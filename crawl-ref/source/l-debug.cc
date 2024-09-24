@@ -211,8 +211,7 @@ LUAFN(debug_cull_monsters)
         if (you.see_cell(mi->pos()))
             continue;
 
-        mi->flags |= MF_HARD_RESET;
-        monster_die(**mi, KILL_DISMISSED, NON_MONSTER);
+        monster_die(**mi, KILL_RESET, NON_MONSTER);
     }
 
     return 0;
@@ -227,10 +226,7 @@ LUAFN(debug_dismiss_adjacent)
         monster* mon = monster_at(*ai);
 
         if (mon)
-        {
-            mon->flags |= MF_HARD_RESET;
-            monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
-        }
+            monster_die(*mon, KILL_RESET, NON_MONSTER);
     }
 
     return 0;
@@ -243,10 +239,7 @@ LUAFN(debug_dismiss_monsters)
     for (monster_iterator mi; mi; ++mi)
     {
         if (mi)
-        {
-            mi->flags |= MF_HARD_RESET;
-            monster_die(**mi, KILL_DISMISSED, NON_MONSTER);
-        }
+            monster_die(**mi, KILL_RESET, NON_MONSTER);
     }
 
     return 0;

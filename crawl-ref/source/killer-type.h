@@ -17,7 +17,7 @@ enum killer_type                       // monster_die(), thing_thrown
                                        // not the player or a monster (eg:
                                        // neutral cloud generators or god effects)
     KILL_RESET,                        // excised from existence
-    KILL_DISMISSED,                    // like KILL_RESET, but drops inventory
+    KILL_RESET_KEEP_ITEMS,             // like KILL_RESET, but drops inventory
     KILL_BANISHED,                     // monsters what got banished
 #if TAG_MAJOR_VERSION == 34
     KILL_UNSUMMONED,                   // summoned monsters whose timers ran out

@@ -4688,8 +4688,7 @@ static int _dgn_item_corpse(const item_spec &ispec, const coord_def where)
         mon->position = where;
         corpse = place_monster_corpse(*mon, true);
         // Dismiss the monster we used to place the corpse.
-        mon->flags |= MF_HARD_RESET;
-        monster_die(*mon, KILL_DISMISSED, NON_MONSTER, true);
+        monster_die(*mon, KILL_RESET, NON_MONSTER, true);
     }
 
     if (ispec.props.exists(CORPSE_NEVER_DECAYS))

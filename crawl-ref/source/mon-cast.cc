@@ -4722,7 +4722,7 @@ bool handle_mon_spell(monster* mons)
     // Living spells die once they are cast.
     if (mons->type == MONS_LIVING_SPELL)
     {
-        monster_die(*mons, KILL_DISMISSED, NON_MONSTER);
+        monster_die(*mons, KILL_RESET, NON_MONSTER);
         return true;
     }
 

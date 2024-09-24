@@ -206,7 +206,7 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
                 break;
 
             simple_monster_message(*mon, " returns to the mists of memory.");
-            monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
+            monster_die(*mon, KILL_RESET, NON_MONSTER);
             break;
 
         case DACT_UPGRADE_ANCESTOR:
@@ -221,7 +221,7 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
 
             simple_monster_message(*mon, " is freed.");
             // The monster disappears.
-            monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
+            monster_die(*mon, KILL_RESET, NON_MONSTER);
             break;
 
         case DACT_SLIME_NEW_ATTEMPT:
@@ -237,7 +237,7 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
                                                 random_range(3, 5), nullptr);
             }
             // The monster disappears.
-            monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
+            monster_die(*mon, KILL_RESET, NON_MONSTER);
             break;
         }
         case DACT_KIRKE_HOGS:

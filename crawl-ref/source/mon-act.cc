@@ -284,7 +284,7 @@ static bool _swap_monsters(monster& mover, monster& moved)
     if (moved.type == MONS_FOXFIRE)
     {
         mprf(MSGCH_GOD, "By Zin's power the foxfire is contained!");
-        monster_die(moved, KILL_DISMISSED, NON_MONSTER, true);
+        monster_die(moved, KILL_RESET, NON_MONSTER, true);
     }
 
     return true;
@@ -3236,7 +3236,7 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     if (m2->type == MONS_FOXFIRE)
     {
         foxfire_attack(m2, mon);
-        monster_die(*m2, KILL_DISMISSED, NON_MONSTER, true);
+        monster_die(*m2, KILL_RESET, NON_MONSTER, true);
     }
 
     return false;
