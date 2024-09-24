@@ -6370,7 +6370,8 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
         result << _monster_habitat_description(mi);
 
     // Hightlight means of interacting with doors.
-    if (mi.itemuse() > MONUSE_NOTHING && mi.itemuse() != NUM_MONUSE)
+    if (mi.itemuse() > MONUSE_NOTHING && mi.itemuse() != NUM_MONUSE &&
+        !mons_class_is_stationary(mi.type))
     {
         if (mon_shape_is_humanoid(get_mon_shape(mi.type)))
             result << uppercase_first(pronoun) << " can open doors.\n";
