@@ -5085,7 +5085,7 @@ static void _cast_mortal_champion(monster* mons)
     {
         // Replace their weapons with short blades of holy wrath- aside from
         // feeling more holy, it avoids the spriggans' demon whips.
-        weapon_type wpn;
+        weapon_type wpn = WPN_RAPIER;
         armour_type arm = ARM_PEARL_DRAGON_ARMOUR;
 
         destroy_item(mortal->inv[MSLOT_WEAPON]);
@@ -5101,7 +5101,6 @@ static void _cast_mortal_champion(monster* mons)
         }
         else if (type == MONS_DEEP_ELF_BLADEMASTER)
         {
-            wpn = WPN_RAPIER;
             destroy_item(mortal->inv[MSLOT_ALT_WEAPON]);
             give_specific_item(mortal, items(false, OBJ_WEAPONS, wpn, 0, SPWPN_HOLY_WRATH));
         }
