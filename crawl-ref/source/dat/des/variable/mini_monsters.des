@@ -1592,11 +1592,9 @@ ENDMAP
 # Elven Outpost
 #   50-50 chance of spiral arms, 50-50 chance of a moat
 NAME:    elves_outpost_lemuel
-TAGS:    transparent
-KMASK:   1>"% = opaque
-KFEAT:   " = floor
+TAGS:    transparent no_pool_fixup
 DEPTH:   D:11-, Orc, Elf
-: if (you.in_branch("D") and you.depth()) > 12 or you.in_branch("Elf") then
+: if (you.in_branch("D") and you.depth() > 12) or you.in_branch("Elf") then
 MONS:    deep elf pyromancer, deep elf knight / deep elf archer
 MONS:    deep elf zephyrmancer / thermic dynamo w:4
 NSUBST:  1 = 2 = %** / 2 = 1% / 3 = 11122 / 3 = 22333 / *:1
@@ -1607,8 +1605,9 @@ MONS:    deep elf pyromancer ; dagger . robe ego:fire_resistance . \
 MONS:    deep elf archer
 NSUBST:  1 = 2 = %%* / 2 = 1% / 2 = 12 / 2 = 23 / *:1
 : end
-SHUFFLE: _?/bb, _'/ww
-SUBST:   ?_' = .
+KMASK:   123"%*> = opaque
+SHUFFLE: _? / bb, _' / ww
+SUBST:   ?_'" = .
 MAP
 .?.....???..
 ?.'''__'''?.
