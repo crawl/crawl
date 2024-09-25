@@ -1070,6 +1070,12 @@ Mass Confusion spell
 
 Causes confusion in all who gaze upon the caster.
 %%%%
+Mass Regeneration spell
+
+Causes all allied monsters nearby to rapidly regenerate over a short period of
+time. This regeneration is proportional to each of those creature's maximum
+health.
+%%%%
 Maxwell's Capacitive Coupling spell
 
 Gradually builds up electric charge in the caster, so long as they maintain
