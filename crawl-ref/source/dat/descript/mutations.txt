@@ -15,7 +15,7 @@ repulsion field mutation
 
 You are surrounded by a repulsion field, providing a small amount of evasion.
 Each level of this mutation provides more EV. The third level of this mutation
-also halves the accuracy of ranged attacks launched at you.
+also repels missiles, greatly increasing your EV against such attacks.
 %%%%
 icy blue scales mutation
 
