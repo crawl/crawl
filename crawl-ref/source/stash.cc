@@ -1161,7 +1161,7 @@ static bool _is_duplicate_for_search(stash_search_result l,
     if (l.in_inventory || r.in_inventory)
         return false;
     if (ignore_missile_stacks &&
-        l.item->base_type == OBJ_MISSILES
+        l.item && r.item && l.item->base_type == OBJ_MISSILES
         && r.item->base_type == OBJ_MISSILES
         && l.item->sub_type == r.item->sub_type
         && l.item->brand == r.item->brand
