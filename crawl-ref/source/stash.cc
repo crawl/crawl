@@ -1510,7 +1510,7 @@ void StashTracker::get_matching_stashes(
 bool StashTracker::get_named_stashes(const string &search,
         vector<stash_search_result> &results)
 {
-    if (search[0] == '*')
+    if (search == "*")
     {
         set<level_pos> cache;
         for (int i = 0; i < TRAVEL_WAYPOINT_COUNT; ++i)
@@ -1524,7 +1524,7 @@ bool StashTracker::get_named_stashes(const string &search,
         }
         return true;
     }
-    else if (isadigit(search[0]))
+    else if (1 == search.size() && isadigit(search[0]))
     {
         const level_pos &pos = travel_cache.get_waypoint(search[0]-'0');
         if (pos.is_valid())
