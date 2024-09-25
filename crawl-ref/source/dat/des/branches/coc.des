@@ -32,23 +32,23 @@ TAGS:   transparent
 DEPTH:  Coc:1-6
 COLOUR: c = blue
 MONS:   Ice Fiend, shard shrike, simulacrum, wendigo / nargun
-KMONS:  H = ice statue
-KMASK:  H = opaque
-KPROP:  H = no_tele_into
+KMONS:  P = pillar of rime
+KMONS:  HI = ice statue
+KFEAT:  PI = deep_water
 MAP
 xwww..3......
 xwwwwww..4...
-xwwwwwwww..4.
-xwwwwwwwww...
-xcccccHwwww3.
+xPwwwwwww..4.
+xwPwwwwwww...
+xcccccIwwww3.
 cc.H.ccwwww..
 c...2.cWWWW3.
 c}1...+.3.3..
 c...2.cWWWW3.
 cc.H.ccwwww..
-xcccccHwwww3.
-xwwwwwwwww...
-xwwwwwwww..4.
+xcccccIwwww3.
+xwPwwwwwww...
+xPwwwwwww..4.
 xwwwwww..4...
 xwww..3......
 ENDMAP
@@ -57,8 +57,9 @@ NAME:    nicolae_coc_three_mouths
 DEPTH:   Coc, !Coc:$
 TAGS:    transparent
 ORIENT:  centre
+MONS:    pillar of rime
 SHUFFLE: jbc
-SUBST:   j = >}}, b = >.., c = >..
+SUBST:   j = >}}, b = >1., c = >1.
 MAP
               .....
              ..x....
@@ -91,38 +92,40 @@ ORIENT:  centre
 TAGS:    transparent
 NSUBST:  D = 3:110 / *:0
 MONS:    ice fiend / shard shrike
+KMONS:   P = pillar of rime
 MAP
       wwwwwwwww
     wwwwwwwwwwwww
    WwwwwxxxxxwwwwW
-  WWWw.xx...xx.wWWW
+  WWWw.xx.P.xx.wWWW
  wwWW.....D.....WWww
  www.D..x...x..D.www
 www....xx.D.xx....www
 wwwx..xx.....xx..xwww
 wwxxDxx...x...xxDxxww
-wwx.....4xxx......xww
-wwx.{.3.xxxxx.1.}.xww
-wwx.....4xxx......xww
+wwx.....0xxx......xww
+wwx.{...xxxxx.1.}.xww
+wwx.....0xxx......xww
 wwxxDxx...x...xxDxxww
 wwwx..xx.....xx..xwww
 www....xx.D.xx....www
  www.D..x...x..D.www
  wwWW.....D.....WWww
-  WWWw.xx...xx.wWWW
+  WWWw.xx.P.xx.wWWW
   @WwwwwxxxxxwwwwW
     wwwwwwwwwwwww
       wwwwwwwww
 ENDMAP
 
 NAME:    nicolae_coc_snowflakes_chance_in_hell
+TAGS:    transparent extra decor
 DEPTH:   Coc, !Coc:$
 ORIENT:  centre
-TAGS:    transparent extra decor
+MONS:    pillar of rime
 SHUFFLE: abcdefghi, jklmno, ABCDEFGH
 SHUFFLE: {[(< / }])>
 # you thought we'd be generous with hatches
-SUBST:   [(<>]) : .
+SUBST:   [(<>]) = 11.
 SUBST:   abc : x, d : ., e : .x, f : .x, g : .x, h : .x, i : .x
 SUBST:   jk : x, l : ., m : .x, n : .x, o : .x, p : .x, q : .x, r : .x, s : .x
 SUBST:   AB : x, C : ., D : .x, E : .x, F : .x, G : .x, H : .x
@@ -155,12 +158,11 @@ MAP
 ENDMAP
 
 NAME:    nooodl_cocytus_jagged_cave
+TAGS:    ruin
 ORIENT:  encompass
 DEPTH:   Coc, !Coc:$
-TAGS:    ruin
-SUBST:   < : AB
-NSUBST:  A = 1:{ / 1:} / *:.
-NSUBST:  B = 1:> / *:.
+MONS:    pillar of rime
+NSUBST:  < = 1:{ / 1:} / *:1
 SUBST:   . : ...W, ' : .W, _ : .W, " : .W, ; : .W
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -197,8 +199,8 @@ NAME:   nicolae_coc_bergin
 TAGS:   transparent no_pool_fixup
 DEPTH:  Coc:2-
 ORIENT: centre
-KFEAT:  0 = W
 KMONS:  0 = 0 w:12 / 9 w:3 / 8 w:1
+KFEAT:  0 = W
 NSUBST: { = 1={ / .
 SUBST:  M = Wwww x:5 .:1, w = w:20 x:1, W = W 0:1
 MAP
@@ -291,8 +293,8 @@ TAGS:   no_pool_fixup patrolling
 DEPTH:  Coc:2-, !Coc:$
 ORIENT: encompass
 KMONS:  1 = ice statue
+KMONS:  P = pillar of rime
 KFEAT:  ~ = open_sea
-KFEAT:  } = }
 : set_border_fill_type('open_sea')
 NSUBST: D = + / nccc / c, E = + / nccc / c, F = + / nccc / c, H = + / nccc /c, \
         J = + / nccc / c, K = + / nccc / c, L = + / nccc / c, M = + / nccc /c, \
@@ -328,12 +330,12 @@ MAP
 ~wwxxxwc...cDDDDDc...c...c......wwwww~
 ~wxxxxxc+ccc.........E...E.Q.xx.wwwww~
 ~wx...xx............xc...cxxxxx.wwwww~
-~wx.{.xxxx....G....Gxc...cccccxxwwwww~
+~wxP{Pxxxx....G....Gxc...cccccxxwwwww~
 ~wx....xxxwwwwxx..xxxc.}.c.}.cxwwwwww~
 ~wxx.....xxxxxx...xxwc...c...ywwwwwww~
 ~wwxx............xxxwc+ccc...ywwwwwww~
 ~wwxxxx.........xxxwww...+...ywwwwwww~
-~wwwxxxxxx...xxxxxxwwwwwwcyyycwwwwwww~
+~wwwxxxxxx.P.xxxxxxwwwwwwcyyycwwwwwww~
 ~wwwwxxxxxxxxxxxxwwwwwwwwwwwwwwwwwwww~
 ~wwwwwwwwxxxxxwwwwwwwwwwwwwwwwwwwwwww~
 ~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
@@ -435,11 +437,13 @@ NAME:     nicolae_coc_icebeans_plural
 TAGS:     transparent no_pool_fixup
 DEPTH:    Coc
 ORIENT:   centre
+KMONS:    1 = pillar of rime
+KFEAT:    1 = w
 SUBVAULT: D : nico_icebean
 SUBVAULT: E : nico_icebean
 SUBVAULT: F : nico_icebean
 SUBVAULT: H : nico_icebean
-SHUFFLE:  JK/xw/xw/xW/xW/ww/wW/wW/WW/-W/-W
+SHUFFLE:  JK/1w/1w/xW/xW/ww/wW/wW/WW/-W/-W
 SUBST:    JK = x, - = .
 MAP
   .............
@@ -503,7 +507,7 @@ DEPTH:  Coc, !Coc:$
 KMONS:  1 = kraken simulacrum
 KFEAT:  1 = w
 SUBST:  ` = w., ' = w-
-NSUBST: - = 1=} / ., w = 3=1 / 3=1w
+NSUBST: - = 1:} / ., w = 3:1 / 3 = 1w / *:w
 MAP
 `...`.`...`
 .'w--'-w-'.
@@ -541,7 +545,7 @@ xxxx~~~xxxx
 ENDMAP
 
 NAME:  nicolae_coc_melting_block
-TAGS:  transparent allow_dup
+TAGS:  transparent allow_dup extra
 DEPTH: Coc
 SUBST: M = mxx, N = Wmm, O = .WW
 MAP
@@ -558,7 +562,7 @@ MAP
 ENDMAP
 
 NAME:    nicolae_coc_naught_crossing
-TAGS:    transparent no_pool_fixup
+TAGS:    transparent no_pool_fixup extra
 DEPTH:   Coc
 ORIENT:  centre
 SHUFFLE: w.
@@ -653,22 +657,22 @@ NAME:   nicolae_coc_three_more_mouths
 TAGS:   transparent patrolling no_pool_fixup
 DEPTH:  Coc, !Coc:$
 ORIENT: centre
-KMONS:  1 = ice fiend
+MONS:   ice fiend, pillar of rime
 MAP
         wwwww
     x  ..xxxww
    xxx..xx.xxww
-    x..xx...xxw
+    x..xx..2xxw
   .....x..1..xw
  w.xxx......xx.
 wwxx.......xx..
 wxx........x..x
-wx..1...}....xxx
+wx2.1...}....xxx
 wxx........x..x
 wwxx.......xx..
  w.xxx......xx.
   .....x..1..xw
-    x..xx...xxw
+    x..xx..2xxw
    xxx..xx.xxww
     x  ..xxxww
         wwwww
@@ -679,7 +683,9 @@ TAGS:   transparent no_pool_fixup
 DEPTH:  Coc
 ORIENT: centre
 KMONS:  1 = 0 w:120 / 9 w:30 / 8
+KMONS:  P = pillar of rime
 KFEAT:  1 = W
+KFEAT:  P = w
 SUBST:  M = wx, ~ = .w, - = Wwxxx, W = W:15 1:1
 MAP
   .......................
@@ -687,11 +693,11 @@ MAP
  ~wWWw~..~wwww~.....~ww~..
  xwWWwxMwwwwwwwMxMwwwwwwMx
 xxMWWMxxMwwwwMxxxxMwwwMxxxx
-xxxWWxxxxMwMxxx--xxxxxxxxxx
+xxxWWxxxxMPMxxx--xxxxxxxxxx
 xx-WW--xxxxxx-WWWWWWWWWW-xx
 xx-WWWW------WWWWWWWWWWW-xx
 xx-WWWWWWWWWWWWWxxxxx-WWW-x
-xxx--WWWWWWWWWWxxMwMx-WWW-x
+xxx--WWWWWWWWWWxxMPMx-WWW-x
 xxxxxxxxxxxxx--xMwwMxx-WW-x
 xxxxxMMwwwwMxxxxMwwwMxwWWxx
  xxxwwwwwwwwMxxMwwwwMxwWWx
@@ -704,13 +710,15 @@ NAME:   nicolae_coc_two_mouths
 TAGS:   patrolling transparent no_pool_fixup
 DEPTH:  Coc:2-, !Coc:$
 ORIENT: centre
+KMONS:  P = pillar of rime
+KFEAT:  P = w
 SUBST:  0 = .009, 9 = 998
 MAP
  wwwwwww             wwwwwww
 wwxxxxxww           wwxxxxxww
 wxx.0.xxww         wwxx.9.xxw
 ..0....xxw         wxx....9..
-@.9..{..xw         wx..}..8.@
+@.9..{..xP         Px..}..8.@
 ..0....xxw         wxx....9..
 wxx.0.xxww         wwxx.9.xxw
 wwxxxxxww           wwxxxxxww
