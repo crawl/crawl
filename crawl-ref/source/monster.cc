@@ -4864,11 +4864,14 @@ bool monster::is_shapeshifter() const
 
 void monster::scale_hp(int num, int den)
 {
-    // Without the +1, we lose maxhp on every berserk (the only use) if the
-    // maxhp is odd. This version does preserve the value correctly, but only
-    // if it is first inflated then deflated.
-    hit_points     = (hit_points * num + 1) / den;
-    max_hit_points = (max_hit_points * num + 1) / den;
+    // XXX: Without the +1, we lose maxhp on every berserk if the maxhp is odd.
+    // But the +1 also causes monsters to *gain* maxhp every turn an apis aura
+    // is active on them. I'd like a better solution in future, but this should
+    // solve the immediate problem.
+    const int bump = ((num == 2 && den == 3) || (num == 3 && den == 2)) ? 1 : 0;
+
+    hit_points     = (hit_points * num + bump) / den;
+    max_hit_points = (max_hit_points * num + bump) / den;
 
     if (hit_points < 1)
         hit_points = 1;
