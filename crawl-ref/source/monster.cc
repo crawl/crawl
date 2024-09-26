@@ -1242,34 +1242,28 @@ bool monster::drop_item(mon_inv_type eslot, bool msg)
 
     if (pitem.flags & ISFLAG_SUMMONED)
     {
-        if (msg)
-        {
-            mprf("%s %s as %s drops %s!",
-                 pitem.name(DESC_THE).c_str(),
-                 summoned_poof_msg(this, pitem).c_str(),
-                 name(DESC_THE).c_str(),
-                 pitem.quantity > 1 ? "them" : "it");
-        }
+        // Monsters sometimes drop summoned items in the process of being
+        // initialized and given equipment, but they should never try to do
+        // this where the player can see it.
+        ASSERT(!msg);
 
         item_was_destroyed(pitem);
         destroy_item(item_index);
     }
-    else
+
+    if (msg)
     {
-        if (msg)
-        {
-            mprf("%s drops %s.", name(DESC_THE).c_str(),
-                 pitem.name(DESC_A).c_str());
-        }
+        mprf("%s drops %s.", name(DESC_THE).c_str(),
+                pitem.name(DESC_A).c_str());
+    }
 
-        if (!move_item_to_grid(&item_index, pos(), swimming()))
-        {
-            // Re-equip item if we somehow failed to drop it.
-            if (was_unequipped && msg)
-                equip_message(pitem);
+    if (!move_item_to_grid(&item_index, pos(), swimming()))
+    {
+        // Re-equip item if we somehow failed to drop it.
+        if (was_unequipped && msg)
+            equip_message(pitem);
 
-            return false;
-        }
+        return false;
     }
 
     inv[eslot] = NON_ITEM;
