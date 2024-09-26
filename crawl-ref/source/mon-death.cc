@@ -557,7 +557,7 @@ void record_monster_defeat(const monster* mons, killer_type killer)
 {
     if (crawl_state.game_is_arena())
         return;
-    if (killer == KILL_RESET || killer == KILL_RESET_KEEP_ITEMS)
+    if (RESET_KILL(killer))
         return;
     if (mons->is_summoned())
         return;
@@ -718,8 +718,7 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
 static bool _yred_bind_soul(monster* mons, killer_type killer)
 {
     if (you_worship(GOD_YREDELEMNUL) && mons->has_ench(ENCH_SOUL_RIPE)
-        && you.see_cell(mons->pos()) && killer != KILL_RESET
-        && killer != KILL_RESET_KEEP_ITEMS && killer != KILL_BANISHED
+        && you.see_cell(mons->pos()) && !RESET_KILL(killer)
         // You can't deliberately bind a summon, but this also handles mirror copies
         && !mons->is_summoned())
     {
@@ -813,7 +812,7 @@ static bool _beogh_maybe_convert_orc(monster &mons, killer_type killer,
 static bool _blorkula_bat_split(monster& blorkula, killer_type ktype)
 {
     // Can't recover from these
-    if (ktype == KILL_BANISHED || ktype == KILL_RESET || ktype == KILL_RESET_KEEP_ITEMS)
+    if (RESET_KILL(ktype))
         return false;
 
     // XXX: Summoned Blorkulas (ie: from phantom mirror) will cease to be when
@@ -1876,7 +1875,7 @@ static void _fire_kill_conducts(const monster &mons, killer_type killer,
         did_kill_conduct(DID_KILL_FAST, mons);
 }
 
-item_def* monster_die(monster& mons, const actor *killer, bool silent, bool fake)
+item_def* monster_die(monster& mons, const actor *killer, bool silent, bool mount_death)
 {
     killer_type ktype = KILL_YOU;
     int kindex = NON_MONSTER;
@@ -1890,7 +1889,7 @@ item_def* monster_die(monster& mons, const actor *killer, bool silent, bool fake
         kindex = kmons->mindex();
     }
 
-    return monster_die(mons, ktype, kindex, silent, fake);
+    return monster_die(mons, ktype, kindex, silent, mount_death);
 }
 
 /**
@@ -2156,11 +2155,11 @@ static void _player_on_kill_effects(monster& mons, killer_type killer,
  *               documented/coded)
  * @param killer_index The mindex of the killer (TODO: always use an actor*)
  * @param silent whether to print any messages about the death
- * @param fake   The death of the mount of a mounted monster (spriggan rider).
+ * @param mount_death The death of the mount of a mounted monster (spriggan rider).
  * @returns a pointer to the created corpse, possibly null
  */
 item_def* monster_die(monster& mons, killer_type killer,
-                      int killer_index, bool silent, bool fake)
+                      int killer_index, bool silent, bool mount_death)
 {
     ASSERT(!invalid_monster(&mons));
 
@@ -2177,7 +2176,7 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     const bool spectralised = testbits(mons.flags, MF_SPECTRALISED);
 
-    if (!silent && !fake
+    if (!silent && !mount_death
         && _monster_avoided_death(&mons, killer, killer_index))
     {
         mons.flags &= ~MF_EXPLODE_KILL;
@@ -2236,9 +2235,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     bool drop_items          = !hard_reset;
     bool in_transit          = false;
     const bool was_banished  = (killer == KILL_BANISHED);
-    const bool mons_reset    = (killer == KILL_RESET
-                                || killer == KILL_RESET_KEEP_ITEMS
-                                || killer == KILL_TENTACLE_CLEANUP);
+    const bool mons_reset    = RESET_KILL(killer);
     bool leaves_corpse = !summoned && !timeout
                             && !mons_reset
                             && !mons_is_tentacle_segment(mons.type);
@@ -2305,21 +2302,13 @@ item_def* monster_die(monster& mons, killer_type killer,
     //
     // (It's possible some other things should be moved here, but dead code that
     // deals primarily with messaging seems fine to override by exploding)
-    if (mons.type == MONS_PROTEAN_PROGENITOR && !was_banished && !mons_reset)
+    if (mons.type == MONS_PROTEAN_PROGENITOR && real_death)
     {
         _protean_explosion(&mons);
         silent = true;
     }
-    else if (mons.type == MONS_SPECTRAL_WEAPON)
-    {
-        end_spectral_weapon(&mons, true, killer == KILL_RESET);
-        silent = true;
-    }
-    else if (mons.type == MONS_SPRIGGAN_DRUID && !silent && !was_banished
-             && !mons_reset)
-    {
+    else if (mons.type == MONS_SPRIGGAN_DRUID && !silent && real_death)
         _druid_final_boon(&mons);
-    }
     else if (mons.type == MONS_VAMPIRE_BAT && !silent && !mons_reset
              && mons.props.exists(BLORKULA_REVIVAL_TIMER_KEY))
     {
@@ -2396,6 +2385,67 @@ item_def* monster_die(monster& mons, killer_type killer,
                                     mons.pos(),
                                     random_range(3, 11) * BASELINE_DELAY);
     }
+    else if (mons.type == MONS_BLAZEHEART_GOLEM && !silent && !mons_reset
+             && !was_banished)
+    {
+        // Only blow up if non-dormant
+        if (grid_distance(mons.pos(), you.pos()) <= 1)
+        {
+            mprf(MSGCH_WARN, "%s falls apart, revealing its core!",
+                 mons.name(DESC_YOUR).c_str());
+
+            int old_hd = mons.get_hit_dice();
+            change_monster_type(&mons, MONS_BLAZEHEART_CORE);
+            mons.set_hit_dice(old_hd);
+
+            // Cores should not count as summons and either expire or be removed
+            // by recasting golem itself.
+            mons.del_ench(ENCH_SUMMON_TIMER, true, false);
+            mons.heal(50000);
+
+            // Give exactly enough energy to act immediately after the player's
+            // next action, but never blow up during the same action that the
+            // golem died.
+            mons.speed_increment = 79;
+
+            // Short-circuiting death, since we didn't 'die'
+            return nullptr;
+        }
+        else
+        {
+            simple_monster_message(mons, " falls apart and the last of its fire"
+                                         " goes out.");
+            silent = true;
+        }
+    }
+    else if (mons.type == MONS_MARTYRED_SHADE && !silent && real_death)
+    {
+        // Don't cause transformation on the player killing their own shade.
+        // (Angering them will normally make them disappear, but if you do
+        // enough damage in one hit, you can still get here)
+        if (!YOU_KILL(killer) || mons.summoner != MID_PLAYER)
+        {
+            _martyr_death_wail(mons);
+
+            // Short-circuit this death
+            return nullptr;
+        }
+    }
+    else if (mons.type == MONS_HOARFROST_CANNON && real_death
+             && env.grid(mons.pos()) == DNGN_FLOOR)
+    {
+        temp_change_terrain(mons.pos(), DNGN_SHALLOW_WATER, random_range(50, 80),
+                            TERRAIN_CHANGE_FLOOD);
+    }
+    else if (mons.type == MONS_INUGAMI && real_death)
+    {
+        if (&mons == find_canine_familiar())
+        {
+            // Prevent you from resummoning it for a little while.
+            you.duration[DUR_CANINE_FAMILIAR_DEAD] = random_range(13, 21)
+                                                        * BASELINE_DELAY;
+        }
+    }
 
     if (mons.has_ench(ENCH_MAGNETISED))
     {
@@ -2429,7 +2479,8 @@ item_def* monster_die(monster& mons, killer_type killer,
             did_death_message = true;
         }
     }
-    else if (mons.type == MONS_DANCING_WEAPON)
+
+    if (mons.type == MONS_DANCING_WEAPON)
     {
         int w_idx = mons.inv[MSLOT_WEAPON];
         ASSERT(w_idx != NON_ITEM);
@@ -2524,64 +2575,6 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (mons.hit_points == -1000)
             silent = true;
     }
-    else if (mons.type == MONS_BLAZEHEART_GOLEM && !silent && !mons_reset
-             && !was_banished)
-    {
-        // Only blow up if non-dormant
-        if (grid_distance(mons.pos(), you.pos()) <= 1)
-        {
-            mprf(MSGCH_WARN, "%s falls apart, revealing its core!",
-                 mons.name(DESC_YOUR).c_str());
-
-            int old_hd = mons.get_hit_dice();
-            change_monster_type(&mons, MONS_BLAZEHEART_CORE);
-            mons.set_hit_dice(old_hd);
-
-            // Cores should not count as summons and either expire or be removed
-            // by recasting golem itself.
-            mons.del_ench(ENCH_SUMMON_TIMER, true, false);
-            mons.heal(50000);
-
-            // Give exactly enough energy to act immediately after the player's
-            // next action, but never blow up during the same action that the
-            // golem died.
-            mons.speed_increment = 79;
-
-            // Short-circuiting death, since we didn't 'die'
-            return nullptr;
-        }
-        else
-        {
-            simple_monster_message(mons, " falls apart and the last of its fire"
-                                         " goes out.");
-            silent = true;
-        }
-    }
-    else if (mons.type == MONS_MARTYRED_SHADE && !silent && !mons_reset
-             && !was_banished)
-    {
-        // Don't cause transformation on the player killing their own shade.
-        // (Angering them will normally make them disappear, but if you do
-        // enough damage in one hit, you can still get here)
-        if (!YOU_KILL(killer) || mons.summoner != MID_PLAYER)
-        {
-            _martyr_death_wail(mons);
-
-            // Short-circuit this death
-            return nullptr;
-        }
-    }
-    else if (mons.type == MONS_HOARFROST_CANNON && !silent && !mons_reset
-             && !was_banished && env.grid(mons.pos()) == DNGN_FLOOR)
-    {
-        temp_change_terrain(mons.pos(), DNGN_SHALLOW_WATER, random_range(50, 80),
-                            TERRAIN_CHANGE_FLOOD);
-    }
-
-    if (mons.type == MONS_INUGAMI)
-        check_canid_farewell(mons, !mons_reset && !was_banished);
-    else if (mons.type == MONS_PLAYER_SHADOW)
-        dithmenos_cleanup_player_shadow(&mons);
 
     const bool death_message = !silent && !did_death_message
                                && you.can_see(mons);
@@ -2589,6 +2582,8 @@ item_def* monster_die(monster& mons, killer_type killer,
     bool anon = (killer_index == ANON_FRIENDLY_MONSTER);
     const mon_holy_type targ_holy = mons.holiness();
 
+    // Print standard death messages, handle god conducts and piety gain, and
+    // perform other killer_type specific actions (like handling banishment).
     switch (killer)
     {
         case KILL_YOU:          // You kill in combat.
@@ -2789,7 +2784,7 @@ item_def* monster_die(monster& mons, killer_type killer,
             break;
     }
 
-    // Make sure Boris has a foe to address.
+    // Make sure Boris has a foe to address before speaking.
     _maybe_set_monster_foe(mons, killer_index);
 
     // Make sure that the monster looks dead.
@@ -2805,6 +2800,7 @@ item_def* monster_die(monster& mons, killer_type killer,
             mons.hit_points = -1;
     }
 
+    // Allow the monster to speak (or emote) about its own death.
     if (!silent && you.see_cell(mons.pos()))
     {
         // Make sure that the monster looks dead to mons_speaks, so that it can
@@ -2874,9 +2870,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         }
         else if (mons_is_elven_twin(&mons))
             elven_twin_died(&mons, in_transit, killer, killer_index);
-        else if (mons.type == MONS_BENNU && !in_transit && !was_banished
-                 && !mons_reset && !mons.pacified()
-                 && (!summoned || duration > 0)
+        else if (mons.type == MONS_BENNU && !mons.pacified() && real_death
                  && mons_bennu_can_revive(&mons))
         {
             // All this information may be lost by the time the monster revives.
@@ -2934,18 +2928,14 @@ item_def* monster_die(monster& mons, killer_type killer,
              && killer != KILL_TENTACLE_CLEANUP)
     {
        monster_die(*monster_by_mid(mons.tentacle_connect), killer,
-                   killer_index, silent, fake);
+                   killer_index, silent, mount_death);
     }
-    else if (mons.type == MONS_FLAYED_GHOST)
-        end_flayed_effect(&mons);
     // Give the treant a last chance to release its hornets if it is killed in a
     // single blow from above half health
-    else if (mons.type == MONS_SHAMBLING_MANGROVE && !was_banished
-             && !mons.pacified() && (!summoned || duration > 0)
-             && !mons_reset)
-    {
+    else if (mons.type == MONS_SHAMBLING_MANGROVE && real_death)
         treant_release_fauna(mons);
-    }
+    else if (mons.type == MONS_PHARAOH_ANT && real_death)
+        _pharaoh_ant_bind_souls(&mons);
     else if (!mons.is_summoned() && mummy_curse_power(mons.type) > 0)
     {
         // TODO: set attacker better? (Player attacker is handled by checking
@@ -3053,16 +3043,13 @@ item_def* monster_die(monster& mons, killer_type killer,
             corpse = daddy_corpse;
     }
 
-    if (mons.type == MONS_PHARAOH_ANT && !was_banished && !mons.is_summoned())
-        _pharaoh_ant_bind_souls(&mons);
-
     const unsigned int player_xp = gives_player_xp
         ? _calc_player_experience(&mons) : 0;
 
     if (!crawl_state.game_is_arena() && leaves_corpse && !in_transit)
         you.kills.record_kill(&mons, killer, pet_kill);
 
-    if (fake)
+    if (mount_death)
     {
         _give_player_experience(player_xp, killer, pet_kill,
                                 was_visible, mons.xp_tracking);
@@ -3127,9 +3114,7 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     ASSERT(mons.type != MONS_NO_MONSTER);
 
-    if (mons.is_divine_companion()
-        && killer != KILL_RESET
-        && !(mons.flags & MF_BANISHED))
+    if (mons.is_divine_companion() && real_death)
     {
         remove_companion(&mons);
         if (mons_is_hepliaklqana_ancestor(mons.type))
@@ -3264,6 +3249,12 @@ void monster_cleanup(monster* mons)
 
     if (mons->type == MONS_BATTLESPHERE)
         end_battlesphere(mons, true);
+    else if (mons->type == MONS_SPECTRAL_WEAPON)
+        end_spectral_weapon(mons, true, true);
+    else if (mons->type == MONS_FLAYED_GHOST)
+        end_flayed_effect(mons);
+    else if (mons->type == MONS_PLAYER_SHADOW)
+        dithmenos_cleanup_player_shadow(mons);
 
     // Monsters haloes should be removed when they die.
     if (mons->halo_radius()
@@ -3690,7 +3681,7 @@ monster* mons_find_elven_twin_of(const monster* mons)
 **/
 void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int killer_index)
 {
-    if (killer == KILL_RESET_KEEP_ITEMS || killer == KILL_RESET)
+    if (RESET_KILL(killer))
         return;
 
     // Sometimes, if you pacify one twin near a staircase, they leave
