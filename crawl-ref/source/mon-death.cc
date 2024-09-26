@@ -1981,6 +1981,174 @@ static void _maybe_set_monster_foe(monster& mons, int killer_index)
 }
 
 /**
+ * Handles giving various mutation/god/equipment-based benefits to the player
+ * that trigger when they (or sometimes their pets) kill a monster.
+ *
+ * @param mons             The monster that died.
+ * @param killer           The type of death it suffered.
+ * @param gives_player_xp  Whether this death will give the player XP.
+ * @param pet_kill         Whether this kill was made by a player ally.
+ */
+static void _player_on_kill_effects(monster& mons, killer_type killer,
+                                    bool gives_player_xp, bool pet_kill)
+{
+    // Various sources of heal-on-kill
+    if (YOU_KILL(killer) && gives_player_xp)
+    {
+        int hp_heal = 0, mp_heal = 0;
+        // Chance scales from 30% at 1* to 80% at 6*
+        const bool can_divine_heal =
+            (gives_player_xp
+                || you_worship(GOD_MAKHLEB)
+                   && player_in_branch(BRANCH_CRUCIBLE))
+            && !player_under_penance()
+            && (x_chance_in_y(50 * (min(piety_breakpoint(5), (int)you.piety) - 30)
+                                / (piety_breakpoint(5) - piety_breakpoint(0)) + 30, 100)
+                || mons.props.exists(MAKHLEB_BLOODRITE_KILL_KEY));
+
+        if (can_divine_heal && have_passive(passive_t::restore_hp))
+        {
+            hp_heal += (1 + mons.get_experience_level()) / 2
+                    + random2(mons.get_experience_level() / 2);
+
+            if (you.form == transformation::slaughter)
+                hp_heal *= 2;
+        }
+        if (can_divine_heal
+            && have_passive(passive_t::restore_hp_mp_vs_evil)
+            && mons.evil())
+        {
+            hp_heal += random2(1 + 2 * mons.get_experience_level());
+            mp_heal += random2(2 + mons.get_experience_level() / 3);
+        }
+        if (can_divine_heal && have_passive(passive_t::mp_on_kill))
+            mp_heal += 1 + random2(mons.get_experience_level() / 2);
+
+        if (you.has_mutation(MUT_DEVOUR_ON_KILL)
+            && mons.holiness() & (MH_NATURAL | MH_PLANT)
+            && coinflip())
+        {
+            hp_heal += 1 + random2avg(1 + you.experience_level, 3);
+        }
+
+        if (hp_heal && you.hp < you.hp_max
+            && !you.duration[DUR_DEATHS_DOOR])
+        {
+            canned_msg(MSG_GAIN_HEALTH);
+            inc_hp(hp_heal);
+        }
+
+        if (mp_heal && you.magic_points < you.max_magic_points)
+        {
+            canned_msg(MSG_GAIN_MAGIC);
+            inc_mp(mp_heal);
+        }
+    }
+
+    if (YOU_KILL(killer) && gives_player_xp)
+    {
+        // TSO follower blessing.
+        if (!mons_is_object(mons.type)
+            && _god_will_bless_follower(&mons))
+        {
+            bless_follower();
+        }
+
+        if (!mons_is_object(mons.type)
+            && you.wearing_ego(EQ_ALL_ARMOUR, SPARM_MAYHEM))
+        {
+            _orb_of_mayhem(you, mons);
+        }
+    }
+
+    // Various sources of berserk extension on kills.
+    if (killer == KILL_YOU && you.berserk())
+    {
+        if (have_passive(passive_t::extend_berserk)
+            && you.piety > random2(1000))
+        {
+            const int bonus = (3 + random2avg(10, 2)) / 2;
+
+            you.increase_duration(DUR_BERSERK, bonus);
+
+            mprf(MSGCH_GOD, you.religion,
+                 "You feel the power of %s in you as your rage grows.",
+                 uppercase_first(god_name(you.religion)).c_str());
+        }
+        else if (player_equip_unrand(UNRAND_BLOODLUST) && coinflip())
+        {
+            const int bonus = (2 + random2(4)) / 2;
+            you.increase_duration(DUR_BERSERK, bonus);
+            mpr("The necklace of Bloodlust glows a violent red.");
+        }
+        else if (player_equip_unrand(UNRAND_TROG) && coinflip())
+        {
+            const int bonus = (2 + random2(4)) / 2;
+            you.increase_duration(DUR_BERSERK, bonus);
+            mpr("You feel the ancient rage of your axe.");
+        }
+    }
+
+    // Adjust fugue of the fallen bonus. This includes both kills by you and
+    // also by your allies.
+    if (you.duration[DUR_FUGUE]
+        && ((gives_player_xp
+            && (killer == KILL_YOU || killer == KILL_YOU_MISSILE || pet_kill))
+            || mons.props.exists(KIKU_WRETCH_KEY)))
+    {
+        const int slaying_bonus = you.props[FUGUE_KEY].get_int();
+        // cap at +7 slay (at which point you do bonus negative energy damage
+        // around targets hit)
+        if (slaying_bonus < FUGUE_MAX_STACKS)
+        {
+            you.props[FUGUE_KEY] = slaying_bonus + 1;
+
+            // Give a message for hitting max stacks
+            if (slaying_bonus + 1 == FUGUE_MAX_STACKS)
+                mpr("The wailing of the fallen reaches a fever pitch!");
+        }
+    }
+
+    if (you.has_mutation(MUT_MAKHLEB_MARK_TYRANT)
+        && gives_player_xp
+        && (killer == KILL_YOU || killer == KILL_YOU_MISSILE)
+        && !one_chance_in(3))
+    {
+        makhleb_tyrant_buff();
+    }
+
+    // Apply unrand effects.
+    unrand_death_effects(&mons, killer);
+
+    // Player Powered by Death
+    if (gives_player_xp && you.get_mutation_level(MUT_POWERED_BY_DEATH)
+        && (YOU_KILL(killer) || pet_kill))
+    {
+        // Enable the status
+        reset_powered_by_death_duration();
+
+        // Maybe increase strength. The chance decreases with number
+        // of existing stacks.
+        const int pbd_level = you.get_mutation_level(MUT_POWERED_BY_DEATH);
+        const int pbd_str = you.props[POWERED_BY_DEATH_KEY].get_int();
+        if (x_chance_in_y(10 - pbd_str, 10))
+        {
+            const int pbd_inc = random2(1 + pbd_level);
+            you.props[POWERED_BY_DEATH_KEY] = pbd_str + pbd_inc;
+            dprf("Powered by Death strength +%d=%d", pbd_inc,
+                 pbd_str + pbd_inc);
+        }
+    }
+
+    // Various kill progress tracking
+    if (player_in_branch(BRANCH_CRUCIBLE) && !mons.is_summoned()
+        && (YOU_KILL(killer) || pet_kill))
+    {
+        makhleb_crucible_kill(mons);
+    }
+}
+
+/**
  * Kill off a monster.
  *
  * @param mons The monster to be killed
@@ -2112,34 +2280,6 @@ item_def* monster_die(monster& mons, killer_type killer,
     // Take notes and mark milestones.
     record_monster_defeat(&mons, killer);
 
-    // Various sources of berserk extension on kills.
-    if (killer == KILL_YOU && you.berserk())
-    {
-        if (have_passive(passive_t::extend_berserk)
-            && you.piety > random2(1000))
-        {
-            const int bonus = (3 + random2avg(10, 2)) / 2;
-
-            you.increase_duration(DUR_BERSERK, bonus);
-
-            mprf(MSGCH_GOD, you.religion,
-                 "You feel the power of %s in you as your rage grows.",
-                 uppercase_first(god_name(you.religion)).c_str());
-        }
-        else if (player_equip_unrand(UNRAND_BLOODLUST) && coinflip())
-        {
-            const int bonus = (2 + random2(4)) / 2;
-            you.increase_duration(DUR_BERSERK, bonus);
-            mpr("The necklace of Bloodlust glows a violent red.");
-        }
-        else if (player_equip_unrand(UNRAND_TROG) && coinflip())
-        {
-            const int bonus = (2 + random2(4)) / 2;
-            you.increase_duration(DUR_BERSERK, bonus);
-            mpr("You feel the ancient rage of your axe.");
-        }
-    }
-
     // Chance to cause monsters you kill yourself to explode with Mark of Haemoclasm
     if (YOU_KILL(killer) && you.has_mutation(MUT_MAKHLEB_MARK_HAEMOCLASM)
         && makhleb_haemoclasm_trigger_check(mons))
@@ -2157,13 +2297,6 @@ item_def* monster_die(monster& mons, killer_type killer,
         crawl_state.cancel_cmd_repeat();
 
     const bool pet_kill = _is_pet_kill(killer, killer_index);
-
-    if (player_in_branch(BRANCH_CRUCIBLE) && !summoned
-        && (YOU_KILL(killer) || pet_kill))
-    {
-        makhleb_crucible_kill(mons);
-    }
-
     bool did_death_message = false;
 
     // We do some of these BEFORE checking for explosions from inner flame,
@@ -2456,37 +2589,6 @@ item_def* monster_die(monster& mons, killer_type killer,
     bool anon = (killer_index == ANON_FRIENDLY_MONSTER);
     const mon_holy_type targ_holy = mons.holiness();
 
-    // Adjust fugue of the fallen bonus. This includes both kills by you and
-    // also by your allies.
-    if (you.duration[DUR_FUGUE]
-        && ((gives_player_xp
-            && (killer == KILL_YOU || killer == KILL_YOU_MISSILE || pet_kill))
-            || mons.props.exists(KIKU_WRETCH_KEY)))
-    {
-        const int slaying_bonus = you.props[FUGUE_KEY].get_int();
-        // cap at +7 slay (at which point you do bonus negative energy damage
-        // around targets hit)
-        if (slaying_bonus < FUGUE_MAX_STACKS)
-        {
-            you.props[FUGUE_KEY] = slaying_bonus + 1;
-
-            // Give a message for hitting max stacks
-            if (slaying_bonus + 1 == FUGUE_MAX_STACKS)
-                mpr("The wailing of the fallen reaches a fever pitch!");
-        }
-    }
-
-    if (you.has_mutation(MUT_MAKHLEB_MARK_TYRANT)
-        && gives_player_xp
-        && (killer == KILL_YOU || killer == KILL_YOU_MISSILE)
-        && !one_chance_in(3))
-    {
-        makhleb_tyrant_buff();
-    }
-
-    // Apply unrand effects.
-    unrand_death_effects(&mons, killer);
-
     switch (killer)
     {
         case KILL_YOU:          // You kill in combat.
@@ -2535,59 +2637,6 @@ item_def* monster_die(monster& mons, killer_type killer,
 
             _fire_kill_conducts(mons, killer, killer_index, gives_player_xp);
 
-            int hp_heal = 0, mp_heal = 0;
-            // Chance scales from 30% at 1* to 80% at 6*
-            const bool can_divine_heal =
-                (gives_player_xp
-                    || you_worship(GOD_MAKHLEB)
-                        && player_in_branch(BRANCH_CRUCIBLE)
-                        && mons_class_gives_xp(mons.type)
-                        && !summoned
-                        && !mons.friendly())
-                && !player_under_penance()
-                && (x_chance_in_y(50 * (min(piety_breakpoint(5), (int)you.piety) - 30)
-                                 / (piety_breakpoint(5) - piety_breakpoint(0)) + 30, 100)
-                    || mons.props.exists(MAKHLEB_BLOODRITE_KILL_KEY));
-
-            if (can_divine_heal && have_passive(passive_t::restore_hp))
-            {
-                hp_heal += (1 + mons.get_experience_level()) / 2
-                        + random2(mons.get_experience_level() / 2);
-
-                if (you.form == transformation::slaughter)
-                    hp_heal *= 2;
-            }
-            if (can_divine_heal
-                && have_passive(passive_t::restore_hp_mp_vs_evil)
-                && mons.evil())
-            {
-                hp_heal += random2(1 + 2 * mons.get_experience_level());
-                mp_heal += random2(2 + mons.get_experience_level() / 3);
-            }
-            if (can_divine_heal && have_passive(passive_t::mp_on_kill))
-                mp_heal += 1 + random2(mons.get_experience_level() / 2);
-
-            if (gives_player_xp
-                && you.has_mutation(MUT_DEVOUR_ON_KILL)
-                && mons.holiness() & (MH_NATURAL | MH_PLANT)
-                && coinflip())
-            {
-                hp_heal += 1 + random2avg(1 + you.experience_level, 3);
-            }
-
-            if (hp_heal && you.hp < you.hp_max
-                && !you.duration[DUR_DEATHS_DOOR])
-            {
-                canned_msg(MSG_GAIN_HEALTH);
-                inc_hp(hp_heal);
-            }
-
-            if (mp_heal && you.magic_points < you.max_magic_points)
-            {
-                canned_msg(MSG_GAIN_MAGIC);
-                inc_mp(mp_heal);
-            }
-
             if (gives_player_xp && you_worship(GOD_RU) && you.piety < 200
                 && one_chance_in(2))
             {
@@ -2597,20 +2646,6 @@ item_def* monster_die(monster& mons, killer_type killer,
                 you.props[RU_SACRIFICE_PROGRESS_KEY] = current_progress + 1;
             }
 
-            // Randomly bless a follower.
-            if (gives_player_xp
-                && !mons_is_object(mons.type)
-                && _god_will_bless_follower(&mons))
-            {
-                bless_follower();
-            }
-
-            if (gives_player_xp
-                && !mons_is_object(mons.type)
-                && you.wearing_ego(EQ_ALL_ARMOUR, SPARM_MAYHEM))
-            {
-                _orb_of_mayhem(you, mons);
-            }
             break;
         }
 
@@ -2631,16 +2666,6 @@ item_def* monster_die(monster& mons, killer_type killer,
                 break;
 
             _fire_kill_conducts(mons, killer, killer_index, gives_player_xp);
-
-            // Trying to prevent summoning abuse here, so we're trying to
-            // prevent summoned creatures from being done_good kills. Only
-            // affects creatures which were friendly when summoned.
-            if (!gives_player_xp
-                || !pet_kill
-                || !anon && invalid_monster_index(killer_index))
-            {
-                break;
-            }
 
             monster* killer_mon = nullptr;
             if (!anon)
@@ -2933,6 +2958,10 @@ item_def* monster_die(monster& mons, killer_type killer,
                 mummy_curse_power(mons.type));
     }
 
+    // Activate various on-kill effects for the player (like divine healing,
+    // Powered by Death, berserk extension, etc.)
+    _player_on_kill_effects(mons, killer, gives_player_xp, pet_kill);
+
     if (mons.has_ench(ENCH_RIMEBLIGHT) && !was_banished && !mons_reset)
     {
         // Potentially infect everyone around the dead monster
@@ -3030,29 +3059,6 @@ item_def* monster_die(monster& mons, killer_type killer,
     const unsigned int player_xp = gives_player_xp
         ? _calc_player_experience(&mons) : 0;
 
-    // Player Powered by Death
-    if (gives_player_xp && you.get_mutation_level(MUT_POWERED_BY_DEATH)
-        && (killer == KILL_YOU
-            || killer == KILL_YOU_MISSILE
-            || killer == KILL_YOU_CONF
-            || pet_kill))
-    {
-        // Enable the status
-        reset_powered_by_death_duration();
-
-        // Maybe increase strength. The chance decreases with number
-        // of existing stacks.
-        const int pbd_level = you.get_mutation_level(MUT_POWERED_BY_DEATH);
-        const int pbd_str = you.props[POWERED_BY_DEATH_KEY].get_int();
-        if (x_chance_in_y(10 - pbd_str, 10))
-        {
-            const int pbd_inc = random2(1 + pbd_level);
-            you.props[POWERED_BY_DEATH_KEY] = pbd_str + pbd_inc;
-            dprf("Powered by Death strength +%d=%d", pbd_inc,
-                 pbd_str + pbd_inc);
-        }
-    }
-
     if (!crawl_state.game_is_arena() && leaves_corpse && !in_transit)
         you.kills.record_kill(&mons, killer, pet_kill);
 
@@ -3078,9 +3084,6 @@ item_def* monster_die(monster& mons, killer_type killer,
             }
         }
     }
-
-    if (mons.has_ench(ENCH_VENGEANCE_TARGET))
-        beogh_progress_vengeance();
 
     mons_remove_from_grid(mons);
     fire_monster_death_event(&mons, killer, false);
@@ -3255,6 +3258,9 @@ void monster_cleanup(monster* mons)
 
     if (mons->has_ench(ENCH_AWAKEN_VINES))
         unawaken_vines(mons, false);
+
+    if (mons->has_ench(ENCH_VENGEANCE_TARGET))
+        beogh_progress_vengeance();
 
     if (mons->type == MONS_BATTLESPHERE)
         end_battlesphere(mons, true);
