@@ -75,7 +75,7 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
 
 int dismiss_monsters(string pattern);
 
-string summoned_poof_msg(const monster* mons);
+string summoned_poof_msg(const monster& mons);
 
 bool mons_is_mons_class(const monster* mons, monster_type type);
 void pikel_band_neutralise();
