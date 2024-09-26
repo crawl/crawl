@@ -34,6 +34,8 @@ class monster;
 #define YOU_KILL(x) ((x) == KILL_YOU || (x) == KILL_YOU_MISSILE \
                      || (x) == KILL_YOU_CONF)
 #define MON_KILL(x) ((x) == KILL_MON || (x) == KILL_MON_MISSILE)
+#define RESET_KILL(x) ((x) == KILL_RESET || (x) == KILL_RESET_KEEP_ITEMS \
+                       || (x) == KILL_TENTACLE_CLEANUP)
 
 #define SAME_ATTITUDE(x) ((x)->friendly()       ? BEH_FRIENDLY :   \
                           (x)->good_neutral()   ? BEH_GOOD_NEUTRAL : \
@@ -43,10 +45,10 @@ class monster;
 struct bolt;
 
 item_def* monster_die(monster& mons, const actor *killer, bool silent = false,
-                      bool fake = false);
+                      bool mount_death = false);
 
 item_def* monster_die(monster& mons, killer_type killer,
-                      int killer_index, bool silent = false, bool fake = false);
+                      int killer_index, bool silent = false, bool mount_death = false);
 
 item_def* mounted_kill(monster* daddy, monster_type mc, killer_type killer,
                        int killer_index);

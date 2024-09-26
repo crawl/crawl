@@ -137,21 +137,6 @@ bool canine_familiar_is_alive()
     return find_canine_familiar() != nullptr;
 }
 
-void check_canid_farewell(const monster &dog, bool deadish)
-{
-    if (&dog != find_canine_familiar())
-        return;
-
-    you.props.erase(CANINE_FAMILIAR_MID);
-
-    if (deadish)
-    {
-        // Prevent you from resummoning it for a little while.
-        you.duration[DUR_CANINE_FAMILIAR_DEAD] = random_range(13, 21)
-                                                 * BASELINE_DELAY;
-    }
-}
-
 spret cast_call_canine_familiar(int pow, bool fail)
 {
     // Many parts of this spell behave differently if our familiar has already
