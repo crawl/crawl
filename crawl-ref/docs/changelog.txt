@@ -1,3 +1,12 @@
+Stone Soup 0.32.1 (20240925)
+----------------------------
+
+Bugfix release
+--------------
+* Fix blockable beam attacks from monster spells being blocked 100% of the
+  time.
+* 40 other bug fixes, interface improvements, and documentation updates.
+
 Stone Soup 0.32.0 (20240829)
 ----------------------------
 
