@@ -327,6 +327,10 @@ bool explode_monster(monster* mons, killer_type killer, bool pet_kill)
     actor* agent = nullptr;
     bool inner_flame = false;
 
+    string poof_msg = "";
+    if (mons->is_abjurable())
+        poof_msg = "The " + mons->name(DESC_PLAIN) + " residue " + summoned_poof_msg(*mons) + ".";
+
     auto it = explosions.find(type);
     if (it != explosions.end())
     {
@@ -412,7 +416,7 @@ bool explode_monster(monster* mons, killer_type killer, bool pet_kill)
     {
         const auto typ = inner_flame ? EXPLOSION_FINEFF_INNER_FLAME
                                      : EXPLOSION_FINEFF_GENERIC;
-        explosion_fineff::schedule(beam, boom_msg, sanct_msg, typ, agent);
+        explosion_fineff::schedule(beam, boom_msg, sanct_msg, typ, agent, poof_msg);
     }
 
     // Monster died in explosion, so don't re-attach it to the grid.

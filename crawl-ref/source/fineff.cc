@@ -633,6 +633,9 @@ void explosion_fineff::fire()
                                         actor_to_death_source(beam.agent()));
         }
     }
+
+    if (you.see_cell(beam.target) && !poof_message.empty())
+        mpr(poof_message.c_str());
 }
 
 void delayed_action_fineff::fire()

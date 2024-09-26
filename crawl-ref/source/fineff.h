@@ -276,17 +276,19 @@ public:
     void fire() override;
 
     static void schedule(bolt &beam, string boom, string sanct,
-                         explosion_fineff_type typ, const actor* flame_agent)
+                         explosion_fineff_type typ, const actor* flame_agent,
+                         string poof)
     {
         final_effect::schedule(new explosion_fineff(beam, boom, sanct,
-                                                    typ, flame_agent));
+                                                    typ, flame_agent, poof));
     }
 protected:
     explosion_fineff(const bolt &beem, string boom, string sanct,
-                     explosion_fineff_type _typ, const actor* agent)
+                     explosion_fineff_type _typ, const actor* agent,
+                     string poof)
         : final_effect(0, 0, coord_def()), beam(beem),
           boom_message(boom), sanctuary_message(sanct),
-          typ(_typ), flame_agent(agent)
+          typ(_typ), flame_agent(agent), poof_message(poof)
     {
     }
     bolt beam;
@@ -294,6 +296,7 @@ protected:
     string sanctuary_message;
     explosion_fineff_type typ;
     const actor* flame_agent;
+    string poof_message;
 };
 
 // A fineff that triggers a daction; otherwise the daction
