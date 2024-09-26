@@ -3000,10 +3000,12 @@ item_def* monster_die(monster& mons, killer_type killer,
         }
     }
 
-    if (!silent && !mons_reset)
+    // Poof messages for summoned things exploded are stored in explosion_fineff
+    // to print later.
+    if (!silent && !mons_reset && !exploded)
         _print_summon_poof_message(mons, real_death);
 
-    if (!was_banished && !mons_reset)
+    if (!was_banished && !mons_reset && !exploded)
         _monster_die_cloud(mons, real_death);
 
     item_def* corpse = nullptr;
