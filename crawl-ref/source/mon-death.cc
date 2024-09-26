@@ -3446,7 +3446,7 @@ int dismiss_monsters(string pattern)
     return ndismissed;
 }
 
-string summoned_poof_msg(const monster* mons, bool plural)
+string summoned_poof_msg(const monster* mons)
 {
     int  summon_type = 0;
     bool valid_mon   = false;
@@ -3457,31 +3457,31 @@ string summoned_poof_msg(const monster* mons, bool plural)
         valid_mon = true;
     }
 
-    string msg      = "disappear%s in a puff of smoke";
+    string msg      = "disappears in a puff of smoke";
     bool   no_chaos = false;
 
     switch (summon_type)
     {
     case SPELL_SHADOW_CREATURES:
     case MON_SUMM_SCROLL:
-        msg      = "dissolve%s into shadows";
+        msg      = "dissolves into shadows";
         no_chaos = true;
         break;
 
     case MON_SUMM_BUTTERFLIES:
-        msg      = "disappear%s in a burst of colours";
+        msg      = "disappears in a burst of colours";
         no_chaos = true;
         break;
 
     case MON_SUMM_CHAOS:
-        msg = "degenerate%s into a cloud of primal chaos";
+        msg = "degenerates into a cloud of primal chaos";
         break;
 
     case MON_SUMM_WRATH:
     case MON_SUMM_AID:
         if (valid_mon && is_good_god(mons->god))
         {
-            msg      = "dissolve%s into sparkling lights";
+            msg      = "dissolves into sparkling lights";
             no_chaos = true;
         }
         else if (valid_mon && mons->god == GOD_YREDELEMNUL)
@@ -3490,7 +3490,7 @@ string summoned_poof_msg(const monster* mons, bool plural)
 
     case SPELL_SPECTRAL_CLOUD:
     case SPELL_CALL_LOST_SOULS:
-        msg = "fade%s away";
+        msg = "fades away";
         break;
 
     case SPELL_STICKS_TO_SNAKES:
@@ -3507,43 +3507,33 @@ string summoned_poof_msg(const monster* mons, bool plural)
         if (mons->god == GOD_XOM && !no_chaos && one_chance_in(10)
             || mons->type == MONS_CHAOS_SPAWN)
         {
-            msg = "degenerate%s into a cloud of primal chaos";
+            msg = "degenerates into a cloud of primal chaos";
         }
 
         if (mons->is_holy()
             && summon_type != SPELL_SHADOW_CREATURES
             && summon_type != MON_SUMM_CHAOS)
         {
-            msg = "dissolve%s into sparkling lights";
+            msg = "dissolves into sparkling lights";
         }
 
         if (mons_is_slime(*mons)
             && mons->god == GOD_JIYVA)
         {
-            msg = "dissolve%s into a puddle of slime";
+            msg = "dissolves into a puddle of slime";
         }
 
         if (mons->type == MONS_DROWNED_SOUL)
-            msg = "return%s to the deep";
+            msg = "returns to the deep";
 
         if (mons->has_ench(ENCH_PHANTOM_MIRROR))
-            msg = "shimmer%s and vanish" + string(plural ? "" : "es"); // Ugh
+            msg = "shimmers and vanish";
 
         if (mons->type == MONS_LIVING_SPELL)
             msg = "disperses";
     }
 
-    // Conjugate.
-    msg = make_stringf(msg.c_str(), plural ? "" : "s");
-
     return msg;
-}
-
-string summoned_poof_msg(const monster* mons, const item_def &item)
-{
-    ASSERT(item.flags & ISFLAG_SUMMONED);
-
-    return summoned_poof_msg(mons, item.quantity > 1);
 }
 
 /**
