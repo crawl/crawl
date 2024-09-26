@@ -1208,30 +1208,17 @@ static void _pharaoh_ant_bind_souls(monster *mons)
     }
 }
 
-static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
-                               bool summoned)
+static void _print_summon_poof_message(const monster& mons, bool corpse = false)
 {
-    // Don't bother placing a cloud for living spells.
-    if (mons->type == MONS_LIVING_SPELL || mons->type == MONS_SOUL_WISP)
-        return;
-
-    // Chaos spawn always leave behind a cloud of chaos.
-    if (mons->type == MONS_CHAOS_SPAWN)
-    {
-        summoned = true;
-        corpse   = false;
-    }
-
-    if (!summoned)
-        return;
-
-    if (cell_is_solid(mons->pos()))
+    // XXX: Chaos spawn leave a chaos cloud in this manner, whether they're
+    //      summoned or not.
+    if (!mons.is_abjurable() && mons.type != MONS_CHAOS_SPAWN)
         return;
 
     string prefix = " ";
     bool need_possessive = false;
 
-    if (corpse && mons_class_can_leave_corpse(mons_species(mons->type)))
+    if (corpse && mons_class_can_leave_corpse(mons_species(mons.type)))
     {
         prefix = " corpse ";
         need_possessive = true;
@@ -1239,38 +1226,57 @@ static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
 
     string msg = summoned_poof_msg(mons) + "!";
 
+    simple_monster_message(mons, (prefix + msg).c_str(), need_possessive);
+}
+
+static void _monster_die_cloud(const monster& mons, bool real_death)
+{
+    if (cell_is_solid(mons.pos()))
+        return;
+
+    if (real_death)
+    {
+        switch (mons.type)
+        {
+            case MONS_SIMULACRUM:
+                place_cloud(CLOUD_COLD, mons.pos(), 2 + random2(4), &mons);
+                return;
+
+            case MONS_PILE_OF_DEBRIS:
+                place_cloud(CLOUD_DUST, mons.pos(), 2 + random2(4), &mons);
+                return;
+
+            case MONS_FIRE_VORTEX:
+                place_cloud(CLOUD_FIRE, mons.pos(), 2 + random2(4), &mons);
+                return;
+
+            case MONS_BATTLESPHERE:
+                place_cloud(CLOUD_MAGIC_TRAIL, mons.pos(), 3 + random2(3), &mons);
+                return;
+
+            default:
+                break;
+        }
+    }
+
+    if (!real_death && !mons.is_abjurable())
+        return;
+
+    // After this point, we're placing clouds for vanishing summons
+
+    // Don't bother placing a cloud for living spells.
+    if (mons.type == MONS_LIVING_SPELL)
+        return;
+
     cloud_type cloud = CLOUD_NONE;
+    string msg = summoned_poof_msg(mons);
     if (msg.find("smoke") != string::npos)
         cloud = random_smoke_type();
     else if (msg.find("chaos") != string::npos)
         cloud = CLOUD_CHAOS;
-    else if (msg.find("armoury") != string::npos)
-    {
-        cloud = CLOUD_NONE;
-
-        // XXX: This doesn't feel like quite the right place for this code, but
-        //      it *is* about the visual after-effects of a summon going poof...
-        if (monster* armoury = monster_by_mid(mons->summoner))
-        {
-            if (!silent && armoury->alive()
-                && armoury->see_cell_no_trans(mons->pos()))
-            {
-                bolt visual;
-                visual.source = mons->pos();
-                visual.target = armoury->pos();
-                visual.flavour = BEAM_VISUAL;
-                visual.range = LOS_RADIUS;
-                visual.aimed_at_spot = true;
-                visual.fire();
-            }
-        }
-    }
-
-    if (!silent)
-        simple_monster_message(*mons, (prefix + msg).c_str(), need_possessive);
 
     if (cloud != CLOUD_NONE)
-        place_cloud(cloud, mons->pos(), 1 + random2(3), mons);
+        place_cloud(cloud, mons.pos(), 1 + random2(3), &mons);
 }
 
 static string _killer_type_name(killer_type killer)
@@ -2068,6 +2074,8 @@ item_def* monster_die(monster& mons, killer_type killer,
     bool leaves_corpse = !summoned && !timeout
                             && !mons_reset
                             && !mons_is_tentacle_segment(mons.type);
+    const bool real_death    = !(timeout && mons.is_abjurable())
+                               && !mons_reset && !was_banished;
     // Award experience for suicide if the suicide was caused by the
     // player.
     if (MON_KILL(killer) && monster_killed == killer_index)
@@ -2168,15 +2176,6 @@ item_def* monster_die(monster& mons, killer_type killer,
     {
         _protean_explosion(&mons);
         silent = true;
-    }
-    else if (mons.type == MONS_BATTLESPHERE)
-    {
-        if (!mons_reset && !was_banished
-            && !cell_is_solid(mons.pos()))
-        {
-            place_cloud(CLOUD_MAGIC_TRAIL, mons.pos(), 3 + random2(3), &mons);
-        }
-        end_battlesphere(&mons, true);
     }
     else if (mons.type == MONS_SPECTRAL_WEAPON)
     {
@@ -2287,30 +2286,6 @@ item_def* monster_die(monster& mons, killer_type killer,
             silent = true;
         }
     }
-    else if (mons.type == MONS_FIRE_VORTEX
-             || mons.type == MONS_SPATIAL_VORTEX
-             || mons.type == MONS_TWISTER
-             || (mons.type == MONS_FOXFIRE && mons.steps_remaining == 0))
-    {
-        if (!silent && !mons_reset && !was_banished)
-        {
-            simple_monster_message(mons, " dissipates!",
-                                   false, MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
-            silent = true;
-        }
-
-        if (mons.type == MONS_FIRE_VORTEX && !mons_reset
-            && !was_banished && !cell_is_solid(mons.pos()))
-        {
-            place_cloud(CLOUD_FIRE, mons.pos(), 2 + random2(4), &mons);
-        }
-    }
-    else if (mons.type == MONS_FOXFIRE)
-    {
-        // Foxfires are unkillable, they either dissipate by timing out
-        // or hit something.
-        silent = true;
-    }
     else if (mons.type == MONS_SIMULACRUM)
     {
         if (!silent && !mons_reset && !was_banished)
@@ -2320,20 +2295,6 @@ item_def* monster_die(monster& mons, killer_type killer,
             silent = true;
             did_death_message = true;
         }
-
-        if (!mons_reset && !was_banished
-            && !cell_is_solid(mons.pos()))
-        {
-            place_cloud(CLOUD_COLD, mons.pos(), 2 + random2(4), &mons);
-        }
-    }
-    else if (mons.type == MONS_PILE_OF_DEBRIS)
-    {
-        if (!mons_reset && !was_banished
-            && !cell_is_solid(mons.pos()))
-        {
-            place_cloud(CLOUD_DUST, mons.pos(), 2 + random2(4), &mons);
-        }
     }
     else if (mons.type == MONS_DANCING_WEAPON)
     {
@@ -2342,8 +2303,29 @@ item_def* monster_die(monster& mons, killer_type killer,
 
         bool summoned_it = mons.is_abjurable();
 
+        if (mons.is_summoned_by(SPELL_FLASHING_BALESTRA) && !silent && !was_banished)
+        {
+            if (monster* armoury = monster_by_mid(mons.summoner))
+            {
+                simple_monster_message(mons, " returns to the armoury!",
+                                        false, MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+                silent = true;
+                did_death_message = true;
+
+                if (armoury->alive() && armoury->see_cell_no_trans(mons.pos()))
+                {
+                    bolt visual;
+                    visual.source = mons.pos();
+                    visual.target = armoury->pos();
+                    visual.flavour = BEAM_VISUAL;
+                    visual.range = LOS_RADIUS;
+                    visual.aimed_at_spot = true;
+                    visual.fire();
+                }
+            }
+        }
         // Let summoned dancing weapons be handled like normal summoned creatures.
-        if (!was_banished && !summoned_it && !silent && !hard_reset)
+        else if (!was_banished && !summoned_it && !silent && !hard_reset)
         {
             // Under Gozag, permanent dancing weapons get turned to gold.
             // Exception: Tukima'd weapons; we don't want to trickily punish Gozagites
@@ -2402,11 +2384,6 @@ item_def* monster_die(monster& mons, killer_type killer,
             }
             silent = true;
         }
-    }
-    else if (mons.type == MONS_BRIAR_PATCH)
-    {
-        if (timeout && !silent)
-            simple_monster_message(mons, " crumbles away.");
     }
     else if (mons.type == MONS_DROWNED_SOUL)
     {
@@ -2703,8 +2680,6 @@ item_def* monster_die(monster& mons, killer_type killer,
                 if (!mons.is_summoned())
                     drop_items = false;
                 break;
-
-
             }
 
             {
@@ -2727,11 +2702,13 @@ item_def* monster_die(monster& mons, killer_type killer,
             break;
 
         case KILL_TIMEOUT:
-            if (!death_message)
+            if (!death_message || mons.is_abjurable())
                 break;
 
-            // Poof messages for abjurable summons (which happen regardless of
-            // how the summon was killed) are handled later, in _monster_die_cloud
+            // Only print messages here for non-abjurable monsters expiring by
+            // timeout. Poof messages for abjurable summons (which happen
+            // regardless of how the summon was killed) are handled later, in
+            // _print_summon_poof_message
 
             // ratskin cloak
             if (mons_genus(mons.type) == MONS_RAT)
@@ -2739,8 +2716,9 @@ item_def* monster_die(monster& mons, killer_type killer,
                 simple_monster_message(mons, " returns to the shadows"
                                                 " of the Dungeon!");
             }
-            // Death Channel
-            else if (mons.type == MONS_SPECTRAL_THING)
+            // Death Channel / Soul Splinter
+            else if (mons.type == MONS_SPECTRAL_THING
+                     || mons.type == MONS_SOUL_WISP)
                 simple_monster_message(mons, " fades into mist!");
             // Animate Dead/Infestation
             else if (mons.type == MONS_ZOMBIE
@@ -2749,17 +2727,27 @@ item_def* monster_die(monster& mons, killer_type killer,
             {
                 simple_monster_message(mons, " crumbles into dust!");
             }
-            else if (mons.type == MONS_SOUL_WISP)
-                simple_monster_message(mons, " fades into mist!");
-            else if (mons.type == MONS_HOARFROST_CANNON)
-                simple_monster_message(mons, " melts away.");
             else if (mons.type == MONS_PILE_OF_DEBRIS)
                 simple_monster_message(mons, " collapses into dust.");
-            else if (mons.type == MONS_PILLAR_OF_SALT || mons.type == MONS_WITHERED_PLANT)
+            else if (mons.type == MONS_PILLAR_OF_SALT
+                    || mons.type == MONS_WITHERED_PLANT
+                    || mons.type == MONS_BRIAR_PATCH)
+            {
                 simple_monster_message(mons, " crumbles away.");
-            else if (mons.type == MONS_BLOCK_OF_ICE)
+            }
+            else if (mons.type == MONS_HOARFROST_CANNON
+                     || mons.type == MONS_BLOCK_OF_ICE)
+            {
                 simple_monster_message(mons, " melts away.");
-            else if (!mons.is_abjurable() && you.can_see(mons))
+            }
+            else if (mons.type == MONS_FIRE_VORTEX
+                     || mons.type == MONS_SPATIAL_VORTEX
+                     || mons.type == MONS_TWISTER
+                     || mons.type == MONS_FOXFIRE)
+            {
+                simple_monster_message(mons, " dissipates.");
+            }
+            else
             {
                 if (mons.props.exists(KIKU_WRETCH_KEY))
                     mprf("A nearby %s perishes wretchedly.", mons.name(DESC_PLAIN, false).c_str());
@@ -3012,11 +3000,11 @@ item_def* monster_die(monster& mons, killer_type killer,
         }
     }
 
-    if (!was_banished)
-    {
-        _monster_die_cloud(&mons, !timeout && !mons_reset,
-                           silent, summoned && mons.is_abjurable());
-    }
+    if (!silent && !mons_reset)
+        _print_summon_poof_message(mons, real_death);
+
+    if (!was_banished && !mons_reset)
+        _monster_die_cloud(mons, real_death);
 
     item_def* corpse = nullptr;
     if (leaves_corpse && !was_banished && !spectralised && !corpse_consumed)
@@ -3266,6 +3254,9 @@ void monster_cleanup(monster* mons)
     if (mons->has_ench(ENCH_AWAKEN_VINES))
         unawaken_vines(mons, false);
 
+    if (mons->type == MONS_BATTLESPHERE)
+        end_battlesphere(mons, true);
+
     // Monsters haloes should be removed when they die.
     if (mons->halo_radius()
         || mons->umbra_radius()
@@ -3446,31 +3437,35 @@ int dismiss_monsters(string pattern)
     return ndismissed;
 }
 
-string summoned_poof_msg(const monster* mons)
+// Returns a special message for an abjurable summon disappearing. This message
+// is printed when the monster expires due to timeout or, additionally, after
+// the normal death message when it is destroyed directly.
+//
+// For special death messages for non-abjurable summons (printed *only* on
+// timeout), see the block under KILL_TIMEOUT in monster_die().
+string summoned_poof_msg(const monster& mons)
 {
-    int  summon_type = 0;
-    bool valid_mon   = false;
-    if (mons != nullptr && !invalid_monster(mons))
-    {
-        if (mons->is_summoned())
-            summon_type = mons->get_ench(ENCH_SUMMON).degree;
-        valid_mon = true;
-    }
+    if (invalid_monster(&mons))
+        return "";
 
-    string msg      = "disappears in a puff of smoke";
-    bool   no_chaos = false;
+    // XXX: chaos spawn death clouds use these messages, whether they were
+    // summoned or not.
+    if (!mons.is_abjurable() && mons.type != MONS_CHAOS_SPAWN)
+        return "";
+
+    int summon_type = mons.get_ench(ENCH_SUMMON).degree;
+
+    string msg = "disappears in a puff of smoke";
 
     switch (summon_type)
     {
     case SPELL_SHADOW_CREATURES:
     case MON_SUMM_SCROLL:
-        msg      = "dissolves into shadows";
-        no_chaos = true;
+        msg = "dissolves into shadows";
         break;
 
     case MON_SUMM_BUTTERFLIES:
-        msg      = "disappears in a burst of colours";
-        no_chaos = true;
+        msg = "disappears in a burst of colours";
         break;
 
     case MON_SUMM_CHAOS:
@@ -3479,13 +3474,10 @@ string summoned_poof_msg(const monster* mons)
 
     case MON_SUMM_WRATH:
     case MON_SUMM_AID:
-        if (valid_mon && is_good_god(mons->god))
-        {
-            msg      = "dissolves into sparkling lights";
-            no_chaos = true;
-        }
-        else if (valid_mon && mons->god == GOD_YREDELEMNUL)
-            msg      = "returns to the grave";
+        if (is_good_god(mons.god))
+            msg = "dissolves into sparkling lights";
+        else if (mons.god == GOD_YREDELEMNUL)
+            msg = "returns to the grave";
         break;
 
     case SPELL_SPECTRAL_CLOUD:
@@ -3496,42 +3488,35 @@ string summoned_poof_msg(const monster* mons)
     case SPELL_STICKS_TO_SNAKES:
         msg = "turns back into a lifeless stick";
         break;
-
-    case SPELL_FLASHING_BALESTRA:
-        msg = "returns to the armoury";
-        break;
     }
 
-    if (valid_mon)
+    if (mons.god == GOD_XOM && one_chance_in(10)
+        || mons.type == MONS_CHAOS_SPAWN)
     {
-        if (mons->god == GOD_XOM && !no_chaos && one_chance_in(10)
-            || mons->type == MONS_CHAOS_SPAWN)
-        {
-            msg = "degenerates into a cloud of primal chaos";
-        }
-
-        if (mons->is_holy()
-            && summon_type != SPELL_SHADOW_CREATURES
-            && summon_type != MON_SUMM_CHAOS)
-        {
-            msg = "dissolves into sparkling lights";
-        }
-
-        if (mons_is_slime(*mons)
-            && mons->god == GOD_JIYVA)
-        {
-            msg = "dissolves into a puddle of slime";
-        }
-
-        if (mons->type == MONS_DROWNED_SOUL)
-            msg = "returns to the deep";
-
-        if (mons->has_ench(ENCH_PHANTOM_MIRROR))
-            msg = "shimmers and vanish";
-
-        if (mons->type == MONS_LIVING_SPELL)
-            msg = "disperses";
+        msg = "degenerates into a cloud of primal chaos";
     }
+
+    if (mons.is_holy()
+        && summon_type != SPELL_SHADOW_CREATURES
+        && summon_type != MON_SUMM_CHAOS)
+    {
+        msg = "dissolves into sparkling lights";
+    }
+
+    if (mons_is_slime(mons)
+        && mons.god == GOD_JIYVA)
+    {
+        msg = "dissolves into a puddle of slime";
+    }
+
+    if (mons.type == MONS_DROWNED_SOUL)
+        msg = "returns to the deep";
+
+    if (mons.has_ench(ENCH_PHANTOM_MIRROR))
+        msg = "shimmers and vanish";
+
+    if (mons.type == MONS_LIVING_SPELL)
+        msg = "disperses";
 
     return msg;
 }

@@ -2704,7 +2704,7 @@ void bolt::affect_endpoint()
                                             SAME_ATTITUDE(agent(true)->as_monster()),
                                             spot, agent(true)->as_monster()->foe,
                                             MG_FORCE_PLACE)
-                            .set_summoned(agent(true), SPELL_FLASHING_BALESTRA, summ_dur(1)));
+                            .set_summoned(agent(true), SPELL_FLASHING_BALESTRA, summ_dur(1), false));
 
             if (blade)
                 blade->add_ench(ENCH_MIGHT);
