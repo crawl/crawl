@@ -1492,7 +1492,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_HELLFIRE_MORTAR:
-        if (temp && hellfire_mortar_active(you))
+        if (temp && count_summons(&you, SPELL_HELLFIRE_MORTAR) > 0)
             return "you already have an active mortar!";
         break;
 
