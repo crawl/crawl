@@ -70,14 +70,6 @@ msc += $warning:Beware. you cannot shaft yourself on this level
 #
 msc += $boring:You start (resting|waiting)
 msc += $boring:Unknown command
-msc += $boring:disappears? in a (puff of smoke|burst of colours)
-msc += $boring:dissolves? into (sparkling lights|shadows)
-msc += $boring:(crumbles|melts) away
-msc += $boring:fades into mist
-msc += $boring:returns to the deep
-msc += $boring:shimmers and vanishes
-msc += $boring:turns back into a lifeless stick
-msc += $boring:returns to where it belongs
 msc += $boring:blood churns to no real effect
 #
 msc += $boring:plain:miss(es)? (the|you|it)
