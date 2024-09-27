@@ -1330,7 +1330,7 @@ TITLEIMGS = denzi_dragon denzi_kitchen_duty denzi_summoner \
             kaonedong_ignis_the_dying_flame kaonedong_menkaure_prince_of_dust \
             philosopheropposite_palentonga_paladin gompami_kohu_xbow \
             micah_c_ereshkigal SpinningBird_djinn_sears_gnolls \
-			benadryl_antaeus king7artist_eustachio
+			benadryl_antaeus king7artist_eustachio benadryl_oni
 
 STATICFILES = $(TILEIMAGEFILES:%=webserver/game_data/static/%.png) \
               webserver/static/stone_soup_icon-32x32.png \
