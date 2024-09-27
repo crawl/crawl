@@ -2194,6 +2194,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_CACTUS,            { 1, 1 } },
     { SPELL_SOUL_SPLINTER,            { 1, 1 } },
     { SPELL_SIMULACRUM,               { 5, 5 } },
+    { SPELL_HELLFIRE_MORTAR,          { 1, 1 } },
     // Monster-only spells
     { SPELL_SHADOW_CREATURES,         { 0, 4 } },
     { SPELL_SUMMON_SPIDERS,           { 0, 5 } },
@@ -3168,26 +3169,6 @@ spret cast_hellfire_mortar(const actor& agent, bolt& beam, int pow, bool fail)
         "chthonic artillery!", agent.name(DESC_ITS).c_str());
 
     return spret::success;
-}
-
-bool hellfire_mortar_active(const actor& agent)
-{
-    // XXX: Really hate to put marionette-specific code in individual spells,
-    //      but this one doesn't have an obvious way to avoid it yet.
-    //
-    //      I'd really like to generalize 'count_summons' to count all things
-    //      with a given summoner, rather than just abjurable things with a
-    //      given summoner.
-    const mid_t agent_mid = (agent.real_attitude() == ATT_MARIONETTE
-                                ? MID_PLAYER : agent.mid);
-
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (mi->type == MONS_HELLFIRE_MORTAR && mi->summoner == agent_mid)
-            return true;
-    }
-
-    return false;
 }
 
 bool make_soul_wisp(const actor& agent, actor& victim)

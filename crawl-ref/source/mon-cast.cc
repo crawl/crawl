@@ -8951,9 +8951,6 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
 
     case SPELL_HELLFIRE_MORTAR:
     {
-        if (hellfire_mortar_active(*mon))
-            return ai_action::impossible();
-
         return ai_action::good_or_impossible(
             _mons_cast_hellfire_mortar(*mon, *mon->get_foe(), 100, true));
     }
