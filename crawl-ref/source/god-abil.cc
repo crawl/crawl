@@ -2024,7 +2024,7 @@ static coord_def _find_displace_space(const monster* mon, coord_def start_pos)
     coord_def pos = start_pos + coord_def(random_range(-30, 30), random_range(-30, 30));
 
     int attempts = 0;
-    while ((!in_bounds(pos) || !monster_habitable_grid(mon, env.grid(pos))
+    while ((!in_bounds(pos) || !monster_habitable_grid(mon, pos)
            || you.see_cell_no_trans(pos) || actor_at(pos)) && attempts < 100)
     {
         pos = start_pos + coord_def(random_range(-30, 30), random_range(-30, 30));

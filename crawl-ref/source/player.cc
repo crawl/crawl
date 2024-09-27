@@ -447,7 +447,7 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
     }
 
     // First try: move monster onto your position.
-    bool swap = !monster_at(loc) && monster_habitable_grid(mons, env.grid(loc));
+    bool swap = !monster_at(loc) && monster_habitable_grid(mons, loc);
 
     // Choose an appropriate habitat square at random around the target.
     if (!swap)
@@ -455,7 +455,7 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
         int num_found = 0;
 
         for (adjacent_iterator ai(mons->pos()); ai; ++ai)
-            if (!monster_at(*ai) && monster_habitable_grid(mons, env.grid(*ai))
+            if (!monster_at(*ai) && monster_habitable_grid(mons, *ai)
                 && one_chance_in(++num_found))
             {
                 loc = *ai;

@@ -294,7 +294,7 @@ bool monster::floundering_at(const coord_def p) const
     const dungeon_feature_type grid = env.grid(p);
     return (liquefied(p)
             || (feat_is_water(grid)
-                // Can't use monster_habitable_grid() because that'll return
+                // Can't use monster_habitable_feat() because that'll return
                 // true for non-water monsters in shallow water.
                 && mons_primary_habitat(*this) != HT_WATER
                 // Use real_amphibious to detect giant non-water monsters in
@@ -314,9 +314,9 @@ bool monster::can_pass_through_feat(dungeon_feature_type grid) const
     return mons_class_can_pass(mons_base_type(*this), grid);
 }
 
-bool monster::is_habitable_feat(dungeon_feature_type actual_grid) const
+bool monster::is_habitable_feat(dungeon_feature_type feat) const
 {
-    return monster_habitable_grid(this, actual_grid);
+    return monster_habitable_feat(this, feat);
 }
 
 bool monster::can_drown() const
@@ -4632,7 +4632,7 @@ bool monster::check_set_valid_home(const coord_def &place,
     if (actor_at(place))
         return false;
 
-    if (!monster_habitable_grid(this, env.grid(place)))
+    if (!monster_habitable_grid(this, place))
         return false;
 
     if (!is_trap_safe(place))
@@ -4647,7 +4647,7 @@ bool monster::check_set_valid_home(const coord_def &place,
 
 bool monster::is_location_safe(const coord_def &place)
 {
-    if (!monster_habitable_grid(this, env.grid(place)))
+    if (!monster_habitable_grid(this, place))
         return false;
 
     if (!is_trap_safe(place))
@@ -4710,7 +4710,7 @@ bool monster::find_home_near_place(const coord_def &c)
                 continue;
             dist(*ai - c) = last_dist = dist(p - c) + 1;
 
-            if (!monster_habitable_grid(this, env.grid(*ai)))
+            if (!monster_habitable_grid(this, *ai))
                 continue;
 
             q.push(*ai);
@@ -5376,7 +5376,7 @@ void monster::apply_location_effects(const coord_def &oldpos,
 
     if (alive()
         && (mons_habitat(*this) == HT_WATER || mons_habitat(*this) == HT_LAVA)
-        && !monster_habitable_grid(this, env.grid(pos()))
+        && !monster_habitable_grid(this, pos())
         && type != MONS_HELLFIRE_MORTAR
         && !has_ench(ENCH_AQUATIC_LAND))
     {
@@ -5385,9 +5385,9 @@ void monster::apply_location_effects(const coord_def &oldpos,
 
     if (alive() && has_ench(ENCH_AQUATIC_LAND))
     {
-        if (!monster_habitable_grid(this, env.grid(pos())))
+        if (!monster_habitable_grid(this, pos()))
             simple_monster_message(*this, " flops around on dry land!");
-        else if (!monster_habitable_grid(this, env.grid(oldpos)))
+        else if (!monster_habitable_grid(this, oldpos))
         {
             if (you.can_see(*this))
             {
@@ -5533,8 +5533,8 @@ bool monster::swap_with(monster* other)
         return false;
     }
 
-    if (!monster_habitable_grid(this, env.grid(new_pos))
-        || !monster_habitable_grid(other, env.grid(old_pos)))
+    if (!monster_habitable_grid(this, new_pos)
+        || !monster_habitable_grid(other, old_pos))
     {
         return false;
     }

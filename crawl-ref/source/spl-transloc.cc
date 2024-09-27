@@ -585,7 +585,7 @@ coord_def get_electric_charge_landing_spot(const actor& agent, coord_def target,
         if (grid_distance(ray.pos(), agent.pos()) == dist_to_targ -1)
         {
             if (agent.is_player() ? is_feat_dangerous(env.grid(ray.pos()))
-                                  : !monster_habitable_grid(agent.as_monster(), env.grid(ray.pos())))
+                                  : !monster_habitable_grid(agent.as_monster(), ray.pos()))
             {
                 if (fail_reason)
                 {
@@ -1700,7 +1700,7 @@ spret cast_gravitas(int pow, const coord_def& where, bool fail)
             {
                 const coord_def new_pos = empty[dist][i];
 
-                if (monster_habitable_grid(mon, env.grid(new_pos)))
+                if (monster_habitable_grid(mon, new_pos))
                 {
                     const coord_def old_pos = mon->pos();
                     mon->move_to_pos(new_pos);
@@ -2005,7 +2005,7 @@ vector<coord_def> piledriver_beam_paths(const vector<coord_def> &targets, bool a
             // Check if this is where our movement stops
             if (i > 0
                 && (actor_at(new_pos) && (actual || you.can_see(*actor_at(new_pos)))
-                    || !monster_habitable_grid(targ, env.grid(new_pos))
+                    || !monster_habitable_grid(targ, new_pos)
                     || is_feat_dangerous(env.grid(new_pos - delta))))
             {
                 path.push_back(new_pos);

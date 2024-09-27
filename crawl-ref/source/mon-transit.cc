@@ -403,7 +403,7 @@ static bool _mons_can_follow_player_from(const monster &mons,
         return false;
     }
 
-    if (!monster_habitable_grid(&mons, DNGN_FLOOR))
+    if (!monster_habitable_feat(&mons, DNGN_FLOOR))
         return false;
 
     // Only non-wandering friendly monsters or those actively

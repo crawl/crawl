@@ -165,18 +165,18 @@ static void _initialise_randmons()
     for (int i = 0; i < NUM_HABITATS; ++i)
     {
         set<monster_type> tmp_species;
-        const dungeon_feature_type grid = habitat2grid(habitat_type(i));
+        const dungeon_feature_type feat = habitat2grid(habitat_type(i));
 
         for (monster_type mt = MONS_0; mt < NUM_MONSTERS; ++mt)
         {
             if (invalid_monster_type(mt))
                 continue;
 
-            if (monster_habitable_grid(mt, grid))
+            if (monster_habitable_feat(mt, feat))
                 monsters_by_habitat[i].push_back(mt);
 
             const monster_type species = mons_species(mt);
-            if (monster_habitable_grid(species, grid))
+            if (monster_habitable_feat(species, feat))
                 tmp_species.insert(species);
 
         }

@@ -1209,7 +1209,7 @@ void mons_create_tentacles(monster* head)
     // unoccupied.
     for (adjacent_iterator adj_it(head->pos()); adj_it; ++adj_it)
     {
-        if (monster_habitable_grid(tent_type, env.grid(*adj_it))
+        if (monster_habitable_grid(tent_type, *adj_it)
             && !actor_at(*adj_it))
         {
             adj_squares.push_back(*adj_it);

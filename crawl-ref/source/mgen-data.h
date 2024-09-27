@@ -94,14 +94,6 @@ struct mgen_data
     // This simply stores the initial shape-shifter type.
     monster_type    initial_shifter;
 
-    // A grid feature to prefer when finding a place to create monsters.
-    // For instance, using DNGN_FLOOR when placing flying monsters or
-    // merfolk in the Shoals will force them to appear on land.
-    // preferred_grid_feature will be ignored if it is incompatible with
-    // the monster's native habitat (for instance, if trying to place
-    // a electric eel with preferred_grid_feature DNGN_FLOOR).
-    dungeon_feature_type preferred_grid_feature = DNGN_UNSEEN;
-
     // Some predefined vaults (aka maps) include flags to suppress random
     // generation of monsters. When generating monsters, this is a mask of
     // map flags to honour (such as MMT_NO_MONS to specify that we shouldn't

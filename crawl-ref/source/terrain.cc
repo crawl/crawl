@@ -2443,7 +2443,7 @@ coord_def push_or_teleport_actor_from(const coord_def& pos)
         {
             if (!actor_at(*di)
                 && ((act->is_player() && you.can_pass_through(*di))
-                    || act->is_monster() && monster_habitable_grid(act->as_monster(), env.grid(*di))))
+                    || act->is_monster() && monster_habitable_grid(act->as_monster(), *di)))
             {
                 if (act->is_player())
                     move_player_to_grid(*di, false);

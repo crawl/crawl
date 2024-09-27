@@ -857,7 +857,7 @@ void spectral_weapon_fineff::fire()
     for (adjacent_iterator ai(atkr->pos()); ai; ++ai)
     {
         if (actor_at(*ai)
-            || !monster_habitable_grid(MONS_SPECTRAL_WEAPON, env.grid(*ai)))
+            || !monster_habitable_grid(MONS_SPECTRAL_WEAPON, *ai))
         {
             continue;
         }

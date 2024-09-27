@@ -2349,7 +2349,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         // If the monster we want to create cannot occupy the tile the block of
         // ice is on, try to find some nearby spot where it can.
         // (Mostly this is an issue with kraken simulacra, at present.)
-        if (!monster_habitable_grid(simu.base_type, env.grid(mons.pos())))
+        if (!monster_habitable_grid(simu.base_type, mons.pos()))
             find_habitable_spot_near(mons.pos(), simu.base_type, 3, true, simu.pos);
 
         monster_type real_simu_type = simu.base_type;
@@ -3312,11 +3312,10 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
 
     dungeon_feature_type grid = env.grid(mons->pos());
     if (grid != DNGN_LAVA && grid != DNGN_DEEP_WATER
-        || monster_habitable_grid(mons, grid))
+        || monster_habitable_feat(mons, grid))
     {
         return;
     }
-
 
     // Don't worry about invisibility. You should be able to see if
     // something has fallen into the lava.

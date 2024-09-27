@@ -142,7 +142,7 @@ static void _monster_regenerate(monster* mons)
 
     // Non-land creatures out of their element cannot regenerate.
     if (mons_primary_habitat(*mons) != HT_LAND
-        && !monster_habitable_grid(mons, env.grid(mons->pos())))
+        && !monster_habitable_grid(mons, mons->pos()))
     {
         return;
     }
@@ -865,7 +865,7 @@ static bool _handle_swoop_or_flank(monster& mons)
         if (tracer.path_taken[j] != target)
             continue;
 
-        if (!monster_habitable_grid(&mons, env.grid(tracer.path_taken[j+1]))
+        if (!monster_habitable_grid(&mons, tracer.path_taken[j+1])
             || actor_at(tracer.path_taken[j+1]))
         {
             continue;
@@ -2751,7 +2751,7 @@ static void _mons_open_door(monster& mons, const coord_def &pos)
 static bool _no_habitable_adjacent_grids(const monster* mon)
 {
     for (adjacent_iterator ai(mon->pos()); ai; ++ai)
-        if (monster_habitable_grid(mon, env.grid(*ai)))
+        if (monster_habitable_grid(mon, *ai))
             return false;
 
     return true;
@@ -2927,7 +2927,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     {
     }
     else if (!mons_can_traverse(*mons, targ, false, false)
-             && !monster_habitable_grid(mons, target_grid))
+             && !monster_habitable_feat(mons, target_grid))
     {
         // If the monster somehow ended up in this habitat (and is
         // not dead by now), give it a chance to get out again.
@@ -3425,7 +3425,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
     _escape_water_hold(mons);
 
     if (env.grid(mons.pos()) == DNGN_DEEP_WATER && env.grid(f) != DNGN_DEEP_WATER
-        && !monster_habitable_grid(&mons, DNGN_DEEP_WATER))
+        && !monster_habitable_feat(&mons, DNGN_DEEP_WATER))
     {
         // er, what?  Seems impossible.
         mons.seen_context = SC_NONSWIMMER_SURFACES_FROM_DEEP;
