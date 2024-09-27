@@ -726,31 +726,6 @@ void infestation_death_fineff::fire()
     }
 }
 
-// XXX: This entire method feels like a hack. But normal summon cap functions
-// won't work because simulacra don't use ENCH_ABJ, and even if it DID work, it
-// would probably make the simulacra disappear in a puff of smoke instead of
-// collapsing in the normal fashion.
-static void _expire_player_simulacra()
-{
-    vector <monster*> simul;
-    for (monster_iterator mi; mi; ++mi)
-    {
-        // We're looking only for simulacra that are friendly to the player and
-        // created by the Sculpt Simulacrum spell.
-        if (mi->type == MONS_SIMULACRUM && mi->friendly()
-            && mi->has_ench(ENCH_SUMMON)
-            && mi->get_ench(ENCH_SUMMON).degree == SPELL_SIMULACRUM)
-        {
-            simul.push_back(*mi);
-        }
-    }
-
-    // If we have too many, expire the oldest.
-    // (Maybe it should use some other logic, like weakest or injured?)
-    if (simul.size() > 4)
-        simul[0]->del_ench(ENCH_SUMMON_TIMER);
-}
-
 void make_derived_undead_fineff::fire()
 {
     monster *undead = create_monster(mg);
@@ -759,10 +734,6 @@ void make_derived_undead_fineff::fire()
 
     if (!message.empty() && you.can_see(*undead))
         mpr(message);
-
-    // Handle cap for player sculpt simulacrum
-    if (mg.summon_type == SPELL_SIMULACRUM)
-        _expire_player_simulacra();
 
     // If the original monster has been levelled up, its HD might be
     // different from its class HD, in which case its HP should be

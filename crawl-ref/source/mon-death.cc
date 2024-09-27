@@ -1404,8 +1404,7 @@ static void _make_derived_undead(monster* mons, bool quiet,
                  god);
     // Don't link monster-created derived undead to the summoner, they
     // shouldn't poof
-    mg.set_summoned(beh == BEH_FRIENDLY ? &you : nullptr,
-                    spell, summ_dur(spell == SPELL_SIMULACRUM ? 3 : 0), false);
+    mg.set_summoned(beh == BEH_FRIENDLY ? &you : nullptr, spell, 0, false);
     mg.set_base(mons->type);
     if (god == GOD_KIKUBAAQUDGHA) // kiku wrath
         mg.extra_flags |= MF_NO_REWARD;
@@ -2344,7 +2343,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     {
         mgen_data simu = mgen_data(MONS_SIMULACRUM, BEH_COPY, mons.pos(),
                             BEH_FRIENDLY, MG_AUTOFOE | MG_FORCE_PLACE)
-                         .set_summoned(&you, SPELL_SIMULACRUM);
+                         .set_summoned(&you, SPELL_SIMULACRUM, summ_dur(3), false);
         simu.base_type = (monster_type)mons.props[SIMULACRUM_TYPE_KEY].get_int();
 
         // If the monster we want to create cannot occupy the tile the block of

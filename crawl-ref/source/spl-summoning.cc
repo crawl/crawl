@@ -2193,6 +2193,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_HAUNT,                    { 8, 8 } },
     { SPELL_SUMMON_CACTUS,            { 1, 1 } },
     { SPELL_SOUL_SPLINTER,            { 1, 1 } },
+    { SPELL_SIMULACRUM,               { 5, 5 } },
     // Monster-only spells
     { SPELL_SHADOW_CREATURES,         { 0, 4 } },
     { SPELL_SUMMON_SPIDERS,           { 0, 5 } },
@@ -2296,6 +2297,10 @@ void summoned_monster(const monster *mons, const actor *caster,
         cap = (mons->type == MONS_ABOMINATION_LARGE ? cap * 3 / 4
                                                     : cap * 1 / 4);
     }
+    // Only the simulacra themselves are capped with this spell. Blocks of ice
+    // are free.
+    else if (spell == SPELL_SIMULACRUM && mons->type != MONS_SIMULACRUM)
+        return;
 
     monster* oldest_summon = 0;
     int oldest_duration = 0;
@@ -2321,9 +2326,13 @@ void summoned_monster(const monster *mons, const actor *caster,
         if (summ.degree != spell)
             continue;
 
-        // Count large abominations and tentacled monstrosities separately
-        if (spell == SPELL_SUMMON_HORRIBLE_THINGS && mi->type != mons->type)
+        // Count large abominations and tentacled monstrosities separately.
+        // (And don't count blocks of ice at all.)
+        if ((spell == SPELL_SUMMON_HORRIBLE_THINGS || spell == SPELL_SIMULACRUM)
+            && mi->type != mons->type)
+        {
             continue;
+        }
 
         if (_spell_has_variable_cap(spell) && mi->props.exists(SUMMON_ID_KEY))
         {
