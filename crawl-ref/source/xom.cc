@@ -1610,7 +1610,7 @@ static void _xom_harmless_flora(int /*sever*/)
             continue;
         }
 
-        if (!actor_at(*ri) && monster_habitable_grid(MONS_PLANT, env.grid(*ri)))
+        if (!actor_at(*ri) && monster_habitable_grid(MONS_PLANT, *ri))
         {
             mgen_data mg(mon_type, BEH_HOSTILE, *ri, MHITYOU,
                          MG_FORCE_BEH | MG_FORCE_PLACE, GOD_XOM);
@@ -1710,7 +1710,7 @@ static int _xom_count_and_move_group(int min_range, int max_range,
             {
                 // Only look for unoccupied viable spaces
                 // outside the entire door ring.
-                if (actor_at(*ri) || !monster_habitable_grid(moving_mons, env.grid(*ri))
+                if (actor_at(*ri) || !monster_habitable_grid(moving_mons, *ri)
                     || grid_distance(*ri, you.pos()) < 6)
                 {
                     continue;
@@ -1726,7 +1726,7 @@ static int _xom_count_and_move_group(int min_range, int max_range,
                 for (radius_iterator ri(moving_mons->pos(), 9, C_SQUARE, LOS_NO_TRANS, true);
                     ri; ++ri)
                 {
-                    if (actor_at(*ri) || !monster_habitable_grid(moving_mons, env.grid(*ri))
+                    if (actor_at(*ri) || !monster_habitable_grid(moving_mons, *ri)
                         || grid_distance(*ri, you.pos()) < 6)
                     {
                         continue;
@@ -4559,7 +4559,7 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
         for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_NO_TRANS, true);
              ri; ++ri)
         {
-            if (!monster_at(*ri) && monster_habitable_grid(MONS_PLANT, env.grid(*ri)))
+            if (!monster_at(*ri) && monster_habitable_grid(MONS_PLANT, *ri))
                 plant_capacity++;
         }
 
@@ -4848,7 +4848,7 @@ static xom_event_type _xom_choose_bad_action(int sever, int tension)
         for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_NO_TRANS, true);
              ri; ++ri)
         {
-            if (!monster_at(*ri) && monster_habitable_grid(MONS_PLAYER_ILLUSION, env.grid(*ri)))
+            if (!monster_at(*ri) && monster_habitable_grid(MONS_PLAYER_ILLUSION, *ri))
                 clone_capacity++;
         }
 

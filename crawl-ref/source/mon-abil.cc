@@ -858,7 +858,7 @@ static coord_def _find_nearer_tree(coord_def cur_loc, coord_def target)
 
         if (!cell_see_cell(target, *di, LOS_NO_TRANS) // there might be a better iterator
             || !_adj_to_tree(*di)
-            || !monster_habitable_grid(MONS_ELEIONOMA, env.grid(*di)))
+            || !monster_habitable_grid(MONS_ELEIONOMA, *di))
         {
             continue;
         }

@@ -1309,7 +1309,7 @@ static void _update_abyss_terrain(const coord_def &p,
         else if (feat_is_solid(feat))
             delete_cloud(rp);
         monster* mon = monster_at(rp);
-        if (mon && !monster_habitable_grid(mon, feat))
+        if (mon && !monster_habitable_feat(mon, feat))
             _push_displaced_monster(mon);
     }
 }
@@ -1854,7 +1854,7 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
 
         monster_type mons = pick_monster(level_id(BRANCH_ABYSS), _incorruptible);
         ASSERT(mons);
-        if (!monster_habitable_grid(mons, env.grid(p)))
+        if (!monster_habitable_grid(mons, p))
             continue;
         mgen_data mg(mons, BEH_NEUTRAL, p);
         mg.set_summoned(0, 0, summ_dur(5)).set_non_actor_summoner("Lugonu's corruption");
@@ -1879,7 +1879,7 @@ static void _spawn_corrupted_servant_near_monster(const monster &who)
             continue;
         monster_type mons = pick_monster(level_id(BRANCH_ABYSS), _incorruptible);
         ASSERT(mons);
-        if (!monster_habitable_grid(mons, env.grid(p)))
+        if (!monster_habitable_grid(mons, p))
             continue;
         mgen_data mg(mons, BEH_COPY, p);
         mg.set_summoned(&who, 0, summ_dur(3));

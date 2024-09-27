@@ -174,7 +174,7 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
     }
 
     // Determine if the monster is happy on current tile.
-    return monster_habitable_grid(new_mclass, env.grid(mons->pos()));
+    return monster_habitable_grid(new_mclass, mons->pos());
 }
 
 static bool _jiyva_slime_target(monster_type targetc)
@@ -710,7 +710,7 @@ void slimify_monster(monster* mon)
     const monster_type target = _slime_target(*mon);
 
     // Bail out if jellies can't live here.
-    if (!monster_habitable_grid(target, env.grid(mon->pos())))
+    if (!monster_habitable_grid(target, mon->pos()))
     {
         simple_monster_message(*mon, " quivers momentarily.");
         return;

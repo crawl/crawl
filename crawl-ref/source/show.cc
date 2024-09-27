@@ -332,7 +332,7 @@ static bool _valid_invisible_spot(const coord_def &where, const monster* mons)
     if (mons_at && mons_at != mons)
         return false;
 
-    if (monster_habitable_grid(mons, env.grid(where)))
+    if (monster_habitable_grid(mons, where))
         return true;
 
     return false;

@@ -401,7 +401,7 @@ static void _place_dragon()
         vector<coord_def> spots;
         for (adjacent_iterator ai(target->pos()); ai; ++ai)
         {
-            if (monster_habitable_grid(MONS_FIRE_DRAGON, env.grid(*ai))
+            if (monster_habitable_grid(MONS_FIRE_DRAGON, *ai)
                 && !actor_at(*ai))
             {
                 spots.push_back(*ai);
@@ -497,7 +497,7 @@ void doom_howl(int time)
         vector<coord_def> spots;
         for (adjacent_iterator ai(target->pos()); ai; ++ai)
         {
-            if (monster_habitable_grid(howlcalled, env.grid(*ai))
+            if (monster_habitable_grid(howlcalled, *ai)
                 && !actor_at(*ai))
             {
                 spots.push_back(*ai);
@@ -2402,7 +2402,7 @@ vector<coord_def> find_briar_spaces(bool just_check)
 
     for (adjacent_iterator adj_it(you.pos()); adj_it; ++adj_it)
     {
-        if (monster_habitable_grid(MONS_BRIAR_PATCH, env.grid(*adj_it))
+        if (monster_habitable_grid(MONS_BRIAR_PATCH, *adj_it)
             && (!actor_at(*adj_it)
                 || just_check && !you.can_see(*actor_at(*adj_it))))
         {
@@ -2501,7 +2501,7 @@ spret fedhas_grow_ballistomycete(const coord_def& target, bool fail)
         return spret::abort;
     }
 
-    if (!monster_habitable_grid(MONS_BALLISTOMYCETE, env.grid(target)))
+    if (!monster_habitable_grid(MONS_BALLISTOMYCETE, target))
     {
         mpr("You can't grow a ballistomycete there.");
         return spret::abort;
@@ -2548,7 +2548,7 @@ spret fedhas_grow_oklob(const coord_def& target, bool fail)
         return spret::abort;
     }
 
-    if (!monster_habitable_grid(MONS_OKLOB_PLANT, env.grid(target)))
+    if (!monster_habitable_grid(MONS_OKLOB_PLANT, target))
     {
         mpr("You can't grow an oklob plant there.");
         return spret::abort;
@@ -3191,7 +3191,7 @@ bool make_soul_wisp(const actor& agent, actor& victim)
     vector<coord_def> spots;
     for (adjacent_iterator ai(victim.pos()); ai; ++ai)
     {
-        if (monster_habitable_grid(MONS_SOUL_WISP, env.grid(*ai))
+        if (monster_habitable_grid(MONS_SOUL_WISP, *ai)
             && !actor_at(*ai) && agent.see_cell_no_trans(*ai))
         {
             spots.push_back(*ai);

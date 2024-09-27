@@ -271,7 +271,7 @@ bool mons_clonable(const monster* mon, bool needs_adjacent)
         {
             if (in_bounds(*ai)
                 && !actor_at(*ai)
-                && monster_habitable_grid(mon, env.grid(*ai)))
+                && monster_habitable_grid(mon, *ai))
             {
                 square_found = true;
                 break;
@@ -320,7 +320,7 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
         {
             if (in_bounds(*ai)
                 && !actor_at(*ai)
-                && monster_habitable_grid(orig, env.grid(*ai)))
+                && monster_habitable_grid(orig, *ai))
             {
                 pos = *ai;
             }

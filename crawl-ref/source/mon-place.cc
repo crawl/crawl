@@ -113,15 +113,14 @@ static bool _hab_requires_mon_flight(dungeon_feature_type g)
 }
 
 /**
- * Can this monster survive on actual_grid?
+ * Can this monster survive on a given feature?
  *
  * @param mon         the monster to be checked.
- * @param actual_grid the feature type that mon might not be able to survive.
+ * @param feat        the feature type that mon might not be able to survive.
  * @returns whether the monster can survive being in/over the feature,
  *          regardless of whether it may be dangerous or harmful.
  */
-bool monster_habitable_grid(const monster* mon,
-                            dungeon_feature_type actual_grid)
+bool monster_habitable_feat(const monster* mon, dungeon_feature_type feat)
 {
     // Zombified monsters enjoy the same habitat as their original,
     // except lava-based monsters.
@@ -129,40 +128,39 @@ bool monster_habitable_grid(const monster* mon,
         ? draconian_subspecies(*mon)
         : fixup_zombie_type(mon->type, mons_base_type(*mon));
 
-    bool type_safe = monster_habitable_grid(mt, actual_grid, DNGN_UNSEEN);
-    return type_safe ||
-                    _hab_requires_mon_flight(actual_grid) && mon->airborne();
+    bool type_safe = monster_habitable_feat(mt, feat);
+    return type_safe || (_hab_requires_mon_flight(feat) && mon->airborne());
 }
 
 /**
- * Can monsters of this class survive on actual_grid?
+ * Can monsters of this class survive on on a given feature type?
  *
  * @param mt the monster class to check against
- * @param actual_grid the terrain feature being checked
- * @param wanted_grid if == DNGN_UNSEEN, or if the monster can't survive on it,
- *                    ignored. Otherwise, return false even if actual_grid is
- *                    survivable, if actual_grid isn't similar to wanted_grid.
+ * @param feat the terrain feature being checked
  */
-bool monster_habitable_grid(monster_type mt,
-                            dungeon_feature_type actual_grid,
-                            dungeon_feature_type wanted_grid)
+bool monster_habitable_feat(monster_type mt, dungeon_feature_type feat)
 {
     // No monster may be placed in walls etc.
-    if (!mons_class_can_pass(mt, actual_grid))
+    if (!mons_class_can_pass(mt, feat))
         return false;
 
 #if TAG_MAJOR_VERSION == 34
     // Monsters can't use teleporters, and standing there would look just wrong.
-    if (actual_grid == DNGN_TELEPORTER)
+    if (feat == DNGN_TELEPORTER)
         return false;
 #endif
     // The kraken is so large it cannot enter shallow water.
     // Its tentacles can, and will, though.
-    if ((actual_grid == DNGN_SHALLOW_WATER
-        || actual_grid == DNGN_TOXIC_BOG)
+    if ((feat == DNGN_SHALLOW_WATER || feat == DNGN_TOXIC_BOG)
         && mt == MONS_KRAKEN)
     {
         return false;
+    }
+    // Only eldritch tentacles are allowed to exist on this feature.
+    else if (feat == DNGN_MALIGN_GATEWAY)
+    {
+        return mt == MONS_ELDRITCH_TENTACLE
+               || mt == MONS_ELDRITCH_TENTACLE_SEGMENT;
     }
 
     const dungeon_feature_type feat_preferred =
@@ -170,28 +168,8 @@ bool monster_habitable_grid(monster_type mt,
     const dungeon_feature_type feat_nonpreferred =
         habitat2grid(mons_class_secondary_habitat(mt));
 
-    // If the caller insists on a specific feature type, try to honour
-    // the request. This allows the builder to place amphibious
-    // creatures only on land, or flying creatures only on lava, etc.
-    if (wanted_grid != DNGN_UNSEEN
-        && monster_habitable_grid(mt, wanted_grid, DNGN_UNSEEN))
-    {
-        return _feat_compatible(wanted_grid, actual_grid);
-    }
-
-    if (actual_grid == DNGN_MALIGN_GATEWAY)
-    {
-        if (mt == MONS_ELDRITCH_TENTACLE
-            || mt == MONS_ELDRITCH_TENTACLE_SEGMENT)
-        {
-            return true;
-        }
-        else
-            return false;
-    }
-
-    if (_feat_compatible(feat_preferred, actual_grid)
-        || _feat_compatible(feat_nonpreferred, actual_grid))
+    if (_feat_compatible(feat_preferred, feat)
+        || _feat_compatible(feat_nonpreferred, feat))
     {
         return true;
     }
@@ -199,10 +177,20 @@ bool monster_habitable_grid(monster_type mt,
     // [dshaligram] Flying creatures are all HT_LAND, so we
     // only have to check for the additional valid grids of deep
     // water and lava.
-    if (_hab_requires_mon_flight(actual_grid) && (mons_class_flag(mt, M_FLIES)))
+    if (_hab_requires_mon_flight(feat) && (mons_class_flag(mt, M_FLIES)))
         return true;
 
     return false;
+}
+
+bool monster_habitable_grid(const monster* mon, const coord_def& pos)
+{
+    return monster_habitable_feat(mon, env.grid(pos));
+}
+
+bool monster_habitable_grid(monster_type mt, const coord_def& pos)
+{
+    return monster_habitable_feat(mt, env.grid(pos));
 }
 
 static int _ood_fuzzspan(level_id &place)
@@ -536,12 +524,24 @@ static bool _valid_monster_generation_location(const mgen_data &mg,
     }
 
     const monster_type montype = fixup_zombie_type(mg.cls, mg.base_type);
-    if (!monster_habitable_grid(montype, env.grid(mg_pos), mg.preferred_grid_feature)
+    if (!monster_habitable_grid(montype, mg_pos)
         || (mg.behaviour != BEH_FRIENDLY
             && is_sanctuary(mg_pos)
             && !mons_is_tentacle_segment(montype)))
     {
         return false;
+    }
+
+    // If we've been requested to place amphibious monsters on solid ground, do
+    // so if possible.
+    if (mg.flags & MG_PREFER_LAND)
+    {
+        habitat_type habitat = mons_class_primary_habitat(montype);
+        if (habitat != HT_WATER && habitat != HT_LAVA
+            && !feat_has_solid_floor(env.grid(mg_pos)))
+        {
+            return false;
+        }
     }
 
     bool close_to_player = grid_distance(you.pos(), mg_pos) <= LOS_RADIUS;
@@ -925,7 +925,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             (!is_sanctuary(mg.pos) || mons_is_tentacle_segment(montype)))
         && !monster_at(mg.pos)
         && (you.pos() != mg.pos || fedhas_passthrough_class(mg.cls))
-        && (force_pos || monster_habitable_grid(montype, env.grid(mg.pos))))
+        && (force_pos || monster_habitable_grid(montype, mg.pos)))
     {
         fpos = mg.pos;
     }
@@ -1484,7 +1484,7 @@ static bool _good_zombie(monster_type base, monster_type cs,
 
     // Actually pick a monster that is happy where we want to put it.
     // Fish zombies on land are helpless and uncool.
-    if (in_bounds(pos) && !monster_habitable_grid(base, env.grid(pos)))
+    if (in_bounds(pos) && !monster_habitable_grid(base, pos))
         return false;
 
     if (cs == MONS_NO_MONSTER)
@@ -2968,7 +2968,7 @@ bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
         if (!cell_see_cell(where, *ri, LOS_NO_TRANS))
             continue;
 
-        if (!monster_habitable_grid(mon_type, env.grid(*ri)))
+        if (!monster_habitable_grid(mon_type, *ri))
             continue;
 
         if (in_player_sight && !you.see_cell_no_trans(*ri))

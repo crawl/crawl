@@ -3469,7 +3469,7 @@ bool mons_word_of_recall(monster* mons, int recall_target)
 
 static bool _valid_vine_spot(coord_def p)
 {
-    if (actor_at(p) || !monster_habitable_grid(MONS_PLANT, env.grid(p)))
+    if (actor_at(p) || !monster_habitable_grid(MONS_PLANT, p))
         return false;
 
     int num_trees = 0;

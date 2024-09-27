@@ -100,10 +100,11 @@ bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
 monster_type random_demon_by_tier(int tier);
 monster_type summon_any_demon(monster_type dct, bool use_local_demons = false);
 
-bool monster_habitable_grid(const monster* mon,
-                            dungeon_feature_type actual_grid);
-bool monster_habitable_grid(monster_type mt, dungeon_feature_type actual_grid,
-                            dungeon_feature_type wanted_grid = DNGN_UNSEEN);
+bool monster_habitable_feat(const monster* mon,
+                            dungeon_feature_type feat);
+bool monster_habitable_feat(monster_type mt, dungeon_feature_type feat);
+bool monster_habitable_grid(const monster* mon, const coord_def& pos);
+bool monster_habitable_grid(monster_type mt, const coord_def& pos);
 coord_def find_newmons_square(monster_type mons_class, const coord_def &p);
 coord_def find_newmons_square_contiguous(monster_type mons_class,
                                          const coord_def &start,

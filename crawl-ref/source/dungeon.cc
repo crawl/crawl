@@ -4090,7 +4090,7 @@ static void _place_assorted_zombies()
         mg.base_type = z_base;
         mg.behaviour = BEH_SLEEP;
         mg.map_mask |= MMT_NO_MONS;
-        mg.preferred_grid_feature = DNGN_FLOOR;
+        mg.flags |= MG_PREFER_LAND;
 
         place_monster(mg);
     }
@@ -4111,12 +4111,6 @@ static void _builder_monsters()
     const bool in_shoals = player_in_branch(BRANCH_SHOALS);
     if (in_shoals)
         dgn_shoals_generate_flora();
-
-    // Try to place Shoals monsters on floor where possible instead of
-    // letting all the merfolk be generated in the middle of the
-    // water.
-    const dungeon_feature_type preferred_grid_feature =
-        in_shoals ? DNGN_FLOOR : DNGN_UNSEEN;
 
     dprf(DIAG_DNGN, "_builder_monsters: Generating %d monsters", mon_wanted);
     for (int i = 0; i < mon_wanted; i++)
@@ -4149,7 +4143,12 @@ static void _builder_monsters()
 
         mg.flags    |= MG_PERMIT_BANDS;
         mg.map_mask |= MMT_NO_MONS;
-        mg.preferred_grid_feature = preferred_grid_feature;
+
+        // Try to place Shoals monsters on solid ground where possible, instead
+        // of letting half the level spawn at the far reaches of deep water.
+        if (in_shoals)
+            mg.flags |= MG_PREFER_LAND;
+
         place_monster(mg);
     }
 
@@ -5191,7 +5190,7 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
 
         const habitat_type habitat = mons_class_primary_habitat(montype);
 
-        if (in_bounds(where) && !monster_habitable_grid(montype, env.grid(where)))
+        if (in_bounds(where) && !monster_habitable_grid(montype, where))
             dungeon_terrain_changed(where, habitat2grid(habitat));
     }
 

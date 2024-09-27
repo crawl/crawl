@@ -64,7 +64,7 @@ static void _apply_move_time_taken();
 static void _swap_places(monster* mons, const coord_def &loc)
 {
     ASSERT(map_bounds(loc));
-    ASSERT(monster_habitable_grid(mons, env.grid(loc)));
+    ASSERT(monster_habitable_grid(mons, loc));
 
     if (monster_at(loc))
     {
