@@ -1086,7 +1086,7 @@ int attack::apply_defender_ac(int damage, int damage_max, ac_type ac_rule) const
  */
 bool attack::attack_shield_blocked(bool verbose)
 {
-    if (defender == attacker)
+    if (defender == attacker || to_hit >= AUTOMATIC_HIT)
         return false; // You can't block your own attacks!
 
     // Divine Shield blocks are guaranteed, no matter what.

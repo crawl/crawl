@@ -89,18 +89,12 @@ int aux_to_hit()
 
 }
 
-static double _to_hit_to_land(attack &atk)
-{
-    int to_land = atk.calc_pre_roll_to_hit(false);
-    if (to_land >= AUTOMATIC_HIT)
-        return 1;
-
-    return to_land;
-}
-
 static double _to_hit_hit_chance(const monster_info& mi, attack &atk, bool melee,
                                  int to_land, bool is_aux = false)
 {
+    if (to_land >= AUTOMATIC_HIT)
+        return 1.0;
+
     const double AUTO_MISS_CHANCE = is_aux ? 0 : 2.5;
     const double AUTO_HIT_CHANCE = is_aux ? 3.3333 : 2.5;
 
@@ -156,6 +150,10 @@ static double _to_hit_shield_chance(const monster_info& mi,
     // Duplicates more logic that is defined in attack::attack_shield_blocked, and
     // attack_melee and attack_ranged classes, for real attacks.
 
+    // Guaranteed hits should ignore the shield as well
+    if (to_land >= AUTOMATIC_HIT)
+        return 0;
+
     // Attack first checks for incapacitation, this is handled with a shield bonus
     // of -100 (or if they have no shield) so we can resolve this here.
     if (mi.shield_bonus == -100)
@@ -187,7 +185,7 @@ static double _to_hit_shield_chance(const monster_info& mi,
 int to_hit_pct(const monster_info& mi, attack &atk, bool melee,
                bool penetrating, int distance)
 {
-    const int to_land = _to_hit_to_land(atk);
+    const int to_land = atk.calc_pre_roll_to_hit(false);
     const double hit_chance = _to_hit_hit_chance(mi, atk, melee, to_land);
     const double shield_chance = _to_hit_shield_chance(mi, melee, to_land, penetrating);
     const int blind_miss_chance = player_blind_miss_chance(distance);
