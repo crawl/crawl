@@ -1225,7 +1225,7 @@ static void _print_summon_poof_message(const monster& mons, bool corpse = false)
 
     string msg = summoned_poof_msg(mons) + "!";
 
-    simple_monster_message(mons, (prefix + msg).c_str(), need_possessive);
+    simple_monster_message(mons, (prefix + msg).c_str(), need_possessive, MSGCH_MONSTER_TIMEOUT);
 }
 
 static void _monster_die_cloud(const monster& mons, bool real_death)
@@ -2722,6 +2722,7 @@ item_def* monster_die(monster& mons, killer_type killer,
             break;
 
         case KILL_TIMEOUT:
+        {
             if (!death_message || mons.is_abjurable())
                 break;
 
@@ -2730,53 +2731,60 @@ item_def* monster_die(monster& mons, killer_type killer,
             // regardless of how the summon was killed) are handled later, in
             // _print_summon_poof_message
 
+            string msg;
             // ratskin cloak
             if (mons_genus(mons.type) == MONS_RAT)
-            {
-                simple_monster_message(mons, " returns to the shadows"
-                                                " of the Dungeon!");
-            }
+                msg = " returns to the shadows of the Dungeon.";
             // Death Channel / Soul Splinter
             else if (mons.type == MONS_SPECTRAL_THING
                      || mons.type == MONS_SOUL_WISP)
-                simple_monster_message(mons, " fades into mist!");
+            {
+                msg = " fades into mist!";
+            }
             // Animate Dead/Infestation
             else if (mons.type == MONS_ZOMBIE
                         || mons.type == MONS_SKELETON
                         || mons.type == MONS_DEATH_SCARAB)
             {
-                simple_monster_message(mons, " crumbles into dust!");
+                msg = " crumbles into dust!";
             }
             else if (mons.type == MONS_PILE_OF_DEBRIS)
-                simple_monster_message(mons, " collapses into dust.");
+                msg = " collapses into dust.";
             else if (mons.type == MONS_PILLAR_OF_SALT
                     || mons.type == MONS_WITHERED_PLANT
                     || mons.type == MONS_BRIAR_PATCH)
             {
-                simple_monster_message(mons, " crumbles away.");
+                msg = " crumbles away.";
             }
             else if (mons.type == MONS_SNAPLASHER_VINE)
-                simple_monster_message(mons, " falls limply to the ground.");
+                msg = " falls limply to the ground.";
             else if (mons.type == MONS_HOARFROST_CANNON
                      || mons.type == MONS_BLOCK_OF_ICE)
             {
-                simple_monster_message(mons, " melts away.");
+                msg = " melts away.";
             }
             else if (mons.type == MONS_FIRE_VORTEX
                      || mons.type == MONS_SPATIAL_VORTEX
                      || mons.type == MONS_TWISTER
                      || mons.type == MONS_FOXFIRE)
             {
-                simple_monster_message(mons, " dissipates.");
+                msg = " dissipates.";
             }
             else
             {
                 if (mons.props.exists(KIKU_WRETCH_KEY))
                     mprf("A nearby %s perishes wretchedly.", mons.name(DESC_PLAIN, false).c_str());
                 else if (mons_class_is_fragile(mons.type))
-                    mprf("A nearby %s withers and dies.", mons.name(DESC_PLAIN, false).c_str());
+                {
+                    mprf(MSGCH_MONSTER_TIMEOUT, "A nearby %s withers and dies.",
+                         mons.name(DESC_PLAIN, false).c_str());
+                }
             }
-            break;
+
+            if (!msg.empty())
+                simple_monster_message(mons, msg.c_str(), false, MSGCH_MONSTER_TIMEOUT);
+        }
+        break;
 
         case KILL_RESET_KEEP_ITEMS:
             break;
@@ -3479,7 +3487,7 @@ string summoned_poof_msg(const monster& mons)
         msg = "returns to the deep";
 
     if (mons.has_ench(ENCH_PHANTOM_MIRROR))
-        msg = "shimmers and vanish";
+        msg = "shimmers and vanishes";
 
     if (mons.type == MONS_LIVING_SPELL)
         msg = "disperses";

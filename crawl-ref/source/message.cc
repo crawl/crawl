@@ -1203,6 +1203,7 @@ static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
         case MSGCH_DIAGNOSTICS:
         case MSGCH_MULTITURN_ACTION:
         case MSGCH_DECOR_FLAVOUR:
+        case MSGCH_MONSTER_TIMEOUT:
             ret = MSGCOL_DARKGREY; // makes it easier to ignore at times -- bwr
             break;
 
