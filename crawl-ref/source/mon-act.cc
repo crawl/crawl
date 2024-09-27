@@ -1529,18 +1529,6 @@ static void _pre_monster_move(monster& mons)
             mons.del_ench(ENCH_HEXED);
     }
 
-    if (mons.type == MONS_SNAPLASHER_VINE
-        && mons.props.exists(VINE_AWAKENER_KEY))
-    {
-        monster* awakener = monster_by_mid(mons.props[VINE_AWAKENER_KEY].get_int());
-        if (awakener && !awakener->can_see(mons))
-        {
-            simple_monster_message(mons, " falls limply to the ground.");
-            monster_die(mons, KILL_RESET, NON_MONSTER);
-            return;
-        }
-    }
-
     // Dissipate player ball lightnings and foxfires
     // that have left the player's sight
     // (monsters are allowed to 'cheat', as with orb of destruction)

@@ -315,8 +315,6 @@ const char * const THUNDERBOLT_AIM_KEY     = "thunderbolt_aim";
 #define FOE_APPROACHING_KEY "foe_approaching"
 #define FAUX_PAS_KEY "foe_pos"
 #define SWOOP_COOLDOWN_KEY "swoop_cooldown"
-#define VINE_AWAKENER_KEY "vine_awakener"
-#define VINES_AWAKENED_KEY "vines_awakened"
 #define OUTWARDS_KEY "outwards"
 #define INWARDS_KEY "inwards"
 #define BASE_POSITION_KEY "base_position"
