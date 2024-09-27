@@ -123,8 +123,8 @@ enum enchant_type
 #endif
     ENCH_WEAK,
     ENCH_DIMENSION_ANCHOR,
-    ENCH_AWAKEN_VINES,   // Is presently animating snaplasher vines
 #if TAG_MAJOR_VERSION == 34
+    ENCH_AWAKEN_VINES,
     ENCH_CONTROL_WINDS,
     ENCH_WIND_AIDED,
 #endif

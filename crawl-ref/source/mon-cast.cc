@@ -3518,8 +3518,7 @@ static bool _awaken_vines(monster* mon, bool test_only = false)
     ASSERT(foe);
 
     int num_vines = 1 + random2(3);
-    if (mon->props.exists(VINES_AWAKENED_KEY))
-        num_vines = min(num_vines, 3 - mon->props[VINES_AWAKENED_KEY].get_int());
+    num_vines = min(num_vines, 3 - count_summons(mon, SPELL_AWAKEN_VINES));
     bool seen = false;
 
     for (coord_def spot : spots)
@@ -3550,11 +3549,8 @@ static bool _awaken_vines(monster* mon, bool test_only = false)
         if (monster* vine = create_monster(
             mgen_data(MONS_SNAPLASHER_VINE, SAME_ATTITUDE(mon), spot, mon->foe,
                         MG_FORCE_PLACE, mon->god)
-            .set_summoned(mon, SPELL_AWAKEN_VINES)))
+            .set_summoned(mon, SPELL_AWAKEN_VINES, random_range(250, 380), false)))
         {
-            vine->props[VINE_AWAKENER_KEY].get_int() = mon->mid;
-            mon->props[VINES_AWAKENED_KEY].get_int()++;
-            mon->add_ench(mon_enchant(ENCH_AWAKEN_VINES, 1, nullptr, 200));
             --num_vines;
             if (you.can_see(*vine))
                 seen = true;
@@ -8614,9 +8610,7 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
         return ai_action::bad();
 
     case SPELL_AWAKEN_VINES:
-        return ai_action::good_or_impossible(
-                    (!mon->has_ench(ENCH_AWAKEN_VINES)
-                        || mon->props[VINES_AWAKENED_KEY].get_int() <= 3)
+        return ai_action::good_or_impossible(count_summons(mon, SPELL_AWAKEN_VINES) <= 3
                     && _awaken_vines(mon, true)); // test cast: would anything happen?
 
     case SPELL_WATERSTRIKE:

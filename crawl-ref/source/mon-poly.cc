@@ -308,7 +308,6 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
                                            ENCH_SHAPESHIFTER);
     mon_enchant summon    = mons->get_ench(ENCH_SUMMON);
     mon_enchant tp        = mons->get_ench(ENCH_TP);
-    mon_enchant vines     = mons->get_ench(ENCH_AWAKEN_VINES);
     mon_enchant forest    = mons->get_ench(ENCH_AWAKEN_FOREST);
     mon_enchant hexed     = mons->get_ench(ENCH_HEXED);
     mon_enchant insanity  = mons->get_ench(ENCH_FRENZIED);
@@ -349,7 +348,6 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     mons->add_ench(shifter);
     mons->add_ench(summon);
     mons->add_ench(tp);
-    mons->add_ench(vines);
     mons->add_ench(forest);
     mons->add_ench(hexed);
     mons->add_ench(insanity);

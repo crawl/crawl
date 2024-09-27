@@ -2755,6 +2755,8 @@ item_def* monster_die(monster& mons, killer_type killer,
             {
                 simple_monster_message(mons, " crumbles away.");
             }
+            else if (mons.type == MONS_SNAPLASHER_VINE)
+                simple_monster_message(mons, " falls limply to the ground.");
             else if (mons.type == MONS_HOARFROST_CANNON
                      || mons.type == MONS_BLOCK_OF_ICE)
             {
@@ -2912,16 +2914,6 @@ item_def* monster_die(monster& mons, killer_type killer,
                  || mons.type == MONS_ELDRITCH_TENTACLE
                  || mons.type == MONS_SNAPLASHER_VINE)
     {
-        if (mons.type == MONS_SNAPLASHER_VINE)
-        {
-            if (mons.props.exists(VINE_AWAKENER_KEY))
-            {
-                monster* awakener =
-                        monster_by_mid(mons.props[VINE_AWAKENER_KEY].get_int());
-                if (awakener)
-                    awakener->props[VINES_AWAKENED_KEY].get_int()--;
-            }
-        }
         destroy_tentacle(&mons);
     }
     else if (mons.type == MONS_ELDRITCH_TENTACLE_SEGMENT
@@ -3169,28 +3161,6 @@ item_def* monster_die(monster& mons, killer_type killer,
     return corpse;
 }
 
-void unawaken_vines(const monster* mons, bool quiet)
-{
-    int vines_seen = 0;
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (mi->type == MONS_SNAPLASHER_VINE
-            && mi->props.exists(VINE_AWAKENER_KEY)
-            && monster_by_mid(mi->props[VINE_AWAKENER_KEY].get_int()) == mons)
-        {
-            if (you.can_see(**mi))
-                ++vines_seen;
-            monster_die(**mi, KILL_RESET, NON_MONSTER);
-        }
-    }
-
-    if (!quiet && vines_seen)
-    {
-        mprf("The vine%s fall%s limply to the ground.",
-              (vines_seen > 1 ? "s" : ""), (vines_seen == 1 ? "s" : ""));
-    }
-}
-
 void heal_flayed_effect(actor* act, bool quiet, bool blood_only)
 {
     ASSERT(act); // XXX: change to actor &act
@@ -3240,9 +3210,6 @@ void monster_cleanup(monster* mons)
         forest_message(mons->pos(), "The forest abruptly stops moving.");
         env.forest_awoken_until = 0;
     }
-
-    if (mons->has_ench(ENCH_AWAKEN_VINES))
-        unawaken_vines(mons, false);
 
     if (mons->has_ench(ENCH_VENGEANCE_TARGET))
         beogh_progress_vengeance();

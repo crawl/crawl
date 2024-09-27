@@ -63,7 +63,6 @@ void maybe_drop_monster_organ(monster_type mon, monster_type orig,
 
 void monster_cleanup(monster* mons);
 void record_monster_defeat(const monster* mons, killer_type killer);
-void unawaken_vines(const monster* mons, bool quiet);
 int mummy_curse_power(monster_type type);
 void fire_monster_death_event(monster* mons, killer_type killer, bool polymorph);
 void heal_flayed_effect(actor* act, bool quiet = false, bool blood_only = false);

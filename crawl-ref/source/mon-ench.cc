@@ -750,10 +750,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(*this, " is no longer weakened.");
         break;
 
-    case ENCH_AWAKEN_VINES:
-        unawaken_vines(this, quiet);
-        break;
-
     case ENCH_TOXIC_RADIANCE:
         if (!quiet && you.can_see(*this))
             mprf("%s toxic aura wanes.", name(DESC_ITS).c_str());
@@ -1347,7 +1343,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_WRETCHED:
     case ENCH_SCREAMED:
     case ENCH_WEAK:
-    case ENCH_AWAKEN_VINES:
     case ENCH_FIRE_VULN:
     case ENCH_BARBS:
     case ENCH_POISON_VULN:
@@ -2020,9 +2015,9 @@ static const char *enchant_names[] =
 #if TAG_MAJOR_VERSION == 34
     "retching",
 #endif
-    "weak", "dimension_anchor", "awaken vines",
+    "weak", "dimension_anchor",
 #if TAG_MAJOR_VERSION == 34
-    "control_winds", "wind_aided",
+     "awaken vines", "control_winds", "wind_aided",
 #endif
     "summon_capped",
     "toxic_radiance",
