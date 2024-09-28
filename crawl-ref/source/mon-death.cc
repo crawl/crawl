@@ -1573,9 +1573,9 @@ static void _protean_explosion(monster* mons)
         //      may think we have a valid tile when we don't. It's very awkward
         //      to prevent that without also limiting the possible spawn pool to
         //      ONLY monsters that can survive in deep water, though.
-        find_habitable_spot_near(mons->pos(), target, 3, false, spot);
+        find_habitable_spot_near(mons->pos(), target, 3, spot);
         if (spot.origin())
-            find_habitable_spot_near(mons->pos(), target, 6, false, spot);
+            find_habitable_spot_near(mons->pos(), target, 6, spot);
         if (spot.origin())
             return;
 
@@ -2350,7 +2350,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         // ice is on, try to find some nearby spot where it can.
         // (Mostly this is an issue with kraken simulacra, at present.)
         if (!monster_habitable_grid(simu.base_type, mons.pos()))
-            find_habitable_spot_near(mons.pos(), simu.base_type, 3, true, simu.pos);
+            find_habitable_spot_near(mons.pos(), simu.base_type, 3, simu.pos, 0);
 
         monster_type real_simu_type = simu.base_type;
         // Don't use uniques' names here; their simulacra won't use them either.

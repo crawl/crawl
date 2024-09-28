@@ -2843,7 +2843,7 @@ coord_def find_newmons_square(monster_type mons_class, const coord_def &p)
     // to it in the case of RANDOM_MONSTER, that way if the target square
     // is surrounded by water or lava this function would work.  -- bwr
 
-    if (find_habitable_spot_near(p, mons_class, 2, true, empty))
+    if (find_habitable_spot_near(p, mons_class, 2, empty))
         pos = empty;
 
     return pos;
@@ -2953,15 +2953,36 @@ monster* create_monster(mgen_data mg, bool fail_msg)
     return summd;
 }
 
+/**
+ * Attempts to choose a random empty cell that a monster could occupy, within a
+ * certain radius of a given position and with valid line of sight to that
+ * position.
+ *
+ * @param where          The center point to begin searching.
+ * @param mon_type       The type of monster to test habitability for.
+ * @param radius         How far from the center point to include in the search.
+ * @param result [out]  If a spot is chosen, this will be set to its location.
+ *                      Will remain unchanged if no valid spot is found.
+ * @param exclude_radius All spots within this distance of the center point will
+ *                       be excluded from the search. (Defaults to -1, which
+ *                       excludes nothing. 0 will exclude only the center.)
+ * @param in_sight_of  If not null, spots will only be considered valid so long
+ *                     as they are in sight of the given actor.
+ *
+ * @return Whether a valid spot was found. (If true, empty will be set to this spot)
+ */
 bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
-                              int radius, bool allow_centre, coord_def& empty,
-                              bool in_player_sight)
+                              int radius, coord_def& result, int exclude_radius,
+                              const actor* in_sight_of)
 {
     int good_count = 0;
 
-    for (radius_iterator ri(where, radius, C_SQUARE, !allow_centre);
+    for (radius_iterator ri(where, radius, C_SQUARE, exclude_radius >= 0);
          ri; ++ri)
     {
+        if (exclude_radius > 0 && grid_distance(where, *ri) <= exclude_radius)
+            continue;
+
         if (actor_at(*ri))
             continue;
 
@@ -2971,11 +2992,11 @@ bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
         if (!monster_habitable_grid(mon_type, *ri))
             continue;
 
-        if (in_player_sight && !you.see_cell_no_trans(*ri))
+        if (in_sight_of && !in_sight_of->see_cell_no_trans(*ri))
             continue;
 
         if (one_chance_in(++good_count))
-            empty = *ri;
+            result = *ri;
     }
 
     return good_count > 0;

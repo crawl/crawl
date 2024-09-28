@@ -3449,7 +3449,7 @@ bool mons_word_of_recall(monster* mons, int recall_target)
         coord_def empty;
         const bool could_see = you.can_see(*mon);
         if (find_habitable_spot_near(target, mons_base_type(*mon),
-                                     3, false, empty)
+                                     3, empty)
             && mon->move_to_pos(empty))
         {
             mon->behaviour = BEH_SEEK;
@@ -3589,7 +3589,7 @@ static bool _place_druids_call_beast(const monster* druid, monster* beast,
         int tries = 0;
         while (tries < 10 && base_spot.origin())
         {
-            find_habitable_spot_near(area, mons_base_type(*beast), 3, false, base_spot);
+            find_habitable_spot_near(area, mons_base_type(*beast), 3, base_spot);
             if (cell_see_cell(target->pos(), base_spot, LOS_DEFAULT))
                 base_spot.reset();
             ++tries;
@@ -5519,7 +5519,7 @@ static void _blink_allies_encircle(const monster* mon)
     for (monster *ally : allies)
     {
         coord_def empty;
-        if (!find_habitable_spot_near(foepos, mons_base_type(*ally), 1, false, empty))
+        if (!find_habitable_spot_near(foepos, mons_base_type(*ally), 1, empty))
             continue;
         if (!ally->blink_to(empty))
             continue;
@@ -6949,11 +6949,11 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             // radius if no adjacent spots can be found
             coord_def empty;
             find_habitable_spot_near(foe->pos(),
-                                     MONS_WANDERING_MUSHROOM, 1, false, empty);
+                                     MONS_WANDERING_MUSHROOM, 1, empty);
             if (empty.origin())
             {
                 find_habitable_spot_near(foe->pos(),
-                                         MONS_WANDERING_MUSHROOM, 2, false, empty);
+                                         MONS_WANDERING_MUSHROOM, 2, empty);
             }
 
             // Can't find any room, so stop trying

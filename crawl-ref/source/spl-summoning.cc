@@ -1032,7 +1032,7 @@ spret summon_butterflies()
     for (int i = 0; i < how_many_outer; ++i)
     {
         coord_def pos(-1,-1);
-        if (!find_habitable_spot_near(you.pos(), MONS_BUTTERFLY, 3, false, pos))
+        if (!find_habitable_spot_near(you.pos(), MONS_BUTTERFLY, 3, pos))
             break;
         mgen_data butterfly(MONS_BUTTERFLY, BEH_FRIENDLY, pos, MHITYOU,
                             MG_AUTOFOE);
@@ -1649,8 +1649,7 @@ spret cast_battlesphere(actor* agent, int pow, bool fail)
         if (!you.can_see(*battlesphere))
         {
             coord_def empty;
-            if (find_habitable_spot_near(agent->pos(), MONS_BATTLESPHERE, 2,
-                                         false, empty)
+            if (find_habitable_spot_near(agent->pos(), MONS_BATTLESPHERE, 2, empty)
                 && battlesphere->move_to_pos(empty))
             {
                 recalled = true;
@@ -3015,8 +3014,7 @@ spret cast_hoarfrost_cannonade(const actor& agent, int pow, bool fail)
     {
         // Find a spot for each cannon (at a somewhat larger distance than
         // normal summons)
-        find_habitable_spot_near(center, MONS_HOARFROST_CANNON, 3, false,
-                                 cannon.pos);
+        find_habitable_spot_near(center, MONS_HOARFROST_CANNON, 3, cannon.pos);
 
         monster* mons = create_monster(cannon);
         if (mons)

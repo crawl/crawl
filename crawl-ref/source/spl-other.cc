@@ -196,7 +196,7 @@ bool try_recall(mid_t mid)
         return false;
     }
     coord_def empty;
-    if (!find_habitable_spot_near(you.pos(), mons->type, 3, false, empty)
+    if (!find_habitable_spot_near(you.pos(), mons->type, 3, empty)
         || !mons->move_to_pos(empty))
     {
         return false;

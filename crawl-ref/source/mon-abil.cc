@@ -1094,7 +1094,7 @@ bool mon_special_ability(monster* mons)
 
         const coord_def targ = foe->pos();
         coord_def spot;
-        if (!find_habitable_spot_near(targ, MONS_ELECTRIC_EEL, 3, false, spot)
+        if (!find_habitable_spot_near(targ, MONS_ELECTRIC_EEL, 3, spot)
             || targ.distance_from(spot) >= targ.distance_from(mons->pos()))
         {
             break;
