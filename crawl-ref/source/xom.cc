@@ -1683,7 +1683,7 @@ static int _xom_count_and_move_group(int min_range, int max_range,
             // Blink close a limited number of hostile enemies
             // adjacent or one tile away.
             if (!find_habitable_spot_near(you.pos(), mons_base_type(*moving_mons),
-                                          2, false, empty))
+                                          2, empty))
             {
                 continue;
             }

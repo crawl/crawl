@@ -19,6 +19,7 @@
 
 using std::vector;
 
+class actor;
 class monster;
 class mons_spec;
 struct mgen_data;
@@ -94,8 +95,8 @@ bool mons_can_hate(monster_type type);
 void check_lovelessness(monster &mon);
 
 bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
-                              int radius, bool allow_centre, coord_def& empty,
-                              bool in_player_sight = false);
+                              int radius, coord_def& result, int exclude_radius = -1,
+                              const actor* in_sight_of = nullptr);
 
 monster_type random_demon_by_tier(int tier);
 monster_type summon_any_demon(monster_type dct, bool use_local_demons = false);

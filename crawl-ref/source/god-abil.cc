@@ -7093,7 +7093,7 @@ static monster* _find_carnage_target(monster_type demon_type, coord_def& demon_s
     for (size_t i = 0; i < targs.size(); ++i)
     {
         coord_def pos;
-        if (find_habitable_spot_near(targs[i]->pos(), demon_type, 1, false, pos, true))
+        if (find_habitable_spot_near(targs[i]->pos(), demon_type, 1, pos, 0, &you))
         {
             demon_spot = pos;
             return targs[i];
@@ -7105,7 +7105,7 @@ static monster* _find_carnage_target(monster_type demon_type, coord_def& demon_s
     for (size_t i = 0; i < targs.size(); ++i)
     {
         coord_def pos;
-        if (find_habitable_spot_near(targs[i]->pos(), demon_type, 2, false, pos, true))
+        if (find_habitable_spot_near(targs[i]->pos(), demon_type, 2, pos, 0, &you))
         {
             demon_spot = pos;
             return targs[i];
