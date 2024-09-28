@@ -1560,9 +1560,7 @@ static void _protean_explosion(monster* mons)
     int delay = random_range(2, 4) * BASELINE_DELAY;
     for (int i = 0; i < num_children; ++i)
     {
-        coord_def spot;
-
-        // Try to find a spot within 3 tiles. If that fails, expand to 6 tiles.
+        // Try to find a spot within 3 tiles. If that fails, expand up to 6 tiles.
         // If that also fails, stop trying to place children; the player got off
         // easy this time.
         //
@@ -1573,9 +1571,7 @@ static void _protean_explosion(monster* mons)
         //      may think we have a valid tile when we don't. It's very awkward
         //      to prevent that without also limiting the possible spawn pool to
         //      ONLY monsters that can survive in deep water, though.
-        find_habitable_spot_near(mons->pos(), target, 3, spot);
-        if (spot.origin())
-            find_habitable_spot_near(mons->pos(), target, 6, spot);
+        const coord_def spot = find_newmons_square(target, mons->pos(), 3, 6);
         if (spot.origin())
             return;
 

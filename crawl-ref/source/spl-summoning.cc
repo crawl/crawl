@@ -397,19 +397,13 @@ static void _place_dragon()
     // valid spot, move on to the next one.
     for (monster *target : targets)
     {
-        // Chose a random viable adjacent spot to the select target
-        vector<coord_def> spots;
-        for (adjacent_iterator ai(target->pos()); ai; ++ai)
-        {
-            if (monster_habitable_grid(MONS_FIRE_DRAGON, *ai)
-                && !actor_at(*ai))
-            {
-                spots.push_back(*ai);
-            }
-        }
+        // Chose a random valid spot adjacent to the selected target which is
+        // also in the player's LoS.
+        coord_def pos = find_newmons_square(MONS_FIRE_DRAGON, target->pos(),
+                                            1, 1, -1, &you);
 
-        // Now try to create the actual dragon
-        if (spots.size() <= 0)
+        // Try the next enemy, if we can't place one to fight this enemy.
+        if (pos.origin())
             continue;
 
         // Abort if we lack sufficient MP, but the dragon call duration
@@ -421,7 +415,6 @@ static void _place_dragon()
             return;
         }
 
-        const coord_def pos = spots[random2(spots.size())];
         monster *dragon = create_monster(
             mgen_data(mon, BEH_COPY, pos, MHITYOU, MG_FORCE_PLACE | MG_AUTOFOE)
             .set_summoned(&you, SPELL_DRAGON_CALL, summ_dur(2)));
@@ -494,23 +487,10 @@ void doom_howl(int time)
                 MONS_BONE_DRAGON, MONS_REAPER, MONS_TORMENTOR, MONS_TZITZIMITL,
                 MONS_PUTRID_MOUTH
         );
-        vector<coord_def> spots;
-        for (adjacent_iterator ai(target->pos()); ai; ++ai)
-        {
-            if (monster_habitable_grid(howlcalled, *ai)
-                && !actor_at(*ai))
-            {
-                spots.push_back(*ai);
-            }
-        }
-        if (spots.size() <= 0)
-            continue;
-
-        const coord_def pos = spots[random2(spots.size())];
 
         monster *mons = create_monster(mgen_data(howlcalled, BEH_HOSTILE,
-                                                 pos, target->mindex(),
-                                                 MG_FORCE_BEH));
+                                                 target->pos(), target->mindex(),
+                                                 MG_FORCE_BEH).set_range(1));
         if (mons)
         {
             mons->add_ench(mon_enchant(ENCH_HAUNTING, 1, target,
@@ -1025,18 +1005,14 @@ spret summon_butterflies()
             success = true;
     }
     // place another set more sparsely. These will try to find a placement
-    // within range 3 of the player. If that place is already filled, they will
-    // go as far as 2 from that original spot. This can backfill the inner
-    // zone.
+    // within range 5 of the player. This can backfill the inner zone.
     const int how_many_outer = random_range(12, 28);
     for (int i = 0; i < how_many_outer; ++i)
     {
-        coord_def pos(-1,-1);
-        if (!find_habitable_spot_near(you.pos(), MONS_BUTTERFLY, 3, pos))
-            break;
-        mgen_data butterfly(MONS_BUTTERFLY, BEH_FRIENDLY, pos, MHITYOU,
+        mgen_data butterfly(MONS_BUTTERFLY, BEH_FRIENDLY, you.pos(), MHITYOU,
                             MG_AUTOFOE);
         butterfly.set_summoned(&you, MON_SUMM_BUTTERFLIES, summ_dur(3));
+        butterfly.set_range(5);
 
         if (create_monster(butterfly))
             success = true;
@@ -1394,7 +1370,7 @@ spret cast_haunt(int pow, const coord_def& where, bool fail)
         const monster_type mon = pick_random_wraith();
 
         if (monster *mons = create_monster(
-                mgen_data(mon, BEH_FRIENDLY, where, mi, MG_FORCE_BEH)
+                mgen_data(mon, BEH_FRIENDLY, where, mi, MG_FORCE_BEH | MG_SEE_SUMMONER)
                 .set_summoned(&you, SPELL_HAUNT, summ_dur(3))))
         {
             success++;
@@ -2994,10 +2970,15 @@ spret cast_hoarfrost_cannonade(const actor& agent, int pow, bool fail)
             monster_die(**mi, KILL_TIMEOUT, NON_MONSTER);
     }
 
+    // Monsters summon cannons around their foe instead of themselves (both to
+    // let them operate with other monsters in the way and because it's too easy
+    // for the player to back out of range otherwise)
     mgen_data cannon = _summon_data(agent, MONS_HOARFROST_CANNON, 0,
                                     SPELL_HOARFROST_CANNONADE);
-    cannon.flags |= MG_FORCE_PLACE;
+    cannon.pos = (agent.is_player() ? you.pos()
+                                    : agent.as_monster()->get_foe()->pos());
     cannon.hd = _hoarfrost_cannon_hd(pow);
+    cannon.set_range(3);
 
     // Make both cannons share the same duration
     cannon.set_summoned(&agent, SPELL_HOARFROST_CANNONADE,
@@ -3005,17 +2986,9 @@ spret cast_hoarfrost_cannonade(const actor& agent, int pow, bool fail)
 
     int num_seen = 0;
 
-    // Monsters summon cannons around their foe instead of themselves (both to
-    // let them operate with other monsters in the way and because it's too easy
-    // for the player to back out of range otherwise)
-    const coord_def center = (agent.is_player() ? you.pos()
-                                                : agent.as_monster()->get_foe()->pos());
+
     for (int i = 0; i < 2; ++i)
     {
-        // Find a spot for each cannon (at a somewhat larger distance than
-        // normal summons)
-        find_habitable_spot_near(center, MONS_HOARFROST_CANNON, 3, cannon.pos);
-
         monster* mons = create_monster(cannon);
         if (mons)
         {
@@ -3186,47 +3159,44 @@ bool make_soul_wisp(const actor& agent, actor& victim)
         return false;
     }
 
-    vector<coord_def> spots;
-    for (adjacent_iterator ai(victim.pos()); ai; ++ai)
-    {
-        if (monster_habitable_grid(MONS_SOUL_WISP, *ai)
-            && !actor_at(*ai) && agent.see_cell_no_trans(*ai))
-        {
-            spots.push_back(*ai);
-        }
-    }
-    if (spots.size() <= 0)
-    {
-        if (agent.is_player())
-            mpr("There's no room for the soul wisp to form!");
-        return false;
-    }
-
-    if (you.see_cell(victim.pos()))
-    {
-        mprf("A fragment of %s soul is dislodged from %s body.",
-                victim.name(DESC_ITS).c_str(),
-                victim.pronoun(PRONOUN_POSSESSIVE).c_str());
-
-    }
-
     mgen_data mg = _summon_data(agent, MONS_SOUL_WISP, summ_dur(2), SPELL_SOUL_SPLINTER);
-    mg.pos = spots[random2(spots.size())];
-    mg.flags |= MG_FORCE_PLACE;
+    mg.pos = victim.pos();
+    mg.set_range(1);
+    mg.flags |= MG_SEE_SUMMONER;
 
     // Damage improves when extracted from stronger enemies, but they are always fragile.
     mg.hd = 2 + div_rand_round(victim.get_experience_level(), 2);
     mg.hp = random_range(5, 8);
 
-    monster* wisp = create_monster(mg);
+    if (monster* wisp = create_monster(mg))
+    {
+        if (you.see_cell(victim.pos()))
+        {
+            mprf("A fragment of %s soul is dislodged from %s body.",
+                    victim.name(DESC_ITS).c_str(),
+                    victim.pronoun(PRONOUN_POSSESSIVE).c_str());
 
-    wisp->add_ench(mon_enchant(ENCH_HAUNTING, 1, &victim, INFINITE_DURATION));
-    victim.weaken(&agent, wisp->get_ench(ENCH_SUMMON_TIMER).duration / 10);
-    victim.props[SOUL_SPLINTERED_KEY]= true;
+        }
 
-    // Let wisp act immediately (so that if it appears behind the enemy, the
-    // enemy won't simply move out of range first).
-    wisp->speed_increment = 80;
+        wisp->add_ench(mon_enchant(ENCH_HAUNTING, 1, &victim, INFINITE_DURATION));
+        // Let wisp act immediately (so that if it appears behind the enemy, the
+        // enemy won't simply move out of range first).
+        wisp->speed_increment = 80;
+        victim.weaken(&agent, wisp->get_ench(ENCH_SUMMON_TIMER).duration / 10);
+        victim.props[SOUL_SPLINTERED_KEY]= true;
 
-    return true;
+        return true;
+    }
+    else if (you.see_cell(victim.pos()))
+    {
+        if (agent.is_player()
+            && !find_habitable_spot_near(victim.pos(), MONS_SOUL_WISP, 1, mg.pos, 0, &you))
+        {
+            mpr("There's no room for the soul wisp to form!");
+        }
+        else
+            canned_msg(MSG_NOTHING_HAPPENS);
+    }
+
+    return false;
 }
