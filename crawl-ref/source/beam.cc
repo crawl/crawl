@@ -2687,28 +2687,14 @@ void bolt::affect_endpoint()
         if (!agent(true) || !agent(true)->alive())
             break;
 
-        coord_def spot;
-        int num_found = 0;
-        for (adjacent_iterator ai(pos()); ai; ++ai)
-        {
-            if (feat_is_solid(env.grid(*ai)) || actor_at(*ai))
-                continue;
+        monster* blade = create_monster(mgen_data(MONS_DANCING_WEAPON,
+                                        SAME_ATTITUDE(agent(true)->as_monster()),
+                                        pos(), agent(true)->as_monster()->foe)
+                        .set_summoned(agent(true), SPELL_FLASHING_BALESTRA, summ_dur(1), false)
+                        .set_range(1));
 
-            if (one_chance_in(++num_found))
-                spot = *ai;
-        }
-
-        if (!spot.origin())
-        {
-            monster* blade = create_monster(mgen_data(MONS_DANCING_WEAPON,
-                                            SAME_ATTITUDE(agent(true)->as_monster()),
-                                            spot, agent(true)->as_monster()->foe,
-                                            MG_FORCE_PLACE)
-                            .set_summoned(agent(true), SPELL_FLASHING_BALESTRA, summ_dur(1), false));
-
-            if (blade)
-                blade->add_ench(ENCH_MIGHT);
-        }
+        if (blade)
+            blade->add_ench(ENCH_MIGHT);
     }
     break;
 

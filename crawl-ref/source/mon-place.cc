@@ -2831,20 +2831,27 @@ coord_def find_newmons_square_contiguous(monster_type mons_class,
     return in_bounds(p) ? p : coord_def(-1, -1);
 }
 
-coord_def find_newmons_square(monster_type mons_class, const coord_def &p)
+coord_def find_newmons_square(monster_type mons_class, const coord_def &p,
+                              int preferred_radius, int max_radius,
+                              int exclude_radius,
+                              const actor* in_sight_of)
 {
-    coord_def empty;
-    coord_def pos(-1, -1);
+    coord_def pos(0, 0);
 
-    if (mons_class == WANDERING_MONSTER)
-        mons_class = RANDOM_MONSTER;
+    // First search within our preferred radius.
+    if (find_habitable_spot_near(p, mons_class, preferred_radius, pos,
+                                 exclude_radius, in_sight_of))
+    {
+        return pos;
+    }
 
-    // Might be better if we chose a space and tried to match the monster
-    // to it in the case of RANDOM_MONSTER, that way if the target square
-    // is surrounded by water or lava this function would work.  -- bwr
-
-    if (find_habitable_spot_near(p, mons_class, 2, empty))
-        pos = empty;
+    // If we didn't find a spot there, expand our search one radius at a time,
+    // until we hit max_radius.
+    for (int rad = preferred_radius + 1; rad <= max_radius; ++rad)
+    {
+        if (find_habitable_spot_near(p, mons_class, rad, pos, rad - 1, in_sight_of))
+            return pos;
+    }
 
     return pos;
 }
@@ -2936,7 +2943,11 @@ monster* create_monster(mgen_data mg, bool fail_msg)
         || you.pos() == mg.pos && !fedhas_passthrough_class(mg.cls)
         || !mons_class_can_pass(montype, env.grid(mg.pos)))
     {
-        mg.pos = find_newmons_square(montype, mg.pos);
+        mg.pos = find_newmons_square(montype, mg.pos, mg.range_preferred,
+                                     mg.range_max, mg.range_min,
+                                     (mg.flags & MG_SEE_SUMMONER)
+                                        ? mg.summoner
+                                        : nullptr);
     }
 
     if (in_bounds(mg.pos))

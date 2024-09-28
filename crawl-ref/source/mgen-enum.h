@@ -168,5 +168,7 @@ enum mgen_flag
     MG_PREFER_LAND  = 0x400, ///< don't place monsters in deep water / lava if
                              ///  they could be placed on land / shallow water
                              ///  instead.
+    MG_SEE_SUMMONER = 0x800, ///< will always be generated in sight of its
+                             ///  summoner
 };
 DEF_BITFIELD(mgen_flags, mgen_flag);

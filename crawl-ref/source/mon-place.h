@@ -105,7 +105,10 @@ bool monster_habitable_feat(const monster* mon,
 bool monster_habitable_feat(monster_type mt, dungeon_feature_type feat);
 bool monster_habitable_grid(const monster* mon, const coord_def& pos);
 bool monster_habitable_grid(monster_type mt, const coord_def& pos);
-coord_def find_newmons_square(monster_type mons_class, const coord_def &p);
+coord_def find_newmons_square(monster_type mons_class, const coord_def &p,
+                              int preferred_radius = 2, int max_radius = 2,
+                              int exclude_radius = -1,
+                              const actor* in_sight_of = nullptr);
 coord_def find_newmons_square_contiguous(monster_type mons_class,
                                          const coord_def &start,
                                          int maxdistance = 3,

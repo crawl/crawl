@@ -45,8 +45,18 @@ struct mgen_data
     // mon_summon_type in mon-enum.h.
     int             summon_type;
 
-    // Where the monster will be created.
+    // The center point around which the monster will be created.
     coord_def       pos;
+
+    // Used to control where the monster will be randomly placed, relative to
+    // the center point. At first, place_monster() will attempt to find a valid
+    // spot within range_preferred tiles of pos. If none can be found, it will
+    // expand its search up to range_max tiles of pos before giving up. If
+    // range_min is non-negative, it will exclude tiles which are within that
+    // distance of pos.
+    int range_preferred = 2;
+    int range_max = 0;
+    int range_min = -1;
 
     // The monster's foe, i.e. which monster it will want to attack. foe
     // may be an index into the monster array (0 - (MAX_MONSTERS-1)), or
@@ -151,6 +161,16 @@ struct mgen_data
     mgen_data &set_base(monster_type base)
     {
         base_type = base;
+        return *this;
+    }
+
+    mgen_data &set_range(int preferred_range, int max_range = 0, int min_range = -1)
+    {
+        range_preferred = preferred_range;
+        if (max_range > 0)
+            range_max = max_range;
+        if (min_range >= 0)
+            range_min = min_range;
         return *this;
     }
 

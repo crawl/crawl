@@ -6945,26 +6945,12 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         duration  = min(2 + mons->spell_hd(spell_cast) / 5, 6);
         for (int i = 0; i < sumcount2; ++i)
         {
-            // Attempt to place adjacent to target first, and only at a wider
-            // radius if no adjacent spots can be found
-            coord_def empty;
-            find_habitable_spot_near(foe->pos(),
-                                     MONS_WANDERING_MUSHROOM, 1, empty);
-            if (empty.origin())
-            {
-                find_habitable_spot_near(foe->pos(),
-                                         MONS_WANDERING_MUSHROOM, 2, empty);
-            }
-
-            // Can't find any room, so stop trying
-            if (empty.origin())
-                return;
-
             create_monster(
                 mgen_data(one_chance_in(3) ? MONS_DEATHCAP
                                            : MONS_WANDERING_MUSHROOM,
-                          SAME_ATTITUDE(mons), empty, mons->foe, MG_FORCE_PLACE,
-                          god).set_summoned(mons, spell_cast, summ_dur(duration)));
+                          SAME_ATTITUDE(mons), foe->pos(), mons->foe, MG_FORCE_PLACE,
+                          god).set_summoned(mons, spell_cast, summ_dur(duration))
+                              .set_range(1, 2));
         }
         return;
 
