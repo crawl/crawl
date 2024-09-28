@@ -104,7 +104,7 @@ void wizard_create_spec_monster_name()
     {
         // Try again with habitat HT_LAND.
         // (Will be changed to the necessary terrain type in dgn_place_monster.)
-        place = find_newmons_square(MONS_NO_MONSTER, you.pos());
+        place = find_newmons_square(MONS_NO_MONSTER, you.pos(), 2, you.current_vision);
     }
 
     if (!in_bounds(place))
