@@ -756,6 +756,7 @@ static void _animate_weapon(int pow, actor* target)
                  hostile ? MHITYOU : target->mindex(),
                  hostile ? MG_NONE : MG_FORCE_BEH);
     mg.set_summoned(&you, SPELL_TUKIMAS_DANCE, summ_dur(dur));
+    mg.set_range(1, 2);
     mg.props[TUKIMA_WEAPON] = *wpn;
     mg.props[TUKIMA_POWER] = pow;
 
@@ -2585,6 +2586,7 @@ void kiku_unearth_wretches()
                      MHITNOT);
         mg.extra_flags = MF_NO_REWARD // ?
                        | MF_NO_REGEN;
+        mg.set_range(2, 4);
         mg.props[KIKU_WRETCH_KEY] = true;
 
         monster *mon = create_monster(mg);

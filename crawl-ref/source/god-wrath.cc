@@ -124,7 +124,8 @@ static mgen_data _wrath_mon_data(monster_type mtyp, god_type god)
 {
     mgen_data mg = mgen_data::hostile_at(mtyp, true, you.pos())
                     .set_summoned(nullptr, 0, 0)
-                    .set_non_actor_summoner(_god_wrath_name(god));
+                    .set_non_actor_summoner(_god_wrath_name(god))
+                    .set_range(2, you.current_vision);
     mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
     mg.god = god;
     return mg;

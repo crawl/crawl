@@ -1406,6 +1406,9 @@ static void _make_derived_undead(monster* mons, bool quiet,
     // shouldn't poof
     mg.set_summoned(beh == BEH_FRIENDLY ? &you : nullptr, spell, 0, false);
     mg.set_base(mons->type);
+    // Prefer to be created wherever the dead monster was, but allow placing up
+    // to 2 spaces away, if needbe.
+    mg.set_range(0, 2);
     if (god == GOD_KIKUBAAQUDGHA) // kiku wrath
         mg.extra_flags |= MF_NO_REWARD;
 
