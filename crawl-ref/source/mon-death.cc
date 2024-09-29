@@ -1420,6 +1420,7 @@ static void _make_derived_undead(monster* mons, bool quiet,
                                       | MF_NAME_ADJECTIVE
                                       | MF_NAME_DESCRIPTOR);
 
+
     const char* mist = which_z == MONS_SIMULACRUM ? "freezing" :
                        god == GOD_YREDELEMNUL ? "black" :
                        "glowing";
@@ -2613,11 +2614,12 @@ item_def* monster_die(monster& mons, killer_type killer,
             // a death message earlier
             if (death_message || did_death_message)
             {
-                // If this monster would otherwise give xp but didn't because
-                // it grants no reward or was neutral, give a message.
+                // If this monster would otherwise give xp but didn't for some
+                // reason that wasn't clearly announced, give a message.
                 if (!gives_player_xp
                     && mons_class_gives_xp(mons.type)
                     && !summoned
+                    && !mons.is_unrewarding()
                     && !mons.friendly())
                 {
                     mpr("That felt strangely unrewarding.");

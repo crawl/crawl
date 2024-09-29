@@ -453,17 +453,24 @@ monster_info::monster_info(const monster* m, int milev)
         && (!m->has_ench(ENCH_PHANTOM_MIRROR) || m->friendly()))
     {
         mb.set(MB_SUMMONED);
-        if (m->type == MONS_SPELLFORGED_SERVITOR && m->summoner == MID_PLAYER)
-            mb.set(MB_PLAYER_SERVITOR);
         if (m->is_abjurable())
             mb.set(MB_ABJURABLE);
+        if (m->type == MONS_SPELLFORGED_SERVITOR && m->summoner == MID_PLAYER)
+            mb.set(MB_PLAYER_SERVITOR);
     }
-    else if (m->is_perm_summoned() && !mons_is_player_shadow(*m))
-        mb.set(MB_PERM_SUMMON);
-    else if (testbits(m->flags, MF_NO_REWARD)
-             && mons_class_gives_xp(m->type, true))
+    else if ((m->is_unrewarding()
+                 || testbits(m->flags, MF_NO_REWARD)
+                 && mons_class_gives_xp(m->type, true)))
     {
+        // This shows a note in the extended description that the monster is
+        // worth no experience.
         mb.set(MB_NO_REWARD);
+
+        // This displays an icon over the monster, and a status line when
+        // examining them, which looks a little weird and unnecessary for
+        // friendly monsters, as it's *always* the case with them.
+        if (m->real_attitude() != ATT_FRIENDLY)
+            mb.set(MB_UNREWARDING);
     }
 
     if (m->has_ench(ENCH_SUMMON_CAPPED))

@@ -3770,7 +3770,7 @@ static string _get_monster_desc(const monster_info& mi)
                 + " indifferent to you.\n";
     }
 
-    if (mi.is(MB_SUMMONED) || mi.is(MB_PERM_SUMMON))
+    if (mi.is(MB_SUMMONED))
     {
         text += pronoun + " " + conjugate_verb("have", mi.pronoun_plurality())
                 + " been summoned";
@@ -3779,8 +3779,6 @@ static string _get_monster_desc(const monster_info& mi)
             text += ", and " + conjugate_verb("are", mi.pronoun_plurality())
                     + " expiring";
         }
-        else if (mi.is(MB_PERM_SUMMON))
-            text += " but will not time out";
         text += ".\n";
     }
 

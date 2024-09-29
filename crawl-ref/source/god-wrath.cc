@@ -393,9 +393,8 @@ void lucy_check_meddling()
         if (invalid_monster(mon) || !mon->alive())
             continue;
         // 80% chance of banishing god wrath summons, 30% chance of banishing
-        // other creatures nearby. Lazily assume that any perma summoned mons
-        // is a god wrath summon.
-        if (x_chance_in_y(mon->is_perm_summoned() ? 8 : 3, 10))
+        // other creatures nearby.
+        if (x_chance_in_y(mon->is_summoned_by(MON_SUMM_WRATH) ? 8 : 3, 10))
         {
             if (!banished)
             {
@@ -2066,10 +2065,10 @@ static monster* _ignis_champion_target()
             || mons_is_tentacle_or_tentacle_segment(mon->type)
             || mon->is_stationary()
             || mons_is_conjured(mon->type)
-            || mon->is_perm_summoned()
             || mon->wont_attack()
             // no stealing another god's pals :P
-            || mon->is_priest())
+            || mon->is_priest()
+            || mon->god != GOD_NO_GOD)
         {
             continue;
         }

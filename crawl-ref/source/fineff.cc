@@ -367,7 +367,7 @@ void trj_spawn_fineff::fire()
                               .set_summoned(trj, 0)))
         {
             // Don't allow milking the Royal Jelly.
-            mons->flags |= MF_NO_REWARD;
+            mons->flags |= MF_NO_REWARD | MF_HARD_RESET;
             spawned++;
         }
     }

@@ -1910,7 +1910,7 @@ bool monster::is_abjurable() const
     return is_summoned() && testbits(flags, MF_ACTUAL_SUMMON);
 }
 
-bool monster::is_perm_summoned() const
+bool monster::is_unrewarding() const
 {
     return testbits(flags, MF_HARD_RESET | MF_NO_REWARD);
 }

@@ -2618,7 +2618,9 @@ static bool _handle_pickup(monster* mons)
 {
     if (env.igrid(mons->pos()) == NON_ITEM
         // Summoned monsters never pick anything up.
-        || mons->is_summoned() || mons->is_perm_summoned()
+        || mons->is_summoned()
+        // And monsters which would remove the item from existence also shouldn't
+        || mons->flags & MF_HARD_RESET
         || mons->asleep())
     {
         return false;

@@ -6607,7 +6607,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     if (!result.empty())
         inf.body << "\n" << result;
 
-    if (mi.is(MB_SUMMONED) || mi.is(MB_PERM_SUMMON))
+    if (mi.is(MB_SUMMONED))
     {
         inf.body << "\nThis monster has been ";
 
@@ -6617,8 +6617,6 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
             inf.body << "temporarily summoned to this location. ";
         else if (mi.is(MB_SUMMONED))
             inf.body << "created by magic and is temporary. ";
-        else if (mi.is(MB_PERM_SUMMON))
-            inf.body << "permanently summoned to this plane. ";
 
         // TODO: hacks; convert angered_by_attacks to a monster_info check
         // (but on the other hand, it is really limiting to not have access
@@ -6634,11 +6632,8 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
             inf.body << "Killing " << it_o << " yields ";
         inf.body << "no experience or items";
 
-        if (!did_stair_use && !mi.is(MB_PERM_SUMMON))
+        if (!did_stair_use)
             inf.body << "; " << it << " " << is << " incapable of using stairs";
-
-        if (mi.is(MB_PERM_SUMMON))
-            inf.body << " and " << it << " cannot be abjured";
 
         inf.body << ".\n";
     }
