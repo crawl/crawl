@@ -109,7 +109,7 @@ string pluralise(const string &name, const char * const qualifiers[],
         // TODO: if someone defines a "goblin chief", this should be revisited.
         return name.substr(0, name.length() - 1) + "ves";
     }
-    else if (ends_with(lowname, "mage"))
+    else if (ends_with(lowname, "mage") && !ends_with(lowname, "damage"))
     {
         // mage -> magi
         return name.substr(0, name.length() - 1) + "i";
