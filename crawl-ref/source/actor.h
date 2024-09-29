@@ -51,8 +51,6 @@ public:
     virtual bool is_summoned_by(const actor& summoner,
                                 int summon_type = SPELL_NO_SPELL) const = 0;
 
-    virtual bool is_perm_summoned() const = 0;
-
     // [ds] Low-level moveto() - moves the actor without updating relevant
     // grids, such as env.mgrid.
     virtual void moveto(const coord_def &c, bool clear_net = true) = 0;

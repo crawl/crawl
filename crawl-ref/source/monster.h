@@ -153,7 +153,7 @@ public:
     bool is_summoned_by(const actor& summoner,
                         int summon_type = SPELL_NO_SPELL) const override;
     bool is_abjurable() const;
-    bool is_perm_summoned() const override;
+    bool is_unrewarding() const;
     bool has_action_energy() const;
     void drain_action_energy();
     bool matches_player_speed() const;

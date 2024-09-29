@@ -100,7 +100,9 @@ enum monster_info_flags
     MB_CLINGING,
 #endif
     MB_NAME_ZOMBIE,
+#if TAG_MAJOR_VERSION == 34
     MB_PERM_SUMMON,
+#endif
     MB_INNER_FLAME,
     MB_UMBRAED,
 #if TAG_MAJOR_VERSION == 34
@@ -240,6 +242,7 @@ enum monster_info_flags
     MB_ENGULFING_PLAYER,
     MB_DOUBLED_VIGOUR,
     MB_ABJURABLE,
+    MB_UNREWARDING,
     NUM_MB_FLAGS
 };
 

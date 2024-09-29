@@ -30,7 +30,7 @@ good_neutral GOOD_NEUTRAL
 neutral NEUTRAL
 animated_weapon ANIMATED_WEAPON
 summoned SUMMONED
-summoned_durable PERM_SUMMON
+unrewarding UNREWARDING
 poison POISON
 poison_more MORE_POISON
 poison_max MAX_POISON

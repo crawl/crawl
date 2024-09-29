@@ -2296,7 +2296,7 @@ static const map<monster_info_flags, tileidx_t> monster_status_icons = {
     { MB_PETRIFIED, TILEI_PETRIFIED },
     { MB_BLIND, TILEI_BLIND },
     { MB_SUMMONED, TILEI_SUMMONED },
-    { MB_PERM_SUMMON, TILEI_PERM_SUMMON },
+    { MB_UNREWARDING, TILEI_UNREWARDING },
     { MB_WORD_OF_RECALL, TILEI_RECALL },
     { MB_LIGHTLY_DRAINED, TILEI_DRAIN },
     { MB_HEAVILY_DRAINED, TILEI_DRAIN },

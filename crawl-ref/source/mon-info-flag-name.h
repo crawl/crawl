@@ -26,8 +26,8 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_CHARMED, "charmed", "charmed", "charmed"},
     { MB_HEXED, "hexed", "control wrested from you", "hexed"},
     { MB_SUMMONED, "summoned", "summoned", "summoned"},
+    { MB_UNREWARDING, "", "unrewarding", ""},
     { MB_WANDERING, "wandering", "wandering", "wandering"},
-    { MB_PERM_SUMMON, "", "durably summoned", ""},
     { MB_SUMMONED_CAPPED, "expiring", "expiring", "expiring"},
     // Bad things for the player
     { MB_MESMERIZING, "mesmerising", "mesmerising", "mesmerising"},
