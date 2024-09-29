@@ -608,13 +608,15 @@ bool summon_berserker(int pow, actor *caster, monster_type override_mons)
                  caster ? caster->pos() : you.pos(),
                  _auto_autofoe(caster),
                  MG_AUTOFOE, GOD_TROG);
-    mg.set_summoned(caster, SPELL_NO_SPELL, summ_dur(caster ? dur : 0));
 
     if (!caster)
     {
+        mg.set_summoned(nullptr, MON_SUMM_WRATH);
         mg.non_actor_summoner = "the rage of " + god_name(GOD_TROG, false);
         mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
     }
+    else
+        mg.set_summoned(caster, MON_SUMM_AID, summ_dur(dur));
 
     monster *mons = create_monster(mg);
 
