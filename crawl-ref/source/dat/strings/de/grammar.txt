@@ -58,21 +58,14 @@ GENERATE:acc
 # Masculine and neuter can be difficult to distinguish. Since masculine nouns
 # are more numerous, we assume masculine unless we see proof of neuter.
 
-# Neuter strings can be marked with the prefix {n} in the input file.
-# If a string is not marked, but we see proof of neuter, we mark here with {neut}.
-# We use a different marker so that we can restore neuter strings back to their
-# original state (in the end, we want only masculine strings to change).
-/^(?!\{(m|n|f|pl|neut)\})(Euer )?[^A-ZÄÖÜ]*(\{adj-es\}|es )/^/{neut}/
-
-# remove masculine gender hint, to simplify following regexps
-/^\{m\}//
+# Mark any unmarked masculine instances of ein/Euer
+/^(ein|Euer) (?!(\{adj-es\}|[^A-ZÄÖÜ ]+es ))/{m}$1 /
 
 # determiners
-# Note that neuter will not match any of these because of the marker prefix.
-/^der /den /
-/^ein /einen /
+/^(\{m\})?der /den /
+/^\{m\}ein /einen /
 # temporary lowercase placeholder to make it easier to find noun
-/^Euer /bigeuren /
+/^\{m\}Euer /euren /
 
 # masc adjectives
 /^den [^A-ZÄÖÜ]+/e /en /
@@ -89,16 +82,13 @@ GENERATE:acc
 /[A-ZÄÖÜ][^ ,]+/(Affe|[^Ww]affe)$/$1n/
 
 # replace temporary placeholder
-/^bigeuren /Euren /
+/^euren /Euren /
 
 # fix special cases
 /Blork der Ork/Blork den Ork/
 /Verrückter /Verrückten /
 /er Drakonier/en Drakonier/
 /^(den [A-ZÄÖÜ][^ ,]+)e Drakonier/$1en Drakonier/
-
-# Restore neuter strings back to their original state
-/^\{neut\}//
 
 %%%%
 
