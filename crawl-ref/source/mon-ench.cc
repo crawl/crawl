@@ -1875,7 +1875,7 @@ void monster::mark_summoned(int summon_type, int longevity, bool mark_items)
  */
 bool monster::is_summoned() const
 {
-    return has_ench(ENCH_SUMMON);
+    return has_ench(ENCH_SUMMON) && has_ench(ENCH_SUMMON_TIMER);
 }
 
 bool monster::is_summoned_by(int summon_type) const
