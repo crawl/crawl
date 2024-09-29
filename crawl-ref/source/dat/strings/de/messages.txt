@@ -21292,5 +21292,5 @@ The fountain becomes smaller until it vanishes.
 ##################
 %%%%
 You hear a hidden mechanism click...the prison walls lower!
-
+Ihr hört ein verborgenes Mechanismus klicken...die Gefängniswände senken sich!
 %%%%
