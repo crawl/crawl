@@ -391,7 +391,7 @@ static const vector<pair<function<void ()>, int>> zot_effects = {
     { [] {
               mgen_data mg = mgen_data::hostile_at(RANDOM_DEMON_GREATER,
                                                    true, you.pos());
-              mg.set_summoned(nullptr, SPELL_NO_SPELL);
+              mg.set_summoned(nullptr, MON_SUMM_ZOT);
               mg.set_non_actor_summoner("a Zot trap");
               mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
               if (create_monster(mg))
@@ -405,7 +405,7 @@ static const vector<pair<function<void ()>, int>> zot_effects = {
     { [] {
               mgen_data mg = mgen_data::hostile_at(MONS_TWISTER,
                                                    false, you.pos());
-              mg.set_summoned(nullptr, SPELL_NO_SPELL, summ_dur(2));
+              mg.set_summoned(nullptr, MON_SUMM_ZOT, summ_dur(2));
               mg.set_non_actor_summoner("a Zot trap");
               mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
               if (create_monster(mg))

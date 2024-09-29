@@ -1078,7 +1078,7 @@ bool yred_random_servant(unsigned int pow, bool force_hostile, int num)
 
         if (force_hostile)
         {
-            mg.set_summoned(0, 0, 0);
+            mg.set_summoned(nullptr, MON_SUMM_WRATH);
             mg.non_actor_summoner = "the anger of Yredelemnul";
             mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
             mg.set_range(2, you.current_vision);
