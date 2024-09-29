@@ -281,16 +281,16 @@ front legs
 Vorderbeine
 %%%%
 your front leg
-Euer Vorderbein
+{n}Euer Vorderbein
 %%%%
 your front legs
 {pl}Eure Vorderbeine
 %%%%
 your weapon front leg
-Euer Waffenvorderbein
+{n}Euer Waffenvorderbein
 %%%%
 your shield front leg
-Euer Schildvorderbein
+{n}Euer Schildvorderbein
 %%%%
 # flesh type
 flesh

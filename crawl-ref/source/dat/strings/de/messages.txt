@@ -19767,13 +19767,13 @@ a plaything of Xom
 ein Spielball von Xom
 %%%%
 a toy of Xom
-ein Spielzeug von Xom
+{n}ein Spielzeug von Xom
 %%%%
 a favourite toy of Xom
-ein Lieblingsspielzeug von Xom
+{n}ein Lieblingsspielzeug von Xom
 %%%%
 a beloved toy of Xom
-ein geliebtes spielzeug von Xom
+{n}ein geliebtes spielzeug von Xom
 %%%%
 Xom's teddy bear
 Xoms Teddybär
