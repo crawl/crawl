@@ -2487,7 +2487,7 @@ item_def* monster_die(monster& mons, killer_type killer,
 
         bool summoned_it = mons.is_abjurable();
 
-        if (mons.is_summoned_by(SPELL_FLASHING_BALESTRA) && !silent && !was_banished)
+        if (mons.was_created_by(SPELL_FLASHING_BALESTRA) && !silent && !was_banished)
         {
             if (monster* armoury = monster_by_mid(mons.summoner))
             {

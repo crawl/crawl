@@ -3705,7 +3705,7 @@ static void _join_okawaru()
     bool needs_message = false;
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mi->is_summoned_by(you))
+        if (mi->was_created_by(you))
         {
             mi->del_ench(ENCH_SUMMON_TIMER);
             needs_message = true;

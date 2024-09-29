@@ -2349,7 +2349,7 @@ int count_summons(const actor *summoner, spell_type spell)
         if (summoner == *mi)
             continue;
 
-        if (mi->is_summoned_by(*summoner, spell) && mons_aligned(summoner, *mi))
+        if (mi->was_created_by(*summoner, spell) && mons_aligned(summoner, *mi))
             count++;
     }
 
@@ -2970,7 +2970,7 @@ spret cast_hoarfrost_cannonade(const actor& agent, int pow, bool fail)
     // Remove any existing cannons we may have first
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mi->is_summoned_by(agent, SPELL_HOARFROST_CANNONADE))
+        if (mi->was_created_by(agent, SPELL_HOARFROST_CANNONADE))
             monster_die(**mi, KILL_TIMEOUT, NON_MONSTER);
     }
 

@@ -47,8 +47,8 @@ public:
 
     // Should return false for perma-summoned things.
     virtual bool is_summoned() const = 0;
-    virtual bool is_summoned_by(int summon_type) const = 0;
-    virtual bool is_summoned_by(const actor& summoner,
+    virtual bool was_created_by(int summon_type) const = 0;
+    virtual bool was_created_by(const actor& summoner,
                                 int summon_type = SPELL_NO_SPELL) const = 0;
 
     // [ds] Low-level moveto() - moves the actor without updating relevant

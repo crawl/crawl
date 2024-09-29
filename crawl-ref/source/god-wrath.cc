@@ -394,7 +394,7 @@ void lucy_check_meddling()
             continue;
         // 80% chance of banishing god wrath summons, 30% chance of banishing
         // other creatures nearby.
-        if (x_chance_in_y(mon->is_summoned_by(MON_SUMM_WRATH) ? 8 : 3, 10))
+        if (x_chance_in_y(mon->was_created_by(MON_SUMM_WRATH) ? 8 : 3, 10))
         {
             if (!banished)
             {

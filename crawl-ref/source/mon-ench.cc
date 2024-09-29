@@ -1878,18 +1878,18 @@ bool monster::is_summoned() const
     return has_ench(ENCH_SUMMON) && has_ench(ENCH_SUMMON_TIMER);
 }
 
-bool monster::is_summoned_by(int summon_type) const
+bool monster::was_created_by(int summon_type) const
 {
-    if (!is_summoned())
+    if (has_ench(ENCH_SUMMON))
         return false;
 
     mon_enchant summ = get_ench(ENCH_SUMMON);
     return summ.degree == summon_type;
 }
 
-bool monster::is_summoned_by(const actor& _summoner, int summon_type) const
+bool monster::was_created_by(const actor& _summoner, int summon_type) const
 {
-    if (!is_summoned())
+    if (!has_ench(ENCH_SUMMON))
         return false;
 
     if (summoner != _summoner.mid)

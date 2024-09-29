@@ -1006,7 +1006,7 @@ bool actor_cloud_immune(const actor &act, const cloud_struct &cloud)
     }
 
     if (!player && have_passive(passive_t::cloud_immunity)
-        && act.is_summoned_by(MON_SUMM_AID))
+        && act.was_created_by(MON_SUMM_AID))
     {
         return true;
     }

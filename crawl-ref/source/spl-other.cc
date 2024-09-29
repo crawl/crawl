@@ -93,7 +93,7 @@ static bool _dismiss_dead()
             continue;
 
         monster &mon = **mi;
-        if (!mon.is_summoned_by(you, SPELL_ANIMATE_DEAD))
+        if (!mon.was_created_by(you, SPELL_ANIMATE_DEAD))
             continue;
 
         // crumble into dust...

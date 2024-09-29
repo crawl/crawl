@@ -33,7 +33,7 @@ static void _end_death_channel()
     you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = 0;
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mi->is_summoned_by(you, SPELL_DEATH_CHANNEL))
+        if (mi->was_created_by(you, SPELL_DEATH_CHANNEL))
             monster_die(**mi, KILL_TIMEOUT, NON_MONSTER);
     }
 }
