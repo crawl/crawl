@@ -1409,8 +1409,6 @@ static void _make_derived_undead(monster* mons, bool quiet,
     // Prefer to be created wherever the dead monster was, but allow placing up
     // to 2 spaces away, if needbe.
     mg.set_range(0, 2);
-    if (god == GOD_KIKUBAAQUDGHA) // kiku wrath
-        mg.extra_flags |= MF_NO_REWARD;
 
     if (!mons->mname.empty() && !(mons->flags & MF_NAME_NOCORPSE))
         mg.mname = mons->mname;
@@ -1420,6 +1418,9 @@ static void _make_derived_undead(monster* mons, bool quiet,
                                       | MF_NAME_ADJECTIVE
                                       | MF_NAME_DESCRIPTOR);
 
+    // Kiku wrath and Bind Soul simulacrum are permanent and shouldn't give rewards
+    if (god == GOD_KIKUBAAQUDGHA || spell == SPELL_BIND_SOULS)
+        mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
     const char* mist = which_z == MONS_SIMULACRUM ? "freezing" :
                        god == GOD_YREDELEMNUL ? "black" :
