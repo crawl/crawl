@@ -3921,7 +3921,7 @@ static bool _qazlal_affected(coord_def pos)
         {
             const monster *mon = act->as_monster();
             // Never fire at elemental forces.
-            if (mon && mon->is_summoned_by(MON_SUMM_AID))
+            if (mon && mon->was_created_by(MON_SUMM_AID))
                 return false;
         }
     }

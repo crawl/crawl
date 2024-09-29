@@ -5832,7 +5832,7 @@ bool bolt::ignores_monster(const monster* mon) const
     if ((flavour == BEAM_HAEMOCLASM || flavour == BEAM_BLOODRITE) && mon->friendly())
         return true;
 
-    if (flavour == BEAM_QAZLAL && mon->is_summoned_by(you, MON_SUMM_AID))
+    if (flavour == BEAM_QAZLAL && mon->was_created_by(you, MON_SUMM_AID))
         return true;
 
     if (origin_spell == SPELL_UPHEAVAL && agent() && agent() == mon)

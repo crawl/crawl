@@ -1213,7 +1213,7 @@ static void _expire_temporary_allies()
         if (mons.friendly() && mons.is_summoned())
             monster_die(mons, KILL_RESET, NON_MONSTER, true);
         // Yred & animate dead zombies crumble on floor change
-        else if (mons.is_summoned_by(you, SPELL_ANIMATE_DEAD)
+        else if (mons.was_created_by(you, SPELL_ANIMATE_DEAD)
                 || (is_yred_undead_follower(mons) && mons.type != MONS_BOUND_SOUL))
         {
             monster_die(mons, KILL_RESET, NON_MONSTER, true);
