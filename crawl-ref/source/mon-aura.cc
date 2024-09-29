@@ -150,6 +150,13 @@ static bool _aura_could_affect(const mon_aura_data& aura, const monster& source,
     if (mons_aligned(&source, &victim) == aura.is_hostile)
         return false;
 
+    // Is the aura something that should affect firewood?
+    if (victim.is_monster() && mons_is_firewood(*victim.as_monster())
+         && aura.ench_type != ENCH_INJURY_BOND)
+    {
+        return false;
+    }
+
     // If the aura suppressed by sanctuary?
     if (aura.is_hostile && (is_sanctuary(source.pos()) || is_sanctuary(victim.pos())))
         return false;
