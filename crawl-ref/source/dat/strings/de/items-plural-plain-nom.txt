@@ -246,3 +246,37 @@ potions of resistance
 #################################
 # Miscellaneous Items
 #################################
+
+%%%%
+boxes of beasts
+{pl}Kisten der Bestien
+%%%%
+lightning rods
+{pl}Blitzstangen
+%%%%
+phials of floods
+{pl}Phiolen der Fluten
+%%%%
+phantom mirrors
+{pl}Phantomspiegel
+%%%%
+figurines of a ziggurat
+{pl}Figuren einer Zikkurat
+%%%%
+condenser vanes
+{pl}Kondensationsfahnen
+%%%%
+pieces from Xom's chessboard
+{pl}Figuren von Xoms Schachbrett
+%%%%
+tins of tremorstones
+{pl}Dosen Zittersteine
+%%%%
+# due to a bug (#4063), the English plural is "damagi" (coz mage -> magi)
+quad damagi
+{pl}Vierfach-Schäden
+%%%%
+# for when the bug is fixed
+quad damages
+{pl}Vierfach-Schäden
+%%%%
