@@ -657,6 +657,8 @@ FOUNTAIN(DNGN_DRY_FOUNTAIN_SPARKLING, "dry fountain", "non-fountain_sparkling", 
 FOUNTAIN(DNGN_DRY_FOUNTAIN_BLOOD, "dry fountain", "non-fountain_blood", LIGHTGREY),
 #endif
 
+FOUNTAIN(DNGN_DECORATIVE_FLOOR, "decorative floor", "decorative_floor", DARKGREY),
+
 FOUNTAIN(DNGN_RUNELIGHT, "runelight", "runelight", ETC_DISJUNCTION),
 
 {

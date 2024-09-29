@@ -992,6 +992,11 @@ A carved rock wall
 
 A wall decorated with images of death and destruction.
 %%%%
+A decorative floor
+
+A base floor type for various decorations one can walk over. If you see this,
+file a bug report.
+%%%%
 A dead tree
 
 The dry remains of a long-dead tree.
