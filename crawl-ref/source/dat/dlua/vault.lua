@@ -198,6 +198,47 @@ function snake_statue_setup (e, glyph)
   e.tile("G : dngn_statue_naga / dngn_statue_archer w:7")
 end
 
+
+-- Since these are all reusable vault redefines scattered across the game,
+-- we might as well have a singular source that keeps it consistent.
+function decorative_floor (e, glyph, type)
+  e.kfeat(glyph .. ' = decorative_floor')
+
+  if type == 'flower patch' then
+    e.colour(glyph .. ' = yellow')
+    e.tile(glyph .. ' = dngn_flower_patch')
+  elseif type == 'garden patch' then
+    e.colour(glyph .. ' = yellow')
+    e.tile(glyph .. ' = dngn_garden_patch')
+  elseif type == 'floral vase' then
+    e.colour(glyph .. ' = lightmagenta')
+    e.tile(glyph .. ' = dngn_flower_pot')
+  elseif type == 'mourning vase' then
+    e.colour(glyph .. ' = magenta')
+    e.tile(glyph .. ' = dngn_dark_flower_pot')
+  elseif type == 'broken floral vase' then
+    e.colour(glyph .. ' = magenta')
+    e.tile(glyph .. ' = dngn_flower_pot_broken / dngn_dark_flower_pot_broken')
+  elseif type == 'orcish standard' then
+    e.colour(glyph .. ' = lightcyan')
+    e.tile(glyph .. ' = dngn_ensign_beogh')
+  elseif type == 'infernal standard' then
+    e.colour(glyph .. ' = red')
+    e.tile(glyph .. ' = dngn_ensign_gehenna')
+  elseif type == 'fur brush' then
+    e.colour(glyph .. ' = brown')
+    e.tile(glyph .. ' = dngn_yak_fur')
+  elseif type == 'mop and bucket' then
+    e.colour(glyph .. ' = lightblue')
+    e.tile(glyph .. ' = dngn_mop')
+  elseif type == 'bloodied mop and bucket' then
+    e.colour(glyph .. ' = lightred')
+    e.tile(glyph .. ' = dngn_mop_bloody')
+  end
+
+  e.set_feature_name('decorative_floor', type)
+end
+
 -- A function that uses what's in the mon-pick-data (and bands) for V in 0.32
 -- for several distinct, tiered, depths-scaling themes + decorations.
 function index_vaults_room_themes (e, set, hard)
@@ -262,10 +303,10 @@ function index_vaults_room_themes (e, set, hard)
            'entropy weaver w:' .. 2 + d * 4)
     e.kmons('S = bush')
     e.kfeat('F = cache of fruit')
-    e.ftile('p = dngn_garden_cobble')
     e.ftile('`SF = floor_lair')
     e.tile('T = dngn_fountain_novelty_fancy')
     e.kitem('d = animal skin / club / whip w:5 / quarterstaff w:5')
+    decorative_floor(e, 'p', "garden patch")
   elseif set == 'rangers' then
     local eq = "arbalest w:29 | hand cannon w:1 . " ..
                " scimitar . ring mail | scale mail"

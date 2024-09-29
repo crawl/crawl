@@ -6,6 +6,8 @@
 # than 28x23. Encompass vaults will be rejected at compile time, and
 # other orientations will produce weird results.
 
+: crawl_require('dlua/vault.lua')
+
 {{
  -- Since abyssal stairs don't spawn at the bottom of the Abyss,
  -- replace a vault's empty guarded floor with a floor item at the bottom.
@@ -1299,6 +1301,7 @@ TILE:   a = wall_wax
 FTILE:  A4O = floor_crystal_squares
 COLOUR: a = yellow
 COLOUR: 4O = lightmagenta
+: decorative_floor(_G, 'OF', "flower patch")
 MAP
           xxxxxxx
         xxxxtttxxxxx
@@ -1312,9 +1315,9 @@ xaa.'a'.'a'.'a'.'a'.'a'.aax
 xaa1aaa1aaa1aaa1aaa1aaa1aax
 xa..'a'.'a'.'a'.'a'.'a'..ax
 aa.a'."a".'a'.'a'."a".'a.aa
-..aaa1aaa1aaa1aaa1aaa1aaa..
+F.aaa1aaa1aaa1aaa1aaa1aaa.F
  ..a.."a".'a'.'a'."a"..a..
-   .....................
+   ..........F..........
         .....A......
            ..@..
 ENDMAP

@@ -10,6 +10,7 @@
 ###############################################################################
 
 : crawl_require("dlua/ghost.lua")
+: crawl_require("dlua/vault.lua")
 
 {{
 
@@ -1529,6 +1530,7 @@ SUBST:   0 = 24., X : xp.., Y : xp..
 SUBST:   A = x, B : p., F = x, G = p., CHI = .
 : dgn.delayed_decay(_G, 'g', 'snapping turtle corpse')
 : dgn.delayed_decay(_G, 'h', 'elephant corpse')
+: decorative_floor(_G, 'p', "flower patch")
 MAP
     ccccccxxxxxxxcccccc
     c3dd*xxxg_hxxx*dd5c
@@ -1536,7 +1538,7 @@ MAP
     cex+xWWx...xWWx+xfc
     cxx...WW.1.WW...xxc
    xxx2.CBAWX.XWABC.4xxx
-  xx...1..WWW1WWW..1...xx
+  xxp..1..WWW1WWW..1..pxx
 xxx...IHGFWYWWWYWFGHI..xxx
 .........WW..W..WW........
  ....xxxWW...W...WWxxx....
@@ -1630,34 +1632,34 @@ MAP
      xxx
 ENDMAP
 
-NAME: cheibrodos_shoals_satyrical_garden
-TAGS: no_monster_gen no_tide no_trap_gen
-DEPTH: Shoals, !Shoals:$
-ORIENT: float
-KMONS: P = bush
-MONS: faun, satyr, centaur
+NAME:    cheibrodos_shoals_satyrical_garden
+TAGS:    no_monster_gen no_tide no_trap_gen
+DEPTH:   Shoals, !Shoals:$
+ORIENT:  float
+MONS:    faun, satyr, centaur
+KMONS:   P = bush
 # One of two garden designs
 SHUFFLE: AB / CD
-SUBST: A = P, B = _, C = _, D = P, c = cccccc.
-NSUBST: - = 3:1 / 2=1_ / 1:2 / 1=23 / 1=3_
-FTILE: -_TP123 = floor_grass
-FTILE: p = dngn_garden_cobble
-FTILE: ' = floor_swamp
-COLOUR: -_P123 = green
-COLOUR: c = white
+SUBST:   A = P, B = _, C = _, D = P, c = cccccc.
+NSUBST:  - = 3:1 / 2=1_ / 1:2 / 1=23 / 1=3_
+FTILE:   -_TpP123 = floor_grass
+FTILE:   ' = floor_swamp
+COLOUR:  -_P123 = green
+COLOUR:  c = white
+: decorative_floor(_G, 'p', "flower patch")
 MAP
 ....................
 .cc..cc..cc..cc..cc.
 .cc..cc..cc..cc..cc.
 ...''''''''''''''...
-...'p------A----'...
+...'--p----A----'...
 .cc'BA-AB----BA-'cc.
 .cc'--T--A-B---B'cc.
 @..'BA--B---AB--'..@
 @..'--BA---B--AB'..@
 .cc'B---B-A--T--'cc.
 .cc'-AB----BA-AB'cc.
-...'----A------p'...
+...'----A----p--'...
 ...''''''''''''''...
 .cc..cc..cc..cc..cc.
 .cc..cc..cc..cc..cc.
@@ -1882,23 +1884,24 @@ KMONS:   4 = satyr band
 KFEAT:   3 = w
 NSUBST:  a = x / ., p = w / t, q = w / t, r = w / t, d = e / f / g / d
 SUBST:   D = t., R = xw, M = W., P = w.
-FTILE:   @124defgt. = floor_grass
+FTILE:   @124defgFt. = floor_grass
+: decorative_floor(_G, 'F', "flower patch")
 MAP
           wwwwwww
   wwwwwwwwwxxxxxwww
   wxxxxxxxxxtttxwww
  wwxRRRwwwwR.1.xxwww
-wwxxR.PPwwwP...Dxwww
+wwxxR.PPwwwP.F.Dxwww
 wxx..2.Pw3ww..2Dxxww
 wxD....PwwwPD2..Dxwww
 wxx.4..MWWWM2DD..xwww
 xxx....DpppDxxxx2xwww
 xaxP...ttwttxdd..xwww
-@x....Dtqtqtxdd4.xxwww
+@x..F.Dtqtqtxdd4.xxwww
 xaxP.Dtttwttxdd...xwww
 xxx...DtrrrDxxxxx2xwww
 wxxD..DPwwwP.2....xwww
-wxxD.2.wwwww......xwww
+wxxD.2.wwwww...F..xwww
 wxD.2.Pww3ww..4..Dxwww
 wxD2..MMwwwwM...xxxwww
 wxD.1.xMWWWMMRxxxwwwww
@@ -2530,6 +2533,7 @@ NSUBST:  N = N / w, < = { / [[< / ((< / <, p = M / 1=M. / 1=MS... / ., \
          q = M / 1=M. / 1=MS... / ., r = S / 1=S. / 1=SM... / .
 SHUFFLE: {[(
 CLEAR:   _
+: decorative_floor(_G, 'V', "floral vase")
 MAP
         `x++x`
        `xx''xx`
@@ -2546,7 +2550,7 @@ xx'p."WW-wNNw-WW".q'xx
  `xxxx''"W--W"''xxxx`
   `xxxxx'"WW"'xxxxx`
     `xxx'"WW"'xxx`
-      xxx."".xxx
+      xxxV""Vxxx
       `xx.<<.xx`
        xx'<<'xx
        `xx''xx`
@@ -2889,13 +2893,14 @@ NAME:    shoals_garden
 TAGS:    shoal_hut_grunt_garden water_ok no_dump allow_dup transparent
 MONS:    faun w:6 / 0
 KMONS:   pP = plant
+KITEM:   | = |
 NSUBST:  1 = 2:1 / 2:1. / 2:1. / *:.
 SHUFFLE: abcdefghijk, ABCDEFGH
 SUBST:   abAB = x, cdef = p, CDE = P, g : xp, h : p', ijk = ', FGH = "
 TILE:    x = wall_brick_gray
 FTILE:   xpP"' = floor_swamp
 FTILE:   1P. = floor_grass
-FTILE:   | = dngn_garden_cobble
+: decorative_floor(_G, '|', "garden patch")
 MAP
    abcbd
  kkaBAAdee

@@ -93,20 +93,23 @@ default-depth: D:12-, Depths, !Depths:$
 #
 ###############################################################################
 
-NAME:   firewood_loft
+# Since nobody really understood it was firewood storage,
+# it is now instead a custodial closet.
+NAME:   broom_closet
 TAGS:   extra no_descent
 DEPTH:  D, !D:$, Depths, !Depths:$
 ORIENT: float
 WEIGHT: 5
 : if you.absdepth() > 8 then
-KITEM:  " = club, quarterstaff, quarterstaff good_item
+KITEM:  d = club, quarterstaff, quarterstaff good_item
 : else
-KITEM:  " = club, quarterstaff, quarterstaff
+KITEM:  d = club, quarterstaff, quarterstaff
 : end
-KITEM:  ' = club, any magical staff
+KITEM:  e = club, any magical staff
+: decorative_floor(_G, '?', "mop and bucket")
 MAP
 xxxxx
-x"']x
+xde]x
 xxxxx
 ENDMAP
 
@@ -143,10 +146,11 @@ WEIGHT:  5
 SHUFFLE: )]}([{
 SUBST:   c : c x:2 v:1 b:1
 SUBST:   n : n:18 G:1 .:1
-SUBST:   G : ...G
+SUBST:   G : ...G, M = M..
+: decorative_floor(_G, 'M', "mop and bucket")
 MAP
 ccccccccccccc
-cG...GcG...Gc
+cM...GcG...cc
 c.....c.....c
 c.....+..)..c
 c.....c.....c
@@ -156,7 +160,7 @@ cG...Gc.....
 c.....c.....
 c.....+.....
 c.....c.....
-cG...Gc.....
+cc...Gc.....
 ccccccc
 ENDMAP
 
@@ -1871,10 +1875,12 @@ NAME:   lemuel_insect_pit
 TAGS:   no_rotate
 ORIENT: float
 DEPTH:  D:5-11
-SUBST:  1 = 1:70 2:60 3:25
 MONS:   giant cockroach w:30 / butterfly w:20
 MONS:   scorpion
 MONS:   killer bee / scorpion / vampire mosquito w:5
+KITEM:  * = *
+SUBST:  1 = 1:70 2:60 3:25
+: decorative_floor(_G, 'p', "flower patch")
 MAP
 cccccccc+cccccccc
 c...............c
@@ -2227,11 +2233,11 @@ ENDMAP
 # of opening the doors so animals can go for a walk, that's intended.
 #
 NAME:   slaughterhouse
+TAGS:   no_monster_gen patrolling
 DEPTH:  Lair:3-, D:11-
-TAGS:   no_monster_gen
 ORIENT: float
 WEIGHT: 5
-MONS:   death yak w:5 / dream sheep w:3 / yak w:7
+MONS:   death yak w:5 / dream sheep w:3 / yak w:6
 MONS:   generate_awake human ; dagger | hand axe
 # these corpses are in the freezer, so never_decay is appropriate.
 KITEM:  d = $, $, animal skin good_item
@@ -2239,12 +2245,13 @@ KITEM:  e = never_decay yak corpse / never_decay dream sheep corpse w:5
 KFEAT:  f = cache of meat
 KFEAT:  ~ = closed_clear_door
 SUBST:  e = e:2 f:1 ':7, 2=2.
-KPROP:  de' = no_tele_into
+KPROP:  1de = no_tele_into
 MARKER: F = lua:fog_machine { \
                 pow_max = 10, delay_min = 30, delay_max = 50, \
                 size = 3, size_buildup_amnt = 2, \
                 size_buildup_time = 35, cloud_type = "freezing vapour" \
             }
+: decorative_floor(_G, 'B', "fur brush")
 MAP
 cccccc       ccccccc
 ceeeecxxxxxxxxceeeec
@@ -2254,7 +2261,7 @@ cccccc  x..x  cccccc
         x2.x
 nnnnnn  x..x  nnnnnn
 n1111nxxx..xxxn1111n
-n1d11~..+..+..~11d1n
+n1d11~B.+..+.B~11d1n
 n1111nxxx..xxxn1111n
 nnnnnn  x..x  nnnnnn
         x.2x
@@ -2367,6 +2374,59 @@ MAP
 .cT..............................c.
 .ccccccccccccccccccccccccccccccccc.
 ...................................
+ENDMAP
+
+##############################################################################
+# The Horrible House of Horrid Horrors (by Mu.)
+NAME:   horrible_house_mu
+TAGS:   transparent depths_entry chance_depths_entry no_monster_gen no_item_gen
+DEPTH:  D:12-, !D:$, Depths
+PLACE:  D:$
+ORIENT: float
+WEIGHT: 2 (D:$), 10
+: if you.in_branch("Depths") then
+MONS:   boggart band, rakshasa, sin beast band
+MONS:   vampire knight, orange crystal statue
+KMONS:  0 = glowing orange brain / very ugly thing band
+SUBST:  gU = .
+NSUBST: ' = 2:0 / *:.
+: elseif you.where() == dgn.level_name(dgn.br_entrance("Depths")) then
+TAGS:   uniq_depths_entry
+MONS:   boggart, rakshasa, very ugly thing
+MONS:   flayed ghost, vampire mage
+KITEM:  g = smoky gem
+KFEAT:  U = enter_depths
+SUBST:  | = %
+FTILE:  'V12345$%G = floor_depthstone
+TILE:   G = depths_column
+: else
+MONS:   laughing skull band, vampire, unseen horror
+MONS:   phantasmal warrior, orange crystal statue
+SUBST:  'gU = ., | = *
+: end
+KMONS:  P = plant
+SUBST:  p = P.
+KMASK:  l = no_monster_gen
+: decorative_floor(_G, 'V', "floral vase")
+MAP
+.....................
+.pp...............pp.
+.pcccccccccccccccccp.
+..c'$$$|||U|||$$$'c..
+..c''$$$'''''$$$''c..
+..c'1''''l4l''''1'c..
+..c'''llll'llll'''c..
+..c'''lGllgllGl'''c..
+..c'2lllc'5'clll2'c..
+..c'''llcccccll'''c..
+..c'''lllllllll'''c..
+..c'3'''lllll'''3'c..
+..c'''''''l'''''''c..
+..c'''''''''''''''c..
+..cV'''''''''''''Vc..
+.pccnnnccc+cccnnnccp.
+.pp.....pPPPp.....pp.
+.........ppp.........
 ENDMAP
 
 ##############################################################################
@@ -2661,56 +2721,60 @@ ENDMAP
 # The Elephants' Graveyard (by Mu.)
 #
 NAME:   mu_elephants_graveyard
-TAGS:   no_monster_gen no_rotate no_vmirror no_pool_fixup
-DEPTH:  Depths, Lair:2-, !Lair:$
+TAGS:   no_monster_gen no_rotate no_pool_fixup
+TAGS:   vaults_hard vaults_orient_s
+DEPTH:  Lair:2-, !Lair:$, Vaults, !Vaults:$
 ORIENT: float
-  # we generate more dire elephants and deeper water at greater depths
+WEIGHT: 20 (Vaults), 10
+SUBST:  % = .:5 %:3, P = 4, a = .4, b = 45
 : if you.in_branch("Lair") then
 MONS:   elephant, dire elephant, spriggan
+SUBST:  ' = .
+:   dgn.delayed_decay(_G, '%', 'elephant corpse w:1 / elephant skeleton w:5')
 : else
-MONS:   dire elephant, hellephant, spriggan defender
-SUBST:  W : w
-:end
+MONS:   dire elephant, ogre mage, ironbound thunderhulk
+SUBST:  W = w, c = n
+NSUBST: . = 2:1 / *:.
+FTILE:  45nt = floor_pebble_brown
+CLEAR:  '@
+:   dgn.delayed_decay(_G, '%', 'dire elephant corpse w:1 / ' ..
+:                              'dire elephant skeleton w:5')
+: end
 MONS:   fungus, plant
-SUBST:  % = .:5 %:3
-: dgn.delayed_decay(_G, '%', 'w:1 elephant corpse / w:5 elephant skeleton')
-SUBST:  . = .:69 1:1
-SUBST:  P = 4
-SUBST:  a = .4
-SUBST:  b = 45
-SUBST:  c = 5tt
+SUBST:  . = .:69 1:1,  c = 5tt
+: decorative_floor(_G, 'V', "mourning vase")
 MAP
-............................
-............................
-............................
-............................
-........tttttttttttt........
-......tttccccccccccttt......
-.....ttcccbbbbbbbbccctt.....
-....ttccbbbaaaaaabbbcctt....
-....tccbbaaa2..3aaabbcct....
-...ttcbbaa*..%%..*aabbctt...
-..ttccbaa..%%%%%%..aabcctt..
-..tccbba..%%%%%%%%..abbcct..
-..tcbbaa.%%.PPP%%%%.aabbct..
-..tcbaa..%%.PWPP%%%..aabct..
-..tcba1.%%%11WPP%%%%..abct..
-..tcba.%%%%11WWP%%%%%.abct..
-..tcba.%%%%.WWWP%%%%%.abct..
-..tcba..%%%.WWWP%%%%1.abct..
-..tcbaa.1%%..WWP.%%..aabct..
-..tcbbaa.%%%..WP.%%.aabbct..
-..tccbba..%%%.WW....abbcct..
-..ttccbaa......WW..aabcctt..
-...ttcbbaa......W.aabbctt...
-....tccbbaaaa..aaaabbcct....
-....ttccbbbba..abbbbcctt....
-.....ttccccca..accccctt.....
-......tttttta..atttttt......
-............................
-............1..1............
-............................
-.............@@.............
+''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''
+''''''''tttttttttttt''''''''
+''''''tttccccccccccttt''''''
+'''''ttcccbbbbbbbbccctt'''''
+''''ttccbbbaaaaaabbbcctt''''
+''''tccbbaaa2..3aaabbcct''''
+'''ttcbbaa*V.%%.V*aabbctt'''
+''ttccbaa..%%%%%%..aabcctt''
+''tccbba..%%%%%%%%..abbcct''
+''tcbbaa.%%.PPP%%%%.aabbct''
+''tcbaa..%%.PWPP%%%..aabct''
+''tcba1.%%%11WPP%%%%..abct''
+''tcba.%%%%11WWP%%%%%.abct''
+''tcba.%%%%.WWWP%%%%%.abct''
+''tcba..%%%.WWWP%%%%1.abct''
+''tcbaa.1%%..WWP.%%..aabct''
+''tcbbaa.%%%..WP.%%.aabbct''
+''tccbba..%%%.WW....abbcct''
+''ttccbaa......WW..aabcctt''
+'''ttcbbaa......W.aabbctt'''
+''''tccbbaaaa..aaaabbcct''''
+''''ttccbbbba..abbbbcctt''''
+'''''ttccccca..accccctt'''''
+''''''tttttta..atttttt''''''
+''''''''''''1..1''''''''''''
+''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''
+'''''''''''''@@'''''''''''''
 ENDMAP
 
 ##############################################################################
@@ -2808,11 +2872,12 @@ NAME:   wad_bat_island
 DEPTH:  D:12-, !D:$
 ORIENT: float
 WEIGHT: 4
-FTILE: >.12t = floor_grass
-COLOUR: .12 = green
-FTILE: ; = floor_grass_dirt_mix
-COLOUR: ; = brown
 MONS:   plant, bat, snapping turtle
+COLOUR: .12 = green
+COLOUR: ; = brown
+FTILE:  ; = floor_grass_dirt_mix
+FTILE:  >.F12t = floor_grass
+: decorative_floor(_G, 'p', "flower patch")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxx>xxxxxwwwwwwxxxwxwxxxxxxxwxxwxxxwwwxxxxxx
@@ -2823,7 +2888,7 @@ xxxt;WWwwwwwwwwwwWWWWWwww3wwwwwwxwwwwwwwwwwx
 xx1;WWwwwww3xwwwWW;;;WWwwwwWWwwwwwwwwwwwwwxx
 xx;WWwwwwxwwwwwWW;2.t;WWwwWwwWwwwwwWWWWwwxxx
 xxWWwwwwxxwwwwWW;.12.2;WWWwwwwWWWwWxxxxWwwxx
-xxxwWWWxxxwwwwWW;t..1t;WWwwwwwwwwWxxxwwwWwwx
+xxxwWWWxxxwwwwWW;t.F1t;WWwwwwwwwwWxxxwwwWwwx
 xxxwwwwWWxwwwwWW;2tt2.;WWwwww3wwwwwwwwwwWwwx
 xxwwwwwwwWxWWWwWW;.1t;WWwwwwwwwwwwwwwwwxWwwx
 xwwww3wwwwWwwwwwWW;;;WWwwwwwwxxwwwwwwwxWwxwx
@@ -3813,6 +3878,7 @@ ENDMAP
 # the +4 great sword "Dinovoldo's Tail" {explosions}
 NAME:   regret_index_qazlal_generations
 TAGS:   no_monster_gen no_item_gen no_pool_fixup
+TAGS:   depths_entry chance_depths_entry
 DEPTH:  Depths, !Depths:$, Zot, !Zot:$
 PLACE:  D:$, Depths:$
 WEIGHT: 1 (Depths:$), 2 (D:$), 10
@@ -3858,6 +3924,7 @@ KFEAT:  Y = enter_depths
 KFEAT:  Z = enter_zot
 SUBST:  A = 1 3:14, B = 2 4:14, C = 5:14 6
 : if you.where() == dgn.level_name(dgn.br_entrance("Depths")) then
+TAGS:   uniq_depths_entry
 SUBST:  1 = q, 2 = r, 3 = s, 4 = t, 56 = u
 NSUBST: ! = 1:1 / 1:2 / *:?, | = 2:| / *:*
 SUBST:  } = Y, ] = $, ) = y
@@ -5091,16 +5158,17 @@ MARKER: P = lua:transp_loc("beogh_ambush_entry")
 MARKER: Q = lua:transp_dest_loc("beogh_ambush_entry")
 MARKER: R = lua:transp_loc("beogh_ambush_exit")
 MARKER: S = lua:transp_dest_loc("beogh_ambush_exit")
+: decorative_floor(_G, 'B', "orcish standard")
 MAP
    ccccccccccc
   cc----R--..cc
   c---ncncn...c
   c---'c'c'...c
- .c-n'-----'n.c.
+ Bc-n'-----'n.c.
  .n-cc-I-I-cc.n.
 @PnRn'--_--'nQnS@
  .n-cc-I-I-cc.n.
- .c-n'-----'n.c.
+ Bc-n'-----'n.c.
   c---'c'c'...c
   c---ncncn...c
   cc----R--..cc
@@ -5464,12 +5532,13 @@ KITEM:  ?1 = kobold skeleton
 KPROP:  ?A1 = bloody
 KFEAT:  O = altar_kikubaaqudgha
 NSUBST: ' = 1:* / 4:%%- / *:-
-FTILE:  uk-?A12O*% = floor_pebble_darkgray
+FTILE:  uk-?A12O*%V = floor_pebble_darkgray
+: decorative_floor(_G, 'V', "mourning vase")
 MAP
        ccccc
-cccccccc'''cccccccc
-ckkkccc'''''ccckkkc
-c--cc--2?A?2--cc--c
+cccccccc'V'cccccccc
+ckkVccc'''''cccVkkc
+ck-cc--2?A?2--cck-c
 c--c----?O?----c--c
 c--+-uu-?1?-uu-+--c
 c--c--uu---uu--c--c
@@ -5917,12 +5986,6 @@ NAME:   dreamdust_black_sun_cult
 TAGS:   transparent no_monster_gen
 ORIENT: float
 DEPTH:  D:13-, Zot
-COLOUR: bm = red
-TILE:   m = dngn_transparent_wall_red
-FTILE:  -mA1 = floor_volcanic
-MARKER: ! = lua:fog_machine { cloud_type='flame', pow_min = 10, pow_max = 10, \
-                              delay = 10, size = 1, excl_rad = 0 }
-NSUBST: - = 2=2 / 2=2- / 3=3 / 3=3- / -
 : if you.in_branch("D") then
 KMONS:  1 = salamander mystic
 KMONS:  2 = sun demon
@@ -5942,6 +6005,12 @@ KITEM:  1 = manual of fire magic / manual of necromancy, \
             slevels:25 numspells:4 title:Dead_Stars, \
             any weapon ego:flaming randart / any weapon ego:draining randart
 : end
+COLOUR: bm = red
+TILE:   m = dngn_transparent_wall_red
+FTILE:  -mA1 = floor_volcanic
+MARKER: ! = lua:fog_machine { cloud_type='flame', pow_min = 10, pow_max = 10, \
+                              delay = 10, size = 1, excl_rad = 0 }
+NSUBST: - = 2=2 / 2=2- / 3=3 / 3=3- / -
 MAP
  .........
 ..!bbbbb!..
@@ -6291,17 +6360,19 @@ MAP
 .............
 ENDMAP
 
-# Home of Duvessa and Dowan
+# Home of Duvessa and Dowan.
+# They're usually off killing adventurers...
 NAME:   dreamdust_elfheim
 TAGS:   no_monster_gen transparent
 ORIENT: float
 DEPTH:  D:4-7
-FTILE:  -?m+1GT = floor_hall
-TILE:   G = dngn_statue_twins
-: set_feature_name("clear_rock_wall", "a polished mirror")
 KMONS:  1 = training dummy
-# They're usually off killing adventurers...
-KMONS:  ? = duvessa band / nothing
+KMONS:  ? = duvessa band
+SUBST:  ? = ?-
+TILE:   G = dngn_statue_twins
+FTILE:  -?m+1GTV = floor_hall
+: decorative_floor(_G, 'V', "floral vase")
+: set_feature_name("clear_rock_wall", "a polished mirror")
 MAP
 ..........
 .xxxxxxxx.
@@ -6309,7 +6380,7 @@ MAP
 .x---+--x.
 .x-?-xxxx.
 .x---+--x.
-.x---x11x.
+.xV--x11x.
 .xx+xxxxx.
 ..........
 ENDMAP
@@ -6407,8 +6478,9 @@ TILE:    x = wall_undead_magenta / wall_undead_darkgray
 TILE:    v = dngn_metal_wall_red / dngn_metal_wall_cyan
 TILE:    g = dngn_scintillating_statue
 FTILE:   `+ = floor_pebble_magenta / floor_pebble_red
-FTILE:   ._$%*|?!12345670BCDEF = floor_tomb
+FTILE:   .f_$%*|?!12345670BCDEF = floor_tomb
 : set_feature_name("granite_statue", "scintillating statue")
+: decorative_floor(_G, 'f', "broken floral vase")
 MAP
   ccccccccccccccccccccccccccccccccc
   ccccccccccccccccccccccccccccccccc
@@ -6422,7 +6494,7 @@ ccc.....vv.......`.`.......vv.....ccc
 ccc.....vv......`...`......vv.....ccc
 ccc..........cc`.....`cc..........ccc
 cccc........ccccc...ccccc........cccc
-ccgccc``ccccc...........ccccc``cccgcc
+ccgccc``cccccf.........fccccc``cccgcc
 ccc........c;....vvv....;c........ccc
 ccc.......cc;...vvvvv...;cc.......ccc
 ccc....9cccc*...9vvv9...*cccc9....ccc
@@ -6487,6 +6559,7 @@ TILE:    b = dngn_crystal_white
 TILE:    G = dngn_scintillating_statue
 FTILE:   '*|67890 = floor_pebble_darkgray
 : set_feature_name("granite_statue", "scintillating statue")
+: decorative_floor(_G, 'P', "flower patch")
 MAP
  XXXXXXXXXX
 XX..T..T.....
@@ -6500,13 +6573,13 @@ X..t..????..t...'bb''bb'*bb.
 X..t.?????tt..T..wb'b''7bbb.
 X..t?????t..t....w'b'''bbb..
  ..t.t..t...t....9G'bbbbbb..
- ..ttF..t........!9llbbb....
+ ..ttF..t..P.....!9llbbb....
   ..tttt.tt.T.......'bbt...
   ..ttb........U.....'xtt..
    .tt..T.....C.....T.'tt.
   ..ttb......U........xtt..
   ...txx........T.tt.tttt..
- ....xxx...4........t..Ftt..
+ ....xxx...4.....P..t..Ftt..
  ..xxxxx.x......t...t..t.t..
  ..xxx..xGx.....t..t????.t..X
  .xxx1..1x....T..tt?????.t..X
@@ -9696,7 +9769,7 @@ ENDMAP
 
 NAME:   cheibrodos_orc_bank
 TAGS:   no_item_gen no_monster_gen
-DEPTH:  Orc, !Orc:$, D:10-14
+DEPTH:  D:10-14, Orc, !Orc:$
 ORIENT: float
 MONS:   orc, orc warrior, orc knight, hobgoblin
 KITEM:  $ = $ no_pickup

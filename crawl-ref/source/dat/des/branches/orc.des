@@ -10,6 +10,8 @@
 #
 ##############################################################################
 
+: crawl_require('dlua/vault.lua')
+
 ###############################################################################
 # <<1>> Orcish Mines entries.
 ###############################################################################
@@ -1355,6 +1357,7 @@ TAGS:   transparent
 DEPTH:  Orc
 MONS:   orc warlord band, orc knight band
 SUBST:  $ = $:100 *|
+: decorative_floor(_G, 'F', "orcish standard")
 MAP
 vvvvvvvvvvvvvvvvvvvvvvv
 v$$$$$$$$v......9v||||v
@@ -1373,7 +1376,7 @@ vv...................vv
  vv......vvvvv......vv
   vv....vvvvvvv....vv
    vv++vvvvvvvvv++vv
-    .........0.....
+    F......F.0....F
     ....v.v.v.v.0..
     .0.............
     ...............
@@ -1467,7 +1470,7 @@ MAP
 ..aabbaxa...
  .xaaaax..
   .aaxa....
-   . . ..
+   ...x..
     ...
 ENDMAP
 

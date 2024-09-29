@@ -10,6 +10,8 @@
 ################################################################################
 
 {{
+crawl_require('dlua/vault.lua')
+
 function wad_woods_setup(e, uniq, weight, mist, delaynum, sizenum, spreadnum)
     if uniq == "decor" then
         e.tags("uniq_wad_woods_decor decor extra")
@@ -1622,14 +1624,14 @@ KFEAT:  e = cache of fruit
 KFEAT:  ^~ = .
 : local size = crawl.random2(9)
 : if size > 7 then
-SUBST:  '`"- = ^:35 ~:5 .
-NSUBST: . = 2:1 / * = d:2 e:1 .:140 1:20 2:4
+SUBST:  '`"- = ^:35 ~:15 .
+NSUBST: . = 2:1 / * = d:2 .:140 1:20 2:4
 : elseif size > 3 then
-SUBST:  "` = ^:35 ~:5 .
-NSUBST: . = 2:1 / * = d:3 e:2 .:42 1:18 2:4
+SUBST:  "` = ^:35 ~:15 .
+NSUBST: . = 2:1 / * = d:3 .:42 1:18 2:4
 : else
-SUBST:  '" = ^:35 ~:5 .
-NSUBST: . = 2:1 / * = d:3 e:2 .:42 1:18 2:4
+SUBST:  '" = ^:35 ~:15 .
+NSUBST: . = 2:1 / * = d:3 .:42 1:18 2:4
 : end
 CLEAR:  `'"-
 COLOUR: ^d = green
@@ -1642,12 +1644,12 @@ MAP
    -``------------
  -``````-----------
  ```````"'''-------
--`````"""'''''-``----
+-`````e""'''''-``----
 --```"""'''''""````--
 ----`"''''''"""`````-
------'''''''"""`````-
+-----'''''''""e`````-
 -----'""'''''""````--
-----``""""''''-``----
+----``""e"''''-``----
  --`````"""'--------
  --````````---------
    -``````--------
@@ -1856,14 +1858,15 @@ DEPTH:   Lair
 KMONS:   P = plant
 KMASK:   ` = no_monster_gen
 SHUFFLE: xP'. / xP'. / .'xP
-SUBST:   '` = .
+SUBST:   '` = ., p : p.
+: decorative_floor(_G, 'p', "flower patch")
 MAP
            xPx
          xxPxPxx    ````..@
         xPP'.'PPx   ....'''
       xxP''.'.''Px...'''PPP
-   xxxPP'```.``'Px.''PPPxxx
-xxxPPP''.xP'``.```'PPxxx
+   xxxPP'```p``'Px.''PPPxxx
+xxxPPP''.xP'``p```'PPxxx
 PPP'''...xP''.'.''Pxx
 '''....   xPP'.'PPx
 @..````    xxPxPxx
@@ -2246,7 +2249,9 @@ MONS:   rat, river rat, hell rat
 KMONS:  D = pile of debris
 KITEM:  d = gold
 KFEAT:  C = cache of fruit / cache of baked goods w:4
-NSUBST: d = 1:d / 1:C / 1:* / 1:9 / 1:3 / * = d11223......., c = 5:Dc / *:c
+NSUBST: d = 1:d / 1:C / 1:F / 1:* / 1:9 / 1:3 / * = d11223.......
+NSUBST: c = 5:Dc / *:c
+: decorative_floor(_G, 'F', "broken floral vase")
 MAP
       .......
 .......ccccc.........
@@ -2294,7 +2299,7 @@ ENDMAP
 
 NAME:   kennysheep_basilisk_garden
 TAGS:   transparent
-DEPTH:  Lair:3-
+DEPTH:  Lair:2-
 MONS:   basilisk, pile of debris
 NSUBST: . = 2:1 / 3 = 11G / *:., G = 2:G2 / *:G
 TILE:   G = dngn_statue_axe / dngn_statue_cat / dngn_statue_centaur / \
@@ -2378,6 +2383,7 @@ KMASK:  Ww = no_monster_gen
 CLEAR:  E
 COLOUR: -|*2 = brown
 FTILE:  =-|*2GT = floor_pebble_brown
+: decorative_floor(_G, 'F', "flower patch")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ttccccccccccccccccccccccctt
@@ -2397,12 +2403,12 @@ Ettp...WwwwwWqqqttttttttE
 Ett.....Wwwwwqq..pttttttE
 Etttp....qWwwwWq..ppttttE
 Etttp......WwwWW...ptttttE
-Etttp.....WWwwWW....pptttE
+Etttp....FWWwwWW....pptttE
 Ettttp...WWWwwwWW....ptttE
 Ettttp...WWwwwwWW.....pttE
 Ettttt...WWwwwwWW....ptttE
- Ettttp...WWwwWWW...pptttE
-  Ettttp..WWWWWW...pttttE
+ Ettttp..FWWwwWWW...pptttE
+  Ettttp..WWWWWWF..pttttE
   Etttttp..WWWW....pttttE
    Ettttp.........ptttEE
     Etttt........tttttE
@@ -2462,10 +2468,11 @@ NAME:    hangedman_lair_generics_rect
 TAGS:    no_monster_gen
 DEPTH:   Lair
 MONS:    plant / fungus w:6
-NSUBST:  ' = 2:c / 2:. / * = c+....
 SHUFFLE: yY / yY / Yy
-SUBST:   y = ., Yz = xxxx1., Z = xx`
+SUBST:   y = ., Yz = xxxx1., Z = xx`, W : WV
+NSUBST:  ' = 2:c / 2:. / * = c+...., V = 1:V / *:.
 CLEAR:   `
+: decorative_floor(_G, 'V', "broken floral vase")
 MAP
 .............xZZ
 .c'c'c'c'c'cxxxZZ
@@ -2836,14 +2843,14 @@ KMONS:   1 = human ; war axe ego:heavy good_item \
                    . leather armour good_item | ring mail good_item \
                        | scale mail good_item
 # Trying to get some good horror move trope representation
-KMONS:   2 = Rupert / reaper / vampire mage / phantasmal warrior \
-                 / tentacled starspawn \
-             , reaper / vampire mage / phantasmal warrior / tentacled starspawn
+KMONS:   2 = Rupert / reaper / vampire mage / phantasmal warrior / \
+             tentacled starspawn, \
+             reaper / vampire mage / phantasmal warrior / tentacled starspawn
 NSUBST:  a = a / c, p = p / c, q = q / c
 NSUBST:  r = r / c, s = s / c, u = u / c
 # These are distinct to preserve 'a' for the rune door.
 SHUFFLE: Er / ?u, Daqp / ?sur
-NSUBST:  D = 2 / | / S / `, E = 1 / *%% / S / `
+NSUBST:  D = 2 / | / S / `, E = 1 / *%% / S / `, ? = 1:B / *:?
 NSUBST:  T = 2=009 / * = .ttt
 NSUBST:  aq = 1:= / c, p = +
 SHUFFLE: rsu
@@ -2853,8 +2860,9 @@ KPROP:   ` = bloody
 MARKER:  F = lua:fog_machine { cloud_type = "thin mist", pow_min = 1, \
          pow_max = 3, delay = 10, start_clouds = 1, size_min = 2, \
          size_max = 3, spread_rate = 33 }
-KITEM: S = human skeleton
+KITEM:   S = human skeleton
 CLEAR:   _
+: decorative_floor(_G, 'B', "broken floral vase")
 MAP
    _____________________
    @ttttttttttttttttttttt_

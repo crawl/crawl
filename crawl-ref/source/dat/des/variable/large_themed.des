@@ -10,6 +10,9 @@
 ###############################################################################
 
 {{
+
+crawl_require('dlua/vault.lua')
+
 function grandhive_vaults(e, hivewallglyph)
     e.tags('uniq_greathive no_monster_gen no_item_gen')
     e.kmons('P = plant')
@@ -501,10 +504,11 @@ ITEM:   battleaxe good_item no_pickup / plate armour good_item no_pickup / \
 KFEAT:  C = altar_beogh
 KFEAT:  e = cache of fruit / cache of meat / cache of baked goods
 SUBST:  e : e$
+: decorative_floor(_G, 'F', "orcish standard")
 MAP
 xxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxx...xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxF.Fxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxx4.4xxxxxxxxxxxxxxx
 xxe*..........x414x..........*exx
 xx**..........x4.4x..........**xx
@@ -868,13 +872,15 @@ NSUBST: C = 2:v / *:+, D = 2:v / *:+
 COLOUR: g = mist
 TILE:   G = dngn_statue_depths_fangs
 TILE:   g = dngn_mystic_cage
-COLOUR: 5M% = white
+COLOUR: 5'% = white
 MARKER: V = lua:fog_machine { \
                 pow_max = 10, delay_min = 5, delay_max = 30, \
                 size = 30, size_buildup_amnt = 1, \
                 size_buildup_time = 10, cloud_type = "purple smoke" \
             }
-SUBST:  MV = .
+SUBST:  'V = .
+: decorative_floor(_G, 'M', "broken floral vase")
+TILE:   M = dngn_dark_flower_pot_broken
 :       set_feature_name("metal_statue", "mystic cage")
 :       dgn.delayed_decay(_G, '%', 'human corpse / human skeleton')
 veto {{
@@ -894,7 +900,7 @@ xxxxvvvvvvvvvvvvv+++vvvvvvvvvvvvvxxxxxxxxxxxxxxxxxxxx
 xxxvv.....vvvvvv.....vvvvvv.....vvxxxxxxxxxxxxxxxxxxx
 xxxv.......+vvv...Y...vvv+.......vxxxxxxxxxxxxxxxxxxx
 xxxvvvV1.vvv.vvv.....vvv.vvv.1Vvvvxxxxxxxxxxxxxxxxxxx
-xxxv.......vv.vv+++++vv.vv.......vxxxxxxxxxxxxxxxxxxx
+xxxvM......vv.vv+++++vv.vv......Mvxxxxxxxxxxxxxxxxxxx
 xxxvv.....vvv.vv.1.1.vv.vvv.....vvxxxxxxxxxxxxxxxxxxx
 xxvvvvv+vvvvv.v...g...v.vvvvv+vvvvvxxxxxxxxxxxxxxxxxx
 xxv.B1+.+1vvv.vv.1.1.vv.vvv1+.+1A.vxxxxxxxxxxxxxxxxxx
@@ -1010,7 +1016,8 @@ SUBST:  v = v:6 a:1, . = .:7 ':1
 KPROP:  'a6 = bloody
 COLOUR: av = lightred
 TILE:   av = dngn_metal_wall_brown
-FTILE:  .Yavp+*|p1234567d$' = floor_infernal_blank
+FTILE:  .Ymavp+*|p1234567d$' = floor_infernal_blank
+: decorative_floor(_G, 'm', "bloodied mop and bucket")
 MAP
           xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
           xxxxvvvvvvvvvvvvvvvvvvvvxxvvvvvvv
@@ -1034,7 +1041,7 @@ MAP
    xvvvvvvvvvvvv...vvvvvvllllllllllvvvvvvvv
    xxxxxxxxvvvvvv+vvvvvvvlvllvllvllllvvvvvv
           xvvvvv...vvvvvvvvvvvvvvvvvllxxxxx
-          xv.......ve'1vxxxxxxxxxxxxxllxxxx
+          xvm......ve'1vxxxxxxxxxxxxxllxxxx
           xv.1..2..vdl3""xxxx""1""xxxxllxxx
           xv.vvv.1.ve'1vx"xxxx"xxx"xxxxll"x
           xv.vvvv..vvpvvx"xx""xxxx"xxxxl>"x
@@ -2118,13 +2125,14 @@ SUBST:   9 = 998, 0 = 009
 :    end
 : end
 : grandhive_vaults(_G, 'a', true)
+: decorative_floor(_G, 'f', "flower patch")
 MAP
       .@.xx.@.......@.xx.@.
-      ...xx.X.......X.xx...
+      ...xx.X...f...X.xx...
     ...X.xx...xx.xx...xx.X...
     .X...xxxxx..x..xxxxx...X.
   .....xxxx...........xxxx.....
-  .X...xxxxxx'.X.X.'xxxxxx...X.
+  .X.f.xxxxxx'.X.X.'xxxxxx.f.X.
 ......x....xxx.."..xxx....x......
 @.X.xx..X..'xHBBCCDDx'..X..xx.X.@
 ....xx...".GH...'...EE."...xx....
@@ -2133,7 +2141,7 @@ xxxxxxxx'EF.a%''""'%a.GG'xxxxxxxx
 .X..x.xxxE.a%aaaAaaa%a.Hxxx.x..X.
 ...x..'xD..'aa9"~**aad..Bx'..x...
 ..x..X..C.a"a8a11da~a'a.B..X..x..
-@.x...."C'a"A~'131'~A"a'C"....x.@
+@fx...."C'a"A~'131'~A"a'C"....xf@
 ..x..X..B.a'a~ad11a8a"a.C..X..x..
 ...x..'xB..daa**~"9aa'..Dx'..x...
 .X..x.xxxH.a%aaaAaaa%a.Exxx.x..X.
@@ -2142,11 +2150,11 @@ xxxxxx....FF.a.aaa.a.GF....xxxxxx
 ....xx...".EE...'...HG."...xx....
 @.X.xx..X..'xDDCCBBHx'..X..xx.X.@
 ......x....xxx.."..xxx....x......
-  .X...xxxxxx'.X.X.'xxxxxx...X.
+  .X.f.xxxxxx'.X.X.'xxxxxx.f.X.
   .....xxxx...........xxxx.....
     .X...xxxxx..x..xxxxx...X.
     ...X.xx...xx.xx...xx.X...
-      ...xx.X.......X.xx...
+      ...xx.X...f...X.xx...
       .@.xx.@.......@.xx.@.
 ENDMAP
 
@@ -2636,13 +2644,14 @@ KFEAT:   - = open_door
 SHUFFLE: Aa / ~~ / ~~, Bb / Cc, opqrs
 SUBST:   ab` = ., A! = +, B = @, C : ccv, c : v.., ~ = v
 SUBST:   j : ll., k : ll., o = ., p : vv^, q : v., r : v., s = v
-SUBST:   z = zzz", % = %%%zz", - = ++-, ^ = .
+SUBST:   z = zzz", % = %:60 z:20 " m, - = ++-, ^ = .
 KPROP:   "yz = bloody
 KPROP:   DEFH` = no_tele_into
 COLOUR:  v = lightred
 TILE:    v = dngn_metal_wall_brown
 TILE:    y = wall_studio
-FTILE:   @.'"vVYM+-defhDEFH0123456789%zn' = floor_infernal_blank
+FTILE:   @.'"mvVYM+-defhDEFH0123456789%zn' = floor_infernal_blank
+:        decorative_floor(_G, 'm', "bloodied mop and bucket")
 :        dgn.delayed_decay(_G, 'z', 'human corpse / spriggan corpse / ' ..
 :                              'elf corpse / tengu corpse / salamander corpse')
 MAP

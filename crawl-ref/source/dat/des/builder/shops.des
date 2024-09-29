@@ -989,9 +989,9 @@ ENDMAP
 # Items related to the good gods thematically; healing, silver, holy wrath,
 # etc.
 NAME: nicolae_good_shop
-WEIGHT: 2
-DEPTH: D:6-, Depths
 TAGS: no_monster_gen no_trap_gen transparent
+DEPTH: D:6-, Depths
+WEIGHT: 2
 SHUFFLE: _s
 KFEAT: s = general shop type:Hallowed suffix:Reliquary ; \
    potion of heal wounds | potion of curing | \
@@ -1039,8 +1039,8 @@ ENDMAP
 #####################################################
 # Sells conjurations-heavy books, destructive wands, etc.
 NAME: nicolae_blasting_shop
-DEPTH: D:8-, Depths
 TAGS: no_monster_gen no_item_gen transparent extra
+DEPTH: D:8-, Depths
 MARKER: s = lua:fog_machine { cloud_type = "flame", \
              pow_min = 3, pow_max = 5, delay_min = 50, delay_max = 90, \
              start_clouds = 1, size = 3, walk_dist = 0, spread_rate= 0 }

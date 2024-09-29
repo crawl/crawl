@@ -194,9 +194,9 @@ ENDMAP
 
 # Another very classical vault.
 NAME:  fountainhead
-DEPTH: D, Depths, Elf, Crypt
 TAGS:  transparent allow_dup extra decor
-SUBST: ?=TUV
+DEPTH: D, Depths, Elf, Crypt
+SUBST: ? = TUV
 MAP
 ..............
 ..xxxw..wxxx..
@@ -292,10 +292,11 @@ ENDMAP
 NAME:  nrook_mini_vaults
 TAGS:  transparent extra
 DEPTH: D, Depths
+: decorative_floor(_G, 'M', "mop and bucket")
 MAP
 .........
 .vvvvvvv.
-.v.....v.
+.vM....v.
 .v.....v.
 .v.....+.
 .v.....v.
@@ -320,17 +321,19 @@ MAP
  xxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:  nrook_pool_corridor
-TAGS:  transparent extra decor
-DEPTH: D:5-, Depths
+NAME:   nrook_pool_corridor
+TAGS:   transparent extra decor
+DEPTH:  D:5-, Depths
+NSUBST: M = 1:M / *:.
+: decorative_floor(_G, 'M', "mop and bucket")
 MAP
  cccccccccccccccc
- c..............c
+ cM............Mc
  c.wwwwwwwwwwww.c
 @+.wwwwwwwwwwww.+@
  c.wwwwwwwwwwww.c
  c.wwwwwwwwwwww.c
- c..............c
+ cM............Mc
  cccccccccccccccc
 ENDMAP
 
@@ -3859,42 +3862,40 @@ xxxxxxxxx
 ENDMAP
 
 NAME:   dk_vineyard_1
+TAGS:   no_item_gen no_monster_gen uniq_vineyard extra transparent
 DEPTH:  D:2-12
 WEIGHT: 4
-TAGS:   no_item_gen no_monster_gen uniq_vineyard extra transparent
-ITEM:   any potion / nothing
-NSUBST: . = 6:d
-KFEAT:  w = shallow_water
+ITEM:   any potion
 KFEAT:  C = cache of fruit
-FTILE:  p = dngn_garden_cobble
-FTILE:  .d = floor_moss / floor_grass / floor_dirt
+NSUBST: . = 6 = d. / *:.
+FTILE:  .dpC : floor_moss / floor_grass / floor_dirt
 COLOUR: .d = green
+: decorative_floor(_G, 'p', "garden patch")
 MAP
 xxxxxxxxx
-xwwwwwwwx
-xwC...pwx
-xw.....wx
-xw.....w+
-xw.....wx
-xw.....wx
-xwp...Cwx
-xwwwwwwwx
+xWWWWWWWx
+xWC...pWx
+xW.....Wx
+xW.....W+
+xW.....Wx
+xW.....Wx
+xWp...CWx
+xWWWWWWWx
 xxxxxxxxx
 ENDMAP
 
 NAME:   dk_vineyard_2
+TAGS:   no_item_gen no_monster_gen uniq_vineyard extra transparent
 DEPTH:  D:2-12
 WEIGHT: 4
-TAGS:   no_item_gen no_monster_gen uniq_vineyard extra transparent
-ITEM:   any potion / nothing
-NSUBST: . = 4:d
-KFEAT:  w = shallow_water
+ITEM:   any potion
+NSUBST: . = 4 = d. / *:.
 FTILE:  .d = floor_moss / floor_grass
 COLOUR: .d = green
 MAP
 xxxxxxxx
 x......x
-x.wwww.+
+x.WWWW.+
 x......x
 xxxxxxxx
 ENDMAP
@@ -3955,11 +3956,11 @@ MAP
 ...........
 ENDMAP
 
-NAME: nicolae_benzene_ring
-DEPTH: D:6-, Depths
-NSUBST: d = d / .
-ITEM: any ring
-TAGS: transparent extra decor
+NAME:   nicolae_benzene_ring
+TAGS:   transparent extra decor
+DEPTH:  D:6-, Depths
+ITEM:   any ring
+NSUBST: d = 1:d / *:.
 MAP
  xxxxxxxxxx...xxxxxxxxxx
  xxxxxxxx...x...xxxxxxxx

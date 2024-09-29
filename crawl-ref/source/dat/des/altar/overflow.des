@@ -38,6 +38,8 @@
 #
 ###############################################################################
 
+: crawl_require('dlua/vault.lua')
+
 {{
 function interest_check(e)
   if not you.in_branch("D") or you.depth() > 10 then
@@ -637,11 +639,12 @@ TAGS:   no_pool_fixup decor transparent
 KFEAT:  C = altar_elyvilon
 KMASK:  wW = no_monster_gen
 : interest_check(_G)
+: decorative_floor(_G, '13', "flower patch")
 MAP
        xxxxxxxxxxxxxxx
       xxtttttttttttttxx
       xtttttttttttttttx
-      tttttttt.tttttttt
+      ttttttttptttttttt
   .....ttttt.....ttttt.....
  .......ttt.......ttt.......
 ...wWw...t...wWw...t...wWw...
@@ -651,7 +654,7 @@ MAP
 ...wWw...t...wWw...t...wWw...
  .......ttt.......ttt.......
   .....ttttt.....ttttt.....
-      tttttttt.tttttttt
+      ttttttttptttttttt
       xtttttttttttttttx
       xxtttttttttttttxx
        xxxxxxxxxxxxxxx
@@ -663,16 +666,17 @@ TAGS:   no_monster_gen transparent patrolling decor
 WEIGHT: 5
 KFEAT:  C = altar_elyvilon
 : local g = "att:good_neutral"
-: mons("quokka " .. g .. " w:30 / bombardier beetle " .. g)
-: mons("bat " .. g .. " / rat " .. g .. " / butterfly " .. g)
-: mons("yak tile:mons_yak_bow " .. g)
+: kmons("1 = quokka " .. g .. " w:30 / bombardier beetle " .. g)
+: kmons("2 = bat " .. g .. " / rat " .. g .. " / butterfly " .. g)
+: kmons("3 = yak tile:mons_yak_bow " .. g)
 : if you.absdepth() > 10 then
 SUBST:  2 = 3
-FTILE:  13 = dngn_garden_cobble
 FTILE:  'CFJt = floor_grass
+:   decorative_floor(_G, '13', "garden patch")
 : else
 FTILE:  '12CFJt = floor_grass
 : end
+COLOUR: '123 = green
 KMASK:  '123CFJ = opaque
 MARKER: E = lua:transp_loc("ely_altar_entry")
 MARKER: F = lua:transp_dest_loc("ely_altar_entry")
@@ -804,17 +808,17 @@ NAME:   fedhas_altar_4
 TAGS:   uniq_altar_fedhas temple_overflow_1 temple_overflow_fedhas transparent
 TAGS:   decor
 KFEAT:  C = altar_fedhas
-FTILE:  . = floor_moss
-FTILE:  t = floor_moss
+FTILE:  .pt = floor_moss
+: decorative_floor(_G, 'p', "flower patch")
 : interest_check(_G)
 MAP
 xxxxxxxxxxxxxxx
 xxxtttttttxxxxx
 xxtttttttttxxxx
-xtttt.ttttttxxx
+xttttp.tttttxxx
 xtttt.C.ttttttt
-xxtttt...ttttt.
-xxtttttt......@
+xxtttt.p.tttt..
+xxttttt.......@
 xxxxttttttttt..
 xxxxxxttttttttx
 xxxxxxxtttttttx
@@ -1368,15 +1372,16 @@ veto {{
     return items.excluded_from_set("wand of paralysis")
   end
 }}
+: decorative_floor(_G, 'V', "mourning vase")
 MAP
     ccccc
     c...c
     c.-.c
     c.2.c     cc
 ccccc...ccccccc.
-c.......`..`..`.
-c._1..c.........
-c.......`..`..`.
+c.....V.`..`..`.
+c._1.Vc.........
+c.....V.`..`..`.
 ccccc...ccccccc.
     c.3.c     cc
     c.G.c
@@ -3757,7 +3762,7 @@ TAGS:   temple_overflow_1 temple_overflow_yredelemnul no_monster_gen no_item_gen
 TAGS:   transparent uniq_altar_yredelemnul
 : if you.in_branch("Depths") then
 KMONS:  _ = spectral juggernaut
-SUBST:  1 = .
+SUBST:  1 = ?
 : else
 MONS:   spectral orc
 KMONS:  _ = weeping skull
@@ -3765,6 +3770,7 @@ KMONS:  _ = weeping skull
 KFEAT:  _ = altar_yredelemnul
 KFEAT:  . = web trap / .
 : interest_check(_G)
+: decorative_floor(_G, '1?', "broken floral vase")
 MAP
 xxxxxxxxx
 xcccccccx
@@ -5698,6 +5704,7 @@ ENDMAP
 
 NAME: minmay_overflow_temple_star_quad
 TAGS: temple_overflow_generic_3 transparent
+: decorative_floor(_G, 'V', "floral vase")
 MAP
            c
            c
@@ -5709,9 +5716,9 @@ MAP
         c.....c
       ccc.....ccc
     ccc....G....ccc
-  ccc......c......ccc
+  ccc.....Vc......ccc
 cccB.....GcccG.....Bccc
-  ccc......c......ccc
+  ccc......cV.....ccc
     ccc....G....ccc
       ccc.....ccc
         c.....c
@@ -5885,11 +5892,12 @@ ENDMAP
 
 NAME:   minmay_overflow_temple_hex
 TAGS:   temple_overflow_generic_6 transparent
+: decorative_floor(_G, 'V', "floral vase")
 MAP
    cccccccccc
    cB......Bc
   cc........cc
-  c...c..c...c
+  cV..c..c..Vc
  cc..........cc
  c...c....c...c
 cc............cc
@@ -5897,7 +5905,7 @@ cB..c......c..Bc
 cc............cc
  c...c....c...c
  cc..........cc
-  c...c..c...c
+  cV..c..c..Vc
   cc........cc
    cB......Bc
    cccc++cccc
@@ -5909,6 +5917,7 @@ ENDMAP
 NAME:  grunt_temple_overflow_octagram
 TAGS:  temple_overflow_generic_7 transparent
 SUBST: T : T G t V:1
+: decorative_floor(_G, 'p', "garden patch")
 MAP
           c
          ccc
@@ -5918,11 +5927,11 @@ MAP
    c..cc.....cc..c
    c.c+.......+c.c
    ccc....T....ccc
-  ccc...T...T...ccc
+  ccc...p...T...ccc
  cc.c...........c.cc
 ccB.+..T..T..T..+.Bcc
  cc.c...........c.cc
-  ccc...T...T...ccc
+  ccc...T...p...ccc
    ccc....T....ccc
    c.c+.......+c.c
    c..cc.....cc..c

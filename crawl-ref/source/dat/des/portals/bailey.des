@@ -9,6 +9,8 @@
 #
 ##############################################################################
 
+: crawl_require('dlua/vault.lua')
+
 {{
 function bailey_portal(e, ptype)
   local timeout_turns = crawl.random_range(600, 800)
@@ -773,14 +775,15 @@ SUBST:  4 = 43322.., 5 = 4333, C : CC.
 NSUBST: ! = 1:deee / *:e
 NSUBST: ? = 1:fffg / *:g
 : bailey_setup(_G)
+: decorative_floor(_G, 'B', "orcish standard")
 MAP
 cccccccccccccccccccccccccccccccccccccccccccccccccccccc
 cc.<.......1cccccccc....1ccccccccc....1ccc.........Ccc
-c......c...12cccccc.....13c.....c.....14+....5......5c
+c.....Bc...12cccccc.....13c.....c.....14+....5......5c
 c.....ccc..12c.$$.c..cc.13+.!!!.+..c..14+.......???..c
 cA.....G...13+.$$.+..G..13+.!!!.+.....14+.......???.<c
 c.....ccc..12c.$$.c..cc.13+.!!!.+..c..14+.......???..c
-c......c...12cccccc.....13c.....c.....14+....5......5c
+c.....Bc...12cccccc.....13c.....c.....14+....5......5c
 cc.<.......1cccccccc....1ccccccccc....1ccc.........Ccc
 cccccccccccccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP

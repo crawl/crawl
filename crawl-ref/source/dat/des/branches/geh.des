@@ -40,19 +40,22 @@ ENDMAP
 
 ##############################################################################
 
-NAME:  lemuel_hellion_isle
-DEPTH: Geh
-MONS:  hellion, brimstone fiend
-SUBST: L = l.
-SUBST: 1 = l:2 1
+NAME:   lemuel_hellion_isle
+TAGS:   no_monster_gen
+DEPTH:  Geh
+KMONS:  1 = hellion
+KMONS:  2 = brimstone fiend
+SUBST:  L = l@, 1 = l:2 1
+KPROP:  12 = no_tele_into
+: decorative_floor(_G, '2', "infernal standard")
 MAP
       lL
      llL
     LlLLL
-   LLllLL
-llLLLlllLLL
+   LLlllL
+llLLllllLLL
 LllllllllllLL
-LLLlll11lllllLL
+LLllll11lllllLL
  LLLll111llllL
   LLlll121llLL
   Lllll111lLL
@@ -248,10 +251,11 @@ MARKER:  " = lua:fog_machine {cloud_type = "flame", \
              pow_min = 8, pow_max = 10, delay = 100, \
              size_min = 1, size_max = 1, start_clouds = 1, excl_rad = 0 }
 FTILE:   " = floor_volcanic
+: decorative_floor(_G, '?', "infernal standard")
 MAP
        cc@.c
    DDDcc...cc
-  DD``C.....c
+  DD``C..?..c
   D```C.....ccccccc
   ccc-cc+c+cccccGGc
   cclllc........llc
@@ -267,23 +271,24 @@ cll...."...clllcccc
 cll........clllcc
 cGGccccc+c+cc-ccc
 ccccccc.....C```D
-      c.....C``DD
+      c..?..C``DD
       cc...ccDDD
        c.@cc
 ENDMAP
 
-NAME:  nicolae_geh_amphitheater
-TAGS:  transparent extra decor
-DEPTH: Geh:2-
+NAME:   nicolae_geh_amphitheater
+TAGS:   transparent extra decor
+DEPTH:  Geh:2-
+: decorative_floor(_G, 'f', "infernal standard")
 MAP
    lllll
  lllclclll
  lclllllcl
-llll...lll
+llll.f.lll
 lcl......@
 lll..{...@
 lcl......@
-llll...lll
+llll.f.lll
  lclllllcl
  lllclclll
    lllll
@@ -323,8 +328,9 @@ DEPTH:  Geh, !Geh:$
 KMONS:  } = 9 / 8
 KFEAT:  } = }
 NSUBST: DEON = 1=+, FHOP = 1=+, JKPQ = 1=+, LMNQ = 1=+, DEFHJKLM = 1=+, \
-        Z = + / +cc, } = }9.. / 9.
+        Z = + / +cc, } = }9ff / 9f
 SUBST:  DEFHJKLMNOPQ = c
+: decorative_floor(_G, 'f', "infernal standard")
 MAP
   cEc   cFc
  cc.cc cc.cc
@@ -405,10 +411,11 @@ ENDMAP
 NAME:    nicolae_geh_isolated_escape
 TAGS:    no_exits
 DEPTH:   Geh, !Geh:$
-KMASK:   .> = no_monster_gen
-SHUFFLE: DE
-NSUBST:  D = + / n
-SUBST:   E = c
+SHUFFLE: DE, FG
+NSUBST:  D = 1:+ / *:n
+SUBST:   E = c, G = .
+KMASK:   .>F = no_monster_gen
+: decorative_floor(_G, 'F', "infernal standard")
 MAP
           ll
         llllll
@@ -416,9 +423,9 @@ MAP
 lllllllllllllll
 lllllccDcclllll
 llllcE...Ecllll
-llllc.....clll
-llllD..>..Dlll
- lllc.....cll
+llllc..G..clll
+llllD.F>F.Dlll
+ lllc..G..cll
   llcE...Ecll
    llccDccllll
     llllllllll
@@ -427,26 +434,27 @@ llllD..>..Dlll
        lllll
 ENDMAP
 
-NAME:  nicolae_geh_lava_lounge
-TAGS:  transparent
-DEPTH: Geh
+NAME:   nicolae_geh_lava_lounge
+TAGS:   transparent
+DEPTH:  Geh
 : if you.depth() == 1 then
-SUBST: S = }G
+SUBST:  S = }G
 : elseif you.depth_fraction() < 1 then
-SUBST: S = {}GG
+SUBST:  S = {}GG
 : else
-SUBST: S = {G
+SUBST:  S = {G
 : end
-SUBST: D = +c@l, 0 = .009, 9 = 998
+SUBST:  D = +c@l, 0 = .009, 9 = 998
+: decorative_floor(_G, 'f', "infernal standard")
 MAP
    ccc+ccc
  cccl...lccc
  clll...lllc
 cclll.0.lllcc
 cllll...llllc
-c...........c
+c......f....c
 D..0..S..0..D
-c...........c
+c....f......c
 cllll...llllc
 cclll.0.lllcc
  clll...lllc
@@ -482,18 +490,19 @@ TAGS:   transparent
 DEPTH:  Geh
 NSUBST: D = + / c, E = + / c, F = + / c, H = + / c
 SUBST:  L = l.
+: decorative_floor(_G, 'f', "infernal standard")
 MAP
  llL.......Lll
 llll.EEEEE.llll
 lllcEE...EEclll
 Llcc.......cclL
-..D...LLL...F..
+..D.f.LLL...F..
 .DD..LlllL..FF.
 .D..LlllllL..F.
 .D..LlllllL..F.
 .D..LlllllL..F.
 .DD..LlllL..FF.
-..D...LLL...F..
+..D...LLL.f.F..
 Llcc.......cclL
 lllcHH...HHclll
 llll.HHHHH.llll
@@ -594,14 +603,16 @@ ENDMAP
 NAME:    nicolae_geh_realm_of_the_lava_sea
 DEPTH:   Geh:2-, !Geh:$
 ORIENT:  encompass
+KMONS:   f = 9
 KMONS:   } = 8
 KFEAT:   ~ = endless_lava
 KFEAT:   } = }
-: set_border_fill_type('endless_lava')
 SHUFFLE: DE, FH, JK/LM, NO/PQ/RS, pq/rs, Zz/ay, '"/-_
 SUBST:   DFJNPpZ' = l, EHLRra- = ., KOQqz" = c, MSsy_ = +, ` = l., \
          0 = 0009, 9 = 9998, ! = }.., 7 = cccccccl
-NSUBST:  } = } / 9
+NSUBST:  } = 1:} / 3:f / *:9
+: decorative_floor(_G, 'f', "infernal standard")
+: set_border_fill_type('endless_lava')
 MAP
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ~llllllllllllllllcccccllllllllllllll~
@@ -683,6 +694,9 @@ KFEAT:  t = demonic_tree
 KFEAT:  2 = l
 SUBST:  L = l., 1 = 11., 2 = 22l, T = tttt3, 7 = tt_
 CLEAR:  _
+TILE:   t = dngn_demonic_tree_1 w:1 / dngn_demonic_tree_2 w:3 / \
+            dngn_demonic_tree_3 w:3 / dngn_demonic_tree_4 / \
+            dngn_demonic_tree_5 / dngn_demonic_tree_16 w:1
 MAP
     77777777777ttt
   77ttttttttttttTTT...
@@ -704,7 +718,9 @@ NAME:   nicolae_geh_split_lavaduct
 TAGS:   transparent
 DEPTH:  Geh
 ORIENT: centre
+KMONS:  8 = 8
 SUBST:  ` = lc, L = l.
+: decorative_floor(_G, '8', "infernal standard")
 MAP
         ...........
         ....c+c....

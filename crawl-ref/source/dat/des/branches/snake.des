@@ -453,6 +453,8 @@ ENDMAP
 
 NAME:  nicolae_snake_serpentine_hallways
 TAGS:  transparent extra snakedec
+SUBST: V : V...
+: decorative_floor(_G, 'V', "flower patch")
 MAP
         x@@@@xxxxx
         x........xxx
@@ -463,10 +465,10 @@ xxxxxxxxxxxxxxxx....xx
 @...............xx...x
 xxxxxxxxxxx......x...x
 xxxxx.....xxx...xx...x
-xxx.........xx.xx....x
+xxxV........xx.xx....x
 xx...........x+x....xx
 xx....x+x...........xx
-x....xx.xx.........xxx
+x....xx.xx........Vxxx
 x...xx...xxx.....xxxxx
 x...x......xxxxxxxxxxx
 x...xx...............@
@@ -480,7 +482,8 @@ ENDMAP
 
 NAME:  nicolae_snake_linked_coils
 TAGS:  transparent extra snakedec
-SUBST: + : +x
+SUBST: + : +x, V : V..
+: decorative_floor(_G, 'V', "floral vase")
 MAP
     xxxxxxxxxxxxxx
   xxx.....xxx....xxx
@@ -488,11 +491,11 @@ MAP
 xx...xxxxx...xxxx...xx
 @...xxxx.+xx..xxxx...@
 @..xxxxx..xx..xxxxx..@
+xxxxxxx..xxxx.Vxxxxxxx
 xxxxxxx..xxxx..xxxxxxx
 xxxxxxx..xxxx..xxxxxxx
 xxxxxxx..xxxx..xxxxxxx
-xxxxxxx..xxxx..xxxxxxx
-xxxxxxx..xxxx..xxxxxxx
+xxxxxxxV.xxxx..xxxxxxx
 @..xxxxx..xx..xxxxx..@
 @...xxxx...x+.xxxx...@
 xx...xxxx...xxxxx...xx
@@ -545,6 +548,7 @@ NAME:    nicolae_snake_round_shape_thing
 TAGS:    transparent extra snakedec luniq_snakedec_large
 SHUFFLE: bc
 SUBST:   a : x., b : x@, c : @
+: decorative_floor(_G, 'V', "floral vase")
 MAP
        xxbbbxx
      xxx.....xxx
@@ -557,9 +561,9 @@ MAP
   xx...xxxxxxx...xx
  xx.....xxxxx.....xx
 xx.......xxx.......xx
-c....a.........a....c
+c....a....V....a....c
 c...aaa.......aaa...c
-c....a.........a....c
+c....a....V....a....c
 xx.......xxx.......xx
  xx.....xxxxx.....xx
   xx...xxxxxxx...xx
@@ -632,8 +636,9 @@ ENDMAP
 NAME:    nicolae_snake_slithery_corners
 TAGS:    transparent extra snakedec
 SHUFFLE: DEF
-SUBST:   D : ggG., E : TG., F : T.
+SUBST:   D : ggG., E : TG., F : T., M = M..
 : snake_statue_setup(_G, "g")
+: decorative_floor(_G, 'M', "mop and bucket")
 MAP
      ccc
 c@@@ccccc@@@cc
@@ -644,7 +649,7 @@ cc....c....ccccccc
 ccc...c...ccccccccc
 ccc..DcF..ccccccccc
 ccc...c...ccccc...@
-cc....c....ccc....@
+cc....c...Mccc....@
 c....ccc..........@
 c...cccc........ccc
 cE..cccccc..F..ccccc
@@ -1013,10 +1018,11 @@ KFEAT:   C = altar_cheibriados / altar_gozag w:5
 KFEAT:   F = cache of fruit / cache of meat
 SHUFFLE: '"yY`~zZ / yY'"zZ`~ / yY'"`~zZ / yY'"`~zZ / '"yYzZ`~ / '"yYzZ`~, ?!
 SUBST:   '` = ., yYzZ = x, ! : bb+, - : x:5 .
-NSUBST:  "~ = 1:{([])}}<<<<>>>>CCCFFTTUUVV
-SUBST:   " : bblG, ~ : bblG, ?b : ccx, ^ : ^x...
+NSUBST:  "~ = 1:{([])}}<<<>>>CCCFFTTUUVVpp
+SUBST:   " : bbbllGGp, ~ : bbblGGGp, ?b : ccx, ^ : ^x...
 TILE:    G = dngn_statue_naga / dngn_statue_archer w:6
 CLEAR:   ^
+: decorative_floor(_G, 'p', "garden patch")
 MAP
     .@.^^                  x
    ..x..^x    ^^^^^      ..x..
@@ -1614,6 +1620,8 @@ ENDMAP
 NAME:   nicolae_snake_widesinders
 TAGS:   transparent snakedec extra
 DEPTH:  Snake
+SUBST:  p : p...
+: decorative_floor(_G, '?', "garden patch")
 MAP
        ....
       ..cc..
@@ -1621,12 +1629,12 @@ MAP
       .c......
    .....c..cc..
   ..cc..c.c..c.
-  .c..cc..c......
+  .cp.cc..c......
   .c.......c..cc..
 ....c..cc..c.c..c.
 .c..c.c..cc..c....
 ..cc..c.......c.
- ......c..cc..c.
+ ......c..cc.pc.
    .c..c.c..cc..
    ..cc..c.....
     ......c.

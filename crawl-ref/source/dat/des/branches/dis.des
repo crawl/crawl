@@ -178,17 +178,18 @@ MONS:    hellion / tormentor / ancient champion / \
 SHUFFLE: ABa / EFc
 NSUBST:  F = 1:112 / 1:1 / 1 : }:6 >:3 .:1
 SUBST:   ABCDE = 0:19 3:1, a = +, bc = v, V : v.
+: decorative_floor(_G, 'M', "bloodied mop and bucket")
 MAP
 ....................
 .vv......vv......vv.
 .vv.v..v....v..v.vv.
-.vv...vv3vv3vv...vv.
+.vv...vv3vv3vv..Mvv.
 .vvv+vvvvvvvvvv+vvv.
 0vvAAAvvvvvvvvEEEvv0
 3vvvavvvvvvvvvvcvvv3
 0vvBBBvvvvvvvvFFFvv0
 .vvv+vvvvvvvvvv+vvv.
-.vv...vv3vv3vv...vv.
+.vvM..vv3vv3vv...vv.
 .vv.v..v....v..v.vv.
 .vv......vv......vv.
 ....................
@@ -199,13 +200,14 @@ NAME:    nicolae_dis_hell_towers
 ORIENT:  encompass
 TAGS:    no_monster_gen
 SHUFFLE: {}
-NSUBST:  a = + / v, b = + / v, c = + / v, d = + / v
+NSUBST:  a = + / v, b = + / v, c = + / v, d = + / v, M = 1:M / *:.
 SUBST:   2 = 2., 0 = 00.
 KMONS:   12 = hell sentinel / iron giant
+: decorative_floor(_G, 'M', "bloodied mop and bucket")
 MAP
   vvvvv     vvvvv
  vv...vv   vv...vv
-vv..0..vv vv..0..vv
+vvM.0..vv vv..0.Mvv
 v.......vvv.......v
 v.0.2.0.+.+.0.2.0.v
 v.......vvv.......v
@@ -219,7 +221,7 @@ vv..0..vvvvv..0..vv
 v.......vvv.......v
 v.0.2.0.+.+.0.2.0.v
 v.......vvv.......v
-vv..0..vv vv..0..vv
+vvM.0..vv vv..0.Mvv
  vv...vv   vv...vv
   vvvvvv    vvvvv
 ENDMAP
@@ -350,11 +352,12 @@ NAME:    hangedman_dis_decor_blocks_mantle
 TAGS:    transparent
 ORIENT:  centre
 SHUFFLE: ABC, DEFG
-NSUBST:  > = 1 = .:13 >:7 / 1 = .:6 {:4 / *:.
+NSUBST:  > = 1 = .:13 >:7 / 1 = M:6 {:4 / *:.
 SUBST:   A : x:9 .:1, B : yy..., C = .
 SUBST:   D : xxxx., E : y.., FG = .
 SUBST:   x : v:3 G:2, y : v, - =  +v
 : dis_statues(_G)
+: decorative_floor(_G, 'M', "bloodied mop and bucket")
 MAP
         vvvvv     vvvvv
         v...v..D..v...v
@@ -383,8 +386,9 @@ SUBST:   A : x:9 .:1, B : yyy.., C : z.., D = .
 SUBST:   E : x:9 .:1, F : yy..., GHIJ = .
 SHUFFLE: xyz, -_
 SUBST:   x : v:3 G:2, y : v:3 G:1, z = v, - : ++v, _ : +vv
-NSUBST:  > = 1 = .:13 >:7 / 1 = .:6 {:4 / *:.
+NSUBST:  > = 1 = .:13 >:7 / 1 = M:6 {:4 / *:.
 : dis_statues(_G)
+: decorative_floor(_G, 'M', "bloodied mop and bucket")
 MAP
                 vvvvv
          .......v...v.E.....
@@ -416,8 +420,9 @@ SHUFFLE: '-` / "_<, AB, CDEFG
 SUBST:   '-` = v, " = ., _ = +, < = >, A : xxx., B: y...
 SUBST:   C : xxxx.:1, D : yyy.., E : z.........., FG = .
 SUBST:   x : v:3 G:2, y : v:3 G:1, z = v
-NSUBST:  > = 1 = .:13 >:7 / 1 = .:6 [:4 / *:.
+NSUBST:  > = 1 = .:13 >:7 / 1 = M:6 [:4 / *:.
 : dis_statues(_G)
+: decorative_floor(_G, 'M', "bloodied mop and bucket")
 MAP
 vvvvv       vvvvv
 v'''v.C...D.v...v
@@ -536,7 +541,7 @@ MONS:    ancient champion / war gargoyle / hellion / tormentor / \
          crystal echidna w:2
 MONS:    ancient lich / dread lich / hell sentinel / iron giant / juggernaut
 KFEAT:   Z = zot trap
-NSUBST:  > = 1 = { / 1 = } / 2 = >:1 .:49
+NSUBST:  > = 1 = { / 1 = } / 2 = >:1 .:49 / *:.
 # Always place at least one door per room, possibly wider or multiplied.
 # Variation provided across either half of the vault and per-room.
 NSUBST:  A = 1:+ / *:-, B = 1:+ / *:-, C = 1:+ / *:-, D = 1:+ / *:-
@@ -555,10 +560,10 @@ NSUBST:  S = 2 = 1:3 2:1 .:1 / * = 1:4 .:1, T = 2 = 1:3 2:1 .:1 / * = 1:4 .:1
 NSUBST:  U = 1:. / 1:1 / * = 1:4 .:1, W = 2:. / 1:1 / 1 = 1:4 .:1
 NSUBST:  X = 1:2 / 1 = 1:3 2:1 .:1 / * = 1:4 .:1, Y = 2:2 / * = 1:4 .:1
 KMASK:   wl = no_monster_gen
-# : dis_statues(_G)
+: decorative_floor(_G, 'm', "bloodied mop and bucket")
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-v...................................................v
+v..................................................mv
 v...................................................v
 v..v..V...vvvBBBvvv...V...vvvDDDvvv...V...vvvFFFvv..v
 v..v......vN.....Nv.......vP.....Pv.......vR....Rv..v
@@ -572,7 +577,7 @@ v..v..V...vvvHHHvvv...V...vvvJJJvvv...V...vvvLLLvv..v
 v..vS....Sv.......vU.....Uv.......vX.....Xv......v..v
 v..vvGGGvvv...V...vvvIIIvvv...V...vvvKKKvvv...V..v..v
 v...................................................v
-v...................................................v
+vm..................................................v
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ENDMAP
 
@@ -607,22 +612,21 @@ TAGS:   no_monster_gen
 DEPTH:  Dis:2-, !Dis:$
 ORIENT: encompass
 KMONS:  } = 8
-KFEAT:  G = metal_statue
 KFEAT:  } = }
 : local placement = crawl.random2( 4 )
 : if placement == 1 then
 SUBST:  D = {
-NSUBST: EFHJKLM = 1=} / .
+NSUBST: EFHJKLM = 1:} / 1:m. / *:.
 : elseif placement == 2 then
 SUBST:  F = {
-NSUBST: DJKLM = 1=} / .
+NSUBST: DJKLM = 1:} / 1:m. / .
 : else
 SUBST:  E = {
-NSUBST: DHJKLM = 1=} / .
+NSUBST: DHJKLM = 1:} / 1:m. / .
 : end
 SUBST:  0 = .00, 0 = 009, 9 = 998
-TILE:   G = dngn_statue_iron
-: set_feature_name("metal_statue", "iron statue")
+: dis_statues(_G)
+: decorative_floor(_G, 'm', "bloodied mop and bucket")
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 vG.....Gv...G...G...+...G...v

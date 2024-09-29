@@ -563,9 +563,10 @@ SUBST:   ; = .:10 d:2
 : if crawl.one_chance_in(300) then
 SUBST:   t = "
 : end
-SUBST:   e = e''', ':.......' , "=' , ':d' , '=..d
+SUBST:   e = ef'', ':.......' , "=' , ':d' , '=..d
 # Randomisation 4: trees or rock
 SUBST:   t : ttx
+: decorative_floor(_G, 'f', "garden patch")
 MAP
  xxxxxxxxxxxxxxxx
  xxtttttttxxtttxx

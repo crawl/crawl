@@ -8,6 +8,8 @@
 # <<5>>      End vaults
 ##############################################################################
 
+: crawl_require('dlua/vault.lua')
+
 {{
 function crypt_drop_grates(data, triggerable, triggerer, marker, ev)
     if data.trig == true then
@@ -483,9 +485,11 @@ ENDMAP
 NAME:  nicolae_crypt_small_crypt
 TAGS:  allow_dup extra
 DEPTH: Crypt
+SUBST: V = V..
+: decorative_floor(_G, 'V', "mourning vase")
 MAP
 ccccc
-cG.Gc
+cGVGc
 c.%.c
 c...c
 cc+cc
@@ -727,11 +731,13 @@ DEPTH:  Crypt
 KFEAT:  - = iron_grate
 NSUBST: D = @ / ., E = @ / .
 SUBST:  F : xxxxGG-, H : xxxxGG-
+TILE:   G = dngn_statue_angel / dngn_statue_ancient_hero / dngn_statue_dwarf
+: decorative_floor(_G, 'M', "mourning vase")
 MAP
 xxxxxDDDx
 xxGxxF.Fx
-x...H...x
-x...H...x
+xM..H...x
+x...H..Mx
 xF.FxxGxx
 xEEExxxxx
 ENDMAP
@@ -1014,13 +1020,15 @@ ENDMAP
 NAME:  nicolae_crypt_memorial_pool
 TAGS:  transparent extra decor no_pool_fixup
 DEPTH: Crypt
+TILE:  G = dngn_statue_angel / dngn_statue_ancient_hero / dngn_statue_dwarf
+: decorative_floor(_G, 'F', "mourning vase")
 MAP
 xxx..
-x.........
+xF........
 x..wwwww..
 xG.wwwww.@
 x..wwwww..
-x.........
+xF........
 xxx..
 ENDMAP
 
@@ -1110,15 +1118,16 @@ ENDMAP
 NAME:   nicolae_crypt_remembering
 TAGS:   transparent extra decor
 DEPTH:  Crypt
-SUBST:  * = **|, p : xxx., q : x..., r : xx.., s : xxx.
+SUBST:  * = **|, p : xxx., q : x..., r : xx.., s : xxx., V : V..
 TILE:   t = dngn_tree_dead, G = dngn_gravestone
 COLOUR: t = brown
 : set_feature_name("tree", "dead tree")
 : set_feature_name("granite_statue", "gravestone")
+: decorative_floor(_G, 'V', "mourning vase")
 MAP
 xxxxxxx
 xptGtpx
-xq.*.qx
+xqV*Vqx
 xr...rx
 xs...sx
 xxx@xxx

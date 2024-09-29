@@ -42,28 +42,34 @@ ENDMAP
 
 NAME:     vaults_room_pool
 TAGS:     vaults_empty allow_dup no_pool_fixup
-SUBST:    w : xW
+SHUFFLE:  wM / x'
+NSUBST:   M = 1:M / *:.
+SUBST:    ' = .
+: decorative_floor(_G, 'M', "mop and bucket")
 MAP
-.......
+M..M..M
 .......
 ..www..
-..www..
+M.www.M
 ..www..
 .......
-.......
+M..M..M
 ENDMAP
 
 NAME:     vaults_room_pools
 TAGS:     vaults_empty allow_dup no_pool_fixup
-SUBST:    w : xwW
+SHUFFLE:  wM / WM / x'
+NSUBST:   M = 1:M / *:.
+SUBST:    ' = .
+: decorative_floor(_G, 'M', "mop and bucket")
 MAP
+ww.M.ww
 ww...ww
+..M.M..
+M..M..M
+..M.M..
 ww...ww
-.......
-.......
-.......
-ww...ww
-ww...ww
+ww.M.ww
 ENDMAP
 
 NAME:     vaults_room_stairs_pillars
@@ -169,18 +175,19 @@ NAME:     vaults_room_ringed_pool
 TAGS:     vaults_empty no_pool_fixup
 SHUFFLE:  xc
 SUBST:    c : x.
-NSUBST:   . = 1:( / *:.
+NSUBST:   ( = 1:( / 1:M. / *:.
+: decorative_floor(_G, 'M', "mop and bucket")
 MAP
 ..xxx..xxx..
 ............
-x...cccc...x
-x..........x
+x.(.cccc.(.x
+x..(....(..x
 x.c.wwww.c.x
 ..c.wwww.c..
 ..c.wwww.c..
 x.c.wwww.c.x
-x..........x
-x...cccc...x
+x..(....(..x
+x.(.cccc.(.x
 ............
 ..xxx..xxx..
 ENDMAP
@@ -269,18 +276,19 @@ ENDMAP
 NAME:    v_alt_pattern_4
 TAGS:    allow_dup vaults_empty
 SUBST:   y : x.
-NSUBST:  . = 1:( / *:.
+NSUBST:  . = 1:( / *:., F = 1:F... / *:.
+: decorative_floor(_G, 'F', "fur brush")
 MAP
 .............
 .............
 ..xxxx.xxxx..
-..x.......x..
+..xF.....Fx..
 ..x.......x..
 ..x..yxy..x..
 .....xxx.....
 ..x..yxy..x..
 ..x.......x..
-..x.......x..
+..xF.....Fx..
 ..xxxx.xxxx..
 .............
 .............
@@ -414,16 +422,17 @@ ENDMAP
 
 NAME:    v_misc_22
 TAGS:    vaults_empty allow_dup
-NSUBST:  . = 1:( / *:.
+NSUBST:  . = 1:( / *:., F = 1:F... / *:.
+: decorative_floor(_G, 'F', "fur brush")
 MAP
 xx.......xx
 xx.......xx
 ....xxx....
-....xxx....
+...FxxxF...
 ..xxxxxxx..
 ..xxxxxxx..
 ..xxxxxxx..
-....xxx....
+...FxxxF...
 ....xxx....
 xx.......xx
 xx.......xx
@@ -648,21 +657,26 @@ ENDMAP
 NAME:   ontoclasm_vaults_claustrophobia
 TAGS:   vaults_empty
 KFEAT:  g = metal_statue
-SUBST:  G : GGgT.
+SUBST:  G : GGgT., M : M..
 COLOUR: g = silver
 TILE:   g = dngn_silver_statue
 : set_feature_name("metal_statue", "silver statue")
+: local dec = "mop and bucket"
+: if crawl.x_chance_in_y(1, 3) then
+:   dec = "fur brush"
+: end
+: decorative_floor(_G, 'M', dec)
 MAP
 .x..x...x..x.
 x+xx+xxxxxx+x
 .x..x...x..x.
-.x..x...x..x.
+.x.Mx...x..x.
 xxxxxxxx+xxx+
 .x.........x.
 .x.G..(..G.x.
 .x.........x.
 +xxx+xxxxxxxx
-.x..x...x..x.
+.x..x...xM.x.
 .x..x...x..x.
 x+xxxxxx+xx+x
 .x..x...x..x.
@@ -905,10 +919,11 @@ ENDMAP
 
 NAME: ontoclasm_vaults_tryst
 TAGS: vaults_empty
-SUBST: T : TTG.
+SUBST: T : TTG., M = M..
+: decorative_floor(_G, 'M', "mop and bucket")
 MAP
 ....xxxxxxxxx..
-....x......xx..
+....xM......xx..
 ....xxx+xx..x..
 ....xx...xx....
 x.xxx.....x.xxx
@@ -916,7 +931,7 @@ x...x..T..x...x
 xxx.x.....xxx.x
 ....xx...xx....
 ..x..xx+xxx....
-..xx......x....
+..xx.....Mx....
 ..xxxxxxxxx....
 ENDMAP
 
@@ -1207,17 +1222,15 @@ xDdxCc..
 ...xxx..
 ENDMAP
 
-NAME: nicolae_vaults_little_squares_4
-TAGS: vaults_empty allow_dup
+NAME:    nicolae_vaults_little_squares_4
+TAGS:    vaults_empty allow_dup
 SHUFFLE: ab, cd
-NSUBST: a = 1:+ / *:x
-NSUBST: c = 1:+ / *:x
-NSUBST: b = 1:= / *:x
-NSUBST: d = 1:= / *:x
-SUBST: = = +xxx
+NSUBST:  a = 1:+ / *:x, b = 1:+xxx / *:x, c = 1:+ / *:x, d = 1:+xxx / *:x
+SUBST:   M = M..
+: decorative_floor(_G, 'M', "mop and bucket")
 MAP
 xxxx....
-x..b.xx.
+xM.b.xx.
 x..b.xx.
 xaax....
 ....xddx
@@ -1425,6 +1438,7 @@ fff.g.hhh
 x.f.g.h.x
 ENDMAP
 
+# XXX: doesn't this produce teleport closets?...
 NAME: nicolae_vaults_little_squares_5
 TAGS: vaults_empty allow_dup
 NSUBST: a = 1:+ / *:xx+

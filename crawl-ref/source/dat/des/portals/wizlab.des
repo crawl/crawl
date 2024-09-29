@@ -75,7 +75,7 @@
 #Cloud Mage's Chambers    |"cloud-esque"        |lightgray, white,
 #                         |                     |lightblue
 #---------------------------------------------------------------
-#Hellbinder's Lair        |triangles and circles|red, darkgray,
+#Hellbinder's Halls       |triangles and circles|red, darkgray,
 #                         |sigils               |yellow sigils
 #---------------------------------------------------------------
 #Lehudib's Moon Base      |Circular and alien   |blue/lightblue/magenta
@@ -105,6 +105,7 @@
 
 {{
 crawl_require("dlua/dungeon.lua")
+crawl_require('dlua/vault.lua')
 
 
 function wizlab_portal (e)
@@ -2089,11 +2090,11 @@ TILE:       t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4
 : end
 TILE:       G = dngn_statue_archer / dngn_statue_centaur w:5
 LROCKTILE:  wall_brick_vines
-LFLOORTILE: floor_grass
-:           set_random_mon_list(
-:               "deep elf archer / faun / centaur warrior / yaktaur / " ..
-:               " satyr / naga sharpshooter / shambling mangrove / " ..
-:               "thorn hunter w:5 / eleionoma w:5 / deep elf master archer w:2")
+: decorative_floor(_G, 'L', "flower patch")
+: set_random_mon_list("deep elf archer / faun / centaur warrior / yaktaur / " ..
+:                     " satyr / naga sharpshooter / shambling mangrove / " ..
+:                     "thorn hunter w:5 / eleionoma w:5 / " ..
+:                     "deep elf master archer w:2")
 :           wizlab_setup(_G)
 epilogue {{
             wizlab_milestone(_G, "Eringya's Formal Garden")
@@ -2106,7 +2107,7 @@ cttttttt.............................tttttttc
 ctttt1....tttttttttttt.tttttttttttt....1ttttc
 cttt.....tttttttttt.......tttttttttt.....tttc
 ctt...tt...ttt......G...G......ttt...tt...ttc
-cty1.ttt2............A.A............2ttt.1ytc
+cty1.ttt2...L..L.....A.A.....L..L...2ttt.1ytc
 ctt...tt......ttt...G...G...ttt......tt...ttc
 cttt.....tttttttttt.......tttttttttt.....tttc
 ctttt1....tttttttttttt.tttttttttttt....1ttttc
@@ -2119,15 +2120,15 @@ cttttttt...t....7.....7.....7....t...tttttttc
 ctttttt....1......tc.....ct......1....ttttttc
 cttttt..t......tttttcc-ccttttt......t..tttttc
 ctttt...tt.7..tttttt.....tttttt..7.tt...ttttc
-cttt...tttt..tttttt...3...tttttt..tttt...tttc
+cttt...tttt..ttttttL..3..Ltttttt..tttt...tttc
 cttt.2.tttt...tttttt2.2.2tttttt...tttt.2.tttc
 ctttt...tttt.2.tttttt;t;tttttt.2.tttt...ttttc
 ctttttp.pttttq.qtttttttttttttq.qttttp.ptttttc
 cttttttpppttttqqqttttyyyttttqqqttttpppttttttc
 cttttp..-..pttq...tt..2..tt...qttp..-..pttttc
-ctty........Fytt....1...1....ttyF........yttc
+cttyL.......Fytt....1...1....ttyF.......Lyttc
 ctt;1..tTt..1;ytt.3...T...3.tty;1..tTt..1;ttc
-ctty....3...2ytt....1...1....tty2...3....yttc
+cttyL...3...2ytt....1...1....tty2...3...Lyttc
 ctttt2..-...tt....tt;.3.;tt....tt...-..2ttttc
 ctttttt...tttt...ttttytytttt...tttt...ttttttc
 cttttt...tttt2..ttttttgtttttt..2tttt...tttttc
@@ -2141,7 +2142,7 @@ cttttttt........t.7-..T..-7.t........tttttttc
 cttttttttt3...11.............11...3tttttttttc
 cttttttttttt..12...7..4..7...21..tttttttttttc
 ctttttttttttttttF...........Ftttttttttttttttc
-cttttttttttttttttttt2.;.2tttttttttttttttttttc
+cttttttttttttttttttt2L;L2tttttttttttttttttttc
 ctttttttttttttttttttttttttttttttttttttttttttc
 ccccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP

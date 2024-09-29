@@ -799,7 +799,14 @@ cache_of_meat_0 DNGN_CACHE_OF_MEAT
 cache_of_meat_1
 cache_of_baked_goods_1 DNGN_CACHE_OF_BAKED_GOODS
 cache_of_baked_goods_2
-garden_cobble DNGN_GARDEN_COBBLE
+garden_patch DNGN_GARDEN_PATCH
+%weight 10
+flower_patch_0 DNGN_FLOWER_PATCH
+%weight 7
+flower_patch_1
+flower_patch_2
+%weight 3
+flower_patch_3
 
 %sdir dngn
 # Remove this entry when TAG_MAJOR_VERSION == 34 is false.

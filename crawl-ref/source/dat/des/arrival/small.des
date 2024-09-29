@@ -4,6 +4,8 @@
 # See arrival_guide.txt for details.
 ##############################################################################
 
+: crawl_require('dlua/vault.lua')
+
 ###############################################################################
 # Probably looks better in tiles
 NAME:   evilmike_arrival_home_sweet_home
@@ -1281,7 +1283,7 @@ TAGS:    arrival
 ORIENT:  float
 SHUFFLE: +'
 SUBST:   ' : x + ':40, '=x+
-FTILE:   p = dngn_garden_cobble
+: decorative_floor(_G, 'p', "garden patch")
 MAP
 xxxxxxx.@.xxxxxxx
 x.....+...x.....x
@@ -1691,20 +1693,19 @@ NAME:    dpeg_arrival_orchard
 TAGS:    arrival
 ORIENT:  float
 MONS:    plant
-SHUFFLE: 1x
-SUBST:   x = '
-NSUBST:  ' = 2:d / *:'
-NSUBST:  . = '.
-FTILE:   '1{ = floor_grass
+SUBST:   x : 1xp
+FTILE:   '1p{ = floor_grass
+FTILE:   " = floor_mud
 COLOUR:  ' = green
+: decorative_floor(_G, 'p', "flower patch")
 MAP
-  .....
- .x...x.
- '''''''
-..''{''..
- '''''''
- .x...x.
-  .....
+  "..."
+ "x"""x"
+ "'''''"
+."''{''".
+ "'''''"
+ "x"""x"
+  "..."
 ENDMAP
 
 ##############################################################################
@@ -2523,25 +2524,26 @@ NAME:    saegor_arrival_fortress
 TAGS:    arrival no_monster_gen no_pool_fixup
 ORIENT:  float
 KPROP:   W = no_tele_into
-NSUBST:  { = 1:{ / 1:> / *:.
+NSUBST:  { = 1:{ / 1:> / 1:M. / *:.
+: decorative_floor(_G, 'M', "flower patch")
 MAP
 wwwwwwwwwcccccwwwwwwwww
 wcccccccwcWtWcwcccccccw
 wc{...GccccGccccG...{cw
 wc.....+.......+.....cw
-wcG...GccGc+cGccG...Gcw
+wcG...ccccc+ccccc...Gcw
 wccc+cccccc+cccccc+cccw
 wcWc.cctt.....ttcc.cWcw
 wttG.ctW.......Wtc.Gttw
-wcWc.Gc.........cG.cWcw
+wcWc.cc.........cc.cWcw
 wccc.cc...WtW...cc.cccw
 @++..++...tGt...++..++@
 wccc.cc...WtW...cc.cccw
-wcWc.Gc.........cG.cWcw
+wcWc.cc.........cc.cWcw
 wttG.ctW.......Wtc.Gttw
 wcWc.cctt.....ttcc.cWcw
 wccc+cccccc+cccccc+cccw
-wcG...GccGc+cGccG...Gcw
+wcG...ccccc+ccccc...Gcw
 wc.....+.......+.....cw
 wc{...GccccGccccG...{cw
 wcccccccwcWtWcwcccccccw
@@ -2665,7 +2667,7 @@ MAP
           ccccccccc
        cccctccccctcccc
       cctt1tc...ct1ttcc
-    ccctttttc.{.ctttttccc
+    cccttttnc.{.cnttttccc
     ccccccccn...ncccccccc
     WWcc..+.......+..ccWW
    @WWz..."'-----'"...zWW@
