@@ -4138,6 +4138,9 @@ bool mons_class_can_pass(monster_type mc, dungeon_feature_type grid)
             // Prevent passing through runed doors and so on.
             if (is_notable_terrain(grid))
                 return false;
+            // Fish aren't known for hanging out in trees
+            if (mons_species(mc) == MONS_ROCK_FISH && feat_is_tree(grid))
+                return false;
             // All other solids are fine
             return true;
         }

@@ -2004,7 +2004,8 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_UFETUBUS,         { {}, {{ BAND_UFETUBI, {1, 2} }}}},
     { MONS_SIN_BEAST,        { {}, {{ BAND_SIN_BEASTS, {1, 2} }}}},
     { MONS_KOBOLD_BLASTMINER, { {}, {{ BAND_BLASTMINER, {0, 2} }}}},
-    { MONS_ARACHNE,          { {}, {{ BAND_ORB_SPIDERS, {3, 5}}}}},
+    { MONS_ARACHNE,          { {}, {{ BAND_ORB_SPIDERS, {3, 5} }}}},
+    { MONS_ROCK_FISH,        { {}, {{ BAND_ROCK_FISH, {1, 2} }}}},
 
     // special-cased band-sizes
     { MONS_SPRIGGAN_DRUID,  { {3}, {{ BAND_SPRIGGAN_DRUID, {0, 1}, true }}}},
@@ -2235,6 +2236,7 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_WOLVES,              {{{MONS_WOLF, 1}}}},
     { BAND_DUVESSA,             {{{MONS_DOWAN, 1}}}},
     { BAND_GNOLLS,              {{{MONS_GNOLL, 1}}}},
+    { BAND_ROCK_FISH,           {{{MONS_ROCK_FISH, 1}}}},
     { BAND_HARPIES,             {{{MONS_HARPY, 1}}}},
     { BAND_RAIJU,               {{{MONS_RAIJU, 1}}}},
     { BAND_WIGHTS,              {{{MONS_WIGHT, 1}}}},

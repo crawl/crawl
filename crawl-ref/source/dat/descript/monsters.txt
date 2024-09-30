@@ -2478,6 +2478,11 @@ river rat
 A rodent with hair of a most peculiar green colour, and a powerful bite. It
 tends to form great swarms with its kin.
 %%%%
+rock fish
+
+A small fish carved perfectly in stone but swimming through rock as easily as
+a flesh and bone one through water.
+%%%%
 rockslime
 
 An oozing avalanche, scouring the ground beneath it as it rumbles forward.
