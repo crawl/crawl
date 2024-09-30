@@ -39,6 +39,8 @@ IGNORE_STRINGS = [
     'debugging ray', 'debug',
     'bug', 'null', 'invalid',
     'true', 'false', 'veto',
+    # property keys
+    'brand', 'bacc', 'bdam', 'nupgr',
     # text colour tags
     'lightgrey', 'darkgrey', 'lightgreen', 'darkgreen', 'lightcyan', 'darkcyan',
     'lightred', 'darkred', 'lightmagenta', 'darkmagenta', 'lightyellow', 'darkyellow'

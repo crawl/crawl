@@ -31,6 +31,12 @@
 "runed "
 "runenverzierte "
 %%%%
+"non-descript "
+"unscheinbare "
+%%%%
+"melded "
+"verschmolzen "
+%%%%
 
 %%%%
 # used for rings, amulets, wands, staves

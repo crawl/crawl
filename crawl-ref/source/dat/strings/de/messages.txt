@@ -496,28 +496,28 @@ You are banished to a different region of the Abyss.
 Ihr werdet in eine andere Region des Abgrunds verbannt.
 %%%%
 Xom snickers loudly.
-
+Xom kichert laut.
 %%%%
 %s is pulled into the Abyss.
-
+%s wird in den Abgrund gezogen.
 %%%%
 You are suddenly pulled into a different region of the Abyss!
-
+Ihr werdet plötzlich in eine andere Region des Abgrunds gezogen!
 %%%%
 Lugonu's corruption
-
+Lugonus Korruption
 %%%%
 This place is already infused with evil and corruption.
 Dieser Ort ist bereits voller Übel und Korruption.
 %%%%
 %s's Hand of Corruption reaches out!
-
+%ss Hand der Korruption streckt sich aus!
 %%%%
 The substance of the Abyss twists violently, and a gateway leading down appears!
-
+Die Substanz des Abgrunds verdreht sich heftig, und ein Tor, das nach unten führt, erscheint!
 %%%%
 The substance of the Abyss twists violently, and a gateway leading out appears!
-
+Die Substanz des Abgrunds verdreht sich heftig, und ein Tor, das nach draußen führt, erscheint!
 %%%%
 
 ##################
@@ -632,61 +632,61 @@ Ihr seid nicht betroffen.
 %s ist nicht betroffen.
 %%%%
 You barely resist.
-
+Ihr widersteht kaum.
 %%%%
 You struggle to resist.
-
+Ihr habt Mühe zu widerstehen.
 %%%%
 You resist with significant effort.
-
+Ihr widersteht mit erheblichem Aufwand.
 %%%%
 You resist with some effort.
-
+Ihr widersteht mit einigem Aufwand.
 %%%%
 You easily resist.
-
+Ihr widersteht leicht.
 %%%%
 You resist with almost no effort.
-
+Ihr widersteht fast ohne Mühe.
 %%%%
 %s barely resists.
-
+%s widersteht kaum.
 %%%%
 %s struggles to resist.
-
+%s hat Mühe zu widerstehen.
 %%%%
 %s resists with significant effort.
-
+%s widersteht mit erheblichem Aufwand.
 %%%%
 %s resists with some effort.
-
+%s widersteht mit einigem Aufwand.
 %%%%
 %s easily resists.
-
+%s widersteht leicht.
 %%%%
 %s resists with almost no effort.
-
+%s widersteht fast ohne Mühe.
 %%%%
 You collide with %s!
-
+Ihr kollidiert mit {dat}%s!
 %%%%
 %s collides with you!
-
+%s kollidiert mit Euch!
 %%%%
 %s collides with %s!
-
+%s kollidiert mit {dat}%s!
 %%%%
 You slam into %s!
-
+Ihr knallt gegen {acc}%s!
 %%%%
 %s slams into %s!
-
+%s knallt gegen {acc}%s!
 %%%%
 You violently stop moving!
-
+Ihr haltet gewaltsam an, Euch zu bewegen!
 %%%%
 %s violently stops moving!
-
+%s hält gewaltsam an, sich zu bewegen!
 %%%%
 
 ##################
@@ -694,16 +694,16 @@ You violently stop moving!
 ##################
 %%%%
 Adjust (i)tems, (s)pells, or (a)bilities?
-
+(i)Gegenstände, (s)Zauber, oder (a)Fähigkeiten einstellen?
 %%%%
 Adjust which item?
-
+Welchen Gegenstand einstellen?
 %%%%
 "Adjust to which letter? "
 An welchen Buchstaben wechseln?
 %%%%
 Adjust which spell?
-
+Welchen Zauber einstellen?
 %%%%
 You don't know that spell.
 Ihr kennt diesen Zauber nicht.
@@ -715,7 +715,7 @@ You don't currently have any abilities.
 Ihr habt momentan keine Fähigkeiten.
 %%%%
 Adjust which ability?
-
+Welche Fähigkeit einstellen?
 %%%%
 No such ability.
 So eine Fähigkeit gibt es nicht.
@@ -726,7 +726,7 @@ So eine Fähigkeit gibt es nicht.
 ##################
 %%%%
 %s revokes the gift of sanctuary.
-
+%s widerruft die Gabe des Heiligtums.
 %%%%
 The sanctuary starts shrinking.
 Das Heiligtum beginnt zu schrumpfen.
@@ -735,16 +735,16 @@ The sanctuary disappears.
 Das Heiligtum verschwindet.
 %%%%
 By Zin's power, the foul cloud within the sanctuary is swept away.
-Durch Zins Kraft wird die schädliche Wolke aus dem Heiligtum entfernt.
+Durch Zins Kraft wird die üble Wolke aus dem Heiligtum entfernt.
 %%%%
 By Zin's power, all foul fumes within the sanctuary are swept away.
-Durch Zins Kraft wird alle schädliche Dämpfe aus dem Heiligtum entfernt.
+Durch Zins Kraft wird alle üble Dämpfe aus dem Heiligtum entfernt.
 %%%%
 By Zin's power, all blood is cleared from the sanctuary.
 Durch Zins Kraft wird alles Blut aus dem Heiligtum entfernt.
 %%%%
 %s turns to flee the light!
-
+%s dreht sich um und flieht vor dem Licht!
 %%%%
 The monsters scatter in all directions!
 Die Monster zerstreuen sich in alle Richtungen!
@@ -788,16 +788,16 @@ Round %d of %d
 Runde %d von %d
 %%%%
 Cancelled contest at user request
-
+Wettbewerb auf Wunsch des Benutzers abgebrochen
 %%%%
 Tie
-
+Gleichstand
 %%%%
 Winner: %s!
-
+Gewinner: %s!
 %%%%
 Final score: %s (%d); %s (%d) [%d ties]
-
+Endstand: %s (%d); %s (%d) [%d Gleichstände]
 %%%%
 Last arena monster was dismissed.
 Das letzte Arena-Monster wurde entlassen.
@@ -809,7 +809,7 @@ Examples:
 Beispiele:
 %%%%
 Results file already open
-
+Ergebnisdatei bereits geöffnet
 %%%%
 
 ##################
@@ -826,7 +826,7 @@ The air shimmers briefly.
 Die Luft schimmert kurz.
 %%%%
 You are hated by all, and nothing will answer your call!
-
+Ihr werdet von allen gehasst, und nichts wird Eurem Ruf folgen!
 %%%%
 The sword of Cerebov burns away your fire resistance.
 Das Schwert von Cerebov verbrennt Euren Feuerwiderstand.
@@ -836,9 +836,6 @@ Das Schwert von Cerebov verbrennt %s Feuerwiderstand.
 %%%%
 A shiver runs down your spine.
 Ein Schauer läuft Euch über den Rücken.
-%%%%
-the scythe of Curses
-
 %%%%
 You're too close to death to use this item.
 Ihr seid dem Tod zu nahe, um diesen Gegenstand zu benutzen.
@@ -867,32 +864,23 @@ Das Schwert sagt: "Hallo! Ich bin das singende Schwert!"
 The Singing Sword hums in delight!
 Das singende Schwert summt vor Freude!
 %%%%
-Singing Sword
-
-%%%%
 The Singing Sword sighs.
 Das singende Schwert seufzt.
-%%%%
-Sulking Sword
-
-%%%%
-Screaming Sword
-
 %%%%
 You feel pruney.
 Ihr fühlt Euch geschrumpft.
 %%%%
 You feel lightning quick.
-
+Ihr fühlt Euch blitzschnell.
 %%%%
 You feel rather sluggish.
 Ihr fühlt Euch ziemlich träge.
 %%%%
 A terrible, searing pain shoots up your arm!
-
+Ein furchtbarer, stechender Schmerz schießt in Euren Arm!
 %%%%
 You feel the exhaustion of battles past.
-
+Ihr fühlt die Erschöpfung vergangener Schlachten.
 %%%%
 You feel less violent.
 Ihr fühlt Euch weniger gewalttätig.
@@ -901,7 +889,7 @@ You feel strangely empty.
 Ihr fühlt Euch seltsam leer.
 %%%%
 You feel a strange hunger, and smell blood in the air...
-
+Ihr spürt einen seltsamen Hunger und riecht Blut in der Luft...
 %%%%
 The mace of Variability scintillates.
 Der Streitkolben der Variabilität funkelt.
@@ -910,10 +898,10 @@ You sense an extremely unholy aura.
 Ihr spürt eine extrem unheilige Aura.
 %%%%
 You hear a strange loud sound.
-
+Ihr hört ein seltsames, lautes Geräusch.
 %%%%
 Visions of slaying %s flood into your mind.
-Visionen, %s zu töten, kommen Euch in den Sinn.
+Visionen des Tötens {gen}%s, kommen Euch in den Sinn.
 %%%%
 Your confusion fades away as the thirst for blood takes over your mind.
 Eure Verwirrung verschwindet, als der Durst nach Blut Euren Geist übernimmt.
@@ -922,10 +910,10 @@ Your thirst for blood fades away.
 Euer Blutdurst verschwindet.
 %%%%
 You feel an uncomfortable desire to slay dragons.
-
+Ihr verspürt ein unangenehmes Verlangen, Drachen zu töten.
 %%%%
 You feel an overwhelming desire to slay dragons!
-
+Ihr verspürt ein überwältigendes Verlangen, Drachen zu töten.
 %%%%
 You convulse
 Ihr krümmt Euch
@@ -934,19 +922,19 @@ Ihr krümmt Euch
 %s krümmt sich
 %%%%
 The lance glows brightly as it skewers %s. You feel that it has reached its full power.
-
+Die Lanze leuchtet hell, während sie {acc}%s aufspießt. Ihr spürt, dass sie ihre volle Kraft erreicht hat.
 %%%%
 The lance glows as it skewers %s.
-
+Die Lanze leuchtet, während sie {acc}%s aufspießt.
 %%%%
 You are blasted by disruptive energy
-
+Ihr werdet von disruptiver Energie eingeschlagt
 %%%%
 %s is blasted by disruptive energy
-
+%s wird von disruptiver Energie eingeschlagt
 %%%%
 Time to lay down the shillelagh law.
-Zeit, das Shillelagh-Gesetz festzulegen.
+Es ist die Zeit, Shillelagh-Vorschriften zu machen.
 %%%%
 You feel oddly protected from the elements.
 Ihr fühlt Euch seltsamerweise vor den Elementen geschützt.
@@ -964,121 +952,121 @@ Mutagenic energy flows through the plutonium sword!
 Mutagene Energie fließt durch das Plutoniumschwert!
 %%%%
 You cleave %s in twain.
-
+Ihr spaltet {acc}%s in zwei Hälften.
 %%%%
 You pulverise %s into a thin bloody mist.
-
+Ihr pulverisiert {acc}%s zu einem dünnen blutigen Nebel.
 %%%%
 You hew %s savagely.
-
+Ihr hackt {acc}%s brutal.
 %%%%
 You fatally mangle %s.
-
+Ihr verstümmelt {acc}%s tödlich.
 %%%%
 You dissect %s like a pig carcass.
-
+Ihr seziert {acc}%s wie einen Schweinekadaver.
 %%%%
 You chop %s into pieces.
-
+Ihr hackt {acc}%s in Stücke.
 %%%%
 You butcher %s messily.
-
+Ihr schlachtet {acc}%s unordentlich.
 %%%%
 You slaughter %s joyfully.
-
+Ihr schlachtet {acc}%s freudig.
 %%%%
 %s cleaves you in twain.
-
+%s spaltet Euch in zwei Hälften.
 %%%%
 %s pulverises you into a thin bloody mist.
-
+%s pulverisiert Euch zu einem dünnen blutigen Nebel.
 %%%%
 %s hews you savagely.
-
+%s zerhackt Euch brutal.
 %%%%
 %s fatally mangles you.
-
+%s zerfleischt Euch tödlich.
 %%%%
 %s dissects you like a pig carcass.
-
+%s seziert Euch wie einen Schweinekadaver.
 %%%%
 %s chops you into pieces.
-
+%s hackt Euch in Stücke.
 %%%%
 %s butchers you messily.
-
+%s schlachtet Euch chaotisch ab.
 %%%%
 %s slaughters you joyfully.
-
+%s schlachtet Euch freudig ab.
 %%%%
 %s cleaves %s in twain.
-
+%s spaltet {acc}%s in zwei Hälften.
 %%%%
 %s pulverises %s into a thin bloody mist.
-
+%s pulverisiert {acc}%s zu einem dünnen blutigen Nebel.
 %%%%
 %s hews %s savagely.
-
+%s hackt {acc}%s brutal.
 %%%%
 %s fatally mangles %s.
-
+%s zerfleischt {acc}%s tödlich.
 %%%%
 %s dissects %s like a pig carcass.
-
+%s seziert {acc}%s wie einen Schweinekadaver.
 %%%%
 %s chops %s into pieces.
-
+%s hackt {acc}%s in Stücke.
 %%%%
 %s butchers %s messily.
-
+%s schlachtet {acc}%s chaotisch ab.
 %%%%
 %s slaughters %s joyfully.
-
+%s schlachtet {acc}%s freudig ab.
 %%%%
 You cleave yourself in twain.
-
+Ihr spaltet Euch selbst in zwei Hälften.
 %%%%
 You pulverise yourself into a thin bloody mist.
-
+Ihr pulverisiert Euch selbst zu einem dünnen blutigen Nebel.
 %%%%
 You hew yourself savagely.
-
+Ihr zerhackt Euch selbst brutal.
 %%%%
 You fatally mangle yourself.
-
+Ihr verstümmelt Euch tödlich.
 %%%%
 You dissect yourself like a pig carcass.
-
+Ihr seziert Euch selbst wie einen Schweinekadaver.
 %%%%
 You chop yourself into pieces.
-
+Ihr hackt Euch selbst in Stücke.
 %%%%
 You butcher yourself messily.
-
+Ihr schlachtet Euch chaotisch ab.
 %%%%
 You slaughter yourself joyfully.
-
+Ihr schlachtet Euch freudig.
 %%%%
 %s is pulverised into a thin bloody mist.
-
+%s wird zu einem dünnen blutigen Nebel pulverisiert.
 %%%%
 %s is hewed savagely.
-
+%s wird grausam zerhackt.
 %%%%
 %s is fatally mangled.
-
+%s wird tödlich verstümmelt.
 %%%%
 %s is dissected like a pig carcass.
-
+%s wird zerlegt wie ein Schweinekadaver.
 %%%%
 %s is chopped into pieces.
-
+%s wird in Stücke zerhackt.
 %%%%
 %s is butchered messily.
-
+%s wird chaotisch geschlachtet.
 %%%%
 %s is cloven in twain.
-
+%s wird in zwei Hälften gespalten.
 %%%%
 The arc blade crackles to life.
 Die Lichtbogenklinge knistert zum Leben.
@@ -1108,7 +1096,7 @@ A voice whispers, "%s"
 Eine Stimme flüstert, "%s"
 %%%%
 The darkness slowly releases its grasp on your magic.
-
+Die Dunkelheit löst langsam ihren Griff um Eure Magie.
 %%%%
 You feel like a king!
 Ihr fühlt Euch wie ein König!
@@ -1117,7 +1105,7 @@ You feel regal.
 Ihr fühlt Euch königlich.
 %%%%
 The captain's cutlass flashes! You lacerate %s!!
-Das Entermesser des Kapitäns blinkt! Ihr zerreißt {acc}%s!!
+Das Entermesser des Kapitäns flitzt! Ihr zerreißt {acc}%s!!
 %%%%
 %s %s falls to the floor!
 %s %s fällt zu Boden!
@@ -1144,7 +1132,7 @@ You feel a powerful hunger.
 Ihr fühlt einen starken Hunger.
 %%%%
 %s liquefies into a cloud of blood!
-
+%s verflüssigt sich zu einer Blutwolke!
 %%%%
 The engine hums to life!
 Der Motor summt zum Leben!
@@ -1165,60 +1153,19 @@ Your shell of carrion and bone grows thicker.
 Eure Schale aus Aas und Knochen wird dicker.
 %%%%
 The air around you leaps into flame!
-
+Die Luft um Euch herum geht in Flammen auf!
 %%%%
 Your ring of flames gutters out.
-
+Ihr Flammenkranz flackert aus.
 %%%%
 Your spectral weapon disappears as you unwield.
-
+Eure Spektralwaffe verschwindet.
 %%%%
 The staff is unable to connect with your magical essence.
-
+Der Stecken kan mit Eurer magischen Essenz nicht verbinden.
 %%%%
 You feel ready to stride towards your foes.
-
-%%%%
-
-##################
-# artefact.cc
-##################
-%%%%
-Brand
-
-%%%%
-BAcc
-
-%%%%
-BDam
-
-%%%%
-nupgr
-
-%%%%
-robe
-
-%%%%
-body armour
-
-%%%%
-artefact
-
-%%%%
-non-descript
-
-%%%%
-exec axe
-
-%%%%
-g.spiked club
-
-%%%%
-triple xbow
-
-%%%%
-of Ashenzari
-
+Ihr fühlt Euch bereit, auf Eure Feinde zu schreiten.
 %%%%
 
 ##################
@@ -1247,13 +1194,13 @@ Ihr krümmt Euch vor Qual
 %s schützt Euch vor versehentlicher Eile.
 %%%%
 You drain %s vigour!
-Ihr erschöpft die Vitalität {gen}%s!
+Ihr erschöpft die Vitalität %s!
 %%%%
 %s drains your vigour!
 %s erschöpft Eure Vitalität!
 %%%%
 %s drains %s vigour!
-%s erschöpft die Vitalität {gen}%s!
+%s erschöpft die Vitalität %s!
 %%%%
 You pounce on %s from a blind spot!
 Ihr stürzt Euch von einem blinden Fleck auf {acc}%s!
@@ -1306,28 +1253,28 @@ Blitzen fließt durch {acc}%s
 ##################
 %%%%
 %s reclaims one of your granted undead slaves!
-
+%s fordert einen Eurer gewährten untoten Sklaven zurück!
 %%%%
 %s reclaims your granted undead slaves!
-
+%s fordert Eure gewährten untoten Sklaven zurück!
 %%%%
 %s reclaims some of your granted undead slaves!
-
+%s fordert einige Eurer gewährten untoten Sklaven zurück!
 %%%%
 %s's voice booms out, "Who do you think you are?"
 Die Stimme {gen}%s donnert: "Für wen hältst du dich?"
 %%%%
 One of your followers decides to abandon you.
-
+Einer Eurer Anhänger beschließt, Euch zu verlassen.
 %%%%
 Your followers decide to abandon you.
-
+Eure Anhänger beschließen, Euch zu verlassen.
 %%%%
 Some of your followers decide to abandon you.
-
+Einige Eurer Anhänger beschließen, Euch zu verlassen.
 %%%%
 %s stares at you suspiciously for a moment, then relaxes.
-
+%s starrt Euch einen Moment lang misstrauisch an und entspannt sich dann.
 %%%%
 %s trembles before you.
 %s zittert vor Euch.
@@ -2774,9 +2721,6 @@ Bound item
 Curse bonuses
 
 %%%%
-melded
-
-%%%%
 Flail
 
 %%%%
@@ -3951,16 +3895,10 @@ It can travel through water.
 It can travel through lava.
 
 %%%%
-tiny
-
-%%%%
 very small
 
 %%%%
 medium
-
-%%%%
-very large
 
 %%%%
 "It is currently targeted by "
@@ -11152,21 +11090,6 @@ Der %s-Mimiker verschwindet!
 %s is a mimic!
 %s ist ein Mimiker!
 %%%%
-Lernaean
-Lernäisch
-%%%%
-monstrous
-monströs
-%%%%
-gelid
-gelid
-%%%%
-infernal
-höllisch
-%%%%
-torturous
-qualend
-%%%%
 Geryon discards his horn.
 Geryon wirft sein Horn ab.
 %%%%
@@ -15759,9 +15682,6 @@ Ihr fühlt eine Welle unheiliger Energie.
 %%%%
 Your body is wracked with pain!
 Euer Körper ist von Schmerz geplagt!
-%%%%
-sceptre of Torment
-
 %%%%
 Xom's torment
 Xoms Qual

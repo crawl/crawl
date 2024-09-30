@@ -846,8 +846,8 @@ Euer Terminalfenster ist zu klein; Bitte ändere die Größe auf mindestens %d,%
 %%%%
 # some items become "melded" when you change form
 %%%%
-"melded "
-vereint
+melded
+verschmolzen
 %%%%
 unarmed
 unbewaffnet

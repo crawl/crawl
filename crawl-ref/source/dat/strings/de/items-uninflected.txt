@@ -21,8 +21,14 @@ Waffe
 #missile
 #Geschoss
 %%%%
+robe
+Robe
+%%%%
 armour
 Rüstung
+%%%%
+body armour
+Körperpanzerung
 %%%%
 wand
 Zauberstab
@@ -65,6 +71,9 @@ Gold
 %%%%
 rune
 Rune
+%%%%
+artefact
+Artefakt
 %%%%
 
 #################################

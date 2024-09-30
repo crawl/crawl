@@ -23,7 +23,6 @@ def add_entry(dbm, key, value):
     else:
         dbm[key]=value
 
-
 def read_dbm(filename):
     dbm = {}
     file = open(filename, "r")
@@ -53,6 +52,24 @@ def read_dbm(filename):
         add_entry(dbm, key, value)
 
     return dbm;
+
+def ignore(key, ignore_vals):
+    if key in ignore_vals:
+        return True
+    # adjective
+    if '"' + key + ' "' in ignore_vals:
+        return True
+    # noun with adjective(s)
+    if key.startswith("the "):
+        if key.replace("the ", "the %s", 1) in ignore_vals:
+            return True
+    elif "%s" + key in ignore_vals:
+        return True
+    # suffix
+    if key.startswith("of "):
+        if '" of %s"' in ignore_vals and key[3:] in ignore_vals:
+            return True
+    return False
 
 
 #####################################
@@ -107,7 +124,7 @@ for line in keyfile:
         outfile.write(line)
     else:
         key = strip_quotes_if_allowed(line.strip())
-        if key in ignore_vals:
+        if ignore(key, ignore_vals):
             locnote = ''
             continue
         if source_heading != "":

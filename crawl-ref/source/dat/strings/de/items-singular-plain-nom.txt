@@ -239,6 +239,24 @@ Silberbumerang
 %%%%
 
 #################################
+# Terse weapon types
+#################################
+# These are used when showing base type for artefacts
+%%%%
+# executioner's axe
+%sexec axe
+{adj-e}%sHenkersaxt
+%%%%
+# giant spiked club
+%sg.spiked club
+{adj-e}%sries. Stachelkeule
+%%%%
+# triple crossbow
+%striple xbow
+{adj-e}%s3fach-Armbrust
+%%%%
+
+#################################
 # Armour
 #################################
 
