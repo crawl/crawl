@@ -1111,7 +1111,7 @@ static const string _detailed_cost_description(ability_type ability)
         ret << "\nUsing this ability will hurt you for a large fraction of your current HP.";
 
     if (abil.flags & abflag::torment)
-        ret << "\nUsing this ability invoke torment.";
+        ret << "\nUsing this ability invokes torment.";
 
     if (abil.flags & abflag::exhaustion)
         ret << "\nThis ability causes exhaustion, and cannot be used when exhausted.";
