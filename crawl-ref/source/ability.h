@@ -25,7 +25,7 @@ enum class abflag
     none                = 0x00000000,
     breath              = 0x00000001, // ability uses DUR_BREATH_WEAPON
     delay               = 0x00000002, // ability has its own delay
-    pain                = 0x00000004, // ability must hurt player (ie torment)
+    torment             = 0x00000004, // torments the player
     quiet_fail          = 0x00000008, // no message on failure
     exhaustion          = 0x00000010, // fails if you.exhausted
     instant             = 0x00000020, // doesn't take time to use
@@ -35,7 +35,7 @@ enum class abflag
     max_hp_drain        = 0x00000200, // drains max hit points
     gold                = 0x00000400, // costs gold
     sacrifice           = 0x00000800, // sacrifice (Ru)
-                       // 0x00001000, // currently unused
+    injury              = 0x00001000, // costs a large proportion of player HP
     berserk_ok          = 0x00002000, // can use even if berserk
     card                = 0x00004000, // deck drawing (Nemelex)
     torchlight          = 0x00008000, // costs torchlight (Yred)

@@ -445,7 +445,7 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_KIKU_GIFT_CAPSTONE_SPELLS, "Receive Forbidden Knowledge",
             0, 0, 0, -1, {fail_basis::invo}, abflag::none },
         { ABIL_KIKU_BLESS_WEAPON, "Brand Weapon With Pain",
-            0, 0, 0, -1, {fail_basis::invo}, abflag::pain },
+            0, 0, 0, -1, {fail_basis::invo}, abflag::torment },
 
         // Yredelemnul
         { ABIL_YRED_LIGHT_THE_TORCH, "Light the Black Torch",
@@ -456,7 +456,7 @@ static vector<ability_def> &_get_ability_list()
             4, 0, 2, 4, {fail_basis::invo, 30, 5, 25}, abflag::torchlight },
         { ABIL_YRED_BIND_SOUL, "Bind Soul",
             6, 0, 8, LOS_MAX_RANGE, {fail_basis::invo, 50, 5, 25},
-            abflag::target | abflag::pain },
+            abflag::target | abflag::injury },
         { ABIL_YRED_FATHOMLESS_SHACKLES, "Fathomless Shackles",
             8, 0, 20, -1, {fail_basis::invo, 80, 4, 25}, abflag::none },
 
@@ -486,11 +486,11 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_MAKHLEB_INFERNAL_LEGION, "Infernal Legion",
             0, scaling_cost::fixed(10), 8, -1, {fail_basis::invo, 55, 5, 20}},
         { ABIL_MAKHLEB_BRAND_SELF_1, "Brand Self #1",
-            0, 0, 0, -1, {fail_basis::invo}, abflag::pain },
+            0, 0, 0, -1, {fail_basis::invo}, abflag::injury },
         { ABIL_MAKHLEB_BRAND_SELF_2, "Brand Self #2",
-            0, 0, 0, -1, {fail_basis::invo}, abflag::pain },
+            0, 0, 0, -1, {fail_basis::invo}, abflag::injury },
         { ABIL_MAKHLEB_BRAND_SELF_3, "Brand Self #3",
-            0, 0, 0, -1, {fail_basis::invo}, abflag::pain },
+            0, 0, 0, -1, {fail_basis::invo}, abflag::injury },
         { ABIL_MAKHLEB_VESSEL_OF_SLAUGHTER, "Vessel of Slaughter",
             0, 0, 12, -1,
             {fail_basis::invo, 75, 5, 25}, abflag::none },
@@ -533,7 +533,7 @@ static vector<ability_def> &_get_ability_list()
             7, scaling_cost::fixed(5), 10, -1, {fail_basis::invo, 70, 4, 25},
             abflag::none },
         { ABIL_LUGONU_ABYSS_ENTER, "Enter the Abyss",
-            10, 0, 28, -1, {fail_basis::invo, 80, 4, 25}, abflag::pain },
+            10, 0, 28, -1, {fail_basis::invo, 80, 4, 25}, abflag::injury },
         { ABIL_LUGONU_BLESS_WEAPON, "Brand Weapon With Distortion",
             0, 0, 0, -1, {fail_basis::invo}, abflag::none },
 
@@ -988,8 +988,11 @@ const string make_cost_description(ability_type ability)
     if (abil.flags & abflag::delay)
         ret += ", Delay";
 
-    if (abil.flags & abflag::pain)
-        ret += ", Pain";
+    if (abil.flags & abflag::torment)
+        ret += ", Torment";
+
+    if (abil.flags & abflag::injury)
+        ret += ", Injury";
 
     if (abil.flags & abflag::exhaustion)
         ret += ", Exhaustion";
@@ -1095,7 +1098,6 @@ static const string _detailed_cost_description(ability_type ability)
         have_cost = true;
         ret << "\nTorchlight";
     }
-
     if (!have_cost)
         ret << "nothing.";
 
@@ -1105,8 +1107,11 @@ static const string _detailed_cost_description(ability_type ability)
     if (abil.flags & abflag::delay)
         ret << "\nThis ability takes some time before being effective.";
 
-    if (abil.flags & abflag::pain)
-        ret << "\nUsing this ability will hurt you.";
+    if (abil.flags & abflag::injury)
+        ret << "\nUsing this ability will hurt you for a large fraction of your current HP.";
+
+    if (abil.flags & abflag::torment)
+        ret << "\nUsing this ability invoke torment.";
 
     if (abil.flags & abflag::exhaustion)
         ret << "\nThis ability causes exhaustion, and cannot be used when exhausted.";
@@ -2883,7 +2888,8 @@ bool activate_talent(const talent& tal, dist *target)
                     || (abil.ability == ABIL_ZIN_RECITE)
                     || (abil.flags & abflag::card) || (abil.flags & abflag::gold)
                     || (abil.flags & abflag::sacrifice)
-                    || (abil.flags & abflag::pain) || abil.get_hp_cost() > 0
+                    || (abil.flags & abflag::torment)
+                    || (abil.flags & abflag::injury) || abil.get_hp_cost() > 0
                     || abil.get_mp_cost() > 0)
                 && you.has_mutation(MUT_EPHEMERAL_SHIELD))
             {
