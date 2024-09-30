@@ -1,0 +1,19 @@
+name: "strolling stone"
+glyph: {char: "9", colour: lightgreen}
+flags: [speaks, no_skeleton, unblindable]
+xp_mult: 15
+resists: {elec: 1, petrify: 1}
+genus: golem
+holiness: [nonliving]
+will: 20
+attacks:
+ - {type: hit, flavour: shed, damage: 16}
+hd: 5
+hp_10x: 290
+ac: 5
+ev: 2
+shout: moan
+intelligence: human
+speed: 10
+size: large
+shape: humanoid

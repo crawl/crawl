@@ -675,6 +675,7 @@ enum monster_type                      // env.mons[].type
     MONS_HELLFIRE_MORTAR,
     MONS_SPLINTERFROST_BARRICADE,
     MONS_SHADOW_TURRET,
+    MONS_STROLLING_STONE,
 #endif
 
     // Demons:
@@ -1337,6 +1338,7 @@ enum monster_type                      // env.mons[].type
     MONS_REVENANT,               // player species dummy
     MONS_ROCK_FISH,
     MONS_WOLF_LICHEN,
+    MONS_STROLLING_STONE,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
