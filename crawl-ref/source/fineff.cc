@@ -607,17 +607,10 @@ void explosion_fineff::fire()
             {
                 continue;
             }
-            // TODO: dedup with knockback_actor in beam.cc
 
             const coord_def newpos = (*ai - beam.target) + *ai;
-            if (newpos == *ai
-                || cell_is_solid(newpos)
-                || actor_at(newpos)
-                || !act->can_pass_through(newpos)
-                || !act->is_habitable(newpos))
-            {
+            if (newpos == *ai || actor_at(newpos) || !act->is_habitable(newpos))
                 continue;
-            }
 
             act->move_to_pos(newpos);
             if (act->is_player())

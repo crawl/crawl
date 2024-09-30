@@ -1385,7 +1385,8 @@ void direction_chooser::draw_beam(crawl_view_buffer &vbuf)
         {
             aff_type aff = hitfunc->is_affected(*ri);
             if (aff
-                && (!feat_is_solid(env.grid(*ri)) || hitfunc->can_affect_walls()))
+                && (!feat_is_solid(env.grid(*ri)) || hitfunc->can_affect_walls()
+                        || monster_at(*ri)))
             {
                 auto& cell = vbuf(grid2view(*ri) - 1);
                 _draw_ray_cell(cell, *ri, *ri == target(), aff);
