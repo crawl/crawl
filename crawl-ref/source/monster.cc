@@ -287,6 +287,9 @@ bool monster::swimming(bool energy_cost) const
     if ((energy_cost || (habitat & HT_LAVA)) && feat_is_lava(grid))
         return true;
 
+    if ((energy_cost || (habitat & HT_WALLS_ONLY)) && feat_is_wall(grid))
+        return true;
+
     return false;
 }
 

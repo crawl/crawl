@@ -116,6 +116,7 @@ static const vector<pop_entry> population[] =
   {  6,  8,  500, PEAK, MONS_SKY_BEAST },
   {  6,  9, 1000, PEAK, MONS_BULLFROG },
   {  6, 10,  500, PEAK, MONS_WIGHT },
+  {  6, 10,  300, PEAK, MONS_ROCK_FISH },
   {  6, 10,  350, PEAK, MONS_STEAM_DRAGON },
   {  6, 11,  500, PEAK, MONS_KOBOLD_BRIGAND },
   {  6, 12,  600, PEAK, MONS_ORC_WARRIOR },

@@ -502,6 +502,7 @@ static void _tweak_wall_move(const monster* mons, coord_def &dir)
         }
     }
 
+    const int tdist = (mons->target - (mons->pos() + dir)).rdist();
     int count = 0;
     int choice = cdir; // stick with original move if none are good
     for (int i = -range; i <= range; ++i)
@@ -513,7 +514,8 @@ static void _tweak_wall_move(const monster* mons, coord_def &dir)
         coord_def t = mons->pos() + mon_compass[altdir];
         const bool good = habitat_is_compatible(HT_WALLS_ONLY, env.grid(t))
                             && mons->is_habitable(t)
-                            && mon_can_move_to_pos(mons, mon_compass[altdir]);
+                            && mon_can_move_to_pos(mons, mon_compass[altdir])
+                            && (mons->target - t).rdist() <= tdist;
         if (good && one_chance_in(++count))
             choice = altdir;
     }

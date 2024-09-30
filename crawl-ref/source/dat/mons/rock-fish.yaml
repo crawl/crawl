@@ -1,0 +1,16 @@
+name: "rock fish"
+glyph: {char: "F", colour: brown}
+resists: {elec: 1, petrify: 1}
+exp: 75
+will: 20
+attacks:
+ - {type: bite, damage: 11}
+hd: 5
+hp_10x: 180
+ac: 8
+ev: 8
+intelligence: animal
+habitat: wall
+energy: {swim: 8}
+size: small
+shape: fish

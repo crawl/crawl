@@ -643,6 +643,10 @@ enum monster_type                      // env.mons[].type
 #if TAG_MAJOR_VERSION > 34
     MONS_SALAMANDER_MYSTIC,
     MONS_SALAMANDER_TYRANT,
+
+    // Rock fish:
+    MONS_ROCK_FISH,
+
 #endif
 
     // Water monsters:
@@ -1380,6 +1384,7 @@ enum monster_type                      // env.mons[].type
     MONS_SHOOTING_STAR,
     MONS_CASSANDRA,
     MONS_BES_KEMWAR,
+    MONS_ROCK_FISH,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

@@ -1262,6 +1262,7 @@ static const map<monster_type, monster_frag> fraggable_monsters = {
     { MONS_USHABTI,           { "rock", BROWN } },
     { MONS_STATUE,            { "rock", BROWN } },
     { MONS_GARGOYLE,          { "rock", BROWN } },
+    { MONS_ROCK_FISH,         { "rock", BROWN } },
     { MONS_VV,                { "rock", BROWN } },
     { MONS_HELLFIRE_MORTAR,   { "rock", BROWN } },
     { MONS_CRAWLING_FLESH_CAGE, { "metal", CYAN, frag_damage_type::metal } },

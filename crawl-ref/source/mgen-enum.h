@@ -144,6 +144,7 @@ enum band_type
     BAND_DEATH_KNIGHT_DRAUGR,
     BAND_MIXED_WRAITHS,
     BAND_BES_KEMWAR,
+    BAND_ROCK_FISH,
     NUM_BANDS                   // always last
 };
 
