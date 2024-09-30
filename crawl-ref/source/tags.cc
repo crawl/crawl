@@ -1292,14 +1292,14 @@ static void _shunt_monsters_out_of_walls()
     {
         monster &m(env.mons[i]);
         if (m.alive() && in_bounds(m.pos()) && cell_is_solid(m.pos())
-            && (env.grid(m.pos()) != DNGN_MALIGN_GATEWAY
-                || mons_genus(m.type) != MONS_ELDRITCH_TENTACLE))
+            // Allow wall dwellers
+            && !m.is_habitable(m.pos()))
         {
             for (distance_iterator di(m.pos()); di; ++di)
                 if (!actor_at(*di) && !cell_is_solid(*di))
                 {
 #if TAG_MAJOR_VERSION == 34
-                    // Could have been a rock worm or a dryad.
+                    // Could have been a rock worm or a dryad from old saves.
                     if (m.type != MONS_GHOST)
 #endif
                     mprf(MSGCH_ERROR, "Error: monster %s in %s at (%d,%d)",

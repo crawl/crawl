@@ -1098,6 +1098,8 @@ static bool _can_safely_go_through(const monster * mon, const coord_def p)
 // FIXME: This is used for monster movement. It should instead be
 //        something like exists_ray(p1, p2, opacity_monmove(mons)),
 //        where opacity_monmove() is fixed to include opacity_immob.
+//        Additionally wall monsters should be allowed to pathfind past
+//        stationary monsters in the corridor.
 bool can_go_straight(const monster* mon, const coord_def& p1,
                      const coord_def& p2)
 {

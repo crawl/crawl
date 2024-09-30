@@ -400,6 +400,13 @@ bool cell_is_solid(const coord_def &c)
     return feat_is_solid(env.grid(c));
 }
 
+/** Can spells and other abilities target this cell?
+ */
+bool cell_is_invalid_target(const coord_def &c)
+{
+    return cell_is_solid(c) && !actor_at(c);
+}
+
 /** Can a human stand on this feature without flying?
  */
 bool feat_has_solid_floor(dungeon_feature_type feat)

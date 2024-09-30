@@ -3986,7 +3986,7 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
         if (!spell_direction(*player_target, beam, &args))
             return spret::abort;
 
-        if (cell_is_solid(beam.target))
+        if (cell_is_invalid_target(beam.target))
         {
             mprf("There is %s there.",
                  article_a(feat_type_name(env.grid(beam.target))).c_str());
@@ -4053,7 +4053,7 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
     for (radius_iterator ri(beam.target, max_radius, C_SQUARE, LOS_SOLID, true);
          ri; ++ri)
     {
-        if (!in_bounds(*ri) || cell_is_solid(*ri))
+        if (!in_bounds(*ri) || cell_is_invalid_target(*ri))
             continue;
 
         if (!_qazlal_affected(*ri))
@@ -4215,7 +4215,7 @@ spret qazlal_disaster_area(bool fail)
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_SQUARE, LOS_NO_TRANS, true);
          ri; ++ri)
     {
-        if (!in_bounds(*ri) || cell_is_solid(*ri))
+        if (!in_bounds(*ri) || cell_is_invalid_target(*ri))
             continue;
 
         if (!_qazlal_affected(*ri))

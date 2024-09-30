@@ -134,6 +134,9 @@ static habitat_type _grid2habitat(dungeon_feature_type grid)
     if (feat_is_water(grid))
         return HT_WATER;
 
+    if (feat_is_solid(grid))
+        return HT_WALLS;
+
     switch (grid)
     {
     case DNGN_LAVA:
@@ -152,6 +155,8 @@ dungeon_feature_type habitat2grid(habitat_type ht)
         return DNGN_DEEP_WATER;
     case HT_LAVA:
         return DNGN_LAVA;
+    case HT_WALLS:
+        return DNGN_ROCK_WALL;
     case HT_LAND:
     case HT_AMPHIBIOUS:
     case HT_AMPHIBIOUS_LAVA:
@@ -3424,12 +3429,15 @@ habitat_type mons_class_primary_habitat(monster_type mc)
     return ht;
 }
 
+static monster_type _habitat_real_base_type(const monster& mon)
+{
+    return mons_is_draconian_job(mon.type)
+        ? draconian_subspecies(mon) : mons_base_type(mon);
+}
+
 habitat_type mons_primary_habitat(const monster& mon)
 {
-    const monster_type type = mons_is_draconian_job(mon.type)
-        ? draconian_subspecies(mon) : mons_base_type(mon);
-
-    return mons_class_primary_habitat(type);
+    return mons_class_primary_habitat(_habitat_real_base_type(mon));
 }
 
 habitat_type mons_class_secondary_habitat(monster_type mc)
@@ -3439,7 +3447,19 @@ habitat_type mons_class_secondary_habitat(monster_type mc)
         ht = HT_WATER;
     if (ht == HT_AMPHIBIOUS_LAVA)
         ht = HT_LAVA;
+    if (ht == HT_WALLS)
+        ht = HT_LAND;
     return ht;
+}
+
+habitat_type mons_secondary_habitat(const monster& mon)
+{
+    return mons_class_secondary_habitat(_habitat_real_base_type(mon));
+}
+
+bool mons_preferred_habitat(const monster& mon, dungeon_feature_type feat)
+{
+    return _grid2habitat(feat) == mons_primary_habitat(mon);
 }
 
 int mons_power(monster_type mc)
@@ -4084,12 +4104,43 @@ bool monster_senior(const monster& m1, const monster& m2, bool fleeing)
            || hd1 > hd2 + min(5, random2(11));
 }
 
-bool mons_class_can_pass(monster_type mc, const dungeon_feature_type grid)
+bool mons_class_can_pass(monster_type mc, dungeon_feature_type grid)
 {
+    // Malign portal *only* passable by eldritch horrors
     if (grid == DNGN_MALIGN_GATEWAY)
     {
         return mc == MONS_ELDRITCH_TENTACLE
                || mc == MONS_ELDRITCH_TENTACLE_SEGMENT;
+    }
+
+    // The kraken is so large it cannot enter shallow water.
+    // Its tentacles can, and will, though.
+    if ((grid == DNGN_SHALLOW_WATER || grid == DNGN_TOXIC_BOG)
+        && mc == MONS_KRAKEN)
+    {
+        return false;
+    }
+
+    // Wall monsters can move on most solid features; they are also prevented
+    // from going more than one tile deep but this test is telling us
+    // if they *can* exist on the terrain theoretically.
+    if (_mons_class_habitat(mc) == HT_WALLS)
+    {
+        if (feat_is_permarock(grid))
+            return false;
+
+        // Aversion to even shallow water.
+        if (feat_is_water(grid) && !feat_is_tree(grid)) // Mangroves
+            return false;
+
+        if (feat_is_solid(grid))
+        {
+            // Prevent passing through runed doors and so on.
+            if (is_notable_terrain(grid))
+                return false;
+            // All other solids are fine
+            return true;
+        }
     }
 
     return !feat_is_solid(grid);
@@ -4150,7 +4201,8 @@ static bool _mons_can_pass_door(const monster* mon, const coord_def& pos)
     return mon->can_pass_through_feat(DNGN_FLOOR)
            && (mons_can_open_door(*mon, pos)
                || mons_can_eat_door(*mon, pos)
-               || mons_can_destroy_door(*mon, pos));
+               || mons_can_destroy_door(*mon, pos)
+               || mon->can_pass_through_feat(DNGN_CLOSED_DOOR));
 }
 
 bool mons_can_traverse(const monster& mon, const coord_def& p,

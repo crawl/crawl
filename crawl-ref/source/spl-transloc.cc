@@ -2066,7 +2066,7 @@ spret word_of_chaos(int pow, bool fail)
 
 spret blinkbolt(int power, bolt &beam, bool fail)
 {
-    if (cell_is_solid(beam.target))
+    if (cell_is_invalid_target(beam.target))
     {
         canned_msg(MSG_UNTHINKING_ACT);
         return spret::abort;

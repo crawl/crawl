@@ -296,6 +296,8 @@ habitat_type mons_habitat(const monster& mon, bool real_amphibious = false);
 habitat_type mons_class_primary_habitat(monster_type mc);
 habitat_type mons_primary_habitat(const monster& mon);
 habitat_type mons_class_secondary_habitat(monster_type mc);
+habitat_type mons_secondary_habitat(const monster& mon);
+bool mons_preferred_habitat(const monster& mon, dungeon_feature_type feat);
 
 bool mons_skeleton(monster_type mc);
 
@@ -493,7 +495,7 @@ tileidx_t get_mon_base_tile(monster_type mc);
 mon_type_tile_variation get_mon_tile_variation(monster_type mc);
 tileidx_t get_mon_base_corpse_tile(monster_type mc);
 
-bool mons_class_can_pass(monster_type mc, const dungeon_feature_type grid);
+bool mons_class_can_pass(monster_type mc, dungeon_feature_type grid);
 bool mons_can_open_door(const monster& mon, const coord_def& pos);
 bool mons_can_eat_door(const monster& mon, const coord_def& pos);
 bool mons_can_destroy_door(const monster& mon, const coord_def& pos);

@@ -319,6 +319,11 @@ bool monster::is_habitable_feat(dungeon_feature_type feat) const
     return monster_habitable_feat(this, feat);
 }
 
+bool monster::is_habitable(const coord_def &_pos) const
+{
+    return monster_habitable_grid(this, _pos);
+}
+
 bool monster::can_drown() const
 {
     // Presumably a electric eel in lava or a lavafish in deep water could
@@ -5062,7 +5067,13 @@ bool monster::can_see_invisible() const
 bool monster::invisible() const
 {
     return has_ench(ENCH_INVIS) && !backlit() && !has_ench(ENCH_FIRE_CHAMPION)
-            && !has_ench(ENCH_MAGNETISED);
+            // For now, monsters on walls can never be invisible... or to avoid
+            // an info leak we'd have to allow targetting walls at all times
+            // which seems not worth such a big rework of targetters. A
+            // compromise might be to show an unseen enemy so we know something
+            // is there but not what it is ... but given the uncertain future
+            // of invisibility in general let's leave this alone for now.
+            && !cell_is_solid(pos()) && !has_ench(ENCH_MAGNETISED);
 }
 
 bool monster::visible_to(const actor *looker) const

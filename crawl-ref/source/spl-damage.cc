@@ -947,7 +947,7 @@ string airstrike_intensity_display(int empty_space, tileidx_t& tile)
 
 spret cast_airstrike(int pow, coord_def target, bool fail)
 {
-    if (cell_is_solid(target))
+    if (cell_is_invalid_target(target))
     {
         canned_msg(MSG_UNTHINKING_ACT);
         return spret::abort;
@@ -1022,7 +1022,7 @@ string describe_resonance_strike_dam(dice_def dice)
 
 spret cast_momentum_strike(int pow, coord_def target, bool fail)
 {
-    if (cell_is_solid(target))
+    if (cell_is_invalid_target(target))
     {
         canned_msg(MSG_UNTHINKING_ACT);
         return spret::abort;
@@ -2551,7 +2551,7 @@ spret cast_ignition(const actor *agent, int pow, bool fail)
     {
         for (adjacent_iterator ai(pos); ai; ++ai)
         {
-            if (cell_is_solid(*ai)
+            if (cell_is_invalid_target(*ai)
                 && (!beam_actual.can_affect_wall(*ai)
                     || you_worship(GOD_FEDHAS)))
             {
@@ -3652,7 +3652,7 @@ static void _setup_unravelling(bolt &beam, int pow, coord_def target)
 
 spret cast_unravelling(coord_def target, int pow, bool fail)
 {
-    if (cell_is_solid(target))
+    if (cell_is_invalid_target(target))
     {
         canned_msg(MSG_UNTHINKING_ACT);
         return spret::abort;
@@ -3732,7 +3732,7 @@ string mons_inner_flame_immune_reason(const monster *mons)
 
 spret cast_inner_flame(coord_def target, int pow, bool fail)
 {
-    if (cell_is_solid(target))
+    if (cell_is_invalid_target(target))
     {
         canned_msg(MSG_UNTHINKING_ACT);
         return spret::abort;

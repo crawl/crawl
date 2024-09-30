@@ -1831,7 +1831,8 @@ static void _spread_cloud(coord_def pos, cloud_type type, int radius, int pow,
     coord_def centre(9,9);
     for (distance_iterator di(pos, true, false); di; ++di)
     {
-        if (di.radius() > radius)
+        // Beam can still return solid cells thanks to wall monsters
+        if (cell_is_solid(*di) || di.radius() > radius)
             return;
 
         if ((exp_map(*di - pos + centre) < INT_MAX) && !cloud_at(*di)

@@ -482,15 +482,41 @@ item_def* place_monster_corpse(const monster& mons, bool force)
     if (!no_coinflip && coinflip())
         return nullptr;
 
+    coord_def dest = mons.pos();
+
     // The game can attempt to place a corpse for an out-of-bounds monster
     // if a shifter turns into a ballistomycete spore and explodes. In this
     // case we place no corpse since the explosion means anything left
     // over would be scattered, tiny chunks of shifter.
-    if (!in_bounds(mons.pos()) && !force)
+    if (!in_bounds(dest) && !force)
         return nullptr;
 
-    // Don't attempt to place corpses within walls, either.
-    if (feat_is_solid(env.grid(mons.pos())) && !force)
+    // If the monster is inside a wall it was a wall monster.
+    // Find a nearby spot, preferably in sight of player, to drop the corpse.
+    if (feat_is_solid(env.grid(dest)) && !force)
+    {
+        int found = 0;
+        bool in_sight = false;
+        for (adjacent_iterator ai(dest); ai; ++ai)
+        {
+            if (!feat_has_solid_floor(env.grid(*ai)))
+                continue;
+            bool can_see = you.see_cell(*ai);
+            if (in_sight && !can_see)
+                continue;
+            // First "seen" cell supercedes any previously picked
+            if (can_see && !in_sight)
+            {
+                in_sight = true;
+                dest = *ai;
+                found = 1;
+            }
+            else if (one_chance_in(++found))
+                dest = *ai;
+        }
+    }
+    // Still didn't find a valid spot.
+    if (feat_is_solid(env.grid(dest)) && !force)
         return nullptr;
 
     // If we were told not to leave a corpse, don't.
@@ -507,7 +533,7 @@ item_def* place_monster_corpse(const monster& mons, bool force)
     {
         _gold_pile(corpse, mons_species(mons.type));
         // If gold would be destroyed, give it directly to the player instead.
-        if (feat_eliminates_items(env.grid(mons.pos())))
+        if (feat_eliminates_items(env.grid(dest)))
         {
             get_gold(corpse, corpse.quantity, false);
             destroy_item(corpse, true);
@@ -519,7 +545,7 @@ item_def* place_monster_corpse(const monster& mons, bool force)
 
     origin_set_monster(corpse, &mons);
 
-    if ((mons.flags & MF_EXPLODE_KILL) && _explode_corpse(corpse, mons.pos()))
+    if ((mons.flags & MF_EXPLODE_KILL) && _explode_corpse(corpse, dest))
     {
         // The corpse itself shouldn't remain.
         item_was_destroyed(corpse);
@@ -527,8 +553,8 @@ item_def* place_monster_corpse(const monster& mons, bool force)
         return nullptr;
     }
 
-    if (in_bounds(mons.pos()))
-        move_item_to_grid(&o, mons.pos(), !mons.swimming());
+    if (in_bounds(dest))
+        move_item_to_grid(&o, dest, !mons.swimming());
 
     if (o == NON_ITEM)
         return nullptr;
