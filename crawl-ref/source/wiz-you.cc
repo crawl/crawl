@@ -29,6 +29,7 @@
 #include "skills.h"
 #include "species.h"
 #include "spl-book.h"
+#include "spl-damage.h"
 #include "spl-util.h"
 #include "state.h"
 #include "status.h"
@@ -240,12 +241,17 @@ void wizard_heal(bool super_heal)
         you.duration[DUR_BERSERK_COOLDOWN] = 0;
         you.duration[DUR_BLINK_COOLDOWN] = 0;
         you.duration[DUR_SIPHON_COOLDOWN] = 0;
+        you.duration[DUR_RECITE_COOLDOWN] = 0;
+        you.duration[DUR_GAVOTTE_COOLDOWN] = 0;
+        you.duration[DUR_WORD_OF_CHAOS_COOLDOWN] = 0;
+        you.duration[DUR_FIRE_VULN] = 0;
         delete_all_temp_mutations("Super heal");
         you.stat_loss.init(0);
         you.attribute[ATTR_STAT_LOSS_XP] = 0;
         decr_zot_clock();
         you.redraw_stats = true;
-        gain_draconian_breath_uses(3);
+        gain_draconian_breath_uses(MAX_DRACONIAN_BREATH);
+        gain_grave_claw_soul(true, true);
 
         you.props.erase(COGLIN_GIZMO_KEY);
     }

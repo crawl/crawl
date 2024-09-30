@@ -5334,7 +5334,7 @@ spret cast_grave_claw(actor& caster, coord_def targ, int pow, bool fail)
     return spret::success;
 }
 
-void gain_grave_claw_soul(bool silent)
+void gain_grave_claw_soul(bool silent, bool wizard)
 {
     int& charges = you.props[GRAVE_CLAW_CHARGES_KEY].get_int();
 
@@ -5342,11 +5342,11 @@ void gain_grave_claw_soul(bool silent)
     if (charges == GRAVE_CLAW_MAX_CHARGES)
         return;
 
-    if (--you.duration[DUR_GRAVE_CLAW_RECHARGE] <= 0)
+    if (--you.duration[DUR_GRAVE_CLAW_RECHARGE] <= 0 || wizard)
     {
         // Set recharge to a random 4-6 kills.
         you.duration[DUR_GRAVE_CLAW_RECHARGE] = random_range(4, 6);
-        charges++;
+        charges = wizard ? GRAVE_CLAW_MAX_CHARGES: charges + 1;
 
         if (silent)
             return;
