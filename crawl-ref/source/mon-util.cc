@@ -3997,12 +3997,23 @@ bool monster_senior(const monster& m1, const monster& m2, bool fleeing)
            || hd1 > hd2 + min(5, random2(11));
 }
 
-bool mons_class_can_pass(monster_type mc, const dungeon_feature_type grid)
+// XXX: This is very redundant with habitat_is_compatible and is barely used
+// outside of creature merging checks, and should be refactored out.
+bool mons_class_can_pass(monster_type mc, dungeon_feature_type grid)
 {
+    // Malign portal *only* passable by eldritch horrors
     if (grid == DNGN_MALIGN_GATEWAY)
     {
         return mc == MONS_ELDRITCH_TENTACLE
                || mc == MONS_ELDRITCH_TENTACLE_SEGMENT;
+    }
+
+    // Wall monsters can move on most solid features
+    if (mons_class_habitat(mc) & HT_WALLS_ONLY)
+    {
+        // See the comment in habitat_is_compatible().
+        return ((feat_is_wall(grid) && !feat_is_permarock(grid) ||
+                 feat_is_statuelike(grid)));
     }
 
     return !feat_is_solid(grid);
@@ -4063,7 +4074,8 @@ static bool _mons_can_pass_door(const monster* mon, const coord_def& pos)
     return mon->can_pass_through_feat(DNGN_FLOOR)
            && (mons_can_open_door(*mon, pos)
                || mons_can_eat_door(*mon, pos)
-               || mons_can_destroy_door(*mon, pos));
+               || mons_can_destroy_door(*mon, pos)
+               || mon->can_pass_through_feat(DNGN_CLOSED_DOOR));
 }
 
 bool mons_can_traverse(const monster& mon, const coord_def& p,

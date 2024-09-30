@@ -749,7 +749,7 @@ static coord_def _find_tremorstone_target(bool& see_targets)
 
     for (radius_iterator ri(you.pos(), 3, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
     {
-        if (ri->distance_from(you.pos()) != 3 || cell_is_solid(*ri))
+        if (ri->distance_from(you.pos()) != 3 || cell_is_invalid_target(*ri))
             continue;
 
         if (num > 0)
@@ -778,7 +778,7 @@ static coord_def _find_tremorstone_target(bool& see_targets)
     for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
     {
         if (ri->distance_from(you.pos()) == 2
-            && !cell_is_solid(*ri)
+            && !cell_is_invalid_target(*ri)
             && one_chance_in(++ties))
         {
             target = *ri;
@@ -789,7 +789,7 @@ static coord_def _find_tremorstone_target(bool& see_targets)
         return target;
 
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
-        if (!cell_is_solid(*ai) && one_chance_in(++ties))
+        if (!cell_is_invalid_target(*ai) && one_chance_in(++ties))
             target = *ai;
     return target;
 }
@@ -805,7 +805,7 @@ static coord_def _fuzz_tremorstone_target(coord_def center)
     coord_def chosen = center;
     int seen = 1;
     for (adjacent_iterator ai(center); ai; ++ai)
-        if (!cell_is_solid(*ai) && one_chance_in(++seen))
+        if (!cell_is_invalid_target(*ai) && one_chance_in(++seen))
             chosen = *ai;
     return chosen;
 }

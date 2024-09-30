@@ -90,14 +90,26 @@ static monster* _place_pghost_aux(const mgen_data &mg, const monster *leader,
 
 static int _fill_apostle_band(monster& mons, monster_type* band);
 
-static bool _habitable_feat(habitat_type ht, dungeon_feature_type feat)
+bool habitat_is_compatible(habitat_type ht, dungeon_feature_type feat)
 {
     if ((ht & HT_MALIGN_GATEWAY) && feat == DNGN_MALIGN_GATEWAY)
         return true;
 
-    // No monster may be placed in walls etc.
+    // Only wall-walkers may be placed in walls.
     if (feat_is_solid(feat))
-        return false;
+    {
+        // Wallwalking monsters are themed as tunneling through earth, not
+        // phasing through features (like our ghosts can't)- thus, only walls
+        // and statues allowed. No interactions with permarock allowed also
+        // includes not passing through such.
+        if ((feat_is_wall(feat) && !feat_is_permarock(feat) ||
+           feat_is_statuelike(feat)))
+        {
+            return ht & HT_WALLS_ONLY;
+        }
+        else
+            return false;
+    }
 
 #if TAG_MAJOR_VERSION == 34
     // Monsters can't use teleporters, and standing there would look just wrong.
@@ -144,7 +156,7 @@ habitat_type habitat_for_any(const vector<monster_type>& mon_types)
  */
 bool monster_habitable_feat(const monster* mon, dungeon_feature_type feat)
 {
-    return _habitable_feat(mons_habitat(*mon), feat);
+    return habitat_is_compatible(mons_habitat(*mon), feat);
 }
 
 /**
@@ -155,7 +167,7 @@ bool monster_habitable_feat(const monster* mon, dungeon_feature_type feat)
  */
 bool monster_habitable_feat(monster_type mt, dungeon_feature_type feat)
 {
-    return _habitable_feat(mons_class_habitat(mt), feat);
+    return habitat_is_compatible(mons_class_habitat(mt), feat);
 }
 
 bool monster_habitable_grid(const monster* mon, const coord_def& pos)
@@ -166,6 +178,23 @@ bool monster_habitable_grid(const monster* mon, const coord_def& pos)
 bool monster_habitable_grid(monster_type mt, const coord_def& pos)
 {
     return monster_habitable_feat(mt, env.grid(pos));
+}
+
+/**
+ * Solid features are only inhabitable one tile deep so monsters don't get
+ * spawned inside large areas of wall (and not findable by the player). This
+ * checks if the tile is solid there is at least one non-solid adjacent.
+ */
+bool has_non_solid_adjacent(coord_def pos)
+{
+    if (!feat_is_solid(env.grid(pos)))
+        return true;
+    for (adjacent_iterator ai(pos); ai; ++ai)
+    {
+        if (in_bounds(*ai) && !feat_is_solid(env.grid(*ai)))
+            return true;
+    }
+    return false;
 }
 
 static int _ood_fuzzspan(level_id &place)
@@ -501,9 +530,7 @@ monster_type fixup_zombie_type(const monster_type cls,
     return base_type;
 }
 
-// Checks if the monster is ok to place at mg_pos. If force_location
-// is true, then we'll be less rigorous in our checks, in particular
-// allowing land monsters to be placed in shallow water.
+// Checks if the monster is ok to place at mg_pos.
 static bool _valid_monster_generation_location(const mgen_data &mg,
                                                 const coord_def &mg_pos)
 {
@@ -522,7 +549,8 @@ static bool _valid_monster_generation_location(const mgen_data &mg,
     if (!monster_habitable_grid(montype, mg_pos)
         || (mg.behaviour != BEH_FRIENDLY
             && is_sanctuary(mg_pos)
-            && !mons_is_tentacle_segment(montype)))
+            && !mons_is_tentacle_segment(montype))
+        || !has_non_solid_adjacent(mg_pos))
     {
         return false;
     }
@@ -2872,7 +2900,9 @@ private:
 
     int best_distance;
     int nfound;
+public:
     bool levelgen;
+    bool preferred;
 public:
     // Terrain that we can't spawn on, but that we can skip through.
     set<dungeon_feature_type> passable;
@@ -2904,7 +2934,8 @@ public:
         {
             return false;
         }
-        if (!_habitable_feat(habitat_wanted, env.grid(dc)))
+        if (!habitat_is_compatible(habitat_wanted, env.grid(dc))
+            || !has_non_solid_adjacent(dc))
         {
             if (passable.count(env.grid(dc)))
                 good_square(dc);
@@ -2916,8 +2947,6 @@ public:
             greedy_place = dc;
             best_distance = traveled_distance;
         }
-        else
-            good_square(dc);
         return false;
     }
 };
@@ -3177,7 +3206,7 @@ bool you_can_see_habitable_spot_near(coord_def pos, habitat_type habitat,
         if (!cell_see_cell(pos, *ri, LOS_NO_TRANS))
             continue;
 
-        if (!_habitable_feat(habitat, env.grid(*ri)))
+        if (!habitat_is_compatible(habitat, env.grid(*ri)))
             continue;
 
         return true;

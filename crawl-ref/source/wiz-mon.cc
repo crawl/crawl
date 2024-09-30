@@ -249,7 +249,9 @@ static string _habitat_debug_name(habitat_type ht)
         result += "lava|";
     if (ht & HT_MALIGN_GATEWAY)
         result += "malign_gateway|";
-    if (ht >= (HT_MALIGN_GATEWAY << 1))
+    if (ht & HT_WALLS_ONLY)
+        result += "walls|";
+    if (ht >= (HT_WALLS_ONLY << 1))
         result += "INVALID|";
     if (result.empty())
         return "none";

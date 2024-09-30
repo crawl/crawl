@@ -1023,12 +1023,9 @@ bool mon_special_ability(monster* mons)
                 continue;
             }
 
-            if (!cell_is_solid(targ->pos()))
-            {
-                mons->suicide();
-                used = true;
-                break;
-            }
+            mons->suicide();
+            used = true;
+            break;
         }
         break;
 
@@ -1054,12 +1051,9 @@ bool mon_special_ability(monster* mons)
                 continue;
             }
 
-            if (!cell_is_solid(targ->pos()))
-            {
-                seeker_attack(*mons, **targ);
-                used = true;
-                break;
-            }
+            seeker_attack(*mons, **targ);
+            used = true;
+            break;
         }
         break;
 

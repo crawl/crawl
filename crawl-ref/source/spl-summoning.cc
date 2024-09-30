@@ -2423,7 +2423,7 @@ static void _setup_infestation(bolt &beam, int pow)
 
 spret cast_infestation(int pow, bolt &beam, bool fail)
 {
-    if (cell_is_solid(beam.target))
+    if (cell_is_invalid_target(beam.target))
     {
         canned_msg(MSG_SOMETHING_IN_WAY);
         return spret::abort;
@@ -3195,7 +3195,7 @@ string mons_simulacrum_immune_reason(const monster *mons)
 
 spret cast_simulacrum(coord_def target, int pow, bool fail)
 {
-    if (cell_is_solid(target))
+    if (cell_is_invalid_target(target))
     {
         canned_msg(MSG_UNTHINKING_ACT);
         return spret::abort;

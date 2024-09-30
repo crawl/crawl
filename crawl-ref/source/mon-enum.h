@@ -210,6 +210,7 @@ enum habitat_type
     HT_DEEP_WATER = 1 << 2,
     HT_LAVA = 1 << 3,
     HT_MALIGN_GATEWAY = 1 << 4,
+    HT_WALLS_ONLY = 1 << 5,
 
     HT_LAND = HT_DRY_LAND | HT_SHALLOW_WATER,
     HT_AMPHIBIOUS = HT_LAND | HT_DEEP_WATER,
@@ -218,6 +219,7 @@ enum habitat_type
     HT_ELDRITCH_TENTACLE = HT_AMPHIBIOUS | HT_MALIGN_GATEWAY,
     // Flying monsters will appear in all categories except HT_MALIGN_GATEWAY
     HT_FLYER = HT_LAND | HT_WATER | HT_LAVA,
+    HT_WALL = HT_LAND | HT_WALLS_ONLY,
 };
 
 // order of these is important:
