@@ -1210,14 +1210,8 @@ static void _expire_temporary_allies()
         if (!mons.alive())
             continue;
 
-        if (mons.friendly() && mons.is_summoned())
-            monster_die(mons, KILL_RESET, NON_MONSTER, true);
-        // Yred & animate dead zombies crumble on floor change
-        else if (mons.was_created_by(you, SPELL_ANIMATE_DEAD)
-                || (is_yred_undead_follower(mons) && mons.type != MONS_BOUND_SOUL))
-        {
-            monster_die(mons, KILL_RESET, NON_MONSTER, true);
-        }
+        if (mons.was_created_by(you))
+            monster_die(mons, KILL_TIMEOUT, NON_MONSTER, true);
     }
 }
 
@@ -1259,10 +1253,10 @@ static void _grab_followers_and_expire_summons()
         {
             if (!mons_is_conjured(fol->type))
                 non_stair_using_allies++;
-            if (fol->is_summoned())
-                non_stair_using_summons++;
             if (fol->holiness() & MH_UNDEAD)
                 non_stair_using_undead++;
+            else if (fol->is_summoned())
+                non_stair_using_summons++;
         }
     }
 
