@@ -125,6 +125,7 @@ static TextDB AllDBs[] =
             "decorlines.txt", //  miscellaneous lines for walking on decoration
             "colourname.txt", // colour names again
             "gizmo.txt",    // name-assembling for gizmos
+            "shopname.txt", // fancy shop name generator
             }),
 
     TextDB("quotes", "descript/",
@@ -701,7 +702,6 @@ static void _call_recursive_replacement(string &str, TextDB &db,
             break;
         }
 
-        string marker_full = str.substr(pos, end - pos + 1);
         string marker      = str.substr(pos + 1, end - pos - 1);
 
         string replacement =
@@ -715,7 +715,7 @@ static void _call_recursive_replacement(string &str, TextDB &db,
         }
         else
         {
-            str.replace(pos, marker_full.length(), replacement);
+            str.replace(pos, marker.length() + 2, replacement);
 
             // Start search from pos rather than end + 1, so that if
             // the replacement contains its own @foo@, we can replace

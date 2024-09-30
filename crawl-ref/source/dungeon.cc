@@ -6230,16 +6230,24 @@ void place_spec_shop(const coord_def& where, shop_spec &spec, int shop_level)
     shop_struct& shop = env.shop[where];
 
     const int level_number = shop_level ? shop_level : env.absdepth0;
-
-    for (int j = 0; j < 3; j++)
-        shop.keeper_name[j] = 1 + random2(200);
-    shop.shop_name = spec.name;
-    shop.shop_type_name = spec.type;
-    shop.shop_suffix_name = spec.suffix;
+    shop.type = spec.sh_type == SHOP_RANDOM ? _random_shop() : spec.sh_type;
     shop.level = level_number * 2;
-    shop.type = spec.sh_type;
-    if (shop.type == SHOP_RANDOM)
-        shop.type = _random_shop();
+    if (!spec.full_name.empty())
+    {
+        shop.shop_name = spec.name;
+        shop.full_shop_name = spec.full_name;
+    }
+    else if (spec.name.empty() && spec.type.empty() && spec.suffix.empty())
+    {
+        auto names = generate_shop_name(shop.type, shop.level, spec.gozag);
+        std::tie(shop.full_shop_name, shop.shop_name) = names;
+    }
+    else
+    {
+        shop.shop_name = spec.name;
+        shop.shop_type_name = spec.type;
+        shop.shop_suffix_name = spec.suffix;
+    }
     shop.greed = _shop_greed(shop.type, level_number, spec.greed);
     shop.pos = where;
 

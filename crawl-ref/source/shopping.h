@@ -34,6 +34,9 @@ shop_struct *shop_at(const coord_def& where);
 
 void destroy_shop_at(coord_def p);
 
+string generate_shopkeeper_name(bool fancy, bool gozag);
+pair<string,string> generate_shop_name(const shop_type type, int shop_level,
+                                       bool gozag);
 string shop_name(const shop_struct& shop);
 string shop_type_name(shop_type type);
 
@@ -60,7 +63,8 @@ struct shop_struct
     string              shop_type_name;
     string              shop_suffix_name;
 
-    FixedVector<uint8_t, 3> keeper_name;
+    // Overrides name, type, suffix, and just specifies entire shop name
+    string              full_shop_name;
 
     vector<item_def> stock;
 #if TAG_MAJOR_VERSION == 34

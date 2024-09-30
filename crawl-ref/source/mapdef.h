@@ -799,10 +799,14 @@ struct shop_spec
                          *   stock).
                          *   */
 
+    string full_name;   /**< Overrides all other name parameters and sets the entire
+                             name of the shop */
+
     shop_spec(shop_type sh, string n="", string t="",
-              string s="", int g=-1, int ni=-1, bool u=false, bool goz=false)
+              string s="", int g=-1, int ni=-1, bool u=false, bool goz=false,
+              string fname="")
         : sh_type(sh), name(n), type(t), suffix(s),
-          greed(g), num_items(ni), items(), use_all(u), gozag(goz) { }
+          greed(g), num_items(ni), items(), use_all(u), gozag(goz), full_name(fname) { }
 };
 
 /**
