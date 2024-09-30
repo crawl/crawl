@@ -84,6 +84,7 @@ static const vector<pop_entry> population[] =
   {  2,  5,  500, FALL, MONS_RIBBON_WORM },
   {  2,  6, 1000, FLAT, MONS_ADDER },
   {  3,  8, 1000, FLAT, MONS_ORC },
+  {  3,  7,  400, PEAK, MONS_ROCK_FISH },
   {  3,  7,  400, PEAK, MONS_BOMBARDIER_BEETLE},
 
 // These historically don't get kills after D:7ish.

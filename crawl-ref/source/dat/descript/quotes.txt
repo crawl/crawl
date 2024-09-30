@@ -3744,6 +3744,11 @@ ribbon worm
    And its hero, the Conqueror Worm.”
     -Edgar Allan Poe
 %%%%
+rock fish
+
+“Stuck between a rock and a hard plaice.”
+    -Anonymous, motivational poster.
+%%%%
 royal mummy
 
 <mummy>

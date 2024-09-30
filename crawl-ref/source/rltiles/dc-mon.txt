@@ -266,7 +266,7 @@ phalanx_beetle MONS_PHALANX_BEETLE
 %sdir mon/unique
 xakkrixis MONS_XAKKRIXIS
 
-## Frogs and flying fish ('F')
+## Frogs and fish of air and earth ('F')
 %sdir mon/demihumanoids
 barachi MONS_BARACHI
 %sdir mon/unique
@@ -281,6 +281,8 @@ blinking_frog MONS_BLINK_FROG_BLINKING
 cane_toad MONS_CANE_TOAD
 goliath_frog MONS_GOLIATH_FROG
 skyshark MONS_SKYSHARK
+%sdir mon/aquatic
+rock_fish MONS_ROCK_FISH
 %sdir mon/undead
 marrowcuda MONS_MARROWCUDA
 
