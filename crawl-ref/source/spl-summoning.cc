@@ -2878,6 +2878,99 @@ bool summon_swarm_clone(const monster& agent, coord_def target_pos)
     return false;
 }
 
+bool summon_detritus(const monster& agent, coord_def target_pos, bool is_death)
+{
+    // Apply pseudo-summon cap
+    int count_shroom = 0;
+    int count_lichen = 0;
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->summoner == agent.mid)
+        {
+            if (mi->type == MONS_WOLF_LICHEN)
+                count_lichen++;
+            else if (mi->type == MONS_TOADSTOOL)
+                count_shroom++;
+        }
+    }
+
+    int num_shroom = 0;
+    int num_lichen = 0;
+    const int num_total = is_death ? 4 : 2;
+
+    // Create up to 4 max of each type
+    for (int n=0; n<num_total; n++)
+    {
+        const int choice = random_range(0, 2);
+        if (choice == 1 && num_shroom + count_shroom < 4)
+            num_shroom++;
+        else if (choice == 2 && num_lichen + count_lichen < 4)
+            num_lichen++;
+    }
+
+    int seen_shroom = 0;
+    int seen_lichen = 0;
+
+    int summ_dur = agent.is_summoned()
+                   ? agent.as_monster()->get_ench(ENCH_SUMMON).duration : 0;
+
+    if (num_shroom > 0)
+    {
+        for (int n=0; n<num_shroom; n++)
+        {
+            mgen_data mg(MONS_TOADSTOOL, BEH_COPY, target_pos,
+                         _auto_autofoe(&agent), MG_AUTOFOE);
+            if (agent.is_summoned())
+                mg.set_summoned(&agent, MON_SUMM_DETRITUS, summ_dur, true);
+            else
+                mg.set_summoned(&agent, MON_SUMM_DETRITUS, 0, false, false);
+            mg.extra_flags |= MF_HARD_RESET | MF_NO_REWARD;
+
+            if (monster* spawn = create_monster(mg))
+            {
+                if (you.can_see(agent) || you.can_see(*spawn))
+                    seen_shroom++;
+            }
+        }
+    }
+
+    if (num_lichen > 0)
+    {
+        for (int n=0; n<num_lichen; n++)
+        {
+            mgen_data mg(MONS_WOLF_LICHEN, BEH_COPY, target_pos,
+                         _auto_autofoe(&agent), MG_AUTOFOE);
+            if (agent.is_summoned())
+                mg.set_summoned(&agent, MON_SUMM_DETRITUS, summ_dur, true);
+            else
+                mg.set_summoned(&agent, MON_SUMM_DETRITUS, 0, false, false);
+            mg.extra_flags |= MF_HARD_RESET | MF_NO_REWARD;
+
+            if (monster* spawn = create_monster(mg))
+            {
+                if (you.can_see(agent) || you.can_see(*spawn))
+                    seen_lichen++;
+            }
+        }
+    }
+
+    if (!seen_shroom && !seen_lichen)
+        return false;
+
+    string seen_what = "";
+    if (seen_lichen)
+        seen_what += "lichen";
+    if (seen_lichen && seen_shroom)
+        seen_what += " and ";
+    if (seen_shroom)
+        seen_what += "toadstools";
+
+    mprf("%s sheds %s!", you.can_see(agent) ? agent.name(DESC_THE).c_str() : "Something",
+         seen_what.c_str());
+
+    return true;
+}
+
 bool summon_spider(const actor &agent, coord_def pos,
                         spell_type spell, int pow)
 {

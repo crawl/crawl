@@ -158,6 +158,7 @@ enum attack_flavour
     AF_BOMBLET,
     AF_AIRSTRIKE,
     AF_TRICKSTER,
+    AF_SHED,
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or
@@ -183,6 +184,7 @@ enum mon_summon_type
     MON_SUMM_WPN_REAP,  // Reaping brand reaping
     MON_SUMM_CACOPHONY, // Poltergeist ability
     MON_SUMM_THRALL,    // Vampiric thralls
+    MON_SUMM_DETRITUS,  // Strolling stone shedding
 };
 
 #include "mon-flags.h"

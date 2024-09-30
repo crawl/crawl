@@ -3112,6 +3112,10 @@ item_def* monster_die(monster& mons, killer_type killer,
             bennu_revive_fineff::schedule(mons.pos(), revives, att, mons.foe,
                                           duel, gozag_bribe);
         }
+        // XX: if the strolling stone *was* an illusion/summoned, unsummon its
+        // illusory sheddings too...
+        else if (mons.type == MONS_STROLLING_STONE)
+            summon_detritus(mons, mons.pos(), true);
     }
 
     if (mons_is_tentacle_head(mons_base_type(mons)))

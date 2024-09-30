@@ -1415,6 +1415,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     }
     else if (mons_is_child_tentacle(mg.cls))
         blame_prefix = "attached to ";
+    else if (mg.cls == MONS_TOADSTOOL || mg.cls == MONS_WOLF_LICHEN)
+        blame_prefix = "shed by ";
     else
         blame_prefix = "created by ";
 
