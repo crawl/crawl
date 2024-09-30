@@ -2417,6 +2417,8 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
         tileset.emplace_back(TILE_HALO_GD_NEUTRAL);
     else if (m->neutral())
         tileset.emplace_back(TILE_HALO_NEUTRAL);
+    else if (m->has_trivial_ench(ENCH_CHARMER))
+        tileset.emplace_back(TILE_HALO_CHARMER);
     else if (Options.tile_show_threat_levels.find("unusual") != string::npos
              && m->has_unusual_items())
         tileset.emplace_back(TILE_THREAT_UNUSUAL);

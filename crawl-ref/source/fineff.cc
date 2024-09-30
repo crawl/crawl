@@ -215,6 +215,12 @@ void summon_dismissal_fineff::merge(const final_effect &)
     return;
 }
 
+void charmer_damage_reaction_fineff::merge(const final_effect &)
+{
+    // just use the first monster for messaging right now
+    return;
+}
+
 void mirror_damage_fineff::fire()
 {
     actor *attack = attacker();
@@ -927,6 +933,24 @@ void splinterfrost_fragment_fineff::fire()
         mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s", msg.c_str());
 
     beam.fire();
+}
+
+void charmer_damage_reaction_fineff::fire()
+{
+    // The player has damaged a charming monster and now must grieve
+    monster *charmer = cached_monster_copy_by_mid(def);
+    ASSERT(charmer);
+
+    mprf(MSGCH_WARN, "You are consumed with grief over causing %s %s!",
+         apostrophise(charmer->name(DESC_THE).c_str()).c_str(),
+         charmer->alive() ? "suffering" : "demise");
+    you.set_duration(DUR_GRIEF, you.turn_is_over ? 1 : 2);
+
+    stop_delay(true, true);
+    you.stop_directly_constricting_all(false);
+    stop_channelling_spells();
+    you.redraw_armour_class = true;
+    you.redraw_evasion = true;
 }
 
 // Effects that occur after all other effects, even if the monster is dead.

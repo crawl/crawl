@@ -4410,6 +4410,24 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             amount += max(hp_before_pain_bond - hit_points, 0);
         }
 
+
+        // If the player is charmed and one of their fake friends is harmed, check
+        // if the player was responsible even indirectly; it seems fair to base
+        // this on whether XP would be received so ally damage counts, and if the
+        // player finds a sneaky way to damage them at least they risk losing XP
+        if (you.duration[DUR_CHARMED] && has_ench(ENCH_CHARMER) && !you.grieving()
+            && damage_contributes_xp(*agent) && !you.props[CHARMER_DAMAGE_REACTION_KEY].get_bool())
+        {
+            // Even though we check for the Grief duration, it's possible that could
+            // expire before your turn and an ally could then damage the charmer,
+            // creating an endless grief cycle. Reset this key at the start of the
+            // next turn to avoid this.
+            you.props[CHARMER_DAMAGE_REACTION_KEY] = true;
+            charmer_damage_reaction_fineff::schedule(this);
+            // Save a copy in case we die before the fineff is fired
+            env.final_effect_monster_cache.push_back(*this);
+        }
+
         // Allow the victim to exhibit passive damage behaviour (e.g.
         // the Royal Jelly or Uskayaw's Pain Bond).
         react_to_damage(agent, amount, flavour, kill_type);

@@ -3849,10 +3849,9 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_CHARM:
-        mprf(MSGCH_WARN, "Your will is overpowered!");
-        confuse_player(5 + random2(3));
-        obvious_effect = true;
-        break;     // charming - confusion?
+        // Power controls the % of monsters on screen you will be "charmed" by
+        obvious_effect = you.charm(agent(), ench_power);
+        break;
 
     case BEAM_BANISH:
         if (YOU_KILL(thrower))
@@ -6578,6 +6577,13 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             mon->add_ench(mon_enchant(good, 0, agent()));
             if (!obvious_effect && could_see && !you.can_see(*mon))
                 obvious_effect = true;
+            return MON_AFFECTED;
+        }
+
+        // Monsters that have charmed the player return to normal
+        if (mon->has_ench(ENCH_CHARMER) && agent()->wont_attack())
+        {
+            obvious_effect = mon->del_ench(ENCH_CHARMER);
             return MON_AFFECTED;
         }
 

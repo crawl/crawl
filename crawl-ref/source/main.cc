@@ -1119,6 +1119,9 @@ static void _input()
     if (you.duration[DUR_VEXED])
         do_vexed_attack(you);
 
+    if (you.props[CHARMER_DAMAGE_REACTION_KEY].get_bool() && !you.duration[DUR_GRIEF])
+        you.props.erase(CHARMER_DAMAGE_REACTION_KEY);
+
     if (you.cannot_act() || you.duration[DUR_VEXED])
     {
         if (crawl_state.repeat_cmd != CMD_WIZARD)

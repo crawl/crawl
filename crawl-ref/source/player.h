@@ -58,6 +58,7 @@
 #define TRICKSTER_POW_KEY "trickster_power"
 #define CACOPHONY_XP_KEY "cacophony_xp"
 #define BATFORM_XP_KEY "batform_xp"
+#define CHARMER_DAMAGE_REACTION_KEY "charmer_damage_reaction"
 
 constexpr int ENKINDLE_CHARGE_COST = 40;
 #define ENKINDLE_CHARGES_KEY "enkindle_charges"
@@ -717,6 +718,7 @@ public:
     void backlight();
     void banish(const actor* /*agent*/, const string &who = "", const int power = 0,
                 bool force = false) override;
+    bool charm(actor* agent, const int power = 0);
     void blink(bool ignore_stasis = false) override;
     void teleport(bool right_now = false,
                   bool wizard_tele = false) override;
@@ -814,6 +816,7 @@ public:
     int umbra_radius() const override;
     bool petrifying() const override;
     bool petrified() const override;
+    bool grieving() const;
     bool liquefied_ground() const override;
     bool incapacitated() const override
     {

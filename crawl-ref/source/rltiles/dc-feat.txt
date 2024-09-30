@@ -957,6 +957,7 @@ landing LANDING
 effect/heataura0 HEAT_AURA
 effect/heataura1
 effect/heataura2
+halo_charmer HALO_CHARMER
 halo_friendly HALO_FRIENDLY
 halo_gd_neutral HALO_GD_NEUTRAL
 halo_neutral HALO_NEUTRAL

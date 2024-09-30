@@ -77,6 +77,16 @@ static void _end_growing_destruction()
     you.props.erase(MAKHLEB_ATROCITY_STACKS_KEY);
 }
 
+static void _end_charming()
+{
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->has_ench(ENCH_CHARMER))
+            mi->del_ench(ENCH_CHARMER);
+        // XX: Deal with off-level ones somehow
+    }
+}
+
 // properties of the duration.
 enum duration_flags : uint32_t
 {
@@ -701,6 +711,11 @@ static const duration_def duration_data[] =
       "enkindled", "enkindled",
       "Your flames burn bright with remembrance.", D_EXPIRES,
       {{ "Your flames start to waver.", end_enkindled_status }}},
+    { DUR_CHARMED, LIGHTMAGENTA, "Charmed",
+      "charmed", "charmed",
+      "You lose a turn when you damage those whose glamour you are under.",
+      D_EXPIRES | D_DISPELLABLE,
+      {{"You break free of the charming influence.", _end_charming}}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
@@ -780,6 +795,7 @@ static const duration_def duration_data[] =
     { DUR_PHALANX_BARRIER, 0, "", "phalanx barrier", "phalanx barrier", "", D_NO_FLAGS},
     { DUR_TRICKSTER_GRACE, 0, "", "", "trickster", "", D_NO_FLAGS, {{""}}},
     { DUR_DROWSY, 0, "Drowsy", "", "drowsy", "", D_NO_FLAGS, {{"You feel less drowsy."}}},
+    { DUR_GRIEF, 0, "", "", "grieving", "", D_NO_FLAGS, {{"You are back in charge again."}}},
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

@@ -28,6 +28,7 @@ cobweb_none_0 TRAP_WEB
 friendly FRIENDLY
 good_neutral GOOD_NEUTRAL
 neutral NEUTRAL
+charmer CHARMER
 animated_weapon ANIMATED_WEAPON
 summoned SUMMONED
 unrewarding UNREWARDING

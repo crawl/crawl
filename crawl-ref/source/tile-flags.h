@@ -10,14 +10,14 @@ enum tile_flags : unsigned long long
 {
     //// Foreground flags
 
-    // 3 mutually exclusive flags for attitude.
-    TILE_FLAG_ATT_MASK     = 0x00030000ULL,
+    // 4 mutually exclusive flags for attitude.
+    TILE_FLAG_ATT_MASK     = 0x00070000ULL,
     TILE_FLAG_PET          = 0x00010000ULL,
     TILE_FLAG_GD_NEUTRAL   = 0x00020000ULL,
     TILE_FLAG_NEUTRAL      = 0x00030000ULL,
+    TILE_FLAG_CHARMER      = 0x00040000ULL,
 
-    TILE_FLAG_S_UNDER      = 0x00040000ULL,
-    TILE_FLAG_FLYING       = 0x00080000ULL,
+    TILE_FLAG_S_UNDER      = 0x00080000ULL,
 
     // 4 mutually exclusive flags for behaviour.
     TILE_FLAG_BEH_MASK     = 0x00700000ULL,
@@ -28,6 +28,8 @@ enum tile_flags : unsigned long long
 
     TILE_FLAG_NET          = 0x00800000ULL,
     TILE_FLAG_WEB          = 0x01000000ULL,
+    TILE_FLAG_FLYING       = 0x02000000ULL,
+
     // Other icons were previously stored here. Lots of space now.
     // Different levels of poison are mutually exclusive, so we can encode them in 2 bits.
     TILE_FLAG_POISON_MASK  = 0x1800000000000000ULL,

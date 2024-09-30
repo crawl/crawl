@@ -410,6 +410,8 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
                     m_buf_feat.add(TILE_HALO_GD_NEUTRAL, x, y);
                 else if (att_flag == TILE_FLAG_NEUTRAL)
                     m_buf_feat.add(TILE_HALO_NEUTRAL, x, y);
+                else if (att_flag == TILE_FLAG_CHARMER)
+                    m_buf_feat.add(TILE_HALO_CHARMER, x, y);
 
                 const tileidx_t threat_flag = cell.fg & TILE_FLAG_THREAT_MASK;
 
@@ -585,6 +587,8 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
             m_buf_icons.add(TILEI_GOOD_NEUTRAL, x, y);
         else if (att_flag == TILE_FLAG_NEUTRAL)
             m_buf_icons.add(TILEI_NEUTRAL, x, y);
+        else if (att_flag == TILE_FLAG_CHARMER)
+            m_buf_icons.add(TILEI_CHARMER, x, y);
     }
 
     int status_shift = 0;

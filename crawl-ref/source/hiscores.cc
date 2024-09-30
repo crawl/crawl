@@ -668,6 +668,7 @@ static const char *kill_method_names[] =
     "mirror_damage", "spines", "frailty", "barbs", "being_thrown",
     "collision", "zot", "constriction", "exploremode", "blinking",
     "death curse",
+    "buggy_charmer_damage", // should never happen
 };
 
 static const char *_kill_method_name(kill_method_type kmt)
