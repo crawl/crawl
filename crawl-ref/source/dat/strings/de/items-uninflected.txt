@@ -95,7 +95,7 @@ Artefakt
 " der Drachentötung"
 %%%%
 " of draining"
-" des Entleerens"
+" der Auszehrung"
 %%%%
 " of electrocution"
 " des Stromschlags"

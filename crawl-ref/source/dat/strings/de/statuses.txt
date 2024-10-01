@@ -281,37 +281,37 @@ Drain
 Entleert
 %%%%
 extremely drained
-extrem entleert
+extrem ausgezehrt
 %%%%
 Your life force is extremely drained.
-Eure Lebenskraft ist extrem ausgelaugt.
+Eure Lebenskraft ist extrem ausgezehrt.
 %%%%
 very heavily drained
-sehr stark entleert
+sehr stark ausgezehrt
 %%%%
 Your life force is very heavily drained.
-Eure Lebenskraft ist sehr stark entleert.
+Eure Lebenskraft ist sehr stark ausgezehrt.
 %%%%
 # duplicate of monster status
 #heavily drained
-#stark entleert
+#stark ausgezehrt
 %%%%
 Your life force is heavily drained.
-Eure Lebenskraft ist stark entleert.
+Eure Lebenskraft wird stark ausgezehrt.
 %%%%
 # duplicate of monster status
 #drained
-#entleert
+#ausgezehrt
 %%%%
 Your life force is drained.
-Eure Lebenskraft ist entleert.
+Eure Lebenskraft ist ausgezehrt.
 %%%%
 # duplicate of monster status
 #lightly drained
-#leicht entleert
+#leicht ausgezehrt
 %%%%
 Your life force is lightly drained.
-Eure Lebenskraft ist leicht entleert.
+Eure Lebenskraft ist leicht ausgezehrt.
 %%%%
 
 # Digging (Formicid ability)
@@ -323,25 +323,25 @@ Grabe
 # Magic sapped
 %%%%
 -Wiz
-Gezehrt
+Ausgelaugt
 %%%%
 extremely magic sapped
-Magie extrem gezehrt
+Magie extrem ausgelaugt
 %%%%
 Your control over your magic has been greatly sapped.
-Eure Kontrolle über Eure Magie ist stark gezehrt.
+Eure Kontrolle über Eure Magie ist stark ausgelaugt.
 %%%%
 very magic sapped
-Magie sehr geschwächt
+Magie sehr ausgelaugt
 %%%%
 Your control over your magic has been significantly sapped.
-Eure Kontrolle über Eure Magie ist stark gezehrt.
+Eure Kontrolle über Eure Magie ist stark ausgelaugt.
 %%%%
 magic sapped
-Magie geschwächt
+Magie ausgelaugt
 %%%%
 Your control over your magic has been sapped.
-Eure Kontrolle über Eure Magie ist gezehrt.
+Eure Kontrolle über Eure Magie ist ausgelaugt.
 %%%%
 
 # Bribing branch (Gozag ability)
@@ -1528,15 +1528,15 @@ Das Eis, das euch umgibt, schmilzt weg.
 # Magic sapped
 %%%%
 Sap
-Gezehrt
+Auslaugen
 %%%%
 # duplicate of monster status
 #magic-sapped
-#Magie gezehrt
+#Magie ausgelaugt
 %%%%
-# duplicate of zap
+# duplicate of sap
 #sap magic
-#Magie gezehrt
+#Magie auslaugen
 %%%%
 Casting spells hinders your spell success.
 Das Wirken von Zaubern behindert Euren Zaubererfolg.

@@ -99,7 +99,7 @@ It may corrode you when you take damage.
 Dieser Gegenstand kann Euch korrodieren wenn Ihr Schaden nimmt.
 %%%%
 It drains your maximum health when unequipped.
-Dieser Gegenstand entleert Euch die Maximale Gesundheit, wenn er abgelegt wird.
+Dieser Gegenstand entzieht Euch die Maximale Gesundheit, wenn er abgelegt wird.
 %%%%
 It may slow you when you take damage.
 Dieser Gegenstand kann Euch verlangsamen, wenn Ihr Schaden nimmt.

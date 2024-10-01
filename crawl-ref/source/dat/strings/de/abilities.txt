@@ -595,7 +595,7 @@ Instant
 Sofortig
 %%%%
 Max HP drain
-Max TP Verzehren
+Max TP auszehren
 %%%%
 Cursed item
 Verfluchter Gegenstand

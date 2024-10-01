@@ -189,7 +189,7 @@ Eure Atemwaffe ist in dieser Form verbessert.
 # lich form
 %%%%
 draining attack
-entleerender Angriff
+zehrender Angriff
 %%%%
 Your unarmed attacks are suffused with negative energy.
 Eure unbewaffneten Angriffe sind von negativer Energie durchdrungen.
@@ -264,7 +264,7 @@ half damage
 Halbschaden
 %%%%
 Damage taken is halved, but you are drained when taking damage.
-Der erlittene Schaden wird halbiert, aber Ihr werdet entleert, wenn Ihr Schaden nehmt.
+Der erlittene Schaden wird halbiert, aber Ihr werdet ausgezehrt, wenn Ihr Schaden nehmt.
 %%%%
 bleed smoke
 Rauch bluten

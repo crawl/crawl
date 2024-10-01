@@ -104,13 +104,13 @@ Ihr vergiftet {acc}%s
 %s vergiftet {acc}%s
 %%%%
 You drain %s
-Ihr entleert {acc}%s
+Ihr zehrt {acc}%s aus
 %%%%
 %s drains you
-%s entleert Euch
+%s zehrt Euch aus
 %%%%
 %s drains %s
-%s entleert {acc}%s
+%s zehrt {acc}%s aus
 %%%%
 You blast %s
 Ihr sprengt {acc}%s
@@ -308,7 +308,7 @@ Continue?
 Weitermachen?
 %%%%
 Your magical essence is drained by the effort!
-Eure magische Essenz wird durch die Anstrengung verzehrt!
+Eure magische Essenz wird durch die Anstrengung ausgezehrt!
 %%%%
 You extend your mandibles.
 Ihr fährt Eure Mandibeln aus.
@@ -1194,13 +1194,13 @@ Ihr krümmt Euch vor Qual
 %s schützt Euch vor versehentlicher Eile.
 %%%%
 You drain %s vigour!
-Ihr erschöpft die Vitalität %s!
+Ihr entzieht die Vitalität %s!
 %%%%
 %s drains your vigour!
-%s erschöpft Eure Vitalität!
+%s entzieht Eure Vitalität!
 %%%%
 %s drains %s vigour!
-%s erschöpft die Vitalität %s!
+%s entzieht die Vitalität %s!
 %%%%
 You pounce on %s from a blind spot!
 Ihr stürzt Euch von einem blinden Fleck auf {acc}%s!
@@ -6786,7 +6786,7 @@ The divine experience confuses you!
 Die göttliche Erfahrung verwirrt Euch!
 %%%%
 The divine experience drains your vigour!
-Die göttliche Erfahrung erschöpft Eure Kraft!
+Die göttliche Erfahrung entzieht Eure Vitalität!
 %%%%
 %s blasts you with cleansing flame!
 %s stößt Euch mit reinigenden Flammen an!
@@ -9033,10 +9033,10 @@ You squeeze %s
 Ihr zerquetscht %s
 %%%%
 You drain %s magic.
-Ihr entleert die Magie {gen}%s.
+Ihr entzieht die Magie {gen}%s.
 %%%%
 You drain %s power.
-Ihr entleert die Energie {gen}%s.
+Ihr entzieht die Energie {gen}%s.
 %%%%
 You disrupt %s magic.
 Ihr stört die Magie {gen}%s.
@@ -9534,16 +9534,16 @@ Eure göttliche Ausdauer schützt Euch vor Gift!
 %s versengt {acc}%s
 %%%%
 %s drains your magic.
-%s entleert Eure Magie.
+%s entzieht Eure Magie.
 %%%%
 %s drains your power.
-%s entleert Eure Energie.
+%s entzieht Eure Energie.
 %%%%
 %s drains %s magic.
-%s entleert die Magie {gen}%s.
+%s entzieht die Magie %s.
 %%%%
 %s drains %s power.
-%s entleert die Energie {gen}%s.
+%s entzieht die Energie %s.
 %%%%
 %s looks very invigorated.
 %s sieht sehr gestärkt aus.
@@ -9823,10 +9823,10 @@ You feel your power returning.
 Ihr fühlt, dass Eure Kraft zurückkehrt.
 %%%%
 You feel momentarily drained.
-Ihr fühlt Euch kurzzeitig ausgelaugt.
+Ihr fühlt Euch kurzzeitig ausgezehrt.
 %%%%
 You suddenly feel drained of magical energy!
-Ihr fühlt Euch plötzlich von magischer Energie erschöpft!
+Ihr fühlt Euch plötzlich von magischer Energie ausgezehrt!
 %%%%
 Your god isn't willing to do this for you now.
 Euer Gott ist nicht bereit, das jetzt für Euch zu tun.
@@ -10820,7 +10820,7 @@ The forest calms down.
 
 %%%%
 %s is no longer being sapped.
-
+%s is nicht mehr ausgelaugt.
 %%%%
 %s is no longer covered in acid.
 
@@ -11339,7 +11339,7 @@ Ihr hört ein plätscherndes Geräusch.
 %s wird von einem Riss in der Realität verschlungen.
 %%%%
 %s is drained!
-%s wird entleert!
+%s wird ausgezehrt!
 %%%%
 %s corrodes %s!
 %s korrodiert {acc}%s!
@@ -11706,7 +11706,7 @@ You're standing next to a slime covered wall!
 Ihr steht neben einer schleimbedeckten Wand!
 %%%%
 You are being drained by your emergency flight!
-Ihr werdet von Eurem Notflug ausgelaugt!
+Ihr werdet von Eurem Notflug ausgezehrt!
 %%%%
 %s is nearby!
 %s ist in der Nähe!
@@ -11820,7 +11820,7 @@ You are now level %d!
 Ihr seid jetzt auf Stufe %d!
 %%%%
 You feel drained.
-Ihr fühlt Euch ausgelaugt.
+Ihr fühlt Euch ausgezehrt.
 %%%%
 %s scurries out from under your cloak.
 %s krabbelt unter Eurem Mantel hervor.
@@ -12811,10 +12811,10 @@ You can't survive in this terrain!
 In diesem Terrain könnt Ihr nicht überleben!
 %%%%
 You fly above the lava, but the process is very draining.
-Ihr fliegt über die Lava, aber der Prozess ist sehr anstrengend.
+Ihr fliegt über die Lava, aber der Prozess ist sehr zehrend.
 %%%%
 You fly above the deep water, but the process is very draining.
-Ihr fliegt über das tiefe Wasser, aber der Prozess ist sehr anstrengend.
+Ihr fliegt über das tiefe Wasser, aber der Prozess ist sehr zehrend.
 %%%%
 %s engulfing you falls away.
 %s fällt von Euch weg.
@@ -14068,7 +14068,7 @@ heal and protect your ancestor
 Euren Ahnen heilen und schützen
 %%%%
 drain nearby creatures when transferring your ancestor
-Kreaturen in der Nähe ausbluten lassen, wenn Ihr Euren Ahnen transferierst
+Kreaturen in der Nähe auszehren lassen, wenn Ihr Euren Ahnen transferierst
 %%%%
 perform damaging attacks by moving towards foes
 schädliche Angriffe ausführen, indem Ihr Euch auf Feinde zubewegst
@@ -15261,7 +15261,7 @@ The surrounding life force dissipates!
 Die umgebende Lebenskraft löst sich auf!
 %%%%
 drained of life
-ausgelaugt vom Leben
+ausgezehrt
 %%%%
 # note: sonic wave
 You send a blast of sound all around you.

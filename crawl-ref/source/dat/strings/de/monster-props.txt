@@ -481,7 +481,7 @@ weak
 schwach
 %%%%
 magic-sapped
-magisch gezehrt
+Magie ausgelaugt
 %%%%
 # corona - long form
 softly glowing
@@ -524,14 +524,14 @@ hasn't noticed you
 hat Euch nicht bemerkt
 %%%%
 lightly drained
-leicht entleert
+leicht ausgezehrt
 %%%%
 heavily drained
-stark entleert
+stark ausgezehrt
 %%%%
 # short form for lightly/heavily drained
 drained
-entleert
+ausgezehrt
 %%%%
 haloed
 nimbiert

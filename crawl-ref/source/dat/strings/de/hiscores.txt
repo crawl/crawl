@@ -433,7 +433,7 @@ Getötet durch Auslösen von {dat}%s
 %%%%
 # duplicate definition
 #drained
-#entleert
+#ausgezehrt
 %%%%
 Drained of all life by %s
 Alles Leben von {dat}%s entzogen

@@ -63,7 +63,6 @@ I have chosen the following translations (explanations below):
 - skill = Fertigkeit
 - dodging (skill) = Ausweichen
 - evasion (attribute) = Umgehung
-- drain/draining = entleeren/Entleerung (probably entziehen would be better)
 - Lair (dungeon branch) = Versteck
 - stash (pile of items) = Versteck (one of these will need to be changed)
 - The Shining One (god) = der Glänzende (would der Leuchtende be better?)
@@ -85,6 +84,20 @@ Words that have a very specific meaning in the context of DCSS that may not matc
 - enchanter - In common usage, a synonym for wizard, but in DCSS, specifically a mage specialising in hexes, which debuff enemies (slow, etc.). There is also an enemy called the Enchantress (feminine form of enchanter), who casts those kinds of spells.
 - shapeshifter/shifter - a shapeshifter changes their shape. A (draconian) shifter moves players/monsters around with magic.
 - shock - the spell gives and electric shock. This would normally be called Stromschlag in German, but the DnD SRD 5.1 on p353 uses Schock for the similarly named Will-o-Wisp (Irrlicht) ability. Also, Google Ngrams finds many hits for "elecktrischer Schock, although Stromschlag and elektrisher Schlag are far more common.
+
+- In everyday English, drain and sap are synonyms, but not in DCSS. Sap is a specific effect that makes magic difficult to use (but it's different from merely draining mana). Also drain is used in a couple of different ways. There is "drain life", which drains the player's max HP, and has the associated brand "drain", and the status "drained". However, it's also possible to drain stats (strength, etc.), and MP (mana).
+- The situation in German is similar. There are many words that have similar meanings: entziehen, auslaugen, zehren, aufzehren, auszehren, abzehren, verzehren.
+https://www.wowhead.com/de/spell=266173/auslaugen
+- Some relevant links:
+- https://www.wowhead.com/spell=6770/sap
+- https://www.wowhead.com/spell=151329/sap-magic
+https://www.wowhead.com/de/spell=151329/magie-entziehen
+https://www.wowhead.com/de/spell=225420/die-lebenden-auszehren
+https://www.wowhead.com/de/spell=187340/aufzehren
+https://www.wowhead.com/de/spell=266173/auslaugen
+https://www.wowhead.com/de/spell=134776/entziehen
+https://www.wowhead.com/de/spell=339460/entzug
+- I went with drain = entziehen for the actual act of draining strength or whatever, drained (of max HP) = (aus)gezehrt, sap = auslaugen
 
 The German word Stab means both staff and wand. One can distinguish Zauberstab (magic wand/staff) from Kampfstab (fighting staff), but how do you distinguish a magical staff from a magic wand? Seems like Harry Potter's wand is a Zauberstab, but so is Gandalf's staff. [5] uses Stecken for magical staves.
 

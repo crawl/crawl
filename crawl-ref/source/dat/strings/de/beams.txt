@@ -228,7 +228,7 @@ the refrigeration
 die Kühlung
 %%%%
 the drain life
-die Lebensentziehung
+der Lebensentzug
 %%%%
 the sonic wave
 die Schallwelle
@@ -567,7 +567,7 @@ a refrigeration
 eine Kühlung
 %%%%
 a drain life
-eine Lebensentziehung
+ein Lebensentzug
 %%%%
 a sonic wave
 eine Schallwelle
@@ -904,7 +904,7 @@ refrigeration
 Kühlung
 %%%%
 drain life
-Lebensentziehung
+Lebensentzug
 %%%%
 sonic wave
 Schallwelle
@@ -1239,10 +1239,10 @@ agility
 Beweglichkeit
 %%%%
 sap magic
-Magie-Zehren
+Magie auslaugen
 %%%%
 drain magic
-Magie-Entleerung
+Magie entziehen
 %%%%
 tukima's dance
 Tukimas Tanz
@@ -1267,7 +1267,7 @@ vile clutch
 widerliche Umklammerung
 %%%%
 vampiric draining
-vampirische Entleerung
+vampirischer Entzug
 %%%%
 concentrate venom
 Gift konzentrieren
