@@ -167,12 +167,13 @@ string make_any_person_message(const string& subject, const string& object,
     else if (reflexive && localisation_active())
     {
         // i18n: Third person reflexive pronouns (himself, herself, etc.)
-        // can be difficult to translate because in languages with gendered
-        // nouns, the gender of the pronoun usually depends on the gender of
-        // the noun (as opposed to the actual gender of the entity, as in
-        // English).
-        // We will hardcode "itself". The translator will have to provide the
-        // correct translation based on context.
+        // can be difficult to translate because the gender in the target
+        // language may not match the gender in English (in languages
+        // where nouns have gender, the gender of the pronoun usually matches
+        // the gender of the noun, rather than the the actual gender of the
+        // entity as in English).
+        // We will hardcode "itself". The translator may have to rephrase in
+        // some languages (for example, into passive voice).
         format = "%s " + finite_verb + " itself";
         if (!suffix.empty())
             format += " " + suffix;
