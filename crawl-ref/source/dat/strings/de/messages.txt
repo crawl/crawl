@@ -13,116 +13,6 @@
 %%%%
 
 ##################
-# variant-msg.cc
-##################
-%%%%
-You melt %s
-Ihr schmelzt {acc}%s
-%%%%
-%s melts you
-%s schmilzt Euch
-%%%%
-%s melts %s
-%s schmilzt {acc}%s
-%%%%
-You melt yourself
-Ihr schmelzt Euch
-%%%%
-%s is melted
-%s wird geschmolzen
-%%%%
-You burn %s
-Ihr brennt {acc}%s
-%%%%
-%s burns you
-%s brennt Euch
-%%%%
-%s burns %s
-%s brennt {acc}%s
-%%%%
-You burn yourself
-Ihr brennt Euch
-%%%%
-%s is burnt
-%s wird verbrannt
-%%%%
-You freeze %s
-Ihr friert {acc}%s ein
-%%%%
-%s freezes you
-%s friert Euch ein
-%%%%
-%s freezes %s
-%s friert {acc}%s ein
-%%%%
-You freeze yourself
-Ihr friert Euch ein
-%%%%
-%s is frozen
-%s wird eingefroren
-%%%%
-You electrocute %s
-Ihr gibt {dat}%s einen Stromschlag
-%%%%
-%s electrocutes you
-%s gibt Euch einen Stromschlag
-%%%%
-%s electrocutes %s
-%s gibt {dat}%s einen Stromschlag
-%%%%
-You electrocute yourself
-Ihr gibt Euch einen Stromschlag
-%%%%
-%s is electrocuted
-%s bekommt einen Stromschlag
-%%%%
-You crush %s
-Ihr zerdrückt {acc}%s
-%%%%
-%s crushes you
-%s zerdrückt Euch
-%%%%
-%s crushes %s
-%s zerdrückt {acc}%s
-%%%%
-You shatter %s
-Ihr zerschmettert {acc}%s
-%%%%
-%s shatters you
-%s zerschmettert Euch
-%%%%
-%s shatters %s
-%s zerschmettert {acc}%s
-%%%%
-You envenom %s
-Ihr vergiftet {acc}%s
-%%%%
-%s envenoms you
-%s vergiftet Euch
-%%%%
-%s envenoms %s
-%s vergiftet {acc}%s
-%%%%
-You drain %s
-Ihr zehrt {acc}%s aus
-%%%%
-%s drains you
-%s zehrt Euch aus
-%%%%
-%s drains %s
-%s zehrt {acc}%s aus
-%%%%
-You blast %s
-Ihr sprengt {acc}%s
-%%%%
-%s blasts you
-%s sprengt Euch
-%%%%
-%s blasts %s
-%s sprengt {acc}%s
-%%%%
-
-##################
 # ability.cc
 ##################
 %%%%
@@ -855,6 +745,18 @@ Der Geruch von Chlor verschwindet.
 The staff's sickly green glow vanishes.
 Das kränklich grüne Leuchten des Steckens verschwindet.
 %%%%
+You envenom %s
+Ihr vergiftet {acc}%s
+%%%%
+%s envenoms you
+%s vergiftet Euch
+%%%%
+%s envenoms %s
+%s vergiftet {acc}%s
+%%%%
+%s envenoms itself
+%s vergiftet sich selbst
+%%%%
 You sense an aura of extreme power.
 Ihr spürt eine Aura extremer Kraft.
 %%%%
@@ -1068,6 +970,54 @@ Ihr schlachtet Euch freudig.
 %s is cloven in twain.
 %s wird in zwei Hälften gespalten.
 %%%%
+You burn %s
+Ihr brennt {acc}%s
+%%%%
+%s burns you
+%s brennt Euch
+%%%%
+%s burns %s
+%s brennt {acc}%s
+%%%%
+%s burns itself
+%s brennt sich selbst
+%%%%
+You freeze %s
+Ihr friert {acc}%s ein
+%%%%
+%s freezes you
+%s friert Euch ein
+%%%%
+%s freezes %s
+%s friert {acc}%s ein
+%%%%
+%s freezes itself
+%s friert sich selbst
+%%%%
+You electrocute %s
+Ihr gibt {dat}%s einen Stromschlag
+%%%%
+%s electrocutes you
+%s gibt Euch einen Stromschlag
+%%%%
+%s electrocutes %s
+%s gibt {dat}%s einen Stromschlag
+%%%%
+%s electrocutes itself
+%s gibt sich selbst einen Stromschlag
+%%%%
+You crush %s
+Ihr zerdrückt {acc}%s
+%%%%
+%s crushes you
+%s zerdrückt Euch
+%%%%
+%s crushes %s
+%s zerdrückt {acc}%s
+%%%%
+%s crushes itself
+%s zerdrückt sich selbst
+%%%%
 The arc blade crackles to life.
 Die Lichtbogenklinge knistert zum Leben.
 %%%%
@@ -1193,6 +1143,18 @@ Ihr krümmt Euch vor Qual
 %s protects you from inadvertent hurry.
 %s schützt Euch vor versehentlicher Eile.
 %%%%
+You drain %s
+Ihr zehrt {acc}%s aus
+%%%%
+%s drains you
+%s zehrt Euch aus
+%%%%
+%s drains %s
+%s zehrt {acc}%s aus
+%%%%
+%s drains itself
+%s zehrt sich selbst aus
+%%%%
 You drain %s vigour!
 Ihr entzieht die Vitalität %s!
 %%%%
@@ -1246,6 +1208,18 @@ Blitzen fließt durch {acc}%s
 %%%%
 %s is healed.
 %s ist geheilt.
+%%%%
+You melt %s
+Ihr schmelzt {acc}%s
+%%%%
+%s melts you
+%s schmilzt Euch
+%%%%
+%s melts %s
+%s schmilzt {acc}%s
+%%%%
+%s melts itself
+%s schmilzt sich selbst
 %%%%
 
 ##################
@@ -9203,6 +9177,9 @@ Ihr rüttelt {acc}%s
 You batter %s
 Iht verprügelt {acc}%s
 %%%%
+You blast %s
+Ihr sprengt {acc}%s
+%%%%
 You scratch %s
 Ihr kratzt {acc}%s
 %%%%
@@ -9268,6 +9245,30 @@ Ihr schneidet einen der Köpfe %s ab!
 %%%%
 %s is burned by acid!
 %s wird durch Säure gebrannt!
+%%%%
+%s is electrocuted
+%s bekommt einen Stromschlag
+%%%%
+You shatter %s
+Ihr zerschmettert {acc}%s
+%%%%
+%s shatters you
+%s zerschmettert Euch
+%%%%
+%s shatters %s
+%s zerschmettert {acc}%s
+%%%%
+%s shatters itself
+%s zerschmettert sich selbst
+%%%%
+%s blasts you
+%s sprengt Euch
+%%%%
+%s blasts %s
+%s sprengt {acc}%s
+%%%%
+%s blasts itself
+%s zerschlagt sich selbst
 %%%%
 %s pokes you
 %s stößt Euch an
@@ -10194,6 +10195,9 @@ Zins Macht schützt Euren Mitkrieger vor böser Magie!
 %%%%
 Send 'em back where they came from!
 Schick sie zurück, wo sie herkommen!
+%%%%
+%s is frozen
+%s wird eingefroren
 %%%%
 %s attempts to bespell you!
 

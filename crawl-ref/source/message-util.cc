@@ -9,7 +9,6 @@
 #include "message-util.h"
 #include "mpr.h"
 #include "stringutil.h"
-#include "variant-msg.h"
 
 /*
  * Add punctuation to a message
@@ -120,52 +119,72 @@ string anon_pronoun(pronoun_type pron)
     return decline_pronoun(GENDER_NEUTER, pron);
 }
 
+// @noloc section start
+
 /*
  * Get message where subject and object can be any combination of 2nd or 3rd person
  * (1st person doesn't exist in this game)
  * Note: subject must be singular
  */
-string get_any_person_message(variant_msg_type msg_id,
-                              const string& subject, const string& object,
-                              const string& punctuation)
+string make_any_person_message(const string& subject, const string& object,
+                               const string& verb, const string& suffix,
+                               const string& punctuation)
 {
-    string subj = lowercase_string(subject);
-    string obj = lowercase_string(object);
-    msg_variant_type variant;
+    bool you_acting = (lowercase_string(subject) == "you");
+    bool reflexive = ends_with(object, "self");
+    string finite_verb = conjugate_verb(verb, you_acting);
 
-    if (subj == "you")
-    {
-        if (obj == "you" || obj == "yourself")
-            variant = MV_YOURSELF;
-        else
-            variant = MV_YOU_SUBJECT;
-    }
-    else if (obj == "you")
-        variant = MV_YOU_OBJECT;
-    else if (obj == "itself" || obj == "himself" || obj == "herself")
-        variant = MV_ITSELF;
-    else
-        variant = MV_THIRD_PARTIES;
+    // printf-style format string (we custom build this for each scenario rather than using a 
+    // generic one with placeholders for everything because the translations may be different)
+    string format;
 
-    const string& temp = get_variant_template(msg_id, variant);
-
+    // final result
     string msg;
-    if (starts_with(temp, "ERROR"))
-    {
-        msg = temp + ", subj=\"" + subj + "\", obj=\"" + obj + "\""; // @noloc
-        return msg;
-    }
 
-    if (variant == MV_YOU_SUBJECT)
-        msg = localise(temp, obj);
-    else if (variant == MV_YOU_OBJECT)
-        msg = localise(temp, subj);
-    else if (variant == MV_THIRD_PARTIES)
-        msg = localise(temp, subj, obj);
-    else if (variant == MV_YOURSELF)
-        msg = localise(temp);
-    else if (variant == MV_ITSELF)
-        msg = localise(temp, subj, obj);
+    if (you_acting && !reflexive)
+    {
+        format = "You " + finite_verb + " %s";
+        if (!suffix.empty())
+            format += " " + suffix;
+        msg = localise(format, object);
+    }
+    else if (you_acting)
+    {
+        // Shouldn't really happen. Monsters can attack themselves when
+        // confused, but players can't.
+        format = "You " + finite_verb + " yourself";
+        if (!suffix.empty())
+            format += " " + suffix;
+        msg = localise(format);
+    }
+    else if (lowercase_string(object) == "you")
+    {
+        format = "%s " + finite_verb + " you";
+        if (!suffix.empty())
+            format += " " + suffix;
+        msg = localise(format, subject);
+    }
+    else if (reflexive && localisation_active())
+    {
+        // i18n: Third person reflexive pronouns (himself, herself, etc.)
+        // can be difficult to translate because in languages with gendered
+        // nouns, the gender of the pronoun usually depends on the gender of
+        // the noun (as opposed to the actual gender of the entity, as in
+        // English).
+        // We will hardcode "itself". The translator will have to provide the
+        // correct translation based on context.
+        format = "%s " + finite_verb + " itself";
+        if (!suffix.empty())
+            format += " " + suffix;
+        msg = localise(format, subject);
+    }
+    else
+    {
+        format = "%s " + finite_verb + " %s";
+        if (!suffix.empty())
+            format += " " + suffix;
+        msg = localise(format, subject, object);
+    }
 
     if (!punctuation.empty())
         msg = add_punctuation(msg, punctuation, false);
@@ -177,21 +196,22 @@ string get_any_person_message(variant_msg_type msg_id,
  * Get message where subject and object can be any combination of 2nd or 3rd person
  * (1st person doesn't exist in this game)
  */
-string get_any_person_message(variant_msg_type msg_id,
-                              const actor* subject, const actor* object,
-                              const string& punctuation)
+string make_any_person_message(const actor* subject, const actor* object,
+                               const string& verb, const string& suffix,
+                               const string& punctuation)
 {
-    return get_any_person_message(msg_id, subject, object, true, true, punctuation);
+    return make_any_person_message(subject, object, true, true,
+                                   verb, suffix, punctuation);
 }
 
 /*
  * Get message where subject and object can be any combination of 2nd or 3rd person
  * (1st person doesn't exist in this game)
  */
-string get_any_person_message(variant_msg_type msg_id,
-                              const actor* subject, const actor* object,
-                              bool subject_seen, bool object_seen,
-                              const string& punctuation)
+string make_any_person_message(const actor* subject, const actor* object,
+                               bool subject_seen, bool object_seen,
+                               const string& verb, const string& suffix,
+                               const string& punctuation)
 {
     string subj = actor_name(subject, DESC_THE, subject_seen);
     string obj;
@@ -199,7 +219,7 @@ string get_any_person_message(variant_msg_type msg_id,
         obj = actor_pronoun(object, PRONOUN_REFLEXIVE, object_seen);
     else
         obj = actor_name(object, DESC_THE, object_seen);
-    return get_any_person_message(msg_id, subj, obj, punctuation);
+    return make_any_person_message(subj, obj, verb, suffix, punctuation);
 }
 
 /*
@@ -207,36 +227,40 @@ string get_any_person_message(variant_msg_type msg_id,
  * (1st person doesn't exist in this game)
  * Note: subject must be singular
  */
-void do_any_person_message(variant_msg_type msg_id,
-                           const string& subject, const string& object,
+void do_any_person_message(const string& subject, const string& object,
+                           const string& verb, const string& suffix,
                            const string& punctuation)
 {
-    mpr_nolocalise(get_any_person_message(msg_id, subject, object, punctuation));
+    string msg = make_any_person_message(subject, object, verb, suffix, 
+                                         punctuation);
+    mpr_nolocalise(msg);
 }
 
 /*
  * Output message where subject and object can be any combination of 2nd or 3rd person
  * (1st person doesn't exist in this game)
  */
-void do_any_person_message(variant_msg_type msg_id,
-                           const actor* subject, const actor* object,
+void do_any_person_message(const actor* subject, const actor* object,
+                           const string& verb, const string& suffix,
                            const string& punctuation)
 {
-    mpr_nolocalise(get_any_person_message(msg_id, subject, object, punctuation));
+    do_any_person_message(subject, object, true, true,
+                          verb, suffix, punctuation);
 }
 
 /*
  * Output message where subject and object can be any combination of 2nd or 3rd person
  * (1st person doesn't exist in this game)
  */
-void do_any_person_message(variant_msg_type msg_id,
-                           const actor* subject, const actor* object,
+void do_any_person_message(const actor* subject, const actor* object,
                            bool subject_seen, bool object_seen,
+                           const string& verb, const string& suffix,
                            const string& punctuation)
 {
-    mpr_nolocalise(get_any_person_message(msg_id, subject, object,
-                                       subject_seen, object_seen,
-                                       punctuation));
+    string msg = make_any_person_message(subject, object, 
+                                         subject_seen, object_seen,
+                                         verb, suffix, punctuation);
+    mpr_nolocalise(msg);
 }
 
 /*
@@ -259,7 +283,7 @@ string get_3rd_person_message(const string& subject, const string& object,
         msg = add_punctuation(msg, punctuation, false);
 
     if (subject == "you")
-        msg += " (bug: 2nd person subject unexpected here)"; // @noloc
+        msg += " (bug: 2nd person subject unexpected here)";
 
     return msg;
 }
@@ -284,7 +308,7 @@ string get_3rd_person_message(const actor* subject, bool subject_seen,
     if (subject && subject == object)
     {
         // reflexive (acting on self) - we didn't expect that here
-        msg += " (bug: reflexive unexpected here)"; // @noloc
+        msg += " (bug: reflexive unexpected here)";
     }
 
     return msg;
@@ -319,3 +343,5 @@ void do_3rd_person_message(const actor* subject, bool subject_seen,
     if (!msg.empty())
         mpr_nolocalise(msg);
 }
+
+// @noloc section end

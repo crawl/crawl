@@ -4,7 +4,6 @@
  */
 
 #include "actor.h"
-#include "variant-msg-type.h"
 
 string add_punctuation(const string& msg, const string& punctuation, bool localise_msg);
 
@@ -18,32 +17,30 @@ string anon_name(description_level_type desc);
 string anon_pronoun(pronoun_type ptyp);
 
 
-string get_any_person_message(variant_msg_type msg_id,
-                              const string& subject, const string& object = "",
-                              const string& punctuation = "");
+string make_any_person_message(const string& subject, const string& object,
+                               const string& verb, const string& suffix = "",
+                               const string& punctuation = "");
 
-string get_any_person_message(variant_msg_type msg_id,
-                              const actor* subject, const actor* object = nullptr,
-                              const string& punctuation = "");
+string make_any_person_message(const actor* subject, const actor* object,
+                               const string& verb, const string& suffix = "",
+                               const string& punctuation = "");
 
-string get_any_person_message(variant_msg_type msg_id,
-                              const actor* subject, const actor* object,
-                              bool subject_visible, bool object_visible,
-                              const string& punctuation = "");
+string make_any_person_message(const actor* subject, const actor* object,
+                               bool subject_visible, bool object_visible,
+                               const string& verb, const string& suffix,
+                               const string& punctuation = "");
 
-
-void do_any_person_message(variant_msg_type msg_id,
-                           const string& subject, const string& object = "",
+void do_any_person_message(const string& subject, const string& object,
+                           const string& verb, const string& suffix = "",
                            const string& punctuation = "");
 
-
-void do_any_person_message(variant_msg_type msg_id,
-                           const actor* subject, const actor* object = nullptr,
+void do_any_person_message(const actor* subject, const actor* object,
+                           const string& verb, const string& suffix = "",
                            const string& punctuation = "");
 
-void do_any_person_message(variant_msg_type msg_id,
-                           const actor* subject, const actor* object,
+void do_any_person_message(const actor* subject, const actor* object,
                            bool subject_visible, bool object_visible,
+                           const string& verb, const string& suffix,
                            const string& punctuation = "");
 
 

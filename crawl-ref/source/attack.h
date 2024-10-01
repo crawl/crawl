@@ -7,7 +7,6 @@
 #include "kill-method-type.h"
 #include "pronoun-type.h"
 #include "spl-util.h" // spschool type definition
-#include "variant-msg-type.h"
 
 // Used throughout inheriting classes, define them here for universal access
 const int HIT_WEAK   = 7;

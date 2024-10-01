@@ -848,8 +848,9 @@ void attack::drain_defender()
         else if (defender_visible)
         {
             special_damage_message =
-                get_any_person_message(VMSG_DRAIN, attacker, defender,
+                make_any_person_message(attacker, defender,
                                        attacker_visible, defender_visible,
+                                       "drain", "",
                                        attack_strength_punctuation(special_damage));
         }
     }
@@ -1643,22 +1644,22 @@ void attack::calc_elemental_brand_damage(beam_type flavour, const char *what)
 
     if (needs_message && special_damage > 0)
     {
-        variant_msg_type msg_id;
+        string verb;
         if (flavour == BEAM_FIRE && defender->is_icy())
-            msg_id = VMSG_MELT;
+            verb = "melt";
         else if (flavour == BEAM_FIRE)
-            msg_id = VMSG_BURN;
+            verb = "burn";
         else if (flavour == BEAM_COLD)
-            msg_id = VMSG_FREEZE;
+            verb = "freeze";
         else
             return;
 
         // XXX: assumes "what" is singular
-        special_damage_message = get_any_person_message(
-            msg_id,
+        special_damage_message = make_any_person_message(
             what ? what : atk_name(DESC_THE),
             // Don't allow reflexive if the subject wasn't the attacker.
             defender_name(!what),
+            verb, "",
             attack_strength_punctuation(special_damage));
     }
 }

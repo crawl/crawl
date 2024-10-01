@@ -36,7 +36,7 @@ IGNORE_STRINGS = [
     'a', 'a ', 'an', 'an ',
     'you', 'you ', 'your', 'your ', 'its ',
     ' of ', ' of', 'of ',
-    'debugging ray', 'debug',
+    'debugging ray', 'debug', 'bugger',
     'bug', 'null', 'invalid',
     'true', 'false', 'veto',
     # property keys
@@ -54,7 +54,7 @@ SPECIAL_FILES = [
     'spl-data.h', 'zap-data.h', 'feature-data.h',
     'item-prop.cc', 'item-name.cc',
     'art-data.txt', # art-data.h generated from art-data.txt
-    'species-data.h', 'job-data.h', 'form-data.h', 'variant-msg.cc'
+    'species-data.h', 'job-data.h', 'form-data.h'
 ]
 
 # These files are evaluated differently. We ignore all strings unless we have a reason to extract them,
@@ -116,6 +116,22 @@ SKIP_FILES = [
     'dat/clua/kills.lua',
 ]
 
+def conjugate_verb(verb):
+    if verb == "be" or verb == "are":
+        return "is"
+    elif verb.endswith('ss') or verb.endswith('sh'):
+        return verb + 'es'
+    else:
+        return verb + 's'
+
+def do_any_person_message(verb, suffix):
+    verb3p = conjugate_verb(verb)
+    strings = []
+    strings.append("You " + verb + " %s" + suffix)
+    strings.append("%s " + verb3p + " you" + suffix)
+    strings.append("%s " + verb3p + " %s" + suffix)
+    strings.append("%s " + verb3p + " itself" + suffix)
+    return strings
 
 # process art-data.txt
 def process_art_data_txt():
@@ -1097,6 +1113,8 @@ def process_cplusplus_file(filename):
             extract = True
         elif 'simple_monster_message' in line or 'simple_god_message' in line:
             extract = True
+        elif 'any_person_message' in line or '3rd_person_message' in line:
+            extract = True
         elif 'MSGCH_DIAGNOSTICS' in line:
             # ignore diagnostic messages - these are for devs
             continue
@@ -1271,6 +1289,29 @@ def process_cplusplus_file(filename):
 
         extract = True
 
+        if 'any_person_message' in line:
+            temp = re.sub('.*any_person_message *\(', '', line);
+            temp = re.sub('\).*', '', line);
+            args = temp.split(',')
+            verb_pos = -1
+            verb = ''
+            suffix = ''
+            if len(args) >= 3 and len(args) <= 5 and args[2].strip()[0] == '"':
+                verb_pos = 2
+            elif len(args) >= 5 and args[4].strip()[0] == '"':
+                verb_pos = 4
+            if verb_pos > 0:
+                verb = args[verb_pos].strip().replace('"', '')
+                if len(args) >= verb_pos + 2:
+                    suffix = args[verb_pos+1].strip().replace('"', '')
+            if suffix != '':
+                suffix = ' ' + suffix
+            if verb != '':
+                strings += do_any_person_message(verb, suffix)
+                continue
+
+
+
         # tokenize line into string and non-string
         tokens = []
         token = ""
@@ -1385,6 +1426,10 @@ def process_cplusplus_file(filename):
                         string = "ring"
                     else:
                         string = string.lower()
+            elif filename == "attack.cc":
+                if string in ["melt", "burn", "freeze"]:
+                    strings += do_any_person_message(string, "")
+                    continue
 
             # strip channel information
             string = re.sub(r'(PLAIN|SOUND|VISUAL|((VISUAL )?WARN|ENCHANT|SPELL)):', '', string)

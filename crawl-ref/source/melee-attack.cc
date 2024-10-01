@@ -2095,9 +2095,10 @@ bool melee_attack::apply_staff_damage()
         if (special_damage)
         {
             special_damage_message =
-                get_any_person_message(VMSG_FREEZE, attacker, defender,
-                                       attacker_visible, defender_visible,
-                                       attack_strength_punctuation(special_damage));
+                make_any_person_message(attacker, defender,
+                                        attacker_visible, defender_visible,
+                                        "freeze", "",
+                                        attack_strength_punctuation(special_damage));
             special_damage_flavour = BEAM_COLD;
         }
         break;
@@ -2109,9 +2110,10 @@ bool melee_attack::apply_staff_damage()
         if (special_damage > 0)
         {
             special_damage_message =
-                get_any_person_message(VMSG_SHATTER, attacker, defender,
-                                       attacker_visible, defender_visible,
-                                       attack_strength_punctuation(special_damage));
+                make_any_person_message(attacker, defender,
+                                        attacker_visible, defender_visible,
+                                        "shatter", "",
+                                        attack_strength_punctuation(special_damage));
         }
         break;
 
@@ -2122,8 +2124,9 @@ bool melee_attack::apply_staff_damage()
         if (special_damage)
         {
             special_damage_message =
-                get_any_person_message(VMSG_BURN, attacker, defender,
+                make_any_person_message(attacker, defender,
                                        attacker_visible, defender_visible,
+                                       "burn", "",
                                        attack_strength_punctuation(special_damage));
 
             special_damage_flavour = BEAM_FIRE;
@@ -2140,8 +2143,9 @@ bool melee_attack::apply_staff_damage()
         if (special_damage)
         {
             special_damage_message =
-                get_any_person_message(VMSG_ENVENOM, attacker, defender,
+                make_any_person_message(attacker, defender,
                                        attacker_visible, defender_visible,
+                                       "envenom", "",
                                        attack_strength_punctuation(special_damage));
 
             special_damage_flavour = BEAM_POISON;
@@ -2174,8 +2178,9 @@ bool melee_attack::apply_staff_damage()
         if (special_damage > 0)
         {
             special_damage_message =
-                get_any_person_message(VMSG_BLAST, attacker, defender,
+                make_any_person_message(attacker, defender,
                                        attacker_visible, defender_visible,
+                                       "blast", "",
                                        attack_strength_punctuation(special_damage));
         }
         break;
@@ -2980,8 +2985,9 @@ void melee_attack::mons_apply_attack_flavour()
 
         if (needs_message && special_damage)
         {
-            do_any_person_message(VMSG_BURN, attacker, defender,
-                                  attacker_visible, defender_visible, "!");
+            do_any_person_message(attacker, defender,
+                                  attacker_visible, defender_visible,
+                                  "burn", "", "!");
             _print_resist_messages(defender, special_damage, BEAM_FIRE);
         }
 
