@@ -849,13 +849,13 @@ You feel a little less angry.
 Ihr fühlt Euch etwas weniger wütend.
 %%%%
 deterioration
-Verschlechterung
+Abbau
 %%%%
 Your body sometimes deteriorates upon taking damage.
-Euer Körper verschlechtert sich manchmal, wenn er Schaden nimmt.
+Euer Körper baut sich manchmal ab, wenn er Schaden nimmt.
 %%%%
 Your body often deteriorates upon taking damage.
-Euer Körper verschlechtert sich oft, wenn er Schaden nimmt.
+Euer Körper baut sich oft ab, wenn er Schaden nimmt.
 %%%%
 You feel yourself wasting away.
 Ihr spürt, wie Euer Körper versiecht.
