@@ -412,18 +412,14 @@ TAGS:    vaults_entry transparent no_monster_gen
 MONS:    entropy weaver / glowing orange brain / great orb of eyes w:1
 MONS:    ironbound preserver / vault guard / peacekeeper w:1
 KFEAT:   AO = enter_vaults
-KFEAT:   g = metal_statue
 KITEM:   B = any armour good_item / gold good_item w:50
 KITEM:   C = any weapon good_item ego:chaos / any wand w:50
 SHUFFLE: AB / CO, gG / "' / "' / "'
 NSUBST:  -" = 1:1 / *:-, .' = 1:2 / *:.
 FTILE:   .BO2g = floor_hall
 FTILE:   -AC1G = floor_nerves
-COLOUR:   G = mountain, g = silver
-TILE:     G = dngn_scintillating_statue
-TILE:     g = dngn_silver_statue
-: set_feature_name("granite_statue", "scintillating statue")
-: set_feature_name("metal_statue", "silver statue")
+: vault_granite_statue_setup(_G, "G", "scintillating statue")
+: vault_metal_statue_setup(_G, "g", "silver statue")
 MAP
     vvv
    vv.vv

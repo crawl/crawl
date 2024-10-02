@@ -3144,13 +3144,10 @@ MONS:   naga warrior
 KITEM:  R = jade gem
 KITEM:  O = serpentine rune of Zot
 KFEAT:  A = altar_okawaru
-KFEAT:  S = metal_statue
 NSUBST: 1 = 4:1 / *=1., 2 = 2:2 / *=2., 5 = 2:5 / *=5..
 SUBST:  3 = 3.., 4 = 4., S : SG
-COLOUR: S = poison
 TILE:   G = dngn_statue_naga / dngn_statue_archer w:2
-TILE:   S = alchemical_conduit
-: set_feature_name("metal_statue", "alchemical conduit")
+: vault_metal_statue_setup(_G, "S", "dimensional conduit")
 MAP
      xxxxxxx
      ccccccc

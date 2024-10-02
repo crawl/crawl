@@ -54,11 +54,8 @@ COLOUR:  F = lightmagenta
 : elseif you.in_branch("Dis") then
 MONS:    zombie / skeleton
 MONS:    hell sentinel / iron giant
-KFEAT:   G = metal_statue
 SUBST:   xc = v, F~ = G
-COLOUR:  G = cyan
-TILE:    G = dngn_statue_iron
-: set_feature_name("metal_statue", "iron statue")
+: vault_metal_statue_setup(_G, "G", "iron statue")
 : end
 KPROP:   lw = no_tele_into
 MAP
@@ -302,9 +299,7 @@ KMONS: 1 = ancient lich / dread lich / nothing
 KFEAT: ! = iron_grate
 : if you.in_branch("Dis") then
 SUBST: D : !c, E : Gvb, F : G., c : v
-KFEAT: G = metal_statue
-TILE:  G = dngn_statue_iron
-: set_feature_name("metal_statue", "iron statue")
+:   vault_metal_statue_setup(_G, "G", "iron statue")
 : elseif you.in_branch("Geh") then
 SUBST: D : xc., E : Glcx., F : ..Gl
 : elseif you.in_branch("Coc") then
@@ -312,8 +307,7 @@ KFEAT: 1 = W
 SUBST: D : wc, E : xw, F : .cw
 : elseif you.in_branch("Tar") then
 SUBST: D : cE, EF = ..G
-TILE:  G = dngn_crumbled_column
-: set_feature_name("granite_statue", "broken pillar")
+:   vault_granite_statue_setup(_G, "G", "broken pillar")
 : end
 MAP
   ccccccccccc

@@ -1181,15 +1181,12 @@ KFEAT: S = general shop type:Changing suffix:Room count:9 ; \
            wand of polymorph | any talisman | staff of alchemy | \
            randbook disc:alchemy | plutonium_sword w:1 | \
            manual of shapeshifting w:5 | manual of alchemy w:5
-KFEAT:  G = metal_statue
-: set_feature_name("metal_statue", "alchemical conduit")
 MARKER: F = lua:fog_machine { cloud_type = "mutagenic fog", pow_min = 50, \
    pow_max = 50, delay = 1, size = 1, walk_dist = 0, start_clouds = 1, \
    spread_rate = 0, excl_rad = 0 }
 COLOUR: m = magenta
-COLOUR: G = poison
 TILE:   m = dngn_transparent_wall_magenta
-TILE:   G = alchemical_conduit
+: vault_metal_statue_setup(_G, "G", "alchemical conduit")
 MAP
 .........
 .mmmmmmm.
@@ -2047,12 +2044,8 @@ KFEAT: S = general shop type:Magical suffix:Supplies w:10 ; \
   manual of ice magic w:1 | manual of earth magic w:1
 : local conduittype = {"arcane", "dimensional", "misfortune",
 :   "soul", "fiery", "alchemical", "icy", "earthen", "storm"}
-: local conduitcolour = {"vehumet", "warp", "shimmer_blue",
-:   "smoke", "fire", "poison", "ice", "earth", "electricity"}
 : local whichconduit = crawl.random2(#conduittype) + 1
-: tile("G = " .. conduittype[whichconduit] .. "_conduit")
-: set_feature_name("metal_statue", conduittype[whichconduit] .. " conduit")
-: colour("G = " .. conduitcolour[whichconduit])
+: vault_metal_statue_setup(_G, "G", conduittype[whichconduit] .. " conduit")
 MAP
  . .
 G.S.G

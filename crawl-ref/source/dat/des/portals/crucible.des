@@ -9,6 +9,8 @@
 #
 ##############################################################################
 
+: crawl_require('dlua/vault.lua')
+
 {{
 function crucible_original_subvault_setup(e, branch)
   e.tags("unrand")
@@ -20,12 +22,10 @@ function crucible_original_subvault_setup(e, branch)
     e.ftile(".'sSx = floor_frozen")
     e.tile("x = wall_ice")
   elseif branch == "Tartarus" then
-    e.kfeat("g = metal_statue")
-    e.colour("g = smoke")
     e.ftile(".'sSgG = floor_green_bones")
-    e.tile("G = dngn_gravestone")
-    e.tile("g = soul_conduit")
     e.tile("c = wall_cobalt_stone")
+    vault_granite_statue_setup(e, "G", "gravestone")
+    vault_metal_statue_setup(e, "g", "soul conduit")
   else
     e.ftile(".'sS+ = floor_iron")
     e.tile("v = dngn_metal_iron")

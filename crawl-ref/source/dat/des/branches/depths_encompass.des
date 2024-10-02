@@ -2,6 +2,8 @@
 # depths_encompass.des: Full level (encompassing) vaults for the Depths go here.
 ###############################################################################
 
+: crawl_require('dlua/vault.lua')
+
 # Setups for the below.
 {{
     function grunt_profane_halls_setup(e)
@@ -672,11 +674,10 @@ KMONS:  4 : iron troll / skeletal warrior
 KMONS:  5 : iron dragon / walking earthen tome
 KMONS:  6 : war gargoyle w:15 / caustic shrike
 KFEAT:  A = stone_arch
-KFEAT:  G = metal_statue
 MARKER: A = lua:props_marker { portal=1 }
 NSUBST: 4 = 5:4 / 2 = 4. / *:., 5 = 1:6 / *:5
 KMASK:  12345 = !no_monster_gen
-COLOUR: G = cyan
+: vault_metal_statue_setup(_G, "G", "iron statue")
 TILE:   G = dngn_statue_iron_golem
 TILE:   b = bedevilled_crystal_dis
 MAP

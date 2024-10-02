@@ -2,6 +2,8 @@
 #
 # Serial vault with an undead/graveyard theme
 
+: crawl_require('dlua/vault.lua')
+
 {{
 function init_undead(e)
   e.tags('serial_undead')
@@ -33,8 +35,7 @@ function init_undead(e)
   end
   e.kmons('t = withered plant')
 
-  e.tile('G = dngn_gravestone')
-  e.set_feature_name("granite_statue", "a gravestone")
+  vault_granite_statue_setup(e, "G", "gravestone")
 end
 }}
 

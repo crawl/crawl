@@ -17,7 +17,7 @@
 function shoals_finale_setup(e, qualifier, decoy_count)
   qualifier = "_" .. qualifier
   if not decoy_count then
-    decoy_count = crawl.random_range(6, 7)
+    decoy_count = crawl.random_range(6, 8)
   end
   e.hook('post_place', function ()
     -- one rune hut, one ilsuiw hut, maybe a mimic hut, and a bunch of decoys.
@@ -328,7 +328,7 @@ ENDMAP
 
 NAME:   nicolae_shoals_former_cling_halls
 TAGS:   no_pool_fixup extra no_descent
-DEPTH:  Shoals:2-, !Spider:$
+DEPTH:  Shoals:2-, !Shoals:$
 ORIENT: float
 NSUBST: D = 2=w / x, E = 2=w / x, F = 2=w / x
 SUBST:  ' = ..wx, . = W...., H = x_, J = xw
@@ -2598,7 +2598,7 @@ NAME: shoals_end_hangedman
 ORIENT: float
 PLACE: Shoals:$
 WEIGHT: 8
-: shoals_finale_setup(_G, 'hangedman', crawl.random_range(5,6))
+: shoals_finale_setup(_G, 'hangedman', crawl.random_range(5,7))
 
 # Grunt's icy Shoals ending
 NAME: shoals_end_grunt_ice
@@ -2648,7 +2648,7 @@ ENDMAP
 NAME:   shoalhut
 TAGS:   shoal_hut_simple water_ok no_dump allow_dup transparent
 NSUBST: A = 1 = x:14 +:1 / *:x
-NSUBST: 0 = 2:. / 2:0 / * = 0.
+NSUBST: 0 = 1:. / 2:0 / * = 0.
 MAP
  xxAxx
 xx.0.xx
@@ -2698,7 +2698,7 @@ KITEM:     e = azure gem
 KFEAT:     123 = w
 KPROP:     d = no_tide
 SHUFFLE:   AB / AB / BA, CD / CD / DC
-NSUBST:    2 = 2 = 22w / * = 22www, 0 = 2:0 / 1:. / * = 00...
+NSUBST:    2 = 2 = 22w / * = 22www, 0 = 2:0 / * = 00...
 SUBST:     AC = x, B = w, D = .
 LROCKTILE: wall_pebble_lightgray
 FHEIGHT: .d0@ = 15
@@ -2719,7 +2719,7 @@ ENDMAP
 NAME:    shoals_rune_alternative_decoy
 TAGS:    shoal_hut_hangedman water_ok allow_dup transparent no_dump
 SHUFFLE: AB / AB / BA, CD / CD / DC
-NSUBST:  0 = 2:0 / 2:. / * = 00...
+NSUBST:  0 = 2:0 / 1:. / * = 00...
 SUBST:   AC = x, B = w, D = .
 FHEIGHT: .d0@ = 15
 MAP
@@ -3096,7 +3096,7 @@ WEIGHT: 3
 MONS:   water elemental / air elemental w:5, wind drake / water nymph
 MONS:   merfolk impaler / merfolk javelineer w:5 / merfolk aquamancer w:5
 SUBST:  + : ++., p : ccc+., q : ccc+., r : ccc+., s = W.c
-SUBST:  1 = 011..., 2 = 2., 3 = 33.
+SUBST:  1 = 011...., 2 = 2., 3 = 33.
 NSUBST: ; = 1:{ / 1:[ / 1:( / * = <.
 SUBVAULT: D : storm_palace_rune
 SUBVAULT: E : storm_palace_corner
@@ -3164,7 +3164,7 @@ KITEM:  O = barnacled rune of Zot
 KITEM:  R = |, azure gem
 KITEM:  | = superb_item
 KFEAT:  |RO = shallow_water
-NSUBST: | = 1:O / 1:R / *:|, 1 = 4 = 8. / * = 1..
+NSUBST: | = 1:O / 1:R / *:|, 1 = 3 = 8. / * = 1..
 SUBST:  p : W., q : W., r : W., S : W.
 MAP
 cccc..pppppppppp..cccc
@@ -3198,7 +3198,7 @@ KMONS:  O = patrolling storm dragon / patrolling titan
 KMONS:  P = plant
 KITEM:  O = barnacled rune of Zot
 KITEM:  R = |, azure gem
-NSUBST: | = 1:O / 1:R / *:|, 1 = 4 = 8. / * = 1..
+NSUBST: | = 1:O / 1:R / *:|, 1 = 3 = 8. / * = 1..
 SUBST:  . = P......
 MAP
 c....................c
@@ -3231,7 +3231,7 @@ MONS:   merfolk aquamancer / merfolk javelineer / merfolk impaler
 KMONS:  O = patrolling storm dragon / patrolling titan
 KITEM:  O = barnacled rune of Zot
 KITEM:  R = |, azure gem
-NSUBST: | = 1:O / 1:R / *:|, 1 = 4 = 8. / * = 1..
+NSUBST: | = 1:O / 1:R / *:|, 1 = 3 = 8. / * = 1..
 SUBST:  p : W., q: W., . = W..., c = cc.
 TILE:   G = dngn_statue_mermaid w:25 / dngn_statue_polearm / \
             dngn_statue_dragon / dngn_statue_maw

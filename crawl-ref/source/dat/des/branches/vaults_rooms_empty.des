@@ -115,11 +115,8 @@ WEIGHT:   2
 SUBST:    w = w:10 2:1, G : Gg.
 MONS:     plant
 KFEAT:    s = any shop
-KFEAT:    g = metal_statue
-COLOUR:   g = silver
 FTILE:    _1s = floor_swamp
-TILE:     g = dngn_silver_statue
-: set_feature_name("metal_statue", "silver statue")
+: vault_metal_statue_setup(_G, "g", "golden statue")
 MAP
 .........
 .G.www.G.
@@ -656,11 +653,8 @@ ENDMAP
 
 NAME:   ontoclasm_vaults_claustrophobia
 TAGS:   vaults_empty
-KFEAT:  g = metal_statue
 SUBST:  G : GGgT., M : M..
-COLOUR: g = silver
-TILE:   g = dngn_silver_statue
-: set_feature_name("metal_statue", "silver statue")
+: vault_metal_statue_setup(_G, "g", "silver statue")
 : local dec = "mop and bucket"
 : if crawl.x_chance_in_y(1, 3) then
 :   dec = "fur brush"
@@ -684,11 +678,8 @@ ENDMAP
 
 NAME:    grunt_vaults_hallway_short
 TAGS:    vaults_empty allow_dup
-KFEAT:   G = metal_statue
-SHUFFLE: G = GT
-COLOUR:  G = silver
-TILE:    G = dngn_silver_statue
-: set_feature_name("metal_statue", "silver statue")
+SUBST:   G : GT
+: vault_metal_statue_setup(_G, "G", "silver statue")
 MAP
 .xx.xx.xx.
 ..........
@@ -700,10 +691,8 @@ ENDMAP
 NAME:    grunt_vaults_hallway_long
 TAGS:    vaults_empty allow_dup
 KFEAT:   G = metal_statue
-SHUFFLE: G = GT
-COLOUR:  G = silver
-TILE:    G = dngn_silver_statue
-: set_feature_name("metal_statue", "silver statue")
+SUBST:   G : GT
+: vault_metal_statue_setup(_G, "G", "silver statue")
 MAP
 .xx.xx.xx.xx.xx.xx.
 ...................
@@ -787,13 +776,10 @@ ENDMAP
 
 NAME:    hangedman_vaults_impose
 TAGS:    vaults_empty allow_dup
-KFEAT:   G = metal_statue
 SHUFFLE: ABC, DEF
 SUBST:   A : x.., B : x.., D : x.., E : x.., CF = .
 SUBST:   G = Gx..., H : xxx., I : xx.
-COLOUR:  G = silver
-TILE:    G = dngn_silver_statue
-: set_feature_name("metal_statue", "silver statue")
+: vault_metal_statue_setup(_G, "G", "silver statue")
 MAP
 ABC.....FED
 B.........E
@@ -1597,11 +1583,8 @@ ENDMAP
 NAME:   nicolae_vaults_inception_statues
 TAGS:   vaults_empty
 WEIGHT: 3
-KFEAT:  g = metal_statue
 SUBST:  G : GgT
-COLOUR: g = silver
-TILE:   g = dngn_silver_statue
-: set_feature_name("metal_statue", "silver statue")
+: vault_metal_statue_setup(_G, "g", "silver statue")
 MAP
 G.................G
 ...................
@@ -1977,11 +1960,8 @@ ENDMAP
 NAME:   nicolae_vaults_storage_room_statues
 TAGS:   vaults_empty no_windows
 WEIGHT: 2
-KFEAT:  g = metal_statue
 SUBST:  ` = G....
-COLOUR: g = silver
-TILE:   g = dngn_silver_statue
-: set_feature_name("metal_statue", "silver statue")
+: vault_metal_statue_setup(_G, "g", "silver statue")
 MAP
 `GgggG`.
 .`GgG`..

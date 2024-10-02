@@ -14,25 +14,6 @@
 : crawl_require('dlua/vault.lua')
 
 {{
--- e.kitem("O = midnight gem") should be here, but it didn't work. Sorry! -- PF
-function zot_entry_setup(e)
-    e.place("Depths:$")
-    e.orient("float")
-    e.mons("patrolling base draconian")
-    e.mons("fire dragon / ice dragon / storm dragon / \
-            shadow dragon / bone dragon / golden dragon")
-    e.mons("patrolling nonbase draconian")
-    e.kmons("0 = ettin / rakshasa / glowing shapeshifter w:5 / \
-                 stone giant w:12 / spriggan berserker w:8 / hell knight w:5")
-    e.kmons("9 = fire giant w:12 / titan w:8 / vampire knight / \
-                 spriggan air mage w:8 / deep troll earth mage w:8 / \
-                 tengu reaver w:12 / tentacled monstrosity / lich w:2")
-    e.kitem("O = midnight gem")
-    e.kfeat("O = enter_zot")
-end
-}}
-
-{{
 -- Stuff for st's various vaults.
 function st_zot_vaults_setup(e)
     e.tags("no_item_gen")
@@ -85,16 +66,17 @@ end
 NAME:   zot_entry_small
 TAGS:   zot_entry
 KFEAT:  O = enter_zot
+KITEM:  R = midnight gem
 COLOUR: c = lightmagenta
 COLOUR: .+ = magenta
 TILE:   c = wall_zot_magenta
-FTILE:  .O+ = floor_hall
+FTILE:  .RO+ = floor_hall
 MAP
 xxxxxxxxx
 xxxcccxxx
 xxcc.ccxx
 xcc...ccx
-xc..O..+@
+xc..OR.+@
 xcc...ccx
 xxcc.ccxx
 xxxcccxxx
@@ -121,7 +103,7 @@ xxc...n....G....n..1cx
 xcc...n.G..4..G.n...cc
 xc.3.nn....v....nn...c
 xc.v.n....v.v....n.v.+
-xc.v.+.G.v.O.v.G.=.v.+
+xc.v.+.G.vRO.v.G.=.v.+
 xc.v.n....v.v....n.v.+
 xc.3.nn....v....nn...c
 xcc...n.G..4..G.n...cc
@@ -138,10 +120,10 @@ ENDMAP
 # Sorry, no wand of wishing in this one
 NAME:   evilmike_zot_entry_castle
 TAGS:   no_monster_gen no_pool_fixup zot_entry layout_city
+KFEAT:  ^ = alarm trap
 NSUBST: O = 1:O / *:A
 SUBST:  ^ = ^..
 SUBST:  s = ccc+
-KFEAT:  ^ = alarm trap
 FTILE:  "OADx = floor_marble
 COLOUR: " = magenta
 TILE:   x = wall_zot_magenta
@@ -180,7 +162,7 @@ MAP
 ENDMAP
 
 NAME:   evilmike_zot_entry_gauntlet
-TAGS:   no_monster_gen zot_entry
+TAGS:   no_monster_gen
 PLACE:  Depths:$
 ORIENT: float
 WEIGHT: 8
@@ -247,19 +229,18 @@ ENDMAP
 NAME:   evilmike_zot_entry_argh
 TAGS:   no_monster_gen zot_entry patrolling transparent
 SUBST:  G: GXm., m: mmlw
+KMONS:  O = nonbase draconian
 KMASK:  4 = opaque
 KFEAT:  m = iron_grate
 SUBST:  x: Xccv
-NSUBST: 2 = 2:2 / *:-
+NSUBST: 2 = 2:2 / 1:R / *:-
 TILE:   X = wall_zot_magenta
 COLOUR: X = lightmagenta
 SUBST:  X = x
 COLOUR: . = white
-FTILE:  -12O = floor_hall
-SUBST:  - = .
-KMONS:  O = nonbase draconian
+FTILE:  -12RO = floor_hall
 : zot_entry_setup(_G)
-MONS:   draconian stormcaller
+MONS:    draconian stormcaller
 MAP
 xxxxxxxxxxxx@xxxxxxxxxxxx
 xxx........---........xxx
@@ -289,14 +270,14 @@ xxxxxxxxxxxx@xxxxxxxxxxxx
 ENDMAP
 
 NAME:   evilmike_zot_entry_hall
-TAGS:   no_monster_gen zot_entry patrolling
-TILE:   X = wall_zot_magenta
+TAGS:   no_monster_gen patrolling
+KFEAT:  X = x
 COLOUR: X+- = magenta
-SUBST:  X = c
 SUBST:  v: ....cnblw, z:..cnblw
 NSUBST: d = 1:0 / 4:1 / 2:2 / *:.
 SUBST:  D = +
-FTILE:  -O+ = floor_hall
+FTILE:  -OR+ = floor_hall
+TILE:   X = wall_zot_magenta
 : zot_entry_setup(_G)
 MAP
                    cccccccccccc
@@ -305,7 +286,7 @@ cccccccccccccccccccc.........cc
 ccccccdccdccdccdccc..2XXXXX...c
 ccc..............dc..XX---XX..c
 D...vv.zz.vv.zz..cc..X-----X..c
-D...vv.zz.vv.zz..+...X--O--+..c
+D...vv.zz.vv.zz..+...X-RO--+..c
 D...vv.zz.vv.zz..cc..X-----X..c
 ccc..............dc..XX---XX..c
 ccccccdccdccdccdccc..2XXXXX...c
@@ -315,10 +296,10 @@ cccccccccccccccccccc.........cc
 ENDMAP
 
 NAME:   evilmike_zot_entry_basic
-TAGS:   no_monster_gen zot_entry transparent
+TAGS:   no_monster_gen transparent
 TILE:   c = wall_zot_magenta
 COLOUR: c+- = magenta
-FTILE:  O-+c = floor_hall
+FTILE:  OR-+c = floor_hall
 SUBST:  - = .
 NSUBST: d = 1:0 / 4:1 / 2:2 / 1:3
 : zot_entry_setup(_G)
@@ -328,19 +309,19 @@ MAP
 .cc---cc.
 .c-----c.
 dc--O--cd
-.c-----c.
+.c--R--c.
 .cc---cc.
 .dcccccd.
 ....d....
 ENDMAP
 
 NAME:   evilmike_zot_entry_diamond
-TAGS:   no_monster_gen zot_entry transparent
+TAGS:   no_monster_gen transparent
 KFEAT:  A = stone_arch
 TILE:   c = wall_zot_magenta
 COLOUR: c- = magenta
 NSUBST: 1 = 1:0 / *:1, 2 = 2:2 / *:., 3 = 2:3 / *:2
-FTILE:  -O+Ac = floor_hall
+FTILE:  -OR+Ac = floor_hall
 : zot_entry_setup(_G)
 MAP
       ..3..
@@ -349,7 +330,7 @@ MAP
    1.cc---cc.1
   ..cc--O--cc..
  ..cccc---cccc..
-.2cc-ccc-ccc-cc2.
+.2cc-cccRccc-cc2.
 .cc---ccccc---cc.
 3+--A--ccc--A--+3
 .cc---ccccc---cc.
@@ -363,9 +344,9 @@ MAP
 ENDMAP
 
 NAME:   grunt_zot_entry_hairpin
-TAGS:   no_monster_gen zot_entry patrolling
-COLOUR: ABC-_ = magenta
-FTILE:  ABC-_O = floor_hall
+TAGS:   no_monster_gen patrolling
+COLOUR: ABC-_R = magenta
+FTILE:  ABC-_OR = floor_hall
 SUBST:  _ = ., A = 2, B = 3, C = c, - = +
 NSUBST: 3 = 1:993 / *:3
 : zot_entry_setup(_G)
@@ -377,7 +358,7 @@ MAP
   c.....cc...........ccc...c
  cc..1.cc1.CCCCCCCCC..c.1..c
 @+....cc..CC_____A_CC.c...cc
-@+..3.c.3.-____B__O_C0+2.cc
+@+..3.c.3.-____B__ORC0+2.cc
 @+....cc..CC_____A_CC.c...cc
  cc..1.cc1.CCCCCCCCC..c.1..c
   c.....cc...........ccc...c
@@ -388,10 +369,10 @@ MAP
 ENDMAP
 
 NAME:   grunt_zot_entry_funnels
-TAGS:   no_monster_gen zot_entry patrolling transparent
+TAGS:   no_monster_gen patrolling transparent
 NSUBST: 3 = 1:9 / *:3, 1 = 2:0 / *:1
-COLOUR: 1239c+. = magenta
-FTILE:  1239c+.O = floor_hall
+COLOUR: 1239c+.R = magenta
+FTILE:  1239c+.OR = floor_hall
 : zot_entry_setup(_G)
 MAP
       @       @
@@ -403,7 +384,7 @@ MAP
 @+..ccxcc.3.ccxcc..+@
  c...ccxcc+ccxcc...c
  cc.1.ccc...ccc.1.cc
-  cc...c..2..c...cc
+  cc...c.R2..c...cc
   ccc.3+.2O2.+3.ccc
   cc...c..2..c...cc
  cc.1.ccc...ccc.1.cc
@@ -418,11 +399,11 @@ MAP
 ENDMAP
 
 NAME:   grunt_zot_entry_pinwheel
-TAGS:   no_monster_gen zot_entry patrolling transparent
+TAGS:   no_monster_gen patrolling transparent
 KFEAT:  A = stone_arch
-NSUBST: A = 1:O / *:A, 1 = 2:0 / *:1, 3 = 1:9 / *:3
-COLOUR: 123c+. = magenta
-FTILE:  123c+.AO = floor_hall
+NSUBST: 1 = 2:0 / *:1, 3 = 1:9 / *:3
+COLOUR: 123c+.R = magenta
+FTILE:  123c+.AOR = floor_hall
 : zot_entry_setup(_G)
 MAP
        @
@@ -432,8 +413,8 @@ MAP
    c...cc cc.1.cc
    c1.1c cc.3...cc
    c.3.ccc.2.1...c
-   cc.2.cc..ccc..+@
-    cc..AcAcc cc.c
+   cc.2.cc.Rccc..+@
+    cc..AcOcc cc.c
  ccc ccccccccc ccc
  c.cc ccAcA..cc
 @+..ccc..cc.2.cc
@@ -447,16 +428,16 @@ MAP
 ENDMAP
 
 NAME:   grunt_zot_entry_bicorn
-TAGS:   no_monster_gen zot_entry transparent patrolling
-COLOUR: 0123c+_ = magenta
-FTILE:  0123+_OT = floor_hall
+TAGS:   no_monster_gen transparent patrolling
+COLOUR: 0123c+_R = magenta
+FTILE:  0123+_ORT = floor_hall
 SUBST:  _ = .
 NSUBST: 3 = 1:9 / *:3
 : zot_entry_setup(_G)
 MAP
             .....
           ...ccc...
-         ..ccc_ccc..
+         ..cccRccc..
         ..cc_____cc..
        ..cc_2_O_2_cc..
       ..cc___2_2___cc..
@@ -474,9 +455,9 @@ MAP
 ENDMAP
 
 NAME:   grunt_zot_entry_tricorne
-TAGS:   no_monster_gen zot_entry transparent patrolling
-COLOUR: ABC_ = magenta
-FTILE:  ABC-_O = floor_hall
+TAGS:   no_monster_gen transparent patrolling
+COLOUR: ABC_R = magenta
+FTILE:  ABC-_OR = floor_hall
 SUBST:  _ = ., A = 2, B = 110, C = c, - = +
 NSUBST: 3 = 1:9 / *:3
 : zot_entry_setup(_G)
@@ -488,7 +469,7 @@ MAP
 ..cc...1....CCCCC....0...cc..
  ..c.0T...CCC___CCC...T1.c..
   .cc...3.C___A___C.3...cc.
-  ..cc...C-_B___B_-C...cc..
+  ..cc...C-_B_R_B_-C...cc..
    ..cc..C_________C..cc..
     ..c..C____O____C.cc..
      .cc.C_________C.cc.
@@ -511,8 +492,8 @@ ENDMAP
 
 NAME:   grunt_zot_entry_gee_three
 TAGS:   no_monster_gen zot_entry transparent patrolling
-COLOUR: ABC_ = magenta
-FTILE:  ABC-_O = floor_hall
+COLOUR: ABC_R = magenta
+FTILE:  ABC-_OR = floor_hall
 SUBST:  _ = ., A = 2, B = 1, C = c, - = +
 NSUBST: 1 = 3:0 / 7:1 / *:., 3 = 1:9 / *:3
 : zot_entry_setup(_G)
@@ -532,7 +513,7 @@ MAP
 @+..c......ccCA_ACcc......c..+@
 .ccc....1..ccC___Ccc..1....ccc.
 ...ccc..T..ccC_O_Ccc..T..ccc...
-.cccc.......cCC_CCc.......cccc.
+.cccc.......cCCRCCc.......cccc.
 @+......2...ccCCCcc...2......+@
 .ccc.......1..c.c..1.......ccc.
 ...ccccc..T..1.3.1..T..ccccc...
@@ -553,8 +534,8 @@ ENDMAP
 
 NAME:   grunt_zot_entry_alcove
 TAGS:   no_monster_gen zot_entry transparent patrolling
-COLOUR: 29C-_ = magenta
-FTILE:  29C-_O = floor_hall
+COLOUR: 29C-_R = magenta
+FTILE:  29C-_OR = floor_hall
 SUBST:  _ = ., C = c
 NSUBST: @ = 1:@ / *:.
 : zot_entry_setup(_G)
@@ -562,7 +543,7 @@ MAP
      ccccccc
     ccCCCCCcc
     cCC_9_CCc
-    cC_____Cc
+    cC__R__Cc
     cC2_O_2Cc
     cC__2__Cc
     cCC___CCc
@@ -1560,18 +1541,15 @@ KFEAT:   s = w
 KFEAT:   A = altar_the_shining_one
 KFEAT:   B = altar_zin
 KFEAT:   C = altar_elyvilon
-KFEAT:   g = metal_statue
 SHUFFLE: mno, AG / Bg / Cs
 SUBST:   } = {([}}))]]<>, y : x.., z : x..
 SUBST:   X : xx., Y : xx., Z : xx., + = +++.
-COLOUR:  g = silver
 FTILE:   'ABC : floor_w_marble
 TILE:    m : dngn_transparent_wall_white
 TILE:    n : dngn_transparent_wall_yellow
 TILE:    o : dngn_transparent_wall_brown
 TILE:    G = dngn_statue_depths_zot_angel
-TILE:    g = dngn_silver_statue
-: set_feature_name("metal_statue", "silver statue")
+: vault_metal_statue_setup(_G, "g", "silver statue")
 MAP
            xxxxxxx..
           xxxx.sxc..
@@ -1677,14 +1655,11 @@ DEPTH:   Zot, !Zot:$
 WEIGHT:  5
 ITEM:    mundane barding
 KFEAT:   C = altar_cheibriados
-KFEAT:   G = metal_statue
 SHUFFLE: pqrs, yz
 SUBST:   G : GGc, p : xbCV, q : xb.., X rs = ., y : cb., z = c
 SUBST:   { = {([})]<$d>>>CCC
 TILE:    m = dngn_transparent_wall_green
-COLOUR:  G = poison
-TILE:    G = alchemical_conduit
-:   set_feature_name("metal_statue", "alchemical conduit")
+: vault_metal_statue_setup(_G, "G", "alchemical conduit")
 MAP
      ..cc@@cc.....
     ...c....c.cccc.
@@ -1719,15 +1694,12 @@ TAGS:    extra transparent zotdec luniq_zot_rune
 DEPTH:   Zot, !Zot:$
 ITEM:    mundane barding
 KFEAT:   C = altar_cheibriados
-KFEAT:   G = metal_statue
 SHUFFLE: ABCDEF, no / pq / rs / tu / vw
 SUBST:   ABC = x, D : xx., E : xx., F = ., G : GGx
 SUBST:   npr = @, tuvw = x, { = {([})]<$d>>>CCC
 TILE:    m = dngn_transparent_wall_green
 CLEAR:   ors
-COLOUR:  G = poison
-TILE:    G = alchemical_conduit
-:   set_feature_name("metal_statue", "alchemical conduit")
+: vault_metal_statue_setup(_G, "G", "alchemical conduit")
 MAP
 fffxxxxxxxxxxxxxxxxxxxxxxxxxxxhhh
 fee..xxxxxxxxxxxxxxxxxxxxxxx..ggh
@@ -2480,15 +2452,12 @@ DEPTH:  Zot, !Zot:$
 MONS:   laughing skull, lich, ancient lich / dread lich, necromancer
 MONS:   vampire mage
 ITEM:   any book mimic:10 w:20 / any scroll mimic:10
-KFEAT:  g = metal_statue
 SUBST:  x : xv, w : w?, G : Gg
 NSUBST: ? = 12 = 11. / *:.
 SUBST:  4 = 4 5:2 .:4
-COLOUR: g = smoke
 TILE:   G = dngn_statue_depths_zot_lich / dngn_statue_zot_old_guardian
 TILE:   c = wall_studio
-TILE:   g = soul_conduit
-: set_feature_name("metal_statue", "soul conduit")
+: vault_metal_statue_setup(_G, "g", "soul conduit")
 MAP
 wwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwww
@@ -2545,11 +2514,8 @@ DEPTH:  Zot
 MONS:   electric golem
 KFEAT:  ^ = permanent teleport trap / dispersal trap
 KFEAT:  m = iron_grate
-KFEAT:  Z = metal_statue
 NSUBST: 1 = 1:1 / 1:. / * = 1.
-COLOUR: Z = magic
-TILE:   Z = dngn_nascence_circuit
-:       set_feature_name("metal_statue", "nascence circuit")
+: vault_metal_statue_setup(_G, "Z", "nascence conduit")
 MAP
   mmmm
  mm..mm
@@ -2635,13 +2601,10 @@ ORIENT: centre
 MONS:   orb of fire, fire elemental
 MONS:   red draconian, any nonbase red draconian
 MONS:   efreet
-KFEAT:  G = metal_statue
 SUBST:  1=122, 3=322
 SUBST:  4 = 2:20 4:5 3:15 .:20
 SUBST:  G : G.
-COLOUR: G = fire
-TILE:   G = fiery_conduit
-: set_feature_name("metal_statue", "fiery conduit")
+: vault_metal_statue_setup(_G, "G", "fiery conduit")
 MAP
           lllll
        lllllllllll
@@ -2719,13 +2682,10 @@ KMONS:  M = patrolling red draconian att:neutral / \
             patrolling nonbase red draconian att:neutral
 KMONS:  F = orb of fire att:neutral
 KFEAT:  MFX = W
-KFEAT:  G = metal_statue
 MARKER: X = lua:fog_machine { cloud_type="steam", \
             pow_min = 2, pow_max = 10, delay = 25, \
             size = 2, walk_dist = 3, spread_rate= 10 }
-COLOUR: G = magic
-TILE:   G = dngn_enigmatic_dynamo
-:       set_feature_name("metal_statue", "enigmatic dynamo")
+: vault_metal_statue_setup(_G, "g", "enigmatic dynamo")
 MAP
      @
 xxxxx+xxxxx
@@ -2758,9 +2718,7 @@ MARKER:  F = lua:fog_machine { cloud_type = "thunder", pow_min = 5, \
               pow_max = 15, delay = 10, size = 2, walk_dist = 0, \
               spread_rate= 0 }
 ITEM:    storm talisman, book of lightning, staff of air, book of storms
-COLOUR:  G = electricity
-TILE:    G = storm_conduit
-:   set_feature_name("metal_statue", "storm conduit")
+:   vault_metal_statue_setup(_G, "G", "storm conduit")
 : elseif crawl.coinflip() then
 MONS:    frost giant, ice dragon / thermic dynamo w:3
 KMONS:   F = shard shrike
@@ -2771,9 +2729,7 @@ ITEM:    granite talisman randart artprops:rC:2&&rF:-1
 ITEM:    staff of cold, book of winter, book of ice
 SUBST:   w = l
 SUBST:   W = l..
-COLOUR:  G = ice
-TILE:    G = icy_conduit
-:   set_feature_name("metal_statue", "icy conduit")
+:   vault_metal_statue_setup(_G, "G", "icy conduit")
 : else
 MONS:    fire giant, fire dragon / thermic dynamo w:3
 KMONS:   F = balrug
@@ -2781,9 +2737,7 @@ MARKER:  F = lua:fog_machine { cloud_type = "flame", pow_min = 5, \
               pow_max = 15, delay = 10, size = 2, walk_dist = 0, \
               spread_rate= 0 }
 ITEM:    book of the dragon, staff of fire, book of fire, book of annihilations
-COLOUR:  G = fire
-TILE:    G = fiery_conduit
-:   set_feature_name("metal_statue", "fiery conduit")
+:   vault_metal_statue_setup(_G, "G", "fiery conduit")
 : end
 ITEM:    potion of enlightenment ident:type q:1
 ITEM:    ring of flight randart ident:type no_pickup
@@ -2846,12 +2800,9 @@ MONS:   oklob plant w:4 / lightning spire w:3
 MONS:   obsidian statue / orange crystal statue / curse skull
 # Not quite the orb, but but close enough
 ITEM:   orb randart no_pickup
-KFEAT:  G = metal_statue
 NSUBST: 1 = 1:1 / 6 = 11. / *:., 3 = 1:1 / 4 = 11....... / *:.
 SUBST:  } = }:80 >, ) = ):80 >, ] = ]:80 >
-COLOUR: G = magic
-TILE:   G = dngn_enigmatic_dynamo
-:       set_feature_name("metal_statue", "enigmatic dynamo")
+: vault_metal_statue_setup(_G, "G", "enigmatic dynamo")
 MAP
         xxxxxxxxx
         xxx.2.xxx
@@ -3400,7 +3351,6 @@ ORIENT:  float
 MONS:    draconian monk / base draconian w:15
 MONS:    patrolling draconian stormcaller, patrolling draconian knight
 MONS:    patrolling draconian scorcher
-KFEAT:   S = metal_statue
 KFEAT:   rybgmq = n
 SHUFFLE: ]}), rybgmq, DZF
 MARKER:  + = lua:restrict_door()
@@ -3421,9 +3371,8 @@ COLOUR:    r = red, y = yellow, b = blue, g = green, \
 TILE:      r = dngn_transparent_stone_red, y = dngn_transparent_stone_yellow, \
            b = dngn_transparent_stone_blue, m = dngn_transparent_stone_magenta, \
            g = dngn_transparent_stone_green, q = dngn_transparent_stone
-TILE:      S = storm_conduit
 TILE:      T = dngn_fountain_novelty_octopode
-: set_feature_name("metal_statue", "storm conduit")
+: vault_metal_statue_setup(_G, "S", "storm conduit")
 MAP
            @.......................@
 ccccccccccccqqcrrcyycbbcggcmmcqqcrrccccccccccc
@@ -3475,7 +3424,6 @@ KMONS:   Z = killer klown ; club randart plus:12 ego:chaos / \
 KITEM:   BEHKN = $ w:15 / % w:25 / *
 KITEM:   z = any good_item
 KITEM:   Z = superb_item
-KFEAT:   ? = granite_statue
 # Rotates out loot, upstairs, downstairs,
 # both (in an enclosed bubble), or nothing, at either end.
 SHUFFLE: defg{>Z' / defg{<'' / fgde>{'Z / fgde<{'' / defg'|Z' / fgde|''Z / \
@@ -3483,9 +3431,7 @@ SHUFFLE: defg{>Z' / defg{<'' / fgde>{'Z / fgde<{'' / defg'|Z' / fgde|''Z / \
 SHUFFLE: ABC / DEF / GHI / JKL / MNO
 SUBST:   d = @, e = ., f = x, g = c, c : ccb, Z = z Z:6, {' = ., ? : ?.
 NSUBST:  < = 1:{ / 1:[, > = 1:} / 1:]
-COLOUR:  ? = mountain
-TILE:    ? = dngn_scintillating_statue
-: set_feature_name("granite_statue", "scintillating statue")
+: vault_granite_statue_setup(_G, "?", "scintillating statue")
 MAP
               xxxxxxxfffff
               xcccccgggggff
@@ -3535,46 +3481,44 @@ MONS:    titan / lich / deep elf annihilator w:3 / deep elf high priest w:4 / \
 MONS:    nonbase draconian w:20 / protean progenitor / killer klown / \
          death cob / curse toe w:5 / ancient lich / dread lich / \
          electric golem / orb of fire w:5
-KFEAT:   G = metal_statue
 SHUFFLE: EF
 SUBST:   E : .
 SHUFFLE: ABCDF, GH / GH / GH / HG
 NSUBST:  1 = 3:1 / 2:2 / 2:112 / 1:122, 0 = 3:1 / 2:2 / 2:112 / 1:122
 NSUBST:  3 = 3:3 / 2:4 / 2:334 / 1:344, 6 = 3:5 / 2:6 / 2:556 / 1:566
-SUBST:   % = $%, * = %:3 *:1, | = %:60 *:25 |:15, 1 = 1:3 .:2
-SUBST:   2 = 2:2 .:1, 3 = 3:4 .:1, 4 = 4:6 .:1, 5 = 5:6 .:1, 6 = 6:5 .:1
+SUBST:   % = $%, * = %:3 *:1, | = %:60 *:25 |:15, 1 = 1:3 ':2
+SUBST:   2 = 2:2 ':1, 3 = 3:4 ':1, 4 = 4:6 ':1, 5 = 5:6 ':1, 6 = 6:5 ':1
 SUBST:   A : v:4 .:1, B : v:7 .:3, C : v:1 .:4, DFH = .
 SUBST:   G : v:7 G:2 .:1, - : +., + : +:5 .:1, { : {:2 }:3 .:2
 NSUBST:  { = 1:{ / 1:( / 1:[ / 1:<, } = 1:} / 1:) / 1:] / 1:>
 SUBST:   ( = (:14 >:1 <:1 ):2, [ = [:14 >:1 <:1 ]:2, ) = ):70 >(, ] = ]:70 >[
-COLOUR:  G = silver
-TILE:    G = dngn_silver_statue
-: set_feature_name("metal_statue", "silver statue")
+FTILE:   '$%*|123456+ = floor_vault
+: vault_metal_statue_setup(_G, "G", "silver statue")
 MAP
        xx@@vvvvv@@xx
       xx..vvvvvvv..xx
       x..vvv6v6vvv..x
-     xx.vvv.*v*.vvv.xx
+     xx.vvv'*v*'vvv.xx
     xx..vv3*|-|*3vv..xx
    xx..Gvvvv+v+vvvvG..xx
  xxx..H.vv0$%-%$0vv.H..xxx
 xx...G...vv4$v$4vv...G...xx
-x..vvvv...vv.v.vv...vvvv..x
-@.vvvvvv..1v...v1..vvvvvv.@
-@vvv3v0vv1...A...1vv0v3vvv@
-vvv.*v$4vv.BC{DB.vv4$v*.vvv
-vv6*|+%$...DEFEC...$%+|*6vv
+x..vvvv...vv'v'vv...vvvv..x
+@.vvvvvv.'1v...v1'.vvvvvv.@
+@vvv3v0vv1'..A..'1vv0v3vvv@
+vvv'*v$4vv.BC{DB.vv4$v*'vvv
+vv6*|+%$'..DEFEC..'$%+|*6vv
 vvvv-v-vv.A{F<F{A.vv-v-vvvv
-vv6*|+%$...CEFED...$%+|*6vv
-vvv.*v$4vv.BD{CB.vv4$v*.vvv
-@vvv3v0vv1...A...1vv0v3vvv@
-@.vvvvvv..1v...v1..vvvvvv.@
-x..vvvv...vv.v.vv...vvvv..x
+vv6*|+%$'..CEFED..'$%+|*6vv
+vvv'*v$4vv.BD{CB.vv4$v*'vvv
+@vvv3v0vv1'..A..'1vv0v3vvv@
+@.vvvvvv.'1v...v1'.vvvvvv.@
+x..vvvv...vv'v'vv...vvvv..x
 xx...G...vv4$v$4vv...G...xx
  xxx..H.vv0$%-%$0vv.H..xxx
    xx..Gvvvv+v+vvvvG..xx
     xx..vv3*|-|*3vv..xx
-     xx.vvv.*v*.vvv.xx
+     xx.vvv'*v*'vvv.xx
       x..vvv6v6vvv..x
       xx..vvvvvvv..xx
        xx@@vvvvv@@xx
@@ -3766,11 +3710,8 @@ DEPTH:  Zot, !Zot:$
 MONS:   lightning spire, patrolling electric golem
 KMONS:  ! = patrolling death cob
 KFEAT:  C = cache of baked goods
-KFEAT:  Z = metal_statue
 NSUBST: % = 2:! / 2:C / *:a
-COLOUR: Z = magic
-TILE:   Z = dngn_nascence_circuit
-: set_feature_name("metal_statue", "nascence circuit")
+: vault_metal_statue_setup(_G, "Z", "nascence circuit")
 : dgn.delayed_decay(_G, 'a', 'random draconian corpse')
 MAP
 @xxxxx@
@@ -3806,7 +3747,6 @@ KFEAT:   C = altar_ecumenical
 KFEAT:   D = altar_lugonu / altar_jiyva / altar_beogh w:5 / altar_ignis w:5
 KFEAT:   ~ = zot trap
 KFEAT:   y = x
-KFEAT:   M = metal_statue
 SHUFFLE: Xy / Xy / Xy / Aa
 NSUBST:  A = 1:. / 19 = X:9 .:1 / *:X
 SUBST:   X : X Y Z:4, X = bbbbvvc, Y = bvvvvc, Z = bvvcccc
@@ -3833,12 +3773,8 @@ SHUFFLE: ])deOG, OGUCD~, GM
 : tile("v = dngn_metal_wall_" .. wallc)
 : tile("c = dngn_stone_wall_" .. wallc)
 : ftile(".`123409deO%CDTG~+ = floor_rough_" .. floorc)
-COLOUR: G = mountain
-COLOUR: M = magic
-TILE:   G = dngn_scintillating_statue
-TILE:   M = dngn_enigmatic_dynamo
-: set_feature_name("granite_statue", "scintillating statue")
-: set_feature_name("metal_statue", "enigmatic dynamo")
+: vault_granite_statue_setup(_G, "G", "scintillating statue")
+: vault_metal_statue_setup(_G, "M", "enigmatic dynamo")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -3907,7 +3843,6 @@ ITEM:   scroll of blinking q:1 / scroll of blinking q:2 / \
 KFEAT:  yz = w
 KFEAT:  YZ" = W
 KFEAT:  # = iron_grate
-KFEAT:  G = metal_statue
 NSUBST: . = 4:1 / 4:2 / 3:3 / 3 = 123. / *:., ' = 2:3 / 6:4 / 4 = 34455 / *:.
 NSUBST: d = 1:d / 1:|ee / *:f, f = 2:f / *:g, G = 2:GG. / *:.
 SUBST:  ` = ., ) = )>>
@@ -3918,13 +3853,9 @@ MARKER: - = lua:fog_machine { cloud_type = "steam", walk_dist = 3, \
 TILE:   v = dngn_metal_iron
 FTILE:  -_ = floor_pebble_darkgray
 : if crawl.coinflip() then
-COLOUR: G = electricity
-TILE:   G = storm_conduit
-:   set_feature_name("metal_statue", "storm conduit")
+:   vault_metal_statue_setup(_G, "G", "storm conduit")
 : else
-COLOUR: G = magic
-TILE:   G = dngn_nascence_circuit
-:   set_feature_name("metal_statue", "nascence circuit")
+:   vault_metal_statue_setup(_G, "G", "nascence circuit")
 : end
 MAP
                  vvvvvvvvv
@@ -4022,10 +3953,8 @@ NSUBST:  > = >. / *:.
 : end
 NSUBST:  ^ = 4:^ / *=^..
 SUBST:   a = aaax.
-COLOUR:  G = mountain
-TILE:    G = dngn_scintillating_statue
 : coloured_glass(_G)
-: set_feature_name("granite_statue", "scintillating statue")
+: vault_granite_statue_setup(_G, "G", "scintillating statue")
 MAP
          ...........
        ...............
@@ -4092,9 +4021,7 @@ KMONS:   a = draconian shifter
 # Those laffy daffy Klowns
 NSUBST:  I = 8 = k. / *:.
 KMONS:   k = killer klown
-COLOUR:  G = mountain
-TILE:    G = dngn_scintillating_statue
-: set_feature_name("granite_statue", "scintillating statue")
+: vault_granite_statue_setup(_G, "G", "scintillating statue")
 MAP
                xxx
              xxxlxxx
@@ -4133,7 +4060,7 @@ KMONS:   F = ancient lich / dread lich
 KMONS:   ! = base draconian w:30 ; cloak . great sword good_item | \
              battleaxe good_item | bardiche good_item | great mace good_item / \
              fire dragon / ice dragon / storm dragon / bone dragon w:5
-KMONS:   ? = moth of wrath / death cob w:2 / guardian mummy w:2
+KMONS:   ? = moth of wrath / death cob w:3
 KITEM:   % = % / * w:2
 KMONS:   H = iron dragon
 SHUFFLE: abcdefghij / bacdegfhij / bcadeghfij / bcdaeghifj / bcdeaghijf, ghij, ^~
@@ -4181,19 +4108,15 @@ KFEAT:  _ = altar_zin
 KFEAT:  O = altar_xom
 KFEAT:  ^ = dispersal trap
 KFEAT:  t = demonic_tree
-KFEAT:  g = metal_statue
 NSUBST: - = 4=s / 4=s- / -
 NSUBST: ? = O / 2=^ / 2=2 / 2=2? / 2:tG / ?
 SUBST:  ? = ":400 n:30 x:40 v b ^
 SUBST:  " = .:200 W:100 O:30 f 3 4 T U V Y
 COLOUR: v = white
-COLOUR: G = mountain, g = silver
 FTILE:  _`1 = floor_w_marble
-TILE:   G = dngn_scintillating_statue
-TILE:   g = dngn_silver_statue
 TILE:   v = dngn_metal_wall_white
-: set_feature_name("granite_statue", "scintillating statue")
-: set_feature_name("metal_statue", "silver statue")
+: vault_granite_statue_setup(_G, "G", "scintillating statue")
+: vault_metal_statue_setup(_G, "g", "silver statue")
 MAP
 xxxxxxxxx@xxxxxxxxx
 x........."?"?"?"?x
@@ -4281,8 +4204,7 @@ DEPTH:  Zot, !Zot:$
 MONS:   lich , ancient lich / dread lich
 NSUBST: . = 4 = 2. / 16 = 1... / 12 = 8... / 12 = 0...
 NSUBST:  < = 1 = {([. / 1 = )}].
-TILE:   G = dngn_gravestone
-: set_feature_name("granite_statue", "gravestone")
+: vault_granite_statue_setup(_G, "G", "gravestone")
 MAP
 bbbbbbbbbbbbbbbbbbbbb
 bbbbbbbbbbbbbbbbbbbbb
@@ -4465,17 +4387,11 @@ COLOUR:  s = electricity
 TILE:    j = dngn_transparent_wall_red
 TILE:    k = dngn_transparent_wall_blue
 TILE:    m = dngn_transparent_wall_magenta
-TILE:    G = dngn_gravestone
-TILE:    s = storm_conduit
-: set_feature_name("granite_statue", "a gravestone")
+: vault_granite_statue_setup(_G, "G", "gravestone")
 : if crawl.coinflip() then
-COLOUR:  s = electricity
-TILE:    s = storm_conduit
-:   set_feature_name("metal_statue", "storm conduit")
+:   vault_metal_statue_setup(_G, "s", "storm conduit")
 : else
-COLOUR:  s = magic
-TILE:    s = dngn_nascence_circuit
-:   set_feature_name("metal_statue", "nascence circuit")
+:   vault_metal_statue_setup(_G, "s", "nascence circuit")
 : end
 MAP
                          xccccccccccccccx

@@ -3258,9 +3258,8 @@ NAME:   wander_arrival_lonely_grave
 TAGS:   arrival no_monster_gen no_item_gen
 ORIENT: float
 FTILE:  ? = floor_pebble_darkgray:20 / none
-TILE:   t = dngn_tree_dead, \
-        G = dngn_gravestone
-: set_feature_name("granite_statue", "a gravestone")
+TILE:   t = dngn_tree_dead
+: vault_granite_statue_setup(_G, "G", "gravestone")
 COLOUR: ? = darkgrey:20 / lightgrey, \
         t = brown
 MAP
@@ -3278,8 +3277,7 @@ ENDMAP
 NAME:   wander_arrival_peaceful_grave
 TAGS:   arrival no_monster_gen no_item_gen
 ORIENT: float
-TILE:   G = dngn_gravestone
-: set_feature_name("granite_statue", "a gravestone")
+: vault_granite_statue_setup(_G, "G", "gravestone")
 FTILE:  ? = floor_grass, \
         ! = floor_grass:20 / none, \
         { = floor_grass:20 / none, \

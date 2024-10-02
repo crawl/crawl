@@ -247,9 +247,7 @@ SUBST:  G = GGG-
 SUBST:  - = --.
 COLOUR: - = brown
 FTILE:  -G = floor_rough_brown
-COLOUR: G = lightgrey
-TILE:   G = dngn_crumbled_column
-: set_feature_name("granite_statue", "broken pillar")
+: vault_granite_statue_setup(_G, "G", "broken pillar")
 : ecumenical_altar_setup(_G)
 MAP
   G-G
@@ -471,9 +469,7 @@ SUBST:  - = --.
 SUBST:  G = GGG-
 COLOUR: - = brown
 FTILE:  -G = floor_rough_brown
-COLOUR: G = lightgrey
-TILE:   G = dngn_crumbled_column
-: set_feature_name("granite_statue", "broken pillar")
+: vault_granite_statue_setup(_G, "G", "broken pillar")
 : ecumenical_altar_setup(_G)
 
 MAP
@@ -493,15 +489,11 @@ ENDMAP
 
 NAME:   shapermc_ecumenical_altar_mp_highgroup
 TAGS:   transparent
-SUBST:  - = --.
-SUBST:  G = GGG-
+KFEAT:  ^ = web trap
+SUBST:  - = --., G = GGG-, ^ = ^^.
 COLOUR: - = brown
 FTILE:  -G = floor_rough_brown
-COLOUR: G = lightgrey
-TILE:   G = dngn_crumbled_column
-: set_feature_name("granite_statue", "broken pillar")
-SUBST:  ^ = ^^.
-KFEAT:  ^ = web trap
+: vault_granite_statue_setup(_G, "G", "broken pillar")
 : ecumenical_altar_setup(_G)
 MAP
 xxxxxx-xxxxxx
@@ -515,16 +507,14 @@ ENDMAP
 
 NAME:   shapermc_ecumenical_altar_mp_urbaneastern
 TAGS:   transparent
+KMONS:  p = plant
+KMONS:  f = fungus
 SUBST:  - = --.
 SUBST:  G = GGG-
 COLOUR: - = brown
 FTILE:  -G = floor_rough_brown
-COLOUR: G = lightgrey
-KMONS:  p = plant
-KMONS:  f = fungus
 NSUBST: ' = 8=pf / 12=ppf... / .
-TILE:   G = dngn_crumbled_column
-: set_feature_name("granite_statue", "broken pillar")
+: vault_granite_statue_setup(_G, "G", "broken pillar")
 : ecumenical_altar_setup(_G)
 MAP
 ...............
@@ -544,19 +534,17 @@ ENDMAP
 
 NAME:   shapermc_ecumenical_altar_mp_ritualfount
 TAGS:   transparent
+KMONS: W = plant / nothing
+KMONS: p = plant
+KMONS: f = fungus
 SUBST: ^ = TUV---
 SUBST: - = --.
 SUBST: G = GGG-
 SUBST: W = WWWWw.
 COLOUR: - = brown
-FTILE: -G = floor_rough_brown
-COLOUR: G = lightgrey
-KMONS: W = plant / nothing
-KMONS: p = plant
-KMONS: f = fungus
 NSUBST: ' = 8=pf. / 12=ppf... / .
-TILE: G = dngn_crumbled_column
-: set_feature_name("granite_statue", "broken pillar")
+FTILE: -G = floor_rough_brown
+: vault_granite_statue_setup(_G, "G", "broken pillar")
 : ecumenical_altar_setup(_G)
 MAP
 ......x....
@@ -1102,10 +1090,9 @@ KMASK:  ? = opaque
 KPROP:  ? = no_tele_into
 KMONS:  ? = any demon perm_ench:petrified generate_awake
 KMONS:  p = demonic plant
-TILE:   G = dngn_crumbled_column
-: set_feature_name("granite_statue", "broken pillar")
+: vault_granite_statue_setup(_G, "G", "broken pillar")
 FTILE:  G_vn?- = floor_demonic_red
-COLOUR: G-? = red
+COLOUR: -? = red
 : ecumenical_altar_setup(_G)
 MAP
 .........
@@ -1224,10 +1211,8 @@ KMONS: 1_ = ball python / nothing
 : else
 KMONS: 1_ = ball python w:30 / adder / nothing
 : end
-KFEAT: G = metal_statue
 SUBST: G : Gx
-TILE:  G = dngn_mystic_cage
-: set_feature_name("metal_statue", "mystic cage")
+: vault_metal_statue_setup(_G, "G", "mystic cage")
 : ecumenical_altar_setup(_G)
 MAP
  x    x    x

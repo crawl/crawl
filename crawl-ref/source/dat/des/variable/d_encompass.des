@@ -828,7 +828,7 @@ ENDMAP
 NAME:    grunt_runaround_loot
 TAGS:    grunt_runaround_loot allow_dup unrand
 KMONS:   9 = 9 band
-KMONS:   8 = 8 band
+KMONS:   8 = 8
 SHUFFLE: }>de
 SUBST:   d = %, e = A
 NSUBST:  % = 4:| / 8:* / *=%

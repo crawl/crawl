@@ -1108,11 +1108,11 @@ NSUBST:  ; = 20=t. / ., - = 4=G / 12=1. / .
 NSUBST:  2 = 5=2 / 2., 3 = 6=3 / 3..., 4 = 3=4 / 4., 5 = 5 / G
 NSUBST:  ! = 6 / G
 SHUFFLE: A<
-TILE:    t = dngn_tree_dead, G = dngn_gravestone
+TILE:    t = dngn_tree_dead
 COLOUR:  t = w:5 lightgrey / w:5 darkgrey / brown
 KITEM:   f = orc skeleton
 : set_feature_name("tree", "dead tree")
-: set_feature_name("granite_statue", "a gravestone")
+: vault_granite_statue_setup(_G, "G", "gravestone")
 : bailey_setup(_G)
 MAP
    cccccc

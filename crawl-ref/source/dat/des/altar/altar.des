@@ -31,6 +31,8 @@
 #
 ###############################################################################
 
+: crawl_require('dlua/vault.lua')
+
 ##############################################################################
 # I   General altars (containing a single C)
 ##############################################################################
@@ -172,9 +174,9 @@ ENDMAP
 # This is the generic version. A special version may occur for Orc, almost always
 # to Beogh. Only one of these can come up.
 NAME:  david_defended_altar_elf
+TAGS:  uniq_defended_altar transparent patrolling
 DEPTH: Elf
-MONS:  patrolling deep elf pyromancer / w:30 nothing
-TAGS:  uniq_defended_altar transparent
+MONS:  deep elf pyromancer / deep elf knight
 MAP
 ccccc...
 c1..c...
@@ -186,8 +188,8 @@ ENDMAP
 # The mix of deep and shallow water is intended to keep the centaurs from
 # escaping without requiring the player to be able to cross deep water.
 NAME:  lemuel_centaur_altar
-DEPTH: Shoals, Lair
 TAGS:  no_pool_fixup no_monster_gen
+DEPTH: Lair, Shoals
 MONS:  patrolling centaur
 MAP
 xxxxxxxxxxxxx
@@ -205,37 +207,36 @@ ENDMAP
 NAME:    lemuel_angel_altar
 TAGS:    no_trap_gen no_descent vaults_empty no_wall_fixup
 DEPTH:   Vaults, !Vaults:$, Depths
+WEIGHT:  3 (Vaults), 10
 MONS:    patrolling Angel, patrolling Daeva
 KMONS:   P = sacred lotus
 KFEAT:   A = altar_elyvilon
 KFEAT:   B = altar_zin
 KFEAT:   C = altar_the_shining_one
 KFEAT:   P = w
-KFEAT:   g = metal_statue
 KFEAT:   n = iron_grate
 SHUFFLE: AP / Bg / CG
 SUBST:   - = c
 : if you.in_branch("Depths") then
-SHUFFLE: 1m= / 2n-
+SHUFFLE: 1m / 2n
 CLEAR:   '
 TILE:    c = wall_church
+TILE:    G = dngn_statue_depths_zot_angel
 : else
-SUBST:   ' = ., = = c
+SUBST:   ' = ., x = v
+TILE:    G = dngn_statue_angel
 : end
 KPROP:   >"12ABC = no_tele_into
 KMASK:   . = !opaque
 KMASK:   x = no_wall_fixup
-COLOUR:  g = silver
-TILE:    G = dngn_statue_angel
-TILE:    g = dngn_silver_statue
-: set_feature_name("metal_statue", "silver statue")
+: vault_metal_statue_setup(_G, "g", "silver statue")
 MAP
     '''''
     .....
    ..cmc..
   ..xc>cx..
 '..xxc"cPx..'
-'.ccc=1cccc.'
+'.cccc1cccc.'
 '.m>""A"">m.'
 '.cccc"cccc.'
 '..xPc"cxx..'

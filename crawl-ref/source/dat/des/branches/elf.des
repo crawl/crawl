@@ -629,18 +629,13 @@ ENDMAP
 NAME:    nicolae_elf_big_sculpture_2
 TAGS:    transparent extra allow_dup luniq
 DEPTH:   Elf
-KFEAT:   G = metal_statue
 SHUFFLE: mlk/mkl/nnn, abcdefghij
 SUBST:   ka = ., nbcd = v, e : .v, f : .v, g : .v, h : .v, i : .v, j : .v
 SUBST:   l : .v, m : GGGv., v : vbcx
 : if crawl.coinflip() then
-COLOUR:  G = warp
-TILE:    G = dimensional_conduit
-:   set_feature_name("metal_statue", "dimensional conduit")
+:   vault_metal_statue_setup(_G, "G", "dimensional conduit")
 : else
-COLOUR:  G = electricity
-TILE:    G = storm_conduit
-:   set_feature_name("metal_statue", "storm conduit")
+:   vault_metal_statue_setup(_G, "G", "storm conduit")
 : end
 MAP
   ...........
@@ -663,7 +658,6 @@ ENDMAP
 NAME:    nicolae_elf_big_sculpture_3
 TAGS:    transparent extra allow_dup luniq
 DEPTH:   Elf
-KFEAT:   G = metal_statue
 : if crawl.coinflip() then
 SHUFFLE: bcegh
 SUBST:   b = .
@@ -675,13 +669,9 @@ SHUFFLE: abcdeghi
 SUBST:   acd = v, b : .v, e : .v, f : .v, g : .v, h : .v, i : .v
 SUBST:   j : GGGv., v : vbcx
 : if crawl.coinflip() then
-COLOUR:  G = warp
-TILE:    G = dimensional_conduit
-:   set_feature_name("metal_statue", "dimensional conduit")
+:   vault_metal_statue_setup(_G, "G", "dimensional conduit")
 : else
-COLOUR:  G = vehumet
-TILE:    G = arcane_conduit
-:   set_feature_name("metal_statue", "arcane conduit")
+:   vault_metal_statue_setup(_G, "G", "arcane conduit")
 : end
 MAP
         .
@@ -769,16 +759,11 @@ ENDMAP
 NAME:    hangedman_elf_targeted_burst
 TAGS:    transparent extra
 DEPTH:   Elf
-KFEAT:   G = metal_statue
 SUBST:   x : xxc, Y : yycvb, y : xxcbv, z : cbv, Z = cbvGG
 : if crawl.coinflip() then
-COLOUR:  G = vehumet
-TILE:    G = arcane_conduit
-:   set_feature_name("metal_statue", "arcane conduit")
+:   vault_metal_statue_setup(_G, "G", "arcane conduit")
 : else
-COLOUR:  G = fire
-TILE:    G = fiery_conduit
-:   set_feature_name("metal_statue", "fiery conduit")
+:   vault_metal_statue_setup(_G, "G", "fiery conduit")
 : end
 MAP
         x
@@ -828,7 +813,6 @@ NAME:    nicolae_elf_glassroom_feature
 TAGS:    transparent
 DEPTH:   Elf
 KFEAT:   O = any shop
-KFEAT:   G = metal_statue
 SHUFFLE: x_/m-
 SUBST:   S = GTOSSS
 : if you.depth() == 1 then
@@ -840,13 +824,9 @@ SUBST:   S = ({[
 : end
 CLEAR:   _
 : if crawl.coinflip() then
-COLOUR:  G = warp
-TILE:    G = dimensional_conduit
-:   set_feature_name("metal_statue", "dimensional conduit")
+:   vault_metal_statue_setup(_G, "G", "dimensional conduit")
 : else
-COLOUR:  G = fire
-TILE:    G = fiery_conduit
-:   set_feature_name("metal_statue", "fiery conduit")
+:   vault_metal_statue_setup(_G, "G", "fiery conduit")
 : end
 MAP
 ---__.__---
@@ -1061,10 +1041,7 @@ MONS:   deep elf pyromancer w:15 / deep elf zephyrmancer w:15 / nothing
 KMONS:  2 = deep elf sorcerer w:90 / deep elf annihilator / deep elf demonologist
 KITEM:  2 = randbook disc:conjuration disc2:summoning slevels:16
 SUBST:  x : xxc, G : Gm, m : mmcxb
-KFEAT:  G = metal_statue
-COLOUR: G = vehumet
-TILE:   G = arcane_conduit
-: set_feature_name("metal_statue", "arcane conduit")
+: vault_metal_statue_setup(_G, "G", "arcane conduit")
 MAP
 ...........1............
 .Gmm.x..x......x..x.mmG.
@@ -1603,12 +1580,9 @@ TAGS:   transparent misc_elf_vault
 DEPTH:  Elf
 MONS:   deep elf knight / deep elf pyromancer / deep elf zephyrmancer
 MONS:   deep elf annihilator, deep elf elementalist / thermic dynamo w:4
-KFEAT:  G = metal_statue
 NSUBST: D = 2 / 3 / * = 1:60 .:60 1 2
 SUBST:  E = 1:140 .:140 1 2, % = %%%*., G : GGx
-COLOUR: G = vehumet
-TILE:   G = arcane_conduit
-: set_feature_name("metal_statue", "arcane conduit")
+: vault_metal_statue_setup(_G, "G", "arcane conduit")
 MAP
 ccc..............ccc
 ccc..cc..cc..cc..ccc
@@ -1700,8 +1674,7 @@ KMONS: 3 = lost soul / weeping skull / spectral deep elf blademaster / \
            deep elf knight simulacrum
 KFEAT: 1V = V
 SUBST: 2 = 22., 3 = 33., D = 32., G = G:85 S B:5
-TILE:  G = dngn_gravestone
-: set_feature_name("granite_statue", "a gravestone")
+: vault_granite_statue_setup(_G, "G", "gravestone")
 MAP
 cccccccccccccccccccccc
 ccccG*GcccG%GcccG%Gccc
@@ -2036,19 +2009,14 @@ MONS:    deep elf pyromancer, deep elf knight, thermic dynamo
 ITEM:    ring of fire, ring of ice
 ITEM:    staff of fire no_pickup, staff of cold no_pickup
 KFEAT:   - = closed_clear_door
-KFEAT:   G = metal_statue
 SUBST:   0 = 12, 9 = 33344455
 SHUFFLE: df, df / eg
 : if crawl.coinflip() then
 SUBST:   ! = l, ? = G, ~ = w
-COLOUR:  G = ice
-TILE:    G = icy_conduit
-:   set_feature_name("metal_statue", "icy conduit")
+:   vault_metal_statue_setup(_G, "G", "icy conduit")
 : else
 SUBST:   ! = G, ? = w, ~ = l
-COLOUR:  G = fire
-TILE:    G = fiery_conduit
-:   set_feature_name("metal_statue", "fiery conduit")
+:   vault_metal_statue_setup(_G, "G", "fiery conduit")
 : end
 MAP
    xxxxxxxx

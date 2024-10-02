@@ -473,21 +473,20 @@ MONS:     sphinx / nothing
 MONS:     obsidian statue / orange crystal statue
 NSUBST:   ( = 1:( / *:.
 # Set up decorative statues.
-: if crawl.coinflip() then
+: if crawl.x_chance_in_y(3, 4) then
 SUBST:    I = I:900 5, N = N:900 5
 SUBST:    J = J:750 5, O = O:750 5
 SUBST:    K = K:550 5, P = P:550 5
 SUBST:    L = L:300 5, Q = Q:300 5
-: end
+:   vault_granite_statue_setup(_G, "FIJKLMNOPQ", "sarcophagus")
+TILE:     FIJKL = dngn_sarcophagus_pedestal_left
+: else
 SUBST:    FIJKLMNOPQ = G
+: end
 # Add greater mummies and traps to the long hall. About 16 greater mummies and
 # 6 traps on-average.
 SUBST:    ' = 2:24 ^ .:210
 KFEAT:    ^ = alarm trap / net trap / zot trap / dispersal trap
-COLOUR:   FIJKLMNOPQ = yellow
-TILE:     FIJKL = dngn_sarcophagus_pedestal_left
-TILE:     MNOPQ = dngn_sarcophagus_pedestal_right
-: set_feature_name("granite_statue", "sarcophagus")
 : set_feature_name("escape_hatch_down", "one-way staircase leading down")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

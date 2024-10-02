@@ -116,8 +116,9 @@ function sroom_beehive(e)
         e.nsubst('1 = 3:M / *:1')
     end
 
-    e.kitem('12M = black bear skeleton / \
-                   potion of ambrosia ident:all / nothing w:20')
+    e.kitem('1 = black bear skeleton / \
+                 potion of ambrosia ident:all / nothing w:20')
+    e.kitem('2M = potion of ambrosia ident:all / nothing w:25')
     decorative_floor(e, '2M', "flower patch")
 end
 

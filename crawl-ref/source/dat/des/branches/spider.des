@@ -9,6 +9,8 @@
 ###############################################################################
 ###############################################################################
 
+: crawl_require('dlua/vault.lua')
+
 # Functions for the spider trap and endvault loot
 {{
 function callback.spider_nest_trap(data, triggerable, triggerer, marker, ev)
@@ -2597,12 +2599,13 @@ SUBST:  Q = W .:15
 NSUBST: d = 2:d / 2:e / 3:f / *=gggge
 NSUBST: N = 4:W / c
 COLOUR: M = yellow
-TILE:   G = dngn_statue_snail w:15 / dngn_statue_tentacles / \
-            dngn_statue_sigmund / dngn_statue_wraith w:15
-TILE:   P = dngn_sarcophagus_pedestal_left
+# Bring this back when we can split descriptions across features in the same vault.
+# TILE:   G = dngn_statue_snail w:15 / dngn_statue_tentacles / \
+#             dngn_statue_sigmund / dngn_statue_wraith w:15
+TILE:   GP = dngn_sarcophagus_pedestal_left
 TILE:   M = wall_tomb
 FTILE:  23+$OEGHNPRS. = floor_sandstone:20 / none
-: set_feature_name("granite_statue", "sarcophagus")
+: vault_granite_statue_setup(_G, "GP", "sarcophagus")
 MAP
   .....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   .G.G.cccccccccccccccccccccccccccccccx

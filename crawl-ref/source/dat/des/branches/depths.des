@@ -149,8 +149,7 @@ FTILE:  - = floor_pebble_brown
 FTILE:  _ = floor_pebble_darkgray
 FTILE:  .123Og = floor_depthstone
 : depths_entry(_G)
-: set_feature_name("granite_statue", "a gravestone")
-TILE:   G = dngn_gravestone
+: vault_granite_statue_setup(_G, "G", "gravestone")
 MAP
   ....@....
  ...........

@@ -942,6 +942,8 @@ ORIENT:     encompass
 KMONS:      u = weeping skull
 KMONS:      U = laughing skull
 KFEAT:      uU = lava
+KFEAT:      X = x
+TILE:       X = wall_undead
 SUBVAULT:   B : volcano_tomb_subvault
 :           volcano_setup(_G)
 : place_chained_volcano(_G)
@@ -959,13 +961,13 @@ MAP
 xxy....LLlLllllllllllllllllllllllL...BBBBBBBBBBBBBBBBBBBBBBBBBB
 xy....LllllllllllllllllllllllllL....lBBBBBBBBBBBBBBBBBBBBBBBBBB
 xLl.LlllllllllllllllllllllllllllL..y.BBBBBBBBBBBBBBBBBBBBBBBBBB
-xlllllllllllllllllGllllllllllllllLLxxBBBBBBBBBBBBBBBBBBBBBBBBBB
-xxlllllllllllllGlllllGllllllllllllxx BBBBBBBBBBBBBBBBBBBBBBBBBB
+xlllllllllllllllllXllllllllllllllLLxxBBBBBBBBBBBBBBBBBBBBBBBBBB
+xxlllllllllllllXlllllXllllllllllllxx BBBBBBBBBBBBBBBBBBBBBBBBBB
  xxlllllllllllVlllllllVllllllllllxx  BBBBBBBBBBBBBBBBBBBBBBBBBB
-  xxUllllllllGlllllllllGlllllllUxx   BBBBBBBBBBBBBBBBBBBBBBBBBB
+  xxUllllllllXlllllllllXlllllllUxx   BBBBBBBBBBBBBBBBBBBBBBBBBB
    xxxllllllllllllllllllllllllxxx    BBBBBBBBBBBBBBBBBBBBBBBBBB
-     xxllllllllGlllllGlllllllxx      BBBBBBBBBBBBBBBBBBBBBBBBBB
-      xxllllllllllGlllllllllxx       BBBBBBBBBBBBBBBBBBBBBBBBBB
+     xxllllllllXlllllXlllllllxx      BBBBBBBBBBBBBBBBBBBBBBBBBB
+      xxllllllllllXlllllllllxx       BBBBBBBBBBBBBBBBBBBBBBBBBB
        xxllllllllllllllllllxx        BBBBBBBBBBBBBBBBBBBBBBBBBB
         xxxllllllllllllllxxx
           xxxlxxlxxxxlxxxx
@@ -1360,13 +1362,10 @@ MONS:   fire elemental / hell hound, deep elf pyromancer
 MONS:   deep elf archer ; shortbow ego:flaming . short sword ego:flaming . \
                           leather armour ego:fire_resistance
 KFEAT:  - = l
-KFEAT:  G = metal_statue
 SUBST:  $ = $$$defg, G : GG.
 NSUBST: 2 = 1:3 / * = 22., 1 = 1:2 / * = 11.
 KPROP:  - = no_tele_into
-COLOUR: G = fire
-TILE:   G = fiery_conduit
-: set_feature_name("metal_statue", "fiery conduit")
+: vault_metal_statue_setup(_G, "G", "fiery conduit")
 : volcano_setup(_G)
 MAP
          ----

@@ -84,6 +84,23 @@ function ks_random_setup(e, norandomexits)
     end
 end
 
+function zot_entry_setup(e)
+  e.tags("zot_entry")
+  e.place("Depths:$")
+  e.orient("float")
+  e.kitem("R = midnight gem")
+  e.kfeat("O = enter_zot")
+  e.mons("patrolling base draconian")
+  e.mons("fire dragon / ice dragon / storm dragon / \
+          shadow dragon / bone dragon / golden dragon")
+  e.mons("patrolling nonbase draconian")
+  e.kmons("0 = ettin / rakshasa / glowing shapeshifter w:5 / \
+              stone giant w:12 / spriggan berserker w:8 / hell knight w:5")
+  e.kmons("9 = fire giant w:12 / titan w:8 / vampire knight / \
+              spriggan air mage w:8 / deep troll earth mage w:8 / \
+              tengu reaver w:12 / tentacled monstrosity / lich w:2")
+end
+
 function soh_hangout()
   if dgn.persist.soh_hangout == nil then
     local hell_branches = { "Geh", "Coc", "Dis", "Tar" }
@@ -183,60 +200,95 @@ function master_elementalist_setup(e, glyph, ele_staff)
             "repel_missiles.11.wizard" .. equip_def)
 end
 
--- A poison & fire theming for statues that show up in Snake.
-function snake_statue_setup (e, glyph)
-  e.kfeat(glyph .. " = metal_statue")
-  if crawl.x_chance_in_y(2, 3) then
-    e.colour(glyph .. " = poison")
-    e.tile(glyph .. " = alchemical_conduit")
-    e.set_feature_name("metal_statue", "alchemical conduit")
-  else
-    e.colour(glyph .. " = fire")
-    e.tile(glyph .. " = fiery_conduit")
-    e.set_feature_name("metal_statue", "fiery conduit")
+-- Three sets of reusable vault feature redefines scattered across the game,
+-- kept in this one function for both consistency and ease of use.
+function vault_granite_statue_setup(e, glyph, type)
+  e.kfeat(glyph .. " = granite_statue")
+
+  -- Feature name, console colour, tile name.
+  local statues = {
+    ["broken pillar"] = {"lightgrey", "dngn_crumbled_column"},
+    ["gravestone"] = {"lightgrey", "dngn_gravestone"},
+    ["sarcophagus"] = {"yellow", "dngn_sarcophagus_pedestal_right"},
+    ["scintillating statue"] = {"mountain", "dngn_scintillating_statue"},
+  }
+
+  for name, contents in pairs(statues) do
+    if type == name then
+      e.colour(glyph .. " = " .. contents[1])
+      e.tile(glyph .. " = " .. contents[2])
+    end
   end
-  e.tile("G : dngn_statue_naga / dngn_statue_archer w:7")
+
+  e.set_feature_name("granite_statue", type)
 end
 
+function vault_metal_statue_setup(e, glyph, type)
+  e.kfeat(glyph .. " = metal_statue")
 
--- Since these are all reusable vault redefines scattered across the game,
--- we might as well have a singular source that keeps it consistent.
+  local statues = {
+    ["golden statue"] = {"yellow", "dngn_golden_statue"},
+    ["silver statue"] = {"silver", "dngn_silver_statue"},
+    ["iron statue"] = {"cyan", "dngn_statue_iron"},
+    ["mystic cage"] = {"mist", "dngn_mystic_cage"},
+    ["arcane conduit"] = {"vehumet", "arcane_conduit"},
+    ["misfortune conduit"] = {"shimmer_blue", "misfortune_conduit"},
+    ["dimensional conduit"] = {"warp", "dimensional_conduit"},
+    ["soul conduit"] = {"smoke", "soul_conduit"},
+    ["alchemical conduit"] = {"poison", "alchemical_conduit"},
+    ["fiery conduit"] = {"fire", "fiery_conduit"},
+    ["icy conduit"] = {"ice", "icy_conduit"},
+    ["earthen conduit"] = {"earth", "earthen_conduit"},
+    ["storm conduit"] = {"electricity", "storm_conduit"},
+    ["enigmatic dynamo"] = {"magic", "dngn_enigmatic_dynamo"},
+    ["nascence circuit"] = {"magic", "dngn_nascence_circuit"}
+  }
+
+  for name, contents in pairs(statues) do
+    if type == name then
+      e.colour(glyph .. " = " .. contents[1])
+      e.tile(glyph .. " = " .. contents[2])
+    end
+  end
+
+  e.set_feature_name("metal_statue", type)
+end
+
 function decorative_floor (e, glyph, type)
   e.kfeat(glyph .. ' = decorative_floor')
 
-  if type == 'flower patch' then
-    e.colour(glyph .. ' = yellow')
-    e.tile(glyph .. ' = dngn_flower_patch')
-  elseif type == 'garden patch' then
-    e.colour(glyph .. ' = yellow')
-    e.tile(glyph .. ' = dngn_garden_patch')
-  elseif type == 'floral vase' then
-    e.colour(glyph .. ' = lightmagenta')
-    e.tile(glyph .. ' = dngn_flower_pot')
-  elseif type == 'mourning vase' then
-    e.colour(glyph .. ' = magenta')
-    e.tile(glyph .. ' = dngn_dark_flower_pot')
-  elseif type == 'broken floral vase' then
-    e.colour(glyph .. ' = magenta')
-    e.tile(glyph .. ' = dngn_flower_pot_broken / dngn_dark_flower_pot_broken')
-  elseif type == 'orcish standard' then
-    e.colour(glyph .. ' = lightcyan')
-    e.tile(glyph .. ' = dngn_ensign_beogh')
-  elseif type == 'infernal standard' then
-    e.colour(glyph .. ' = red')
-    e.tile(glyph .. ' = dngn_ensign_gehenna')
-  elseif type == 'fur brush' then
-    e.colour(glyph .. ' = brown')
-    e.tile(glyph .. ' = dngn_yak_fur')
-  elseif type == 'mop and bucket' then
-    e.colour(glyph .. ' = lightblue')
-    e.tile(glyph .. ' = dngn_mop')
-  elseif type == 'bloodied mop and bucket' then
-    e.colour(glyph .. ' = lightred')
-    e.tile(glyph .. ' = dngn_mop_bloody')
+  local dec = {
+    ["flower patch"] = {"green", "dngn_flower_patch"},
+    ["garden patch"] = {"yellow", "dngn_garden_patch"},
+    ["floral vase"] = {"yellow", "dngn_flower_pot"},
+    ["mourning vase"] = {"magenta", "dngn_dark_flower_pot"},
+    ["broken floral vase"] = {"magenta", "dngn_flower_pot_broken / " ..
+                              "dngn_dark_flower_pot_broken"},
+    ["orcish standard"] = {"lightcyan", "dngn_ensign_beogh"},
+    ["infernal standard"] = {"red", "dngn_ensign_gehenna"},
+    ["fur brush"] = {"brown", "dngn_yak_fur"},
+    ["mop and bucket"] = {"lightblue", "dngn_mop"},
+    ["bloodied mop and bucket"] = {"lightred", "dngn_mop_bloody"}
+  }
+
+  for name, contents in pairs(dec) do
+    if type == name then
+      e.colour(glyph .. " = " .. contents[1])
+      e.tile(glyph .. " = " .. contents[2])
+    end
   end
 
   e.set_feature_name('decorative_floor', type)
+end
+
+-- A reusable poison / fire / snake theming for statues that show up in Snake.
+function snake_statue_setup (e, glyph)
+  if crawl.x_chance_in_y(2, 3) then
+    vault_metal_statue_setup(e, glyph, "alchemical conduit")
+  else
+    vault_metal_statue_setup(e, glyph, "fiery conduit")
+  end
+  e.tile("G : dngn_statue_naga / dngn_statue_archer w:7")
 end
 
 -- A function that uses what's in the mon-pick-data (and bands) for V in 0.32

@@ -605,12 +605,9 @@ MONS:    vampire knight ; demon whip | demon trident | demon blade . \
 MONS:    putrid mouth, tormentor w:3, silent spectre
 KMONS:   9 = reaper
 KMONS:   J = Jory w:9 / tzitzimitl w:1, tzitzimitl
-KFEAT:   G = metal_statue
 NSUBST:  J = 1:J / *:9, 8 = 1:6 / * = 5:19 6:1
 SUBST:   A : x.., B : x.., } = }>
-COLOUR:  G = mist
-TILE:    G = dngn_mystic_cage
-: set_feature_name("metal_statue", "mystic cage")
+: vault_metal_statue_setup(_G, "G", "mystic cage")
 MAP
           xx  xx  xx  xx  xx  xx
          xxxxxxxxxxxxxxxxxxxxxxxxx
@@ -868,8 +865,7 @@ NSUBST: D = + / x, E = + / x, F = + / x, H = + / x, J = + / x, K = + / x, \
         R = +x / +x / x
 SUBST:  G : GGVVY
 : if crawl.coinflip() then
-TILE:  G = dngn_crumbled_column
-: set_feature_name("granite_statue", "broken pillar")
+:   vault_granite_statue_setup(_G, "G", "broken pillar")
 : end
 MAP
 .....xRRRx.....
@@ -974,8 +970,7 @@ KMONS:  1 = halazid warlock
 KMONS:  2 = revenant
 KMONS:  3 = spectral thing / nothing w:5
 SUBST:  S = 12
-TILE:  G = dngn_crumbled_column
-: set_feature_name("granite_statue", "broken pillar")
+: vault_granite_statue_setup(_G, "G", "broken pillar")
 MAP
     xxxxxxx
   xxx.x.x.xxx

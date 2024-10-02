@@ -19,21 +19,6 @@
 : crawl_require('dlua/vault.lua')
 
 {{
--- TODO: move this to vault.lua so it doesn't desync with zot.des's version.
-function zot_entry_setup(e)
-    e.kitem("O = midnight gem")
-    e.kfeat("O = enter_zot")
-    e.mons("patrolling base draconian")
-    e.mons("fire dragon / ice dragon / storm dragon / \
-            shadow dragon / bone dragon / golden dragon")
-    e.mons("patrolling nonbase draconian")
-    e.kmons("0 = ettin / rakshasa / glowing shapeshifter w:5 / \
-                 stone giant w:12 / spriggan berserker w:8 / hell knight w:5")
-    e.kmons("9 = fire giant w:12 / titan w:8 / vampire knight / \
-                 spriggan air mage w:8 / deep troll earth mage w:8 / \
-                 tengu reaver w:12 / tentacled monstrosity / lich w:2")
-end
-
 function minmay_elemental_octagon_setup(e)
     e.tags('uniq_elemental_octagon no_pool_fixup no_monster_gen no_item_gen')
     e.subst('a : xcvb m:5 .:5')
@@ -2022,13 +2007,10 @@ MONS:    revenant / eidolon / lich w:5
 : end
 KITEM:   _ = superb_item
 KFEAT:   _ = altar_yredelemnul / altar_kikubaaqudgha
-KFEAT:   g = metal_statue
 SHUFFLE: apqr
 SUBST:   a = +, pqr = x, D = 56, G : Ggg
 NSUBST:  1 = 10:1 / 8 = 1. / *:.
-COLOUR:  g = mist
-TILE:    g = dngn_mystic_cage
-: set_feature_name("metal_statue", "mystic cage")
+: vault_metal_statue_setup(_G, "g", "mystic cage")
 MAP
 G..wwwwwWwwWwwWwwwww..G
 ..wwwwwWwwwWwwwWwwwww..
@@ -2333,11 +2315,8 @@ MONS:   golden eye / glass eye w:5
 MONS:   glowing orange brain
 KFEAT:  T = fountain_eyes
 KFEAT:  m = iron_grate
-KFEAT:  G = metal_statue
 SUBST:  G = G..
-COLOUR: G = shimmer_blue
-TILE:   G = misfortune_conduit
-: set_feature_name("metal_statue", "misfortune conduit")
+: vault_metal_statue_setup(_G, "G", "icy conduit")
 MAP
 ...................................
 .cccccccccccc.........cccccccccccc.
@@ -2958,17 +2937,14 @@ MONS:   pearl dragon / fravashi god:Zin w:2
 : else
 KMONS:  4 = Mennas, fravashi god:Zin
 : end
-KFEAT:  G = metal_statue
 NSUBST: A = 3 / '
 KFEAT:  _ = altar_zin
 FTILE:  '+_!$%*|1234 = floor_vault
 TILE:   v = dngn_metal_wall_white
 TILE:   n = dngn_transparent_stone_white
-TILE:   G = dngn_silver_statue
 COLOUR: vn = white
-COLOUR: G = silver
 SUBST:  !' = .
-: set_feature_name("metal_statue", "silver statue")
+: vault_metal_statue_setup(_G, "G", "silver statue")
 MAP
 ............@@@@@@@............
 ....vvvvvvv...T.T...vvvvvvv....
@@ -3234,10 +3210,10 @@ PLACE:  Depths:$
      kfeat("1 = stone_stairs_down_i / stone_stairs_down_ii / "
            .. "stone_stairs_down_iii / escape_hatch_down")
      kfeat("t = petrified_tree")
-     subst("* = .")
+     subst("*$R = .")
   elseif you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
-     colour(".+123* = magenta")
-     ftile(".+123* = floor_hall")
+     colour(".+123*$R = magenta")
+     ftile(".+123*$R = floor_hall")
      kitem("1 = midnight gem")
      kfeat("1 = enter_zot")
      kmons("1 = nonbase draconian")
@@ -3256,6 +3232,7 @@ PLACE:  Depths:$
      kmons("3 = nothing")
      kitem("1 = superb_item")
      kitem("2 = any")
+     subst("R = $")
   end
 }}
 SUBST:  G = GTt
@@ -3270,9 +3247,9 @@ x.3x..c.......x..x3..
  ...xcc.cc....ccc.x.
   ...c..c........c.
   ...c..c+ccccc....
-.....c..c.*.+.cc.....
+.....c..cR*$+.cc.....
 @.G..c..c*1*c..c..G.@
-.....cc.+.*.c..c.....
+.....cc.+$*$c..c.....
   ....ccccc+c..c...
   .c........c..c...
  .x.ccc....cc.ccx...
@@ -3415,10 +3392,8 @@ MARKER: C = lua:fog_machine { cloud_type= "purple smoke", \
              pow_min = 2, pow_max = 4, delay = 15, \
              size = 2, walk_dist = 20, spread_rate= 33 }
 FTILE:  'P1vbtmn = floor_pebble_red
-COLOUR:  G = mountain
-TILE:    G = dngn_scintillating_statue
 TILE:    b = bedevilled_crystal_abyss
-: set_feature_name("granite_statue", "scintillating statue")
+: vault_granite_statue_setup(_G, "G", "scintillating statue")
 : set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
     ---------
@@ -3685,7 +3660,6 @@ MONS:   reaper ; halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:venom 
 : end
 KMONS:  A = lich
 KFEAT:  A = stone_arch
-KFEAT:  G = metal_statue
 KPROP:  '? = no_tele_into
 KMASK:  '? = opaque
 NSUBST: - = 4:| / 4:* / 4:% / *:.
@@ -3693,9 +3667,7 @@ SUBST:  G : G.
 MARKER: ? = lua:fog_machine { cloud_type = "poison gas", pow_min = 2, \
         pow_max = 7, delay = 30, start_clouds = 1, size_min = 1, \
         size_max = 7, spread_rate = 1 }
-COLOUR: G = poison
-TILE:   G = alchemical_conduit
-:   set_feature_name("metal_statue", "alchemical conduit")
+: vault_metal_statue_setup(_G, "G", "alchemical conduit")
 MAP
                   ccccccc
                 cccc'?'cccc
@@ -4323,14 +4295,11 @@ MONS:    white draconian stormcaller / white draconian annihilator / \
          white draconian monk / white draconian knight ; glaive ego:freezing . \
                                                          cloak
 MONS:    white draconian ; halberd ego:freezing . cloak
-KFEAT:   b = metal_statue
 NSUBST:  . = 1:{} / 1 = ):50 / 1 = ]:40 >
 NSUBST:  - = 4:1 / 4:2 / 2 = 122 / *:-
 SHUFFLE: {([, })]
 SUBST:   b : bm
-COLOUR:  b = ice
-TILE:    b = icy_conduit
-:   set_feature_name("metal_statue", "icy conduit")
+:   vault_metal_statue_setup(_G, "b", "icy conduit")
 : elseif you.branch() == "Vaults" then
 MONS:   ironbound frostheart, arcanist / white very ugly thing w:2
 SUBST:  @ = ., b = m
@@ -4588,12 +4557,9 @@ MONS:   spark wasp
 MONS:   anaconda w:5 / black mamba / water moccasin, mana viper, shock serpent
 : end
 ITEM:   star_item w:60 / staff of air / lightning rod w:20
-KFEAT:  G = metal_statue
 NSUBST: " = 1:2 / 1:1 / 3=12., ' = 1:2 / 1:1 / 3=12., - = 2:3, ` = 2=*% / *:%
 SUBST:  G : Gb
-COLOUR: G = electricity
-TILE:   G = storm_conduit
-: set_feature_name("metal_statue", "storm conduit")
+: vault_metal_statue_setup(_G, "G", "storm conduit")
 MAP
 @...........
 ....ccccccc..
@@ -4624,10 +4590,9 @@ NSUBST: . = 3:1 / 3=1. / 3:2 / 2=2., " = 1:*% / 3 = $%., 3 = 1:3 / *:.
 NSUBST: . = 5:1 / 3=1. / 3:2 / 2=2., " = 1:*% / 5 = $%.
 : end
 SUBST:  . = .....--__tG
-TILE:   G = dngn_gravestone
 FTILE:  - = floor_pebble_brown
 FTILE:  _ = floor_pebble_darkgray
-: set_feature_name("granite_statue", "a gravestone")
+: vault_granite_statue_setup(_G, "G", "gravestone")
 MAP
   ....@....
  ...........
@@ -4799,13 +4764,10 @@ ORIENT: float
 : if you.in_branch("Vaults") then
 KMONS:  1 = war gargoyle
 KMONS:  2 = vault sentinel
-KFEAT:  G = metal_statue
 KITEM:  12 = % / * w:4
 NSUBST: - = 3:1 / 2:2 / 2 = 1G / *:G
 SUBST:  @ = ., '" = .
-COLOUR: G = silver
-TILE:   G = dngn_silver_statue
-:   set_feature_name("metal_statue", "silver statue")
+:   vault_metal_statue_setup(_G, "G", "silver statue")
 : else
 :   if you.depth() > 12 then
 KMONS:  1 = molten gargoyle
@@ -5700,11 +5662,10 @@ NSUBST:  O = 2=k / k$, N = 2=$ / M, M = 2=3 / 3., K = 2=Q / 4=QP / P
 # wall, and statues, the latter being themed as sarcophagi.
 SUBST:   x = c
 TILE:    c = wall_tomb
-COLOUR:  rc = yellow
-TILE:    r = dngn_sarcophagus_pedestal_right
+COLOUR:  c = yellow
 FTILE:   fgjk$F123PQ^.rc = floor_sandstone
 FTILE:   = = floor_sandstone
-: set_feature_name("granite_statue", "sarcophagus")
+: vault_granite_statue_setup(_G, "r", "sarcophagus")
 :     end
 : elseif you.in_branch("Lair") then
 KMONS:   3 = lindwurm
@@ -5748,10 +5709,9 @@ NSUBST:  K = 3=Q / 3=QP / P, NM = 2=$ / N / 2=3 / 3.
 # theme for the interior.
 SUBST:   ' = a', x = c
 TILE:    c = wall_tomb
-COLOUR:  rc = yellow
-TILE:    r = dngn_sarcophagus_pedestal_right
+COLOUR:  c = yellow
 FTILE:   fhjk$F123NPQ^.rc = floor_sandstone
-: set_feature_name("granite_statue", "sarcophagus")
+: vault_granite_statue_setup(_G, "G", "sarcophagus")
 : end
 TILE:    q = dngn_statue_ancient_hero
 CLEAR:   '
@@ -6108,7 +6068,6 @@ MONS:   hornet, orc sorcerer / ogre mage, jorogumo / fenstrider witch
 MONS:   sphinx / vampire knight, dread lich
 # scroll of vulnerability as fallback if paralysis isn't generated this game
 ITEM:   wand of paralysis w:9999 / scroll of vulnerability w:1
-KFEAT:  G = metal_statue
 NSUBST: 1 = 1:1 / *:1.
 : if you.in_branch("D") and you.absdepth() < 13 then
 NSUBST:  - = 20 = 1... / 1:2 / *:.
@@ -6124,10 +6083,8 @@ NSUBST: - = 12 = 1... / 12 = 2... / 1:3 / *:.
 : end
 NSUBST: ' = 1:* / * = *..
 SUBST:  G : GG.
-COLOUR: G = shimmer_blue
 TILE:   v = dngn_metal_wall_yellow
-TILE:   G = misfortune_conduit
-: set_feature_name("metal_statue", "misfortune conduit")
+: vault_metal_statue_setup(_G, "G", "misfortune conduit")
 MAP
 ccccccccccccccc
 c-----'''-----c
@@ -6464,7 +6421,6 @@ ITEM:    potion of ambrosia q:4 ident:all / \
 KFEAT:   _ = altar_xom
 KFEAT:   ? = altar_kikubaaqudgha mimic
 KFEAT:   ! = altar_yredelemnul mimic
-KFEAT:   g = granite_statue
 NSUBST:  9 = 3:0 / 1:1 / 2:2 / 1:E / 5 = 1E 0:30 / *:., I = 1:4 / 1:6 / *:.
 NSUBST:  A = 2:8 / 2 = 8. / *:., 8 = 1:3 / 1:4 / 1:6 / 1:7 / 2:H / * = 36E 0:30
 SHUFFLE: BCD
@@ -6476,10 +6432,9 @@ COLOUR:  ` = magenta
 COLOUR:  g = mountain
 TILE:    x = wall_undead_magenta / wall_undead_darkgray
 TILE:    v = dngn_metal_wall_red / dngn_metal_wall_cyan
-TILE:    g = dngn_scintillating_statue
 FTILE:   `+ = floor_pebble_magenta / floor_pebble_red
 FTILE:   .f_$%*|?!12345670BCDEF = floor_tomb
-: set_feature_name("granite_statue", "scintillating statue")
+: vault_granite_statue_setup(_G, "g", "scintillating statue")
 : decorative_floor(_G, 'f', "broken floral vase")
 MAP
   ccccccccccccccccccccccccccccccccc
@@ -6553,12 +6508,10 @@ SUBST:   T = tt., F : FF.
 SHUFFLE: 678
 COLOUR:  x = yellow
 COLOUR:  b = white
-COLOUR:  G = mountain
 TILE:    x = wall_wax
 TILE:    b = dngn_crystal_white
-TILE:    G = dngn_scintillating_statue
 FTILE:   '*|67890 = floor_pebble_darkgray
-: set_feature_name("granite_statue", "scintillating statue")
+: vault_granite_statue_setup(_G, "G", "scintillating statue")
 : decorative_floor(_G, 'P', "flower patch")
 MAP
  XXXXXXXXXX
@@ -6709,14 +6662,11 @@ KMONS:   F = entropy weaver band
 KMONS:   0 = arcanist / necromancer / very ugly thing
 KMONS:   9 = stone giant / tengu reaver / sphinx
 KMONS:   P = bush
-KFEAT:   G = metal_statue
 SUBST:   @&A = ., Wl = ., c = b
 NSUBST:  1 = 4:1 / 1:12. / 1:% / *:., 2 = 2:2 / 1:% / *:.
 NSUBST:  d = 1:D. / *:., f = 1:F. / *:., P = 2:G / *:P
 SHUFFLE: DF
-COLOUR:  G = mist
-TILE:    G = dngn_mystic_cage
-:   set_feature_name("metal_statue", "mystic cage")
+: vault_metal_statue_setup(_G, "G", "mystic cage")
 CLEAR:   z
 : end
 SUBST:   & : xx@, A : x@@, X = x., P = Pxx...
@@ -7935,7 +7885,7 @@ ORIENT:  float
 DEPTH:   D:6-, !D:$, Depths, !Depths:$, Elf, Snake
 WEIGHT:  5 (Elf, Snake), 10
 KMONS:   0 = 0
-: if you.depth() < 9 then
+: if you.in_branch("D") and you.depth() < 9 then
 :   kmons("9 = place:D:" .. you.depth() + 3)
 : else
 KMONS:   9 = 9
@@ -8216,7 +8166,7 @@ KMONS:  8 = w:35 nonbase draconian / orb of fire / electric golem / \
             w:5 dread lich / protean progenitor w:15
 SUBST:  *% = .
 :else
-KMONS:  8 = 8 band
+KMONS:  8 = 8
 : end
 KMONS:  0 = 0 band
 MAP
@@ -9514,11 +9464,11 @@ ORIENT: centre
 :     zot_entry_setup(_G)
 TAGS:   patrolling no_monster_gen transparent
 NSUBST: 0 = 6:1 / 2 = 1. / 2:0 / *:.
-NSUBST: 9 = 2:3 / 1:9 / *:.
-SUBST:  8 = 2, | = -
+NSUBST: 9 = 2:3 / 1:9 / *:., | = 1:R / *:$
+SUBST:  8 = 2
 COLOUR: c = lightmagenta
-COLOUR: -+2O = magenta
-FTILE:  -+2O = floor_hall
+COLOUR: -+2OR$ = magenta
+FTILE:  -+2OR$ = floor_hall
 : else
 KMONS:  8 = 8 band
 KMONS:  9 = 9 band
@@ -9552,11 +9502,11 @@ ORIENT: centre
 :     zot_entry_setup(_G)
 TAGS:   no_monster_gen transparent
 NSUBST: 0 = 6:1 / 2 = 1. / 2:0 / *:.
-NSUBST: 9 = 2:3 / 1:9 / *:.
-SUBST:  8 = 2, | = -
+NSUBST: 9 = 2:3 / 1:9 / *:., | = 1:R / *:$
+SUBST:  8 = 2
 COLOUR: c = lightmagenta
-COLOUR: -+2O = magenta
-FTILE:  -+2O = floor_hall
+COLOUR: -+2OR$ = magenta
+FTILE:  -+2OR$ = floor_hall
 : else
 KMONS:  8 = 8 band
 KMONS:  9 = 9 band
@@ -10131,23 +10081,20 @@ TAGS:   transparent no_monster_gen no_pool_fixup no_item_gen
 TAGS:   uniq_kennysheep_gozag_temple
 DEPTH:  Depths, !Depths:$
 ORIENT: centre
-KMONS:  2 = guardian serpent
+KMONS:  1 = guardian serpent
 KMONS:  B = golden dragon
 KITEM:  | = gold good_item
-KITEM:  23 = gold
+KITEM:  13 = gold
 KFEAT:  B = altar_gozag
-KFEAT:  D = granite_statue
-KFEAT:  G = metal_statue
-TILE:   GD = dngn_golden_statue
-: set_feature_name("metal_statue", "golden statue")
-COLOUR: cGD = yellow
+COLOUR: c = yellow
 FTILE:  .0_Gt = floor_grass
-FTILE:  $|B}+nc23-D = floor_limestone
+FTILE:  $|B}+nc1-D = floor_limestone
 FTILE:  " = floor_dirt
 TILE:   c = wall_tomb
 KFEAT:  _ = antiques shop name:Gozag greed:100 count:3 /\
             antique weapon shop name:Gozag greed:100 count:3 /\
             antique armour shop name:Gozag greed:100 count:3
+: vault_metal_statue_setup(_G, "GD", "golden statue")
 MAP
       ww    @    ww
      wwt..G"""G..tww
@@ -10158,9 +10105,9 @@ MAP
  ww..."""cc+++cc"""...ww
  ww.t.""Gcc$$$ccG"".t.ww
  ww..0""cc$$$$$cc""0..ww
- w""""""n$$2|$$$n""""""w
+ w""""""n$$1|$$$n""""""w
 @""G.""_n$$|B|$$n_"".G""@
- w""""".n$$$|2$$n."""""w
+ w""""".n$$$|1$$n."""""w
  ww.0"".cc$$$$$cc.""0.ww
  ww.."".Gcc$$$ccG.""..ww
  ww..""..0cnnnc0..""..ww

@@ -213,12 +213,9 @@ ENDMAP
 NAME:    regret_index_abyss_entry_earlier_magic
 TAGS:    nolayout_encompass transparent
 MONS:    occultist, rakshasa, glowing orange brain
-KFEAT:   G = metal_statue
 SUBST:   - : xc++., 0 = 123, D : x.., E : x..
 SHUFFLE: AO
-COLOUR:  G = warp
-TILE:    G = dimensional_conduit
-: set_feature_name("metal_statue", "dimensional conduit")
+: vault_metal_statue_setup(_G, "G", "dimensional conduit")
 : abyss_entry(_G, 'O')
 MAP
     x...@..xx..

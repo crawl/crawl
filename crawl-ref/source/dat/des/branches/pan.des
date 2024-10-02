@@ -415,7 +415,7 @@ NSUBST: ? = 1:O / 4:1 / 2:2 /*:.
 : pan_entry_vault_contents(_G, 'O')
 MAP
 ''''''''''''
-'xxx....xxx'
+'xxx''''xxx'
 'x?xx+xxx?x'
 'xx+....+xx'
 ''x.x++x.x''
@@ -3055,7 +3055,6 @@ end
 }}
 : end
 KFEAT:   D = granite_statue
-KFEAT:   S = metal_statue
 KFEAT:   X = rock_wall
 KFEAT:   _ = floor
 KFEAT: { = {
@@ -3069,10 +3068,8 @@ COLOUR:  P.xp01234567dO = disco
 RTILE:   x = wall_zot_blue
 FTILE:   D.xpP01234567dO = floor_pebble
 FTILE:   _{+S = floor_hall
-COLOUR:  S = warp
-TILE:    S = dimensional_conduit
 TILE:    D = dngn_disco_ball
-: set_feature_name("metal_statue", "dimensional conduit")
+: vault_metal_statue_setup(_G, "S", "dimensional conduit")
 : set_feature_name("granite_statue", "weirdly glowing ball")
 MARKER:  D = lua:props_marker { veto_destroy="veto" }
 MAP
@@ -3185,10 +3182,8 @@ KFEAT:   L = altar_lugonu
 KFEAT:   t = demonic_tree
 : if crawl.one_chance_in(3) then
 SHUFFLE: YT / xK / GM / tL
-COLOUR:  G = mountain
 TILE:    x = wall_undead
-TILE:    G = dngn_scintillating_statue
-:   set_feature_name("granite_statue", "scintillating statue")
+:   vault_granite_statue_setup(_G, "G", "scintillating statue")
 : else
 SUBST:   T = Y
 : end
@@ -3213,10 +3208,8 @@ KFEAT:   L = altar_lugonu
 KFEAT:   t = demonic_tree
 : if crawl.one_chance_in(3) then
 SHUFFLE: YT / xK / GM / tL
-COLOUR:  G = mountain
 TILE:    x = wall_undead
-TILE:    G = dngn_scintillating_statue
-:   set_feature_name("granite_statue", "scintillating statue")
+:   vault_granite_statue_setup(_G, "G", "scintillating statue")
 : else
 SUBST:   T = Y
 : end
@@ -4274,21 +4267,19 @@ ITEM:   any
 KFEAT:  _ = altar_the_shining_one
 KFEAT:  E = altar_elyvilon
 KFEAT:  Z = altar_zin
-KFEAT:  G = metal_statue
 KFEAT:  P = w
 NSUBST: . = 1:> / *:., i = 2=ghh / 3=ghhiii / *:i
 TILE:   c = wall_church
-COLOUR: cGH = yellow
+COLOUR: c = yellow
 TILE:   v = dngn_metal_wall_white
 COLOUR: v& = white
-TILE:   GH = dngn_golden_statue
 FTILE:  _124S~cG|*'O = floor_limestone
 FTILE:  "E80B;$ = floor_grass
 COLOUR: "80B;$ = green
 FTILE:  -ZDghi&v = floor_vault
 KPROP:  ;E8$ = no_tele_into
-SUBST:  ~& = +, '"-; = ., H = G, C = c
-: set_feature_name("metal_statue", "golden statue")
+SUBST:  ~& = +, '"-; = ., C = c
+: vault_metal_statue_setup(_G, "GH", "golden statue")
 : set_feature_name("metal_wall", "silver wall")
 : set_random_mon_list("angel w:20 / cherub / ophan / daeva /\
 :                      fravashi / apis w:20")

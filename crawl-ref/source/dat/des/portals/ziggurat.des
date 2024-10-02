@@ -6,6 +6,7 @@
 # XXX: Ziggurat code is incomplete.
 
 : crawl_require("dlua/ziggurat.lua")
+: crawl_require('dlua/vault.lua')
 
 {{
 function megazig_zot_traps(e)
@@ -292,13 +293,10 @@ NAME:    ziggurat_pillar_centre_l
 TAGS:    ziggurat_pillar centered no_dump unrand no_exits
 KFEAT:   g = metal_statue
 SHUFFLE: X' / X' / X' / 'X
-SUBST:   xX : bcmvx, ' = .
+SUBST:   xX : bcmvxG, ' = .
 NSUBST:  G = 1:g / *:G
-COLOUR:  G = mountain, g = silver
-TILE:    G = dngn_scintillating_statue
-TILE:    g = dngn_silver_statue
-: set_feature_name("granite_statue", "scintillating statue")
-: set_feature_name("metal_statue", "silver statue")
+: vault_granite_statue_setup(_G, "G", "scintillating statue")
+: vault_metal_statue_setup(_G, "g", "silver statue")
 : megazig_zot_traps(_G)
 MAP
   x
@@ -313,13 +311,10 @@ TAGS:    ziggurat_pillar centered no_dump unrand no_exits
 DEPTH:   Zig:18-
 WEIGHT:  5
 SHUFFLE: X'" / X'" / 'X" / '"X
-SUBST:   x : bcmvx, X : bcmvx, '" = .
+SUBST:   x : bcmvx, X : bcmvxG, '" = .
 NSUBST:  G = 1:G / *:g
-COLOUR:  G = mountain, g = silver
-TILE:    G = dngn_scintillating_statue
-TILE:    g = dngn_silver_statue
-: set_feature_name("granite_statue", "scintillating statue")
-: set_feature_name("metal_statue", "silver statue")
+: vault_granite_statue_setup(_G, "G", "scintillating statue")
+: vault_metal_statue_setup(_G, "g", "silver statue")
 : megazig_zot_traps(_G)
 MAP
   x x
@@ -332,13 +327,10 @@ ENDMAP
 NAME:    ziggurat_pillar_centre_n
 TAGS:    ziggurat_pillar centered no_dump unrand no_exits no_pool_fixup
 DEPTH:   Zig:18-
-SUBST:   x : w:40 bcmvx
+SUBST:   x : w:40 bcmvxG
 NSUBST:  G = 1:g / *:G
-COLOUR:  G = mountain, g = silver
-TILE:    G = dngn_scintillating_statue
-TILE:    g = dngn_silver_statue
-: set_feature_name("granite_statue", "scintillating statue")
-: set_feature_name("metal_statue", "silver statue")
+: vault_granite_statue_setup(_G, "G", "scintillating statue")
+: vault_metal_statue_setup(_G, "g", "silver statue")
 : megazig_zot_traps(_G)
 MAP
  ...
@@ -461,9 +453,7 @@ NAME:   ziggurat_pillar_centre_dispersal
 TAGS:   ziggurat_pillar centered generate_awake unrand no_exits
 KFEAT:  ^ = dispersal trap
 KFEAT:  a = iron_grate
-COLOUR: G = mountain
-TILE:   G = dngn_scintillating_statue
-: set_feature_name("granite_statue", "scintillating statue")
+: vault_granite_statue_setup(_G, "G", "scintillating statue")
 : megazig_zot_traps(_G)
 MAP
 ^a.a^
@@ -477,10 +467,7 @@ NAME:   ziggurat_pillar_centre_mark
 TAGS:   ziggurat_pillar centered unrand no_exits
 WEIGHT: 5
 KFEAT:  ^ = alarm trap
-KFEAT:  G = metal_statue
-COLOUR: G = silver
-TILE:   G = dngn_silver_statue
-: set_feature_name("metal_statue", "silver statue")
+: vault_metal_statue_setup(_G, "G", "silver statue")
 : megazig_zot_traps(_G)
 MAP
  G.G

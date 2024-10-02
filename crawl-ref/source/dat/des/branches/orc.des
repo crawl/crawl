@@ -1094,12 +1094,8 @@ ENDMAP
 # warg stables, with kobold stablehand
 NAME:   mines5_lemuel
 MONS:   warg / wolf, kobold blastminer
-KFEAT:  G = metal_statue
 SUBST:  ? : wx, G : GGG..
-COLOUR: G = mist
-TILE:   G = dngn_mystic_cage
-: set_feature_name("metal_statue", "mystic cage")
-
+: vault_metal_statue_setup(_G, "G", "mystic cage")
 MAP
 x???????x
 xwwwwwwwx
@@ -1626,12 +1622,9 @@ TAGS:   no_monster_gen transparent
 DEPTH:  Orc
 ORIENT: float
 MONS:   warg
-KFEAT:  G = metal_statue
 NSUBST: 1 = 3:1 / 4 = 1..
 SUBST:  G : GGI
-COLOUR: G = mist
-TILE:   G = dngn_mystic_cage
-: set_feature_name("metal_statue", "mystic cage")
+: vault_metal_statue_setup(_G, "G", "mystic cage")
 MAP
 xxx..@..xxx
 x1...1...1x
@@ -1755,14 +1748,11 @@ KMONS:   9 = ogre / two-headed ogre
 KMONS:   0 = ogre mage
 KFEAT:   S = any shop
 KFEAT:   _ = altar_beogh
-KFEAT:   G = metal_statue
 SHUFFLE: 34? / 56! / 78` / 90~, AC / BD / BD
 SUBST:   ? = 33444, ! = 55666, ` = 77888, ~ = 990
 SUBST:   1 = 1., 2 = 222.
 SUBST:   AC = +, BD = c, T : TIII, G : GGGcc
-COLOUR:  G = mist
-TILE:    G = dngn_mystic_cage
-: set_feature_name("metal_statue", "mystic cage")
+: vault_metal_statue_setup(_G, "G", "mystic cage")
 MAP
 ...................................
 ...................................

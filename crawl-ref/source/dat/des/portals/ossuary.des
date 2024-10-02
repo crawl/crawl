@@ -308,11 +308,9 @@ ENDMAP
 NAME:   mainiacjoe_ossuary_entry_dusty_tomb
 TAGS:   no_monster_gen no_item_gen
 KFEAT:  ` = web
-KFEAT:  H = granite_statue
 NSUBST: ` = 8:` / *:.
-TILE:   G = dngn_sarcophagus_pedestal_right
+: vault_granite_statue_setup(_G, "GH", "sarcophagus")
 TILE:   H = dngn_sarcophagus_pedestal_left
-: set_feature_name("granite_statue", "sarcophagus")
 : ossuary_portal(_G)
 MAP
   .......

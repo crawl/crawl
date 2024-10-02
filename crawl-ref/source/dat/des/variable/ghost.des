@@ -94,10 +94,9 @@ ORIENT: float
 KMONS:  O = player ghost
 KMONS:  p = withered plant
 SUBST:  t : tp
-TILE:   G = dngn_gravestone
 TILE:   t = dngn_tree_dead
 COLOUR: t = brown
-: set_feature_name("granite_statue", "a gravestone")
+: vault_granite_statue_setup(_G, "G", "gravestone")
 : set_feature_name("tree", "dead tree")
 FTILE:  -|*%$OGt = floor_pebble_brown / floor_pebble_darkgray
 : ghost_setup(_G, true)
@@ -260,11 +259,10 @@ NSUBST:  d = d / |*--, e = e / |*--, f = |* / |*--, h = 2=|* / |*--
 NSUBST:  d = d / |*--, e = e / |*--, f = |* / |*--, h = 2=|* / |*--
 : end
 SUBST:   qrs = G, Z = -, y = p, z = V, p : tp
-TILE:    G = dngn_gravestone
 TILE:    t = dngn_tree_dead
 COLOUR:  t = brown
 FTILE:   -de|*%$DFHpGt = floor_pebble_brown / floor_pebble_darkgray
-: set_feature_name("granite_statue", "a gravestone")
+: vault_granite_statue_setup(_G, "G", "gravestone")
 : set_feature_name("tree", "dead tree")
 : ghost_setup(_G, true)
 MAP
@@ -415,12 +413,9 @@ SUBST:  D = DF
 : setup_gozag_gold(_G)
 KFEAT:  ODEJ = abandoned_shop
 KFEAT:  FH = antiques shop
-KFEAT:  G = metal_statue
 KFEAT:  _ = altar_gozag
-TILE:   G = dngn_golden_statue
 FTILE:  -_DEFHJ$0189OG = floor_limestone
-COLOUR: G = yellow
-: set_feature_name("metal_statue", "golden statue")
+: vault_metal_statue_setup(_G, "G", "golden statue")
 : set_feature_name("stone_wall", "golden wall")
 : ghost_setup(_G, true)
 MAP
@@ -1065,11 +1060,10 @@ MONS:   ancient lich / dread lich
 : end
 : ghost_good_loot(_G)
 NSUBST: - = 2=1 / 2=1- / 2 / 2=2- / 3 / -
-TILE:   G = dngn_gravestone
 TILE:   t = dngn_tree_dead
 COLOUR: t = brown
 FTILE:  GtO123498$*|- = floor_pebble_brown / floor_pebble_darkgray
-: set_feature_name("granite_statue", "a gravestone")
+: vault_granite_statue_setup(_G, "G", "gravestone")
 : set_feature_name("tree", "dead tree")
 : ghost_setup(_G)
 MAP

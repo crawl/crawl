@@ -51,13 +51,6 @@ function dis_castle(e)
    e.depth("Dis:$")
    dis_rune(e)
 end
-
-function dis_statues(e)
-    e.kfeat("G = metal_statue")
-    e.colour("G = cyan")
-    e.tile("G = dngn_statue_iron")
-    e.set_feature_name("metal_statue", "iron statue")
-end
 }}
 
 ##############################################################################
@@ -70,7 +63,7 @@ MONS:   guardian mummy w:6 / ushabti w:4 / mummy priest / royal mummy
 MONS:   ancient lich / dread lich
 NSUBST: 1:1=}> / *=1
 # occasionally the downstairs are in this vault
-: dis_statues(_G)
+: vault_metal_statue_setup(_G, "G", "iron statue")
 MAP
 xxxxxxxxxxxxxxxxxx
 xxGxxxxx1xxxx2.+1x
@@ -132,12 +125,9 @@ KFEAT:  G = metal_statue
     lua_marker('}', trap_marker)
     lua_marker('G', props_marker {trap_statue=1,
                                   veto_destroy="veto"})
-    set_feature_name("metal_statue", "iron statue")
 }}
-SUBST: d = 3
-SUBST: e = 4
-SUBST: f = 5
-: dis_statues(_G)
+SUBST: d = 3, e = 4, f = 5
+: vault_metal_statue_setup(_G, "G", "iron statue")
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 vvG.+4Gvvv:::::}:::::vvvG4+.Gvv
@@ -232,7 +222,7 @@ TAGS:   transparent extra decor
 NSUBST: a = 2:+ / v, b = 2:+ / v, c = 2:+ / v, d = 2:+ / v, e = 2:+ / v
 NSUBST: f = + / v
 SUBST:  G = GG., V = .v
-: dis_statues(_G)
+: vault_metal_statue_setup(_G, "G", "iron statue")
 MAP
 vvvavvv
 vG....a      vvdvvv
@@ -356,7 +346,7 @@ NSUBST:  > = 1 = .:13 >:7 / 1 = M:6 {:4 / *:.
 SUBST:   A : x:9 .:1, B : yy..., C = .
 SUBST:   D : xxxx., E : y.., FG = .
 SUBST:   x : v:3 G:2, y : v, - =  +v
-: dis_statues(_G)
+: vault_metal_statue_setup(_G, "G", "iron statue")
 : decorative_floor(_G, 'M', "bloodied mop and bucket")
 MAP
         vvvvv     vvvvv
@@ -387,7 +377,7 @@ SUBST:   E : x:9 .:1, F : yy..., GHIJ = .
 SHUFFLE: xyz, -_
 SUBST:   x : v:3 G:2, y : v:3 G:1, z = v, - : ++v, _ : +vv
 NSUBST:  > = 1 = .:13 >:7 / 1 = M:6 {:4 / *:.
-: dis_statues(_G)
+: vault_metal_statue_setup(_G, "G", "iron statue")
 : decorative_floor(_G, 'M', "bloodied mop and bucket")
 MAP
                 vvvvv
@@ -421,7 +411,7 @@ SUBST:   '-` = v, " = ., _ = +, < = >, A : xxx., B: y...
 SUBST:   C : xxxx.:1, D : yyy.., E : z.........., FG = .
 SUBST:   x : v:3 G:2, y : v:3 G:1, z = v
 NSUBST:  > = 1 = .:13 >:7 / 1 = M:6 [:4 / *:.
-: dis_statues(_G)
+: vault_metal_statue_setup(_G, "G", "iron statue")
 : decorative_floor(_G, 'M', "bloodied mop and bucket")
 MAP
 vvvvv       vvvvv
@@ -474,7 +464,7 @@ ENDMAP
 NAME:   hangedman_dis_chains
 TAGS:   transparent extra decor
 SUBST:  A : vv., B : vv., C : Gvv, D : Gvv
-: dis_statues(_G)
+: vault_metal_statue_setup(_G, "G", "iron statue")
 MAP
       .....vv.
    .....vvv..C
@@ -625,7 +615,7 @@ SUBST:  E = {
 NSUBST: DHJKLM = 1:} / 1:m. / .
 : end
 SUBST:  0 = .00, 0 = 009, 9 = 998
-: dis_statues(_G)
+: vault_metal_statue_setup(_G, "G", "iron statue")
 : decorative_floor(_G, 'm', "bloodied mop and bucket")
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -663,7 +653,6 @@ NAME:   nicolae_dis_circle_tower
 TAGS:   transparent
 DEPTH:  Dis
 ORIENT: centre
-KFEAT:  G = metal_statue
 NSUBST: D = vvv+ / +, E = vvv+ / +, F = vvv+ / +, H = vvv+ / +, Q = + / vv+
 : if you.depth() == 1 then
 SUBST:  { = }
@@ -671,8 +660,7 @@ SUBST:  { = }
 SUBST:  { = {}
 : end
 SUBST:  0 = ...0000099, 9 = 998
-TILE:   G = dngn_statue_iron
-: set_feature_name("metal_statue", "iron statue")
+: vault_metal_statue_setup(_G, "G", "iron statue")
 MAP
      vvvQvvv
    vvv.....vvv
@@ -718,11 +706,9 @@ NAME:  nicolae_dis_emergency_hatch
 TAGS:  transparent
 DEPTH: Dis, !Dis:$
 KFEAT: ! = iron_grate
-KFEAT: G = metal_statue
 KMASK: 9>' = opaque
 SUBST: G : Gvb.
-TILE:  G = dngn_statue_iron
-: set_feature_name("metal_statue", "iron statue")
+: vault_metal_statue_setup(_G, "G", "iron statue")
 MAP
 .........
 .Gv!!!vG.
@@ -746,9 +732,7 @@ KMONS: 1 = stone giant ; large rock . giant club good_item | \
                                       giant spiked club good_item
 KMONS: 2 = ancient champion ; morningstar good_item | dire flail good_item | \
                               eveningstar good_item | great mace good_item
-KFEAT:  G = metal_statue
-TILE:   G = dngn_statue_iron
-: set_feature_name("metal_statue", "iron statue")
+: vault_metal_statue_setup(_G, "G", "iron statue")
 MAP
 vvvvvvvvvvvvvvv
 vvGvvvv11111vvv
@@ -764,12 +748,11 @@ ENDMAP
 NAME:  nicolae_dis_grated_feature
 TAGS:  transparent allow_dup
 DEPTH: Dis
-KFEAT: G = metal_statue
 KFEAT: ! = iron_grate
 KPROP: v = no_tele_into
 KMASK: vbGl = opaque
 SUBST: v : vbGl
-: set_feature_name("metal_statue", "iron statue")
+: vault_metal_statue_setup(_G, "G", "iron statue")
 TILE:  G = dngn_statue_iron / dngn_statue_iron_golem
 MAP
 .....
@@ -814,11 +797,9 @@ KMONS:  1 = iron troll
 KMONS:  2 = iron dragon
 KMONS:  3 = iron golem
 KMONS:  4 = iron giant
-KFEAT:  G = metal_statue
 KFEAT:  ! = iron_grate
 SUBST:  1 = 11., 1 = 111223 4:5, 3 = .2334
-: set_feature_name("metal_statue", "iron statue")
-TILE:   G = dngn_statue_iron
+: vault_metal_statue_setup(_G, "G", "iron statue")
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv...v
@@ -946,11 +927,9 @@ DEPTH:  Dis:2-
 KMONS:  1 = hell sentinel
 KMONS:  2 = hellion / tormentor
 KMONS:  3 = ancient lich / dread lich
-KFEAT:  G = metal_statue
 NSUBST: M = 1=1 / 2=3 / 13
 SUBST:  N = 1223 .:5
-TILE:   G = dngn_statue_iron
-: set_feature_name("metal_statue", "iron statue")
+: vault_metal_statue_setup(_G, "G", "iron statue")
 MAP
      vvvvv
      N...N
@@ -975,11 +954,9 @@ DEPTH:  Dis:2-
 KMONS:  1 = golden dragon
 KMONS:  2 = quicksilver dragon
 KMONS:  3 = iron dragon
-KFEAT:  G = metal_statue
 NSUBST: D = 1 / 2 / 3 / 123
 SUBST:  G : GGv
-TILE:   G = dngn_statue_iron
-: set_feature_name("metal_statue", "iron statue")
+: vault_metal_statue_setup(_G, "G", "iron statue")
 MAP
     .......
   ....D.G....
@@ -1004,8 +981,7 @@ DEPTH:  Dis
 ORIENT: centre
 KFEAT:  G = metal_statue
 SUBST:  0 = .009, 9 = 998
-TILE:   G = dngn_statue_iron
-: set_feature_name("metal_statue", "iron statue")
+: vault_metal_statue_setup(_G, "G", "iron statue")
 MAP
 vvvv vv vv vvvvv vv
 ......v v....G....v
@@ -1094,8 +1070,7 @@ DEPTH:   Dis, !Dis:$
 KFEAT:   G = metal_statue
 SHUFFLE: DE/FH/JK/LM/NO/PQ
 SUBST:   D = @, F : @vv, JLNP = v, K = }, EHMOQ0 = .009, 9 = 998
-: set_feature_name("metal_statue", "iron statue")
-TILE:    G = dngn_statue_iron
+: vault_metal_statue_setup(_G, "G", "iron statue")
 MAP
 vDDDvvFFFvvJJJv
 v...vv...vv...v
@@ -1150,11 +1125,10 @@ TAGS:   transparent no_monster_gen
 DEPTH:  Dis:2-
 KMONS:  O = boulder beetle
 KMONS:  P = iron giant
-KFEAT:  G = metal_statue
 SUBST:  Q = OO.
-NSUBST: G = 1={ / G
+NSUBST: G = 1:{ / *:G
+: vault_metal_statue_setup(_G, "G", "iron statue")
 TILE:   G = dngn_statue_iron_golem
-: set_feature_name("metal_statue", "iron statue")
 MAP
 vvvvvvvvvvvvvvvv
 v.............Qv
@@ -1172,11 +1146,9 @@ ENDMAP
 NAME:    nicolae_dis_metal_lava_thing
 TAGS:    transparent
 DEPTH:   Dis:2-
-KFEAT:   G = metal_statue
 SHUFFLE: DEF, HJK, LMN, OPQ
 SUBST:   DHLO = ., EFJKMNPQ = l, 0 = .009, 9 = 9998
-: set_feature_name("metal_statue", "iron statue")
-TILE:    G = dngn_statue_iron
+: vault_metal_statue_setup(_G, "G", "iron statue")
 MAP
 vlvlvlv...vlvlvlv
 l.....D...F.....l
@@ -1324,7 +1296,7 @@ KMONS:   0 = quicksilver elemental
 SHUFFLE: 23
 SUBST:   4 = 4:20 7
 SUBST:   8 = 8o
-COLOUR:  o : cyan
+: vault_metal_statue_setup(_G, "oG", "iron statue")
 TILE:    o = dngn_statue_iron_golem
 # Use primary/replica setup.
 MARKER:  o = lua:monster_on_death { \
@@ -1336,7 +1308,6 @@ MARKER:  o = lua:monster_on_death { \
          }
 KITEM:   | = superb_item no_pickup
 : dis_castle(_G)
-: dis_statues(_G)
 MAP
 ....................................................................
 ...............................................v5v..v5v.............
@@ -1378,8 +1349,6 @@ SHUFFLE: AP / BQ / CR / SY / ET
 SUBST:   A = 1, BC = 2, SE = 7, Y = D
 SUBST:   P = O, QRST = .
 NSUBST:  D = 1:D / *:., G = 4:8 / *:G
-TILE:    G = dngn_statue_iron_golem
-COLOUR:  G = cyan
 KMONS:   8 = iron golem
 KMONS:   9 = war gargoyle
 ITEM:    plate armour good_item / crystal plate armour good_item w:3
@@ -1390,7 +1359,8 @@ KMONS:   J = Hell Sentinel
 KITEM:   J = $
 : serpent_of_hell_setup(_G)
 : dis_castle(_G)
-: dis_statues(_G)
+: vault_metal_statue_setup(_G, "G", "iron statue")
+TILE:    G = dngn_statue_iron_golem
 MAP
 ....................................................................
 ....................................................................
@@ -1564,7 +1534,7 @@ KMASK:   W = no_monster_gen
 : serpent_of_hell_setup(_G)
 : dis_setup(_G)
 : dis_rune(_G)
-: dis_statues(_G)
+: vault_metal_statue_setup(_G, "G", "iron statue")
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 v...........................v.....v........v.0...v.............v.....v
@@ -1660,7 +1630,7 @@ SUBST:   acegi = v, bdfhj = ., k : vvv., l : vvv., m : vvv., ` : 12
 : serpent_of_hell_setup(_G)
 : dis_setup(_G)
 : dis_rune(_G)
-: dis_statues(_G)
+: vault_metal_statue_setup(_G, "G", "iron statue")
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -1750,14 +1720,13 @@ NSUBST:  d = 1:+ / 1:v / *=+vvv
 NSUBST:  e = 1:+ / 1:v / *=+vvv
 NSUBST:  f = 1:+ / 1:v / *=+vvv
 NSUBST:  . = 20:4 / 10:5 / *:.
-TILE:    G = dngn_statue_iron_golem
-COLOUR:  G = cyan
 KMONS:   8 = iron golem
 KMONS:   9 = war gargoyle
 : serpent_of_hell_setup(_G)
 : dis_setup(_G)
 : dis_rune(_G)
-: dis_statues(_G)
+: vault_metal_statue_setup(_G, "G", "iron statue")
+TILE:    G = dngn_statue_iron_golem
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv

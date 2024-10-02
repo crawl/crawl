@@ -2153,9 +2153,7 @@ MONS:   vampire mage, tyrant leech
 KPROP:  .21 = bloody / w:30 nothing
 KPROP:  e = bloody
 SUBST:  G : Gxx
-COLOUR: G = mist
-TILE:   G = dngn_mystic_cage
-: set_feature_name("metal_statue", "mystic cage")
+: vault_metal_statue_setup(_G, "G", "mystic cage")
 : dgn.delayed_decay(_G, 'e', 'human corpse')
 MAP
  ttttt
@@ -3505,10 +3503,10 @@ NSUBST:  6 = 2:6 / 3 = 6. / ., P = 3=' / ppW
 SUBST:   3 = 2344, . = ...W
 KPROP:   q = bloody
 TILE:    E = WALL_UNDEAD, T = DNGN_TREE_DEAD
-TILE:    G = DNGN_GRAVESTONE, x = WALL_BRICK_VINES
+TILE:    x = WALL_BRICK_VINES
 COLOUR:  T = brown
 SUBST:   T = t
-: set_feature_name("granite_statue", "a gravestone")
+: vault_granite_statue_setup(_G, "G", "gravestone")
 : dgn.delayed_decay_extra(_G, 'q', 'hydra corpse')
 MAP
          xxx@@@xx

@@ -2294,7 +2294,6 @@ TAGS:    extra decor
 DEPTH:   D:2-, Depths, !D:$, !Depths:$
 KMONS:   1 = sacred lotus
 KFEAT:   1 = W
-KFEAT:   g = metal_statue
 SHUFFLE: DEFH / DEDE / FHFH / FHFH
 SUBST:   D = +, E = ., F = c, H = w, t = t1Gg
 KMASK:   W = no_monster_gen
@@ -2305,13 +2304,9 @@ TILE:    G = dngn_statue_angel
 TILE:    G = dngn_statue_depths_zot_angel
 : end
 : if crawl.coinflip() then
-COLOUR:  g = silver
-TILE:    g = dngn_silver_statue
-:   set_feature_name("metal_statue", "silver statue")
+:   vault_metal_statue_setup(_G, "g", "silver statue")
 : else
-COLOUR:  g = yellow
-TILE:    g = dngn_golden_statue
-:   set_feature_name("metal_statue", "golden statue")
+:   vault_metal_statue_setup(_G, "g", "golden statue")
 : end
 MAP
         cFFFc

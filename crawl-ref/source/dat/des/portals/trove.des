@@ -1268,14 +1268,9 @@ item(genweap(egos2[1]))
 item(genweap(egos2[2]))
 }}
 KFEAT:   + = closed_clear_door
-KFEAT:   S = metal_statue
 SHUFFLE: defg
-COLOUR:  G = mountain
-COLOUR:  S = yellow
-TILE:    G = dngn_scintillating_statue
-TILE:    S = dngn_golden_statue
-: set_feature_name("granite_statue", "scintillating statue")
-: set_feature_name("metal_statue", "golden statue")
+: vault_granite_statue_setup(_G, "G", "scintillating statue")
+: vault_metal_statue_setup(_G, "G", "golden statue")
 : trove.setup_features(_G)
 MAP
 xxxxxxxxxxxxxxxxxx

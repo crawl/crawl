@@ -268,13 +268,15 @@ MAP
 .............
 ENDMAP
 
-NAME: nicolae_ashenzari_panopticon
-TAGS: uniq_altar_ashenzari temple_overflow_1 temple_overflow_ashenzari \
-      transparent decor
+NAME:   nicolae_ashenzari_panopticon
+TAGS:   uniq_altar_ashenzari temple_overflow_1 temple_overflow_ashenzari
+TAGS:   transparent decor vaults_empty
+DEPTH:  D:3-, Vaults, !Vaults:$, Depths
+WEIGHT: 3 (Vaults), 10
+KFEAT: _ = altar_ashenzari
 SHUFFLE: ABCDEF/abcdef
 SUBST: ACEbdf = x, Ba = m, Dc = ., Fe = @
 NSUBST: m = + / m
-KFEAT: _ = altar_ashenzari
 : interest_check(_G)
 MAP
 E....F..E..F...CE
@@ -605,14 +607,18 @@ ENDMAP
 
 NAME:   elyvilon_altar_1
 TAGS:   uniq_altar_elyvilon temple_overflow_1 temple_overflow_elyvilon
-TAGS:   transparent decor
-KFEAT:  C = altar_elyvilon
-SUBST:  X : T G t 1 2 3 4:30
+TAGS:   transparent decor vaults_empty
+DEPTH:  D:3-, Vaults, !Vaults:$, Depths
+WEIGHT: 1 (Vaults), 10
 MONS:   plant, bush, fungus
 KMONS:  4 = sacred lotus
+KFEAT:  C = altar_elyvilon
 KFEAT:  4 = W
-KMASK:  T = no_monster_gen
+SUBST:  X : T G t 1 2 3 4:30
 : interest_check(_G)
+: if you.in_branch("Vaults") then
+CLEAR:  @x
+: end
 MAP
       xx@xx
       x...x
@@ -662,8 +668,9 @@ ENDMAP
 
 NAME:   elyvilon_altar_4
 TAGS:   uniq_altar_elyvilon temple_overflow_1 temple_overflow_elyvilon
-TAGS:   no_monster_gen transparent patrolling decor
-WEIGHT: 5
+TAGS:   no_monster_gen transparent patrolling decor vaults_empty
+DEPTH:  D:3-, Vaults, !Vaults:$
+WEIGHT: 1 (Vaults), 5
 KFEAT:  C = altar_elyvilon
 : local g = "att:good_neutral"
 : kmons("1 = quokka " .. g .. " w:30 / bombardier beetle " .. g)
@@ -979,14 +986,17 @@ ENDMAP
 
 NAME:   grunt_gozag_statues
 TAGS:   transparent no_item_gen no_monster_gen no_trap_gen temple_overflow_1
-TAGS:   temple_overflow_gozag uniq_altar_gozag decor
+TAGS:   temple_overflow_gozag uniq_altar_gozag vaults_empty no_wall_fixup decor
+DEPTH:  D:3-, Vaults, !Vaults:$, Depths
+WEIGHT: 3 (Vaults), 10
 KFEAT:  _ = altar_gozag
-KFEAT:  G = metal_statue
-TILE:   G = dngn_golden_statue
+COLOUR: x = yellow
 FTILE:  _-G = floor_limestone
-RTILE:  x = wall_sandstone
-COLOUR: xG = yellow
-: set_feature_name("metal_statue", "golden statue")
+TILE:   x = wall_sandstone
+: vault_metal_statue_setup(_G, "G", "golden statue")
+: if you.in_branch("Vaults") then
+CLEAR:  @
+: end
 : interest_check(_G)
 MAP
      @
@@ -1005,15 +1015,16 @@ ENDMAP
 NAME:   grunt_gozag_breadcrumbs
 TAGS:   transparent no_item_gen no_monster_gen no_trap_gen temple_overflow_1
 TAGS:   temple_overflow_gozag uniq_altar_gozag decor
+TAGS:   no_wall_fixup vaults_empty vaults_orient_w
+DEPTH:  D:3-, Vaults, !Vaults:$, Depths
+WEIGHT: 3 (Vaults), 10
 KFEAT:  _ = altar_gozag
-ITEM:   gold q:1
+ITEM:   gold q:1 no_pickup
 KITEM:  e = gold q:1
-KFEAT:  G = metal_statue
-TILE:   G = dngn_golden_statue
 FTILE:  _-Ge = floor_limestone
 RTILE:  x = wall_sandstone
-COLOUR: xG = yellow
-: set_feature_name("metal_statue", "golden statue")
+COLOUR: x = yellow
+: vault_metal_statue_setup(_G, "G", "golden statue")
 : interest_check(_G)
 MAP
         xxxxx
@@ -1040,13 +1051,15 @@ ENDMAP
 
 # No, you probably can't afford any of it.
 # You should have thought of that before being poor.
-NAME:  nicolae_gozag_zags_fifth_avenue
-TAGS:  temple_overflow_gozag temple_overflow_1 uniq_altar_gozag
-TAGS:  no_pool_fixup no_item_gen no_monster_gen decor transparent
-WEIGHT: 5
-FTILE: '_TS = floor_limestone
-KFEAT: _ = altar_gozag
-KFEAT: S = general shop name:Gozag type:Platinum suffix:Reserve count:4 \
+NAME:   nicolae_gozag_zags_fifth_avenue
+TAGS:   temple_overflow_gozag temple_overflow_1 uniq_altar_gozag
+TAGS:   no_pool_fixup no_item_gen no_monster_gen decor transparent
+TAGS:   vaults_empty vaults_orient_e
+DEPTH:  D:3-, Vaults, !Vaults:$, Depths
+WEIGHT: 1 (Vaults), 5
+FTILE:  '_TS = floor_limestone
+KFEAT:  _ = altar_gozag
+KFEAT:  S = general shop name:Gozag type:Platinum suffix:Reserve count:4 \
         greed:100 ; any weapon randart | any armour randart | any jewellery randart
 : interest_check(_G)
 MAP
@@ -1062,7 +1075,8 @@ ENDMAP
 NAME:  nicolae_gozag_seed_capital
 TAGS:  temple_overflow_gozag temple_overflow_1 uniq_altar_gozag decor
 TAGS:  transparent no_item_gen
-ITEM:  gold q:1 / gold q:2
+DEPTH: D:3-, Vaults, !Vaults:$, Depths
+ITEM:  gold q:1 no_pickup / gold q:2 no_pickup
 KFEAT: _ = altar_gozag
 : interest_check(_G)
 MAP
@@ -1073,20 +1087,20 @@ ENDMAP
 
 NAME:   nicolae_gozag_conspicuous_consumption
 TAGS:   temple_overflow_gozag temple_overflow_1 no_pool_fixup decor
-TAGS:   transparent no_trap_gen uniq_altar_gozag
+TAGS:   transparent no_trap_gen uniq_altar_gozag vaults_empty
+DEPTH:  D:3-, Vaults, !Vaults:$, Depths
 WEIGHT: 1
+KITEM:  $ = gold
+KFEAT:  _ = altar_gozag
 KPROP:  $ = no_tele_into
 KMASK:  $ = opaque
 KMASK:  $ = no_monster_gen
-KITEM:  $ = gold
-KFEAT:  _ = altar_gozag
-KFEAT:  G = metal_statue
 TILE:   G = dngn_golden_statue
 TILE:   n = dngn_transparent_stone_yellow
 TILE:   m = dngn_transparent_wall_yellow
 FTILE:  ._Gmn$U = floor_limestone
-COLOUR: .Gmn$U = yellow
-: set_feature_name("metal_statue", "golden statue")
+COLOUR: .mn$U = yellow
+: vault_metal_statue_setup(_G, "G", "golden statue")
 MAP
     .....
  G...._....G
@@ -1571,14 +1585,11 @@ DEPTH:   D:5-8
 MONS:    patrolling burial acolyte, patrolling shadow imp
 MONS:    kobold zombie / gnoll zombie, adder zombie / hound zombie
 KFEAT:   _ = altar_kikubaaqudgha
-KFEAT:   G = metal_statue
 SHUFFLE: ABCD
 NSUBST:  A = 1:2 / *:3, B = 1:2 / *:4
 SUBST:   C = $, D = .
 SUBST:   X : x', Y : x', y : x., z : c.., G : Gxx
-COLOUR:  G = smoke
-TILE:    G = soul_conduit
-: set_feature_name("metal_statue", "soul conduit")
+: vault_metal_statue_setup(_G, "G", "soul conduit")
 CLEAR:   '
 MAP
  Xxxxx.....xxxxY
@@ -1671,14 +1682,11 @@ KMONS:  1 = human skeleton
 KMONS:  2 = hound skeleton
 : end
 KFEAT:  _ = altar_makhleb
-KFEAT:  G = metal_statue
 KFEAT:  X = x
 KPROP:  y' = bloody
 TILE:   X = wall_hall
 SUBST:  ' = ., y = x, G = GGx
-COLOUR: G = mist
-TILE:   G = dngn_mystic_cage
-: set_feature_name("metal_statue", "mystic cage")
+: vault_metal_statue_setup(_G, "G", "mystic cage")
 MAP
   @@@
  x..'.xxx
@@ -1703,9 +1711,7 @@ KFEAT:  _ = altar_makhleb
 KFEAT:  X = x
 SUBST:  y = xx., G = GXXX
 TILE:   X = wall_hall
-COLOUR: G = mist
-TILE:   G = dngn_mystic_cage
-: set_feature_name("metal_statue", "mystic cage")
+: vault_metal_statue_setup(_G, "G", "mystic cage")
 MAP
  xxxxx
 xxXGXxx
@@ -1761,7 +1767,6 @@ WEIGHT:  1
 KPROP:   . = bloody w:5 / nothing w:25
 KFEAT:   D = altar_ignis
 KFEAT:   E = altar_makhleb
-KFEAT:   G = metal_statue
 KFEAT:   ' = floor
 MARKER:  P = lua:fog_machine { cloud_type = "flame", \
              pow_min = 1000, pow_max = 1000, delay = 1, \
@@ -1770,11 +1775,9 @@ MARKER:  P = lua:fog_machine { cloud_type = "grey smoke", \
              pow_min = 3, pow_max = 3, delay = 100, \
              size = 1, walk_dist = 1, start_clouds = 1 }
 FTILE:   ' = floor_rough_brown
-TILE:    G = fiery_conduit
 COLOUR:  c = lightred
 COLOUR:  ' = brown
-COLOUR:  G = fire
-: set_feature_name("metal_statue", "fiery conduit")
+: vault_metal_statue_setup(_G, "G", "fiery conduit")
 MAP
    cccccccc+cccccccc
  ccc....ccc'ccc....ccc
@@ -1840,9 +1843,7 @@ MARKER: R = lua:fog_machine { cloud_type="calcifying dust", walk_dist=1, \
 MARKER: S = lua:fog_machine { cloud_type="foul pestilence", walk_dist=1, \
             size=9,  pow_max=20, delay=10, buildup_amnt=14, buildup_time=7, \
             spread_rate=3, start_clouds=1 }
-COLOUR: G = mountain
-TILE:   G = dngn_scintillating_statue
-: set_feature_name("granite_statue", "scintillating statue")
+: vault_granite_statue_setup(_G, "G", "scintillating statue")
 : interest_check(_G)
 MAP
 cccccccc+++cccccccc
@@ -1993,8 +1994,8 @@ ENDMAP
 
 NAME:   okawaru_metal_pillars_3
 TAGS:   temple_overflow_1 temple_overflow_okawaru uniq_altar_okawaru
-TAGS:   transparent decor
-DEPTH:  D, Orc
+TAGS:   transparent decor vaults_empty
+DEPTH:  D, Vaults, Orc
 WEIGHT: 3
 KFEAT:  _ = altar_okawaru
 : interest_check(_G)
@@ -2010,8 +2011,9 @@ ENDMAP
 
 NAME:   okawaru_trees_1
 TAGS:   temple_overflow_1 temple_overflow_okawaru uniq_altar_okawaru
-TAGS:   transparent decor
-WEIGHT: 5
+TAGS:   transparent decor vaults_empty
+DEPTH:  D:3-, Vaults, !Vaults:$, Depths
+WEIGHT: 1 (Vaults), 5
 KFEAT:  _ = altar_okawaru
 : interest_check(_G)
 MAP
@@ -2046,10 +2048,12 @@ MAP
 ...........
 ENDMAP
 
-NAME:  okawaru_ov_weapons_minmay
-TAGS:  temple_overflow_1 temple_overflow_okawaru uniq_altar_okawaru
-TAGS:  transparent decor
-ITEM:  hand axe, falchion, mace, spear
+NAME:   okawaru_ov_weapons_minmay
+TAGS:   temple_overflow_1 temple_overflow_okawaru uniq_altar_okawaru
+TAGS:   transparent decor vaults_empty
+DEPTH:  D:3-, Vaults, !Vaults:$
+WEIGHT: 3 (Vaults), 10
+ITEM:   hand axe, falchion, mace, spear
 KFEAT: _ = altar_okawaru
 : interest_check(_G)
 MAP
@@ -2093,7 +2097,9 @@ ENDMAP
 
 NAME:   okawaru_gym_becter
 TAGS:   uniq_altar_okawaru temple_overflow_1 temple_overflow_okawaru
-TAGS:   transparent decor
+TAGS:   transparent decor vaults_empty
+DEPTH:  D:3-, Vaults, !Vaults:$
+WEIGHT: 3 (Vaults), 10
 KFEAT:  _ = altar_okawaru
 : interest_check(_G)
 MAP
@@ -2153,10 +2159,14 @@ ENDMAP
 
 NAME:   hellmonk_okawaru_the_only_friend_you_need
 TAGS:   temple_overflow_1 temple_overflow_okawaru uniq_altar_okawaru
-TAGS:   transparent decor
-WEIGHT: 5
+TAGS:   transparent decor vaults_empty vaults_orient_s
+DEPTH:  D:3-, Vaults
+WEIGHT: 1 (Vaults), 5
 KFEAT:  _ = altar_okawaru
-KITEM:  ' = any weapon plus:0 ego:spectral ident:all
+KITEM:  ' = any weapon plus:0 ego:spectral ident:all no_pickup
+: if you.in_branch("Vaults") then
+SUBST:  @ = .
+: end
 : interest_check(_G)
 MAP
 vvvv vvvv
@@ -2228,7 +2238,6 @@ MARKER:  N = lua:fog_machine { cloud_type = "sparse dust", \
                                pow_min = 5, pow_max = 7, delay_min = 55, \
                                delay_max = 75, size = 1, walk_dist = 0, \
                                spread_rate = 0 }
-# not a storm cloud - it would be too noisy
 MARKER:  O = lua:fog_machine { cloud_type = "rain", \
                                pow_min = 5, pow_max = 7, delay_min = 55, \
                                delay_max = 75, size = 1, walk_dist = 0, \
@@ -2543,9 +2552,14 @@ ENDMAP
 NAME:   lemuel_blue_sif_altar
 TAGS:   no_monster_gen temple_overflow_1 temple_overflow_sif_muna
 TAGS:   uniq_altar_sif_muna decor transparent
+DEPTH:  D:3-, Vaults
+WEIGHT: 3 (Vaults), 10
 COLOUR: . = blue
-FTILE:  . = floor_hall, C = floor_hall, @ = floor_hall, + = floor_hall
+FTILE:  .*+_ = floor_hall
 KFEAT:  _ = altar_sif_muna
+: if you.in_branch("Vaults") then
+CLEAR:  x
+: end
 : interest_check(_G)
 MAP
 xxxxxxxxxxxxxx
@@ -2659,15 +2673,23 @@ ENDMAP
 
 NAME:   nicolae_sif_muna_little_library
 TAGS:   temple_overflow_sif_muna temple_overflow_1 no_trap_gen
-TAGS:   uniq_altar_sif_muna
-NSUBST: D = + / x
+TAGS:   uniq_altar_sif_muna vaults_orient_n vaults_orient_e vaults_orient_s
+DEPTH:  D:3-, Vaults, Depths
+WEIGHT: 3 (Vaults), 10
+KITEM:  a = any randbook ident:all owner:Sif_Muna slevels:1
+KFEAT:  _ = altar_sif_muna
+COLOUR: a.mc+ = blue
+FTILE:  a._mc+ = floor_marble
+TILE:   c = wall_studio
 KPROP:  a = no_tele_into
 KMASK:  a = no_item_gen
 KMASK:  a = no_monster_gen
-KITEM:  a = any randbook ident:all owner:Sif_Muna slevels:1
-KFEAT:  _ = altar_sif_muna
-FTILE:  a._mc+ = floor_marble
-COLOUR: a.mc+ = blue
+: if you.in_branch("Vaults") then
+SUBST:  D = .
+CLEAR:  x
+: else
+NSUBST: D = 1:+ / *:x
+: end
 : interest_check(_G)
 MAP
 xxxxDDDx
@@ -2716,11 +2738,16 @@ ENDMAP
 
 NAME:   hellmonk_sif_muna_bookshelves
 TAGS:   temple_overflow_sif_muna temple_overflow_1 uniq_altar_sif_muna
-TAGS:   transparent decor
-DEPTH:  D, Elf, Depths
+TAGS:   transparent decor vaults_empty vaults_orient_s
+DEPTH:  D, Elf, Vaults, Depths
+WEIGHT: 3 (Vaults), 10
 KFEAT:  _ = altar_sif_muna
 TILE:   c = wall_studio
 FTILE:  ._c = floor_studio
+: if you.in_branch("Vaults") then
+SUBST:  @ = .
+CLEAR:  x
+: end
 MAP
    xxxxx
   xxcccxx
@@ -3125,17 +3152,12 @@ NAME:    vehumet_crystals
 TAGS:    temple_overflow_1 temple_overflow_vehumet transparent decor
 TAGS:    uniq_altar_vehumet
 KFEAT:   _ = altar_vehumet
-KFEAT:   G = metal_statue
 SUBST:   G : Gbb
 : interest_check(_G)
 : if crawl.coinflip() then
-COLOUR:  G = vehumet
-TILE:    G = arcane_conduit
-:   set_feature_name("metal_statue", "arcane conduit")
+:   vault_metal_statue_setup(_G, "G", "arcane conduit")
 : else
-COLOUR:  G = fire
-TILE:    G = fiery_conduit
-:   set_feature_name("metal_statue", "fiery conduit")
+:   vault_metal_statue_setup(_G, "G", "fiery conduit")
 : end
 MAP
 .........
@@ -3417,9 +3439,7 @@ SUBST:  1 = 3, 2 = 4, 3 = 5
 :  end
 FTILE:  ? = floor_nerves_lightgray / floor_hall
 COLOUR: ? = mountain
-COLOUR: G = mountain
-TILE:   G = dngn_scintillating_statue
-: set_feature_name("granite_statue", "scintillating statue")
+: vault_granite_statue_setup(_G, "G", "scintillating statue")
 MAP
    xxxxxx@xxxxxx
   xxG...'.G..'.xx
@@ -3529,9 +3549,7 @@ SUBST: _ = ____C
 : end
 NSUBST:  " = 2:^ / 1:G__ / 5:m /  * = ltbm~......
 NSUBST:  T = 2:^ / *:., ^ = 2:^ / *:.
-COLOUR:  G = mountain
-TILE:    G = dngn_scintillating_statue
-: set_feature_name("granite_statue", "scintillating statue")
+: vault_granite_statue_setup(_G, "G", "scintillating statue")
 : interest_check(_G)
 MAP
       @
@@ -3685,10 +3703,8 @@ SUBST:   2 = 34, ?! = .
 SHUFFLE: xp, pPtU', xGv"
 SUBST:   d : d %:490, - : +ccc, '" = .
 NSUBST:  % = 1:% / 1:$ / *:.
-COLOUR:  G = mountain
 TILE:    c = dngn_stone_wall_darkgray
-TILE:    G = dngn_scintillating_statue
-: set_feature_name("granite_statue", "scintillating statue")
+: vault_granite_statue_setup(_G, "G", "scintillating statue")
 MAP
   ccccccccccc.@.c
   ccc.d1....c.p.c
@@ -3841,17 +3857,28 @@ ENDMAP
 
 NAME:   zin_angel
 TAGS:   no_item_gen no_monster_gen temple_overflow_1 temple_overflow_zin decor
-TAGS:   uniq_altar_zin
+TAGS:   uniq_altar_zin vaults_empty vaults_orient_s
+DEPTH:  D:3-, Vaults, !Vaults:$, Depths
+WEIGHT: 3 (Vaults), 10
 KFEAT:  _ = altar_zin
 KPROP:  1 = no_tele_into
 COLOUR: G = lightgray
 COLOUR: c = white
 TILE:   c = wall_church
 FTILE: _.G1m+ = floor_limestone
-MONS:   angel god:zin dbname:zin_angel / \
-        angel god:zin dbname:zin_angel ; any weapon level:20 ego:holy_wrath ident:type / \
-        angel god:zin dbname:zin_angel ; long sword ego:holy_wrath ident:type / \
-        angel god:zin dbname:zin_angel ; mace ego:holy_wrath ident:type
+: local h = "ego:holy_wrath"
+: mons("angel god:zin dbname:zin_angel ; sacred scourge w:2 | whip w:8 " .. h ..
+:                                    " | long sword " .. h .. " | mace " .. h ..
+:                                    " | any weapon level:20 " .. h)
+: if you.in_branch("Depths") then
+TILE:   G = dngn_statue_depths_zot_angel
+: else
+TILE:   G = dngn_statue_angel
+:   if you.in_branch("Vaults") then
+CLEAR:  x
+SUBST:  @ = .
+:   end
+: end
 : interest_check(_G)
 MAP
 xxxxxxxxx
@@ -3867,6 +3894,8 @@ ENDMAP
 NAME:   zin_treasury
 TAGS:   no_item_gen no_monster_gen temple_overflow_1 temple_overflow_zin
 TAGS:   uniq_altar_zin no_descent
+DEPTH:  D:3-, Vaults, !Vaults:$
+WEIGHT: 3 (Vaults), 10
 KFEAT:  _ = altar_zin
 KFEAT:  m = iron_grate
 KPROP:  $ = no_tele_into
@@ -3874,6 +3903,10 @@ COLOUR: c = white
 TILE:   c = wall_church
 FTILE:  _.m+$ = floor_limestone
 : interest_check(_G)
+: if you.in_branch("Vaults") then
+CLEAR:  x
+SUBST:  @ = .
+: end
 MAP
   xxxxxxx
   xcccccx
@@ -3889,16 +3922,15 @@ ENDMAP
 
 NAME:   zin_purify
 TAGS:   no_item_gen no_monster_gen temple_overflow_1 temple_overflow_zin
-TAGS:   transparent uniq_altar_zin
+TAGS:   transparent uniq_altar_zin vaults_empty
+DEPTH:  D:3-, Vaults, !Vaults:$
+WEIGHT: 3 (Vaults), 10
 KFEAT:  _ = altar_zin
 KFEAT:  v = general shop name:Zin type:Purification suffix:Station count:1 \
-        greed:30 ; \
-        potion of curing
-COLOUR: c = white
-COLOUR: ' = white
+            greed:30 ; potion of curing
+COLOUR: c' = white
 TILE:   c = wall_church
 FTILE:  Td'_ = floor_limestone
-SUBST:  ' = .
 : interest_check(_G)
 MAP
  .....
@@ -3914,7 +3946,9 @@ ENDMAP
 
 NAME:   zin_scriptorium
 TAGS:   no_item_gen no_monster_gen temple_overflow_1 temple_overflow_zin
-TAGS:   uniq_altar_zin no_descent
+TAGS:   uniq_altar_zin no_descent vaults_empty
+DEPTH:  D:3-, Vaults, !Vaults:$
+WEIGHT: 1 (Vaults), 10
 ITEM:   any scroll
 KFEAT:  _ = altar_zin
 KFEAT:  m = iron_grate
@@ -3939,7 +3973,10 @@ ENDMAP
 
 NAME:   zin_academy
 TAGS:   no_item_gen no_monster_gen temple_overflow_1 temple_overflow_zin
-TAGS:   transparent uniq_altar_zin
+TAGS:   transparent uniq_altar_zin vaults_empty
+TAGS:   vaults_orient_w vaults_orient_s vaults_orient_e
+DEPTH:  D:3-, Vaults, !Vaults:$, Depths
+WEIGHT: 3 (Vaults), 10
 KFEAT:  _ = altar_zin
 KFEAT:  G = metal_statue
 COLOUR: c = white
@@ -3949,7 +3986,7 @@ COLOUR: G = silver
 TILE:   G = dngn_silver_statue
 FTILE:  _'G = floor_limestone
 SUBST:  ' = .
-: set_feature_name("metal_statue", "silver statue")
+: vault_metal_statue_setup(_G, "G", "silver statue")
 : interest_check(_G)
 MAP
   ccccccc
@@ -3964,17 +4001,15 @@ ENDMAP
 
 NAME:   zin_statuary
 TAGS:   no_item_gen no_monster_gen temple_overflow_1 temple_overflow_zin
-TAGS:   transparent uniq_altar_zin
+TAGS:   transparent uniq_altar_zin vaults_empty
+DEPTH:  D:3-, Vaults, !Vaults:$
+WEIGHT: 3 (Vaults), 10
 KFEAT:  _ = altar_zin
-KFEAT:  S = metal_statue
 COLOUR: c = white
-COLOUR: GS = silver
 TILE:   c = wall_church
 TILE:   G = dngn_statue_triangle
-TILE:   S = dngn_silver_statue
 FTILE:  _'+ = floor_limestone
-SUBST:  ' = .
-: set_feature_name("metal_statue", "silver statue")
+: vault_metal_statue_setup(_G, "S", "silver statue")
 : interest_check(_G)
 MAP
  .......
@@ -4016,9 +4051,14 @@ ENDMAP
 NAME:    tso_metal_star
 TAGS:    no_monster_gen no_trap_gen no_pool_fixup no_item_gen decor
 TAGS:    temple_overflow_1 temple_overflow_the_shining_one transparent
-TAGS:    uniq_altar_the_shining_one
+TAGS:    uniq_altar_the_shining_one vaults_empty
+DEPTH:   D:3-, Vaults, !Vaults:$, Depths
+WEIGHT:  3 (Vaults), 10
 KFEAT:   _ = altar_the_shining_one
 SUBST:   ! : vmmTG..
+: if you.in_branch("Vaults") then
+CLEAR:   @
+: end
 : interest_check(_G)
 MAP
           @
@@ -4096,19 +4136,17 @@ xxcc..vvv..ccxx
 ENDMAP
 
 
-NAME: nicolae_tso_carved_into_rock
-TAGS: temple_overflow_the_shining_one uniq_altar_the_shining_one
-TAGS: temple_overflow_1 transparent decor
-KFEAT: G = metal_statue
-SUBST: X = xxx.
-COLOUR: 'G = yellow
+NAME:   nicolae_tso_carved_into_rock
+TAGS:   temple_overflow_the_shining_one uniq_altar_the_shining_one
+TAGS:   temple_overflow_1 transparent decor
+KFEAT:  _ = altar_the_shining_one
+SUBST:  X = xxx.
+COLOUR: ' = yellow
 COLOUR: c = white
-TILE: G = dngn_golden_statue
-TILE: c = wall_church
-FTILE: G'_ = floor_limestone
-KFEAT: _ = altar_the_shining_one
+TILE:   c = wall_church
+FTILE:  G'_ = floor_limestone
 : interest_check(_G)
-: set_feature_name("metal_statue", "golden statue")
+: vault_metal_statue_setup(_G, "G", "golden statue")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxXXXXxxxxxxxxxxxxx
@@ -4260,9 +4298,7 @@ TAGS:   no_monster_gen transparent
 MONS:   crimson imp ; dagger ego:chaos ident:type
 KFEAT:  A = altar_makhleb
 KFEAT:  B = altar_xom
-COLOUR: G = mountain
-TILE:   G = dngn_scintillating_statue
-: set_feature_name("granite_statue", "scintillating statue")
+: vault_granite_statue_setup(_G, "G", "scintillating statue")
 MAP
 xxxxx
 xAGBx
@@ -4374,21 +4410,16 @@ KFEAT:   B = altar_zin
 KFEAT:   L-_ = floor
 KFEAT:   C = stone_wall
 KFEAT:   N = clear_stone_wall
-KFEAT:   g = metal_statue
 SUBST:   ; = -_, - = --_, X = C-
 SHUFFLE: 12nN / 12nN / Gg''
 KPROP:   -1 = bloody / nothing w:5
 KPROP:   12gG = no_tele_into
 KMASK:   12gG = opaque
 COLOUR:  C = white
-COLOUR:  g = silver
-COLOUR:  G = mountain
 FTILE:   _BN2 = floor_limestone
 TILE:    C = wall_church
-TILE:    G = dngn_scintillating_statue
-TILE:    g = dngn_silver_statue
-: set_feature_name("granite_statue", "scintillating statue")
-: set_feature_name("metal_statue", "silver statue")
+: vault_granite_statue_setup(_G, "G", "scintillating statue")
+: vault_metal_statue_setup(_G, "g", "silver statue")
 MAP
     x.@.x
   xxx...xxx
@@ -4452,7 +4483,7 @@ MAP
  x...xx.xx...x
  xAd.......`Cx
  x...x.U.x...x
- xGxx...xxGxx
+ xxGxx...xxGxx
   xxx  @  xxx
 ENDMAP
 
@@ -4503,12 +4534,10 @@ TAGS:    transparent
 SHUFFLE: GU, _O
 KFEAT:   _ = altar_gozag
 KFEAT:   O = altar_nemelex_xobeh
-KFEAT:   G = metal_statue
-TILE:    G = dngn_golden_statue
 FTILE:   ._GOU+ = floor_limestone
-RTILE:   x = wall_sandstone
-COLOUR:  xG = yellow
-: set_feature_name("metal_statue", "golden statue")
+TILE:    x = wall_sandstone
+COLOUR:  x = yellow
+: vault_metal_statue_setup(_G, "G", "golden statue")
 MAP
   xxxxxxx
  xx.....xx
@@ -4523,26 +4552,26 @@ ENDMAP
 
 NAME:   grunt_temple_overflow_gold_and_silver
 TAGS:   temple_overflow_2 temple_overflow_gozag temple_overflow_zin
-TAGS:   transparent
+TAGS:   transparent vaults_empty vaults_orient_s no_wall_fixup
+DEPTH:  D:3-, Vaults, !Vaults:$
+WEIGHT: 3 (Vaults), 10
 KITEM:  $ = gold q:1 / gold q:2
 KFEAT:  _ = altar_gozag
 KFEAT:  O = altar_zin
-KFEAT:  G = metal_statue
 : if crawl.one_chance_in(4) then
 SUBST:  v = x
-COLOUR: G = silver
-TILE:   G = dngn_silver_statue
 TILE:   x = wall_orc
 FTILE:  +._OG$ = floor_w_marble
-:   set_feature_name("metal_statue", "silver statue")
+:   vault_metal_statue_setup(_G, "G", "silver statue")
 : else
-COLOUR: G = yellow
 COLOUR: v = white
-TILE:   G = dngn_golden_statue
 TILE:   v = dngn_metal_wall_white
 FTILE:  +._OG$ = floor_limestone
-:   set_feature_name("metal_statue", "golden statue")
+:   vault_metal_statue_setup(_G, "G", "golden statue")
 :   set_feature_name("metal_wall", "silver wall")
+: end
+: if you.in_branch("Vaults") then
+SUBST: + = .
 : end
 MAP
 vvvvvvvvv
@@ -4710,12 +4739,10 @@ MARKER: P = lua:transp_loc("temple_of_torment_entry")
 MARKER: Q = lua:transp_dest_loc("temple_of_torment_entry")
 MARKER: R = lua:transp_loc("temple_of_torment_exit")
 MARKER: S = lua:transp_dest_loc("temple_of_torment_exit")
-TILE:   G = dngn_sarcophagus_pedestal_left
 TILE:   c = wall_tomb
 FTILE:  -QRVDE|*$123Gcn = floor_tomb
-COLOUR: G = yellow
 COLOUR: -QR|*$123 = brown
-: set_feature_name("granite_statue", "sarcophagus")
+: vault_granite_statue_setup(_G, "G", "sarcophagus")
 MAP
  ...............
  .nnnnnnnnnnnnn.
@@ -4898,12 +4925,10 @@ MONS:    generate_awake chaos spawn
 KMONS:   g = pile of debris
 KITEM:   i = any damaged weapon ego:chaos ident:all
 COLOUR:  b = lightred
-COLOUR:  G = mountain
 TILE:    b = dngn_crystal_lightred
-TILE:    G = dngn_scintillating_statue
 KMASK:   1 = opaque
+: vault_granite_statue_setup(_G, "G", "scintillating statue")
 : set_feature_name("crystal_wall", "wall of orange crystal")
-: set_feature_name("granite_statue", "scintillating statue")
 MAP
    bbHbb
  bbbb.bbbb

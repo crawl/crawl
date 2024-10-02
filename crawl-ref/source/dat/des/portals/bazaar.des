@@ -2058,17 +2058,13 @@ SUBST:   b = bbbn, - = ccxy
 SUBST:   " = bbbnnnnxycct^+g ":300
 KPROP:   "` = no_tele_into
 COLOUR:  W = lightgreen
-COLOUR:  g = shimmer_blue
-COLOUR:  G = mountain
 FTILE:   t = floor_nerves_magenta
-TILE:    g = misfortune_conduit
-TILE:    G = dngn_scintillating_statue
 TILE:    v = wall_crypt_metal
 MARKER:  F = lua:fog_machine { cloud_type = "magical condensation", \
              pow_min = 6, pow_max = 7, delay_min = 60, delay_max = 80, size = 8 }
 MARKER:  + = lua: props_marker { connected_exclude="true" }
-: set_feature_name("metal_statue", "misfortune conduit")
-: set_feature_name("granite_statue", "scintillating statue")
+: vault_granite_statue_setup(_G, "G", "scintillating statue")
+: vault_metal_statue_setup(_G, "g", "misfortune conduit")
 : bazaar_setup(_G, false, false, true)
 {{
 local magi_name = util.random_from({"type:Ever-Affordable suffix:Forbidden_Knowledge",
