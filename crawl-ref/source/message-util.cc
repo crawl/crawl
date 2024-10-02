@@ -134,8 +134,14 @@ string make_any_2_actors_message(const string& subject, const string& object,
     bool reflexive = ends_with(object, "self");
     string finite_verb = conjugate_verb(verb, you_acting);
 
-    // printf-style format string (we custom build this for each scenario rather than using a 
-    // generic one with placeholders for everything because the translations may be different)
+    // i18n: In English, we can use the same sentence construction in all
+    // scenarios. However, that won't be the case in all languages. For example:
+    // - Some languages construct the sentence differently depending on whether
+    //   the object is a noun, personal pronoun or reflexive pronoun.
+    // - Some languages leave out the subject if it's a pronoun (like "you")
+    //   because it's obvious from the verb conjugation.
+    // Therefore, we need to construct a custom format string for all scenarios
+    // because the translation may be different.
     string format;
 
     // final result
