@@ -1878,6 +1878,30 @@ static string _localise_string(const string& context, const LocalisationArg& arg
     return result.empty() ? arg.plural : result;
 }
 
+// check for punctuation that needs special handling
+// (? and ! need special handling in languages like Spanish because they put characters at the start and end.)
+static bool _is_special_punctuation(const string& s)
+{
+    if (s.empty())
+        return false;
+    if (s[0] != '!' && s[0] != '?')
+        return false;
+    for (size_t i = 1; i < s.length(); i++) {
+        if (s[i] != s[0])
+            return false;
+    }
+    return true;
+}
+
+// localise special punctuation
+// (? and ! need special handling in languages like Spanish because they put characters at the start and end.)
+static string _localise_special_punctuation(const string& sentence, const string& punct)
+{
+    // For a language like Spanish, "%s?" would translate to "¿%s?", and similar for exclamation mark.
+    string p = xlate("%s" + punct, true);
+    return replace_first(p, "%s", sentence);
+}
+
 void LocalisationArg::init()
 {
     intVal = 0;
@@ -2056,8 +2080,16 @@ static string _build_string(const vector<LocalisationArg>& args, bool translate)
                     // arg is string
                     if (arg.translate && translate)
                     {
-                        string argx = _localise_string(_context, arg);
-                        ss << format_utf8_string(fmt_spec, argx);
+                        if (_is_special_punctuation(arg.stringVal))
+                        {
+                            string s = _localise_special_punctuation(ss.str(), arg.stringVal);
+                            ss.str(s);
+                        }
+                        else
+                        {
+                            string argx = _localise_string(_context, arg);
+                            ss << format_utf8_string(fmt_spec, argx);
+                        }
                     }
                     else
                         ss << make_stringf(fmt_spec.c_str(), arg.stringVal.c_str());
