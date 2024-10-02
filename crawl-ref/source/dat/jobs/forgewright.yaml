@@ -15,7 +15,7 @@ spells:
 equipment:
   - "robe"
   - "potion of magic"
-  - "hammer"
+  - "mace tile:wpn_hammer wtile:hammer itemname:hammer"
 recommended_species:
   - mountain dwarf
   - coglin
