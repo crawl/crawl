@@ -1025,23 +1025,28 @@ static void _ELEMENTAL_STAFF_melee_effects(item_def*, actor* attacker,
     if (mondied || !(x_chance_in_y(evoc, 27*27) || x_chance_in_y(evoc, 27*27)))
         return;
 
+    const char *verb = nullptr;
     beam_type flavour = BEAM_NONE;
 
     switch (random2(4))
     {
     case 0:
+        verb = "burn";
         flavour = BEAM_FIRE;
         break;
     case 1:
+        verb = "freeze";
         flavour = BEAM_COLD;
         break;
     case 2:
+        verb = "electrocute";
         flavour = BEAM_ELECTRICITY;
         break;
     default:
         dprf("Bad damage type for elemental staff; defaulting to earth");
         // fallthrough to earth
     case 3:
+        verb = "crush";
         break;
     }
 
@@ -1051,16 +1056,7 @@ static void _ELEMENTAL_STAFF_melee_effects(item_def*, actor* attacker,
         return;
 
     string punct = attack_strength_punctuation(bonus_dam);
-
-    string msg;
-    if (flavour == BEAM_FIRE)
-        do_any_2_actors_message(attacker, defender, "burn", "", punct);
-    else if (flavour == BEAM_COLD)
-        do_any_2_actors_message(attacker, defender, "freeze", "", punct);
-    else if (flavour == BEAM_ELECTRICITY)
-        do_any_2_actors_message(attacker, defender, "electrocute", "", punct);
-    else
-        do_any_2_actors_message(attacker, defender, "crush", "", punct);
+    do_any_2_actors_message(attacker, defender, verb, "", punct);
 
     defender->hurt(attacker, bonus_dam, flavour);
 

@@ -1432,8 +1432,8 @@ def process_cplusplus_file(filename):
                         string = "ring"
                     else:
                         string = string.lower()
-            elif filename == "attack.cc":
-                if string in ["melt", "burn", "freeze"]:
+            elif filename in ['art-func.h', 'attack.cc']:
+                if string in ["melt", "burn", "freeze", "electrocute", "crush"]:
                     strings += do_any_2_actors_message(string, "")
                     continue
 
