@@ -1773,10 +1773,10 @@ bool okawaru_gift_weapon()
 {
     ASSERT(!you.props.exists(OKAWARU_WEAPON_GIFTED_KEY));
 
-    if (!you.props.exists(OKAWARU_WEAPONS_KEY))
-        _make_okawaru_gifts(OBJ_WEAPONS);
-
     auto &acq_items = you.props[OKAWARU_WEAPONS_KEY].get_vector();
+
+    if (acq_items.empty())
+        _make_okawaru_gifts(OBJ_WEAPONS);
 
     simple_god_message(" offers you a choice of weapons!");
 
@@ -1813,10 +1813,10 @@ bool okawaru_gift_armour()
 {
     ASSERT(!you.props.exists(OKAWARU_ARMOUR_GIFTED_KEY));
 
-    if (!you.props.exists(OKAWARU_ARMOUR_KEY))
-        _make_okawaru_gifts(OBJ_ARMOUR);
-
     auto &acq_items = you.props[OKAWARU_ARMOUR_KEY].get_vector();
+
+    if (acq_items.empty())
+        _make_okawaru_gifts(OBJ_ARMOUR);
 
     simple_god_message(" offers you a choice of armour!");
 
@@ -1845,6 +1845,18 @@ bool okawaru_gift_armour()
 
     take_note(Note(NOTE_GOD_GIFT, you.religion));
     you.props[OKAWARU_ARMOUR_GIFTED_KEY] = true;
+
+    return true;
+}
+
+bool okawaru_reject_gifts()
+{
+    ASSERT(!you.props.exists(OKAWARU_WEAPON_GIFTED_KEY) || !you.props.exists(OKAWARU_ARMOUR_GIFTED_KEY));
+
+    you.props[OKAWARU_WEAPONS_KEY].get_vector().clear();
+    you.props[OKAWARU_ARMOUR_KEY].get_vector().clear();
+
+    simple_god_message(" rescinds your offer of armaments!");
 
     return true;
 }

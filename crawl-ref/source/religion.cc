@@ -179,6 +179,7 @@ const vector<vector<god_power>> & get_all_god_powers()
             { 6, ABIL_OKAWARU_GIFT_ARMOUR,
                  "Okawaru will grant you a choice of armour... once.",
                  "Okawaru is no longer ready to gift you armour." },
+            { 6, ABIL_OKAWARU_REJECT_GIFTS, "Okawaru will reconsider your choice of armaments." },
         },
 
         // Makhleb
