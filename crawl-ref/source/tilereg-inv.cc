@@ -148,10 +148,10 @@ int InventoryRegion::handle_mouse(wm_mouse_event &event)
         return CK_NO_KEY;
 
     int idx = m_items[item_idx].idx;
+    ASSERT(idx >= 0);
 
     bool on_floor = m_items[item_idx].flag & TILEI_FLAG_FLOOR;
-
-    ASSERT(idx >= 0);
+    ASSERT(on_floor || idx < ENDOFPACK);
 
     // TODO enne - this is all really only valid for the on-screen inventory
     // Do we subclass InventoryRegion for the onscreen and offscreen versions?
@@ -162,39 +162,53 @@ int InventoryRegion::handle_mouse(wm_mouse_event &event)
     if (event.button == wm_mouse_event::LEFT)
     {
         m_last_clicked_item = item_idx;
-        tiles.set_need_redraw();
+
         if (on_floor)
-            tile_item_pickup(idx, (event.mod & TILES_MOD_CTRL));
-        else
         {
-            if (event.mod & TILES_MOD_SHIFT)
-                tile_item_drop(idx, (event.mod & TILES_MOD_CTRL));
-            if (event.mod & TILES_MOD_CTRL)
-                tile_item_use_secondary(idx);
-            else
-                tile_item_use(idx);
+            command_type base_command = event.mod & TILES_MOD_CTRL
+                ? CMD_PICKUP_ITEM_QUANTITY_BY_INDEX_MIN
+                : CMD_PICKUP_ITEM_BY_INDEX_MIN;
+            command_type cmd = (command_type)(base_command + idx);
+            return encode_command_as_key(cmd);
         }
-        update();
-        return CK_MOUSE_CMD;
+
+        if (event.mod & TILES_MOD_SHIFT)
+        {
+            command_type base_command = event.mod & TILES_MOD_CTRL
+                ? CMD_DROP_ITEM_QUANTITY_AT_INDEX_MIN
+                : CMD_DROP_ITEM_AT_INDEX_MIN;
+            command_type cmd = (command_type)(base_command + idx);
+            return encode_command_as_key(cmd);
+        }
+
+        if (event.mod & TILES_MOD_CTRL)
+        {
+            command_type cmd =
+                (command_type)(CMD_USE_ITEM_SECONDARY_BY_INDEX_MIN + idx);
+            return encode_command_as_key(cmd);
+        }
+
+        command_type cmd = (command_type)(CMD_USE_ITEM_BY_INDEX_MIN + idx);
+        return encode_command_as_key(cmd);
     }
     else if (event.button == wm_mouse_event::RIGHT)
     {
-        if (on_floor)
-        {
-            describe_item(env.item[idx]);
-            redraw_screen();
-            update_screen();
-        }
-        else // in inventory
-        {
-            describe_item(you.inv[idx]);
-            redraw_screen();
-            update_screen();
-        }
-        return CK_MOUSE_CMD;
+        command_type cmd = on_floor ? CMD_DESCRIBE_FLOOR_ITEM_MIN :
+            CMD_DESCRIBE_INVENTORY_ITEM_MIN;
+        cmd = (command_type)(cmd + idx);
+        return encode_command_as_key(cmd);
     }
 
     return 0;
+}
+
+bool InventoryRegion::handle_mouse_for_map_view(wm_mouse_event &event)
+{
+    // Highlight the items in the players inventory as they mouse over them,
+    // but don't do anything else.
+    unsigned int item_idx;
+    place_cursor(event, item_idx);
+    return false;
 }
 
 // NOTE: Assumes the item is equipped in the first place!

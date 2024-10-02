@@ -53,17 +53,24 @@ void MonsterRegion::update()
     }
 }
 
-int MonsterRegion::handle_mouse(wm_mouse_event &event)
+bool MonsterRegion::_update_cursor(wm_mouse_event &event)
 {
     int cx, cy;
     if (!mouse_pos(event.px, event.py, cx, cy))
     {
         place_cursor(NO_CURSOR);
-        return 0;
+        return false;
     }
 
     const coord_def cursor(cx, cy);
     place_cursor(cursor);
+    return true;
+}
+
+int MonsterRegion::handle_mouse(wm_mouse_event &event)
+{
+    if (!_update_cursor(event))
+        return 0;
 
     if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
         return 0;
@@ -86,13 +93,36 @@ int MonsterRegion::handle_mouse(wm_mouse_event &event)
     }
     else if (event.button == wm_mouse_event::RIGHT)
     {
-        full_describe_square(gc);
-        redraw_screen();
-        update_screen();
-        return CK_MOUSE_CMD;
+        // Does it really make sense to describe the square including the items
+        // on it when clicking the monster panel?
+        const command_type cmd = (command_type)(CMD_DESCRIBE_SQUARE_MIN +
+            (gc.y - Y_BOUND_1) * X_WIDTH + (gc.x - X_BOUND_1));
+        ASSERT(cmd >= CMD_DESCRIBE_SQUARE_MIN
+            && cmd <= CMD_DESCRIBE_SQUARE_MAX);
+        return encode_command_as_key(cmd);
     }
 
     return 0;
+}
+
+bool MonsterRegion::handle_mouse_for_targeting(wm_mouse_event &event)
+{
+    if (!_update_cursor(event))
+        return false;
+
+    unsigned int item_idx = cursor_index();
+    const monster_info* mon = get_monster(item_idx);
+    if (!mon)
+        return false;
+
+    const coord_def &gc = mon->pos;
+    targeting_mouse_move(gc);
+    if (event.event == wm_mouse_event::PRESS
+        && event.button == wm_mouse_event::LEFT)
+    {
+        targeting_mouse_select(gc);
+    }
+    return false;
 }
 
 bool MonsterRegion::update_tip_text(string &tip)

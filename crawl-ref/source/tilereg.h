@@ -24,6 +24,14 @@ public:
     virtual bool update_tip_text(string &) { return false; }
     virtual bool update_alt_text(string &) { return false; }
     virtual int handle_mouse(wm_mouse_event &event) = 0;
+    virtual bool handle_mouse_for_map_view(wm_mouse_event &)
+    {
+        return false;
+    }
+    virtual bool handle_mouse_for_targeting(wm_mouse_event &)
+    {
+        return false;
+    }
 
     virtual void render() = 0;
     virtual void clear() = 0;

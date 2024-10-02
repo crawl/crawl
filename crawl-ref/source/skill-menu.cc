@@ -1778,6 +1778,10 @@ bool UISkillMenu::on_event(const Event& ev)
     mev.px -= m_region.x;
     mev.py -= m_region.y;
 
+    // Usually it would be a bad idea to call handle_mouse from on_event as we
+    // can't return a keycode from on_event, however, the only keycodes
+    // returned by the skill menu are fake ones like CK_MOUSE_CLICK and
+    // CK_MOUSE_CMD which we can handle.
     int key = skm.handle_mouse(mev);
     if (key && key != CK_NO_KEY)
     {
