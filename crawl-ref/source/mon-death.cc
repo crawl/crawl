@@ -2788,6 +2788,10 @@ item_def* monster_die(monster& mons, killer_type killer,
             {
                 msg = " dissipates.";
             }
+            else if (mons.type == MONS_CLOCKWORK_BEE)
+                msg = " runs out of power.";
+            else if (mons.type == MONS_CLOCKWORK_BEE_INACTIVE)
+                msg = " falls apart.";
             else
             {
                 if (mons.props.exists(KIKU_WRETCH_KEY))

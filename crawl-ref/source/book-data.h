@@ -541,6 +541,10 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_MAXWELLS_COUPLING,
 },
 
+{ // Handbook of Applied Construction
+    SPELL_CLOCKWORK_BEE,
+},
+
 };
 
 COMPILE_CHECK(ARRAYSZ(spellbook_templates) == NUM_BOOKS);

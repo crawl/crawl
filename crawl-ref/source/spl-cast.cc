@@ -2446,6 +2446,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_NOXIOUS_BOG:
         return cast_noxious_bog(powc, fail);
 
+    case SPELL_CLOCKWORK_BEE:
+        return cast_clockwork_bee(beam.target, fail);
+
     // Enchantments.
     case SPELL_CONFUSING_TOUCH:
         return cast_confusing_touch(powc, fail);
@@ -3217,6 +3220,10 @@ void handle_channelled_spell()
             handle_searing_ray(you, turn);
             return;
 
+        case SPELL_CLOCKWORK_BEE:
+            handle_clockwork_bee_spell(turn);
+            return;
+
         default:
             mprf(MSGCH_WARN, "Attempting to channel buggy spell: %s", spell_title(spell));
     }
@@ -3244,6 +3251,10 @@ void stop_channelling_spells(bool quiet)
 
         case SPELL_MAXWELLS_COUPLING:
             mpr("The insufficient charge dissipates harmlessly.");
+            break;
+
+        case SPELL_CLOCKWORK_BEE:
+            mpr("You stop assembling your clockwork bee.");
             break;
 
         default:

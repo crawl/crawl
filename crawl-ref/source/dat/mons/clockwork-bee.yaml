@@ -1,0 +1,18 @@
+name: "clockwork bee"
+glyph: {char: "y", colour: lightcyan}
+genus: killer_bee
+resists: {fire: 1, elec: 1}
+holiness: [nonliving]
+flags: [flies]
+will: invuln
+attacks:
+ - {type: sting, damage: 13}
+hd: 5
+hp_10x: 260
+ac: 6
+ev: 16
+shout: buzz
+intelligence: brainless
+speed: 15
+size: tiny
+shape: insect_winged

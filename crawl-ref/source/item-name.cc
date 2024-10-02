@@ -1251,6 +1251,8 @@ string sub_type_string(const item_def &item, bool known)
             return "Compendium of Siegecraft";
         case BOOK_CONDUCTIVITY:
             return "Codex of Conductivity";
+        case BOOK_FORGECRAFT:
+            return "Handbook of Applied Construction";
 #if TAG_MAJOR_VERSION == 34
         case BOOK_AKASHIC_RECORD:
             return "Akashic Record";

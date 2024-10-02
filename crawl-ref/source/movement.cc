@@ -46,6 +46,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "spl-damage.h"
+#include "spl-summoning.h"
 #include "target-compass.h"
 #include "terrain.h"
 #include "traps.h"
@@ -993,6 +994,15 @@ void move_player_action(coord_def move)
 
     if (targ_monst)
     {
+        if (try_to_swap
+            && targ_monst->type == MONS_CLOCKWORK_BEE_INACTIVE)
+        {
+            if (clockwork_bee_recharge(*targ_monst))
+                you.turn_is_over = false;
+
+            return;
+        }
+
         if (try_to_swap && !beholder && !fmonger)
         {
             if (swap_check(targ_monst, mon_swap_dest))

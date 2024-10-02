@@ -4115,6 +4115,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_CLOCKWORK_BEE, "Launch Clockwork Bee",
+    spschool::forgecraft,
+    spflag::target | spflag::not_self,
+    3,
+    100,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_ERROR,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

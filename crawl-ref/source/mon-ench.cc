@@ -736,7 +736,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_HAUNTING:
-        if (type != MONS_SOUL_WISP)
+        if (type != MONS_SOUL_WISP && type != MONS_CLOCKWORK_BEE)
         {
             mon_enchant timer = get_ench(ENCH_SUMMON_TIMER);
             timer.degree = 1;
@@ -1713,7 +1713,12 @@ void monster::apply_enchantment(const mon_enchant &me)
 
     case ENCH_HAUNTING:
         if (!me.agent() || !me.agent()->alive())
-            del_ench(ENCH_HAUNTING);
+        {
+            if (type != MONS_CLOCKWORK_BEE)
+                del_ench(ENCH_HAUNTING);
+            else
+                clockwork_bee_pick_new_target(*this);
+        }
         break;
 
     case ENCH_TOXIC_RADIANCE:

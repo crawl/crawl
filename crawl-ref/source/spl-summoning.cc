@@ -87,17 +87,19 @@ static int _auto_autofoe(const actor *caster)
 }
 
 static mgen_data _summon_data(const actor &caster, monster_type mtyp,
-                              int dur, spell_type spell)
+                              int dur, spell_type spell,
+                              bool abjurable = true)
 {
     return mgen_data(mtyp, BEH_COPY, caster.pos(),
                      _auto_autofoe(&caster),
                      MG_AUTOFOE)
-                     .set_summoned(&caster, spell, dur);
+                     .set_summoned(&caster, spell, dur, abjurable);
 }
 
-static mgen_data _pal_data(monster_type pal, int dur, spell_type spell)
+static mgen_data _pal_data(monster_type pal, int dur, spell_type spell,
+                           bool abjurable = true)
 {
-    return _summon_data(you, pal, dur, spell);
+    return _summon_data(you, pal, dur, spell, abjurable);
 }
 
 spret cast_summon_small_mammal(int pow, bool fail)
@@ -3205,4 +3207,175 @@ bool make_soul_wisp(const actor& agent, actor& victim)
     }
 
     return false;
+}
+
+static monster* _get_clockwork_bee_target()
+{
+    monster* targ = nullptr;
+    int num_seen = 0;
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (!mi->wont_attack() && you.can_see(**mi)
+            && !mons_is_firewood(**mi))
+        {
+            if (one_chance_in(++num_seen))
+                targ = *mi;
+        }
+    }
+
+    return targ;
+}
+
+void handle_clockwork_bee_spell(int turn)
+{
+    if (turn < 4)
+    {
+        mpr("You continue winding your clockwork bee...");
+        return;
+    }
+
+    stop_channelling_spells(true);
+
+    // Try to find what we targeted when we started casting.
+    monster* targ = monster_by_mid(you.props[CLOCKWORK_BEE_TARGET].get_int());
+
+    // If the original target is not available, pick another suitable one at random.
+    if (!targ || !targ->alive() || !targ->visible_to(&you)
+        || !you.see_cell(targ->pos()))
+    {
+        targ = _get_clockwork_bee_target();
+
+        // Couldn't find anything, so just deposit an inert bee near us
+        if (!targ)
+        {
+            mgen_data mg = _pal_data(MONS_CLOCKWORK_BEE_INACTIVE,
+                                        random_range(80, 120),
+                                     SPELL_CLOCKWORK_BEE, false).set_range(1, 2);
+            mg.hd = 5 + div_rand_round(calc_spell_power(SPELL_CLOCKWORK_BEE), 20);
+            if (create_monster(mg))
+            {
+                mprf("Without a target, your clockwork bee falls to the ground.");
+                return;
+            }
+        }
+    }
+
+    mgen_data mg = _pal_data(MONS_CLOCKWORK_BEE, random_range(400, 500),
+                             SPELL_CLOCKWORK_BEE, false).set_range(1, 2);
+    mg.hd = 5 + div_rand_round(calc_spell_power(SPELL_CLOCKWORK_BEE), 20);
+
+    monster* bee = create_monster(mg);
+    if (bee)
+    {
+        bee->number = 3 + div_rand_round(calc_spell_power(SPELL_CLOCKWORK_BEE), 15);
+        bee->add_ench(mon_enchant(ENCH_HAUNTING, 1, targ, INFINITE_DURATION));
+
+        mprf("With a metallic buzz, your clockwork bee launches itself at %s.",
+             targ->name(DESC_THE).c_str());
+
+        bee->speed_increment = 80;
+    }
+    else
+        mpr("Your bee fails to deploy!");
+}
+
+spret cast_clockwork_bee(coord_def target, bool fail)
+{
+    fail_check();
+
+    monster* targ = monster_at(target);
+
+    if (!targ || !you.can_see(*targ))
+    {
+        mpr("You see nothing there to target.");
+        return spret::abort;
+    }
+    else if (targ->wont_attack())
+    {
+        mpr("Your bee can only target hostiles.");
+        return spret::abort;
+    }
+
+    you.props[CLOCKWORK_BEE_TARGET].get_int() = targ->mid;
+
+    mprf("You lock target on %s and prepare to deploy your bee.", targ->name(DESC_THE).c_str());
+    start_channelling_spell(SPELL_CLOCKWORK_BEE, "continue winding your bee", false);
+
+    // Remove any existing bee
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->was_created_by(you, SPELL_CLOCKWORK_BEE))
+        {
+            if (you.can_see(**mi))
+                mprf("Your existing bee falls apart.");
+            monster_die(**mi, KILL_RESET, NON_MONSTER, true);
+        }
+    }
+
+    return spret::success;
+}
+
+void clockwork_bee_go_dormant(monster& bee)
+{
+    mpr("Your clockwork bee winds down and falls to the ground.");
+
+    int old_hd = bee.get_hit_dice();
+    int old_hp = bee.hit_points;
+    change_monster_type(&bee, MONS_CLOCKWORK_BEE_INACTIVE);
+    bee.max_hit_points = bee.max_hit_points * old_hd / bee.get_hit_dice();
+    bee.set_hit_dice(old_hd);
+    bee.hit_points = min(bee.max_hit_points, old_hp);
+    bee.del_ench(ENCH_HAUNTING);
+
+    // Set duration to no longer than a small-ish amount (since the active bee's
+    // duration is deliberately high so that it doesn't expire while active in
+    // normal circumstances)
+    mon_enchant timer = bee.get_ench(ENCH_SUMMON_TIMER);
+    timer.duration = min(timer.duration, random_range(80, 120));
+    bee.update_ench(timer);
+
+    // Might have falled into deep water or lava!
+    mons_check_pool(&bee, bee.pos(), KILL_RESET);
+}
+
+// Attempts to repair and rewind a clockwork bee.
+// Returns false if we lacked the MP to do so or there was no valid target for it.
+bool clockwork_bee_recharge(monster& bee)
+{
+    monster* targ = _get_clockwork_bee_target();
+
+    // Nothing around for it to attack.
+    if (!targ)
+    {
+        mpr("You see no target in range to command your bee to attack.");
+        return false;
+    }
+
+    mprf("You wind your clockwork bee back up and it locks its sights upon %s!",
+         targ->name(DESC_THE).c_str());
+    int old_hd = bee.get_hit_dice();
+    change_monster_type(&bee, MONS_CLOCKWORK_BEE);
+    bee.max_hit_points = bee.max_hit_points * old_hd / bee.get_hit_dice();
+    bee.set_hit_dice(old_hd);
+    bee.heal(roll_dice(2, 10));
+    bee.add_ench(mon_enchant(ENCH_SUMMON_TIMER, 0, &you, random_range(400, 500)));
+    bee.add_ench(mon_enchant(ENCH_HAUNTING, 0, targ, INFINITE_DURATION));
+    bee.number = 3 + div_rand_round(calc_spell_power(SPELL_CLOCKWORK_BEE), 15);
+    bee.speed_increment = 80;
+
+    return true;
+}
+
+void clockwork_bee_pick_new_target(monster& bee)
+{
+    monster* targ = _get_clockwork_bee_target();
+
+    // Nothing around for it to attack
+    if (!targ)
+       clockwork_bee_go_dormant(bee);
+    else
+    {
+        mprf("Your clockwork bee locks its sights upon %s.", targ->name(DESC_THE).c_str());
+        bee.add_ench(mon_enchant(ENCH_HAUNTING, 0, targ, INFINITE_DURATION));
+    }
 }

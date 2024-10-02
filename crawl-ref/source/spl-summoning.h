@@ -21,6 +21,8 @@ constexpr int MAX_HOARFROST_SHOTS = 4;
 
 #define SERVITOR_SPELL_KEY "servitor_spell"
 
+#define CLOCKWORK_BEE_TARGET "clockwork_bee_target"
+
 constexpr int BOULDER_ABRASION_DAMAGE = 5;
 
 spret cast_summon_small_mammal(int pow, bool fail);
@@ -135,3 +137,9 @@ dice_def hellfire_mortar_damage(int pow);
 spret cast_hellfire_mortar(const actor& agent, bolt& beam, int pow, bool fail);
 
 bool make_soul_wisp(const actor& agent, actor& victim);
+
+spret cast_clockwork_bee(coord_def target, bool fail);
+void handle_clockwork_bee_spell(int turn);
+void clockwork_bee_go_dormant(monster& bee);
+bool clockwork_bee_recharge(monster& bee);
+void clockwork_bee_pick_new_target(monster& bee);

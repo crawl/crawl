@@ -148,6 +148,9 @@ killer_bee MONS_KILLER_BEE
 queen_bee MONS_QUEEN_BEE
 %sdir mon/demihumanoids
 meliai MONS_MELIAI
+%sdir mon/nonliving
+clockwork_bee MONS_CLOCKWORK_BEE
+clockwork_bee_inert MONS_CLOCKWORK_BEE_INACTIVE
 %sdir mon/animals
 
 ## Reptiles and lizards ('l')

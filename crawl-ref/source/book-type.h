@@ -121,6 +121,7 @@ enum book_type
     BOOK_SIEGECRAFT,
     BOOK_MALADIES,
     BOOK_CONDUCTIVITY,
+    BOOK_FORGECRAFT,
     NUM_BOOKS
 };
 

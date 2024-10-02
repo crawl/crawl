@@ -1,0 +1,18 @@
+name: "dormant clockwork bee"
+enum: clockwork_bee_inactive
+glyph: {char: "*", colour: cyan}
+genus: killer_bee
+resists: {fire: 1, elec: 1}
+flags: [stationary]
+holiness: [nonliving]
+will: invuln
+attacks:
+hd: 5
+hp_10x: 260
+ac: 13
+ev: 0
+shout: buzz
+intelligence: brainless
+speed: 15
+size: tiny
+shape: insect_winged

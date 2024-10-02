@@ -231,6 +231,8 @@ enum monster_type                      // env.mons[].type
     MONS_QUEEN_BEE,
 #if TAG_MAJOR_VERSION > 34
     MONS_MELIAI,
+    MONS_CLOCKWORK_BEE,
+    MONS_CLOCKWORK_BEE_INACTIVE,
 #endif
     MONS_VAMPIRE_MOSQUITO,
 #if TAG_MAJOR_VERSION == 34
@@ -1276,6 +1278,8 @@ enum monster_type                      // env.mons[].type
     MONS_GLOBE_OF_ANNIHILATION,
     MONS_FRAVASHI,
     MONS_NEKOMATA,
+    MONS_CLOCKWORK_BEE,
+    MONS_CLOCKWORK_BEE_INACTIVE,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

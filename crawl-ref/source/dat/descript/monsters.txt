@@ -949,6 +949,12 @@ one of an ox, one of a lion, one of an eagle. It is one of the angelic beings
 who stand before the good gods, singing eternal hymns of praise to their glory
 and greatness.
 %%%%
+clockwork bee
+
+A mechanical insect powered by an intricate array of gears and springs. It is
+vicious and resiliant to damage, but its clockwork naturally winds down as it
+attacks, eventually leaving it unable to move until its creator winds it again.
+%%%%
 creeping inferno
 
 A formless mass of ancient fire, bound by heat and malevolence. It longs to
@@ -1176,6 +1182,11 @@ A demon lapdog of the queen of Tartarus, bound to hunt her enemies. The first
 time a foe hears its howl, it will echo in their mind, calling nightmarish
 creatures to hunt them. Those who survive have the small consolation of being
 inoculated against that particular hound's howl.
+%%%%
+dormant clockwork bee
+
+A mechanical insect powered by an intricate array of gears and springs. It has
+run out of power and can only be rewound by its creator moving into it.
 %%%%
 draconian
 

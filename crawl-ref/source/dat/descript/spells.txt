@@ -945,6 +945,17 @@ on contact with open flame or with creatures - including any caster foolish
 enough to linger in them! The explosion is concussive, knocking adjacent
 creatures away. Damage done rises with the spell's power.
 %%%%
+Launch Clockwork Bee spell
+
+Constructs a mechanical bee and winds its clockwork mechanisms over several
+turns before unleashing it against a targeted foe. The bee is swift and
+powerful, but its clockwork quickly winds down as it attacks, eventually leaving
+it helpless and unable to move.
+
+The caster may repair and rewind a dormant bee by attempting to move into it.
+Spellpower increases the number of attacks the bee may perform before going
+dormant.
+%%%%
 Leda's Liquefaction spell
 
 Liquefies the ground around the caster, making it difficult to move through.

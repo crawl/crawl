@@ -1213,6 +1213,11 @@ static void _describe_channelled_spell(status_info& inf)
             inf.light_text   = _charge_text().c_str();
             break;
 
+        case SPELL_CLOCKWORK_BEE:
+            inf.light_colour = CYAN;
+            inf.light_text = "Winding" + string(max(turns - 1, 0), '.');
+            break;
+
         default:
             break;
     }

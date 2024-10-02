@@ -1023,6 +1023,11 @@ bool melee_attack::handle_phase_end()
                                mon_attacker->max_hit_points / 3 + 1,
                                BEAM_MISSILE);
         }
+        else if (mon_attacker->type == MONS_CLOCKWORK_BEE && did_hit)
+        {
+            if (--mon_attacker->number == 0)
+                clockwork_bee_go_dormant(*mon_attacker);
+        }
     }
 
     if (defender && !is_multihit)
