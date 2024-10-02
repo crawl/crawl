@@ -1404,7 +1404,7 @@ static void _redraw_title()
     if (you_worship(GOD_NO_GOD))
     {
         if (you.char_class == JOB_MONK
-            && !you.has_mutation(MUT_FORLORN) // XX is this necessary?
+            && !you.has_mutation(MUT_FORLORN)
             && !had_gods())
         {
             if (small_layout)
