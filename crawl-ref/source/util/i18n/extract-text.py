@@ -116,6 +116,9 @@ SKIP_FILES = [
     'dat/clua/kills.lua',
 ]
 
+def replace_last(s, old, new):
+    return new.join(s.rsplit(old, 1))
+
 def conjugate_verb(verb):
     if verb == "be" or verb == "are":
         return "is"
@@ -124,7 +127,7 @@ def conjugate_verb(verb):
     else:
         return verb + 's'
 
-def do_any_person_message(verb, suffix):
+def do_any_2_actors_message(verb, suffix):
     verb3p = conjugate_verb(verb)
     strings = []
     strings.append("You " + verb + " %s" + suffix)
@@ -1113,7 +1116,7 @@ def process_cplusplus_file(filename):
             extract = True
         elif 'simple_monster_message' in line or 'simple_god_message' in line:
             extract = True
-        elif 'any_person_message' in line or '3rd_person_message' in line:
+        elif 'any_2_actors_message' in line or '3rd_person_message' in line:
             extract = True
         elif 'MSGCH_DIAGNOSTICS' in line:
             # ignore diagnostic messages - these are for devs
@@ -1289,8 +1292,8 @@ def process_cplusplus_file(filename):
 
         extract = True
 
-        if 'any_person_message' in line:
-            temp = re.sub('.*any_person_message *\(', '', line);
+        if 'any_2_actors_message' in line:
+            temp = re.sub('.*any_2_actors_message *\(', '', line);
             temp = re.sub('\).*', '', line);
             args = temp.split(',')
             verb_pos = -1
@@ -1307,7 +1310,7 @@ def process_cplusplus_file(filename):
             if suffix != '':
                 suffix = ' ' + suffix
             if verb != '':
-                strings += do_any_person_message(verb, suffix)
+                strings += do_any_2_actors_message(verb, suffix)
                 continue
 
 
@@ -1395,6 +1398,9 @@ def process_cplusplus_file(filename):
             if 'simple_god_message' in line or 'simple_monster_message' in line:
                 if string != "" and (string[0] == " " or string[0] == "'"):
                     string = '%s' + string
+            elif '3rd_person_message' in line:
+                # also do the version where "you" is the object
+                strings.append(replace_last(string, '%s', 'you'))
 
             if 'held_status' in line and 'while %s' in string:
                 # there are only two possibilities
@@ -1428,7 +1434,7 @@ def process_cplusplus_file(filename):
                         string = string.lower()
             elif filename == "attack.cc":
                 if string in ["melt", "burn", "freeze"]:
-                    strings += do_any_person_message(string, "")
+                    strings += do_any_2_actors_message(string, "")
                     continue
 
             # strip channel information
