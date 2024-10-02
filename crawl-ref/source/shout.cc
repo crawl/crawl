@@ -526,7 +526,6 @@ static int _issue_orders_prompt()
     {
         string cap_shout = you.shout_verb(false);
         cap_shout[0] = toupper_safe(cap_shout[0]);
-        // @locnote: press t to shout
         mprf(" t - %s!", cap_shout.c_str());
     }
 
@@ -540,7 +539,6 @@ static int _issue_orders_prompt()
                 previous = true;
         }
 
-        // @locnote: All these orders can be given to one or multiple allies
         mpr_nojoin(" Orders for allies:");
         if (!previous)
            mpr_nojoin("  a - Attack new target.");
@@ -738,7 +736,6 @@ void yell(const actor* mon)
         {
             if (you.paralysed() || you.duration[DUR_WATER_HOLD])
             {
-                // @locnote: %s = shout/howl/hiss/etc. depending on species/form
                 mprf("You feel a strong urge to %s, but "
                      "you are unable to make a sound!",
                      shout_verb.c_str());
@@ -746,7 +743,6 @@ void yell(const actor* mon)
             else
             {
                 string shout_noun = article_a(shout_verb);
-                // @locnote: %s = a shout/howl/hiss/etc. depending on species/form
                 mprf("You feel %s rip itself from your throat, "
                      "but you make no sound!",
                      shout_noun.c_str());

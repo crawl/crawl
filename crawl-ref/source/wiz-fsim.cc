@@ -49,7 +49,6 @@
 
 typedef map<skill_type, int8_t> skill_map;
 
-// @locnote: column widths must be preserved
 static const char* _title_line =
     "  Source | AvHitDam | MaxDam |  Acc | AvDam | AvTime | AvSpd | AvEffDam";
 static const char* _tsv_title_line =

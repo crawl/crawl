@@ -430,7 +430,6 @@ public:
                       "prevents you from becoming completely invisible.";
             }
 
-            // @locnote: The following are all causes of glowing to plug into the above messages
             vector<const char *> afflictions;
             if (you.haloed() && !you.umbraed()) {
                 if (you.halo_radius() == -1)

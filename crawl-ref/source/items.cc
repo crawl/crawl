@@ -1863,7 +1863,6 @@ static void _get_book(item_def& it)
 
     if (you.skill_manual_points[sk])
     {
-        // @locnote: pick up manual
         mprf("You pick up another %s and continue studying.", it.name(DESC_PLAIN).c_str());
     }
     else
@@ -1901,7 +1900,6 @@ static void _get_rune(const item_def& it, bool quiet)
     if (!quiet)
     {
         flash_view_delay(UA_PICKUP, rune_colour(it.sub_type), 300);
-        // @locnote: pick up rune
         mprf("You pick up %s and feel its power.",
              rune_short_name(it.sub_type).c_str());
         int nrunes = runes_in_pack();
@@ -2550,7 +2548,6 @@ bool drop_item(int item_dropped, int quant_drop)
     {
         if (!Options.easy_unequip)
         {
-            // @locnote: ring/amulet
             mpr("You will have to take that off first.");
         }
         else if (remove_ring(item_dropped, true))

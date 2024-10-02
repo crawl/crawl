@@ -4399,7 +4399,7 @@ static string _get_sound_string(int s_type, bool verb_only)
         "buzzes at @foe@",
         "moans at @foe@",
         "gurgles at @foe@",
-        "croaks at @foe@",       // @locnote: frogs/toads, but also shadow demon
+        "croaks at @foe@",
         "growls at @foe@",
         "hisses at @foe@",
         "sneers at @foe@",       // S_DEMON_TAUNT
@@ -4432,7 +4432,7 @@ static string _get_sound_string(int s_type, bool verb_only)
         "buzzes",
         "moans",
         "gurgles",
-        "croaks",       // @locnote: frogs/toads, but also shadow demon
+        "croaks",
         "growls",
         "hisses",
         "sneers",       // S_DEMON_TAUNT

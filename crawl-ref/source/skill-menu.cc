@@ -543,7 +543,6 @@ string SkillMenuSwitch::get_help()
             if (_any_crosstrained())
                 causes.push_back("cross-training");
 
-            // @locnote: %s = comma-separated list containing any of Heroism, <god>'s power, cross-training
             string fmt = "Skills enhanced by %s are in <green>green</green>.";
             string cause_str = comma_separated_line(causes.begin(), causes.end());
             result = localise(fmt, cause_str);
@@ -559,7 +558,6 @@ string SkillMenuSwitch::get_help()
 
             if (!result.empty())
                 result += "\n";
-            // @locnote: %s = in theory a comma-separated list, but in practice always "Ashenzari's anger"
             string fmt = "Skills reduced by %s are in <magenta>magenta</magenta>.";
             string cause_str = comma_separated_line(causes.begin(), causes.end());
             result += localise(fmt, cause_str);

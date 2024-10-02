@@ -997,7 +997,6 @@ bool learn_spell(spell_type specspell, bool wizard, bool interactive)
             mprf(MSGCH_WARN, "This spell is impossible to cast!");
         else if (severity > 0)
         {
-            // @locnote: first %s = dangerous, very dangerous, etc.; second %s = ! or .
             mprf(MSGCH_WARN, "This spell is %s to cast%s",
                              fail_severity_adjs[severity],
                              severity > 1 ? "!" : ".");

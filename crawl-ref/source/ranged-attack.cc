@@ -181,7 +181,6 @@ bool ranged_attack::handle_phase_blocked()
                 if (needs_message) {
                     if (defender->is_player()) {
                         string shld = defender_shield->name(DESC_YOUR);
-                        // @locnote: You reflect <projectile> off <your shield>!
                         mprf("You reflect %s off %s!", proj.c_str(), shld.c_str());
                     }
                     else {
@@ -420,12 +419,10 @@ bool ranged_attack::ignores_shield(bool verbose)
 
             if (defender_shield) {
                 if (defender->is_player()) {
-                    // @locnote: <projectile> pierces through <your shield>!
                     mprf("%s pierces through %s!", proj.c_str(),
                         defender_shield->name(DESC_YOUR).c_str());
                 }
                 else {
-                    // @locnote: <projectile> pierces through <monster's> <shield>!
                     mprf("%s pierces through %s %s!", proj.c_str(), dfndr.c_str(),
                         defender_shield->name(DESC_PLAIN).c_str());
                 }
@@ -434,7 +431,6 @@ bool ranged_attack::ignores_shield(bool verbose)
                 if (defender->is_player())
                     mprf("%s pierces through your shielding!", proj.c_str());
                 else {
-                    // @locnote: <projectile> pierces through <monster's> shielding!
                     mprf("%s pierces through %s shielding!",
                          proj.c_str(), dfndr.c_str());
                 }

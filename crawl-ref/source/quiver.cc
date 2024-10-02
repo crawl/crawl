@@ -382,7 +382,6 @@ namespace quiver
                         case FAV_TOUCH:
                             return !confused ? "Touch: " : "Confused touch: ";
                         case FAV_ENGULF:
-                            // @locnote: Wisp form attack
                             return !confused ? "Engulf: " : "Confused engulf: ";
                         case FAV_RELEASE_SPORES_AT:
                             return !confused ? "Release spores: "
@@ -390,7 +389,6 @@ namespace quiver
                         case FAV_SLASH:
                             return !confused ? "Slash: " : "Confused slash: ";
                         case FAV_SMACK:
-                            // @locnote: Tree form attack
                             return !confused ? "Smack: ": "Confused smack: ";
                         default:
                             return !confused ? "Hit: " : "Confused hit: ";
@@ -1808,7 +1806,6 @@ namespace quiver
 
         virtual string quiver_verb() const override
         {
-            // @locnote: evoke wand
             return "Zap: ";
         }
 

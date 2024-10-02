@@ -669,7 +669,6 @@ static bool _check_tukima_validity(const actor *target)
 
         if (target_is_player)
         {
-            // @locnote: Tukima's dance fail messages
             mpr_nolocalise(you.hand_act("%s twitches.", "%s twitch."));
         }
         else
@@ -680,12 +679,10 @@ static bool _check_tukima_validity(const actor *target)
             const string owner = apostrophise(target->name(DESC_THE));
             if (plural)
             {
-                // @locnote: <the monster's> <hands> twitch.
                 mprf("%s %s twitch.", owner.c_str(), hand.c_str());
             }
             else
             {
-                // @locnote: <the monster's> <hand> twitches.
                 mprf("%s %s twitches.", owner.c_str(), hand.c_str());
             }
         }
@@ -1001,7 +998,6 @@ static bool _summon_demon_wrapper(int pow, god_type god, int spell,
 
         if (!friendly)
         {
-            // @locnote: summoned demon is not friendly
             mpr(charmed ? "You don't feel so good about this..."
                         : "It doesn't seem very happy.");
         }
@@ -2906,7 +2902,6 @@ static void _overgrow_wall(const coord_def &pos)
 
     if (monster_at(pos))
     {
-        // @locnote: Fedhas overgrow ability
         mprf("Something unseen blocks growth in %s.", what.c_str());
         return;
     }

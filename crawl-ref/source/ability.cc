@@ -1220,7 +1220,6 @@ static string _sacrifice_desc(const ability_type ability)
     ASSERT(you.props.exists(sac_vec_key));
     const CrawlVector &sacrifice_muts = you.props[sac_vec_key].get_vector();
     return "\n"
-            // @locnote: %s is a mutation description like "you are clumsy"
             + localise("After this sacrifice, you will find that %s.",
                        comma_separated_fn(sacrifice_muts.begin(),
                                           sacrifice_muts.end(),

@@ -1358,7 +1358,6 @@ static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
             mprf("%s suddenly disappears!", orig_name.c_str());
         else
         {
-            // @locnote: @feature@ suddenly disappears from beside/under/etc. @monster@
             mprf("%s suddenly disappears from %s %s!",
                  orig_name.c_str(), prep.c_str(), orig_actor.c_str());
         }
@@ -1369,7 +1368,6 @@ static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
             mprf("%s suddenly appears!", orig_name.c_str());
         else
         {
-            // @locnote: @feature@ suddenly appears beside/under/etc. @monster@
             mprf("%s suddenly appears %s %s!",
                  orig_name.c_str(), prep.c_str(), dest_actor.c_str());
         }
@@ -1380,7 +1378,6 @@ static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
             mprf("%s moves!", orig_name.c_str());
         else if (!orig_actor.empty() && !dest_actor.empty())
         {
-            // @locnote: @feature@ moves from beside/under/etc. @monster1@ to beside/under/etc. @monster2@
             mprf("%s moves from %s %s to %s %s!", orig_name.c_str(),
                  prep.c_str(), orig_actor.c_str(),
                  prep.c_str(), dest_actor.c_str());
@@ -1821,7 +1818,6 @@ string stair_climb_verb(dungeon_feature_type feat)
 {
     ASSERT(feat_stair_direction(feat) != CMD_NO_CMD);
 
-    // @locnote: infinitive verbs as used in "@feature@ moves away as you attempt to @verb@ it"
     if (feat_is_staircase(feat))
         return "climb";
     else if (feat_is_escape_hatch(feat))

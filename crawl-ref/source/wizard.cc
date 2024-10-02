@@ -407,7 +407,6 @@ void enter_explore_mode()
 
 int list_wizard_commands(bool do_redraw_screen)
 {
-    // @locnote: Max width for these menu options is 42 chars (exluding formatting tags)
     // 2 columns
     column_composer cols(2, 44);
     cols.add_formatted(0, localise(

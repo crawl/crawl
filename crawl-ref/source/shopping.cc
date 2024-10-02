@@ -2099,7 +2099,6 @@ void ShoppingList::gold_changed(int old_amount, int new_amount)
             }
             else
             {
-                // @locnote: You now have enough gold to...
                 desc = "buy %s";
             }
 

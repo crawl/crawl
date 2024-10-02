@@ -859,7 +859,6 @@ void wizard_make_monster_summoned(monster* mon)
         return;
     }
 
-    // @locnote: summon type
     mprf(MSGCH_PROMPT, "[a] clone [b] animated [c] chaos [d] miscast [e] zot");
     mprf(MSGCH_PROMPT, "[f] wrath [h] aid   [m] misc    [s] spell");
 

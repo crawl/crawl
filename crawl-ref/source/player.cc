@@ -7397,7 +7397,6 @@ bool player::attempt_escape(int attempts)
     if (escape_score
         >= roll_dice(5, 8 + div_rand_round(themonst->get_hit_dice(), 4)))
     {
-        // @locnote: You escape <the monster's> grip.
         mprf("You escape %s grasp.", object.c_str());
 
         // Stun the monster to prevent it from constricting again right away.
@@ -7410,7 +7409,6 @@ bool player::attempt_escape(int attempts)
     }
     else
     {
-        // @locnote: <The monster's> grasp...
         mprf("%s grasp on you weakens, but your attempt to escape fails.",
              object.c_str());
         turn_is_over = true;

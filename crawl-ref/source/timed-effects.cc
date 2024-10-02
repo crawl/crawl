@@ -362,7 +362,6 @@ static void _jiyva_effects(int /*time_delta*/)
                         mpr(MSGCH_SOUND, "You hear a splatter.");
                     break;
                 case 2:
-                    // @locnote: Xom's command to slimes/jellies (they reproduce by dividing)
                     simple_god_message(" says: Divide and consume!");
                     break;
             }

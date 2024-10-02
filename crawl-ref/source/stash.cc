@@ -576,7 +576,6 @@ ShopInfo::ShopInfo(const shop_struct& shop_)
 
 string ShopInfo::shop_item_name(const item_def &it) const
 {
-    // @locnote: shop item entry - item name + " (unknown)" if applicable + price
     return localise("%s%s (%d gold)",
                         Stash::stash_item_name(it).c_str(),
                         shop_item_unknown(it) ? " (unknown)" : "",

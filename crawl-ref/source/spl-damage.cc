@@ -335,7 +335,6 @@ spret cast_chain_lightning(int pow, const actor &caster, bool fail)
 
     if (you.can_see(caster))
     {
-        // @locnote: ...from <monster's> <hand>
         mprf("Lightning arcs from %s %s!",
              apostrophise(caster.name(DESC_PLAIN)).c_str(),
              caster.hand_name(true).c_str());
@@ -719,7 +718,6 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
                            " environment!";
             mons_invis_msg = "The ambient heat is drained!";
             verb = "frozen";
-            // @locnote: verb for the prompt "Really refrigerate?"
             prompt_verb = "refrigerate";
             vulnerable = [](const actor *caster, const actor *act) {
                 return act != caster
@@ -741,7 +739,6 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
             break;
 
         case SPELL_SONIC_WAVE:
-            // @locnote: sonic wave
             player_msg = "You send a blast of sound all around you.";
             global_msg = "Something sends a blast of sound all around you.";
             mons_vis_msg = "%s sends a blast of sound all around you!";
@@ -1163,7 +1160,6 @@ struct feature_frag
 };
 
 static const map<dungeon_feature_type, feature_frag> fraggable_terrain = {
-    // @locnote: Things that can shatter
     // Stone and rock terrain
     { DNGN_ROCK_WALL, { "blast of rock fragments", "the wall" } },
     { DNGN_SLIMY_WALL, { "blast of rock fragments", "the wall" } },
@@ -1344,7 +1340,6 @@ spret cast_fragmentation(int pow, const actor *caster,
     else if (target == you.pos()) // You explode.
     {
         const int dam = beam.damage.roll();
-        // @locnote: param = damage-based punctuation
         mprf("You shatter%s", attack_strength_punctuation(dam).c_str());
 
         ouch(dam, KILLED_BY_BEAM, caster->mid,
@@ -1362,7 +1357,6 @@ spret cast_fragmentation(int pow, const actor *caster,
         const int dam = beam.damage.roll();
         if (you.see_cell(target))
         {
-            // @locnote: params = the monster, damage-based punctuation
             mprf("%s shatters%s", mon->name(DESC_THE).c_str(),
                  attack_strength_punctuation(dam).c_str());
         }
@@ -2345,7 +2339,6 @@ static int _discharge_monsters(const coord_def &where, int pow,
         dprf("You: static discharge damage: %d", damage);
         damage = check_your_resists(damage, BEAM_ELECTRICITY,
                                     "static discharge");
-        // @locnote: param = damage-based punctuation
         mprf("You are struck by an arc of lightning%s",
              attack_strength_punctuation(damage).c_str());
         ouch(damage, KILLED_BY_BEAM, agent.mid, "by static electricity", true,
@@ -2727,7 +2720,6 @@ void forest_damage(const actor *mon)
                 {
                     if (foe->is_player())
                     {
-                        // @locnote: these are intentionally without final punctuation
                         msg = random_choose(
                             "You are hit by a branch",
                             "A tree reaches out and hits you",

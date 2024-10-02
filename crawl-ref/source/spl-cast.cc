@@ -1163,7 +1163,6 @@ static bool _spellcasting_aborted(spell_type spell, bool fake_spell)
             return true;
         }
 
-        // @locnote: params: 1 = dangerous/very dangerous/etc, 2 = <failure rate>, 3 = !/.
         string prompt = localise("The spell is %s to cast "
                                      "(%s risk of failure)%s"
                                      " Continue anyway?",

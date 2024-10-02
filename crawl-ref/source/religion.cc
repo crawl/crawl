@@ -86,7 +86,6 @@ static brand_type _hepliaklqana_weapon_brand(monster_type mc, int HD);
 static armour_type _hepliaklqana_shield_type(monster_type mc, int HD);
 static special_armour_type _hepliaklqana_shield_ego(int HD);
 
-// @locnote: some of these are infinitive clauses to be plugged into "You can [now/no longer] %s."
 const vector<vector<god_power>> & get_all_god_powers()
 {
     static vector<vector<god_power>> god_powers =
@@ -1998,7 +1997,6 @@ void upgrade_hepliaklqana_ancestor(bool quiet_force)
             string full_name = base_name + " of " + brand_type_name(brand, false);
             base_name = "the " + base_name;
             full_name = article_a(full_name);
-            // @locnote: <ancestor> remembers that <the weapon> was <a weapon of brand>
             mprf("%s remembers that %s was %s.",
                  ancestor->name(DESC_YOUR, true).c_str(),
                  base_name.c_str(),
