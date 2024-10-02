@@ -1265,7 +1265,7 @@ Einige Eurer Anhänger beschließen, Euch zu verlassen.
 %s hüllt Euch ein
 %%%%
 %s grips you
-
+%s greift Euch
 %%%%
 %s skewers you
 %s spießt Euch auf
@@ -1286,7 +1286,7 @@ Einige Eurer Anhänger beschließen, Euch zu verlassen.
 %s hüllt {acc}%s ein
 %%%%
 %s grips %s
-
+%s greift {acc}%s
 %%%%
 %s skewers %s
 %s spießt {acc}%s auf
@@ -1301,10 +1301,10 @@ Einige Eurer Anhänger beschließen, Euch zu verlassen.
 %s schlägt {acc}%s
 %%%%
 You hear a mighty clap of thunder!
-
+Ihr hört einen gewaltigen Donnerschlag!
 %%%%
 Animating this weapon would place you under penance. Really cast this spell?
-
+Die Belebung dieser Waffe würde Euch unter Strafe stellen. Diesen Zauber wirklich wirken?
 %%%%
 %s appears from out of thin air!
 %s erscheint aus der Luft!
@@ -1313,181 +1313,181 @@ You hear a grinding noise.
 Ihr hört ein knirschendes Geräusch.
 %%%%
 The damaged grate falls apart.
-Der beschädigte Rost fällt auseinander.
+Das beschädigte Gitter fällt auseinander.
 %%%%
 The slime shatters into small pieces.
-
+Der Schleim zersplittert in kleine Stücke.
 %%%%
 The weird stuff shatters into small pieces.
-
+Das seltsame Zeug zersplittert in kleine Stücke.
 %%%%
 The rock shatters into small pieces.
-
+Das Gestein zersplittert in kleine Stücke.
 %%%%
 Some slime shatters into small pieces.
-
+Etwas Schleim zersplittert in kleine Stücke.
 %%%%
 Some weird stuff shatters into small pieces.
-
+Etwas seltsames Zeug zersplittert in kleine Stücke.
 %%%%
 Some rock shatters into small pieces.
-
+Einige Gestein zersplittert in kleine Stücke.
 %%%%
 The tree burns like a torch!
-
+Der Baum brennt wie eine Fackel!
 %%%%
 The mangrove smoulders and burns.
-
+Die Mangrove schwelt und brennt.
 %%%%
 The demonic tree burns, releasing chaotic energy.
-
+Der dämonische Baum brennt und setzt chaotische Energie frei.
 %%%%
 You smell burning wood.
-
+Ihr riecht brennendes Holz.
 %%%%
 Are you sure you want to burn %s?
-
+Seid Ihr sicher, dass Ihr {acc}%s verbrennen wolltet?
 %%%%
 Your line of fire to %s is blocked by %s. Continue anyway?
-
+Eure Feuerlinie zu {dat}%s wird von {dat}%s blockiert. Trotzdem weitermachen?
 %%%%
-Your line of fire to the targeted %s is blocked by %s. Continue anyway?
-
+Your line of fire to the targeted location is blocked by %s. Continue anyway?
+Eure Feuerlinie zum Zileort ist von {dat}%s blockiert. Trotzdem weitermachen?
 %%%%
 %s appears from out of your range of vision.
 %s erscheint außerhalb Eurer Sichtweite.
 %%%%
 %s completely resists.
-
+%s widersteht vollständig.
 %%%%
 %s resists.
-
+%s widersteht.
 %%%%
 %s melts!
-
+%s schmilzt!
 %%%%
 %s is on fire!
-
+%s steht in Flammen!
 %%%%
 %s is burned terribly!
-
+%s wird furchtbar verbrannt!
 %%%%
 %s is scalded terribly!
-
+%s wird furchtbar verbrüht!
 %%%%
 %s is doused terribly!
-
+%s wird furchtbar übergossen!
 %%%%
 %s is frozen!
-
+%s wird erfroren!
 %%%%
 %s is electrocuted!
-
+%s bekommt einen Stromschlag!
 %%%%
 %s partially resists.
-
+%s widersteht teilweise.
 %%%%
 %s is drained terribly!
-
+%s wird furchtbar ausgezehrt!
 %%%%
 %s writhes in agony!
-
+%s windet sich qualvoll!
 %%%%
 %s looks frightened!
-
+%s sieht verängstigt aus!
 %%%%
 %s submits to your will.
-
+%s unterwirft sich Eurem Willen!
 %%%%
 %s suddenly stops moving!
-
+%s bewegt sich plötzlich nicht mehr!
 %%%%
 %s is moving more slowly.
-
+%s bewegt sich immer langsamer!
 %%%%
 %s convulses.
-
+%s krampft.
 %%%%
 %s seems to be slow for longer.
-
+%s scheint länger langsam zu sein.
 %%%%
 %s seems to slow down.
-
+%s scheint langsamer zu werden.
 %%%%
 %s looks as sick as possible!
-
+%s sieht so krank wie möglich aus!
 %%%%
 %s looks even sicker.
-
+%s sieht noch kränker aus.
 %%%%
 %s is poisoned.
-
+%s ist vergiftet.
 %%%%
 %s is covered in liquid flames!
-
+%s ist mit flüssigen Flammen bedeckt!
 %%%%
 You have difficulty breathing.
 Ihr habt Schwierigkeiten beim Atmen.
 %%%%
 The silver sears %s!
-
+Das Silber versengt {acc}%s!
 %%%%
 %s life force is offered up.
 %s Lebenskraft wird angeboten.
 %%%%
-%s %s life force from %s%s
-
+You draw life force from %s%s
+Ihr zieht Lebenskraft aus %s%s
 %%%%
-draw
-
+%s draws life force from %s%s
+%s zieht Lebenskraft aus %s%s
 %%%%
 %s is healed by the life force!
-
+%s wird durch die Lebenskraft geheilt!
 %%%%
 You feel life coursing into your body%s
-
+Ihr spürt, wie das Leben in Euren Körper strömt%s
 %%%%
 The wave splashes down.
-Die Welle spritzt runter.
+Die Welle plätschert nach unten.
 %%%%
 You hear a splash.
 Ihr hört ein Plätschern.
 %%%%
 %s is engulfed in water.
-
+%s ist von Wasser verschlungen.
 %%%%
 You hear a sizzling sound!
 Ihr hört ein zischendes Geräusch!
 %%%%
 %s is likely to hit you. Continue anyway?
-
+%s wird Euch wahrscheinlich treffen. Trotzdem weitermachen?
 %%%%
 That beam is likely to hit you. Continue anyway?
-
+Dieser Strahl wird Euch wahrscheinlich treffen. Trotzdem weitermachen?
 %%%%
 %s reflects %s!
-
+%s reflektiert {acc}%s!
 %%%%
 %s reflects off an invisible shield around you!
-%s reflektiert einen unsichtbaren Schild um Euch herum!
+%s reflektiert von einem unsichtbaren Schild um Euch herum!
 %%%%
 You block %s.
 Ihr blockiert %s.
 %%%%
 %s misses you.
-
+%s verfehlt Euch.
 %%%%
 %s is repelled.
 %s wird abgestoßen.
 %%%%
 Something tries to affect you, but you are unaffected.
-
+Etwas versucht, Euch zu beeinflussen, aber Ihr seid nicht betroffen.
 %%%%
 Something tries to affect you, but you resist.
-
+Etwas versucht, Euch zu beeinflussen, aber Ihr widersteht.
 %%%%
 Your will lashes out at %s%s
-
+Ihr Wille schlägt auf {acc}%s ein%s
 %%%%
 Strange energies course through your body.
 Seltsame Energien fließen durch Euren Körper.
@@ -1505,88 +1505,64 @@ You convulse!
 Ihr krümmt Euch!
 %%%%
 Your mind is blasted!
-
+Euer Verstand wird zerschlagt!
 %%%%
 You feel a momentary urge to oink.
-Ihr fühlt einen momentanen Drang zu grunzen.
+Ihr verspürt kurzzeitig den Drang zu grunzen.
 %%%%
 You feel more firmly anchored in space.
-
+Ihr fühlt Euch fester im Raum verankert.
 %%%%
 You feel firmly anchored in space.
-
+Ihr fühlt Euch fest im Raum verankert.
 %%%%
 Your teleport is interrupted.
 Euer Teleport ist unterbrochen.
 %%%%
 Your willpower is stripped away!
-
+Eure Willenskraft wird aufgezehrt!
 %%%%
 You feel yourself grow more vulnerable to poison.
 Ihr fühlt Euch anfälliger für Gift werden.
 %%%%
 Your magic feels more tainted.
-
+Ihr spürt, dass Eure Magie stärker verdorben ist.
 %%%%
 Your magic feels tainted.
-
+Ihr spürt, dass Eure Magie verdorben ist.
 %%%%
 You feel your power leaking away.
-Ihr fühlt, wie Eure Kraft nachlässt.
-%%%%
-Software bugs nibble your toes!
-Software-Bugs knabbern an Euren Zehen!
-%%%%
-plum
-
+Ihr spürt, wie Eure Kraft nachlässt.
 %%%%
 You feel your light-headedness will last longer.
-Ihr fühlt, dass Eure Benommenheit länger anhält.
+Ihr fühlt, dass Eure Benommenheit länger anhalten wird.
 %%%%
 You feel light-headed.
 Ihr fühlt Euch benommen.
 %%%%
-lemon
-
-%%%%
 You feel your inability to drink will last longer.
-Ihr fühlt, dass Eure Unfähigkeit zu trinken länger anhält.
+Ihr fühlt, dass Eure Unfähigkeit zu trinken länger anhalten wird.
 %%%%
 You feel unable to drink.
 Ihr fühlt Euch unfähig zu trinken.
 %%%%
-blueberry
-
-%%%%
 %s loses the ability to speak.
-
+%s verliert die Fähigkeit zu sprechen.
 %%%%
 You feel your silence will last longer.
-Ihr fühlt, dass Eure Stille länger dauern wird.
+Ihr fühlt, dass Eure Stille länger anhalten wird.
 %%%%
 An unnatural silence engulfs you.
-Eine unnatürliche Stille verschlingt Euch.
-%%%%
-raspberry
-
-%%%%
-cherry
-
+Eine unnatürliche Stille umfängt Euch.
 %%%%
 %s looks more vulnerable to fire.
-
+%s sieht anfälliger für Feuer aus.
 %%%%
 You feel your vulnerability to fire will last longer.
-
+Ihr fühlt, dass Ihre Anfälligkeit für Feuer länger anhalten wird.
 %%%%
 Cherry-coloured flames burn away your fire resistance!
-
-%%%%
-moon pie
-
-%%%%
-your lifeless body
-
+Kirschfarbene Flammen brennen Eure Feuerresistenz weg!
 %%%%
 " but does no damage."
 , fügt aber keinen Schaden zu.
@@ -1601,199 +1577,193 @@ You are encased in ice.
 Ihr seid in Eis gehüllt.
 %%%%
 %s shatters and turns to gold!
-
+%s zersplittert und wird zu Gold!
 %%%%
 %s is frozen into a solid block of ice!
-
+%s wird zu einem festen Eisblock gefroren!
 %%%%
 The acid splashes onto %s!
-Die Säure spritzt auf%s!
+Die Säure spritzt auf {acc}%s!
 %%%%
 %s is flash-frozen.
-%s ist blitzgefroren.
+%s wird blitzgefroren.
 %%%%
 %s is paralysed.
-
+%s wird paralysiert.
 %%%%
 You are blown backwards by the freezing wind.
-
+Der eiskalte Wind bläst Euch nach hinten.
 %%%%
 %s is blown backwards by the freezing wind.
-
+Der eiskalte Wind bläst {acc}%s nach hinten.
 %%%%
 You are knocked back by %s.
-
+Ihr werdet von {dat}%s zurückgeschlegen.
 %%%%
 %s is knocked back by %s.
-
+%s wird von {dat}%s zurückgeschlegen.
 %%%%
-You are yanked forward by the %s.
-
+You are yanked forward by %s.
+Ihr werdet von {dat}%s nach vorne gerissen.
 %%%%
-%s is yanked forward by the %s.
-
+%s is yanked forward by %s.
+%s wird von {dat}%s nach vorne gerissen.
 %%%%
 %s reflects off %s %s!
 %s wird von %s {dat}%s reflektiert!
 %%%%
 %s reflects off an invisible shield around %s!
-%s wird von einem unsichtbaren Schild um%s reflektiert!
+%s wird von einem unsichtbaren Schild um {dat}%s herum reflektiert!
 %%%%
 %s bounces off of thin air!
-%s prallt aus der Luft ab!
+%s prallt an der dünnen Luft ab!
 %%%%
 %s blocks %s.
-
+%s blockiert {acc}%s.
 %%%%
 Your demonic guardian avoids your attack.
 Euer dämonischer Wächter vermeidet Euren Angriff.
 %%%%
 %s passes through %s.
-
+%s geht durch {acc}%s.
 %%%%
 %s repels %s!
-
+%s stößt {acc}%s ab!
 %%%%
 %s misses %s!
-%s vermisst %s!
+%s verfehlt {acc}%s!
 %%%%
 %s hits something.
-
+%s trifft etwas.
 %%%%
 %s flickers and vanishes!
-
+%s flackert und verschwindet!
 %%%%
 %s flickers and vanishes for a moment!
-
+%s flackert und verschwindet für einen Moment!
 %%%%
 %s flickers out of sight!
-
+%s flackert außer Sicht!
 %%%%
 %s flickers out of sight for a moment!
-
+%s flackert außer Sicht für einen Moment!
 %%%%
 %s is dispelled
-%s wird%s zerstre
+%s wird vertrieben
 %%%%
 %s mind is blasted
-
+%s Verstand wird zerschlagt
 %%%%
 %s minds are blasted
-
+%s Verstand wird zerschlagt
 %%%%
 %s looks drowsy...
-
+%s sieht schläfrig aus...
 %%%%
 %s seems to speed up.
-
+%s scheint schneller zu werden.
 %%%%
 %s seems to grow stronger.
-
+%s scheint stärker zu werden.
 %%%%
 %s's wounds heal themselves!
-
+Die Wunden {gen}%s heilen von selbst!
 %%%%
 %s is healed somewhat.
-
+%s wird etwas geheilt.
 %%%%
 %s appears confused.
-
+%s scheint verwirrt.
 %%%%
 %s falls asleep!
-
+%s schläft ein!
 %%%%
 %s is charmed!
-
+%s ist bezaubert!
 %%%%
 %s is charmed.
-
+%s ist bezaubert.
 %%%%
 %s is filled with an intense inner flame!
-
+%s ist von einer intensiven inneren Flamme erfüllt!
 %%%%
 %s is firmly anchored in space.
-
+%s ist fest im Raum verankert.
 %%%%
 %s willpower is stripped away.
-
+%s Willenskraft wird aufgezehrt!
 %%%%
 %s grows more vulnerable to poison.
-
+%s wird anfälliger für Gift.
 %%%%
 %s suddenly seems more agile.
-
+%s scheint plötzlich agiler zu sein.
 %%%%
 %s seems less confident about using magic.
-
+%s scheint weniger Vertrauen in die Magie zu haben.
 %%%%
 %s magic leaks into the air.
 %s Magie sickert in die Luft.
 %%%%
 %s suddenly seems more resistant.
-
+%s wirkt plötzlich widerstandsfähiger.
 %%%%
 %s is infested!
-
+%s ist verseucht!
 %%%%
 %s seems to grow toxic.
-
+%s scheint giftig zu werden.
 %%%%
 The sphere of damnation explodes!
-
+Die Kugel der Verdammnis explodiert!
 %%%%
 You hear the wailing of the damned!
-
+Ihr hört das Jammern der Verdammten!
 %%%%
 The fireball explodes!
-
+Der Feuerball explodiert!
 %%%%
 You hear an explosion!
-
+Ihr hört eine Explosion!
 %%%%
 The orb of electricity explodes!
-
+Die Elektrizitätskugel explodiert!
 %%%%
 You hear a clap of thunder!
-
+Ihr hört einen Donnerschlag!
 %%%%
 A raging storm of fire appears!
-
+Ein wütender Feuersturm erscheint!
 %%%%
 You hear a raging storm!
-
+Ihr hört einen wütenden Sturm!
 %%%%
 The ball explodes into a vile cloud!
-
+Der Ball explodiert in einer üblen Wolke!
 %%%%
 You hear a loud 'bang'!
-
+Ihr hört einen lauten 'Peng'!
 %%%%
 The ghostly flame explodes!
-
+Die geisterhafte Flamme explodiert!
 %%%%
 You hear the shriek of haunting fire!
-
+Ihr hört den Schrei von gespenstischem Feuer!
 %%%%
 The enchantments explode!
-
+Die Verzauberungen explodieren!
 %%%%
 You hear a sharp crackling!
-
+Ihr hört ein scharfes Knistern!
 %%%%
 The mass of ice explodes!
-
+Die Eismasse explodiert!
 %%%%
 %s explodes!
 %s explodiert!
 %%%%
-The beam explodes into a cloud of software bugs!
-
-%%%%
-You hear the sound of one hand!
-
-%%%%
 By Zin's power, %s is contained.
-
+Durch Zins Macht wird %s eingedämmt.
 %%%%
 
 ##################
@@ -1801,7 +1771,7 @@ By Zin's power, %s is contained.
 ##################
 %%%%
 %s's singing sounds muted, and has no effect on you.
-%s Gesang klingt gedämpft und hat keinen Einfluss auf Euch.
+{gen}%s Gesang klingt gedämpft und hat keinen Einfluss auf Euch.
 %%%%
 The melody is strangely muted, and has no effect on you.
 Die Melodie ist seltsam gedämpft und hat keinen Einfluss auf Euch.
@@ -1813,16 +1783,16 @@ Your mesmeriser suddenly seems less interesting!
 Euer Mesmeriser scheint plötzlich weniger interessant!
 %%%%
 You are mesmerised by %s!
-Ihr seid fasziniert von%s!
+Ihr seid fasziniert von {dat}%s!
 %%%%
 %s's singing becomes strangely muted.
-%s Gesang wird seltsam gedämpft.
+{gen}%s Gesang wird seltsam gedämpft.
 %%%%
 Something's singing becomes strangely muted.
-Etwas singt wird seltsam gedämpft.
+Der Gesang von irgendetwas wird seltsam gedämpft.
 %%%%
 You can no longer hear %s's singing!
-Ihr könnt%s nicht mehr singen hören!
+Ihr könnt {acc}%s nicht mehr singen hören!
 %%%%
 The silence clears your mind.
 Die Stille klärt Euren Geist.
@@ -1837,10 +1807,10 @@ Your mesmeriser is now quite boring!
 Euer Mesmeriser ist jetzt ziemlich langweilig!
 %%%%
 You break out of your daze!
-
+Ihr brecht aus Eurer Benommenheit heraus!
 %%%%
 You are no longer entranced.
-
+Ihr seid nicht mehr verzaubert.
 %%%%
 
 ##################
@@ -1848,55 +1818,55 @@ You are no longer entranced.
 ##################
 %%%%
 Welcome to Hell!
-
+Willkommen in der Hölle!
 %%%%
 Please enjoy your stay.
-
+Bitte genießt Euren Aufenthalt.
 %%%%
 Welcome to the Realm of Zot!
-
+Willkommen im Reich von Zot!
 %%%%
 You feel the power of the Orb interfering with translocations here.
-
+Ihr spürt, wie die Macht der Kugel die Translokation hier behindert.
 %%%%
 You enter the halls of Pandemonium!
-
+Ihr betretet die Hallen von Pandemonium!
 %%%%
 To return, you must find a gate leading back.
 Um zurückzukehren, müsst Ihr ein Tor finden, das zurückführt.
 %%%%
 You land on top of a ziggurat so tall you cannot make out the ground.
-
+Ihr landet auf einer Zikkurat, die so hoch ist, dass man den Boden nicht erkennen kann.
 %%%%
 You enter an inter-dimensional bazaar!
-
+Ihr betretet einen interdimensionalen Basar!
 %%%%
 You enter a treasure trove!
-
+Ihr betretet einen Schatzfund!
 %%%%
 You enter a sewer!
-
+Ihr betretet einen Siel!
 %%%%
 You enter an ossuary!
-
+Ihr betretet ein Beinhaus!
 %%%%
 You enter a bailey!
-
+Ihr betretet einen Burghof!
 %%%%
 You enter a gauntlet!
-
+Ihr betretet eine Spießrute!
 %%%%
 You enter an ice cave!
-
+Ihr betretet eine Eishöhle!
 %%%%
 You enter a volcano!
-
+Ihr betretet einen Vulkan!
 %%%%
 You enter a wizard's laboratory!
-
+Ihr betretet das Labor eines Zauberers!
 %%%%
 You enter a great desolation of salt!
-
+Ihr betretet eine große Verwüstung des Salzes!
 %%%%
 
 ##################
@@ -1904,13 +1874,13 @@ You enter a great desolation of salt!
 ##################
 %%%%
 This branch is very noisy, and so sound travels much less far.
-
+Dieser Zweig ist sehr laut, so dass der Schall weniger weit übertragen wird.
 %%%%
 This branch is unnaturally silent, and so sound travels much further.
-
+Dieser Zweig ist unnatürlich still, so dass sich der Schall viel weiter ausbreitet.
 %%%%
 This branch contains %s.
-
+Dieser Zweig enthält {acc}%s.
 %%%%
 
 ##################

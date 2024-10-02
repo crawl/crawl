@@ -39,6 +39,7 @@ IGNORE_STRINGS = [
     'debugging ray', 'debug', 'bugger',
     'bug', 'null', 'invalid',
     'true', 'false', 'veto',
+    'You hear the sound of one hand!',
     # property keys
     'brand', 'bacc', 'bdam', 'nupgr',
     # text colour tags
@@ -621,6 +622,7 @@ def ignore_string(string):
     # ignore bug-catching stuff
     if 'INVALID' in string or re.search(r'bugg(il)?y', string, re.I) or \
        'DUMMY' in string or 'eggplant' in string or \
+       re.search('software bug', string, re.I) or \
        re.search(r'bugginess', string, re.I):
         return True
 

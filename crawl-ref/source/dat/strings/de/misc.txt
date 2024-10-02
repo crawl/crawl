@@ -252,6 +252,11 @@ Euch
 {dat}you
 Euch
 %%%%
+# when something hits you after you're already dead
+# declension will be handled by grammar.txt
+your lifeless body
+Euer lebloser Körper
+%%%%
 
 #################################
 # Attack verb infinitives
@@ -321,3 +326,28 @@ schlagen, beißen, picken, oder durchstechen
 hit or gore
 schlagen oder durchstechen
 %%%%
+
+#################################
+# Klown pie flavours
+#################################
+# These are only used alone as an exclamation, e.g. "Plum!"
+%%%%
+plum
+Pflaume
+%%%%
+lemon
+Zitrone
+%%%%
+blueberry
+Blaubeere
+%%%%
+raspberry
+Himbeere
+%%%%
+cherry
+Kirsche
+%%%%
+moon pie
+Moon Pie
+%%%%
+

@@ -1286,9 +1286,8 @@ void bolt::do_fire()
             }
             else
             {
-                prompt = localise("Your line of fire to the targeted %s "
+                prompt = localise("Your line of fire to the targeted location "
                                   "is blocked by %s. Continue anyway?",
-                                  feature_description_at(target, false, DESC_PLAIN),
                                   blocker);
             }
 
@@ -2278,11 +2277,19 @@ static void _vampiric_draining_effect(actor& victim, actor& agent, int damage)
 
     if (you.can_see(victim) || you.can_see(agent))
     {
-        mprf("%s %s life force from %s%s",
-             agent.name(DESC_THE).c_str(),
-             agent.conj_verb("draw").c_str(),
-             victim.name(DESC_THE).c_str(),
-             attack_strength_punctuation(damage).c_str());
+        if (agent.is_player())
+        {
+            mprf("You draw life force from %s%s",
+                 victim.name(DESC_THE).c_str(),
+                 attack_strength_punctuation(damage).c_str());
+        }
+        else
+        {
+            mprf("%s draws life force from %s%s",
+                 agent.name(DESC_THE).c_str(),
+                 victim.name(DESC_THE).c_str(),
+                 attack_strength_punctuation(damage).c_str());
+        }
     }
 
     const int drain_amount = victim.hurt(&agent, damage,
@@ -4791,10 +4798,10 @@ void bolt::pull_actor(actor *act, int dam)
     if (you.can_see(*act))
     {
         if (act->is_player())
-            mprf("You are yanked forward by the %s.", get_the_name().c_str());
+            mprf("You are yanked forward by %s.", get_the_name().c_str());
         else
         {
-            mprf("%s is yanked forward by the %s.",
+            mprf("%s is yanked forward by %s.",
                  act->name(DESC_THE).c_str(), get_the_name().c_str());
         }
     }
