@@ -1903,49 +1903,50 @@ The rain has left you waist-deep in water!
 Der Regen hat Euch hüfthoch im Wasser gelassen!
 %%%%
 You steam in the rain.
-
+Ihr dampft im Regen.
 %%%%
 You sizzle in the rain.
-
+Ihr brutzelt im Regen.
 %%%%
 %s steams in the rain.
-
+%s dampft im Regen.
 %%%%
 %s sizzles in the rain.
-
+%s brutzelt im Regen.
 %%%%
 You choke on the stench!
-Ihr verschluckt euch am Gestank!
+Ihr verschluckt Euch am Gestank!
 %%%%
 The mutagenic energy flows into you.
-Die mutagene Energie fließt in Euch.
+Die mutagene Energie fließt in Euch hinein.
 %%%%
 You are struck by lightning!
-Ihr seid vom Blitz getroffen!
+Ihr werdet vom Blitz getroffen!
 %%%%
 %s is struck by lightning.
-
+%s wird vom Blitz getroffen!
 %%%%
 Lightning from the thunderstorm strikes something you cannot see.
 Ein Blitz vom Gewitter trifft etwas, was Ihr nicht sehen könnt.
 %%%%
+# note: beneficial cloud
 You bask in %s.
-
+Ihr schwelgt in {dat}%s.
 %%%%
 You are engulfed in %s.
-
+Ihr seid in {dat}%s verschlungen.
 %%%%
 %s basks in %s.
-
+%s schwelgt in {dat}%s.
 %%%%
 %s is engulfed in %s.
-
+%s ist in {dat}%s verschlungen.
 %%%%
 You are standing in a thunderstorm.
-
+Ihr steht in einem Gewitter.
 %%%%
 You are standing in the rain.
-
+Ihr steht im Regen.
 %%%%
 The air becomes perfectly still.
 Die Luft wird vollkommen still.
