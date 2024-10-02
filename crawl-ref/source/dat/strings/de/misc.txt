@@ -193,6 +193,15 @@ Ctrl-Z
 Strg-Z
 %%%%
 
+# status indicators for substitute keys
+%%%%
+CTRL
+STRG
+%%%%
+SHIFT
+SHIFT
+%%%%
+
 ####################
 # Messages for obsolete items
 ####################
