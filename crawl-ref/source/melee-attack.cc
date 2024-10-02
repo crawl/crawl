@@ -2096,7 +2096,6 @@ bool melee_attack::apply_staff_damage()
         {
             special_damage_message =
                 make_any_2_actors_message(attacker, defender,
-                                          attacker_visible, defender_visible,
                                           "freeze", "",
                                           attack_strength_punctuation(special_damage));
             special_damage_flavour = BEAM_COLD;
@@ -2111,7 +2110,6 @@ bool melee_attack::apply_staff_damage()
         {
             special_damage_message =
                 make_any_2_actors_message(attacker, defender,
-                                          attacker_visible, defender_visible,
                                           "shatter", "",
                                           attack_strength_punctuation(special_damage));
         }
@@ -2125,7 +2123,6 @@ bool melee_attack::apply_staff_damage()
         {
             special_damage_message =
                 make_any_2_actors_message(attacker, defender,
-                                          attacker_visible, defender_visible,
                                           "burn", "",
                                           attack_strength_punctuation(special_damage));
 
@@ -2144,7 +2141,6 @@ bool melee_attack::apply_staff_damage()
         {
             special_damage_message =
                 make_any_2_actors_message(attacker, defender,
-                                          attacker_visible, defender_visible,
                                           "envenom", "",
                                           attack_strength_punctuation(special_damage));
 
@@ -2179,7 +2175,6 @@ bool melee_attack::apply_staff_damage()
         {
             special_damage_message =
                 make_any_2_actors_message(attacker, defender,
-                                          attacker_visible, defender_visible,
                                           "blast", "",
                                           attack_strength_punctuation(special_damage));
         }
@@ -2986,7 +2981,6 @@ void melee_attack::mons_apply_attack_flavour()
         if (needs_message && special_damage)
         {
             do_any_2_actors_message(attacker, defender,
-                                    attacker_visible, defender_visible,
                                     "burn", "", "!");
             _print_resist_messages(defender, special_damage, BEAM_FIRE);
         }

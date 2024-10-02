@@ -850,7 +850,6 @@ void attack::drain_defender()
             string punct = attack_strength_punctuation(special_damage);
             special_damage_message =
                 make_any_2_actors_message(attacker, defender,
-                                          attacker_visible, defender_visible,
                                           "drain", "", punct);
         }
     }

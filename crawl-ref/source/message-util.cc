@@ -201,19 +201,9 @@ string make_any_2_actors_message(const actor* subject, const actor* object,
                                  const string& verb, const string& suffix,
                                  const string& punctuation)
 {
-    return make_any_2_actors_message(subject, object, true, true,
-                                     verb, suffix, punctuation);
-}
+    bool subject_seen = (subject && subject->observable());
+    bool object_seen = (object && object->observable());
 
-/*
- * Get message where subject and object can be any combination of 2nd or 3rd person
- * (1st person doesn't exist in this game)
- */
-string make_any_2_actors_message(const actor* subject, const actor* object,
-                                 bool subject_seen, bool object_seen,
-                                 const string& verb, const string& suffix,
-                                 const string& punctuation)
-{
     string subj = actor_name(subject, DESC_THE, subject_seen);
     string obj;
     if (object && object == subject)
@@ -232,8 +222,8 @@ void do_any_2_actors_message(const string& subject, const string& object,
                              const string& verb, const string& suffix,
                              const string& punctuation)
 {
-    string msg = make_any_2_actors_message(subject, object, verb, suffix, 
-                                         punctuation);
+    string msg = make_any_2_actors_message(subject, object, verb, suffix,
+                                           punctuation);
     mpr_nolocalise(msg);
 }
 
@@ -245,22 +235,8 @@ void do_any_2_actors_message(const actor* subject, const actor* object,
                              const string& verb, const string& suffix,
                              const string& punctuation)
 {
-    do_any_2_actors_message(subject, object, true, true,
-                            verb, suffix, punctuation);
-}
-
-/*
- * Output message where subject and object can be any combination of 2nd or 3rd person
- * (1st person doesn't exist in this game)
- */
-void do_any_2_actors_message(const actor* subject, const actor* object,
-                             bool subject_seen, bool object_seen,
-                             const string& verb, const string& suffix,
-                             const string& punctuation)
-{
-    string msg = make_any_2_actors_message(subject, object, 
-                                           subject_seen, object_seen,
-                                           verb, suffix, punctuation);
+    string msg = make_any_2_actors_message(subject, object, verb, suffix,
+                                           punctuation);
     mpr_nolocalise(msg);
 }
 
