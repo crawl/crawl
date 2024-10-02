@@ -1981,13 +1981,13 @@ Keine Antwort in der FAQ gefunden! Bitte einen Fehlerbericht schicken!
 %s zerbröckelt zu Staub!
 %%%%
 %s returns to the mists of memory.
-
+%s kehrt in den Nebel der Erinnerung zurück.
 %%%%
 %s is freed.
-
+%s wurde freigegeben.
 %%%%
 %s departs this earthly plane.
-
+%s verlässt diese irdische Ebene.
 %%%%
 The hog vanishes!
 Das Schwein verschwindet!
