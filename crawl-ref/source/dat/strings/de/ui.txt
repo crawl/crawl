@@ -864,7 +864,7 @@ Klingenhand
 %%%%
 
 ##############################################
-# Equipment Slots
+# Equipment Slots (Character Overview Screen)
 ##############################################
 %%%%
 Quiver unavailable
@@ -877,7 +877,7 @@ Nichts im Köcher
 %s nicht verfügbar
 %%%%
 %s currently unavailable
-%s aktuell nicht verfügbar
+%s zurzeit nicht verfügbar
 %%%%
 %s restricted
 %s beschränkt
@@ -947,6 +947,92 @@ kein Amulett
 %%%%
 no ring
 kein Ring
+%%%%
+
+##############################################
+# Equipment Slots (List Armour/Jewellery Commands)
+##############################################
+%%%%
+Cloak
+Umhang
+%%%%
+Helmet
+Helm
+%%%%
+Gloves
+Handschue
+%%%%
+Shield
+Schild
+%%%%
+Armour
+Rüstung
+%%%%
+Boots
+Stiefel
+%%%%
+# some species (e.g. Naga) wear barding instead of boots
+Barding
+Gelieger
+%%%%
+unknown
+unbekannt
+%%%%
+Left ring
+Linker Ring
+%%%%
+Right ring
+Rechter Ring
+%%%%
+Amulet
+Amulett
+%%%%
+# if player is wearing the Macabre Finger Amulet, they can put a ring on it
+Amulet ring
+Amulett-Ring
+%%%%
+# Octopodes can wear 8 rings (because they have 8 arms)
+1st ring
+1. Ring
+%%%%
+2nd ring
+2. Ring
+%%%%
+3rd ring
+3. Ring
+%%%%
+4th ring
+4. Ring
+%%%%
+5th ring
+5. Ring
+%%%%
+6th ring
+6. Ring
+%%%%
+7th ring
+7. Ring
+%%%%
+8th ring
+8. Ring
+%%%%
+
+# equipment slot annotations
+%%%%
+# player can't equip this type of item
+# (e.g. trolls can't wear gloves due to having large claws)
+(unavailable)
+(nicht verfügbar)
+%%%%
+# player temporarily can't equip this type of item
+# (typically because they are transformed)
+(currently unavailable)
+(zurzeit nicht verfügbar)
+%%%%
+# player can wear some items in this slot, but not all.
+# (e.g. minotaurs can wear hats, but not helmets)
+(restricted)
+(eingeschränkt)
 %%%%
 
 ##############################################
@@ -1313,20 +1399,11 @@ Halo
 %%%%
 Ench
 %%%%
-Cloak
-Umhang
-%%%%
-Boots
-Stiefeln
-%%%%
 Legs
 Beine
 %%%%
 Body
 Leib
-%%%%
-Gloves
-Stulpen
 %%%%
 LHand
 LHand

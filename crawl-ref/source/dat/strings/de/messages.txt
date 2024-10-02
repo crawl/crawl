@@ -1959,66 +1959,6 @@ Die Luft nimmt ihre normalen Bewegungen wieder auf.
 # command.cc
 ##################
 %%%%
-Helmet
-Helm
-%%%%
-Shield
-Schild
-%%%%
-Armour
-Rüstung
-%%%%
-Barding
-Gelieger
-%%%%
-unknown
-unbekannt
-%%%%
-(unavailable)
-
-%%%%
-(currently unavailable)
-
-%%%%
-(restricted)
-
-%%%%
-Left ring
-Linker Ring
-%%%%
-Right ring
-Rechter Ring
-%%%%
-Amulet
-Amulett
-%%%%
-1st ring
-1. Ring
-%%%%
-2nd ring
-2. Ring
-%%%%
-3rd ring
-3. Ring
-%%%%
-4th ring
-4. Ring
-%%%%
-5th ring
-5. Ring
-%%%%
-6th ring
-6. Ring
-%%%%
-7th ring
-7. Ring
-%%%%
-8th ring
-8. Ring
-%%%%
-Amulet ring
-Amulett-Ring
-%%%%
 No questions found in FAQ! Please submit a bug report!
 Keine Fragen in den FAQ gefunden! Bitte einen Fehlerbericht schicken!
 %%%%
@@ -2028,6 +1968,7 @@ Häufig gestellte Fragen
 No answer found in the FAQ! Please submit a bug report!
 Keine Antwort in der FAQ gefunden! Bitte einen Fehlerbericht schicken!
 %%%%
+# note: Q for question
 "Q: "
 "F: "
 %%%%
