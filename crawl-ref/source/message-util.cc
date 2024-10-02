@@ -245,16 +245,15 @@ void do_any_2_actors_message(const actor* subject, const actor* object,
  * (Object can be 2nd or 3rd person)
  * Note: supplied messages must match subject number (singular or plural)
  */
-string get_3rd_person_message(const string& subject, const string& object,
-                              const string& you_obj_msg,
-                              const string& other_msg,
-                              const string& punctuation)
+string make_3rd_person_message(const string& subject, const string& object,
+                               const string& msg_template,
+                               const string& punctuation)
 {
     string msg;
     if (object == "you")
-        msg = localise(you_obj_msg, subject);
+        msg = localise(replace_last(msg_template, "%s", "you"), subject);
     else
-        msg = localise(other_msg, subject, object);
+        msg = localise(msg_template, subject, object);
 
     if (!punctuation.empty())
         msg = add_punctuation(msg, punctuation, false);
@@ -270,17 +269,17 @@ string get_3rd_person_message(const string& subject, const string& object,
  * (Object can be 2nd or 3rd person)
  * Note: supplied messages must match subject number (singular or plural)
  */
-string get_3rd_person_message(const actor* subject, bool subject_seen,
-                              const actor* object, bool object_seen,
-                              const string& you_obj_msg,
-                              const string& other_msg,
-                              const string& punctuation)
+string make_3rd_person_message(const actor* subject, const actor* object,
+                               const string& msg_template,
+                               const string& punctuation)
 {
+    bool subject_seen = (subject && subject->observable());
+    bool object_seen = (object && object->observable());
+
     string subj = actor_name(subject, DESC_THE, subject_seen);
     string obj = actor_name(object, DESC_THE, object_seen);
 
-    string msg = get_3rd_person_message(subj, obj, you_obj_msg, other_msg,
-                                        punctuation);
+    string msg = make_3rd_person_message(subj, obj, msg_template, punctuation);
 
     if (subject && subject == object)
     {
@@ -292,12 +291,11 @@ string get_3rd_person_message(const actor* subject, bool subject_seen,
 }
 
 void do_3rd_person_message(const string& subject, const string& object,
-                             const string& you_obj_msg,
-                             const string& other_msg,
-                             const string& punctuation)
+                           const string& msg_template,
+                           const string& punctuation)
 {
-    string msg = get_3rd_person_message(subject, object, you_obj_msg, other_msg,
-                                        punctuation);
+    string msg = make_3rd_person_message(subject, object, msg_template,
+                                         punctuation);
 
     if (!msg.empty())
         mpr_nolocalise(msg);
@@ -307,15 +305,12 @@ void do_3rd_person_message(const string& subject, const string& object,
  * Output message where subject is guaranteed to be 3rd person
  * (Object can be 2nd or 3rd person)
  */
-void do_3rd_person_message(const actor* subject, bool subject_seen,
-                           const actor* object, bool object_seen,
-                           const string& you_obj_msg,
-                           const string& other_msg,
+void do_3rd_person_message(const actor* subject, const actor* object,
+                           const string& msg_template,
                            const string& punctuation)
 {
-    string msg = get_3rd_person_message(subject, subject_seen,
-                                        object, object_seen,
-                                        you_obj_msg, other_msg, punctuation);
+    string msg = make_3rd_person_message(subject, object,
+                                         msg_template, punctuation);
 
     if (!msg.empty())
         mpr_nolocalise(msg);

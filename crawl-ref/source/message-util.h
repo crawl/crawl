@@ -33,24 +33,18 @@ void do_any_2_actors_message(const actor* subject, const actor* object,
                              const string& verb, const string& suffix = "",
                              const string& punctuation = "");
 
-string get_3rd_person_message(const string& subject, const string& object,
-                              const string& you_obj_msg,
-                              const string& other_msg,
-                              const string& punctuation = "");
+string make_3rd_person_message(const string& subject, const string& object,
+                               const string& msg_template,
+                               const string& punctuation = "");
 
-string get_3rd_person_message(const actor* subject, bool subject_seen,
-                              const actor* object, bool object_seen,
-                              const string& you_obj_msg,
-                              const string& other_msg,
-                              const string& punctuation = "");
+string make_3rd_person_message(const actor* subject, const actor* object,
+                               const string& msg_template,
+                               const string& punctuation = "");
 
 void do_3rd_person_message(const string& subject, const string& object,
-                           const string& you_obj_msg,
-                           const string& other_msg,
+                           const string& msg_template,
                            const string& punctuation = "");
 
-void do_3rd_person_message(const actor* subject, bool subject_seen,
-                           const actor* object, bool object_seen,
-                           const string& you_obj_msg,
-                           const string& other_msg,
+void do_3rd_person_message(const actor* subject, const actor* object,
+                           const string& msg_template,
                            const string& punctuation = "");

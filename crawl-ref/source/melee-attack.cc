@@ -322,37 +322,17 @@ bool melee_attack::handle_phase_dodged()
         // player_attack
         if (attacker->is_player())
             player_warn_miss();
-        else
+        else if (ev_margin <= -20)
         {
-            if (ev_margin <= -20)
-            {
-                do_3rd_person_message(attacker, attacker_visible,
-                                      defender, defender_visible,
-                                      "%s completely misses you.",
-                                      "%s completely misses %s.");
-            }
-            else if (ev_margin <= -12)
-            {
-                do_3rd_person_message(attacker, attacker_visible,
-                                      defender, defender_visible,
-                                      "%s misses you.",
-                                      "%s misses %s.");
-            }
-            else if (ev_margin <= -6)
-            {
-                do_3rd_person_message(attacker, attacker_visible,
-                                      defender, defender_visible,
-                                      "%s closely misses you.",
-                                      "%s closely misses %s.");
-            }
-            else
-            {
-                do_3rd_person_message(attacker, attacker_visible,
-                                      defender, defender_visible,
-                                      "%s barely misses you.",
-                                      "%s barely misses %s.");
-            }
+            do_3rd_person_message(attacker, defender,
+                                  "%s completely misses %s.");
         }
+        else if (ev_margin <= -12)
+            do_3rd_person_message(attacker, defender, "%s misses %s.");
+        else if (ev_margin <= -6)
+            do_3rd_person_message(attacker, defender, "%s closely misses %s.");
+        else
+            do_3rd_person_message(attacker, defender, "%s barely misses %s.");
     }
 
     if (attacker->is_player())
@@ -2628,9 +2608,7 @@ void melee_attack::mons_apply_attack_flavour()
 
         if (needs_message && base_damage)
         {
-            do_3rd_person_message(attacker, attacker_visible,
-                                  defender, defender_visible,
-                                  "%s freezes you", "%s freezes %s",
+            do_3rd_person_message(attacker, defender, "%s freezes %s",
                                   attack_strength_punctuation(special_damage));
 
             _print_resist_messages(defender, base_damage, BEAM_COLD);
@@ -2648,9 +2626,7 @@ void melee_attack::mons_apply_attack_flavour()
 
         if (needs_message && base_damage)
         {
-            do_3rd_person_message(attacker, attacker_visible,
-                                  defender, defender_visible,
-                                  "%s shocks you", "%s shocks %s",
+            do_3rd_person_message(attacker, defender, "%s shocks %s",
                                   attack_strength_punctuation(special_damage));
 
             _print_resist_messages(defender, base_damage, BEAM_ELECTRICITY);
@@ -2848,9 +2824,7 @@ void melee_attack::mons_apply_attack_flavour()
 
         if (needs_message && special_damage)
         {
-            do_3rd_person_message(attacker, attacker_visible,
-                                  defender, defender_visible,
-                                  "%s sears you", "%s sears %s",
+            do_3rd_person_message(attacker, defender, "%s sears %s",
                                   attack_strength_punctuation(special_damage));
         }
         break;
@@ -2917,9 +2891,7 @@ void melee_attack::mons_apply_attack_flavour()
     case AF_CRUSH:
         if (needs_message)
         {
-            do_3rd_person_message(attacker, attacker_visible,
-                                  defender, defender_visible,
-                                  "%s grabs you.", "%s grabs %s.");
+            do_3rd_person_message(attacker, defender, "%s grabs %s.");
         }
         attacker->start_constricting(*defender);
         // if you got grabbed, interrupt stair climb and passwall
@@ -2951,17 +2923,12 @@ void melee_attack::mons_apply_attack_flavour()
             {
                 if (watery)
                 {
-                    do_3rd_person_message(attacker, attacker_visible,
-                                        defender, defender_visible,
-                                        "%s engulfs you in water!",
-                                        "%s engulfs %s in water!");
+                    do_3rd_person_message(attacker, defender,
+                                          "%s engulfs %s in water!");
                 }
                 else
                 {
-                    do_3rd_person_message(attacker, attacker_visible,
-                                        defender, defender_visible,
-                                        "%s engulfs you!",
-                                        "%s engulfs %s!");
+                    do_3rd_person_message(attacker, defender, "%s engulfs %s!");
                 }
             }
         }
@@ -3040,9 +3007,7 @@ void melee_attack::mons_apply_attack_flavour()
 
             if (needs_message)
             {
-                do_3rd_person_message(attacker, attacker_visible,
-                                      defender, defender_visible,
-                                      "%s drowns you", "%s drowns %s",
+                do_3rd_person_message(attacker, defender, "%s drowns %s",
                                       attack_strength_punctuation(special_damage));
             }
         }
