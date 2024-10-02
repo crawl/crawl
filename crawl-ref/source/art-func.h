@@ -341,7 +341,7 @@ static void _OLGREB_melee_effects(item_def* /*weapon*/, actor* attacker,
     if (!mondied && bonus_dam)
     {
         string punct = attack_strength_punctuation(bonus_dam);
-        do_any_person_message(attacker, defender, "envenom", "", punct);
+        do_any_2_actors_message(attacker, defender, "envenom", "", punct);
 
         defender->hurt(attacker, bonus_dam);
         if (defender->alive())
@@ -1054,13 +1054,13 @@ static void _ELEMENTAL_STAFF_melee_effects(item_def*, actor* attacker,
 
     string msg;
     if (flavour == BEAM_FIRE)
-        do_any_person_message(attacker, defender, "burn", "", punct);
+        do_any_2_actors_message(attacker, defender, "burn", "", punct);
     else if (flavour == BEAM_COLD)
-        do_any_person_message(attacker, defender, "freeze", "", punct);
+        do_any_2_actors_message(attacker, defender, "freeze", "", punct);
     else if (flavour == BEAM_ELECTRICITY)
-        do_any_person_message(attacker, defender, "electrocute", "", punct);
+        do_any_2_actors_message(attacker, defender, "electrocute", "", punct);
     else
-        do_any_person_message(attacker, defender, "crush", "", punct);
+        do_any_2_actors_message(attacker, defender, "crush", "", punct);
 
     defender->hurt(attacker, bonus_dam, flavour);
 
@@ -1476,7 +1476,7 @@ static void _THERMIC_ENGINE_melee_effects(item_def* weapon, actor* attacker,
                                                random2(dam) / 2 + 1);
     if (bonus_dam > 0)
     {
-        do_any_person_message(attacker, defender, "freeze", "", ".");
+        do_any_2_actors_message(attacker, defender, "freeze", "", ".");
 
         defender->hurt(attacker, bonus_dam, BEAM_COLD);
         if (defender->alive())

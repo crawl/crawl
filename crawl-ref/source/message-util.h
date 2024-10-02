@@ -17,31 +17,31 @@ string anon_name(description_level_type desc);
 string anon_pronoun(pronoun_type ptyp);
 
 
-string make_any_person_message(const string& subject, const string& object,
-                               const string& verb, const string& suffix = "",
-                               const string& punctuation = "");
+string make_any_2_actors_message(const string& subject, const string& object,
+                                 const string& verb, const string& suffix = "",
+                                 const string& punctuation = "");
 
-string make_any_person_message(const actor* subject, const actor* object,
-                               const string& verb, const string& suffix = "",
-                               const string& punctuation = "");
+string make_any_2_actors_message(const actor* subject, const actor* object,
+                                 const string& verb, const string& suffix = "",
+                                 const string& punctuation = "");
 
-string make_any_person_message(const actor* subject, const actor* object,
-                               bool subject_visible, bool object_visible,
-                               const string& verb, const string& suffix,
-                               const string& punctuation = "");
+string make_any_2_actors_message(const actor* subject, const actor* object,
+                                 bool subject_visible, bool object_visible,
+                                 const string& verb, const string& suffix,
+                                 const string& punctuation = "");
 
-void do_any_person_message(const string& subject, const string& object,
-                           const string& verb, const string& suffix = "",
-                           const string& punctuation = "");
+void do_any_2_actors_message(const string& subject, const string& object,
+                             const string& verb, const string& suffix = "",
+                             const string& punctuation = "");
 
-void do_any_person_message(const actor* subject, const actor* object,
-                           const string& verb, const string& suffix = "",
-                           const string& punctuation = "");
+void do_any_2_actors_message(const actor* subject, const actor* object,
+                             const string& verb, const string& suffix = "",
+                             const string& punctuation = "");
 
-void do_any_person_message(const actor* subject, const actor* object,
-                           bool subject_visible, bool object_visible,
-                           const string& verb, const string& suffix,
-                           const string& punctuation = "");
+void do_any_2_actors_message(const actor* subject, const actor* object,
+                             bool subject_visible, bool object_visible,
+                             const string& verb, const string& suffix,
+                             const string& punctuation = "");
 
 
 string get_3rd_person_message(const string& subject, const string& object,

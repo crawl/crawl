@@ -847,11 +847,11 @@ void attack::drain_defender()
             obvious_effect = true;
         else if (defender_visible)
         {
+            string punct = attack_strength_punctuation(special_damage);
             special_damage_message =
-                make_any_person_message(attacker, defender,
-                                       attacker_visible, defender_visible,
-                                       "drain", "",
-                                       attack_strength_punctuation(special_damage));
+                make_any_2_actors_message(attacker, defender,
+                                          attacker_visible, defender_visible,
+                                          "drain", "", punct);
         }
     }
 }
@@ -1655,7 +1655,7 @@ void attack::calc_elemental_brand_damage(beam_type flavour, const char *what)
             return;
 
         // XXX: assumes "what" is singular
-        special_damage_message = make_any_person_message(
+        special_damage_message = make_any_2_actors_message(
             what ? what : atk_name(DESC_THE),
             // Don't allow reflexive if the subject wasn't the attacker.
             defender_name(!what),

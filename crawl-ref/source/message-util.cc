@@ -126,9 +126,9 @@ string anon_pronoun(pronoun_type pron)
  * (1st person doesn't exist in this game)
  * Note: subject must be singular
  */
-string make_any_person_message(const string& subject, const string& object,
-                               const string& verb, const string& suffix,
-                               const string& punctuation)
+string make_any_2_actors_message(const string& subject, const string& object,
+                                 const string& verb, const string& suffix,
+                                 const string& punctuation)
 {
     bool you_acting = (lowercase_string(subject) == "you");
     bool reflexive = ends_with(object, "self");
@@ -197,22 +197,22 @@ string make_any_person_message(const string& subject, const string& object,
  * Get message where subject and object can be any combination of 2nd or 3rd person
  * (1st person doesn't exist in this game)
  */
-string make_any_person_message(const actor* subject, const actor* object,
-                               const string& verb, const string& suffix,
-                               const string& punctuation)
+string make_any_2_actors_message(const actor* subject, const actor* object,
+                                 const string& verb, const string& suffix,
+                                 const string& punctuation)
 {
-    return make_any_person_message(subject, object, true, true,
-                                   verb, suffix, punctuation);
+    return make_any_2_actors_message(subject, object, true, true,
+                                     verb, suffix, punctuation);
 }
 
 /*
  * Get message where subject and object can be any combination of 2nd or 3rd person
  * (1st person doesn't exist in this game)
  */
-string make_any_person_message(const actor* subject, const actor* object,
-                               bool subject_seen, bool object_seen,
-                               const string& verb, const string& suffix,
-                               const string& punctuation)
+string make_any_2_actors_message(const actor* subject, const actor* object,
+                                 bool subject_seen, bool object_seen,
+                                 const string& verb, const string& suffix,
+                                 const string& punctuation)
 {
     string subj = actor_name(subject, DESC_THE, subject_seen);
     string obj;
@@ -220,7 +220,7 @@ string make_any_person_message(const actor* subject, const actor* object,
         obj = actor_pronoun(object, PRONOUN_REFLEXIVE, object_seen);
     else
         obj = actor_name(object, DESC_THE, object_seen);
-    return make_any_person_message(subj, obj, verb, suffix, punctuation);
+    return make_any_2_actors_message(subj, obj, verb, suffix, punctuation);
 }
 
 /*
@@ -228,11 +228,11 @@ string make_any_person_message(const actor* subject, const actor* object,
  * (1st person doesn't exist in this game)
  * Note: subject must be singular
  */
-void do_any_person_message(const string& subject, const string& object,
-                           const string& verb, const string& suffix,
-                           const string& punctuation)
+void do_any_2_actors_message(const string& subject, const string& object,
+                             const string& verb, const string& suffix,
+                             const string& punctuation)
 {
-    string msg = make_any_person_message(subject, object, verb, suffix, 
+    string msg = make_any_2_actors_message(subject, object, verb, suffix, 
                                          punctuation);
     mpr_nolocalise(msg);
 }
@@ -241,26 +241,26 @@ void do_any_person_message(const string& subject, const string& object,
  * Output message where subject and object can be any combination of 2nd or 3rd person
  * (1st person doesn't exist in this game)
  */
-void do_any_person_message(const actor* subject, const actor* object,
-                           const string& verb, const string& suffix,
-                           const string& punctuation)
+void do_any_2_actors_message(const actor* subject, const actor* object,
+                             const string& verb, const string& suffix,
+                             const string& punctuation)
 {
-    do_any_person_message(subject, object, true, true,
-                          verb, suffix, punctuation);
+    do_any_2_actors_message(subject, object, true, true,
+                            verb, suffix, punctuation);
 }
 
 /*
  * Output message where subject and object can be any combination of 2nd or 3rd person
  * (1st person doesn't exist in this game)
  */
-void do_any_person_message(const actor* subject, const actor* object,
-                           bool subject_seen, bool object_seen,
-                           const string& verb, const string& suffix,
-                           const string& punctuation)
+void do_any_2_actors_message(const actor* subject, const actor* object,
+                             bool subject_seen, bool object_seen,
+                             const string& verb, const string& suffix,
+                             const string& punctuation)
 {
-    string msg = make_any_person_message(subject, object, 
-                                         subject_seen, object_seen,
-                                         verb, suffix, punctuation);
+    string msg = make_any_2_actors_message(subject, object, 
+                                           subject_seen, object_seen,
+                                           verb, suffix, punctuation);
     mpr_nolocalise(msg);
 }
 
