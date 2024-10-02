@@ -15,13 +15,15 @@ def strip_quotes_if_allowed(line):
                 return line[1:-1]
     return line
 
-def add_entry(dbm, key, value):
+def add_entry(dbm, key, value, comment):
     key = strip_quotes_if_allowed(key)
     value = strip_quotes_if_allowed(value)
     if key in dbm:
         print('WARNING: multiple definitions for: "{0}"'.format(key))
     else:
         dbm[key]=value
+        if comment is not None and comment != "":
+            dbm["comment:" + key] = comment
 
 def read_dbm(filename):
     dbm = {}
@@ -29,17 +31,22 @@ def read_dbm(filename):
 
     key = ""
     value = ""
+    comment = ""
 
     for line in file:
         line = line.strip()
-        if re.match(r'^\s*$', line) or re.match(r'^\s*#', line):
-            # blank line or comment
+        if re.match(r'^\s*$', line):
+            # blank line
             continue
+        elif re.match(r'^\s*#', line):
+            # comment
+            comment = line
         elif line == "%%%%":
             if key != "":
-                add_entry(dbm, key, value)
+                add_entry(dbm, key, value, comment)
             key = ""
             value = ""
+            comment = ""
         elif key == "":
             key = line
         elif value == "":
@@ -49,7 +56,7 @@ def read_dbm(filename):
             value += line
 
     if key != "":
-        add_entry(dbm, key, value)
+        add_entry(dbm, key, value, comment)
 
     return dbm;
 
@@ -106,7 +113,7 @@ for line in keyfile:
             #locnote = ''
             continue
         elif line.startswith('# note:'):
-            locnote = line
+            locnote = line.strip()
             continue
         if in_entry:
             outfile.write("%%%%\n");
@@ -132,8 +139,13 @@ for line in keyfile:
             source_heading = ""
         outfile.write("%%%%\n");
         if locnote != "":
-            outfile.write(locnote)
-            locnote = ""
+            outfile.write(locnote + "\n")
+        comment_key = "comment:" + key
+        if comment_key in old_vals != "":
+            comment = old_vals[comment_key]
+            if comment != locnote:
+                outfile.write(comment + "\n")
+        locnote = ""
         outfile.write(key + "\n")
         if key in old_vals:
             outfile.write(old_vals[key])
