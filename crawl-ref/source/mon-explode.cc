@@ -135,9 +135,14 @@ static void _setup_lightning_explosion(bolt & beam, const monster& origin)
     beam.ex_size   = x_chance_in_y(origin.get_hit_dice(), 24) ? 3 : 2;
     if (origin.summoner)
         beam.origin_spell = SPELL_CONJURE_BALL_LIGHTNING;
-    // Don't credit the player for ally-summoned ball lightning explosions.
-    if (origin.summoner && origin.summoner != MID_PLAYER)
-        beam.thrower = KILL_MON;
+    // Credit the player directly for their own ball lightning
+    if (origin.summoner == MID_PLAYER)
+        beam.thrower = KILL_YOU;
+    // But since we can assume the ball lightning will be dead by the time it
+    // blows up, ensure the player still gets XP from ball lightning made by
+    // other friendly monsters.
+    else if (beam.thrower == KILL_MON && origin.friendly())
+        beam.source_id = ANON_FRIENDLY_MONSTER;
 }
 
 dice_def prism_damage(int hd, bool fully_powered)
