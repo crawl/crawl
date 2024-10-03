@@ -379,7 +379,8 @@ living_spell_holy MONS_LIVING_SPELL_HOLY
 living_spell_ice MONS_LIVING_SPELL_ICE
 %rim 1
 ball_lightning MONS_BALL_LIGHTNING /*'*'*/
-creeping_inferno MONS_CREEPING_INFERNO
+creeping_inferno1 MONS_CREEPING_INFERNO
+creeping_inferno2
 %sdir mon/undead
 polterguardian MONS_POLTERGUARDIAN
 undying_armoury MONS_UNDYING_ARMOURY
