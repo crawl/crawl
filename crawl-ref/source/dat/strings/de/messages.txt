@@ -7438,43 +7438,43 @@ Wirklich {acc}%s ablegen?
 " Das könnte Buße erzeugen!"
 %%%%
 Really wield %s?
-Wirklich %s führen?
+Wirklich {acc}%s führen?
 %%%%
 Really quaff %s?
-Wirklich %s trinken?
+Wirklich {acc}%s trinken?
 %%%%
 Really drop %s?
-Wirklich %s fallen lassen?
+Wirklich {acc}%s fallen lassen?
 %%%%
 Really wear %s?
-Wirklich %s anziehen?
+Wirklich {acc}%s anziehen?
 %%%%
 Really put on %s?
-Wirklich %s anlegen?
+Wirklich {acc}%s anlegen?
 %%%%
 Really read %s?
-Wirklich %s lesen?
+Wirklich {acc}%s lesen?
 %%%%
 Really memorise from %s?
-Wirklich von %s memorieren?
+Wirklich von {dat}%s memorieren?
 %%%%
 Really zap %s?
-Wirklich %s zaubern?
+Wirklich {acc}%s zaubern?
 %%%%
 Really fire %s?
-Wirklich %s schießen?
+Wirklich {acc}%s schießen?
 %%%%
 Really evoke %s?
-Wirklich %s evozieren?
+Wirklich {acc}%s evozieren?
 %%%%
 Really destroy %s?
-Wirklich %s zerstören?
+Wirklich {acc}%s zerstören?
 %%%%
 Really quiver %s?
-Wirklich %s in den Köcher stecken?
+Wirklich {acc}%s in den Köcher stecken?
 %%%%
 Really choose %s?
-Wirklich %s wählen?
+Wirklich {acc}%s wählen?
 %%%%
 " This could place you under penance AND you're about to teleport!"
 " Das könnte Euch unter Strafe stellen UND Ihr werdet gleich teleportieren!"
