@@ -25,7 +25,6 @@
 #include "externs.h"
 #include "god-passive.h"
 #include "killer-type.h"
-#include "localise.h"
 #include "message.h"
 #include "monster.h"
 #include "mon-death.h"
@@ -146,7 +145,7 @@ static void _curse_message(actor& target, actor* /*source*/,
 
     auto msg = random_iterator(messages);
 
-    if (contains(*msg, "%s"))
+    if (contains(*msg, "prickle"))
     {
         const string your_skin = "your " + skin;
         mprf(msg->c_str(), your_skin.c_str());

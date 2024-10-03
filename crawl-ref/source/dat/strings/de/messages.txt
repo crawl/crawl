@@ -1998,28 +1998,28 @@ Das Schwein verschwindet!
 ##################
 %%%%
 You feel homesick.
-
+Ihr habt Heimweh.
 %%%%
 The world around you seems to dim momentarily.
-
+Die Welt um Euch herum scheint sich für einen Moment zu verdunkeln.
 %%%%
 You feel numb.
-
+Ihr fühlt Euch wie betäubt.
 %%%%
 Strange energies run through your body.
-
+Seltsame Energien durchströmen Euren Körper.
 %%%%
 You shiver with cold.
-
+Ihr zittert vor Kälte.
 %%%%
 You sense a malignant aura.
-
+Ihr spürt eine bösartige Aura.
 %%%%
 You feel very uncomfortable.
-
+Ihr fühlt Euch sehr unbehaglich.
 %%%%
 Something just walked over your grave. No, really!
-
+Etwas ist gerade über Euer Grab gelaufen. Nein, wirklich!
 %%%%
 You smell decay.
 Ihr riecht die Verwesung.
@@ -2027,26 +2027,28 @@ Ihr riecht die Verwesung.
 Your bandages flutter.
 Eure Bandagen flattern.
 %%%%
+# Your feathers/scales prickle.
 %s prickle.
-
+%s kribbeln.
 %%%%
+# Your skin (or fur) prickles
 %s prickles.
-
+%s kribbelt.
 %%%%
 You hear strange and distant voices.
-
+Ihr hört fremde und ferne Stimmen.
 %%%%
 Your bones ache.
-
+Eure Knochen schmerzen.
 %%%%
 You feel weird for a moment.
-
+Ihr fühlt euch einen Moment lang komisch.
 %%%%
 @The_monster@ has a weird expression for a moment.
-
+@The_monster@ hat für einen Moment einen seltsamen Gesichtsausdruck.
 %%%%
 Something is bathed in an unholy light.
-
+Etwas wird in ein unheiliges Licht getaucht.
 %%%%
 Pain shoots through your body
 Schmerz schießt durch Euren Körper
@@ -2055,28 +2057,28 @@ Schmerz schießt durch Euren Körper
 @The_monster@ krampft vor Schmerz
 %%%%
 Something is bathed in an unholy light
-
+Etwas ist in ein unheiliges Licht getaucht.
 %%%%
 You feel horribly lethargic.
-
+Ihr fühlt Euch furchtbar lethargisch.
 %%%%
 @The_monster@ looks incredibly listless.
-
+@The_monster@ sieht unglaublich lustlos aus.
 %%%%
 You are engulfed in negative energy!
-
+Ihr werdet von negativer Energie umhüllt!
 %%%%
 @The_monster@ is engulfed in negative energy!
-
+@The_monster@ wird von negativer Energie umhüllt!
 %%%%
 Something is engulfed in negative energy!
-
+Etwas wird von negativer Energie umhüllt!
 %%%%
 %s averts the curse.
-
+%s wendet den Fluch ab.
 %%%%
 %s partially averts the curse.
-
+%s wendet den Fluch teilweise ab.
 %%%%
 
 ##################
