@@ -7405,13 +7405,13 @@ Ihr habt keinen solchen Gegenstand bei Euch.
 " (%d+ Runden)"
 %%%%
 Drop (and turn off autopickup for) what?
-Was wird abgesetzt (und die automatische Abholung dafür ausgeschaltet)?
+Was fallen lassen (und die automatische Abholung dafür ausschalten)?
 %%%%
 Drop what?
-Was wird abgesetzt?
+Was fallen lassen?
 %%%%
 (<Enter> or tap header to drop)
-(<Enter> oder Kopfzeile tippen abzulegen)
+(<Enter> oder Kopfzeile tippen fallen zu lassen)
 %%%%
 (_ for help)
 (_ für Hilfe)
@@ -7444,7 +7444,7 @@ Really quaff %s?
 Wirklich %s trinken?
 %%%%
 Really drop %s?
-Wirklich %s absetzen?
+Wirklich %s fallen lassen?
 %%%%
 Really wear %s?
 Wirklich %s anziehen?
@@ -7968,7 +7968,7 @@ You can't pick that up.
 Das könnt Ihr nicht aufheben.
 %%%%
 Drop how many?
-Wie viele absetzen?
+Wie viele fallen lassen?
 %%%%
 You can't wear or remove anything in your present form.
 In Eurer gegenwärtigen Form könnt Ihr nichts anziehen oder ausziehen.
@@ -8123,13 +8123,13 @@ You will have to take that off first.
 Das musst Ihr zuerst abnehmen.
 %%%%
 Too many items on this level, not dropping the item.
-Zu viele Gegenstände auf dieser Ebene. Gegenstand wird nicht abgesetzt.
+Zu viele Gegenstände auf dieser Ebene. Gegenstand wird nicht fallen gelassen.
 %%%%
 You drop %s.
-Ihr setzt {acc}%s ab.
+Ihr lasst {acc}%s fallen.
 %%%%
 No item to drop.
-Kein Gegenstand zum Absetzen.
+Kein Gegenstand zum Fallenlassen.
 %%%%
 Autopickup disabled for %s.
 Autopickup für {acc}%s deaktiviert.

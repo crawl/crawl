@@ -1283,10 +1283,10 @@ Quaff
 Trinken
 %%%%
 Drop
-Hinlegen
+Fallenlassen
 %%%%
 Drop quantity
-Anzahl hinlegen
+Anzahl fallenlassen
 %%%%
 Enable map mode
 Kartenmodus aktivieren
