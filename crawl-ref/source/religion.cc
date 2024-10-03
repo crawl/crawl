@@ -1753,7 +1753,6 @@ mgen_data hepliaklqana_ancestor_gen_data()
         MONS_ANCESTOR;
     mgen_data mg(type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE,
                  GOD_HEPLIAKLQANA);
-    mg.set_summoned(&you, SPELL_NO_SPELL);
     mg.hd = _hepliaklqana_ally_hd();
     mg.hp = hepliaklqana_ally_hp();
     mg.extra_flags |= MF_NO_REWARD;
