@@ -2286,9 +2286,11 @@ Ihr spürt eine Woge der Magie.
 # delay.h
 ##################
 %%%%
+# armour, cloak, boots/barding, gloves, helmet/hat, or amulet (but not ring)
 You continue putting on %s.
 Ihr zieht {acc}%s weiter an.
 %%%%
+# armour, cloak, boots/barding, gloves, helmet/hat, or amulet (but not ring)
 You continue taking off %s.
 Ihr zieht {acc}%s weiter aus.
 %%%%
