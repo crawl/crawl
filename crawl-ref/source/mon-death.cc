@@ -1642,7 +1642,7 @@ static void _martyr_death_wail(monster &mons)
     // Reset duration on its summoning, but move it out of martyr's summon cap
     mons.del_ench(ENCH_SUMMON_TIMER, true, false);
     mons.del_ench(ENCH_SUMMON, true, false);
-    mons.mark_summoned(SPELL_NO_SPELL, 2);
+    mons.mark_summoned(SPELL_NO_SPELL, summ_dur(2));
     mons.heal(50000);
 
     // Show brief animation

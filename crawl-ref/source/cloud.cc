@@ -1957,7 +1957,7 @@ static const vector<chaos_effect> chaos_effects = {
 
             // The player shouldn't get new permanent followers from cloning.
             if (clone->attitude == ATT_FRIENDLY && !clone->is_summoned())
-                clone->mark_summoned(MON_SUMM_CLONE, 6);
+                clone->mark_summoned(MON_SUMM_CLONE, summ_dur(6));
             else
                 clone->flags |= (MF_NO_REWARD | MF_HARD_RESET);
 

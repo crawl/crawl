@@ -2721,7 +2721,7 @@ void bolt::affect_endpoint()
             bool obviousness; // dummy argument
             monster *mirror = clone_mons(blitzer, true, &obviousness,
                                          blitzer->attitude, spot);
-            mirror->mark_summoned(SPELL_PHANTOM_BLITZ, 2);
+            mirror->mark_summoned(SPELL_PHANTOM_BLITZ, summ_dur(2));
             mirror->summoner = blitzer->mid;
             mirror->foe = blitzer->foe;
             mirror->hit_points = blitzer->max_hit_points;

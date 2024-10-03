@@ -3829,7 +3829,7 @@ monster* cast_phantom_mirror(monster* mons, monster* targ, int hp_perc,
     }
     targ->reset_client_id();
 
-    mirror->mark_summoned(summ_type, 5);
+    mirror->mark_summoned(summ_type, summ_dur(5));
     mirror->add_ench(ENCH_PHANTOM_MIRROR);
     mirror->summoner = mons->mid;
     mirror->hit_points = max(mirror->hit_points * hp_perc / 100, 1);
