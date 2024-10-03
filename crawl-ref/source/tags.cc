@@ -3243,8 +3243,6 @@ static void _tag_read_you(reader &th)
                                            you.duration[DUR_REGENERATION]);
         you.duration[DUR_REGENERATION] = 0;
     }
-    if (you.attribute[ATTR_SEARING_RAY] > 3)
-        you.attribute[ATTR_SEARING_RAY] = 0;
 
     if (you.attribute[ATTR_DELAYED_FIREBALL])
         you.attribute[ATTR_DELAYED_FIREBALL] = 0;
@@ -4379,6 +4377,39 @@ static void _tag_read_you(reader &th)
         && you.has_spell(SPELL_GRAVE_CLAW))
     {
         gain_grave_claw_soul(true);
+    }
+
+    // Unify handling of multiple wait spells into common attributes
+    if (th.getMinorVersion() < TAG_MINOR_REFACTOR_CHANNEL_SPELLS)
+    {
+        const string FLAME_WAVE_KEY = "flame_waves";
+
+        if (you.props.exists(FLAME_WAVE_KEY))
+        {
+            you.attribute[ATTR_CHANNELLED_SPELL] = SPELL_FLAME_WAVE;
+            you.attribute[ATTR_CHANNEL_DURATION] = you.props[FLAME_WAVE_KEY].get_int();
+        }
+        else if (you.props.exists(COUPLING_TIME_KEY))
+        {
+            you.attribute[ATTR_CHANNELLED_SPELL] = SPELL_MAXWELLS_COUPLING;
+            you.attribute[ATTR_CHANNEL_DURATION] = 1; // Irrelevant in this case.
+            you.props[COUPLING_TIME_KEY].get_int() += you.elapsed_time - 10;
+        }
+        // Old Searing Ray handling
+        else if (you.attribute[ATTR_CHANNEL_DURATION] != 0)
+        {
+            // -1 used to be special-cased for the first turn of channelling.
+            // This is no longer done.
+            if (you.attribute[ATTR_CHANNEL_DURATION] == -1)
+                you.attribute[ATTR_CHANNEL_DURATION] = 1;
+
+            you.attribute[ATTR_CHANNELLED_SPELL] = SPELL_SEARING_RAY;
+        }
+        else
+        {
+            you.attribute[ATTR_CHANNELLED_SPELL] = SPELL_NO_SPELL;
+            you.attribute[ATTR_CHANNEL_DURATION] = 0;
+        }
     }
 #endif
 }

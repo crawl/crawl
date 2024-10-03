@@ -7435,7 +7435,7 @@ void player::paralyse(const actor *who, int str, string source)
 
     stop_delay(true, true);
     stop_directly_constricting_all(false);
-    end_wait_spells();
+    stop_channelling_spells();
     redraw_armour_class = true;
     redraw_evasion = true;
 }
@@ -7489,7 +7489,7 @@ bool player::fully_petrify(bool /*quiet*/)
     _pruneify();
 
     stop_delay(true, true);
-    end_wait_spells();
+    stop_channelling_spells();
 
     return true;
 }
@@ -8003,7 +8003,7 @@ void player::put_to_sleep(actor*, int power, bool hibernate)
     _pruneify();
 
     stop_directly_constricting_all(false);
-    end_wait_spells();
+    stop_channelling_spells();
     stop_delay(true, true);
     flash_view(UA_MONSTER, DARKGREY);
 

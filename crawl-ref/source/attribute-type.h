@@ -53,10 +53,8 @@ enum attribute_type
     ATTR_EVOKER_XP,            // How much xp remaining until next evoker charge
 #endif
     ATTR_SEEN_BEOGH,           // Did an orc priest already offer conversion?
-#if TAG_MAJOR_VERSION == 34
-    ATTR_XP_DRAIN,             // Severity of current skill drain
-#endif
-    ATTR_SEARING_RAY,          // Are we currently firing a searing ray?
+    ATTR_CHANNELLED_SPELL,     // Which spell are we currently channelling?
+    ATTR_CHANNEL_DURATION,     // How many turns have we been channelling it?
     ATTR_RECITE_TYPE,          // Recitation type.
     ATTR_RECITE_SEED,          // Recite text seed.
 #if TAG_MAJOR_VERSION == 34

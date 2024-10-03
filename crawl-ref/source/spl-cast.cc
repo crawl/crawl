@@ -2035,7 +2035,7 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
         // already been carried out
         const bool useless = spell_is_useless(spell, true, false, true);
         const char *spell_title_color = useless ? "darkgrey" : "w";
-        const string verb = wait_spell_active(spell)
+        const string verb = channelled_spell_active(spell)
             ? "<lightred>Restarting spell</lightred>"
             : is_targeted ? "Aiming" : "Casting";
         string title = make_stringf("%s: <%s>%s</%s>", verb.c_str(),
@@ -3143,5 +3143,110 @@ void do_demonic_magic(int pow, int rank)
 
         if (mons->check_willpower(&you, pow) <= 0)
             mons->paralyse(&you, random_range(2, 5));
+    }
+}
+
+bool channelled_spell_active(spell_type spell)
+{
+    return you.attribute[ATTR_CHANNELLED_SPELL] == spell;
+}
+
+void start_channelling_spell(spell_type spell, string reminder_msg, bool do_effect)
+{
+    you.attribute[ATTR_CHANNELLED_SPELL] = spell;
+    you.attribute[ATTR_CHANNEL_DURATION] = -1;
+
+    if (do_effect)
+        handle_channelled_spell();
+    else
+        you.attribute[ATTR_CHANNEL_DURATION] = 0;
+
+    if (!reminder_msg.empty())
+    {
+        string msg = "(Press <w>%</w> to " + reminder_msg + ".)";
+        insert_commands(msg, { CMD_WAIT });
+        mpr(msg);
+    }
+}
+
+void handle_channelled_spell()
+{
+    if (you.attribute[ATTR_CHANNELLED_SPELL] == SPELL_NO_SPELL)
+        return;
+
+    // Skip processing at the end of the turn this is cast (since that already
+    // happened *as* it was cast and shouldn't happen a second time.)
+    if (++you.attribute[ATTR_CHANNEL_DURATION] == 1)
+        return;
+
+    const spell_type spell = (spell_type)you.attribute[ATTR_CHANNELLED_SPELL];
+
+    // This value is -1 at the moment the spell is started. 0 is 'skipped' as
+    // the end of the turn it is started. 1+ represents subsequent turns.
+    const int turn = (you.attribute[ATTR_CHANNEL_DURATION] == 0 ? 1
+                        : you.attribute[ATTR_CHANNEL_DURATION]);
+
+    // Don't stop on non-wait for the first turn of a channelled spell, since
+    // that was the turn we cast it on.
+    if (turn > 1 && crawl_state.prev_cmd != CMD_WAIT || !can_cast_spells(true))
+    {
+        stop_channelling_spells();
+        return;
+    }
+
+    if ((spell == SPELL_FLAME_WAVE || spell == SPELL_SEARING_RAY)
+        && turn > 1 && !enough_mp(1, true))
+    {
+        mprf("Without enough magic to sustain it, your %s dissipates.",
+             spell_title(spell));
+        stop_channelling_spells(true);
+        return;
+    }
+
+    switch (you.attribute[ATTR_CHANNELLED_SPELL])
+    {
+        case SPELL_MAXWELLS_COUPLING:
+            handle_maxwells_coupling();
+            return;
+
+        case SPELL_FLAME_WAVE:
+            handle_flame_wave(turn);
+            return;
+
+        case SPELL_SEARING_RAY:
+            handle_searing_ray(you, turn);
+            return;
+
+        default:
+            mprf(MSGCH_WARN, "Attempting to channel buggy spell: %s", spell_title(spell));
+    }
+}
+
+void stop_channelling_spells(bool quiet)
+{
+    const spell_type spell = (spell_type)you.attribute[ATTR_CHANNELLED_SPELL];
+
+    you.attribute[ATTR_CHANNELLED_SPELL] = 0;
+    you.attribute[ATTR_CHANNEL_DURATION] = 0;
+
+    if (quiet)
+        return;
+
+    switch (spell)
+    {
+        case SPELL_FLAME_WAVE:
+            mpr("You stop channelling waves of flame.");
+            break;
+
+        case SPELL_SEARING_RAY:
+            mpr("You stop channelling your searing ray.");
+            break;
+
+        case SPELL_MAXWELLS_COUPLING:
+            mpr("The insufficient charge dissipates harmlessly.");
+            break;
+
+        default:
+            break;
     }
 }

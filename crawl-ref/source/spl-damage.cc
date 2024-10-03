@@ -3806,7 +3806,7 @@ spret cast_mercury_vapours(int pow, const coord_def target, bool fail)
     return spret::success;
 }
 
-static bool _prep_flame_wave(bolt &beam, int pow, int lvl)
+static bool _prep_flame_wave(bolt &beam, int pow, int lvl, bool skip_tracer = false)
 {
     zappy(ZAP_FLAME_WAVE, pow, false, beam);
     beam.set_agent(&you);
@@ -3814,10 +3814,15 @@ static bool _prep_flame_wave(bolt &beam, int pow, int lvl)
     beam.ex_size       = lvl;
     beam.source = beam.target = you.pos();
 
-    bolt tracer_beam = beam;
-    tracer_beam.is_tracer = true;
-    tracer_beam.explode(false, true);
-    return !tracer_beam.beam_cancelled;
+    if (!skip_tracer)
+    {
+        bolt tracer_beam = beam;
+        tracer_beam.is_tracer = true;
+        tracer_beam.explode(false, true);
+        return !tracer_beam.beam_cancelled;
+    }
+
+    return true;
 }
 
 spret cast_flame_wave(int pow, bool fail)
@@ -3828,49 +3833,19 @@ spret cast_flame_wave(int pow, bool fail)
 
     fail_check();
 
-    beam.apply_beam_conducts();
-    beam.refine_for_explosion();
-    beam.explode(true, true);
-
-    you.props[FLAME_WAVE_KEY] = 0;
     you.props[FLAME_WAVE_POWER_KEY].get_int() = pow;
-
-    string msg = "(Press <w>%</w> to intensify the flame waves.)";
-    insert_commands(msg, { CMD_WAIT });
-    mpr(msg);
+    start_channelling_spell(SPELL_FLAME_WAVE, "intensify the flame waves");
 
     return spret::success;
 }
 
-void handle_flame_wave()
+void handle_flame_wave(int lvl)
 {
-    if (!you.props.exists(FLAME_WAVE_KEY))
-        return;
-
-    int &lvl = you.props[FLAME_WAVE_KEY].get_int();
-    ++lvl;
-    if (lvl == 1) // just cast it this turn
-        return;
-
-    if (crawl_state.prev_cmd != CMD_WAIT || !can_cast_spells(true))
-    {
-        end_flame_wave();
-        return;
-    }
-
-    if (!enough_mp(1, true))
-    {
-        mpr("Without enough magic to sustain them, the waves of flame dissipate.");
-        end_flame_wave();
-        return;
-    }
-
     const int pow = you.props[FLAME_WAVE_POWER_KEY].get_int();
     bolt beam;
-    if (!_prep_flame_wave(beam, pow, lvl))
+    if (!_prep_flame_wave(beam, pow, lvl, lvl == 1))
     {
-        mpr("You stop channelling waves of flame.");
-        end_flame_wave();
+        stop_channelling_spells();
         return;
     }
 
@@ -3879,108 +3854,60 @@ void handle_flame_wave()
     beam.explode(true, true);
     trigger_battlesphere(&you);
 
-    pay_mp(1);
-    finalize_mp_cost();
+    if (lvl > 1)
+    {
+        pay_mp(1);
+        finalize_mp_cost();
+    }
 
     if (lvl >= spell_range(SPELL_FLAME_WAVE, pow))
     {
-        mpr("You finish channelling waves of flame.");
-        end_flame_wave();
+        mpr("Your wave of flame reaches its maximum intensity and dissipates.");
+        stop_channelling_spells(true);
     }
-}
-
-void end_flame_wave()
-{
-    you.props.erase(FLAME_WAVE_KEY);
 }
 
 spret cast_searing_ray(actor& agent, int pow, bolt &beam, bool fail)
 {
-    spret ret = spret::success;
-
     if (agent.is_player())
-        ret = zapping(ZAP_SEARING_RAY, pow, beam, true, nullptr, fail);
+    {
+        if (!player_tracer(ZAP_SEARING_RAY, pow, beam))
+            return spret::abort;
+
+        fail_check();
+    }
     else
     {
         zappy(ZAP_SEARING_RAY, pow, false, beam);
         beam.fire();
     }
 
-    if (ret == spret::success)
+    actor* targ = actor_at(beam.target);
+    agent.props[SEARING_RAY_AIM_SPOT_KEY].get_bool() = beam.aimed_at_spot
+                                                        || !targ;
+    agent.props[SEARING_RAY_TARGET_KEY].get_coord() = beam.target;
+    agent.props[SEARING_RAY_POWER_KEY].get_int() = pow;
+
+    if (targ)
+        agent.props[SEARING_RAY_MID_KEY].get_int() = targ->mid;
+    else
+        agent.props.erase(SEARING_RAY_MID_KEY);
+
+    if (agent.is_player())
+        start_channelling_spell(SPELL_SEARING_RAY, "maintain the ray");
+    else
     {
-        actor* targ = actor_at(beam.target);
-        agent.props[SEARING_RAY_AIM_SPOT_KEY].get_bool() = beam.aimed_at_spot
-                                                           || !targ;
-        agent.props[SEARING_RAY_TARGET_KEY].get_coord() = beam.target;
-        agent.props[SEARING_RAY_POWER_KEY].get_int() = pow;
-
-        if (targ)
-            agent.props[SEARING_RAY_MID_KEY].get_int() = targ->mid;
-
-        if (agent.is_player())
-        {
-            // Special value, used to avoid terminating ray immediately, since we
-            // took a non-wait action on this turn (ie: casting it)
-            you.attribute[ATTR_SEARING_RAY] = -1;
-
-            string msg = "(Press <w>%</w> to maintain the ray.)";
-            insert_commands(msg, { CMD_WAIT });
-            mpr(msg);
-        }
-        else
-        {
-            int dur = min(3 + pow / 60, 5);
-            mon_enchant ench(ENCH_CHANNEL_SEARING_RAY, 0, &agent, dur);
-            agent.as_monster()->add_ench(ench);
-        }
+        int dur = min(3 + pow / 60, 5);
+        mon_enchant ench(ENCH_CHANNEL_SEARING_RAY, 0, &agent, dur);
+        agent.as_monster()->add_ench(ench);
     }
 
-    return ret;
-}
-
-static bool _handle_player_searing_ray()
-{
-    if (you.attribute[ATTR_SEARING_RAY] == 0)
-        return false;
-
-    // Convert prepping value into stage one value (so it can fire next turn)
-    if (you.attribute[ATTR_SEARING_RAY] == -1)
-    {
-        you.attribute[ATTR_SEARING_RAY] = 1;
-        return false;
-    }
-
-    if (crawl_state.prev_cmd != CMD_WAIT)
-    {
-        end_searing_ray(you);
-        return false;
-    }
-
-    ASSERT_RANGE(you.attribute[ATTR_SEARING_RAY], 1, 4);
-
-    if (!can_cast_spells(true))
-    {
-        end_searing_ray(you);
-        return false;
-    }
-
-    if (!enough_mp(1, true))
-    {
-        mpr("Without enough magic to sustain it, your searing ray dissipates.");
-        end_searing_ray(you);
-        return false;
-    }
-
-    return true;
+    return spret::success;
 }
 
 // Returns true if the searing ray still fired this turn
-bool handle_searing_ray(actor& agent)
+bool handle_searing_ray(actor& agent, int turn)
 {
-    // If a player ray was cancelled or unable to continue, do nothing
-    if (agent.is_player() && !_handle_player_searing_ray())
-        return false;
-
     const zap_type zap = zap_type(ZAP_SEARING_RAY);
     const int pow = agent.props[SEARING_RAY_POWER_KEY].get_int();
 
@@ -4004,8 +3931,7 @@ bool handle_searing_ray(actor& agent)
     // If friendlies have moved into the beam path, give a chance to abort
     if (agent.is_player() && !player_tracer(zap, pow, beam))
     {
-        mpr("You stop channelling your searing ray.");
-        end_searing_ray(you);
+        stop_channelling_spells();
         return false;
     }
 
@@ -4020,7 +3946,6 @@ bool handle_searing_ray(actor& agent)
         {
             simple_monster_message(*agent.as_monster(), " stops channelling.");
             agent.as_monster()->del_ench(ENCH_CHANNEL_SEARING_RAY);
-            end_searing_ray(agent);
             return false;
         }
     }
@@ -4033,10 +3958,10 @@ bool handle_searing_ray(actor& agent)
         pay_mp(1);
         finalize_mp_cost();
 
-        if (++you.attribute[ATTR_SEARING_RAY] > 3)
+        if (turn > 3)
         {
             mpr("You finish channelling your searing ray.");
-            end_searing_ray(agent);
+            stop_channelling_spells(true);
         }
     }
     else
@@ -4046,24 +3971,10 @@ bool handle_searing_ray(actor& agent)
         mon_enchant me = mons->get_ench(ENCH_CHANNEL_SEARING_RAY);
         mons->lose_ench_duration(me, 1);
         if (!mons->has_ench(ENCH_CHANNEL_SEARING_RAY))
-        {
             simple_monster_message(*mons, " finishes channelling their searing ray.");
-            end_searing_ray(agent);
-        }
     }
 
     return true;
-}
-
-void end_searing_ray(actor& agent)
-{
-    if (agent.is_player())
-        you.attribute[ATTR_SEARING_RAY] = 0;
-    else
-        agent.as_monster()->del_ench(ENCH_CHANNEL_SEARING_RAY);
-
-    agent.props.erase(SEARING_RAY_TARGET_KEY);
-    agent.props.erase(SEARING_RAY_AIM_SPOT_KEY);
 }
 
 /**
@@ -4691,17 +4602,6 @@ static bool _maxwells_target_check(const monster &m)
             && !m.wont_attack();
 }
 
-bool wait_spell_active(spell_type spell)
-{
-    // XX deduplicate code somehow
-    return spell == SPELL_SEARING_RAY
-                && you.attribute[ATTR_SEARING_RAY] != 0
-            || spell == SPELL_MAXWELLS_COUPLING
-                && you.props.exists(COUPLING_TIME_KEY)
-            || spell == SPELL_FLAME_WAVE
-                && you.props.exists(FLAME_WAVE_KEY);
-}
-
 // returns the closest target to the player, choosing randomly if there are more
 // than one (see `fair` argument to distance_iterator).
 static monster* _find_maxwells_target(bool tracer)
@@ -4752,12 +4652,12 @@ spret cast_maxwells_coupling(int pow, bool fail, bool tracer)
     fail_check();
 
     mpr("You begin accumulating electric charge.");
-    string msg = "(Press <w>%</w> to continue charging.)";
-    insert_commands(msg, { CMD_WAIT });
-    mpr(msg);
 
     you.props[COUPLING_TIME_KEY] =
-        - (30 + div_rand_round(random2((200 - pow) * 40), 200));
+       you.elapsed_time + (30 + div_rand_round(random2((200 - pow) * 40), 200));
+
+    start_channelling_spell(SPELL_MAXWELLS_COUPLING, "continue charging", false);
+
     return spret::success;
 }
 
@@ -4813,51 +4713,17 @@ static void _discharge_maxwells_coupling()
 
 void handle_maxwells_coupling()
 {
-    if (!you.props.exists(COUPLING_TIME_KEY))
-        return;
+    const int discharge_time = you.props[COUPLING_TIME_KEY].get_int();
 
-    if (!can_cast_spells(true))
+    if (you.elapsed_time >= discharge_time)
     {
-        end_maxwells_coupling();
-        return;
-    }
-
-    int charging_auts_remaining = you.props[COUPLING_TIME_KEY].get_int();
-
-    if (charging_auts_remaining < 0)
-    {
-        mpr("You feel charge building up...");
-        you.props[COUPLING_TIME_KEY] = - (charging_auts_remaining
-                                            + you.time_taken);
-        return;
-    }
-
-    if (crawl_state.prev_cmd != CMD_WAIT)
-    {
-        end_maxwells_coupling();
-        return;
-    }
-
-    if (charging_auts_remaining <= you.time_taken)
-    {
-        you.time_taken = charging_auts_remaining;
         you.props.erase(COUPLING_TIME_KEY);
         _discharge_maxwells_coupling();
+        stop_channelling_spells(true);
         return;
     }
 
-    you.props[COUPLING_TIME_KEY] = charging_auts_remaining
-                                      - you.time_taken;
     mpr("You feel charge building up...");
-}
-
-void end_maxwells_coupling(bool quiet)
-{
-    if (!you.props.exists(COUPLING_TIME_KEY))
-        return;
-    if (!quiet)
-        mpr("The insufficient charge dissipates harmlessly.");
-    you.props.erase(COUPLING_TIME_KEY);
 }
 
 vector<coord_def> find_bog_locations(const coord_def &center, int pow)

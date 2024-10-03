@@ -484,7 +484,7 @@ void revive()
     you.los_noise_level = 0;
     you.los_noise_last_turn = 0; // silence in death
 
-    end_wait_spells(true);
+    stop_channelling_spells();
 
     if (you.duration[DUR_FROZEN_RAMPARTS])
         end_frozen_ramparts();

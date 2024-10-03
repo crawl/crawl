@@ -1901,7 +1901,9 @@ void handle_monster_move(monster* mons)
     if (mons->has_ench(ENCH_CHANNEL_SEARING_RAY))
     {
         // If we are continuing to fire searing ray, remain in place.
-        if (handle_searing_ray(*mons))
+        // XXX: Doesn't track how many turns this has been channelled, but that
+        //      doesn't presently matter.
+        if (handle_searing_ray(*mons, 1))
         {
             mons->speed_increment -= non_move_energy;
             return;

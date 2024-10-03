@@ -1163,9 +1163,9 @@ namespace quiver
             return is_valid();
         }
 
-        bool check_wait_spells() const
+        bool check_channelled_spells() const
         {
-            if (!target.needs_targeting() && wait_spell_active(spell))
+            if (!target.needs_targeting() && channelled_spell_active(spell))
             {
                 crawl_state.prev_cmd = CMD_WAIT; // hackiness, but easy
                 update_acrobat_status();
@@ -1215,7 +1215,7 @@ namespace quiver
             if (autofight_check())
                 return;
 
-            if (!check_wait_spells())
+            if (!check_channelled_spells())
                 cast_a_spell(do_range_check, spell, &target);
 
             t = target; // copy back, in case they are different
@@ -1239,7 +1239,7 @@ namespace quiver
             formatted_string qdesc;
 
             qdesc.textcolour(Options.status_caption_colour);
-            if (wait_spell_active(spell))
+            if (channelled_spell_active(spell))
                 qdesc.cprintf("Continue: ");
             else
                 qdesc.cprintf("Cast: ");

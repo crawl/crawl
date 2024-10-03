@@ -192,7 +192,6 @@ static void _launch_game_loop();
 NORETURN static void _launch_game();
 
 static void _do_berserk_no_combat_penalty();
-static void _do_wait_spells();
 
 static void _input();
 
@@ -1147,7 +1146,7 @@ static void _input()
     if (you_are_delayed()
         && !dynamic_cast<MacroProcessKeyDelay*>(current_delay().get()))
     {
-        end_wait_spells();
+        stop_channelling_spells();
         handle_delay();
 
         // Some delays set you.turn_is_over.
@@ -1296,7 +1295,7 @@ static void _input()
         if (you.apply_berserk_penalty)
             _do_berserk_no_combat_penalty();
 
-        _do_wait_spells();
+        handle_channelled_spell();
 
         world_reacts();
     }
@@ -2821,18 +2820,6 @@ static void _do_berserk_no_combat_penalty()
             you.duration[DUR_BERSERK] = 1;
     }
     return;
-}
-
-/**
- * Update damaging spells that are channeled by waiting.
- * These only update when the player actively waits with CMD_WAIT,
- * so should not be moved to world_reacts().
- */
-static void _do_wait_spells()
-{
-    handle_searing_ray(you);
-    handle_maxwells_coupling();
-    handle_flame_wave();
 }
 
 static void _safe_move_player(coord_def move)

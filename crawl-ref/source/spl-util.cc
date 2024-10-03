@@ -2014,10 +2014,3 @@ bool spell_was_form(spell_type spell)
     return form_spells.count(spell);
 }
 #endif
-
-void end_wait_spells(bool quiet)
-{
-    end_searing_ray(you);
-    end_maxwells_coupling(quiet);
-    end_flame_wave();
-}

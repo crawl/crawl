@@ -1214,11 +1214,6 @@ aff_type targeter_flame_wave::is_affected(coord_def loc)
     const int dist = (loc - origin).rdist();
     if (dist == 1)
         return AFF_YES;
-    if (you.props.exists(FLAME_WAVE_KEY)
-        && dist <= you.props[FLAME_WAVE_KEY].get_int() + 1)
-    {
-        return AFF_YES;
-    }
     return AFF_MAYBE;
 }
 
