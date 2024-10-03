@@ -951,10 +951,9 @@ and greatness.
 %%%%
 creeping inferno
 
-A formless mass of ancient fire, bound by heat and malevolence. The slightest
-disturbance will destroy the bonds holding it together and unleash a fire
-storm. It longs for that release, yet seems reluctant to move while
-being observed.
+A formless mass of ancient fire, bound by heat and malevolence. It longs to
+unleash itself as a wild fire storm, yet must first patiently burn towards its
+victims with implaceable inevitability.
 %%%%
 crimson imp
 

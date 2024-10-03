@@ -505,8 +505,7 @@ static bool _fungal_move_check(monster &mon)
     // These monsters have restrictions on moving while you are looking.
     if ((mon.type == MONS_WANDERING_MUSHROOM || mon.type == MONS_DEATHCAP)
             && mon.foe_distance() > 1 // can attack if adjacent
-        || ((mon.type == MONS_LURKING_HORROR
-             || mon.type == MONS_CREEPING_INFERNO)
+        || (mon.type == MONS_LURKING_HORROR
             // 1 in los chance at max los
             && mon.foe_distance() > random2(you.current_vision + 1)))
     {

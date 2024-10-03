@@ -1130,7 +1130,7 @@ static const mon_spellbook mspell_list[] =
       {
        {
         { SPELL_WIND_BLAST, 20, MON_SPELL_WIZARD },
-        { SPELL_STOKE_FLAMES, 10, MON_SPELL_WIZARD },
+        { SPELL_STOKE_FLAMES, 20, MON_SPELL_WIZARD },
        }
       }
     },

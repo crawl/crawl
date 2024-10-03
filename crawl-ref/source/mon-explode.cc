@@ -58,9 +58,9 @@ static void _setup_base_explosion(bolt & beam, const monster& origin)
     env.final_effect_monster_cache.push_back(origin);
 }
 
-static int _inferno_power(int /*hd*/)
+static int _inferno_power(int hd)
 {
-    return 100; // dubious
+    return min(hd * 10, 200);
 }
 
 static dice_def _inferno_damage(int hd)
