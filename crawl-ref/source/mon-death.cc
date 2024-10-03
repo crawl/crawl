@@ -2663,18 +2663,23 @@ item_def* monster_die(monster& mons, killer_type killer,
 
             _fire_kill_conducts(mons, killer, killer_index, gives_player_xp);
 
-            monster* killer_mon = nullptr;
-            if (!anon)
-                killer_mon = &env.mons[killer_index];
-
-            if (!invalid_monster_index(killer_index)
-                && _god_will_bless_follower(&mons))
+            // Check for applicability before looking to see if a blessing or
+            // on-kill effect should happen.
+            if (anon
+                || invalid_monster_index(killer_index)
+                || !gives_player_xp)
             {
-                // Randomly bless the follower who killed.
-                bless_follower(killer_mon);
-                if (killer_mon->wearing_ego(EQ_ALL_ARMOUR, SPARM_MAYHEM))
-                    _orb_of_mayhem(*killer_mon, mons);
+                break;
             }
+
+            monster* killer_mon = &env.mons[killer_index];
+
+            if (killer_mon->wearing_ego(EQ_ALL_ARMOUR, SPARM_MAYHEM))
+                _orb_of_mayhem(*killer_mon, mons);
+
+            if (pet_kill && _god_will_bless_follower(&mons))
+                bless_follower(killer_mon);
+
             break;
         }
 
