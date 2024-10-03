@@ -4768,8 +4768,8 @@ bool monster::needs_abyss_transit() const
 {
     return (mons_is_unique(type)
             || (flags & MF_BANISHED)
-            || get_experience_level() > 8 + random2(25)
-            && mons_can_use_stairs(*this))
+               && get_experience_level() > 8 + random2(25)
+               && mons_can_use_stairs(*this))
         && !is_summoned()
         && !mons_is_conjured(type)
         // We want to 'kill' banished apostles for real, so that they can escape
