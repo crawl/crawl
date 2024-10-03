@@ -412,7 +412,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player, opt
                     .addClass("fg"+desc.colour).html(desc.favour);
         var powers_list = desc.powers_list.split("\n").slice(3, -1);
         var $powers = $panes.eq(0).find(".god-powers");
-        var re = /^(<[a-z]*>)?(.*\.) *( \(.*\))?$/;
+        var re = /^(<[a-z]*>)?(.*\.) *(\(.*\))?$/;
         for (var i = 0; i < powers_list.length; i++)
         {
             var matches = powers_list[i].match(re);
