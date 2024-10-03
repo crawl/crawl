@@ -2725,8 +2725,10 @@ void bolt::affect_endpoint()
             mirror->summoner = blitzer->mid;
             mirror->foe = blitzer->foe;
             mirror->hit_points = blitzer->max_hit_points;
+
 #ifdef USE_TILE
-            mirror->props[MONSTER_TILE_KEY] = TILEP_MONS_NEKOMATA_PHANTOM;
+            if (mirror->type == MONS_NEKOMATA)
+                mirror->props[MONSTER_TILE_KEY] = TILEP_MONS_NEKOMATA_PHANTOM;
 #endif
         }
     }
