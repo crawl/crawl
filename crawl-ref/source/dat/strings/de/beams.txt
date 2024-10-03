@@ -305,6 +305,9 @@ die Auswirkungen der Hölle
 the magical storm
 der magische Sturm
 %%%%
+the electrical discharge
+die elektrische Entladung
+%%%%
 
 # Fragments created by Lee's Rapid Deconstruction
 %%%%
@@ -640,6 +643,9 @@ eine goldene Flamme
 %%%%
 a magical storm
 ein magischer Sturm
+%%%%
+a electrical discharge
+eine elektrische Entladung
 %%%%
 
 # Fragments created by Lee's Rapid Deconstruction
@@ -980,6 +986,9 @@ Auswirkungen der Hölle
 %%%%
 magical storm
 magischer Sturm
+%%%%
+electrical discharge
+elektrische Entladung
 %%%%
 
 # Fragments created by Lee's Rapid Deconstruction

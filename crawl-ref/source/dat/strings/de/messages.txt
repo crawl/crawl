@@ -2086,148 +2086,148 @@ Etwas wird von negativer Energie umhüllt!
 ##################
 %%%%
 A deck of cards, mainly dealing with various forms of escape.
-
+Ein Deck voller Karten, die sich hauptsächlich mit verschiedenen Formen der Flucht beschäftigen.
 %%%%
 A deck of cards, most of which hurl death and destruction at one's foes (or, if unlucky, at oneself).
-
+Ein Deck voller Karten, von denen die meisten Tod und Zerstörung auf die Feinde (oder, wenn man Pech hat, auf sich selbst) schleudern.
 %%%%
 A deck of cards, depicting a range of weird and wonderful creatures.
-
+Ein Deck voller Karten, die eine Reihe von seltsamen und wunderbaren Kreaturen darstellen.
 %%%%
 A deck of cards, which wreak havoc on the user.
-
+Ein Deck voller Karten, die dem Benutzer übel hausen.
 %%%%
 "Remaining cards: "
-
+"Verbleibende Karten: "
 %%%%
 "It may contain the following cards: "
-
+"Es kann folgende Karten enthalten: "
 %%%%
 A deck of cards, set aside for later.
-
+Ein Kartendeck, das für später beiseite gelegt wird.
 %%%%
 1 %s card
-
+1 %s Karte
 %%%%
 %d %s cards
-
+%d %s Karten
 %%%%
-It is found in decks of %s, or in Nemelex Xobeh's deck of punishment.
-
+It is found in %s, or in Nemelex Xobeh's deck of punishment.
+Man findet sie in {dat}%s, oder in Nemelex Xobehs Deck der Strafe.
 %%%%
-It is found in decks of %s.
-
+It is found in %s.
+Man findet sie in {dat}%s.
 %%%%
 It is only found in Nemelex Xobeh's deck of punishment.
-
+Sie kommt nur in Nemelex Xobehs Deck der Strafe vor.
 %%%%
 It is normally not part of any deck.
-
+Sie ist normalerweise nicht Teil eines Decks.
 %%%%
 "It currently has %d cards "
-
+"Es hat derzeit %d Karten "
 %%%%
 "It currently has 1 card "
-
+"Es hat derzeit 1 Karte "
 %%%%
 "It is currently empty "
-
+"Es ist derzeit leer "
 %%%%
 and can contain up to %d cards.
-
+und kann bis zu %d Karten enthalten.
 %%%%
 Deal which deck?
-
+Aus welchem Deck geben?
 %%%%
 Draw which deck?
-
+Aus welchem Deck ziehen?
 %%%%
 Cards available
-
+Verfügbare Karten
 %%%%
 Describe which deck?
-
+Welches Deck beschreiben?
 %%%%
 Press '<w>!</w>' or '<w>?</w>' to toggle between deck selection and description.
-
+'<w>!</w>' oder '<w>?</w>' drücken, um zwischen Auswahl und Beschreibung umzuschalten.
 %%%%
 The deck of cards disappears without a trace.
-
+Das Kartendeck verschwindet spurlos.
 %%%%
 The deck of cards glows slightly and disappears.
-
+Das Kartendeck leuchtet leicht auf und verschwindet.
 %%%%
 The deck of cards glows with a rainbow of weird colours and disappears.
-
+Das Kartendeck leuchtet in einem Regenbogen von seltsamen Farben und verschwindet.
 %%%%
 You deal a card...
-
+Ihr gebt eine Karte...
 %%%%
 You draw a card...
-
+Ihr zieht eine Karte...
 %%%%
 You can't repeat Stack Five.
-
+Ihr könnt 'Fünf vorsortieren' nicht wiederholen.
 %%%%
 Replace your current stack?
-
+Euren aktuellen Stapel ersetzen?
 %%%%
 You are out of cards!
 Ihr habt keine Karten mehr!
 %%%%
 You have fewer than five cards, stack them anyway?
-
+Ihr habt weniger als fünf Karten. Stapeln sie trotzdem?
 %%%%
 Are you done? (press y or Y to confirm)
-
+Fertig? (y oder Y drücken zur Bestätigung)
 %%%%
 "Drawn so far: "
-
+"Bislang gezogene Karten: "
 %%%%
 Select two cards to swap them:
-
+Zwei Karten auswählen, um sie zu tauschen:
 %%%%
 Press <w>?</w> for the card descriptions or <w>Enter</w> to accept.
-
+<w>?</w> drücken für die Kartenbeschreibungen oder <w>Enter</w> zum Akzeptieren.
 %%%%
 You can't repeat Triple Draw.
-
+Ihr könnt 'dreifaches Ziehen' nicht wiederholen.
 %%%%
 There's fewer than three cards, still triple draw?
-
+Es gibt weniger als drei Karten, immer noch dreifaches Ziehen machen?
 %%%%
 There's only one card left!
 Es ist nur noch eine Karte übrig!
 %%%%
 You draw... (choose one card, ? for their descriptions)
-Ihr zieht ... (wähle eine Karte? Für ihre Beschreibungen)
+Ihr zieht... (eine Karte wählen, ? für ihre Beschreibungen)
 %%%%
 No stairs available to move.
-Keine Treppen zum Bewegen verfügbar.
+Keine Treppe zum Bewegen verfügbar.
 %%%%
 You have dealt %s.
-
+Ihr habt {acc}%s ausgegeben.
 %%%%
 You have drawn %s.
-
+Ihr habt {acc}%s gezogen.
 %%%%
 You radiate a wave of entropy!
-Ihr strahlt eine Entropiewelle aus!
+Ihr strahlt eine Welle der Entropie aus!
 %%%%
 You reveal a symbol of torment!
-Ihr zeigt ein Symbol der Qual!
+Ihr deckt ein Symbol der Qual auf!
 %%%%
 Aiming: %s
-
+Anvisieren: %s
 %%%%
 Really abort (and waste the card)?
-
+Wirklich abbrechen (und die Karte verschwenden)?
 %%%%
 You begin rapidly regenerating health and magic.
-Ihr fangt an, Gesundheit und Magie schnell zu regenerieren.
+Ihr beginnt, Gesundheit und Magie schnell zu regenerieren.
 %%%%
 You somehow manage to escape divine attention...
-Ihr schafft es irgendwie, der göttlichen Aufmerksamkeit zu entkommen ...
+Ihr schafft es irgendwie, der göttlichen Aufmerksamkeit zu entgehen...
 %%%%
 You see a puff of smoke.
 Ihr seht eine Rauchwolke.
@@ -2238,53 +2238,48 @@ Ihr spürt die Anwesenheit von etwas Unfreundlichem.
 Clouds appear around you!
 Wolken erscheinen um Euch herum!
 %%%%
-electrical discharge
-
-%%%%
 You hear a mighty peal of thunder!
-
+Ihr hört einen heftigen Donnerschlag!
 %%%%
 You hear a violent peal of thunder!
-
+Ihr hört einen gewaltigen Donnerschlag!
 %%%%
 You hear a cataclysmic peal of thunder!
-
+Ihr hört einen verheerenden Donnerschlag!
 %%%%
+# When player can't hear
 You feel a mighty peal of thunder!
-
+Ihr fühlt einen heftigen Donnerschlag!
 %%%%
 You feel a violent peal of thunder!
-
+Ihr fühlt einen gewaltigen Donnerschlag!
 %%%%
 You feel a cataclysmic peal of thunder!
-
+Ihr fühlt einen verheerenden Donnerschlag!
 %%%%
 You hear mighty peals of thunder!
-
+Ihr hört heftige Donnerschläge!
 %%%%
 You hear violent peals of thunder!
-
+Ihr hört gewaltige Donnerschläge!
 %%%%
 You hear cataclysmic peals of thunder!
-
+Ihr hört verheerende Donnerschläge!
 %%%%
 You feel mighty peals of thunder!
-
+Ihr fühlt heftige Donnerschläge!
 %%%%
 You feel violent peals of thunder!
-
+Ihr fühlt gewaltige Donnerschläge!
 %%%%
 You feel cataclysmic peals of thunder!
-
+Ihr fühlt verheerende Donnerschläge!
 %%%%
 %s is dazed by the mutagenic energy.
-
+%s ist durch die mutagene Energie benommen.
 %%%%
 You feel a surge of magic.
-Ihr fühlt eine Welle von Magie.
-%%%%
-"deck of "
-
+Ihr spürt eine Woge der Magie.
 %%%%
 
 ##################
@@ -6579,7 +6574,7 @@ Der Raum verzieht sich um Euch!
 %s lässt Euch aus dem Deck der Bestrafung ziehen.
 %%%%
 You feel Jiyva alter your body.
-Du spürst, wie Jiyva Euren Körper verändert.
+Ihr spürt, wie Jiyva Euren Körper verändert.
 %%%%
 %s's gift of slime is revoked.
 {gen}%s Gabe des Schleims ist widerrufen.

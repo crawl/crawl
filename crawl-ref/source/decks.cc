@@ -319,7 +319,7 @@ string deck_summary()
     {
         int cards = deck_cards((deck_type) i);
         const deck_type_data *deck_data = map_find(all_decks, (deck_type) i);
-        const string name = deck_data ? deck_data->name : "bugginess"; // @noloc
+        const string name = deck_data ? deck_data->name : "bugginess";
         if (cards)
         {
             if (cards == 1)
@@ -344,7 +344,7 @@ string which_decks(card_type card)
         if (deck_data.first == DECK_OF_PUNISHMENT)
             punishment = true;
         else
-            decks.push_back(deck_data.second.name);
+            decks.push_back("decks of " + deck_data.second.name);
     }
 
     if (!decks.empty())
@@ -352,11 +352,11 @@ string which_decks(card_type card)
         string list = comma_separated_line(decks.begin(), decks.end());
         if (punishment)
         {
-            output += localise("It is found in decks of %s, or in "
+            output += localise("It is found in %s, or in "
                                "Nemelex Xobeh's deck of punishment.", list);
         }
         else
-            output += localise("It is found in decks of %s.", list);
+            output += localise("It is found in %s.", list);
     }
     else if (punishment)
     {
@@ -516,14 +516,14 @@ static deck_type _choose_deck(bool deal = false)
 {
     string text;
     if (deal)
-        text = chop_string(localise("Deal which deck?"), 24);
+        text = chop_string(localise("Deal which deck?"), 28, true);
     else
-        text = chop_string(localise("Draw which deck?"), 24);
+        text = chop_string(localise("Draw which deck?"), 28, true);
     text += localise("Cards available");
 
     string alt_text;
-    text = chop_string(localise("Describe which deck?"), 24);
-    text += localise("Cards available");
+    alt_text = chop_string(localise("Describe which deck?"), 28, true);
+    alt_text += localise("Cards available");
 
     ToggleableMenu deck_menu(MF_SINGLESELECT
             | MF_NO_WRAP_ROWS | MF_TOGGLE_ACTION | MF_ALWAYS_SHOW_MORE);
@@ -936,7 +936,7 @@ bool draw_three()
             for (int i = 0; i < draws.size(); ++i)
             {
                 msg::streams(MSGCH_PROMPT)
-                    << msg::nocap << (static_cast<char>(i + 'a')) << " - " // @noloc
+                    << msg::nocap << (static_cast<char>(i + 'a')) << " - "
                     << card_name((card_type)draws[i].get_int()) << endl;
             }
             need_prompt_redraw = false;
@@ -1622,7 +1622,7 @@ static void _wild_magic_card(int power)
             miscast_effect(*mons, &you,
                            {miscast_source::deck}, type,
                            3 * (power_level + 1), random2(70),
-                           "a card of wild magic"); // @noloc
+                           "a card of wild magic");
 
             num_affected++;
         }
@@ -1752,7 +1752,7 @@ string deck_name(deck_type deck)
     if (deck == DECK_STACK)
         return "stacked deck";
     const deck_type_data *deck_data = map_find(all_decks, deck);
-    const string name = deck_data ? deck_data->name : "bugginess"; // @noloc
+    const string name = deck_data ? deck_data->name : "bugginess";
     return "deck of " + name;
 }
 

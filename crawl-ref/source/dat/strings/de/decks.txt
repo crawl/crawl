@@ -27,40 +27,57 @@ eine %s-Karte
 
 %%%%
 deck of escape
-Stapel der Flucht
+Deck der Flucht
 %%%%
 deck of destruction
-Stapel der Zerstörung
+Deck der Zerstörung
 %%%%
 deck of summoning
-Stapel der Herbeirufung
+Deck der Herbeirufung
 %%%%
 deck of punishment
-Stapel der Strafe
+Deck der Strafe
 %%%%
 stacked deck
-vorsortierter Stapel
+vorsortiertes Deck
 %%%%
 
 
 %%%%
 the deck of escape
-der Stapel der Flucht
+das Deck der Flucht
 %%%%
 the deck of destruction
-der Stapel der Zerstörung
+das Deck der Zerstörung
 %%%%
 the deck of summoning
-der Stapel der Herbeirufung
+das Deck der Herbeirufung
 %%%%
 the deck of punishment
-der Stapel der Strafe
+das Deck der Strafe
 %%%%
 a stacked deck
-ein vorsortierter Stapel
+ein vorsortiertes Deck
 %%%%
 your stacked deck
-Euer vorsortierter Stapel
+Euer vorsortiertes Deck
+%%%%
+
+%%%%
+decks of escape
+Decks der Flucht
+%%%%
+decks of destruction
+Decks der Zerstörung
+%%%%
+decks of summoning
+Decks der Herbeirufung
+%%%%
+decks of punishment
+Decks der Strafe
+%%%%
+stacked decks
+vorsortierte Decks
 %%%%
 
 

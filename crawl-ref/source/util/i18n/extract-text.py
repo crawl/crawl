@@ -1689,6 +1689,8 @@ for filename in files:
     filtered_strings = []
     for string in strings:
 
+        extras = []
+
         if string.startswith('# note:') or string.startswith('# section:'):
             filtered_strings.append(string)
             continue
@@ -1760,9 +1762,16 @@ for filename in files:
                 continue
             elif string == " the pandemonium lord":
                 string = "the %spandemonium lord"
+            elif string == "deck of " or string == "decks of ":
+                for suffix in ["destruction", "escape", "summoning"]:
+                    extras.append(string + suffix);
+                string = None
 
-        if string not in filtered_strings:
+        if string is not None and string not in filtered_strings:
             filtered_strings.append(string)
+        for extra in extras:
+            if extra not in filtered_strings:
+                filtered_strings.append(extra)
 
     remove_unnecessary_section_markers(filtered_strings)
 

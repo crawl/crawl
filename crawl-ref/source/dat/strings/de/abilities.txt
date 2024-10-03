@@ -305,7 +305,7 @@ Draw Stack
 Vorsortierte ziehen
 %%%%
 Triple Draw
-Dreifach ziehen
+Dreifaches Ziehen
 %%%%
 Deal Four
 Vier ausgeben
