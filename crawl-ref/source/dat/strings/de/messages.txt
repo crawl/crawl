@@ -2287,13 +2287,13 @@ Ihr spürt eine Woge der Magie.
 ##################
 %%%%
 You continue putting on %s.
-Ihr zieht%s weiter an.
+Ihr zieht {acc}%s weiter an.
 %%%%
 You continue taking off %s.
-Ihr zieht%s weiter aus.
+Ihr zieht {acc}%s weiter aus.
 %%%%
 You continue memorising.
-Ihr lernt weiter.
+Ihr memoriert weiter.
 %%%%
 You continue meditating on the rock.
 Ihr meditiert weiter auf dem Felsen.
@@ -2313,7 +2313,7 @@ Ihr setzt Euer Ritual fort.
 ##################
 %%%%
 Your memorisation is interrupted.
-Euer Auswendiglernen ist unterbrochen.
+Euer Memorieren ist unterbrochen.
 %%%%
 You stop dropping stuff.
 Ihr hört auf Sachen fallen zu lassen.
