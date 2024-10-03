@@ -25,7 +25,8 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     // Attitudes
     { MB_CHARMED, "charmed", "charmed", "charmed"},
     { MB_HEXED, "hexed", "control wrested from you", "hexed"},
-    { MB_SUMMONED, "summoned", "summoned", "summoned"},
+    { MB_ABJURABLE, "summoned", "summoned", "summoned"},
+    { MB_MINION, "minion", "minion", "minion"},
     { MB_UNREWARDING, "", "unrewarding", ""},
     { MB_WANDERING, "wandering", "wandering", "wandering"},
     { MB_SUMMONED_CAPPED, "expiring", "expiring", "expiring"},

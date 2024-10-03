@@ -31,6 +31,7 @@ neutral NEUTRAL
 animated_weapon ANIMATED_WEAPON
 summoned SUMMONED
 unrewarding UNREWARDING
+minion MINION
 poison POISON
 poison_more MORE_POISON
 poison_max MAX_POISON

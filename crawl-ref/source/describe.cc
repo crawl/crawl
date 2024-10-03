@@ -6615,7 +6615,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         //      non-abjurable summons?
         if (mi.is(MB_ABJURABLE))
             inf.body << "temporarily summoned to this location. ";
-        else if (mi.is(MB_SUMMONED))
+        else if (mi.is(MB_MINION))
             inf.body << "created by magic and is temporary. ";
 
         // TODO: hacks; convert angered_by_attacks to a monster_info check

@@ -522,6 +522,7 @@ static map<tileidx_t, int> status_icon_sizes = {
     // (E.g. for summoned dancing weapons or animated armour.)
     { TILEI_ANIMATED_WEAPON, FIXED_LOC_ICON },
     { TILEI_SUMMONED,        FIXED_LOC_ICON },
+    { TILEI_MINION,          FIXED_LOC_ICON },
     { TILEI_UNREWARDING,     FIXED_LOC_ICON },
     { TILEI_VENGEANCE_TARGET,FIXED_LOC_ICON },
 

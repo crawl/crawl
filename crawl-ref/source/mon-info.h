@@ -243,6 +243,7 @@ enum monster_info_flags
     MB_DOUBLED_VIGOUR,
     MB_ABJURABLE,
     MB_UNREWARDING,
+    MB_MINION,
     NUM_MB_FLAGS
 };
 

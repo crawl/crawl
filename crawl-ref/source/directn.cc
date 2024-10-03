@@ -3770,7 +3770,7 @@ static string _get_monster_desc(const monster_info& mi)
                 + " indifferent to you.\n";
     }
 
-    if (mi.is(MB_SUMMONED))
+    if (mi.is(MB_ABJURABLE))
     {
         text += pronoun + " " + conjugate_verb("have", mi.pronoun_plurality())
                 + " been summoned";
@@ -3780,6 +3780,11 @@ static string _get_monster_desc(const monster_info& mi)
                     + " expiring";
         }
         text += ".\n";
+    }
+    else if (mi.is(MB_MINION))
+    {
+        text += pronoun + " " + conjugate_verb("have", mi.pronoun_plurality())
+                + " been created by magic";
     }
 
     if (mi.is(MB_HALOED))

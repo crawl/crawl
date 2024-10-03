@@ -455,6 +455,8 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_SUMMONED);
         if (m->is_abjurable())
             mb.set(MB_ABJURABLE);
+        else
+            mb.set(MB_MINION);
         if (m->type == MONS_SPELLFORGED_SERVITOR && m->summoner == MID_PLAYER)
             mb.set(MB_PLAYER_SERVITOR);
     }

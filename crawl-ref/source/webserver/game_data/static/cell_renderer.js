@@ -1086,7 +1086,8 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 case icons.SHADOWLESS:
                 // Anim. weap. and summoned might overlap, but that's okay
                 case icons.SUMMONED:
-                case icons.PERM_SUMMON:
+                case icons.MINION:
+                case icons.UNREWARDING:
                 case icons.ANIMATED_WEAPON:
                 case icons.VENGEANCE_TARGET:
                     this.draw_icon(idx, x, y, undefined, undefined, img_scale);
