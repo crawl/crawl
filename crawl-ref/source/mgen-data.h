@@ -204,7 +204,7 @@ struct mgen_data
         summon_type = _summon_type;
 
         // It doesn't make sense to have an abjurable summon with no duration.
-        if (duration = 0)
+        if (duration == 0)
             abjurable = false;
 
         if (abjurable)

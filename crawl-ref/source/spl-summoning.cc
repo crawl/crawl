@@ -2045,7 +2045,7 @@ spret cast_fulminating_prism(actor* caster, int pow, const coord_def& where,
                                         : SAME_ATTITUDE(caster->as_monster()),
                                      where, MHITNOT, MG_FORCE_PLACE);
     prism_data.set_summoned(caster, is_shadow ? SPELL_SHADOW_PRISM
-                                              : SPELL_FULMINANT_PRISM);
+                                              : SPELL_FULMINANT_PRISM, 0, false, false);
     prism_data.hd = hd;
     monster *prism = create_monster(prism_data);
 
