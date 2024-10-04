@@ -2158,13 +2158,13 @@ _Boris_return_rare_
 w:5
 @The_monster@ asks, "Do I look like the kind of man who dies?"
 %%%%
-Boris unsummoned
+Boris timeout
 
 @The_monster@ says, "You can't fire me, I quit!"
 %%%%
 friendly Boris timeout
 
-@Boris unsummoned@
+@Boris timeout@
 %%%%
 Boris triumphant
 
