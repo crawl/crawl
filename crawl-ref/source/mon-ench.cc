@@ -1853,7 +1853,8 @@ void monster::apply_enchantment(const mon_enchant &me)
     }
 }
 
-void monster::mark_summoned(int summon_type, int longevity, bool mark_items)
+void monster::mark_summoned(int summon_type, int longevity, bool mark_items,
+                            bool make_abjurable)
 {
     if (longevity > 0)
         add_ench(mon_enchant(ENCH_SUMMON_TIMER, 1, 0, longevity));
@@ -1863,6 +1864,9 @@ void monster::mark_summoned(int summon_type, int longevity, bool mark_items)
     if (mark_items)
         for (mon_inv_iterator ii(*this); ii; ++ii)
             ii->flags |= ISFLAG_SUMMONED;
+
+    if (make_abjurable)
+        flags |= MF_ACTUAL_SUMMON;
 }
 
 /* Is the monster created by a spell or effect (generally temporary)?

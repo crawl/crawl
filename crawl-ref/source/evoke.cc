@@ -685,7 +685,7 @@ static spret _phantom_mirror(dist *target)
     int dur = min(6, max(1, (you.skill(SK_EVOCATIONS, 1) / 4 + 1)
                          * (100 - victim->check_willpower(&you, power)) / 100));
 
-    mon->mark_summoned(SPELL_PHANTOM_MIRROR, summ_dur(dur));
+    mon->mark_summoned(SPELL_PHANTOM_MIRROR, summ_dur(dur), true, true);
 
     mon->summoner = MID_PLAYER;
     mons_add_blame(mon, "mirrored by the player character");

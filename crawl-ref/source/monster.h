@@ -147,7 +147,8 @@ public:
     const monsterentry *find_monsterentry() const;
 
     void mark_summoned(int summon_type = 0, int longevity = 0,
-                       bool mark_items_summoned = true);
+                       bool mark_items_summoned = true,
+                       bool make_abjurable = false);
     bool is_summoned() const override;
     bool was_created_by(int summon_type) const override;
     bool was_created_by(const actor& summoner,

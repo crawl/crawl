@@ -98,7 +98,7 @@ static void _mons_summon_monster_illusion(monster* caster,
         mons_add_blame(clone,
                        "woven by " + caster->name(DESC_THE));
         if (!clone->has_ench(ENCH_SUMMON_TIMER))
-            clone->mark_summoned(MON_SUMM_CLONE, summ_dur(6));
+            clone->mark_summoned(MON_SUMM_CLONE, summ_dur(6), true, true);
         clone->add_ench(ENCH_PHANTOM_MIRROR);
         clone->summoner = caster->mid;
 
