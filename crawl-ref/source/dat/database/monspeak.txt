@@ -7691,7 +7691,7 @@ VISUAL: A cold fog rises from @the_monster@.
 @The_monster@ makes a faint grinding noise.
 %%%%
 ################## Nekomata ##################################
-# TODO: some line about Iskederun as the only worthwhile mortal cat in a while?
+# TODO: some line about Iskenderun as the only worthwhile mortal cat in a while?
 nekomata
 
 {{
