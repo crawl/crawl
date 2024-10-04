@@ -4724,7 +4724,15 @@ int get_tension(god_type god)
     // Other effects are listed from highest influence to lowest to help with
     // rounding on more minor effects.
     if (you.confused())
-        tension *= 2;
+    {
+        // Later on, one only stays confused if the fight doesn't matter
+        // or if they can't cure it, so scale this slowly with XL and
+        // acknowledge its badness specifically when it's uncurable.
+        if (player_in_branch(BRANCH_COCYTUS) || you.can_drink() == false)
+            tension = tension * 5 / 2;
+        else
+            tension = tension * (9 - (you.experience_level / 10)) / 4;
+    }
 
     if (you.caught())
         tension *= 2;
