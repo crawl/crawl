@@ -841,6 +841,32 @@ LUAFN(moninf_get_name)
     return 1;
 }
 
+/*
+ * The x,y coordinates of the monster that summoned this monster, in player
+ * centered coordinates. If the monster was not summoned by another monster
+ * that's currently in LOS, return nil.
+ * @treturn int
+ * @treturn int
+ * @function pos
+ */
+LUAFN(moninf_get_summoner_pos)
+{
+    MONINF(ls, 1, mi);
+
+    const auto *summoner = monster_by_mid(mi->summoner_id);
+    if (summoner && you.can_see(*summoner))
+    {
+        lua_pushnumber(ls, summoner->pos().x - you.pos().x);
+        lua_pushnumber(ls, summoner->pos().y - you.pos().y);
+        return 2;
+    }
+    else
+    {
+        lua_pushnil(ls);
+        return 1;
+    }
+}
+
 static const struct luaL_reg moninf_lib[] =
 {
     MIREG(type),
@@ -895,6 +921,7 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(x_pos),
     MIREG(y_pos),
     MIREG(pos),
+    MIREG(summoner_pos),
     MIREG(avg_local_depth),
     MIREG(avg_local_prob),
 

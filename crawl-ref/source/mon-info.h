@@ -296,7 +296,8 @@ struct monster_info_base
     bool umbraed;
     int shield_bonus;
 
-    uint32_t client_id;
+    mid_t client_id;
+    mid_t summoner_id;
 };
 
 // Monster info used by the pane; precomputes some data

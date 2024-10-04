@@ -2020,15 +2020,11 @@ void direction_chooser::do_redraws()
 
 coord_def direction_chooser::find_summoner()
 {
-    const monster* mon = monster_at(target());
-
-    if (mon && mon->is_summoned()
-        // Don't leak information about rakshasa mirrored illusions.
-        && !mon->has_ench(ENCH_PHANTOM_MIRROR)
-        // Don't leak information about invisible or out-of-los summons.
-        && you.can_see(*mon))
+    const auto *mon = monster_at(target());
+    if (mon && mon->is_summoned() && you.can_see(*mon))
     {
-        const monster *summ = monster_by_mid(mon->summoner);
+        monster_info mi(mon);
+        const monster *summ = monster_by_mid(mi.summoner_id);
         // Don't leak information about invisible summoners.
         if (summ && you.can_see(*summ))
             return summ->pos();
@@ -2039,8 +2035,7 @@ coord_def direction_chooser::find_summoner()
 void direction_chooser::highlight_summoner(crawl_view_buffer &vbuf)
 {
     const coord_def summ_loc = find_summoner();
-
-    if (summ_loc == INVALID_COORD || !you.see_cell(summ_loc))
+    if (summ_loc == INVALID_COORD)
         return;
 
     auto& cell = vbuf(grid2view(summ_loc) - 1);

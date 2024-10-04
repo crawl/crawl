@@ -391,7 +391,8 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
             props[MUTANT_BEAST_FACETS].get_vector().push_back(i);
     }
 
-    client_id = 0;
+    client_id = MID_NOBODY;
+    summoner_id = MID_NOBODY;
 }
 
 static description_level_type _article_for(const actor* a)
@@ -448,17 +449,22 @@ monster_info::monster_info(const monster* m, int milev)
 
     _colour = m->colour;
 
+    summoner_id = MID_NOBODY;
     if (m->is_summoned()
         && !(m->flags & MF_PERSISTS)
         && (!m->has_ench(ENCH_PHANTOM_MIRROR) || m->friendly()))
     {
         mb.set(MB_SUMMONED);
+
         if (m->is_abjurable())
             mb.set(MB_ABJURABLE);
         else
             mb.set(MB_MINION);
+
         if (m->type == MONS_SPELLFORGED_SERVITOR && m->summoner == MID_PLAYER)
             mb.set(MB_PLAYER_SERVITOR);
+
+        summoner_id = m->summoner;
     }
     else if ((m->is_unrewarding()
                  || testbits(m->flags, MF_NO_REWARD)
