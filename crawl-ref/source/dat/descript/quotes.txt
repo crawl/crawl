@@ -3986,6 +3986,11 @@ spellspark servitor
  You cannot shirk”
     -Siouxsie and the Banshees, “Spellbound”
 %%%%
+spirit yak
+
+“Please guide all beings from this swamp of cyclic existence!”
+    -Padmasambhava, “The Tibetan Book of the Dead”
+%%%%
 sphinx marauder
 
 “Oedipus speaks: 'Far from me is the crime and shame of cowardice, and my

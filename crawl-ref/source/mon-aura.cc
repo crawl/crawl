@@ -79,6 +79,13 @@ static const vector<mon_aura_data> aura_map =
     {MONS_PHALANX_BEETLE,
         ENCH_NONE, 1, false, DUR_PHALANX_BARRIER, PHALANX_BARRIER_KEY,
          nullptr, nullptr, true},
+
+    {MONS_SPIRIT_YAK,
+        ENCH_SPIRIT_ARROW, 1, false,
+        NUM_DURATIONS, "",
+        [](const actor& targ)
+            {   return targ.is_monster() && targ.as_monster()->launcher();
+            }},
 };
 
 static mon_aura_data _get_aura_for(const monster& mon)

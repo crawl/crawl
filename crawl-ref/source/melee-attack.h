@@ -94,7 +94,7 @@ private:
     int weapon_damage() const override;
     int calc_mon_to_hit_base() override;
     int apply_damage_modifiers(int damage) override;
-    int calc_damage() override;
+    int calc_damage(ac_type ac_rule = ac_type::normal) override;
     bool apply_damage_brand(const char *what = nullptr) override;
 
     /* Attack effects */

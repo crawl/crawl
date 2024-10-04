@@ -2188,9 +2188,9 @@ static const char *enchant_names[] =
     "grapnel", "tempered", "hatching", "blinkitis", "chaos_laced", "vexed",
     "deep sleep", "drowsy",
     "vampire thrall", "pyrrhic recollection",
+    "spirit_arrows",
     "buggy", // NUM_ENCHANTMENTS
 };
-
 static const char *_mons_enchantment_name(enchant_type ench)
 {
     COMPILE_CHECK(ARRAYSZ(enchant_names) == NUM_ENCHANTMENTS+1);

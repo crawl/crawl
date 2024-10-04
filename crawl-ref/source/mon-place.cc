@@ -1826,6 +1826,9 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_YAKTAUR,         { {2}, {{ BAND_YAKTAURS, {2, 5} }}}},
     { MONS_YAKTAUR_CLERIC,  { {2}, {{ BAND_YAKTAUR_CLERIC, {4, 8} }}}},
     { MONS_DEATH_YAK,       { {}, {{ BAND_DEATH_YAKS, {2, 6} }}}},
+    { MONS_SPIRIT_YAK,      { {}, {{ BAND_ARCHERS,          {1, 3} },
+                                   { BAND_ZOMBIE_ARCHERS,   {2, 5} },
+                                   { BAND_SKELETON_ARCHERS, {2, 5} }}}},
     { MONS_OGRE_MAGE,       { {}, {{ BAND_OGRE_MAGE, {4, 8} }}}},
     { MONS_LODUL,           { {}, {{ BAND_OGRES, {6, 10}, true }}}},
     { MONS_BALRUG,          { {0, 0, []() { return !player_in_hell(); }},
@@ -2237,6 +2240,7 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_CENTAURS,            {{{MONS_CENTAUR, 1}}}},
     { BAND_YAKTAURS,            {{{MONS_YAKTAUR, 1}}}},
     { BAND_YAKTAUR_CLERIC,      {{{MONS_YAKTAUR_CAPTAIN, 1}, // Occasionally a (subservient) captain
+                                  {MONS_SPIRIT_YAK, 2}, // Or another special yak
                                   {MONS_YAKTAUR, 4}},
                                  {{MONS_POLTERGUARDIAN, 1}, // Maybe an undead-themed support
                                   {MONS_UNDYING_ARMOURY, 1},
@@ -2321,6 +2325,11 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_ARCHERS,             {{{RANDOM_ARCHER, 1}}}},
     { BAND_SKELETON_ARCHERS,    {{{RANDOM_SKELETON_ARCHER, 1}}}},
     { BAND_ZOMBIE_ARCHERS,      {{{RANDOM_ZOMBIE_ARCHER, 1}}}},
+    { BAND_SPIRIT_YAK,          {{{MONS_DEEP_ELF_MASTER_ARCHER, 1},
+                                  {MONS_YAKTAUR_CAPTAIN, 1}},
+                                 {{MONS_DEEP_ELF_ARCHER, 1},
+                                  {MONS_NAGA_SHARPSHOOTER, 1},
+                                  {MONS_CENTAUR_WARRIOR, 1}}}},
     { BAND_BALRUG,              {{{MONS_SUN_DEMON, 1}}}},
     { BAND_HELLWING,            {{{MONS_HELLWING, 1},
                                   {MONS_SMOKE_DEMON, 1}}}},

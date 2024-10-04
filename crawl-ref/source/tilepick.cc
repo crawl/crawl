@@ -2398,6 +2398,7 @@ static const map<monster_info_flags, tileidx_t> monster_status_icons = {
     { MB_VEXED, TILEI_VEXED },
     { MB_VAMPIRE_THRALL, TILEI_VAMPIRE_THRALL },
     { MB_PYRRHIC_RECOLLECTION, TILEI_PYRRHIC },
+    { MB_SPIRIT_ARROW, TILEI_SPIRIT_ARROW },
 };
 
 set<tileidx_t> status_icons_for(const monster_info &mons)
@@ -3312,6 +3313,9 @@ tileidx_t tileidx_item_throw(const item_def &item, int dx, int dy)
         {
             case MI_ARROW:
                 ch = TILE_MI_ARROW0;
+                break;
+            case MI_SPIRIT_ARROW:
+                ch = TILE_MI_SPIRIT_ARROW0;
                 break;
             case MI_BOLT:
                 ch = TILE_MI_BOLT0;

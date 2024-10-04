@@ -1441,7 +1441,7 @@ static bool _handle_wand(monster& mons)
     return true;
 }
 
-bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
+bool handle_throw(monster* mons, bolt& beem, bool teleport, bool check_only)
 {
     // Yes, there is a logic to this ordering {dlb}:
     if (mons->incapacitated()
@@ -1614,7 +1614,32 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
             mons->swap_weapons();
 
         beem.name.clear();
-        return mons_throw(mons, beem, teleport);
+        bool result = mons_throw(mons, beem, teleport);
+        // Spirit arrow grants a free shot with a special ammo type
+        if (!mons->has_ench(ENCH_SPIRIT_ARROW) || !mons->alive() || check_only
+            || !using_launcher || !result || beem.hit_verb.empty())
+        {
+            return result;
+        }
+        if (you.see_cell(mons->pos()))
+        {
+            mprf("A ghostly arrow loads itself in %s %s.",
+                mons->visible_to(&you) ? apostrophise(mons->name(DESC_THE)).c_str()
+                                       : "an unseen",
+                // The basic type of weapon can be inferred by observing the
+                // loading action
+                mons->visible_to(&you) ? mons->launcher()->name(DESC_PLAIN).c_str()
+                                       : item_base_name(*mons->launcher()).c_str());
+        }
+        beem.name.clear();
+        // Set the custom ammo type and slow down the animation a bit
+        missile->sub_type = MI_SPIRIT_ARROW;
+        beem.draw_delay = 30;
+        // Reassign as it gets unassigned during first mons_throw
+        beem.item = missile;
+        mons_throw(mons, beem, teleport, false);
+        // First throw was successful already so always true
+        return true;
     }
 
     return false;

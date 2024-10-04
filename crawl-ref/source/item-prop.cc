@@ -832,6 +832,7 @@ static const missile_def Missile_prop[] =
     { MI_ARROW,         "arrow",         0, 1,  2  },
     { MI_BOLT,          "bolt",          0, 1,  2  },
     { MI_SLUG,          "slug",          0, 1,  2  },
+    { MI_SPIRIT_ARROW,  "spirit arrow",-10, 1,  2  },
     { MI_LARGE_ROCK,    "large rock",   20, 25, 15 },
     { MI_SLING_BULLET,  "sling bullet",  0, 1,  5  },
     { MI_JAVELIN,       "javelin",      10, 20, 30 },
@@ -1057,6 +1058,7 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_MISSILES,  MI_BOLT },
     { OBJ_MISSILES,  MI_SLING_BULLET },
     { OBJ_MISSILES,  MI_SLUG },
+    { OBJ_MISSILES,  MI_SPIRIT_ARROW },
     { OBJ_GEMS,      GEM_ORC },
 #endif
     { OBJ_JEWELLERY, AMU_NOTHING }, // These should only spawn as uniques
@@ -2120,6 +2122,7 @@ bool is_launcher_ammo(const item_def &wpn)
     case MI_BOLT:
     case MI_SLING_BULLET:
     case MI_SLUG:
+    case MI_SPIRIT_ARROW:
         return true;
     default:
         return false;

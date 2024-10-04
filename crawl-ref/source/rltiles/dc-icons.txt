@@ -109,6 +109,7 @@ nobody_memory_1 NOBODY_MEMORY_1
 nobody_memory_2 NOBODY_MEMORY_2
 nobody_memory_3 NOBODY_MEMORY_3
 pyrrhic PYRRHIC
+spirit_arrow SPIRIT_ARROW
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR

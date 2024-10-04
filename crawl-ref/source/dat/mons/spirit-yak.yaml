@@ -1,0 +1,17 @@
+name: "spirit yak"
+glyph: {char: "Y", colour: etc_spirit}
+flags: [flies, insubstantial, has_aura]
+xp_mult: 22
+genus: yak
+holiness: [undead]
+will: 160
+attacks:
+ - {type: gore, damage: 35}
+hd: 17
+hp_10x: 1000
+ac: 7
+ev: 12
+shout: bellow
+intelligence: animal
+size: large
+shape: quadruped

@@ -375,6 +375,7 @@ enum missile_type
     MI_BOOMERANG,
 
     MI_SLUG,
+    MI_SPIRIT_ARROW,
 
     NUM_MISSILES,
     MI_NONE             // was MI_EGGPLANT... used for launch type detection

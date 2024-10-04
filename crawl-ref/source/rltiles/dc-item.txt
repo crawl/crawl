@@ -285,6 +285,15 @@ effect/arrow5 MI_ARROW5
 effect/arrow6 MI_ARROW6
 effect/arrow7 MI_ARROW7
 
+effect/spirit_arrow0 MI_SPIRIT_ARROW0
+effect/spirit_arrow1 MI_SPIRIT_ARROW1
+effect/spirit_arrow2 MI_SPIRIT_ARROW2
+effect/spirit_arrow3 MI_SPIRIT_ARROW3
+effect/spirit_arrow4 MI_SPIRIT_ARROW4
+effect/spirit_arrow5 MI_SPIRIT_ARROW5
+effect/spirit_arrow6 MI_SPIRIT_ARROW6
+effect/spirit_arrow7 MI_SPIRIT_ARROW7
+
 crossbow_bolt1 MI_BOLT
 crossbow_bolt2
 steel_crossbow_bolt1 MI_BOLT_STEEL

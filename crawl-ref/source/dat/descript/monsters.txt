@@ -2786,6 +2786,16 @@ precise hairline cracks are visible just beneath its surface which allow it to
 fracture into a barrage of razor-sharp projectiles whenever it sustains critical
 damage.
 %%%%
+spirit yak
+
+The ghostly apparition of a yak custodian known to guide its fallen kin on
+their journey into the afterlife.
+
+It manifests from time to time in this world to aid the living, bringing
+with it a gift from the ancestors: bolts whittled from the wood of the Spirit
+Tree, which will follow up any ranged hit and are able to partially ignore
+the defences of the target.
+%%%%
 spriggan
 
 A small humanoid, resembling a human or elf except for the size. It moves at a

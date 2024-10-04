@@ -379,8 +379,8 @@ int actor::apply_ac(int damage, int max_damage, ac_type ac_rule, bool for_real) 
         die("invalid AC rule");
     }
 
-    // We only support GDR for normal melee attacks at the moment.
-    // EVIL HACK: other callers of this function always pass 0 for max_damage,
+    // We only support GDR for normal melee or ranged monster attacks.
+    // EVIL HACK: other callers of this function pass 0 for max_damage,
     // hence disabling GDR. This is very silly! We should do this better!
     if (ac_rule == ac_type::normal)
         saved = max(saved, min(gdr * max_damage / 100, div_rand_round(ac, 2)));

@@ -4514,13 +4514,13 @@ int melee_attack::apply_damage_modifiers(int damage)
     return damage;
 }
 
-int melee_attack::calc_damage()
+int melee_attack::calc_damage(ac_type ac_rule)
 {
     // Constriction deals damage over time, not when grabbing.
     if (attk_flavour == AF_CRUSH)
         return 0;
 
-    return attack::calc_damage();
+    return attack::calc_damage(ac_rule);
 }
 
 bool melee_attack::apply_damage_brand(const char *what)

@@ -932,7 +932,7 @@ int attack::adjusted_weapon_damage() const
     return brand_adjust_weapon_damage(weapon_damage(), damage_brand, true);
 }
 
-int attack::calc_damage()
+int attack::calc_damage(ac_type ac_rule)
 {
     if (stat_source().is_monster())
     {
@@ -965,7 +965,8 @@ int attack::calc_damage()
         damage = apply_damage_modifiers(damage);
 
         set_attack_verb(damage);
-        return apply_defender_ac(damage, damage_max);
+
+        return apply_defender_ac(damage, damage_max, ac_rule);
     }
     else
     {
@@ -993,7 +994,7 @@ int attack::calc_damage()
         if (!defender->alive())
             return 0;
         damage = player_apply_final_multipliers(damage);
-        damage = apply_defender_ac(damage);
+        damage = apply_defender_ac(damage, 0, ac_rule);
         damage = player_apply_postac_multipliers(damage);
 
         damage = max(0, damage);

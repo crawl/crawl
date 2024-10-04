@@ -593,6 +593,7 @@ static const vector<pop_entry> population[] =
   {  0,  5,  105, FLAT, MONS_VAMPIRE_KNIGHT },
   {  1,  4,   75, FLAT, MONS_SKELETAL_WARRIOR },
   {  1,  5,   55, SEMI, MONS_SOUL_EATER },
+  {  1,  5,   40, SEMI, MONS_SPIRIT_YAK },
   {  1,  6,  145, SEMI, MONS_EIDOLON },
   {  1,  6,   80, SEMI, MONS_DEEP_ELF_DEATH_MAGE },
   {  1,  7,   85, SEMI, MONS_REVENANT_SOULMONGER },

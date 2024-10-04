@@ -434,6 +434,7 @@ void check_item_knowledge(bool unknown_items)
             case MI_BOLT:
             case MI_SLING_BULLET:
             case MI_SLUG:
+            case MI_SPIRIT_ARROW:
                 continue;
             }
 #endif

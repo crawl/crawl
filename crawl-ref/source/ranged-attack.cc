@@ -291,7 +291,8 @@ bool ranged_attack::handle_phase_hit()
     }
     else
     {
-        damage_done = calc_damage();
+        damage_done = calc_damage(projectile->is_type(OBJ_MISSILES, MI_SPIRIT_ARROW)
+                                  ? ac_type::half : ac_type::normal);
         if (damage_done > 0)
         {
             if (!handle_phase_damaged())
@@ -321,7 +322,7 @@ bool ranged_attack::handle_phase_hit()
         maybe_trigger_jinxbite();
     }
 
-    if ((using_weapon() || throwing())
+    if ((using_weapon() || throwing()) && projectile->sub_type != MI_SPIRIT_ARROW
         && (!defender->is_player() || !you.pending_revival))
     {
         if (using_weapon()

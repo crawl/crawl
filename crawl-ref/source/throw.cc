@@ -487,6 +487,7 @@ static void _setup_missile_beam(const actor *agent, bolt &beam,
     beam.name = item.name(DESC_PLAIN, false, false, false);
 
     const unrandart_entry* entry = launcher && is_unrandom_artefact(*launcher)
+        && item.sub_type != MI_SPIRIT_ARROW
         ? get_unrand_entry(launcher->unrand_idx) : nullptr;
 
     if (entry && entry->launch)
@@ -858,7 +859,7 @@ void setup_monster_throw_beam(monster* mons, bolt &beam)
     beam.pierce  = false;
 }
 
-bool mons_throw(monster* mons, bolt &beam, bool teleport)
+bool mons_throw(monster* mons, bolt &beam, bool teleport, bool use_energy)
 {
     ASSERT(beam.item);
     const item_def &missile = *beam.item;
@@ -866,7 +867,7 @@ bool mons_throw(monster* mons, bolt &beam, bool teleport)
 
     // Energy is already deducted for the spell cast, if using portal projectile
     // FIXME: should it use this delay and not the spell delay?
-    if (!teleport)
+    if (!teleport && use_energy)
     {
         const int energy = mons->action_energy(EUT_MISSILE);
         const int delay = mons->attack_delay(&missile).roll();
