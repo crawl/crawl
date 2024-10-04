@@ -2321,22 +2321,22 @@ You stop dropping stuff.
 Ihr hört auf Sachen fallen zu lassen.
 %%%%
 Keep equipping yourself?
-
+Euch weiter ausrüsten?
 %%%%
 You stop putting on your amulet.
-
+Ihr hört auf, Euer Amulett anzulegen.
 %%%%
 You stop putting on your armour.
-
+Ihr hört auf, Eure Rüstung anzulegen.
 %%%%
 Keep disrobing?
-
+Euch weiter ausziehen?
 %%%%
 You stop removing your amulet.
-
+Ihr hört auf, Euer Amulett abzunehmen.
 %%%%
 You stop removing your armour.
-
+Ihr hört auf, Eure Rüstung abzulegen.
 %%%%
 You stop ascending the stairs.
 Ihr hört auf die Treppe hinaufzusteigen.
@@ -2351,40 +2351,41 @@ You stop digging.
 Ihr hört auf zu graben.
 %%%%
 Keep bloodletting?
-
+Aderlass fortsetzen?
 %%%%
 You stop emptying yourself of blood.
 Ihr hört auf, Euch von Blut zu entleeren.
 %%%%
 Continue your ritual?
-
+Euer Ritual fortsetzen?
 %%%%
 You stop revivifying.
 Ihr hört auf zu beleben.
 %%%%
 Done waiting.
-Fertig warten.
+Fertig mit Warten.
 %%%%
 You start putting on your amulet.
-
+Ihr beginnt, Euer Amulett anzulegen.
 %%%%
 You start putting on your armour.
-
+Ihr beginnt, Eure Rüstung anzulegen.
 %%%%
 You start removing your amulet.
-
+Ihr beginnt, Euer Amulett abzulegen.
 %%%%
 You start removing your armour.
-
+Ihr beginnt, Eure Rüstung abzulegen.
 %%%%
 %s grants you knowledge of %s.
-
+%s gewährt Euch Wissen über {acc}%s.
 %%%%
 You start memorising the spell.
-Ihr fangt an, den Zauber auswendig zu lernen.
+Ihr beginnt, den Zauber zu memorieren.
 %%%%
+# Passwall spell - prpearing to merge oneself with the wall
 You begin to meditate on the wall.
-Ihr fangt an, an der Wand zu meditieren.
+Ihr fangt an, über die Wand zu meditieren.
 %%%%
 You begin to dig a shaft.
 Ihr fangt an, einen Schacht zu graben.
@@ -2396,86 +2397,90 @@ You begin the revivification ritual.
 Ihr beginnt das Wiederbelebungsritual.
 %%%%
 Really put on %s while about to teleport?
-
+Wirklich {acc}%s anlegen, während Ihr kurz davor zu teleportieren seid?
 %%%%
 You finish putting on %s.
-Ihr habt %s fertig angelegt.
+Ihr habt {acc}%s fertig angelegt.
 %%%%
 You finish taking off %s.
-Ihr habt %s fertig abgenommen.
+Ihr habt {acc}%s fertig abgelegt.
 %%%%
 You finish memorising.
-Ihr seid mit dem Auswendiglernen fertig.
+Ihr seid mit dem Memorieren fertig.
 %%%%
 You finish merging with the rock.
-Ihr seid mit dem Felsen fertig.
+Ihr seid mit der Verschmelzung mit dem Felsen fertig.
 %%%%
 ...yet there is something new on the other side. You quickly turn back.
-
+...doch auf der anderen Seite gibt es etwas Neues. Ihr kehrt schnell um.
 %%%%
 ...and sense your way blocked. You quickly turn back.
-... und spüre, wie Euer Weg blockiert ist. Ihr dreht Euch schnell um.
+... und spüre, wie Euer Weg blockiert ist. Ihr kehrt schnell um.
 %%%%
+# Vampire has entered bloodless state
 You become bloodless.
-
+Ihr werdet blutleer.
 %%%%
+# Vampire has entered alive state
 You return to life.
-
+Ihr kehrt ins Leben zurück.
 %%%%
+# A bunch of messages for Abyss monsters spawning (flavour text, so translation can be quite loose)
 %s appears in a burst of microwaves!
-
+%s erscheint in einem Ausbruch von Mikrowellen!
 %%%%
 %s pops from nullspace!
-
+%s springt aus dem Nullraum!
 %%%%
 %s appears in a shower of translocational energy.
-
+%s erscheint in einem Schauer von Translokationsenergie.
 %%%%
 %s appears in a shower of sparks.
-
+%s erscheint in einem Funkenschauer.
 %%%%
 %s materialises.
-
+%s materialisiert.
 %%%%
 %s emerges from chaos.
-
+%s taucht aus dem Chaos auf.
 %%%%
 %s emerges from the beyond.
-
+%s taucht aus dem Jenseits auf.
 %%%%
 %s coalesces!
-
+%s wächst zusammen!
 %%%%
 %s erupts from nowhere.
-
+%s bricht aus dem Nichts hervor.
 %%%%
 %s bursts from nowhere.
-
+%s platzt aus dem Nichts.
 %%%%
 %s is cast out of space.
-
+%s formt sich aus purem Raum.
 %%%%
 %s is cast out of reality.
-
+%s formt sich aus der Realität.
 %%%%
 %s coalesces out of pure chaos.
-
+%s entsteht aus dem reinen Chaos.
 %%%%
 %s coalesces out of seething chaos.
-
+%s entsteht aus dem brodelnden Chaos.
 %%%%
 %s punctures the fabric of time!
-
+%s durchbohrt das Gewebe der Zeit!
 %%%%
 %s punctures the fabric of the universe.
-
+%s durchbohrt das Gewebe des Universums.
 %%%%
 %s manifests!
-
+%s manifestiert sich!
 %%%%
 %s manifests with a bang!
-
+%s manifestiert sich mit einem Knall!
 %%%%
+# player senses monster that is out of sight
 You sense a monster nearby.
 Ihr spürt ein Monster in der Nähe.
 %%%%
@@ -2483,46 +2488,47 @@ Ihr spürt ein Monster in der Nähe.
 %s ist jetzt zu nah für Euren Geschmack.
 %%%%
 %s opens the door.
-
+%s öffnet die Tür.
 %%%%
 %s opens the gate.
-
+%s öffnet das Tor.
 %%%%
+# monster teleports into view
 %s appears from thin air!
 %s erscheint aus der Luft!
 %%%%
 %s leaps into view!
-
+%s springt ins Blickfeld!
 %%%%
 %s bursts forth from the lava.
-
+%s bricht aus der Lava hervor.
 %%%%
 %s bursts forth from the water.
-%s platzt aus dem Wasser.
+%s bricht aus dem Wasser hervor.
 %%%%
 %s emerges from the water.
-
+%s steigt aus dem Wasser auf.
 %%%%
 %s comes up the stairs.
-
+%s kommt die Treppe hoch.
 %%%%
 %s comes down the stairs.
-
+%s kommt die Treppe herunter.
 %%%%
 %s comes through the gate.
-
+%s kommt durch das Tor.
 %%%%
 %s is thrown into view!
-
+%s wird ins Blickfeld geworfen!
 %%%%
 %s comes into view.
 %s kommt in Sicht.
 %%%%
 %s warns you: It is a foul glowing shapeshifter.
-
+%s warnt Euch: Das ist ein übler glühender Gestaltwandler.
 %%%%
 %s warns you: It is a foul shapeshifter.
-
+%s warnt Euch: Das ist ein übler Gestaltwandler.
 %%%%
 %s is %s.
 %s ist %s.
@@ -2537,13 +2543,13 @@ Reactivating autopickup.
 Autopickup reaktiviert.
 %%%%
 HP restored.
-HP wiederhergestellt.
+TP wiederhergestellt.
 %%%%
 Magic restored.
 Magie wiederhergestellt.
 %%%%
 Ancestor HP restored.
-Ahnen HP wiederhergestellt.
+Ahnen TP wiederhergestellt.
 %%%%
 
 ##################
