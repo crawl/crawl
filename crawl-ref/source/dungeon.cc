@@ -2034,9 +2034,13 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs,
     // In Hell, don't create extra hatches, the levels are small already.
     if (player_in_branch(BRANCH_ZOT) || player_in_hell())
     {
-        replace = random_choose(DNGN_FOUNTAIN_BLUE,
-                                DNGN_FOUNTAIN_SPARKLING,
-                                DNGN_FOUNTAIN_BLOOD);
+        if (player_in_branch(BRANCH_GEHENNA) || player_in_branch(BRANCH_TARTARUS))
+            replace = random_choose(DNGN_FOUNTAIN_BLOOD, DNGN_DRY_FOUNTAIN);
+        else
+        {
+            replace = random_choose(DNGN_FOUNTAIN_BLUE, DNGN_FOUNTAIN_SPARKLING,
+                                    DNGN_FOUNTAIN_BLOOD);
+        }
     }
 
     dprf(DIAG_DNGN, "Before culling: %d/%d %s stairs",
