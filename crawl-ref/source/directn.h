@@ -209,7 +209,7 @@ private:
     // at the choosen target location respecting visibility, if any.
     // If there is a monster, dungeon features and clouds are also described.
     void print_target_monster_description(bool &did_cloud) const;
-    // Prints a aiming prompt, for the top level item
+    // Prints an aiming prompt, for the top level item
     // at the current target location.
     // Used for spells targeting items, like aportation.
     void print_target_object_description() const;
