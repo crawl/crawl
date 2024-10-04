@@ -195,7 +195,7 @@ DEF_BITFIELD(monclass_flags_t, monclass_flag_type);
 enum monster_flag_type : uint64_t
 {
     MF_NO_FLAGS           = 0,
-    /// no benefit from killing
+    /// no XP/piety from killing (even if the monster type would otherwise)
     MF_NO_REWARD          = BIT(0),
     /// monster skips next available action
     MF_JUST_SUMMONED      = BIT(1),
@@ -211,7 +211,7 @@ enum monster_flag_type : uint64_t
     /// Monster that has been banished.
     MF_BANISHED           = BIT(6),
 
-    /// Summoned, should not drop gear on reset
+    /// Never drops any items upon death
     MF_HARD_RESET         = BIT(7),
     /// mirror to CREATED_FRIENDLY for neutrals
     MF_WAS_NEUTRAL        = BIT(8),

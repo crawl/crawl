@@ -1875,6 +1875,10 @@ void monster::mark_summoned(int summon_type, int longevity, bool mark_items,
  * or not they are 'actual' abjurable summons or non-abjurable magical creations
  * like battlespheres or hoarfrost cannons.
  *
+ * This function is used to determine eligability for many effects (such as
+ * vampiric draining), whether a monster should be able to take stairs, and also
+ * to prevent it giving the player XP upon death.
+ *
  * Note: We can't just look at whether they have a timer, since they won't have
  *       one during KILL_TIMEOUT
  *
@@ -1912,11 +1916,22 @@ bool monster::was_created_by(const actor& _summoner, int summon_type) const
     return summ.degree == summon_type;
 }
 
+// Returns whether the monster is a 'proper' summon, vulnerable to abjuration,
+// and whose corpse will vanish (possibly in a puff of smoke) upon them dying
+// for any reason.
 bool monster::is_abjurable() const
 {
     return is_summoned() && testbits(flags, MF_ACTUAL_SUMMON);
 }
 
+// Returns whether the monster will be explicitly marked by the UI as
+// Unrewarding, regardless of its normal properties. This is used for monsters
+// created by god wrath, spawns from The Royal Jelly, and some other situations
+// where we want a monster that is otherwise normal, but provides the player
+// with no reward.
+//
+// Note: This returns false for monsters which provide no XP for other reasons,
+//       such as being firewood or summoned.
 bool monster::is_unrewarding() const
 {
     return testbits(flags, MF_HARD_RESET | MF_NO_REWARD);
