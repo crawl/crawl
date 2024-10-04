@@ -43,10 +43,16 @@ static void _setup_base_explosion(bolt & beam, const monster& origin)
     beam.target       = origin.pos();
     beam.explode_noise_msg = "You hear an explosion!";
 
-    if (!crawl_state.game_is_arena() && origin.attitude == ATT_FRIENDLY
-        && !origin.is_summoned())
+    if (!crawl_state.game_is_arena()
+        && origin.friendly() && origin.was_created_by(you))
     {
-        beam.thrower = KILL_YOU;
+        if (origin.is_abjurable())
+        {
+            beam.thrower = KILL_MON;
+            beam.source_id = ANON_FRIENDLY_MONSTER;
+        }
+        else
+            beam.thrower = KILL_YOU;
     }
     else
         beam.thrower = KILL_MON;
@@ -135,14 +141,6 @@ static void _setup_lightning_explosion(bolt & beam, const monster& origin)
     beam.ex_size   = x_chance_in_y(origin.get_hit_dice(), 24) ? 3 : 2;
     if (origin.summoner)
         beam.origin_spell = SPELL_CONJURE_BALL_LIGHTNING;
-    // Credit the player directly for their own ball lightning
-    if (origin.summoner == MID_PLAYER)
-        beam.thrower = KILL_YOU;
-    // But since we can assume the ball lightning will be dead by the time it
-    // blows up, ensure the player still gets XP from ball lightning made by
-    // other friendly monsters.
-    else if (beam.thrower == KILL_MON && origin.friendly())
-        beam.source_id = ANON_FRIENDLY_MONSTER;
 }
 
 dice_def prism_damage(int hd, bool fully_powered)
