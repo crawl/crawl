@@ -2617,7 +2617,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     default:
         if (spell_removed(spell))
         {
-            mpr("Sorry, this spell is gone!");
+            mprf("Sorry, the spell '%s' is gone!", spell_title(spell));
             return spret::abort;
         }
         break;

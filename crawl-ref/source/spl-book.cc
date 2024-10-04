@@ -999,7 +999,7 @@ static bool _learn_spell_checks(spell_type specspell, bool wizard = false)
 {
     if (spell_removed(specspell))
     {
-        mpr("Sorry, this spell is gone!");
+        mprf("Sorry, the spell '%s' is gone!", spell_title(specspell));
         return false;
     }
 
