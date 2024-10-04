@@ -13,6 +13,7 @@ hp_10x: 1600
 ac: 4
 ev: 8
 intelligence: human
+habitat: amphibious_lava
 uses: open_doors
 size: medium
 shape: humanoid
