@@ -1870,12 +1870,15 @@ void monster::mark_summoned(int summon_type, int longevity, bool mark_items)
  * Monsters with ENCH_SUMMON are considered summoned for this purpose, whether
  * or not they are 'actual' abjurable summons or non-abjurable magical creations
  * like battlespheres or hoarfrost cannons.
-
- * @returns True if the monster is a temporary summon/creation, false otherwise.
+ *
+ * Note: We can't just look at whether they have a timer, since they won't have
+ *       one during KILL_TIMEOUT
+ *
+ * @returns True if the monster is a (temporary) summon/creation, false otherwise.
  */
 bool monster::is_summoned() const
 {
-    return has_ench(ENCH_SUMMON) && has_ench(ENCH_SUMMON_TIMER);
+    return has_ench(ENCH_SUMMON) && !is_unrewarding();
 }
 
 bool monster::was_created_by(int summon_type) const
