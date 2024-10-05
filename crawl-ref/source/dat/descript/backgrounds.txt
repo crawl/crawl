@@ -30,8 +30,8 @@ there is nothing left.
 %%%%
 Conjurer
 
-Conjurers confront problems with reliably damaging spells, like their starter
-Magic Dart spell.
+Conjurers confront problems with reliably hitting and hurting spells, like their 
+starter Magic Dart spell.
 %%%%
 Delver
 
@@ -101,7 +101,7 @@ when in need. They start with the Kiss of Death spell.
 Summoner
 
 Summoners are able to cast Summon Small Mammal from the start, and can
-summon deadlier beings further down the line.
+summon stronger beings further down the line.
 %%%%
 Shapeshifter
 
@@ -110,7 +110,7 @@ fighters (especially when unarmed) at the cost of armour.
 %%%%
 Alchemist
 
-Alchemists start with the Sting spell.  They have a wide range of deadly and
+Alchemists start with the Sting spell.  They have a wide range of damaging and
 debilitating effects at their disposal.
 %%%%
 Wanderer
