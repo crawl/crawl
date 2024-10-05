@@ -106,6 +106,10 @@ Strahl der Entleerung
 Lehudib's Crystal Spear
 Lehudibs Kristallspeer
 %%%%
+# short form of the spell name above
+Crystal Spear
+Kristallspeer
+%%%%
 Tornado
 Tornado
 %%%%

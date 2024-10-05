@@ -2905,32 +2905,28 @@ Seid Ihr sicher, dass Ihr {acc}%s aufgeben wollt?
 # describe-spells.cc
 ##################
 %%%%
-silence and antimagic
-
-%%%%
-antimagic (but not silence)
-
+# subordinate clauses
+, which are affected by silence
+, die von Stille betroffen wird
 %%%%
 , which are affected by silence and antimagic
 , die von Stille und Antimagie betroffen wird
 %%%%
-, which are affected by silence
-, die von Stille betroffen wird
+, which are affected by antimagic (but not silence)
+, die von Antimagie (aber nicht von Stille) betroffen wird
 %%%%
-, which are affected by antimagic
-, die von Antimagie betroffen wird
-%%%%
+# %s in these messages is placeholder for the subordinate clauses above
 This monster has mastered the following spells%s:
-
+Dieses Monster beherrscht die folgenden Zaubersprüche%s:
 %%%%
 This monster has the following magical abilities%s:
-
+Dieses Monster hat die folgenden magischen Fähigkeiten%s:
 %%%%
 This monster has the following divine abilities%s:
-
+Dieses Monster hat die folgenden göttlichen Fähigkeiten%s:
 %%%%
 This monster has the following natural abilities%s:
-
+Dieses Monster hat die folgenden natürlichen Fähigkeiten%s:
 %%%%
 (immune)
 (immun)
@@ -2939,19 +2935,17 @@ This monster has the following natural abilities%s:
 2x
 %%%%
 3x
-
+3x
 %%%%
+# the "d" here stands for "dice" (e.g. 3x2d10)
 (%s%dd%d)
-(%s%dd%d)
+(%s%dW%d)
 %%%%
 Type
 Art
 %%%%
 Known
 Bekannt
-%%%%
-Crystal Spear
-Krystalspeer
 %%%%
 
 ##################

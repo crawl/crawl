@@ -80,14 +80,8 @@ static string _ability_type_vulnerabilities(mon_spell_slot_flag type)
     const bool antimagicable = type == MON_SPELL_WIZARD
                                || type == MON_SPELL_MAGICAL;
     ASSERT(silencable || antimagicable);
-    if (silencable && antimagicable)
-        return ", which are affected by silence and antimagic";
-    else if (silencable)
-        return ", which are affected by silence";
-    else if (antimagicable)
-        return ", which are affected by antimagic";
-    else
-        return "";
+    return make_stringf(", which are affected by %s",
+                        _abil_type_vuln_core(silencable, antimagicable));
 }
 
 /**
@@ -467,7 +461,7 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
         mult = "2x";
     else if (spell == SPELL_CONJURE_BALL_LIGHTNING)
         mult = "3x";
-    return make_stringf("(%s%dd%d)", mult.c_str(), dam.num, dam.size);
+    return localise("(%s%dd%d)", mult.c_str(), dam.num, dam.size);
 }
 
 /**
