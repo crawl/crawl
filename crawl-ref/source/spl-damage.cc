@@ -579,9 +579,6 @@ static void _player_hurt_monster(monster &mon, int damage, beam_type flavour,
         if (damage && you.can_see(mon) && !quiet)
             print_wounds(mon);
     }
-    // monster::hurt() wasn't called, so we do death cleanup.
-    else if (!damage)
-        monster_die(mon, KILL_YOU, NON_MONSTER);
 }
 
 static bool _drain_lifeable(const actor* agent, const actor* act)
