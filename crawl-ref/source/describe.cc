@@ -5011,36 +5011,13 @@ struct mon_attack_info
     }
 };
 
-/**
- * What weapon is the given monster using for the given attack, if any?
- *
- * @param mi        The monster in question.
- * @param atk       The attack number. (E.g. 0, 1, 2...)
- * @return          The melee weapon being used by the monster for the given
- *                  attack, if any.
- */
-static const item_def* _weapon_for_attack(const monster_info& mi, int atk)
-{
-    // XXX: duplicates monster::weapon()
-    if ((atk % 2) && mi.wields_two_weapons())
-    {
-        item_def *alt_weap = mi.inv[MSLOT_ALT_WEAPON].get();
-        if (alt_weap && is_weapon(*alt_weap))
-            return alt_weap;
-    }
-    item_def* weapon = mi.inv[MSLOT_WEAPON].get();
-    if (weapon && is_weapon(*weapon))
-        return weapon;
-    return nullptr;
-}
-
 static mon_attack_info _atk_info(const monster_info& mi, int i)
 {
     const mon_attack_def &attack = mi.attack[i];
-    const item_def* weapon = nullptr;
-    // XXX: duplicates monster::weapon()
-    if (attack.type == AT_HIT || attack.type == AT_WEAP_ONLY)
-        weapon = _weapon_for_attack(mi, i);
+    const item_def* weapon = mons_weapon_for_attack(attack.type,
+                                 mi.wields_two_weapons(), i,
+                                 mi.inv[MSLOT_WEAPON].get(),
+                                 mi.inv[MSLOT_ALT_WEAPON].get());
     mon_attack_info attack_info = { attack, weapon };
     return attack_info;
 }
