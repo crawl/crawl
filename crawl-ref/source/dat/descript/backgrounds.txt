@@ -30,8 +30,8 @@ there is nothing left.
 %%%%
 Conjurer
 
-Conjurers confront problems with reliable spells. Their starter Magic Dart spell 
-is an attack that always hits.
+Conjurers confront problems with reliably damaging spells, like their starter
+Magic Dart spell.
 %%%%
 Delver
 
@@ -110,8 +110,8 @@ fighters (especially when unarmed) at the cost of armour.
 %%%%
 Alchemist
 
-Alchemists start with the Sting spell, and their wide range of effects
-can harm a variety of foes.
+Alchemists start with the Sting spell.  They have a wide range of deadly and
+debilitating effects at their disposal.
 %%%%
 Wanderer
 
