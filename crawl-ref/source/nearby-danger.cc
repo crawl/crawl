@@ -505,7 +505,10 @@ void revive()
             && dur != DUR_TRANSFORMATION
             && dur != DUR_BEOGH_SEEKING_VENGEANCE
             && dur != DUR_BEOGH_DIVINE_CHALLENGE
-            && dur != DUR_GRAVE_CLAW_RECHARGE)
+            && dur != DUR_GRAVE_CLAW_RECHARGE
+            && dur != DUR_COLLAPSE
+            && dur != DUR_BRAINLESS
+            && dur != DUR_CLUMSY)
         {
             you.duration[dur] = 0;
         }
