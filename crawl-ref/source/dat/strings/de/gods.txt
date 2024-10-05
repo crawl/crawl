@@ -528,131 +528,131 @@ mehr Zeit in dieser Welt
 # (i.e. these go after the word "when")
 %%%%
 you use evil magic or items
-Ihr verwendet böse Magie oder Gegenstände
+Ihr böse Magie oder Gegenstände verwendet
 %%%%
 you attack non-hostile holy beings
-Ihr greift nicht-feindliche heilige Wesen an
+Ihr nicht-feindliche heilige Wesen angreift
 %%%%
 you kill non-hostile holy beings
-Ihr tötet nicht-feindliche heilige Wesen
+Ihr nicht-feindliche heilige Wesen tötet
 %%%%
 you attack neutral beings
-Ihr greift neutrale Wesen an
+Ihr neutrale Wesen angreift
 %%%%
 you attack allies
-Ihr greift Verbündete an
+Ihr Verbündete angreift
 %%%%
 you attack monsters in a sanctuary
-Ihr greift Monster in einem Heiligtum an
+Ihr Monster in einem Heiligtum angreift
 %%%%
 you use unclean or chaotic magic or items
 Ihr unreine oder chaotische Magie oder Gegenstände verwendet
 %%%%
 you polymorph monsters
-Ihr polymorphisiert Monster
+Ihr Monster polymorphisiert
 %%%%
 you deliberately mutate or transform yourself
-Ihr mutiert oder verwandelt Euch absichtlich
+Ihr  Euch absichtlich mutiert oder verwandelt
 %%%%
 you use holy magic or items
-Ihr verwendet heilige Magie oder Gegenstände
+Ihr heilige Magie oder Gegenstände verwendet
 %%%%
 you memorise spells
-Ihr lernt Zaubersprüche auswendig
+Ihr Zaubersprüche memoriert
 %%%%
 you attempt to cast spells
 Ihr versucht, Zaubersprüche zu wirken
 %%%%
 you train magic skills
-Ihr trainiert magische Fähigkeiten
+Ihr magische Fähigkeiten trainiert
 %%%%
 you use magical staves or pain-branded weapons
-Ihr verwendet magische Stecken oder mit Schmerz versehene Waffen
+Ihr magische Stecken oder mit Schmerz versehene Waffen verwendet
 %%%%
 you kill living things while asking for your life to be spared
-Ihr tötet Lebewesen, während Ihr darum bittet, dass Euer Leben verschont wird
+Ihr Lebewesen tötet, während Ihr darum bittet, dass Euer Leben verschont wird
 %%%%
 you desecrate orcish remains
-Ihr schändet die Überreste von Orks
+Ihr die Überreste von Orks schändet
 %%%%
 you attack allied orcs
-Ihr greift verbündete Orks an
+Ihr verbündete Orks angreift
 %%%%
 you kill slimes
-Ihr tötet Schleime
+Ihr Schleime tötet
 %%%%
 you attack fellow slimes
-Ihr greift andere Schleime an
+Ihr andere Schleime angreift
 %%%%
 you destroy plants
-Ihr zerstört Pflanzen
+Ihr Pflanzen zerstört
 %%%%
 you hasten yourself or others
-Ihr hetzt Euch oder andere
+Ihr Euch oder andere beschleunigt
 %%%%
 you channel magical energy
-Ihr kanalisiert magische Energie
+Ihr magische Energie kanalisiert
 %%%%
 use unnaturally quick items
-Ihr benutzt unnatürlich schnelle Gegenstände
+Ihr unnatürlich schnelle Gegenstände verwendet
 %%%%
 you kill living beings
-Ihr tötet lebende Wesen
+Ihr lebende Wesen tötet
 %%%%
 you destroy the undead
-Ihr vernichtet Untote
+Ihr Untote vernichtet
 %%%%
 you kill demons
-Ihr tötet Dämonen
+Ihr Dämonen tötet
 %%%%
 you kill holy beings
-Ihr tötet heilige Wesen
+Ihr heilige Wesen tötet
 %%%%
 you destroy nonliving beings
-Ihr vernichtet nicht-lebende Wesen
+Ihr nicht-lebende Wesen vernichtet
 %%%%
 you explore the world
-Ihr erforscht die Welt
+Ihr die Welt erforscht
 %%%%
 you kill unclean or chaotic beings
-Ihr tötet unreine oder chaotische Wesen
+Ihr unreine oder chaotische Wesen tötet
 %%%%
 you kill the undead
-Ihr tötet die Untoten
+Ihr die Untoten tötet
 %%%%
 you kill evil beings
-Ihr tötet böse Wesen
+Ihr böse Wesen tötet
 %%%%
 you encounter other hostile creatures
-Ihr trifft auf andere feindliche Kreaturen
+Ihr auf andere feindliche Kreaturen trifft
 %%%%
 you kill wizards and other users of magic
-Ihr tötet Zauberer und andere Benutzer von Magie
+Ihr Zauberer und andere Benutzer von Magie tötet
 %%%%
 you banish creatures to the Abyss
-Ihr verbannt Kreaturen in den Abgrund
+Ihr Kreaturen in den Abgrund verbannt
 %%%%
 you kill the priests of other religions
-Ihr tötet die Priester anderer Religionen
+Ihr die Priester anderer Religionen tötet
 %%%%
 you kill fast things, relative to your speed
-Ihr tötet schnelle Dinge, relativ zu Eurer Geschwindigkeit
+Ihr Wesen tötet, die schneller als Ihr sind
 %%%%
 you explore the world (preferably while bound by curses)
-Ihr erkundet die Welt (vorzugsweise während Ihr durch Flüche gebunden seid)
+Ihr die Welt erkundet (vorzugsweise während Ihr durch Flüche gebunden seid)
 %%%%
 you hurt your foes; however, effects that cause damage over time do not interest Uskayaw
-Ihr verletzt Eure Feinde; Effekte, die Schaden über Zeit verursachen, interessieren Uskayaw jedoch nicht
+Ihr Eure Feinde verletzt; Effekte, die Schaden über Zeit verursachen, interessieren Uskayaw jedoch nicht
 %%%%
 you sacrifice items by allowing slimes to consume them
-Ihr opfert Gegenstände, indem Ihr ihnen von Schleimen verzehren lässt
+Ihr Gegenstände opfert, indem Ihr ihnen von Schleimen verzehren lässt
 %%%%
 you collect gold
-Ihr sammelt Gold
+Ihr Gold sammelt
 %%%%
 you make personal sacrifices
-Ihr bringt persönliche Opfer
+Ihr persönliche Opfer bringt
 %%%%
 you donate money
-Ihr spendet Geld
+Ihr Geld spendet
 %%%%
