@@ -711,7 +711,7 @@ the %sharpy
 die {adj-e}%sHarpyie
 %%%%
 the %smutant beast
-die {adj-e}%smutierte Bestie
+das {adj-e}%sMutant-Biest
 %%%%
 the %sancestor
 der {adj-e}%sAhne
@@ -1417,6 +1417,7 @@ das {adj-e}%sharte gespürte Monster
 the %snasty sensed monster
 das {adj-e}%sfurchtbare gespürte Monster
 %%%%
+# subtypes of mutant beast
 the %ssting beast
 das {adj-e}%sStichbiest
 %%%%

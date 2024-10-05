@@ -711,7 +711,7 @@ your %sharpy
 Eure {adj-e}%sHarpyie
 %%%%
 your %smutant beast
-Eure {adj-e}%smutierte Bestie
+Euer {adj-es}%sMutant-Biest
 %%%%
 your %sancestor
 Euer {adj-er}%sAhne

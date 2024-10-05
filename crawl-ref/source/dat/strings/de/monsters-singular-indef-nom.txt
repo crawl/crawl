@@ -711,7 +711,7 @@ a %sharpy
 eine {adj-e}%sHarpyie
 %%%%
 a %smutant beast
-eine {adj-e}%smutierte Bestie
+ein {adj-es}%sMutant-Biest
 %%%%
 a %sancestor
 ein {adj-er}%sAhne

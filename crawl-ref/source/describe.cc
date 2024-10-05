@@ -788,7 +788,7 @@ int str_to_trap(const string &s)
 static string _describe_demon(const string& name, bool flying)
 {
     const uint32_t seed = hash32(&name[0], name.size());
-    #define HRANDOM_ELEMENT(arr, id) arr[hash_with_seed(ARRAYSZ(arr), seed, id)]
+    #define HRANDOM_ELEMENT(arr, id) localise(arr[hash_with_seed(ARRAYSZ(arr), seed, id)])
 
     const string start = "One of the many lords of Pandemonium, @name@ has ";
 
@@ -956,7 +956,7 @@ static string _describe_mutant_beast_tier(int tier)
     COMPILE_CHECK(ARRAYSZ(tier_descs) == NUM_BEAST_TIERS);
 
     ASSERT_RANGE(tier, 0, NUM_BEAST_TIERS);
-    return tier_descs[tier];
+    return localise(tier_descs[tier]);
 }
 
 
@@ -2426,7 +2426,7 @@ static vector<extra_feature_desc> _get_feature_extra_descs(const coord_def &pos)
     if (feat_is_tree(feat) && env.forest_awoken_until)
     {
         ret.push_back({
-            "Awoken.",
+            localise("Awoken."),
             getLongDescription("awoken"),
             tile_def(TILE_AWOKEN_OVERLAY)
         });
@@ -2525,13 +2525,14 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
         {
             if (is_unknown_stair(pos))
             {
-                long_desc += "\nYou have not yet explored it and cannot tell ";
-                long_desc += "where it leads.";
+                long_desc += "\n";
+                long_desc += localise("You have not yet explored it and cannot "
+                                      "tell where it leads.");
             }
             else
             {
                 long_desc +=
-                    make_stringf("\nYou can view the location it leads to by "
+                        localise("\nYou can view the location it leads to by "
                                  "examining it with <w>%s</w> and pressing "
                                  "<w>%s</w>.",
                                  command_to_string(CMD_DISPLAY_MAP).c_str(),
@@ -3299,13 +3300,13 @@ int hex_chance(const spell_type spell, const int hd)
 static string _miscast_damage_string(spell_type spell)
 {
     const map <spschool, string> damage_flavor = {
-        { spschool::conjuration, "irresistible" },
-        { spschool::necromancy, "draining" },
-        { spschool::fire, "fire" },
-        { spschool::ice, "cold" },
-        { spschool::air, "electric" },
-        { spschool::earth, "fragmentation" },
-        { spschool::poison, "poison" },
+        { spschool::conjuration, "irresistible damage" },
+        { spschool::necromancy, "draining damage" },
+        { spschool::fire, "fire damage" },
+        { spschool::ice, "cold damage" },
+        { spschool::air, "electric damage" },
+        { spschool::earth, "fragmentation damage" },
+        { spschool::poison, "poison damage" },
     };
 
     const map <spschool, string> special_flavor = {
@@ -3330,7 +3331,7 @@ static string _miscast_damage_string(spell_type spell)
 
     if (!dam_flavors.empty())
     {
-        descs.push_back(localise("deals up to %d %s damage", dam,
+        descs.push_back(localise("deals up to %d %s", dam,
                                      comma_separated_line(dam_flavors.begin(),
                                                          dam_flavors.end(),
                                                          " or ").c_str()));

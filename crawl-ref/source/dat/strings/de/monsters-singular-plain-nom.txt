@@ -711,7 +711,7 @@
 {adj-e}%sHarpyie
 %%%%
 %smutant beast
-{adj-e}%smutierte Bestie
+{adj-es}%sMutant-Biest
 %%%%
 %sancestor
 {adj-er}%sAhne

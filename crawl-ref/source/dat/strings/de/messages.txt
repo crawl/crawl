@@ -2953,517 +2953,539 @@ Bekannt
 ##################
 %%%%
 "[<w>!</w>|<w>Right-click</w>]: "
-
+"[<w>!</w>|<w>Rechtsklick</w>]: "
 %%%%
 "[<w>!</w>]: "
-
+"[<w>!</w>]: "
 %%%%
 <w>Description</w>|Quote
-
+<w>Beschreibung</w>|Zitat
 %%%%
 Description|<w>Quote</w>
-
+Beschreibung|<w>Zitat</w>
 %%%%
-RegenMP
-
-%%%%
+# Descriptions for randomly-generated Pandemonium Lords
 "One of the many lords of Pandemonium, @name@ has "
-
+"Einer der vielen Lords von Pandämonium, @name@ hat "
 %%%%
+# Random pan lord body types
 an armoured body
-
+einen gepanzerten Körper
 %%%%
 a vast, spindly body
-
+einen großen, dürren Körper
 %%%%
 a fat body
-
+einen fetten Körper
 %%%%
 an obese body
-
+einen fettleibigen Körper
 %%%%
 a muscular body
-
+einen muskulösen Körper
 %%%%
 a spiked body
-
+einen stacheligen Körper
 %%%%
 a splotchy body
-
+einen fleckigen Körper
 %%%%
 a slender body
-
+einen schlanken Körper
 %%%%
 a tentacled body
-
+einen tentakeligen Körper
 %%%%
 an emaciated body
-
+einen ausgemergelten Körper
 %%%%
 a bug-like body
-
+einen wanzenartigen Körper
 %%%%
 a skeletal body
-
+einen skelettartigen Körper
 %%%%
 a mantis body
-
+einen Gottesanbeterin-Körper
 %%%%
 a slithering body
-
+einen schlängelnden Körper
 %%%%
+# Random pan lord wing types (optional) - follows body type
 " with small, bat-like wings"
-
+" mit kleinen, fledermausartigen Flügeln
 %%%%
 " with bony wings"
-
+" mit knöchernen Flügeln"
 %%%%
 " with sharp, metallic wings"
-
+" mit scharfen, metallischen Flügeln"
 %%%%
 " with the wings of a moth"
-
+" mit den Flügeln einer Motte"
 %%%%
 " with thin, membranous wings"
-
+" mit dünnen, häutigen Flügeln"
 %%%%
 " with dragonfly wings"
-
+" mit Libellenflügeln"
 %%%%
 " with large, powerful wings"
-
+" mit großen, kräftigen Flügeln"
 %%%%
 " with fluttering wings"
-
+" mit flatternden Flügeln"
 %%%%
 " with great, sinister wings"
-
+" mit großen, finsteren Flügeln"
 %%%%
 " with hideous, tattered wings"
-
+" mit hässlichen, zerfetzten Flügeln"
 %%%%
 " with sparrow-like wings"
-
+" mit sperlingsartigen Flügeln"
 %%%%
 " with hooked wings"
-
+" mit hakenförmigen Flügeln"
 %%%%
 " with strange knobs attached"
-
+" mit merkwürdigen Knöpfen daran"
 %%%%
 " which hovers in mid-air"
-
+, der mitten in der Luft schwebt
 %%%%
 " with sacs of gas hanging from its back"
-
+" mit Gassäcken, die von seinem Rücken hängen"
 %%%%
+# Random pan lord head type - follows wing type (or body type if no wings)
 " and a cubic structure in place of a head"
-
+, und eine kubische Struktur anstelle eines Kopfes
 %%%%
 " and a brain for a head"
-
+, und ein Gehirn anstelle eines Kopfes
 %%%%
 " and a hideous tangle of tentacles for a mouth"
-
+, und ein hässliches Gewirr von Tentakeln als Mund
 %%%%
 " and the head of an elephant"
-
+, und den Kopf eines Elefanten
 %%%%
 " and an eyeball for a head"
-
+, und einen Augapfel als Kopf
 %%%%
 " and wears a helmet over its head"
-
+, und trägt einen Helm auf seinem Kopf
 %%%%
 " and a horn in place of a head"
-
+, und ein Horn anstelle eines Kopfes
 %%%%
 " and a thick, horned head"
-
+, und einen dicken, gehörnten Kopf
 %%%%
 " and the head of a horse"
-
+, und den Kopf eines Pferdes
 %%%%
 " and a vicious glare"
-
+, und einen bösen Blick
 %%%%
 " and snakes for hair"
-
+, und Schlangen als Haare
 %%%%
 " and the face of a baboon"
-
+, und das Gesicht eines Pavians
 %%%%
 " and the head of a mouse"
-
+, und den Kopf einer Maus
 %%%%
 " and a ram's head"
-
+, und den Kopf eines Widders
 %%%%
 " and the head of a rhino"
-
+, und den Kopf eines Nashorns
 %%%%
 " and eerily human features"
-
+, und schaurig menschliche Züge
 %%%%
 " and a gigantic mouth"
-
+, und ein gigantisches Maul
 %%%%
 " and a mass of tentacles growing from its neck"
-
+, und eine Masse von Tentakeln, die aus seinem Hals wachsen
 %%%%
 " and a thin, worm-like head"
-
+, und einen dünnen, wurmartigen Kopf
 %%%%
 " and huge, compound eyes"
-
+, und riesige, zusammengesetzte Augen
 %%%%
 " and the head of a frog"
-
+, und den Kopf eines Frosches
 %%%%
 " and an insectoid head"
-
+, und einen insektoiden Kopf
 %%%%
 " and a great mass of hair"
-
+, und eine große Masse an Haaren
 %%%%
 " and a skull for a head"
-
+, und einen Schädel als Kopf
 %%%%
 " and a cow's skull for a head"
-
+, und einen Kuhschädel als Kopf
 %%%%
 " and the head of a bird"
-
+, und den Kopf eines Vogels
 %%%%
 " and a large fungus growing from its neck"
-
+, und einen großen Pilz, der aus seinem Hals wächst
 %%%%
 " and an ominous eye at the end of a thin stalk"
-
+, und ein ominöses Auge am Ende eines dünnen Stiels
 %%%%
 " and a face from nightmares"
-
+, und ein Gesicht aus Albträumen
 %%%%
+# Random pan lord misc descriptions (optional) - separate sentence following all the above
 " It seethes with hatred of the living."
-
+" Er brodelt vor Hass auf die Lebenden."
 %%%%
 " Tiny orange flames dance around it."
-
+" Winzige orange Flammen tanzen um ihn herum."
 %%%%
 " Tiny purple flames dance around it."
-
+" Winzige lila Flammen tanzen um ihn herum."
 %%%%
 " It is surrounded by a weird haze."
-
+" Er ist von einem seltsamen Dunst umgeben."
 %%%%
 " It glows with a malevolent light."
-
+" Er ghlüht mit einem bösartigen Licht."
 %%%%
 " It looks incredibly angry."
-
+" Er sieht unglaublich wütend aus."
 %%%%
 " It oozes with slime."
-
+" Er trieft vor Schleim."
 %%%%
 " It dribbles constantly."
-
+" Er sabbert ständig."
 %%%%
 " Mould grows all over it."
-
+" Überall auf ihm wächst Schimmel."
 %%%%
 " Its body is covered in fungus."
-
+" Sein Körper ist mit Pilzen bedeckt."
 %%%%
 " It is covered with lank hair."
-
+" Er ist mit schütterem Haar bedeckt."
 %%%%
 " It looks diseased."
-
+" Er sieht krank aus."
 %%%%
 " It looks as frightened of you as you are of it."
-
+" Er sieht aus, als hätte er genauso viel Angst vor Euch wie Ihr vor ihm."
 %%%%
 " It moves in a series of hideous convulsions."
-
+" Er bewegt sich in einer Reihe von grässlichen Zuckungen."
 %%%%
 " It moves with an unearthly grace."
-
+" Er bewegt sich mit einer unheimlichen Anmut."
 %%%%
 " It leaves a glistening oily trail."
-
+" Er hinterlässt eine glitzernde, ölige Spur."
 %%%%
 " It shimmers before your eyes."
-
+" Er schimmert vor Euren Augen."
 %%%%
 " It is surrounded by a brilliant glow."
-
+" Er ist von einem strahlenden Glühen umgeben."
 %%%%
 " It radiates an aura of extreme power."
-
+" Er strahlt eine Aura extremer Kraft aus."
 %%%%
 " It seems utterly heartbroken."
-
+" Er scheint untröstlich zu sein."
 %%%%
 " It seems filled with irrepressible glee."
-
+" Er scheint von unbändiger Freude erfüllt zu sein."
 %%%%
 " It constantly shivers and twitches."
-
+" Er zittert und zuckt ständig."
 %%%%
 " Blue sparks crawl across its body."
-
+" Blaue Funken krabbeln über seinen Körper."
 %%%%
 " It seems uncertain."
-
+" Er scheint unsicher zu sein."
 %%%%
 " A cloud of flies swarms around it."
-
+" Eine Wolke von Fliegen umschwirrt ihn."
 %%%%
 " The air around it ripples with heat."
-
+" Die Luft um ihn herum kräuselt sich vor Hitze."
 %%%%
 " Crystalline structures grow on everything near it."
-
+" Kristalline Strukturen wachsen auf allem in seiner Nähe."
 %%%%
 " It appears supremely confident."
-
+" Er wirkt sehr selbstbewusst."
 %%%%
 " Its skin is covered in a network of cracks."
-
+" Seine Haut ist mit einem Netz von Rissen überzogen."
 %%%%
 " Its skin has a disgusting oily sheen."
-
+" Seine Haut hat einen ekelhaften, öligen Schimmer."
 %%%%
 " It seems somehow familiar."
-
+" Er kommt Euch irgendwie bekannt vor."
 %%%%
 " It is somehow always in shadow."
-
+" Er ist irgendwie immer im Schatten."
 %%%%
 " It is difficult to look away."
-
+" Es ist schwierig, den Blick abzuwenden."
 %%%%
 " It is constantly speaking in tongues."
-
+" Er spricht ständig in fremden Zungen."
 %%%%
 " It babbles unendingly."
-
+" Er plappert unaufhörlich."
 %%%%
 " Its body is scourged by damnation."
-
+" Sein Körper wird von der Verdammnis gegeißelt."
 %%%%
 " Its body is extensively scarred."
-
+" Sein Körper ist von Narben übersät."
 %%%%
 " You find it difficult to look away."
-
+" Es fällt Euch schwer, den Blick abzuwenden."
 %%%%
 " Oddly mechanical noises accompany its jarring movements."
-
+" Seltsame mechanische Geräusche begleiten seine ruckartigen Bewegungen."
 %%%%
 " Its skin looks unnervingly wrinkled."
-
+" Seine Haut sieht nervenaufreibend faltig aus."
 %%%%
+# Random pan lord smell descriptions (optional) - separate sentence before misc description
 " It smells of brimstone."
-
+" Er riecht nach Schwefel."
 %%%%
 " It is surrounded by a sickening stench."
-
+" Er ist von einem ekelhaften Gestank umgeben."
 %%%%
 " It smells of rotting flesh."
-
+" Er riecht nach verfaulendem Fleisch."
 %%%%
 " It stinks of death."
-
+" Er stinkt nach Tod."
 %%%%
 " It stinks of decay."
-
+" Er stinkt nach Verwesung."
 %%%%
 " It smells delicious!"
-
+" Er riecht köstlich!"
 %%%%
+# Mutant beast tiers
 It is larval and weak, freshly emerged from its mother's pouch.
-
+Es ist larval und schwach, frisch aus dem Beutel seiner Mutter geschlüpft.
 %%%%
 It is a juvenile, no longer larval but below its mature strength.
-
+Es ist ein Jungtier, nicht mehr larval, aber noch nicht ausgewachsen.
 %%%%
 It is mature, stronger than a juvenile but weaker than its elders.
-
+Es ist reif, stärker als ein Jungtier, aber schwächer als die Älteren.
 %%%%
 It is an elder, stronger than mature beasts.
-
+Es ist ein Ältester, stärker als reife Tiere.
 %%%%
 It is a primal beast, the most powerful of its kind.
-
+Es ist ein Urbiest, das mächtigste seiner Art.
 %%%%
+# Mutant beast facets - multiple possible, code handles capitalisation
 it sports a set of venomous tails
-
+es trägt einen Satz giftiger Schwänze
 %%%%
 it flies swiftly and unpredictably
-
+es fliegt schnell und unberechenbar
 %%%%
 it's breath smoulders ominously
-
+sein Atem riecht unheilvoll
 %%%%
 it is covered with eyes and tentacles
-
+es ist mit Augen und Tentakeln bedeckt
 %%%%
 it flickers and crackles with electricity
-
+es flackert und knistert vor Elektrizität
 %%%%
 it is covered in dense fur and muscle
-
+es ist mit dichtem Fell und Muskeln bedeckt
 %%%%
 A cloud of %s.
-
+Eine Wolke aus {dat}%s.
 %%%%
 Awoken.
-
+Aufgewacht.
 %%%%
 A covering of ice.
-
+Eine Eisdecke.
 %%%%
 A halo.
-
+Ein Heiligenschein.
 %%%%
 An umbra.
-
+Ein Umbra.
 %%%%
 Liquefied ground.
-
+Verflüssigter Boden.
 %%%%
 Translocational energy.
-
+Translokationsenergie.
 %%%%
-"You have not yet explored it and cannot tell "
-
+# unexplored staircase/escape hatch
+You have not yet explored it and cannot tell where it leads.
+Ihr habt sie noch nicht erforscht und können nicht sagen, wohin sie führt.
 %%%%
-where it leads.
-
-%%%%
+# explored staircase/escape hatch
 You can view the location it leads to by examining it with <w>%s</w> and pressing <w>%s</w>.
-
+Ihr könnt den Ort sehen, zu dem sie führt, indem ihr sie mit <w>%s</w> untersucht und <w>%s</w> drückt.
 %%%%
 (Pray here with <w>'%s'</w> to learn more.)
-
+(Hier mit <w>'%s'</w> beten, um mehr zu erfahren.)
 %%%%
+# diggable wall
 It can be dug through.
-
+Sie kann durchgraben werden.
 %%%%
+#actions
 (w)ield
-
+(w)führen
 %%%%
 (u)nwield
-
+(u)loslassen
 %%%%
 (q)uiver
-
+(q)in Kocher stecken
 %%%%
 (w)ear
-
+(w)tragen
 %%%%
+# remove a piece of armour (including helmet, boots, etc.)
 (t)ake off
-
+(t)ausziehen
 %%%%
 e(v)oke
-
+e(v)ozieren
 %%%%
 (r)ead
-
+(r)lesen
 %%%%
 (p)ut on
-
+(p)anlegen
 %%%%
+# remove jewellery
 (r)emove
-
+(r)abnahmen
 %%%%
 (q)uaff
-
+(q)trinken
 %%%%
 (d)rop
-
+(d)fallen lassen
 %%%%
 (i)nscribe
-
+(i)beschriften
 %%%%
 (=)adjust
-
+(=)einstellen
 %%%%
 (s)kill
-
+(s)Fertigkeit
 %%%%
 "Select a spell, or "
-
+"Einen Zauber asuwählen, oder "
 %%%%
 "Replace inscription with what? "
-
+"Die Inschrift durch was ersetzen? "
 %%%%
 "Inscribe with what? "
-
+"Mit was beschriften? "
 %%%%
+# spell properties
 Level: %d
-
+Stufe: %d
 %%%%
 "School: "
-
+"Schule: "
 %%%%
 "Schools: "
-
+"Schulen: "
 %%%%
 Fail: %d%%
-
+Versagen: %d%%
 %%%%
 "Power: "
-
+"Kraft: "
 %%%%
 "Accuracy: "
-
+"Genauigkeit: "
 %%%%
 "Range: "
-
+"Reichweite: "
 %%%%
+# player has trained Invocations despite being a demi-god (shouldn't happen)
 How on earth did you manage to pick this up?
-
+Wie um alles in der Welt habt Ihr das trainiert?
 %%%%
 Note that Trog doesn't use Invocations, due to its close connection to magic.
-
+Beachtet, dass Trog kein Invozieren verwendet, denn es hat eine enge Verbindung zur Magie.
 %%%%
 Keep in mind, though, that Trog would greatly disapprove of this.
-
+Bedenkt jedoch, dass Trog dies sehr missbilligen würde.
 %%%%
-irresistible
-
+# spell miscast effects
+irresistible damage
+unwiderstehlicher Schaden
 %%%%
-draining
-
+draining damage
+Auszehrungsschaden
 %%%%
-electric
-
+fire damage
+Feuerschaden
 %%%%
-fragmentation
-
+cold damage
+Kälteschaden
+%%%%
+electric damage
+elektrischer Schaden
+%%%%
+fragmentation damage
+Splitterschaden
+%%%%
+poison damage
+Giftschaden
 %%%%
 summons a nameless horror
-
+einen namenlosen Horror herbeiruft
 %%%%
 further contaminates you
-
+Euch weiter kontaminiert
 %%%%
 anchors you in place
-
+Euch am Ort verankert
 %%%%
 debuffs and slows you
-
+Euch verlangsamt und Verstärkungen entfernt
 %%%%
-deals up to %d %s damage
-
+# miscast damage, for example: "deals up to 10 fire damage"
+deals up to %d %s
+bis zu %d {acc}%s verursacht
 %%%%
 Miscasting this spell causes magic contamination.
-
+Ein Fehlzauber verursacht magische Verunreinigung.
 %%%%
+# %s is a placeholder for the miscast effects above
 Miscasting this spell causes magic contamination and also %s.
-
+Ein Fehlzauber verursacht magische Verunreinigung, und auch %s.
 %%%%
 Your servitor would be unable to mimic any of your spells.
 
@@ -3690,6 +3712,7 @@ This monster looks extremely dangerous.
 " and cause weakness if any damage is dealt"
 
 %%%%
+# %s here is a verb like "hit"
 %s for up to %d fire damage
 %s für bis zu %d Feuer-Schaden.
 %%%%

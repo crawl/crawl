@@ -134,9 +134,13 @@ UnsS
 sInv
 UnsS
 %%%%
-# regeneration
+# HP regeneration
 Regen
 Regen
+%%%%
+# MP regeneration
+RegenMP
+RegenMP
 %%%%
 # Extra move when moving towards enemy
 Rampage

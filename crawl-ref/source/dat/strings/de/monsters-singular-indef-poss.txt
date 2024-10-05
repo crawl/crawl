@@ -712,7 +712,7 @@ a %sharpy's
 einer {adj-en}%sHarpyie
 %%%%
 a %smutant beast's
-einer {adj-en}%smutierten Bestie
+eines {adj-en}%sMutant-Biests
 %%%%
 a %sancestor's
 eines {adj-en}%sAhnen

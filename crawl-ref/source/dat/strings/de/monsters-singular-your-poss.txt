@@ -712,7 +712,7 @@ your %sharpy's
 Eurer {adj-en}%sHarpyie
 %%%%
 your %smutant beast's
-Eurer {adj-en}%smutierten Bestie
+Eures {adj-en}%sMutant-Biests
 %%%%
 your %sancestor's
 Eures {adj-en}%sAhnen

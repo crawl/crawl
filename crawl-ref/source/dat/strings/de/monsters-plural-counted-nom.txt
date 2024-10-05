@@ -711,7 +711,7 @@
 %d Harpyien
 %%%%
 %d mutant beasts
-%d mutierte Bestien
+%d Mutant-Biester
 %%%%
 %d ancestors
 %d Ahnen

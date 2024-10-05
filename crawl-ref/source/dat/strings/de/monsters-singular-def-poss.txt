@@ -711,7 +711,7 @@ the %sharpy's
 der {adj-en}%sHarpyie
 %%%%
 the %smutant beast's
-der {adj-en}%smutierten Bestie
+des {adj-en}%sMutant-Biests
 %%%%
 the %sancestor's
 des {adj-en}%sAhnen
