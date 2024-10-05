@@ -2557,343 +2557,348 @@ Ahnen TP wiederhergestellt.
 ##################
 %%%%
 Godly wrath is upon you!
-
+Der göttliche Zorn ist über Euch gekommen!
 %%%%
 You've transgressed heavily! Be penitent!
-
+Ihr habt schwer gesündigt! Seid reuig!
 %%%%
 You are under penance.
-
+Ihr steht unter Buße.
 %%%%
 You should show more discipline.
-
+Ihr solltet mehr Disziplin zeigen.
 %%%%
 A prized avatar of %s.
-
+Ein geschätzter Avatar von {dat}%s.
 %%%%
 A favoured servant of %s.
-
+Ein bevorzugter Diener von {dat}%s.
 %%%%
 A glorious shadow in the eyes of %s.
-
+Ein glorreicher Schatten in den Augen von {dat}%s.
 %%%%
 A shining star in the eyes of %s.
-
+Ein leuchtender Stern in den Augen von {dat}%s.
 %%%%
 A rising shadow in the eyes of %s.
-
+Ein aufsteigender Schatten in den Augen von {dat}%s.
 %%%%
 A rising star in the eyes of %s.
-
+Ein aufsteigender Stern in den Augen von {dat}%s.
 %%%%
 %s is pleased with you.
-
+%s ist mit Euch zufrieden.
 %%%%
 %s is aware of your devotion.
-
+%s ist sich Eurer Hingabe bewusst.
 %%%%
 %s is noncommittal.
-
+%s ist unverbindlich.
 %%%%
 Bound item
-
+Gebundener Gegenstand
 %%%%
 Curse bonuses
-
+Fluch-Bonus
 %%%%
+# Hep ancestor equipment/spells
 Flail
-
+Flegel
 %%%%
 Chain mail (+AC)
-
+Kettenhemd (+AC)
 %%%%
 Broad axe (flame)
-
+Breitaxt (Flamme)
 %%%%
 Tower shield (reflect)
-
+Turmschild (Reflexion)
 %%%%
 Broad axe (speed)
-
+Breitaxt (Geschwindigkeit)
 %%%%
 Quarterstaff
-
+Quarterstaff
 %%%%
 Increased melee damage
-
+Erhöhter Nahkampfschaden
 %%%%
 Lajatang (freeze)
-
+Lajatang (einfrieren)
 %%%%
 Dagger (drain)
-
+Dolch (auszehren)
 %%%%
 Quick blade (antimagic)
-
+Schnelle Klinge (antimagie)
 %%%%
 Ancestor Upgrades:
-
+Ahnen-Upgrades:
 %%%%
 XL
-
+XL
 %%%%
 Upgrade
-
+Upgrade
 %%%%
 You can bribe the following branches of the dungeon:
-
+Ihr könnt die folgenden Zweige des Dungeons bestechen:
 %%%%
 not bribed
-
+nicht bestochen
 %%%%
 %s forgives followers for abandonment; however, those who later take up the worship of an evil god will be punished.
-
+%s verzeiht seinen Anhängern die Abkehr; wer jedoch später einen bösen Gott anbetet, wird bestraft.
 %%%%
 " (%s are evil gods.)"
-
+" (%s sind böse Götter.)"
 %%%%
 %s forgives followers for abandonment; however, those who later take up the worship of an evil or chaotic god will be scourged.
-
+%s verzeiht Anhängern die Abkehr; wer jedoch später einen bösen oder chaotischen Gott anbetet, wird gegeißelt.
 %%%%
 " (%s are evil, and %s are chaotic.)"
-
+" (%s sind böse, und %s sind chaotisch.)"
 %%%%
 %s does not appreciate abandonment, and will call down fearful punishments on disloyal followers!
-
+%s schätzt es nicht, wenn man ihn verlässt, und wird abtrünnige Anhänger furchtbar bestrafen!
 %%%%
 %s's wrath lasts for a relatively long duration.
-
+Der Zorn {gen}%s hält relativ lange an.
 %%%%
 %s's wrath lasts for a relatively short duration.
-
+Der Zorn {gen}%s hält relativ kurz an.
 %%%%
 Named Followers:
-
+Benannte Anhänger:
 %%%%
 on another level
-
+auf einer anderen Ebene
 %%%%
 Decks of power:
-
+Decks der Macht:
 %%%%
 stacked deck:
-
+Gestapeltes Deck:
 %%%%
 Ashenzari supports the following skill groups because of your curses:
-
+Aschenzari unterstützt aufgrund Eure Flüche die folgenden Fertigkeitsgruppen:
 %%%%
 Martial attacks:
-
+Martialische Angriffe:
 %%%%
 %s's powers are not affected by the Invocations skill.
-
+Die Kräfte {gen}%s werden nicht von der Anrufungsfertigkeit beeinflusst.
 %%%%
 %s's powers are based on %s instead of Invocations skill.
-
+Die Kräfte {gen}%s basieren auf {dat}%s statt auf der Anrufungsfertigkeit.
 %%%%
 %s is ambivalent towards you.
-
+%s ist Euch gegenüber ambivalent.
 %%%%
 %s is almost ready to forgive your sins.
-
+%s ist fast bereit, Euch Eure Sünden zu vergeben.
 %%%%
 %s's wrath is upon you!
-
+{gen}%s Zorn ist über Euch gekommen!
 %%%%
 %s well remembers your sins.
-
+%s erinnert sich gut an Eure Sünden.
 %%%%
 %s's wrath is beginning to fade.
-
+{gen}%s Zorn beginnt zu schwinden.
 %%%%
 %s is neutral towards you.
-
+%s ist Euch gegenüber neutral.
 %%%%
+# Elyvilon lifesaving
 , especially when called upon
-
+, besonders wenn er angerufen wird
 %%%%
+# Elyvilon lifesaving
 , and always does so when called upon
-
+, und tut dies immer, wenn er angerufen wird.
 %%%%
 Granted powers:
-
+Erteilte Kräfte:
 %%%%
 (Cost)
-
+(Kosten)
 %%%%
+# Elyvilon lifesaving - the last %s is replaced by one of the clauses above
 %s carefully guards your life%s.
-
+%s bewacht sorgfältig Euer Leben%s.
 %%%%
 %s often guards your life%s.
-
+%s bewacht oft Euer Leben%s.
 %%%%
 %s sometimes guards your life%s.
-
+%s bewacht manchmal Euer Leben%s.
 %%%%
 %s occasionally guards your life%s.
-
+%s bewacht gelegentlich Euer Leben%s.
 %%%%
 %s guards your life%s.
-
+%s bewacht Euer Leben%s.
 %%%%
 Zin always shields you from chaos.
-
+Zin schirmt Euch immer vor Chaos ab.
 %%%%
 Zin often shields you from chaos.
-
+Zin schirmt Euch oft vor Chaos ab.
 %%%%
 Zin sometimes shields you from chaos.
-
+Zin schirmt Euch manchmal vor Chaos ab.
 %%%%
 Zin occasionally shields you from chaos.
-
+Zin schirmt Euch gelegentlich vor dem Chaos ab.
 %%%%
 The Shining One prevents you from stabbing unaware foes.
-
+Der Glänzende hindert Euch daran, unbewusste Feinde zu erstechen.
 %%%%
 The Shining One completely shields you from negative energy.
-
+Der Glänzende schirmt Euch vollständig vor negativer Energie ab.
 %%%%
 The Shining One mostly shields you from negative energy.
-
+Der Glänzende schirmt Euch meistens vor negativer Energie ab.
 %%%%
 The Shining One partially shields you from negative energy.
-
+Das Glänzende schirmt Euch teilweise vor negativer Energie ab.
 %%%%
 You radiate a large righteous aura, and others within it are easier to hit.
-
+Ihr strahlt eine große, rechtschaffene Aura aus, und andere, die sich darin befinden, sind leichter zu treffen.
 %%%%
 You radiate a righteous aura, and others within it are easier to hit.
-
+Ihr strahlt eine rechtschaffene Aura aus, und andere, die sich darin befinden, sind leichter zu treffen.
 %%%%
 You radiate a small righteous aura, and others within it are easier to hit.
-
+Ihr strahlt eine kleine, rechtschaffene Aura aus, und andere, die sich darin befinden, sind leichter zu treffen.
 %%%%
 You gain magic and health when your fellow slimes consume items.
-
+Ihr erhaltet Magie und Gesundheit, wenn Eure Mitschleimlinge Gegenstände verbrauchen.
 %%%%
 You gain magic when your fellow slimes consume items.
-
+Ihr erhaltet Magie, wenn Eure Mitschleimlinge Gegenstände konsumieren.
 %%%%
 You can walk through plants and fire through allied plants.
-
+Ihr könnt durch Pflanzen gehen und durch verbündete Pflanzen feuern.
 %%%%
 Cheibriados greatly slows your movement.
-
+Cheibriados verlangsamt Eure Bewegung stark.
 %%%%
 Cheibriados slows your movement.
-
+Cheibriados verlangsamt Eure Bewegung.
 %%%%
 Cheibriados slightly slows your movement.
-
+Cheibriados verlangsamt Eure Bewegung leicht.
 %%%%
 Cheibriados supports your attributes. (+%d)
-
+Cheibriados unterstützt Eure Attribute. (+%d)
 %%%%
 You can memorise %s.
-
+Ihr könnt %s memorisieren.
 %%%%
 You can memorise some of Vehumet's most lethal spells.
-
+Ihr könnt einige von Vehumets tödlichsten Zaubern memorieren.
 %%%%
 You can memorise some of Vehumet's spells.
-
+Ihr könnt einige von Vehumets Zaubersprüchen memorieren.
 %%%%
 You radiate a large aura of darkness, enhancing your stealth and reducing the accuracy of your foes.
-
+Ihr strahlt eine große Aura der Dunkelheit aus, die Eure Heimlichkeit verbessert und die Treffsicherheit Eurer Feinde verringert.
 %%%%
 You radiate an aura of darkness, enhancing your stealth and reducing the accuracy of your foes.
-
+Ihr strahlt eine Aura der Dunkelheit aus, die Eure Heimlichkeit verbessert und die Treffsicherheit Eurer Feinde verringert.
 %%%%
 You radiate a small aura of darkness, enhancing your stealth and reducing the accuracy of your foes.
-
+Ihr strahlt eine kleine Aura der Dunkelheit aus, die Eure Heimlichkeit verbessert und die Treffsicherheit Eurer Feinde verringert.
 %%%%
 You passively detect gold.
-
+Ihr entdeckt passiv Gold.
 %%%%
 %s turns your defeated foes' bodies to gold.
-
+%s verwandelt die Körper Eurer besiegten Feinde in Gold.
 %%%%
 Your enemies may become distracted by gold.
-
+Eure Feinde können durch Gold abgelenkt werden.
 %%%%
 Your life essence is reduced. (-10%% HP)
-
+Eure Lebensessenz wird reduziert. (-10%% TP)
 %%%%
 Your ancestor manifests to aid you.
-
+Euer Ahne manifestiert sich, um Euch zu helfen.
 %%%%
 You are protected from the effects of unwielding distortion weapons.
-
+Ihr seid vor den Auswirkungen des Loslassens von Verzerrungswaffen geschützt.
 %%%%
 You can %s.
-
+Ihr könnt %s.
 %%%%
 None.
-
+Keine.
 %%%%
 "Title  - "
-
+"Titel - "
 %%%%
 "Favour - "
-
+"Gunst - "
 %%%%
 "[<w>!</w>/<w>^</w>|<w>Right-click</w>]: "
-
+"[<w>!</w>/<w>^</w>|<w>Rechtsklick</w>]: "
 %%%%
 "[<w>!</w>/<w>^</w>]: "
-
+"[<w>!</w>/<w>^</w>]: "
 %%%%
 <w>Overview</w>|Powers|Wrath
-
+<w>Übersicht</w>|Kräfte|Zorn
 %%%%
 Overview|<w>Powers</w>|Wrath
-
+Übersicht|<w>Kräfte</w>|Zorn
 %%%%
 Overview|Powers|<w>Wrath</w>
-
+Übersicht|Kräfte|<w>Zorn</w>
 %%%%
 Overview|Powers|Wrath
-
+Übersicht|Kräfte|Zorn
 %%%%
 <w>Overview</w>|Powers|Wrath|Extra
-
+<w>Übersicht</w>|Kräfte|Zorn|Extra
 %%%%
 Overview|<w>Powers</w>|Wrath|Extra
-
+Übersicht|<w>Kräfte</w>|Zorn|Extra
 %%%%
 Overview|Powers|<w>Wrath</w>|Extra
-
+Übersicht|Kräfte|<w>Zorn</w>|Extra
 %%%%
 Overview|Powers|Wrath|<w>Extra</w>
-
+Übersicht|Kräfte|Zorn|<w>Extra</w>
 %%%%
+# Gozag joining fee
 no fee if you act now
-
+keine Gebühr, wenn Ihr jetzt handelt
 %%%%
 no fee if you join today
-
+keine Gebühr, wenn Ihr heute beitretet
 %%%%
 %d gold; you have %d
-
+%d Gold; Ihr habt %d
 %%%%
 You are not religious.
-Ihr seid nicht religiös.
+Sie sind nicht religiös.
 %%%%
 "  [<w>J</w>/<w>Enter</w>]: "
-
+"  [<w>J</w>/<w>Enter</w>]: "
 %%%%
 join religion
-
+Religion beitreten
 %%%%
 join
-
+beitreten
 %%%%
 Are you sure you want to abandon %s?
-
+Seid Ihr sicher, dass Ihr {acc}%s aufgeben wollt?
 %%%%
 " [Y]es or [n]o only, please."
-
+" Nur [J]a oder [n]ein, bitte."
 %%%%
 
 ##################
@@ -16295,7 +16300,7 @@ The liquid ground foams!
 Der flüssige Boden schäumt!
 %%%%
 Forget which spell?
-Wlechen Zauber vergessen?
+Welchen Zauber vergessen?
 %%%%
 Forget %s, freeing 1 spell level for a total of %d?
 %s vergessen, und damit 1 Zauberplatz freimachen für insgesamt %d frei?

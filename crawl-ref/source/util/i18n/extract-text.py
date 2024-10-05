@@ -1275,6 +1275,8 @@ def process_cplusplus_file(filename):
                 continue
             if re.search(r'^# *define.*KEY', line):
                 continue
+            if 'desc_key' in line:
+                continue
             if 'GetModuleHandle' in line:
                 continue
             if re.search(r'\bcreate_item_named *\(', line):

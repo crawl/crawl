@@ -134,8 +134,8 @@ static string _describe_favour(god_type which_god)
 static const char *divine_title[][8] =
 {
     // No god.
-    {"Buglet",             "Firebug",               "Bogeybug",                 "Bugger", // @noloc
-        "Bugbear",            "Bugged One",            "Giant Bug",                "Lord of the Bugs"}, // @noloc
+    {"Buglet",             "Firebug",               "Bogeybug",                 "Bugger",
+        "Bugbear",            "Bugged One",            "Giant Bug",                "Lord of the Bugs"},
 
     // Zin.
     {"Blasphemer",         "Anchorite",             "Apologist",                "Pious",
@@ -577,9 +577,9 @@ static formatted_string _beogh_extra_description()
         if (companion_is_elsewhere(mons->mid))
         {
             desc += formatted_string::parse_string(
-                            " (<blue>" // @noloc
+                            " (<blue>"
                             + localise("on another level")
-                            + "</blue>)"); // @noloc
+                            + "</blue>)");
         }
         else if (given_gift(mons))
         {
@@ -628,7 +628,7 @@ static string _describe_deck_summary()
 static formatted_string _god_extra_description(god_type which_god)
 {
     formatted_string desc;
-    string desc_key = god_name(which_god) + " extra"; // @noloc
+    string desc_key = god_name(which_god) + " extra";
 
     switch (which_god)
     {
@@ -1205,16 +1205,16 @@ static void build_partial_god_ui(god_type which_god, shared_ptr<ui::Popup>& popu
     const char* mores[2][4] =
     {
         {
-            MORE_PREFIX "<w>Overview</w>|Powers|Wrath",
-            MORE_PREFIX "Overview|<w>Powers</w>|Wrath",
-            MORE_PREFIX "Overview|Powers|<w>Wrath</w>",
-            MORE_PREFIX "Overview|Powers|Wrath"
+            "<w>Overview</w>|Powers|Wrath",
+            "Overview|<w>Powers</w>|Wrath",
+            "Overview|Powers|<w>Wrath</w>",
+            "Overview|Powers|Wrath"
         },
         {
-            MORE_PREFIX "<w>Overview</w>|Powers|Wrath|Extra",
-            MORE_PREFIX "Overview|<w>Powers</w>|Wrath|Extra",
-            MORE_PREFIX "Overview|Powers|<w>Wrath</w>|Extra",
-            MORE_PREFIX "Overview|Powers|Wrath|<w>Extra</w>"
+            "<w>Overview</w>|Powers|Wrath|Extra",
+            "Overview|<w>Powers</w>|Wrath|Extra",
+            "Overview|Powers|<w>Wrath</w>|Extra",
+            "Overview|Powers|Wrath|<w>Extra</w>"
         }
     };
 
@@ -1230,8 +1230,9 @@ static void build_partial_god_ui(god_type which_god, shared_ptr<ui::Popup>& popu
         scroller->set_child(text);
         desc_sw->add_child(move(scroller));
 
+        string more = localise(MORE_PREFIX) + localise(mores[mores_index][i]);
         more_sw->add_child(make_shared<Text>(
-                formatted_string::parse_string(mores[mores_index][i])));
+                formatted_string::parse_string(more)));
     }
 
     desc_sw->set_margin_for_sdl(20, 0);
@@ -1257,7 +1258,7 @@ static const string _god_service_fee_description(god_type which_god)
         {
             string str = random_choose("no fee if you act now",
                                        "no fee if you join today");
-            return "( " + localise(str) + ")"; // @noloc
+            return "( " + localise(str) + ")";
         }
         else
         {
@@ -1356,15 +1357,16 @@ bool describe_god_with_join(god_type which_god)
     {
         Text* label = static_cast<Text*>(child.get());
         formatted_string text = label->get_text();
-        text += formatted_string::parse_string("  [<w>J</w>/<w>Enter</w>]: ");
+        string prefix = localise("  [<w>J</w>/<w>Enter</w>]: ");
+        text += formatted_string::parse_string(prefix);
 
         // We assume that a player who has enough gold such that
         // the join fee plus accumulated gold overflows knows what this menu
         // does.
         if (text.width() + service_fee.length() + 9 <= MIN_COLS)
-            text += "join religion";
+            text += localise("join religion");
         else
-            text += "join";
+            text += localise("join");
 
         if (!service_fee.empty())
             text += service_fee;
@@ -1428,18 +1430,19 @@ bool describe_god_with_join(god_type which_god)
 
         if (step == ABANDON)
         {
-            if (keyin != 'Y' && toupper_safe(keyin) != 'N')
+            if (keyin != localise_char('Y') 
+                && toupper_safe(keyin) != localise_char('N'))
                 yesno_only = true;
             else
                 yesno_only = false;
 
-            if (toupper_safe(keyin) == 'N')
+            if (toupper_safe(keyin) == localise_char('N'))
             {
                 canned_msg(MSG_OK);
                 return done = true;
             }
 
-            if (keyin == 'Y')
+            if (keyin == localise_char('Y'))
                 return done = join = true;
         }
         else if ((keyin == 'J' || keyin == CK_ENTER) && step == SHOW)
