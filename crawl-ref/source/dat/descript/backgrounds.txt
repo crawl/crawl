@@ -30,7 +30,7 @@ there is nothing left.
 %%%%
 Conjurer
 
-Conjurers confront problems with reliably hitting and hurting spells, like their 
+Conjurers confront problems with reliably hitting and hurting magic, like their 
 starter Magic Dart spell.
 %%%%
 Delver
