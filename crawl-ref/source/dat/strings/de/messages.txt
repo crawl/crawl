@@ -6940,9 +6940,6 @@ first <w>%</w>ear it
 first <w>%</w>ut it on
 
 %%%%
-<r>(BUG! this item shouldn't give an ability)</r>
-
-%%%%
 ", then "
 
 %%%%
@@ -18412,9 +18409,6 @@ Ihr könnt dieses Level nicht annotieren.
 %%%%
 Can't go down from the bottom of a branch.
 Kann nicht vom Boden eines Zweiges runter gehen.
-%%%%
-Bug in determining level exit.
-Fehler beim Bestimmen des Ebene-Ausgangs.
 %%%%
 Creating downstairs.
 Treppen nach unten erschafft.

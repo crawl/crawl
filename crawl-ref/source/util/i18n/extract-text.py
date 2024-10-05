@@ -620,10 +620,11 @@ def ignore_string(string):
         return True
 
     # ignore bug-catching stuff
-    if 'INVALID' in string or re.search(r'bugg(il)?y', string, re.I) or \
-       'DUMMY' in string or 'eggplant' in string or \
-       re.search('software bug', string, re.I) or \
-       re.search(r'bugginess', string, re.I):
+    if 'INVALID' in string or 'DUMMY' in string or 'eggplant' in string:
+        return True
+    if re.search('bug', string, re.I) and 'bug-like' not in string \
+       and 'bug report' not in string and 'program bug' not in string \
+       and not re.search('debug', string, re.I):
         return True
 
     # ignore debug stuff
