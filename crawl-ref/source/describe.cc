@@ -3681,7 +3681,7 @@ static string _describe_draconian(const monster_info& mi)
             break;
         }
 
-        description = localise("It has %sscales. ");
+        description = localise("It has %sscales.") + localise(" ");
     }
 
     switch (subsp)
@@ -3811,7 +3811,7 @@ static const char* _get_threat_desc(mon_threat_level_type threat)
     case MTHRT_TOUGH:   return "This monster looks dangerous.";
     case MTHRT_NASTY:   return "This monster looks extremely dangerous.";
     case MTHRT_UNDEF:
-    default:            return "This montsre looks buggily threatening."; // @noloc
+    default:            return "This monster looks buggily threatening.";
     }
 }
 

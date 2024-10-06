@@ -3488,115 +3488,119 @@ Miscasting this spell causes magic contamination and also %s.
 Ein Fehlzauber verursacht magische Verunreinigung, und auch %s.
 %%%%
 Your servitor would be unable to mimic any of your spells.
-
+Euer Diener könnte keinen Eurer Zaubersprüche nachahmen.
 %%%%
 Your servitor casts %s.
-
+Euer Diener wirkt {acc}%s.
 %%%%
 You can sustain at most 1 creature summoned by this spell.
-
+Ihr könnt maximal 1 durch diesen Zauber herbeigerufene Kreatur erhalten.
 %%%%
 You can sustain at most %d creatures summoned by this spell.
-
+Ihr könnt maximal %d durch diesen Zauber herbeigerufene Kreaturen erhalten.
 %%%%
 %s frowns upon the use of this spell.
-
+%s missbilligt die Verwendung dieses Zaubers.
 %%%%
 You'd be excommunicated if you dared to cast it!
-
+Ihr würdet exkommuniziert werden, wenn Ihr es wagen würdet, ihn zu wirken!
 %%%%
 %s supports the use of this spell.
-
+%s unterstützt die Verwendung dieses Zaubers.
 %%%%
 You cannot cast this spell because %s
-
+Ihr könnt diesen Zauberspruch nicht wirken, denn %s
 %%%%
 You cannot memorise this spell because %s
-
+Ihr könnt diesen Zauberspruch nicht memorisieren, denn %s
 %%%%
 This spell would have no effect right now because %s
 Dieser Zauber würde im Moment keine Wirkung haben, denn %s
 %%%%
 This spell has no description. Casting it may therefore be unwise. Please file a bug report.
-
+Dieser Zauberspruch hat keine Beschreibung. Es könnte daher unklug sein, ihn zu wirken. Bitte einen Fehlerbericht einreichen.
 %%%%
 "Range : "
-
+"Reichweite : "
 %%%%
 " (pow %d)"
-
+" (Kraft %d)"
 %%%%
 You cannot be affected by this spell right now. %s
-
+Ihr könnt im Moment nicht von diesem Zauber betroffen sein. %s
 %%%%
 Chance to defeat your Will: %d%%%s
-
+Chance, Euren Willen zu besiegen: %d%%%s
 %%%%
-"It has %sscales. "
-
+# Draconian descriptions
+It has %sscales.
+Er hat {adj-e}%sSchuppen.
 %%%%
 Sparks flare out of its mouth and nostrils.
-
+Funken schießen aus seinem Mund und seinen Nasenlöchern.
 %%%%
 Acidic fumes swirl around it.
-
+Säurehaltige Dämpfe umschwirren ihn.
 %%%%
 Venom drips from its jaws.
-
+Gift tropft aus seinem Maul.
 %%%%
 Its outline shimmers with magical energy.
-
+Sein Umriss schimmert mit magischer Energie.
 %%%%
 Smoke pours from its nostrils.
-
+Rauch strömt aus seinen Nasenlöchern.
 %%%%
 Frost pours from its nostrils.
-
+Frost strömt aus seinen Nasenlöchern.
 %%%%
 Its scales and tail are adapted to the water.
-
+Seine Schuppen und sein Schwanz sind an das Wasser angepasst.
 %%%%
 It is cloaked in a pall of superheated steam.
-
+Er ist in eine Wolke aus überhitztem Dampf gehüllt.
 %%%%
+# Demonspawn descriptions
 It weaves powerful and unpredictable spells of devastation.
-
+Sie webt mächtige und unvorhersehbare Zauber der Verwüstung.
 %%%%
 It is devoted to combat, disrupting the magic of its foes as it battles endlessly.
-
+Sie hat sich dem Kampf verschrieben und unterbricht die Magie ihrer Feinde, während sie endlos kämpft.
 %%%%
 It corrupts space around itself, and can twist even the very flesh of its opponents.
-
+Sie korrumpiert den Raum um sich herum und kann sogar das Fleisch ihrer Gegner verdrehen.
 %%%%
 It shines with an unholy radiance, and wields powers of darkness from its devotion to the deities of death.
-
+Sie leuchtet in einem unheiligen Glanz und verfügt durch ihre Hingabe an die Gottheiten des Todes über dunkle Kräfte.
 %%%%
 It is more beast now than whatever species it is descended from.
-
+Sie ist jetzt mehr Bestie als die Spezies, von der sie abstammt.
 %%%%
 It is covered in icy armour.
-
+Sie ist mit einer eisigen Rüstung bedeckt.
 %%%%
 It gives off an intense heat.
-
+Sie strahlt eine intensive Hitze aus.
 %%%%
 It oozes dark energies.
-
+Sie sondert dunkle Energien ab.
 %%%%
+# resistances
 polar vortices
-
+Polarwirbel
 %%%%
+# monster threat description
 This monster looks harmless.
-
+Dieses Monster sieht harmlos aus.
 %%%%
 This monster looks easy.
-
+Dieses Monster sieht leicht aus.
 %%%%
 This monster looks dangerous.
-
+Dieses Monster sieht gefährlich aus.
 %%%%
 This monster looks extremely dangerous.
-
+Dieses Monster sieht extrem gefährlich aus.
 %%%%
 "retreat from adjacent foes and "
 
