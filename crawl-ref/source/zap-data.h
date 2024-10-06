@@ -2386,4 +2386,20 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     false,
 },
 
+{
+    ZAP_KINETIC_GRAPNEL,
+    "kinetic grapnel",
+    25,
+    new dicedef_calculator<1, 4, 4, 25>,
+    new tohit_calculator<8, 1, 5>,
+    nullptr,
+    nullptr,
+    CYAN,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+},
+
 };

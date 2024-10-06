@@ -2801,6 +2801,9 @@ item_def* monster_die(monster& mons, killer_type killer,
                     mprf(MSGCH_MONSTER_TIMEOUT, "A nearby %s withers and dies.",
                          mons.name(DESC_PLAIN, false).c_str());
                 }
+                // Default message so that at least *something* is printed.
+                else
+                    msg = " fades away.";
             }
 
             if (!msg.empty())

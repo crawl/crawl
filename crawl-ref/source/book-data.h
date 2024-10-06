@@ -230,7 +230,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Cantrips
     SPELL_STING,
-    SPELL_SOUL_SPLINTER,
+    SPELL_KINETIC_DISCUS,
     SPELL_SUMMON_SMALL_MAMMAL,
     SPELL_APPORTATION,
 },
@@ -542,6 +542,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Handbook of Applied Construction
+    SPELL_KINETIC_DISCUS,
     SPELL_SPIKE_LAUNCHER,
     SPELL_CLOCKWORK_BEE,
 },

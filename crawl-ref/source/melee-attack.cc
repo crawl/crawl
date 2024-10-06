@@ -73,6 +73,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     attack_number(attack_num), effective_attack_number(effective_attack_num),
     cleaving(false), is_multihit(false), is_riposte(false),
     is_projected(false), charge_pow(0), never_cleave(false),
+    flat_dmg_bonus(0),
     wu_jian_attack(WU_JIAN_ATTACK_NONE),
     wu_jian_number_of_targets(1),
     is_shadow_stab(false)
@@ -251,6 +252,19 @@ bool melee_attack::handle_phase_attempted()
              && attacker->type == MONS_DROWNED_SOUL)
     {
         to_hit = AUTOMATIC_HIT;
+    }
+    else if (defender && defender->is_monster()
+             && defender->as_monster()->has_ench(ENCH_KINETIC_GRAPNEL))
+    {
+        mon_enchant grapnel = defender->as_monster()->get_ench(ENCH_KINETIC_GRAPNEL);
+        if (grapnel.agent() == attacker)
+        {
+            to_hit = AUTOMATIC_HIT;
+            flat_dmg_bonus = random_range(0, 3);
+            defender->as_monster()->del_ench(ENCH_KINETIC_GRAPNEL, true);
+            if (attacker->is_player())
+                mpr("The grapnel guides your strike.");
+        }
     }
 
     attack_occurred = true;
@@ -2094,6 +2108,8 @@ int melee_attack::player_apply_misc_modifiers(int damage)
 {
     if (you.duration[DUR_MIGHT] || you.duration[DUR_BERSERK])
         damage += 1 + random2(10);
+
+    damage += flat_dmg_bonus;
 
     return damage;
 }
@@ -4320,6 +4336,8 @@ int melee_attack::apply_damage_modifiers(int damage)
 
     if (cleaving)
         damage = cleave_damage_mod(damage);
+
+    damage += flat_dmg_bonus;
 
     return damage;
 }

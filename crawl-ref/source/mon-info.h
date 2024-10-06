@@ -244,6 +244,7 @@ enum monster_info_flags
     MB_ABJURABLE,
     MB_UNREWARDING,
     MB_MINION,
+    MB_KINETIC_GRAPNEL,
     NUM_MB_FLAGS
 };
 

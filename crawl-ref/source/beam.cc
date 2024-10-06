@@ -5272,6 +5272,9 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         simple_monster_message(*mon, " is pinned in place!");
         mon->add_ench(mon_enchant(ENCH_BOUND, 0, nullptr, random_range(2, 4) * BASELINE_DELAY));
     }
+
+    if (origin_spell == SPELL_KINETIC_GRAPNEL && dmg > 0)
+        mon->add_ench(mon_enchant(ENCH_KINETIC_GRAPNEL, 0, agent(), random_range(30, 50)));
 }
 
 static int _knockback_dist(spell_type origin, int pow)

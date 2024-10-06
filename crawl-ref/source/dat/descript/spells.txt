@@ -945,6 +945,13 @@ Fae assistance is fickle, however; they cannot be beckoned unless a susceptible
 victim is visible, and will depart rapidly once no more remain. Calling on the
 fae also reduces the caster's own willpower for a time.
 %%%%
+Kinetic Grapnel spell
+
+Weaves a thin kinetic filiment around the caster's melee weapon and launches the
+other end of it at a nearby enemy. If this grapnel successfully hits and does
+damage, it will become lodged in them, allowing the next melee attack the caster
+performs against them to strike with perfect accuracy and a small slaying bonus.
+%%%%
 Volatile Blastmotes spell
 
 Brings forth a cloud of volatile blastmotes around the caster. These explode

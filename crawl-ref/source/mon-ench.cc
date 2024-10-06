@@ -965,6 +965,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         props.erase(MONSTER_TILE_KEY);
         break;
 
+    case ENCH_KINETIC_GRAPNEL:
+        if (you.can_see(*this) && !quiet)
+            mprf("The grapnel comes loose from %s.", name(DESC_THE).c_str());
+        break;
+
     default:
         break;
     }
@@ -1371,6 +1376,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_REPEL_MISSILES:
     case ENCH_MISDIRECTED:
     case ENCH_CHANGED_APPEARANCE:
+    case ENCH_KINETIC_GRAPNEL:
         decay_enchantment(en);
         break;
 
@@ -2110,6 +2116,7 @@ static const char *enchant_names[] =
     "magnetised",
     "armed",
     "misdirected", "changed appearance", "shadowless", "doubled_vigour",
+    "grapnel",
     "buggy", // NUM_ENCHANTMENTS
 };
 

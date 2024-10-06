@@ -4137,6 +4137,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_KINETIC_GRAPNEL, "Kinetic Grapnel",
+    spschool::forgecraft,
+    spflag::dir_or_target | spflag::needs_tracer,
+    1,
+    25,
+    4, 4,
+    0,
+    TILEG_KINETIC_DISCUS,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

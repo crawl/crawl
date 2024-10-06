@@ -171,6 +171,9 @@ gravitas GRAVITAS
 manifold_assault MANIFOLD_ASSAULT
 electric_charge ELECTRIC_CHARGE
 
+%sdir gui/spells/forgecraft
+kinetic_discus KINETIC_DISCUS
+
 # item-based spells
 %sdir gui/spells/misc
 bolt_of_light BOLT_OF_LIGHT

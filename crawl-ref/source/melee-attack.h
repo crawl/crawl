@@ -46,6 +46,7 @@ public:
     int          charge_pow;      // electric charge bonus damage
     bool         never_cleave;    // if this attack shouldn't trigger cleave
                                   // followups, but still do 100% damage
+    int          flat_dmg_bonus;  // flat slaying to add to this attack
     wu_jian_attack_type wu_jian_attack;
     int wu_jian_number_of_targets;
     coord_def attack_position;
