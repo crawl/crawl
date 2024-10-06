@@ -4054,10 +4054,10 @@ The tide is released from %s call.
 Die Flut wird von {gen}%s Anruf befreit.
 %%%%
 Not in Shoals or no heightmap; tide not available.
-Nicht in Shoals oder ohne Höhenkarte; Gezeiten nicht verfügbar.
+Nicht in Shoals oder keine Höhenkarte; Gezeiten nicht verfügbar.
 %%%%
 "Tide inertia: %d. New value (smaller = faster tide) or use +/- to change tide: "
-
+"Gezeitenträgheit: %d. Neuer Wert (kleiner = schnellere Gezeiten) oder +/- benutzen um Gezeit zu ändern: "
 %%%%
 
 ##################
