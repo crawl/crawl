@@ -99,6 +99,7 @@ enum dungeon_feature_type
 #if TAG_MAJOR_VERSION > 34
     DNGN_TRAP_NET,
     DNGN_TRAP_PLATE,
+    DNGN_SPIKE_LAUNCHER,
     DNGN_ORB_DAIS,
 #endif
 #if TAG_MAJOR_VERSION == 34
@@ -374,6 +375,7 @@ enum dungeon_feature_type
     DNGN_FOUNTAIN_EYES,
     DNGN_CACHE_OF_BAKED_GOODS,
     DNGN_DECORATIVE_FLOOR,  // XXX: dummy for redefinition until we rewrite code
+    DNGN_SPIKE_LAUNCHER,
 
 #endif
 

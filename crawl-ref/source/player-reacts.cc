@@ -1109,6 +1109,9 @@ void player_reacts()
 
     actor_apply_toxic_bog(&you);
 
+    if (you.duration[DUR_SPIKE_LAUNCHER_ACTIVE])
+        handle_spike_launcher(you.time_taken);
+
     _decrement_durations();
 
     // Translocations and possibly other duration decrements can

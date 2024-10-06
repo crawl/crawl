@@ -809,6 +809,12 @@ contaminated with enormous amounts of wild magic, have mighty fiends summoned
 against you, or the like. Hostile monsters may trigger this trap themselves to
 invoke its effects against you, but your allies will avoid stepping on it.
 %%%%
+A spike launcher
+
+A magical contraption which skewers nearby monsters with sharp rocky spikes. It
+will disintegrate after a short length of time or if the caster strays too far
+away from it.
+%%%%
 ########################################################################
 ### Portal vault entrances
 ########################################################################

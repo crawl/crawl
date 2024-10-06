@@ -2370,4 +2370,20 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     false,
 },
 
+{
+    ZAP_SPIKE_LAUNCHER,
+    "rocky spike",
+    50,
+    new dicedef_calculator<2, 3, 1, 12>,
+    new tohit_calculator<12, 1, 10>,
+    nullptr,
+    nullptr,
+    LIGHTGREY,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_MISSILE,
+    false,
+    false,
+},
+
 };

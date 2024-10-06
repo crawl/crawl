@@ -4126,6 +4126,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_SPIKE_LAUNCHER, "Construct Spike Launcher",
+    spschool::forgecraft,
+    spflag::none,
+    2,
+    50,
+    -1, -1,
+    0,
+    TILEG_ERROR,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

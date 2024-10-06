@@ -555,6 +555,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_BINDING_SIGIL;
     case DNGN_ORB_DAIS:
         return TILE_DNGN_ORB_DAIS;
+    case DNGN_SPIKE_LAUNCHER:
+        return TILE_DNGN_SPIKE_LAUNCHER;
     default:
         return TILE_DNGN_ERROR;
     }

@@ -2449,6 +2449,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_CLOCKWORK_BEE:
         return cast_clockwork_bee(beam.target, fail);
 
+    case SPELL_SPIKE_LAUNCHER:
+        return cast_spike_launcher(powc, fail);
+
     // Enchantments.
     case SPELL_CONFUSING_TOUCH:
         return cast_confusing_touch(powc, fail);

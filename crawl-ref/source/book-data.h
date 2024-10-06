@@ -542,6 +542,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Handbook of Applied Construction
+    SPELL_SPIKE_LAUNCHER,
     SPELL_CLOCKWORK_BEE,
 },
 

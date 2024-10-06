@@ -1512,6 +1512,18 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you must harvest more living souls to recharge this spell.";
         break;
 
+    case SPELL_SPIKE_LAUNCHER:
+    {
+        if (!temp)
+            break;
+
+        for (adjacent_iterator ai(you.pos()); ai; ++ai)
+            if (env.grid(*ai) == DNGN_ROCK_WALL)
+                return "";
+
+        return "there are no nearby walls to construct a spike launcher in.";
+    }
+
     default:
         break;
     }

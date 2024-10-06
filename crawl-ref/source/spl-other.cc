@@ -9,6 +9,7 @@
 #include "spl-other.h"
 
 #include "act-iter.h"
+#include "beam.h"
 #include "coordit.h"
 #include "delay.h"
 #include "env.h"
@@ -25,6 +26,7 @@
 #include "spl-util.h"
 #include "terrain.h"
 #include "timed-effects.h"
+#include "view.h"
 
 spret cast_sublimation_of_blood(int pow, bool fail)
 {
@@ -619,4 +621,138 @@ void trigger_binding_sigil(actor& actor)
     }
 
     revert_terrain_change(actor.pos(), TERRAIN_CHANGE_BINDING_SIGIL);
+}
+
+spret cast_spike_launcher(int pow, bool fail)
+{
+    fail_check();
+
+    int valid = 0;
+    coord_def spot;
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+    {
+        if (env.grid(*ai) == DNGN_ROCK_WALL)
+        {
+            if (one_chance_in(++valid))
+                spot = *ai;
+        }
+    }
+
+    // Targeter should prevent this from happening.
+    if (spot.origin())
+        return spret::abort;
+
+    // Remove any existing spike launcher, if we have one
+    if (you.duration[DUR_SPIKE_LAUNCHER_ACTIVE])
+    {
+        for (map_marker *mark : env.markers.get_all(MAT_TERRAIN_CHANGE))
+        {
+            map_terrain_change_marker *marker =
+                dynamic_cast<map_terrain_change_marker*>(mark);
+
+            if (marker->change_type == TERRAIN_CHANGE_SPIKE_LAUNCHER)
+                revert_terrain_change(marker->pos, TERRAIN_CHANGE_SPIKE_LAUNCHER);
+        }
+    }
+
+    int dur = random_range(50, 90) + pow;
+
+    temp_change_terrain(spot, DNGN_SPIKE_LAUNCHER, dur, TERRAIN_CHANGE_SPIKE_LAUNCHER);
+    you.duration[DUR_SPIKE_LAUNCHER_ACTIVE] = dur;
+    you.props.erase(SPIKE_LAUNCHER_TIMER);
+    you.props[SPIKE_LAUNCHER_POWER] = pow;
+
+    mpr("You shape a spike launcher from a nearby wall.");
+
+    return spret::success;
+}
+
+static void _fire_spike_launcher(const coord_def& origin, monster* target)
+{
+    bolt spike;
+    zappy(ZAP_SPIKE_LAUNCHER, you.props[SPIKE_LAUNCHER_POWER].get_int(),
+            false, spike);
+    spike.source = origin;
+    spike.target = target->pos();
+    spike.seen = true;
+    spike.range = 1;
+    spike.hit_verb = "skewers";
+    flash_tile(target->pos(), CYAN);
+    spike.fire();
+}
+
+static coord_def _find_spike_launcher()
+{
+    for (map_marker *mark : env.markers.get_all(MAT_TERRAIN_CHANGE))
+    {
+        map_terrain_change_marker *marker =
+            dynamic_cast<map_terrain_change_marker*>(mark);
+
+        if (marker->change_type == TERRAIN_CHANGE_SPIKE_LAUNCHER)
+            return marker->pos;
+    }
+
+    return coord_def();
+}
+
+void handle_spike_launcher(int delay)
+{
+    coord_def pos = _find_spike_launcher();
+
+    // Somehow it doesn't exist. Maybe it got destroyed?
+    if (pos.origin())
+    {
+        you.duration[DUR_SPIKE_LAUNCHER_ACTIVE] = 0;
+        return;
+    }
+
+    // Check if we've gotten too far away from our launcher
+    if (!you.see_cell_no_trans(pos) || grid_distance(you.pos(), pos) > 3)
+    {
+        mpr("Your spike launcher falls apart as you grow too distant to "
+            "maintain it.");
+        revert_terrain_change(pos, TERRAIN_CHANGE_SPIKE_LAUNCHER);
+        you.duration[DUR_SPIKE_LAUNCHER_ACTIVE] = 0;
+        return;
+    }
+
+    int& timer = you.props[SPIKE_LAUNCHER_TIMER].get_int();
+    timer -= delay;
+
+    // Now, fire the launcher, if anything is in range.
+    while (timer < 0)
+    {
+        for (fair_adjacent_iterator ai(pos); ai; ++ai)
+        {
+            if (monster* targ = monster_at(*ai))
+            {
+                if (!you.see_cell_no_trans(*ai) || targ->wont_attack()
+                    || mons_is_firewood(*targ))
+                {
+                    continue;
+                }
+
+                _fire_spike_launcher(pos, targ);
+                break;
+            }
+        }
+
+        timer += BASELINE_DELAY;
+    }
+}
+
+void end_spike_launcher()
+{
+    for (map_marker *mark : env.markers.get_all(MAT_TERRAIN_CHANGE))
+    {
+        map_terrain_change_marker *marker =
+            dynamic_cast<map_terrain_change_marker*>(mark);
+
+        if (marker->change_type == TERRAIN_CHANGE_SPIKE_LAUNCHER)
+        {
+            mpr("Your spike launcher falls apart.");
+            revert_terrain_change(marker->pos, TERRAIN_CHANGE_SPIKE_LAUNCHER);
+            return;
+        }
+    }
 }
