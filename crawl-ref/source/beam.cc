@@ -5310,7 +5310,11 @@ void bolt::knockback_actor(actor *act, int dam)
                      : 25;
     const int dist = binomial(max_dist, roll - weight, roll); // This is silly! -- PF
 
-    act->knockback(*agent(), dist, _collision_damage(origin_spell, ench_power), name);
+    // not sure this belongs here, but it can't be done in agent::knockback
+    // if the caster is dead, we can't get their former position for knockback
+    auto caster = agent();
+    if (!caster) return;
+    act->knockback(*caster, dist, _collision_damage(origin_spell, ench_power), name);
 }
 
 void bolt::pull_actor(actor *act, int dam)
