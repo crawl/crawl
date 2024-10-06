@@ -115,6 +115,8 @@ SKIP_FILES = [
     'lang-fake.h', 'lang-fake.cc',
     # dump file stuff
     'dat/clua/kills.lua',
+    # simple messaging - I don't think this is actually used, even though it's built into webtiles
+    'dgl-message.h', 'dgl-message.cc',
 ]
 
 def replace_last(s, old, new):

@@ -3976,29 +3976,6 @@ Wolken dieser Art, die ein Abenteurer erzeugt, verschwinden fast augenblicklich,
 %%%%
 
 ##################
-# dgl-message.cc
-##################
-%%%%
-<white>%s:</white> %s
-
-%%%%
-Couldn't read %s: %s
-%s konnte nicht gelesen werden: %s
-%%%%
-Failed to lock %s: %s
-Fehler beim Sperren von %s: %s
-%%%%
-Your messages:
-Eure Nachrichten:
-%%%%
-Unable to write lock %s: %s
-%s Kann nich gesperrt sein: %s
-%%%%
-Beep! Your pager goes off! Use _ to check your messages.
-Beep! Euer Pager geht aus! Benutze _, um Eure Nachrichten zu überprüfen.
-%%%%
-
-##################
 # dgn-overview.cc
 ##################
 %%%%
