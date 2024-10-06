@@ -3713,7 +3713,7 @@ Schwäche verursachen
 %%%%
 # %s here is a verb like "hit"
 %s for up to %d fire damage
-%s für bis zu %d Feuer-Schaden.
+%s für bis zu %d Feuer-Schaden
 %%%%
 %s %d times for up to %d damage each
 %2$d Mal %1$s für bis zu %3$d Schaden pro Mal
@@ -3722,10 +3722,10 @@ Schwäche verursachen
 %s für bis zu %d Schaden
 %%%%
 %s %d times for up to %d damage each plus %s
-%2$d Mal %1$s für bis zu %3$d Schaden pro Mal plus %4$s
+%2$d Mal %1$s für bis zu %3$d Schaden pro Mal plus {acc}%4$s
 %%%%
 %s for up to %d damage plus %s
-%s für bis zu %d Schaden plus %s
+%s für bis zu %d Schaden plus {acc}%s
 %%%%
 %s from a distance %d times for up to %d damage each
 %2$d Mal aus der Ferne %1$s für bis zu %3$d Schaden pro Mal
@@ -3734,14 +3734,14 @@ Schwäche verursachen
 aus der Ferne %s für bis zu %d Schaden
 %%%%
 %s from a distance %d times for up to %d damage each plus %s
-%2$d Mal aus der Ferne %1$s für bis zu %3$d Schaden pro Mal plus %$4s
+%2$d Mal aus der Ferne %1$s für bis zu %3$d Schaden pro Mal plus {acc}%$4s
 %%%%
 %s from a distance for up to %d damage plus %s
-aus der Ferne %s für bis zu %d Schaden plus %s
+aus der Ferne %s für bis zu %d Schaden plus {acc}%s
 %%%%
 # Monster can do whatever from the things above
-It can %s.
-Dieses Monster kann %s.
+It can %s
+Es kann %s
 %%%%
 # The Royal Jelly
 It will release varied jellies when damaged or killed, with the number of jellies proportional to the amount of damage.
@@ -3755,232 +3755,224 @@ It is quivering %s.
 Es hat {acc}%s im Köcher.
 %%%%
 To read a description, press the key listed above. (AdB) indicates damage (the sum of A B-sided dice), (x%%) indicates the chance to defeat your Will, and (y) indicates the spell range
-
+Die oben genannte Taste drücken, um eine Beschreibung zu lesen. (AWB) gibt den Schaden an (die Summe von A B-seitigen Würfeln), (x%%) zeigt die Chance an, Ihren Willen zu besiegen, und (y) zeigt die Reichweite des Zaubers an
 %%%%
 ; shown in red if you are in range
-
+; rot angezeigt, wenn Ihr in Reichweite seid
 %%%%
+# the speed with which the monster does specific actions
 extremely slowly
-
+extrem langsam
 %%%%
 very slowly
-
+sehr langsam
 %%%%
 slowly
-
+langsam
 %%%%
 extremely quickly
-
+extrem schnell
 %%%%
 very quickly
-
+sehr schnell
 %%%%
 quickly
-
+schnell
 %%%%
 about %d%% to evade %s
-
+etwa %d%%, um %s auszuweichen
 %%%%
 " (about %d%% to hit you)"
 " (gegen %d%% Chance Euch zu treffen)"
 %%%%
 none (normally %s)
-
+keine (normalerweise %s)
 %%%%
 "Max HP: "
-
+"Max TP: "
 %%%%
 Will:
-
+Wille:
 %%%%
 It can travel through water.
-
+Es kann sich durch Wasser bewegen.
 %%%%
 It can travel through lava.
-
+Es kann sich durch Lava bewegen.
 %%%%
-very small
-
-%%%%
-medium
-
-%%%%
-"It is currently targeted by "
-
+It is currently targeted by %s.
+Es ist derzeit das Ziel von {dat}%s.
 %%%%
 It is currently targeted by allies:
-
+Es ist derzeit das Ziel von Verbündeten:
 %%%%
-"It is currently targeting "
-
+It is currently targeting %s.
+Es zielt derzeit auf {acc}%s.
 %%%%
+# immunity
 clouds of all kinds
-
+Wolken aller Art
 %%%%
 It is immune to %s.
-
+Es ist immun gegen {acc}%s.
 %%%%
 It is very resistant to %s.
-
+Es ist sehr widerstandsfähig gegen {acc}%s.
 %%%%
 It is resistant to %s.
-
+Es ist widerstandsfähig gegen {acc}%s.
 %%%%
 It is susceptible to %s.
-
+Es ist anfällig für {acc}%s.
 %%%%
 It is vulnerable to silver and hated by Zin.
-
+Es ist anfällig für Silber und wird von Zin gehasst.
 %%%%
 It cannot move.
-
+Es kann sich nicht bewegen.
 %%%%
 It is cold-blooded and may be slowed by cold attacks.
-
+Es ist kaltblütig und kann durch Kälteattacken verlangsamt werden.
 %%%%
 It can see invisible.
-
+Es kann unsichtbar sehen.
 %%%%
 It is immune to blinding.
-
+Es ist immun gegen Blendung.
 %%%%
 It is mindless.
-
+Es ist hirnlos.
 %%%%
 It is intelligent.
-
+Es ist intelligent.
 %%%%
+# %s here can be speed or size
 It is %s.
-
+Es ist %s.
 %%%%
+# %s in the following messages is speed (quickly, slowly, etc.)
 It covers ground %s.
-
+Es ist intelligent.
 %%%%
 It swims %s.
-
+Es schwimmt %s.
 %%%%
 It attacks %s.
-
+Es attackiert %s.
 %%%%
 It shoots %s.
-
+Es schießt %s.
 %%%%
 It casts spells %s.
-
+Es wirkt Zauber %s.
 %%%%
 It uses invocations %s.
-
+Es verwendet Anrufe %s.
 %%%%
 It uses natural abilities %s.
-
+Es verwendet natürliche Fähigkeiten %s.
 %%%%
 It uses special abilities %s.
-
+Es verwendet besondere Fähigkeiten %s.
 %%%%
 It uses items %s.
-
+Es verwendet Gegenstände %s.
 %%%%
-It covers  ground more quickly when invisible.
-
+It covers ground more quickly when invisible.
+Es bewegt sich schneller, wenn es unsichtbar.
 %%%%
 It can fly.
-
+Es kann fliegen.
 %%%%
 It cannot regenerate.
-
+Es kann sich nicht regenerieren.
 %%%%
 It regenerates quickly.
-
+Es regeneriert sich schnell.
 %%%%
 It cannot be affected by reciting Zin's laws.
-
+Es kann nicht durch die Rezitation der Gesetze Zins beeinflusst werden.
 %%%%
 It is too strong to be affected by reciting Zin's laws.
-
+Es ist zu stark, um durch die Rezitation der Gesetze Zins beeinflusst zu werden.
 %%%%
 It can can be affected by reciting Zin's laws.
-
+Es kann durch die Rezitation der Gesetze Zins beeinflusst werden.
 %%%%
 " (Recite power: %d, Hit Dice: %d)"
-
-%%%%
-are
-
+" (Rezitierenskraft: %d, Trefferwürfel: %d)"
 %%%%
 The apparition of %s.
-Eine Erscheinung von {dat}%s.
+Die Erscheinung von {dat}%s.
 %%%%
 It looks just like you...spooky!
-
+Es sieht genau wie Ihr aus... gruselig!
 %%%%
 An illusion of %s.
 Eine Illusion von {dat}%s.
 %%%%
 It is quickly melting away.
-
+Es schmilzt schnell weg.
 %%%%
 It is quickly crumbling away.
-
+Es bröckelt schnell weg.
 %%%%
-If this monster is a "program bug", then it's recommended that you save your game and reload. Please report monsters who masquerade as program bugs or run around the dungeon without a proper description to the authorities.
-
+If this monster is a "program bug", then it's recommended that you save your game and reload.
+Wenn dieses Monster ein „Programmfehler“ ist, empfiehlt es sich, das Spiel zu speichern und neu zu laden.
+%%%%
+" Please report monsters who masquerade as program bugs or run around the dungeon without a proper description to the authorities."
+" Bitte Monster, die sich als Programmfehler ausgeben oder ohne richtige Beschreibung im Dungeon herumlaufen, den Behörden melden.
 %%%%
 It is quickly withering away.
-
+Es verdorrt schnell.
 %%%%
 If struck, it will die soon after.
-
+Wird es getroffen, stirbt es bald darauf.
 %%%%
 It will inflict a necromantic curse on its foe when destroyed.
-
+Wenn es zerstört wird, belegt es seinen Feind mit einem nekromantischen Fluch.
 %%%%
 It will inflict a powerful necromantic curse on its foe when destroyed.
-
+Wenn es zerstört wird, belegt es seinen Feind mit einem mächtigen nekromantischen Fluch.
 %%%%
 It is incapable of using stairs.
-
+Es ist nicht in der Lage, Treppen zu benutzen.
 %%%%
 This monster has been summoned, and is thus only temporary.
-
+Dieses Monster wurde herbeigerufen und ist daher nur vorübergehend.
 %%%%
 This monster has been summoned in a durable way.
-
+Dieses Monster wurde auf eine dauerhafte Weise herbeigerufen.
 %%%%
 If angered it will immediately vanish, yielding no experience or items
-
+Wird es verärgert, verschwindet es sofort und gibt keine Erfahrung oder Gegenstände ab.
 %%%%
 Killing it yields no experience or items
-
+Es zu töten, bringt keine Erfahrung oder Gegenstände ein.
 %%%%
 ; it is incapable of using stairs
-
+; es ist nicht in der Lage, Treppen zu benutzen
 %%%%
 " and it cannot be abjured"
-
+" und es kann nicht annulliert werden"
 %%%%
 Killing this monster yields no experience or items.
-
+Dieses Monster zu töten, bringt keine Erfahrung oder Gegenstände ein.
 %%%%
 If it is slain, it may be possible to recover its hide, which can be used as armour.
-
+Wenn es getötet wird, kann man seine Haut bergen, die als Rüstung verwendet werden kann.
 %%%%
 You have summoned too many monsters of this kind to sustain them all, and thus this one will shortly expire.
-
-%%%%
-"doll":[[%d,%d]]
-
-%%%%
-"doll":[[%u,%d]]
-
+Ihr habt zu viele Monster dieser Art herbeigerufen, um sie alle aufrechtzuerhalten, und deshalb wird dieses hier bald vergehen.
 %%%%
 This cloud is opaque; one tile will not block vision, but multiple will.
-
+Diese Wolke ist undurchsichtig; ein Feld versperrt nicht die Sicht, aber mehrere schon.
 %%%%
 Clouds of this kind an adventurer makes will vanish quickly once outside their sight.
-
+Wolken dieser Art, die ein Abenteurer erzeugt, verschwinden schnell, sobald sie außer Sichtweite sind.
 %%%%
 Clouds of this kind an adventurer makes will vanish almost instantly once outside their sight.
-
+Wolken dieser Art, die ein Abenteurer erzeugt, verschwinden fast augenblicklich, sobald sie außer Sichtweite sind.
 %%%%
 
 ##################
@@ -18721,9 +18713,6 @@ Wert für {acc}%s darf nicht negativ sein
 %%%%
 %s was %s.
 %s war %s.
-%%%%
-normal
-normal
 %%%%
 "New ego? "
 "Neues Ego? "

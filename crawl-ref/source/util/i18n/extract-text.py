@@ -41,7 +41,7 @@ IGNORE_STRINGS = [
     'true', 'false', 'veto',
     'You hear the sound of one hand!',
     # property keys
-    'brand', 'bacc', 'bdam', 'nupgr',
+    'brand', 'bacc', 'bdam', 'nupgr', 'cap-',
     # text colour tags
     'lightgrey', 'darkgrey', 'lightgreen', 'darkgreen', 'lightcyan', 'darkcyan',
     'lightred', 'darkred', 'lightmagenta', 'darkmagenta', 'lightyellow', 'darkyellow'
@@ -1242,6 +1242,8 @@ def process_cplusplus_file(filename):
             if 'annotate_string' in line:
                 continue
             if 'json_' in line:
+                continue
+            if 'tiles.write_message' in line:
                 continue
             if 'serialize' in line:
                 continue

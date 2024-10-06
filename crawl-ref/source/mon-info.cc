@@ -1560,7 +1560,7 @@ string monster_info::speed_description() const
         return "fast";
 
     // This only ever displays through Lua.
-    return "normal"; // @noloc
+    return "normal";
 }
 
 bool monster_info::wields_two_weapons() const

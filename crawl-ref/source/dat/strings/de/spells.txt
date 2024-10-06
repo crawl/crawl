@@ -98,7 +98,7 @@ Summon Small Mammal
 Kleines Säugetier beschwören
 %%%%
 Abjuration
-Abjurierung
+Annullierung
 %%%%
 Bolt of Draining
 Strahl der Entleerung

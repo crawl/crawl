@@ -680,17 +680,19 @@ Einen verfluchten Gegenstand
 # piety amounts
 # Used like this "Piety: <amount>"
 %%%%
+# duplicate
 extremely large
 extrem viel
 %%%%
-large
-viel
+# duplicate
+#large
+#viel
 %%%%
 moderate
 moderat
 %%%%
-small
-wenig
+#small
+#wenig
 %%%%
 
 # gold amount

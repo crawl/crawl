@@ -4059,7 +4059,7 @@ static string _monster_attacks_description(const monster_info& mi)
         string list = comma_separated_line(attack_descs.begin(),
                                            attack_descs.end(),
                                            localise("; and "), localise("; "));
-        result << localise("It can %s.", LocalisationArg(list, false));
+        result << localise("It can %s", LocalisationArg(list, false));
         _describe_mons_to_hit(mi, result);
         result << localise(".") << "\n";
     }
@@ -4416,18 +4416,26 @@ static string _monster_current_target_description(const monster_info &mi)
     {
         auto allies = find_allies_targeting(*m);
         if (allies.size() == 1)
-            result << "It is currently targeted by " << allies[0]->name(DESC_YOUR) << ".\n";
+        {
+            result << localise("It is currently targeted by %s.", 
+                               allies[0]->name(DESC_YOUR))
+                   << "\n";
+        }
         else
         {
-            result << "It is currently targeted by allies:\n";
+            result << localise("It is currently targeted by allies:\n");
             for (auto *a : allies)
-                result << "  " << a->name(DESC_YOUR) << "\n";
+                result << "  " << localise(a->name(DESC_YOUR)) << "\n";
         }
     }
 
     // TODO: this might be ambiguous, give a relative position?
     if (mi.attitude == ATT_FRIENDLY && m->get_foe())
-        result << "It is currently targeting " << m->get_foe()->name(DESC_THE) << ".\n";
+    {
+        string foe = m->get_foe()->name(DESC_THE);
+        result << localise("It is currently targeting %s.", foe)
+               << "\n";
+    }
 
     return result.str();
 }
@@ -4637,7 +4645,7 @@ static string _monster_stat_description(const monster_info& mi)
     if (mi.type == MONS_SHADOW)
     {
         // Cf. monster::action_energy() in monster.cc.
-        result << localise("It covers  ground more quickly when invisible.")
+        result << localise("It covers ground more quickly when invisible.")
                << "\n";
     }
 
@@ -4746,7 +4754,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     string symbol;
     symbol += get_monster_data(mi.type)->basechar;
     if (isaupper(symbol[0]))
-        symbol = "cap-" + symbol; // @noloc
+        symbol = "cap-" + symbol;
 
     string quote2;
     if (!mons_is_unique(mi.type))
@@ -4761,11 +4769,6 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     if (!inf.quote.empty() && !quote2.empty())
         inf.quote += "\n";
     inf.quote += quote2;
-
-    const string it = mi.pronoun(PRONOUN_SUBJECTIVE);
-    const string it_o = mi.pronoun(PRONOUN_OBJECTIVE);
-    const string It = uppercase_first(it);
-    const string is = conjugate_verb("are", mi.pronoun_plurality());
 
     switch (mi.type)
     {
@@ -4837,10 +4840,10 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
     case MONS_PROGRAM_BUG:
         inf.body << localise("If this monster is a \"program bug\", then it's "
-                "recommended that you save your game and reload. Please report "
-                "monsters who masquerade as program bugs or run around the "
-                "dungeon without a proper description to the authorities.");
-        inf.body << "\n";
+                             "recommended that you save your game and reload.")
+                 << localise(" Please report monsters who masquerade as program"
+                             " bugs or run around the dungeon without a proper"
+                             " description to the authorities.\n");
         break;
 
     default:
@@ -4850,11 +4853,11 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     if (mons_class_is_fragile(mi.type))
     {
         if (mi.is(MB_CRUMBLING))
-            inf.body << "\n" << localise("It is quickly crumbling away.") << "\n";
+            inf.body << localise("\nIt is quickly crumbling away.\n");
         else if (mi.is(MB_WITHERING))
-            inf.body << "\n" << localise("It is quickly withering away.") << "\n";
+            inf.body << localise("\nIt is quickly withering away.\n");
         else
-            inf.body << "\n" << localise("If struck, it will die soon after.") << "\n";
+            inf.body << localise("\nIf struck, it will die soon after.\n");
     }
 
     if (!mons_is_unique(mi.type))
@@ -5351,18 +5354,19 @@ string get_command_description(const command_type cmd, bool terse)
  */
 string extra_cloud_info(cloud_type cloud_type)
 {
+    const bool opaque = is_opaque_cloud(cloud_type);
     ostringstream desc;
-    desc << "\n";
-    if (is_opaque_cloud(cloud_type))
+    if (opaque)
     {
-        desc << localise("This cloud is opaque; one tile will not block vision"
-                         ", but multiple will.");
+        desc << localise("\nThis cloud is opaque; one tile will not block "
+                         "vision, but multiple will.");
         desc << "\n\n";
         desc << localise("Clouds of this kind an adventurer makes will vanish "
                          "quickly once outside their sight.");
     }
     else
     {
+        desc << "\n\n";
         desc << localise("Clouds of this kind an adventurer makes will vanish "
                          "almost instantly once outside their sight.");
     }

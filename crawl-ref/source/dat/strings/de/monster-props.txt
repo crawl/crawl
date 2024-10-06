@@ -568,6 +568,29 @@ Schmerz verbunden
 #Curare
 %%%%
 
+%%%%
+tiny
+winzig
+%%%%
+very small
+sehr klein
+%%%%
+small
+klein
+%%%%
+medium
+mittelgroß
+%%%%
+large
+groß
+%%%%
+very large
+sehr groß
+%%%%
+giant
+gigantisch
+%%%%
+
 # how fast
 %%%%
 extremely fast
@@ -578,6 +601,10 @@ sehr schnell
 %%%%
 fast
 schnell
+%%%%
+# never actually displayed, but it's in the code
+normal
+normal
 %%%%
 slow
 langsam
