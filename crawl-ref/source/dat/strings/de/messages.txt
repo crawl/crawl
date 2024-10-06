@@ -3980,10 +3980,10 @@ Wolken dieser Art, die ein Abenteurer erzeugt, verschwinden fast augenblicklich,
 ##################
 %%%%
 Dungeon Overview and Level Annotations
-Dungeon-Überblick und Ebenen-Anmerkungen
+Dungeon-Überblick und Ebene-Anmerkungen
 %%%%
 Branches:
-Äste:
+Zweige:
 %%%%
 " (press <white>G</white> to reach them and <white>?/B</white> for more information)"
 " (<white>G</white> drücken um sie zu erreichen und <white>?/B</white> für wietere Informationen)"
@@ -4022,25 +4022,25 @@ corrupted
 verdorben
 %%%%
 Annotate which branch? (. - %s, ? - help, ! - show branch list)
-
+Welchen Zweig anmerken? (. - %s, ? - Hilfe, ! - Zweigsliste zeigen)
 %%%%
 There is no level above you.
-
+Es gibt keine Ebene über Euch.
 %%%%
 There is no level below you in this branch.
-
+In diesem Zweig gibt es keine Ebene unter Euch.
 %%%%
 "What level of %s? "
-Welche Ebene von %s?
+Welche Ebene von {dat}%s?
 %%%%
 That's not a valid depth.
-
+Das ist keine gültige Tiefe.
 %%%%
 "Current level annotation: "
-
+"Aktuelle Ebene-Anmerkung: "
 %%%%
 "New annotation for %s (include '!' for warning): "
-
+"Neue Anmerkung für {acc}%s ('!' einschließen für Warnung): "
 %%%%
 Cleared annotation.
 Anmerkung gelöscht.
