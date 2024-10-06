@@ -909,8 +909,9 @@ Malmutat
 refrigeration
 Kühlung
 %%%%
+# also used in monster attack description ("It can %s.")
 drain life
-Lebensentzug
+Leben entziehen
 %%%%
 sonic wave
 Schallwelle
@@ -1250,6 +1251,7 @@ Beweglichkeit
 sap magic
 Magie auslaugen
 %%%%
+# also used in monster attack description ("It can %s.")
 drain magic
 Magie entziehen
 %%%%

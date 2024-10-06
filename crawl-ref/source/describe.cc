@@ -3839,46 +3839,46 @@ static const char* _special_flavour_prefix(attack_flavour flavour)
 static string _flavour_base_desc(attack_flavour flavour)
 {
     static const map<attack_flavour, string> base_descs = {
-        { AF_ACID,              " and deal extra acid damage if any damage is dealt"},
-        { AF_BLINK,             " and blink self if any damage is dealt" },
-        { AF_BLINK_WITH,        " and blink together with the defender if any damage is dealt" },
-        { AF_COLD,              " and deal up to %d extra cold damage if any damage is dealt" },
-        { AF_CONFUSE,           " and cause confusion if any damage is dealt" },
-        { AF_DRAIN_STR,         " and drain strength if any damage is dealt" },
-        { AF_DRAIN_INT,         " and drain intelligence if any damage is dealt" },
-        { AF_DRAIN_DEX,         " and drain dexterity if any damage is dealt" },
-        { AF_DRAIN_STAT,        " and drain strength, intelligence or dexterity if any damage is dealt" },
-        { AF_DRAIN,             " and drain life if any damage is dealt" },
-        { AF_ELEC,              " and deal up to %d extra electric damage if any damage is dealt" },
-        { AF_FIRE,              " and deal up to %d extra fire damage if any damage is dealt" },
-        { AF_MUTATE,            " and cause mutations if any damage is dealt" },
-        { AF_POISON_PARALYSE,   " and poison and cause paralysis or slowing if any damage is dealt" },
-        { AF_POISON,            " and cause poisoning if any damage is dealt" },
-        { AF_POISON_STRONG,     " and cause strong poisoning if any damage is dealt" },
-        { AF_VAMPIRIC,          " and drain health from the living if any damage is dealt" },
-        { AF_DISTORT,           " and cause wild translocation effects if any damge is dealt" },
-        { AF_RAGE,              " and cause berserking if any damage is dealt" },
-        { AF_STICKY_FLAME,      " and apply sticky flame if any damage is dealt" },
-        { AF_CHAOTIC,           " and cause unpredictable effects if any damage is dealt" },
-        { AF_STEAL,             " and steal items if any damage is dealt" },
-        { AF_CRUSH,             " and begin ongoing constriction" },
+        { AF_ACID,              "deal extra acid damage"},
+        { AF_BLINK,             "blink self" },
+        { AF_BLINK_WITH,        "blink together with the defender" },
+        { AF_COLD,              "deal up to %d extra cold damage" },
+        { AF_CONFUSE,           "cause confusion" },
+        { AF_DRAIN_STR,         "drain strength" },
+        { AF_DRAIN_INT,         "drain intelligence" },
+        { AF_DRAIN_DEX,         "drain dexterity" },
+        { AF_DRAIN_STAT,        "drain strength, intelligence or dexterity" },
+        { AF_DRAIN,             "drain life" },
+        { AF_ELEC,              "deal up to %d extra electric damage" },
+        { AF_FIRE,              "deal up to %d extra fire damage" },
+        { AF_MUTATE,            "cause mutations" },
+        { AF_POISON_PARALYSE,   "poison and cause paralysis or slowing" },
+        { AF_POISON,            "cause poisoning" },
+        { AF_POISON_STRONG,     "cause strong poisoning" },
+        { AF_VAMPIRIC,          "drain health from the living" },
+        { AF_DISTORT,           "cause wild translocation effects" },
+        { AF_RAGE,              "cause berserking" },
+        { AF_STICKY_FLAME,      "apply sticky flame" },
+        { AF_CHAOTIC,           "cause unpredictable effects" },
+        { AF_STEAL,             "steal items" },
+        { AF_CRUSH,             "begin ongoing constriction" },
         { AF_REACH,             "" },
-        { AF_HOLY,              " and deal extra damage to undead and demons if any damage is dealt" },
-        { AF_ANTIMAGIC,         " and drain magic if any dmage is dealt" },
-        { AF_PAIN,              " and cause pain to the living if any damage is dealt" },
-        { AF_ENSNARE,           " and ensnare with webbing if any damage is dealt" },
-        { AF_ENGULF,            " and engulf" },
+        { AF_HOLY,              "deal extra damage to undead and demons" },
+        { AF_ANTIMAGIC,         "drain magic" },
+        { AF_PAIN,              "cause pain to the living" },
+        { AF_ENSNARE,           "ensnare with webbing" },
+        { AF_ENGULF,            "engulf" },
         { AF_PURE_FIRE,         "" },
-        { AF_DRAIN_SPEED,       " and drain speed if any damage is dealt" },
-        { AF_VULN,              " and reduce willpower if any damage is dealt" },
-        { AF_SHADOWSTAB,        " and deal increased damage when unseen" },
-        { AF_DROWN,             " and deal drowning damage" },
-        { AF_CORRODE,           " and cause corrosion" },
-        { AF_SCARAB,            " and drain speed and drain health if any damage is dealt" },
-        { AF_TRAMPLE,           " and knock back the defender if any damage is dealt" },
-        { AF_REACH_STING,       " and cause poisoning if any damage is dealt" },
-        { AF_REACH_TONGUE,      " and deal extra acid damage if any damage is dealt" },
-        { AF_WEAKNESS,          " and cause weakness if any damage is dealt" },
+        { AF_DRAIN_SPEED,       "drain speed" },
+        { AF_VULN,              "reduce willpower" },
+        { AF_SHADOWSTAB,        "deal increased damage when unseen" },
+        { AF_DROWN,             "deal drowning damage" },
+        { AF_CORRODE,           "cause corrosion" },
+        { AF_SCARAB,            "drain speed and drain health" },
+        { AF_TRAMPLE,           "knock back the defender" },
+        { AF_REACH_STING,       "cause poisoning" },
+        { AF_REACH_TONGUE,      "deal extra acid damage" },
+        { AF_WEAKNESS,          "cause weakness" },
         { AF_KITE,              "" },
         { AF_SWOOP,             "" },
         { AF_PLAIN,             "" },
@@ -3905,7 +3905,16 @@ static string _flavour_effect(attack_flavour flavour, int HD)
         return base_desc;
 
     const int flavour_dam = flavour_damage(flavour, HD, false);
-    return localise(base_desc, flavour_dam);
+    const string flavour_desc = localise(base_desc, flavour_dam);
+
+    if (!flavour_triggers_damageless(flavour)
+        && flavour != AF_KITE && flavour != AF_SWOOP)
+    {
+        return localise(" and ") + flavour_desc
+               + localise(" if any damage is dealt");
+    }
+
+    return localise(" and ") + flavour_desc;
 }
 
 struct mon_attack_info

@@ -3602,119 +3602,114 @@ Dieses Monster sieht gefährlich aus.
 This monster looks extremely dangerous.
 Dieses Monster sieht extrem gefährlich aus.
 %%%%
+# monster attack descriptions ("It can %s.")
 "retreat from adjacent foes and "
-
+"von benachbarten Gegnern zurückweichen und "
 %%%%
 "swoop behind its foe and "
-
+"hinter seinen Feind herabstoßen und "
 %%%%
-" and deal extra acid damage if any damage is dealt"
-
+deal extra acid damage
+zusätzlichen Säureschaden verursachen
 %%%%
-" and blink self if any damage is dealt"
-
+blink self
+selbst blinzeln
 %%%%
-" and blink together with the defender if any damage is dealt"
-
+blink together with the defender
+zusammen mit dem Verteidiger blinzeln
 %%%%
-" and deal up to %d extra cold damage if any damage is dealt"
-
+deal up to %d extra cold damage
+bis zu %d zusätzlichen Kälteschaden verursachen
 %%%%
-" and cause confusion if any damage is dealt"
-
+cause confusion
+Verwirrung verursachen
 %%%%
-" and drain strength if any damage is dealt"
-
+drain strength
+Stärke entziehen
 %%%%
-" and drain intelligence if any damage is dealt"
-
+drain intelligence
+Intelligenz entziehen
 %%%%
-" and drain dexterity if any damage is dealt"
-
+drain dexterity
+Geschicklichket entziehen
 %%%%
-" and drain strength, intelligence or dexterity if any damage is dealt"
-
+drain strength, intelligence or dexterity
+Stärke, Intelligenz, oder Geschicklichket entziehen
 %%%%
-" and drain life if any damage is dealt"
-
+deal up to %d extra electric damage
+bis zu %d zusätzlichen elektrischen Schaden verursachen
 %%%%
-" and deal up to %d extra electric damage if any damage is dealt"
-
+deal up to %d extra fire damage
+bis zu %d zusätzlichen Feuerschaden verursachen
 %%%%
-" and deal up to %d extra fire damage if any damage is dealt"
-
+cause mutations
+Mutationen verursachen
 %%%%
-" and cause mutations if any damage is dealt"
-
+poison and cause paralysis or slowing
+vergiften und paralysieren oder verlangsamen
 %%%%
-" and poison and cause paralysis or slowing if any damage is dealt"
-
+cause poisoning
+vergiften
 %%%%
-" and cause poisoning if any damage is dealt"
-
+cause strong poisoning
+starke Vergiftungen verursachen
 %%%%
-" and cause strong poisoning if any damage is dealt"
-
+drain health from the living
+den Lebenden die Gesundheit entziehen
 %%%%
-" and drain health from the living if any damage is dealt"
-
+cause wild translocation effects
+wilde Translokationseffekte verursachen
 %%%%
-" and cause wild translocation effects if any damge is dealt"
-
+cause berserking
+Berserken verursachen
 %%%%
-" and cause berserking if any damage is dealt"
-
+apply sticky flame
+klebrige Flamme auftragen
 %%%%
-" and apply sticky flame if any damage is dealt"
-
+cause unpredictable effects
+unvorhersehbare Auswirkungen verursachen
 %%%%
-" and cause unpredictable effects if any damage is dealt"
-
+steal items
+Gegenstände stehlen
 %%%%
-" and steal items if any damage is dealt"
-
+begin ongoing constriction
+andauerndes Erwürgen beginnen
 %%%%
-" and begin ongoing constriction"
-
+deal extra damage to undead and demons
+zusätzlichen Schaden an Untoten und Dämonen verursachen
 %%%%
-" and deal extra damage to undead and demons if any damage is dealt"
-
+cause pain to the living
+den Lebenden Schmerz zufügen
 %%%%
-" and drain magic if any dmage is dealt"
-
+ensnare with webbing
+mit Gewebe einschnüren
 %%%%
-" and cause pain to the living if any damage is dealt"
-
+drain speed
+Geschwindigkeit entziehen
 %%%%
-" and ensnare with webbing if any damage is dealt"
-
+reduce willpower
+Willenskraft entziehen
 %%%%
-" and engulf"
-
+deal increased damage when unseen
+wenn ungesehen mehr Schaden verursachen
 %%%%
-" and drain speed if any damage is dealt"
-
+deal drowning damage
+Ertrinkungsschaden verursachen
 %%%%
-" and reduce willpower if any damage is dealt"
-
+cause corrosion
+Korrosion verursachen
 %%%%
-" and deal increased damage when unseen"
-
+drain speed and drain health
+Geschwindigkeit und Gesundheit entziehen
 %%%%
-" and deal drowning damage"
-
+knock back the defender
+den Verteidiger zurückschlagen
 %%%%
-" and cause corrosion"
-
+cause weakness
+Schwäche verursachen
 %%%%
-" and drain speed and drain health if any damage is dealt"
-
-%%%%
-" and knock back the defender if any damage is dealt"
-
-%%%%
-" and cause weakness if any damage is dealt"
-
+" if any damage is dealt"
+" wenn Schaden zugefügt wird"
 %%%%
 # %s here is a verb like "hit"
 %s for up to %d fire damage
@@ -3727,7 +3722,7 @@ Dieses Monster sieht extrem gefährlich aus.
 %s für bis zu %d Schaden
 %%%%
 %s %d times for up to %d damage each plus %s
-%s %d Mal für bis zu %d Schaden pro Mal plus %s
+%2$d Mal %1$s für bis zu %3$d Schaden pro Mal plus %4$s
 %%%%
 %s for up to %d damage plus %s
 %s für bis zu %d Schaden plus %s
@@ -3744,17 +3739,20 @@ aus der Ferne %s für bis zu %d Schaden
 %s from a distance for up to %d damage plus %s
 aus der Ferne %s für bis zu %d Schaden plus %s
 %%%%
+# Monster can do whatever from the things above
 It can %s.
 Dieses Monster kann %s.
 %%%%
+# The Royal Jelly
 It will release varied jellies when damaged or killed, with the number of jellies proportional to the amount of damage.
-
+Wenn es beschädigt oder getötet wird, setzt es verschiedene Gelees frei, wobei die Anzahl der Gelees proportional zur Höhe des Schadens ist.
 %%%%
 It will release all of its jellies when polymorphed.
-
+Es setzt alle seine Gelees frei, wenn es polymorphisiert wird.
 %%%%
+# Quivering here means "has in quiver" (not shaking)
 It is quivering %s.
-
+Es hat {acc}%s im Köcher.
 %%%%
 To read a description, press the key listed above. (AdB) indicates damage (the sum of A B-sided dice), (x%%) indicates the chance to defeat your Will, and (y) indicates the spell range
 
