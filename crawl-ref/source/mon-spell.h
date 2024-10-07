@@ -1715,6 +1715,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_SAWBLADE,
+      {
+        { SPELL_SHRED, 200, MON_SPELL_NATURAL },
+      }
+    },
+
     // (';') Walking Tomes.
     { MST_WALKING_TOME,
       {

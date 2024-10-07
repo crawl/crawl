@@ -1524,6 +1524,11 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         return "there are no nearby walls to construct a spike launcher in.";
     }
 
+    case SPELL_DIAMOND_SAWBLADES:
+        if (temp && diamond_sawblade_spots(false).empty())
+            return "there is no room to construct a sawblade.";
+        break;
+
     default:
         break;
     }

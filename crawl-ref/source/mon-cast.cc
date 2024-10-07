@@ -835,6 +835,39 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             cast_grave_claw(caster, beam.target, pow, false);
         },
     } },
+    { SPELL_SHRED, {
+       _always_worthwhile,
+       [](monster &caster, mon_spell_slot, bolt&) {
+            const int pow = mons_spellpower(caster, SPELL_SHRED);
+            dice_def dmg = zap_damage(ZAP_SHRED, pow, true);
+            for (adjacent_iterator ai(caster.pos()); ai; ++ai)
+            {
+                if (!monster_at(*ai) || monster_at(*ai)->wont_attack())
+                    continue;
+
+                // Don't shred things out of the player's sight
+                if (!monster_los_is_valid(&caster, *ai))
+                    continue;
+
+                monster* victim = monster_at(*ai);
+                int final = victim->apply_ac(dmg.roll());
+
+                if (you.can_see(caster))
+                {
+                    mprf("%s shreds %s%s", caster.name(DESC_THE).c_str(),
+                        victim->name(DESC_THE).c_str(),
+                        final ? attack_strength_punctuation(final).c_str()
+                                : ", but does no damage.");
+                }
+
+                if (final)
+                {
+                    bleed_onto_floor(victim->pos(), victim->type, final, true);
+                    victim->hurt(&caster, final);
+                }
+            }
+        },
+    } },
     { SPELL_SOUL_SPLINTER, _hex_logic(SPELL_SOUL_SPLINTER, _foe_soul_splinter_goodness) },
 };
 

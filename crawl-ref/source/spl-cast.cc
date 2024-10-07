@@ -1414,6 +1414,10 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_PUTREFACTION:
         return make_unique<targeter_putrefaction>(range);
 
+    case SPELL_DIAMOND_SAWBLADES:
+        return make_unique<targeter_multiposition>(&you,
+                                                   diamond_sawblade_spots(false));
+
     default:
         break;
     }
@@ -2452,6 +2456,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_SPIKE_LAUNCHER:
         return cast_spike_launcher(powc, fail);
 
+    case SPELL_DIAMOND_SAWBLADES:
+        return cast_diamond_sawblades(powc, fail);
+
     // Enchantments.
     case SPELL_CONFUSING_TOUCH:
         return cast_confusing_touch(powc, fail);
@@ -2909,6 +2916,8 @@ static dice_def _spell_damage(spell_type spell, int power)
             return hellfire_mortar_damage(power);
         case SPELL_SUMMON_LIGHTNING_SPIRE:
             return lightning_spire_damage(power);
+        case SPELL_DIAMOND_SAWBLADES:
+            return diamond_sawblade_damage(power);
         default:
             break;
     }

@@ -3379,3 +3379,88 @@ void clockwork_bee_pick_new_target(monster& bee)
         bee.add_ench(mon_enchant(ENCH_HAUNTING, 0, targ, INFINITE_DURATION));
     }
 }
+
+dice_def diamond_sawblade_damage(int power)
+{
+    return zap_damage(ZAP_SHRED, (1 + div_rand_round(power, 10)) * 12, true, false);
+}
+
+vector<coord_def> diamond_sawblade_spots(bool actual)
+{
+    const static coord_def offsets[4] =
+    {
+        coord_def(-2, -2),
+        coord_def(2, -2),
+        coord_def(2, 2),
+        coord_def(-2, 2)
+    };
+
+    vector<coord_def> spots;
+
+    for (int i = 0; i < 4; ++i)
+    {
+        coord_def spot = you.pos() + offsets[i];
+        if (!in_bounds(spot) || !you.see_cell_no_trans(spot)
+            || !feat_has_solid_floor(env.grid(spot)))
+        {
+            continue;
+        }
+
+        // Cannot place on top of another actor (but can always replace
+        // existing sawblades made by this spell).
+        if (const actor* act = actor_at(spot))
+        {
+            if (!(act->type == MONS_DIAMOND_SAWBLADE
+                  && act->was_created_by(SPELL_DIAMOND_SAWBLADES))
+                && (actual || you.can_see(*act)))
+            {
+                continue;
+            }
+        }
+
+        spots.push_back(spot);
+    }
+
+    return spots;
+}
+
+spret cast_diamond_sawblades(int power, bool fail)
+{
+    fail_check();
+
+    vector<coord_def> spots = diamond_sawblade_spots(true);
+
+    // Implies there is an invisible monster occupying one of the spaces we were
+    // going to make a sawblade.
+    if (spots.empty())
+    {
+        mpr("You try to forge sawblades, but something it already there!");
+        return spret::success;
+    }
+
+    // Remove all our old sawblades first.
+    for (monster_iterator mi; mi; ++mi)
+        if (mi->was_created_by(you, SPELL_DIAMOND_SAWBLADES))
+            monster_die(**mi, KILL_TIMEOUT, NON_MONSTER);
+
+    int dur = random_range(140, 220);
+    mgen_data mg = _pal_data(MONS_DIAMOND_SAWBLADE, dur,
+                             SPELL_DIAMOND_SAWBLADES, false).set_range(0);
+    mg.hd = 1 + div_rand_round(power, 10);
+
+    // Dmage should increase with power, but HP stay constant.
+    mg.hp = 40 + random2avg(20, 2);
+
+    for (size_t i = 0; i < spots.size(); ++i)
+    {
+        mg.pos = spots[i];
+        create_monster(mg);
+    }
+
+    if (spots.size() == 1)
+        mpr("You forge a whirling saw of razor-sharp crystal.");
+    else
+        mpr("You forge whirling saws of razor-sharp crystal.");
+
+    return spret::success;
+}

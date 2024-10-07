@@ -1836,6 +1836,16 @@ void handle_monster_move(monster* mons)
         return;
     }
 
+    if (mons->type == MONS_DIAMOND_SAWBLADE)
+    {
+        // XXX: If its foe gets set to something that is no longer in sight, it
+        //      will refuse to shred entirely.
+        mons->foe = MHITNOT;
+        try_mons_cast(*mons, SPELL_SHRED);
+        mons->lose_energy(EUT_SPELL);
+        return;
+    }
+
     if (mons->type == MONS_BLAZEHEART_CORE)
     {
         mons->suicide();

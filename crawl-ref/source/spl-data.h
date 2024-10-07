@@ -4148,6 +4148,31 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_DIAMOND_SAWBLADES, "Diamond Sawblades",
+    spschool::forgecraft,
+    spflag::none,
+    7,
+    200,
+    -1, -1,
+    0,
+    TILEG_ERROR,
+},
+
+{
+    SPELL_SHRED, "Shred",
+    spschool::forgecraft,
+    // XXX: This isn't really a 'utility' spell, but this is the easiest way to
+    //      avoid sawblades refusing to use it if they somehow end up targeting
+    //      the player.
+    spflag::monster | spflag::utility,
+    1,
+    200,
+    1, 1,
+    0,
+    TILEG_ERROR,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

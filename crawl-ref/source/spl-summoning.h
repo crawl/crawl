@@ -143,3 +143,7 @@ void handle_clockwork_bee_spell(int turn);
 void clockwork_bee_go_dormant(monster& bee);
 bool clockwork_bee_recharge(monster& bee);
 void clockwork_bee_pick_new_target(monster& bee);
+
+dice_def diamond_sawblade_damage(int power);
+vector<coord_def> diamond_sawblade_spots(bool actual);
+spret cast_diamond_sawblades(int power, bool fail);

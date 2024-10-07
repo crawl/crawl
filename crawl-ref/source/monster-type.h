@@ -647,6 +647,7 @@ enum monster_type                      // env.mons[].type
 #if TAG_MAJOR_VERSION > 34
     MONS_DIAMOND_OBELISK,
     MONS_HOARFROST_CANNON,
+    MONS_DIAMOND_SAWBLADE,
     MONS_HELLFIRE_MORTAR,
 #endif
 
@@ -1280,6 +1281,7 @@ enum monster_type                      // env.mons[].type
     MONS_NEKOMATA,
     MONS_CLOCKWORK_BEE,
     MONS_CLOCKWORK_BEE_INACTIVE,
+    MONS_DIAMOND_SAWBLADE,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

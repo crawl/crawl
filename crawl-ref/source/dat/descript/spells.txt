@@ -451,6 +451,11 @@ Debugging Ray spell
 
 Fires a ray which does massive damage (1500 hp) and always hits.
 %%%%
+Diamond Sawblades spell
+
+Forges up to four razor-sharp sawblades at fixed positions around the caster
+which shred any enemies adjacent to them over several turns.
+%%%%
 Dig spell
 
 Digs a tunnel through unworked rock.
@@ -1541,6 +1546,11 @@ animating them and sending them out to attack.
 Shock spell
 
 Throws a bouncing bolt of electricity. It bypasses half of defenders' armour.
+%%%%
+Shred spell
+
+Spins in place, dealing grievous damage to adjacent enemies with its serrated
+body.
 %%%%
 Sigil of Binding spell
 

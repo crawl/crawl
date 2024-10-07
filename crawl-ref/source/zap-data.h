@@ -2402,4 +2402,20 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     false,
 },
 
+{
+    ZAP_SHRED,
+    "shred",
+    200,
+    nullptr,
+    nullptr,
+    new dicedef_calculator<4, 4, 1, 15>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    CYAN,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+},
+
 };
