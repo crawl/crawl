@@ -705,7 +705,7 @@ monster* update_monster(monster& mon, int turns)
     mon.foe_memory = max(mon.foe_memory - turns, 0);
 
     // Yredelemnul bind soul requires the monster stay in our LOS
-    if(mon.has_ench(ENCH_SOUL_RIPE))
+    if (mon.has_ench(ENCH_SOUL_RIPE))
         mon.del_ench(ENCH_SOUL_RIPE, true, false);
 
     // FIXME:  Convert literal string 10 to constant to convert to auts
