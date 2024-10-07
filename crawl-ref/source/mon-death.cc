@@ -2368,23 +2368,6 @@ item_def* monster_die(monster& mons, killer_type killer,
 
         silent = true;
     }
-    else if (leaves_corpse && mons.has_ench(ENCH_RIMEBLIGHT)
-             && !silent && !was_banished && !mons_reset
-             && mons.props.exists(RIMEBLIGHT_DEATH_KEY))
-    {
-        // If we died due to the rimeblight instakill threshold, leave a pillar
-        // of rime behind.
-        leaves_corpse = false;
-        did_death_message = true;
-        if (you.see_cell(mons.pos()))
-        {
-            mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD,
-                 "Tendrils of ice devour %s body!", mons.name(DESC_ITS).c_str());
-        }
-        death_spawn_fineff::schedule(MONS_PILLAR_OF_RIME,
-                                    mons.pos(),
-                                    random_range(3, 11) * BASELINE_DELAY);
-    }
     else if (mons.type == MONS_BLAZEHEART_GOLEM && !silent && !mons_reset
              && !was_banished)
     {
@@ -2446,12 +2429,41 @@ item_def* monster_die(monster& mons, killer_type killer,
                                                         * BASELINE_DELAY;
         }
     }
+    else if (mons.type == MONS_BATTLESPHERE)
+        end_battlesphere(&mons, true);
+    else if (mons.type == MONS_SPECTRAL_WEAPON)
+        end_spectral_weapon(&mons, true, true);
+    else if (mons.type == MONS_FLAYED_GHOST)
+        end_flayed_effect(&mons);
+    else if (mons.type == MONS_PLAYER_SHADOW)
+        dithmenos_cleanup_player_shadow(&mons);
 
     if (mons.has_ench(ENCH_MAGNETISED))
     {
         place_cloud(CLOUD_MAGNETISED_DUST, mons.pos(),
                         random_range(7, 11),
                         mons.get_ench(ENCH_MAGNETISED).agent());
+    }
+
+    if (mons.has_ench(ENCH_VENGEANCE_TARGET))
+        beogh_progress_vengeance();
+
+    if (leaves_corpse && mons.has_ench(ENCH_RIMEBLIGHT)
+        && !silent && !was_banished && !mons_reset
+        && mons.props.exists(RIMEBLIGHT_DEATH_KEY))
+    {
+        // If we died due to the rimeblight instakill threshold, leave a pillar
+        // of rime behind.
+        leaves_corpse = false;
+        did_death_message = true;
+        if (you.see_cell(mons.pos()))
+        {
+            mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD,
+                 "Tendrils of ice devour %s body!", mons.name(DESC_ITS).c_str());
+        }
+        death_spawn_fineff::schedule(MONS_PILLAR_OF_RIME,
+                                    mons.pos(),
+                                    random_range(3, 11) * BASELINE_DELAY);
     }
 
     if (monster_explodes(mons))
@@ -3212,7 +3224,8 @@ void end_flayed_effect(monster* ghost)
     }
 }
 
-// Clean up after a dead monster.
+// Clean up a monster that's stopped existing on the current floor (whether
+// because they died or because they're transiting to a new floor).
 void monster_cleanup(monster* mons)
 {
     crawl_state.mon_gone(mons);
@@ -3224,18 +3237,6 @@ void monster_cleanup(monster* mons)
         forest_message(mons->pos(), "The forest abruptly stops moving.");
         env.forest_awoken_until = 0;
     }
-
-    if (mons->has_ench(ENCH_VENGEANCE_TARGET))
-        beogh_progress_vengeance();
-
-    if (mons->type == MONS_BATTLESPHERE)
-        end_battlesphere(mons, true);
-    else if (mons->type == MONS_SPECTRAL_WEAPON)
-        end_spectral_weapon(mons, true, true);
-    else if (mons->type == MONS_FLAYED_GHOST)
-        end_flayed_effect(mons);
-    else if (mons->type == MONS_PLAYER_SHADOW)
-        dithmenos_cleanup_player_shadow(mons);
 
     // Monsters haloes should be removed when they die.
     if (mons->halo_radius()
