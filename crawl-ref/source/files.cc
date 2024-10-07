@@ -551,7 +551,7 @@ void validate_basedirs()
         string err = "Missing DCSS data directory; tried:"; // localise
         string dirs = comma_separated_line(bases.begin(), bases.end());
 
-        end(1, false, "%s\n%s", err.c_str(), dirs.c_str()); // @noloc
+        end(1, false, "%s\n%s", err.c_str(), dirs.c_str());
     }
 }
 
@@ -3462,7 +3462,7 @@ static bool _restore_tagged_chunk(package *save, const string &name,
             return false;
         }
         else
-            end(-1, false, "\n%s %s\n", complaint, reason.c_str()); // @noloc
+            end(-1, false, "\n%s %s\n", complaint, reason.c_str());
     }
 
     crawl_state.minor_version = inf.getMinorVersion();

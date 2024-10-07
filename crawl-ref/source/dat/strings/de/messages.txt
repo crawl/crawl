@@ -4755,10 +4755,10 @@ Your summoned allies are left behind.
 Eure beschworene Verbündeter bleiben zurück.
 %%%%
 Your mindless thrall stays behind.
-Euer geistloser Sklave bleibt zurück.
+Euer hirnloser Sklave bleibt zurück.
 %%%%
 Your mindless thralls stay behind.
-Eure geistlose Sklaven bleiben zurück.
+Eure hirnlose Sklaven bleiben zurück.
 %%%%
 Generating dungeon...
 Dungeon wird generiert...
@@ -4800,16 +4800,16 @@ Error installing bones file to %s
 Fehler beim Installieren der Bones-Datei auf %s
 %%%%
 Failed to unlink probably corrupt bones file: %s
-Vermutlich beschädigte Knochendatei konnte nicht entlinkt werden: %s
+Vermutlich beschädigte Bones-Datei konnte nicht entlinkt werden: %s
 %%%%
 Bones file to back up doesn't exist: %s
 Zu sichernde Bones-Datei existiert nicht: %s
 %%%%
 Unable to open bones backup file %s for writing
-Bones-Sicherungsdatei%s kann nicht zum Schreiben geöffnet werden
+Bones-Backup-Datei %s kann nicht zum Schreiben geöffnet werden
 %%%%
 Error backing up bones file to %s
-Fehler beim Sichern der Bones-Datei auf%s
+Fehler beim Sichern der Bones-Datei auf %s
 %%%%
 Ghost file "%s" seems to be invalid (short read); deleting it.
 Gespenst-Datei "%s" scheint ungültig zu sein (kurzes Lesen); wird gelöscht.
@@ -4818,7 +4818,7 @@ Mismatch between bones backup filename '%s' and version %d.%d!
 Unstimmigkeit zwischen dem Namen der Bones-Datei '%s' und der Version %d.%d!
 %%%%
 Failed to unlink bones file: %s
-Fehler beim Aufheben der Verknüpfung der Bones-Datei:%s
+Bones-Datei kann nicht entlinkt werden: %s
 %%%%
 regular
 normal
@@ -4839,7 +4839,7 @@ You already have a %s game saved under the name '%s';
 Es gibt schon ein Spiel dieser Art (%s) unter den Namen '%s';
 %%%%
 do you want to load that instead?
-soll ich das stattdessen laden?
+diese Datei stattdessen laden?
 %%%%
 Please use a different name to start a new %s game, then.
 Bitte verwendet dann einen anderen Namen, um ein neues %s Spiel zu beginnen.
@@ -4863,13 +4863,13 @@ Error: %s
 Fehler: %s
 %%%%
 File is corrupt (found version %d.%d).
-Datei ist korrumpiert (Version %d.%d gefunden)
+Datei ist beschädigt (Version %d.%d gefunden)
 %%%%
 This save is from an older version.
 Diese Datei stammt aus einer älteren Version.
 %%%%
 %s %s is not compatible with save files this old. You can:
-%s %s %s ist nicht kompatibel mit so alten Speicherdateien. Möglichkeiten:
+%s %s ist nicht kompatibel mit so alten Speicherdateien. Möglichkeiten:
 %%%%
 " • continue your game with an older version of %s"
 " • das Spiel mit einer älteren Version von %s weitermachen"
@@ -4893,7 +4893,7 @@ This save's version: (%d.%d) (must be <= %d.%d)
 Version dieses Spiels: (%d.%d) (muss <= %d.%d sein)
 %%%%
 ERROR: Could not lock file %s
-FEHLER: Datei%s konnte nicht gesperrt werden
+FEHLER: Datei "%s" konnte nicht gesperrt werden
 %%%%
 Unable to open lock file "%s"
 Sperrdatei "%s" kann nicht geöffnet werden
