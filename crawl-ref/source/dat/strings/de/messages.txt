@@ -4904,28 +4904,28 @@ Sperrdatei "%s" kann nicht geöffnet werden
 ##################
 %%%%
 %s reflects your damage back at you!
-%s spiegelt Euren Schaden bei Euch wider!
+%s reflektiert Euren Schaden auf Euch zurück!
 %%%%
 Your damage is reflected back at you!
-Euer Schaden spiegelt sich bei Euch wider!
+Euer Schaden wird zurück auf Euch reflektiert!
 %%%%
 %s mirrors your injury!
-
+%s spiegelt Eure Verletzung wider!
 %%%%
 %s suffers a backlash!
-
+%s erleidet einen Rückschlag!
 %%%%
 %s shudders alarmingly.
-
+%s zittert erschreckend.
 %%%%
 %s shudders violently.
-
+%s zittert heftig.
 %%%%
 %s shudders vigorously.
-
+%s zittert kräftig.
 %%%%
 %s shudders.
-
+%s zittert.
 %%%%
 %s spits out another jelly.
 %s spuckt noch ein Gelee aus.
@@ -4934,25 +4934,27 @@ Euer Schaden spiegelt sich bei Euch wider!
 %s spuckt %d mehr Gelees aus.
 %%%%
 One of the Royal Jelly's fragments survives.
-Eines der Fragmente des Gelée Royale ist erhalten.
+Eines der Fragmente des Gelée Royale ist erhalten geblieben.
 %%%%
 The dying Royal Jelly spits out %d more jellies.
 Das sterbende Gelée Royale spuckt %d mehr Gelees aus.
 %%%%
+# starcursed mass merge
 %s shudders and is absorbed by its neighbour.
-
+%s zittert und wird von ihrem Nachbarn absorbiert.
 %%%%
+# starcursed mass attempted merge
 %s shudders and withdraws towards its neighbour.
-
+%s zittert und zieht sich zu ihrem Nachbarn zurück.
 %%%%
 %s electric aura discharges, shocking %s!
-Die elektrische Aura {gen}%s entlädt sich und schockiert {acc}%s!
+Die elektrische Aura %s entlädt sich und schockiert {acc}%s!
 %%%%
 %s electric aura discharges violently, shocking %s!
-Die elektrische Aura {gen}%s entlädt sich heftig und schockiert {acc}%s!
+Die elektrische Aura %s entlädt sich heftig und schockiert {acc}%s!
 %%%%
 The air sparks with electricity, shocking %s!
-Die Luft funkelt vor Elektrizität und schockiert %s!
+Die Luft funkelt vor Elektrizität und schockiert {acc}%s!
 %%%%
 The injured rakshasa weaves a defensive illusion!
 Der verletzte Rakshasa webt eine defensive Illusion!
@@ -4961,7 +4963,7 @@ Der verletzte Rakshasa webt eine defensive Illusion!
 %s platzt aus {dat}%s!
 %%%%
 You feel extremely nervous for a moment...
-Ihr fühlt Euch für einen Moment extrem nervös ...
+Ihr fühlt Euch für einen Moment extrem nervös...
 %%%%
 A malignant aura surrounds %s.
 Eine bösartige Aura umgibt {acc}%s.
