@@ -1396,8 +1396,10 @@ Basis
 #Schatte
 %%%%
 Halo
+Nimbus
 %%%%
 Ench
+Verzaub
 %%%%
 Legs
 Beine
