@@ -339,69 +339,6 @@ a %sgold dragon scales
 a %sring
 ein {adj-er}%sRing
 %%%%
-a %sring of protection
-ein {adj-er}%sRing des Schutzes
-%%%%
-a %sring of protection from fire
-ein {adj-er}%sRing der Feuerresistenz
-%%%%
-a %sring of poison resistance
-ein {adj-er}%sRing der Giftresistenz
-%%%%
-a %sring of protection from cold
-ein {adj-er}%sRing der Kälteresistenz
-%%%%
-a %sring of strength
-ein {adj-er}%sRing der Stärke
-%%%%
-a %sring of slaying
-ein {adj-er}%sRing des Tötens
-%%%%
-a %sring of see invisible
-ein {adj-er}%sRing von Unsichtbares sehen
-%%%%
-a %sring of resist corrosion
-ein {adj-er}%sRing der Korrosionresistenz
-%%%%
-a %sring of teleportation
-ein {adj-er}%sRing der Teleportation
-%%%%
-a %sring of evasion
-ein {adj-er}%sRing der Umgehung
-%%%%
-a %sring of stealth
-ein {adj-er}%sRing der Heimlichkeit
-%%%%
-a %sring of dexterity
-ein {adj-er}%sRing der Geschicklichkeit
-%%%%
-a %sring of intelligence
-ein {adj-er}%sRing der Intelligenz
-%%%%
-a %sring of wizardry
-ein {adj-er}%sRing der Zauberei
-%%%%
-a %sring of magical power
-ein {adj-er}%sRing magischer Kraft
-%%%%
-a %sring of flight
-ein {adj-er}%sRing des Fliegens
-%%%%
-a %sring of positive energy
-ein {adj-er}%sRing positiver Energie
-%%%%
-a %sring of willpower
-ein {adj-er}%sRing der Willenskraft
-%%%%
-a %sring of fire
-ein {adj-er}%sRing des Feuers
-%%%%
-a %sring of ice
-ein {adj-er}%sRing des Eises
-%%%%
-a %sring of obsoleteness
-ein {adj-er}%sobsoleter Ring
-%%%%
 
 # unidentified
 %%%%
@@ -500,30 +437,6 @@ ein {adj-er}%sMondsteinring
 %%%%
 a %samulet
 ein {adj-es}%sAmulett
-%%%%
-a %samulet of magic regeneration
-ein {adj-es}%sAmulett der Magie-Regeneration
-%%%%
-a %samulet of the acrobat
-ein {adj-es}%sAmulett des Akrobaten
-%%%%
-a %samulet of inaccuracy
-ein {adj-es}%sAmulett der Ungenauigkeit
-%%%%
-a %samulet of nothing
-ein {adj-es}%sAmulett von nichts
-%%%%
-a %samulet of guardian spirit
-ein {adj-es}%sAmulett des Geistschildes
-%%%%
-a %samulet of faith
-ein {adj-es}%sAmulett des Glaubens
-%%%%
-a %samulet of reflection
-ein {adj-es}%sAmulett der Reflexion
-%%%%
-a %samulet of regeneration
-ein {adj-es}%sAmulett der Regeneration
 %%%%
 
 # unidentified

@@ -24,7 +24,7 @@ It affects your shielding (%+d).
 Dieser Gegenstand beeinflusst Eure Abschirmung (%+d).
 %%%%
 It affects your evasion (%+d).
-Dieser Gegenstand beeinflusst Eure Umgehung (%+d).
+Dieser Gegenstand beeinflusst Euer Ausweichen (%+d).
 %%%%
 It affects your strength (%+d).
 Dieser Gegenstand beeinflusst Eure Stärke (%+d).
@@ -415,7 +415,7 @@ Encumbrance rating: %d
 Belastungswert: %d
 %%%%
 Evasion: %d
-Umgehung: %d
+Ausweichen: %d
 %%%%
 If you switch to wearing this armour, your AC would increase by %d (%d -> %d).
 Wenn Ihr zu dieser Rüstung wechselt, würde Eure RK um %d erhöht (%d -> %d).

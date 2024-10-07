@@ -558,7 +558,7 @@ Trunk-Spiele gelten nicht für das Turnier. Ihr wollt veilleicht %s. Trunk trotz
 AC:
 RK:
 %%%%
-# Evasion = Umgehung
+# Evasion = Ausweichen
 %%%%
 EV:
 AW:
@@ -678,7 +678,7 @@ Gold:
 "AC: "
 "RK:  "
 %%%%
-# Evasion = Umgehung
+# Evasion = Ausweichen
 %%%%
 "EV: "
 "AW:  "

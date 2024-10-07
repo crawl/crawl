@@ -268,9 +268,9 @@ vector<map<string, string>> amulets =
         {"acc", "ein Amulett des Akrobaten"}
     },
     {
-        {"en", "a cursed amulet of inaccuracy"},
-        {"nom", "ein verfluchtes Amulett der Ungenauigkeit"},
-        {"acc", "ein verfluchtes Amulett der Ungenauigkeit"}
+        {"en", "a cursed amulet of faith"},
+        {"nom", "ein verfluchtes Amulett des Glaubens"},
+        {"acc", "ein verfluchtes Amulett des Glaubens"}
     },
 };
 

@@ -1007,10 +1007,7 @@ def special_handling_for_item_name_cc(section, line, string, strings):
     elif section == 'scroll_type_name':
         string = 'scroll of ' + string
     elif section == 'jewellery_effect_name':
-        if 'AMU_' in line:
-            string = '%samulet of ' + string
-        else:
-            string = '%sring of ' + string
+        string = ' of ' + string
     elif section == 'jewellery_effect_name(terse)':
         # the plus is handled separately
         string = re.sub(r'\+.*', '', string)

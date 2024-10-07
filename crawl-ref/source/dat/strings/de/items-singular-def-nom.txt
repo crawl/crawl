@@ -339,69 +339,6 @@ die {adj-en}%sGolddrachenschuppen
 the %sring
 der {adj-e}%sRing
 %%%%
-the %sring of protection
-der {adj-e}%sRing des Schutzes
-%%%%
-the %sring of protection from fire
-der {adj-e}%sRing der Feuerresistenz
-%%%%
-the %sring of poison resistance
-der {adj-e}%sRing der Giftresistenz
-%%%%
-the %sring of protection from cold
-der {adj-e}%sRing der Kälteresistenz
-%%%%
-the %sring of strength
-der {adj-e}%sRing der Stärke
-%%%%
-the %sring of slaying
-der {adj-e}%sRing des Tötens
-%%%%
-the %sring of see invisible
-der {adj-e}%sRing von Unsichtbares sehen
-%%%%
-the %sring of resist corrosion
-der {adj-e}%sRing der Korrosionresistenz
-%%%%
-the %sring of teleportation
-der {adj-e}%sRing der Teleportation
-%%%%
-the %sring of evasion
-der {adj-e}%sRing der Umgehung
-%%%%
-the %sring of stealth
-der {adj-e}%sRing der Heimlichkeit
-%%%%
-the %sring of dexterity
-der {adj-e}%sRing der Geschicklichkeit
-%%%%
-the %sring of intelligence
-der {adj-e}%sRing der Intelligenz
-%%%%
-the %sring of wizardry
-der {adj-e}%sRing der Zauberei
-%%%%
-the %sring of magical power
-der {adj-e}%sRing magischer Kraft
-%%%%
-the %sring of flight
-der {adj-e}%sRing des Fliegens
-%%%%
-the %sring of positive energy
-der {adj-e}%sRing positiver Energie
-%%%%
-the %sring of willpower
-der {adj-e}%sRing der Willenskraft
-%%%%
-the %sring of fire
-der {adj-e}%sRing des Feuers
-%%%%
-the %sring of ice
-der {adj-e}%sRing des Eises
-%%%%
-the %sring of obsoleteness
-der {adj-e}%sobsoleter Ring
-%%%%
 
 # unidentified
 %%%%
@@ -500,30 +437,6 @@ der {adj-e}%sMondsteinring
 %%%%
 the %samulet
 das {adj-e}%sAmulett
-%%%%
-the %samulet of magic regeneration
-das {adj-e}%sAmulett der Magie-Regeneration
-%%%%
-the %samulet of the acrobat
-das {adj-e}%sAmulett des Akrobaten
-%%%%
-the %samulet of inaccuracy
-das {adj-e}%sAmulett der Ungenauigkeit
-%%%%
-the %samulet of nothing
-das {adj-e}%sAmulett von nichts
-%%%%
-the %samulet of guardian spirit
-das {adj-e}%sAmulett des Geistschildes
-%%%%
-the %samulet of faith
-das {adj-e}%sAmulett des Glaubens
-%%%%
-the %samulet of reflection
-das {adj-e}%sAmulett der Reflexion
-%%%%
-the %samulet of regeneration
-das {adj-e}%sAmulett der Regeneration
 %%%%
 
 # unidentified

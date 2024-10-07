@@ -339,69 +339,6 @@ Eure {adj-en}%sGolddrachenschuppen
 your %sring
 Euer {adj-er}%sRing
 %%%%
-your %sring of protection
-Euer {adj-er}%sRing des Schutzes
-%%%%
-your %sring of protection from fire
-Euer {adj-er}%sRing der Feuerresistenz
-%%%%
-your %sring of poison resistance
-Euer {adj-er}%sRing der Giftresistenz
-%%%%
-your %sring of protection from cold
-Euer {adj-er}%sRing der Kälteresistenz
-%%%%
-your %sring of strength
-Euer {adj-er}%sRing der Stärke
-%%%%
-your %sring of slaying
-Euer {adj-er}%sRing des Tötens
-%%%%
-your %sring of see invisible
-Euer {adj-er}%sRing von Unsichtbares sehen
-%%%%
-your %sring of resist corrosion
-Euer {adj-er}%sRing der Korrosionresistenz
-%%%%
-your %sring of teleportation
-Euer {adj-er}%sRing der Teleportation
-%%%%
-your %sring of evasion
-Euer {adj-er}%sRing der Umgehung
-%%%%
-your %sring of stealth
-Euer {adj-er}%sRing der Heimlichkeit
-%%%%
-your %sring of dexterity
-Euer {adj-er}%sRing der Geschicklichkeit
-%%%%
-your %sring of intelligence
-Euer {adj-er}%sRing der Intelligenz
-%%%%
-your %sring of wizardry
-Euer {adj-er}%sRing der Zauberei
-%%%%
-your %sring of magical power
-Euer {adj-er}%sRing magischer Kraft
-%%%%
-your %sring of flight
-Euer {adj-er}%sRing des Fliegens
-%%%%
-your %sring of positive energy
-Euer {adj-er}%sRing positiver Energie
-%%%%
-your %sring of willpower
-Euer {adj-er}%sRing der Willenskraft
-%%%%
-your %sring of fire
-Euer {adj-er}%sRing des Feuers
-%%%%
-your %sring of ice
-Euer {adj-er}%sRing des Eises
-%%%%
-your %sring of obsoleteness
-Euer {adj-er}%sobsoleter Ring
-%%%%
 
 # unidentified
 %%%%
@@ -500,30 +437,6 @@ Euer {adj-er}%sMondsteinring
 %%%%
 your %samulet
 Euer {adj-es}%sAmulett
-%%%%
-your %samulet of magic regeneration
-Euer {adj-es}%sAmulett der Magie-Regeneration
-%%%%
-your %samulet of the acrobat
-Euer {adj-es}%sAmulett des Akrobaten
-%%%%
-your %samulet of inaccuracy
-Euer {adj-es}%sAmulett der Ungenauigkeit
-%%%%
-your %samulet of nothing
-Euer {adj-es}%sAmulett von nichts
-%%%%
-your %samulet of guardian spirit
-Euer {adj-es}%sAmulett des Geistschildes
-%%%%
-your %samulet of faith
-Euer {adj-es}%sAmulett des Glaubens
-%%%%
-your %samulet of reflection
-Euer {adj-es}%sAmulett der Reflexion
-%%%%
-your %samulet of regeneration
-Euer {adj-es}%sAmulett der Regeneration
 %%%%
 
 # unidentified

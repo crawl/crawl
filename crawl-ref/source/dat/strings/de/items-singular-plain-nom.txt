@@ -357,69 +357,6 @@ Silberbumerang
 %sring
 {adj-er}%sRing
 %%%%
-%sring of protection
-{adj-er}%sRing des Schutzes
-%%%%
-%sring of protection from fire
-{adj-er}%sRing der Feuerresistenz
-%%%%
-%sring of poison resistance
-{adj-er}%sRing der Giftresistenz
-%%%%
-%sring of protection from cold
-{adj-er}%sRing der Kälteresistenz
-%%%%
-%sring of strength
-{adj-er}%sRing der Stärke
-%%%%
-%sring of slaying
-{adj-er}%sRing des Tötens
-%%%%
-%sring of see invisible
-{adj-er}%sRing von Unsichtbares sehen
-%%%%
-%sring of resist corrosion
-{adj-er}%sRing der Korrosionresistenz
-%%%%
-%sring of teleportation
-{adj-er}%sRing der Teleportation
-%%%%
-%sring of evasion
-{adj-er}%sRing der Umgehung
-%%%%
-%sring of stealth
-{adj-er}%sRing der Heimlichkeit
-%%%%
-%sring of dexterity
-{adj-er}%sRing der Geschicklichkeit
-%%%%
-%sring of intelligence
-{adj-er}%sRing der Intelligenz
-%%%%
-%sring of wizardry
-{adj-er}%sRing der Zauberei
-%%%%
-%sring of magical power
-{adj-er}%sRing magischer Kraft
-%%%%
-%sring of flight
-{adj-er}%sRing des Fliegens
-%%%%
-%sring of positive energy
-{adj-er}%sRing positiver Energie
-%%%%
-%sring of willpower
-{adj-er}%sRing der Willenskraft
-%%%%
-%sring of fire
-{adj-er}%sRing des Feuers
-%%%%
-%sring of ice
-{adj-er}%sRing des Eises
-%%%%
-%sring of obsoleteness
-{adj-er}%sobsoleter Ring
-%%%%
 
 # unidentified
 %%%%
@@ -518,30 +455,6 @@ Silberbumerang
 %%%%
 %samulet
 {adj-es}%sAmulett
-%%%%
-%samulet of magic regeneration
-{adj-es}%sAmulett der Magie-Regeneration
-%%%%
-%samulet of the acrobat
-{adj-es}%sAmulett des Akrobaten
-%%%%
-%samulet of inaccuracy
-{adj-es}%sAmulett der Ungenauigkeit
-%%%%
-%samulet of nothing
-{adj-es}%sAmulett von nichts
-%%%%
-%samulet of guardian spirit
-{adj-es}%sAmulett des Geistschildes
-%%%%
-%samulet of faith
-{adj-es}%sAmulett des Glaubens
-%%%%
-%samulet of reflection
-{adj-es}%sAmulett der Reflexion
-%%%%
-%samulet of regeneration
-{adj-es}%sAmulett der Regeneration
 %%%%
 
 # unidentified

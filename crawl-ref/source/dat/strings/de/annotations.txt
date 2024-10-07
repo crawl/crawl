@@ -59,7 +59,7 @@ RK
 %%%%
 # evasion
 EV
-EV
+AW
 %%%%
 # shields
 SH
