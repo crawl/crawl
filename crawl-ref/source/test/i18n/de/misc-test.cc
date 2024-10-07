@@ -136,7 +136,7 @@ int main()
     show_result(msg, expected);
 
     msg = localise("The apparition of %s.", "MrDizzy the Warrior, an amateur Naga Venom Mage of Cheibriados");
-    expected = "Eine Erscheinung von MrDizzy dem Krieger, einem amateurhaften Naga Giftmagier von Cheibriados.";
+    expected = "Die Erscheinung von MrDizzy dem Krieger, einem amateurhaften Naga Giftmagier von Cheibriados.";
     show_result(msg, expected);
 
     msg = localise("hydra");
