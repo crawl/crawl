@@ -4645,7 +4645,7 @@ The fearful aura is strangely muted, and has no effect on you.
 Die ängstliche Aura ist seltsamerweise gedämpft und hat keine Auswirkung auf Euch.
 %%%%
 You are terrified of %s!
-Ihr habt Angst vor%s!
+Ihr habt Angst vor {dat}%s!
 %%%%
 You are no longer terrified.
 Ihr habt keine Angst mehr.
