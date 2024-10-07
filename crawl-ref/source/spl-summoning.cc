@@ -293,7 +293,7 @@ static monster_type _choose_dragon_type(int pow, god_type /*god*/, bool player)
 
 spret cast_dragon_call(int pow, bool fail)
 {
-    if (rude_stop_summoning_prompt(RUDE_STOP_CALL_DRAGONS))
+    if (rude_stop_summoning_prompt("call dragons"))
         return spret::abort;
 
     fail_check();
@@ -1072,7 +1072,7 @@ spret cast_summon_demon(int pow)
 spret cast_shadow_creatures(int st, god_type god, level_id place,
                                  bool fail)
 {
-    if (rude_stop_summoning_prompt())
+    if (rude_stop_summoning_prompt("summon"))
         return spret::abort;
 
     fail_check();
@@ -1333,7 +1333,7 @@ spret cast_summon_forest(actor* caster, int pow, god_type god, bool fail, bool t
 
     if (success)
     {
-        if (rude_stop_summoning_prompt(RUDE_STOP_SUMMON_FOREST))
+        if (rude_stop_summoning_prompt("summon a forest"))
             return spret::abort;
 
         fail_check();

@@ -736,11 +736,15 @@ bool wielded_weapon_check(const item_def *weapon, string attack_verb)
         return true;
     }
 
+    string verb = attack_verb.empty() ? "attack" : attack_verb;
     string prompt;
     if (weapon)
-        prompt = localise("Really attack while wielding %s?", weapon->name(DESC_YOUR));
+    {
+        prompt = localise("Really %s while wielding %s?", verb,
+                          weapon->name(DESC_YOUR));
+    }
     else
-        prompt = localise("Really attack while wielding nothing?");
+        prompt = localise("Really %s while wielding nothing?", verb);
     if (penance)
         prompt += " " + localise("This could place you under penance!");
 
@@ -1108,21 +1112,17 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
     if (beam_attack)
     {
         if (beam_target == mon->pos())
-            fmt = "Really fire at %s";
+            fmt = "Really fire at %s%s?";
         else
         {
-            fmt = "Really fire in %s direction";
+            fmt = "Really fire in %s direction%s?";
             mon_name = apostrophise(mon_name);
         }
     }
     else
-        fmt = "Really attack %s";
+        fmt = "Really attack %s%s?";
 
-    if (!suffix.empty())
-        fmt += suffix;
-    fmt += "?";
-
-    string prompt = localise(fmt, mon_name);
+    string prompt = localise(fmt, mon_name, suffix);
 
     if (penance)
         prompt += " " + localise("This attack would place you under penance!");
@@ -1213,16 +1213,12 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
 
     string fmt;
     string prompt;
-    if (!suffix.empty())
-        fmt = "Really attack %s" + suffix + "?";
+    if (!defender_ok)
+        fmt = "Really %s %s%s?";
     else
-    {
-        if (!defender_ok)
-            fmt = "Really attack %s?";
-        else
-            fmt = "Really do that near %s?";
-    }
-    prompt = localise(fmt, mon_names);
+        fmt = "Really %s near %s%s?";
+
+    prompt = localise(fmt, verb, mon_names, suffix);
 
     if (penance)
         prompt += " " + localise("This attack would place you under penance!");
@@ -1260,11 +1256,10 @@ string rude_stop_summoning_reason()
  * penance prompt, because we don't cause penance when monsters enter line of
  * sight when OTR is active, regardless of how they entered LOS.
  *
- * @param prompt  The prompt to be used. Defaults to "summon".
- * @param target  The object of the verb
+ * @param verb    The verb to be used in the prompt. Defaults to "summon".
  * @return        True if the player wants to abort.
  */
-bool rude_stop_summoning_prompt(rude_stop_prompt prompt_id)
+bool rude_stop_summoning_prompt(string verb)
 {
     string which = rude_stop_summoning_reason();
 
@@ -1277,15 +1272,7 @@ bool rude_stop_summoning_prompt(rude_stop_prompt prompt_id)
     if (crawl_state.which_god_acting() == GOD_XOM)
         return false;
 
-    string prompt;
-    if (prompt_id == RUDE_STOP_SUMMON_FOREST)
-        prompt = localise("Really summon a forest while emitting %s?", which);
-    else if (prompt_id == RUDE_STOP_CALL_DRAGONS)
-        prompt = localise("Really call dragons while emitting %s?", which);
-    else if (prompt_id == RUDE_STOP_CHARM)
-        prompt = localise("Really enslave while emitting %s?", which);
-    else
-        prompt = localise("Really summon while emitting %s?", which);
+    string prompt = localise("Really %s while emitting %s?", verb, which);
 
     if (yesno(prompt.c_str(), false, 'n'))
         return false;

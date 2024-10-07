@@ -4658,59 +4658,54 @@ Ihr habt keine Angst mehr.
 %s hops backward while attacking.
 %s springt rückwarts während des Angriffs.
 %%%%
-Really attack while wielding %s?
-Greife wirklich an, während Ihr {acc}%s schwingt?
+Really %s while wielding %s?
+Wirklich %s, während Ihr {acc}%s schwingt?
 %%%%
-Really attack while wielding nothing?
-
+Really %s while wielding nothing?
+Wirklich %s, während Ihr nichts schwingt?
 %%%%
 This could place you under penance!
 Dies könnte Euch unter Buße stellen!
 %%%%
 , despite your sanctuary
-
+, trotz Eures Heiligtums
 %%%%
 " while asking for your life to be spared"
-
+" während Ihr darum bittet, dass Euer Leben verschont wird"
 %%%%
-Really fire at %s
-
+# in these messages, first %s is allied monster (e.g. "your orc"), second %s is one of the suffixes immediately above
+Really fire at %s%s?
+Wirklich auf {acc}%s schießen%s?
 %%%%
-Really fire in %s direction
-
+# monster name here will be possessive (e.g. "your orc's")
+Really fire in %s direction%s?
+Wirklich in Richtung %s schießen%s?
 %%%%
-Really attack %s
-
+Really attack %s%s?
+Wirklich {acc}%s angreifen%s?
 %%%%
 This attack would place you under penance!
 Dieser Angriff würde Euch unter Buße stellen!
 %%%%
-Really attack %s?
-Wirklich %s angreife?
+# first %s is verb, 2nd is monster, 3rd is suffix from above
+Really %s %s%s?
+Wirklich %s {acc}%s%s?
 %%%%
-Really do that near %s?
-Mach das wirklich in der Nähe {gen}%s?
+Really %s near %s%s?
+Wirklich %s in der Nähe von {dat}%s%s?
 %%%%
 a toxic aura
-
+eine toxische Aura
 %%%%
 a noxious bog
-
+ein giftiges Moor
 %%%%
 a polar vortex
-
+ein Polarwirbel
 %%%%
-Really summon a forest while emitting %s?
-
-%%%%
-Really call dragons while emitting %s?
-
-%%%%
-Really enslave while emitting %s?
-
-%%%%
-Really summon while emitting %s?
-
+# first %s is a verb, 2nd %s is one of the things immediately above
+Really %s while emitting %s?
+Wirklich %s, während Ihr {acc}%s ausstrahlt?
 %%%%
 
 ##################

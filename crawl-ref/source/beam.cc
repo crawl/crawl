@@ -4341,7 +4341,7 @@ void bolt::handle_stop_attack_prompt(monster* mon)
     // attempting to enslave monsters that might be affected.
     else if (flavour == BEAM_CHARM)
     {
-        if (rude_stop_summoning_prompt(RUDE_STOP_CHARM))
+        if (rude_stop_summoning_prompt("charm"))
         {
             beam_cancelled = true;
             finish_beam();

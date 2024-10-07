@@ -336,6 +336,21 @@ hit or gore
 schlagen oder durchstechen
 %%%%
 
+# verbs for "Really %s while emitting %s?"
+%%%%
+summon
+herbeirufen
+%%%%
+charm
+verzaubern
+%%%%
+call dragons
+Drachen rufen
+%%%%
+summon a forest
+einen Wald beschwören
+%%%%
+
 #################################
 # Klown pie flavours
 #################################
