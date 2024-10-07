@@ -4340,25 +4340,25 @@ carrying %s
 mit {dat}%s dabei
 %%%%
 This square lies inside a sanctuary.
-Dieser Platz liegt innerhalb eines Heiligtums.
+Dieses Feld liegt innerhalb eines Heiligtums.
 %%%%
 This square is shrouded in silence.
-Dieser Platz ist in Schweigen gehüllt.
+Dieses Feld ist in Schweigen gehüllt.
 %%%%
 This square is lit by a halo.
 Dieses Platz wird von einem Heiligenschein beleuchtet.
 %%%%
 This square is wreathed by an umbra.
-Dieser Platz ist von einem Umbra umkränzt.
+Dieses Feld ist von einem Umbra umkränzt.
 %%%%
 This square is liquefied.
-Dieser Platz ist verflüssigt.
+Dieses Feld ist verflüssigt.
 %%%%
 This square is covered in a magical glow.
-Dieser Platz ist von einem magischen Glühen überzogen.
+Dieses Feld ist von einem magischen Glühen überzogen.
 %%%%
 This square is bathed in translocational energy.
-Dieser Platz ist von Translokationsenergie durchdrungen.
+Dieses Feld ist von Translokationsenergie durchdrungen.
 %%%%
 There is a cloud of %s here.
 Hier ist eine Wolke von {dat}%s.
@@ -4405,25 +4405,27 @@ Dieses Monster ist außer Reichweite.
 ##################
 %%%%
 Hit any key to exit, ctrl-p for the full log.
-
+Eine beliebige Taste drücken zum Beenden, Strg-p fürs vollständige Protokoll.
 %%%%
 %s appreciates your contribution to the ecosystem.
-
+%s schätzt Euren Beitrag zum Ökosystem.
 %%%%
+# death message from Kiku
 %s rasps: "You have failed me! Welcome... oblivion!"
-
+%s krächzt: „Du hast mich enttäuscht! Grüßt... Vergessenheit!“
 %%%%
+# death message from Kiku
 %s rasps: "You have failed me! Welcome... death!"
-
+%s krächzt: „Du hast mich enttäuscht! Grüßt... den Tod!“
 %%%%
 %s claims you as an undead slave.
-
+%s beansprucht Euch als untoten Sklaven.
 %%%%
 Your body rises from the dead as a mindless zombie.
-
+Ihr Körper erhebt sich aus dem Tod als hirnloser Zombie.
 %%%%
 %s appreciates the killing of a heretic priest.
-
+%s begrüßt die Tötung eines ketzerischen Priesters.
 %%%%
 Your body crumbles into a pile of gold.
 Euer Körper zerfällt zu einem Haufen Gold.
@@ -4432,13 +4434,13 @@ Char dump unsuccessful! Sorry about that.
 Char Dump erfolglos! Tut mir leid.
 %%%%
 Goodbye, %s.
-
+Auf Wiedersehen, %s.
 %%%%
 Best Crawlers - %s
-
+Beste Crawlers - %s
 %%%%
 You can find your morgue file in the '%s' directory.
-
+Sie finden Ihre Morgue-Datei im Verzeichnis '%s'.
 %%%%
 
 ##################
