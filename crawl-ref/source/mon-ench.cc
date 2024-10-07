@@ -1891,7 +1891,7 @@ bool monster::is_summoned() const
 
 bool monster::was_created_by(int summon_type) const
 {
-    if (has_ench(ENCH_SUMMON))
+    if (!has_ench(ENCH_SUMMON))
         return false;
 
     mon_enchant summ = get_ench(ENCH_SUMMON);
