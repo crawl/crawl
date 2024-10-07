@@ -127,6 +127,7 @@ Looking in the dictionary:
 - Anrufen means to call someone, including a god, for help (i.e. invoke): https://de.thefreedictionary.com/anrufen
 - Hervorrufen seems to mean evoke: https://de.thefreedictionary.com/hervorrufen
 - Hervorzaubern seems to unambiguously mean conjure: https://de.pons.com/%C3%BCbersetzung/deutsch-englisch/hervorzaubern
+- Hervorrufer=conjurer: https://www.wowhead.com/de/npc=162288/hervorrufer-des-schwarzen-imperiums
 
 It's difficult to choose translations for the different types of magic users. I've gone with:
 
