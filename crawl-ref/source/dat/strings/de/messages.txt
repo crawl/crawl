@@ -4600,37 +4600,38 @@ Die Schachfigur wird grau!
 ##################
 %%%%
 Marking area around %s as unsafe for travelling.
-Den Bereich um %s wird als unsicher für Reisen gezeichnet.
+Der Bereich um {acc}%s wird als unsicher für Reisen markiert.
 %%%%
+# terse cloud name
 %s cloud
-
+%s-Wolke
 %%%%
 " (detected)"
-
+" (gespürt)"
 %%%%
 upstairs
-
+Treppe nach oben
 %%%%
 downstairs
-
+Treppe nach unten
 %%%%
 1 exclusion
-
+1 Sperrgebiet
 %%%%
 1 more exclusion
-
+1 wieteres Sperrgebiet
 %%%%
 %d exclusions
-
+%s Sperrgebiete
 %%%%
 %d more exclusions
-
+%d wietere Sperrgebiete
 %%%%
 "exclusions: "
-
+"Sperrgebiete: "
 %%%%
 "exclusion: "
-
+"Sperrgebiet: "
 %%%%
 
 ##################

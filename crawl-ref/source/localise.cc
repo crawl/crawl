@@ -41,6 +41,22 @@ static string _localise_string(const string context, const string& value);
 static string _localise_list(const string context, const string& value);
 static string _localise_player_species_job(const string& s);
 
+static bool _is_integer(const string& s)
+{
+    if (s.empty())
+        return false;
+
+    for (size_t i = 0; i < s.length(); i++)
+    {
+        if (i == 0 && (s[i] == '+' || s[i] == '-'))
+            continue;
+        else if (!isdigit(s[i]))
+            return false;
+    }
+    return true;
+}
+
+
 // is this char a printf typespec (i.e. the end of %<something><char>)?
 static inline bool _is_type_spec(char c)
 {
@@ -1549,16 +1565,6 @@ static string _localise_location(const string& context, const string& value)
         }
     }
 
-    // handle string like "Orc:2"
-    size_t pos = value.find(':');
-    if (pos != string::npos && pos != 0 && pos < value.length()-1)
-    {
-        string branch = value.substr(0, pos);
-        string level = value.substr(pos + 1);
-        if (is_all_alphas(branch) && is_all_digits(level))
-            return cxlate("branch_abbrev", branch, true) + ":" + level;
-    }
-
     return "";
 }
 
@@ -1658,7 +1664,7 @@ static string _reverse_engineer_parameterised_string(const string& s, const stri
  * Lua code can only pass a single string to mpr(), so any parameterisation has
  * to be handled on the Lua code, and all we see is the completed string. If the
  * number of possible permutations is small, we can just provide a translation
- * for ech one, but in some cases, the number of permutations is to great for
+ * for ech one, but in some cases, the number of permutations is too great for
  * that to be feasible, so we're forced to reverse engineer.
  *
  * Unfortunately, this is tightly coupled to the Lua code (yuk).
@@ -1754,6 +1760,9 @@ static string _localise_string(const string context, const string& value)
         return oss.str();
     }
 
+    if (_is_integer(value))
+        return value;
+
     // try simple translation
     string result;
     result = cxlate(context, value, false);
@@ -1776,6 +1785,26 @@ static string _localise_string(const string context, const string& value)
     // then there's no point wasting any more time - just use the English one
     if (is_list_separator(value))
         return value;
+    
+    // try splitting on colon
+    size_t colon_pos;
+    if ((colon_pos = value.find(':')) != string::npos)
+    {
+        size_t pos = colon_pos + 1;
+        if (pos < value.length() - 1 && value[pos] == ' ')
+            pos += 1;
+        while (pos >= colon_pos)
+        {
+            string prefix = value.substr(0, pos);
+            string prefix_xlated = cxlate(context, prefix, prefix == ":");
+            if (!prefix_xlated.empty())
+            {
+                string suffix = value.substr(pos);
+                return prefix_xlated + _localise_string(context, suffix);
+            }
+            pos--;
+        }
+    }
 
     // try treating as list
     result = _localise_list(context, value);

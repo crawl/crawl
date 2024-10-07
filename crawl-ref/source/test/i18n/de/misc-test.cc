@@ -272,6 +272,9 @@ int main()
     msg = localise("You don't have 10 scrolls of teleportation with you.");
     show_result(msg, "Ihr habt 10 Schriftrollen der Teleportation nicht dabei.");
 
+    msg = localise("Depths:2");
+    show_result(msg, "Tiefen:2");
+
     you.position = coord_def(10, 10);
     env.grid.init(DNGN_FLOOR);
     env.pgrid.init(FPROP_NONE);

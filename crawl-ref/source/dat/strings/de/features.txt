@@ -1769,9 +1769,18 @@ eine seltsam leuchtende Kugel
 %%%%
 
 ################################
-# Plural
+# Counted
 # (used in dungeon overview screen)
 ################################
+%%%%
+1 runed door
+1 runenverzierte Tür
+%%%%
+1 runed translucent door
+1 runenverzierte durchsichtige Tür
+%%%%
+1 transporter
+1 Transporter
 %%%%
 %d runed doors
 %d runenverzierte Türen
