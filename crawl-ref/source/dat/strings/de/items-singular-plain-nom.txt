@@ -664,7 +664,7 @@ wand of mindburst
 Zauberstab des Gehirnschlags
 %%%%
 wand of removedness
-beseitigter Zauberstab
+Zauberstab der Obsoleszenz
 %%%%
 
 # unidentified
