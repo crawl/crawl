@@ -802,7 +802,7 @@ string maybe_capitalise_substring(string s)
  * @returns a string with substitutions based on the arguments. For example, if
  *          given "baz@foo@" and { "foo", "bar" } then this returns "bazbar".
  *          If a string not in replacements is found between @ signs, then the
- *          original, unedited string is returned.
+ *          placeholder is kept
  */
 string replace_keys(const string &text, const map<string, string>& replacements)
 {
@@ -819,23 +819,27 @@ string replace_keys(const string &text, const map<string, string>& replacements)
 
         const string key = text.substr(at + 1, end - at - 1);
         const string* value = map_find(replacements, key);
+        string value_temp;
 
-        if (!value && isupper(key[0]))
+        if (!value && !key.empty() && isupper(key[0]))
+        {
             value = map_find(replacements, lowercase_string(key));
-
-        if (!value)
-            return text;
-
-        // capitalise value if key is capitalised
-        string value2;
-        if (isupper(key[0])) {
-            value2 = uppercase_first(*value);
-            value = &value2;
+            if (value)
+            {
+                // capitalise value if key is capitalised
+                value_temp = uppercase_first(*value);
+                value = &value_temp;
+            }
         }
 
-        // allow nesting, but avoid infinite loops from circular refs
-        if (nested_calls < 5 && value->find("@") != string::npos)
+        if (!value)
         {
+            // keep placeholder
+            res << text.substr(at, end - at + 1);
+        }
+        else if (nested_calls < 5 && value->find("@") != string::npos)
+        {
+            // allow nesting, but avoid infinite loops from circular refs
             nested_calls++;
             string new_value = replace_keys(*value, replacements);
             nested_calls--;
