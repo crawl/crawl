@@ -32,7 +32,7 @@ local books = {
 "Basic_Undead_Handling numspells:2 spells:animate_dead&dispel_undead",
 "Beguiling owner:Ashenzari numspells:5 spells:momentum_strike&dazzling_flash&"
   .. "dimensional_bullseye&fulminant_prism&iskenderun's_mystic_blast",
-"Crowd_Control numspells:3 spells:gell's_gravitas&arcjolt&ignition",
+"Crowd_Control numspells:3 spells:gell's_gavotte&arcjolt&ignition",
 "Curse_Words numspells:5 spells:slow&anguish&silence&enfeeble&discord",
 "Earth_from_Core_to_Peak numspells:8 spells:sandblast&passwall&stone_arrow&"
   .. "petrify&brom's_barrelling_boulder&lee's_rapid_deconstruction&"
@@ -59,7 +59,7 @@ local books = {
   .. "orb_of_destruction",
 "Cookery numspells:4 spells:freeze&searing_ray&"
   .. "scorch&ozocubu's_refrigeration",
-"Legendary_Spells,_Part_II numspells:6 spells:gell's_gravitas&"
+"Legendary_Spells,_Part_II numspells:6 spells:gell's_gavotte&"
   .. "leda's_liquefaction&lee's_rapid_deconstruction&iskenderun's_battlesphere&"
   .. "eringya's_noxious_bog&borgnjor's_revivification",
 "Legendary_Spells,_Part_IX numspells:7 spells:cigotuvi's_putrefaction&"
@@ -74,7 +74,7 @@ local books = {
 "Magnificence owner:Eustachio numspells:3 spells:summon_small_mammal&blink&"
   .. "call_imp",
 "Mayhem numspells:3 spells:inner_flame&conjure_ball_lightning&discord",
-"Modern_Magic,_Vol._16 numspells:2 spells:gell's_gravitas&irradiate",
+"Modern_Magic,_Vol._16 numspells:2 spells:gell's_gavotte&irradiate",
 "Modern_Magic,_Vol._19 numspells:2 spells:lesser_beckoning&infestation",
 "Modern_Magic,_Vol._20 numspells:2 spells:mercury_vapours&ignition",
 "Modern_Magic,_Vol._21 numspells:1 spells:borgnjor's_vile_clutch",
@@ -141,7 +141,7 @@ local books = {
   .. "petrify&sticky_flame&alistair's_intoxication&enfeeble&"
   .. "yara's_violent_unravelling",
 "Wasteful_Hastiness owner:Cheibriados numspells:2 spells:swiftness&discord",
-"Weird_Science numspells:8 spells:momentum_strike&gell's_gravitas&"
+"Weird_Science numspells:8 spells:momentum_strike&gell's_gavotte&"
   .. "vhi's_electric_charge&manifold_assault&summon_lightning_spire&irradiate&"
   .. "plasma_beam&maxwell's_capacitive_coupling",
 "Yoinking numspells:3 spells:apportation&lesser_beckoning&tukima's_dance",
