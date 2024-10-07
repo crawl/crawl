@@ -4065,85 +4065,85 @@ Nicht in Shoals oder keine Höhenkarte; Gezeiten nicht verfügbar.
 ##################
 %%%%
 , f/p - %s
-
+, f/p - %s
 %%%%
 , f - %s
-
+, f - %s
 %%%%
 , p - %s
-
+, p - %s
 %%%%
 Press: ? - help
-
+Drücken: ? - Hilfe
 %%%%
 v - describe
-
+v - beschreiben
 %%%%
 . - travel
-
+. - reisen
 %%%%
 g - get item
-
+g - Gegenstand holen
 %%%%
 Dir - look around, f - activate
-
+Richtung - umschauen, f - aktivieren
 %%%%
 Shift-Dir - straight line
-
+Shift-Richtung - gerade Linie
 %%%%
 Dir - move target
-
+Richtung - Ziel bewegen
 %%%%
 Visible Monsters
-
+Sichtbare Monster
 %%%%
 /Items
-
+/Gegenstände
 %%%%
 Visible Items
-
+Sichtbare Gegenstände
 %%%%
 /Features
-
+/Features
 %%%%
 Visible Features
-
+Sichtbare Features
 %%%%
 " (select to examine)"
-
+" (auswählen um zu examinieren)"
 %%%%
 " (select to examine, '!' to %s):"
-
+" (auswählen um zu examinieren, '!' um zu %s)"
 %%%%
 " (select to %s, '!' to examine):"
-
+" (%s um zu examinieren, '!' um zu examinieren)"
 %%%%
 Items
-
+Gegenstände
 %%%%
 Features
-
+Features
 %%%%
 " (not visited)"
-
+" (nicht besucht)"
 %%%%
 stair
-
+Treppe
 %%%%
 trap
-
+Fall
 %%%%
 No monsters, items or features are visible.
 Es sind keine Monster, Gegenstände oder Features sichtbar.
 %%%%
 target/travel
-
+zielen/reisen
 %%%%
 Here
 Hier
 %%%%
 There's something in the way.
-Da ist etwas im Weg.
+Es gibt etwas im Weg.
 %%%%
 You can't see that place.
 Ihr könnt diesen Ort nicht sehen.
@@ -4158,13 +4158,13 @@ Sorry, you can't target yourself.
 Sorry, Ihr könnt Euch selbst nicht zielen.
 %%%%
 Are you sure you want to fizzle?
-
+Seid Ihr sicher, dass Ihr missglücken wolltet?
 %%%%
 All monsters which could be auto-targeted are covered by a wall or statue which interrupts your line of fire, even though it doesn't interrupt your line of sight.
-
+Alle Monster, die automatisch anvisiert werden können, sind durch eine Wand oder Statue verdeckt, die die Schusslinie unterbricht, auch wenn sie die Sichtlinie nicht unterbricht.
 %%%%
 To return to the main mode, press <w>Escape</w>.
-Um zum Hauptmodus zurückzukehren, drücke <w>Escape</w>.
+<w>Escape</w> drücken, um zum Hauptmodus zurückzukehren.
 %%%%
 You can't see any item there.
 Ihr könnt dort keinen Gegenstand sehen.
@@ -4176,13 +4176,14 @@ Out of range.
 Außerhalb der Reichweite.
 %%%%
 sanctuary
-
+Heiligtum
 %%%%
+# invisible monster
 Disturbance
-
+Störung
 %%%%
 Look
-Gucken
+Scauen
 %%%%
 Aim
 Zielen
@@ -4203,10 +4204,11 @@ Brought monster down to 1 HP.
 Monster auf 1 TP gesenkt.
 %%%%
 There are no valid targets to list.
-
+s sind keine gültigen Ziele aufzulisten.
 %%%%
+# verb
 target
-
+zielen
 %%%%
 You cannot set exclusions on this level.
 Ihr könnt auf dieser Ebene keine Ausschlüsse setzen.
@@ -4215,19 +4217,19 @@ Placed new exclusion.
 Neuer Ausschluss platziert.
 %%%%
 Removed exclusion.
-Ausschluss entfernt.
+Ausschluss gelöscht.
 %%%%
 Reduced exclusion size to a single square.
-Ausschlussgröße auf ein einzelnes Quadrat reduziert.
+Ausschlussgröße auf ein einzelnes Feld reduziert.
 %%%%
 [unseen terrain]
 [unsichtbares Terrain]
 %%%%
 What do you want to examine?
-
+Was wollt Ihr examinieren?
 %%%%
 What do you want to remember?
-
+An was wollt Ihr erinnern?
 %%%%
 There is %s here.
 Hier gibt es {acc}%s.
@@ -4236,19 +4238,16 @@ There is an entrance to %s here.
 Hier gibt es einen Eingang zu {dat}%s.
 %%%%
 Beware, the minotaur awaits!
-Vorsicht, der Minotaurus wartet!
-%%%%
-wall of the weird stuff which makes up Pandemonium
-
+Vorsicht, der Minotaur wartet!
 %%%%
 , awoken
-
+, erwacht
 %%%%
 , covered with ice
 , mit Eis bedeckt
 %%%%
 , summoned
-
+, herbeigerufen
 %%%%
 , spattered with blood
 , mit Blut bespritzt
@@ -4293,13 +4292,13 @@ This monster is indifferent to you.
 Dieses Monster ist Euch gleichgültig.
 %%%%
 This monster has been summoned and is expiring.
-Dieses Monster wurde beschworen und läuft ab.
+Dieses Monster wurde herbeigerufen und läuft ab.
 %%%%
 This monster has been summoned but will not time out.
-Dieses Monster wurde beschworen und wird nicht ablaufen.
+Dieses Monster wurde herbeigerufen und wird nicht ablaufen.
 %%%%
 This monster has been summoned.
-Dieses Monster wurde beschworen.
+Dieses Monster wurde herbeigerufen.
 %%%%
 This monster is illuminated by a divine halo.
 Dieses Monster wird von einem göttlichen Heiligenschein erleuchtet.
@@ -4341,31 +4340,31 @@ carrying %s
 mit {dat}%s dabei
 %%%%
 This square lies inside a sanctuary.
-
+Dieser Platz liegt innerhalb eines Heiligtums.
 %%%%
 This square is shrouded in silence.
-
+Dieser Platz ist in Schweigen gehüllt.
 %%%%
 This square is lit by a halo.
-
+Dieses Platz wird von einem Heiligenschein beleuchtet.
 %%%%
 This square is wreathed by an umbra.
-
+Dieser Platz ist von einem Umbra umkränzt.
 %%%%
 This square is liquefied.
-
+Dieser Platz ist verflüssigt.
 %%%%
 This square is covered in a magical glow.
-
+Dieser Platz ist von einem magischen Glühen überzogen.
 %%%%
 This square is bathed in translocational energy.
-
+Dieser Platz ist von Translokationsenergie durchdrungen.
 %%%%
 There is a cloud of %s here.
-Hier ist eine Wolke von%s.
+Hier ist eine Wolke von {dat}%s.
 %%%%
 You see %s here.
-Ihr seht%s hier.
+Ihr seht {acc}%s hier.
 %%%%
 There is something else lying underneath.
 Da liegt noch etwas darunter.
@@ -4383,19 +4382,19 @@ This monster is out of range.
 Dieses Monster ist außer Reichweite.
 %%%%
 (<w>Right-click</w> for more information.)
-(<w>Recht-Klicken</w> für mehre Informationen.)
+(<w>Rechtsklicken</w> für mehre Informationen.)
 %%%%
 (Press <w>v</w> for more information.)
 (<w>v</w> drücken für mehre Informationen.)
 %%%%
 " (<w>Right-click</w> for more information.)"
-" (<w>Recht-Klicken</w> für mehre Informationen.)"
+" (<w>Rechtsklicken</w> für mehre Informationen.)"
 %%%%
 " (Press <w>v</w> for more information.)"
 " (<w>v</w> drücken für mehre Informationen.)"
 %%%%
 " (Right-click for more information.)"
-" (Recht-Klicken für mehre Informationen.)"
+" (Rechtsklicken für mehre Informationen.)"
 %%%%
 " (Press 'v' for more information.)"
 " ('v' drücken für mehre Informationen.)"

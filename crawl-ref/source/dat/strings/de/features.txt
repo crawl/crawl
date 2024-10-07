@@ -74,6 +74,9 @@ durchsichtige Steinwand
 translucent unnaturally hard rock wall
 durchsichtige unnatürlich harte Felswand
 %%%%
+wall of the weird stuff which makes up Pandemonium
+Wand aus dem seltsamen Zeug, aus dem Pandemonium gemacht ist
+%%%%
 grate
 Gitter
 %%%%
@@ -712,6 +715,9 @@ die durchsichtige Steinwand
 the translucent unnaturally hard rock wall
 die durchsichtige unnatürlich harte Felswand
 %%%%
+the wall of the weird stuff which makes up Pandemonium
+die Wand aus dem seltsamen Zeug, aus dem Pandemonium gemacht ist
+%%%%
 the grate
 das Gitter
 %%%%
@@ -1196,6 +1202,9 @@ eine durchsichtige Steinwand
 %%%%
 a translucent unnaturally hard rock wall
 eine durchsichtige unnatürlich harte Felswand
+%%%%
+a wall of the weird stuff which makes up Pandemonium
+eine Wand aus dem seltsamen Zeug, aus dem Pandemonium gemacht ist
 %%%%
 a grate
 {n}ein Gitter
