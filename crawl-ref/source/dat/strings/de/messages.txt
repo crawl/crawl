@@ -4456,8 +4456,9 @@ Ihr macht ein schreckliches Heulgeräusch!
 Nothing answers your call.
 Nichts beantwortet Euren Anruf.
 %%%%
+# zap = evoke
 Zap which item?
-
+Welchen Gegenstand zappen?
 %%%%
 You can't zap that!
 Das könnt Ihr nicht zappen!
@@ -4465,8 +4466,8 @@ Das könnt Ihr nicht zappen!
 The now-empty wand crumbles to dust.
 Der jetzt leere Zauberstab zerfällt zu Staub.
 %%%%
-%lu skills
-
+%d skills
+%d Fertigkeiten
 %%%%
 You open the lid...
 Ihr macht den Deckel auf ...
@@ -4475,52 +4476,52 @@ Ihr macht den Deckel auf ...
 ...aber nichts passiert.
 %%%%
 ...and %s flies out!
-
+...und %s fliegt raus!
 %%%%
 ...and %s leaps out!
-
+...und %s springt raus!
 %%%%
 You can't place a gateway to a ziggurat here.
 Ihr könnt hier kein Tor zu einer Zikkurat platzieren.
 %%%%
 Finish your current ziggurat first!
-Beende zuerst Eure aktuelle Zikkurat!
+Beendet zuerst Eure aktuelle Zikkurat!
 %%%%
 You set the figurine down, and a mystic portal to a ziggurat forms.
 Ihr stellt die Figur ab und ein mystisches Portal zu einer Zikkurat bildet sich.
 %%%%
 A mighty gale blasts forth from the card!
-
+Ein mächtiger Starkwind weht von der Karte herab!
 %%%%
 A mighty gale blasts forth from the fan!
-
+Ein mächtiger Starkwind weht vom Fächer herab!
 %%%%
 A fierce wind blows from the card.
-
+Ein heftiger Wind weht aus der Karte.
 %%%%
 A fierce wind blows from the fan.
-
+Ein heftiger Wind weht aus dem Fächer.
 %%%%
 You are blown backwards!
 Ihr seid rückwärts geblasen!
 %%%%
 %s are blown away by the wind.
-
+%s werden vom Wind weggeblasen.
 %%%%
 %s is blown away by the wind.
-
+%s wird vom Wind weggeblasen.
 %%%%
 The monsters around you are blown away!
 Die Monster um Euch herum sind weggeblasen!
 %%%%
 Aim the phial where?
-
+Die Phiole wohin zielen?
 %%%%
 Aiming: <white>Phantom Mirror</white>
-
+Zielen: <white>Phantomspiegel</white>
 %%%%
 You can't use the mirror on yourself.
-Ihr könnt den Spiegel nicht an Euch benutzen.
+Ihr könnt den Spiegel nicht an Euch selbst verwenden.
 %%%%
 You can't see anything there to clone.
 Ihr könnt dort nichts zum Klonen sehen.
@@ -4529,10 +4530,10 @@ The mirror can't reflect that.
 Der Spiegel kann das nicht widerspiegeln.
 %%%%
 You reflect %s with the mirror!
-
+Ihr spiegelt {acc}%s mit dem Spiegel!
 %%%%
 You can't see anything, release a tremorstone anyway?
-
+Ihr könnt nichts sehen. Einen Zitterstein trotzdem auslösen?
 %%%%
 The tremorstone explodes into fragments!
 Der Zitterstein explodiert in Fragmente!
@@ -4541,55 +4542,57 @@ The air is too still to form clouds.
 Die Luft ist zu still, um Wolken zu bilden.
 %%%%
 You can't see anything. Try to condense clouds anyway?
-
+Ihr könnt nichts sehen. Trotzdem versuchen, Wolken zu verdichten?
 %%%%
 Clouds of %s condense around you!
-
+Wolken aus {dat}%s verdichten sich um Euch herum!
 %%%%
 You can't see anything. Try to make a move anyway?
-
+Ihr könnt nichts sehen. Trotzdem versuchen, einen Zug zu machen?
 %%%%
 You make a move on Xom's chessboard...
-
+Ihr macht einen Zug auf Xoms Schachbrett...
 %%%%
 Sorry, this item was removed!
-
+Sorry, dieser Gegenstand wurde entfernt vom Spiel!
 %%%%
 You do not have any ammo quivered for %s.
-
+Ihr habt keine Munition für {acc}%s im Köcher.
 %%%%
 You cannot evoke magical items.
-Ihr könnt keine magischen Gegenstände hervorrufen.
+Ihr könnt keine magischen Gegenstände evozieren.
 %%%%
 This wand has no charges.
 Dieser Zauberstab hat keine Ladungen.
 %%%%
 %s is presently inert.
-
+%s ist derzeit inert.
 %%%%
 Evoke which item? (* to show all)
-
+Welchen Gegenstand evozieren? (* um alle zu zeigen)
 %%%%
+# When player uses last charge of box of beasts
 The box is emptied!
-
+Die Kiste wird geleert!
 %%%%
 The lightning rod overheats!
 Der Blitzableiter ist überhitzt!
 %%%%
 QUAD DAMAGE!
-QUAD DAMAGE!
+VIERFACHER SCHADEN!
 %%%%
+# Last charge of phantom mirror used
 The mirror clouds!
-
+Der Spiegel wird getrübt!
 %%%%
 The tin is emptied!
-Die Dose ist geleert!
+Die Dose wird geleert!
 %%%%
 The condenser dries out!
-
+Der Kondensator wird trocken!
 %%%%
 The chess piece greys!
-
+Die Schachfigur wird grau!
 %%%%
 
 ##################

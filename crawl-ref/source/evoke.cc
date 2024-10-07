@@ -288,7 +288,7 @@ string manual_skill_names(bool short_text)
     if (short_text && skills.size() > 1)
     {
         char buf[40];
-        sprintf(buf, "%lu skills", (unsigned long) skills.size());
+        sprintf(buf, "%d skills", (int) skills.size());
         return string(buf);
     }
     else
@@ -1141,7 +1141,7 @@ bool evoke_check(int slot, bool quiet)
         // DESC_THE prints "The tin of tremorstones (inert) is presently inert."
         if (!quiet)
         {
-            string name = "the " + i->name(DESC_DBNAME); // @noloc
+            string name = "the " + i->name(DESC_DBNAME);
             mprf("%s is presently inert.", name.c_str());
         }
         return false;
