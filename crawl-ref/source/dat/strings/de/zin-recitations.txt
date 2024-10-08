@@ -1,0 +1,613 @@
+###############################################################################
+#
+# Recitations from Zin's holy books
+#
+# The translation of this can be quite loose. It's just for flavour.
+#
+###############################################################################
+
+#################################
+# @sinners@
+#################################
+
+%%%%
+hordes of the Abyss
+Horden des Abyss
+%%%%
+bastard children of Xom
+Bastardkinder von Xom
+%%%%
+amorphous wretches
+amorphe Elendsgestalten
+%%%%
+fetid masses
+stinkende Massen
+%%%%
+agents of filth
+Agenten des Drecks
+%%%%
+squalid dregs
+schmutziger Abschaum
+%%%%
+unbelievers
+Ungläubige
+%%%%
+heretics
+Ketzer
+%%%%
+guilty
+Schuldige
+%%%%
+legions of the damned
+Legionen der Verdammten
+%%%%
+servants of Hell
+Diener der Hölle
+%%%%
+forces of darkness
+Mächte der Finsternis
+%%%%
+
+#################################
+# @the_sinners@
+#################################
+
+# the English version only uses @sinners@, but the program also populates this
+# parameter for the benefit of languages where there's more than one word for "the"
+
+%%%%
+the hordes of the Abyss
+die Horden des Abyss
+%%%%
+the bastard children of Xom
+die Bastardkinder von Xom
+%%%%
+the amorphous wretches
+die amorphen Elendsgestalten
+%%%%
+the fetid masses
+die stinkenden Massen
+%%%%
+the agents of filth
+die Agenten des Drecks
+%%%%
+the squalid dregs
+der schmutzige Abschaum
+%%%%
+the unbelievers
+die Ungläubigen
+%%%%
+the heretics
+die Ketzer
+%%%%
+the guilty
+die Schuldigen
+%%%%
+the legions of the damned
+die Legionen der Verdammten
+%%%%
+the servants of Hell
+die Diener der Hölle
+%%%%
+the forces of darkness
+die Mächte der Finsternis
+%%%%
+
+#################################
+# @sin_noun@
+#################################
+
+%%%%
+# duplicate of weapon brand annotation
+#chaos
+#Chaos
+%%%%
+discord
+Unfrieden
+%%%%
+anarchy
+Anarchie
+%%%%
+uncleanliness
+Unreinlichkeit
+%%%%
+impurity
+Unreinheit
+%%%%
+contamination
+Kontamination
+%%%%
+unfaithfulness
+Untreue
+%%%%
+disloyalty
+Abtrünnigkeit
+%%%%
+doubt
+Zweifel
+%%%%
+profanity
+Gotteslästerung
+%%%%
+blasphemy
+Blasphemie
+%%%%
+sacrilege
+Sakrileg
+%%%%
+
+#################################
+# @sin_adj@
+#################################
+
+%%%%
+chaotic
+chaotisch
+%%%%
+discordant
+unfriedlich
+%%%%
+anarchic
+anarchisch
+%%%%
+unclean
+unsauber
+%%%%
+impure
+unrein
+%%%%
+# duplicate of player status
+#contaminated
+#kontaminiert
+%%%%
+unfaithful
+untreu
+%%%%
+disloyal
+abtrünnig
+%%%%
+doubting
+zweifelnd
+%%%%
+profane
+gotteslästerlich
+%%%%
+blasphemous
+blasphemisch
+%%%%
+sacrilegious
+sakrilegisch
+%%%%
+
+#################################
+# @virtue@
+#################################
+
+%%%%
+order
+Ordnung
+%%%%
+harmony
+Harmonie
+%%%%
+lawfulness
+Rechtmäßigkeit
+%%%%
+cleanliness
+Sauberkeit
+%%%%
+purity
+Reinheit
+%%%%
+hygiene
+Hygiene
+%%%%
+faithfulness
+Treue
+%%%%
+loyalty
+Loyalität
+%%%%
+belief
+Glaube
+%%%%
+reverence
+Ehrfurcht
+%%%%
+piety
+Frömmigkeit
+%%%%
+obedience
+Gehorsamkeit
+%%%%
+
+#################################
+# @virtuous@
+#################################
+
+%%%%
+ordered
+ordentlich
+%%%%
+harmonic
+harmonisch
+%%%%
+lawful
+rechtmäßig
+%%%%
+clean
+sauber
+%%%%
+pure
+rein
+%%%%
+hygienic
+hygienisch
+%%%%
+faithful
+treu
+%%%%
+loyal
+loyal
+%%%%
+believing
+gläubig
+%%%%
+reverent
+ehrfürchtig
+%%%%
+pious
+fromm
+%%%%
+obedient
+gehorsam
+%%%%
+
+#################################
+# @smite@
+#################################
+
+%%%%
+purify
+läutern
+%%%%
+censure
+tadeln
+%%%%
+condemn
+verurteilen
+%%%%
+# not translating literally, in order to avoid a separable verb
+strike down
+geißeln
+%%%%
+expel
+vertreiben
+%%%%
+oust
+verdrängen
+%%%%
+smite
+zerschlagen
+%%%%
+castigate
+züchtigen
+%%%%
+rebuke
+rügen
+%%%%
+
+#################################
+# @smitten@
+#################################
+
+%%%%
+purified
+geläutered
+%%%%
+censured
+getadelt
+%%%%
+condemned
+verurteilt
+%%%%
+# not translating literally, in order to avoid a separable verb
+struck down
+gegeißelt
+%%%%
+expelled
+vertrieben
+%%%%
+ousted
+verdrängt
+%%%%
+smitten
+zerschlagen
+%%%%
+castigated
+gezüchtigt
+%%%%
+rebuked
+gerügt
+%%%%
+
+#################################
+# Scripture names
+#################################
+
+%%%%
+Abominations
+Abscheulichkeiten
+%%%%
+Ablutions
+Ablutionen
+%%%%
+Apostates
+Apostaten
+%%%%
+Anathema
+Anathema
+%%%%
+# Example: "%s %d:%d" -> "Abominations 10:13"
+You finish reciting %s %d:%d.
+Ihr beendet die Rezitation von %s %d:%d.
+%%%%
+
+
+#################################
+# Recitations
+#################################
+
+# Each recitation is 3 lines, and these variables are always available:
+#     @sinners@, @sin_adj@, @sin_noun@, @virtuous@, @virtue@, @smite@, @smitten@,
+#     as well as these extras that are not used in the English version: 
+#     @the_sinners@, @the_sin@, @the_virtue@, which are just @sinners@,
+#     @sin_noun@ and @virtue@ prepended with the definite article ("the").
+# The translation can use any of these variables freely at any time. It does not
+# need to restrict itself to those variables used in the equivalent English line.
+# (However, if you use a variable, you must provide translations for its values.)
+
+%%%%
+It was the word of Zin that there would not be @sin_noun@...
+Es war das Wort von Zin, dass es nicht mehr {acc}@sin_noun@ geben würde...
+%%%%
+...and did the people not suffer until they had @smitten@...
+...und hat das Volk nicht gelitten, bis es @the_sinners@...
+%%%%
+...the @sinners@, after which all was well?
+...@smitten@ hatte, nach denen alles gut war?
+%%%%
+The voice of Zin, pure and clear, did say that the @sinners@...
+Die Stimme von Zin, rein und klar, hat gesagt, dass @the_sinners@...
+%%%%
+...were not @virtuous@! And hearing this, the people rose up...
+.. nicht @virtuous@ waren! Und als das Volk dies hörte, erhob es sich...
+%%%%
+...and embraced @virtue@, for they feared Zin's wrath.
+...und nahmen @virtue@ an, denn sie fürchteten Zin's Zorn.
+%%%%
+Zin spoke of the doctrine of @virtue@, and...
+Zin sprach von der Lehre von {dat}@virtue@, und...
+%%%%
+...saw the @sinners@ filled with fear, for they were...
+...sah {acc}@the_sinners@ von Furcht erfüllt, denn sie waren...
+%%%%
+...@sin_adj@ and knew Zin's wrath would come for them.
+...@sin_adj@, und wussten, dass Zins Zorn sie finden würde.
+%%%%
+And so Zin bade the @sinners@ to come before...
+Und so forderte Zin {acc}@the_sinners@ auf, vor den Altar...
+%%%%
+...the altar, that judgement might be passed...
+...zu treten, damit ein Urteil gefällt werden kann...
+%%%%
+...upon those who were not @virtuous@.
+...über die, die nicht @virtuous@ waren.
+%%%%
+To the devout, Zin provideth. From the rest...
+Für die Frommen sorgt Zin. Vom Rest...
+%%%%
+...ye @sinners@, ye guilty...
+...ihr @sinners@, ihr, die von...
+%%%%
+...of @sin_noun@, Zin taketh.
+...{dat}@sin_noun@ schuldig seid, nimmt Zin.
+%%%%
+Zin saw the @sin_noun@ of the @sinners@, and...
+Zin sah {gen}@the_sinners@ @sin_noun@, und...
+%%%%
+...was displeased, for did the law not say that...
+...war missfallen, denn sagt das Gesetz nicht, dass...
+%%%%
+...those who did not become @virtuous@ would be @smitten@?
+...diejenigen, die nicht @virtuous@ geworden sind, @smitten@ werden?
+%%%%
+Zin said that @virtue@ shall be the law of the land, and...
+Zin sagte, dass @virtue@ das Gesetz des Landes sein soll, und...
+%%%%
+...those who turn to @sin_noun@ will be @smitten@. This was fair...
+die, die sich @sin_noun@ zuwenden, werden @smitten@. Das war fair...
+%%%%
+...and just, and not a voice dissented.
+...und gerecht, und keine Stimme hat widersprochen.
+%%%%
+Damned, damned be the @sinners@ and...
+Verdammt, verdammt seien @the_sinners@ und...
+%%%%
+...all else who abandon @virtue@! Let them...
+...alle anderen, die @virtue@ aufgeben! Sie sollen...
+%%%%
+...be @smitten@ by the jurisprudence of Zin!
+...von der Rechtsprechung von Zin @smitten@ werden!
+%%%%
+And Zin said to all in attendance, 'Which of ye...
+Und Zin sagte zu allen Anwesenden: 'Wer von euch...
+%%%%
+...number among the @sinners@? Come before me, that...
+...zählt zu {dat}@the_sinners@? Kommt vor mich, dass...
+%%%%
+...I may @smite@ you now for your @sin_noun@!'
+...ich euch für @sin_noun@ @smite@ kann!'
+%%%%
+Yea, I say unto thee, bring forth...
+Ja, ich sage dir, bringe {acc}@the_sinners@...
+%%%%
+...the @sinners@ that they may know...
+...hervor, damit sie den Zorn Zins...
+%%%%
+...the wrath of Zin, and thus be @smitten@!
+...erkennen dürfen, und somit @smitten@ werden!
+%%%%
+In a great set of silver scales are weighed the...
+In einer großen silbernen Waage werden die Seele...
+%%%%
+...souls of the @sinners@, and with their @sin_adj@...
+...{gen}@the_sinners@ gewogen, and weil sie @sin_adj@...
+%%%%
+...ways, the balance hath tipped against them!
+...gewesen sind, hat sich the Gleichgewicht gegen sie gewendet!
+%%%%
+It is just that the @sinners@ shall be @smitten@...
+Es ist gerecht, dass @the_sinners@ zur rechten Zeit @smitten@...
+%%%%
+...in due time, for @virtue@ is what Zin has declared...
+...werden sollen, denn @virtue@ ist das, was Zin als das Gesetz...
+%%%%
+...the law of the land, and Zin's word is law!
+...des Landes erklärt hat, und das Wort von Zin ist Gesetz!
+%%%%
+Thus the people made the covenant of @virtue@ with...
+So Schloss das Volk den Bund von {dat}@virtue@ mit...
+%%%%
+...Zin, and all was good, for they knew that the...
+...Zin, und alles war gut, denn sie wussten, dass...
+%%%%
+...@sinners@ would trouble them no longer.
+...@the sinners@ würden sie nicht mehr stören.
+%%%%
+What of the @sinners@? @Smitten@ for their...
+Was geschieht mit {dat}@the sinners@? @Smitten@ für..
+%%%%
+...@sin_noun@ they shall be! Zin will @smite@ them again...
+...@sin_noun@ sollen sie sein! Zin wird sie wieder...
+%%%%
+...and again, and again!
+...und wieder, und wieder @smite@!
+%%%%
+And lo, the wrath of Zin did find...
+Und sehet, der Zorn von Zin fand...
+%%%%
+...them wherever they hid, and the @sinners@...
+...sie wo auch immer sie sich versteckten, und @the_sinners@...
+%%%%
+...were @smitten@ for their @sin_noun@!
+...wurden @smitten@ für @sin_noun@!
+%%%%
+Zin looked out upon the remains of the @sinners@...
+Zin blickte auf die Überreste {gen}@the_sinners@...
+%%%%
+...and declared it good that they had been...
+...und erklärten es für gut, dass sie @smitten@...
+%%%%
+...@smitten@. And thus justice was done.
+...worden waren. Und so wurde der Gerechtigkeit Genüge getan.
+%%%%
+The law of Zin demands thee...
+Das Gesetz von Zin verlangt von dir...
+%%%%
+...be @virtuous@, and that the punishment for @sin_noun@...
+...@virtuous@ zu sein, und dass die Strafe für @sin_noun@...
+%%%%
+...shall be swift and harsh!
+...schnell und hart sein wird!
+%%%%
+It was then that Zin bade them...
+Da ermahnte Zin sie, nicht von...
+%%%%
+...not to stray from @virtue@, lest...
+...@virtue@ abzuweichen, damit sie nicht...
+%%%%
+...they become as damned as the @sinners@.
+...so verdammt würden wie @the_sinners@.
+%%%%
+Only the @virtuous@ shall be judged worthy, and...
+Nur die, die @virtuous@ sind, werden für würdig befunden, und...
+%%%%
+...all the @sinners@ will be found wanting. Such is...
+...@the_sinners@ werden alle als unzulänglich befunden werden...
+%%%%
+...the word of Zin, and such is the law!
+...So lautet das Wort von Zin, und so lautet das Gesetz!
+%%%%
+To those who would swear an oath of @virtue@ on my altar...
+Denen, die auf meinem Altar den Eid von {dat}@virtue@ schwören würden...
+%%%%
+...I bring ye salvation. To the rest, ye @sinners@...
+...werde ich Erlösung bringen. {dat}@The_sinners@...
+%%%%
+...and the @sin_adj@, the name of Zin shall be thy damnation.
+...und denen, die @sin_adj@ sind, soll der Name Zins eure Verdammnis sein.
+%%%%
+And Zin decreed that the people would be...
+Und Zin ordnete an, dass das Volk vor jeder Art von...
+%%%%
+...protected from @sin_noun@ in all its forms, and...
+...{dat}@sin_noun@ geschützt werden sollte, und...
+%%%%
+...preserved in their @virtue@ for all the days to come.
+...bewahrt in {dat}@virtue@ für alle kommenden Tage.
+%%%%
+For those who would enter Zin's holy bosom...
+Für diejenigen, die in Zins heiligen Schoß eintreten wollen...
+%%%%
+...and live in @virtue@, Zin provideth. Such is...
+...und in {dat}@virtue@ leben, Zin versorgt. So ist...
+%%%%
+...the covenant, and such is the way of things.
+...der Bund, und so ist der Lauf der Dinge.
+%%%%
+Zin hath not damned the @sinners@, but it is they...
+Zin hat @the_sinners@ nich verdammt, sondern ist es sie...
+%%%%
+...that have damned themselves for their @sin_noun@, for...
+...dass sich selbst verdammt haben mit {dat}@sin_noun@, denn...
+%%%%
+...did Zin not decree that to be @sin_adj@ was wrong?
+...hat Zin nicht verfügt, dass es falsch ist, @sin_adj@ zu sein?
+%%%%
+And Zin, furious at their @sin_noun@, held...
+Und Zin, wütend über ihr @sin_noun@, hielt...
+%%%%
+...aloft a silver sceptre! The @sinners@...
+...ein silbernes Zepter in die Höhe! @The_sinners@...
+%%%%
+...were @smitten@, and thus the way of things was maintained.
+...wurden @smitten@, und so wurde der Lauf der Dinge beibehalten.
+%%%%
+When the law of the land faltered, Zin rose...
+Als das Gesetz des Landes ins Wanken geriet, erhob sich Zin...
+%%%%
+...from the silver throne, and the @sinners@ were...
+...von dem silbernen Thron, und @the_sinners@ waren...
+%%%%
+...@smitten@. And it was thus that the law was made good.
+...@smitten@. Auf diese Weise wurde das Gesetz verwirklicht.
+%%%%
+Zin descended from on high in a silver chariot...
+Zin stieg in einem silbernen Wagen von oben herab...
+%%%%
+...to @smite@ the @sinners@ for their...
+...um {acc}@the_sinners@ zu @smite@ für...
+%%%%
+...@sin_noun@, and thus judgement was rendered.
+...@sin_noun@, und so wurde das Urteil verkündet.
+%%%%
+The @sinners@ stood before Zin, and in that instant...
+@The_sinners@ standen vor Zin, und in diesem Augenblick wussten sie...
+%%%%
+...they knew they would be found guilty of @sin_noun@...
+...dass sie für schuldig von {dat}@sin_noun@ befunden werden würden...
+%%%%
+...for that is the word of Zin, and Zin's word is law.
+...denn das ist das Wort von Zin, und Zins Wort ist Recht.
+%%%%

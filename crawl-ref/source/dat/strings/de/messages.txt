@@ -4974,31 +4974,31 @@ Eine bösartige Aura umgibt {acc}%s.
 ##################
 %%%%
 Brand which weapon?
-
+Welche Waffe brandmarkieren.
 %%%%
 Do you wish to have %s bloodied with pain?
-
+{acc}%s mit Schmerz bluten lassen?
 %%%%
 Do you wish to have %s corrupted with distortion?
-
+{acc}%s mit Verzerrung verderben lassen?
 %%%%
 Do you wish to have %s blessed with holy wrath?
-
+%s mit heiligen Zorn segnen lassen?
 %%%%
 %s shines brightly!
 %s leuchtet hell!
 %%%%
 %s booms: Use this gift wisely!
-
+%s boomt: Nutzt dieses Geschenk mit Bedacht!
 %%%%
 You don't have anything to sacrifice.
 Ihr habt nichts zu opfern.
 %%%%
 Do you wish to donate half of your money?
-
+Wollt Ihr die Hälfte Eures Geldes spenden?
 %%%%
 %s finds your generosity lacking.
-
+%s findet Eure Großzügigkeit unzureichend.
 %%%%
 You feel that you will soon be absolved of all your sins.
 Ihr habt das Gefühl, dass Ihr bald von all Euren Sünden befreit sein werdet.
@@ -5007,511 +5007,25 @@ You feel that your burden of sins will soon be lighter.
 Ihr fühlt, dass Eure Last der Sünden bald leichter sein wird.
 %%%%
 You feel that Zin will soon be exalted by your worship.
-
+Ihr habt das Gefühl, dass Zin bald durch Eure Verehrung erhöht werden wird.
 %%%%
 You feel that Zin will soon be extremely pleased with you.
-
+Ihr habt das Gefühl, dass Zin bald extrem zufrieden mit Euch sein wird.
 %%%%
 You feel that Zin will soon be greatly pleased with you.
-
+Ihr habt das Gefühl, dass Zin bald erheblich zufrieden mit Euch sein wird.
 %%%%
 You feel that Zin will soon be most pleased with you.
-
+Ihr habt das Gefühl, dass Zin bald sehr zufrieden mit Euch sein wird.
 %%%%
 You feel that Zin will soon be pleased with you.
-
+Ihr habt das Gefühl, dass Zin bald zufrieden mit Euch sein wird.
 %%%%
 You feel that Zin will soon be aware of your devotion.
-
+Ihr habt das Gefühl, dass Zin bald von Euere Hingabe erfarhren wird.
 %%%%
 You feel that Zin will soon be noncommittal.
-
-%%%%
-It was the word of Zin that there would not be @sin_noun@...
-
-%%%%
-...and did the people not suffer until they had @smitten@...
-
-%%%%
-...the @sinners@, after which all was well?
-
-%%%%
-The voice of Zin, pure and clear, did say that the @sinners@...
-
-%%%%
-...were not @virtuous@! And hearing this, the people rose up...
-
-%%%%
-...and embraced @virtue@, for they feared Zin's wrath.
-
-%%%%
-Zin spoke of the doctrine of @virtue@, and...
-
-%%%%
-...saw the @sinners@ filled with fear, for they were...
-
-%%%%
-...@sin_adj@ and knew Zin's wrath would come for them.
-
-%%%%
-And so Zin bade the @sinners@ to come before...
-
-%%%%
-...the altar, that judgement might be passed...
-
-%%%%
-...upon those who were not @virtuous@.
-
-%%%%
-To the devout, Zin provideth. From the rest...
-
-%%%%
-...ye @sinners@, ye guilty...
-
-%%%%
-...of @sin_noun@, Zin taketh.
-
-%%%%
-Zin saw the @sin_noun@ of the @sinners@, and...
-
-%%%%
-...was displeased, for did the law not say that...
-
-%%%%
-...those who did not become @virtuous@ would be @smitten@?
-
-%%%%
-Zin said that @virtue@ shall be the law of the land, and...
-
-%%%%
-...those who turn to @sin_noun@ will be @smitten@. This was fair...
-
-%%%%
-...and just, and not a voice dissented.
-
-%%%%
-Damned, damned be the @sinners@ and...
-
-%%%%
-...all else who abandon @virtue@! Let them...
-
-%%%%
-...be @smitten@ by the jurisprudence of Zin!
-
-%%%%
-And Zin said to all in attendance, 'Which of ye...
-
-%%%%
-...number among the @sinners@? Come before me, that...
-
-%%%%
-...I may @smite@ you now for your @sin_noun@!'
-
-%%%%
-Yea, I say unto thee, bring forth...
-
-%%%%
-...the @sinners@ that they may know...
-
-%%%%
-...the wrath of Zin, and thus be @smitten@!
-
-%%%%
-In a great set of silver scales are weighed the...
-
-%%%%
-...souls of the @sinners@, and with their @sin_adj@...
-
-%%%%
-...ways, the balance hath tipped against them!
-
-%%%%
-It is just that the @sinners@ shall be @smitten@...
-
-%%%%
-...in due time, for @virtue@ is what Zin has declared...
-
-%%%%
-...the law of the land, and Zin's word is law!
-
-%%%%
-Thus the people made the covenant of @virtue@ with...
-
-%%%%
-...Zin, and all was good, for they knew that the...
-
-%%%%
-...@sinners@ would trouble them no longer.
-
-%%%%
-What of the @sinners@? @Smitten@ for their...
-
-%%%%
-...@sin_noun@ they shall be! Zin will @smite@ them again...
-
-%%%%
-...and again, and again!
-
-%%%%
-And lo, the wrath of Zin did find...
-
-%%%%
-...them wherever they hid, and the @sinners@...
-
-%%%%
-...were @smitten@ for their @sin_noun@!
-
-%%%%
-Zin looked out upon the remains of the @sinners@...
-
-%%%%
-...and declared it good that they had been...
-
-%%%%
-...@smitten@. And thus justice was done.
-
-%%%%
-The law of Zin demands thee...
-
-%%%%
-...be @virtuous@, and that the punishment for @sin_noun@...
-
-%%%%
-...shall be swift and harsh!
-
-%%%%
-It was then that Zin bade them...
-
-%%%%
-...not to stray from @virtue@, lest...
-
-%%%%
-...they become as damned as the @sinners@.
-
-%%%%
-Only the @virtuous@ shall be judged worthy, and...
-
-%%%%
-...all the @sinners@ will be found wanting. Such is...
-
-%%%%
-...the word of Zin, and such is the law!
-
-%%%%
-To those who would swear an oath of @virtue@ on my altar...
-
-%%%%
-...I bring ye salvation. To the rest, ye @sinners@...
-
-%%%%
-...and the @sin_adj@, the name of Zin shall be thy damnation.
-
-%%%%
-And Zin decreed that the people would be...
-
-%%%%
-...protected from @sin_noun@ in all its forms, and...
-
-%%%%
-...preserved in their @virtue@ for all the days to come.
-
-%%%%
-For those who would enter Zin's holy bosom...
-
-%%%%
-...and live in @virtue@, Zin provideth. Such is...
-
-%%%%
-...the covenant, and such is the way of things.
-
-%%%%
-Zin hath not damned the @sinners@, but it is they...
-
-%%%%
-...that have damned themselves for their @sin_noun@, for...
-
-%%%%
-...did Zin not decree that to be @sin_adj@ was wrong?
-
-%%%%
-And Zin, furious at their @sin_noun@, held...
-
-%%%%
-...aloft a silver sceptre! The @sinners@...
-
-%%%%
-...were @smitten@, and thus the way of things was maintained.
-
-%%%%
-When the law of the land faltered, Zin rose...
-
-%%%%
-...from the silver throne, and the @sinners@ were...
-
-%%%%
-...@smitten@. And it was thus that the law was made good.
-
-%%%%
-Zin descended from on high in a silver chariot...
-
-%%%%
-...to @smite@ the @sinners@ for their...
-
-%%%%
-...@sin_noun@, and thus judgement was rendered.
-
-%%%%
-The @sinners@ stood before Zin, and in that instant...
-
-%%%%
-...they knew they would be found guilty of @sin_noun@...
-
-%%%%
-...for that is the word of Zin, and Zin's word is law.
-
-%%%%
-hordes of the Abyss
-
-%%%%
-bastard children of Xom
-
-%%%%
-amorphous wretches
-
-%%%%
-fetid masses
-
-%%%%
-agents of filth
-
-%%%%
-squalid dregs
-
-%%%%
-unbelievers
-
-%%%%
-heretics
-
-%%%%
-guilty
-
-%%%%
-legions of the damned
-
-%%%%
-servants of Hell
-
-%%%%
-forces of darkness
-
-%%%%
-chaotic
-
-%%%%
-discordant
-
-%%%%
-discord
-
-%%%%
-anarchic
-
-%%%%
-anarchy
-
-%%%%
-unclean
-
-%%%%
-uncleanliness
-
-%%%%
-impure
-
-%%%%
-impurity
-
-%%%%
-contamination
-
-%%%%
-unfaithful
-
-%%%%
-unfaithfulness
-
-%%%%
-disloyal
-
-%%%%
-disloyalty
-
-%%%%
-doubting
-
-%%%%
-doubt
-
-%%%%
-profane
-
-%%%%
-profanity
-
-%%%%
-blasphemous
-
-%%%%
-blasphemy
-
-%%%%
-sacrilegious
-
-%%%%
-sacrilege
-
-%%%%
-ordered
-
-%%%%
-order
-
-%%%%
-harmonic
-
-%%%%
-harmony
-
-%%%%
-lawful
-
-%%%%
-lawfulness
-
-%%%%
-clean
-
-%%%%
-cleanliness
-
-%%%%
-pure
-
-%%%%
-purity
-
-%%%%
-hygienic
-
-%%%%
-hygiene
-
-%%%%
-faithful
-
-%%%%
-faithfulness
-
-%%%%
-loyal
-
-%%%%
-loyalty
-
-%%%%
-believing
-
-%%%%
-belief
-
-%%%%
-reverent
-
-%%%%
-reverence
-
-%%%%
-pious
-
-%%%%
-piety
-
-%%%%
-obedient
-
-%%%%
-obedience
-
-%%%%
-purify
-
-%%%%
-purified
-
-%%%%
-censure
-
-%%%%
-censured
-
-%%%%
-condemn
-
-%%%%
-condemned
-
-%%%%
-strike down
-
-%%%%
-struck down
-
-%%%%
-expel
-
-%%%%
-expelled
-
-%%%%
-oust
-
-%%%%
-ousted
-
-%%%%
-smite
-
-%%%%
-smitten
-
-%%%%
-castigate
-
-%%%%
-castigated
-
-%%%%
-rebuke
-
-%%%%
-rebuked
-
-%%%%
-Abominations
-
-%%%%
-Ablutions
-
-%%%%
-Apostates
-
-%%%%
-Anathema
-
-%%%%
-You finish reciting %s %d:%d.
-Ihr beendet die Rezitation von %s %d:%d.
+Ihr habt das Gefühl, dass Zin bald gleichgültig sein wird.
 %%%%
 Finish your current sermon first, please.
 Beendet bitte zuerst Eure aktuelle Predigt.
