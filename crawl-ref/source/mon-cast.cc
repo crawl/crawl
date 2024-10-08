@@ -3956,7 +3956,6 @@ static int _get_dam_fraction(const bolt &tracer, int scale)
  * Pick a target for Ghostly Sacrifice.
  *
  *  @param  caster       The monster casting the spell.
- *                      TODO: constify (requires mon_spell_beam param const
  *  @return The target square, or an out of bounds coord if none was found.
  */
 static coord_def _mons_ghostly_sacrifice_target(const monster &caster,
