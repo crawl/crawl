@@ -262,8 +262,32 @@ mon_attitude_type monster::temp_attitude() const
 
 bool monster::swimming() const
 {
-    const dungeon_feature_type grid = env.grid(pos());
-    return feat_is_water(grid) && mons_primary_habitat(*this) == HT_WATER;
+    return swimming(false);
+}
+
+/**
+ * Is this monster considered swimming right now?
+ *
+ * energy_cost boolean If this is an energy cost check, we
+ *                     still consider them swimming, even if
+ *                     they're not doing it well
+ *                     default = false
+*/
+bool monster::swimming(bool energy_cost) const
+{
+    if (!ground_level()) {
+        return false;
+    }
+
+    const dungeon_feature_type feat = env.grid(pos());
+    auto primary = mons_primary_habitat(*this);
+    auto secondary = mons_secondary_habitat(*this);
+
+    bool water = feat_is_water(feat) && (energy_cost || primary == HT_WATER);
+    if (water)
+        return true;
+    return feat_is_lava(feat) && (energy_cost
+                              || primary == HT_LAVA || secondary == HT_LAVA);
 }
 
 bool monster::extra_balanced_at(const coord_def p) const

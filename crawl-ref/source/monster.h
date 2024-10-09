@@ -264,6 +264,7 @@ public:
     bool     alive() const override;
     bool     defined() const { return alive(); }
     bool     swimming() const override;
+    bool     swimming(bool energy_cost) const;
 
     bool     can_drown() const;
     bool     floundering_at(const coord_def p) const;
