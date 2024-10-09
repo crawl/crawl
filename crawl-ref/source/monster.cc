@@ -286,8 +286,11 @@ bool monster::swimming(bool energy_cost) const
     bool water = feat_is_water(feat) && (energy_cost || primary == HT_WATER);
     if (water)
         return true;
-    return feat_is_lava(feat) && (energy_cost
-                              || primary == HT_LAVA || secondary == HT_LAVA);
+    const bool lava = feat_is_lava(feat) && (energy_cost
+                      || primary == HT_LAVA || secondary == HT_LAVA);
+    if (lava)
+        return true;
+    return feat_is_wall(feat) && (energy_cost || primary == HT_WALLS);
 }
 
 bool monster::extra_balanced_at(const coord_def p) const
