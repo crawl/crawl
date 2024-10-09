@@ -295,10 +295,7 @@ static bool _swap_monsters(monster& mover, monster& moved)
 
 static energy_use_type _get_swim_or_move(monster& mon)
 {
-    const dungeon_feature_type feat = env.grid(mon.pos());
-    // FIXME: Replace check with mons_is_swimming()?
-    return (feat_is_lava(feat) || feat_is_water(feat))
-            && mon.ground_level() ? EUT_SWIM : EUT_MOVE;
+    return mon.swimming(true) ? EUT_SWIM : EUT_MOVE;
 }
 
 static void _swim_or_move_energy(monster& mon)
