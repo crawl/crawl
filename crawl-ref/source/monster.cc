@@ -263,12 +263,31 @@ mon_attitude_type monster::temp_attitude() const
 
 bool monster::swimming() const
 {
+    return swimming(false);
+}
+
+/**
+ * Is this monster considered swimming right now?
+ *
+ * @param energy_cost   If this is an energy cost check, we still consider them
+ *                      swimming through liquids, even if they're not doing it
+ *                      well.
+ */
+bool monster::swimming(bool energy_cost) const
+{
+    if (!ground_level())
+        return false;
+
     const dungeon_feature_type grid = env.grid(pos());
     const habitat_type habitat = mons_habitat(*this);
-    // XXX: counting anything that can leave water as not swimming seems too
-    // restrictive to me as it excludes monstrs like merfolk, frogs, and
-    // polar bears --Wizard Ike
-    return feat_is_water(grid) && (habitat & HT_WATER) == habitat;
+
+    if ((energy_cost || (habitat & HT_DEEP_WATER)) && feat_is_water(grid))
+        return true;
+
+    if ((energy_cost || (habitat & HT_LAVA)) && feat_is_lava(grid))
+        return true;
+
+    return false;
 }
 
 bool monster::extra_balanced_at(const coord_def p) const
