@@ -1020,7 +1020,6 @@ plant_07
 plant_08
 plant_09
 plant_10
-plant_11
 plant_crypt MONS_WITHERED_PLANT
 plant_demonic MONS_DEMONIC_PLANT
 %rim 0
