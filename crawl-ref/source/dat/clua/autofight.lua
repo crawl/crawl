@@ -106,8 +106,15 @@ local function have_ranged()
   return wp and wp.is_ranged and not wp.is_melded
 end
 
+local function should_quiver_be_used(no_move)
+  if no_move then
+      return AUTOFIGHT_THROW_NOMOVE
+  end
+  return AUTOFIGHT_THROW
+end
+
 local function have_quiver_action(no_move)
-  return ((AUTOFIGHT_THROW or no_move and AUTOFIGHT_THROW_NOMOVE)
+  return (should_quiver_be_used(no_move)
           and you.quiver_valid(1) and you.quiver_enabled(1)
           -- TODO: armataur roll passes the following check, which may be
           -- counterintuitive for the nomove case
