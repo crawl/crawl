@@ -805,24 +805,23 @@ void treant_release_fauna(monster& mons)
 
     monster_type fauna_t = MONS_HORNET;
 
-    mon_enchant timer = mons.get_ench(ENCH_SUMMON_TIMER);
-
     for (int i = 0; i < count; ++i)
     {
         mgen_data fauna_data(fauna_t, SAME_ATTITUDE(&mons),
                             mons.pos(),  mons.foe);
-        fauna_data.set_summoned(&mons, SPELL_NO_SPELL);
         fauna_data.extra_flags |= MF_WAS_IN_VIEW;
-        monster* fauna = create_monster(fauna_data);
 
-        if (fauna)
+        // If the mangrove was summoned, give its fauna the same summon type and duration.
+        if (mons.is_summoned())
         {
-            fauna->set_band_leader(mons);
+            mon_enchant summ = mons.get_ench(ENCH_SUMMON);
+            mon_enchant timer = mons.get_ench(ENCH_SUMMON_TIMER);
+            fauna_data.set_summoned(summ.agent(), summ.degree, timer.duration,
+                                    mons.is_abjurable(), !!(mons.flags & ~MF_PERSISTS));
+        }
 
-            // Give released fauna the same summon duration as their 'parent'
-            if (timer.ench != ENCH_NONE)
-                fauna->add_ench(timer);
-
+        if (create_monster(fauna_data))
+        {
             created = true;
             mons.mangrove_pests--;
         }
