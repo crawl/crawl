@@ -3194,6 +3194,12 @@ spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
 
     beam.glyph = 0; // FIXME: a hack to avoid "appears out of thin air"
 
+
+    int arc = hitfunc.arclen;
+
+    ASSERT(arc > 0);
+    dprf("arc length is %d", arc);
+
     for (const auto &entry : hitfunc.zapped)
     {
         if (entry.second <= 0)
@@ -3203,10 +3209,6 @@ spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
         if (!actor_at(entry.first))
             continue;
 
-        int arc = hitfunc.arc_length[entry.first.distance_from(hitfunc.origin)];
-        ASSERT(arc > 0);
-        dprf("at distance %d, arc length is %d",
-             entry.first.distance_from(hitfunc.origin), arc);
         beam.source = beam.target = entry.first;
         beam.source.x -= sgn(beam.source.x - hitfunc.origin.x);
         beam.source.y -= sgn(beam.source.y - hitfunc.origin.y);
@@ -3216,7 +3218,8 @@ spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
 
     noisy(spell_effect_noise(SPELL_THUNDERBOLT), caster->pos());
 
-    _set_thunderbolt_last_aim(caster, aim);
+    //we use hitfunc aim bc set_aim has adjusted the target coord to be 5 away
+    _set_thunderbolt_last_aim(caster, hitfunc.aim);
 
     if (charges < LIGHTNING_MAX_CHARGE)
         charges++;

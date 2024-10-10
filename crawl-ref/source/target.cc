@@ -1306,45 +1306,82 @@ static bool left_of(coord_def a, coord_def b)
     return a.x * b.y > a.y * b.x;
 }
 
+
+//returns the arc distance from a to b about the given center
+//requires a and b to be equidistant from center
+static int _get_arclen(coord_def a, coord_def b, coord_def center)
+{
+    ASSERT(a != center);
+    ASSERT(b != center);
+
+    coord_def a_off = a - center; 
+    coord_def b_off = b - center;
+
+    int range = a_off.rdist();
+
+    ASSERT(b_off.rdist() == range);
+
+    int arclen = abs(a_off.x - b_off.x) + abs(a_off.y - b_off.y) + 1;
+
+    //A and b on opposite vertical sides
+    if (abs(a_off.x) == range && abs(b_off.x) == range && a_off.x != b_off.x)
+    {
+        const int a_to_side = range - abs(a_off.y);
+        const int b_to_side = range - abs(b_off.y);
+        arclen += 2 * min(a_to_side, b_to_side);
+    }
+
+    //Opposite horizontal sides
+    if (abs(a_off.y) == range && abs(b_off.y) == range && a_off.y != b_off.y)
+    {
+        const int a_to_side = range - abs(a_off.x);
+        const int b_to_side = range - abs(b_off.x);
+        arclen += 2 * min(a_to_side, b_to_side);
+    }
+
+    return arclen;
+}
+
 bool targeter_thunderbolt::set_aim(coord_def a)
 {
-    aim = a;
     zapped.clear();
 
     if (a == origin)
         return false;
 
-    arc_length.init(0);
-
     ray_def ray;
     coord_def p; // ray.pos() does lots of processing, cache it
 
     // For consistency with beams, we need to
-    _make_ray(ray, origin, aim);
-    while ((origin - (p = ray.pos())).rdist() <= range
-           && map_bounds(p) && opc_solid_see(p) < OPC_OPAQUE)
+    _make_ray(ray, origin, a);
+    p = ray.pos();
+    while (p.distance_from(origin) < range)
     {
-        if (p != origin && zapped[p] <= 0)
+        ray.advance();
+        p = ray.pos();
+        if (p != origin && zapped[p] <= 0
+           && map_bounds(p) && opc_solid_see(p) < OPC_OPAQUE)
         {
             zapped[p] = AFF_YES;
-            arc_length[origin.distance_from(p)]++;
         }
-        ray.advance();
     }
+    //We adjust the targetted coord so it is always range 5 away
+    aim = ray.pos();
 
     if (prev.origin())
         return true;
 
     _make_ray(ray, origin, prev);
-    while ((origin - (p = ray.pos())).rdist() <= range
-           && map_bounds(p) && opc_solid_see(p) < OPC_OPAQUE)
+    p = ray.pos();
+    while (p.distance_from(origin) < range)
     {
-        if (p != origin && zapped[p] <= 0)
+        ray.advance();
+        p = ray.pos();
+        if (p != origin && zapped[p] <= 0
+           && map_bounds(p) && opc_solid_see(p) < OPC_OPAQUE)
         {
             zapped[p] = AFF_MAYBE; // fully affected, we just want to highlight cur
-            arc_length[origin.distance_from(p)]++;
         }
-        ray.advance();
     }
 
     coord_def a1 = prev - origin;
@@ -1361,8 +1398,6 @@ bool targeter_thunderbolt::set_aim(coord_def a)
             if (left_of(a1, r) && left_of(r, a2))
             {
                 (p = r) += origin;
-                if (!zapped.count(p))
-                    arc_length[r.rdist()]++;
                 if (zapped[p] <= 0 && cell_see_cell(origin, p, LOS_NO_TRANS))
                     zapped[p] = AFF_MAYBE;
             }
@@ -1370,6 +1405,9 @@ bool targeter_thunderbolt::set_aim(coord_def a)
 
     zapped[origin] = AFF_NO;
 
+    ASSERT(aim.distance_from(origin) == range);
+
+    arclen = _get_arclen(aim, prev, origin);
     return true;
 }
 
