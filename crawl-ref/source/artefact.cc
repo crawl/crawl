@@ -479,6 +479,112 @@ static void _populate_item_intrinsic_artps(const item_def &item,
     }
 }
 
+static int _get_jewelry_property(const item_def &item, artefact_prop_type prop)
+{
+    ASSERT(item.base_type == OBJ_JEWELLERY);
+    ASSERT(!is_artefact(item));
+
+    const jewellery_type jewel = (jewellery_type)item.sub_type;
+    vector<jewellery_fake_artp> *props = map_find(jewellery_artps, jewel);
+    for (const auto &fake_artp : *props)
+    {
+        if(prop == fake_artp.artp)
+            return fake_artp.plus;
+    }
+    return 0;
+}
+
+
+/// The artefact properties corresponding to a given armor ego
+/// Does not register intrinsic properties e.g. dragon scales
+struct armour_fake_artp
+{
+    /// The artp matching the jewellery (e.g. ARTP_AC for RING_PROTECTION)
+    artefact_prop_type  artp;
+    /// The value of the artp. (E.g. '9' for RING_MAGICAL_POWER.) If set to 0, uses item.plus instead.
+    int                 plus;
+};
+
+
+//SPARM is the key here as resistance needs to map to multiple ARTPs 
+static map<special_armour_type, vector<armour_fake_artp>> sparm_to_artp = {
+    {SPARM_PROTECTION, {{ARTP_AC, 3}}},
+    {SPARM_STRENGTH, {{ARTP_STRENGTH, 3}}},
+    {SPARM_INTELLIGENCE, {{ARTP_INTELLIGENCE, 3}}},
+    {SPARM_DEXTERITY, {{ARTP_DEXTERITY, 3}}},
+    {SPARM_FIRE_RESISTANCE, {{ARTP_FIRE, 1}}},
+    {SPARM_COLD_RESISTANCE, {{ARTP_COLD, 1}}},
+    {SPARM_RESISTANCE, {{ARTP_FIRE, 1}, {ARTP_COLD, 1}}},
+    {SPARM_POISON_RESISTANCE, {{ARTP_POISON, 1}}},
+    {SPARM_POSITIVE_ENERGY, {{ARTP_NEGATIVE_ENERGY, 1}}},
+    {SPARM_WILLPOWER, {{ARTP_WILLPOWER, 1}}},
+    {SPARM_SEE_INVISIBLE, {{ARTP_SEE_INVISIBLE, 1}}},
+    {SPARM_INVISIBILITY, {{ARTP_INVISIBLE, 1}}},
+    {SPARM_FLYING, {{ARTP_FLY, 1}}},
+    {SPARM_RAGE, {{ARTP_ANGRY, 1}}},
+    {SPARM_STEALTH, {{ARTP_STEALTH, 1}}},
+    {SPARM_REPULSION, {{ARTP_RMSL, 1}}},
+    {SPARM_PRESERVATION, {{ARTP_RCORR, 1}}},
+    {SPARM_HARM, {{ARTP_HARM, 1}}},
+    {SPARM_RAMPAGING, {{ARTP_RAMPAGING, 1}}},
+    {SPARM_ARCHMAGI, {{ARTP_ARCHMAGI, 1}}}
+};
+
+static map<artefact_prop_type, armour_flag> artp_to_flag = {
+    {ARTP_FIRE, ARMF_RES_FIRE},
+    {ARTP_COLD, ARMF_RES_COLD},
+    {ARTP_NEGATIVE_ENERGY, ARMF_RES_NEG},
+    {ARTP_STEALTH, ARMF_STEALTH},
+    {ARTP_REGENERATION, ARMF_REGENERATION},
+    {ARTP_WILLPOWER, ARMF_WILLPOWER},
+    {ARTP_ELECTRICITY, ARMF_RES_ELEC},
+    {ARTP_POISON, ARMF_RES_POISON},
+    {ARTP_CORRODE, ARMF_RES_CORR}
+};
+
+
+static int _get_armour_property(const item_def &item, artefact_prop_type prop)
+{
+    int value = 0;
+
+    armour_flag *flag = map_find(artp_to_flag, prop);
+    if(flag)
+        value += armour_type_prop(item.base_type, *flag);
+
+    special_armour_type brand = (special_armour_type) item.brand;
+    vector<armour_fake_artp> *props = map_find(sparm_to_artp, brand);
+    for (const auto &fake_artp : *props)
+    {
+        if(prop == fake_artp.artp)
+            value += fake_artp.plus;
+    }
+    return value;
+}
+
+//Return the value of an artefact property or it's equivalent ego
+//TODO: Does not function for querying base damage, acc, or delay
+//TODO: Does not function for querying brands
+int get_item_property(const item_def &item, artefact_prop_type prop)
+{
+    if(is_artefact(item))
+        int artp_val = artefact_property(item, prop);
+
+    switch(item.base_type)
+    {
+        case OBJ_ARMOUR:
+            return artp_val + _get_armour_property(item, prop);
+        case OBJ_JEWELLERY:
+            return artp_val + _get_jewelry_property(item, prop);
+        case OBJ_STAVES:
+            //TODO
+        case OBJ_WEAPONS: //Weapons and orbs do not provide artp equivalents
+        case OBJ_ORBS:
+            return artp_val;
+        default:
+            return 0; //TODO implement
+    }
+}
+
 void artefact_desc_properties(const item_def &item,
                               artefact_properties_t &proprt,
                               artefact_known_props_t &known)
