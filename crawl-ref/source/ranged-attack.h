@@ -43,6 +43,7 @@ private:
     bool apply_missile_brand();
     bool throwing() const;
     bool clumsy_throwing() const;
+    bool apply_damage_brand(const char *what = nullptr) override;
 
     /* Weapon Effects */
     bool check_unrand_effects() override;
