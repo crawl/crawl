@@ -1295,7 +1295,7 @@ spret zin_imprison(const coord_def& target, bool fail)
         return spret::abort;
     }
 
-    int power = 3 + (roll_dice(5, you.skill(SK_INVOCATIONS, 5) + 12) / 26);
+    int power = 6 + (roll_dice(5, you.skill(SK_INVOCATIONS, 5) + 12) / 26);
 
     return cast_tomb(power, mons, -GOD_ZIN, fail);
 }
