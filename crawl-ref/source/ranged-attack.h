@@ -38,6 +38,8 @@ private:
     special_missile_type random_chaos_missile_brand();
     bool dart_check(special_missile_type type);
     int dart_duration_roll(special_missile_type type);
+    // Applies the effects of the missile brand.
+    // Returns true if the defender has been killed, and false otherwise.
     bool apply_missile_brand();
     bool throwing() const;
     bool clumsy_throwing() const;

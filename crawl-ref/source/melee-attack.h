@@ -165,6 +165,9 @@ private:
     void attacker_sustain_passive_damage();
     int  staff_damage(stave_type staff) const;
     string staff_message(stave_type staff, int damage) const;
+
+    // Returns whether this method is applicable for the ongoing attack.
+    // If it is applicable it will apply the resulting staff damage.
     bool apply_staff_damage();
     void player_stab_check() override;
     bool player_good_stab() override;
