@@ -2799,6 +2799,8 @@ static void _build_dungeon_level()
         && !player_in_branch(BRANCH_SHOALS))
     {
         _prepare_water();
+        if (player_in_branch(BRANCH_LAIR) || !one_chance_in(4))
+            _prepare_water();
     }
 
     if (player_in_hell())
@@ -2867,6 +2869,7 @@ int count_feature_in_box(int x0, int y0, int x1, int y1,
 // shallow. Checks each water space.
 static void _prepare_water()
 {
+    set<coord_def> fix_positions;
     for (rectangle_iterator ri(1); ri; ++ri)
     {
         if (map_masked(*ri, MMT_NO_POOL) || env.grid(*ri) != DNGN_DEEP_WATER)
@@ -2876,14 +2879,17 @@ static void _prepare_water()
         {
             const dungeon_feature_type which_grid = env.grid(*ai);
 
-            if (which_grid == DNGN_SHALLOW_WATER && one_chance_in(20)
-                || feat_has_dry_floor(which_grid) && x_chance_in_y(2, 5))
+            if (which_grid == DNGN_SHALLOW_WATER && one_chance_in(10)
+                || feat_has_dry_floor(which_grid) && one_chance_in(5))
             {
-                _set_grd(*ri, DNGN_SHALLOW_WATER);
+                fix_positions.emplace(*ri);
                 break;
             }
         }
     }
+
+    for (coord_def pos : fix_positions)
+        _set_grd(pos, DNGN_SHALLOW_WATER);
 }
 
 static bool _vault_can_use_layout(const map_def *vault, const map_def *layout)
