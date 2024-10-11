@@ -871,7 +871,7 @@ void move_solo_tentacle(monster* tentacle)
     // Why do I have to do this move? I don't get it.
     // specifically, if tentacle isn't registered at its new position on env.mgrid
     // the search fails (sometimes), Don't know why. -cao
-    tentacle->move_to_pos(new_pos);
+    tentacle->move_to_pos(new_pos, true, false, false);
 
     if (pull_constrictee)
     {
@@ -881,16 +881,16 @@ void move_solo_tentacle(monster* tentacle)
                     constrictee->name(DESC_THE).c_str());
         }
 
-        if (constrictee->as_player())
-            move_player_to_grid(shift_pos, false);
-        else
-            constrictee->move_to_pos(shift_pos);
+        const coord_def old_constrictee_pos  = constrictee->pos();
+        constrictee->move_to_pos(shift_pos);
+        constrictee->apply_location_effects(old_constrictee_pos);
 
         // Interrupt stair travel and passwall.
         if (constrictee->is_player())
             stop_delay(true);
     }
     tentacle->clear_invalid_constrictions();
+    tentacle->clear_far_engulf();
 
     tentacle_connect_constraints connect_costs;
     connect_costs.connection_constraints = &connection_data;

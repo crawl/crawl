@@ -64,7 +64,8 @@ bool player::alive() const
 // n.b. it might be better to use this as player::moveto's function signature
 // itself (or something more flexible), but that involves annoying refactoring
 // because of the actor/monster signature.
-static void _player_moveto(const coord_def &c, bool real_movement, bool clear_net)
+static void _player_moveto(const coord_def &c, bool real_movement, bool clear_net,
+                           bool clear_constrict = true)
 {
     if (c != you.pos())
     {
@@ -85,8 +86,11 @@ static void _player_moveto(const coord_def &c, bool real_movement, bool clear_ne
     you.set_position(c);
 
     // clear invalid constrictions even with fake movement
-    you.clear_invalid_constrictions();
-    you.clear_far_engulf();
+    if (clear_constrict)
+    {
+        you.clear_invalid_constrictions();
+        you.clear_far_engulf();
+    }
 }
 
 player_vanishes::player_vanishes(bool _movement)
@@ -109,16 +113,17 @@ player_vanishes::~player_vanishes()
     _player_moveto(source, movement, true);
 }
 
-void player::moveto(const coord_def &c, bool clear_net)
+void player::moveto(const coord_def &c, bool clear_net, bool clear_constrict)
 {
-    _player_moveto(c, true, clear_net);
+    _player_moveto(c, true, clear_net, clear_constrict);
 }
 
-bool player::move_to_pos(const coord_def &c, bool clear_net, bool /*force*/)
+bool player::move_to_pos(const coord_def &c, bool clear_net, bool /*force*/,
+                         bool clear_constrict)
 {
     if (actor_at(c))
         return false;
-    moveto(c, clear_net);
+    moveto(c, clear_net, clear_constrict);
     return true;
 }
 
