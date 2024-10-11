@@ -818,7 +818,7 @@ void mummy_death_curse_fineff::fire()
 void summon_dismissal_fineff::fire()
 {
     if (defender() && defender()->alive())
-        monster_die(*(defender()->as_monster()), KILL_RESET_KEEP_ITEMS, NON_MONSTER);
+        monster_die(*(defender()->as_monster()), KILL_TIMEOUT, NON_MONSTER);
 }
 
 void spectral_weapon_fineff::fire()
