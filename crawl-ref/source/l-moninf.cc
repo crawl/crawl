@@ -562,10 +562,20 @@ LUAFN(moninf_get_spells)
     const vector<mon_spell_slot> &unique_slots = get_unique_spells(*mi);
     vector<string> spell_titles;
 
+    bool abjuration = false;
     for (const auto& slot : unique_slots)
+    {
         spell_titles.emplace_back(spell_title(slot.spell));
-    clua_stringtable(ls, spell_titles);
 
+        // XXX: Probably get_unique_spells() could just do this for us.
+        if (get_spell_flags(slot.spell) & spflag::mons_abjure)
+            abjuration = true;
+    }
+
+    if (abjuration)
+        spell_titles.emplace_back(spell_title(SPELL_ABJURATION));
+
+    clua_stringtable(ls, spell_titles);
     return 1;
 }
 
