@@ -2940,6 +2940,9 @@ item_def* monster_die(monster& mons, killer_type killer,
                  || mons.type == MONS_ELDRITCH_TENTACLE
                  || mons.type == MONS_SNAPLASHER_VINE)
     {
+        // XXX: Make sure this segment looks dead, or destroy_tentacle may
+        //      reset it before this function completes
+        mons.hit_points = -1;
         destroy_tentacle(&mons);
     }
     else if (mons.type == MONS_ELDRITCH_TENTACLE_SEGMENT
