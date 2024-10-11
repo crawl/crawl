@@ -6150,13 +6150,10 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
     {
         result << "You have ";
         describe_to_hit(mi, result, you.weapon(), true);
-        if (mi.base_ev != mi.ev)
-        {
-            if (!mi.ev)
-                result << " (while incapacitated)";
-            else
-                result << " (at present)";
-        }
+        if (mi.incapacitated()) // Affects ev and sh
+            result << " (while incapacitated)";
+        else if (mi.base_ev != mi.ev)
+            result << " (at present)";
         result << ".\n";
     }
     result << _monster_attacks_description(mi);

@@ -294,7 +294,6 @@ struct monster_info_base
     bool sleepwalking;
     bool backlit;
     bool umbraed;
-    int shield_bonus;
 
     mid_t client_id;
     mid_t summoner_id;
@@ -434,6 +433,8 @@ struct monster_info : public monster_info_base
     // (Maybe unify somehow?)
     // Note: actor version is now actor::cannot_act.
     bool cannot_move() const;
+    bool asleep() const;
+    bool incapacitated() const;
     bool airborne() const;
     bool ground_level() const;
 

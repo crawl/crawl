@@ -148,15 +148,17 @@ static double _to_hit_shield_chance(const monster_info& mi,
                                     bool melee, int to_land, bool penetrating)
 {
     // Duplicates more logic that is defined in attack::attack_shield_blocked, and
-    // attack_melee and attack_ranged classes, for real attacks.
+    // melee_attack and ranged_attack classes, for real attacks, and also
+    // monster::shield_bonus (since it's randomised and loses some resolution
+    // through division, it's more accurate to use floating point math here.)
 
     // Guaranteed hits should ignore the shield as well
     if (to_land >= AUTOMATIC_HIT)
         return 0;
 
-    // Attack first checks for incapacitation, this is handled with a shield bonus
-    // of -100 (or if they have no shield) so we can resolve this here.
-    if (mi.shield_bonus == -100)
+    // Shield bonus is -100 if incapacitated or the roll is too low, resolve
+    // that first. Monster can only block at all if shield_class > 2.
+    if (mi.incapacitated() || mi.sh <= 2)
         return 0;
 
     // There is also a check for a ranged attacker to ignore a shield, but we can't call
@@ -167,13 +169,24 @@ static double _to_hit_shield_chance(const monster_info& mi,
 
     // Main check
     const int con_block = you.shield_bypass_ability(to_land);
-    const int pro_block = _to_hit_is_invisible(mi) ? mi.shield_bonus : mi.shield_bonus / 3;
 
-    // There is also a check for shield exhausted but we have no way of accounting for
-    // this (and we assume not)
+    // This is an approximation of the average result of shield_bonus, which
+    // looks odd due to how integer rounding affects the result for different
+    // values of sh. It's a sequence of fractions looking like:
+    // 1/3, 2/4, 4/5, 6/6, 9/7, 12/8, 16/9, 20/10 ... (for sh starting from 3)
+    const int pro_mult = (mi.sh - 1) / 2;
+    double pro_block = (double)(pro_mult * (mi.sh - pro_mult - 1)) / (double)mi.sh;
+
+    // Slightly inaccurate for very low shield values as the chance should be
+    // zero below a certain sh, due to integer division in attack_shield_blocked.
+    if (_to_hit_is_invisible(mi))
+        pro_block /= 3.0;
+
+    // Shield exhaustion would be checked at this point but it's only meaningful
+    // for multiple hits, so for basic hit chance we assume no exhaustion.
 
     // Final average
-    return min(1.0, max(0.0, (double)pro_block / (double)con_block));
+    return min(1.0, max(0.0, pro_block / (double)con_block));
 }
 
 /**

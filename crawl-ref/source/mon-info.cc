@@ -579,7 +579,6 @@ monster_info::monster_info(const monster* m, int milev)
     sleepwalking = m->sleepwalking();
     backlit = m->backlit(false);
     umbraed = m->umbra();
-    shield_bonus = m->shield_bonus();
 
     // Not an MB_ because it's rare.
     if (m->cloud_immune())
@@ -1733,6 +1732,21 @@ bool monster_info::net_immune() const
 bool monster_info::cannot_move() const
 {
     return is(MB_PARALYSED) || is(MB_PETRIFIED);
+}
+
+bool monster_info::asleep() const
+{
+    // BEH_SLEEP becomes either of these flags
+    return is(MB_DORMANT) || is(MB_SLEEPING);
+}
+
+bool monster_info::incapacitated() const
+{
+    // Duplicates actor::incapacitated
+    return cannot_move()
+            || asleep()
+            || is(MB_CONFUSED)
+            || is(MB_CAUGHT);
 }
 
 bool monster_info::airborne() const
