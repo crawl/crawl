@@ -27,6 +27,7 @@
 #include "mon-death.h"
 #include "mon-movetarget.h"
 #include "mon-speak.h"
+#include "mon-tentacle.h"
 #include "ouch.h"
 #include "religion.h"
 #include "shout.h"
@@ -1086,6 +1087,14 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             // effects.
             else if (mon->temp_attitude()  != ATT_HOSTILE)
             {
+                // Pass aggro events along to the head, so that attitude changes
+                // can be propogated in a way that makes sense.
+                if (mon->is_child_monster())
+                {
+                    monster* head = &get_tentacle_head(get_tentacle_head(*mon));
+                    behaviour_event(head, event, src, src_pos, allow_shout);
+                }
+
                 mon->attitude = ATT_HOSTILE;
                 breakCharm    = true;
             }

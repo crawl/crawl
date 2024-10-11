@@ -138,6 +138,9 @@ static void _wizard_make_friendly(monster* m)
 
     mon_attitude_type att = m->attitude;
 
+    // Propogate attitude change up to the ultimate head, if this is a tentacle.
+    m = &get_tentacle_head(get_tentacle_head(*m));
+
     // During arena mode, skip directly from friendly to hostile.
     if (crawl_state.arena_suspended && att == ATT_FRIENDLY)
         att = ATT_NEUTRAL;
