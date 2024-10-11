@@ -452,6 +452,7 @@ monster_info::monster_info(const monster* m, int milev)
     summoner_id = MID_NOBODY;
     if (m->is_summoned()
         && !(m->flags & MF_PERSISTS)
+        && !m->is_child_monster() && !mons_is_tentacle_segment(m->type)
         && (!m->has_ench(ENCH_PHANTOM_MIRROR) || m->friendly()))
     {
         mb.set(MB_SUMMONED);
