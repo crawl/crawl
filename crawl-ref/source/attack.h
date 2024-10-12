@@ -79,6 +79,8 @@ public:
     string     no_damage_message;
     string     special_damage_message;
     string     aux_attack, aux_verb;
+    // stored to have the descr even when the attacker disappears
+    string     attacker_descr; 
 
     item_def        *defender_shield;
 
