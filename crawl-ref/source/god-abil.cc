@@ -4164,7 +4164,6 @@ spret qazlal_elemental_force(bool fail)
                                        1 + you.skill_rdiv(SK_INVOCATIONS, 1, 2)));
     mgen_data mg;
     mg.summon_type = MON_SUMM_AID;
-    mg.summon_duration = 1;
     mg.flags |= MG_FORCE_PLACE | MG_AUTOFOE;
     mg.summoner = &you;
     int placed = 0;
@@ -4181,6 +4180,7 @@ spret qazlal_elemental_force(bool fail)
         if (!mons_type)
             continue;
         mg.cls = *mons_type;
+        mg.summon_duration = summ_dur(1);
         if (!create_monster(mg))
             continue;
         delete_cloud(pos);
