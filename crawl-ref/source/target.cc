@@ -2495,3 +2495,44 @@ bool targeter_soul_splinter::affects_monster(const monster_info& mon)
     // No visible free spots found
     return false;
 }
+
+targeter_surprising_crocodile::targeter_surprising_crocodile(const actor* caster)
+    : targeter_smite(caster, 1, 0, 0, false, nullptr)
+{
+}
+
+bool targeter_surprising_crocodile::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    string msg = surprising_crocodile_unusable_reason(*agent, a, false);
+    if (!msg.empty())
+        return notify_fail(msg);
+
+    return true;
+}
+
+bool targeter_surprising_crocodile::set_aim(coord_def a)
+{
+    landing_spots.clear();
+    if (!targeter_smite::set_aim(a) || !valid_aim(a))
+        return false;
+
+    const coord_def drag_shift = -(a - agent->pos()).sgn();
+    landing_spots.push_back(agent->pos() + drag_shift);
+
+    if (surprising_crocodile_can_drag(*agent, a, false))
+        landing_spots.push_back(agent->pos() + drag_shift + drag_shift);
+
+    return true;
+}
+
+aff_type targeter_surprising_crocodile::is_affected(coord_def loc)
+{
+    for (coord_def spot : landing_spots)
+        if (spot == loc)
+            return AFF_YES;
+
+    return AFF_NO;
+}

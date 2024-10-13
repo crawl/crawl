@@ -506,6 +506,12 @@ Ensorcelled Hibernation spell
 “Sweet dreams are made of this; who am I to disagree?”
     -Eurythmics, “Sweet Dreams (Are Made of This)”. 1983.
 %%%%
+Eringya's Surprising Crocodile
+
+A popular legend states that Eringya first demonstrated this spell as the
+closing remark of a particularly acrimonious debate about wetlands conservation,
+but most modern scholars consider this apocryphal.
+%%%%
 Fire Storm spell
 
 “Some have said there is no subtlety to destruction. You know what? They're

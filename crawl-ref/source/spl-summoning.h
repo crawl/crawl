@@ -147,3 +147,10 @@ void clockwork_bee_pick_new_target(monster& bee);
 dice_def diamond_sawblade_damage(int power);
 vector<coord_def> diamond_sawblade_spots(bool actual);
 spret cast_diamond_sawblades(int power, bool fail);
+
+string surprising_crocodile_unusable_reason(const actor& agent,
+                                            const coord_def& target, bool actual);
+bool surprising_crocodile_can_drag(const actor& agent, const coord_def& target,
+                                   bool actual);
+spret cast_surprising_crocodile(actor& agent, const coord_def& targ,
+                                int pow, bool fail);

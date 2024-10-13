@@ -150,7 +150,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SUMMON_SMALL_MAMMAL,
     SPELL_CALL_IMP,
     SPELL_CALL_CANINE_FAMILIAR,
-    SPELL_SUMMON_BLAZEHEART_GOLEM,
+    SPELL_SURPRISING_CROCODILE,
 },
 
 #if TAG_MAJOR_VERSION == 34

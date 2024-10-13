@@ -1357,6 +1357,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         vector<coord_def> targ = { dog->pos() };
         return make_unique<targeter_multiposition>(&you, targ);
     }
+    case SPELL_SURPRISING_CROCODILE:
+        return make_unique<targeter_surprising_crocodile>(&you);
     case SPELL_FOXFIRE:
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 1, 0, 1);
     // TODO: these two actually have pretty wtf positioning that uses compass
@@ -2458,6 +2460,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_DIAMOND_SAWBLADES:
         return cast_diamond_sawblades(powc, fail);
+
+    case SPELL_SURPRISING_CROCODILE:
+        return cast_surprising_crocodile(you, beam.target, powc, fail);
 
     // Enchantments.
     case SPELL_CONFUSING_TOUCH:

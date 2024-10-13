@@ -27,6 +27,7 @@
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
+#include "mon-place.h"
 #include "notes.h"
 #include "options.h"
 #include "orb.h"
@@ -1527,6 +1528,16 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_DIAMOND_SAWBLADES:
         if (temp && diamond_sawblade_spots(false).empty())
             return "there is no room to construct a sawblade.";
+        break;
+
+    case SPELL_SURPRISING_CROCODILE:
+        if (temp)
+        {
+            if (!monster_habitable_grid(MONS_CROCODILE, you.pos()))
+                return "a crocodile could not survive beneath you.";
+            else if (count_summons(&you, SPELL_SURPRISING_CROCODILE))
+                return "your pet crocodile is still here.";
+        }
         break;
 
     default:

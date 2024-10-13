@@ -37,6 +37,7 @@
 #include "losglobal.h"
 #include "losparam.h"
 #include "mapmark.h"
+#include "melee-attack.h"
 #include "message.h"
 #include "mgen-data.h"
 #include "mon-abil.h"
@@ -2175,6 +2176,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SOUL_SPLINTER,            { 1, 1 } },
     { SPELL_SIMULACRUM,               { 5, 5 } },
     { SPELL_HELLFIRE_MORTAR,          { 1, 1 } },
+    { SPELL_SURPRISING_CROCODILE,     { 1, 1 } },
     // Monster-only spells
     { SPELL_SHADOW_CREATURES,         { 0, 4 } },
     { SPELL_SUMMON_SPIDERS,           { 0, 5 } },
@@ -3461,6 +3463,161 @@ spret cast_diamond_sawblades(int power, bool fail)
         mpr("You forge a whirling saw of razor-sharp crystal.");
     else
         mpr("You forge whirling saws of razor-sharp crystal.");
+
+    return spret::success;
+}
+
+string surprising_crocodile_unusable_reason(const actor& agent, const coord_def& target,
+                                            bool actual)
+{
+    if (!monster_habitable_grid(MONS_CROCODILE, agent.pos()))
+        return "A crocodile could not survive beneath you.";
+
+    actor* targ = actor_at(target);
+    if (!targ || !agent.can_see(*targ) || mons_aligned(&agent, targ))
+        return "You can't see a valid target there.";
+
+    const coord_def drag_shift = -(target - agent.pos()).sgn();
+    const coord_def move_pos = agent.pos() + drag_shift;
+    if (cell_is_solid(move_pos)
+        || actor_at(move_pos) && (actual || agent.can_see(*actor_at(move_pos))))
+    {
+        return "There's not enough room behind you.";
+    }
+
+    if (!agent.is_habitable(move_pos)
+         || agent.is_player() && need_expiration_warning(move_pos))
+    {
+        return "It isn't safe to move backwards.";
+    }
+
+    // Nothing is preventing this spell from being cast (even if the crocodile
+    // will not be able to drag the monster anywhere).
+    return "";
+}
+
+// Assuming the spell is castable at all (see surprising_crocodile_unusable_reason()
+// above), is there room and suitable terrain for the crocodile to drag the
+// target back a tile at the same time?
+bool surprising_crocodile_can_drag(const actor& agent, const coord_def& target,
+                                   bool actual)
+{
+    // First, check if it is possible to pull the target at all.
+    // (We specifically *don't* check constriction here, since this spell will
+    // pull constricted monsters, unlike normal dragging.)
+    actor* targ = actor_at(target);
+    if (targ->is_stationary()
+        || !targ->is_habitable(agent.pos())
+        || targ->is_player() && need_expiration_warning(agent.pos())
+        || targ->resists_dislodge(""))
+    {
+        return false;
+    }
+
+    // Then check if the summoned and crocodile can also back off a space
+    const coord_def drag_shift = -(target - agent.pos()).sgn();
+    coord_def croc_move_pos = agent.pos() + drag_shift;
+    coord_def agent_move_pos = croc_move_pos + drag_shift;
+
+    if (!agent.is_habitable(agent_move_pos)
+        || agent.is_player() && need_expiration_warning(agent_move_pos)
+        || !monster_habitable_grid(MONS_CROCODILE, croc_move_pos))
+    {
+        return false;
+    }
+
+    // Can't move the agent into an occupied space
+    if (actor_at(agent_move_pos) && (actual || agent.can_see(*actor_at(agent_move_pos))))
+        return false;
+
+    return true;
+}
+
+spret cast_surprising_crocodile(actor& agent, const coord_def& targ, int pow, bool fail)
+{
+    fail_check();
+
+    // The targeter will prevent casting this at times where the player *knows*
+    // it won't work, but it's possible there's still an invisible creature in
+    // the way that will cause this to fail.
+    string msg = surprising_crocodile_unusable_reason(agent, targ, true);
+    if (!msg.empty())
+    {
+        mpr("Something unseen prevents your spell from working!");
+        return spret::success;
+    }
+
+    // At this point, we know we can place the crocodile and move the caster,
+    // but we don't know where the caster needs to move. Check whether they will
+    // move one tile back or two.
+    bool can_drag = surprising_crocodile_can_drag(agent, targ, true);
+
+    const coord_def start_pos = agent.pos();
+    const coord_def drag_shift = -(targ - agent.pos()).sgn();
+    coord_def agent_pos = agent.pos() + drag_shift;
+    if (can_drag)
+        agent_pos += drag_shift;
+
+    // Move agent to theiir destination grid *first*, so there's room to move the
+    // other things (but don't trigger location effects yet)
+    agent.move_to_pos(agent_pos, true, true);
+
+    actor* victim = actor_at(targ);
+
+    mgen_data mg = _pal_data(MONS_CROCODILE, summ_dur(2), SPELL_SURPRISING_CROCODILE);
+    mg.pos = start_pos;
+    mg.set_range(0);
+    mg.foe = victim->mindex();
+    mg.hd = 4 + div_rand_round(pow, 15);
+    monster* croc = create_monster(mg);
+
+    // Probably only possible if the monster array is filled?
+    if (!croc)
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return spret::success;
+    }
+
+    if (you.can_see(agent))
+    {
+        mprf("A crocodile bursts forth beneath %s and grabs %s in its jaws!",
+                agent.name(DESC_THE).c_str(),
+                victim->name(DESC_THE).c_str());
+    }
+
+    // Perform the drag silently, before the actual attack (so that it will
+    // always happen, regardless of whether we do 0 damage)
+    melee_attack atk(croc, victim);
+    atk.needs_message = false;
+    atk.do_drag();
+
+    // Then perform the actual attack, with bonus power
+    atk.needs_message = true;
+    atk.dmg_mult = 20 + pow;
+    atk.to_hit = AUTOMATIC_HIT;
+    atk.attack();
+
+    croc->flags & ~MF_JUST_SUMMONED;
+
+    if (you.can_see(agent))
+    {
+        mprf("%s dismount%s %s crocodile.",
+             agent.name(DESC_THE).c_str(),
+             agent.is_player() ? "" : "s",
+             agent.pronoun(PRONOUN_POSSESSIVE).c_str());
+    }
+
+    // Make the temporary water (after the movement, so we don't get slash
+    // messages before the main part appears to happen).)
+    for (int i = 0; i < 3; ++i)
+    {
+        coord_def spot = start_pos + (drag_shift * (i - 1));
+        if (env.grid(spot) == DNGN_FLOOR || env.grid(spot) == DNGN_SHALLOW_WATER)
+        {
+            temp_change_terrain(spot, DNGN_SHALLOW_WATER, random_range(130, 190),
+                                TERRAIN_CHANGE_FLOOD);
+        }
+    }
 
     return spret::success;
 }

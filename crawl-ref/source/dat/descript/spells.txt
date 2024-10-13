@@ -580,6 +580,14 @@ features, nor on areas that lack solid floor, like deep water or lava. The
 transformation is temporary and cannot be sustained out of the caster's sight.
 Spellpower will increase how long the bog lingers.
 %%%%
+Eringya's Surprising Crocodile spell
+
+Summons a toothy crocodile to assault an adjacent enemy. The crocodile will
+appear beneath the caster in a surge of murky water and perform an empowered
+attack against the chosen target, dragging both it and the caster backward
+before allowing the latter to dismount safely behind it. It cannot be recast
+while the crocodile is still active.
+%%%%
 Eruption spell
 
 Splits the earth to draw up a localised, short-lived volcano under the target.

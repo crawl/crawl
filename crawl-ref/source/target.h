@@ -665,3 +665,14 @@ public:
     targeter_soul_splinter(const actor *act, int r);
     bool affects_monster(const monster_info& mon) override;
 };
+
+class targeter_surprising_crocodile : public targeter_smite
+{
+public:
+    targeter_surprising_crocodile(const actor* caster);
+    bool valid_aim(coord_def a) override;
+    bool set_aim(coord_def a) override;
+    aff_type is_affected(coord_def loc) override;
+private:
+    vector<coord_def> landing_spots;
+};

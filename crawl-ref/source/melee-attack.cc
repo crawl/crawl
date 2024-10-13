@@ -72,7 +72,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
 
     attack_number(attack_num), effective_attack_number(effective_attack_num),
     cleaving(false), is_multihit(false), is_riposte(false),
-    is_projected(false), charge_pow(0), never_cleave(false),
+    is_projected(false), charge_pow(0), never_cleave(false), dmg_mult(0),
     flat_dmg_bonus(0),
     wu_jian_attack(WU_JIAN_ATTACK_NONE),
     wu_jian_number_of_targets(1),
@@ -4336,6 +4336,9 @@ int melee_attack::apply_damage_modifiers(int damage)
 
     if (cleaving)
         damage = cleave_damage_mod(damage);
+
+    if (dmg_mult)
+        damage = damage * (100 + dmg_mult) / 100;
 
     damage += flat_dmg_bonus;
 

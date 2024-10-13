@@ -155,6 +155,7 @@ summon_lightning_spire SUMMON_LIGHTNING_SPIRE
 summon_mana_viper SUMMON_MANA_VIPER
 summon_shadow_creatures SUMMON_SHADOW_CREATURES
 summon_small_mammal SUMMON_SMALL_MAMMAL
+surprising_crocodile SURPRISING_CROCODILE
 
 %sdir gui/spells/translocation
 apportation APPORTATION

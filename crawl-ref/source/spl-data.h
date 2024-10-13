@@ -4173,6 +4173,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_SURPRISING_CROCODILE, "Eringya's Surprising Crocodile",
+    spschool::summoning,
+    spflag::target | spflag::not_self,
+    4,
+    100,
+    1, 1,
+    0,
+    TILEG_SURPRISING_CROCODILE,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,
