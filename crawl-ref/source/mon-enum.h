@@ -172,6 +172,7 @@ enum mon_summon_type
     MON_SUMM_LANTERN, // Lantern of shadows
 #endif
     MON_SUMM_BUTTERFLIES, // Scroll of butterflies
+    MON_SUMM_REAPING, // Yred's reaping passive
 };
 
 #include "mon-flags.h"

@@ -1367,12 +1367,12 @@ static string _derived_undead_message(const monster &mons, monster_type which_z,
  * @param quiet      whether to print flavour messages
  * @param which_z    the kind of zombie
  * @param beh        the zombie's behavior
- * @param spell      the spell used (if any)
+ * @param spell      the spell or summon type used (if any)
  * @param god        the god involved (if any)
  */
 static void _make_derived_undead(monster* mons, bool quiet,
                                  monster_type which_z, beh_type beh,
-                                 spell_type spell, god_type god)
+                                 int spell, god_type god)
 {
     bool requires_corpse = which_z == MONS_ZOMBIE || which_z == MONS_SKELETON;
     // This function is used by several different sorts of things, each with
@@ -1451,7 +1451,7 @@ static void _make_derived_undead(monster* mons, bool quiet,
                            god == GOD_KIKUBAAQUDGHA ? "Kikubaaqudgha cackles." :
                            _derived_undead_message(*mons, which_z, mist);
     make_derived_undead_fineff::schedule(mons->pos(), mg,
-            mons->get_experience_level(), agent_name, message, spell);
+            mons->get_experience_level(), agent_name, message);
 }
 
 static void _druid_final_boon(const monster* mons)
@@ -1704,7 +1704,7 @@ static void _yred_reap(monster &mons, bool uncorpsed)
                            MONS_SPECTRAL_THING;
 
     _make_derived_undead(&mons, false, which_z, BEH_FRIENDLY,
-                         SPELL_NO_SPELL, you.religion);
+                         MON_SUMM_REAPING, you.religion);
 }
 
 static bool _animate_dead_reap(monster &mons)
@@ -2363,8 +2363,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         make_derived_undead_fineff::schedule(simu.pos, simu,
                                              get_monster_data(simu.base_type)->HD,
                                              "the player",
-                                             msg.c_str(),
-                                             SPELL_SIMULACRUM);
+                                             msg.c_str());
 
         silent = true;
     }

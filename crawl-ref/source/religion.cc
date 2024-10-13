@@ -1099,11 +1099,14 @@ bool yred_reap_chance()
     int hd = 0;
     for (monster_iterator mi; mi; ++mi)
     {
-        if (!mi->friendly() || mi->is_summoned())
+        if (!mi->friendly())
             continue;
 
-        if (mi->type == MONS_ZOMBIE || mi->type == MONS_SPECTRAL_THING)
+        if ((mi->type == MONS_ZOMBIE || mi->type == MONS_SPECTRAL_THING)
+             && mi->was_created_by(you, MON_SUMM_REAPING))
+        {
             hd += mi->get_experience_level();
+        }
     }
 
     // Always reap if we have no minions. Otherwise, use a sliding scale based
