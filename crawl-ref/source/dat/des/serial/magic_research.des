@@ -18,6 +18,8 @@
 
 default-depth: Depths:1, Vaults, !Vaults:$, Elf, !Elf:$
 
+: crawl_require('dlua/vault.lua')
+
 {{
 function init_research(e, disc)
   e.tags('serial_research')

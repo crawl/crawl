@@ -5,6 +5,8 @@
 # <<M>>       Temple maps
 ##############################################################################
 
+: crawl_require('dlua/vault.lua')
+
 {{
 -- Call this function, with the default being the top parameter,
 -- for any temple with variable altar totals.

@@ -8,6 +8,9 @@
 # fighters in a library), but that's kind of the point.
 #
 ##############################################################################
+
+: crawl_require('dlua/vault.lua')
+
 {{
 
 trove = {}

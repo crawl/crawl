@@ -38,6 +38,9 @@
 # See setup_loot() for more information.
 #
 ###
+
+: crawl_require('dlua/vault.lua')
+
 {{
 -- ####
 -- # General setup and design functions: (head to line 382 for the maps)

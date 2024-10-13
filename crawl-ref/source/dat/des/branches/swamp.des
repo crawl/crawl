@@ -10,6 +10,7 @@
 ###############################################################################
 
 : crawl_require("dlua/dungeon.lua")
+: crawl_require('dlua/vault.lua')
 
 # Functionality for one of Grunt's vaults.
 {{

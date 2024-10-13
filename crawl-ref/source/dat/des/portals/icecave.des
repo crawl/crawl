@@ -9,6 +9,7 @@
 {{
 
 crawl_require("dlua/dungeon.lua")
+crawl_require('dlua/vault.lua')
 
 --[[
 Setup function for ice cave entry vaults. Create portal timer marker, determine

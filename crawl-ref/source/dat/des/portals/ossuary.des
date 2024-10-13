@@ -11,6 +11,8 @@
 #
 ##############################################################################
 
+: crawl_require('dlua/vault.lua')
+
 {{
 function ossuary_portal(e)
   local timeout_turns = crawl.random_range(600, 800)

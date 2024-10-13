@@ -4,6 +4,8 @@
 # Vaults are scattered according to purpose across the rest of dat/des.
 ###############################################################################
 
+: crawl_require('dlua/vault.lua')
+
 {{
 -- Vaults:$ common loot substitutions.
 function vaults_end_loot(e)

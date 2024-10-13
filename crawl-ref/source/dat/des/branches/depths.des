@@ -12,6 +12,8 @@
 # later in the dungeon to make it clear what to expect.
 ##########################################################################
 
+: crawl_require('dlua/vault.lua')
+
 {{
 function depths_entry(e)
    e.tags("depths_entry uniq_depths_entry chance_depths_entry no_monster_gen")
