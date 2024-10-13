@@ -83,6 +83,7 @@ freezing_cloud FREEZING_CLOUD
 frozen_ramparts FROZEN_RAMPARTS
 hailstorm HAILSTORM
 hoarfrost_cannonade HOARFROST_CANNONADE
+hoarfrost_bullet HOARFROST_BULLET
 ice_form ICE_FORM
 ice_storm ICE_STORM
 metabolic_englaciation METABOLIC_ENGLACIATION
@@ -217,7 +218,6 @@ ensnare ENSNARE
 entropic_weave ENTROPIC_WEAVE
 eruption ERUPTION
 fake_mara_summon FAKE_MARA_SUMMON
-fake_rakshasa_summon FAKE_RAKSHASA_SUMMON
 fire_breath FIRE_BREATH
 fire_elementals FIRE_ELEMENTALS
 fire_summon FIRE_SUMMON
