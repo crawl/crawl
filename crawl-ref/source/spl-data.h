@@ -629,17 +629,6 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_ANIMATE_SKELETON, "Animate Skeleton",
-    spschool::necromancy,
-    spflag::utility | spflag::monster,
-    1,
-    50,
-    -1, -1,
-    0,
-    TILEG_ANIMATE_SKELETON,
-},
-
-{
     SPELL_VAMPIRIC_DRAINING, "Vampiric Draining",
     spschool::necromancy,
     spflag::dir_or_target | spflag::not_self,
@@ -4237,6 +4226,7 @@ AXED_SPELL(SPELL_STORM_FORM, "Storm Form")
 AXED_SPELL(SPELL_DRAGON_FORM, "Dragon Form")
 AXED_SPELL(SPELL_NECROMUTATION, "Necromutation")
 AXED_SPELL(SPELL_AWAKEN_EARTH, "Awaken Earth")
+AXED_SPELL(SPELL_ANIMATE_SKELETON, "Animate Skeleton")
 #endif
 
 };

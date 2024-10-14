@@ -1884,6 +1884,7 @@ const vector<spell_type> *soh_breath_spells(spell_type spell)
 const set<spell_type> removed_spells =
 {
 #if TAG_MAJOR_VERSION == 34
+    SPELL_ANIMATE_SKELETON,
     SPELL_AURA_OF_ABJURATION,
     SPELL_AWAKEN_EARTH,
     SPELL_BEASTLY_APPENDAGE,

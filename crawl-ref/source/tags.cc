@@ -2511,6 +2511,9 @@ static spell_type _fixup_removed_spells(spell_type s)
         case SPELL_AGONISING_TOUCH:
             return SPELL_CURSE_OF_AGONY;
 
+        case SPELL_ANIMATE_SKELETON:
+            return SPELL_SOUL_SPLINTER;
+
         default:
             return s;
     }
