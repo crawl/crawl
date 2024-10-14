@@ -102,6 +102,7 @@ public:
         return base_type == base && sub_type == sub;
     }
 
+    bool in_env_item() const;
     /**
      * Find the index of an item in the env.item array. Results are undefined
      * if this item is not in the array!

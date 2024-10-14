@@ -3435,13 +3435,13 @@ bool item_def::cursed() const
 
 int item_def::index() const
 {
-    ASSERT(is_floor_item(*this));
+    ASSERT(this->in_env_item());
     return this - env.item.buffer();
 }
 
-bool is_floor_item(const item_def &item)
+bool item_def::in_env_item() const
 {
-    return &item >= env.item.begin() && &item < env.item.end();
+    return this >= env.item.begin() && this < env.item.end();
 }
 
 int item_def::armour_rating() const
