@@ -347,6 +347,21 @@ the blast of bone shards
 die Explosion von Knochensplittern
 %%%%
 
+# Qazlal Upheaval
+%%%%
+the blast of magma
+die Explosion von Magma
+%%%%
+the blast of ice
+die Explosion von Eis
+%%%%
+the cutting wind
+der schneidende Wind
+%%%%
+the blast of rubble
+der Trümmerhagel
+%%%%
+
 #################################
 # full names - indefinite article
 #################################
@@ -684,6 +699,21 @@ eine Explosion von Saphirscherben
 %%%%
 a blast of bone shards
 eine Explosion von Knochensplittern
+%%%%
+
+# Qazlal Upheaval
+%%%%
+a blast of magma
+eine Explosion von Magma
+%%%%
+a blast of ice
+eine Explosion von Eis
+%%%%
+a cutting wind
+ein schneidender Wind
+%%%%
+a blast of rubble
+ein Trümmerhagel
 %%%%
 
 #################################
@@ -1028,6 +1058,21 @@ Explosion von Saphirscherben
 %%%%
 blast of bone shards
 Explosion von Knochensplittern
+%%%%
+
+# Qazlal Upheaval
+%%%%
+blast of magma
+Explosion von Magma
+%%%%
+blast of ice
+Explosion von Eis
+%%%%
+cutting wind
+schneidender Wind
+%%%%
+blast of rubble
+Trümmerhagel
 %%%%
 
 #################################

@@ -1924,9 +1924,9 @@ bool kiku_gift_capstone_spells()
                                   SPELL_NECROMUTATION,
                                   SPELL_DEATHS_DOOR };
 
-    string msg = "Do you wish to receive knowledge of "
-                 + comma_separated_fn(spells.begin(), spells.end(), spell_title)
-                 + "?";
+    string msg = 
+        localise("Do you wish to receive knowledge of %s?",
+                 comma_separated_fn(spells.begin(), spells.end(), spell_title));
 
     if (!yesno(msg.c_str(), true, 'n'))
     {
@@ -2031,8 +2031,8 @@ void cheibriados_time_bend(int pow)
                 continue;
             }
 
-            string msg = localise("Cheibriados rebukes %s.", mon->name(DESC_THE));
-            god_speaks(GOD_CHEIBRIADOS, msg.c_str());
+            mprf(MSGCH_GOD, GOD_CHEIBRIADOS, "Cheibriados rebukes %s.",
+                 mon->name(DESC_THE).c_str());
             do_slow_monster(*mon, &you);
         }
     }
@@ -2358,16 +2358,22 @@ void ashenzari_offer_new_curse()
     you.props[AVAILABLE_CURSE_KEY] = true;
     you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 0;
     const string curse_names = ashenzari_curse_knowledge_list();
-    const string offer_string = curse_names.empty() ? "" :
-                                (" of " + curse_names);
 
-    mprf(MSGCH_GOD, "Ashenzari invites you to partake of a vision"
-                    " and a curse%s.", offer_string.c_str());
+    if (curse_names.empty())
+    {
+        mprf(MSGCH_GOD, "Ashenzari invites you to partake of a vision"
+                        " and a curse.");
+    }
+    else
+    {
+        mprf(MSGCH_GOD, "Ashenzari invites you to partake of a vision"
+                        " and a curse of %s.", curse_names.c_str());
+    }
 }
 
 static void _do_curse_item(item_def &item)
 {
-    mprf("Your %s glows black for a moment.", item.name(DESC_PLAIN).c_str());
+    mprf("%s glows black for a moment.", item.name(DESC_YOUR).c_str());
     item.flags |= ISFLAG_CURSED;
 
     if (you.equip[EQ_WEAPON] == item.link)
@@ -2457,13 +2463,15 @@ bool ashenzari_uncurse_item()
         return false;
     }
 
-    if (!yesno(make_stringf("Really remove and destroy %s?%s",
-                            item.name(DESC_THE).c_str(),
-                            you.props.exists(AVAILABLE_CURSE_KEY) ?
-                                " Ashenzari will withdraw the offered vision "
-                                "and curse!"
-                                : "").c_str(),
-                            false, 'n'))
+    string prompt = localise("Really remove and destroy %s?",
+                             item.name(DESC_THE));
+    if (you.props.exists(AVAILABLE_CURSE_KEY))
+    {
+        prompt += localise(" Ashenzari will withdraw the offered vision "
+                           "and curse!");
+    }
+
+    if (!yesno(prompt.c_str(), false, 'n'))
     {
         canned_msg(MSG_OK);
         return false;
@@ -2974,13 +2982,12 @@ static string _describe_gozag_shop(int index)
     const string suffix =
         you.props[make_stringf(GOZAG_SHOP_SUFFIX_KEY, index)].get_string();
 
-    // i18n: TODO:  handle this
-    return make_stringf("  [%c] %5d gold - %s %s %s",
+    string full_shop_name = shop_name + " " + type_name + " " + suffix;
+    
+    return localise("  [%c] %5d gold - %s",
                         offer_letter,
                         cost,
-                        shop_name.c_str(),
-                        type_name.c_str(),
-                        suffix.c_str());
+                        full_shop_name.c_str());
 }
 
 /**
@@ -3301,10 +3308,9 @@ bool gozag_bribe_branch()
         you.del_gold(bribe_amount);
         you.attribute[ATTR_GOZAG_GOLD_USED] += bribe_amount;
         branch_bribe[branch] += bribe_amount;
-        string msg = localise("Gozag spreads your bribe to %s!",
-                              branch == BRANCH_VESTIBULE ? "the Hells" :
-                              branches[branch].longname);
-        god_speaks(GOD_GOZAG, msg.c_str());
+        mprf(MSGCH_GOD, GOD_GOZAG, "Gozag spreads your bribe to %s!",
+                                   branch == BRANCH_VESTIBULE ? "the Hells" :
+                                   branches[branch].longname);
         add_daction(DACT_SET_BRIBES);
         return true;
     }
@@ -5454,8 +5460,8 @@ bool hepliaklqana_choose_ancestor_type(int ancestor_choice)
     const auto ancestor_type = *ancestor_mapped;
     const string ancestor_type_name = mons_type_name(ancestor_type, DESC_A);
 
-    if (!yesno(make_stringf("Are you sure you want to remember your ancestor "
-                            "as %s?", ancestor_type_name.c_str()).c_str(),
+    if (!yesno(localise("Are you sure you want to remember your ancestor "
+                        "as %s?", ancestor_type_name.c_str()).c_str(),
                false, 'n'))
     {
         canned_msg(MSG_OK);

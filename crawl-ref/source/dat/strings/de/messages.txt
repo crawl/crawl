@@ -5034,79 +5034,79 @@ You're not ready to recite again yet.
 Ihr seid noch nicht bereit, noch einmal zu rezitieren.
 %%%%
 %s guffaws at your puny god.
-
+%s lacht schallend über Euren mickrigen Gott.
 %%%%
 %s sneers at your recitation.
-
+%s spottet über Eure Rezitation.
 %%%%
 %s is dazed by your recitation.
-
+%s ist von Eurer Rezitation benommen.
 %%%%
 %s is confused by your recitation.
-
+%s ist von Eure Rezitation verwirrt.
 %%%%
 %s stumbles about in disarray.
-
+%s stolpert verwirrt umher.
 %%%%
 %s is awed by your recitation.
-
+%s ist ehrfürchtig über Eure Rezitation.
 %%%%
 %s is aghast at the heresy of your recitation.
-
+%s ist entsetzt über die Ketzerei Eurer Rezitation.
 %%%%
 %s is smitten by the wrath of Zin.
-
+%s wird vom Zorn Zins getroffen.
 %%%%
 %s is blasted by the fury of Zin!
-
+%s wird vom Zorn Zins zerschmettert!
 %%%%
 %s is struck blind by the wrath of Zin!
-
+%s wird vom Zorn Zins blind gemacht!
 %%%%
 %s is limned with silver light.
-
+%s wird von silbernem Licht erhellt.
 %%%%
 %s quails at your recitation.
-
+%s zittert bei Eurer Rezitation.
 %%%%
 %s looks feeble and powerless before your recitation.
-
+%s sieht schwach und kraftlos aus vor Eurer Rezitation.
 %%%%
 %s is struck mute by the wrath of Zin!
-
+%s ist stumm geworden durch den Zorn von Zin!
 %%%%
 %s is driven mad by the wrath of Zin!
-
+%s wird durch den Zorn von Zin in den Wahnsinn getrieben!
 %%%%
 %s is left stupefied by the wrath of Zin!
-
+%s ist betäubt vom Zorn des Zin!
 %%%%
 %s's chaotic flesh sizzles and spatters!
-
+{gen}%s chaotisches Fleisch brutzelt und spritzt!
 %%%%
 %s's chaotic flesh bubbles and boils.
-
+{gen}%s chaotisches Fleisch blubbert und kocht.
 %%%%
 %s's chaotic flesh runs like molten wax.
-
+{gen}%s chaotisches Fleisch fließt wie geschmolzenes Wachs.
 %%%%
 %s melts away into a sizzling puddle of chaotic flesh.
-
+%s schmilzt zu einer brutzelnden Pfütze aus chaotischem Fleisch.
 %%%%
 %s is turned into a pillar of salt by the wrath of Zin!
-
+%s wird durch den Zorn von Zin in eine Salzsäule verwandelt!
 %%%%
 %s grants you divine stamina.
-
+%s gewährt Euch göttliche Ausdauer.
 %%%%
 Your divine stamina fades away.
 Eure göttliche Ausdauer schwindet.
 %%%%
 Do you wish to cure all of your mutations?
-
+Möchtet Ihr alle Eure Mutationen heilen?
 %%%%
 %s draws all chaos from your body!
-
+%s zieht alles Chaos aus Eurem Körper!
 %%%%
 You hear a choir sing!
 Ihr hört einen Chor singen!
@@ -5115,7 +5115,7 @@ You are suddenly bathed in radiance!
 Ihr seid plötzlich in Strahlen getaucht!
 %%%%
 Your shield is strengthened by the Shining One's divine power.
-
+Euer Schild wird durch die göttliche Macht des Glänzenden gestärkt.
 %%%%
 A divine shield forms around you!
 Ein göttlicher Schild bildet sich um Euch!
@@ -5130,22 +5130,22 @@ You feel purified!
 Ihr fühlt Euch gereinigt!
 %%%%
 Elyvilon grants you divine vigour.
-
+Elyvilon gewährt Euch göttliche Kraft.
 %%%%
 Your divine vigour fades away.
-Eure göttliche Kraft schwindet.
+Eure göttliche Vitalität schwindet.
 %%%%
 Your skin crawls.
-
+Ihr bekommt eine Gänsehaut.
 %%%%
 You feel strong-willed.
-
+Ihr fühlt Euch willensstark.
 %%%%
 Your skin stops crawling.
-Eure Haut hört auf zu kriechen.
+Ihr habt keine Gänsehaut mehr.
 %%%%
 You feel less strong-willed.
-
+Ihr fühlt Euch weniger willensstark.
 %%%%
 That's not an orcish ally!
 Das ist kein orkischer Verbündeter!
@@ -5160,25 +5160,25 @@ No worthy followers in sight.
 Keine würdigen Anhänger in Sicht.
 %%%%
 Select a follower to give a gift to.
-
+Einen Anhänger auswählen, dem Ihr ein Geschenk machen möchtet.
 %%%%
 Give which item?
-
+Welchen Gegenstand geben?
 %%%%
 You can't give that to %s.
-Das könnt Ihr%s nicht geben.
+Das könnt Ihr {dat}%s nicht geben.
 %%%%
 %s can't equip that with a two-handed weapon.
-%s können das nicht mit einer Zweihandwaffe ausstatten.
+%s Kann das nicht zusammen mit einer Zweihandwaffe ausstatten.
 %%%%
 Resurrect %s?
-
+{acc}%s wieder zum Leben erwecken?
 %%%%
 There's nobody else here you can resurrect.
-
+Hier gibt es sonst niemanden, den Ihr wiederbeleben könnt.
 %%%%
 There's nobody here you can resurrect.
-
+Hier gibt es niemanden, den Ihr wiederbeleben könnt.
 %%%%
 There's no room!
 Es ist kein Platz!
@@ -5190,49 +5190,51 @@ You feel cleansed.
 Ihr fühlt Euch gereinigt.
 %%%%
 %s's soul fights you.
-
+Die Seele {gen}%s bekämpft Euch.
 %%%%
 %s's soul is now yours.
-
+Die Seele {gen}%s gehört jetzt Euch.
 %%%%
+# unseen monster
 Its soul fights you.
-
+Seine Seele bekämpft Euch.
 %%%%
 Its soul is now yours.
-
+Seine Seele gehört jetzt Euch.
 %%%%
 %s delivers you corpses!
-
+%s liefert Euch Leichen!
 %%%%
 %s delivers you a corpse!
-
+%s liefert Euch eine Leiche!
 %%%%
 %s can find no cadavers for you!
-
+%s kann keine Kadaver für Euch finden!
 %%%%
-"Do you wish to receive knowledge of "
-
+# Kiku gift of several spells
+Do you wish to receive knowledge of %s?
+Möchtet Ihr Kenntnisse von {dat}%s erhalten?
 %%%%
 %s grants you forbidden knowledge!
-
+%s gewährt Euch verbotenes Wissen!
 %%%%
 Space bends sharply around you!
-
+Der Raum krümmt sich scharf um Euch herum!
 %%%%
 Space bends around you!
 Der Raum krümmt sich um Euch herum!
 %%%%
 The flow of time bends around you.
-Der Fluss der Zeit biegt sich um Euch.
+Der Fluss der Zeit krümmt sich um Euch herum!
 %%%%
 Cheibriados rebukes %s.
-
+Cheibriados tadelt {acc}%s.
 %%%%
 There's no one hasty visible. Invoke Slouch anyway?
-
+Es ist niemand übereilt zu sehen. Latschen trotzdem invozieren?
 %%%%
 You can feel time thicken for a moment.
-Ihr könnt fühlen, wie sich die Zeit für einen Moment verdickt.
+Ihr fühlt, wie sich die Zeit für einen Moment verdickt.
 %%%%
 You warp the flow of time around you!
 Ihr verzerrt den Fluss der Zeit um Euch herum!
@@ -5243,116 +5245,120 @@ Ihr trittt aus dem Fluss der Zeit heraus.
 You return to the normal time flow.
 Ihr kehrt zum normalen Zeitfluss zurück.
 %%%%
+# Ashenzari curses (long name, short name)
 Melee Combat
-
+Nahkampf
 %%%%
 Melee
-
+Nkampf
 %%%%
 Ranged Combat
-
+Fernkampf
 %%%%
 Rngd
-
+Fkampf
 %%%%
 Elements
-
+Elemente
 %%%%
 Elem
-
+Elem
 %%%%
 Alchemy
-
+Alchemie
 %%%%
 Alch
-
+Alch
 %%%%
 Companions
-
+Begleiter
 %%%%
 Comp
-
+Begl
 %%%%
 Beguiling
-
+Betören
 %%%%
 Bglg
-
+Bet
 %%%%
 Introspection
-
+Selbstbeobachtung
 %%%%
 Self
-
+Selbst
 %%%%
 Fortitude
-
+Standhaftigkeit
 %%%%
 Fort
-
+Stand
 %%%%
 Cunning
-
+List
 %%%%
 Cun
-
+List
 %%%%
-Ashenzari invites you to partake of a vision and a curse%s.
-
+Ashenzari invites you to partake of a vision and a curse.
+Ashenzari lädt Euch ein, an einer Vision und einem Fluch teilzuhaben.
 %%%%
-Your %s glows black for a moment.
-
+Ashenzari invites you to partake of a vision and a curse of %s.
+Ashenzari lädt Euch ein, an einer Vision und einem Fluch von {dat}%s teilzuhaben.
+%%%%
+%s glows black for a moment.
+%s leuchtet für einen Moment schwarz.
 %%%%
 Curse which item?
-
+Welechen Gegenstand verfluchen?
 %%%%
 " (Esc to abort)"
-
+" (Esc zu beenden)"
 %%%%
 You can't curse that!
 Das könnt Ihr nicht verfluchen!
 %%%%
 Uncurse and destroy which item?
-
+Welchen Gegenstand entfluchen und zerstören?
 %%%%
 You must shatter the curse binding the ring to the amulet's finger first!
-
+Ihr müsst zuerst den Fluch zerbrechen, der den Ring an den Finger des Amuletts bindet!
 %%%%
 You cannot shatter the curse on %s while it is melded with your body!
-
+Ihr könnt den Fluch auf diesem Gegenstand nicht brechen, solange er mit Eurem Körper verschmolzen ist!
 %%%%
-Really remove and destroy %s?%s
-
+Really remove and destroy %s?
+{acc}%s wirklich entfernen und zerstören?
 %%%%
 " Ashenzari will withdraw the offered vision and curse!"
-
+“ Aschenzari wird die angebotene Vision und den Fluch zurückziehen!“
 %%%%
 You shatter the curse binding %s!
-
+Ihr zerbrecht den Fluch, der {acc}%s bindet!
 %%%%
 %s withdraws the vision and curse.
-
+%s zieht die Vision und den Fluch zurück.
 %%%%
 The priest welcomes you and lets you live.
 Der Priester heißt Euch willkommen und lässt Euch leben.
 %%%%
 With a roar of approval, the orcs welcome you as one of their own, and spare your life.
-
+Mit lautem Gebrüll heißen die Orks Euch als einen der ihren willkommen und verschonen Euer Leben.
 %%%%
 Aiming: <white>Shadow Step</white>
-
+Zielen: <white>Schattenschritt</white>
 %%%%
 Something blocks your shadow step.
 Etwas blockiert Euren Schattenschritt.
 %%%%
 You step into %s shadow.
-Ihr trittt in%s Schatten.
+Ihr trittt in {gen}%s Schatten.
 %%%%
 You need at least %d gold to purchase potions right now!
-Ihr braucht mindestens %d Gold, um jetzt Tränke zu kaufen!
+Derzeit braucht Ihr mindestens %d Gold, um Tränke zu kaufen!
 %%%%
 "  [%c] - %d gold - "
-
+"  [%c] - %d Gold - "
 %%%%
 Purchase which effect?
 Welchen Effekt kaufen?
@@ -5361,7 +5367,7 @@ You don't have enough gold for that!
 Dafür habt Ihr nicht genug Gold!
 %%%%
 You currently need %d gold to open negotiations with a merchant.
-
+Ihr benötigt derzeit %d Gold, um Verhandlungen mit einem Händler aufzunehmen.
 %%%%
 No merchants are willing to come to this location.
 Kein Händler ist bereit, an diesen Ort zu kommen.
@@ -5369,8 +5375,8 @@ Kein Händler ist bereit, an diesen Ort zu kommen.
 You need to be standing on open floor to call a merchant.
 Ihr müsst auf offenem Boden stehen, um einen Händler anzurufen.
 %%%%
-"  [%c] %5d gold - %s %s %s"
-
+"  [%c] %5d gold - %s"
+"  [%c] %5d Gold - %s"
 %%%%
 Fund which merchant?
 Welchen Händler finanzieren?
@@ -5378,71 +5384,62 @@ Welchen Händler finanzieren?
 You don't have enough gold to fund that merchant!
 Ihr habt nicht genug Gold, um diesen Händler zu finanzieren!
 %%%%
+# shopkeeper invites player to visit shop
 %s invites you to visit %s %s%s%s.
-%s lädt Euch ein,%s%s%s%s zu besuchen.
+%s lädt Euch ein, den Laden zu besuchen.
 %%%%
+# Your bribe of <branch>...
 Your bribe of %s has been exhausted.
-Euer Bestechungsgeld von%s ist erschöpft.
+Euer Bestechung von {dat}%s ist erschöpft.
 %%%%
 You need at least %d gold to offer a bribe.
-Ihr braucht mindestens %d Gold, um ein Bestechungsgeld anzubieten.
+Ihr braucht mindestens %d Gold, um eine Bestechung anzubieten.
 %%%%
 You can't bribe the denizens of %s or the denizens of %s.
-
+Ihr könnt die Bewohner von {dat}%s oder von {dat}%s nicht bestechen.
 %%%%
 You can't bribe the denizens of %s.
-
+Ihr könnt die Bewohner von {dat}%s nicht bestechen.
 %%%%
 Do you want to bribe the denizens of %s?
-
+Wollt Ihr die Bewohner von {dat}%s betstechen?
 %%%%
+# Gozag spreads your bribe to <branch>!
 Gozag spreads your bribe to %s!
-
+Gozag verteilt Euer Bestechungsgeld durch {acc}%s!
 %%%%
 Aiming: <white>Upheaval</white>
-Ziel: <white>Umwälzung</white>
+Zielen: <white>Umwälzung</white>
 %%%%
 There is %s there.
 Da ist %s.
 %%%%
-blast of magma
-
-%%%%
 Magma suddenly erupts from the ground!
-
-%%%%
-blast of ice
-
+Magma bricht plötzlich aus dem Boden!
 %%%%
 A blizzard blasts the area with ice!
-
-%%%%
-cutting wind
-
+Ein Schneesturm überzieht das Gebiet mit Eis!
 %%%%
 A storm cloud blasts the area with cutting wind!
-
-%%%%
-blast of rubble
-
+Eine Sturmwolke bläst den Bereich mit schneidendem Wind!
 %%%%
 The ground shakes violently, spewing rubble!
-
+Der Boden bebt heftig und spuckt Trümmer!
 %%%%
 Ka-crash!
-Ka-krash!
+Ka-krach!
 %%%%
 You can't see any clouds you can empower.
 Ihr könnt keine Wolken sehen, die Ihr stärken könnt.
 %%%%
 Clouds arounds you coalesce and take form!
-Wolken verschmelzen um Euch herum und nehmen Gestalt an!
+Die Wolken um Euch herum verdichten sich und nehmen Gestalt an!
 %%%%
 There isn't enough space here!
 Hier ist nicht genug Platz!
 %%%%
 There are friendlies around; are you sure you want to hurt them?
-
+Es sind Freunde in der Nähe; seid Ihr sicher, dass Ihr sie verletzen wollt?
 %%%%
 Nature churns violently around you!
 Die Natur wirbelt heftig um Euch herum!
@@ -5463,85 +5460,86 @@ This is a modest sacrifice.
 Das ist ein bescheidenes Opfer.
 %%%%
 This is a trivial sacrifice.
-Das ist ein unbedeutendes Opfer.
+Das ist ein triviales Opfer.
 %%%%
 Do you really want to make this sacrifice?
 Wollt Ihr dieses Opfer wirklich bringen?
 %%%%
 You can no longer hold %s!
-Ihr könnt%s nicht länger halten!
+Ihr könnt {acc}%s nicht länger halten!
 %%%%
 You can no longer wear %s!
-Ihr könnt%s nicht mehr tragen!
+Ihr könnt {acc}%s nicht mehr tragen!
 %%%%
+# Replace ring after sacrificing hand (or equivalent)
 You put %s back on another tentacle!
-
+Ihr steckt {acc}%s auf einen anderen Tentakel!
 %%%%
 You put %s back on your other hand!
-
+Ihr steckt {acc}%s auf die andere Hand!
 %%%%
 You put %s back on your other claw!
-
+Ihr steckt {acc}%s auf die andere Kralle!
 %%%%
 You put %s back on your other paw!
-
+Ihr steckt {acc}%s auf die andere Pfote!
 %%%%
 You put %s back on the other side!
-
+Ihr steckt {acc}%s auf die andere Seite!
 %%%%
 Piety after sacrifice: %s
 Frömmigkeit nach dem Opfer: %s
 %%%%
 %s indicates that your awakening is complete.
-
+%s zeigt an, dass Euer Erwachen abgeschlossen ist.
 %%%%
 Do you really want to reject the sacrifices Ru is offering?
-
+Wollt Ihr die Opfer, die Ru bringt, wirklich ablehnen?
 %%%%
 %s will take longer to evaluate your readiness.
-
+%s wird länger brauchen, um Eure Bereitschaft zu beurteilen.
 %%%%
 You focus your inner power and drain %s's magic in retribution!
-
+Ihr konzentriert eure innere Kraft und entzieht {dat}%s zur Vergeltung die Magie!
 %%%%
 You focus your inner power and paralyse %s in retribution!
-
+Ihr konzentriert Eure innere Kraft und lähmt {acc}%s als Vergeltung!
 %%%%
 You focus your inner power and slow %s in retribution!
-
+Ihr konzentriert Eure innere Kraft und verlangsamt {acc}%s als Vergeltung!
 %%%%
 You focus your inner power and blind %s in retribution!
-
+Ihr konzentriert Eure innere Kraft und blendet {acc}%s als Vergeltung!
 %%%%
 You focus your inner power and illuminate %s in retribution!
-
+Ihr konzentriert Eure innere Kraft und erleuchtet {acc}%s als Vergeltung!
 %%%%
 You are restored by drawing out deep reserves of power within.
-Ihr werdet wiederhergestellt, indem Ihr tiefe Kraftreserven aus Euch zieht.
+Ihr werdet wiederhergestellt, indem Ihr tiefe Kraftreserven aus Eurem Inneren schöpfen.
 %%%%
 You burst free from the webs!
-Ihr seid aus dem Gewebe geplatzt!
+Ihr brecht aus dem Gewebe aus!
 %%%%
 You burst free from the net!
-Ihr seid aus dem Netz geplatzt!
+Ihr brecht aus dem Netz aus!
 %%%%
 You can't repeat Power Leap.
-
+Ihr könnt den Macht-Sprung nicht wiederholen.
 %%%%
 You are too terrified to leap around!
 Ihr seid zu verängstigt, um herumzuspringen!
 %%%%
 Aiming: <white>Power Leap</white>
-
+Zielen: <white>Macht-Sprung</white>
 %%%%
 Cancelling leap due to HUP.
-Sprung wegen HUP abbrechen.
+Sprung wegen HUP abgebrochen.
 %%%%
 You cannot leap away from %s!
-Ihr könnt nicht von%s wegspringen!
+Ihr könnt nicht von {dat}%s wegspringen!
 %%%%
 You cannot leap closer to %s!
-Ihr könnt nicht näher an%s heran springen!
+Ihr könnt nicht näher an {acc}%s heran springen!
 %%%%
 You can't leap on top of the monster!
 Ihr könnt nicht auf das Monster springen!
@@ -5555,53 +5553,54 @@ Ihr könnt nicht ins Lavameer springen!
 Something unexpectedly blocked you, preventing you from leaping!
 Etwas hat Euch unerwartet blockiert und Euch daran gehindert zu springen!
 %%%%
+# beam name
 power leap
-
+Macht-Sprung
 %%%%
 %s doubts the power of magic when faced with ultimate truth!
-
+Angesichts der ultimativen Wahrheit zweifelt %s an der Macht der Magie!
 %%%%
 %s is paralysed by terrible understanding!
-
+%s ist gelähmt durch schreckliches Verständnis!
 %%%%
 %s slows down under the weight of truth!
-
+%s verlangsamt sich unter dem Gewicht der Wahrheit!
 %%%%
 There are no visible enemies. Unleash your apocalypse anyway?
-
+Es gibt keine Feinde im Sicht. Apokalypse totzdem entfesseln?
 %%%%
 You reveal the great annihilating truth to your foes!
 Ihr offenbart Euren Feinden die große vernichtende Wahrheit!
 %%%%
 There are friendlies around, are you sure you want to hurt them?
-
+Es sind Freunde in der Nähe, wollt Ihr sie wirklich verletzen?
 %%%%
 You stomp with the beat, sending a shockwave through the revellers around you!
-
+Ihr stampft mit dem Beat und schickt eine Schockwelle durch die Feiernden um Euch herum!
 %%%%
 You can't repeat Line Pass.
-
+Ihr könnt Linienpass nich wiederholen.
 %%%%
 Aiming: <white>Line Pass</white>
-
+Zielen: <white>Linienpass</white>
 %%%%
 Cancelling line pass due to HUP.
-Zeilenabbruch wegen HUP stornieren.
+Linienpass abgebrochen wegen HUP.
 %%%%
 You cannot move away from %s!
-Ihr könnt Euch nicht von%s entfernen!
+Ihr könnt Euch nicht von {dat}%s entfernen!
 %%%%
 You cannot move closer to %s!
-Ihr könnt nicht näher an%s heranrücken!
+Ihr könnt nicht näher an {acc}%s heranrücken!
 %%%%
 You can't stand on top of the monster!
 Ihr könnt nicht auf dem Monster stehen!
 %%%%
 You can't line pass into the sea!
-Ihr könnt nicht ins Meer!
+Ihr könnt nicht ins Meer laufen!
 %%%%
 You can't line pass into the sea of lava!
-Ihr könnt nicht in das Lavameer gehen!
+Ihr könnt nicht in das Lavameer laufen!
 %%%%
 You can't walk through walls!
 Ihr könnt nicht durch Wände gehen!
@@ -5610,22 +5609,22 @@ Something unexpectedly blocked you, preventing you from passing!
 Etwas hat Euch unerwartet blockiert und Euch am Passieren gehindert!
 %%%%
 No encores!
-
+Keine Zugaben!
 %%%%
 Aiming: <white>Grand Finale</white>
-
+Zielen: <white>Großes Finale</white>
 %%%%
 Cancelling grand finale due to HUP.
-Das große Finale wegen HUP absagen.
+Das große Finale wegen HUP abgebrochen.
 %%%%
 You can't perceive a target there!
 Ihr könnt dort kein Ziel wahrnehmen!
 %%%%
 %s explodes violently into a cloud of jellies!
-%s explodiert heftig in eine Wolke aus Gelees!
+%s explodiert gewaltsam in eine Wolke aus Gelees!
 %%%%
 %s explodes violently!
-%s explodiert heftig!
+%s explodiert gewaltsam!
 %%%%
 You spring back to your original position.
 Ihr springt zurück zu Eurer ursprünglichen Position.
@@ -5633,11 +5632,12 @@ Ihr springt zurück zu Eurer ursprünglichen Position.
 You can't make this choice while your ancestor is elsewhere.
 Ihr könnt diese Wahl nicht treffen, solange Euer Ahne woanders ist.
 %%%%
+# Remember ancestor as <character class>?
 Are you sure you want to remember your ancestor as %s?
-
+Seid Ihr sicher, dass Ihr Euch an Euren Ahnen als %s erinnern wollen?
 %%%%
 It is so.
-
+So ist es.
 %%%%
 You have no ancestor to preserve!
 Ihr habt keinen Ahnen zu bewahren!
@@ -5646,100 +5646,102 @@ Ihr habt keinen Ahnen zu bewahren!
 %s ist nicht in der Nähe!
 %%%%
 %s grants %s healing and protection!
-
+%s gewährt %s Heilung und Schutz!
 %%%%
 %s is fully restored!
-
+%s ist vollständig wiederhergestellt!
 %%%%
 Select a target.
-
+Ziel auswählen.
 %%%%
 %s is drained by nostalgia.
-
+%s ist durch die Nostalgie ausgezehrt.
 %%%%
 You can't see anything there. Try transferring anyway?
-
+Ihr könnt dort nichts sehen. Übertragen trotzdem versuchen?
 %%%%
 You can't transfer your ancestor with %s.
-
+Ihr könnt Euren Ahnen nicht mit {dat}%s übertragen.
 %%%%
 You can't transfer that.
 Das könnt Ihr nicht übertragen.
 %%%%
 %s can't be transferred there.
-
+%s kann nicht dorthin übertragen werden.
 %%%%
 You swap with %s!
-
+Ihr tauscht mit %s!
 %%%%
 %s swaps with %s!
-
+%s tauscht mit %s!
 %%%%
 "Remember %s name as what? "
-
+"Euch an %s Namen als was erinnern? "
 %%%%
 Yes, %s is definitely a better name.
-Ja,%s ist definitiv ein besserer Name.
+Ja, %s ist definitiv ein besserer Name.
 %%%%
+# Choosing Hep ancestor gender
 neither
-
+anderes
 %%%%
 male
-
+männlich
 %%%%
 female
-
+weiblich
 %%%%
 Was %s a) male, b) female, or c) neither? (Currently %s.)
-
+War %s a) männlich, b) weiblich, oder c) anderes (Zurzeit %s.)
 %%%%
 %s was always %s, you're pretty sure.
-%s war immer%s, Ihr seid Euch ziemlich sicher.
+%s war immer %s, da seid Ihr Euch ziemlich sicher.
 %%%%
 Please select an adjacent position to wall jump against.
-
+Bitte wählt eine benachbarte Position, um gegen die Wand zu springen.
 %%%%
 You cannot wall jump against %s.
-
+Ihr könnt nicht gegen {acc}%s springen.
 %%%%
 You cannot wall jump away from %s!
-
+Ihr könnt nicht von {dat}%s wegspringen!
 %%%%
 You cannot wall jump closer to %s!
-
+Ihr könnt nicht näher an {acc}%s springen!
 %%%%
 You have no room to wall jump there; %s is in the way.
-
+Es gibt keinen Platz, um dorthin zu springen; %s ist im Weg.
 %%%%
 You have no room to wall jump there; something you can't see is in the way.
-
+Es gibt keinen Platz, um dorthin zu springen; etwas Unsichtbares ist im Weg.
 %%%%
 You have no room to wall jump there.
-
+Es gibt keinen Platz, um dorthin zu springen.
 %%%%
 You can't repeat a wall jump.
-
+Ihr könnt einen Wandsprung nich wiederholen.
 %%%%
 Aiming: <white>Wall Jump</white>
-
+Zielen: <white>Wandsprung</white>
 %%%%
 Cancelling wall jump due to HUP.
-Wandsprung wegen HUP abbrechen.
+Wandsprung wegen HUP abgebrochen.
 %%%%
 The air is filled with shimmering golden clouds!
 Die Luft ist gefüllt mit schimmernden goldenen Wolken!
 %%%%
+# One of the Wu Jian Council (gods) says this
 The storm will not cease as long as you keep fighting, disciple!
-
+Der Sturm wird nicht aufhören, solange du weiter kämpfst, Schüler!
 %%%%
 You feel like a meek peon again.
-
+Ihr fühlt Euch wieder wie ein sanftmütiger Leibeigener.
 %%%%
 %s slows down.
-
+%s wird langsamer.
 %%%%
 %s slow down.
-
+%s werden langsamer.
 %%%%
 
 ##################
