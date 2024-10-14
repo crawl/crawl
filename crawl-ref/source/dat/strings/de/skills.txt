@@ -48,14 +48,8 @@ Ausweichen
 Stealth
 Heimlichkeit
 %%%%
-Stabbing
-# obsolete
-%%%%
 Shields
 Schilde
-%%%%
-Traps
-# obsolete
 %%%%
 Unarmed Combat
 Unbewaffneter Kampf
