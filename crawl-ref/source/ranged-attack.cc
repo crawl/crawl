@@ -382,7 +382,9 @@ bool ranged_attack::apply_damage_brand(const char *what)
 
     if ((!using_weapon() && !throwing())
         || (defender->is_player() && you.pending_revival))
+    {
         return false;
+    }
 
     if (using_weapon()
         && attack::apply_damage_brand(projectile->name(DESC_THE).c_str()))
