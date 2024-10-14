@@ -4363,9 +4363,7 @@ bool melee_attack::apply_damage_brand(const char *what)
             result = result || attack::apply_damage_brand(what);
         }
     }
-
-
-    return did_work || result;
+    return result;
 }
 
 bool melee_attack::_vamp_wants_blood_from_monster(const monster* mon)
