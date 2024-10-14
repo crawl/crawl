@@ -113,7 +113,6 @@ bool attack::handle_phase_damaged()
     // Inflict stored damage
     damage_done = inflict_damage(damage_done);
 
-    apply_damage_brand();
     // TODO: Unify these, added here so we can get rid of player_attack
     if (attacker->is_player())
     {

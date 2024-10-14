@@ -666,6 +666,16 @@ bool melee_attack::handle_phase_hit()
 
     maybe_trigger_jinxbite();
 
+    // Check for weapon brand & inflict that damage too
+    apply_damage_brand();
+
+    // Apply flux form's sfx.
+    if (attacker->is_player() && you.form == transformation::flux
+        && defender->alive() && defender->is_monster())
+    {
+        _apply_flux_contam(*(defender->as_monster()));
+    }
+
     // Fireworks when using Serpent's Lash to kill.
     if (!defender->alive()
         && defender->as_monster()->has_blood()
@@ -4341,10 +4351,11 @@ bool melee_attack::apply_damage_brand(const char *what)
     // Staff damage overrides any brands
     bool did_work = apply_staff_damage();
     bool result = false;
-    if(!did_work)
+    if (!did_work)
     {
         result = result || attack::apply_damage_brand(what);
-        if (weapon && testbits(weapon->flags, ISFLAG_CHAOTIC)
+        // if the defender did no disappear and the weapon is chaotic
+        if (!result && weapon && testbits(weapon->flags, ISFLAG_CHAOTIC)
             && defender->alive())
         {
             unwind_var<brand_type> save_brand(damage_brand);
@@ -4352,12 +4363,7 @@ bool melee_attack::apply_damage_brand(const char *what)
             result = result || attack::apply_damage_brand(what);
         }
     }
-    // Apply flux form's sfx.
-    if (attacker->is_player() && you.form == transformation::flux
-        && defender->alive() && defender->is_monster())
-    {
-        _apply_flux_contam(*(defender->as_monster()));
-    }
+
 
     return did_work || result;
 }

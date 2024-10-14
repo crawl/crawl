@@ -80,7 +80,7 @@ public:
     string     special_damage_message;
     string     aux_attack, aux_verb;
     // stored to have the descr even when the attacker disappears
-    string     attacker_descr; 
+    string     attacker_descr;
 
     item_def        *defender_shield;
 
@@ -116,8 +116,7 @@ protected:
     virtual void init_attack(skill_type unarmed_skill, int attack_number);
 
     /* Attack Phases */
-    // The return values indicate whether the attack evaluation should
-    // should be aborted, e.g. because the enemy was banished or died
+    // These methods return true if the attack should continue
     virtual bool handle_phase_attempted();
     virtual bool handle_phase_dodged() = 0;
     virtual bool handle_phase_blocked();

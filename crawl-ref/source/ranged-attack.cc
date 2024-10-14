@@ -380,9 +380,8 @@ bool ranged_attack::apply_damage_brand(const char *what)
 {
     (void) what;
 
-    if (!using_weapon() && !throwing())
-        return false;
-    else if (defender->is_player() && you.pending_revival)
+    if ((!using_weapon() && !throwing())
+        || (defender->is_player() && you.pending_revival))
         return false;
 
     if (using_weapon()
@@ -399,13 +398,8 @@ bool ranged_attack::apply_damage_brand(const char *what)
             return true;
     }
 
-    if (apply_missile_brand())
-        return true;
-
-    return false;
+    return apply_missile_brand();
 }
-
-
 
 int ranged_attack::apply_damage_modifiers(int damage)
 {
