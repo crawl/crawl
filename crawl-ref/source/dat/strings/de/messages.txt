@@ -5730,9 +5730,8 @@ Wandsprung wegen HUP abgebrochen.
 The air is filled with shimmering golden clouds!
 Die Luft ist gefüllt mit schimmernden goldenen Wolken!
 %%%%
-# One of the Wu Jian Council (gods) says this
-The storm will not cease as long as you keep fighting, disciple!
-Der Sturm wird nicht aufhören, solange du weiter kämpfst, Schüler!
+Sifu %s says: The storm will not cease as long as you keep fighting, disciple!
+Sifu %s sagt: Der Sturm wird nicht aufhören, solange du weiter kämpfst, Schüler!
 %%%%
 You feel like a meek peon again.
 Ihr fühlt Euch wieder wie ein sanftmütiger Leibeigener.
@@ -6150,18 +6149,17 @@ Ihr fühlt Euch von den Schatten um Euch herum überwältigt.
 %s causes a mighty clap of thunder!
 %s verursacht einen mächtigen Donnerschlag!
 %%%%
-# Said by Wu Jian Council member (Sifu)
-Die by a thousand cuts!
-Stirb durch tausend Schnitte!
+Sifu %s says: Die by a thousand cuts!
+Sifu %s sagt: Stirb durch tausend Schnitte!
 %%%%
-Nowhere to run...
-Du kannst nirgendwohin fliehen...
+Sifu %s whispers: Nowhere to run...
+Sifu %s flüstert: Es gibt keinen Ausweg...
 %%%%
-These will loosen your tongue!
-Das wird dir die Zunge lösen!
+Sifu %s whispers: These will loosen your tongue!
+Sifu %s flüstert: Das wird dir die Zunge lösen!
 %%%%
-Suffer, mortal!
-Leide, Sterblicher!
+Sifu %s says: Suffer, mortal!
+Sifu %s sagt: Leide, Sterblicher!
 %%%%
 %s's divine weapons fail to arrive.
 {gen}%s göttlichen Waffen kommen nicht an.
@@ -9247,9 +9245,6 @@ Ihr fühlt Euch plötzlich von magischer Energie ausgezehrt!
 %%%%
 Your god isn't willing to do this for you now.
 Euer Gott ist nicht bereit, das jetzt für Euch zu tun.
-%%%%
-Sifu %s says: %s
-Sifu %s sagt: %s
 %%%%
 
 ##################

@@ -5999,7 +5999,7 @@ spret wu_jian_wall_jump_ability()
 void wu_jian_heavenly_storm()
 {
     mprf(MSGCH_GOD, "The air is filled with shimmering golden clouds!");
-    wu_jian_sifu_message("The storm will not cease as long as you "
+    wu_jian_sifu_message(" says: The storm will not cease as long as you "
                          "keep fighting, disciple!");
 
     for (radius_iterator ai(you.pos(), 2, C_SQUARE, LOS_SOLID); ai; ++ai)

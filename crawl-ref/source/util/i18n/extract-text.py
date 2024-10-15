@@ -1404,6 +1404,8 @@ def process_cplusplus_file(filename):
             if 'simple_god_message' in line or 'simple_monster_message' in line or '_spell_retribution' in line:
                 if string != "" and (string[0] == " " or string[0] == "'"):
                     string = '%s' + string
+            elif 'wu_jian_sifu_message' in line:
+                string = 'Sifu %s' + string
             elif '3rd_person_message' in line:
                 # also do the version where "you" is the object
                 strings.append(replace_last(string, '%s', 'you'))
@@ -1445,6 +1447,10 @@ def process_cplusplus_file(filename):
             elif filename == 'item-name.cc':
                 special_handling_for_item_name_cc(section, line, string, strings)
                 continue
+            elif filename == 'message.cc':
+                if section == 'wu_jian_sifu_message':
+                    # message prefix only - will be added at point of call (see above)
+                    continue
             elif filename == 'mon-util.cc' and section in ['ugly_colour_names', 'drac_colour_names']:
                 # adjectives
                 string += ' '
