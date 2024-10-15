@@ -5850,10 +5850,10 @@ You feel more protected from fire.
 Ihr fühlt Euch besser vor Feuer geschützt.
 %%%%
 You feel protected from cold.
-Ihr fühlt Euch vor Kalt geschützt.
+Ihr fühlt Euch vor Kälte geschützt.
 %%%%
 You feel more protected from cold.
-Ihr fühlt Euch besser vor Kalt geschützt.
+Ihr fühlt Euch besser vor Kälte geschützt.
 %%%%
 You feel protected from electricity.
 Ihr fühlt Euch vor Elektrizität geschützt.
