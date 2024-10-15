@@ -1,6 +1,6 @@
 name: "Grinder"
 glyph: {char: "5", colour: blue}
-flags: [no_ht_wand, speaks, unique, female]
+flags: [speaks, unique, female]
 resists: {poison: 1, cold: 2}
 xp_mult: 11
 species: shadow_imp
