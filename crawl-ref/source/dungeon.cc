@@ -6537,8 +6537,7 @@ static coord_def _get_feat_dest(coord_def base_pos, dungeon_feature_type feat,
                 dest_pos = random_in_bounds();
             }
             while (env.grid(dest_pos) != DNGN_FLOOR
-                   || env.pgrid(dest_pos) & FPROP_NO_TELE_INTO
-                   || count_adjacent_slime_walls(dest_pos) != 0);
+                   || env.pgrid(dest_pos) & FPROP_NO_TELE_INTO);
         }
 
         if (!shaft)
