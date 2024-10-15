@@ -1401,7 +1401,7 @@ def process_cplusplus_file(filename):
                         continue
 
             # simple_god/monster_message may contain an implied %s
-            if 'simple_god_message' in line or 'simple_monster_message' in line:
+            if 'simple_god_message' in line or 'simple_monster_message' in line or '_spell_retribution' in line:
                 if string != "" and (string[0] == " " or string[0] == "'"):
                     string = '%s' + string
             elif '3rd_person_message' in line:
@@ -1432,6 +1432,16 @@ def process_cplusplus_file(filename):
                 elif section == "_abil_type_vuln_core":
                     # will be joined to string from _ability_type_vulnerabilities before translation
                     string = ", which are affected by " + string
+            elif filename == 'god-wrath.cc':
+                # god wratch names are mostly used only in notes.
+                # the exception is the Wu Jian one
+                if section == '_god_wrath_adjectives':
+                    if string == 'rancor' or string == 'rancour':
+                        string = 'the ' + string + ' of the Wu Jian Council'
+                    else:
+                        continue
+                elif section == '_god_wrath_name':
+                        continue
             elif filename == 'item-name.cc':
                 special_handling_for_item_name_cc(section, line, string, strings)
                 continue

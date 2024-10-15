@@ -64,41 +64,39 @@ static void _tso_blasts_cleansing_flame(const char *message = nullptr);
 // i18n: Currently, most of these don't need to be localised as they're only
 // used in notes. The exception is Wu Jian wrath which is used for a message
 // in player::corrode_equipment()
-// @noloc section start
-static const char *_god_wrath[] =
+static const char *_god_wrath_adjectives[] =
 {
-    "the bugginess of No God",
-    "the wrath of Zin",
-    "the wrath of the Shining One",
-    "the malice of Kikubaaqudgha",
-    "the anger of Yredelemnul",
-    "the capriciousness of Xom",
-    "the wrath of Vehumet",
-    "the fury of Okawaru",
-    "the fury of Makhleb",
-    "the will of Sif Muna",
-    "the fiery rage of Trog",
-    "the wrath of Nemelex",
-    "the displeasure of Elyvilon",
-    "the touch of Lugonu",
-    "the wrath of Beogh",
-    "the vengeance of %s",          // Jiyva name is variable
-    "the enmity of Fedhas Madhash",
-    "the meddling of Cheibriados",
-    "the doom of Ashenzari",
-    "the darkness of Dithmenos",
-    "the greed of Gozag",
-    "the adversity of Qazlal",
-    "the disappointment of Ru",
+    "bugginess",        // NO_GOD
+    "wrath",            // Zin
+    "wrath",            // the Shining One (unused)
+    "malice",           // Kikubaaqudgha
+    "anger",            // Yredelemnul
+    "capriciousness",   // Xom
+    "wrath",            // Vehumet
+    "fury",             // Okawaru
+    "fury",             // Makhleb
+    "will",             // Sif Muna
+    "fiery rage",       // Trog
+    "wrath",            // Nemelex
+    "displeasure",      // Elyvilon
+    "touch",            // Lugonu
+    "wrath",            // Beogh
+    "vengeance",        // Jiyva
+    "enmity",           // Fedhas Madhash
+    "meddling",         // Cheibriados
+    "doom",             // Ashenzari (unused)
+    "darkness",         // Dithmenos
+    "greed",            // Gozag (unused)
+    "adversity",        // Qazlal
+    "disappointment",   // Ru
 #if TAG_MAJOR_VERSION == 34
-    "the progress of Pakellas",
+    "progress",         // Pakellas
 #endif
-    "the fury of Uskayaw",
-    "the memory of Hepliaklqana",
-    "the rancour of the Wu Jian Council", // localise (used in corrode msg)
+    "fury",             // Uskayaw
+    "memory",           // Hepliaklqana (unused)
+    "rancor",           // Wu Jian
 };
-COMPILE_CHECK(ARRAYSZ(_god_wrath) == NUM_GODS);
-// @noloc section end
+COMPILE_CHECK(ARRAYSZ(_god_wrath_adjectives) == NUM_GODS);
 
 /**
  * Return a name associated with the given god's wrath.
@@ -112,10 +110,12 @@ COMPILE_CHECK(ARRAYSZ(_god_wrath) == NUM_GODS);
  */
 static string _god_wrath_name(god_type god)
 {
-    if (god == GOD_JIYVA)
-        return make_stringf(_god_wrath[god], god_name(god).c_str());
-    else
-        return _god_wrath[god];
+    const bool use_full_name = god == GOD_FEDHAS      // fedhas is very formal.
+                               || god == GOD_WU_JIAN; // apparently.
+
+    return make_stringf("the %s of %s",
+                        _god_wrath_adjectives[god],
+                        god_name(god, use_full_name).c_str());
 }
 
 static mgen_data _wrath_mon_data(monster_type mtyp, god_type god)
@@ -218,13 +218,9 @@ static void _tso_summon_warriors()
             success = true;
     }
 
-    string msg;
-    if (success)
-        msg = "%s sends the divine host to punish you for your evil ways!";
-    else
-        msg = "%s's divine host fails to appear.";
-
-    simple_god_message(msg.c_str(), GOD_SHINING_ONE);
+    simple_god_message(success ? " sends the divine host to punish "
+                       "you for your evil ways!"
+                       : "'s divine host fails to appear.", GOD_SHINING_ONE);
 
 }
 
@@ -737,7 +733,7 @@ static bool _yredelemnul_retribution()
         }
 
         _spell_retribution(avatar, SPELL_BOLT_OF_DRAINING, god,
-                           "%s's anger turns toward you for a moment.");
+                           "'s anger turns toward you for a moment.");
         _reset_avatar(*avatar);
     }
 
@@ -834,7 +830,7 @@ static bool _trog_retribution()
         }
 
         _spell_retribution(avatar, SPELL_FIREBALL,
-                           god, "%s hurls fiery rage upon you!");
+                           god, " hurls fiery rage upon you!");
         _reset_avatar(*avatar);
     }
 
@@ -894,14 +890,16 @@ static bool _beogh_retribution()
             }
         }
 
-        if (num_created > 0)
+        if (num_created == 1)
         {
-            string msg;
-            if (num_created == 1)
-                msg = "%s throws an implement of electrocution at you.";
-            else
-                msg = "%s throws implements of electrocution at you.";
-            simple_god_message(msg.c_str(), god);
+            simple_god_message(" throws an implement of electrocution at you.",
+                               god);
+            break;
+        }
+        else if (num_created > 0)
+        {
+            simple_god_message(" throws implements of electrocution at you.",
+                               god);
             break;
         } // else fall through
     }
@@ -1340,7 +1338,7 @@ static void _fedhas_nature_retribution()
                                      SPELL_PRIMAL_WAVE,
                                      SPELL_THORN_VOLLEY);
 
-    _spell_retribution(avatar, spell, god, "%s invokes nature against you.");
+    _spell_retribution(avatar, spell, god, " invokes nature against you.");
     _reset_avatar(*avatar);
 }
 
@@ -2035,9 +2033,8 @@ static bool _uskayaw_retribution()
     case 1:
         if (mon && mon->can_go_berserk())
         {
-            string msg = localise("%s drives %s into a dance frenzy!",
-                                  god_speaker(god), mon->name(DESC_THE));
-            god_speaks(god, msg.c_str());
+            mprf(MSGCH_GOD, god, "%s drives %s into a dance frenzy!",
+                 god_speaker(god).c_str(), mon->name(DESC_THE).c_str());
             mon->go_berserk(true);
             return true;
         }

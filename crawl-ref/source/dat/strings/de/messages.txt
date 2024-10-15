@@ -5964,14 +5964,14 @@ Ihr zahlt einen Zehnten von %d Gold.
 # god-wrath.cc
 ##################
 %%%%
-the rancour of the Wu Jian Council
+the rancor of the Wu Jian Council
 die Verbitterung des Wu-Jian-Rates
 %%%%
 %s sends the divine host to punish you for your evil ways!
 %s schickt die göttliche Heerschar, um Euch für Eure bösen Taten zu bestrafen!
 %%%%
 %s's divine host fails to appear.
-Die göttliche Heerschar von {dat}%s erscheint nicht.
+Die göttliche Heerschar {gen}%s erscheint nicht.
 %%%%
 %s booms out: "Take the path of righteousness! REPENT!"
 %s dröhnt: "Nimm den Weg der Rechtschaffenheit! TUE BUSSE!"
@@ -5995,7 +5995,7 @@ Ihr spürt den stillen Zorn des Glänzenden auf Euch!
 %s schlägt die Stunde.
 %%%%
 You lose track of time.
-Ihr verliert den Überblick über die Zeit.
+Ihr verliert das Zeitgefühl.
 %%%%
 You feel the world leave you behind!
 Ihr fühlt, wie die Welt Euch zurücklässt!
@@ -6010,7 +6010,7 @@ Die Zeit zittert.
 %s hat jetzt keine Zeit, um sich mit Euch zu beschäftigen.
 %%%%
 %s sends minions to punish you.
-%s schickt Schergen, um Euch zu bestrafen.
+%s schickt Lakaien, um Euch zu bestrafen.
 %%%%
 %s sends a minion to punish you.
 %s schickt einen Lakaien, um Euch zu bestrafen.
@@ -6031,7 +6031,7 @@ Kikubaaqudghas Bosheit konzentriert sich auf Euch.
 %s schickt einen Diener, um Euch zu bestrafen.
 %%%%
 %s's servants fail to arrive.
-Die Diener von %s kommen nicht an.
+{gen}%s Diener kommen nicht an.
 %%%%
 %s's anger turns toward you for a moment.
 Der Zorn {gen}%s richtet sich für einen Moment gegen Euch.
@@ -6046,7 +6046,7 @@ Der Zorn {gen}%s richtet sich für einen Moment gegen Euch.
 %s hat keine Zeit, Euch zu bestrafen... jetzt.
 %%%%
 %s's voice booms out, "Feel my wrath!"
-Die Stimme von %s dröhnt: "Spüre meinen Zorn!"
+{gen}%s Stimme dröhnt: "Fühle meinen Zorn!"
 %%%%
 You suddenly pass out!
 Ihr werdet plötzlich ohnmächtig!
@@ -6055,8 +6055,9 @@ You suddenly feel lethargic!
 Ihr fühlt Euch plötzlich träge!
 %%%%
 %s hurls fiery rage upon you!
-
+%s schleudert feurige Wut auf Euch!
 %%%%
+# Beogh sends electric weapon(s)
 %s throws an implement of electrocution at you.
 %s wirft ein Stromschlagsgerät auf Euch.
 %%%%
@@ -6073,17 +6074,19 @@ Ihr fühlt Euch plötzlich träge!
 %s schickt Truppen gegen Euch!
 %%%%
 %s's forces are busy with other wars.
-Die Truppen von %s sind mit anderen Kriegen beschäftigt.
+{gen}%s Truppen sind mit anderen Kriegen beschäftigt.
 %%%%
 %s's wrath finds you.
-Der Zorn von %s findet Euch.
+{gen}%s Zorn findet Euch.
 %%%%
+# Lugonu teleports player
 %s's wrath scatters you!
-Deu Zorn {gen}%s zerstreut Euch!
+{gen}%s Zorn zerstreut Euch!
 %%%%
 Space warps around you!
 Der Raum verzieht sich um Euch!
 %%%%
+# Lugonu banishes player to the Abyss
 %s draws you home!
 %s zieht Euch nach Hause!
 %%%%
@@ -6127,7 +6130,7 @@ Pflanzen wachsen um Euch herum in einer unheilvollen Weise.
 %s schafft es nicht, Monster aus den Schatten zu weben.
 %%%%
 You feel overwhelmed by the shadows around you.
-Du fühlst Euch von den Schatten um Euch herum überwältigt.
+Ihr fühlt Euch von den Schatten um Euch herum überwältigt.
 %%%%
 %s tears the shadows away from you.
 %s reißt die Schatten von Euch weg.
@@ -6142,11 +6145,12 @@ Du fühlst Euch von den Schatten um Euch herum überwältigt.
 %s entzieht Euch Euren Elementarschutz.
 %%%%
 %s fails to strip away your elemental protection.
-%s schafft es nicht, Euren Elementarschutz aufzuheben.
+%s schafft es nicht, Euren Elementarschutz zu entziehen.
 %%%%
 %s causes a mighty clap of thunder!
 %s verursacht einen mächtigen Donnerschlag!
 %%%%
+# Said by Wu Jian Council member (Sifu)
 Die by a thousand cuts!
 Stirb durch tausend Schnitte!
 %%%%
@@ -6160,7 +6164,7 @@ Suffer, mortal!
 Leide, Sterblicher!
 %%%%
 %s's divine weapons fail to arrive.
-Die göttlichen Waffen von %s kommen nicht an.
+{gen}%s göttlichen Waffen kommen nicht an.
 %%%%
 %s drives %s into a dance frenzy!
 %s treibt {acc}%s in einen Tanzrausch!
@@ -6181,7 +6185,7 @@ Die göttliche Erfahrung entzieht Eure Vitalität!
 %s stößt Euch mit reinigenden Flammen an!
 %%%%
 %s smites you!
-%s schlägt Euch!
+%s zerschlägt Euch!
 %%%%
 
 ##################
