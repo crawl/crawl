@@ -656,3 +656,6 @@ Ihr persönliche Opfer bringt
 you donate money
 Ihr Geld spendet
 %%%%
+you bind yourself with curses
+Ihr Euch mit flüchen bindet
+%%%%

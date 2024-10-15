@@ -5760,70 +5760,68 @@ Ihr habt keine Gefährten.
 ##################
 %%%%
 %s is not enthusiastic about the mutagenic glow surrounding you.
-
+%s ist nicht begeistert von dem mutagenen Glühen, das Euch umgibt.
 %%%%
 %s does not appreciate the extra mutagenic glow surrounding you!
-
+%s ist nicht begeistert von dem zusätzlichen mutagenen Glühen, das Euch umgibt!
 %%%%
 %s forgives your inadvertent evil act, just this once.
-
+%s verzeiht Euch Eure versehentliche böse Tat, nur dieses eine Mal.
 %%%%
 %s forgives your inadvertent attack on a neutral, just this once.
-
+%s verzeiht Euch Euren versehentlichen Angriff auf einen Neutralen, nur dieses eine Mal.
 %%%%
 %s forgives your inadvertent attack on an ally, just this once.
-
+%s verzeiht Euch Euren versehentlichen Angriff auf einen Verbündeten, nur dieses eine Mal.
 %%%%
 %s forgives your inadvertent unclean act, just this once.
-
+%s verzeiht Euch Eure versehentliche unsaubere Handlung, nur dieses eine Mal.
 %%%%
 %s forgives your inadvertent chaotic act, just this once.
-
+%s verzeiht Euch Eure versehentliche chaotische Tat, nur dieses eine Mal.
 %%%%
 %s forgives your inadvertent holy act, just this once.
-
+%s verzeiht Euch Eure versehentliche heilige Tat, nur dieses eine Mal.
 %%%%
 %s does not appreciate your training of magic skills!
-
+%s schätzt Euer Training von magischen Fähigkeiten nicht!
 %%%%
 %s does not appreciate your use of wizardly items!
-
+%s schätzt Euren Gebrauch von magischen Gegenständen nicht!
 %%%%
 %s does not appreciate your shedding blood when asking for salvation!
-
+%s schätzt es nicht, dass Ihr Blut vergießt, wenn Ihr um Erlösung bittet!
 %%%%
 %s forgives your accidental hurry, just this once.
-
+%s verzeiht Euch Eure versehentliche Eile, nur dieses eine Mal.
 %%%%
 %s thinks you should slow down.
-
+%s findet, Ihr solltet langsamer gehen.
 %%%%
 %s accepts your kill.
-
+%s nimmt Eure Tötung an.
 %%%%
 <white>%s is honoured by your kill.</white>
-
+<white>%s wird durch Eure Tötung geehrt.</white>
 %%%%
 %s appreciates your killing of a holy being.
-
+%s schätzt Eure Tötung eines heiligen Wesens.
 %%%%
 %s appreciates your killing of a magic user.
-
+%s schätzt Eure Tötung eines Magieanwenders.
 %%%%
 %s claims a new guest.
-
+%s fordert einen neuen Gast.
 %%%%
 %s appreciates your killing of a heretic priest.
-
+%s schätzt Eure Tötung eines ketzerischen Priesters.
 %%%%
+# Chei likes it when you kill fast enemies. "Change of pace" is a deliberate wordplay.
 %s thoroughly appreciates the change of pace.
-
+%s weiß den Tempowechsel sehr zu schätzen.
 %%%%
 %s appreciates the change of pace.
-
-%%%%
-you bind yourself with curses
-
+%s weiß den Tempowechsel zu schätzen.
 %%%%
 
 ##################
