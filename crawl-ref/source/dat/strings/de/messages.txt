@@ -5933,10 +5933,10 @@ Ihr greift {acc}%s wiederholt von oben an, mit unglaublichem Schwung.
 ##################
 %%%%
 You cannot tell which god this altar belongs to. Convert to them anyway?
-Ihr wisst nicht, welchem Gott dieser Altar gehört. Trotzdem konvertieren?
+Ihr könnt nicht sagen, welchem Gott dieser Altar gehört. Trotzdem konvertieren?
 %%%%
 Really abandon %s for an unknown god?
-
+Wirklich %s für einen unbekannten Gott aufgeben?
 %%%%
 %s accepts your prayer!
 %s nimmt Euer Gebet an!
@@ -5945,7 +5945,7 @@ A being of your status worships no god.
 Ein Wesen Eures Standes verehrt keinen Gott.
 %%%%
 You offer a silent prayer to %s.
-Ihr betet im Stillen zu {dat}%s.
+Ihr sprecht ein stilles Gebet zu {dat}%s.
 %%%%
 You offer a prayer to %s.
 Ihr sprecht ein Gebet zu {dat}%s.
