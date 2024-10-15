@@ -1405,6 +1405,7 @@ def process_cplusplus_file(filename):
                 if string != "" and (string[0] == " " or string[0] == "'"):
                     string = '%s' + string
             elif 'wu_jian_sifu_message' in line:
+                # this function adds a prefix to the message parameter
                 string = 'Sifu %s' + string
             elif '3rd_person_message' in line:
                 # also do the version where "you" is the object
@@ -1449,7 +1450,8 @@ def process_cplusplus_file(filename):
                 continue
             elif filename == 'message.cc':
                 if section == 'wu_jian_sifu_message':
-                    # message prefix only - will be added at point of call (see above)
+                    # this function adds a prefix to the message parameter
+                    # this script will add it when extracting the message at the point of call (see above)
                     continue
             elif filename == 'mon-util.cc' and section in ['ugly_colour_names', 'drac_colour_names']:
                 # adjectives
