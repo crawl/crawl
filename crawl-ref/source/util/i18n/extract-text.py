@@ -1246,6 +1246,8 @@ def process_cplusplus_file(filename):
                 continue
             if 'serialize' in line:
                 continue
+            if '_chunk' in line:
+                continue
             if '_id =' in line:
                 continue
             if 'push_ui_layout' in line or 'ui_state_change' in line:
@@ -1445,6 +1447,10 @@ def process_cplusplus_file(filename):
                         continue
                 elif section == '_god_wrath_name':
                         continue
+            elif filename == 'hints.cc':
+                if section == '_replace_static_tags':
+                    # error messages for translator, not end user
+                    continue
             elif filename == 'item-name.cc':
                 special_handling_for_item_name_cc(section, line, string, strings)
                 continue

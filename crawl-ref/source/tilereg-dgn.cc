@@ -183,7 +183,7 @@ void DungeonRegion::render()
             // center this coord, which is at the top left of gc's cell
             pc.x += dx / 2;
 
-            const auto text = formatted_string(tag.tag.c_str(), WHITE);
+            const auto text = formatted_string(localise(tag.tag), WHITE);
             m_tag_font->render_hover_string(pc.x, pc.y, text);
         }
 

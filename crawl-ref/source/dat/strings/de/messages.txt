@@ -6191,199 +6191,80 @@ Die göttliche Erfahrung entzieht Eure Vitalität!
 ##################
 %%%%
 (Melee oriented character with divine support)
-
+(Nahkampf-orientierter Charakter mit göttlicher Unterstützung)
 %%%%
 (Magic oriented character)
-
+(Magieorientierter Charakter)
 %%%%
 (Ranged fighter)
-
+(Fernkämpfer)
 %%%%
 (erroneous character)
-
+(fehlerhafter Charakter)
 %%%%
 <white>You must be new here indeed!</white>
-
+<white>Ihr müsst wirklich neu hier sein!</white>
 %%%%
 <cyan>You can be:</cyan>
-
+<cyan>Ihr könnt einer der Folgende sein:</cyan>
 %%%%
 "  * - Random hints mode character"
-
-%%%%
-<lightred>ERROR: unterminated $cmd</lightred>
-
-%%%%
-<lightred>ERROR: unterminated $item</lightred>
-
-%%%%
-<lightred>ERROR: unterminated $feature</lightred>
-
-%%%%
-<lightred>ERROR: unterminated <input></lightred>
-
+"  * - Zufälliger Hinweis-Modus Charakter"
 %%%%
 See you next game!
 Bis zum nächsten Spiel!
 %%%%
-tut
-
-%%%%
-Remember to rest between fights and to enter unexplored terrain with full health and magic. Ideally you should retreat into areas you've already explored and cleared of monsters; resting on the edge of the explored terrain increases the chances of your rest being interrupted by wandering monsters. To rest, press <w>5</w> or <w>Shift-numpad 5</w><tiles>, or <w>click the rest button</w></tiles>.
-
-%%%%
-Also, berserking might help you not to lose so much health in the first place. To use your abilities press <w>a</w>.
-
-%%%%
-"That "
-
-%%%%
-"monster is a "
-
-%%%%
-. You can learn about any monster by hovering your mouse over it, and read its description by <w>right-clicking</w> on it.
-
-%%%%
-" is a monster, usually depicted by a letter. Some typical early monsters look like <brown>r</brown>, <green>l</green>, <brown>K</brown> or <lightgrey>g</lightgrey>. "
-
-%%%%
-Your console settings allowing, you'll always see a list of monsters somewhere on the screen.
-
-%%%%
-"You can gain information about it by pressing <w>x</w> and moving the cursor over the monster, and read the monster description by then pressing <w>v</w>. "
-
-%%%%
-"To attack this monster with your wielded weapon, just move into it. "
-
-%%%%
-Note that as long as there's a non-friendly monster in view you won't be able to automatically move to distant squares, to avoid death by misclicking.
-
-%%%%
-"However, as a hunter you will want to deal with it using your bow. If you have a look at your shortbow from your <w>i</w>nventory, you'll find an explanation of how to do this. "
-
-%%%%
-First <w>w</w>ield it, then follow the instructions.<tiles>
-
-%%%%
-As a short-cut you can also <w>right-click</w> on your shortbow to read its description, and <w>left-click</w> to wield it.</tiles>
-
-%%%%
-<tiles>Clicking with your <w>right mouse button</w> on your shortbow will also let you read its description.</tiles>
-
-%%%%
-However, as a conjurer you will want to deal with it using magic. If you look at the help entry for the <w>M</w>emorisation screen you'll find an explanation of how to do this.
-
-%%%%
+# hint mode hover text for dungeon features  - I don't think they're ever seen (hidden by the standard hover text)
 Stairs
-
+Treppe
 %%%%
 Escape hatch
-
+Fluchtluke
 %%%%
 Branch stairs
-
+Zweigtreppe
 %%%%
 Portal
-
+Portal
 %%%%
 "An altar to "
-
+"Ein Altar für "
 %%%%
 Closed door
-
+Geschlossene Tür
 %%%%
 Runed door
-
-%%%%
-"Uh-oh, "
-
-%%%%
-" just excommunicated you for running out of piety (your divine favour went to nothing). Maybe you repeatedly violated the religious rules, or maybe you failed to please your deity often enough, or some combination of the two. If you can find an altar dedicated to "
-
-%%%%
-"Should you decide that abandoning "
-
-%%%%
-"wasn't such a smart move after all, and you'd like to return to your old faith, you'll have to find an altar dedicated to "
-
-%%%%
-" where"
-
-%%%%
-" you can re-convert, and all will be well. Otherwise you'll have to weather this god's displeasure until all divine wrath is spent."
-
-%%%%
-"Fortunately, it seems that "
-
-%%%%
-" didn't mind your converting to "
-
-%%%%
-"You even kept some of your piety! "
-
-%%%%
-Note that this kind of alliance only exists between the three good gods, so don't expect this to be the norm.
-
-%%%%
-". That's because "
-
-%%%%
-" is one of the good gods who generally are rather forgiving about change of faith - unless you switch over to the path of evil, in which case their retribution can be nasty indeed!"
-
-%%%%
-"Looks like "
-
-%%%%
-" didn't appreciate your converting to "
-
-%%%%
-"! But really, changing from one of the good gods to an evil one, what did you expect!? For any god not on the opposing side of the faith, "
-
-%%%%
-" would have been much more forgiving. "
-
-%%%%
-"! (Actually, only the three good gods will usually be forgiving about this kind of faithlessness.) "
-
-%%%%
-"Unfortunately, while converting back would appease "
-
-%%%%
-", it would annoy "
-
-%%%%
-, so you're stuck with having to suffer the wrath of one god or another.
-
+Runenverzierte Tür
 %%%%
 Welcome back! If it's been a while, you may want to refresh your memory.
-
+Willkommen zurück! Wenn es eine Weile her ist, solltet Ihr vielleicht Euer Gedächtnis auffrischen.
 %%%%
-"Your <w>%</w>nventory, "
-
+Your <w>%</w>nventory
+Euer Inventar (<w>%</w>)
 %%%%
 your spells (<w>%?</w>)
-
+Eure Zauber (<w>%?</w>)
 %%%%
 your <w>%</w>bilities
-
+Eure Fähigkeiten (<w>%</w>)
 %%%%
 your set of mutations (<w>%</w>)
-
+Euer Mutationssatz (<w>%</w>)
 %%%%
 your religious standing (<w>%</w>)
-
+Euer religiöses Ansehen (<w>%</w>)
 %%%%
 the message history (<w>%</w>)
-
+die Nachrichtenhistorie (<w>%</w>)
 %%%%
 the character overview screen (<w>%</w>)
-
+die Charakterübersichtsseite (<w>%</w>)
 %%%%
 the dungeon overview screen (<w>%</w>)
-
+die Dungeon-Übersichtsseite (<w>%</w>)
 %%%%
-" are good things to check."
-
+%s are good things to check.
+%s sind gut zu überprüfen.
 %%%%
 This screen shows your character's set of talents. You can gain new abilities via certain items, through religion or by way of mutations. Activation of an ability usually comes at a cost, e.g. Magic power. Press '<w>!</w>' or '<w>?</w>' to toggle between ability selection and description.
 

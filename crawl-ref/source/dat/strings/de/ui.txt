@@ -46,10 +46,10 @@ Tutorial that covers the basics of Dungeon Crawl survival.
 Tutorial, das die Grundlagen des Überlebens behandelt.
 %%%%
 Hints Mode for Dungeon Crawl
-Hinweismodus für Dungeon Crawl
+Hinweis-Modus für Dungeon Crawl
 %%%%
 A mostly normal game that provides more advanced hints than the tutorial.
-Ein fast normales Spiel, das fortgeschrittenere Hinweise bietet.
+Ein fast normales Spiel, das fortgeschrittenere Hinweise bietet als das Tutorial.
 %%%%
 Dungeon Sprint
 Dungeon-Sprint

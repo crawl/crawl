@@ -159,7 +159,7 @@ static string _print_hints_menu(hints_types type)
         break;
     }
 
-    return make_stringf("%c - %s %s %s",
+    return localise("%c - %s %s %s",
             letter, species::name(_get_hints_species(type)).c_str(),
                     get_job_name(_get_hints_job(type)), desc);
 }
@@ -179,6 +179,7 @@ void pick_hints(newgame_def& choice)
     string prompt = "<white>You must be new here indeed!</white>"
         "\n\n"
         "<cyan>You can be:</cyan>";
+    prompt = localise(prompt);
     auto prompt_ui = make_shared<Text>(formatted_string::parse_string(prompt));
 
     auto vbox = make_shared<Box>(Box::VERT);
@@ -245,7 +246,8 @@ void pick_hints(newgame_def& choice)
     sub_items->linked_menus[0] = main_items;
 
     {
-        auto label = make_shared<Text>(formatted_string("Esc - Quit", BROWN));
+        string label_text = localise("Esc - Quit");
+        auto label = make_shared<Text>(formatted_string(label_text, BROWN));
         auto btn = make_shared<MenuButton>();
         btn->set_child(move(label));
         btn->hotkey = CK_ESCAPE;
@@ -253,7 +255,8 @@ void pick_hints(newgame_def& choice)
         sub_items->add_button(btn, 0, 0);
     }
     {
-        auto label = make_shared<Text>(formatted_string("  * - Random hints mode character", BROWN));
+        string label_text = localise("  * - Random hints mode character");
+        auto label = make_shared<Text>(formatted_string(label_text, BROWN));
         auto btn = make_shared<MenuButton>();
         btn->set_child(move(label));
         btn->hotkey = '*';
@@ -498,8 +501,23 @@ void print_hint(string key, const string& arg1, const string& arg2)
 
     _replace_static_tags(text);
     text = untag_tiles_console(text);
-    text = replace_all(text, "$1", arg1);
-    text = replace_all(text, "$2", arg2);
+
+    // i18n: We can't just do a simple replace of args because some languages
+    // have grammatical case, which potentially requires the args to be inflected
+
+    // for English, empty string, and glyph tags, we can just do a simple replace
+    if (!localisation_active() || arg1.empty() || arg1[0] == '<')
+        text = replace_all(text, "$1", arg1);
+    if (!localisation_active() || arg2.empty() || arg2[0] == '<')
+        text = replace_all(text, "$2", arg2);
+
+    if (contains(text, "$1") || contains(text, "$2"))
+    {
+        // Not English, and at least one arg is something other than a glyph tag
+        text = replace_all(text, "$1", "@$1@");
+        text = replace_all(text, "$2", "@$2@");
+        text = localise(text, {{"@$1@", arg1}, {"@$2@", arg2}}, false);
+    }
 
     // "\n" to preserve indented parts, the rest is unwrapped, or split into
     // paragraphs by "\n\n", split_string() will ignore the empty line.
@@ -659,25 +677,13 @@ static void _hints_healing_reminder()
 
             Hints.hints_just_triggered = true;
 
-            string text;
-            text =  "Remember to rest between fights and to enter unexplored "
-                    "terrain with full health and magic. Ideally you "
-                    "should retreat into areas you've already explored and "
-                    "cleared of monsters; resting on the edge of the explored "
-                    "terrain increases the chances of your rest being "
-                    "interrupted by wandering monsters. To rest, press "
-                    "<w>5</w> or <w>Shift-numpad 5</w>"
-                    "<tiles>, or <w>click the rest button</w></tiles>"
-                    ".";
+            print_hint("HINT_REST_BETWEEN_FIGHTS");
 
             if (you.hp < you.hp_max && you_worship(GOD_TROG)
                 && you.can_go_berserk())
             {
-                text += "\nAlso, berserking might help you not to lose so much "
-                        "health in the first place. To use your abilities "
-                        "press <w>a</w>.";
+                print_hint("HINT_BERSERK_CONSERVES_HP");
             }
-            mprf(MSGCH_TUTORIAL, "%s", untag_tiles_console(text).c_str());
 
             if (is_resting())
                 stop_running();
@@ -897,79 +903,36 @@ void hints_monster_seen(const monster& mon)
     tiles.add_text_tag(TAG_TUTORIAL, mi);
 #endif
 
-    string text = "That ";
-
     if (is_tiles())
     {
-        text +=
-            string("monster is a ") +
-            mon.name(DESC_PLAIN).c_str() +
-            ". You can learn about any monster by hovering your mouse over it,"
-            " and read its description by <w>right-clicking</w> on it.";
+        print_hint("HINT_SEEN_MONSTER_TILES", mon.name(DESC_A).c_str());
     }
     else
     {
-        text +=
-            glyph_to_tagstr(get_mons_glyph(mi)) +
-            " is a monster, usually depicted by a letter. Some typical "
-            "early monsters look like <brown>r</brown>, <green>l</green>, "
-            "<brown>K</brown> or <lightgrey>g</lightgrey>. ";
+        print_hint("HINT_SEEN_MONSTER_CONSOLE",
+                   glyph_to_tagstr(get_mons_glyph(mi)));
         if (crawl_view.mlistsz.y > 0)
-        {
-            text += "Your console settings allowing, you'll always see a "
-                    "list of monsters somewhere on the screen.\n";
-        }
-        text += "You can gain information about it by pressing <w>x</w> and "
-                "moving the cursor over the monster, and read the monster "
-                "description by then pressing <w>v</w>. ";
+            print_hint("HINT_MONSTER_LIST_CONSOLE");
     }
 
-    text += "\nTo attack this monster with your wielded weapon, just move "
-            "into it. ";
-    if (is_tiles())
-    {
-        text +=
-            "Note that as long as there's a non-friendly monster in view you "
-            "won't be able to automatically move to distant squares, to avoid "
-            "death by misclicking.";
-    }
-
-    mprf(MSGCH_TUTORIAL, "%s", text.c_str());
+    print_hint("HINT_LEARN_ABOUT_MONSTERS");
+    print_hint("HINT_ATTACK_MONSTER");
 
     if (Hints.hints_type == HINT_RANGER_CHAR)
     {
-        text =  "However, as a hunter you will want to deal with it using your "
-                "bow. If you have a look at your shortbow from your "
-                "<w>i</w>nventory, you'll find an explanation of how to do "
-                "this. ";
+        print_hint("HINT_ATTACK_MONSTER_RANGED");
 
         if (!you.weapon()
             || you.weapon()->base_type != OBJ_WEAPONS
             || you.weapon()->sub_type != WPN_SHORTBOW)
         {
-            text += "First <w>w</w>ield it, then follow the instructions."
-                "<tiles>\nAs a short-cut you can also <w>right-click</w> on your "
-                "shortbow to read its description, and <w>left-click</w> to wield "
-                "it.</tiles>";
+            print_hint("HINT_RANGED_NOT_WIELDED");
         }
         else
-        {
-            text += "<tiles>Clicking with your <w>right mouse button</w> on your "
-                    "shortbow will also let you read its description.</tiles>";
-        }
-
-        mprf(MSGCH_TUTORIAL, "%s", untag_tiles_console(text).c_str());
-
+            print_hint("HINT_RANGED_WIELDED");
     }
     else if (Hints.hints_type == HINT_MAGIC_CHAR)
-    {
-        text =  "However, as a conjurer you will want to deal with it using "
-                "magic. If you look at the help entry for the "
-                "<w>M</w>emorisation screen you'll find an explanation of how "
-                "to do this.";
-        mprf(MSGCH_TUTORIAL, "%s", untag_tiles_console(text).c_str());
-
-    }
+        print_hint("HINT_ATTACK_MONSTER_MAGIC");
 }
 
 void hints_first_item(const item_def &item)
@@ -1556,7 +1519,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
 
     case HINT_GOD_DISPLEASED:
-        print_hint("HINT_GOD_DISPLEASED", localise(god_name(you.religion)));
+        print_hint("HINT_GOD_DISPLEASED", god_name(you.religion));
         break;
 
     case HINT_EXCOMMUNICATE:
@@ -1578,25 +1541,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         if (new_god == GOD_NO_GOD)
         {
             if (old_piety < 1)
-            {
-                text << "Uh-oh, " << old_god_name << " just excommunicated you "
-                        "for running out of piety (your divine favour went "
-                        "to nothing). Maybe you repeatedly violated the "
-                        "religious rules, or maybe you failed to please your "
-                        "deity often enough, or some combination of the two. "
-                        "If you can find an altar dedicated to "
-                     << old_god_name;
-            }
+                print_hint("HINT_EXCOMMUNICATED", old_god_name);
             else
-            {
-                text << "Should you decide that abandoning " << old_god_name
-                     << "wasn't such a smart move after all, and you'd like to "
-                        "return to your old faith, you'll have to find an "
-                        "altar dedicated to " << old_god_name << " where";
-            }
-            text << " you can re-convert, and all will be well. Otherwise "
-                    "you'll have to weather this god's displeasure until all "
-                    "divine wrath is spent.";
+                print_hint("HINT_GOD_ABANDONED", old_god_name);
 
         }
         else
@@ -1606,57 +1553,38 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             {
                 if (is_good_god(new_god))
                 {
-                    text << "Fortunately, it seems that " << old_god_name <<
-                            " didn't mind your converting to " << new_god_name
-                         << ". ";
+                    print_hint("HINT_CONVERTED_GOD_NOT_ANGRY",
+                               old_god_name, new_god_name);
 
                     if (old_piety > piety_breakpoint(0))
-                        text << "You even kept some of your piety! ";
+                        print_hint("HINT_CONVERTED_KEPT_PIETY");
 
-                    text << "Note that this kind of alliance only exists "
-                            "between the three good gods, so don't expect this "
-                            "to be the norm.";
+                    print_hint("HINT_CONVERTED_GOOD_TO_GOOD");
                 }
                 else if (!god_hates_your_god(old_god))
                 {
-                    text << "Fortunately, it seems that " << old_god_name <<
-                            " didn't mind your converting to " << new_god_name
-                         << ". That's because " << old_god_name << " is one of "
-                            "the good gods who generally are rather forgiving "
-                            "about change of faith - unless you switch over to "
-                            "the path of evil, in which case their retribution "
-                            "can be nasty indeed!";
+                    print_hint("HINT_CONVERTED_GOD_NOT_ANGRY",
+                               old_god_name, new_god_name);
+                    print_hint("HINT_CONVERTED_GOOD_TO_NEUTRAL");
                 }
                 else
                 {
-                    text << "Looks like " << old_god_name << " didn't "
-                            "appreciate your converting to " << new_god_name
-                         << "! But really, changing from one of the good gods "
-                            "to an evil one, what did you expect!? For any god "
-                            "not on the opposing side of the faith, "
-                         << old_god_name << " would have been much more "
-                            "forgiving. ";
-
+                    print_hint("HINT_CONVERTED_GOD_ANGRY",
+                               old_god_name, new_god_name);
+                    print_hint("HINT_CONVERTED_GOOD_TO_EVIL");
                     angry = true;
                 }
             }
             else if (god_hates_your_god(old_god))
             {
-                text << "Looks like " << old_god_name << " didn't appreciate "
-                        "your converting to " << new_god_name << "! (Actually, "
-                        "only the three good gods will usually be forgiving "
-                        "about this kind of faithlessness.) ";
-
+                print_hint("HINT_CONVERTED_GOD_ANGRY",
+                           old_god_name, new_god_name);
+                print_hint("HINT_CONVERTED_NONGOOD_TO_HATED");
                 angry = true;
             }
 
             if (angry)
-            {
-                text << "Unfortunately, while converting back would appease "
-                     << old_god_name << ", it would annoy " << new_god_name
-                     << ", so you're stuck with having to suffer the wrath of "
-                        "one god or another.";
-            }
+                print_hint("HINT_CONVERTED_WRATH", old_god_name, new_god_name);
         }
 
         break;
@@ -1824,11 +1752,13 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_LOAD_SAVED_GAME:
     {
-        text << "Welcome back! If it's been a while, you may want to refresh "
-                "your memory.\nYour <w>%</w>nventory, ";
-        cmd.push_back(CMD_DISPLAY_INVENTORY);
+        text << localise("Welcome back! If it's been a while, you may want to "
+                         "refresh your memory.\n");
 
         vector<const char *> listed;
+        listed.push_back("Your <w>%</w>nventory");
+        cmd.push_back(CMD_DISPLAY_INVENTORY);
+
         if (you.spell_no > 0)
         {
             listed.push_back("your spells (<w>%?</w>)");
@@ -1853,8 +1783,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         listed.push_back("the message history (<w>%</w>)");
         listed.push_back("the character overview screen (<w>%</w>)");
         listed.push_back("the dungeon overview screen (<w>%</w>)");
-        text << comma_separated_line(listed.begin(), listed.end())
-             << " are good things to check.";
+        text << localise("%s are good things to check.", 
+                         comma_separated_line(listed.begin(), listed.end()));
         cmd.push_back(CMD_REPLAY_MESSAGES);
         cmd.push_back(CMD_RESISTS_SCREEN);
         cmd.push_back(CMD_DISPLAY_OVERMAP);

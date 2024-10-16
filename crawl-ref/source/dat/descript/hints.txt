@@ -187,6 +187,22 @@ and divine abilities, by typing
 <input>$cmd[CMD_DISPLAY_RELIGION]</input><localtiles>, or by pressing
 <input>Shift-right-click</input> on your avatar</localtiles>.
 %%%%
+HINT_REST_BETWEEN_FIGHTS
+
+Remember to rest between fights and to enter unexplored terrain with full health
+and magic. Ideally you should retreat into areas you've already explored and
+cleared of monsters; resting on the edge of the explored terrain increases the
+chances of your rest being interrupted by wandering monsters. To rest, press
+<w>5</w> or <w>Shift-numpad 5</w><tiles>, or <w>click the rest button</w>
+</tiles>.
+
+%%%%
+HINT_BERSERK_CONSERVES_HP
+
+Also, berserking might help you not to lose so much health in the first place.
+To use your abilities press <w>a</w>.;
+
+%%%%
 HINT_SEEN_FIRST_OBJECT
 
 That <console>$1 </console>is an item. If you move there and press
@@ -740,6 +756,61 @@ annoying your god. In any case, you'd better reread the religious description.
 To do so, press <w>$cmd[CMD_DISPLAY_RELIGION]</w><localtiles> or press
 <w>Shift</w> and <w>right-click</w> on your avatar</localtiles>.
 %%%%
+HINT_EXCOMMUNICATED
+
+Uh-oh, $1 just excommunicated you for running out of piety (your divine favour
+went to nothing). Maybe you repeatedly violated the religious rules, or maybe
+you failed to please your deity often enough, or some combination of the two.
+If you can find an altar dedicated to $1, you can re-convert, and all will be
+well. Otherwise you'll have to weather this god's displeasure until all divine
+wrath is spent.
+%%%%
+HINT_GOD_ABANDONED
+
+Should you decide that abandoning $1 wasn't such a smart move after all, and
+you'd like to return to your old faith, you'll have to find an altar dedicated
+to $1 where you can re-convert, and all will be well. Otherwise you'll have to
+weather this god's displeasure until all divine wrath is spent.
+%%%%
+HINT_CONVERTED_GOD_NOT_ANGRY
+
+Fortunately, it seems that $1 didn't mind your converting to $2.
+%%%%
+HINT_CONVERTED_GOD_ANGRY
+
+Looks like $1 didn't appreciate your converting to $2.
+%%%%
+HINT_CONVERTED_KEPT_PIETY
+
+You even kept some of your piety!
+%%%%
+HINT_CONVERTED_GOOD_TO_GOOD
+
+Note that this kind of alliance only exists between the three good gods, so
+don't expect this to be the norm.
+%%%%
+HINT_CONVERTED_GOOD_TO_NEUTRAL
+
+That's because $1 is one of the good gods who generally are rather forgiving
+about change of faith - unless you switch over to the path of evil, in which
+case their retribution can be nasty indeed!
+%%%%
+HINT_CONVERTED_GOOD_TO_EVIL
+
+But really, changing from one of the good gods to an evil one, what did you
+expect!? For any god not on the opposing side of the faith, $1 would have been
+much more forgiving.
+%%%%
+HINT_CONVERTED_NONGOOD_TO_HATED
+
+(Actually,only the three good gods will usually be forgiving about this kind
+of faithlessness.)
+%%%%
+HINT_CONVERTED_WRATH
+
+Unfortunately, while converting back would appease $1, it would annoy $2, so
+you're stuck with having to suffer the wrath of one god or another.
+%%%%
 HINT_SWITCH_WEAPONS_A_AND_B
 
 You can easily switch between weapons in slots a and b by pressing
@@ -750,6 +821,61 @@ HINT_SWITCH_BACK_TO_WEAPON_A
 You can easily switch back to your weapon in slot a by
 pressing <w>$cmd[CMD_WEAPON_SWAP]</w>. To change the slot of an item, press
 <w>$cmd[CMD_ADJUST_INVENTORY]i</w> and choose the appropriate slots.
+%%%%
+HINT_SEEN_MONSTER_TILES
+
+That monster is $1.
+%%%%
+HINT_SEEN_MONSTER_CONSOLE
+
+$1 is a monster, usually depicted by a letter. Some typical early monsters look
+like <brown>r</brown>, <green>l</green>, <brown>K</brown> or
+<lightgrey>g</lightgrey>.
+%%%%
+HINT_MONSTER_LIST_CONSOLE
+
+Your console settings allowing, you'll always see a list of monsters somewhere
+on the screen.
+%%%%
+HINT_LEARN_ABOUT_MONSTERS
+
+<tiles>You can learn about any monster by hovering your mouse over it, and read
+its description by <w>right-clicking</w> on it.</tiles><nomouse>You can gain
+information about it by pressing <w>$cmd[CMD_LOOK_AROUND]</w> and moving
+the cursor over the monster, and read the monster description by then pressing
+<w>$cmd[CMD_TARGET_DESCRIBE]</w>.</nomouse>
+
+%%%%
+HINT_ATTACK_MONSTER
+
+To attack this monster with your wielded weapon, just move into it.
+<tiles>Note that as long as there's a non-friendly monster in view you won't be
+able to automatically move to distant squares, to avoid death by misclicking.
+</tiles>
+%%%%
+HINT_ATTACK_MONSTER_RANGED
+
+However, as a hunter you will want to deal with it using your bow. If you have
+a look at your shortbow from your <w>i</w>nventory, you'll find an explanation
+of how to do this.
+%%%%
+HINT_RANGED_NOT_WIELDED
+
+First <w>w</w>ield it, then follow the instructions.<tiles>
+
+As a short-cut you can also <w>right-click</w> on your shortbow to read its
+description, and <w>left-click</w> to wield it.</tiles>
+%%%%
+HINT_RANGED_WIELDED
+
+<tiles>Clicking with your <w>right mouse button</w> on your shortbow will also
+let you read its description.</tiles>
+%%%%
+HINT_ATTACK_MONSTER_MAGIC
+
+However, as a conjurer you will want to deal with it using magic. If you look at
+the help entry for the <w>M</w>emorisation screen you'll find an explanation of
+how to do this.
 %%%%
 HINT_FLEEING_MONSTER
 
