@@ -48,10 +48,10 @@ a %s Hedge Wizard
 ein %s Heckenzauberer
 %%%%
 a %s Conjurer
-ein %s Beschwörer
+ein %s Hervorrufer
 %%%%
 a %s Summoner
-ein %s Herbeirufer
+ein %s Beschwörer
 %%%%
 a %s Necromancer
 ein %s Nekromant
@@ -126,10 +126,10 @@ a %s%s Hedge Wizard
 ein {adj-er}%s%s Heckenzauberer
 %%%%
 a %s%s Conjurer
-ein {adj-er}%s%s Beschwörer
+ein {adj-er}%s%s Hervorrufer
 %%%%
 a %s%s Summoner
-ein {adj-er}%s%s Herbeirufer
+ein {adj-er}%s%s Beschwörer
 %%%%
 a %s%s Necromancer
 ein {adj-er}%s%s Nekromant

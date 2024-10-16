@@ -658,7 +658,7 @@ eine Schriftrolle der Stille
 # The usual German word for summoning is Beschwörung, but that also means conjuration
 %%%%
 a scroll of summoning
-eine Schriftrolle des Herbeirufs
+eine Schriftrolle des Beschwörs
 %%%%
 a scroll of teleportation
 eine Schriftrolle der Teleportation

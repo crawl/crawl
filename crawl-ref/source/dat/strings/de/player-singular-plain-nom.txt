@@ -366,10 +366,10 @@ Hedge Wizard
 Heckenzauberer
 %%%%
 Conjurer
-Beschwörer
+Hervorrufer
 %%%%
 Summoner
-Herbeirufer
+Beschwörer
 %%%%
 Necromancer
 Nekromant
@@ -453,10 +453,10 @@ Skalde
 %s Heckenzauberer
 %%%%
 %s Conjurer
-%s Beschwörer
+%s Hervorrufer
 %%%%
 %s Summoner
-%s Herbeirufer
+%s Beschwörer
 %%%%
 %s Necromancer
 %s Nekromant

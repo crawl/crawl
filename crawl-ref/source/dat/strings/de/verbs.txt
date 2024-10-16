@@ -265,7 +265,7 @@ spucken auf
 zappen
 %%%%
 summon
-herbeirufen
+beschwören
 %%%%
 charm
 verzaubern

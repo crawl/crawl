@@ -1136,7 +1136,7 @@ schließlich nur noch den Leser abdeckt, bevor er abläuft.
 %%%%
 scroll of summoning
 
-Eine Schriftrolle, die mehrere verbündete Kreaturen hervorruft, die aus Schatten
+Eine Schriftrolle, die mehrere verbündete Kreaturen beschwört, die aus Schatten
 in die Formen der Wesen verwoben sind, die sich in der unmittelbaren Nähe des
 Lesers befinden.
 %%%%

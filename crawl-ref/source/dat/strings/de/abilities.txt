@@ -155,7 +155,7 @@ Cleansing Flame
 Reinigende Flamme
 %%%%
 Summon Divine Warrior
-Göttlichen Krieger herbeirufen
+Göttlichen Krieger beschwören
 %%%%
 Brand Weapon With Holy Wrath
 Waffe mit heiligem Zorn segnen
@@ -299,7 +299,7 @@ Draw Escape
 Flucht ziehen
 %%%%
 Draw Summoning
-Herbeirufung ziehen
+Beschwörung ziehen
 %%%%
 Draw Stack
 Vorsortierte ziehen

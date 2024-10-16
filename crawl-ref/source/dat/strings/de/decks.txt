@@ -12,7 +12,7 @@ destruction
 Zerstörung
 %%%%
 summoning
-Herbeirufung
+Beschwörung
 %%%%
 punishment
 Strafe
@@ -33,7 +33,7 @@ deck of destruction
 Deck der Zerstörung
 %%%%
 deck of summoning
-Deck der Herbeirufung
+Deck der Beschwörung
 %%%%
 deck of punishment
 Deck der Strafe
@@ -51,7 +51,7 @@ the deck of destruction
 das Deck der Zerstörung
 %%%%
 the deck of summoning
-das Deck der Herbeirufung
+das Deck der Beschwörung
 %%%%
 the deck of punishment
 das Deck der Strafe
@@ -71,7 +71,7 @@ decks of destruction
 Decks der Zerstörung
 %%%%
 decks of summoning
-Decks der Herbeirufung
+Decks der Beschwörung
 %%%%
 decks of punishment
 Decks der Strafe

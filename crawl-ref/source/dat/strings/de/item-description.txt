@@ -774,7 +774,7 @@ Es wird effektiver, wenn es etwas trifft. Dieser Effekt lässt mit der Zeit nach
 # Obsidian Axe
 %%%%
 It occasionally summons demons to assist the wielder when it strikes in combat.
-Gelegentlich ruft sie Dämonen herbei, die dem Träger im Kampf beistehen.
+Gelegentlich beschwört sie Dämonen, die dem Träger im Kampf beistehen.
 %%%%
 Its wielder is mesmerised by any visible foes.
 Ihr Träger wird von allen sichtbaren Gegnern hypnotisiert.
@@ -922,7 +922,7 @@ Er verstärkt Eure Feuer-, Eis-, Erd- und Luftmagie.
 # Sceptre of Asmodeus (staff)
 %%%%
 It can be evoked to summon fiery demons, with success rate depending on Evocations skill. Those summoned this way will remain friendly only for a limited time.
-Er kann evoziert werden, um feurige Dämonen herbeizurufen, wobei die Erfolgsquote von der Evokationsfertigkeit abhängt. Die Dämonen bleiben nur für eine begrenzte Zeit freundlich.
+Er kann evoziert werden, um feurige Dämonen zu beschwören, wobei die Erfolgsquote von der Evokationsfertigkeit abhängt. Die Dämonen bleiben nur für eine begrenzte Zeit freundlich.
 %%%%
 
 # Staff of Battle

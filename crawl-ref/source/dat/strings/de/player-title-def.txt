@@ -1038,7 +1038,7 @@ the Caller
 der Rufer
 %%%%
 the Summoner
-der Herbeirufer
+der Beschwörer
 %%%%
 the Convoker
 der Einbeirufer

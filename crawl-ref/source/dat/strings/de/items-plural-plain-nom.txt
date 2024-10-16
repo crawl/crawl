@@ -152,7 +152,7 @@ scrolls of silence
 Schriftrollen der Stille
 %%%%
 scrolls of summoning
-Schriftrollen des Herbeirufs
+Schriftrollen des Beschwörs
 %%%%
 scrolls of teleportation
 Schriftrollen der Teleportation

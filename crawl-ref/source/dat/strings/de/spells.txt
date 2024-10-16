@@ -120,7 +120,7 @@ Fire Storm
 Feuersturm
 %%%%
 Call Down Damnation
-Verdammnis herbeirufen
+Verdammnis beschwören
 %%%%
 # duplicate of ability
 #Blink
@@ -328,7 +328,7 @@ Simulacrum
 Simulakrum
 %%%%
 Conjure Ball Lightning
-Kugelblitz beschwören
+Kugelblitz hervorrufen
 %%%%
 Chain Lightning
 Kettenblitz

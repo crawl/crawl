@@ -1034,7 +1034,7 @@ Rufer
 %%%%
 # duplicate (background)
 #Summoner
-#Herbeirufer
+#Beschwörer
 %%%%
 Convoker
 Einbeirufer

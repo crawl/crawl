@@ -3465,7 +3465,7 @@ poison damage
 Giftschaden
 %%%%
 summons a nameless horror
-einen namenlosen Horror herbeiruft
+einen namenlosen Horror beschwört
 %%%%
 further contaminates you
 Euch weiter kontaminiert
@@ -3494,10 +3494,10 @@ Your servitor casts %s.
 Euer Diener wirkt {acc}%s.
 %%%%
 You can sustain at most 1 creature summoned by this spell.
-Ihr könnt maximal 1 durch diesen Zauber herbeigerufene Kreatur erhalten.
+Ihr könnt maximal 1 durch diesen Zauber beschwörene Kreatur erhalten.
 %%%%
 You can sustain at most %d creatures summoned by this spell.
-Ihr könnt maximal %d durch diesen Zauber herbeigerufene Kreaturen erhalten.
+Ihr könnt maximal %d durch diesen Zauber beschwörene Kreaturen erhalten.
 %%%%
 %s frowns upon the use of this spell.
 %s missbilligt die Verwendung dieses Zaubers.
@@ -3939,10 +3939,10 @@ It is incapable of using stairs.
 Es ist nicht in der Lage, Treppen zu benutzen.
 %%%%
 This monster has been summoned, and is thus only temporary.
-Dieses Monster wurde herbeigerufen und ist daher nur vorübergehend.
+Dieses Monster wurde beschwören und ist daher nur vorübergehend.
 %%%%
 This monster has been summoned in a durable way.
-Dieses Monster wurde auf eine dauerhafte Weise herbeigerufen.
+Dieses Monster wurde auf eine dauerhafte Weise beschwören.
 %%%%
 If angered it will immediately vanish, yielding no experience or items
 Wird es verärgert, verschwindet es sofort und gibt keine Erfahrung oder Gegenstände ab.
@@ -3963,7 +3963,7 @@ If it is slain, it may be possible to recover its hide, which can be used as arm
 Wenn es getötet wird, kann man seine Haut bergen, die als Rüstung verwendet werden kann.
 %%%%
 You have summoned too many monsters of this kind to sustain them all, and thus this one will shortly expire.
-Ihr habt zu viele Monster dieser Art herbeigerufen, um sie alle aufrechtzuerhalten, und deshalb wird dieses hier bald vergehen.
+Ihr habt zu viele Monster dieser Art beschwören, um sie alle aufrechtzuerhalten, und deshalb wird dieses hier bald vergehen.
 %%%%
 This cloud is opaque; one tile will not block vision, but multiple will.
 Diese Wolke ist undurchsichtig; ein Feld versperrt nicht die Sicht, aber mehrere schon.
@@ -4247,7 +4247,7 @@ Vorsicht, der Minotaur wartet!
 , mit Eis bedeckt
 %%%%
 , summoned
-, herbeigerufen
+, beschwören
 %%%%
 , spattered with blood
 , mit Blut bespritzt
@@ -4292,13 +4292,13 @@ This monster is indifferent to you.
 Dieses Monster ist Euch gleichgültig.
 %%%%
 This monster has been summoned and is expiring.
-Dieses Monster wurde herbeigerufen und läuft ab.
+Dieses Monster wurde beschwören und läuft ab.
 %%%%
 This monster has been summoned but will not time out.
-Dieses Monster wurde herbeigerufen und wird nicht ablaufen.
+Dieses Monster wurde beschwören und wird nicht ablaufen.
 %%%%
 This monster has been summoned.
-Dieses Monster wurde herbeigerufen.
+Dieses Monster wurde beschwören.
 %%%%
 This monster is illuminated by a divine halo.
 Dieses Monster wird von einem göttlichen Heiligenschein erleuchtet.
@@ -13096,13 +13096,13 @@ harness Makhleb's destructive might
 Euch Makhlebs zerstörerische Macht zunutze machen
 %%%%
 summon a lesser servant of Makhleb
-einen geringeren Diener Makhlebs herbeirufen
+einen geringeren Diener Makhlebs beschwören
 %%%%
 hurl Makhleb's greater destruction
 Makhlebs größere Zerstörung schleudern
 %%%%
 summon a greater servant of Makhleb
-einen größeren Diener Makhlebs herbeirufen
+einen größeren Diener Makhlebs beschwören
 %%%%
 call upon Sif Muna for magical energy
 Sif Muna für magische Energie anrufen
@@ -13132,7 +13132,7 @@ call upon Trog for regeneration and willpower
 Trog um Regeneration und Willenskraft anrufen
 %%%%
 call in reinforcements
-Verstärkung herbeirufen
+Verstärkung beschwören
 %%%%
 Trog will now gift you melee weapons as you gain piety.
 Trog wird Euch jetzt Nahkampfwaffen schenken, als Ihr Frömmigkeit erlangt.
@@ -15838,10 +15838,10 @@ A chill wind blows around you.
 Ein kalter Wind weht um Euch herum.
 %%%%
 You summon %s!
-Ihr ruft {acc}%s herbei!
+Ihr beschwört {acc}%s!
 %%%%
 %s summons %s!
-%s ruft {acc}%s herbei!
+%s beschwört {acc}%s!
 %%%%
 %s appears.
 %s erscheint.
@@ -15986,10 +15986,10 @@ You sense a hostile presence.
 Ihr spürt eine feindliche Wesenheit.
 %%%%
 You summon a servant imbued with your destructive magic!
-Ihr ruft einen Diener herbei, der von Eurer zerstörerischen Magie durchtränkt ist!
+Ihr beschwört einen Diener, der von Eurer zerstörerischen Magie durchtränkt ist!
 %%%%
 %s summons a servant imbued with destructive magic!
-%s ruft einen Diener herbei, der von zerstörerischer Magie durchtränkt ist!
+%s beschwört einen Diener, der von zerstörerischer Magie durchtränkt ist!
 %%%%
 %s appears!
 %s erscheint!
@@ -16001,10 +16001,10 @@ You imbue your battlesphere with additional charge.
 Ihr erfüllt Eure Kampfsphäre mit zusätzliche Energie.
 %%%%
 You conjure a globe of magical energy.
-Ihr beschwört eine Kugel magischer Energie.
+Ihr ruft eine Kugel magischer Energie hervor.
 %%%%
 %s conjures a globe of magical energy!
-%s beschwört eine Kugel magischer Energie.
+%s ruft eine Kugel magischer Energie hervor.
 %%%%
 Your battlesphere expends the last of its energy and dissipates.
 
@@ -18438,7 +18438,7 @@ Monster ist schon gerufen.
 [f] Zorn [h] Hilfe [m] Verschiedenes [s] Zauberspruch
 %%%%
 "Which summon type? "
-"Welcher Herbeirufungstyp? "
+"Welcher Beschwörungstyp? "
 %%%%
 "Cast which spell by name? "
 "Welchen Spruch zaubern (Name)? "

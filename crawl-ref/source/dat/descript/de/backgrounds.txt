@@ -98,8 +98,8 @@ mit dem Schmerzfluch.
 %%%%
 Summoner
 
-Herbeirufer können am Anfang kleine Säugetiere herbeirufen, und haben andere
-Herbeirufungen in ihrer Sammlung.
+Beschwörer können am Anfang kleine Säugetiere beschwören, und haben andere
+Beschwörungen in ihrer Sammlung.
 %%%%
 Transmuter
 

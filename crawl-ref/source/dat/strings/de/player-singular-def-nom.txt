@@ -263,10 +263,10 @@ the %s Hedge Wizard
 der %s Heckenzauberer
 %%%%
 the %s Conjurer
-der %s Beschwörer
+der %s Hervorrufer
 %%%%
 the %s Summoner
-der %s Herbeirufer
+der %s Beschwörer
 %%%%
 the %s Necromancer
 der %s Nekromant
