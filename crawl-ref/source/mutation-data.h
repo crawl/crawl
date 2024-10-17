@@ -248,7 +248,7 @@ static const mutation_def mut_data[] =
 { MUT_INHIBITED_REGENERATION, 3, 1, mutflag::bad, false,
   "inhibited regeneration",
 
-  {"You do not regenerate when monsters are visible.", "", ""},
+  {"You do not regenerate when monsters are nearby.", "", ""},
 
   {"Your regeneration stops near monsters.", "", ""},
 

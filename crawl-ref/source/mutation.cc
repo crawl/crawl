@@ -1091,7 +1091,7 @@ static vector<string> _get_fakemuts(bool terse)
         else
         {
             result.push_back(
-                _formmut("You do not regenerate when monsters are visible."));
+                _formmut("You do not regenerate when monsters are nearby."));
             result.push_back(
                 _formmut("You are frail without blood (-20% HP)."));
             result.push_back(

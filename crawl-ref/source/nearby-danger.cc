@@ -173,7 +173,8 @@ bool mons_is_safe(const monster* mon, const bool want_move,
 }
 
 static string _seen_monsters_announcement(const vector<monster*> &visible,
-                                          bool sensed_monster)
+                                          bool sensed_monster,
+                                          bool inhibited_reg = false)
 {
     // Announce the presence of monsters (Eidolos).
     if (visible.size() == 1)
@@ -185,6 +186,8 @@ static string _seen_monsters_announcement(const vector<monster*> &visible,
         return "There are monsters nearby!";
     if (sensed_monster)
         return "There is a strange disturbance nearby!";
+    if (inhibited_reg)
+        return "You feel the presence of a monster inhibiting your regeneration.";
     return "";
 }
 
@@ -341,17 +344,20 @@ bool can_rest_here(bool announce)
     // before iterating over each monster.
     vector<monster*> visible;
     bool sensed = false;
+    bool inhibited_reg = false;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (!regeneration_is_inhibited(*mi))
             continue;
+        inhibited_reg = true;
         if (mi->visible_to(&you))
             visible.push_back(*mi);
         else if (env.map_knowledge(mi->pos()).flags & MAP_INVISIBLE_MONSTER)
             sensed = true;
     }
 
-    const string announcement = _seen_monsters_announcement(visible, sensed);
+    const string announcement = _seen_monsters_announcement(visible, sensed,
+                                                            inhibited_reg);
     if (announcement.empty())
         return true;
 
