@@ -31,10 +31,10 @@ TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen 
 DESC:    Lesson 4: Magic and Spellcasting
 ORDER:   4
 ORIENT:  encompass
-KFEAT:   ABCDEF = .
+KFEAT:   ABCDEFG = .
 # TODO: pad g here was for spell hunger, what else could go here?
-COLOUR:  ABCDEFdef = lightblue
-FTILE:   ABCDEFdef = tutorial_pad
+COLOUR:  ABCDEFGdef = lightblue
+FTILE:   ABCDEFGdef = tutorial_pad
 ITEM:    randbook numspells:2 spells:magic_dart&mephitic_cloud title:Introductory_Spellcasting owner:player
 ITEM:    ring of magical power
 ITEM:    ring of wizardry
@@ -44,7 +44,8 @@ MONS:    bat skeleton, goblin skeleton
 MONS:    rat, goblin
 KMONS:   8 = training dummy hd:3 hp:7
 MARKER:  d = lua:tutorial4.msg("spellbook")
-MARKER:  B = lua:tutorial4.msg("spellcasting")
+MARKER:  G = lua:tutorial4.msg("spellcasting")
+MARKER:  B = lua:tutorial4.msg("spellquivering")
 MARKER:  e = lua:tutorial4.msg("ring_power")
 MARKER:  C = lua:tutorial4.msg("undead")
 MARKER:  f = lua:tutorial4.msg("spell_success")
@@ -68,7 +69,7 @@ xxxxxxxxxxxxx...xxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxx.d.........{.xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxx...xxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxGxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxx.xxxxxxxxxxxx...x.2.xxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxx.xxxxxxxxxxx.....xxx..f.xxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxBxxxxxxxxxxx.2..xxxxxxxx.....xxxxxxxxxx
