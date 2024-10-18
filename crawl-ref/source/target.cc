@@ -2252,7 +2252,7 @@ bool targeter_gavotte::valid_aim(coord_def a)
     if (!targeter_beam::valid_aim(a))
         return false;
 
-    if (!in_bounds(a) || grid_distance(a, you.pos()) > 1 || a == you.pos())
+    if (grid_distance(a, you.pos()) > 1 || a == you.pos())
         return false;
 
     if (a == agent->pos())
