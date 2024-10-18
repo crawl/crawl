@@ -2383,6 +2383,8 @@ item_def* monster_die(monster& mons, killer_type killer,
             // by recasting golem itself.
             mons.del_ench(ENCH_SUMMON_TIMER, true, false);
             mons.heal(50000);
+            mons.flags |= MF_PERSISTS;
+            mons.flags &= ~MF_ACTUAL_SUMMON;
 
             // Give exactly enough energy to act immediately after the player's
             // next action, but never blow up during the same action that the
