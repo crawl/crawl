@@ -489,12 +489,6 @@ static void _set_allies_withdraw(const coord_def &target)
     }
 }
 
-/// Does the player have a 'previous target' to issue targeting orders at?
-static bool _can_target_prev()
-{
-    return !(you.prev_targ == MHITNOT || you.prev_targ == MHITYOU);
-}
-
 /// Prompt the player to issue orders. Returns the key pressed.
 static int _issue_orders_prompt()
 {
@@ -508,15 +502,7 @@ static int _issue_orders_prompt()
 
     if (!you.berserk() && !you.confused())
     {
-        string previous;
-        if (_can_target_prev())
-        {
-            const monster* target = &env.mons[you.prev_targ];
-            if (target->alive() && you.can_see(*target))
-                previous = "   p - Attack previous target.";
-        }
-
-        mprf("Orders for allies: a - Attack new target.%s", previous.c_str());
+        mpr("Orders for allies: a - Attack new target.");
         mpr("                   r - Retreat!             s - Stop attacking.");
         mpr("                   g - Guard the area.      f - Follow me.");
     }
@@ -578,15 +564,6 @@ static bool _issue_order(int keyn, int &mons_targd)
             _set_allies_patrol_point();
             break;
 
-        case 'p':
-
-            if (_can_target_prev())
-            {
-                mons_targd = you.prev_targ;
-                break;
-            }
-
-            // fall through
         case 'a':
             if (env.sanctuary_time > 0)
             {
