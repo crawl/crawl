@@ -860,6 +860,16 @@ bool fill_status_info(int status, status_info& inf)
         break;
     }
 
+    case DUR_PARAGON_ACTIVE:
+    {
+        if (paragon_defense_bonus_active())
+        {
+            inf.light_colour = WHITE;
+            inf.light_text = "Protected";
+        }
+        break;
+    }
+
     default:
         if (!found)
         {

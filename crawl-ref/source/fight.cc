@@ -474,6 +474,9 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         if (you.duration[DUR_EXECUTION])
             you.duration[DUR_EXECUTION] += you.time_taken;
 
+        if (you.duration[DUR_PARAGON_ACTIVE])
+            paragon_attack_trigger();
+
         return true;
     }
 
@@ -563,6 +566,11 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
 
         fire_final_effects();
     }
+
+    // Here, rather than in melee_attack, so that it only triggers on attack
+    // actions, rather than additional times for bonus attacks (ie: from Autumn Katana)
+    if (attacker->as_monster()->type == MONS_PLATINUM_PARAGON)
+        paragon_charge_up(*attacker->as_monster());
 
     return true;
 }

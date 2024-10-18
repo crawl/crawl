@@ -39,6 +39,7 @@
 #include "religion.h"
 #include "skills.h"
 #include "spl-goditem.h" // dispellable_enchantments
+#include "spl-summoning.h"
 #include "state.h"
 #include "stringutil.h"
 #include "tag-version.h"
@@ -709,7 +710,8 @@ monster_info::monster_info(const monster* m, int milev)
     // familiar really is - which matters when you want to keep it alive.
     else if (m->type == MONS_PANDEMONIUM_LORD
              || m->type == MONS_INUGAMI
-             || m->type == MONS_ORC_APOSTLE)
+             || m->type == MONS_ORC_APOSTLE
+             || m->type == MONS_PLATINUM_PARAGON)
     {
         props[KNOWN_MAX_HP_KEY] = (int)(m->max_hit_points);
     }
@@ -843,6 +845,15 @@ monster_info::monster_info(const monster* m, int milev)
 
     if (m->type == MONS_ASPIRING_FLESH)
         props[PROTEAN_TARGET_KEY] = m->props[PROTEAN_TARGET_KEY];
+
+    if (m->type == MONS_PLATINUM_PARAGON)
+    {
+        const int level = paragon_charge_level(*m);
+        if (level == 2)
+            mb.set(MB_FULLY_CHARGED);
+        else if (level == 1)
+            mb.set(MB_PARTIALLY_CHARGED);
+    }
 
     // this must be last because it provides this structure to Lua code
     if (milev > MILEV_SKIP_SAFE)

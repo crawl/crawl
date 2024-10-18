@@ -23,7 +23,12 @@ constexpr int MAX_HOARFROST_SHOTS = 4;
 
 #define CLOCKWORK_BEE_TARGET "clockwork_bee_target"
 
+#define PARAGON_WEAPON_KEY "paragon_weapon"
+#define PARAGON_MID_KEY "paragon_mid"
+
 constexpr int BOULDER_ABRASION_DAMAGE = 5;
+constexpr int PARAGON_FINISHER_MID_CHARGE = 8;
+constexpr int PARAGON_FINISHER_MAX_CHARGE = 14;
 
 spret cast_summon_small_mammal(int pow, bool fail);
 
@@ -154,3 +159,10 @@ bool surprising_crocodile_can_drag(const actor& agent, const coord_def& target,
                                    bool actual);
 spret cast_surprising_crocodile(actor& agent, const coord_def& targ,
                                 int pow, bool fail);
+
+spret cast_platinum_paragon(const coord_def& target, int pow, bool fail);
+void paragon_attack_trigger();
+monster* find_player_paragon();
+int paragon_charge_level(const monster& paragon);
+void paragon_charge_up(monster& paragon);
+bool paragon_defense_bonus_active();

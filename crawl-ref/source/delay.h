@@ -759,6 +759,33 @@ private:
     spell_type spell;
 };
 
+class ImprintDelay : public Delay
+{
+    bool was_prompted = false;
+
+    void start() override;
+
+    void tick() override
+    {
+        mprf(MSGCH_MULTITURN_ACTION, "You continue imprinting.");
+    }
+
+    void finish() override;
+public:
+    ImprintDelay(int dur, const item_def& _weapon) : Delay(dur), wpn(_weapon)
+    { }
+
+    bool try_interrupt(bool force = false) override;
+
+    const char* name() const override
+    {
+        return "imprint_weapon";
+    }
+
+private:
+    item_def wpn;
+};
+
 
 void push_delay(shared_ptr<Delay> delay);
 

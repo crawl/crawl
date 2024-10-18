@@ -2259,6 +2259,12 @@ plant
 A plant that has adapted to grow in the unpleasant dungeon environment,
 somehow thriving even underground in the absence of the sun.
 %%%%
+platinum paragon
+
+A gleaming warrior, wrought from precious metals and the very pinacle of
+forgecraft techniques. Its every motion flows with a deadly, fluid grace that
+belies its artifical nature.
+%%%%
 player ghost
 
 The apparition of an unfortunate adventurer, retaining many of the skills and

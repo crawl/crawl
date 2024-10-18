@@ -4480,6 +4480,17 @@ static string _player_spell_desc(spell_type spell)
             description << " casts " << spell_title(player_servitor_spell());
         description << ".\n";
     }
+    else if (spell == SPELL_PLATINUM_PARAGON)
+    {
+        description << "Your paragon wields ";
+
+        if (you.props.exists(PARAGON_WEAPON_KEY))
+            description << you.props[PARAGON_WEAPON_KEY].get_item().name(DESC_A, true).c_str();
+        else
+            description << "your current weapon";
+
+        description << ".\n";
+    }
     else if (you.has_spell(SPELL_SPELLFORGED_SERVITOR) && spell_servitorable(spell))
     {
         if (failure_rate_to_int(raw_spell_fail(spell)) <= 20)

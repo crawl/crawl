@@ -101,6 +101,7 @@ class targeter_smite : public targeter
 public:
     targeter_smite(const actor *act, int range = LOS_RADIUS,
                     int exp_min = 0, int exp_max = 0, bool wall_ok = false,
+                    bool monster_okay = true,
                     bool (*affects_pos_func)(const coord_def &) = 0);
     virtual bool set_aim(coord_def a) override;
     virtual bool valid_aim(coord_def a) override;
@@ -114,6 +115,7 @@ protected:
     int range;
 private:
     bool affects_walls;
+    bool can_target_monsters;
     bool (*affects_pos)(const coord_def &);
 };
 

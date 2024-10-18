@@ -122,12 +122,15 @@ bool ranged_attack::attack()
     {
         if (ev_margin >= 0)
         {
-            if (!handle_phase_hit())
+            if (!paragon_defends_player())
             {
-                if (!defender->alive())
-                    handle_phase_killed();
-                handle_phase_end();
-                return false;
+                if (!handle_phase_hit())
+                {
+                    if (!defender->alive())
+                        handle_phase_killed();
+                    handle_phase_end();
+                    return false;
+                }
             }
         }
         else

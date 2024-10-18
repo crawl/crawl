@@ -18,9 +18,7 @@ enum ability_type
     ABIL_CAUSTIC_BREATH,
     // Others
     ABIL_IMBUE_SERVITOR,
-#if TAG_MAJOR_VERSION == 34
-    ABIL_DELAYED_FIREBALL,
-#endif
+    ABIL_IMPRINT_WEAPON,
     // Abort duration-based spells
     ABIL_END_TRANSFORMATION,
 #if TAG_MAJOR_VERSION == 34

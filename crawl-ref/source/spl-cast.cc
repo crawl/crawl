@@ -1225,7 +1225,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_VIOLENT_UNRAVELLING:
         return make_unique<targeter_unravelling>();
     case SPELL_INFESTATION:
-        return make_unique<targeter_smite>(&you, range, 2, 2, false,
+        return make_unique<targeter_smite>(&you, range, 2, 2, false, true,
                                            [](const coord_def& p) -> bool {
                                               return you.pos() != p; });
     case SPELL_PASSWALL:
@@ -1359,6 +1359,16 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     }
     case SPELL_SURPRISING_CROCODILE:
         return make_unique<targeter_surprising_crocodile>(&you);
+    case SPELL_PLATINUM_PARAGON:
+    {
+        const monster* paragon = find_player_paragon();
+        if (!paragon)
+            return make_unique<targeter_smite>(&you, range, 1, 1, false, false);
+        else if (paragon_charge_level(*paragon) == 2)
+            return make_unique<targeter_smite>(paragon, 3, 3, 3, false, false);
+        else
+            return make_unique<targeter_smite>(paragon, 3, 2, 2, false, false);
+    }
     case SPELL_FOXFIRE:
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 1, 0, 1);
     // TODO: these two actually have pretty wtf positioning that uses compass
@@ -2463,6 +2473,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_SURPRISING_CROCODILE:
         return cast_surprising_crocodile(you, beam.target, powc, fail);
+
+    case SPELL_PLATINUM_PARAGON:
+        return cast_platinum_paragon(beam.target, powc, fail);
 
     // Enchantments.
     case SPELL_CONFUSING_TOUCH:

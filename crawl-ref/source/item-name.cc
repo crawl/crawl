@@ -1477,10 +1477,11 @@ static string _name_weapon(const item_def &weap, description_level_type desc,
     const string curse_prefix = !dbname && !terse && weap.cursed() ? "cursed " : "";
     const string plus_text = know_pluses ? _plus_prefix(weap) : "";
     const string chaotic = testbits(weap.flags, ISFLAG_CHAOTIC) ? "chaotic " : "";
+    const string replica = testbits(weap.flags, ISFLAG_REPLICA) ? "replica " : "";
 
     if (is_artefact(weap) && !dbname)
     {
-        const string long_name = curse_prefix + chaotic + plus_text
+        const string long_name = curse_prefix + chaotic + plus_text + replica
                                  + get_artefact_name(weap, ident);
 
         // crop long artefact names when not controlled by webtiles -
@@ -1517,7 +1518,8 @@ static string _name_weapon(const item_def &weap, description_level_type desc,
         }
 
         const string short_name
-            = curse_prefix + plus_text + get_artefact_base_name(weap, true);
+            = curse_prefix + chaotic + plus_text + replica
+              + get_artefact_base_name(weap, true);
         return short_name;
     }
 

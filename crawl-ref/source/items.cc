@@ -4653,7 +4653,8 @@ item_def get_item_known_info(const item_def& item)
     ii.flags = item.flags & (0
             | ISFLAG_IDENT_MASK
             | ISFLAG_ARTEFACT_MASK | ISFLAG_DROPPED | ISFLAG_THROWN
-            | ISFLAG_COSMETIC_MASK | ISFLAG_CURSED | ISFLAG_CHAOTIC);
+            | ISFLAG_COSMETIC_MASK | ISFLAG_CURSED | ISFLAG_CHAOTIC
+            | ISFLAG_REPLICA);
 
     if (in_inventory(item))
     {

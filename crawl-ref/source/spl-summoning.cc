@@ -47,6 +47,7 @@
 #include "mon-book.h" // MON_SPELL_WIZARD
 #include "mon-cast.h"
 #include "mon-death.h"
+#include "mon-gear.h"
 #include "mon-movetarget.h"
 #include "mon-place.h"
 #include "mon-speak.h"
@@ -67,6 +68,7 @@
 #include "terrain.h"
 #include "tilepick.h"
 #include "timed-effects.h"
+#include "throw.h"
 #include "unwind.h"
 #include "viewchar.h"
 #include "xom.h"
@@ -174,7 +176,7 @@ spret cast_call_canine_familiar(int pow, bool fail)
         // create_monster call above.
         ASSERT(dog->ghost);
         dog->ghost->init_inugami_from_player(pow);
-        dog->inugami_init();
+        dog->ghost_demon_init();
 
         mpr("You call for your canine familiar and it appears with a howl!");
         you.props[CANINE_FAMILIAR_MID].get_int() = dog->mid;
@@ -2177,6 +2179,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SIMULACRUM,               { 5, 5 } },
     { SPELL_HELLFIRE_MORTAR,          { 1, 1 } },
     { SPELL_SURPRISING_CROCODILE,     { 1, 1 } },
+    { SPELL_PLATINUM_PARAGON,         { 1, 1 } },
     // Monster-only spells
     { SPELL_SHADOW_CREATURES,         { 0, 4 } },
     { SPELL_SUMMON_SPIDERS,           { 0, 5 } },
@@ -3620,4 +3623,229 @@ spret cast_surprising_crocodile(actor& agent, const coord_def& targ, int pow, bo
     }
 
     return spret::success;
+}
+
+static void _paragon_tempest(const coord_def& target)
+{
+    monster* paragon = find_player_paragon();
+    const int level = paragon_charge_level(*paragon);
+
+    const int radius = level == 2 ? 3 : 2;
+    const int mult = level == 2 ? 200 : 125;
+
+    // Make the paragon leap to its new position if the player told it to move.
+    if (target != paragon->pos())
+    {
+        const coord_def old_pos = paragon->pos();
+
+        bolt visual;
+        visual.flavour = BEAM_VISUAL;
+        visual.colour = WHITE;
+        visual.source = old_pos;
+        visual.target = target;
+        visual.range = LOS_RADIUS;
+        visual.aimed_at_spot = true;
+        visual.fire();
+
+        paragon->move_to_pos(target, true, true);
+        paragon->check_redraw(old_pos);
+    }
+
+    vector<monster*> targs;
+    for (radius_iterator ri(paragon->pos(), radius, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
+    {
+        if (!you.see_cell_no_trans(*ri))
+            continue;
+
+        if (monster* mon = monster_at(*ri))
+        {
+            if (!mon->wont_attack())
+                targs.push_back(mon);
+        }
+    }
+
+    shuffle_array(targs);
+    for (monster* mon : targs)
+    {
+        flash_tile(mon->pos(), WHITE, 20);
+        view_clear_overlays();
+    }
+
+    mprf("Your paragon expends all of its energy in an overwhelming flurry of blows!");
+    for (monster* mon : targs)
+    {
+        melee_attack atk(paragon, mon);
+        atk.dmg_mult = mult;
+        // The flavor is that the paragon is actually dashing around, but let's
+        // not worry about the details.
+        atk.is_projected = true;
+        atk.attack();
+    }
+
+    monster_die(*paragon, KILL_NON_ACTOR, NON_MONSTER);
+}
+
+
+spret cast_platinum_paragon(const coord_def& target, int pow, bool fail)
+{
+    fail_check();
+
+    monster* old_paragon = find_player_paragon();
+    if (old_paragon)
+    {
+        _paragon_tempest(target);
+        return spret::success;
+    }
+
+    const int dur = summ_dur(4);
+    mgen_data mg = _pal_data(MONS_PLATINUM_PARAGON, dur,
+                             SPELL_PLATINUM_PARAGON, false);
+    mg.set_range(0).pos = target;
+
+    // If there's an invisible monster at the target, kindly toss it out of the
+    // way. This is too high-level a spell to fail for such reasons.
+    if (monster* blocker = monster_at(target))
+    {
+        coord_def spot;
+        if (random_near_space(blocker, blocker->pos(), spot, true)
+            && env.grid(spot) != DNGN_TRAP_DISPERSAL)
+        {
+            blocker->blink_to(spot, true);
+        }
+        else
+            monster_teleport(blocker, true);
+
+        // If we somehow cannot move them, just crush them. (This will probably
+        // never happen, but it's better not to have even theoretical problems.)
+        if (blocker->pos() == target)
+            monster_die(*blocker, KILL_NON_ACTOR, NON_MONSTER);
+    }
+
+    monster* paragon = create_monster(mg);
+
+    if (!paragon)
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return spret::success;
+    }
+
+    mpr("You craft a gleaming metal champion and it leaps into the fray!");
+    you.duration[DUR_PARAGON_ACTIVE] = dur;
+
+    // Use the caster's weapon, if none is imprinted.
+    item_def wpn;
+
+    if (you.props.exists(PARAGON_WEAPON_KEY))
+        wpn = you.props[PARAGON_WEAPON_KEY].get_item();
+    else if (you.weapon())
+        wpn = item_def(*you.weapon());
+    // We've never imprinted anything *and* we're unarmed. Just give them a mace.
+    else
+    {
+        wpn.base_type = OBJ_WEAPONS;
+        wpn.sub_type = WPN_GREAT_MACE;
+        wpn.quantity = 1;
+    }
+
+    wpn.flags |= (ISFLAG_SUMMONED | ISFLAG_REPLICA);
+
+    give_specific_item(paragon, wpn);
+    paragon->ghost->init_platinum_paragon(pow, wpn);
+    paragon->ghost_demon_init();
+
+    // Do the landing shockwave.
+    bolt shockwave;
+    shockwave.source_id = paragon->mid;
+    shockwave.source = target;
+    shockwave.target = target;
+    shockwave.is_explosion = true;
+    shockwave.ex_size = 1;
+    zappy(ZAP_PARAGON_IMPACT, pow, true, shockwave);
+    shockwave.explode(true, true);
+
+    return spret::success;
+}
+
+monster* find_player_paragon()
+{
+    if (!you.duration[DUR_PARAGON_ACTIVE])
+        return nullptr;
+
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->type == MONS_PLATINUM_PARAGON && mi->was_created_by(you, SPELL_PLATINUM_PARAGON))
+            return *mi;
+    }
+
+    return nullptr;
+}
+
+void paragon_attack_trigger()
+{
+    monster* paragon = find_player_paragon();
+    if (!paragon || !you.can_see(*paragon))
+        return;
+
+    int reach = paragon->reach_range();
+
+    int num_found = 0;
+    monster* targ = nullptr;
+    for (radius_iterator ri(paragon->pos(), reach, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
+    {
+        monster* mon = monster_at(*ri);
+
+        if (!mon || mon->wont_attack() || mons_is_firewood(*mon) || !you.see_cell_no_trans(*ri))
+            continue;
+
+        if (one_chance_in(++num_found))
+            targ = mon;
+    }
+
+    if (!targ)
+        return;
+
+    mpr("Your paragon attacks with you!");
+    fight_melee(paragon, targ);
+    paragon->speed_increment += paragon->action_energy(EUT_ATTACK);
+}
+
+int paragon_charge_level(const monster& paragon)
+{
+    if (paragon.type != MONS_PLATINUM_PARAGON)
+        return 0;
+
+    if (paragon.number >= 13)
+        return 2;
+    else if (paragon.number >= 7)
+        return 1;
+
+    return 0;
+}
+
+void paragon_charge_up(monster& paragon)
+{
+    const int old_charge = paragon_charge_level(paragon);
+    ++paragon.number;
+
+    // A little fuzzing
+    if (one_chance_in(5))
+        ++paragon.number;
+
+    const int new_charge = paragon_charge_level(paragon);
+
+    if (new_charge > old_charge)
+    {
+        if (new_charge == 2)
+            mprf(MSGCH_DURATION, "Your paragon has reached its maximum power!");
+        else if (new_charge == 1)
+            mprf(MSGCH_DURATION, "Your paragon is now ready to unleash a masterful attack.");
+    }
+}
+
+bool paragon_defense_bonus_active()
+{
+    const monster* paragon = find_player_paragon();
+
+    return paragon && grid_distance(you.pos(), paragon->pos()) <=2
+           && you.can_see(*paragon);
 }

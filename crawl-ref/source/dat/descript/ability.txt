@@ -156,6 +156,12 @@ no more than 20%.
 Note: imbuing a spell in this manner will take several turns and also dismiss
 your servitor if it is active.
 %%%%
+Imprint Weapon ability
+
+Analyzes the structural composition of a melee weapon in your inventory and
+imprints it upon your Platinum Paragon spell, allowing it to wield a functional
+replica of it whenever you create one.
+%%%%
 # Zin
 Recite ability
 

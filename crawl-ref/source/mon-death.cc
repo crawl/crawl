@@ -2792,6 +2792,8 @@ item_def* monster_die(monster& mons, killer_type killer,
                 msg = " runs out of power.";
             else if (mons.type == MONS_CLOCKWORK_BEE_INACTIVE)
                 msg = " falls apart.";
+            else if (mons.type == MONS_PLATINUM_PARAGON)
+                msg = " expends the last of its power.";
             else
             {
                 if (mons.props.exists(KIKU_WRETCH_KEY))
@@ -3255,6 +3257,9 @@ void monster_cleanup(monster* mons)
     {
         invalidate_agrid();
     }
+
+    if (mons->type == MONS_PLATINUM_PARAGON)
+        you.duration[DUR_PARAGON_ACTIVE] = 0;
 
     // May have been constricting something. No message because that depends
     // on the order in which things are cleaned up: If the constrictee is

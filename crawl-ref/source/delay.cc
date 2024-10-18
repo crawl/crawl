@@ -356,6 +356,12 @@ bool ImbueDelay::try_interrupt(bool force)
     return false;
 }
 
+bool ImprintDelay::try_interrupt(bool /*force*/)
+{
+    mpr("Your concentration is interrupted.");
+    return true;
+}
+
 void stop_delay(bool stop_relocations, bool force)
 {
     if (you.delay_queue.empty())
@@ -516,6 +522,12 @@ void ImbueDelay::start()
     mprf(MSGCH_MULTITURN_ACTION, "You begin to imbue your servitor with "
          "knowledge of %s.",
          spell_title(spell));
+}
+
+void ImprintDelay::start()
+{
+    mprf(MSGCH_MULTITURN_ACTION, "You begin to imprint %s upon your paragon.",
+         wpn.name(DESC_THE).c_str());
 }
 
 void TransformDelay::start()
@@ -980,6 +992,13 @@ void ImbueDelay::finish()
 {
     mpr("You finish imbuing your servitor.");
     you.props[SERVITOR_SPELL_KEY] = spell;
+}
+
+void ImprintDelay::finish()
+{
+    mprf("You finish imprinting the physical structure of %s upon your paragon.",
+            wpn.name(DESC_THE).c_str());
+    you.props[PARAGON_WEAPON_KEY].get_item() = wpn;
 }
 
 bool TransformDelay::invalidated()

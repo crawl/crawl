@@ -1319,6 +1319,22 @@ Fires a penetrating beam of plasma at one of the caster's most distant foes.
 The ionised beam bypasses half of defenders' armour, and a second beam of fire
 follows in its wake.
 %%%%
+Platinum Paragon spell
+
+Constructs a gleaming metal champion whose prowess rivals that of the greatest
+living warriors. It is resistant to all forms of magic and wields a perfect
+replica of any melee weapon the caster chooses.
+
+It creates a damaging shockwave around itself when first deployed and slowly
+gains charge as it attacks enemies. When it has gained sufficient charge, the
+spell may be recast to overload the paragon, unleashing a flurry of attacks
+in a wide area which inflict increased damage, but destroying the paragon in the
+process.
+
+Due to the magical link it maintains with its creator, it will perform an
+extra attack whenever they do, and will sometimes even parry attacks directed at
+them, if they are close enough together.
+%%%%
 Poison Arrow spell
 
 Fires a magical arrow coated with the most vile and noxious toxin. Even those

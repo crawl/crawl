@@ -3120,20 +3120,13 @@ void define_monster(monster& mons, bool friendly)
     // before placement without crashing (proper setup is done later here)
     case MONS_DANCING_WEAPON:
     case MONS_SPECTRAL_WEAPON:
+    case MONS_INUGAMI:
+    case MONS_PLATINUM_PARAGON:
     {
         ghost_demon ghost;
+        ghost.barebones_init();
         mons.set_ghost(ghost);
         break;
-    }
-
-    case MONS_INUGAMI:
-    {
-        ghost_demon ghost;
-        mons.set_ghost(ghost);
-        mons.inugami_init();
-        // this does not finish setting up the inugami! See
-        // `cast_call_canine_familiar` for where the ghost_demon details are
-        // finalized.
     }
 
     default:

@@ -319,6 +319,7 @@ enum monster_type                      // env.mons[].type
     MONS_SPELLFORGED_SERVITOR,
     MONS_USHABTI,
     MONS_NARGUN,
+    MONS_PLATINUM_PARAGON,
 #endif
     MONS_ORB_OF_FIRE,    // Swords renamed to fit -- bwr
 #if TAG_MAJOR_VERSION > 34
@@ -1282,6 +1283,7 @@ enum monster_type                      // env.mons[].type
     MONS_CLOCKWORK_BEE,
     MONS_CLOCKWORK_BEE_INACTIVE,
     MONS_DIAMOND_SAWBLADE,
+    MONS_PLATINUM_PARAGON,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

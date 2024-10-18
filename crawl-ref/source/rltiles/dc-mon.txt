@@ -564,6 +564,7 @@ ushabti MONS_USHABTI
 peacekeeper MONS_PEACEKEEPER
 saltling MONS_SALTLING
 animated_armour MONS_ANIMATED_ARMOUR
+platinum_paragon MONS_PLATINUM_PARAGON
 %rim 1
 toenail_golem MONS_TOENAIL_GOLEM
 # For the Cigotuvi WizLab

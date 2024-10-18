@@ -395,6 +395,8 @@ static vector<ability_def> &_get_ability_list()
 #endif
         { ABIL_IMBUE_SERVITOR, "Imbue Servitor",
             0, 0, 0, -1, {}, abflag::delay },
+        { ABIL_IMPRINT_WEAPON, "Imprint Weapon",
+            0, 0, 0, -1, {}, abflag::delay },
         { ABIL_END_TRANSFORMATION, "End Transformation",
             0, 0, 0, -1, {}, abflag::none },
         { ABIL_BEGIN_UNTRANSFORM, "Begin Untransformation",
@@ -3239,6 +3241,43 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     case ABIL_IMBUE_SERVITOR:
         return imbue_servitor();
 
+    case ABIL_IMPRINT_WEAPON:
+        {
+            item_def *wpn = nullptr;
+            auto success = use_an_item_menu(wpn, OPER_ANY, OSEL_MELEE_WEAPON,
+                                "Select a weapon to imprint upon your Paragon.",
+                                [=](){return true;});
+
+            if (success == OPER_NONE)
+                return spret::abort;
+
+            static const vector<int> forbidden_unrands =
+            {
+                UNRAND_POWER,
+                UNRAND_ARC_BLADE,
+            };
+
+            // Currently excluding the same weapons that Manifold Assault does
+            // (because they work weirdly for projected attacks), though a
+            // larger number than that are *unsafe*. Is it okay if the player
+            // knowingly imprints something dangerous-but-fun? Maybe?
+            for (int urand : forbidden_unrands)
+            {
+                if (is_unrandom_artefact(*wpn, urand))
+                {
+                    mprf(MSGCH_WARN, "That weapon cannot be imprinted.");
+                    return spret::abort;
+                }
+            }
+
+            if (monster* paragon = find_player_paragon())
+                paragon->del_ench(ENCH_SUMMON_TIMER);
+
+            item_def replica = item_def(*wpn);
+            start_delay<ImprintDelay>(5, replica);
+        }
+        break;
+
     case ABIL_COMBUSTION_BREATH:
     case ABIL_GLACIAL_BREATH:
     case ABIL_NULLIFYING_BREATH:
@@ -4265,6 +4304,8 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         && !you.props.exists(INVENT_GIZMO_USED_KEY);
     case ABIL_IMBUE_SERVITOR:
         return you.has_spell(SPELL_SPELLFORGED_SERVITOR);
+    case ABIL_IMPRINT_WEAPON:
+        return you.has_spell(SPELL_PLATINUM_PARAGON);
     // mutations
     case ABIL_DAMNATION:
         return you.get_mutation_level(MUT_HURL_DAMNATION);
@@ -4344,6 +4385,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_BLINKBOLT,
             ABIL_SIPHON_ESSENCE,
             ABIL_IMBUE_SERVITOR,
+            ABIL_IMPRINT_WEAPON,
             ABIL_END_TRANSFORMATION,
             ABIL_BEGIN_UNTRANSFORM,
             ABIL_RENOUNCE_RELIGION,
@@ -4562,6 +4604,10 @@ int find_ability_slot(const ability_type abil, char firstletter)
 
     case ABIL_BEOGH_RECRUIT_APOSTLE:
         first_slot = letter_to_index('r');
+        break;
+
+    case ABIL_IMPRINT_WEAPON:
+        first_slot = letter_to_index('w');
         break;
 
 #ifdef WIZARD

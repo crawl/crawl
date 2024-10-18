@@ -1045,8 +1045,15 @@ bool monster::unequip(item_def &item, bool msg, bool force)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        if (!force && mons_class_is_animated_object(type))
+        // In specific circumstances, it is possible for a launcher-wielding
+        // paragon to put their launcher away to punch something instead (which
+        // causes problems with its abilities). So try to prevent them from
+        // doing this.
+        if (!force && mons_class_is_animated_object(type)
+            && type != MONS_PLATINUM_PARAGON)
+        {
             return false;
+        }
         unequip_weapon(item, msg);
         break;
 
@@ -4556,19 +4563,10 @@ void monster::uglything_init(bool only_mutate)
     colour          = ghost->colour;
 }
 
-void monster::inugami_init()
-{
-    hit_dice            = ghost->xl;
-    // these `max`es let an incomplete inugami be valid long enough to get
-    // fully set up
-    max_hit_points      = max(static_cast<int>(ghost->max_hp), 1);
-    hit_points          = max(max_hit_points, 1);
-}
-
 void monster::ghost_demon_init()
 {
-    hit_dice        = ghost->xl;
-    max_hit_points  = min<short int>(ghost->max_hp, MAX_MONSTER_HP);
+    hit_dice        = max<short int>(ghost->xl, 1);
+    max_hit_points  = max<short int>(1, min<short int>(ghost->max_hp, MAX_MONSTER_HP));
     hit_points      = max_hit_points;
     speed           = ghost->speed;
     speed_increment = 70;

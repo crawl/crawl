@@ -40,6 +40,7 @@
 #include "skills.h"
 #include "spl-damage.h"
 #include "spl-selfench.h"
+#include "spl-summoning.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stepdown.h"
@@ -1660,4 +1661,17 @@ void attack::maybe_trigger_autodazzler()
             proj.fire();
         }
     }
+}
+
+bool attack::paragon_defends_player()
+{
+    if (defender->is_player() && paragon_defense_bonus_active()
+        && one_chance_in(3))
+    {
+        mprf("Your paragon deflects %s attack away from you.",
+                    attacker->name(DESC_ITS).c_str());
+        return true;
+    }
+
+    return false;
 }

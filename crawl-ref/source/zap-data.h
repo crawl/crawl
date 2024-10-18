@@ -2418,4 +2418,20 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     false,
 },
 
+{
+    ZAP_PARAGON_IMPACT,
+    "shockwave",
+    200,
+    nullptr,
+    nullptr,
+    new dicedef_calculator<4, 10, 1, 10>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    WHITE,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+},
+
 };

@@ -166,5 +166,6 @@ enum zap_type
     ZAP_SPIKE_LAUNCHER,
     ZAP_KINETIC_GRAPNEL,
     ZAP_SHRED,
+    ZAP_PARAGON_IMPACT,
     NUM_ZAPS
 };

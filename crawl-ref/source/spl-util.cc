@@ -354,7 +354,14 @@ bool add_spell_to_memory(spell_type spell)
     {
         mprf(MSGCH_TUTORIAL,
              "(You may use Imbue Servitor from the <w>%s</w>bility menu to change "
-             "which spell your servitor casts)",
+             "which spell your servitor casts.)",
+                command_to_string(CMD_USE_ABILITY).c_str());
+    }
+    else if (spell == SPELL_PLATINUM_PARAGON)
+    {
+        mprf(MSGCH_TUTORIAL,
+             "(You may use Imprint Weapon from the <w>%s</w>bility menu to change "
+             "which weapon your Paragon wields.)",
                 command_to_string(CMD_USE_ABILITY).c_str());
     }
     // Give a free charge upon learning this spell for the first time, so the
@@ -1540,6 +1547,15 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         }
         break;
 
+    case SPELL_PLATINUM_PARAGON:
+        if (temp)
+        {
+            monster* paragon = find_player_paragon();
+            if (paragon && paragon_charge_level(*paragon) == 0)
+                return "your paragon is already deployed, but not yet charged.";
+        }
+        break;
+
     default:
         break;
     }
@@ -1601,6 +1617,7 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_NOXIOUS_BOG:
     case SPELL_BOULDER:
     case SPELL_GELLS_GAVOTTE:
+    case SPELL_PLATINUM_PARAGON:
     // This can always potentially hit out-of-LOS, although this is conditional
     // on spell-power.
     case SPELL_FIRE_STORM:

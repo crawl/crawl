@@ -1356,16 +1356,19 @@ bool melee_attack::attack()
 
         if (ev_margin >= 0)
         {
-            bool cont = handle_phase_hit();
-
-            if (cont)
-                attacker_sustain_passive_damage();
-            else
+            if (!paragon_defends_player())
             {
-                if (!defender->alive())
-                    handle_phase_killed();
-                handle_phase_end();
-                return false;
+                bool cont = handle_phase_hit();
+
+                if (cont)
+                    attacker_sustain_passive_damage();
+                else
+                {
+                    if (!defender->alive())
+                        handle_phase_killed();
+                    handle_phase_end();
+                    return false;
+                }
             }
         }
         else

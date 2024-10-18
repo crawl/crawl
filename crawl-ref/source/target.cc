@@ -392,9 +392,11 @@ aff_type targeter_view::is_affected(coord_def loc)
 
 targeter_smite::targeter_smite(const actor* act, int ran,
                                  int exp_min, int exp_max, bool wall_ok,
+                                 bool monster_ok,
                                  bool (*affects_pos_func)(const coord_def &)):
     exp_range_min(exp_min), exp_range_max(exp_max), range(ran),
-    affects_walls(wall_ok), affects_pos(affects_pos_func)
+    affects_walls(wall_ok), can_target_monsters(monster_ok),
+    affects_pos(affects_pos_func)
 {
     ASSERT(act);
     ASSERT(exp_min >= 0);
@@ -417,6 +419,12 @@ bool targeter_smite::valid_aim(coord_def a)
         return notify_fail("Out of range.");
     if (!affects_walls && cell_is_solid(a))
         return notify_fail(_wallmsg(a));
+    if (!can_target_monsters && monster_at(a) && you.can_see(*monster_at(a))
+        // XXX: To let Paragon Tempest be cast without moving the Paragon.
+        && monster_at(a) != agent)
+    {
+        return notify_fail("There's something in the way.");
+    }
     return true;
 }
 
@@ -482,7 +490,7 @@ aff_type targeter_smite::is_affected(coord_def loc)
 }
 
 targeter_walljump::targeter_walljump() :
-    targeter_smite(&you, LOS_RADIUS, 1, 1, false, nullptr)
+    targeter_smite(&you, LOS_RADIUS, 1, 1)
 {
 }
 
@@ -510,7 +518,7 @@ aff_type targeter_walljump::is_affected(coord_def loc)
 }
 
 targeter_passwall::targeter_passwall(int max_range) :
-    targeter_smite(&you, max_range, 1, 1, true, nullptr)
+    targeter_smite(&you, max_range, 1, 1, true)
 {
 }
 
@@ -643,7 +651,7 @@ aff_type targeter_dig::is_affected(coord_def loc)
 }
 
 targeter_transference::targeter_transference(const actor* act, int aoe) :
-    targeter_smite(act, LOS_RADIUS, aoe, aoe, false, nullptr)
+    targeter_smite(act, LOS_RADIUS, aoe, aoe)
 {
 }
 
@@ -695,7 +703,7 @@ aff_type targeter_permafrost::is_affected(coord_def loc)
 }
 
 targeter_inner_flame::targeter_inner_flame(const actor* act, int r) :
-    targeter_smite(act, r, 0, 0, false, nullptr)
+    targeter_smite(act, r, 0, 0, false)
 {
 }
 
@@ -711,7 +719,7 @@ bool targeter_inner_flame::valid_aim(coord_def a)
 }
 
 targeter_simulacrum::targeter_simulacrum(const actor* act, int r) :
-    targeter_smite(act, r, 0, 0, false, nullptr)
+    targeter_smite(act, r, 0, 0)
 {
 }
 
@@ -727,7 +735,7 @@ bool targeter_simulacrum::valid_aim(coord_def a)
 }
 
 targeter_unravelling::targeter_unravelling()
-    : targeter_smite(&you, LOS_RADIUS, 1, 1, false, nullptr)
+    : targeter_smite(&you, LOS_RADIUS, 1, 1)
 {
 }
 
@@ -867,7 +875,7 @@ aff_type targeter_passage::is_affected(coord_def loc)
 }
 
 targeter_fragment::targeter_fragment(const actor* act, int power, int ran) :
-    targeter_smite(act, ran, 1, 1, true, nullptr),
+    targeter_smite(act, ran, 1, 1, true),
     pow(power)
 {
 }
@@ -2076,7 +2084,7 @@ aff_type targeter_petrify::is_affected(coord_def loc)
 }
 
 targeter_bind_soul::targeter_bind_soul() :
-    targeter_smite(&you, LOS_MAX_RANGE, 0, 0, false, nullptr)
+    targeter_smite(&you, LOS_MAX_RANGE)
 {
 }
 
@@ -2275,7 +2283,7 @@ aff_type targeter_gavotte::is_affected(coord_def loc)
 }
 
 targeter_magnavolt::targeter_magnavolt(const actor* act, int _range) :
-    targeter_smite(act, _range, 0, 0, false, nullptr)
+    targeter_smite(act, _range)
 {
 }
 
@@ -2410,7 +2418,7 @@ aff_type targeter_slouch::is_affected(coord_def loc)
 }
 
 targeter_marionette::targeter_marionette() :
-    targeter_smite(&you, LOS_RADIUS, 0, 0, false, nullptr)
+    targeter_smite(&you, LOS_RADIUS)
 {
 }
 
@@ -2439,7 +2447,7 @@ bool targeter_marionette::valid_aim(coord_def a)
 }
 
 targeter_putrefaction::targeter_putrefaction(int r) :
-    targeter_smite(&you, r, 0, 0, false, nullptr)
+    targeter_smite(&you, r)
 {
 }
 
@@ -2497,7 +2505,7 @@ bool targeter_soul_splinter::affects_monster(const monster_info& mon)
 }
 
 targeter_surprising_crocodile::targeter_surprising_crocodile(const actor* caster)
-    : targeter_smite(caster, 1, 0, 0, false, nullptr)
+    : targeter_smite(caster, 1)
 {
 }
 

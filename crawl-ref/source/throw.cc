@@ -42,6 +42,7 @@
 #include "showsymb.h"
 #include "skills.h"
 #include "sound.h"
+#include "spl-summoning.h"
 #include "state.h"
 #include "stringutil.h"
 #include "tag-version.h"
@@ -740,6 +741,9 @@ void throw_it(quiver::action &a)
     {
         dithmenos_shadow_shoot(a.target, item);
     }
+
+    if (aimed_at_foe && launcher && you.duration[DUR_PARAGON_ACTIVE])
+        paragon_attack_trigger();
 }
 
 // Once the player has committed to a target, shoot/throw/toss at it.

@@ -4184,6 +4184,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_PLATINUM_PARAGON, "Platinum Paragon",
+    spschool::forgecraft,
+    spflag::target | spflag::not_self,
+    9,
+    200,
+    3, 3,
+    10,
+    TILEG_ERROR,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,
