@@ -1357,6 +1357,9 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_IGNITION:
         return make_unique<targeter_multifireball>(&you,
                    get_ignition_blast_sources(&you, true));
+    case SPELL_UNGOLDIFY:
+        return make_unique<targeter_widebeam>(&you, range,
+                                              ungoldify_beam_width(range));
 
     // Summons. Most summons have a simple range 2 radius, see
     // find_newmons_square
@@ -2281,7 +2284,9 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
 
         if (you.props.exists(BATTLESPHERE_KEY)
             && (actual_spell || you.divine_exegesis)
-            && battlesphere_can_mirror(spell))
+            && battlesphere_can_mirror(spell)
+            // Should not trigger on the *initial* cast, only on actual fires
+            && spell != SPELL_UNGOLDIFY)
         {
             trigger_battlesphere(&you);
         }
@@ -2706,6 +2711,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_PILEDRIVER:
         return cast_piledriver(beam.target, powc, fail);
+
+    case SPELL_UNGOLDIFY:
+        return cast_ungoldify(powc, fail);
 
     // Just to do extra messaging; spell is handled by default zapping
     case SPELL_COMBUSTION_BREATH:
@@ -3135,6 +3143,8 @@ string spell_damage_string(spell_type spell, bool evoked, int pow, bool terse)
             else
                 return make_stringf("%dd%d", dmg.num, dmg.size);
         }
+        case SPELL_UNGOLDIFY:
+            return describe_ungoldify_damage(pow, terse);
         default:
             break;
     }
@@ -3154,6 +3164,7 @@ string spell_damage_string(spell_type spell, bool evoked, int pow, bool terse)
             break;
         case SPELL_TREMORSTONE:
             mult = make_stringf("%dx", tremorstone_count(pow));
+            break;
         default:
             break;
     }
@@ -3393,6 +3404,12 @@ void handle_channelled_spell()
         case SPELL_CLOCKWORK_BEE:
             handle_clockwork_bee_spell(turn);
             return;
+
+        case SPELL_UNGOLDIFY:
+            // Not a "wait" channelled spell, triggers on movement instead
+            // If we moved, it was already triggered; just check if should end
+            // due to other actions being taken
+            handle_ungoldify_turn(turn);
 
         default:
             mprf(MSGCH_WARN, "Attempting to channel buggy spell: %s", spell_title(spell));

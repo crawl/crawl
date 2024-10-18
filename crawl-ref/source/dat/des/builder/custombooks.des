@@ -93,8 +93,8 @@ local books = {
   .. "volatile_blastmotes&arcjolt&plasma_beam",
 "Modern_Magic,_Vol._31a numspells:5 spells:jinxbite&sigil_of_binding&"
   .. "fugue_of_the_fallen&brom's_barrelling_boulder&martyr's_knell",
-"Modern_Magic,_Vol._31b numspells:4 spells:forge_blazeheart_golem&"
-  .. "curse_of_agony&bombard&sculpt_simulacrum",
+"Modern_Magic,_Vol._31b numspells:5 spells:forge_blazeheart_golem&"
+  .. "curse_of_agony&bombard&sculpt_simulacrum&alistair's_pocket_shrapnel",
 "Modern_Magic,_Vol._32a numspells:6 spells:soul_splinter&grave_claw&"
   .. "maxwell's_portable_piledriver&cigotuvi's_putrefaction&"
   .. "hoarfrost_cannonade&gell's_gavotte",

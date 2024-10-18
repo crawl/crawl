@@ -27,6 +27,9 @@ const int GRAVE_CLAW_MAX_CHARGES = 3;
 #define GRAVE_CLAW_CHARGES_KEY "grave_claw_charges"
 #define FORTRESS_BLAST_POS_KEY "fortress_blast_pos"
 
+#define UNGOLDIFY_KEY "ungoldify"
+#define UNGOLDIFY_COINS_KEY "ungoldify_coins"
+#define UNGOLDIFY_POWER_KEY "ungoldify_power"
 
 void setup_fire_storm(const actor *source, int pow, bolt &beam);
 spret cast_fire_storm(int pow, bolt &beam, bool fail);
@@ -57,6 +60,12 @@ dice_def shatter_damage(int pow, monster *mons = nullptr, bool random = false);
 int terrain_shatter_chance(coord_def where, const actor &agent);
 spret cast_irradiate(int powc, actor &caster, bool fail);
 dice_def irradiate_damage(int powc, bool random = true);
+dice_def ungoldify_damage(int powc, int position = 0, bool random = true);
+string describe_ungoldify_damage(int pow, bool terse);
+int ungoldify_beam_width(int range);
+spret cast_ungoldify(int powc, bool fail);
+void handle_ungoldify_turn();
+void handle_ungoldify_movement(coord_def move);
 bool ignite_poison_affects_cell(const coord_def where, actor* agent);
 spret cast_ignite_poison(actor *agent, int pow, bool fail,
                               bool tracer = false);

@@ -3374,6 +3374,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_UNGOLDIFY, "Alistair's Pocket Shrapnel",
+    spschool::alchemy,
+    spflag::dir_or_target | spflag::destructive | spflag::area,
+    5,
+    200,
+    6, 6,
+    4,
+    TILEG_UNGOLDIFY,
+},
+
+{
     SPELL_AGONY, "Agony",
     spschool::necromancy,
     spflag::dir_or_target | spflag::not_self | spflag::needs_tracer

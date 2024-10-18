@@ -395,6 +395,16 @@ public:
     }
 };
 
+template<int num_adder, int num_mult, int num_denom, int size>
+class multiply_dice_calculator : public dam_deducer
+{
+public:
+    dice_def operator()(int pow, bool /*random*/) const override
+    {
+        return dice_def(num_adder + pow * num_mult / num_denom, size);
+    }
+};
+
 struct zap_info
 {
     zap_type ztype;
@@ -1850,6 +1860,13 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             }
         }
         break;
+    case BEAM_UNGOLD: {
+        string msg;
+        const int extra_dam = silver_damages_victim(mons, hurted, msg);
+        hurted += extra_dam;
+        if (extra_dam > 0 && doFlavouredEffects)
+            mpr(msg);
+    }
 
     default:
         break;
@@ -5878,6 +5895,8 @@ void bolt::affect_monster(monster* mon)
     else if (!invalid_monster(mon))
         kill_monster(*mon);
 
+    if (momentum_loss && damage.num > 1)
+        damage = dice_def(max(1, damage.num - momentum_loss), damage.size);
     extra_range_used += range_used_on_hit();
 }
 
@@ -7745,6 +7764,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_BOLAS:                 return "entwining bolas";
     case BEAM_MERCURY:               return "mercury";
     case BEAM_BAT_CLOUD:             return "cloud of bats";
+    case BEAM_UNGOLD:                return "silver";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

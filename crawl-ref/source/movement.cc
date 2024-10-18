@@ -755,6 +755,15 @@ static spret _rampage_forward(coord_def move)
     if (you_are_delayed() && current_delay()->is_run())
         env.travel_trail.push_back(you.pos());
 
+    // Since we moved, creating kinetic energy, it seems reasonable that
+    // Ungoldify's effect can be triggered. But if the player will attack
+    // now instead of moving an additional square then the effect fails
+    // to trigger, so let's do it here.
+    // This might make ungoldify+rampage rather strong. Additionally if we
+    // kill the monster outright, the player will *still* get their free
+    // movement after that.
+    handle_ungoldify_movement(move);
+
     return spret::success;
 }
 
@@ -1137,6 +1146,7 @@ void move_player_action(coord_def move)
             remove_ice_movement();
             you.clear_far_engulf(false, true);
             apply_cloud_trail(old_pos);
+            handle_ungoldify_movement(move);
         }
 
         // Now it is safe to apply the swappee's location effects and add

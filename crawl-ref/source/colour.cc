@@ -673,6 +673,16 @@ void init_element_colours()
                               {20,  LIGHTGREEN},
                               {100, LIGHTGREY},
                             }));
+    // Gold transitioning to silver
+    add_element_colour(new random_element_colour_calc(
+                            ETC_UNGOLD, "ungold",
+                            { {20,  YELLOW},
+                              {20,  BROWN},
+                              {40,  LIGHTGREY},
+                              {10,  MAGENTA}, // Gold vapour is purple apparently
+                              {10,  LIGHTMAGENTA},
+                            }));
+
     // redefined by Lua later
     add_element_colour(new element_colour_calc(
                             ETC_DISCO, "disco", _etc_random

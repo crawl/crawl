@@ -3567,6 +3567,18 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dir, int dist)
     case TILE_MI_BOOMERANG0:
         return tile + ui_random(4);
 
+    // Used by SPELL_UNGOLDIFY; more coins as damage dice increase
+    // XX: Used to have this as well
+    // case ETC_UNGOLD:
+    //     return TILE_BOLT_UNGOLD + min(bolt.damage.num / 10, 3);
+
+    // Turning to gold over distance, but we have to allow for 4 different
+    // base tiles (for different damage levels)
+    case TILE_BOLT_UNGOLD:
+    // case TILE_BOLT_UNGOLD + 1:
+    // case TILE_BOLT_UNGOLD + 2:
+    // case TILE_BOLT_UNGOLD + 3:
+        return tile + min(8, max(0, 4 * (dist - 1)));
     default:
         return tile;
     }
