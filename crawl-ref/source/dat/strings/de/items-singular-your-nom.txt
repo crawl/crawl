@@ -706,7 +706,7 @@ your potion of flight
 Euer Trank des Fliegens
 %%%%
 your potion of haste
-Euer Trank der Geschwindigkeit
+Euer Trank der Hast
 %%%%
 your potion of heal wounds
 Euer Heiltrank

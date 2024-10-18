@@ -706,7 +706,7 @@ a potion of flight
 ein Trank des Fliegens
 %%%%
 a potion of haste
-ein Trank der Geschwindigkeit
+ein Trank der Hast
 %%%%
 a potion of heal wounds
 ein Heiltrank

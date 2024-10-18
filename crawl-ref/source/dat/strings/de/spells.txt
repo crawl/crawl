@@ -49,7 +49,7 @@ Slow
 Verlangsamen
 %%%%
 Haste
-Eilen
+Hast
 %%%%
 Petrify
 Versteinern
@@ -456,7 +456,7 @@ Summon Eyeballs
 Augäpfel beschwören
 %%%%
 Haste Other
-Anderen beeilen
+Andere hasten
 %%%%
 Summon Earth Elementals
 Erdelementare beschwören

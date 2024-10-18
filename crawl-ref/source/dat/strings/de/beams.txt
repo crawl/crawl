@@ -1189,7 +1189,7 @@ zufällig
 #Langsamkeit
 %%%%
 haste
-Eile
+Hast
 %%%%
 might
 Macht

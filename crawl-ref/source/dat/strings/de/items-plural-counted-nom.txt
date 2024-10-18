@@ -200,7 +200,7 @@
 %d Tränke des Fliegens
 %%%%
 %d potions of haste
-%d Tränke der Geschwindigkeit
+%d Tränke der Hast
 %%%%
 %d potions of heal wounds
 %d Heiltränke

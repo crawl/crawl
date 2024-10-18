@@ -724,7 +724,7 @@ potion of flight
 Trank des Fliegens
 %%%%
 potion of haste
-Trank der Geschwindigkeit
+Trank der Hast
 %%%%
 potion of heal wounds
 Heiltrank

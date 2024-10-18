@@ -200,7 +200,7 @@ potions of flight
 {pl}Tränke des Fliegens
 %%%%
 potions of haste
-{pl}Tränke der Geschwindigkeit
+{pl}Tränke der Hast
 %%%%
 potions of heal wounds
 {pl}Heiltränke

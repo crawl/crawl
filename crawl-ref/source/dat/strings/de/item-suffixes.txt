@@ -146,7 +146,7 @@
 " der Penetration"
 %%%%
 " of speed"
-" der Geschwindigkeit"
+" der Hast"
 %%%%
 " of venom"
 " des Giftes"

@@ -2018,7 +2018,7 @@ Immunität gegen Mesmerisation
 %%%%
 # duplicate of zap
 #haste
-#Eile
+#Hast
 %%%%
 flight
 Flug
