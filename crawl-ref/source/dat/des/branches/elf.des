@@ -1698,7 +1698,7 @@ KITEM: 123 = % w:20 / scroll of enchant weapon ident:type w:5 \
        / scroll of brand weapon ident:type w:5
 {{
 -- Fast dancing weapons. This will have chaos, but will be nerfed a lot by
--- confusion
+-- vitrification
 local chaos_types = { ["spear"] = 2, ["trident"] = 2, ["mace"] = 2,
     ["flail"] = 2, ["dire flail"] = 2, ["quarterstaff"] = 2,
     ["long sword"] = 2, ["scimitar"] = 2, ["short sword"] = 2, ["dagger"] = 2,
@@ -1712,7 +1712,7 @@ local venom_types = { ["demon trident"] = 1, ["bardiche"] = 2,
     ["giant spiked club"] = 2, ["lajatang"] = 1, ["double sword"] = 1,
     ["triple sword"] = 1, ["broad axe"] = 1, ["battleaxe"] = 2,
     ["executioner's axe"] = 1 }
-kmons("1 = dancing weapon perm_ench:blind ; " ..
+kmons("1 = dancing weapon perm_ench:vitrified ; " ..
     dgn.random_item_def(chaos_types, "chaos", nil, "|"))
 kmons("2 = dancing weapon perm_ench:slow ; " ..
     dgn.random_item_def(disto_types, "distortion", nil, "|"))
