@@ -1280,7 +1280,8 @@ static bool _mons_inhibits_regen(const monster &m)
 {
     return mons_is_threatening(m)
                 && !m.wont_attack()
-                && !m.neutral();
+                && !m.neutral()
+                && you.can_see(m);
 }
 
 /// Is the player's hp regeneration inhibited by nearby monsters?
