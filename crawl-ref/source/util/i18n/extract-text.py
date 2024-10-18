@@ -1451,6 +1451,9 @@ def process_cplusplus_file(filename):
                 if section == '_replace_static_tags':
                     # error messages for translator, not end user
                     continue
+                elif section == '_hints_target_mode':
+                    # literal commands (and % placeholder)
+                    continue
             elif filename == 'item-name.cc':
                 special_handling_for_item_name_cc(section, line, string, strings)
                 continue

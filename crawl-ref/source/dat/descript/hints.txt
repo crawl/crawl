@@ -369,7 +369,6 @@ HINT_SEEN_STAIRS
 These<console> '$1'</console> are downstairs. You can enter the next (deeper)
 level by following them down (<w>$cmd[CMD_GO_DOWNSTAIRS]</w>). To return to this
 level, press <w>$cmd[CMD_GO_UPSTAIRS]</w> while standing on the upstairs.
-
 <localtiles>Alternatively, you can <w>left-click</w> on stairs you're standing
 on to use them.</localtiles>
 %%%%
@@ -377,7 +376,7 @@ HINT_SEEN_ESCAPE_HATCH
 
 This<console> '$1'</console> is an escape hatch. You can use it to leave a
 level with <w>$cmd[CMD_GO_UPSTAIRS]</w> and <w>$cmd[CMD_GO_DOWNSTAIRS]</w>
-respectively<localtiles> (or by<w>left-clicking</w>)</localtiles>, like stairs;
+respectively<localtiles> (or by <w>left-clicking</w>)</localtiles>, like stairs;
 unlike stairs, however, hatches are a one-way trip, so be careful when
 descending!
 %%%%
@@ -1070,4 +1069,539 @@ Animate Skeleton works on the corpse of any monster that has a skeleton inside.
 HINT_FOUND_UNKNOWN
 
 You've found something new (but I don't know what)!
+%%%%
+HINT_ABILITIES_SCREEN
+
+This screen shows your character's set of talents. You can gain new abilities
+via certain items, through religion or by way of mutations. Activation of an
+ability usually comes at a cost, e.g. Magic power. Press '<w>!</w>' or
+'<w>?</w>' to toggle between ability selection and description.
+%%%%
+HINT_SKILLS_SCREEN
+
+This screen shows the skill set of your character. The number next to the skill
+is your current level, the higher the better. <w>Training</w> displays training
+percentages. <w>Costs</w> displays relative training costs. <w>Targets</w>
+displays skill training targets. You can toggle which skills to train by
+pressing their slot letters. A <darkgrey>grey</darkgrey> skill will not be
+trained and ease the training of others.
+%%%%
+HINT_SKILL_TRAINING
+
+The training percentage (in <brown>brown</brown>) shows the relative amount of
+the experience gained which will be used to train each skill. It is
+automatically set depending on which skills you have used recently. Disabling
+a skill sets the training rate to 0.
+%%%%
+HINT_SKILL_COSTS
+
+The training cost (in <cyan>cyan</cyan>) shows the experience cost to raise the
+given skill one level, relative to the cost of raising an aptitude zero skill
+from level zero to level one.
+%%%%
+HINT_SKILL_TARGETS
+
+Press the letter of a skill to set a training target. When the target is reached
+a message will appear and the training of the skill will be disabled.
+%%%%
+HINT_SKILL_DESCRIPTIONS
+
+This screen shows the skill set of your character. Press the letter of a skill
+to read its description, or press <w>?</w> again to return to the skill
+selection.
+%%%%
+HINT_MEMORISE_SCREEN
+
+This screen shows the spells in your spell library. From here you can memorise
+spells by selecting them, as well as view spell descriptions, search for them,
+and organize them. As a conjurer, you start with five memorisable spells, and
+one already memorised: Magic Dart. (To view memorised spells, you can exit this
+menu and select <w>I</w>.)
+%%%%
+HINT_MEMORISE
+
+A spell that isn't <darkgray>grayed out</darkgray> or <lightred>forbidden
+</lightred> can be memorised right away by selecting it at this menu.
+%%%%
+HINT_CANNOT_MEMORISE
+
+You cannot memorise any
+{{
+    if table.getn(you.spell_letters()) > 0 then
+        return "more"
+    end
+}}
+spells right now. This will change as you grow in levels and Spellcasting
+proficiency.
+%%%%
+HINT_CAST_SPELL
+
+To use magic, <tiles>you can <w>left mouse click</w> on the monster you wish to
+target (or on your player character to cast a spell on yourself) while pressing
+the <w>Control key</w>, and then select a spell from the menu. Or you can switch
+to the spellcasting display by <w>clicking on the</w> corresponding <w>tab</w>.
+
+Alternatively, </tiles>you can press <w>$cmd[CMD_CAST_SPELL]</w> and choose a
+spell, e.g. <w>a</w> (check with <w>?</w>). For attack spells:
+%%%%
+# target mode hint used for attack spells and ranged weapons
+HINT_TARGET_MODE
+
+You'll then be taken to target mode with the nearest monster or previous target
+already targeted. You can also cycle through all hostile monsters in sight with
+<w>+</w> or <w>-</w>. Once you're aiming at the correct monster, simply hit
+<w>f</w>, <w>Enter</w> or <w>.</w> to shoot at it. If you miss, <w>$1</w> fires
+at the same target again.
+%%%%
+HINT_WEAPON_HAS_ABILITY
+
+When wielded, some weapons (such as this one) offer certain abilities you can
+activate.
+%%%%
+HINT_ACTIVATE_ABILITY_ITEM_EQUIPPED
+
+To do this, enter the ability menu with <w>$cmd[CMD_USE_ABILITY]</w>, and then
+choose the corresponding ability. Note that such an activation attempt,
+especially by the untrained, is likely to fail.
+%%%%
+HINT_ACTIVATE_ABILITY_WEAPON_NOT_WIELDED
+
+To do this, first <w>$cmd[CMD_WIELD_WEAPON]</w>ield it, then enter the ability
+menu with <w>$cmd[CMD_USE_ABILITY]</w>, and then choose the corresponding
+ability. Note that such an activation attempt, especially by the untrained, is
+likely to fail.
+%%%%
+HINT_ACTIVATE_ABILITY_ARMOUR_NOT_WORN
+
+To do this, first <w>$cmd[CMD_WEAR_ARMOUR]</w>ear it, then enter the ability
+menu with <w>$cmd[CMD_USE_ABILITY]</w>, and then choose the corresponding
+ability. Note that such an activation attempt, especially by the untrained, is
+likely to fail.
+%%%%
+HINT_ACTIVATE_ABILITY_JEWELLERY_NOT_WORN
+
+To do this, first <w>$cmd[CMD_WEAR_JEWELLERY]</w>ut it on, then enter the
+ability menu with <w>$cmd[CMD_USE_ABILITY]</w>, and then choose the
+corresponding ability. Note that such an activation attempt, especially by the
+untrained, is likely to fail.
+%%%%
+HINT_THROW_INVENTORY_ITEM
+
+To do this, press <w>$cmd[CMD_FIRE]</w> to fire, then <w>$1</w> for this item.
+%%%%
+HINT_THROW_GROUND_ITEM
+
+To do this, press <w>$cmd[CMD_FIRE]</w> to fire, then select this item.
+%%%%
+HINT_WEAPON_HAS_RESIST
+
+This weapon offers its wearer protection from certain sources. For an overview
+of your resistances (among other things) press <w>$cmd[CMD_RESISTS_SCREEN]</w>
+<tiles> or click on your avatar with the <w>right mouse button</w></tiles>.
+%%%%
+HINT_WIELD_WEAPON
+
+You can wield this weapon with <w>$cmd[CMD_WIELD_WEAPON]</w>, or use
+<w>$cmd[CMD_WEAPON_SWAP]</w> to switch between the weapons in slot a and b.
+(Use <w>$[CMD_ADJUST_INVENTORY]i</w> to adjust item slots.)
+%%%%
+HINT_WEAPON_SKILL
+
+However, you've been training in <w>$1</w> for a while, so maybe you should
+continue training that rather than <w>$2</w>. (Press
+<w>$cmd[CMD_DISPLAY_SKILLS]</w> to see the skill management screen for the
+actual numbers.)
+%%%%
+HINT_ATTACK_WITH_RANGED_WEAPON
+
+To attack a monster,
+<tiles> if you have appropriate ammo quivered you can <w>left mouse click</w>
+on the monster while pressing the <w>Shift key</w>. Alternatively, you can
+<w>left mouse click</w> on the tile for the ammo you wish to fire, and then
+<w>left mouse click</w> on the monster.
+
+To launch ammunition using the keyboard,
+</tiles> you only need to <w>$cmd[CMD_FIRE]</w>ire the appropriate type of
+ammunition.
+%%%%
+HINT_ATTACK_WITH_MELEE_WEAPON
+
+To attack a monster, you can simply walk into it.
+%%%%
+HINT_UNUSUAL_EQUIPMENT
+
+Weapons and armour that have unusual descriptions like this are much more likely
+to be of higher enchantment or have special properties, good or bad.
+%%%%
+# i18n note: $1 can be singular or plural
+HINT_THROWABLE
+
+$1 can be <w>$cmd[CMD_FIRE]</w>ired without the use of a launcher.
+%%%%
+HINT_MISSILE_LAUNCHER_WIELDED
+
+As you're already wielding the appropriate launcher, you can simply
+<tiles> <w>left mouse click</w> on the monster you want to hit while pressing
+the <w>Shift key</w>. Alternatively, you can <w>left mouse click</w> on the
+tile of the ammo you want to fire, and then <w>left mouse click</w> on the
+monster you want to hit.
+
+To launch this ammo using the keyboard, you can simply</tiles>
+ <w>$cmd[CMD_FIRE]</w>ire $1.
+%%%%
+HINT_MISSILE_LAUNCHER_NOT_WIELDED
+
+To shoot $1, first you need to <w>$cmd[CMD_WIELD_WEAPON]</w>ield an appropriate
+launcher.
+%%%%
+HINT_CANNOT_WEAR_HELMET
+
+Because of your horns you cannot wear helmets. (Press
+<w>$cmd[CMD_DISPLAY_MUTATIONS]</w> to see a list of your mutations and innate
+abilities.
+%%%%%
+HINT_CANNOT_WEAR_BARDING
+
+Only nagas and palentongas can wear barding.
+%%%%
+HINT_EQUIP_UNEQUIP_ARMOUR
+
+You can wear pieces of armour with <w>$cmd[CMD_WEAR_ARMOUR]</w> and take them
+off again with <w>$cmd[CMD_REMOVE_ARMOUR]</w><tiles>, or, alternatively, simply
+click on their tiles to perform either action</tiles>.
+%%%%
+HINT_ARMOUR_HINDERS_CASTING
+
+Note that body armour with a high encumbrance rating may hinder your ability to
+cast spells. Light armour such as robes and leather armour will be generally
+safe for any aspiring spellcaster.
+%%%%
+HINT_SHIELD_HINDERS_CASTING
+
+Note that shields will hinder your ability to cast spells, until you've gained
+enough Shields skill to remove the penalty.
+%%%%
+HINT_NO_SHIELD_WITH_MOST_LAUNCHERS
+
+Note that many ranged weapons are two handed and so cannot be used with a
+shield.
+%%%%%
+HINT_ARMOUR_HAS_RESIST
+
+This armour offers its wearer protection from certain sources. For an overview
+of your resistances (among other things) press <w>$cmd[CMD_RESISTS_SCREEN]</w>
+<tiles> or click on your avatar with the <w>right mouse button</w></tiles>.
+%%%%
+HINT_ARMOUR_HAS_ABILITY
+
+When worn, some types of armour (such as this one) offer certain abilities you
+can activate with <w>$cmd[CMD_USE_ABILITY]</w>.
+%%%%
+HINT_DESCRIBE_WAND
+
+The magic within can be unleashed by evoking (<w>$cmd[CMD_EVOKE]</w>) it.
+<tiles>Alternatively, you can <w>left mouse click</w> on the wand tile and then
+<w>left mouse click</w> on the monster you wish to target (or your player
+character to target yourself)<localtiles>, or having first quivered the wand
+(<w>$cmd[CMD_QUIVER_ITEM]</w>), <w>left mouse click</w> on your target
+while pressing the Shift key</localtiles>.</tiles>
+%%%%%
+HINT_DESCRIBE_SCROLL
+
+Press <w>$cmd[CMD_READ]</w> to read this scroll<tiles> or simply click on it
+with your <w>left mouse button</w></tiles>.
+%%%%%
+HINT_DESCRIBE_JEWELLERY
+
+Jewellery can be <w>$cmd[CMD_WEAR_JEWELLERY]</w>ut on or
+<w>$cmd[CMD_REMOVE_JEWELLERY]</w>emoved again<tiles>, though in Tiles, either
+can be done by clicking on the item in your inventory</tiles>.
+%%%%
+HINT_JEWELLERY_HAS_RESIST
+
+This item offers its wearer protection from certain sources. For an
+overview of your resistances (among other things) press
+<w>$cmd[CMD_RESISTS_SCREEN]</w><tiles> or click on your avatar with the
+<w>right mouse button</w></tiles>.
+%%%%
+HINT_JEWELLERY_HAS_ABILITY
+
+When worn, some types of jewellery (such as this one) offer certain abilities
+you can activate by pressing <w>$cmd[CMD_USE_ABILITY]</w>.
+%%%%
+HINT_DESCRIBE_POTION
+
+Press <w>$cmd[CMD_QUAFF] to quaff this potion</w><tiles>, or simply click on
+it with your <w>left mouse button</w></tiles>.
+%%%%
+HINT_DESCRIBE_MANUAL
+
+A manual can greatly help you in training a skill. After you pick one up, the
+skill in question will be trained more efficiently and will level up faster
+until you exhaust the manual's contents.
+%%%%
+HINT_DESCRIBE_SPELLBOOK
+
+You can pick up a spellbook to add its spells to your spell library. (View your
+spell library with  <w>$cmd[CMD_MEMORISE_SPELL]</w>.)
+%%%%
+HINT_DESCRIBE_CORPSE
+
+Skeletons and corpses can be used as components for certain necromantic spells.
+Apart from that, they are largely useless.
+%%%%
+HINT_DESCRIBE_MAGICAL_STAFF
+
+This staff can enhance your spellcasting, making spells of its related spell
+school more powerful.
+%%%%
+HINT_MAGICAL_STAFF_HAS_RESISTANCE
+
+It also offers its wielder protection from certain sources. For an overview of
+your resistances (among other things) press <w>$cmd[CMD_RESISTS_SCREEN]</w>
+<tiles> or click on your avatar with the <w>right mouse button</w></tiles>.
+%%%%
+HINT_MAGICAL_STAFF_WITH_TROG
+
+Seeing how Trog frowns upon the use of magic, this staff will be of little use
+to you and you might just as well <w>$cmd[CMD_DROP]</w>rop it now.
+%%%%
+HINT_DESCRIBE_MISCELLANEOUS_ITEM
+
+Miscellaneous items sometimes harbour magical powers that can be harnessed by
+evoking the item with <w>$cmd[CMD_EVOKE]</w>.
+%%%%
+HINT_DESCRIBE_STATUE
+
+It's just a harmless statue - or is it?\nEven if not a danger by themselves,
+statues often mark special areas, dangerous ones or ones harbouring treasure.
+%%%%
+HINT_DESCRIBE_TRAP_PLATE
+
+These nasty constructions can cause a range of unpleasant effects. You won't be
+able to avoid tripping traps by flying over them; their magic construction will
+cause them to be triggered anyway.
+%%%%
+HINT_DESCRIBE_TRAP_SHAFT
+
+The dungeon contains a number of natural obstacles such as shafts, which lead
+one to three levels down. Once you know the shaft is there, you can safely step
+over it.\nIf you want to jump down there, use <w>$cmd[CMD_GO_DOWNSTAIRS]</w> to
+do so. Be warned that getting back here might be difficult.
+%%%%
+HINT_DESCRIBE_TRAP_WEB
+
+Some areas of the dungeon, such as the Spider Nest, may be strewn with giant
+webs that may ensnare you for a short time. Players in Spider Form can safely
+navigate the webs (as can incorporeal entities and various oozes).
+%%%%
+HINT_DESCRIBE_DOWNSTAIRS
+
+You can enter the next (deeper) level by following them down
+(<w>$cmd[CMD_GO_DOWNSTAIRS]</w>). To get back to this level again, press
+<w>$cmd[CMD_GO_UPSTAIRS]</w> while standing on the upstairs.<tiles> In Tiles,
+you can achieve the same, in either direction, by clicking the <w>left mouse
+button</w>.</tiles>
+%%%%
+HINT_DESCRIBE_UNKNOWN_STAIRS
+
+\nYou have not yet passed through this particular set of stairs.
+%%%%
+HINT_DESCRIBE_DUNGEON_EXIT
+
+These stairs lead out of the dungeon. Following them will end the game. The
+only way to win is to transport the fabled Orb of Zot outside.
+%%%%
+HINT_DESCRIBE_UPSTAIRS
+
+You can enter the previous (shallower) level by following these up
+(<w>$cmd[CMD_GO_UPSTAIRS]</w>). This is ideal for retreating or finding a safe
+resting spot, since the previous level will have less monsters, and monsters on
+this level can't follow you up unless they're standing right next to you. To
+get back to this level again, press <w>$cmd[CMD_GO_DOWNSTAIRS]</w> while
+standing on the downstairs.<tiles> In Tiles, you can perform either action
+simply by clicking the <w>left mouse button</w> instead.</tiles>
+%%%%
+HINT_DESCRIBE_ESCAPE_HATCH
+
+Escape hatches can be used to quickly leave a level with
+<w>$cmd[CMD_GO_UPSTAIRS]</w> and <w>$cmd[CMD_GO_DOWNSTAIRS]</w>, respectively.
+Note that you will usually be unable to return right away.
+%%%%
+HINT_DESCRIBE_CLOSED_DOOR
+
+To avoid accidentally opening a door you'd rather remain closed during travel
+or autoexplore, you can mark it with an exclusion from the map view
+(<w>$cmd[CMD_DISPLAY_MAP]</w>) with
+<w>$cmd[CMD_MAP_EXCLUDE_AREA]$cmd[CMD_MAP_EXCLUDE_AREA]</w> while your cursor
+is on the square in question. Such an exclusion will prevent autotravel from
+ever entering that grid until you remove the exclusion with another press of
+<w>$cmd[CMD_DISPLAY_MAP]$cmd[CMD_MAP_EXCLUDE_AREA]</w>.
+%%%%
+HINT_DESCRIBE_ALTAR_ATHEIST
+
+This is your chance to join a religion! In general, the gods will help their
+followers, bestowing powers of all sorts upon them, but many of them demand a
+life of dedication, constant tributes or entertainment in return.
+%%%%
+HINT_DESCRIBE_FADED_ALTAR_ATHEIST
+
+This particular altar is so ancient that you cannot make out which god it is
+dedicated to! Converting here by pressing <w>$cmd[CMD_GO_DOWNSTAIRS]</w> while
+standing on the altar will enter you into service of a random god, who will
+grant you some additional piety in thanks.
+%%%%
+# $1 = altar god
+HINT_DESCRIBE_NONFADED_ALTAR_ATHEIST
+
+You can get information about <w>$1</w> by pressing
+<w>$cmd[CMD_GO_DOWNSTAIRS]</w> while standing on the altar. Before taking up
+the responding faith you'll be asked for confirmation.
+%%%%
+# $1 = player's current god
+HINT_DESCRIBE_FADED_ALTAR
+
+This particular altar is so ancient that you cannot make out which god it is
+dedicated to, and $1 probably won't like it if you switch allegiance. If you
+want to take the risk, you can convert here by pressing
+<w>$cmd[CMD_GO_DOWNSTAIRS]</w> while standing on the altar. Doing so will enter
+you into service of a random god, who will grant you some additional piety in
+thanks.
+%%%%
+# $1 = player's current god, $2 = altar god
+HINT_DESCRIBE_NONFADED_ALTAR
+
+$1 probably won't like it if you switch allegiance, but having a look won't
+hurt: to get information on <w>$2</w>, press <w>$cmd[CMD_GO_DOWNSTAIRS]</w>
+while standing on the altar. Before taking up the responding faith (and
+abandoning your current one!) you'll be asked for confirmation.\nTo see your
+current standing with $1 press <w>$cmd[CMD_DISPLAY_RELIGION]</w>
+<tiles>, or click with your <w>right mouse button</w> on your avatar while
+pressing <w>Shift</w></tiles>.
+%%%%
+HINT_DESCRIBE_BRANCH_ENTRY
+
+An entryway into one of the many dungeon side branches in Crawl.
+%%%%
+HINT_DESCRIBE_BRANCH_ENTRY_DANGEROUS
+
+Beware, sometimes these can be deadly!
+%%%%
+HINT_DESCRIBE_HARMLESS_CLOUD_SINGULAR
+
+$1 is harmless.
+%%%%
+HINT_DESCRIBE_HARMLESS_CLOUD_PLURAL
+
+$1 are harmless.
+%%%%
+HINT_DESCRIBE_HARMFUL_CLOUD_SINGULAR
+
+$1 is probably dangerous, and you should stay out of it if you can.
+%%%%
+HINT_DESCRIBE_HARMFUL_CLOUD_PLURAL
+
+$1 are probably dangerous, and you should stay out of them if you can.
+%%%%
+HINT_DESCRIBE_CURRENTLY_HARMLESS_CLOUD_SINGULAR
+
+$1 is currently harmless, but that could change at some point. Check the
+overview screen (<w>$cmd[CMD_RESISTS_SCREEN]</w>) to view your resistances.
+%%%%
+HINT_DESCRIBE_CURRENTLY_HARMLESS_CLOUD_PLURAL
+
+$1 are currently harmless, but that could change at some point. Check the
+overview screen (<w>$cmd[CMD_RESISTS_SCREEN]</w>) to view your resistances.
+%%%%
+HINT_DESCRIBE_OPAQUE_CLOUD
+
+This cloud is opaque. If two or more opaque clouds are between you and a square,
+you won't be able to see anything in that square.
+%%%%
+HINT_DESCRIBE_UNIQUE_MONSTER
+
+Did you think you were the only adventurer in the dungeon? Well, you thought
+wrong! These unique adversaries often possess skills that normal monsters
+wouldn't, so be careful.
+%%%%
+HINT_DESCRIBE_PLAYER_GHOST
+
+The ghost of a deceased adventurer, it would like nothing better than to send
+you the same way.
+%%%%
+HINT_DESCRIBE_TIER_1_DEMON
+
+This monster is a demon of the highest tier.
+%%%%
+HINT_DESCRIBE_TIER_2_DEMON
+
+This monster is a demon of the second-highest tier.
+%%%%
+HINT_DESCRIBE_TIER_3_DEMON
+
+This monster is a demon of the middle tier.
+%%%%
+HINT_DESCRIBE_TIER_4_DEMON
+
+This monster is a demon of the second-lowest tier.
+%%%%
+HINT_DESCRIBE_TIER_5_DEMON
+
+This monster is a demon of the lowest tier.
+%%%%
+HINT_DESCRIBE_NASTY_MONSTER
+
+This monster appears to be really dangerous!
+%%%%
+HINT_DESCRIBE_TOUGH_MONSTER
+
+This monster appears to be quite dangerous!
+%%%%
+HINT_DESCRIBE_BERSERKED_MONSTER
+
+A berserking monster is bloodthirsty and fighting madly. Such a blood rage
+makes it particularly dangerous!
+%%%%
+HINT_DESCRIBE_FRIENDLY_MONSTER
+
+Friendly monsters will follow you around and attempt to aid you in battle. You
+can order nearby allies by talking to them (<w>$cmd[CMD_SHOUT]</w>).
+%%%%
+HINT_DESCRIBE_TEMPORARILY_FRIENDLY_MONSTER
+
+However, it is only <w>temporarily</w> friendly, and will become dangerous
+again when this friendliness wears off.
+%%%%
+HINT_DESCRIBE_UNAWARE_MONSTER
+
+You can easily mark its square as dangerous to avoid accidentally entering into
+its field of view when using auto-explore or auto-travel. To do so, enter
+targeting mode with <w>$cmd[CMD_LOOK_AROUND]</w> and then press
+<w>$cmd[CMD_MAP_EXCLUDE_AREA]</w> when your cursor is hovering over the
+monster's grid. Doing so will mark this grid and all surrounding ones within a
+radius of 8 as \"excluded\" ones that explore or travel modes won't enter.
+%%%%
+HINT_RUN_AWAY
+
+This might be a good time to run away.
+%%%%
+HINT_RUN_AWAY_OR_BERSERK
+
+This might be a good time to run away or apply your Berserk <w>a</w>bility.
+%%%%
+HINT_DESCRIBE_STABBABLE_MONSTER
+
+Apparently it has not noticed you - yet. Note that you do not have to engage
+every monster you meet. Sometimes, discretion is the better part of valour
+%%%%%
+HINT_DESCRIBE_DISTRACTED_MONSTER
+
+Apparently it has been distracted by something. You could use this opportunity
+to sneak up on this monster - or to sneak away.
+%%%%
+HINT_DESCRIBE_UNREMARKABLE_MONSTER
+
+This monster doesn't appear to have any resistances or susceptibilities. It
+cannot fly and is of average speed. Examining other, possibly more high-level
+monsters can give important clues as to how to deal with them.
 %%%%
