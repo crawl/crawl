@@ -202,6 +202,7 @@ dungeon_feature_type sanitize_feature(dungeon_feature_type feature, bool strict)
     {
         case DNGN_SEALED_DOOR:
             return DNGN_CLOSED_DOOR;
+        case DNGN_RUNED_CLEAR_DOOR:
         case DNGN_SEALED_CLEAR_DOOR:
             return DNGN_CLOSED_CLEAR_DOOR;
         case DNGN_PERMAROCK_WALL:
@@ -211,8 +212,10 @@ dungeon_feature_type sanitize_feature(dungeon_feature_type feature, bool strict)
         case DNGN_SLIMY_WALL:
             return DNGN_CRYSTAL_WALL; // !?
         case DNGN_METAL_STATUE:
+        case DNGN_ORB_DAIS:
             return DNGN_GRANITE_STATUE;
         case DNGN_UNSEEN:
+        case DNGN_DECORATIVE_FLOOR:
         case DNGN_ENDLESS_SALT:
             return DNGN_FLOOR;
         case DNGN_OPEN_SEA:
