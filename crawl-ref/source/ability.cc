@@ -472,6 +472,8 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 0, -1, {fail_basis::invo}, abflag::none },
         { ABIL_OKAWARU_GIFT_ARMOUR, "Receive Armour",
             0, 0, 0, -1, {fail_basis::invo}, abflag::none },
+        { ABIL_OKAWARU_REJECT_GIFTS, "Reject Gifts",
+            0, 0, 40, -1, {fail_basis::invo}, abflag::none },
 
 
         // Makhleb
@@ -1178,6 +1180,10 @@ ability_type fixup_ability(ability_type ability)
         else
             return ability;
 
+    case ABIL_OKAWARU_REJECT_GIFTS:
+        if player_can_use_armour() && !you.props.exists(OKAWARU_ARMOUR_GIFTED_KEY)
+            return ability;
+        // fall through
     case ABIL_OKAWARU_GIFT_WEAPON:
         if (you.props.exists(OKAWARU_WEAPON_GIFTED_KEY))
             return ABIL_NON_ABILITY;
@@ -3513,6 +3519,11 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
             return spret::abort;
         break;
 
+    case ABIL_OKAWARU_REJECT_GIFTS:
+        if (!okawaru_reject_gifts())
+            return spret::abort;
+        break;
+
     case ABIL_MAKHLEB_ANNIHILATION:
         return cast_iood(&you, _makhleb_annihilation_power(), &beam, 0, 0, MHITNOT,
                          fail, false, MONS_GLOBE_OF_ANNIHILATION);
@@ -4513,6 +4524,9 @@ int find_ability_slot(const ability_type abil, char firstletter)
         break;
     case ABIL_OKAWARU_GIFT_ARMOUR:
         first_slot = letter_to_index('E');
+        break;
+    case ABIL_OKAWARU_REJECT_GIFTS:
+        first_slot = letter_to_index('R');
         break;
     case ABIL_CONVERT_TO_BEOGH:
         first_slot = letter_to_index('Y');
