@@ -187,6 +187,7 @@ warp_space WARP_SPACE
 %sdir gui/spells/monster
 generic GENERIC_MONSTER_SPELL
 air_elementals AIR_ELEMENTALS
+avatar_song AVATAR_SONG
 awaken_forest AWAKEN_FOREST
 awaken_vines AWAKEN_VINES
 battlecry BATTLECRY
@@ -252,6 +253,7 @@ roll ROLL
 seal_doors SEAL_DOORS
 sentinel_mark SENTINEL_MARK
 shezas_dance SHEZAS_DANCE
+siren_song SIREN_SONG
 sleep SLEEP
 slug_dart SLUG_DART
 spectral_cloud SPECTRAL_CLOUD

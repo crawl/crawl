@@ -2563,6 +2563,8 @@ static const mutation_def mut_data[] =
   {"Your lower body shifts to a powerful aquatic tail in water.", "", ""},
   {"Your legs feel aquatic.", "", ""},
   {"Your legs no longer feel aquatic."},
+
+  TILEG_MUT_MERTAIL,
 },
 
 { MUT_FLOAT, 0, 1, mutflag::good, false,

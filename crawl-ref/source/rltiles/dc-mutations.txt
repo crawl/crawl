@@ -193,6 +193,7 @@ nightstalker_1 NIGHTSTALKER
 nightstalker_2
 nightstalker_3
 inhibited_regeneration INHIBITED_REGENERATION
+mertail MERTAIL
 no_drink NO_DRINK
 faith FAITH
 spit_poison_1 SPIT_POISON
