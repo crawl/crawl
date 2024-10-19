@@ -351,6 +351,11 @@ bool explode_monster(monster* mons, killer_type killer, bool pet_kill)
     }
     else if (mons->has_ench(ENCH_INNER_FLAME))
     {
+        // Timeout is a valid reason for things like ball lightning to explode,
+        // but not inner flamed monsters.
+        if (killer == KILL_TIMEOUT)
+            return false;
+
         mon_enchant i_f = mons->get_ench(ENCH_INNER_FLAME);
         ASSERT(i_f.ench == ENCH_INNER_FLAME);
         agent = actor_by_mid(i_f.source);
