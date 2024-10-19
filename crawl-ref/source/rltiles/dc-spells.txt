@@ -193,6 +193,8 @@ awaken_vines AWAKEN_VINES
 battlecry BATTLECRY
 berserk_other BERSERK_OTHER
 bestow_arms BESTOW_ARMS
+blink_allies_away BLINK_ALLIES_AWAY
+blink_allies_encircling BLINK_ALLIES_ENCIRCLING
 blink_other BLINK_OTHER
 brain_bite BRAIN_BITE
 call_of_chaos CALL_OF_CHAOS
@@ -208,6 +210,7 @@ conjure_living_spells CONJURE_LIVING_SPELLS
 corrupting_pulse CORRUPTING_PULSE
 create_tentacles CREATE_TENTACLES
 crystallizing_shot CRYSTALLIZING_SHOT
+dimensional_anchor DIMENSIONAL_ANCHOR
 doom_howl DOOM_HOWL
 draining_gaze DRAINING_GAZE
 drain_magic DRAIN_MAGIC
@@ -222,6 +225,7 @@ fire_breath FIRE_BREATH
 fire_elementals FIRE_ELEMENTALS
 fire_summon FIRE_SUMMON
 flaming_cloud FLAMING_CLOUD
+flash_freeze FLASH_FREEZE
 flay FLAY
 forceful_invitation FORCEFUL_INVITATION
 ghostly_fireball GHOSTLY_FIREBALL
@@ -234,6 +238,7 @@ injury_bond INJURY_BOND
 iron_elementals IRON_ELEMENTALS
 legendary_destruction LEGENDARY_DESTRUCTION
 malmutate MALMUTATE
+mesmerise MESMERISE
 metal_splinters METAL_SPLINTERS
 miasma_breath MIASMA_BREATH
 might MIGHT
@@ -249,6 +254,7 @@ porkalator PORKALATOR
 quicksilver_bolt QUICKSILVER_BOLT
 rebounding_blaze REBOUNDING_BLAZE
 rebounding_chill REBOUNDING_CHILL
+resonance_strike RESONANCE_STRIKE
 roll ROLL
 seal_doors SEAL_DOORS
 sentinel_mark SENTINEL_MARK
@@ -290,6 +296,8 @@ throw_ally THROW_ALLY
 throw_klown_pie THROW_KLOWN_PIE
 thorn_volley THORN_VOLLEY
 virulence VIRULENCE
+vitrify VITRIFY
+vitrifying_gaze VITRIFYING_GAZE
 wall_of_brambles WALL_OF_BRAMBLES
 warning_cry WARNING_CRY
 water_elementals WATER_ELEMENTALS
