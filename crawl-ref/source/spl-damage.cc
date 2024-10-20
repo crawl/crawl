@@ -2163,18 +2163,23 @@ static void _ungoldify_targets(vector<widebeam_beam> beams, int coins, int pow, 
     beam.set_agent(&you);
     beam.range             = range;
     beam.hit_verb          = "peppers";
-    beam.draw_delay        = 50;
+    beam.draw_delay        = 0;
+
+    // beam.draw_delay        = 50;
     // beam.draw_delay        = 10;
     beam.momentum_loss     = 1;
     beam.aimed_at_spot     = true;
 
+    vector<bolt> bolts;
     for (widebeam_beam item : beams)
     {
-        beam.damage = ungoldify_damage(pow, item.position);
-        beam.target = item.end;
-        beam.source = item.start;
-        beam.fire();
+        bolt copy = beam;
+        copy.damage = ungoldify_damage(pow, item.position);
+        copy.target = item.end;
+        copy.source = item.start;
+        bolts.push_back(copy);
     }
+    multi_bolt_fire(bolts, 50);
 }
 
 static void _end_ungoldify() {
