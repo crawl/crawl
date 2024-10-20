@@ -1813,7 +1813,7 @@ void handle_monster_move(monster* mons)
         if (mons->steps_remaining == 0)
         {
             check_place_cloud(CLOUD_FLAME, mons->pos(), 2, mons);
-            mons->suicide();
+            monster_die(*mons, KILL_TIMEOUT, NON_MONSTER);
             return;
         }
     }
