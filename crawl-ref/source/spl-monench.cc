@@ -341,20 +341,7 @@ spret cast_sign_of_ruin(actor& caster, coord_def target, int duration, bool chec
         return spret::abort;
 
     // Show animation
-    for (int i = 2; i >= 0; --i)
-    {
-        for (distance_iterator di(target, false, false, i); di; ++di)
-        {
-            if (grid_distance(target, *di) == i && !feat_is_solid(env.grid(*di))
-                && you.see_cell_no_trans(*di))
-            {
-                flash_tile(*di, random_choose(DARKGRAY, RED), 0);
-            }
-        }
-
-        animation_delay(50, true);
-        view_clear_overlays();
-    }
+    draw_ring_animation(target, 2, DARKGRAY, RED);
 
     // Apply signs
     for (actor* act : targets)

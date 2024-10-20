@@ -1631,6 +1631,62 @@ spret cast_dispersal(int pow, bool fail)
     return spret::success;
 }
 
+void pull_monsters_inward(const coord_def& center, int radius)
+{
+    vector<coord_def> empty[LOS_RADIUS];
+    vector<monster*> targ;
+
+    // Build lists of valid monsters and empty spaces, sorted in order of distance
+    for (distance_iterator di(center, true, false, radius); di; ++di)
+    {
+        if (!you.see_cell_no_trans(*di))
+            continue;
+
+        const int dist = grid_distance(center, *di);
+        monster* mon = monster_at(*di);
+        if (mon && !mon->is_stationary() && !mons_is_projectile(*mon))
+            targ.push_back(mon);
+        else if (!mon && !feat_is_solid(env.grid(*di)))
+            empty[dist].push_back(*di);
+    }
+
+    // Move each monster to a nearer space, if we can
+    for (monster* mon : targ)
+    {
+        bool moved = false;
+        for (int dist = 0; dist <= radius; ++dist)
+        {
+            if (grid_distance(mon->pos(), center) <= dist)
+                break;
+
+            for (unsigned int i = 0; i < empty[dist].size(); ++i)
+            {
+                const coord_def new_pos = empty[dist][i];
+
+                if (monster_habitable_grid(mon, new_pos))
+                {
+                    const coord_def old_pos = mon->pos();
+                    mon->move_to_pos(new_pos);
+                    mon->apply_location_effects(old_pos);
+                    mons_relocated(mon);
+
+                    empty[dist].erase(empty[dist].begin() + i);
+
+                    if (grid_distance(center, old_pos) < 2)
+                        empty[grid_distance(center, old_pos) - 1].push_back(old_pos);
+
+                    moved = true;
+
+                    break;
+                }
+            }
+
+            if (moved)
+                break;
+        }
+    }
+}
+
 int gravitas_radius(int pow)
 {
     return 2 + (pow / 48);
@@ -1654,74 +1710,8 @@ spret cast_gravitas(int pow, const coord_def& where, bool fail)
                                                                      DESC_THE)
                                                                     .c_str() : "");
 
-    // Show animation
-    for (int i = radius; i >= 0; --i)
-    {
-        for (distance_iterator di(where, false, false, i); di; ++di)
-        {
-            if (grid_distance(where, *di) == i && !feat_is_solid(env.grid(*di))
-                && you.see_cell_no_trans(*di))
-            {
-                flash_tile(*di, LIGHTMAGENTA, 0);
-            }
-        }
-
-        animation_delay(50, true);
-        view_clear_overlays();
-    }
-
-    vector<coord_def> empty[LOS_RADIUS];
-    vector<monster*> targ;
-
-    // Build lists of valid monsters and empty spaces, sorted in order of distance
-    for (distance_iterator di(where, true, false, radius); di; ++di)
-    {
-        if (!you.see_cell_no_trans(*di))
-            continue;
-
-        const int dist = grid_distance(where, *di);
-        monster* mon = monster_at(*di);
-        if (mon && !mon->is_stationary() && !mons_is_projectile(*mon))
-            targ.push_back(mon);
-        else if (!mon && !feat_is_solid(env.grid(*di)))
-            empty[dist].push_back(*di);
-    }
-
-    // Move each monster to a nearer space, if we can
-    for (monster* mon : targ)
-    {
-        bool moved = false;
-        for (int dist = 0; dist <= radius; ++dist)
-        {
-            if (grid_distance(mon->pos(), where) <= dist)
-                break;
-
-            for (unsigned int i = 0; i < empty[dist].size(); ++i)
-            {
-                const coord_def new_pos = empty[dist][i];
-
-                if (monster_habitable_grid(mon, new_pos))
-                {
-                    const coord_def old_pos = mon->pos();
-                    mon->move_to_pos(new_pos);
-                    mon->apply_location_effects(old_pos);
-                    mons_relocated(mon);
-
-                    empty[dist].erase(empty[dist].begin() + i);
-
-                    if (grid_distance(where, old_pos) < 2)
-                        empty[grid_distance(where, old_pos) - 1].push_back(old_pos);
-
-                    moved = true;
-
-                    break;
-                }
-            }
-
-            if (moved)
-                break;
-        }
-    }
+    draw_ring_animation(where, radius, LIGHTMAGENTA);
+    pull_monsters_inward(where, radius);
 
     // Bind all hostile monsters in place and damage them
     // (friendlies are exempt from this part)

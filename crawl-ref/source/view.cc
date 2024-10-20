@@ -1547,6 +1547,28 @@ void view_clear_overlays()
     glyph_overlays.clear();
 }
 
+void draw_ring_animation(const coord_def& center, int radius, colour_t colour,
+                         colour_t colour_alt, int delay)
+{
+    for (int i = radius; i >= 0; --i)
+    {
+        for (distance_iterator di(center, false, false, i); di; ++di)
+        {
+            if (grid_distance(center, *di) == i && !feat_is_solid(env.grid(*di))
+                && you.see_cell_no_trans(*di))
+            {
+                colour_t draw_colour = colour_alt != BLACK ? coinflip() ? colour
+                                                                        : colour_alt
+                                                           : colour;
+                flash_tile(*di, draw_colour, 0);
+            }
+        }
+
+        animation_delay(delay, true);
+        view_clear_overlays();
+    }
+}
+
 /**
  * Comparison function for coord_defs that orders coords based on the ordering
  * used by rectangle_iterator.
