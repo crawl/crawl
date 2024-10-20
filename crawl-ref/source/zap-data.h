@@ -2730,7 +2730,7 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     false,
     BEAM_UNGOLD,
     DCHAR_ITEM_GOLD,
-    false,
+    true,
     false,
 },
 
