@@ -4386,7 +4386,7 @@ spret cast_starburst(int pow, bool fail, bool tracer)
     beam.attitude = ATT_FRIENDLY;
     beam.thrower      = KILL_YOU;
     beam.origin_spell = SPELL_STARBURST;
-    beam.draw_delay   = 5;
+    beam.draw_delay   = 0;
     zappy(ZAP_BOLT_OF_FIRE, pow, false, beam);
 
     for (const coord_def & offset : offsets)
@@ -4414,13 +4414,16 @@ spret cast_starburst(int pow, bool fail, bool tracer)
 
     fail_check();
 
-    // Randomize for nice animations
+    // Randomize so there's no bias to which direction gets processed first
     shuffle_array(offsets);
+    vector<bolt> bolts;
     for (auto & offset : offsets)
     {
-        beam.target = you.pos() + offset;
-        beam.fire();
+        bolt beam_copy = beam;
+        beam_copy.target = you.pos() + offset;
+        bolts.push_back(beam_copy);
     }
+    multi_bolt_fire(bolts, 10);
 
     return spret::success;
 }
