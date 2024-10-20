@@ -62,7 +62,7 @@ int calc_skill_cost(int skill_cost_level);
 void check_skill_cost_change();
 
 bool skill_default_shown(skill_type sk);
-void reassess_starting_skills();
+void reassess_starting_skills(bool balance_djinn = true);
 bool check_selected_skills();
 void init_train();
 void init_can_currently_train();
