@@ -7951,27 +7951,7 @@ void multi_bolt_fire(vector<bolt> bolts, int delay)
                     beam.finish_fire();
             }
         }
-        animation_delay(delay, true);
+        if (Options.use_animations & UA_BEAM)
+            animation_delay(delay, true);
     }
 }
-
-// void multi_bolt::do_fire()
-// {
-//     for (auto& component : components)
-//     if (!setup_fire())
-//         return;
-
-//     cursor_control coff(false);
-
-//     // Note: nothing but this loop should be changing the ray.
-//     while (map_bounds(pos()))
-//     {
-//         if (!advance_fire())
-//             break;
-//     }
-
-//     if (beam_cancelled)
-//         return;
-
-//     finish_fire();
-// }
