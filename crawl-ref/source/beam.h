@@ -76,6 +76,7 @@ struct beam_tracer
         UNUSED(bolt, mon);
     }
     virtual void cancel() {}
+    virtual bool was_cancelled() noexcept { return false; }
 };
 
 // Used when casting a spell to check if the spell should be aborted
@@ -108,6 +109,7 @@ struct player_beam_tracer : beam_tracer
     void player_hit() noexcept override;
     void monster_hit(const bolt& bolt, const monster& mon) override;
     void cancel() noexcept override;
+    bool was_cancelled() noexcept override;
 };
 
 // Used to check if casting a spell might be useful
@@ -266,7 +268,7 @@ public:
 
     actor* agent(bool ignore_reflections = false) const;
 
-    void fire();
+    virtual void fire();
     void fire(beam_tracer& tracer);
 
     // Returns member short_name if set, otherwise some reasonable string
@@ -307,6 +309,12 @@ public:
 
     // Setup.
     void fake_flavour();
+
+    // Methods for controlling the firing externally; generally just call fire()
+    bool begin_fire();
+    bool advance_fire();
+    void finish_fire();
+
 private:
     void do_fire();
     void initialise_fire();
@@ -407,6 +415,14 @@ public:
     bool is_tracer() const noexcept { return tracer != nullptr; }
     void set_is_tracer(bool value) noexcept;
 };
+
+struct multi_bolt_component
+{
+    bolt beam;
+    bool finished;
+};
+
+void multi_bolt_fire(vector<bolt> bolts, int delay);
 
 int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
                           bool doFlavouredEffects = true);
