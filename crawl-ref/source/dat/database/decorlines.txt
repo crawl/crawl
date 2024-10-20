@@ -386,7 +386,7 @@ an apple. Crisp.
 
 an apricot. Delicious.
 
-a banana. Delcious.
+a banana. Delicious.
 
 a choko. Bland.
 
@@ -404,7 +404,7 @@ a snozzcumber. Putrid!
 
 # Other fruits.
 
-a tomato. Savory.
+a tomato. Savoury.
 
 a cherimoya. Tangy!
 
@@ -416,7 +416,7 @@ _meat_and_reaction_
 
 # Try to keep to dungeon animals.
 
-a smoked eel. Savory!
+a smoked eel. Savoury!
 
 a yak sausage. Delicious.
 
@@ -488,7 +488,7 @@ w:6
 some choko cake. Less bland than expected!
 
 w:2
-some [trollish|giant|giant] [wittenberger|grovbrød]. Savory.
+some [trollish|giant|giant] [wittenberger|grovbrød]. Savoury.
 
 w:2
 some tengu anpan. Delightful.
