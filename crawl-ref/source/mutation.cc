@@ -2577,6 +2577,9 @@ static bool _delete_single_mutation_level(mutation_type mutat,
 
     case MUT_BIG_WINGS:
         land_player();
+#ifdef USE_TILE
+        init_player_doll();
+#endif
         break;
 
     case MUT_HORNS:
