@@ -296,9 +296,7 @@ also hosts Windows and Mac binaries you can download. Note that trunk may be
 buggy, and that very rarely a bug may invalidate your saved games. If that
 doesn't bother you, go ahead and play!
 
-Be sure to reports bugs on github (https://github.com/crawl/crawl/issues).
-You may also use the mantis bug tracker if you have an account
-(https://crawl.develz.org/mantis/).
+Please report bugs on github (https://github.com/crawl/crawl/issues).
 
 When doing so, please mention the version (see '?v') you're currently playing,
 in case the bug's already been fixed or the feature already implemented.
@@ -309,9 +307,8 @@ The game keeps crashing. / I think I found a bug. What do I do?
 %%%%
 A:bug
 
-A: Please submit a bug report on github (https://github.com/crawl/crawl/issues)
-or Mantis (https://crawl.develz.org/mantis/), and give as much information as
-you can:
+A: Please submit a bug report on github (https://github.com/crawl/crawl/issues),
+and give as much information as you can:
 
 * What were you doing at the time?
 
@@ -369,7 +366,7 @@ appreciated. These are:
 
 Also, if you'd like to write a patch but don't know how to go about it, read
 patch_guide.txt in the docs/develop/ directory. Submit it and other new things
-on our Mantis tracker: https://crawl.develz.org/mantis/
+at our github repository: https://github.com/crawl/crawl/issues
 
 Keep in mind that without previous discussions, we may not be able to use the
 patch, or it might need heavy modification. It's possible that it won't be
