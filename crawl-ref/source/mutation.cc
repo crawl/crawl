@@ -1852,7 +1852,6 @@ static void _maybe_remove_armour(mutation_type mut, int level)
         if (_mut_blocks_item_reason(you.inv[slot], mut, level).empty())
             continue;
         remove_one_equip((equipment_type)i, false, true);
-        ash_check_bondage();
     }
 }
 
@@ -2456,6 +2455,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         }
 
         _maybe_remove_armour(mutat, cur_base_level);
+        ash_check_bondage();
 
         xom_is_stimulated(_calc_mutation_amusement_value(mutat));
 
