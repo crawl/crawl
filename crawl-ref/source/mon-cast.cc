@@ -8505,11 +8505,6 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
         ASSERT(foe);
         return _negative_energy_spell_goodness(foe);
 
-    case SPELL_DEATH_RATTLE:
-    case SPELL_MIASMA_BREATH:
-        ASSERT(foe);
-        return ai_action::good_or_bad(!foe->res_miasma() && !no_clouds);
-
     case SPELL_DISPEL_UNDEAD:
     case SPELL_DISPEL_UNDEAD_RANGE:
         // [ds] How is dispel undead intended to interact with vampires?
@@ -8879,6 +8874,8 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
     case SPELL_SPECTRAL_CLOUD:
     case SPELL_FLAMING_CLOUD:
     case SPELL_CHAOS_BREATH:
+    case SPELL_DEATH_RATTLE:
+    case SPELL_MIASMA_BREATH:
         return ai_action::good_or_impossible(!no_clouds);
 
     case SPELL_MARCH_OF_SORROWS:
