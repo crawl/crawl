@@ -394,7 +394,7 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 0, -1, {fail_basis::xl, 45, 2}, abflag::none },
 #endif
         { ABIL_IMBUE_SERVITOR, "Imbue Servitor",
-            0, 0, 0, -1, {}, abflag::none },
+            0, 0, 0, -1, {}, abflag::delay },
         { ABIL_END_TRANSFORMATION, "End Transformation",
             0, 0, 0, -1, {}, abflag::none },
         { ABIL_BEGIN_UNTRANSFORM, "Begin Untransformation",
