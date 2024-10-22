@@ -3008,16 +3008,15 @@ bool melee_attack::mons_attack_effects()
 
     // Monsters attacking themselves don't get attack flavour.
     // The message sequences look too weird. Also, stealing
-    // attacks aren't handled until after the damage msg. Also,
-    // no attack flavours for dead defenders
-    if (attacker != defender && defender->alive())
+    // attacks aren't handled until after the damage msg.
+    if (attacker != defender)
     {
         mons_apply_attack_flavour();
 
         if (needs_message && !special_damage_message.empty())
             mpr(special_damage_message);
 
-        if (special_damage > 0)
+        if (special_damage > 0 && defender->alive())
         {
             inflict_damage(special_damage, special_damage_flavour);
             special_damage = 0;
@@ -3090,6 +3089,25 @@ bool melee_attack::mons_attack_effects()
     return true;
 }
 
+static bool _attack_flavour_needs_living_defender(attack_flavour flavour)
+{
+    switch (flavour)
+    {
+        case AF_SCARAB:
+        case AF_VAMPIRIC:
+        case AF_BLINK:
+        case AF_SHADOWSTAB:
+        case AF_SPIDER:
+        case AF_HELL_HUNT:
+        case AF_SWARM:
+        case AF_BLOODZERK:
+            return false;
+
+        default:
+            return true;
+    }
+}
+
 void melee_attack::mons_apply_attack_flavour()
 {
     // Most of this is from BWR 4.1.2.
@@ -3097,6 +3115,14 @@ void melee_attack::mons_apply_attack_flavour()
     attack_flavour flavour = attk_flavour;
     if (flavour == AF_CHAOTIC)
         flavour = random_chaos_attack_flavour();
+
+    // Most attack flavours don't make sense against a dead target, but some do.
+    if (_attack_flavour_needs_living_defender(flavour) && !defender->alive())
+        return;
+
+    // Don't announce the speed draining component against dead targets.
+    if (!defender->alive() && flavour == AF_SCARAB)
+        flavour = AF_VAMPIRIC;
 
     const int base_damage = flavour_damage(flavour, attacker->get_hit_dice());
 
