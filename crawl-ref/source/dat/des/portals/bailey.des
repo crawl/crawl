@@ -1270,3 +1270,60 @@ ccc''--3"""""3--''cc
      xxx;;;;;xxx
        xxxxxxx
 ENDMAP
+
+# Inspired by Minas Tirith tiered city
+# Guards at doorways to each tier, and a patrolling pack
+# Treasury is alarm trapped with a guard room nearby
+NAME: test
+TAGS: no_pool_fixup no_item_gen no_monster_gen no_rotate
+: orc_warrior_with_polearm(_G) 
+: easy_axe_fighter(_G)         
+MONS: orc wizard / orc priest / w:2 orc sorcerer
+MONS: orc ; club | mace . leather armour      
+MONS: orc warrior ; morningstar good_item . chain mail | plate armour
+: orc_warlord_with_axe(_G)     
+MONS:  orc knight ; broad axe . plate armour good_item
+: item(dgn.loot_potions .. " / " .. dgn.loot_scrolls)
+ITEM: eveningstar
+ITEM: any orb
+SUBST: | = 6 7                            # Warlord or knight guarding vault  
+NSUBST: d = 3:$ / 3:d / 1:e / 1:f / *=.   # 3 gold piles, 3 potions or scrolls, eveningstar, orb
+SHUFFLE !~/45                             # randomise the patrol location
+KFEAT: ? = alarm trap
+KFEAT: - = iron_grate
+FTILE: _3 = floor_grass
+: bailey_setup(_G)
+MAP
+          xxxxxxxxxxxxxxxxxxxxxx
+          xddddddddx...........x
+          xddddddddx._________.x
+          xx-=----xx._____3___.x
+          x|.......x.__wwwww__.x
+          x........x.__wwUww__.x
+         xxxxx??xxxx.__wwwww__.x
+        xx..xx++xx..._________.x
+        xx...G..G...._________.x
+    xxxxxx.....................x
+xxxxxG..Gx.................xxxxxx
+x...x....xx................x2.2.x
+x..1x.....xx...............+.2.2x
+x...+......xxx.............+2.2.x
+x...+..t.....xxxx..........x.2.2x
+x..1x.....!.....xxxxxxx++xxxxxxxx
+x...x......~..........1..1....xx
+x...xx....!...................xx
+x....xx......t.......t.......xxx
+x.....xx....................xxxx
+x......xx..................xx..x
+x..T....xxx..............xxx...x
+x.........xxxx........xxxx.....x
+xx...........xxxxxxxxxx.......xx
+ x.............xxxxx..........x
+ xx..................4...T...xx
+  xx.....T............5.....xx
+   xx............T...4.....xx
+    xx....................xx
+     xxx................xxx
+       xxxxG........Gxxxx
+          xxG......Gxx
+ENDMAP
