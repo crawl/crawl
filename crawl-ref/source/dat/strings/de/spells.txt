@@ -181,7 +181,7 @@ Ozocubu's Armour
 Ozocubus Rüstung
 %%%%
 Call Imp
-Kobold rufen
+Teufelchen rufen
 %%%%
 Repel Missiles
 Raketen abwehren
