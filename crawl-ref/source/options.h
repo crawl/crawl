@@ -824,6 +824,9 @@ public:
     bool        rest_wait_ancestor;// Stop resting only if the ancestor's HP
                                    // is fully restored.
 
+    bool        rest_wait_ignore_mp; // Completely disregard depleted MP when
+                                     // resting
+
     int         rest_wait_percent; // Stop resting after restoring this
                                    // fraction of HP or MP
 
