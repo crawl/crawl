@@ -13,7 +13,7 @@ all the same thing.
 Beogh
 
 A god of outcasts, pariahs, and the dispossessed, Beogh's altars are rarely
-found among those of other faiths, but their missionaries may always be sought
+found among those of other faiths, but Beogh's missionaries may always be sought
 by those looking for a place to belong. Worshippers will find many friends
 within the dungeon, and those who prove their strength to Beogh may gain
 lifelong companions the equal of any adventurer. To worship Beogh is to believe
@@ -210,9 +210,9 @@ Yredelemnul
 
 Cast down by the good gods eons ago, Yredelemnul seeks to despoil their
 creations and chain all living souls within their inexorable grip. Followers who
-would conquer in their name are granted the power to reap an army of the dead
-and bind powerful souls into eternal service - provided they can sweep across
-the land in a tide as inexorable as the god themself.
+would conquer in Yredelemnul's name are granted the power to reap an army of the
+dead and bind powerful souls into eternal service - provided they can sweep
+across the land in a tide as inexorable as their god.
 %%%%
 Zin
 
@@ -236,12 +236,12 @@ protect worshippers from the Dungeon's malevolent forces.
 Beogh powers
 
 Worshippers will gain the power to call down Beogh's wrath upon their
-oppressors, and other orcs will start to see you as one of their own. Especially
-promising adherents will find themselves beset by rivals for Beogh's favour, but
-overcoming these trials without fleeing will gain you loyal companions whom
-Beogh will resurrect time and time again - just so long as you continue to fight
-and avenge in their name. A true chosen one may even rally an entire orcish army
-to avenge a wrongful death.
+oppressors, and other orcs will start to see them as one of their own.
+Especially promising adherents will find themselves beset by rivals for Beogh's
+favour, but overcoming these trials without fleeing will gain them loyal
+companions whom Beogh will resurrect time and time again, so long as they
+continue to fight and avenge in Beogh's name. A true chosen one may even rally
+an entire orcish army to avenge a wrongful death.
 %%%%
 Cheibriados powers
 
@@ -483,7 +483,7 @@ the dead, and bind especially noteworthy souls to fight for them in death with
 the full capacities they held in life. Especially devout worshippers can even
 call down the inescapable grip of the Fallen directly, binding foes helplessly
 in place as the very life is sucked from them. Yredelemnul will also dispatch
-undead servants to aid their followers at the start of each new conquest.
+undead servants to aid followers at the start of each new conquest.
 %%%%
 Zin powers
 
@@ -680,14 +680,14 @@ Yredelemnul wrath
 
 Those who anger Yredelemnul find themselves beset by legions of the dead.
 Sometimes, the god will also intervene directly, binding the unfaithful in
-inescapable chains as their dark army demonstrates the price of betrayal.
+inescapable chains as Yredelemnul's dark army demonstrates the price of
+betrayal.
 %%%%
 Zin wrath
 
 Those under Zin's wrath will find their beneficial mutations stripped away,
-their enemies alerted, and their senses confounded by the
-axioms of Law; confusion, fainting, blindness and complete paralysis will
-be their lot.
+their enemies alerted, and their senses confounded by the axioms of Law;
+confusion, fainting, blindness and complete paralysis will be their lot.
 %%%%
 Wu Jian extra
 # any god extra screens need :nowrap

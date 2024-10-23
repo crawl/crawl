@@ -258,11 +258,11 @@ Those who have already earned the god's favour will be gifted temporary undead
 servants to help begin their conquest, with stronger servants being provided to
 the experienced and especially pious.
 
-Yredelemnul wishes for their worshippers to pour across the land as an endless
-despoiling tide, and so you will only earn piety for kills made while their
-symbol is lit; its flame will be taken from you the next time you leave the
-floor. They also do not offer second chances - the torch may only be lit once
-per floor, ever.
+Yredelemnul wishes for worshippers to pour across the land as an endless
+despoiling tide, and so you will only earn piety for kills made while the
+symbol is lit; the flame will be taken from you the next time you leave the
+floor. Yredelemnul also does not offer second chances - the torch may only be
+lit once per floor, ever.
 %%%%
 Hurl Torchlight ability
 

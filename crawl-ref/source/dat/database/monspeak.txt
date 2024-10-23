@@ -3414,7 +3414,7 @@ Beogh Donald
 w:50
 @_generic_Donald_@
 
-@The_monster@ says, "Beogh's pretty vain. All their worshippers get remade in their image."
+@The_monster@ says, "Beogh must be pretty vain, having all those worshippers get remade in Beogh's image."
 
 @The_monster@ says, "One of the priests looked like she was going to ask me to join... I guess she changed her mind."
 
@@ -8493,7 +8493,7 @@ orc_priest_preaching
 
 @The_monster@ shouts, "Surrender to Beogh and we'll let you live!"
 
-@The_monster@ threatens, "Beogh's wrath is as vast as their mercy. Make your choice!"
+@The_monster@ threatens, "Beogh's wrath is as vast as Beogh's mercy. Make your choice!"
 %%%%
 ########################################################
 orc_apostle_yield
@@ -8537,7 +8537,7 @@ friendly bfb orc
 
 @The_monster@ shouts, "Blood calls out to blood!"
 
-@The_monster@ cries, "Kill them all! Beogh will know their own!"
+@The_monster@ cries, "Kill them all! Beogh will know Beogh's own!"
 
 @The_monster@ beats @possessive@ weapon against @possessive@ chest and roars.
 
