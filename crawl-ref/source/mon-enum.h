@@ -151,6 +151,7 @@ enum attack_flavour
     AF_FOUL_FLAME,
     AF_HELL_HUNT,
     AF_SWARM,
+    AF_ALEMBIC,
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or

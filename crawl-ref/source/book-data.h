@@ -547,6 +547,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_CLOCKWORK_BEE,
     SPELL_DIAMOND_SAWBLADES,
     SPELL_PLATINUM_PARAGON,
+    SPELL_WALKING_ALEMBIC,
 },
 
 };

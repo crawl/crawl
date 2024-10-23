@@ -4195,6 +4195,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_WALKING_ALEMBIC, "Alistair's Walking Alembic",
+    spschool::forgecraft | spschool::alchemy,
+    spflag::none,
+    5,
+    100,
+    -1, -1,
+    0,
+    TILEG_ANIMATE_ARMOUR,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

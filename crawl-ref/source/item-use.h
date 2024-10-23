@@ -25,6 +25,7 @@ bool armour_prompt(const string & mesg, int *index, operation_types oper);
 
 bool takeoff_armour(int index, bool noask = false);
 
+bool oni_drunken_swing();
 bool drink(item_def* potion = nullptr);
 
 bool god_hates_brand(const int brand);

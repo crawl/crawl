@@ -3125,6 +3125,7 @@ static bool _attack_flavour_needs_living_defender(attack_flavour flavour)
         case AF_HELL_HUNT:
         case AF_SWARM:
         case AF_BLOODZERK:
+        case AF_ALEMBIC:
             return false;
 
         default:
@@ -3728,7 +3729,41 @@ void melee_attack::mons_apply_attack_flavour()
         }
         defender->put_to_sleep(attacker, attacker->get_experience_level() * 3);
         break;
+
+
+    case AF_ALEMBIC:
+    {
+        if (needs_message)
+            mprf("%s vents fumes.", attacker->name(DESC_THE).c_str());
+
+        int dur = random_range(3, 7);
+        place_cloud(CLOUD_POISON, defender->pos(), dur, attacker);
+
+        if (coinflip())
+        {
+            vector<coord_def> cloud_pos;
+            for (adjacent_iterator ai(defender->pos()); ai; ++ai)
+            {
+                if (!cell_is_solid(*ai) && !cloud_at(*ai)
+                    && !(actor_at(*ai) && mons_aligned(attacker, actor_at(*ai))))
+                {
+                    cloud_pos.push_back(*ai);
+                }
+            }
+            shuffle_array(cloud_pos);
+
+            const unsigned int num_clouds = random_range(3, 4);
+            for (size_t i = 0; i < cloud_pos.size() && i < num_clouds; ++i)
+                place_cloud(CLOUD_POISON, cloud_pos[i], dur, attacker);
+        }
+
+        if (--attacker->as_monster()->number == 0)
+            alembic_brew_potion(*attacker->as_monster());
     }
+    break;
+
+    }
+
 }
 
 void melee_attack::do_fiery_armour_burn()

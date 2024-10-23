@@ -166,3 +166,6 @@ monster* find_player_paragon();
 int paragon_charge_level(const monster& paragon);
 void paragon_charge_up(monster& paragon);
 bool paragon_defense_bonus_active();
+
+spret cast_walking_alembic(const actor& agent, int pow, bool fail);
+void alembic_brew_potion(monster& mons);

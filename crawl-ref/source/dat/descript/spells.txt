@@ -31,6 +31,14 @@ poison-resistant creatures may resist the effects). The caster will experience
 vertigo briefly if they successfully make contact with other minds. It is
 frequently used as an icebreaker at wizard parties.
 %%%%
+Alistair's Walking Alembic spell
+
+Constructs a mobile and combat-capable alchemical manufactory. It uses the
+friction of melee combat to brew a variety of useful potions, venting clouds of
+their toxic byproducts at whatever it punches. When it has built up enough heat
+to complete its synthesis, it will automatically dispense the finished potions
+to nearby allies before falling apart.
+%%%%
 Anguish spell
 
 Afflicts nearby foes with supernatural anguish, causing all damage they deal to

@@ -3009,6 +3009,13 @@ that defies its towering size. Its very substance is a hole in the fabric of
 magic; enchantments find no purchase there and it leaches magical power from
 anything it touches like a dry sponge in water.
 %%%%
+walking alembic
+
+A mobile and combat-capable alchemical manufactory that uses the friction of
+melee combat to brew a variety of useful potions. When it has built up enough
+heat to complete its synthesis, it will automatically dispense the finished
+potions to nearby allies and fall apart.
+%%%%
 walking earthen tome
 
 A spellbook that has gone too long without being read. It overflows with magic,

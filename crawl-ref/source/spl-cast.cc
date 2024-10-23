@@ -2477,6 +2477,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_PLATINUM_PARAGON:
         return cast_platinum_paragon(beam.target, powc, fail);
 
+    case SPELL_WALKING_ALEMBIC:
+        return cast_walking_alembic(you, powc, fail);
+
     // Enchantments.
     case SPELL_CONFUSING_TOUCH:
         return cast_confusing_touch(powc, fail);

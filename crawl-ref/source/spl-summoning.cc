@@ -31,6 +31,7 @@
 #include "invent.h"
 #include "item-prop.h"
 #include "item-status-flag-type.h"
+#include "item-use.h"
 #include "items.h"
 #include "libutil.h"
 #include "los.h"
@@ -54,6 +55,7 @@
 #include "place.h" // absdungeon_depth
 #include "player-equip.h"
 #include "player-stats.h"
+#include "potion.h"
 #include "prompt.h"
 #include "religion.h"
 #include "shout.h"
@@ -2180,6 +2182,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_HELLFIRE_MORTAR,          { 1, 1 } },
     { SPELL_SURPRISING_CROCODILE,     { 1, 1 } },
     { SPELL_PLATINUM_PARAGON,         { 1, 1 } },
+    { SPELL_WALKING_ALEMBIC,          { 1, 1 } },
     // Monster-only spells
     { SPELL_SHADOW_CREATURES,         { 0, 4 } },
     { SPELL_SUMMON_SPIDERS,           { 0, 5 } },
@@ -3848,4 +3851,146 @@ bool paragon_defense_bonus_active()
 
     return paragon && grid_distance(you.pos(), paragon->pos()) <=2
            && you.can_see(*paragon);
+}
+
+spret cast_walking_alembic(const actor& agent, int pow, bool fail)
+{
+    fail_check();
+
+    mgen_data mg = _summon_data(agent, MONS_WALKING_ALEMBIC, summ_dur(3),
+                                SPELL_WALKING_ALEMBIC, false);
+    mg.hd = (7 + div_rand_round(pow, 16));
+
+    if (monster* mon = create_monster(mg))
+    {
+        if (you.can_see(*mon))
+            mpr("A lumbering aparatus takes shape within a cloud of fumes.");
+
+        mon->number = random_range(4, 6);
+    }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return spret::success;
+}
+
+static void _do_player_potion()
+{
+    if (!you.can_drink())
+    {
+        mpr("You sigh wistfully at the memory of the taste.");
+        return;
+    }
+
+    vector<pair<potion_type, int>> weights;
+
+    if (get_potion_effect(POT_HASTE)->can_quaff())
+        weights.push_back({POT_HASTE, 50});
+    // The double HP/MP check here is that so that oni won't be extra-likely to
+    // get these potions over something more exciting, just because they could
+    // technically cleave with it.
+    if (you.magic_points < you.max_magic_points && get_potion_effect(POT_MAGIC)->can_quaff())
+        weights.push_back({POT_MAGIC, 30});
+    if (you.hp < you.hp_max && (get_potion_effect(POT_HEAL_WOUNDS)->can_quaff()))
+        weights.push_back({POT_HEAL_WOUNDS, 50});
+    if (get_potion_effect(POT_MIGHT)->can_quaff())
+        weights.push_back({POT_MIGHT, 50});
+    if (get_potion_effect(POT_INVISIBILITY)->can_quaff())
+        weights.push_back({POT_INVISIBILITY, 30});
+
+    if (weights.empty())
+        return;
+
+    flash_tile(you.pos(), random_choose(LIGHTBLUE, LIGHTGREEN, LIGHTMAGENTA));
+
+    potion_type potion = *random_choose_weighted(weights);
+
+    mprf("Mmmm... tastes like %s.", potion_type_name(potion));
+
+    if (you.has_mutation(MUT_DRUNKEN_BRAWLING) && oni_likes_potion(potion))
+        oni_drunken_swing();
+
+    // Mildly shorter duration than drinking the potion normally.
+    get_potion_effect(potion)->effect(true, 15);
+}
+
+// Pick a potion effect that would *do* something to the monster
+static bool _do_monster_potion(monster& mons, monster& alembic)
+{
+    vector<pair<potion_type, int>> weights;
+
+    if (!mons.has_ench(ENCH_HASTE))
+        weights.push_back({POT_HASTE, 50});
+    if (!mons.has_ench(ENCH_MIGHT) && mons_has_attacks(mons))
+        weights.push_back({POT_MIGHT, 75});
+    if (!mons.has_ench(ENCH_EMPOWERED_SPELLS) && mons.antimagic_susceptible())
+        weights.push_back({POT_BRILLIANCE, 75});
+    if (mons.hit_points * 2 / 3 < mons.max_hit_points)
+        weights.push_back({POT_HEAL_WOUNDS, 35});
+
+    if (weights.empty())
+        return false;
+
+    potion_type potion = *random_choose_weighted(weights);
+
+    flash_tile(mons.pos(), random_choose(LIGHTBLUE, LIGHTGREEN, LIGHTMAGENTA));
+
+    switch (potion)
+    {
+        case POT_HASTE:
+            enchant_actor_with_flavour(&mons, &alembic, BEAM_HASTE);
+            return true;
+
+        case POT_MIGHT:
+            enchant_actor_with_flavour(&mons, &alembic, BEAM_MIGHT);
+            return true;
+
+        case POT_BRILLIANCE:
+            simple_monster_message(mons, " magic is enhanced!", true);
+            mons.add_ench(mon_enchant(ENCH_EMPOWERED_SPELLS, 1, &alembic));
+            return true;
+
+        case POT_HEAL_WOUNDS:
+            simple_monster_message(mons, " is healed!");
+            mons.heal(random_range(30, 50));
+            return true;
+
+        default:
+            break;
+    }
+
+    return false;
+}
+
+void alembic_brew_potion(monster& mons)
+{
+    simple_monster_message(mons, " finishes brewing potions and dispenses them!",
+                            false, MSGCH_MONSTER_SPELL);
+
+    if (mons.friendly() && you.see_cell_no_trans(mons.pos()))
+    {
+        if (grid_distance(you.pos(), mons.pos()) <= 3)
+            _do_player_potion();
+        else
+            mpr("But you're too far away!");
+    }
+
+    int num_potions = 5;
+    for (distance_iterator di(mons.pos(), true, true, 3); di && num_potions > 0; ++di)
+    {
+        if (monster* targ = monster_at(*di))
+        {
+            if (mons_aligned(targ, &mons) && !mons_is_firewood(*targ)
+                && !mons_is_conjured(targ->type)
+                && mons.see_cell_no_trans(*di))
+            {
+                if (_do_monster_potion(*targ, mons))
+                    --num_potions;
+            }
+        }
+    }
+
+    simple_monster_message(mons, " collapses with a clattering noise.", false,
+                           MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+    monster_die(mons, KILL_RESET, NON_MONSTER);
 }
