@@ -4,12 +4,12 @@ welcome
 <white>Willkommen bei Dungeon Crawl!</white>
 
 Eure Aufgabe ist es einen <w>{{ return you.race() }} {{ return you.class()
-}}</w> sicher durch die Tiefen der Höhlen zu leiten und dabei den sagenhaften
+}}</w> sicher durch die Tiefen des Dungeons zu leiten und dabei den sagenhaften
 Orb von Zot zurück zur Oberfläche zu bringen. Wie auch immer, bei Euren ersten
 Versuchen sollte entdecken das Hauptziel sein. Versuche so tief wie möglich zu
-erforschen, aber nehm Euch in Acht : der Tod schleicht um jede Ecke!
+erforschen, aber nehm Euch in Acht: der Tod schleicht um jede Ecke!
 
-Für jetzt merke die die folgenden Tasten und Funktionen:
+Für jetzt merkt die folgenden Tasten und Funktionen:
  <input>$cmd[CMD_DISPLAY_COMMANDS]?</input> — zeigt die Gegenstände und die
 Befehle
  <input>$cmd[CMD_SAVE_GAME]</input>  — speichert das Spiel um später
@@ -18,14 +18,14 @@ fortzufahren (aber bedenke das der Tod permanent ist)
 
 Der Hinweismodus wird Euch helfen Crawl zu spielen ohne irgendwelche Handbücher
 zu lesen. Falls Ihr es noch nicht versucht habt möchtet Ihr vielleicht die
-Einführung ausprobieren. Und wenn es Euch dann noch interessiert bekommt Ihr
-noch mehr Informationen in den folgenden doks / Verzeichnissen (die man auch
-alle im Spiel selbst lesen kann):
+Einführung ausprobieren. Und wenn es Euch dann noch interessiert, bekommt Ihr
+noch mehr Informationen in den folgenden Dateien im docs/ Verzeichnis (die man
+auch alle im Spiel selbst lesen kann):
  <lightblue>quickstart.txt</lightblue>     — eine Kurzeinführung in Crawl.
  <lightblue>crawl_manual.txt</lightblue>   — Beinhaltet alle Details über
-Arten, Magie, Fähigkeiten, usw.
- <lightblue>options_guide.txt</lightblue>  — Crawl's Interface ist sehr gut an
-eigene Bedürfnisse anpassbar. Dieses Dokument erklärt alle Optionen.
+Spezies, Magie, Fähigkeiten, usw.
+ <lightblue>options_guide.txt</lightblue>  — Crawl's Interface ist in hohem Maße
+konfigurierbar. In diesem Dokument werden alle Optionen erklärt.
 
 Viel Spass beim Crawlen!
 %%%%
@@ -39,9 +39,9 @@ Eventuell kann der folgende Ratschlag Eure Spielweise verbessern:
 %%%%
 death conjurer melee
 
-Angriffszauber sollten als Zauberer Eure Hauptwaffe sein. Wirke Eure
-Zaubersprüche so oft es geht. Denke daran zu rasten wenn Eure Magie niedrig
-ist.
+Angriffszauber sollten als Zauberer Eure Hauptwaffe sein. Wirkt Eure
+Zaubersprüche so oft es geht. Denkt daran, euch auszuruhen, wenn Euer Mana
+niedrig ist.
 %%%%
 death berserker unberserked
 
@@ -50,74 +50,76 @@ Gegner kämpft. Das ist zwar riskant, macht Euch aber schneller und kräftiger.
 %%%%
 death ranger melee
 
-Euer Bogen mit Pfeilen ist unheimlich stark gegen entfernte Monster. Denke dran
-alle Pfeile die in den Höhlen liegen mitzunehmen.
+Eure Bogen und Pfeilen sind unheimlich stark gegen entfernte Monster. Denkt
+daran alle Pfeile, die im Dungeon liegen, mitzunehmen.
 %%%%
 death random 0
 
-Erwäge immer die Nutzung von Geschossen, Stäben und Zaubersprüchen bevor Ihr
-Euch einem Monster im Nahkampf stellt.
+Erwägt immer die Nutzung von Geschossen, Zauberstäben und Zaubersprüchen bevor
+Ihr Euch einem Monster im Nahkampf stellt.
 %%%%
 death random 1
 
-Lerne wann Ihr vor Dingen davonlaufen müsst die Ihr nicht bewältigen könnt — das
-ist sehr wichtig! Es ist oft sehr weise einen teilweise gefährlichen Level zu
-überspringen. Doch übertreibe es dabei nicht, denn die Monster werden immer
+Lerne wann Ihr vor Dingen davonlaufen müsst, die Ihr nicht bewältigen könnt — das
+ist sehr wichtig! Es ist oft sehr weise einen besonders gefährlichen Level zu
+überspringen. Doch übertreibt es dabei nicht, denn die Monster werden immer
 Mächtiger je tiefer Ihr vordringt.
 %%%%
 death random 2
 
-Raste zwischen den Begegnungen, wenn möglich am besten in einem schon
-erforschtem und von Monstern bereinigtem Bereich. In Crawl sind suchen und
-rasten ein und dasselbe. Um eine Runde zu suchen drücke <input>s</input>,
-<input>.</input>, <input>Entf</input> oder <input>Tastenfeld-5</input>. Beim
-Druck auf <input>5</input> oder <input>Shift-und-Tastenfeld-5</input> <tiles>,
-oder <input>klick in den Statistik bereich</input></tiles> lässt Euch einen
-längeren Zeitraum rasten (nach 100 Runden oder wenn Ihr vollständig geheilt seid
-ist die Rast zu Ende).
+Rastet zwischen Begegnungen, wenn möglich am besten in einem schon erforschten
+und von Monstern bereinigten Bereich. <input>$cmd[CMD_REST]</input><localtiles>
+drücken<localtiles>, oder auf den 'Rasten' Button in der Befehlsleiste klicken
+<localtiles> werden für 100 Runden, oder bis zur vollständigen Heilung, rasten.
 %%%%
 death random 3
 
-Denke daran von Euch gefundene Schriftrollen, Tränke und Stäbe zu benutzen. Ihr
-werdet sehr häufig nicht alles mit der Schriftrolle identifizieren können. Lernt
-zu improvisieren : findet es durch ausprobieren heraus.
+Vergesst nicht, die gefundenen Schriftrollen, Tränke oder Zauberstäbe zu
+benutzen. Lernt zu improvisieren: Ihr musst Tränke und Schriftrollen erkennen,
+indem Ihr sie benutzt.
+%%%%
+death random 4
+
+Wenn sich eine bestimmte Begegnung überwältigend anfühlt, vergesst nicht,
+frühzeitig Notfallgegenstände zu benutzen. Eine Schriftrolle der Teleportation
+oder ein Trank der Hast können wirklich den Hintern retten.
 %%%%
 death random 5
 
-Bekämpft nie mehr als ein Monster wenn Ihr es vermeiden könnt. Ziehe Euch
+Bekämpft nie mehr als ein Monster wenn Ihr es vermeiden könnt. Zieht Euch
 immer in einen Gang zurück damit sie gezwungen sind Euch einzeln zu bekämpfen.
 %%%%
 finished
 
-Glückwunsch! Ihr habt bis zum Ende des Hilfe-Modus überlebt — sicherlich wollt
-Ihr die anderen auch versuchen. Bitte beachte das der Kommando Hilfe-Schirm
+Glückwunsch! Ihr habt bis zum Ende des Hilfe-Modus überlebt — probiert unbedingt
+auch die anderen Charaktere aus. Bitte beachtet das die Kommando-Hilfe-Seite
 (<input>$cmd[CMD_DISPLAY_COMMANDS]?</input>) von nun an ganz anders aussehen
 wird. Hier noch ein letzter Spieltipp:
 %%%%
 finished explored
 
-Herumwandern und die Level erforschen wird einfacher man Auto-Erforschen
-(<input>$cmd[CMD_EXPLORE]</input>) benutzt. Crawl bewegt und hebt automatisch
-interessante Gegenstände für Euch auf.<tiles>
+Herumwandern und die Level erforschen werde einfacher wenn man Auto-Erforschen
+(<input>$cmd[CMD_EXPLORE]</input>) benutzt. Damit könnt Ihr automatisch zu
+interessanten Gegenständen bewegen und diese aufheben.<localtiles>
 
 Auto-Erforschen lässt sich auch mit einem <input>links-klick</input> bei
-gehaltener <input>Strg</input>-Taste starten.</tiles>
+gehaltener <input>Strg</input>-Taste starten.</localtiles>
 %%%%
 finished travel
 
-Es gibt einen praktischen Weg wie man zwischen weit entfernten Höhlen Level
-reisen kann: Drücke <input>$cmd[CMD_INTERLEVEL_TRAVEL]</input> oder
-<input>G</input> und gib das gewünschte Ziel ein. Wird die Reise unterbrochen
-wird ein Druck auf <input>$cmd[CMD_INTERLEVEL_TRAVEL] Eingabe</input> or
-<input>G Eingabe</input> diese wieder aufnehmen.
+Es gibt einen praktischen Weg wie man zwischen weit entfernten Ebenen
+reisen kann: <input>$cmd[CMD_INTERLEVEL_TRAVEL]</input> oder <input>G</input>
+drücken und das gewünschte Ziel eingeben. Wird die Reise unterbrochen
+wird ein Druck auf <input>$cmd[CMD_INTERLEVEL_TRAVEL] Enter</input> oder
+<input>G Enter</input> sie fortfahren.
 %%%%
 finished stashes
 
-Ihr könnt unter allen Gegenstände in den Höhlen mit dem Befehl
+Ihr könnt unter allen Gegenstände im Dungeon mit dem Befehl
 <input>$cmd[CMD_SEARCH_STASHES]</input> suchen. Zum Beispiel,
-<input>$cmd[CMD_SEARCH_STASHES]</input> <w>„dolch“</w> listet alle dolche auf.
-Dann könnt Ihr zu einem der Punkte reisen. Es ist genauso möglich Worte wie
-<w>„Shop“</w> oder <w>„Altar“</w> einzugeben.
+<input>$cmd[CMD_SEARCH_STASHES]</input> <w>„dolch“</w> listet alle Dolche auf.
+Dann könnt Ihr zu einem reisen. Es ist genauso möglich Strukture wie
+<w>„Shop“</w> oder <w>„Altar“</w> zu suchen.
 %%%%
 finished random 0
 
@@ -150,59 +152,1058 @@ Dateien nicht finden kann.
 %%%%
 finished random 3
 
-Um Rat und Hilfe fragst du am besten andere Crawl-Spieler auf dem
-<w>#crawl</w> IRC (Internet Relay Chat) Kanal auf Libera
-(<w>irc.libera.chat</w>).
-%%%%
-dissection reminder
-
-Wenn Ihr sie nicht verspeisen möchtet, dann überlege Euch die Leichen mit einem
-Gebet als Opfer an {{ return you.god() }} anzubieten. Genauso könnt Ihr
-jederzeit die Leichen, welche Ihr auf dem Bodenabschnitt Eures Inventarfeldes
-seht, kleinhacken indem Ihr mit der <input>linken Maustaste</input> drauf
-klickt. Immer wenn Ihr einen Leichnam im Hilfe-Modus sehst könnt Ihr diese
-Information erneut lesen.
+Um Rat und Hilfe fragt man am besten andere Crawl-Spieler durch die
+Community-Ressourcen bei http://crawl.develz.org/.
 %%%%
 HINT_CONVERT Xom
 
-Ihr seid gerade zur Anbetung von <w>Xom</w> konvertiert. Ihr könnt Xom bei Laune
-halten indem Ihr absolut nichts tut damit dieser Gott sich an Euch langweilt.
+Ihr seid gerade zur Anbetung von <w>Xom</w> konvertiert. Als Anhänger von Xom
+werdet Ihr wie ein Spielzeug behandelt, dem Xom nach Belieben hilft oder
+schadet, um sich zu amüsieren.
 
-Wenn Ihr Xom bei Laune haltet dann behandelt er Euch wie ein Spielzeug, er wird
-Euch zufällig helfen oder schaden, ganz zu seinem Vergnügen; andererseits wird
-er Euch wie ein missbilligtes Spielzeug behandeln.
+Es gibt keine Garantie dafür, dass Xom gut gelaunt bleibt - das Beste, worauf
+ein Anhänger hoffen kann, ist, dass Xom sich nicht langweilt!
+%%%%
+HINT_CONVERT Gozag
+
+Ihr seid gerade zur Anbetung von <w>Gozag</w> konvertiert. Im Gegensatz zu
+anderen Göttern interessiert sich Gozag nur für Gold; jede göttliche Fähigkeit
+kostet Gold, und Eure Feinde verwandeln sich beim Tod in Gold.
+%%%%
+HINT_CONVERT Ru
+
+Ihr seid gerade zur Anbetung von <w>Ru</w> konvertiert. Im Gegensatz zu anderen
+Göttern gewährt Ru Frömmigkeit (göttliche Gunst) im Austausch für dauerhafte
+Opfer, wie z. B. den Verzicht auf die die Fähigkeit, Tränke zu trinken, während
+man gefährdet ist, oder den Verlust der Fähigkeit, bestimmte Fertigkeiten zu
+trainieren. Je mehr Frömmigkeit Ihr habt, desto mehr Fähigkeiten gewährt Euch Ru
+und desto mächtiger werden diese Fähigkeiten. Ru wird Euch weitere Opfer
+anbieten, als Ihr die Tiefen des Dungeons erforscht.
+%%%%
+HINT_CONVERT Uskayaw
+
+Ihr seid gerade zur Anbetung von <w>Uskayaw</w> konvertiert. Im Gegensatz zu
+anderen Göttern kann man Uskayaws Gunst nicht nach und nach gewinnen, indem man
+den Dungeon erforscht oder Monster tötet. Stattdessen wird die Gunst von Uskayaw
+schnell im Kampf gewonnen, wenn man Schaden anrichtet. Je länger man im Kampf
+bleibt und je mehr Schaden man anrichtet, desto größer sind die Kräfte, die ihm
+angeboten werden. Sobald der Kampf endet, geht Uskayaws Gunst schnell verloren
+und muss im nächsten Kampf wiedergewonnen werden.
 %%%%
 HINT_CONVERT
 
 Ihr seid gerade zur Anbetung von <w>{{ return you.god() }}</w> konvertiert.
-Eure Frömmigkeit (Göttliche Gefälligkeit) wird mit der Zeit schrittweise
-abnehmen, und sobald sie verlischt wird Euch {{ return you.god()
-}} verbannen und bestrafen. Allerdings könnt Ihr das verhindern und sogar genug
-Frömmigkeit erhalten um Macht und göttliche Gaben zu erlangen indem Ihr Dinge
-tut die {{ return you.god() }} gefallen. Aber keine Panik: Ihr beginnt mit
-einem angemessenen Betrag an Frömmigkeit, somit ist jegliche Gefahr der
-Verbannung erstmal weit entfernt.
+Eure Frömmigkeit (göttliche Gunst) wird zunehmen, wenn Ihr Dinge tut, die Eurem
+neuen Gott gefallen, und sie wird im Laufe der Zeit abnehmen.
 
-Die Vorlieben und Abneigungen Eures Gottes sowie Euren aktuellen Stand und
-göttlichen Fähigkeiten mit drücken von <input>^</input><tiles> überprüfen
-(alternativ drücke <input>Shift</input> zusammen mit
-<input>rechts-klick</input> auf Eure Figur)</tiles>.
+Ihr könnt die Vorlieben und Abneigungen Eures Gottes sowie Euren aktuellen
+Status und Eure göttlichen Fähigkeiten überprüfen, indem Ihr 
+<input>$cmd[CMD_DISPLAY_RELIGION]</input> drückt<localtiles>, oder
+<input>Shift-rechtsklickt</input> auf Euren Avatar</localtiles>.
 %%%%
 HINT_SEEN_FIRST_OBJECT
 
-<console>$1 </console> ist ein Gegenstand. Wenn Ihr dort hin geht und
-<input>g</input> oder <input>,</input> drückt werdet Ihr es
-aufsammeln.<console>Normalerweise werden Gegenstände mit Symbolen wie
-<w>%?!"=()[</w> angezeigt. </console><tiles>Ihr könnt Gegenstände auch
-aufsammeln indem Ihr die <input>linke Maustaste</input> drückt als Ihr auf dem
-Feld über ihm steht. </tiles> Außerdem werden einige Dinge normalerweise
-automatisch aufgesammelt.<tiles>(Auf dem Feld werden diese dann grün
-umrandet.)</tiles>
+Das <console>$1 </console>ist ein Gegnstand. Wenn Ihr dorthin bewegt und
+<input>$cmd[CMD_PICKUP]</input> drückt<localtiles>, oder 
+<input>linksklickt</input> auf ihn im Inventar</localtiles>, werdet Ihr ihn
+aufheben.<console> Im Allgemeinen werden Gegenstände durch nicht-Buchstaben-
+Symbole wie <w>%?!"=()[</w> gezeigt.</console> Einige Gegenstände
+<tiles>, mit einem grünen Rahmen markiert,</tiles> werden automatisch aufgehebt.
 
-Sobald es in Eurem Inventar ist könnt Ihr es wieder fallen lassen indem Ihr
-<tiles> die <input>linke Maustaste</input> mit gehaltener <input>Shift
-Taste</input> klickt. Immer wenn Ihr einen <input>Rechtsklick</input> auf einen
-Gegenstand mit</tiles><console><input>d</input>. Jederzeit wenn Ihr ein Objekt
-in Eurem <input>i</input>nventar</console> anseht, könnt Ihr alles über
-seine Eigenschaften und die Beschreibung dazu lesen.
+Sobald ein Gegenstand sich in Eurem Inventar befindet, könnt Ihr es wieder mit
+<input>$cmd[CMD_DROP]</input><localtiles> oder <input>Shift-Linksklick</input>
+</localtiles> fallen lassen. Wann immer Ihr einen Gegenstand in ihrem Inventar
+anschaut,<localtiles> oder <input>rechtsklickt</input> auf ihn,</localtiles>
+könnt Ihr über seine Eigenschaften und seine Beschreibung lesen.
+%%%%
+HINT_SEEN_POTION
+
+Ihr habt Euren ersten Zaubertrank erhalten<console>
+('<w>$item[potion]</w>')</console>. <w>$cmd[CMD_QUAFF]</w> drücken<localtiles>,
+oder auf ihn <w>linksklicken</w></localtiles>, um ihn zu trinken.
+
+Sobald Ihr einen Trank identifiziert habt, entweder mit einer Schriftrolle der
+Identifizierung oder durch Trinken, erkennt Ihr automatisch alle anderen Tränke
+derselben Art; das bedeutet, dass es manchmal nützlich ist, Tränke zu trinken,
+um sie zu identifizieren.
+%%%%
+HINT_SEEN_SCROLL
+
+Ihr habt Eure erste Schriftrolle erhalten<console>
+('<w>$item[scroll]</w>')</console>. <w>$cmd[CMD_READ]</w> drücken<localtiles>,
+oder auf sie<w>linksklicken</w>s</localtiles>, um sie zu lesen.
+
+Sobald Ihr eine Schriftrolle identifiziert habt, entweder mit einer Schriftrolle der
+Identifizierung oder durch Lesen, erkennt Ihr automatisch alle anderen Schriftrollen
+derselben Art; das bedeutet, dass es manchmal nützlich ist, Schriftrollen zu lesen,
+um sie zu identifizieren.
+%%%%
+HINT_SEEN_WAND
+
+Ihr habt Euren ersten Zauberstab erhalten<console>
+('<w>$item[wand]</w>')</console>. <w>$cmd[CMD_EVOKE]</w> drücken<localtiles>,
+oder auf ihn <w>linksklicken</w></localtiles>, um ihn zu evozieren.
+
+Wenn Ihr weitere Zauberstäbe desselben Typs findet, verschmelzen sie mit diesem
+Zauberstab und laden ihn auf.
+%%%%
+HINT_SEEN_SPBOOK
+
+Ihr habt ein Buch aufgehoben<console> ('<w>$item[book]</w>')</console>. Beim
+Aufheben sind seine Zaubersprüche sofort zu Eurem Bibliothek zegefügt. Dann
+könnt Ihr ihn mit <w>$cmd[CMD_MEMORISE_SPELL]</w> memorisieren, und mit
+<w>$cmd[CMD_CAST_SPELL]</w> wirken.
+{{
+    if you.god() == "Trog" then
+        return "Trog hasst es allerdings, wenn Ihr Magie memoriert oder studiert!"
+    end
+}}
+%%%%
+HINT_SEEN_WEAPON
+
+Das ist die erste Waffe<console> ('<w>$item[weapon]</w>')</console>, die Ihr
+aufgehoben habt. Drückt <w>$cmd[CMD_WIELD_WEAPON]</w><localtiles> oder
+<w>linksklickt</w> auf sie</localtiles>, um sie zu führen, aber seiet Euch
+bewusst, dass diese Waffe eine andere Fertigkeit trainieren kann als Eure
+Aktuelle. Ihr könnt die Eigenschaften dieser Waffe von Eurem Inventar
+(<w>$cmd[CMD_DISPLAY_INVENTORY]</w>)<localtiles> oder durch
+<w>Rechtsklicken</w> auf sie</localtiles> anschauen.
+
+{{
+    if crawl.hints_type() == "berserk" then
+        return "Ihr sollten wahrscheinlich bei Äxten bleiben. Die Verzauberung"
+               .. " anderer Äxte zu überprüfen wäre aber nutzlich!"
+    end
+}}
+%%%%
+HINT_SEEN_MISSILES
+
+Das ist der erste Stapel Geschosse<console> ('<w>$item[missile]</w>')</console>,
+den Ihr aufgehoben habt. Geschosse wie Bumerangs und Wurfnetze können mit der
+Hand geworfen werden, aber andere Geschosse wie Pfeile und Bolzen erfordern
+einen Abschussapparat und Training im Umgang damit, um wirklich effektiv zu sein.
+Diesen Gegenstand im Inventar auswählen<localtiles>, oder einfach auf ihn
+<w>rechtsklicken</w>, um mehr Informationen über Geschosse und Abschussgerät zu
+lesen.
+
+{{
+    if crawl.hints_type() = "hunter" then
+        return "Da Ihr bereits im Bogenschießen ausgebildet seid, müsst Ihr"
+               .." Euch nur noch um das Sammeln von Pfeilen kümmern."
+    elseif crawl.hints_type() = "magic" then
+        return "Als Zauberer braucht Ihr jedoch nicht wirklich eine weitere Art"
+               .. "  von Fernkampfangriff."
+    elseif crawl.hints_type() == "berserk"
+        return "Für den Moment ist es am besten, wenn Ihr Euch mit Steinen für"
+               .. " Fernkampfangriffe begnügt."
+    else
+        return "";
+    end
+}}
+%%%%
+HINT_SEEN_ARMOUR
+
+Das ist das erste Rüstungsstück<console> ('<w>$item[armour]</w>')</console>,
+das Ihr aufgehoben habt. <localtiles>Ihr könnt es anklicken, um es anzuziehen,
+und erneut klicken, um es zu entfernen. <w>Rechtsklicken</w> auf es wird mehr
+Informationen über es geben.</localtiles><nomouse><w>$cmd[CMD_WEAR_ARMOUR]</w>
+drücken, um es anzuziehen, und <w>$cmd[CMD_REMOVE_ARMOUR]</w> drücken, um es
+auszuziehen. Ihr könnt seine Eigenschaften vom Inventar
+(<w>$cmd[CMD_DISPLAY_INVENTORY]</w>) anschauen.</nomouse>
+
+{{
+    if you.get_base_mutation_level("horns") > 0 then
+        return "Beachtet, dass Ihr wegen Euer Hörner keine Helme tragen können."
+               .. " (Drückt <w>$cmd[CMD_DISPLAY_MUTATIONS]</w>, um eine Liste"
+               .. " Eurer Mutationen und eingeborenen Fähigkeiten zu sehen.)"
+    end
+}}
+%%%%
+HINT_SEEN_RANDART
+
+Bei Waffen und Rüstungen, die solche ungewöhnlichen Beschreibungen aufweisen,
+ist die Wahrscheinlichkeit höher, dass sie verzaubert sind oder besondere
+Eigenschaften haben, seien sie nun gut oder schlecht.
+%%%%
+HINT_SEEN_CARRION
+
+Das<console> <w>$item[corpse]</w></console> ist eine Leiche.
+%%%%
+HINT_NON_FLOOR_CARRION
+
+Ah, eine Leiche!
+%%%%
+HINT_SEEN_JEWELLERY
+
+Ihr habt ein Schmuckstück aufgehoben, entweder einen Ring
+<console>('<w>$item[jewellery]</w>') </console>oder ein
+Amulett<console> ('<w>$item[amulet]</w>')</console>.
+<nomouse>Drückt <w>$cmd[CMD_WEAR_JEWELLERY]</w>, um es anzulegen, und
+<w>$cmd[CMD_REMOVE_JEWELLERY]</w> um es zu entfernen. Ihr könnt seine
+Eigenschaften von Eurem Inventar (<w>$cmd[CMD_DISPLAY_INVENTORY]</w>)
+sehen.</nomouse><localtiles>Auf es klicken, um es anzulegen, und nochmal
+klicken, um es zu entfernen. <w>Rechtsklicken</w> auf es wird seine
+Eigenschaften zeigen.</localtiles>
+%%%%
+HINT_SEEN_MISC
+
+Dies ist in der Tat ein merkwürdiges Objekt. Ihr könnt damit herumspielen, um
+herauszufinden, was es bewirkt, indem Ihr es evoziert mit
+(<w>$cmd[CMD_EVOKE]</w>)<localtiles>, oder <w>Linksklick</w></localtiles>.
+Wie üblich, es im Inventar (<w>$cmd[CMD_DISPLAY_INVENTORY]</w>) auszuwählen,
+kann weitere Informationen hervorbringen.
+%%%%
+HINT_SEEN_STAFF
+
+Ihr habt einen magischen Stecken<console> ('<w>$item[magical staff]</w>')
+</console> aufgehoben. Er muss gehandhabt werden, um von Nutzen zu sein. Magier
+verwenden Stecken, um ihre Macht in bestimmten Zauberschulen zu erhöhen. Er kann
+auch als Waffe verwendet werden. Er kann mit <w>$cmd[CMD_WIELD_WEAPON]</w>
+<localtiles><w> oder Linksklick</w></localtiles> gehandhabt werden.
+%%%%
+HINT_SEEN_GOLD
+
+Ihr habt Euren ersten Goldhaufen aufgesammelt<console>
+('<yellow>$item[gold]</yellow>')</console>. Im Gegensatz zu den meisten anderen
+Gegenständen in Crawl nimmt Gold keinen Platz in Eurem Inventar ein und kann
+nicht fallen gelassen werden. Gold kann zum Kauf von Gegenständen in Geschäften
+verwendet werden und wird von bestimmten Göttern geschätzt.
+%%%%
+HINT_SEEN_STAIRS
+
+Das<console> '$1'</console> ist eine Treppe nach unten. Ihr könnt die nächste
+(tiefere) Ebene eintreten, indem Ihr ihr nach unten folgen
+(<w>$cmd[CMD_GO_DOWNSTAIRS]</w>). Drückt <w>$cmd[CMD_GO_UPSTAIRS]</w>, während
+Ihr auf die Treppe nach oben stehen, um zu dieser Ebene zurückzukehren.
+<localtiles>Alternativ könnt Ihr auch auf die Treppe <w>linksklicken</w>, auf
+der Ihr steht, um sie zu benutzen.</localtiles>
+%%%%
+HINT_SEEN_ESCAPE_HATCH
+
+Das<console> '$1'</console> ist eine Fluchtluke. Ihr könnt damit eine Ebene
+verlassen mit <w>$cmd[CMD_GO_UPSTAIRS]</w> bzw. <w>$cmd[CMD_GO_DOWNSTAIRS]</w>
+<localtiles> (oder durch <w>Linksklicken</w>)</localtiles>, genau wie mit
+Treppen. Im Gegensatz zu Treppen sind Luken jedoch eine Einwegreise, seiet Ihr
+also beim Abstieg vorsichtig.
+%%%%
+HINT_SEEN_BRANCH
+
+Das<Konsole> '$1'</Konsole> ist der Zugang zu einem anderen Zweig des Dungeons,
+der sich in Gelände, Levelaufbau und Monstern unterscheiden kann, von dem des
+den aktuellen Hauptzweig, in dem Sie sich befinden. Einige Verzweigungen
+enthalten nur eine einzige Ebene, und andere sind viele Ebenen tief. Sie können
+auch Eingänge zu anderen Zweigen enthalten.
+
+Die ersten drei Abzweigungen sind der Tempel, die Höhle der Bestien und die
+Orkische Minen. Während die Höhle und die Minen für neue Abenteurer gefährlich
+sein können, ist der Tempel völlig sicher und enthält eine Reihe von Altären an
+die man zu einem neuen Gott bekehren kann.
+%%%%
+HINT_SEEN_PORTAL
+
+Das<console> '$1'</console> ist ein Portal zu einer optionalen Ebene, die
+zusätzliche Beute im Austausch für zusätzliche Gefahr bietet. Es gibt keine
+Strafe für das Überspringen, aber das Portal verschwindet, wenn Ihr wartet,
+also müsst Ihr jetzt entscheiden, ob Ihr es riskieren wollt.
+%%%%
+HINT_SEEN_BAZAAR_PORTAL
+
+Das<console> '$1'</console> ist ein Portal zu einem interdimensionalen Basar mit vielen Geschäften. Es wird verschwinden, wenn Ihr es nicht bald betretet, also beeilt Euch.
+%%%%
+HINT_SEEN_PORTAL_2
+
+Ihr könnt ein Portal wie eine Treppe betreten, indem Ihr darauf steht und <localtiles><w>klickst</w> oder </localtiles><w>$cmd[CMD_GO_DOWNSTAIRS]</w> drückst. Um zurückzukehren, findet <tiles>ein ähnlich aussehendes Portal.</tiles><console>ein weiteres $1 - aber NICHT den alten Steinbogen, an dem Ihr begonnen habt!</console>
+%%%%
+HINT_STAIR_BRAND
+
+<tiles>Ein kleines Symbol auf einer Treppenkachel bedeutet, dass sich an dieser Stelle Gegenstände befinden, die Ihr Euch vielleicht ansehen möchtet.</tiles>
+<console>Wenn Gegenstände eine Treppe oder eine Fluchtluke verdecken, wird dies durch die Hervorhebung des <w><<</w>- oder <w>></w>-Symbols angezeigt, anstatt das Treppensymbol mit einem Gegenstandsglyph zu verdecken.</console>
+%%%%
+HINT_HEAP_BRAND
+
+<tiles>Ein kleines Symbol auf einer Kachel zeigt an, dass sich mindestens ein weiterer Gegenstand auf demselben Haufen befindet, den Ihr Euch vielleicht ansehen möchtet.</tiles>
+<console>Wenn sich zwei oder mehr Gegenstände auf einem einzigen Feld befinden, wird das Feld hervorgehoben und das Symbol für den Gegenstand an der Spitze des Haufens angezeigt.</console>
+%%%%
+HINT_TRAP_BRAND
+
+<console>Wenn Gegenstände eine Falle verdecken, wird dies durch Hervorhebung des <w>^</w>-Symbols angezeigt, anstatt das Fallensymbol mit einer Gegenstandsglyphe zu verbergen.</console>
+%%%%
+HINT_SEEN_TRAP
+
+Ihr habt gerade eine Falle entdeckt. Gelegentlich stolpert Ihr über diese fiesen Konstruktionen<console>, die mit $1 dargestellt werden</console>. Jede Art von Falle hat einen anderen Effekt, wenn Ihr sie betretet, wie z.B. Feinde zu alarmieren oder eine zufällige Teleportation auszulösen.
+%%%%
+HINT_TRIGGERED_TRAP
+
+Ups ... Ihr habt gerade eine Falle ausgelöst. Gelegentlich stolpert Ihr in diese fiesen Konstruktionen<console>, die mit $1 dargestellt werden</console>. Jede Art von Falle hat einen anderen Effekt, wenn Ihr sie betretet, wie z.B. Feinde zu alarmieren oder eine zufällige Teleportation auszulösen.
+%%%%
+HINT_SEEN_ALTAR
+
+Das<console> $1</console> ist ein Altar. <localtiles>Durch <w>Rechtsklick</w> mit der Maus darauf</localtiles><nomouse>Wenn Ihr den Altar mit <w>$cmd[CMD_LOOK_AROUND]</w> anvisiert und dann <w>$cmd[CMD_TARGET_DESCRIBE]</w> drückt</nomouse> könnt Ihr eine kurze Beschreibung erhalten.
+
+Drückt <w>$cmd[CMD_GO_UPSTAIRS]</w> oder <w>$cmd[CMD_GO_DOWNSTAIRS]</w>, während Ihr auf dem Platz steht, um dem Glauben beizutreten oder einige Informationen über den jeweiligen Gott zu lesen. Bevor Ihr den entsprechenden Glauben annehmt, werdet Ihr um eine Bestätigung gebeten.
+
+{{
+    if you.god() == "No God" and crawl.hints_type() = "magic" then
+        return "Der einfachste Gott für einen unerfahrenen Zauberer ist"
+               .. " wahrscheinlich Vehumet, obwohl Sif Muna eine gute zweite"
+               .. " Wahl ist."
+    end
+}}
+%%%%
+HINT_SEEN_SHOP
+
+Das<console> $1</console> ist ein Laden. Ihr könnt ihn betreten, indem Ihr <w>$cmd[CMD_GO_UPSTAIRS]</w> oder <w>$cmd[CMD_GO_DOWNSTAIRS]</w> eintippt<tiles>, oder indem Ihr darauf <w>linksklickt</w></tiles>, während Ihr auf dem Platz steht.
+
+Wenn Ihr Euch etwas wünschst, das Ihr Euch noch nicht leisten könnt, könnt Ihr die <w>Umschalttaste</w> gedrückt halten und den entsprechenden Buchstaben drücken, um es auf Eure Einkaufsliste zu setzen. Das Spiel wird Euch dann daran erinnern, wenn Ihr genug Gold gesammelt habt, um es zu kaufen.
+%%%%
+HINT_SEEN_DOOR
+
+Das<console> $1</console> ist eine geschlossene Tür. Ihr könnt sie öffnen, indem Ihr sie betretet. Manchmal ist es nützlich, eine Tür zu schließen. <nomouse>Dazu drückt Ihr <w>$cmd[CMD_CLOSE_DOOR]</w>, während Ihr neben der Tür steht. Wenn es mehrere Türen gibt, werdet Ihr dann aufgefordert, eine Richtung anzugeben.</nomouse><localtiles>Dazu linksklickt Ihr auf die Tür, während Ihr neben Ihr steht.</localtiles>
+%%%%
+HINT_SEEN_RUNED_DOOR
+
+Das<console> $1</console> ist eine runenverzierte Tür, die sich wahrscheinlich vor etwas ungewöhnlich Gefährlichem befindet. Monster werden sie niemals öffnen. Wenn Ihr es doch tut, werden die Runen zerbrochen und sie wird zu einer normalen Tür.
+%%%%
+HINT_KILLED_MONSTER
+
+Herzlichen Glückwunsch, Euer Charakter hat durch das Töten dieses Monsters gerade Erfahrung gesammelt! Das erhöht einige Eurer Fähigkeiten und macht Euch tödlicher.
+{{
+    if you.god() == "Trog" then
+        return "Außerdem werden die meisten Tötungen Euch Gunst in den Augen"
+               .. " von Trog verschaffen."
+    end
+}}
+%%%%
+HINT_NEW_LEVEL
+
+Gut gemacht! Das Erreichen einer neuen Erfahrungsstufe ist immer ein schönes Ereignis: Ihr erhaltet mehr Gesundheits- und Magiepunkte und gelegentlich auch Verbesserungen Eurer Attribute: Stärke, Intelligenz und Geschicklichkeit.
+{{
+    if crawl.hints_type() == "magic" then
+        return "Mit dem Erreichen einer Erfahrungsstufe könnt Ihr auch schwierigere Zauber lernen. Ihr könnt einen zweiten Zauber mit <w>$cmd[CMD_MEMORISE_SPELL]</w><tiles> oder durch <w>linksklicken</w> auf den Zauber im Memorisierungs-Tab</tiles> einprägen."
+    end
+}}
+%%%%
+HINT_SKILL_RAISE
+
+Eine Eurer Fertigkeiten hat gerade einen Meilenstein erreicht. Die Fertigkeiten, die Ihr benutzt, werden automatisch trainiert, wenn Ihr durch das Töten von Monstern Erfahrung sammelst. Standardmäßig fließt die Erfahrung in Fertigkeiten, die Ihr aktiv benutzt. Um Eure Fertigkeiten zu sehen oder zu verwalten, gebt <w>$cmd[CMD_DISPLAY_SKILLS]</w><localtiles> ein oder klickt auf den Fertigkeits-Tab unten rechts</localtiles>.
+%%%%
+HINT_GAINED_MAGICAL_SKILL
+
+Die Beherrschung einer magischen "Schule" erleichtert das Erlernen und Wirken von Zaubern dieser Schule. Viele Zaubersprüche gehören zu einer Kombination aus mehreren Schulen. In diesem Fall bestimmt die durchschnittliche Fertigkeit in diesen Schulen den Erfolg und die Macht des Zaubers.
+%%%%
+HINT_GAINED_MELEE_SKILL
+
+Wenn Ihr eine bestimmte Waffenart beherrscht, verursacht Ihr etwas mehr Schaden und greift mit allen Waffen dieses Typs deutlich schneller an. Es ist eine gute Idee, sich auf nur einen Waffentyp zu konzentrieren, normalerweise auf den, mit dem man anfängt, obwohl das Finden einer besonders guten Waffe einen Wechsel rechtfertigen kann.
+%%%%
+HINT_GAINED_RANGED_SKILL
+
+Wenn Ihr eine bestimmte Art von Fernkampfangriff beherrscht, könnt Ihr mehr Schaden verursachen, wenn Ihr die entsprechenden Waffen benutzt. In der Regel ist es am besten, sich auf eine Art von Fernkampfangriff (einschließlich Zaubern) zu konzentrieren und eine Nahkampfwaffe als Unterstützung im Kampf gegen schwache Gegner zu verwenden.
+%%%%
+HINT_CHOOSE_STAT
+
+Auf jeder dritten Stufe könnt Ihr ein Attribut wählen, das Ihr erhöhen möchtet: Stärke, Intelligenz oder Geschicklichkeit.
+
+<w>Stärke</w> macht schwere Rüstungen weniger schwerfällig und erhöht leicht den Waffenschaden.
+
+<w>Intelligenz</w> macht Eure Zaubersprüche zuverlässiger und mächtiger.
+
+<w>Geschicklichkeit</w> erhöht Euer Ausweichen und Eure Heimlichkeit.
+%%%%
+HINT_YOU_ENCHANTED
+
+Verzauberungen aller Art können Euch vorübergehend heimsuchen. Kurze Beschreibungen dazu erscheinen am unteren Ende des Statistikbereichs. Drückt <w>$cmd[CMD_DISPLAY_CHARACTER_STATUS]</w> für weitere Details. Ihr könnt nach vollständigen Beschreibungen von Verzauberungen suchen, indem Ihr <w>$cmd[CMD_DISPLAY_COMMANDS]/T</w> drückt.
+%%%%
+HINT_YOU_POISON
+
+Gift wird Eure Gesundheit schnell verringern. Ihr könnt es mit <w>$cmd[CMD_REST]</w> abwarten, aber wenn Ihr Euch im Kampf befindet oder tödlich vergiftet seid, solltet Ihr lieber einen Trank des Gegenmittels zu Euch nehmen.
+%%%%
+HINT_MULTI_PICKUP
+
+Hier gibt es eine Menge von Gegenständen. Ihr wählt aus einem Menü aus, was Ihr abholen möchtet: Drückt <w>$cmd[CMD_PICKUP]</w><localtiles> oder <w>klickt</w> auf die Spielerpuppe</localtiles>, um das Abholmenü zu öffnen. Um das Menü zu verlassen, bestätigt Eure Auswahl mit <w>Enter</w>.
+%%%%
+HINT_FULL_INVENTORY
+
+Leider ist das Inventar auf 52 Gegenstände begrenzt, und es scheint, dass Euer Rucksack voll ist. Das lässt sich jedoch leicht beheben: Lasst einfach einige der Dinge fallen mit <w>$cmd[CMD_DROP]</w>, die Ihr im Moment nicht braucht. Im Menü könnt Ihr dann bequem auswählen, welche Gegenstände Ihr fallen lassen wollt, indem Ihr den entsprechenden Inventarbuchstaben drückt<localtiles> oder auf sie klickt</localtiles>.
+%%%%
+HINT_SHIFT_RUN
+
+Herumläufen benöntigt weniger Tastenanschläge, wenn man <w>Shift-Richtung</w> oder <w>/ Richtung</w> drückt. So kann man laufen, bis ein Monster in Sicht kommt oder der Charackter etwas Interessantes sieht.
+%%%%
+HINT_MAP_VIEW
+
+Wenn Ihr eine Ebene erkundet, kann die Orientierung schwierig werden. Drückt <w>$cmd[CMD_DISPLAY_MAP]</w>, um die Levelkarte aufzurufen. Die Eingabe von <w>?</w> zeigt die Liste der Befehle für die Levelkarte an. Am wichtigsten zu wissen: Wenn man den Cursor an eine Stelle bewegt und <w>.</w> oder <w>Enter</w> drückt, bewegt sich der Charakter von selbst dorthin.
+
+<localtiles>Auch ein Klick mit der <w>rechten Maustaste</w> auf die Minimap auf der rechten Seite zoomt in diesen Bereich des Dungeons. Klickt man stattdessen mit der <w>linken Maustaste</w>, kann man sich dorthin bewegen.</localtiles>
+%%%%
+HINT_AUTO_EXPLORE
+
+Einen Level vollständig zu erforschen und alle interessanten Gegenstände einzusammeln, kann sehr mühsam sein. Um sich diese Mühe zu ersparen, kann man <w>$cmd[CMD_EXPLORE]</w> drücken, um die automatische Erkundung zu aktivieren. Diese erkundet automatisch unkartierte Gebiete, sammelt automatisch interessante Gegenstände ein und hält an, wenn man auf ein Monster oder ein interessantes Dungeonmerkmal (Treppe, Altar usw.) trifft.
+%%%%
+HINT_DONE_EXPLORE
+
+Hey, Ihr habt die Erkundung des Dungeons in diesem Level beendet! Ihr könnt auf der Levelkarte (<w>$cmd[CMD_DISPLAY_MAP]</w>) nach Treppen suchen, indem Ihr <w>></w> drückt. Der Cursor springt zur nächstgelegenen Treppe, und durch Drücken von <w>.</w> oder <w>Enter</w> kann sich Euer Charakter auch dorthin bewegen. Jede Ebene von Crawl hat drei <console>weiße </console>aufwärts und drei <console>weiße </console>abwärts Treppen. Unerforschte Teile können oft über eine andere Ebene erreicht werden.
+%%%%
+HINT_AUTO_EXCLUSION
+
+Um zu verhindern, dass die automatische Reise oder die automatische Erkundung Euch in gefährliches Gebiet führt, könnt Ihr Reiseausschlüsse setzen, indem Ihr die Kartenansicht aufruft (<w>$cmd[CMD_DISPLAY_MAP]</w>) und dann den Ausschlussradius für die Monsterposition mit <w>e</w> umschaltet. Um dies zu vereinfachen, werden einige unbewegliche Monster, die in der Option <w>auto_exclude</w> aufgelistet sind (wie dieses hier), als gefährlich genug angesehen, um eine automatische Einstellung eines Ausschlusses zu rechtfertigen. Sie wird automatisch aufgehoben, wenn es Euch gelingt, das Monster zu töten. Ihr könnt den Ausschluss auch manuell mit <w>$cmd[CMD_DISPLAY_MAP]ee</w> entfernen, aber wenn Ihr das Monster nicht aus der auto_exclude-Liste entfernt, wird der Ausschluss in der nächsten Runde wiederhergestellt.
+%%%%
+HINT_HEALING_POTIONS
+
+Eure Gesundheit ist gefährlich niedrig. Es könnte eine gute Idee sein, sich zurückzuziehen und/oder einen Trank der Wundheilung oder Heilung zu trinken.
+%%%%
+HINT_NEED_HEALING
+
+Wenn Ihr nur noch wenig Gesundheit oder Magie habt und keine dringende Notwendigkeit besteht, Euch zu bewegen, könnt Ihr Euch eine Weile ausruhen. Idealerweise solltet Ihr Euch in ein Gebiet zurückziehen, das Ihr bereits erkundet und von Monstern gesäubert habt, bevor Ihr Euch ausruht, da das Ausruhen am Rande des erkundeten Geländes das Risiko erhöht, von einem umherwandernden Monster gestört zu werden. Drückt <w>$cmd[CMD_REST]</w> oder <w>shift-numpad-5</w><localtiles>, oder klickt auf die Schaltfläche 'Rast',</localtiles> um dies zu tun.
+%%%%
+HINT_NEED_POISON_HEALING
+
+Ihr seid tödlich vergiftet, also wäre jetzt ein guter Zeitpunkt, einen Heiltrank oder, noch besser, einen Trank des Gegenmittels zu trinken (<w>$cmd[CMD_QUAFF]</w>). Wenn Ihr bisher keinen von beiden gesehen habt, versucht es mit unbekannten Tränken in Eurem Inventar. Viel Glück!
+%%%%
+HINT_INVISIBLE_DANGER
+
+Der Kampf gegen ein Monster, das man nicht sehen kann, ist schwierig. Wenn man keine Quelle des Unsichtbarkeit-Sehens hat, kann man unsichtbare Monster finden, indem man sie in seichtes Wasser, undurchsichtige Wolken (aus einer Schriftrolle des Nebels) oder einen Korridor lockt, wo ihre Bewegungen besser vorhersehbar sind. Wenn es schief geht, versucht, Euch hinaus zu teleportieren oder das Level ganz zu verlassen!
+%%%%
+HINT_NEED_HEALING_INVIS
+
+Ihr habt vor kurzem ein unsichtbares Monster bemerkt. Wenn Ihr es nicht getötet oder den Ort des Geschehens verlassen habt, ist es nicht sicher, Euch auszuruhen. Wenn Ihr Eure Gesundheit oder Magie wieder auffüllen müsst, müsst Ihr einen entsprechenden Trank zu Euch nehmen. Um sich normal auszuruhen, müsst Ihr Euch zunächst von der Gefahr entfernen.
+%%%%
+HINT_CAN_BERSERK
+
+Bei besonders schwierigen Gegnern solltet Ihe Eure Berserker-Fähigkeit (<w>$cmd[CMD_USE_ABILITY]</w>) einsetzen. Durch das Töten von Monstern während des Berserkens hält diese länger an.
+%%%%
+HINT_POSTBERSERK
+
+Berserken ist extrem anstrengend! Danach seid Ihr verlangsamt und könnt erst wieder berserkern, wenn Eure Erschöpfung abgeklungen ist.
+%%%%
+HINT_RUN_AWAY_1
+
+Wenn die Lebenspunkte sehr niedrig sind und man Gefahr läuft, zu sterben, soll man alle Möglichkeiten sorgfältig prüfen. Oft ist der Rückzug oder die Verwendung eines Gegenstands eine sinnvolle Alternative zum Weiterkämpfen.
+%%%%
+HINT_LAST_MINUTE_BERSERK
+
+Mit Trogs Unterstützung könnt Ihr Eure Berserker-Fähigkeit (<w>$cmd[CMD_USE_ABILITY]</w>) einsetzen, um vorübergehend mehr Lebenspunkte und größere Stärke zu erhalten. Denkt daran, dass Berserken in letzter Minute oft riskant ist und Euch daran hindert, Gegenstände zur Flucht zu benutzen!
+%%%%
+HINT_RUN_AWAY_2
+
+Wenn man sich auf eine andere Ebene zurückzieht, sollte man bedenken, dass die Monster einem folgen können, wenn sie direkt neben einem stehen, als man die Treppe hinauf- oder hinabsteigt. Und selbst wenn man es geschafft hat, sie abzuschütteln, sind sie immer noch da, wenn man zurückkommt, also soll man vielleicht eine andere Treppe benutzen, wenn man zurückkommt.
+%%%%
+HINT_RETREAT_CASTER
+
+Ohne magische Kraft könnt Ihr keine Zauber wirken. Der Nahkampf ist zwar eine Möglichkeit, aber das ist nicht Eure Stärke, also ist der Rückzug (wenn möglich) die bessere Option.
+%%%%
+HINT_ADVISE_USE_WAND
+
+Oder Ihr könnte einen Zauberstab mit <w>$cmd[CMD_EVOKE]</w> evozieren, um Schaden zu verursachen.
+%%%%
+HINT_YOU_MUTATED
+
+Mutationen können aus verschiedenen Quellen stammen, unter anderem aus Tränken, Fehlzaubern und der übermäßigen Anwendung starker Verzauberungen wie Unsichtbarkeit. Die Götter Zin und Jiyva werden Eure Mutationen heilen. Überprüft Eure Mutationen mit <w>$cmd[CMD_DISPLAY_MUTATIONS]</w>.
+%%%%
+HINT_NEW_ABILITY_GOD_PASSIVE
+
+Ihr habt gerade eine göttliche Fähigkeit erhalten. Drückt <w>$cmd[CMD_DISPLAY_RELIGION]</w><localtiles> oder drückt <w>Shift</w> und <w>Rechtsklick</w> auf die Spielerkachel</localtiles>, um Euch Eure Fähigkeiten anzusehen.
+%%%%
+HINT_NEW_ABILITY_GOD_ACTIVE
+
+Ihr habt gerade eine göttliche Fähigkeit erhalten. Drückt <w>$cmd[CMD_USE_ABILITY]</w>, um einen Blick auf Eure Fähigkeiten zu werfen oder eine von ihnen zu benutzen.
+%%%%
+HINT_NEW_ABILITY_ITEM
+
+Der Gegenstand, den Ihr gerade ausgerüstet habt, gewährt Euch eine neue Fähigkeit. Drückt <w>$cmd[CMD_USE_ABILITY]</w><localtiles> (oder <w>Klick</w> im <w>Befehlsfeld</w>)</localtiles>, um Eure Fähigkeiten zu sehen oder eine davon zu benutzen.
+%%%%
+HINT_ITEM_FLIGHT
+
+Der Flug ermöglicht es Euch, tiefes Wasser oder Lava zu überqueren. Gegenstände, die Euch das Fliegen ermöglichen, werden automatisch aktiviert, wenn Ihr sie an habt.
+%%%%
+HINT_ITEM_RESISTANCES
+
+Das Ausrüsten dieses Gegenstandes wirkt sich auf Eure Resistenzen aus. Auf dem Übersichtsbildschirm (<w>$cmd[CMD_RESISTS_SCREEN]</w><localtiles> oder die <w>Schaltfläche Charakterübersicht</w> im Befehlsfeld</localtiles>) findet Ihr Details.
+%%%%
+HINT_GOD_DISPLEASED
+
+Oh-oh, $1 wird unzufrieden, weil Eure Frömmigkeit wird knapp. Möglicherweise ist dies der Fall, weil Ihr ketzerische Handlungen begeht, weil $1 Eure Anbetung als mangelhaft empfindet oder eine Kombination aus beidem. Wenn Eure Frömmigkeit auf Null sinkt, werdet Ihr exkommuniziert. Fangt also besser an, Eure Frömmigkeit zu steigern, und/oder hört auf, Euren Gott zu ärgern. Auf jeden Fall solltet Ihr die Beschreibung der Religion noch einmal lesen. Drückt dazu <w>$cmd[CMD_DISPLAY_RELIGION]</w><localtiles> oder drücke <w>Shift</w> und <w>Rechtsklick</w> auf Euren Avatar</localtiles>.
+%%%%
+HINT_EXCOMMUNICATED
+
+Oh-oh, $1 hat Euch gerade exkommuniziert, weil Ihr nicht mehr fromm genug seid (Eure göttliche Gunst ist ins Leere gelaufen). Vielleicht habt Ihr wiederholt gegen die religiösen Regeln verstoßen, oder Ihr habt Eure Gottheit nicht oft genug zufrieden gestellt, oder eine Kombination aus beidem. Wenn Ihr einen Altar findet, der $1 gewidmet ist, könnt Ihr wieder konvertieren, und alles wird gut sein. Andernfalls müsst Ihr den Unmut dieses Gottes aushalten, bis der göttliche Zorn verraucht ist.
+%%%%
+HINT_GOD_ABANDONED
+
+Solltet Ihr feststellen, dass der Verzicht auf {acc}$1 doch nicht so klug war und Ihr zu Euren alten Glauben zurückkehren möchten, müsst Ihr einen Altar finden, der $1 gewidmet ist, wo Ihr Euch wieder bekehren können, und alles wird gut. Andernfalls müsst Ihr den Unmut dieses Gottes aushalten, bis der göttliche Zorn verraucht ist.
+%%%%
+HINT_CONVERTED_GOD_NOT_ANGRY
+
+Glücklicherweise scheint es so, als ob $1 nichts dagegen hat, dass Ihr zu $2 konvertiert habt.
+%%%%
+HINT_CONVERTED_GOD_ANGRY
+
+Sieht so aus, als ob $1 Euren Übertritt zu $2 nicht zu schätzen wusste.
+%%%%
+HINT_CONVERTED_KEPT_PIETY
+
+Ihr habt sogar etwas von Eurer Frömmigkeit behalten!
+%%%%
+HINT_CONVERTED_GOOD_TO_GOOD
+
+Beachtet, dass diese Art von Bündnis nur zwischen den drei guten Göttern besteht, erwartet also nicht, dass dies die Norm ist.
+%%%%
+HINT_CONVERTED_GOOD_TO_NEUTRAL
+
+Das liegt daran, dass $1 einer der guten Götter ist, die im Allgemeinen recht nachsichtig sind, wenn man den Glauben wechselt - es sei denn, man wechselt auf den Pfad des Bösen, in diesem Fall kann die Vergeltung in der Tat böse sein!
+%%%%
+HINT_CONVERTED_GOOD_TO_EVIL
+
+Aber mal ehrlich, von einem der guten Götter zu einem bösen zu wechseln, was habt Ihr denn erwartet!? Bei jedem Gott, der nicht auf der gegnerischen Seite des Glaubens steht, wäre $1 viel nachsichtiger gewesen.
+%%%%
+HINT_CONVERTED_NONGOOD_TO_HATED
+
+(Eigentlich sind nur die drei guten Götter in der Regel nachsichtig mit dieser Art von Treulosigkeit).
+%%%%
+HINT_CONVERTED_WRATH
+
+Leider würde der Rücktritt zwar $1 besänftigen, aber $2 verärgern, so dass Ihr den Zorn des einen oder anderen Gottes ertragen müsst.
+%%%%
+HINT_SWITCH_WEAPONS_A_AND_B
+
+Ihr könnt einfach zwischen den Waffen in den Slots a und b wechseln, indem Ihr <w>$cmd[CMD_WEAPON_SWAP]</w> drückt.
+%%%%
+HINT_SWITCH_BACK_TO_WEAPON_A
+
+Ihr könnt ganz einfach zu Eurer Waffe in Slot a zurückkehren, indem Ihr <w>$cmd[CMD_WEAPON_SWAP]</w> drückt. Um den Slot eines Gegenstandes zu ändern, drückt <w>$cmd[CMD_ADJUST_INVENTORY]i</w> und wählt die entsprechenden Slots.
+%%%%
+HINT_SEEN_MONSTER_TILES
+
+Dieses Monster ist $1.
+%%%%
+HINT_SEEN_MONSTER_CONSOLE
+
+$1 ist ein Monster, das normalerweise durch einen Buchstaben dargestellt wird. Einige typische frühe Monster sehen aus wie <brown>r</brown>, <green>l</green>, <brown>K</brown> oder <lightgrey>g</lightgrey>.
+%%%%
+HINT_MONSTER_LIST_CONSOLE
+
+Wenn die Console-Einstellungen es zulassen, seht Ihr immer eine Liste von Monstern irgendwo auf dem Bildschirm.
+%%%%
+HINT_LEARN_ABOUT_MONSTERS
+
+<tiles>Ihr könnt etwas über jedes Monster erfahren, indem Ihr mit der Maus darüber fährst und seine Beschreibung lest, indem Ihr <w>rechtsklickt</w> auf es.</tiles>
+<nomouse> Ihr könnt Informationen über das Monster erhalten, indem Ihr <w>$cmd[CMD_LOOK_AROUND]</w> drückt und den Cursor über das Monster bewegt und die Beschreibung des Monsters lest, indem Ihr dann <w>$cmd[CMD_TARGET_DESCRIBE]</w> drückt.</nomouse> 
+%%%%
+HINT_ATTACK_MONSTER
+
+Um dieses Monster mit Eurer Waffe anzugreifen, müsst Ihr Euch einfach auf es zubewegen.<tiles>Solange ein nicht-freundliches Monster in Sicht ist, könnt Ihr Euch nicht automatisch auf entfernte Felder bewegen, um den Tod durch falsches Klicken zu vermeiden.</tiles>
+%%%%
+HINT_ATTACK_MONSTER_RANGED
+
+Als Jäger werdet Ihr es jedoch mit Eurem Bogen bekämpfen wollen. Wenn Ihr einen Blick auf Eurem Kurzbogen in Eurem Inventar (<w>$cmd[CMD_DISPLAY_INVENTORY]</w>) werft, findet Ihr eine Erklärung, wie Ihr das machen könnt.
+%%%%
+HINT_RANGED_NOT_WIELDED
+
+Zuerst handhabt (<w>$cmd[CMD_WIELD_WEAPON]</w>) die Waffe, dann folgt den Anweisungen.<tiles>
+
+Als Abkürzung könnt Ihr auch <w>Rechtsklick</w> auf den Kurzbogen machen, um seine Beschreibung zu lesen, und <w>Linksklick</w>, um ihn zu handhaben.</tiles>
+%%%%
+HINT_RANGED_WIELDED
+
+<tiles>Klickt mit der <w>rechten Maustaste</w> auf Euren Kurzbogen, könnt Ihr auch dessen Beschreibung lesen.</tiles>
+%%%%
+HINT_ATTACK_MONSTER_MAGIC
+
+Als Hervorrufer werdet Ihr es jedoch mit Magie behandeln wollen. Im Hilfe-Eintrag für den Memorierungsreiter (<w>$cmd[CMD_MEMORISE_SPELL]</w>) findet Ihr eine Erklärung, wie Ihr das machen könnt.
+%%%%
+HINT_FLEEING_MONSTER
+
+Jetzt hat das Monster Angst vor Euch! Beachtet, dass Ihr ihm nicht unbedingt folgen müsst. Ihr könnt es weglaufen lassen. Manchmal kann es aber nützlich sein, eine fliehende Kreatur anzugreifen, indem Ihr etwas hinterherwirft. Wenn Ihr irgendwelche Steine in Eurem Inventar (<w>$cmd[CMD_DISPLAY_INVENTORY]</w>) habt, könnt Ihr Euch einen davon ansehen, um eine Erklärung zu lesen, wie man das macht.
+%%%%
+HINT_MONSTER_BRAND
+
+Dieses Monster sieht ein wenig ungewöhnlich aus. Vielleicht möchtet Ihr es
+etwas genauer untersuchen, indem Ihr <localtiles>mit der Maus über seine Kachel
+fährst.</localtiles><nomouse>drückt <w>$cmd[CMD_LOOK_AROUND]</w> und bewegt den
+Cursor auf sein Feld.</nomouse>
+%%%%
+HINT_MONSTER_FRIENDLY
+
+Dieses Monster ist Euch freundlich gesinnt und wird Eure Feinde angreifen, allerdings erhältet Ihr nur einen Teil der Erfahrung für Monster, die von Verbündeten beschädigt wurden, im Vergleich zu dem, was Ihr bekommen würdet, wenn Ihr die ganze Arbeit selbst machen würdet. Ihr könnt Euren Verbündeten Befehle geben, indem Ihr <w>$cmd[CMD_SHOUT]</w> drückt.
+%%%%
+HINT_TEMPORARILY_FRIENDLY
+
+Es ist jedoch nur <w>vorübergehend</w> freundlich und wird wieder gefährlich, wenn diese Freundlichkeit nachlässt.
+%%%%
+HINT_MONSTER_SHOUTED_UNSEEN
+
+Oh-oh, ein Monster hat Euch bemerkt, entweder eines, das um die Ecke ist, oder eines, das unsichtbar ist. Außerdem wird das Geräusch, das es gemacht hat, andere Monster in der Nähe alarmieren, die kommen werden, um zu sehen, was der Grund für die Aufregung war.
+%%%%
+HINT_MONSTER_SHOUTED_UNSEEN
+
+Oh-oh, das Monster hat Euch bemerkt! Außerdem wird der Lärm, den es gemacht hat, andere Monster in der Nähe alarmieren, die kommen werden, um zu sehen, was der Grund für den Aufruhr war.
+%%%%
+HINT_MONSTER_NO_SHOUT
+
+Oh-oh, das Monster hat Euch bemerkt! Zum Glück hat es keinen Lärm gemacht, aber viele Monster machen Lärm, wenn sie Euch bemerken. Das alarmiert andere Monster in der Gegend, die kommen werden, um zu sehen, was der Grund für den Aufruhr war.
+%%%%
+HINT_MONSTER_LEFT_LOS
+
+$1 ist nicht verschwunden, sondern lediglich auf ein Feld gewandert, das Ihr derzeit nicht sehen könnt. Das Monster ist immer noch in der Nähe, es sei denn, in der kurzen Zeit, in der es nicht zu sehen ist, passiert etwas mit ihm.
+%%%%
+HINT_SEEN_ZERO_EXP_MON
+
+Das<console> $1</console> ist $2. Obwohl das <w>technisch</w> ein Monster ist, ist es eher ein Dungeonmöbel, da es harmlos ist und sich nicht bewegt. Wenn es Euch im Weg steht, könnt Ihr es wie andere Monster angreifen und töten, aber Ihr bekommt dafür keine Erfahrung.
+%%%%
+HINT_ABYSS
+
+Oh-oh, Ihr seid im Abgrund gelandet! Der Abgrund ist ein besonderer Ort, an dem Ihr Euch nicht erinnern kannst, wo Ihr wart. Er ist voller fieser Monster, und Ihr werdet wahrscheinlich sterben.
+
+Um Eure Überlebenschancen zu erhöhen, bis Ihr den Ausgang<console> (einen flackernden <w>$1</w>)</console> findet, bleibt in Bewegung, kämpft nicht gegen die Monster und jagt nicht nach Gegenständen auf dem Boden. Wenn sich die Monster nähern, versucht, Gegenstände des Hasts zu benutzen, um zu entkommen.
+%%%%
+HINT_SPELL_MISCAST_EFFECTS
+
+Ein falscher Zauberspruch kann böse Folgen haben, vor allem bei den schwierigeren Zaubern. Eure Chance, einen Zauber erfolgreich zu wirken, steigt mit Euren magischen Fertigkeiten und kann auch mit Hilfe einiger Gegenstände verbessert werden. Benutzt den <w>$cmd[CMD_DISPLAY_SPELLS]</w>-Befehl<localtiles> oder fahre mit der Maus über die Zauberkacheln</localtiles>, um Eure aktuelle Fehlerquote zu überprüfen.
+%%%%
+HINT_YOU_MISCAST
+
+Ihr habt gerade einen Fehlzauber gesprochen.
+%%%%
+HINT_MISCAST_ARMOUR
+
+Das Tragen einer schweren Rüstung oder eines Schildes, insbesondere eines großen Schildes, kann Eure Zauberfähigkeiten stark beeinträchtigen. Ihr könnt die Auswirkungen überprüfen, indem Ihr die Fehlerraten auf der <w>$cmd[CMD_CAST_SPELL]</w>-Seite mit und ohne den getragenen Gegenstand vergleicht.
+%%%%
+HINT_MISCAST_CONTAMINATION_AND_MP
+
+Wenn die Erfolgschance beim Zaubern hoch ist (was durch Eingabe von <w>$cmd[CMD_CAST_SPELL]</w> oder <w>$cmd[CMD_DISPLAY_SPELLS]</w> überprüft werden kann), dann bedeutet ein Fehlzauber lediglich, dass der Zauber nicht funktioniert, zusammen mit einer harmlosen Nebenwirkung. Bei Zaubern mit einer hohen Fehlerquote besteht jedoch die Gefahr, dass man sich selbst mit magischer Energie kontaminiert und eine zusätzliche schädliche Nebenwirkung auftritt. Normalerweise ist das kein Problem, da magische Kontamination mit der Zeit abklingen, aber wenn man in kurzer Zeit wiederholt kontaminiert wird, mutiert man oder leidet unter anderen schädlichen Nebeneffekten.
+
+Beachtet, dass ein falsch gewirkter Zauber immer noch die volle Menge an MP verbraucht, die ein erfolgreich gewirkter Zauber verbrauchen würde.
+%%%%
+HINT_GLOWING
+
+Ihr habt so viel magische Kontamination angesammelt, dass Ihr glüht! Magische Kontamination entstehen in der Regel durch die Anwendung mächtiger Magie, wie Unsichtbarkeit, oder durch falsch gewirkte Zaubersprüche.
+%%%%
+HINT_CONTAMINATION_MILD
+
+Solange der Status nur in Grau angezeigt wird, passiert eigentlich nichts, aber wenn Ihr Euch weiter mit magischer Kontamination infiziert, fangt Ihr irgendwann an, richtig zu glühen, was böse Folgen haben kann, wie Mutation oder direkten Schaden verursachen. Außerdem werdet Ihr durch das Glühen viel auffälliger.
+%%%%
+HINT_CONTAMINATION_SEVERE
+
+Normalerweise ist das kein Problem, da die Kontamination langsam von selbst abfärbt, aber es scheint, dass Ihr in kurzer Zeit so viel Kontamination angesammelt habt, dass sie böse Auswirkungen haben kann, z. B. Euch mutieren oder direkten Schaden verursachen. Außerdem werdet Euch durch das Glühen viel stärker auffallen.
+%%%%
+HINT_YOU_RESIST
+
+Es gibt viele Gefahren in Crawl. Glücklicherweise gibt es Möglichkeiten, einigen von ihnen (zumindest teilweise) zu widerstehen, wenn Ihr das Glück habt, sie zu finden. Es gibt zwei grundlegende Varianten von Resistenzen: die angeborene Willenskraft, die von Eurer Spezies abhängt, mit der Erfahrungsstufe wächst und vor vielen magischen Effekten schützt, und die spezifischen Resistenzen gegen bestimmte andere Effekte, z. B. Feuer oder Auszehrung.
+
+Ihr könnt im Dungeon Gegenstände finden oder Mutationen erlangen, die eine oder mehrere eurer Resistenzen erhöhen (oder senken). Um eure aktuellen Resistenzen zu sehen, <localtiles><w>klickt mit der rechten Maustaste</w> auf den Spieler-Avatar oder </localtiles>drückt <w>$cmd[CMD_RESISTS_SCREEN]</w>.
+%%%%
+HINT_CAUGHT_IN_NET
+
+Solange Ihr in einem Netz gefangen seid, könnt Ihr Euch nicht bewegen oder Monster im Kampf angreifen. Stattdessen wird jede Bewegung, die Ihr macht, als Versuch gewertet, Euch aus dem Netz zu befreien.
+{{
+    if crawl.hints_type() == "magic" then
+        return "Beachtet, dass das Wirken von Zaubersprüchen immer noch möglich"
+               .. " ist, ebenso wie die Verwendung von Zauberstäben, "
+               .. " Schriftrollen und Tränken."
+    else
+        return "Beachtet, dass die Verwendung von Zauberstäben, Schriftrollen"
+               .. " und Tränken weiterhin möglich ist."
+    end
+}}
+%%%%
+HINT_YOU_SILENCE
+
+Solange Ihr zum Schweigen gebracht seid, könnt Ihr keine Zauber wirken, keine Schriftrollen lesen und keine göttlichen Beschwörungen benutzen. Das Gleiche gilt für alle Monster innerhalb des Wirkungsradius. Das Feld der Stille (erkennbar an <tiles>den speziell aussehenden Rahmenkacheln</tiles><console>unterschiedlich gefärbten Felder</console>) ist immer auf Euch zentriert und bewegt sich mit Euch. Der Radius schrumpft allmählich, bis nur noch Ihr betroffen seid, bevor der Effekt ganz verschwindet.
+%%%%
+HINT_AUTOPICKUP_THROWN
+
+Wenn Ihr auf Gegenstände tretet, die Ihr geworfen habt, werden sie automatisch aufgefangen.
+%%%%
+HINT_GAINED_SPELLCASTING
+
+Mit zunehmender Zaubern-Fertigkeit könnt Ihr Euch mehr Zaubersprüche memorieren und erleidet etwas weniger Fehlschläge, wenn Ihr sie wirkt.
+
+Drückt <w>$cmd[CMD_DISPLAY_SKILLS]</w><localtiles> (oder klickt auf die <w>Schaltfläche</w>in der Befehlsleiste)</localtiles>, um einen Blick auf Eure Fertigkeiten zu werfen und ihr Training zu verwalten.
+%%%%
+HINT_FUMBLING_SHALLOW_WATER
+
+Bei Kämpfen im flachen Wasser kann es vorkommen, dass Ihr ausrutschst und Euren Angriff verpatzt. Wenn möglich, versucht, auf festem Boden zu kämpfen.
+%%%%
+HINT_CLOUD_WARNING
+
+Anstatt in diese Wolke zu treten und Euch zu verletzen, solltet Ihr entweder ein paar Runden warten, um zu sehen, ob sie verschwindet (mit <w>$cmd[CMD_WAIT]</w>), oder einfach um sie herumgehen.
+%%%%
+HINT_ANIMATE_CORPSE_SKELETON
+
+<yellow>Skelett Beleben</yellow> wirkt auf die Leiche eines beliebigen Monsters, das ein Skelett in sich trägt.
+%%%%
+HINT_FOUND_UNKNOWN
+
+Ihr habt etwas Neues entdeckt (aber ich weiß nicht was)!
+%%%%
+HINT_ABILITIES_SCREEN
+
+Diese Seite zeigt die Talente Eures Charakters an. Ihr könnt neue Fähigkeiten durch bestimmte Gegenstände, durch Religion oder durch Mutationen erlangen. Die Aktivierung einer Fähigkeit hat in der Regel ihren Preis, z.B. Magiekraft. Drückt '<w>!</w>' oder '<w>?</w>', um zwischen der Auswahl der Fähigkeit und der Beschreibung zu wechseln.
+%%%%
+HINT_SKILLS_SCREEN
+
+Diese Seite zeigt die Fertigkeiten Eures Charakters an. Die Zahl neben der Fertigkeit ist die aktuelle Stufe, je höher, desto besser. <w>Training</w> zeigt den Prozentsatz des Trainings an. <w>Kosten</w> zeigt die relativen Trainingskosten an. <w>Ziele</w> zeigt die Trainingsziele der Fertigkeit an. Ihr könnt die zu trainierenden Fertigkeiten umschalten, indem Ihr auf die entsprechenden Buchstaben drückt. Eine <darkgrey>graue</darkgrey> Fertigkeit wird nicht trainiert und erleichtert das Training der anderen.
+%%%%
+HINT_SKILL_TRAINING
+
+Der Trainingsprozentsatz (in <brown>braun</brown>) zeigt den relativen Anteil der gewonnenen Erfahrung an, der für das Training jeder Fertigkeit verwendet wird. Er wird automatisch eingestellt, je nachdem, welche Fertigkeiten Ihr zuletzt benutzt habt. Das Deaktivieren einer Fertigkeit setzt die Trainingsrate auf 0.
+%%%%
+HINT_SKILL_COSTS
+
+Die Ausbildungskosten (in <cyan>cyan</cyan>) zeigen die Erfahrungskosten an, um die gegebene Fertigkeit um eine Stufe zu erhöhen, im Verhältnis zu den Kosten, die entstehen, wenn man eine Fertigkeit der Begabung Null von Stufe Null auf Stufe Eins erhöht.
+%%%%
+HINT_SKILL_TARGETS
+
+Den Buchstaben einer Fertigkeit drücken, um ein Trainingsziel festzulegen. Wenn das Ziel erreicht ist, erscheint eine Meldung und das Training der Fertigkeit wird deaktiviert.
+%%%%
+HINT_SKILL_DESCRIPTIONS
+
+Diese Seite zeigt die Fertigkeiten Eures Charakters an. Drückt den Buchstaben einer Fertigkeit, um ihre Beschreibung zu lesen, oder drückt erneut <w>?</w>, um zur Fertigkeitsauswahl zurückzukehren.
+%%%%
+HINT_MEMORISE_SCREEN
+
+Diese Seite zeigt die Zaubersprüche in Eurer Zauberbibliothek an. Von hier aus könnt Ihr Zaubersprüche memorieren, indem Ihr sie auswählst, und Ihr könnt Euch Beschreibungen von Zaubersprüchen ansehen, nach ihnen suchen und sie organisieren. Als Zauberer beginnt man mit fünf memorierbaren Zaubern und einem bereits memoriert: Magischer Pfeil. (Um die memorierten Zaubersprüche zu sehen, könnt Ihr dieses Menü verlassen und <w>$cmd[CMD_DISPLAY_SPELLS]</w> wählen).
+%%%%
+HINT_MEMORISE
+
+Ein Zauber, der nicht <darkgrey>ausgegraut</darkgrey> oder <lightred>verboten</lightred> ist, kann sofort memoriert werden, indem man ihn in diesem Menü auswählt.
+%%%%
+HINT_CANNOT_MEMORISE
+
+Ihr könnt zurzeit keine
+{{
+    if table.getn(you.spell_letters()) > 0 then
+        return "mehr"
+    end
+}}
+Zaubersprüche memorieren. Dies wird sich mit steigender Stufe und Zaubern-Fertigkeit ändern.
+%%%%
+HINT_CAST_SPELL
+
+Um Magie zu benutzen, <tiles>könnt Ihr auf das Monster <w>linksklicken</w>, auf das Ihr zielen möchtet (oder auf Euren Spielercharakter, um einen Zauber auf Euch selbst zu wirken), während Ihr <w>Strg</w> drückt, und dann einen Zauber aus dem Menü auswählen. Oder Ihr könnt in die Zauberanzeige wechseln, indem Ihr <w>auf den entsprechenden <w>Reiter</w> klickt.
+
+Alternativ </tiles> könnt Ihr <w>$cmd[CMD_CAST_SPELL]</w> drücken und einen Zauber wählen, z.B. <w>a</w> (mit <w>?</w> überprüfen). Für Angriffszauber:
+%%%%
+HINT_TARGET_MODE
+Ihr gelangt dann in den Zielmodus, in dem das nächstgelegene Monster oder das vorherige Ziel bereits anvisiert ist. Ihr könnt auch mit <w>+</w> oder <w>-</w> durch alle feindlichen Monster in Sichtweite blättern. Sobald Ihr das richtige Monster anvisiert habt, drückt einfach <w>f</w>, <w>Enter</w> oder <w>.</w>, um es zu beschießen. Wenn Ihr nicht triffst, schießt <w>$1</w> erneut auf das gleiche Ziel.
+%%%%
+HINT_WEAPON_HAS_ABILITY
+
+Einige Waffen (wie diese hier) bieten bestimmte Fähigkeiten, die aktiviert werden kann, wenn sie gehandhabt ist.
+%%%%
+HINT_ACTIVATE_ABILITY_ITEM_EQUIPPED
+
+Man ruft dazu mit <w>$cmd[CMD_USE_ABILITY]</w> das Fähigkeitsmenü auf und wählt dann die entsprechende Fähigkeit. Beachtet, dass ein solcher Aktivierungsversuch, insbesondere bei Ungeübten, wahrscheinlich fehlschlagen wird.
+%%%%
+HINT_ACTIVATE_ABILITY_WEAPON_NOT_WIELDED
+
+Dazu muss man zuerst die Waffe handhaben (<w>$cmd[CMD_WIELD_WEAPON]</w>), dann mit <w>$cmd[CMD_USE_ABILITY]</w> das Fähigkeitsmenü aufrufen und dann die entsprechende Fähigkeit auswählen. Beachtet, dass ein solcher Aktivierungsversuch, insbesondere bei Ungeübten, wahrscheinlich scheitern wird.
+%%%%
+HINT_ACTIVATE_ABILITY_ARMOUR_NOT_WORN
+
+Dazu muss man zuerst die Rüstung anziehen (<w>$cmd[CMD_WEAR_ARMOUR]</w>), dann mit <w>$cmd[CMD_USE_ABILITY]</w> das Fähigkeitsmenü aufrufen und dann die entsprechende Fähigkeit auswählen. Beachtet, dass ein solcher Aktivierungsversuch, insbesondere bei Ungeübten, wahrscheinlich scheitern wird.
+%%%%
+HINT_ACTIVATE_ABILITY_JEWELLERY_NOT_WORN
+
+Dazu muss man zuerst den Schmuck einlegen <w>$cmd[CMD_WEAR_JEWELLERY]</w>, dann mit <w>$cmd[CMD_USE_ABILITY]</w> das Fähigkeitsmenü aufrufen und dann die entsprechende Fähigkeit auswählen. Beachtet, dass ein solcher Aktivierungsversuch, insbesondere bei Ungeübten, wahrscheinlich scheitern wird.
+%%%%
+HINT_THROW_INVENTORY_ITEM
+
+Dazu drückt man <w>$cmd[CMD_FIRE]</w> zum Feuern, dann <w>$1</w> für diesen Gegenstand.
+%%%%
+HINT_THROW_GROUND_ITEM
+
+Dazu drückt man <w>$cmd[CMD_FIRE]</w> zum Feuern und wählt dann diesen Gegenstand aus.
+%%%%
+HINT_WEAPON_HAS_RESIST
+
+Diese Waffe bietet ihrem Träger Schutz vor bestimmten Quellen. Für eine Übersicht über Eure Resistenzen (unter anderem) drückt <w>$cmd[CMD_RESISTS_SCREEN]</w><tiles> oder <w>rechtsklickt</w></tiles> auf Euren Avatar.
+%%%%
+HINT_WIELD_WEAPON
+
+Ihr könnt diese Waffe mit <w>$cmd[CMD_WIELD_WEAPON]</w> führen, oder <w>$cmd[CMD_WEAPON_SWAP]</w> verwenden, um zwischen den Waffen in Slot a und b zu wechseln. (Verwendet <w>$[CMD_ADJUST_INVENTORY]i</w>, um die Gegenstand-Slots einzustellen.)
+%%%%
+HINT_WEAPON_SKILL
+
+Allerdings habt Ihr schon eine ganze Weile <w>$1</w> trainiert, also solltet Ihr vielleicht lieber <w>$2</w> weiter trainieren. (Drückt <w>$cmd[CMD_DISPLAY_SKILLS]</w>, um die Fertigkeitsseite mit den aktuellen Zahlen zu sehen).
+%%%%
+HINT_ATTACK_WITH_RANGED_WEAPON
+
+Um ein Monster anzugreifen, <tiles>könnt Ihr auf das Monster <w>linksklicken</w>, während Ihr die <w>Umschalttaste</w> drückt, wenn Ihr entsprechende Munition habt. Alternativ könnt Ihr auch auf die Kachel für die Munition <w>linksklicken</w>, die Ihr abfeuern möchtet, und dann auf das Monster <w>linksklicken</w>.
+
+Um Munition über die Tastatur abzufeuern, </tiles>braucht Ihr nur <w>$cmd[CMD_FIRE]</w> drücken um den entsprechenden Munitionstyp zu feuern.
+%%%%
+HINT_ATTACK_WITH_MELEE_WEAPON
+
+Um ein Monster anzugreifen, könnt Ihr einfach auf es zugehen.
+%%%%
+HINT_UNUSUAL_EQUIPMENT
+
+Bei Waffen und Rüstungen, die solche ungewöhnlichen Beschreibungen aufweisen, ist es viel wahrscheinlicher, dass sie höher verzaubert sind oder besondere Eigenschaften haben, seien sie gut oder schlecht.
+%%%%
+HINT_THROWABLE
+
+$1 kann ohne die Verwendung eines Abschussgeräts gefeuert werden (<w>$cmd[CMD_FIRE]</w>).
+%%%%
+HINT_MISSILE_LAUNCHER_WIELDED
+
+Da Ihr bereits das passende Abschussgeräts habt, könnt Ihr einfach<tiles> auf das Monster <w>linksklicken</w>, das Ihr treffen wollt, während Ihr die <w>Umschalttaste</w> drückt. Alternativ könnt Ihr auch auf die Kachel der Munition <w>linksklicken</w>, die Ihr abfeuern willst, und dann auf das Monster <w>linksklicken</w>, das Ihr treffen wollt. Um diese Munition mit der Tastatur abzufeuern, könnt Ihr einfach</tiles> {acc}$1 mit <w>$cmd[CMD_FIRE]</w> feuern.
+%%%%
+HINT_MISSILE_LAUNCHER_NOT_WIELDED
+
+Um {acc}$1 zu schießen, müsst Ihr zuerst ein entsprechendes Wurfgerät mit <w>$cmd[CMD_WIELD_WEAPON]</w> handhaben.
+%%%%
+HINT_CANNOT_WEAR_HELMET
+
+Wegen Eurer Hörner könnt Ihr keine Helme tragen. (Drückt <w>$cmd[CMD_DISPLAY_MUTATIONEN]</w>, um eine Liste Eurer Mutationen und angeborenen Fähigkeiten zu sehen.)
+%%%%
+HINT_CANNOT_WEAR_BARDING
+
+Nur Nagas und Palentongas können Gelieger tragen.
+%%%%
+HINT_EQUIP_UNEQUIP_ARMOUR
+
+Man kann Rüstungsteile mit <w>$cmd[CMD_WEAR_ARMOUR]</w> anziehen und mit <w>$cmd[CMD_REMOVE_ARMOUR]</w> wieder ausziehen<tiles>, oder man klickt einfach auf die Kacheln, um beide Aktionen auszuführen</tiles>.
+%%%%
+HINT_ARMOUR_HINDERS_CASTING
+
+Beachtet, dass Körperrüstungen mit einem hohen Belastungswert Eure Fähigkeit, Zauber zu wirken, beeinträchtigen können. Leichte Rüstungen wie Roben und Lederrüstungen sind im Allgemeinen für jeden aufstrebenden Zauberwirker sicher.
+%%%%
+HINT_SHIELD_HINDERS_CASTING
+
+Beachte, dass Schilde Eure Fähigkeit, Zauber zu wirken, so lange behindern, bis Ihr genug Schild-Fertigkeit erlangt habt, um den Nachteil zu beseitigen.
+%%%%
+HINT_NO_SHIELD_WITH_MOST_LAUNCHERS
+
+Beachten Sie, dass viele Fernkampfwaffen zweihändig sind und daher nicht mit einem Schild verwendet werden können.
+%%%%
+HINT_ARMOUR_HAS_RESIST
+
+Diese Rüstung bietet ihrem Träger Schutz vor bestimmten Quellen. Für eine Übersicht über Eure Resistenzen (unter anderem) drücke <w>$cmd[CMD_RESISTS_SCREEN]</w> <Tiles> oder klicke mit der <w>rechten Maustaste</w></tiles> auf Euren Avatar.
+%%%%
+HINT_ARMOUR_HAS_ABILITY
+
+Wenn sie getragen werden, bieten einige Rüstungstypen (wie dieser) bestimmte Fähigkeiten, die man mit <w>$cmd[CMD_USE_ABILITY]</w> aktivieren kann.
+%%%%
+HINT_DESCRIBE_WAND
+
+Die Magie darin kann durch Evozierung (<w>$cmd[CMD_EVOKE]</w>) entfesselt werden. <tiles>Alternativ kann man auch auf die Zauberstabkachel <w>linksklicken</w> und dann auf das Monster <w>linksklicken</w>, das man anvisieren möchte (oder den Spielercharakter, um sich selbst anzuvisieren)<localtiles>, oder nachdem man zuerst den Zauberstab im Köcher hat (<w>$cmd[CMD_QUIVER_ITEM]</w>), auf das Ziel <w>linksklicken</w>, während man die Umschalttaste drückt</localtiles>.</tiles>
+%%%%
+HINT_DESCRIBE_SCROLL
+
+<w>$cmd[CMD_READ]</w> drücken, um diese Schriftrolle zu lesen<tiles> oder einfach darauf <w>linksklicken</w></tiles>.
+%%%%
+HINT_DESCRIBE_JEWELLERY
+
+Schmuck kann mit <w>$cmd[CMD_WEAR_JEWELLERY]</w> angelegt und mit <w>$cmd[CMD_REMOVE_JEWELLERY]</w> wieder entfernt werden<tiles>, wobei in Tiles beides durch Klicken auf den Gegenstand im Inventar möglich ist</tiles>.
+%%%%
+HINT_JEWELLERY_HAS_RESIST
+
+Dieser Gegenstand bietet seinem Träger Schutz vor bestimmten Quellen. Für eine Übersicht über Eure Resistenzen (unter anderem) drückt <w>$cmd[CMD_RESISTS_SCREEN]</w><tiles> oder <w>rechtsklickt</w> auf Euren Avatar</tiles>.
+%%%%
+HINT_JEWELLERY_HAS_ABILITY
+
+Einige Schmuckstücke (wie dieses) bieten beim Tragen bestimmte Fähigkeiten, die durch Drücken von <w>$cmd[CMD_USE_ABILITY]</w> aktiviert werden kann.
+%%%%
+HINT_DESCRIBE_POTION
+
+<w>$cmd[CMD_QUAFF]</w> drücken, um diesen Trank zu trinken<tiles>, oder einfach auf ihn <w>linksklicken</w></tiles>.
+%%%%
+HINT_DESCRIBE_MANUAL
+
+Ein Handbuch kann Euch beim Training einer Fertigkeit sehr helfen. Wenn Ihr es in die Hand nimmst, wird die betreffende Fertigkeit effizienter trainiert und steigt schneller auf, bis Ihr den Inhalt des Handbuchs aufgebraucht habt.
+%%%%
+HINT_DESCRIBE_SPELLBOOK
+
+Ihr könnt ein Zauberbuch in die Hand nehmen, um die darin enthaltenen Zaubersprüche zu Eurer Zauberbibliothek hinzuzufügen. (Eure Zauberbibliothek könnt Ihr mit <w>$cmd[CMD_MEMORISE_SPELL]</w> anschauen.)
+%%%%
+HINT_DESCRIBE_CORPSE
+
+Skelette und Leichen können als Bestandteile für bestimmte nekromantische Zauber verwendet werden. Abgesehen davon sind sie weitgehend nutzlos.
+%%%%
+HINT_DESCRIBE_MAGICAL_STAFF
+
+Dieser Stecken kann Eure Zauberei verbessern, indem er die Zauber der entsprechenden Zauberschule mächtiger macht.
+%%%%
+HINT_MAGICAL_STAFF_HAS_RESISTANCE
+
+Außerdem bietet es seinem Träger Schutz vor bestimmten Quellen. Für eine Übersicht über Eure Resistenzen (unter anderem), drückt <w>$cmd[CMD_RESISTS_SCREEN]</w><tiles> oder <w>rechtsklickt</w> auf Euren Avatar</tiles>.
+%%%%
+HINT_MAGICAL_STAFF_WITH_TROG
+
+Da Trog den Einsatz von Magie missbilligt, wird Euch dieser Stab wenig nützen und Ihr könnt ihn genauso gut jetzt mit <w>$cmd[CMD_DROP]</w> fallen lassen.
+%%%%
+HINT_DESCRIBE_MISCELLANEOUS_ITEM
+
+Verschiedene Gegenstände haben manchmal magische Kräfte, die man sich zunutze machen kann, indem man den Gegenstand mit <w>$cmd[CMD_EVOKE]</w> evoziert.
+%%%%
+HINT_DESCRIBE_STATUE
+
+Es ist nur eine harmlose Statue - oder doch nicht?\nAuch wenn sie an sich keine Gefahr darstellen, markieren Statuen oft besondere Gebiete, gefährliche Gebiete oder solche, die Schätze bergen.
+%%%%
+HINT_DESCRIBE_TRAP_PLATE
+
+Diese fiesen Konstruktionen können eine Reihe unangenehmer Effekte verursachen. Man kann Druckplatten nicht vermeiden, indem man über sie fliegt; ihre magische Konstruktion führt dazu, dass sie trotzdem ausgelöst werden.
+%%%%
+HINT_DESCRIBE_TRAP_SHAFT
+
+Der Dungeon enthält eine Reihe von natürlichen Hindernissen wie Schächte, die eine bis drei Ebenen nach unten führen. Wenn Ihr wisst, dass der Schacht dort ist, könnt Ihr ihn gefahrlos überqueren. Wenn Ihr dort hinunter springen wollt, benutzt <w>$cmd[CMD_GO_DOWNSTAIRS]</w>, um dies zu tun. Sei gewarnt, dass es schwierig sein könnte, hierher zurückzukommen.
+%%%%
+HINT_DESCRIBE_TRAP_WEB
+
+Einige Bereiche des Dungeons, wie z. B. das Spinnennest, können mit riesigen Netzen übersät sein, die man für kurze Zeit gefangen halten können. Spieler in Spinnengestalt können sich sicher durch die Netze bewegen (ebenso körperlose Wesen und verschiedene Schlamme).
+%%%%
+HINT_DESCRIBE_DOWNSTAIRS
+
+Ihr könnt die nächste (tiefere) Ebene betreten, indem Ihr ihnen nach unten folgst (<w>$cmd[CMD_GO_DOWNSTAIRS]</w>). Um wieder auf diese Ebene zu gelangen, drückt Ihr <w>$cmd[CMD_GO_UPSTAIRS]</w>, während Ihr auf der Treppe nach oben steht.<tiles> In Tiles könnt Ihr das Gleiche in beide Richtungen erreichen, indem Ihr die <w>linke Maustaste</w> drückst.</tiles>
+%%%%
+HINT_DESCRIBE_UNKNOWN_STAIRS
+
+\nDiese Treppe habt Ihr noch nicht durchschritten.
+%%%%
+HINT_DESCRIBE_DUNGEON_EXIT
+
+Diese Treppe führt aus dem Dungeon heraus. Wenn Ihr ihnen folgst, endet das Spiel. Die einzige Möglichkeit zu gewinnen ist, den sagenumwobenen Kugel von Zot nach draußen zu bringen.
+%%%%
+HINT_DESCRIBE_UPSTAIRS
+
+Ihr könnt die vorherige (flachere) Ebene betreten, indem Ihr ihnen nach oben folgst (<w>$cmd[CMD_GO_UPSTAIRS]</w>). Dies ist ideal, um sich zurückzuziehen oder einen sicheren Ruheplatz zu finden, da es auf der vorherigen Ebene weniger Monster gibt und die Monster auf dieser Ebene Euch nicht nach oben folgen können, es sei denn, sie stehen direkt neben Euch. Um wieder auf diese Ebene zu gelangen, drückt <w>$cmd[CMD_GO_DOWNSTAIRS]</w>, während Ihr auf der Treppe nach unten steht.<tiles> In Tiles könnt Ihr beide Aktionen einfach durch Klicken der <w>linken Maustaste</w> ausführen.</tiles>
+%%%%
+HINT_DESCRIBE_ESCAPE_HATCH
+
+Fluchtluken können zum schnellen Verlassen einer Ebene mit <w>$cmd[CMD_GO_UPSTAIRS]</w> bzw. <w>$cmd[CMD_GO_DOWNSTAIRS]</w> verwendet werden. Beachtet, dass man normalerweise nicht sofort zurückkehren kann.
+%%%%
+HINT_DESCRIBE_CLOSED_DOOR
+
+Um zu vermeiden, dass Ihr versehentlich eine Tür öffnet, die Ihr während der Reise oder der automatischen Erkundung lieber geschlossen halten möchtet, könnt Ihr sie mit <w>$cmd[CMD_DISPLAY_MAP]</w> aus der Kartenansicht ausschließen, indem Ihr <w>$cmd[CMD_MAP_EXCLUDE_AREA]$cmd[CMD_MAP_EXCLUDE_AREA]</w> drückt, während sich Euer Cursor auf dem betreffenden Feld befindet. Ein solcher Ausschluss verhindert, dass Autoreisen jemals in dieses Feld eintritt, bis Ihr den Ausschluss mit einem weiteren Druck auf <w>$cmd[CMD_DISPLAY_MAP]$cmd[CMD_MAP_EXCLUDE_AREA]</w> aufhebt.
+%%%%
+HINT_DESCRIBE_ALTAR_ATHEIST
+
+Dies ist Eure Chance, einer Religion beizutreten! Im Allgemeinen helfen die Götter ihren Anhängern und verleihen ihnen Kräfte aller Art, aber viele von ihnen verlangen im Gegenzug ein Leben der Hingabe, ständige Tribute oder Unterhaltung.
+%%%%
+HINT_DESCRIBE_FADED_ALTAR_ATHEIST
+
+Dieser besondere Altar ist so alt, dass man nicht erkennen kann, welchem Gott er gewidmet ist! Wenn Ihr hier konvertiert, indem Ihr <w>$cmd[CMD_GO_DOWNSTAIRS]</w> drückt, während Ihr auf dem Altar steht, tretet Ihr in den Dienst eines zufälligen Gottes, der Euch zum Dank etwas zusätzliche Frömmigkeit gewährt.
+%%%%
+# $1 = altar god
+HINT_DESCRIBE_NONFADED_ALTAR_ATHEIST
+
+Ihr könnt Informationen über {acc}<w>$1</w> erhalten, indem Ihr <w>$cmd[CMD_GO_DOWNSTAIRS]</w> drückt, während Ihr auf dem Altar stehst. Bevor Ihr den antwortenden Glauben annimmst, werdet Ihr um eine Bestätigung gebeten.
+%%%%
+# $1 = player's current god
+HINT_DESCRIBE_FADED_ALTAR
+
+Dieser besondere Altar ist so alt, dass man nicht erkennen kann, welchem Gott er gewidmet ist, und $1 wird es wahrscheinlich nicht mögen, wenn Ihr die Gefolgschaft wechselt. Wenn Ihr das Risiko eingehen wollt, könnt Ihr hier konvertieren, indem Ihr <w>$cmd[CMD_GO_DOWNSTAIRS]</w> drückt, während Ihr auf dem Altar steht. Damit stellt Ihr Euch in den Dienst eines zufälligen Gottes, der Euch zum Dank etwas zusätzliche Frömmigkeit gewährt.
+%%%%
+# $1 = player's current god, $2 = altar god
+HINT_DESCRIBE_NONFADED_ALTAR
+
+$1 wird es wahrscheinlich nicht mögen, wenn Ihr die Loyalität wechselt, aber ein Blick kann nicht schaden: Um Informationen über {acc}<w>$2</w> zu erhalten, drückt <w>$cmd[CMD_GO_DOWNSTAIRS]</w>, während Ihr auf dem Altar stehst. Bevor Ihr den antwortenden Glauben annimmst (und Euren jetzigen aufgibst!), werdet Ihr um eine Bestätigung gebeten.\nUm Euren aktuellen Stand bei {dat}$1 zu sehen, drückt <w>$cmd[CMD_DISPLAY_RELIGION]</w>, oder <w>rechtsklickt</w> auf Euren Avatar, während Ihr die <w>Shift-Taste</w> drückt.
+%%%%
+HINT_DESCRIBE_BRANCH_ENTRY
+
+Ein Eingang zu einem der vielen Dungeon-Seitenzweige in Crawl.
+%%%%
+HINT_DESCRIBE_BRANCH_ENTRY_DANGEROUS
+
+Vorsicht, manchmal können sie tödlich sein!
+%%%%
+HINT_DESCRIBE_HARMLESS_CLOUD_SINGULAR
+
+$1 ist harmlos.
+%%%%
+HINT_DESCRIBE_HARMLESS_CLOUD_PLURAL
+
+$1 sind harmlos.
+%%%%
+HINT_DESCRIBE_HARMFUL_CLOUD_SINGULAR
+
+$1 ist wahrscheinlich gefährlich, und Ihr solltet Euch davon fernhalten, wenn Ihr könnt.
+%%%%
+HINT_DESCRIBE_HARMFUL_CLOUD_PLURAL
+
+$1 sind wahrscheinlich gefährlich, und Ihr solltet Euch davon fernhalten, wenn Ihr könnt.
+%%%%
+HINT_DESCRIBE_CURRENTLY_HARMLESS_CLOUD_SINGULAR
+
+$1 ist derzeit harmlos, aber das könnte sich irgendwann ändern. Auf der Übersichtsseite (<w>$cmd[CMD_RESISTS_SCREEN]</w>) könnt Ihr Eure Resistenzen einsehen.
+%%%%
+HINT_DESCRIBE_CURRENTLY_HARMLESS_CLOUD_PLURAL
+
+$1 sind derzeit harmlos, aber das könnte sich irgendwann ändern. Auf der Übersichtsseite (<w>$cmd[CMD_RESISTS_SCREEN]</w>) könnt Ihr Eure Resistenzen einsehen.
+%%%%
+HINT_DESCRIBE_OPAQUE_CLOUD
+
+Diese Wolke ist undurchsichtig. Wenn sich zwei oder mehr undurchsichtige Wolken zwischen Euch und einem Feld befinden, könnt Ihr in diesem Feld nichts sehen.
+%%%%
+HINT_DESCRIBE_UNIQUE_MONSTER
+
+Habt Ihr gedacht, Ihr wärst der einzige Abenteurer im Dungeon? Nun, da habt Ihr falsch gedacht! Diese einzigartigen Gegner verfügen oft über Fähigkeiten, die normale Monster nicht haben, also seiet vorsichtig.
+%%%%
+HINT_DESCRIBE_PLAYER_GHOST
+
+Der Geist eines verstorbenen Abenteurers würde nichts lieber tun, als Euch auf denselben Weg zu schicken.
+%%%%
+HINT_DESCRIBE_TIER_1_DEMON
+
+Dieses Monster ist ein Dämon der höchsten Stufe.
+%%%%
+HINT_DESCRIBE_TIER_2_DEMON
+
+Dieses Monster ist ein Dämon der zweithöchsten Stufe.
+%%%%
+HINT_DESCRIBE_TIER_3_DEMON
+
+Dieses Monster ist ein Dämon der mittleren Stufe.
+%%%%
+HINT_DESCRIBE_TIER_4_DEMON
+
+Dieses Monster ist ein Dämon der zweitniedrigsten Stufe.
+%%%%
+HINT_DESCRIBE_TIER_5_DEMON
+
+Dieses Monster ist ein Dämon der untersten Stufe.
+%%%%
+HINT_DESCRIBE_NASTY_MONSTER
+
+Dieses Monster scheint wirklich gefährlich zu sein!
+%%%%
+HINT_DESCRIBE_TOUGH_MONSTER
+
+Dieses Monster scheint ziemlich gefährlich zu sein!
+%%%%
+HINT_DESCRIBE_BERSERKED_MONSTER
+
+Ein berserkendes Monster ist blutdürstig und kämpft wie verrückt. Ein solcher Blutrausch macht es besonders gefährlich!
+%%%%
+HINT_DESCRIBE_FRIENDLY_MONSTER
+
+Freundliche Monster werden Euch folgen und versuchen, Euch im Kampf zu unterstützen. Ihr könnt Verbündeten in der Nähe Befehle erteilen, indem Ihr mit ihnen sprichst (<w>$cmd[CMD_SHOUT]</w>).
+%%%%
+HINT_DESCRIBE_TEMPORARILY_FRIENDLY_MONSTER
+
+Es ist jedoch nur <w>vorübergehend</w> freundlich und wird wieder gefährlich, wenn diese Freundlichkeit nachlässt.
+%%%%
+HINT_DESCRIBE_UNAWARE_MONSTER
+
+Ihr könnt sein Feld ganz einfach als gefährlich markieren, um zu vermeiden, dass Ihr versehentlich in sein Sichtfeld geratet, wenn Ihr die automatische Erkundung oder die automatische Reise verwendet. Geht dazu mit <w>$cmd[CMD_LOOK_AROUND]</w> in den Zielmodus und drückt dann <w>$cmd[CMD_MAP_EXCLUDE_AREA]</w>, wenn Euer Mauszeiger über dem Feld des Monsters schwebt. Dadurch werden dieses Feld und alle umliegenden Felder in einem Radius von 8 als "ausgeschlossen" markiert, so dass der Erkundungs- oder Reisemodus sie nicht betreten kann.
+%%%%
+HINT_RUN_AWAY
+
+Dies könnte ein guter Zeitpunkt sein, um wegzulaufen.
+%%%%
+HINT_RUN_AWAY_OR_BERSERK
+
+Dies könnte ein guter Zeitpunkt sein, um wegzulaufen oder Eure Berserker Fähigkeit einzusetzen (<w>$cmd[CMD_USE_ABILITY]</w>).
+%%%%
+HINT_DESCRIBE_STABBABLE_MONSTER
+
+Offenbar hat es Euch noch nicht bemerkt. Beachtet, dass Ihr nicht jedes Monster, dem Ihr begegnet, angreifen müsst. Manchmal ist Diskretion der bessere Teil der Tapferkeit.
+%%%%
+HINT_DESCRIBE_DISTRACTED_MONSTER
+
+Offenbar ist es durch etwas abgelenkt worden. Ihr könntet diese Gelegenheit nutzen, um Euch an das Monster heranzuschleichen - oder um Euch davonzuschleichen.
+%%%%
+HINT_DESCRIBE_UNREMARKABLE_MONSTER
+
+Dieses Monster scheint keine Resistenzen oder Anfälligkeiten zu haben. Es kann nicht fliegen und hat eine durchschnittliche Geschwindigkeit. Die Untersuchung anderer, möglicherweise höherstufigerer Monster kann wichtige Hinweise darauf geben, wie man mit ihnen umgehen sollte.
 %%%%

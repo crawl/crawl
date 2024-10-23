@@ -490,7 +490,7 @@ HINT_SEEN_RUNED_DOOR
 
 That<console> $1</console> is a runed door, which is probably in front of
 something unusually dangerous. Monsters will never open it. If you do, the runes
-will be broken, and it will become a normal door
+will be broken, and it will become a normal door.
 %%%%
 HINT_KILLED_MONSTER
 
@@ -708,7 +708,7 @@ be the better option.
 %%%%
 HINT_ADVISE_USE_WAND
 
-\nOr you could e<w>$cmd[CMD_EVOKE]</w>oke a wand to deal damage.
+Or you could e<w>$cmd[CMD_EVOKE]</w>oke a wand to deal damage.
 %%%%
 HINT_YOU_MUTATED
 
@@ -1259,7 +1259,7 @@ HINT_CANNOT_WEAR_HELMET
 Because of your horns you cannot wear helmets. (Press
 <w>$cmd[CMD_DISPLAY_MUTATIONS]</w> to see a list of your mutations and innate
 abilities.
-%%%%%
+%%%%
 HINT_CANNOT_WEAR_BARDING
 
 Only nagas and palentongas can wear barding.
@@ -1285,7 +1285,7 @@ HINT_NO_SHIELD_WITH_MOST_LAUNCHERS
 
 Note that many ranged weapons are two handed and so cannot be used with a
 shield.
-%%%%%
+%%%%
 HINT_ARMOUR_HAS_RESIST
 
 This armour offers its wearer protection from certain sources. For an overview
@@ -1305,12 +1305,12 @@ The magic within can be unleashed by evoking (<w>$cmd[CMD_EVOKE]</w>) it.
 character to target yourself)<localtiles>, or having first quivered the wand
 (<w>$cmd[CMD_QUIVER_ITEM]</w>), <w>left mouse click</w> on your target
 while pressing the Shift key</localtiles>.</tiles>
-%%%%%
+%%%%
 HINT_DESCRIBE_SCROLL
 
 Press <w>$cmd[CMD_READ]</w> to read this scroll<tiles> or simply click on it
 with your <w>left mouse button</w></tiles>.
-%%%%%
+%%%%
 HINT_DESCRIBE_JEWELLERY
 
 Jewellery can be <w>$cmd[CMD_WEAR_JEWELLERY]</w>ut on or
@@ -1593,7 +1593,7 @@ HINT_DESCRIBE_STABBABLE_MONSTER
 
 Apparently it has not noticed you - yet. Note that you do not have to engage
 every monster you meet. Sometimes, discretion is the better part of valour
-%%%%%
+%%%%
 HINT_DESCRIBE_DISTRACTED_MONSTER
 
 Apparently it has been distracted by something. You could use this opportunity
