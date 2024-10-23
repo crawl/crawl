@@ -599,12 +599,12 @@ at most once per death.
 # Fedhas
 Wall of Briars ability
 
-Grow short-lived briar patches around you. Monsters attacking these briars will
+Grows short-lived briar patches around you. Monsters attacking these briars will
 be damaged by sharp thorns. Invocations skill increases the briars' health.
 %%%%
 Grow Ballistomycete ability
 
-Grow a short-lived ballistomycete at the location you choose. A ballistomycete
+Grows a short-lived ballistomycete at the location you choose. A ballistomycete
 occasionally releases spores that quickly seek out foes and violently explode,
 damaging and confusing all living things caught in the blast.
 
@@ -613,13 +613,13 @@ well as the damage of its exploding spores.
 %%%%
 Overgrow ability
 
-Permanently destroy a wall-like structure, growing a short-lived plant ally in
+Permanently destroys a wall-like structure, growing a short-lived plant ally in
 its place. Even a tree will give its life to support the will of Fedhas, and
 only truly indestructible walls are immune to this power.
 %%%%
 Grow Oklob ability
 
-Grow a short-lived oklob plant at the location you choose. These dangerous
+Grows a short-lived oklob plant at the location you choose. These dangerous
 plants spray corrosive vitriol at your foes.
 
 Invocations skill increases the health and duration of the oklob as well as the
@@ -980,7 +980,7 @@ invisibility, and obscure the vision of those outside the storm.
 %%%%
 Fiery Armour ability
 
-Armour yourself in fire, providing +7 AC and searing foes foolish enough to
+Armours yourself in fire, providing +7 AC and searing foes foolish enough to
 strike you in melee. The fire takes quite a long time to burn out.
 %%%%
 Foxfire Swarm ability
@@ -1010,7 +1010,7 @@ again for a short time.
 %%%%
 Siphon Essence ability
 
-Torment nearby living foes, halving their health. The pain inflicted heals
+Torments nearby living foes, halving their health. The pain inflicted heals
 the user to an extent determined by Shapeshifting skill. After using this
 ability, you will be unable to use it again for a short time.
 %%%%
