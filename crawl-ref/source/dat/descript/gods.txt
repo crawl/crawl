@@ -317,11 +317,11 @@ will always grant followers resistance to fire.
 %%%%
 Jiyva powers
 
-Jiyva will gradually fill the dungeon with jellies. Your fellow slimes will
-rapidly consume nearby items as well as slowly consuming items from elsewhere
-in the dungeon. As they spread slime across more of the dungeon, Jiyva will
-grant followers increasingly rapid health and magic regeneration, and will
-begin mutating them to better reflect Jiyva's image. Followers will later
+Jiyva will gradually fill the dungeon with jellies. These and any other fellow
+slimes will rapidly consume nearby items, as well as slowly consuming items from
+elsewhere in the  dungeon. As they spread slime across more of the dungeon,
+Jiyva will grant followers increasingly rapid health and magic regeneration, and
+will begin mutating them to better reflect Jiyva's image. Followers will later
 become able to call forth acidic ooze from the walls of the dungeon, and to
 turn monsters to slime with a touch.
 %%%%
@@ -553,17 +553,18 @@ Gozag wrath
 The first of Gozag's punishments is commercial: all shops opened through
 Gozag's intervention shut their doors forever. The disloyal are advised to
 finish their shopping before they launch their betrayal. For as long as Gozag
-remains angered, potions will have a chance to fail when quaffed, and any
-foes that are encountered may be granted potions of their own to assist them
-against the ex-worshipper. You may sometimes be bedazzled by the glint of coin.
+remains angered, ex-worshippers may sometimes be bedazzled by the glint of coin,
+and their potions will have a chance to fail when quaffed. Any foes that are
+encountered may also be granted potions of their own to assist them against
+those who resign from Gozag's service.
 %%%%
 Ignis wrath
 
 The wrath of Ignis is now weaker than that of most other gods. Apostates will
 find their resistance to fire stripped away completely, and will be periodically
 assaulted by fire elementals, find their enemies strengthened by fire, or even
-have the floor burned out from beneath them. Experienced and cautious adventurers
-will likely overmaster these assaults.
+have the floor burned out from beneath them. Experienced and cautious
+adventurers will likely overmaster these assaults.
 %%%%
 Jiyva wrath
 
