@@ -2497,6 +2497,7 @@ vector<coord_def> get_ignition_blast_sources(const actor *agent, bool tracer)
             && !ai->as_monster()->wont_attack()
             && !mons_is_firewood(*ai->as_monster())
             && !mons_is_tentacle_segment(ai->as_monster()->type)
+            && !mons_is_projectile(*ai->as_monster())
             && (!tracer || agent->can_see(**ai)))
         {
             blast_sources.push_back(ai->position);
