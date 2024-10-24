@@ -1516,16 +1516,16 @@ void yred_end_conquest()
     int ratio = kills * 100 / (kills + souls_remaining + 1);
 
     // Print a message about how happy Yred is about our performance this floor
-    string msg = "You return your torch's flame to Yredelemnul,";
+    string msg = "You offer up the Black Torch's flame,";
 
     if (ratio > 90)
-        msg+= " and they are glorified by your conquest!";
+        msg+= " and Yredelemnul is glorified by your conquest!";
     else if (ratio > 65)
-        msg+= " and they are satisfied with your conquest.";
+        msg+= " and Yredelemnul is satisfied with your conquest.";
     else if (ratio > 30)
-        msg+= " and feel their disappointment in your meagre crusade.";
+        msg+= " and feel Yredelemnul's disappointment in your meagre crusade.";
     else
-        msg+= " and feel their disdain for your failure.";
+        msg+= " and feel Yredelemnul's disdain for your failure.";
 
     mprf(MSGCH_GOD, "%s", msg.c_str());
 
