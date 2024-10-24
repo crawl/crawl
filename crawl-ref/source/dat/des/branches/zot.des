@@ -118,19 +118,17 @@ xxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 # Sorry, no wand of wishing in this one
-NAME:   evilmike_zot_entry_castle
-TAGS:   no_monster_gen no_pool_fixup zot_entry layout_city
-KFEAT:  ^ = alarm trap
-NSUBST: O = 1:O / *:A
-SUBST:  ^ = ^..
-SUBST:  s = ccc+
-FTILE:  "OADx = floor_marble
-COLOUR: " = magenta
-TILE:   x = wall_zot_magenta
-COLOUR: x = magenta
-FTILE:  .+cm^01234$ = floor_hall
-SUBST:  D = +, "' = .
-NSUBST: 3 = 1:9 / *:3
+NAME:    evilmike_zot_entry_castle
+TAGS:    no_monster_gen no_pool_fixup zot_entry layout_city
+KFEAT:   ^ = alarm trap
+KFEAT:   - = +
+SHUFFLE: Nn / Oo / Pp / Qq
+SUBST:   o = R, NPQ = A, npq = ., ^ = ^.., s = ccc+
+NSUBST:  3 = 1:9 / *:3
+COLOUR:  "x = magenta
+FTILE:   "OADx = floor_marble
+FTILE:   .+cm^012349$ = floor_hall
+TILE:    x = wall_zot_magenta
 : zot_entry_setup(_G)
 MONS:   base draconian ; glaive | halberd
 MAP
@@ -139,21 +137,21 @@ MAP
 'wcccccccwwwwwwwwwwwwwwwwwwwwwwwcccccccw'
 'wc3....cccccmccccccmccccccmccccc....3cw'
 'wc.""".+....2.............2....+.""".cw'
-'wc."O".cccccccccccc+cccccccccccc."O".cw'
+'wc."N".cccccccccccc+cccccccccccc."O".cw'
 'wc.""".s..1.....=4w.w4=......0.s.""".cw'
-'wc.....c.....cccccc.cccccc.""".c.....cw'
+'wcn....c.....cccccc.cccccc.""".c....ocw'
 'wccccccc0....+...."""1...+."x".ccc+cccw'
 'wwwwwwccccccccc.""""""".ccc""".c$$$.ccw'
 ''''''wm.......c.""""""".c4=..1.s$$$2mww'
 ''''''wc.x1x1x2c"""xxx"""cwcccccccccccw''
-''''''WD"""""""D"""xxx"""+.+^^^^^^^^^+w''
+''''''W-"""""""-"""xxx"""+.+^^^^^^^^^+w''
 ''''''wc.x1x1x2c"""xxx"""cwcccccccccccw''
 ''''''wm.......c.""""""".c4=..1.s$$$2mww'
 'wwwwwwccccccccc.""""""".ccc""".c$$$.ccw'
 'wccccccc0....+...."""1...+."x".ccc+cccw'
-'wc.....c.....cccccc.cccccc.""".c.....cw'
+'wcp....c.....cccccc.cccccc.""".c....qcw'
 'wc.""".s..1.....=4w.w4=......0.s.""".cw'
-'wc."O".cccccccccccc+cccccccccccc."O".cw'
+'wc."P".cccccccccccc+cccccccccccc."Q".cw'
 'wc.""".+....2.............2....+.""".cw'
 'wc3....cccccmccccccmccccccmccccc....3cw'
 'wcccccccwwwwwwwwwwwwwwwwwwwwwwwcccccccw'
