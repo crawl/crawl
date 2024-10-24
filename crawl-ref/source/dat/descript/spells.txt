@@ -39,9 +39,9 @@ necromantic visions of pain and suffering, and mindless creatures are unaffected
 %%%%
 Animate Armour spell
 
-Call upon the spirit of your worn armour to fight alongside you. The spirit moves
-slowly, but draws strength from the inherent protection of your own armour. At
-higher power, the spirit becomes more durable.
+Calls upon the spirit of your worn armour to fight alongside you. The spirit
+moves slowly, but draws strength from the inherent protection of your own
+armour. At higher power, the spirit becomes more durable.
 %%%%
 Animate Dead spell
 
@@ -575,7 +575,7 @@ Splits the earth to draw up a localised, short-lived volcano under the target.
 %%%%
 Fastroot spell
 
-Fire a magical seed, entangling victims in quick-growing tree roots. Those
+Fires a magical seed, entangling victims in quick-growing tree roots. Those
 entangled will be painfully constricted until they escape or the roots wither
 away. The roots will only sprout from solid ground.
 %%%%
@@ -2024,8 +2024,8 @@ Generates a loud noise, alerting nearby enemies.
 %%%%
 Warp Space spell
 
-Create a brief but violent rift in space, damaging everything caught in its wake
-and sometimes blinking them a short distance away.
+Creates a brief but violent rift in space, damaging everything caught in its
+wake and sometimes blinking them a short distance away.
 %%%%
 Waterstrike spell
 
