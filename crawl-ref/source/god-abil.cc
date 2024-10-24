@@ -1438,7 +1438,7 @@ string yred_cannot_light_torch_reason()
     if (levels.exists(level_id::current().describe()))
     {
         return "You have raised the torch once already on this floor."
-               " Yredelemnul offers no second-chances.";
+               " Yredelemnul offers no second chances.";
     }
 
     return "";
