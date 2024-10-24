@@ -964,9 +964,6 @@ _speaking_high_tension_
 
 @The_weapon@ yells, "I hereby consecrate these halls WITH BLOOD!"
 
-# After the crusader's "deus vult" battle cry
-@The_weapon@ bellows, "{{ if you.god() == "No God" then return "@_godless_sorter_@"; else return "@player_god@"; end }} wills it!"
-
 @The_weapon@ shouts, "Lose my temper? Nonsense! My steel will be strong forever!"
 
 @The_weapon@ shouts, "Cut 'em off! All their little heads at once!"
