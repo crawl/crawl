@@ -497,7 +497,7 @@ function coven_setup(e)
   e.kmons("9 = Frederick / Boris / Margery band w:5 / Sojobo band w:5")
   e.kfeat("v = crystal_wall")
   e.colour("v = green")
-  e.tile("v = wall_emerald")
+  e.tile("v = wall_crystal_bookcase")
   e.subst("0 = 0:20 9:1")
   e.kitem("a = any book good_item ident:all")
   e.kitem("b = amulet of faith randart ident:all /\

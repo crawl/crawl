@@ -4298,11 +4298,11 @@ SHUFFLE: {([}
 SUBST:   ( = (:40 U, [ = [:40 Y
 SUBST:   a = b.., d = c.., u = v.., y = x..
 # fudged a bunch for Lom, admittedly.
-TILE:    V = dngn_metal_wall_brown
-TILE:    B = dngn_crystal_white
-TILE:    b = wall_emerald
+TILE:    V = dngn_metal_steel_blood
+TILE:    B = wall_crystal_bookcase
+TILE:    b = dngn_crystal_white
 TILE:    X = wall_hall_darkgray
-TILE:    C = dngn_stone_wall_yellow
+TILE:    C = stone_wall_flesh_cage
 SUBST:   V = v, X = x, B = b, C = c
 MAP
         .........      ..............
@@ -4332,11 +4332,11 @@ MAP
  v...v.u......v5.%v...x.................x.
  v%.5+...v....+...v....x.xx+++xxxxxxxx.x..
  v...v...v....v..5v...x..x.7.....7xxxx..x.
-.vv+vv...v....Vv+vvv...x.+7...y....xxx.x..
-.........vV........v..x..+..7x.x...%xx..x.
-.......u.5vv[......v...x.+..x7X..x..7x.x..
-vv.........Vv.....5vv.x..x.y.X.X.x.x.x..x.
-v...vvv5....vV......v..x.x..x.X}.xx7xx.x..
+.vv+vv...v....vv+vvv...x.+7...y....xxx.x..
+.........vv........v..x..+..7x.x...%xx..x.
+.......u.5VV[......v...x.+..x7X..x..7x.x..
+vv.........vV.....5vv.x..x.y.X.X.x.x.x..x.
+v...vvv5....Vv......v..x.x..x.X}.xx7xx.x..
 v.....vv....5vvvv..5v.x..x......xx.x.x..x.
 vv.....vv..........vv..x.x7..xxxxx...+.x..
 v.......vv5.u....u.v..x..xx....x.....+..x.

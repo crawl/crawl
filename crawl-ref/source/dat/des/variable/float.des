@@ -6109,12 +6109,14 @@ NAME:    dreamdust_dug_too_deep
 TAGS:    no_monster_gen no_pool_fixup
 ORIENT:  float
 DEPTH:   D:11-, !D:$, Orc, !Orc:$
+KMONS:   A = balrug
+KFEAT:   A = stone_arch
+KFEAT:   C = c
 SUBST:   - = ---..!
 KPROP:   -! = bloody
-TILE:    G = dngn_statue_dwarf
 : set_feature_name("granite_statue", "a statue of a dwarf")
-KFEAT:   A = stone_arch
-KMONS:   A = balrug
+TILE:    C = stone_wall_pyre
+TILE:    G = dngn_statue_dwarf
 : dgn.delayed_decay_extra(_G, "?", "deep dwarf corpse", "helmet / \
 : cloak, plate armour, war axe good_item / broad axe / \
 : battleaxe / executioner's axe / arga w:1")
@@ -6127,8 +6129,8 @@ wcG....G....Gcw
 wc..-------..cw
 wcc+cV---Vc+ccw
 wwc.ccc=ccc.cww
- wc.cc---cc.cw
-wwc.cc-?-cc.cww
+ wc.cC---Cc.cw
+wwc.cC-?-Cc.cww
 wcc+cc-A-cc+ccw
 wc...ccccc...cw
 wc...........cw

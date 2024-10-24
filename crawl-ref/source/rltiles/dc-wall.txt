@@ -463,6 +463,11 @@ wall_stone_abyss_c5
 wall_stone_abyss_c6
 wall_stone_abyss_c7
 
+wall_stone_pan0 STONE_WALL_PANDEMONIUM
+wall_stone_pan1
+wall_stone_pan2
+wall_stone_pan3
+
 # ssssssss
 %weight 10
 wall_stone_spider0 STONE_WALL_SPIDER
@@ -1160,6 +1165,12 @@ ice_block2
 ice_block3
 ice_block4
 
+wall_stone_pyre0 STONE_WALL_PYRE
+wall_stone_pyre1
+wall_stone_pyre2
+wall_stone_pyre3
+wall_stone_pyre4
+
 lab-rock0 WALL_LAB_ROCK WALL_SWAMP
 lab-rock1
 lab-rock2
@@ -1714,6 +1725,31 @@ bars_red08
 %lum 0 30
 %repeat WALL_BARS WALL_BARS_WHITE
 %resetcol
+
+wall_metal_steel_blood0 DNGN_METAL_STEEL_BLOOD
+wall_metal_steel_blood1
+wall_metal_steel_blood2
+wall_metal_steel_blood3
+wall_metal_steel_blood4
+
+crystal_bookcase0 WALL_CRYSTAL_BOOKCASE
+crystal_bookcase1
+crystal_bookcase2
+crystal_bookcase3
+
+wall_stone_flesh_cage0 STONE_WALL_FLESH_CAGE
+wall_stone_flesh_cage1
+wall_stone_flesh_cage2
+wall_stone_flesh_cage3
+wall_stone_flesh_cage4
+
+%weight 10
+wall_stone_shadow_mesh0 STONE_WALL_SHADOW_MESH
+wall_stone_shadow_mesh1
+%weight 9
+wall_stone_shadow_mesh2
+wall_stone_shadow_mesh3
+wall_stone_shadow_mesh4
 
 permarock_red0 WALL_PERMAROCK WALL_PERMAROCK_RED
 
