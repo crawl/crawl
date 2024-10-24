@@ -253,28 +253,28 @@ surroundings.
 %%%%
 Light the Black Torch ability
 
-Raises the Black Torch aloft and calls upon Yredelemnul to light it aflame.
-Those who have already earned the god's favour will be gifted temporary undead
-servants to help begin their conquest, with stronger servants being provided to
-the experienced and especially pious.
+Raises the Black Torch aloft and calls upon Yredelemnul to light it aflame,
+marking the beginning of your attempt to conquer the current level of the
+dungeon. Yredelemnul only grants piety for kills made while the torch is lit.
 
-Yredelemnul wishes for worshippers to pour across the land as an endless
-despoiling tide, and so you will only earn piety for kills made while the
-symbol is lit; the flame will be taken from you the next time you leave the
-floor. Yredelemnul also does not offer second chances - the torch may only be
-lit once per floor, ever.
+Those who have earned some of Yredelemnul's favour will be gifted temporary
+undead servants to help begin their conquest, with stronger servants being
+provided to the experienced and especially pious.
+
+Yredelemnul does not offer second chances - the torch will be extinguished when
+you leave the current floor, and it may only be lit once per floor, ever.
 %%%%
 Hurl Torchlight ability
 
 Hurls a gout of umbral fire from the Black Torch, which deals irresistible
 damage to living, demonic, and holy beings. The torchlight will also briefly
 empower any of your undead servants caught in its blast, and is harmless to its
-user.
+user. The damage is increased by Invocations skill.
 
-Can only be used while the torch is lit, and doing so will expend a significant
-amount of its flame - never extinguishing it entirely, but leaving you unable to
-hurl more until you enter a new floor, or stoke its flames with a particularly
-remarkable enemy soul.
+This ability can be used only while the torch is lit, and only a limited number
+of times on each floor. The number of uses available per floor increases with
+piety, and stoking the Black Torch's flames with a particularly remarkable soul
+by killing a unique named enemy will also provide an additional use.
 %%%%
 Bind Soul ability
 

@@ -319,11 +319,11 @@ Jiyva powers
 
 Jiyva will gradually fill the dungeon with jellies. These and any other fellow
 slimes will rapidly consume nearby items, as well as slowly consuming items from
-elsewhere in the  dungeon. As they spread slime across more of the dungeon,
-Jiyva will grant followers increasingly rapid health and magic regeneration, and
-will begin mutating them to better reflect Jiyva's image. Followers will later
-become able to call forth acidic ooze from the walls of the dungeon, and to
-turn monsters to slime with a touch.
+elsewhere in the dungeon. As they spread slime across more of the dungeon, Jiyva
+will grant followers increasingly rapid health and magic regeneration, and will
+begin mutating them to better reflect Jiyva's image. Followers will later become
+able to call forth acidic ooze from the walls of the dungeon, and to turn
+monsters to slime with a touch.
 %%%%
 Kikubaaqudgha powers
 
