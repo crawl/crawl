@@ -885,9 +885,10 @@ static bool _handle_swoop_or_flank(monster& mons)
                 defender->name(DESC_THE).c_str());
             }
         }
+        const coord_def old_pos = mons.pos();
         mons.move_to_pos(tracer.path_taken[j+1]);
         // Apply traps and other location effects to the monster.
-        mons.apply_location_effects(mons.pos());
+        mons.apply_location_effects(old_pos);
         fight_melee(&mons, defender);
         mons.props[SWOOP_COOLDOWN_KEY].get_int() = you.elapsed_time
                                                   + 40 + random2(51);
