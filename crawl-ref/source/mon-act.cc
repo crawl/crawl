@@ -832,7 +832,8 @@ static bool _handle_swoop_or_flank(monster& mons)
     if (mons.confused() || !defender || !mons.can_see(*defender)
         || (mons_aligned(&mons, defender) && !mons.has_ench(ENCH_FRENZIED))
         || mons_is_fleeing(mons) || mons.pacified()
-        || is_sanctuary(mons.pos()) || is_sanctuary(defender->pos()))
+        || is_sanctuary(mons.pos()) || is_sanctuary(defender->pos())
+        || mons.has_ench(ENCH_BOUND))
     {
         return false;
     }
