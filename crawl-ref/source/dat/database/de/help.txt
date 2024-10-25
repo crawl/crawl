@@ -1,0 +1,1055 @@
+%%%%
+pick-up
+
+                   <h>Gegenstände aufheben und hinsetzen</h>
+<h>Gegenstand-Buchstaben</h>
+Der Buchstabe eines Gegenstands drücken um den Gegenstand auszuwählen.
+Eine Zahl vor dem Buchstabe eingeben wird nur diese Menge auswählen.
+
+<h>Reguläre Ausdrücke</h>
+Suchen mit <w>Strg-F</w>. Ein Wort (oder Regulären Ausdruck) eingeben.
+Alle passenden Artikel werden ausgewählt.
+
+<h>Cursor</h>
+Es gibt Tastenkombinationen, um schnell mehrere Gegenstände nacheinander auszuwählen:
+<w>.</w>   wählt den nächsten Gegenstand aus und bewegt den Cursor nach unten
+<w>'</w>   bewegt den Cursor nach unten, ohne die Auswahl zu ändern
+Der Cursor ist normalerweise ausgeblendet; durch Drücken von <w>.</w> oder <w>'</w> erscheint er.
+
+<h>Kategorie-Verknüpfungen</h>
+Die folgenden Tasten drücken wird Gegenstände nach Art auswählen:
+<w>!</w>   Tränke       <w>(</w>   Waffen         <w>)</w>   Geschosse       <w>[</w>   Rüstung
+<w>/</w>   Zauberstäbe  <w>|</w>   Mag. Stecken   <w>?</w>   Schriftrollen   <w>:</w>   Bücher
+<w>"</w>   Amulette     <w>=</w>   Ringe          <w>}</w>   Verschiedenes
+Globale:  <w>,</w>   alle auswählen     <w>*</w>   alle invertieren    <w>-</w>   alle abwählen
+          <w>;</w>   Letzter unausgerüstete wählen
+Hinweis: Beim Hinsetzen, der Befehl (<w>,</w>) verwendet die Option <w>drop_filter</w>, die
+die Gegenstände für Auswahl/Abwahl verringert. Standardmäßig werden alle nutzlosen Gegenstände
+gewählt.
+
+<h>Deaktivieren der automatischen Abholung über das Fallenlassen-Menü</h>
+Gegenstände im Fallenlassen-Menü, die nach das Drücken von <w>\</w> ausgeẅahlt wird, wird
+mit <w>*</w> markiert statt das übliche <w>+</w>. Autoabholung wird für diese Gegenstände
+wird ausgeschaltet nach dem Schliessen des Menus. <w>\</w> nochmal drücken, um in den
+normale Modus zurückzutreten.
+%%%%
+known-menu
+
+                   <h>Bekannte-Gegenstände-Menü</h>
+<h>Gegenstand-Buchstaben</h>
+Einen Gegenstandtyp wird durchs Drücken seines Buchstabens geẅahlt.
+
+<h>Gegenstandtype wählen</h>
+Die grau dargestellten Gegenstandtypen verwenden die Standardoptionen für die automatische
+Abholung, die in der Konfigurationsdatei eingestellt sind. (Gegenstände, die für den
+aktuellen Charakter nutzlos sind, werden in <darkgrey>dunkelgrau</darkgrey> angezeigt.)
+Die Auswahl eines Gegenstandstyps setzt diese Optionen außer Kraft (gekennzeichnet durch
+<w>weißen</w> Text) und schaltet den Gegenstand zwischen den Zuständen um:
+ <w>+</w>  Gegenstände dieses Typs werden automatisch abgeholt.
+ <w>-</w>  Gegenstände dieses Typs werden nicht automatisch abgeholt.
+Die automatische Abholung kann auch für alle unbekannten Gegenstände einer bestimmten
+Kategorie umgeschaltet werden.
+
+<h>Kategoriekürzel</h>
+Man kann schnell all Gegenstandtypen in einer bestimmten Kategorie auswählen durch:
+<w>!</w> Tränke       <w>?</w> Schriftrollen   <w>(</w> Geschosse        <w>"</w>   Amulette
+<w>=</w> Ringe        <w>/</w> Zauberstäbe     <w>|</w> magische Stacken
+Globaler Auswahl:  <w>*</w>   alle umschalten   <w>^</w>   alles auf Standardwert zurücksetzen
+
+<h>Unbekannte und bekannte Gegenstände anzeigen</h>
+<w>\</w> and <w>-</w> schalten zwischen den Menüs für bekannte und unbekannte Elemente um.
+Hinweis dass keine der oben genannten Funktionen über das Menü "Unbekannte Gegenstände"
+verfügbar ist.
+
+<h>Wiederherstellung der Standardwerte für die automatische Abholung</h>
+Durch Drücken von <w>Strg-D</w>, gefolgt von einem Gegenstand-Buchstaben oder
+einem Kategoriekürzel, wird die Standardeinstellungen für den ausgewählte
+Gegenstand bzw. die ausgewählten Gegenstände wiederhergestellt.
+
+<h>Reguläre Ausdrücke</h>
+Man kann <w>Strg-F</w> drücken und ein Wort (oder einen regulären Ausdruck)
+eingeben. Alle passenden Gegenstände werden ausgewählt.
+
+<h>Cursor</h>
+Es gibt Tastenkombinationen, um schnell mehrere Gegenstände nacheinander auszuwählen:
+<w>.</w>   wählt den nächsten Gegenstand aus und bewegt den Cursor nach unten
+<w>'</w>   bewegt den Cursor nach unten, ohne die Auswahl zu ändern
+Der Cursor ist normalerweise ausgeblendet; durch Drücken von <w>.</w> oder <w>'</w> erscheint er.
+
+%%%%
+stash-search.prompt
+
+<h>Durchsuchen des Stash-Trackers</h>
+
+Man kann nach Gegenstände oder Dungeon-Einrichtungen anhand des deutschen oder englischen
+Namens (oder eines Teils davon) suchen. In der Liste der Suchergebnisse kann man ein
+davon anhand seiner Tastenkombination wählen, um zu seinem Standort zu reisen.
+
+Einige Beispiele für Suchbegriffe:
+<w>mutation</w>      alle Tränke der Mutation finden, einschließlich Tränke in Läden.
+<w>wurfnetz</w>      alle Wurfnetze und Haufen davon finden
+<w>laden</w>         alle Läden auflisten. <w>?</w> und den Buchstaben eines Ladens
+                     drücken für sein Inventar
+<w>Höhle:2</w>       alles finden, von dem bekannt ist, dass es auf Höhle:2 ist.
+<w>/D:[2-4]</w>      alles auf Dungeon-Ebenen 2-4 finden. Regexes sind erlaubt!
+              Achtung! /D:[3-10] wird nicht wie vorgesehen funktionieren, da [x-y]
+              ein Regex-Zeichenbereich ist.
+<w>rGift</w>         alle Gegenstände mit Giftresistenz finden
+<w>rC++</w>          alle Gegenstände mit mindestens zwei Stufe Kälteresistenz finden
+<w>+3</w>            alle Gegenstände einer Verzauberung von +3 finden
+<w>/Höhle.*axt</w> und <w>axt && Höhle</w> beide zeigen alle Äxte in der Höhle
+
+Einige Abkürzungen:
+<w>.</w>             alles auf der aktuellen Ebene auflisten
+<w>..</w>            alle Gegenstände, die der Spieler kennt, auflisten
+<w>0</w> bis <w>9</w>     alle Gegenstände am angegebenen Wegpunkt auflisten
+<w>*</w>             alle Gegenstände an allen Wegpunkten auflisten
+<w>@<<query></w>      alles, was <<query> auf die aktuellen Ebene entspricht, auflisten
+<w>/<<regex></w>      alles, was den reguläre Ausdruck <<regex> entspricht, auflisten
+<w>=<<string></w>     alle Gegenstände, die <string> als Teilzeichenfolge enthalten, auflisten
+
+Man kann auch Läden und Gegenstände in den Suchergebnissen untersuchen, indem man
+<w>?</w> und dann den entsprechenden Buchstaben drückt. Dies ergibt eine Beschreibung
+des Artikels oder den Inhalt des Ladens.
+
+Bei der Suche wird die Groß- und Kleinschreibung nicht berücksichtigt.
+
+<h>Suche anhand von Gegenstandeigenschaften:</h>
+
+Zauberbücher können gefunden werden, indem man nach einen Zauberspruch sucht,
+der sich in dem Buch befindet.
+
+Man kann nach nach Artefakt-Eigenschaften (z. B. <w>/verhindert.*Teleport</w>)
+suchen, um Artefakte zu finden, die diese Eigenschaft aufweisen.
+
+Man kann nach einigen zusätzlichen Gegenstandseigenschaften suchen:
+<w>artefakt</w> oder <w>artefact</w> wird identifizierte Artefakte finden
+<w>ego</w> oder <w>branded</w> wird Nicht-Artefakte, die brandmarkiert
+sind, oder nicht-identifizierte Gegenstände, die möglicherweise brandmarkiert
+sind, finden
+<w>throwable</w> oder <w>werfbar</w> wird Gegenstände dinden, die man werfen kann
+<w>dropped</w> wird Gegenstände finden, die der Charakter fallen lassen hat
+<w>in_shop</w> wird Gegenstände finden, die in Läden sind
+<w>autopickup</w> wird (wenn die Option autopickup_search angeschaltet ist)
+Gegenstände finden, die automatisch abgeholt würden 
+
+Fertigkeitsnamen (z. B. <w>Stangenwaffen</w>) werden alle Wffen finden, die
+diese Fertigkeit verwenden. Man kann auch nach <w>melee weapon</w> oder 
+<w>ranged weapon</w> suchen.
+
+Es ist auch möglich nach Gegenstandtypen zu suchen (z. B. <w>Buch</w> oder <w>Schmuck</w>).
+
+Gegenstände anhand Rüstungsslot suchen:
+<w>helm</w> oder <w>helmet</w>  für alle Kopfbedeckungen
+<w>handschuche</w> oder <w>gloves</w> für Handschuche
+<w>schild</w> oder <w>shield</w> für Schilde
+und <w>body</w> oder <w>körper</w> für Körperrüstung
+<w>rüstung && !!körper</w> bzw. <w>armour && !!body</w> wird alle Rüstungsteile,
+außer Körperrüstung, finden.
+
+<h>Finden von Dungeon-Einrichtungen:</h>
+
+Man kann nach Dungeon-Einrichtungen anhand des Namens suchen: alle Läden werden durch
+eine Suche nach <w>laden</w> oder <w>shop</w> gefunden (einschließlich Läden, die
+nicht das Wort "Laden" Im Namen haben); andere Dungeon-Einrichtungen können auch anhand
+ihres Namens gefunden werden: <w>Zerstreuungsfalle</w>, <w>Altar</w>, usw. Man
+kann auch nach Altären mit dem Namen einer Gottheit suchen: <w>Zin</w>.
+
+<h>Nicht-Regex-Operatoren:</h>
+
+Man kann !! verwenden, um einen Suchbegriff zu negieren, && für ein boolesches UND,
+|| für ein boolesches ODER, and <<<< >> für Gruppierung.
+
+Zum Beispiel, um Ringe (Schmuck) zu finden, aber keine Ringpanzer:
+<w>ring && !!panzer</w> bzw. <w>ring && !!mail</w>
+
+Achtung. <w>/</w> und <w>=</w> für einzelne Muster gelten, nicht für die gesamte Abfrage:
+Man soll nach <w>rüstung && /r(K|F|Gift|Elek)</w> suchen, nicht
+<w>/rüstung && r(K|F|Gift|Elek)</w>.
+%%%%
+level-map
+
+<h>Ebenenkarte ('<w>X</w>' im Hauptfenster):</h>
+<w>Esc</w>        : Ebenenkarte lassen
+             (auch <w>Leertaste</w> oder eine beliebige unbenutzte Taste).
+<w>Richtung</w>   : Den Cursor bewegen.
+<w>Shift-Richt.</w> : Den Cursor in größeren Schritten bewegen (standardmäßig 7).
+<w>-</w> oder <w>+</w> : Ebenenkarte um 20 Felder nach oben oder unten verschieben.
+<w>.</w>          : Reise beginnen (auch <w>Enter</w> und <w>,</w> und <w>;</w>).
+             (Bewegt den Cursor zum letzten Reiseziel, falls noch auf @.)
+<w>[</w> or <w>]</w>     : Die nächsthöhere oder -niedrigere Ebene untersuchen.
+             (Bewegt den Cursor zum Treppenziel, wenn eine bekannte Treppe
+              hervorgehoben ist.)
+<w>G</w>          : Zu einer anderen Ebene nach Verzweigung und Tiefe gehen.
+<w>o</w>          : Den Cursor zum nächsten Ziel der automatischen Erkundung bewegen.
+<w>{</w> or <w>}</w>     : Verkleinern oder Vergrößern (nur Kacheln).
+
+<h>Reiseausschlüsse</h>
+<w>e</w>          : Einen Reiseausschluss erstellen, seinen Radius ändern oder ihn entfernen.
+<w>E</w>          : Die Reiseausschlüsse durchwechseln.
+<w>Strg-E</w>     : Löscht alle Reiseausschlüsse auf der Ebene.
+
+<h>Wegpunkte</h>
+<w>Strg-W</w>     : Wegpunkt auf aktuelle Position setzen.
+<w>W</w>          : Wegpunkt auf der Ebene durchwechseln.
+
+<h>Einrichtungen durchwechseln</h>
+<w><<</w> or <w>></w>     : Treppen nach oben/unten durchwechseln.
+<w>^</w>          : Fälle durchwechseln.
+<w>\</w> or <w>Tab</w>   : Läden und Portale durchwechseln.
+<w>I</w>          : Vorwärts durch alle Gegenstände wechseln.
+<w>O</w>          : Rückwärts durch alle Gegenstände wechseln.
+<w>_</w>          : Altäre durchwechseln.
+
+<h>Andere</h>
+<w>v</w>          : Den letzten Zustand der angegebenen Kachel zeigen.
+<w>!</w>          : Ebene annotieren.
+<w>Strg-C</w>     : Gegenstands- und Monstererinnerung löschen.
+<w>Strg-F</w>     : Ebenenkarte vergessen.
+<w>Strg-U</w>     : Vergessene Ebenenkarte wiederherstellen.{{
+if you.wizard() then
+    return "\n\n"
+          .. "<h>Wizard-Befehle</h>\n"
+          .. "<w>T</w>          : Zum Cursor teleportieren.\n"
+          .. "<w>Strg-X</w>     : Karte komplett löschen."
+end }}
+%%%%
+interlevel-travel.branch.prompt
+
+<h>Zwischen Ebenen reisen (Zweig auswählen):
+ Den entprechenden Buchstaben eingeben, um einen Zweig auszuwählen.
+
+ Nach dem Eingabe, wird es nach Tiefe gefragt (mehr Hilfe dort verfügbar).
+
+ <w>Enter</w>  : Die letzte Reise wiederholen.
+ <w>.</w>      : Nach einer Ebene im aktuellen Zweig reisen.
+ <w><<</w>      : Die nächste Trepp nach oben nehmen.
+ <w>></w>      : Die nächste Trepp nach unten nehmen.
+ <w>Strg-P</w> : Nach einer Ebene im Zweig über dem Aktuellen reisen.
+ <w>*</w>      : Verfügbare Wegpunkte zeigen (falls welche gesetzt sind).
+ <w>0</w>-<w>9</w>    : Zum nummerierten Wegpunkt gehen.
+ <w>_</w>      : Verfügbare Altäre anzeigen (falls welche entdeckt wurden).
+%%%%
+interlevel-travel.depth.prompt
+
+<h>Zwischen Ebenen reisen (zu einer bestimmten Ebene im ausgewählten Zweig gehen)
+ die Nummer der gewünschten Ebene eingeben und Enter drücken, oder:
+ <w>Enter</w>  : Zur Standardebene gehen.
+ <w>0</w>      : Zum Eingang des aktuellen Zweigs gehen.
+ <w><<</w>      : Ändert die Voreinstellung auf eine Stufe über der aktuellen.
+ <w>></w>      : Ändern Sie die Voreinstellung auf eine Ebene unter der aktuellen.
+ <w>-</w> oder <w>p</w> : Ändert die Voreinstellung auf den Zweig über diesem.
+ <w>$</w>      : Ändert die Voreinstellung auf die tiefste besuchte Ebene in diesem Zweig.
+ <w>^</w>      : Ändert die Voreinstellung auf den Eingang des aktuellen Zweigs.
+%%%%
+interlevel-travel.altar.prompt
+
+<h>Zwischen Ebenen reisen (zu Altar gehen):
+ Den entsprechenden Buchstaben eingeben um  eine Gottheit eingeben, um zu ihrem Altar
+ zu gehen.
+
+ <w>Enter</w>  : Die letzte Reise wiederholen.
+%%%%
+annotate.prompt
+
+<h>Annotieren (Ebene wählen):
+ <w>Enter</w> or <w>.</w> : Aktuelle Ebene annotieren.
+ <w>Buchstabe</w> : Eine Ebene im entsprechenden Zweig annotieren.
+ <w><<</w>          : Die nächste Ebene oben annotieren.
+ <w>></w>          : Die nächste Ebene unten annotieren.
+ <w>Strg-P</w>     : Eine Ebene im Zweig über diesem annotieren.
+ <w>!</w>          : Liste der Dungeon-Zweige zeigen.
+
+%%%%
+skill-menu
+
+                       <h>Fertigkeitsmanagement</h>
+
+
+Man erhältet Erfahrung für das Töten von Monstern (und nur wenige andere Aktivitäten).
+Diese Erfahrung wird für das Training von Fertigkeiten verwendet. Im Fertigkeitenfenster
+kann man auswählen, welche Fertigkeiten man trainieren möchte.
+
+Durch Drücken des entsprechenden Buchstabens kann man festlegen, ob und wie eine
+Fertigkeit trainiert wird:
+  <darkgrey>- abgewählt</darkgrey>    Fertigkeit wird nicht trainiert.
+  + ausgewählt      Fertigkeit wird trainiert.
+  <w>* fokussiert</w>       Fertigkeit wird mit höherem Gewicht trainiert.
+
+Das Drücken eines Großbuchstabens wählt diese Fertigkeit und wählt alle anderen ab.
+Diese Abkürzung ist nützlich, wenn man nur eine Fähigkeit trainieren möchte.
+
+Das Training kann in zwei Modi durchgeführt werden, die mit der Taste <w>/</w>
+umgeschaltet werden.
+  - automatisch:  Fertigkeiten werden entsprechend ihrer Verwendung gewichtet.
+  - manuell:      Die Erfahrung ist gleichmäßig auf alle aktivierten Fertigkeiten verteilt.
+
+Im Trainingszielmodus kann man Trainingsziele für Fertigkeiten festlegen: Fertigkeitsstufen,
+bei denen das Training der Fertigkeit automatisch deaktiviert wird.
+
+Wie schnell man eine Fertigkeit trainiert, hängt von den folgenden Faktoren ab:
+  - Begabung: Im Spalte "Beg", <white>Weiß</white> gezeigt. Höhere Zahlen bedeuten, dass
+              weniger Erfahrung erforderlich ist, um eine Fertigkeit zu verbessern. Hängt
+              von der Spezies ab.
+  - Handbücher: Seltene Bücher, die einen Begabungsbonus von <lightred>+4</lightred> in
+                einer Fertigkeit geben.
+
+Darüber hinaus gibt es einige Effekte, die eine Fertigkeit direkt verändern, z.B. wenn man
+eine verwandte Fertigkeit trainiert hat (Crosstraining), oder bestimmte göttliche Kräfte.
+Reduzierte Fertigkeiten werden in <magenta>magenta</magenta> angezeigt, und verbesserte
+Fertigkeiten in <green>grün</green>. Der Trainingsprozentsatz (in <brown>braun</brown>)
+zeigt die relative Menge an Erfahrung, die für das Training dieser Fertigkeit verwendet wird.
+
+Neben der Auswahl/Abwahl von Fertigkeiten gibt es auch die folgenden Umschaltmöglichkeiten:
+  <w>/</w> :  Zwischen automatische und manuelle Trainingsmodi umschalten
+  <w>*</w> :  Alle Fertigkeiten anzeigen, auch diejenige die derzeit nicht nützlich sind
+  <w>?</w> :  Fertigkeitsbeschreibungen anzeigen
+  <w>_</w> :  Änderungen der Fertigkeitsstufen (göttliche Kräfte, Crosstraining) zeigen oder
+              ausblenden.
+  <w>!</w> :  Zwischen der Anzeige von Trainingsprozentsätzen, Fertigkeitskosten und
+              Trainingszielen umschalten
+%%%%
+spell-library
+
+<h>Zaubersammlung</h>
+<w>!</w>        : Zwischen <w>Memorieren</w>, <w>Beschreiben</w>, <w>Ausblenden</w>,
+                  und <w>Zeigen</w> umschalten.
+<w>Strg-F</w>   : Die Liste der Zauber mit einem Regex filtern.
+<w>?</w>        : Diese Hilfe anzeigen.
+
+Standardmäßig öffnet sich die Zaubersammlung auf der Seite <w>Memorieren</w>. Um einen
+Zauber zu memorieren, einfach auf den entsprechenden Buchstaben drücken. Um die
+Beschreibung eines Zaubers zu lesen, wechselt man zuerst auf die Seite <w>Beschreiben</w>,
+indem man <w>!</w> drückt, und drückt dann den Buchstaben des Zaubers.
+
+Die meisten Charaktere werden nicht daran interessiert sein, die meisten Zaubersprüche zu
+memorieren, die in ihrer Zaubersammlung ansammeln; hier kommen die Seiten <w>Zeigen</w>
+und <w>Ausblenden</w> ins Spiel. Um einen Zauber aus den Seiten <w>Memorieren</w> und
+<w>Beschreiben</w> auszublenden, drückt man auf seinen Buchstaben von der Seite 
+<w>Ausblenden</w>. Ausgeblendete Zaubersprüche können auf der Seite <w>Zeigen</w> wieder
+angezeigt werden.
+
+Die Option <w>auto_hide_spells</w> kann nützlich sein; wenn sie aktiviert ist, werden
+alle neu entdeckten Zaubersprüche standardmäßig ausgeblendet.
+
+w>Strg-F</w> kann verwendet werden, um die Liste der Zaubersprüche zu filtern. Jeder
+auf diese Weise gesetzte Filter wird bleiben bestehen, bis die Zaubersammlung geschlossen
+und wieder geöffnet wird oder bis ein neuer Filter mit <w>Strg-F</w> gesetzt wird. Wenn
+<w>Enter</w> bei der Eingabeaufforderung gedrückt wird, ohne dass ein Text eingegeben wird,
+wird den Filter gelöscht werden. Zaubersprüche können nach Namen und nach Zauberschulen
+gefiltert werden.
+%%%%
+# TODO: wizard mode help
+wiz-monster
+<h>Create specified monster</h>
+
+To create a monster with the default equipment for its species, simply enter
+the species name, such as <w>kobold</w> or <w>Yiuf</w>.
+
+A hydra can be given a specific number of heads by calling it an n<w>-headed</w>
+<w>hydra</w> (with a maximum of 20 heads):
+
+<w>four-headed hydra</w>
+
+To set the colour a (very) ugly thing takes when it is first created, use:
+
+<w>white very ugly thing</w>
+
+The valid colours are <w>brown</w>, <w>cyan</w>, <w>green</w>, <w>purple</w>, <w>red</w> and <w>white</w>.
+
+A mutant beast can be customized by prefacing it with a maturity level and/or
+hyphen-separated set of traits, as follows:
+
+<w>mature shock-weird mutant beast</w>
+
+The valid maturity levels are <w>larval</w>, <w>juvenile</w>, <w>mature</w>, <w>elder</w> and <w>primal</w>. The
+facets are <w>sting</w>, <w>bat</w>, <w>fire</w>, <w>weird</w>, <w>shock</w> and <w>ox</w>.
+
+A slime creature's size can be set to other than normal using the prefixes
+<w>large</w>, <w>very large</w>, <w>enormous</w> or <w>titanic</w>:
+
+<w>very large slime creature</w>
+
+If a monster is a member of a band, you can request that it be eligible for
+band members by adding the keyword <w>band</w> to the name. For instance:
+
+<w>orc warlord band</w>
+
+Specifying <w>band</w> doesn't force bands to be placed - it requests that the game
+use the normal chances of creating a band. A band will only be placed if there
+is space for it.
+
+A monster can be given specific items by following the monster name with a
+semi-colon and then with an item list. For example:
+
+<w>orc ; rapier | quick blade . chain mail | plate armour</w>
+
+will generate an orc wielding either a rapier or a quick blade and wearing
+either chain mail or plate armour. Randarts and ego items are only generated
+if they are explicitly requested. Note that any items that the monster was
+originally generated with will be removed and destroyed. This can be used to
+force a monster to have no items whatsoever:
+
+<w>orc; nothing</w>
+
+For further information, see <cyan>docs/develop/levels/syntax.txt</cyan>, section <cyan>ITEMS</cyan>.
+Any reference to a slash (<w>/</w>) should be replaced with a pipe (<w>|</w>) and any comma
+(<w>,</w>) with a full stop (<w>.</w>).
+
+The same syntax is also used to create a specific type of dancing weapon:
+
+<w>dancing weapon; rapier</w>
+
+Limitations: If a monster is given a random launcher, there is no way to force
+the ammo type to match the launcher type. As a special case, however, a
+launcher dancing weapon is always generated with some suitable ammunition.
+
+You can specify that a monster will always generate a corpse by using the tag
+<w>always_corpse</w>, or that it will never generate a corpse with <w>never_corpse</w>.
+
+By default, monsters are generated asleep. This is changed by prefixing the
+name with <w>generate_awake</w>.
+
+<w>generate_awake boulder beetle</w>
+
+A prefix of <w>patrolling</w> prevents it from walking out of sight of the the place
+where it was created.
+
+You can set the monster's god using the <w>god</w>: specifier as follows:
+
+<w>orc god:the_shining_one</w>
+
+If the monster is to be a gift of the specified god, this should be suffixed
+with <w>god_gift</w>:
+
+<w>orc god:the_shining_one god_gift</w>
+
+Note that the monster will not be considered a god gift unless <w>god_gift</w> is
+explicitly set.
+
+You can set the monster's faction by specifying <w>att</w>: one of:
+
+* <w>att:hostile</w> -- the default
+* <w>att:friendly</w> -- tame, will follow you
+* <w>att:neutral</w> -- hostile to both you and att:hostile monsters
+* <w>att:good_neutral</w> -- hostile to att:hostile
+* <w>att:fellow_slime</w> -- tame, won't follow you
+
+Monsters can be given colours that override their default colour:
+
+<w>col:darkgrey fungus</w>
+
+The colour <w>any</w> can be given, in which case a random colour will be chosen.
+
+You can override the displayed monster tile using the <w>tile</w>: specifier as
+follows:
+
+<w>rat tile:mons_giant_bat</w>
+
+In tiles version, this would create a monster that uses the "<cyan>mons_giant_bat</cyan>"
+tile, but is otherwise identical to a rat. In ASCII mode, this will do
+nothing.
+
+If you want to place a random monster suitable for the level the map is
+generated on, you can use
+
+<w>random</w>
+
+If you want to place a random monster suitable for some other place, you can
+use a place: tag in the monster spec:
+
+<w>place:Abyss</w>
+
+Using <w>place</w>: implies that you want a random monster. You can also request
+zombies from random monsters suitable for some other depth as (e.g.):
+
+<w>place:Elf:3 zombie</w>
+
+The available modifiers are <w>zombie</w>, <w>skeleton</w>, <w>simulacrum</w>, and <w>spectre</w>.
+
+<h>Overriding Monster Names</h>
+
+Individual monsters can be given names as follows:
+
+<w>kobold name:Durwent</w>
+
+This will cause the monster to appear as "<cyan>Durwent the kobold</cyan>". Spaces can be
+placed in the name by substituting them with the _ symbol. It is worth noting
+that "<cyan>the <<race></cyan>" will be appended to all names, which should be considered
+when coming up with them.
+
+There are three different modifiers that can be used on a name:
+<w>name_adjective</w>, <w>name_suffix and </w>name_replace. <w>name_adjective</w> makes the
+name act as an adjective. For example:
+
+<w>kobold name:ugly name_adjective</w>
+
+Will cause "<cyan>An ugly kobold</cyan>", "<cyan>The ugly kobold hits you</cyan>", and so on.
+
+<w>name_suffix</w> does the same, but after the monster's base name:
+
+<w>kobold name:wearing_mittens name_suffix</w>
+
+Will give "<cyan>A kobold wearing mittens</cyan>", "<cyan>The kobold wearing mittens hits you</cyan>",
+and so on.
+
+<w>name_replace</w> causes the base name to be replaced by given name, as if the
+monster was a unique:
+
+<w>kobold name:Durwent name_replace</w>
+
+Will result in "<cyan>Durwent</cyan>" rather than "<cyan>Durwent the Kobold</cyan>". The corpse will
+still be a "<cyan>kobold corpse of Durwent</cyan>".
+
+<w>name_species</w> uses the name for corpses as-is, without prefixing it with
+"<cyan>kobold</cyan> <cyan>corpse of X</cyan>" for <w>name_replace</w>. It also avoids the usual name tag
+that displays above unique and renamed monsters in local tiles.
+
+In combination with <w>name_replace</w> or <w>name_species</w>, there are two further tags
+that can be used when renaming monsters, but not giving them an actual "name":
+<w>name_descriptor</w>, and <w>name_definite</w>.
+
+For example:
+
+<w>kobold name:goblin name_replace</w>
+
+Will result in "<cyan>goblin hits you</cyan>". However, adding <w>name_descriptor</w> from the
+above flags will result in "<cyan>The goblin hits you</cyan>" and in the description of the
+monster, "<cyan>A goblin</cyan>".
+
+<w>kobold name:goblin name_replace name_descriptor</w>
+
+The <w>name_definite</w> flag ensures that it is never referred to as "<cyan>a</cyan>" or "<cyan>an</cyan>",
+but that the definite object is always used. Therefore, you will see "<cyan>The
+<cyan>goblin</cyan> <cyan>hits you</cyan>", as per above, but also "<cyan>The goblin</cyan>" in its description.
+Setting <w>name_definite</w> will automatically set the flag <w>name_descriptor</w>,
+therefore meaning that:
+
+<w>kobold name:goblin name_replace name_definite</w>
+
+is exactly the same as:
+
+<w>kobold name:goblin name_replace name_descriptor name_definite</w>
+
+<w>name_zombie</w> can be used to redefine already zombified monsters (including
+skeletons, simulacra and spectrals).
+
+Finally, <w>name_nocorpse</w> will cause the name to be completely ignored for
+corpses. For example:
+
+<w>wizard name:sad name_adjective name_nocorpse</w>
+
+will result in "<cyan>a sad wizard</cyan>" that leaves "<cyan>a wizard corpse</cyan>".
+
+For instances where space in definitions is limited, you can use abbreviated
+forms of these tags:
+
+* <w>name_suffix</w> -> <w>n_suf</w>
+* <w>name_adjective</w> -> <w>n_adj</w>
+* <w>name_replace</w> -> <w>n_rpl</w>
+* <w>name_species</w> -> <w>n_spe</w>
+* <w>name_descriptor</w> -> <w>n_des</w>
+* <w>name_definite</w> -> <w>n_the</w>
+* <w>name_zombie</w> -> <w>n_zom</w>
+* <w>name_nocorpse</w> -> <w>n_noc</w>
+
+<h>Overriding Monster Stats</h>
+
+Further monster customisation can be made by using <w>hd</w> and <w>hp</w>. These two tags
+allow you to completely overwrite the original hit dice and hit points of a
+monster:
+
+<w>kobold hd:20</w>
+
+Creates a kobold with a hit dice of 20. As its hp is randomised, based on its
+hit dice, this will also be re-rolled. Monsters with a specific hit point
+value will not have this value change.
+
+You can also have a specific value for hit points:
+
+<w>kobold hp:20</w>
+
+Creates a kobold with 20 hit points. This is also useful for monsters (such as
+statues) which come with non-randomised HP values.
+
+Monsters can be marked as summoned by using <w>dur</w> and <w>sum</w> tags. The <w>dur</w> tag
+accepts an integer between 1 and 6 inclusive. The <w>sum</w> tag accepts the name of
+a spell (parsed as per the <w>spells</w> tag, described below) or any of <w>clone</w>
+(Rakshasa), <w>animate</w> (from animate dead), <w>chaos</w> (made from pure chaos), <w>miscast</w>
+(summoned from by spell miscast effect), <w>zot</w> (summoned by a Zot trap), <w>wrath</w>
+(summoned by a god in an act of retribution), <w>aid</w> (summoned by a god in order
+to give aid).
+
+Of the spells, <w>shadow_creatures</w> has the most significant effect, in that
+monsters will dissipate into the shadows rather than disappear in a puff of
+smoke. Using non-summoning spells will also have no effect.
+
+Tagging a monster with <w>seen</w> will override the system and force that monster to
+be marked as already viewed; this means that it won't generate messages such
+as "<cyan>A kobold comes into view</cyan>".
+
+<h>Overriding Monster Spells</h>
+
+Monster spell sets can be overridden with a <w>spells</w>: tag, used as follows:
+
+*<w>goblin spells:throw_flame.50.wizard</w>
+*<w>ancient lich spells:symbol_of_torment.26.wizard; glaciate.51.wizard</w>
+
+(a list of spell slots, consisting of a spell name with spaces replaced with
+underscores, a frequency of casting and set of spell slot flags specified
+afterwards with <w>.</w>, with slots separated by <w>;</w>. There should be no spaces around
+the <w>;</w> or after the <w>spells</w>: prefix)
+
+Spell names must exactly match the names in <cyan>spl-data.h</cyan>, with spaces replaced
+by underscores. Spell frequencies are an (x in 200) chance that that spell
+will be cast. Spell flags include:
+
+* <w>natural</w>, <w>magical</w>, <w>demonic</w>, <w>wizard</w>, or <w>priest</w> - the manner in which this
+spell is being cast. Wizards and priests can be silenced and will trigger
+appropriate conducts (Trog will appreciate killing wizards, Beogh will
+appreciate killing priests). Magical, demonic, and wizard spells are subject
+to anti-magic effects. Natural spells do not generate noise.
+* <w>emergency</w> - the monster will only cast the spell when low on health.
+* <w>breath</w> - the spell is a breath weapon, and using it triggers a breath
+timeout during which the spell cannot be cast again.
+* <w>no_silent</w> - the spell cannot be used while silent, even if it is an ability
+type normally not subject to silence.
+* <w>instant</w> - the spell does not expend the monster's energy; they may take
+another action on the same turn.
+* <w>noisy</w> - forces the spell to make noise even if it is a natural ability.
+
+You may use <w>none</w> specify that a slot should be left empty. You can force a
+spell-less monster with:
+
+<w>orc wizard spells:none</w>
+
+<h>Setting enchantments</h>
+
+You may give a monster any number of enchantments. It may start hasted, blind,
+have permanent RMsl, etc. The syntax is <w>ench:<<name>:<<degree>:<<duration></w> or
+<w>perm_ench:<<name>:<<degree></w>. The <w><<degree></w> and <w><<duration></w> fields may be
+omitted.
+
+For example:
+
+* <w>orc perm_ench:blind perm_ench:mad</w>
+* <w>dream sheep ench:sticky_flame</w>
+* <w>stone giant dur:1 ench:berserk</w>
+
+%%%%
+macro-menu
+
+<h>Bearbeiten von Makros und Tastaturbelegungen</h>
+
+Um ein aktuelles Makro/Tastaturbelegung zu bearbeiten, aus dem Menü mit den
+Pfeiltasten oder per Hotkey auswählen. (Hotkeys, die für die Navigation im
+Menü verwendet werden, können ausgewählt werden durch Pfeiltasten). Um eine
+neue Zuordnung durch Eingabe einer Taste zu erstellen, verwendet man die Taste
+[<w>~</w>] oder den entsprechenden Menüpunkt, und gibt dann die Taste ein.
+Damit kann man Zuordnungen erstellen (und bearbeiten), die Menütasten verwenden.
+Die Taste [<w>!</w>] verwenden zum Umschalten in den Modus zur Bearbeitung von
+Tastaturbelegungen (siehe unten für weitere Informationen zu Tastaturbelegungen).
+
+<w>Makros</w> erlauben die Zuweisung von Tasten, die bei der Eingabe an das
+Spiel gesendet werden. Dies kann verwendet werden, um eine Befehlstaste neu zu
+definieren, oder um eine unbenutzte Taste zu definieren. Sie ordnen eine Taste
+einer Folge von Tastenanschlägen zu, und Tastenanschläge sind übertragbar
+in Untermenüs.
+
+Beispiel 1: Die Zuordnung von <w>e</w> zu <w>p</w> würde dazu führen, dass die
+Taste "e" das gleiche Befehl auslöst als die Taste "p" (die in der
+Standardeinstellung "autofeuern" ist).
+
+Beispiel 2: Die Zuordnung von <w>1</w> auf die Folge <w>zaf</w> würde die Taste
+"1" zulassen einen Zauber, der auf den Buchstaben "a" gerichtet ist, mit 
+Standardzielen zu wirken.
+
+Beispiel 3: Die Zuordnung von <w>F1</w> zu <w>Q&a</w> würde die F1-Taste den
+lassen, den Zauberspruch, die auf dem Buchstaben "a" steht, im Köcher zu laden.
+
+<w>Tastaturbelegungen</w> sind Ersetzungen von Tasten auf niedrigerer Ebene, die
+die Tasten vollständig durch eine Folge von Tastendrücken erseten. Sie werden
+für die einheitliche Änderung von Tasten empfohlen, um mit alternativen
+Tastaturlayouts umzugehen. Tastaturbelegungen sind kontextabhängig, und der
+Standard-Kontext wird überall dort verwendet, wo kein nicht-spezialisierter
+Kontext aktiv ist. Makros nehmen das Ergebnis von Tastaturbelegungen als
+Eingabe.
+
+Beispiel: In einigen europäischen Tastaturlayouts ersetzt das §-Symbol ~. Daher,
+es könnte sinnvoll sein, § sowohl in der normalen als auch in der Menü-
+Tastaturbelegung mit ~ zu belegen so dass das Hauptmenü und das Makromenü etwas
+leichter zugänglich werden. (In anderen Layouts, gilt dies stattdessen für ½).
+
+Wenn sie für Befehle zuordenen, können Tastaturbelegungen unerwartete
+Nebeneffekte haben: z. B. die Zuordnung von <w>1</w> zu <w>zaf</w> wird nicht
+empfohlen, da dies die Eingabe von "1" bei der Eingabe eines Fertigkeitsziels
+erschweren wird.
+
+<w>Tastencodes</w>: Sowohl Makros als auch Tastaturbelegungen akzeptieren
+Tastencodes bei der Beschreibung der Aktion, in der Form von <w>\{n}</w>, um
+den Schlüsselcode <w>n</w> einzugeben. (<w>\\</w> evrwenden, um einen Backslash
+einzugeben). Zum Beispiel, <w>\{9}</w> wird den Schlüsselcode für die Taste
+<w>Tab</w> eingeben. Man kann Makros und Tastenkombinationen über den Tastencode
+binden, indem man <w>~~</w> im Makrobearbeitungsmenü eingibt.
+
+<w>Speichern</w>: Bindungen, die in diesem Menü bearbeitet werden, werden in
+einer .macro-Datei im Speichern-Verzeichnis speichern. Sie werden durch die
+Einstellungen in die Optionsdatei überschrieben. das Befehl `macro` in
+options_guide.txt sehen für weitere Informationen.
+%%%%
+# Note: This cannot exceed 39 chars wide (excluding tags) because it's
+# displayed in left-hand column
+targeting-help-1
+<h>Umgebung untersuchen ('<w>x</w>' in Haupt):<h>
+<w>Esc</w>: abbrechen (auch <w>Leertaste</w>, <w>x</w>)
+<w>Strg-X</w>: alle Dinge im Sicht auflisten
+<w>Richt.</w>: Cursor in die Richtung bewegen
+<w>.</w>: zum Cursor bewegen (auch <w>Enter</w>,<w>Del</w>)
+<w>g</w>: Gegenstand am Cursor aufheben
+<w>v</w>: Monster am Cursor beschreiben
+<w>+</w>: Monster vorw. durchwechseln(auch <w>=</w>)
+<w>-</w>: Monster rückw. durchwechseln
+<w>*</w>: Objekte vorw. durchwechseln(auch <w>'</w>)
+<w>/</w>: Obj. rückw. durchwechseln (auch <w>;</w>)
+<w>^</w>: Fallen vorwärts durchwechseln
+<w>_</w>: Fallen rückwärts durchwechseln
+<w><<</w>/<w>></w>: Treppen nach o./u. durchwechseln
+<w>Tab</w>: Läden und Portale durchwechseln
+<w>r</w>: Cursor zum Spielercharakter bewegen
+<w>e</w>: Reiseausschluss erstellen/entfernen
+<w>Strg-P</w>: Aufforderung wiederholen
+%%%%
+# Right-hand column
+targeting-help-2
+<h>Zielen (Zauberstäbe, Zaubersprüche, usw.):
+Die meisten Tasten aus Umgebung-Untersuchen
+funktionieren. Einige Tasten schießen auf das
+Ziel. <w>Strg-X</w> listet nur anpessende Ziele.
+Standardmäßig, wird Reichweite  beachtet und
+Strahlen halten nicht an.
+<w>Enter</w> : feuern (<w>Leertaste</w>, <w>Del</w>)
+<w>.</w>: feuern, am Ziel anhalten
+<w>@</w>: feuern, am Ziel anhalten, Reichw. ignorieren
+<w>!</w>: feuern, nicht anhalten, Reichweite ignorieren
+<w>p</w>: auf vorheriges Ziel feuern (auch <w>f</w>)
+<w>:</w>: Strahlengang ein-/ausblenden
+<w>Shift-Richt.</w>: geradlinigen Strahl abfeuern
+
+<h>Feuermodus ('<w>f</w><h>' in Haupt):
+<w>Q</w>: Feuer-Aktion wählen.
+<w>(</w>: zur vorherigen geeigneten Aktion wechseln
+<w>)</w>: zur nächsten geeigneten Aktion wechseln
+%%%%
+targeting-help-wiz
+<h>Zielen in Wizard-Modus (Debug-Modus):</h>
+<w>Strg-C</w> : Strahlengänge durchwechseln
+<w>D</w>: Debug-Informationen über Monster zeigen
+<w>o</w>: Monster einen Gegenstand geben
+<w>F</w>: Monster freundlich/gut neutral/neutral/feindlich durchwechseln
+<w>G</w>: Monster Erfahrung gewinnen lassen
+<w>Strg-H</w>: Monster heilen
+<w>P</w>: göttlichen Segen auf Monster anwenden
+<w>m</w>: Monster oder Spieler bewegen
+<w>M</w>: Fehlzauber für Monster oder Spieler verursachen
+<w>s</w>: Monster zum Schreien oder Sprechen zwingen
+<w>S</w>: Monster zu einem beschworenen Monster machen
+<w>w</w>: berechnet den kürzesten Weg zu einem Punkt
+<w>"</w>: Debug-Informationen über ein Portal erhalten
+<w>~</w>: Monster in einem bestimmten Typ verwandeln
+<w>,</w>: Monster auf 1 TP herunterbringen
+<w>Strg-(</w>: Mimik platzieren
+<w>Strg-B</w>: Monster verbannen
+<w>Strg-K</w>: Monster töten
+%%%%
+# Left-hand column
+help-menu-1
+<h>Dungeon Crawl Hilfe
+
+Eine der folgenden Tasten drücken, um
+mehr Informationen über eine bestimmte
+Aspekt von Dungeon Crawl zu bekommen.
+<w>?</w>: Liste der Befehle
+<w>^</w>: Schnellstart-Anleitung
+<w>:</w>: Charakter-Notizen zeigen
+<w>#</w>: Charakter-Dump zeigen
+<w>~</w>: Makros-Hilfe
+<w>&</w>: Optionenhilfe
+<w>%</w>: Tabelle der Begabungen
+<w>/</w>: Beschreibung suchen
+<w>Q</w>: FAQ
+{{
+if crawl.is_tiles()
+then
+    return "<w>T</w>: Kachel-Modus-Hilfe"
+end
+}}
+<w>V</w>: Version-Informationen
+<w>Home</w>: Diese Seite
+%%%%
+help-menu-2
+<h>Inhalt des Handbuchs (Englisch)
+
+<w>A</w>.      Inhaltsverzeichnis
+<w>B</w>.      Startbildschirm
+<w>C</w>.      Attribute und Statistiken
+<w>D</w>.      Den Dungeon erforschen
+<w>E</w>.      Erfahrungen und Fertigkeiten
+<w>F</w>.      Monsters
+<w>G</w>.      Gegenstände
+<w>H</w>.      Zaubersprüche
+<w>I</w>.      Anvisieren
+<w>J</w>.      Religion
+<w>K</w>.      Mutationen
+<w>L</w>.      Lizenz, Kontakt, Geschichte
+<w>M</w>.      Makros, Optionen, Leistung
+<w>N</w>.      Philosophie
+<w>1</w>.      Liste der Charakterspezies
+<w>2</w>.      Liste der Charakterhintergründe
+<w>3</w>.      Liste der Fertigkeiten
+<w>4</w>.      Liste der Tasten und Befehle
+<w>5</w>.      Inschriften
+<w>6</w>.      Dungeon-Sprint-Modi
+%%%%
+# Left-hand column - max 40 chars
+cmd-help-movement
+<h>Bewegung:
+Den Ziffernblock oder vi-Tasten
+verwenden, um in eine Richtung zu
+bewegen oder angreifen:
+%%%%
+cmd-help-rest
+<h>Rasten:
+<w>%</w> : eine Runde warten (auch <w>s</w>, <w>Del</w>)
+<w>%</w> : rasten und lang warten; endet wenn
+    Gesundheit und Mana voll sind oder
+    etwas entdeckt wird. Wenn Gesundheit
+    und Mana schon voll sind, endet
+    nach 100 Runden (<w>NumPad-5</w>)
+%%%%
+cmd-help-ext-movement
+<h>Erweiterte Bewegung:
+<w>%</w> : Automatisch erforschen
+<w>%</w> : Zwischen Ebenen reisen
+<w>%</w> : Gegenstände suchen
+<w>%</w> : Wegpunkt setzen
+<w>/ Richt.</w>, <w>Shift-Richt.</w>: lang gehen
+<w>* Richt.</w>, <w>Strg-Richt.</w> : Angriff ohne Bewegung
+%%%%
+cmd-help-autofight
+<h>Autokampf:
+<w>Tab</w>          : das nächste Monster
+               angreifen, bewegen
+               wenn erforderlich
+<w>Shift-Tab</w>, <w>p</w> : Aktion im Köcher
+               auslösen; wenn gezielte
+               Aktion, auf nächstes
+               Monster zielen
+%%%%
+cmd-help-item-types
+<h>Gegenstandtypen (und übliche Befehle)
+<cyan>)</cyan> : Handwaffen (<w>%</w> handhaben)
+<brown>(</brown> : Geschosse (<w>%</w> Köcher, <w>%</w> feuern,
+    <w>%</w>/<w>%</w> durchwechseln)
+<cyan>[</cyan> : Rüstung (<w>%</w> anziehn, <w>%</w> ausziehen)
+<w>?</w> : Schriftrollen (<w>%</w> lesen)
+<magenta>!</magenta> : Tränke (<w>%</w> trinken)
+<blue>=</blue> : Ringe (<w>%</w> anlegen, <w>%</w> entfernen)
+<red>"</red> : Amulette (<w>%</w> anlegen, <w>%</w> entfernen)
+<lightgrey>/</lightgrey> : Zauberstäbe (<w>%</w> evozieren)
+<lightcyan>@book_glyph@</lightcyan> : Bücher (<w>%</w> memorieren, <w>%</w>/<w>%</w> wirken,
+    aufheben um zu Sammlung hinzufügen)
+<brown>|</brown> : Stecken (<w>%</w> handhaben)
+<lightgreen>}</lightgreen> : Verschiedenes (e<w>%</w> evozieren)
+<yellow>$</yellow> : Gold (<w>%</w> zählt Gold)
+<lightmagenta>0</lightmagenta> : die Kugel von Zot
+    Sie aus dem Dungeon tragen um zu gewinnen!
+%%%%
+cmd-help-other-gameplay
+<h>Sonstige Gameplay-Aktionen:
+<w>%</w> : spezielle Fähigkeit verwenden
+    (<w>%!</w> für Hilfe)
+<w>%</w> : Zauber wirken, abbrechen ohne Ziele
+<w>%</w> : Zauber wirken, unbedingt
+<w>%</w> : alle memorierte Zauber listen
+<w>%</w> : Einen Zauber aus Euer Sammlung
+    memorieren
+<w>%</w> : Verbündete sagen (<w>%t</w> zum Schreien)
+<w>%</w> : vorherigen Befehl wiederholen
+<w>%</w> : nächsten Befehl x-Mal wiederholen
+%%%%
+cmd-help-non-gameplay
+<h>Nicht-Gameplay Befehle / Infos
+<w>%</w> : Spielmenü
+<w>%</w> : Vorherige Nachrichten anzeigen
+<w>%</w> : Bildschirm neu zeichnen
+<w>%</w> : Haupt- und Levelkarten löschen
+<w>%</w> : Makro schnell Hinzufügen
+<w>%</w> : Makros bearbeiten
+<w>%</w> : Den Dungeon-Ebene anmerken
+<w>%</w> : Charakter-Auszug speichern
+<w>%</w> : Notiz hinzufügen (zum Lesen von
+    Notizen <w>%:</w> verwenden)
+<w>%</w> : Inventar-/Zauberbuchstaben neu
+    ordnen
+{{if crawl.is_tiles() then
+    return "<w>%</w> : Spielerpuppe bearbeiten"
+else
+    return "<w>F12</w> : Nachrichten lesen (nur Online-Spiel)"
+end}}
+%%%%
+# Right-hand column
+cmd-help-save-quit
+<h>Speichern und Beenden des Spiels:
+<w>%</w> : Spiel speichern und beenden
+<w>%</w> : Speichern und Beenden ohne Bestätigung
+<w>%</w> : Den aktuellen Charakter aufgeben
+    und das Spiel beenden
+%%%%
+cmd-help-character
+<h>Spieler-Charakter-Informationen:
+<w>%</w> : Charakterstatus anziegen
+<w>%</w> : Fertigkeitsseite anzeigen
+<w>%</w> : Charakterübersicht
+<w>%</w> : Religionsseite anzeigen
+<w>%</w> : Fähigkeiten/Mutationen anzeigen
+<w>%</w> : Gegenstandwissen anzeigen
+<w>%</w> : Zaubersprüchsammlung anzeiegen
+<w>%</w> : gesammelte Runen anzeigen
+<w>%</w> : getragene Rüstung anzeigen
+<w>%</w> : getragenes Schmuck anzeigen
+<w>%</w> : Gold im Besitz anzeigen
+<w>%</w> : Erfahrungsinfos anzeigen
+%%%%
+cmd-help-dungeon
+<h>Dungeoninteraktion und Informationen:
+<w>%</w>/<w>%</w>    : Tür öffnen/schließen
+<w>%</w>/<w>%</w>    : Treppe benutzen
+<w>%</w>      : belegte Feld untersuchen und
+         Teil eines einzelnen Stapels
+         aufheben
+<w>%</w>      : Umgebung/Ziele untersuchen
+<w>%</w>      : Ebenenkarte untersuchen
+         (<w>%?</w> für Hilfe)
+<w>%</w> : Monster, Gegenstände,
+         Einrichtungen im Sicht auflisten
+<w>%</w>      : Ansichtsebenen umschalten
+<w>%</w> : Dungeonübersicht anzeigen
+<w>%</w> : Automatisches Aufheben
+         umschalten
+<w>%</w> : Gehgeschwindigkeit auf die des
+         langsamsten Verbündeten stellen
+%%%%
+cmd-help-sound
+<w>%</w>      : Toneffekte stummschalten/anschalten
+%%%%
+cmd-help-zoom
+<w>%</w>/<w>%</w> : Verkleinern/Vergrößern
+%%%%
+cmd-help-inventory
+<h>Inventarmanagement:
+<w>%</w> : Inventar anzeigen
+<w>%</w> : Gegenstände aufheben (auch <w>g</w>)
+    (zweimal drücken, um Aufhebensmenü aufzurufen)
+<w>%</w> : Gegenstand fallen lassen
+<w>%#</w>: Genaue Anzahl der Gegenstände fallen
+    lassen
+<w>%</w> : Zuletzt aufgenommenen Gegenstand
+    fallen lassen
+%%%%
+cmd-help-items
+<h>Gegenstand-Interaction:
+<w>%</w> : Gegenstand einschreiben
+<w>%</w> : Die aktuelle Aktion im Köcher auslösen
+<w>%</w> : einen Gegenstand auswählen und ihn
+    abfeuern
+<w>%</w> : Aktion für Köcher auswählen
+<w>%</w> : Zwischen den letzten Köcheraktionen
+    wechseln
+<w>%</w> : Einen Trank trinken
+<w>%</w> : Eine Schriftrolle lesen
+<w>%</w> : Einen Gegenstand handhaben (<w>-</w> für keinen)
+<w>%</w> : Gegenstand a schwingen, oder zu b wechseln
+    (<w>%</w> verwenden, um Slots zuzuweisen)
+<w>%</w> : Angriff mit geschwungenem Gegenstand
+<w>%</w> : Zauberstab oder verschiedenen Gegenstand
+    evozieren
+<w>%</w>/<w>%</w> : Rüstung anziehen oder ausziehen
+<w>%</w>/<w>%</w> : Schmuck anlegen oder entfernen
+%%%%
+cmd-help-additional
+<h>Zusätzliche Hilfe:
+Viele Befehle haben kontextsensitive
+Hilfe, darunter <w>%</w>, <w>%</w>, <w>%</w> (oder jede
+Form des Zielens), <w>%</w>, und <w>%</w>.
+Beschreibungen des Spielers aktuellen
+Zaubersprüche (<w>%</w>), Fertigkeiten (<w>%?</w>)
+und Fähigkeiten (<w>%!</w>) sind verfügbar.
+%%%%
+cmd-hints-move
+<w>Shift-Richt.</w> läuft in eine Richtung
+<w>%</w> or <w>%</w> : die Treppe hinauf-/hinabsteigen
+<w>%</w>      : autoerkunden
+%%%%
+cmd-hints-rest
+<h>Rasten:
+<w>%</w> : eine Runde warten (auch <w>s</w>, <w>Del</w>)
+<w>%</w> : rasten und lang warten; endet wenn
+    Gesundheit und Mana voll sind oder
+    etwas entdeckt wird. Wenn Gesundheit
+    und Mana schon voll sind, endet
+    nach 100 Runden (<w>NumPad-5</w>)
+%%%%
+cmd-hints-attack
+<h>Monster angreifen
+Wenn der Spieler ein Monster trifft,
+wird es mit der geschwungenen Waffe oder
+mit der bloßen Hand angegriffen.
+%%%%
+cmd-hints-ranged
+<h>Fernkampf und Magie
+<w>%</w> : Geschosse feuern/werfen
+<w>%</w>/<w>%</w> : Zauber wirken (<w>%?/%</w> listet Zauber)
+<w>%</w> : Zauber memorieren und die
+    Zaubersammlung ansehen (Bücher sammeln um zu ihr zu hinzufügen)
+%%%%
+cmd-hints-items
+<h>Gegenstandtypen und Inventarmanagement
+<console><cyan>)</cyan> : </console>Handwaffen (<w>%</w> handhaben)
+<console><brown>(</brown> : </console>Geschosse (<w>%</w> Köcher, <w>%</w> feuern,
+    <w>%</w>/<w>%</w> durchwechseln)
+<console><cyan>[</cyan> : </console>Rüstung (<w>%</w> anziehen, <w>%</w> ausziehen)
+<console><w>?</w> : </console>Schriftrollen (<w>%</w> lesen)
+<console><magenta>!</magenta> : </console>Tränke (<w>%</w> trinken)
+<console><blue>=</blue> : </console>Ringe (<w>%</w> anlegen, <w>%</w> entfernen)
+<console><red>"</red> : </console>Amulette (<w>%</w> anlegen, <w>%</w> entfernen)
+<console><lightgrey>/</lightgrey> : </console>Zauberstäbe (e<w>%</w> evozieren)
+<console><lightcyan>@book_glyph@</lightcyan> : </console>Bücher (<w>%</w> memorieren, <w>%</w>/<w>%</w> wirken,
+    aufheben um zu Sammlung zu
+    hinzufügen)
+<console><brown>@staff_glyph@</brown> : </console>Stecken (<w>%</w> handhaben)
+%%%%
+cmd-hints-items2
+<w>%</w> : Inventar (Gegenstand wählen um ihn
+    anzuschauen)
+<w>%</w> : Gegenstände aufheben (auch <w>g</w>)
+<w>%</w> : Gegenstand fallen lassen
+<w>%</w> : Zuletzt aufgenommenen Gegenstand
+    fallen lassen
+%%%%
+cmd-hints-additional
+<h>Zusätzliche wichtige Befehle
+<w>%</w> : Spiel speichern und beenden
+<w>%</w> : vorherige Nachrichten anzeigen
+<w>%</w> : eine Fähigkeit verwenden
+<w>%</w> : Charakterübersicht anzeigen
+<w>%</w> : Religionsübersicht anzeigen
+<w>%</w> : Ebenenkarte anzeigen
+<w>%</w> : Dungeonsübersicht anzeigen
+%%%%
+cmd-hints-targeting
+<h>Zielen
+<w>Enter</w> oder <w>.</w> oder <w>Del</w> : Ziel bestätigen
+<w>+</w> und <w>-</w> : Ziele durchschalten
+<w>f</w> oder <w>p</w> : auf vorheriges Ziel schießen
+         wenn noch am Leben und im Sicht
+%%%%

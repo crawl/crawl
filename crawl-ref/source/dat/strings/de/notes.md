@@ -21,6 +21,7 @@
 15. http://www.baldurs-gate.ch/bg2/
 16. http://www.knight.privat.t-online.de/KnightsBG2Kits.html
 17. https://media.wizards.com/2023/downloads/dnd/SRD_CC_v5.1_DE.pdf
+18. https://abkürzung.info
 
 ## Specific Terms
 
