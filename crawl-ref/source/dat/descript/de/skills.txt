@@ -1,55 +1,304 @@
 %%%%
 Fighting
 
-Erfahrung mit Kämpfen erhöht Eure Trefferwahrscheinlichkeit und Euren Schaden
-im Nahkampf; außerdem erhöht sie Eure maximalen Lebenspunkte.
+Die Kampffähigkeit erhöht Eure Genauigkeit und Euren Schaden im physischen Kampf
+und erhöht auch Eure maximale Gesundheit.
+%%%%
+Short Blades
+
+Kurzklingen sind effektiver als jeder andere Waffentyp, wenn es darum geht,
+hilflose Feinde zu erstechen.
+
+Mit Kurzklingen geübt zu sein ermöglicht es Euch, mit allen Waffen dieses Typs
+schneller anzugreifen und erhöht Eure Genauigkeit und Euren Schaden mit ihnen.
+
+Mit kurzen Klingen geübt zu sein, erhöht die Effektivität mit langen Klingen
+und umgekehrt.
+%%%%
+Long Blades
+
+Mit Langklingen geübt zu sein ermöglicht es Euch, mit allen Waffen dieses Typs
+schneller anzugreifen und erhöht Eure Genauigkeit und Euren Schaden mit ihnen.
+
+Mit langen Klingen geübt zu sein, erhöht die Effektivität mit kurzen Klingen
+und umgekehrt.
+%%%%
+Axes
+
+Äxte spalten mehrere Feinde mit einem einzigen Schwung und treffen die Feinde
+in einem Bogen um den Träger.
+
+Mit Äxten geübt zu sein ermöglicht es Euch, mit allen Waffen dieses Typs
+schneller anzugreifen und erhöht Eure Genauigkeit und Euren Schaden mit ihnen.
+
+Mit Äxten geübt zu sein erhöht die Effektivität mit Keulen & Flegeln und
+Stangenwaffen, und umgekehrt.
+%%%%
+Maces & Flails
+
+Mit Keulen & Flegeln geübt zu sein ermöglicht es Euch, mit allen Waffen dieses
+Typs schneller anzugreifen und erhöht Eure Genauigkeit und Euren Schaden mit
+ihnen.
+
+Mit Keulen & Flegeln geübt zu sein erhöht die Effektivität mit Äxten und
+Stecken, und umgekehrt.
+%%%%
+Polearms
+
+Stangenwaffen können mit 'v' evoziert werden, um Gegner aus zwei Feldern
+Entfernung anzugreifen.
+
+Mit Stangenwaffen geübt zu sein ermöglicht es Euch, mit allen Waffen dieses Typs
+schneller anzugreifen und erhöht Eure Genauigkeit und Euren Schaden mit ihnen.
+
+Mit Stangenwaffen geübt zu sein erhöht die Effektivität mit Äxten und Stecken,
+und umgekehrt.
+%%%%
+Staves
+
+Stecken erfordern ein relativ geringes Maß an Fertigkeit, um möglichst effektiv
+eingesetzt zu werden, obwohl sie nicht das hohe Schadenspotenzial einiger
+anderer Waffenklassen haben.
+
+Mit Stecken geübt zu sein ermöglicht es Euch, mit allen Waffen dieses Typs
+schneller anzugreifen und erhöht Eure Genauigkeit und Euren Schaden mit ihnen.
+
+Mit Stecken geübt zu sein erhöht die Effektivität mit Keulen & Flegeln und
+Stangenwaffen, und umgekehrt.
+%%%%
+Slings
+
+Wenn man mit Schleudern geübt ist, kann man mehr Schaden verursachen, wenn man
+den richtigen Werfer und die richtige Munition verwendet.
+
+Mit Schleudern geübt zu sein erhöht die Effektivität im Werfen, und umgekehrt.
+%%%%
+Bows
+
+Wenn man mit Bogen geübt ist, kann man mehr Schaden verursachen, wenn man
+den richtigen Werfer und die richtige Munition verwendet.
+%%%%
+Crossbows
+
+Wenn man mit Armbrüste geübt ist, kann man mehr Schaden verursachen, wenn man
+den richtigen Werfer und die richtige Munition verwendet.
 %%%%
 Throwing
 
-Erfahrung mit Werfen macht die Benutzung geworfener Waffen (z.B. Wurfspeeren
-und Blasrohren) effektiver. Außerdem erhöht sie die Wahrscheinlichkeit, dass
-eine zurückkehrende Waffe tatsächlich zurückkehrt, und dass mit einem Blasrohr
-geschossene magische Nadeln einen besonderen Effekt haben.
+Das Training des Werfens macht geworfene Waffen (z.B. Wurfspeere) effektiver.
+Insbesondere kehren Bumerangs eher zu ihrem Werfer zurück, und bestimmte
+magische Wurfpfeile haben eher eine Wirkung.
 
-Erfahrung mit Werfen erleichtert das Training mit Schleudern, und umgekehrt.
+Mit Werfen geübt zu sein erhöht die Effektivität mit Schleudern, und umgekehrt.
 %%%%
 Armour
 
-Die Rüstungserfahrung erhöht die von schwerer Rüstung erhaltene AC, und sie
-verringert den Nachteil, den das Tragen schwerer Rüstung bei Nahkampf und
-Zaubern verursacht.
+Die Rüstungsfertigkeit erhöht den RK-Wert, der durch das Tragen einer schweren
+Rüstung erreicht wird, und trägt dazu bei, die Beeinträchtigung durch schwere
+Rüstungen im Nahkampf und bei der Zauberei etwas zu verringern.
 %%%%
 Dodging
 
-Erfahrung mit Ausweichen beeinflusst Eure Chance, einer Attacke auszuweichen —
-sei es Nahkampf, Fernkampf oder Magie. Manchen Arten von Attacken kann man
-allerdings nicht ausweichen, zum Beispiel Verzauberungen (dafür ist
-Magiewiderstand wichtig) und Explosionen.
+Die Ausweichensfertigkeit beeinflusst die Chance, einem Angriff auszuweichen,
+egal ob es sich um einen Nahkampf-, Fernkampf- oder magischen Angriff handelt.
+Bestimmten Arten von Angriffen kann jedoch nicht ausgewichen werden, z. B.
+Verzauberungen (denen mit Willenskraft widerstanden werden muss) und
+Explosionen.
 %%%%
-Stabbing
+Stealth
 
-Erfahrung mit Erdolchen erhöht Eure Wahrscheinlichkeit, großen Schaden zu
-verursachen, wenn Ihr einen abgelenkten oder hilflosen Gegner angreift
-(normalerweise mit einem Kurzschwert). Je erfahrener Ihr mit Erdolchen seid,
-desto mehr Schaden verursacht ein solcher Angriff. Manche Götter missbilligen
-diese Angriffsart.
+Durch das Training von Heimlichkeit kann man die Wahrscheinlichkeit
+verringern, dass Monster einen bemerken, wenn sie schlafen oder aus anderen
+Gründen unaufmerksam sind, und die Wahrscheinlichkeit erhöhen, dass Monster die
+Spur von einem verlieren, wenn man aus ihrem Blickfeld verschwunden ist.
+Beachtet, dass stärkere Monster dazu neigen, misstrauischer und aufmerksamer zu
+sein.
+
+Die Fertigkeit „Heimlichkeit“ bestimmt zusammen mit der Waffenfertigkeit Eurer
+ausgerüsteten Waffe auch die Wahrscheinlichkeit, dass Ihr bei einem Angriff auf
+eine abgelenkte oder hilflose Kreatur eine große Menge Schaden anrichtet, sowie
+die Höhe des zusätzlichen Schadens.
 %%%%
 Shields
 
-Erfahrung mit Schutzschildern hilft Euch, Nahkampfangriffe oder Projektile
-(magisch und nicht-magisch) mit einem ausgerüsteten (oder magischen)
-Schutzschuild abzuwehren. Manche Angriffe, beispielsweise durchdringende
-Pfeile, können nicht abgewehrt werden.
-%%%%
-Traps
-
-Erfahrung mit Fallen macht Euch aufmerksamer auf Eure Umgebung und lässt Euch
-Fallen schneller erkennen und unschädlich machen.
+Eine hohe Schild-Fertigkeit hilft Euch, Nahkampfangriffe oder Projektile (sowohl
+magische als auch nichtmagische) mit Eurem ausgerüsteten Schild zu blockieren.
+Einige Angriffe, wie z.B. durchdringende Strahlen, können überhaupt nicht
+geblockt werden.
 %%%%
 Unarmed Combat
 
-Erfahrung mit waffenlosem Kampf erhöht Eure Trefferwahrscheinlichkeit, Euren
-Schaden und Eure Geschwindigkeit im Nahkampf, wenn Ihr unbewaffnet seid. Ein
-erfahrener waffenloser Kämpfer kann außerdem eine freie Hand nutzen, um während
-eines bewaffneten Kampfes zusätzliche Schläge auszuteilen.
+Die Fertigkeit „Unbewaffneter Kampf“ erhöht Eure Genauigkeit, Euren Schaden und
+Eure Angriffsgeschwindigkeit im Nahkampf, wenn Ihr mit bloßen Händen kämpfst.
+Außerdem könnt Ihr gelegentlich mit Eurer freien Hand als zusätzlichen 
+Nahkampfangriff zuschlagen, sofern die Hand dafür frei ist.
+%%%%
+Spellcasting
+
+{{
+    if you.race() == "Djinni" then
+        return "Die Fertigkeit Zaubern erhöht die Erfolgsrate und die Kraft " ..
+               "aller Zauber."
+    else
+        return "Wenn Ihr im Zaubern geübt seid, erhöht sich die Erfolgsrate " ..
+               "und die Kraft aller Zauber, und Eure magischen Reserven " ..
+               "nehmen zu. Durch das Training des Zauberns erhältet Ihr " ..
+               "außerdem mehr Zauberplätze, die Ihr für neue Zauber " ..
+               "ausgeben könnt."
+    end
+}}
+%%%%
+Conjurations
+
+Hervorrufungen sind kampforientierte Zauber, bei denen oft ein Stück kurzlebiger
+Materie hervorgerufen und auf das Opfer geschleudert wird, um direkten Schaden
+zu verursachen. Die Beherrschung von Beschwörungen erhöht in der Regel den
+Schaden und die Genauigkeit solcher Zauber und wirkt sich manchmal auch auf
+ihre Reichweite oder die Größe des betroffenen Bereichs aus.
+
+Diese Fertigkeit erhöht die Erfolgsquote und die Zauberkraft von Zaubern der
+entsprechenden Schule. Viele Zauber gehören zu einer Kombination aus mehreren
+Schulen. In diesem Fall hängen der Erfolg und die Macht von Zaubern von der
+durchschnittlichen Fertigkeit in diesen Schulen ab.
+%%%%
+Hexes
+
+Verhexungen versuchen, Dinge in der Nähe mit verschiedenen Verzauberungen zu
+versehen. Zwar richten sie keinen direkten Schaden an, aber eine Verhexung kann
+einen Gegner effektiv außer Gefecht setzen, obwohl sie oft die Willenskraft des
+Gegners überwinden muss, um ihre Wirkung zu entfalten. Die Fertigkeit
+Verhexung kann dabei helfen, dies zu überwinden.
+
+Diese Fertigkeit erhöht die Erfolgsquote und die Zauberkraft von Zaubern der
+entsprechenden Schule. Viele Zauber gehören zu einer Kombination aus mehreren
+Schulen. In diesem Fall hängen der Erfolg und die Macht von Zaubern von der
+durchschnittlichen Fertigkeit in diesen Schulen ab.
+%%%%
+Summonings
+
+Bei Beschwörungen geht es darum, Kreaturen aus einer anderen Realitätsebene zu
+beschwören, die dir vorübergehend helfen. Die Steigerung der Fertigkeit
+Beschwörung kann je nach Zauber eine Reihe von Effekten gewähren, wie zum
+Beispiel eine längere Dauer oder mächtigere Verbündete. Beachtet, dass
+beschworene Wesen keine Leichen hinterlassen und keine Erfahrung geben, wenn
+sie getötet werden, und dass ihre Ausrüstung ebenso vergänglich ist wie sie
+selbst.
+
+Diese Fertigkeit erhöht die Erfolgsquote und die Zauberkraft von Zaubern der
+entsprechenden Schule. Viele Zauber gehören zu einer Kombination aus mehreren
+Schulen. In diesem Fall hängen der Erfolg und die Macht von Zaubern von der
+durchschnittlichen Fertigkeit in diesen Schulen ab.
+%%%%
+Necromancy
+
+Nekromantie ist die Kunst, Leben auszusaugen und wiederzugewinnen, auch wenn
+man sie meist mit Zombies und anderen Untoten in Verbindung bringt. Als solche
+haben Nekromantie-Zauber eine breite Palette von Effekten, die von Zaubern zur
+Erschaffung oder Zerrüttung von Untoten bis zu Zaubern reichen, die unheilige
+Heilung in verschiedenen Formen gewähren.
+
+Diese Fertigkeit erhöht die Erfolgsquote und die Zauberkraft von Zaubern der
+entsprechenden Schule. Viele Zauber gehören zu einer Kombination aus mehreren
+Schulen. In diesem Fall hängen der Erfolg und die Macht von Zaubern von der
+durchschnittlichen Fertigkeit in diesen Schulen ab.
+%%%%
+Translocations
+
+Translokationen befassen sich mit der räumlichen Bewegung von Wesen oder
+Gegenständen, einschließlich nützlicher Zauber, mit denen man sich selbst
+schnell über kurze Distanzen verlagern oder seine Feinde von sich wegbringen
+kann.
+
+Diese Fertigkeit erhöht die Erfolgsquote und die Zauberkraft von Zaubern der
+entsprechenden Schule. Viele Zauber gehören zu einer Kombination aus mehreren
+Schulen. In diesem Fall hängen der Erfolg und die Macht von Zaubern von der
+durchschnittlichen Fertigkeit in diesen Schulen ab.
+%%%%
+Transmutations
+
+Bei Verwandlung geht es um die Veränderung von Formen. Bei vielen Verwandlungen
+geht es darum, die eigene Gestalt zu verändern, aber die Schule enthält auch
+Zauber, mit denen man seine Feinde verändern oder Gegenstände um sich herum
+umwandeln kann.
+
+Diese Fertigkeit erhöht die Erfolgsquote und die Zauberkraft von Zaubern der
+entsprechenden Schule. Viele Zauber gehören zu einer Kombination aus mehreren
+Schulen. In diesem Fall hängen der Erfolg und die Macht von Zaubern von der
+durchschnittlichen Fertigkeit in diesen Schulen ab.
+%%%%
+Fire Magic
+
+Die Feuermagie konzentriert sich hauptsächlich darauf, Feuerschaden über große
+Entfernungen zu verursachen, mit vielen effektiven Hervorrufungen.
+
+Diese Fertigkeit erhöht die Erfolgsquote und die Zauberkraft von Zaubern der
+entsprechenden Schule. Viele Zauber gehören zu einer Kombination aus mehreren
+Schulen. In diesem Fall hängen der Erfolg und die Macht von Zaubern von der
+durchschnittlichen Fertigkeit in diesen Schulen ab.
+%%%%
+Ice Magic
+
+Eismagie enthält eine Reihe von Zaubern, die direkten Schaden verursachen, sowie
+einige defensive Effekte - zum Beispiel die Herstellung einer vorübergehenden
+Eisrüstung.
+
+Diese Fertigkeit erhöht die Erfolgsquote und die Zauberkraft von Zaubern der
+entsprechenden Schule. Viele Zauber gehören zu einer Kombination aus mehreren
+Schulen. In diesem Fall hängen der Erfolg und die Macht von Zaubern von der
+durchschnittlichen Fertigkeit in diesen Schulen ab.
+%%%%
+Air Magic
+
+Die Luftmagie bietet Zauber, die direkt mit dem Wind Schaden verursachen, sowie
+laute, aber mächtige Blitzhervorrufungen. Sie bietet auch einige Hilfszauber,
+wie z.B. den Ruf des Windes, um Eure Bewegung zu unterstützen, oder eine
+Verhexung, die den Einsatz von Magie in Eurer Umgebung weitgehend verhindert.
+
+Diese Fertigkeit erhöht die Erfolgsquote und die Zauberkraft von Zaubern der
+entsprechenden Schule. Viele Zauber gehören zu einer Kombination aus mehreren
+Schulen. In diesem Fall hängen der Erfolg und die Macht von Zaubern von der
+durchschnittlichen Fertigkeit in diesen Schulen ab.
+%%%%
+Earth Magic
+
+Erdmagie enthält Zauber, die große Mengen an direktem körperlichen Schaden
+verursachen, dem nicht wie Feuer-, Kälte- und Blitzschaden widerstanden werden
+kann. Sie ist auch mit einigen Verwandlungen verbunden, mit Zaubern, die die
+Erde um Euch herum verflüssigen oder Eure Feinde in Stein verwandeln.
+
+Diese Fertigkeit erhöht die Erfolgsquote und die Zauberkraft von Zaubern der
+entsprechenden Schule. Viele Zauber gehören zu einer Kombination aus mehreren
+Schulen. In diesem Fall hängen der Erfolg und die Macht von Zaubern von der
+durchschnittlichen Fertigkeit in diesen Schulen ab.
+%%%%
+Poison Magic
+
+Die Giftmagie bietet Zaubersprüche, die gegen viele natürliche Kreaturen sehr
+wirksam sind.
+
+Diese Fertigkeit erhöht die Erfolgsquote und die Zauberkraft von Zaubern der
+entsprechenden Schule. Viele Zauber gehören zu einer Kombination aus mehreren
+Schulen. In diesem Fall hängen der Erfolg und die Macht von Zaubern von der
+durchschnittlichen Fertigkeit in diesen Schulen ab.
+%%%%
+Invocations
+
+Die Anrufungsfertigkeit beeinflusst die Wahrscheinlichkeit, dass ein Versuch,
+göttliche Fähigkeiten bei bestimmten Göttern einzusetzen, erfolgreich ist, und
+oft auch die Macht solcher Fähigkeiten.
+
+{{
+    if you.race() ~= "Djinni" then
+        return "Die Anrufungsfertigkeit wirkt sich ebenfalls auf Eure " ..
+               "magischen Reserven aus, allerdings in geringerem Maße als " ..
+               "die Zaubern-Fertigkeit. Es wird nur der höhere Beitrag " ..
+               "verwendet."
+    end
+}}
+%%%%
+Evocations
+
+Die Evozierungsfertigkeit wirkt sich auf die Fähigkeit aus, magische
+Gegenstände wie Zauberstäbe und andere ungewöhnliche Objekte zu benutzen, und
+erhöht die Macht oder die Erfolgsrate solcher Gegenstände.
 %%%%
