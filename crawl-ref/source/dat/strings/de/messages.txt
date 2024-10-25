@@ -8464,7 +8464,7 @@ the water
 das Wasser
 %%%%
 the ooze
-
+der Schlamm
 %%%%
 %s engulfs you in water!
 %s überflutet Euch!
