@@ -401,9 +401,10 @@ static vector<string> _get_skill_keys()
     vector<string> names;
     for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
     {
-        const string name = lowercase_string(skill_name(sk));
+        // i18n: Keep original case for translation
+        const string name = skill_name(sk);
 #if TAG_MAJOR_VERSION == 34
-        if (getLongDescription(name).empty())
+        if (getLongDescription(lowercase_string(name)).empty())
             continue; // obsolete skills
 #endif
 
@@ -1047,7 +1048,8 @@ static int _describe_spell(const string &key, const string &suffix,
 static int _describe_skill(const string &key, const string &suffix,
                              string /*footer*/)
 {
-    const string skill_name = key.substr(0, key.size() - suffix.size());
+    string skill_name = key.substr(0, key.size() - suffix.size());
+    lowercase(skill_name);
     const skill_type skill = skill_from_name(skill_name.c_str());
     describe_skill(skill);
     return 0;
