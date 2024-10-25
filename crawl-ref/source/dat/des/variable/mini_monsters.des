@@ -3430,10 +3430,12 @@ MONS:    shadow demon / green death / blizzard demon / balrug / cacodemon / \
          sin beast / hellion / reaper / tormentor
 KITEM:   | = superb_item / any good_item / randbook disc:summoning w:5
 : if you.in_branch("Depths") then
-SUBST:   2 = 3, 4 = 5
+SUBST:   2 = 3, 4 = 5, v = c
 NSUBST:  3 = 1:5 / *:3
-: end
+TILE:    c = stone_wall_pyre
+: else
 SUBST:   b = bbv
+: end
 SHUFFLE: {( / <<
 KPROP:   2345*| = no_tele_into
 TILE:    b = bedevilled_crystal_pandemonium

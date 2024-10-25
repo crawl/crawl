@@ -1304,13 +1304,15 @@ static monster* _xom_mons_poly_target()
 {
     vector<monster*> polymorphable;
 
-    // XXX: Polymorphing early bats over liquids turn into D:1 steam dragons
+    // XXX: Polymorphing early bats over liquids turn into D:1 acid dragons
     //      and killer bees, so skip them while polymorphing at low xls.
+    //      Likewise, there's very few plant polymorph options.
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (_choose_mutatable_monster(**mi) && !mons_is_firewood(**mi)
-           && (you.experience_level < 4 && (env.grid(mi->pos()) != DNGN_DEEP_WATER)
-               && env.grid(mi->pos()) != DNGN_LAVA) || you.experience_level > 3 )
+           && ((env.grid(mi->pos()) != DNGN_DEEP_WATER)
+               && (env.grid(mi->pos()) != DNGN_LAVA) || you.experience_level > 4)
+           && (!(mi->holiness() & MH_PLANT) || you.experience_level > 8))
         {
             polymorphable.push_back(*mi);
         }

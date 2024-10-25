@@ -343,7 +343,7 @@ SHUFFLE: +- / +- / =+
 NSUBST:  - = 1:+cc / *:c
 SUBST:   = = c
 KMASK:   l = no_monster_gen
-TILE:    c = dngn_stone_wall_red
+TILE:    c = stone_wall_pyre
 : hell_entry_feature(_G, 'O')
 : hell_entry_tier(_G, "low")
 MAP
@@ -392,7 +392,7 @@ ENDMAP
 NAME:    pf_vacation_house_of_asmodeus
 TAGS:    transparent uniq_hell_entry_geh
 WEIGHT:  4
-TILE:    c = dngn_stone_wall_red
+TILE:    c = stone_wall_pyre
 COLOUR:  c = red
 FTILE:  'O = floor_infernal_blank
 : hell_entry_feature(_G, 'O')

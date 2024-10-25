@@ -117,6 +117,8 @@
             e.mons("rakshasa / hell hog / greater demon w:5")
             e.mons("ice fiend / brimstone fiend / hell sentinel / " ..
                    "tzitzimitl / greater demon w:200")
+            e.subst("x = c")
+            e.tile("c = stone_wall_pandemonium")
             e.subst("A : ....l")
             e.subst("B = Y")
         elseif set_weight == 4 then
