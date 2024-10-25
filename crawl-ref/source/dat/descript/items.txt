@@ -1579,7 +1579,7 @@ of victims' resistance to cold.
 wand of light
 
 A magical device which fires a ray of searing light, injuring and blinding
-those struck. Only living, demonic and angelic monsters can be blinded. and
+those struck. Only living, demonic and angelic monsters can be blinded, and
 tougher monsters will recover their vision more quickly.
 %%%%
 wand of mindburst
