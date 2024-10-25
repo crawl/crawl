@@ -663,6 +663,17 @@ Summons some creatures from one of the Snake Pit, the Spider Nest, the Swamp,
 the Shoals, the Elven Halls, the Vaults, or the Crypt; the specific branch
 varies with the caster.
 %%%%
+Forge Monarch Bomb spell
+
+Constructs a flying incendiary factory, packed to the brim with cluster bomblets
+which it can deploy both in melee and launch at range. While the monarch's
+bomblets have no attack of their own, they will pursue the caster's enemies
+until given the signal to explode.
+
+Recasting this spell while anything created by is still active will detonate the
+monarch bomb and all bomblets, dealing a combination of fire and physical damage
+to everything adjacent to them besides the caster themselves.
+%%%%
 Foxfire spell
 
 Conjures two balls of burning swamp gas adjacent to the caster. The balls will
@@ -979,6 +990,14 @@ Brings forth a cloud of volatile blastmotes around the caster. These explode
 on contact with open flame or with creatures - including any caster foolish
 enough to linger in them! The explosion is concussive, knocking adjacent
 creatures away. Damage done rises with the spell's power.
+%%%%
+Launch Bomblet spell
+
+Fires a bomblet on a ballistic trajectory that ignores line of fire, dealing
+minor damage to a single target within range and deploying the bomblet near it.
+
+Cannot target enemies adjacent to the caster or those with no nearby room for
+the bomblet to land.
 %%%%
 Launch Clockwork Bee spell
 

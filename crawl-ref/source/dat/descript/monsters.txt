@@ -824,6 +824,12 @@ sticky spray it fires is capable of igniting predators and unwary adventurers
 alike, though more experienced ones know to keep moving if they wish to avoid
 a fiery grave.
 %%%%
+bomblet
+
+A small metal sphere surrounding a core of dormant fire magic. When given the
+proper command, it will detonate in a blast of metal and flame that is only
+partially affected by fire resistance.
+%%%%
 bone dragon
 
 A mighty undead abomination, pieced together from the broken bones of many
@@ -1966,6 +1972,13 @@ molten gargoyle
 
 A hideous molten stone statue come to life, with flames licking across its
 body.
+%%%%
+monarch bomb
+
+A flying munitions factory, held aloft on jets of fiery exhaust and packed to
+the brim with explosives. It can rapidly fill an area with bomblets, and when
+commanded by its creator, will explode them all (and itself) to devastating
+effect.
 %%%%
 moth of wrath
 

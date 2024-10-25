@@ -1369,6 +1369,13 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         else
             return make_unique<targeter_smite>(paragon, 3, 2, 2, false, false);
     }
+    case SPELL_MONARCH_BOMB:
+    {
+        if (count_summons(&you, SPELL_MONARCH_BOMB) > 1)
+            return make_unique<targeter_multiposition>(&you, get_monarch_detonation_spots(you), AFF_YES);
+        else
+            return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 2, 0, 1);
+    }
     case SPELL_FOXFIRE:
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 1, 0, 1);
     // TODO: these two actually have pretty wtf positioning that uses compass
@@ -2479,6 +2486,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_WALKING_ALEMBIC:
         return cast_walking_alembic(you, powc, fail);
+
+    case SPELL_MONARCH_BOMB:
+        return cast_monarch_bomb(you, powc, fail);
 
     // Enchantments.
     case SPELL_CONFUSING_TOUCH:

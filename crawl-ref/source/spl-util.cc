@@ -1835,7 +1835,6 @@ bool spell_no_hostile_in_range(spell_type spell)
     return false;
 }
 
-
 // a map of schools to the corresponding sacrifice 'mutations'.
 static const mutation_type arcana_sacrifice_map[] = {
     MUT_NO_CONJURATION_MAGIC,

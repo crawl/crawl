@@ -3994,3 +3994,128 @@ void alembic_brew_potion(monster& mons)
                            MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
     monster_die(mons, KILL_RESET, NON_MONSTER);
 }
+
+spret cast_monarch_bomb(const actor& agent, int pow, bool fail)
+{
+    fail_check();
+
+    if (count_summons(&agent, SPELL_MONARCH_BOMB))
+        return monarch_detonation(agent, pow);
+
+    mgen_data mg = _summon_data(agent, MONS_MONARCH_BOMB, summ_dur(3),
+                                SPELL_MONARCH_BOMB, false);
+    mg.hd = (7 + div_rand_round(pow, 12));
+
+    if (monster* mon = create_monster(mg))
+    {
+        if (you.can_see(*mon))
+        {
+            mprf("%s construct%s an explosive harbinger and set it loose.",
+                 agent.name(DESC_THE).c_str(), agent.is_player() ? "" : "s");
+        }
+
+        mon->number = 5 + div_rand_round(pow, 50);
+        //mon->number = random_range(1, 3);
+    }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return spret::success;
+}
+
+bool monarch_deploy_bomblet(monster& original, const coord_def& target,
+                            bool quiet)
+{
+    mgen_data mg = mgen_data(MONS_BOMBLET, original.friendly()
+                                                ? BEH_FRIENDLY
+                                                : BEH_HOSTILE,
+                             target, MG_AUTOFOE);
+    mg.set_summoned(actor_by_mid(original.summoner),
+                    SPELL_MONARCH_BOMB, summ_dur(3), false);
+    mg.set_range(0, 2);
+    if (create_monster(mg))
+    {
+        if (!quiet && you.can_see(original))
+            mprf("%s deploys a bomblet.", original.name(DESC_THE).c_str());
+
+        return true;
+    }
+
+    return false;
+}
+
+vector<coord_def> get_monarch_detonation_spots(const actor& agent)
+{
+    vector<coord_def> spots;
+
+    for (monster_near_iterator mi(&you); mi; ++mi)
+    {
+        if (mi->was_created_by(you, SPELL_MONARCH_BOMB))
+        {
+            for (adjacent_iterator ai(mi->pos(), false); ai; ++ai)
+            {
+                if (agent.see_cell_no_trans(*ai) && !cell_is_solid(*ai)
+                    && *ai != agent.pos())
+                {
+                    spots.push_back(*ai);
+                }
+            }
+        }
+    }
+
+    return spots;
+}
+
+spret monarch_detonation(const actor& agent, int pow)
+{
+    vector<coord_def> spots = get_monarch_detonation_spots(agent);
+    if (agent.is_player()
+        && warn_about_bad_targets("Detonate Monarch Bomb", spots,
+                                  [](const monster& m) { return m.type == MONS_MONARCH_BOMB
+                                                                || m.type == MONS_BOMBLET; }))
+    {
+        return spret::abort;
+    }
+
+    if (you.can_see(agent))
+    {
+        mprf("%s command%s %s explosives to detonate!",
+                agent.name(DESC_THE).c_str(),
+                agent.is_player() ? "" : "s",
+                agent.pronoun(PRONOUN_POSSESSIVE).c_str());
+    }
+
+    for (coord_def spot : spots)
+        flash_tile(spot, RED, 0);
+    if (Options.use_animations & UA_BEAM)
+        animation_delay(100, true);
+
+    // Now remove all the bomblets, whether they blew up or not (ie: ones that
+    // weren't in LoS of the caster at the time).
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->was_created_by(agent, SPELL_MONARCH_BOMB))
+        {
+            noisy(spell_effect_noise(SPELL_MONARCH_BOMB), mi->pos());
+            monster_die(**mi, KILL_RESET, NON_MONSTER);
+        }
+    }
+
+    bolt detonation;
+    zappy(ZAP_MONARCH_DETONATION, pow, false, detonation);
+    detonation.set_agent(&agent);
+    detonation.ex_size       = 0;
+    detonation.apply_beam_conducts();
+    detonation.in_explosion_phase = true;
+
+    for (coord_def spot : spots)
+    {
+        if (!actor_at(spot) || actor_at(spot) != &agent)
+        {
+            bolt det = detonation;
+            det.explosion_affect_cell(spot);
+        }
+    }
+
+    return spret::success;
+}

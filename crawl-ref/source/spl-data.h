@@ -4206,6 +4206,28 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_MONARCH_BOMB, "Forge Monarch Bomb",
+    spschool::forgecraft | spschool::fire,
+    spflag::none,
+    6,
+    200,
+    -1, -1,
+    0,
+    TILEG_ERROR,
+},
+
+{
+    SPELL_DEPLOY_BOMBLET, "Launch Bomblet",
+    spschool::forgecraft | spschool::fire,
+    spflag::target | spflag::monster,
+    6,
+    200,
+    4, 4,
+    0,
+    TILEG_CALL_DOWN_DAMNATION,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

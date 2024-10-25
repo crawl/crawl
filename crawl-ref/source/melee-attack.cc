@@ -3126,6 +3126,7 @@ static bool _attack_flavour_needs_living_defender(attack_flavour flavour)
         case AF_SWARM:
         case AF_BLOODZERK:
         case AF_ALEMBIC:
+        case AF_BOMBLET:
             return false;
 
         default:
@@ -3761,6 +3762,10 @@ void melee_attack::mons_apply_attack_flavour()
             alembic_brew_potion(*attacker->as_monster());
     }
     break;
+
+    case AF_BOMBLET:
+        monarch_deploy_bomblet(*attacker->as_monster(), defender->pos());
+        break;
 
     }
 

@@ -169,3 +169,9 @@ bool paragon_defense_bonus_active();
 
 spret cast_walking_alembic(const actor& agent, int pow, bool fail);
 void alembic_brew_potion(monster& mons);
+
+spret cast_monarch_bomb(const actor& agent, int pow, bool fail);
+bool monarch_deploy_bomblet(monster& original, const coord_def& target,
+                            bool quiet = false);
+vector<coord_def> get_monarch_detonation_spots(const actor& agent);
+spret monarch_detonation(const actor& agent, int pow);

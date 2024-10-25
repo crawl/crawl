@@ -111,6 +111,7 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
 static string _god_name(god_type god);
 static coord_def _mons_ghostly_sacrifice_target(const monster &caster,
                                                 bolt tracer);
+static coord_def _mons_bomblet_target(const monster& caster);
 static function<void(bolt&, const monster&, int)>
     _selfench_beam_setup(beam_type flavour);
 static function<void(bolt&, const monster&, int)>
@@ -868,6 +869,24 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             }
         },
     } },
+    { SPELL_DEPLOY_BOMBLET, {
+        [](const monster &caster)
+        {
+            if (!_mons_bomblet_target(caster).origin())
+                return ai_action::good();
+            else
+                return ai_action::impossible();
+        },
+        [](monster &caster, mon_spell_slot, bolt& beam) {
+            const coord_def targ = _mons_bomblet_target(caster);
+            beam.source = targ;
+            beam.target = targ;
+            beam.draw_delay = 80;
+            beam.fire();
+            monarch_deploy_bomblet(caster, targ, true);
+        },
+        _zap_setup(SPELL_DEPLOY_BOMBLET) } },
+
     { SPELL_SOUL_SPLINTER, _hex_logic(SPELL_SOUL_SPLINTER, _foe_soul_splinter_goodness) },
 };
 
@@ -4070,6 +4089,48 @@ static void _setup_ghostly_sacrifice_beam(bolt& beam, const monster& caster,
 
     beam.target = _mons_ghostly_sacrifice_target(caster, beam);
     beam.aimed_at_spot = true;  // to get noise to work properly
+}
+
+// Choose a target for Launch Bomblet. Prefer our foe, if not already in ideal
+// range of it. Pick some other valid hostile, if not.
+static coord_def _mons_bomblet_target(const monster& caster)
+{
+    // Check if foe is valid first.
+    actor* foe = caster.get_foe();
+    if (foe && caster.can_see(*foe) && monster_los_is_valid(&caster, foe)
+        && grid_distance(caster.pos(), foe->pos()) > 1
+        && grid_distance(caster.pos(), foe->pos()) <= spell_range(SPELL_DEPLOY_BOMBLET, 0))
+    {
+        coord_def result;
+        if (find_habitable_spot_near(foe->pos(), MONS_BOMBLET, 2, result))
+            return foe->pos();
+    }
+
+    // Otherwise, check all nearby hostile monsters
+    vector<coord_def> targs;
+    for (actor_near_iterator ai(caster.pos()); ai; ++ai)
+    {
+        if (!mons_aligned(&caster, *ai)
+            && grid_distance(caster.pos(), ai->pos()) > 1
+            && grid_distance(caster.pos(), ai->pos()) <= spell_range(SPELL_DEPLOY_BOMBLET, 0)
+            && caster.can_see(**ai)
+            && monster_los_is_valid(&caster, *ai))
+        {
+            targs.push_back(ai->pos());
+        }
+    }
+
+    // Do the 'habitable spot near' check as a second pass
+    shuffle_array(targs);
+    for (coord_def targ : targs)
+    {
+        coord_def result;
+        if (find_habitable_spot_near(targ, MONS_BOMBLET, 2, result))
+            return targ;
+    }
+
+    // Found nothing
+    return coord_def();
 }
 
 static bool _can_injury_bond(const monster &protector, const monster &protectee)

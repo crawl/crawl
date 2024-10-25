@@ -963,6 +963,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_MONARCH_BOMB,
+      {
+       { SPELL_DEPLOY_BOMBLET, 100, MON_SPELL_NATURAL},
+      }
+    },
+
     // ('G') Organs.
     {  MST_GLASS_EYE,
       {

@@ -2861,6 +2861,7 @@ bool bolt::can_burn_trees() const
     case SPELL_FLAME_WAVE:
     case SPELL_SUMMON_BLAZEHEART_GOLEM: // core breach!
     case SPELL_HELLFIRE_MORTAR:
+    case SPELL_MONARCH_BOMB:
         return true;
     case SPELL_UNLEASH_DESTRUCTION:
         return flavour == BEAM_FIRE || flavour == BEAM_LAVA;
