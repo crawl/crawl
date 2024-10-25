@@ -1972,6 +1972,30 @@ Keine Antwort in der FAQ gefunden! Bitte einen Fehlerbericht schicken!
 "Q: "
 "F: "
 %%%%
+Manual
+Handbuch
+%%%%
+Aptitudes
+Begabungen
+%%%%
+Quickstart
+Schnellstart
+%%%%
+Macros
+Macros
+%%%%
+Options
+Optionen
+%%%%
+Tiles
+Kacheln
+%%%%
+Key help
+Tasten-Hilfe
+%%%%
+Dungeon Crawl Help
+Dungeon Crawl Hilfe
+%%%%
 
 ##################
 # dactions.cc
@@ -4104,10 +4128,10 @@ Visible Items
 Sichtbare Gegenstände
 %%%%
 /Features
-/Features
+/Einrichtungen
 %%%%
 Visible Features
-Sichtbare Features
+Sichtbare Einrichtungen
 %%%%
 " (select to examine)"
 " (auswählen um zu examinieren)"
@@ -4122,7 +4146,7 @@ Items
 Gegenstände
 %%%%
 Features
-Features
+Einrichtungen
 %%%%
 " (not visited)"
 " (nicht besucht)"
@@ -4134,7 +4158,7 @@ trap
 Fall
 %%%%
 No monsters, items or features are visible.
-Es sind keine Monster, Gegenstände oder Features sichtbar.
+Es sind keine Monster, Gegenstände oder Einrichtungen sichtbar.
 %%%%
 target/travel
 zielen/reisen
@@ -7200,7 +7224,7 @@ spell
 Zauberspruch
 %%%%
 s(K)ill
-f(E)rtigkeit
+(F)ertigkeit
 %%%%
 skill
 Fertigkeit
@@ -7224,10 +7248,10 @@ item
 Objekt
 %%%%
 (F)eature
-(F)eature
+(E)inrichtung
 %%%%
 feature
-Feature
+Einrichtung
 %%%%
 (G)od
 (G)ott
@@ -17392,19 +17416,19 @@ Creating upstairs.
 Treppen nach oben erschafft.
 %%%%
 "Create what kind of feature mimic? "
-Welche Art von Feature-Mimik erstellen?
+Welche Art von Einrichtung-Mimik erstellen?
 %%%%
 "Create which feature? "
-"Welche Feature erstellen? "
+"Welche Einrichtung erstellen? "
 %%%%
 Set fprops "%s" at (%d,%d)
 Fprops "%s" auf (%d,%d) eingesetzt
 %%%%
 "No exact match for feature '%s', possible matches are: "
-"Keine Feature passt exakt zu '%s'. Möglichkeiten sind: "
+"Keine Einrichtung passt exakt zu '%s'. Möglichkeiten sind: "
 %%%%
 "This isn't a valid feature mimic. Create it anyway? "
-"Das ist keine gültige Feature-Mimik. Trotzdem erstellen? "
+"Das ist keine gültige Einrichtung-Mimik. Trotzdem erstellen? "
 %%%%
 Force level to be mappable?
 Erzwingen, dass die Ebene kartierbar ist?
@@ -18312,7 +18336,7 @@ Kann nicht nochmal in den Erkundungsmodus eintreten.
 <w>,</w>/<w>.</w>    Treppe nach oben/unten schaffen
 %%%%
 <w>(</w>      turn cell into feature
-<w>(</w>      Feld in Struktur verwandeln
+<w>(</w>      Feld in Einrichtung verwandeln
 %%%%
 <w>\</w>      make a shop
 <w>\</w>      Laden schaffen
