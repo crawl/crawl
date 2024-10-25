@@ -1972,30 +1972,6 @@ Keine Antwort in der FAQ gefunden! Bitte einen Fehlerbericht schicken!
 "Q: "
 "F: "
 %%%%
-Manual
-Handbuch
-%%%%
-Aptitudes
-Begabungen
-%%%%
-Quickstart
-Schnellstart
-%%%%
-Macros
-Macros
-%%%%
-Options
-Optionen
-%%%%
-Tiles
-Kacheln
-%%%%
-Key help
-Tasten-Hilfe
-%%%%
-Dungeon Crawl Help
-Dungeon Crawl Hilfe
-%%%%
 
 ##################
 # dactions.cc
