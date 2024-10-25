@@ -5312,7 +5312,7 @@ string get_ghost_description(const monster_info &mi, bool concise)
 void describe_skill(skill_type skill)
 {
     describe_info inf;
-    inf.title = skill_name(skill);
+    inf.title = localise(skill_name(skill));
     inf.body << get_skill_description(skill, false);
     tile_def tile = tile_def(tileidx_skill(skill, TRAINING_ENABLED));
     show_description(inf, &tile);
