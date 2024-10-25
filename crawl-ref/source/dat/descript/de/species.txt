@@ -1,114 +1,147 @@
 %%%%
-Centaur
+Barachi
 
-Schnell, stark und massig. Zentauren brauchen mehr Nahrung als andere Spezies.
-Sie sind besonders geschickt im Umgang mit Fernkampfwaffen.
+Barachim sind langsam laufende, amphibische Humanoide, die über weite Strecken
+hüpfen können. Ihr erweitertes Sichtfeld ermöglicht es ihnen, auch aus
+größerer Entfernung gesehen zu werden.
 %%%%
 Deep Dwarf
 
-Tiefenzwerge leben im Untergrund und können sich nicht auf natürliche Weise
-heilen, aber sie sind sehr widerstandsfähig gegenüber Schaden und tragen
-Heilausrüstung mit sich.
+Tiefenzwerge leben unter der Erde und können ihre Gesundheit nicht auf
+natürliche Weise regenerieren, aber sie sind sehr widerstandsfähig gegen
+Schaden und haben eine begrenzte Fähigkeit, sich nach Belieben zu heilen.
 %%%%
 Deep Elf
 
-Die magieaffinsten Elfen, aber auch die gebrechlichsten.
+Tiefenelfen haben eine starke Affinität zu allen Arten von Magie, sind aber
+sehr zerbrechlich.
 %%%%
 Demigod
 
-Sie werden niemals einem Gott folgen, aber Halbgötter machen das mit göttlichen
-Attributen und Lebenspunkten wett.
+Halbgötter weigern sich, einen Gott anzubeten, machen dies aber durch
+göttliche Eigenschaften und hohe Reserven an Gesundheit und Magie wett.
 %%%%
 Demonspawn
 
-Dämonenbruten sind halb Mensch, halb Dämon. Sie erlangen während ihres
-Wachstums starke Mutationen.
+Dämonenbruten sind halb Mensch, halb Dämon. Während sie heranwachsen,
+entwickeln sie starke dämonische Mutationen.
+%%%%
+Djinni
+
+Dschinns sind ewig brennende Geister. Sie lernen Zaubersprüche von Natur aus,
+ohne Bücher, und sie wirken, indem sie ihr eigenes Feuer herabziehen.
 %%%%
 Draconian
 
-Draken sind vielseitige Hybride. Sie werden mit Level 7 erwachsen und
+Drakonier sind vielseitige Hybriden. Sie reifen mit Erreichen der Stufe 7 und
 entwickeln eine Farbe.
+%%%%
+Formicid
+
+Formiciden sind humanoide Ameisen, die gut graben können. Ihre Gliedmaßen
+sind außergewöhnlich stark und sie leben in einem Zustand permanenter Stasis.
 %%%%
 Felid
 
-Diese viellebigen Katzen besitzen Wissen, doch zu erweiterter
-Gegenstandsveränderung oder der Benutzung von Rüstungen und Waffen sind sie
-nicht in der Lage.
+Feliden sind empfindungsfähige Katzen mit vielen Leben. Sie sind nicht in der
+Lage, komplizierte Gegenstände zu manipulieren oder Rüstungen oder Waffen zu
+tragen.
 %%%%
 Ghoul
 
-Ein Untoter, dazu verdammt auf ewig zu verrotten. Sie sind immer auf der Suche
-nach Faulem, um es zu essen...
+Ghule sind untote Kreaturen, die dazu verdammt sind, ewig zu verrotten. Sie
+haben scharfe Klauen und heilen sich vom Tod der Lebenden.
 %%%%
 Gargoyle
 
-Hergestellt aus lebendem Stein, haben Gargoyles eine übernatürliche Affinität
-für  Erde.
+Gargoyles bestehen aus lebendem Stein und haben eine übernatürliche
+Affinität zur Erde. Sie haben wenig Gesundheit, aber ihre steinernen Körper
+sind unglaublich zäh.
 %%%%
-Halfling
+Gnoll
 
-Klein, aber zäh, sind Halblinge unübertroffene Meister mit Schleudern. Sie
-haben eine erhöhte Resistenz gegen Mutationen.
+Gnolls sind hundeähnliche Humanoide. Sie können sich nicht auf eine einzelne
+Fertigkeit spezialisieren, sondern beherrschen nach und nach alle Fertigkeiten
+auf einmal.
 %%%%
 Hill Orc
 
-Orks sind geschickt im Nahkampf, und versuchen sich oft in offensiver Magie.
-Von den meisten gehasst, sind Orks sehr stolz und viele von ihnen fühlen sich
-überlegen.
+Hügelorks sind geschickt im Nahkampf und üben sich oft in offensiver Magie.
+Nur sie dürfen den Ork-Gott Beogh verehren.
 %%%%
 Human
 
-Schlicht und durchschnittlich.
+Menschen steigen schnell in den Stufen auf und haben in den meisten
+Fertigkeiten die gleichen Begabung.
 %%%%
 Tengu
 
-Vogelmenschen, die den Kampf lieben – sowohl mit Waffen, als auch mit Zaubern.
-Sie sind recht gebrechlich, aber später lernen sie, geschickt zu fliegen.
+Tengu sind Vogelmenschen, die gerne kämpfen, sowohl mit Waffen als auch mit
+Zaubern. Sie sind ziemlich zerbrechlich, aber sie lernen später schnell zu
+fliegen.
 %%%%
-Lava Orc
+Kobold
 
-Diese Meister der Erde und Feuer Magie kommen von tief unter dem Dungeon. Ihre
-Fähigkeiten ändern sich mit ihrer Temperatur.
+Kobolde are attuned to the shadows and can only see or be seen at a close
+range. They are small and a little fragile, and are talented in most skills.
 %%%%
 Merfolk
 
-Halb Fisch, halb Mensch, sind Meerleute Bewohner des Wassers und des Landes.
-Sie sind starke Kämpfer, und Meister darin, Magie zur Unterstützung im Kampf zu
-benutzen.
+Halb Fisch, halb Mensch, sind Merfolks sowohl Wasser- als auch Landbewohner.
+Sie sind starke Kämpfer und geschickt darin, Magie zur Unterstützung im Kampf
+einzusetzen.
 %%%%
 Minotaur
 
-Ein großer, muskulärer Mensch mit dem Kopf eins Bullen. Sie sind hervorragend
-in allen Formen von Nah- und Fernkampf.
+Minotauren sind große, muskulöse Menschen mit Rinderköpfen. Sie zeichnen
+sich durch alle Formen des Nah- und Fernkampfes aus.
 %%%%
 Mummy
 
-Eine untote Gestalt, gehüllt in Bandagen und einbalsamierende Flüssigkeiten,
-gezwungen zum Laufen durch einen antiken Fluch.
+Mumien, die durch einen uralten Fluch zum Gehen gezwungen sind, beherrschen die
+Nekromantie, lernen aber andere Fertigkeiten nur sehr langsam. Sie können keine
+Tränke konsumieren.
 %%%%
 Naga
 
-Ein Hybrid; Mensch von der Brust aufwärts, mit dem schuppigen, muskulösen Torso
-einer Schlange. Sie bewegen sich langsam, sind aber von Natur aus sehr
-widerstandsfähig.
+Nagas sind Hybriden, von der Taille aufwärts menschlich, mit einem
+schlangenartigen Schwanz anstelle von Beinen. Sie bewegen sich sehr langsam,
+sind aber von Natur aus widerstandsfähig.
 %%%%
 Octopode
 
-Eine Spezies amphibischer Kopffüßer. Sie können acht Ringe tragen, aber fast
-keine Rüstung passt ihnen.
+Oktopoden sind eine Art amphibischen Kopffüßer. Sie können acht Ringe
+tragen, aber fast keine Rüstung passt ihnen.
 %%%%
 Ogre
 
-Groß und stark, werden sie meistens als Wüstlinge angesehen. Allerdings sind
-Oger sehr gut mit den Grundkenntnissen der Magie vertraut.
+Oger sind groß, stark und äußerst widerstandsfähig und beherrschen alle
+Formen des Nahkampfes. Sie sind nicht nur brutal, sondern auch recht fähige
+Zauberwirker.
+%%%%
+Palentonga
+
+Palentongas sind geschuppte Säugetiere von der Größe eines Pferdes. Sie
+können mächtige rollende Ansturme machen.
 %%%%
 Spriggan
 
-Sehr klein, sehr schmächtig und sehr schnell. Spriggans sind kompetente
-Messerstecher und Zauberer.
+Sehr klein, sehr zerbrechlich und sehr schnell, Spriggans sind äußerst
+fähige Messerstecher und Zauberwirker.
 %%%%
 Troll
 
-Große Wüstlinge, bereit, alles mit ihren Klauen zu zermalmen, nie zweimal
-nachdenkend. Sie haben stets Hunger.
+Trolle sind monströse Kreaturen mit mächtigen Klauen. Sie regenerieren ihre
+Gesundheit schnell.
+%%%%
+Vampire
+
+Vampire, die nach Belieben zwischen den Zuständen des Lebens und des Untodes
+wechseln können, sind geschickte Messerstecher und Zauberer.
+%%%%
+Vine Stalker
+
+Rebpirscher sind schwache Symbionten. Sie können ihre Gesundheit nicht durch
+Tränke wiederherstellen. Ihre magischen Reserven absorbieren Schaden, und sie
+verfügen über einen Biss, der die Magie wiederherstellt.
 %%%%
