@@ -8873,7 +8873,7 @@ Being near %s leaves you feeling lethargic.
 In der Nähe {acc}%s, fühlt Ihr Euch träge.
 %%%%
 %s watery aura covers %s.
-{gen}%s wässrige Aura bedeckt {acc}%s.
+%s wässrige Aura bedeckt {acc}%s.
 %%%%
 %s moves out of view.
 %s bewegt sich aus dem Blickfeld.
