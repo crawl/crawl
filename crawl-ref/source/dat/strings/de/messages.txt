@@ -9306,7 +9306,7 @@ Es gibt ein schreckliches, plötzlich reißendes Gefühl in Eurer Seele!
 ##################
 %%%%
 Error, exp for monster with no damage: %s
-Fehler, Exp für Monster ohne Schaden: %s
+Fehler, XP für Monster ohne Schaden: %s
 %%%%
 You feel a bit more experienced.
 Ihr fühlt Euch ein bisschen erfahrener.
@@ -9330,13 +9330,13 @@ With an infernal noise, the power ruling this place vanishes!
 Mit einem infernalischen Geräusch verschwindet die Macht, die diesen Ort beherrscht!
 %%%%
 %s's corpse
-
+{gen}%s
 %%%%
 A freezing mist gathers momentarily, then fades.
-Ein eisiger Nebel sammelt sich kurz, dann vergeht er.
+Ein eisiger Nebel sammelt sich kurz, dann vergeht.
 %%%%
 A glowing mist gathers momentarily, then fades.
-Ein glühender Nebel sammelt sich kurz, dann vergeht er.
+Ein glühender Nebel sammelt sich kurz, dann vergeht.
 %%%%
 A freezing mist starts to gather...
 Ein eisiger Nebel beginnt sich zu sammeln...
@@ -9351,10 +9351,10 @@ Mit seinem letzten Atemzug opfert der Spriggan-Druide seine Kraft den Bestien de
 %s scheint immer grimmiger zu werden.
 %%%%
 %s turns into a zombie!
-
+%s verwandelt sich in einen Zombie!
 %%%%
 %s turns into a skeleton!
-
+%s verwandelt sich in ein Skelett!
 %%%%
 %s appears out of thin air!
 %s erscheint aus der Luft!
@@ -9375,19 +9375,19 @@ The necklace of Bloodlust glows a violent red.
 Die Kette von Bloodlust leuchtet heftig rot.
 %%%%
 You feel the ancient rage of your axe.
-
+Ihr spürt die alte Wut Eurer Axt.
 %%%%
 %s detonates feebly.
 %s detoniert kraftlos.
 %%%%
 %s dissipates!
-%s verflüchtigt sich!
+%s löst sich auf!
 %%%%
 %s vaporises!
-
+%s verdampft!
 %%%%
 %s turns to gold and falls from the air.
-
+%s wird zu Gold und fällt aus der Luft.
 %%%%
 %s falls from the air.
 %s fällt aus der Luft.
@@ -9402,7 +9402,7 @@ Mit einem Gebrüll wird die Tentakel zurück durch das Portal gezogen!
 %s bröckelt weg.
 %%%%
 You feel a bit better.
-
+Ihr fühlt Euch ein bisschen besser.
 %%%%
 %s is blown up!
 %s wird gesprengt!
@@ -9432,7 +9432,7 @@ Das fühlte sich seltsam unergiebig an.
 %s verwelkt und stirbt!
 %%%%
 %s returns to the shadows of the Dungeon!
-%s kehrt zurück in die Schatten des Verlieses!
+%s kehrt zurück in die Schatten des Dungeons!
 %%%%
 %s fades into mist!
 %s verblasst zu Nebel!
@@ -9456,7 +9456,7 @@ The terrible wounds on your body vanish.
 Die schrecklichen Wunden an Eurem Körper verschwinden.
 %%%%
 The terrible wounds on %s body vanish.
-Die schrecklichen Wunden an {gen}%s Körper verschwinden.
+Die schrecklichen Wunden an %s Körper verschwinden.
 %%%%
 The forest abruptly stops moving.
 Der Wald hört abrupt auf, sich zu bewegen.
@@ -9537,7 +9537,7 @@ With Pikel's spell broken, his former minions thank you for their freedom.
 Da Pikels Bann gebrochen ist, danken Euch seine ehemaligen Sklaven für ihre Freiheit.
 %%%%
 No longer under Kirke's spell, the hog returns to its human form!
-Nicht länger unter Kirkes Bann, das Schwein nimmt wieder sieine menschliche Gestalt an!
+Nicht länger unter Kirkes Bann, das Schwein nimmt wieder seine menschliche Gestalt an!
 %%%%
 No longer under Kirke's spell, the hogs return to their human form!
 Nicht länger unter Kirkes Bann, die Schweine nehmen wieder ihre menschliche Gestalt an!

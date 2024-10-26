@@ -1477,7 +1477,16 @@ def process_cplusplus_file(filename):
                     if string == "nothing" or string.upper() == string:
                         # dummy placeholder
                         continue
-                    
+            elif filename == 'mon-death.cc':
+                if section == '_milestone_kill_verb':
+                    # only used for milesone
+                    continue
+                elif section == '_killer_type_name':
+                    # internal keys
+                    continue
+                elif section == 'monster_die' and string.startswith(' '):
+                    # simple_monster_message
+                    string = "%s" + string
             elif filename == 'mon-util.cc' and section in ['ugly_colour_names', 'drac_colour_names']:
                 # adjectives
                 string += ' '

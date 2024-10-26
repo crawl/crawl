@@ -599,12 +599,10 @@ static void _hints_inspect_kill()
 
 static string _milestone_kill_verb(killer_type killer)
 {
-    // @noloc section start (only used for milestones)
     return killer == KILL_BANISHED ? "banished" :
            killer == KILL_PACIFIED ? "pacified" :
            killer == KILL_CHARMD ? "enslaved" :
            killer == KILL_SLIMIFIED ? "slimified" : "killed";
-    // @noloc section end
 }
 
 void record_monster_defeat(const monster* mons, killer_type killer)
@@ -1091,7 +1089,6 @@ static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
 
 static string _killer_type_name(killer_type killer)
 {
-    // @noloc section start
     switch (killer)
     {
     case KILL_NONE:
@@ -1130,7 +1127,6 @@ static string _killer_type_name(killer_type killer)
         return "slimified";
     }
     die("invalid killer type");
-    // @noloc section end
 }
 
 /**
@@ -1996,9 +1992,9 @@ item_def* monster_die(monster& mons, killer_type killer,
             if (death_message)
             {
                 const char* msg =
-                    exploded                   ? "%s is blown up!" :
-                    wounded_damaged(targ_holy) ? "%s is destroyed!"
-                                               : "%s dies!";
+                    exploded                   ? " is blown up!" :
+                    wounded_damaged(targ_holy) ? " is destroyed!"
+                                               : " dies!";
                 simple_monster_message(mons, msg, MSGCH_MONSTER_DAMAGE,
                                        MDAM_DEAD);
             }
