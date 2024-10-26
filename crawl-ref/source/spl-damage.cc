@@ -293,44 +293,6 @@ vector<coord_def> chain_lightning_targets()
     return targets;
 }
 
-bool warn_about_bad_targets(spell_type spell, vector<coord_def> targets)
-{
-    vector<const monster*> bad_targets;
-    for (coord_def p : targets)
-    {
-        const monster* mon = monster_at(p);
-        // XXX: maybe check for ioods/bspheres instead of all conjured mons..?
-        // feels a little bad to blow up a prism with a plasma beam, maybe?
-        if (!mon || god_protects(&you, *mon) || mons_is_conjured(mon->type))
-            continue;
-        string adj, suffix;
-        bool penance;
-        if (bad_attack(mon, adj, suffix, penance, you.pos()))
-            bad_targets.push_back(mon);
-    }
-
-    if (bad_targets.empty())
-        return false;
-
-    const monster* ex_mon = bad_targets.back();
-    string adj, suffix;
-    bool penance;
-    bad_attack(ex_mon, adj, suffix, penance, you.pos());
-    const string and_more = bad_targets.size() > 1 ?
-            make_stringf(" (and %zu other bad targets)",
-                         bad_targets.size() - 1) : "";
-    const string prompt = make_stringf("%s might hit %s%s. Cast it anyway?",
-                                       spell_title(spell),
-                                       ex_mon->name(DESC_THE).c_str(),
-                                       and_more.c_str());
-    if (!yesno(prompt.c_str(), false, 'n'))
-    {
-        canned_msg(MSG_OK);
-        return true;
-    }
-    return false;
-}
-
 spret cast_chain_lightning(int pow, const actor &caster, bool fail)
 {
     if (caster.is_player()

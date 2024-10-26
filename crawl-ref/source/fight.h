@@ -105,6 +105,11 @@ bool stop_summoning_prompt(resists_t resists = MR_NO_FLAGS,
                            monclass_flags_t flags = M_NO_FLAGS,
                            string verb = "summon");
 
+bool warn_about_bad_targets(spell_type spell, vector<coord_def> targets,
+                            function<bool(const monster& mon)> should_ignore = nullptr);
+bool warn_about_bad_targets(const char* source_name, vector<coord_def> targets,
+                            function<bool(const monster&)> should_ignore = nullptr);
+
 bool can_reach_attack_between(coord_def source, coord_def target,
                               reach_type range);
 dice_def spines_damage(monster_type mon);

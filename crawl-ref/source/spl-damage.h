@@ -176,5 +176,3 @@ void fire_fusillade();
 
 spret cast_grave_claw(actor& caster, coord_def targ, int pow, bool fail);
 void gain_grave_claw_soul(bool silent = false, bool wizard = false);
-
-bool warn_about_bad_targets(spell_type spell, vector<coord_def> targets);
