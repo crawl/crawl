@@ -230,12 +230,14 @@ bool EquipOffDelay::try_interrupt(bool force)
 bool AscendingStairsDelay::try_interrupt(bool /*force*/)
 {
     mpr("You stop ascending the stairs.");
+    untag_followers();
     return true;  // short... and probably what people want
 }
 
 bool DescendingStairsDelay::try_interrupt(bool /*force*/)
 {
     mpr("You stop descending the stairs.");
+    untag_followers();
     return true;  // short... and probably what people want
 }
 
