@@ -1462,6 +1462,22 @@ def process_cplusplus_file(filename):
                     # this function adds a prefix to the message parameter
                     # this script will add it when extracting the message at the point of call (see above)
                     continue
+            elif filename == 'mon-cast.cc':
+                if section == '_cast_cantrip' and string.startswith(' '):
+                    # these are passed to simple_monster_message()
+                    string = "%s" + string
+                elif section in ['_speech_keys', '_speech_message']:
+                    # these are just keys for getSpeakString()
+                    continue
+                elif section in ['_speech_fill_target', 'mons_cast_noise']:
+                    # filling params for speech strings, but we don't want to directly translate
+                    # the prepositions (it's handled in monspeak.txt)
+                    if 'target' not in line:
+                        continue
+                    if string == "nothing" or string.upper() == string:
+                        # dummy placeholder
+                        continue
+                    
             elif filename == 'mon-util.cc' and section in ['ugly_colour_names', 'drac_colour_names']:
                 # adjectives
                 string += ' '

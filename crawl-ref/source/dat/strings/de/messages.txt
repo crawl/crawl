@@ -8970,34 +8970,35 @@ In die Enge getrieben, wendet sich @the_monster@ dem Kampf zu!
 ##################
 %%%%
 %s invokes %s protection!
-
+%s ruft %s Schutz auf!
 %%%%
+# params: 1. monster name 2. reflexive pronoun
 %s liquefies the ground around %s!
 %s verflüssigt den Boden um sich herum!
 %%%%
 %s casts a cantrip, but nothing happens.
-
+%s wirkt einen Zaubertrick, aber es passiert nichts.
 %%%%
 %s begins to cast a cantrip, but forgets the words!
-
+%s beginnt, einen Zaubertrick zu wirken, vergisst aber die Worte!
 %%%%
 %s miscasts a cantrip.
-
+%s führt einen Zaubertrick falsch aus.
 %%%%
 %s looks braver for a moment.
-
+%s sieht einen Moment lang mutiger aus.
 %%%%
 %s looks encouraged for a moment.
-
+%s sieht einen Moment lang ermutigt aus.
 %%%%
 %s looks satisfied for a moment.
-
+%s sieht einen Moment lang zufrieden aus.
 %%%%
 %s prays to %s, and fills with unholy energy.
-
+%s betet zu {dat}%s und füllt sich mit unheiliger Energie.
 %%%%
 %s is smitten.
-
+%s wird geschlagen.
 %%%%
 Roots burst forth from the earth!
 Wurzeln brachen aus der Erde hervor!
@@ -9027,67 +9028,68 @@ You are pushed out of the doorway!
 Ihr werdet aus der Tür geschoben!
 %%%%
 The queen bee calls on %s to defend her!
-Die Bienenkönigin ruft %s auf, sie zu verteidigen!
+Die Bienenkönigin ruft {acc}%s auf, sie zu verteidigen!
 %%%%
 %s goads %s on!
-%s stachelt %s an!
+%s stachelt {acc}%s an!
 %%%%
 Sorry, this spell isn't supported for dummies!
-Sorry, dieser Zauber wird für Dummies nicht unterstützt!
+Sorry, dieser Zauber wird für Dummköpfe nicht unterstützt!
 %%%%
 Vines fly forth from the trees!
 Weinreben fliegen von den Bäumen hervor!
 %%%%
 Thorny briars emerge from the ground!
-Dornige Briars tauchen aus dem Boden auf!
+Dornensträucher tauchen aus dem Boden auf!
 %%%%
 %s begins absorbing vital energies!
-
+%s beginnt, vitale Energien zu absorbieren!
 %%%%
 %s is empowered by %s aura!
-%s wird durch%s Aura gestärkt!
+%s wird durch %s Aura gestärkt!
 %%%%
 %s animating energy erupts into ghostly fire!
 %s animierende Energie bricht in gespenstisches Feuer aus!
 %%%%
 %s begins to cast a spell, but is stunned by your conviction!
-
+%s beginnt zu zaubern, wird aber von Eurer Überzeugung betäubt!
 %%%%
 %s begins to pray, but is stunned by your conviction!
-
+%s beginnt zu beten, wird aber von Eurer Überzeugung betäubt!
 %%%%
 %s begins to attack, but is stunned by your conviction!
-
+%s beginnt anzugreifen, wird aber von Eurer Überzeugung betäubt!
 %%%%
 %s protects your fellow warrior from evil magic!
-
+%s schützt Euren Mitstreiter vor böser Magie!
 %%%%
 %s shields your ally from puny magic!
-
+%s schützt Euren Verbündeten vor mickriger Magie!
 %%%%
 Zin's power protects your fellow warrior from evil magic!
 Zins Macht schützt Euren Mitkrieger vor böser Magie!
 %%%%
 Send 'em back where they came from!
-Schick sie zurück, wo sie herkommen!
+Schickt sie dorthin zurück, wo sie hergekommen sind!
 %%%%
 %s is frozen
 %s wird eingefroren
 %%%%
 %s attempts to bespell you!
-
+%s versucht, Euch zu verzaubern!
 %%%%
+# params: 1. monster name 2. his/her/its/their
 %s draws you further into %s thrall.
 %s zieht Euch weiter in die Verzauberung.
 %%%%
 %s radiates an aura of fear!
-
+%s strahlt eine Aura der Angst aus!
 %%%%
 An aura of fear fills the air!
 Eine Aura der Angst erfüllt die Luft!
 %%%%
 %s blinks into view!
-
+%s blinzelt in Sicht!
 %%%%
 Terrible wounds spread across more of %s body!
 Schreckliche Wunden breiten sich über mehr %s Körper aus!
@@ -9096,73 +9098,73 @@ Terrible wounds open up all over %s body!
 Schreckliche Wunden öffnen sich am ganzen Körper %s!
 %%%%
 A blast of power from the earth strikes %s!
-
+Ein Energiestoß aus der Erde trifft {acc}%s!
 %%%%
 A blast of power from the earth and the adjacent constructs strikes %s!
-
+Ein Energiestoß aus der Erde und den angrenzenden Konstrukten trifft {acc}%s!
 %%%%
 A blast of power from the earth and %s strikes %s!
-
+Ein Energiestoß aus der Erde und {dat}%s {acc}%s!
 %%%%
 You are overwhelmed by glittering dream dust!
-
+Ihr werdet von glitzerndem Traumstaub überwältigt!
 %%%%
 The dream sheep are wreathed in dream dust.
-
+Die Traumschafe sind von Traumstaub umhüllt.
 %%%%
 The dream sheep shakes its wool and sparkles.
-
+Das Traumschaf schüttelt seine Wolle und funkelt.
 %%%%
 The dream sheep shake their wool and sparkle.
-
+Die Traumschafe schütteln ihre Wolle und funkeln.
 %%%%
 The dream sheep ruffles its wool and motes of dream dust sparkle, to no effect.
-
+Das Traumschaf kräuselt seine Wolle, und Traumstaubpartikel glitzern, ohne dass es etwas bewirkt.
 %%%%
 The dream sheep ruffle their wool and motes of dream dust sparkle, to no effect.
-
+Die Traumschafe kräuseln ihre Wolle, und Traumstaubpartikel glitzern, ohne dass es etwas bewirkt.
 %%%%
 As the sheep sparkles and sways, %s falls asleep.
-
+Während das Schaf funkelt und sich wiegt, schläft %s ein.
 %%%%
 As the sheep sparkle and sway, %s falls asleep.
-
+Während die Schafe funkeln und sich wiegen, schläft %s ein.
 %%%%
 The dream sheep attempts to lull %s to sleep.
-
+Das Traumschaf versucht, {acc}%s in den Schlaf zu wiegen.
 %%%%
 The dream sheep attempt to lull %s to sleep.
-
+Die Traumschafe versuchen, {acc}%s in den Schlaf zu wiegen.
 %%%%
 " You feel drowsy..."
-
+" Ihr fühlt Euch schläfrig..."
 %%%%
 A freezing vortex appears around %s!
-
+Ein Gefrierwirbel erscheint um {acc}%s herum!
 %%%%
 A freezing vortex appears and lifts %s up!
-
+Ein Gefrierwirbel erscheint und hebt {acc}%s hoch!
 %%%%
 A freezing vortex appears out of thin air!
-
+Ein Gefrierwirbel erscheint aus dem Nichts!
 %%%%
 The water rises up and strikes you
-
+Das Wasser steigt auf und schlägt Euch
 %%%%
 The water swirls and strikes you
-
+Das Wasser wirbelt und schlägt Euch
 %%%%
 The water rises up and strikes %s
-
+Das Wasser steigt auf und schlägt {acc}%s
 %%%%
 The water swirls and strikes %s
-
+Das Wasser wirbelt und schlägt {acc}%s
 %%%%
 The air twists around and violently strikes you in flight
-
+Die Luft wirbelt herum und schlägt heftig auf Euch im Flug ein
 %%%%
 The air twists around and strikes you
-
+Die Luft wirbelt herum und schlägt heftig auf Euch ein
 %%%%
 The air twists around and strikes %s%s
 Die Luft wirbelt herum und trifft auf {acc}%s%s
@@ -9177,7 +9179,7 @@ Orcish apparitions take form around you.
 Orkische Erscheinungen nehmen um Euch herum Gestalt an.
 %%%%
 %s is surrounded by Orcish apparitions.
-
+%s ist von orkischen Erscheinungen umgeben.
 %%%%
 You feel haunted.
 Ihr fühlt Euch verfolgt.
@@ -9186,22 +9188,22 @@ You sense an evil presence.
 Ihr spürt eine böse Präsenz.
 %%%%
 %s puts on a burst of speed!
-
+%s legt einen Geschwindigkeitsschub hin!
 %%%%
 %s's surroundings become eerily quiet.
-
+Die Umgebung von {dat}%s wird unheimlich still.
 %%%%
 %s sings a water chant to call the tide!
-
+%s singt einen Wassergesang, um die Flut zu rufen!
 %%%%
 %s squirts a massive cloud of ink into the water!
-
+%s spritzt eine riesige Tintenwolke ins Wasser!
 %%%%
 %s shimmers and seems to become two!
-
+%s schimmert und scheint zwei zu werden!
 %%%%
 %s shimmers and seems to become three!
-
+%s schimmert und scheint drei zu werden!
 %%%%
 Walls emerge from the floor!
 Wände tauchen aus dem Boden auf!
@@ -9210,73 +9212,73 @@ Wände tauchen aus dem Boden auf!
 %s befiehlt dem Wald anzugreifen, aber es passiert nichts.
 %%%%
 The forest starts to sway and rumble!
-
+Der Wald beginnt zu schwanken und zu rumpeln!
 %%%%
 An electric hum fills the air.
 Ein elektrisches Summen erfüllt die Luft.
 %%%%
 %s begins to accept the injuries of allies.
-
+%s beginnt, die Verletzungen von Verbündeten zu akzeptieren.
 %%%%
 %s radiates an aura of cold.
-
+%s strahlt eine Aura der Kälte aus.
 %%%%
 A wave of cold passes over you.
 Eine Kältewelle zieht über Euch.
 %%%%
 %s begins repelling missiles!
-
+%s beginnt, Geschosse abzuwehren!
 %%%%
 %s channels a blast of cleansing flame!
-
+%s kanalisiert einen reinigenden Flammenstrahl!
 %%%%
 %s begins emitting a brilliant aura!
-
+%s beginnt eine leuchtende Aura auszustrahlen!
 %%%%
 %s binds the souls of nearby monsters.
-
+%s bindet die Seelen von Monstern in der Nähe.
 %%%%
 %s curls into a ball and begins rolling!
-
+%s rollt sich zu einem Ball zusammen und beginnt zu rollen!
 %%%%
 thin air
-
+{f}dünne Luft
 %%%%
 %s throws %s at %s!
-
+%s wirft {acc}%s auf {acc}%s!
 %%%%
 %s throws %s out of sight!
-
+%s wirft {acc}%s außer Sichtweite!
 %%%%
 %s unleashes a terrible howl, and it begins to echo in your mind!
-
+%s stößt ein schreckliches Heulen aus, das in Eurem Kopf widerhallt!
 %%%%
 %s unleashes a silent howl, and it begins to echo in your mind!
-
+%s stößt ein stilles Heulen aus, das in EUrem Kopf widerhallt!
 %%%%
 Some walls begin to move on their own!
-
+Manche Wände beginnen sich von selbst zu bewegen!
 %%%%
 Some walls crumble away!
-
+Manche Wände bröckeln weg!
 %%%%
 You hear rumbling.
-
+Ihr hör Rumpeln.
 %%%%
 %s chants its luring song.
-
+%s singt sein verlockendes Lied.
 %%%%
 %s chants a haunting song.
-
+%s singt ein eindringliches Lied.
 %%%%
 You hear a luring song.
-
+Ihr hört ein verlockendes Lied.
 %%%%
 You hear a haunting song.
-
+Sie hören ein eindringliches Lied.
 %%%%
 You hear an eerie melody.
-
+Ihr hört eine unheimliche Melodie.
 %%%%
 
 ##################
