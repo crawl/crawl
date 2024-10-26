@@ -9289,7 +9289,7 @@ Ihr hört eine unheimliche Melodie.
 %s scheint aus sich herauszugehen.
 %%%%
 %s seems to draw %s out of %s!
-%s scheint %s aus sich selbst heraus zu ziehen!
+%s scheint {acc}%s aus sich selbst heraus zu ziehen!
 %%%%
 Suddenly you stand beside yourself.
 Plötzlich steht Ihr neben Euch.
