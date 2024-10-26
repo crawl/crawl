@@ -41,19 +41,46 @@ static string _localise_string(const string context, const string& value);
 static string _localise_list(const string context, const string& value);
 static string _localise_player_species_job(const string& s);
 
-static bool _is_integer(const string& s)
+// is this string a whole number (i.e. only digits)
+static bool _is_whole_number(const char *s)
 {
-    if (s.empty())
+    if (s == nullptr || s[0] == '\0')
         return false;
 
-    for (size_t i = 0; i < s.length(); i++)
+    size_t i = 0;
+    while (s[i] != '\0')
     {
-        if (i == 0 && (s[i] == '+' || s[i] == '-'))
-            continue;
-        else if (!isdigit(s[i]))
+        // note: isdigit() can be affected by locale
+        if (s[i] < '0' || s[i] > '9')
             return false;
+        i++;
     }
+
     return true;
+}
+
+// is this string a whole number (i.e. only digits)
+static bool _is_whole_number(const string& s)
+{
+    return _is_whole_number(s.c_str());
+}
+
+// is this the string representation of an integer?
+static bool _is_integer(const char* s)
+{
+    if (s == nullptr || s[0] == '\0')
+        return false;
+
+    if (s[0] == '+' || s[0] == '-')
+        return _is_whole_number(&s[1]);
+    else
+        return _is_whole_number(s);
+}
+
+// is this the string representation of an integer?
+static bool _is_integer(const string& s)
+{
+    return _is_integer(s.c_str());
 }
 
 
@@ -279,22 +306,6 @@ static string _strip_menu_id(const string& s, string& id)
 }
 
 /*
- * Is this a count (natural number)?
- */
-static bool _is_count(const string& s)
-{
-    for (size_t i = 0; i < s.length(); i++)
-    {
-        char ch = s[i];
-        // note: isdigit() can be affected by locale
-        if (ch < '0' || ch > '9')
-            return false;
-    }
-
-    return !s.empty();
-}
-
-/*
  * Does it start with a count (number followed by space)
  */
 static bool _starts_with_count(const string& s)
@@ -346,7 +357,7 @@ static bool _is_determiner(const string& word)
     {
         return true;
     }
-    else if (_is_count(lower))
+    else if (_is_whole_number(lower))
         return true;
 
     return false;
@@ -1785,7 +1796,7 @@ static string _localise_string(const string context, const string& value)
     // then there's no point wasting any more time - just use the English one
     if (is_list_separator(value))
         return value;
-    
+
     // try splitting on colon
     size_t colon_pos;
     if ((colon_pos = value.find(':')) != string::npos)
