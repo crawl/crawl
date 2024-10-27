@@ -1012,7 +1012,7 @@ Vernichter
 # Hexes
 %%%%
 Vexing
-Verhexer
+Ärgerlicher
 %%%%
 Jinx
 Jinx

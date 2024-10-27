@@ -1017,7 +1017,7 @@ der Vernichter
 # Hexes
 %%%%
 the Vexing
-der Verhexer
+der Ärgerliche
 %%%%
 the Jinx
 der Jinx
