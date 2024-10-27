@@ -1397,14 +1397,20 @@ static void _mons_indicate_level_exit(const monster* mon)
     else if (feat_is_travelable_stair(feat))
     {
         command_type dir = feat_stair_direction(feat);
-        string msg;
-        if (dir == CMD_GO_UPSTAIRS)
-            msg = "%s goes up the stairs.";
-        else if (dir == CMD_GO_DOWNSTAIRS)
-            msg = "%s goes down the stairs.";
+        if (feat_is_escape_hatch(feat))
+        {
+            if (dir == CMD_GO_UPSTAIRS)
+                simple_monster_message(*mon, " goes up the escape hatch.");
+            else
+                simple_monster_message(*mon, " goes down the escape hatch.");
+        }
         else
-            msg = "%s takes the escape hatch.";
-        simple_monster_message(*mon, msg.c_str());
+        {
+            if (dir == CMD_GO_UPSTAIRS)
+                simple_monster_message(*mon, " goes up the stairs.");
+            else
+                simple_monster_message(*mon, " goes down the stairs.");
+        }
     }
     else if (is_shaft)
     {

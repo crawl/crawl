@@ -8949,14 +8949,17 @@ In die Enge getrieben, wendet sich @the_monster@ dem Kampf zu!
 %s passes through the gate.
 %s geht durch das Tor.
 %%%%
+%s goes up the escape hatch.
+%s geht nach oben durch die Fluchtluke.
+%%%%
+%s goes down the escape hatch.
+%s geht nach unten durch die Fluchtluke.
+%%%%
 %s goes up the stairs.
 %s geht die Treppe hinauf.
 %%%%
 %s goes down the stairs.
 %s geht die Treppe hinunter.
-%%%%
-%s takes the escape hatch.
-%s nimmt die Fluchtluke.
 %%%%
 %s goes down the shaft.
 %s geht den Schacht hinunter.
