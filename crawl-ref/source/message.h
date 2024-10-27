@@ -36,7 +36,7 @@ bool simple_monster_message(const monster& mons, const char *event,
                             msg_channel_type channel = MSGCH_PLAIN,
                             int param = 0,
                             description_level_type descrip = DESC_THE);
-
+bool complex_monster_message(const monster& mons, PRINTF(1, ));
 string god_speaker(god_type which_deity = you.religion);
 void simple_god_message(const char *event, god_type which_deity = you.religion);
 void wu_jian_sifu_message(const char *event);

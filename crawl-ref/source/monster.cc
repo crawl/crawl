@@ -823,11 +823,9 @@ bool monster::likes_wand(const item_def &item) const
 
 void monster::equip_weapon_message(item_def &item)
 {
-    const string str = localise("%s wields %s.", this->name(DESC_THE),
-                                item.name(DESC_A, false, false, true,
-                                          ISFLAG_CURSED));
-
-    simple_monster_message(*this, str.c_str());
+    string item_name = item.name(DESC_A, false, false, true, ISFLAG_CURSED);
+    complex_monster_message(*this, "%s wields %s.",
+                            this->name(DESC_THE).c_str(), item_name.c_str());
 
     const int brand = get_weapon_brand(item);
 
@@ -921,18 +919,17 @@ int monster::armour_bonus(const item_def &item, bool calc_unid) const
 
 void monster::equip_armour_message(item_def &item)
 {
-    string str = localise("%s wears %s.", this->name(DESC_THE),
-                          item.name(DESC_A));
-    simple_monster_message(*this, str.c_str());
+    complex_monster_message(*this, "%s wears %s.", this->name(DESC_THE).c_str(),
+                            item.name(DESC_A).c_str());
 }
 
 void monster::equip_jewellery_message(item_def &item)
 {
     ASSERT(item.base_type == OBJ_JEWELLERY);
 
-    string str = localise("%s puts on %s.", this->name(DESC_THE),
-                          item.name(DESC_A));
-    simple_monster_message(*this, str.c_str());
+    complex_monster_message(*this, "%s puts on %s.",
+                            this->name(DESC_THE).c_str(),
+                            item.name(DESC_A).c_str());
 }
 
 void monster::equip_message(item_def &item)
@@ -962,8 +959,7 @@ void monster::unequip_weapon(item_def &item, bool msg)
     if (msg)
     {
         string obj = item.name(DESC_A, false, false, true, ISFLAG_CURSED);
-        string str = localise("%s unwields %s.", name(DESC_THE), obj);
-        msg = simple_monster_message(*this, str.c_str());
+        mprf("%s unwields %s.", name(DESC_THE).c_str(), obj.c_str());
     }
 
     const int brand = get_weapon_brand(item);
@@ -1013,9 +1009,9 @@ void monster::unequip_armour(item_def &item, bool msg)
 {
     if (msg)
     {
-        const string str = localise("%s takes off %s.", name(DESC_THE),
-                                    item.name(DESC_A));
-        simple_monster_message(*this, str.c_str());
+        complex_monster_message(*this, "%s takes off %s.",
+                                name(DESC_THE).c_str(),
+                                item.name(DESC_A).c_str());
     }
 }
 
@@ -1025,9 +1021,9 @@ void monster::unequip_jewellery(item_def &item, bool msg)
 
     if (msg)
     {
-        const string str = localise("%s removes %s.", name(DESC_THE),
-                                    item.name(DESC_A));
-        simple_monster_message(*this, str.c_str());
+        complex_monster_message(*this, "%s removes %s.",
+                                name(DESC_THE).c_str(),
+                                item.name(DESC_A).c_str());
     }
 }
 
@@ -2210,7 +2206,6 @@ bool monster::has_base_name() const
     return !mname.empty() && !ghost;
 }
 
-// @noloc section start
 static string _invalid_monster_str(monster_type type)
 {
     string str = "INVALID MONSTER ";
@@ -2263,7 +2258,6 @@ static string _invalid_monster_str(monster_type type)
 
     return str;
 }
-// @noloc section end
 
 static string _mon_special_name(const monster& mon, description_level_type desc,
                                 bool force_seen)
@@ -2275,7 +2269,7 @@ static string _mon_special_name(const monster& mon, description_level_type desc,
                                      && mon.submerged();
 
     if (mon.type == MONS_NO_MONSTER)
-        return "DEAD_MONSTER";
+        return "DEAD MONSTER";
     else if (mon.mid == MID_YOU_FAULTLESS)
         return "INVALID YOU_FAULTLESS";
     else if (invalid_monster_type(mon.type) && mon.type != MONS_PROGRAM_BUG)
@@ -2476,7 +2470,7 @@ string monster::hand_name(bool plural, bool *can_plural) const
         break;
 
     case MON_SHAPE_BUGGY:
-        str = "handbug"; // @noloc
+        str = "handbug";
         break;
     }
 
@@ -2603,7 +2597,7 @@ string monster::foot_name(bool plural, bool *can_plural) const
         break;
 
     case MON_SHAPE_BUGGY:
-        str = "footbug"; // @noloc
+        str = "footbug";
         break;
     }
 
@@ -5624,8 +5618,8 @@ bool monster::do_shaft()
     if (!pacified() && !mons_is_conjured(type))
         set_transit(lev);
 
-    string msg = ground_level() ? "%s falls through a shaft!"
-                                : "%s is sucked into a shaft!";
+    string msg = ground_level() ? " falls through a shaft!"
+                                : " is sucked into a shaft!";
 
     const bool reveal = simple_monster_message(*this, msg.c_str());
 
@@ -5954,8 +5948,8 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                     mpr("Your spectral weapon shares its damage with you!");
                 else if (owner->alive() && you.can_see(*owner))
                 {
-                    string buf = "%s shares the spectral weapon's damage!";
-                    simple_monster_message(*owner->as_monster(), buf.c_str());
+                    simple_monster_message(*owner->as_monster(), " shares the "
+                                           "spectral weapon's damage!");
                 }
 
                 // Share damage using a fineff, so that it's non-fatal
@@ -6124,8 +6118,8 @@ void monster::steal_item_from_player()
         string msg = getSpeakString("Maurice confused nonstealing");
         if (!msg.empty() && msg != "__NONE")
         {
-            msg = replace_all(msg, "@The_monster@", name(DESC_THE));
-            mprf(MSGCH_TALK, "%s", msg.c_str());
+            msg = replace_all(msg, "@The_monster@", localise(name(DESC_THE)));
+            mprf_nolocalise(MSGCH_TALK, "%s", msg.c_str());
         }
         return;
     }
@@ -6196,8 +6190,8 @@ void monster::steal_item_from_player()
             if (!complaint.empty())
             {
                 complaint = replace_all(complaint, "@The_monster@",
-                                        name(DESC_THE));
-                mprf(MSGCH_TALK, "%s", complaint.c_str());
+                                        localise(name(DESC_THE)));
+                mprf_nolocalise(MSGCH_TALK, "%s", complaint.c_str());
             }
 
             bolt beem;
@@ -6479,13 +6473,15 @@ bool monster::has_usable_tentacle() const
 }
 
 // Move the monster to the nearest valid space.
-bool monster::shove(const char* /*feat_name*/)
+bool monster::shove(const char* feat_name)
 {
     for (distance_iterator di(pos()); di; ++di)
         if (monster_space_valid(this, *di, false))
         {
             move_to_pos(*di);
-            simple_monster_message(*this, " is pushed out of the way.");
+            complex_monster_message(*this, "%s is pushed out of %s.",
+                                    this->name(DESC_THE).c_str(),
+                                    article_the(feat_name).c_str());
             dprf("Moved to (%d, %d).", pos().x, pos().y);
 
             return true;

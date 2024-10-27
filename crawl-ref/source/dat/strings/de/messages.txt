@@ -10139,14 +10139,15 @@ Das Aussehen der Waffe verzerrt für einen Moment.
 It is briefly surrounded by a scintillating aura of random colours.
 Die Waffe ist kurzzeitig von einer schillernden Aura aus zufälligen Farben umgeben.
 %%%%
+# <its> <hand(s)> briefly pass(es) through it before <it> manage(s) to get a firm grip on it.
 %s %s briefly %s through it before %s %s to get a firm grip on it.
 Die Hand des Monsters geht kurz durch die Waffe, bevor es sie fest in den Griff bekommt.
 %%%%
 pass
-
+gehen
 %%%%
 manage
-
+bewältigen
 %%%%
 It is briefly surrounded by shifting shadows.
 Die Waffe ist kurz von wechselnden Schatten umgeben.
@@ -10186,7 +10187,7 @@ Die Waffe hört auf, von Gift zu tropfen.
 %s nimmt {acc}%s ab.
 %%%%
 %s picks up %s.
-%s nimmt %s auf.
+%s nimmt {acc}%s auf.
 %%%%
 some gold
 etwas Gold
@@ -10305,8 +10306,8 @@ Der Spriggan fällt von seinem nun toten Reittier.
 %s steals %s!
 %s stiehlt {acc}%s!
 %%%%
-%s is pushed out of the way.
-%s wird zur Seite geschoben.
+%s is pushed out of %s.
+%s wird aus {dat}%s geschoben.
 %%%%
 
 ##################

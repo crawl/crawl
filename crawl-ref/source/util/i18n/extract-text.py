@@ -37,7 +37,7 @@ IGNORE_STRINGS = [
     'you', 'you ', 'your', 'your ', 'its ',
     ' of ', ' of', 'of ',
     'debugging ray', 'debug', 'bugger',
-    'bug', 'null', 'invalid',
+    'bug', 'null', 'invalid', 'DEAD MONSTER',
     'true', 'false', 'veto',
     'You hear the sound of one hand!',
     # property keys
@@ -1407,7 +1407,8 @@ def process_cplusplus_file(filename):
                 if 'simple_god_message' in line or 'simple_monster_message' in line \
                   or '_spell_retribution' in line \
                   or (filename == 'mon-cast.cc' and section == '_cast_cantrip') \
-                  or (filename == 'mon-death.cc' and section == 'monster_die'):
+                  or (filename == 'mon-death.cc' and section == 'monster_die') \
+                  or (filename == 'monster.cc' and section == 'monster::do_shaft'):
                     string = '%s' + string
 
             if 'wu_jian_sifu_message' in line:
@@ -1484,6 +1485,10 @@ def process_cplusplus_file(filename):
                     continue
                 elif section == '_killer_type_name':
                     # internal keys
+                    continue
+            elif filename == 'monster.cc':
+                if section == '_invalid_monster_str':
+                    # debugging stuff
                     continue
             elif filename == 'mon-util.cc' and section in ['ugly_colour_names', 'drac_colour_names']:
                 # adjectives

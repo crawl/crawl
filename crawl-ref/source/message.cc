@@ -2198,6 +2198,21 @@ bool simple_monster_message(const monster& mons, const char *event,
     return false;
 }
 
+bool complex_monster_message(const monster& mons, const char *format, ...)
+{
+    if (!you.see_cell(mons.pos()) || !mons.visible_to(&you))
+        return false;
+
+    msg_channel_type channel = mons.wont_attack() ? MSGCH_FRIEND_ACTION
+                                                  : MSGCH_PLAIN;
+
+    va_list argp;
+    va_start(argp, format);
+    mprf(channel, 0, format, argp);
+    va_end(argp);
+    return true;
+}
+
 string god_speaker(god_type which_deity)
 {
     // i18n: Avoid capitalising here to avoid the necessity for yet another
