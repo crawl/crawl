@@ -1406,6 +1406,7 @@ def process_cplusplus_file(filename):
             if string.startswith(" ") or string.startswith("'"):
                 if 'simple_god_message' in line or 'simple_monster_message' in line \
                   or '_spell_retribution' in line \
+                  or (filename == 'mon-abil.cc' and section == 'ugly_thing_mutate') \
                   or (filename == 'mon-cast.cc' and section == '_cast_cantrip') \
                   or (filename == 'mon-death.cc' and section == 'monster_die') \
                   or (filename == 'monster.cc' and section == 'monster::do_shaft'):
