@@ -9819,25 +9819,25 @@ Die Winde um {acc}%s beruhigen sich.
 ##################
 %%%%
 You hear an otherworldly crackling!
-
+Ihr hört ein unheimliches Knistern!
 %%%%
 You hear an high-pitched explosion!
-
+Ihr hört eine hellklingende Explosion!
 %%%%
 By Zin's power, %s torment is averted.
-
+Durch Zins Macht wird %s Qualen abgewendet.
 %%%%
 By Zin's power, %s fires are quelled.
-
+Durch Zins Kraft werden %s Brände gelöscht.
 %%%%
 By Zin's power, %s explosion is contained.
-
+Durch Zins Kraft ist %s Explosion eingedämmt.
 %%%%
 %s blazes out!
 %s lodert aus!
 %%%%
 By Zin's power, the fiery explosion is contained.
-
+Durch die Kraft von Zin wird die feurige Explosion eingedämmt.
 %%%%
 
 ##################
