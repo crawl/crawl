@@ -303,12 +303,8 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
                     adj = "charmed ";
                 else
                     adj = "bribed ";
-                // For the moment, we only add the adjective if language is English.
-                // TODO: i18n: Handle the adjective in other languages
-                if (localisation_active())
-                    mon_name = string("the ") + mon_name;
-                else
-                    mon_name = string("the ") + adj + mon_name;
+
+                mon_name = string("the ") + adj + mon_name;
 
                 if (friendly())
                     mprf("You detect %s.", mon_name.c_str());
@@ -655,15 +651,15 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                 if (me.ench == ENCH_CHARM && props.exists("charmed_demon"))
                 {
                     simple_monster_message(*this,
-                                           "%s breaks free of your control!");
+                                           " breaks free of your control!");
                 }
                 else
                     simple_monster_message(*this,
                                         me.ench == ENCH_CHARM
-                                        ? "%s is no longer charmed."
+                                        ? " is no longer charmed."
                                         : me.ench == ENCH_HEXED
-                                        ? "%s is no longer hexed."
-                                        : "%s is no longer bribed.");
+                                        ? " is no longer hexed."
+                                        : " is no longer bribed.");
             }
 
         }
@@ -799,7 +795,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         if (!quiet)
         {
             simple_monster_message(*this,
-                                   "%s's soul is no longer ripe for the taking.");
+                                   "'s soul is no longer ripe for the taking.");
         }
         break;
 
@@ -1586,9 +1582,8 @@ void monster::apply_enchantment(const mon_enchant &me)
                         mprf("%s melts away.", name(DESC_THE, false).c_str());
                         break;
                     default:
-                        mprf("A nearby %s withers and dies.",
-                             name(DESC_PLAIN, false).c_str());
-                        break;
+                        string what = "nearby " + name(DESC_PLAIN, false);
+                        mprf("%s withers and dies.", article_a(what).c_str());
 
                 }
             }
@@ -1862,10 +1857,7 @@ void monster::apply_enchantment(const mon_enchant &me)
 
     case ENCH_PAIN_BOND:
         if (decay_enchantment(en))
-        {
-            const string msg = "%s is no longer sharing pain.";
-            simple_monster_message(*this, msg.c_str());
-        }
+            simple_monster_message(*this, " is no longer sharing pain.");
         break;
 
     default:

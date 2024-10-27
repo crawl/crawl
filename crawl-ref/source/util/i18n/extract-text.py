@@ -1403,10 +1403,14 @@ def process_cplusplus_file(filename):
                         continue
 
             # simple_god/monster_message may contain an implied %s
-            if 'simple_god_message' in line or 'simple_monster_message' in line or '_spell_retribution' in line:
-                if string != "" and (string[0] == " " or string[0] == "'"):
+            if string.startswith(" ") or string.startswith("'"):
+                if 'simple_god_message' in line or 'simple_monster_message' in line \
+                  or '_spell_retribution' in line \
+                  or (filename == 'mon-cast.cc' and section == '_cast_cantrip') \
+                  or (filename == 'mon-death.cc' and section == 'monster_die'):
                     string = '%s' + string
-            elif 'wu_jian_sifu_message' in line:
+
+            if 'wu_jian_sifu_message' in line:
                 # this function adds a prefix to the message parameter
                 string = 'Sifu %s' + string
             elif '3rd_person_message' in line:
@@ -1463,10 +1467,7 @@ def process_cplusplus_file(filename):
                     # this script will add it when extracting the message at the point of call (see above)
                     continue
             elif filename == 'mon-cast.cc':
-                if section == '_cast_cantrip' and string.startswith(' '):
-                    # these are passed to simple_monster_message()
-                    string = "%s" + string
-                elif section in ['_speech_keys', '_speech_message']:
+                if section in ['_speech_keys', '_speech_message']:
                     # these are just keys for getSpeakString()
                     continue
                 elif section in ['_speech_fill_target', 'mons_cast_noise']:
@@ -1484,9 +1485,6 @@ def process_cplusplus_file(filename):
                 elif section == '_killer_type_name':
                     # internal keys
                     continue
-                elif section == 'monster_die' and string.startswith(' '):
-                    # simple_monster_message
-                    string = "%s" + string
             elif filename == 'mon-util.cc' and section in ['ugly_colour_names', 'drac_colour_names']:
                 # adjectives
                 string += ' '

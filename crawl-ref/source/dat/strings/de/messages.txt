@@ -1709,7 +1709,7 @@ Die Wunden {gen}%s heilen von selbst!
 %s wirkt plötzlich widerstandsfähiger.
 %%%%
 %s is infested!
-%s ist verseucht!
+%s ist befallen!
 %%%%
 %s seems to grow toxic.
 %s scheint giftig zu werden.
@@ -9563,253 +9563,255 @@ Nicht mehr unter Kirkes Bann, die Schweine nehmen wieder ihre ursprüngliche For
 ##################
 %%%%
 You detect %s.
-
+Ihr spürt {acc}%s.
 %%%%
 You can no longer detect %s.
-
+Ihr könnt {acc}%s nicht mehr spüren.
 %%%%
 Zombie hands grab %s.
-
+Zombiehände greifen {acc}%s.
 %%%%
 Roots grab %s.
-
+Wurzeln greifen {acc}%s.
 %%%%
 %s is no longer moving quickly.
-
+%s bewegt sich nicht mehr schnell.
 %%%%
 %s becomes audible again.
-
+%s wird wieder hörbar.
 %%%%
 As %s is destroyed, the sound returns.
-
+Als %s zerstört wird, kehrt das Geräusch zurück.
 %%%%
 As %s dies, the sound returns.
-
+Als %s stirbt, kehrt das Geräusch zurück.
 %%%%
 %s no longer looks unusually strong.
-
+%s sieht nicht mehr ungewöhnlich stark aus.
 %%%%
 %s is no longer moving slowly.
-
+%s bewegt sich nicht mehr langsam.
 %%%%
 %s is no longer paralysed.
-
+%s ist nicht mehr paralysiert.
 %%%%
 %s is no longer petrified.
-
+%s ist nicht mehr versteinert.
 %%%%
 %s stops retreating.
-
+%s hört auf, sich zurückzuziehen.
 %%%%
 %s seems to regain courage.
-
+%s scheint den Mut wieder zu finden.
 %%%%
 %s seems less confused.
-
+%s scheint weniger verwirrt zu sein.
 %%%%
 %s breaks free of your control!
 %s befreit sich von Eurer Kontrolle!
 %%%%
 %s is no longer charmed.
-
+%s ist nicht mehr verzaubert.
 %%%%
 %s is no longer hexed.
-
+%s ist nicht mehr verhext.
 %%%%
 %s is no longer bribed.
-
+%s ist nicht mehr bestochen.
 %%%%
 You can once again detect %s.
-
+Ihr könnt {acc}%s wieder spüren.
 %%%%
 %s stops glowing and disappears.
-%s hört auf zu leuchten und verschwindet.
+%s hört auf zu glühen und verschwindet.
 %%%%
 %s stops burning.
-
+%s hört auf zu brennen.
 %%%%
 %s looks more healthy.
-
+%s sieht gesünder aus.
 %%%%
 %s breaks free.
-
+%s bricht frei.
 %%%%
 %s is no longer berserk.
-
+%s ist nicht mehr berserkert.
 %%%%
 Something invisible bursts forth from the water.
 Etwas Unsichtbares platzt aus dem Wasser.
 %%%%
 %s's soul is no longer ripe for the taking.
-
+Die Seele {gen}%s ist nicht mehr reif für die Übernahme.
 %%%%
 The forest calms down.
-
+Der Wald beruhigt sich.
 %%%%
 %s is no longer liquefying the ground.
-
+%s verflüssigt den Boden nicht mehr.
 %%%%
 %s is no longer dazed.
-
+%s ist nicht mehr benommen.
 %%%%
 %s's inner flame fades away.
-
+Die innere Flamme {gen}%s verblasst.
 %%%%
 %s is no longer mute.
-
+%s ist nicht mehr stumm.
 %%%%
 %s is no longer blind.
-
+%s ist nicht mehr blind.
 %%%%
 %s is no longer stupefied.
-
+%s ist nicht mehr betäubt.
 %%%%
+# note: mad = crazy here
 %s is no longer mad.
-
+%s ist nicht mehr verrückt.
 %%%%
 %s is no longer regenerating.
-
+%s regeneriert sich nicht mehr.
 %%%%
 %s is no longer strong-willed.
-
+%s ist nicht mehr willensstark.
 %%%%
 %s seems to return to a normal shape.
-
+%s scheint wieder eine normale Form anzunehmen.
 %%%%
 %s is no longer weakened.
-
+%s ist nicht mehr geschwächt.
 %%%%
 %s toxic aura wanes.
 %s giftige Aura schwindet.
 %%%%
 %s is no longer more vulnerable to fire.
-
+%s ist nicht mehr anfälliger für Feuer.
 %%%%
 %s is no longer more vulnerable to poison.
-
+%s ist nicht mehr anfälliger für Gift.
 %%%%
 %s icy envelope dissipates!
 %s eisiger Umschlag löst sich auf!
 %%%%
 %s is no longer unusually agile.
-
+%s ist nicht mehr ungewöhnlich agil.
 %%%%
 %s is no longer encased in ice.
-
+%s ist nicht mehr in Eis eingeschlossen.
 %%%%
 %s is no longer absorbing vital energies.
-
+%s absorbiert keine vitalen Energien mehr.
 %%%%
 %s is no longer being sapped.
 %s is nicht mehr ausgelaugt.
 %%%%
 %s is no longer covered in acid.
-
+%s ist nicht mehr mit Säure bedeckt.
 %%%%
 %s is no longer distracted by gold.
-
+%s ist nicht mehr durch Gold abgelenkt.
 %%%%
 %s seems less drained.
-
+%s scheint weniger ausgezehrt zu sein.
 %%%%
 %s is no longer repelling missiles.
-
+%s wehrt keine Geschosse mehr ab.
 %%%%
 %s is no longer unusually resistant.
-
+%s ist nicht mehr ungewöhnlich resistent.
 %%%%
 %s is no longer giving off an aura.
-
+%s strahlt keine Aura mehr aus.
 %%%%
 %s seems less brilliant.
-
+%s scheint weniger brillant zu sein.
 %%%%
 %s loses the glow of perfection.
-
+%s verliert den Glanz der Perfektion.
 %%%%
 %s soul is no longer bound.
 %s Seele ist nicht mehr gebunden.
 %%%%
 %s is no longer infested.
-
+%s ist nicht mehr befallen.
 %%%%
 The zombie hands release their grip on %s.
-
+Die Zombiehände lösen ihren Griff um {acc}%s.
 %%%%
 The roots release their grip on %s.
-
+Die Wurzeln lösen ihren Griff um {acc}%s.
 %%%%
 %s is no longer waterlogged.
-
+%s ist nicht mehr wasserdurchtränkt.
 %%%%
 %s stops rolling and uncurls.
-
+%s hört auf zu rollen und rollt sich auf.
 %%%%
 %s no longer looks unusually toxic.
-
+%s sieht nicht mehr ungewöhnlich giftig aus.
 %%%%
+# it = merfolk avatar
 The pull of its song draws you forwards.
 Der Zug seines Liedes zieht Euch nach vorne.
 %%%%
 Something prevents you from swapping places with %s.
-
+Irgendetwas hindert Euch daran, den Platz mit {dat}%s zu tauschen.
 %%%%
 The shadowy forms in the deep grow still as others approach.
 Die Schattenformen in der Tiefe wachsen immer noch, wenn sich andere nähern.
 %%%%
 Shadowy forms rise from the deep at %s song!
-Schattenhafte Formen erheben sich aus der Tiefe bei%s Lied!
+Schattenhafte Formen erheben sich aus der Tiefe bei %s Lied!
 %%%%
 %s is no longer in an insane frenzy.
-
+%s ist nicht mehr in einem wahnsinnigen Rausch.
 %%%%
 %s looks more energetic.
-
+%s sieht energetischer aus.
 %%%%
 %s's dark mirror aura disappears.
-
+Die dunkle Spiegelaura {gen}%s verschwindet.
 %%%%
 The flames covering %s go out.
-Die Flammen, die%s bedecken, gehen aus.
+Die Flammen, die {acc}%s bedecken, erlöschen.
 %%%%
 %s melts away.
 %s schmilzt weg.
 %%%%
-A nearby %s withers and dies.
-Ein nahe gelegener%s verdorrt und stirbt.
+%s withers and dies.
+%s verdorrt und stirbt.
 %%%%
 The portal closes; %s is severed.
-Das Portal wird geschlossen;%s wird getrennt.
+Das Portal wird geschlossen; %s wird getrennt.
 %%%%
 %s suddenly becomes enraged!
-
+%s wird plötzlich wütend!
 %%%%
 You hear a distant and violent thrashing sound.
-Ihr hört ein fernes und heftiges Dröhnen.
+Ihr hört ein fernes und heftiges Schlaggeräusch.
 %%%%
 %s writhes!
-
+%s windet sich!
 %%%%
 The winds around %s start to calm down.
-Die Winde um%s beginnen sich zu beruhigen.
+Die Winde um {acc}%s beginnen sich zu beruhigen.
 %%%%
 %s is seared!
-
+%s wird versengt!
 %%%%
 %s chant is interrupted.
 %s Gesang ist unterbrochen.
 %%%%
 %s is asphyxiated!
-
+%s wird erstickt!
 %%%%
 The winds around %s calm down.
-Die Winde um%s beruhigen sich.
+Die Winde um {acc}%s beruhigen sich.
 %%%%
 %s song is interrupted.
 %s Lied ist unterbrochen.
 %%%%
 %s is no longer sharing pain.
-
+%s teilt keinen Schmerz mehr.
 %%%%
 
 ##################

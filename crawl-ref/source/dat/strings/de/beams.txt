@@ -1317,7 +1317,7 @@ shared pain
 geteilter Schmerz
 %%%%
 infestation
-Verseuchung
+Befall
 %%%%
 vile clutch
 widerliche Umklammerung

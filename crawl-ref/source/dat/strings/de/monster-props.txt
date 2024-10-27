@@ -346,7 +346,7 @@ blind
 blind
 %%%%
 infested
-verseucht
+befallen
 %%%%
 stupefied
 betäubt

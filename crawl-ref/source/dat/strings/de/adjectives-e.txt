@@ -430,6 +430,9 @@ einfarbig braune
 # monsters
 ################################
 %%%%
+"nearby "
+"nahgelegene "
+%%%%
 "helpless "
 "hilflose "
 %%%%
@@ -449,7 +452,7 @@ einfarbig braune
 "gespürte "
 %%%%
 "hexed "
-"verfluchte "
+"verhexte "
 %%%%
 "charmed "
 "verzuaberte "
