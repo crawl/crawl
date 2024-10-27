@@ -9845,10 +9845,10 @@ Durch die Kraft von Zin wird die feurige Explosion eingedämmt.
 ##################
 %%%%
 %s looks more experienced.
-
+%s sieht erfahrener aus.
 %%%%
 %s looks stronger.
-
+%s sieht stärker aus.
 %%%%
 
 ##################
