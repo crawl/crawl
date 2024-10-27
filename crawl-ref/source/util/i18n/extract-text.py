@@ -35,7 +35,7 @@ IGNORE_STRINGS = [
     'the', 'the ', ' the ',
     'a', 'a ', 'an', 'an ',
     'you', 'you ', 'your', 'your ', 'its ',
-    ' of ', ' of', 'of ',
+    ' of ', ' of', 'of ', 's',
     'debugging ray', 'debug', 'bugger',
     'bug', 'null', 'invalid', 'DEAD MONSTER',
     'true', 'false', 'veto',

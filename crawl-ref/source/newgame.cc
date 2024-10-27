@@ -892,27 +892,21 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
     });
     seed_hbox->add_child(move(daily_seed_btn));
 
-    string footer_text;
+    const string footer_text = localise(
 #ifdef USE_TILE_LOCAL
-    footer_text += localise(
         "\n"
         "Press [p] or [ctrl-v] to paste a seed from the clipboard\n"
         "(overwriting the current value).\n"
-    );
 #endif
-    footer_text += localise(
         "\n"
         "The seed will determine the dungeon layout, monsters, and items\n"
         "that you discover, relative to this version of crawl. Upgrading\n"
         "mid-game may affect seeding. (See the manual for more details.)\n"
-    );
 #ifdef SEEDING_UNRELIABLE
-    footer_text += localise(
         "Warning: your build of crawl does not support stable seeding!\n"
         "Levels may differ from 'official' seeded games.\n"
-    );
 #endif
-        ;
+    );
     box->add_child(make_shared<ui::Text>(footer_text));
 
     auto pregen_check = make_shared<ui::Checkbox>();

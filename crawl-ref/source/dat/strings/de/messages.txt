@@ -10642,9 +10642,6 @@ Seed-Spielen
 No player name specified.
 Keinen Spielername gegeben.
 %%%%
-s
-
-%%%%
 Lists the numerical skill train aptitudes for all races
 Auflistung der numerischen Fertigkeitsbegaben für alle Rassen
 %%%%
