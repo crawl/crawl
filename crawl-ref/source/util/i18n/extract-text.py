@@ -1502,6 +1502,10 @@ def process_cplusplus_file(filename):
                         string = "ring"
                     else:
                         string = string.lower()
+            elif filename == 'throw.cc' and section == '_setup_missile_beam':
+                if string in ["explosion of ", " fragments"]:
+                    # beam for explosive brand - now only used for Damnation artefact, and not displayed
+                    continue
             elif filename in ['art-func.h', 'attack.cc']:
                 if string in ["melt", "burn", "freeze", "electrocute", "crush"]:
                     strings += do_any_2_actors_message(string, "")

@@ -15479,7 +15479,7 @@ Ihr ruft eine Kugel magischer Energie hervor.
 %s ruft eine Kugel magischer Energie hervor.
 %%%%
 Your battlesphere expends the last of its energy and dissipates.
-
+Eure Kampfsphäre verbraucht den letzten Rest ihrer Energie und löst sich auf.
 %%%%
 Your battlesphere wavers and loses cohesion.
 Eure Kampfsphäre schwankt und verliert den Zusammenhalt.
@@ -15707,7 +15707,7 @@ You can't see anything to attack.
 Ihr seht nichts, was ihr angreifen könnt.
 %%%%
 Space momentarily warps into an impossible shape!
-
+Der Raum verformt sich augenblicklich in eine unmögliche Form!
 %%%%
 You don't see anything to apport there.
 Ihr seht dort nichts zu verteilen.
@@ -15740,10 +15740,10 @@ Yoink! You pull the items towards yourself.
 Grabsch! Ihr zieht die Gegenstände zu Euch heran.
 %%%%
 A magic seal in the Gauntlet prevents you from opening a passage!
-
+Ein magisches Siegel in der Spießrute verhindert das Öffnen einer Passage!
 %%%%
 You cannot create a passage on the other side of the transparent wall.
-Ihr könnt keinen Durchgang auf der anderen Seite der transparenten Wand schaffen.
+Ihr könnt keine Passage auf der anderen Seite der transparenten Wand schaffen.
 %%%%
 Creating a passage of Golubria requires sufficient empty space.
 Um eine Passage von Golubria zu schaffen, ist ausreichend leerer Raum erforderlich.
@@ -15805,7 +15805,7 @@ Fragment what (e.g. wall or brittle monster)?
 Was fragmentieren (z.B. Wand oder zerbrechliches Monster)?
 %%%%
 Rndm
-Zufl
+Zuf
 %%%%
 you're too confused to cast spells.
 Ihr seid zu verwirrt, um zu zaubern.
@@ -16526,12 +16526,6 @@ Ihr könnt mit {dat}%s nicht schießen, solange Ihr in einem Netz gefangen seid.
 %%%%
 You cannot shoot with %s while caught in a web.
 Ihr könnt mit {dat}%s nicht schießen, solange Ihr in einem Gewebe gefangen seid.
-%%%%
-" fragments"
-
-%%%%
-"explosion of "
-
 %%%%
 You hear a whirring sound.
 Ihr hört ein surrendes Geräusch.
