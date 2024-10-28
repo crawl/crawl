@@ -61,7 +61,7 @@ string userdef_annotate_item(const char *s, const item_def *item)
     string ann;
     if (lua_isstring(clua, -1))
         ann = luaL_checkstring(clua, -1);
-    return ann;
+    return localise(ann);
 }
 
 string stash_annotate_item(const char *s, const item_def *item)

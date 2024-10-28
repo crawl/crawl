@@ -720,6 +720,9 @@ def process_lua_file(filename):
             strings.append('# section: ' + section)
             continue
 
+        # don't extract map keys
+        line = re.sub(r'\["[^"]*"\]', '[dummy]', line)
+
         # extract wizlab descriptions
         if filename.endswith('wizlab.des') and 'wizlab_milestone' in line and '"' in line:
             m = re.search('(?<=")[^"]+(?=")', line)
@@ -815,9 +818,12 @@ def process_lua_file(filename):
             # embedded conditional
             line = re.sub(r'\.\.\s*\([^\)]+\)', '.. param', line)
 
+            if filename.endswith('stash.lua'):
+                line = re.sub(r'annot\s=\sannot\s\.\.', 'annot =', line)
             #line = re.sub(r'"\s*\.\.[^"]*"', '%s', line)
             line = re.sub(r'"\s*\.\.\s*', '@', line)
             line = re.sub(r'\s*\.\.\s*"', '@', line)
+            #line = re.sub(r'"\s*\.\.\s*([a-zA-Z_]+)\s*\.\.\s*"', r'@\1@', line)
             line = re.sub(r'\s+\.\.\s+', '@@', line)
             line = line.replace('@AUTOMAGIC_SPELL_SLOT@', '@slot@')
             line = re.sub('@[^@]*AUTOMAGIC_SPELL_SLOT[^@]*@', '@spell_name@', line)
@@ -867,12 +873,46 @@ def process_lua_file(filename):
                         elif not re.match('^([A-Z]|the |some )', ss):
                             strings.append(article_a(ss));
 
+    # separate and clean up annotations
+    if filename.endswith('stash.lua'):
+        raw_strings = strings
+        strings = []
+        for string in raw_strings:
+            if '} {' in string:
+                substrings = string.split('} {')
+                for ss in substrings:
+                    if '@res@' in string:
+                        # expanded below (cold, corrosion, etc.)
+                        continue
+                    ss = ss.replace('{', '').replace('}', '').strip()
+                    strings.append(ss)
+            elif '+' in string or ('-' in string and '-handed' not in string):
+                substrings = string.split(" ")
+                for ss in substrings:
+                    strings.append(ss.replace('+', '').replace('-', ''))
+            else:
+                string = string.replace('{', '').replace('}', '').strip()
+                if string in ['melee', 'ranged']:
+                    string += ' weapon'
+                elif string in ['cold', 'corrosion', 'electricity', 'fire', 'mutation', 'negative energy', 'poison']:
+                    strings.append('resist ' + string)
+                    strings.append(string + ' resistance')
+                    continue
+                elif string == '@subtype@ armor':
+                    strings.append('body armour')
+                else:
+                    strings.append(string)
+
     # expand params
     raw_strings = strings
     strings = []
     for string in raw_strings:
         if "@" not in string and "$F" not in string:
             strings.append(string)
+            continue
+
+        # ignore if just a param and nothing else
+        if re.match(r'^@[^@]*@$', string):
             continue
 
         alternatives = [string]

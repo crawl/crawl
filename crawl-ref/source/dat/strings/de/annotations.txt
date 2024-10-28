@@ -32,6 +32,22 @@ Gottesgeschenk
 Fragile
 Fragil
 %%%%
+branded
+brandmarkiert
+%%%%
+# for some reason, brands on armour are called egos
+ego
+Ego
+%%%%
+two-handed
+zweihändig
+%%%%
+one-handed
+einhändig
+%%%%
+willpower
+Willenskraft
+%%%%
 
 # attribute +/-
 %%%%
@@ -92,10 +108,6 @@ rGift
 rCorr
 rKorr
 %%%%
-# will (magic resistance)
-Will
-Wille
-%%%%
 # clarity (immunity to confusion, etc.)
 Clar
 Klar
@@ -111,6 +123,58 @@ rMut
 rMiasma
 rMiasma
 %%%%
+rSteam
+rDampf
+%%%%
+# will (magic resistance)
+Will
+Wille
+%%%%
+dropped
+gefallen
+%%%%
+
+
+# long-form resistances (some are covered under mutations)
+
+%%%%
+corrosion resistance
+Korrosionresistenz
+%%%%
+# magic resistance is an old name for will
+magic resistance
+Magie-Resistenz
+%%%%
+MR
+MR
+%%%%
+
+%%%%
+resist magic
+Magie resistieren
+%%%%
+resist cold
+Kälte resistieren
+%%%%
+resist corrosion
+Korrosion resistieren
+%%%%
+resist electricity
+Elektrizität resistieren
+%%%%
+resist fire
+Feuer resistieren
+%%%%
+resist mutation
+Mutation resistieren
+%%%%
+resist negative energy
+negative Energie resistieren
+%%%%
+resist poison
+Gift resistieren
+%%%%
+
 
 # benefits
 %%%%
@@ -421,4 +485,10 @@ Gegenstand in falscher Position
 %%%%
 " (under plant)"
 " (unter Pflanze)"
+%%%%
+in_shop
+im_Laden
+%%%%
+inventory
+Inventar
 %%%%

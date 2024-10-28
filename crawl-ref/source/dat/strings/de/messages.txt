@@ -18883,59 +18883,6 @@ Automagie aktiviert, wird den Zauber im Platz @slot@ (@spell_name@) wirken.
 %%%%
 
 ##################
-# dat/clua/stash.lua
-##################
-%%%%
-two-handed
-
-%%%%
-one-handed
-
-%%%%
-death
-
-%%%%
-rN+
-
-%%%%
-Regen+
-
-%%%%
-rSteam
-
-%%%%
-quicksilver
-
-%%%%
-Will+
-
-%%%%
-swamp
-
-%%%%
-rF++ rC-
-
-%%%%
-rC++ rF-
-
-%%%%
-pearl
-
-%%%%
-Stlth++++
-
-%%%%
-rF+ rC+ rPois
-
-%%%%
-willpower
-
-%%%%
-mutation
-
-%%%%
-
-##################
 # dat/dlua/lm_timed.lua
 ##################
 %%%%

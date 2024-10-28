@@ -17,18 +17,21 @@
 weapon
 Waffe
 %%%%
+melee weapon
+Nahkampfwaffe
+%%%%
+ranged weapon
+Fernkampfwaffe
+%%%%
+throwable
+Werfbares
+%%%%
 # duplicate
 #missile
 #Geschoss
 %%%%
 robe
 Robe
-%%%%
-armour
-Rüstung
-%%%%
-body armour
-Körperpanzerung
 %%%%
 wand
 Zauberstab
@@ -74,6 +77,32 @@ Rune
 %%%%
 artefact
 Artefakt
+%%%%
+artifact
+Artefakt
+%%%%
+
+%%%%
+armour
+Rüstung
+%%%%
+body armour
+Körperrüstung
+%%%%
+auxiliary armour
+Zusatzrüstung
+%%%%
+
+# stash.lua adds "armor" as well as "armour", which allows us to give alternative search terms
+%%%%
+armor
+Panzerung
+%%%%
+body armor
+Körperpanzerung
+%%%%
+auxiliary armor
+Zusatzpanzerung
 %%%%
 
 #################################
