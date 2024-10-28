@@ -2420,6 +2420,21 @@ item_def* monster_die(monster& mons, killer_type killer,
         temp_change_terrain(mons.pos(), DNGN_SHALLOW_WATER, random_range(50, 80),
                             TERRAIN_CHANGE_FLOOD);
     }
+    else if (mons.type == MONS_SPLINTERFROST_BARRICADE && real_death
+             && !timeout)
+    {
+        coord_def aim;
+        if (!invalid_monster_index(killer_index) && env.mons[killer_index].alive())
+            aim = env.mons[killer_index].pos();
+        else if (killer_index == MHITYOU)
+            aim = you.pos();
+
+        if (!aim.origin())
+        {
+            if (splinterfrost_block_fragment(mons, aim))
+                silent = true;
+        }
+    }
     else if (mons.type == MONS_INUGAMI && real_death)
     {
         if (&mons == find_canine_familiar())
@@ -2777,7 +2792,8 @@ item_def* monster_die(monster& mons, killer_type killer,
             else if (mons.type == MONS_SNAPLASHER_VINE)
                 msg = " falls limply to the ground.";
             else if (mons.type == MONS_HOARFROST_CANNON
-                     || mons.type == MONS_BLOCK_OF_ICE)
+                     || mons.type == MONS_BLOCK_OF_ICE
+                     || mons.type == MONS_SPLINTERFROST_BARRICADE)
             {
                 msg = " melts away.";
             }

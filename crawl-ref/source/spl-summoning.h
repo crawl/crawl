@@ -26,6 +26,8 @@ constexpr int MAX_HOARFROST_SHOTS = 4;
 #define PARAGON_WEAPON_KEY "paragon_weapon"
 #define PARAGON_MID_KEY "paragon_mid"
 
+#define SPLINTERFROST_POWER_KEY "splinterfrost_power"
+
 constexpr int BOULDER_ABRASION_DAMAGE = 5;
 constexpr int PARAGON_FINISHER_MID_CHARGE = 8;
 constexpr int PARAGON_FINISHER_MAX_CHARGE = 14;
@@ -175,3 +177,9 @@ bool monarch_deploy_bomblet(monster& original, const coord_def& target,
                             bool quiet = false);
 vector<coord_def> get_monarch_detonation_spots(const actor& agent);
 spret monarch_detonation(const actor& agent, int pow);
+
+spret cast_splinterfrost_shell(const actor& agent, const coord_def& aim, int pow,
+                             bool fail);
+vector<coord_def> get_splinterfrost_block_spots(const actor& agent,
+                                              const coord_def& aim, int num_walls);
+bool splinterfrost_block_fragment(monster& block, const coord_def& aim);

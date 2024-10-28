@@ -1699,6 +1699,16 @@ Spit Poison spell
 
 <Spit Poison ability>
 %%%%
+Splinterfrost Shell spell
+
+Constructs a frangible shell of reinforced ice in a half-circle around the
+caster, pushing creatures out of the way to make space for it, if possible.
+
+This barricade is durable, and whenever a segment of it is destroyed, will
+fracture into a salvo of icy projectiles launched at whatever destroyed it.
+
+If the caster strays too far away from their barrier, it will melt rapidly.
+%%%%
 Splinterspray spell
 
 Fires a burst of wooden splinters. Its damage is strongly reduced by armour.

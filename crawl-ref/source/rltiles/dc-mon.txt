@@ -380,6 +380,7 @@ living_spell_crystal MONS_LIVING_SPELL_CRYSTAL
 living_spell_earth MONS_LIVING_SPELL_EARTH
 living_spell_holy MONS_LIVING_SPELL_HOLY
 living_spell_ice MONS_LIVING_SPELL_ICE
+splinterfrost_barricade MONS_SPLINTERFROST_BARRICADE
 %rim 1
 ball_lightning MONS_BALL_LIGHTNING /*'*'*/
 creeping_inferno1 MONS_CREEPING_INFERNO

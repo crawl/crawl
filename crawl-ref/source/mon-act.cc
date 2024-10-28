@@ -1846,6 +1846,17 @@ void handle_monster_move(monster* mons)
         return;
     }
 
+    // Melt barricades whose creator has moved too far away.
+    if (mons->type == MONS_SPLINTERFROST_BARRICADE)
+    {
+        actor* agent = actor_by_mid(mons->summoner);
+        if (!agent || grid_distance(agent->pos(), mons->pos()) > 2)
+        {
+            monster_die(*mons, KILL_TIMEOUT, NON_MONSTER);
+            return;
+        }
+    }
+
     if (mons->type == MONS_BLAZEHEART_CORE)
     {
         mons->suicide();

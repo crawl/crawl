@@ -3453,6 +3453,7 @@ tileidx_t tileidx_bolt(const bolt &bolt)
         else if (bolt.name == "puff of frost")
             return TILE_BOLT_FROST;
         else if (bolt.name == "shard of ice"
+                 || bolt.name == "salvo of icicles"
                  || bolt.name == "shard of alchemical ice"
                  || bolt.name == "salvo of alchemical ice"
                     && !bolt.in_explosion_phase)

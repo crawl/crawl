@@ -299,6 +299,25 @@ protected:
     string poof_message;
 };
 
+class splinterfrost_fragment_fineff : public final_effect
+{
+public:
+    bool mergeable(const final_effect &) const override { return false; }
+    void fire() override;
+
+    static void schedule(bolt &beam, string msg)
+    {
+        final_effect::schedule(new splinterfrost_fragment_fineff(beam, msg));
+    }
+protected:
+    splinterfrost_fragment_fineff(bolt beem, string _msg)
+        : final_effect(0, 0, coord_def()), beam(beem), msg(_msg)
+    {
+    }
+    bolt beam;
+    string msg;
+};
+
 // A fineff that triggers a daction; otherwise the daction
 // occurs immediately (and then later) -- this might actually
 // be too soon in some cases.

@@ -678,3 +678,14 @@ public:
 private:
     vector<coord_def> landing_spots;
 };
+
+class targeter_wall_arc : public targeter_smite
+{
+public:
+    targeter_wall_arc(const actor* caster, int size);
+    bool set_aim(coord_def a) override;
+    aff_type is_affected(coord_def loc) override;
+private:
+    int wall_num;
+    vector<coord_def> spots;
+};

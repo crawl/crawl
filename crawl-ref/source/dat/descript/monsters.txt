@@ -2702,6 +2702,13 @@ sphinx
 A fearsome hybrid with a woman's head, a lion's body and the wings of an eagle,
 able to cloud the minds of its foes and wield fell magics.
 %%%%
+splinterfrost barricade
+
+A durable barricade made of ice reinforced with forgecraft magic. A lattice of
+precise hairline cracks are visible just beneath its surface which allow it to
+fracture into a barrage of razor-sharp projectiles whenever it sustains critical
+damage.
+%%%%
 spriggan
 
 A small humanoid, resembling a human or elf except for the size. It moves at a

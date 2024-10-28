@@ -1437,6 +1437,9 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_multiposition>(&you,
                                                    diamond_sawblade_spots(false));
 
+    case SPELL_SPLINTERFROST_SHELL:
+        return make_unique<targeter_wall_arc>(&you, 5);
+
     default:
         break;
     }
@@ -2489,6 +2492,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_MONARCH_BOMB:
         return cast_monarch_bomb(you, powc, fail);
+
+    case SPELL_SPLINTERFROST_SHELL:
+        return cast_splinterfrost_shell(you, beam.target, powc, fail);
 
     // Enchantments.
     case SPELL_CONFUSING_TOUCH:

@@ -2466,4 +2466,20 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     false,
 },
 
+{
+    ZAP_SPLINTERFROST_FRAGMENT,
+    "salvo of icicles",
+    200,
+    new calcdice_calculator<6, 24, 4, 5>,
+    new tohit_calculator<10, 1, 25>,
+    new dicedef_calculator<3, 8, 1, 11>,
+    new tohit_calculator<17, 1, 25>,
+    WHITE,
+    false,
+    BEAM_ICE,
+    DCHAR_FIRED_ZAP,
+    true,
+    false,
+},
+
 };

@@ -1618,6 +1618,7 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_BOULDER:
     case SPELL_GELLS_GAVOTTE:
     case SPELL_PLATINUM_PARAGON:
+    case SPELL_SPLINTERFROST_SHELL:
     // This can always potentially hit out-of-LOS, although this is conditional
     // on spell-power.
     case SPELL_FIRE_STORM:

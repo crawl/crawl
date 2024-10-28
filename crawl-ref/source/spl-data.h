@@ -4228,6 +4228,18 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_SPLINTERFROST_SHELL, "Splinterfrost Shell",
+    spschool::forgecraft | spschool::ice,
+    spflag::target | spflag::not_self,
+    7,
+    200,
+    1, 1,
+    0,
+    TILEG_ERROR,
+},
+
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

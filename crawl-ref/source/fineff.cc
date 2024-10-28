@@ -947,6 +947,14 @@ void death_spawn_fineff::fire()
     create_monster(mg);
 }
 
+void splinterfrost_fragment_fineff::fire()
+{
+    if (!msg.empty())
+        mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s", msg.c_str());
+
+    beam.fire();
+}
+
 // Effects that occur after all other effects, even if the monster is dead.
 // For example, explosions that would hit other creatures, but we want
 // to deal with only one creature at a time, so that's handled last.

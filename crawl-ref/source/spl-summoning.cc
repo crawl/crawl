@@ -24,6 +24,7 @@
 #include "english.h"
 #include "env.h"
 #include "fight.h"
+#include "fineff.h"
 #include "fprop.h"
 #include "ghost.h"
 #include "god-conduct.h"
@@ -4118,4 +4119,161 @@ spret monarch_detonation(const actor& agent, int pow)
     }
 
     return spret::success;
+}
+
+static bool _push_line_back(const coord_def& center, const coord_def& dir)
+{
+    // We want to trace a line of all connected monsters in a row, in the
+    // direction we're moving, and then push them away in reverse order.
+    vector<actor*> push_targs;
+    coord_def pos = center + dir;
+    while (actor_at(pos) && !actor_at(pos)->is_stationary())
+    {
+        push_targs.push_back(actor_at(pos));
+        pos += dir;
+    }
+
+    for (int i = push_targs.size() - 1; i >= 0; --i)
+        if (push_targs[i]->alive()) // died from earlier knockback?
+            push_targs[i]->stumble_away_from(center);
+
+    return !actor_at(center + dir);
+}
+
+
+vector<coord_def> get_splinterfrost_block_spots(const actor& agent,
+                                              const coord_def& aim, int num_walls)
+{
+    vector<coord_def> spots;
+
+    // Convert aim to a compass direction
+    coord_def delta = (aim - agent.pos()).sgn();
+    int dir = 0;
+    for (int i = 0; i < 8; ++i)
+    {
+        if (Compass[i] == delta)
+        {
+            dir = i;
+            break;
+        }
+    }
+
+    // Now choose adjacent compass spots to test
+    int start = dir - ((num_walls - 1) / 2);
+    if (start < 0)
+        start = start + 8;
+
+    for (int i = start; i < start + num_walls; ++i)
+    {
+        const int index = i % 8;
+        const coord_def spot = agent.pos() + Compass[index];
+        if (in_bounds(spot) && !cell_is_solid(spot)
+            && env.grid(spot) != DNGN_LAVA
+            && !feat_is_trap(env.grid(spot)))
+        {
+            spots.push_back(spot);
+        }
+    }
+
+    return spots;
+}
+
+spret cast_splinterfrost_shell(const actor& agent, const coord_def& aim,
+                             int pow, bool fail)
+{
+    fail_check();
+
+    for (monster_iterator mi; mi; ++mi)
+        if (mi->was_created_by(agent, SPELL_SPLINTERFROST_SHELL))
+            monster_die(**mi, KILL_RESET, NON_MONSTER);
+
+    const int dur = random_range(110, 160);
+    mgen_data mg = _summon_data(agent, MONS_SPLINTERFROST_BARRICADE, dur,
+                                SPELL_SPLINTERFROST_SHELL, false);
+    mg.hd = 10 + div_rand_round(pow, 20);
+    mg.set_range(0);
+
+    vector<coord_def> spots = get_splinterfrost_block_spots(agent, aim, 4);
+    int num_created = 0;
+    for (size_t i = 0; i < spots.size(); ++i)
+    {
+        if (actor_at(spots[i]))
+        {
+            if (!_push_line_back(agent.pos(), spots[i] - agent.pos()))
+                continue;
+        }
+
+        mg.pos = spots[i];
+        if (monster* block = create_monster(mg))
+        {
+            block->props[SPLINTERFROST_POWER_KEY] = pow;
+            ++num_created;
+        }
+    }
+
+    if (num_created > 0)
+        mprf("You construct a shell of ice in front of yourself.");
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return spret::success;
+}
+
+bool splinterfrost_block_fragment(monster& block, const coord_def& aim)
+{
+    const int pow = block.props[SPLINTERFROST_POWER_KEY].get_int();
+    actor* agent = actor_by_mid(block.summoner);
+
+    ray_def ray;
+    if (!find_ray(block.pos(), aim, ray, opc_solid_see))
+        return false;
+
+    // Examine spaces one at a time, stopping before we'd hit a friendly
+    // non-firewood actor.
+    // XXX: It feels wrong not using a beam tracer for this, but tracers will
+    //      simply refuse to fire if an ally is anywhere in the path, rather
+    //      than ending their shot a bit earlier. That is fine for normal
+    //      monsters, but as a reactive player thing, it feels bad if the
+    //      barricade doesn't detonate when it looks like it should.
+    int steps_taken = 0;
+    coord_def aim_spot;
+    while (ray.advance() && steps_taken < LOS_RADIUS)
+    {
+        ++steps_taken;
+        const coord_def p = ray.pos();
+
+        if (!in_bounds(p) || cell_is_solid(p))
+            break;
+        else if (actor* targ = actor_at(p))
+        {
+            // Don't hurt allies.
+            if (mons_aligned(&block, targ) && !targ->is_firewood())
+                break;
+        }
+
+        aim_spot = p;
+    }
+
+    if (aim_spot.origin())
+        return false;
+
+    bolt beam;
+    zappy(ZAP_SPLINTERFROST_FRAGMENT, pow, false, beam);
+    beam.source = block.pos();
+    beam.attitude = block.attitude;
+    beam.set_agent(agent);
+    beam.dont_stop_player = true;
+    beam.target = aim_spot;
+    beam.range = steps_taken;
+    beam.aimed_at_spot = true;
+
+    string msg;
+    if (you.can_see(block))
+    {
+        msg = make_stringf("%s fragments into a salvo of icicles!",
+                            block.name(DESC_THE).c_str());
+    }
+    splinterfrost_fragment_fineff::schedule(beam, msg);
+
+    return true;
 }
