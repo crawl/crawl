@@ -418,7 +418,7 @@ the %scabochon ring
 der {adj-e}%sCabochonring
 %%%%
 the %sgilded ring
-der {adj-e}%svergoldeter Ring
+der {adj-e}%svergoldete Ring
 %%%%
 the %sonyx ring
 der {adj-e}%sOnyxring
