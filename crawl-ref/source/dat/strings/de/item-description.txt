@@ -132,13 +132,13 @@ It renders you almost immune to %s.
 Dieser Gegenstand macht Euch fast immun gegen {acc}%s.
 %%%%
 It greatly decreases your willpower.
-Dieser Gegenstand verringert Eure Willenskraft erheblich.
+Dieser Gegenstand reduziert Eure Willenskraft erheblich.
 %%%%
 It greatly increases your willpower.
 Dieser Gegenstand erhöht Eure Willenskraft erheblich.
 %%%%
 It decreases your willpower.
-Dieser Gegenstand verringert Eure Willenskraft.
+Dieser Gegenstand reduziert Eure Willenskraft.
 %%%%
 It increases your willpower.
 Dieser Gegenstand erhöht Eure Willenskraft.
@@ -421,7 +421,7 @@ If you switch to wearing this armour, your AC would increase by %d (%d -> %d).
 Wenn Ihr zu dieser Rüstung wechselt, würde Eure RK um %d erhöht (%d -> %d).
 %%%%
 If you switch to wearing this armour, your AC would decrease by %d (%d -> %d).
-Wenn Ihr zu dieser Rüstung wechselt, würde Eure RK um %d verringert (%d -> %d).
+Wenn Ihr zu dieser Rüstung wechselt, würde Eure RK um %d reduziert (%d -> %d).
 %%%%
 If you switch to wearing this armour, your AC would remain unchanged.
 Wenn Ihr zu dieser Rüstung wechselt, bleibt Eure RK unverändert.
@@ -430,7 +430,7 @@ If you remove this armour, your AC would increase by %d (%d -> %d).
 Wenn Ihr diese Rüstung ablegt, würde Eure RK um %d erhöht (%d -> %d).
 %%%%
 If you remove this armour, your AC would decrease by %d (%d -> %d).
-Wenn Ihr diese Rüstung ablegt, würde Eure RK um %d verringert (%d -> %d).
+Wenn Ihr diese Rüstung ablegt, würde Eure RK um %d reduziert (%d -> %d).
 %%%%
 If you remove this armour, your AC would remain unchanged.
 Wenn Ihr diese Rüstung ablegt, bleibt Eure RK unverändert.
@@ -502,7 +502,7 @@ it increases damage dealt and taken.
 diese Rüstung erhöht den zugefügten und erlittenen Schaden.
 %%%%
 it reduces the distance the wearer can be seen at and can see.
-diese Rüstung verringert die Entfernung, aus der der Träger gesehen werden kann und in der er sehen kann.
+diese Rüstung reduziert die Entfernung, aus der der Träger gesehen werden kann und in der er sehen kann.
 %%%%
 its wearer takes one free step when moving towards enemies.
 der Träger macht einen freien Schritt, wenn er sich auf Feinde zubewegt.
@@ -1031,7 +1031,7 @@ Dark
 dunkel
 %%%%
 It shrouds the wearer in darkness, reducing the range at which they can see and be seen by others.
-Sie hüllt den Träger in Dunkelheit und verringert die Reichweite, in der er sehen und von anderen gesehen werden kann.
+Sie hüllt den Träger in Dunkelheit und reduziert die Reichweite, in der er sehen und von anderen gesehen werden kann.
 %%%%
 
 # Fencer's Gloves
@@ -1155,7 +1155,7 @@ Umbra
 Umbra
 %%%%
 It surrounds you with an aura of shadow, increasing your stealth and reducing the accuracy of all within it (including the wearer).
-Er umgibt Euch mit einer Aura des Schattens, die Eure Heimlichkeit erhöht und die Treffsicherheit aller in ihr befindlichen Personen (einschließlich des Trägers) verringert.
+Er umgibt Euch mit einer Aura des Schattens, die Eure Heimlichkeit erhöht und die Treffsicherheit aller in ihr befindlichen Personen (einschließlich des Trägers) reduziert.
 %%%%
 
 # Amulet of the Air
@@ -1164,7 +1164,7 @@ Inacc Air
 Ungenau Luft
 %%%%
 It reduces the accuracy of all your attacks.
-Es verringert die Genauigkeit all Eurer Angriffe.
+Es reduziert die Genauigkeit all Eurer Angriffe.
 %%%%
 
 # Necklace of Bloodlust
