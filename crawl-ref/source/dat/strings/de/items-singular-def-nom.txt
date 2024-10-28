@@ -737,6 +737,24 @@ the %spotion
 der {adj-e}%sZaubertrank
 %%%%
 
+# Some potion colours are the names of gemstones, etc., and are used elsewhere
+# in Crawl to mean actually made of/with that thing, rather than merely having
+# its colour. In English, we can get away with using the same word for both
+# meanings, but that's not necessarily the case in other languages.
+%%%%
+the %samethyst potion
+der {adj-e}%samethystfarbene Zaubertrank
+%%%%
+the %semerald potion
+der {adj-e}%ssmaragdgrüne Zaubertrank
+%%%%
+the %sruby potion
+der {adj-e}%srubinrote Zaubertrank
+%%%%
+the %ssapphire potion
+der {adj-e}%ssaphirblaue Zaubertrank
+%%%%
+
 #################################
 # Magical Staves
 #################################

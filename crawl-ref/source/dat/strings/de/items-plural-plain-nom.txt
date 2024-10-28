@@ -231,6 +231,24 @@ potions of resistance
 {pl}{adj-e}%sZaubertränke
 %%%%
 
+# Some potion colours are the names of gemstones, etc., and are used elsewhere
+# in Crawl to mean actually made of/with that thing, rather than merely having
+# its colour. In English, we can get away with using the same word for both
+# meanings, but that's not necessarily the case in other languages.
+%%%%
+%samethyst potion
+{pl}{adj-e}%samethystfarbene Zaubertränke
+%%%%
+%semerald potion
+{pl}{adj-e}%ssmaragdgrüne Zaubertränke
+%%%%
+%sruby potion
+{pl}{adj-e}%srubinrote Zaubertränke
+%%%%
+%ssapphire potion
+{pl}{adj-e}%ssaphirblaue Zaubertränke
+%%%%
+
 #################################
 # Magical Staves
 #################################

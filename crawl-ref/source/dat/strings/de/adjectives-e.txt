@@ -549,20 +549,20 @@
 "goldene "
 %%%%
 
-# TODO: these ones are a jewellery material, and also a potion colour
+# These ones are a jewellery material, and also a potion colour
 # so we have to distinguish them
 %%%%
-#"amethyst "
-#"Amethyst-"
+"amethyst "
+"Amethyst-"
 %%%%
-#"emerald "
-#"Smaragd-"
+"emerald "
+"Smaragd-"
 %%%%
-#"ruby "
-#"Rubin-"
+"ruby "
+"Rubin-"
 %%%%
-#"sapphire "
-#"Saphir-"
+"sapphire "
+"Saphir-"
 %%%%
 
 ################################
@@ -643,20 +643,21 @@
 "dunkle "
 %%%%
 
-# TODO: these ones are a material for jewellery, etc., and also a potion colour
-# so we have to distinguish them
+# These ones are a material for jewellery, etc., and also a potion colour.
+# Since potions are the only items that use them as colours, we define
+# specific strings with this usage in items*.txt.
 %%%%
-"amethyst "
-"amethystfarbene "
+#"amethyst "
+#"amethystfarbene "
 %%%%
-"emerald "
-"smaragdgrüne "
+#"emerald "
+#"smaragdgrüne "
 %%%%
-"ruby "
-"rubinrote "
+#"ruby "
+#"rubinrote "
 %%%%
-"sapphire "
-"saphirblaue "
+#"sapphire "
+#"saphirblaue "
 %%%%
 
 ################################

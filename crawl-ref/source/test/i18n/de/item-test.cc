@@ -25,6 +25,7 @@ const vector<string> test_items = {
     "2 scrolls of remove curse",
 
     "a green potion",
+    "an amethyst potion",
     "10 smoky black potions",
 
     "a potion of heal wounds",
@@ -76,6 +77,7 @@ const vector<string> expected = {
     "2 Schriftrollen des Segnens",
 
     "ein grüner Zaubertrank",
+    "ein amethystfarbener Zaubertrank",
     "10 rauchige schwarze Zaubertränke",
 
     "ein Heiltrank",
