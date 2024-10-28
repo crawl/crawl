@@ -290,7 +290,7 @@
 "seltsame "
 %%%%
 "wizard "
-"Zauberer- "
+"Zauberer-"
 %%%%
 "worn "
 "abgenutzte "
