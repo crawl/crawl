@@ -72,7 +72,8 @@ end
 
 function shoals_ice_setup(e)
   e.subst("- = xxxW.")
-  e.rtile("x = wall_zot_cyan")
+  e.rtile("x = wall_ice_block")
+  e.set_feature_name("rock_wall", "ice covered rock wall")
   e.colour(".x@01eO| = white")
   e.ftile(".x@+01eO| = floor_ice")
 end
@@ -767,7 +768,7 @@ NAME:  nicolae_shoals_nautilus_by_nature
 TAGS:  extra transparent water_ok
 : if you.depth() == 1 then
 SUBST: S = )}]
-: elseif you.depth_fraction() < 1 then
+: elseif you.depth() ~= dgn.br_depth(you.branch()) then
 SUBST: S = (){}[]
 : else
 SUBST: S = ({[

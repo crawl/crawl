@@ -340,7 +340,7 @@ ENDMAP
 NAME:   nicolae_spider_jumping_sub_stairs
 : if you.depth() == 1 then
 SUBST:  S = )}]
-: elseif you.depth_fraction() < 1 then
+: elseif you.depth() ~= dgn.br_depth(you.branch()) then
 SUBST:  S = (){}[]
 : else
 SUBST:  S = ({[

@@ -1050,7 +1050,7 @@ TAGS:    transparent decor no_pool_fixup no_descent
 ORIENT:  float
 : if you.depth() == 1 then
 SUBST:   P = p, Q = q, R = r, S = s, Z = z
-: elseif you.depth_fraction() < 1 then
+: elseif you.depth() ~= dgn.br_depth(you.branch()) then
 SHUFFLE: PQRSZ/pqrsz
 : end
 SUBST:   Ps = t, Qr = ., Rq = W, Sp = w, Z = [{(, z = ]})
@@ -1072,7 +1072,7 @@ ORIENT:  float
 SUBST:   D = PQ, E = QR, F = RS, _ = S_
 : if you.depth() == 1 then
 SUBST:   P = p, Q = q, R = r, S = s, Z = z
-: elseif you.depth_fraction() < 1 then
+: elseif you.depth() ~= dgn.br_depth(you.branch()) then
 SHUFFLE: PQRSZ/pqrsz
 : end
 SUBST:   Ps = t, Qr = ., Rq = W, Sp = w, Z = [{(, z = ]})

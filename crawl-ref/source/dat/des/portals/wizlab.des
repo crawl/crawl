@@ -2081,6 +2081,7 @@ TILE:       t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4
 : end
 TILE:       G = dngn_statue_archer / dngn_statue_centaur w:5
 LROCKTILE:  wall_brick_vines
+LFLOORTILE: floor_grass
 : decorative_floor(_G, 'L', "flower patch")
 : set_random_mon_list("deep elf archer / faun / centaur warrior / yaktaur / " ..
 :                     " satyr / naga sharpshooter / shambling mangrove / " ..

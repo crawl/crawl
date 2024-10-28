@@ -2229,7 +2229,7 @@ ORIENT:  float
 KMONS:   0 = 0 / 0 band
 : if you.depth() == 1 then
 SUBST:   S = )}]
-: elseif you.depth_fraction() < 1 then
+: elseif you.depth() ~= dgn.br_depth(you.branch()) then
 SUBST:   S = (){}[]
 : else
 SUBST:   S = ({[

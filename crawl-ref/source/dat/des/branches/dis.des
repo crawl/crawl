@@ -656,7 +656,7 @@ ORIENT: centre
 NSUBST: D = vvv+ / +, E = vvv+ / +, F = vvv+ / +, H = vvv+ / +, Q = + / vv+
 : if you.depth() == 1 then
 SUBST:  { = }
-: elseif you.depth_fraction() < 1 then
+: elseif you.depth() ~= dgn.br_depth(you.branch()) then
 SUBST:  { = {}
 : end
 SUBST:  0 = ...0000099, 9 = 998

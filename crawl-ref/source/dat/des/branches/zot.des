@@ -2513,7 +2513,7 @@ MONS:   electric golem
 KFEAT:  ^ = permanent teleport trap / dispersal trap
 KFEAT:  m = iron_grate
 NSUBST: 1 = 1:1 / 1:. / * = 1.
-: vault_metal_statue_setup(_G, "Z", "nascence conduit")
+: vault_metal_statue_setup(_G, "Z", "nascence circuit")
 MAP
   mmmm
  mm..mm
@@ -4045,7 +4045,7 @@ ENDMAP
 ##############################################################################
 NAME:    hangedman_player_shredder
 TAGS:    transparent no_monster_gen no_item_gen no_pool_fixup
-DEPTH:   Zot:1-4
+DEPTH:   Zot, !Zot:$
 KMONS:   01 = ghost moth
 KMONS:   23 = golden dragon
 KMONS:   45 = nonbase draconian
@@ -4057,7 +4057,7 @@ KMONS:   E = orb of fire
 KMONS:   F = ancient lich / dread lich
 KMONS:   ! = base draconian w:30 ; cloak . great sword good_item | \
              battleaxe good_item | bardiche good_item | great mace good_item / \
-             fire dragon / ice dragon / storm dragon / bone dragon w:5
+             storm dragon / quicksilver dragon / bone dragon w:5
 KMONS:   ? = moth of wrath / death cob w:3
 KITEM:   % = % / * w:2
 KMONS:   H = iron dragon

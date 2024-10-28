@@ -59,9 +59,10 @@ function random_stair(e, symbol)
   if you.depth() > 1 then
     valid = "([{"
   else
-    valid = "" -- should always coincide with depth_fraction() < 1
+    -- should coincide with you.depth() ~= dgn.br_depth(you.branch())
+    valid = ""
   end
-  if you.depth_fraction() < 1 then
+  if you.depth() ~= dgn.br_depth(you.branch()) then
     valid = valid .. ")]}"
   end
   if valid == "" then
@@ -179,6 +180,7 @@ WEIGHT: 1
 KMONS:  12 = butterfly
 : door_vault_setup(_G)
 : if you.in_branch("D") or you.in_branch("Depths") or you.in_branch("Vaults") then
+FTILE:  12 = floor_lair
 :   decorative_floor(_G, '12', "flower patch")
 : end
 MAP
@@ -2297,17 +2299,18 @@ cccc..000........cccD
 ccccccccccccccccccccC
 ENDMAP
 
-NAME:  lightli_orcish_oven
-TAGS:  vaults_room vaults_orient_s
-DEPTH: D:6-11, Orc, Vaults
-MONS:  orc warrior, orc, orc warlord, orc knight w:14 / lindwurm w:1
-KITEM: d = stone q:1 no_pickup
-KFEAT: e = cache of meat
-KFEAT: f = cache of baked goods
+NAME:   lightli_orcish_oven
+TAGS:   vaults_room vaults_orient_s
+DEPTH:  D:6-11, Orc, Vaults
+WEIGHT: 5 (Vaults), 10
+MONS:   orc warrior, orc, orc warlord, orc knight w:14 / lindwurm w:1
+KITEM:  d = stone q:1 no_pickup
+KFEAT:  e = cache of meat
+KFEAT:  f = cache of baked goods
 : if you.in_branch("Vaults") then
-SUBST: 1 = 3, 2 = 4, @ = ., d = f, g = h
+SUBST:  1 = 3, 2 = 4, @ = ., d = f, g = h
 : else
-SUBST: d = def
+SUBST:  d = def
 : end
 : dgn.delayed_decay(_G, 'g', 'adder corpse / electric eel corpse')
 : dgn.delayed_decay(_G, 'h', 'hog corpse / lindwurm corpse')
@@ -2335,7 +2338,10 @@ MONS:     lich, occultist / naga mage / tengu conjurer, tengu reaver
 : end
 ITEM:     book of power, robe good_item, hat good_item, robe, hat
 KFEAT:    _ = altar_vehumet
-SHUFFLE: ef, gh, ij
+SHUFFLE:  ef, gh, ij
+TILE:     v = dngn_metal_wall_magenta
+TILE:     c = dngn_stone_wall_magenta
+TILE:     b = dngn_crystal_magenta
 MAP
       ccccc
      ccedfcc

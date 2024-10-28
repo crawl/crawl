@@ -2016,7 +2016,7 @@ WEIGHT: 50
 # Heavily customized in flavour and power to emphasize Xom's love of risks.
 ##########################################################################
 
-NAME:    regret_index_bazaar_x_original
+NAME:    regret_index_bazaar_xom_original
 TAGS:    allow_dup xom_bazaar
 ORIENT:  encompass
 KMONS:   p = pile of debris
