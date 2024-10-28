@@ -204,7 +204,7 @@ int main()
     show_result(msg, expected);
 
     msg = localise("You detect %s.", "the hexed spriggan");
-    show_result(msg, "Ihr spürt den verfluchten Spriggan.");
+    show_result(msg, "Ihr spürt den verhexten Spriggan.");
 
     msg = localise("The barbs in your skin will harm you if you move."
                    " Rampaging like this could really hurt!"
