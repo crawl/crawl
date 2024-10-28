@@ -6,15 +6,50 @@
 #
 ###############################################################################
 
+
 ################################
-# General adjectives
+# size
 ################################
+
+# used for doors/gates, slimes, and also for item flavour
+# slime creatures: large, very large, enormous, titanic
+# doors/gates: miniscule, large, huge
+# item flavour: tiny, small, large (isn't really meaningful in this context)
+
+%%%%
+"miniscule "
+"klitzekleine "
+%%%%
+"tiny "
+"winzige "
+%%%%
+"small "
+"kleine "
 %%%%
 "large "
 "große "
 %%%%
-"small "
-"kleine "
+"very large "
+"sehr große "
+%%%%
+"huge "
+"riesige "
+%%%%
+"enormous "
+"enorme "
+%%%%
+"titanic "
+"titanische "
+%%%%
+
+################################
+# Meaningful item adjectives
+################################
+
+%%%%
+# affected by Animate Armour spell
+"animated "
+"animierte "
 %%%%
 "cursed "
 "verfluchte "
@@ -22,91 +57,512 @@
 "enchanted "
 "verzauberte "
 %%%%
-"glowing "
-"glühende "
-%%%%
-"shiny "
-"glänzende "
-%%%%
-"runed "
-"runenverzierte "
-%%%%
-"non-descript "
-"unscheinbare "
-%%%%
 "melded "
 "verschmolzen "
 %%%%
 
+################################
+# Cosmetic adjectives for unidentified items
+# (don't have any gameplay meaning)
+################################
 %%%%
-# used for rings, amulets, wands, staves
-"twisted "
-"verdrehte "
+"ancient "
+"uralte "
 %%%%
-# used for rings, amulets, wands
 "blackened "
 "geschwärzte "
 %%%%
-# used for amulets and staves
-"thick "
-"dicke "
+"bloodstained "
+"blutbefleckte "
 %%%%
-# used for amulets and staves
-"thin "
-"dünne "
+"bound "
+"gebundene "
+%%%%
+"buzzing "
+"summende "
+%%%%
+"clouded "
+"getrübte "
+%%%%
+"coiled "
+"aufgerollte "
+%%%%
+"colourful "
+"bunte "
+%%%%
+# only used in "creamy pearl robe"
+"creamy "
+"cremefarbige "
+%%%%
+"crooked "
+"krumme "
+%%%%
+"crude "
+"krude "
+%%%%
+"curved "
+"gebogene "
+%%%%
+"dazzling "
+"schillernde "
+%%%%
+"dented "
+"verbeulte "
+%%%%
+"dull "
+"matte "
+%%%%
+"dyed "
+"gefärbte "
+%%%%
+"embroidered "
+"bestickte "
+%%%%
+"encrusted "
+"verkrustete "
+%%%%
+"fading "
+"verblassende "
+%%%%
+"fine "
+"feine "
+%%%%
+"flickering "
+"flackernde "
+%%%%
+"forked "
+"gegabelte "
+%%%%
+"glimmering "
+"glimmernde "
+%%%%
+"glittering "
+"glitzernde "
+%%%%
+# also a rune
+"glowing "
+"glühende "
+%%%%
+"gnarled "
+"knorrige "
+%%%%
+"graven "
+"gravierte "
+%%%%
+"heavy "
+"schwere "
+%%%%
+"humming "
+"brummende "
+%%%%
+"ichor-stained "
+"ichorgefleckte "
+%%%%
+"iridescent "
+"irisierende "
+%%%%
+"jewelled "
+"juwelenbesetzte "
+%%%%
+"knobbly "
+"knubbelige "
+%%%%
+"long "
+"lange "
 %%%%
 # used for amulets and potions
 "lumpy "
 "klumpige "
 %%%%
-# used for rings and wands
-"encrusted "
-"verkrustete "
+"masterwork "
+"Meisterwerk-"
 %%%%
-# used for potion and rune
-"golden "
-"goldene "
+"non-descript "
+"unscheinbare "
 %%%%
-# used for potion and rune
-"dark "
-"dunkle "
+"notched "
+"gekerbte "
 %%%%
-# used for rings and staves
-"knobbly "
-"knubbelige "
+"opalescent "
+"opalisierende "
 %%%%
-
-# all these used for both wands and staves
+"ornate "
+"verschnörkelte "
 %%%%
-"jewelled "
-"juwelenbesetzte "
+"pitted "
+"löchrig "
 %%%%
-"curved "
-"gebogene "
+"polished "
+"polierte "
 %%%%
-"long "
-"lange "
+"ripped "
+"gerissene "
+%%%%
+"scintillating "
+"schillernde "
+%%%%
+"scorched "
+"verbrannte "
+%%%%
+"scratched "
+"zerkratzte "
+%%%%
+# also a rune
+"serpentine "
+"schlangenförmige "
+%%%%
+"shadowed "
+"schattierte "
+%%%%
+"sharpened "
+"geschärfte "
+%%%%
+"sheer "
+"schiere "
+%%%%
+"shimmering "
+"schimmernde "
+%%%%
+"shiny "
+"glänzende "
 %%%%
 "short "
 "kurze "
 %%%%
-"crooked "
-"krumme "
+"smelly "
+"stinkende "
+%%%%
+"smoking "
+"rauchige "
+%%%%
+"smouldering "
+"schwelende "
+%%%%
+"sparkling "
+"glitzernde "
+%%%%
+"spiked "
+"sprudelnde "
+%%%%
+"square "
+"quadratische "
+%%%%
+"steaming "
+"dämpfende "
+%%%%
+"tapered "
+"verjüngte "
+%%%%
+"tattered "
+"zerfledderte "
+%%%%
+"thick "
+"dicke "
+%%%%
+"thin "
+"dünne "
+%%%%
+"transparent "
+"dusrchsichtige "
+%%%%
+"triangular "
+"dreieckige "
+%%%%
+"tubular "
+"röhrenförmige "
+%%%%
+"twisted "
+"verdrehte "
+%%%%
+"twitching "
+"zuckende "
+%%%%
+"vibrating "
+"vibrierende "
+%%%%
+"warped "
+"verzogene"
+%%%%
+"wavering "
+"schwankende "
+%%%%
+"weird "
+"seltsame "
+%%%%
+"wizard "
+"Zauberer- "
+%%%%
+"worn "
+"abgenutzte "
+%%%%
+
+#adverbs (e.g. brightly glowing)
+%%%%
+"brightly "
+"hell "
+%%%%
+"distressingly "
+"erschreckend "
+%%%%
+"fabulously "
+"fabelhaft "
+%%%%
+"faintly "
+"leicht "
+%%%%
+"heavily "
+"schwer "
+%%%%
+"ominously "
+"ominös "
+%%%%
+
+%%%%
+"agate-encrusted "
+"Achat-verkrustete "
+%%%%
+"amber-encrusted "
+"Bernstein-verkrustete "
+%%%%
+"amethyst-encrusted "
+"Amethyst-verkrustete "
+%%%%
+"aquamarine-encrusted "
+"Aquamarin-verkrustete "
+%%%%
+"black opal-encrusted "
+"Schwarzer-Opal-verkrustete "
+%%%%
+"citrine-encrusted "
+"Zitrin-verkrustete "
+%%%%
+"diamond-encrusted "
+"Diamant-verkrustete "
+%%%%
+"emerald-encrusted "
+"Smaragd-verkrustete "
+%%%%
+"garnet-encrusted "
+"Granat-verkrustete "
+%%%%
+"jacinth-encrusted "
+"jacinth-verkrustete "
+%%%%
+"jade-encrusted "
+"Jade-verkrustete "
+%%%%
+"jasper-encrusted "
+"Jaspis-verkrustete "
+%%%%
+"jet-encrusted "
+"Jet-verkrustete "
+%%%%
+"obsidian-encrusted "
+"Obsidian-verkrustete "
+%%%%
+"opal-encrusted "
+"Opal-verkrustete "
+%%%%
+"pearl-encrusted "
+"perlverkrustete "
+%%%%
+"ruby-encrusted "
+"Rubin-verkrustete "
+%%%%
+"sapphire-encrusted "
+"Saphir-verkrustete "
+%%%%
+"tiger eye-encrusted "
+"Tigerauge-verkrustete "
+%%%%
+"topaz-encrusted "
+"Topas-verkrustete "
+%%%%
+"turquoise-encrusted "
+"Türkis-verkrustete "
+%%%%
+
+%%%%
+"agate-studded "
+"achatbesetzte "
+%%%%
+"amber-studded "
+"bernsteinbesetzte "
+%%%%
+"amethyst-studded "
+"amethystbesetzte "
+%%%%
+"aquamarine-studded "
+"aquamarinbesetzte "
+%%%%
+"black opal-studded "
+"Schwarzer-Opal-besetzte "
+%%%%
+"citrine-studded "
+"citrinbesetzte "
+%%%%
+"diamond-studded "
+"diamantbesetzte "
+%%%%
+"emerald-studded "
+"smaragdbesetzte "
+%%%%
+"garnet-studded "
+"granatbesetzte "
+%%%%
+"jacinth-studded "
+"jacinthbesetzte "
+%%%%
+"jade-studded "
+"jadebesetzte "
+%%%%
+"jasper-studded "
+"jaspisbesetzte "
+%%%%
+"jet-studded "
+"jetbesetzte "
+%%%%
+"obsidian-studded "
+"obsidianbesetzte "
+%%%%
+"opal-studded "
+"opalbesetzte "
+%%%%
+"pearl-studded "
+"perlenbesetzte "
+%%%%
+"ruby-studded "
+"rubinbesetzte "
+%%%%
+"sapphire-studded "
+"saphirbesetzte "
+%%%%
+"tiger eye-studded "
+"tigeraugebesetzte "
+%%%%
+"topaz-studded "
+"topasbesetzte "
+%%%%
+"turquoise-studded "
+"türkisbesetzte "
 %%%%
 
 ################################
-# armour
+# materials
 ################################
+# mostly for rings/amulets, but a few are for armour/weapons as well/instead
+# these are also just cosmetic
 %%%%
-"embroidered "
-"bestickte "
+"amber "
+"Bernstein-"
 %%%%
-"dyed "
-"gefärbte "
+"brass "
+"Messing-"
 %%%%
-# affected by Animate Armour spell
-"animated "
-"animierte "
+"bronze "
+"Bronze-"
+%%%%
+"copper "
+"Kupfer-"
+%%%%
+"crystal "
+"Kristall-"
+%%%%
+"diamond "
+"Diamant-"
+%%%%
+"ebony "
+"Ebenholz-"
+%%%%
+"garnet "
+"Granat-"
+%%%%
+"glass "
+"Glas-"
+%%%%
+"granite "
+"Granit-"
+%%%%
+"ivory "
+"Elfenbein-"
+%%%%
+"jade "
+"Jade-"
+%%%%
+# "lapis lazuli" will be split into two words
+"lapis "
+"Lapis"
+%%%%
+"lazuli "
+"lazuli-"
+%%%%
+"lead "
+"Blei-"
+%%%%
+"marble "
+"Marmor-"
+%%%%
+"pearl "
+"Perle-"
+%%%%
+"pewter "
+"Zinn-"
+%%%%
+"platinum "
+"Platin-"
+%%%%
+"silken "
+"Seide-"
+%%%%
+"steel "
+"Stahl-"
+%%%%
+"tin "
+"Zinn-"
+%%%%
+"turquoise "
+"Türkis-"
+%%%%
+"wooden "
+"Holz-"
+%%%%
+"zirconium "
+"Zirkonium-"
+%%%%
+
+# these ones are a jewellery material and a rune
+%%%%
+"gossamer "
+"Spinnfäden-"
+%%%%
+"bone "
+"Knochen-"
+%%%%
+"iron "
+"eiserne "
+%%%%
+"silver "
+"silberne "
+%%%%
+# used for potion colour, jewellery material, and rune
+"golden "
+"goldene "
+%%%%
+
+# TODO: these ones are a jewellery material, and also a potion colour
+# so we have to distinguish them
+%%%%
+#"amethyst "
+#"Amethyst-"
+%%%%
+#"emerald "
+#"Smaragd-"
+%%%%
+#"ruby "
+#"Rubin-"
+%%%%
+#"sapphire "
+#"Saphir-"
 %%%%
 
 ################################
@@ -124,72 +580,11 @@
 %%%%
 
 ################################
-# rings
-################################
-%%%%
-"tubular "
-"röhrenförmige "
-%%%%
-"scratched "
-"zerkratzte "
-%%%%
-"notched "
-"gekerbte "
-%%%%
-
-################################
-# amulets
-################################
-%%%%
-"dented "
-"verbeulte "
-%%%%
-"square "
-"quadratische "
-%%%%
-"tiny "
-"sehr kleine "
-%%%%
-"triangular "
-"dreieckige "
-%%%%
-
-################################
-# wands
-################################
-%%%%
-"forked "
-"gegabelte "
-%%%%
-"tapered "
-"verjüngte "
-%%%%
-"worn "
-"abgenutzte "
-%%%%
-"sharpened "
-"geschärfte "
-%%%%
-
-################################
-# magical staves
-################################
-%%%%
-"weird "
-"seltsame "
-%%%%
-"gnarled "
-"knorrige "
-%%%%
-"smoking "
-"rauchige "
-%%%%
-
-################################
 # colours
 ################################
 
-# used for potions, draconians, (very) ugly things
+# used for draconians, (very) ugly things, unidentified potions
+# for potions, these are cosmetic, but they are meaningful on monsters
 
 %%%%
 "blue "
@@ -225,14 +620,8 @@
 "brown "
 "braune "
 %%%%
-"ruby "
-"rubinrote "
-%%%%
 "white "
 "weiße "
-%%%%
-"emerald "
-"smaragdgrüne "
 %%%%
 "grey "
 "graue "
@@ -246,21 +635,35 @@
 "puce "
 "braunrote "
 %%%%
+"pale "
+"blasse "
+%%%%
+# used for potion and rune
+"dark "
+"dunkle "
+%%%%
+
+# TODO: these ones are a material for jewellery, etc., and also a potion colour
+# so we have to distinguish them
+%%%%
 "amethyst "
 "amethystfarbene "
 %%%%
+"emerald "
+"smaragdgrüne "
+%%%%
+"ruby "
+"rubinrote "
+%%%%
 "sapphire "
 "saphirblaue "
-%%%%
-"pale "
-"blasse "
 %%%%
 
 ################################
 # potions
 ################################
 
-# potion qualifiers (optionally added in front of colour)
+# potion qualifiers (optionally added in front of colour - cosmetic)
 %%%%
 "bubbling "
 "sprudelnde "
@@ -292,35 +695,25 @@
 "oily "
 "ölige "
 %%%%
-"slimy "
-"schleimige "
-%%%%
 "emulsified "
 "emulgierte "
+%%%%
+# also a rune
+"slimy "
+"schleimige "
 %%%%
 
 ################################
 # runes
 ################################
+# Not really used because we have defined the entire strings (e.g. "the golden rune")
+# There are 17 runes in total.
+# 2 (glowing, sepentine) covered under general adjectives
+# 5 (gossamer, bone, iron, silver, golden) covered in materials section
+# 1 (dark) covered under colours
+# 1 (slimy) covered under potions
+# 8 covered here
 
-%%%%
-"iron "
-"eiserne "
-%%%%
-"icy "
-"eisige "
-%%%%
-"bone "
-"Knochen-"
-%%%%
-#"slimy "
-#"schleimige "
-%%%%
-"silver "
-"silberne "
-%%%%
-"serpentine "
-"Schlangen-"
 %%%%
 "decaying "
 "verfallende "
@@ -328,8 +721,11 @@
 "barnacled "
 "Kletten-"
 %%%%
-"gossamer "
-"Spinnfäden-"
+"abyssal "
+"Abgrund-"
+%%%%
+"icy "
+"eisige "
 %%%%
 "demonic "
 "dämonische "
@@ -340,6 +736,8 @@
 "fiery "
 "feurige "
 %%%%
+"obsidian "
+"Obsidian-"
 
 ################################
 # doors/gates
@@ -351,17 +749,15 @@
 "closed "
 "geschlossene "
 %%%%
+# also used for items
+"runed "
+"runenverzierte "
+%%%%
 "sealed "
 "versiegelte "
 %%%%
 "translucent "
-"durchsichtige "
-%%%%
-"huge "
-"riesige "
-%%%%
-"miniscule "
-"winzige "
+"durchscheinende "
 %%%%
 
 ################################
@@ -487,18 +883,6 @@ einfarbig braune
 %%%%
 "primal "
 "urzeitliche "
-%%%%
-
-# slime size (large also possible, but that's covered above)
-%%%%
-"very large "
-"sehr große "
-%%%%
-"enormous "
-"riesige "
-%%%%
-"titanic "
-"titanische "
 %%%%
 
 # player ghost ranks

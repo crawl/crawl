@@ -121,6 +121,7 @@ const vector<string> expected = {
 const vector<string> armour_en =
 {
     "a leather armour",
+    "a brightly glowing leather armour",
     "a +1 scale mail",
     "an cursed robe",
     "a cursed -1 chain mail",
@@ -137,6 +138,7 @@ const vector<string> armour_en =
 const vector<string> armour_de =
 {
     "eine Lederrüstung",
+    "eine hell glühende Lederrüstung",
     "ein +1 Schuppenpanzer",
     "eine verfluchte Robe",
     "ein verfluchter -1 Kettenpanzer",
