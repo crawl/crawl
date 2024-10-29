@@ -263,6 +263,9 @@ Tor zu einer Zikkurat
 gateway to a bazaar
 Tor zu einem Basar
 %%%%
+flickering gateway to a bazaar
+flackerndes Tor zu einem Basar
+%%%%
 portal to a secret trove of treasure
 Tor zu einer geheimen Fundgrube von Schätzen
 %%%%
@@ -904,6 +907,9 @@ das Tor zu einer Zikkurat
 the gateway to a bazaar
 das Tor zu einem Basar
 %%%%
+the flickering gateway to a bazaar
+das flackernde Tor zu einem Basar
+%%%%
 the portal to a secret trove of treasure
 das Tor zu einer geheimen Fundgrube von Schätzen
 %%%%
@@ -1382,6 +1388,9 @@ a gateway to a ziggurat
 %%%%
 a gateway to a bazaar
 {n}ein Tor zu einem Basar
+%%%%
+a flickering gateway to a bazaar
+{n}ein flackerndes Tor zu einem Basar
 %%%%
 a portal to a secret trove of treasure
 {n}ein Tor zu einer geheimen Fundgrube von Schätzen

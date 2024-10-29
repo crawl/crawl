@@ -18993,19 +18993,19 @@ Ihr fühlt Euch völlig allein.
 ##################
 %%%%
 Ashenzari says, "See what I see, mortal..."
-
+Aschenzari sagt: „Sieh, was ich sehe, Sterblicher...“
 %%%%
 You have a sudden vision of the Swamp and the Snake Pit!
-
+Ihr habt plötzlich eine Vision vom Sumpf und der Schlangengrube!
 %%%%
 You have a sudden vision of the Swamp and the Spider Nest!
-
+Ihr habt plötzlich eine Vision vom Sumpf und dem Spinnennest!
 %%%%
 You have a sudden vision of the Shoals and the Snake Pit!
-
+Ihr habt plötzlich eine Vision von den Tiefen und der Schlangengrube!
 %%%%
 You have a sudden vision of the Shoals and the Spider Nest!
-
+Ihr habt plötzlich eine Vision von den Tiefen und dem Spinnennest!
 %%%%
 
 ##################
@@ -19013,10 +19013,10 @@ You have a sudden vision of the Shoals and the Spider Nest!
 ##################
 %%%%
 Miasma emanates from the human's flesh.
-
+Aus dem Fleisch des Menschen strömt Miasma aus.
 %%%%
 The human rises from the dead!
-
+Der Mensch ist von den Toten auferstanden!
 %%%%
 
 ##################
@@ -19024,7 +19024,7 @@ The human rises from the dead!
 ##################
 %%%%
 An item emerges from the Abyss! Perhaps it is an incitement to worship... or even an insult?
-
+Ein Gegenstand taucht aus dem Abgrund auf! Vielleicht ist es eine Aufforderung zur Anbetung... oder sogar eine Beleidigung?
 %%%%
 
 ##################
@@ -19032,31 +19032,31 @@ An item emerges from the Abyss! Perhaps it is an incitement to worship... or eve
 ##################
 %%%%
 Nemelex Xobeh says, "Care to risk it all for some fabulous prizes, mortal?"
-
+Nemelex Xobeh sagt: „Willst du alles für einige fabelhafte Preise riskieren, Sterblicher?“
 %%%%
 Nemelex Xobeh says, "Through this portal lies a prize... or peril!"
-
+Nemelex Xobeh sagt: „Hinter diesem Portal liegt eine Belohnung... oder Gefahr!“
 %%%%
 Nemelex Xobeh says, "The prize could be yours... at the risk of your life!"
-
+Nemelex Xobeh sagt: „Der Preis könnte dir gehören... unter Einsatz deines Lebens!“
 %%%%
 Nemelex Xobeh says, "Care for a little wager, mortal?"
-
+Nemelex Xobeh sagt: „Lust auf eine kleine Wette, Sterblicher?“
 %%%%
 \"Beware! This is a limited time offer!\"
-
+\"Achtung! Dies ist ein zeitlich begrenztes Angebot!\"
 %%%%
 A transporter appears.
-
+Ein Transporter erscheint.
 %%%%
 <white>The transporter glows with a rainbow of weird colours and disappears.</white>
-
+<white>Der Transporter leuchtet in einem Regenbogen aus seltsamen Farben und verschwindet.</white>
 %%%%
 Nemelex Xobeh says, "You win!"
-
+Nemelex Xobeh sagt: „Du hast gewonnen!“
 %%%%
 Nemelex Xobeh says, "You lose!"
-
+Nemelex Xobeh sagt: „Du hast verloren!“
 %%%%
 
 ##################
@@ -19064,16 +19064,16 @@ Nemelex Xobeh says, "You lose!"
 ##################
 %%%%
 The portcullises are lifted away, releasing the combatants.
-
+Die Fallgitter werden hochgezogen und die Kämpfer befreit.
 %%%%
 The doors seal shut behind you!
-
+Die Türen schließen sich hinter Euch!
 %%%%
 Okawaru booms, "Excellent! You may choose a reward."
-
+Okawaru brummt: „Ausgezeichnet! Du darfst dir eine Belohnung aussuchen.“
 %%%%
 The gates behind the altar rise, and the entry reopens.
-
+Die Tore hinter dem Altar heben sich, und der Eingang öffnet sich wieder.
 %%%%
 
 ##################
@@ -19081,22 +19081,22 @@ The gates behind the altar rise, and the entry reopens.
 ##################
 %%%%
 As you approach the altar, the fountains begin to flow with blood!
-
+Als Ihr Euch dem Altar nähert, beginnen die Brunnen mit Blut zu fließen!
 %%%%
 Let the past return from memory!
-
+Lass die Vergangenheit aus der Erinnerung zurückkehren!
 %%%%
 \"WORSHIP ME, MORTAL,\" Xom booms, \"AND I SHALL GRANT YOU THE GREATEST GIFT OF ALL.\"
-
+\„BETE MICH AN, STERBLICHER,\“ dröhnt Xom, \"UND ICH WERDE DIR DAS GRÖSTE GESCHENK VON ALLEN GEWÄHREN.\“
 %%%%
 A goblin pops into existence! It looks at you with admiration.
-
+Ein Goblin taucht auf! Er sieht Euch mit Bewunderung an.
 %%%%
 \"Friendship. The greatest gift is friendship!\"
-
+\"Freundschaft. Das größte Geschenk ist die Freundschaft!\"
 %%%%
 For a moment, you catch a glimpse of warriors who walked this path long ago.
-
+Für einen Moment erhascht Ihr einen Blick auf die Krieger, die diesen Weg vor langer Zeit gegangen sind.
 %%%%
 
 ##################
@@ -19104,7 +19104,7 @@ For a moment, you catch a glimpse of warriors who walked this path long ago.
 ##################
 %%%%
 The spellbook bursts into flames! Trog roars with delight!
-
+Das Zauberbuch explodiert in Flammen! Trog brüllt vor Freude!
 %%%%
 
 ##################
@@ -19112,13 +19112,13 @@ The spellbook bursts into flames! Trog roars with delight!
 ##################
 %%%%
 Flames erupt from the bowels of the wizard! Trog roars with satisfaction!
-
+Flammen brechen aus den Eingeweiden des Zauberers hervor! Trog brüllt vor Genugtuung!
 %%%%
 Flames erupt from the wizard's cell! Trog roars with frustration!
-
+Flammen brechen aus der Zelle des Zauberers hervor! Trog brüllt vor Frustration!
 %%%%
 Flames erupt from the wizard's empty cell! Trog roars with frustration!
-
+Flammen brechen aus der leeren Zelle des Zauberers hervor! Trog brüllt vor Frustration!
 %%%%
 
 ##################
@@ -19126,10 +19126,10 @@ Flames erupt from the wizard's empty cell! Trog roars with frustration!
 ##################
 %%%%
 Vehumet offers to free you in exchange for your devotion to destruction.
-
+Vehumet bietet Euch an, Euch im Gegenzug für Eure Hingabe an die Zerstörung zu befreien.
 %%%%
 Suddenly, the trees start to burn!
-
+Plötzlich fangen die Bäume an zu brennen!
 %%%%
 
 ##################
@@ -19137,10 +19137,10 @@ Suddenly, the trees start to burn!
 ##################
 %%%%
 You feel as though Xom is toying with you.
-
+Ihr habt das Gefühl, dass Xom mit Euch spielt.
 %%%%
 Suddenly, the walls become transparent!
-
+Plötzlich werden die Wände durchsichtig!
 %%%%
 
 ##################
@@ -19148,13 +19148,13 @@ Suddenly, the walls become transparent!
 ##################
 %%%%
 The walls suddenly crumble!
-
+Die Mauern stürzen plötzlich ein!
 %%%%
 A dream sheep catches fire!
-
+Ein Traumschaf geht in Flammen auf!
 %%%%
 You hear mad divine giggling.
-
+Ihr hört verrücktes göttliches Kichern.
 %%%%
 
 ##################
@@ -19162,13 +19162,13 @@ You hear mad divine giggling.
 ##################
 %%%%
 You sense Yredelemnul urging you to kill the trapped human.
-
+Ihr spürt, dass Yredelemnul Euch dazu drängt, den gefangenen Menschen zu töten.
 %%%%
 Yredelemnul welcomes your deed!
-
+Yredelemnul begrüßt Eure Tat!
 %%%%
 You hear a strange fizzling.
-
+Ihr hört ein seltsames Zischen.
 %%%%
 
 ##################
@@ -19176,7 +19176,7 @@ You hear a strange fizzling.
 ##################
 %%%%
 (@x@,@y@)
-
+(@x@,@y@)
 %%%%
 
 ##################
@@ -19184,19 +19184,19 @@ You hear a strange fizzling.
 ##################
 %%%%
 There is a click. Suddenly, the grates are dropped!
-
+Es gibt ein Klicken. Plötzlich fallen die Gitterroste herunter!
 %%%%
 There is a click. Nothing appears to happen.
-
+Es gibt ein Klicken. Nichts scheint zu passieren.
 %%%%
 Something awakens from inside the sarcophagi!
-
+Etwas erwacht aus dem Inneren der Sarkophage!
 %%%%
 The ground shakes!
-
+Der Boden bebt!
 %%%%
 You hear grinding stone!
-
+Ihr hört mahlenden Stein!
 %%%%
 
 ##################
@@ -19204,7 +19204,7 @@ You hear grinding stone!
 ##################
 %%%%
 You hear the creaking of ancient metal!
-
+Ihr hört das Knarren von uraltem Metall!
 %%%%
 
 ##################
@@ -19259,7 +19259,7 @@ Ihr hört ein Geräusch von rostigem Metall, das gleitet.
 ##################
 %%%%
 The surface of the water froths suddenly, and then rushes away.
-
+Die Oberfläche des Wassers schäumt plötzlich auf und rauscht dann davon.
 %%%%
 
 ##################
@@ -19267,16 +19267,16 @@ The surface of the water froths suddenly, and then rushes away.
 ##################
 %%%%
 You feel a strange vibration for a moment.
-
+Einen Moment lang spürt Ihr eine seltsame Vibration.
 %%%%
 You hear the sound of toppling stones.
-
+Ihr hört das Geräusch von umstürzenden Steinen.
 %%%%
 The stone walls suddenly crumble and collapse.
-
+Die Steinwände bröckeln plötzlich und stürzen ein.
 %%%%
 You feel a great sense of loss, and a brush of the Abyss.
-
+Ihr fühlt einen großen Verlust und einen Hauch des Abgrunds.
 %%%%
 
 ##################
@@ -19284,10 +19284,10 @@ You feel a great sense of loss, and a brush of the Abyss.
 ##################
 %%%%
 A basket of spiders falls from above!
-
+Ein Korb voller Spinnen fällt von oben herab!
 %%%%
 You notice webbing strewn about the room and hear a chittering noise in the background.
-
+Ihr bemerkt, dass überall im Raum Spinnweben verstreut sind und hört im Hintergrund ein schnatterndes Geräusch.
 %%%%
 
 ##################
@@ -19306,10 +19306,10 @@ The water ripples visibly.
 ##################
 %%%%
 You hear an unearthly scream, and the grinding of stone!
-
+Eine Gestalt taucht aus den Tiefen des Wassers auf!
 %%%%
 The path is suddenly blocked!
-
+Der Weg ist plötzlich versperrt!
 %%%%
 
 ##################
@@ -19317,13 +19317,13 @@ The path is suddenly blocked!
 ##################
 %%%%
 You have a sense of imminent foreboding.
-
+Sie spüren eine unmittelbare Vorahnung.
 %%%%
 One of the plants suddenly grows acid sacs!
-
+Eine der Pflanzen wächst plötzlich Säuresäcke!
 %%%%
 Another plant grows acid sacs!
-
+Noch eine Pflanze wächst Säuresäcke!
 %%%%
 
 ##################
@@ -19346,16 +19346,16 @@ You hear the @adjective@creaking of a portcullis very nearby.
 Ihr hört das @adjective@Knarren eines Fallgatters ganz in der Nähe.
 %%%%
 You hear the roar of battle.
-
+Ihr hört das Gebrüll der Schlacht.
 %%%%
 There is an entrance to a bailey on this level. Hurry and find it before the portal closes forever!
-
+Auf dieser Ebene gibt es einen Eingang zu einem Burghof. Beeilt Euch und findet ihn, bevor sich das Portal für immer schließt!
 %%%%
 The portcullis has been lowered almost to the ground.
-
+Das Fallgitter wurde fast bis zum Boden heruntergelassen.
 %%%%
 The portal closes with a thud.
-
+Das Portal schließt sich mit einem Knall.
 %%%%
 
 ##################
@@ -19378,19 +19378,16 @@ You hear the @adjective@tolling of a bell very nearby.
 Ihr hört das @adjective@Läuten einer Glocke ganz in der Nähe.
 %%%%
 You hear coins being counted.
-
+Ihr hört, wie Münzen gezählt werden.
 %%%%
 An interdimensional caravan has stopped on this level and set up a bazaar. Hurry and find its entrance before they move on!
-
+Eine interdimensionale Karawane hat auf dieser Ebene Halt gemacht und einen Basar aufgebaut. Beeilt Euch und findet den Eingang, bevor sie weiterziehen!
 %%%%
 You hear the last, dying notes of the bell.
-
+Ihr hört die letzten, verklingenden Töne der Glocke.
 %%%%
 The gate to the bazaar disappears!
-
-%%%%
-flickering gateway to a bazaar
-
+Das Tor zum Basar verschwindet!
 %%%%
 
 ##################
@@ -19413,16 +19410,16 @@ You hear the @adjective@whistling of a wind very nearby.
 Ihr hört das @adjective@Pfeifen eines Windes ganz in der Nähe.
 %%%%
 You hear a distant wind.
-
+Ihr hört einen entfernten Wind.
 %%%%
 There is a portal to the Desolation of Salt on this level. Hurry and find it before the gateway collapses!
-
+Auf dieser Ebene gibt es ein Portal zur Verwüstung des Salzes. Beeilt Euch und findet es, bevor das Tor einstürzt!
 %%%%
 The wind is rapidly growing quiet.
-
+Der Wind wird schnell leiser.
 %%%%
 The gateway collapses.
-
+Das Tor bricht zusammen.
 %%%%
 
 ##################
@@ -19445,13 +19442,13 @@ You hear the @adjective@beating of a drum very nearby.
 Ihr hört @adjective@Paukenschläge ganz in der Nähe.
 %%%%
 You hear a distant snort.
-
+Ihr hört ein entferntes Schnauben.
 %%%%
 Hark! There is a gateway to a gauntlet on this level. Find the entrance quickly before the gate is sealed!
-
+Horcht! Auf dieser Ebene gibt es ein Tor zu einem Spießrutenlauf. Findet den Eingang schnell, bevor das Tor versiegelt wird!
 %%%%
 After a thunderous strike, the drumbeats cease.
-
+Nach einem donnernden Schlag verstummen die Trommelschläge.
 %%%%
 
 ##################
@@ -19474,16 +19471,16 @@ You hear the @adjective@crackling of a melting archway very nearby.
 Ihr hört das @adjective@Knacken eines schmelzenden Torbogens ganz in der Nähe.
 %%%%
 You feel a wave of frost pass over you.
-
+Ihr spürt, wie eine Welle der Kälte über euch hereinbricht.
 %%%%
 There is an entrance to an ice cave on this level. Hurry and find it before the portal melts!
-
+Auf dieser Ebene gibt es einen Eingang zu einer Eishöhle. Beeilt Euch und findet ihn, bevor das Portal schmilzt!
 %%%%
 The crackling of melting ice is subsiding rapidly.
-
+Das Knistern des schmelzenden Eises lässt schnell nach.
 %%%%
 The archway melts and disappears.
-
+Der Torbogen schmilzt und verschwindet.
 %%%%
 
 ##################
@@ -19506,19 +19503,19 @@ You hear the @adjective@hiss of an avalanche of sand very nearby.
 Ihr hört das @adjective@Zischen einer Sandlawine ganz in der Nähe.
 %%%%
 You hear the hiss of flowing sand.
-
+Ihr hört das Zischen von fließendem Sand.
 %%%%
 There is an entrance to an ossuary on this level. Hurry and find it before the portal is buried!
-
+Auf dieser Ebene gibt es einen Eingang zu einem Beinhaus. Beeilt Euch und findet ihn, bevor das Portal begraben wird!
 %%%%
 The hiss of flowing sand is almost imperceptible now.
-
+Das Zischen des fließenden Sandes ist jetzt fast nicht mehr wahrnehmbar.
 %%%%
 The hiss of flowing sand is gone.
-
+Das Zischen des fließenden Sandes ist weg.
 %%%%
 There is a click, and some walls slide away!
-
+Es macht klick, und einige Wände rutschen weg!
 %%%%
 
 ##################
@@ -19541,16 +19538,16 @@ You hear the @adjective@rusting of a drain very nearby.
 Ihr hört das @adjective@Rosten eines Abflusses ganz in der Nähe.
 %%%%
 You hear the sound of rushing water.
-
+Ihr hört das Geräusch von rauschendem Wasser.
 %%%%
 There is an entrance to a sewer on this level. Hurry and find it before the portal rusts away!
-
+Auf dieser Ebene gibt es einen Eingang zu einem Abwasserkanal. Beeilt Euch und findet ihn, bevor das Portal wegrostet!
 %%%%
 You hear the drain falling apart.
-
+Ihr hört, wie der Abfluss zerfällt.
 %%%%
 The drain falls to bits.
-
+Der Abfluss fällt in Stücke.
 %%%%
 
 ##################
@@ -19573,43 +19570,43 @@ You hear the @adjective@rumble of an avalanche of rocks very nearby.
 Ihr hört das @adjective@Grollen einer Steinlawine ganz in der Nähe.
 %%%%
 You feel an oppressive heat about you.
-
+Ihr spürt eine drückende Hitze um Euch herum.
 %%%%
 There is an entrance to a volcano on this level. Hurry and find it before the entrance collapses!
-
+Auf dieser Ebene gibt es einen Eingang zu einem Vulkan. Beeilt Euch und findet ihn, bevor der Eingang zusammenbricht!
 %%%%
 The sound of falling rocks suddenly begins to subside.
-
+Das Geräusch von fallenden Steinen wird plötzlich leiser.
 %%%%
 There is a deep roar from within the tunnel. Moments later, a river of lava pours forth, sealing it permanently.
-
+Aus dem Inneren des Tunnels ertönt ein tiefes Brüllen. Augenblicke später ergießt sich ein Lavastrom und versiegelt den Tunnel für immer.
 %%%%
 There is a rumble as the volcano erupts. The roof shakes.
-
+Ein Grollen ertönt, als der Vulkan ausbricht. Das Dach wackelt.
 %%%%
 The volcano erupts! Nearby, a roof collapses.
-
+Der Vulkan bricht aus! In der Nähe stürzt ein Dach ein.
 %%%%
 The ground shudders ominously.
-
+Der Boden erzittert bedrohlich.
 %%%%
 In the distance, the volcano explodes with a roar! Lava spreads onto the path.
-
+In der Ferne explodiert der Vulkan mit einem Brüllen! Lava breitet sich auf dem Weg aus.
 %%%%
 The air is thick with the scent of sulphur.
-
+Die Luft ist dick mit dem Geruch von Schwefel.
 %%%%
 There is another distant roar. More lava overflows!
-
+In der Ferne ertönt ein weiteres Brüllen. Mehr Lava fließt über!
 %%%%
 The ground moves violently!
-
+Der Boden bewegt sich heftig!
 %%%%
 The volcano erupts again! A thin layer of lava overflows to fill the cavern.
-
+Der Vulkan bricht erneut aus! Eine dünne Schicht Lava fließt über und füllt die Kaverne.
 %%%%
 The ground shudders. Some of the lava has hardened enough to walk over!
-
+Der Boden zittert. Ein Teil der Lava ist so hart geworden, dass man darüber laufen kann!
 %%%%
 
 ##################
@@ -19632,91 +19629,91 @@ You hear the @adjective@crackle of a magical portal very nearby.
 Ihr hört das @adjective@Knistern eines magischen Portals ganz in der Nähe.
 %%%%
 You hear the crackle of arcane power.
-
+Du hörst das Knistern von arkaner Macht.
 %%%%
 There is an entrance to a wizard's laboratory on this level! Hurry and find it before the portal closes forever!
-
+Auf dieser Ebene gibt es einen Eingang zum Labor eines Zauberers! Beeilt Euch und findet ihn, bevor sich das Portal für immer schließt!
 %%%%
 The crackle of the magical portal is almost imperceptible now.
-
+Das Knistern des magischen Portals ist jetzt kaum noch zu hören.
 %%%%
 The flow of magic halts.
-
+Der Fluss der Magie kommt zum Stillstand.
 %%%%
 Welcome to Doroklohe's Tomb!
-
+Willkommen in Doroklohes Grab!
 %%%%
 Welcome to Cigotuvi's Fleshworks!
-
+Willkommen bei Cigotuvis Fleischwerk!
 %%%%
 Welcome to Iskenderun's Mystic Tower!
-
+Willkommen im Mystischen Turm von Iskenderun!
 %%%%
 Welcome to Zonguldrok's Shrine!
-
+Willkommen bei Zonguldroks Schrein!
 %%%%
 Welcome to Wucad Mu's Monastery!
-
+Willkommen im Kloster von Wucad Mu!
 %%%%
 Welcome to The Roulette of Golubria!
-
+Willkommen beim Roulette von Golubria!
 %%%%
 Welcome to The Chambers of the Cloud Mage!
-
+Willkommen in den Kammern des Wolkenmagiers!
 %%%%
 Welcome to The Hall of the Hellbinder!
-
+Willkommen in der Halle des Höllenbinders!
 %%%%
 Welcome to Lehudib's Moon Base!
-
+Willkommen bei Lehudibs Mondbasis!
 %%%%
 The ground shakes.
-
+Der Boden zittert.
 %%%%
 There is a faint hissing noise.
-
+Es ist ein leises Zischen zu hören.
 %%%%
 There is a loud grinding noise.
-
+Es ist ein lautes Schleifgeräusch zu hören.
 %%%%
 The walls fall away. The entombed are set free!
-
+Die Wände fallen weg. Die Begrabenen werden befreit!
 %%%%
 A door appears!
-
+Eine Tür erscheint!
 %%%%
 The walls vibrate.
-
+Die Wände vibrieren.
 %%%%
 Strange, shadowy figures dance through the air in front of you.
-
+Seltsame, schattenhafte Gestalten tanzen vor Euch durch die Luft.
 %%%%
 This room is filled with shadowy figures, quietly meditating.
-
+Dieser Raum ist voll von schattenhaften Gestalten, die still meditieren.
 %%%%
 Here, spectral monks perform complicated, martial routines; they fade quickly.
-
+Hier führen gespenstische Mönche komplizierte, martialische Routinen vor; sie verblassen schnell.
 %%%%
 Faint laughter comes from somewhere. Too faint to be real.
-
+Von irgendwoher kommt leises Lachen. Zu leise, um echt zu sein.
 %%%%
 There is a faint scream of pain from a crouched figure. This too fades quickly.
-
+Ein schwacher Schmerzensschrei von einer zusammengekauerten Gestalt ist zu hören. Auch dieser verklingt schnell.
 %%%%
 Grey monks gather around the fountain. They do not speak, nor look at each other.
-
+Graue Mönche versammeln sich um den Springbrunnen. Sie sprechen nicht und sehen sich nicht an.
 %%%%
 A figure sits in silent meditation. It spots you, gestures wildly, and disappears.
-
+Eine Gestalt sitzt in stiller Meditation. Sie sieht Euc, gestikuliert wild und verschwindet.
 %%%%
 One of the shadowy figures appears more solid!
-
+Eine der schattenhaften Gestalten erscheint fester!
 %%%%
 Shadows coalesce into solid form.
-
+Die Schatten verdichten sich zu einer festen Form.
 %%%%
 The shadows inhabiting this place fade forever.
-
+Die Schatten, die diesen Ort bewohnen, verblassen für immer.
 %%%%
 
 ##################
