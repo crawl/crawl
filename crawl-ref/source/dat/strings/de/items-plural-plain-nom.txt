@@ -236,16 +236,16 @@ potions of resistance
 # its colour. In English, we can get away with using the same word for both
 # meanings, but that's not necessarily the case in other languages.
 %%%%
-%samethyst potion
+%samethyst potions
 {pl}{adj-e}%samethystfarbene Zaubertränke
 %%%%
-%semerald potion
+%semerald potions
 {pl}{adj-e}%ssmaragdgrüne Zaubertränke
 %%%%
-%sruby potion
+%sruby potions
 {pl}{adj-e}%srubinrote Zaubertränke
 %%%%
-%ssapphire potion
+%ssapphire potions
 {pl}{adj-e}%ssaphirblaue Zaubertränke
 %%%%
 

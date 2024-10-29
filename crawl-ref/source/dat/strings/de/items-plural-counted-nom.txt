@@ -236,16 +236,16 @@
 # its colour. In English, we can get away with using the same word for both
 # meanings, but that's not necessarily the case in other languages.
 %%%%
-%d %samethyst potion
+%d %samethyst potions
 %d {adj-e}%samethystfarbene Zaubertränke
 %%%%
-the %semerald potion
+%d %semerald potions
 %d {adj-e}%ssmaragdgrüne Zaubertränke
 %%%%
-the %sruby potion
+%d %sruby potions
 %d {adj-e}%srubinrote Zaubertränke
 %%%%
-the %ssapphire potion
+%d %ssapphire potions
 %d {adj-e}%ssaphirblaue Zaubertränke
 %%%%
 
