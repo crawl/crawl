@@ -278,6 +278,12 @@ int main()
     msg = localise("Depths:2");
     show_result(msg, "Tiefen:2");
 
+    msg = localise("The portal disappears!");
+    show_result(msg, "Das Portal verschwindet!");
+
+    msg = localise("show slimy rune");
+    show_result(msg, "schleimige Rune zeigen");
+
     you.position = coord_def(10, 10);
     env.grid.init(DNGN_FLOOR);
     env.pgrid.init(FPROP_NONE);

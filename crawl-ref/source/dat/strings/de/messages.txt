@@ -18887,13 +18887,13 @@ Automagie aktiviert, wird den Zauber im Platz @slot@ (@spell_name@) wirken.
 ##################
 %%%%
 @The_feature@ vanishes just as you enter it!
-
+@The_feature@ verschwindet, sobald Ihr es betretet!
 %%%%
 @The_feature@ disappears!
-
+@The_feature@ verschwindet!
 %%%%
 The walls and floor vibrate strangely for a moment.
-
+Die Wände und der Boden vibrieren einen Moment lang auf seltsame Weise.
 %%%%
 
 ##################
@@ -18937,10 +18937,10 @@ The portal is engraved with runes symbolizing the primacy of the material over t
 Ans Portal sind Runen eingraviert, die den Vorrang des Materiellen gegenüber dem Göttlichen symbolisieren. Diejenigen, die es betreten, mögen Reichtümer finden, aber wenn sie zurückkehren, werden sie feststellen, dass die Götter, die ihnen teuer waren, sie in ihrer Abwesenheit vergessen haben.
 %%%%
 show @item_name@
-
+{acc}@item_name@ zeigen
 %%%%
 give @item_name@
-
+{acc}@item_name@ geben
 %%%%
 lose all piety
 alle Frömmigkeit verlieren

@@ -1638,6 +1638,7 @@ static string _reverse_engineer_parameterised_string(const string& s, const stri
     string param_name;
     for (const string &tok: tokens)
     {
+        //TRACE("token: %s", tok.c_str());
         if (starts_with(tok, "@") && ends_with(tok, "@"))
         {
             // param
@@ -1646,7 +1647,7 @@ static string _reverse_engineer_parameterised_string(const string& s, const stri
         else
         {
             // not param
-            if (pos == 0)
+            if (pos == 0 && param_name.empty())
             {
                 if (!starts_with(s, tok))
                     return "";
@@ -1660,6 +1661,8 @@ static string _reverse_engineer_parameterised_string(const string& s, const stri
                 if (!param_name.empty())
                 {
                     string param_value = s.substr(prev, pos - prev);
+                    if (prev == 0)
+                        param_value = lowercase_first(param_value);
                     params[param_name] = param_value;
                     param_name = "";
                 }
@@ -1668,6 +1671,11 @@ static string _reverse_engineer_parameterised_string(const string& s, const stri
         }
     }
 
+    // check for param right at the end
+    if (!param_name.empty())
+        params[param_name] = s.substr(pos);
+
+    TRACE("_reverse_engineer_parameterised_string: %s, %s", s.c_str(), candidate.c_str());
     return localise(candidate, params);
 }
 
@@ -1689,7 +1697,12 @@ static string _reverse_engineer_parameterised_string(const string& s)
         "You don't have enough magic to cast @spell_name@!",
         "Automagic will cast spell in slot @slot@ (@spell_name@).",
         "Automagic enabled, will cast spell in slot @slot@ (@spell_name@).",
+        // lm_timed.lua
+        "@The_feature@ vanishes just as you enter it!",
+        "@The_feature@ disappears!",
         // lm_trove.lua
+        "show @item_name@",
+        "give @item_name@",
         "This portal requires the presence of @item_name@ to function.",
         "The portal requires @item_name@ for entry.",
         "This portal needs @item_name@ to function.",
