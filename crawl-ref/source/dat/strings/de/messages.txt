@@ -18886,6 +18886,12 @@ Automagie aktiviert, wird den Zauber im Platz @slot@ (@spell_name@) wirken.
 # dat/dlua/lm_timed.lua
 ##################
 %%%%
+@The_feature@ vanishes just as you enter it!
+
+%%%%
+@The_feature@ disappears!
+
+%%%%
 The walls and floor vibrate strangely for a moment.
 
 %%%%
@@ -18929,6 +18935,12 @@ Dieses Portal benötigt {acc}@item_name@, um zu funktionieren.
 %%%%
 The portal is engraved with runes symbolizing the primacy of the material over the divine. Those who enter it may find riches, but when they return, they will find that whatever gods they held dear have forgotten them in their absence.
 Ans Portal sind Runen eingraviert, die den Vorrang des Materiellen gegenüber dem Göttlichen symbolisieren. Diejenigen, die es betreten, mögen Reichtümer finden, aber wenn sie zurückkehren, werden sie feststellen, dass die Götter, die ihnen teuer waren, sie in ihrer Abwesenheit vergessen haben.
+%%%%
+show @item_name@
+
+%%%%
+give @item_name@
+
 %%%%
 lose all piety
 alle Frömmigkeit verlieren
@@ -19019,16 +19031,16 @@ An item emerges from the Abyss! Perhaps it is an incitement to worship... or eve
 # dat/des/altar/nemelex_the_gamble.des
 ##################
 %%%%
-\"Care to risk it all for some fabulous prizes, mortal?\"
+Nemelex Xobeh says, "Care to risk it all for some fabulous prizes, mortal?"
 
 %%%%
-\"Through this portal lies a prize... or peril!\"
+Nemelex Xobeh says, "Through this portal lies a prize... or peril!"
 
 %%%%
-\"The prize could be yours... at the risk of your life!\"
+Nemelex Xobeh says, "The prize could be yours... at the risk of your life!"
 
 %%%%
-\"Care for a little wager, mortal?\"
+Nemelex Xobeh says, "Care for a little wager, mortal?"
 
 %%%%
 \"Beware! This is a limited time offer!\"

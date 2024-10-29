@@ -818,11 +818,15 @@ def process_lua_file(filename):
             # embedded conditional
             line = re.sub(r'\.\.\s*\([^\)]+\)', '.. param', line)
 
-            if filename.endswith('stash.lua'):
-                line = re.sub(r'annot\s=\sannot\s\.\.', 'annot =', line)
-            #line = re.sub(r'"\s*\.\.[^"]*"', '%s', line)
-            line = re.sub(r'"\s*\.\.\s*', '@', line)
-            line = re.sub(r'\s*\.\.\s*"', '@', line)
+            # dont make self a param in concatenation (e.g. msg = msg .. whatever)
+            line = re.sub(r'([a-z]+)\s*=\s*\1\s*\.\.', r'\1 =', line)
+            # param in middle of string
+            line = re.sub(r'"\s*\.\.\s*([^"]*?)\s*\.\.\s*"', r'@\1@', line)
+            # param at end of string
+            line = re.sub(r'"\s*\.\.\s*(.*)', r'@\1@"', line)
+            # param at start of string
+            line = re.sub(r'(return\s*|mpr\(\s*)(.*?)\s*\.\.\s*"', r'\1"@\2@', line)
+            line = re.sub(r'(.*?)\s*\.\.\s*"', r'"@\1@', line)
             #line = re.sub(r'"\s*\.\.\s*([a-zA-Z_]+)\s*\.\.\s*"', r'@\1@', line)
             line = re.sub(r'\s+\.\.\s+', '@@', line)
             line = line.replace('@AUTOMAGIC_SPELL_SLOT@', '@slot@')
@@ -833,6 +837,8 @@ def process_lua_file(filename):
             line = re.sub('\s*[\-\+]\s*[0-9]\s*@', '@', line)
             # verb is actually a noun
             line = line.replace('@chk_2@@verb@', '@adjective@@noise@')
+            line = re.sub('@[^@]+the_feature@', '@the_feature@', line)
+            line = re.sub('@([^@ ]+?)[\(\)][^@]*@', r'@\1@', line)
 
         if 'crawl.mpr' in line:
             # we don't want to extract the second parameter - it's the channel
@@ -853,9 +859,21 @@ def process_lua_file(filename):
                 continue
             if filename.endswith('automagic.lua') and string == " enabled,":
                 continue
+            if string in [" and", " the @name@", "@feat@/@dur@", r"AUTOMAGIC_SPELL_SLOT = '@slot@'\n"]:
+                continue
+
+            if filename.endswith('nemelex_the_gamble.des'):
+                # expand
+                if string.startswith(r'\"') and not string.startswith(r'\"Beware'):
+                    string = 'Nemelex Xobeh says, ' + string
+                elif string.startswith('Nemelex Xobeh says, @'):
+                    continue
 
             # make sure double quotes are escaped
             string = re.sub(r'(?<!\\)"', r'\"', string)
+
+            # make sure inital param is capitalised
+            string = re.sub('^@the_', '@The_', string)
 
             if string == "no spell currently":
                 strings.append("# note: @spell_name@ when no spell in chosen slot")
