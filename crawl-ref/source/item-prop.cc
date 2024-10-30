@@ -2078,14 +2078,11 @@ skill_type item_attack_skill(object_class_type wclass, int wtype)
     return item_attack_skill(wpn);
 }
 
-// True if item is a staff that deals extra damage based on Evocations skill,
-// or has an evocations-based passive effect (staff of Asmodeus).
+// True if item is a staff that deals extra damage based on Evocations skill.
 bool staff_uses_evocations(const item_def &item)
 {
     if (is_unrandom_artefact(item, UNRAND_ELEMENTAL_STAFF)
-        || is_unrandom_artefact(item, UNRAND_OLGREB)
-        || is_unrandom_artefact(item, UNRAND_ASMODEUS)
-        || is_unrandom_artefact(item, UNRAND_DISPATER))
+        || is_unrandom_artefact(item, UNRAND_OLGREB))
     {
         return true;
     }
@@ -2955,7 +2952,6 @@ bool gives_ability(const item_def &item)
     // Check for evokable randart properties.
     if (artefact_property(item, ARTP_INVISIBLE)
         || artefact_property(item, ARTP_BLINK)
-        || is_unrandom_artefact(item, UNRAND_ASMODEUS)
         || is_unrandom_artefact(item, UNRAND_DISPATER)
         || is_unrandom_artefact(item, UNRAND_OLGREB))
     {
