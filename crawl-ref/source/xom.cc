@@ -1517,6 +1517,73 @@ static void _xom_snakes_to_sticks(int /*sever*/)
     }
 }
 
+// Xom counts up webs to light on fire.
+static vector<coord_def> _xom_counts_webs()
+{
+    vector<coord_def> webs;
+
+    for (vision_iterator ri(you); ri; ++ri)
+    {
+        if (env.grid(*ri) == DNGN_TRAP_WEB)
+            webs.push_back(*ri);
+    }
+
+    return webs;
+}
+
+// Xom burns down all webs in sight, replacing them with fire clouds.
+// All other sorts of clouds are removed, and anybody in a web is freed.
+static void _xom_lights_up_webs(int /*sever*/)
+{
+    int webs_count = 0;
+    int blaze_time = 3 + random2(4) * 3;
+
+    vector<coord_def> candidates = _xom_counts_webs();
+
+    for (coord_def pos : candidates)
+    {
+        if (env.grid(pos) == DNGN_TRAP_WEB)
+        {
+            flash_tile(pos, RED, 0);
+            animation_delay(20, true);
+
+            if (cloud_at(pos))
+                delete_cloud(pos);
+
+            check_place_cloud(CLOUD_FIRE, pos, blaze_time, nullptr, 0);
+
+            webs_count++;
+            env.map_knowledge(pos).set_feature(DNGN_FLOOR);
+            dungeon_terrain_changed(pos, DNGN_FLOOR);
+
+            if (get_trapping_net(pos, true) == NON_ITEM)
+            {
+                if (monster_at(pos) && monster_at(pos)->has_ench(ENCH_HELD))
+                {
+                    monster_web_cleanup(*monster_at(pos), true);
+                    monster_at(pos)->del_ench(ENCH_HELD);
+                }
+                else if (pos == you.pos() && you.attribute[ATTR_HELD])
+                {
+                    leave_web();
+                    stop_being_held();
+                }
+            }
+        }
+    }
+
+    view_clear_overlays();
+
+    if (webs_count > 0)
+    {
+        god_speaks(GOD_XOM, _get_xom_speech("lights up webs").c_str());
+        mprf("%s %s into flame!", number_in_words(webs_count).c_str(),
+              webs_count == 1 ? "web bursts" : "webs burst");
+        string note = make_stringf("lit up %d webs", webs_count);
+        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
+    }
+}
+
 /// Try to find a nearby hostile monster with an animateable weapon.
 static monster* _find_monster_with_animateable_weapon()
 {
@@ -4651,6 +4718,20 @@ static const vector<xom_event_data> _list_xom_good_actions = {
         {return mon_nearby(_hostile_snake);}
     },
     {
+        XOM_GOOD_LIGHT_UP_WEBS, 205, 0, [](int /*sv*/, int tn)
+        {
+            // Since this is meant to be a good action, don't set the player's
+            // tile on fire if they're close to death.
+            if (env.grid(you.pos()) == DNGN_TRAP_WEB
+                && you.hp <= (27 - you.res_fire() * 4))
+            {
+                return false;
+            }
+
+            return tn > 0 && !_xom_counts_webs().empty();
+        }
+    },
+    {
         XOM_GOOD_ANIMATE_MON_WPN, 325, 0,[](int /*sv*/, int tn)
         {return tn > 4 && _find_monster_with_animateable_weapon()
                        && !you.allies_forbidden();}
@@ -5440,6 +5521,7 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_GOOD_FLORA_RING, {"flora ring", _xom_harmless_flora }},
     { XOM_GOOD_DOOR_RING, {"good door ring enclosure", _xom_good_door_ring }},
     { XOM_GOOD_SNAKES, { "snakes to sticks", _xom_snakes_to_sticks }},
+    { XOM_GOOD_LIGHT_UP_WEBS, { "light up webs", _xom_lights_up_webs }},
     { XOM_GOOD_DESTRUCTION, { "mass fireball", _xom_real_destruction }},
     { XOM_GOOD_FAKE_DESTRUCTION, { "fake fireball", _xom_fake_destruction }},
     { XOM_GOOD_FORCE_LANCE_FLEET, {"living force lance fleet",
