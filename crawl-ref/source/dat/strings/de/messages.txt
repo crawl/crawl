@@ -19721,100 +19721,100 @@ Die Schatten, die diesen Ort bewohnen, verblassen für immer.
 ##################
 %%%%
 A rune of Zot has appeared.
-
+Eine Rune von Zot ist erschienen.
 %%%%
 The exit has re-opened... for now.
-
+Der Ausgang ist wieder geöffnet... vorerst.
 %%%%
 The exit has re-opened.
-
+Der Ausgang ist wieder geöffnet.
 %%%%
 The Orb of Zot has appeared in the centre of the arena!
-
+Die Kugel von Zot ist in der Mitte der Arena erschienen!
 %%%%
 <yellow>You have won a prize for killing the boss!</yellow>
-
+<yellow>Ihr habt einen Preis für das Töten des Bosses gewonnen!</yellow>
 %%%%
 <yellow>Victory!</yellow>
-
+<yellow>Sieg!</yellow>
 %%%%
 Score multiplier: @style_mult@x
-
+Punktemultiplikator: @style_mult@x
 %%%%
 Score multiplier reset to 27x
-
+Punktemultiplikator auf 27x zurückgesetzt
 %%%%
 You lost your score multiplier.
-
+Ihr habt Euren Punktemultiplikator verloren.
 %%%%
 You now have @style_points@ arena points (gained @style_gain@).
-
+Ihr habt jetzt @style_points@ Arenapunkte (@style_gain@ gewonnen).
 %%%%
 You now have 1 arena point.
-
+Ihr habt jetzt 1 Arenapunkt.
 %%%%
 <white>The arena falls silent. Everyone but you is dead.</white>
-
+<white>Die Arena wird still. Alle außer Euch sind tot.</white>
 %%%%
 <white>There is nothing to do now but take the Orb and leave.</white>
-
+<white>Es bleibt nichts anderes übrig, als die Kugel zu nehmen und zu gehen.</white>
 %%%%
 <white>Congratulations, champion.</white>
-
+<white>Glückwunsch, Champion.</white>
 %%%%
 Time's up!
-
+Die Zeit ist um!
 %%%%
 The arena falls silent.
-
+Die Arena wird still.
 %%%%
 <yellow>Get ready!</yellow>
-
+<yellow>Bereit sein!</yellow>
 %%%%
 ROUND @round_id@!
-
+RUNDE @round_id@!
 %%%%
 FINAL BOSS!
-
+ENDE-BOSS!
 %%%%
 BOSS ROUND!
-
+BOSSRUNDE!
 %%%%
 ZOT ROUND!
-
+ZOTRUNDE!
 %%%%
 FIGHT!
-
+KÄMPFEN!
 %%%%
 LIGHTNING ROUND!
-
+BLITZRUNDE!
 %%%%
 The exit has been sealed! It will re-open when you get the next rune.
-
+Der Ausgang wurde versiegelt! Er wird sich wieder öffnen, wenn Ihr die nächste Rune bekommt.
 %%%%
 You sense a tension in the north.
-
+Ihr spürt eine Spannung im Norden.
 %%%%
 You sense a tension in the south.
-
+Ihr spürt eine Spannung im Süden.
 %%%%
 You sense a tension in the east.
-
+Ihr spürt eine Spannung im Osten.
 %%%%
 You sense a tension in the west.
-
+Ihr spürt eine Spannung im Westen.
 %%%%
 <cyan>You have entered the arena!
-
+<cyan>Ihr habt die Arena betreten!
 %%%%
 You will win if you kill everything that spawns (including allies).
-
+Ihr gewinnt, wenn Ihr alles tötet, was spawnen wird (einschließlich Verbündeter).
 %%%%
 If it is a boss round, you only need to kill the boss in order to win.
-
+Wenn es sich um eine Bossrunde handelt, müsst Ihr nur den Boss töten, um zu gewinnen.
 %%%%
 If it is a lightning round, you only need to survive!</cyan>
-
+Wenn es eine Blitzrunde ist, müsst Ihr nur überleben!</cyan>
 %%%%
 
 ##################
@@ -19822,85 +19822,85 @@ If it is a lightning round, you only need to survive!</cyan>
 ##################
 %%%%
 <red>@border_top@</lightred><red>                      --
-
+<red>@border_top@</lightred><red>                      --
 %%%%
 @border_bottom@</red>
-
+@border_bottom@</red>
 %%%%
 <red>@border_top@</lightred><red>                          --
-
+<red>@border_top@</lightred><red>                          --
 %%%%
 The Orb of Zot has appeared underneath you.
-
+Die Kugel von Zot ist unter Euch erschienen.
 %%%%
 <red>@border_top@</lightred><red>                   --
-
+<red>@border_top@</lightred><red>                   --
 %%%%
 <lightgreen>The slimy rune of Zot has appeared underneath you.</lightgreen>
-
+<lightgreen>Die schleimige Rune von Zot ist unter Euch erschienen.</lightgreen>
 %%%%
 <red>@border_top@</lightred><red>                       --
-
+<red>@border_top@</lightred><red>                       --
 %%%%
 <red>------------------------------------------------------------------------------
-
+<red>------------------------------------------------------------------------------
 %%%%
 --                            The Arena Of Blood                            --
-
+--                            Die Arena des Bluts                           --
 %%%%
 --                                                                          --</red>
-
+--                                                                          --</red>
 %%%%
 <red>--                                                                          --
-
+<red>--                                                                          --
 %%%%
 --                You descend into the pit of gibs and meat,                --
-
+--         Ihr steigt hinab in die Grube von Innereien und Fleisch,         --
 %%%%
 --                    The sunken abyss of the depraved,                     --
-
+--                 Den versunkenen Abgrund der Verderbten,                  --
 %%%%
 --                       The mill of turgid gutspawn.                       --
-
+--                   Die Mühle der schwülstigen Darmbrut.                   --
 %%%%
 --                The writhen instruments serve in adoration,               --
-
+--               Die gewundenen Instrumente dienen in Anbetung,             --
 %%%%
 --                     Immured beneath a rotten throne.                     --</red>
-
+--                  Unter einem verrotteten Thron gefangen.                 --</red>
 %%%%
 --                  Before you lies the servitor of chaos,                  --
-
+--                  Before you lies the servitor of chaos,                  --
 %%%%
 --                           The cleaver,                                   --
-
+--                         Der Fleischbeil,                                 --
 %%%%
 --                             The blasphemer,                              --
-
+--                             Der Blasphemist,                             --
 %%%%
 --                              The destroyer,                              --
-
+--                              Der Zerstörer,                              --
 %%%%
 --                               The Axe of Woe.                            --</red>
-
+--                              Die Axt des Wehs.                           --</red>
 %%%%
 --                            Vessel of Makhleb,                            --
-
+--                            Gefäß von Makhleb,                            --
 %%%%
 --                           You are the unmaker,                           --
-
+--                         Ihr seid der Entschöpfer,                        --
 %%%%
 --                          You bring the rapture,                          --
-
+--                        Ihr bringt die Entrückung,                        --
 %%%%
 --                     The murmurs of the thralls rise...                   --
-
+--                   Das Gemurmel der Leibeigener steigt...                 --
 %%%%
 --                       The theatre of blood begins.                       --
-
+--                      Das Theater des Bluts beginnt.                      --
 %%%%
 ------------------------------------------------------------------------------</red>
-
+------------------------------------------------------------------------------</red>
 %%%%
 
 ##################
@@ -19908,7 +19908,7 @@ The Orb of Zot has appeared underneath you.
 ##################
 %%%%
 Murray drops in to check on your progress.
-
+Murray kommt vorbei, um sich über Eure Fortschritte zu informieren.
 %%%%
 
 ##################
@@ -19916,7 +19916,7 @@ Murray drops in to check on your progress.
 ##################
 %%%%
 You hear a whooshing noise from somewhere close by.
-
+Ihr hört ein zischendes Geräusch von irgendwo in der Nähe.
 %%%%
 
 ##################
@@ -19924,16 +19924,16 @@ You hear a whooshing noise from somewhere close by.
 ##################
 %%%%
 Your surroundings seem different!
-
+Eure Umgebung scheint anders zu sein!
 %%%%
 Welcome to arena @teleport_spot@.
-
+Willkommen in Arena @teleport_spot@.
 %%%%
 Welcome to arena @arena_number@.
-
+Willkommen in Arena @arena_number@.
 %%%%
 <magenta>An exit appears before you!</magenta>
-
+<magenta>Ein Ausgang erscheint vor Euch!</magenta>
 %%%%
 
 ##################
@@ -19941,10 +19941,10 @@ Welcome to arena @arena_number@.
 ##################
 %%%%
 With a honk a tiny klown kar falls from above, and Killer Klowns tumble out!
-
+Mit einem Hupen fällt ein kleiner Klown-Wagen von oben herab, und Killer-Klowns purzeln heraus!
 %%%%
 A basket of snakes falls from above!
-
+Ein Korb voller Schlangen fällt von oben herab!
 %%%%
 
 ##################
@@ -19952,16 +19952,16 @@ A basket of snakes falls from above!
 ##################
 %%%%
 You hear a faint click.
-
+Ihr hört ein leises Klicken.
 %%%%
 You hear a click.
-
+Ihr hört ein Klicken.
 %%%%
 You step on to a pressure plate.
-
+Ihr tretet auf eine Druckplatte.
 %%%%
 Suddenly a wall slides open!
-
+Plötzlich gleitet eine Wand auf!
 %%%%
 
 ##################
@@ -19969,10 +19969,10 @@ Suddenly a wall slides open!
 ##################
 %%%%
 Nothing continues to happen.
-
+Es passiert weiterhin nichts.
 %%%%
 Luckily, nothing happens.
-
+Zum Glück passiert nichts.
 %%%%
 
 ##################
@@ -19980,7 +19980,7 @@ Luckily, nothing happens.
 ##################
 %%%%
 A bat flies out of a crevice!
-
+Eine Fledermaus fliegt aus einer Felsspalte!
 %%%%
 
 ##################
@@ -19988,37 +19988,37 @@ A bat flies out of a crevice!
 ##################
 %%%%
 Several panes of glass retract into the floor.
-
+Mehrere Glasscheiben lassen sich in den Boden versenken.
 %%%%
 There is a strange hissing noise.
-
+Es ist ein seltsames Zischen zu hören.
 %%%%
 Your surroundings suddenly seem different!
-
+Eure Umgebung wirkt plötzlich anders!
 %%%%
 Couldn't find a slave!
-
+Konnte keinen Sklaven finden!
 %%%%
 As the champion is destroyed, a metal wall slides away!
-
+Als der Champion zerstört wird, rutscht eine Metallwand weg!
 %%%%
 As the champion is destroyed, you hear a distant grinding noise.
-
+Als der Champion zerstört wird, hört Ihr ein entferntes Schleifgeräusch.
 %%%%
 Your presence is welcomed at the altar of Beogh.
-
+Eure Anwesenheit ist am Altar von Beogh willkommen.
 %%%%
 The orc god booms: Stay away, heretic!
-
+Der Orkgott brüllt: Bleib weg, Ketzer!
 %%%%
 The orc god booms: Stay away, mortal!
-
+Der Orkgott brüllt: Bleib weg, Sterblicher!
 %%%%
 Beogh's servants are called upon to defend the altar!
-
+Beoghs Diener sind aufgerufen, den Altar zu verteidigen!
 %%%%
 <white>The teleporter glows with a rainbow of weird colours and disappears.</white>
-
+<white>Der Teleporter leuchtet in einem Regenbogen aus seltsamen Farben und verschwindet</white>.
 %%%%
 
 ##################
@@ -20026,16 +20026,16 @@ Beogh's servants are called upon to defend the altar!
 ##################
 %%%%
 A fountain of clear blue water erupts!
-
+Eine Fontäne klaren, blauen Wassers bricht aus!
 %%%%
 A fountain of sparkling water erupts!
-
+Eine Fontäne sprudelnden Wassers bricht aus!
 %%%%
 You hear a distant splash.
-
+Ihr hört ein entferntes Platschen.
 %%%%
 The fountain becomes smaller until it vanishes.
-
+Die Fontäne wird kleiner, bis sie verschwindet.
 %%%%
 
 ##################
