@@ -158,6 +158,12 @@ Boggart (pl: Boggarts) is used: https://de.wikipedia.org/wiki/Spook-Zyklus
 
 Eleionoma - German plural is Eleionomai - ref: https://de.wikipedia.org/wiki/Eleionomai
 
+Efreet is der Ifrit in German: https://de.wikipedia.org/wiki/Ifrit (but Efreet is an archaic form)
+
+Spriggan is translated as der Zweigling here: https://elderscrolls.fandom.com/de/wiki/Zweigling
+
+Deathcap is Knollenblätterpilz in German: https://de.wikipedia.org/wiki/Gr%C3%BCner_Knollenbl%C3%A4tterpilz
+
 Blink - in [5] translated as Flimmern.
       - in [6] translated as Blinzeln: https://de.classic.wowhead.com/search?q=blinzeln
 

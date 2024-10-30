@@ -1020,7 +1020,7 @@
 %d Skelette
 %%%%
 %d simulacra
-%d Simulacren
+%d Simulacra
 %%%%
 %d small zombies
 %d kleine Zombies
@@ -1029,7 +1029,7 @@
 %d kleine Skelette
 %%%%
 %d small simulacra
-%d kleine Simulacren
+%d kleine Simulacra
 %%%%
 %d large zombies
 %d große Zombies
@@ -1038,7 +1038,7 @@
 %d große Skelette
 %%%%
 %d large simulacra
-%d große Simulacren
+%d große Simulacra
 %%%%
 %d spectral things
 %d spektrale Sachen
