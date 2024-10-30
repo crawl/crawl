@@ -81,9 +81,9 @@ stash-search.prompt
 
 <h>Durchsuchen des Stash-Trackers</h>
 
-Man kann nach Gegenstände oder Dungeon-Einrichtungen anhand des deutschen oder englischen
-Namens (oder eines Teils davon) suchen. In der Liste der Suchergebnisse kann man ein
-davon anhand seiner Tastenkombination wählen, um zu seinem Standort zu reisen.
+Man kann nach Gegenstände oder Dungeon-Einrichtungen anhand des Namens (oder
+eines Teils davon) suchen. In der Liste der Suchergebnisse kann man ein davon
+anhand seiner Tastenkombination wählen, um zu seinem Standort zu reisen.
 
 Einige Beispiele für Suchbegriffe:
 <w>mutation</w>      alle Tränke der Mutation finden, einschließlich Tränke in Läden.
@@ -123,10 +123,9 @@ Man kann nach nach Artefakt-Eigenschaften (z. B. <w>/verhindert.*Teleport</w>)
 suchen, um Artefakte zu finden, die diese Eigenschaft aufweisen.
 
 Man kann nach einigen zusätzlichen Gegenstandseigenschaften suchen:
-<w>artefakt</w> oder <w>artefact</w> wird identifizierte Artefakte finden
-<w>ego</w> oder <w>branded</w> wird Nicht-Artefakte, die brandmarkiert
-sind, oder nicht-identifizierte Gegenstände, die möglicherweise brandmarkiert
-sind, finden
+<w>artefakt</w> wird identifizierte Artefakte finden <w>ego</w> oder
+<w>brandmark</w> wird Nicht-Artefakte, die brandmarkiert sind, oder nicht-
+identifizierte Gegenstände, die möglicherweise brandmarkiert sind, finden
 <w>throwable</w> oder <w>werfbar</w> wird Gegenstände dinden, die man werfen kann
 <w>dropped</w> wird Gegenstände finden, die der Charakter fallen lassen hat
 <w>in_shop</w> wird Gegenstände finden, die in Läden sind
@@ -140,18 +139,17 @@ diese Fertigkeit verwenden. Man kann auch nach <w>melee weapon</w> oder
 Es ist auch möglich nach Gegenstandtypen zu suchen (z. B. <w>Buch</w> oder <w>Schmuck</w>).
 
 Gegenstände anhand Rüstungsslot suchen:
-<w>helm</w> oder <w>helmet</w>  für alle Kopfbedeckungen
-<w>handschuche</w> oder <w>gloves</w> für Handschuche
-<w>schild</w> oder <w>shield</w> für Schilde
-und <w>body</w> oder <w>körper</w> für Körperrüstung
-<w>rüstung && !!körper</w> bzw. <w>armour && !!body</w> wird alle Rüstungsteile,
-außer Körperrüstung, finden.
+<w>helm</w> für alle Kopfbedeckungen
+<w>handschuche</w> für Handschuche
+<w>schild</w> für Schilde
+und <w>körper</w> für Körperrüstung
+<w>rüstung && !!körper</w> wird alle Rüstungsteile, außer Körperrüstung, finden.
 
 <h>Finden von Dungeon-Einrichtungen:</h>
 
-Man kann nach Dungeon-Einrichtungen anhand des Namens suchen: alle Läden werden durch
-eine Suche nach <w>laden</w> oder <w>shop</w> gefunden (einschließlich Läden, die
-nicht das Wort "Laden" Im Namen haben); andere Dungeon-Einrichtungen können auch anhand
+Man kann nach Dungeon-Einrichtungen anhand des Namens suchen: alle Läden werden
+durch eine Suche nach <w>laden</w> gefunden (einschließlich Läden, die nicht das
+Wort "Laden" Im Namen haben); andere Dungeon-Einrichtungen können auch anhand
 ihres Namens gefunden werden: <w>Zerstreuungsfalle</w>, <w>Altar</w>, usw. Man
 kann auch nach Altären mit dem Namen einer Gottheit suchen: <w>Zin</w>.
 
@@ -161,7 +159,7 @@ Man kann !! verwenden, um einen Suchbegriff zu negieren, && für ein boolesches 
 || für ein boolesches ODER, and <<<< >> für Gruppierung.
 
 Zum Beispiel, um Ringe (Schmuck) zu finden, aber keine Ringpanzer:
-<w>ring && !!panzer</w> bzw. <w>ring && !!mail</w>
+<w>ring && !!panzer</w>
 
 Achtung. <w>/</w> und <w>=</w> für einzelne Muster gelten, nicht für die gesamte Abfrage:
 Man soll nach <w>rüstung && /r(K|F|Gift|Elek)</w> suchen, nicht
