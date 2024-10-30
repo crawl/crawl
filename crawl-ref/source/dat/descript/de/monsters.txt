@@ -1,32 +1,54 @@
 %%%%
 __(_suffix_examine
 
-Diese Waffe wurde verzaubert, so dass sie durch die Luft tanzt und aus eigener Kraft angreift.
+Diese Waffe wurde verzaubert, so dass sie durch die Luft tanzt und aus eigener
+Kraft angreift.
 %%%%
 # Uniques
 Agnes
 
-Dieser Spriggan ist gealtert und verwittert von jahrelangen Reisen fernab der Wälder und Sümpfe, in denen ihre Verwandten leben. Ihre Waffenwahl und ihre erstaunliche Geschwindigkeit zeugen von der Ausbildung, die sie durchlaufen hat. Man unterschätzt sie auf eigene Gefahr!
+Dieser Spriggan ist gealtert und verwittert von jahrelangen Reisen fernab der
+Wälder und Sümpfe, in denen ihre Verwandten leben. Ihre Waffenwahl und ihre
+erstaunliche Geschwindigkeit zeugen von der Ausbildung, die sie durchlaufen hat.
+Man unterschätzt sie auf eigene Gefahr!
 %%%%
 Aizul
 
-Einst war sie die Hauptwächterschlange eines legendären Schatzes, doch entehrt, nachdem Diebe es geplündert hatten, während sie schlief. Jetzt schlängelt sie sich durch den Dungeon und sinnt auf Rache an allen potenziellen Plünderern. Sie ist eine versierte Zauberin, aber im Nahkampf nicht tödlicher als andere ihrer Art.
+Einst war sie die Hauptwächterschlange eines legendären Schatzes, doch entehrt,
+nachdem Diebe es geplündert hatten, während sie schlief. Jetzt schlängelt sie
+sich durch den Dungeon und sinnt auf Rache an allen potenziellen Plünderern. Sie
+ist eine versierte Zauberin, aber im Nahkampf nicht tödlicher als andere ihrer
+Art.
 %%%%
 Antaeus
 
-Antaeus war einst ein Held unter den Titanen, doch dann wurde er eifersüchtig auf die Titanenkönigin. Im Zweikampf forderte er sie heraus und erschlug sie. Für dieses Verbrechen wurde er verbannt und in die Hölle hinabgestiegen. Da die Bewohner dieses Ortes seiner Macht nicht gewachsen waren, riss Antaeus aus seiner Substanz eine vierte Hölle, Kokytus, ein Reich, das aus gefrorener Bosheit geboren wurde.
+Antaeus war einst ein Held unter den Titanen, doch dann wurde er eifersüchtig
+auf die Titanenkönigin. Im Zweikampf forderte er sie heraus und erschlug sie.
+Für dieses Verbrechen wurde er verbannt und in die Hölle hinabgestiegen. Da die
+Bewohner dieses Ortes seiner Macht nicht gewachsen waren, riss Antaeus aus
+seiner Substanz eine vierte Hölle, Kokytus, ein Reich, das aus gefrorener
+Bosheit geboren wurde.
 %%%%
 Arachne
 
-Arachne war einst eine begabte menschliche Weberin, doch sie wurde verflucht und in ihre heutige Gestalt verwandelt: halb Mensch, halb Spinne. Ihre Sympathien gelten jetzt den unmenschlichen Bewohnern ihrer neuen Heimat und sie ist bestrebt, jeden zu beseitigen, der sie bedrohen könnte.
+Arachne war einst eine begabte menschliche Weberin, doch sie wurde verflucht und
+in ihre heutige Gestalt verwandelt: halb Mensch, halb Spinne. Ihre Sympathien
+gelten jetzt den unmenschlichen Bewohnern ihrer neuen Heimat und sie ist
+bestrebt, jeden zu beseitigen, der sie bedrohen könnte.
 %%%%
 Asmodeus
 
-Asmodäus, der größte und listigste Höllenfürst, wurde geboren, als die Zwillingsfeuer der Gier und des Verrats erstmals im Herzen eines Sterblichen entfacht wurden. Sein abscheulicher Körper ist ständig in Flammen gehüllt.
+Asmodäus, der größte und listigste Höllenfürst, wurde geboren, als die
+Zwillingsfeuer der Gier und des Verrats erstmals im Herzen eines Sterblichen
+entfacht wurden. Sein abscheulicher Körper ist ständig in Flammen gehüllt.
 %%%%
 Asterion
 
-Asterion war einst ein König, der für seine blutrünstigen Feldzüge berüchtigt war. Für seine Verbrechen wurde er in die tiefsten Kerker verbannt. Hier lauert er in seiner zerfetzten Pracht und träumt von einem neuen Königreich. In seiner Gier nach Macht wandte sich der Minotauruskönig der Anbetung Makhlebs zu, und Makhleb belohnte ihn mit schrecklicher Zerstörungskraft.
+Asterion war einst ein König, der für seine blutrünstigen Feldzüge berüchtigt
+war. Für seine Verbrechen wurde er in die tiefsten Kerker verbannt. Hier lauert
+er in seiner zerfetzten Pracht und träumt von einem neuen Königreich. In seiner
+Gier nach Macht wandte sich der Minotauruskönig der Anbetung Makhlebs zu, und
+Makhleb belohnte ihn mit schrecklicher Zerstörungskraft.
 %%%%
 Azrael
 
@@ -34,35 +56,57 @@ Ein mächtiger, kriegerischer Efreet. (Gibt es eine andere Art?)
 %%%%
 Bai Suzhen
 
-Ein lebensmüder Drakonier mit fremden und wässrigen Schuppen. Sie ist in den Dungeon gekommen, um ihren sterblichen Ehemann wiederzubeleben; eine edle Sache für ein Wesen, das einst dafür bekannt war, mit Heiligen zu streiten und unglückliche Tempel zu überfluten. Wenn sie an ihre Grenzen getrieben wird, wird sie ihre wahre Gestalt offenbaren, deren bloßer Anblick ihren Ehemann erschlagen hat. Abenteurer können sich wünschen, sie hätten so viel Glück!
+Ein lebensmüder Drakonier mit fremden und wässrigen Schuppen. Sie ist in den
+Dungeon gekommen, um ihren sterblichen Ehemann wiederzubeleben; eine edle Sache
+für ein Wesen, das einst dafür bekannt war, mit Heiligen zu streiten und
+unglückliche Tempel zu überfluten. Wenn sie an ihre Grenzen getrieben wird, wird
+sie ihre wahre Gestalt offenbaren, deren bloßer Anblick ihren Ehemann erschlagen
+hat. Abenteurer können sich wünschen, sie hätten so viel Glück!
 %%%%
 Blork the orc
 
-Ein besonders fetter und hässlicher Ork. Er hat irgendwo ein Paar Hosenträger in Regenbogenfarben aufgelesen. Sie helfen nicht weiter.
+Ein besonders fetter und hässlicher Ork. Er hat irgendwo ein Paar Hosenträger in
+Regenbogenfarben aufgelesen. Sie helfen nicht weiter.
 %%%%
 Boris
 
-Ein uralter und mächtiger Lich. Wie alle echten Lichs ist Boris unsterblich und kann seine ausgetrockneten Skelettreste regenerieren, selbst wenn sie vollständig zerfallen sind.
+Ein uralter und mächtiger Lich. Wie alle echten Lichs ist Boris unsterblich und
+kann seine ausgetrockneten Skelettreste regenerieren, selbst wenn sie
+vollständig zerfallen sind.
 %%%%
 Cerebov
 
-Cerebov, ein gewalttätiger und zorniger Dämon, erscheint als riesiger Humanoid, der in eine glänzende goldene Rüstung gehüllt ist und ein großes, verdrehtes Schwert schwingt.
+Cerebov, ein gewalttätiger und zorniger Dämon, erscheint als riesiger Humanoid,
+der in eine glänzende goldene Rüstung gehüllt ist und ein großes, verdrehtes
+Schwert schwingt.
 %%%%
 Chuck
 
-Chuck, der Steinriese, liebt Steine, je größer, desto besser! Im Laufe der Jahre ist es ihm gelungen, eine beachtliche Sammlung zusammenzutragen, darunter auch einige seltene, verzauberte Steine.
+Chuck, der Steinriese, liebt Steine, je größer, desto besser! Im Laufe der Jahre
+ist es ihm gelungen, eine beachtliche Sammlung zusammenzutragen, darunter auch
+einige seltene, verzauberte Steine.
 %%%%
 Crazy Yiuf
 
-Ein verdorrter alter Gnoll mit langem silbernem Bart, der einen Kampfstab schwingt und einen Umhang trägt. Er sieht aus wie eine Figur aus der Mythologie! Moment, wird sein Bart mit Haken an seinen Ohren gehalten?
+Ein verdorrter alter Gnoll mit langem silbernem Bart, der einen Kampfstab
+schwingt und einen Umhang trägt. Er sieht aus wie eine Figur aus der Mythologie!
+Moment, wird sein Bart mit Haken an seinen Ohren gehalten?
 %%%%
 Dispater
 
-Dispater, der größte der Höllenfürsten, wurde geboren, als zum ersten Mal ein Eisenschwert sterbliches Blut trank. Er verachtet sterbliche Eitelkeiten, das Streben nach „Vernunft“ und „Schönheit“ – die einzige Kunst, die ihm Freude bereitet, ist die Kriegskunst.
+Dispater, der größte der Höllenfürsten, wurde geboren, als zum ersten Mal ein
+Eisenschwert sterbliches Blut trank. Er verachtet sterbliche Eitelkeiten, das
+Streben nach „Vernunft“ und „Schönheit“ – die einzige Kunst, die ihm Freude
+bereitet, ist die Kriegskunst.
 %%%%
 Dissolution
 
-Die Schleimgruben waren einst eine blühende Zivilisation und Dissolution war der Prophet ihres Gottes. Als die Stadt von ihren derzeitigen Bewohnern eingenommen wurde, überlebte nur Dissolution, denn sie allein wandten sich treu dem Schleimgott zu. Dissolution wurde zu einer gewaltigen Masse säurehaltigen Schlamms, behielt jedoch ihre Intelligenz. Sie sind erfüllt von Hass auf alles, was eine Form annehmen kann.
+Die Schleimgruben waren einst eine blühende Zivilisation und Dissolution war der
+Prophet ihres Gottes. Als die Stadt von ihren derzeitigen Bewohnern eingenommen
+wurde, überlebte nur Dissolution, denn sie allein wandten sich treu dem
+Schleimgott zu. Dissolution wurde zu einer gewaltigen Masse säurehaltigen
+Schlamms, behielt jedoch ihre Intelligenz. Sie sind erfüllt von Hass auf alles,
+was eine Form annehmen kann.
 %%%%
 Donald
 
@@ -84,23 +128,38 @@ Donald
 %%%%
 Dowan
 
-Ein schöner, aber eitler Hochelf mit einer Begabung für Magie und wenig anderem. Seine Fähigkeiten sind die perfekte Ergänzung zu den Kampfkünsten seiner Zwillingsschwester Duvessa. Auf der Suche nach mächtigeren Zaubern reist er mit seiner Schwester an die Oberfläche.
+Ein schöner, aber eitler Hochelf mit einer Begabung für Magie und wenig anderem.
+Seine Fähigkeiten sind die perfekte Ergänzung zu den Kampfkünsten seiner
+Zwillingsschwester Duvessa. Auf der Suche nach mächtigeren Zaubern reist er mit
+seiner Schwester an die Oberfläche.
 %%%%
 Duvessa
 
-Eine einfach aussehende, tiefelfische Kämpferin, die in vielen Kampfarten technisch brillant, aber deshalb übermäßig selbstsicher ist. Ergänzt wird sie durch die magischen Fähigkeiten ihres Zwillingsbruders Dowan. Sie reist an die Oberfläche, um die größten Champions herauszufordern.
+Eine einfach aussehende, tiefelfische Kämpferin, die in vielen Kampfarten
+technisch brillant, aber deshalb übermäßig selbstsicher ist. Ergänzt wird sie
+durch die magischen Fähigkeiten ihres Zwillingsbruders Dowan. Sie reist an die
+Oberfläche, um die größten Champions herauszufordern.
 %%%%
 Edmund
 
-Ein eifersüchtiger Bruder von Sigmund (tatsächlich der jüngste von neun Brüdern). Er besitzt keine der magischen Fähigkeiten von Sigmund, macht dies aber durch seine Kampfkünste und sein Gespür für Geld wett. Er ist begierig darauf, seine Überlegenheit zu beweisen, indem er glücklose Abenteurer mit seiner teuren Dreschflegel und seinem schnellen Verstand tötet.
+Ein eifersüchtiger Bruder von Sigmund (tatsächlich der jüngste von neun
+Brüdern). Er besitzt keine der magischen Fähigkeiten von Sigmund, macht dies
+aber durch seine Kampfkünste und sein Gespür für Geld wett. Er ist begierig
+darauf, seine Überlegenheit zu beweisen, indem er glücklose Abenteurer mit
+seiner teuren Dreschflegel und seinem schnellen Verstand tötet.
 %%%%
 the Enchantress
 
-Die Zauberin ist die Erste und Furchterregendste ihrer Art und herrscht über die Spriggans des Dungeons. Sie trägt ein opaleszierendes Outfit aus Drachenhaut, das in vielen Farben schimmert.
+Die Zauberin ist die Erste und Furchterregendste ihrer Art und herrscht über die
+Spriggans des Dungeons. Sie trägt ein opaleszierendes Outfit aus Drachenhaut,
+das in vielen Farben schimmert.
 %%%%
 Ereshkigal
 
-Ereshkigal, die größte und unerbittlichste der Höllenfürstinnen, wurde geboren, als erst ein Sterblicher seinen letzten Atemzug tat. Lautlos lacht sie über Leben, die vorzeitig beendet wurden, und über geliebte Menschen, die durch einen vorzeitigen Tod getrennt wurden, eingehüllt in die Stille des Grabes.
+Ereshkigal, die größte und unerbittlichste der Höllenfürstinnen, wurde geboren,
+als erst ein Sterblicher seinen letzten Atemzug tat. Lautlos lacht sie über
+Leben, die vorzeitig beendet wurden, und über geliebte Menschen, die durch einen
+vorzeitigen Tod getrennt wurden, eingehüllt in die Stille des Grabes.
 %%%%
 Erica
 
@@ -112,27 +171,41 @@ Ein besonders gerissener Oger-Magier.
 %%%%
 Eustachio
 
-Ein Beschwörerlehrling mit wallendem Schnurrbart. Er hat eigenartige Vorstellungen von Ehre.
+Ein Beschwörerlehrling mit wallendem Schnurrbart. Er hat eigenartige
+Vorstellungen von Ehre.
 %%%%
 Fannar
 
-Ein kaltherziger Elfenzauberer, gehüllt in die Robe eines hohen Amtes. Er flüstert grimmig vor sich hin, während er durch den Dungeon schreitet und Eiskristalle hinter sich herzieht.
+Ein kaltherziger Elfenzauberer, gehüllt in die Robe eines hohen Amtes. Er
+flüstert grimmig vor sich hin, während er durch den Dungeon schreitet und
+Eiskristalle hinter sich herzieht.
 %%%%
 Frances
 
-Eine tapfere Kriegerin, die einst einen mächtigen Lord von Pandemonium im Kampf besiegte und so die Kontrolle über das Reich und die Vasalllen des Dämons erlangte. Der Kampf hinterließ bei ihr eine tiefe Narbe im Gesicht, die sie eher als Ehrenzeichen denn als Symbol der Schande trägt.
+Eine tapfere Kriegerin, die einst einen mächtigen Lord von Pandemonium im Kampf
+besiegte und so die Kontrolle über das Reich und die Vasalllen des Dämons
+erlangte. Der Kampf hinterließ bei ihr eine tiefe Narbe im Gesicht, die sie eher
+als Ehrenzeichen denn als Symbol der Schande trägt.
 %%%%
 Frederick
 
-Ein schlanker Kampfmagier mit einem goldumrandeten Monokel, einem ausgeprägten Sinn für Tradition und dem Blut der Götter, das durch seine Adern fließt. Er ist hier auf der Suche nach einem würdigen Gegner, hat aber noch keinen gefunden.
+Ein schlanker Kampfmagier mit einem goldumrandeten Monokel, einem ausgeprägten
+Sinn für Tradition und dem Blut der Götter, das durch seine Adern fließt. Er ist
+hier auf der Suche nach einem würdigen Gegner, hat aber noch keinen gefunden.
 %%%%
 Gastronok
 
-Eine gefräßige und überraschend intelligente Schnecke, die alles und jeden frisst, der ihr über den Weg läuft, mit einem spitzen Hut, der verwegen auf ihrem Kopf sitzt. Den Hut hat Gastronok auf dieselbe Weise erworben wie seine Intelligenz und sein Wissen über Zaubersprüche: indem er ihren früheren Besitzer, einen mächtigen Zauberer, abgefressen hat.
+Eine gefräßige und überraschend intelligente Schnecke, die alles und jeden
+frisst, der ihr über den Weg läuft, mit einem spitzen Hut, der verwegen auf
+ihrem Kopf sitzt. Den Hut hat Gastronok auf dieselbe Weise erworben wie seine
+Intelligenz und sein Wissen über Zaubersprüche: indem er ihren früheren
+Besitzer, einen mächtigen Zauberer, abgefressen hat.
 %%%%
 Geryon
 
-Ein riesiger, dreiköpfiger, geflügelter Erzdämon, Wächter der vier Höllen. Legenden besagen, dass er mit seinem silbernen Horn schreckliche Bestien herbeirufen kann, die ihm im Kampf zur Seite stehen.
+Ein riesiger, dreiköpfiger, geflügelter Erzdämon, Wächter der vier Höllen.
+Legenden besagen, dass er mit seinem silbernen Horn schreckliche Bestien
+herbeirufen kann, die ihm im Kampf zur Seite stehen.
 %%%%
 Gloorx Vloq
 
@@ -140,41 +213,61 @@ Eine schattenhafte Gestalt, gekleidet in tiefe Dunkelheit.
 %%%%
 Grinder
 
-Eine ineffiziente Schattenkoboldin, die früher als Foltererin in einem der unteren Höllenkreise arbeitete. Sie neigt dazu, sich zu beschweren und alberne Behauptungen aufzustellen.
+Eine ineffiziente Schattenkoboldin, die früher als Foltererin in einem der
+unteren Höllenkreise arbeitete. Sie neigt dazu, sich zu beschweren und alberne
+Behauptungen aufzustellen.
 %%%%
 Grum
 
-Ein robust aussehender Gnoll, der das Fell eines seiner ehemaligen Kriegshunde trägt.
+Ein robust aussehender Gnoll, der das Fell eines seiner ehemaligen Kriegshunde
+trägt.
 %%%%
 Harold
 
-Ein Kopfgeldjäger mittleren Alters, der nach einem letzten Auftrag in Rente gehen möchte. Er hofft, sich irgendwo niederzulassen und mit seiner Familie ein ruhiges Leben zu führen, und zwar mit dem Geld aus seiner letzten Kopfbeute: Euch.
+Ein Kopfgeldjäger mittleren Alters, der nach einem letzten Auftrag in Rente
+gehen möchte. Er hofft, sich irgendwo niederzulassen und mit seiner Familie ein
+ruhiges Leben zu führen, und zwar mit dem Geld aus seiner letzten Kopfbeute:
+Euch.
 %%%%
 Ignacio
 
-Obwohl ein Sterblicher sich nicht in einen Dämon verwandeln kann, außer durch göttliche Intervention, geschah dies mit Ignacio, nachdem Makhleb seine Liebe zu seinem Job sah und ihm zulächelte. Er soll nun die Freude seines Lebens für alle Ewigkeit fortsetzen.
+Obwohl ein Sterblicher sich nicht in einen Dämon verwandeln kann, außer durch
+göttliche Intervention, geschah dies mit Ignacio, nachdem Makhleb seine Liebe zu
+seinem Job sah und ihm zulächelte. Er soll nun die Freude seines Lebens für alle
+Ewigkeit fortsetzen.
 
-Obwohl aus seinen dämonischen Gliedmaßen in seiner neuen Gestalt eine Reihe großer, rasiermesserscharfer Klingen wachsen, hat er seine Lieblingsaxt behalten und lässt Euch deren Schneide gerne testen.
+Obwohl aus seinen dämonischen Gliedmaßen in seiner neuen Gestalt eine Reihe
+großer, rasiermesserscharfer Klingen wachsen, hat er seine Lieblingsaxt behalten
+und lässt Euch deren Schneide gerne testen.
 %%%%
 Ijyb
 
-Eine kleine, verdrehte Koboldin, der hässliche blaue Lumpen trägt. Sie beansprucht die Herrschaft über diese Ebene des DUngeons; alle, die sie betreten, werden mit vorgehaltenem Zauberstab gefoltert und getötet.
+Eine kleine, verdrehte Koboldin, der hässliche blaue Lumpen trägt. Sie
+beansprucht die Herrschaft über diese Ebene des DUngeons; alle, die sie
+betreten, werden mit vorgehaltenem Zauberstab gefoltert und getötet.
 %%%%
 Ilsuiw
 
-Eine tödliche Wasserhexe vom Meervolk, die ihre Macht über die Gezeiten nutzt, um ahnungslose Abenteurer in den Tod zu locken.
+Eine tödliche Wasserhexe vom Meervolk, die ihre Macht über die Gezeiten nutzt,
+um ahnungslose Abenteurer in den Tod zu locken.
 %%%%
 Jessica
 
-Eine böse Zauberin in Lehrlingsausbildung. Sie betrat den Dungon in der Hoffnung, einen ruhigen, abgeschiedenen Ort zu finden, an dem sie ungestört die dunkleren Künste studieren konnte.
+Eine böse Zauberin in Lehrlingsausbildung. Sie betrat den Dungon in der
+Hoffnung, einen ruhigen, abgeschiedenen Ort zu finden, an dem sie ungestört die
+dunkleren Künste studieren konnte.
 %%%%
 Jorgrun
 
-Ein Zwergenmagier, der sich besonders gut mit dem ihn umgebenden Dungeon auskennt. Im Kampf setzt er mächtige Erdmagie ein.
+Ein Zwergenmagier, der sich besonders gut mit dem ihn umgebenden Dungeon
+auskennt. Im Kampf setzt er mächtige Erdmagie ein.
 %%%%
 Jory
 
-Jory war einst ein einfacher Dorfbauer, doch als er vom Tod in eine mächtige Kreatur verwandelt wurde, hat er in den unzähligen Jahrhunderten, die seitdem vergangen sind, seine Fertigkeiten im Kampf und in der Magie verfeinert und großen Reichtum und viele Besitztümer angehäuft.
+Jory war einst ein einfacher Dorfbauer, doch als er vom Tod in eine mächtige
+Kreatur verwandelt wurde, hat er in den unzähligen Jahrhunderten, die seitdem
+vergangen sind, seine Fertigkeiten im Kampf und in der Magie verfeinert und
+großen Reichtum und viele Besitztümer angehäuft.
 %%%%
 Joseph
 
@@ -182,57 +275,101 @@ Sieht aus wie ein Söldner mit einem albernen Hut.
 %%%%
 Josephine
 
-Eine beeindruckende Totenbeschwörerin, die ihrem Handwerk treu blieb, auch als sie dadurch selbst gealtert, verfallen und halb untot wurde.
+Eine beeindruckende Totenbeschwörerin, die ihrem Handwerk treu blieb, auch als
+sie dadurch selbst gealtert, verfallen und halb untot wurde.
 %%%%
 Khufu
 
-Ein unglaublich mächtiger Kaiser auf dem Weg zur Gottheit. Er ist vor einiger Zeit gestorben, sieht aber keinen Grund, warum ihn das aufhalten sollte.
+Ein unglaublich mächtiger Kaiser auf dem Weg zur Gottheit. Er ist vor einiger
+Zeit gestorben, sieht aber keinen Grund, warum ihn das aufhalten sollte.
 %%%%
 Kirke
 
-Eine Meisterin der Verwandlung und des Verrats. Passt auf, sonst könnt Ihr das nächste Schwein sein, das sich ihrer Herde anschließt!
+Eine Meisterin der Verwandlung und des Verrats. Passt auf, sonst könnt Ihr das
+nächste Schwein sein, das sich ihrer Herde anschließt!
 %%%%
 the Lernaean hydra
 
-Ein riesiges Tier, die mächtigste Hydra, berüchtigt in Mythen und Legenden. Sie fließt schneller durch das Wasser, als ein Mensch laufen kann, und schlägt Bäume beiseite, als wären sie Streichhölzer. Ihre vielen Köpfe geifern und knirschen ständig, während sie nach Beute jagt, um ihren unersättlichen Appetit zu stillen.
+Ein riesiges Tier, die mächtigste Hydra, berüchtigt in Mythen und Legenden. Sie
+fließt schneller durch das Wasser, als ein Mensch laufen kann, und schlägt Bäume
+beiseite, als wären sie Streichhölzer. Ihre vielen Köpfe geifern und knirschen
+ständig, während sie nach Beute jagt, um ihren unersättlichen Appetit zu
+stillen.
 %%%%
 Lom Lobon
 
-Lom Lobon ist ein alter Dämon, der stoisch und unergründlich ist und für seine magischen Fähigkeiten berüchtigt ist. Gerüchten zufolge ist er das gelehrteste Wesen in den Hallen von Pandemonium. Manchmal wird er von sterblichen Zauberern aufgesucht, die ihre Seelen im Austausch für die Geheimnisse des Arkanen anbieten. Da Lom Lobon nicht den schrecklichen Zorn besitzt, den die meisten Dämonen in sich tragen, verbirgt sich hinter seinem einzelnen Auge eine kalte, unparteiische Grausamkeit.
+Lom Lobon ist ein alter Dämon, der stoisch und unergründlich ist und für seine
+magischen Fähigkeiten berüchtigt ist. Gerüchten zufolge ist er das gelehrteste
+Wesen in den Hallen von Pandemonium. Manchmal wird er von sterblichen Zauberern
+aufgesucht, die ihre Seelen im Austausch für die Geheimnisse des Arkanen
+anbieten. Da Lom Lobon nicht den schrecklichen Zorn besitzt, den die meisten
+Dämonen in sich tragen, verbirgt sich hinter seinem einzelnen Auge eine kalte,
+unparteiische Grausamkeit.
 %%%%
 Louise
 
-Eine mächtige Zauberin, von Kopf bis Fuß in schwere Rüstung gehüllt. Einst war sie eine Abenteurerin auf der Suche nach der sagenumwobenen Kugel von Zot, wurde in den Abgrund geworfen und verirrte sich dort hoffnungslos. Von einer höheren Macht verführt, saß sie fast ein Jahrzehnt lang auf der feindlichen Ebene fest. Als sie schließlich aus dem Abgrund hervortrat, war Louise zwar mächtig geworden, aber auch völlig verrückt. Jetzt wandert sie durch die Hallen des Verlieses und sucht nach anderen Abenteurern, um ihr Schicksal mit ihnen zu teilen.
+Eine mächtige Zauberin, von Kopf bis Fuß in schwere Rüstung gehüllt. Einst war
+sie eine Abenteurerin auf der Suche nach der sagenumwobenen Kugel von Zot, wurde
+in den Abgrund geworfen und verirrte sich dort hoffnungslos. Von einer höheren
+Macht verführt, saß sie fast ein Jahrzehnt lang auf der feindlichen Ebene fest.
+Als sie schließlich aus dem Abgrund hervortrat, war Louise zwar mächtig
+geworden, aber auch völlig verrückt. Jetzt wandert sie durch die Hallen des
+Verlieses und sucht nach anderen Abenteurern, um ihr Schicksal mit ihnen zu
+teilen.
 %%%%
 Mara
 
-Dieser große und mächtige Dämon ist Mara, Herr der Illusionen, der Mächtigste unter den Träumern. Er ist in der Lage, detailreiche Illusionen zu erschaffen, die so real sind, dass sie fast so tödlich sind wie die Kreaturen, die sie verkörpern.
+Dieser große und mächtige Dämon ist Mara, Herr der Illusionen, der Mächtigste
+unter den Träumern. Er ist in der Lage, detailreiche Illusionen zu erschaffen,
+die so real sind, dass sie fast so tödlich sind wie die Kreaturen, die sie
+verkörpern.
 %%%%
 Maggie
 
-Vor langer Zeit war Maggie die Lehrlingin der gefürchteten Höllenritter – doch sie wurde ungeduldig. Auf der Suche nach einer Abkürzung zu Ruhm und Reichtum (und etwas ohne Fantasie) betrat sie den Dungeon und machte sich daran, einen Drachen zu töten. Nachdem sie nun einen Drachen getötet hat, sieht Maggie keinen Grund mehr aufzuhören.
+Vor langer Zeit war Maggie die Lehrlingin der gefürchteten Höllenritter – doch
+sie wurde ungeduldig. Auf der Suche nach einer Abkürzung zu Ruhm und Reichtum
+(und etwas ohne Fantasie) betrat sie den Dungeon und machte sich daran, einen
+Drachen zu töten. Nachdem sie nun einen Drachen getötet hat, sieht Maggie keinen
+Grund mehr aufzuhören.
 %%%%
 Margery
 
-Eine geschmeidige Zauberin im Dienste der Mächte der Hölle. Ihre Pflicht ist es, dafür zu sorgen, dass die Bewohner des DUngeons ihren Platz nie vergessen. Sie hat persönlich den alten Drachen erschlagen, aus dessen Haut ihre seltsame Rüstung gefertigt ist.
+Eine geschmeidige Zauberin im Dienste der Mächte der Hölle. Ihre Pflicht ist es,
+dafür zu sorgen, dass die Bewohner des DUngeons ihren Platz nie vergessen. Sie
+hat persönlich den alten Drachen erschlagen, aus dessen Haut ihre seltsame
+Rüstung gefertigt ist.
 %%%%
 Maurice
 
-Ein schlauer, intriganter Dieb. In seinem Beruf gilt Maurice als Legende – zumindest sagt er das selbst. Er ist jedoch geschickt und von allen Dieben und Schurken, die von der Kugel angelockt werden, ist Maurice zweifellos der schlauste. Er verwendet neben Umhang und Dolch auch Zauberstäbe.
+Ein schlauer, intriganter Dieb. In seinem Beruf gilt Maurice als Legende –
+zumindest sagt er das selbst. Er ist jedoch geschickt und von allen Dieben und
+Schurken, die von der Kugel angelockt werden, ist Maurice zweifellos der
+schlauste. Er verwendet neben Umhang und Dolch auch Zauberstäbe.
 %%%%
 Menkaure
 
-Ein gerechter und edler Herrscher eines alten und mächtigen Königreichs, der nach einem frühen Tod mumifiziert wurde. Seine treuen Priester flößten ihm anschließend große und mächtige Magie ein, um ihm ewiges Leben zu gewähren. Jetzt ist er vergessen, und nur noch ein verrottender Verband und trockene, brüchige Knochen sind übrig.
+Ein gerechter und edler Herrscher eines alten und mächtigen Königreichs, der
+nach einem frühen Tod mumifiziert wurde. Seine treuen Priester flößten ihm
+anschließend große und mächtige Magie ein, um ihm ewiges Leben zu gewähren.
+Jetzt ist er vergessen, und nur noch ein verrottender Verband und trockene,
+brüchige Knochen sind übrig.
 %%%%
 Mennas
 
-Es war einmal ein menschlicher Priester namens Mennas. Er reiste weit und breit und predigte jedem, der ihm zuhören wollte, von Zin. Er reiste sogar in orkische Länder und predigte den Orks über Gesetze und Gnade. Allen Berichten zufolge waren die Orks mit Mennas nicht zufrieden. Sie verlangten von ihm, zu schwören, dass Beogh der einzig wahre Gott sei, und als Mennas schwieg, schnitten sie ihm die Zunge heraus.
+Es war einmal ein menschlicher Priester namens Mennas. Er reiste weit und breit
+und predigte jedem, der ihm zuhören wollte, von Zin. Er reiste sogar in orkische
+Länder und predigte den Orks über Gesetze und Gnade. Allen Berichten zufolge
+waren die Orks mit Mennas nicht zufrieden. Sie verlangten von ihm, zu schwören,
+dass Beogh der einzig wahre Gott sei, und als Mennas schwieg, schnitten sie ihm
+die Zunge heraus.
 
-Ob es sich bei diesem Engel um den gleichen Mennas handelt, bleibt ein Rätsel, da er offenbar Schwierigkeiten beim Sprechen hat.
+Ob es sich bei diesem Engel um den gleichen Mennas handelt, bleibt ein Rätsel,
+da er offenbar Schwierigkeiten beim Sprechen hat.
 %%%%
 Mnoleg
 
-Eine unheimlich leuchtende Gestalt, die durch die verdrehte Luft von Pandemonium tanzt.
+Eine unheimlich leuchtende Gestalt, die durch die verdrehte Luft von Pandemonium
+tanzt.
 %%%%
 Murray
 
@@ -240,41 +377,64 @@ Ein dämonischer Schädel, der über den Boden rollt.
 %%%%
 Natasha
 
-Eine magische Katze. Natascha war einst die Vertraute eines mächtigen Zauberers, wurde aber verlassen, nachdem ihr Meister von eben jenen nekromantischen Kräften verschlungen wurde, die er kontrollieren wollte. Jetzt patrouilliert sie im Dungeon und übt mit Zaubersprüchen und Klauen blutige Rache an jedem Abenteurer, der ihren Weg kreuzt.
+Eine magische Katze. Natascha war einst die Vertraute eines mächtigen Zauberers,
+wurde aber verlassen, nachdem ihr Meister von eben jenen nekromantischen Kräften
+verschlungen wurde, die er kontrollieren wollte. Jetzt patrouilliert sie im
+Dungeon und übt mit Zaubersprüchen und Klauen blutige Rache an jedem Abenteurer,
+der ihren Weg kreuzt.
 
-Diese Katze hat keine neun Leben, aber ein einziger Tod wird nicht ausreichen, um sie endgültig einzuschläfern.
+Diese Katze hat keine neun Leben, aber ein einziger Tod wird nicht ausreichen,
+um sie endgültig einzuschläfern.
 %%%%
 Nellie
 
-Eine hochintelligente Elefantin, die als Teil eines Zirkus unterwegs war. In einer dunklen Nacht rutschte sie aus ihrer Kette und verschwand in Pandemonium, um nie wieder gesehen zu werden.
+Eine hochintelligente Elefantin, die als Teil eines Zirkus unterwegs war. In
+einer dunklen Nacht rutschte sie aus ihrer Kette und verschwand in Pandemonium,
+um nie wieder gesehen zu werden.
 %%%%
 Nergalle
 
-Eine verdorrte Zauberin, die selbst für Ork-Verhältnisse außergewöhnlich grausam ist. Die Lebenden fürchten sie, die Toten gehorchen jedem ihrer Befehle. Für Letztere hat sie eine Schwäche.
+Eine verdorrte Zauberin, die selbst für Ork-Verhältnisse außergewöhnlich grausam
+ist. Die Lebenden fürchten sie, die Toten gehorchen jedem ihrer Befehle. Für
+Letztere hat sie eine Schwäche.
 %%%%
 Nessos
 
-Ein Zentaurenkrieger, der sich durch Kriegsführung und Täuschung auszeichnete. Er erschlug eine mächtige Hydra, und nun tropft ihr tödliches Blut noch rauchend von seinem Pfeilen.
+Ein Zentaurenkrieger, der sich durch Kriegsführung und Täuschung auszeichnete.
+Er erschlug eine mächtige Hydra, und nun tropft ihr tödliches Blut noch rauchend
+von seinem Pfeilen.
 %%%%
 Nikola
 
-Ein brillanter Wissenschaftler, der von Elektrizität besessen ist. Bei seinen Versuchen, seinen elektrischen Golem zu perfektionieren, war er in einen schrecklichen Unfall verwickelt und taucht nun immer wieder in die Realität ein und aus ihr heraus.
+Ein brillanter Wissenschaftler, der von Elektrizität besessen ist. Bei seinen
+Versuchen, seinen elektrischen Golem zu perfektionieren, war er in einen
+schrecklichen Unfall verwickelt und taucht nun immer wieder in die Realität ein
+und aus ihr heraus.
 %%%%
 Pikel
 
-Ein weiser Kobold würde die Mächte der Hölle fürchten und sicherlich keinen lukrativen transdimensionalen Handel mit verdammten Seelen betreiben. Aber Pikel ist eher für seine Peitsche als für seine Weisheit bekannt und quält seine bemitleidenswerten Schützlinge gnadenlos, während er sie zu ihren Käufern bringt.
+Ein weiser Kobold würde die Mächte der Hölle fürchten und sicherlich keinen
+lukrativen transdimensionalen Handel mit verdammten Seelen betreiben. Aber Pikel
+ist eher für seine Peitsche als für seine Weisheit bekannt und quält seine
+bemitleidenswerten Schützlinge gnadenlos, während er sie zu ihren Käufern
+bringt.
 %%%%
 Polyphemus
 
-Als Zyklopenhirte ist er sehr beschützerisch gegenüber seinen Schützlingen, die er mit unermüdlicher Hingabe durch sein einziges großes Auge beobachtet. Dennoch zögert er nicht, sie im Notfall als Geschosse einzusetzen; schließlich ist Angriff die beste Verteidigung.
+Als Zyklopenhirte ist er sehr beschützerisch gegenüber seinen Schützlingen, die
+er mit unermüdlicher Hingabe durch sein einziges großes Auge beobachtet. Dennoch
+zögert er nicht, sie im Notfall als Geschosse einzusetzen; schließlich ist
+Angriff die beste Verteidigung.
 %%%%
 Prince Ribbit
 
-Ein Frosch von ungewöhnlicher Größe mit einer winzigen Krone, die unpassenderweise auf seinem Kopf thront.
+Ein Frosch von ungewöhnlicher Größe mit einer winzigen Krone, die
+unpassenderweise auf seinem Kopf thront.
 %%%%
 Psyche
 
-Eine blonde Magierin, die umherwandert und scheinbar halb verrückt vor Kummer und Schuld ist.
+Eine blonde Magierin, die umherwandert und scheinbar halb verrückt vor Kummer
+und Schuld ist.
 %%%%
 Purgy
 
@@ -282,47 +442,73 @@ Ein ungewöhnlich dünner Troll.
 %%%%
 Robin
 
-Ein Bergkobold, der vor Kurzem auf der Suche nach der legendären Kugel war. Robin ist nicht tollkühn oder rücksichtslos genug, um allein in die Tiefen des Verlieses vorzudringen, und hat eine kleine Armee aus Dienern aufgebaut. Potenzielle Konkurrenten werden schnell feststellen, dass ihnen ein Schwarm schreiender Kobolde entgegenfliegt!
+Ein Bergkobold, der vor Kurzem auf der Suche nach der legendären Kugel war.
+Robin ist nicht tollkühn oder rücksichtslos genug, um allein in die Tiefen des
+Verlieses vorzudringen, und hat eine kleine Armee aus Dienern aufgebaut.
+Potenzielle Konkurrenten werden schnell feststellen, dass ihnen ein Schwarm
+schreiender Kobolde entgegenfliegt!
 %%%%
 Roxanne
 
-Eine erstaunlich realistische Saphirstatue einer berühmten Erdmagierin, die nach einem katastrophalen Zauberfehler verschwand. Sie hält ein Buch in der Hand.
+Eine erstaunlich realistische Saphirstatue einer berühmten Erdmagierin, die nach
+einem katastrophalen Zauberfehler verschwand. Sie hält ein Buch in der Hand.
 %%%%
 Rupert
 
-Ein Mensch, dessen wildes Brüllen allen, die es hören, Angst und Schrecken einflößt.
+Ein Mensch, dessen wildes Brüllen allen, die es hören, Angst und Schrecken
+einflößt.
 %%%%
 Saint Roka
 
-Ein mächtiger Kriegsherr. Manche Orks behaupten sogar, er sei der Auserwählte von Beogh.
+Ein mächtiger Kriegsherr. Manche Orks behaupten sogar, er sei der Auserwählte
+von Beogh.
 %%%%
 Sigmund
 
-Der Ältere eines Brüderpaars, das wegen der Kugel gekommen war. Niemand weiß, was Sigmund im Dungeon sah, das ihn in den Wahnsinn trieb, aber seine raffinierten magischen Taktiken und seine bösartige Sense lassen seinen Opfern kaum noch Zeit, sich zu wundern. Trotz seines Rufs als grausamer Mörder hat er sich durch sein grandioses und dramatisches Auftreten die Bewunderung vieler Bewohner des Dungeons verdient.
+Der Ältere eines Brüderpaars, das wegen der Kugel gekommen war. Niemand weiß,
+was Sigmund im Dungeon sah, das ihn in den Wahnsinn trieb, aber seine
+raffinierten magischen Taktiken und seine bösartige Sense lassen seinen Opfern
+kaum noch Zeit, sich zu wundern. Trotz seines Rufs als grausamer Mörder hat er
+sich durch sein grandioses und dramatisches Auftreten die Bewunderung vieler
+Bewohner des Dungeons verdient.
 %%%%
 Snorg
 
-Ein besonders korpulenter Troll mit aufbrausendem Temperament und einem ansehnlichen Bauch. Snorg interessiert sich nicht für die Kugel, sondern erfreut sich an der endlosen Parade von Abenteurern - also leichten Mahlzeiten -, die sie anzieht.
+Ein besonders korpulenter Troll mit aufbrausendem Temperament und einem
+ansehnlichen Bauch. Snorg interessiert sich nicht für die Kugel, sondern erfreut
+sich an der endlosen Parade von Abenteurern - also leichten Mahlzeiten -, die
+sie anzieht.
 %%%%
 Sojobo
 
-Königin der Tengu, mit legendären Fähigkeiten im Schwertkampf, in der Taktik und in der Magie.
+Königin der Tengu, mit legendären Fähigkeiten im Schwertkampf, in der Taktik und
+in der Magie.
 %%%%
 Sonja
 
-Eine anmutige Kobold-Attentäterin. Bewundert ihre anmutigen Pirouetten und lasst Euch von ihren waghalsigen Sprüngen begeistern! Aber hütet Euch vor ihren Messern!
+Eine anmutige Kobold-Attentäterin. Bewundert ihre anmutigen Pirouetten und lasst
+Euch von ihren waghalsigen Sprüngen begeistern! Aber hütet Euch vor ihren
+Messern!
 %%%%
 Terence
 
-Terence ist ein brutaler Mörder, der aus Spaß und Profit tötet. Nach einem misslungenen Mord muss er untertauchen. Auf seinen Kopf ist ein Kopfgeld ausgesetzt und er kann es sich nicht leisten, jemanden, der ihn sieht, am Leben zu lassen!
+Terence ist ein brutaler Mörder, der aus Spaß und Profit tötet. Nach einem
+misslungenen Mord muss er untertauchen. Auf seinen Kopf ist ein Kopfgeld
+ausgesetzt und er kann es sich nicht leisten, jemanden, der ihn sieht, am Leben
+zu lassen!
 %%%%
 Tiamat
 
-Der irdische Avatar von Tiamat, der Göttin der Drachen, hier inkarniert als mächtige drakonische Kriegerin. Ihre Schuppen scheinen zu schimmern und ihre Farbe zu ändern, während man zuseht.
+Der irdische Avatar von Tiamat, der Göttin der Drachen, hier inkarniert als
+mächtige drakonische Kriegerin. Ihre Schuppen scheinen zu schimmern und ihre
+Farbe zu ändern, während man zuseht.
 %%%%
 Urug
 
-Ein grobschlächtiger und schlaksiger Ork. Urug verlor ihr Auge im Kampf mit einer Harpyie und hat geschworen, jede einzelne von ihnen zu töten. Leider ist die Sehkraft ihres verbleibenden Auges nicht sehr gut und sie hat Euch für eine gehalten.
+Ein grobschlächtiger und schlaksiger Ork. Urug verlor ihr Auge im Kampf mit
+einer Harpyie und hat geschworen, jede einzelne von ihnen zu töten. Leider ist
+die Sehkraft ihres verbleibenden Auges nicht sehr gut und sie hat Euch für eine
+gehalten.
 {{
     if you.can_smell() then
         return "Sie stinkt furchtbar."
@@ -331,7 +517,8 @@ Ein grobschlächtiger und schlaksiger Ork. Urug verlor ihr Auge im Kampf mit ein
 %%%%
 Vashnia
 
-Eine Eine Elite-Naga-Scharfschützin, die ein Team erfahrener Scharfschützen anführt. Sie ist besonders begabt in der Translokationsmagie.
+Eine Eine Elite-Naga-Scharfschützin, die ein Team erfahrener Scharfschützen
+anführt. Sie ist besonders begabt in der Translokationsmagie.
 %%%%
 Xtahua
 
@@ -339,19 +526,25 @@ Ein alter und mächtiger Drache.
 %%%%
 the Serpent of Hell gehenna
 
-Ein riesiger, rot leuchtender, dreiköpfiger Drache, der in Verdammnis gehüllt ist. Er ist besessen von der Essenz der Gehenna und ihrem ewigen Feuer.
+Ein riesiger, rot leuchtender, dreiköpfiger Drache, der in Verdammnis gehüllt
+ist. Er ist besessen von der Essenz der Gehenna und ihrem ewigen Feuer.
 %%%%
 the Serpent of Hell cocytus
 
-Ein riesiger weißer dreiköpfiger Drache, bedeckt mit Scherben aus glänzendem Eis und völlig besessen von der alptraumhaften Kälte des Kokytus.
+Ein riesiger weißer dreiköpfiger Drache, bedeckt mit Scherben aus glänzendem Eis
+und völlig besessen von der alptraumhaften Kälte des Kokytus.
 %%%%
 the Serpent of Hell dis
 
-Ein gewaltiges dreiköpfiges Ungeheuer mit Schwertern im Wert einer ganzen Armee als Zähnen. Jede seiner Schuppen ist ein Schild mit rasiermesserscharfer Schneide.
+Ein gewaltiges dreiköpfiges Ungeheuer mit Schwertern im Wert einer ganzen Armee
+als Zähnen. Jede seiner Schuppen ist ein Schild mit rasiermesserscharfer
+Schneide.
 %%%%
 the Serpent of Hell tartarus
 
-Es sieht so aus, als ob drei Paare greller magentafarbener Augen in der Dunkelheit hängen. Dahinter ist die Silhouette eines riesigen, gewundenen Drachens kaum zu erkennen. Seine Bosheit ist greifbar.
+Es sieht so aus, als ob drei Paare greller magentafarbener Augen in der
+Dunkelheit hängen. Dahinter ist die Silhouette eines riesigen, gewundenen
+Drachens kaum zu erkennen. Seine Bosheit ist greifbar.
 %%%%
 # Non-unique monsters
 acid blob
@@ -360,51 +553,71 @@ Ein Klumpen kränklichen, eitrigen Fleisches, aus dem tödliche Säure tropft.
 %%%%
 acid dragon
 
-Ein kleiner Drache mit leuchtend gelben Schuppen, aus dessen Maul ätzender Schleim tropft.
+Ein kleiner Drache mit leuchtend gelben Schuppen, aus dessen Maul ätzender
+Schleim tropft.
 %%%%
 adder
 
-Eine häufig vorkommende Dungeonschlange, eine Art höhlenbewohnendes Reptil, das häufig in unterirdischen Räumen vorkommt.
+Eine häufig vorkommende Dungeonschlange, eine Art höhlenbewohnendes Reptil, das
+häufig in unterirdischen Räumen vorkommt.
 %%%%
 air elemental
 
-Ein Geist aus der Elementarebene der Luft. Er existiert in dieser Welt als Blitze spuckender Geist, der seine Feinde mit seinen knisternden Blitzen betäubt.
+Ein Geist aus der Elementarebene der Luft. Er existiert in dieser Welt als
+Blitze spuckender Geist, der seine Feinde mit seinen knisternden Blitzen
+betäubt.
 %%%%
 alligator
 
-Eine aggressive Panzerechse mit großen, knackenden Kiefern voller scharfer Zähne.
+Eine aggressive Panzerechse mit großen, knackenden Kiefern voller scharfer
+Zähne.
 %%%%
 alligator snapping turtle
 
-Eine besonders große und fiese Schnappschildkröte. Wie ihre kleineren Verwandten kann sie aus der Ferne zubeißen.
+Eine besonders große und fiese Schnappschildkröte. Wie ihre kleineren Verwandten
+kann sie aus der Ferne zubeißen.
 %%%%
 anaconda
 
-Eine sehr große Schlange, die sich mit erstaunlicher Geschwindigkeit bewegt. Sie tötet ihre Beute nicht durch Gift, sondern indem sie sie umschlingt.
+Eine sehr große Schlange, die sich mit erstaunlicher Geschwindigkeit bewegt. Sie
+tötet ihre Beute nicht durch Gift, sondern indem sie sie umschlingt.
 %%%%
 ancestor
 
-Ein humanoides Konstrukt aus körperlosen Erinnerungen, das durch die Luft schwebt. Obwohl seine Form vielleicht etwas verändert ist und es kaum erkennbare Merkmale aufweist, scheint es dennoch irgendwie einem Krieger aus der fernen Vergangenheit zu ähneln. Die Erinnerung und der Erinnerer kämpfen gemeinsam, und jeder kann an dem anderen vorbeischießen.
+Ein humanoides Konstrukt aus körperlosen Erinnerungen, das durch die Luft
+schwebt. Obwohl seine Form vielleicht etwas verändert ist und es kaum erkennbare
+Merkmale aufweist, scheint es dennoch irgendwie einem Krieger aus der fernen
+Vergangenheit zu ähneln. Die Erinnerung und der Erinnerer kämpfen gemeinsam, und
+jeder kann an dem anderen vorbeischießen.
 %%%%
 ancient champion
 
-Ein unfassbar altes Skelett. In seine Knochen sind Hunderte goldene Siegel eingraviert und es pulsiert mit schrecklicher, unheiliger Kraft.
+Ein unfassbar altes Skelett. In seine Knochen sind Hunderte goldene Siegel
+eingraviert und es pulsiert mit schrecklicher, unheiliger Kraft.
 %%%%
 ancient lich
 
-Ein Lich, der seit zahllosen Jahrhunderten existiert und durch das Studium der schwarzen Magie eine fast unvorstellbare Macht erlangt hat.
+Ein Lich, der seit zahllosen Jahrhunderten existiert und durch das Studium der
+schwarzen Magie eine fast unvorstellbare Macht erlangt hat.
 %%%%
 ancient zyme
 
-Ein Nexus aus empfindungsfähigem Krebs und Krankheit, der vielleicht nur aus Bosheit in die Welt gesetzt wurde. Seine Natur fügt allen Lebewesen in seiner Gegenwart eine vernichtende Krankheit zu.
+Ein Nexus aus empfindungsfähigem Krebs und Krankheit, der vielleicht nur aus
+Bosheit in die Welt gesetzt wurde. Seine Natur fügt allen Lebewesen in seiner
+Gegenwart eine vernichtende Krankheit zu.
 %%%%
 angel
 
-Ein göttlicher Krieger des Glänzenden. Er ist eine gewaltige geflügelte Gestalt von unnatürlicher Schönheit, umgeben von einer Aura aus strahlend weißem Licht.
+Ein göttlicher Krieger des Glänzenden. Er ist eine gewaltige geflügelte Gestalt
+von unnatürlicher Schönheit, umgeben von einer Aura aus strahlend weißem Licht.
 %%%%
 animated armour
 
-Der Schweiß und die Mühe des Waffenschmieds, der Leder und Stahl bearbeitet, verleihen ihrer Schöpfung einen Geist, einen einzigartigen Funken in jedem Kürass, Schulterstück und Armschutz. Ein geschickter Zauberer kann diese Funken bündeln, sodass seine Rüstung den Träger stärker schützt als herkömmliche Rüstungen.
+Der Schweiß und die Mühe des Waffenschmieds, der Leder und Stahl bearbeitet,
+verleihen ihrer Schöpfung einen Geist, einen einzigartigen Funken in jedem
+Kürass, Schulterstück und Armschutz. Ein geschickter Zauberer kann diese Funken
+bündeln, sodass seine Rüstung den Träger stärker schützt als herkömmliche
+Rüstungen.
 %%%%
 apis
 
@@ -412,27 +625,38 @@ Ein ruhiger, heiliger Bulle von Elyvilon.
 %%%%
 apocalypse crab
 
-Eine opaleszierende Krabbe mit pechschwarzen Augen und chaotischem Nebel, der aus ihren Mandibeln strömt. Gerüchten zufolge wartet diese Art auf das Ende der Zeit.
+Eine opaleszierende Krabbe mit pechschwarzen Augen und chaotischem Nebel, der
+aus ihren Mandibeln strömt. Gerüchten zufolge wartet diese Art auf das Ende der
+Zeit.
 %%%%
 azure jelly
 
-Ein extrem kalter Klumpen hellblauen Zytoplasmas, der in der ihn umgebenden Luft Frostpartikel bildet.
+Ein extrem kalter Klumpen hellblauen Zytoplasmas, der in der ihn umgebenden Luft
+Frostpartikel bildet.
 %%%%
 ball lightning
 
-Eine schnelle Kugel aus funkelnder elektrischer Energie. Sie explodiert bei der geringsten Störung.
+Eine schnelle Kugel aus funkelnder elektrischer Energie. Sie explodiert bei der
+geringsten Störung.
 %%%%
 ball python
 
-Eine kleine Schlange, die ihren Biss verstärken kann, indem sie kleine Lebewesen umschlingt.
+Eine kleine Schlange, die ihren Biss verstärken kann, indem sie kleine Lebewesen
+umschlingt.
 %%%%
 ballistomycete
 
-Ein klumpiger, rötlicher Pilz, der mit knotigen Rhizomen bedeckt ist und in feuchten unterirdischen Verliesen gut wächst. Wenn der Ballistomycet eine Bedrohung wahrnimmt, kann er eine tödliche schwebende Spore freisetzen, die auf seinen Opfern explodiert.
+Ein klumpiger, rötlicher Pilz, der mit knotigen Rhizomen bedeckt ist und in
+feuchten unterirdischen Verliesen gut wächst. Wenn der Ballistomycet eine
+Bedrohung wahrnimmt, kann er eine tödliche schwebende Spore freisetzen, die auf
+seinen Opfern explodiert.
 %%%%
 ballistomycete spore
 
-Eine schnelle, mit Gas gefüllte schwebende Spore, die von einem Ballistomyceten freigesetzt wird, wenn er eine Bedrohung wahrnimmt. Nachdem die Spore ihren Feind aufgespürt hat, explodiert sie und beschädigt alles, was in die Explosion gerät, und verwirrt Lebewesen dazu.
+Eine schnelle, mit Gas gefüllte schwebende Spore, die von einem Ballistomyceten
+freigesetzt wird, wenn er eine Bedrohung wahrnimmt. Nachdem die Spore ihren
+Feind aufgespürt hat, explodiert sie und beschädigt alles, was in die Explosion
+gerät, und verwirrt Lebewesen dazu.
 %%%%
 balrug
 
@@ -449,31 +673,45 @@ Eine Schopfechse mittlerer Größe mit einem furchtbaren, versteinernden Blick.
 %%%%
 bat
 
-Eine große graue Fledermaus, die zwar Pflanzenfresser ist, aber ziemlich aggressiv. Sie ist kurzsichtig und nutzt zur Orientierung Echoortung.
+Eine große graue Fledermaus, die zwar Pflanzenfresser ist, aber ziemlich
+aggressiv. Sie ist kurzsichtig und nutzt zur Orientierung Echoortung.
 %%%%
 battlemage
 
-Ein humanoides Konstrukt aus körperlosem Gedächtnis, das durch die Luft schwebt. Obwohl seine Form vielleicht etwas verändert ist und er kaum erkennbare Merkmale aufweist, scheint es dennoch irgendwie einem Krieger aus längst vergangenen Zeiten zu ähneln, der sowohl in Hervorrufungen als auch im Nahkampf bewandert ist.
+Ein humanoides Konstrukt aus körperlosem Gedächtnis, das durch die Luft schwebt.
+Obwohl seine Form vielleicht etwas verändert ist und er kaum erkennbare Merkmale
+aufweist, scheint es dennoch irgendwie einem Krieger aus längst vergangenen
+Zeiten zu ähneln, der sowohl in Hervorrufungen als auch im Nahkampf bewandert
+ist.
 %%%%
 battlesphere
 
-Eine kleine Kugel aus magischer Energie, die einem Zauberer folgt. Sie kann nicht von alleine agieren, greift aber die Feinde des Zauberers mit magischen Geschossen an, die nie ihr Ziel verfehlen, wenn der Zauberer einen Zauber spricht.
+Eine kleine Kugel aus magischer Energie, die einem Zauberer folgt. Sie kann
+nicht von alleine agieren, greift aber die Feinde des Zauberers mit magischen
+Geschossen an, die nie ihr Ziel verfehlen, wenn der Zauberer einen Zauber
+spricht.
 %%%%
 bennu
 
-Ein heiliger, selbst erschaffener Sonnenvogel, der die Wiedergeburt repräsentiert. Er hat die Zyklen von Leben und Tod hinter sich gelassen und ruft Aspekte von beiden hervor, um in einem Ausbruch unheiliger Flammen aus dem Tod hervorzugehen.
+Ein heiliger, selbst erschaffener Sonnenvogel, der die Wiedergeburt
+repräsentiert. Er hat die Zyklen von Leben und Tod hinter sich gelassen und ruft
+Aspekte von beiden hervor, um in einem Ausbruch unheiliger Flammen aus dem Tod
+hervorzugehen.
 %%%%
 black bear
 
-Ein kleiner schwarzer Bär. Wie alle Bären wird er wütend, wenn er schwer verletzt oder erschreckt wird.
+Ein kleiner schwarzer Bär. Wie alle Bären wird er wütend, wenn er schwer
+verletzt oder erschreckt wird.
 %%%%
 black draconian
 
-Ein muskulöser Humanoid mit schwarzen Schuppen, einem Reptilienschwanz und kräftigen Flügeln.
+Ein muskulöser Humanoid mit schwarzen Schuppen, einem Reptilienschwanz und
+kräftigen Flügeln.
 %%%%
 black mamba
 
-Eine erstaunlich schnelle tropische Schlange, deren Biss ein tödliches Gift mit sich bringt.
+Eine erstaunlich schnelle tropische Schlange, deren Biss ein tödliches Gift mit
+sich bringt.
 %%%%
 black sun
 
@@ -481,7 +719,9 @@ black sun
 %%%%
 blink frog
 
-Eine Froschart, die die Fähigkeit besitzt, nach Belieben zu blinzeln. Sie kann sich ihrer beabsichtigten Beute nähern oder wegblinzeln, um Schaden zu entgehen. Sie kommt häufig in Rudeln vor.
+Eine Froschart, die die Fähigkeit besitzt, nach Belieben zu blinzeln. Sie kann
+sich ihrer beabsichtigten Beute nähern oder wegblinzeln, um Schaden zu entgehen.
+Sie kommt häufig in Rudeln vor.
 %%%%
 blizzard demon
 
@@ -489,11 +729,14 @@ Ein größerer Dämon, umhüllt von Schnee und Blitzen.
 %%%%
 bloated husk
 
-Der verwesende Leichnam eines Untoten. Wenn er ein Opfer erreicht (oder vorher zerstört wird), werden die in ihm eingeschlossenen Gase freigesetzt und erzeugen eine große, heftige Explosion.
+Der verwesende Leichnam eines Untoten. Wenn er ein Opfer erreicht (oder vorher
+zerstört wird), werden die in ihm eingeschlossenen Gase freigesetzt und erzeugen
+eine große, heftige Explosion.
 %%%%
 block of ice
 
-Ein Eisblock in Form einer Statue, der jedoch von keinen lebenden Händen bearbeitet wurde.
+Ein Eisblock in Form einer Statue, der jedoch von keinen lebenden Händen
+bearbeitet wurde.
 %%%%
 blood saint
 
@@ -501,85 +744,124 @@ blood saint
 %%%%
 bog body
 
-Eine untote Gestalt, die durch das Brackwasser eines Moores konserviert und durch unbekannte Magie wiederbelebt wurde.
+Eine untote Gestalt, die durch das Brackwasser eines Moores konserviert und
+durch unbekannte Magie wiederbelebt wurde.
 %%%%
 boggart
 
-Ein bösartiger und gefährlicher kleiner Waldgeist. Die schattenhaften Illusionen, die er beschwört, sind zwar nicht real, aber dennoch tödlich.
+Ein bösartiger und gefährlicher kleiner Waldgeist. Die schattenhaften
+Illusionen, die er beschwört, sind zwar nicht real, aber dennoch tödlich.
 %%%%
 bone dragon
 
-Eine mächtige untote Abscheulichkeit, die mithilfe mächtiger nekromantischer Magie aus den gebrochenen Knochen vieler Drachen zusammengesetzt wurde. Glücklicherweise ging dabei das Organ verloren, das den furchterregenden Atem eines Drachens erzeugt.
+Eine mächtige untote Abscheulichkeit, die mithilfe mächtiger nekromantischer
+Magie aus den gebrochenen Knochen vieler Drachen zusammengesetzt wurde.
+Glücklicherweise ging dabei das Organ verloren, das den furchterregenden Atem
+eines Drachens erzeugt.
 %%%%
 boulder beetle
 
-Ein grauer Käfer mit einem fast undurchdringlichen Panzer aus Felsgestein. Wenn er sich in einiger Entfernung von seinem Gegner befindet, kann ein Rollsteinkäfer mit hoher Geschwindigkeit davonrollen und versuchen, in sein Ziel zu krachen und ihm schweren Schaden zuzufügen.
+Ein grauer Käfer mit einem fast undurchdringlichen Panzer aus Felsgestein. Wenn
+er sich in einiger Entfernung von seinem Gegner befindet, kann ein
+Rollsteinkäfer mit hoher Geschwindigkeit davonrollen und versuchen, in sein Ziel
+zu krachen und ihm schweren Schaden zuzufügen.
 %%%%
 briar patch
 
-Ein Gewirr aus Dornengestrüpp, scharf genug, um dickes Fell und Rüstungen zu durchbohren. Obwohl es im Gehölz so viele Lücken gibt, dass man Geschosse hindurchschießen könnte, scheint es eine qualvolle Angelegenheit zu sein, hindurchzugehen.
+Ein Gewirr aus Dornengestrüpp, scharf genug, um dickes Fell und Rüstungen zu
+durchbohren. Obwohl es im Gehölz so viele Lücken gibt, dass man Geschosse
+hindurchschießen könnte, scheint es eine qualvolle Angelegenheit zu sein,
+hindurchzugehen.
 
-Sowohl magische als auch alltägliche Geschosse bleiben von dieser Anlage unberührt, Verzauberungen und Explosionen hingegen nicht.
+Sowohl magische als auch alltägliche Geschosse bleiben von dieser Anlage
+unberührt, Verzauberungen und Explosionen hingegen nicht.
 %%%%
 %%%%
 Brimstone Fiend
 
-Ein riesiger und mächtiger Dämon, der mit Verdammnis umhüllt ist und große schuppige Flügel besitzt. Er ist einer der furchterregendsten Bewohner der Hölle.
+Ein riesiger und mächtiger Dämon, der mit Verdammnis umhüllt ist und große
+schuppige Flügel besitzt. Er ist einer der furchterregendsten Bewohner der
+Hölle.
 %%%%
 burning bush
 
-Eine Masse geschwärzter Zweige, umkränzt von orangefarbenen Flammen, mit Brandflecken, die die Umgebung verunstalten.
+Eine Masse geschwärzter Zweige, umkränzt von orangefarbenen Flammen, mit
+Brandflecken, die die Umgebung verunstalten.
 %%%%
 bush
 
-Eine holzige Pflanze. Sie sieht trocken genug aus, um leicht Feuer zu fangen, und ihr Laub ist nicht sehr dicht, sodass Geschosse sie durchdringen können. Sie ist jedoch fest verwurzelt und kann nur mit erheblichem Aufwand zerstört werden.
+Eine holzige Pflanze. Sie sieht trocken genug aus, um leicht Feuer zu fangen,
+und ihr Laub ist nicht sehr dicht, sodass Geschosse sie durchdringen können. Sie
+ist jedoch fest verwurzelt und kann nur mit erheblichem Aufwand zerstört werden.
 
-Sowohl magische als auch alltägliche Geschosse bleiben von dieser Anlage unberührt, Verzauberungen und Explosionen hingegen nicht.
+Sowohl magische als auch alltägliche Geschosse bleiben von dieser Anlage
+unberührt, Verzauberungen und Explosionen hingegen nicht.
 %%%%
 %%%%
 bullfrog
 
-Ein ungewöhnlich aggressives Amphibium, das seine Beute mit schnellen Sprüngen verfolgt. Sein Quaken ist laut und unverwechselbar, aber im Gegensatz zu seinen kleineren Artgenossen über der Erde ist der Dungeon-Ochsenfrosch so groß, wie er klingt.
+Ein ungewöhnlich aggressives Amphibium, das seine Beute mit schnellen Sprüngen
+verfolgt. Sein Quaken ist laut und unverwechselbar, aber im Gegensatz zu seinen
+kleineren Artgenossen über der Erde ist der Dungeon-Ochsenfrosch so groß, wie er
+klingt.
 %%%%
 bunyip
 
-Ein fleischfressendes Tier, das seine Gliedmaßen und seinen Schwanz abwechselnd verwendet. Es bewegt sich mit alarmierender Geschwindigkeit, muss aber nach jedem Angriff innehalten, um sich neu zu organisieren. Seine unverwechselbaren Schreie sind weithin zu hören.
+Ein fleischfressendes Tier, das seine Gliedmaßen und seinen Schwanz abwechselnd
+verwendet. Es bewegt sich mit alarmierender Geschwindigkeit, muss aber nach
+jedem Angriff innehalten, um sich neu zu organisieren. Seine unverwechselbaren
+Schreie sind weithin zu hören.
 %%%%
 butterfly
 
-Ein großer, bunter Schmetterling mit wunderschön gemusterten Flügeln, der unpassend durch die Dunkelheit der Höhle flattert.
+Ein großer, bunter Schmetterling mit wunderschön gemusterten Flügeln, der
+unpassend durch die Dunkelheit der Höhle flattert.
 %%%%
 cacodemon
 
-Er ist ein abscheulich hässlicher Dämon voller Wut und legendärer Macht, der seine Feinde außer Gefecht setzt und sie dann in Stücke sprengt.
+Er ist ein abscheulich hässlicher Dämon voller Wut und legendärer Macht, der
+seine Feinde außer Gefecht setzt und sie dann in Stücke sprengt.
 %%%%
 cane toad
 
-Eine abscheuliche Kröte, deren dicke, warzige Haut mit Giftdrüsen bedeckt ist. Im Gegensatz zu ihren kleineren, oberirdischen Verwandten ist dieser Dungeonbewohner so groß wie ein Wolf.
+Eine abscheuliche Kröte, deren dicke, warzige Haut mit Giftdrüsen bedeckt ist.
+Im Gegensatz zu ihren kleineren, oberirdischen Verwandten ist dieser
+Dungeonbewohner so groß wie ein Wolf.
 %%%%
 catoblepas
 
-Ein träger schwarzer Büffel, dessen Haut mit stumpfen Schuppen überzogen ist. Seinen schweineartigen Kopf hält er knapp über dem Boden, geschützt durch eine steife Mähne aus Borsten. Sein furchterregender Atem verwandelt Fleisch in Stein.
+Ein träger schwarzer Büffel, dessen Haut mit stumpfen Schuppen überzogen ist.
+Seinen schweineartigen Kopf hält er knapp über dem Boden, geschützt durch eine
+steife Mähne aus Borsten. Sein furchterregender Atem verwandelt Fleisch in
+Stein.
 %%%%
 caustic shrike
 
-Ein schneller, alptraumhafter Vogel, aus dessen messerscharfen Metallfedern ätzende Säure tropft.
+Ein schneller, alptraumhafter Vogel, aus dessen messerscharfen Metallfedern
+ätzende Säure tropft.
 %%%%
 centaur
 
-Ein Hybrid mit menschlichem Oberkörper auf dem Körper eines Pferdes. Er ist ein sehr geschickter Bogenschütze.
+Ein Hybrid mit menschlichem Oberkörper auf dem Körper eines Pferdes. Er ist ein
+sehr geschickter Bogenschütze.
 %%%%
 centaur warrior
 
-Ein muskulöser Zentaur und Veteran zahlreicher Schlachten, der mit hochwertigen Waffen ausgestattet ist und diese geschickt einzusetzen weiß.
+Ein muskulöser Zentaur und Veteran zahlreicher Schlachten, der mit hochwertigen
+Waffen ausgestattet ist und diese geschickt einzusetzen weiß.
 %%%%
 chaos spawn
 
-Ein Wesen des reinen Chaos, dessen Gestalt sich ständig verändert, das Augen, Münder, Klauen und Tentakeln wächst und dann verliert. Es verdirbt alles, was es berührt.
+Ein Wesen des reinen Chaos, dessen Gestalt sich ständig verändert, das Augen,
+Münder, Klauen und Tentakeln wächst und dann verliert. Es verdirbt alles, was es
+berührt.
 %%%%
 cherub
 
-Ein Thronträger der Götter, dessen Kopf von vier Gesichtern umgeben ist: das eines Menschen, das eines Ochsen, das eines Löwen und das eines Adlers. Es ist eines der Engelwesen, die vor den guten Göttern stehen und ewige Loblieder auf ihre Herrlichkeit und Größe singen.
+Ein Thronträger der Götter, dessen Kopf von vier Gesichtern umgeben ist: das
+eines Menschen, das eines Ochsen, das eines Löwen und das eines Adlers. Es ist
+eines der Engelwesen, die vor den guten Göttern stehen und ewige Loblieder auf
+ihre Herrlichkeit und Größe singen.
 %%%%
 corrupter
 
@@ -587,64 +869,84 @@ corrupter
 %%%%
 crimson imp
 
-Ein kleiner, hässlicher Dämon. Sein Maul voller Reißzähnen scheint in einem permanenten, bösartigen Grinsen verharrt zu haben, und seine Hörner ragen obszön aus seiner schuppigen Glatze hervor.
+Ein kleiner, hässlicher Dämon. Sein Maul voller Reißzähnen scheint in einem
+permanenten, bösartigen Grinsen verharrt zu haben, und seine Hörner ragen obszön
+aus seiner schuppigen Glatze hervor.
 %%%%
 crystal guardian
 
-Eine kunstvolle, belebte Statue aus stark verzaubertem, zähem Kristall. Sie ist gegen die meisten Formen der Magie immun und magisch aufgeladen, um große Feuer- und Kälteblitze zu schleudern, die von jeder Oberfläche reflektiert werden.
+Eine kunstvolle, belebte Statue aus stark verzaubertem, zähem Kristall. Sie ist
+gegen die meisten Formen der Magie immun und magisch aufgeladen, um große Feuer-
+und Kälteblitze zu schleudern, die von jeder Oberfläche reflektiert werden.
 %%%%
 curse skull
 
-Ein verkohlter Totenschädel schwebt in der Luft und dreht sich langsam. In seine geschwärzte Oberfläche sind mystische Symbole eingeritzt.
+Ein verkohlter Totenschädel schwebt in der Luft und dreht sich langsam. In seine
+geschwärzte Oberfläche sind mystische Symbole eingeritzt.
 %%%%
 curse toe
 
-Ein körperloser Zeh, der in der Luft hängt und ein intensives Feld negativer Energie ausstrahlt.
+Ein körperloser Zeh, der in der Luft hängt und ein intensives Feld negativer
+Energie ausstrahlt.
 %%%%
 cyclops
 
-Ein Riese mit einem Auge mitten auf der Stirn. Obwohl er kein binokulares Sehvermögen hat, kann er Felsbrocken mit furchterregender Genauigkeit werfen.
+Ein Riese mit einem Auge mitten auf der Stirn. Obwohl er kein binokulares
+Sehvermögen hat, kann er Felsbrocken mit furchterregender Genauigkeit werfen.
 %%%%
 daeva
 
-Eine turmhohen geflügelte Gestalt, die eine Aura aus strahlendem goldenen Licht ausstrahlt. Es ist ein göttlicher Agent des Glänzenden.
+Eine turmhohen geflügelte Gestalt, die eine Aura aus strahlendem goldenen Licht
+ausstrahlt. Es ist ein göttlicher Agent des Glänzenden.
 %%%%
 dancing weapon
 
-Eine Waffe, die so verzaubert ist, dass sie durch die Luft tanzt und aus eigener Kraft angreift.
+Eine Waffe, die so verzaubert ist, dass sie durch die Luft tanzt und aus eigener
+Kraft angreift.
 
 %%%%
 dart slug
 
-Ein kleines wirbelloses Tier. Es jagt Beute, die erheblich größer ist als es selbst, indem es Chitinpfeile abfeuert, die es mithilfe einer verborgenen Luftblase mit bemerkenswerter Reichweite und Kraft schießt.
+Ein kleines wirbelloses Tier. Es jagt Beute, die erheblich größer ist als es
+selbst, indem es Chitinpfeile abfeuert, die es mithilfe einer verborgenen
+Luftblase mit bemerkenswerter Reichweite und Kraft schießt.
 %%%%
 deathcap
 
-Ein giftiger und tödlicher Pilz, der von negativer Energie durchdrungen ist. Obwohl er im Leben ein Parasit war, hat ihm der Untod die Fähigkeit verliehen, seine Nährstoffe direkt aus der Lebenskraft anderer zu beziehen.
+Ein giftiger und tödlicher Pilz, der von negativer Energie durchdrungen ist.
+Obwohl er im Leben ein Parasit war, hat ihm der Untod die Fähigkeit verliehen,
+seine Nährstoffe direkt aus der Lebenskraft anderer zu beziehen.
 %%%%
 death cob
 
-Ein furchtbarer, untoter Maiskolben. Na ja, das war wahrscheinlich ein Fehler. Es tut uns leid.
+Ein furchtbarer, untoter Maiskolben. Na ja, das war wahrscheinlich ein Fehler.
+Es tut uns leid.
 %%%%
 death drake
 
-Ein dunkler und unheilvoller kleiner Drache. Aus seinem pestartigen Maul stößt er ein tödliches Miasma aus.
+Ein dunkler und unheilvoller kleiner Drache. Aus seinem pestartigen Maul stößt
+er ein tödliches Miasma aus.
 %%%%
 death knight
 
-Ein Kriegerpriester von Yredelemnul, der ängstliche Bittgebete an seinen dunklen Gott richtet.
+Ein Kriegerpriester von Yredelemnul, der ängstliche Bittgebete an seinen dunklen
+Gott richtet.
 %%%%
 death scarab
 
-Ein abscheuliches, wimmelndes untotes Insekt, das Tod und Verfall ausströmt und sich von der Lebensenergie derer ernährt, die das Pech haben, ihm zu begegnen.
+Ein abscheuliches, wimmelndes untotes Insekt, das Tod und Verfall ausströmt und
+sich von der Lebensenergie derer ernährt, die das Pech haben, ihm zu begegnen.
 %%%%
 death yak
 
-Ein größerer und kräftigerer Verwandter des gewöhnlichen Dungeonyaks. Seine kleinen roten Augen glänzen vor Hunger nach lebendigem Fleisch.
+Ein größerer und kräftigerer Verwandter des gewöhnlichen Dungeonyaks. Seine
+kleinen roten Augen glänzen vor Hunger nach lebendigem Fleisch.
 %%%%
 deep elf annihilator
 
-Ein Tiefenelf, der sich an heraufbeschworenem Chaos und Zerstörung erfreut. Er wird allgemein gehasst und gefürchtet, sowohl wegen der Macht als auch wegen der Präzision seiner zerstörerischen Magie.
+Ein Tiefenelf, der sich an heraufbeschworenem Chaos und Zerstörung erfreut. Er
+wird allgemein gehasst und gefürchtet, sowohl wegen der Macht als auch wegen der
+Präzision seiner zerstörerischen Magie.
 %%%%
 deep elf archer
 
@@ -652,23 +954,31 @@ Ein erfahrener Tiefenelfenkämpfer mit einer Vorliebe für den Fernkampf.
 %%%%
 deep elf blademaster
 
-Ein Held der Tiefenelfen, der Magie verachtet und sich dem Studium des Schwertes verschrieben hat. Er führt zwei Waffen mit erstaunlicher Geschicklichkeit und Geschwindigkeit.
+Ein Held der Tiefenelfen, der Magie verachtet und sich dem Studium des Schwertes
+verschrieben hat. Er führt zwei Waffen mit erstaunlicher Geschicklichkeit und
+Geschwindigkeit.
 %%%%
 deep elf death mage
 
-Ein Tiefenelf, der von einer schimmernden Aura negativer Energie umgeben ist, die auf die Ausübung von Nekromantie und lebensraubender Magie zurückzuführen ist.
+Ein Tiefenelf, der von einer schimmernden Aura negativer Energie umgeben ist,
+die auf die Ausübung von Nekromantie und lebensraubender Magie zurückzuführen
+ist.
 %%%%
 deep elf demonologist
 
-Ein Tiefenelf, der stark durch den jahrelangen Kontakt mit unnatürlichen dämonischen Kräften und den Kreaturen des Abgrunds geprägt ist.
+Ein Tiefenelf, der stark durch den jahrelangen Kontakt mit unnatürlichen
+dämonischen Kräften und den Kreaturen des Abgrunds geprägt ist.
 %%%%
 deep elf elementalist
 
-Ein Tiefenelf, der die Urkräfte des Universums beherrscht. Er ist bekannt für seine Fähigkeit, selbst die schwer fassbarsten Feinde mit mächtiger, unausweichlicher Magie auszugraben und festzuhalten.
+Ein Tiefenelf, der die Urkräfte des Universums beherrscht. Er ist bekannt für
+seine Fähigkeit, selbst die schwer fassbarsten Feinde mit mächtiger,
+unausweichlicher Magie auszugraben und festzuhalten.
 %%%%
 deep elf high priest
 
-Ein erhabener Diener des alten dunklen Gottes der Tiefenelfen, der in höllischer Todesmagie schwelgt.
+Ein erhabener Diener des alten dunklen Gottes der Tiefenelfen, der in höllischer
+Todesmagie schwelgt.
 %%%%
 deep elf knight
 
@@ -676,23 +986,28 @@ Ein kampferprobter Tiefenelfenkämpfer.
 %%%%
 deep elf master archer
 
-Ein Tiefenelfen-Bogenschütze, der sein Leben der Beherrschung des Bogenschießens gewidmet hat und Magie als frivole Ablenkung abtut.
+Ein Tiefenelfen-Bogenschütze, der sein Leben der Beherrschung des Bogenschießens
+gewidmet hat und Magie als frivole Ablenkung abtut.
 %%%%
 deep elf pyromancer
 
-Ein Tiefenelf, der die Feuermagie beherrscht. Er ist in der Lage, eine große Bandbreite sengender Zauber zu wirken.
+Ein Tiefenelf, der die Feuermagie beherrscht. Er ist in der Lage, eine große
+Bandbreite sengender Zauber zu wirken.
 %%%%
 deep elf sorcerer
 
-Ein mächtiger Zauberer, der seine Kraft aus der Hölle selbst bezieht und über tödliche arkane Fähigkeiten verfügt.
+Ein mächtiger Zauberer, der seine Kraft aus der Hölle selbst bezieht und über
+tödliche arkane Fähigkeiten verfügt.
 %%%%
 deep elf zephyrmancer
 
-Ein Elf, der sich ausschließlich auf die Magie der Luft konzentriert und kaum Zeit hat, andere Dinge zu studieren.
+Ein Elf, der sich ausschließlich auf die Magie der Luft konzentriert und kaum
+Zeit hat, andere Dinge zu studieren.
 %%%%
 deep dwarf
 
-Ein blasser Zwerg mit unnatürlich dicker Haut, der tief unter der Erde lebt und fast nie die sonnenbeschienene Oberwelt betretet.
+Ein blasser Zwerg mit unnatürlich dicker Haut, der tief unter der Erde lebt und
+fast nie die sonnenbeschienene Oberwelt betretet.
 %%%%
 deep troll
 
@@ -700,23 +1015,29 @@ Ein gebeugter Troll mit dunkler Haut. Er reist oft in Rudeln.
 %%%%
 deep troll earth mage
 
-Ein besonders intelligenter Tiefentroll. Er nutzt seine Magie, um Tunnel durch die Erde zu graben und Feinden aufzulauern.
+Ein besonders intelligenter Tiefentroll. Er nutzt seine Magie, um Tunnel durch
+die Erde zu graben und Feinden aufzulauern.
 %%%%
 deep troll shaman
 
-Ein Tiefentroll, gesegnet mit göttlicher Kraft, um seine Artgenossen zu stärken und zu beschleunigen.
+Ein Tiefentroll, gesegnet mit göttlicher Kraft, um seine Artgenossen zu stärken
+und zu beschleunigen.
 %%%%
 demigod
 
-Eine menschenähnliche Gestalt mit einer Aura der Macht, die ihre göttliche Herkunft verrät.
+Eine menschenähnliche Gestalt mit einer Aura der Macht, die ihre göttliche
+Herkunft verrät.
 %%%%
 demonic crawler
 
-Eine höllische insektenartige Kreatur mit einem langen, aufgeblähten Körper, der von Dutzenden kurzer, gegliederter Beine gestützt wird und obenauf einen fast menschlichen Kopf trägt.
+Eine höllische insektenartige Kreatur mit einem langen, aufgeblähten Körper, der
+von Dutzenden kurzer, gegliederter Beine gestützt wird und obenauf einen fast
+menschlichen Kopf trägt.
 %%%%
 demonspawn
 
-Eine halb sterbliche, halb dämonische Kreatur, deren höllisches Erbe sich in einer gewissen teuflischen Ausstrahlung ihrer Gesichtszüge widerspiegelt.
+Eine halb sterbliche, halb dämonische Kreatur, deren höllisches Erbe sich in
+einer gewissen teuflischen Ausstrahlung ihrer Gesichtszüge widerspiegelt.
 %%%%
 diamond obelisk
 
@@ -724,7 +1045,8 @@ Ein hoch aufragender Obelisk, umgeben von einem mächtigen Sturm.
 %%%%
 dire elephant
 
-Ein riesiger Dickhäuter, wilder und grimmiger als normale Elefanten, mit einer sehr dicken Haut, kräftigen Beinen und einem umwerfenden Gedächtnis.
+Ein riesiger Dickhäuter, wilder und grimmiger als normale Elefanten, mit einer
+sehr dicken Haut, kräftigen Beinen und einem umwerfenden Gedächtnis.
 %%%%
 djinni
 
@@ -732,51 +1054,71 @@ Ein Elementargeist, geformt aus rauchlosem Feuer.
 %%%%
 doom hound
 
-Ein dämonischer Schoßhund der Königin von Tartarus, der dazu bestimmt ist, ihre Feinde zu jagen. Obwohl er allein erscheint, besitzt er die schreckliche Macht, Kreaturen des Albtraums auf die Fährte seines Opfers zu hetzen.
+Ein dämonischer Schoßhund der Königin von Tartarus, der dazu bestimmt ist, ihre
+Feinde zu jagen. Obwohl er allein erscheint, besitzt er die schreckliche Macht,
+Kreaturen des Albtraums auf die Fährte seines Opfers zu hetzen.
 %%%%
 draconian
 
-Ein Humanoid mit braunen Schuppen, einem Reptilienschwanz und kleinen Flügeln. Die ausgeprägte Färbung und der kräftige Atem seiner erwachsenen Form müssen noch entwickelt werden.
+Ein Humanoid mit braunen Schuppen, einem Reptilienschwanz und kleinen Flügeln.
+Die ausgeprägte Färbung und der kräftige Atem seiner erwachsenen Form müssen
+noch entwickelt werden.
 %%%%
 draconian annihilator
 
-Ein Drakonier, der mächtige Hervorrufungen anwendet, um jeden zu vernichten, der es wagt, sich ihm in den Weg zu stellen.
+Ein Drakonier, der mächtige Hervorrufungen anwendet, um jeden zu vernichten, der
+es wagt, sich ihm in den Weg zu stellen.
 %%%%
 draconian knight
 
-Ein Drakonier, der durch dicke Schuppen, geschickten Waffengebrauch und ergänzende Magie geschützt ist.
+Ein Drakonier, der durch dicke Schuppen, geschickten Waffengebrauch und
+ergänzende Magie geschützt ist.
 %%%%
 draconian monk
 
-Ein Drakonier, der das Studium von Waffen und Magie aufgegeben hat, um sich in der Kunst des waffenlosen Kampfes zu üben. Seine schuppigen Fäuste, seine gut gebauten Beine und sein mächtiger Schwanz lassen Schläge auf seine Gegner niederprasseln.
+Ein Drakonier, der das Studium von Waffen und Magie aufgegeben hat, um sich in
+der Kunst des waffenlosen Kampfes zu üben. Seine schuppigen Fäuste, seine gut
+gebauten Beine und sein mächtiger Schwanz lassen Schläge auf seine Gegner
+niederprasseln.
 %%%%
 draconian scorcher
 
-Ein schlauer Drakonier, der die inneren Geheimnisse des Elements Feuer gemeistert hat. Seine Schuppen sind von jahrelanger magischer Pyrotechnik rußbedeckt.
+Ein schlauer Drakonier, der die inneren Geheimnisse des Elements Feuer
+gemeistert hat. Seine Schuppen sind von jahrelanger magischer Pyrotechnik
+rußbedeckt.
 %%%%
 draconian shifter
 
-Ein drakonischer Meister des Warps, der sich selbst und jeden anderen an jeden Ort innerhalb oder außerhalb dieser Welt transportieren kann.
+Ein drakonischer Meister des Warps, der sich selbst und jeden anderen an jeden
+Ort innerhalb oder außerhalb dieser Welt transportieren kann.
 %%%%
 draconian stormcaller
 
-Ein Drakonier, der seine gewaltigen Kräfte und drakonischen Verbündeten aus der Anbetung von Qazlal bezieht.
+Ein Drakonier, der seine gewaltigen Kräfte und drakonischen Verbündeten aus der
+Anbetung von Qazlal bezieht.
 %%%%
 dread lich
 
-Ein Lich, der schreckliche Pakte mit dämonischen Mächten geschlossen hat, um seine dunkle Magie zu verstärken.
+Ein Lich, der schreckliche Pakte mit dämonischen Mächten geschlossen hat, um
+seine dunkle Magie zu verstärken.
 %%%%
 dream sheep
 
-Ein schläfriges, flauschiges Schaf, dessen Fell von Traumstaubkörnchen glitzert. Es sammelt sich in Herden und füllt die Luft mit Traumstaub, überwältigt seine Opfer und versetzt sie in Schlaf.
+Ein schläfriges, flauschiges Schaf, dessen Fell von Traumstaubkörnchen glitzert.
+Es sammelt sich in Herden und füllt die Luft mit Traumstaub, überwältigt seine
+Opfer und versetzt sie in Schlaf.
 %%%%
 drowned soul
 
-Eine kalte und hohle Erscheinung ertrunkener Toten, die durch eine anhaltende Bindung an die Tiefen gefesselt sind, in denen sie umgekommen sind. Sie eilt den Lebenden entgegen, um sie zu umarmen, und teilt die letzten Momente ihres wässrigen Schicksals mit allem, was sie berührt.
+Eine kalte und hohle Erscheinung ertrunkener Toten, die durch eine anhaltende
+Bindung an die Tiefen gefesselt sind, in denen sie umgekommen sind. Sie eilt den
+Lebenden entgegen, um sie zu umarmen, und teilt die letzten Momente ihres
+wässrigen Schicksals mit allem, was sie berührt.
 %%%%
 dryad
 
-Ein Naturgeist, der an den Wald gebunden ist, in dem er lebt. Er kann die Bäume anrufen, um sich gegen Eindringlinge zu verteidigen.
+Ein Naturgeist, der an den Wald gebunden ist, in dem er lebt. Er kann die Bäume
+anrufen, um sich gegen Eindringlinge zu verteidigen.
 %%%%
 dwarf
 
@@ -784,27 +1126,34 @@ Ein Angehöriger eines kleinen, stämmigen Bergvolkes.
 %%%%
 earth elemental
 
-Ein Geist aus der elementaren Ebene der Erde, der in dieser Welt existiert, indem er einen Klumpen Erde und Steine bewohnt.
+Ein Geist aus der elementaren Ebene der Erde, der in dieser Welt existiert,
+indem er einen Klumpen Erde und Steine bewohnt.
 %%%%
 efreet
 
-Eine imposante, muskulöse Gestalt, eingehüllt in eine Wolke aus sengenden Flammen.
+Eine imposante, muskulöse Gestalt, eingehüllt in eine Wolke aus sengenden
+Flammen.
 %%%%
 eidolon
 
-Eine uralte Skeletterscheinung, eingehüllt in eine Nebelwolke. Ihre Gestalt glüht weißglühend vor lähmender Energie.
+Eine uralte Skeletterscheinung, eingehüllt in eine Nebelwolke. Ihre Gestalt
+glüht weißglühend vor lähmender Energie.
 %%%%
 eldritch tentacle
 
-Ein riesiger, schuppiger Anhang einer unsichtbaren Kreatur, von dem Eiter tropft und an dessen Spitze sich eine einzelne, furchterregend aussehende Klaue befindet.
+Ein riesiger, schuppiger Anhang einer unsichtbaren Kreatur, von dem Eiter tropft
+und an dessen Spitze sich eine einzelne, furchterregend aussehende Klaue
+befindet.
 %%%%
 eldritch tentacle segment
 
-Ein Teil eines riesigen schuppigen Anhängsels. Es schlägt und pulsiert wie kein anderes Lebewesen.
+Ein Teil eines riesigen schuppigen Anhängsels. Es schlägt und pulsiert wie kein
+anderes Lebewesen.
 %%%%
 electric golem
 
-Eine animierte Figur, die vollständig aus Elektrizität besteht und im Experiment eines verrückten Zauberers entstanden ist.
+Eine animierte Figur, die vollständig aus Elektrizität besteht und im Experiment
+eines verrückten Zauberers entstanden ist.
 %%%%
 electric eel
 
@@ -812,15 +1161,20 @@ Eine Fischart, die ein starkes elektrisches Feld erzeugen kann.
 %%%%
 eleionoma
 
-Geister der Sümpfe und Moore. Aus den Zypressen und Weiden der Sümpfe stammt die Kraft dieser wilden Schutzgeister. Mit den Ästen und Zweigen fließen sie und kommen aus Bäumen in der Nähe ihrer Feinde hervor, um zuzuschlagen.
+Geister der Sümpfe und Moore. Aus den Zypressen und Weiden der Sümpfe stammt die
+Kraft dieser wilden Schutzgeister. Mit den Ästen und Zweigen fließen sie und
+kommen aus Bäumen in der Nähe ihrer Feinde hervor, um zuzuschlagen.
 %%%%
 elemental wellspring
 
-Ein wirbelnder Zusammenfluss elementaren Wassers, das aus der Elementarebene in diese strömt, mit mächtigen Geistern und gewaltigen Fluten, die aus ihm hervorgehen.
+Ein wirbelnder Zusammenfluss elementaren Wassers, das aus der Elementarebene in
+diese strömt, mit mächtigen Geistern und gewaltigen Fluten, die aus ihm
+hervorgehen.
 %%%%
 elephant
 
-Ein großer Dickhäuter mit dickem Fell. Er zerquetscht seine Feinde und verprügelt sie dann mit seinem Rüssel.
+Ein großer Dickhäuter mit dickem Fell. Er zerquetscht seine Feinde und
+verprügelt sie dann mit seinem Rüssel.
 %%%%
 elf
 
@@ -828,39 +1182,53 @@ Ein Elf, ein Mitglied eines alten Feenvolkes.
 %%%%
 emperor scorpion
 
-Ein riesiger Skorpion mit einem riesigen Stachel am Schwanz, aus dem tödliches Gift tropft. Er ist eines der größten bekannten Spinnentiere.
+Ein riesiger Skorpion mit einem riesigen Stachel am Schwanz, aus dem tödliches
+Gift tropft. Er ist eines der größten bekannten Spinnentiere.
 %%%%
 endoplasm
 
-Ein Klumpen grauen Schlamms, der irgendwie ein rudimentäres Bewusstsein und eingeschränkte Beweglichkeit entwickelt hat. Er zieht regelmäßig Wärme aus seiner Umgebung, um sich zu ernähren, und friert Feinde ein, die das Pech haben, sich zu diesem Zeitpunkt in der Nähe aufzuhalten.
+Ein Klumpen grauen Schlamms, der irgendwie ein rudimentäres Bewusstsein und
+eingeschränkte Beweglichkeit entwickelt hat. Er zieht regelmäßig Wärme aus
+seiner Umgebung, um sich zu ernähren, und friert Feinde ein, die das Pech haben,
+sich zu diesem Zeitpunkt in der Nähe aufzuhalten.
 %%%%
 entropy weaver
 
-Ein hagerer Humanoid mit schuppigem, blassem Chitin. Seine dünnen Gliedmaßen sind zu erstaunlich schnellen Bewegungen fähig und enden in rasiermesserscharfen Krallen.
+Ein hagerer Humanoid mit schuppigem, blassem Chitin. Seine dünnen Gliedmaßen
+sind zu erstaunlich schnellen Bewegungen fähig und enden in rasiermesserscharfen
+Krallen.
 %%%%
 ettin
 
-Ein zweiköpfiger Riese, stärker als die meisten anderen und in der Lage, mit seinen beiden riesigen Waffen links und rechts verheerende Schläge zu landen.
+Ein zweiköpfiger Riese, stärker als die meisten anderen und in der Lage, mit
+seinen beiden riesigen Waffen links und rechts verheerende Schläge zu landen.
 %%%%
 Executioner
 
-Ein schrecklich mächtiger und schneller Dämon, dessen Gestalt durch eine Wolke aus wirbelnden sensenartigen Klingen verborgen ist.
+Ein schrecklich mächtiger und schneller Dämon, dessen Gestalt durch eine Wolke
+aus wirbelnden sensenartigen Klingen verborgen ist.
 %%%%
 eye of devastation
 
-Ein riesiger Augapfel, eingeschlossen in einer schwebenden Kugel aus glühender Energie.
+Ein riesiger Augapfel, eingeschlossen in einer schwebenden Kugel aus glühender
+Energie.
 %%%%
 faun
 
-Ein Hybrid mit dem Oberkörper eines Menschen auf den Vorderbeinen einer Ziege. Er ist berühmt für seine Fähigkeit, mit den Gedanken derer zu spielen, die in sein Reich eindringen.
+Ein Hybrid mit dem Oberkörper eines Menschen auf den Vorderbeinen einer Ziege.
+Er ist berühmt für seine Fähigkeit, mit den Gedanken derer zu spielen, die in
+sein Reich eindringen.
 %%%%
 felid
 
-Ein katzenartiges Wesen, dem durch magische Kräfte Bewusstsein verliehen wurde. Es nutzt die Gabe der Sprache, um Milch, Leckerlis und Katzenminze zu verlangen.
+Ein katzenartiges Wesen, dem durch magische Kräfte Bewusstsein verliehen wurde.
+Es nutzt die Gabe der Sprache, um Milch, Leckerlis und Katzenminze zu verlangen.
 %%%%
 fenstrider witch
 
-Diese Hexen folgen den alten Sumpfmethoden und erheben sich auf stelzenartigen Hühnerbeinen über Schlamm und Morast. Sie sind Meisterinnen des Schmerzes und des Giftes.
+Diese Hexen folgen den alten Sumpfmethoden und erheben sich auf stelzenartigen
+Hühnerbeinen über Schlamm und Morast. Sie sind Meisterinnen des Schmerzes und
+des Giftes.
 %%%%
 fire bat
 
@@ -868,39 +1236,53 @@ Eine Fledermaus, deren ledriger Körper in einer heißen Flamme brennt.
 %%%%
 fire crab
 
-Eine Krabbenart, die für ihre mit Edelsteinen verzierten Panzer geschätzt wird. Die Seltenheit der Panzer wird durch ihre bösartige, feurige Natur und ihre fast übernatürliche Fähigkeit, riesige Mengen an Flammen auszustoßen, noch verstärkt.
+Eine Krabbenart, die für ihre mit Edelsteinen verzierten Panzer geschätzt wird.
+Die Seltenheit der Panzer wird durch ihre bösartige, feurige Natur und ihre fast
+übernatürliche Fähigkeit, riesige Mengen an Flammen auszustoßen, noch verstärkt.
 %%%%
 fire dragon
 
-Ein großes Reptil mit kräftigen Klauen an den Gliedmaßen, das mit dicken roten Schuppen bedeckt ist und zwei riesige fledermausartige Flügel hat. Aus seinem zahnigen Maul steigen kleine Rauchschwaden auf.
+Ein großes Reptil mit kräftigen Klauen an den Gliedmaßen, das mit dicken roten
+Schuppen bedeckt ist und zwei riesige fledermausartige Flügel hat. Aus seinem
+zahnigen Maul steigen kleine Rauchschwaden auf.
 %%%%
 fire elemental
 
-Ein Geist aus der elementaren Ebene des Feuers, der in dieser Welt als strahlende Säule aus lodernden Flammen existiert.
+Ein Geist aus der elementaren Ebene des Feuers, der in dieser Welt als
+strahlende Säule aus lodernden Flammen existiert.
 %%%%
 fire giant
 
-Ein Riese mit obsidianfarbener Haut und einer wilden Mähne aus leuchtend rotem Haar, der ein feuriges Schwert hochhält. Feuerriesen glauben, dass es ihr Schicksal ist, sich zu vereinen und die ganze Welt zu Asche zu verbrennen.
+Ein Riese mit obsidianfarbener Haut und einer wilden Mähne aus leuchtend rotem
+Haar, der ein feuriges Schwert hochhält. Feuerriesen glauben, dass es ihr
+Schicksal ist, sich zu vereinen und die ganze Welt zu Asche zu verbrennen.
 %%%%
 fire vortex
 
-Eine wirbelnde Flammenwolke. Sie zerfällt, nachdem sie einen Gegner getroffen hat.
+Eine wirbelnde Flammenwolke. Sie zerfällt, nachdem sie einen Gegner getroffen
+hat.
 %%%%
 flayed ghost
 
-Eine abscheuliche schwebende untote Kreatur, der gequälte Geist eines gefolterten Opfers, dessen zerrissene Haut von einem ausgemergelten Körper hängt. Sie schleicht ruhelos durch den Dungeon und fügt den Lebenden die Qualen zu, die sie zu Lebzeiten empfunden hat.
+Eine abscheuliche schwebende untote Kreatur, der gequälte Geist eines
+gefolterten Opfers, dessen zerrissene Haut von einem ausgemergelten Körper
+hängt. Sie schleicht ruhelos durch den Dungeon und fügt den Lebenden die Qualen
+zu, die sie zu Lebzeiten empfunden hat.
 %%%%
 floating eye
 
-Ein schwebender Augapfel, der angeblich einer der Diener von Jiyva ist. Sein Blick kann selbst den willensstärksten Abenteurer lähmen.
+Ein schwebender Augapfel, der angeblich einer der Diener von Jiyva ist. Sein
+Blick kann selbst den willensstärksten Abenteurer lähmen.
 %%%%
 flying skull
 
-Ein untoter Schädel, der durch unheilige Magie in der Luft gehalten wird und schnell umherflattert.
+Ein untoter Schädel, der durch unheilige Magie in der Luft gehalten wird und
+schnell umherflattert.
 %%%%
 frilled lizard
 
-Eine Eidechse mit einem riesigen, bunten Fellkragen um den Hals. Sie stellt ihren Opfern ihren eindrucksvollen Kragen entgegen und zischt dabei wütend.
+Eine Eidechse mit einem riesigen, bunten Fellkragen um den Hals. Sie stellt
+ihren Opfern ihren eindrucksvollen Kragen entgegen und zischt dabei wütend.
 %%%%
 formicid
 
@@ -908,19 +1290,26 @@ Eine empfindungsfähige Ameise, die aufrecht geht und gut graben kann.
 %%%%
 foxfire
 
-Ein dünner Hauch brennenden Sumpfgases. Es verbrennt alles, was sich zu nahe wagt, Freund oder Feind.
+Ein dünner Hauch brennenden Sumpfgases. Es verbrennt alles, was sich zu nahe
+wagt, Freund oder Feind.
 %%%%
 freezing wraith
 
-Eine körperlose Skelettform, umgeben von einer Wolke eisiger Luft, wahrscheinlich die Überreste eines unglücklichen Abenteurers. Es schwebt nun langsam durch den Dungeon und versucht, sein Schicksal mit anderen zu teilen.
+Eine körperlose Skelettform, umgeben von einer Wolke eisiger Luft,
+wahrscheinlich die Überreste eines unglücklichen Abenteurers. Es schwebt nun
+langsam durch den Dungeon und versucht, sein Schicksal mit anderen zu teilen.
 %%%%
 frost giant
 
-Ein Riese mit blauer Haut und Haaren wie Eis und Schnee. Seine Augen sind so düster wie der Winterhimmel. Er marschiert grimmig mit einer großen, frostigen Axt und heulenden Kältestößen in die Schlacht.
+Ein Riese mit blauer Haut und Haaren wie Eis und Schnee. Seine Augen sind so
+düster wie der Winterhimmel. Er marschiert grimmig mit einer großen, frostigen
+Axt und heulenden Kältestößen in die Schlacht.
 %%%%
 fulminant prism
 
-Ein schlankes Prisma, das vor kaum zu bändigender Zerstörungskraft knistert. Jeder Schlag, der seine fragile Oberfläche zum Beben bringt, führt wahrscheinlich zu einer gewaltigen Explosion.
+Ein schlankes Prisma, das vor kaum zu bändigender Zerstörungskraft knistert.
+Jeder Schlag, der seine fragile Oberfläche zum Beben bringt, führt
+wahrscheinlich zu einer gewaltigen Explosion.
 %%%%
 fungus
 
@@ -928,19 +1317,24 @@ Ein klumpiger grauer Pilz, der im feuchten unterirdischen Dungeon gut wächst.
 %%%%
 gargoyle
 
-Eine Granitstatue eines furchtbaren geflügelten Monsters, das irgendwie zum Leben erweckt wurde.
+Eine Granitstatue eines furchtbaren geflügelten Monsters, das irgendwie zum
+Leben erweckt wurde.
 %%%%
 ghost crab
 
-Eine Krabbe, die durch die Nähe zu negativer Energie verdreht ist. Erscheinungen der Toten wirbeln um sie herum, kaum sichtbar.
+Eine Krabbe, die durch die Nähe zu negativer Energie verdreht ist. Erscheinungen
+der Toten wirbeln um sie herum, kaum sichtbar.
 %%%%
 ghost moth
 
-Ein abscheuliches interdimensionales Raubtier, das sich von der Lebenskraft lebender Wesen ernährt. Es ähnelt einer riesigen, stacheligen Motte.
+Ein abscheuliches interdimensionales Raubtier, das sich von der Lebenskraft
+lebender Wesen ernährt. Es ähnelt einer riesigen, stacheligen Motte.
 %%%%
 ghoul
 
-Ein verwester Kadaver, wiederbelebt und mit einem schrecklichen Hunger verflucht. Er will nichts anderes, als sich vom Fleisch der Lebenden zu ernähren und wird seine Opfer mit seinen bösartigen Klauen fällen.
+Ein verwester Kadaver, wiederbelebt und mit einem schrecklichen Hunger
+verflucht. Er will nichts anderes, als sich vom Fleisch der Lebenden zu ernähren
+und wird seine Opfer mit seinen bösartigen Klauen fällen.
 %%%%
 gelid demonspawn
 
@@ -948,108 +1342,143 @@ gelid demonspawn
 %%%%
 giant cockroach
 
-Ein großes braunes Insekt, das ein unangenehmes Zischgeräusch macht. Entgegen der landläufigen Meinung ist es tatsächlich recht anfällig für mutagene Energien.
+Ein großes braunes Insekt, das ein unangenehmes Zischgeräusch macht. Entgegen
+der landläufigen Meinung ist es tatsächlich recht anfällig für mutagene
+Energien.
 %%%%
 glowing orange brain
 
-Ein riesiges, runzeliges Gehirn, das knapp über dem Boden schwebt und vor mutagener Energie glüht. Ab und zu scheint es zu pulsieren.
+Ein riesiges, runzeliges Gehirn, das knapp über dem Boden schwebt und vor
+mutagener Energie glüht. Ab und zu scheint es zu pulsieren.
 %%%%
 glowing shapeshifter
 
-Ein Gestaltwandler, der die Kontrolle über seine Verwandlungen verloren hat und ständig seine Form ändert.
+Ein Gestaltwandler, der die Kontrolle über seine Verwandlungen verloren hat und
+ständig seine Form ändert.
 %%%%
 gnoll
 
-Ein größerer und besser ausgerüsteter Verwandter der Goblins und Orks, der im Aussehen etwas an einen Hund erinnert.
+Ein größerer und besser ausgerüsteter Verwandter der Goblins und Orks, der im
+Aussehen etwas an einen Hund erinnert.
 %%%%
 gnoll sergeant
 
-Ein Kommandant einer Gnoll-Meute. Narben auf seinem kräftigen Körper zeugen davon, wie er seinen Rang verdient hat.
+Ein Kommandant einer Gnoll-Meute. Narben auf seinem kräftigen Körper zeugen
+davon, wie er seinen Rang verdient hat.
 %%%%
 gnoll shaman
 
-Ein hagerer alter Gnoll, weise und böse. Seine seltsamen Gesänge und Heulen versetzen andere Gnolls in wilde Raserei.
+Ein hagerer alter Gnoll, weise und böse. Seine seltsamen Gesänge und Heulen
+versetzen andere Gnolls in wilde Raserei.
 %%%%
 goblin
 
-Ein kleiner, hässlicher und unfreundlicher Humanoid: gedrungen, breit, mit flacher Nase, fahler Haut, breitem Mund und pistazienförmigen Augen.
+Ein kleiner, hässlicher und unfreundlicher Humanoid: gedrungen, breit, mit
+flacher Nase, fahler Haut, breitem Mund und pistazienförmigen Augen.
 %%%%
 golden dragon
 
-Ein großer geflügelter Drache, der mit glänzenden goldenen Schuppen bedeckt ist. Legenden besagen, dass sein Blut sowohl heiß als auch kalt ist und zudem giftig.
+Ein großer geflügelter Drache, der mit glänzenden goldenen Schuppen bedeckt ist.
+Legenden besagen, dass sein Blut sowohl heiß als auch kalt ist und zudem giftig.
 %%%%
 golden eye
 
-Ein winziges, schimmerndes, schwebendes Auge, schnell wie der Wind und glitzernd wie Gold. Es hat einen eigentümlich hypnotischen Blick.
+Ein winziges, schimmerndes, schwebendes Auge, schnell wie der Wind und glitzernd
+wie Gold. Es hat einen eigentümlich hypnotischen Blick.
 %%%%
 goliath frog
 
-Ein Frosch von außergewöhnlicher Größe, für einen Frosch. Er schlägt seine Beute aus der Ferne mit der Zunge, um sie mit seinen sauren Magensäften zu überziehen.
+Ein Frosch von außergewöhnlicher Größe, für einen Frosch. Er schlägt seine Beute
+aus der Ferne mit der Zunge, um sie mit seinen sauren Magensäften zu überziehen.
 %%%%
 great orb of eyes
 
-Ein schwebender Ball, bedeckt mit bösartigen Augen und summend vor unheimlicher Energie. So mancher Abenteurer wurde von seinen schrecklichen Augenzähnen in Stücke gerissen.
+Ein schwebender Ball, bedeckt mit bösartigen Augen und summend vor unheimlicher
+Energie. So mancher Abenteurer wurde von seinen schrecklichen Augenzähnen in
+Stücke gerissen.
 %%%%
 green death
 
-Eine aufgeblähte Gestalt, bedeckt mit nässenden Wunden und ausatmend Wolken tödlichen Giftes.
+Eine aufgeblähte Gestalt, bedeckt mit nässenden Wunden und ausatmend Wolken
+tödlichen Giftes.
 %%%%
 green draconian
 
-Ein muskulöser Humanoid mit grünen Schuppen, einem Reptilienschwanz und kleinen Flügeln.
+Ein muskulöser Humanoid mit grünen Schuppen, einem Reptilienschwanz und kleinen
+Flügeln.
 %%%%
 grey draconian
 
-Ein muskulöser, grauschuppiger Humanoid mit einem Reptilienschwanz und kleinen Flügeln.
+Ein muskulöser, grauschuppiger Humanoid mit einem Reptilienschwanz und kleinen
+Flügeln.
 %%%%
 guardian golem
 
-Eine große Konstruktion, die zum Schutz konzipiert wurde. Sie kann die Schläge anderer einstecken, neigt jedoch dazu, nach schwerer Bestrafung explosionsartig instabil zu werden.
+Eine große Konstruktion, die zum Schutz konzipiert wurde. Sie kann die Schläge
+anderer einstecken, neigt jedoch dazu, nach schwerer Bestrafung explosionsartig
+instabil zu werden.
 %%%%
 guardian mummy
 
-Ein uralter Krieger, einbalsamiert und dazu verflucht, für alle Ewigkeit als Untoter zu wandeln.
+Ein uralter Krieger, einbalsamiert und dazu verflucht, für alle Ewigkeit als
+Untoter zu wandeln.
 %%%%
 guardian serpent
 
-Ein seltenes und besonderes Mitglied der Schuppengesellschaft, leicht und schnell wie eine Schlange, aber auch intelligent wie eine Naga. Es heißt, dass eine Wächterschlange lieber im Kampf sterben würde, als einem Eindringling etwas zu überlassen.
+Ein seltenes und besonderes Mitglied der Schuppengesellschaft, leicht und
+schnell wie eine Schlange, aber auch intelligent wie eine Naga. Es heißt, dass
+eine Wächterschlange lieber im Kampf sterben würde, als einem Eindringling etwas
+zu überlassen.
 %%%%
 halazid warlock
 
-Ein uralter untoter Zauberer, der von den lebenden Göttern Scheza und Sargol exhumiert und gezwungen wurde, Tag und Nacht zu arbeiten, um sie in der Welt zu verankern. Selbst nach dem Fall der göttlichen Zwillinge arbeitet er daran, seine gefallenen Meister wiederzubeleben.
+Ein uralter untoter Zauberer, der von den lebenden Göttern Scheza und Sargol
+exhumiert und gezwungen wurde, Tag und Nacht zu arbeiten, um sie in der Welt zu
+verankern. Selbst nach dem Fall der göttlichen Zwillinge arbeitet er daran,
+seine gefallenen Meister wiederzubeleben.
 %%%%
 harpy
 
-Ein vogelähnliches Wesen mit menschlichem Gesicht, das endlos die Küsten durchstreift und wegen seiner scharfen Krallen und verheerenden Schläge gefürchtet wird.
+Ein vogelähnliches Wesen mit menschlichem Gesicht, das endlos die Küsten
+durchstreift und wegen seiner scharfen Krallen und verheerenden Schläge
+gefürchtet wird.
 %%%%
 hell beast
 
-Eine abscheuliche Kreuzung aus Tier und Mensch, die schreckliche Bellgeräusche macht.
+Eine abscheuliche Kreuzung aus Tier und Mensch, die schreckliche Bellgeräusche
+macht.
 %%%%
 hell hog
 
-Ein extrem großes und aggressives Schwein, in der Hölle gezüchtet, dessen Atem seine Feinde zu Asche verbrennt.
+Ein extrem großes und aggressives Schwein, in der Hölle gezüchtet, dessen Atem
+seine Feinde zu Asche verbrennt.
 %%%%
 hell hound
 
-Ein riesiger schwarzer Hund mit leuchtend roten Augen und aus dessen mit Reißzähnen besetztem Maul Rauch quillt.
+Ein riesiger schwarzer Hund mit leuchtend roten Augen und aus dessen mit
+Reißzähnen besetztem Maul Rauch quillt.
 %%%%
 hell knight
 
-Ein schwer gepanzerter Krieger, der mit den Mächten der Hölle im Bunde ist und normalerweise von anderen widerlichen Wesen seiner Art begleitet wird.
+Ein schwer gepanzerter Krieger, der mit den Mächten der Hölle im Bunde ist und
+normalerweise von anderen widerlichen Wesen seiner Art begleitet wird.
 %%%%
 hell rat
 
-Eine ungewöhnlich große Ratte. Ihre seltsame, knotige orangefarbene Haut leuchtet von den höllischen Energien, die sie hervorgebracht haben.
+Eine ungewöhnlich große Ratte. Ihre seltsame, knotige orangefarbene Haut
+leuchtet von den höllischen Energien, die sie hervorgebracht haben.
 %%%%
 %%%%
 Hell Sentinel
 
-Ein gewaltiger Monolith, der von dämonischen Mächten erschaffen und besessen wurde. Tausend Augen starren durch Schlitze in seiner gezackten, mit Stacheln besetzten Rüstung.
+Ein gewaltiger Monolith, der von dämonischen Mächten erschaffen und besessen
+wurde. Tausend Augen starren durch Schlitze in seiner gezackten, mit Stacheln
+besetzten Rüstung.
 %%%%
 hellephant
 
-Ein abscheulicher Dickhäuter, Nachkomme von Dämonen, der von innen im Feuer der Hölle brennt.
+Ein abscheulicher Dickhäuter, Nachkomme von Dämonen, der von innen im Feuer der
+Hölle brennt.
 %%%%
 hellion
 
@@ -1057,23 +1486,33 @@ Ein hasserfüllter Dämon, der durch seine Verdammnis alles Leben vernichten wil
 %%%%
 hellwing
 
-Ein abscheulicher Skelettdämon. Er schwebt auf mächtigen Flügeln aus uralter, verdorrter Haut durch die Luft und hat sadistische Freude daran, jene zu quälen, die versuchen, seinem Griff zu entkommen.
+Ein abscheulicher Skelettdämon. Er schwebt auf mächtigen Flügeln aus uralter,
+verdorrter Haut durch die Luft und hat sadistische Freude daran, jene zu quälen,
+die versuchen, seinem Griff zu entkommen.
 %%%%
 hexer
 
-Ein humanoides Konstrukt aus körperlosem Gedächtnis, das durch die Luft schwebt. Obwohl seine Form vielleicht etwas verändert ist und es kaum erkennbare Merkmale aufweist, scheint es dennoch irgendwie einem Krieger aus der fernen Vergangenheit zu ähneln, der mit lähmenden Zaubersprüchen und tödlichen Messerangriffen bereitsteht.
+Ein humanoides Konstrukt aus körperlosem Gedächtnis, das durch die Luft schwebt.
+Obwohl seine Form vielleicht etwas verändert ist und es kaum erkennbare Merkmale
+aufweist, scheint es dennoch irgendwie einem Krieger aus der fernen
+Vergangenheit zu ähneln, der mit lähmenden Zaubersprüchen und tödlichen
+Messerangriffen bereitsteht.
 %%%%
 hobgoblin
 
-Ein größerer und noch hässlicherer Kobold mit einem noch schlimmeren Temperament. Viele dumme junge Abenteurer haben die Gefahr unterschätzt, einem Hobgoblin in die Quere zu kommen, und dafür mit ihrem Leben bezahlt.
+Ein größerer und noch hässlicherer Kobold mit einem noch schlimmeren
+Temperament. Viele dumme junge Abenteurer haben die Gefahr unterschätzt, einem
+Hobgoblin in die Quere zu kommen, und dafür mit ihrem Leben bezahlt.
 %%%%
 hog
 
-Ein großes Paarhufer. Wie der Mensch ist es Allesfresser, intelligent und fast haarlos.
+Ein großes Paarhufer. Wie der Mensch ist es Allesfresser, intelligent und fast
+haarlos.
 %%%%
 holy swine
 
-Eine seltene himmlische Version eines normalerweise schmutzigen Tieres, von dem es heißt, es sei ein engelsgleiches Wesen gewesen, das feindlicher Magie erlag.
+Eine seltene himmlische Version eines normalerweise schmutzigen Tieres, von dem
+es heißt, es sei ein engelsgleiches Wesen gewesen, das feindlicher Magie erlag.
 %%%%
 hound
 
@@ -1081,21 +1520,29 @@ Ein furchterregender Jagdhund, geschmeidig und wachsam.
 %%%%
 howler monkey
 
-Ein aggressiv territorialer Primat, der für die erstaunliche Vielfalt und Lautstärke der Geräusche bekannt ist, die er erzeugen kann.
+Ein aggressiv territorialer Primat, der für die erstaunliche Vielfalt und
+Lautstärke der Geräusche bekannt ist, die er erzeugen kann.
 %%%%
 human
 
-Eine hochnäsige Art von oberflächlich lebendem, haarlosem Affen. Zwerge halten sie für zerbrechlich, Elfen für tollpatschig und Monster für lecker.
+Eine hochnäsige Art von oberflächlich lebendem, haarlosem Affen. Zwerge halten
+sie für zerbrechlich, Elfen für tollpatschig und Monster für lecker.
 %%%%
 hydra
 
-Ein großes und alptraumhaftes, eidechsenartiges Biest. Es hat viele Köpfe und das Potenzial, noch viele weitere wachsen zu lassen!
+Ein großes und alptraumhaftes, eidechsenartiges Biest. Es hat viele Köpfe und
+das Potenzial, noch viele weitere wachsen zu lassen!
 
-Wenn man mit einer Klingenwaffe, die größer als eine Kurzklinge ist, zuschlägt, besteht die Gefahr, dass ein Kopf abgeschlagen wird und an seiner Stelle zwei neue nachwachsen. Sehr große Klauen, wie die von Trollen, sind lang genug, um dasselbe zu bewirken. Nur eine mit Flammen gebrandmarkte Waffe kann die Wunde kauterisieren und verhindern, dass weitere Köpfe nachwachsen.
+Wenn man mit einer Klingenwaffe, die größer als eine Kurzklinge ist, zuschlägt,
+besteht die Gefahr, dass ein Kopf abgeschlagen wird und an seiner Stelle zwei
+neue nachwachsen. Sehr große Klauen, wie die von Trollen, sind lang genug, um
+dasselbe zu bewirken. Nur eine mit Flammen gebrandmarkte Waffe kann die Wunde
+kauterisieren und verhindern, dass weitere Köpfe nachwachsen.
 %%%%
 ice beast
 
-Eine schreckliche Kreatur aus Schnee und kristallinem Eis. Ihre Füße hinterlassen Pfützen aus eiskaltem Wasser auf dem Boden.
+Eine schreckliche Kreatur aus Schnee und kristallinem Eis. Ihre Füße
+hinterlassen Pfützen aus eiskaltem Wasser auf dem Boden.
 %%%%
 ice devil
 
@@ -1103,27 +1550,37 @@ Ein menschengroßer Dämon, bedeckt mit glitzerndem Eis.
 %%%%
 ice dragon
 
-Ein weißer, mit Frost überzogener Drache. Schneeflocken rieseln aus seinen Nüstern.
+Ein weißer, mit Frost überzogener Drache. Schneeflocken rieseln aus seinen
+Nüstern.
 %%%%
 Ice Fiend
 
-Ein riesiger, eisiger Dämon, der von Frost bedeckt und von eisiger Luft umhüllt ist. Er ist einer der schrecklichsten Bewohner der vielen Höllen.
+Ein riesiger, eisiger Dämon, der von Frost bedeckt und von eisiger Luft umhüllt
+ist. Er ist einer der schrecklichsten Bewohner der vielen Höllen.
 %%%%
 ice statue
 
-Ein imposantes Abbild eines namenlosen arktischen Gottes, aus glitzerndem tiefblauem Eis geschnitzt. Eiskalte Dämpfe wirbeln darum herum und Kälte liegt in der Luft.
+Ein imposantes Abbild eines namenlosen arktischen Gottes, aus glitzerndem
+tiefblauem Eis geschnitzt. Eiskalte Dämpfe wirbeln darum herum und Kälte liegt
+in der Luft.
 %%%%
 ironbound frostheart
 
-Ein ausgemergelter Krieger-Magier, der die Aufgabe hat, lang ersehnte Schätze zu bewachen. Er ruft in seiner Umgebung tödlichen Frost hervor, der Feinde in der Nähe von Mauern einfriert.
+Ein ausgemergelter Krieger-Magier, der die Aufgabe hat, lang ersehnte Schätze zu
+bewachen. Er ruft in seiner Umgebung tödlichen Frost hervor, der Feinde in der
+Nähe von Mauern einfriert.
 %%%%
 iguana
 
-Eine grüne Eidechse mit starkem Kiefer und scharfen Zähnen, die für ihr Fleisch geschätzt wird.
+Eine grüne Eidechse mit starkem Kiefer und scharfen Zähnen, die für ihr Fleisch
+geschätzt wird.
 %%%%
 imperial myrmidon
 
-Ein Krieger, der in die Geheimnisse eines sterbenden Kults eingeweiht ist und sich dem Dienst an längst gefallenen Thronen verschrieben hat. Seine Schläge zerstören magische Abwehrmechanismen und machen seine Feinde selbst für die einfachsten Flüche verwundbar.
+Ein Krieger, der in die Geheimnisse eines sterbenden Kults eingeweiht ist und
+sich dem Dienst an längst gefallenen Thronen verschrieben hat. Seine Schläge
+zerstören magische Abwehrmechanismen und machen seine Feinde selbst für die
+einfachsten Flüche verwundbar.
 %%%%
 infernal demonspawn
 
@@ -1131,19 +1588,24 @@ infernal demonspawn
 %%%%
 iron dragon
 
-Ein sehr schwerer, langsamer und anscheinend flugunfähiger Drache. Er ist nach seinen Schuppen benannt, die so hart sind, als wären sie aus Eisen. Aus seinen Nasenlöchern hängen kleine Metallsplitter.
+Ein sehr schwerer, langsamer und anscheinend flugunfähiger Drache. Er ist nach
+seinen Schuppen benannt, die so hart sind, als wären sie aus Eisen. Aus seinen
+Nasenlöchern hängen kleine Metallsplitter.
 %%%%
 iron elemental
 
-Er ist ein seltener und mächtiger Geist aus der Elementarebene der Erde, der in dieser Welt existiert, indem er eine gewaltige Masse aus Eisen bewohnt.
+Er ist ein seltener und mächtiger Geist aus der Elementarebene der Erde, der in
+dieser Welt existiert, indem er eine gewaltige Masse aus Eisen bewohnt.
 %%%%
 iron giant
 
-Ein riesiger, rostender Monolith, größer als jede andere Riesenart. Er hat eine unglaubliche Schlagkraft.
+Ein riesiger, rostender Monolith, größer als jede andere Riesenart. Er hat eine
+unglaubliche Schlagkraft.
 %%%%
 iron golem
 
-Eine große, schwerfällige und sehr solide Metallstatue, der auf esoterische Weise die Fähigkeit zur Fortbewegung verliehen wurde.
+Eine große, schwerfällige und sehr solide Metallstatue, der auf esoterische
+Weise die Fähigkeit zur Fortbewegung verliehen wurde.
 %%%%
 iron imp
 
@@ -1151,27 +1613,38 @@ Ein hässlicher, verdrehter kleiner Dämon mit Metallhaut.
 %%%%
 iron troll
 
-Ein großer Troll mit mächtigen Gliedmaßen und dicken Schuppen, die aufgrund ihrer Härte an leicht verrostetes Eisen erinnern.
+Ein großer Troll mit mächtigen Gliedmaßen und dicken Schuppen, die aufgrund
+ihrer Härte an leicht verrostetes Eisen erinnern.
 %%%%
 ironbound thunderhulk
 
-Eine brutale Gestalt, die sich hastig mit Leder- und Metallfetzen bewaffnet hat, um einen furchterregenden Eindringling zu bekämpfen. Auf ihrem Rücken befindet sich ein antiker, geheimnisvoller „Blitzableiter“, der Donner auf entfernte Feinde herabregnen lässt, obwohl er nahe Ziele nicht treffen kann.
+Eine brutale Gestalt, die sich hastig mit Leder- und Metallfetzen bewaffnet hat,
+um einen furchterregenden Eindringling zu bekämpfen. Auf ihrem Rücken befindet
+sich ein antiker, geheimnisvoller „Blitzableiter“, der Donner auf entfernte
+Feinde herabregnen lässt, obwohl er nahe Ziele nicht treffen kann.
 %%%%
 ironbound convoker
 
-Ein Schutzmagier in einer Rüstung mit Mustergravur. Er kann mächtige Worte rezitieren, um weit entfernte Verbündete herbeizurufen und ihnen unnatürliche Macht zu verleihen.
+Ein Schutzmagier in einer Rüstung mit Mustergravur. Er kann mächtige Worte
+rezitieren, um weit entfernte Verbündete herbeizurufen und ihnen unnatürliche
+Macht zu verleihen.
 %%%%
 ironbound preserver
 
-Eine gewaltige, muskulöse Gestalt, die in der Lage ist, ihre Verbündeten zu schützen, indem sie selbstlos einen Teil der ihnen zugefügten Verletzungen in sich trägt.
+Eine gewaltige, muskulöse Gestalt, die in der Lage ist, ihre Verbündeten zu
+schützen, indem sie selbstlos einen Teil der ihnen zugefügten Verletzungen in
+sich trägt.
 %%%%
 ironbound beastmaster
 
-Ein grausamer und wilder Rohling, der in der Sprache der Ungezähmten knurrt. Er bereitet Tiere mit Netzen und Bosheit auf den Kampf vor und spornt sie an, gegen seine Feinde zu kämpfen.
+Ein grausamer und wilder Rohling, der in der Sprache der Ungezähmten knurrt. Er
+bereitet Tiere mit Netzen und Bosheit auf den Kampf vor und spornt sie an, gegen
+seine Feinde zu kämpfen.
 %%%%
 jackal
 
-Ein kleiner Aasfresser. Schakalrudel durchstreifen die Unterwelt auf der Suche nach Aas, das sie fressen können.
+Ein kleiner Aasfresser. Schakalrudel durchstreifen die Unterwelt auf der Suche
+nach Aas, das sie fressen können.
 %%%%
 jelly
 
@@ -1179,15 +1652,23 @@ Eine pulsierende Masse aus säurehaltigem Protoplasma.
 %%%%
 jiangshi
 
-Ein Vampirsklave, der durch esoterische Rituale in Knechtschaft gefesselt ist. Obwohl seine steifen Gliedmaßen ihm einen unbeholfenen Gang verleihen, bewegt er sich mit überraschender Geschwindigkeit, springt auf seine Opfer und saugt ihnen mit seinen bösartigen Klauen die Lebensessenz aus.
+Ein Vampirsklave, der durch esoterische Rituale in Knechtschaft gefesselt ist.
+Obwohl seine steifen Gliedmaßen ihm einen unbeholfenen Gang verleihen, bewegt er
+sich mit überraschender Geschwindigkeit, springt auf seine Opfer und saugt ihnen
+mit seinen bösartigen Klauen die Lebensessenz aus.
 %%%%
 juggernaut
 
-Ein gigantischer Humanoid mit dicken, auf seine Haut geschweißten Eisenplatten. Er bewegt sich mit alarmierender Geschwindigkeit und verursacht mit seinen riesigen Fäusten unglaublichen Schaden, muss aber zwischen den Schlägen eine Pause einlegen.
+Ein gigantischer Humanoid mit dicken, auf seine Haut geschweißten Eisenplatten.
+Er bewegt sich mit alarmierender Geschwindigkeit und verursacht mit seinen
+riesigen Fäusten unglaublichen Schaden, muss aber zwischen den Schlägen eine
+Pause einlegen.
 %%%%
 jumping spider
 
-Eine Spinne, die Netze zwischen ihren Vorderbeinen spinnt und sich auf ihre Beute stürzt, um sie zu fangen. Die Geschwindigkeit, mit der sie springt, ist fast übernatürlich.
+Eine Spinne, die Netze zwischen ihren Vorderbeinen spinnt und sich auf ihre
+Beute stürzt, um sie zu fangen. Die Geschwindigkeit, mit der sie springt, ist
+fast übernatürlich.
 %%%%
 killer bee
 
@@ -1195,23 +1676,34 @@ Eine riesige Biene mit einem tödlichen Widerhaken, der wiederholt stechen kann.
 %%%%
 Killer Klown
 
-Eine komische Figur voller Leben und Lachen. Sie sieht aus, als würde sie sich sehr freuen, Euch zu sehen ... aber ist in ihren Gesichtszügen auch ein leicht bösartiger Anflug zu erkennen? Ist das rote Gesichtsbemalung oder etwas ganz und gar weniger Angenehmes?
+Eine komische Figur voller Leben und Lachen. Sie sieht aus, als würde sie sich
+sehr freuen, Euch zu sehen ... aber ist in ihren Gesichtszügen auch ein leicht
+bösartiger Anflug zu erkennen? Ist das rote Gesichtsbemalung oder etwas ganz und
+gar weniger Angenehmes?
 %%%%
 knight
 
-Ein humanoides Konstrukt aus körperloser Erinnerung, das durch die Luft schwebt. Obwohl seine Form vielleicht etwas verändert ist und es kaum erkennbare Merkmale aufweist, scheint es dennoch irgendwie einem Krieger aus der fernen Vergangenheit zu ähneln, der sowohl mit Waffen als auch mit Rüstung gut ausgerüstet ist.
+Ein humanoides Konstrukt aus körperloser Erinnerung, das durch die Luft schwebt.
+Obwohl seine Form vielleicht etwas verändert ist und es kaum erkennbare Merkmale
+aufweist, scheint es dennoch irgendwie einem Krieger aus der fernen
+Vergangenheit zu ähneln, der sowohl mit Waffen als auch mit Rüstung gut
+ausgerüstet ist.
 %%%%
 kobold
 
-Eine kleine, gräuliche Kreatur mit dem Aussehen und Temperament eines wilden Hundes. Niemand weiß genau, woher Kobolde kommen, aber alte Dämonengötter, böse Geister und aufdringliche Zauberer wurden als Schuldige vermutet.
+Eine kleine, gräuliche Kreatur mit dem Aussehen und Temperament eines wilden
+Hundes. Niemand weiß genau, woher Kobolde kommen, aber alte Dämonengötter, böse
+Geister und aufdringliche Zauberer wurden als Schuldige vermutet.
 %%%%
 kobold brigand
 
-Ein Kobold, der größer und zäher als der gewöhnliche Kobold ist und eine Vorliebe für hinterhältige Taktiken hat.
+Ein Kobold, der größer und zäher als der gewöhnliche Kobold ist und eine
+Vorliebe für hinterhältige Taktiken hat.
 %%%%
 kobold demonologist
 
-Ein Kobold im Bunde mit dämonischen Mächten, der Wesen aus den Tiefen der Hölle heraufbeschwören kann.
+Ein Kobold im Bunde mit dämonischen Mächten, der Wesen aus den Tiefen der Hölle
+heraufbeschwören kann.
 %%%%
 komodo dragon
 
@@ -1219,67 +1711,98 @@ Ein riesiger Waran, der durchaus in der Lage ist, große Tiere zu jagen.
 %%%%
 kraken
 
-Ein gigantisches Seeungeheuer, das ganze Schiffe verschlingen kann. Seine vielen Tentakeln reichen bis zur Küste und zerquetschen jeden, der sich ihm nähert.
+Ein gigantisches Seeungeheuer, das ganze Schiffe verschlingen kann. Seine vielen
+Tentakeln reichen bis zur Küste und zerquetschen jeden, der sich ihm nähert.
 %%%%
 large abomination
 
-Ein abscheuliches Konglomerat verstümmelter Körperteile, besessen und verändert auf eine Weise, die jeden Verstand infrage stellt. Jedes davon variiert in Geschwindigkeit und Haltbarkeit, je nach der Natur der Unglücklichen, die zu seiner Herstellung verwendet wurden.
+Ein abscheuliches Konglomerat verstümmelter Körperteile, besessen und verändert
+auf eine Weise, die jeden Verstand infrage stellt. Jedes davon variiert in
+Geschwindigkeit und Haltbarkeit, je nach der Natur der Unglücklichen, die zu
+seiner Herstellung verwendet wurden.
 %%%%
 lava snake
 
-Eine brennende rote Schlange, die in Lavabecken lebt. Sie spuckt Klumpen geschmolzenen Gesteins auf Passanten.
+Eine brennende rote Schlange, die in Lavabecken lebt. Sie spuckt Klumpen
+geschmolzenen Gesteins auf Passanten.
 %%%%
 lemure
 
-Eine verfluchte Seele, die durch Magie in höllische Knechtschaft für den Meistbietenden gebunden ist. Wenn ihr Meister getötet wird, wird sie freigelassen und verlässt dieses Reich in Dankbarkeit.
+Eine verfluchte Seele, die durch Magie in höllische Knechtschaft für den
+Meistbietenden gebunden ist. Wenn ihr Meister getötet wird, wird sie
+freigelassen und verlässt dieses Reich in Dankbarkeit.
 %%%%
 lich
 
-Ein mächtiger Zauberer, der gelernt hat, dem Tod selbst ein Schnippchen zu schlagen und nun als ausgetrockneter Skelettkörper existiert, der durch den Einsatz mächtiger schwarzer Magie intakt gehalten wird.
+Ein mächtiger Zauberer, der gelernt hat, dem Tod selbst ein Schnippchen zu
+schlagen und nun als ausgetrockneter Skelettkörper existiert, der durch den
+Einsatz mächtiger schwarzer Magie intakt gehalten wird.
 %%%%
 lightning spire
 
-Ein summendes Gerät aus einer Spule und einem Stab. Es sendet Elektrizität an Lebewesen in der Nähe.
+Ein summendes Gerät aus einer Spule und einem Stab. Es sendet Elektrizität an
+Lebewesen in der Nähe.
 %%%%
 lindwurm
 
-Ein kleiner schlangenartiger Drache mit einem Paar kräftiger Vorderbeine. Seine dicken Schuppen leuchten unheimlich rot.
+Ein kleiner schlangenartiger Drache mit einem Paar kräftiger Vorderbeine. Seine
+dicken Schuppen leuchten unheimlich rot.
 %%%%
 lorocyproca
 
-Eine große, hagere Gestalt, gehüllt in lange Gewänder, die wie lebendig wehen. Sie dürstet nach magischen Energien.
+Eine große, hagere Gestalt, gehüllt in lange Gewänder, die wie lebendig wehen.
+Sie dürstet nach magischen Energien.
 %%%%
 lost soul
 
-Das Echo einer unbetrauerten Seele. Obwohl die Erinnerungen an ihr lebendes Selbst längst verblasst sind, wird sie durch einen anhaltenden Instinkt zum Moment des Todes hingezogen. Sie greift den Weg anderer Seelen auf und verliert die letzten Spuren ihres Daseins in den Erinnerungen an das Leben anderer.
+Das Echo einer unbetrauerten Seele. Obwohl die Erinnerungen an ihr lebendes
+Selbst längst verblasst sind, wird sie durch einen anhaltenden Instinkt zum
+Moment des Todes hingezogen. Sie greift den Weg anderer Seelen auf und verliert
+die letzten Spuren ihres Daseins in den Erinnerungen an das Leben anderer.
 %%%%
 lurking horror
 
-Eine formlose Masse negativer Energie, die schreckliche Qualen bringen wird, sobald die Kräfte, die sie zusammenhalten, sich auflösen. Die fremde Präsenz von Eindringlingen im Abgrund wird sie mit Sicherheit auflösen, doch sie scheint auf perverse Weise von ihnen angezogen zu werden; dennoch scheint sie sich irgendwie nicht bewegen zu wollen, während sie beobachtet wird.
+Eine formlose Masse negativer Energie, die schreckliche Qualen bringen wird,
+sobald die Kräfte, die sie zusammenhalten, sich auflösen. Die fremde Präsenz von
+Eindringlingen im Abgrund wird sie mit Sicherheit auflösen, doch sie scheint auf
+perverse Weise von ihnen angezogen zu werden; dennoch scheint sie sich irgendwie
+nicht bewegen zu wollen, während sie beobachtet wird.
 %%%%
 mana viper
 
-Eine Schlange mit violetten Schuppen und schwach leuchtenden Augen. Sie dürstet sowohl nach Magie als auch nach Fleisch, und ihr Biss kann selbst die magischen Reserven eines mächtigen Magiers im Handumdrehen leeren.
+Eine Schlange mit violetten Schuppen und schwach leuchtenden Augen. Sie dürstet
+sowohl nach Magie als auch nach Fleisch, und ihr Biss kann selbst die magischen
+Reserven eines mächtigen Magiers im Handumdrehen leeren.
 %%%%
 manticore
 
-Eine abscheuliche Kreuzung mit den Merkmalen eines Menschen und eines Löwen, mit großen fledermausartigen Flügeln. Sein Schwanz ist mit Stacheln besetzt, die er auf potenzielle Beute loslassen kann.
+Eine abscheuliche Kreuzung mit den Merkmalen eines Menschen und eines Löwen, mit
+großen fledermausartigen Flügeln. Sein Schwanz ist mit Stacheln besetzt, die er
+auf potenzielle Beute loslassen kann.
 %%%%
 meliai
 
-Ein Nymphenhybrid mit einem geflügelten menschlichen Torso auf dem stechenden Hinterleib einer Biene. Die Meliai erfüllen viele Rollen: Sie sind Priesterinnen der Natur, Ammen des Göttlichen und Kämpferinnen für ihre Bienenstöcke.
+Ein Nymphenhybrid mit einem geflügelten menschlichen Torso auf dem stechenden
+Hinterleib einer Biene. Die Meliai erfüllen viele Rollen: Sie sind Priesterinnen
+der Natur, Ammen des Göttlichen und Kämpferinnen für ihre Bienenstöcke.
 %%%%
 merfolk
 
-Ein Hybrid mit dem Oberkörper eines Menschen und dem Schwanz eines Fisches. Er kann sowohl im Wasser als auch an Land leben und verteidigt sein Revier erbittert.
+Ein Hybrid mit dem Oberkörper eines Menschen und dem Schwanz eines Fisches. Er
+kann sowohl im Wasser als auch an Land leben und verteidigt sein Revier
+erbittert.
 %%%%
 merfolk aquamancer
 
-Ein schlanker Meervolk-Mystiker mit ungewöhnlich häutigen Händen. Seine Gestalt verändert sich und glitzert, als ob man sie durch die Gischt des Ozeans sehen würde.
+Ein schlanker Meervolk-Mystiker mit ungewöhnlich häutigen Händen. Seine Gestalt
+verändert sich und glitzert, als ob man sie durch die Gischt des Ozeans sehen
+würde.
 %%%%
 merfolk avatar
 
-Ein betörendes Meervolk, dessen Stimme die Zuhörer hypnotisiert. Es trägt keine Waffe, aber sein Lied ruft ertrunkene Seelen herbei, um das Meer gegen Eindringlinge zu verteidigen.
+Ein betörendes Meervolk, dessen Stimme die Zuhörer hypnotisiert. Es trägt keine
+Waffe, aber sein Lied ruft ertrunkene Seelen herbei, um das Meer gegen
+Eindringlinge zu verteidigen.
 %%%%
 merfolk impaler
 
@@ -1287,7 +1810,8 @@ Ein muskulöser Meervolk-Krieger, der eine tödliche Waffe trägt.
 %%%%
 merfolk javelineer
 
-Ein furchterregender Meervolk-Champion mit durchdringendem Blick und einem großen Bündel Speere.
+Ein furchterregender Meervolk-Champion mit durchdringendem Blick und einem
+großen Bündel Speere.
 %%%%
 merfolk siren
 
@@ -1295,11 +1819,13 @@ Ein betörendes Meervolk, dessen Stimme die Zuhörer hypnotisieren kann.
 %%%%
 minotaur
 
-Ein großer, muskulöser Mensch mit dem Kopf eines Stiers. Sein Zuhause ist ein Spießrutenlauf, wo er auf würdige Herausforderer wartet.
+Ein großer, muskulöser Mensch mit dem Kopf eines Stiers. Sein Zuhause ist ein
+Spießrutenlauf, wo er auf würdige Herausforderer wartet.
 %%%%
 molten gargoyle
 
-Eine scheußliche Statue aus geschmolzenem Stein erwacht zum Leben. Flammen züngeln über ihren Körper.
+Eine scheußliche Statue aus geschmolzenem Stein erwacht zum Leben. Flammen
+züngeln über ihren Körper.
 %%%%
 monstrous demonspawn
 
@@ -1307,131 +1833,187 @@ monstrous demonspawn
 %%%%
 moth of wrath
 
-Eine Motte, die dafür bekannt ist, dass sie durch Berührung oder bloßes Anstarren ihrer Freunde wahnsinnige Wut auslösen kann. Aus unerklärlichen Gründen wurde sie vor Jahrhunderten von der Oberfläche ausgerottet.
+Eine Motte, die dafür bekannt ist, dass sie durch Berührung oder bloßes
+Anstarren ihrer Freunde wahnsinnige Wut auslösen kann. Aus unerklärlichen
+Gründen wurde sie vor Jahrhunderten von der Oberfläche ausgerottet.
 %%%%
 mummy
 
-Eine untote Gestalt, bedeckt mit Bandagen und Einbalsamierungsflüssigkeiten, die durch einen uralten Fluch zum Gehen gezwungen ist. Sie strahlt eine bösartige Aura aus.
+Eine untote Gestalt, bedeckt mit Bandagen und Einbalsamierungsflüssigkeiten, die
+durch einen uralten Fluch zum Gehen gezwungen ist. Sie strahlt eine bösartige
+Aura aus.
 %%%%
 mummy priest
 
-Ein uralter Diener eines längst vergessenen Gottes, einbalsamiert und dazu verflucht, für alle Ewigkeit als Untoter zu wandeln.
+Ein uralter Diener eines längst vergessenen Gottes, einbalsamiert und dazu
+verflucht, für alle Ewigkeit als Untoter zu wandeln.
 %%%%
 mutant beast
 
-Eine bizarre Kreatur, verdreht und verformt durch übermäßige Einwirkung magischer Strahlung. Jede hat unterschiedliche Merkmale.
+Eine bizarre Kreatur, verdreht und verformt durch übermäßige Einwirkung
+magischer Strahlung. Jede hat unterschiedliche Merkmale.
 %%%%
 naga
 
-Ein Hybrid, der von der Hüfte aufwärts menschlich ist; darunter befindet sich ein schuppiger, muskulöser, schlangenartiger Schwanz. Aus seinem Mund tropft giftiger Speichel.
+Ein Hybrid, der von der Hüfte aufwärts menschlich ist; darunter befindet sich
+ein schuppiger, muskulöser, schlangenartiger Schwanz. Aus seinem Mund tropft
+giftiger Speichel.
 %%%%
 naga mage
 
-Ein Naga, der in der Verwendung von Magie ausgebildet ist und von einem unheimlichen Heiligenschein umgeben ist. Er ist besonders geschickt im Umgang mit Giftzaubern.
+Ein Naga, der in der Verwendung von Magie ausgebildet ist und von einem
+unheimlichen Heiligenschein umgeben ist. Er ist besonders geschickt im Umgang
+mit Giftzaubern.
 %%%%
 naga ritualist
 
-Ein esoterischer Mystiker, der mit Talismanen behangen ist. Er verehrt Gift als heilige Gabe und Mittel zur spirituellen Reinigung.
+Ein esoterischer Mystiker, der mit Talismanen behangen ist. Er verehrt Gift als
+heilige Gabe und Mittel zur spirituellen Reinigung.
 %%%%
 naga sharpshooter
 
-Ein Naga mit außergewöhnlich scharfem Sehvermögen, der mit Fernwaffen und einfacher Magie vertraut ist, was es ihm ermöglicht, über fast jedes Hindernis hinweg auf Ziele zu schießen.
+Ein Naga mit außergewöhnlich scharfem Sehvermögen, der mit Fernwaffen und
+einfacher Magie vertraut ist, was es ihm ermöglicht, über fast jedes Hindernis
+hinweg auf Ziele zu schießen.
 %%%%
 naga warrior
 
-Ein furchterregender Naga-Krieger, gekleidet in robuste Rüstung und mit einer mächtigen Waffe.
+Ein furchterregender Naga-Krieger, gekleidet in robuste Rüstung und mit einer
+mächtigen Waffe.
 %%%%
 nagaraja
 
-Ein prachtvolles Exemplar der Naga. Sie sind Experten sowohl in Kampf- als auch in Zauberkünsten.
+Ein prachtvolles Exemplar der Naga. Sie sind Experten sowohl in Kampf- als auch
+in Zauberkünsten.
 %%%%
 nameless horror
 
-Eine bösartige Macht aus dem Raum zwischen den Ebenen. Sie ist den magischen Kräften, die sie aus ihrer Heimat vertrieben haben, feindlich gesinnt. Diese Schrecken sind oft das Ergebnis falscher Beschwörungszauber und haben schon viele aufstrebende Zauberer getötet.
+Eine bösartige Macht aus dem Raum zwischen den Ebenen. Sie ist den magischen
+Kräften, die sie aus ihrer Heimat vertrieben haben, feindlich gesinnt. Diese
+Schrecken sind oft das Ergebnis falscher Beschwörungszauber und haben schon
+viele aufstrebende Zauberer getötet.
 %%%%
 necromancer
 
-Ein böser Zauberer, der sich der Ausübung von Todesmagie, der Beherrschung unheiliger Energien und der Wiedererweckung von Leichen zu einer Parodie des Lebens verschrieben hat.
+Ein böser Zauberer, der sich der Ausübung von Todesmagie, der Beherrschung
+unheiliger Energien und der Wiedererweckung von Leichen zu einer Parodie des
+Lebens verschrieben hat.
 %%%%
 necrophage
 
-Eine abscheuliche, untote Schöpfung der unheiligsten Nekromantie, erschaffen aus den verwesenden Leichen humanoider Kreaturen. Ihr Dasein dient der Verbreitung von Krankheiten und Verfall.
+Eine abscheuliche, untote Schöpfung der unheiligsten Nekromantie, erschaffen aus
+den verwesenden Leichen humanoider Kreaturen. Ihr Dasein dient der Verbreitung
+von Krankheiten und Verfall.
 %%%%
 neqoxec
 
-Ein seltsam geformter Dämon, der vor mutagenen Energien pulsiert und sich verändert, und dessen Bauch von den verschlungenen Gehirnen seiner Opfer aufgebläht ist.
+Ein seltsam geformter Dämon, der vor mutagenen Energien pulsiert und sich
+verändert, und dessen Bauch von den verschlungenen Gehirnen seiner Opfer
+aufgebläht ist.
 %%%%
 obsidian statue
 
-Eine wunderschöne Statue einer unbekannten Kreatur, pechschwarz wie ein Riss in der Realität. Ihre Augen leuchten mit einem überirdischen, bösartigen Glanz.
+Eine wunderschöne Statue einer unbekannten Kreatur, pechschwarz wie ein Riss in
+der Realität. Ihre Augen leuchten mit einem überirdischen, bösartigen Glanz.
 %%%%
 octopode
 
-Ein intelligenterer Cousin des mächtigen Kraken, der Werkzeuge und Zaubersprüche benutzen kann. Er ist voll amphibisch, aber die meisten seiner Spezies bleiben lieber unter Wasser und dienen ihrem König.
+Ein intelligenterer Cousin des mächtigen Kraken, der Werkzeuge und Zaubersprüche
+benutzen kann. Er ist voll amphibisch, aber die meisten seiner Spezies bleiben
+lieber unter Wasser und dienen ihrem König.
 %%%%
 ogre
 
-Eine große, hässliche und fette Kreatur, entfernt verwandt mit Orks und Goblins. Sie ist unglaublich stark.
+Eine große, hässliche und fette Kreatur, entfernt verwandt mit Orks und Goblins.
+Sie ist unglaublich stark.
 %%%%
 ogre mage
 
-Eine seltene Ogerart, die sich mit Magie auskennt. Normalerweise wird er zum Häuptling unter seinesgleichen.
+Eine seltene Ogerart, die sich mit Magie auskennt. Normalerweise wird er zum
+Häuptling unter seinesgleichen.
 %%%%
 oklob plant
 
-Eine sehr gefährliche Pflanze, die ihre Fressfeinde abwehrt, indem sie ätzendes Vitriol auf sie sprüht. Selbst erfahrene Abenteurer machen einen großen Bogen um Oklob-Pflanzen.
+Eine sehr gefährliche Pflanze, die ihre Fressfeinde abwehrt, indem sie ätzendes
+Vitriol auf sie sprüht. Selbst erfahrene Abenteurer machen einen großen Bogen um
+Oklob-Pflanzen.
 %%%%
 oklob sapling
 
-Eine junge Oklob-Pflanze. Sie ist zerbrechlicher als das ausgewachsene Exemplar, aber die Säure, die sie versprüht, ist genauso tödlich.
+Eine junge Oklob-Pflanze. Sie ist zerbrechlicher als das ausgewachsene Exemplar,
+aber die Säure, die sie versprüht, ist genauso tödlich.
 %%%%
 ophan
 
-Eine Kreatur aus den himmlischen Reichen. Sie besteht aus einem Rad in einem Rad, und beide sind mit Augen bedeckt; seltsame Flammen heiligen Feuers flackern überall darauf.
+Eine Kreatur aus den himmlischen Reichen. Sie besteht aus einem Rad in einem
+Rad, und beide sind mit Augen bedeckt; seltsame Flammen heiligen Feuers flackern
+überall darauf.
 %%%%
 orange crystal statue
 
-Ein kunstvoll geschnitztes Abbild eines namenlosen Gottes, aus durchscheinendem orangefarbenem Kristall gehauen. Seine leblosen Augen scheinen unheimlich vor böser Intelligenz zu funkeln. Es ist in der Lage, einen mächtigen psychischen Angriff auf den Geist eines jeden auszulösen, der sich ihm nähert.
+Ein kunstvoll geschnitztes Abbild eines namenlosen Gottes, aus durchscheinendem
+orangefarbenem Kristall gehauen. Seine leblosen Augen scheinen unheimlich vor
+böser Intelligenz zu funkeln. Es ist in der Lage, einen mächtigen psychischen
+Angriff auf den Geist eines jeden auszulösen, der sich ihm nähert.
 %%%%
 orange demon
 
-Ein bernsteinfarbener Dämon mit einem Widerhakenschwanz, der dem eines Skorpions nicht unähnlich ist.
+Ein bernsteinfarbener Dämon mit einem Widerhakenschwanz, der dem eines Skorpions
+nicht unähnlich ist.
 %%%%
 Orb Guardian
 
-Eine riesige, leuchtende, viergliedrige violette Kreatur mit geschärften Sinnen, erschaffen von der Kugel selbst. Sie bewacht die Kugel mit enormer Sorgfalt und Gewalt.
+Eine riesige, leuchtende, viergliedrige violette Kreatur mit geschärften Sinnen,
+erschaffen von der Kugel selbst. Sie bewacht die Kugel mit enormer Sorgfalt und
+Gewalt.
 %%%%
 orb of destruction
 
-Eine heraufbeschworene Kugel aus purer Magie, die ein bestimmtes Ziel ansteuert, allerdings mit enormer Trägheit. Eine kluge und flinke Person kann ihr aus dem Weg gehen, sodass sie ihr Ziel verfehlt. Sie kann nicht durch Ausweichsfertigkeit vermieden werden und kann scharfe Wendungen machen, um benachbarte Ziele zu treffen.
+Eine heraufbeschworene Kugel aus purer Magie, die ein bestimmtes Ziel ansteuert,
+allerdings mit enormer Trägheit. Eine kluge und flinke Person kann ihr aus dem
+Weg gehen, sodass sie ihr Ziel verfehlt. Sie kann nicht durch
+Ausweichsfertigkeit vermieden werden und kann scharfe Wendungen machen, um
+benachbarte Ziele zu treffen.
 %%%%
 orb of fire
 
-Eine Kugel aus reinem, urzeitlichem Feuer, die zu beeindruckender Pyrotechnik fähig ist und das Fleisch von Kreaturen verdrehen kann, die in ihre Reichweite kommen.
+Eine Kugel aus reinem, urzeitlichem Feuer, die zu beeindruckender Pyrotechnik
+fähig ist und das Fleisch von Kreaturen verdrehen kann, die in ihre Reichweite
+kommen.
 %%%%
 orb spider
 
-Eine unheimlich leuchtende Spinne, aus deren Spinndrüsen Stränge purer Energie austreten. Sie scheint auf Distanz bleiben zu wollen.
+Eine unheimlich leuchtende Spinne, aus deren Spinndrüsen Stränge purer Energie
+austreten. Sie scheint auf Distanz bleiben zu wollen.
 %%%%
 orc
 
-Eine hässliche unterirdische Kreatur, die die schlimmsten Eigenschaften von Menschen, Schweinen und mehreren anderen unangenehmen Kreaturen in sich vereint. Sie ist meist in Rudeln oder Gruppen unterwegs und erfreut sich an wahnsinnigen Gewaltausbrüchen.
+Eine hässliche unterirdische Kreatur, die die schlimmsten Eigenschaften von
+Menschen, Schweinen und mehreren anderen unangenehmen Kreaturen in sich vereint.
+Sie ist meist in Rudeln oder Gruppen unterwegs und erfreut sich an wahnsinnigen
+Gewaltausbrüchen.
 %%%%
 orc high priest
 
-Ein erhabener Diener des Orkgottes Beogh und Meister vieler schwarzer Riten, zu dessen Hilfe Beogh sogar Wesen aus der Unterwelt schickt.
+Ein erhabener Diener des Orkgottes Beogh und Meister vieler schwarzer Riten, zu
+dessen Hilfe Beogh sogar Wesen aus der Unterwelt schickt.
 %%%%
 orc knight
 
-Ein schwer gepanzerter Ork, bedeckt mit Narben aus vielen vergangenen Schlachten. Er befehligt seine Brüder im Kampf und spornt sie mit markerschütternden Schreien zu größeren, gewalttätigeren Anstrengungen an.
+Ein schwer gepanzerter Ork, bedeckt mit Narben aus vielen vergangenen
+Schlachten. Er befehligt seine Brüder im Kampf und spornt sie mit
+markerschütternden Schreien zu größeren, gewalttätigeren Anstrengungen an.
 %%%%
 orc priest
 
-Ein Diener von Beogh, dem alten und grausamen Gott der Orks. Beogh belohnt seine hingebungsvollen Gebete, indem er seine Feinde niederstreckt.
+Ein Diener von Beogh, dem alten und grausamen Gott der Orks. Beogh belohnt seine
+hingebungsvollen Gebete, indem er seine Feinde niederstreckt.
 %%%%
 orc sorcerer
 
-Ein außergewöhnlich fähiger orkischer Zauberer, der mit höllischen und chthonischen Mächten im Bunde ist und von der reinsten Art von Böswilligkeit angetrieben wird, die man sich vorstellen kann.
+Ein außergewöhnlich fähiger orkischer Zauberer, der mit höllischen und
+chthonischen Mächten im Bunde ist und von der reinsten Art von Böswilligkeit
+angetrieben wird, die man sich vorstellen kann.
 %%%%
 orc warlord
 
@@ -1439,239 +2021,334 @@ Ein Oberbefehlshaber einer Ork-Armee, erfahren im Nah- und Fernkampf.
 %%%%
 orc warrior
 
-Ein erfahrener, gepanzerter und gut bewaffneter Orksoldat, der in der Lage ist, eine kleine Gruppe seiner Kameraden zu befehligen.
+Ein erfahrener, gepanzerter und gut bewaffneter Orksoldat, der in der Lage ist,
+eine kleine Gruppe seiner Kameraden zu befehligen.
 %%%%
 orc wizard
 
-Ein Ork, der Kenntnisse in den okkulten Künsten erworben hat und diese für Kampfzwecke einsetzt.
+Ein Ork, der Kenntnisse in den okkulten Künsten erworben hat und diese für
+Kampfzwecke einsetzt.
 %%%%
 pale draconian
 
-Ein muskulöser Humanoid mit hellen Schuppen, einem Reptilienschwanz und kleinen Flügeln.
+Ein muskulöser Humanoid mit hellen Schuppen, einem Reptilienschwanz und kleinen
+Flügeln.
 %%%%
 pandemonium lord
 
-Ein furchterregender Dämonenfürst, der die endlosen Hallen von Pandemonium bewohnt. Jeder von ihnen ist anders und hat seine eigenen Stärken und Schwächen.
+Ein furchterregender Dämonenfürst, der die endlosen Hallen von Pandemonium
+bewohnt. Jeder von ihnen ist anders und hat seine eigenen Stärken und Schwächen.
 %%%%
 peacekeeper
 
-Ein vierbeiniges humanoides Konstrukt, dessen Aufgabe es ist, entflohene Sklaven wieder einzufangen und Ketzer zu bestrafen. Lange nach dem Fall des Reiches, dem es einst diente, setzt es weiterhin das kaiserliche Recht durch und kennt keine Rechtsprechung.
+Ein vierbeiniges humanoides Konstrukt, dessen Aufgabe es ist, entflohene Sklaven
+wieder einzufangen und Ketzer zu bestrafen. Lange nach dem Fall des Reiches, dem
+es einst diente, setzt es weiterhin das kaiserliche Recht durch und kennt keine
+Rechtsprechung.
 %%%%
 pearl dragon
 
-Ein Drache, der den heiligen göttlichen Kräften geweiht ist. Sein Atem ist gesegnetes Feuer und seine Klauen versengen seine Opfer mit göttlichem Zorn.
+Ein Drache, der den heiligen göttlichen Kräften geweiht ist. Sein Atem ist
+gesegnetes Feuer und seine Klauen versengen seine Opfer mit göttlichem Zorn.
 %%%%
 phantasmal warrior
 
-Der abscheuliche, durchscheinend grüne Geist eines im Kampf gefallenen Kriegers, der durch unheilige Magie auf diese Ebene zurückgerufen wurde. Die Klinge, die er trägt, ist ätherisch und macht diejenigen, die er trifft, willensschwach und anfällig für dunkle Magie.
+Der abscheuliche, durchscheinend grüne Geist eines im Kampf gefallenen Kriegers,
+der durch unheilige Magie auf diese Ebene zurückgerufen wurde. Die Klinge, die
+er trägt, ist ätherisch und macht diejenigen, die er trifft, willensschwach und
+anfällig für dunkle Magie.
 %%%%
 phantom
 
-Ein fast durchsichtiger, untoter Geist, von dem einige Weise vermuten, dass es sich um eine degenerierte Form eines Geistes ohne Erinnerungen an sein früheres Leben handelt. Er bleibt selten lange an einem Ort.
+Ein fast durchsichtiger, untoter Geist, von dem einige Weise vermuten, dass es
+sich um eine degenerierte Form eines Geistes ohne Erinnerungen an sein früheres
+Leben handelt. Er bleibt selten lange an einem Ort.
 %%%%
 pillar of salt
 
-Eine Salzsäule in Form einer Statue, die allerdings nicht von lebenden Händen bearbeitet wurde.
+Eine Salzsäule in Form einer Statue, die allerdings nicht von lebenden Händen
+bearbeitet wurde.
 %%%%
 plant
 
-Eine Pflanze, die sich an die unangenehme Umgebung eines Dungeons angepasst hat und irgendwie sogar unter der Erde ohne Sonne gedeiht.
+Eine Pflanze, die sich an die unangenehme Umgebung eines Dungeons angepasst hat
+und irgendwie sogar unter der Erde ohne Sonne gedeiht.
 %%%%
 player ghost
 
-Die Erscheinung eines unglücklichen Abenteurers, der viele der Fertigkeiten und Fähigkeiten, die er zu Lebzeiten besaß, noch besitzt. Er ist dazu verdammt, in dieser bestimmten Ebene des Dungeons herumzugeistern und den nächsten Abenteurer, der ihm über den Weg läuft, gewaltsam anzugreifen.
+Die Erscheinung eines unglücklichen Abenteurers, der viele der Fertigkeiten und
+Fähigkeiten, die er zu Lebzeiten besaß, noch besitzt. Er ist dazu verdammt, in
+dieser bestimmten Ebene des Dungeons herumzugeistern und den nächsten
+Abenteurer, der ihm über den Weg läuft, gewaltsam anzugreifen.
 %%%%
 polar bear
 
-Ein Bär mit glänzendem weißem Fell, der an Kälte gewöhnt ist. Wie alle Bären wird er wütend, wenn er schwer verletzt oder erschreckt wird.
+Ein Bär mit glänzendem weißem Fell, der an Kälte gewöhnt ist. Wie alle Bären
+wird er wütend, wenn er schwer verletzt oder erschreckt wird.
 %%%%
 profane servitor
 
-Ein blasphemisches Wesen, das einst ein Engel des Glänzeden war. Jetzt ist es der leblose Beweis dafür, dass nicht einmal die heiligsten Wesen außerhalb der Reichweite von Yredelemnul liegen.
+Ein blasphemisches Wesen, das einst ein Engel des Glänzeden war. Jetzt ist es
+der leblose Beweis dafür, dass nicht einmal die heiligsten Wesen außerhalb der
+Reichweite von Yredelemnul liegen.
 %%%%
 program bug
 
-Ein gefräßiges und unglaublich fehlerhaftes Monster. Bitte melden Sie seine Existenz dem DevTeam.
+Ein gefräßiges und unglaublich fehlerhaftes Monster. Bitte melden Sie seine
+Existenz dem DevTeam.
 %%%%
 purple draconian
 
-Ein muskulöser Humanoid mit violetten Schuppen, einem Reptilienschwanz und kleinen Flügeln.
+Ein muskulöser Humanoid mit violetten Schuppen, einem Reptilienschwanz und
+kleinen Flügeln.
 %%%%
 quasit
 
-Ein feiger kleiner Dämon mit einem langen, bösartig spitzen Schwanz. In seine scharfen Klauen sind Fluchrunen eingraviert, die die Muskeln versteifen.
+Ein feiger kleiner Dämon mit einem langen, bösartig spitzen Schwanz. In seine
+scharfen Klauen sind Fluchrunen eingraviert, die die Muskeln versteifen.
 %%%%
 queen bee
 
-Herrscherin eines Bienenschwarms, die noch größer und gefährlicher ist als ihre zahlreichen Nachkommen.
+Herrscherin eines Bienenschwarms, die noch größer und gefährlicher ist als ihre
+zahlreichen Nachkommen.
 %%%%
 quicksilver dragon
 
-Ein langer und gewundener Drache, der mehr aus Hals und Schwanz als aus allem anderen zu bestehen scheint. Seine Haut glänzt wie geschmolzenes Quecksilber, magische Energien strömen aus seiner spitzen Schnauze und er bewegt sich mit erschreckender Schnelligkeit.
+Ein langer und gewundener Drache, der mehr aus Hals und Schwanz als aus allem
+anderen zu bestehen scheint. Seine Haut glänzt wie geschmolzenes Quecksilber,
+magische Energien strömen aus seiner spitzen Schnauze und er bewegt sich mit
+erschreckender Schnelligkeit.
 %%%%
 quicksilver ooze
 
-Eine dünne Schicht glänzenden, reflektierenden Schleims bedeckt eine große Fläche und saust mit atemberaubender Geschwindigkeit vorwärts. Zaubersprüche perlen daran ab wie Wasser.
+Eine dünne Schicht glänzenden, reflektierenden Schleims bedeckt eine große
+Fläche und saust mit atemberaubender Geschwindigkeit vorwärts. Zaubersprüche
+perlen daran ab wie Wasser.
 %%%%
 quokka
 
-Ein lästiges kleines Beuteltier, das ein bisschen wie eine Ratte aussieht, aber nicht ganz.
+Ein lästiges kleines Beuteltier, das ein bisschen wie eine Ratte aussieht, aber
+nicht ganz.
 %%%%
 ragged hierophant
 
-Ein zerzauster Priester, dessen einstmals feine Robe jetzt mit Salz und Staub bedeckt ist. Von den Göttern verlassen, verlässt er sich jetzt auf Konstrukte, um sich zu schützen.
+Ein zerzauster Priester, dessen einstmals feine Robe jetzt mit Salz und Staub
+bedeckt ist. Von den Göttern verlassen, verlässt er sich jetzt auf Konstrukte,
+um sich zu schützen.
 %%%%
 rakshasa
 
-Ein Dämon in Tigergestalt, auf der Suche nach verborgener Macht und Wissen. Er ist ein Experte in der Kunst der Illusion und außergewöhnlich intelligent und grausam.
+Ein Dämon in Tigergestalt, auf der Suche nach verborgener Macht und Wissen. Er
+ist ein Experte in der Kunst der Illusion und außergewöhnlich intelligent und
+grausam.
 %%%%
 rat
 
-Ein schmutziges Nagetier, das in der Dungeonumgebung groß und aggressiv geworden ist.
+Ein schmutziges Nagetier, das in der Dungeonumgebung groß und aggressiv geworden
+ist.
 %%%%
 raiju
 
-Ein zutiefst unnatürlicher Hund, der vor Elektrizität knistert. Er bewegt sich in Rudeln und überwindet große Entfernungen, indem er in lebendiges Blitzen verwandelt.
+Ein zutiefst unnatürlicher Hund, der vor Elektrizität knistert. Er bewegt sich
+in Rudeln und überwindet große Entfernungen, indem er in lebendiges Blitzen
+verwandelt.
 %%%%
 reaper
 
-Eine Skelettgestalt, die eine riesige Sense schwingt und unaufhörlich die Seelen der Lebenden erntet.
+Eine Skelettgestalt, die eine riesige Sense schwingt und unaufhörlich die Seelen
+der Lebenden erntet.
 %%%%
 red devil
 
-Ein größerer Cousin des gewöhnlichen Teufelchens mit einem teuflischen Grinsen und zwei kurzen Flügeln, die aus seinen Schultern sprießen. Er bevorzugt Dreizacke mit Widerhaken und verspottet seine Opfer aus der Ferne.
+Ein größerer Cousin des gewöhnlichen Teufelchens mit einem teuflischen Grinsen
+und zwei kurzen Flügeln, die aus seinen Schultern sprießen. Er bevorzugt
+Dreizacke mit Widerhaken und verspottet seine Opfer aus der Ferne.
 %%%%
 red draconian
 
-Ein muskulöser Humanoid mit roten Schuppen, einem Reptilienschwanz und kleinen Flügeln.
+Ein muskulöser Humanoid mit roten Schuppen, einem Reptilienschwanz und kleinen
+Flügeln.
 %%%%
 hornet
 
-Eine summende Hornisse mit einem gefährlichen Stachel, aus dem lähmendes Gift tropft.
+Eine summende Hornisse mit einem gefährlichen Stachel, aus dem lähmendes Gift
+tropft.
 %%%%
 redback
 
-Eine bösartige schwarze Spinne mit einem roten Spritzer auf ihrem geschwollenen Hinterleib. Aus ihren Mandibeln tropft tödliches Gift.
+Eine bösartige schwarze Spinne mit einem roten Spritzer auf ihrem geschwollenen
+Hinterleib. Aus ihren Mandibeln tropft tödliches Gift.
 %%%%
 revenant
 
-Eine skelettartige Gestalt, umhüllt von kaltem, blauem Feuer, steht zwischen diesem und dem nächsten Leben. Echos der verbliebenen Toten flackern in ihren geisterhaften Flammen.
+Eine skelettartige Gestalt, umhüllt von kaltem, blauem Feuer, steht zwischen
+diesem und dem nächsten Leben. Echos der verbliebenen Toten flackern in ihren
+geisterhaften Flammen.
 %%%%
 rime drake
 
-Ein kleiner, aber gefährlicher Drache. Sein Atem ist selbst an den wärmsten Tagen sichtbar.
+Ein kleiner, aber gefährlicher Drache. Sein Atem ist selbst an den wärmsten
+Tagen sichtbar.
 %%%%
 river rat
 
-Ein Nagetier mit Fell von höchst eigenartiger grüner Farbe und einem kräftigen Biss. Es neigt dazu, mit seinen Artgenossen große Schwärme zu bilden.
+Ein Nagetier mit Fell von höchst eigenartiger grüner Farbe und einem kräftigen
+Biss. Es neigt dazu, mit seinen Artgenossen große Schwärme zu bilden.
 %%%%
 rockslime
 
-Eine schleimige Lawine, die den Boden unter sich aufwühlt, während sie vorwärts rumpelt. Sie frisst nur das Metall und die Knochen ihrer Opfer und nutzt sie, um sich noch stärker zu machen.
+Eine schleimige Lawine, die den Boden unter sich aufwühlt, während sie vorwärts
+rumpelt. Sie frisst nur das Metall und die Knochen ihrer Opfer und nutzt sie, um
+sich noch stärker zu machen.
 %%%%
 the Royal Jelly
 
-Eine besonders reichhaltige und goldene gallertartige Masse. Kleinere Gelees schwimmen und pulsieren knapp unter der Oberfläche und platzen bei der leichtesten Berührung heraus.
+Eine besonders reichhaltige und goldene gallertartige Masse. Kleinere Gelees
+schwimmen und pulsieren knapp unter der Oberfläche und platzen bei der
+leichtesten Berührung heraus.
 %%%%
 royal mummy
 
-Ein antiker Pharao, einbalsamiert und zum Untod verflucht, ist nun zu großen und furchterregenden Zaubertaten fähig.
+Ein antiker Pharao, einbalsamiert und zum Untod verflucht, ist nun zu großen und
+furchterregenden Zaubertaten fähig.
 %%%%
 rust devil
 
-Eine abscheuliche, menschenähnliche Gestalt mit rostfleckiger Metallhaut, die alles, was sie berührt, mit Korrosion und Verfall überzieht.
+Eine abscheuliche, menschenähnliche Gestalt mit rostfleckiger Metallhaut, die
+alles, was sie berührt, mit Korrosion und Verfall überzieht.
 %%%%
 salamander
 
-Eine rote, flammende Kreatur, halb Mensch, halb Schlange, mit einer legendären Affinität zum Feuer.
+Eine rote, flammende Kreatur, halb Mensch, halb Schlange, mit einer legendären
+Affinität zum Feuer.
 %%%%
 salamander mystic
 
-Ein Mitglied der Gelehrtenkaste der Salamander, von geringerer Größe und Kraft, aber mit Kenntnissen in der Magie.
+Ein Mitglied der Gelehrtenkaste der Salamander, von geringerer Größe und Kraft,
+aber mit Kenntnissen in der Magie.
 %%%%
 salamander tyrant
 
-Ein einschüchternder Vulkanherrscher. Er beherrscht das Magma seines Reiches wie eine Erweiterung seines Körpers und die Erhabenheit seines Blicks kann selbst den stolzesten Herausforderer schwächen.
+Ein einschüchternder Vulkanherrscher. Er beherrscht das Magma seines Reiches wie
+eine Erweiterung seines Körpers und die Erhabenheit seines Blicks kann selbst
+den stolzesten Herausforderer schwächen.
 %%%%
 saltling
 
-Eine kleine, menschenförmige Ansammlung aus Salz. Sie wurde von den letzten flüchtigen Loyalisten des untergegangenen östlichen Reichs geschaffen, die aus Verzweiflung gezwungen waren, aus den örtlichen Ressourcen Golems zu bauen, um sich zu verteidigen.
+Eine kleine, menschenförmige Ansammlung aus Salz. Sie wurde von den letzten
+flüchtigen Loyalisten des untergegangenen östlichen Reichs geschaffen, die aus
+Verzweiflung gezwungen waren, aus den örtlichen Ressourcen Golems zu bauen, um
+sich zu verteidigen.
 %%%%
 satyr
 
-Ein intelligenterer Verwandter des Fauns, der oft in ihrer Gesellschaft anzutreffen ist und Eindringlingen gegenüber weitaus unversöhnlicher und gefährlicher ist.
+Ein intelligenterer Verwandter des Fauns, der oft in ihrer Gesellschaft
+anzutreffen ist und Eindringlingen gegenüber weitaus unversöhnlicher und
+gefährlicher ist.
 %%%%
 scorpion
 
-Ein abscheuliches Spinnentier, das bis an die Zähne bewaffnet ist. Sein Körper ist von einem dicken Panzer bedeckt, an der Spitze seines Schwanzes befindet sich ein giftiger Stachel und seine Vorderbeine sind mit einem Paar scharfer Greifklauen ausgestattet.
+Ein abscheuliches Spinnentier, das bis an die Zähne bewaffnet ist. Sein Körper
+ist von einem dicken Panzer bedeckt, an der Spitze seines Schwanzes befindet
+sich ein giftiger Stachel und seine Vorderbeine sind mit einem Paar scharfer
+Greifklauen ausgestattet.
 %%%%
 sea snake
 
-Eine farbenfrohe Schlange, die sich im Wasser sehr wohl fühlt. Ihr Biss ist äußerst giftig.
+Eine farbenfrohe Schlange, die sich im Wasser sehr wohl fühlt. Ihr Biss ist
+äußerst giftig.
 %%%%
 seraph
 
-Ein sechsflügeliger Diener der guten Götter, der höchste Rang der Engelsscharen. In seinen Augen brennt göttliches Feuer.
+Ein sechsflügeliger Diener der guten Götter, der höchste Rang der Engelsscharen.
+In seinen Augen brennt göttliches Feuer.
 %%%%
 servant of whispers
 
-Ein Mitglied eines Mönchsordens, der seinen früheren Glauben aufgegeben hat. Er dient nun einem kleinen Gott des Windes und des Flüsterns, der es ihm erlaubt, die Luft zu beruhigen und, wenn es nötig ist, die Stille mit göttlichem Donner zu durchbrechen.
+Ein Mitglied eines Mönchsordens, der seinen früheren Glauben aufgegeben hat. Er
+dient nun einem kleinen Gott des Windes und des Flüsterns, der es ihm erlaubt,
+die Luft zu beruhigen und, wenn es nötig ist, die Stille mit göttlichem Donner
+zu durchbrechen.
 %%%%
 shadow
 
-Ein Hauch leblosen Schattens, der in die Dunkelheit des Dungeons hinein- und wieder hinausgleitet. Er bewegt sich schnell und lautlos von einem Schattenfleck zum nächsten und schlägt zielsicher aus den toten Winkeln derer zu, die ihn nicht sehen können.
+Ein Hauch leblosen Schattens, der in die Dunkelheit des Dungeons hinein- und
+wieder hinausgleitet. Er bewegt sich schnell und lautlos von einem Schattenfleck
+zum nächsten und schlägt zielsicher aus den toten Winkeln derer zu, die ihn
+nicht sehen können.
 %%%%
 shadow demon
 
-Eine geheimnisvolle dämonische Gestalt, die sich nur schwer von der umgebenden Dunkelheit unterscheiden lässt. Sie verwebt die Schatten zu mächtigen Dienern.
+Eine geheimnisvolle dämonische Gestalt, die sich nur schwer von der umgebenden
+Dunkelheit unterscheiden lässt. Sie verwebt die Schatten zu mächtigen Dienern.
 %%%%
 shadow dragon
 
-Ein großer Schattendrache, der Böses und Tod ausstrahlt. Sein Atem stinkt nach dem Grab.
+Ein großer Schattendrache, der Böses und Tod ausstrahlt. Sein Atem stinkt nach
+dem Grab.
 %%%%
 shadow imp
 
-Ein schattenhafter kleiner Dämon mit einer Affinität zu den Künsten der Totenbeschwörung.
+Ein schattenhafter kleiner Dämon mit einer Affinität zu den Künsten der
+Totenbeschwörung.
 %%%%
 shadow wraith
 
-Ein nebelumhüllter Skelettschatten, der in der Luft hängt. Er saugt Lebewesen die Lebenskraft aus.
+Ein nebelumhüllter Skelettschatten, der in der Luft hängt. Er saugt Lebewesen
+die Lebenskraft aus.
 %%%%
 shambling mangrove
 
-Eine knorrige Mangrove, die über Intelligenz und ein streitsüchtiges Wesen verfügt. Ihre Wurzeln reichen tief durch das Wasser und den Boden ihrer sumpfigen Heimat und können denjenigen, die ihren Zorn provozieren, den Halt sehr schwer machen. Sumpftiere nisten oft in ihren Zweigen und reagieren möglicherweise nicht freundlich, wenn man sie stört.
+Eine knorrige Mangrove, die über Intelligenz und ein streitsüchtiges Wesen
+verfügt. Ihre Wurzeln reichen tief durch das Wasser und den Boden ihrer
+sumpfigen Heimat und können denjenigen, die ihren Zorn provozieren, den Halt
+sehr schwer machen. Sumpftiere nisten oft in ihren Zweigen und reagieren
+möglicherweise nicht freundlich, wenn man sie stört.
 %%%%
 shapeshifter
 
-Eine beunruhigende Kreatur mit der Fähigkeit, ihre Form zu ändern. Sie wird nur sehr selten lebend in ihrem natürlichen Zustand beobachtet.
+Eine beunruhigende Kreatur mit der Fähigkeit, ihre Form zu ändern. Sie wird nur
+sehr selten lebend in ihrem natürlichen Zustand beobachtet.
 %%%%
 shard shrike
 
-Ein unglaublich schneller Vogel, der dafür bekannt ist, seine Beute auf Eissplitter aufzuspießen und sie dann in Stücke zu reißen. Er hat sich an die trostlosen Wüsten von Kokytus gewöhnt und ist von einer verfluchten Kälte umgeben.
+Ein unglaublich schneller Vogel, der dafür bekannt ist, seine Beute auf
+Eissplitter aufzuspießen und sie dann in Stücke zu reißen. Er hat sich an die
+trostlosen Wüsten von Kokytus gewöhnt und ist von einer verfluchten Kälte
+umgeben.
 %%%%
 shining eye
 
-Ein seltsam deformierter schwebender Augapfel, der vor fleischverdrehender Energie pulsiert.
+Ein seltsam deformierter schwebender Augapfel, der vor fleischverdrehender
+Energie pulsiert.
 %%%%
 shock serpent
 
-Eine gewundene Schlange, deren Körper vor explosiver Elektrizität knistert. Ihr elektrischer Mantel kann sich bei einem Schlag entladen und allen Gegnern in der Nähe einen schmerzhaften Schock zufügen.
+Eine gewundene Schlange, deren Körper vor explosiver Elektrizität knistert. Ihr
+elektrischer Mantel kann sich bei einem Schlag entladen und allen Gegnern in der
+Nähe einen schmerzhaften Schock zufügen.
 %%%%
 silent spectre
 
-Ein schrecklicher Geist, der in seiner Umgebung eine unheimliche Stille verbreitet, die es unmöglich macht, die magischen Zauberformeln aufzusagen, die mit dem Wirken von Zaubersprüchen oder dem Lesen von Schriftrollen verbunden sind.
+Ein schrecklicher Geist, der in seiner Umgebung eine unheimliche Stille
+verbreitet, die es unmöglich macht, die magischen Zauberformeln aufzusagen, die
+mit dem Wirken von Zaubersprüchen oder dem Lesen von Schriftrollen verbunden
+sind.
 %%%%
 simulacrum
 
-Eine Eisnachbildung eines Monsters, zum Leben erweckt durch die Kräfte der Nekromantie.
+Eine Eisnachbildung eines Monsters, zum Leben erweckt durch die Kräfte der
+Nekromantie.
 %%%%
 sixfirhy
 
-Eine kleine, abscheuliche Kreatur, die sich stoßweise bewegt, anhält und dann blitzschnell davonschießt. Dabei sprüht sie Funken.
+Eine kleine, abscheuliche Kreatur, die sich stoßweise bewegt, anhält und dann
+blitzschnell davonschießt. Dabei sprüht sie Funken.
 %%%%
 skeletal warrior
 
-Ein bösartiges und schwer bewaffnetes humanoides Skelett, belebt durch unheilige Macht.
+Ein bösartiges und schwer bewaffnetes humanoides Skelett, belebt durch unheilige
+Macht.
 %%%%
 skeleton
 
@@ -1679,43 +2356,60 @@ Ein Skelett, das durch die Ausübung von Nekromantie zum Unleben gezwungen wird.
 %%%%
 sky beast
 
-Ein seltsames Luftwesen aus Wolken und gequältem Fleisch, das elektrisch funkelt und hin und wieder vollständig aus dem Blickfeld verschwindet.
+Ein seltsames Luftwesen aus Wolken und gequältem Fleisch, das elektrisch funkelt
+und hin und wieder vollständig aus dem Blickfeld verschwindet.
 %%%%
 slime creature
 
-Ein ekliger Schleimklumpen, der über den Boden gleitet. Er kann sich mit anderen Schleimkreaturen verbinden und dadurch noch gefährlicher werden. Dies passiert besonders häufig in engen Räumen.
+Ein ekliger Schleimklumpen, der über den Boden gleitet. Er kann sich mit anderen
+Schleimkreaturen verbinden und dadurch noch gefährlicher werden. Dies passiert
+besonders häufig in engen Räumen.
 %%%%
 small abomination
 
-Eine abscheuliche Masse aus Körperteilen. Jedes davon unterscheidet sich in Geschwindigkeit und Haltbarkeit, je nach der Art der Unglücklichen, aus denen es hergestellt wurde.
+Eine abscheuliche Masse aus Körperteilen. Jedes davon unterscheidet sich in
+Geschwindigkeit und Haltbarkeit, je nach der Art der Unglücklichen, aus denen es
+hergestellt wurde.
 %%%%
 smoke demon
 
-Ein höllischer Dämon, der sich als sich windende Rauchwolke manifestiert. Er verfügt über beträchtliche pyrokinetische Kräfte und kann seine Feinde sehr effektiv aus der Ferne angreifen.
+Ein höllischer Dämon, der sich als sich windende Rauchwolke manifestiert. Er
+verfügt über beträchtliche pyrokinetische Kräfte und kann seine Feinde sehr
+effektiv aus der Ferne angreifen.
 %%%%
 snaplasher vine
 
-Eine schnelle und gewundene Rebe, die durch die Magie einer Dryade zum Leben erweckt wird. Sie kann die Feinde der Dryade schnell fesseln und verstricken und sie zurück in den Wald ziehen, aus dem sie hervorsprudelt.
+Eine schnelle und gewundene Rebe, die durch die Magie einer Dryade zum Leben
+erweckt wird. Sie kann die Feinde der Dryade schnell fesseln und verstricken und
+sie zurück in den Wald ziehen, aus dem sie hervorsprudelt.
 %%%%
 snaplasher vine segment
 
-Teil einer schnellen und gewundenen Rebe, die durch die Magie einer Dryade zum Leben erweckt wurde. Sie kann die Feinde der Dryade schnell fesseln und verstricken und sie zurück in den Wald ziehen, aus dem sie hervorsprudelt.
+Teil einer schnellen und gewundenen Rebe, die durch die Magie einer Dryade zum
+Leben erweckt wurde. Sie kann die Feinde der Dryade schnell fesseln und
+verstricken und sie zurück in den Wald ziehen, aus dem sie hervorsprudelt.
 %%%%
 snapping turtle
 
-Ein angriffslustiger Testudine mit gepanzertem Rückenschild. Sein Hals ist überraschend dehnbar und er kann aus der Ferne zubeißen.
+Ein angriffslustiger Testudine mit gepanzertem Rückenschild. Sein Hals ist
+überraschend dehnbar und er kann aus der Ferne zubeißen.
 %%%%
 soul eater
 
-Ein Dämon, der sich als bösartig durch die Luft gleitender Schatten manifestiert. Er strahlt eine intensive Aura negativer Kraft aus.
+Ein Dämon, der sich als bösartig durch die Luft gleitender Schatten
+manifestiert. Er strahlt eine intensive Aura negativer Kraft aus.
 %%%%
 spark wasp
 
-Ein zutiefst unnatürliches Insekt, das mit metallisch anmutenden Platten bedeckt ist. Sein Stachel knistert vor Elektrizität, kann ahnungslosen Opfern einen starken Schock versetzen und die Distanz zu ihnen mit erschreckend tödlicher Geschwindigkeit überwinden.
+Ein zutiefst unnatürliches Insekt, das mit metallisch anmutenden Platten bedeckt
+ist. Sein Stachel knistert vor Elektrizität, kann ahnungslosen Opfern einen
+starken Schock versetzen und die Distanz zu ihnen mit erschreckend tödlicher
+Geschwindigkeit überwinden.
 %%%%
 spatial maelstrom
 
-Ein bösartiger Riss in der Realität, der alles Terrain, an dem er vorbeikommt, in wirbelnde Strudel auflöst.
+Ein bösartiger Riss in der Realität, der alles Terrain, an dem er vorbeikommt,
+in wirbelnde Strudel auflöst.
 %%%%
 spatial vortex
 
@@ -1727,19 +2421,28 @@ Eine scheußliche, leuchtende Erscheinung.
 %%%%
 spectral weapon
 
-Ein Geist, der aus einer Waffe gezogen wird – er schlägt nie von selbst zu. Der ihm zugefügte Schaden wird teilweise auf den Zaubernden übertragen.
+Ein Geist, der aus einer Waffe gezogen wird – er schlägt nie von selbst zu. Der
+ihm zugefügte Schaden wird teilweise auf den Zaubernden übertragen.
 %%%%
 spellforged servitor
 
-Ein magisches Konstrukt, das mit einem Teil der Magie eines Hervorrufers verwoben und mit einer primitiven Elementarintelligenz verbunden ist, die aus einer äußeren Ebene beschworen wurde. Die Magie, mit der es geschmiedet wurde, verleiht ihm die Fähigkeit, einige der zerstörerischen Zauber seines Schöpfers zu wirken.
+Ein magisches Konstrukt, das mit einem Teil der Magie eines Hervorrufers
+verwoben und mit einer primitiven Elementarintelligenz verbunden ist, die aus
+einer äußeren Ebene beschworen wurde. Die Magie, mit der es geschmiedet wurde,
+verleiht ihm die Fähigkeit, einige der zerstörerischen Zauber seines Schöpfers
+zu wirken.
 %%%%
 sphinx
 
-Ein furchterregender Hybrid mit dem Kopf einer Frau, dem Körper eines Löwen und den Flügeln eines Adlers, der in der Lage ist, die Gedanken seiner Feinde zu vernebeln und böse Magie anzuwenden.
+Ein furchterregender Hybrid mit dem Kopf einer Frau, dem Körper eines Löwen und
+den Flügeln eines Adlers, der in der Lage ist, die Gedanken seiner Feinde zu
+vernebeln und böse Magie anzuwenden.
 %%%%
 spriggan
 
-Ein kleiner Humanoid, der bis auf die Größe einem Menschen oder Elf ähnelt. Er bewegt sich mit hoher Geschwindigkeit und spielt den Leuten gerne schmutzige Streiche.
+Ein kleiner Humanoid, der bis auf die Größe einem Menschen oder Elf ähnelt. Er
+bewegt sich mit hoher Geschwindigkeit und spielt den Leuten gerne schmutzige
+Streiche.
 %%%%
 spriggan air mage
 
@@ -1751,55 +2454,75 @@ Ein relativ mächtiger Spriggan, der sich rücksichtslos in den Kampf stürzt.
 %%%%
 spriggan defender
 
-Ein elitärer, gut ausgerüsteter Spriggan-Krieger, der für seine unglaubliche Beweglichkeit und seinen Umgang mit hochmodernen Waffen bekannt ist.
+Ein elitärer, gut ausgerüsteter Spriggan-Krieger, der für seine unglaubliche
+Beweglichkeit und seinen Umgang mit hochmodernen Waffen bekannt ist.
 %%%%
 spriggan druid
 
-Ein Spriggan, dessen Verbindung zu Vögeln und Tieren außergewöhnlich stark ist. Er ruft den Zorn der Natur auf jeden herab, der auch nur einen Zweig abbricht.
+Ein Spriggan, dessen Verbindung zu Vögeln und Tieren außergewöhnlich stark ist.
+Er ruft den Zorn der Natur auf jeden herab, der auch nur einen Zweig abbricht.
 %%%%
 spriggan rider
 
-Ein Spriggan, der eine Hornisse als Reittier gezähmt hat und dessen Aufgabe es ist, die Spriggan-Sümpfe und -Steinhaufen vor Eindringlingen zu schützen.
+Ein Spriggan, der eine Hornisse als Reittier gezähmt hat und dessen Aufgabe es
+ist, die Spriggan-Sümpfe und -Steinhaufen vor Eindringlingen zu schützen.
 %%%%
 starcursed mass
 
-Eine Masse aus Sternentrümmern, die mit der kränklichen Fäulnis eines sterbenden Sterns glüht und für immer lautlos mit einer Stimme schreit, die für Sterbliche unerreichbar ist. Ihre Form schwankt ständig, teilt sich spontan und zieht sich bei Bedrohung wieder zurück. Wenn sie geteilt ist, kann ihr ohrenbetäubender Chor aus Schreien selbst die tapfersten Krieger überwältigen und sie betäubt und hilflos zurücklassen.
+Eine Masse aus Sternentrümmern, die mit der kränklichen Fäulnis eines sterbenden
+Sterns glüht und für immer lautlos mit einer Stimme schreit, die für Sterbliche
+unerreichbar ist. Ihre Form schwankt ständig, teilt sich spontan und zieht sich
+bei Bedrohung wieder zurück. Wenn sie geteilt ist, kann ihr ohrenbetäubender
+Chor aus Schreien selbst die tapfersten Krieger überwältigen und sie betäubt und
+hilflos zurücklassen.
 %%%%
 starspawn tentacle
 
-Das sich windende Anhängsel einer mit Tentakeln bewehrten Sternenbrut, das nahezu jede Beute packen und zurückziehen kann, um sie zu verschlingen. Jeder ihm zugefügte Schaden schadet der gesamten Kreatur.
+Das sich windende Anhängsel einer mit Tentakeln bewehrten Sternenbrut, das
+nahezu jede Beute packen und zurückziehen kann, um sie zu verschlingen. Jeder
+ihm zugefügte Schaden schadet der gesamten Kreatur.
 %%%%
 starspawn tentacle segment
 
-Die gewundene Länge eines ausgestreckten Sternenbrut-Tentakels. Jeder ihm zugefügte Schaden verletzt die ganze Kreatur.
+Die gewundene Länge eines ausgestreckten Sternenbrut-Tentakels. Jeder ihm
+zugefügte Schaden verletzt die ganze Kreatur.
 %%%%
 statue
 
-Ein Stück Granitskulptur mit leuchtend roten Augen. Obwohl es an seiner Basis festgewurzelt ist, kann es dennoch Teile von sich bewegen.
+Ein Stück Granitskulptur mit leuchtend roten Augen. Obwohl es an seiner Basis
+festgewurzelt ist, kann es dennoch Teile von sich bewegen.
 %%%%
 steam dragon
 
-Ein relativ kleiner grauer Drache mit widerstandsfähig wirkender, schuppiger Haut und aus dessen Maul Dampf strömt.
+Ein relativ kleiner grauer Drache mit widerstandsfähig wirkender, schuppiger
+Haut und aus dessen Maul Dampf strömt.
 %%%%
 stone giant
 
-Ein gigantischer Humanoid mit grauer Haut, die fast so hart wie Stein ist. Er trägt mehrere Felsbrocken und ist durchaus in der Lage, diese über große Distanzen zu schleudern.
+Ein gigantischer Humanoid mit grauer Haut, die fast so hart wie Stein ist. Er
+trägt mehrere Felsbrocken und ist durchaus in der Lage, diese über große
+Distanzen zu schleudern.
 %%%%
 storm dragon
 
-Ein mächtiger Drache mit einer Haut aus dicken, matten Schuppen, die fast wie blaues Gummi aussehen, und riesigen schuppigen Flügeln, aus denen Funken sprühen.
+Ein mächtiger Drache mit einer Haut aus dicken, matten Schuppen, die fast wie
+blaues Gummi aussehen, und riesigen schuppigen Flügeln, aus denen Funken
+sprühen.
 %%%%
 sun demon
 
-Eine dämonische Gestalt, die mit der Hitze und Wut eines gefallenen Sterns strahlt.
+Eine dämonische Gestalt, die mit der Hitze und Wut eines gefallenen Sterns
+strahlt.
 %%%%
 swamp dragon
 
-Ein schleimiger Drache, dessen knorrige Haut mit Sumpfschlamm bedeckt ist. Giftige Gase tropfen aus seiner Schnauze.
+Ein schleimiger Drache, dessen knorrige Haut mit Sumpfschlamm bedeckt ist.
+Giftige Gase tropfen aus seiner Schnauze.
 %%%%
 swamp drake
 
-Ein kleiner, schleimiger Drache, der mit Sumpfschlamm bedeckt ist und einen fürchterlichen Gestank verströmt.
+Ein kleiner, schleimiger Drache, der mit Sumpfschlamm bedeckt ist und einen
+fürchterlichen Gestank verströmt.
 %%%%
 swamp worm
 
@@ -1807,11 +2530,13 @@ Ein großer, schleimiger Wurm, der Sümpfe und Marschen gut durchqueren kann.
 %%%%
 tarantella
 
-Eine kleine, aber sehr gefürchtete Spinne, deren Zauberbiss ihre Opfer in einen wilden Tanz ausbrechen lässt.
+Eine kleine, aber sehr gefürchtete Spinne, deren Zauberbiss ihre Opfer in einen
+wilden Tanz ausbrechen lässt.
 %%%%
 tengu
 
-Eine menschenähnliche Figur mit dem Kopf und den Krallen eines Vogels. Ihr wilder Kampfgeist täuscht über ihre zerbrechliche Erscheinung hinweg.
+Eine menschenähnliche Figur mit dem Kopf und den Krallen eines Vogels. Ihr
+wilder Kampfgeist täuscht über ihre zerbrechliche Erscheinung hinweg.
 %%%%
 tengu conjurer
 
@@ -1819,19 +2544,23 @@ Ein Tengu mit einem Talent für die zerstörerischen magischen Künste.
 %%%%
 tengu reaver
 
-Ein elitärer, wilder Tengu mit hervorragenden Fähigkeiten im Umgang mit Stahl und Zaubersprüchen.
+Ein elitärer, wilder Tengu mit hervorragenden Fähigkeiten im Umgang mit Stahl
+und Zaubersprüchen.
 %%%%
 tengu warrior
 
-Ein besonders blutrünstiger Tengu, der sich dafür entschieden hat, seine Fertigkeiten im Kampf und im Umgang mit Waffen statt im Zaubern zu verfeinern.
+Ein besonders blutrünstiger Tengu, der sich dafür entschieden hat, seine
+Fertigkeiten im Kampf und im Umgang mit Waffen statt im Zaubern zu verfeinern.
 %%%%
 tentacle
 
-Der mächtige Tentakel eines Kraken. Jeder ihm zugefügte Schaden schadet der gesamten Kreatur.
+Der mächtige Tentakel eines Kraken. Jeder ihm zugefügte Schaden schadet der
+gesamten Kreatur.
 %%%%
 tentacle segment
 
-Ein Teil des mächtigen Tentakels eines Kraken. Jeder ihm zugefügte Schaden schadet der gesamten Kreatur.
+Ein Teil des mächtigen Tentakels eines Kraken. Jeder ihm zugefügte Schaden
+schadet der gesamten Kreatur.
 %%%%
 
 tentacled monstrosity
@@ -1839,35 +2568,48 @@ Eine sich windende Masse aus Tentakeln, alle mit fauligem Schleim bedeckt.
 %%%%
 tentacled starspawn
 
-Ein schwerfälliges Maul, das von einer Masse gewundener Tentakeln umhüllt ist. Wenn es Beute entdeckt, schnellt es mit seinen Tentakeln nach vorne und zieht das Opfer direkt in seinen wartenden Schlund.
+Ein schwerfälliges Maul, das von einer Masse gewundener Tentakeln umhüllt ist.
+Wenn es Beute entdeckt, schnellt es mit seinen Tentakeln nach vorne und zieht
+das Opfer direkt in seinen wartenden Schlund.
 %%%%
 thrashing horror
 
-Eine brodelnde Masse aus gelbem Fleisch. Sie schlägt unregelmäßig um sich und lässt ihre Feinde unter der Wucht ihrer Schläge taumeln.
+Eine brodelnde Masse aus gelbem Fleisch. Sie schlägt unregelmäßig um sich und
+lässt ihre Feinde unter der Wucht ihrer Schläge taumeln.
 %%%%
 titan
 
-Ein riesiger, Donnerkeil schleudernder, von Blitz durchdrungener Humanoid. Er ist selbst für Riesen ungewöhnlich groß und mächtig.
+Ein riesiger, Donnerkeil schleudernder, von Blitz durchdrungener Humanoid. Er
+ist selbst für Riesen ungewöhnlich groß und mächtig.
 %%%%
 thorn hunter
 
-Eine räuberische Sumpfpflanze, die über Beweglichkeit und rudimentäre Intelligenz verfügt. Sie fängt ihre Beute mit Dornenstängeln und spießt die gefangenen Tiere dann mit ihren messerscharfen Dornen auf.
+Eine räuberische Sumpfpflanze, die über Beweglichkeit und rudimentäre
+Intelligenz verfügt. Sie fängt ihre Beute mit Dornenstängeln und spießt die
+gefangenen Tiere dann mit ihren messerscharfen Dornen auf.
 %%%%
 toadstool
 
-Eine kurzlebige Pilzart, die typischerweise auf oder um verrottende organische Stoffe herum vorkommt.
+Eine kurzlebige Pilzart, die typischerweise auf oder um verrottende organische
+Stoffe herum vorkommt.
 %%%%
 toenail golem
 
-Eine riesige animierte Statue, die vollständig aus abgeschnittenen Fußnägeln besteht. Manche Leute haben einfach zu viel Zeit.
+Eine riesige animierte Statue, die vollständig aus abgeschnittenen Fußnägeln
+besteht. Manche Leute haben einfach zu viel Zeit.
 %%%%
 tormentor
 
-Ein bösartiger Teufel, der mit allerlei Klauen, Stacheln und grausamen Haken ausgestattet ist. Er kann jedem, der dumm genug ist, ihn anzuschauen, qualvolle Qualen zufügen.
+Ein bösartiger Teufel, der mit allerlei Klauen, Stacheln und grausamen Haken
+ausgestattet ist. Er kann jedem, der dumm genug ist, ihn anzuschauen, qualvolle
+Qualen zufügen.
 %%%%
 torpor snail
 
-Eine schwere Schnecke mit steinharter Schale. Sie soll in irgendeiner Weise mit dem Gott Cheibriados verbunden sein. Schon ihre bloße Anwesenheit verlangsamt die Bewegungen unvorsichtiger Abenteurer und macht sie zu einer leichten Beute für ihre furchterregenden, ständig knirschenden Radulae.
+Eine schwere Schnecke mit steinharter Schale. Sie soll in irgendeiner Weise mit
+dem Gott Cheibriados verbunden sein. Schon ihre bloße Anwesenheit verlangsamt
+die Bewegungen unvorsichtiger Abenteurer und macht sie zu einer leichten Beute
+für ihre furchterregenden, ständig knirschenden Radulae.
 %%%%
 torturous demonspawn
 
@@ -1879,7 +2621,9 @@ Eine Puppe für Kampfübungen.
 %%%%
 troll
 
-Eine riesige und körperlich starke menschenähnliche Kreatur. Sie ist nicht sehr intelligent, hat aber viel Muskelkraft. Ihre dicke, knotige Haut heilt die meisten Wunden schnell.
+Eine riesige und körperlich starke menschenähnliche Kreatur. Sie ist nicht sehr
+intelligent, hat aber viel Muskelkraft. Ihre dicke, knotige Haut heilt die
+meisten Wunden schnell.
 %%%%
 twister
 
@@ -1887,15 +2631,20 @@ Ein wirbelnder Froststrudel.
 %%%%
 two-headed ogre
 
-Ein riesiger Oger mit zwei Köpfen auf seinem aufgeblähten Körper. Er kann in jeder riesigen Hand eine Waffe halten.
+Ein riesiger Oger mit zwei Köpfen auf seinem aufgeblähten Körper. Er kann in
+jeder riesigen Hand eine Waffe halten.
 %%%%
 tyrant leech
 
-Ein außergewöhnlich aggressiver, blutsaugender Ringelwurm, der in Sümpfen und Marschgebieten gedeiht.
+Ein außergewöhnlich aggressiver, blutsaugender Ringelwurm, der in Sümpfen und
+Marschgebieten gedeiht.
 %%%%
 Tzitzimitl
 
-Eine schreckliche, gefallene Gottheit mit Kiefern aus knirschendem Stein und einer Halskette aus sternförmigen Organen. Sie verbreitet Krankheit und Verzweiflung und wartet geduldig auf das Ende der Tage, an dem sie die Sonne verschlingen wird.
+Eine schreckliche, gefallene Gottheit mit Kiefern aus knirschendem Stein und
+einer Halskette aus sternförmigen Organen. Sie verbreitet Krankheit und
+Verzweiflung und wartet geduldig auf das Ende der Tage, an dem sie die Sonne
+verschlingen wird.
 %%%%
 ufetubus
 
@@ -1903,23 +2652,29 @@ Ein plappernder und kreischender kleiner Dämon.
 %%%%
 ugly thing
 
-Ein hässliches Ding. Der Legende nach handelt es sich um die außerirdische Brut eines Zuchtexperiments eines Zauberers. Igitt.
+Ein hässliches Ding. Der Legende nach handelt es sich um die außerirdische Brut
+eines Zuchtexperiments eines Zauberers. Igitt.
 %%%%
 unseen horror
 
-Ein Wesen, das kaum jemand zu Gesicht bekommt; die wenigen, die es je gesehen haben, hätten es lieber nicht gesehen. Es bewegt sich unregelmäßig.
+Ein Wesen, das kaum jemand zu Gesicht bekommt; die wenigen, die es je gesehen
+haben, hätten es lieber nicht gesehen. Es bewegt sich unregelmäßig.
 %%%%
 ushabti
 
-Eine Grabfigur aus Stein, die in Gräbern aufbewahrt wird, um den Verstorbenen auf ihrem Weg durchs Jenseits zu dienen. Sie ist mit Zaubersprüchen versehen, die die Bestatteten für alle Ewigkeit schützen sollen.
+Eine Grabfigur aus Stein, die in Gräbern aufbewahrt wird, um den Verstorbenen
+auf ihrem Weg durchs Jenseits zu dienen. Sie ist mit Zaubersprüchen versehen,
+die die Bestatteten für alle Ewigkeit schützen sollen.
 %%%%
 vampire
 
-Ein Mensch, der mit dem Vampirismus verfluchtet ist, in einem Zustand zwischen Leben und Untod treibt und ständig nach dem Blut der Lebenden hungert.
+Ein Mensch, der mit dem Vampirismus verfluchtet ist, in einem Zustand zwischen
+Leben und Untod treibt und ständig nach dem Blut der Lebenden hungert.
 %%%%
 vampire bat
 
-Eine große schwarze Fledermaus mit bösartigen Reißzähnen, die sich von Blut ernährt. Dies ist die bevorzugte Form von Vampiren in Verkleidung.
+Eine große schwarze Fledermaus mit bösartigen Reißzähnen, die sich von Blut
+ernährt. Dies ist die bevorzugte Form von Vampiren in Verkleidung.
 %%%%
 vampire knight
 
@@ -1927,11 +2682,15 @@ Ein mächtiger Vampir-Adliger, der seine Kampfkraft mit dunkler Magie ergänzt.
 %%%%
 vampire mage
 
-Ein Zauberer, der durch Zufall oder Absicht mit dem Fluch des Vampirs belegt wurde. Ungeachtet dessen hat er durch den Untod schließlich die Kunst der schwarzen Magie gemeistert.
+Ein Zauberer, der durch Zufall oder Absicht mit dem Fluch des Vampirs belegt
+wurde. Ungeachtet dessen hat er durch den Untod schließlich die Kunst der
+schwarzen Magie gemeistert.
 %%%%
 vampire mosquito
 
-Eine Mücke, die sich von verdorbenem Blut ernährt und sich in ein abstoßendes und widerliches untotes Insekt verwandelt hat, das versucht, seine Opfer bis zum letzten Tropfen auszusaugen.
+Eine Mücke, die sich von verdorbenem Blut ernährt und sich in ein abstoßendes
+und widerliches untotes Insekt verwandelt hat, das versucht, seine Opfer bis zum
+letzten Tropfen auszusaugen.
 %%%%
 vault guard
 
@@ -1939,30 +2698,43 @@ Ein schwer bewaffneter und gepanzerter Wächter der Gewölbe.
 %%%%
 vault sentinel
 
-Ein wachsamer Kundschafter, der seine Kameraden schnell auf die Anwesenheit von Eindringlingen aufmerksam macht. Er markiert solche Eindringlinge mit mächtiger Magie, sodass sie sich nicht vor Verfolgern verstecken können, egal wohin sie fliehen.
+Ein wachsamer Kundschafter, der seine Kameraden schnell auf die Anwesenheit von
+Eindringlingen aufmerksam macht. Er markiert solche Eindringlinge mit mächtiger
+Magie, sodass sie sich nicht vor Verfolgern verstecken können, egal wohin sie
+fliehen.
 %%%%
 vault warden
 
-Ein erfahrener Kommandant, der in der Lage ist, nahegelegene Türen und Treppen abzuriegeln, um Eindringlinge daran zu hindern, weiter vorzudringen oder lebend zu entkommen.
+Ein erfahrener Kommandant, der in der Lage ist, nahegelegene Türen und Treppen
+abzuriegeln, um Eindringlinge daran zu hindern, weiter vorzudringen oder lebend
+zu entkommen.
 %%%%
 very ugly thing
 
-Ein sehr hässliches Ding. Der Legende nach handelt es sich um die außerirdische Brut eines Zuchtexperiments eines Zauberers. Doppelt igitt!
+Ein sehr hässliches Ding. Der Legende nach handelt es sich um die außerirdische
+Brut eines Zuchtexperiments eines Zauberers. Doppelt igitt!
 %%%%
 vine stalker
 
-Eine bizarre symbiotische Kreatur, bestehend aus einer fleischfressenden Rebe, die auf magische Weise mit einem Humanoiden verbunden wurde.
+Eine bizarre symbiotische Kreatur, bestehend aus einer fleischfressenden Rebe,
+die auf magische Weise mit einem Humanoiden verbunden wurde.
 %%%%
 wandering mushroom
 
-Ein großer, fleischiger Pilz, der langsam durch den Dungeon wandert. Er ist von Natur aus neugierig und zugleich unglaublich scheu und verfolgt die Objekte seiner Neugier nur, wenn sie außer Sichtweite sind. Giftige Sporen schweben um seinen Hut.
+Ein großer, fleischiger Pilz, der langsam durch den Dungeon wandert. Er ist von
+Natur aus neugierig und zugleich unglaublich scheu und verfolgt die Objekte
+seiner Neugier nur, wenn sie außer Sichtweite sind. Giftige Sporen schweben um
+seinen Hut.
 %%%%
 warg
 
-Ein besonders bösartig aussehender Wolf, der sich normalerweise in der Gesellschaft von Orks aufhält.
+Ein besonders bösartig aussehender Wolf, der sich normalerweise in der
+Gesellschaft von Orks aufhält.
 %%%%
 war gargoyle
-Eine seltene Art von Gargoyle, der aus einer Statue aus massivem Stahl gefertigt und mit bösartiger Stärke, Geschwindigkeit und waffenfähigem Atem ausgestattet ist.
+Eine seltene Art von Gargoyle, der aus einer Statue aus massivem Stahl gefertigt
+und mit bösartiger Stärke, Geschwindigkeit und waffenfähigem Atem ausgestattet
+ist.
 %%%%
 warmonger
 
@@ -1970,19 +2742,25 @@ warmonger
 %%%%
 water elemental
 
-Ein Geist aus der Elementarebene des Wassers. Er existiert in dieser Welt als Teil eines Gewässers und kann andere Wesen in seiner Gestalt verschlingen und ihnen so Atem und Stimme rauben.
+Ein Geist aus der Elementarebene des Wassers. Er existiert in dieser Welt als
+Teil eines Gewässers und kann andere Wesen in seiner Gestalt verschlingen und
+ihnen so Atem und Stimme rauben.
 %%%%
 water moccasin
 
-Eine ziemlich große, giftige braune Schlange. Sie lebt normalerweise in der Nähe von Wasser und ist eine gute Schwimmerin.
+Eine ziemlich große, giftige braune Schlange. Sie lebt normalerweise in der Nähe
+von Wasser und ist eine gute Schwimmerin.
 %%%%
 water nymph
 
-Ein launischer Naturgeist, der tief mit dem Wasser verbunden ist, in dem er lebt. Wohin es auch fließt, kann er auch, und Teiche und Flüsse wogen und schwappen nach Lust und Laune.
+Ein launischer Naturgeist, der tief mit dem Wasser verbunden ist, in dem er
+lebt. Wohin es auch fließt, kann er auch, und Teiche und Flüsse wogen und
+schwappen nach Lust und Laune.
 %%%%
 white draconian
 
-Ein muskulöser Humanoid mit weißen Schuppen, einem Reptilienschwanz und kleinen Flügeln.
+Ein muskulöser Humanoid mit weißen Schuppen, einem Reptilienschwanz und kleinen
+Flügeln.
 %%%%
 white imp
 
@@ -1990,19 +2768,25 @@ Ein kleiner, boshafter Dämon, bedeckt mit Frost.
 %%%%
 wight
 
-Ein uralter Krieger, der durch seinen Wunsch, in der Schlacht ehrenvoll zu sterben, in einem Zustand ewigen Untodes gehalten wird.
+Ein uralter Krieger, der durch seinen Wunsch, in der Schlacht ehrenvoll zu
+sterben, in einem Zustand ewigen Untodes gehalten wird.
 %%%%
 will-o-the-wisp
 
-Ein grün leuchtendes gasförmiges Gebilde, das unregelmäßig flackert und pulsiert, während es durch die Luft schwebt. Reisende verwechseln es schon mit entfernten Laternen – ein Fehler, der selten zweimal passiert.
+Ein grün leuchtendes gasförmiges Gebilde, das unregelmäßig flackert und
+pulsiert, während es durch die Luft schwebt. Reisende verwechseln es schon mit
+entfernten Laternen – ein Fehler, der selten zweimal passiert.
 %%%%
 wind drake
 
-Ein kleiner, aber mächtiger Drache, der im Vergleich zu seinen Artgenossen besonders gut darin ist, die ihn umgebenden Luftströme zu manipulieren. Er kann kräftige Windstöße ausstoßen.
+Ein kleiner, aber mächtiger Drache, der im Vergleich zu seinen Artgenossen
+besonders gut darin ist, die ihn umgebenden Luftströme zu manipulieren. Er kann
+kräftige Windstöße ausstoßen.
 %%%%
 wizard
 
-Eine ziemlich exzentrische Person, die sich mit allen möglichen geheimnisvollen Kuriositäten beschäftigt.
+Eine ziemlich exzentrische Person, die sich mit allen möglichen geheimnisvollen
+Kuriositäten beschäftigt.
 %%%%
 wolf
 
@@ -2010,11 +2794,16 @@ Ein starker Wildhund mit scharfen Zähnen und gesundem Appetit.
 %%%%
 wolf spider
 
-Eine haarige, schnell bewegliche Jagdspinne mit bösartigen Mandibeln. Sie durchstreift den Kerker auf der Suche nach Beute, die sie mit ihrem tödlichen Gift tötet.
+Eine haarige, schnell bewegliche Jagdspinne mit bösartigen Mandibeln. Sie
+durchstreift den Kerker auf der Suche nach Beute, die sie mit ihrem tödlichen
+Gift tötet.
 %%%%
 worldbinder
 
-Eine Wolke aus dichtem Nebel, mit schwachen, kraftlosen Klauen, die ständig nach vorn greifen und dann wieder im Nebel verschwinden. Bei Bedrohung ruft es Kreaturen herbei, die in die Leere zwischen den Realitäten verbannt wurden, und nutzt sie zur Selbstverteidigung.
+Eine Wolke aus dichtem Nebel, mit schwachen, kraftlosen Klauen, die ständig nach
+vorn greifen und dann wieder im Nebel verschwinden. Bei Bedrohung ruft es
+Kreaturen herbei, die in die Leere zwischen den Realitäten verbannt wurden, und
+nutzt sie zur Selbstverteidigung.
 %%%%
 worm
 
@@ -2022,35 +2811,48 @@ Ein riesiger, schleimig glänzender Ringelwurm mit ungewöhnlich großen Zähnen
 %%%%
 wraith
 
-Eine Wolke aus schwarzem Nebel umgibt eine körperlose Skelettgestalt. Seine Augen leuchten hell vor unheiliger Bosheit und Hunger nach Lebensessenz, von der es sich ernährt.
+Eine Wolke aus schwarzem Nebel umgibt eine körperlose Skelettgestalt. Seine
+Augen leuchten hell vor unheiliger Bosheit und Hunger nach Lebensessenz, von der
+es sich ernährt.
 %%%%
 wretched star
 
-Ein Zusammenfluss von überirdischem Licht und Energie, überflutet mit unnatürlichen Farben und seltsamen Formen, die kein normales Wesen wahrnehmen sollte. Es erfüllt alle, die sich in seiner Gegenwart befinden, mit der Unordnung des Abgrunds.
+Ein Zusammenfluss von überirdischem Licht und Energie, überflutet mit
+unnatürlichen Farben und seltsamen Formen, die kein normales Wesen wahrnehmen
+sollte. Es erfüllt alle, die sich in seiner Gegenwart befinden, mit der
+Unordnung des Abgrunds.
 %%%%
 wyvern
 
-Eine drachenähnliche Kreatur mit einem langen, spitzen Schwanz. Obwohl er kleiner und weniger furchterregend als echte Drachen ist, ist er dennoch ein Feind, mit dem man rechnen muss.
+Eine drachenähnliche Kreatur mit einem langen, spitzen Schwanz. Obwohl er
+kleiner und weniger furchterregend als echte Drachen ist, ist er dennoch ein
+Feind, mit dem man rechnen muss.
 %%%%
 yak
 
-Ein gewöhnliches Dungeonyak, bedeckt mit zotteligem Yakhaar und mit einem hässlichen Paar Yakhörner.
+Ein gewöhnliches Dungeonyak, bedeckt mit zotteligem Yakhaar und mit einem
+hässlichen Paar Yakhörner.
 %%%%
 yaktaur
 
-Ein Hybrid mit dem Oberkörper eines robusten Menschen auf dem Körper eines Yaks. Er ist hervorragend im Fernkampf und auch im Nahkampf ein beeindruckender Gegner.
+Ein Hybrid mit dem Oberkörper eines robusten Menschen auf dem Körper eines Yaks.
+Er ist hervorragend im Fernkampf und auch im Nahkampf ein beeindruckender
+Gegner.
 %%%%
 yaktaur captain
 
-Ein außergewöhnlich starker und brutaler Yaktaur, der in der Lage ist, seinen schwächeren Brüdern Befehle zu erteilen.
+Ein außergewöhnlich starker und brutaler Yaktaur, der in der Lage ist, seinen
+schwächeren Brüdern Befehle zu erteilen.
 %%%%
 yellow draconian
 
-Ein muskulöser Humanoid mit gelben Schuppen, einem Reptilienschwanz und kleinen Flügeln.
+Ein muskulöser Humanoid mit gelben Schuppen, einem Reptilienschwanz und kleinen
+Flügeln.
 %%%%
 ynoxinul
 
-Ein geflügelter Dämon, der mit glänzenden Metallschuppen bedeckt ist. Er hat eine Legion kleinerer Dämonen unter seinem Kommando.
+Ein geflügelter Dämon, der mit glänzenden Metallschuppen bedeckt ist. Er hat
+eine Legion kleinerer Dämonen unter seinem Kommando.
 %%%%
 zombie
 
@@ -2059,17 +2861,22 @@ Eine Leiche, die durch Nekromantie zum Untoten gemacht wurde.
 # Specials
 test spawner
 
-(Wenn Ihr dies außerhalb des Wiz-Modus oder der Arena seht, handelt es sich um einen Fehler.)
+(Wenn Ihr dies außerhalb des Wiz-Modus oder der Arena seht, handelt es sich um
+einen Fehler.)
 
-Was auch immer es ist, es kann durch das Beschwören von Schattenkreaturen zahllose Monster hervorbringen und ist selbst praktisch unzerstörbar.
+Was auch immer es ist, es kann durch das Beschwören von Schattenkreaturen
+zahllose Monster hervorbringen und ist selbst praktisch unzerstörbar.
 
-Um es zu zerstören, senkt die zentrale Aufzugssäule ab und pumpt dann Raketen in das Loch in seinem freiliegenden Gehirn, wenn die Säule eine entsprechende Höhe erreicht hat. Ihr könnt beim Herunterspringen eine weitere Rakete hinzufügen.
+Um es zu zerstören, senkt die zentrale Aufzugssäule ab und pumpt dann Raketen in
+das Loch in seinem freiliegenden Gehirn, wenn die Säule eine entsprechende Höhe
+erreicht hat. Ihr könnt beim Herunterspringen eine weitere Rakete hinzufügen.
 
 Oh wartet, falsches Spiel.
 %%%%
 ghost
 
-Die Überreste eines Monsters, das in einer älteren Version existierte, aber inzwischen entfernt wurde.
+Die Überreste eines Monsters, das in einer älteren Version existierte, aber
+inzwischen entfernt wurde.
 %%%%
 sensed monster
 
@@ -2077,19 +2884,23 @@ Ein feindliches Monster, dessen Anwesenheit entdeckt wurde.
 %%%%
 trivial sensed monster
 
-Ein trivial schwaches Monster, dessen Anwesenheit durch die Macht von Aschenzari enthüllt wurde.
+Ein trivial schwaches Monster, dessen Anwesenheit durch die Macht von Aschenzari
+enthüllt wurde.
 %%%%
 easy sensed monster
 
-Ein schwaches Monster, dessen Anwesenheit durch die Macht von Aschenzari enthüllt wurde.
+Ein schwaches Monster, dessen Anwesenheit durch die Macht von Aschenzari
+enthüllt wurde.
 %%%%
 tough sensed monster
 
-Ein ziemlich gefährliches Monster, dessen Anwesenheit durch die Macht von Aschenzari enthüllt wurde.
+Ein ziemlich gefährliches Monster, dessen Anwesenheit durch die Macht von
+Aschenzari enthüllt wurde.
 %%%%
 nasty sensed monster
 
-Ein sehr gefährliches Monster, dessen Anwesenheit durch die Macht von Aschenzari enthüllt wurde.
+Ein sehr gefährliches Monster, dessen Anwesenheit durch die Macht von Aschenzari
+enthüllt wurde.
 %%%%
 friendly sensed monster
 
@@ -2107,23 +2918,30 @@ Ein freundliches Monster, dessen Anwesenheit {{
 %%%%
 Cloud Mage
 
-Ein seltsamer Zauberer, der die Kontrolle über die Wolken erlangt hat und dabei geschickte und unheilvolle mystische Gesten macht.
+Ein seltsamer Zauberer, der die Kontrolle über die Wolken erlangt hat und dabei
+geschickte und unheilvolle mystische Gesten macht.
 %%%%
 Hellbinder
 
-Ein mächtiger Zauberer, umhüllt von geheimnisvollen Energien, der gottlose Zauberformeln murmelt.
+Ein mächtiger Zauberer, umhüllt von geheimnisvollen Energien, der gottlose
+Zauberformeln murmelt.
 %%%%
 Master Blaster
 
-Ein mächtiger alter Lich, der dafür berüchtigt ist, Menschen beim geringsten Anlass oder einfach aus einer Laune heraus mit mächtigen Hervorrufungen in die Luft zu jagen.
+Ein mächtiger alter Lich, der dafür berüchtigt ist, Menschen beim geringsten
+Anlass oder einfach aus einer Laune heraus mit mächtigen Hervorrufungen in die
+Luft zu jagen.
 %%%%
 Statue of Wucad Mu
 
-Eine Statue aus feinem, glasartigem, orangefarbenem Kristall. Sie stellt einen Mystiker namens Wucad Mu dar, der die Angelegenheiten des Geistes beherrschte. Sie ist mit Wucad Mus Kräften des mentalen Kampfes ausgestattet.
+Eine Statue aus feinem, glasartigem, orangefarbenem Kristall. Sie stellt einen
+Mystiker namens Wucad Mu dar, der die Angelegenheiten des Geistes beherrschte.
+Sie ist mit Wucad Mus Kräften des mentalen Kampfes ausgestattet.
 %%%%
 moon troll
 
-Eine bizarre Art intelligenter Trolle, die vor geheimnisvoller Kraft aus einer anderen Welt strotzen.
+Eine bizarre Art intelligenter Trolle, die vor geheimnisvoller Kraft aus einer
+anderen Welt strotzen.
 %%%%
 lunar statue
 
@@ -2131,7 +2949,8 @@ lunar statue
 %%%%
 air elementalist statue
 
-Eine zierliche Statue eines Tengu, der durch die Luft gleitet. Sie sieht ziemlich substanzlos aus.
+Eine zierliche Statue eines Tengu, der durch die Luft gleitet. Sie sieht
+ziemlich substanzlos aus.
 %%%%
 antique lich
 
@@ -2139,27 +2958,36 @@ Ein Lich, der im Laufe der Jahre teuer geworden ist.
 %%%%
 archer statue
 
-Eine Statue eines wunderschönen Elfenbogenschützen, aus feinstem Marmor gemeißelt. Sie hält einen Bogen hoch und scheint durch Magie belebt zu sein, sodass sie mit dem Bogen Eindringlinge mit Pfeilen durchlöchern kann.
+Eine Statue eines wunderschönen Elfenbogenschützen, aus feinstem Marmor
+gemeißelt. Sie hält einen Bogen hoch und scheint durch Magie belebt zu sein,
+sodass sie mit dem Bogen Eindringlinge mit Pfeilen durchlöchern kann.
 %%%%
 bog mummy
 
-Eine untote Gestalt, konserviert durch das Brackwasser eines Moores. Sie hat bereits stark zu verwesen begonnen und sieht zerbrechlich aus.
+Eine untote Gestalt, konserviert durch das Brackwasser eines Moores. Sie hat
+bereits stark zu verwesen begonnen und sieht zerbrechlich aus.
 %%%%
 captured wizard
 
-Ein Zauberer mit wildem Blick, dem die Zunge herausgeschnitten wurde, der wild murmelt und mit den Armen wedelt, jedoch nicht in der Lage ist, einen einzigen Zauber zu wirken.
+Ein Zauberer mit wildem Blick, dem die Zunge herausgeschnitten wurde, der wild
+murmelt und mit den Armen wedelt, jedoch nicht in der Lage ist, einen einzigen
+Zauber zu wirken.
 %%%%
 charred statue
 
-Eine mit Flammen erfüllte Statue, die es ihr ermöglicht, einfache, auf Feuer basierende Hervorrufungen durchzuführen.
+Eine mit Flammen erfüllte Statue, die es ihr ermöglicht, einfache, auf Feuer
+basierende Hervorrufungen durchzuführen.
 %%%%
 Cigotuvi's Monster
 
-Eine Furcht erregende Kreatur, die aus den Körperteilen jeder nur denkbaren monströsen Kreatur zusammengesetzt zu sein scheint und aus deren Gestalt sich windende Tentakeln entsprießen.
+Eine Furcht erregende Kreatur, die aus den Körperteilen jeder nur denkbaren
+monströsen Kreatur zusammengesetzt zu sein scheint und aus deren Gestalt sich
+windende Tentakeln entsprießen.
 %%%%
 conjurer statue
 
-Eine Statue, die die mächtigsten Hervorrufungen beherrscht, die Iskenderun je erdacht hat.
+Eine Statue, die die mächtigsten Hervorrufungen beherrscht, die Iskenderun je
+erdacht hat.
 %%%%
 deformed humanoid
 
@@ -2167,23 +2995,28 @@ Ein armes Geschöpf, das schrecklich deformiert aussieht.
 %%%%
 demonic plant
 
-Eine dämonische Parodie einer Pflanze, bedeckt mit mysteriösen Fortsätzen und sich windenden Tentakeln. Sie scheint harmlos zu sein.
+Eine dämonische Parodie einer Pflanze, bedeckt mit mysteriösen Fortsätzen und
+sich windenden Tentakeln. Sie scheint harmlos zu sein.
 %%%%
 dimme
 
-Eine schreckliche Kreatur mit dämonischen Vorfahren. Ihre Präsenz ist erschreckend, aber übernatürlich fesselnd.
+Eine schreckliche Kreatur mit dämonischen Vorfahren. Ihre Präsenz ist
+erschreckend, aber übernatürlich fesselnd.
 %%%%
 drunken dwarf
 
-Ein Zwerg, der anscheinend als Bierqualitätstester arbeitet und die Arbeit ein wenig zu sehr genießt.
+Ein Zwerg, der anscheinend als Bierqualitätstester arbeitet und die Arbeit ein
+wenig zu sehr genießt.
 %%%%
 earth elementalist statue
 
-Eine schlichte Statue eines Zwergs mit einer Spitzhacke. Sie sieht unglaublich schwer aus.
+Eine schlichte Statue eines Zwergs mit einer Spitzhacke. Sie sieht unglaublich
+schwer aus.
 %%%%
 fire elementalist statue
 
-Eine kunstvoll gearbeitete Statue eines Orks, der eine Fackel hochhält, aus schwarzem Basalt gehauen. Die Luft um ihn herum schimmert.
+Eine kunstvoll gearbeitete Statue eines Orks, der eine Fackel hochhält, aus
+schwarzem Basalt gehauen. Die Luft um ihn herum schimmert.
 %%%%
 flesh golem
 
@@ -2203,7 +3036,8 @@ Eine riesige, aufgeblähte Fledermaus.
 %%%%
 greater air elemental
 
-Ein mächtiger Geist aus der elementaren Ebene der Luft, umgeben von einem tödlichen Frostwirbel.
+Ein mächtiger Geist aus der elementaren Ebene der Luft, umgeben von einem
+tödlichen Frostwirbel.
 %%%%
 ice bat
 
@@ -2215,11 +3049,13 @@ Ein Kobold, der so verzaubert wurde, dass er in einem Feuersturm explodiert.
 %%%%
 mad acolyte of Lugonu
 
-Ein ergebener Anhänger von Lugonu, der durch jahrelanges Leben im Abgrund in den Wahnsinn getrieben wurde.
+Ein ergebener Anhänger von Lugonu, der durch jahrelanges Leben im Abgrund in den
+Wahnsinn getrieben wurde.
 %%%%
 malarious merfolk avatar
 
-Ein junges Meervolk, das schwer krank aussieht, aber dennoch in der Lage ist, sein Publikum zu verzaubern.
+Ein junges Meervolk, das schwer krank aussieht, aber dennoch in der Lage ist,
+sein Publikum zu verzaubern.
 %%%%
 master elementalist
 
@@ -2231,12 +3067,14 @@ Eine riesige schwarze Fledermaus.
 %%%%
 microbat
 
-Eine Fledermaus, die trotz ihres Namens nicht kleiner ist als eine Riesenfledermaus.
+Eine Fledermaus, die trotz ihres Namens nicht kleiner ist als eine
+Riesenfledermaus.
 %%%%
 # Sprint only, too unhinged for regular games...
 oklob plant annihilator
 
-Eine bloße Pflanze, die durch eine unfassbare Zauberei irgendwie Empfindungsvermögen und die Fähigkeit zur Anwendung von Magie erlangt hat.
+Eine bloße Pflanze, die durch eine unfassbare Zauberei irgendwie
+Empfindungsvermögen und die Fähigkeit zur Anwendung von Magie erlangt hat.
 %%%%
 oklob plant conjurer
 
@@ -2268,11 +3106,14 @@ oklob sapling wizard
 %%%%
 orb golem
 
-Ein Metallgolem, der vor magischer Energie knistert. Er muss von einem wirklich hinterhältigen Zauberer erschaffen worden sein, oder vielleicht von jemandem, der falsch gehört hat, welche Monster im Reich von Zot zu finden sind.
+Ein Metallgolem, der vor magischer Energie knistert. Er muss von einem wirklich
+hinterhältigen Zauberer erschaffen worden sein, oder vielleicht von jemandem,
+der falsch gehört hat, welche Monster im Reich von Zot zu finden sind.
 %%%%
 orb of electricity
 
-Eine massive schwebende Kugel. Sie ähnelt einem Kugelblitz, sieht aber wesentlich stabiler aus.
+Eine massive schwebende Kugel. Sie ähnelt einem Kugelblitz, sieht aber
+wesentlich stabiler aus.
 %%%%
 # I'm not sure how widely cosmogonical Norse myths are known to an average
 # reader; Crawl's audience tends to be far more educated though, so let's
@@ -2280,7 +3121,9 @@ Eine massive schwebende Kugel. Sie ähnelt einem Kugelblitz, sieht aber wesentli
 # obscure.
 orb of ice
 
-Eine Kugel aus Ureis, die in der Luft schwebt. Sie soll ein Relikt aus alten Zeiten sein, als die Welt eine Leere war, umgeben von Reichen endlosen Feuers und endloser Kälte.
+Eine Kugel aus Ureis, die in der Luft schwebt. Sie soll ein Relikt aus alten
+Zeiten sein, als die Welt eine Leere war, umgeben von Reichen endlosen Feuers
+und endloser Kälte.
 %%%%
 petrified plant
 
@@ -2288,15 +3131,19 @@ Eine gewöhnliche Pflanze, die zu Stein geworden ist.
 %%%%
 phase bat
 
-Eine seltsame, leuchtende Fledermaus, die durch mehr Dimensionen flattert als die durchschnittliche Fledermaus.
+Eine seltsame, leuchtende Fledermaus, die durch mehr Dimensionen flattert als
+die durchschnittliche Fledermaus.
 %%%%
 phase spider
 
-Eine außerweltliche Spinne, die sich über kurze und mittlere Distanzen fortbewegen kann, indem sie kurzzeitig die Realitätsebenen wechselt, um ihre Beute besser fangen zu können.
+Eine außerweltliche Spinne, die sich über kurze und mittlere Distanzen
+fortbewegen kann, indem sie kurzzeitig die Realitätsebenen wechselt, um ihre
+Beute besser fangen zu können.
 %%%%
 pristine statue
 
-Eine makellos geformte Porphyrstatue eines Bogenschützen, der bereit ist, einen Bolzen abzuschießen, mit einem vollen Köcher an der Hüfte.
+Eine makellos geformte Porphyrstatue eines Bogenschützen, der bereit ist, einen
+Bolzen abzuschießen, mit einem vollen Köcher an der Hüfte.
 %%%%
 rotten bat
 
@@ -2304,11 +3151,13 @@ Eine Fledermaus, deren Verfallsdatum weit überschritten ist.
 %%%%
 sickly merfolk siren
 
-Ein junges Meervolk, das ziemlich krank aussieht, aber immer noch die Macht hat, seine Opfer zu hypnotisieren.
+Ein junges Meervolk, das ziemlich krank aussieht, aber immer noch die Macht hat,
+seine Opfer zu hypnotisieren.
 %%%%
 skeletal bat
 
-Ein Fledermausskelett ohne den Anstand, regungslos liegen zu bleiben, wie es sich für tote Fledermäuse gehört.
+Ein Fledermausskelett ohne den Anstand, regungslos liegen zu bleiben, wie es
+sich für tote Fledermäuse gehört.
 %%%%
 spriggan baker
 
@@ -2316,11 +3165,14 @@ Ein Spriggan, der die Kochkunst beherrscht.
 %%%%
 water elementalist statue
 
-Eine glatte Statue eines wunderschönen Meermenschen, der in einem Brunnen badet, geformt aus cremigem, leicht rosafarbenem Travertin. Sie glitzert sanft im Licht.
+Eine glatte Statue eines wunderschönen Meermenschen, der in einem Brunnen badet,
+geformt aus cremigem, leicht rosafarbenem Travertin. Sie glitzert sanft im
+Licht.
 %%%%
 witch
 
-Ein alter und unnatürlich hässlicher Mensch, der eine Robe trägt, die mit etwas befleckt scheint, das wie Sumpfschlamm, Kesselruß und Brauzutaten aussieht.
+Ein alter und unnatürlich hässlicher Mensch, der eine Robe trägt, die mit etwas
+befleckt scheint, das wie Sumpfschlamm, Kesselruß und Brauzutaten aussieht.
 %%%%
 withered plant
 
@@ -2331,74 +3183,121 @@ or you.branch("Tomb") then return "Jahrhunderten"; else return "Jahren"; end
 %%%%
 zin angel
 
-Ein göttlicher Agent von Zin. Es ist eine gewaltige geflügelte Gestalt mit einer Aura aus strahlend weißem Licht. Sein Gesicht ist von einem finsteren Blick gezeichnet, als ob sein Eifer gegen jedes reale oder vermeintliche Laster seine Güte überschattet.
+Ein göttlicher Agent von Zin. Es ist eine gewaltige geflügelte Gestalt mit einer
+Aura aus strahlend weißem Licht. Sein Gesicht ist von einem finsteren Blick
+gezeichnet, als ob sein Eifer gegen jedes reale oder vermeintliche Laster seine
+Güte überschattet.
 %%%%
 zot statue
 
-Eine zutiefst verstörende Statue, aus einem einzigen Stück dunklem Gabbro gehauen, in dem winzige Kristalle funkeln. Es ist unmöglich zu sagen, ob sie eine Kreatur oder Persönlichkeit darstellen soll oder ob sie völlig abstrakt ist.
+Eine zutiefst verstörende Statue, aus einem einzigen Stück dunklem Gabbro
+gehauen, in dem winzige Kristalle funkeln. Es ist unmöglich zu sagen, ob sie
+eine Kreatur oder Persönlichkeit darstellen soll oder ob sie völlig abstrakt
+ist.
 %%%%
 ### Meatsprint
 bag of meat
 
-Eine der Legionen von Abscheulichkeiten, die von den Bildhauern des Fleisches erschaffen wurden. Sie ist eine grauenhafte Nachahmung der menschlichen Gestalt, bestehend aus einer nicht wiederzuerkennenden Fleischmasse, die mit scheinbar willkürlich angenähten Gliedmaßen zusammengenäht ist. Die Haut hängt an manchen Stellen lose herunter und wölbt sich an anderen abstoßend. In jede von ihnen ist ein großes Symbol eingeritzt, ein Zeichen des Stolzes ihres perversen Schöpfers.
+Eine der Legionen von Abscheulichkeiten, die von den Bildhauern des Fleisches
+erschaffen wurden. Sie ist eine grauenhafte Nachahmung der menschlichen Gestalt,
+bestehend aus einer nicht wiederzuerkennenden Fleischmasse, die mit scheinbar
+willkürlich angenähten Gliedmaßen zusammengenäht ist. Die Haut hängt an manchen
+Stellen lose herunter und wölbt sich an anderen abstoßend. In jede von ihnen ist
+ein großes Symbol eingeritzt, ein Zeichen des Stolzes ihres perversen Schöpfers.
 %%%%
 large bag of meat
 
-Eine der Legionen von Abscheulichkeiten, die von den Bildhauern des Fleisches erschaffen wurden. Ihr aufgeblähter Rumpf pulsiert und pocht ständig mit verfluchten Feuern. Es sieht aus, als könnte sie jeden Moment in einen Schwall von Eingeweiden explodieren.
+Eine der Legionen von Abscheulichkeiten, die von den Bildhauern des Fleisches
+erschaffen wurden. Ihr aufgeblähter Rumpf pulsiert und pocht ständig mit
+verfluchten Feuern. Es sieht aus, als könnte sie jeden Moment in einen Schwall
+von Eingeweiden explodieren.
 %%%%
 meat berserker
 
-Eine der Legionen von Abscheulichkeiten, die von den Bildhauern des Fleisches erschaffen wurden. Seine Gestalt ist groß und muskulös. Sie bewegt sich schnell und mit ungestümer Wut, und ihre einziger Gedanke ist, Euch mit großer Inbrunst in Stücke zu reißen. Während sie tobt, erzeugt sie einen kakophonischen Lärm.
+Eine der Legionen von Abscheulichkeiten, die von den Bildhauern des Fleisches
+erschaffen wurden. Seine Gestalt ist groß und muskulös. Sie bewegt sich schnell
+und mit ungestümer Wut, und ihre einziger Gedanke ist, Euch mit großer Inbrunst
+in Stücke zu reißen. Während sie tobt, erzeugt sie einen kakophonischen Lärm.
 %%%%
 meat hydra
 
-Eine der Legionen von Abscheulichkeiten, die von den Bildhauern des Fleisches erschaffen wurden. Jeder ihrer acht Hälse ist aufgebläht und verlängert und mit einem kolossalen, zerknitterten und von Eiter triefenden Körper verbunden. Ihre vielen Köpfe spucken Blut, während sie sich vor Schmerzen winden und zucken, während sie sich selbst und allen anderen, die ihr widerliches Antlitz erblicken, Qualen zufügt.
+Eine der Legionen von Abscheulichkeiten, die von den Bildhauern des Fleisches
+erschaffen wurden. Jeder ihrer acht Hälse ist aufgebläht und verlängert und mit
+einem kolossalen, zerknitterten und von Eiter triefenden Körper verbunden. Ihre
+vielen Köpfe spucken Blut, während sie sich vor Schmerzen winden und zucken,
+während sie sich selbst und allen anderen, die ihr widerliches Antlitz
+erblicken, Qualen zufügt.
 %%%%
 meat beast
 
-Eine der Legionen von Abscheulichkeiten, die von den Bildhauern des Fleisches erschaffen wurden. In dämonischer Raserei lodernd, zerfleischt und trampelt es mit beispielloser Wildheit. Seine Haut ist abgezogen, sodass die darunter liegenden glänzenden Sehnen und Bänder freigelegt sind, und die Zähne in seinem höhlenartigen Maul sind blutbefleckt.
+Eine der Legionen von Abscheulichkeiten, die von den Bildhauern des Fleisches
+erschaffen wurden. In dämonischer Raserei lodernd, zerfleischt und trampelt es
+mit beispielloser Wildheit. Seine Haut ist abgezogen, sodass die darunter
+liegenden glänzenden Sehnen und Bänder freigelegt sind, und die Zähne in seinem
+höhlenartigen Maul sind blutbefleckt.
 %%%%
 sculptor of flesh
 
-Der Bildhauer ist ein Handwerker des Unlebens und erscheint als grimmige Skelettgestalt. Er hat sechs lange Arme, die in verstümmelten Händen mit gebrochenen Fingern enden, auf denen er wie eine Spinne kriecht. Sein Schädel ist ungewöhnlich groß und voller Löcher. Seine Knochen sind gerötet und gebrochen und mit den unheiligen Zaubersprüchen versehen, die er webt, um seine Puppen zusammenzusetzen.
+Der Bildhauer ist ein Handwerker des Unlebens und erscheint als grimmige
+Skelettgestalt. Er hat sechs lange Arme, die in verstümmelten Händen mit
+gebrochenen Fingern enden, auf denen er wie eine Spinne kriecht. Sein Schädel
+ist ungewöhnlich groß und voller Löcher. Seine Knochen sind gerötet und
+gebrochen und mit den unheiligen Zaubersprüchen versehen, die er webt, um seine
+Puppen zusammenzusetzen.
 %%%%
 destroyer
 
-Die Zerstörer beginnen, über Euch herzufallen. Sie kommen in großer Zahl und voller Zorn, ihre Münder klaffen wie Abaddon, bodenlos und abgründig. Sie bringen euer Verderben und werden sich an Euren Überresten laben.
+Die Zerstörer beginnen, über Euch herzufallen. Sie kommen in großer Zahl und
+voller Zorn, ihre Münder klaffen wie Abaddon, bodenlos und abgründig. Sie
+bringen euer Verderben und werden sich an Euren Überresten laben.
 %%%%
 accursed
 
-Die Verfluchten sind diejenigen, die vor Euch kamen. Sie sind gekommen, um sicherzustellen, dass Ihr ihr Schicksal teilt.
+Die Verfluchten sind diejenigen, die vor Euch kamen. Sie sind gekommen, um
+sicherzustellen, dass Ihr ihr Schicksal teilt.
 %%%%
 tyrant
 
-Eine kolossale Masse aus Knochen und Schädeln, ein wandelndes Grab. Ihr hört Kreischen und Schreie, wenn es sich nähert, bei jedem zermalmenden Schritt Knochen zertrümmert und sich in ewiger Unruhe neu zusammensetzt.
+Eine kolossale Masse aus Knochen und Schädeln, ein wandelndes Grab. Ihr hört
+Kreischen und Schreie, wenn es sich nähert, bei jedem zermalmenden Schritt
+Knochen zertrümmert und sich in ewiger Unruhe neu zusammensetzt.
 %%%%
 dread
 
-Eine Beleidigung der Existenz, eine Leere, in der es nur Qual und Verdammnis gibt. Seine überirdische Form ist zerrissen und verdreht, schwarz und hohl. Es ist beraubt rationalen Denkens und kennt nur Hass und den Wunsch, Eure Seele zu entweihen.
+Eine Beleidigung der Existenz, eine Leere, in der es nur Qual und Verdammnis
+gibt. Seine überirdische Form ist zerrissen und verdreht, schwarz und hohl. Es
+ist beraubt rationalen Denkens und kennt nur Hass und den Wunsch, Eure Seele zu
+entweihen.
 %%%%
 scourge
 
-Eine gewaltige, schlangenartige Gestalt mit wunden, kranken Hautstellen, aus denen Galle und Eiter sickern und die Gift und Seuchen speit.
+Eine gewaltige, schlangenartige Gestalt mit wunden, kranken Hautstellen, aus
+denen Galle und Eiter sickern und die Gift und Seuchen speit.
 %%%%
 observer
 
-Ihr seht das Unsichtbare, Ihr starrt und sie starren zurück. Sie flüstern und lachen, sie grinsen und weinen, sie blicken Euch verächtlich an und starren Euch voller Bewunderung an. Sie sind die Beobachter, sie beurteilen Euren Wert und werden über Euer Ende entscheiden.
+Ihr seht das Unsichtbare, Ihr starrt und sie starren zurück. Sie flüstern und
+lachen, sie grinsen und weinen, sie blicken Euch verächtlich an und starren Euch
+voller Bewunderung an. Sie sind die Beobachter, sie beurteilen Euren Wert und
+werden über Euer Ende entscheiden.
 %%%%
 wretched soul
 
-Ein Gespenst, das versucht, die sterbliche Welt zu verlassen, in der es gefangen ist. Es saugt Leben und Unleben aus allen, mit denen es in Kontakt kommt.
+Ein Gespenst, das versucht, die sterbliche Welt zu verlassen, in der es gefangen
+ist. Es saugt Leben und Unleben aus allen, mit denen es in Kontakt kommt.
 %%%%
 # Slight problem, the German words for flesh and meat are the same.
-# For that reason, I have differentiated fleshlord and meatlord on the "lord" part.
+# For that reason, I have differentiated fleshlord and meatlord on the "lord"
+part.
 fleshlord
 
-Einer der größten Diener des Fleischfürsten. Er ist muskulös, wendig und voller Boshaftigkeit.
+Einer der größten Diener des Fleischfürsten. Er ist muskulös, wendig und voller
+Boshaftigkeit.
 %%%%
 vile
 
-Eine ausgemergelte Gestalt, erfüllt von Verdammnis und Pest. Ihr Erscheinen symbolisiert das Ende der Tage.
+Eine ausgemergelte Gestalt, erfüllt von Verdammnis und Pest. Ihr Erscheinen
+symbolisiert das Ende der Tage.
 %%%%
 The Servant
 
@@ -2414,9 +3313,24 @@ Sein Schild ist mit Bildern höllischer Flammen verziert.
 %%%%
 The Meatlord
 
-Ihr seht die Verkörperung von Schmutz, Verwesung und Verderbtheit, den Fleischfürst. Sein widerlicher Körper ist bis zum Äußersten aufgebläht, aus ihm sickert zähe Flüssigkeit und der Gestank des Todes. Sein Kopf ist der eines Ebers mit hervorquellenden Augen und gespaltenen Stoßzähnen, seine Schnauze bebt und sickert, während er bei Eurem Anblick schnaubt und quiekt, sein Mund ist ein zahnloser Spalt, aus dem Blutlachen sabbern und widerliche Überreste erbrechen. Sein Hals ist gestreckt und hängt nach vorne, die Haut hängt herab. Sein riesiges Bauch windet und verformt sich, während die Larven darin auf ihre widerwärtige Freilassung warten. Seine Beine sind unkenntliche Fleischmassen, bedeckt mit Ausstülpungen und pochenden Furunkeln. Euer Verstand taumelt beim Anblick dieser abscheulichen Gestalt und Eure Sinne beginnen sich abzuschalten, um Euren Verstand zu bewahren, während Ihr an dem bedrückenden Gestank ersticken.
+Ihr seht die Verkörperung von Schmutz, Verwesung und Verderbtheit, den
+Fleischfürst. Sein widerlicher Körper ist bis zum Äußersten aufgebläht, aus ihm
+sickert zähe Flüssigkeit und der Gestank des Todes. Sein Kopf ist der eines
+Ebers mit hervorquellenden Augen und gespaltenen Stoßzähnen, seine Schnauze bebt
+und sickert, während er bei Eurem Anblick schnaubt und quiekt, sein Mund ist ein
+zahnloser Spalt, aus dem Blutlachen sabbern und widerliche Überreste erbrechen.
+Sein Hals ist gestreckt und hängt nach vorne, die Haut hängt herab. Sein
+riesiges Bauch windet und verformt sich, während die Larven darin auf ihre
+widerwärtige Freilassung warten. Seine Beine sind unkenntliche Fleischmassen,
+bedeckt mit Ausstülpungen und pochenden Furunkeln. Euer Verstand taumelt beim
+Anblick dieser abscheulichen Gestalt und Eure Sinne beginnen sich abzuschalten,
+um Euren Verstand zu bewahren, während Ihr an dem bedrückenden Gestank
+ersticken.
 %%%%
 The Unspeakable
 
-Ihr hört das Echo der Planeten hinter dem ohrenbetäubenden Brüllen der Sterne, wenn es sich nähert. Es ist das Maul des Abgrunds. Es bringt kriechendes Chaos aus seinem Inneren hervor. Es ist der letzte Anblick, den Ihr jemals sehen werdet.
+Ihr hört das Echo der Planeten hinter dem ohrenbetäubenden Brüllen der Sterne,
+wenn es sich nähert. Es ist das Maul des Abgrunds. Es bringt kriechendes Chaos
+aus seinem Inneren hervor. Es ist der letzte Anblick, den Ihr jemals sehen
+werdet.
 %%%%
