@@ -1763,10 +1763,10 @@ static string _reverse_engineer_parameterised_string(const string& s)
 // localise a string
 static string _localise_string(const string context, const string& value)
 {
-    TRACE("context='%s', value='%s'", context.c_str(), value.c_str());
-
     if (value.empty() || !localisation_active())
         return value;
+
+    TRACE("context='%s', value='%s'", context.c_str(), value.c_str());
 
     _context = context;
 

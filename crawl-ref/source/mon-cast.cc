@@ -4311,9 +4311,13 @@ static bool _mons_cast_freeze(monster* mons)
 
     if (you.can_see(*target))
     {
-        string msg = localise("%s is frozen", target->name(DESC_THE));
+        string msg;
+        if (target->is_player())
+            msg = localise("You are frozen");
+        else
+            msg = localise("%s is frozen", target->name(DESC_THE));
         msg = add_attack_strength_punct(msg, damage, false);
-        mpr(msg);
+        mpr_nolocalise(msg);
     }
 
     // Resist messaging, needs to happen after so we get the correct message

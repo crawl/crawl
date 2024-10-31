@@ -349,7 +349,7 @@ Ihr hört ein spuckendes Geräusch.
 %%%%
 Freeze cast
 
-@The_monster@ freezes @target@.
+@The_monster@ friert {acc}@target@ ein.
 %%%%
 Sticky Flame Splash cast
 

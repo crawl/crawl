@@ -9075,6 +9075,9 @@ Zins Macht schützt Euren Mitkrieger vor böser Magie!
 Send 'em back where they came from!
 Schickt sie dorthin zurück, wo sie hergekommen sind!
 %%%%
+You are frozen
+Ihr werdet eingefroren
+%%%%
 %s is frozen
 %s wird eingefroren
 %%%%
