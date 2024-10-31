@@ -9,6 +9,7 @@
 #include "god-abil.h"
 #include "god-companions.h"
 #include "god-passive.h"
+#include "spl-damage.h"
 #include "spl-other.h"
 #include "spl-selfench.h"
 #include "tag-version.h"
@@ -755,6 +756,7 @@ static const duration_def duration_data[] =
     { DUR_TIME_WARPED_BLOOD_COOLDOWN, 0, "", "", "time-warped blood cooldown", "", D_NO_FLAGS},
     { DUR_SPIKE_LAUNCHER_ACTIVE, 0, "", "", "spike launcher", "", D_NO_FLAGS, {{"", end_spike_launcher}}},
     { DUR_PARAGON_ACTIVE, 0, "", "", "paragon active", "", D_NO_FLAGS, {{""}}},
+    { DUR_FORTRESS_BLAST_TIMER, 0, "", "", "fortress blast charging", "", D_DISPELLABLE},
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

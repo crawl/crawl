@@ -1065,3 +1065,23 @@ Shield status
 
 You are protected by a divine shield. Enemies that strike it in melee will have
 their attacks completely blocked, and they may also be blinded by its light.
+%%%%
+Blast status
+
+You are preparing to unleash a kinetic shockwave and cannot move until this is
+complete.
+%%%%
+Blast. status
+
+<Blast status>
+%%%%
+%%%%
+Blast.. status
+
+<Blast status>
+%%%%
+%%%%
+Blast... status
+
+<Blast status>
+%%%%

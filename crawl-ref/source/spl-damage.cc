@@ -5189,3 +5189,59 @@ void gain_grave_claw_soul(bool silent, bool wizard)
         }
     }
 }
+
+spret cast_fortress_blast(actor& caster, int pow, bool fail)
+{
+    fail_check();
+
+    if (caster.is_player())
+    {
+        const int delay = 70 - div_rand_round(pow * 10, 25);
+        you.duration[DUR_FORTRESS_BLAST_TIMER] = delay;
+        mprf("You steady yourself in place and focus your resilience into a mighty blast.");
+    }
+    // Todo: Add monster implementation here
+
+    caster.props[FORTRESS_BLAST_POS_KEY] = caster.pos();
+
+    return spret::success;
+}
+
+void unleash_fortress_blast(actor& caster)
+{
+    // Hits power cap at 70 AC
+    int power = min(200, (int)pow(caster.armour_class(), 1.343) * 2 / 3);
+
+    if (caster.is_player())
+    {
+        string desc = "a";
+        if (power < 30)
+            desc = "a weak";
+        else if (power > 180)
+            desc = "an overpowering";
+        else if (power > 135)
+            desc = "a very strong";
+        else if (power > 80)
+            desc = "a strong";
+        mprf(MSGCH_DURATION, "You unleash %s concussive blast!", desc.c_str());
+    }
+
+    bolt blast;
+    zappy(ZAP_FORTRESS_BLAST, power, caster.is_monster(), blast);
+    blast.set_agent(&caster);
+    blast.attitude = caster.temp_attitude();
+    blast.source = caster.pos();
+    blast.target = caster.pos();
+    blast.origin_spell = SPELL_FORTRESS_BLAST;
+    blast.is_explosion = true;
+    blast.ex_size = spell_range(SPELL_FORTRESS_BLAST, 0);
+
+    blast.explode(true, true);
+}
+
+// For UI purposes. Non-random.
+dice_def fortress_blast_damage(int AC, bool is_monster)
+{
+    int power = min(200, (int)pow(AC, 1.35));
+    return zap_damage(ZAP_FORTRESS_BLAST, power, is_monster, false);
+}

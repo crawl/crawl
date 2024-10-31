@@ -1560,6 +1560,11 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         }
         break;
 
+    case SPELL_FORTRESS_BLAST:
+        if (temp && you.duration[DUR_FORTRESS_BLAST_TIMER])
+            return "you are already charging a Fortress Blast.";
+        break;
+
     default:
         break;
     }

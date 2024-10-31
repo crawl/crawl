@@ -765,6 +765,24 @@ static void _decrement_durations()
         }
     }
 
+    if (you.duration[DUR_FORTRESS_BLAST_TIMER])
+    {
+        if (you.pos() != you.props[FORTRESS_BLAST_POS_KEY].get_coord())
+        {
+            mprf(MSGCH_DURATION, "Your fortress blast dissipates harmlessly.");
+            you.duration[DUR_FORTRESS_BLAST_TIMER] = 0;
+        }
+        else
+        {
+            you.duration[DUR_FORTRESS_BLAST_TIMER] -= you.time_taken;
+            if (you.duration[DUR_FORTRESS_BLAST_TIMER] <= 0)
+            {
+                unleash_fortress_blast(you);
+                you.duration[DUR_FORTRESS_BLAST_TIMER] = 0;
+            }
+        }
+    }
+
     if (you.duration[DUR_FLIGHT])
     {
         if (!you.permanent_flight())

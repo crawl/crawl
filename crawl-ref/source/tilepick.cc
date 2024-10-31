@@ -3468,6 +3468,8 @@ tileidx_t tileidx_bolt(const bolt &bolt)
         {
             return TILE_BOLT_LIGHT + dir;
         }
+        else if (bolt.name == "fortress blast")
+            return TILE_BOLT_FORTRESS_BLAST;
         break;
 
     case LIGHTCYAN:

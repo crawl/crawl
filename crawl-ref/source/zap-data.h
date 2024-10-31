@@ -2498,4 +2498,20 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     true,
 },
 
+{
+    ZAP_FORTRESS_BLAST,
+    "fortress blast",
+    200,
+    new dicedef_calculator<6, 4, 3, 17>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    new dicedef_calculator<6, 4, 1, 6>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    WHITE,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    false,
+    true,
+},
+
 };

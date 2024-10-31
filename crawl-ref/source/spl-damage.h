@@ -25,6 +25,7 @@ const int GRAVE_CLAW_MAX_CHARGES = 3;
 #define VORTEX_POWER_KEY "vortex_power"
 #define FUSILLADE_POWER_KEY "fusillade_power"
 #define GRAVE_CLAW_CHARGES_KEY "grave_claw_charges"
+#define FORTRESS_BLAST_POS_KEY "fortress_blast_pos"
 
 
 void setup_fire_storm(const actor *source, int pow, bolt &beam);
@@ -176,3 +177,7 @@ void fire_fusillade();
 
 spret cast_grave_claw(actor& caster, coord_def targ, int pow, bool fail);
 void gain_grave_claw_soul(bool silent = false, bool wizard = false);
+
+spret cast_fortress_blast(actor& caster, int pow, bool fail);
+void unleash_fortress_blast(actor& caster);
+dice_def fortress_blast_damage(int AC, bool is_monster);

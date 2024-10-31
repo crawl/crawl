@@ -1443,6 +1443,9 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_PERCUSSIVE_TEMPERING:
         return make_unique<targeter_tempering>();
 
+    case SPELL_FORTRESS_BLAST:
+        return make_unique<targeter_radius>(&you, LOS_NO_TRANS, range);
+
     default:
         break;
     }
@@ -2502,6 +2505,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_PERCUSSIVE_TEMPERING:
         return cast_percussive_tempering(you, *monster_at(beam.target), powc, fail);
 
+    case SPELL_FORTRESS_BLAST:
+        return cast_fortress_blast(you, powc, fail);
+
     // Enchantments.
     case SPELL_CONFUSING_TOUCH:
         return cast_confusing_touch(powc, fail);
@@ -2961,6 +2967,8 @@ static dice_def _spell_damage(spell_type spell, int power)
             return lightning_spire_damage(power);
         case SPELL_DIAMOND_SAWBLADES:
             return diamond_sawblade_damage(power);
+        case SPELL_FORTRESS_BLAST:
+            return fortress_blast_damage(you.armour_class(), false);
         default:
             break;
     }
@@ -2978,6 +2986,13 @@ string spell_max_damage_string(spell_type spell)
     case SPELL_FREEZING_CLOUD:
         // These have damage strings, but don't scale with power.
         return "";
+    case SPELL_FORTRESS_BLAST:
+    {
+        // Fortress Blast's damage scales with AC, not spellpower, and thus
+        // exceeds the normal spellpower cap.
+        dice_def dmg = zap_damage(ZAP_FORTRESS_BLAST, 200, false);
+        return make_stringf("%dd%d", dmg.num, dmg.size);
+    }
     default:
         break;
     }

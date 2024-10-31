@@ -870,6 +870,13 @@ bool fill_status_info(int status, status_info& inf)
         break;
     }
 
+    case DUR_FORTRESS_BLAST_TIMER:
+        inf.light_colour = WHITE;
+        inf.light_text = "Blast" + string(max(0, (40 - you.duration[DUR_FORTRESS_BLAST_TIMER]) / 10), '.');
+        inf.short_text = "fortress blast";
+        inf.long_text = "Preparing a Fortress Blast.";
+        break;
+
     default:
         if (!found)
         {

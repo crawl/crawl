@@ -551,6 +551,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_MONARCH_BOMB,
     SPELL_SPLINTERFROST_SHELL,
     SPELL_PERCUSSIVE_TEMPERING,
+    SPELL_FORTRESS_BLAST,
 },
 
 };

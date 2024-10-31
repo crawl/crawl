@@ -7859,7 +7859,8 @@ bool player::is_stationary() const
 
 bool player::is_motile() const
 {
-    return !is_stationary() && !you.duration[DUR_NO_MOMENTUM];
+    return !is_stationary() && !you.duration[DUR_NO_MOMENTUM]
+                            && !you.duration[DUR_FORTRESS_BLAST_TIMER];
 }
 
 bool player::malmutate(const string &reason)
@@ -8104,7 +8105,7 @@ bool player::can_do_shaft_ability(bool quiet) const
         return false;
     }
 
-    if (you.duration[DUR_NO_MOMENTUM])
+    if (!you.is_motile())
     {
         if (!quiet)
             mpr("You can't shaft yourself while stuck.");

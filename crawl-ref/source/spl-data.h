@@ -4250,6 +4250,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_FORTRESS_BLAST, "Fortress Blast",
+    spschool::forgecraft,
+    spflag::area | spflag::destructive,
+    6,
+    75,
+    2, 2,
+    20,
+    TILEG_ERROR,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,
