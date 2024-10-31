@@ -1532,11 +1532,11 @@ Andere Gegenstände
 
 %%%%
 Skill
-Skill
+Fertigkeit
 %%%%
 # Here, this means skill level, but it's also used on the spell menu for spell level
 Level
-Level
+Stufe
 %%%%
 # aptitude
 Apt
@@ -1590,7 +1590,7 @@ alle
 %%%%
 %%%%
 skills
-Skills
+Fertigkeiten
 %%%%
 
 # "modified|reduced|enhanced|base level"
@@ -1609,7 +1609,7 @@ Grund-
 %%%%
 # Here, this means skill level, but the same string is used in a macros sub-menu for dungeon level
 level
-Level
+Stufe
 %%%%
 
 # "training|cost|progress|targets|points"

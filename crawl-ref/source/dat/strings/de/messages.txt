@@ -13617,16 +13617,16 @@ Ihr {verb-ihr}%s nach Aufmerksamkeit!
 ##################
 %%%%
 In automatic mode, skills are trained as you use them.
-Im automatischen Modus werden die Skills trainiert, während Ihr sie benutzt.
+Im automatischen Modus werden die Fertigkeiten trainiert, während Ihr sie benutzt.
 %%%%
 In manual mode, experience is spread evenly across all activated skills.
-Im manuellen Modus ist die Erfahrung gleichmäßig auf alle aktivierten Skills verteilt.
+Im manuellen Modus ist die Erfahrung gleichmäßig auf alle aktivierten Fertigkeiten verteilt.
 %%%%
 Press the letter of a skill to choose whether you want to practise it. Skills marked with '<darkgrey>-</darkgrey>' will not be trained.
-Den Buchstaben eines Skills drücken, um auszuwählen, ob er trainiert wird. Skills, die mit '<dunkelgrau>-</dunkelgrau>' markiert sind, werden nicht trainiert.
+Den Buchstaben einer Fertigkeit drücken, um auszuwählen, ob sie trainiert wird. Fertigkeiten, die mit '<dunkelgrau>-</dunkelgrau>' markiert sind, werden nicht trainiert.
 %%%%
 Press the letter of a skill to cycle between <darkgrey>disabled</darkgrey> (<darkgrey>-</darkgrey>), enabled (+) and <white>focused</white> (<white>*</white>). Focused skills train twice as fast relative to others.
-Den Buchstaben eines Skills drücken, um zwischen <darkgrey>deaktiviert</darkgrey> (<darkgrey>-</darkgrey>), aktiviert (+) und <white>fokussiert</white> (<white>*</white>) zu wechseln. Fokussierte Skills trainieren im Vergleich zu anderen doppelt so schnell.
+Den Buchstaben einer Fertigkeit drücken, um zwischen <darkgrey>deaktiviert</darkgrey> (<darkgrey>-</darkgrey>), aktiviert (+) und <white>fokussiert</white> (<white>*</white>) zu wechseln. Fokussierte Fertigkeiten trainieren im Vergleich zu anderen doppelt so schnell.
 %%%%
 @god_possessive@ power
 @god_possessive@ Macht
@@ -13636,17 +13636,17 @@ Cross-Skilling
 %%%%
 # note: %s = comma-separated list containing any of Heroism, <god>'s power, cross-training
 Skills enhanced by %s are in <green>green</green>.
-Durch {acc}%s verbesserte Skills sind <green>grün</green>.
+Durch {acc}%s verbesserte Fertigkeiten sind <green>grün</green> angezeigt.
 %%%%
 Ashenzari's anger
 Aschenzaris Zorn
 %%%%
 # note: %s = in theory a comma-separated list, but in practice always "Ashenzari's anger"
 Skills reduced by %s are in <magenta>magenta</magenta>.
-Durch {acc}%s reduzierte Skills sind <magenta>magenta</magenta>.
+Durch {acc}%s reduzierte Fertigkeiten sind <magenta>magenta</magenta>.
 %%%%
 The percentage of incoming experience used to train each skill is in <brown>brown</brown>.
-Der Prozentsatz der eingehenden Erfahrung, der für das Training jedes Skills verwendet wird, ist <brown>braun</brown>.
+Der Prozentsatz der eingehenden Erfahrung, der für das Training jeder Fertigkeit verwendet wird, ist <brown>braun</brown> angezeigt.
 %%%%
 The current training targets, if any.
 Die aktuellen Trainingsziele, falls vorhanden.
@@ -13655,34 +13655,34 @@ The percentage of the progress done before reaching next level is in <cyan>cyan<
 Der Prozentsatz des Fortschritts vor Erreichen des nächsten Levels ist <cyan>cyan</cyan>.
 %%%%
 The relative cost of raising each skill is in <cyan>cyan</cyan> (or <lightred>red</lightred> if enhanced by a manual).
-Die relativen Kosten für die Verbesserung jedes Skills sind <cyan>cyan</cyan> (oder <lightred>rot</lightred>, wenn sie durch ein Handbuch verbessert wird).
+Die relativen Kosten für die Verbesserung jeder Fertigkeit sind <cyan>cyan</cyan> (oder <lightred>rot</lightred>, wenn sie durch ein Handbuch verbessert wird).
 %%%%
 "Enter a skill target for %s: "
 "Ein Trainingsziel für %s eingeben: "
 %%%%
 You need to enable at least one skill.
-Ihr müsst mindestens einen Skill aktivieren.
+Ihr müsst mindestens eine Fertigkeit aktivieren.
 %%%%
 Press the letter of a skill to read its description.
-Den Buchstaben eines Skills drücken, um seine Beschreibung zu lesen.
+Den Buchstaben einer Fertigkeit drücken, um seine Beschreibung zu lesen.
 %%%%
 Press <w>?</w> for a general explanation of skilling and the various toggles.
-<w>?</w> drücken für eine allgemeine Erklärung des Skillings und der verschiedenen Umschaltmöglichkeiten.
+<w>?</w> drücken für eine allgemeine Erklärung des Trainierens und der verschiedenen Umschaltmöglichkeiten.
 %%%%
 Skill descriptions
-Beschreibungen der Skills
+Beschreibungen der Fertigkeiten
 %%%%
 Help
 Hilfe
 %%%%
 Return to skill selection
-Zurück zur Auswahl der Skills
+Zurück zur Auswahl der Fertigkeiten
 %%%%
 <w>Help</w>
 <w>Hilfe</w>
 %%%%
 skill descriptions
-Beschreibungen der Skills
+Beschreibungen der Fertigkeiten
 %%%%
 set skill target
 Ziel festlegen
@@ -13697,7 +13697,7 @@ clear all targets
 alle Ziele löschen
 %%%%
 Select the skills you want to be trained. The chosen skills will be raised to the level shown in <cyan>cyan</cyan>.
-Die Skills auswählen, die Ihr trainieren wollt. Die gewählten Skills werden auf die in <cyan>cyan</cyan> angegebene Stufe angehoben.
+Die Fertigkeiten auswählen, die Ihr trainieren wollt. Die gewählten Fertigkeiten werden auf die in <cyan>cyan</cyan> angegebene Stufe angehoben.
 %%%%
 The species aptitude is in <white>white</white>.
 Die Speziesbegebung ist <white>weiß</white>.
@@ -13706,7 +13706,7 @@ Bonus from skill manuals is in <lightred>red</lightred>.
 Der Bonus von Handbüchern ist <lightred>rot</lightred>.
 %%%%
 You have quaffed a potion of experience. Select the skills to train.
-Ihr habt einen Trank der Erfahrung getrunken. Skills für Training auswählen.
+Ihr habt einen Trank der Erfahrung getrunken. Fertigkeiten zum Trainieren auswählen.
 %%%%
 You feel omnipotent.
 Ihr fühlt Euch allmächtig.
@@ -13720,37 +13720,37 @@ You have mastered %s!
 Ihr habt %s gemeistert!
 %%%%
 Your base %s skill increases to level %d!
-Euer %s-Basis-Skill %s steigt auf Level %d!
+Eure %s-Basis-Fertigkeit %s steigt auf Stufe %d!
 %%%%
 Your base %s skill decreases to level %d!
-Euer %s-Basis-Skill sinkt auf Level %d!
+Eure %s-Basis-Fertigkeit sinkt auf Stufe %d!
 %%%%
 Your %s skill increases to level %d!
-Euer %s-Skill steigt auf Level %d!
+Eure %s-Fertigkeit steigt auf Stufe %d!
 %%%%
 Your %s skill decreases to level %d!
-Euer %s-Skill sinkt auf Level %d!
+Eure %s-Fertigkeit sinkt auf Stufe %d!
 %%%%
 Your base %s skill gained %d levels and is now at level %d!
-Euer %s-Basis-Skill gewinnt %d Levels und ist jetzt auf Level %d!
+Eure %s-Basis-Fertigkeit gewinnt %d Stufen und ist jetzt auf Level %d!
 %%%%
 Your base %s skill lost %d levels and is now at level %d!
-Euer %s-Basis-Skill verliert %d Levels und ist jetzt auf Level %d!
+Eure %s-Basis-Fertigkeit verliert %d Stufen und ist jetzt auf Level %d!
 %%%%
 Your %s skill gained %d levels and is now at level %d!
-Euer %s-Skill gewinnt %d Levels und ist jetzt auf Level %d!
+Eure %s-Fertigkeit gewinnt %d Stufen und ist jetzt auf Level %d!
 %%%%
 Your %s skill lost %d levels and is now at level %d!
-Euer %s-Skill verliert %d Levels und ist jetzt auf Level %d!
+Eure %s-Fertigkeit verliert %d Stufen und ist jetzt auf Level %d!
 %%%%
 You cannot train any new skills!
-Ihr könnt keine neuen Skills trainieren!
+Ihr könnt keine neuen Fertigkeiten trainieren!
 %%%%
 You need to enable at least one skill for training.
-Ihr müsst mindestens einen Skill für das Training aktivieren.
+Ihr müsst mindestens eine Fertigkeit für das Training aktivieren.
 %%%%
 Base training target %.1f for %s reached!
-Basis-Skill Trainingsziel %.1f für {acc}%s erreicht!
+Basis-Fertigkeit-Trainingsziel %.1f für {acc}%s erreicht!
 %%%%
 Training target %.1f for %s reached!
 Trainingsziel %.1f für {acc}%s erreicht!
