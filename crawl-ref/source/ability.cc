@@ -1628,7 +1628,7 @@ string get_ability_desc(const ability_type ability, bool need_title)
 
     const string quote = getQuoteString(name + " ability");
     if (!quote.empty())
-        res << "\n\n" << quote;
+        res << "\n_________________\n\n<darkgrey>" << quote << "</darkgrey>";
 
     return res.str();
 }

@@ -2844,7 +2844,7 @@ string get_mutation_desc(mutation_type mut)
 
     const string quote = getQuoteString(key);
     if (!quote.empty())
-        desc << "\n\n" << quote;
+        desc << "\n_________________\n\n<darkgrey>" << quote << "</darkgrey>";
     return desc.str();
 }
 

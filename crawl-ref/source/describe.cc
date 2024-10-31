@@ -3635,8 +3635,8 @@ bool describe_feature_wide(const coord_def& pos, bool do_actions)
             formatted_string desc_text = formatted_string::parse_string(feat.body);
             if (!feat.quote.empty())
             {
-                desc_text.cprintf("\n\n");
-                desc_text += formatted_string::parse_string(feat.quote);
+                desc_text.cprintf("\n_________________\n\n");
+                desc_text += formatted_string::parse_string("<darkgrey>" + feat.quote + "</darkgrey>");
             }
             auto text = make_shared<Text>(desc_text);
             if (&feat != &feats.back())
@@ -4069,7 +4069,7 @@ command_type describe_item_popup(const item_def &item,
     if (!(crawl_state.game_is_hints_tutorial()
           || quote.empty()))
     {
-        desc += "\n\n" + quote;
+        desc += "\n_________________\n\n<darkgrey>" + quote + "</darkgrey>";
     }
 
     if (crawl_state.game_is_hints())
@@ -4679,7 +4679,7 @@ static void _get_spell_description(const spell_type spell,
 
     const string quote = getQuoteString(string(spell_title(spell)) + " spell");
     if (!quote.empty())
-        description += "\n" + quote;
+        description += "_________________\n\n<darkgrey>" + quote + "</darkgrey>";
 }
 
 /**
