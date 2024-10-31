@@ -57,7 +57,7 @@ anzeigen.
 %%%%
 CMD_DISPLAY_OVERMAP
 
-Die Verlies-Übersichtskarte zeigen
+Die Dungeon-Übersichtskarte zeigen
 %%%%
 CMD_DISPLAY_OVERMAP verbose
 

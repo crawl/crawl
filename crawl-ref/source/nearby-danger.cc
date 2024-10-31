@@ -299,7 +299,8 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
     if (visible.size() == 1)
     {
         const monster& m = *visible[0];
-        msg = make_stringf("%s is nearby!", m.name(DESC_A).c_str());
+        if (announce)
+            mprf("%s is nearby!", m.name(DESC_A).c_str());
     }
     else if (visible.size() > 1)
         msg = "There are monsters nearby!";
@@ -310,7 +311,8 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
 
     if (announce)
     {
-        mprf(MSGCH_WARN, "%s", msg.c_str());
+        if (!msg.empty())
+            mprf(MSGCH_WARN, "%s", msg.c_str());
 
         if (Options.use_animations & UA_MONSTER_IN_SIGHT)
         {

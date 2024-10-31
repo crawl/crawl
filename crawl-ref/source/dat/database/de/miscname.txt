@@ -82,9 +82,9 @@ transzendente
 %%%%
 welcome_spam
 
-Werdet Ihr Euch durchsetzen, wo andere versagt haben? Werdet Ihr den Reichsapfel von Zot finden?
+Werdet Ihr Euch durchsetzen, wo andere versagt haben? Werdet Ihr die Kugel von Zot finden?
 
-Der Schoß dieses Verlieses birgt das @_great_adj_@ Artefakt, den Reichsapfel von Zot.
+Der Schoß dieses Dungeons birgt das @_great_adj_@ Artefakt, die Kugel von Zot.
 
 Werdet Ihr derjenige sein, der die @_great_adj_@ Kugel von Zot aus den Tiefen holt?
 

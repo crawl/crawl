@@ -314,7 +314,7 @@ in den Abgrund geworfen und verirrte sich dort hoffnungslos. Von einer höheren
 Macht verführt, saß sie fast ein Jahrzehnt lang auf der feindlichen Ebene fest.
 Als sie schließlich aus dem Abgrund hervortrat, war Louise zwar mächtig
 geworden, aber auch völlig verrückt. Jetzt wandert sie durch die Hallen des
-Verlieses und sucht nach anderen Abenteurern, um ihr Schicksal mit ihnen zu
+Dungeons und sucht nach anderen Abenteurern, um ihr Schicksal mit ihnen zu
 teilen.
 %%%%
 Mara
@@ -444,7 +444,7 @@ Robin
 
 Ein Bergkobold, der vor Kurzem auf der Suche nach der legendären Kugel war.
 Robin ist nicht tollkühn oder rücksichtslos genug, um allein in die Tiefen des
-Verlieses vorzudringen, und hat eine kleine Armee aus Dienern aufgebaut.
+Dungeons vorzudringen, und hat eine kleine Armee aus Dienern aufgebaut.
 Potenzielle Konkurrenten werden schnell feststellen, dass ihnen ein Schwarm
 schreiender Kobolde entgegenfliegt!
 %%%%
@@ -648,7 +648,7 @@ umschlingt und zerquetscht.
 ballistomycete
 
 Ein klumpiger, rötlicher Pilz, der mit knotigen Rhizomen bedeckt ist und in
-feuchten unterirdischen Verliesen gut wächst. Wenn der Ballistomycet eine
+feuchten unterirdischen Dungeonen gut wächst. Wenn der Ballistomycet eine
 Bedrohung wahrnimmt, kann er eine tödliche schwebende Spore freisetzen, die auf
 seinen Opfern explodiert.
 %%%%

@@ -11082,7 +11082,7 @@ The haze of the repulsion field disappears.
 Der Dunst des Abstoßungsfeldes verschwindet.
 %%%%
 The dungeon's light returns to normal.
-Das Licht im Verlies wird wieder normal.
+Das Licht im Dungeon wird wieder normal.
 %%%%
 %s seems less interested in you.
 %s scheint weniger an Euch interessiert zu sein.
@@ -11452,13 +11452,13 @@ Welcome back to level %d!
 Willkommen zurück auf Level %d!
 %%%%
 You have reached level 27, the final one!
-Ihr habt Level 27 erreicht, das letzte!
+Ihr habt Stufe 27 erreicht, die letzte!
 %%%%
 You have reached level %d, the highest you will ever reach!
-Ihr habt Level %d erreicht, das höchste, das Ihr jemals erreichen werdet!
+Ihr habt Stufe %d erreicht, die höchste, die Ihr jemals erreichen werdet!
 %%%%
 You have reached level %d!
-Ihr habt Level %d erreicht!
+Ihr habt Stufe %d erreicht!
 %%%%
 Your skin feels tougher.
 Eure Haut fühlt sich härter an.
@@ -12769,7 +12769,7 @@ Ashenzari warns you of distant threats and treasures.
 Aschenzari warnt Euch vor fernen Bedrohungen und Schätzen.
 %%%%
 Ashenzari reveals the structure of the dungeon to you.
-Aschenzari offenbart Euch die Struktur des Verlieses.
+Aschenzari offenbart Euch die Struktur des Dungeons.
 %%%%
 Ashenzari shows you where magical portals lie.
 Aschenzari zeigt Euch, wo magische Portale liegen.

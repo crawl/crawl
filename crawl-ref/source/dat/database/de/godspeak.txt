@@ -167,7 +167,7 @@ Xom revert other banishment
 
 "Nein, tust du nicht!"
 
-Xom zieht Euch zurück in die vergleichbare Stille des Verlieses.
+Xom zieht Euch zurück in die vergleichbare Stille des Dungeons.
 %%%%
 # Xom upgrades a nearby hostile monster's weapon to a chaos brand
 Xom chaos upgrade

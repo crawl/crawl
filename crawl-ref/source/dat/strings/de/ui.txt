@@ -344,7 +344,7 @@ Vorgeschlagenes Meervolk
 # weapon selection
 %%%%
 You have a choice of weapons.
-Bitte wähle eine Waffe.
+Bitte wählt eine Waffe.
 %%%%
 # apt = aptitude
 %%%%
