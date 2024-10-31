@@ -30,7 +30,7 @@ def read_dbm(filename, data = {}):
     value = ""
 
     for line in file:
-        line = line.strip()
+        line = line.rstrip('\n')
         if re.match(r'^\s*$', line) or re.match(r'^\s*#', line):
             # blank line or comment
             continue
