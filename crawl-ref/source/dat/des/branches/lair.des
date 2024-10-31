@@ -1927,6 +1927,1016 @@ MAP
 .....@.....
 ENDMAP
 
+NAME:   nicolae_lair_blooderflies
+TAGS:   decor extra transparent
+DEPTH:  Lair
+KMONS:  p = plant
+KMONS:  1 = butterfly
+KITEM:  S = human skeleton
+NSUBST: ` = 2=S / 2=SS.` / 2=1 / 2=11.` / 4=.` / ., - = 4=t / 4=t. / ..p
+KPROP:  S1` = bloody
+MAP
+..........
+.--------.
+.-pppppp-.
+.-p````p-.
+.-p````p-.
+.-p````p-.
+..p````p-.
+.-pppppp-.
+.--------.
+..........
+ENDMAP
+
+NAME:   nicolae_lair_bush_border
+TAGS:   decor extra transparent
+DEPTH:  Lair
+KMONS:  P = bush
+# It is technically possible for the bushes to make a teleport closet.
+# You can beat a bush to death, so this is more of a rare hassle than it is a
+# game ruiner, but nobody wants to have to stand there hacking at a bush for
+# five minutes. So make the potential bush zone no_tele_into.
+KPROP:  `pqrsu = no_tele_into
+NSUBST: p = P / -, q = P / -, r = P / -, s = P / -, u = P / -
+SUBST:  y = xx., - = .`, ` = P..
+MAP
+   .....@.....
+....`.`.`.`.`....
+yxy`p`q`r`s`u`yxy
+xxxPpPqPrPsPuPxxx
+yxy`p`q`r`s`u`yxy
+....`.`.`.`.`....
+   .....@.....
+ENDMAP
+
+NAME:    nicolae_lair_cache_of_fresh_prey
+TAGS:    decor extra transparent
+DEPTH:   Lair
+SHUFFLE: PQ/pq
+NSUBST:  Q` = 1=@ / x, S = S / S- / .-
+SUBST:   P = ., pq = x, ` = x_
+KPROP:   S- = bloody
+ : dgn.delayed_decay(_G, "S", "yak corpse / dream sheep corpse / human corpse")
+MAP
+   `x`
+  `xxxqq
+`xxx-xpq
+xxSSx.x`
+xxSSxxPQ
+`xxxxQQQ
+ `xx`
+ENDMAP
+
+NAME:   nicolae_lair_carnivore_tree_lair
+TAGS:   decor extra transparent
+DEPTH:  Lair
+KITEM:  S = yak skeleton / dream sheep skeleton / human skeleton w:5
+SUBST:  s = t., z = t_
+NSUBST: S = 2=S / S` / `
+KPROP:  ` = bloody
+CLEAR:  _
+MAP
+ .........
+......s....
+..ssst.tt..
+.sttttt.ts.
+sttSStt.ts.
+zttSSt`ttz
+ ztttSttz
+  zttttz
+   zzzz
+ENDMAP
+
+NAME:    nicolae_lair_clover_grove
+TAGS:    decor extra transparent
+DEPTH:   Lair
+KMONS:   p = plant
+KMONS:   P = bush
+SHUFFLE: DEFHJK, LMNO
+SUBST:   DEL = ., F = t, H : tP, M : tP, J : tP.., K : tP.., N : tP.., O : tP..
+SUBST:   . = .:70 p
+MAP
+L.M.N.M.L
+.DEH.HED.
+MEFJ.JFEM
+.HJK.KJH.
+N...O...N
+.HJK.KJH.
+MEFJ.JFEM
+.DEH.HED.
+L.M.N.M.L
+ENDMAP
+
+NAME:  nicolae_lair_clump_of_vegetation
+TAGS:  decor extra transparent
+DEPTH: Lair
+KMONS: p = plant
+SUBST: a = tttpp., p = ppp..
+MAP
+ ...pap...
+...apapa...
+..papapap..
+.aapatapaa.
+pppaptpappp
+aaatttttaaa
+pppaptpappp
+.aapatapaa.
+..papapap..
+...apapa...
+ ...pap...
+ENDMAP
+
+NAME:  nicolae_lair_cropped_circle
+TAGS:  decor extra transparent
+DEPTH: Lair
+KMONS: p = plant w:49 / withered plant w:1
+: if you.depth() == 1 then
+SUBST: S = }])
+: elseif you.depth() ~= dgn.br_depth(you.branch()) then
+SUBST: S = {}[]()
+: end
+SUBST: S = {[(, ` = p_
+CLEAR: _
+MAP
+       `````
+    ```ppppp```
+   `ppp.....ppp`
+  `ppp.ppppp.ppp`
+ `ppp.pp...pp.ppp`
+ `pp.p..ppp..p.pp`
+ `p.p.pp...pp.p.p@
+`p.pp.p.ppp.p.pp.p
+`p.p.p.p...p.p.p.p
+`p.p.p.p.S.p.p.p.p
+`p.p.p.p...p.p.p.p
+`p.pp.p.ppp.p.pp.p
+ `p.p.pp...pp.p.p`
+ `pp.p..ppp..p.pp`
+ `ppp.pp...pp.ppp`
+  `ppp.ppppp.ppp`
+   `ppp.....ppp`
+    ```ppppp```
+       `````
+ENDMAP
+
+NAME:    nicolae_lair_crumbling_lobby
+TAGS:    extra decor transparent
+DEPTH:   Lair:2-, !Lair:$
+ORIENT:  float
+KMONS:   ! = pile of debris
+SHUFFLE: []/<>, {}/[]/(), PQ/pq, PQ
+NSUBST:  a = 2=@ / x
+SUBST:   pq = ., P = V:50 !, Q = G:50 !, x = x:80 ttt., " = xxxt
+MAP
+      xxxxx
+      x...x
+      x.[.x
+   xaax...xaax
+   a.........a
+   a.P..p..Q.a
+xxxx.........xxxx
+x......xxx......x
+x.]..q.x"x.q..}.x
+x......xxx......x
+xxxx.........xxxx
+   a.Q..p..P.a
+   a.........a
+   xaax...xaax
+      x.{.x
+      x...x
+      xxxxx
+ENDMAP
+
+NAME:   nicolae_lair_deadzone
+TAGS:   decor extra transparent
+DEPTH:  Lair
+KMONS:  p = withered plant
+KITEM:  S = 0 skeleton / human skeleton w:1 / elf skeleton w:1
+SUBST:  t = ttt.., . = .:60 p
+NSUBST: . = 4=S / 4=S. / .
+COLOUR: t = lightgrey w:5 / brown
+TILE:   t = dngn_tree_dead
+: set_feature_name("tree", "dead tree")
+MAP
+   .......
+  ..ttttt..
+ ..t.ttt.t..
+..t.t...t.t..
+.t.t.ttt.t.t.
+.tt.t.t.t.tt.
+.tt.ttttt.tt.
+.tt.t.t.t.tt.
+.t.t.ttt.t.t.
+..t.t...t.t..
+ ..t.ttt.t..
+  ..ttttt..
+   .......
+ENDMAP
+
+NAME:   nicolae_lair_decay_into_growth
+TAGS:   decor extra transparent
+DEPTH:  Lair
+KMONS:  F = fungus
+SUBST:  ` = ..F
+NSUBST: t = 4=t / 2=F / ttF
+COLOUR: t = lightgrey w:5 / brown
+TILE:   t = dngn_tree_dead
+: set_feature_name("tree", "dead tree")
+MAP
+ .......
+..``````.
+.``tttt`.
+.`tttt``.
+.``````..
+........
+ENDMAP
+
+NAME:   nicolae_lair_decrepit_plaza
+TAGS:   decor extra transparent
+DEPTH:  Lair
+KMONS:  P = plant
+KFEAT:  D = closed_door
+SUBST:  ` = x., s = tt., S = ttx, - = +., p = m., Z = tt_, z : tt!, . = P .:90
+NSUBST: ! = | / !, % = 4=% / 4=%P / .P
+CLEAR:  _
+KPROP:  |!D = no_tele_into
+KMASK:  |!D = opaque
+MAP
+              ZZZZZ
+  @....sZtt  ZtttttZ
+ t.xx``xtt.`xxx```tt
+ t.xt%.ttS..stts%`ttt
+ t...ts.%m.mttts.`.Z
+ Z.x%st.tx.xzztts..Z
+   St..m-x.xDmztt`.
+   `%.t+...ttD!!tS.
+  tx`px`....txxmxS.
+  Zt.....tV........
+ ZtxSp``.t..sxxpSx.@
+Zttx.%.-..s..+s.%x.Z
+Ztt`s..p-`.x+m..tx.tZ
+Ztt`.%...`tx.s%t.xttZ
+Ztt`.%.%.ptpttt%sStZ
+ Ztxt.sttSt..%..sSt
+  Zxxxxx``..``xxSSt
+  ZtttZ ......stttZ
+   ZZZ   ZZZ .@ZZZ
+ENDMAP
+
+NAME:   nicolae_lair_defunct_apartments
+TAGS:   decor extra transparent
+DEPTH:  Lair
+KMONS:  p = plant
+KITEM:  ` = human skeleton
+: local glifz = "DEFHJKLMNOPQ"
+: for i = 1, string.len(glifz), 1 do
+:    nsubst(string.sub(glifz, i, i) .. " = + / x")
+: end
+NSUBST: R = 2=+ / +x / x, . = 3=` / 2=`. / .
+SUBST:  G = GVt, a = .:70 t, s= t...., x = x:80 ., + = +:60 ., - = ., . = .:90 p
+MAP
+-------------------
+-xxDxxxExxxFxxxHxx-
+-xa.axa.axa.axa.ax-
+-D...E...x...F...H-
+-xa.axa.axa.axa.ax-
+-xxJxxxRxxxRxxxKxx-
+-xa.ax..s.s..xa.ax-
+-J...R.t.t.t.R...K-
+-xa.axs.s.s.sxa.ax-
+-xxxxx.t.G.t.xxxxx-
+-xa.axs.s.s.sxa.ax-
+-L...R.t.t.t.R...M-
+-xa.ax..s.s..xa.ax-
+-xxLxxxRxxxRxxxMxx-
+-xa.axa.axa.axa.ax-
+-N...O...x...P...Q-
+-xa.axa.axa.axa.ax-
+-xxNxxxOxxxPxxxQxx-
+-------------------
+ENDMAP
+
+NAME:    nicolae_lair_demoated_fort
+TAGS:    extra decor transparent no_pool_fixup
+DEPTH:   Lair
+KMONS:   1 = plant
+SHUFFLE: Pp/Qq
+NSUBST:  PR = 1=W
+SUBST:   p = ., PQ = w, q = x, w = wwwwwW, x = xx., c = ccccc., W = WWWWW.
+SUBST:   G = GGVV., . = .:100 1
+MAP
+.............
+.............
+..wPPRQQwww..
+..wcpcqcxcw..
+..wx.....xw..
+..wc.....cw..
+..wx..G..xw..
+..wc.....cw..
+..wx.....xw..
+..wcxcxcxcw..
+..wwwwwwwww..
+.............
+.............
+ENDMAP
+
+NAME:   nicolae_lair_die-orama
+TAGS:   decor extra transparent
+DEPTH:  Lair
+KMONS:  M = hydra / death yak / polar bear / dire elephant / alligator
+KITEM:  S = human skeleton
+KPROP:  ` = no_tele_into
+SUBST:  q = t``
+NSUBST: D = + / n, ` = M / 2=S / S` / 3=' / 3='` / `
+SUBST:  - = x:50 t, n = m:50 t, s = t.., z = t__
+KPROP:  MS' = bloody
+KMASK:  +MS'` = no_monster_gen
+KMASK:  +MS'` = no_trap_gen
+KMASK:  +MS'` = no_item_gen
+KMASK:  +MS'` = opaque
+CLEAR:  _
+MAP
+  zzzzzzzzz
+..sttttttttz
+.stttttttttz
+.sx-D-D--ttz
+.sxq```q-ttz
+..m`````Dttz
+.sxq```q-ttz
+.sxxmxmxxts
+..ss.s.sss.
+@..........
+ENDMAP
+
+NAME:   nicolae_lair_flooded_remnant
+TAGS:   decor extra transparent
+DEPTH:  Lair
+KMONS:  P = plant
+KITEM:  S = human skeleton
+NSUBST: D = m / x, E = m / x, F = m / -, H = . / m / -
+SUBST:  M = wP, - = xx., ` = ..P
+MAP
+  .........
+xxDDDDDD--.
+xSPMwwM``-.
+EPMwwwwM`H.
+E`MwwwwM`H.
+E``MwwM``H.
+E```MM```H.
+x````````x.
+xxFFFFFFxx
+ENDMAP
+
+NAME:  nicolae_lair_flower_corridor
+TAGS:  decor extra transparent
+DEPTH: Lair
+SUBST: s = tF
+: decorative_floor(_G, "F", "flower patch")
+MAP
+tttttttttt
+tsssssssst
+@........@
+.tsssssst.
+.tsssssst.
+@........@
+tsssssssst
+tttttttttt
+ENDMAP
+
+NAME:   nicolae_lair_former_tree_maze
+TAGS:   decor extra transparent
+DEPTH:  Lair
+KMONS:  P = plant
+NSUBST: - = 2=. / 6=s / t
+SUBST:  s = tt., . = .:120 P:20 F
+: decorative_floor(_G, "F", "flower patch")
+MAP
+s.t.s...s.t.s
+..s.t---t.s..
+tst.-...-.tst
+....-.t.-....
+st--t.s.t--ts
+.-....s....-.
+.-.tsstsst.-.
+.-....s....-.
+st--t.s.t--ts
+....-.t.-....
+tst.-...-.tst
+..s.t---t.s..
+s.t.s...s.t.s
+ENDMAP
+
+NAME:   nicolae_lair_fungal_den
+TAGS:   decor extra transparent
+DEPTH:  Lair
+KMONS:  F = fungus
+KITEM:  S = yak skeleton / dream sheep skeleton / human skeleton w:5
+NSUBST: S = 2=S / SE / E
+SUBST:  ` = x_, E = F..
+CLEAR:  _
+MAP
+  ````````
+`xxxxxxxxxx`
+xx...xEEFFxx`
+x..x..E.SSFxx`
+xx.xx.FE.SFxx`
+`x..xxE.SSFxx`
+ .@.xxxEFFxx`
+    `xxxxxx`
+      ````
+ENDMAP
+
+NAME:  nicolae_lair_garden_over_the_wall_1
+TAGS:  decor extra transparent
+DEPTH: Lair
+KMONS: P = plant
+SUBST: x = x:70 t:20 ., . = ...P
+MAP
+.xx.
+.xx.
+.xx.
+.xx.     .xx.
+.xx.......xx...
+.xxxxxxxxxxxxxx
+.xxxxxxxxxxxxxx
+......xx.......
+     .xx.
+ENDMAP
+
+NAME:  nicolae_lair_garden_over_the_wall_2
+TAGS:  decor extra transparent
+DEPTH: Lair
+KMONS: P = plant
+SUBST: x = x:70 t:20 ., . = ...P
+MAP
+    .xx.
+.....xx...
+.xxxxxxxx.
+.xxxxxxxx.  .....
+.xx....xx.  .xxxx
+.xx.  .xx.  .xxxx
+.xx.  .xx.  .xx..
+.xx.  .xx....xx.
+      .xxxxxxxx.
+      .xxxxxxxx.
+      .......xx.
+            .xx.
+ENDMAP
+
+NAME:  nicolae_lair_garden_over_the_wall_3
+TAGS:  decor extra transparent
+DEPTH: Lair
+KMONS: P = plant
+SUBST: x = x:70 t:20 ., . = ...P
+MAP
+......  .......
+xxxxx.  .xxxxxx
+xxxxx.  .xxxxxx
+...xx....xx....
+  .xxxxxxxx.
+  .xxxxxxxx.
+...xx....xx..
+.xxxx.  .xxxx
+.xxxx.  .xxxx
+.xx...  .....
+.xx.
+ENDMAP
+
+NAME:  nicolae_lair_garden_over_the_wall_4
+TAGS:  decor extra transparent
+DEPTH: Lair
+KMONS: P = plant
+SUBST: x = x:70 t:20 ., . = ...P
+MAP
+   ..........  .......
+   .xxxxxxxx.  .xxxxxx
+   .xxxxxxxx.  .xxxxxx
+   .xx....xx.  .xx....
+....xx.  .xx....xx.
+xxxxxx.  .xxxxxxxx.
+xxxxxx.  .xxxxxxxx.
+.......  ..........
+ENDMAP
+
+NAME:    nicolae_lair_garden_over_the_wall_5
+TAGS:    decor extra transparent
+DEPTH:   Lair
+KMONS:   P = plant
+SHUFFLE: Qq/Rr
+SUBST:   R = x, r = ., Qq = _, x = x:70 t:20 ., . = ...P
+CLEAR:   _
+MAP
+  .........rrr
+  .xxxxxxxxRRR
+  .xxxxxxxxRRR
+  ....xx...rrr
+......xx...qqq
+xxxxxxxxxxxQQQ
+xxxxxxxxxxxQQQ
+...........qqq
+ENDMAP
+
+NAME:  nicolae_lair_grabbed_some_dinner
+TAGS:  decor extra transparent
+DEPTH: Lair, !Lair:$
+KMONS: Pp = plant
+KFEAT: ^ = shaft trap
+SUBST: s = tt., - = p., ! = P`, ' = .`
+KPROP: `P^ = bloody
+MAP
+@.....  sttt
+.'`'......stt
+.```.....-pptt
+.'``...``!PP^t
+....```..-pptt
+ ........sttt
+       sttt
+ENDMAP
+
+NAME:  nicolae_lair_lichen
+TAGS:  decor extra transparent
+DEPTH: Lair
+KMONS: F = fungus
+KMONS: P = plant
+SUBST: ` = FFF..P, - = PPP..F, ' = _..
+CLEAR: _
+MAP
+''''''''
+'`-`-`-'
+'-FPFP`'
+'`PttF-'
+'-FttP`'
+'`PFPF-'
+'-`-`-`'
+''''''''
+ENDMAP
+
+NAME:  nicolae_lair_little_watering_hole
+TAGS:  decor extra transparent
+DEPTH: Lair
+KMONS: p = plant
+KMONS: P = bush
+SUBST: D = tP, ` = ..p, - = ..P
+MAP
+   -....@
+  DPPPPP.
+ ttttwwP.
+ttD``wwP.
+D````ttP-.
+.@```tDD
+....Dt
+ENDMAP
+
+NAME:   nicolae_lair_lossy_orchard
+TAGS:   decor extra transparent
+DEPTH:  Lair
+KFEAT:  F = cache of fruit
+SUBST:  s = t., S = t_, x = x:40 ., ' = _.
+NSUBST: f = 3=F / F..., ` = 2=F / .
+CLEAR:  _
+MAP
+     SSS.sttts.......'
+  Stttts...s...........'
+ Sttttst.tst.t.t.t.s...........'
+Stttts.fs.f..sf.......xxxxxxxx..'
+Sttttts.tststst.t.t.s.m`.....x..'
+Stttttts.s.f.s...f....x`.....+..'
+Stttttstst.t.t.t.t.s..m`.....x..'
+Stttttf..f.s..........xxxxxxxx..'
+Sttttstst.tstst.t.t.s..........'
+  Sttttts.s.f..........'
+      SSSS.t.s.......'
+ENDMAP
+
+NAME:   nicolae_lair_messy_den
+TAGS:   decor extra transparent
+DEPTH:  Lair, !Lair:$
+KMONS:  p = bush / plant w:5 / nothing w:1
+KMONS:  P = bush
+KITEM:  S = yak skeleton / dream sheep skeleton / human skeleton w:5
+KFEAT:  ^ = shaft trap
+NSUBST: ` = 2=P / `P / S / 2=`S / `
+SUBST:  ` = `..
+KPROP:  PS` = bloody
+MAP
+ ppp
+p```p
+p`^`p
+p```p
+ ppp
+ENDMAP
+
+NAME:   nicolae_lair_more_dang_stairs
+TAGS:   extra decor transparent
+DEPTH:  Lair:2-
+ORIENT: float
+: if you.depth() ~= dgn.br_depth(you.branch()) then
+SUBST: { = {}[]()
+: else
+SUBST: { = {[(
+: end
+NSUBST: - = . / t, D = 2=@ / x
+SUBST:  a = sy, s = t., y = x., ` = x_
+CLEAR:  _
+MAP
+  ``xxDDDxx``
+ `xxxy...yxxx`
+`xxy.a.a.a.yxx`
+`xy.a.s.s.a.yx`
+xx.a.st-ts.a.xx
+xya.sts.sts.ayx
+D..sts...sts..D
+D.a.-..{..-.a.D
+D..sts...sts..D
+xya.sts.sts.ayx
+xx.a.st-ts.a.xx
+`xy.a.s.s.a.yx`
+`xxy.a.a.a.yxx`
+ `xxxy...yxxx`
+  ``xxDDDxx``
+ENDMAP
+
+NAME:  nicolae_lair_overgrowve
+TAGS:  decor extra transparent
+DEPTH: Lair
+KMONS: p = plant
+KMONS: P = bush
+KMONS: F = fungus / toadstool w:2
+SUBST: ` = .__, s = t__, t = tt., . = p:5 .:7, p : p:100 F, t = t:80 P
+CLEAR: _
+MAP
+s``ss``ss`
+`tt..tt..s
+`tt..tt..s
+s..tt..tt`
+s..tt..tt`
+`tt..tt..s
+`tt..tt..s
+s..tt..tt`
+s..tt..tt`
+`ss``ss``s
+ENDMAP
+
+NAME:    nicolae_lair_percent_stairs
+TAGS:    decor extra transparent
+DEPTH:   Lair:2-
+ORIENT:  float
+SHUFFLE: {[(
+NSUBST:  D = . / s / t, E = . / s / t, F = . / s / t, H = . / s / t
+NSUBST:  J = . / t / s
+SUBST:   s = tt.
+MAP
+  xxxxx     tts..@
+ xxsssxx   tts.s..
+xxs.t.sxx ttsHs.s.
+xs.....sxtts.sHs.s
+xst.{.tsxts.s.sHst
+xs.....sxsEs.s.stt
+xxs.t.s.s.sEs.stt
+ xxsss.s.sJsEstt
+  xxxxs.sJs.stt
+   tts.sJs.sxxxx
+  ttsDsJs.s.sssxx
+ tts.sDs.s.s.t.sxx
+tts.s.sDsxs.....sx
+tsFs.s.stxst.[.tsx
+s.sFs.sttxs.....sx
+.s.sFstt xxs.t.sxx
+..s.stt   xxsssxx
+@..stt     xxxxx
+ENDMAP
+
+NAME:   nicolae_lair_planthole_bean
+TAGS:   decor extra transparent luniq_nico_planthole
+DEPTH:  Lair
+KMONS:  p = plant
+NSUBST: ' = 4=. / 4=x / 4=x., - = 2=t / tp / p
+MAP
+    ......
+    .'xx'..
+   ..xppx'.
+  ..'xp-px.
+...'xp--px.
+.'xxp--px'.
+.xpp---px..
+.xp--ppx'.
+.'xppxx'..
+..'xx'...
+ ......
+ENDMAP
+
+NAME:   nicolae_lair_planthole_diamond
+TAGS:   decor extra transparent luniq_nico_planthole
+DEPTH:  Lair
+KMONS:  p = plant
+NSUBST: ' = 5=. / 5=x / 6=x., - = 2=t / tp / p
+MAP
+   .....
+  ..'x'..
+ ..'xpx'..
+..'xp-px'..
+.'xp---px'.
+.xp-----px.
+.'xp---px'.
+..'xp-px'..
+ ..'xpx'..
+  ..'x'..
+   .....
+ENDMAP
+
+NAME:   nicolae_lair_planthole_kiki
+TAGS:   decor extra transparent luniq_nico_planthole
+DEPTH:  Lair
+KMONS:  p = plant
+NSUBST: ' = 4=. / 4=x / 4=x., - = 2=t / tp / p
+MAP
+..........
+.'xx''xx'...
+.xppxxppxx'.
+.xp-pp--ppx..
+.'xp-----px'.
+..xpp--pp-px.
+ .'xxppxxppx.
+ ...'xx''xx'.
+   ..........
+ENDMAP
+
+NAME:   nicolae_lair_planthole_pinch
+TAGS:   decor extra transparent luniq_nico_planthole
+DEPTH:  Lair
+KMONS:  p = plant
+NSUBST: ' = 6=. / 6=x / 6=x., -! = 1=pt, - = t / p, ! = t / p
+MAP
+ .......
+..'xxx'........
+.'xpppx'..'xx'..
+.xp---px''xppx'.
+.xp---ppxxp!!px.
+.xp--pxxpp!!!px.
+.'xppx''xp!!!px.
+..'xx'..'xpppx'.
+ ........'xxx'..
+        .......
+ENDMAP
+
+NAME:   nicolae_lair_planthole_trapezoid
+TAGS:   decor extra transparent luniq_nico_planthole
+DEPTH:  Lair
+KMONS:  p = plant
+NSUBST: ' = 3=. / 3=x / 4=x., - = t / tp / p
+MAP
+      ......
+    ...'xx'.
+  ...'xxppx.
+...'xxpp-px.
+.'xxpp--px'.
+.xpp----px..
+.xppp--px'.
+.'xxxpppx..
+....'xxx'.
+   .......
+ENDMAP
+
+NAME:   nicolae_lair_planthole_worm
+TAGS:   decor extra transparent luniq_nico_planthole
+DEPTH:  Lair
+KMONS:  p = plant
+NSUBST: ' = 4=. / 4=x / 2=x., - = 2=t / tp / p
+MAP
+         .......
+      ....'xxx'.
+   ....'xxxpppx.
+....'xxxppp--px.
+.'xxxppp---pppx.
+.xppp---pppxxx'.
+.xp--pppxxx'....
+.xpppxxx'....
+.'xxx'....
+.......
+ENDMAP
+
+NAME:   nicolae_lair_pondular_hallway
+TAGS:   decor extra transparent
+DEPTH:  Lair
+SUBST:  ~ = -.
+NSUBST: - = 8=t / 4=tw / w, p = ` / ., q = ` / .
+SUBST:  ` = ...xx, ' = x_
+CLEAR:  _
+MAP
+        'xxxxxxxxxxxx'
+     'xxxx``````````xxxx'
+  'xxxxxxx`........`xxxxxxx'
+xxxxxxxxx``.~----~.``xxxxxxxxx
+```ppp```..~------~..```qqq```
+@..```...`~~-wwww-~~`...```..@
+```ppp```..~------~..```qqq```
+xxxxxxxxx``.~----~.``xxxxxxxxx
+  'xxxxxxx`........`xxxxxxx'
+     'xxxx``````````xxxx'
+        'xxxxxxxxxxxx'
+ENDMAP
+
+NAME:   nicolae_lair_rhizomatic_trees
+TAGS:   decor extra transparent
+DEPTH:  Lair
+KMONS:  p = plant
+NSUBST: p = . / `t / t, q = . / `t / t, r = . / `t / t, s = . / `t / t
+NSUBST: D = . / `t / t, E = . / `t / t, F = . / `t / t, H = . / `t / t
+NSUBST: J = . / `t / t, K = . / `t / t, L = . / `t / t, M = . / `t / t
+NSUBST: N = . / `t / t
+SUBST:  ` = t.
+MAP
+ .............
+..`.`.`.`.`.`..
+.`tKt.tpt.tLt`.
+..K.K.p.p.L.L..
+.`tKtDt.tEtLt`.
+....D.D.E.E....
+.`tstDtFtEtqt`.
+..s...F.F...q..
+.`tstHtFtJtqt`.
+....H.H.J.J....
+.`tMtHt.tJtNt`.
+..M.M.r.r.N.N..
+.`tMt.trt.tNt`.
+..`.`.`.`.`.`..
+ .............
+ENDMAP
+
+NAME:  nicolae_lair_simplegrove
+TAGS:  extra decor transparent
+DEPTH: Lair
+KMONS: p = plant
+SUBST: t = tt., . = .:70 p
+MAP
+ ..tt..
+ .tttt....
+ .tttt.tt.
+...tt.tttt
+.tt...tttt
+tttt...tt.
+tttt.tt...
+.tt.tttt.
+....tttt.
+   ..tt..
+ENDMAP
+
+NAME:   nicolae_lair_sylvan_descent
+TAGS:   decor extra transparent
+DEPTH:  Lair, !Lair:$
+ORIENT: float
+NSUBST: p = . / t / .ttt, q = . / t / .ttt, r = . / t / .ttt
+SUBST:  - = ttx, t = t:110 ., ' = _xx, } = }])
+CLEAR:  _
+MAP
+''''
+xxxx'''
+-r-xxxx'''
+.t.-q-xxxx'''
+trt.t.-p-xxxx'
+.t.tqt.t.t.tx'
+trt.t.tpt.}.x'
+.t.tqt.t.t.tx'
+trt.t.-p-xxxx'
+.t.-q-xxxx'''
+-r-xxxx'''
+xxxx'''
+''''
+ENDMAP
+
+NAME:   nicolae_lair_to_the_finish
+TAGS:   decor extra transparent
+DEPTH:  Lair
+KMONS:  P = plant
+KITEM:  H = human skeleton
+KITEM:  M = black bear skeleton / elephant skeleton / anaconda skeleton
+KITEM:  d = damaged mundane short sword
+KITEM:  e = damaged mundane helmet
+NSUBST: ` = d / e, D = + / 2=. / x
+SUBST:  x = xxxx., . = ....P
+MAP
+.........
+.xDDDDDx.
+.D.....D.
+.D.H`..D.
+.D..`M.D.
+.D.....D.
+.xDDDDDx.
+.........
+ENDMAP
+
+NAME:   nicolae_lair_treehouse
+TAGS:   extra decor transparent
+DEPTH:  Lair
+NSUBST: p = mmx / x, q = mmx / x, r = mmx / x, s = + / x
+SUBST:  D : EKtt, J : HOtt, K : LPt, E : FLt, H : FNt, O : NZt
+SUBST:  P : QQQt, L : QQQMMMtt, F : MMMt, N : SSSMMMtt, Z : SSSt
+SUBST:  Q : RRRRt, M : RRRRt, S : RRRRt, R : .....t, x = x:100 .
+MAP
+.........
+.xpppppx.
+.qDEFHJr.
+.qKLMNOr.
+.qPQRSZr.
+.xxsssxx.
+.........
+ENDMAP
+
+NAME:    nicolae_lair_unfinished_basement
+TAGS:    decor extra transparent
+DEPTH:   Lair:2-
+WEIGHT:  5
+ORIENT:  float
+KMONS:   p = plant
+KFEAT:   - = broken_door
+NSUBST:  DE = 1=.
+SHUFFLE: VG
+SUBST:   S = {[(, D = c, E = n, + = +:35 -, G = G:35 ., V = V:35 .
+SUBST:   c = c:70 ., n = n:70 ., . = .:100 p
+MAP
+     .......
+   ...cDDDc...
+  ..cEc...cEc..
+ ..Gc.+.V.+.cG..
+ .ccccc...ccccc.
+..E.cccc+cccc.E..
+.cc+cc.....cc+cc.
+.D...c.....c...D.
+.D.V.+..S..+.V.D.
+.D...c.....c...D.
+.cc+cc.....cc+cc.
+..E.cccc+cccc.E..
+ .ccccc...ccccc.
+ ..Gc.+.V.+.cG..
+  ..cEc...cEc..
+   ...cDDDc...
+     .......
+ENDMAP
+
+NAME:   nicolae_lair_walls_n_trees_1
+TAGS:   decor extra transparent
+DEPTH:  Lair
+SUBST:  y = x., s = t., _ = _.
+NSUBST: - = + / x
+CLEAR:  _
+MAP
+ _____________
+_...sts......._
+_sst...stttts._
+_.tx-----xyyy._
+_t.-....tt..s._
+_.s-.sss...s.._
+_..-..s..yts.s_
+_s.xss..txt..t_
+_..ytt.yxxxy.._
+_s.yt.t..yttt._
+_..y..sss..ss._
+_.s..ss...s..._
+ _____________
+ENDMAP
+
+NAME:   nicolae_lair_walls_n_trees_2
+TAGS:   decor extra transparent
+DEPTH:  Lair
+SUBST:  y = x., s = t., _ = _.
+NSUBST: - = + / x, ` = + / x
+CLEAR:  _
+MAP
+ _____________
+_...sy........_
+_.s..y...sss.._
+_.tt.-.tt..y...__
+_yy--xxxyy...s..._
+_...sxttt..yttsy._
+_.st.y.t...y.t..._
+_.stsy..ss.y.s..._
+_..tsy.ss..`...t._
+_...s..yyy`x```y._
+ __..t..t..`...y._
+   _.y.....y..sy._
+    _____________
+ENDMAP
+
+NAME:   nicolae_lair_walls_n_trees_3
+TAGS:   decor extra transparent
+DEPTH:  Lair
+SUBST:  y = x., s = t., _ = _., S = t_
+NSUBST: - = + / x, ` = + / x
+CLEAR:  _
+MAP
+ _..ytSSSSSSttt__
+_.yyxxxxyyyxxt..._
+_...-.t....txt..._
+_.t.-t.ssts.x....._
+_...-..t.s.sxxxyy._
+_.yyxtt.stt.`..y.._
+_...xt.s..t.`...._
+_...y.s..s..`...._
+_..yyyyx````xxy.._
+ _..y..t....y...tS
+  _...ttttt...__S
+ENDMAP
+
 ###############################################################################
 # Remaining non-grouped regular Lair vaults.
 
