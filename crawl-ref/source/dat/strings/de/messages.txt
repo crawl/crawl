@@ -11261,10 +11261,10 @@ Ihr fühlt Euch seltsam instabil.
 ##################
 %%%%
 Your experience leads to an increase in your attributes!
-Eure Erfahrung führt zu einer Steigerung Eurer Eigenschaften!
+Eure Erfahrung führt zu einer Steigerung Eurer Attribute!
 %%%%
 Your experience leads to a dramatic increase in your attributes!
-Eure Erfahrung führt zu einer dramatischen Steigerung Eurer Eigenschaften!
+Eure Erfahrung führt zu einer dramatischen Steigerung Eurer Attribute!
 %%%%
 Strength
 Stärke
@@ -13732,16 +13732,16 @@ Your %s skill decreases to level %d!
 Eure %s-Fertigkeit sinkt auf Stufe %d!
 %%%%
 Your base %s skill gained %d levels and is now at level %d!
-Eure %s-Basis-Fertigkeit gewinnt %d Stufen und ist jetzt auf Level %d!
+Eure %s-Basis-Fertigkeit gewinnt %d Stufen und ist jetzt auf Stufe %d!
 %%%%
 Your base %s skill lost %d levels and is now at level %d!
-Eure %s-Basis-Fertigkeit verliert %d Stufen und ist jetzt auf Level %d!
+Eure %s-Basis-Fertigkeit verliert %d Stufen und ist jetzt auf Stufe %d!
 %%%%
 Your %s skill gained %d levels and is now at level %d!
-Eure %s-Fertigkeit gewinnt %d Stufen und ist jetzt auf Level %d!
+Eure %s-Fertigkeit gewinnt %d Stufen und ist jetzt auf Stufe %d!
 %%%%
 Your %s skill lost %d levels and is now at level %d!
-Eure %s-Fertigkeit verliert %d Stufen und ist jetzt auf Level %d!
+Eure %s-Fertigkeit verliert %d Stufen und ist jetzt auf Stufe %d!
 %%%%
 You cannot train any new skills!
 Ihr könnt keine neuen Fertigkeiten trainieren!
@@ -18104,7 +18104,7 @@ Fand #%d: %s ('%s')
 "Werte für Stä, Int, Ges eingeben (durch Leerzeichen getrennt): "
 %%%%
 Setting attributes (Str, Int, Dex) to: %i, %i, %i
-Attributen (Stä, Int, Ges) eingestellt auf: %i, %i, %i
+Attribute (Stä, Int, Ges) eingestellt auf: %i, %i, %i
 %%%%
 "Edit which duration (letter or name)? "
 "Welche Dauer bearbeiten (Buchstabe oder Name)? "
