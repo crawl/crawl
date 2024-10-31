@@ -1,0 +1,763 @@
+%%%%
+Fast status
+
+Alle Eure Aktionen sind 50% schneller.
+%%%%
+Invis status
+
+Ihr seid unsichtbar. Die meisten Feinde können Euch nicht sehen und erleiden
+Abzüge für Treffer, obwohl sie Euren ungefähren Standort erraten können. Dies
+führt mit der Zeit zu magischer Kontamination und kann gefährliche
+Kontaminationsgrade verursachen, wenn Ihr bereits vor Erreichen dieses Status
+kontaminiert wart. Wenn der Status ausgegraut ist, ist er aktiv (und verursacht
+Kontamination), aber aus irgendeinem Grund wirkungslos (z. B. wenn Ihr vor
+Kontamination glüht oder in seichtem Wasser steht).
+%%%%
+Tele status
+
+Ihr seid dabei, Euch zu teleportieren. Während Ihr auf die Teleportation wartet,
+wird die Teleportation abgebrochen, wenn Ihr versucht, den Status erneut
+anzuwenden (z. B. durch Verwendung einer Teleportationsrolle).
+%%%%
+Fly status
+
+Ihr fliegt über dem Boden und könnt Wasser und Lava überqueren oder über
+seichtem Wasser ohne Abzüge kämpfen. Bei den meisten Flugarten kommt es zu einer
+Zeitüberschreitung. Passt in diesem Fall auf, worüber Ihr Euch befindet!
+%%%%
+Agi status
+
+Ihr seid unnatürlich beweglich und erhaltet einen Bonus für Euer Ausweichen.
+%%%%
+Brill status
+
+Ihr seid unnatürlich schlau und erhaltet einen Bonus auf die Kraft Eurer Zauber,
+während Eure Manakosten halbiert werden (aufgerundet).
+%%%%
+Might status
+
+Ihr seid übernatürlich stark und richtet im Nahkampf deutlich mehr Schaden an.
+%%%%
+Regen status
+
+Ihr regeneriert Gesundheit unnatürlich schnell. Dies wird nur bei
+vorübergehender Regeneration angezeigt.
+%%%%
+RMsl status
+
+Ihr wehrt Geschosse ab und verbessern so Eure Chance, ihnen auszuweichen.
+%%%%
+Touch status
+
+Eure Angriffe verursachen keinen Schaden, es besteht jedoch die Chance, dass sie
+die Monster, die sie treffen, verwirren.
+%%%%
+Will++ status
+
+Eure Willenskraft ist viel stärker und schützt vor vielen magischen Effekten.
+%%%%
+Berserk status
+
+Ihr seid schneller, verursacht im Kampf mehr Schaden und habt mehr Gesundheit,
+könnt aber die meisten Aktionen außer Bewegen und Angreifen nicht ausführen. Der
+Status lässt sehr schnell nach, es sei denn, Ihr greift Monster an. Wenn er
+abläuft, seid Ihr verlangsamt und könnt für kurze Zeit nicht mehr in den
+Berserkermodus geraten.
+%%%%
+-Berserk status
+
+Ihr erholt Euch von Eurer Berserkerwut und könnt für kurze Zeit nicht erneut in
+Berserkerwut geraten.
+%%%%
+Pois status
+
+Ihr seid vergiftet und verlieren kontinuierlich an Gesundheit. Während der
+Vergiftung wird Eure aktuelle Gesundheit teilweise neu eingefärbt, um den
+eventuellen Giftschaden anzuzeigen, der verursacht wird. Vergiftungen können
+sofort mit Tränken des Gegenmittels geheilt werden.
+%%%%
+Conf status
+
+Ihr seid verwirrt. Ihr könnt in eine zufällige Richtung stolpern, wenn Ihr
+versucht, Euch zu bewegen oder anzugreifen, und könnt weder Zauber wirken noch
+die meisten Gegenstände außer Tränken verwenden. Verwirrung kann sofort durch
+Tränke des Gegenmittels geheilt werden.
+%%%%
+Contam status
+
+Ihr leuchtet mit mutagener Strahlung. Diese kann Euch mit der Zeit mutieren
+lassen, was normalerweise ein negatives Ergebnis hat. Die Farbe zeigt den
+Schweregrad an: Die erste Stufe (grau) ist nur eine Warnung und führt weder zu
+einer Mutation noch zu einem Verlust der Verstohlenheit.
+%%%%
+Drain status
+
+Eure maximalen Trefferpunkte wurden vorübergehend durch negative Energie
+ausgezehrt. Dieser Status lässt nicht nach, wenn Ihr wartet, sondern erlischt
+allmählich, wenn Ihr Erfahrung sammelt.
+%%%%
+Breath status
+
+Euch stockt der Atem, und Ihr könnt Eure angeborene Atemfähigkeit nicht nutzen,
+bis der Status abläuft.
+%%%%
+Exh status
+
+Ihr seid erschöpft und könnt keine göttlichen Kräfte aktivieren, die Erschöpfung
+verursachen, bis der Status abläuft.
+%%%%
+Slow status
+
+Alle Eure Aktionen dauern 50% länger.
+%%%%
+Para status
+
+Ihr seid gelähmt und völlig handlungsunfähig.
+%%%%
+Sleep status
+
+Ihr schlaft und seid völlig handlungsunfähig. Wenn Ihr Schaden nehmt, wacht Ihr
+auf.
+%%%%
+Held status
+
+Ihr seid in einem Netz oder Spinnennetz gefangen. Ihr könnt Euch nicht frei
+bewegen und werdet stattdessen versuchen, Euch zu befreien.
+%%%%
+Constr status
+
+Ihr seid von einem Feind umschlungen und erleiden mit der Zeit immer mehr
+Schaden. Ihr könnt Euch nicht vom Feind wegbewegen (oder blinzeln), obwohl Ihr
+versuchen könnt, zu entkommen, indem Ihr dies versucht, und wenn Ihr dies
+mehrmals versucht, wird die Wahrscheinlichkeit, dass Ihr Erfolg habt und die
+Umschlingung durchbrecht, immer größer.
+%%%%
+Mesm status
+
+Ihr seid hypnotisiert und könnt Euch nicht von dem Monster entfernen, das Euch
+hypnotisiert. Der Effekt kann durch Töten oder Verwirren des verantwortlichen
+Monsters oder durch Unterbrechen der Sichtlinie zu ihm aufgehoben werden.
+%%%%
+Fear status
+
+Ihr werdet von Angst überwältigt und könnt Euch nicht auf das Monster zubewegen,
+das Euch Angst macht. Der Effekt kann durch Töten oder Verwirren des
+verantwortlichen Monsters oder durch Unterbrechen der Sichtlinie zu ihm
+aufgehoben werden.
+%%%%
+-Tele status
+
+Ihr seid verhindert, Euch zu teleportieren oder blinzeln.
+%%%%
+-Move status
+
+Ihr könnt Euch nicht bewegen, blinzeln oder teleportieren. (Ihr könnt weiterhin
+andere Aktionen ausführen.)
+%%%%
+Mark status
+
+Euer Standort wird durch die Wirkung einer Falle oder eines Zaubers markiert,
+und Monster können Euch gezielter jagen und Euch entdecken, auch wenn Ihr Euch
+nicht in ihrem Blickfeld befinden.
+%%%%
+Fire status
+
+Ihr seid mit klebrigem Feuer bedeckt, das innerhalb kurzer Zeit Schaden
+verursacht. Das Betreten von Wasser löscht die Flammen.
+%%%%
+Corona status
+
+Ihr seid von Licht umgeben, was Eure Verstohlenheit erheblich einschränkt und es
+einfacher macht, Euch zu treffen.
+%%%%
+Barbs status
+
+In Eurer Haut sind Widerhaken eingebettet und wenn Ihr Euch bewegt, werdet Ihr
+verletzt. Wenn Ihr eine kurze Zeit an Ort und Stelle bleibt, könnt Ihr die
+Widerhaken entfernen, ohne Schaden zu nehmen.
+%%%%
+Sick status
+
+Ihr seid krank geworden und Eure Gesundheit kann sich nicht mehr regenerieren.
+%%%%
+Vertigo status
+
+Ihr seid desorientiert und Euch ist schwindelig, was Eure Genauigkeit, Euer
+Ausweichvermögen und Eure Erfolgsquote beim Zaubern verringert.
+%%%%
+Corr status
+
+Ihr seid korrodiert, wodurch Euer Schaden im physischen Kampf und Eure Rüstung
+um einen Betrag reduziert werden, der vom Schweregrad der Korrosion abhängt.
+%%%%
+Flay status
+
+Ihr seid mit illusionären Wunden bedeckt, die schweren Schaden verursachen,
+solange der Effekt aktiv bleibt. Durch die Zerstörung der Quelle der Illusion
+wird die gesamte durch die Häutung verlorene Gesundheit wiederhergestellt.
+%%%%
+Weak status
+
+Eure physischen Angriffe richten weniger Schaden an.
+%%%%
+Frozen status
+
+Ihr seid mit Eis bedeckt und Eure Bewegungsgeschwindigkeit ist reduziert.
+%%%%
+Sap status
+
+Eure Magie wird geschwächt. Mit jedem Zauberspruch besteht die Chance, dass sich
+die Wirkung verstärkt, was wiederum dazu führt, dass Eure Erfolgsquote sinkt.
+%%%%
+Brainless status
+
+Eure Intelligenz ist auf 0 gesunken. Ihr seid verlangsamt, könnt keine Zauber
+wirken oder memorisieren und beim Lesen von Schriftrollen scheitert Ihr
+normalerweise. Der Status bleibt auch nach der Wiederherstellung Eurer
+Intelligenz für kurze Zeit bestehen.
+%%%%
+Clumsy status
+
+Eure Geschicklichkeit ist auf 0 gesunken. Ihr seid verlangsamt, könnt nicht
+schleichen oder Schilde verwenden und seid fast völlig unfähig auszuweichen. Der
+Status bleibt auch nach Wiederherstellung Eurer Geschicklichkeit noch kurze Zeit
+bestehen.
+%%%%
+Collapse status
+
+Eure Stärke ist auf 0 gesunken. Ihr seid verlangsamt und Eure
+Gesundheitsregeneration ist stark reduziert. Der Status bleibt auch nach
+Wiederherstellung Eurer Stärke noch kurze Zeit bestehen.
+%%%%
+DChan status
+
+Ihr kanalisiert die Toten und sorgt dafür, dass alle in Eurer Nähe getöteten
+Lebewesen als geisterhafte Diener auferstehen.
+%%%%
+Vit status
+
+Ihr seid göttlich vitalisiert, was Euch Schutz vor Gift, Verwirrung,
+Versteinerung und Krankheit bietet und Eure Kraft, Intelligenz und
+Geschicklichkeit steigert und erhält.
+%%%%
+Will/2 status
+
+Eure Willenskraft ist schwächer, was Euch anfällig für viele magische Effekte
+macht.
+%%%%
+Stone status
+
+Ihr seid versteinert und völlig handlungsunfähig. Ihr seid sehr leicht zu
+treffen, aber der erlittene Schaden ist deutlich geringer.
+%%%%
+Petr status
+
+Ihr verwandelt Euch in Stein. Eure Aktionen werden verlangsamt, der erlittene
+Schaden wird leicht reduziert und bald werdet Ihr vollständig versteinert
+(werdet den Steinstatus erlangen).
+%%%%
+Resist status
+
+Ihr seid widerstandsfähiger gegen Feuer, Kälte, Elektrizität, Gift und Säure.
+%%%%
+Slime status
+
+Eure getragene Waffe oder Eure Fäuste sind mit Schleim bedeckt und verwandeln
+das nächste lebende oder körperlose untote Monster, das ihr trefft, in einen
+neutralen Schleim.
+%%%%
+Swift status
+
+Ihr kommt schnell voran.
+%%%%
+-Swift status
+
+Ihr kommt langsam voran.
+%%%%
+DDoor status
+
+Ihr seid vorübergehend unverwundbar, geratet dabei aber in Todesgefahr und könnt
+nicht durch Heilung beeinflusst werden, solange der Effekt aktiv ist. Nachdem
+der Zauber abgelaufen ist, kann er nicht sofort erneut gewirkt werden.
+%%%%
+-DDoor status
+
+Ihr befindet Euch noch immer in der Nähe der Schwelle des Todes und kannst „Tür
+des Todes“ für kurze Zeit nicht erneut wirken.
+%%%%
+Quad status
+
+QUAD-SCHADEN!
+%%%%
+Sil status
+
+Ihr seid zum Schweigen gebracht. Dadurch ist es unmöglich, Schriftrollen zu
+lesen, Zauber zu wirken, göttliche Kräfte anzurufen oder zu schreien. Der
+bedrückende, unnatürliche Effekt behindert Eure Verstohlenheit erheblich.
+%%%%
+Engulf status
+
+{{
+    local desc = "Ihr seid von einer benachbarten Kreatur verschlungen"
+
+    if not you.res_drowning() then
+        desc = desc .. " und könnt nicht atmen. Ihr werdet zunehmend "
+                       .. " Ertickungsschaden in jeder Runde nehmen bis Ihr"
+                       .. " entkommt. Dies macht das Lesen von Schriftrollen"
+                       .. " Zauberwirken, und das Anrufung göttlicher Kräfte"
+                       .. " unmöglich. Das Wegbewegen von der verschlingenden"
+                       .. " Kreatur wird die Wirkung enden"
+    else
+        desc = desc .. " aber erleidet keine negativen Auswirkungen"
+    end
+
+    return desc .. "."
+}}
+%%%%
+Stealth status
+
+Eure Verstohlenheit wird erheblich verbessert.
+%%%%
+Mirror status
+
+Ihr reflektiert jeglichen erlittenen Schaden auf Eure Angreifer, und verlierst
+je nach Höhe des reflektierten Schadens an Frömmigkeit.
+%%%%
+Vortex status
+
+Ihr befindet Euch im Auge eines gewaltigen Eissturms. Nachdem der Wirbel
+abgeklungen ist, kann er für kurze Zeit nicht erneut hervorgerufen werden.
+%%%%
+-Vortex status
+
+Ihr seid von instabilen Winden umgeben und könnt Polarwirbel für kurze Zeit
+nicht erneut wirken.
+%%%%
+Liquid status
+
+Ihr verflüssigt den Boden um Euch herum und verlangsamt die Bewegung aller
+Kreaturen in der Umgebung.
+%%%%
+Hero status
+
+Eure Kampffertigkeiten sind vorübergehend verbessert.
+%%%%
+Finesse status
+
+Eure Kampfgeschwindigkeit ist erheblich erhöht.
+%%%%
+Prot status
+
+Ihr fleht Elyvilon an, Euer Leben zu retten. Wenn Ihr tödlich verwundet seid,
+kann der Heiler den Todesstoß rückgängig machen. Andere zu töten, während man um
+göttlichen Schutz bittet, führt zu Buße.
+%%%%
+Disjoin status
+
+Ihr destabilisiert den Raum um Euch herum und führt dazu, dass in der Nähe
+befindliche Monster zufällig von Euch weggeblinkt werden.
+%%%%
+Slay status
+
+Ihr habt das Blut eines Werwolfs in Euch, das Euch heilt und Euren Fern- und
+Nahkampfangriffen Boni verleiht, die sich jedes Mal erhöhen, wenn Ihr einen
+Feind tötet.
+%%%%
+Toxic status
+
+Ihr strahlt giftige Energie aus und vergiftet alle Lebewesen in der Nähe
+kontinuierlich.
+%%%%
+Recite status
+
+Ihr rezitiert in der Nähe befindlichen Monstern Zins Gesetze, wobei je nach Ziel
+eine Reihe von Effekten auftreten. Nach Abschluss einer Rezitation kann sie für
+kurze Zeit nicht wiederholt werden.
+%%%%
+-Recite status
+
+Ihr habt vor Kurzem die Rezitation von Zins Gesetzen beendet und könnt sie für
+eine kurze Zeit nicht erneut rezitieren.
+%%%%
+rF- status
+
+Ihr seid anfälliger für Feuer.
+%%%%
+rP- status
+
+Ihr seid anfälliger für Gift.
+%%%%
+PProj status
+
+Ihr teleportiert abgefeuerte oder geworfene Projektile mit erhöhter Genauigkeit
+direkt zu Euren Zielen, wobei Ihr für jede Projektil eine kleine Menge Magie
+verbraucht.
+%%%%
+Forest status
+
+Ihr ruft eine bewaldete Ebene vorübergehend ins Leben und erweckt nahe gelegene
+Bäume, um Euren Feinden Schaden zuzufügen.
+%%%%
+Dragoncall status
+
+Ihr ruft mächtige Drachen herbei, um Eure Feinde anzugreifen. Jeder Drache, der
+den Ruf beantwortet, verbraucht Eure magische Energie. Nachdem der Ruf beendet
+ist, kann er für kurze Zeit nicht erneut ausgelöst werden.
+%%%%
+-Dragoncall status
+
+Ihr habt vor Kurzem Drachen herbeigerufen und könnt Drachenruf für kurze Zeit
+nicht erneut wirken.
+%%%%
+-Potion status
+
+Ihr könnt keine Zaubertränke trinken.
+%%%%
+rF+ status
+
+Ihr seid widerstandsfähiger gegen Feuer.
+%%%%
+rC+ status
+
+Ihr seid widerstandsfähiger gegen Kälte.
+%%%%
+rElec+ status
+
+Ihr seid widerstandsfähiger gegen Elektrizität.
+%%%%
+Horr status
+
+Ihr habt panische Angst vor Monstern in der Nähe, was Euren Schaden und Eure
+Genauigkeit im Kampf und die Kraft Eurer Zauber verringert.
+%%%%
+-Scroll status
+
+Ihr könnt keine Schriftrollen lesen.
+%%%%
+Cleave status
+
+Eure Nahkampfangriffe verursachen Spaltungen und treffen alle benachbarten
+Ziele.
+%%%%
+Ambros status
+
+Ihe regeneriert Gesundheit und Magie, seid aber auch verwirrt. Das Beheben der
+Verwirrung beendet auch die Regeneration.
+%%%%
+Surge status
+
+Wenn Ihr das nächste Mal ein evozierbares Gerät verwendet, wird dessen Wirkung
+verstärkt, allerdings verliert Ihr dabei einen Teil Eurer Magie.
+%%%%
+Howl status
+
+Ein furchterregendes Heulen hallt in Eurem Kopf wider und ruft mächtige
+Kreaturen herbei, die Euch angreifen.
+%%%%
+Blood status
+
+Euer Körper ist mit geronnenem Blut bedeckt, das Euch als Rüstung dient, solange
+Ihr schwer verletzt seid.
+%%%%
+-Cast status
+
+Ihr könnt keine Zauber wirken.
+%%%%
+Channel status
+
+Ihr kanalisiert magische Energie.
+%%%%
+Spider status
+
+Ihr wurdet in eine giftige, spinnenartige Kreatur verwandelt. Ihr könnt sehr gut
+ausweichen und habt einen giftigen Biss, werdet aber anfällig für Gift. Alle
+ausgerüsteten Waffen und Rüstungen sind verschmolzen und Eure Erfolgsrate bei
+Zaubersprüchen ist leicht reduziert.
+%%%%
+Blade status
+
+Aus Euren Händen sind lange, sensenförmige Klingen gewachsen, die Euren
+Nahkampfschaden deutlich erhöhen. Alle ausgerüsteten Waffen sind verschmolzen
+und Eure Erfolgsrate mit Zaubern ist etwas reduziert.
+%%%%
+Statue status
+
+Ihr wurdet in eine langsame, aber extrem robuste Steinstatue verwandelt. Euer
+Nahkampfschaden, sowohl unbewaffnet als auch mit Waffen, ist erheblich erhöht.
+Euer Steinkörper ist von Elektrizität isoliert und resistent gegen Gift und
+negative Energie. Alle ausgerüsteten Körperpanzer, Handschuhe und Stiefel sind
+verschmolzen.
+%%%%
+Ice status
+
+Ihr wurdet in eine gefrorene Eiskreatur verwandelt, die leicht genug ist, um auf
+dem Wasser zu schwimmen. Ihr erhaltet einen eisigen Nahkampfangriff und seid
+unglaublich kälteresistent und resistent gegen Gift, aber anfällig für Feuer.
+Alle ausgerüsteten Waffen und Rüstungen sind verschmolzen.
+%%%%
+Dragon status
+
+{{
+    local desc = "Ihr wurdet in einen mächtigen"
+
+    if you.race():find("Draconian") then
+        desc = desc .. " Drache verwandelt"
+        if you.race() ~= "Grey Draconian" then
+            desc = desc .. ", was die Kraft aller angeborenen Atemangriffe " ..
+                           "erhöht"
+        end
+        if you.race() == "Red Draconian" then
+            desc = desc .. ". Ihr seid sehr resistent gegen Feuer und Gift" ..
+                           ", aber anfällig gegen Kälte"
+        elseif you.race() == "White Draconian" then
+            desc = desc .. ". Ihr seid sehr resistent gegen Kälte und Gift" ..
+                           ",aber anfällig gegen Feuer"
+        elseif you.race() == "Green Draconian" then
+            desc = desc .. " und behalte Eure angeborene Farbe"
+        else
+            desc = desc .. ". Ihr behaltet Eure angeborene Farbe und seid" ..
+                           " auch resistent gegen Gift"
+        end
+    else
+        desc = desc .. ", feuerspeiender Drache verwandelt. Ihr seid sehr" ..
+                       " resistent gegen Feuer und Gift, aber anfällig" ..
+                       " gegen Kälte"
+    end
+
+    desc = desc .. "."
+
+    return desc
+}} Eure Nahkampfangriffe verursachen unglaublichen Schaden und Ihr seid viel
+robuster, aber weniger ausweichend.
+
+Alle ausgerüsteten Waffen und Rüstungen sind verschmolzen.
+%%%%
+Lich status
+
+Ihr wurdet in einen Lich verwandelt. Ihr seid resistent gegen Kälte und
+feindliche Verhexungen und für die Dauer der Verwandlung vollkommen immun gegen
+Gift, negative Energie und Qual. Eure Nekromantie-Zauber werden stärker und Ihr
+erhaltet einen auszehrenden Nahkampfangriff. Ihr seid jedoch auch anfällig für
+heiligen Schaden und Untote Vertreiben und könnt keine Tränke zu Euch nehmen.
+%%%%
+Bat status
+
+Ihr wurdet in eine flinke Fledermaus verwandelt, was Eure Ausweichfähigkeit
+erhöht, aber Eure Nahkampfangriffe erheblich schwächt.
+
+Alle ausgerüsteten Waffen, Rüstungen und Ringe sind verschmolzen und Ihr könnt
+keine Zauber. {{
+    if you.race() ~= "Vampire" then
+        return "Die Wirksamkeit Eurer Nahkampfangriffe während in dieser " ..
+               "Form basiert auf Eurem Erfahrungsstufe und nicht auf " ..
+               "Eurer Fertigkeit im waffenlosen Kampf."
+    end
+}}
+%%%%
+Pig status
+
+Ihr wurdet in ein Schwein verwandelt. Ihr bewegr Euch schnell, seid aber im
+Nahkampf weniger effektiv. Alle ausgerüsteten Waffen, Rüstungen und Ringe sind
+verschmolzen und Ihr könnt keine Zauber wirken. Die Effektivität Eurer
+Nahkampfangriffe in dieser Form basiert auf Eurem Erfahrungsstufe und nicht auf
+Eurer Fertigkeit im waffenlosen Kampf.
+%%%%
+App status
+
+{{
+    if you.race() == "Octopode" then
+        return "Aus einem Eurer Tentakeln ist ein bösartiger Stachel " ..
+               "gewachsen, der den Schaden Eurer zusätzlichen " ..
+               "Tentakelangriffe erhöht."
+    else
+        return "Aus Eurem Körper sind monströse Hörner oder Krallen " ..
+               "gewachsen, was die Durchführung eines zusätzlichen Angriffs " ..
+               "im Nahkampf ermöglicht."
+    end
+}}
+%%%%
+Tree status
+
+Ihr wurdet in einen Baum verwandelt und seid am Boden festgewurzelt. Ihr könnt
+Euch nicht bewegen oder teleportieren. Ihr habt nur minimale
+Ausweichmöglichkeiten, aber mehr Gesundheit und natürliche Rüstung. Ihr seid
+resistent gegen Gift und immun gegen negative Energie.
+
+Alle ausgerüsteten Mäntel, Helme, Handschuhe, Stiefel und Körperpanzer sind
+verschmolzen.
+%%%%
+Wisp status
+
+Ihr wurdet in einen körperlosen Gashauch verwandelt. Ihr seid äußerst
+ausweichend und resistent gegen Feuer, Kälte, Elektrizität und Säure sowie immun
+gegen Gift und negative Energie.
+
+Alle ausgerüsteten Waffen, Rüstungen und Schmuckstücke sind verschmolzen und Ihr
+könnt keine Zauber wirken. Die Wirksamkeit Eurer Nahkampfangriffe in dieser Form
+hängt von der Erfahrungsstufe und nicht von der Fertigkeit im waffenlosen Kampf
+ab.
+%%%%
+Fungus status
+
+Ihr wurdet in einen empfindungsfähigen Pilz verwandelt. Ihr seid sehr
+ausweichend und könnt Sporen freisetzen, die bei Nahkampfangriffen Verwirrung
+stiften, können sich jedoch nicht bewegen, wenn feindliche Kreaturen anwesend
+sind. Ihr seid resistent gegen Gift und immun gegen negative Energie.
+
+Alle ausgerüsteten Waffen und Rüstungen sind verschmolzen und Ihr könnt keine
+Zauber wirken. Die Wirksamkeit Eurer Nahkampfangriffe in dieser Form basiert auf
+Eurer Erfahrungsstufe und nicht auf Eurer Fertigkeit im waffenlosen Kampf.
+%%%%
+Shadow status
+
+Ihr wurdet in eine wirbelnde Masse dunkler Schatten verwandelt. Ihr seid
+dauerhaft unsichtbar und immun gegen Gift, Auszehrung und Qual. Ankommender
+Schaden wird halbiert, Ihr blutet bei jedem Angriff Rauch und verfügt über
+unendliche Willenskraft. Allerdings ist Eure Fähigkeit, im Nahkampf und mit
+Fernkampfangriffen Schaden zuzufügen, halbiert, Eure Zauberkraft wird stark
+eingeschränkt und Eure maximale Gesundheit wird weiter gezehrt, wenn Ihr Schaden
+erleidet.
+%%%%
+Orb status
+
+Ihr befindet Euch in der Nähe der Kugel von Zot (oder haltet sie vielleicht in
+der Hand), deren Energien die Translokationsmagie stören. Die Teleportation
+dauert länger und die Portale von Passage von Golubria sind weniger genau
+positioniert und verfallen schneller.
+%%%%
+-Hop status
+
+Eure Beine sind müde und Ihr könnt nicht hüpfen. Dieser Zustand wird erst
+aufgehoben, wenn Ihr mehrere Runden lang nicht in Bewegung seid. (Andere
+Aktionen wie Angreifen oder Zaubern sind in Ordnung.)
+%%%%
+Ray status
+
+Ihr kanalisiert gerade einen Strahl sengender magischer Energie. Durch Drücken
+von . wird der Strahl aufrechterhalten und verstärkt, was 1 MP pro Runde kostet;
+jede andere Aktion, einschließlich der erneuten Verwendung des Zaubers, beendet
+ihn.
+%%%%
+Lash status
+
+Ihr bewegt Euch mit übernatürlicher Geschwindigkeit, wodurch Bewegungsaktionen
+sofort ausgeführt werden. Alle Kampfangriffe, die Ihr während dieser Bewegung
+ausführt, verursachen erhöhten Schaden und verfehlen nie Euer Ziel.
+%%%%
+Storm status
+
+Ihr seid von einem Sturm himmlischer Wolken umgeben. Während der Sturm tobt,
+sind Eure Ausweichen und Kampfgenauigkeit sowie Euer Schaden erheblich erhöht,
+und wenn Ihr Feinde mit Kampfangriffen trefft, wird dieser Bonus erhöht. Der
+Sturm schwächt sich mit der Zeit ab und verschwindet, sobald der Bonus Null
+erreicht. Die himmlischen Wolken verhindern Unsichtbarkeit und verdecken die
+Sicht derjenigen außerhalb des Sturms.
+%%%%
+SlowM status
+
+Auf diesem flüssigen Boden wird Eure Bewegung verlangsamt.
+%%%%
+Alive status
+
+Ihr seid voller Blut und Eure Gesundheit regeneriert sich schnell.
+%%%%
+Aug status
+
+Ihr erhaltet Zauber- und Tötungsboni, die mit Eurer Gesundheit skalieren.
+%%%%
+Beogh status
+
+Ihr könnt Beogh, dem Gott der Höhlenorks, durch einen Priester in der Nähe Treue
+schwören. Drückt dazu im Fähigkeitsmenü die Taste <white>Y</white>.
+%%%%
+Bloodless status
+
+Euer Körper ist völlig blutleer, was Eure maximale Gesundheit verringert und
+Eure Gesundheit daran hindert, sich zu regenerieren, wenn Monster sichtbar sind.
+Ihr seid immun gegen Gift und negative Energie, widerstehen Kälte erheblich und
+sind resistent gegen Qualen.
+%%%%
+Bribe status
+
+Ihr bestecht die Bewohner des aktuellen Zweiges.
+%%%%
+Cloud status
+
+Ihr steht in einer Wolke.
+%%%%
+-Clouds status
+
+Die Luft ist zu ruhig, als dass sich Wolken bilden könnten.
+%%%%
+Dig status
+
+Ihr grabt.
+%%%%
+Elixir status
+
+Eure Gesundheit und/oder Magie sowie die Gesundheit Eurer Verbündeten werden
+schnell wiederhergestellt.
+%%%%
+Fast+Slow status
+
+Ihr unterlieget sowohl verlangsamenden als auch beschleunigenden Effekten.
+%%%%
+Lava status
+
+Ihr fliegt gerade über Lava.
+%%%%
+Recall status
+
+Ihr ruft Eure Verbündeten zurück.
+%%%%
+Water status
+
+{{
+    local feat = view.feature_at(0, 0):gsub("_", " ")
+    if you.flying() then
+        if feat == "deep water" then
+            return "Ihr fliegt über tiefes Wasser.
+        elseif feat == "shallow water" then
+            return "Ihr fliegt über seichtes Wasser.
+        else
+            return "Ihr fliegt über Wasser.
+        end
+    else
+        local verb = you.race() == "Merfolk" and "schwimmt in" or "steht in"
+        if feat == "deep water" then
+            return "Ihr " .. verb .. " tiefem Wasser.
+        elseif feat == "shallow water" then
+            return "Ihr " .. verb .. " seichtem Wasser.
+        else
+            return "Ihr " .. verb .. " Wasser.
+        end
+    end
+}}
+%%%%
+-Wiz status
+
+Ihr habt die Kontrolle über Eure Magie verloren.
+%%%%
+Attr status
+
+Feinde werden magisch zu Euch hingezogen.
+%%%%
+Zot status
+
+Ihr habt zu viel Zeit in einem Zweig verbracht, sodass das bösartige Wesen Zot
+Euch bemerkt hat. Wenn Ihr die angegebene Anzahl von Runden in dem Zweig
+verbringt, ohne in eine neue Ebene hinabzusteigen, wird Zot Euch finden und
+auszehren.
+%%%%
+Zot count status
+
+Wenn Ihr die angegebene Anzahl an Runden in diesem Zweig verbringt, ohne in eine
+neue Eben hinabzusteigen, wird Zot Euch finden und auszehren.
+%%%%
+Curl status
+
+Nach einem Angriff habt Ihr Euch reflexartig zusammengerollt, um Euch vor
+weiteren Schlägen zu schützen. Ihr löst Euch jetzt aus dieser
+Verteidigungshaltung und erhaltet keinen weiteren Schutz, bis Ihr erneut
+getroffen werdet.
+%%%%
