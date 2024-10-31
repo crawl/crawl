@@ -449,7 +449,7 @@ Es gibt sechs bekannte Eigenschaften:
  * Ochsenbestien widerstehen Kälte, sind mit einem dicken Fell gepanzert und können Feinde zurückwerfen.
  * Schock-Bestien widerstehen Elektrizität und können sich in lebende Blitze verwandeln.
  * Stachel-Bestien widerstehen Gift und haben einen weitreichenden Giftschwanz-Angriff.
- * Unheimliche Bestien können unsichtbar sehen und greifen mit einschnürenden Tentakeln an.
+ * Unheimliche Bestien können unsichtbar sehen und greifen mit zerquetschenden Tentakeln an.
 
 Soweit man weiß, haben alle Bestien genau zwei dieser Eigenschaften.
 %%%%

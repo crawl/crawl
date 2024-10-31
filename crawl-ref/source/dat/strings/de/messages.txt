@@ -486,34 +486,34 @@ Ihr verliert den Halt auf {dat}%s.
 %s verliert den Halt auf {dat}%s.
 %%%%
 The zombie hands constrict %s but do no damage.
-Die Zombiehände schnüren {acc}%s ab, fügen aber keinen Schaden zu.
+Die Zombiehände zerquetschen {acc}%s, fügen aber keinen Schaden zu.
 %%%%
 You constrict %s but do no damage.
-Ihr schnürt {acc}%s ab, fügt aber keinen Schaden zu.
+Ihr zerquetscht {acc}%s, fügt aber keinen Schaden zu.
 %%%%
 The grasping roots
 Die greifenden Wurzeln
 %%%%
 You constrict %s
-Ihr schnürt {acc}%s ab
+Ihr zerquetscht {acc}%s
 %%%%
 %s constrict you
-%s schnüren Euch ab
+%s zerquetscht Euch
 %%%%
 %s constricts you
-%s schnürt Euch ab
+%s zerquetscht Euch
 %%%%
 %s constrict %s
-%s schnüren {acc}%s ab
+%s zerquetscht {acc}%s
 %%%%
 %s constricts %s
-%s schnürt {acc}%s ab
+%s zerquetscht {acc}%s
 %%%%
 You are constricted
-Ihr werdet abgeschnürt
+Ihr werdet zerquetscht
 %%%%
 %s is constricted
-%s wird abgeschnürt
+%s wird zerquetscht
 %%%%
 You are unaffected.
 Ihr seid nicht betroffen.
@@ -3673,7 +3673,7 @@ steal items
 Gegenstände stehlen
 %%%%
 begin ongoing constriction
-andauerndes Erwürgen beginnen
+andauernde Zerquetschung beginnen
 %%%%
 deal extra damage to undead and demons
 zusätzlichen Schaden an Untoten und Dämonen verursachen
@@ -8897,7 +8897,7 @@ Etwas Ungesehenes öffnet %s.
 %s entkommt!
 %%%%
 %s struggles to escape constriction.
-%s kämpft, um der Einschnürung zu entkommen.
+%s kämpft, um der Zerquetschung zu entkommen.
 %%%%
 The door bursts into shrapnel!
 Die Tür platzt in Splitter!
@@ -11377,7 +11377,7 @@ Es ist unklug, darauf einzugehen.
 %s ist in einem Gewebe festgehalten!
 %%%%
 %s is being constricted!
-%s wird abgeschnürt!
+%s wird zerquetscht!
 %%%%
 %s cannot move out of your way!
 %s kann Euch nicht aus dem Weg gehen!
@@ -11847,19 +11847,19 @@ You feel as though you will be weak longer.
 Ihr habt das Gefühl, dass Ihr länger schwach bleiben werdet.
 %%%%
 You have 1 tentacle available for constriction.
-Ihr habt 1 Tentakel zum Einschnüren zur Verfügung.
+Ihr habt 1 Tentakel zum Zerquetschen zur Verfügung.
 %%%%
 You have %d tentacles available for constriction.
-Ihr habt %d Tentakel zum Einschnüren zur Verfügung.
+Ihr habt %d Tentakel zum Zerquetschen zur Verfügung.
 %%%%
 You are being constricted by %s.
-Ihr werdet von {dat}%s eingeschnürt.
+Ihr werdet von {dat}%s zerquetscht.
 %%%%
 You are being held by %s.
 Ihr werdet von {dat}%s festgehalten.
 %%%%
 You are constricting %s.
-Ihr schnürt {acc}%s ein.
+Ihr zerquetscht {acc}%s.
 %%%%
 %s enhances the healing.
 %s verbessert die Heilung.
@@ -16358,10 +16358,10 @@ Dort könnt Ihr nichts wachsen lassen.
 ##################
 %%%%
 %s struggles to leap free from constriction.
-%s kämpft darum, sich aus der Einschnürung zu befreien.
+%s kämpft darum, sich aus der Zerquetschung zu befreien.
 %%%%
 %s struggles to blink free from constriction.
-%s kämpft darum, sich aus der Einschnürung zu blinzeln.
+%s kämpft darum, sich aus der Zerquetschung zu blinzeln.
 %%%%
 %s jumps free!
 %s springt frei!

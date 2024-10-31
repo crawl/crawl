@@ -636,10 +636,10 @@ Tarried too long and was consumed by Zot
 Hat zu lange gezögert und wurde von Zot verschlungen
 %%%%
 constriction
-Einschnürung
+Zerquetschung
 %%%%
 Constricted to death by %s
-Von %s zu Tode eingeschnürt
+Von %s zu Tode zerquetscht
 %%%%
 Nibbled to death by software bugs
 Zu Tode geknabbert durch Software-Bugs

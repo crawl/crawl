@@ -196,10 +196,10 @@ Ihr studiert %s.
 # Constricted (by snake/tentacles/roots/etc.)
 %%%%
 Constr
-Umschlung
+Zerqtsch
 %%%%
 constricted
-umschlungen
+zerquetscht
 %%%%
 
 # Silenced
@@ -2123,7 +2123,7 @@ grasping roots
 fassende Wurzeln
 %%%%
 You are constricted by grasping roots.
-Ih seid durch Wurzeln eingeengt.
+Ih seid durch Wurzeln zerquetscht.
 %%%%
 
 %%%%

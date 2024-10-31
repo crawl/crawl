@@ -580,7 +580,8 @@ kann sie aus der Ferne zubeißen.
 anaconda
 
 Eine sehr große Schlange, die sich mit erstaunlicher Geschwindigkeit bewegt. Sie
-tötet ihre Beute nicht durch Gift, sondern indem sie sie umschlingt.
+tötet ihre Beute nicht durch Gift, sondern indem sie sie umschlingt und
+zerquetscht.
 %%%%
 ancestor
 
@@ -642,7 +643,7 @@ geringsten Störung.
 ball python
 
 Eine kleine Schlange, die ihren Biss verstärken kann, indem sie kleine Lebewesen
-umschlingt.
+umschlingt und zerquetscht.
 %%%%
 ballistomycete
 

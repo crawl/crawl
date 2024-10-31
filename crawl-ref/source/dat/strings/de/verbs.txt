@@ -197,7 +197,7 @@ gore
 durchstechen
 %%%%
 constrict
-würgen
+zerquetschen
 %%%%
 trample
 trampeln

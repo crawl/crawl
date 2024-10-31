@@ -126,11 +126,11 @@ bewegen und werdet stattdessen versuchen, Euch zu befreien.
 %%%%
 Constr status
 
-Ihr seid von einem Feind umschlungen und erleiden mit der Zeit immer mehr
+Ihr seid von einem Feind zerquetscht und erleiden mit der Zeit immer mehr
 Schaden. Ihr könnt Euch nicht vom Feind wegbewegen (oder blinzeln), obwohl Ihr
 versuchen könnt, zu entkommen, indem Ihr dies versucht, und wenn Ihr dies
 mehrmals versucht, wird die Wahrscheinlichkeit, dass Ihr Erfolg habt und die
-Umschlingung durchbrecht, immer größer.
+Zerquetschung durchbrecht, immer größer.
 %%%%
 Mesm status
 

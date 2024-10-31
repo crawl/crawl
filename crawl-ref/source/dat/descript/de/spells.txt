@@ -236,7 +236,7 @@ Borgnjor's Vile Clutch spell
 
 Ruft Hände von Leichen hervor, die vor langer Zeit unter dem Boden begraben
 wurden. In diesem Bereich gefangene Feinde werden an Ort und Stelle festgehalten
-und erwürgt, bis sie sich befreien.
+und zerquetscht, bis sie sich befreien.
 %%%%
 Brain Feed spell
 
@@ -724,7 +724,7 @@ erheblicher Teil des Schadens umgeht die Kälteresistenz.
 Grasping Roots spell
 
 Ruft riesige Greifwurzeln aus der Tiefe, die ihr Opfer festhalten und
-einschnüren. Die Wurzeln ziehen sich zurück, wenn sich das Opfer losreißt oder
+zerquetschen. Die Wurzeln ziehen sich zurück, wenn sich das Opfer losreißt oder
 der Rufer außer Sichtweite gerät.
 %%%%
 Greater Servant of Makhleb spell

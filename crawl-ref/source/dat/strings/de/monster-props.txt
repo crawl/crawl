@@ -454,14 +454,14 @@ flayed
 gehäutet
 %%%%
 constricted by roots
-von Wurzeln eingeschnürt
+von Wurzeln zerquetscht
 %%%%
 # short form
 rooted
 verwurzelt
 %%%%
 constricted by zombie hands
-von Zombiehänden eingeklemmt
+von Zombiehänden zerquetscht
 %%%%
 # short form
 clutched
@@ -654,10 +654,10 @@ nicht verwundet
 
 %%%%
 constricted by you
-von Euch gewürgt
+von Euch zerquetscht
 %%%%
 constricted by %s
-von {dat}%s gewürgt
+von {dat}%s zerquetscht
 %%%%
 held by you
 von Euch gefangen
@@ -666,10 +666,10 @@ held by %s
 von {dat}%s gefangen
 %%%%
 constricting you
-würgt Euch
+zerquetscht Euch
 %%%%
 constricting %s
-würgt {acc}%s
+zerquetscht {acc}%s
 %%%%
 holding you
 Euch haltend

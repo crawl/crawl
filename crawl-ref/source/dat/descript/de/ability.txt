@@ -630,8 +630,8 @@ Draw Out Power ability
 
 Zapft Eure innere Kraft an, um Gesundheit und Magie wiederherzustellen und
 Euren Körper und Geist von äußeren Beschränkungen wie Netzen, Spinnweben,
-Verengungen, Versteinerung, Verlangsamung und Verwirrung zu befreien. Die Menge
-der wiederhergestellten Gesundheit und Magie steigt mit der Frömmigkeit.
+Zerquetschung, Versteinerung, Verlangsamung und Verwirrung zu befreien. Die
+Menge der wiederhergestellten Gesundheit und Magie steigt mit der Frömmigkeit.
 %%%%
 Power Leap ability
 
