@@ -2350,6 +2350,7 @@ static const map<monster_info_flags, tileidx_t> monster_status_icons = {
     { MB_SIGN_OF_RUIN, TILEI_SIGN_OF_RUIN },
     { MB_DOUBLED_VIGOUR, TILEI_DOUBLED_VIGOUR },
     { MB_KINETIC_GRAPNEL, TILEI_KINETIC_GRAPNEL },
+    { MB_TEMPERED, TILEI_TEMPERED },
 };
 
 set<tileidx_t> status_icons_for(const monster_info &mons)

@@ -363,3 +363,52 @@ spret cast_sign_of_ruin(actor& caster, coord_def target, int duration, bool chec
 
     return spret::success;
 }
+
+spret cast_percussive_tempering(const actor& caster, monster& target, int power,
+                                bool fail)
+{
+    ASSERT(is_valid_tempering_target(target, caster));
+
+    fail_check();
+
+    if (you.can_see(target))
+    {
+        mprf("A magical hammer augments %s in a flurry of sparks and slag.",
+             target.name(DESC_THE).c_str());
+    }
+
+    bolt shockwave;
+    shockwave.set_agent(&caster);
+    shockwave.attitude = caster.temp_attitude();
+    shockwave.source = target.pos();
+    shockwave.target = target.pos();
+    shockwave.is_explosion = true;
+    shockwave.ex_size = 1;
+    shockwave.origin_spell = SPELL_PERCUSSIVE_TEMPERING;
+    zappy(ZAP_PERCUSSIVE_TEMPERING, power, true, shockwave);
+    shockwave.explode(true, true);
+
+    target.heal(roll_dice(3, 10));
+    target.add_ench(mon_enchant(ENCH_TEMPERED, 0, &caster, random_range(70, 100)));
+
+    return spret::success;
+}
+
+bool is_valid_tempering_target(const monster& mon, const actor& caster)
+{
+    if (!mon.was_created_by(caster) || mon.has_ench(ENCH_TEMPERED))
+        return false;
+
+    mon_enchant summ = mon.get_ench(ENCH_SUMMON);
+    if (summ.degree > 0)
+    {
+        const spell_type spell = (spell_type)summ.degree;
+        // XXX: Bomblets are marked as created by the player cast of Monarch
+        //      Bomb in order to track all detontation targets, but should *not*
+        //      count as valid targets for Percussive Tempering despite this.
+        if (!!(get_spell_disciplines(spell) & spschool::forgecraft))
+            return mon.type != MONS_BOMBLET;
+    }
+
+    return false;
+}

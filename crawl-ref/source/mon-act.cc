@@ -90,6 +90,8 @@ int monster::get_hit_dice() const
     // temp malmuts (-25% HD)
     if (has_ench(ENCH_WRETCHED))
         return max(drained_hd * 3 / 4, 1);
+    else if (has_ench(ENCH_TEMPERED))
+        return max(drained_hd + 4, 1);
     return max(drained_hd, 1);
 }
 

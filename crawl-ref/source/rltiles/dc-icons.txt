@@ -96,6 +96,7 @@ weak_willed WEAK_WILLED
 sign_of_ruin SIGN_OF_RUIN
 doubled_vigour DOUBLED_VIGOUR
 kinetic_grapnel KINETIC_GRAPNEL
+tempered TEMPERED
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR

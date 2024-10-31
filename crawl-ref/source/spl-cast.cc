@@ -1440,6 +1440,9 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_SPLINTERFROST_SHELL:
         return make_unique<targeter_wall_arc>(&you, 5);
 
+    case SPELL_PERCUSSIVE_TEMPERING:
+        return make_unique<targeter_tempering>();
+
     default:
         break;
     }
@@ -2495,6 +2498,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_SPLINTERFROST_SHELL:
         return cast_splinterfrost_shell(you, beam.target, powc, fail);
+
+    case SPELL_PERCUSSIVE_TEMPERING:
+        return cast_percussive_tempering(you, *monster_at(beam.target), powc, fail);
 
     // Enchantments.
     case SPELL_CONFUSING_TOUCH:

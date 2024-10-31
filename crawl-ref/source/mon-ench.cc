@@ -1377,6 +1377,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_MISDIRECTED:
     case ENCH_CHANGED_APPEARANCE:
     case ENCH_KINETIC_GRAPNEL:
+    case ENCH_TEMPERED:
         decay_enchantment(en);
         break;
 
@@ -2116,7 +2117,7 @@ static const char *enchant_names[] =
     "magnetised",
     "armed",
     "misdirected", "changed appearance", "shadowless", "doubled_vigour",
-    "grapnel",
+    "grapnel", "tempered",
     "buggy", // NUM_ENCHANTMENTS
 };
 

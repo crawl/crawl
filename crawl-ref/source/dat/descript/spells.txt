@@ -1226,6 +1226,15 @@ Mud Breath spell
 
 <Mud Breath ability>
 %%%%
+Nazja's Percussive Tempering spell
+
+Manifests a magical hammer that repairs and temporarily augments the offensive
+capabilities of any construct that was created by the caster's own Forgecraft
+spells. This process results in a flurry of sparks, slag, and concussive
+shockwaves that do considerable damage to any enemies adjacent to the targeted
+construct, but it cannot be recast upon the same object until the enhancement
+wears off.
+%%%%
 Noxious Breath spell
 
 <Noxious Breath ability>

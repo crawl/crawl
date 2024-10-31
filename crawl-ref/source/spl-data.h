@@ -4238,6 +4238,16 @@ static const struct spell_desc spelldata[] =
     TILEG_ERROR,
 },
 
+{
+    SPELL_PERCUSSIVE_TEMPERING, "Nazja's Percussive Tempering",
+    spschool::forgecraft,
+    spflag::target | spflag::helpful | spflag::not_self | spflag::destructive,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_ERROR,
+},
 
 {
     SPELL_NO_SPELL, "nonexistent spell",

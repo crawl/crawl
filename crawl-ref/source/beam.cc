@@ -4522,6 +4522,9 @@ bool bolt::ignores_player() const
         return true;
     }
 
+    if (origin_spell == SPELL_PERCUSSIVE_TEMPERING && attitude == ATT_FRIENDLY)
+        return true;
+
     return false;
 }
 
@@ -5851,6 +5854,12 @@ bool bolt::ignores_monster(const monster* mon) const
 
     if (origin_spell == SPELL_UPHEAVAL && agent() && agent() == mon)
         return true;
+
+    if (origin_spell == SPELL_PERCUSSIVE_TEMPERING
+        && mons_atts_aligned(attitude, mon->temp_attitude()))
+    {
+        return true;
+    }
 
     return false;
 }

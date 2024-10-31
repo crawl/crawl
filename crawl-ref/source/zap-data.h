@@ -2482,4 +2482,20 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     false,
 },
 
+{
+    ZAP_PERCUSSIVE_TEMPERING,
+    "blast",
+    200,
+    new dicedef_calculator<4, 4, 1, 12>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    new dicedef_calculator<4, 4, 1, 12>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    WHITE,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    false,
+    true,
+},
+
 };

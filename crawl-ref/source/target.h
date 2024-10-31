@@ -689,3 +689,10 @@ private:
     int wall_num;
     vector<coord_def> spots;
 };
+
+class targeter_tempering : public targeter_smite
+{
+public:
+    targeter_tempering();
+    bool valid_aim(coord_def a) override;
+};

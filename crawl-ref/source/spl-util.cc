@@ -464,7 +464,11 @@ bool spell_harms_area(spell_type spell)
     const spell_flags flags = _seekspell(spell)->flags;
 
     if (flags & (spflag::helpful | spflag::neutral))
-        return false;
+    {
+        // XXX: This is a 'helpful' spell that also does area damage, so monster
+        //      logic should account for this, regarding Sanctuary.
+        return spell == SPELL_PERCUSSIVE_TEMPERING;
+    }
 
     if (flags & spflag::area)
         return true;

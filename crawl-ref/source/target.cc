@@ -23,6 +23,7 @@
 #include "ray.h"
 #include "spl-damage.h"
 #include "spl-goditem.h" // player_is_debuffable
+#include "spl-monench.h"
 #include "spl-summoning.h"
 #include "spl-other.h"
 #include "spl-transloc.h"
@@ -2568,4 +2569,27 @@ aff_type targeter_wall_arc::is_affected(coord_def loc)
             return AFF_YES;
 
     return AFF_NO;
+}
+
+targeter_tempering::targeter_tempering() :
+    targeter_smite(&you, LOS_RADIUS, 1, 1)
+{
+}
+
+bool targeter_tempering::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    monster* mons = monster_at(a);
+    if (!mons || !you.can_see(*mons) || !mons->friendly())
+        return false;
+
+    if (mons->has_ench(ENCH_TEMPERED))
+        return notify_fail("You cannot target a construct which is already augmented.");
+
+    if (!is_valid_tempering_target(*mons, *agent))
+        return notify_fail("You can only target your own Forgecraft constructs.");
+
+    return true;
 }
