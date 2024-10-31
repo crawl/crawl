@@ -767,21 +767,21 @@ Eine der folgenden Tasten drücken, um
 mehr Informationen über eine bestimmte
 Aspekt von Dungeon Crawl zu bekommen.
 <w>?</w>: Liste der Befehle
-<w>^</w>: Schnellstart-Anleitung
+<w>^</w>: Schnellstart-Anleitung (Englisch)
 <w>:</w>: Charakter-Notizen zeigen
 <w>#</w>: Charakter-Dump zeigen
-<w>~</w>: Makros-Hilfe
-<w>&</w>: Optionenhilfe
-<w>%</w>: Tabelle der Begabungen
+<w>~</w>: Makros-Hilfe (Englisch)
+<w>&</w>: Optionenhilfe (Englisch)
+<w>%</w>: Tabelle der Begabungen (Englisch)
 <w>/</w>: Beschreibung suchen
-<w>Q</w>: FAQ
+<w>Q</w>: FAQ (Englisch)
 {{
 if crawl.is_tiles()
 then
-    return "<w>T</w>: Kachel-Modus-Hilfe"
+    return "<w>T</w>: Kachel-Modus-Hilfe (Englisch)"
 end
 }}
-<w>V</w>: Version-Informationen
+<w>V</w>: Version-Informationen (Englisch)
 <w>Home</w>: Diese Seite
 %%%%
 help-menu-2
