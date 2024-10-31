@@ -2834,10 +2834,6 @@ static bool _find_monster(const coord_def& where, targ_mode_type mode,
             return bool(x);
     }
 
-    // Target the player for friendly and general spells.
-    if ((mode == TARG_FRIEND || mode == TARG_ANY) && where == you.pos())
-        return true;
-
     // Don't target out of range
     if (!_is_target_in_range(where, range, hitfunc, find_preferred))
         return false;
