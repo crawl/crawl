@@ -1,181 +1,719 @@
 %%%%
-the Shining One
+Ashenzari
 
-Der Glänzende ist eine mächtige Gottheit im Kreuzzug gegen alles Böse. Seine
-Anhänger und deren Verbündete können verschiedene Segen für das erbarmungslose
-Töten böser und unheiliger Kreaturen erhalten. Seine Anhänger dürfen niemals
-unheilige oder böse Magie verwenden, und es wird von ihnen erwartet, dass sie
-ihre morale Überlegenheit durch faires Kämpfen beweisen. Der Gott verlangt von
-seinen Anhängern das Umherstreifen in der Welt, um all seine Bewohner nach
-Spuren des Bösen zu durchsuchen, das ausgerottet werden muss. Anhänger des
-Glänzenden können ohne großen Frömmigkeitsverlust(?) zu Elyvilon oder Zin
-konvertieren.
+Obwohl es unvorstellbar scheint, dass das Göttliche gefesselt sein könnte, ist
+Aschenzari genau das: Der unerschütterliche Gott ist für alle Ewigkeit an den
+Himmel gefesselt, allwissend und allsehend. Ergebenen Anbetern ist es gestattet,
+Bruchstücke dieses Wissens und dieser Voraussicht zu erfassen, aber seiet
+gewarnt: Für Aschenzari sind Macht, Segen und Fluch dasselbe.
+%%%%
+Beogh
+
+Beogh ist eine böse Gottheit, die von den im Dungeon beheimateten Höhlenorks
+verehrt wird. Nur Orks dürfen Beogh dienen und müssen ihre Hingabe mit
+Blutvergießen beweisen. Besonders glühende Anhänger Beoghs werden feststellen,
+dass sich orkische Anhänger um ihr Banner scharen: Es ist ein Zeitalter der
+Zeichen und Omen, und die Orks sind sich zunehmend sicher, dass die Ankunft
+ihres Messias nahe ist.
+%%%%
+Cheibriados
+
+Cheibriados ist ein Gott der Überlegung. Diejenigen, die Cheibriados folgen,
+reisen langsamer, je weiter sie in ihrem Glauben voranschreiten, und es ist
+ihnen verboten, sich durch irgendwelche Mittel zu beschleunigen. Indem sie ihren
+Gott so nachahmen, erreichen sie Vollkommenheit von Geist und Körper und die
+Geheimnisse der Zeit entfalten sich vor ihnen. Besonders fromme Anhänger können
+sogar vorübergehend den Fluss der Zeit und seine unnötigen Störungen hinter sich
+lassen.
+%%%%
+Dithmenos
+
+Dithmenos der Schattenhafte wünscht sich, dass alles dunkel ist. Anhänger von
+Dithmenos entwickeln eine seltsame und überirdische Affinität zu den Schatten
+ihrer Umgebung. Dieser Gott verachtet die physische Welt und versucht ständig,
+in sie einzudringen. Dithmenos belohnt daher diejenigen, die Tod und Zerstörung
+verbreiten, während er sie nach und nach mit Dunkelheit verzehrt.
+%%%%
+Elyvilon
+
+Elyvilon der Heiler heißt alle guten Seelen willkommen, die bereit sind, anderen
+zu helfen. Diese Personen können mit mächtigen Heilkräften rechnen, mit denen
+sie Blutvergießen vermeiden können. Elyvilon schätzt die Erkundung des Dungeons.
+Elyvilons Anhänger können sich zum Glänzenden oder Zin bekehren und dabei etwas
+Frömmigkeit bewahren.
+%%%%
+Fedhas
+
+Fedhas ist der Gott des Pflanzen- und Pilzlebens. Seinen Anhängern ist es
+verboten, einer Spezies, die unter Fedhas‘ Schutz steht, Schaden zuzufügen. Im
+Gegenzug verleiht Fedhas eine Reihe von Fähigkeiten, die das Wachstum von
+Pflanzen und Pilzen fördern. Diese Fähigkeiten können sich für Abenteurer im
+Übrigen als nützlich erweisen.
+%%%%
+Gozag
+
+Gozag Ym Sagoz, der Gierige, lehrt, dass die Welt den Reichen gehört. Wer dieses
+Prinzip akzeptiert, kann sein Gold gegen göttliche Hilfe eintauschen. Anhänger
+von Gozag verdienen keine Frömmigkeit; die einzige Möglichkeit, diesen Gott zu
+beeindrucken, besteht darin, ein Vermögen anzuhäufen, und Gläubige können um so
+viel Hilfe bitten, wie sie sich leisten können. Glücklicherweise sagt man, dass
+Gozags Gläubige ein Händchen für Gold haben.
+%%%%
+Hepliaklqana
+
+Hepliaklqana die Vergessene akzeptiert die Anbetung jener, die sich an ihre
+Vorfahren erinnern und an der Seite der Größten von allen kämpfen. Die Akolythen
+von Hepliaklqana opfern einen kleinen Teil ihrer Lebensessenz, um ihre Vorfahren
+in die Welt zu bringen. Während sie neue Erfahrungen erforschen und sammeln,
+werden sie feststellen, dass sie die Erinnerung an ihre Vorfahren formen und
+kontrollieren können, was sie schließlich in die Reihen der mythischen Helden
+bringt.
+%%%%
+Jiyva
+
+Jiyva ist die alte Gottheit der Schleime. Von den Anhängern wird erwartet, dass
+sie die Verbreitung und Sättigung ihrer Schleimkollegen unterstützen, indem sie
+ihnen erlauben, Gegenstände zu konsumieren, und es ist ihnen verboten, Schleimen
+Schaden zuzufügen. Besonders bevorzugte Anhänger werden so formlos wie ihr Gott,
+da sich ihre Attribute und Mutationen unter Jiyvas Einfluss verändern.
 %%%%
 Kikubaaqudgha
 
-Kikubaaqudgha ist ein schrecklicher Dämonengott mit Anhängern, die sich den
-Kräften des Todes hingeben. Kikubaaqudgha ist böse und verlangt den Tod
-lebender Kreaturen und Dämonen so oft wie möglich.
+Kikubaaqudgha ist ein schrecklicher Dämonengott, dem jene dienen, die sich den
+Mächten des Todes hingeben wollen. Kikubaaqudgha, ein böser Gott, verlangt von
+seinen Anbetern, dass sie den Tod und die Vernichtung möglichst vieler Kreaturen
+herbeiführen. Im Gegenzug bietet Kikubaaqudgha dem aufstrebenden Nekromanten
+große Hilfe: Wissen über dunkle Magie, Schutz vor nekromantischen Reaktionen und
+einen endlosen Vorrat an Leichen aus Kikubaaqudghas riesigem Mausoleum.
 %%%%
-Yredelemnul
+Lugonu
 
-Yredelemnul, der Dunkle, ist ein böser Gott, der von denen angebetet wird, die
-Macht über die Toten und die Untoten suchen. Anhänger, die alles heilige
-ablehnen müssen, können Legionen unterwürfiger Untoter beschwören, und erhalten
-eine Reihe nützlicher (wenn auch unangenehmer) Kräfte. Yredelemnul schätzt das
-Töten, aber er bevorzugt die Nutzung der toten Körper statt deren Opferung.
-Auch das Zerstören künstlicher Wesen gefällt dem Dunklen, denn diese sind weder
-wirklich lebendig, noch tot oder untot.
+In das chaotische Reich des Abgrunds verbannt, sucht Lugonu der Ungestalte nach
+Anhängern, um Blutvergießen und Verderben in der Oberwelt zu verbreiten. Wer
+Lugonus Gunst erlangt, erhält einen Teil der Macht des Abgrunds selbst, was es
+ihm ermöglicht, unheimliche Schrecken heraufzubeschwören und sogar nach Belieben
+zwischen der Oberwelt und dem Abgrund zu reisen.
+%%%%
+Makhleb
+
+Makhleb der Zerstörer ist eine furchterregende Gottheit des Blutvergießens und
+der Demütigung des Fleisches. Von seinen Anhängern wird erwartet, dass sie
+andere reinigen, indem sie ihnen in Makhlebs Namen Leid und Tod zufügen.
+Engagierte Anhänger können auch auf die rohen Energien und die in der Hölle
+geborenen Diener des Chaos zugreifen, damit sie die unreine Welt und ihre
+falschen Gesetze zur Ehre ihres bösen Gottes besser brechen können.
+%%%%
+Nemelex Xobeh
+
+Nemelex ist ein seltsamer und unberechenbarer Trickster-Gott, dessen Kräfte
+durch magische Kartenspiele heraufbeschworen werden, die mit dem Ichor von
+Dämonen bemalt sind. Anhänger erhalten Kartenspiele, während sie den Dungeon
+durchqueren, und werden ermutigt, auf die Karten zu vertrauen, um göttliche
+Hilfe zu erhalten. Der Trickster kann jedoch auch dafür sorgen, dass das Glück
+den Mutigen hold ist.
+%%%%
+Okawaru
+
+Okawaru ist ein gefährlicher und mächtiger Gott des Krieges. Von seinen
+Anhängern wird erwartet, dass sie sich ständig im Kampf beweisen und sie können
+Okawarus Macht nutzen, um ihre Fähigkeiten zu steigern. Okawaru schenkt leichten
+Siegen wenig Beachtung, belohnt seine Anhänger jedoch für heroische Taten gegen
+mächtige Feinde.
+%%%%
+Pakellas
+
+Pakellas der Erfinderische glaubt an die Überlegenheit magischer oder anderer
+Geräte gegenüber Zaubersprüchen und anderen Formen der Magie. Obwohl seine
+Anhänger von der umgebenden magischen Kraft abgeschnitten sind, werden sie mit
+magischer Energie versorgt, um ihre Geräte zu stärken, solange sie diese
+verwenden, um Pakellas' Überlegenheit zu behaupten. Pakellas gewährt frommen
+Anbetern Zugang zu immer mächtigeren Geräten.
+%%%%
+Qazlal
+
+Qazlal Sturmbringer ist ein gewalttätiger Gott der Stürme, der es genießt, die
+Kräfte der Natur gegen die Ahnungslosen zu entfesseln. Wer Qazlals Blick auf
+sich zieht, wird zum Auge eines Sturms elementarer Zerstörung, vor dem nur sein
+Gott ihn schützen kann. Fromme Anbeter Qazlals erlangen die Fähigkeit, die
+zerstörerische Kraft des Sturms zu lenken und zu kontrollieren.
+%%%%
+Ru
+
+Von allen Göttern widersetzte sich nur Ru der Schöpfung. Nicht aus Torheit,
+sondern als Ablenkung. Ru-Initianten können Kanäle zu den Kräften öffnen, die
+der sichtbaren Welt zugrunde liegen, indem sie die Fesseln aufgeben, die sie
+hier binden. Diese Opfer werden nicht Ru dargebracht, sondern freiwillig und
+dauerhaft aufgegeben. Nachdem sie solche Opfer gebracht haben, können Initianten
+diese immense Kraft zu ihrem eigenen Nutzen nutzen und schließlich die Fähigkeit
+erlangen, ihre zerstörerische Kraft gegen ihre Feinde einzusetzen.
+%%%%
+Sif Muna
+
+Sif Muna, der Lehrmeister, ist eine nachdenkliche, aber mächtige Gottheit, der
+jene dienen, die nach magischem Wissen streben. Anhänger, die über ihre Feinde
+triumphieren, können den Lehrmeister anrufen, um magische Kraft und die
+Fähigkeit zu erlangen, Zauber zu wirken, die über ihre magische Ausbildung
+hinausgehen. Die Gläubigen werden mit einem Vorrat an Zauberbüchern belohnt, die
+direkt aus Sif Munas legendärer Bibliothek stammen.
+%%%%
+the Shining One
+
+Die Anhänger des Glänzenden sind dem Kodex des ehrenhaften Kriegers verpflichtet
+und sind Soldaten im ewigen Kreuzzug ihres Gottes gegen das Böse. Für den
+Verzicht auf dunkle Magie und hinterhältige Taktiken belohnt der Glänzende sie
+und ihre Verbündeten mit der Macht, die sie brauchen, um Dämonen und Untote zu
+vernichten. Besonders fromme Krieger können in Zeiten der Not sogar Engel
+anrufen. Die Anhänger des Strahlenden können zu Elyvilon oder Zin konvertieren
+und dabei etwas Frömmigkeit bewahren.
+%%%%
+Trog
+
+Trog ist ein alter Gott des Zorns und der Gewalt. Von seinen Anhängern wird
+erwartet, dass sie in Trogs Namen töten und insbesondere Zauberer erschlagen. Im
+Gegenzug erhalten Trog-Anbeter die Fähigkeit, im Kampf nach Belieben zum
+Berserker zu werden, und erhalten Unterstützung in Form mächtiger Waffen und
+mächtiger Verbündeter. Anhängern ist die Verwendung von Zaubermagie strengstens
+untersagt.
+%%%%
+Uskayaw
+
+Uskayaw der Feiernde ist ein Gott des ekstatischen Tanzes. Im Dungeon schätzt
+Uskayaw die Leidenschaft und den Rhythmus des Kampfes und belohnt seine Anhänger
+für jeden Schlag, den sie ausführen, und für den Schaden, den sie ihren Feinden
+zufügen. Je länger der Tanz andauert, desto größere Kräfte bietet Uskayaw. Wenn
+der Tanz endet, verliert Uskayaw schnell das Interesse.
 %%%%
 Vehumet
 
 Vehumet ist ein Gott der zerstörerischen Kräfte der Magie. Seine Anhänger
-erhalten verschiedene nützliche Kräfte, um ihre Kontrolle über die
-hermetischen(?) Künste zu verbessern und Zugang zu einigen der
-furchteinflößenden Zauber aus Vehumets Bibliothek zu erlangen. Man kann seine
-Zuwendung zu Vehumet beweisen, indem man so viel Tod und Verderben wie möglich
-verbreitet.
+erhalten göttliche Unterstützung bei der Beherrschung der hermetischen Künste
+und die Begünstigten haben Zugriff auf einige der furchterregenden Zaubersprüche
+aus Vehumets Bibliothek. Die Hingabe an Vehumet kann dadurch bewiesen werden,
+dass man so viel Blutvergießen und Zerstörung wie möglich verursacht.
 %%%%
-Okawaru
+Wu Jian
 
-Okawaru ist der gefährliche und mächtige Gott des Kampfes. Seine Anhänger
-können eine Vielzahl nützlicher Kampfkräfte und verschiedene Belohnungen
-erhalten, aber sie müssen sich ständig durch Kampf und das Opfern von Leichen
-beweisen. Okawaru bevorzugt heldenhafte Siege gegen deutlich stärkere Gegner,
-und beachtet einfachere Siege kaum. Außerdem, obwohl faires Kämpfen nicht
-erforderlich ist, wird das Angreifen eines Verbündeten Okawaru zornig machen.
+Der Wu Jian-Rat ist eine Versammlung von Kampfmönchen, die zu Göttern
+aufgestiegen sind, nachdem sie sich ihren Weg aus dem Jenseits erkämpft haben.
+Die Schüler des Rates sind in der Lage, akrobatische Kampfmanöver wie
+Wandsprünge, Drehangriffe und strafende Ausfallschritte auszuführen. Sie werden
+schließlich in der Lage sein, Hilfe in Form eines Sturms himmlischer Wolken
+anzufordern.
 %%%%
-Makhleb
+Xom
 
-Makhleb, der Zerstörer, ist eine furchteinflößende Gottheit des Blutvergießens
-und der Kränkung des Fleisches. Von Anhängern wird die Reinigung anderer durch
-Zufügung von Leid und Tod in Makhlebs Namen erwartet, und sie können weitere
-Anerkennung durch das Verwüsten der frisch Gestorbenen erhalten. Geeignete
-Anhänger können außerdem Zugang zu den rohen Energien und den höllenbrütigen
-Dienern des Chaos erhalten, sodass sie die unreine Welt und ihre falschen
-Gesetze besser für den Ruhm ihres Gottes brechen können.
+Xom ist ein wilder und unberechenbarer Gott des Chaos, der keine Anhänger sucht,
+sondern Spielzeuge, mit denen er spielen kann. Viele folgen Xom in der Hoffnung
+auf fabelhafte Belohnungen und gewaltige Kräfte, aber Xom ist nichts, wenn nicht
+launisch. Es gibt nichts, was ein Anhänger tun kann, um Xoms Stimmung zu
+beeinflussen.
 %%%%
-Sif Muna
+Yredelemnul
 
-Sif Muna, die Wissende, ist eine nachdenkliche, aber mächtige Gottheit, der
-diejenigen dienen, die magisches Wissen suchen. Die Wissende begrüßt das
-Training der Zauberfähigkeiten.
+Yredelemnul der Dunkle ist ein Gott, der von jenen verehrt wird, die Macht über
+den Tod und die Untoten erlangen wollen. Anhänger können Legionen unterwürfiger
+Untoter aufstellen und eine Reihe weiterer nützlicher Kräfte erlangen, mit denen
+sie die Seelen der Lebenden besser nutzen können. Yredelemnul bevorzugt
+insbesondere jene, die heilige Kreaturen zerstören, die sich dem Reich der
+Untoten widersetzen.
 %%%%
-Trog
+Zin
 
-Trog ist ein antiker Gott des Zorns und der Gewalt. Seine Anhänger sollen in
-seinem Namen töten und die Leichen opfern, um im Gegenzug Kraft im Kampf und
-einige Belohnungen zu erhalten. Trog hasst alle Zauberer und liebt es, ihre
-Bücher brennen zu sehen. Seine Anhänger dürfen keine Zaubermagie verwenden.
+Zin ist ein Gott der Disziplin. Seine Anhänger müssen an Körper und Seele rein
+bleiben und sich von dunkler Magie und chaotischen Taten fernhalten. Sie müssen
+außerdem einen Teil des gesamten Goldes spenden, das sie erbeuten, und
+vorzugsweise noch mehr spenden. Im Gegenzug können die Anbeter Zins Zorn auf
+Sünder herabrufen und schließlich verschiedene göttliche Schutzbefugnisse
+erlangen. Zins Anhänger können sich zu Elyvilon oder dem Glänzenden bekehren und
+dabei etwas Frömmigkeit bewahren.
 %%%%
-Elyvilon
+Ashenzari powers
 
-Elyvilon, der Heiler, heißt alle guten Seelen, die bereit sind, anderen zu
-helfen, willkommen. Diese Wesen können den Zugang zu mächtigen Heilfähigkeiten
-erwarten. Der Heiler bevorzugt eine pazifistische Überzeugung und hilft seinen
-Anhängern, Blutvergießen zu vermeiden. Elyvilon begrüßt die Zerstörung von
-Waffen, doch frommere Anhänger müssen unheilige oder böse Waffen finden, um auf
-diese Weise Frömmigkeit zu erlangen. Elyvilons Anhänger können zum Glänzenden
-und zu Zin konvertieren, ohne eine allzu große Menge Frömmigkeit zu verlieren.
+Aschenzari fordert seine Anhänger auf, ihre Besitztümer zu verfluchen, und
+bietet diese Flüche regelmäßig seinen Anhängern an während sie den Dungeon
+erkunden. Verfluchte Ausrüstung kann nicht verzaubert werden und kann nur
+entfernt werden, indem man sie für immer zerschmettert. Diese Flüche verbessern
+jedoch bestimmte Fähigkeiten. Sie gefallen auch Aschenzari, der das Unsichtbare
+enthüllt und Klarheit des Geistes verleiht. Die wirklich Gläubigen erhalten ein
+Fragment von Aschenzaris Astralsicht, mit der sie durch Wände sehen können.
 %%%%
-Lugonu
+Beogh powers
 
-Lugonu, die Unförmige, feiert im Chaos des Abgrunds. Ihre Anhänger werden
-ausgesandt, um Blutvergießen und Zerstörung in der Oberwelt zu verbreiten, und
-müssen das unermüdlich tun, um die Anerkennung der bösen Göttin zu erlangen.
-%%%%
-Fedhas
-
-Fedhas Madash ist der Gott der Pflanzen und Pilze. Fedhas verlangt, dass seine
-Anhänger die Verwitterung von Leichen unterstützen. Er verbietet seinen
-Anhängern, unter seinem Schutz stehenden Wesen Leid zuzufügen; außerdem
-verbietet er jede Art der Nekromantie, besonders die, die Auswirkungen auf
-Leichen haben. Im Gegenzug gibt Fedhas seinen Anhängern einige Fähigkeiten, die
-das Wachsen von Pflanzen und Pilzen unterstützen. Diese Fähigkeiten könnten
-sich als nützlich für Abenteurer erweisen.
-%%%%
-Cheibriados
-
-Cheibriados ist ein Gott, der im Geheimnis der Zeit meditiert. Wer sich
-entscheidet, dem Weg der Gottheit zu folgen, wird lernen, unnötige Hast zu
-vermeiden, und sich selbst sowie andere Wesen zu verlangsamen, und denen
-Schaden zuzufügen, die sich weigern, langsamer zu werden. Besonders
-strenggläubige Anhänger können sogar die Zeit und ihre unnötigen Störungen für
-einige Zeit anhalten.
-%%%%
-Ashenzari
-
-Während es unvorstellbar ist, dass ein Gott gefesselt sein könnte, ist
-Ashenzari genau das: Immer am Himmel festgenagelt, sieht und weiß der
-unbewegliche Gott alles. Strenggläubige Anhänger dürfen Bruchteile dieses
-Wissens erhalten, doch sei gewarnt: Für Ashenzari sind Macht, Segen und Fluch
-gleichgestellt.
-%%%%
-Jiyva
-
-Jiyva ist die chaotische antike Gottheit der Schleime. Von ihren Anhängern wird
-erwartet, dass sie die Verbreitung und Sättigung ihrer Schleimkollegen
-unterstützen, indem sie ihnen erlauben, Gegenstände zu verzehren, und dass sie
-keinem Schleim Schaden zufügen. Jiyva wird manchmal sogar selbst Gegenstände
-verzehren, die von ihren Anhängern woanders im Dungeon liegen gelassen wurden.
-Besonders strenggläubige Anhänger werden genauso formlos wie ihr Gott, weil
-ihre Eigenschaften und Mutationen sich unter Jiyvas Einfluss verändern.
-%%%%
-Zin powers
-
-Zin gibt seinen Anhängern die Fähigkeit, den unbeleuchteten Massen zu predigen,
-und Kräfte zum Beleben ihrer Körper sowie zum Erreichen göttlicher Ausdauer. Er
-schützt sie vor vielen Beschwerden und gibt ihnen zu Essen, wenn sie hungrig
-sind. Später erhalten seine Anhänger die Fähigkeit, ihre Feinde kurzzeitig
-einzusperren. Außerdem können sie irgendwann kurzzeitigen Schutz bei ihrem Gott
-suchen, und wenn ihre Frömmigkeit wächst, wird Zin sie vor Mutationen und
-eventuell sogar vor dem Tod schützen.
-%%%%
-Xom powers
-
-Xom anzubeten bedeutet, riskant zu leben. In guter Laune wird Xom Euch mit
-Geschenken überhäufen, doch zu anderen Zeitpunkten könnte der launische Gott
-sich dazu entscheiden, „etwas Spannung ins Spiel zu bringen“, und Euch so ins
-Verderben zu stürzen. Wenn Ihr Euch als der stärkere erweist, umso besser – wenn
-nicht, nun, es wird auch andere Spielzeuge geben...
-%%%%
-Vehumet powers
-
-Anhänger Vehumets werden schnell dazu in der Lage sein, ihre magische Energie
-durch das Töten anderer Wesen aufzuladen. Wenn sie beliebter werden, erhalten
-sie verschiedene Verbesserungen für ihre zerstörerischen Zauber – zuerst Hilfe
-beim Zaubern solcher Magie, dann eine erhöhte Reichweite für
-Elementbeschwörungen, und zuletzt geringere Kosten für die Benutzung von
-Hochlevelzaubern. Irgendwann wird Vehumet seinen Anhängern Zauberbücher für
-zerstörerische Magie schenken.
-%%%%
-Elyvilon powers
-
-Der Heiler bietet seinen Anhängern Möglichkeiten, sich selbst von Schaden und
-anderen krankmachenden Effekten zu heilen. Elyvilon erlaubt zudem das Heilen
-von Gegnern, was dazu führen kann, dass diese neutral werden. Elyvilon kann
-direkt eingreifen, um das Leben eines Anhängers zu retten, besonders dann, wenn
-er darum gebeten wurde. Besonders fromme Anhänger können sich einer solchen
-Rettung sicher sein.
-%%%%
-Fedhas powers
-
-Pflanzen und Pilze werden Fedhas' Anhänger nicht ohne Grund angreifen. Seine
-Anhänger können durch Pflanzen und Pilze wandern, und sogar Geschosse sowie
-Zaubersprüche durch sie feuern, ohne ihnen Schaden zuzufügen. Fedhas gibt die
-Fähigkeit, Pflanzen und Pilze in stärkere Wesen zu verwandeln. Irgendwann
-können seine Anhäger eine Mauer aus Pflanzen und explosive Sporen aus Leichen
-herstellen. Ihnen wird zudem einige Kontrolle über das Wetter gegeben, indem
-sie das Sonnlicht und schließlich Regenstürme beeinflussen können.
+Anhänger von Beogh können ihre Feinde vernichten und erhalten sogar eigene
+orkische Anhänger, die im Kampf von Beogh gesegnet werden und bei Bedarf
+zurückgerufen werden können. Schließlich erlangen Anhänger die Fähigkeit, auf
+dem Wasser zu gehen. Beogh greift manchmal direkt ein, um das Leben eines
+Anhängers zu retten, und die Auserwählten von Beogh können schließlich andere
+gefallene Orks wiederbeleben.
 %%%%
 Cheibriados powers
 
-Anhänger von Cheibriados bewegen sich langsamer, während sie Anerkennung von
-ihrem Gott erhalten, und werden dafür belohnt, Wesen zu töten, die schneller
-als sie selbst sind. Zu schnelle Bewegungen oder unnötig magisch beschleunigte
-Waffennutzung heißt der Gott nicht gut. Cheibriados belohnt die Gläubigen mit
-einem verlangsamten Metabolismus, der Fähigkeit, andere Wesen zu verlangsamen,
-der Kraft, den Fluss der Zeit durcheinander zu bringen, denen zu schaden, die
-sich schneller als sie selbst bewegen und, letztendlich, die Fähigkeit, die
-Zeit komplett anzuhalten.
+Anhänger von Cheibriados bewegen sich langsamer, wenn sie an Gunst gewinnen, und
+werden dafür belohnt, Kreaturen zu töten, die schneller sind als sie. Je
+langsamer sie sich bewegen, desto stärkere Attribute werden ihnen verliehen.
+Cheibriados belohnt die Gläubigen mit der Macht, andere Kreaturen zu
+verlangsamen und den Zeitfluss kurzzeitig zu stören. Gläubige Anbeter erhalten
+die Fähigkeit, all jenen großen Schaden zuzufügen, die sich schneller bewegen
+als sie, und schließlich die Fähigkeit, den Zeitfluss vollständig zu verlassen.
+%%%%
+Dithmenos powers
+
+Anhänger von Dithmenos sind ständig von einer Aura aus Schatten umgeben, deren
+Ausmaß ihre Hingabe widerspiegelt. Dithmenos verleiht seinen Anhängern die
+Fähigkeit, sofort in den Schatten von Kreaturen in der Nähe zu treten, und
+schützt seine Anhänger, indem er die von Angriffen Getroffenen gelegentlich in
+dunklen Rauch hüllt. Hinreichend fromme Anhänger von Dithmenos werden
+feststellen, dass ihr eigener Schatten von selbst angreift, und erlangen
+schließlich die Fähigkeit, selbst die Form eines Schattens anzunehmen.
+%%%%
+Elyvilon powers
+
+Der Heiler bietet seinen Anhängern eine Reihe zunehmend wirksamerer Mittel, um
+sich von Schaden und anderen schädlichen Auswirkungen zu heilen. Anhänger können
+auch versuchen, feindliche Monster zu besänftigen und neutral zu machen.
+Elyvilon kann direkt eingreifen, um das Leben eines Anhängers zu retten, und
+kann gelegentlich auch die Verbündeten des Anhängers vor dem Tod bewahren.
+Besonders fromme Anhänger können sich der Hilfe sicher sein, wenn sie Elyvilon
+um Schutz bitten.
+%%%%
+Fedhas powers
+
+Pflanzen und Pilze greifen Fedhas‘ Anbeter nicht ohne Provokation an. Anbeter
+können durch Pflanzen oder Pilze hindurchgehen und sogar Geschosse oder Zauber
+durch sie hindurch abfeuern, ohne Schaden zu verursachen. Fedhas verleiht die
+Macht, vorübergehend eine Menagerie von Pflanzenverbündeten wachsen zu lassen,
+deren Stärke und Dauer mit der Anrufungsfertigkeit zunimmt. Anbeter können eine
+Schutzmauer aus Dornengestrüpp wachsen lassen, sowie Ballistomyceten, die
+schädliche Sporen abfeuern, deren Explosionen Lebewesen verwirren. Gläubige
+Anhänger können einen Abschnitt festen Geländes mit einer Ansammlung von
+Pflanzenverbündeten überwuchern oder sogar eine mächtige Oklob-Pflanze
+beschwören.
+%%%%
+Gozag powers
+
+Für Gozag sind Fleisch und Geist weniger wichtig als Reichtum, und deshalb
+verwandeln sich alle Monster nach ihrem Tod in Gold. Andere Monster können dann
+kurzzeitig durch die Vorstellung großen Reichtums abgelenkt werden. Getreue
+können sich sofortige Hilfe in Form von Tränken kaufen und können auch dafür
+bezahlen, Ladenbesitzer in den Dungeon zu locken. Besonders wohlhabende Anhänger
+können die Bewohner eines Zweigs des Dungeons bestechen, damit sie ihre
+Anwesenheit ignorieren oder sogar ihre Loyalität wechseln.
+%%%%
+Hepliaklqana powers
+
+Den Anbetern von Hepliaklqana dient ein Wächter, der aus einem Teil ihrer
+Lebensessenz in Gestalt ihres größten Vorfahren geformt wurde. Dieser Vorfahre
+wird zunächst so in Erinnerung behalten, wie er zu Beginn seiner sagenumwobenen
+Abenteuer war, doch seine Fähigkeiten werden mit der seines Nachkommens
+zunehmen. Hepliaklqana ermöglicht es seinen Anhängern immer, ihren Vorfahren an
+ihre Seite zurückzurufen, und selbst wenn der Vorfahre zerstört wird, wird
+Hepliaklqana ihn nicht lange danach wieder heraufbeschwören. Weitere
+Fortschritte in Hepliaklqanas Dienst ermöglichen es den Anbetern, ihren
+Vorfahren wiederherzustellen und zu stärken, ihn mit anderen Kreaturen
+auszutauschen und zu wählen, wie sie sich an die Talente ihres Lebens erinnern.
+%%%%
+Jiyva powers
+
+Jiyvas Anhänger können Gelees anfordern, die in der Nähe befindliche Gegenstände
+verzehren und dabei Gesundheits- und Magiepunkte liefern. Jiyva verzehrt auch
+Gegenstände, die anderswo im Dungeon zurückgelassen werden. Anhänger werden
+später in der Lage sein, Monster in Schleim zu verwandeln und sich schließlich
+selbst umzugestalten, um schädliche Mutationen zu entfernen. Wenn ihre
+Frömmigkeit wächst, wird Jiyva mit zunehmender Häufigkeit Gelees in den Dungeon
+fallen lassen, die Attribute der Anhänger basierend auf ihren Fähigkeiten und
+ihrer Rüstung neu anordnen und Anhänger mutieren lassen, um Jiyvas Bild besser
+widerzuspiegeln.
+%%%%
+Kikubaaqudgha powers
+
+Kikubaaqudgha schickt seinen Anhängern Leichen und verbessert die
+nekromantischen Fähigkeiten seiner Diener durch die Gabe von
+Nekromantie-Zaubersprüchen. Kikubaaqudgha schützt seine Anhänger vor den
+Auswirkungen nekromantischer Fehlzauber und Todesflüchen und kann sie sogar vor
+unheiliger Qual bewahren. Besonders eifrige Anhänger können sich selbst Qualen
+zufügen, indem sie eine Leiche opfern, und Kikubaaqudgha ermöglicht es seinen
+Anhängern schließlich, entweder Wissen über die mächtigste und verbotenste
+nekromantische Magie zu erlangen oder ihre Waffe mit Schmerz zu erfüllen.
+%%%%
+Lugonu powers
+
+Anhänger von Lugonu erlangen die Macht, den Abgrund nach Belieben zu verlassen,
+den Raum um sich herum zu krümmen und Monster in den Abgrund zu verbannen.
+Später werden sie in der Lage sein, die geordnete Welt zu verderben, indem sie
+ein Tor öffnen, durch das Kreaturen des Abgrunds hindurchgehen können, und sich
+selbst direkt in dieses Reich des Chaos zu begeben. Lugonu wird Anhänger vor den
+normalerweise schädlichen Auswirkungen von Waffen, die mit den verzerrenden
+Energien des Abgrunds durchdrungen sind, schützen und wird schließlich anbieten,
+die Waffe eines Anhängers auf diese Weise zu verderben. Lugonu erwartet von
+seinen Anhängern, dass sie unaufhörliches Chaos in der Oberwelt verbreiten, und
+gewährt daher seinen Anbetern keine Frömmigkeit, solange sie im Abgrund selbst
+bleiben.
+%%%%
+Makhleb powers
+
+Makhleb bietet seinen Anhängern die Möglichkeit, durch chaotische,
+zerstörerische Angriffe immensen Schaden anzurichten. Außerdem können Anhänger
+mächtige Dämonen um Hilfe bitten. Makhlebs Kräfte haben ihren Preis in Blut.
+Allerdings verleiht Makhleb seinen Anhängern neue Gesundheit, wenn sie Wesen
+aller Art töten.
+%%%%
+Nemelex Xobeh powers
+
+Die Anhänger des Tricksters erhalten verschiedene Möglichkeiten, das Schicksal
+zu beeinflussen, wenn sie ihre Karten ausspielen. Die Effekte der Karten werden
+mit zunehmender Frömmigkeit und mit größerer Anrufungsfertigkeit mächtiger.
+Später erhalten die Anhänger mächtige Fähigkeiten, die Karten zu manipulieren,
+was es ihnen ermöglicht, eine von drei gezogenen Karten auszuwählen, die Effekte
+mehrerer Karten gleichzeitig zu erzielen und schließlich Karten zu stapeln und
+ihren Inhalt neu anzuordnen.
+%%%%
+Okawaru powers
+
+Anhänger von Okawaru erhalten die Fähigkeit, ihre Kampffertigkeiten
+vorübergehend zu verbessern und viel später viel schneller zuzuschlagen. Okawaru
+wird Anhänger schließlich mit Munition, Waffen und Rüstung beschenken.
+%%%%
+Pakellas powers
+
+Anhänger von Pakellas regenerieren ihre magischen Kräfte nicht auf natürliche
+Weise und dürfen keine externen Mittel dazu verwenden. Stattdessen erhalten sie
+magische Energie, wenn sie Wesen töten. Sie können zunehmende Mengen magischer
+Energie verwenden, um ihre Geräte zu stärken, was ihnen vorübergehend
+zusätzliche Kraft verleiht, und sie können ihre magische Energie auch verwenden,
+um ihre Geräte wieder aufzuladen. Ausreichend ergebene Anhänger erhalten neue
+Geräte von Pakellas und können Pakellas schließlich bitten, eines ihrer Geräte
+persönlich über seine normalen Grenzen hinaus aufzuladen.
+%%%%
+Qazlal powers
+
+Anhänger von Qazlal sind vor allen Wolken geschützt. Wenn ein Anhänger von
+Qazlal die Gunst des Gottes erlangt, wird er langsam von einem lauten Sturm
+umgeben. Der Sturm erzeugt nicht nur Lärm, sondern lässt auch Elementarwolken in
+der Nähe von Anhängern erscheinen, blockiert Angriffe und (bei besonders
+Frommen) lenkt ankommende Geschosse ab. Qazlal ermöglicht es Anhängern, die
+Natur gegen ihre Feinde aufzuhetzen, indem sie eine lokale Naturstörung oder,
+bei besonders frommen Anhängern, eine weitreichendere Katastrophe verursachen.
+Anhänger von Qazlal erlangen nach dem Erleiden von Schaden mit der Zeit
+vorübergehende Resistenzen und können Wolken Leben einhauchen und sie in
+verbündete Elementare verwandeln.
+%%%%
+Ru powers
+
+Ru wird seinen Anhängern auf ihrer Reise durch den Dungeon eine Reihe von Opfern
+anbieten. Wenn sie diese Opfer annehmen, erhalten die Anhänger nach und nach
+eine Aura von immenser Macht. Diese Aura lässt Feinde, die versuchen, ihnen
+Schaden zuzufügen, zunächst ins Wanken geraten und sie mit Krankheiten
+heimsuchen. Nach weiteren Opfern können die Anhänger diese Macht nutzen, um ihre
+Gesundheit und Magie wiederherzustellen oder einen blitzschnellen explosiven
+Sprung zu machen. Außergewöhnliche Opfer können ihre Macht in einem massiven
+Schlag gegen alle ihre Feinde entfesseln. Jede der Kräfte von Rus Opfern wird
+durch mehr Frömmigkeit und mehr Opfer stärker.
+%%%%
+Sif Muna powers
+
+Sif Muna verleiht seinen Anhängern die Fähigkeit, ihre magische Energie schnell
+wiederherzustellen und Zauber nach Belieben zu vergessen, um neue zu lernen.
+Gläubige können den Lehrmeister anrufen, um jeden Zauber zu wirken, den sie
+entdeckt haben, selbst wenn dieser weit über ihre derzeitige magische Ausbildung
+hinausgeht. Mit der Zeit erhalten treue Anhänger Zauberbücher mit einer großen
+Auswahl an Zaubersprüchen.
+%%%%
+the Shining One powers
+
+Anhänger des Glänzenden sind von einem Heiligenschein umgeben, der ihnen ihre
+Feinde offenbart. Anhänger gewinnen an Macht, indem sie böse Wesen töten, und
+mit wachsender Frömmigkeit wird ihre Lebenskraft geschützt. Der Glänzende wird
+herbeigerufene und bezauberte Verbündete länger auf seiner Seite halten, sollten
+sich die Verbündeten des Kreuzzugs als würdig erweisen. Anhänger erhalten die
+Verwendung eines göttlichen Schildes, der sie im Kampf schützt. Später können
+sie Strahlen reinigender Flammen kanalisieren, die unheiligen Wesen besonders
+schaden, und mächtige göttliche Wesen als vorübergehende Verbündete anrufen.
+Sehr fromme Anhänger können den Glänzenden um den Segen einer Waffe bitten. Der
+Glänzende kann gelegentlich direkt eingreifen, um das Leben eines Anhängers zu
+retten.
+%%%%
+Trog powers
+
+Trog bietet seinen Anhängern verschiedene Kräfte, die ihnen im Kampf helfen.
+Anhänger erhalten die Fähigkeit, nach Belieben in Berserkerwut zu geraten, und
+Trog verlängert die Dauer ihrer Wut beim Töten von Feinden. Trog verleiht seinen
+Anhängern die Fähigkeit, ihre Wunden schnell zu heilen und gleichzeitig ihre
+Willenskraft zu stärken, und später die Fähigkeit, mächtige, wütende Verbündete
+herbeizurufen. Schließlich wird Trog seinen Anhängern Waffen schenken, oft mit
+antimagischer Wirkung.
+%%%%
+Uskayaw powers
+
+Anbeter von Uskayaw können stampfen, um Gegner in ihrer Umgebung zu verletzen,
+und sich schnell durch eine Reihe von Kreaturen bewegen, während sie diese
+verwirren. Wenn der Tanz eines Anbeters einen bestimmten Punkt erreicht, wird
+Uskayaw alle Gegner sofort stoppen, damit der Tänzer ein Solo tanzen kann.
+Während der Tanz weitergeht, wird Uskayaw die Emotionen der Gegner verbinden und
+sie zwingen, ihren Schmerz zu teilen. Die Dauer dieser Effekte wird mit der
+Anrufungsfertigkeit zunehmen, und solange die Intensität des Tanzes ausreichend
+ist, können sie nach kurzer Zeit wiederholt werden. Wenn der Tanz weitergeht,
+ermöglicht Uskayaw den Anbetern, ihn zu beenden, indem sie mit einem Gegner
+verschmelzen und dann heftig explodieren, wodurch er sofort getötet wird.
+%%%%
+Vehumet powers
+
+Anhänger von Vehumet können ihre magische Energie schnell wiederherstellen, wenn
+sie Wesen töten. Wenn sie an Gunst gewinnen, werden ihre zerstörerischen Zauber
+verbessert – zunächst erhalten sie Hilfe beim Wirken solcher Zauber und dann
+eine größere Reichweite für Hervorrufungen. Vehumet bietet seinen Anhängern das
+Wissen über immer mächtigere zerstörerische Zauber, wenn sie an Frömmigkeit
+gewinnen.
+%%%%
+Wu Jian powers
+
+Die Jünger des Rates lernen, drei Kampftechniken anzuwenden, während sie sich im
+Kampf bewegen. Kampftechniken sind nicht mit ausgefeilteren Bewegungsmethoden
+kompatibel und lassen sich nicht mit Sturmen, Graben, Hüpfen oder Randalieren
+kombinieren. Sie lernen auch, sich über kurze Distanzen mit unvorstellbarer
+Geschwindigkeit zu bewegen und einen Sturm aus goldenen Wolken
+heraufzubeschwören, um ihre Präzision und ihren Schaden zu erhöhen, solange sie
+Kampfangriffe verwenden.
+%%%%
+Xom powers
+
+Xom anzubeten bedeutet, riskant zu leben. Wenn Xom gut gelaunt ist, überhäuft er
+seine Anbeter mit Geschenken, aber zu anderen Zeiten könnte dieser kapriziöse
+Gott beschließen, "die Dinge ein wenig aufzupeppen" und seine Anbeter ins
+Verderben zu schicken. Wenn sich solche Spielzeuge von Xom als interessant
+erweisen, umso besser; wenn nicht, nun ja, dann gibt es andere Spielzeuge...
+%%%%
+Yredelemnul powers
+
+Yredelemnul verleiht seinen Anhängern die Macht, Skelette und Leichen
+wiederzubeleben, untote Anhänger in ihre Nähe zurückzurufen, und zu heilen,
+indem sie lebenden Kreaturen die Lebenskraft entziehen. Mit genügend Frömmigkeit
+kann Yredelemnul dazu gerufen werden, die Verletzungen eines Anhängers auf
+Angreifer zu übertragen. Schließlich erlangen Anhänger die Macht, die Seele
+eines Monsters zu binden und es stattdessen für sie kämpfen zu lassen.
+Yredelemnul wird seinen Anhängern sporadisch immer mächtigere untote Diener
+schenken.
+%%%%
+Zin powers
+
+Zin verleiht seinen Anhängern die Fähigkeit, den unaufgeklärten Massen zu
+predigen, und die Macht, ihre Körper zu vitalisieren und sie so vor
+verschiedenen Leiden zu schützen. Später erlangen Anhänger die Fähigkeit, ihre
+Feinde vorübergehend einzusperren. Anhänger können schließlich vorübergehende
+Sicherheit in einer göttlichen Zuflucht finden. Mit zunehmender Frömmigkeit
+werden Anhänger vor Mutation geschützt, und Zin kann gelegentlich sogar direkt
+eingreifen, um das Leben eines Anhängers zu retten.
+%%%%
+Ashenzari wrath
+
+Aschenzaris Zorn ist während seiner gesamten Dauer konstant und unerbittlich.
+Die Fähigkeiten der Opfer werden beeinträchtigt und ihre Feinde werden göttlich
+geführt – sie verlieren sie nie aus den Augen und die Jagd endet nie.
+%%%%
+Beogh wrath
+
+Gotteslästerer gegen Beoghs Wort werden von Wellen orkischer Krieger oder
+tanzenden elektrischen Waffen angegriffen. Beogh kann solche Gotteslästerer auch
+einfach niederstrecken – und wenn es um die Zerschlagung wahrer Sünder geht, ist
+Beoghs Hand wirklich hart! Diejenigen, die Beogh noch immer anbeten, werden
+außerdem feststellen, dass ihre Anhänger sie regelmäßig verlassen.
+%%%%
+Cheibriados wrath
+
+Täter gegen Cheibriados werden feststellen, dass ihre Bewegungen langsam
+bleiben, solange Cheibriados seine Aufmerksamkeit auf sie richtet, und dass
+ihnen häufig jegliche magische Beschleunigung entzogen wird. Sie können auch
+noch weiter verlangsamt und erschöpft werden, in Schlaf versetzt werden oder es
+kann wilde und unvorhersehbare magische Effekte aus den Tiefen der Zeit auf sie
+losgelassen.
+%%%%
+Dithmenos wrath
+
+Wenn Dithmenos wütend ist, wendet er die Schatten gegen seine Opfer. Aus der
+Dunkelheit tauchen Monster auf, sowohl aus Schatten gewobene Illusionen als auch
+die Schatten selbst, die sich gegen die Sünder wenden. Dithmenos' subtile
+Strafen sind, wenn überhaupt, noch gefährlicher: Den Opfern werden die Schatten
+entrissen, sie werden gejagt und haben kein Versteck, oder sie ersticken im
+Schatten und schlafen, vielleicht für immer.
+%%%%
+Elyvilon wrath
+
+Elyvilon ist kein Gott, der für seinen Zorn bekannt ist. Dennoch werden
+diejenigen, die Elyvilons Zorn auf sich ziehen, feststellen, dass der Heiler
+ihre Feinde gelegentlich vor dem Tod beschützt.
+%%%%
+Fedhas wrath
+
+Wer Fedhas beleidigt, wird mit Naturgewalten konfrontiert, die pure
+Elementarzerstörung darstellen. Wellen von Ballistomycetensporen steigen aus
+nahegelegenen Leichen auf und die schlimmsten Übeltäter werden von belebten
+Pilzen und säurespeienden Oklob-Pflanzen umzingelt.
+%%%%
+Hepliaklqana wrath
+
+Hepliaklqana glaubt, dass die einzige angemessene Strafe dafür, dem Pfad der
+Erinnerung den Rücken zu kehren, darin besteht, dass man ihm die Nutzung
+verweigert. Jede neue Erfahrung bleibt dem unglücklichen Abtrünnigen verwehrt,
+bis Hepliaklqana entscheidet, dass er genug bestraft wurde. Die Lebensessenz,
+die geopfert wurde, um einen Vorfahren zu manifestieren, wird nicht
+zurückgegeben, bis Hepliaklqana besänftigt ist, und das wird nicht schnell
+gehen: Im Gegensatz zu manchen anderen hat Hepliaklqana ein langes Gedächtnis.
+%%%%
+Gozag wrath
+
+Die erste Strafe von Gozag ist kommerzieller Natur: Alle Geschäfte, die durch
+Gozags Eingreifen eröffnet wurden, schließen für immer ihre Türen. Den Untreuen
+wird geraten, ihre Einkäufe zu erledigen, bevor sie ihren Verrat begehen.
+Solange Gozag wütend bleibt, besteht die Möglichkeit, dass Zaubertränke
+versagen, wenn sie getrunken werden, und allen Feinden, denen man begegnet,
+können eigene Zaubertränke gewährt werden, die ihnen gegen den ehemaligen
+Anbeter helfen.
+%%%%
+Jiyva wrath
+
+Jiyvas Rache ist schnell und gurgelnd. Alle Schleime wenden sich gegen
+diejenigen, die Jiyva beleidigen, und Jiyva sorgt für reichlich Nachschub an
+weiteren Schleimen. Auch die Körper der Opfer werden instabil; sie verwandeln
+sich regelmäßig in seltsame Formen und erleiden schwächende Mutationen, und
+ihnen werden alle Gaben der Schleimmutationen genommen.
+%%%%
+Kikubaaqudgha wrath
+
+Kikubaaqudghas Zorn bringt alle schrecklichen Kräfte der Nekromantie hervor. Die
+Opfer werden von Qualen gefoltern, von Untoten angegriffen, von Miasma erstickt
+und von einer Vielzahl anderer nekromantischer Leiden heimgesucht. Darüber
+hinaus werden Kikubaaqudghas Gaben verdorben; diejenigen, die versuchen,
+nekromantische Magie zu verwenden, um den Zorn abzuwehren, werden feststellen,
+dass sie im unvorhergesehenen Moment nach hinten losgeht.
+%%%%
+Lugonu wrath
+
+Lugonus Zorn macht die Barriere zwischen Realität und Abgrund schwach und
+durchlässig. Der Raum verformt sich und schleudert Opfer durch den Dungeon oder
+sogar direkt in den Abgrund. Lugonu streckt auch die Hand aus und schickt die
+chaotischen Bewohner des Abgrunds gegen Opfer, wobei erfahrene Abenteurer den
+größten Schrecken des Abgrunds gegenüberstehen. Lugonu vergibt nicht leicht und
+wird ehemaligen Anhängern nicht erlauben, sich wieder der Gemeinschaft
+anzuschließen, solange Lugonus Zorn noch anhält.
+%%%%
+Makhleb wrath
+
+Wer Makhlebs Zorn auf sich zieht, wird von Dämonen und Zerstörung überwältigt.
+Die schwersten Strafen sind den stärksten Sündern vorbehalten; Kristallspeere
+und Scharfsrichter werden nur auf jene geschleudert, die Makhleb für wahrhaft
+würdig hält!
+%%%%
+Nemelex Xobeh wrath
+
+Wer Nemelex Xobeh verlässt, verliert sofort alle seine Gabendecks. Außerdem sind
+sie regelmäßig gezwungen, vom Deck der Bestrafung zu ziehen, was eine Reihe
+unangenehmer Effekte verursacht, darunter Entzug, Qual und Verwandlung, und
+andere Götter werden angerufen, um beim Erzeugen von Zorn zu helfen.
+%%%%
+Okawaru wrath
+
+Okawarus grausamste Krieger werden gegen rebellische Diener ausgesandt. Novizen
+werden von Horden von Ogern und Gnolls umzingelt, während Champions von Titanen
+und elfischen Schwertmeistern umzingelt werden.
+%%%%
+Pakellas wrath
+
+Diejenigen, die Pakellas beleidigen, können ihre Geräte für die Dauer von
+Pakellas' Missfallen überhaupt nicht mehr nutzen. Diejenigen, die Pakellas
+völlig im Stich lassen, können ihre magischen Kräfte auch weiterhin nicht
+regenerieren, solange Pakellas' Aufmerksamkeit auf ihnen liegt.
+%%%%
+Qazlal wrath
+
+Qazlals Zorn ist schnell und unverkennbar. Sünder werden ihrer Resistenzen
+beraubt und von wütenden Elementarkreaturen angegriffen, und Qazlal erzeugt
+mächtige Donnerschläge, um seine Feinde zu warnen.
+%%%%
+Ru wrath
+
+Diejenigen, die Rus Dienste verlassen, werden nicht weiter bestraft; ihre
+Frömmigkeit geht jedoch auch bei einer Rückkehr verloren und ihre Opfer bleiben
+für immer bestehen.
+%%%%
+Sif Muna wrath
+
+Diejenigen, die in Sif Munas Ungnade gefallen sind, müssen feststellen, dass die
+Mächte der Magie gegen sie rebellieren. Sie werden verwirrt und betäubt, ihre
+magischen Reserven werden erschöpft, ihre Zauber werden aufgelöst. Auch das
+Wirken von Zaubersprüchen wird unzuverlässig – und sogar gefährlich.
+%%%%
+the Shining One wrath
+
+Der Zorn des Glänzenden ist direkt und unmissverständlich. Seine Opfer werden
+mit heiligem Feuer geschlagen und von heiligen Kriegern bedrängt. Sünder werden
+zum Schweigen gebracht und der Glänzende wird auch schreien, um die Feinde des
+Opfers zu warnen.
+%%%%
+Trog wrath
+
+Trogs Zorn ist glühend. Die Täter werden von Berserkern umzingelt – von
+Bärenrudeln bis hin zu Riesen- und Trollbanden, für die Mächtigsten unter ihnen.
+Die Körper derer, die Trog erzürnen, beginnen zu verwesen, langsamer zu werden
+und zusammenzubrechen, und Trog kann sie einfach mit seiner feurigen Wut direkt
+niederstrecken.
+%%%%
+Uskayaw wrath
+
+Uskayaws Zorn wendet die Kräfte des Tanzes gegen den Täter. Die Prüden werden
+feststellen, dass ihre Feinde in Beserkerwut geraten, und müssen hilflos
+zusehen, wie die Feinde ihre eigenen Solos aufführen. Wenn der Tanz zu langsam
+wird, wird Uskayaw Lärm machen, um mehr Feiernde anzulocken.
+%%%%
+Vehumet wrath
+
+Wer Vehumet erzürnt, wird mit großer Vernichtung rechnen müssen. Novizen werden
+von Flammen und Frost getroffen, Erzmagier von Kristallspeeren und Feuerstürmen.
+Auch ihre eigenen Hervorrufungen gehen oft im ungünstigsten Moment fehl.
+%%%%
+Wu Jian wrath
+
+Wer sich gegen den Rat wendet, muss darauf vorbereitet sein, den Tod durch
+tausend Schnitte zu erleiden. Kein Versteck ist sicher, keine Verkleidung
+perfekt genug, um den plötzlich zuschnappenden Fallen, den fliegenden Dolchen
+und den Armeen belebter Waffen zu entgehen, die den Verräter aus dem Hinterhalt
+überraschen werden.
+%%%%
+Xom wrath
+
+Untreue ehemalige Anhänger werden unter Xoms schlechter Laune leiden müssen,
+solange Xom sich die Mühe macht, sich an sie zu erinnern. Dennoch bleibt Xoms
+Laune bestehen; die Untreuen werden belohnt, so wie die Treuen bestraft werden.
+%%%%
+Yredelemnul wrath
+
+Wer Yredelemnul erzürnt, wird von Legionen der Toten heimgesucht. Neue
+Abenteurer werden von Zombies und Skeletten angegriffen, Veteranen von den
+stärksten untoten Dienern Yredelemnuls. Die eigenen untoten Diener der Opfer
+verlassen sie und zerfallen zu Staub. Eine Vielzahl nekromantischer Krankheiten
+befällt auch diejenigen, die von Yredremnuls Zorn heimgesucht werden.
+%%%%
+Zin wrath
+
+Diejenigen, die unter Zins Zorn stehen, werden ihrer vorteilhaften Mutationen
+beraubt, ihre Feinde werden alarmiert und ihre Sinne werden durch die Axiome des
+Gesetzes verwirrt; Verwirrung, Ohnmacht und völlige Lähmung werden ihr Los sein.
+%%%%
+# Note: It's tricky to get the layout right here. Lines must be no more than 80
+# chars wide (excluding tags), otherwise, they will wrap and disrupt the
+# diagrams.
+Wu Jian extra
+
+
+  .......       ....... (.) <lightred>Ausfallschritt</lightred>: Sich direkt auf einen Feind
+  ..<lightred>@</lightred>.O..  -->  ...<lightred>@</lightred>O.. zubewegen, um zusätzliche Schaden zu
+  .......       ....... verursachen.
+
+  .......       ...<lightred>@</lightred>... (*) <lightred>Wirbelwind</lightred>: Sich zwischen zwei Feldern neben einem
+  ...<lightred>@</lightred>O..  -->  ....O.. Feind bewegen, um ihn leicht zu treffen. Mehrere
+  .......       ....... benachbarte Feinde können gleichzeitig angegriffen
+                        werden.
+
+  ..#....       ..#.... (**) <lightred>Wandsprung</lightred>: Von einer nahgelegenen Wand abspringen
+  ..#<lightred>@</lightred>O..  -->  ..#.O<lightred>@</lightred>. und Feinde in der Nähe des Landeplatzes treffen.
+  ..#....       ..#.... Dauert zwei Runden. Wird über das Fähigkeitsmenü
+                        aktiviert (a).
 %%%%
