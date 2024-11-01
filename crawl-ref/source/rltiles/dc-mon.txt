@@ -159,6 +159,10 @@ iguana MONS_IGUANA
 crocodile MONS_CROCODILE
 %rim 0
 basilisk MONS_BASILISK
+seismosaurus MONS_SEISMOSAURUS
+seismosaurus_egg1 MONS_SEISMOSAURUS_EGG
+seismosaurus_egg2
+seismosaurus_egg3
 %rim 1
 komodo_dragon MONS_KOMODO_DRAGON
 alligator MONS_ALLIGATOR

@@ -1673,6 +1673,9 @@ tileidx_t tileidx_monster_base(int type, int mon_id, bool in_water, int colour,
                                  number <= 5 ?
                                  number - 1 : 4 + (number - 1)/5);
 
+    case MONS_SEISMOSAURUS_EGG:
+        return tileidx_mon_clamp(TILEP_MONS_SEISMOSAURUS_EGG, number);
+
     // draconian ('d')
     case MONS_TIAMAT:
     {
@@ -2351,6 +2354,7 @@ static const map<monster_info_flags, tileidx_t> monster_status_icons = {
     { MB_DOUBLED_VIGOUR, TILEI_DOUBLED_VIGOUR },
     { MB_KINETIC_GRAPNEL, TILEI_KINETIC_GRAPNEL },
     { MB_TEMPERED, TILEI_TEMPERED },
+    { MB_HATCHING, TILEI_HEART },
 };
 
 set<tileidx_t> status_icons_for(const monster_info &mons)

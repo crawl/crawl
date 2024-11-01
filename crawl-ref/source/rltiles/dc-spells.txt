@@ -153,6 +153,7 @@ summon_hydra SUMMON_HYDRA
 summon_ice_beast SUMMON_ICE_BEAST
 summon_lightning_spire SUMMON_LIGHTNING_SPIRE
 summon_mana_viper SUMMON_MANA_VIPER
+summon_seismosaurus_egg SUMMON_SEISMOSAURUS_EGG
 summon_shadow_creatures SUMMON_SHADOW_CREATURES
 summon_small_mammal SUMMON_SMALL_MAMMAL
 surprising_crocodile SURPRISING_CROCODILE

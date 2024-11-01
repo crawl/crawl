@@ -1149,6 +1149,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 case icons.WEAK_WILLED:
                 case icons.DOUBLED_VIGOUR:
                 case icons.TEMPERED:
+                case icons.HEART:
                     this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
                     return 10;
                 case icons.CONSTRICTED:

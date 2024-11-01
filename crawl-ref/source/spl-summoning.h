@@ -183,3 +183,5 @@ spret cast_splinterfrost_shell(const actor& agent, const coord_def& aim, int pow
 vector<coord_def> get_splinterfrost_block_spots(const actor& agent,
                                               const coord_def& aim, int num_walls);
 bool splinterfrost_block_fragment(monster& block, const coord_def& aim);
+
+spret cast_summon_seismosaurus_egg(const actor& agent, int pow, bool fail);

@@ -323,6 +323,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_SEISMOSAURUS,
+      {
+       { SPELL_SEISMIC_STOMP, 56, MON_SPELL_NATURAL },
+      }
+    },
+
     // ('m') Merfolk and friends.
     {  MST_MERFOLK_SIREN,
       {

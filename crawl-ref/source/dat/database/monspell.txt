@@ -418,6 +418,10 @@ Weakening Gaze cast
 Woodweal cast
 
 @The_monster@ touches a tree and draws upon its vitality.
+%%%%
+Seismic Stomp cast
+
+@The_monster@ stomps @possessive@ heavy feet.
 ########################################################################
 # Unique monsters
 ########################################################################

@@ -2184,6 +2184,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SURPRISING_CROCODILE,     { 1, 1 } },
     { SPELL_PLATINUM_PARAGON,         { 1, 1 } },
     { SPELL_WALKING_ALEMBIC,          { 1, 1 } },
+    { SPELL_SUMMON_SEISMOSAURUS_EGG,  { 1, 1 } },
     // Monster-only spells
     { SPELL_SHADOW_CREATURES,         { 0, 4 } },
     { SPELL_SUMMON_SPIDERS,           { 0, 5 } },
@@ -4276,4 +4277,24 @@ bool splinterfrost_block_fragment(monster& block, const coord_def& aim)
     splinterfrost_fragment_fineff::schedule(beam, msg);
 
     return true;
+}
+
+spret cast_summon_seismosaurus_egg(const actor& agent, int pow, bool fail)
+{
+    fail_check();
+
+    mgen_data egg = _summon_data(agent, MONS_SEISMOSAURUS_EGG, summ_dur(3),
+                                 SPELL_SUMMON_SEISMOSAURUS_EGG);
+    egg.hd = (7 + div_rand_round(pow, 22));
+    egg.set_range(3, 3, 1);
+
+    if (monster* mons = create_monster(egg))
+    {
+        mpr("A rock-encrusted egg appears nearby and begins to stir.");
+        mons->add_ench(mon_enchant(ENCH_HATCHING, 0, &agent, random_range(6, 9)));
+    }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return spret::success;
 }

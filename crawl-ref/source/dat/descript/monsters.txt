@@ -2495,6 +2495,18 @@ searing wretch
 An animated corpse alight with terrible fire. The flames are fueled by its
 regenerating flesh, which bubbles and melts as it grows.
 %%%%
+seismosaurus
+
+A stubborn and fiercely territorial lizard with the strength of a mountain. Its
+thunderous footfalls herald violent tremors.
+%%%%
+seismosaurus egg
+
+A lizard egg the size of a small boulder and nearly as hard. Perhaps as a
+defense mechanism, they hatch rapidly in the presence of predators and even a
+newborn can give all but the most ambitious of monsters a reason to consider an
+easier meal.
+%%%%
 seraph
 
 A six-winged servant of the good gods, of the highest rank of the angelic

@@ -1540,6 +1540,14 @@ Searing Breath spell
 Breathes a blast of fire at a targeted creature, leaving a cloud of flames at
 the endpoint.
 %%%%
+Seismic Stomp spell
+
+Stomps heavily upon the ground, sending out violent shockwaves that fracture the
+ground beneath multiple nearby enemies. Flying creatures take greatly reduced
+damage from this attack, but those on the ground may sometimes to lose their
+footing altogether, delaying their next action as they struggle to regain
+balance on the uneven terrain.
+%%%%
 Sentinel's Mark spell
 
 Bestows a strong beacon upon a targeted creature. It announces the presence
@@ -1950,6 +1958,17 @@ Calls forth a swarm of death scarabs.
 Summon Scorpions spell
 
 Calls forth a swarm of venomous scorpions.
+%%%%
+Summon Seismosaurus Egg spell
+
+Summons the egg of a brutish lizard, just on the verge of hatching. So long as
+there are foes nearby and the caster remains adjacent to the egg, it will hatch
+several turns after being summoned to wreck havoc upon its summoner's foes.
+
+Even as a juvenile, a seismosaurus is a force to be reckoned with. It is nearly
+as hardy as a mountain, and its footfalls are capable of creating violent
+seismic shockwaves that deal considerable damage to non-flying enemies and may
+sometimes even cause them to lose their footing altogether.
 %%%%
 Summon Small Mammal spell
 

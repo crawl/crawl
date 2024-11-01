@@ -232,6 +232,7 @@ enum enchant_type
     ENCH_DOUBLED_VIGOUR,
     ENCH_KINETIC_GRAPNEL,
     ENCH_TEMPERED,
+    ENCH_HATCHING,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

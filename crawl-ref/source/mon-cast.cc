@@ -179,6 +179,7 @@ static bool _mons_cast_prisms(monster& caster, actor& foe, int pow, bool check_o
 static bool _mons_cast_hellfire_mortar(monster& caster, actor& foe, int pow, bool check_only);
 static ai_action::goodness _hoarfrost_cannonade_goodness(const monster &caster);
 static void _cast_wall_burst(monster &caster, bolt &beam, int radius = LOS_RADIUS);
+static bool _cast_seismic_stomp(const monster& caster, bolt& beam, bool check_only = false);
 
 enum spell_logic_flag
 {
@@ -886,7 +887,17 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             monarch_deploy_bomblet(caster, targ, true);
         },
         _zap_setup(SPELL_DEPLOY_BOMBLET) } },
-
+    { SPELL_SEISMIC_STOMP, {
+        [](const monster &caster)
+        {
+            bolt dummy;
+            return ai_action::good_or_impossible(
+                _cast_seismic_stomp(caster, dummy, true));
+        },
+       [](monster &caster, mon_spell_slot, bolt& beam) {
+            _cast_seismic_stomp(caster, beam);
+        },
+        _zap_setup(SPELL_SEISMIC_STOMP) } },
     { SPELL_SOUL_SPLINTER, _hex_logic(SPELL_SOUL_SPLINTER, _foe_soul_splinter_goodness) },
 };
 
@@ -1357,6 +1368,57 @@ static void _cast_mass_regeneration(monster* caster)
         _regen_monster(mon, caster, dur);
 }
 
+static bool _cast_seismic_stomp(const monster& caster, bolt& beam, bool check_only)
+{
+    const int range = spell_range(SPELL_SEISMIC_STOMP, 4);
+    vector<actor*> targs;
+    for (actor_near_iterator mi(&caster, LOS_NO_TRANS); mi; ++mi)
+    {
+        if (grid_distance(mi->pos(), caster.pos()) <= range
+            && !(mi->is_monster() && mons_is_firewood(*mi->as_monster()))
+            && !mons_aligned(&caster, *mi))
+        {
+            if (check_only)
+                return true;
+
+            targs.push_back(*mi);
+        }
+    }
+
+    if (targs.empty())
+        return false;
+
+    const int pow = mons_spellpower(caster, SPELL_SEISMIC_STOMP);
+    const unsigned int num_targs = 2 + div_rand_round((int)max(0, pow - 50), 40);
+    shuffle_array(targs);
+    for (size_t i = 0; i < targs.size() && i < num_targs; ++i)
+    {
+        if (you.see_cell(targs[i]->pos()))
+            flash_tile(targs[i]->pos(), YELLOW, 0);
+    }
+    animation_delay(50, true);
+
+    for (size_t i = 0; i < targs.size() && i < num_targs; ++i)
+    {
+        if (!targs[i]->alive())
+            continue;
+
+        beam.source = targs[i]->pos();
+        beam.target = targs[i]->pos();
+        beam.fire();
+
+        if (monster* mon = targs[i]->as_monster())
+        {
+            if (mon->alive() && !mon->airborne() && one_chance_in(3))
+            {
+                simple_monster_message(*mon, " stumbles on the uneven ground.");
+                mon->speed_increment -= random_range(10, 13);
+            }
+        }
+    }
+
+    return true;
+}
 
 /// Is the given full-LOS attack spell worth casting for the given monster?
 static bool _los_spell_worthwhile(const monster &mons, spell_type spell)

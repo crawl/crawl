@@ -311,6 +311,11 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         }
         break;
 
+    case BEAM_SEISMIC:
+        if (you.airborne())
+            hurted = hurted / 3;
+        break;
+
     default:
         break;
     }                           // end switch

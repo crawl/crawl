@@ -28,3 +28,5 @@ bool lost_soul_revive(monster& mons, killer_type killer);
 
 void treant_release_fauna(monster& mons);
 void check_grasping_roots(actor& act, bool quiet = false);
+
+bool egg_is_incubating(const monster& egg);

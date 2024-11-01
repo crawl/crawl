@@ -18,6 +18,9 @@ enum monster_type                      // env.mons[].type
     MONS_IGUANA,
     MONS_KOMODO_DRAGON,
     MONS_BASILISK,
+#if TAG_MAJOR_VERSION > 34
+    MONS_SEISMOSAURUS,
+#endif
     MONS_BAT,
     MONS_FIRE_BAT,
 #if TAG_MAJOR_VERSION > 34
@@ -986,6 +989,7 @@ enum monster_type                      // env.mons[].type
 #if TAG_MAJOR_VERSION > 34
     MONS_BLOCK_OF_ICE,
     MONS_PILLAR_OF_RIME,
+    MONS_SEISMOSAURUS_EGG,
 #endif
     MONS_HELL_LORD,             // genus
     MONS_MERGED_SLIME_CREATURE, // used only for recolouring
@@ -1292,6 +1296,8 @@ enum monster_type                      // env.mons[].type
     MONS_MONARCH_BOMB,
     MONS_BOMBLET,
     MONS_SPLINTERFROST_BARRICADE,
+    MONS_SEISMOSAURUS,
+    MONS_SEISMOSAURUS_EGG,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

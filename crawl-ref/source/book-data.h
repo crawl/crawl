@@ -441,6 +441,7 @@ static const vector<spell_type> spellbook_templates[] =
 { // Book of Blood
     SPELL_SUBLIMATION_OF_BLOOD,
     SPELL_IGNITE_POISON,
+    SPELL_SUMMON_SEISMOSAURUS_EGG,
     SPELL_SUMMON_HYDRA,
 },
 

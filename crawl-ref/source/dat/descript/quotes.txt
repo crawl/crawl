@@ -730,6 +730,17 @@ Summon Illusion spell
 # Sadly, player illusions don't seem to work with the database, so I can't
 # associate this quote with player illusions themselves.
 %%%%
+Summon Seismosaurus Egg spell
+
+Zoologists famously considered this animal to have been extinct for centuries
+until copies of this spell were unearthed among the affairs of a misanthropic
+hermit who'd finally made the wrong noble's hair fall out.
+
+Several well-funded expeditions were launched in the wake of the discovery, but
+despite (or perhaps because of) the sometimes-violent competitiveness these
+naturalists had for each other, the location of the lizards' nesting grounds
+remains unknown to this day.
+%%%%
 Swiftness spell
 
 “JUST WALK OUT

@@ -254,8 +254,6 @@ static unordered_set<int> _player_nonbook_spells =
     SPELL_CAUSTIC_BREATH,
     SPELL_GALVANIC_BREATH,
     SPELL_MUD_BREATH,
-    // Activate component of Seismic Cannonade
-    SPELL_SEISMIC_SHOCKWAVE,
 };
 
 bool is_player_spell(spell_type which_spell)

@@ -2514,4 +2514,20 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     true,
 },
 
+{
+    ZAP_SEISMIC_STOMP,
+    "seismic shockwave",
+    200,
+    nullptr,
+    nullptr,
+    new dicedef_calculator<4, 3, 1, 23>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    YELLOW,
+    false,
+    BEAM_SEISMIC,
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+},
+
 };

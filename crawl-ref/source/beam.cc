@@ -1807,6 +1807,11 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         }
         break;
 
+    case BEAM_SEISMIC:
+        if (mons->airborne())
+            hurted = hurted / 3;
+        break;
+
     default:
         break;
     }
@@ -7609,6 +7614,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_HAEMOCLASM:            return "gore";
     case BEAM_BLOODRITE:             return "blood";
     case BEAM_DOUBLE_VIGOUR:         return "vigour-doubling";
+    case BEAM_SEISMIC:               return "seismic shockwave";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

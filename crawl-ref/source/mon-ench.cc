@@ -2117,7 +2117,7 @@ static const char *enchant_names[] =
     "magnetised",
     "armed",
     "misdirected", "changed appearance", "shadowless", "doubled_vigour",
-    "grapnel", "tempered",
+    "grapnel", "tempered", "hatching",
     "buggy", // NUM_ENCHANTMENTS
 };
 

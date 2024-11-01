@@ -3919,14 +3919,14 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_SEISMIC_SHOCKWAVE, "Seismic Shockwave",
-    spschool::alchemy | spschool::earth,
-    spflag::target,
-    7,
+    SPELL_SEISMIC_STOMP, "Seismic Stomp",
+    spschool::earth,
+    spflag::monster,
+    5,
     200,
-    6, 6,
-    0,
-    TILEG_SUMMON_LIGHTNING_SPIRE,
+    4, 4,
+    8,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -4258,6 +4258,17 @@ static const struct spell_desc spelldata[] =
     2, 2,
     20,
     TILEG_ERROR,
+},
+
+{
+    SPELL_SUMMON_SEISMOSAURUS_EGG, "Summon Seismosaurus Egg",
+    spschool::summoning | spschool::earth,
+    spflag::none,
+    4,
+    100,
+    -1, -1,
+    0,
+    TILEG_SUMMON_SEISMOSAURUS_EGG,
 },
 
 {

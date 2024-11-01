@@ -29,6 +29,7 @@
 #include "libutil.h"
 #include "los.h"
 #include "message.h"
+#include "mon-abil.h"
 #include "mon-behv.h"
 #include "mon-book.h"
 #include "mon-death.h" // ELVEN_IS_ENERGIZED_KEY
@@ -443,6 +444,8 @@ monster_info::monster_info(const monster* m, int milev)
         is_active = !!m->ballisto_activity;
     else if (_has_hydra_multi_attack(*this))
         num_heads = m->num_heads;
+    else if (type == MONS_SEISMOSAURUS_EGG)
+        number = m->number;
     // others use number for internal information
     else
         number = 0;
@@ -855,6 +858,9 @@ monster_info::monster_info(const monster* m, int milev)
         else if (level == 1)
             mb.set(MB_PARTIALLY_CHARGED);
     }
+
+    if (m->type == MONS_SEISMOSAURUS_EGG && egg_is_incubating(*m))
+        mb.set(MB_HATCHING);
 
     // this must be last because it provides this structure to Lua code
     if (milev > MILEV_SKIP_SAFE)
