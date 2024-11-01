@@ -17,7 +17,7 @@
 #include "tileview.h"
 
 GodMenuEntry::GodMenuEntry(god_type god_, bool long_name) :
-    MenuEntry(localise(god_name(god_, long_name)), MEL_ITEM, 1, 0, false),
+    MenuEntry(god_name(god_, long_name), MEL_ITEM, 1, 0, false),
     god(god_)
 {
     if (god == GOD_SHINING_ONE)
@@ -29,6 +29,7 @@ GodMenuEntry::GodMenuEntry(god_type god_, bool long_name) :
     }
     int c = god_message_altar_colour(god);
     colour_text = colour_to_str(c);
+    // i18n: data is used as lookup key, so text must be stored in English
     data = &text;
 
     const dungeon_feature_type feat = altar_for_god(god_);
@@ -45,7 +46,8 @@ string GodMenuEntry::get_text(const bool) const
     {
         char buf[300];
         snprintf(buf, sizeof buf, " <%s>%c</%s> %c %s",  colour_text.c_str(),
-                 hotkeys[0], colour_text.c_str(), preselected ? '+' : '-', text.c_str());
+                 hotkeys[0], colour_text.c_str(), preselected ? '+' : '-',
+                 localise(text).c_str());
         return string(buf);
     }
     return text;

@@ -3578,7 +3578,7 @@ void describe_spell(spell_type spell, const monster_info *mon_owner,
     title_hbox->add_child(move(spell_icon));
 #endif
 
-    string spl_title = spell_title(spell);
+    string spl_title = localise(spell_title(spell));
     trim_string(desc);
 
     auto title = make_shared<Text>();

@@ -971,6 +971,13 @@ static int _describe_key(const string &key, const string &suffix,
     inf.title = [&]() {
         string title = key;
         strip_suffix(title, suffix);
+        if (localisation_active())
+        {
+            string title_en = title;
+            title = localise(title);
+            if (title == title_en)
+                title = localise(uppercase_first(title));
+        }
         return uppercase_first(title);
     }();
     inf.footer = footer;
