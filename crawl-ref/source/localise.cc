@@ -1743,7 +1743,7 @@ static string _reverse_engineer_parameterised_string(const string& s)
     {
         string msg;
         string adjective;
-        for (const string adj: {"stately ", "brisk ", "urgent ", "frantic "})
+        for (const string adj: {"slow ", "stately ", "brisk ", "urgent ", "frantic "})
             if (contains(s, adj))
             {
                 adjective = adj;

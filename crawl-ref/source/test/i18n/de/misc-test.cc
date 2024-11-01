@@ -266,6 +266,9 @@ int main()
     msg = localise("You hear the stately tolling of a bell very nearby.");
     show_result(msg, "Ihr hört das langsame Läuten einer Glocke ganz in der Nähe.");
 
+    msg = localise("You hear the slow hiss of an avalanche of sand very nearby.");
+    show_result(msg, "Ihr hört das langsame Zischen einer Sandlawine ganz in der Nähe.");
+
     msg = localise("This portal requires the presence of the gossamer rune to function.");
     show_result(msg, "Dieses Portal erfordert das Vorhandensein der Spinnfäden-Rune, um zu funktionieren.");
 
