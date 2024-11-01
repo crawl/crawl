@@ -22,6 +22,7 @@
 16. http://www.knight.privat.t-online.de/KnightsBG2Kits.html
 17. https://media.wizards.com/2023/downloads/dnd/SRD_CC_v5.1_DE.pdf
 18. https://abkürzung.info
+19. https://mythical.ink/de
 
 ## Specific Terms
 
@@ -163,6 +164,10 @@ Efreet is der Ifrit in German: https://de.wikipedia.org/wiki/Ifrit (but Efreet i
 Spriggan is translated as der Zweigling here: https://elderscrolls.fandom.com/de/wiki/Zweigling
 
 Deathcap is Knollenblätterpilz in German: https://de.wikipedia.org/wiki/Gr%C3%BCner_Knollenbl%C3%A4tterpilz
+
+Ghost/wraith/spectre/phantom are all synonyms in everyday English, but distinct in DCSS.
+Some equivalent German words are Geist, Gespenst, Spuk, Phantom, Schemen, Schreckgespenst, Spukgespenst, Spukgestalt.
+[5] translates wraith as Todesalb, but it seems to be a pretty uncommon word.
 
 Blink - in [5] translated as Flimmern.
       - in [6] translated as Blinzeln: https://de.classic.wowhead.com/search?q=blinzeln
