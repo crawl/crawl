@@ -81,7 +81,7 @@ Hepliaklqana der Vergessene
 %%%%
 Wu Jian lastname
 
-das Wu Jian Konzil
+der Wu Jian Rat
 %%%%
 # Xom is neuter
 Xom lastname
