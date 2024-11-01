@@ -2208,7 +2208,11 @@ bool complex_monster_message(const monster& mons, const char *format, ...)
 
     va_list argp;
     va_start(argp, format);
-    mprf(channel, 0, format, argp);
+
+    string text_orig = vmake_stringf(format, argp); // english
+    string text = vlocalise(format, argp); // target language
+    _mpr(text, text_orig, channel, 0);
+
     va_end(argp);
     return true;
 }
