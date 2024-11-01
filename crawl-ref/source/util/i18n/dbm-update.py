@@ -16,9 +16,10 @@ def write_entry(key, value):
     value = dbm.strip_quotes_if_allowed(value)
     outfile.write(key + '\n')
     if key in new_vals:
-        outfile.write(new_vals[key])
-    else:
-        outfile.write(value)
+        value = new_vals[key]
+    if '\n' in value:
+        outfile.write('\n')
+    outfile.write(value)
     outfile.write('\n')
     #outfile.write('%%%%\n');
 
@@ -43,9 +44,9 @@ key = ""
 value = ""
 
 for line in infile:
-    line = line.strip()
-    if re.match(r'^\s*$', line) or re.match(r'^\s*#', line):
-        # blank line or comment
+    line = line.rstrip()
+    if re.match(r'^\s*#', line):
+        # comment
         outfile.write(line + '\n');
     elif line == "%%%%":
         if key != "":
@@ -54,7 +55,8 @@ for line in infile:
         key = ""
         value = ""
     elif key == "":
-        key = line
+        if line != "":
+            key = line
     elif value == "":
         value = line
     else:
