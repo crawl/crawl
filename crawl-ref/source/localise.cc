@@ -1741,15 +1741,35 @@ static string _reverse_engineer_parameterised_string(const string& s)
              or (contains(s, "creaking") && contains(s, "portcullis"))
              or (contains(s, "beating") && contains(s, "drum"))))
     {
-        string msg;
-        string adjective;
-        for (const string adj: {"slow ", "stately ", "brisk ", "urgent ", "frantic "})
-            if (contains(s, adj))
+        // Technically not verbs, but that's what the .des files call them
+        static const string verbs[] =
+        {
+            "creaking", "tolling", "whistling", "beating", "crackling",
+            "hiss", "rusting", "rumble", "crackle"
+        };
+
+        string msg, adjective;
+        for (const string& verb: verbs)
+        {
+            size_t pos = s.find(verb);
+            if (pos != string::npos && pos > 3)
             {
-                adjective = adj;
-                msg = replace_first(s, adj, "@adjective@");
+                pos -= 2;
+                size_t space_pos = s.rfind(' ', pos);
+                if (space_pos != string::npos)
+                {
+                    adjective = s.substr(space_pos + 1, pos - space_pos);
+                    if (adjective == "the")
+                        adjective = "";
+                    else
+                    {
+                        adjective += " ";
+                        msg = replace_first(s, adjective, "@adjective@");
+                    }
+                }
                 break;
             }
+        }
 
         if (msg == "")
             msg = replace_first(s, "the ", "the @adjective@");
