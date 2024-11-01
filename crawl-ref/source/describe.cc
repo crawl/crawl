@@ -2303,7 +2303,7 @@ string get_item_description(const item_def &item, bool verbose,
                                             describe_player_cancellation());
                 }
                 else
-                    description << "\n\nDrinking this now will have no effect.";
+                    description << localise("\n\nDrinking this now will have no effect.");
             }
         }
         break;

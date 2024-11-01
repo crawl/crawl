@@ -1433,13 +1433,16 @@ static string _level_description_string_hud()
     string short_name = branches[place.branch].shortname;
 
     if (brdepth[place.branch] > 1)
+    {
+        short_name = localise(short_name);
         short_name += make_stringf(":%d", you.depth);
+    }
     // Indefinite articles
     else if (place.branch != BRANCH_PANDEMONIUM
              && place.branch != BRANCH_DESOLATION
              && !is_connected_branch(place.branch))
     {
-        short_name = article_a(short_name);
+        short_name = localise(article_a(short_name));
     }
     return short_name;
 }
