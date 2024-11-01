@@ -727,7 +727,7 @@ the potion of mutation
 der Trank der Mutation
 %%%%
 the potion of resistance
-der Trank des Widerstands
+der Trank der Resistenz
 %%%%
 
 # unidentified potions are named "<colour> <potion>"

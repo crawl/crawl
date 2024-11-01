@@ -221,7 +221,7 @@
 %d Tränke der Mutation
 %%%%
 %d potions of resistance
-%d Tränke des Widerstands
+%d Tränke der Resistenz
 %%%%
 
 # unidentified potions are named "<colour> <potion>"

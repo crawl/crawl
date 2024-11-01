@@ -390,7 +390,7 @@ Summon Undead
 Untote beschwören
 %%%%
 Cantrip
-Cantrip
+Zaubertrick
 %%%%
 Quicksilver Bolt
 Quecksilberstrahl

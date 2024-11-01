@@ -745,7 +745,7 @@ potion of mutation
 Trank der Mutation
 %%%%
 potion of resistance
-Trank des Widerstands
+Trank der Resistenz
 %%%%
 
 # unidentified potions are named "<colour> <potion>"

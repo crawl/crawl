@@ -221,7 +221,7 @@ potions of mutation
 {pl}Tränke der Mutation
 %%%%
 potions of resistance
-{pl}Tränke des Widerstands
+{pl}Tränke der Resistenz
 %%%%
 
 # unidentified potions are named "<colour> <potion>"

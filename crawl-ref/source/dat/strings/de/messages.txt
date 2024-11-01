@@ -6732,7 +6732,7 @@ You're already wearing that ring!
 Ihr tragt diesen Ring schon!
 %%%%
 Put on which piece of jewellery (* to show all)?
-Welchen Schmuck anlegen (* all zu zeigen)?
+Welchen Schmuck anlegen (* alle zu zeigen)?
 %%%%
 You aren't wearing any unmelded rings or amulets.
 Ihr tragt keine ungeschmolzenen Ringe oder Amulette.
@@ -6894,7 +6894,7 @@ You almost manage to decipher the scroll, but fail in this attempt.
 Es gelingt Euch fast, die Schriftrolle zu entziffern, aber Ihr scheitert bei diesem Versuch.
 %%%%
 As you read %s, it crumbles to dust.
-Als Ihr %s lest, sie zerfällt zu Staub.
+Als Ihr %s lest, zerfällt sie zu Staub.
 %%%%
 This is a scroll of acquirement!
 Dies ist eine Schriftrolle des Erwerbs!
@@ -6924,19 +6924,19 @@ The air around you briefly surges with heat, but it dissipates.
 Die Luft um Euch herum schwankt kurz vor Hitze, aber sie löst sich auf.
 %%%%
 It is a scroll of enchant weapon.
-Es ist eine Schriftrolle der Waffenverzauberung.
+Das ist eine Schriftrolle der Waffenverzauberung.
 %%%%
 It is a scroll of brand weapon.
-Es ist eine Schriftrolle der Waffenmark.
+Das ist eine Schriftrolle der Waffenmark.
 %%%%
 It is a scroll of identify.
-Es ist eine Schriftrolle der Identifizierung.
+Das ist eine Schriftrolle der Identifizierung.
 %%%%
 It is a scroll of enchant armour.
-Es ist eine Schriftrolle der Rüstungsverzauberung.
+Das ist eine Schriftrolle der Rüstungsverzauberung.
 %%%%
 It is a scroll of amnesia.
-Es ist eine Schriftrolle der Amnesie.
+Das ist eine Schriftrolle der Amnesie.
 %%%%
 You feel forgetful for a moment.
 Ihr fühlt Euch für einen Moment vergesslich.
@@ -12649,7 +12649,7 @@ heal and attempt to pacify others
 heilen und versuchen, andere zu besänftigen
 %%%%
 purify yourself
-sich selbst zu läutern
+sich selbst reinigen
 %%%%
 provide greater healing for yourself
 Euch größere Heilung verschaffen
