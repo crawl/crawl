@@ -149,10 +149,10 @@ erlangen, ihre zerstörerische Kraft gegen ihre Feinde einzusetzen.
 %%%%
 Sif Muna
 
-Sif Muna, der Lehrmeister, ist eine nachdenkliche, aber mächtige Gottheit, der
-jene dienen, die nach magischem Wissen streben. Anhänger, die über ihre Feinde
-triumphieren, können den Lehrmeister anrufen, um magische Kraft und die
-Fähigkeit zu erlangen, Zauber zu wirken, die über ihre magische Ausbildung
+Sif Muna, der Kundenbewahrer, ist eine nachdenkliche, aber mächtige Gottheit,
+der jene dienen, die nach magischem Wissen streben. Anhänger, die über ihre
+Feinde triumphieren, können den Kundenbewahrer anrufen, um magische Kraft und
+die Fähigkeit zu erlangen, Zauber zu wirken, die über ihre magische Ausbildung
 hinausgehen. Die Gläubigen werden mit einem Vorrat an Zauberbüchern belohnt, die
 direkt aus Sif Munas legendärer Bibliothek stammen.
 %%%%
@@ -413,7 +413,7 @@ Sif Muna powers
 
 Sif Muna verleiht seinen Anhängern die Fähigkeit, ihre magische Energie schnell
 wiederherzustellen und Zauber nach Belieben zu vergessen, um neue zu lernen.
-Gläubige können den Lehrmeister anrufen, um jeden Zauber zu wirken, den sie
+Gläubige können den Kundenbewahrer anrufen, um jeden Zauber zu wirken, den sie
 entdeckt haben, selbst wenn dieser weit über ihre derzeitige magische Ausbildung
 hinausgeht. Mit der Zeit erhalten treue Anhänger Zauberbücher mit einer großen
 Auswahl an Zaubersprüchen.
