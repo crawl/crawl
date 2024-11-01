@@ -152,7 +152,7 @@
 %d Schriftrollen der Stille
 %%%%
 %d scrolls of summoning
-%d Schriftrollen des Beschwörs
+%d Schriftrollen der Beschwörung
 %%%%
 %d scrolls of teleportation
 %d Schriftrollen der Teleportation

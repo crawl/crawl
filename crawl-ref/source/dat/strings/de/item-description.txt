@@ -584,10 +584,10 @@ If you quaff this potion your AC would be %d.
 Wenn Ihr diesen Trank trinkt, ist Euer RK %d.
 %%%%
 If you drink this now, you will no longer be %s.
-Wenn Ihr das jetzt trinkt, werdet Ihr nicht mehr %s sein.
+Wenn Ihr ihn jetzt trinkt, werdet Ihr nicht mehr %s sein.
 %%%%
 Drinking this now will have no effect.
-Wenn Ihr das jetzt trinkt, hat das keine Auswirkungen.
+Ihn jetz zu trinken, würde keine Auswirkungen haben.
 %%%%
 
 #################################

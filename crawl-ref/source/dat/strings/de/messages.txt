@@ -1277,7 +1277,7 @@ Einige Eurer Anhänger beschließen, Euch zu verlassen.
 %s trifft Euch schwach
 %%%%
 %s hits you
-%s schlägt Euch
+%s trifft Euch
 %%%%
 %s pelts %s
 %s bewirft {acc}%s
@@ -1298,7 +1298,7 @@ Einige Eurer Anhänger beschließen, Euch zu verlassen.
 %s trifft {acc}%s schwach
 %%%%
 %s hits %s
-%s schlägt {acc}%s
+%s trifft {acc}%s
 %%%%
 You hear a mighty clap of thunder!
 Ihr hört einen gewaltigen Donnerschlag!
@@ -8353,10 +8353,10 @@ schlägt Euch mit dem Tentakel
 %s stürzt sich auf {acc}%s
 %%%%
 %s hits you from afar
-%s schlägt Euch von weitem
+%s trifft Euch von weitem
 %%%%
 %s hits %s from afar
-%s schlägt {acc}%s von weitem
+%s trifft {acc}%s von weitem
 %%%%
 " with %s"
 " mit {dat}%s"
@@ -11285,7 +11285,7 @@ Attribute erhöhen
 " Erhöhen:"
 %%%%
 Your base attributes are Str %d, Int %d, Dex %d.
-Eure Basisattribute sind Str %d, Int %d, Dex %d.
+Eure Basisattribute sind Stä %d, Int %d, Ges %d.
 %%%%
 "Increase (S)trength, (I)ntelligence, or (D)exterity? "
 "(S)tärke, (I)ntelligenz oder (G)eschicklichkeit erhöhen? "
@@ -17191,7 +17191,7 @@ Could not %s, %s.
 Konnte nicht %s, %s.
 %%%%
 Key pressed, stopping %s.
-Taste gedrückt,%s gestoppt.
+Taste gedrückt, %s gestoppt.
 %%%%
 You're confused, stopping %s.
 Ihr seid verwirrt, %s gestoppt.
