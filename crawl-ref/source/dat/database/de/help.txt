@@ -130,10 +130,10 @@ identifizierte Gegenstände, die möglicherweise brandmarkiert sind, finden
 <w>dropped</w> wird Gegenstände finden, die der Charakter fallen lassen hat
 <w>in_shop</w> wird Gegenstände finden, die in Läden sind
 <w>autopickup</w> wird (wenn die Option autopickup_search angeschaltet ist)
-Gegenstände finden, die automatisch abgeholt würden 
+Gegenstände finden, die automatisch abgeholt würden
 
 Fertigkeitsnamen (z. B. <w>Stangenwaffen</w>) werden alle Wffen finden, die
-diese Fertigkeit verwenden. Man kann auch nach <w>melee weapon</w> oder 
+diese Fertigkeit verwenden. Man kann auch nach <w>melee weapon</w> oder
 <w>ranged weapon</w> suchen.
 
 Es ist auch möglich nach Gegenstandtypen zu suchen (z. B. <w>Buch</w> oder <w>Schmuck</w>).
@@ -323,7 +323,7 @@ indem man <w>!</w> drückt, und drückt dann den Buchstaben des Zaubers.
 Die meisten Charaktere werden nicht daran interessiert sein, die meisten Zaubersprüche zu
 memorieren, die in ihrer Zaubersammlung ansammeln; hier kommen die Seiten <w>Zeigen</w>
 und <w>Ausblenden</w> ins Spiel. Um einen Zauber aus den Seiten <w>Memorieren</w> und
-<w>Beschreiben</w> auszublenden, drückt man auf seinen Buchstaben von der Seite 
+<w>Beschreiben</w> auszublenden, drückt man auf seinen Buchstaben von der Seite
 <w>Ausblenden</w>. Ausgeblendete Zaubersprüche können auf der Seite <w>Zeigen</w> wieder
 angezeigt werden.
 
@@ -659,7 +659,7 @@ Taste "e" das gleiche Befehl auslöst als die Taste "p" (die in der
 Standardeinstellung "autofeuern" ist).
 
 Beispiel 2: Die Zuordnung von <w>1</w> auf die Folge <w>zaf</w> würde die Taste
-"1" zulassen einen Zauber, der auf den Buchstaben "a" gerichtet ist, mit 
+"1" zulassen einen Zauber, der auf den Buchstaben "a" gerichtet ist, mit
 Standardzielen zu wirken.
 
 Beispiel 3: Die Zuordnung von <w>F1</w> zu <w>Q&a</w> würde die F1-Taste den
