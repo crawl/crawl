@@ -1432,7 +1432,9 @@ bool describe_god_with_join(god_type which_god)
         {
             if (keyin != localise_char('Y')
                 && toupper_safe(keyin) != localise_char('N'))
+            {
                 yesno_only = true;
+            }
             else
                 yesno_only = false;
 

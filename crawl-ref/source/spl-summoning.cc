@@ -668,9 +668,7 @@ static bool _check_tukima_validity(const actor *target)
             return _fail_tukimas();
 
         if (target_is_player)
-        {
             mpr_nolocalise(you.hand_act("%s twitches.", "%s twitch."));
-        }
         else
         {
             // FIXME: maybe move hand_act to class actor?
@@ -678,13 +676,9 @@ static bool _check_tukima_validity(const actor *target)
             const string hand = target->hand_name(true, &plural);
             const string owner = apostrophise(target->name(DESC_THE));
             if (plural)
-            {
                 mprf("%s %s twitch.", owner.c_str(), hand.c_str());
-            }
             else
-            {
                 mprf("%s %s twitches.", owner.c_str(), hand.c_str());
-            }
         }
         return false;
     }

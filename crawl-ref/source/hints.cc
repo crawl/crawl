@@ -2530,9 +2530,7 @@ string hints_describe_monster(const monster_info& mi, bool has_stat_desc)
     else if (dangerous)
     {
         if (!Hints.hints_explored && (mi.is(MB_WANDERING) || mi.is(MB_UNAWARE)))
-        {
             ostr << getHintString("HINT_DESCRIBE_UNAWARE_MONSTER");
-        }
         else
         {
             if (you_worship(GOD_TROG) && you.can_go_berserk())
@@ -2553,9 +2551,7 @@ string hints_describe_monster(const monster_info& mi, bool has_stat_desc)
     }
 
     if (!dangerous && !has_stat_desc)
-    {
         ostr << "\n" << getHintString("HINT_DESCRIBE_UNREMARKABLE_MONSTER");
-    }
 
     if (ostr.str().empty())
         return "";

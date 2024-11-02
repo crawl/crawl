@@ -1862,9 +1862,7 @@ static void _get_book(item_def& it)
     }
 
     if (you.skill_manual_points[sk])
-    {
         mprf("You pick up another %s and continue studying.", it.name(DESC_PLAIN).c_str());
-    }
     else
         mprf("You pick up %s and begin studying.", it.name(DESC_A).c_str());
 
@@ -2547,9 +2545,7 @@ bool drop_item(int item_dropped, int quant_drop)
      || item_dropped == you.equip[EQ_RING_AMULET])
     {
         if (!Options.easy_unequip)
-        {
             mpr("You will have to take that off first.");
-        }
         else if (remove_ring(item_dropped, true))
         {
             // The delay handles the case where the item disappeared.

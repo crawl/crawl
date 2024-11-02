@@ -2890,9 +2890,7 @@ void melee_attack::mons_apply_attack_flavour()
 
     case AF_CRUSH:
         if (needs_message)
-        {
             do_3rd_person_message(attacker, defender, "%s grabs %s.");
-        }
         attacker->start_constricting(*defender);
         // if you got grabbed, interrupt stair climb and passwall
         if (defender->is_player())
@@ -2927,9 +2925,7 @@ void melee_attack::mons_apply_attack_flavour()
                                           "%s engulfs %s in water!");
                 }
                 else
-                {
                     do_3rd_person_message(attacker, defender, "%s engulfs %s!");
-                }
             }
         }
 
