@@ -419,7 +419,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_DOUBLED_VIGOUR:
         scale_hp(1, 2);
         if (!quiet)
-            mprf("%s excess vigour fades away.", name(DESC_ITS).c_str());
+            simple_monster_message(*this, " excess vigour fades away.", true);
         break;
 
     case ENCH_HASTE:
