@@ -1026,3 +1026,51 @@ einfarbig braune
 "shaped "
 "geformte "
 %%%%
+
+################################
+# timed portal noises
+################################
+
+%%%%
+"slow "
+"langsame "
+%%%%
+"stately "
+"getragene "
+%%%%
+"steady "
+"regelmäßige "
+%%%%
+"brisk "
+"stramme "
+%%%%
+"quick "
+"zügige "
+%%%%
+"rapid "
+"rapide "
+%%%%
+"urgent "
+"dringende "
+%%%%
+"frantic "
+"hektische "
+%%%%
+"faint "
+"schwache "
+%%%%
+"quiet "
+"leise "
+%%%%
+"loud "
+"laute "
+%%%%
+"ear-piercing "
+"gellende "
+%%%%
+"thunderous "
+"donnernde "
+%%%%
+"deafening "
+"ohrenbetäubende "
+%%%%

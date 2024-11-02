@@ -267,8 +267,11 @@ int main()
     msg = localise("You hear the brisk rumble of a very distant avalanche of rocks.");
     show_result(msg, "Ihr hört das stramme Grollen einer Steinlawine weit in der Ferne.");
 
+    msg = localise("You hear the thunderous beating of a drum.");
+    show_result(msg, "Ihr hört donnernde Paukenschläge.");
+
     msg = localise("You hear the stately tolling of a bell very nearby.");
-    show_result(msg, "Ihr hört das langsame Läuten einer Glocke ganz in der Nähe.");
+    show_result(msg, "Ihr hört das getragene Läuten einer Glocke ganz in der Nähe.");
 
     msg = localise("You hear the hiss of an avalanche of sand very nearby.");
     show_result(msg, "Ihr hört das Zischen einer Sandlawine ganz in der Nähe.");

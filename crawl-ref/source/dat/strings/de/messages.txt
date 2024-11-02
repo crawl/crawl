@@ -18901,33 +18901,6 @@ Die Wände und der Boden vibrieren einen Moment lang auf seltsame Weise.
 %%%%
 
 ##################
-# dat/dlua/lm_tmsg.lua
-##################
-%%%%
-# note: adjectives for portal noises (null also possible)
-"stately "
-"langsame "
-%%%%
-"brisk "
-"stramme "
-%%%%
-"urgent "
-"dringende "
-%%%%
-"frantic "
-"hektische "
-%%%%
-"faint "
-"schwache "
-%%%%
-"quiet "
-"leise "
-%%%%
-"slow "
-"langsame "
-%%%%
-
-##################
 # dat/dlua/lm_trove.lua
 ##################
 %%%%

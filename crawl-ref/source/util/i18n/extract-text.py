@@ -650,6 +650,27 @@ def ignore_string(string):
     return False
 
 
+# extract strings from Lua line (can be enclosed in single or double quotes)
+# inclosing quotes are included in the results
+def extract_lua_strings(line):
+
+    quote = None
+    start_pos = None
+    results = []
+
+    for i in range(0, len(line)):
+        if quote is None:
+            if line[i] in "'\"":
+                quote = line[i]
+                start_pos = i
+        elif line[i] == quote and line[i-1] != "\\":
+            # end of string
+            results.append(line[start_pos:i+1])
+            quote = None
+
+    return results
+
+
 def process_lua_file(filename):
 
     is_des = filename.endswith('.des')
@@ -845,7 +866,7 @@ def process_lua_file(filename):
             line = re.sub(r',\s*"[^"]*"\s*\);?$', ', channel)', line)
             line = re.sub(r",\s*'[^']*'\s*\);?$", ', channel)', line)
 
-        matches = re.findall(r'(?:"(?:[^"\\]|\\.)+"|\'(?:[^\'\\]|\\.)+\')', line)
+        matches = extract_lua_strings(line)
         for match in matches:
             string = match[1:-1] # remove quotes
             if len(string) < 2:
@@ -961,15 +982,6 @@ def process_lua_file(filename):
         elif '@noise@ of @noisemaker@' in string:
             # will be covered under each specific portal
             alternatives = []
-
-            strings.append('# note: adjectives for portal noises (null also possible)')
-            strings.append('stately ')
-            strings.append('brisk ')
-            strings.append('urgent ')
-            strings.append('frantic ')
-            strings.append('faint ')
-            strings.append('quiet ')
-            strings.append('slow ')
 
         strings.extend(alternatives)
 
