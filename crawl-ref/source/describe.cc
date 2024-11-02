@@ -4417,7 +4417,7 @@ static string _monster_current_target_description(const monster_info &mi)
         auto allies = find_allies_targeting(*m);
         if (allies.size() == 1)
         {
-            result << localise("It is currently targeted by %s.", 
+            result << localise("It is currently targeted by %s.",
                                allies[0]->name(DESC_YOUR))
                    << "\n";
         }

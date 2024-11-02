@@ -1924,7 +1924,7 @@ bool kiku_gift_capstone_spells()
                                   SPELL_NECROMUTATION,
                                   SPELL_DEATHS_DOOR };
 
-    string msg = 
+    string msg =
         localise("Do you wish to receive knowledge of %s?",
                  comma_separated_fn(spells.begin(), spells.end(), spell_title));
 
@@ -2983,7 +2983,7 @@ static string _describe_gozag_shop(int index)
         you.props[make_stringf(GOZAG_SHOP_SUFFIX_KEY, index)].get_string();
 
     string full_shop_name = shop_name + " " + type_name + " " + suffix;
-    
+
     return localise("  [%c] %5d gold - %s",
                         offer_letter,
                         cost,

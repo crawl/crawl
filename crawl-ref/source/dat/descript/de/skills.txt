@@ -130,7 +130,7 @@ Unarmed Combat
 
 Die Fertigkeit „Unbewaffneter Kampf“ erhöht Eure Genauigkeit, Euren Schaden und
 Eure Angriffsgeschwindigkeit im Nahkampf, wenn Ihr mit bloßen Händen kämpfst.
-Außerdem könnt Ihr gelegentlich mit Eurer freien Hand als zusätzlichen 
+Außerdem könnt Ihr gelegentlich mit Eurer freien Hand als zusätzlichen
 Nahkampfangriff zuschlagen, sofern die Hand dafür frei ist.
 %%%%
 Spellcasting

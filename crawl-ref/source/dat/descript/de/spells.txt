@@ -1,7 +1,7 @@
 %%%%
 Abjuration spell
 
-﻿Reduziert die verbleibende Dauer aller in der Nähe befindlichen beschworenen
+Reduziert die verbleibende Dauer aller in der Nähe befindlichen beschworenen
 feindlichen Kreaturen.
 %%%%
 Acid Splash spell

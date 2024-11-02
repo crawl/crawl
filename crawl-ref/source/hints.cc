@@ -1790,7 +1790,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         listed.push_back("the message history (<w>%</w>)");
         listed.push_back("the character overview screen (<w>%</w>)");
         listed.push_back("the dungeon overview screen (<w>%</w>)");
-        text << localise("%s are good things to check.", 
+        text << localise("%s are good things to check.",
                          comma_separated_line(listed.begin(), listed.end()));
         cmd.push_back(CMD_REPLAY_MESSAGES);
         cmd.push_back(CMD_RESISTS_SCREEN);

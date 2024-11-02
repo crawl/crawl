@@ -360,7 +360,7 @@ Ihr beendet die Rezitation von %s %d:%d.
 
 # Each recitation is 3 lines, and these variables are always available:
 #     @sinners@, @sin_adj@, @sin_noun@, @virtuous@, @virtue@, @smite@, @smitten@,
-#     as well as these extras that are not used in the English version: 
+#     as well as these extras that are not used in the English version:
 #     @the_sinners@, @the_sin@, @the_virtue@, which are just @sinners@,
 #     @sin_noun@ and @virtue@ prepended with the definite article ("the").
 # The translation can use any of these variables freely at any time. It does not
