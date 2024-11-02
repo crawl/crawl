@@ -1766,7 +1766,7 @@ static string _reverse_engineer_parameterised_string(const string& s)
     if (contains(s, '@'))
         return "";
 
-    for (const string c: candidates)
+    for (const string& c: candidates)
     {
         result = _reverse_engineer_parameterised_string(s, c);
         if (!result.empty())
