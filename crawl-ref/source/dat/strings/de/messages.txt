@@ -19299,10 +19299,10 @@ Ihr bemerkt, dass überall im Raum Spinnweben verstreut sind und hört im Hinter
 ##################
 %%%%
 A figure emerges from the depths of the water!
-
+Eine Gestalt taucht aus den Tiefen des Wassers auf!
 %%%%
 The water ripples visibly.
-
+Das Wasser kräuselt sich merklich.
 %%%%
 
 ##################
