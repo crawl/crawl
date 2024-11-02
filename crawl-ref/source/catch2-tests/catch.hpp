@@ -7943,7 +7943,7 @@ namespace Catch {
         static bool isSet;
         static struct sigaction oldSigActions[];
         static stack_t oldSigStack;
-        static char altStackMem[];
+        static char* altStackMem;
 
         static void handleSignal( int sig );
 
@@ -10773,7 +10773,7 @@ namespace Catch {
     bool FatalConditionHandler::isSet = false;
     struct sigaction FatalConditionHandler::oldSigActions[sizeof(signalDefs)/sizeof(SignalDefs)] = {};
     stack_t FatalConditionHandler::oldSigStack = {};
-    char FatalConditionHandler::altStackMem[sigStackSize] = {};
+    char* FatalConditionHandler::altStackMem = new char[sigStackSize];
 
 } // namespace Catch
 
