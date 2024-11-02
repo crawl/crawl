@@ -1680,10 +1680,54 @@ static string _reverse_engineer_parameterised_string(const string& s, const stri
 }
 
 /*
+ * Localise a timed portal noise message like:
+ *   "You hear the rusting of a drain."
+ *   "You hear the stately tolling of a bell very nearby."
+ * Parts of this are parameterised, but the replacements get done in Lua code.
+ * (See _reverse_engineer_parameterised_string for more info.)
+ */
+static string _localise_timed_portal_noise(const string& s)
+{
+    static const string prefix = "You hear the ";
+    if (!starts_with(s, prefix))
+        return "";
+
+    // find the (optional) adjective
+    size_t adj_pos = prefix.length();
+
+    // find the noise (rusting, tolling, crackling, hiss, etc.)
+    size_t noise_pos = s.find(' ', adj_pos);
+    if (noise_pos == string::npos)
+        return "";
+    noise_pos++;
+
+    // find the word "of"
+    size_t of_pos = s.find("of ", noise_pos);
+    if (of_pos == string::npos)
+        return "";
+
+    string msg, adjective;
+    if (noise_pos == of_pos)
+    {
+        // there is no adjective, but the template string will have a
+        // placeholder for it
+        msg = replace_first(s, "the ", "the @adjective@");
+    }
+    else
+    {
+        // extract adjective, including trailing space
+        adjective = s.substr(adj_pos, noise_pos - adj_pos);
+        msg = replace_first(s, adjective, "@adjective@");
+    }
+
+    return localise(msg, {{"adjective", adjective}});
+}
+
+/*
  * Lua code can only pass a single string to mpr(), so any parameterisation has
- * to be handled on the Lua code, and all we see is the completed string. If the
+ * to be handled in the Lua code, and all we see is the completed string. If the
  * number of possible permutations is small, we can just provide a translation
- * for ech one, but in some cases, the number of permutations is too great for
+ * for each one, but in some cases, the number of permutations is too great for
  * that to be feasible, so we're forced to reverse engineer.
  *
  * Unfortunately, this is tightly coupled to the Lua code (yuk).
@@ -1729,55 +1773,7 @@ static string _reverse_engineer_parameterised_string(const string& s)
             return result;
     }
 
-    // timed portal noise (lm_tmsg.lua)
-    if (starts_with(s, "You hear the ")
-        and (contains(s, "avalanche of sand")
-             or contains(s, "avalanche of rocks")
-             or contains(s, "melting archway")
-             or contains(s, "magical portal")
-             or (contains(s, "tolling") && contains(s, "bell"))
-             or (contains(s, "whistling") && contains(s, "wind"))
-             or (contains(s, "rusting") && contains(s, "drain"))
-             or (contains(s, "creaking") && contains(s, "portcullis"))
-             or (contains(s, "beating") && contains(s, "drum"))))
-    {
-        // Technically not verbs, but that's what the .des files call them
-        static const string verbs[] =
-        {
-            "creaking", "tolling", "whistling", "beating", "crackling",
-            "hiss", "rusting", "rumble", "crackle"
-        };
-
-        string msg, adjective;
-        for (const string& verb: verbs)
-        {
-            size_t pos = s.find(verb);
-            if (pos != string::npos && pos > 3)
-            {
-                pos -= 2;
-                size_t space_pos = s.rfind(' ', pos);
-                if (space_pos != string::npos)
-                {
-                    adjective = s.substr(space_pos + 1, pos - space_pos);
-                    if (adjective == "the")
-                        adjective = "";
-                    else
-                    {
-                        adjective += " ";
-                        msg = replace_first(s, adjective, "@adjective@");
-                    }
-                }
-                break;
-            }
-        }
-
-        if (msg == "")
-            msg = replace_first(s, "the ", "the @adjective@");
-
-        return localise(msg, {{"adjective", adjective}});
-    }
-
-    return "";
+    return _localise_timed_portal_noise(s);
 }
 
 // localise a string
