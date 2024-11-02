@@ -3794,11 +3794,13 @@ keine (normalerweise %s)
 Will:
 Wille:
 %%%%
-It can travel through water.
-Es kann sich durch Wasser bewegen.
+# %s is monster's pronoun - can be he, she, it or singular they
+%s can travel through water.
+Dieses Monster kann sich durch Wasser bewegen.
 %%%%
-It can travel through lava.
-Es kann sich durch Lava bewegen.
+# %s is monster's pronoun - can be he, she, it or singular they
+%s can travel through lava.
+Dieses Monster kann sich durch Lava bewegen.
 %%%%
 It is currently targeted by %s.
 Es ist derzeit das Ziel von {dat}%s.

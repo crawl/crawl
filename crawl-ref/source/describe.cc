@@ -4375,9 +4375,11 @@ string _monster_habitat_description(const monster_info& mi)
     switch (mons_habitat_type(type, mi.base_type))
     {
     case HT_AMPHIBIOUS:
-        return localise("It can travel through water.") + "\n";
+        return uppercase_first(localise("%s can travel through water.\n",
+                               mi.pronoun(PRONOUN_SUBJECTIVE)));
     case HT_AMPHIBIOUS_LAVA:
-        return localise("It can travel through lava.") + "\n";
+        return uppercase_first(localise("%s can travel through lava.\n",
+                               mi.pronoun(PRONOUN_SUBJECTIVE)));
     default:
         return "";
     }
