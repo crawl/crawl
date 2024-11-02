@@ -34,8 +34,8 @@ grau
 
 %%%%
 @The_monster@ hits you.
-@The_monster@ schlägt Euch.
+@The_monster@ trifft Euch.
 %%%%
 You hit @the_monster@.
-Ihr schlagt {acc}@the_monster@.
+Ihr trefft {acc}@the_monster@.
 %%%%

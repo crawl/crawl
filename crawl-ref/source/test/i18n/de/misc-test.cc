@@ -70,21 +70,25 @@ int main()
     map<string, string> params;
     params["The_monster"] = "the orc";
     msg = localise("@The_monster@ hits you.", params);
-    show_result(msg, "Der Ork schlägt Euch.");
+    show_result(msg, "Der Ork trifft Euch.");
 
     params.clear();
     params["the_monster"] = "the orc";
     msg = localise("You hit @the_monster@.", params);
-    show_result(msg, "Ihr schlagt den Ork.");
+    show_result(msg, "Ihr trefft den Ork.");
 
     // test with %s params
 
     msg = uppercase_first(localise("%s hits %s", "an orc", "a skeleton"));
-    expected = "Ein Ork schlägt ein Skelett";
+    expected = "Ein Ork trifft ein Skelett";
     show_result(msg, expected);
 
     msg = uppercase_first(localise("%s hits %s", "a skeleton", "an orc"));
-    expected = "Ein Skelett schlägt einen Ork";
+    expected = "Ein Skelett trifft einen Ork";
+    show_result(msg, expected);
+
+    msg = uppercase_first(localise("%s hits %s", "your boomerang", "an orc"));
+    expected = "Euer Bumerang trifft einen Ork";
     show_result(msg, expected);
 
     // test list with acc context
@@ -164,7 +168,7 @@ int main()
     show_result(msg, expected);
 
     msg = localise("You hit %s", "the 27-headed Lernaean hydra zombie");
-    expected = "Ihr schlagt den 27-köpfigen Lernäische-Hydra-Zombie";
+    expected = "Ihr trefft den 27-köpfigen Lernäische-Hydra-Zombie";
     show_result(msg, expected);
 
     msg = localise("an infernal demonspawn simulacrum (dormant)");
