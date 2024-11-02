@@ -180,7 +180,7 @@ jobs:
           git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
       - name: Install Dependencies
         run: |
-          sudo pip3 install PyYAML
+          sudo pip3 install PyYAML --break-system-packages --user
       - name: Cache compilation
         uses: actions/cache@v3
         with:
