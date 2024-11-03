@@ -863,6 +863,48 @@ einfarbig braune
 "non-hostile "
 "nicht-feindliche "
 %%%%
+"charred "
+"verkohlte "
+%%%%
+"frost-covered "
+"frostbedeckte "
+%%%%
+"deformed "
+"deformierte "
+%%%%
+"grotesque "
+"groteske "
+%%%%
+"hideous "
+"scheußliche "
+%%%%
+"febrile "
+"febrile "
+%%%%
+"sickly "
+"kränkliche "
+%%%%
+"malarious "
+"malariaverseuchte "
+%%%%
+"drunken "
+"betrunkene "
+%%%%
+"greater "
+"größere "
+%%%%
+"giant "
+"gigantische "
+%%%%
+"pristine "
+"unberührte "
+%%%%
+"skinned "
+"gehäutete "
+%%%%
+"rotten "
+"verdorbene "
+%%%%
 # used for obsolete monsters
 "removed "
 "entfernte "
@@ -1025,6 +1067,31 @@ einfarbig braune
 %%%%
 "shaped "
 "geformte "
+%%%%
+
+# not actually adjectives, but put in front of "statue" like an adjective
+%%%%
+"zot "
+"Zot-"
+%%%%
+"archer "
+"Bogenschütze-"
+%%%%
+"conjurer "
+"Hervorrufer-"
+%%%%
+"fire elementalist "
+"Feuermagier-"
+%%%%
+# no, this is not a mistake - water not ice
+"water elementalist "
+"Wassermagier-"
+%%%%
+"earth elementalist "
+"Erdmagier-"
+%%%%
+"air elementalist "
+"Luftmagier-"
 %%%%
 
 ################################

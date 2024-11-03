@@ -26,6 +26,28 @@ einer {adj-en}%sVampirfledermaus
 a %sfire bat's
 einer {adj-en}%sFeuerfledermaus
 %%%%
+a %sice bat's
+einer {adj-en}%sEisfledermaus
+%%%%
+# rebadged spectral bat
+a %sghost-faced bat's
+einer {adj-en}%sGespenstfledermaus
+%%%%
+a %sphase bat's
+einer {adj-en}%sPhasenfledermaus
+%%%%
+a %sskeletal bat's
+einer {adj-en}%sSkelett-Fledermaus
+%%%%
+a %smicrobat's
+einer {adj-en}%sMicro-Fledermaus
+%%%%
+a %smegabat's
+einer {adj-en}%sMega-Fledermaus
+%%%%
+a %sgiga bat's
+einer {adj-en}%sGiga-Fledermaus
+%%%%
 a %sbennu's
 eines {adj-en}%sBennus
 %%%%

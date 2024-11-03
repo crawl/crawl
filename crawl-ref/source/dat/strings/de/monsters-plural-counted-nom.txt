@@ -26,6 +26,28 @@
 %d fire bats
 %d Feuerfledermäuse
 %%%%
+%d ice bats
+%d Eisfledermäuse
+%%%%
+# rebadged spectral bat
+%d ghost-faced bats
+%d Gespenstfledermäuse
+%%%%
+%d phase bats
+%d Phasenfledermäuse
+%%%%
+%d skeletal bats
+%d Skelett-Fledermäuse
+%%%%
+%d microbats
+%d Micro-Fledermäuse
+%%%%
+%d megabats
+%d Mega-Fledermäuse
+%%%%
+%d giga bats
+%d Giga-Fledermäuse
+%%%%
 %d bennus
 %d Bennus
 %%%%

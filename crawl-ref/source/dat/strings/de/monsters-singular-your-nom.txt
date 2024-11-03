@@ -26,6 +26,28 @@ Eure {adj-e}%sVampirfledermaus
 your %sfire bat
 Eure {adj-e}%sFeuerfledermaus
 %%%%
+your %sice bat
+Eure {adj-e}%sEisfledermaus
+%%%%
+# rebadged spectral bat
+your %sghost-faced bat
+Eure {adj-e}%sGespenstfledermaus
+%%%%
+your %sphase bat
+Eure {adj-e}%sPhasenfledermaus
+%%%%
+your %sskeletal bat
+Eure {adj-e}%sSkelett-Fledermaus
+%%%%
+your %smicrobat
+Eure {adj-e}%sMicro-Fledermaus
+%%%%
+your %smegabat
+Eure {adj-e}%sMega-Fledermaus
+%%%%
+your %sgiga bat
+Eure {adj-e}%sGiga-Fledermaus
+%%%%
 your %sbennu
 Euer {adj-es}%sBennu
 %%%%

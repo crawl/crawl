@@ -696,6 +696,10 @@ def process_lua_file(filename):
             if line.startswith(':'):
                 lines.append(line)
                 continue
+            elif re.search(r'\bname:', line):
+                lines.append(line)
+                continue
+
             if '{{' in line and '}}' in line:
                 lines.append(line)
                 continue
@@ -750,7 +754,7 @@ def process_lua_file(filename):
             if m and m.group(0):
                 wizlab_descs.append(m.group(0))
 
-        if '"' not in line and "'" not in line:
+        if '"' not in line and "'" not in line and 'name:' not in line:
             continue
 
         if is_portal:
@@ -783,6 +787,27 @@ def process_lua_file(filename):
                 # first param is a key
                 line = re.sub('"[^"]",', 'dummy,', line)
                 skip = False
+            elif re.search(r'\bname:', line):
+                if re.search(r'\bshop\b', line):
+                    # TODO: Handle shop names
+                    continue
+                skip = False
+                line = line.replace('"', '').replace("'", "")
+                # remove other property settings, which can get in the way
+                line = re.sub(r'[^ ]+(?<!\bname):[^ ]+', '', line)
+                line = line.strip()
+                line = re.sub('r\s*=\s*', '=', line)
+                if 'name_adjective' in line or 'n_adj' in line:
+                    if 'name:bog' in line:
+                        line = line.replace('name:bog', 'name:"bog mummy"')
+                    elif re.search(r'name:(phase|dire|giga|sulfuric)\b', line):
+                        line = re.sub(r'\b([A-Za-z ]+?)\s+name:([A-Za-z_]+)', r'name:"\2 \1"', line)
+                    else:
+                        line = re.sub(r'\bname:([A-Za-z_\-]+)', r'name: "\1 "', line)
+                elif 'name_suffix' in line or 'n_suf' in line:
+                    line = re.sub(r'([^ ]+)\s+name:([A-Za-z_\-]+)', r'name:"\1 \2"', line)
+                else:
+                    line = re.sub(r'\bname\s*:\s*([A-Za-z_\-]+)', r'name:"\1"', line)
             elif re.search('(?:msg|prompt)\s*=', line):
                 skip = False
             elif is_portal and re.search(r'ranges\s*=', line):
@@ -835,7 +860,7 @@ def process_lua_file(filename):
             line = re.sub(r"'\s*\.\.\s*'", '', line)
 
         # turn joins of variables, etc. into embedded params
-        if '..' in line:
+        if '..' in line and 'name:' not in line:
             # embedded conditional
             line = re.sub(r'\.\.\s*\([^\)]+\)', '.. param', line)
 
@@ -875,6 +900,10 @@ def process_lua_file(filename):
                 continue
             if 'marker' in string or 'Marker' in string:
                 continue
+            if '_' in string and is_des and 'name:' in line:
+                string = string.replace('_', ' ')
+                if string == "rotten bat":
+                    string = "rotten "
             if '_' in string and not '@' in string:
                 # identifier
                 continue

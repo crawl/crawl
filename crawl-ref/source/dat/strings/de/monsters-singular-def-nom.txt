@@ -26,6 +26,29 @@ die {adj-e}%sVampirfledermaus
 the %sfire bat
 die {adj-e}%sFeuerfledermaus
 %%%%
+the %sice bat
+die {adj-e}%sEisfledermaus
+%%%%
+# rebadged spectral bat
+# Real German name is Peters-Kinnblattfledermaus, but that would lose the wordplay
+the %sghost-faced bat
+die {adj-e}%sGespenstfledermaus
+%%%%
+the %sphase bat
+die {adj-e}%sPhasenfledermaus
+%%%%
+the %sskeletal bat
+die {adj-e}%sSkelett-Fledermaus
+%%%%
+the %smicrobat
+die {adj-e}%sMicro-Fledermaus
+%%%%
+the %smegabat
+die {adj-e}%sMega-Fledermaus
+%%%%
+the %sgiga bat
+die {adj-e}%sGiga-Fledermaus
+%%%%
 the %sbennu
 das {adj-e}%sBennu
 %%%%

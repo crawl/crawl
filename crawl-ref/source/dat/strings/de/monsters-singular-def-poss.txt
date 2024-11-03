@@ -26,6 +26,28 @@ der {adj-en}%sVampirfledermaus
 the %sfire bat's
 der {adj-en}%sFeuerfledermaus
 %%%%
+the %sice bat's
+der {adj-en}%sEisfledermaus
+%%%%
+# rebadged spectral bat
+the %sghost-faced bat's
+der {adj-en}%sGespenstfledermaus
+%%%%
+the %sphase bat's
+der {adj-en}%sPhasenfledermaus
+%%%%
+the %sskeletal bat's
+der {adj-en}%sSkelett-Fledermaus
+%%%%
+the %smicrobat's
+der {adj-en}%sMicro-Fledermaus
+%%%%
+the %smegabat's
+der {adj-en}%sMega-Fledermaus
+%%%%
+the %sgiga bat's
+der {adj-en}%sGiga-Fledermaus
+%%%%
 the %sbennu's
 des {adj-en}%sBennus
 %%%%

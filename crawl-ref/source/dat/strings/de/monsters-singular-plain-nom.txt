@@ -26,6 +26,28 @@
 %sfire bat
 {adj-e}%sFeuerfledermaus
 %%%%
+%sice bat
+{adj-e}%sEisfledermaus
+%%%%
+# rebadged spectral bat
+%sghost-faced bat
+{adj-e}%sGespenstfledermaus
+%%%%
+%sphase bat
+{adj-e}%sPhasenfledermaus
+%%%%
+%sskeletal bat
+{adj-e}%sSkelett-Fledermaus
+%%%%
+%smicrobat
+{adj-e}%sMicro-Fledermaus
+%%%%
+%smegabat
+{adj-e}%sMega-Fledermaus
+%%%%
+%sgiga bat
+{adj-e}%sGiga-Fledermaus
+%%%%
 %sbennu
 {adj-es}%sBennu
 %%%%
