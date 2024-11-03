@@ -742,7 +742,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             vector<monster*> targs;
             for (monster_near_iterator mi(&caster, LOS_NO_TRANS); mi; ++mi)
             {
-                if (!mi->is_stationary() && !mons_is_firewood(**mi)
+                if (!mons_is_conjured(mi->type) && !mons_is_firewood(**mi)
                     && !mons_aligned(&caster, *mi))
                 {
                     targs.push_back(*mi);
