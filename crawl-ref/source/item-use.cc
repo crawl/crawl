@@ -3544,6 +3544,9 @@ void read(item_def* scroll, dist *target)
     set_ident_type(*scroll, true);
     set_ident_flags(*scroll, ISFLAG_KNOW_TYPE); // for notes
 
+    // can't use DESC_A becaue we will get the stack count
+    string a_scroll = "a " + scroll->name(DESC_QUALNAME);
+
     if (!cancel_scroll)
     {
         if (in_inventory(*scroll))
@@ -3564,9 +3567,6 @@ void read(item_def* scroll, dist *target)
         && which_scroll != SCR_AMNESIA
         && which_scroll != SCR_ACQUIREMENT)
     {
-        // can't use DESC_A becaue we will get the stack count
-        string a_scroll = "a " + scroll->name(DESC_QUALNAME); // @noloc
-
         if (scroll->quantity < prev_quantity)
             mprf("It was %s.", a_scroll.c_str());
         else
