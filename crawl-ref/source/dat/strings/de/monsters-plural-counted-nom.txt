@@ -261,6 +261,12 @@
 %d spriggan defenders
 %d Spriggan-Verteidiger
 %%%%
+%d spriggan bakers
+%d Spriggan-Bäcker
+%%%%
+%d spriggan hatters
+%d Spriggan-Hutmacher
+%%%%
 %d drakes
 %d Drachlinge
 %%%%

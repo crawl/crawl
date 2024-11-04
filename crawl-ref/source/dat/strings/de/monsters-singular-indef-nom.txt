@@ -261,6 +261,12 @@ ein {adj-er}%sSpriggan-Luftmagier
 a %sspriggan defender
 ein {adj-er}%sSpriggan-Verteidiger
 %%%%
+a %sspriggan baker
+ein {adj-er}%sSpriggan-Bäcker
+%%%%
+a %sspriggan hatter
+ein {adj-er}%sSpriggan-Hutmacher
+%%%%
 a %sdrake
 ein {adj-er}%sDrachling
 %%%%

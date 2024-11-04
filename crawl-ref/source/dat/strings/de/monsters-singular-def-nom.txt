@@ -262,6 +262,12 @@ der {adj-e}%sSpriggan-Luftmagier
 the %sspriggan defender
 der {adj-e}%sSpriggan-Verteidiger
 %%%%
+the %sspriggan baker
+der {adj-e}%sSpriggan-Bäcker
+%%%%
+the %sspriggan hatter
+der {adj-e}%sSpriggan-Hutmacher
+%%%%
 the %sdrake
 der {adj-e}%sDrachling
 %%%%

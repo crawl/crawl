@@ -261,6 +261,12 @@ Eures {adj-en}%sSpriggan-Luftmagiers
 your %sspriggan defender's
 Eures {adj-en}%sSpriggan-Verteidigers
 %%%%
+your %sspriggan baker's
+Eures {adj-en}%sSpriggan-Bäckers
+%%%%
+your %sspriggan hatter's
+Eures {adj-en}%sSpriggan-Hutmachers
+%%%%
 your %sdrake's
 Eures {adj-en}%sDrachlings
 %%%%

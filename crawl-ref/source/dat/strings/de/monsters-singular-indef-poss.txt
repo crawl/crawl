@@ -261,6 +261,12 @@ eines {adj-en}%sSpriggan-Luftmagiers
 a %sspriggan defender's
 eines {adj-en}%sSpriggan-Verteidigers
 %%%%
+a %sspriggan baker's
+eines {adj-en}%sSpriggan-Bäckers
+%%%%
+a %sspriggan hatter's
+eines {adj-en}%sSpriggan-Hutmachers
+%%%%
 a %sdrake's
 eines {adj-en}%sDrachlings
 %%%%

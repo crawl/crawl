@@ -261,6 +261,12 @@
 %sspriggan defender
 {adj-er}%sSpriggan-Verteidiger
 %%%%
+%sspriggan baker
+{adj-er}%sSpriggan-Bäcker
+%%%%
+%sspriggan hatter
+{adj-er}%sSpriggan-Hutmacher
+%%%%
 %sdrake
 {adj-er}%sDrachling
 %%%%

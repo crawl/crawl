@@ -261,6 +261,12 @@ Euer {adj-er}%sSpriggan-Luftmagier
 your %sspriggan defender
 Euer {adj-er}%sSpriggan-Verteidiger
 %%%%
+your %sspriggan baker
+Euer {adj-er}%sSpriggan-Bäcker
+%%%%
+your %sspriggan hatter
+Euer {adj-er}%sSpriggan-Hutmacher
+%%%%
 your %sdrake
 Euer {adj-er}%sDrachling
 %%%%

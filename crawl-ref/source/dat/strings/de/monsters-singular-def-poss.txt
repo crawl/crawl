@@ -261,6 +261,12 @@ des {adj-en}%sSpriggan-Luftmagiers
 the %sspriggan defender's
 des {adj-en}%sSpriggan-Verteidigers
 %%%%
+the %sspriggan baker's
+des {adj-en}%sSpriggan-Bäckers
+%%%%
+the %sspriggan hatter's
+des {adj-en}%sSpriggan-Hutmachers
+%%%%
 the %sdrake's
 des {adj-en}%sDrachlings
 %%%%
