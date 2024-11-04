@@ -7,7 +7,7 @@ There are three sets of text files. They are in the following directories:
 2. crawl-ref/source/dat/database
 3. crawl-ref/source/dat/strings
 
-The English files (if applicable) are in the directory itself.
+The English files are in the directory itself (for #1 and #2 only. #3 has no English files) .
 
 The equivalent files for other languages go in a subdirectory named with the
 2-letter ISO code for that language (e.g. de for German, fr for French, es for
@@ -34,7 +34,7 @@ A description of the different file sets:
 1. crawl-ref/source/dat/descript
 --------------------------------
 
-These hold description text for various things in the game (items, monsters, etc.).
+These hold verbose description text for various things in the game (items, monsters, etc.).
 
 By convention, the max line length is 80 characters. However, the lines will be
 concatenated by the program. Do not put whitespace at the end of lines (when the
@@ -127,14 +127,14 @@ Suppose I defined this adjective in French:
 "grand "
 %%%%
 
-If I then do:
+If I then add a string with a placeholder for the adjective:
 
 %%%%
 %sgate
 %sportail
 %%%%
 
-I would get "grand portail", as required. However, if I do this:
+I would get "grand portail" displayed, as required. However, if I do this:
 
 %%%%
 %sdoor
