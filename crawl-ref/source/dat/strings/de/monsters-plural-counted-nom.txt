@@ -712,7 +712,7 @@
 %d orange leuchtende Gehirne
 %%%%
 %d great orbs of eyes
-%d große Augenkugel
+%d große Augenkugeln
 %%%%
 %d shining eyes
 %d leuchtende Augen
