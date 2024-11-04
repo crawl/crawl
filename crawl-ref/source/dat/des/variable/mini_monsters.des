@@ -1449,7 +1449,7 @@ MONS:   yaktaur ; arbalest good_item / death yak band / cyclops band w:20
 NSUBST: . = 1:1 / 1:$ / *:.
 : else -- Shoals:4
 MONS:   death yak / catoblepas / centaur warrior w:15 / yaktaur w:15
-MONS:   apis / stone giant / yaktaur captain / titan
+MONS:   apis / stone giant / yaktaur captain
 NSUBST: . = 2:1 / 2:$ / 1:% / *:.
 : end
 MAP
