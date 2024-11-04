@@ -713,7 +713,7 @@ the %sglowing orange brain
 das {adj-e}%sorange leuchtende Gehirn
 %%%%
 the %sgreat orb of eyes
-die {adj-e}%sgroße Augenkugel
+die {adj-e}%sgroße Kugel der Augen
 %%%%
 the %sshining eye
 das {adj-e}%sleuchtende Auge
