@@ -220,10 +220,13 @@ TAGS:  ziggurat_pillar centered unrand no_exits
 # away from it, and teleports are more risky.
 MONS:  dread lich / shadow demon / curse skull / ironbound convoker / \
        demonspawn corrupter / undying armoury w:5 / deep elf demonologist / \
-       mummy priest w:5 / royal mummy w:5 / deep elf death mage
-MONS:  titan / glass eye / ghost moth / glowing orange brain / tormentor
-MONS:  demonspawn soul scholar / torpor snail / \
-       servant of whispers / tainted leviathan
+       mummy priest w:5 / royal mummy w:5 / deep elf death mage / stoker / \
+       fravashi / seraph w:2 / moth of wrath w:5 / curse toe w:5 / guardian serpent
+MONS:  titan / glass eye / ghost moth / deep elf high priest / tormentor w:5 / \
+       ophan / salamander tyrant / demonspawn soul scholar / naga ritualist w:5 / \
+       soul eater w:5 / flayed ghost w:5 / entropy weaver / daeva
+MONS:  torpor snail / servant of whispers / tainted leviathan / apis / \
+       glowing orange brain / silent spectre w:3 / polterguardian
 MONS:  plant / demonic plant / butterfly
 KFEAT: m = iron_grate
 : if you.depth() > 21 then
