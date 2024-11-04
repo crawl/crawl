@@ -715,6 +715,9 @@ eines {adj-en}%sorangen leuchtenden Gehirns
 a %sgreat orb of eyes's
 einer {adj-en}%sgroßen Kugel der Augen
 %%%%
+a %sgreater orb of eyes's
+einer {adj-en}%sgrößeren Kugel der Augen
+%%%%
 a %sshining eye's
 eines {adj-en}%sleuchtenden Auges
 %%%%

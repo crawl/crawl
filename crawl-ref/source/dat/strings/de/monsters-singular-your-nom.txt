@@ -714,6 +714,9 @@ Euer {adj-es}%soranges leuchtendes Gehirn
 your %sgreat orb of eyes
 Eure {adj-e}%sgroße Kugel der Augen
 %%%%
+your %sgreater orb of eyes
+Eure {adj-e}%sgrößere Kugel der Augen
+%%%%
 your %sshining eye
 Euer {adj-es}%sleuchtendes Auge
 %%%%

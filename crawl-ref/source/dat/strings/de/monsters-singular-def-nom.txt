@@ -715,6 +715,9 @@ das {adj-e}%sorange leuchtende Gehirn
 the %sgreat orb of eyes
 die {adj-e}%sgroße Kugel der Augen
 %%%%
+the %sgreater orb of eyes
+die {adj-e}%sgrößere Kugel der Augen
+%%%%
 the %sshining eye
 das {adj-e}%sleuchtende Auge
 %%%%

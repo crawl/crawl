@@ -65,6 +65,15 @@ int main()
     msg = localise("large closed door, spattered with blood");
     show_result(msg, "große geschlossene Tür, mit Blut bespritzt");
 
+    msg = localise("a great orb of eyes");
+    show_result(msg, "eine große Kugel der Augen");
+
+    msg = localise("a greater orb of eyes");
+    show_result(msg, "eine größere Kugel der Augen");
+
+    msg = localise("10 greater orbs of eyes");
+    show_result(msg, "10 größere Kugeln der Augen");
+
     // test with @foo@ style placeholders
 
     map<string, string> params;

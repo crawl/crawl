@@ -714,6 +714,9 @@
 %sgreat orb of eyes
 {adj-e}%sgroße Kugel der Augen
 %%%%
+%sgreater orb of eyes
+{adj-e}%sgrößere Kugel der Augen
+%%%%
 %sshining eye
 {adj-es}%sleuchtendes Auge
 %%%%

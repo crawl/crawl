@@ -715,6 +715,9 @@ Eures {adj-en}%sorangen leuchtenden Gehirns
 your %sgreat orb of eyes's
 Eurer {adj-en}%sgroßen Kugel der Augen
 %%%%
+your %sgreater orb of eyes's
+Eurer {adj-en}%sgrößeren Kugel der Augen
+%%%%
 your %sshining eye's
 Eures {adj-en}%sleuchtenden Auges
 %%%%

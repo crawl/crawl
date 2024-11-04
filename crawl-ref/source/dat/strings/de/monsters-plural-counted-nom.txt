@@ -714,6 +714,9 @@
 %d great orbs of eyes
 %d große Kugeln der Augen
 %%%%
+%d greater orbs of eyes
+%d größere Kugeln der Augen
+%%%%
 %d shining eyes
 %d leuchtende Augen
 %%%%
