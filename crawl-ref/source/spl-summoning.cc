@@ -2186,6 +2186,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_WALKING_ALEMBIC,          { 1, 1 } },
     { SPELL_SUMMON_SEISMOSAURUS_EGG,  { 1, 1 } },
     { SPELL_PHALANX_BEETLE,           { 1, 1 } },
+    { SPELL_RENDING_BLADE,            { 1, 1 } },
     // Monster-only spells
     { SPELL_SHADOW_CREATURES,         { 0, 4 } },
     { SPELL_SUMMON_SPIDERS,           { 0, 5 } },
@@ -4319,4 +4320,55 @@ spret cast_phalanx_beetle(const actor& agent, int pow, bool fail)
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return spret::success;
+}
+
+static int _rending_blade_power(int base_power)
+{
+    const int mp_spent = max(0, you.magic_points - spell_difficulty(SPELL_RENDING_BLADE));
+    const int mp_bonus = stepdown(mp_spent, 10);
+    return base_power * (100 + mp_bonus * 3) / 100;
+}
+
+dice_def rending_blade_damage(int power, bool include_mp)
+{
+    const int pow = include_mp ? _rending_blade_power(power) : power;
+    return zap_damage(ZAP_RENDING_SLASH, pow, true, false);
+}
+
+spret cast_rending_blade(int pow, bool fail)
+{
+    fail_check();
+
+    mgen_data blade = _pal_data(MONS_RENDING_BLADE, random_range(7, 10) * BASELINE_DELAY,
+                                SPELL_RENDING_BLADE, false);
+
+    if (monster* mon = create_monster(blade))
+    {
+        mpr("You condense your magic into a crackling blade!");
+        you.props[RENDING_BLADE_MP_KEY].get_int() = you.magic_points;
+        mon->props[RENDING_BLADE_POWER_KEY] = _rending_blade_power(pow);
+        pay_mp(you.magic_points);
+    }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return spret::success;
+}
+
+// Find our rending blade and increase its stored trigger count by one, so that
+// it will try to fire when its turn comes around.
+void trigger_rending_blade()
+{
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->type == MONS_RENDING_BLADE && mi->summoner == MID_PLAYER)
+        {
+            // Only save up to 3 charges at once, so that axes aren't overly
+            // ridiclous and that you can't bank too many charges while the
+            // blade isn't positioned to act.
+            mi->number = min((unsigned int)3, mi->number + 1);
+            mi->speed_increment = 100;
+            return;
+        }
+    }
 }

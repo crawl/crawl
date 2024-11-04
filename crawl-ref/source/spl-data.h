@@ -4283,6 +4283,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_RENDING_BLADE, "Rending Blade",
+    spschool::conjuration | spschool::forgecraft,
+    spflag::utility,
+    4,
+    100,
+    -1, -1,
+    0,
+    TILEG_RENDING_BLADE,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

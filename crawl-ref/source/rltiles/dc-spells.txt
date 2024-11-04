@@ -23,6 +23,7 @@ orb_of_destruction IOOD
 magic_dart MAGIC_DART
 momentum_strike MOMENTUM_STRIKE
 searing_ray SEARING_RAY
+rending_blade RENDING_BLADE
 
 %sdir gui/spells/earth
 boulder BOULDER

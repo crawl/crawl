@@ -1216,6 +1216,117 @@ static void _check_blazeheart_golem_link(monster& mons)
     }
 }
 
+static bool _handle_rending_blade_trigger(monster* blade)
+{
+    if (blade->number <= 0)
+        return false;
+
+    const int pow = blade->props[RENDING_BLADE_POWER_KEY].get_int();
+
+    coord_def best_targ;
+    int best_weight = 0;
+    int best_range = 0;
+    int num_best_found = 0;
+
+    // Look at all hostile enemies both you and the blade can see, then
+    // trace a path towards each of them, going as far as possible without
+    // exceeding the blade's maximum range (4), hitting an ally, or leaving
+    // the player's LoS. If no path is productive and safe, do nothing and
+    // hope we'll be in a better position next turn.
+    for (monster_near_iterator mi(blade, LOS_NO_TRANS); mi; ++mi)
+    {
+        if (mons_aligned(*mi, blade) || !you.can_see(**mi)
+            || grid_distance(mi->pos(), blade->pos()) > 4)
+        {
+            continue;
+        }
+
+        ray_def ray;
+        if (!find_ray(blade->pos(), mi->pos(), ray, opc_solid_see))
+            continue;
+
+        // Examine spaces one at a time, stopping if we hit a friendly
+        // monster, wall, or leave the player's LoS, and otherwise keep
+        // track of the furthest safe empty space we can occupy (to determine
+        // the maximal range of this shot).
+        int steps_taken = 0;
+        int furthest_safe = 0;
+        int enemy_power = 0;
+        int enemy_power_reachable = 0;
+
+        while (ray.advance() && steps_taken < 4)
+        {
+            ++steps_taken;
+            const coord_def p = ray.pos();
+
+            // Don't leave the player's LoS.
+            if (!you.see_cell_no_trans(p) || p == you.pos())
+                break;
+
+            if (monster* targ = monster_at(p))
+            {
+                // Don't hurt allies.
+                if (mons_aligned(blade, targ))
+                    break;
+
+                if (!mons_is_firewood(*targ))
+                    enemy_power += targ->get_experience_level();
+            }
+            // We need somewhere safe to end our path.
+            else if (monster_habitable_grid(MONS_RENDING_BLADE, p))
+            {
+                furthest_safe = steps_taken;
+                enemy_power_reachable = enemy_power;
+            }
+        }
+
+        if (furthest_safe > 0)
+        {
+            if (enemy_power_reachable > best_weight)
+            {
+                best_weight = enemy_power_reachable;
+                best_range = furthest_safe;
+                best_targ = mi->pos();
+                num_best_found = 0;
+            }
+            // Choose randomly among ties for best shot
+            else if (enemy_power_reachable > 0
+                     && enemy_power_reachable == best_weight
+                     && one_chance_in(++num_best_found))
+            {
+                best_weight = enemy_power_reachable;
+                best_range = furthest_safe;
+                best_targ = mi->pos();
+            }
+        }
+    }
+
+    // If we found no valid path, bail.
+    if (best_targ.origin())
+        return false;
+
+    // Point blade at foe, so it won't wander off
+    blade->foe = monster_at(best_targ)->mindex();
+
+    bolt slash;
+    zappy(ZAP_RENDING_SLASH, pow, true, slash);
+    slash.range = best_range;
+    slash.source = blade->pos();
+    slash.source_id = blade->mid;
+    slash.thrower = KILL_MON_MISSILE;
+    slash.origin_spell = SPELL_RENDING_BLADE;
+    slash.target = best_targ;
+    slash.hit_verb = "slices through";
+
+    simple_monster_message(*blade, " flashes!");
+
+    slash.fire();
+    blade->blink_to(slash.path_taken[slash.path_taken.size() - 1], true, true);
+    blade->number -= 1;
+
+    return true;
+}
+
 static void _mons_fire_wand(monster& mons, spell_type mzap, bolt &beem)
 {
     if (!simple_monster_message(mons, " zaps a wand."))
@@ -1873,6 +1984,21 @@ void handle_monster_move(monster* mons)
     {
         mons->suicide();
         return;
+    }
+
+    if (mons->type == MONS_RENDING_BLADE)
+    {
+        // Perform as many slashes as we are able and have charge for.
+        bool did_slash = false;
+        while (_handle_rending_blade_trigger(mons))
+            did_slash = true;
+
+        // Pause in place after attacking (for slightly better visuals).
+        if (did_slash)
+        {
+            mons->speed_increment = 60;
+            return;
+        }
     }
 
     // Friendly player shadows don't act independently (though hostile ones from

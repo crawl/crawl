@@ -2515,6 +2515,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_PHALANX_BEETLE:
         return cast_phalanx_beetle(you, powc, fail);
 
+    case SPELL_RENDING_BLADE:
+        return cast_rending_blade(powc, fail);
+
     // Enchantments.
     case SPELL_CONFUSING_TOUCH:
         return cast_confusing_touch(powc, fail);
@@ -3046,6 +3049,16 @@ string spell_damage_string(spell_type spell, bool evoked, int pow, bool terse)
 
             return make_stringf("%dd%d/%dd%d",
                 shot_dam.num, shot_dam.size, finale_dam.num, finale_dam.size);
+        }
+        case SPELL_RENDING_BLADE:
+        {
+            dice_def dmg_mp = rending_blade_damage(pow, true);
+            dice_def dmg = rending_blade_damage(pow, false);
+            const int bonus = dmg_mp.size - dmg.size;
+            if (bonus > 0)
+                return make_stringf("%dd(%d+%d*)", dmg.num, dmg.size, bonus);
+            else
+                return make_stringf("%dd%d", dmg.num, dmg.size);
         }
         default:
             break;

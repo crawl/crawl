@@ -1471,6 +1471,18 @@ Regenerate Other spell
 Causes another creature to rapidly regenerate over a short period of time.
 This regeneration is proportional to that creature's maximum health.
 %%%%
+Rending Blade spell
+
+Condenses the caster's magical energy into the form of a violently crackling
+blade. Each time the caster successfully hits with a melee attack while the
+spell is active, this blade will rend a path back and forth through nearby foes,
+dealing irresistible damage.
+
+Casting this spell temporarily drains *all* of the caster's remaining magical
+power to constitute the blade, but this energy will be returned to them as soon
+as the blade ceases to exist. Each point of magical power sequestered this way
+slightly increases the damage the blade inflicts.
+%%%%
 Repel Missiles spell
 
 Reduces the chance of projectile attacks striking the caster, making them

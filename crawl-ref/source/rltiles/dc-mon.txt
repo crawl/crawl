@@ -638,6 +638,7 @@ spectral_axe MONS_SPECTRAL_AXE
 spectral_mace MONS_SPECTRAL_MACE
 spectral_whip MONS_SPECTRAL_WHIP
 spectral_spear MONS_SPECTRAL_SPEAR
+rending_blade MONS_RENDING_BLADE
 
 ## Walking Tomes (';')
 %rim 0

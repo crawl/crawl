@@ -2410,6 +2410,11 @@ redback
 A vicious black spider with a splash of red on its swollen abdomen. Its
 mandibles drip with lethal poison.
 %%%%
+rending blade
+
+A crackling weapon formed of condensed magical energy. It can cut through entire
+rows of aversaries whenever its creator lands a melee attack.
+%%%%
 revenant
 
 An animated skeleton wreathed in cold blue fire, standing astride this life and

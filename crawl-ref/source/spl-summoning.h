@@ -30,6 +30,9 @@ constexpr int MAX_HOARFROST_SHOTS = 4;
 
 #define PHALANX_BARRIER_POWER_KEY "phalanx_barrier_power"
 
+#define RENDING_BLADE_MP_KEY "rending_blade_mp"
+#define RENDING_BLADE_POWER_KEY "rending_blade_power"
+
 constexpr int BOULDER_ABRASION_DAMAGE = 5;
 constexpr int PARAGON_FINISHER_MID_CHARGE = 8;
 constexpr int PARAGON_FINISHER_MAX_CHARGE = 14;
@@ -189,3 +192,7 @@ bool splinterfrost_block_fragment(monster& block, const coord_def& aim);
 spret cast_summon_seismosaurus_egg(const actor& agent, int pow, bool fail);
 
 spret cast_phalanx_beetle(const actor& agent, int pow, bool fail);
+
+dice_def rending_blade_damage(int power, bool include_mp);
+spret cast_rending_blade(int pow, bool fail);
+void trigger_rending_blade();

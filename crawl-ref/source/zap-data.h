@@ -2530,4 +2530,20 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     false,
 },
 
+{
+    ZAP_RENDING_SLASH,
+    "condensed magic",
+    150,
+    nullptr,
+    nullptr,
+    new dicedef_calculator<2, 4, 1, 14>,
+    new tohit_calculator<30>,
+    MAGENTA,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    true,
+    false,
+},
+
 };

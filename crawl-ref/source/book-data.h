@@ -554,6 +554,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_PERCUSSIVE_TEMPERING,
     SPELL_FORTRESS_BLAST,
     SPELL_PHALANX_BEETLE,
+    SPELL_RENDING_BLADE,
 },
 
 };

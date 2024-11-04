@@ -859,6 +859,9 @@ monster_info::monster_info(const monster* m, int milev)
             mb.set(MB_PARTIALLY_CHARGED);
     }
 
+    if (m->type == MONS_RENDING_BLADE && m->number > 0)
+        mb.set(MB_FULLY_CHARGED);
+
     if (m->type == MONS_SEISMOSAURUS_EGG && egg_is_incubating(*m))
         mb.set(MB_HATCHING);
 

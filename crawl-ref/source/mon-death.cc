@@ -2448,6 +2448,12 @@ item_def* monster_die(monster& mons, killer_type killer,
         end_battlesphere(&mons, true);
     else if (mons.type == MONS_SPECTRAL_WEAPON)
         end_spectral_weapon(&mons, true, true);
+    else if (mons.type == MONS_RENDING_BLADE)
+    {
+        mprf(MSGCH_DURATION, "Your magic returns to you!");
+        inc_mp(you.props[RENDING_BLADE_MP_KEY].get_int());
+        you.props.erase(RENDING_BLADE_MP_KEY);
+    }
     else if (mons.type == MONS_FLAYED_GHOST)
         end_flayed_effect(&mons);
     else if (mons.type == MONS_PLAYER_SHADOW)
@@ -2810,6 +2816,8 @@ item_def* monster_die(monster& mons, killer_type killer,
                 msg = " falls apart.";
             else if (mons.type == MONS_PLATINUM_PARAGON)
                 msg = " expends the last of its power.";
+            else if (mons.type == MONS_RENDING_BLADE)
+                msg = " implodes with a snap.";
             else
             {
                 if (mons.props.exists(KIKU_WRETCH_KEY))
