@@ -1000,7 +1000,7 @@ a %sOrb Guardian
 ein {adj-er}%sKugelwächter
 %%%%
 a %stentacled starspawn
-ein {adj-er}%sTentakelsternbrut
+eine {adj-e}%sTentakelsternbrut
 %%%%
 a %sstarspawn tentacle
 ein {adj-er}%sSternbruttentakel
@@ -1126,7 +1126,7 @@ a %smonstrous demonspawn
 eine {adj-e}%smonströse Dämonenbrut
 %%%%
 a %sgelid demonspawn
-ein {adj-er}%sgelider Dämonenbrut
+eine {adj-e}%sgelide Dämonenbrut
 %%%%
 a %sinfernal demonspawn
 eine {adj-e}%shöllische Dämonenbrut

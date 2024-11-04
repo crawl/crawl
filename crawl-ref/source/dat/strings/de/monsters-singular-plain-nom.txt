@@ -1000,7 +1000,7 @@
 {adj-er}%sKugelwächter
 %%%%
 %stentacled starspawn
-{adj-er}%sTentakelsternbrut
+{adj-e}%sTentakelsternbrut
 %%%%
 %sstarspawn tentacle
 {adj-er}%sSternbruttentakel
@@ -1126,7 +1126,7 @@
 {adj-e}%smonströse Dämonenbrut
 %%%%
 %sgelid demonspawn
-{adj-er}%sgelider Dämonenbrut
+{adj-e}%sgelide Dämonenbrut
 %%%%
 %sinfernal demonspawn
 {adj-e}%shöllische Dämonenbrut
