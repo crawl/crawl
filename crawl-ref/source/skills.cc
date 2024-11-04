@@ -519,6 +519,16 @@ static void _check_abil_skills()
     }
 }
 
+static void _check_active_talisman_skills()
+{
+    skill_set skills;
+    if (you.active_talisman.defined()
+        && item_skills(you.active_talisman, skills))
+    {
+        _erase_from_skills_to_hide(skills);
+    }
+}
+
 /// Check to see if the player is a djinn with at least one magic skill
 /// un-hidden. If so, unhide all of them.
 static void _check_innate_magic_skills()
@@ -565,6 +575,7 @@ static void _check_skills_to_hide()
     _check_inventory_skills();
     _check_spell_skills();
     _check_abil_skills();
+    _check_active_talisman_skills();
     _check_innate_magic_skills();
 
     if (you.skills_to_hide.empty())

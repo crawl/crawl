@@ -2420,6 +2420,7 @@ bool ashenzari_uncurse_item()
     }
 
     mprf("You shatter the curse binding %s!", item.name(DESC_THE).c_str());
+    item_skills(item, you.skills_to_hide);
     unequip_item(item_equip_slot(you.inv[item_slot]));
     ash_check_bondage();
 

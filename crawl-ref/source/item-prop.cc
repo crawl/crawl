@@ -2079,7 +2079,7 @@ skill_type item_attack_skill(object_class_type wclass, int wtype)
 }
 
 // True if item is a staff that deals extra damage based on Evocations skill.
-bool staff_uses_evocations(const item_def &item)
+static bool _staff_uses_evocations(const item_def &item)
 {
     if (is_unrandom_artefact(item, UNRAND_ELEMENTAL_STAFF)
         || is_unrandom_artefact(item, UNRAND_OLGREB))
@@ -2124,41 +2124,15 @@ ac_type staff_ac_check(stave_type s)
 
 bool item_skills(const item_def &item, set<skill_type> &skills)
 {
+    if (is_useless_item(item))
+        return false;
+
     if (item.is_type(OBJ_BOOKS, BOOK_MANUAL))
     {
         const skill_type skill = static_cast<skill_type>(item.plus);
         if (!skill_default_shown(skill))
             skills.insert(skill);
     }
-
-    // Jewellery with evokable abilities, wands and similar unwielded
-    // evokers allow training. (Talismans don't use evo.)
-    // XX why are gives_ability cases broken up like this
-    if (item.base_type == OBJ_TALISMANS)
-        skills.insert(SK_SHAPESHIFTING);
-    else if (item_ever_evokable(item) && !item.is_type(OBJ_MISCELLANY, MISC_ZIGGURAT)
-        || item.base_type == OBJ_JEWELLERY && gives_ability(item)
-        || staff_uses_evocations(item)
-        || item.base_type == OBJ_WEAPONS && gives_ability(item))
-    {
-        skills.insert(SK_EVOCATIONS);
-    }
-
-    // Shields and abilities on armours allow training as long as your species
-    // can wear them.
-    if (item.base_type == OBJ_ARMOUR && can_wear_armour(item, false, true))
-    {
-        if (is_shield(item))
-            skills.insert(SK_SHIELDS);
-
-        if (gives_ability(item))
-            skills.insert(SK_EVOCATIONS);
-    }
-
-
-    // Weapons and staves allow training as long as your species can wield them.
-    if (!you.could_wield(item, true, true))
-        return !skills.empty();
 
     if (item.base_type == OBJ_STAVES)
     {
@@ -2179,6 +2153,23 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
     {
         skills.insert(SK_POLEARMS);
         skills.insert(SK_AXES);
+    }
+
+    if (is_shield(item))
+        skills.insert(SK_SHIELDS);
+
+    if (item.base_type == OBJ_TALISMANS)
+        skills.insert(SK_SHAPESHIFTING);
+
+    // Artefacts with evokable abilities, wands and similar unwielded
+    // evokers allow training. Talismans usually don't use evo (unless it's
+    // an artefact with, say, +Blink).
+    if (item_ever_evokable(item) && !item.is_type(OBJ_MISCELLANY, MISC_ZIGGURAT)
+                                 && item.base_type != OBJ_TALISMANS
+        || gives_ability(item)
+        || _staff_uses_evocations(item))
+    {
+        skills.insert(SK_EVOCATIONS);
     }
 
     return !skills.empty();
@@ -2928,28 +2919,16 @@ bool gives_ability(const item_def &item)
     if (!item_type_known(item))
         return false;
 
-    switch (item.base_type)
+    if (item.base_type == OBJ_ARMOUR
+        && get_armour_ego_type(item) == SPARM_INVISIBILITY)
     {
-    case OBJ_WEAPONS:
-        break;
-    case OBJ_ARMOUR:
-    {
-        const equipment_type eq = get_armour_slot(item);
-        if (eq == EQ_NONE)
-            return false;
-
-        if (get_armour_ego_type(item) == SPARM_INVISIBILITY)
-            return true;
-        break;
-    }
-    default:
-        return false;
+        return true;
     }
 
     if (!is_artefact(item))
         return false;
 
-    // Check for evokable randart properties.
+    // Check for evokable artefact properties.
     if (artefact_property(item, ARTP_INVISIBLE)
         || artefact_property(item, ARTP_BLINK)
         || is_unrandom_artefact(item, UNRAND_DISPATER)
@@ -2957,7 +2936,6 @@ bool gives_ability(const item_def &item)
     {
         return true;
     }
-
 
     return false;
 }
