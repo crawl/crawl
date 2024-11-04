@@ -315,14 +315,33 @@ void handle_behaviour(monster* mon)
     if (proxPlayer && !you.visible_to(mon))
         proxPlayer = _monster_guesses_invis_player(*mon);
 
+    // Handle phalanx beetle behavior: return to its creator if non-adjacent,
+    // otherwise try to pick a monster in reach to attack.
+    if (mon->type == MONS_PHALANX_BEETLE && owner)
+    {
+        if (!adjacent(owner->pos(), mon->pos()))
+        {
+            mon->foe = MHITYOU;
+            mon->behaviour = BEH_SEEK;
+        }
+        else
+        {
+            actor* foe = mon->get_foe();
+            // If foe is clearly unreachable while next to creator, pick another
+            // one if possible. (This doesn't perfectly account for reachability
+            // but should be adequate in practice.)
+            if (!foe || grid_distance(foe->pos(), owner->pos()) > 2)
+                set_nearest_monster_foe(mon, true);
+        }
+    }
     // Set friendly target, if they don't already have one.
     // Berserking allies ignore your commands!
-    if (isFriendly
-        && (mon->foe == MHITNOT || mon->foe == MHITYOU)
-        && !mon->berserk_or_frenzied()
-        && mon->behaviour != BEH_WITHDRAW
-        && !mons_self_destructs(*mon)
-        && !mons_is_avatar(mon->type))
+    else if (isFriendly
+             && (mon->foe == MHITNOT || mon->foe == MHITYOU)
+             && !mon->berserk_or_frenzied()
+             && mon->behaviour != BEH_WITHDRAW
+             && !mons_self_destructs(*mon)
+             && !mons_is_avatar(mon->type))
     {
         if (you.pet_target != MHITNOT)
             mon->foe = you.pet_target;

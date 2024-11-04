@@ -4272,6 +4272,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_PHALANX_BEETLE, "Forge Phalanx Beetle",
+    spschool::forgecraft,
+    spflag::none,
+    6,
+    200,
+    -1, -1,
+    0,
+    TILEG_ERROR,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

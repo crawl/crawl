@@ -6636,6 +6636,9 @@ int player::armour_class_with_specific_items(int scale,
     if (you.props.exists(PASSWALL_ARMOUR_KEY))
         AC += you.props[PASSWALL_ARMOUR_KEY].get_int() * 100;
 
+    if (you.duration[DUR_PHALANX_BARRIER])
+        AC += you.props[PHALANX_BARRIER_POWER_KEY].get_int();
+
     AC -= 100 * corrosion_amount();
 
     AC += sanguine_armour_bonus();

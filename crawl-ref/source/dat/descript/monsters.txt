@@ -2229,6 +2229,15 @@ pearl dragon
 A dragon consecrated to the holy divine powers. Its breath is blessed fire, and
 its claws sear its victims with divine wrath.
 %%%%
+phalanx beetle
+
+An intricate mechanical beetle covered in reinforced metal plates that resemble
+a shield. It projects a kinetic barrier around its creator while adjacent to
+them, increasing their armour class.
+
+It will never voluntarily leave its creator's side, and if forcibly seperated,
+will prioritize returning to them over any other concerns.
+%%%%
 phantasmal warrior
 
 A hideous translucent green spirit of a warrior fallen in battle but recalled

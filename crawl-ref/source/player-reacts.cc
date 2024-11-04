@@ -136,6 +136,8 @@ static bool _decrement_a_duration(duration_type dur, int delay,
 
     if (dur == DUR_SENTINEL_MARK && aura_is_active_on_player(OPHAN_MARK_KEY))
         return false;
+    else if (dur == DUR_PHALANX_BARRIER && aura_is_active_on_player(PHALANX_BARRIER_KEY))
+        return false;
 
     const int old_dur = you.duration[dur];
     you.duration[dur] -= delay;
@@ -509,6 +511,9 @@ void player_reacts_to_monsters()
         if (you.duration[DUR_BLOOD_FOR_BLOOD] < 1)
             you.duration[DUR_BLOOD_FOR_BLOOD] = 1;
     }
+
+    if (_decrement_a_duration(DUR_PHALANX_BARRIER, you.time_taken))
+        you.redraw_armour_class = true;
 
     _maybe_melt_armour();
     _update_cowardice();

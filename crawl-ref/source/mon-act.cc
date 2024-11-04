@@ -1720,6 +1720,16 @@ static bool _mons_take_special_action(monster &mons, int old_energy)
     return false;
 }
 
+static bool _beetle_must_return(const monster* mons)
+{
+    if (mons->type != MONS_PHALANX_BEETLE)
+        return false;
+
+    actor* creator = actor_by_mid(mons->summoner);
+    return creator && creator->alive()
+           && !adjacent(mons->pos(), creator->pos());
+}
+
 void handle_monster_move(monster* mons)
 {
     ASSERT(mons); // XXX: change to monster &mons
@@ -2090,6 +2100,7 @@ void handle_monster_move(monster* mons)
         if (targ
             && targ != mons
             && mons->behaviour != BEH_WITHDRAW
+            && !_beetle_must_return(mons)
             && (!(mons_aligned(mons, targ) || targ->type == MONS_FOXFIRE)
                 || mons->has_ench(ENCH_FRENZIED))
             && monster_los_is_valid(mons, targ))
@@ -3006,6 +3017,28 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
                     else if (ray.pos() == targ)
                         return false;
                 }
+            }
+        }
+    }
+
+    // Never voluntarily leave your creator's side if you're already next to
+    // them (but can freely move to catch up with them, if not.)
+    if (mons->type == MONS_PHALANX_BEETLE)
+    {
+        actor* creator = actor_by_mid(mons->summoner);
+        if (creator && creator->alive())
+        {
+            if (adjacent(creator->pos(), mons->pos())
+                && !adjacent(creator->pos(), targ))
+            {
+                return false;
+            }
+            // Don't consider moving into enemies good enough if we're trying
+            // to return to our creator.
+            else if (!adjacent(creator->pos(), mons->pos())
+                     && actor_at(targ))
+            {
+                return false;
             }
         }
     }

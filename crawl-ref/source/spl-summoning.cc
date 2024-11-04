@@ -2185,6 +2185,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_PLATINUM_PARAGON,         { 1, 1 } },
     { SPELL_WALKING_ALEMBIC,          { 1, 1 } },
     { SPELL_SUMMON_SEISMOSAURUS_EGG,  { 1, 1 } },
+    { SPELL_PHALANX_BEETLE,           { 1, 1 } },
     // Monster-only spells
     { SPELL_SHADOW_CREATURES,         { 0, 4 } },
     { SPELL_SUMMON_SPIDERS,           { 0, 5 } },
@@ -4292,6 +4293,27 @@ spret cast_summon_seismosaurus_egg(const actor& agent, int pow, bool fail)
     {
         mpr("A rock-encrusted egg appears nearby and begins to stir.");
         mons->add_ench(mon_enchant(ENCH_HATCHING, 0, &agent, random_range(6, 9)));
+    }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return spret::success;
+}
+
+spret cast_phalanx_beetle(const actor& agent, int pow, bool fail)
+{
+    fail_check();
+
+    mgen_data beetle = _summon_data(agent, MONS_PHALANX_BEETLE, summ_dur(4),
+                                    SPELL_PHALANX_BEETLE, false);
+    beetle.hd = 9 + div_rand_round(pow, 25);
+    beetle.set_range(1, 2);
+
+    if (monster* mons = create_monster(beetle))
+    {
+        mpr("You forge a skittering defender to stand by your side.");
+        you.props[PHALANX_BARRIER_POWER_KEY] = 400 + pow * 3;
+        mons_update_aura(*mons);
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);

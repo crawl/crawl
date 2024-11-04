@@ -28,6 +28,8 @@ constexpr int MAX_HOARFROST_SHOTS = 4;
 
 #define SPLINTERFROST_POWER_KEY "splinterfrost_power"
 
+#define PHALANX_BARRIER_POWER_KEY "phalanx_barrier_power"
+
 constexpr int BOULDER_ABRASION_DAMAGE = 5;
 constexpr int PARAGON_FINISHER_MID_CHARGE = 8;
 constexpr int PARAGON_FINISHER_MAX_CHARGE = 14;
@@ -185,3 +187,5 @@ vector<coord_def> get_splinterfrost_block_spots(const actor& agent,
 bool splinterfrost_block_fragment(monster& block, const coord_def& aim);
 
 spret cast_summon_seismosaurus_egg(const actor& agent, int pow, bool fail);
+
+spret cast_phalanx_beetle(const actor& agent, int pow, bool fail);

@@ -2512,6 +2512,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_FORTRESS_BLAST:
         return cast_fortress_blast(you, powc, fail);
 
+    case SPELL_PHALANX_BEETLE:
+        return cast_phalanx_beetle(you, powc, fail);
+
     // Enchantments.
     case SPELL_CONFUSING_TOUCH:
         return cast_confusing_touch(powc, fail);
