@@ -2991,7 +2991,7 @@ spret cast_hoarfrost_cannonade(const actor& agent, int pow, bool fail)
     cannon.pos = (agent.is_player() ? you.pos()
                                     : agent.as_monster()->get_foe()->pos());
     cannon.hd = _hoarfrost_cannon_hd(pow);
-    cannon.set_range(3);
+    cannon.set_range(3, 3, 1);
 
     // Make both cannons share the same duration
     cannon.set_summoned(&agent, SPELL_HOARFROST_CANNONADE,

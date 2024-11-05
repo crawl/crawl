@@ -2132,7 +2132,7 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
 
 {
     ZAP_HOARFROST_BULLET,
-    "shard of alchemical ice",
+    "shard of frigid ice",
     100,
     nullptr,
     nullptr,
@@ -2148,7 +2148,7 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
 
 {
     ZAP_HOARFROST_BULLET_FINALE,
-    "salvo of alchemical ice",
+    "salvo of frigid ice",
     100,
     nullptr,
     nullptr,

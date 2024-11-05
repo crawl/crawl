@@ -902,8 +902,8 @@ even those resistant to poison.
 %%%%
 Hoarfrost Bullet spell
 
-Fires a shard of alchemical ice that coats whatever it hits with a layer of
-brittle frost, which slows their movement.
+Fires a shard of ice that coats whatever it hits with a layer of brittle frost
+which slows their movement.
 
 Each shot fired will deplete the cannon's remaining durability, but if it
 survives to fire 5 times, the final shot will fragment to hit all enemies around
@@ -911,9 +911,9 @@ the primary target for additional damage.
 %%%%
 Hoarfrost Cannonade spell
 
-Sculpts a pair of cannons from alchemical ice that assail the caster's enemies
-from long range. The frigid shards they fire rapidly coat their targets with a
-layer of brittle frost, which slows their movement.
+Sculpts a pair of icy cannons that assail the caster's enemies from long range.
+The frigid shards they fire rapidly coat their targets with a layer of brittle
+frost which slows their movement.
 
 The cannons are short-lived and consume a part of themselves with every shard
 they fire, but if they survive to fire their final salvo without interference,

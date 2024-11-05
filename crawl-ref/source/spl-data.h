@@ -3909,7 +3909,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_HOARFROST_CANNONADE, "Hoarfrost Cannonade",
-    spschool::alchemy | spschool::ice,
+    spschool::forgecraft | spschool::ice,
     spflag::none,
     5,
     200,
