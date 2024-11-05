@@ -3035,13 +3035,13 @@ spret cast_hoarfrost_cannonade(const actor& agent, int pow, bool fail)
 static int _hellfire_mortar_hd(int pow, bool random = true)
 {
     if (random)
-        return 3 + div_rand_round(pow, 28);
-    return 3 + pow / 28;
+        return 1 + div_rand_round(pow, 10);
+    return 1 + pow / 10;
 }
 
 dice_def hellfire_mortar_damage(int pow)
 {
-    return zap_damage(ZAP_BOLT_OF_MAGMA, _hellfire_mortar_hd(pow, false) * 12, true, false);
+    return zap_damage(ZAP_MAGMA_BARRAGE, _hellfire_mortar_hd(pow, false) * 12, true, false);
 }
 
 static bool _hellfire_stops_here(bolt& beam, coord_def pos)
@@ -3130,6 +3130,7 @@ spret cast_hellfire_mortar(const actor& agent, bolt& beam, int pow, bool fail)
     mg.flags |= MG_FORCE_PLACE;
     mg.pos = beam.path_taken[0];
     mg.hd = _hellfire_mortar_hd(pow);
+    mg.hp = 100;
     monster* cannon = create_monster(mg);
 
     // Unclear why this could happen (we've already checked that the spot is

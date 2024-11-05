@@ -3975,7 +3975,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_HELLFIRE_MORTAR, "Hellfire Mortar",
-    spschool::earth | spschool::fire,
+    spschool::earth | spschool::fire | spschool::forgecraft,
     spflag::dir_or_target | spflag::destructive,
     7,
     200,
@@ -4291,6 +4291,17 @@ static const struct spell_desc spelldata[] =
     -1, -1,
     0,
     TILEG_RENDING_BLADE,
+},
+
+{
+    SPELL_MAGMA_BARRAGE, "Magma Barrage",
+    spschool::conjuration | spschool::fire | spschool::earth,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
+    5,
+    200,
+    5, 5,
+    0,
+    TILEG_BOLT_OF_MAGMA,
 },
 
 {

@@ -6,7 +6,7 @@ holiness: [nonliving]
 will: invuln
 attacks:
 hd: 10
-hp_10x: 1200
+hp_10x: 1000
 ac: 20
 ev: 0
 spells: hellfire_mortar

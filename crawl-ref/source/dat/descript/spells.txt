@@ -1096,6 +1096,11 @@ Magic Dart spell
 
 Fires a small bolt of magical energy which never misses.
 %%%%
+Magma Barrage spell
+
+Fires penetrating bolts of molten rock at up to two different enemy targets.
+Half of its damage bypasses fire resistance.
+%%%%
 Magnavolt spell
 
 Envelops a target in a thin layer of magnetically charged metal fragments, then

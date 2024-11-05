@@ -2858,6 +2858,7 @@ bool bolt::can_burn_trees() const
     case SPELL_BOLT_OF_FIRE:
     case SPELL_REBOUNDING_BLAZE:
     case SPELL_BOLT_OF_MAGMA:
+    case SPELL_MAGMA_BARRAGE:
     case SPELL_FIREBALL:
     case SPELL_FIRE_STORM:
     case SPELL_IGNITION:

@@ -2546,4 +2546,20 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     false,
 },
 
+{
+    ZAP_MAGMA_BARRAGE,
+    "bolt of magma",
+    200,
+    nullptr,
+    nullptr,
+    new dicedef_calculator<4, 4, 2, 21>,
+    new tohit_calculator<17, 1, 25>,
+    RED,
+    false,
+    BEAM_LAVA,
+    DCHAR_FIRED_ZAP,
+    true,
+    false,
+},
+
 };

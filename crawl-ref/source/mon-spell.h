@@ -1694,7 +1694,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_HELLFIRE_MORTAR,
       {
-       { SPELL_BOLT_OF_MAGMA, 200, MON_SPELL_MAGICAL },
+       { SPELL_MAGMA_BARRAGE, 200, MON_SPELL_MAGICAL },
       }
     },
 

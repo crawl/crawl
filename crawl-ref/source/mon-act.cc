@@ -1103,7 +1103,7 @@ static void _handle_hellfire_mortar(monster& mortar)
     {
         if (!mons_aligned(&mortar, *ai) && monster_los_is_valid(&mortar, *ai))
         {
-            bolt tracer = mons_spell_beam(&mortar, SPELL_BOLT_OF_MAGMA, 100);
+            bolt tracer = mons_spell_beam(&mortar, SPELL_MAGMA_BARRAGE, 100);
             tracer.source = mortar.pos();
             tracer.target = ai->pos();
 
@@ -1129,10 +1129,10 @@ static void _handle_hellfire_mortar(monster& mortar)
         mortar.foe = actor_at(targs[i])->mindex();
 
         bolt beam;
-        setup_mons_cast(&mortar, beam, SPELL_BOLT_OF_MAGMA);
+        setup_mons_cast(&mortar, beam, SPELL_MAGMA_BARRAGE);
         beam.target = targs[i];
-        mons_cast(&mortar, beam, SPELL_BOLT_OF_MAGMA,
-                    mortar.spell_slot_flags(SPELL_BOLT_OF_MAGMA));
+        mons_cast(&mortar, beam, SPELL_MAGMA_BARRAGE,
+                    mortar.spell_slot_flags(SPELL_MAGMA_BARRAGE));
 
         ++shots_fired;
     }
