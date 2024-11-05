@@ -1214,7 +1214,14 @@ void TilesFramework::_send_player(bool force_full)
                 // Don't claim Zot is impending when it's not near.
                 if (dbname == "Zot" && status.light_colour == WHITE)
                     dbname = "Zot count";
-                const string dbdesc = getLongDescription(dbname + " status");
+                string dbdesc = getLongDescription(dbname + " status");
+                
+                // add expiring description
+                if(status.short_text.find(" (expiring)") != std::string::npos) 
+                {
+                    dbdesc += " (expiring)";
+                }
+
                 json_write_string("desc", dbdesc.size() ? dbdesc : "No description found");
             }
             if (!status.short_text.empty())
