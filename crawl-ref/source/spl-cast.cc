@@ -1346,7 +1346,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_CALL_IMP:
     case SPELL_SUMMON_HORRIBLE_THINGS:
     case SPELL_SPELLFORGED_SERVITOR:
-    case SPELL_SUMMON_LIGHTNING_SPIRE:
+    case SPELL_FORGE_LIGHTNING_SPIRE:
     case SPELL_BATTLESPHERE:
     case SPELL_SUMMON_SEISMOSAURUS_EGG:
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 2, 0, 1);
@@ -2437,8 +2437,8 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_CONJURE_BALL_LIGHTNING:
         return cast_conjure_ball_lightning(powc, fail);
 
-    case SPELL_SUMMON_LIGHTNING_SPIRE:
-        return cast_summon_lightning_spire(powc, fail);
+    case SPELL_FORGE_LIGHTNING_SPIRE:
+        return cast_forge_lightning_spire(powc, fail);
 
     case SPELL_SUMMON_BLAZEHEART_GOLEM:
         return cast_summon_blazeheart_golem(powc, fail);
@@ -2973,7 +2973,7 @@ static dice_def _spell_damage(spell_type spell, int power)
             return thunderbolt_damage(power, 1);
         case SPELL_HELLFIRE_MORTAR:
             return hellfire_mortar_damage(power);
-        case SPELL_SUMMON_LIGHTNING_SPIRE:
+        case SPELL_FORGE_LIGHTNING_SPIRE:
             return lightning_spire_damage(power);
         case SPELL_DIAMOND_SAWBLADES:
             return diamond_sawblade_damage(power);

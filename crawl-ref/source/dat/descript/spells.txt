@@ -663,6 +663,12 @@ Summons some creatures from one of the Snake Pit, the Spider Nest, the Swamp,
 the Shoals, the Elven Halls, the Vaults, or the Crypt; the specific branch
 varies with the caster.
 %%%%
+Forge Lightning Spire spell
+
+Constructs an immobile lightning spire at a nearby location. This spire
+irregularly discharges bolts of electricity at the caster's foes, prioritizing
+whichever of them is most distant from it.
+%%%%
 Forge Monarch Bomb spell
 
 Constructs a flying incendiary factory, packed to the brim with cluster bomblets
@@ -1948,12 +1954,6 @@ Summon Illusion spell
 
 Summons a temporary mirror image of an enemy. Such a copy has the same physical
 prowess as the original, and can cast the same spells.
-%%%%
-Summon Lightning Spire spell
-
-Constructs a lightning spire in a nearby location. It can fire bouncing bolts
-of electricity at the caster's foes, but is completely immobile. The strength
-of the spire depends on spell power.
 %%%%
 Summon Mana Viper spell
 

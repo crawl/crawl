@@ -70,7 +70,7 @@ local books = {
   .. "passage_of_golubria&brom's_barrelling_boulder&borgnjor's_vile_clutch&"
   .. "alistair's_intoxication&maxwell's_capacitive_coupling",
 "Magical_Constructs numspells:5 spells:summon_blazeheart_golem&tukima's_dance&"
-  .."animate_armour&summon_lightning_spire&spellforged_servitor",
+  .."animate_armour&forge_lightning_spire&spellforged_servitor",
 "Magnificence owner:Eustachio numspells:3 spells:summon_small_mammal&blink&"
   .. "call_imp",
 "Mayhem numspells:3 spells:inner_flame&conjure_ball_lightning&discord",
@@ -142,7 +142,7 @@ local books = {
   .. "yara's_violent_unravelling",
 "Wasteful_Hastiness owner:Cheibriados numspells:2 spells:swiftness&discord",
 "Weird_Science numspells:8 spells:momentum_strike&gell's_gavotte&"
-  .. "vhi's_electric_charge&manifold_assault&summon_lightning_spire&irradiate&"
+  .. "vhi's_electric_charge&manifold_assault&forge_lightning_spire&irradiate&"
   .. "plasma_beam&maxwell's_capacitive_coupling",
 "Yoinking numspells:3 spells:apportation&lesser_beckoning&tukima's_dance",
 "the_Age_of_Ice numspells:8 spells:freeze&ensorcelled_hibernation&"
@@ -177,7 +177,7 @@ local books = {
   .. "dragon's_call",
 "the_Monster_Mash numspells:6 spells:soul_splinter&fugue_of_the_fallen&"
   .. "call_canine_familiar&"
-  .. "vampiric_draining&summon_lightning_spire&spellforged_servitor",
+  .. "vampiric_draining&forge_lightning_spire&spellforged_servitor",
 "the_Nosferatu numspells:6 spells:summon_small_mammal&call_canine_familiar&"
   .. "sublimation_of_blood&vampiric_draining&cause_fear&"
   .. "borgnjor's_revivification",

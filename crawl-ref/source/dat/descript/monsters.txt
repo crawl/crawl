@@ -1874,8 +1874,8 @@ skeletal, desiccated corpse kept intact by a mighty exercise of dark magic.
 %%%%
 lightning spire
 
-A buzzing contraption made from a coil and a rod. It zaps electricity towards
-nearby creatures.
+A buzzing contraption made from a coil and a rod. It irregularly zaps
+electricity at the most distant enemy in its range.
 %%%%
 lindwurm
 

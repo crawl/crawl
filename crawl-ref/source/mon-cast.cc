@@ -1446,17 +1446,18 @@ static void _setup_fake_beam(bolt& beam, const monster&, int)
  * @param mtyp          The type of monster to summon.
  * @param dur           The duration for which the monster should last (in aut).
  * @param slot          The spell & slot flags.
+ * @param abjurable     Whether the monster is an abjurable summon.
  * @return              The summoned creature, if any.
  */
 
 static monster* _summon(const monster &summoner, monster_type mtyp, int dur,
-                        mon_spell_slot slot)
+                        mon_spell_slot slot, bool abjurable = true)
 {
     const god_type god = _find_god(summoner, slot.flags);
     return create_monster(
             mgen_data(mtyp, SAME_ATTITUDE((&summoner)), summoner.pos(),
                       summoner.foe, MG_NONE, god)
-            .set_summoned(&summoner, slot.spell, dur));
+            .set_summoned(&summoner, slot.spell, dur, abjurable));
 }
 
 void init_mons_spells()
@@ -2366,7 +2367,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_DREAM_DUST:
     case SPELL_SPORULATE:
     case SPELL_ROLL:
-    case SPELL_SUMMON_LIGHTNING_SPIRE:
+    case SPELL_FORGE_LIGHTNING_SPIRE:
     case SPELL_SUMMON_TZITZIMITL:
     case SPELL_SUMMON_HELL_SENTINEL:
     case SPELL_STOKE_FLAMES:
@@ -7382,9 +7383,9 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         cast_summon_hydra(mons, splpow, god);
         return;
 
-    case SPELL_SUMMON_LIGHTNING_SPIRE:
+    case SPELL_FORGE_LIGHTNING_SPIRE:
     {
-        monster* spire = _summon(*mons, MONS_LIGHTNING_SPIRE, summ_dur(2), slot);
+        monster* spire = _summon(*mons, MONS_LIGHTNING_SPIRE, summ_dur(2), slot, false);
         if (spire && !silenced(spire->pos()))
             mpr("An electric hum fills the air.");
         return;

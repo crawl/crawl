@@ -423,7 +423,7 @@ static const vector<spell_type> spellbook_templates[] =
 { // Book of Storms
     SPELL_DISCHARGE,
     SPELL_AIRSTRIKE,
-    SPELL_SUMMON_LIGHTNING_SPIRE,
+    SPELL_FORGE_LIGHTNING_SPIRE,
 },
 
 { // Book of Weapons
@@ -537,7 +537,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Codex of Conductivity
-    SPELL_SUMMON_LIGHTNING_SPIRE,
+    SPELL_FORGE_LIGHTNING_SPIRE,
     SPELL_ARCJOLT,
     SPELL_MAXWELLS_COUPLING,
 },

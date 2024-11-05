@@ -887,15 +887,12 @@ dice_def lightning_spire_damage(int pow)
     return zap_damage(ZAP_ELECTRICAL_BOLT, _lightning_spire_hd(pow, false) * 12, true, false);
 }
 
-spret cast_summon_lightning_spire(int pow, bool fail)
+spret cast_forge_lightning_spire(int pow, bool fail)
 {
-    if (stop_summoning_prompt(MR_RES_POISON))
-        return spret::abort;
-
     fail_check();
 
     mgen_data spire = _pal_data(MONS_LIGHTNING_SPIRE, summ_dur(2),
-                                SPELL_SUMMON_LIGHTNING_SPIRE);
+                                SPELL_FORGE_LIGHTNING_SPIRE, false);
     spire.hd = _lightning_spire_hd(pow);
 
     monster* mons = create_monster(spire);
@@ -2171,7 +2168,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_CALL_IMP,                 { 1, 3 } },
     { SPELL_MONSTROUS_MENAGERIE,      { 2, 3 } },
     { SPELL_SUMMON_HORRIBLE_THINGS,   { 8, 8 } },
-    { SPELL_SUMMON_LIGHTNING_SPIRE,   { 1, 1 } },
+    { SPELL_FORGE_LIGHTNING_SPIRE,    { 1, 1 } },
     { SPELL_SUMMON_BLAZEHEART_GOLEM,  { 1, 1 } },
     { SPELL_SPELLFORGED_SERVITOR,     { 1, 1 } },
     { SPELL_ANIMATE_ARMOUR,           { 1, 1 } },

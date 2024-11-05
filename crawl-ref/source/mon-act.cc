@@ -1327,6 +1327,45 @@ static bool _handle_rending_blade_trigger(monster* blade)
     return true;
 }
 
+static void _handle_lightning_spire(monster& spire)
+{
+    // 50% chance of casting each turn
+    if (coinflip() || spire.is_silenced())
+        return;
+
+    // Gather all eligable targets in sight
+    vector<actor*> targs;
+    for (actor_near_iterator ai(&spire, LOS_NO_TRANS); ai; ++ai)
+    {
+        if (mons_aligned(*ai, &spire) || !monster_los_is_valid(&spire, *ai))
+            continue;
+
+        monster* mons = ai->as_monster();
+        if (mons && (mons_is_firewood(*mons) || mons_is_conjured(mons->type)))
+            continue;
+
+        targs.push_back(*ai);
+    }
+
+    // Sort farthest-to-nearest (with ties randomized)
+    shuffle_array(targs);
+    sort(targs.begin( ), targs.end( ), [spire](actor* a, actor* b)
+    {
+        return grid_distance(a->pos(), spire.pos())
+               > grid_distance(b->pos(), spire.pos());
+    });
+
+    // Now attempt to cast electrical bolt on each target, in order of
+    // decreasing priority.
+    for (size_t i = 0; i < targs.size(); ++i)
+    {
+        spire.foe = targs[i]->mindex();
+        spire.target = targs[i]->pos();
+        if (try_mons_cast(spire, SPELL_ELECTRICAL_BOLT))
+            return;
+    }
+}
+
 static void _mons_fire_wand(monster& mons, spell_type mzap, bolt &beem)
 {
     if (!simple_monster_message(mons, " zaps a wand."))
@@ -1965,6 +2004,13 @@ void handle_monster_move(monster* mons)
         //      will refuse to shred entirely.
         mons->foe = MHITNOT;
         try_mons_cast(*mons, SPELL_SHRED);
+        mons->lose_energy(EUT_SPELL);
+        return;
+    }
+
+    if (mons->type == MONS_LIGHTNING_SPIRE)
+    {
+        _handle_lightning_spire(*mons);
         mons->lose_energy(EUT_SPELL);
         return;
     }
