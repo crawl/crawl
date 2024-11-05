@@ -2092,7 +2092,7 @@ local tlocspells = util.random_subset({ "maxwell's_portable_piledriver",
                                         "volatile_blastmotes", "gell's_gavotte",
                                         "dispersal", "malign_gateway" }, 2)
 local summspells = util.random_subset({ "call_imp", "animate_armour",
-                                        "summon_blazeheart_golem", "summon_forest",
+                                        "forge_blazeheart_golem", "summon_forest",
                                         "summon_horrible_things" }, 2)
 
 local hexbook = "randbook owner:Xom title:Mystic_Anarchy disc:hexes " ..

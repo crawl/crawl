@@ -69,7 +69,7 @@ local books = {
 "Legendary_Spells,_Part_XIV numspells:7 spells:tukima's_dance&ozocubu's_armour&"
   .. "passage_of_golubria&brom's_barrelling_boulder&borgnjor's_vile_clutch&"
   .. "alistair's_intoxication&maxwell's_capacitive_coupling",
-"Magical_Constructs numspells:5 spells:summon_blazeheart_golem&tukima's_dance&"
+"Magical_Constructs numspells:5 spells:forge_blazeheart_golem&tukima's_dance&"
   .."animate_armour&forge_lightning_spire&spellforged_servitor",
 "Magnificence owner:Eustachio numspells:3 spells:summon_small_mammal&blink&"
   .. "call_imp",
@@ -197,7 +197,7 @@ local books = {
 "the_Unknown_Variable numspells:6 spells:foxfire&olgreb's_toxic_radiance&"
   .. "alistair's_intoxication&eringya's_noxious_bog&"
   .. "maxwell's_capacitive_coupling&polar_vortex",
-"the_Vowels numspells:6 spells:summon_blazeheart_golem&animate_armour&"
+"the_Vowels numspells:6 spells:forge_blazeheart_golem&animate_armour&"
   .. "summon_ice_beast&monstrous_menagerie&summon_mana_viper&"
   .. "conjure_ball_lightning"
 }

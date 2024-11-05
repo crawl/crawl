@@ -73,7 +73,7 @@ spret cast_malign_gateway(actor* caster, int pow, bool fail = false,
                           bool test = false);
 coord_def find_gateway_location(actor* caster);
 spret cast_summon_forest(actor* caster, int pow, bool fail, bool test=false);
-spret cast_summon_blazeheart_golem(int pow, bool fail);
+spret cast_forge_blazeheart_golem(int pow, bool fail);
 
 spret cast_dragon_call(int pow, bool fail);
 void do_dragon_call(int time);

@@ -905,23 +905,19 @@ spret cast_forge_lightning_spire(int pow, bool fail)
     return spret::success;
 }
 
-spret cast_summon_blazeheart_golem(int pow, bool fail)
+spret cast_forge_blazeheart_golem(int pow, bool fail)
 {
-    if (stop_summoning_prompt(MR_RES_POISON))
-        return spret::abort;
-
     fail_check();
 
     mgen_data golem = _pal_data(MONS_BLAZEHEART_GOLEM, summ_dur(3),
-                                SPELL_SUMMON_BLAZEHEART_GOLEM);
-    golem.flags &= ~MG_AUTOFOE; // !!!
+                                SPELL_FORGE_BLAZEHEART_GOLEM, false);
     golem.hd = 6 + div_rand_round(pow, 10);
 
     monster* mons = (create_monster(golem));
 
     if (mons)
     {
-        mpr("A fiery spirit appears, bound in slag iron.");
+        mpr("You bind the heart of a blast furnace in slag iron.");
 
         // Give an extra turn of grace period on the turn it is summoned.
         mons->blazeheart_heat = 4;
@@ -2169,7 +2165,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_MONSTROUS_MENAGERIE,      { 2, 3 } },
     { SPELL_SUMMON_HORRIBLE_THINGS,   { 8, 8 } },
     { SPELL_FORGE_LIGHTNING_SPIRE,    { 1, 1 } },
-    { SPELL_SUMMON_BLAZEHEART_GOLEM,  { 1, 1 } },
+    { SPELL_FORGE_BLAZEHEART_GOLEM,   { 1, 1 } },
     { SPELL_SPELLFORGED_SERVITOR,     { 1, 1 } },
     { SPELL_ANIMATE_ARMOUR,           { 1, 1 } },
     { SPELL_MARTYRS_KNELL,            { 1, 1 } },

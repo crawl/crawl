@@ -2367,7 +2367,7 @@ item_def* monster_die(monster& mons, killer_type killer,
 
         silent = true;
     }
-    else if (mons.type == MONS_BLAZEHEART_GOLEM && real_death)
+    else if (mons.type == MONS_BLAZEHEART_GOLEM && real_death && !timeout)
     {
         // Only blow up if non-dormant
         if (grid_distance(mons.pos(), you.pos()) <= 1)

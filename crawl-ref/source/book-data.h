@@ -452,7 +452,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Book of Dangerous Friends
-    SPELL_SUMMON_BLAZEHEART_GOLEM,
+    SPELL_FORGE_BLAZEHEART_GOLEM,
     SPELL_IOOD,
     SPELL_SPELLFORGED_SERVITOR,
 },

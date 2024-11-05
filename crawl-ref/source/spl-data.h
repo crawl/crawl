@@ -2515,8 +2515,8 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_SUMMON_BLAZEHEART_GOLEM, "Summon Blazeheart Golem",
-    spschool::summoning | spschool::fire,
+    SPELL_FORGE_BLAZEHEART_GOLEM, "Forge Blazeheart Golem",
+    spschool::forgecraft | spschool::fire,
     spflag::none,
     4,
     100,

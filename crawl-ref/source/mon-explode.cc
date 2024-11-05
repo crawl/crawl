@@ -106,7 +106,7 @@ static void _setup_blazeheart_core_explosion(bolt & beam, const monster& origin)
     beam.source_id    = MID_PLAYER;
 
     // This is so it places flame clouds under the explosion
-    beam.origin_spell = SPELL_SUMMON_BLAZEHEART_GOLEM;
+    beam.origin_spell = SPELL_FORGE_BLAZEHEART_GOLEM;
 }
 
 static dice_def _spore_damage(int hd)

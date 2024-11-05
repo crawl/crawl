@@ -663,6 +663,19 @@ Summons some creatures from one of the Snake Pit, the Spider Nest, the Swamp,
 the Shoals, the Elven Halls, the Vaults, or the Crypt; the specific branch
 varies with the caster.
 %%%%
+Forge Blazeheart Golem spell
+
+Constructs a shell of slag iron around a volatile elemental spark. It is capable
+of raining down powerful blows on its creator's adversaries - so powerful that
+the golem itself is often damaged by their impact.
+
+Only tenuously independent of its creator's magic, the flames within it will
+rapidly go dormant if the two ever leave each other's side. If its shell is
+destroyed while the golem is still active, its exposed core will violently
+detonate a moment later.
+
+It gains greater explosive damage at higher power.
+%%%%
 Forge Lightning Spire spell
 
 Constructs an immobile lightning spire at a nearby location. This spire
@@ -1908,18 +1921,6 @@ plane; as well as the strength of the spirit.
 Summon Greater Demon spell
 
 Calls forth one of the greater demons of Pandemonium to serve the caster.
-%%%%
-Summon Blazeheart Golem spell
-
-Summons a volatile elemental spark encased in a shell of slag iron. It is
-capable of raining down powerful blows on its summoner's adversaries - so
-powerful that the golem itself is often damaged by their impact.
-
-Only tenuously bound to this world, the flames within it will rapidly go
-dormant whenever its summoner leaves its side. If its shell is ever destroyed
-while still active, the exposed core will violently detonate a moment later.
-
-It gains greater explosive damage at higher power.
 %%%%
 Summon Sin Beast spell
 

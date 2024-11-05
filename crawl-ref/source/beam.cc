@@ -2864,7 +2864,7 @@ bool bolt::can_burn_trees() const
     case SPELL_INNER_FLAME:
     case SPELL_STARBURST:
     case SPELL_FLAME_WAVE:
-    case SPELL_SUMMON_BLAZEHEART_GOLEM: // core breach!
+    case SPELL_FORGE_BLAZEHEART_GOLEM: // core breach!
     case SPELL_HELLFIRE_MORTAR:
     case SPELL_MONARCH_BOMB:
         return true;
@@ -3051,7 +3051,7 @@ void bolt::affect_place_explosion_clouds()
     }
 
     // Blazeheart core detonation
-    if (origin_spell == SPELL_SUMMON_BLAZEHEART_GOLEM)
+    if (origin_spell == SPELL_FORGE_BLAZEHEART_GOLEM)
         place_cloud(CLOUD_FIRE, p, 2 + random2avg(5,2), agent());
 
     if (origin_spell == SPELL_FIRE_STORM)
