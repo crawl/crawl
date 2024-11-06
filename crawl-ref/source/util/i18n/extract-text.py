@@ -677,7 +677,7 @@ def extract_strings_from_des_rebadge_line(line):
         return []
 
     # remove any existing quotes
-    line = line.replace('"', '').replace("'", "")
+    line = line.replace('"', '')
 
     # remove other property overrides, which can get in the way
     line = re.sub(r'[^ ]+(?<!\bname):[^ ]+', '', line)
@@ -692,14 +692,14 @@ def extract_strings_from_des_rebadge_line(line):
         if 'name:bog' in line:
             line = line.replace('name:bog', 'name:"bog mummy"')
         elif re.search(r'name:(phase|dire|giga|sulfuric)\b', line):
-            line = re.sub(r'\b([A-Za-z ]+?)\s+name:([A-Za-z_]+)', r'name:"\2 \1"', line)
+            line = re.sub(r'\b([A-Za-z ]+?)\s+name:([^ ]+)', r'name:"\2 \1"', line)
         else:
-            line = re.sub(r'\bname:([A-Za-z_\-]+)', r'name: "\1 "', line)
+            line = re.sub(r'\bname:([^ ]+)', r'name: "\1 "', line)
             is_adjective = True
     elif 'name_suffix' in line or 'n_suf' in line:
-        line = re.sub(r'([^ ]+)\s+name:([A-Za-z_\-]+)', r'name:"\1 \2"', line)
+        line = re.sub(r'([^ ]+)\s+name:([^ ]+)', r'name:"\1 \2"', line)
     else:
-        line = re.sub(r'\bname\s*:\s*([A-Za-z_\-]+)', r'name:"\1"', line)
+        line = re.sub(r'\bname:([^ ]+)', r'name:"\1"', line)
 
     if '"' not in line:
         return []
