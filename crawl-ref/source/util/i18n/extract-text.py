@@ -1722,6 +1722,8 @@ def pluralise(string):
     for suffix in ["ch", "sh", "ss"]:
         if string.endswith(suffix):
             return string + "es"
+    if string.endswith("y") and not string.endswith("ey"):
+        return string[:-1] + "ies"
     return string + "s"
 
 def is_unique_monster(string):
