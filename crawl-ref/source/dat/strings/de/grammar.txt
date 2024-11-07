@@ -70,8 +70,8 @@ GENERATE:acc
 # masc adjectives
 /^den [^A-ZÄÖÜ]+/e /en /
 /^den [^A-ZÄÖÜ]+/\{adj-e\}/{adj-en}/
-/^[^A-ZÄÖÜ]+/er /en /
-/^[^A-ZÄÖÜ]+/\{adj-er\}/{adj-en}/
+/^[^A-ZÄÖÜ ][^A-ZÄÖÜ]+/er /en /
+/^[^A-ZÄÖÜ ][^A-ZÄÖÜ]+/\{adj-er\}/{adj-en}/
 
 # weak nouns
 /(Prinz|Akolyth)\b/$1en/
@@ -109,8 +109,8 @@ GENERATE:dat
 # masc/neut adjectives
 /^(d|ein|Eur)em [^A-ZÄÖÜ]+/e[rs]? /en /
 /^(d|ein|Eur)em [^A-ZÄÖÜ]+/\{adj-e[rs]?\}/{adj-en}/
-/^[^A-ZÄÖÜ]+/e[rs] /em /
-/^[^A-ZÄÖÜ]+/\{adj-e[rs]\}/{adj-em}/
+/^[^A-ZÄÖÜ ][^A-ZÄÖÜ]+/e[rs] /em /
+/^[^A-ZÄÖÜ ][^A-ZÄÖÜ]+/\{adj-e[rs]\}/{adj-em}/
 
 # mark plurals, if not already marked
 /^(die |Eure )?(%d|[0-9]+) /^/{pl}/
@@ -135,8 +135,8 @@ GENERATE:dat
 # fem adjectives
 /^(\{f\})?(der|einer|bigeurer) [^A-ZÄÖÜ]+/e /en /
 /^(\{f\})?(der|einer|bigeurer) [^A-ZÄÖÜ]+/\{adj-e\}/{adj-en}/
-/^[^A-ZÄÖÜ]+/e /er /
-/^[^A-ZÄÖÜ]+/\{adj-e\}/{adj-er}/
+/^[^A-ZÄÖÜ ][^A-ZÄÖÜ]+/e /er /
+/^[^A-ZÄÖÜ ][^A-ZÄÖÜ]+/\{adj-e\}/{adj-er}/
 
 # plural nouns
 /^\{pl\}.*?[A-ZÄÖÜ][^ ,]+/([^snai])$/$1n/
