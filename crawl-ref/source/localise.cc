@@ -1480,7 +1480,7 @@ static string _localise_name(const string& context, const string& value)
     string result;
     result = cxlate(context, value, false);
     if (!result.empty())
-        return result;
+        return _shift_context(result);
 
     // substring " the " could mean a name like "Boghold the orc warlord"
     size_t pos = value.find(" the ");
@@ -1495,7 +1495,7 @@ static string _localise_name(const string& context, const string& value)
         if (base.empty())
             return "";
         else
-            return prefix + base;
+            return _shift_context(prefix) + base;
     }
 
     result = _localise_ghost_name(context, value);
