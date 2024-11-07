@@ -419,6 +419,17 @@ static bool _spell_triggered_by(spell_type to_trigger, spell_type trigger)
             return battlesphere_can_mirror(trigger);
         case SPELL_SPELLSPARK_SERVITOR:
             return spell_servitorable(trigger);
+        case SPELL_PERCUSSIVE_TEMPERING:
+            return trigger == SPELL_CLOCKWORK_BEE
+                    || trigger == SPELL_WALKING_ALEMBIC
+                    || trigger == SPELL_PHALANX_BEETLE
+                    || trigger == SPELL_MONARCH_BOMB
+                    || trigger == SPELL_FORGE_LIGHTNING_SPIRE
+                    || trigger == SPELL_FORGE_BLAZEHEART_GOLEM
+                    || trigger == SPELL_RENDING_BLADE
+                    || trigger == SPELL_BATTLESPHERE
+                    || trigger == SPELL_SPLINTERFROST_SHELL
+                    || trigger == SPELL_PLATINUM_PARAGON;
         default:
             return true;
     }
