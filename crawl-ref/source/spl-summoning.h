@@ -97,8 +97,6 @@ void end_battlesphere(monster* mons, bool killed);
 bool battlesphere_can_mirror(spell_type spell);
 vector<spell_type> player_battlesphere_spells();
 bool trigger_battlesphere(actor* agent);
-bool fire_battlesphere(monster* mons);
-void reset_battlesphere(monster* mons);
 dice_def battlesphere_damage(int pow);
 
 spret cast_fulminating_prism(actor* caster, int pow,

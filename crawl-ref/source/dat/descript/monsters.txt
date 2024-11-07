@@ -756,8 +756,9 @@ skilled with both conjurations and melee combat.
 %%%%
 battlesphere
 
-A small globe of magical energy. Each time its creator casts a destructive
-Conjuration, it will launch a magical missile at a random foe.
+A small globe of destructive energy. Each time its creator casts an offensive
+spell, it will launch a magical barrage at the most injured nearby foe it can
+reach.
 %%%%
 bennu
 

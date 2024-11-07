@@ -997,11 +997,12 @@ dangerously contaminated after a few castings.
 %%%%
 Iskenderun's Battlesphere spell
 
-Conjures a small globe of magical energy. Each time its creator casts a
-destructive spell (other than Battlesphere itself or Spellspark Servitor), the
-battlesphere will launch its own volley of energy at a random foe. With
-increasing power, the battlesphere lasts longer and deals more damage per
-volley.
+Conjures a small globe of destructive energy. Each time its creator casts a
+offensive spell, the battlesphere will also fire an unerring volley of energy at
+the most injured nearby foe it can reach.
+
+The battlesphere's creator can freely fire through its position without harming
+it.
 %%%%
 Iskenderun's Mystic Blast spell
 

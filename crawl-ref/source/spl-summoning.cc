@@ -51,6 +51,7 @@
 #include "mon-death.h"
 #include "mon-gear.h"
 #include "mon-movetarget.h"
+#include "mon-pathfind.h"
 #include "mon-place.h"
 #include "mon-speak.h"
 #include "place.h" // absdungeon_depth
@@ -1601,13 +1602,13 @@ monster* find_battlesphere(const actor* agent)
 static int _battlesphere_hd(int pow, bool random = true)
 {
     if (random)
-        return 1 + div_rand_round(pow, 11);
-    return 1 + pow / 11;
+        return 1 + div_rand_round(pow, 9);
+    return 1 + pow / 9;
 }
 
 static dice_def _battlesphere_damage(int hd)
 {
-    return dice_def(2, 5 + hd);
+    return dice_def(2, 6 + hd);
 }
 
 dice_def battlesphere_damage(int pow)
@@ -1617,9 +1618,6 @@ dice_def battlesphere_damage(int pow)
 
 spret cast_battlesphere(actor* agent, int pow, bool fail)
 {
-    if (agent->is_player() && stop_summoning_prompt(MR_RES_POISON, M_FLIES))
-        return spret::abort;
-
     fail_check();
 
     monster* battlesphere;
@@ -1645,12 +1643,12 @@ spret cast_battlesphere(actor* agent, int pow, bool fail)
             mpr("You imbue your battlesphere with additional charge.");
 
         battlesphere->battlecharge = min(20, (int) battlesphere->battlecharge
-                                              + 4 + random2(pow + 10) / 10);
+                                              + random_range(6, 10));
 
         // Increase duration and update HD
         mon_enchant timer = battlesphere->get_ench(ENCH_SUMMON_TIMER);
         battlesphere->set_hit_dice(_battlesphere_hd(pow));
-        timer.duration = min(timer.duration + (7 + roll_dice(2, pow)) * 10, 500);
+        timer.duration = min(timer.duration + random_range(300, 500), 500);
         battlesphere->update_ench(timer);
     }
     else
@@ -1660,8 +1658,7 @@ spret cast_battlesphere(actor* agent, int pow, bool fail)
                       agent->is_player() ? BEH_FRIENDLY
                                          : SAME_ATTITUDE(agent->as_monster()),
                       agent->pos(), agent->mindex());
-        mg.set_summoned(agent, SPELL_BATTLESPHERE,
-                        min((7 + roll_dice(2, pow)) * 10, 500), false);
+        mg.set_summoned(agent, SPELL_BATTLESPHERE, random_range(300, 500), false);
         mg.hd = _battlesphere_hd(pow);
         battlesphere = create_monster(mg);
 
@@ -1684,7 +1681,7 @@ spret cast_battlesphere(actor* agent, int pow, bool fail)
                 if (agent->is_monster())
                     battlesphere->set_band_leader(*(agent->as_monster()));
             }
-            battlesphere->battlecharge = 4 + random2(pow + 10) / 10;
+            battlesphere->battlecharge = random_range(6, 10);
             battlesphere->foe = agent->mindex();
             battlesphere->target = agent->pos();
         }
@@ -1754,36 +1751,54 @@ vector<spell_type> player_battlesphere_spells()
 static bool _is_valid_battlesphere_target(actor* caster, actor* targ)
 {
     return targ && targ->alive() && !mons_aligned(caster, targ)
-           && caster->can_see(*targ);
+           && caster->can_see(*targ)
+           && (targ->is_player() || !mons_is_firewood(*targ->as_monster()));
 }
 
-static actor* _find_battlesphere_target(monster* battlesphere)
+// Returns whether a battlesphere should fire from a given position if it wants
+// to be able to hit a given target.
+//
+// fallback is set to our current firing position if this aim hits *some* actor
+// (even if it was not our primary target) and fallback is currently (0, 0)
+static bool _battlesphere_should_fire(actor* target,
+                                      const coord_def& firing_pos,
+                                      bolt& beam, coord_def& fallback)
 {
-    actor* agent = actor_by_mid(battlesphere->summoner);
-    // If we already have a saved foe, check if they're still a viable target.
-    // If they are, keep trying to fire at them.
-    if (battlesphere->props.exists(BATTLESPHERE_FOE_KEY))
+    beam.source = firing_pos;
+    beam.target = target->pos();
+    beam.foe_info.reset();
+    beam.friend_info.reset();
+
+    // Fire tracer.
+    beam.fire();
+
+    // If we hit at least *something*, mark this as a possible fallback
+    if (beam.friend_info.count == 0 && beam.foe_info.count > 0)
     {
-        actor* targ = actor_by_mid(battlesphere->props[BATTLESPHERE_FOE_KEY].get_int());
-        if (_is_valid_battlesphere_target(agent, targ))
-            return targ;
+        // And if we hit our primary target, actually fire
+        if (beam.hit_count.count(target->mid))
+            return true;
+        else if (fallback.origin())
+            fallback = firing_pos;
     }
 
-    // If we need a new target, scan visible enemies and pick one at random.
-    vector<actor *> targets;
-    for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
-    {
-        if (!mons_aligned(agent, *ai)
-            && (ai->is_player() || !mons_is_firewood(*ai->as_monster())))
-        {
-            targets.push_back(*ai);
-        }
-    }
+    return false;
+}
 
-    if (targets.empty())
-        return nullptr;
+static void _fire_battlesphere(monster* battlesphere, bolt& beam)
+{
+    beam.thrower = battlesphere->summoner == MID_PLAYER ? KILL_YOU : KILL_MON;
+    beam.is_tracer = false;
 
-    return *random_iterator(targets);
+    battlesphere->foe = actor_at(beam.target)->mindex();
+    battlesphere->target = beam.target;
+
+    simple_monster_message(*battlesphere, " fires at %s!");
+    beam.fire();
+
+    // Decrement # of volleys left and possibly expire the battlesphere.
+    if (--battlesphere->battlecharge == 0)
+        end_battlesphere(battlesphere, false);
 }
 
 bool trigger_battlesphere(actor* agent)
@@ -1798,188 +1813,102 @@ bool trigger_battlesphere(actor* agent)
         return false;
     }
 
-    // Reset battlesphere now. Otherwise, if it ran out of energy without being
-    // able to fire at its target on the previous player turn, the pre-action
-    // reset will make it unable to fire THIS turnt, too.
-    reset_battlesphere(battlesphere);
+    // Scan visible enemies and pick the most injured one.
+    // (Not the one with the lowest hp - the one with the most hp *missing*.)
+    vector<actor*> targets;
+    for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
+        if (_is_valid_battlesphere_target(agent, *ai))
+            targets.push_back(*ai);
 
-    actor* target = _find_battlesphere_target(battlesphere);
-
-    // If we couldn't find any target at all, bail.
-    if (!target)
-    {
-        agent->props.erase(BATTLESPHERE_FOE_KEY);
+    if (targets.empty())
         return false;
-    }
+
+    shuffle_array(targets);
+    sort(targets.begin( ), targets.end( ), [](actor* a, actor* b)
+    {
+        return a->stat_maxhp() - a->stat_hp()
+               > b->stat_maxhp() - b->stat_hp();
+    });
+
+    actor* target = targets[0];
 
     dprf("Battlesphere targeting %s at (%d, %d).",
          target->name(DESC_THE).c_str(),
          target->pos().x,
          target->pos().y);
 
-    // Otherwise, prime the battlesphere to fire
-    battlesphere->foe = target->mindex();
-    battlesphere->props[BATTLESPHERE_FOE_KEY].get_int() = target->mid;
-    battlesphere->props[BATTLESPHERE_IS_FIRING_KEY] = true;
+    // Set up the battlesphere beam
+    bolt beam;
+    beam.source_name = battlesphere->name(DESC_YOUR).c_str();
+    beam.name        = "barrage of energy";
+    beam.range       = LOS_RADIUS;
+    beam.hit         = AUTOMATIC_HIT;
+    beam.damage      = _battlesphere_damage(battlesphere->get_hit_dice());
+    beam.glyph       = dchar_glyph(DCHAR_FIRED_ZAP);
+    beam.colour      = MAGENTA;
+    beam.flavour     = BEAM_MMISSILE;
+    beam.pierce      = false;
+    beam.target      = target->pos();
+    beam.source_id   = battlesphere->mid;
+    beam.attitude    = mons_attitude(*battlesphere);
+    beam.is_tracer   = true;
 
-    // Since monsters may be acting out of sequence, give the battlesphere
-    // enough energy to attempt to fire this round, and requeue if it's
-    // already passed its turn
-    if (agent->is_monster())
+    coord_def fallback_pos;
+    // First, just try to fire from our present position
+    if (_battlesphere_should_fire(target, battlesphere->pos(), beam, fallback_pos))
     {
-        battlesphere->speed_increment = 100;
-        queue_monster_for_action(battlesphere);
+        _fire_battlesphere(battlesphere, beam);
+        return true;
+    }
+
+    // If that wasn't good enough, gather all the nearby spots that the battlesphere
+    // could reach in one turn and see if any of *these* spots have a good firing
+    // position. If so, move there and fire.
+
+    // Claculate reachability by performing short-range pathfinding with monsters
+    // considered opaque.
+    monster_pathfind mp;
+    mp.fill_traversability(battlesphere, 3, true);
+
+    for (distance_iterator di(battlesphere->pos(), true, true, 3); di; ++di)
+    {
+        if (*di == target->pos() || actor_at(*di) || cell_is_solid(*di)
+            || !agent->see_cell(*di) || !mp.is_reachable(*di))
+        {
+            continue;
+        }
+
+        if (_battlesphere_should_fire(target, *di, beam, fallback_pos))
+        {
+            const coord_def old_pos = battlesphere->pos();
+            battlesphere->move_to_pos(*di, true, true);
+
+            // Show battlesphere at its new location and attempt to prevent it
+            // from moving further until after the next action.
+            battlesphere->check_redraw(old_pos);
+            battlesphere->speed_increment -= 30;
+
+            _fire_battlesphere(battlesphere, beam);
+            battlesphere->apply_location_effects(old_pos);
+            return true;
+        }
+    }
+
+    // We didn't find any reachable spot that fires on our primary target, but
+    // we did find a spot that fires at *something* hostile, so use that.
+    if (!fallback_pos.origin())
+    {
+        const coord_def old_pos = battlesphere->pos();
+        battlesphere->move_to_pos(fallback_pos, true, true);
+        battlesphere->check_redraw(old_pos);
+        battlesphere->speed_increment -= 30;
+
+        _fire_battlesphere(battlesphere, beam);
+        battlesphere->apply_location_effects(old_pos);
+        return true;
     }
 
     return true;
-}
-
-// Called at the start of each round. Cancels firing orders given in the
-// previous round, if the battlesphere was not able to execute them fully
-// before the next player action
-void reset_battlesphere(monster* mons)
-{
-    if (!mons || mons->type != MONS_BATTLESPHERE)
-        return;
-
-    if (mons->props.exists(BATTLESPHERE_IS_TRACKING_KEY))
-    {
-        mons->props.erase(BATTLESPHERE_IS_TRACKING_KEY);
-        mons->props.erase(BATTLESPHERE_IS_FIRING_KEY);
-        mons->behaviour = BEH_SEEK;
-    }
-}
-
-bool fire_battlesphere(monster* mons)
-{
-    if (!mons || mons->type != MONS_BATTLESPHERE)
-        return false;
-
-    actor* agent = actor_by_mid(mons->summoner);
-
-    if (!agent || !agent->alive())
-    {
-        end_battlesphere(mons, false);
-        return false;
-    }
-
-    bool used = false;
-
-    actor* target = actor_by_mid(mons->props[BATTLESPHERE_FOE_KEY].get_int());
-
-    // Double-check that our target still exists
-    if (!target || !target->alive())
-        return false;
-
-    if (mons->props.exists(BATTLESPHERE_IS_FIRING_KEY) && mons->battlecharge > 0)
-    {
-        // Was in the process of repositioning to get a better shot at our foe.
-        if (mons->props.exists(BATTLESPHERE_IS_TRACKING_KEY))
-        {
-            // We have reached the position we were looking for, so stop tracking.
-            if (mons->pos() == mons->props[TRACKING_TARGET_KEY].get_coord())
-            {
-                mons->props.erase(BATTLESPHERE_IS_TRACKING_KEY);
-                if (mons->props.exists(BATTLESPHERE_FOE_KEY))
-                    mons->foe = agent->mindex();
-                mons->behaviour = BEH_SEEK;
-            }
-            // Currently tracking, but have not yet reached target position.
-            else
-            {
-                mons->target = mons->props[TRACKING_TARGET_KEY].get_coord();
-                return false;
-            }
-        }
-        else
-        {
-            // If the battlesphere forgot its foe (due to being out of los),
-            // remind it
-            if (mons->props.exists(BATTLESPHERE_FOE_KEY))
-                mons->foe = target->mindex();
-        }
-
-        // Set up the beam.
-        bolt beam;
-        beam.source_name = mons->name(DESC_YOUR).c_str();
-        beam.target      = target->pos();
-        beam.name        = "barrage of energy";
-        beam.range       = LOS_RADIUS;
-        beam.hit         = AUTOMATIC_HIT;
-        beam.damage      = _battlesphere_damage(mons->get_hit_dice());
-        beam.glyph       = dchar_glyph(DCHAR_FIRED_ZAP);
-        beam.colour      = MAGENTA;
-        beam.flavour     = BEAM_MMISSILE;
-        beam.pierce      = false;
-
-        // Fire tracer.
-        fire_tracer(mons, beam);
-
-        // Never fire if we would hurt the caster or not hit anything at all.
-        if (beam.friend_info.count == 0 && beam.foe_info.count > 0)
-        {
-            beam.thrower = (agent->is_player()) ? KILL_YOU : KILL_MON;
-            simple_monster_message(*mons, " fires!");
-            beam.fire();
-
-            used = true;
-            // Decrement # of volleys left and possibly expire the battlesphere.
-            if (--mons->battlecharge == 0)
-                end_battlesphere(mons, false);
-
-            mons->props.erase(BATTLESPHERE_IS_FIRING_KEY);
-        }
-        // We don't have a good shot at our target from our current position.
-        // Evaluate nearby positions to see if one of them has a better shot.
-        else
-        {
-            for (distance_iterator di(mons->pos(), true, true, 4); di; ++di)
-            {
-                if (*di == beam.target || actor_at(*di)
-                    || cell_is_solid(*di)
-                    || !agent->see_cell(*di))
-                {
-                    continue;
-                }
-
-                beam.source = *di;
-                beam.is_tracer = true;
-                beam.friend_info.reset();
-                beam.foe_info.reset();
-                beam.fire();
-
-                // We found a firing position to shoot at our target without
-                // endangering our controller. Mark this location and have the
-                // battlesphere move towards it over the next few actions.
-                if (beam.friend_info.count == 0 && beam.foe_info.count > 0)
-                {
-                    mons->firing_pos = coord_def(0, 0);
-                    mons->target = *di;
-                    mons->behaviour = BEH_WANDER;
-                    mons->props[BATTLESPHERE_IS_TRACKING_KEY] = true;
-                    mons->foe = MHITNOT;
-                    mons->props[TRACKING_TARGET_KEY] = *di;
-                    break;
-                }
-            }
-
-            // If we didn't find a better firing position nearby, cancel firing
-            if (!mons->props.exists("tracking"))
-                mons->props.erase(BATTLESPHERE_IS_FIRING_KEY);
-        }
-    }
-
-    // If our last target is dead, or the player wandered off, resume
-    // following the player
-    if ((mons->foe == MHITNOT || !mons->can_see(*agent)
-         || (!invalid_monster_index(mons->foe)
-             && !agent->can_see(env.mons[mons->foe])))
-        && !mons->props.exists(BATTLESPHERE_IS_TRACKING_KEY))
-    {
-        mons->foe = agent->mindex();
-    }
-
-    return used;
 }
 
 int prism_hd(int pow, bool random)

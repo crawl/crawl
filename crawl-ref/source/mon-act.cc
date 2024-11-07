@@ -1723,8 +1723,6 @@ static void _pre_monster_move(monster& mons)
             mons.props.erase(FAUX_PAS_KEY);
     }
 
-    reset_battlesphere(&mons);
-
     fedhas_neutralise(&mons);
     slime_convert(&mons);
 
@@ -1943,12 +1941,6 @@ void handle_monster_move(monster* mons)
             return;
         mons->lose_energy(EUT_MOVE);
         return;
-    }
-
-    if (mons->type == MONS_BATTLESPHERE)
-    {
-        if (fire_battlesphere(mons))
-            mons->lose_energy(EUT_SPECIAL);
     }
 
     if (mons->type == MONS_FULMINANT_PRISM
