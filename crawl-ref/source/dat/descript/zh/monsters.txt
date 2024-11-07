@@ -2241,7 +2241,7 @@ spectral weapon
 一个从武器中汲取的灵魂——它永远不会自行攻击。
 对它造成的损伤会部分反馈到施法者身上。
 %%%%
-spellforged servitor
+spellspark servitor
 
 一个魔法造物，铸入了塑能师的魔法，
 并与外层位面召唤而来原始元素面的智慧相融合。

@@ -4470,7 +4470,7 @@ static string _player_spell_desc(spell_type spell)
         description << ".\n";
     }
 
-    if (spell == SPELL_SPELLFORGED_SERVITOR)
+    if (spell == SPELL_SPELLSPARK_SERVITOR)
     {
         spell_type servitor_spell = player_servitor_spell();
         description << "Your servitor";
@@ -4491,7 +4491,7 @@ static string _player_spell_desc(spell_type spell)
 
         description << ".\n";
     }
-    else if (you.has_spell(SPELL_SPELLFORGED_SERVITOR) && spell_servitorable(spell))
+    else if (you.has_spell(SPELL_SPELLSPARK_SERVITOR) && spell_servitorable(spell))
     {
         if (failure_rate_to_int(raw_spell_fail(spell)) <= 20)
             description << "Your servitor can be imbued with this spell.\n";

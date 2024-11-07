@@ -468,7 +468,7 @@ monster_info::monster_info(const monster* m, int milev)
         else
             mb.set(MB_MINION);
 
-        if (m->type == MONS_SPELLFORGED_SERVITOR && m->summoner == MID_PLAYER)
+        if (m->type == MONS_SPELLSPARK_SERVITOR && m->summoner == MID_PLAYER)
             mb.set(MB_PLAYER_SERVITOR);
 
         summoner_id = m->summoner;

@@ -2716,12 +2716,10 @@ spectral weapon
 A spirit drawn from a weapon — it never strikes on its own. Damage done to it
 will be partially mirrored onto the caster.
 %%%%
-spellforged servitor
+spellspark servitor
 
-A magical construct woven with a portion of a conjurer's magic and bonded with
-a primitive elemental intelligence, summoned from an outer plane. The magic it
-is forged with gives it the capacity to wield some of its creator's destructive
-spells.
+A magical construct forged around a spark of its creator's own arcane power,
+allowing it to wield some of their destructive magics directly.
 %%%%
 sphinx
 

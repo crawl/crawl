@@ -2593,7 +2593,7 @@ int exper_value(const monster& mon, bool real, bool legacy)
             case SPELL_CHAIN_LIGHTNING:
             case SPELL_LEGENDARY_DESTRUCTION:
             case SPELL_SUMMON_ILLUSION:
-            case SPELL_SPELLFORGED_SERVITOR:
+            case SPELL_SPELLSPARK_SERVITOR:
             case SPELL_CONJURE_LIVING_SPELLS:
                 diff += 25;
                 break;

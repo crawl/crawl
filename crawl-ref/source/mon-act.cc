@@ -3164,7 +3164,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     }
 
     // Try to avoid deliberately blocking the player's line of fire.
-    if (mons->type == MONS_SPELLFORGED_SERVITOR)
+    if (mons->type == MONS_SPELLSPARK_SERVITOR)
     {
         const actor * const summoner = actor_by_mid(mons->summoner);
 

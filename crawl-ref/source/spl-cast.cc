@@ -1345,7 +1345,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_FORGE_BLAZEHEART_GOLEM:
     case SPELL_CALL_IMP:
     case SPELL_SUMMON_HORRIBLE_THINGS:
-    case SPELL_SPELLFORGED_SERVITOR:
+    case SPELL_SPELLSPARK_SERVITOR:
     case SPELL_FORGE_LIGHTNING_SPIRE:
     case SPELL_BATTLESPHERE:
     case SPELL_SUMMON_SEISMOSAURUS_EGG:
@@ -2467,8 +2467,8 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_DEATH_CHANNEL:
         return cast_death_channel(powc, god, fail);
 
-    case SPELL_SPELLFORGED_SERVITOR:
-        return cast_spellforged_servitor(powc, fail);
+    case SPELL_SPELLSPARK_SERVITOR:
+        return cast_spellspark_servitor(powc, fail);
 
     case SPELL_BATTLESPHERE:
         return cast_battlesphere(&you, powc, fail);

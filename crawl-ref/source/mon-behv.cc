@@ -197,7 +197,7 @@ static void _decide_monster_firing_position(monster* mon, actor* owner)
             _set_firing_pos(mon, mon->target);
         }
         // Hold position if we've reached our ideal range
-        else if (mon->type == MONS_SPELLFORGED_SERVITOR
+        else if (mon->type == MONS_SPELLSPARK_SERVITOR
                  && (mon->pos() - target->pos()).rdist()
                  <= mon->props[IDEAL_RANGE_KEY].get_int()
                  && !one_chance_in(8))

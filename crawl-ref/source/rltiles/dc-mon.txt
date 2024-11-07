@@ -618,7 +618,7 @@ lightning_spire MONS_LIGHTNING_SPIRE
 hoarfrost_cannon MONS_HOARFROST_CANNON
 hellfire_mortar MONS_HELLFIRE_MORTAR
 %sdir mon/nonliving
-spellforged_servitor MONS_SPELLFORGED_SERVITOR
+spellspark_servitor MONS_SPELLSPARK_SERVITOR
 %rim 1
 
 ## Gargoyles ('9')

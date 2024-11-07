@@ -4303,7 +4303,7 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         return you.species == SP_COGLIN
         && !you.props.exists(INVENT_GIZMO_USED_KEY);
     case ABIL_IMBUE_SERVITOR:
-        return you.has_spell(SPELL_SPELLFORGED_SERVITOR);
+        return you.has_spell(SPELL_SPELLSPARK_SERVITOR);
     case ABIL_IMPRINT_WEAPON:
         return you.has_spell(SPELL_PLATINUM_PARAGON);
     // mutations

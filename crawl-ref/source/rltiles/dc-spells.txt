@@ -142,7 +142,6 @@ malign_gateway MALIGN_GATEWAY
 mass_abjuration MASS_ABJURATION
 monstrous_menagerie MONSTROUS_MENAGERIE
 recall RECALL
-spellforged_servitor SPELLFORGED_SERVITOR
 summon_blazeheart_golem SUMMON_BLAZEHEART_GOLEM
 summon_cactus_giant SUMMON_CACTUS_GIANT
 summon_demon SUMMON_DEMON
@@ -176,6 +175,7 @@ electric_charge ELECTRIC_CHARGE
 
 %sdir gui/spells/forgecraft
 kinetic_discus KINETIC_DISCUS
+spellspark_servitor SPELLSPARK_SERVITOR
 
 # item-based spells
 %sdir gui/spells/misc

@@ -998,7 +998,7 @@ dangerously contaminated after a few castings.
 Iskenderun's Battlesphere spell
 
 Conjures a small globe of magical energy. Each time its creator casts a
-destructive spell (other than Battlesphere itself or Spellforged Servitor), the
+destructive spell (other than Battlesphere itself or Spellspark Servitor), the
 battlesphere will launch its own volley of energy at a random foe. With
 increasing power, the battlesphere lasts longer and deals more damage per
 volley.
@@ -1752,11 +1752,11 @@ Creates a cloud of spectral mist, dealing minor damage to all creatures other
 than the undead. Dangerous but short-lived spectral undead creatures will
 coalesce from the mist over time.
 %%%%
-Spellforged Servitor spell
+Spellspark Servitor spell
 
-Summons an extraplanar elemental and binds it to a durable shell forged from
-the caster's own magic. The servitor is capable of unleashing some of the
-destructive spells known to its creator, though the strongest and most volatile
+Constructs a metallic servant with a spark of the caster's own arcane knowledge
+at its core. This spark allows the servitor to unleash some of the destructive
+spells known to its creator, though the strongest and most volatile
 of magics cannot be imbued in this fashion. The strength of the servitor
 increases with spell power.
 

@@ -2571,14 +2571,14 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_SPELLFORGED_SERVITOR, "Spellforged Servitor",
-    spschool::conjuration | spschool::summoning,
+    SPELL_SPELLSPARK_SERVITOR, "Spellspark Servitor",
+    spschool::conjuration | spschool::forgecraft,
     spflag::none,
     7,
     200,
     -1, -1,
     0,
-    TILEG_SPELLFORGED_SERVITOR,
+    TILEG_SPELLSPARK_SERVITOR,
 },
 
 {

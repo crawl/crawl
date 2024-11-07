@@ -6519,7 +6519,7 @@ bool monster::angered_by_attacks() const
             && !mons_is_avatar(type)
             && !mons_class_is_zombified(type)
             && !is_divine_companion()
-            && type != MONS_SPELLFORGED_SERVITOR
+            && type != MONS_SPELLSPARK_SERVITOR
             && type != MONS_HOARFROST_CANNON
             && type != MONS_BLOCK_OF_ICE
             && !mons_is_conjured(type)

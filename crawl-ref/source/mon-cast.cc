@@ -1816,7 +1816,7 @@ static int _ench_power(spell_type spell, const monster &mons)
 int mons_spell_range(const monster &mons, spell_type spell)
 {
     return mons_spell_range_for_hd(spell, mons.spell_hd(),
-                                   mons.type == MONS_SPELLFORGED_SERVITOR
+                                   mons.type == MONS_SPELLSPARK_SERVITOR
                                    && mons.summoner == MID_PLAYER);
 }
 
@@ -2341,7 +2341,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_HUNTING_CALL:
     case SPELL_SEAL_DOORS:
     case SPELL_BERSERK_OTHER:
-    case SPELL_SPELLFORGED_SERVITOR:
+    case SPELL_SPELLSPARK_SERVITOR:
     case SPELL_THROW_ALLY:
     case SPELL_CORRUPTING_PULSE:
     case SPELL_SIREN_SONG:
@@ -7606,10 +7606,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         _incite_monsters(mons, true);
         return;
 
-    case SPELL_SPELLFORGED_SERVITOR:
+    case SPELL_SPELLSPARK_SERVITOR:
     {
         const int pow = 7 * mons->spell_hd(spell_cast);
-        monster* servitor = _summon(*mons, MONS_SPELLFORGED_SERVITOR, summ_dur(4), slot);
+        monster* servitor = _summon(*mons, MONS_SPELLSPARK_SERVITOR, summ_dur(4), slot, false);
         if (servitor)
             init_servitor(servitor, mons, pow);
         else if (you.can_see(*mons))

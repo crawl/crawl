@@ -350,7 +350,7 @@ bool add_spell_to_memory(spell_type spell)
         mprf("Spell assigned to '%c'.", index_to_letter(letter_j));
 
     // A hint, for those who may not be aware.
-    if (spell == SPELL_SPELLFORGED_SERVITOR)
+    if (spell == SPELL_SPELLSPARK_SERVITOR)
     {
         mprf(MSGCH_TUTORIAL,
              "(You may use Imbue Servitor from the <w>%s</w>bility menu to change "

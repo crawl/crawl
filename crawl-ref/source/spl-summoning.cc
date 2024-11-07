@@ -1453,7 +1453,7 @@ static spell_type servitor_spells[] =
 };
 
 /**
- * Return the spell a player spellforged servitor would use, for the spell
+ * Return the spell a player spellspark servitor would use, for the spell
  * description.
  *
  * @return spell_type  The spell a player servitor would use if cast now
@@ -1486,10 +1486,10 @@ bool spell_servitorable(spell_type to_serve)
 }
 
 /**
- * Initialize the given spellforged servitor's HD and spellset, based on the
+ * Initialize the given spellspark servitor's HD and spellset, based on the
  * caster's spellpower and castable attack spells.
  *
- * @param mon       The spellforged servitor to be initialized.
+ * @param mon       The spellspark servitor to be initialized.
  * @param caster    The entity summoning the servitor; may be the player.
  * @param pow       The caster's spellpower.
  */
@@ -1541,7 +1541,7 @@ void init_servitor(monster* servitor, actor* caster, int pow)
     {
         mprf("%s %s a servant imbued with %s destructive magic!",
              caster->name(DESC_THE).c_str(),
-             caster->conj_verb("summon").c_str(),
+             caster->conj_verb("forge").c_str(),
              caster->pronoun(PRONOUN_POSSESSIVE).c_str());
     }
     else
@@ -1560,15 +1560,15 @@ void init_servitor(monster* servitor, actor* caster, int pow)
     servitor->props[IDEAL_RANGE_KEY].get_int() = shortest_range;
 }
 
-spret cast_spellforged_servitor(int pow, bool fail)
+spret cast_spellspark_servitor(int pow, bool fail)
 {
     if (stop_summoning_prompt(MR_RES_POISON, M_FLIES))
         return spret::abort;
 
     fail_check();
 
-    mgen_data mdata = _pal_data(MONS_SPELLFORGED_SERVITOR, summ_dur(3),
-                                SPELL_SPELLFORGED_SERVITOR);
+    mgen_data mdata = _pal_data(MONS_SPELLSPARK_SERVITOR, summ_dur(3),
+                                SPELL_SPELLSPARK_SERVITOR, false);
 
     if (monster* mon = create_monster(mdata))
         init_servitor(mon, &you, pow);
@@ -1582,7 +1582,7 @@ void remove_player_servitor()
 {
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mi->type == MONS_SPELLFORGED_SERVITOR && mi->summoner == MID_PLAYER)
+        if (mi->type == MONS_SPELLSPARK_SERVITOR && mi->summoner == MID_PLAYER)
         {
             monster_die(**mi, KILL_RESET, NON_MONSTER);
             return;
@@ -1737,7 +1737,7 @@ bool battlesphere_can_mirror(spell_type spell)
     return (spell_typematch(spell, spschool::conjuration)
             || (get_spell_flags(spell) & spflag::destructive))
            && spell != SPELL_BATTLESPHERE
-           && spell != SPELL_SPELLFORGED_SERVITOR;
+           && spell != SPELL_SPELLSPARK_SERVITOR;
 }
 
 vector<spell_type> player_battlesphere_spells()
@@ -2166,7 +2166,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_HORRIBLE_THINGS,   { 8, 8 } },
     { SPELL_FORGE_LIGHTNING_SPIRE,    { 1, 1 } },
     { SPELL_FORGE_BLAZEHEART_GOLEM,   { 1, 1 } },
-    { SPELL_SPELLFORGED_SERVITOR,     { 1, 1 } },
+    { SPELL_SPELLSPARK_SERVITOR,      { 1, 1 } },
     { SPELL_ANIMATE_ARMOUR,           { 1, 1 } },
     { SPELL_MARTYRS_KNELL,            { 1, 1 } },
     { SPELL_HAUNT,                    { 8, 8 } },

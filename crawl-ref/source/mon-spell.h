@@ -2331,7 +2331,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_PLASMA_BEAM, 24, MON_SPELL_WIZARD },
        { SPELL_BOMBARD, 24, MON_SPELL_WIZARD },
-       { SPELL_SPELLFORGED_SERVITOR, 32, MON_SPELL_WIZARD },
+       { SPELL_SPELLSPARK_SERVITOR, 32, MON_SPELL_WIZARD },
       }
     },
 

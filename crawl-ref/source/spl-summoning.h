@@ -83,7 +83,7 @@ void doom_howl(int time);
 spell_type player_servitor_spell();
 bool spell_servitorable(spell_type spell);
 void init_servitor(monster* servitor, actor* caster, int pow);
-spret cast_spellforged_servitor(int pow, bool fail);
+spret cast_spellspark_servitor(int pow, bool fail);
 void remove_player_servitor();
 
 monster_type pick_random_wraith();

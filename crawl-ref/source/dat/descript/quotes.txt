@@ -682,9 +682,9 @@ Slouch ability
  And the void would be calling”
     -Richard O'Brien, “Time Warp”. 1975.
 %%%%
-Spellforged Servitor spell
+Spellspark Servitor spell
 
-<spellforged servitor>
+<spellspark servitor>
 %%%%
 Sticky Flame spell
 
@@ -3902,7 +3902,7 @@ spectral thing
  My Spectre follows thee behind.”
     -William Blake, “Broken Love”. ca. 1800.
 %%%%
-spellforged servitor
+spellspark servitor
 
 “When you think
  Your toys have gone berserk

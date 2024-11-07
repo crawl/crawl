@@ -417,7 +417,7 @@ static bool _spell_triggered_by(spell_type to_trigger, spell_type trigger)
     {
         case SPELL_BATTLESPHERE:
             return battlesphere_can_mirror(trigger);
-        case SPELL_SPELLFORGED_SERVITOR:
+        case SPELL_SPELLSPARK_SERVITOR:
             return spell_servitorable(trigger);
         default:
             return true;

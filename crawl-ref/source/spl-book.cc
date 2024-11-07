@@ -848,7 +848,7 @@ public:
                 you.magic_points);
         }
         else if (default_action == action::imbue)
-            spell_levels_str = "<lightgreen>Select a spell to imbue your Spellforged Servitor with:</lightgreen>";
+            spell_levels_str = "<lightgreen>Select a spell to imbue your Spellspark Servitor with:</lightgreen>";
         else
         {
             spell_levels_str = make_stringf("<lightgreen>%d spell level%s"
