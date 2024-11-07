@@ -3333,7 +3333,7 @@ A halo.
 Ein Heiligenschein.
 %%%%
 An umbra.
-Ein Umbra.
+Eine Umbra.
 %%%%
 Liquefied ground.
 Verflüssigter Boden.
@@ -4306,7 +4306,7 @@ This monster is illuminated by a divine halo.
 Dieses Monster wird von einem göttlichen Heiligenschein erleuchtet.
 %%%%
 This monster is wreathed by an umbra.
-Dieses Monster ist mit einer Umbra umhüllt.
+Dieses Monster ist von einer Umbra umhüllt.
 %%%%
 This monster is mindless.
 Dieses Monster ist hirnlos.
@@ -4351,7 +4351,7 @@ This square is lit by a halo.
 Dieses Platz wird von einem Heiligenschein beleuchtet.
 %%%%
 This square is wreathed by an umbra.
-Dieses Feld ist von einem Umbra umkränzt.
+Dieses Feld ist von einer Umbra umhüllt.
 %%%%
 This square is liquefied.
 Dieses Feld ist verflüssigt.

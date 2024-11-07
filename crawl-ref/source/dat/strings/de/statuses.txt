@@ -99,10 +99,10 @@ Ihr seid glühend.
 # Umbra (from Dithmenos or Ring of Shadows)
 %%%%
 wreathed by umbra
-umkränzt von einem Umbra
+von einer Umbra umhüllt
 %%%%
 You are wreathed by an umbra.
-Ihr seid von einem Umbra umhüllt.
+Ihr seid von einer Umbra umhüllt.
 %%%%
 
 # Held in a net/web

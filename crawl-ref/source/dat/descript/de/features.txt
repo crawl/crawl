@@ -1077,7 +1077,7 @@ Angriffen gegen beleuchtete Kreaturen erhöht.
 %%%%
 umbraed
 
-Dieser Bereich wird von einem Umbra umhüllt, der Eure Heimlichkeit verbessert,
+Dieser Bereich ist von einer Umbra umhüllt, der Eure Heimlichkeit verbessert,
 wenn Ihr auf die Schatten eingestimmt seid, und die Genauigkeit der Angriffe
 derjenigen verringert, die nicht auf die Schatten eingestimmt sind.
 %%%%
