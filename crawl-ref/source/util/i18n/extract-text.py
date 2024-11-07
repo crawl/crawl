@@ -722,7 +722,11 @@ def extract_strings_from_des_rebadge_line(line):
                 string = string.replace(adj, '')
                 break
 
-    if string.startswith('the ') or string.startswith('The '):
+    if string == "Cigotuvi's Monster":
+        strings.append("%s" + string)
+        strings.append("%s" + string + "'s")
+    elif string.startswith('the ') or string.startswith('The '):
+        # uniques
         strings.append(string)
         strings.append(string + "'s")
     else:
