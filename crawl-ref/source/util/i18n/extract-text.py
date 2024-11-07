@@ -722,6 +722,9 @@ def extract_strings_from_des_rebadge_line(line):
                 string = string.replace(adj, '')
                 break
 
+    if 'n_the' in line:
+        string = article_the(string)
+
     if string.startswith('the ') or string.startswith('The ') or string == "Cigotuvi's Monster":
         # uniques
         strings.append(string)
