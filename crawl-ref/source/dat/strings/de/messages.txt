@@ -19608,7 +19608,7 @@ You hear the @adjective@crackle of a magical portal very nearby.
 Ihr hört das @adjective@Knistern eines magischen Portals ganz in der Nähe.
 %%%%
 You hear the crackle of arcane power.
-Du hörst das Knistern von arkaner Macht.
+Ihr hört das Knistern arkaner Macht.
 %%%%
 There is an entrance to a wizard's laboratory on this level! Hurry and find it before the portal closes forever!
 Auf dieser Ebene gibt es einen Eingang zum Labor eines Zauberers! Beeilt Euch und findet ihn, bevor sich das Portal für immer schließt!
