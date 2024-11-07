@@ -251,6 +251,9 @@ die {adj-e}%sLernäische Hydra
 the %sCigotuvi's Monster
 das {adj-e}%sCigotuvis Monster
 %%%%
+the %sStatue of Wucad Mu
+die {adj-e}%sStatue von Wucad Mu
+%%%%
 
 # not really uniques, but gramatically similar
 

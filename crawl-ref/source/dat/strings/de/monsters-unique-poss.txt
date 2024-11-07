@@ -248,6 +248,8 @@ der {adj-en}%sLernäischen Hydra
 Cigotuvi's Monster's
 des Cigotuvis Monsters
 %%%%
+the Statue of Wucad Mu's
+der Statue von Wucad Mu
 
 # not really uniques, but gramatically similar
 
