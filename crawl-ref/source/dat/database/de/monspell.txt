@@ -514,7 +514,7 @@ orange crystal statue cast
 %%%%
 orange crystal statue cast targeted
 
-@The_monster@ richtet seinen stechenden Blick @at_or_near_target@.
+@The_monster@ richtet ihren stechenden Blick @at_or_near_target@.
 %%%%
 orb of fire cast
 
