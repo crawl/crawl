@@ -1485,6 +1485,9 @@ eines {adj-en}%sverrückten Akolythen von Lugonu
 a %sbog mummy's
 einer {adj-en}%sMoormumie
 %%%%
+a %slunar statue's
+einer {adj-en}%sMond-Statue
+%%%%
 
 # derived monsters containing the name of the original monster
 # "elf zombie", "orc skeleton", etc.

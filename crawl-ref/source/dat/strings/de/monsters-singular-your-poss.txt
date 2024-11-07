@@ -1485,6 +1485,9 @@ Eures {adj-en}%sverrückten Akolythen von Lugonu
 your %sbog mummy's
 Eurer {adj-en}%sMoormumie
 %%%%
+your %slunar statue's
+Eurer {adj-en}%sMond-Statue
+%%%%
 
 # derived monsters containing the name of the original monster
 # "elf zombie", "orc skeleton", etc.

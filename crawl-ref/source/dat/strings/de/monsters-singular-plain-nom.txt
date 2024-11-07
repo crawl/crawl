@@ -1581,6 +1581,9 @@
 %sbog mummy
 {adj-e}%sMoormumie
 %%%%
+%slunar statue
+{adj-e}%sMond-Statue
+%%%%
 
 %%%%
 %sLernaean hydra simulacrum
