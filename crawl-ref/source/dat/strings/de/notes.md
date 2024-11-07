@@ -134,7 +134,7 @@ Looking in the dictionary:
 It's difficult to choose translations for the different types of magic users. I've gone with:
 
 - Wizard -> Zauberer (because that's what they used for Harry Potter)
-- the Enchantress -> die Hexenmeisterin (Google Translate and leo.org both gave me "die Zauberin", but I think this sounds better)
+- the Enchantress -> die Zauberin, retaining the double-meaning
 - Sorcerer -> Hexenmeister
 - Mage -> Magier (so Earth Mage -> Erdmagier, etc.)
 - Shifter -> Verschieber (because verschieben means to move, displace)

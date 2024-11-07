@@ -231,7 +231,7 @@ the %sCrazy Yiuf
 der {adj-e}%sVerrückte Yiuf
 %%%%
 the %sEnchantress
-die {adj-e}%sHexenmeisterin
+die {adj-e}%sZauberin
 %%%%
 the %sBlork the orc
 der {adj-e}%sBlork der Ork
