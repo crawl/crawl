@@ -1144,6 +1144,15 @@ das Tor, das tiefer in den Abgrund führt
 The dimension's edge
 Der Rand der Dimension
 %%%%
+the damp floor
+der feuchte Boden
+%%%%
+the pulsating floor
+der pulsierende Boden
+%%%%
+the rough-hewn floor
+der grob behauene Boden
+%%%%
 
 ################################
 # Indefinite article
