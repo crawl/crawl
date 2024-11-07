@@ -653,6 +653,9 @@ Wand aus weißem Kristall
 weirdly glowing ball
 seltsam leuchtende Kugel
 %%%%
+%sfleshy orifice
+{adj-e}%sfleischige Öffnung
+%%%%
 
 ################################
 # Definite article
@@ -1784,6 +1787,9 @@ eine Wand aus weißem Kristall
 %%%%
 a weirdly glowing ball
 eine seltsam leuchtende Kugel
+%%%%
+a %sfleshy orifice
+eine {adj-e}%sfleischige Öffnung
 %%%%
 
 ################################
