@@ -786,6 +786,9 @@
 %sancient lich
 {adj-er}%salter Lich
 %%%%
+%santique lich
+{adj-er}%santiker Lich
+%%%%
 %srevenant
 {adj-er}%sWiedergänger
 %%%%
@@ -1278,6 +1281,9 @@
 %sguardian golem
 {adj-er}%sWächtergolem
 %%%%
+%sflesh golem
+{adj-er}%sFleischgolem
+%%%%
 %sspellforged servitor
 {adj-er}%szaubergeschmeideter Diener
 %%%%
@@ -1565,6 +1571,15 @@
 %%%%
 %sgrey draconian skeleton
 {adj-es}%sGrauer-Drakonier-Skelett
+%%%%
+%scentipede
+{adj-er}%sTausendfüßer
+%%%%
+%smad acolyte of Lugonu
+{adj-er}%sverrückter Akolyth von Lugonu
+%%%%
+%sbog mummy
+{adj-e}%sMoormumie
 %%%%
 
 %%%%

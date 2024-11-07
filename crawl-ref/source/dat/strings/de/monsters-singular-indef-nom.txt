@@ -786,6 +786,9 @@ ein {adj-er}%sLich
 a %sancient lich
 ein {adj-er}%salter Lich
 %%%%
+a %santique lich
+ein {adj-er}%santiker Lich
+%%%%
 a %srevenant
 ein {adj-er}%sWiedergänger
 %%%%
@@ -1278,6 +1281,9 @@ eine {adj-e}%sUschabti
 a %sguardian golem
 ein {adj-er}%sWächtergolem
 %%%%
+a %sflesh golem
+ein {adj-er}%sFleischgolem
+%%%%
 a %sspellforged servitor
 ein {adj-er}%szaubergeschmeideter Diener
 %%%%
@@ -1468,6 +1474,15 @@ ein {adj-es}%sOchsenbiest
 %%%%
 a %sspectre
 eine {adj-e}%sSpukgestalt
+%%%%
+a %scentipede
+ein {adj-er}%sTausendfüßer
+%%%%
+a %smad acolyte of Lugonu
+ein {adj-er}%sverrückter Akolyth von Lugonu
+%%%%
+a %sbog mummy
+eine {adj-e}%sMoormumie
 %%%%
 
 # derived monsters containing the name of the original monster

@@ -74,7 +74,7 @@ GENERATE:acc
 /^[^A-ZÄÖÜ]+/\{adj-er\}/{adj-en}/
 
 # weak nouns
-/Prinz\b/Prinzen/
+/(Prinz|Akolyth)\b/$1en/
 /[A-ZÄÖÜ][^ ,]+/(Mensch|[Bb]är|[^e]ist|ant|taur|myzet|[Ff]ürst)$/$1en/
 /[A-ZÄÖÜ][^ ,]+/([Ss]chamane|[Ss]chütze|Sklave|[Hh]err|loge|mycete)$/$1n/
 /[A-ZÄÖÜ][^ ,]+/([Rr]iese|[Dd]rache|[Dd]ruide|[Hh]eilige|Ahne)$/$1n/
@@ -142,7 +142,7 @@ GENERATE:dat
 /^\{pl\}.*?[A-ZÄÖÜ][^ ,]+/([^snai])$/$1n/
 
 # weak nouns
-/Prinz\b/Prinzen/
+/(Prinz|Akolyth)\b/$1en/
 /[A-ZÄÖÜ][^ ,]+/(Mensch|[Bb]är|[^e]ist|ant|taur|myzet|[Ff]ürst|herz)$/$1en/
 /[A-ZÄÖÜ][^ ,]+/([Ss]chamane|[Ss]chütze|Sklave|[Hh]err|loge|mycete)$/$1n/
 /[A-ZÄÖÜ][^ ,]+/([Rr]iese|[Dd]rache|[Dd]ruide|[Hh]eilige|Ahne)$/$1n/
@@ -212,6 +212,7 @@ GENERATE:gen
 
 # fixup weak nouns
 /herzs\b/herzens/
+/(Prinz|Akolyth)\b/$1en/
 /^.*?(?=(#|$))/(Mensch|[Bb]är|[^e]ist|ant|taur|myzet|[Ff]ürst)s$/$1en/
 /^.*?(?=(#|$))/([Ss]chamane|[Ss]chütze|Sklave|[Hh]err|loge|mycete)s$/$1n/
 /^.*?(?=(#|$))/([Rr]iese|[Dd]rache|[Dd]ruide|[Hh]eilige|Ahne)s$/$1n/

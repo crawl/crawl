@@ -245,6 +245,9 @@ Höllenschlange
 %sLernaean hydra
 {adj-e}%sLernäische Hydra
 %%%%
+%sCigotuvi's Monster
+{adj-es}%sCigotuvis Monster
+%%%%
 
 # not really uniques, but gramatically similar
 

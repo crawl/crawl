@@ -786,6 +786,9 @@
 %d ancient liches
 %d alte Lichs
 %%%%
+%d antique liches
+%d antike Lichs
+%%%%
 %d revenants
 %d Wiedergänger
 %%%%
@@ -1278,6 +1281,9 @@
 %d guardian golems
 %d Wächtergoleme
 %%%%
+%d flesh golems
+%d Fleischgoleme
+%%%%
 %d spellforged servitors
 %d zaubergeschmeidete Diener
 %%%%
@@ -1463,6 +1469,15 @@
 %%%%
 %d %sspectres
 %d {adj-e}%sSpukgestalten
+%%%%
+%d centipedes
+%d Tausendfüßer
+%%%%
+%d mad acolytes of Lugonu
+%d verrückte Akolythen von Lugonu
+%%%%
+%d bog mummies
+%d Moormumien
 %%%%
 
 # derived monsters containing the name of the original monster

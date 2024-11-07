@@ -14,6 +14,9 @@ Verrückten Yiufs
 {gen}Blork the orc
 Blork des Orks
 %%%%
+{gen}Cigotuvi's Monster
+des Cigotuvis Monsters
+%%%%
 
 # not really uniques, but grammatically similar
 

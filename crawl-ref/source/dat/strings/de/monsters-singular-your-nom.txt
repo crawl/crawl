@@ -786,6 +786,9 @@ Euer {adj-er}%sLich
 your %sancient lich
 Euer {adj-er}%salter Lich
 %%%%
+your %santique lich
+Euer {adj-er}%santiker Lich
+%%%%
 your %srevenant
 Euer {adj-er}%sWiedergänger
 %%%%
@@ -1278,6 +1281,9 @@ Eure {adj-e}%sUschabti
 your %sguardian golem
 Euer {adj-er}%sWächtergolem
 %%%%
+your %sflesh golem
+Euer {adj-er}%sFleischgolem
+%%%%
 your %sspellforged servitor
 Euer {adj-er}%szaubergeschmeideter Diener
 %%%%
@@ -1468,6 +1474,15 @@ Euer {adj-es}%sOchsenbiest
 %%%%
 your %sspectre
 Eure {adj-e}%sSpukgestalt
+%%%%
+your %scentipede
+Euer {adj-er}%sTausendfüßer
+%%%%
+your %smad acolyte of Lugonu
+Euer {adj-er}%sverrückter Akolyth von Lugonu
+%%%%
+your %sbog mummy
+Eure {adj-e}%sMoormumie
 %%%%
 
 # derived monsters containing the name of the original monster

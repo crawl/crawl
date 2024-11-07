@@ -787,6 +787,9 @@ Eures {adj-en}%sLichs
 your %sancient lich's
 Eures {adj-en}%salten Lichs
 %%%%
+your %santique lich's
+Eures {adj-en}%santiken Lichs
+%%%%
 your %srevenant's
 Eures {adj-en}%sWiedergängers
 %%%%
@@ -1279,6 +1282,9 @@ Eurer {adj-en}%sUschabti
 your %sguardian golem's
 Eures {adj-en}%sWächtergolems
 %%%%
+your %sflesh golem's
+Eures {adj-en}%sFleischgolems
+%%%%
 your %sspellforged servitor's
 Eures {adj-en}%szaubergeschmeideten Dieners
 %%%%
@@ -1469,6 +1475,15 @@ Eures {adj-en}%sOchsenbiests
 %%%%
 your %sspectre's
 Eurer {adj-en}%sSpukgestalt
+%%%%
+your %scentipede's
+Eures {adj-en}%sTausendfüßers
+%%%%
+your %smad acolyte of Lugonu's
+Eures {adj-en}%sverrückten Akolythen von Lugonu
+%%%%
+your %sbog mummy's
+Eurer {adj-en}%sMoormumie
 %%%%
 
 # derived monsters containing the name of the original monster

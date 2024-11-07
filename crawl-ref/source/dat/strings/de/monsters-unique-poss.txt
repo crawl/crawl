@@ -245,6 +245,9 @@ der Höllenschlange
 the %sLernaean hydra's
 der {adj-en}%sLernäischen Hydra
 %%%%
+%sCigotivi's Monster's
+des {adj-en}%sCigotivis Monsters
+%%%%
 
 # not really uniques, but gramatically similar
 

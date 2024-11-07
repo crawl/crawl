@@ -787,6 +787,9 @@ der {adj-e}%sLich
 the %sancient lich
 der {adj-e}%salte Lich
 %%%%
+the %santique lich
+der {adj-e}%santike Lich
+%%%%
 the %srevenant
 der {adj-e}%sWiedergänger
 %%%%
@@ -1279,6 +1282,9 @@ die {adj-e}%sUschabti
 the %sguardian golem
 der {adj-e}%sWächtergolem
 %%%%
+the %sflsh golem
+der {adj-e}%sFleischgolem
+%%%%
 the %sspellforged servitor
 der {adj-e}%szaubergeschmeidete Diener
 %%%%
@@ -1470,6 +1476,15 @@ das {adj-e}%sOchsenbiest
 %%%%
 the %sspectre
 die {adj-e}%sSpukgestalt
+%%%%
+the %scentipede
+der {adj-e}%sTausendfüßer
+%%%%
+the %smad acolyte of Lugonu
+der {adj-e}%sverrückte Akolyth von Lugonu
+%%%%
+the %sbog mummy
+die {adj-e}%sMoormumie
 %%%%
 
 # derived monsters containing the name of the original monster

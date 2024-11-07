@@ -248,6 +248,9 @@ die {adj-e}%sHöllenschlange
 the %sLernaean hydra
 die {adj-e}%sLernäische Hydra
 %%%%
+the %sCigotuvi's Monster
+das {adj-e}%sCigotuvis Monster
+%%%%
 
 # not really uniques, but gramatically similar
 
