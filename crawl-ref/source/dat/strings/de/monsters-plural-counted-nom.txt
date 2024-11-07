@@ -1611,3 +1611,111 @@
 %d %sgrey draconian simulacrum
 %d {adj-e}%sGrauer-Drakonier-Simulacrum
 %%%%
+
+##################
+# Sprint Monsters
+##################
+
+%%%%
+%d kamikaze kobold
+%d Kamikaze-Kobold
+%%%%
+%d orb golem
+%d Kugelgolem
+%%%%
+%d orb of ice
+%d Kugel des Eises
+%%%%
+%d orb of electricity
+%d Kugel der Elektrizität
+%%%%
+%d naga warlord
+%d Naga-Kriegsherr
+%%%%
+%d witch
+%d Hexe
+%%%%
+%d dire wolf spider
+%d Schreckenswolfspinne
+%%%%
+%d phase spider
+%d Phasenspinne
+%%%%
+%d dimme
+%d Dimme
+%%%%
+%d sulfuric acid blob
+%d Schwefelsaure-Klumpen
+%%%%
+%d guard captain
+%d Wachkapitän
+%%%%
+%d Master Blaster
+%d Master-Blaster
+%%%%
+%d oklob sapling priest
+%d Oklob-Setzling-Priester
+%%%%
+%d oklob sapling wizard
+%d Oklob-Setzling-Zauberer
+%%%%
+%d oklob plant conjurer
+%d Oklob-Pflanze-Hervorrufer
+%%%%
+%d oklob plant summoner
+%d Oklob-Pflanze-Beschwörer
+%%%%
+the %oklob splant shifter
+%d Oklob-Pflanze-Wandler
+%%%%
+%d oklob plant meteorologist
+%d Oklob-Pflanze-Meteorologe
+%%%%
+%d oklob plant demonologist
+%d Oklob-Pflanze-Dämonologe
+%%%%
+%d oklob plant annihilator
+%d Oklob-Pflanze-Vernichter
+%%%%
+%d bag of meat
+%d Fleischsack
+%%%%
+%d meat berserker
+%d Fleischberserker
+%%%%
+%d tyrant
+%d Tyrann
+%%%%
+%d meat hydra
+%d fleischliche Hydra
+%%%%
+%d dread
+%d Schrecken
+%%%%
+%d destroyer
+%d Zerstörer
+%%%%
+%d scourge
+%d Geißel
+%%%%
+%d sculptor of flesh
+%d Bildhauer des Fleisches
+%%%%
+%d observer
+%d Beobachter
+%%%%
+%d accursed
+%d Verfluchte
+%%%%
+%d vile
+%d Niederträchtige
+%%%%
+%d meat beast
+%d Fleischbestie
+%%%%
+%d wretched soul
+%d unglückliche Seele
+%%%%
+%d fleshlord
+%d Fleischlord
+%%%%

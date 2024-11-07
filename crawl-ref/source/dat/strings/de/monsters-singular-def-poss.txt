@@ -1625,3 +1625,111 @@ des {adj-en}%sWeißer-Drakonier-Simulacrums
 the %sgrey draconian simulacrum's
 des {adj-en}%sGrauer-Drakonier-Simulacrums
 %%%%
+
+##################
+# Sprint Monsters
+##################
+
+%%%%
+the %skamikaze kobold's
+des {adj-en}%sKamikaze-Kobolds
+%%%%
+the %sorb golem's
+des {adj-en}%sKugelgolems
+%%%%
+the %sorb of ice's
+der {adj-en}%sKugel des Eises
+%%%%
+the %sorb of electricity's
+der {adj-en}%sKugel der Elektrizität
+%%%%
+the %snaga warlord's
+des {adj-en}%sNaga-Kriegsherrs
+%%%%
+the %switch's
+der {adj-en}%sHexe
+%%%%
+the %sdire wolf spider's
+der {adj-en}%sSchreckenswolfspinne
+%%%%
+the %sphase spider's
+der {adj-en}%sPhasenspinne
+%%%%
+the %sdimme's
+der {adj-en}%sDimme
+%%%%
+the %ssulfuric acid blob's
+des {adj-en}%sSchwefelsaure-Klumpens
+%%%%
+the %sguard captain's
+des {adj-en}%sWachkapitäns
+%%%%
+the %sMaster Blaster's
+des {adj-en}%sMaster-Blasters
+%%%%
+the %soklob sapling priest's
+des {adj-en}%sOklob-Setzling-Priesters
+%%%%
+the %soklob sapling wizard's
+des {adj-en}%sOklob-Setzling-Zauberers
+%%%%
+the %soklob plant conjurer's
+des {adj-en}%sOklob-Pflanze-Hervorrufers
+%%%%
+the %soklob plant summoner's
+des {adj-en}%sOklob-Pflanze-Beschwörers
+%%%%
+the %oklob splant shifter's
+des {adj-en}%sOklob-Pflanze-Wandlers
+%%%%
+the %soklob plant meteorologist's
+des {adj-en}%sOklob-Pflanze-Meteorologen
+%%%%
+the %soklob plant demonologist's
+des {adj-en}%sOklob-Pflanze-Dämonologen
+%%%%
+the %soklob plant annihilator's
+des {adj-en}%sOklob-Pflanze-Vernichters
+%%%%
+the %sbag of meat's
+des {adj-en}%sFleischsacks
+%%%%
+the %smeat berserker's
+des {adj-en}%sFleischberserkers
+%%%%
+the %styrant's
+des {adj-en}%sTyranns
+%%%%
+the %smeat hydra's
+der {adj-en}%sfleischliche Hydra
+%%%%
+the %sdread's
+des {adj-en}%sSchreckens
+%%%%
+the %sdestroyer's
+des {adj-en}%sZerstörers
+%%%%
+the %sscourge's
+der {adj-en}%sGeißel
+%%%%
+the %ssculptor of flesh's
+des {adj-en}%sBildhauers des Fleisches
+%%%%
+the %sobserver's
+des {adj-en}%sBeobachters
+%%%%
+the %saccursed's
+des {adj-en}%sVerfluchten
+%%%%
+the %svile's
+des {adj-en}%sNiederträchtigen
+%%%%
+the %smeat beast's
+der {adj-en}%sFleischbestie
+%%%%
+the %swretched soul's
+der {adj-en}%sunglückliche Seele
+%%%%
+the %sfleshlord's
+des {adj-en}%sFleischlords
+%%%%

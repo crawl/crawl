@@ -1626,3 +1626,111 @@ eines {adj-en}%sWeißer-Drakonier-Simulacrums
 a %sgrey draconian simulacrum's
 eines {adj-en}%sGrauer-Drakonier-Simulacrums
 %%%%
+
+##################
+# Sprint Monsters
+##################
+
+%%%%
+a %skamikaze kobold's
+eines {adj-en}%sKamikaze-Kobolds
+%%%%
+a %sorb golem's
+eines {adj-en}%sKugelgolems
+%%%%
+a %sorb of ice's
+einer {adj-en}%sKugel des Eises
+%%%%
+a %sorb of electricity's
+einer {adj-en}%sKugel der Elektrizität
+%%%%
+a %snaga warlord's
+eines {adj-en}%sNaga-Kriegsherrs
+%%%%
+a %switch's
+einer {adj-en}%sHexe
+%%%%
+a %sdire wolf spider's
+einer {adj-en}%sSchreckenswolfspinne
+%%%%
+a %sphase spider's
+einer {adj-en}%sPhasenspinne
+%%%%
+a %sdimme's
+einer {adj-en}%sDimme
+%%%%
+a %ssulfuric acid blob's
+eines {adj-en}%sSchwefelsaure-Klumpens
+%%%%
+a %sguard captain's
+eines {adj-en}%sWachkapitäns
+%%%%
+a %sMaster Blaster's
+eines {adj-en}%sMaster-Blasters
+%%%%
+a %soklob sapling priest's
+eines {adj-en}%sOklob-Setzling-Priesters
+%%%%
+a %soklob sapling wizard's
+eines {adj-en}%sOklob-Setzling-Zauberers
+%%%%
+a %soklob plant conjurer's
+eines {adj-en}%sOklob-Pflanze-Hervorrufers
+%%%%
+a %soklob plant summoner's
+eines {adj-en}%sOklob-Pflanze-Beschwörers
+%%%%
+a %oklob splant shifter's
+eines {adj-en}%sOklob-Pflanze-Wandlers
+%%%%
+a %soklob plant meteorologist's
+eines {adj-en}%sOklob-Pflanze-Meteorologen
+%%%%
+a %soklob plant demonologist's
+eines {adj-en}%sOklob-Pflanze-Dämonologen
+%%%%
+a %soklob plant annihilator's
+eines {adj-en}%sOklob-Pflanze-Vernichters
+%%%%
+a %sbag of meat's
+eines {adj-en}%sFleischsacks
+%%%%
+a %smeat berserker's
+eines {adj-en}%sFleischberserkers
+%%%%
+a %styrant's
+eines {adj-en}%sTyranns
+%%%%
+a %smeat hydra's
+einer {adj-en}%sfleischliche Hydra
+%%%%
+a %sdread's
+eines {adj-en}%sSchreckens
+%%%%
+a %sdestroyer's
+eines {adj-en}%sZerstörers
+%%%%
+a %sscourge's
+einer {adj-en}%sGeißel
+%%%%
+a %ssculptor of flesh's
+eines {adj-en}%sBildhauers des Fleisches
+%%%%
+a %sobserver's
+eines {adj-en}%sBeobachters
+%%%%
+a %saccursed's
+eines {adj-en}%sVerfluchten
+%%%%
+a %svile's
+eines {adj-en}%sNiederträchtigen
+%%%%
+a %smeat beast's
+einer {adj-en}%sFleischbestie
+%%%%
+a %swretched soul's
+einer {adj-en}%sunglückliche Seele
+%%%%
+a %sfleshlord's
+eines {adj-en}%sFleischlords
+%%%%

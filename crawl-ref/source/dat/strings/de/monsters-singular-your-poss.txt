@@ -1626,3 +1626,111 @@ Eures {adj-en}%sWeißer-Drakonier-Simulacrums
 your %sgrey draconian simulacrum's
 Eures {adj-en}%sGrauer-Drakonier-Simulacrums
 %%%%
+
+##################
+# Sprint Monsters
+##################
+
+%%%%
+your %skamikaze kobold's
+Eures {adj-en}%sKamikaze-Kobolds
+%%%%
+your %sorb golem's
+Eures {adj-en}%sKugelgolems
+%%%%
+your %sorb of ice's
+Eurer {adj-en}%sKugel des Eises
+%%%%
+your %sorb of electricity's
+Eurer {adj-en}%sKugel der Elektrizität
+%%%%
+your %snaga warlord's
+Eures {adj-en}%sNaga-Kriegsherrs
+%%%%
+your %switch's
+Eurer {adj-en}%sHexe
+%%%%
+your %sdire wolf spider's
+Eurer {adj-en}%sSchreckenswolfspinne
+%%%%
+your %sphase spider's
+Eurer {adj-en}%sPhasenspinne
+%%%%
+your %sdimme's
+Eurer {adj-en}%sDimme
+%%%%
+your %ssulfuric acid blob's
+Eures {adj-en}%sSchwefelsaure-Klumpens
+%%%%
+your %sguard captain's
+Eures {adj-en}%sWachkapitäns
+%%%%
+your %sMaster Blaster's
+Eures {adj-en}%sMaster-Blasters
+%%%%
+your %soklob sapling priest's
+Eures {adj-en}%sOklob-Setzling-Priesters
+%%%%
+your %soklob sapling wizard's
+Eures {adj-en}%sOklob-Setzling-Zauberers
+%%%%
+your %soklob plant conjurer's
+Eures {adj-en}%sOklob-Pflanze-Hervorrufers
+%%%%
+your %soklob plant summoner's
+Eures {adj-en}%sOklob-Pflanze-Beschwörers
+%%%%
+your %oklob splant shifter's
+Eures {adj-en}%sOklob-Pflanze-Wandlers
+%%%%
+your %soklob plant meteorologist's
+Eures {adj-en}%sOklob-Pflanze-Meteorologen
+%%%%
+your %soklob plant demonologist's
+Eures {adj-en}%sOklob-Pflanze-Dämonologen
+%%%%
+your %soklob plant annihilator's
+Eures {adj-en}%sOklob-Pflanze-Vernichters
+%%%%
+your %sbag of meat's
+Eures {adj-en}%sFleischsacks
+%%%%
+your %smeat berserker's
+Eures {adj-en}%sFleischberserkers
+%%%%
+your %styrant's
+Eures {adj-en}%sTyranns
+%%%%
+your %smeat hydra's
+Eurer {adj-en}%sfleischliche Hydra
+%%%%
+your %sdread's
+Eures {adj-en}%sSchreckens
+%%%%
+your %sdestroyer's
+Eures {adj-en}%sZerstörers
+%%%%
+your %sscourge's
+Eurer {adj-en}%sGeißel
+%%%%
+your %ssculptor of flesh's
+Eures {adj-en}%sBildhauers des Fleisches
+%%%%
+your %sobserver's
+Eures {adj-en}%sBeobachters
+%%%%
+your %saccursed's
+Eures {adj-en}%sVerfluchten
+%%%%
+your %svile's
+Eures {adj-en}%sNiederträchtigen
+%%%%
+your %smeat beast's
+Eurer {adj-en}%sFleischbestie
+%%%%
+your %swretched soul's
+Eurer {adj-en}%sunglückliche Seele
+%%%%
+your %sfleshlord's
+Eures {adj-en}%sFleischlords
+%%%%

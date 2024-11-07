@@ -1625,3 +1625,111 @@ Euer {adj-es}%sWeißer-Drakonier-Simulacrum
 your %sgrey draconian simulacrum
 Euer {adj-es}%sGrauer-Drakonier-Simulacrum
 %%%%
+
+##################
+# Sprint Monsters
+##################
+
+%%%%
+your %skamikaze kobold
+Euer {adj-er}%sKamikaze-Kobold
+%%%%
+your %sorb golem
+Euer {adj-er}%sKugelgolem
+%%%%
+your %sorb of ice
+Eure {adj-e}%sKugel des Eises
+%%%%
+your %sorb of electricity
+Eure {adj-e}%sKugel der Elektrizität
+%%%%
+your %snaga warlord
+Euer {adj-er}%sNaga-Kriegsherr
+%%%%
+your %switch
+Eure {adj-e}%sHexe
+%%%%
+your %sdire wolf spider
+Eure {adj-e}%sSchreckenswolfspinne
+%%%%
+your %sphase spider
+Eure {adj-e}%sPhasenspinne
+%%%%
+your %sdimme
+Eure {adj-e}%sDimme
+%%%%
+your %ssulfuric acid blob
+Euer {adj-er}%sSchwefelsaure-Klumpen
+%%%%
+your %sguard captain
+Euer {adj-er}%sWachkapitän
+%%%%
+your %sMaster Blaster
+Euer {adj-er}%sMaster-Blaster
+%%%%
+your %soklob sapling priest
+Euer {adj-er}%sOklob-Setzling-Priester
+%%%%
+your %soklob sapling wizard
+Euer {adj-er}%sOklob-Setzling-Zauberer
+%%%%
+your %soklob plant conjurer
+Euer {adj-er}%sOklob-Pflanze-Hervorrufer
+%%%%
+your %soklob plant summoner
+Euer {adj-er}%sOklob-Pflanze-Beschwörer
+%%%%
+your %oklob splant shifter
+Euer {adj-er}%sOklob-Pflanze-Wandler
+%%%%
+your %soklob plant meteorologist
+Euer {adj-er}%sOklob-Pflanze-Meteorologe
+%%%%
+your %soklob plant demonologist
+Euer {adj-er}%sOklob-Pflanze-Dämonologe
+%%%%
+your %soklob plant annihilator
+Euer {adj-er}%sOklob-Pflanze-Vernichter
+%%%%
+your %sbag of meat
+Euer {adj-er}%sFleischsack
+%%%%
+your %smeat berserker
+Euer {adj-er}%sFleischberserker
+%%%%
+your %styrant
+Euer {adj-er}%sTyrann
+%%%%
+your %smeat hydra
+Eure {adj-e}%sfleischliche Hydra
+%%%%
+your %sdread
+Euer {adj-er}%sSchrecken
+%%%%
+your %sdestroyer
+Euer {adj-er}%sZerstörer
+%%%%
+your %sscourge
+Eure {adj-e}%sGeißel
+%%%%
+your %ssculptor of flesh
+Euer {adj-er}%sBildhauer des Fleisches
+%%%%
+your %sobserver
+Euer {adj-er}%sBeobachter
+%%%%
+your %saccursed
+Euer {adj-er}%sVerfluchte
+%%%%
+your %svile
+Euer {adj-er}%sNiederträchtige
+%%%%
+your %smeat beast
+Eure {adj-e}%sFleischbestie
+%%%%
+your %swretched soul
+Eure {adj-e}%sunglückliche Seele
+%%%%
+your %sfleshlord
+Euer {adj-er}%sFleischlord
+%%%%

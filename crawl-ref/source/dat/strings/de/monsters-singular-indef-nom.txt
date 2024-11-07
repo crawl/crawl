@@ -1625,3 +1625,111 @@ ein {adj-es}%sWeißer-Drakonier-Simulacrum
 a %sgrey draconian simulacrum
 ein {adj-es}%sGrauer-Drakonier-Simulacrum
 %%%%
+
+##################
+# Sprint Monsters
+##################
+
+%%%%
+a %skamikaze kobold
+ein {adj-er}%sKamikaze-Kobold
+%%%%
+a %sorb golem
+ein {adj-er}%sKugelgolem
+%%%%
+a %sorb of ice
+eine {adj-e}%sKugel des Eises
+%%%%
+a %sorb of electricity
+eine {adj-e}%sKugel der Elektrizität
+%%%%
+a %snaga warlord
+ein {adj-er}%sNaga-Kriegsherr
+%%%%
+a %switch
+eine {adj-e}%sHexe
+%%%%
+a %sdire wolf spider
+eine {adj-e}%sSchreckenswolfspinne
+%%%%
+a %sphase spider
+eine {adj-e}%sPhasenspinne
+%%%%
+a %sdimme
+eine {adj-e}%sDimme
+%%%%
+a %ssulfuric acid blob
+ein {adj-er}%sSchwefelsaure-Klumpen
+%%%%
+a %sguard captain
+ein {adj-er}%sWachkapitän
+%%%%
+a %sMaster Blaster
+ein {adj-er}%sMaster-Blaster
+%%%%
+a %soklob sapling priest
+ein {adj-er}%sOklob-Setzling-Priester
+%%%%
+a %soklob sapling wizard
+ein {adj-er}%sOklob-Setzling-Zauberer
+%%%%
+a %soklob plant conjurer
+ein {adj-er}%sOklob-Pflanze-Hervorrufer
+%%%%
+a %soklob plant summoner
+ein {adj-er}%sOklob-Pflanze-Beschwörer
+%%%%
+a %oklob splant shifter
+ein {adj-er}%sOklob-Pflanze-Wandler
+%%%%
+a %soklob plant meteorologist
+ein {adj-er}%sOklob-Pflanze-Meteorologe
+%%%%
+a %soklob plant demonologist
+ein {adj-er}%sOklob-Pflanze-Dämonologe
+%%%%
+a %soklob plant annihilator
+ein {adj-er}%sOklob-Pflanze-Vernichter
+%%%%
+a %sbag of meat
+ein {adj-er}%sFleischsack
+%%%%
+a %smeat berserker
+ein {adj-er}%sFleischberserker
+%%%%
+a %styrant
+ein {adj-er}%sTyrann
+%%%%
+a %smeat hydra
+eine {adj-e}%sfleischliche Hydra
+%%%%
+a %sdread
+ein {adj-er}%sSchrecken
+%%%%
+a %sdestroyer
+ein {adj-er}%sZerstörer
+%%%%
+a %sscourge
+eine {adj-e}%sGeißel
+%%%%
+a %ssculptor of flesh
+ein {adj-er}%sBildhauer des Fleisches
+%%%%
+a %sobserver
+ein {adj-er}%sBeobachter
+%%%%
+a %saccursed
+ein {adj-er}%sVerfluchte
+%%%%
+a %svile
+ein {adj-er}%sNiederträchtige
+%%%%
+a %smeat beast
+eine {adj-e}%sFleischbestie
+%%%%
+a %swretched soul
+eine {adj-e}%sunglückliche Seele
+%%%%
+a %sfleshlord
+ein {adj-er}%sFleischlord
+%%%%

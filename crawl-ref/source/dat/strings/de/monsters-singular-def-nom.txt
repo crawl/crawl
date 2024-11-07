@@ -1627,3 +1627,111 @@ das {adj-e}%sWeißer-Drakonier-Simulacrum
 the %sgrey draconian simulacrum
 das {adj-e}%sGrauer-Drakonier-Simulacrum
 %%%%
+
+##################
+# Sprint Monsters
+##################
+
+%%%%
+the %skamikaze kobold
+der {adj-e}%sKamikaze-Kobold
+%%%%
+the %sorb golem
+der {adj-e}%sKugelgolem
+%%%%
+the %sorb of ice
+die {adj-e}%sKugel des Eises
+%%%%
+the %sorb of electricity
+die {adj-e}%sKugel der Elektrizität
+%%%%
+the %snaga warlord
+der {adj-e}%sNaga-Kriegsherr
+%%%%
+the %switch
+die {adj-e}%sHexe
+%%%%
+the %sdire wolf spider
+die {adj-e}%sSchreckenswolfspinne
+%%%%
+the %sphase spider
+die {adj-e}%sPhasenspinne
+%%%%
+the %sdimme
+die {adj-e}%sDimme
+%%%%
+the %ssulfuric acid blob
+der {adj-e}%sSchwefelsaure-Klumpen
+%%%%
+the %sguard captain
+der {adj-e}%sWachkapitän
+%%%%
+the %sMaster Blaster
+der {adj-e}%sMaster-Blaster
+%%%%
+the %soklob sapling priest
+der {adj-e}%sOklob-Setzling-Priester
+%%%%
+the %soklob sapling wizard
+der {adj-e}%sOklob-Setzling-Zauberer
+%%%%
+the %soklob plant conjurer
+der {adj-e}%sOklob-Pflanze-Hervorrufer
+%%%%
+the %soklob plant summoner
+der {adj-e}%sOklob-Pflanze-Beschwörer
+%%%%
+the %oklob splant shifter
+der {adj-e}%sOklob-Pflanze-Wandler
+%%%%
+the %soklob plant meteorologist
+der {adj-e}%sOklob-Pflanze-Meteorologe
+%%%%
+the %soklob plant demonologist
+der {adj-e}%sOklob-Pflanze-Dämonologe
+%%%%
+the %soklob plant annihilator
+der {adj-e}%sOklob-Pflanze-Vernichter
+%%%%
+the %sbag of meat
+der {adj-e}%sFleischsack
+%%%%
+the %smeat berserker
+der {adj-e}%sFleischberserker
+%%%%
+the %styrant
+der {adj-e}%sTyrann
+%%%%
+the %smeat hydra
+die {adj-e}%sfleischliche Hydra
+%%%%
+the %sdread
+der {adj-e}%sSchrecken
+%%%%
+the %sdestroyer
+der {adj-e}%sZerstörer
+%%%%
+the %sscourge
+die {adj-e}%sGeißel
+%%%%
+the %ssculptor of flesh
+der {adj-e}%sBildhauer des Fleisches
+%%%%
+the %sobserver
+der {adj-e}%sBeobachter
+%%%%
+the %saccursed
+der {adj-e}%sVerfluchte
+%%%%
+the %svile
+der {adj-e}%sNiederträchtige
+%%%%
+the %smeat beast
+die {adj-e}%sFleischbestie
+%%%%
+the %swretched soul
+die {adj-e}%sunglückliche Seele
+%%%%
+the %sfleshlord
+der {adj-e}%sFleischlord
+%%%%
