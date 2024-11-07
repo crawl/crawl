@@ -1692,7 +1692,7 @@
 {adj-er}%sOklob-Pflanze-Vernichter
 %%%%
 %sbag of meat
-{adj-er}%sFleischsack
+{adj-er}%sFleischklops
 %%%%
 %smeat berserker
 {adj-er}%sFleischberserker

@@ -1692,7 +1692,7 @@ a %soklob plant annihilator
 ein {adj-er}%sOklob-Pflanze-Vernichter
 %%%%
 a %sbag of meat
-ein {adj-er}%sFleischsack
+ein {adj-er}%sFleischklops
 %%%%
 a %smeat berserker
 ein {adj-er}%sFleischberserker

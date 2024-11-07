@@ -1677,8 +1677,8 @@ the %oklob splant shifter
 %d oklob plant annihilator
 %d Oklob-Pflanze-Vernichter
 %%%%
-%d bag of meat
-%d Fleischsack
+%d bags of meat
+%d Fleischklopse
 %%%%
 %d meat berserker
 %d Fleischberserker

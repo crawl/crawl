@@ -1692,7 +1692,7 @@ your %soklob plant annihilator
 Euer {adj-er}%sOklob-Pflanze-Vernichter
 %%%%
 your %sbag of meat
-Euer {adj-er}%sFleischsack
+Euer {adj-er}%sFleischklops
 %%%%
 your %smeat berserker
 Euer {adj-er}%sFleischberserker

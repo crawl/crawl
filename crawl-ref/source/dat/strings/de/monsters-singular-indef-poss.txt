@@ -1693,7 +1693,7 @@ a %soklob plant annihilator's
 eines {adj-en}%sOklob-Pflanze-Vernichters
 %%%%
 a %sbag of meat's
-eines {adj-en}%sFleischsacks
+eines {adj-en}%sFleischklopses
 %%%%
 a %smeat berserker's
 eines {adj-en}%sFleischberserkers

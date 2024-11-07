@@ -1692,7 +1692,7 @@ the %soklob plant annihilator's
 des {adj-en}%sOklob-Pflanze-Vernichters
 %%%%
 the %sbag of meat's
-des {adj-en}%sFleischsacks
+des {adj-en}%sFleischklopses
 %%%%
 the %smeat berserker's
 des {adj-en}%sFleischberserkers

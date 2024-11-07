@@ -1694,7 +1694,7 @@ the %soklob plant annihilator
 der {adj-e}%sOklob-Pflanze-Vernichter
 %%%%
 the %sbag of meat
-der {adj-e}%sFleischsack
+der {adj-e}%sFleischklops
 %%%%
 the %smeat berserker
 der {adj-e}%sFleischberserker

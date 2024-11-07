@@ -1693,7 +1693,7 @@ your %soklob plant annihilator's
 Eures {adj-en}%sOklob-Pflanze-Vernichters
 %%%%
 your %sbag of meat's
-Eures {adj-en}%sFleischsacks
+Eures {adj-en}%sFleischklopses
 %%%%
 your %smeat berserker's
 Eures {adj-en}%sFleischberserkers
