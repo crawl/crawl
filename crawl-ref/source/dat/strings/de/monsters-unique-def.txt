@@ -268,3 +268,25 @@ der {adj-e}%s Geist %s's
 the %s%s's illusion
 die {adj-e}%s Illusion %s's
 %%%%
+
+##################
+# Sprint Monsters
+##################
+
+%%%%
+# note: Must distinguish from fleshlords (in German, flesh and meat are both Fleisch)
+The Meatlord
+Der Schlachtmeister
+%%%%
+The Servant
+Der Diener
+%%%%
+The Captor
+Der Fänger
+%%%%
+The Defiler
+Der Schänder
+%%%%
+The Unspeakable
+Der Unsägliche
+%%%%

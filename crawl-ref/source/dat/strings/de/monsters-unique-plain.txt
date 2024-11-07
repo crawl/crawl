@@ -268,3 +268,25 @@ etwas Unsichtbares
 %s's illusion
 %ss Illusion
 %%%%
+
+##################
+# Sprint Monsters
+##################
+
+%%%%
+# note: Must distinguish from fleshlords (in German, flesh and meat are both Fleisch)
+Meatlord
+Schlachtmeister
+%%%%
+Servant
+Diener
+%%%%
+Captor
+Fänger
+%%%%
+Defiler
+Schänder
+%%%%
+Unspeakable
+Unsägliche
+%%%%

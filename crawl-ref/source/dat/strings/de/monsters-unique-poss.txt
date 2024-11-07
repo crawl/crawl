@@ -261,3 +261,25 @@ des Etwas
 %s's ghost's
 %ss Geistes
 %%%%
+
+##################
+# Sprint Monsters
+##################
+
+%%%%
+# note: Must distinguish from fleshlords (in German, flesh and meat are both Fleisch)
+the %sMeatlord's
+des {adj-en}%sSchlachtmeisters
+%%%%
+the Servant's
+des {adj-en}%sDiener
+%%%%
+the Captor's
+des {adj-en}%sFängers
+%%%%
+the Defiler's
+des {adj-en}%sSchänders
+%%%%
+the Unspeakable's
+des {adj-en}%sUnsäglichen
+%%%%
