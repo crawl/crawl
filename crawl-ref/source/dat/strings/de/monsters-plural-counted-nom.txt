@@ -769,7 +769,7 @@
 %d azurblaue Geleen
 %%%%
 %d acid blobs
-%d Säureklumpene
+%d Säureklumpen
 %%%%
 %d kobolds
 %d Kobolde
