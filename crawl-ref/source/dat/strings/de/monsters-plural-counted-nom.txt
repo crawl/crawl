@@ -1617,105 +1617,105 @@
 ##################
 
 %%%%
-%d kamikaze kobold
-%d Kamikaze-Kobold
+%d kamikaze kobolds
+%d Kamikaze-Kobolde
 %%%%
-%d orb golem
-%d Kugelgolem
+%d orb golems
+%d Kugelgolems
 %%%%
-%d orb of ice
-%d Kugel des Eises
+%d orbs of ice
+%d Kugeln des Eises
 %%%%
-%d orb of electricity
-%d Kugel der Elektrizität
+%d orbs of electricity
+%d Kugeln der Elektrizität
 %%%%
-%d naga warlord
-%d Naga-Kriegsherr
+%d naga warlords
+%d Naga-Kriegsherren
 %%%%
-%d witch
-%d Hexe
+%d witches
+%d Hexen
 %%%%
-%d dire wolf spider
-%d Schreckenswolfspinne
+%d dire wolf spiders
+%d Schreckenswolfspinnen
 %%%%
-%d phase spider
-%d Phasenspinne
+%d phase spiders
+%d Phasenspinnen
 %%%%
-%d dimme
-%d Dimme
+%d dimmes
+%d Dimmes
 %%%%
-%d sulfuric acid blob
+%d sulfuric acid blobs
 %d Schwefelsaure-Klumpen
 %%%%
-%d guard captain
-%d Wachkapitän
+%d guard captains
+%d Wachkapitäne
 %%%%
-%d Master Blaster
-%d Master-Blaster
+%d Master Blasters
+%d Master-Blasters
 %%%%
-%d oklob sapling priest
+%d oklob sapling priests
 %d Oklob-Setzling-Priester
 %%%%
-%d oklob sapling wizard
+%d oklob sapling wizards
 %d Oklob-Setzling-Zauberer
 %%%%
-%d oklob plant conjurer
+%d oklob plant conjurers
 %d Oklob-Pflanze-Hervorrufer
 %%%%
-%d oklob plant summoner
+%d oklob plant summoners
 %d Oklob-Pflanze-Beschwörer
 %%%%
-%d oklob plant shifter
+%d oklob plant shifters
 %d Oklob-Pflanze-Wandler
 %%%%
-%d oklob plant meteorologist
-%d Oklob-Pflanze-Meteorologe
+%d oklob plant meteorologists
+%d Oklob-Pflanze-Meteorologen
 %%%%
-%d oklob plant demonologist
-%d Oklob-Pflanze-Dämonologe
+%d oklob plant demonologists
+%d Oklob-Pflanze-Dämonologen
 %%%%
-%d oklob plant annihilator
+%d oklob plant annihilators
 %d Oklob-Pflanze-Vernichter
 %%%%
 %d bags of meat
 %d Fleischklopse
 %%%%
-%d meat berserker
+%d meat berserkers
 %d Fleischberserker
 %%%%
-%d tyrant
-%d Tyrann
+%d tyrants
+%d Tyrannen
 %%%%
-%d meat hydra
-%d fleischliche Hydra
+%d meat hydras
+%d fleischliche Hydren
 %%%%
-%d dread
+%d dreads
 %d Schrecken
 %%%%
-%d destroyer
+%d destroyers
 %d Zerstörer
 %%%%
-%d scourge
-%d Geißel
+%d scourges
+%d Geißeln
 %%%%
-%d sculptor of flesh
+%d sculptors of flesh
 %d Bildhauer des Fleisches
 %%%%
-%d observer
+%d observers
 %d Beobachter
 %%%%
-%d accursed
+%d accurseds
 %d Verfluchte
 %%%%
-%d vile
+%d viles
 %d Niederträchtige
 %%%%
-%d meat beast
-%d Fleischbestie
+%d meat beasts
+%d Fleischbestien
 %%%%
-%d wretched soul
-%d unglückliche Seele
+%d wretched souls
+%d unglückliche Seelen
 %%%%
-%d fleshlord
-%d Fleischlord
+%d fleshlords
+%d Fleischlords
 %%%%
