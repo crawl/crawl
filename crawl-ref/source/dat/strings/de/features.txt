@@ -1826,3 +1826,29 @@ mit Eis bedeckt
 spattered with blood
 mit Blut bespritzt
 %%%%
+
+################################
+# Shop names
+################################
+%%%%
+Zin's Purification Station
+Zins Reinigungsstation
+%%%%
+Gozag's Platinum Reserve
+Gozags Platin-Reserve
+%%%%
+The Legendary @owner@'s Legendary Smithy
+Des Legendären @owner@s Legendäre Schmiede
+%%%%
+@owner@'s Merfolk Weapons
+@owner@s Meervolk-Waffen
+%%%%
+@owner@'s Merfolk Armours
+@owner@s Meervolk-Rüstungen
+%%%%
+@owner@'s Merfolk Magic
+@owner@s Meervolk-Magie
+%%%%
+@owner@'s Visitors' Centre
+@owner@s Besucherzentrum
+%%%%

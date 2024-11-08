@@ -688,9 +688,33 @@ def extract_strings_from_des_rebadge_line(line):
     line = line.replace('"', '')
 
     if re.search(r'\bshop\b', line):
-        # TODO: Handle shop names
-        #print("DEBUG: " + line)
-        return []
+        # Handle shop names
+        line = re.sub(r'\s*\.\.\s*([a-zA-Z_]+)\s*\.\.', r'@\1@', line)
+        line = line.replace('@smithy@', '@owner@')
+
+        # extract owner name
+        m = re.search(r'(?<=\bname:)[^ ]+', line)
+        if not m:
+            #print("DEBUG: " + line)
+            return []
+        owner = m.group()
+        owner = owner.replace('_', ' ')
+
+        # extract shop type
+        m = re.search(r'(?<=\btype:)[^ ]+', line)
+        if not m:
+            #print("DEBUG: " + line)
+            return []
+        shop_type = m.group()
+
+        name = owner + "'s " + shop_type
+
+        # extract shop suffix
+        m = re.search(r'(?<=\bsuffix:)[^ ]+', line)
+        if m:
+            name += " " + m.group()
+
+        return [name]
 
     # extract base (original) name
     m = re.search(r'[a-z][a-z \-]+[a-z](?=\s)', line)
