@@ -672,6 +672,17 @@ def extract_lua_strings(line):
 
 # where a name is overriden in a .des file, extract the new name and inflections
 def extract_strings_from_des_rebadge_line(line):
+
+    strings = []
+
+    # multiple monsters can be on the same line separated by slashes
+    # process them separately
+    if '/' in line:
+        lines = line.split('/')
+        for l in lines:
+            strings.extend(extract_strings_from_des_rebadge_line(l))
+        return strings
+
     if re.search(r'\bshop\b', line):
         # TODO: Handle shop names
         return []
@@ -684,16 +695,16 @@ def extract_strings_from_des_rebadge_line(line):
 
     # remove excess whitespace
     line = line.strip()
-    line = re.sub('r\s*=\s*', '=', line)
+    line = re.sub(r'\s+', ' ', line)
 
     is_adjective = False
     # quote the name
     if 'name_adjective' in line or 'n_adj' in line:
-        if 'name:bog' in line:
-            line = line.replace('name:bog', 'name:"bog mummy"')
-        elif re.search(r'name:(phase|dire|giga|sulfuric)\b', line):
+        if re.search(r'name:(phase|dire|giga|sulfuric|bog)\b', line):
+            # generate the full name
             line = re.sub(r'\b([A-Za-z ]+?)\s+name:([^ ]+)', r'name:"\2 \1"', line)
         else:
+            # just take the adjective
             line = re.sub(r'\bname:([^ ]+)', r'name: "\1 "', line)
             is_adjective = True
     elif 'name_suffix' in line or 'n_suf' in line:
@@ -703,8 +714,6 @@ def extract_strings_from_des_rebadge_line(line):
 
     if '"' not in line:
         return []
-
-    strings = []
 
     # extract the quoted string
     string = re.sub(r'^.*"(.*)".*$', r'\1', line)
@@ -756,6 +765,16 @@ def process_lua_file(filename):
 
     raw_lines = data.splitlines()
     lines = []
+
+    for line in raw_lines:
+        if lines and lines[-1].endswith('\\'):
+            lines[-1] = lines[-1][:-1].rstrip() + " " + line.lstrip()
+        else:
+            lines.append(line)
+
+    raw_lines = lines
+    lines = []
+
     ignore = is_des
     for line in raw_lines:
         line = line.strip()
