@@ -1679,7 +1679,7 @@
 %soklob plant summoner
 {adj-er}%sOklob-Pflanze-Beschwörer
 %%%%
-%oklob splant shifter
+%soklob plant shifter
 {adj-er}%sOklob-Pflanze-Wandler
 %%%%
 %soklob plant meteorologist

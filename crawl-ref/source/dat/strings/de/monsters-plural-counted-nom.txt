@@ -1665,7 +1665,7 @@
 %d oklob plant summoner
 %d Oklob-Pflanze-Beschwörer
 %%%%
-the %oklob splant shifter
+%d oklob plant shifter
 %d Oklob-Pflanze-Wandler
 %%%%
 %d oklob plant meteorologist

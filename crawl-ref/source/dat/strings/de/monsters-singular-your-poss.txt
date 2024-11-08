@@ -1680,7 +1680,7 @@ Eures {adj-en}%sOklob-Pflanze-Hervorrufers
 your %soklob plant summoner's
 Eures {adj-en}%sOklob-Pflanze-Beschwörers
 %%%%
-your %oklob splant shifter's
+your %soklob plant shifter's
 Eures {adj-en}%sOklob-Pflanze-Wandlers
 %%%%
 your %soklob plant meteorologist's

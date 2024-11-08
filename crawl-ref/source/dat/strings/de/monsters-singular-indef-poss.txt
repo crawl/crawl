@@ -1680,7 +1680,7 @@ eines {adj-en}%sOklob-Pflanze-Hervorrufers
 a %soklob plant summoner's
 eines {adj-en}%sOklob-Pflanze-Beschwörers
 %%%%
-a %oklob splant shifter's
+a %soklob plant shifter's
 eines {adj-en}%sOklob-Pflanze-Wandlers
 %%%%
 a %soklob plant meteorologist's

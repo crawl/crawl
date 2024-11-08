@@ -1679,7 +1679,7 @@ Euer {adj-er}%sOklob-Pflanze-Hervorrufer
 your %soklob plant summoner
 Euer {adj-er}%sOklob-Pflanze-Beschwörer
 %%%%
-your %oklob splant shifter
+your %soklob plant shifter
 Euer {adj-er}%sOklob-Pflanze-Wandler
 %%%%
 your %soklob plant meteorologist

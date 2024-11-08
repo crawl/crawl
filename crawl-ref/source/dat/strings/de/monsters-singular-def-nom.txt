@@ -1681,7 +1681,7 @@ der {adj-e}%sOklob-Pflanze-Hervorrufer
 the %soklob plant summoner
 der {adj-e}%sOklob-Pflanze-Beschwörer
 %%%%
-the %oklob splant shifter
+the %soklob plant shifter
 der {adj-e}%sOklob-Pflanze-Wandler
 %%%%
 the %soklob plant meteorologist
