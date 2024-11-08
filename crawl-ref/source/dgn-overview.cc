@@ -707,6 +707,13 @@ protected:
 void display_overview()
 {
     string disp = overview_description_string(true);
+
+    // Add the key for altar symbols at the bottom of the display
+    disp += "\n\n<white>Legend:</white>\n";
+    disp += "<green>+</green> Available Altar\n";
+    disp += "<red>x</red> Unavailable Altar\n";
+    disp += "<blue>*</blue> Locked Altar\n";
+
     linebreak_string(disp, 80);
     dgn_overview overview(disp);
     _process_command(overview.show());
