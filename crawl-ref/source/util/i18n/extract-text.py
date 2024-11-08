@@ -697,7 +697,7 @@ def extract_strings_from_des_rebadge_line(line):
             line = re.sub(r'\bname:([^ ]+)', r'name: "\1 "', line)
             is_adjective = True
     elif 'name_suffix' in line or 'n_suf' in line:
-        line = re.sub(r'([^ ]+)\s+name:([^ ]+)', r'name:"\1 \2"', line)
+        line = re.sub(r'\b([A-Za-z ]+?)\s+name:([^ ]+)', r'name:"\1 \2"', line)
     else:
         line = re.sub(r'\bname:([^ ]+)', r'name:"\1"', line)
 
