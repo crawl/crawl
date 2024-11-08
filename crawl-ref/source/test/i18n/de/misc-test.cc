@@ -367,4 +367,10 @@ int main()
     msg = getSpeakString("generic_insult");
     msg = do_mon_str_replacements(msg, *orc);
     cout << msg << endl;
+
+    cout << endl << num_passes << " TESTS PASSED" << endl;
+    if (num_fails > 0)
+        cout << "**** " << num_fails << " TESTS FAILED ****" << endl;
+
+    return num_fails;
 }

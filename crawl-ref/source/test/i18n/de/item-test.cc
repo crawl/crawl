@@ -410,6 +410,9 @@ int main()
         test_group(cse, "RUNES", runes);
     }
 
-    cout << endl << num_passes << " passed, "<< num_fails << " failed" << endl;
-    return 0;
+    cout << endl << num_passes << " TESTS PASSED" << endl;
+    if (num_fails > 0)
+        cout << "**** " << num_fails << " TESTS FAILED ****" << endl;
+
+    return num_fails;
 }
