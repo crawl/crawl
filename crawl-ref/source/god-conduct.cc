@@ -345,7 +345,7 @@ static peeve_map divine_peeves[] =
             1, 0, nullptr, " does not appreciate your training of magic skills!"
         } },
         { DID_WIZARDLY_ITEM, {
-            "you use magical staves or pain-branded weapons", true,
+            "you use magical staves or other wizardly items", true,
             1, 0, nullptr, " does not appreciate your use of wizardly items!"
         } },
     },
