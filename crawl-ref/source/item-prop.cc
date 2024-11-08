@@ -2142,8 +2142,12 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
             skills.insert(staff_sk);
     }
 
-    if (item.base_type == OBJ_WEAPONS && get_weapon_brand(item) == SPWPN_PAIN)
+    if (item.base_type == OBJ_WEAPONS
+        && get_weapon_brand(item) == SPWPN_PAIN
+        && !you_worship(GOD_TROG))
+    {
         skills.insert(SK_NECROMANCY);
+    }
 
     const skill_type sk = item_attack_skill(item);
     if (sk != SK_FIGHTING)
