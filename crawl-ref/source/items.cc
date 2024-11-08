@@ -1927,7 +1927,7 @@ static bool _is_ungenerated_gem(gem_type gem)
 {
     branch_type br = branch_for_gem(gem);
 
-    return (!brentry[br].is_valid() && is_random_subbranch(br));
+    return !brentry[br].is_valid() && is_random_subbranch(br);
 }
 
 static bool _got_all_gems()
