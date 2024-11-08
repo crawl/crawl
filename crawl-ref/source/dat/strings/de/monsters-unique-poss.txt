@@ -268,18 +268,18 @@ des Etwas
 
 %%%%
 # note: Must distinguish from fleshlords (in German, flesh and meat are both Fleisch)
-the %sMeatlord's
-des {adj-en}%sSchlachtmeisters
+The Meatlord's
+des Schlachtmeisters
 %%%%
-the Servant's
-des {adj-en}%sDiener
+The Servant's
+des Dieners
 %%%%
-the Captor's
-des {adj-en}%sFängers
+The Captor's
+des sFängers
 %%%%
-the Defiler's
-des {adj-en}%sSchänders
+The Defiler's
+des Schänders
 %%%%
-the Unspeakable's
-des {adj-en}%sUnsäglichen
+The Unspeakable's
+des Unsäglichen
 %%%%
