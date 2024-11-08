@@ -769,7 +769,9 @@ def process_lua_file(filename):
     raw_lines = data.splitlines()
     lines = []
 
+    # a line ending in backslash means the statement continues on the next line
     for line in raw_lines:
+        line = line.rstrip()
         if lines and lines[-1].endswith('\\'):
             lines[-1] = lines[-1][:-1].rstrip() + " " + line.lstrip()
         else:
