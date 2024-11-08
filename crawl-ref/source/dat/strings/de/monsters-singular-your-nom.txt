@@ -1661,8 +1661,8 @@ Eure {adj-e}%sDimme
 your %ssulfuric acid blob
 Euer {adj-er}%sSchwefelsaure-Klumpen
 %%%%
-your %sguard captain
-Euer {adj-er}%sWachkapitän
+your %svault guard captain
+Euer {adj-er}%sHaupttresorwächter
 %%%%
 your %sMaster Blaster
 Euer {adj-er}%sMaster-Blaster

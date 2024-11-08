@@ -1662,8 +1662,8 @@ einer {adj-en}%sDimme
 a %ssulfuric acid blob's
 eines {adj-en}%sSchwefelsaure-Klumpens
 %%%%
-a %sguard captain's
-eines {adj-en}%sWachkapitäns
+a %svault guard captain's
+eines {adj-en}%sHaupttresorwächters
 %%%%
 a %sMaster Blaster's
 eines {adj-en}%sMaster-Blasters

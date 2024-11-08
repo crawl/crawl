@@ -1662,8 +1662,8 @@ Eurer {adj-en}%sDimme
 your %ssulfuric acid blob's
 Eures {adj-en}%sSchwefelsaure-Klumpens
 %%%%
-your %sguard captain's
-Eures {adj-en}%sWachkapitäns
+your %svault guard captain's
+Eures {adj-en}%sHaupttresorwächters
 %%%%
 your %sMaster Blaster's
 Eures {adj-en}%sMaster-Blasters

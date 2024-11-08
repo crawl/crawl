@@ -1661,8 +1661,8 @@ der {adj-en}%sDimme
 the %ssulfuric acid blob's
 des {adj-en}%sSchwefelsaure-Klumpens
 %%%%
-the %sguard captain's
-des {adj-en}%sWachkapitäns
+the %svault guard captain's
+des {adj-en}%sHaupttresorwächters
 %%%%
 the %sMaster Blaster's
 des {adj-en}%sMaster-Blasters

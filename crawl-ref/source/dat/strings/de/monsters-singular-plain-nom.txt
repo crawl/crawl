@@ -1661,8 +1661,8 @@
 %ssulfuric acid blob
 {adj-er}%sSchwefelsaure-Klumpen
 %%%%
-%sguard captain
-{adj-er}%sWachkapitän
+%svault guard captain
+{adj-er}%sHaupttresorwächter
 %%%%
 %sMaster Blaster
 {adj-er}%sMaster-Blaster

@@ -1663,8 +1663,8 @@ die {adj-e}%sDimme
 the %ssulfuric acid blob
 der {adj-e}%sSchwefelsaure-Klumpen
 %%%%
-the %sguard captain
-der {adj-e}%sWachkapitän
+the %svault guard captain
+der {adj-e}%sHaupttresorwächter
 %%%%
 the %sMaster Blaster
 der {adj-e}%sMaster-Blaster

@@ -1661,8 +1661,8 @@ eine {adj-e}%sDimme
 a %ssulfuric acid blob
 ein {adj-er}%sSchwefelsaure-Klumpen
 %%%%
-a %sguard captain
-ein {adj-er}%sWachkapitän
+a %svault guard captain
+ein {adj-er}%sHaupttresorwächter
 %%%%
 a %sMaster Blaster
 ein {adj-er}%sMaster-Blaster

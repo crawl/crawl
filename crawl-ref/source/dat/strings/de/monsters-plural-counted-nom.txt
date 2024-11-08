@@ -1647,8 +1647,8 @@
 %d sulfuric acid blobs
 %d Schwefelsaure-Klumpen
 %%%%
-%d guard captains
-%d Wachkapitäne
+%d vault guard captains
+%d Haupttresorwächter
 %%%%
 %d Master Blasters
 %d Master-Blasters
