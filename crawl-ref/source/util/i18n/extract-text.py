@@ -684,15 +684,16 @@ def extract_strings_from_des_rebadge_line(line):
                 strings.extend(extract_strings_from_des_rebadge_line(l))
         return strings
 
-    if re.search(r'\bshop\b', line):
-        # TODO: Handle shop names
-        return []
-
     # remove any existing quotes
     line = line.replace('"', '')
 
+    if re.search(r'\bshop\b', line):
+        # TODO: Handle shop names
+        #print("DEBUG: " + line)
+        return []
+
     # extract base (original) name
-    m = re.search(r'[a-z][a-z ]+[a-z](?=\s)', line)
+    m = re.search(r'[a-z][a-z \-]+[a-z](?=\s)', line)
     if not m:
         return []
     base_name = m.group()
@@ -771,9 +772,11 @@ def process_lua_file(filename):
 
     # a line ending in backslash means the statement continues on the next line
     for line in raw_lines:
-        line = line.rstrip()
+        line = line.strip()
         if lines and lines[-1].endswith('\\'):
-            lines[-1] = lines[-1][:-1].rstrip() + " " + line.lstrip()
+            if is_des and line.startswith(":"):
+                line = line[1:].lstrip()
+            lines[-1] = lines[-1][:-1].rstrip() + " " + line
         else:
             lines.append(line)
 
@@ -782,7 +785,6 @@ def process_lua_file(filename):
 
     ignore = is_des
     for line in raw_lines:
-        line = line.strip()
         if line.startswith('--') or line.startswith('#'):
             # skip comments
             continue
