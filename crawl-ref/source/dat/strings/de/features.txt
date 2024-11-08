@@ -381,7 +381,7 @@ glowing silver altar of Zin
 glühender silberner Altar von Zin
 %%%%
 glowing golden altar of the Shining One
-glühender goldener Altar des Glänzenden
+glühender goldener Altar des Strahlenden
 %%%%
 ancient bone altar of Kikubaaqudgha
 uralter Knochenaltar von Kikubaaqudgha
@@ -1028,7 +1028,7 @@ the glowing silver altar of Zin
 der glühende silberne Altar von Zin
 %%%%
 the glowing golden altar of the Shining One
-der glühende goldene Altar des Glänzenden
+der glühende goldene Altar des Strahlenden
 %%%%
 the ancient bone altar of Kikubaaqudgha
 der uralte Knochenaltar von Kikubaaqudgha
@@ -1519,7 +1519,7 @@ a glowing silver altar of Zin
 ein glühender silberner Altar von Zin
 %%%%
 a glowing golden altar of the Shining One
-ein glühender goldener Altar des Glänzenden
+ein glühender goldener Altar des Strahlenden
 %%%%
 an ancient bone altar of Kikubaaqudgha
 ein uralter Knochenaltar von Kikubaaqudgha

@@ -89,12 +89,12 @@ Zin
 Zin
 %%%%
 the Shining One
-der Glänzende
+der Strahlende
 %%%%
 # The Shining One short form (for "travel to altar" menu, must be 14 chars or less)
 #             |<-
 TSO
-der Glänzende
+der Strahlende
 %%%%
 the Wu Jian Council
 der Wu-Jian-Rat
@@ -245,7 +245,7 @@ Yredelemnuls
 Zins
 %%%%
 {gen}the Shining One
-des Glänzenden
+des Strahlenden
 %%%%
 {gen}the Wu Jian Council
 des Wu-Jian-Rates
@@ -355,7 +355,7 @@ Zin's
 Zins
 %%%%
 the Shining One's
-des Glänzenden
+des Strahlenden
 %%%%
 the Wu Jian Council's
 des Wu-Jian-Rates
@@ -366,7 +366,7 @@ des Wu-Jian-Rates
 ########################
 %%%%
 {acc}the Shining One
-den Glänzenden
+den Strahlenden
 %%%%
 {acc}the Wu Jian Council
 den Wu-Jian-Rat
@@ -406,7 +406,7 @@ einen Gott
 ########################
 %%%%
 {dat}the Shining One
-dem Glänzenden
+dem Strahlenden
 %%%%
 {dat}the Wu Jian Council
 dem Wu-Jian-Rat
@@ -451,7 +451,7 @@ einem Gott
 %%%%
 # specific override
 " of the Shining One"
-" des Glänzenden"
+" des Strahlenden"
 %%%%
 
 ##################

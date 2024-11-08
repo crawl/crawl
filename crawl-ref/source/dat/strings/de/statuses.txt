@@ -1775,7 +1775,7 @@ divine shield
 göttlicher Schild
 %%%%
 You are shielded by the power of the Shining One.
-Ihr seid durch die Macht des Glänzenden geschirmt.
+Ihr seid durch die Macht des Strahlenden geschirmt.
 %%%%
 
 # Cleaving

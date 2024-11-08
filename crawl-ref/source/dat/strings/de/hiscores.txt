@@ -535,10 +535,10 @@ Killed by an exploding %s
 Getötet durch explodierende %s
 %%%%
 smitten by Shining One
-vom Glänzenden zerschlagen
+vom Strahlenden zerschlagen
 %%%%
 Smitten by the Shining One
-Vom Glänzenden zerschlagen
+Vom Strahlenden zerschlagen
 %%%%
 smitten by Beogh
 von Beogh zerschlagen

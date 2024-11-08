@@ -538,7 +538,7 @@ ihr diese Meldung seht, ist das ein Fehler.
 eudemon blade
 
 Eine heilige Klinge aus den Schmieden des Himmels, bewohnt von einem guten
-Geist. Sie ist eine bevorzugte Waffe der Diener des Glänzenden und kann nicht
+Geist. Sie ist eine bevorzugte Waffe der Diener des Strahlenden und kann nicht
 von den Mächten des Bösen geführt werden.
 %%%%
 eveningstar
@@ -1026,7 +1026,7 @@ Ein Talisman, der den Eintritt in das Reich von Zot ermöglicht.
 sacred scourge
 
 Eine gesegnete Waffe, hergestellt von den Heiligen im Himmel und gehasst von
-den Unheiligen. Es ist eine bevorzugte Waffe der Diener des Glänzenden.
+den Unheiligen. Es ist eine bevorzugte Waffe der Diener des Strahlenden.
 %%%%
 scale mail
 
@@ -1317,7 +1317,7 @@ trishula
 
 Ein gesegneter Dreizack, geformt in reinigender Flammen, mit drei Spitzen, die
 die vereinte Macht der drei heiligen Götter symbolisieren. Es ist eine
-bevorzugte Waffe der Diener des Glänzenden.
+bevorzugte Waffe der Diener des Strahlenden.
 %%%%
 troll leather armour
 

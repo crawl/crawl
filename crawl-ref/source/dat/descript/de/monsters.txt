@@ -609,7 +609,7 @@ Gegenwart eine vernichtende Krankheit zu.
 %%%%
 angel
 
-Ein göttlicher Krieger des Glänzenden. Er ist eine gewaltige geflügelte Gestalt
+Ein göttlicher Krieger des Strahlenden. Er ist eine gewaltige geflügelte Gestalt
 von unnatürlicher Schönheit, umgeben von einer Aura aus strahlend weißem Licht.
 %%%%
 animated armour
@@ -898,7 +898,7 @@ Sehvermögen hat, kann er Felsbrocken mit furchterregender Genauigkeit werfen.
 daeva
 
 Eine turmhohen geflügelte Gestalt, die eine Aura aus strahlendem goldenen Licht
-ausstrahlt. Es ist ein göttlicher Agent des Glänzenden.
+ausstrahlt. Es ist ein göttlicher Agent des Strahlenden.
 %%%%
 dancing weapon
 

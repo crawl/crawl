@@ -266,10 +266,10 @@ It can also slow down cold-blooded creatures.
 Diese Waffe kann auch kaltblütige Kreaturen verlangsamen.
 %%%%
 It has been blessed by the Shining One, and any ammunition fired from it cause great damage to the undead and demons.
-Diese Waffe wurde vom Glänzenden gesegnet, und jede Munition, die aus ihr abgefeuert wird, verursacht bei Untoten und Dämonen großen Schaden.
+Diese Waffe wurde vom Strahlenden gesegnet, und jede Munition, die aus ihr abgefeuert wird, verursacht bei Untoten und Dämonen großen Schaden.
 %%%%
 It has been blessed by the Shining One to cause great damage to the undead and demons.
-Diese Waffe wurde vom Glänzenden gesegnet, um Untoten und Dämonen großen Schaden zuzufügen.
+Diese Waffe wurde vom Strahlenden gesegnet, um Untoten und Dämonen großen Schaden zuzufügen.
 %%%%
 Any ammunition fired from it occasionally discharges a powerful burst of electricity upon striking a foe.
 Jede Munition, die aus dieser Waffe abgefeuert wird, entlädt gelegentlich einen mächtigen Stromstoß, wenn sie einen Feind trifft.

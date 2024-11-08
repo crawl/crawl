@@ -2753,16 +2753,16 @@ Zin occasionally shields you from chaos.
 Zin schirmt Euch gelegentlich vor dem Chaos ab.
 %%%%
 The Shining One prevents you from stabbing unaware foes.
-Der Glänzende hindert Euch daran, unbewusste Feinde zu erstechen.
+Der Strahlende hindert Euch daran, unbewusste Feinde zu erstechen.
 %%%%
 The Shining One completely shields you from negative energy.
-Der Glänzende schirmt Euch vollständig vor negativer Energie ab.
+Der Strahlende schirmt Euch vollständig vor negativer Energie ab.
 %%%%
 The Shining One mostly shields you from negative energy.
-Der Glänzende schirmt Euch meistens vor negativer Energie ab.
+Der Strahlende schirmt Euch meistens vor negativer Energie ab.
 %%%%
 The Shining One partially shields you from negative energy.
-Das Glänzende schirmt Euch teilweise vor negativer Energie ab.
+Das Strahlende schirmt Euch teilweise vor negativer Energie ab.
 %%%%
 You radiate a large righteous aura, and others within it are easier to hit.
 Ihr strahlt eine große, rechtschaffene Aura aus, und andere, die sich darin befinden, sind leichter zu treffen.
@@ -5117,7 +5117,7 @@ You are suddenly bathed in radiance!
 Ihr seid plötzlich in Strahlen getaucht!
 %%%%
 Your shield is strengthened by the Shining One's divine power.
-Euer Schild wird durch die göttliche Macht des Glänzenden gestärkt.
+Euer Schild wird durch die göttliche Macht des Strahlenden gestärkt.
 %%%%
 A divine shield forms around you!
 Ein göttlicher Schild bildet sich um Euch!
@@ -5978,7 +5978,7 @@ Die göttliche Heerschar {gen}%s erscheint nicht.
 %s dröhnt: "Nimm den Weg der Rechtschaffenheit! TUE BUSSE!"
 %%%%
 You feel the Shining One's silent rage upon you!
-Ihr spürt den stillen Zorn des Glänzenden auf Euch!
+Ihr spürt den stillen Zorn des Strahlenden auf Euch!
 %%%%
 %s draws some chaos from your body!
 %s zieht etwas Chaos aus Eurem Körper!
@@ -12448,7 +12448,7 @@ You and your allies can gain power from killing the unholy and evil.
 Ihr und Eure Verbündeten können Macht durch das Töten des Unheiligen und Bösen erlangen.
 %%%%
 call upon the Shining One for a divine shield
-den Glänzenden um einen göttlichen Schild anrufen
+den Strahlenden um einen göttlichen Schild anrufen
 %%%%
 channel blasts of cleansing flame
 Strahlen der reinigenden Flamme hervorrufen
@@ -12457,10 +12457,10 @@ summon a divine warrior
 einen göttlichen Krieger beschwören
 %%%%
 The Shining One will bless your weapon with holy wrath... once.
-Der Glänzende wird Eure Waffe mit heiligem Zorn segnen... einmal.
+Der Strahlende wird Eure Waffe mit heiligem Zorn segnen... einmal.
 %%%%
 The Shining One is no longer ready to bless your weapon.
-Der Glänzende ist nicht mehr bereit, Eure Waffe zu segnen.
+Der Strahlende ist nicht mehr bereit, Eure Waffe zu segnen.
 %%%%
 receive cadavers from Kikubaaqudgha
 Kadaver von Kikubaaqudgha erhalten
@@ -14547,7 +14547,7 @@ Zin's holy word
 Zins heiliges Wort
 %%%%
 the Shining One's holy word
-des Glänzendens heiliges Wort
+des Strahlenden heiliges Wort
 %%%%
 the Torment card
 die Karte der Qual
@@ -17867,7 +17867,7 @@ Ihr and das Monster befindet euch in Stille. Also, Ihr werdet wahrscheinlich nic
 %s scheint unfähig weiter to erwachsen.
 %%%%
 "Apply blessing of (B)eogh, The (S)hining One, or (R)andomly? "
-"Segen von (B)eogh, (S) dem Glänzenden oder (R)andom anwenden?
+"Segen von (B)eogh, dem (S)trahlenden oder (R)andom anwenden?
 %%%%
 %s won't bless this monster for you!
 %s wird dieses Monster für Euch nicht segnen!

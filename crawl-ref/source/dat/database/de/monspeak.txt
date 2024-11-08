@@ -7167,7 +7167,7 @@ orc_priest_preaching
 #################################
 cherub
 
-@The_monster@ singt in vierstimmiger Harmonie ein Loblied auf den Glänzenden.
+@The_monster@ singt in vierstimmiger Harmonie ein Loblied auf den Strahlenden.
 
 Der Löwenkopf {gen}@the_monster@ brüllt!
 
@@ -7338,7 +7338,7 @@ Untote, und warum sie böse sind.
 # the gods
 der Fall von Lugonu.
 
-das Bündnis zwischen Zin und dem Glänzenden.
+das Bündnis zwischen Zin und dem Strahlenden.
 
 das Bündnis zwischen Zin und Elyvilon.
 

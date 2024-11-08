@@ -39,7 +39,7 @@ Elyvilon
 Elyvilon der Heiler heißt alle guten Seelen willkommen, die bereit sind, anderen
 zu helfen. Diese Personen können mit mächtigen Heilkräften rechnen, mit denen
 sie Blutvergießen vermeiden können. Elyvilon schätzt die Erkundung des Dungeons.
-Elyvilons Anhänger können sich zum Glänzenden oder Zin bekehren und dabei etwas
+Elyvilons Anhänger können sich zum Strahlenden oder Zin bekehren und dabei etwas
 Frömmigkeit bewahren.
 %%%%
 Fedhas
@@ -158,9 +158,9 @@ direkt aus Sif Munas legendärer Bibliothek stammen.
 %%%%
 the Shining One
 
-Die Anhänger des Glänzenden sind dem Kodex des ehrenhaften Kriegers verpflichtet
+Die Anhänger des Strahlenden sind dem Kodex des ehrenhaften Kriegers verpflichtet
 und sind Soldaten im ewigen Kreuzzug ihres Gottes gegen das Böse. Für den
-Verzicht auf dunkle Magie und hinterhältige Taktiken belohnt der Glänzende sie
+Verzicht auf dunkle Magie und hinterhältige Taktiken belohnt der Strahlende sie
 und ihre Verbündeten mit der Macht, die sie brauchen, um Dämonen und Untote zu
 vernichten. Besonders fromme Krieger können in Zeiten der Not sogar Engel
 anrufen. Die Anhänger des Strahlenden können zu Elyvilon oder Zin konvertieren
@@ -224,7 +224,7 @@ bleiben und sich von dunkler Magie und chaotischen Taten fernhalten. Sie müssen
 außerdem einen Teil des gesamten Goldes spenden, das sie erbeuten, und
 vorzugsweise noch mehr spenden. Im Gegenzug können die Anbeter Zins Zorn auf
 Sünder herabrufen und schließlich verschiedene göttliche Schutzbefugnisse
-erlangen. Zins Anhänger können sich zu Elyvilon oder dem Glänzenden bekehren und
+erlangen. Zins Anhänger können sich zu Elyvilon oder dem Strahlenden bekehren und
 dabei etwas Frömmigkeit bewahren.
 %%%%
 Ashenzari powers
@@ -420,16 +420,16 @@ Auswahl an Zaubersprüchen.
 %%%%
 the Shining One powers
 
-Anhänger des Glänzenden sind von einem Heiligenschein umgeben, der ihnen ihre
+Anhänger des Strahlenden sind von einem Heiligenschein umgeben, der ihnen ihre
 Feinde offenbart. Anhänger gewinnen an Macht, indem sie böse Wesen töten, und
-mit wachsender Frömmigkeit wird ihre Lebenskraft geschützt. Der Glänzende wird
+mit wachsender Frömmigkeit wird ihre Lebenskraft geschützt. Der Strahlende wird
 herbeigerufene und bezauberte Verbündete länger auf seiner Seite halten, sollten
 sich die Verbündeten des Kreuzzugs als würdig erweisen. Anhänger erhalten die
 Verwendung eines göttlichen Schildes, der sie im Kampf schützt. Später können
 sie Strahlen reinigender Flammen kanalisieren, die unheiligen Wesen besonders
 schaden, und mächtige göttliche Wesen als vorübergehende Verbündete anrufen.
-Sehr fromme Anhänger können den Glänzenden um den Segen einer Waffe bitten. Der
-Glänzende kann gelegentlich direkt eingreifen, um das Leben eines Anhängers zu
+Sehr fromme Anhänger können den Strahlenden um den Segen einer Waffe bitten. Der
+Strahlende kann gelegentlich direkt eingreifen, um das Leben eines Anhängers zu
 retten.
 %%%%
 Trog powers
@@ -643,9 +643,9 @@ Wirken von Zaubersprüchen wird unzuverlässig – und sogar gefährlich.
 %%%%
 the Shining One wrath
 
-Der Zorn des Glänzenden ist direkt und unmissverständlich. Seine Opfer werden
+Der Zorn des Strahlenden ist direkt und unmissverständlich. Seine Opfer werden
 mit heiligem Feuer geschlagen und von heiligen Kriegern bedrängt. Sünder werden
-zum Schweigen gebracht und der Glänzende wird auch schreien, um die Feinde des
+zum Schweigen gebracht und der Strahlende wird auch schreien, um die Feinde des
 Opfers zu warnen.
 %%%%
 Trog wrath

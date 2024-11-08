@@ -649,11 +649,11 @@ Sif Muna flüstert: Ich kenne viele Geheimnisse...
 %%%%
 the Shining One penance
 
-Der Glänzende sagt: Ein Märtyrer zu sein, kann deine Sünde wegwaschen!
+Der Strahlende sagt: Ein Märtyrer zu sein, kann deine Sünde wegwaschen!
 %%%%
 the Shining One welcome
 
-Der Glänzende sagt: Führe die Kräfte des Lichts zum Sieg!
+Der Strahlende sagt: Führe die Kräfte des Lichts zum Sieg!
 %%%%
 Trog penance
 
