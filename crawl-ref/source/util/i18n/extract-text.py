@@ -680,7 +680,8 @@ def extract_strings_from_des_rebadge_line(line):
     if '/' in line:
         lines = line.split('/')
         for l in lines:
-            strings.extend(extract_strings_from_des_rebadge_line(l))
+            if re.search(r'\bname:', l):
+                strings.extend(extract_strings_from_des_rebadge_line(l))
         return strings
 
     if re.search(r'\bshop\b', line):
@@ -690,41 +691,43 @@ def extract_strings_from_des_rebadge_line(line):
     # remove any existing quotes
     line = line.replace('"', '')
 
-    # remove other property overrides, which can get in the way
-    line = re.sub(r'[^ ]+(?<!\bname):[^ ]+', '', line)
+    # extract base (original) name
+    m = re.search(r'[a-z][a-z ]+[a-z](?=\s)', line)
+    if not m:
+        return []
+    base_name = m.group()
 
-    # remove excess whitespace
-    line = line.strip()
-    line = re.sub(r'\s+', ' ', line)
+    # extract override
+    m = re.search(r'(?<=\bname:)[^ ]+', line)
+    if not m:
+        return []
+    override = m.group()
+    override = override.replace('_', ' ')
 
+    string = ""
     is_adjective = False
-    # quote the name
     if 'name_adjective' in line or 'n_adj' in line:
-        if re.search(r'name:(phase|dire|giga|sulfuric|bog)\b', line):
+        if override in ["phase", "dire", "giga", "sulfuric", "bog"]:
             # generate the full name
-            line = re.sub(r'\b([A-Za-z ]+?)\s+name:([^ ]+)', r'name:"\2 \1"', line)
+            string = override + " " + base_name
         else:
             # just take the adjective
-            line = re.sub(r'\bname:([^ ]+)', r'name: "\1 "', line)
+            string = override + " "
             is_adjective = True
     elif 'name_suffix' in line or 'n_suf' in line:
-        line = re.sub(r'\b([A-Za-z ]+?)\s+name:([^ ]+)', r'name:"\1 \2"', line)
+        string = base_name + " " + override
     else:
-        line = re.sub(r'\bname:([^ ]+)', r'name:"\1"', line)
+        string = override
 
-    if '"' not in line:
+    if string == "":
         return []
 
-    # extract the quoted string
-    string = re.sub(r'^.*"(.*)".*$', r'\1', line)
-
     # if adjective, just return this single string as is
-    if is_adjective or string == "":
+    if is_adjective:
         strings.append(string)
         return strings
 
-    if '_' in string:
-        string = string.replace('_', ' ')
+    if " " in string:
         for adj in ["rotten ", "ancient ", "large "]:
             if string.startswith(adj):
                 strings.append(adj)
