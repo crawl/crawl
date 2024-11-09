@@ -37,7 +37,7 @@
 static void _init_player()
 {
     you = player();
-    dlua.callfn("dgn_clear_data", "");
+    dlua.callfn("dgn_clear_persistant_data", "");
 }
 
 // Make sure no stats are unacceptably low

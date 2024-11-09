@@ -47,16 +47,16 @@ dgn_init_hook_tables(dgn.MAP_GLOBAL_HOOKS)
 -- Table that will be saved in <foo>.sav.
 dgn.persist = { }
 
-function dgn_clear_data()
-  dgn.persist = { }
-end
-
 function dgn_save_data(th)
   lmark.marshall_table(th, dgn.persist)
 end
 
 function dgn_load_data(th)
   dgn.persist = lmark.unmarshall_table(th) or { }
+end
+
+function dgn_clear_persistant_data()
+  dgn.persist = { }
 end
 
 function dgn_set_persistent_var(var, val)

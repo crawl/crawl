@@ -33,7 +33,7 @@ local function test_bounce_iter(map)
 end
 
 local function test_bounces()
-  debug.flush_map_memory()
+  debug.reset_player_data()
   local map = dgn.map_by_tag("bounce_test")
   assert(map, "Could not find bounce_test map (tag 'bounce_test')")
   -- The ragedness of the map edge is randomized on placement,

@@ -733,13 +733,15 @@ void level_clear_vault_memory()
     env.level_map_ids.init(INVALID_MAP_INDEX);
 }
 
-void dgn_flush_map_memory()
+/*
+It's probably better in general to just reset `you` instead of calling this.
+But that's not so convenient for some users of this function, notably lua
+tests. This leaves some state uninitialized, and probably should be immediately
+followed by a call to `initial_dungeon_setup` and something that moves the
+player to a level or regenerates a level.
+*/
+void dgn_reset_player_data()
 {
-    // it's probably better in general to just reset `you`. But that's not so
-    // convenient for lua tests, who are the only user of this function.
-    // This leaves some state uninitialized, and probably should be immediately
-    // followed by a call to `initial_dungeon_setup` and something that moves
-    // the player to a level or regenerates a level.
 
     // vaults and map stuff
     you.uniq_map_tags.clear();
@@ -762,7 +764,7 @@ void dgn_flush_map_memory()
     // the following is supposed to clear any persistent lua state related to
     // the builder. However, it's susceptible to custom dlua doing its own
     // thing...
-    dlua.callfn("dgn_clear_data", "");
+    dlua.callfn("dgn_clear_persistant_data", "");
 
     // monsters
     you.unique_creatures.reset();
@@ -770,6 +772,8 @@ void dgn_flush_map_memory()
     // item stuff that can interact with the builder
     you.runes.reset();
     you.obtainable_runes = 15;
+    initialise_item_sets(true);
+    you.generated_misc.clear();
     you.unique_items.init(UNIQ_NOT_EXISTS);
     you.octopus_king_rings = 0x00;
     you.item_description.init(255); // random names need reset after this, e.g.
