@@ -135,7 +135,6 @@ sting STING
 venom_bolt VENOM_BOLT
 
 %sdir gui/spells/summoning
-animate_armour ANIMATE_ARMOUR
 call_canine_familiar CALL_CANINE_FAMILIAR
 call_imp CALL_IMP
 malign_gateway MALIGN_GATEWAY
@@ -174,6 +173,7 @@ manifold_assault MANIFOLD_ASSAULT
 electric_charge ELECTRIC_CHARGE
 
 %sdir gui/spells/forgecraft
+awaken_armour AWAKEN_ARMOUR
 kinetic_discus KINETIC_DISCUS
 spellspark_servitor SPELLSPARK_SERVITOR
 

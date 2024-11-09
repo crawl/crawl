@@ -28,7 +28,6 @@ local books = {
   .. "malign_gateway&death's_door",
 "Apprentice_Sorcery owner:Jessica numspells:4 spells:soul_splinter&slow&blink&"
   .. "swiftness",
-"Arcane_Animation numspells:2 spells:animate_armour&animate_dead",
 "Basic_Undead_Handling numspells:2 spells:animate_dead&dispel_undead",
 "Beguiling owner:Ashenzari numspells:5 spells:momentum_strike&dazzling_flash&"
   .. "dimensional_bullseye&fulminant_prism&iskenderun's_mystic_blast",
@@ -70,7 +69,7 @@ local books = {
   .. "passage_of_golubria&brom's_barrelling_boulder&borgnjor's_vile_clutch&"
   .. "alistair's_intoxication&maxwell's_capacitive_coupling",
 "Magical_Constructs numspells:5 spells:forge_blazeheart_golem&tukima's_dance&"
-  .."animate_armour&forge_lightning_spire&spellspark_servitor",
+  .."awaken_armour&forge_lightning_spire&spellspark_servitor",
 "Magnificence owner:Eustachio numspells:3 spells:summon_small_mammal&blink&"
   .. "call_imp",
 "Mayhem numspells:3 spells:inner_flame&conjure_ball_lightning&discord",
@@ -80,7 +79,7 @@ local books = {
 "Modern_Magic,_Vol._21 numspells:1 spells:borgnjor's_vile_clutch",
 "Modern_Magic,_Vol._25 numspells:6 spells:foxfire&dazzling_flash&"
   .. "frozen_ramparts&hailstorm&eringya's_noxious_bog&starburst",
-"Modern_Magic,_Vol._27 numspells:4 spells:animate_armour&manifold_assault&"
+"Modern_Magic,_Vol._27 numspells:4 spells:awaken_armour&manifold_assault&"
   .. "maxwell's_capacitive_coupling&polar_vortex",
 "Modern_Magic,_Vol._28 numspells:5 spells:scorch&anguish&flame_wave&"
   .. "summon_cactus_giant&enfeeble",
@@ -187,7 +186,7 @@ local books = {
 "the_Seventh_Heavens numspells:7 spells:foxfire&anguish&petrify&arcjolt&"
   .. "silence&discord&shatter",
 "the_Stone_Book owner:Thyrsus numspells:6 spells:fugue_of_the_fallen&"
-  .. "call_canine_familiar&animate_armour&summon_mana_viper&"
+  .. "call_canine_familiar&awaken_armour&summon_mana_viper&"
   .. "monstrous_menagerie&borgnjor's_revivification",
 "the_Sum_of_Summoning numspells:8 spells:summon_small_mammal&call_imp&"
   .. "call_canine_familiar&summon_ice_beast&summon_mana_viper&"
@@ -197,7 +196,7 @@ local books = {
 "the_Unknown_Variable numspells:6 spells:foxfire&olgreb's_toxic_radiance&"
   .. "alistair's_intoxication&eringya's_noxious_bog&"
   .. "maxwell's_capacitive_coupling&polar_vortex",
-"the_Vowels numspells:6 spells:forge_blazeheart_golem&animate_armour&"
+"the_Vowels numspells:6 spells:forge_blazeheart_golem&awaken_armour&"
   .. "summon_ice_beast&monstrous_menagerie&summon_mana_viper&"
   .. "conjure_ball_lightning"
 }

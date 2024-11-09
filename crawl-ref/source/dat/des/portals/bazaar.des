@@ -2091,7 +2091,7 @@ local necrospells = util.random_subset({ "kiss_of_death", "sublimation_of_blood"
 local tlocspells = util.random_subset({ "maxwell's_portable_piledriver",
                                         "volatile_blastmotes", "gell's_gavotte",
                                         "dispersal", "malign_gateway" }, 2)
-local summspells = util.random_subset({ "call_imp", "animate_armour",
+local summspells = util.random_subset({ "call_imp", "awaken_armour",
                                         "forge_blazeheart_golem", "summon_forest",
                                         "summon_horrible_things" }, 2)
 

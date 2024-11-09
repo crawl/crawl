@@ -644,7 +644,7 @@ KMONS:   p = dancing weapon ; rapier | triple sword | executioner's axe | \
                great mace | bardiche | lajatang | triple crossbow | \
                demon blade | demon trident | demon whip | quick blade | \
                giant club | giant spiked club
-KMONS:   q = animated armour ; plate armour | crystal plate armour | \
+KMONS:   q = armour echo ; plate armour | crystal plate armour | \
                pearl dragon scales | shadow dragon scales | \
                storm dragon scales | golden dragon scales
 KMONS:   r = walking crystal tome / walking divine tome / \

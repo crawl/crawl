@@ -186,7 +186,7 @@ enum monster_type                      // env.mons[].type
 #if TAG_MAJOR_VERSION > 34
     MONS_SPECTRAL_WEAPON,
     MONS_RENDING_BLADE,
-    MONS_ANIMATED_ARMOUR,
+    MONS_ARMOUR_ECHO,
     MONS_LIVING_SPELL,
     MONS_WALKING_TOME,
     MONS_EARTHEN_TOME,
@@ -1203,7 +1203,7 @@ enum monster_type                      // env.mons[].type
     MONS_TEST_BLOB,
     MONS_DREAD_LICH,
     MONS_DEEP_ELF_AIR_MAGE,
-    MONS_ANIMATED_ARMOUR,
+    MONS_ARMOUR_ECHO,
     MONS_ROCKSLIME,
     MONS_VOID_OOZE,
     MONS_IRONBOUND_FROSTHEART,

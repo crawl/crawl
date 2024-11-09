@@ -269,7 +269,7 @@ static bool _is_mon_equipment_worth_listing(const monster_info &mi)
 static bool _does_core_name_include_inventory(const monster *mon)
 {
     return mon->type == MONS_DANCING_WEAPON || mon->type == MONS_SPECTRAL_WEAPON
-           || mon->type == MONS_ANIMATED_ARMOUR;
+           || mon->type == MONS_ARMOUR_ECHO;
 }
 
 /// Return a warning for the player about newly-seen monsters, as appropriate.

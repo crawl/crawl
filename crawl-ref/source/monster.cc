@@ -525,7 +525,7 @@ item_def *monster::get_defining_object() const
     // really guarantee these items
     if (mons_class_is_animated_weapon(type) && inv[MSLOT_WEAPON] != NON_ITEM)
         return &env.item[inv[MSLOT_WEAPON]];
-    else if (type == MONS_ANIMATED_ARMOUR && inv[MSLOT_ARMOUR] != NON_ITEM)
+    else if (type == MONS_ARMOUR_ECHO && inv[MSLOT_ARMOUR] != NON_ITEM)
         return &env.item[inv[MSLOT_ARMOUR]];
 
     return nullptr;
@@ -3208,7 +3208,7 @@ int monster::base_armour_class() const
         return get_experience_level() / 2;
     }
 
-    if (type == MONS_ANIMATED_ARMOUR)
+    if (type == MONS_ARMOUR_ECHO)
     {
         // Armour spirits get double AC from their armour.
         const int armour_slot = inv[MSLOT_ARMOUR];

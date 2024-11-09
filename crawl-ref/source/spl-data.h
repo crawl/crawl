@@ -3430,14 +3430,14 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_ANIMATE_ARMOUR, "Animate Armour",
-    spschool::summoning | spschool::earth,
+    SPELL_AWAKEN_ARMOUR, "Awaken Armour",
+    spschool::forgecraft | spschool::earth,
     spflag::none,
     4,
     50,
     -1, -1,
     0,
-    TILEG_ANIMATE_ARMOUR,
+    TILEG_AWAKEN_ARMOUR,
 },
 
 {
@@ -4202,7 +4202,7 @@ static const struct spell_desc spelldata[] =
     100,
     -1, -1,
     0,
-    TILEG_ANIMATE_ARMOUR,
+    TILEG_AWAKEN_ARMOUR,
 },
 
 {

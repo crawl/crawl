@@ -3893,8 +3893,7 @@ string get_monster_equipment_desc(const monster_info& mi,
                 if (!str.empty())
                     str += " ";
 
-                // animated armour is has "animated" in its name already,
-                // spectral weapons have "spectral".
+                // spectral weapons have "spectral" in their name already.
                 if (mi.type == MONS_DANCING_WEAPON)
                     str += "dancing weapon";
                 else if (mi.type == MONS_PANDEMONIUM_LORD)
@@ -3951,8 +3950,8 @@ string get_monster_equipment_desc(const monster_info& mi,
     if (!weap.empty() && !mons_class_is_animated_weapon(mi.type))
         item_descriptions.push_back(weap.substr(1)); // strip leading space
 
-    // as with dancing weapons, don't claim animated armours 'wear' their armour
-    if (mon_arm && mi.type != MONS_ANIMATED_ARMOUR)
+    // as with dancing weapons, don't claim armour echoes 'wear' their armour
+    if (mon_arm && mi.type != MONS_ARMOUR_ECHO)
     {
         const string armour_desc = make_stringf("wearing %s",
                                                 mon_arm->name(DESC_A).c_str());

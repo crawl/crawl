@@ -401,6 +401,12 @@ Animate Dead spell
     -Mary Shelley, _Frankenstein, or the Modern Prometheus_,
      Vol. I, Chapter 3. 1818 (1st Ed.)
 %%%%
+Animate Armour spell
+
+"A blacksmith shapes the heart of their steel just as much as any leader shapes
+the hearts of their soldiers. If this armour of mine could speak, I know it
+would say that we fight for the same cause."
+%%%%
 Awaken Forest spell
 
  • Hel: [She died to] Infection! She's mine!

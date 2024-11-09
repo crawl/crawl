@@ -557,7 +557,7 @@ monster_info::monster_info(const monster* m, int milev)
                     get_item_known_info(env.item[m->inv[MSLOT_MISSILE]])));
             }
         }
-        else if (type == MONS_ANIMATED_ARMOUR && m->get_defining_object())
+        else if (type == MONS_ARMOUR_ECHO && m->get_defining_object())
         {
             inv[MSLOT_ARMOUR].reset(new item_def(
                 get_item_known_info(*m->get_defining_object())));
@@ -1059,11 +1059,11 @@ string monster_info::_core_name() const
             }
             break;
 
-        case MONS_ANIMATED_ARMOUR:
+        case MONS_ARMOUR_ECHO:
             if (inv[MSLOT_ARMOUR])
             {
                 const item_def& item = *inv[MSLOT_ARMOUR];
-                s = "animated " + item.name(DESC_PLAIN, false, false, true, false, ISFLAG_KNOW_PLUSES);
+                s = "echoed " + item.name(DESC_PLAIN, false, false, true, false, ISFLAG_KNOW_PLUSES);
             }
             break;
 
@@ -1339,7 +1339,7 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
 
     // Never distinguish between dancing weapons.
     // The above checks guarantee that *both* monsters are of this type.
-    if (m1.type == MONS_DANCING_WEAPON || m1.type == MONS_ANIMATED_ARMOUR)
+    if (m1.type == MONS_DANCING_WEAPON || m1.type == MONS_ARMOUR_ECHO)
         return false;
 
     if (m1.type == MONS_SLIME_CREATURE)
@@ -1407,7 +1407,7 @@ string monster_info::pluralised_name(bool fullname) const
         return pluralise_monster(mons_type_name(MONS_DRACONIAN, DESC_PLAIN));
     else if ((type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
                 || type == MONS_DANCING_WEAPON || type == MONS_SPECTRAL_WEAPON
-                || type == MONS_ANIMATED_ARMOUR || type == MONS_MUTANT_BEAST
+                || type == MONS_ARMOUR_ECHO || type == MONS_MUTANT_BEAST
                 || !fullname)
             && !is(MB_NAME_REPLACE))
 

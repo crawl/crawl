@@ -224,11 +224,8 @@ spret cast_summon_cactus(int pow, bool fail)
     return spret::success;
 }
 
-spret cast_summon_armour_spirit(int pow, bool fail)
+spret cast_awaken_armour(int pow, bool fail)
 {
-    if (stop_summoning_prompt(MR_RES_POISON))
-        return spret::abort;
-
     const item_def *armour = you.slot_item(EQ_BODY_ARMOUR);
     if (armour == nullptr)
     {
@@ -246,8 +243,10 @@ spret cast_summon_armour_spirit(int pow, bool fail)
 
     fail_check();
 
-    mgen_data mg = _pal_data(MONS_ANIMATED_ARMOUR, summ_dur(2), SPELL_ANIMATE_ARMOUR);
+    mgen_data mg = _pal_data(MONS_ARMOUR_ECHO, summ_dur(2),
+                             SPELL_AWAKEN_ARMOUR, false);
     mg.hd = 15 + div_rand_round(pow, 10);
+    mg.set_range(1, 2);
     monster* spirit = create_monster(mg);
     if (!spirit)
     {
@@ -255,14 +254,12 @@ spret cast_summon_armour_spirit(int pow, bool fail)
         return spret::success;
     }
 
+    mprf("You draw out an echo of %s", armour->name(DESC_YOUR).c_str());
+
     item_def &fake_armour = env.item[mitm_slot];
     fake_armour.clear();
-    fake_armour.base_type = OBJ_ARMOUR;
-    fake_armour.sub_type = armour->sub_type;
-    fake_armour.quantity = 1;
-    fake_armour.rnd = armour->rnd ? armour->rnd : 1; // unrands have no rnd; hackily add one
+    fake_armour = *armour;
     fake_armour.flags |= ISFLAG_SUMMONED | ISFLAG_KNOW_PLUSES;
-    item_set_appearance(fake_armour);
 
     spirit->pickup_item(fake_armour, false, true);
 
@@ -2096,7 +2093,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_FORGE_LIGHTNING_SPIRE,    { 1, 1 } },
     { SPELL_FORGE_BLAZEHEART_GOLEM,   { 1, 1 } },
     { SPELL_SPELLSPARK_SERVITOR,      { 1, 1 } },
-    { SPELL_ANIMATE_ARMOUR,           { 1, 1 } },
+    { SPELL_AWAKEN_ARMOUR,            { 1, 1 } },
     { SPELL_MARTYRS_KNELL,            { 1, 1 } },
     { SPELL_HAUNT,                    { 8, 8 } },
     { SPELL_SUMMON_CACTUS,            { 1, 1 } },

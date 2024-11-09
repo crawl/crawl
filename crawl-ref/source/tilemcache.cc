@@ -1578,7 +1578,7 @@ int mcache_armour::info(tile_draw_info *dinfo) const
 
 bool mcache_armour::valid(const monster_info& mon)
 {
-    return mon.type == MONS_ANIMATED_ARMOUR;
+    return mon.type == MONS_ARMOUR_ECHO;
 }
 
 /////////////////////////////////////////////////////////////////////////////

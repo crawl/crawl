@@ -2360,7 +2360,7 @@ static const map<monster_info_flags, tileidx_t> monster_status_icons = {
 set<tileidx_t> status_icons_for(const monster_info &mons)
 {
     set<tileidx_t> icons;
-    if (mons.type == MONS_DANCING_WEAPON || mons.type == MONS_ANIMATED_ARMOUR)
+    if (mons.type == MONS_DANCING_WEAPON)
         icons.insert(TILEI_ANIMATED_WEAPON);
     if (!mons.constrictor_name.empty())
         icons.insert(TILEI_CONSTRICTED);

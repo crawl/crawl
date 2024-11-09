@@ -43,7 +43,7 @@ bool canine_familiar_is_alive();
 monster *find_canine_familiar();
 spret cast_call_canine_familiar(int pow, bool fail);
 
-spret cast_summon_armour_spirit(int pow, bool fail);
+spret cast_awaken_armour(int pow, bool fail);
 spret cast_summon_ice_beast(int pow, bool fail);
 spret cast_summon_cactus(int pow, bool fail);
 spret cast_monstrous_menagerie(actor* caster, int pow, bool fail = false);

@@ -1439,7 +1439,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you cannot sustain more bogs right now.";
         break;
 
-    case SPELL_ANIMATE_ARMOUR:
+    case SPELL_AWAKEN_ARMOUR:
         if (!you_can_wear(EQ_BODY_ARMOUR, temp))
             return "you cannot wear body armour.";
         if (temp && !you.slot_item(EQ_BODY_ARMOUR))

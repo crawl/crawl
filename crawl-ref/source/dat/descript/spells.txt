@@ -45,12 +45,6 @@ Afflicts nearby foes with supernatural anguish, causing all damage they deal to
 rebound on them for the duration of the effect. Strong-willed foes can resist the
 necromantic visions of pain and suffering, and mindless creatures are unaffected.
 %%%%
-Animate Armour spell
-
-Calls upon the spirit of your worn armour to fight alongside you. The spirit
-moves slowly, but draws strength from the inherent protection of your own
-armour. At higher power, the spirit becomes more durable.
-%%%%
 Animate Dead spell
 
 For some time after casting this, living creatures killed by the caster will rise
@@ -79,6 +73,15 @@ Avatar Song spell
 Sings a powerfully haunting song; in addition to making nearby victims
 unwilling to move away from the singer, it calls forth drowned souls from
 any nearby bodies of deep water.
+%%%%
+Awaken Armour spell
+
+Draws upon the memory of your worn armour to manifest an echo of it that fights
+alongside you. This echo moves slowly, but the power of its blows increases
+dramatically with the weight of the armour used to form it. It possesses all
+the defensive properties of the armour itself.
+
+Spellpower increases its durability.
 %%%%
 Awaken Forest spell
 

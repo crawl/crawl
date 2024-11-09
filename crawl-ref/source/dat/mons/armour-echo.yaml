@@ -1,4 +1,4 @@
-name: "animated armour"
+name: "armour echo"
 glyph: {char: "[", colour: green}
 flags: [flies, unblindable]
 holiness: [nonliving]
@@ -7,7 +7,7 @@ attacks:
  - {type: hit, damage: 1}
  - {type: hit, damage: 1}
 hd: 15
-hp_10x: 400
+hp_10x: 350
 ac: 8
 ev: 5
 uses: starting_equipment

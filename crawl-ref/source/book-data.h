@@ -401,7 +401,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Book of Iron
-    SPELL_ANIMATE_ARMOUR,
+    SPELL_AWAKEN_ARMOUR,
     SPELL_LRD,
     SPELL_MAGNAVOLT,
 },
@@ -548,7 +548,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Book of the Fortress
-    SPELL_ANIMATE_ARMOUR,
+    SPELL_AWAKEN_ARMOUR,
     SPELL_PHALANX_BEETLE,
     SPELL_FORTRESS_BLAST,
 },

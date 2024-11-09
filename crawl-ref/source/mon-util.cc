@@ -842,7 +842,7 @@ bool mons_has_body(const monster& mon)
         || mons_species(mon.type) == MONS_CURSE_SKULL // including Murray
         || mon.type == MONS_CURSE_TOE
         || mon.type == MONS_DEATH_COB
-        || mon.type == MONS_ANIMATED_ARMOUR
+        || mon.type == MONS_ARMOUR_ECHO
         || mons_class_is_animated_weapon(mon.type)
         || mons_is_tentacle_or_tentacle_segment(mon.type))
     {
@@ -1730,7 +1730,7 @@ bool mons_class_is_remnant(monster_type mc)
 bool mons_class_is_animated_object(monster_type type)
 {
     return mons_class_is_animated_weapon(type)
-        || type == MONS_ANIMATED_ARMOUR;
+        || type == MONS_ARMOUR_ECHO;
 }
 
 bool mons_is_zombified(const monster& mon)
@@ -2130,7 +2130,7 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
         return mbase->attack[1];
     }
 
-    if (mon.type == MONS_ANIMATED_ARMOUR)
+    if (mon.type == MONS_ARMOUR_ECHO)
     {
         item_def *def = mon.get_defining_object();
         if (def)

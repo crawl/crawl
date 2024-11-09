@@ -2608,6 +2608,8 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (mons.hit_points == -1000)
             silent = true;
     }
+    else if (mons.type == MONS_ARMOUR_ECHO)
+        drop_items = false;
 
     const bool death_message = !silent && !did_death_message
                                && you.can_see(mons);
