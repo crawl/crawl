@@ -3872,16 +3872,26 @@ DE.ttttt.ED
    DDDDD
 ENDMAP
 
+# This used to have a player ghost in it before the Necropolis rework.
 NAME:   nicolae_yredelemnul_ghost_church
 TAGS:   temple_overflow_yredelemnul temple_overflow_1 transparent
 TAGS:   uniq_altar_yredelemnul
 TAGS:   no_trap_gen
 WEIGHT: 5
+DEPTH:  D:3-
 KPROP:  dO' = no_tele_into
 KMASK:  dO' = no_monster_gen
 NSUBST: d = * / $ / %
 KFEAT:  _ = altar_yredelemnul
-KMONS:  O = player ghost
+: if you.depth() < 5 then
+KMONS:  O = spectral orc warrior
+: elseif you.depth() < 8 then
+KMONS:  O = spectral ogre
+: elseif you.depth() < 12 then
+KMONS:  O = flayed ghost
+: else
+KMONS:  O = phantasmal warrior
+: end
 KMONS:  z = patrolling zombie
 : interest_check(_G)
 MAP

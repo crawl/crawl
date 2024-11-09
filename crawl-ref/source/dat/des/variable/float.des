@@ -5531,6 +5531,96 @@ ccccc---kkk---ccccc
      ...@@@...
 ENDMAP
 
+# Inspired by lemuel_castle_with_subvaults
+NAME:    gammafunk_gnarly_gnolls
+TAGS:    no_pool_fixup
+DEPTH:   D:3-8
+ORIENT:  float
+ITEM:    any manual
+ITEM:    any jewellery, any jewellery good_item, any jewellery randart
+KMONS:   p = plant
+MONS:    gnoll, gnoll bouda, gnoll sergeant, grum band
+KMONS:   D = gnoll ; wand of flame | any beam wand | \
+                wand of polymorph | wand of charming | \
+                wand of paralysis | wand of mindburst \
+            . spear w:20 | halberd | club | whip | flail | nothing w:15
+# Define some gnolls with reach weapons.
+{{
+    local basic_weapons = {["halberd"] = 1, ["spear"] = 1}
+    local sgt_weapons = {["trident"] = 1, ["spear"] = 1}
+    egos = {["venom"] = 15, ["vampirism"] = 5, ["pain"] = 5,
+            ["electrocution"] = 5, ["chaos"] = 5}
+
+    local basic_def = dgn.random_item_def(basic_weapons, egos, nil, "|")
+    local sgt_basic_def = dgn.random_item_def(sgt_weapons, egos, nil, "|")
+
+    local quality = crawl.one_chance_in(3) and "randart" or "good_item"
+    local good_def = dgn.random_item_def(basic_weapons, egos, quality, "|")
+    local sgt_good_def = dgn.random_item_def(sgt_weapons, egos, quality, "|")
+
+    kmons("E = gnoll ; " .. basic_def .. " . throwing net | nothing")
+    kmons("F = gnoll ; " .. good_def .. " . throwing net | nothing")
+    kmons("H = gnoll sergeant ; " .. sgt_basic_def ..
+          "    . buckler | kite shield | nothing w:40" ..
+          "    . ring mail | scale mail")
+    kmons("J = gnoll sergeant ; " .. sgt_good_def ..
+          "    . buckler good_item | buckler randart w:5 " ..
+          "        | kite shield good_item | kite shield randart w:5 " ..
+          "    . ring mail good_item | ring mail randart w:5 " ..
+          "        | scale mail good_item | scale mail randart w:5")
+}}
+# Sometimes add an additional pairs of doors near the landing area. Also
+# randomize exit transporters and tower inner walls.
+SHUFFLE: qK / rL
+NSUBST:  R = R / '
+SUBST:   q = c, r = ~, K = T, L = -, s : ccG-
+# Scale loot and monsters with depth.
+: if you.depth() < 5 then
+SUBST:   h = %$, ij= `, 2 = 2'
+NSUBST:  - = 2=1 / 2=1. / D / D. / ., ' = E / E. / FFFJ / .
+NSUBST:  R = R / E / E.
+: elseif you.depth() < 7 then
+SUBST:   e = f, h = *, i = %$, j= `
+NSUBST:  - = 2=1 / 2=1. / D / D. / ., ' = E / E. / 3 / H. / J / .
+: else
+SUBST:   e = g, h = |*, i = *, j = %$
+NSUBST:  - = 2=1 / 2=1. / D / 2=D. / ., ' = E / 2=E. / 3 / 3. / 2=H. / J / .
+:     if not you.uniques("Grum") and crawl.one_chance_in(3) then
+NSUBST:   3 = 4 / 3
+:     end
+: end
+KFEAT:   ~ = closed_clear_door
+MARKER:  P = lua:transp_loc("ghostless_gnarly_gnolls_entry")
+MARKER:  Q = lua:transp_dest_loc("ghostless_gnarly_gnolls_entry")
+MARKER:  R = lua:transp_loc("ghostless_gnarly_gnolls_exit")
+MARKER:  S = lua:transp_dest_loc("ghostless_gnarly_gnolls_exit")
+TILE:    c = wall_stone_smooth
+COLOUR:  `defghij|*%$O = cyan
+FTILE:   `defghij|*%$O = floor_cobble_blood
+COLOUR:  " = brown
+FTILE:   " = floor_mud
+MAP
+...........................
+.wwwwwwwwwwwwWwwwwwwwwwwww.
+.wwwwwwwwwwwwWwwwwwwwwwwww.
+.wwncccn...........ncccnww.
+.wwc's-c.cnc.S.cnc.c-s'cww.
+.wwc---cncRccnccRcnc---cww.
+.wwncc---------------ccnww.
+.ww.Gc-cnqncc~ccncnc-cG.ww.
+.ww.cc-cpKpcp-Gcej$c-cc.ww.
+.WW.n'-~-----QTcd9$~-2n.WW.
+.ww.cc-cpKpcp-Gchi$c-cc.ww.
+.ww.Gc-cnqncc~ccncnc-cG.ww.
+.wwncc---------------ccnww.
+.wwc---cncRccnccRcnc---cww.
+.wwc's-c.cnc.P.cnc.c-s'cww.
+.wwncccn...........ncccnww.
+.wwwwwwwwwww"""wwwwwwwwwww.
+.wwwwwwwwwww"""wwwwwwwwwww.
+...........................
+ENDMAP
+
 NAME:   gammafunk_worm_tunnel
 TAGS:   no_monster_gen no_trap_gen no_tele_into no_item_gen no_descent
 DEPTH:  Lair, D:10-, Swamp

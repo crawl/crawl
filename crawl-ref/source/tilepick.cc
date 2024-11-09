@@ -395,6 +395,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_PORTAL_BAZAAR;
     case DNGN_ENTER_TROVE:
         return TILE_DNGN_PORTAL_TROVE;
+    case DNGN_ENTER_NECROPOLIS:
+        return TILE_DNGN_PORTAL_NECROPOLIS;
     case DNGN_ENTER_SEWER:
         return TILE_DNGN_PORTAL_SEWER;
     case DNGN_ENTER_OSSUARY:
@@ -457,6 +459,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_EXIT_ARENA:
     case DNGN_EXIT_CRUCIBLE:
         return TILE_DNGN_PORTAL;
+    case DNGN_EXIT_NECROPOLIS:
+        return TILE_DNGN_EXIT_NECROPOLIS;
     case DNGN_EXIT_ICE_CAVE:
         return TILE_DNGN_PORTAL_ICE_CAVE;
     case DNGN_EXIT_VOLCANO:
@@ -4306,18 +4310,20 @@ tileidx_t tileidx_branch(const branch_type br)
         return TILE_DNGN_ENTER_PANDEMONIUM;
     case BRANCH_ZIGGURAT:
         return TILE_DNGN_PORTAL_ZIGGURAT;
-    case BRANCH_GAUNTLET:
-        return TILE_DNGN_PORTAL_GAUNTLET;
     case BRANCH_BAZAAR:
         return TILE_DNGN_PORTAL_BAZAAR;
     case BRANCH_TROVE:
         return TILE_DNGN_PORTAL_TROVE;
+    case BRANCH_NECROPOLIS:
+        return TILE_DNGN_PORTAL_NECROPOLIS;
     case BRANCH_SEWER:
         return TILE_DNGN_PORTAL_SEWER;
     case BRANCH_OSSUARY:
         return TILE_DNGN_PORTAL_OSSUARY;
     case BRANCH_BAILEY:
         return TILE_DNGN_PORTAL_BAILEY;
+    case BRANCH_GAUNTLET:
+        return TILE_DNGN_PORTAL_GAUNTLET;
     case BRANCH_ICE_CAVE:
         return TILE_DNGN_PORTAL_ICE_CAVE;
     case BRANCH_VOLCANO:
@@ -4330,7 +4336,6 @@ tileidx_t tileidx_branch(const branch_type br)
         return TILE_DNGN_ALTAR_OKAWARU;
     case BRANCH_CRUCIBLE:
         return TILE_DNGN_ALTAR_MAKHLEB;
-
     default:
         return TILEG_ERROR;
     }

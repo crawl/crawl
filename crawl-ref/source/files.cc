@@ -1636,7 +1636,8 @@ void update_portal_entrances()
             level_id whither = stair_destination(feat, "", false);
             if (whither.branch == BRANCH_ZIGGURAT // not (quite) pregenerated
                 || whither.branch == BRANCH_TROVE // not pregenerated
-                || whither.branch == BRANCH_BAZAAR) // multiple bazaars possible
+                || whither.branch == BRANCH_BAZAAR // multiple bazaars possible
+                || whither.branch == BRANCH_NECROPOLIS) // multiple possible
             {
                 continue; // handle these differently
             }

@@ -248,6 +248,11 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         flv.floor = TILE_FLOOR_VAULT;
         return;
 
+    case BRANCH_NECROPOLIS:
+        flv.wall  = TILE_WALL_CATACOMBS;
+        flv.floor = TILE_FLOOR_NECROPOLIS_SQUARES;
+        return;
+
 #if TAG_MAJOR_VERSION == 34
     case BRANCH_LABYRINTH:
 #endif

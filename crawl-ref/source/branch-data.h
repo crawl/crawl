@@ -433,6 +433,16 @@ const Branch branches[NUM_BRANCHES] =
       '@', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
       {}
     },
+
+    { BRANCH_NECROPOLIS, NUM_BRANCHES, -1, -1, 1, 0,
+      brflag::no_x_level_travel | brflag::no_items,
+      DNGN_ENTER_NECROPOLIS, DNGN_EXIT_NECROPOLIS, NUM_FEATURES,
+      "Necropolis", "the Necropolis", "Necropolis",
+      "You enter an ornate necropolis!",
+      MAGENTA, LIGHTGREY,
+      '%', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
+      {}
+    },
 };
 
 /*

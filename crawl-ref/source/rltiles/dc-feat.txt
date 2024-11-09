@@ -675,7 +675,8 @@ exit_pandemonium_flickering
 # portal vault entrances
 necropolis_portal DNGN_PORTAL_NECROPOLIS
 necropolis_gone DNGN_NECROPOLIS_GONE
-necropolis_exit DNGN_EXIT_NECROPOLIS
+necropolis_exit0 DNGN_EXIT_NECROPOLIS
+necropolis_exit1
 volcano_portal DNGN_PORTAL_VOLCANO
 volcano_gone DNGN_PORTAL_VOLCANO_GONE
 volcano_exit DNGN_EXIT_VOLCANO
