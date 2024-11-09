@@ -231,7 +231,7 @@ local function generate_map(map)
     local max_zones = 0
     for iter_i = 1, checks do
         output_to = output_to_base .. map_to_test .. "." .. iter_i .. ".txt"
-        debug.flush_map_memory()
+        debug.reset_player_data()
         dgn.reset_level()
         crawl.clear_message_store()
         crawl.mpr("Testing vault '" .. map_to_test .. "', iteration " .. iter_i .. " of " .. checks)

@@ -44,7 +44,7 @@ local function run_los_tests(depth, nlevels, tests_per_level)
   debug.goto_place(place)
 
   for lev_i = 1, nlevels do
-    debug.flush_map_memory()
+    debug.reset_player_data()
     debug.generate_level()
     for t_i = 1, tests_per_level do
       test_cellseecell_symmetry()
