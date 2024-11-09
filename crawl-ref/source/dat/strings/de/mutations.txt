@@ -411,7 +411,7 @@ You expend health (3 HP) to strengthen your wands.
 Ihr verbraucht Gesundheit (3 HP), um Eure Zauberstäbe zu stärken.
 %%%%
 You have tentacles for arms and can constrict up to %d enemies at once.
-Ihr habt Tentakel als Arme und könnt bis zu %d Feinde auf einmal zerquetschen.
+Ihr habt Tentakel als Arme und könnt bis zu %d Feinde auf einmal umschlingen.
 %%%%
 You have sharp claws.
 Ihr habt scharfe Krallen.
@@ -1185,19 +1185,19 @@ You have a snake-like lower body.
 Ihr habt einen schlangenartigen Unterkörper.
 %%%%
 You can use your snake-like lower body to constrict enemies.
-Ihr könnt Euren schlangenartigen Unterkörper einsetzen, um Feinde zu zerquetschen.
+Ihr könnt Euren schlangenartigen Unterkörper dazu einsetzen, Feinde zu umschlingen.
 %%%%
 Your lower body turns into a snake tail.
 Euer Unterkörper verwandelt Euch in einen Schlangenschwanz.
 %%%%
 Your tail grows strong enough to constrict your enemies.
-Euer Schwanz wird stark genug, um Eure Feinde zu zerquetschen.
+Euer Schwanz wächst und ist nun stark genug, Eure Feinde zu umschlingen.
 %%%%
 Your lower body returns to normal.
 Euer unterer Körper kehrt in den Normalzustand zurück.
 %%%%
 Your snake tail weakens and can no longer constrict your enemies.
-Euer Schlangenschwanz wird schwächer und kann Eure Feinde nicht mehr zerquetschen.
+Euer Schlangenschwanz wird schwächer und kann Eure Feinde nicht mehr umschlingen.
 %%%%
 stinger
 Giftstachel
@@ -2874,7 +2874,7 @@ You feel less comfortable near water.
 Ihr fühlt Euch in der Nähe von Wasser weniger wohl.
 %%%%
 You have tentacles for arms and can constrict enemies.
-Ihr habt Tentakel als Arme und könnt Feinde zerquetschen.
+Ihr habt Tentakel als Arme und könnt Feinde umschlingen.
 %%%%
 Your arms feel tentacular.
 Eure Arme fühlen Euch tentakulär an.

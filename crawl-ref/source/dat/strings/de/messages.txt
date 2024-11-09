@@ -486,34 +486,34 @@ Ihr verliert den Halt auf {dat}%s.
 %s verliert den Halt auf {dat}%s.
 %%%%
 The zombie hands constrict %s but do no damage.
-Die Zombiehände zerquetschen {acc}%s, fügen aber keinen Schaden zu.
+Die Zombiehände umschlingen {acc}%s, fügen aber keinen Schaden zu.
 %%%%
 You constrict %s but do no damage.
-Ihr zerquetscht {acc}%s, fügt aber keinen Schaden zu.
+Ihr umschlingt {acc}%s, fügt aber keinen Schaden zu.
 %%%%
 The grasping roots
 Die greifenden Wurzeln
 %%%%
 You constrict %s
-Ihr zerquetscht {acc}%s
+Ihr umschlingt {acc}%s
 %%%%
 %s constrict you
-%s zerquetscht Euch
+%s umschlingen Euch
 %%%%
 %s constricts you
-%s zerquetscht Euch
+%s umschlingt Euch
 %%%%
 %s constrict %s
-%s zerquetscht {acc}%s
+%s umschlingen {acc}%s
 %%%%
 %s constricts %s
-%s zerquetscht {acc}%s
+%s umschlingt {acc}%s
 %%%%
 You are constricted
-Ihr werdet zerquetscht
+Ihr werdet umschlungen
 %%%%
 %s is constricted
-%s wird zerquetscht
+%s wird umschlungen
 %%%%
 You are unaffected.
 Ihr seid nicht betroffen.
@@ -3673,7 +3673,7 @@ steal items
 Gegenstände stehlen
 %%%%
 begin ongoing constriction
-andauernde Zerquetschung beginnen
+andauernde Umschlingung beginnen
 %%%%
 deal extra damage to undead and demons
 zusätzlichen Schaden an Untoten und Dämonen verursachen
@@ -7995,7 +7995,7 @@ You splatter %s into a gooey mess
 Ihr zerstampft {acc}%s zu einem klebrigen Brei
 %%%%
 You crush %s like a grape
-Ihr zerquetschst {acc}%s wie eine Traube
+Ihr zerquetscht {acc}%s wie eine Traube
 %%%%
 You beat %s like a drum
 Ihr schlagt {acc}%s wie eine Trommel
@@ -8899,7 +8899,7 @@ Etwas Ungesehenes öffnet %s.
 %s entkommt!
 %%%%
 %s struggles to escape constriction.
-%s kämpft, um der Zerquetschung zu entkommen.
+%s kämpft, um der Umschlingung zu entkommen.
 %%%%
 The door bursts into shrapnel!
 Die Tür platzt in Splitter!
@@ -11383,7 +11383,7 @@ Es ist unklug, darauf einzugehen.
 %s ist in einem Gewebe festgehalten!
 %%%%
 %s is being constricted!
-%s wird zerquetscht!
+%s wird umschlungen!
 %%%%
 %s cannot move out of your way!
 %s kann Euch nicht aus dem Weg gehen!
@@ -11853,19 +11853,19 @@ You feel as though you will be weak longer.
 Ihr habt das Gefühl, dass Ihr länger schwach bleiben werdet.
 %%%%
 You have 1 tentacle available for constriction.
-Ihr habt 1 Tentakel zum Zerquetschen zur Verfügung.
+Ihr habt 1 Tentakel zum Umschlingen zur Verfügung.
 %%%%
 You have %d tentacles available for constriction.
-Ihr habt %d Tentakel zum Zerquetschen zur Verfügung.
+Ihr habt %d Tentakel zum Umschlingen zur Verfügung.
 %%%%
 You are being constricted by %s.
-Ihr werdet von {dat}%s zerquetscht.
+Ihr werdet von {dat}%s umschlungen.
 %%%%
 You are being held by %s.
 Ihr werdet von {dat}%s festgehalten.
 %%%%
 You are constricting %s.
-Ihr zerquetscht {acc}%s.
+Ihr umschlingt {acc}%s.
 %%%%
 %s enhances the healing.
 %s verbessert die Heilung.
@@ -16364,10 +16364,10 @@ Dort könnt Ihr nichts wachsen lassen.
 ##################
 %%%%
 %s struggles to leap free from constriction.
-%s kämpft darum, sich aus der Zerquetschung zu befreien.
+%s kämpft darum, sich aus der Umschlingung zu befreien.
 %%%%
 %s struggles to blink free from constriction.
-%s kämpft darum, sich aus der Zerquetschung zu blinzeln.
+%s kämpft darum, sich aus der Umschlingung zu blinzeln.
 %%%%
 %s jumps free!
 %s springt frei!

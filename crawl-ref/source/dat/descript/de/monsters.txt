@@ -853,9 +853,9 @@ Waffen ausgestattet ist und diese geschickt einzusetzen weiß.
 %%%%
 chaos spawn
 
-Ein Wesen des reinen Chaos, dessen Gestalt sich ständig verändert, das Augen,
-Münder, Klauen und Tentakeln wächst und dann verliert. Es verdirbt alles, was es
-berührt.
+Ein Wesen aus reinem Chaos, dessen Gestalt sich ununterbrochen verändert. Ihm
+wachsen neue Augen, Münder, Klauen und Tentakel und verschwinden direkt wieder.
+Es korrumpiert alles, was es berührt.
 %%%%
 cherub
 
@@ -1713,7 +1713,7 @@ Ein riesiger Waran, der durchaus in der Lage ist, große Tiere zu jagen.
 kraken
 
 Ein gigantisches Seeungeheuer, das ganze Schiffe verschlingen kann. Seine vielen
-Tentakeln reichen bis zur Küste und zerquetschen jeden, der sich ihm nähert.
+Tentakel reichen bis zur Küste und umschlingen jeden, der sich ihm nähert.
 %%%%
 large abomination
 
@@ -2569,7 +2569,7 @@ Eine sich windende Masse aus Tentakeln, alle mit fauligem Schleim bedeckt.
 %%%%
 tentacled starspawn
 
-Ein schwerfälliges Maul, das von einer Masse gewundener Tentakeln umhüllt ist.
+Ein schwerfälliges Maul, das von einer Masse gewundener Tentakel umhüllt ist.
 Wenn es Beute entdeckt, schnellt es mit seinen Tentakeln nach vorne und zieht
 das Opfer direkt in seinen wartenden Schlund.
 %%%%
@@ -2983,7 +2983,7 @@ Cigotuvi's Monster
 
 Eine Furcht erregende Kreatur, die aus den Körperteilen jeder nur denkbaren
 monströsen Kreatur zusammengesetzt zu sein scheint und aus deren Gestalt sich
-windende Tentakeln entsprießen.
+windende Tentakel sprießen.
 %%%%
 conjurer statue
 
