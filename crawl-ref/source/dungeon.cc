@@ -2886,7 +2886,7 @@ static void _prepare_water()
             if (which_grid == DNGN_SHALLOW_WATER && one_chance_in(10)
                 || feat_has_dry_floor(which_grid) && one_chance_in(5))
             {
-                fix_positions.emplace(*ri);
+                fix_positions.insert(*ri);
                 break;
             }
         }
