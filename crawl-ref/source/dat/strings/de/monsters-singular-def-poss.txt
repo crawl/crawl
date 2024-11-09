@@ -901,7 +901,7 @@ the %ssnake's
 der {adj-en}%sSchlange
 %%%%
 the %sball python's
-der {adj-en}%sKugelpython
+der {adj-en}%sKönigspython
 %%%%
 the %sadder's
 der {adj-en}%sKreuzotter

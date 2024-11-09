@@ -901,7 +901,7 @@ a %ssnake
 eine {adj-e}%sSchlange
 %%%%
 a %sball python
-eine {adj-e}%sKugelpython
+eine {adj-e}%sKönigspython
 %%%%
 a %sadder
 eine {adj-e}%sKreuzotter

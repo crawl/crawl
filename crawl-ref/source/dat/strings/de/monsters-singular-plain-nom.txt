@@ -901,7 +901,7 @@
 {adj-e}%sSchlange
 %%%%
 %sball python
-{adj-e}%sKugelpython
+{adj-e}%sKönigspython
 %%%%
 %sadder
 {adj-e}%sKreuzotter

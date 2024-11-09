@@ -902,7 +902,7 @@ your %ssnake's
 Eurer {adj-en}%sSchlange
 %%%%
 your %sball python's
-Eurer {adj-en}%sKugelpython
+Eurer {adj-en}%sKönigspython
 %%%%
 your %sadder's
 Eurer {adj-en}%sKreuzotter

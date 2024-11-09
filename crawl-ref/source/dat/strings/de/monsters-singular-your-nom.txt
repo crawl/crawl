@@ -901,7 +901,7 @@ your %ssnake
 Eure {adj-e}%sSchlange
 %%%%
 your %sball python
-Eure {adj-e}%sKugelpython
+Eure {adj-e}%sKönigspython
 %%%%
 your %sadder
 Eure {adj-e}%sKreuzotter

@@ -902,7 +902,7 @@ the %ssnake
 die {adj-e}%sSchlange
 %%%%
 the %sball python
-die {adj-e}%sKugelpython
+die {adj-e}%sKönigspython
 %%%%
 the %sadder
 die {adj-e}%sKreuzotter

@@ -902,7 +902,7 @@ a %ssnake's
 einer {adj-en}%sSchlange
 %%%%
 a %sball python's
-einer {adj-en}%sKugelpython
+einer {adj-en}%sKönigspython
 %%%%
 a %sadder's
 einer {adj-en}%sKreuzotter

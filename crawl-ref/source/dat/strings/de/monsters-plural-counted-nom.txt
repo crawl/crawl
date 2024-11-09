@@ -901,7 +901,7 @@
 %d Schlangen
 %%%%
 %d ball pythons
-%d Kugelpythonen
+%d Königspythonen
 %%%%
 %d adders
 %d Kreuzottern
