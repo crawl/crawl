@@ -1636,6 +1636,9 @@ def process_cplusplus_file(filename):
                         continue
                     # also used with 'Sacrifice ' removed for the cost
                     strings.append(string.replace('Sacrifice ', ''))
+            elif filename == 'delay.cc':
+                if string.startswith(' ') and section in ['_monster_warning', '_abyss_monster_creation_message']:
+                    string = "%s" + string
             elif filename == 'describe-spells.cc':
                 if section == "_ability_type_vulnerabilities":
                     # will be joined to strings from _abil_type_vuln_core before translation

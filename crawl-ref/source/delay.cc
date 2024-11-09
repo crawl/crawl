@@ -935,28 +935,28 @@ static string _abyss_monster_creation_message(const monster* mon)
 {
     if (mon->type == MONS_DEATH_COB)
     {
-        return coinflip() ? "%s appears in a burst of microwaves!"
-                          : "%s pops from nullspace!";
+        return coinflip() ? " appears in a burst of microwaves!"
+                          : " pops from nullspace!";
     }
 
     // You may ask: "Why these weights?" So would I!
     const vector<pair<string, int>> messages = {
-        { "%s appears in a shower of translocational energy.", 17 },
-        { "%s appears in a shower of sparks.", 34 },
-        { "%s materialises.", 45 },
-        { "%s emerges from chaos.", 13 },
-        { "%s emerges from the beyond.", 26 },
-        { "%s coalesces!", 33 },
-        { "%s erupts from nowhere.", 9 },
-        { "%s bursts from nowhere.", 18 },
-        { "%s is cast out of space.", 7 },
-        { "%s is cast out of reality.", 14 },
-        { "%s coalesces out of pure chaos.", 5 },
-        { "%s coalesces out of seething chaos.", 10 },
-        { "%s punctures the fabric of time!", 2 },
-        { "%s punctures the fabric of the universe.", 7 },
-        { silenced(you.pos()) ? "%s manifests!"
-                              : "%s manifests with a bang!", 3 },
+        { " appears in a shower of translocational energy.", 17 },
+        { " appears in a shower of sparks.", 34 },
+        { " materialises.", 45 },
+        { " emerges from chaos.", 13 },
+        { " emerges from the beyond.", 26 },
+        { " coalesces!", 33 },
+        { " erupts from nowhere.", 9 },
+        { " bursts from nowhere.", 18 },
+        { " is cast out of space.", 7 },
+        { " is cast out of reality.", 14 },
+        { " coalesces out of pure chaos.", 5 },
+        { " coalesces out of seething chaos.", 10 },
+        { " punctures the fabric of time!", 2 },
+        { " punctures the fabric of the universe.", 7 },
+        { silenced(you.pos()) ? " manifests!"
+                              : " manifests with a bang!", 3 },
 
 
     };
@@ -1010,47 +1010,51 @@ static inline bool _monster_warning(activity_interrupt ai,
         // seen_monster
         view_monster_equipment(mon);
 
-        string name = getMiscString(mon->name(DESC_DBNAME) + " title");
-        if (name.empty())
-            name = mon->full_name(DESC_A);
+        string text = getMiscString(mon->name(DESC_DBNAME) + " title");
+        if (text.empty())
+            text = mon->full_name(DESC_A);
         if (mon->type == MONS_PLAYER_GHOST)
         {
-            name += make_stringf(" (%s)",
+            text += make_stringf(" (%s)",
                                  short_ghost_description(mon).c_str());
         }
 
-        string text;
+        // i18n: We can't just concatenate the monster name with the rest of the
+        // sentence. We need a placeholder to translate the sentence properly.
+        string name = text;
+        text = "%s";
+
         if (at.context == SC_DOOR)
-            text = "%s opens the door.";
+            text += " opens the door.";
         else if (at.context == SC_GATE)
-            text = "%s opens the gate.";
+            text += " opens the gate.";
         else if (at.context == SC_TELEPORT_IN)
-            text = "%s appears from thin air!";
+            text += " appears from thin air!";
         else if (at.context == SC_LEAP_IN)
-            text = "%s leaps into view!";
+            text += " leaps into view!";
         else if (at.context == SC_FISH_SURFACES)
         {
             if (mons_primary_habitat(*mon) == HT_LAVA)
-                text = "%s bursts forth from the lava.";
+                text += " bursts forth from the lava.";
             else if (mons_primary_habitat(*mon) == HT_WATER)
-                text = "%s bursts forth from the water.";
+                text += " bursts forth from the water.";
             else
-                text = "%s bursts forth from the realm of bugdom."; // @noloc
+                text += " bursts forth from the realm of bugdom.";
         }
         else if (at.context == SC_NONSWIMMER_SURFACES_FROM_DEEP)
-            text = "%s emerges from the water.";
+            text += " emerges from the water.";
         else if (at.context == SC_UPSTAIRS)
-            text = "%s comes up the stairs.";
+            text += " comes up the stairs.";
         else if (at.context == SC_DOWNSTAIRS)
-            text = "%s comes down the stairs.";
+            text += " comes down the stairs.";
         else if (at.context == SC_ARCH)
-            text = "%s comes through the gate.";
+            text += " comes through the gate.";
         else if (at.context == SC_ABYSS)
-            text = _abyss_monster_creation_message(mon);
+            text += _abyss_monster_creation_message(mon);
         else if (at.context == SC_THROWN_IN)
-            text = "%s is thrown into view!";
+            text += " is thrown into view!";
         else
-            text = "%s comes into view.";
+            text += " comes into view.";
 
         text = localise(text, name);
 
