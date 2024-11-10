@@ -1028,6 +1028,8 @@ static void _handle_boulder_movement(monster& boulder)
                 blocker_name = blocker->name(DESC_THE);
             else
                 blocker_name = feature_description_at(targ + dir);
+            if (blocker_name.empty())
+                blocker_name = "something";
 
             if (blocker || cell_is_solid(targ + dir))
             {
