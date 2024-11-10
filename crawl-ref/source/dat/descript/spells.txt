@@ -173,9 +173,8 @@ Fires a penetrating bolt of flames.
 %%%%
 Bolt of Light spell
 
-Fires a ray of searing light, injuring those struck. Inhabitants of the dungeon
-will also be blinded, while adventurers (more accustomed to light) will merely
-suffer momentary confusion.
+Fires a ray of searing light, which may blind any living, demonic, or holy
+creature it strikes.
 %%%%
 Bolt of Magma spell
 
