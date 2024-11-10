@@ -1475,6 +1475,8 @@ string stop_summoning_reason(resists_t resists, monclass_flags_t flags)
         return "noxious bog";
     if (you.duration[DUR_VORTEX])
         return "polar vortex";
+    if (you.duration[DUR_FUSILLADE])
+        return "fulsome fusillade";
     return "";
 }
 
