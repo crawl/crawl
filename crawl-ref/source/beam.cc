@@ -1148,6 +1148,11 @@ void bolt::affect_cell()
             return;
         if (hit == AUTOMATIC_HIT && !pierce)
             finish_beam();
+        // XXX: If an ally stopped a piercing beam short to avoid hitting the
+        //      player on this cell, don't attempt to hit a monster on the
+        //      cell immediately before them again.
+        if (extra_range_used >= BEAM_STOP)
+            return;
     }
 
     // Stop single target beams from affecting a monster if they already
