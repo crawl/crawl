@@ -1669,11 +1669,13 @@ int apply_fighting_skill(int damage, bool aux, bool random)
     return damage;
 }
 
-int throwing_base_damage_bonus(const item_def &proj)
+int throwing_base_damage_bonus(const item_def &proj, bool random)
 {
     // Stones get half bonus; everything else gets full bonus.
-    return div_rand_round(you.skill_rdiv(SK_THROWING)
-                          * min(4, property(proj, PWPN_DAMAGE)), 4);
+    int damage_mult = min(4, property(proj, PWPN_DAMAGE));
+    if (random)
+        return div_rand_round(you.skill_rdiv(SK_THROWING) * damage_mult, 4);
+    return (you.skill(SK_THROWING) * damage_mult) / 4;
 }
 
 int brand_adjust_weapon_damage(int base_dam, int brand, bool random)
