@@ -1759,7 +1759,7 @@ w:5
 %%%%
 _Asterion_common_
 
-VVISUAL:@The_monster@ schnaubt und scharrt mit den Pfoten auf dem Boden.
+VISUAL:@The_monster@ schnaubt und scharrt mit den Pfoten auf dem Boden.
 
 VISUAL:@The_monster@ klopft langsam mit der Waffe in seiner Hand.
 
@@ -6041,7 +6041,7 @@ w:4
 %%%%
 _Terence_common_
 
-VVISUAL:@The_monster@ schaut verächtlich zu {dat}@foe@.
+VISUAL:@The_monster@ schaut verächtlich zu {dat}@foe@.
 
 VISUAL:@The_monster@ fletscht seine Zähne.
 
