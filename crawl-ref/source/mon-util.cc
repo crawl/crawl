@@ -4415,50 +4415,22 @@ static string _get_sound_string(int s_type, bool verb_only)
     };
     COMPILE_CHECK(ARRAYSZ(sound_list) == NUM_LOUDNESS);
 
-    // if fo is player, we don't say "at/to you", we just use the verb
-    static const char * sound_list_verb_only[] =
-    {
-        "says",         // actually S_SILENT
-        "shouts",
-        "barks",
-        "howls",
-        "shouts",
-        "roars",
-        "screams",
-        "bellows",
-        "bleats",
-        "trumpets",
-        "screeches",
-        "buzzes",
-        "moans",
-        "gurgles",
-        "croaks",
-        "growls",
-        "hisses",
-        "sneers",       // S_DEMON_TAUNT
-        "says",         // S_CHERUB -- they just speak normally.
-        "squeals",
-        "roars",
-        "buggily says", // NUM_SHOUTS
-        "breathes",     // S_VERY_SOFT
-        "whispers",     // S_SOFT
-        "says",         // S_NORMAL
-        "shouts",       // S_LOUD
-        "screams",      // S_VERY_LOUD
-    };
-    COMPILE_CHECK(ARRAYSZ(sound_list_verb_only) == NUM_LOUDNESS);
-
-
+    string result;
     if (s_type < 0 || s_type >= NUM_LOUDNESS || s_type == NUM_SHOUTS)
     {
         mprf(MSGCH_DIAGNOSTICS, "Invalid @says@ type.");
-        return verb_only ? "buggily says" : "buggily says to @foe@";
+        result = sound_list[NUM_SHOUTS];
     }
-    else if (verb_only)
-        return sound_list_verb_only[s_type];
     else
-        return sound_list[s_type];
+        result = sound_list[s_type];
 
+    if (verb_only)
+    {
+        result = replace_first(result, " at @foe@", "");
+        result = replace_first(result, " to @foe@", "");
+    }
+
+    return result;
 }
 
 // Replaces the "@foo@" strings in monster shout and monster speak

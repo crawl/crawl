@@ -1695,9 +1695,14 @@ def process_cplusplus_file(filename):
                 if section == '_invalid_monster_str':
                     # debugging stuff
                     continue
-            elif filename == 'mon-util.cc' and section in ['ugly_colour_names', 'drac_colour_names']:
-                # adjectives
-                string += ' '
+            elif filename == 'mon-util.cc':
+                if section in ['ugly_colour_names', 'drac_colour_names']:
+                    # adjectives
+                    string += ' '
+                elif section == "_get_sound_string":
+                    # we need the full thing (e.g. "says to @foe@") and also the verb alone
+                    verb = string.replace(" at @foe@", "").replace(" to @foe@", "")
+                    strings.append(verb)
             elif filename == 'output.cc':
                 if section == 's_equip_slot_names' or section == 'equip_slot_to_name':
                     # equipment slots are only ever displayed in lowercase form

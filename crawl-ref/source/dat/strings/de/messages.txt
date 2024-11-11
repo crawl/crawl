@@ -9985,127 +9985,127 @@ Der %s-Mimiker verschwindet!
 Geryon discards his horn.
 Geryon wirft sein Horn ab.
 %%%%
+says
+sagt
+%%%%
 says to @foe@
 sagt zu {dat}@foe@
+%%%%
+shouts
+schreit
 %%%%
 shouts at @foe@
 schreit {acc}@foe@ an
 %%%%
+barks
+bellt
+%%%%
 barks at @foe@
 bellt {acc}@foe@ an
+%%%%
+howls
+heult
 %%%%
 howls at @foe@
 heult {acc}@foe@ an
 %%%%
+roars
+brüllt
+%%%%
 roars at @foe@
 brüllt {acc}@foe@ an
+%%%%
+screams
+schreit
 %%%%
 screams at @foe@
 schreit {acc}@foe@ an
 %%%%
+bellows
+brüllt
+%%%%
 bellows at @foe@
 brüllt {acc}@foe@ an
+%%%%
+bleats
+blökt
 %%%%
 bleats at @foe@
 blökt {acc}@foe@ an
 %%%%
+trumpets
+trompetet
+%%%%
 trumpets at @foe@
 trompetet {acc}@foe@ an
+%%%%
+screeches
+kreischt
 %%%%
 screeches at @foe@
 kreischt {acc}@foe@ an
 %%%%
+buzzes
+brummt
+%%%%
 buzzes at @foe@
 brummt {acc}@foe@ an
 %%%%
+moans
+stöhnt
+%%%%
 moans at @foe@
 stöhnt {acc}@foe@ an
+%%%%
+gurgles
+gurgelt
 %%%%
 gurgles at @foe@
 gurgelt {acc}@foe@ an
 %%%%
 # note: frogs/toads, but also shadow demon
-croaks at @foe@
-quakt {acc}@foe@ an
-%%%%
-growls at @foe@
-knurrt {acc}@foe@ an
-%%%%
-hisses at @foe@
-zischt {acc}@foe@ an
-%%%%
-sneers at @foe@
-verspottet @foe@
-%%%%
-squeals at @foe@
-quiekt {acc}@foe@ an
-%%%%
-breathes at @foe@
-haucht {acc}@foe@ an
-%%%%
-whispers to @foe@
-flüstert {dat}@foe@ zu
-%%%%
-says
-sagt
-%%%%
-shouts
-schreit
-%%%%
-barks
-bellt
-%%%%
-howls
-heult
-%%%%
-roars
-brüllt
-%%%%
-screams
-schreit
-%%%%
-bellows
-brüllt
-%%%%
-bleats
-blökt
-%%%%
-trumpets
-trompetet
-%%%%
-screeches
-kreischt
-%%%%
-buzzes
-brummt
-%%%%
-moans
-stöhnt
-%%%%
-gurgles
-gurgelt
-%%%%
-# note: frogs/toads, but also shadow demon
 croaks
 quakt
+%%%%
+# note: frogs/toads, but also shadow demon
+croaks at @foe@
+quakt {acc}@foe@ an
 %%%%
 growls
 knurrt
 %%%%
+growls at @foe@
+knurrt {acc}@foe@ an
+%%%%
 hisses
 zischt
+%%%%
+hisses at @foe@
+zischt {acc}@foe@ an
 %%%%
 sneers
 spottet
 %%%%
+sneers at @foe@
+verspottet @foe@
+%%%%
 squeals
 quiekt
+%%%%
+squeals at @foe@
+quiekt {acc}@foe@ an
 %%%%
 breathes
 haucht
 %%%%
+breathes at @foe@
+haucht {acc}@foe@ an
+%%%%
 whispers
 flüstert
+%%%%
+whispers to @foe@
+flüstert {dat}@foe@ zu
 %%%%
 the ground
 der Boden
