@@ -152,6 +152,10 @@ Hoarfrost Bullet cast finale
 
 @The_monster@ launches the last of @reflexive@ @at@ @target@ with a shrill rumble.
 %%%%
+Shadow Shot cast
+
+@The_monster@ fires @at@ @target@.
+%%%%
 Launch Bomblet cast
 
 @The_monster@ launches a bomblet.

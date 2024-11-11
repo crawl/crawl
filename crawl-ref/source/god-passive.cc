@@ -1764,6 +1764,8 @@ static spell_type _get_shadow_spell(spell_type player_spell)
         spells.push_back(SPELL_SHADOW_TORPOR);
     if (schools & spschool::summoning)
         spells.push_back(SPELL_SHADOW_PUPPET);
+    if (schools & spschool::forgecraft)
+        spells.push_back(SPELL_SHADOW_TURRET);
 
     return spells[random2(spells.size())];
 }
@@ -1808,6 +1810,7 @@ void dithmenos_shadow_spell(spell_type spell)
 
         default:
         case SPELL_SHADOW_PUPPET:
+        case SPELL_SHADOW_TURRET:
             // Don't cast this spell without any enemies in sight, to prevent
             // tedious pre-casting by the player.
             if (_shadow_target_exists())

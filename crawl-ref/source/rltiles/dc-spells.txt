@@ -338,6 +338,7 @@ shadow_puppet SHADOW_PUPPET
 shadow_shard SHADOW_SHARD
 shadow_tempest SHADOW_TEMPEST
 shadow_torpor SHADOW_TORPOR
+shadow_turret SHADOW_TURRET
 shadowball SHADOWBALL
 
 # spells mimicking divine abilities

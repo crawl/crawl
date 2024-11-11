@@ -2307,6 +2307,22 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
 },
 
 {
+    ZAP_SHADOW_SHOT,
+    "shadow bullet",
+    200,
+    nullptr,
+    nullptr,
+    new dicedef_calculator<2, 3, 1, 17>,
+    new tohit_calculator<15, 1, 15>,
+    MAGENTA,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+},
+
+{
     ZAP_GRAVE_CLAW,
     "jagged bones",
     50,

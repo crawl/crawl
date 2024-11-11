@@ -4069,6 +4069,29 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_SHADOW_TURRET, "Shadow Turret",
+    spschool::forgecraft,
+    spflag::monster | spflag::silent,
+    5,
+    200,
+    -1, -1,
+    0,
+    TILEG_SHADOW_TURRET,
+},
+
+{
+    SPELL_SHADOW_SHOT, "Shadow Shot",
+    spschool::forgecraft,
+    spflag::dir_or_target | spflag::monster | spflag::needs_tracer
+    | spflag::silent,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_SHADOW_SHARD,
+},
+
+{
     SPELL_SHADOW_BIND, "Shadow Bind",
     spschool::translocation,
     spflag::target | spflag::monster | spflag::silent,

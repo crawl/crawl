@@ -4486,7 +4486,8 @@ bool bolt::ignores_player() const
     if (origin_spell == SPELL_COMBUSTION_BREATH
         || origin_spell == SPELL_NULLIFYING_BREATH
         || origin_spell == SPELL_RIMEBLIGHT
-        || origin_spell == SPELL_SHADOW_PRISM)
+        || origin_spell == SPELL_SHADOW_PRISM
+        || origin_spell == SPELL_SHADOW_SHOT)
     {
         return true;
     }
@@ -5811,6 +5812,7 @@ bool bolt::ignores_monster(const monster* mon) const
     // Shadow spells have no friendly fire, even against monsters.
     // (These should be the only ones that don't avoid that in other ways.)
     if ((origin_spell == SPELL_SHADOW_PRISM || origin_spell == SPELL_SHADOW_BEAM
+         || origin_spell == SPELL_SHADOW_SHOT
          || origin_spell == SPELL_SHADOW_TORPOR
          || (origin_spell == SPELL_SHADOW_BALL && in_explosion_phase))
         && mons_atts_aligned(attitude, mons_attitude(*mon)))

@@ -1648,6 +1648,10 @@ Shadow Shard spell
 
 Fires a shard of hardened shadow at a single enemy.
 %%%%
+Shadow Shot spell
+
+Fires a small bullet of hardened shadow at a single enemy.
+%%%%
 Shadow Tempest spell
 
 Calls down shadowy lightning upon up to half of all visible enemies, dealing
@@ -1658,6 +1662,11 @@ Shadow Torpor spell
 Saps the energy from a line of enemies, slowing them for a short while.
 Spellpower increases the duration of this effect, but stronger creatures may
 shake off their lethargy more quickly.
+%%%%
+Shadow Turret spell
+
+Forms a stationary turret of solidified shadow that repeatedly fires upon the
+caster's enemies.
 %%%%
 Shatter spell
 

@@ -154,6 +154,7 @@ static void _mons_summon_dancing_weapons(monster &caster, mon_spell_slot, bolt&)
 static void _cast_divine_armament(monster& mons, mon_spell_slot slot, bolt&);
 static void _mons_sticks_to_snakes(monster& mons, mon_spell_slot slot, bolt&);
 static void _mons_shadow_puppet(monster& mons, mon_spell_slot slot, bolt&);
+static void _mons_shadow_turret(monster& mons, mon_spell_slot slot, bolt&);
 static bool _los_spell_worthwhile(const monster &caster, spell_type spell);
 static void _setup_fake_beam(bolt& beam, const monster&, int = -1);
 static void _branch_summon(monster &caster, mon_spell_slot slot, bolt&);
@@ -723,7 +724,9 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_SHADOW_BALL, _conjuration_logic(SPELL_SHADOW_BALL) },
     { SPELL_SHADOW_BEAM, _conjuration_logic(SPELL_SHADOW_BEAM) },
     { SPELL_SHADOW_SHARD, _conjuration_logic(SPELL_SHADOW_SHARD) },
+    { SPELL_SHADOW_SHOT, _conjuration_logic(SPELL_SHADOW_SHOT) },
     { SPELL_SHADOW_PUPPET, { _always_worthwhile, _mons_shadow_puppet } },
+    { SPELL_SHADOW_TURRET, { _always_worthwhile, _mons_shadow_turret } },
     { SPELL_CREEPING_SHADOW, { _foe_near_wall,
         [](monster &caster, mon_spell_slot, bolt& beam) {
             _cast_wall_burst(caster, beam, 5);
@@ -5138,6 +5141,18 @@ static void _mons_shadow_puppet(monster& mons, mon_spell_slot slot, bolt&)
                              mons.foe, MG_NONE, god);
     mg.set_summoned(&mons, slot.spell, summ_dur(2));
     mg.hd = 1 + div_rand_round(pow, 15);
+    mg.hd += div_rand_round(max(0, pow - 80), 11);
+    create_monster(mg);
+}
+
+static void _mons_shadow_turret(monster& mons, mon_spell_slot slot, bolt&)
+{
+    const int pow = mons_spellpower(mons, SPELL_SHADOW_TURRET);
+    const god_type god = _find_god(mons, slot.flags);
+    mgen_data mg = mgen_data(MONS_SHADOW_TURRET, SAME_ATTITUDE((&mons)), mons.pos(),
+                             mons.foe, MG_NONE, god).set_range(1, 2);
+    mg.set_summoned(&mons, slot.spell, summ_dur(2), false);
+    mg.hd = 2 + div_rand_round(pow, 15);
     mg.hd += div_rand_round(max(0, pow - 80), 11);
     create_monster(mg);
 }

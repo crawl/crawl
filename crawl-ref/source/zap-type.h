@@ -174,5 +174,6 @@ enum zap_type
     ZAP_SEISMIC_STOMP,
     ZAP_RENDING_SLASH,
     ZAP_MAGMA_BARRAGE,
+    ZAP_SHADOW_SHOT,
     NUM_ZAPS
 };

@@ -3555,6 +3555,8 @@ tileidx_t tileidx_bolt(const bolt &bolt)
         }
         if (bolt.origin_spell == SPELL_SHADOW_SHARD)
             return TILE_BOLT_SHADOW_SHARD;
+        if (bolt.origin_spell == SPELL_SHADOW_SHOT)
+            return TILE_BOLT_SHADOW_SHOT + dir;
         break;
 
     case CYAN:

@@ -2575,6 +2575,12 @@ familiar.
 The strength of its attacks increases in proportion with the power of the spell
 which summoned it.
 %%%%
+shadow turret
+
+A strangely static silhouette whose form suggests a large cannon. Though it uses
+no gunpowder, the depths of its bore flickers angrily with every shot, as if
+remembering the fiery light of its ignition.
+%%%%
 shadow wraith
 
 A mist-wreathed skeletal shadow, hanging in mid-air. It drains away the

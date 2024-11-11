@@ -178,6 +178,15 @@ shadow_blast1
 shadow_blast2
 shadow_blast3
 
+shadow_shot0 BOLT_SHADOW_SHOT
+shadow_shot1
+shadow_shot2
+shadow_shot3
+shadow_shot4
+shadow_shot5
+shadow_shot6
+shadow_shot7
+
 haemoclasm0 BOLT_HAEMOCLASM
 haemoclasm1
 haemoclasm2

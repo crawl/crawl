@@ -1698,6 +1698,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_SHADOW_TURRET,
+      {
+       { SPELL_SHADOW_SHOT, 200, MON_SPELL_MAGICAL },
+      }
+    },
+
     {  MST_ELECTRIC_GOLEM,
       {
        { SPELL_LIGHTNING_BOLT, 44, MON_SPELL_MAGICAL },

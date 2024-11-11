@@ -658,6 +658,7 @@ enum monster_type                      // env.mons[].type
     MONS_DIAMOND_SAWBLADE,
     MONS_HELLFIRE_MORTAR,
     MONS_SPLINTERFROST_BARRICADE,
+    MONS_SHADOW_TURRET,
 #endif
 
     // Demons:
@@ -1302,6 +1303,7 @@ enum monster_type                      // env.mons[].type
     MONS_SEISMOSAURUS_EGG,
     MONS_PHALANX_BEETLE,
     MONS_RENDING_BLADE,
+    MONS_SHADOW_TURRET,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
