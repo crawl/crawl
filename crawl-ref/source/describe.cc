@@ -4628,13 +4628,11 @@ static void _get_spell_description(const spell_type spell,
 
         const int hd = mon_owner->spell_hd();
         const int range = mons_spell_range_for_hd(spell, hd, mon_owner->is(MB_PLAYER_SERVITOR));
+        const int minrange = (spell == SPELL_CALL_DOWN_LIGHTNING
+                                || spell == SPELL_FLASHING_BALESTRA) ? 2 : 0;
+
         description += "\nRange : ";
-        if (spell == SPELL_CALL_DOWN_LIGHTNING)
-            description += stringize_glyph(mons_char(mon_owner->type)) + "..---->";
-        else if (spell == SPELL_FLASHING_BALESTRA)
-            description += stringize_glyph(mons_char(mon_owner->type)) + "..-->";
-        else
-            description += range_string(range, range, mons_char(mon_owner->type));
+        description += range_string(range, -1, minrange);
 
         if (crawl_state.need_save && you_worship(GOD_DITHMENOS))
         {

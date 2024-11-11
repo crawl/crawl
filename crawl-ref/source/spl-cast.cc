@@ -124,14 +124,14 @@ static string _spell_base_description(spell_type spell, bool viewing)
     desc << "<" << colour_to_str(highlight) << ">" << left;
 
     // spell name
-    desc << chop_string(spell_title(spell), 30);
+    desc << chop_string(spell_title(spell), 32);
 
     // spell schools
     desc << spell_schools_string(spell);
 
     const int so_far = strwidth(desc.str()) - (strwidth(colour_to_str(highlight))+2);
-    if (so_far < 60)
-        desc << string(60 - so_far, ' ');
+    if (so_far < 58)
+        desc << string(58 - so_far, ' ');
     desc << "</" << colour_to_str(highlight) <<">";
 
     // spell fail rate, level
@@ -139,7 +139,10 @@ static string _spell_base_description(spell_type spell, bool viewing)
     const int width = strwidth(formatted_string::parse_string(failure_rate).tostring());
     desc << failure_rate << string(9-width, ' ');
     desc << spell_difficulty(spell);
-    desc << " ";
+    // XXX: This exact padding is needed to make the webtiles spell menu not re-align
+    //      itself whenever we toggle display modes. For some reason, this doesn't
+    //      seem to matter for local tiles. Who know why?
+    desc << "      ";
 
     return desc.str();
 }
@@ -153,7 +156,7 @@ static string _spell_extra_description(spell_type spell, bool viewing)
     desc << "<" << colour_to_str(highlight) << ">" << left;
 
     // spell name
-    desc << chop_string(spell_title(spell), 30);
+    desc << chop_string(spell_title(spell), 32);
 
     // spell power, spell range, noise
     const string rangestring = spell_range_string(spell);
@@ -161,7 +164,7 @@ static string _spell_extra_description(spell_type spell, bool viewing)
 
     desc << chop_string(spell_power_string(spell), 10)
          << chop_string(damagestring.length() ? damagestring : "N/A", 10)
-         << chop_string(rangestring, 10)
+         << chop_string(rangestring, 8)
          << chop_string(spell_noise_string(spell, 10), 14);
 
     desc << "</" << colour_to_str(highlight) <<">";
@@ -246,8 +249,8 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
     {
         ToggleableMenuEntry* me =
             new ToggleableMenuEntry(
-                titlestring + "         Type                          Failure  Level",
-                titlestring + "         Power     Damage    Range     Noise         ",
+                titlestring + "           Type                      Failure  Level  ",
+                titlestring + "           Power     Damage    Range   Noise         ",
                 MEL_TITLE);
         spell_menu.set_title(me, true, true);
     }
@@ -3154,43 +3157,48 @@ int calc_spell_range(spell_type spell, int power, bool allow_bonus,
 }
 
 /**
- * Give a string visually describing a given spell's range, as cast by the
- * player.
+ * Give a string describing a given spell's range, as cast by the player.
  *
  * @param spell     The spell in question.
- * @return          Something like "@-->.."
+ * @return          See above.
  */
 string spell_range_string(spell_type spell)
 {
-    if (spell == SPELL_HAILSTORM)
-        return "@.->"; // Special case: hailstorm is a ring
-
-    const int cap      = spell_power_cap(spell);
     const int range    = calc_spell_range(spell, 0);
-    const int maxrange = calc_spell_range(spell, cap, true, true);
+    const int maxrange = spell_has_variable_range(spell)
+                            ? calc_spell_range(spell, spell_power_cap(spell), true, true)
+                            : -1;
 
-    return range_string(range, maxrange, '@');
+    return range_string(range, maxrange, spell == SPELL_HAILSTORM ? 2 : 0);
 }
 
 /**
- * Give a string visually describing a given spell's range.
+ * Give a string describing a given spell's range.
  *
- * E.g., for a spell of fixed range 1 (melee), "@>"
- *       for a spell of range 3, max range 5, "@-->.."
+ * For spells with variable range, will be written in the form of 'X/Y' where X
+ * is the current range and Y is the maximum range.
+ *
+ * For spells with a minimum range (ie: Call Down Lightning), will be written in
+ * the form of 'X-Y' where X is the minimal effective range.
  *
  * @param range         The current range of the spell.
  * @param maxrange      The range the spell would have at max power.
- * @param caster_char   The character used to represent the caster.
- *                      Usually @ for the player.
+ *                      -1 if the spell does not have variable range.
+ * @param minrange      The minimal range at which the spell is castable.
  * @return              See above.
  */
-string range_string(int range, int maxrange, char32_t caster_char)
+string range_string(int range, int maxrange, int minrange)
 {
     if (range <= 0)
         return "N/A";
 
-    return stringize_glyph(caster_char) + string(range - 1, '-')
-           + string(">") + string(maxrange - range, '.');
+    string ret = to_string(range);
+    if (maxrange > -1)
+        ret += "/" + to_string(maxrange);
+    if (minrange > 0)
+        ret = to_string(minrange) + "-" + ret;
+
+    return ret;
 }
 
 string spell_schools_string(spell_type spell)

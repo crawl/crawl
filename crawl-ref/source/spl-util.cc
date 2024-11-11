@@ -1936,6 +1936,12 @@ const vector<spell_type> *soh_breath_spells(spell_type spell)
     return map_find(soh_breaths, spell);
 }
 
+bool spell_has_variable_range(spell_type spell)
+{
+    return spell_range(spell, 0, false)
+            != spell_range(spell, spell_power_cap(spell), false);
+}
+
 /* How to regenerate this:
    comm -2 -3 \
     <(clang -P -E -nostdinc -nobuiltininc spell-type.h -DTAG_MAJOR_VERSION=34 | sort) \

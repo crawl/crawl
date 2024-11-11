@@ -369,12 +369,20 @@ static string _range_string(const spell_type &spell, const monster_info *mon_own
                         && !testbits(flags, spflag::selfench);
     if (!has_range)
         return "";
+
+    int minrange = 0;
+    if (spell == SPELL_CALL_DOWN_LIGHTNING || spell == SPELL_FLASHING_BALESTRA)
+        minrange = 2;
+
     const bool in_range = has_range
                     && crawl_state.need_save
                     && in_bounds(mon_owner->pos)
-                    && grid_distance(you.pos(), mon_owner->pos) <= range;
+                    && grid_distance(you.pos(), mon_owner->pos) <= range
+                    && grid_distance(you.pos(), mon_owner->pos) >= minrange;
     const char *range_col = in_range ? "lightred" : "lightgray";
-    return make_stringf("(<%s>%d</%s>)", range_col, range, range_col);
+    return make_stringf("(<%s>%d%s</%s>)", range_col, range,
+                                           minrange > 0 ? "*" : "",
+                                           range_col);
 }
 
 // TODO: deduplicate with the same-named function in spl-cast.cc

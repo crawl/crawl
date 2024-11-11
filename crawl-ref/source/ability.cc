@@ -1614,8 +1614,7 @@ string get_ability_desc(const ability_type ability, bool need_title)
 
     const string damage_str = _ability_damage_string(ability);
 
-    const string range_str = range_string(ability_range(ability),
-                                          ability_range(ability), '@');
+    const string range_str = range_string(ability_range(ability));
 
     lookup += "\n";
 
