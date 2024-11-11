@@ -326,13 +326,13 @@ It is coated in acid, damaging and corroding those it strikes.
 Diese Waffe ist mit Säure überzogen, die die Getroffenen, beschädigt und korrodiert.
 %%%%
 It has no special brand (it is not flaming, freezing, etc), but is still enchanted in some way - positive or negative.
-Diese Waffe hat kein spezielles Brandmarke (sie brennt nicht, gefriert nicht, etc.), ist aber dennoch auf irgendeine Weise verzaubert - positiv oder negativ.
+Diese Waffe hat keine spezielle Prägung (sie brennt nicht, gefriert nicht, etc.), ist aber dennoch auf irgendeine Weise verzaubert - positiv oder negativ.
 %%%%
 It is temporarily rebranded; it is actually an unbranded weapon.
-Diese Waffe ist vorübergehend mit einer neuen Brandmarke versehen; sie ist eigentlich eine Waffe ohne Brandmarke.
+Diese Waffe ist vorübergehend mit einer neuen Prägung versehen; sie ist eigentlich eine Waffe ohne Prägung.
 %%%%
 It is temporarily rebranded; it is actually %s.
-Diese Waffe ist vorübergehend mit einer neuen Brandmarke versehen; sie ist eigentlich %s.
+Diese Waffe ist vorübergehend mit einer neuen Prägung versehen; sie ist eigentlich %s.
 %%%%
 This is %s.
 Dies ist %s.

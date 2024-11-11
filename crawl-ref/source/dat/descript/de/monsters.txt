@@ -1537,7 +1537,7 @@ das Potenzial, noch viele weitere wachsen zu lassen!
 Wenn man mit einer Klingenwaffe, die größer als eine Kurzklinge ist, zuschlägt,
 besteht die Gefahr, dass ein Kopf abgeschlagen wird und an seiner Stelle zwei
 neue nachwachsen. Sehr große Klauen, wie die von Trollen, sind lang genug, um
-dasselbe zu bewirken. Nur eine mit Flammen gebrandmarkte Waffe kann die Wunde
+dasselbe zu bewirken. Nur eine mit Flammen geprägte Waffe kann die Wunde
 kauterisieren und verhindern, dass weitere Köpfe nachwachsen.
 %%%%
 ice beast

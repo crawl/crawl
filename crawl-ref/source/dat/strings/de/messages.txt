@@ -4976,7 +4976,7 @@ Eine bösartige Aura umgibt {acc}%s.
 ##################
 %%%%
 Brand which weapon?
-Welche Waffe brandmarkieren.
+Welche Waffe prägen?
 %%%%
 Do you wish to have %s bloodied with pain?
 {acc}%s mit Schmerz bluten lassen?
@@ -15995,13 +15995,13 @@ Vorsicht! Ihr fliegt jetzt über {dat}%s.
 %s fällt weg!
 %%%%
 You cannot brand ranged weapons with this spell.
-Mit diesem Zauber könnt Ihr keine Fernkampfwaffen brandmarken.
+Mit diesem Zauber könnt Ihr keine Fernkampfwaffen prägen.
 %%%%
 This weapon is already branded with pain.
-Diese Waffe ist bereits mit Schmerzen gebrandmarkt.
+Diese Waffe ist bereits mit Schmerz geprägt.
 %%%%
 Really brand %s?
-Wirklich {acc}%s brandmarkieren?"
+Wirklich {acc}%s prägen?"
 %%%%
 %s writhes in agony.
 %s windet sich vor Schmerzen.

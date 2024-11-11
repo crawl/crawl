@@ -33,7 +33,7 @@ Fragile
 Fragil
 %%%%
 branded
-brandmarkiert
+geprägt
 %%%%
 # for some reason, brands on armour are called egos
 ego
@@ -151,28 +151,28 @@ MR
 
 %%%%
 resist magic
-Magie resistieren
+Magie widerstehen
 %%%%
 resist cold
-Kälte resistieren
+Kälte widerstehen
 %%%%
 resist corrosion
-Korrosion resistieren
+Korrosion widerstehen
 %%%%
 resist electricity
-Elektrizität resistieren
+Elektrizität widerstehen
 %%%%
 resist fire
-Feuer resistieren
+Feuer widerstehen
 %%%%
 resist mutation
-Mutation resistieren
+Mutationen widerstehen
 %%%%
 resist negative energy
-negative Energie resistieren
+negativer Energie widerstehen
 %%%%
 resist poison
-Gift resistieren
+Gift widerstehen
 %%%%
 
 
@@ -285,7 +285,7 @@ pain
 Schmerz
 %%%%
 antimagic
-antimagie
+Antimagie
 %%%%
 distort
 Verzerr
@@ -308,7 +308,7 @@ Säure
 %%%%
 # accuracy
 Acc
-Genau
+Treffs
 %%%%
 
 # missile brands
@@ -371,13 +371,13 @@ Schatten
 #################################
 %%%%
 " (melded)"
-" (verschmelzt)"
+" (verschmolzen)"
 %%%%
 " (weapon)"
 " (Waffe)"
 %%%%
 " (worn)"
-" (angehabt)"
+" (angelegt)"
 %%%%
 # yes, this is supposed to have leading AND trailing space
 " (carried) "
@@ -399,7 +399,7 @@ Gegenstand in falscher Position
 " (in der Hand)"
 %%%%
 " (in claw)"
-" (in der Kralle)"
+" (in der Klaue)"
 %%%%
 " (in tentacle)"
 " (im Tentakel)"
@@ -435,16 +435,16 @@ Gegenstand in falscher Position
 " (rechte Pfote)"
 %%%%
 " (left claw)"
-" (linke Kralle)"
+" (linke Klaue)"
 %%%%
 " (right claw)"
-" (rechte Kralle)"
+" (rechte Klaue)"
 %%%%
 " (left tentacle)"
-" (linker Tentakel)"
+" (linkes Tentakel)"
 %%%%
 " (right tentacle)"
-" (rechter Tentakel)"
+" (rechtes Tentakel)"
 %%%%
 # octopode rings after the first two
 " (on tentacle)"

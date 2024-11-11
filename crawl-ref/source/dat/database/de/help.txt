@@ -124,9 +124,9 @@ suchen, um Artefakte zu finden, die diese Eigenschaft aufweisen.
 
 Man kann nach einigen zusätzlichen Gegenstandseigenschaften suchen:
 <w>artefakt</w> wird identifizierte Artefakte finden <w>ego</w> oder
-<w>brandmark</w> wird Nicht-Artefakte, die brandmarkiert sind, oder nicht-
-identifizierte Gegenstände, die möglicherweise brandmarkiert sind, finden
-<w>throwable</w> oder <w>werfbar</w> wird Gegenstände dinden, die man werfen kann
+<w>geprägt</w> wird Nicht-Artefakte, die geprägt sind, oder nicht-
+identifizierte Gegenstände, die möglicherweise geprägt sind, finden
+<w>throwable</w> oder <w>werfbar</w> wird Gegenstände finden, die man werfen kann
 <w>dropped</w> wird Gegenstände finden, die der Charakter fallen lassen hat
 <w>in_shop</w> wird Gegenstände finden, die in Läden sind
 <w>autopickup</w> wird (wenn die Option autopickup_search angeschaltet ist)
