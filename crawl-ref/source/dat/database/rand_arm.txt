@@ -275,6 +275,8 @@ Jackalope
 
 Jersey Devil
 
+Skvader
+
 Snallygaster
 
 Tatzelwurm
