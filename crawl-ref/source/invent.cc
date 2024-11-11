@@ -902,10 +902,11 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
             get_class_hotkeys(i, glyphs);
             if (!glyphs.empty())
             {
-                subtitle += string(1 + max_classname_width - strwidth(subtitle),
-                                   ' ');
+                size_t pad_len = 1 + max_classname_width - strwidth(subtitle);
+                subtitle += string(pad_len, ' ');
+                string glyph_str = string(glyphs.begin(), glyphs.end());
                 subtitle += localise("(select all with <w>%s</w><blue>)",
-                                     string(glyphs.begin(), glyphs.end()));
+                                     LocalisationArg(glyph_str, false));
             }
         }
         add_entry(new MenuEntry(subtitle, MEL_SUBTITLE));
