@@ -1136,9 +1136,7 @@ void StashTracker::remove_dead_shops()
             shops_to_remove.insert(rs.pos);
     }
     for (auto &lpos : shops_to_remove)
-    {
         remove_shop(lpos);
-    }
 }
 
 void StashTracker::remove_shop(const level_pos &pos)
