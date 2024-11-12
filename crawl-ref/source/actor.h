@@ -51,6 +51,8 @@ public:
     virtual bool was_created_by(const actor& summoner,
                                 int summon_type = SPELL_NO_SPELL) const = 0;
 
+    virtual bool is_firewood() const = 0;
+
     // [ds] Low-level moveto() - moves the actor without updating relevant
     // grids, such as env.mgrid.
     virtual void moveto(const coord_def &c, bool clear_net = true,

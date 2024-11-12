@@ -727,7 +727,7 @@ void handle_spike_launcher(int delay)
             if (monster* targ = monster_at(*ai))
             {
                 if (!you.see_cell_no_trans(*ai) || targ->wont_attack()
-                    || mons_is_firewood(*targ))
+                    || targ->is_firewood())
                 {
                     continue;
                 }

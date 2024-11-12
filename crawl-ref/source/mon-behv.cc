@@ -913,7 +913,7 @@ static bool _mons_check_foe(monster* mon, const coord_def& p,
            && !mons_is_projectile(*foe)
            && monster_los_is_valid(mon, p)
            && (friendly || !is_sanctuary(p))
-           && !mons_is_firewood(*foe)
+           && !foe->is_firewood()
            && !foe->props.exists(KIKU_WRETCH_KEY)
            || p == you.pos() && mon->has_ench(ENCH_FRENZIED);
 }

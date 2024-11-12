@@ -745,7 +745,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             vector<monster*> targs;
             for (monster_near_iterator mi(&caster, LOS_NO_TRANS); mi; ++mi)
             {
-                if (!mons_is_conjured(mi->type) && !mons_is_firewood(**mi)
+                if (!mons_is_conjured(mi->type) && !mi->is_firewood()
                     && !mons_aligned(&caster, *mi))
                 {
                     targs.push_back(*mi);
@@ -787,7 +787,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             vector<monster*> targs;
             for (monster_near_iterator mi(&caster, LOS_NO_TRANS); mi; ++mi)
             {
-                if (!mi->is_stationary() && !mons_is_firewood(**mi)
+                if (!mi->is_stationary() && !mi->is_firewood()
                     && !mons_aligned(&caster, *mi) && !mi->has_ench(ENCH_BOUND))
                 {
                     targs.push_back(*mi);
@@ -1378,7 +1378,7 @@ static bool _cast_seismic_stomp(const monster& caster, bolt& beam, bool check_on
     for (actor_near_iterator mi(&caster, LOS_NO_TRANS); mi; ++mi)
     {
         if (grid_distance(mi->pos(), caster.pos()) <= range
-            && !(mi->is_monster() && mons_is_firewood(*mi->as_monster()))
+            && !mi->is_firewood()
             && !mons_aligned(&caster, *mi))
         {
             if (check_only)
@@ -1553,7 +1553,7 @@ static bool _flavour_benefits_monster(beam_type flavour, monster& monster)
  */
 static bool _monster_will_buff(const monster &caster, const monster &targ)
 {
-    if (mons_is_firewood(targ))
+    if (targ.is_firewood())
         return false;
 
     if (!mons_aligned(&targ, &caster))
@@ -1642,7 +1642,7 @@ static bool _set_hex_target(monster* caster, bolt& pbolt)
         if (mons_aligned(*targ, foe)
             && !targ->has_ench(ENCH_CHARM)
             && !targ->has_ench(ENCH_HEXED)
-            && !mons_is_firewood(**targ)
+            && !targ->is_firewood()
             && !_flavour_benefits_monster(pbolt.flavour, **targ))
         {
             got_target = true;
@@ -2730,7 +2730,7 @@ static bool _mons_call_of_chaos(const monster& mon, bool check_only = false)
         if (!mons_aligned(&mon, mons))
             continue;
 
-        if (mons_is_firewood(*mons))
+        if (mons->is_firewood())
             continue;
 
         if (check_only)
@@ -3515,7 +3515,7 @@ bool _should_recall(monster* caller)
         {
             if (*mi != caller && caller->can_see(**mi)
                 && mons_aligned(caller, *mi)
-                && !mons_is_firewood(**mi))
+                && !mi->is_firewood())
             {
                 ally_hd += mi->get_experience_level();
             }
@@ -4208,7 +4208,7 @@ static bool _can_injury_bond(const monster &protector, const monster &protectee)
         && !protectee.has_ench(ENCH_HEXED)
         && !protectee.has_ench(ENCH_INJURY_BOND)
         && !mons_is_projectile(protectee)
-        && !mons_is_firewood(protectee)
+        && !protectee.is_firewood()
         && &protector != &protectee;
 }
 
@@ -4780,9 +4780,9 @@ bool handle_mon_spell(monster* mons)
             {
                 monster* new_target = monster_at(*ri);
 
-                if (new_target == nullptr
+                if (!new_target
                     || mons_is_projectile(new_target->type)
-                    || mons_is_firewood(*new_target)
+                    || new_target->is_firewood()
                     || new_target->friendly())
                 {
                     continue;
@@ -5536,7 +5536,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
         // Will not further scare a monster that is already afraid.
         if (mons_invuln_will(**mi)
             || !(mi->holiness() & MH_NATURAL)
-            || mons_is_firewood(**mi)
+            || mi->is_firewood()
             || mons_aligned(*mi, mons)
             || mi->has_ench(ENCH_FEAR))
         {
@@ -5605,12 +5605,8 @@ static int _mons_mass_confuse(monster* mons, bool actual)
         if (*mi == mons)
             continue;
 
-        if (mons_invuln_will(**mi)
-            || mons_is_firewood(**mi)
-            || mons_atts_aligned(mi->temp_attitude(), mons->temp_attitude()))
-        {
+        if (mons_invuln_will(**mi) || mi->is_firewood() || mons_aligned(*mi, mons))
             continue;
-        }
 
         retval = max(retval, 0);
 

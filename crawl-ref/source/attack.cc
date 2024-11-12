@@ -1193,12 +1193,8 @@ bool attack::apply_damage_brand(const char *what)
     switch (brand)
     {
     case SPWPN_PROTECTION:
-        if (attacker->is_player())
-        {
-            const monster* mon = defender->as_monster();
-            if (mon && !mons_is_firewood(*mon))
-                refresh_weapon_protection();
-        }
+        if (attacker->is_player() && !defender->is_firewood())
+            refresh_weapon_protection();
         break;
 
     case SPWPN_FLAMING:

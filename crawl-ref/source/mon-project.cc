@@ -185,7 +185,7 @@ static int _burst_iood_target(double iood_angle, int preferred_foe)
             return preferred_foe;
         }
 
-        if (mons_aligned(m, &you) || mons_is_firewood(*m))
+        if (mons_aligned(m, &you) || m->is_firewood())
         {
             dprf("skipping invalid burst target %s (%s)",
                  m->name(DESC_PLAIN).c_str(),

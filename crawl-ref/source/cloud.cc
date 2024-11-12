@@ -1916,16 +1916,12 @@ static bool _is_chaos_polyable(const actor &defender)
     if (!mon)
         return true;
 
-    return !mons_is_firewood(*mon) && !mons_invuln_will(*mon);
+    return !mon->is_firewood() && !mons_invuln_will(*mon);
 }
 
 static bool _is_chaos_slowable(const actor &defender)
 {
-    const monster* mon = defender.as_monster();
-    if (!mon)
-        return true;
-
-    return !mons_is_firewood(*mon);
+    return !defender.is_firewood() && !defender.stasis();
 }
 
 struct chaos_effect
@@ -2028,10 +2024,8 @@ static const vector<chaos_effect> chaos_effects = {
        },
     },
     {
-        "minipara", 3, [](const actor &victim) {
-            return !victim.is_monster()
-                    || !mons_is_firewood(*victim.as_monster());
-        }, BEAM_NONE, [](actor* victim, actor* source) {
+        "minipara", 3, _is_chaos_slowable, BEAM_NONE,
+        [](actor* victim, actor* source) {
             victim->paralyse(source, 1);
             return you.can_see(*victim);
         },

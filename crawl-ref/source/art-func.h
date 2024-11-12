@@ -553,8 +553,7 @@ static void _DEMON_AXE_melee_effects(item_def* /*item*/, actor* attacker,
                                      actor* defender, bool /*mondied*/,
                                      int /*dam*/)
 {
-    const monster* mon = defender->as_monster();
-    if (mon && (mons_is_firewood(*mon) || mons_is_conjured(mon->type)))
+    if (defender->is_firewood() || mons_is_conjured(defender->type))
         return;
 
     if (one_chance_in(10))
@@ -1797,10 +1796,8 @@ static void _ASMODEUS_melee_effects(item_def* /*weapon*/, actor* attacker,
     if (!attacker->is_player() || you.allies_forbidden())
         return;
 
-    const monster* mon = defender->as_monster();
-    if (mons_is_firewood(*mon)
-        || mons_is_conjured(mon->type)
-        || mon->is_summoned())
+    if (defender->is_firewood() || mons_is_conjured(defender->type)
+        || defender->is_summoned())
     {
         return;
     }

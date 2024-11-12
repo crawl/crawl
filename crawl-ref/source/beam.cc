@@ -1840,7 +1840,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
 {
     // Mass enchantments around lots of plants/fungi shouldn't cause a flood
     // of "is unaffected" messages. --Eino
-    if (mons_is_firewood(*mons))
+    if (mons->is_firewood())
         return true;
     // Jiyva protects from mass enchantments.
     if (have_passive(passive_t::neutral_slimes) && god_protects(*mons))
@@ -4985,7 +4985,7 @@ static void _add_petrify_chain_candidates(const bolt& beam, coord_def pos,
 
         monster *mon = act->as_monster();
         if (mon && (shoot_through_monster(beam, mon)
-                    || mons_is_firewood(*mon)))
+                    || mon->is_firewood()))
         {
             continue;
         }
@@ -5162,7 +5162,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
             return;
     }
 
-    if (YOU_KILL(thrower) && !mon->wont_attack() && !mons_is_firewood(*mon))
+    if (YOU_KILL(thrower) && !mon->wont_attack() && !mon->is_firewood())
         you.pet_target = mon->mindex();
 
     // We check player Sticky Flame by name and other effects by flavour, since
@@ -5474,12 +5474,8 @@ bool bolt::at_blocking_monster() const
     if (!mon || !you.can_see(*mon))
         return false;
 
-    if (!pierce
-        && !ignores_monster(mon)
-        && mons_is_firewood(*mon))
-    {
+    if (!pierce && !ignores_monster(mon) && mon->is_firewood())
         return true;
-    }
     if (have_passive(passive_t::neutral_slimes)
         && god_protects(agent(), *mon, true)
         && flavour != BEAM_VILE_CLUTCH)
@@ -5553,7 +5549,7 @@ void bolt::affect_monster(monster* mon)
         // Test if this qualifies to trigger Dimensional Bullseye later on.
         if (agent()->is_player() && you.duration[DUR_DIMENSIONAL_BULLSEYE]
             && !can_trigger_bullseye && !special_explosion
-            && !mons_is_firewood(*mon) && mon->summoner != MID_PLAYER)
+            && !mon->is_firewood() && mon->summoner != MID_PLAYER)
         {
             can_trigger_bullseye = true;
         }

@@ -957,7 +957,7 @@ bool melee_attack::handle_phase_killed()
     const bool execute = attacker->is_player() && defender->is_monster()
                             && you.has_mutation(MUT_MAKHLEB_MARK_EXECUTION)
                             && !you.duration[DUR_EXECUTION]
-                            && !mons_is_firewood(*defender->as_monster())
+                            && !defender->is_firewood()
                             && defender->real_attitude() != ATT_FRIENDLY
                             && one_chance_in(7)
     // It's unsatisfying to repeatedly trigger a transformation on the final
@@ -1151,7 +1151,7 @@ bool melee_attack::launch_attack_set(bool allow_rev)
                             && allow_rev
                             && defender && !defender->is_player()
                             && !defender->wont_attack()
-                            && !mons_is_firewood(*defender->as_monster())
+                            && !defender->is_firewood()
                             && one_chance_in(wu_jian_number_of_targets);
     bool success = run_attack_set();
     if (should_rev)
@@ -1406,7 +1406,7 @@ bool melee_attack::attack()
 
 void melee_attack::check_autoberserk()
 {
-    if (defender->is_monster() && mons_is_firewood(*defender->as_monster()))
+    if (defender->is_firewood())
         return;
 
     if (x_chance_in_y(attacker->angry(), 100))
@@ -2055,7 +2055,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 
                 if (you.magic_points != you.max_magic_points
                     && !defender->is_summoned()
-                    && !mons_is_firewood(*defender->as_monster()))
+                    && !defender->is_firewood())
                 {
                     int drain = random2(damage_done * 2) + 1;
                     // Augment mana drain--1.25 "standard" effectiveness at 0 mp,
@@ -2422,11 +2422,8 @@ void melee_attack::set_attack_verb(int damage)
 
 void melee_attack::player_exercise_combat_skills()
 {
-    if (defender && defender->is_monster()
-        && !mons_is_firewood(*defender->as_monster()))
-    {
+    if (!defender->is_firewood())
         practise_hitting(weapon);
-    }
 }
 
 /*
@@ -3496,9 +3493,7 @@ void melee_attack::mons_apply_attack_flavour()
 
             monster* vine = attacker->as_monster();
             if (vine->has_ench(ENCH_ANTIMAGIC)
-                && (defender->is_player()
-                    || (!defender->is_summoned()
-                        && !mons_is_firewood(*defender->as_monster()))))
+                && !defender->is_summoned() && !defender->is_firewood())
             {
                 mon_enchant me = vine->get_ench(ENCH_ANTIMAGIC);
                 vine->lose_ench_duration(me, random2(damage_done) + 1);
@@ -3690,11 +3685,9 @@ void melee_attack::mons_apply_attack_flavour()
     }
 
     case AF_SWARM:
-    {
-        if (!defender->is_monster() || !mons_is_firewood(*defender->as_monster()))
+        if (!defender->is_firewood())
             summon_swarm_clone(*attacker->as_monster(), defender->pos());
         break;
-    }
 
     case AF_BLOODZERK:
     {

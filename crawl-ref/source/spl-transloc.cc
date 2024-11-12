@@ -518,8 +518,7 @@ bool valid_electric_charge_target(const actor& agent, coord_def target, string* 
     }
 
     // No charging at friends or firewood.
-    if (mons_aligned(act, &agent)
-        || act->is_monster() && mons_is_firewood(*act->as_monster()))
+    if (mons_aligned(act, &agent) || act->is_firewood())
     {
         if (fail_reason)
             *fail_reason = "Why would you want to do that?";
@@ -1273,7 +1272,7 @@ spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
         monster* mon = ai->is_monster() ? ai->as_monster() : nullptr;
         if (mons_aligned(&agent, *ai) || mon && mon->neutral())
             continue; // this should be enough to avoid penance?
-        if (mon && (mons_is_firewood(*mon) || mons_is_projectile(*mon)))
+        if (mon && (mon->is_firewood() || mons_is_projectile(*mon)))
             continue;
         if (!agent.can_see(**ai)
             || (agent.is_monster() && !monster_los_is_valid(agent.as_monster(), *ai)))
@@ -1930,7 +1929,7 @@ spret blinkbolt(int power, bolt &beam, bool fail)
         return spret::abort;
     }
 
-    if (mons_aligned(mons, &you) || mons_is_firewood(*mons))
+    if (mons_aligned(mons, &you) || mons->is_firewood())
     {
         canned_msg(MSG_UNTHINKING_ACT);
         return spret::abort;
@@ -1970,7 +1969,7 @@ spret blinkbolt(int power, bolt &beam, bool fail)
 
 static bool _valid_piledriver_target(monster* targ)
 {
-    return targ && !targ->friendly() && !mons_is_firewood(*targ)
+    return targ && !targ->friendly() && !targ->is_firewood()
            && !targ->is_stationary() && you.can_see(*targ);
 }
 

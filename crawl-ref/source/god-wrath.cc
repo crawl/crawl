@@ -376,7 +376,7 @@ void lucy_check_meddling()
         if (!mon
             || mon->attitude != ATT_HOSTILE
             || mons_is_conjured(mon->type)
-            || mons_is_firewood(*mon))
+            || mon->is_firewood())
         {
             continue;
         }
@@ -2060,7 +2060,7 @@ static monster* _ignis_champion_target()
         monster* mon = monster_at(*ri);
         // Some of these cases are redundant. TODO: cleanup
         if (!mon
-            || mons_is_firewood(*mon)
+            || mon->is_firewood()
             || !mons_can_use_stairs(*mon, DNGN_STONE_STAIRS_DOWN_I)
             || mons_is_tentacle_or_tentacle_segment(mon->type)
             || mon->is_stationary()

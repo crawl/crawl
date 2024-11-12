@@ -720,9 +720,9 @@ void qazlal_storm_clouds()
         if (cell_is_solid(*ri) || cloud_at(*ri))
             continue;
 
-        // Don't create clouds over firewood
+        // Don't create clouds over firewood (to avoid message spam)
         const monster * mon = monster_at(*ri);
-        if (mon != nullptr && mons_is_firewood(*mon))
+        if (mon && mon->is_firewood())
             continue;
 
         // No clouds in corridors.
@@ -863,7 +863,7 @@ bool does_ru_wanna_redirect(const monster &mon)
     return have_passive(passive_t::aura_of_power)
             && !mon.friendly()
             && you.see_cell_no_trans(mon.pos())
-            && !mons_is_firewood(mon)
+            && !mon.is_firewood()
             && !mons_is_projectile(mon.type);
 }
 
@@ -893,10 +893,8 @@ ru_interference get_ru_attack_interference_level()
 static bool _shadow_target_exists()
 {
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-    {
-        if (you.can_see(**mi) && !mi->wont_attack() && !mons_is_firewood(**mi))
+        if (you.can_see(**mi) && !mi->wont_attack() && !mi->is_firewood())
             return true;
-    }
 
     return false;
 }
@@ -906,10 +904,8 @@ static vector<monster*> _get_shadow_targets()
 {
     vector<monster*> valid_targs;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-    {
-        if (you.can_see(**mi) && !mi->wont_attack() && !mons_is_firewood(**mi))
+        if (you.can_see(**mi) && !mi->wont_attack() && !mi->is_firewood())
             valid_targs.push_back(*mi);
-    }
     shuffle_array(valid_targs);
     return valid_targs;
 }
@@ -1191,16 +1187,14 @@ void dithmenos_shadow_melee(actor* initial_target)
     {
         for (distance_iterator di(you.pos(), true, true, reach); di; ++di)
         {
-            if (!monster_at(*di) || mons_aligned(&you, monster_at(*di))
-                || mons_is_firewood(*monster_at(*di)))
-            {
+            monster* mons = monster_at(*di);
+            if (!mons || mons->is_firewood() || mons_aligned(&you, mons))
                 continue;
-            }
 
             pos = _find_shadow_melee_position(*di, reach);
             if (!pos.origin())
             {
-                target = monster_at(*di);
+                target = mons;
                 break;
             }
         }
@@ -1935,7 +1929,7 @@ bool wu_jian_has_momentum(wu_jian_attack_type attack_type)
 static bool _can_attack_martial(const monster* mons)
 {
     return !(mons->wont_attack()
-             || mons_is_firewood(*mons)
+             || mons->is_firewood()
              || mons_is_projectile(mons->type)
              || !you.can_see(*mons));
 }
@@ -2198,7 +2192,7 @@ static int _check_for_uskayaw_targets(coord_def where)
     monster* mons = monster_at(where);
     ASSERT(mons);
 
-    if (mons_is_firewood(*mons))
+    if (mons->is_firewood())
         return 0;
 
     return 1;
@@ -2380,7 +2374,7 @@ void makhleb_celebrant_bloodrite()
     vector<coord_def> targs;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (!mi->wont_attack() && !mons_is_firewood(**mi))
+        if (!mi->wont_attack() && !mi->is_firewood())
             targs.push_back(mi->pos());
     }
 
@@ -2474,7 +2468,7 @@ bool makhleb_haemoclasm_trigger_check(const monster& victim)
     {
         if (monster* mons = monster_at(*ai))
         {
-            if (!mons->wont_attack() && !mons_is_firewood(*mons))
+            if (!mons->wont_attack() && !mons->is_firewood())
                 ++count;
         }
     }

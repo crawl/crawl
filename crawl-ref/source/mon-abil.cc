@@ -991,7 +991,7 @@ bool mon_special_ability(monster* mons)
 
         for (monster_near_iterator targ(mons, LOS_NO_TRANS); targ; ++targ)
         {
-            if (mons_aligned(mons, *targ) || mons_is_firewood(**targ)
+            if (mons_aligned(mons, *targ) || targ->is_firewood()
                 || grid_distance(mons->pos(), targ->pos()) > 2
                 || !you.see_cell(targ->pos()))
             {
@@ -1023,7 +1023,7 @@ bool mon_special_ability(monster* mons)
 
         for (monster_near_iterator targ(mons, LOS_NO_TRANS); targ; ++targ)
         {
-            if (mons_aligned(mons, *targ) || mons_is_firewood(**targ)
+            if (mons_aligned(mons, *targ) || targ->is_firewood()
                 || grid_distance(mons->pos(), targ->pos()) > 1
                 || !you.see_cell(targ->pos()))
             {
@@ -1219,7 +1219,7 @@ bool egg_is_incubating(const monster& egg)
     // Finally, check that there are foes sufficiently nearby
     for (monster_near_iterator mi(&egg, LOS_NO_TRANS); mi; ++mi)
     {
-        if (!mons_aligned(*mi, &egg) && !mons_is_firewood(**mi)
+        if (!mons_aligned(*mi, &egg) && !mi->is_firewood()
             && grid_distance(egg.pos(), mi->pos()) <= 4)
         {
             return true;

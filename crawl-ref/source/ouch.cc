@@ -639,7 +639,7 @@ void _maybe_blood_hastes_allies()
             && !mi->berserk_or_frenzied() && you.can_see(**mi)
             && !mi->has_ench(ENCH_HASTE)
             && !mons_is_tentacle_or_tentacle_segment(mi->type)
-            && !mons_is_firewood(**mi) && !mons_is_object(mi->type))
+            && !mi->is_firewood() && !mons_is_object(mi->type))
         {
             targetable.emplace_back(*mi);
         }

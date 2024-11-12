@@ -1747,9 +1747,9 @@ vector<spell_type> player_battlesphere_spells()
 
 static bool _is_valid_battlesphere_target(actor* caster, actor* targ)
 {
-    return targ && targ->alive() && !mons_aligned(caster, targ)
-           && caster->can_see(*targ)
-           && (targ->is_player() || !mons_is_firewood(*targ->as_monster()));
+    return targ && targ->alive() && !targ->is_firewood()
+           && !mons_aligned(caster, targ)
+           && caster->can_see(*targ);
 }
 
 // Returns whether a battlesphere should fire from a given position if it wants
@@ -3149,8 +3149,7 @@ static monster* _get_clockwork_bee_target()
     int num_seen = 0;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (!mi->wont_attack() && you.can_see(**mi)
-            && !mons_is_firewood(**mi))
+        if (!mi->wont_attack() && !mi->is_firewood() && you.can_see(**mi))
         {
             if (one_chance_in(++num_seen))
                 targ = *mi;
@@ -3723,7 +3722,7 @@ void paragon_attack_trigger()
     {
         monster* mon = monster_at(*ri);
 
-        if (!mon || mon->wont_attack() || mons_is_firewood(*mon) || !you.see_cell_no_trans(*ri))
+        if (!mon || mon->wont_attack() || mon->is_firewood() || !you.see_cell_no_trans(*ri))
             continue;
 
         if (one_chance_in(++num_found))
@@ -3906,7 +3905,7 @@ void alembic_brew_potion(monster& mons)
     {
         if (monster* targ = monster_at(*di))
         {
-            if (mons_aligned(targ, &mons) && !mons_is_firewood(*targ)
+            if (mons_aligned(targ, &mons) && !targ->is_firewood()
                 && !mons_is_conjured(targ->type)
                 && mons.see_cell_no_trans(*di))
             {

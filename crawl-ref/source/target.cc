@@ -2429,11 +2429,8 @@ bool targeter_marionette::valid_aim(coord_def a)
         return false;
 
     monster* mons = monster_at(a);
-    if (!mons || !you.can_see(*mons) || mons_is_firewood(*mons)
-        || mons->friendly())
-    {
+    if (!mons || !you.can_see(*mons) || mons->is_firewood() || mons->friendly())
         return notify_fail("");
-    }
 
     if (mons->has_ench(ENCH_SHADOWLESS))
         return notify_fail("Their shadow is too faded to take hold of.");

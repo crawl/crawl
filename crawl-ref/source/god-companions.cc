@@ -910,7 +910,7 @@ void beogh_swear_vegeance(monster& apostle)
     for (radius_iterator ri(apostle.pos(), LOS_NO_TRANS, true); ri; ++ri)
     {
         monster* mon = monster_at(*ri);
-        if (mon && !mon->wont_attack() && !mons_is_firewood(*mon)
+        if (mon && !mon->wont_attack() && !mon->is_firewood()
             // This isn't redundant with wont_attack here, but additionally
             // prevents marking frenzied apostles
             && mon->attitude != ATT_FRIENDLY

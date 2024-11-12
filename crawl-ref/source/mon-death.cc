@@ -668,7 +668,7 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
         return false;
 
     if (mons->wont_attack()
-        || mons_is_firewood(*mons)
+        || mons->is_firewood()
         || mons_is_object(mons->type)
         || mons_is_tentacle_or_tentacle_segment(mons->type)
         || mons->props.exists(ELY_WRATH_HEALED_KEY)

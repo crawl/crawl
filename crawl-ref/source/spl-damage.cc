@@ -76,7 +76,7 @@ static bool _act_worth_targeting(const actor &caster, const actor &a)
     if (a.is_player())
         return true;
     const monster &m = *a.as_monster();
-    if (mons_is_firewood(m) || mons_is_conjured(m.type))
+    if (m.is_firewood() || mons_is_conjured(m.type))
         return false;
     if (!caster.is_player())
         return true;
@@ -646,9 +646,8 @@ int adjacent_huddlers(coord_def pos, bool only_in_sight)
         if (only_in_sight && !you.can_see(*act))
             continue;
 
-        const monster* mon = act->as_monster();
-        if (!mons_is_firewood(*mon) && !mons_is_conjured(mon->type)
-            && mons_aligned(mon, actor_at(pos)))
+        if (!act->is_firewood() && !mons_is_conjured(act->type)
+            && mons_aligned(act, actor_at(pos)))
         {
             ++adj_count;
         }
@@ -2455,10 +2454,9 @@ vector<coord_def> get_ignition_blast_sources(const actor *agent, bool tracer)
     for (actor_near_iterator ai(agent->pos(), LOS_NO_TRANS);
          ai; ++ai)
     {
-        if (ai->is_monster()
-            && !ai->as_monster()->wont_attack()
-            && !mons_is_firewood(*ai->as_monster())
-            && !mons_is_tentacle_segment(ai->as_monster()->type)
+        if (!ai->wont_attack()
+            && !ai->is_firewood()
+            && !mons_is_tentacle_segment(ai->type)
             && !mons_is_projectile(*ai->as_monster())
             && (!tracer || agent->can_see(**ai)))
         {
@@ -4278,7 +4276,7 @@ spret cast_hailstorm(int pow, bool fail, bool tracer)
       // actor guaranteed to be monster from usage,
       // but we'll verify it as a matter of good hygiene.
         const monster* mon = act->as_monster();
-        return mon && !mons_is_firewood(*mon)
+        return mon && !mon->is_firewood()
             && !god_protects(*mon)
             && !mons_is_projectile(*mon)
             && !(mons_is_avatar(mon->type) && mons_aligned(&you, mon))
@@ -5054,11 +5052,11 @@ void fire_fusillade()
     map<coord_def, beam_type> hit_map; // Map of which flavour to apply on which tile
     vector<coord_def> exp_map[3];      // Individual explosions, for animation
 
-    // Determine which monster's we're hitting
+    // Determine which monsters we're hitting
     vector<monster*> targs;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (!mi->wont_attack() && !mons_is_firewood(**mi) && you.can_see(**mi)
+        if (!mi->wont_attack() && !mi->is_firewood() && you.can_see(**mi)
             && grid_distance(mi->pos(), you.pos()) > 1)
         {
             targs.push_back(*mi);

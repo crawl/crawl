@@ -822,18 +822,6 @@ bool mons_class_is_test(monster_type mc)
         || mc == MONS_TEST_BLOB;
 }
 
-/**
- * Is this monster firewood?
- *
- * Firewood monsters are stationary monsters than don't give xp.
- * @param mon             The monster
- * @returns True if the monster is firewood, false otherwise.
- */
-bool mons_is_firewood(const monster& mon)
-{
-    return mons_class_is_firewood(mon.type);
-}
-
 // "body" in a purely grammatical sense.
 bool mons_has_body(const monster& mon)
 {
@@ -1084,7 +1072,7 @@ bool actor_is_susceptible_to_vampirism(const actor& act, bool only_known)
     // or firewood.
     return !testbits(mon->flags, MF_SPECTRALISED)
            && !mons_is_conjured(mon->type)
-           && !mons_is_firewood(*mon);
+           && !mon->is_firewood();
 }
 
 bool invalid_monster(const monster* mon)
@@ -3625,7 +3613,7 @@ bool mons_just_slept(const monster& m)
 // So does preparing resurrect, struggling against a net, etc.
 bool mons_is_immotile(const monster& mons)
 {
-    return mons_is_firewood(mons)
+    return mons.is_firewood()
         || mons.petrified()
         || mons.asleep()
         || mons.paralysed();

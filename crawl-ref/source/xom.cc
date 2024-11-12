@@ -1309,7 +1309,7 @@ static monster* _xom_mons_poly_target()
     //      Likewise, there's very few plant polymorph options.
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (_choose_mutatable_monster(**mi) && !mons_is_firewood(**mi)
+        if (_choose_mutatable_monster(**mi) && !mi->is_firewood()
            && ((env.grid(mi->pos()) != DNGN_DEEP_WATER)
                && (env.grid(mi->pos()) != DNGN_LAVA) || you.experience_level > 4)
            && (!(mi->holiness() & MH_PLANT) || you.experience_level > 8))
@@ -4209,7 +4209,7 @@ static bool _valid_speaker_of_recall(monster* mon)
     return mon->alive() && !mon->wont_attack() && _should_recall(mon)
             && !mon->berserk_or_frenzied() && you.can_see(*mon)
             && !mons_is_tentacle_or_tentacle_segment(mon->type)
-            && !mons_is_firewood(*mon) && !mons_is_object(mon->type)
+            && !mon->is_firewood() && !mons_is_object(mon->type)
             && !mon->is_summoned() && !mons_is_confused(*mon)
             && !mon->petrifying() && !mon->cannot_act() && !mon->asleep()
             && !mon->is_silenced() && !mon->has_ench(ENCH_WORD_OF_RECALL);

@@ -814,7 +814,7 @@ static bool _advise_use_wand()
 
 void hints_monster_seen(const monster& mon)
 {
-    if (mons_is_firewood(mon))
+    if (mon.is_firewood())
     {
         if (Hints.hints_events[HINT_SEEN_ZERO_EXP_MON])
         {

@@ -197,9 +197,9 @@ static bool _handle_ru_melee_redirection(monster &mons, monster **new_target)
         for (adjacent_iterator ai(mons.pos(), false); ai; ++ai)
         {
             monster* candidate = monster_at(*ai);
-            if (candidate == nullptr
+            if (!candidate
                 || mons_is_projectile(candidate->type)
-                || mons_is_firewood(*candidate)
+                || candidate->is_firewood()
                 || candidate->friendly())
             {
                 continue;
@@ -1269,7 +1269,7 @@ static bool _handle_rending_blade_trigger(monster* blade)
                 if (mons_aligned(blade, targ))
                     break;
 
-                if (!mons_is_firewood(*targ))
+                if (!targ->is_firewood())
                     enemy_power += targ->get_experience_level();
             }
             // We need somewhere safe to end our path.
@@ -1340,8 +1340,7 @@ static void _handle_lightning_spire(monster& spire)
         if (mons_aligned(*ai, &spire) || !monster_los_is_valid(&spire, *ai))
             continue;
 
-        monster* mons = ai->as_monster();
-        if (mons && (mons_is_firewood(*mons) || mons_is_conjured(mons->type)))
+        if (ai->is_firewood() || mons_is_conjured(ai->type))
             continue;
 
         targs.push_back(*ai);
@@ -1566,9 +1565,9 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
             {
                 monster* new_target = monster_at(*ri);
 
-                if (new_target == nullptr
+                if (!new_target
                     || mons_is_projectile(new_target->type)
-                    || mons_is_firewood(*new_target)
+                    || new_target->is_firewood()
                     || new_target->friendly())
                 {
                     continue;
@@ -2127,7 +2126,7 @@ void handle_monster_move(monster* mons)
         && !mons->asleep()
         && !mons_is_conjured(mons->type)
         && !mons_is_tentacle_or_tentacle_segment(mons->type)
-        && !mons_is_firewood(*mons)
+        && !mons->is_firewood()
         && !mons->wont_attack())
     {
         const int gold = you.props[GOZAG_GOLD_AURA_KEY].get_int();
@@ -2276,7 +2275,7 @@ void handle_monster_move(monster* mons)
                 return;
             }
             // Figure out if they fight.
-            else if ((!mons_is_firewood(*targ)
+            else if ((!targ->is_firewood()
                       || mons->is_child_tentacle())
                           && fight_melee(mons, targ))
             {
@@ -3243,7 +3242,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
 
         // Cut down plants only when no alternative, or they're
         // our target.
-        if (mons_is_firewood(*targmonster) && mons->target != targ)
+        if (targmonster->is_firewood() && mons->target != targ)
             return false;
 
         if ((mons_aligned(mons, targmonster)
@@ -3297,7 +3296,7 @@ static bool _may_cutdown(monster* mons, monster* targ)
     }
     // Outside of that case, can always cut mundane plants
     // (but don't try to attack briars unless their damage will be insignificant)
-    return mons_is_firewood(*targ)
+    return targ->is_firewood()
         && (targ->type != MONS_BRIAR_PATCH
             || (targ->friendly() && !mons_aligned(mons, targ))
             || mons->type == MONS_THORN_HUNTER

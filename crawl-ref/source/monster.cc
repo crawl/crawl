@@ -4390,7 +4390,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
            did_hurt_conduct(DID_HURT_FOE, *this, amount);
         }
 
-        if (amount && !mons_is_firewood(*this)
+        if (amount && !is_firewood()
             && agent && agent->alive() && agent->is_monster()
             && agent->as_monster()->has_ench(ENCH_ANGUISH))
         {
@@ -5674,11 +5674,8 @@ bool monster::matches_player_speed() const
     for (radius_iterator ri(pos(), 5, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
     {
         const monster* m = monster_at(*ri);
-        if (m && !m->wont_attack() && !mons_is_firewood(*m)
-              && m->visible_to(this))
-        {
+        if (m && !m->wont_attack() && !m->is_firewood() && m->visible_to(this))
             return false;
-        }
     }
     return true;
 }
@@ -6558,4 +6555,9 @@ monster* monster::get_band_leader() const
 void monster::set_band_leader(const monster& leader)
 {
     props[BAND_LEADER_KEY].get_int() = leader.mid;
+}
+
+bool monster::is_firewood() const
+{
+    return mons_class_is_firewood(type);
 }

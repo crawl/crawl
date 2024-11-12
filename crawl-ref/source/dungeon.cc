@@ -936,7 +936,7 @@ static bool _dgn_square_is_boring(const coord_def &c)
     const dungeon_feature_type feat = env.grid(c);
     return (feat_has_solid_floor(feat) || feat_is_door(feat))
         && (env.mgrid(c) == NON_MONSTER
-            || mons_is_firewood(env.mons[env.mgrid(c)]))
+            || env.mons[env.mgrid(c)].is_firewood())
         && (env.level_map_mask(c) & MMT_PASSABLE
             || !(env.level_map_mask(c) & MMT_OPAQUE));
 }
@@ -4188,7 +4188,7 @@ static void _randomly_place_item(int item)
         found = env.grid(itempos) == DNGN_FLOOR
                 && !map_masked(itempos, MMT_NO_ITEM)
                 // oklobs or statues are ok
-                && (!mon || !mons_is_firewood(*mon));
+                && (!mon || !mon->is_firewood());
     }
     if (!found)
     {

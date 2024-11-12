@@ -2622,13 +2622,8 @@ static vector<coord_def> _find_carnage_servant_targets()
     vector<coord_def> targs;
 
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-    {
-         if (!mi->wont_attack() && !mons_is_firewood(**mi)
-            && you.can_see(**mi))
-        {
+        if (!mi->wont_attack() && !mi->is_firewood() && you.can_see(**mi))
             targs.push_back(mi->pos());
-        }
-    }
 
     return targs;
 }

@@ -616,7 +616,7 @@ monster* get_rampage_target(coord_def move)
 
         if (mon->wont_attack()
             || mons_is_projectile(*mon)
-            || mons_is_firewood(*mon)
+            || mon->is_firewood()
             || adjacent(you.pos(), mon->pos()))
         {
             return nullptr;

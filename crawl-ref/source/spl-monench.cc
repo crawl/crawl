@@ -35,7 +35,7 @@ int englaciate(coord_def where, int pow, actor *agent)
 
     // Skip some ineligable monster categories
     if (mons &&
-        (mons_is_conjured(mons->type) || mons_is_firewood(*mons)
+        (mons_is_conjured(mons->type) || mons->is_firewood()
         || mons_is_tentacle_segment(mons->type)))
     {
         return 0;
@@ -239,7 +239,7 @@ string describe_rimeblight_damage(int pow, bool terse)
 bool maybe_spread_rimeblight(monster& victim, int power, bool test_only)
 {
     if (!victim.has_ench(ENCH_RIMEBLIGHT)
-        && !mons_is_firewood(victim)
+        && !victim.is_firewood()
         && !mons_is_conjured(victim.type)
         && x_chance_in_y(2, 3)
         && you.see_cell_no_trans(victim.pos()))
