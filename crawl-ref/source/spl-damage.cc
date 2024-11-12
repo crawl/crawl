@@ -648,7 +648,7 @@ int adjacent_huddlers(coord_def pos, bool only_in_sight)
 
         const monster* mon = act->as_monster();
         if (!mons_is_firewood(*mon) && !mons_is_conjured(mon->type)
-            && mons_aligned(act, mon))
+            && mons_aligned(mon, actor_at(pos)))
         {
             ++adj_count;
         }
