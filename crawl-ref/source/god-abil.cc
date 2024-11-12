@@ -4600,12 +4600,7 @@ static int _piety_for_skill_by_sacrifice(ability_type sacrifice)
     const sacrifice_def &sac_def = _get_sacrifice_def(sacrifice);
 
     piety_gain += _piety_for_skill(sac_def.sacrifice_skill);
-    if (sacrifice == ABIL_RU_SACRIFICE_HAND
-        && species::size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
-    {
-        // No one-handed staves for small races.
-        piety_gain += _piety_for_skill(SK_STAVES);
-    }
+
     return piety_gain;
 }
 
@@ -5301,16 +5296,6 @@ bool ru_do_sacrifice(ability_type sac)
     }
     else if (sac_def.sacrifice_skill != SK_NONE)
         _ru_kill_skill(sac_def.sacrifice_skill);
-
-    // Maybe this should go in _extra_sacrifice_code, but it would be
-    // inconsistent for the milestone to have reduced Shields skill
-    // but not the others.
-    if (sac == ABIL_RU_SACRIFICE_HAND
-        && species::size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
-    {
-        // No one-handed staves for small races.
-        _ru_kill_skill(SK_STAVES);
-    }
 
     mark_milestone("sacrifice", mile_text);
 
