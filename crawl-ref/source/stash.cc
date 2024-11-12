@@ -1114,6 +1114,33 @@ string StashTracker::stash_search_prompt()
     return make_stringf("Search for what%s? ", prompt_qual.c_str());
 }
 
+void StashTracker::remove_dead_shops()
+{
+    level_excursion le;
+    set<level_pos> shops_to_remove;
+    vector<stash_search_result> results;
+    base_pattern *search = nullptr;
+    plaintext_pattern ptpat("shop", true);
+    search = &ptpat;
+
+    StashTrack.get_matching_stashes(*search, results, crawl_state.game_is_descent());
+
+    for (auto &rs : results)
+    {
+        le.go_to(rs.pos.id); // thereby running DACT_REMOVE_GOZAG_SHOPS
+        // Is there still a shop, after running DACT_REMOVE_GOZAG_SHOPS?
+        // If not, we found a dead shop that should be removed
+        ShopInfo shop = *(rs.shop);
+        const shop_struct *_shop = shop_at(shop.shop.pos);
+        if (!_shop)
+            shops_to_remove.insert(rs.pos);
+    }
+    for (auto &lpos : shops_to_remove)
+    {
+        remove_shop(lpos);
+    }
+}
+
 void StashTracker::remove_shop(const level_pos &pos)
 {
     LevelStashes *lev = find_level(pos.id);

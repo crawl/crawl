@@ -273,6 +273,7 @@ public:
 
     void dump(const char *filename, bool identify = false) const;
 
+    void remove_dead_shops();
     void remove_shop(const level_pos &pos);
 private:
     void get_matching_stashes(const base_pattern &search,
