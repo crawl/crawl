@@ -914,7 +914,7 @@ void beogh_swear_vegeance(monster& apostle)
             // This isn't redundant with wont_attack here, but additionally
             // prevents marking frenzied apostles
             && mon->attitude != ATT_FRIENDLY
-            && !mon->is_summoned() && !mons_is_conjured(mon->type)
+            && !mon->is_summoned() && !mon->is_peripheral()
             && !mon->has_ench(ENCH_VENGEANCE_TARGET))
         {
             you.duration[DUR_BEOGH_SEEKING_VENGEANCE] += 1;

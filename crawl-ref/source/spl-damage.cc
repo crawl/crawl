@@ -76,7 +76,7 @@ static bool _act_worth_targeting(const actor &caster, const actor &a)
     if (a.is_player())
         return true;
     const monster &m = *a.as_monster();
-    if (m.is_firewood() || mons_is_conjured(m.type))
+    if (m.is_peripheral())
         return false;
     if (!caster.is_player())
         return true;
@@ -646,11 +646,8 @@ int adjacent_huddlers(coord_def pos, bool only_in_sight)
         if (only_in_sight && !you.can_see(*act))
             continue;
 
-        if (!act->is_firewood() && !mons_is_conjured(act->type)
-            && mons_aligned(act, actor_at(pos)))
-        {
+        if (!act->is_firewood() && mons_aligned(act, actor_at(pos)))
             ++adj_count;
-        }
     }
     return adj_count;
 }
@@ -1558,8 +1555,11 @@ static int _shatter_monsters(coord_def where, int pow, actor *agent)
 {
     monster* mon = monster_at(where);
 
-    if (!mon || !mon->alive() || mon == agent || mons_is_conjured(mon->type))
+    if (!mon || !mon->alive() || mon == agent
+        || always_shoot_through_monster(agent, *mon))
+    {
         return 0;
+    }
 
     const dice_def dam_dice = shatter_damage(pow, mon);
     int damage = max(0, dam_dice.roll() - random2(1 + mon->armour_class()));
@@ -1660,8 +1660,7 @@ static bool _shatterable(const actor *act)
 {
     if (act->is_player())
         return _shatter_player_dice();
-    return !mons_is_conjured(act->as_monster()->type)
-           && _shatter_mon_dice(act->as_monster());
+    return _shatter_mon_dice(act->as_monster());
 }
 
 spret cast_shatter(int pow, bool fail)
@@ -1671,6 +1670,7 @@ spret cast_shatter(int pow, bool fail)
     {
         return !act->is_player()
                && !god_protects(*act->as_monster())
+               && !always_shoot_through_monster(&you, *act->as_monster())
                && _shatterable(act);
     };
     if (stop_attack_prompt(hitfunc, "attack", vulnerable))
@@ -1962,13 +1962,13 @@ dice_def irradiate_damage(int pow, bool random)
  *
  * @param where     The cell in question.
  * @param pow       The power with which the spell is being cast.
- * @param agent    The agent (player or monster) doing the irradiating.
+ * @param agent     The agent (player or monster) doing the irradiating.
  */
 static int _irradiate_cell(coord_def where, int pow, const actor &agent)
 {
     actor *act = actor_at(where);
     if (!act || !act->alive()
-        || act->is_monster() && mons_is_conjured(act->as_monster()->type))
+        || act->is_monster() && always_shoot_through_monster(&agent, *act->as_monster()))
     {
         return 0;
     }
@@ -2021,7 +2021,7 @@ spret cast_irradiate(int powc, actor &caster, bool fail)
     auto vulnerable = [&caster](const actor *act) -> bool
     {
         return !act->is_player()
-               && !mons_is_conjured(act->as_monster()->type)
+               && !always_shoot_through_monster(&caster, *act->as_monster())
                && !god_protects(&caster, *act->as_monster());
     };
 
@@ -4356,7 +4356,7 @@ spret cast_imb(int pow, bool fail)
     bool (*vulnerable) (const actor *) = [](const actor * act) -> bool
     {
         return !(act->is_monster()
-                 && (mons_is_conjured(act->as_monster()->type)
+                 && (always_shoot_through_monster(&you, *act->as_monster())
                      || god_protects(*act->as_monster())));
     };
 
@@ -4373,12 +4373,8 @@ spret cast_imb(int pow, bool fail)
 
     for (actor_near_iterator ai(source, LOS_SOLID_SEE); ai; ++ai)
     {
-        if (ai->pos().distance_from(you.pos()) > range
-            || ai->pos() == you.pos() // so it's never aimed_at_feet
-            || mons_is_conjured(ai->as_monster()->type)) // skip prisms &c.
-        {
+        if (ai->pos().distance_from(you.pos()) > range || ai->pos() == you.pos())
             continue;
-        }
 
         act_list.push_back(*ai);
     }
@@ -4744,9 +4740,7 @@ bool siphon_essence_affects(const monster &m)
 {
     return !m.wont_attack()
         && !m.res_torment()
-        && !mons_is_conjured(m.type) // redundant?
-        && !mons_is_tentacle_or_tentacle_segment(m.type); // dubious
-        // intentionally allowing firewood, i guess..?
+        && !m.is_peripheral();
 }
 
 dice_def boulder_damage(int pow, bool random)

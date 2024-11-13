@@ -1251,11 +1251,11 @@ static void _grab_followers_and_expire_summons()
         // Note friendlies that are being left behind because they can't take stairs.
         if (fol->friendly() && !mons_can_use_stairs(*fol))
         {
-            if (!mons_is_conjured(fol->type))
+            if (!fol->is_peripheral())
                 non_stair_using_allies++;
             if (fol->holiness() & MH_UNDEAD)
                 non_stair_using_undead++;
-            else if (fol->is_summoned())
+            else if (fol->is_abjurable())
                 non_stair_using_summons++;
         }
     }

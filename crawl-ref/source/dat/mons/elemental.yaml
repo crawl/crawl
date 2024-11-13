@@ -9,7 +9,7 @@ hp_10x: 0
 ac: 0
 ev: 0
 has_corpse: true
-intelligence: brainless
+intelligence: animal
 speed: 0
 size: medium
 shape: misc

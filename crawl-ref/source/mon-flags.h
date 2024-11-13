@@ -161,7 +161,8 @@ enum monclass_flag_type : uint64_t
 
                         //BIT(50),
 
-    /// monster is a projectile (just OOD right now)
+    /// monster is an invulnerable projectile with momentum-based homing
+    /// movement
     M_PROJECTILE        = BIT(51),
 
     /// monster is an "avatar" (no independent attacks, only support)
@@ -169,8 +170,10 @@ enum monclass_flag_type : uint64_t
 
                         //BIT(53),
 
-    /// monster is a proxy for a charm/conjuration spell (ball lightning, etc.)
-    M_CONJURED          = BIT(54),
+    /// monster is a pseudo-projectile or manifestation of a spell effect (eg:
+    /// foxfires or ball lightnings) or otherwise not a 'full' monster for many
+    /// purposes (eg: tentacle segments).
+    M_PERIPHERAL        = BIT(54),
 
     /// monster will never harm the player
     M_NO_THREAT         = BIT(55),

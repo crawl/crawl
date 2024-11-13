@@ -617,6 +617,7 @@ public:
     bool      was_created_by(const actor&, int = SPELL_NO_SPELL) const override
                              { return false; };
     bool      is_firewood() const override { return false; };
+    bool      is_peripheral() const override { return false; };
 
     bool        swimming() const override;
     bool        floundering() const override;

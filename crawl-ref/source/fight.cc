@@ -1499,10 +1499,11 @@ bool warn_about_bad_targets(const char* source_name, vector<coord_def> targets,
     for (coord_def p : targets)
     {
         const monster* mon = monster_at(p);
-        // XXX: maybe check for ioods/bspheres instead of all conjured mons..?
-        // feels a little bad to blow up a prism with a plasma beam, maybe?
-        if (!mon || god_protects(&you, *mon) || mons_is_conjured(mon->type))
+        if (!mon || god_protects(&you, *mon)
+            || always_shoot_through_monster(&you, *mon))
+        {
             continue;
+        }
 
         if (should_ignore && should_ignore(*mon))
             continue;

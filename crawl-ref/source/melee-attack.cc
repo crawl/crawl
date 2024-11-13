@@ -762,12 +762,8 @@ bool melee_attack::handle_phase_hit()
 
 static void _inflict_deathly_blight(monster &m)
 {
-    if (m.holiness() & MH_NONLIVING
-        || mons_is_conjured(m.type)
-        || mons_is_tentacle_or_tentacle_segment(m.type))
-    {
+    if (m.holiness() & MH_NONLIVING || m.is_peripheral())
         return;
-    }
 
     const int dur = random_range(3, 6) * BASELINE_DELAY;
     bool worked = false;

@@ -4773,7 +4773,7 @@ bool monster::needs_abyss_transit() const
                && get_experience_level() > 8 + random2(25)
                && mons_can_use_stairs(*this))
         && !is_summoned()
-        && !mons_is_conjured(type)
+        && !is_peripheral()
         // We want to 'kill' banished apostles for real, so that they can escape
         // on their own instead of being actually lost in the abyss
         && type != MONS_ORC_APOSTLE;
@@ -4967,7 +4967,6 @@ bool monster::can_get_mad() const
         return false;
 
     // Brainless natural monsters can still be berserked/frenzied.
-    // This could maybe all be replaced by mons_is_object()?
     if (mons_intel(*this) == I_BRAINLESS && !(holiness() & MH_NATURAL))
         return false;
 
@@ -5589,7 +5588,7 @@ bool monster::do_shaft()
     // If a pacified monster is leaving the level via a shaft trap, and
     // has reached its goal, vaporize it instead of moving it.
     // ditto, non-monsters like battlespheres and prisms.
-    if (!pacified() && !mons_is_conjured(type))
+    if (!pacified() && !is_peripheral())
         set_transit(lev);
 
     string msg = make_stringf(" %s a shaft!",
@@ -6516,11 +6515,8 @@ bool monster::angered_by_attacks() const
             && !mons_is_avatar(type)
             && !mons_class_is_zombified(type)
             && !is_divine_companion()
-            && type != MONS_SPELLSPARK_SERVITOR
-            && type != MONS_HOARFROST_CANNON
-            && type != MONS_BLOCK_OF_ICE
-            && !mons_is_conjured(type)
             && !testbits(flags, MF_DEMONIC_GUARDIAN)
+            && !((holiness() & MH_NONLIVING) && mons_intel(*this) == I_BRAINLESS)
             // allied fed plants, hep ancestor:
             && !god_protects(*this);
 }
@@ -6560,4 +6556,9 @@ void monster::set_band_leader(const monster& leader)
 bool monster::is_firewood() const
 {
     return mons_class_is_firewood(type);
+}
+
+bool monster::is_peripheral() const
+{
+    return mons_class_is_peripheral(type);
 }

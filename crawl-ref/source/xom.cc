@@ -2749,8 +2749,7 @@ static vector<monster*> _xom_find_weak_monsters(bool range)
         // the same target multiple times by checking the most prominent ones.
         // Fuzz the HD range to make it harder to deliberately plan around.
         if (mons_attitude(**mi) == ATT_FRIENDLY
-            && !mons_is_conjured(mi->type)
-            && !mons_is_tentacle_or_tentacle_segment(mi->type)
+            && !mi->is_peripheral()
             && !(mi->has_ench(ENCH_HASTE) && mi->has_ench(ENCH_INVIS)
                  && mi->has_ench(ENCH_EMPOWERED_SPELLS) && mi->has_ench(ENCH_MIGHT))
             && mi->get_hit_dice() < maximum_hd + (range ? random_range(-2, 1) : 0))
@@ -4208,9 +4207,8 @@ static bool _valid_speaker_of_recall(monster* mon)
 {
     return mon->alive() && !mon->wont_attack() && _should_recall(mon)
             && !mon->berserk_or_frenzied() && you.can_see(*mon)
-            && !mons_is_tentacle_or_tentacle_segment(mon->type)
-            && !mon->is_firewood() && !mons_is_object(mon->type)
             && !mon->is_summoned() && !mons_is_confused(*mon)
+            && !mon->is_peripheral()
             && !mon->petrifying() && !mon->cannot_act() && !mon->asleep()
             && !mon->is_silenced() && !mon->has_ench(ENCH_WORD_OF_RECALL);
 }

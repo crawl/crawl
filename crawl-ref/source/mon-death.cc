@@ -668,9 +668,7 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
         return false;
 
     if (mons->wont_attack()
-        || mons->is_firewood()
-        || mons_is_object(mons->type)
-        || mons_is_tentacle_or_tentacle_segment(mons->type)
+        || mons->is_peripheral()
         || mons->props.exists(ELY_WRATH_HEALED_KEY)
         || mons->get_experience_level() < random2(you.experience_level)
         || !one_chance_in(3))
@@ -2047,17 +2045,11 @@ static void _player_on_kill_effects(monster& mons, killer_type killer,
     if (YOU_KILL(killer) && gives_player_xp)
     {
         // TSO follower blessing.
-        if (!mons_is_object(mons.type)
-            && _god_will_bless_follower(&mons))
-        {
+        if (_god_will_bless_follower(&mons))
             bless_follower();
-        }
 
-        if (!mons_is_object(mons.type)
-            && you.wearing_ego(EQ_ALL_ARMOUR, SPARM_MAYHEM))
-        {
+        if (you.wearing_ego(EQ_ALL_ARMOUR, SPARM_MAYHEM))
             _orb_of_mayhem(you, mons);
-        }
     }
 
     // Various sources of berserk extension on kills.

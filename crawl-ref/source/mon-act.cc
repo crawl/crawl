@@ -1340,7 +1340,7 @@ static void _handle_lightning_spire(monster& spire)
         if (mons_aligned(*ai, &spire) || !monster_los_is_valid(&spire, *ai))
             continue;
 
-        if (ai->is_firewood() || mons_is_conjured(ai->type))
+        if (ai->is_peripheral())
             continue;
 
         targs.push_back(*ai);
@@ -2124,9 +2124,7 @@ void handle_monster_move(monster* mons)
         && have_passive(passive_t::gold_aura)
         && you.see_cell(mons->pos())
         && !mons->asleep()
-        && !mons_is_conjured(mons->type)
-        && !mons_is_tentacle_or_tentacle_segment(mons->type)
-        && !mons->is_firewood()
+        && !mons->is_peripheral()
         && !mons->wont_attack())
     {
         const int gold = you.props[GOZAG_GOLD_AURA_KEY].get_int();
@@ -2578,11 +2576,8 @@ void clear_monster_flags()
 **/
 static void _update_monster_attitude(monster *mon)
 {
-    if (you.allies_forbidden()
-        && !mons_is_conjured(mon->type))
-    {
+    if (you.allies_forbidden() && !mon->is_peripheral())
         mon->attitude = ATT_HOSTILE;
-    }
 }
 
 vector<monster *> just_seen_queue;

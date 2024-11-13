@@ -1670,7 +1670,7 @@ bool is_follower(const monster& mon)
     else
     {
         return mon.alive() && mon.attitude == ATT_FRIENDLY
-               && !mons_is_conjured(mon.type);
+                           && !mon.is_summoned();
     }
 }
 
@@ -3270,7 +3270,8 @@ bool god_hates_attacking_friend(god_type god, const monster& fr)
 
     monster_type species = fr.mons_species();
 
-    if (mons_is_object(species))
+    // Nobody minds you hurting inanimate objects
+    if ((fr.holiness() & MH_NONLIVING) && mons_intel(fr) == I_BRAINLESS)
         return false;
     switch (god)
     {
@@ -4112,13 +4113,6 @@ bool god_hates_killing(god_type god, const monster& mon)
 {
     if (invalid_monster(&mon))
         return false;
-    // Must be at least a creature of sorts. Smacking down an enchanted
-    // weapon or disrupting a lightning doesn't count. Technically, this
-    // might raise a concern about necromancy but zombies traditionally
-    // count as creatures and that's the average person's (even if not ours)
-    // intuition.
-    if (mons_is_object(mon.type))
-        return false;
 
     // kill as many illusions as you want.
     if (mon.is_illusion())
@@ -4547,7 +4541,7 @@ int get_monster_tension(const monster& mons, god_type god)
     // or bomb is offhand, but they should count for _some_ minimal tension.
     if (exper <= 0)
     {
-        if (mons_is_conjured(mons.type))
+        if (mons.is_peripheral())
             exper = 50;
         else
             return 0;

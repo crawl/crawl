@@ -52,6 +52,7 @@ public:
                                 int summon_type = SPELL_NO_SPELL) const = 0;
 
     virtual bool is_firewood() const = 0;
+    virtual bool is_peripheral() const = 0;
 
     // [ds] Low-level moveto() - moves the actor without updating relevant
     // grids, such as env.mgrid.

@@ -3905,8 +3905,7 @@ void alembic_brew_potion(monster& mons)
     {
         if (monster* targ = monster_at(*di))
         {
-            if (mons_aligned(targ, &mons) && !targ->is_firewood()
-                && !mons_is_conjured(targ->type)
+            if (mons_aligned(targ, &mons) && !targ->is_peripheral()
                 && mons.see_cell_no_trans(*di))
             {
                 if (_do_monster_potion(*targ, mons))

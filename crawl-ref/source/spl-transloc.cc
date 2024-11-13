@@ -1863,7 +1863,7 @@ vector<monster *> find_chaos_targets(bool just_check)
     {
         if (!mons_is_tentacle_or_tentacle_segment(mi->type)
             && !mons_class_is_stationary(mi->type)
-            && !mons_is_conjured(mi->type)
+            && !mi->is_peripheral()
             && !mi->friendly())
         {
             if (!just_check || you.can_see(**mi))
@@ -2135,11 +2135,8 @@ static void _maybe_penance_for_collision(god_conduct_trigger conducts[3], actor&
     if (victim.is_monster() && victim.alive())
     {
         //potentially penance
-        if (!mons_is_conjured(victim.as_monster()->type))
-        {
-            set_attack_conducts(conducts, *victim.as_monster(),
-                you.can_see(*victim.as_monster()));
-        }
+        set_attack_conducts(conducts, *victim.as_monster(),
+            you.can_see(*victim.as_monster()));
     }
 }
 

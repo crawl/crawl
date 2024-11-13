@@ -522,8 +522,7 @@ static void _maybe_gozag_incite(vector<monster*> monsters)
         // XXX: some of this is probably redundant with interrupt_activity
         if (mon->wont_attack()
             || mon->is_stationary()
-            || mons_is_object(mon->type)
-            || mons_is_tentacle_or_tentacle_segment(mon->type))
+            || mon->is_peripheral())
         {
             continue;
         }

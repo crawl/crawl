@@ -1326,8 +1326,7 @@ static inline bool _monster_warning(activity_interrupt ai,
             if (player_under_penance(GOD_GOZAG)
                 && !mon->wont_attack()
                 && !mon->is_stationary()
-                && !mons_is_object(mon->type)
-                && !mons_is_tentacle_or_tentacle_segment(mon->type))
+                && !mon->is_peripheral())
             {
                 if (coinflip()
                     && mon->get_experience_level() >=

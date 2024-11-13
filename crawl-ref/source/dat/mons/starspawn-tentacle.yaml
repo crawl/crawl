@@ -1,6 +1,6 @@
 name: "starspawn tentacle"
 glyph: {char: "w", colour: lightcyan}
-flags: [flies, stationary, no_exp_gain, no_poly_to]
+flags: [flies, stationary, no_exp_gain, no_poly_to, peripheral]
 genus: tentacled_starspawn
 holiness: [nonliving]
 will: invuln

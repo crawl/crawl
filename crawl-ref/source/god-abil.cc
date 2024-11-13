@@ -1283,7 +1283,7 @@ spret zin_imprison(const coord_def& target, bool fail)
         return spret::abort;
     }
 
-    if (mons->is_firewood() || mons_is_conjured(mons->type))
+    if (mons->is_peripheral())
     {
         mpr("You cannot imprison that!");
         return spret::abort;
@@ -6657,9 +6657,7 @@ spret okawaru_duel(const coord_def& target, bool fail)
         return spret::abort;
     }
 
-    if (mons->is_firewood()
-        || mons_is_conjured(mons->type)
-        || mons_is_tentacle_or_tentacle_segment(mons->type)
+    if (mons->is_peripheral()
         || mons_primary_habitat(*mons) == HT_LAVA
         || mons_primary_habitat(*mons) == HT_WATER
         || mons->wont_attack())

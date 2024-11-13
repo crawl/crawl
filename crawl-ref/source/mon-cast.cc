@@ -744,13 +744,9 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
        [](monster &caster, mon_spell_slot, bolt& beam) {
             vector<monster*> targs;
             for (monster_near_iterator mi(&caster, LOS_NO_TRANS); mi; ++mi)
-            {
-                if (!mons_is_conjured(mi->type) && !mi->is_firewood()
-                    && !mons_aligned(&caster, *mi))
-                {
+                if (!mi->is_peripheral() && !mons_aligned(&caster, *mi))
                     targs.push_back(*mi);
-                }
-            }
+
             const unsigned int num_targs = (targs.size() * random_range(30, 50) / 100)
                                            + 1;
             shuffle_array(targs);
@@ -2532,7 +2528,7 @@ static bool _mirrorable(const monster* agent, const monster* mon)
            && mons_aligned(mon, agent)
            && !mon->is_stationary()
            && !mon->is_summoned()
-           && !mons_is_conjured(mon->type)
+           && !mon->is_peripheral()
            && !mons_is_unique(mon->type);
 }
 
@@ -8325,7 +8321,7 @@ static bool _will_throw_ally(const monster& thrower, const monster& throwee)
     case MONS_POLYPHEMUS:
         return mons_genus(throwee.type) == MONS_YAK;
     case MONS_IRON_GIANT:
-        return !mons_is_conjured(throwee.type);
+        return !throwee.is_peripheral();
     default:
         return false;
     }

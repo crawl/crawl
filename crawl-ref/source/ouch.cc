@@ -638,8 +638,7 @@ void _maybe_blood_hastes_allies()
         if (mi->alive() && mons_attitude(**mi) == ATT_FRIENDLY
             && !mi->berserk_or_frenzied() && you.can_see(**mi)
             && !mi->has_ench(ENCH_HASTE)
-            && !mons_is_tentacle_or_tentacle_segment(mi->type)
-            && !mi->is_firewood() && !mons_is_object(mi->type))
+            && !mi->is_peripheral())
         {
             targetable.emplace_back(*mi);
         }

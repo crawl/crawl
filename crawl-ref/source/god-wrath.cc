@@ -373,13 +373,8 @@ void lucy_check_meddling()
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
         monster *mon = *mi;
-        if (!mon
-            || mon->attitude != ATT_HOSTILE
-            || mons_is_conjured(mon->type)
-            || mon->is_firewood())
-        {
+        if (!mon || mon->attitude != ATT_HOSTILE || mon->is_peripheral())
             continue;
-        }
         potential_banishees.push_back(mon);
     }
     if (potential_banishees.empty())
@@ -2060,11 +2055,9 @@ static monster* _ignis_champion_target()
         monster* mon = monster_at(*ri);
         // Some of these cases are redundant. TODO: cleanup
         if (!mon
-            || mon->is_firewood()
+            || mon->is_peripheral()
             || !mons_can_use_stairs(*mon, DNGN_STONE_STAIRS_DOWN_I)
-            || mons_is_tentacle_or_tentacle_segment(mon->type)
             || mon->is_stationary()
-            || mons_is_conjured(mon->type)
             || mon->wont_attack()
             // no stealing another god's pals :P
             || mon->is_priest()

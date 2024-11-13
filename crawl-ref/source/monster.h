@@ -156,6 +156,7 @@ public:
     bool is_abjurable() const;
     bool is_unrewarding() const;
     bool is_firewood() const override;
+    bool is_peripheral() const override;
     bool has_action_energy() const;
     void drain_action_energy();
     bool matches_player_speed() const;

@@ -1,6 +1,6 @@
 name: "diamond sawblade"
 glyph: {char: "I", colour: ETC_IRON}
-flags: [stationary, no_poly_to]
+flags: [stationary, no_poly_to, peripheral]
 resists: {elec: 3, fire: 2, cold: 2, petrify: 1}
 xp_mult: 9
 holiness: [nonliving]
