@@ -1810,6 +1810,29 @@ static bool _god_will_bless_follower(monster* victim)
            && random2(you.piety) >= piety_breakpoint(0);
 }
 
+static bool should_blame_you_for_kill(int killer_index, bool pet_kill) noexcept
+{
+    if (killer_index == YOU_FAULTLESS)
+        return false;
+
+    if (pet_kill && !invalid_monster_index(killer_index))
+    {
+        const monster& m = env.mons[killer_index];
+
+        // always blame the player for marionette kills
+        if (m.attitude == ATT_MARIONETTE)
+            return true;
+
+        const mon_enchant ench = m.get_ench(ENCH_CONFUSION);
+        bool confused_by_non_ally = ench.ench == ENCH_CONFUSION
+            && (ench.who != KC_YOU && ench.who != KC_FRIENDLY);
+        if (confused_by_non_ally)
+            return false;
+    }
+
+    return true;
+}
+
 /**
  * Trigger the appropriate god conducts for a monster's death.
  *
@@ -1833,9 +1856,10 @@ static void _fire_kill_conducts(const monster &mons, killer_type killer,
     if (!your_kill && !pet_kill)
         return;
 
-    // player gets credit for reflection kills, but not blame
+    // player gets credit for reflection and confused ally kills, but not blame
     const bool blameworthy = god_hates_killing(you.religion, mons)
-                             && killer_index != YOU_FAULTLESS;
+                             && should_blame_you_for_kill(killer_index,
+                                 pet_kill);
 
     // if you can't get piety for it & your god won't give penance/-piety for
     // it, no one cares
