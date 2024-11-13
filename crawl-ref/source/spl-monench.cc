@@ -19,6 +19,7 @@
 #include "spl-util.h"
 #include "stringutil.h" // make_stringf
 #include "terrain.h"
+#include "rltiles/tiledef-main.h"
 #include "view.h"
 
 int englaciate(coord_def where, int pow, actor *agent)
@@ -371,6 +372,8 @@ spret cast_percussive_tempering(const actor& caster, monster& target, int power,
         mprf("A magical hammer augments %s in a flurry of sparks and slag.",
              target.name(DESC_THE).c_str());
     }
+
+    flash_tile(target.pos(), WHITE, 0, TILE_BOLT_PERCUSSIVE_TEMPERING);
 
     bolt shockwave;
     shockwave.set_agent(&caster);

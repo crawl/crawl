@@ -1345,18 +1345,25 @@ spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
             mpr("Space momentarily warps into an impossible shape!");
     }
 
-    const bool animate = (Options.use_animations & UA_BEAM) != UA_NONE;
-
     shuffle_array(targets);
     // UC is worse at launching multiple manifold assaults, since
     // shapeshifters have a much easier time casting it.
     const size_t max_targets = weapon ? 4 + div_rand_round(pow, 25)
                                       : 2 + div_rand_round(pow, 50);
+    const int animation_delay = 80 / max_targets;
+
+    if ((Options.use_animations & UA_BEAM) != UA_NONE)
+    {
+        for (size_t i = 0; i < max_targets && i < targets.size(); i++)
+        {
+            flash_tile(targets[i]->pos(), LIGHTMAGENTA, animation_delay,
+                       TILE_BOLT_MANIFOLD_ASSAULT);
+            view_clear_overlays();
+        }
+    }
+
     for (size_t i = 0; i < max_targets && i < targets.size(); i++)
     {
-        if (animate)
-            flash_tile(targets[i]->pos(), LIGHTMAGENTA, 0);
-
         melee_attack atk(&agent, targets[i]);
         atk.is_projected = true;
         if (katana_defender)
@@ -1381,9 +1388,6 @@ spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
             break;
         }
     }
-
-    if (animate)
-        animation_delay(50, true);
 
     return spret::success;
 }

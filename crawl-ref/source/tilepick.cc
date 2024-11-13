@@ -3603,6 +3603,9 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dist)
     case TILE_BOLT_SHADOW_BLAST:
     case TILE_BOLT_HAEMOCLASM:
     case TILE_BOLT_GHOSTLY_FIREBALL:
+    case TILE_BOLT_BOMBLET_BLAST:
+    case TILE_BOLT_MANIFOLD_ASSAULT:
+    case TILE_BOLT_PARAGON_TEMPEST:
         return tile + ui_random(tile_main_count(tile));
     case TILE_MI_BOOMERANG0:
         return tile + ui_random(4);

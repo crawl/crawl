@@ -3595,7 +3595,7 @@ static void _paragon_tempest(const coord_def& target)
     shuffle_array(targs);
     for (monster* mon : targs)
     {
-        flash_tile(mon->pos(), WHITE, 20);
+        flash_tile(mon->pos(), WHITE, 20, TILE_BOLT_PARAGON_TEMPEST);
         view_clear_overlays();
     }
 
@@ -4010,7 +4010,7 @@ spret monarch_detonation(const actor& agent, int pow)
     }
 
     for (coord_def spot : spots)
-        flash_tile(spot, RED, 0);
+        flash_tile(spot, RED, 0, TILE_BOLT_BOMBLET_BLAST);
     if (Options.use_animations & UA_BEAM)
         animation_delay(100, true);
 

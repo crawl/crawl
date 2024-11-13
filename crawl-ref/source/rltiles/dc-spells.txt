@@ -175,6 +175,7 @@ electric_charge ELECTRIC_CHARGE
 %sdir gui/spells/forgecraft
 awaken_armour AWAKEN_ARMOUR
 kinetic_discus KINETIC_DISCUS
+percussive_tempering PERCUSSIVE_TEMPERING
 spellspark_servitor SPELLSPARK_SERVITOR
 
 # item-based spells
@@ -243,6 +244,7 @@ ink_cloud INK_CLOUD
 injury_bond INJURY_BOND
 iron_elementals IRON_ELEMENTALS
 legendary_destruction LEGENDARY_DESTRUCTION
+magma_barrage MAGMA_BARRAGE
 malmutate MALMUTATE
 mesmerise MESMERISE
 metal_splinters METAL_SPLINTERS
