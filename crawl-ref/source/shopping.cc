@@ -15,6 +15,7 @@
 #include "branch.h"
 #include "cio.h"
 #include "colour.h"
+#include "dactions.h"
 #include "describe.h"
 #include "dgn-overview.h"
 #include "english.h"
@@ -2072,6 +2073,7 @@ void ShoppingList::remove_dead_shops()
     {
         const level_pos place = thing_pos(thing);
         le.go_to(place.id); // thereby running DACT_REMOVE_GOZAG_SHOPS
+        catchup_dactions();
         const shop_struct *shop = shop_at(place.pos);
 
         if (!shop)
