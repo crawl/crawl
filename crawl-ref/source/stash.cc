@@ -18,6 +18,7 @@
 #include "command.h"
 #include "coordit.h"
 #include "corpse.h"
+#include "dactions.h"
 #include "describe.h"
 #include "describe-spells.h"
 #include "directn.h"
@@ -1112,6 +1113,33 @@ string StashTracker::stash_search_prompt()
         prompt_qual = " [" + prompt_qual + "]";
 
     return make_stringf("Search for what%s? ", prompt_qual.c_str());
+}
+
+void StashTracker::remove_dead_shops()
+{
+    level_excursion le;
+    set<level_pos> shops_to_remove;
+    vector<stash_search_result> results;
+    base_pattern *search = nullptr;
+    plaintext_pattern ptpat("shop", true);
+    search = &ptpat;
+
+    get_matching_stashes(*search, results, crawl_state.game_is_descent());
+
+    for (auto &sr : results)
+    {
+        // Go to the location to trigger the daction DACT_REMOVE_GOZAG_SHOPS
+        // If there no shop after running the daction,
+        // then we found a dead shop that should be removed
+        le.go_to(sr.pos.id);
+        catchup_dactions();
+        ShopInfo stashed_shop = *(sr.shop);
+        const shop_struct *shop = shop_at(stashed_shop.shop.pos);
+        if (!shop)
+            shops_to_remove.insert(sr.pos);
+    }
+    for (auto &lpos : shops_to_remove)
+        remove_shop(lpos);
 }
 
 void StashTracker::remove_shop(const level_pos &pos)
