@@ -343,6 +343,12 @@ LUARET1(you_stealth_pips, number, stealth_pips())
  */
 LUARET1(you_willpower, number, player_willpower() / WL_PIP)
 
+/*** Are you currently immune to torment?
+ * @treturn boolean
+ * @function torment_immune
+ */
+LUARET1(you_torment_immune, boolean, you.res_torment())
+
 /*** Drowning resistance (rDrown).
  * @treturn boolean
  * @function res_drowning
@@ -1429,6 +1435,7 @@ static const struct luaL_reg you_clib[] =
     { "res_shock"   , you_res_shock },
     { "stealth_pips", you_stealth_pips },
     { "willpower"   , you_willpower },
+    { "torment_immune", you_torment_immune },
     { "res_drowning", you_res_drowning },
     { "res_mutation", you_res_mutation },
     { "see_invisible", you_see_invisible },
