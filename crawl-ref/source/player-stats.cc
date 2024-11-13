@@ -185,27 +185,26 @@ bool attribute_increase()
                 update_screen();
             }
 #endif
+            if (localisation_active())
+            {
+                // i18n: Transform target language answer to English answer.
+                // Any English answer which doesn't have a different meaning in the
+                // target language will pass through unchanged and be accepted.
+                if (keyin == localise_char('S'))
+                    keyin = 'S';
+                else if (keyin == localise_char('I'))
+                    keyin = 'I';
+                else if (keyin == localise_char('D'))
+                    keyin = 'D';
+                else if (keyin == localise_char('s'))
+                    keyin = 's';
+                else if (keyin == localise_char('i'))
+                    keyin = 'i';
+                else if (keyin == localise_char('d'))
+                    keyin = 'd';
+            }
         }
         tried_lua = true;
-
-        if (localisation_active())
-        {
-            // i18n: Transform target language answer to English answer.
-            // Any English answer which doesn't have a different meaning in the
-            // target language will pass through unchanged and be accepted.
-            if (keyin == localise_char('S'))
-                keyin = 'S';
-            else if (keyin == localise_char('I'))
-                keyin = 'I';
-            else if (keyin == localise_char('D'))
-                keyin = 'D';
-            else if (keyin == localise_char('s'))
-                keyin = 's';
-            else if (keyin == localise_char('i'))
-                keyin = 'i';
-            else if (keyin == localise_char('d'))
-                keyin = 'd';
-        }
 
         if (!need_caps)
             keyin = toupper_safe(keyin);
