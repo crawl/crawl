@@ -1,0 +1,781 @@
+%%%%
+Fast status
+
+Toutes vos actions sont 50 % plus rapides.
+%%%%
+Invis status
+
+Vous êtes invisible. La plupart des ennemis ne peuvent pas vous voir et 
+subissent des pénalités pour toucher, bien qu'ils puissent 
+deviner votre position approximative. 
+Cela conduit avec le temps à une contamination magique et peut causer des
+niveaux de contamination dangereux si vous étiez déjà contaminé avant
+d'atteindre ce statut. Si le statut est grisé, il est actif (et cause
+contamination), mais est inefficace pour une raison quelconque
+(par ex. si vous êtes lumineux à cause de la contamination 
+ou si vous êtes dans une eau peu profonde).
+%%%%
+Tele status
+
+Vous êtes en train de vous téléporter. Pendant que vous attendez 
+la téléportation, celle-ci sera annulée si vous tentez de réappliquer le statut
+(par ex. en utilisant un parchemin de téléportation).
+%%%%
+Fly status
+
+Vous volez au-dessus du sol et pouvez traverser de l'eau et de la lave ou
+combattre au-dessus de l'eau peu profonde sans pénalité.
+Pour la plupart des formes de vol, il y a une
+limite de temps. Faites attention à ce qui se trouve sous vous dans ce cas !
+%%%%
+Agi status
+
+Vous êtes anormalement agile et recevez un bonus pour votre esquive.
+%%%%
+Brill status
+
+Vous êtes anormalement intelligent et recevez un bonus sur la 
+puissance de vos sorts, tandis que vos coûts en mana sont 
+réduits de moitié (arrondis).
+%%%%
+Might status
+
+Vous êtes surnaturellement fort et infligez beaucoup plus de 
+dégâts en combat rapproché.
+%%%%
+Regen status
+
+Vous régénérez la santé de manière anormalement rapide. 
+Ceci n'est affiché qu'en cas de régénération temporaire.
+%%%%
+RMsl status
+
+Vous déviez les projectiles, augmentant ainsi vos chances de les éviter.
+%%%%
+Touch status
+
+Vos attaques ne causent aucun dégât, mais elles peuvent confondre les
+monstres qu'elles touchent.
+%%%%
+Will++ status
+
+Votre volonté est beaucoup plus forte et protège 
+contre de nombreux effets magiques.
+%%%%
+Berserk status
+
+Vous êtes plus rapide, infligez plus de dégâts en combat et avez plus de santé,
+mais vous ne pouvez pas exécuter la plupart des actions à part 
+bouger et attaquer. Le statut disparaît très rapidement, 
+sauf si vous attaquez des monstres. Lorsqu'il s'expire, vous êtes ralenti
+et ne pouvez pas entrer en mode berserk pendant un court moment.
+%%%%
+-Berserk status
+
+Vous vous remettez de votre furie berserk et ne pouvez pas entrer en
+furie berserk pendant un court instant.
+%%%%
+Pois status
+
+Vous êtes empoisonné et perdez continuellement de la santé. Pendant
+l'empoisonnement, votre santé actuelle est partiellement 
+recolorée pour montrer les dégâts potentiels du poison.
+Les empoisonnements peuvent être guéris instantanément avec des 
+potions d'antidote.
+%%%%
+Conf status
+
+Vous êtes confus. Vous pouvez trébucher dans une direction aléatoire si vous
+essayez de vous déplacer ou d'attaquer, et vous ne pouvez ni lancer de sorts ni
+utiliser la plupart des objets sauf des potions. La confusion peut être
+guérie immédiatement avec des potions d'antidote.
+%%%%
+Contam status
+
+Vous brillez avec de la radiation mutagène. 
+Cela peut vous faire muter avec le temps, ce qui a 
+normalement un résultat négatif. 
+La couleur montre le degré de gravité : Le premier niveau (gris) est juste
+un avertissement et ne mène ni à une mutation ni à une perte de furtivité.
+%%%%
+Drain status
+
+Vos points de vie maximum ont été temporairement épuisés par
+de l'énergie négative. Ce statut ne diminue pas si vous attendez,
+mais disparaît progressivement lorsque vous gagnez de l'expérience.
+%%%%
+Breath status
+
+Votre respiration est coupée, et vous ne pouvez pas utiliser 
+votre capacité respiratoire innée, tant que le statut est actif.
+%%%%
+Exh status
+
+Vous êtes épuisé et ne pouvez pas activer de pouvoirs divins 
+qui causent de l'épuisement, tant que le statut est actif.
+%%%%
+Slow status
+
+Toutes vos actions prennent 50 % de temps en plus.
+%%%%
+Para status
+
+Vous êtes paralysé et totalement incapable d'agir.
+%%%%
+Sleep status
+
+Vous dormez et êtes totalement incapable d'agir. 
+Si vous subissez des dégâts, vous vous réveillez.
+%%%%
+Held status
+
+Vous êtes piégé dans un filet ou une toile d'araignée. 
+Vous ne pouvez pas vous déplacer librement et tenterez plutôt de vous libérer.
+%%%%
+Constr status
+
+Vous êtes écrasé par un ennemi et subissez des dégâts de plus en plus
+importants avec le temps. Vous ne pouvez pas vous déplacer loin de l'ennemi
+(ou cligner), bien que vous puissiez tenter de vous échapper en essayant cela,
+et si vous tentez plusieurs fois,
+la probabilité de réussir à briser l'écrasement augmentera.
+%%%%
+Mesm status
+
+Vous êtes hypnotisé et ne pouvez pas vous éloigner du monstre qui 
+vous a hypnotisé. L'effet peut être annulé en tuant ou en perturbant
+le monstre responsable, ou en interrompant la ligne de vue avec lui.
+%%%%
+Fear status
+
+Vous êtes envahi par la peur et ne pouvez pas vous approcher du monstre
+qui vous fait peur. L'effet peut être annulé en tuant ou en perturbant
+le monstre responsable, ou en interrompant la ligne de vue avec lui.
+%%%%
+-Tele status
+
+Vous êtes empêché de vous téléporter ou de cligner.
+%%%%
+-Move status
+
+Vous ne pouvez pas vous déplacer, cligner ou vous téléporter. 
+(Vous pouvez toujours effectuer d'autres actions.)
+%%%%
+Mark status
+
+Votre emplacement est marqué par l'effet d'un piège ou d'un sort,
+et les monstres peuvent vous chasser plus précisément et vous découvrir,
+même si vous n'êtes pas dans leur champ de vision.
+%%%%
+Fire status
+
+Vous êtes couvert de feu collant, qui cause des dégâts en peu de temps.
+Entrer dans l'eau éteint les flammes.
+%%%%
+Corona status
+
+Vous êtes entouré de lumière, ce qui limite considérablement
+votre furtivité et rend plus facile de vous toucher.
+%%%%
+Barbs status
+
+Des crochets sont incrustés dans votre peau et lorsque vous vous déplacez,
+vous subissez des blessures. Si vous restez un moment immobile,
+vous pouvez retirer les crochets sans subir de dégâts.
+%%%%
+Sick status
+
+Vous êtes tombé malade et votre santé ne peut plus se régénérer.
+%%%%
+Vertigo status
+
+Vous êtes désorienté et avez des vertiges, ce qui réduit votre précision,
+votre capacité d'esquive et votre taux de réussite en lançant des sorts.
+%%%%
+Corr status
+
+Vous êtes corrodé, ce qui réduit vos dégâts en combat physique et
+votre armure d'une quantité dépendant du degré de corrosion.
+%%%%
+Flay status
+
+Vous êtes couvert de blessures illusoires, causant de lourds dégâts
+tant que l'effet est actif. La destruction de la source de l'illusion
+restaurera toute la santé perdue par la dépouillement.
+%%%%
+Weak status
+
+Vos attaques physiques infligent moins de dégâts.
+%%%%
+Frozen status
+
+Vous êtes couvert de glace et votre vitesse de mouvement est réduite.
+%%%%
+Sap status
+
+Votre magie est affaiblie. À chaque sort lancé, il y a une chance
+que l'effet s'intensifie, ce qui fait baisser votre taux de réussite.
+%%%%
+Brainless status
+
+Votre intelligence est tombée à 0. Vous êtes ralenti,
+ne pouvez pas lancer de sorts ni les mémoriser, 
+et échouez généralement à lire des parchemins. 
+Le statut persiste aussi après la restauration de votre intelligence 
+pendant un court moment.
+%%%%
+Clumsy status
+
+Votre dextérité est tombée à 0. Vous êtes ralenti, ne pouvez pas vous faufiler
+ni utiliser des boucliers et êtes presque totalement incapable d'esquiver.
+Le statut persiste aussi après la restauration de
+votre dextérité pendant un court moment.
+%%%%
+Collapse status
+
+Votre force est tombée à 0. Vous êtes ralenti et votre régénération
+de santé est fortement réduite. Le statut persiste aussi après
+la restauration de votre force pendant un court moment.
+%%%%
+DChan status
+
+Vous canalisez les morts et faites en sorte que tous les êtres vivants
+tués près de vous se relèvent en tant que serviteurs fantomatiques.
+%%%%
+Vit status
+
+Vous êtes divinement vitalisé, ce qui vous protège contre le poison,
+la confusion, la pétrification et la maladie, et augmente et
+maintient votre force, votre intelligence et votre dextérité.
+%%%%
+Will/2 status
+
+Votre volonté est plus faible, ce qui vous rend vulnérable à de
+nombreux effets magiques.
+%%%%
+Stone status
+
+Vous êtes pétrifié et totalement incapable d'agir. Vous êtes très facile
+à toucher, mais les dégâts subis sont nettement réduits.
+%%%%
+Petr status
+
+Vous vous transformez en pierre. Vos actions sont ralenties,
+les dégâts subis sont légèrement réduits et bientôt
+vous serez complètement pétrifié (vous obtiendrez le statut de pierre).
+%%%%
+Resist status
+
+Vous êtes plus résistant au feu, au froid, à l'électricité,
+au poison et à l'acide.
+%%%%
+Slime status
+
+Votre arme équipée ou vos poings sont recouverts de slime
+et transforment le prochain monstre vivant ou
+non-vivant que vous touchez en un slime neutre.
+%%%%
+Swift status
+
+Vous avancez rapidement.
+%%%%
+-Swift status
+
+Vous avancez lentement.
+%%%%
+DDoor status
+
+Vous êtes temporairement invulnérable, mais vous vous exposez à un danger
+de mort et ne pouvez pas être affecté par la guérison tant que
+l'effet est actif. Après que le sort soit écoulé,
+il ne peut pas être relancé immédiatement.
+%%%%
+-DDoor status
+
+Vous êtes toujours près du seuil de la mort et ne pouvez pas
+relancer « Porte de la Mort » pendant un court moment.
+%%%%
+Quad status
+
+DÉGÂT QUAD !
+%%%%
+Sil status
+
+Vous êtes réduit au silence. Cela rend impossible la lecture de parchemins,
+le lancement de sorts, l'appel de pouvoirs divins ou de crier.
+L'effet oppressant et non naturel gêne considérablement votre furtivité.
+%%%%
+Engulf status
+
+{{
+    local desc = "Vous êtes englouti par une créature voisine"
+
+    if not you.res_drowning() then
+        desc = desc .. " et ne pouvez pas respirer. Vous allez prendre "
+                       .. " progressivement des dégâts d'étouffement à "
+                       .. " chaque tour jusqu'à ce que vous échappiez. "
+                       .. " Cela rend la lecture de parchemins le lancement "
+                       .. " de sorts, et l'appel de pouvoirs divins impossible."
+                       .. " S'éloigner de la créature engloutissante "
+                       .. " mettra fin à l'effet"
+    else
+        desc = desc .. " mais ne subit aucun effet négatif"
+    end
+
+    return desc .. "."
+}}
+%%%%
+Stealth status
+
+Votre furtivité est considérablement améliorée.
+%%%%
+Mirror status
+
+Vous renvoyez tous les dégâts subis vers vos attaquants,
+et perdez de la piété selon la quantité de dégâts réfléchis.
+%%%%
+Vortex status
+
+Vous êtes dans l'œil d'une tempête de neige gigantesque.
+Une fois que le tourbillon est calmé,
+il ne peut pas être réactivé pendant un court moment.
+%%%%
+-Vortex status
+
+Vous êtes entouré de vents instables et ne pouvez pas relancer
+le vortex pendant un court moment.
+%%%%
+Liquid status
+
+Vous liquéfiez le sol autour de vous et ralentissez
+le mouvement de toutes les créatures aux alentours.
+%%%%
+Hero status
+
+Vos compétences en combat sont temporairement améliorées.
+%%%%
+Finesse status
+
+Votre vitesse de combat est considérablement augmentée.
+%%%%
+Prot status
+
+Vous implorez Elyvilon de sauver votre vie. Si vous êtes mortellement blessé,
+le guérisseur peut annuler le coup fatal. Tuer d'autres créatures
+tout en implorant la protection divine mène à une pénitence.
+%%%%
+Disjoin status
+
+Vous déstabilisez l'espace autour de vous et faites en sorte que
+les monstres proches soient téléportés au hasard loin de vous.
+%%%%
+Slay status
+
+Vous avez le sang d'un loup-garou en vous, ce qui vous guérit et confère
+des bonus à vos attaques à distance et au corps-à-corps,
+qui augmentent à chaque fois que vous tuez un ennemi.
+%%%%
+Toxic status
+
+Vous émettez de l'énergie toxique et empoisonnez toutes les
+créatures vivantes autour de vous de manière continue.
+%%%%
+Recite status
+
+Vous récitez des lois sur les intérêts aux monstres à proximité,
+entraînant divers effets selon la cible. Une fois la récitation terminée,
+elle ne peut pas être répétée pendant un court moment.
+%%%%
+-Recite status
+
+Vous avez récemment terminé la récitation des lois sur les intérêts et
+ne pouvez pas les réciter de nouveau pendant un court moment.
+%%%%
+rF- status
+
+Vous êtes plus vulnérable au feu.
+%%%%
+rP- status
+
+Vous êtes plus vulnérable au poison.
+%%%%
+PProj status
+
+Vous téléportez les projectiles tirés ou lancés avec une précision accrue
+directement vers vos cibles, consommant une petite
+quantité de magie pour chaque projectile.
+%%%%
+Forest status
+
+Vous invoquez temporairement une plaine forestière et
+réveillez les arbres proches pour infliger des dégâts à vos ennemis.
+%%%%
+Dragoncall status
+
+Vous appelez de puissants dragons pour attaquer vos ennemis.
+Chaque dragon répondant à l'appel consomme votre énergie magique.
+Une fois l'appel terminé, il ne peut pas être réactivé pendant un court moment.
+%%%%
+-Dragoncall status
+
+Vous avez récemment appelé des dragons et ne pouvez pas
+relancer l'appel des dragons pendant un court moment.
+%%%%
+-Potion status
+
+Vous ne pouvez pas boire de potions.
+%%%%
+rF+ status
+
+Vous êtes plus résistant au feu.
+%%%%
+rC+ status
+
+Vous êtes plus résistant au froid.
+%%%%
+rElec+ status
+
+Vous êtes plus résistant à l'électricité.
+%%%%
+Horr status
+
+Vous avez une peur panique des monstres à proximité, ce qui réduit vos dégâts,
+votre précision en combat et la puissance de vos sorts.
+%%%%
+-Scroll status
+
+Vous ne pouvez pas lire de parchemins.
+%%%%
+Cleave status
+
+Vos attaque de mêlée causent des éclats et touchent tous les ennemis adjacents.
+%%%%
+Ambros status
+
+Vous régénérez de la santé et de la magie, mais êtes aussi confus.
+Résoudre la confusion met fin à la régénération.
+%%%%
+Surge status
+
+La prochaine fois que vous utilisez un appareil évocateur,
+son effet sera amplifié, mais vous perdrez une partie de votre magie.
+%%%%
+Howl status
+
+Un hurlement terrifiant résonne dans votre tête et appelle de
+puissantes créatures qui vous attaquent.
+%%%%
+Blood status
+
+Votre corps est recouvert de sang coagulé, qui vous sert
+d'armure tant que vous êtes gravement blessé.
+%%%%
+-Cast status
+
+Vous ne pouvez pas lancer de sorts.
+%%%%
+Channel status
+
+Vous canalisez de l'énergie magique.
+%%%%
+Spider status
+
+Vous avez été transformé en une créature arachnéenne venimeuse.
+Vous êtes très agile et avez une morsure toxique, mais êtes vulnérable 
+au poison. Toutes les armes et armures équipées sont fusionnées,
+et votre taux de réussite avec les sorts est légèrement réduit.
+%%%%
+Blade status
+
+De vos mains ont poussé de longues lames en forme de faux,
+augmentant considérablement vos dégâts de mêlée.
+Toutes les armes équipées sont fusionnées et votre taux de
+réussite avec les sorts est légèrement réduit.
+%%%%
+Statue status
+
+Vous avez été transformé en une statue de pierre lent mais extrêmement robuste.
+Vos dégâts de mêlée, à la fois sans armes et avec armes,
+sont considérablement augmentés. Votre corps de pierre est isolé de
+l'électricité et résistant au poison et à l'énergie négative. 
+Toutes les armures corporelles, gants et bottes équipés sont fusionnés.
+%%%%
+Ice status
+
+Vous avez été transformé en une créature de glace, suffisamment légère
+pour flotter sur l'eau. Vous obtenez une attaque de mêlée glacée et êtes
+incroyablement résistant au froid et au poison, mais vulnérable au feu.
+Toutes les armes et armures équipées sont fusionnées.
+%%%%
+Dragon status
+
+{{
+    local desc = "Vous avez été transformé en un puissant"
+
+    if you.race():find("Draconian") then
+        desc = desc .. " Draconian"
+        if you.race() ~= "Grey Draconian" then
+            desc = desc .. ", ce qui augmente la puissance de toutes " ..
+                           ", vos attaques respiratoires innées "
+         end
+        if you.race() == "Red Draconian" then
+            desc = desc .. ". Vous êtes très résistan au feu et au poison, " ..
+                           ", mais vulnérable au froid"
+        elseif you.race() == "White Draconian" then
+            desc = desc .. ". Vous êtes très résistant au froid et au poison" ..
+                           ",mais vulnérable au feu"
+        elseif you.race() == "Green Draconian" then
+            desc = desc .. " et gardez votre couleur innée"
+        else
+            desc = desc .. ". Vous gardez votre couleur innée et êtes" ..
+                           " également résistant au poison"
+        end
+    else
+        desc = desc .. ", transformé en dragon cracheur de feu. Vous êtes " ..
+                       " très résistan au feu et au poison, mais vulnérable" ..
+                       "au froid"
+    end
+
+    desc = desc .. "."
+
+    return desc
+}} Vos attaques de mêlée causent des dégâts incroyables et vous êtes beaucoup
+plus robuste, mais moins esquivant.
+
+Toutes les armes et armures équipées sont fusionnées.
+%%%%
+Lich status
+
+Vous avez été transformé en un Lich. Vous êtes résistant au froid et aux
+malédictions ennemies et pendant la durée de la transformation, totalement
+immunisé contre le poison, l'énergie négative et la souffrance. Vos sorts
+de nécromancie deviennent plus puissants et vous obtenez une attaque de
+mêlée épuisante. Cependant, vous êtes aussi vulnérable aux dégâts sacrés
+et à l'exorcisme des morts-vivants et vous ne pouvez pas boire de potions.
+%%%%
+Bat status
+
+Vous avez été transformé en une chauve-souris agile, ce qui augmente votre
+capacité d'esquive, mais affaiblit considérablement vos attaques de mêlée.
+
+Toutes les armes, armures et anneaux équipés sont fusionnés et vous ne pouvez
+pas lancer de sorts. {{
+    if you.race() ~= "Vampire" then
+        return "L'efficacité de vos attaques de mêlée dans cette forme " ..
+               "est basée sur votre la forme est basée sur votre niveau " ..
+               "d'expérience et non sur votre compétence en combat à main nue."
+    end
+}}
+%%%%
+Pig status
+
+Vous avez été transformé en un cochon. Vous vous déplacez rapidement, mais êtes
+moins efficace au corps à corps. Toutes les armes, armures et anneaux équipés
+sont fusionné et vous ne pouvez pas lancer de sort. L'efficacité de vos attaque
+de mêlée dans cette forme est basée sur votre niveau d'expérience et non sur
+votre compétence en combat à mains nues.
+%%%%
+App status
+
+{{
+    if you.race() == "Octopode" then
+        return "De l'un de vos tentacules sort une épine malveillante " ..
+               "est poussé, ce qui augmente les dégâts de vos attaques  " ..
+               "supplémentaires augmente les attaques de tentacules"
+    else
+        return "De votre corps sortent des cornes ou des griffes  " ..
+               "monstrueuses qui ont poussé, ce qui permet d'effectuer " ..
+               "une attaque supplémentaire permet au corps à corps."
+    end
+}}
+%%%%
+Tree status
+
+Vous avez été transformé en un arbre et êtes fermement enraciné dans le
+sol. Vous ne pouvez pas vous déplacer ou vous téléporter. Vous avez juste
+des possibilités d'esquive minimales, mais plus de santé et d'armure
+naturelle. Vous êtes résistant au poison et immunisé contre l'énergie
+négative.
+
+Tous les manteaux, casques, gants, bottes et armures corporelles équipés
+sont fusionnés.
+%%%%
+Wisp status
+
+Vous avez été transformé en une bouffée de gaz sans corps. Vous êtes
+extrêmement esquivant et résistant au feu, au froid, à l'électricité et à
+l'acide ainsi qu'immunisé contre le poison et l'énergie négative.
+
+Toutes les armes, armures et bijoux équipés sont fusionnés et vous ne
+pouvez pas lancer de sorts. L'efficacité de vos attaques au corps à corps
+sous cette forme dépend de votre niveau d'expérience et non de votre
+compétence en combat à mains nues.
+%%%%
+Fungus status
+
+Vous avez été transformé en un champignon sensible. Vous êtes très
+esquivant et pouvez libérer des spores qui provoquent de la confusion
+lors des attaques au corps à corps, mais vous ne pouvez pas vous déplacer
+si des créatures ennemies sont présentes. Vous êtes résistant au poison et
+immunisé contre l'énergie négative.
+
+Toutes les armes et armures équipées sont fusionnées et vous ne pouvez pas
+lancer de sorts. L'efficacité de vos attaques au corps à corps sous cette
+forme dépend de votre niveau d'expérience et non de votre compétence en
+combat à mains nues.
+%%%%
+Shadow status
+
+Vous avez été transformé en une masse tourbillonnante d'ombres sombres.
+Vous êtes constamment invisible et immunisé contre le poison, l'épuisement
+et la souffrance. Les dégâts entrants sont réduits de moitié, vous saignez
+de la fumée à chaque attaque et disposez d'une volonté infinie. Cependant,
+votre capacité à infliger des dégâts en combat rapproché et à distance est
+réduite de moitié, votre pouvoir magique est fortement limité et votre
+santé maximale est continuellement réduite si vous subissez des dégâts.
+%%%%
+Orb status
+
+Vous êtes proche de la sphère de Zot (ou peut-être la tenez-vous dans
+votre main), dont les énergies perturbent la magie de téléportation. La
+téléportation prend plus de temps et les portails de passage de Golubria
+sont moins précisément positionnés et se dégradent plus vite.
+%%%%
+-Hop status
+
+Vos jambes sont fatiguées et vous ne pouvez pas sauter. Cet état n'est
+levé que lorsque vous êtes immobile pendant plusieurs tours. (D'autres
+actions comme attaquer ou lancer des sorts sont autorisées.)
+%%%%
+Ray status
+
+Vous canalisez un faisceau d'énergie magique brûlante. En appuyant sur
+., le faisceau est maintenu et renforcé, ce qui coûte 1 MP par tour ;
+toute autre action, y compris relancer le sort, le termine.
+%%%%
+Lash status
+
+Vous vous déplacez avec une vitesse surnaturelle, ce qui permet d'exécuter
+les actions de mouvement instantanément. Toutes les attaques au corps à
+corps que vous effectuez pendant ce mouvement infligent des dégâts accrus
+et ne ratent jamais leur cible.
+%%%%
+Storm status
+
+Vous êtes entouré par une tempête de nuages célestes. Tant que la tempête
+fait rage, vos esquives, votre précision au combat et vos dégâts sont
+considérablement augmentés, et si vous frappez des ennemis avec des attaques
+au corps à corps, ce bonus est encore accru. La tempête s'affaiblit avec
+le temps et disparaît dès que le bonus atteint zéro. Les nuages célestes
+empêchent l'invisibilité et masquent la vue de ceux qui se trouvent à
+l'extérieur de la tempête.
+%%%%
+SlowM status
+
+Sur ce sol liquide, votre mouvement est ralenti.
+%%%%
+Alive status
+
+Vous êtes plein de sang et votre santé se régénère rapidement.
+%%%%
+Aug status
+
+Vous recevez des bonus de sorts et de tuerie qui sont proportionnels à
+votre santé.
+%%%%
+Beogh status
+
+Vous pouvez jurer fidélité à Beogh, le dieu des Orques des Cavernes, par
+le biais d'un prêtre à proximité. Pour ce faire, appuyez sur la touche
+<white>Y</white> dans le menu des compétences.
+%%%%
+Bloodless status
+
+Votre corps est complètement privé de sang, ce qui réduit votre santé
+maximale et empêche votre santé de se régénérer lorsque des monstres
+sont visibles. Vous êtes immunisé contre le poison et l'énergie négative,
+résistez fortement au froid et êtes résistant à la souffrance.
+%%%%
+Bribe status
+
+Vous soudoyez les habitants de la branche actuelle.
+%%%%
+Cloud status
+
+Vous êtes dans un nuage.
+%%%%
+-Clouds status
+
+L'air est trop calme pour que des nuages puissent se former.
+%%%%
+Dig status
+
+Vous creusez.
+%%%%
+Elixir status
+
+Votre santé et/ou magie ainsi que la santé de vos alliés sont rapidement
+restaurées.
+%%%%
+Fast+Slow status
+
+Vous subissez à la fois des effets ralentissants et accélérants.
+%%%%
+Lava status
+
+Vous volez actuellement au-dessus de la lave.
+%%%%
+Recall status
+
+Vous rappelez vos alliés.
+%%%%
+Water status
+
+{{
+    local feat = view.feature_at(0, 0):gsub("_", " ")
+    if you.flying() then
+        if feat == "deep water" then
+            return "Vous volez au-dessus d'eaux profondes.
+        elseif feat == "shallow water" then
+            return "Vous volez au-dessus d'eaux peu profondes.
+        else
+            return "Vous volez au-dessus de l'eau.
+        end
+    else
+        local verb = you.race() == "Merfolk" and "nage dans" or "trouve dans"
+        if feat == "deep water" then
+            return "Ihr " .. verb .. " eau profonde.
+        elseif feat == "shallow water" then
+            return "Ihr " .. verb .. " eaux peu profondes.
+        else
+            return "Ihr " .. verb .. " Eau.
+        end
+    end
+}}
+%%%%
+-Wiz status
+
+Vous avez perdu le contrôle de votre magie.
+%%%%
+Attr status
+
+Les ennemis sont attirés magiquement vers vous.
+%%%%
+Zot status
+
+Vous avez passé trop de temps dans une branche, ce qui a attiré l'attention
+de la créature malveillante Zot. Si vous passez le nombre de tours spécifié
+dans cette branche sans descendre dans un nouveau niveau, Zot vous trouvera
+et vous épuisera.
+%%%%
+Zot count status
+
+Si vous passez le nombre de tours spécifié dans cette branche sans descendre
+dans un nouveau niveau, Zot vous trouvera et vous épuisera.
+%%%%
+Curl status
+
+Après une attaque, vous vous êtes instinctivement replié pour vous protéger
+de nouveaux coups. Vous sortez maintenant de cette position défensive et ne
+bénéficiez plus de protection jusqu'à ce que vous soyez à nouveau touché.
+%%%%

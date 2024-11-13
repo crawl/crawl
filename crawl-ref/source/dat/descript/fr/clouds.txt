@@ -1,0 +1,140 @@
+%%%%
+flame cloud
+
+Une nuée de feu en colère. Toute créature qui n'est pas totalement immunisée contre le feu subit des dégâts en fonction du temps passé dans les flammes.
+
+Les attaques à distance basées sur le froid qui traversent la nuée voient leur portée considérablement réduite et la nuée se dissipe.
+
+Lorsqu’elle est placée à proximité ou au-dessus de l'eau, la chaleur à proximité génère de la vapeur.
+%%%%
+noxious fumes cloud
+
+Une nuée de vapeurs nauséabondes et suffocantes. Toute créature qui s'y trouve risque d'être désorientée par les gaz, à moins qu'elle ne soit résistante au poison. Les créatures plus fortes et expérimentées sont moins exposées.
+%%%%
+freezing vapour cloud
+
+Une nuée d'air glacial. Toute créature qui n'est pas totalement immunisée contre le froid subit des dégâts en y restant.
+
+Les attaques de feu à distance qui traversent la nuée voient leur portée considérablement réduite et la nuée se dissipe.
+%%%%
+poison gas cloud
+
+Une nuée de poison mortel. Toute créature qui n'est pas résistante au poison est empoisonnée et subit des dégâts directs si elle y reste.
+%%%%
+_smoke_cloud_
+
+Une nuée de fumée colorée. Inoffensive, sauf pour les asthmatiques.
+%%%%
+black smoke cloud
+
+<_smoke_cloud_>
+%%%%
+grey smoke cloud
+
+<_smoke_cloud_>
+%%%%
+blue smoke cloud
+
+<_smoke_cloud_>
+%%%%
+purple smoke cloud
+
+<_smoke_cloud_>
+%%%%
+translocational energy cloud
+
+Le vestige d'une créature qui était récemment ici, mais n'y est plus, bannie à proximité, à travers le plan ou hors de la réalité elle-même, jusqu'aux abysses. Certains sorciers disent qu'il s'agit d'une sorte de "réaction allergique" produite par l'univers en réponse à la magie qui déforme l'espace d'une manière impossible ; un éternuement cosmique. Peut-être métaphysiquement répugnant, mais autrement inoffensif.
+%%%%
+spreading flames cloud
+
+Un incendie forestier furieux. Toute créature qui n'est pas totalement immunisée contre le feu subit des dégâts en y restant. Les flammes crépitent à intervalles et embrasent leur environnement avec de petits feux. Tout arbre situé à proximité est souvent destiné à fournir encore plus de bois pour le feu.
+
+Les attaques de froid à distance qui traversent la nuée voient leur portée considérablement réduite et la nuée se dissipe.
+
+Lorsqu’elle est placée à proximité ou au-dessus de l'eau, la chaleur à proximité génère de la vapeur.
+%%%%
+steam cloud
+
+Une nuée de vapeur brûlante. Les créatures qui y sont piégées subissent de légers dégâts. La résistance au feu réduit les dégâts.
+%%%%
+ink cloud
+
+Une nuée d'encre qui remplit complètement l'eau.
+%%%%
+calcifying dust cloud
+
+Une nuée pétrifiante. Les créatures qui restent dans la nuée se transforment en pierre, bien que des créatures expérimentées puissent être capables de résister aux effets.
+%%%%
+blessed fire cloud
+
+Une nuée de feu divin, imprégnée de puissance sacrée. Ceux qui sont au service de l'un des dieux bienveillants n'en seront pas affectés. Toutes les autres créatures subiront des dégâts, les créatures non-mortes et démoniaques étant particulièrement touchées.
+%%%%
+foul pestilence cloud
+
+# XXX: clarify gargoyles
+Une nuée de pestilence fétide. Tout être vivant qui y reste est empoisonné et peut voir ses mouvements entravés.
+%%%%
+thin mist cloud
+
+Une nuée de brouillard léger. Atmosphérique, mais inoffensive.
+%%%%
+seething chaos cloud
+
+Une nuée de chaos bouillonnant. Elle inflige une multitude d'effets imprévisibles sur ceux qui s'y trouvent, allant de l'invisibilité à la frénésie en passant par une paralysie complète.
+%%%%
+rain cloud
+
+Une tempête de pluie extrêmement localisée. Elle peut créer des flaques d'eau peu profondes ou temporairement approfondir les flaques existantes. Les créatures constituées uniquement de feu n'apprécient pas de rester sous la pluie.
+%%%%
+mutagenic fog cloud
+
+Une nuée de magie pure et non structurée, condensée en un brouillard chatoyant ; essentiellement un déchet magique toxique. Les créatures qui osent s'y aventurer accumulent une contamination magique croissante qui, en quantité suffisante, cause des mutations négatives.
+%%%%
+magical condensation cloud
+
+L'aspiration d'une énergie magique hautement concentrée, totalement inoffensive en elle-même.
+%%%%
+whirling frost cloud
+
+Les vents d'un vortex polaire. Ils infligent des dégâts importants à ceux qui s'y trouvent, partiellement réduits par la résistance au froid.
+%%%%
+sparse dust cloud
+
+Une nuée de poussière éparse. Atmosphérique, mais inoffensive.
+%%%%
+spectral mist cloud
+
+Une nuée de brouillard spectral. Elle inflige de faibles dégâts à toutes les créatures, excepté aux non-morts. Du brouillard émanent progressivement des créatures spectrales non-mortes, dangereuses mais éphémères.
+%%%%
+acidic fog cloud
+
+Une nuée de brume acide corrosive, qui inflige des dégâts et provoque la corrosion chez ceux qui s'y trouvent. La résistance à la corrosion immunise contre ses effets.
+%%%%
+thunder cloud
+
+Une nuée d'orage sombre. Elle frappe périodiquement de foudre ceux qui s'y trouvent, infligeant de lourds dégâts à ceux qui ne sont pas résistants à l'électricité.
+%%%%
+negative energy cloud
+
+Une nuée d'énergie nécromantique. Les êtres vivants qui s'y trouvent se voient drainés de leur énergie vitale, bien qu'une protection contre l'énergie négative en atténue les effets.
+%%%%
+white fluffiness cloud
+
+Une nuée blanche et duveteuse. Pas vraiment assez solide pour être utilisée comme un coussin, mais étrangement apaisante.
+%%%%
+salt cloud
+
+Une nuée de poussière et de sel en suspension. Elle pique les yeux et la peau des êtres vivants qui s'y trouvent, bien qu'elle soit finalement inoffensive.
+%%%%
+golden dust cloud
+
+Une nuée de poussière dorée scintillante. Les adeptes du Conseil y gagnent une force énorme au combat.
+%%%%
+smouldering embers cloud
+
+Une nuée de braises fumantes. Elle peut être facilement étouffée par tout être se trouvant au-dessus, mais si on la laisse tranquille, elle s'enflamme en une nuée de flammes ardentes.
+%%%%
+wisps of flame cloud
+
+Une traînée d'étincelles et de flammes. Atmosphérique, mais inoffensive.
+%%%%
