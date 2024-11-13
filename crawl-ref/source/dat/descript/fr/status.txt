@@ -744,11 +744,11 @@ Water status
     else
         local verb = you.race() == "Merfolk" and "nage dans" or "trouve dans"
         if feat == "deep water" then
-            return "Ihr " .. verb .. " eau profonde.
+            return "Vous " .. verb .. " eau profonde.
         elseif feat == "shallow water" then
-            return "Ihr " .. verb .. " eaux peu profondes.
+            return "Vous " .. verb .. " eaux peu profondes.
         else
-            return "Ihr " .. verb .. " Eau.
+            return "Vous " .. verb .. " Eau.
         end
     end
 }}
