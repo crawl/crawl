@@ -75,11 +75,9 @@
 #include "target.h"
 #include "teleport.h"
 #include "terrain.h"
-#ifdef USE_TILE
 #include "tilepick.h"
 #include "rltiles/tiledef-dngn.h"
 #include "rltiles/tiledef-player.h"
-#endif
 #include "tileview.h"
 #include "timed-effects.h"
 #include "traps.h"
@@ -754,18 +752,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             for (size_t i = 0; i < targs.size() && i < num_targs; ++i)
             {
                 if (you.see_cell(targs[i]->pos()))
-                {
-#ifdef USE_TILE
-                    if (Options.use_animations & UA_BEAM)
-                    {
-                        view_add_tile_overlay(targs[i]->pos(), vary_bolt_tile(tileidx_bolt(beam), 0));
-                        animation_delay(50, draw_delay);
-                    }
-#else
-                    flash_tile(targs[i]->pos(), MAGENTA, draw_delay);
-#endif
-                }
-
+                    flash_tile(targs[i]->pos(), MAGENTA, draw_delay, TILE_BOLT_SHADOW_BLAST);
             }
             for (size_t i = 0; i < targs.size() && i < num_targs; ++i)
             {

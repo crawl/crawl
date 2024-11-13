@@ -4942,13 +4942,9 @@ static void _show_fusillade_explosion(map<coord_def, beam_type>& hit_map,
         const coord_def pos = exp_map[j];
         if (you.see_cell(pos))
         {
-#ifdef USE_TILE
-            view_add_tile_overlay(pos, concoction_colour[hit_map[pos]] == YELLOW
-                                       ? (tileidx_t)TILE_BOLT_IRRADIATE
-                                       : tileidx_zap(concoction_colour[hit_map[pos]]));
-#else
-            flash_tile(pos, concoction_colour[hit_map[pos]], 0);
-#endif
+            colour_t colour = concoction_colour[hit_map[pos]];
+            flash_tile(pos, concoction_colour[hit_map[pos]], 0,
+                       colour == YELLOW ? int{TILE_BOLT_IRRADIATE} : 0);
         }
     }
 

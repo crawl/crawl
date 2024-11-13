@@ -1520,7 +1520,7 @@ void view_add_glyph_overlay(const coord_def &gc, cglyph_t glyph)
 }
 
 // Simple helper function to reduce duplication with repeatedly used animation code
-void flash_tile(coord_def p, colour_t colour, int delay)
+void flash_tile(coord_def p, colour_t colour, int delay, tileidx_t tile)
 {
     if (!(Options.use_animations & UA_BEAM))
         return;
@@ -1529,7 +1529,12 @@ void flash_tile(coord_def p, colour_t colour, int delay)
         return;
 
 #ifdef USE_TILE
-        view_add_tile_overlay(p, tileidx_zap(colour));
+        // Use a bolt tile if one is specified. Otherwise, just use the default
+        // for the colour provied.
+        if (tile > 0)
+            view_add_tile_overlay(p, vary_bolt_tile(tile, 0));
+        else
+            view_add_tile_overlay(p, tileidx_zap(colour));
 #endif
         view_add_glyph_overlay(p, {dchar_glyph(DCHAR_FIRED_ZAP),
                                    static_cast<unsigned short>(colour)});
