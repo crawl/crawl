@@ -1085,7 +1085,7 @@ the %skraken
 der {adj-e}%sKraken
 %%%%
 the %stentacle
-der {adj-e}%sTentakel
+das {adj-e}%sTentakel
 %%%%
 the %stentacle segment
 das {adj-e}%sTentakelsegment
@@ -1121,7 +1121,7 @@ the %sspectral weapon
 die {adj-e}%sSpektralwaffe
 %%%%
 the %seldritch tentacle
-der {adj-e}%sunheimliche Tentakel
+das {adj-e}%sunheimliche Tentakel
 %%%%
 the %seldritch tentacle segment
 das {adj-e}%sunheimliche Tentakelsegment

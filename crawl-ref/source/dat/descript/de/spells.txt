@@ -935,9 +935,9 @@ Malign Gateway spell
 Reißt einen Schnitt in die Realität und schafft ein sich selbst erhaltendes,
 aber temporäres Portal zu einer unbekannten, verdorbenen anderen Welt. Es
 erfordert offenen Raum, um erfolgreich zu sein. Nach kurzer Zeit wird ein
-mächtiger Tentakel mit Klauen durch das Portal greifen und für eine von der
+mächtiges Tentakel mit Klauen durch das Portal greifen und für eine von der
 Kraft abhängige Dauer an den Willen des Zauberers gebunden bleiben. Mit Ablauf
-des Portals wird der Tentakel abgetrennt und wendet sich gegen den Zauberer.
+des Portals wird das Tentakel abgetrennt und wendet sich gegen den Zauberer.
 %%%%
 Malign Offering spell
 

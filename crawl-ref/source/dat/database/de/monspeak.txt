@@ -2713,7 +2713,7 @@ w:50
 
 @The_monster@ sagt, "Eine Schildkröte hat mich gebissen. Ich hasse Schildkröten."
 
-@The_monster@ sagt, "Dieser Tentakel kam einfach aus dem Nichts und hat mich berührt. Ich hasse Tentakel!"
+@The_monster@ sagt, "Dieses Tentakel kam einfach aus dem Nichts und hat mich berührt. Ich hasse Tentakel!"
 %%%%
 Spider Donald
 

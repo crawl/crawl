@@ -1084,7 +1084,7 @@ your %skraken
 Euer {adj-er}%sKraken
 %%%%
 your %stentacle
-Euer {adj-er}%sTentakel
+Euer {adj-es}%sTentakel
 %%%%
 your %stentacle segment
 Euer {adj-es}%sTentakelsegment
@@ -1120,10 +1120,10 @@ your %sspectral weapon
 Eure {adj-e}%sSpektralwaffe
 %%%%
 your %seldritch tentacle
-Euer {adj-er}%sunheimlicher Tentakel
+Euer {adj-es}%sunheimliches Tentakel
 %%%%
 your %seldritch tentacle segment
-Euer {adj-er}%sunheimliches Tentakelsegment
+Euer {adj-es}%sunheimliches Tentakelsegment
 %%%%
 your %sdemonspawn
 Eure {adj-e}%sDämonenbrut

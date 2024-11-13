@@ -1084,7 +1084,7 @@ a %skraken
 ein {adj-er}%sKraken
 %%%%
 a %stentacle
-ein {adj-er}%sTentakel
+ein {adj-es}%sTentakel
 %%%%
 a %stentacle segment
 ein {adj-es}%sTentakelsegment
@@ -1120,10 +1120,10 @@ a %sspectral weapon
 eine {adj-e}%sSpektralwaffe
 %%%%
 a %seldritch tentacle
-ein {adj-er}%sunheimlicher Tentakel
+ein {adj-es}%sunheimliches Tentakel
 %%%%
 a %seldritch tentacle segment
-ein {adj-er}%sunheimliches Tentakelsegment
+ein {adj-es}%sunheimliches Tentakelsegment
 %%%%
 a %sdemonspawn
 eine {adj-e}%sDämonenbrut

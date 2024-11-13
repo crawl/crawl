@@ -2555,7 +2555,7 @@ Fertigkeiten im Kampf und im Umgang mit Waffen statt im Zaubern zu verfeinern.
 %%%%
 tentacle
 
-Der mächtige Tentakel eines Kraken. Jeder ihm zugefügte Schaden schadet der
+Das mächtige Tentakel eines Kraken. Jeder ihm zugefügte Schaden schadet der
 gesamten Kreatur.
 %%%%
 tentacle segment

@@ -5475,7 +5475,7 @@ Ihr könnt {acc}%s nicht mehr tragen!
 %%%%
 # Replace ring after sacrificing hand (or equivalent)
 You put %s back on another tentacle!
-Ihr steckt {acc}%s auf einen anderen Tentakel!
+Ihr steckt {acc}%s auf ein anderes Tentakel!
 %%%%
 You put %s back on your other hand!
 Ihr steckt {acc}%s auf die andere Hand!
@@ -6512,7 +6512,7 @@ You can't unwield your weapon to draw a new one!
 Ihr könnt Eure Waffe nicht loslassen, um eine Neue zu zücken.
 %%%%
 You can't wield that without your missing tentacle.
-Ohne den fehlenden Tentakel könnt Ihr das nicht führen.
+Ohne das fehlende Tentakel könnt Ihr das nicht führen.
 %%%%
 You can't wield that without your missing arm.
 Ohne den fehlenden Arm könnt Ihr das nicht führen.
@@ -9401,10 +9401,10 @@ Ihr spürt die alte Wut Eurer Axt.
 %s fällt aus der Luft.
 %%%%
 The tentacle is hauled back through the portal!
-Der Tentakel wird durch das Portal zurückgeschleppt!
+Das Tentakel wird in das Portal zurückgerissen!
 %%%%
 With a roar, the tentacle is hauled back through the portal!
-Mit einem Gebrüll wird die Tentakel zurück durch das Portal gezogen!
+Mit lautem Getöse wird das Tentakel in das Portal zurückgerissen!
 %%%%
 %s crumbles away.
 %s bröckelt weg.
@@ -9945,7 +9945,7 @@ The vine drags %s backwards!
 Die Rebe zieht {acc}%s nach hinten!
 %%%%
 The tentacle pulls %s backwards!
-Der Tentakel zieht {acc}%s nach hinten!
+Das Tentakel zieht {acc}%s nach hinten!
 %%%%
 A tentacle rises from the water!
 Ein Tentakel erhebt sich aus dem Wasser!

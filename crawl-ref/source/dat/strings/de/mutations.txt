@@ -1155,13 +1155,13 @@ tentacle spike
 Tentakelstachel
 %%%%
 One of your tentacles bears a spike.
-Einer Eurer Tentakel trägt einen Stachel.
+Eins Eurer Tentakel trägt einen Stachel.
 %%%%
 One of your tentacles bears a nasty spike.
-Einer Eurer Tentakel trägt einen bösen Stachel.
+Eins Eurer Tentakel trägt einen bösen Stachel.
 %%%%
 One of your tentacles bears a large vicious spike.
-Einer Eurer Tentakel trägt einen großen, bösartigen Stachel.
+Eins Eurer Tentakel trägt einen großen, bösartigen Stachel.
 %%%%
 One of your lower tentacles grows a sharp spike.
 An einem Eurer unteren Tentakel wächst ein scharfer Stachel.
@@ -1173,7 +1173,7 @@ Your tentacle spike grows even bigger.
 Euer Tentakelstachel wird noch größer.
 %%%%
 Your tentacle spike becomes smaller.
-Euer Tentakel-Stachel wird kleiner.
+Euer Tentakelstachel wird kleiner.
 %%%%
 Your tentacle spike recedes somewhat.
 Euer Tentakelstachel wird etwas kleiner.

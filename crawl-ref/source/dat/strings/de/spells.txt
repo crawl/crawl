@@ -447,7 +447,7 @@ Porkalator
 Verschweinen
 %%%%
 Spawn Tentacles
-Tentakeln ergeben
+Tentakel ergeben
 %%%%
 Tomb of Doroklohe
 Gruft von Doroklohe

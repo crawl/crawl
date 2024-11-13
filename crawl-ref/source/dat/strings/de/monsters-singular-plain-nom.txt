@@ -1084,7 +1084,7 @@
 {adj-er}%sKraken
 %%%%
 %stentacle
-{adj-er}%sTentakel
+{adj-es}%sTentakel
 %%%%
 %stentacle segment
 {adj-es}%sTentakelsegment
@@ -1120,10 +1120,10 @@
 {adj-e}%sSpektralwaffe
 %%%%
 %seldritch tentacle
-{adj-er}%sunheimlicher Tentakel
+{adj-es}%sunheimliches Tentakel
 %%%%
 %seldritch tentacle segment
-{adj-er}%sunheimliches Tentakelsegment
+{adj-es}%sunheimliches Tentakelsegment
 %%%%
 %sdemonspawn
 {adj-e}%sDämonenbrut
