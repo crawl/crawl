@@ -100,9 +100,16 @@ icicle5
 icicle6
 icicle7
 
+iceblast0 BOLT_ICEBLAST
+
 flame0 BOLT_FLAME
 flame1
 flame2
+
+magma0 BOLT_MAGMA
+magma1
+
+fire_storm0 BOLT_FIRE_STORM
 
 frost0 BOLT_FROST
 frost1
@@ -133,6 +140,8 @@ drain2
 
 searing_ray4 BOLT_SEARING_RAY
 searing_ray5
+
+warping_blast0 BOLT_WARP_SPACE
 
 damnation BOLT_DAMNATION
 

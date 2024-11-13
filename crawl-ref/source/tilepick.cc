@@ -3439,7 +3439,13 @@ tileidx_t tileidx_bolt(const bolt &bolt)
     switch (col)
     {
     case WHITE:
-        if (bolt.name == "crystal spear")
+        if (bolt.origin_spell == SPELL_ICEBLAST ||
+            bolt.origin_spell == SPELL_SERACFALL ||
+            bolt.origin_spell == SPELL_GLACIATE)
+        {
+            return TILE_BOLT_ICEBLAST;
+        }
+        else if (bolt.name == "crystal spear")
             return TILE_BOLT_CRYSTAL_SPEAR + dir;
         else if (bolt.name == "puff of frost")
             return TILE_BOLT_FROST;
@@ -3471,7 +3477,14 @@ tileidx_t tileidx_bolt(const bolt &bolt)
     case RED:
         if (bolt.name == "puff of flame")
             return TILE_BOLT_FLAME;
-        if (bolt.name == "rain of gore")
+        else if (bolt.origin_spell == SPELL_SPIT_LAVA ||
+                 bolt.origin_spell == SPELL_BOLT_OF_MAGMA)
+        {
+            return TILE_BOLT_MAGMA;
+        }
+        else if (bolt.origin_spell == SPELL_FIRE_STORM)
+            return TILE_BOLT_FIRE_STORM;
+        else if (bolt.name == "rain of gore")
             return TILE_BOLT_HAEMOCLASM;
         break;
 
@@ -3485,6 +3498,8 @@ tileidx_t tileidx_bolt(const bolt &bolt)
     case LIGHTMAGENTA:
         if (bolt.name == "magic dart")
             return TILE_BOLT_MAGIC_DART;
+        else if (bolt.origin_spell == SPELL_WARP_SPACE)
+            return TILE_BOLT_WARP_SPACE;
         break;
 
     case BROWN:
@@ -3570,6 +3585,7 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dist)
     case TILE_BOLT_STING:
         return tile + (dist - 1) % tile_main_count(tile);
     case TILE_BOLT_FLAME:
+    case TILE_BOLT_MAGMA:
     case TILE_BOLT_IRRADIATE:
     case TILE_BOLT_SHADOW_BLAST:
     case TILE_BOLT_HAEMOCLASM:
