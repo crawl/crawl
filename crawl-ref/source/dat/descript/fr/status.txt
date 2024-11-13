@@ -5,19 +5,19 @@ Toutes vos actions sont 50 % plus rapides.
 %%%%
 Invis status
 
-Vous êtes invisible. La plupart des ennemis ne peuvent pas vous voir et 
-subissent des pénalités pour toucher, bien qu'ils puissent 
-deviner votre position approximative. 
+Vous êtes invisible. La plupart des ennemis ne peuvent pas vous voir et
+subissent des pénalités pour toucher, bien qu'ils puissent
+deviner votre position approximative.
 Cela conduit avec le temps à une contamination magique et peut causer des
 niveaux de contamination dangereux si vous étiez déjà contaminé avant
 d'atteindre ce statut. Si le statut est grisé, il est actif (et cause
 contamination), mais est inefficace pour une raison quelconque
-(par ex. si vous êtes lumineux à cause de la contamination 
+(par ex. si vous êtes lumineux à cause de la contamination
 ou si vous êtes dans une eau peu profonde).
 %%%%
 Tele status
 
-Vous êtes en train de vous téléporter. Pendant que vous attendez 
+Vous êtes en train de vous téléporter. Pendant que vous attendez
 la téléportation, celle-ci sera annulée si vous tentez de réappliquer le statut
 (par ex. en utilisant un parchemin de téléportation).
 %%%%
@@ -34,18 +34,18 @@ Vous êtes anormalement agile et recevez un bonus pour votre esquive.
 %%%%
 Brill status
 
-Vous êtes anormalement intelligent et recevez un bonus sur la 
-puissance de vos sorts, tandis que vos coûts en mana sont 
+Vous êtes anormalement intelligent et recevez un bonus sur la
+puissance de vos sorts, tandis que vos coûts en mana sont
 réduits de moitié (arrondis).
 %%%%
 Might status
 
-Vous êtes surnaturellement fort et infligez beaucoup plus de 
+Vous êtes surnaturellement fort et infligez beaucoup plus de
 dégâts en combat rapproché.
 %%%%
 Regen status
 
-Vous régénérez la santé de manière anormalement rapide. 
+Vous régénérez la santé de manière anormalement rapide.
 Ceci n'est affiché qu'en cas de régénération temporaire.
 %%%%
 RMsl status
@@ -59,14 +59,14 @@ monstres qu'elles touchent.
 %%%%
 Will++ status
 
-Votre volonté est beaucoup plus forte et protège 
+Votre volonté est beaucoup plus forte et protège
 contre de nombreux effets magiques.
 %%%%
 Berserk status
 
 Vous êtes plus rapide, infligez plus de dégâts en combat et avez plus de santé,
-mais vous ne pouvez pas exécuter la plupart des actions à part 
-bouger et attaquer. Le statut disparaît très rapidement, 
+mais vous ne pouvez pas exécuter la plupart des actions à part
+bouger et attaquer. Le statut disparaît très rapidement,
 sauf si vous attaquez des monstres. Lorsqu'il s'expire, vous êtes ralenti
 et ne pouvez pas entrer en mode berserk pendant un court moment.
 %%%%
@@ -78,9 +78,9 @@ furie berserk pendant un court instant.
 Pois status
 
 Vous êtes empoisonné et perdez continuellement de la santé. Pendant
-l'empoisonnement, votre santé actuelle est partiellement 
+l'empoisonnement, votre santé actuelle est partiellement
 recolorée pour montrer les dégâts potentiels du poison.
-Les empoisonnements peuvent être guéris instantanément avec des 
+Les empoisonnements peuvent être guéris instantanément avec des
 potions d'antidote.
 %%%%
 Conf status
@@ -92,9 +92,9 @@ guérie immédiatement avec des potions d'antidote.
 %%%%
 Contam status
 
-Vous brillez avec de la radiation mutagène. 
-Cela peut vous faire muter avec le temps, ce qui a 
-normalement un résultat négatif. 
+Vous brillez avec de la radiation mutagène.
+Cela peut vous faire muter avec le temps, ce qui a
+normalement un résultat négatif.
 La couleur montre le degré de gravité : Le premier niveau (gris) est juste
 un avertissement et ne mène ni à une mutation ni à une perte de furtivité.
 %%%%
@@ -106,12 +106,12 @@ mais disparaît progressivement lorsque vous gagnez de l'expérience.
 %%%%
 Breath status
 
-Votre respiration est coupée, et vous ne pouvez pas utiliser 
+Votre respiration est coupée, et vous ne pouvez pas utiliser
 votre capacité respiratoire innée, tant que le statut est actif.
 %%%%
 Exh status
 
-Vous êtes épuisé et ne pouvez pas activer de pouvoirs divins 
+Vous êtes épuisé et ne pouvez pas activer de pouvoirs divins
 qui causent de l'épuisement, tant que le statut est actif.
 %%%%
 Slow status
@@ -124,12 +124,12 @@ Vous êtes paralysé et totalement incapable d'agir.
 %%%%
 Sleep status
 
-Vous dormez et êtes totalement incapable d'agir. 
+Vous dormez et êtes totalement incapable d'agir.
 Si vous subissez des dégâts, vous vous réveillez.
 %%%%
 Held status
 
-Vous êtes piégé dans un filet ou une toile d'araignée. 
+Vous êtes piégé dans un filet ou une toile d'araignée.
 Vous ne pouvez pas vous déplacer librement et tenterez plutôt de vous libérer.
 %%%%
 Constr status
@@ -142,7 +142,7 @@ la probabilité de réussir à briser l'écrasement augmentera.
 %%%%
 Mesm status
 
-Vous êtes hypnotisé et ne pouvez pas vous éloigner du monstre qui 
+Vous êtes hypnotisé et ne pouvez pas vous éloigner du monstre qui
 vous a hypnotisé. L'effet peut être annulé en tuant ou en perturbant
 le monstre responsable, ou en interrompant la ligne de vue avec lui.
 %%%%
@@ -158,7 +158,7 @@ Vous êtes empêché de vous téléporter ou de cligner.
 %%%%
 -Move status
 
-Vous ne pouvez pas vous déplacer, cligner ou vous téléporter. 
+Vous ne pouvez pas vous déplacer, cligner ou vous téléporter.
 (Vous pouvez toujours effectuer d'autres actions.)
 %%%%
 Mark status
@@ -219,9 +219,9 @@ que l'effet s'intensifie, ce qui fait baisser votre taux de réussite.
 Brainless status
 
 Votre intelligence est tombée à 0. Vous êtes ralenti,
-ne pouvez pas lancer de sorts ni les mémoriser, 
-et échouez généralement à lire des parchemins. 
-Le statut persiste aussi après la restauration de votre intelligence 
+ne pouvez pas lancer de sorts ni les mémoriser,
+et échouez généralement à lire des parchemins.
+Le statut persiste aussi après la restauration de votre intelligence
 pendant un court moment.
 %%%%
 Clumsy status
@@ -481,7 +481,7 @@ Vous canalisez de l'énergie magique.
 Spider status
 
 Vous avez été transformé en une créature arachnéenne venimeuse.
-Vous êtes très agile et avez une morsure toxique, mais êtes vulnérable 
+Vous êtes très agile et avez une morsure toxique, mais êtes vulnérable
 au poison. Toutes les armes et armures équipées sont fusionnées,
 et votre taux de réussite avec les sorts est légèrement réduit.
 %%%%
@@ -497,7 +497,7 @@ Statue status
 Vous avez été transformé en une statue de pierre lent mais extrêmement robuste.
 Vos dégâts de mêlée, à la fois sans armes et avec armes,
 sont considérablement augmentés. Votre corps de pierre est isolé de
-l'électricité et résistant au poison et à l'énergie négative. 
+l'électricité et résistant au poison et à l'énergie négative.
 Toutes les armures corporelles, gants et bottes équipés sont fusionnés.
 %%%%
 Ice status
