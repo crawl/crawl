@@ -1398,8 +1398,8 @@ as it slides along. Surely such a mockery of life could not be natural..?
 %%%%
 foxfire
 
-A thin wisp of flaming swamp gas. It will burn anything that ventures too
-close, friend or foe.
+A thin wisp of flaming swamp gas. It will burn the first hostile thing it
+touches and then dissipate.
 %%%%
 freezing wraith
 
