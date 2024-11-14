@@ -329,7 +329,6 @@ static void _tag_read_level_items(reader &th);
 static void _tag_read_level_monsters(reader &th);
 static void _tag_read_level_tiles(reader &th);
 static void _regenerate_tile_flavour();
-static void _draw_tiles();
 
 static void _tag_construct_ghost(writer &th, vector<ghost_demon> &);
 static vector<ghost_demon> _tag_read_ghost(reader &th);
@@ -7740,9 +7739,6 @@ void _tag_read_level_tiles(reader &th)
     _debug_count_tiles();
 
     _regenerate_tile_flavour();
-
-    // Draw remembered map
-    _draw_tiles();
 }
 
 static tileidx_t _get_tile_from_vector(const unsigned int idx)
@@ -7838,16 +7834,6 @@ static void _regenerate_tile_flavour()
     tile_new_level(true, false);
 }
 
-static void _draw_tiles()
-{
-#ifdef USE_TILE
-    for (rectangle_iterator ri(coord_def(0, 0), coord_def(GXM-1, GYM-1));
-         ri; ++ri)
-    {
-        tile_draw_map_cell(*ri);
-    }
-#endif
-}
 // ------------------------------- ghost tags ---------------------------- //
 
 static void _marshallSpells(writer &th, const monster_spells &spells)
