@@ -2618,7 +2618,9 @@ static bool _create_foxfire(const actor &agent, coord_def pos, int pow,
     const auto att = agent.is_player() ? BEH_FRIENDLY
                                        : SAME_ATTITUDE(agent.as_monster());
     mgen_data fox(MONS_FOXFIRE, att,
-                  pos, MHITNOT, MG_FORCE_PLACE | MG_AUTOFOE);
+                  pos, (att != BEH_FRIENDLY && agent.is_monster())
+                            ? agent.as_monster()->foe : int{MHITNOT},
+                  MG_FORCE_PLACE | MG_AUTOFOE);
     fox.set_summoned(&agent, SPELL_FOXFIRE, random_range(40, 70), false, false);
     fox.hd = pow;
     monster *foxfire;
