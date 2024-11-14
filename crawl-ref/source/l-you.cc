@@ -1377,6 +1377,8 @@ LUAFN(you_quiver_allows_autofight)
     PLUARET(boolean, quiver::get_secondary_action()->allow_autofight());
 }
 
+LUARET1(you_is_web_immune, boolean, you.is_web_immune())
+
 static const struct luaL_reg you_clib[] =
 {
     { "turn_is_over", you_turn_is_over },
@@ -1520,6 +1522,7 @@ static const struct luaL_reg you_clib[] =
     { "quiver_uses_mp",     you_quiver_uses_mp},
     { "quiver_allows_autofight", you_quiver_allows_autofight },
     { "activate_ability",        you_activate_ability},
+    { "is_web_immune",     you_is_web_immune },
 
     { nullptr, nullptr },
 };
