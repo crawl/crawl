@@ -2785,12 +2785,9 @@ static bool _mons_can_displace(const monster* mpusher,
     if (invalid_monster_index(ipushee))
         return false;
 
-    // Foxfires can always be pushed
-    if (mpushee->type == MONS_FOXFIRE)
-        return !mons_aligned(mpushee, mpusher); // But allies won't do it
-
     if (!mpushee->has_action_energy()
-        && !_same_tentacle_parts(mpusher, mpushee))
+        && !_same_tentacle_parts(mpusher, mpushee)
+        && mpushee->type != MONS_FOXFIRE)
     {
         return false;
     }
@@ -2807,6 +2804,10 @@ static bool _mons_can_displace(const monster* mpusher,
     {
         return false;
     }
+
+    // Foxfires can always be pushed
+    if (mpushee->type == MONS_FOXFIRE)
+        return !mons_aligned(mpushee, mpusher); // But allies won't do it
 
     // OODs should crash into things, not push them around.
     if (mons_is_projectile(*mpusher) || mons_is_projectile(*mpushee))
