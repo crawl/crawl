@@ -1035,7 +1035,7 @@ static void _print_stats_ac(int x, int y)
     string ac = make_stringf("%2d ", you.armour_class_scaled(1));
 #ifdef WIZARD
     if (you.wizard && !_is_using_small_layout())
-        ac += make_stringf("(%d%%) ", you.gdr_perc());
+        ac += make_stringf("(%d%%) ", you.gdr_perc(false));
 #endif
     textcolour(text_col);
     CGOTOXY(x+4, y, GOTO_STAT);

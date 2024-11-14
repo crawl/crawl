@@ -6667,9 +6667,10 @@ void player::refresh_rampage_hints()
   *
   * \return GDR as a percentage.
   **/
-int player::gdr_perc() const
+int player::gdr_perc(bool random) const
 {
-    return (int)(16 * sqrt(sqrt(max(0, you.armour_class()))));
+    int ac = random ? armour_class() : armour_class_scaled(1);
+    return (int)(16 * sqrt(sqrt(max(0, ac))));
 }
 
 /**
