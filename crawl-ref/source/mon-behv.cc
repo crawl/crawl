@@ -1137,8 +1137,9 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         if (mon->behaviour == BEH_WITHDRAW || mons_just_slept(*mon))
             break;
 
-        // Avoid moving friendly explodey things out of BEH_WANDER.
-        if (mon->friendly() && mons_self_destructs(*mon))
+        // Avoid making friendly explodey things cluster around the player
+        // when there are no enemies around.
+        if (mon->friendly() && mons_self_destructs(*mon) && !mon->get_foe())
             break;
 
         // [ds] Neutral monsters don't react to your presence.
