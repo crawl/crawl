@@ -3376,6 +3376,7 @@ void roll_demonspawn_mutations()
 bool perma_mutate(mutation_type which_mut, int how_much, const string &reason)
 {
     ASSERT(_is_valid_mutation(which_mut));
+    ASSERT(!mut_check_conflict(which_mut, true));
 
     int cap = get_mutation_cap(which_mut);
     how_much = min(how_much, cap);

@@ -720,6 +720,11 @@ void give_level_mutations(species_type species, int xp_level)
     for (const auto& lum : get_species_def(species).level_up_mutations)
         if (lum.xp_level == xp_level)
         {
+            // XX: perma_mutate() doesn't handle prior conflicting innate muts,
+            // so we skip this mut if this occurs, e.g. through a Ru sacrifice.
+            if (mut_check_conflict(lum.mut, true))
+                continue;
+
             perma_mutate(lum.mut, lum.mut_level,
                          species::name(species) + " growth");
         }
