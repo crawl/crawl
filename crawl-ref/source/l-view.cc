@@ -310,9 +310,7 @@ LUAFN(view_get_map)
     return 1;
 }
 
-/**
- * @brief Are the given coordinates in the minimal bounding box of the known
- * map?
+/*** Are the given coordinates in the minimal bounding box of the known map?
  * @tparam int x
  * @tparam int y
  * @treturn boolean
