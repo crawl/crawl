@@ -2714,10 +2714,18 @@ monster* mons_place(mgen_data mg)
         behaviour_event(creation, ME_EVAL);
     }
 
+    // If MG_AUTOFOE is set, find the nearest valid foe and point this monster
+    // towards it immediately.
     if (mg.flags & MG_AUTOFOE && (creation->attitude == ATT_FRIENDLY
                                   || mg.behaviour == BEH_CHARMED))
     {
         set_nearest_monster_foe(creation, true);
+        const actor* foe = creation->get_foe();
+        if (foe)
+        {
+            creation->behaviour = BEH_SEEK;
+            creation->target = foe->pos();
+        }
     }
 
     return creation;
