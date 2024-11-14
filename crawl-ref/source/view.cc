@@ -1339,11 +1339,6 @@ static animation *animations[NUM_ANIMATIONS] = {
 
 void run_animation(animation_type anim, use_animation_type type, bool cleanup)
 {
-#ifdef USE_TILE_WEB
-    // XXX this doesn't work in webtiles yet
-    if (is_tiles())
-        return;
-#endif
     if (Options.use_animations & type)
     {
         animation *a = animations[anim];
