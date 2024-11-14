@@ -869,7 +869,7 @@ cmd-help-other-gameplay
 <w>%</w> : Zauber wirken, abbrechen ohne Ziele
 <w>%</w> : Zauber wirken, unbedingt
 <w>%</w> : alle memorierte Zauber listen
-<w>%</w> : Einen Zauber aus Euer Sammlung
+<w>%</w> : Einen Zauber aus deiner Sammlung
     memorieren
 <w>%</w> : Verbündete sagen (<w>%t</w> zum Schreien)
 <w>%</w> : vorherigen Befehl wiederholen

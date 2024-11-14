@@ -258,7 +258,7 @@ Statue von Wucad Mu
 something
 etwas
 %%%%
-# avoid "etwas, das Ihr nicht sehn könnt" because it would require a following komma in some situations and not others
+# avoid "etwas, das du nicht sehen kannst" because it would require a following komma in some situations and not others
 something you cannot see
 etwas Unsichtbares
 %%%%

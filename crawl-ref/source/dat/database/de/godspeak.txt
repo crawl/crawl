@@ -29,13 +29,13 @@ Xom gewährt dir ein Geschenk!
 
 Xoms großzügige Natur offenbart sich.
 
-Xom schenkt Euch eine Art Instrument
+Xom schenkt dir eine Art Instrument
 
 "Nimm dieses Instrument von etwas!"
 
 "Nimm dieses Zeichen meiner Wertschätzung."
 
-Xom lächelt Euch an.
+Xom lächelt dich an.
 
 "Fang!"
 %%%%
@@ -55,7 +55,7 @@ Xom multiple summons
 
 "Dient den Sterblichen, meine Kinder!"
 
-Xom gewährt Euch eine vorübergehende Hilfe.
+Xom gewährt dir eine vorübergehende Hilfe.
 
 Xom öffnet kurzzeitig ein Tor.
 %%%%
@@ -65,16 +65,16 @@ Xom animate monster weapon
 
 Du hörst Xoms wahnsinniges Lachen.
 
-Xom gewährt Euch einen kleinen Gefallen.
+Xom gewährt dir einen kleinen Gefallen.
 
-Xom lächelt Euch an.
+Xom lächelt dich an.
 %%%%
 # changing the scenery
 Xom scenery
 
-Xom berührt kurz Eure Umgebung.
+Xom berührt kurz deine Umgebung.
 
-Xom verleiht Eurer Umgebung eine persönliche Note.
+Xom verleiht deiner Umgebung eine persönliche Note.
 
 Xom beschwert sich über die Landschaft.
 
@@ -105,13 +105,13 @@ Xom teleportation journey
 
 "Wo es aufhört, weiß niemand!"
 
-Xom verdreht den Raum um Euch herum.
+Xom verdreht den Raum um dich herum.
 %%%%
 Xom confusion
 
 "Heh heh heh..."
 
-Die Macht von Xom berührt für einen Moment Euren Geist.
+Die Macht von Xom berührt für einen Moment deinen Geist.
 
 Xom kichert.
 %%%%
@@ -122,13 +122,13 @@ Xom draining or torment
 
 "Du bist zu selbstbewusst für deinen geringen Wert."
 
-Xoms Macht berührt Euch einen Moment lang.
+Xoms Macht berührt dich einen Moment lang.
 
-Ihr hört Xoms wahnsinniges Lachen.
+Du hörst Xoms wahnsinniges Lachen.
 
 "Leide!"
 
-Xoms bösartige Aufmerksamkeit richtet sich für einen Moment auf Euch.
+Xoms bösartige Aufmerksamkeit richtet sich für einen Moment auf dich.
 %%%%
 # 25% chance dancing weapon, else summon hostile monster
 Xom hostile monster
@@ -139,15 +139,15 @@ Xom hostile monster
 
 "Mal sehen, ob es stark genug ist, um zu überleben."
 
-Ihr hört Xoms wahnsinniges Lachen.
+Du hörst Xoms wahnsinniges Lachen.
 %%%%
 Xom banishment
 
 "Du hast es dir in deiner kleinen Welt zu bequem gemacht, Sterblicher!"
 
-Xom wirft Euch in den Abgrund!
+Xom wirft dich in den Abgrund!
 
-Die Welt scheint sich zu drehen, während Xoms wahnsinniges Lachen in Euren Ohren klingt.
+Die Welt scheint sich zu drehen, während Xoms wahnsinniges Lachen in deinen Ohren klingt.
 %%%%
 Xom revert own banishment
 
@@ -158,7 +158,7 @@ w:30
 
 "Nein, ich habe es mir anders überlegt."
 
-Xom zieht Euch zurück in die vergleichbare Stille des Dungeons.
+Xom zieht dich zurück in die vergleichbare Stille des Dungeons.
 %%%%
 %%%%
 Xom revert other banishment
@@ -167,7 +167,7 @@ Xom revert other banishment
 
 "Nein, tust du nicht!"
 
-Xom zieht Euch zurück in die vergleichbare Stille des Dungeons.
+Xom zieht dich zurück in die vergleichbare Stille des Dungeons.
 %%%%
 # Xom upgrades a nearby hostile monster's weapon to a chaos brand
 Xom chaos upgrade
@@ -180,7 +180,7 @@ Xom gluckst.
 %%%%
 Xom noise
 
-Xom macht plötzlich ein Geräusch! Ihr hört @weapon_noise@
+Xom macht plötzlich ein Geräusch! Du hörst @weapon_noise@
 
 w:1
 "Buh!"
@@ -205,9 +205,9 @@ Xom potion effect
 
 "Geh hinaus und richte Schaden an, Sterblicher!"
 
-Xom gewährt Euch einen kleinen Gefallen.
+Xom gewährt dir einen kleinen Gefallen.
 
-Xom lächelt Euch an.
+Xom lächelt dich an.
 %%%%
 Xom cleaving
 
@@ -225,7 +225,7 @@ Xom schmunzelt.
 # cast a random spell
 Xom spell effect
 
-Die Macht von Xom fließt durch Euch!
+Die Macht von Xom fließt durch dich!
 
 Xom spielt einen Moment lang mit der Realität.
 
@@ -247,7 +247,7 @@ Xom good monster polymorph
 
 Xoms Kraft berührt ein Monster in der Nähe.
 
-Ihr hört Xoms onkelhaftes Kichern.
+Du hörst Xoms onkelhaftes Kichern.
 %%%%
 # weakens friendlies, strengthens hostiles
 Xom bad monster polymorph
@@ -260,9 +260,9 @@ Xom good mutations
 
 "Lass mich deinen erbärmlichen Körper verändern."
 
-Xoms Macht berührt Euch einen Moment lang.
+Xoms Macht berührt dich einen Moment lang.
 
-Ihr hört Xoms wahnsinniges Gackern.
+Du hörst Xoms wahnsinniges Gackern.
 %%%%
 Xom random mutations
 
@@ -270,19 +270,19 @@ Xom random mutations
 
 "Lass mich deinen Körper verändern."
 
-Xoms Macht berührt Euch für einen Moment.
+Xoms Macht berührt dich für einen Moment.
 
-Ihr hört Xoms onkelhaftes Kichern.
+Du hörst Xoms onkelhaftes Kichern.
 %%%%
 Xom snakes to sticks
 
-Xom verwandelt Dinge um Euch herum.
+Xom verwandelt Dinge um dich herum.
 
 "So gefallen sie mir besser."
 
 "Ich mochte diese verschnörkelten Dinger noch nie."
 
-Xom berührt Eure Umgebung.
+Xom berührt deine Umgebung.
 
 @Xom good monster polymorph@
 %%%%
@@ -319,15 +319,15 @@ Xom resurrection
 
 "Lass mich deinen Körper reparieren."
 
-Xom bringt den Tod dazu, Euch in Ruhe zu lassen.
+Xom bringt den Tod dazu, dich in Ruhe zu lassen.
 
 Xoms wahnsinniges Lachen verscheucht den Tod.
 
-Xoms Macht belebt Euch wieder.
+Xoms Macht belebt dich wieder.
 
-Xom erweckt Euch wieder zum Leben.
+Xom erweckt dich wieder zum Leben.
 
-Xom lächelt Euch an.
+Xom lächelt dich an.
 
 "Spielzeug, stirb mir jetzt nicht weg!"
 
@@ -342,7 +342,7 @@ Xom stößt auf eine nahe gelegene @staircase@.
 
 "Du bist dran!"
 
-Xom verändert den Dungeon um Euch herum.
+Xom verändert den Dungeon um dich herum.
 %%%%
 Xom good enchant monster
 
@@ -354,7 +354,7 @@ Xom bad enchant monster
 %%%%
 Xom stealth player
 
-Xom bringt Euch auffällig zum Schweigen.
+Xom bringt dich auffällig zum Schweigen.
 
 Xom flüstert: Pssst!
 %%%%
@@ -533,7 +533,7 @@ Elyvilon sagt: Geh hinaus und hilf den Schwachen!
 %%%%
 Fedhas penance
 
-Fedhas protestiert gegen Eure Eingriffe gegen die Natur.
+Fedhas protestiert gegen deine Eingriffe gegen die Natur.
 %%%%
 Fedhas welcome
 
@@ -700,7 +700,7 @@ _xom_welcome_rare_
 
 Xom says: Ich beobachte dich, mein @_xom_child_@.
 
-Xom ohrfeigt Euch mit einer @_trout_species_@!
+Xom ohrfeigt dich mit einer @_trout_species_@!
 %%%%
 _xom_child_
 
@@ -776,7 +776,7 @@ Yredelemnul sagt: Tragt die schwarze Fackel! Erwecke die untätigen Toten!
 %%%%
 Zin penance
 
-Zin geißelt Euch für Euren Ungehorsam gegenüber dem Gesetz.
+Zin geißelt dich für deinen Ungehorsam gegenüber dem Gesetz.
 
 Zin erklärt eindringlich die Bedeutung @_important_subject_gen_@
 %%%%

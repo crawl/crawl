@@ -72,7 +72,7 @@ curled up
 eingerollt
 %%%%
 You are defensively curled.
-Ihr seid defensiv eingerollt.
+Du bist defensiv eingerollt.
 %%%%
 
 # Mesmerised
@@ -84,7 +84,7 @@ mesmerised
 mesmerisiert
 %%%%
 You are mesmerised.
-Ihr seid mesmerisiert.
+Du bist mesmerisiert.
 %%%%
 
 # Glowing (due to magical contamination)
@@ -93,7 +93,7 @@ Ihr seid mesmerisiert.
 glühend
 %%%%
 You are glowing.
-Ihr seid glühend.
+Du bist glühend.
 %%%%
 
 # Umbra (from Dithmenos or Ring of Shadows)
@@ -102,7 +102,7 @@ wreathed by umbra
 von einer Umbra umhüllt
 %%%%
 You are wreathed by an umbra.
-Ihr seid von einer Umbra umhüllt.
+Du bist von einer Umbra umhüllt.
 %%%%
 
 # Held in a net/web
@@ -114,10 +114,10 @@ held
 gehalten
 %%%%
 You are held in a net.
-Ihr seid in einem Netz gefangen.
+Du bist in einem Netz gefangen.
 %%%%
 You are caught in a web.
-Ihr seid in einem Gewebe gefangen.
+Du bist in einem Gewebe gefangen.
 %%%%
 
 # Vampire bloodless status
@@ -148,7 +148,7 @@ slowed movement
 verlangsamte Bewegung
 %%%%
 Your movement is slowed on this liquid ground.
-Eure Bewegung ist auf diesem flüssigen Boden verlangsamt.
+Deine Bewegung ist auf diesem flüssigen Boden verlangsamt.
 %%%%
 
 # Augmentation mutation
@@ -190,7 +190,7 @@ studying %s
 studiert %s
 %%%%
 You are studying %s.
-Ihr studiert %s.
+Du studierst %s.
 %%%%
 
 # Constricted (by snake/tentacles/roots/etc.)
@@ -211,7 +211,7 @@ silenced
 verstummt
 %%%%
 You are silenced.
-Ihr seid verstummt.
+Du bist verstummt.
 %%%%
 
 # Serpent's Lash (Wu Jian ability) active
@@ -223,7 +223,7 @@ serpent's lash
 Peitschenhieb der Schlange
 %%%%
 You are moving at supernatural speed.
-Ihr bewegt Euch mit übernatürlicher Geschwindigkeit.
+Du bewegst dich mit übernatürlicher Geschwindigkeit.
 %%%%
 
 # Heaqvenly Storm (Wu Jian) active
@@ -253,7 +253,7 @@ recalling
 Rückruf
 %%%%
 You are recalling your allies.
-Ihr ruft Eure Verbündeten zurück.
+Du rufst deine Verbündeten zurück.
 %%%%
 
 # Engulfed by water (e.g. water elemental, primal wave spell)
@@ -266,13 +266,13 @@ Verschl
 #verschlungen
 %%%%
 You are engulfed.
-Ihr seid verschlungen.
+Du bist verschlungen.
 %%%%
 engulfed (cannot breathe)
-verschlungen (könnt nicht atmen)
+verschlungen (kannst nicht atmen)
 %%%%
 You are engulfed and unable to breathe.
-Ihr seid verschlungen und könnt nicht mehr atmen.
+Du bist verschlungen und kannst nicht mehr atmen.
 %%%%
 
 # Drained
@@ -284,34 +284,34 @@ extremely drained
 extrem ausgezehrt
 %%%%
 Your life force is extremely drained.
-Eure Lebenskraft ist extrem ausgezehrt.
+Deine Lebenskraft ist extrem ausgezehrt.
 %%%%
 very heavily drained
 sehr stark ausgezehrt
 %%%%
 Your life force is very heavily drained.
-Eure Lebenskraft ist sehr stark ausgezehrt.
+Deine Lebenskraft ist sehr stark ausgezehrt.
 %%%%
 # duplicate of monster status
 #heavily drained
 #stark ausgezehrt
 %%%%
 Your life force is heavily drained.
-Eure Lebenskraft wird stark ausgezehrt.
+Deine Lebenskraft wird stark ausgezehrt.
 %%%%
 # duplicate of monster status
 #drained
 #ausgezehrt
 %%%%
 Your life force is drained.
-Eure Lebenskraft ist ausgezehrt.
+Deine Lebenskraft ist ausgezehrt.
 %%%%
 # duplicate of monster status
 #lightly drained
 #leicht ausgezehrt
 %%%%
 Your life force is lightly drained.
-Eure Lebenskraft ist leicht ausgezehrt.
+Deine Lebenskraft ist leicht ausgezehrt.
 %%%%
 
 # Digging (Formicid ability)
@@ -329,19 +329,19 @@ extremely magic sapped
 Magie extrem ausgelaugt
 %%%%
 Your control over your magic has been greatly sapped.
-Eure Kontrolle über Eure Magie ist stark ausgelaugt.
+Deine Kontrolle über deine Magie ist stark ausgelaugt.
 %%%%
 very magic sapped
 Magie sehr ausgelaugt
 %%%%
 Your control over your magic has been significantly sapped.
-Eure Kontrolle über Eure Magie ist stark ausgelaugt.
+Deine Kontrolle über deine Magie ist stark ausgelaugt.
 %%%%
 magic sapped
 Magie ausgelaugt
 %%%%
 Your control over your magic has been sapped.
-Eure Kontrolle über Eure Magie ist ausgelaugt.
+Deine Kontrolle über deine Magie ist ausgelaugt.
 %%%%
 
 # Bribing branch (Gozag ability)
@@ -353,7 +353,7 @@ bribing [%s]
 bestecht [%s]
 %%%%
 You are bribing %s.
-Ihr bestecht %s.
+Du bestichst %s.
 %%%%
 
 # Horrified
@@ -365,19 +365,19 @@ overwhelmed with horror
 überwältigt von Entsetzen
 %%%%
 Horror overwhelms you!
-Entsetzen überwältigt Euch!
+Entsetzen überwältigt dich!
 %%%%
 extremely horrified
 extrem entsetzt
 %%%%
 You are extremely horrified!
-Ihr seid extrem entsetzt!
+Du bist extrem entsetzt!
 %%%%
 horrified
 entsetzt
 %%%%
 You are horrified!
-Ihr seid entsetzt!
+Du bist entsetzt!
 %%%%
 
 # Standing in a damaging cloud
@@ -442,7 +442,7 @@ Regen Wille++
 #regenerierend
 %%%%
 You are regenerating.
-Ihr regeneriert Euch.
+Du regenerierst dich.
 %%%%
 
 # Inhibited regeneration
@@ -454,7 +454,7 @@ inhibited regen
 behinderte Regeneration
 %%%%
 Your regeneration is inhibited by nearby monsters.
-Eure Regeneration wird von Monstern in der Nähe behindert.
+Deine Regeneration wird von Monstern in der Nähe behindert.
 %%%%
 
 # Poisoned
@@ -467,25 +467,25 @@ lethally poisoned
 tödlich vergiftet
 %%%%
 You are lethally poisoned.
-Ihr seid tödlich vergiftet.
+Du bist tödlich vergiftet.
 %%%%
 seriously poisoned
 schwer vergiftet
 %%%%
 You are seriously poisoned.
-Ihr seid schwer vergiftet.
+Du bist schwer vergiftet.
 %%%%
 quite poisoned
 ziemlich vergiftet
 %%%%
 You are quite poisoned.
-Ihr seid ziemlich vergiftet.
+Du bist ziemlich vergiftet.
 %%%%
 mildly poisoned
 leicht vergiftet
 %%%%
 You are mildly poisoned.
-Ihr seid leicht vergiftet.
+Du bist leicht vergiftet.
 %%%%
 
 # fast (aka hasted)
@@ -497,7 +497,7 @@ hasted
 gehastet
 %%%%
 Your actions are hasted.
-Eure Aktionen werden gehastet.
+Deine Aktionen werden gehastet.
 %%%%
 
 # Slowed
@@ -510,7 +510,7 @@ slowed
 verlangsamt
 %%%%
 You are slowed.
-Ihr seid verlangsamt.
+Du bist verlangsamt.
 %%%%
 
 # Hasted and slowed at the same time
@@ -522,7 +522,7 @@ hasted and slowed
 gehastet und verlangsamt
 %%%%
 You are under both slowing and hasting effects.
-Ihr seid sowohl verlangsamt als auch gehastet.
+Du bist sowohl verlangsamt als auch gehastet.
 %%%%
 
 # Swift (affected by Swiftness spell)
@@ -539,7 +539,7 @@ swiftness
 Raschheit
 %%%%
 You can move swiftly.
-Ihr könnt Euch rasch bewegen.
+Du kannst dich rasch bewegen.
 %%%%
 
 # Cooldown from Swiftness spell
@@ -551,7 +551,7 @@ sluggish
 schleppend
 %%%%
 You are moving sluggishly.
-Ihr bewegt Euch sehr langsam.
+Du bewegst dich sehr langsam.
 %%%%
 
 # Flying
@@ -564,13 +564,13 @@ flying
 fliegt
 %%%%
 You are flying.
-Ihr fliegt.
+Du fliegst.
 %%%%
 flying quickly and evasively
 fliegt schnell und ausweichend
 %%%%
 You are flying quickly and evasively.
-Ihr fliegt schnell und ausweichend.
+Du fliegst schnell und ausweichend.
 %%%%
 
 # Sick
@@ -582,19 +582,19 @@ badly diseased
 schwer erkrankt
 %%%%
 You are badly diseased.
-Ihr seid schwer erkrankt.
+Du bist schwer erkrankt.
 %%%%
 diseased
 erkrankt
 %%%%
 You are diseased.
-Ihr seid erkrankt.
+Du bist erkrankt.
 %%%%
 mildly diseased
 leicht erkrankt
 %%%%
 You are mildly diseased.
-Ihr seid leicht erkrankt.
+Du bist leicht erkrankt.
 %%%%
 
 # Collapsing (strength has been drained to zero)
@@ -606,10 +606,10 @@ lost strength
 Stärke verloren
 %%%%
 You have no strength!
-Ihr habt keine Stärke mehr!
+Du hast keine Stärke mehr!
 %%%%
 You are recovering from loss of strength.
-Ihr erholt Euch von dem Verlust Eurer Stärke.
+Du erholst dich von dem Verlust deiner Stärke.
 %%%%
 
 # Brainless (intelligence has been drained to zero)
@@ -621,10 +621,10 @@ lost intelligence
 verlorene Intelligenz
 %%%%
 You have no intelligence!
-Ihr habt keine Intelligenz!
+Du hast keine Intelligenz!
 %%%%
 You are recovering from loss of intelligence.
-Ihr erholt Euch von dem Verlust Eurer Intelligenz.
+Du erholst dich von dem Verlust deiner Intelligenz.
 %%%%
 
 # Clumsy (dexterity has been drained to zero)
@@ -636,10 +636,10 @@ lost dexterity
 verlorene Geschicklichkeit
 %%%%
 You have no dexterity!
-Ihr habt keine Geschicklichkeit!
+Du hast keine Geschicklichkeit!
 %%%%
 You are recovering from loss of dexterity.
-Ihr erholt Euch von dem Verlust Eurer Geschicklichkeit.
+Du erholst dich von dem Verlust deiner Geschicklichkeit.
 %%%%
 
 # In or over water
@@ -664,7 +664,7 @@ RGesch
 #repelliert Geschosse
 %%%%
 You repel missiles.
-Ihr repelliert Geschosse.
+Du repellierst Geschosse.
 %%%%
 
 # Invisible
@@ -677,13 +677,13 @@ Unsicht
 #unsichtbar
 %%%%
 You are invisible.
-Ihr seid unsichtbar.
+Du bist unsichtbar.
 %%%%
 invisible (but backlit and visible)
 unsichtbar (aber hintergrundbeleuchtet und sichtbar)
 %%%%
 You are invisible (but backlit and visible).
-Ihr seid unsichtbar (aber hintergrundbeleuchtet und sichtbar).
+Du bist unsichtbar (aber hintergrundbeleuchtet und sichtbar).
 
 ##################
 # duration-data.h
@@ -704,10 +704,10 @@ Agi
 #Agilität
 %%%%
 You are agile.
-Ihr seid agil.
+Du bist agil.
 %%%%
 You feel a little less agile now.
-Ihr fühlt euch jetzt ein bisschen weniger agil.
+Du fühlst dich jetzt ein bisschen weniger agil.
 %%%%
 
 # Berserk
@@ -723,10 +723,10 @@ berserkend
 #berserk
 %%%%
 You are possessed by a berserker rage.
-Ihr seid von einer Berserkerwut besessen.
+Du bist von einer Berserkerwut besessen.
 %%%%
 You are no longer berserk.
-Ihr seid nicht mehr berserkerhaft.
+Du bist nicht mehr berserkerhaft.
 %%%%
 
 # on cooldown from Berserk
@@ -741,7 +741,7 @@ berserk cooldown
 Berserker-Abklingzeit
 %%%%
 You are unable to berserk.
-Ihr könnt nicht berserkern.
+Du kannst nicht berserkern.
 %%%%
 
 # on breath cooldown
@@ -756,10 +756,10 @@ breath weapon
 Atem-Waffe
 %%%%
 You are short of breath.
-Ihr seid kurzatmig.
+Du bist kurzatmig.
 %%%%
 You have got your breath back.
-Ihr habt Euren Atem zurückbekommen.
+Du hast deinen Atem zurückbekommen.
 %%%%
 
 # Brilliance (increases spell power)
@@ -774,10 +774,10 @@ brilliance
 Brillanz
 %%%%
 You are brilliant.
-Ihr seid brillant.
+Du bist brillant.
 %%%%
 You feel a little less clever now.
-Ihr fühlt euch jetzt ein bisschen weniger clever.
+Du fühlst dich jetzt ein bisschen weniger clever.
 %%%%
 
 # Confused
@@ -793,10 +793,10 @@ conf
 verw
 %%%%
 You are confused.
-Ihr seid verwirrt.
+Du bist verwirrt.
 %%%%
 You feel less confused.
-Ihr fühlt Euch weniger verwirrt.
+Du fühlst dich weniger verwirrt.
 %%%%
 
 # Confusing Touch spell active
@@ -830,7 +830,7 @@ erleuchtet von einer Korona
 #Korona
 %%%%
 You are no longer glowing.
-Ihr leuchtet nicht mehr.
+Du leuchtest nicht mehr.
 %%%%
 
 # Death Channel spell active (raises slain enemies as spectral things)
@@ -845,13 +845,13 @@ death channel
 Todeskanal
 %%%%
 You are channeling the dead.
-Ihr channelt die Toten.
+Du kanalisierst die Toten.
 %%%%
 Your unholy channel expires.
-Euer unheiliger Kanal erlischt.
+Dein unheiliger Kanal erlischt.
 %%%%
 Your unholy channel is weakening.
-Euer unheiliger Kanal wird schwächer.
+Dein unheiliger Kanal wird schwächer.
 %%%%
 
 # Vitality (Okawaru divine ability)
@@ -866,7 +866,7 @@ divine stamina
 göttliche Ausdauer
 %%%%
 You are divinely vitalised.
-Ihr seid göttlich vitalisiert.
+Du bist göttlich vitalisiert.
 %%%%
 divinely vigorous
 göttlich vitalisiert
@@ -875,7 +875,7 @@ divine vigour
 göttliche Vitalität
 %%%%
 You are imbued with divine vigour.
-Ihr seid von göttlicher Kraft durchdrungen.
+Du bist von göttlicher Kraft durchdrungen.
 %%%%
 
 # Exhausted
@@ -887,10 +887,10 @@ exhausted
 erschöpft
 %%%%
 You are exhausted.
-Ihr seid erschöpft.
+Du bist erschöpft.
 %%%%
 You feel less exhausted.
-Ihr fühlt euch weniger erschöpft.
+Du fühlst dich weniger erschöpft.
 %%%%
 
 # Ozocubu's armour
@@ -902,7 +902,7 @@ icy armour
 eisige Panzerung
 %%%%
 You are protected by a layer of icy armour.
-Ihr seid durch eine eisige Panzerung geschützt.
+Du bist durch eine eisige Panzerung geschützt.
 %%%%
 
 # on fire
@@ -918,10 +918,10 @@ liquid flames
 flüssige Flammen
 %%%%
 You are covered in liquid flames.
-Ihr seid in flüssige Flammen gehüllt.
+Du bist in flüssige Flammen gehüllt.
 %%%%
 You are no longer on fire.
-Ihr steht nicht mehr in Flammen.
+Du stehst nicht mehr in Flammen.
 %%%%
 
 # Reduced will
@@ -937,10 +937,10 @@ lowered wl
 schwäche wl
 %%%%
 You are weak-willed.
-Ihr seid willensschwach.
+Du bist willensschwach.
 %%%%
 You feel your willpower return.
-Ihr spürt eure Willenskraft zurückkehren.
+Du spürst eure Willenskraft zurückkehren.
 %%%%
 
 # Mighted
@@ -956,10 +956,10 @@ mächtig
 #Macht
 %%%%
 You are mighty.
-Ihr seid mächtig.
+Du bist mächtig.
 %%%%
 You feel a little less mighty now.
-Ihr fühlt euch jetzt ein bisschen weniger mächtig.
+Du fühlst dich jetzt ein bisschen weniger mächtig.
 %%%%
 
 # Paralysed
@@ -976,7 +976,7 @@ Para
 #Lähmung
 %%%%
 You are paralysed.
-Ihr seid gelähmt.
+Du bist gelähmt.
 %%%%
 
 # Petrified (i.e. turned to stone)
@@ -989,7 +989,7 @@ Stein
 #versteinert
 %%%%
 You are petrified.
-Ihr seid versteinert.
+Du bist versteinert.
 %%%%
 
 # Petrifying (i.e. turning to stone)
@@ -1002,7 +1002,7 @@ Verst
 #versteinernd
 %%%%
 You are turning to stone.
-Ihr werdet versteinert.
+Du wirst versteinert.
 %%%%
 
 # Potion of resistance
@@ -1018,13 +1018,13 @@ resistance
 Resistenz
 %%%%
 You are resistant to the elements.
-Ihr seid resistent gegen die Elemente.
+Du bist resistent gegen die Elemente.
 %%%%
 Your resistance to elements expires.
-Eure Resistenz gegen die Elemente lässt nach.
+Deine Resistenz gegen die Elemente lässt nach.
 %%%%
 You start to feel less resistant.
-Ihr fühlt Euch weniger resistent gegen die Elemente.
+Du fühlst dich weniger resistent gegen die Elemente.
 %%%%
 
 # Slimify
@@ -1040,10 +1040,10 @@ slimify
 verschleimen
 %%%%
 You feel less slimy.
-Ihr fühlt euch weniger schleimig.
+Du fühlst dich weniger schleimig.
 %%%%
 Your slime is starting to congeal.
-Euer Schleim beginnt zu erstarren.
+Dein Schleim beginnt zu erstarren.
 %%%%
 
 # Sleeping
@@ -1056,7 +1056,7 @@ schlafend
 #Schlaf
 %%%%
 You are sleeping.
-Ihr schlaft.
+Du schläfst.
 %%%%
 
 # About to teleport
@@ -1065,13 +1065,13 @@ Tele
 Tele
 %%%%
 about to teleport
-werdet gleich teleportieren
+wirst gleich teleportieren
 %%%%
 teleport
 teleportieren
 %%%%
 You are about to teleport.
-Ihr werdet gleich teleportieren.
+Du wirst gleich teleportieren.
 %%%%
 
 # Death's Door spell
@@ -1086,13 +1086,13 @@ deaths door
 Pforte des Todes
 %%%%
 You are standing in death's doorway.
-Ihr steht an der Pforte des Todes
+Du stehst an der Pforte des Todes
 %%%%
 Your life is in your own hands again!
-Euer Leben liegt wieder in euren eigenen Händen!
+Dein Leben liegt wieder in euren eigenen Händen!
 %%%%
 Your time is quickly running out!
-Eure Zeit läuft schnell ab!
+Deine Zeit läuft schnell ab!
 %%%%
 
 # Death's Door spell cooldown
@@ -1107,10 +1107,10 @@ deaths door cooldown
 Abklingzeit der Pforte des Todes
 %%%%
 You are unable to enter death's door.
-Ihr seid nicht in der Lage, die Pforte des Todes zu betreten.
+Du bist nicht in der Lage, die Pforte des Todes zu betreten.
 %%%%
 You step away from death's doorway.
-Ihr tretet zurück von der Pforte des Todes.
+Du trittst zurück von der Pforte des Todes.
 %%%%
 
 # 4x damage
@@ -1136,10 +1136,10 @@ silence
 Verstummung
 %%%%
 You radiate silence.
-Ihr strahlt Stille aus.
+Du strahlst Stille aus.
 %%%%
 Your hearing returns.
-Euer Gehör kehrt zurück.
+Dein Gehör kehrt zurück.
 %%%%
 
 # Stealth
@@ -1154,10 +1154,10 @@ stealth
 Heimlichkeit
 %%%%
 You are especially stealthy.
-Ihr seid besonders heimlich.
+Du bist besonders heimlich.
 %%%%
 You feel less stealthy.
-Ihr fühlt Euch weniger heimlich.
+Du fühlst dich weniger heimlich.
 %%%%
 
 # Fear spell
@@ -1169,10 +1169,10 @@ afraid
 ängstlich
 %%%%
 You are terrified.
-Ihr seid verängstigt.
+Du bist verängstigt.
 %%%%
 Your fear fades away.
-Eure Angst verblasst.
+Deine Angst verblasst.
 %%%%
 
 # Injury Mirror
@@ -1188,10 +1188,10 @@ spiegelt Verletzungen
 Schäden spiegeln
 %%%%
 You mirror injuries.
-Ihr spiegelt Verletzungen.
+Du spiegelst Verletzungen.
 %%%%
 Your dark mirror aura disappears.
-Eure dunkle Spiegelaura verschwindet.
+Deine dunkle Spiegelaura verschwindet.
 %%%%
 
 # Polar Vortex spell
@@ -1207,7 +1207,7 @@ in einem Wirbel
 #Wirbel
 %%%%
 You are in the eye of a polar vortex.
-Ihr befindet euch im Auge eines Polarwirbels.
+Du befindest dich im Auge eines Polarwirbels.
 %%%%
 
 # Leda's Liquefaction spell
@@ -1219,10 +1219,10 @@ liquefying
 verflüssigend
 %%%%
 You are liquefying the ground beneath you.
-Ihr verflüssigt den Boden unter Euch.
+Du verflüssigst den Boden unter dir.
 %%%%
 The ground is no longer liquid beneath you.
-Der Boden unter euch ist nicht mehr flüssig.
+Der Boden unter dir ist nicht mehr flüssig.
 %%%%
 
 # Heroism (Okawaru divine ability)
@@ -1237,7 +1237,7 @@ heroism
 Heldentum
 %%%%
 You possess the skills of a mighty hero.
-Ihr hat die Fertigkeiten eines mächtigen Helden.
+Du hast die Fertigkeiten eines mächtigen Helden.
 %%%%
 
 # Finesse (Okawaru divine ability)
@@ -1252,7 +1252,7 @@ finesse
 Finesse
 %%%%
 Your blows are lightning fast.
-Eure Schläge sind blitzschnell.
+Deine Schläge sind blitzschnell.
 %%%%
 
 # Divine protection
@@ -1267,10 +1267,10 @@ lifesaving
 Lebensrettung
 %%%%
 You are calling for your life to be saved.
-Ihr ruft, dass Euer Leben gerettet werden soll.
+Du rufst, dass dein Leben gerettet werden soll.
 %%%%
 Your divine protection fades away.
-Euer göttlicher Schutz verblasst.
+Dein göttlicher Schutz verblasst.
 %%%%
 
 # Polar vortex cooldown
@@ -1285,10 +1285,10 @@ vortex cooldown
 Wirbel-Abklingzeit
 %%%%
 You are unable to create a polar vortex.
-Ihr seid nicht in der Lage, einen Polarwirbel zu erzeugen.
+Du bist nicht in der Lage, einen Polarwirbel zu erzeugen.
 %%%%
 The winds around you calm down.
-Die Winde um euch herum beruhigen sich.
+Die Winde um dich herum beruhigen sich.
 %%%%
 
 # Disjunction spell
@@ -1303,7 +1303,7 @@ disjunction
 Disjunktion
 %%%%
 You are disjoining your surroundings.
-Ihr trennt euch von eurer Umgebung.
+Du trennst deine Umgebung.
 %%%%
 The translocation energy dissipates.
 Die Translokationsenergie verflüchtigt sich.
@@ -1321,10 +1321,10 @@ markiert
 #Sentinel-Zeichen
 %%%%
 A sentinel's mark is revealing your location to enemies.
-Das Zeichen eines Wächters verrät Euren Feinden Euren Standort.
+Das Zeichen eines Wächters verrät deinen Feinden deinen Standort.
 %%%%
 The sentinel's mark upon you fades away.
-Das Zeichen des Wächters auf Euch verblasst.
+Das Zeichen des Wächters auf dich verblasst.
 %%%%
 
 %%%%
@@ -1338,13 +1338,13 @@ wereblood
 Werblut
 %%%%
 Your melee attacks are strengthened by your wereblood.
-Eure Nahkampfangriffe werden durch Eure Werblut verstärkt.
+Deine Nahkampfangriffe werden durch deine Werblut verstärkt.
 %%%%
 Your primal bloodlust has ended.
-Euer ursprünglicher Blutrausch ist beendet.
+Dein ursprünglicher Blutrausch ist beendet.
 %%%%
 Your primal bloodlust is almost over.
-Euer ursprünglicher Blutrausch ist fast vorbei.
+Dein ursprünglicher Blutrausch ist fast vorbei.
 %%%%
 
 %%%%
@@ -1356,7 +1356,7 @@ Häut
 #gehäutet
 %%%%
 You are covered in terrible wounds.
-Ihr seid mit schrecklichen Wunden übersät.
+Du bist mit schrecklichen Wunden übersät.
 %%%%
 
 %%%%
@@ -1371,10 +1371,10 @@ geschwächt
 #schwach
 %%%%
 Your attacks are enfeebled.
-Eure Angriffe sind geschwächt.
+Deine Angriffe sind geschwächt.
 %%%%
 Your attacks no longer feel as feeble.
-Eure Angriffe fühlen sich nicht mehr so schwach an.
+Deine Angriffe fühlen sich nicht mehr so schwach an.
 %%%%
 
 %%%%
@@ -1389,10 +1389,10 @@ Unverschiebbar
 #Dimensionsanker
 %%%%
 You are firmly anchored to this plane.
-Ihr seid fest in dieser Ebene verankert.
+Du bist fest in dieser Ebene verankert.
 %%%%
 You are no longer firmly anchored in space.
-Ihr seid nicht mehr fest im Raum verankert.
+Du bist nicht mehr fest im Raum verankert.
 %%%%
 
 %%%%
@@ -1403,10 +1403,10 @@ immobile
 unbeweglich
 %%%%
 You are magically locked in place.
-Ihr seid magisch an eurem Platz fixiert.
+Du bist magisch an eurem Platz fixiert.
 %%%%
 You are no longer locked in place.
-Ihr seid nicht länger an eurem Platz fixiert.
+Du bist nicht länger an eurem Platz fixiert.
 %%%%
 
 # Toxic Radiance spell
@@ -1421,10 +1421,10 @@ toxic radiance
 giftige Ausstrahlung
 %%%%
 You are radiating toxic energy.
-Ihr strahlt giftige Energie aus.
+Du strahlst giftige Energie aus.
 %%%%
 Your toxic aura wanes.
-Eure toxische Aura schwindet.
+Deine toxische Aura schwindet.
 %%%%
 
 # Recite (Zin divine ability)
@@ -1440,7 +1440,7 @@ recite
 rezitieren
 %%%%
 You are reciting Zin's Axioms of Law.
-Ihr rezitiert Zins Axiome des Gesetzes.
+Du rezitierst Zins Axiome des Gesetzes.
 %%%%
 
 # Recite cooldown
@@ -1452,10 +1452,10 @@ on recite cooldown
 auf Abklingzeit des Rezitierens
 %%%%
 You are unable to recite.
-Ihr seid nicht in der Lage zu rezitieren.
+Du bist nicht in der Lage zu rezitieren.
 %%%%
 You are ready to recite again.
-Ihr seid bereit, erneut zu rezitieren.
+Du bist bereit, erneut zu rezitieren.
 %%%%
 
 # Fire vulnerability
@@ -1470,10 +1470,10 @@ fire vulnerability
 Feuerverwundbarkeit
 %%%%
 You are more vulnerable to fire.
-Ihr seid stärker durch Feuer gefährdet.
+Du bist stärker durch Feuer gefährdet.
 %%%%
 You feel less vulnerable to fire.
-Ihr fühlt euch weniger anfällig für Feuer.
+Du fühlst dich weniger anfällig für Feuer.
 %%%%
 
 # Barbs from a Manticore, etc.
@@ -1503,10 +1503,10 @@ poison vulnerability
 Giftanfälligkeit
 %%%%
 You are more vulnerable to poison.
-Ihr seid anfälliger für Gift.
+Du bist anfälliger für Gift.
 %%%%
 You feel less vulnerable to poison.
-Ihr fühlt euch weniger anfällig für Gift.
+Du fühlst dich weniger anfällig für Gift.
 %%%%
 
 # Let it go, let it go
@@ -1519,10 +1519,10 @@ Gefroren
 #gefroren
 %%%%
 You are partly encased in ice.
-Ihr seid teilweise in Eis eingeschlossen.
+Du bist teilweise in Eis eingeschlossen.
 %%%%
 The ice encasing you melts away.
-Das Eis, das euch umgibt, schmilzt weg.
+Das Eis, das dich umgibt, schmilzt weg.
 %%%%
 
 # Magic sapped
@@ -1539,10 +1539,10 @@ Auslaugen
 #Magie auslaugen
 %%%%
 Casting spells hinders your spell success.
-Das Wirken von Zaubern behindert Euren Zaubererfolg.
+Das Wirken von Zaubern behindert deinen Zaubererfolg.
 %%%%
 Your magic seems less tainted.
-Eure Magie scheint weniger verdorben zu sein.
+Deine Magie scheint weniger verdorben zu sein.
 %%%%
 
 # Portal Projectile spell
@@ -1557,10 +1557,10 @@ portal projectile
 Portal-Geschoss
 %%%%
 You are teleporting projectiles to their destination.
-Ihr teleportiert Geschosse an ihren Bestimmungsort.
+Du teleportierst Geschosse an ihren Bestimmungsort.
 %%%%
 You are no longer teleporting projectiles to their destination.
-Ihr teleportiert keine Geschosse mehr an ihren Bestimmungsort.
+Du teleportierst keine Geschosse mehr an ihren Bestimmungsort.
 %%%%
 
 # Summon Forrest spell
@@ -1572,7 +1572,7 @@ forested
 bewaldet
 %%%%
 You are summoning a forest.
-Ihr beschwört einen Wald.
+Du beschwörst einen Wald.
 %%%%
 Space becomes stable.
 Der Raum wird stabil.
@@ -1590,7 +1590,7 @@ dragon call
 Drachenruf
 %%%%
 You are beckoning forth a horde of dragons.
-Ihr ruft eine Drachenhorde herbei.
+Du rufst eine Drachenhorde herbei.
 %%%%
 The roar of the dragon horde subsides.
 Das Gebrüll der Drachenhorde verstummt.
@@ -1608,10 +1608,10 @@ dragon call cooldown
 Abklingzeit des Drachenrufs
 %%%%
 You are unable to call dragons.
-Ihr seid nicht in der Lage, Drachen zu rufen.
+Du bist nicht in der Lage, Drachen zu rufen.
 %%%%
 You can once more reach out to the dragon horde.
-Ihr könnt die Drachenhorde noch einmal erreichen.
+Du kannst die Drachenhorde noch einmal erreichen.
 %%%%
 
 # No potion
@@ -1626,10 +1626,10 @@ no potions
 keine Tränke
 %%%%
 You cannot drink potions.
-Ihr könnt keine Tränke trinken.
+Du kannst keine Tränke trinken.
 %%%%
 You can drink potions again.
-Ihr könnt wieder Tränke trinken.
+Du kannst wieder Tränke trinken.
 %%%%
 
 # Fire resistance
@@ -1644,13 +1644,13 @@ qazlal fire resistance
 Qazlal Feuerresistenz
 %%%%
 Qazlal is protecting you from fire.
-Qazlal schützt Euch vor Feuer.
+Qazlal schützt dich vor Feuer.
 %%%%
 You feel less protected from fire.
-Ihr fühlt Euch weniger vor Feuer geschützt.
+Du fühlst dich weniger vor Feuer geschützt.
 %%%%
 Your protection from fire is fading.
-Euer Schutz vor Feuer lässt nach.
+Dein Schutz vor Feuer lässt nach.
 %%%%
 
 # Cold resistance
@@ -1665,13 +1665,13 @@ qazlal cold resistance
 qazlal kälteresistenz
 %%%%
 Qazlal is protecting you from cold.
-Qazlal schützt euch vor Kälte.
+Qazlal schützt dich vor Kälte.
 %%%%
 You feel less protected from cold.
-Ihr fühlt euch weniger vor Kälte geschützt.
+Du fühlst dich weniger vor Kälte geschützt.
 %%%%
 Your protection from cold is fading.
-Euer Schutz vor Kälte lässt nach.
+Dein Schutz vor Kälte lässt nach.
 %%%%
 
 # Electricity resistance
@@ -1686,13 +1686,13 @@ qazlal elec resistance
 qazlal elec Resistanz
 %%%%
 Qazlal is protecting you from electricity.
-Qazlal schützt euch vor Elektrizität.
+Qazlal schützt dich vor Elektrizität.
 %%%%
 You feel less protected from electricity.
-Ihr fühlt euch weniger vor Elektrizität geschützt.
+Du fühlst dich weniger vor Elektrizität geschützt.
 %%%%
 Your protection from electricity is fading.
-Euer Schutz vor Elektrizität lässt nach.
+Dein Schutz vor Elektrizität lässt nach.
 %%%%
 
 # Physical damage resistance
@@ -1704,13 +1704,13 @@ qazlal ac
 qazlal ac
 %%%%
 Qazlal is protecting you from physical damage.
-Qazlal schützt euch vor physischem Schaden.
+Qazlal schützt dich vor physischem Schaden.
 %%%%
 You feel less protected from physical attacks.
-Ihr fühlt euch weniger geschützt vor physischen Angriffen.
+Du fühlst dich weniger geschützt vor physischen Angriffen.
 %%%%
 Your protection from physical attacks is fading.
-Euer Schutz vor physischen Angriffen nimmt ab.
+Dein Schutz vor physischen Angriffen nimmt ab.
 %%%%
 
 # Corroded
@@ -1726,10 +1726,10 @@ corrosion
 Korrosion
 %%%%
 You are corroded.
-Ihr seid korrodiert.
+Du bist korrodiert.
 %%%%
 You are no longer corroded.
-Ihr seid nicht mehr korrodiert.
+Du bist nicht mehr korrodiert.
 %%%%
 
 # Horrified
@@ -1745,7 +1745,7 @@ horror
 Entsetzen
 %%%%
 You are horrified, weakening your attacks and spells.
-Ihr seid entsetzt, wodurch eure Angriffe und Zauber geschwächt werden.
+Du bist entsetzt, wodurch eure Angriffe und Zauber geschwächt werden.
 %%%%
 
 # Unable to read scrolls
@@ -1754,16 +1754,16 @@ Ihr seid entsetzt, wodurch eure Angriffe und Zauber geschwächt werden.
 -Scroll
 %%%%
 unable to read
-könnt nicht lesen
+kannst nicht lesen
 %%%%
 no scrolls
 keine Schriftrollen
 %%%%
 You cannot read scrolls.
-Ihr könnt keine Schriftrollen lesen.
+Du kannst keine Schriftrollen lesen.
 %%%%
 You can read scrolls again.
-Ihr könnt wieder Schriftrollen lesen.
+Du kannst wieder Schriftrollen lesen.
 %%%%
 
 # Divine Shield (Shining One divine ability)
@@ -1775,7 +1775,7 @@ divine shield
 göttlicher Schild
 %%%%
 You are shielded by the power of the Shining One.
-Ihr seid durch die Macht des Strahlenden geschirmt.
+Du bist durch die Macht des Strahlenden geschirmt.
 %%%%
 
 # Cleaving
@@ -1791,10 +1791,10 @@ cleave
 spalten
 %%%%
 You are cleaving through your foes.
-Ihr spaltet durch eure Feinde.
+Du spaltest durch eure Feinde.
 %%%%
 Your cleaving frenzy subsides.
-Eure Spaltungswut lässt nach.
+Deine Spaltungswut lässt nach.
 %%%%
 
 # Ambrosia
@@ -1809,7 +1809,7 @@ ambrosia
 Ambrosia
 %%%%
 You are regenerating under the effects of ambrosia.
-Ihr regeneriert Euch unter der Wirkung von Ambrosia.
+Du regenerierst dich unter der Wirkung von Ambrosia.
 %%%%
 
 # Channel Magic (Sif Muna divine ability)
@@ -1824,7 +1824,7 @@ channel
 leitet
 %%%%
 You are rapidly regenerating magical energy.
-Ihr regeneriert schnell magische Energie.
+Du regenerierst schnell magische Energie.
 %%%%
 
 %%%%
@@ -1838,7 +1838,7 @@ howl
 heulen
 %%%%
 A terrible howling echoes in your mind.
-Ein schreckliches Heulen hallt in Eurem Geist wider.
+Ein schreckliches Heulen hallt in deinem Geist wider.
 %%%%
 The infernal howling subsides.
 Das infernalische Heulen verstummt.
@@ -1873,10 +1873,10 @@ sanguine armour
 Sanguinische Rüstung
 %%%%
 Your shed blood clings to and protects you.
-Euer vergossenes Blut haftet an dir und schützt dich.
+Dein vergossenes Blut haftet an dir und schützt dich.
 %%%%
 Your blood armour dries and flakes away.
-Euer Blutpanzer trocknet und blättert ab.
+Dein Blutpanzer trocknet und blättert ab.
 %%%%
 
 # Protective auro from spectral weapon (is this still possible?)
@@ -1888,7 +1888,7 @@ protection aura
 Schutzaura
 %%%%
 Your weapon is exuding a protective aura.
-Eure Waffe verströmt eine schützende Aura.
+Deine Waffe verströmt eine schützende Aura.
 %%%%
 
 # Barachi Hop ability cooldown
@@ -1897,16 +1897,16 @@ Eure Waffe verströmt eine schützende Aura.
 -Hop
 %%%%
 unable to hop
-könnt nicht hüpfen
+kannst nicht hüpfen
 %%%%
 no hop
 nicht hüpfen
 %%%%
 You are unable to hop.
-Ihr seid nicht in der Lage zu hüpfen.
+Du bist nicht in der Lage zu hüpfen.
 %%%%
 You are ready to hop once more.
-Ihr seid bereit, noch einmal zu hüpfen.
+Du bist bereit, noch einmal zu hüpfen.
 %%%%
 
 # Blinkbolt cooldown
@@ -1922,7 +1922,7 @@ no blinkbolt
 kein Blinzelbolzen
 %%%%
 You feel energetic enough to blinkbolt again.
-Ihr fühlt Euch energiegeladen genug, um wieder zu blinzelbolzenen.
+Du fühlst dich energiegeladen genug, um wieder zu blinzelbolzenen.
 %%%%
 
 %%%%
@@ -1933,7 +1933,7 @@ acrobat
 Akrobat
 %%%%
 You are acrobatic and have increased evasion.
-Ihr seid akrobatisch und hast eine erhöhte Ausweichfähigkeit.
+Du bist akrobatisch und hast eine erhöhte Ausweichfähigkeit.
 %%%%
 
 %%%%
@@ -1947,7 +1947,7 @@ attract
 anziehen
 %%%%
 You attract monsters toward you.
-Ihr lockt Monster zu Euch.
+Du lockst Monster zu dir.
 %%%%
 
 # Under the effects of the Elixir card
@@ -1962,7 +1962,7 @@ elixir
 Elixier
 %%%%
 You are rapidly regenerating health and magic.
-Ihr regeneriert schnell Gesundheit und Magie.
+Du regenerierst schnell Gesundheit und Magie.
 %%%%
 
 %%%%
@@ -1976,10 +1976,10 @@ word of chaos cooldown
 Abklingzeit des Wortes des Chaos
 %%%%
 You are unable to speak a word of chaos.
-Ihr seid nicht in der Lage, ein Wort des Chaos zu sprechen.
+Du bist nicht in der Lage, ein Wort des Chaos zu sprechen.
 %%%%
 You are ready to speak a word of chaos again.
-Ihr seid bereit, wieder ein Wort des Chaos zu sprechen.
+Du bist bereit, wieder ein Wort des Chaos zu sprechen.
 %%%%
 
 %%%%
@@ -1987,14 +1987,14 @@ invis
 invis
 %%%%
 You flicker for a moment.
-Ihr flackert einen Moment lang.
+Du flackerst einen Moment lang.
 %%%%
 %%%%
 You feel more conspicuous.
-Ihr fühlt euch auffälliger.
+Du fühlst dich auffälliger.
 %%%%
 You flicker back into view.
-Ihr flackert wieder ins Blickfeld.
+Du flackerst wieder ins Blickfeld.
 %%%%
 
 %%%%
@@ -2009,7 +2009,7 @@ Ihr flackert wieder ins Blickfeld.
 #mesmerisiert
 %%%%
 You break out of your daze.
-Ihr bricht aus Eurer Benommenheit aus.
+Du brichst aus deiner Benommenheit aus.
 %%%%
 mesmerisation immunity
 Immunität gegen Mesmerisation
@@ -2058,7 +2058,7 @@ icemail depleted
 Eispost verbraucht
 %%%%
 Your icy envelope is restored.
-Euer eisiger Umschlag ist wiederhergestellt.
+Dein eisiger Umschlag ist wiederhergestellt.
 %%%%
 paralysis immunity
 Immunität gegen Lähmung
@@ -2086,10 +2086,10 @@ trogs hand
 Trogs Hand
 %%%%
 Your willpower is greatly increased.
-Eure Willenskraft ist stark erhöht.
+Deine Willenskraft ist stark erhöht.
 %%%%
 You feel the effects of Trog's Hand fading.
-Ihr spürt, wie die Wirkung von Trogs Hand nachlässt.
+Du spürst, wie die Wirkung von Trogs Hand nachlässt.
 %%%%
 
 %%%%
@@ -2123,7 +2123,7 @@ grasping roots
 fassende Wurzeln
 %%%%
 You are constricted by grasping roots.
-Ih seid von Wurzeln umschlungen.
+Du bist von Wurzeln umschlungen.
 %%%%
 
 %%%%
@@ -2143,10 +2143,10 @@ noxious bog
 giftiger Sumpf
 %%%%
 You are spewing a noxious bog.
-Ihr spuckt einen giftigen Schlamm.
+Du spuckst einen giftigen Schlamm.
 %%%%
 Your noxious spew wanes.
-Euer giftiges Spucken lässt nach.
+Dein giftiges Spucken lässt nach.
 %%%%
 
 # Frozen Ramparts spell
@@ -2161,7 +2161,7 @@ frozen ramparts
 Gefrorene Wälle
 %%%%
 You have covered nearby walls with an icy ambush.
-Ihr habt nahe gelegene Mauern mit einem eisigen Hinterhalt überzogen.
+Du hast nahe gelegene Mauern mit einem eisigen Hinterhalt überzogen.
 %%%%
 
 # Heavenly Storm (Wu Jian ability)
@@ -2173,7 +2173,7 @@ heavenly storm
 himmlischer Sturm
 %%%%
 Heavenly clouds are increasing your accuracy and damage.
-Himmlische Wolken erhöhen Eure Treffsicherheit und Euren Schaden.
+Himmlische Wolken erhöhen deine Treffsicherheit und deinen Schaden.
 %%%%
 
 # Sickness
@@ -2182,5 +2182,5 @@ sickness
 krankheit
 %%%%
 You feel your health improve.
-Ihr spürs, wie sich Eure Gesundheit verbessert.
+Du spürst, wie sich deine Gesundheit verbessert.
 %%%%

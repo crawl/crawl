@@ -14,16 +14,16 @@
 
 %%%%
 your %sweapon
-Eure {adj-e}%sWaffe
+deine {adj-e}%sWaffe
 %%%%
 your polearm
-Eure Stangenwaffe
+deine Stangenwaffe
 %%%%
 your launcher
-Euer Werfer
+dein Werfer
 %%%%
 your missile
-{n}Euer Geschoss
+{n}dein Geschoss
 %%%%
 
 #################################
@@ -32,128 +32,128 @@ your missile
 
 %%%%
 your %sclub
-Eure {adj-e}%sKeule
+deine {adj-e}%sKeule
 %%%%
 your %swhip
-Eure {adj-e}%sPeitsche
+deine {adj-e}%sPeitsche
 %%%%
 your %smace
-Euer {adj-er}%sStreitkolben
+dein {adj-er}%sStreitkolben
 %%%%
 your %sflail
-Euer {adj-er}%sFlegel
+dein {adj-er}%sFlegel
 %%%%
 your %smorningstar
-Euer {adj-er}%sMorgenstern
+dein {adj-er}%sMorgenstern
 %%%%
 your %sdemon whip
-Eure {adj-e}%sDämonenpeitsche
+deine {adj-e}%sDämonenpeitsche
 %%%%
 your %ssacred scourge
-Eure {adj-e}%sgeistliche Geißel
+deine {adj-e}%sgeistliche Geißel
 %%%%
 your %sdire flail
-Euer {adj-er}%sSchreckensflegel
+dein {adj-er}%sSchreckensflegel
 %%%%
 your %seveningstar
-Euer {adj-er}%sAbendstern
+dein {adj-er}%sAbendstern
 %%%%
 your %sgreat mace
-Euer {adj-er}%sgroßer Streitkolben
+dein {adj-er}%sgroßer Streitkolben
 %%%%
 your %sgiant club
-Eure {adj-e}%sRiesenkeule
+deine {adj-e}%sRiesenkeule
 %%%%
 your %sgiant spiked club
-Eure {adj-e}%sriesige Stachelkeule
+deine {adj-e}%sriesige Stachelkeule
 %%%%
 your %sdagger
-Euer {adj-er}%sDolch
+dein {adj-er}%sDolch
 %%%%
 your %squick blade
-Eure {adj-e}%sSchnellklinge
+deine {adj-e}%sSchnellklinge
 %%%%
 your %sshort sword
-Euer {adj-es}%sKurzschwert
+dein {adj-es}%sKurzschwert
 %%%%
 your %srapier
-Euer {adj-es}%sRapier
+dein {adj-es}%sRapier
 %%%%
 your %sfalchion
-Euer {adj-es}%sFalchion
+dein {adj-es}%sFalchion
 %%%%
 your %slong sword
-Euer {adj-es}%sLangschwert
+dein {adj-es}%sLangschwert
 %%%%
 your %sscimitar
-Euer {adj-er}%sKrummsäbel
+dein {adj-er}%sKrummsäbel
 %%%%
 your %sdemon blade
-Eure {adj-e}%sDämonenklinge
+deine {adj-e}%sDämonenklinge
 %%%%
 your %seudemon blade
-Eure {adj-e}%sEudämonenklinge
+deine {adj-e}%sEudämonenklinge
 %%%%
 your %sdouble sword
-Euer {adj-es}%sDoppelschwert
+dein {adj-es}%sDoppelschwert
 %%%%
 your %sgreat sword
-Euer {adj-es}%sGroßschwert
+dein {adj-es}%sGroßschwert
 %%%%
 your %striple sword
-Euer {adj-es}%sDreifach-Schwert
+dein {adj-es}%sDreifach-Schwert
 %%%%
 your %shand axe
-Euer {adj-es}%sHandbeil
+dein {adj-es}%sHandbeil
 %%%%
 your %swar axe
-Eure {adj-e}%sKriegsaxt
+deine {adj-e}%sKriegsaxt
 %%%%
 your %sbroad axe
-Eure {adj-e}%sBreitaxt
+deine {adj-e}%sBreitaxt
 %%%%
 your %sbattleaxe
-Eure {adj-e}%sStreitaxt
+deine {adj-e}%sStreitaxt
 %%%%
 your %sexecutioner's axe
-Eure {adj-e}%sHenkersaxt
+deine {adj-e}%sHenkersaxt
 %%%%
 your %sspear
-Euer {adj-er}%sSpeer
+dein {adj-er}%sSpeer
 %%%%
 your %strident
-Euer {adj-er}%sDreizack
+dein {adj-er}%sDreizack
 %%%%
 your %shalberd
-Eure {adj-e}%sHellebarde
+deine {adj-e}%sHellebarde
 %%%%
 your %sscythe
-Eure {adj-e}%sSense
+deine {adj-e}%sSense
 %%%%
 your %sdemon trident
-Euer {adj-er}%sDämonendreizack
+dein {adj-er}%sDämonendreizack
 %%%%
 your %strishula
-Euer {adj-er}%sTrishula
+dein {adj-er}%sTrishula
 %%%%
 your %sglaive
-Eure {adj-e}%sGleve
+deine {adj-e}%sGleve
 %%%%
 your %sbardiche
-Eure {adj-e}%sBardiche
+deine {adj-e}%sBardiche
 %%%%
 your %squarterstaff
-Euer {adj-er}%sKampfstab
+dein {adj-er}%sKampfstab
 %%%%
 your %slajatang
-Euer {adj-er}%sLajatang
+dein {adj-er}%sLajatang
 %%%%
 your %slance
-Eure {adj-e}%sLanze
+deine {adj-e}%sLanze
 %%%%
 # "Gyre" and "Gimble" - base name
 your %spair of quick blades
-Euer {adj-es}%sPaar Schnellklingen
+dein {adj-es}%sPaar Schnellklingen
 %%%%
 
 #################################
@@ -162,25 +162,25 @@ Euer {adj-es}%sPaar Schnellklingen
 
 %%%%
 your %shunting sling
-Eure {adj-e}%sSchleuder
+deine {adj-e}%sSchleuder
 %%%%
 your %sfustibalus
-Euer {adj-er}%sFustibalus
+dein {adj-er}%sFustibalus
 %%%%
 your %shand crossbow
-Eure {adj-e}%sHandarmbrust
+deine {adj-e}%sHandarmbrust
 %%%%
 your %sarbalest
-Eure {adj-e}%sArmbrust
+deine {adj-e}%sArmbrust
 %%%%
 your %striple crossbow
-Eure {adj-e}%sDreifach-Armbrust
+deine {adj-e}%sDreifach-Armbrust
 %%%%
 your %sshortbow
-Euer {adj-er}%sKurzbogen
+dein {adj-er}%sKurzbogen
 %%%%
 your %slongbow
-Euer {adj-er}%sLangbogen
+dein {adj-er}%sLangbogen
 %%%%
 
 #################################
@@ -189,53 +189,53 @@ Euer {adj-er}%sLangbogen
 
 %%%%
 your arrow
-Euer Pfeil
+dein Pfeil
 %%%%
 your bolt
-Euer Bolzen
+dein Bolzen
 %%%%
 # the artefact arbalest "Damnation" shoots these
 your damnation bolt
-Euer Verdammnis-Bolzen
+dein Verdammnis-Bolzen
 %%%%
 your dart
-Euer Wurfpfeil
+dein Wurfpfeil
 %%%%
 your poisoned dart
-Euer vergifteter Wurfpfeil
+dein vergifteter Wurfpfeil
 %%%%
 your atropa-tipped dart
-Euer Atropa-Wurfpfeil
+dein Atropa-Wurfpfeil
 %%%%
 your curare-tipped dart
-Euer Curare-Wurfpfeil
+dein Curare-Wurfpfeil
 %%%%
 your datura-tipped dart
-Euer Datura-Wurfpfeil
+dein Datura-Wurfpfeil
 %%%%
 your stone
-Euer Stein
+dein Stein
 %%%%
 your large rock
-Euer Felsblock
+dein Felsblock
 %%%%
 your sling bullet
-Eure Schleuderkugel
+deine Schleuderkugel
 %%%%
 your javelin
-Euer Wurfspeer
+dein Wurfspeer
 %%%%
 your silver javelin
-Euer Silberwurfspeer
+dein Silberwurfspeer
 %%%%
 your throwing net
-{n}Euer Wurfnetz
+{n}dein Wurfnetz
 %%%%
 your boomerang
-Euer Bumerang
+dein Bumerang
 %%%%
 your silver boomerang
-Euer Silberbumerang
+dein Silberbumerang
 %%%%
 
 #################################
@@ -244,91 +244,91 @@ Euer Silberbumerang
 
 %%%%
 your %sanimal skin
-Eure {adj-e}%sTierhaut
+deine {adj-e}%sTierhaut
 %%%%
 your %srobe
-Eure {adj-e}%sRobe
+deine {adj-e}%sRobe
 %%%%
 your %sleather armour
-Eure {adj-e}%sLederrüstung
+deine {adj-e}%sLederrüstung
 %%%%
 your %sring mail
-Euer {adj-er}%sRingpanzer
+dein {adj-er}%sRingpanzer
 %%%%
 your %sscale mail
-Euer {adj-er}%sSchuppenpanzer
+dein {adj-er}%sSchuppenpanzer
 %%%%
 your %schain mail
-Euer {adj-er}%sKettenpanzer
+dein {adj-er}%sKettenpanzer
 %%%%
 your %splate armour
-Euer {adj-er}%sPlattenpanzer
+dein {adj-er}%sPlattenpanzer
 %%%%
 your %scrystal plate armour
-Euer {adj-er}%sKristallplattenpanzer
+dein {adj-er}%sKristallplattenpanzer
 %%%%
 your %stroll leather armour
-Eure {adj-e}%sTrolllederrüstung
+deine {adj-e}%sTrolllederrüstung
 %%%%
 your %scloak
-Euer {adj-er}%sUmhang
+dein {adj-er}%sUmhang
 %%%%
 your %sscarf
-Euer {adj-er}%sSchal
+dein {adj-er}%sSchal
 %%%%
 your %spair of %sgloves
-Euer {adj-es}%sPaar {adj-e}%sHandschuhe
+dein {adj-es}%sPaar {adj-e}%sHandschuhe
 %%%%
 your %shelmet
-Euer {adj-er}%sHelm
+dein {adj-er}%sHelm
 %%%%
 your %shat
-Euer {adj-er}%sHut
+dein {adj-er}%sHut
 %%%%
 your %spair of %sboots
-Euer {adj-es}%sPaar {adj-e}%sStiefel
+dein {adj-es}%sPaar {adj-e}%sStiefel
 %%%%
 your %sbarding
-Euer {adj-es}%sGelieger
+dein {adj-es}%sGelieger
 %%%%
 your %sbuckler
-Euer {adj-er}%sBuckler
+dein {adj-er}%sBuckler
 %%%%
 your %skite shield
-Euer {adj-er}%sKiteschild
+dein {adj-er}%sKiteschild
 %%%%
 your %stower shield
-Euer {adj-er}%sTurmschild
+dein {adj-er}%sTurmschild
 %%%%
 your %ssteam dragon scales
-Eure {adj-en}%sDampfdrachenschuppen
+deine {adj-en}%sDampfdrachenschuppen
 %%%%
 your %sacid dragon scales
-Eure {adj-en}%sSauredrachenschuppen
+deine {adj-en}%sSauredrachenschuppen
 %%%%
 your %squicksilver dragon scales
-Eure {adj-en}%sQuecksilberdrachenschuppen
+deine {adj-en}%sQuecksilberdrachenschuppen
 %%%%
 your %sswamp dragon scales
-Eure {adj-en}%sSumpfdrachenschuppen
+deine {adj-en}%sSumpfdrachenschuppen
 %%%%
 your %sfire dragon scales
-Eure {adj-en}%sFeuerdrachenschuppen
+deine {adj-en}%sFeuerdrachenschuppen
 %%%%
 your %sice dragon scales
-Eure {adj-en}%sEisdrachenschuppen
+deine {adj-en}%sEisdrachenschuppen
 %%%%
 your %spearl dragon scales
-Eure {adj-en}%sPerlendrachenschuppen
+deine {adj-en}%sPerlendrachenschuppen
 %%%%
 your %sstorm dragon scales
-Eure {adj-en}%sSturmdrachenschuppen
+deine {adj-en}%sSturmdrachenschuppen
 %%%%
 your %sshadow dragon scales
-Eure {adj-en}%sSchattendrachenschuppen
+deine {adj-en}%sSchattendrachenschuppen
 %%%%
 your %sgold dragon scales
-Eure {adj-en}%sGolddrachenschuppen
+deine {adj-en}%sGolddrachenschuppen
 %%%%
 
 #################################
@@ -337,97 +337,97 @@ Eure {adj-en}%sGolddrachenschuppen
 
 %%%%
 your %sring
-Euer {adj-er}%sRing
+dein {adj-er}%sRing
 %%%%
 
 # unidentified
 %%%%
 your %swooden ring
-Euer {adj-er}%sHolzring
+dein {adj-er}%sHolzring
 %%%%
 your %ssilver ring
-Euer {adj-er}%sSilberring
+dein {adj-er}%sSilberring
 %%%%
 your %sgolden ring
-Euer {adj-er}%sGoldring
+dein {adj-er}%sGoldring
 %%%%
 your %siron ring
-Euer {adj-er}%sEisenring
+dein {adj-er}%sEisenring
 %%%%
 your %ssteel ring
-Euer {adj-er}%sStahlring
+dein {adj-er}%sStahlring
 %%%%
 your %stourmaline ring
-Euer {adj-er}%sTurmalinring
+dein {adj-er}%sTurmalinring
 %%%%
 your %sbrass ring
-Euer {adj-er}%sMessingring
+dein {adj-er}%sMessingring
 %%%%
 your %scopper ring
-Euer {adj-er}%sKupferring
+dein {adj-er}%sKupferring
 %%%%
 your %sgranite ring
-Euer {adj-er}%sGranitring
+dein {adj-er}%sGranitring
 %%%%
 your %sivory ring
-Euer {adj-er}%sElfenbeinring
+dein {adj-er}%sElfenbeinring
 %%%%
 your %sruby ring
-Euer {adj-er}%sRubinring
+dein {adj-er}%sRubinring
 %%%%
 your %smarble ring
-Euer {adj-er}%sMarmorring
+dein {adj-er}%sMarmorring
 %%%%
 your %sjade ring
-Euer {adj-er}%sJadering
+dein {adj-er}%sJadering
 %%%%
 your %sglass ring
-Euer {adj-er}%sGlasring
+dein {adj-er}%sGlasring
 %%%%
 your %sagate ring
-Euer {adj-er}%sAchatring
+dein {adj-er}%sAchatring
 %%%%
 your %sbone ring
-Euer {adj-er}%sKnochenring
+dein {adj-er}%sKnochenring
 %%%%
 your %sdiamond ring
-Euer {adj-er}%sDiamantring
+dein {adj-er}%sDiamantring
 %%%%
 your %semerald ring
-Euer {adj-er}%sSmaragdring
+dein {adj-er}%sSmaragdring
 %%%%
 your %speridot ring
-Euer {adj-er}%sPeridotring
+dein {adj-er}%sPeridotring
 %%%%
 your %sgarnet ring
-Euer {adj-er}%sGranatring
+dein {adj-er}%sGranatring
 %%%%
 your %sopal ring
-Euer {adj-er}%sOpalring
+dein {adj-er}%sOpalring
 %%%%
 your %spearl ring
-Euer {adj-er}%sPerlenring
+dein {adj-er}%sPerlenring
 %%%%
 your %scoral ring
-Euer {adj-er}%sKorallenring
+dein {adj-er}%sKorallenring
 %%%%
 your %ssapphire ring
-Euer {adj-er}%sSaphirring
+dein {adj-er}%sSaphirring
 %%%%
 your %scabochon ring
-Euer {adj-er}%sCabochonring
+dein {adj-er}%sCabochonring
 %%%%
 your %sgilded ring
-Euer {adj-er}%svergoldeter Ring
+dein {adj-er}%svergoldeter Ring
 %%%%
 your %sonyx ring
-Euer {adj-er}%sOnyxring
+dein {adj-er}%sOnyxring
 %%%%
 your %sbronze ring
-Euer {adj-er}%sBronzering
+dein {adj-er}%sBronzering
 %%%%
 your %smoonstone ring
-Euer {adj-er}%sMondsteinring
+dein {adj-er}%sMondsteinring
 %%%%
 
 #################################
@@ -436,97 +436,97 @@ Euer {adj-er}%sMondsteinring
 
 %%%%
 your %samulet
-Euer {adj-es}%sAmulett
+dein {adj-es}%sAmulett
 %%%%
 
 # unidentified
 %%%%
 your %ssapphire amulet
-Euer {adj-es}%sSaphiramulett
+dein {adj-es}%sSaphiramulett
 %%%%
 your %szirconium amulet
-Euer {adj-es}%sZirkoniumamulett
+dein {adj-es}%sZirkoniumamulett
 %%%%
 your %sgolden amulet
-Euer {adj-es}%sGoldamulett
+dein {adj-es}%sGoldamulett
 %%%%
 your %semerald amulet
-Euer {adj-es}%sSmaragdamulett
+dein {adj-es}%sSmaragdamulett
 %%%%
 your %sgarnet amulet
-Euer {adj-es}%sGranatamulett
+dein {adj-es}%sGranatamulett
 %%%%
 your %sbronze amulet
-Euer {adj-es}%sBronzeamulett
+dein {adj-es}%sBronzeamulett
 %%%%
 your %sbrass amulet
-Euer {adj-es}%sMessingamulett
+dein {adj-es}%sMessingamulett
 %%%%
 your %scopper amulet
-Euer {adj-es}%sKupferamulett
+dein {adj-es}%sKupferamulett
 %%%%
 your %sruby amulet
-Euer {adj-es}%sRubinamulett
+dein {adj-es}%sRubinamulett
 %%%%
 your %scitrine amulet
-Euer {adj-es}%sCitrinamulett
+dein {adj-es}%sCitrinamulett
 %%%%
 your %sbone amulet
-Euer {adj-es}%sKnochenamulett
+dein {adj-es}%sKnochenamulett
 %%%%
 your %splatinum amulet
-Euer {adj-es}%sPlatinamulett
+dein {adj-es}%sPlatinamulett
 %%%%
 your %sjade amulet
-Euer {adj-es}%sJade-Amulett
+dein {adj-es}%sJade-Amulett
 %%%%
 your %sfluorescent amulet
-Euer {adj-es}%sfluoreszierendes Amulett
+dein {adj-es}%sfluoreszierendes Amulett
 %%%%
 your %samethyst amulet
-Euer {adj-es}%sAmethystamulett
+dein {adj-es}%sAmethystamulett
 %%%%
 your %scameo amulet
-Euer {adj-es}%sCameo-Amulett
+dein {adj-es}%sCameo-Amulett
 %%%%
 your %spearl amulet
-Euer {adj-es}%sPerlenamulett
+dein {adj-es}%sPerlenamulett
 %%%%
 your %sblue amulet
-Euer {adj-es}%sblaues Amulett
+dein {adj-es}%sblaues Amulett
 %%%%
 your %speridot amulet
-Euer {adj-es}%sPeridot-Amulett
+dein {adj-es}%sPeridot-Amulett
 %%%%
 your %sjasper amulet
-Euer {adj-es}%sJaspisamulett
+dein {adj-es}%sJaspisamulett
 %%%%
 your %sdiamond amulet
-Euer {adj-es}%sDiamantamulett
+dein {adj-es}%sDiamantamulett
 %%%%
 your %smalachite amulet
-Euer {adj-es}%sMalachitamulett
+dein {adj-es}%sMalachitamulett
 %%%%
 your %ssteel amulet
-Euer {adj-es}%sStahlamulett
+dein {adj-es}%sStahlamulett
 %%%%
 your %scabochon amulet
-Euer {adj-es}%sCabochon-Amulett
+dein {adj-es}%sCabochon-Amulett
 %%%%
 your %ssilver amulet
-Euer {adj-es}%sSilberamulett
+dein {adj-es}%sSilberamulett
 %%%%
 your %ssoapstone amulet
-Euer {adj-es}%sSpecksteinamulett
+dein {adj-es}%sSpecksteinamulett
 %%%%
 your %slapis lazuli amulet
-Euer {adj-es}%sLapislazuli-Amulett
+dein {adj-es}%sLapislazuli-Amulett
 %%%%
 your %sfiligree amulet
-Euer {adj-es}%sFiligranamulett
+dein {adj-es}%sFiligranamulett
 %%%%
 your %sberyl amulet
-Euer {adj-es}%sBeryllamulett
+dein {adj-es}%sBeryllamulett
 %%%%
 
 #################################
@@ -535,70 +535,70 @@ Euer {adj-es}%sBeryllamulett
 
 %%%%
 your wand of flame
-Euer Zauberstab des Flammens
+dein Zauberstab des Flammens
 %%%%
 your wand of paralysis
-Euer Zauberstab der Paralyse
+dein Zauberstab der Paralyse
 %%%%
 your wand of digging
-Euer Zauberstab des Grabens
+dein Zauberstab des Grabens
 %%%%
 your wand of iceblast
-Euer Zauberstab des Eisstrahls
+dein Zauberstab des Eisstrahls
 %%%%
 your wand of polymorph
-Euer Zauberstab der Verwandlung
+dein Zauberstab der Verwandlung
 %%%%
 your wand of charming
-Euer Zauberstab der Verzauberung
+dein Zauberstab der Verzauberung
 %%%%
 your wand of acid
-Euer Zauberstab der Säure
+dein Zauberstab der Säure
 %%%%
 your wand of mindburst
-Euer Zauberstab des Gehirnschlags
+dein Zauberstab des Gehirnschlags
 %%%%
 your wand of removedness
-Euer Zauberstab der Obsoleszenz
+dein Zauberstab der Obsoleszenz
 %%%%
 
 # unidentified
 %%%%
 your %siron wand
-Euer {adj-er}%sEisenzauberstab
+dein {adj-er}%sEisenzauberstab
 %%%%
 your %sbrass wand
-Euer {adj-er}%sMessingzauberstab
+dein {adj-er}%sMessingzauberstab
 %%%%
 your %sbone wand
-Euer {adj-er}%sZauberstab aus Knochen
+dein {adj-er}%sZauberstab aus Knochen
 %%%%
 your %swooden wand
-Euer {adj-er}%sHolzzauberstab
+dein {adj-er}%sHolzzauberstab
 %%%%
 your %scopper wand
-Euer {adj-er}%sKupferzauberstab
+dein {adj-er}%sKupferzauberstab
 %%%%
 your %sgold wand
-Euer {adj-er}%sGoldzauberstab
+dein {adj-er}%sGoldzauberstab
 %%%%
 your %ssilver wand
-Euer {adj-er}%sSilberzauberstab
+dein {adj-er}%sSilberzauberstab
 %%%%
 your %sbronze wand
-Euer {adj-er}%sZauberstab aus Bronze
+dein {adj-er}%sZauberstab aus Bronze
 %%%%
 your %sivory wand
-Euer {adj-er}%sElfenbeinzauberstab
+dein {adj-er}%sElfenbeinzauberstab
 %%%%
 your %sglass wand
-Euer {adj-er}%sgläserner Zauberstab
+dein {adj-er}%sgläserner Zauberstab
 %%%%
 your %slead wand
-Euer {adj-er}%sZauberstab aus Blei
+dein {adj-er}%sZauberstab aus Blei
 %%%%
 your %sfluorescent wand
-Euer {adj-er}%sfluoreszierender Zauberstab
+dein {adj-er}%sfluoreszierender Zauberstab
 %%%%
 
 #################################
@@ -607,70 +607,70 @@ Euer {adj-er}%sfluoreszierender Zauberstab
 
 %%%%
 your scroll labelled %s
-Eure Schriftrolle beschriftet mit %s
+deine Schriftrolle beschriftet mit %s
 %%%%
 your scroll of acquirement
-Eure Schriftrolle des Erwerbs
+deine Schriftrolle des Erwerbs
 %%%%
 your scroll of amnesia
-Eure Schriftrolle der Amnesie
+deine Schriftrolle der Amnesie
 %%%%
 your scroll of blinking
-Eure Schriftrolle des Blinzelns
+deine Schriftrolle des Blinzelns
 %%%%
 your scroll of brand weapon
-Eure Schriftrolle der Waffenmark
+deine Schriftrolle der Waffenmark
 %%%%
 your scroll of enchant armour
-Eure Schriftrolle der Rüstungsverzauberung
+deine Schriftrolle der Rüstungsverzauberung
 %%%%
 your scroll of enchant weapon
-Eure Schriftrolle der Waffenverzauberung
+deine Schriftrolle der Waffenverzauberung
 %%%%
 your scroll of fear
-Eure Schriftrolle der Angst
+deine Schriftrolle der Angst
 %%%%
 your scroll of fog
-Eure Schriftrolle des Nebels
+deine Schriftrolle des Nebels
 %%%%
 your scroll of holy word
-Eure Schriftrolle des heiligen Wortes
+deine Schriftrolle des heiligen Wortes
 %%%%
 your scroll of identify
-Eure Schriftrolle der Identifizierung
+deine Schriftrolle der Identifizierung
 %%%%
 your scroll of immolation
-Eure Schriftrolle der Verbrennug
+deine Schriftrolle der Verbrennug
 %%%%
 your scroll of magic mapping
-Eure Schriftrolle des magischen Kartierens
+deine Schriftrolle des magischen Kartierens
 %%%%
 your scroll of noise
-Eure Schriftrolle des Lärms
+deine Schriftrolle des Lärms
 %%%%
 your scroll of remove curse
-Eure Schriftrolle des Segnens
+deine Schriftrolle des Segnens
 %%%%
 your scroll of silence
-Eure Schriftrolle der Stille
+deine Schriftrolle der Stille
 %%%%
 # Note: In DCSS, there is a distinction between summoning and conjuration
 # The usual German word for summoning is Beschwörung, but that also means conjuration
 %%%%
 your scroll of summoning
-Eure Schriftrolle der Beschwörung
+deine Schriftrolle der Beschwörung
 %%%%
 your scroll of teleportation
-Eure Schriftrolle der Teleportation
+deine Schriftrolle der Teleportation
 %%%%
 your scroll of torment
-Eure Schriftrolle der Qual
+deine Schriftrolle der Qual
 %%%%
 your scroll of vulnerability
-Eure Schriftrolle der Vulnerabilität
+deine Schriftrolle der Vulnerabilität
 %%%%
 your scroll of removedness
-Eure Schriftrolle der Obsoleszenz
+deine Schriftrolle der Obsoleszenz
 %%%%
 
 #################################
@@ -679,62 +679,62 @@ Eure Schriftrolle der Obsoleszenz
 
 %%%%
 your potion of ambrosia
-Euer Trank der Ambrosia
+dein Trank der Ambrosia
 %%%%
 your potion of attraction
-Euer Trank der Anziehung
+dein Trank der Anziehung
 %%%%
 your potion of berserk rage
-Euer Trank der Berserker-Wut
+dein Trank der Berserker-Wut
 %%%%
 your potion of brilliance
-Euer Trank der Brillanz
+dein Trank der Brillanz
 %%%%
 your potion of cancellation
-Euer Trank der Aufhebung
+dein Trank der Aufhebung
 %%%%
 your potion of curing
-Euer Trank des Gegenmittels
+dein Trank des Gegenmittels
 %%%%
 your potion of degeneration
-Euer Trank der Degeneration
+dein Trank der Degeneration
 %%%%
 your potion of experience
-Euer Trank der Erfahrung
+dein Trank der Erfahrung
 %%%%
 your potion of flight
-Euer Trank des Fliegens
+dein Trank des Fliegens
 %%%%
 your potion of haste
-Euer Trank der Hast
+dein Trank der Hast
 %%%%
 your potion of heal wounds
-Euer Heiltrank
+dein Heiltrank
 %%%%
 your potion of invisibility
-Euer Trank der Unsichtbarkeit
+dein Trank der Unsichtbarkeit
 %%%%
 your potion of lignification
-Euer Trank der Verholzung
+dein Trank der Verholzung
 %%%%
 your potion of magic
-Euer Trank der Magie
+dein Trank der Magie
 %%%%
 your potion of might
-Euer Trank der Macht
+dein Trank der Macht
 %%%%
 your potion of mutation
-Euer Trank der Mutation
+dein Trank der Mutation
 %%%%
 your potion of resistance
-Euer Trank der Resistenz
+dein Trank der Resistenz
 %%%%
 
 # unidentified potions are named "<colour> <potion>"
 # or "<qualifier> <colour> potion"
 %%%%
 your %spotion
-Euer {adj-er}%sZaubertrank
+dein {adj-er}%sZaubertrank
 %%%%
 
 #################################
@@ -743,31 +743,31 @@ Euer {adj-er}%sZaubertrank
 
 %%%%
 your %sstaff of fire
-Euer {adj-er}%sStecken des Feuers
+dein {adj-er}%sStecken des Feuers
 %%%%
 your %sstaff of cold
-Euer {adj-er}%sStecken der Kälte
+dein {adj-er}%sStecken der Kälte
 %%%%
 your %sstaff of poison
-Euer {adj-er}%sStecken des Giftes
+dein {adj-er}%sStecken des Giftes
 %%%%
 your %sstaff of death
-Euer {adj-er}%sStecken des Todes
+dein {adj-er}%sStecken des Todes
 %%%%
 your %sstaff of conjuration
-Euer {adj-er}%sStecken der Hervorrufung
+dein {adj-er}%sStecken der Hervorrufung
 %%%%
 your %sstaff of air
-Euer {adj-er}%sStecken der Luft
+dein {adj-er}%sStecken der Luft
 %%%%
 your %sstaff of earth
-Euer {adj-er}%sStecken der Erde
+dein {adj-er}%sStecken der Erde
 %%%%
 your %sstaff of removedness
-Euer {adj-er}%sStecken der Obsoleszenz
+dein {adj-er}%sStecken der Obsoleszenz
 %%%%
 your %sstaff
-Euer {adj-er}%sStecken
+dein {adj-er}%sStecken
 %%%%
 
 #################################
@@ -776,175 +776,175 @@ Euer {adj-er}%sStecken
 
 %%%%
 your book of Minor Magic
-{n}Euer Buch der kleinen Magie
+{n}dein Buch der kleinen Magie
 %%%%
 your book of Conjurations
-{n}Euer Buch der Hervorrufung
+{n}dein Buch der Hervorrufung
 %%%%
 your book of Flames
-{n}Euer Buch der Flammen
+{n}dein Buch der Flammen
 %%%%
 your book of Frost
-{n}Euer Buch des Frosts
+{n}dein Buch des Frosts
 %%%%
 your book of the Dryads
-{n}Euer Buch der Dryaden
+{n}dein Buch der Dryaden
 %%%%
 your book of Fire
-{n}Euer Buch des Feuers
+{n}dein Buch des Feuers
 %%%%
 your book of Ice
-{n}Euer Buch des Eises
+{n}dein Buch des Eises
 %%%%
 your book of Spatial Translocations
-{n}Euer Buch der räumlichen Translokationen
+{n}dein Buch der räumlichen Translokationen
 %%%%
 your book of Hexes
-{n}Euer Buch der Verhexungen
+{n}dein Buch der Verhexungen
 %%%%
 your book of Lightning
-{n}Euer Buch des Blitzes
+{n}dein Buch des Blitzes
 %%%%
 your book of Death
-{n}Euer Buch des Todes
+{n}dein Buch des Todes
 %%%%
 your book of Misfortune
-{n}Euer Buch des Unglücks
+{n}dein Buch des Unglücks
 %%%%
 your book of Changes
-{n}Euer Buch der Veränderungen
+{n}dein Buch der Veränderungen
 %%%%
 your book of Transfigurations
-{n}Euer Buch der Umgestaltungen
+{n}dein Buch der Umgestaltungen
 %%%%
 your book of Battle
-{n}Euer Buch der Schlacht
+{n}dein Buch der Schlacht
 %%%%
 your book of Vapours
-{n}Euer Buch der Dämpfe
+{n}dein Buch der Dämpfe
 %%%%
 your book of Necromancy
-{n}Euer Buch der Nekromantie
+{n}dein Buch der Nekromantie
 %%%%
 your book of Callings
-{n}Euer Buch der Rufe
+{n}dein Buch der Rufe
 %%%%
 your book of Maledictions
-{n}Euer Buch der Flüche
+{n}dein Buch der Flüche
 %%%%
 your book of Air
-{n}Euer Buch der Luft
+{n}dein Buch der Luft
 %%%%
 your book of the Sky
-{n}Euer Buch des Himmels
+{n}dein Buch des Himmels
 %%%%
 your book of the Warp
-{n}Euer Buch des Warps
+{n}dein Buch des Warps
 %%%%
 your book of Annihilations
-{n}Euer Buch der Vernichtung
+{n}dein Buch der Vernichtung
 %%%%
 your book of Unlife
-{n}Euer Buch des Unlebens
+{n}dein Buch des Unlebens
 %%%%
 your book of Geomancy
-{n}Euer Buch der Geomantie
+{n}dein Buch der Geomantie
 %%%%
 your book of the Earth
-{n}Euer Buch der Erde
+{n}dein Buch der Erde
 %%%%
 your book of Power
-{n}Euer Buch der Macht
+{n}dein Buch der Macht
 %%%%
 your book of Cantrips
-{n}Euer Buch der Schelmenstreiche
+{n}dein Buch der Schelmenstreiche
 %%%%
 your book of Party Tricks
-{n}Euer Buch mit Partytricks
+{n}dein Buch mit Partytricks
 %%%%
 your book of Debilitation
-{n}Euer Buch der Entkräftung
+{n}dein Buch der Entkräftung
 %%%%
 your book of the Dragon
-{n}Euer Buch des Drachen
+{n}dein Buch des Drachen
 %%%%
 your book of Burglary
-{n}Euer Buch des Diebstahls
+{n}dein Buch des Diebstahls
 %%%%
 your book of Dreams
-{n}Euer Buch der Träume
+{n}dein Buch der Träume
 %%%%
 your book of Alchemy
-{n}Euer Buch der Alchemie
+{n}dein Buch der Alchemie
 %%%%
 your book of Beasts
-{n}Euer Buch der Bestien
+{n}dein Buch der Bestien
 %%%%
 your book of Spectacle
-{n}Euer Buch des Spektakels
+{n}dein Buch des Spektakels
 %%%%
 your book of Winter
-{n}Euer Buch des Winters
+{n}dein Buch des Winters
 %%%%
 your book of the Spheres
-{n}Euer Buch der Sphären
+{n}dein Buch der Sphären
 %%%%
 your book of Armaments
-{n}Euer Buch der Bewaffnung
+{n}dein Buch der Bewaffnung
 %%%%
 your book of Pain
-{n}Euer Buch des Schmerzes
+{n}dein Buch des Schmerzes
 %%%%
 your book of Decay
-{n}Euer Buch des Verfalls
+{n}dein Buch des Verfalls
 %%%%
 your book of Displacement
-{n}Euer Buch der Verdrängung
+{n}dein Buch der Verdrängung
 %%%%
 your book of Rime
-{n}Euer Buch des Reims
+{n}dein Buch des Reims
 %%%%
 your book of Stone
-{n}Euer Buch des Steins
+{n}dein Buch des Steins
 %%%%
 your book of the Senses
-{n}Euer Buch der Sinne
+{n}dein Buch der Sinne
 %%%%
 your book of Blasting
-{n}Euer Buch der Sprengung
+{n}dein Buch der Sprengung
 %%%%
 your book of Iron
-{n}Euer Buch des Eisens
+{n}dein Buch des Eisens
 %%%%
 your book of the Tundra
-{n}Euer Buch der Tundra
+{n}dein Buch der Tundra
 %%%%
 your book of the Moon
-{n}Euer Buch des Mondes
+{n}dein Buch des Mondes
 %%%%
 your book of Storms
-{n}Euer Buch der Stürme
+{n}dein Buch der Stürme
 %%%%
 your book of Weapons
-{n}Euer Buch der Gewehre
+{n}dein Buch der Gewehre
 %%%%
 your book of Sloth
-{n}Euer Buch der Faulheit
+{n}dein Buch der Faulheit
 %%%%
 your book of Blood
-{n}Euer Buch des Blutes
+{n}dein Buch des Blutes
 %%%%
 your book of Dangerous Friends
-{n}Euer Buch der gefährlichen Freunde
+{n}dein Buch der gefährlichen Freunde
 %%%%
 your book of Touch
-{n}Euer Buch der Berührung
+{n}dein Buch der Berührung
 %%%%
 your book of Chaos
-{n}Euer Buch des Chaos
+{n}dein Buch des Chaos
 %%%%
 your book of the Hunter
-{n}Euer Buch des Jägers
+{n}dein Buch des Jägers
 %%%%
 
 #################################
@@ -953,7 +953,7 @@ your book of the Hunter
 
 %%%%
 your %s@monster@ corpse
-Eure {adj-e}%s@monster@-Leiche
+deine {adj-e}%s@monster@-Leiche
 %%%%
 
 #################################
@@ -962,31 +962,31 @@ Eure {adj-e}%s@monster@-Leiche
 
 %%%%
 your box of beasts
-Eure Kiste der Bestien
+deine Kiste der Bestien
 %%%%
 your lightning rod
-Eure Blitzstange
+deine Blitzstange
 %%%%
 your phial of floods
-Eure Phiole der Fluten
+deine Phiole der Fluten
 %%%%
 your phantom mirror
-Euer Phantomspiegel
+dein Phantomspiegel
 %%%%
 your %sfigurine of a ziggurat
-Eure %sFigur einer Zikkurat
+deine %sFigur einer Zikkurat
 %%%%
 your condenser vane
-Eure Kondensationsfahne
+deine Kondensationsfahne
 %%%%
 your piece from Xom's chessboard
-Eure Figur von Xoms Schachbrett
+deine Figur von Xoms Schachbrett
 %%%%
 your tin of tremorstones
-Eure Dose Zittersteine
+deine Dose Zittersteine
 %%%%
 your quad damage
-Euer Vierfach-Schaden
+dein Vierfach-Schaden
 %%%%
 
 #################################
@@ -999,61 +999,61 @@ Euer Vierfach-Schaden
 
 %%%%
 your decaying rune
-Eure verfallende Rune
+deine verfallende Rune
 %%%%
 your barnacled rune
-Eure Kletten-Rune
+deine Kletten-Rune
 %%%%
 your gossamer rune
-Eure Spinnfäden-Rune
+deine Spinnfäden-Rune
 %%%%
 your serpentine rune
-Eure Schlangen-Rune
+deine Schlangen-Rune
 %%%%
 your slimy rune
-Eure schleimige Rune
+deine schleimige Rune
 %%%%
 your abyssal rune
-Eure Abgrundsrune
+deine Abgrundsrune
 %%%%
 your silver rune
-Eure silberne Rune
+deine silberne Rune
 %%%%
 your golden rune
-Eure goldene Rune
+deine goldene Rune
 %%%%
 
 # hell runes
 %%%%
 your obsidian rune
-Eure Obsidianrune
+deine Obsidianrune
 %%%%
 your icy rune
-Eure eisige Rune
+deine eisige Rune
 %%%%
 your bone rune
-Eure Knochen-Rune
+deine Knochen-Rune
 %%%%
 your iron rune
-Eure eiserne Rune
+deine eiserne Rune
 %%%%
 
 # pandemonium runes
 %%%%
 your demonic rune
-Eure dämonische Rune
+deine dämonische Rune
 %%%%
 your glowing rune
-Eure leuchtende Rune
+deine leuchtende Rune
 %%%%
 your magical rune
-Eure magische Rune
+deine magische Rune
 %%%%
 your fiery rune
-Eure feurige Rune
+deine feurige Rune
 %%%%
 your dark rune
-Eure dunkle Rune
+deine dunkle Rune
 %%%%
 
 #################################
@@ -1063,5 +1063,5 @@ Eure dunkle Rune
 # Most are unique, but this one isn't
 %%%%
 your %sring of the Octopus King
-Euer {adj-er}%sRing des Krakenkönigs
+dein {adj-er}%sRing des Krakenkönigs
 %%%%

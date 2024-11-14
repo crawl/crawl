@@ -350,7 +350,7 @@ Anathema
 %%%%
 # Example: "%s %d:%d" -> "Abominations 10:13"
 You finish reciting %s %d:%d.
-Ihr beendet die Rezitation von %s %d:%d.
+Du beendest die Rezitation von %s %d:%d.
 %%%%
 
 

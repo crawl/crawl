@@ -9,63 +9,63 @@
 # Used by Summon Horrible Things.
 SHT_int_loss
 
-Euer Geist taumelt, berührt von den Schrecken durch das Portal.
+Dein Geist taumelt, berührt von den Schrecken durch das Portal.
 
-Ihr zittert in Eurer sterblichen Hülle, umschmeichelt von dem flüssigen Wahnsinn durch das funkelnde Tor.
+Du zitterst in deiner sterblichen Hülle, umschmeichelt von dem flüssigen Wahnsinn durch das funkelnde Tor.
 
 # Bal-Sagoth
 Der Beschwörungsritus scheint einen nicht unerheblichen Tribut von eurer geistigen Gesundheit zu fordern.
 
-Ihr habt eine kurze Vision einer großen schwarzen zyklopischen Stadtlandschaft mit hoch aufragenden stygischen Mauern.
+Du hast eine kurze Vision einer großen schwarzen zyklopischen Stadtlandschaft mit hoch aufragenden stygischen Mauern.
 
-Eure Sicht wird von seltsamen Glyphen verdeckt, die sich krumme Formen zu geben scheinen und ihre Gestalt verändern.
+Deine Sicht wird von seltsamen Glyphen verdeckt, die sich krumme Formen zu geben scheinen und ihre Gestalt verändern.
 
-Ihr fühlt Euch unaufhaltsam von einer namenlosen und unerbittlichen Düsternis verfolgt.
+Du fühlst dich unaufhaltsam von einer namenlosen und unerbittlichen Düsternis verfolgt.
 #-----------
 
-Ihr windet euch im Todeskampf, während Euer Geist von Schrecken heimgesucht wird, die jenseits der menschlichen Vorstellungskraft liegen.
+Du windest dich im Todeskampf, während dein Geist von Schrecken heimgesucht wird, die jenseits der menschlichen Vorstellungskraft liegen.
 
-Euer Geist wird von erhabenem Wahnsinn verführt, als ihr durch das Portal ins Jenseits blickt.
+Dein Geist wird von erhabenem Wahnsinn verführt, als du durch das Portal ins Jenseits blickst.
 
-Ihr gackert wahnsinnig beim Anblick der eldritischen Monstrosität.
+Du gackerst wahnsinnig beim Anblick der eldritischen Monstrosität.
 
-Ihr seid vom Wahnsinn ergriffen!
+Du bist vom Wahnsinn ergriffen!
 
-Der Versuch, die unfassbaren Tiefen der Unendlichkeit zu begreifen, zehrt an Eurem Verstand.
+Der Versuch, die unfassbaren Tiefen der Unendlichkeit zu begreifen, zehrt an deinem Verstand.
 
-Eure Gedanken werden unausweichlich von einem unaufhörlichen Brummen gequält.
+Deine Gedanken werden unausweichlich von einem unaufhörlichen Brummen gequält.
 
-Euer Verstand bricht im Wahnsinn zusammen beim Anblick dieser Blasphemie gegen die Schöpfung!
+Dein Verstand bricht im Wahnsinn zusammen beim Anblick dieser Blasphemie gegen die Schöpfung!
 
-Euer Verstand zerbricht kurz, aber ihr schafft es gerade noch, euch zusammenzureißen.
+Dein Verstand zerbricht kurz, aber du schaffst es gerade noch, dich zusammenzureißen.
 
-Ihr spürt, wie Euer zarter Halt an der Vernunft zu erodieren beginnt.
+Du spürst, wie dein zarter Halt an der Vernunft zu erodieren beginnt.
 
-Eindringliche Einflüsterungen tiefster Ketzerei dringen unaufhörlich in Eure Gedanken ein.
+Eindringliche Einflüsterungen tiefster Ketzerei dringen unaufhörlich in deine Gedanken ein.
 
-Euer Geist schmerzt vor Abscheu beim Anblick der wogenden Schrecken, die ihr angerichtet habt.
+Dein Geist schmerzt vor Abscheu beim Anblick der wogenden Schrecken, die ihr angerichtet habt.
 
-Nur einen Augenblick lang ist Euer Geist vor der gewaltigen Unendlichkeit des Unvorstellbaren entblößt.
+Nur einen Augenblick lang ist dein Geist vor der gewaltigen Unendlichkeit des Unvorstellbaren entblößt.
 
-Euer Schädel pulsiert und pocht, während Worte, die in einer unaussprechlichen Sprache gesprochen werden, durch Eure Psyche driften.
+Dein Schädel pulsiert und pocht, während Worte, die in einer unaussprechlichen Sprache gesprochen werden, durch deine Psyche driften.
 
-Ein dünnes, monotones Wiehern von außerhalb der Zeit wird in Euren Ohren immer lauter.
+Ein dünnes, monotones Wiehern von außerhalb der Zeit wird in deinen Ohren immer lauter.
 
-Formlose Schrecken verharren am Rande Eurer Vision und kommen immer näher.
+Formlose Schrecken verharren am Rande deiner Vision und kommen immer näher.
 
-Ein unaufhaltsames Gefühl unerbittlicher Finsternis überkommt euch.
+Ein unaufhaltsames Gefühl unerbittlicher Finsternis überkommt dich.
 
-Zusammenhängende, vernünftige Gedanken scheinen Euch fremd zu sein.
+Zusammenhängende, vernünftige Gedanken scheinen dich fremd zu sein.
 
-Ranken des Wahnsinns sickern und winden sich in die dunkelsten Ritzen Eures Geistes.
+Ranken des Wahnsinns sickern und winden sich in die dunkelsten Ritzen deines Geistes.
 
-Ihr ringt darum, die Natur der unbegreiflichen Kräfte zu begreifen, die am Werk sind.
+Du ringst darum, die Natur der unbegreiflichen Kräfte zu begreifen, die am Werk sind.
 
-Alptraumhafte Unholde überfallen Eure wachen Gedanken!
+Alptraumhafte Unholde überfallen deine wachen Gedanken!
 
-Schäumende Schrecken belagern Euren Verstand!
+Schäumende Schrecken belagern deinen Verstand!
 
-Die Klarheit entgleitet Eurem schwachen Griff.
+Die Klarheit entgleitet deinem schwachen Griff.
 %%%%
 # How great is the Orb of Zot?
 _great_adj_
@@ -82,11 +82,11 @@ transzendente
 %%%%
 welcome_spam
 
-Werdet Ihr Euch durchsetzen, wo andere versagt haben? Werdet Ihr die Kugel von Zot finden?
+Wirst du dich durchsetzen, wo andere versagt haben? Wirst du die Kugel von Zot finden?
 
 Der Schoß dieses Dungeons birgt das @_great_adj_@ Artefakt, die Kugel von Zot.
 
-Werdet Ihr derjenige sein, der die @_great_adj_@ Kugel von Zot aus den Tiefen holt?
+Wirst du derjenige sein, der die @_great_adj_@ Kugel von Zot aus den Tiefen holt?
 
 Es heißt, dass die Kugel von Zot tief in diesem Dungeon existiert.
 %%%%
@@ -118,37 +118,37 @@ welcome_spam Halloween
 
 @welcome_spam@ Seid vorsichtig! Heute Abend ist Halloween.
 
-Die Monster hier sind keine großen Fans von Süßem oder Saurem. Wenn sie Euch die Kugel von Zot nicht geben wollen, musst Ihr ihn Euch nehmen.
+Die Monster hier sind keine großen Fans von Süßem oder Saurem. Wenn sie dir die Kugel von Zot nicht geben wollen, musst du ihn dir nehmen.
 
-Ein schrecklicher Fluch hat Euch auf die Suche nach der Kugel von Zot geschickt. Was für eine schreckliche Nacht, um einen Fluch zu haben!
+Ein schrecklicher Fluch hat dich auf die Suche nach der Kugel von Zot geschickt. Was für eine schreckliche Nacht, um einen Fluch zu haben!
 
-Während Ihr auf der Suche nach der Kugel hinabsteigt, scharen sich @_halloween_things_@ um Euch. An diesem Ort spukt es!
+Während du auf der Suche nach der Kugel hinabsteigst, scharen sich @_halloween_things_@ um dich. An diesem Ort spukt es!
 
-Ihr hört das Gackern einer Hexe und seid plötzlich ins Dungeon angekommen. Wenn Ihr die Kugel von Zot nicht findet, verwandelt Ihr Euch in @_a_lowly_@!
+Du hörst das Gackern einer Hexe und bist plötzlich ins Dungeon angekommen. Wenn du die Kugel von Zot nicht findest, verwandelst du dich in @_a_lowly_@!
 %%%%
 hell_effect_quiet
 
 {{
 if you.can_smell() then
-    return "Ihr riecht Schwefel."
+    return "Du riechst Schwefel."
 else
     return "Es regnet Schwefel von oben."
 end
 }}
 
-Ihr fühlt Euch verloren und weit, weit weg von zu Hause...
+Du fühlst dich verloren und weit, weit weg von zu Hause...
 
-Ihr zittert vor Angst.
+Du zitterst vor Angst.
 
-Ihr fühlt eine schreckliche Vorahnung...
+Du fühlst eine schreckliche Vorahnung...
 
 Etwas Beängstigendes geschieht.
 
-Ihr spürt, dass ein uraltes Böses Euch beobachtet...
+Du spürst, dass ein uraltes Böses dich beobachtet...
 
-Ihr fühlt Euch plötzlich ganz klein und verletzlich.
+Du fühlst dich plötzlich ganz klein und verletzlich.
 
-Ihr spürt eine feindliche Präsenz.
+Du spürst eine feindliche Präsenz.
 
 "Du wirst diesen Ort nicht verlassen."
 
@@ -168,7 +168,7 @@ hell_effect_noisy
 
 Ein markerschütternder Schrei durchdringt die Luft!
 
-Ihr hört Worte, die in einer seltsamen und schrecklichen Sprache gesprochen werden...
+Du hörst Worte, die in einer seltsamen und schrecklichen Sprache gesprochen werden...
 
-Ihr hört ein teuflisches Gelächter!
+Du hörst ein teuflisches Gelächter!
 %%%%

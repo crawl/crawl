@@ -28,7 +28,7 @@ stärker beschädigt.
 %%%%
 Alistair's Intoxication spell
 
-Wandelt einen kleinen Teil der Gehirnmasse der Kreaturen um Euch herum in
+Wandelt einen kleinen Teil der Gehirnmasse der Kreaturen um dich herum in
 Alkohol um und versucht, alle intelligenten Lebewesen in Sichtweite zu verwirren
 (giftresistente Kreaturen können der Wirkung jedoch widerstehen). Der Zauberer
 wird kurzzeitig Schwindelgefühle verspüren, wenn er erfolgreich Kontakt mit
@@ -37,8 +37,8 @@ eingesetzt.
 %%%%
 Animate Armour spell
 
-Ruft den Geist Eurer getragene Rüstung herbei, um an Eurer Seite zu kämpfen. Der
-Geist bewegt sich langsam, bezieht aber Kraft aus dem inhärenten Schutz Eurer
+Ruft den Geist deiner getragene Rüstung herbei, um an deiner Seite zu kämpfen. Der
+Geist bewegt sich langsam, bezieht aber Kraft aus dem inhärenten Schutz deiner
 eigenen Rüstung. Bei höherer Kraft wird der Geist widerstandsfähiger.
 %%%%
 Animate Dead spell
@@ -1062,7 +1062,7 @@ sie ausmanövrieren. Die Kugeln brauchen etwas Zeit, um sich zu stabilisieren,
 und eine entstehende Kugel verursacht weniger Schaden.
 
 Bewohner des Dungeons können die Kugel behalten, bis sie ein Ziel trifft, doch
-wenn Ihr sie zaubert, löst sie sich auf, sobald sie Euer Sichtfeld verlässt.
+wenn du sie zauberst, löst sie sich auf, sobald sie dein Sichtfeld verlässt.
 %%%%
 Orb of Electricity spell
 
@@ -1642,7 +1642,7 @@ Throw Klown Pie spell
 Wirft einen schädlichen, aber seltsam köstlichen Kuchen, der seinem Opfer eine
 Reihe vorübergehender, lähmender Effekte zufügen kann. Dazu gehören Schwindel,
 Stille, Feueranfälligkeit, Attributentzug oder eine Abneigung gegen das Trinken
-von Zaubertränken. Der gefürchtete Mondkuchen kann Euch sogar in eine
+von Zaubertränken. Der gefürchtete Mondkuchen kann dich sogar in eine
 Fledermaus, ein Schwein oder einen körperlosen Irrwisch verwandeln!
 %%%%
 Thunderbolt spell

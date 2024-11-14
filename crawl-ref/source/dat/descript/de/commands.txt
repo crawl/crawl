@@ -15,7 +15,7 @@ Die aktuelle Ebene automatisch erforschen
 %%%%
 CMD_EXPLORE verbose
 
-Lässt Euren Charakter automatisch durch unerforschte Bereiche der aktuellen
+Lässt deinen Charakter automatisch durch unerforschte Bereiche der aktuellen
 Ebene reisen und dabei brauchbare Gegenstände die auf dem Weg liegen aufheben.
 Die Reise wird unterbrochen, sobald ein feindseliges Monster in Sicht kommt,
 und auch um gefunden Gegenstände und Besonderheiten anzuzeigen.
@@ -39,8 +39,8 @@ Nach Gegenständen/Strukture suchen
 %%%%
 CMD_SEARCH_STASHES verbose
 
-Nach Gegenständen/Strukture suchen, die Ihr woanders gesehen habt. Danach
-Euch dort hin begeben.
+Nach Gegenständen/Strukture suchen, die du woanders gesehen hast. Danach
+dich dort hin begeben.
 %%%%
 CMD_REPLAY_MESSAGES
 
@@ -70,7 +70,7 @@ Religiösen Status anzeigen.
 %%%%
 CMD_DISPLAY_RELIGION verbose
 
-Zeigt was Eurem Gott ge- und missfällt, Euer Betragen und Euren religiösen
+Zeigt was deinem Gott ge- und missfällt, dein Betragen und deinen religiösen
 Stand sowie göttliche Fähigkeiten.
 %%%%
 CMD_DISPLAY_MUTATIONS
@@ -87,7 +87,7 @@ Charakterstatus anzeigen
 %%%%
 CMD_DISPLAY_CHARACTER_STATUS verbose
 
-Zeigt Details zu Eurem aktuellen Bewegungstempo, Angriffstempo, Verstohlenheit,
+Zeigt Details zu deinem aktuellen Bewegungstempo, Angriffstempo, Verstohlenheit,
 Magieresistenz und alle derzeit aktiven Verzauberungen oder Statuseffekte.
 %%%%
 CMD_DISPLAY_KNOWN_OBJECTS
@@ -100,7 +100,7 @@ Spiel speichern und verlassen
 %%%%
 CMD_SAVE_GAME_NOW verbose
 
-Das Spiel speichern und verlassen. Sobald Ihr das Spiel fortsetzt,
+Das Spiel speichern und verlassen. Sobald du das Spiel fortsetzt,
 wird die Speicherdatei gelöscht.
 %%%%
 CMD_EDIT_PLAYER_TILE
@@ -146,8 +146,8 @@ Das nächst stehende Monster bekämpfen
 %%%%
 CMD_AUTOFIGHT verbose
 
-Bewegt Euch auf das am nächsten stehende feindselige Monster zu und greift es
-mit Eurer ausgerüsteten Waffe an.
+Bewegt dich auf das am nächsten stehende feindselige Monster zu und greift es
+mit deiner ausgerüsteten Waffe an.
 %%%%
 CMD_AUTOFIGHT_NOMOVE
 
@@ -155,7 +155,7 @@ Das benachbarte Monster bekämpfen
 %%%%
 CMD_AUTOFIGHT_NOMOVE verbose
 
-Greift das neben Euch stehende Monster mir Eurer ausgerüsteten Waffe an.
+Greift das neben dich stehende Monster mir deiner ausgerüsteten Waffe an.
 %%%%
 CMD_WAIT
 
@@ -179,7 +179,7 @@ Inventar anzeigen
 %%%%
 CMD_DISPLAY_INVENTORY verbose
 
-Den Inhalt Eures Inventars anzeigen.
+Den Inhalt deines Inventars anzeigen.
 %%%%
 CMD_CAST_SPELL
 
@@ -195,7 +195,7 @@ Zauberspruch memorieren
 %%%%
 CMD_MEMORISE_SPELL verbose
 
-Einen Zauberspruch aus Eurem Bibliothek memorieren.
+Einen Zauberspruch aus deinem Bibliothek memorieren.
 %%%%
 CMD_LOOKUP_HELP
 
@@ -211,7 +211,7 @@ Gegenstand ablegen
 %%%%
 CMD_DROP verbose
 
-Einen oder mehrere Gegenstände, die Ihr gerade bei Euch habt, ablegen.
+Einen oder mehrere Gegenstände, die du gerade bei dir hast, ablegen.
 %%%%
 CMD_DISPLAY_MAP
 
@@ -227,11 +227,11 @@ Eine Karte der aktuellen Ebene anzeigen.
 %%%%
 CMD_MAP_GOTO_TARGET
 
-Euch bis zum Cursor bewegen
+dich bis zum Cursor bewegen
 %%%%
 CMD_MAP_GOTO_TARGET verbose
 
-Euch bis zur aktuellen Position des Cursors bewegen.
+dich bis zur aktuellen Position des Cursors bewegen.
 %%%%
 CMD_MAP_EXPLORE
 
@@ -287,7 +287,7 @@ Ebene anzeigen
 %%%%
 CMD_MAP_GOTO_LEVEL verbose
 
-Eine andere Ebene anzeigen, indem Ihr Abzweig und Tiefe wählt.
+Eine andere Ebene anzeigen, indem du Abzweig und Tiefe wählst.
 %%%%
 CMD_MAP_FIND_UPSTAIR
 

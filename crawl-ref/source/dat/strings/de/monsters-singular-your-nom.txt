@@ -6,1624 +6,1624 @@
 
 %%%%
 your %sprogram bug
-Euer {adj-er}%sProgrammfehler
+dein {adj-er}%sProgrammfehler
 %%%%
 your %sformicid
-Euer {adj-er}%sFormicid
+dein {adj-er}%sFormicid
 %%%%
 your %sentropy weaver
-Euer {adj-er}%sEntropieweber
+dein {adj-er}%sEntropieweber
 %%%%
 your %sbat
-Eure {adj-e}%sFledermaus
+deine {adj-e}%sFledermaus
 %%%%
 your %sbutterfly
-Euer {adj-er}%sSchmetterling
+dein {adj-er}%sSchmetterling
 %%%%
 your %svampire bat
-Eure {adj-e}%sVampirfledermaus
+deine {adj-e}%sVampirfledermaus
 %%%%
 your %sfire bat
-Eure {adj-e}%sFeuerfledermaus
+deine {adj-e}%sFeuerfledermaus
 %%%%
 your %sice bat
-Eure {adj-e}%sEisfledermaus
+deine {adj-e}%sEisfledermaus
 %%%%
 # rebadged spectral bat
 your %sghost-faced bat
-Eure {adj-e}%sGespenstfledermaus
+deine {adj-e}%sGespenstfledermaus
 %%%%
 your %sphase bat
-Eure {adj-e}%sPhasenfledermaus
+deine {adj-e}%sPhasenfledermaus
 %%%%
 your %sskeletal bat
-Eure {adj-e}%sSkelett-Fledermaus
+deine {adj-e}%sSkelett-Fledermaus
 %%%%
 your %smicrobat
-Eure {adj-e}%sMicro-Fledermaus
+deine {adj-e}%sMicro-Fledermaus
 %%%%
 your %smegabat
-Eure {adj-e}%sMega-Fledermaus
+deine {adj-e}%sMega-Fledermaus
 %%%%
 your %sgiga bat
-Eure {adj-e}%sGiga-Fledermaus
+deine {adj-e}%sGiga-Fledermaus
 %%%%
 your %sbennu
-Euer {adj-es}%sBennu
+dein {adj-es}%sBennu
 %%%%
 your %scaustic shrike
-Euer {adj-er}%sätzender Würger
+dein {adj-er}%sätzender Würger
 %%%%
 your %sshard shrike
-Euer {adj-er}%sScherbenwürger
+dein {adj-er}%sScherbenwürger
 %%%%
 your %scentaur
-Euer {adj-er}%sZentaur
+dein {adj-er}%sZentaur
 %%%%
 your %scentaur warrior
-Euer {adj-er}%sZentaur-Krieger
+dein {adj-er}%sZentaur-Krieger
 %%%%
 your %syaktaur
-Euer {adj-er}%sYaktaur
+dein {adj-er}%sYaktaur
 %%%%
 your %syaktaur captain
-Euer {adj-er}%sYaktaur-Kapitän
+dein {adj-er}%sYaktaur-Kapitän
 %%%%
 your %sfaun
-Euer {adj-er}%sFaun
+dein {adj-er}%sFaun
 %%%%
 your %ssatyr
-Euer {adj-er}%sSatyr
+dein {adj-er}%sSatyr
 %%%%
 your %sdraconian
-Euer {adj-er}%sDrakonier
+dein {adj-er}%sDrakonier
 %%%%
 your %sblack draconian
-Euer {adj-er}%sschwarzer Drakonier
+dein {adj-er}%sschwarzer Drakonier
 %%%%
 your %syellow draconian
-Euer {adj-er}%sgelber Drakonier
+dein {adj-er}%sgelber Drakonier
 %%%%
 your %spale draconian
-Euer {adj-er}%sblasser Drakonier
+dein {adj-er}%sblasser Drakonier
 %%%%
 your %sgreen draconian
-Euer {adj-er}%sgrüner Drakonier
+dein {adj-er}%sgrüner Drakonier
 %%%%
 your %spurple draconian
-Euer {adj-er}%spurpurner Drakonier
+dein {adj-er}%spurpurner Drakonier
 %%%%
 your %sred draconian
-Euer {adj-er}%sroter Drakonier
+dein {adj-er}%sroter Drakonier
 %%%%
 your %swhite draconian
-Euer {adj-er}%sweißer Drakonier
+dein {adj-er}%sweißer Drakonier
 %%%%
 your %sgrey draconian
-Euer {adj-er}%sgrauer Drakonier
+dein {adj-er}%sgrauer Drakonier
 %%%%
 your %sdraconian stormcaller
-Euer {adj-er}%sDrakonier-Sturmrufer
+dein {adj-er}%sDrakonier-Sturmrufer
 %%%%
 your %sdraconian monk
-Euer {adj-er}%sDrakonier-Mönch
+dein {adj-er}%sDrakonier-Mönch
 %%%%
 your %sdraconian shifter
-Euer {adj-er}%sDrakonier-Verschieber
+dein {adj-er}%sDrakonier-Verschieber
 %%%%
 your %sdraconian annihilator
-Euer {adj-er}%sDrakonier-Vernichter
+dein {adj-er}%sDrakonier-Vernichter
 %%%%
 your %sdraconian knight
-Euer {adj-er}%sDrakonier-Ritter
+dein {adj-er}%sDrakonier-Ritter
 %%%%
 your %sdraconian scorcher
-Euer {adj-er}%sDrakonier-Verschmorer
+dein {adj-er}%sDrakonier-Verschmorer
 %%%%
 your %self
-Euer {adj-er}%sElf
+dein {adj-er}%sElf
 %%%%
 your %sdeep elf knight
-Euer {adj-er}%sTiefenelf-Ritter
+dein {adj-er}%sTiefenelf-Ritter
 %%%%
 your %sdeep elf archer
-Euer {adj-er}%sTiefenelf-Bogenschütze
+dein {adj-er}%sTiefenelf-Bogenschütze
 %%%%
 your %sdeep elf blademaster
-Euer {adj-er}%sTiefenelf-Klingenmeister
+dein {adj-er}%sTiefenelf-Klingenmeister
 %%%%
 your %sdeep elf master archer
-Euer {adj-er}%sTiefenelf-Bogenmeister
+dein {adj-er}%sTiefenelf-Bogenmeister
 %%%%
 your %sdeep elf zephyrmancer
-Euer {adj-er}%sTiefenelf-Zephyrmant
+dein {adj-er}%sTiefenelf-Zephyrmant
 %%%%
 your %sdeep elf pyromancer
-Euer {adj-er}%sTiefenelf-Pyromant
+dein {adj-er}%sTiefenelf-Pyromant
 %%%%
 your %sdeep elf high priest
-Euer {adj-er}%sTiefenelf-Hohepriester
+dein {adj-er}%sTiefenelf-Hohepriester
 %%%%
 your %sdeep elf demonologist
-Euer {adj-er}%sTiefenelf-Dämonologe
+dein {adj-er}%sTiefenelf-Dämonologe
 %%%%
 your %sdeep elf annihilator
-Euer {adj-er}%sTiefenelf-Vernichter
+dein {adj-er}%sTiefenelf-Vernichter
 %%%%
 your %sdeep elf sorcerer
-Euer {adj-er}%sTiefenelf-Zauberer
+dein {adj-er}%sTiefenelf-Zauberer
 %%%%
 your %sdeep elf death mage
-Euer {adj-er}%sTiefenelf-Todesmagier
+dein {adj-er}%sTiefenelf-Todesmagier
 %%%%
 your %sdeep elf elementalist
-Euer {adj-er}%sTiefenelf-Elementalist
+dein {adj-er}%sTiefenelf-Elementalist
 %%%%
 your %swandering mushroom
-Euer {adj-er}%swandernder Pilz
+dein {adj-er}%swandernder Pilz
 %%%%
 your %sdeathcap
-Eure {adj-e}%sTodesmütze
+deine {adj-e}%sTodesmütze
 %%%%
 your %sthorn hunter
-Euer {adj-er}%sDornenjäger
+dein {adj-er}%sDornenjäger
 %%%%
 your %sshambling mangrove
-Eure {adj-e}%swatschelnde Mangrove
+deine {adj-e}%swatschelnde Mangrove
 %%%%
 your %svine stalker
-Euer {adj-er}%sRebjäger
+dein {adj-er}%sRebjäger
 %%%%
 your %sgoblin
-Euer {adj-er}%sGoblin
+dein {adj-er}%sGoblin
 %%%%
 your %shobgoblin
-Euer {adj-er}%sHobgoblin
+dein {adj-er}%sHobgoblin
 %%%%
 your %sgnoll
-Euer {adj-er}%sGnoll
+dein {adj-er}%sGnoll
 %%%%
 your %sgnoll shaman
-Euer {adj-er}%sGnoll-Schamane
+dein {adj-er}%sGnoll-Schamane
 %%%%
 your %sgnoll sergeant
-Euer {adj-er}%sGnoll-Wachtmeister
+dein {adj-er}%sGnoll-Wachtmeister
 %%%%
 your %sboggart
-Euer {adj-er}%sBoggart
+dein {adj-er}%sBoggart
 %%%%
 your %sdwarf
-Euer {adj-er}%sZwerg
+dein {adj-er}%sZwerg
 %%%%
 your %sdeep dwarf
-Euer {adj-er}%sTiefenzwerg
+dein {adj-er}%sTiefenzwerg
 %%%%
 your %sjackal
-Euer {adj-er}%sSchakal
+dein {adj-er}%sSchakal
 %%%%
 your %shound
-Euer {adj-er}%sHund
+dein {adj-er}%sHund
 %%%%
 your %showler monkey
-Euer {adj-er}%sBrüllaffe
+dein {adj-er}%sBrüllaffe
 %%%%
 your %swarg
-Euer {adj-er}%sWarg
+dein {adj-er}%sWarg
 %%%%
 your %swolf
-Euer {adj-er}%sWolf
+dein {adj-er}%sWolf
 %%%%
 your %shog
-Euer {adj-es}%sSchwein
+dein {adj-es}%sSchwein
 %%%%
 your %shell hound
-Euer {adj-er}%sHöllenhund
+dein {adj-er}%sHöllenhund
 %%%%
 your %sdoom hound
-Euer {adj-er}%sUntergangshund
+dein {adj-er}%sUntergangshund
 %%%%
 your %sraiju
-Euer {adj-er}%sRaiju
+dein {adj-er}%sRaiju
 %%%%
 your %shell hog
-Euer {adj-er}%shöllisches Schwein
+dein {adj-er}%shöllisches Schwein
 %%%%
 your %sholy swine
-Euer {adj-er}%sheiliges Schwein
+dein {adj-er}%sheiliges Schwein
 %%%%
 your %sfelid
-Euer {adj-es}%sFelid
+dein {adj-es}%sFelid
 %%%%
 your %sbear
-Euer {adj-er}%sBär
+dein {adj-er}%sBär
 %%%%
 your %spolar bear
-Euer {adj-er}%sEisbär
+dein {adj-er}%sEisbär
 %%%%
 your %sblack bear
-Euer {adj-er}%sSchwarzbär
+dein {adj-er}%sSchwarzbär
 %%%%
 your %sspriggan
-Euer {adj-er}%sSpriggan
+dein {adj-er}%sSpriggan
 %%%%
 your %sspriggan rider
-Euer {adj-er}%sSpriggan-Reiter
+dein {adj-er}%sSpriggan-Reiter
 %%%%
 your %sspriggan druid
-Euer {adj-er}%sSpriggan-Druide
+dein {adj-er}%sSpriggan-Druide
 %%%%
 your %sspriggan berserker
-Euer {adj-er}%sSpriggan-Berserker
+dein {adj-er}%sSpriggan-Berserker
 %%%%
 your %sspriggan air mage
-Euer {adj-er}%sSpriggan-Luftmagier
+dein {adj-er}%sSpriggan-Luftmagier
 %%%%
 your %sspriggan defender
-Euer {adj-er}%sSpriggan-Verteidiger
+dein {adj-er}%sSpriggan-Verteidiger
 %%%%
 your %sspriggan baker
-Euer {adj-er}%sSpriggan-Bäcker
+dein {adj-er}%sSpriggan-Bäcker
 %%%%
 your %sspriggan hatter
-Euer {adj-er}%sSpriggan-Hutmacher
+dein {adj-er}%sSpriggan-Hutmacher
 %%%%
 your %sdrake
-Euer {adj-er}%sDrachling
+dein {adj-er}%sDrachling
 %%%%
 your %sswamp drake
-Euer {adj-er}%sSumpfdrachling
+dein {adj-er}%sSumpfdrachling
 %%%%
 your %srime drake
-Euer {adj-er}%sReifsdrachling
+dein {adj-er}%sReifsdrachling
 %%%%
 your %swind drake
-Euer {adj-er}%sWinddrachling
+dein {adj-er}%sWinddrachling
 %%%%
 your %slindwurm
-Euer {adj-er}%sLindwurm
+dein {adj-er}%sLindwurm
 %%%%
 your %sdeath drake
-Euer {adj-er}%sTodesdrachling
+dein {adj-er}%sTodesdrachling
 %%%%
 your %sgiant lizard
-Eure {adj-e}%sRieseneidechse
+deine {adj-e}%sRieseneidechse
 %%%%
 your %sfrilled lizard
-Eure {adj-e}%sgekräuselte Eidechse
+deine {adj-e}%sgekräuselte Eidechse
 %%%%
 your %siguana
-Euer {adj-er}%sLeguan
+dein {adj-er}%sLeguan
 %%%%
 your %sbasilisk
-Euer {adj-er}%sBasilisk
+dein {adj-er}%sBasilisk
 %%%%
 your %swyvern
-Euer {adj-er}%sWyvern
+dein {adj-er}%sWyvern
 %%%%
 your %skomodo dragon
-Euer {adj-er}%sKomododrache
+dein {adj-er}%sKomododrache
 %%%%
 your %smerfolk
-Euer {adj-es}%sMeervolk
+dein {adj-es}%sMeervolk
 %%%%
 your %smerfolk impaler
-Euer {adj-er}%sMeervolk-Impaler
+dein {adj-er}%sMeervolk-Impaler
 %%%%
 your %smerfolk javelineer
-Euer {adj-er}%sMeervolk-Speerführer
+dein {adj-er}%sMeervolk-Speerführer
 %%%%
 your %smerfolk aquamancer
-Euer {adj-er}%sMeervolk-Aquamancer
+dein {adj-er}%sMeervolk-Aquamancer
 %%%%
 your %smerfolk siren
-Eure {adj-e}%sMeervolk-Sirene
+deine {adj-e}%sMeervolk-Sirene
 %%%%
 your %smerfolk avatar
-Euer {adj-er}%sMeervolk-Avatar
+dein {adj-er}%sMeervolk-Avatar
 %%%%
 your %swater nymph
-Eure {adj-e}%sWassernymphe
+deine {adj-e}%sWassernymphe
 %%%%
 your %sbog body
-Eure {adj-e}%sMoorleiche
+deine {adj-e}%sMoorleiche
 %%%%
 your %snecrophage
-Euer {adj-er}%sNekrophagen
+dein {adj-er}%sNekrophagen
 %%%%
 your %sbloated husk
-Eure {adj-e}%saufgeblähte Hülle
+deine {adj-e}%saufgeblähte Hülle
 %%%%
 your %sghoul
-Euer {adj-er}%sGhul
+dein {adj-er}%sGhul
 %%%%
 your %sorc
-Euer {adj-er}%sOrk
+dein {adj-er}%sOrk
 %%%%
 your %sorc wizard
-Euer {adj-er}%sOrk-Zauberer
+dein {adj-er}%sOrk-Zauberer
 %%%%
 your %sorc priest
-Euer {adj-er}%sOrk-Priester
+dein {adj-er}%sOrk-Priester
 %%%%
 your %sorc warrior
-Euer {adj-er}%sOrk-Krieger
+dein {adj-er}%sOrk-Krieger
 %%%%
 your %sorc knight
-Euer {adj-er}%sOrk-Ritter
+dein {adj-er}%sOrk-Ritter
 %%%%
 your %sorc warlord
-Euer {adj-er}%sOrk-Warlord
+dein {adj-er}%sOrk-Warlord
 %%%%
 your %sorc sorcerer
-Euer {adj-er}%sOrk-Hexenmeister
+dein {adj-er}%sOrk-Hexenmeister
 %%%%
 your %sorc high priest
-Euer {adj-er}%sOrk-Hohepriester
+dein {adj-er}%sOrk-Hohepriester
 %%%%
 your %shuman
-Euer {adj-er}%sMensch
+dein {adj-er}%sMensch
 %%%%
 your %shell knight
-Euer {adj-er}%sHöllenritter
+dein {adj-er}%sHöllenritter
 %%%%
 your %sdeath knight
-Euer {adj-er}%sTodesritter
+dein {adj-er}%sTodesritter
 %%%%
 your %snecromancer
-Euer {adj-er}%sNekromant
+dein {adj-er}%sNekromant
 %%%%
 your %swizard
-Euer {adj-er}%sZauberer
+dein {adj-er}%sZauberer
 %%%%
 your %svault guard
-Euer {adj-er}%sTresorwächter
+dein {adj-er}%sTresorwächter
 %%%%
 your %svault sentinel
-Eure {adj-e}%sTresorwache
+deine {adj-e}%sTresorwache
 %%%%
 your %svault warden
-Euer {adj-er}%sTresorwärter
+dein {adj-er}%sTresorwärter
 %%%%
 your %sironbound convoker
-Euer {adj-er}%seisenbeschlagener Einberufer
+dein {adj-er}%seisenbeschlagener Einberufer
 %%%%
 your %sironbound frostheart
-Euer {adj-er}%seisengebundenes Frostherz
+dein {adj-er}%seisengebundenes Frostherz
 %%%%
 your %sironbound preserver
-Euer {adj-er}%seisenbeschlagener Bewahrer
+dein {adj-er}%seisenbeschlagener Bewahrer
 %%%%
 your %sironbound beastmaster
-Euer {adj-er}%seisenbeschlagener Bestienmeister
+dein {adj-er}%seisenbeschlagener Bestienmeister
 %%%%
 your %sironbound thunderhulk
-Euer {adj-er}%seisenbeschlagener Donnerkoloss
+dein {adj-er}%seisenbeschlagener Donnerkoloss
 %%%%
 your %simperial myrmidon
-Euer {adj-er}%skaiserlicher Myrmidon
+dein {adj-er}%skaiserlicher Myrmidon
 %%%%
 your %sservant of whispers
-Euer {adj-er}%sDiener des Flüsterns
+dein {adj-er}%sDiener des Flüsterns
 %%%%
 your %sragged hierophant
-Euer {adj-er}%szerlumpter Hierophant
+dein {adj-er}%szerlumpter Hierophant
 %%%%
 your %sshapeshifter
-Euer {adj-er}%sGestaltwandler
+dein {adj-er}%sGestaltwandler
 %%%%
 your %sglowing shapeshifter
-Euer {adj-er}%sleuchtender Gestaltwandler
+dein {adj-er}%sleuchtender Gestaltwandler
 %%%%
 your %sKiller Klown
-Euer {adj-er}%sKiller-Klown
+dein {adj-er}%sKiller-Klown
 %%%%
 your %sdemigod
-Euer {adj-er}%sHalbgott
+dein {adj-er}%sHalbgott
 %%%%
 your %shalfling
-Euer {adj-er}%sHalbling
+dein {adj-er}%sHalbling
 %%%%
 your %srat
-Eure {adj-e}%sRatte
+deine {adj-e}%sRatte
 %%%%
 your %squokka
-Euer {adj-es}%sQuokka
+dein {adj-es}%sQuokka
 %%%%
 your %sriver rat
-Eure {adj-e}%sFlussratte
+deine {adj-e}%sFlussratte
 %%%%
 your %shell rat
-Eure {adj-e}%sHöllenratte
+deine {adj-e}%sHöllenratte
 %%%%
 your %sgiant cockroach
-Eure {adj-e}%sRiesenkakerlake
+deine {adj-e}%sRiesenkakerlake
 %%%%
 your %sscorpion
-Euer {adj-er}%sSkorpion
+dein {adj-er}%sSkorpion
 %%%%
 your %semperor scorpion
-Euer {adj-er}%sKaiserskorpion
+dein {adj-er}%sKaiserskorpion
 %%%%
 your %sdeath scarab
-Euer {adj-er}%sTodesskarabäus
+dein {adj-er}%sTodesskarabäus
 %%%%
 your %sspider
-Eure {adj-e}%sSpinne
+deine {adj-e}%sSpinne
 %%%%
 your %starantella
-Eure {adj-e}%sTarantella
+deine {adj-e}%sTarantella
 %%%%
 your %sjumping spider
-Eure {adj-e}%sspringende Spinne
+deine {adj-e}%sspringende Spinne
 %%%%
 your %swolf spider
-Eure {adj-e}%sWolfsspinne
+deine {adj-e}%sWolfsspinne
 %%%%
 your %sredback
-Eure {adj-e}%sRotrückenspinne
+deine {adj-e}%sRotrückenspinne
 %%%%
 your %sdemonic crawler
-Euer {adj-er}%sdämonischer Kriecher
+dein {adj-er}%sdämonischer Kriecher
 %%%%
 your %sorb spider
-Eure {adj-e}%sKugelspinne
+deine {adj-e}%sKugelspinne
 %%%%
 your %salligator
-Euer {adj-er}%sAlligator
+dein {adj-er}%sAlligator
 %%%%
 your %ssnapping turtle
-Eure {adj-e}%sSchnappschildkröte
+deine {adj-e}%sSchnappschildkröte
 %%%%
 your %salligator snapping turtle
-Eure {adj-e}%sAlligatorschnappschildkröte
+deine {adj-e}%sAlligatorschnappschildkröte
 %%%%
 your %scrab
-Eure {adj-e}%sKrabbe
+deine {adj-e}%sKrabbe
 %%%%
 your %sfire crab
-Eure {adj-e}%sFeuerkrabbe
+deine {adj-e}%sFeuerkrabbe
 %%%%
 your %sghost crab
-Eure {adj-e}%sGeisterkrabbe
+deine {adj-e}%sGeisterkrabbe
 %%%%
 your %sapocalypse crab
-Eure {adj-e}%sApokalypse-Krabbe
+deine {adj-e}%sApokalypse-Krabbe
 %%%%
 your %sugly thing
-Euer {adj-es}%shässliches Ding
+dein {adj-es}%shässliches Ding
 %%%%
 your %svery ugly thing
-Euer {adj-es}%ssehr hässliches Ding
+dein {adj-es}%ssehr hässliches Ding
 %%%%
 your %sfire vortex
-Euer {adj-er}%sFeuerwirbel
+dein {adj-er}%sFeuerwirbel
 %%%%
 your %sspatial vortex
-Euer {adj-er}%sräumlicher Wirbel
+dein {adj-er}%sräumlicher Wirbel
 %%%%
 your %sspatial maelstrom
-Euer {adj-er}%sräumlicher Mahlstrom
+dein {adj-er}%sräumlicher Mahlstrom
 %%%%
 your %sinsubstantial wisp
-Euer {adj-er}%sunwesentliches Irrlicht
+dein {adj-er}%sunwesentliches Irrlicht
 %%%%
 your %stwister
-Euer {adj-er}%sTwister
+dein {adj-er}%sTwister
 %%%%
 your %sworm
-Euer {adj-er}%sWurm
+dein {adj-er}%sWurm
 %%%%
 your %sswamp worm
-Euer {adj-er}%sSumpfwurm
+dein {adj-er}%sSumpfwurm
 %%%%
 your %styrant leech
-Euer {adj-er}%sTyrannblutegel
+dein {adj-er}%sTyrannblutegel
 %%%%
 your %sdart slug
-Eure {adj-e}%sPfeilschnecke
+deine {adj-e}%sPfeilschnecke
 %%%%
 your %storpor snail
-Eure {adj-e}%sErstarrungsschnecke
+deine {adj-e}%sErstarrungsschnecke
 %%%%
 your %selephant slug
-Eure {adj-e}%sElefantenschnecke
+deine {adj-e}%sElefantenschnecke
 %%%%
 your %sunseen horror
-Euer {adj-er}%sunsichtbares Grauen
+dein {adj-er}%sunsichtbares Grauen
 %%%%
 your %ssmall abomination
-Euer {adj-er}%skleiner Greuel
+dein {adj-er}%skleiner Greuel
 %%%%
 your %sancient zyme
-Euer {adj-er}%suraltes Zym
+dein {adj-er}%suraltes Zym
 %%%%
 your %sworldbinder
-Euer {adj-er}%sWeltbinder
+dein {adj-er}%sWeltbinder
 %%%%
 your %skiller bee
-Eure {adj-e}%sKillerbiene
+deine {adj-e}%sKillerbiene
 %%%%
 your %squeen bee
-Eure {adj-e}%sBienenkönigin
+deine {adj-e}%sBienenkönigin
 %%%%
 your %svampire mosquito
-Eure {adj-e}%sVampir-Mücke
+deine {adj-e}%sVampir-Mücke
 %%%%
 your %shornet
-Eure {adj-e}%sHornisse
+deine {adj-e}%sHornisse
 %%%%
 your %smeliai
-Eure {adj-e}%sMeliai
+deine {adj-e}%sMeliai
 %%%%
 your %sspark wasp
-Eure {adj-e}%sFunkenwespe
+deine {adj-e}%sFunkenwespe
 %%%%
 your %smoth
-Eure {adj-e}%sMotte
+deine {adj-e}%sMotte
 %%%%
 your %sghost moth
-Eure {adj-e}%sGeistermotte
+deine {adj-e}%sGeistermotte
 %%%%
 your %smoth of wrath
-Eure {adj-e}%sMotte des Zorns
+deine {adj-e}%sMotte des Zorns
 %%%%
 your %swight
-Euer {adj-er}%sWight
+dein {adj-er}%sWight
 %%%%
 your %sskeletal warrior
-Euer {adj-er}%sSkelettkrieger
+dein {adj-er}%sSkelettkrieger
 %%%%
 your %sancient champion
-Euer {adj-er}%salter Champion
+dein {adj-er}%salter Champion
 %%%%
 your %sflying skull
-Euer {adj-er}%sfliegender Schädel
+dein {adj-er}%sfliegender Schädel
 %%%%
 your %scurse skull
-Euer {adj-er}%sFluchschädel
+dein {adj-er}%sFluchschädel
 %%%%
 your %scurse toe
-Euer {adj-er}%sFluchzeh
+dein {adj-er}%sFluchzeh
 %%%%
 your %sangel
-Euer {adj-er}%sEngel
+dein {adj-er}%sEngel
 %%%%
 your %scherub
-Euer {adj-er}%sCherub
+dein {adj-er}%sCherub
 %%%%
 your %sseraph
-Euer {adj-er}%sSeraph
+dein {adj-er}%sSeraph
 %%%%
 your %sdaeva
-Euer {adj-er}%sDaeva
+dein {adj-er}%sDaeva
 %%%%
 your %sprofane servitor
-Euer {adj-er}%sprofaner Diener
+dein {adj-er}%sprofaner Diener
 %%%%
 your %sgiant
-Euer {adj-er}%sRiese
+dein {adj-er}%sRiese
 %%%%
 your %scyclops
-Euer {adj-er}%sZyklop
+dein {adj-er}%sZyklop
 %%%%
 your %settin
-Euer {adj-er}%sEttin
+dein {adj-er}%sEttin
 %%%%
 your %sfire giant
-Euer {adj-er}%sFeuerriese
+dein {adj-er}%sFeuerriese
 %%%%
 your %sfrost giant
-Euer {adj-er}%sFrostriese
+dein {adj-er}%sFrostriese
 %%%%
 your %sstone giant
-Euer {adj-er}%sSteinriese
+dein {adj-er}%sSteinriese
 %%%%
 your %stitan
-Euer {adj-er}%sTitan
+dein {adj-er}%sTitan
 %%%%
 your %sjuggernaut
-Euer {adj-er}%sJuggernaut
+dein {adj-er}%sJuggernaut
 %%%%
 your %siron giant
-Euer {adj-er}%sEisenriese
+dein {adj-er}%sEisenriese
 %%%%
 your %sdragon
-Euer {adj-er}%sDrache
+dein {adj-er}%sDrache
 %%%%
 your %sfire dragon
-Euer {adj-er}%sFeuerdrache
+dein {adj-er}%sFeuerdrache
 %%%%
 your %shydra
-Eure {adj-e}%sHydra
+deine {adj-e}%sHydra
 %%%%
 your %sice dragon
-Euer {adj-er}%sEisdrache
+dein {adj-er}%sEisdrache
 %%%%
 your %ssteam dragon
-Euer {adj-er}%sDampfdrache
+dein {adj-er}%sDampfdrache
 %%%%
 your %sswamp dragon
-Euer {adj-er}%sSumpfdrache
+dein {adj-er}%sSumpfdrache
 %%%%
 your %sacid dragon
-Euer {adj-er}%sSäuredrache
+dein {adj-er}%sSäuredrache
 %%%%
 your %squicksilver dragon
-Euer {adj-er}%sQuecksilberdrache
+dein {adj-er}%sQuecksilberdrache
 %%%%
 your %siron dragon
-Euer {adj-er}%sEisendrache
+dein {adj-er}%sEisendrache
 %%%%
 your %sstorm dragon
-Euer {adj-er}%sSturmdrache
+dein {adj-er}%sSturmdrache
 %%%%
 your %sgolden dragon
-Euer {adj-er}%sGolddrache
+dein {adj-er}%sGolddrache
 %%%%
 your %sshadow dragon
-Euer {adj-er}%sSchattendrache
+dein {adj-er}%sSchattendrache
 %%%%
 your %sbone dragon
-Euer {adj-er}%sKnochendrache
+dein {adj-er}%sKnochendrache
 %%%%
 your %spearl dragon
-Euer {adj-er}%sPerlendrache
+dein {adj-er}%sPerlendrache
 %%%%
 your %selemental
-Euer {adj-es}%sElementar
+dein {adj-es}%sElementar
 %%%%
 your %searth elemental
-Euer {adj-es}%sErdelementar
+dein {adj-es}%sErdelementar
 %%%%
 your %sfire elemental
-Euer {adj-es}%sFeuerelementar
+dein {adj-es}%sFeuerelementar
 %%%%
 your %swater elemental
-Euer {adj-es}%sWasserelementar
+dein {adj-es}%sWasserelementar
 %%%%
 your %sair elemental
-Euer {adj-es}%sLuftelementar
+dein {adj-es}%sLuftelementar
 %%%%
 your %siron elemental
-Euer {adj-es}%sEisenelementar
+dein {adj-es}%sEisenelementar
 %%%%
 your %selemental wellspring
-Eure {adj-e}%selementare Quelle
+deine {adj-e}%selementare Quelle
 %%%%
 your %sgiant frog
-Euer {adj-er}%sRiesenfrosch
+dein {adj-er}%sRiesenfrosch
 %%%%
 your %sbullfrog
-Euer {adj-er}%sOchsenfrosch
+dein {adj-er}%sOchsenfrosch
 %%%%
 your %sspiny frog
-Euer {adj-er}%sStachelfrosch
+dein {adj-er}%sStachelfrosch
 %%%%
 your %sblink frog
-Euer {adj-er}%sBlinzelfrosch
+dein {adj-er}%sBlinzelfrosch
 %%%%
 your %sbarachi
-Eure {adj-e}%sBarachi
+deine {adj-e}%sBarachi
 %%%%
 your %sfloating eye
-Euer {adj-es}%sschwebendes Auge
+dein {adj-es}%sschwebendes Auge
 %%%%
 your %sglowing orange brain
-Euer {adj-es}%soranges leuchtendes Gehirn
+dein {adj-es}%soranges leuchtendes Gehirn
 %%%%
 your %sgreat orb of eyes
-Eure {adj-e}%sgroße Kugel der Augen
+deine {adj-e}%sgroße Kugel der Augen
 %%%%
 your %sgreater orb of eyes
-Eure {adj-e}%sgrößere Kugel der Augen
+deine {adj-e}%sgrößere Kugel der Augen
 %%%%
 your %sshining eye
-Euer {adj-es}%sleuchtendes Auge
+dein {adj-es}%sleuchtendes Auge
 %%%%
 your %seye of devastation
-Euer {adj-es}%sAuge der Verwüstung
+dein {adj-es}%sAuge der Verwüstung
 %%%%
 your %sgolden eye
-Euer {adj-es}%sgoldenes Auge
+dein {adj-es}%sgoldenes Auge
 %%%%
 your %sophan
-Euer {adj-er}%sOphan
+dein {adj-er}%sOphan
 %%%%
 your %smanticore
-Euer {adj-er}%sMantikor
+dein {adj-er}%sMantikor
 %%%%
 your %sminotaur
-Euer {adj-er}%sMinotaur
+dein {adj-er}%sMinotaur
 %%%%
 your %ssphinx
-Eure {adj-e}%sSphinx
+deine {adj-e}%sSphinx
 %%%%
 your %sharpy
-Eure {adj-e}%sHarpyie
+deine {adj-e}%sHarpyie
 %%%%
 your %smutant beast
-Euer {adj-es}%sMutant-Biest
+dein {adj-es}%sMutant-Biest
 %%%%
 your %sancestor
-Euer {adj-er}%sAhne
+dein {adj-er}%sAhne
 %%%%
 your %sknight
-Euer {adj-er}%sRitter
+dein {adj-er}%sRitter
 %%%%
 your %sbattlemage
-Euer {adj-er}%sKampfmagier
+dein {adj-er}%sKampfmagier
 %%%%
 your %shexer
-Euer {adj-er}%sHexer
+dein {adj-er}%sHexer
 %%%%
 your %sjelly
-Euer {adj-es}%sGelee
+dein {adj-es}%sGelee
 %%%%
 your %sslime creature
-Euer {adj-es}%sSchleimwesen
+dein {adj-es}%sSchleimwesen
 %%%%
 your %smerged slime creature
-Eure {adj-e}%sverschmolzene Schleimkreatur
+deine {adj-e}%sverschmolzene Schleimkreatur
 %%%%
 your %sazure jelly
-Euer {adj-es}%sazurblaues Gelee
+dein {adj-es}%sazurblaues Gelee
 %%%%
 your %sacid blob
-Euer {adj-er}%sSäureklumpen
+dein {adj-er}%sSäureklumpen
 %%%%
 your %skobold
-Euer {adj-er}%sKobold
+dein {adj-er}%sKobold
 %%%%
 your %sbig kobold
-Euer {adj-er}%sgroßer Kobold
+dein {adj-er}%sgroßer Kobold
 %%%%
 your %skobold demonologist
-Euer {adj-er}%sKobold-Dämonologe
+dein {adj-er}%sKobold-Dämonologe
 %%%%
 your %slich
-Euer {adj-er}%sLich
+dein {adj-er}%sLich
 %%%%
 your %sancient lich
-Euer {adj-er}%salter Lich
+dein {adj-er}%salter Lich
 %%%%
 your %santique lich
-Euer {adj-er}%santiker Lich
+dein {adj-er}%santiker Lich
 %%%%
 your %srevenant
-Euer {adj-er}%sWiedergänger
+dein {adj-er}%sWiedergänger
 %%%%
 your %shalazid warlock
-Euer {adj-er}%shalazidischer Hexenmeister
+dein {adj-er}%shalazidischer Hexenmeister
 %%%%
 your %smummy
-Eure {adj-e}%sMumie
+deine {adj-e}%sMumie
 %%%%
 your %sguardian mummy
-Eure {adj-e}%sWächtermumie
+deine {adj-e}%sWächtermumie
 %%%%
 your %sgreater mummy
-Eure {adj-e}%sgrößere Mumie
+deine {adj-e}%sgrößere Mumie
 %%%%
 your %smummy priest
-Euer {adj-er}%sMumie-Priester
+dein {adj-er}%sMumie-Priester
 %%%%
 your %snaga
-Euer {adj-er}%sNaga
+dein {adj-er}%sNaga
 %%%%
 your %snaga mage
-Euer {adj-er}%sNaga-Magier
+dein {adj-er}%sNaga-Magier
 %%%%
 your %snaga sharpshooter
-Euer {adj-er}%sNaga-Scharfschütze
+dein {adj-er}%sNaga-Scharfschütze
 %%%%
 your %snaga ritualist
-Euer {adj-er}%sNaga-Ritualist
+dein {adj-er}%sNaga-Ritualist
 %%%%
 your %snaga warrior
-Euer {adj-er}%sNaga-Krieger
+dein {adj-er}%sNaga-Krieger
 %%%%
 your %snagaraja
-Euer {adj-er}%sNagaraja
+dein {adj-er}%sNagaraja
 %%%%
 your %sogre
-Euer {adj-er}%sOger
+dein {adj-er}%sOger
 %%%%
 your %stwo-headed ogre
-Euer {adj-er}%szweiköpfiger Oger
+dein {adj-er}%szweiköpfiger Oger
 %%%%
 your %sogre mage
-Euer {adj-er}%sOger-Magier
+dein {adj-er}%sOger-Magier
 %%%%
 your %splant
-Eure {adj-e}%sPflanze
+deine {adj-e}%sPflanze
 %%%%
 your %sdemonic plant
-Eure {adj-e}%sdämonische Pflanze
+deine {adj-e}%sdämonische Pflanze
 %%%%
 your %swithered plant
-Eure {adj-e}%sverwelkte Pflanze
+deine {adj-e}%sverwelkte Pflanze
 %%%%
 your %soklob sapling
-Euer {adj-er}%sOklob-Setzling
+dein {adj-er}%sOklob-Setzling
 %%%%
 your %soklob plant
-Eure {adj-e}%sOklob-Pflanze
+deine {adj-e}%sOklob-Pflanze
 %%%%
 your %sbush
-Euer {adj-er}%sBusch
+dein {adj-er}%sBusch
 %%%%
 your %sburning bush
-Euer {adj-er}%sbrennender Busch
+dein {adj-er}%sbrennender Busch
 %%%%
 your %stoadstool
-Euer {adj-er}%sGiftpilz
+dein {adj-er}%sGiftpilz
 %%%%
 your %sfungus
-Euer {adj-er}%sPilz
+dein {adj-er}%sPilz
 %%%%
 your %sballistomycete
-Euer {adj-er}%sBallistomycete
+dein {adj-er}%sBallistomycete
 %%%%
 your %shyperactive ballistomycete
-Euer {adj-er}%shyperaktiver Ballistomycete
+dein {adj-er}%shyperaktiver Ballistomycete
 %%%%
 your %sbriar patch
-Euer {adj-er}%sDornstrauch
+dein {adj-er}%sDornstrauch
 %%%%
 your %stengu
-Euer {adj-er}%sTengu
+dein {adj-er}%sTengu
 %%%%
 your %stengu conjurer
-Euer {adj-er}%sTengu-Zauberer
+dein {adj-er}%sTengu-Zauberer
 %%%%
 your %stengu warrior
-Euer {adj-er}%sTengu-Krieger
+dein {adj-er}%sTengu-Krieger
 %%%%
 your %stengu reaver
-Euer {adj-er}%sTengu-Häscher
+dein {adj-er}%sTengu-Häscher
 %%%%
 your %sefreet
-Euer {adj-es}%sEfreet
+dein {adj-es}%sEfreet
 %%%%
 your %srakshasa
-Euer {adj-er}%sRakshasa
+dein {adj-er}%sRakshasa
 %%%%
 your %sdryad
-Eure {adj-e}%sDryade
+deine {adj-e}%sDryade
 %%%%
 your %ssnaplasher vine
-Eure {adj-e}%sPeitscherrebe
+deine {adj-e}%sPeitscherrebe
 %%%%
 your %ssnaplasher vine segment
-Euer {adj-es}%sPeitscherrebesegment
+dein {adj-es}%sPeitscherrebesegment
 %%%%
 your %ssnake
-Eure {adj-e}%sSchlange
+deine {adj-e}%sSchlange
 %%%%
 your %sball python
-Eure {adj-e}%sKönigspython
+deine {adj-e}%sKönigspython
 %%%%
 your %sadder
-Eure {adj-e}%sKreuzotter
+deine {adj-e}%sKreuzotter
 %%%%
 your %swater moccasin
-Euer {adj-er}%sWassermokassin
+dein {adj-er}%sWassermokassin
 %%%%
 your %sblack mamba
-Eure {adj-e}%sschwarze Mamba
+deine {adj-e}%sschwarze Mamba
 %%%%
 your %ssea snake
-Eure {adj-e}%sSeeschlange
+deine {adj-e}%sSeeschlange
 %%%%
 your %sanaconda
-Eure {adj-e}%sAnakonda
+deine {adj-e}%sAnakonda
 %%%%
 your %sguardian serpent
-Eure {adj-e}%sWächter-Schlange
+deine {adj-e}%sWächter-Schlange
 %%%%
 your %sshock serpent
-Eure {adj-e}%sSchockschlange
+deine {adj-e}%sSchockschlange
 %%%%
 your %smana viper
-Eure {adj-e}%sManaviper
+deine {adj-e}%sManaviper
 %%%%
 your %stroll
-Euer {adj-er}%sTroll
+dein {adj-er}%sTroll
 %%%%
 your %siron troll
-Euer {adj-er}%sEisentroll
+dein {adj-er}%sEisentroll
 %%%%
 your %sdeep troll
-Euer {adj-er}%sTiefentroll
+dein {adj-er}%sTiefentroll
 %%%%
 your %sdeep troll earth mage
-Euer {adj-er}%sTiefentroll-Erdmagier
+dein {adj-er}%sTiefentroll-Erdmagier
 %%%%
 your %sdeep troll shaman
-Euer {adj-er}%sTiefentroll-Schamane
+dein {adj-er}%sTiefentroll-Schamane
 %%%%
 your %svampire
-Euer {adj-er}%sVampir
+dein {adj-er}%sVampir
 %%%%
 your %svampire knight
-Euer {adj-er}%sVampir-Ritter
+dein {adj-er}%sVampir-Ritter
 %%%%
 your %svampire mage
-Euer {adj-er}%sVampir-Magier
+dein {adj-er}%sVampir-Magier
 %%%%
 your %sjiangshi
-Euer {adj-es}%sJiangshi
+dein {adj-es}%sJiangshi
 %%%%
 your %sghost
-Euer {adj-es}%sGespenst
+dein {adj-es}%sGespenst
 %%%%
 your %sphantom
-Euer {adj-es}%sPhantom
+dein {adj-es}%sPhantom
 %%%%
 your %shungry ghost
-Euer {adj-er}%shungriger Geist
+dein {adj-er}%shungriger Geist
 %%%%
 your %sflayed ghost
-Euer {adj-er}%senthäuteter Geist
+dein {adj-er}%senthäuteter Geist
 %%%%
 your %splayer ghost
-Euer {adj-er}%sSpielergeist
+dein {adj-er}%sSpielergeist
 %%%%
 your %sshadow
-Euer {adj-er}%sSchatten
+dein {adj-er}%sSchatten
 %%%%
 your %ssilent spectre
-Euer {adj-er}%sstilles Gespenst
+dein {adj-er}%sstilles Gespenst
 %%%%
 your %sdrowned soul
-Eure {adj-e}%sertrunkene Seele
+deine {adj-e}%sertrunkene Seele
 %%%%
 your %swraith
-Euer {adj-er}%sGeist
+dein {adj-er}%sGeist
 %%%%
 your %sshadow wraith
-Euer {adj-er}%sSchattengeist
+dein {adj-er}%sSchattengeist
 %%%%
 your %sfreezing wraith
-Euer {adj-er}%sFrostgeist
+dein {adj-er}%sFrostgeist
 %%%%
 your %seidolon
-Euer {adj-er}%sEidolon
+dein {adj-er}%sEidolon
 %%%%
 your %sphantasmal warrior
-Euer {adj-er}%sphantastischer Krieger
+dein {adj-er}%sphantastischer Krieger
 %%%%
 your %slarge abomination
-Euer {adj-er}%sgroßer Greuel
+dein {adj-er}%sgroßer Greuel
 %%%%
 your %sthrashing horror
-Euer {adj-er}%sverprügelndes Grauen
+dein {adj-er}%sverprügelndes Grauen
 %%%%
 your %stentacled monstrosity
-Eure {adj-e}%sTentakel-Monstrosität
+deine {adj-e}%sTentakel-Monstrosität
 %%%%
 your %sOrb Guardian
-Euer {adj-er}%sKugelwächter
+dein {adj-er}%sKugelwächter
 %%%%
 your %stentacled starspawn
-Eure {adj-e}%sTentakelsternbrut
+deine {adj-e}%sTentakelsternbrut
 %%%%
 your %sstarspawn tentacle
-Euer {adj-er}%sSternbruttentakel
+dein {adj-er}%sSternbruttentakel
 %%%%
 your %sstarspawn tentacle segment
-Euer {adj-es}%sSternbruttentakelsegment
+dein {adj-es}%sSternbruttentakelsegment
 %%%%
 your %sstarcursed mass
-Eure {adj-e}%ssternverfluchte Masse
+deine {adj-e}%ssternverfluchte Masse
 %%%%
 your %sdream sheep
-Euer {adj-es}%sTraumschaf
+dein {adj-es}%sTraumschaf
 %%%%
 your %syak
-Euer {adj-es}%sYak
+dein {adj-es}%sYak
 %%%%
 your %sdeath yak
-Euer {adj-es}%sTodesyak
+dein {adj-es}%sTodesyak
 %%%%
 your %scatoblepas
-Eure {adj-e}%sCatoblepas
+deine {adj-e}%sCatoblepas
 %%%%
 your %selephant
-Euer {adj-er}%sElefant
+dein {adj-er}%sElefant
 %%%%
 your %sdire elephant
-Euer {adj-er}%sSchreckenselefant
+dein {adj-er}%sSchreckenselefant
 %%%%
 your %shellephant
-Euer {adj-er}%sHöllefant
+dein {adj-er}%sHöllefant
 %%%%
 your %sapis
-Eure {adj-e}%sApis
+deine {adj-e}%sApis
 %%%%
 your %sice beast
-Eure {adj-e}%sEisbestie
+deine {adj-e}%sEisbestie
 %%%%
 your %ssky beast
-Euer {adj-es}%sHimmelstier
+dein {adj-es}%sHimmelstier
 %%%%
 your %szombie
-Euer {adj-er}%sZombie
+dein {adj-er}%sZombie
 %%%%
 your %sskeleton
-Euer {adj-es}%sSkelett
+dein {adj-es}%sSkelett
 %%%%
 your %ssimulacrum
-Euer {adj-es}%sSimulacrum
+dein {adj-es}%sSimulacrum
 %%%%
 your %ssmall zombie
-Euer {adj-er}%skleiner Zombie
+dein {adj-er}%skleiner Zombie
 %%%%
 your %ssmall skeleton
-Euer {adj-er}%skleines Skelett
+dein {adj-er}%skleines Skelett
 %%%%
 your %ssmall simulacrum
-Euer {adj-er}%skleines Simulacrum
+dein {adj-er}%skleines Simulacrum
 %%%%
 your %slarge zombie
-Euer {adj-er}%sgroßer Zombie
+dein {adj-er}%sgroßer Zombie
 %%%%
 your %slarge skeleton
-Euer {adj-er}%sgroßes Skelett
+dein {adj-er}%sgroßes Skelett
 %%%%
 your %slarge simulacrum
-Euer {adj-er}%sgroßes Simulacrum
+dein {adj-er}%sgroßes Simulacrum
 %%%%
 your %sspectral thing
-Eure {adj-e}%sspektrale Sache
+deine {adj-e}%sspektrale Sache
 %%%%
 your %selectric eel
-Euer {adj-er}%sZitteraal
+dein {adj-er}%sZitteraal
 %%%%
 your %skraken
-Euer {adj-er}%sKraken
+dein {adj-er}%sKraken
 %%%%
 your %stentacle
-Euer {adj-es}%sTentakel
+dein {adj-es}%sTentakel
 %%%%
 your %stentacle segment
-Euer {adj-es}%sTentakelsegment
+dein {adj-es}%sTentakelsegment
 %%%%
 your %soctopode
-Euer {adj-er}%sOktopod
+dein {adj-er}%sOktopod
 %%%%
 your %slava snake
-Eure {adj-e}%sLavaschlange
+deine {adj-e}%sLavaschlange
 %%%%
 your %ssalamander
-Euer {adj-er}%sSalamander
+dein {adj-er}%sSalamander
 %%%%
 your %ssalamander mystic
-Euer {adj-er}%sSalamander-Mystiker
+dein {adj-er}%sSalamander-Mystiker
 %%%%
 your %sHellbinder
-Euer {adj-er}%sHöllenbinder
+dein {adj-er}%sHöllenbinder
 %%%%
 your %sCloud Mage
-Euer {adj-er}%sWolkenmagier
+dein {adj-er}%sWolkenmagier
 %%%%
 your %splayer
-Euer {adj-er}%sSpieler
+dein {adj-er}%sSpieler
 %%%%
 your %splayer illusion
-Eure {adj-e}%sSpieler-Illusion
+deine {adj-e}%sSpieler-Illusion
 %%%%
 your %sdancing weapon
-Eure {adj-e}%stanzende Waffe
+deine {adj-e}%stanzende Waffe
 %%%%
 your %sspectral weapon
-Eure {adj-e}%sSpektralwaffe
+deine {adj-e}%sSpektralwaffe
 %%%%
 your %seldritch tentacle
-Euer {adj-es}%sunheimliches Tentakel
+dein {adj-es}%sunheimliches Tentakel
 %%%%
 your %seldritch tentacle segment
-Euer {adj-es}%sunheimliches Tentakelsegment
+dein {adj-es}%sunheimliches Tentakelsegment
 %%%%
 your %sdemonspawn
-Eure {adj-e}%sDämonenbrut
+deine {adj-e}%sDämonenbrut
 %%%%
 your %smonstrous demonspawn
-Eure {adj-e}%smonströse Dämonenbrut
+deine {adj-e}%smonströse Dämonenbrut
 %%%%
 your %sgelid demonspawn
-Eure {adj-e}%sgelide Dämonenbrut
+deine {adj-e}%sgelide Dämonenbrut
 %%%%
 your %sinfernal demonspawn
-Eure {adj-e}%shöllische Dämonenbrut
+deine {adj-e}%shöllische Dämonenbrut
 %%%%
 your %storturous demonspawn
-Eure {adj-e}%squälende Dämonenbrut
+deine {adj-e}%squälende Dämonenbrut
 %%%%
 your %sblood saint
-Euer {adj-er}%sBlutheilige
+dein {adj-er}%sBlutheilige
 %%%%
 your %swarmonger
-Euer {adj-er}%sKriegstreiber
+dein {adj-er}%sKriegstreiber
 %%%%
 your %scorrupter
-Euer {adj-er}%sKorruptor
+dein {adj-er}%sKorruptor
 %%%%
 your %sblack sun
-Eure {adj-e}%sschwarze Sonne
+deine {adj-e}%sschwarze Sonne
 %%%%
 your %scrimson imp
-Euer {adj-es}%skarminrotes Teufelchen
+dein {adj-es}%skarminrotes Teufelchen
 %%%%
 your %squasit
-Euer {adj-es}%sQuasit
+dein {adj-es}%sQuasit
 %%%%
 your %swhite imp
-Euer {adj-es}%sweißes Teufelchen
+dein {adj-es}%sweißes Teufelchen
 %%%%
 your %sufetubus
-Euer {adj-er}%sUfetubus
+dein {adj-er}%sUfetubus
 %%%%
 your %siron imp
-Euer {adj-es}%sEisenteufelchen
+dein {adj-es}%sEisenteufelchen
 %%%%
 your %sshadow imp
-Euer {adj-es}%sSchattenteufelchen
+dein {adj-es}%sSchattenteufelchen
 %%%%
 your %srust devil
-Euer {adj-er}%sRostteufel
+dein {adj-er}%sRostteufel
 %%%%
 your %sorange demon
-Euer {adj-er}%soranger Dämon
+dein {adj-er}%soranger Dämon
 %%%%
 your %sred devil
-Euer {adj-er}%sroter Teufel
+dein {adj-er}%sroter Teufel
 %%%%
 your %shellwing
-Euer {adj-er}%sHöllenflügel
+dein {adj-er}%sHöllenflügel
 %%%%
 your %sice devil
-Euer {adj-er}%sEisteufel
+dein {adj-er}%sEisteufel
 %%%%
 your %schaos spawn
-Eure {adj-e}%sChaosbrut
+deine {adj-e}%sChaosbrut
 %%%%
 your %ssun demon
-Euer {adj-er}%sSonnendämon
+dein {adj-er}%sSonnendämon
 %%%%
 your %ssoul eater
-Euer {adj-er}%sSeelenfresser
+dein {adj-er}%sSeelenfresser
 %%%%
 your %ssmoke demon
-Euer {adj-er}%sRauchdämon
+dein {adj-er}%sRauchdämon
 %%%%
 your %sneqoxec
-Eure {adj-e}%sNeqoxec
+deine {adj-e}%sNeqoxec
 %%%%
 your %synoxinul
-Euer {adj-es}%sYnoxinul
+dein {adj-es}%sYnoxinul
 %%%%
 your %ssixfirhy
-Euer {adj-er}%sSixfirhy
+dein {adj-er}%sSixfirhy
 %%%%
 your %sshadow demon
-Euer {adj-er}%sSchattendämon
+dein {adj-er}%sSchattendämon
 %%%%
 your %sgreen death
-Euer {adj-er}%sgrüner Tod
+dein {adj-er}%sgrüner Tod
 %%%%
 your %sblizzard demon
-Euer {adj-er}%sBlizzarddämon
+dein {adj-er}%sBlizzarddämon
 %%%%
 your %sbalrug
-Euer {adj-er}%sBalrug
+dein {adj-er}%sBalrug
 %%%%
 your %scacodemon
-Euer {adj-er}%sCacodaemon
+dein {adj-er}%sCacodaemon
 %%%%
 your %shell beast
-Euer {adj-es}%sHöllentier
+dein {adj-es}%sHöllentier
 %%%%
 your %shellion
-Euer {adj-er}%sTeufelsbraten
+dein {adj-er}%sTeufelsbraten
 %%%%
 your %sreaper
-Euer {adj-er}%sSchnitter
+dein {adj-er}%sSchnitter
 %%%%
 your %slorocyproca
-Eure {adj-e}%sLorocyproca
+deine {adj-e}%sLorocyproca
 %%%%
 your %stormentor
-Euer {adj-er}%sQuäler
+dein {adj-er}%sQuäler
 %%%%
 your %sBrimstone Fiend
-Euer {adj-er}%sSchwefelunterweltler
+dein {adj-er}%sSchwefelunterweltler
 %%%%
 your %sIce Fiend
-Euer {adj-er}%sEisunterweltler
+dein {adj-er}%sEisunterweltler
 %%%%
 your %sTzitzimitl
-Euer {adj-es}%sTzitzimitl
+dein {adj-es}%sTzitzimitl
 %%%%
 your %sHell Sentinel
-Euer {adj-er}%sHöllenwächter
+dein {adj-er}%sHöllenwächter
 %%%%
 your %sExecutioner
-Euer {adj-er}%sScharfrichter
+dein {adj-er}%sScharfrichter
 %%%%
 your %sanimated tree
-Euer {adj-er}%sanimierter Baum
+dein {adj-er}%sanimierter Baum
 %%%%
 your %sgolem
-Euer {adj-er}%sGolem
+dein {adj-er}%sGolem
 %%%%
 your %ssaltling
-Euer {adj-er}%sSalzling
+dein {adj-er}%sSalzling
 %%%%
 your %speacekeeper
-Euer {adj-er}%sFriedenshüter
+dein {adj-er}%sFriedenshüter
 %%%%
 your %siron golem
-Euer {adj-er}%sEisengolem
+dein {adj-er}%sEisengolem
 %%%%
 your %scrystal guardian
-Euer {adj-er}%sKristallwächter
+dein {adj-er}%sKristallwächter
 %%%%
 your %stoenail golem
-Euer {adj-er}%sZehennagelgolem
+dein {adj-er}%sZehennagelgolem
 %%%%
 your %selectric golem
-Euer {adj-er}%sBlitzgolem
+dein {adj-er}%sBlitzgolem
 %%%%
 your %sushabti
-Eure {adj-e}%sUschabti
+deine {adj-e}%sUschabti
 %%%%
 your %sguardian golem
-Euer {adj-er}%sWächtergolem
+dein {adj-er}%sWächtergolem
 %%%%
 your %sflesh golem
-Euer {adj-er}%sFleischgolem
+dein {adj-er}%sFleischgolem
 %%%%
 your %sspellforged servitor
-Euer {adj-er}%szaubergeschmeideter Diener
+dein {adj-er}%szaubergeschmeideter Diener
 %%%%
 your %sice statue
-Eure {adj-e}%sEisstatue
+deine {adj-e}%sEisstatue
 %%%%
 your %sobsidian statue
-Eure {adj-e}%sObsidianstatue
+deine {adj-e}%sObsidianstatue
 %%%%
 your %sorange crystal statue
-Eure {adj-e}%sorange Kristallstatue
+deine {adj-e}%sorange Kristallstatue
 %%%%
 your %sstatue
-Eure {adj-e}%sStatue
+deine {adj-e}%sStatue
 %%%%
 your %straining dummy
-Eure {adj-e}%sTrainingspuppe
+deine {adj-e}%sTrainingspuppe
 %%%%
 your %spillar of salt
-Eure {adj-e}%sSalzsäule
+deine {adj-e}%sSalzsäule
 %%%%
 your %sblock of ice
-Euer {adj-er}%sEisblock
+dein {adj-er}%sEisblock
 %%%%
 your %sdiamond obelisk
-Euer {adj-er}%sDiamantobelisk
+dein {adj-er}%sDiamantobelisk
 %%%%
 your %slightning spire
-Euer {adj-er}%sBlitzturm
+dein {adj-er}%sBlitzturm
 %%%%
 your %sgargoyle
-Euer {adj-er}%sGargoyle
+dein {adj-er}%sGargoyle
 %%%%
 your %swar gargoyle
-Euer {adj-er}%sKriegsgargoyle
+dein {adj-er}%sKriegsgargoyle
 %%%%
 your %smolten gargoyle
-Euer {adj-er}%sgeschmolzener Gargoyle
+dein {adj-er}%sgeschmolzener Gargoyle
 %%%%
 your %spandemonium lord
-Euer {adj-er}%sPandämoniumsfürst
+dein {adj-er}%sPandämoniumsfürst
 %%%%
 your %shell lord
-Euer {adj-er}%sHöllenfürst
+dein {adj-er}%sHöllenfürst
 %%%%
 your %sball lightning
-Euer {adj-er}%sKugelblitz
+dein {adj-er}%sKugelblitz
 %%%%
 your %sballistomycete spore
-Eure {adj-e}%sBallistomycetenspore
+deine {adj-e}%sBallistomycetenspore
 %%%%
 your %slost soul
-Eure {adj-e}%sverlorene Seele
+deine {adj-e}%sverlorene Seele
 %%%%
 your %slurking horror
-Euer {adj-er}%slauerndes Grauen
+dein {adj-er}%slauerndes Grauen
 %%%%
 your %sorb of fire
-Eure {adj-e}%sFeuerkugel
+deine {adj-e}%sFeuerkugel
 %%%%
 your %sorb of destruction
-Eure {adj-e}%sKugel der Zerstörung
+deine {adj-e}%sKugel der Zerstörung
 %%%%
 your %swavering orb of destruction
-Eure {adj-e}%sschwankende Kugel der Zerstörung
+deine {adj-e}%sschwankende Kugel der Zerstörung
 %%%%
 your %sfulminant prism
-Euer {adj-er}%sfulminantes Prisma
+dein {adj-er}%sfulminantes Prisma
 %%%%
 your %swretched star
-Euer {adj-er}%selender Stern
+dein {adj-er}%selender Stern
 %%%%
 your %sbattlesphere
-Eure {adj-e}%sKampfsphäre
+deine {adj-e}%sKampfsphäre
 %%%%
 your %sdeath cob
-Euer {adj-er}%sTodeskolben
+dein {adj-er}%sTodeskolben
 %%%%
 your %smoon troll
-Euer {adj-er}%sMondtroll
+dein {adj-er}%sMondtroll
 %%%%
 your %sfoxfire
-Euer {adj-es}%sFuchsfeuer
+dein {adj-es}%sFuchsfeuer
 %%%%
 your %snameless horror
-Euer {adj-er}%snamenloser Horror
+dein {adj-er}%snamenloser Horror
 %%%%
 your %swill-o-the-wisp
-Euer {adj-es}%sIrrlicht
+dein {adj-es}%sIrrlicht
 %%%%
 your %sbunyip
-Euer {adj-er}%sBunyip
+dein {adj-er}%sBunyip
 %%%%
 your %sboulder beetle
-Euer {adj-er}%sRollsteinkäfer
+dein {adj-er}%sRollsteinkäfer
 %%%%
 your %scane toad
-Eure {adj-e}%sAga-Kröte
+deine {adj-e}%sAga-Kröte
 %%%%
 your %sgoliath frog
-Euer {adj-er}%sGoliathfrosch
+dein {adj-er}%sGoliathfrosch
 %%%%
 your %sfenstrider witch
-Eure {adj-e}%sFennläuferhexe
+deine {adj-e}%sFennläuferhexe
 %%%%
 your %spalentonga
-Euer {adj-er}%sPalentonga
+dein {adj-er}%sPalentonga
 %%%%
 your %sroyal mummy
-Eure {adj-e}%skönigliche Mumie
+deine {adj-e}%skönigliche Mumie
 %%%%
 your %seleionoma
-Eure {adj-e}%sEleionoma
+deine {adj-e}%sEleionoma
 %%%%
 your %slemure
-Eure {adj-e}%sLemure
+deine {adj-e}%sLemure
 %%%%
 your %sendoplasm
-Euer {adj-es}%sEndoplasma
+dein {adj-es}%sEndoplasma
 %%%%
 your %srockslime
-Euer {adj-er}%sFelsenschleim
+dein {adj-er}%sFelsenschleim
 %%%%
 your %squicksilver ooze
-Euer {adj-er}%sQuecksilber-Schlamm
+dein {adj-er}%sQuecksilber-Schlamm
 %%%%
 your %skobold brigand
-Euer {adj-er}%sKobold-Brigant
+dein {adj-er}%sKobold-Brigant
 %%%%
 your %sdread lich
-Euer {adj-er}%sGrauenlich
+dein {adj-er}%sGrauenlich
 %%%%
 your %sdjinni
-Euer {adj-er}%sDschinn
+dein {adj-er}%sDschinn
 %%%%
 your %ssalamander tyrant
-Euer {adj-er}%sSalamander-Tyrann
+dein {adj-er}%sSalamander-Tyrann
 %%%%
 your %sanimated armour
-Eure {adj-e}%sanimierte Rüstung
+deine {adj-e}%sanimierte Rüstung
 %%%%
 # Test monsters can be created in Arena
 %%%%
 your %stest spawner
-Euer {adj-er}%sTest-Erzeuger
+dein {adj-er}%sTest-Erzeuger
 %%%%
 your %stest statue
-Eure {adj-e}%sTest-Statue
+deine {adj-e}%sTest-Statue
 %%%%
 your %stest blob
-Euer {adj-er}%sTest-Klumpen
+dein {adj-er}%sTest-Klumpen
 %%%%
 your %ssensed monster
-Euer {adj-er}%sgespürtes Monster
+dein {adj-er}%sgespürtes Monster
 %%%%
 your %sfriendly sensed monster
-Euer {adj-er}%sfreundliches gespürtes Monster
+dein {adj-er}%sfreundliches gespürtes Monster
 %%%%
 your %strivial sensed monster
-Euer {adj-er}%striviales gespürtes Monster
+dein {adj-er}%striviales gespürtes Monster
 %%%%
 your %seasy sensed monster
-Euer {adj-er}%sleichtes gespürtes Monster
+dein {adj-er}%sleichtes gespürtes Monster
 %%%%
 your %stough sensed monster
-Euer {adj-er}%shartes gespürtes Monster
+dein {adj-er}%shartes gespürtes Monster
 %%%%
 your %snasty sensed monster
-Euer {adj-er}%sfurchtbares gespürtes Monster
+dein {adj-er}%sfurchtbares gespürtes Monster
 %%%%
 your %ssting beast
-Euer {adj-es}%sStichbiest
+dein {adj-es}%sStichbiest
 %%%%
 your %sbat beast
-Euer {adj-es}%sFledermaus-Biest
+dein {adj-es}%sFledermaus-Biest
 %%%%
 your %sfire beast
-Euer {adj-es}%sFeuerbiest
+dein {adj-es}%sFeuerbiest
 %%%%
 your %sweird beast
-Euer {adj-es}%sbizarres Biest
+dein {adj-es}%sbizarres Biest
 %%%%
 your %sshock beast
-Euer {adj-es}%sSchockbiest
+dein {adj-es}%sSchockbiest
 %%%%
 your %sox beast
-Euer {adj-es}%sOchsenbiest
+dein {adj-es}%sOchsenbiest
 %%%%
 your %sspectre
-Eure {adj-e}%sSpukgestalt
+deine {adj-e}%sSpukgestalt
 %%%%
 your %scentipede
-Euer {adj-er}%sTausendfüßer
+dein {adj-er}%sTausendfüßer
 %%%%
 your %smad acolyte of Lugonu
-Euer {adj-er}%sverrückter Akolyth von Lugonu
+dein {adj-er}%sverrückter Akolyth von Lugonu
 %%%%
 your %sbog mummy
-Eure {adj-e}%sMoormumie
+deine {adj-e}%sMoormumie
 %%%%
 your %slunar statue
-Eure {adj-e}%sMond-Statue
+deine {adj-e}%sMond-Statue
 %%%%
 
 # derived monsters containing the name of the original monster
 # "elf zombie", "orc skeleton", etc.
 %%%%
 your %s@monster@ zombie
-Euer {adj-er}%s@monster@-Zombie
+dein {adj-er}%s@monster@-Zombie
 %%%%
 your %s@monster@ skeleton
-Euer {adj-es}%s@monster@-Skelett
+dein {adj-es}%s@monster@-Skelett
 %%%%
 your %s@monster@ simulacrum
-Euer {adj-es}%s@monster@-Simulacrum
+dein {adj-es}%s@monster@-Simulacrum
 %%%%
 
 # irregular derived monsters
 
 %%%%
 your %sLernaean hydra zombie
-Euer {adj-er}%sLernäische-Hydra-Zombie
+dein {adj-er}%sLernäische-Hydra-Zombie
 %%%%
 your %smonstrous demonspawn zombie
-Euer {adj-er}%sMonströse-Dämonenbrut-Zombie
+dein {adj-er}%sMonströse-Dämonenbrut-Zombie
 %%%%
 your %sgelid demonspawn zombie
-Euer {adj-er}%sGelide-Dämonenbrut-Zombie
+dein {adj-er}%sGelide-Dämonenbrut-Zombie
 %%%%
 your %sinfernal demonspawn zombie
-Euer {adj-er}%sHöllische-Dämonenbrut-Zombie
+dein {adj-er}%sHöllische-Dämonenbrut-Zombie
 %%%%
 your %storturous demonspawn zombie
-Euer {adj-er}%sQuälende-Dämonenbrut-Zombie
+dein {adj-er}%sQuälende-Dämonenbrut-Zombie
 %%%%
 your %sblack draconian zombie
-Euer {adj-er}%sSchwarzer-Drakonier-Zombie
+dein {adj-er}%sSchwarzer-Drakonier-Zombie
 %%%%
 your %syellow draconian zombie
-Euer {adj-er}%sGelber-Drakonier-Zombie
+dein {adj-er}%sGelber-Drakonier-Zombie
 %%%%
 your %spale draconian zombie
-Euer {adj-er}%sBlasser-Drakonier-Zombie
+dein {adj-er}%sBlasser-Drakonier-Zombie
 %%%%
 your %sgreen draconian zombie
-Euer {adj-er}%sGrüner-Drakonier-Zombie
+dein {adj-er}%sGrüner-Drakonier-Zombie
 %%%%
 your %spurple draconian zombie
-Euer {adj-er}%sPurpurner-Drakonier-Zombie
+dein {adj-er}%sPurpurner-Drakonier-Zombie
 %%%%
 your %sred draconian zombie
-Euer {adj-er}%sRoter-Drakonier-Zombie
+dein {adj-er}%sRoter-Drakonier-Zombie
 %%%%
 your %swhite draconian zombie
-Euer {adj-er}%sWeißer-Drakonier-Zombie
+dein {adj-er}%sWeißer-Drakonier-Zombie
 %%%%
 your %sgrey draconian zombie
-Euer {adj-er}%sGrauer-Drakonier-Zombie
+dein {adj-er}%sGrauer-Drakonier-Zombie
 %%%%
 
 %%%%
 your %sLernaean hydra skeleton
-Euer {adj-es}%sLernäische-Hydra-Skelett
+dein {adj-es}%sLernäische-Hydra-Skelett
 %%%%
 your %smonstrous demonspawn skeleton
-Euer {adj-es}%sMonströse-Dämonenbrut-Skelett
+dein {adj-es}%sMonströse-Dämonenbrut-Skelett
 %%%%
 your %sgelid demonspawn skeleton
-Euer {adj-es}%sGelide-Dämonenbrut-Skelett
+dein {adj-es}%sGelide-Dämonenbrut-Skelett
 %%%%
 your %sinfernal demonspawn skeleton
-Euer {adj-es}%sHöllische-Dämonenbrut-Skelett
+dein {adj-es}%sHöllische-Dämonenbrut-Skelett
 %%%%
 your %storturous demonspawn skeleton
-Euer {adj-es}%sQuälende-Dämonenbrut-Skelett
+dein {adj-es}%sQuälende-Dämonenbrut-Skelett
 %%%%
 your %sblack draconian skeleton
-Euer {adj-es}%sSchwarzer-Drakonier-Skelett
+dein {adj-es}%sSchwarzer-Drakonier-Skelett
 %%%%
 your %syellow draconian skeleton
-Euer {adj-es}%sGelber-Drakonier-Skelett
+dein {adj-es}%sGelber-Drakonier-Skelett
 %%%%
 your %spale draconian skeleton
-Euer {adj-es}%sBlasser-Drakonier-Skelett
+dein {adj-es}%sBlasser-Drakonier-Skelett
 %%%%
 your %sgreen draconian skeleton
-Euer {adj-es}%sGrüner-Drakonier-Skelett
+dein {adj-es}%sGrüner-Drakonier-Skelett
 %%%%
 your %spurple draconian skeleton
-Euer {adj-es}%sPurpurner-Drakonier-Skelett
+dein {adj-es}%sPurpurner-Drakonier-Skelett
 %%%%
 your %sred draconian skeleton
-Euer {adj-es}%sRoter-Drakonier-Skelett
+dein {adj-es}%sRoter-Drakonier-Skelett
 %%%%
 your %swhite draconian skeleton
-Euer {adj-es}%sWeißer-Drakonier-Skelett
+dein {adj-es}%sWeißer-Drakonier-Skelett
 %%%%
 your %sgrey draconian skeleton
-Euer {adj-es}%sGrauer-Drakonier-Skelett
+dein {adj-es}%sGrauer-Drakonier-Skelett
 %%%%
 
 %%%%
 your %sLernaean hydra simulacrum
-Euer {adj-es}%sLernäische-Hydra-Simulacrum
+dein {adj-es}%sLernäische-Hydra-Simulacrum
 %%%%
 your %smonstrous demonspawn simulacrum
-Euer {adj-es}%sMonströse-Dämonenbrut-Simulacrum
+dein {adj-es}%sMonströse-Dämonenbrut-Simulacrum
 %%%%
 your %sgelid demonspawn simulacrum
-Euer {adj-es}%sGelide-Dämonenbrut-Simulacrum
+dein {adj-es}%sGelide-Dämonenbrut-Simulacrum
 %%%%
 your %sinfernal demonspawn simulacrum
-Euer {adj-es}%sHöllische-Dämonenbrut-Simulacrum
+dein {adj-es}%sHöllische-Dämonenbrut-Simulacrum
 %%%%
 your %storturous demonspawn simulacrum
-Euer {adj-es}%sQuälende-Dämonenbrut-Simulacrum
+dein {adj-es}%sQuälende-Dämonenbrut-Simulacrum
 %%%%
 your %sblack draconian simulacrum
-Euer {adj-es}%sSchwarzer-Drakonier-Simulacrum
+dein {adj-es}%sSchwarzer-Drakonier-Simulacrum
 %%%%
 your %syellow draconian simulacrum
-Euer {adj-es}%sGelber-Drakonier-Simulacrum
+dein {adj-es}%sGelber-Drakonier-Simulacrum
 %%%%
 your %spale draconian simulacrum
-Euer {adj-es}%sBlasser-Drakonier-Simulacrum
+dein {adj-es}%sBlasser-Drakonier-Simulacrum
 %%%%
 your %sgreen draconian simulacrum
-Euer {adj-es}%sGrüner-Drakonier-Simulacrum
+dein {adj-es}%sGrüner-Drakonier-Simulacrum
 %%%%
 your %spurple draconian simulacrum
-Euer {adj-es}%sPurpurner-Drakonier-Simulacrum
+dein {adj-es}%sPurpurner-Drakonier-Simulacrum
 %%%%
 your %sred draconian simulacrum
-Euer {adj-es}%sRoter-Drakonier-Simulacrum
+dein {adj-es}%sRoter-Drakonier-Simulacrum
 %%%%
 your %swhite draconian simulacrum
-Euer {adj-es}%sWeißer-Drakonier-Simulacrum
+dein {adj-es}%sWeißer-Drakonier-Simulacrum
 %%%%
 your %sgrey draconian simulacrum
-Euer {adj-es}%sGrauer-Drakonier-Simulacrum
+dein {adj-es}%sGrauer-Drakonier-Simulacrum
 %%%%
 
 ##################
@@ -1632,104 +1632,104 @@ Euer {adj-es}%sGrauer-Drakonier-Simulacrum
 
 %%%%
 your %skamikaze kobold
-Euer {adj-er}%sKamikaze-Kobold
+dein {adj-er}%sKamikaze-Kobold
 %%%%
 your %sorb golem
-Euer {adj-er}%sKugelgolem
+dein {adj-er}%sKugelgolem
 %%%%
 your %sorb of ice
-Eure {adj-e}%sKugel des Eises
+deine {adj-e}%sKugel des Eises
 %%%%
 your %sorb of electricity
-Eure {adj-e}%sKugel der Elektrizität
+deine {adj-e}%sKugel der Elektrizität
 %%%%
 your %snaga warlord
-Euer {adj-er}%sNaga-Kriegsherr
+dein {adj-er}%sNaga-Kriegsherr
 %%%%
 your %switch
-Eure {adj-e}%sHexe
+deine {adj-e}%sHexe
 %%%%
 your %sdire wolf spider
-Eure {adj-e}%sSchreckenswolfspinne
+deine {adj-e}%sSchreckenswolfspinne
 %%%%
 your %sphase spider
-Eure {adj-e}%sPhasenspinne
+deine {adj-e}%sPhasenspinne
 %%%%
 your %sdimme
-Eure {adj-e}%sDimme
+deine {adj-e}%sDimme
 %%%%
 your %ssulfuric acid blob
-Euer {adj-er}%sSchwefelsaure-Klumpen
+dein {adj-er}%sSchwefelsaure-Klumpen
 %%%%
 your %svault guard captain
-Euer {adj-er}%sHaupttresorwächter
+dein {adj-er}%sHaupttresorwächter
 %%%%
 your %sMaster Blaster
-Euer {adj-er}%sMaster-Blaster
+dein {adj-er}%sMaster-Blaster
 %%%%
 your %soklob sapling priest
-Euer {adj-er}%sOklob-Setzling-Priester
+dein {adj-er}%sOklob-Setzling-Priester
 %%%%
 your %soklob sapling wizard
-Euer {adj-er}%sOklob-Setzling-Zauberer
+dein {adj-er}%sOklob-Setzling-Zauberer
 %%%%
 your %soklob plant conjurer
-Euer {adj-er}%sOklob-Pflanze-Hervorrufer
+dein {adj-er}%sOklob-Pflanze-Hervorrufer
 %%%%
 your %soklob plant summoner
-Euer {adj-er}%sOklob-Pflanze-Beschwörer
+dein {adj-er}%sOklob-Pflanze-Beschwörer
 %%%%
 your %soklob plant shifter
-Euer {adj-er}%sOklob-Pflanze-Wandler
+dein {adj-er}%sOklob-Pflanze-Wandler
 %%%%
 your %soklob plant meteorologist
-Euer {adj-er}%sOklob-Pflanze-Meteorologe
+dein {adj-er}%sOklob-Pflanze-Meteorologe
 %%%%
 your %soklob plant demonologist
-Euer {adj-er}%sOklob-Pflanze-Dämonologe
+dein {adj-er}%sOklob-Pflanze-Dämonologe
 %%%%
 your %soklob plant annihilator
-Euer {adj-er}%sOklob-Pflanze-Vernichter
+dein {adj-er}%sOklob-Pflanze-Vernichter
 %%%%
 your %sbag of meat
-Euer {adj-er}%sFleischklops
+dein {adj-er}%sFleischklops
 %%%%
 your %smeat berserker
-Euer {adj-er}%sFleischberserker
+dein {adj-er}%sFleischberserker
 %%%%
 your %styrant
-Euer {adj-er}%sTyrann
+dein {adj-er}%sTyrann
 %%%%
 your %smeat hydra
-Eure {adj-e}%sfleischliche Hydra
+deine {adj-e}%sfleischliche Hydra
 %%%%
 your %sdread
-Euer {adj-er}%sSchrecken
+dein {adj-er}%sSchrecken
 %%%%
 your %sdestroyer
-Euer {adj-er}%sZerstörer
+dein {adj-er}%sZerstörer
 %%%%
 your %sscourge
-Eure {adj-e}%sGeißel
+deine {adj-e}%sGeißel
 %%%%
 your %ssculptor of flesh
-Euer {adj-er}%sBildhauer des Fleisches
+dein {adj-er}%sBildhauer des Fleisches
 %%%%
 your %sobserver
-Euer {adj-er}%sBeobachter
+dein {adj-er}%sBeobachter
 %%%%
 your %saccursed
-Euer {adj-er}%sVerfluchte
+dein {adj-er}%sVerfluchte
 %%%%
 your %svile
-Euer {adj-er}%sNiederträchtige
+dein {adj-er}%sNiederträchtige
 %%%%
 your %smeat beast
-Eure {adj-e}%sFleischbestie
+deine {adj-e}%sFleischbestie
 %%%%
 your %swretched soul
-Eure {adj-e}%sunglückliche Seele
+deine {adj-e}%sunglückliche Seele
 %%%%
 your %sfleshlord
-Euer {adj-er}%sFleischlord
+dein {adj-er}%sFleischlord
 %%%%

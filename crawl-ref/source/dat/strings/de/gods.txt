@@ -117,7 +117,7 @@ my god
 mein Gott
 %%%%
 your god
-Euer Gott
+dein Gott
 %%%%
 
 # These are used in messages like "@The_monster@ calls down the wrath of @possessive_God@ upon @target@.",
@@ -260,7 +260,7 @@ eines Gottes
 meines Gottes
 %%%%
 {gen}your god
-Eures Gottes
+deines Gottes
 %%%%
 
 # We use "a god" instead of "his/her/its/their god"
@@ -381,7 +381,7 @@ einen Gott
 meinen Gott
 %%%%
 {acc}your god
-Euren Gott
+deinen Gott
 %%%%
 
 # We use "a god" instead of "his/her/its/their god"
@@ -421,7 +421,7 @@ einem Gott
 meinem Gott
 %%%%
 {dat}your god
-Eurem Gott
+deinem Gott
 %%%%
 
 # We use "a god" instead of "his/her/its/their god"
@@ -459,7 +459,7 @@ einem Gott
 ##################
 %%%%
 Beogh blesses you with reinforcements.
-Beogh segnet Euch mit Verstärkungen.
+Beogh segnet dich mit Verstärkungen.
 %%%%
 %s blesses %s with %s.
 %s segnet %s mit %s.
@@ -528,134 +528,134 @@ mehr Zeit in dieser Welt
 # (i.e. these go after the word "when")
 %%%%
 you use evil magic or items
-Ihr böse Magie oder Gegenstände verwendet
+du böse Magie oder Gegenstände verwendest
 %%%%
 you attack non-hostile holy beings
-Ihr nicht-feindliche heilige Wesen angreift
+du nicht-feindliche heilige Wesen angreifst
 %%%%
 you kill non-hostile holy beings
-Ihr nicht-feindliche heilige Wesen tötet
+du nicht-feindliche heilige Wesen tötest
 %%%%
 you attack neutral beings
-Ihr neutrale Wesen angreift
+du neutrale Wesen angreifst
 %%%%
 you attack allies
-Ihr Verbündete angreift
+du Verbündete angreift
 %%%%
 you attack monsters in a sanctuary
-Ihr Monster in einem Heiligtum angreift
+du Monster in einem Heiligtum angreifst
 %%%%
 you use unclean or chaotic magic or items
-Ihr unreine oder chaotische Magie oder Gegenstände verwendet
+du unreine oder chaotische Magie oder Gegenstände verwendest
 %%%%
 you polymorph monsters
-Ihr Monster polymorphisiert
+du Monster polymorphisierst
 %%%%
 you deliberately mutate or transform yourself
-Ihr  Euch absichtlich mutiert oder verwandelt
+du dich absichtlich mutierst oder verwandelst
 %%%%
 you use holy magic or items
-Ihr heilige Magie oder Gegenstände verwendet
+du heilige Magie oder Gegenstände verwendest
 %%%%
 you memorise spells
-Ihr Zaubersprüche memoriert
+du Zaubersprüche memorierst
 %%%%
 you attempt to cast spells
-Ihr versucht, Zaubersprüche zu wirken
+du versuchst, Zaubersprüche zu wirken
 %%%%
 you train magic skills
-Ihr magische Fähigkeiten trainiert
+du magische Fähigkeiten trainierst
 %%%%
 you use magical staves or pain-branded weapons
-Ihr magische Stecken oder mit Schmerz versehene Waffen verwendet
+du magische Stecken oder mit Schmerz versehene Waffen verwendest
 %%%%
 you kill living things while asking for your life to be spared
-Ihr Lebewesen tötet, während Ihr darum bittet, dass Euer Leben verschont wird
+du Lebewesen tötest, während du darum bittest, dass dein Leben verschont wird
 %%%%
 you desecrate orcish remains
-Ihr die Überreste von Orks schändet
+du die Überreste von Orks schändest
 %%%%
 you attack allied orcs
-Ihr verbündete Orks angreift
+du verbündete Orks angreifst
 %%%%
 you kill slimes
-Ihr Schleime tötet
+du Schleime tötest
 %%%%
 you attack fellow slimes
-Ihr andere Schleime angreift
+du andere Schleime angreifst
 %%%%
 you destroy plants
-Ihr Pflanzen zerstört
+du Pflanzen zerstörst
 %%%%
 you hasten yourself or others
-Ihr Euch oder andere beschleunigt
+du dich oder andere beschleunigst
 %%%%
 you channel magical energy
-Ihr magische Energie kanalisiert
+du magische Energie kanalisierst
 %%%%
 use unnaturally quick items
-Ihr unnatürlich schnelle Gegenstände verwendet
+du unnatürlich schnelle Gegenstände verwendest
 %%%%
 you kill living beings
-Ihr lebende Wesen tötet
+du lebende Wesen tötest
 %%%%
 you destroy the undead
-Ihr Untote vernichtet
+du Untote vernichtest
 %%%%
 you kill demons
-Ihr Dämonen tötet
+du Dämonen tötest
 %%%%
 you kill holy beings
-Ihr heilige Wesen tötet
+du heilige Wesen tötest
 %%%%
 you destroy nonliving beings
-Ihr nicht-lebende Wesen vernichtet
+du nicht-lebende Wesen vernichtest
 %%%%
 you explore the world
-Ihr die Welt erforscht
+du die Welt erforschst
 %%%%
 you kill unclean or chaotic beings
-Ihr unreine oder chaotische Wesen tötet
+du unreine oder chaotische Wesen tötest
 %%%%
 you kill the undead
-Ihr die Untoten tötet
+du die Untoten tötest
 %%%%
 you kill evil beings
-Ihr böse Wesen tötet
+du böse Wesen tötest
 %%%%
 you encounter other hostile creatures
-Ihr auf andere feindliche Kreaturen trifft
+du auf andere feindliche Kreaturen triffst
 %%%%
 you kill wizards and other users of magic
-Ihr Zauberer und andere Benutzer von Magie tötet
+du Zauberer und andere Benutzer von Magie tötest
 %%%%
 you banish creatures to the Abyss
-Ihr Kreaturen in den Abgrund verbannt
+du Kreaturen in den Abgrund verbannst
 %%%%
 you kill the priests of other religions
-Ihr die Priester anderer Religionen tötet
+du die Priester anderer Religionen tötest
 %%%%
 you kill fast things, relative to your speed
-Ihr Wesen tötet, die schneller als Ihr sind
+du Wesen tötest, die schneller als du sind
 %%%%
 you explore the world (preferably while bound by curses)
-Ihr die Welt erkundet (vorzugsweise während Ihr durch Flüche gebunden seid)
+du die Welt erkundest (vorzugsweise während du durch Flüche gebunden bist)
 %%%%
 you hurt your foes; however, effects that cause damage over time do not interest Uskayaw
-Ihr Eure Feinde verletzt; Effekte, die Schaden über Zeit verursachen, interessieren Uskayaw jedoch nicht
+du deine Feinde verletzt; Effekte, die Schaden über Zeit verursachen, interessieren Uskayaw jedoch nicht
 %%%%
 you sacrifice items by allowing slimes to consume them
-Ihr Gegenstände opfert, indem Ihr ihnen von Schleimen verzehren lässt
+du Gegenstände opferst, indem du ihnen von Schleimen verzehren lässt
 %%%%
 you collect gold
-Ihr Gold sammelt
+du Gold sammelst
 %%%%
 you make personal sacrifices
-Ihr persönliche Opfer bringt
+du persönliche Opfer bringst
 %%%%
 you donate money
-Ihr Geld spendet
+du Geld spendest
 %%%%
 you bind yourself with curses
-Ihr Euch mit flüchen bindet
+du dich mit flüchen bindest
 %%%%

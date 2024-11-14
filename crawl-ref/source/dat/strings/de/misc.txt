@@ -225,10 +225,10 @@ the entropic weave
 das entropisches Weben
 %%%%
 Your corrosive artefact
-Euer ätzendes Artefakt
+Dein ätzendes Artefakt
 %%%%
 Your corrupting presence
-Eure verderbliche Präsenz
+Deine verderbliche Präsenz
 %%%%
 # a flying bit of exploded monster (used directly after monster explosion
 # message, so it will be obvious what it refers to)
@@ -253,18 +253,18 @@ ein fliegendes Stück
 #################################
 %%%%
 you
-Ihr
+du
 %%%%
 {acc}you
-Euch
+dich
 %%%%
 {dat}you
-Euch
+dir
 %%%%
 # when something hits you after you're already dead
 # declension will be handled by grammar.txt
 your lifeless body
-Euer lebloser Körper
+dein lebloser Körper
 %%%%
 
 #################################

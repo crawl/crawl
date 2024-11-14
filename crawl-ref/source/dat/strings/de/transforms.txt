@@ -13,44 +13,44 @@
 # standard
 %%%%
 shout
-schreit
+schreist
 %%%%
 yell
-schreit
+schreist
 %%%%
 scream
-schreit
+schreist
 %%%%
 
 # felid
 %%%%
 meow
-miaut
+miaust
 %%%%
 yowl
-jault
+jaulst
 %%%%
 caterwaul
 maunzt
 %%%%
 hiss
-zischt
+zischst
 %%%%
 
 # gnoll (doglike)
 %%%%
 bark
-bellt
+bellst
 %%%%
 # context needed to avoid collision with howl status
-{verb-ihr}howl
-heult
+{verb-du}howl
+heulst
 %%%%
 screech
-kreischt
+kreischst
 %%%%
 growl
-knurrt
+knurrst
 %%%%
 
 # barachi (froglike)
@@ -59,10 +59,10 @@ croak
 krächzt
 %%%%
 ribbit
-quakt
+quakst
 %%%%
 bellow
-brüllt
+brüllst
 %%%%
 
 # shout-equivalent as noun with indefinite article
@@ -131,16 +131,16 @@ hands
 Hände
 %%%%
 your hand
-Eure Hand
+deine Hand
 %%%%
 your hands
-{pl}Eure Hände
+{pl}deine Hände
 %%%%
 your weapon hand
-Eure Waffenhand
+deine Waffenhand
 %%%%
 your shield hand
-Eure Schildhand
+deine Schildhand
 %%%%
 
 # claw (troll/ghoul)
@@ -152,16 +152,16 @@ claws
 Krallen
 %%%%
 your claw
-Eure Kralle
+deine Kralle
 %%%%
 your claws
-{pl}Eure Krallen
+{pl}deine Krallen
 %%%%
 your weapon claw
-Eure Waffenkralle
+deine Waffenkralle
 %%%%
 your shield claw
-Eure Schildkralle
+deine Schildkralle
 %%%%
 
 # paw (felid)
@@ -173,10 +173,10 @@ paws
 Pfoten
 %%%%
 your paw
-Eure Pfote
+deine Pfote
 %%%%
 your paws
-{pl}Eure Pfoten
+{pl}deine Pfoten
 %%%%
 
 # tentacle (octopode)
@@ -193,16 +193,16 @@ Haupttentakeln
 %%%%
 # duplicate: also a monster
 #your tentacle
-#Euer Tentakel
+#dein Tentakel
 %%%%
 your tentacles
-{pl}Eure Tentakel
+{pl}deine Tentakel
 %%%%
 your weapon tentacle
-Euer Waffententakel
+dein Waffententakel
 %%%%
 your shield tentacle
-Euer Schildtentakel
+dein Schildtentakel
 %%%%
 
 # skin
@@ -226,19 +226,19 @@ Haut
 # your skin
 %%%%
 your scales
-{pl}Eure Schuppen
+{pl}deine Schuppen
 %%%%
 your feathers
-{pl}Eure Federn
+{pl}deine Federn
 %%%%
 your fur
-{n}Euer Fell
+{n}dein Fell
 %%%%
 your bandages
-{pl}Eure Bandagen
+{pl}deine Bandagen
 %%%%
 your skin
-Eure Haut
+deine Haut
 %%%%
 
 ################################
@@ -267,7 +267,7 @@ Giftzähne
 # shout-equivalent
 # same as felid
 #hiss
-#zischt
+#zischst
 %%%%
 # shout-equivalent as noun
 #a hiss
@@ -281,16 +281,16 @@ front legs
 Vorderbeine
 %%%%
 your front leg
-{n}Euer Vorderbein
+{n}dein Vorderbein
 %%%%
 your front legs
-{pl}Eure Vorderbeine
+{pl}deine Vorderbeine
 %%%%
 your weapon front leg
-{n}Euer Waffenvorderbein
+{n}dein Waffenvorderbein
 %%%%
 your shield front leg
-{n}Euer Schildvorderbein
+{n}dein Schildvorderbein
 %%%%
 # flesh type
 flesh
@@ -341,16 +341,16 @@ scythe-like blades
 sensenartige Klingen
 %%%%
 your scythe-like blade
-Eure sensenartige Klinge
+deine sensenartige Klinge
 %%%%
 your scythe-like blades
-{pl}Eure sensenartige Klingen
+{pl}deine sensenartige Klingen
 %%%%
 your weapon scythe-like blade
-Eure sensenartige Waffenklinge
+deine sensenartige Waffenklinge
 %%%%
 your shield scythe-like blade
-Eure sensenartige Schildklinge
+deine sensenartige Schildklinge
 %%%%
 
 ################################
@@ -430,16 +430,16 @@ front paws
 Vorderpfoten
 %%%%
 your front paw
-Eure Vorderpfote
+deine Vorderpfote
 %%%%
 your front paws
-{pl}Eure Vorderpfoten
+{pl}deine Vorderpfoten
 %%%%
 your weapon front paw
-Eure Waffenvorderpfote
+deine Waffenvorderpfote
 %%%%
 your shield front paw
-Eure Schildvorderpfote
+deine Schildvorderpfote
 %%%%
 # foot equivalent
 # duplicate: felids also have paws
@@ -472,7 +472,7 @@ Zähne und Krallen
 %%%%
 # shout-equivalent
 roar
-brüllt
+brüllst
 %%%%
 # shout-equivalent as noun
 a roar
@@ -486,16 +486,16 @@ foreclaws
 Vorderkrallen
 %%%%
 your foreclaw
-Eure Vorderkralle
+deine Vorderkralle
 %%%%
 your foreclaws
-{pl}Eure Vorderkrallen
+{pl}deine Vorderkrallen
 %%%%
 your weapon foreclaw
-Eure Waffenvorderkralle
+deine Waffenvorderkralle
 %%%%
 your shield foreclaw
-Eure Schildvorderkralle
+deine Schildvorderkralle
 %%%%
 
 # draconians transform into specific types of dragon based on their colour
@@ -581,7 +581,7 @@ Zähne
 %%%%
 # shout-equivalent
 squeak
-quietscht
+quietschst
 %%%%
 # shout-equivalent as noun
 a squeak
@@ -610,7 +610,7 @@ ein dreckiges Schwein
 %%%%
 # shout-equivalent
 squeal
-kreischt
+kreischst
 %%%%
 # shout-equivalent as noun
 a squeal
@@ -624,16 +624,16 @@ front trotters
 Vorderfüße
 %%%%
 your front trotter
-Euer Vorderfuß
+dein Vorderfuß
 %%%%
 your front trotters
-{pl}Eure Vorderfüße
+{pl}deine Vorderfüße
 %%%%
 your weapon front trotter
-Euer Waffenvorderfuß
+dein Waffenvorderfuß
 %%%%
 your shield front trotter
-Euer Schildvorderfuß
+dein Schildvorderfuß
 %%%%
 # foot-equivalent
 trotter
@@ -656,27 +656,27 @@ Körpergliede
 # untransform messages
 %%%%
 Your horns disappear.
-Eure Hörner verschwinden.
+Deine Hörner verschwinden.
 %%%%
 Your talons disappear.
-Eure Krallen verschwinden.
+Deine Krallen verschwinden.
 %%%%
 # this one is for octopode only
 Your tentacle spike disappears.
-Euer Tentakelstachel verschwindet.
+Dein Tentakelstachel verschwindet.
 %%%%
 
 # untransform messages (when player keeps appendage due to mutation)
 %%%%
 Your horns shrink.
-Eure Hörner schrumpfen.
+Deine Hörner schrumpfen.
 %%%%
 Your talons shrink.
-Eure Krallen schrumpfen.
+Deine Krallen schrumpfen.
 %%%%
 # this one is for octopode only
 Your tentacle spike shrinks.
-Euer Tentakelstachel schrumpft.
+Dein Tentakelstachel schrumpft.
 %%%%
 
 ################################
@@ -716,16 +716,16 @@ branches
 Zweige
 %%%%
 your branch
-Euer Zweig
+dein Zweig
 %%%%
 your branches
-{pl}Eure Zweige
+{pl}deine Zweige
 %%%%
 your weapon branch
-Euer Waffenzweig
+dein Waffenzweig
 %%%%
 your shield branch
-Euer Schildzweig
+dein Schildzweig
 %%%%
 # foot-equivalent
 root
@@ -783,7 +783,7 @@ Neblige Ranken
 %%%%
 # shout
 whoosh
-rauscht
+rauschst
 %%%%
 # shout-equivalent as noun
 a whoosh
@@ -797,16 +797,16 @@ misty tendrils
 Nebelranken
 %%%%
 your misty tendril
-Eure Nebelranke
+deine Nebelranke
 %%%%
 your misty tendrils
-{pl}Eure Nebelranken
+{pl}deine Nebelranken
 %%%%
 your weapon misty tendril
-Eure Waffennebelranke
+deine Waffennebelranke
 %%%%
 your shield misty tendril
-Eure Schildnebelranke
+deine Schildnebelranke
 %%%%
 # foot
 strand
@@ -861,7 +861,7 @@ Sporen
 %%%%
 # shout
 sporulate
-sporuliert
+sporulierst
 %%%%
 # shout-equivalent as noun
 # should be "a sporulation", but code just puts indefinite article in front of verb
@@ -876,16 +876,16 @@ hyphae
 Hyphen
 %%%%
 your hypha
-Eure Hyphe
+deine Hyphe
 %%%%
 your hyphae
-{pl}Eure Hyphen
+{pl}deine Hyphen
 %%%%
 your weapon hypha
-Eure Waffenhyphe
+deine Waffenhyphe
 %%%%
 your shield hypha
-Eure Schildhyphe
+deine Schildhyphe
 %%%%
 
 ################################
@@ -961,7 +961,7 @@ Sturmfäuste
 %%%%
 # description
 your old self
-Euer altes Ich
+dein altes Ich
 %%%%
 
 ################################
@@ -971,57 +971,57 @@ Euer altes Ich
 %%%%
 # default for most species
 You kneel at the altar of %s.
-Ihr kniet vor dem Altar von {dat}%s.
+Du kniest vor dem Altar von {dat}%s.
 %%%%
 # default for felid
 You sit before the altar of %s.
-Ihr sitzt vor dem Altar von {dat}%s.
+Du sitzt vor dem Altar von {dat}%s.
 %%%%
 # default for octopode
 You curl up in front of the altar of %s.
-Ihr rollt Euch vor dem Altar von {dat}%s zusammen.
+Du rollst dich vor dem Altar von {dat}%s zusammen.
 %%%%
 # default for naga (snakelike)
 You coil in front of the altar of %s.
-Ihr windet Euch vor dem Altar von {dat}%s.
+Du windest dich vor dem Altar von {dat}%s.
 %%%%
 # flying
 You hover solemnly before the altar of %s.
-Ihr schwebt feierlich vor dem Altar von {dat}%s.
+Du schwebst feierlich vor dem Altar von {dat}%s.
 %%%%
 # porcupine form
 You curl into a sanctuary of spikes before the altar of %s.
-Ihr rollt Euch zu einem Heiligtum aus Stacheln vor dem Altar von {dat}%s zusammen.
+Du rollst dich zu einem Heiligtum aus Stacheln vor dem Altar von {dat}%s zusammen.
 %%%%
 # spider form
 You crawl onto the altar of %s.
-Ihr kriecht auf den Altar von {dat}%s.
+Du kriechst auf den Altar von {dat}%s.
 %%%%
 # tree form
 You sway towards the altar of %s.
-Ihr schwankt zum Altar von {dat}%s.
+Du schwankst zum Altar von {dat}%s.
 %%%%
 # bat form
 You perch on the altar of %s.
-Ihr hockt Euch auf den Altar von {acc}%s.
+Du hockst dich auf den Altar von {acc}%s.
 %%%%
 # ice/pig/dragon form
 You bow your head before the altar of %s.
-Ihr verneigt Euer Kopf vor dem Altar von {dat}%s.
+Du verneigst deinen Kopf vor dem Altar von {dat}%s.
 %%%%
 # hydra form
 You bow your heads before the altar of %s.
-Ihr verneigt Eure Köpfe vor dem Altar von {dat}%s.
+Du verneigst deine Köpfe vor dem Altar von {dat}%s.
 %%%%
 # statue/storm form
 You place yourself before the altar of %s.
-Ihr stellt Euch vor dem Altar von {dat}%s.
+Du stellst dich vor dem Altar von {dat}%s.
 %%%%
 # fungus form
 You release spores on the altar of %s.
-Ihr setzt Sporen auf den Altar von {dat}%s frei.
+Du setzt Sporen auf den Altar von {dat}%s frei.
 %%%%
 # wisp form
 You swirl around the altar of %s.
-Ihr wirbelt um den Altar von {dat}%s.
+Du wirbelst um den Altar von {dat}%s.
 %%%%

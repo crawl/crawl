@@ -55,13 +55,13 @@ Gierigen, der selbst im schummrigen Kerkerlicht hell erstrahlt.
 A hazy altar of Hepliaklqana
 
 Ein Altar für Hepliaklqana den Vergessenen, in Nebel gehüllt und schwer zu
-erkennen. Irgendetwas daran kommt Euch furchtbar bekannt vor, aber es ist
+erkennen. Irgendetwas daran kommt dich furchtbar bekannt vor, aber es ist
 unmöglich, genau zu sagen, warum.
 %%%%
 A viscous altar of Jiyva
 
-Ein schleimiger, sich ständig wandelnder Altar für Jiyva. Ihr seid Euch nicht
-sicher, woraus er besteht, und Ihr wollt es auch gar nicht wissen.
+Ein schleimiger, sich ständig wandelnder Altar für Jiyva. Du bist dich nicht
+sicher, woraus er besteht, und du willst es auch gar nicht wissen.
 %%%%
 An ancient bone altar of Kikubaaqudgha
 
@@ -247,7 +247,7 @@ A shop
 Ein Laden im Dungeon, außerhalb der Sichtweite der Welt, der von einem
 geheimnisvollen und zurückgezogenen Ladenbesitzer geführt wird, mit dem man
 nicht verhandeln kann, der keine Rückerstattungen gewährt und der an nichts
-interessiert ist, was ihr zu verkaufen habt. Einige Läden bieten Antiquitäten
+interessiert ist, was du zu verkaufen hast. Einige Läden bieten Antiquitäten
 unbekannter Herkunft an und geben kaum Hinweise auf die Qualität oder Art
 ihrer Waren.
 %%%%
@@ -386,7 +386,7 @@ den Rückweg finden.
 ########################################################################
 A gate leading back out of this place
 
-Ein Tor, durch das Ihr zurückkehren könnt, woher Ihr gekommen seid.
+Ein Tor, durch das du zurückkehren kannst, woher du gekommen bist.
 %%%%
 A gate leading out of Pandemonium
 
@@ -486,8 +486,8 @@ A staircase leading out of the dungeon
 
 Diese Treppe führt zurück aus dem Dungeon.
 
-Eine Treppe, die aus dem Dungeon herausführt. Wenn Ihr diese Treppe
-hinaufsteigt, endet Eure Suche, egal ob Ihr die Kugel bei Euch tragt oder nicht.
+Eine Treppe, die aus dem Dungeon herausführt. Wenn du diese Treppe
+hinaufsteigst, endet deine Suche, egal ob du die Kugel bei dir trägst oder nicht.
 %%%%
 A staircase back to the Crypt
 
@@ -539,8 +539,8 @@ Ein Tor, das zu den Gewölben führt.
 %%%%
 A transporter
 
-Ein Einwegportal zu einem anderen Ort auf dieser Ebene. Wenn Ihr einen
-Transporter benutzt, reisen benachbarte Verbündete und Monster mit Euch auf die
+Ein Einwegportal zu einem anderen Ort auf dieser Ebene. Wenn du einen
+Transporter benutzt, reisen benachbarte Verbündete und Monster mit dir auf die
 andere Seite.
 %%%%
 A transporter landing site
@@ -567,8 +567,8 @@ für ein Wesen zu öffnen, das nicht von ihrer Magie erkannt wird.
 A runed door
 
 Eine Tür, bedeckt mit Runenschrift. Es sieht so aus, als ob sich dahinter etwas
-Besonderes verbirgt - vielleicht eine Gefahr, vielleicht ein Schatz. Ihr könnt
-die Runen brechen, indem Ihr sie wie jede andere Tür öffnet.
+Besonderes verbirgt - vielleicht eine Gefahr, vielleicht ein Schatz. Du kannst
+die Runen brechen, indem du sie wie jede andere Tür öffnest.
 %%%%
 A large open door
 
@@ -628,7 +628,7 @@ anzulocken.
 Zusätzlich zu dem Geräusch, das sie erzeugt, wendet sie eine Verzauberung an,
 die Monster auf der ganzen Ebene auf deinen Standort aufmerksam macht.
 Feindliche Monster können diese Falle selbst auslösen, um ihre Wirkung gegen
-Euch zu entfalten, aber Eure Verbündeten werden es vermeiden, in die Falle zu
+dich zu entfalten, aber deine Verbündeten werden es vermeiden, in die Falle zu
 treten.
 %%%%
 An arrow trap
@@ -699,7 +699,7 @@ diejenigen ausübt, die das Pech haben, in sie hineinzutreten. Es kann sein,
 dass man in den Abgrund geworfen wird, mit enormen Mengen wilder Magie
 verseucht wird, mächtige Unholde gegen einen beschworen werden oder
 Ähnliches. Feindlich gesinnte Monster können diese Falle selbst auslösen, um
-ihre Wirkung gegen Euch zu entfalten, aber Eure Verbündeten werden es
+ihre Wirkung gegen dich zu entfalten, aber deine Verbündeten werden es
 vermeiden, in die Falle zu treten.
 %%%%
 ########################################################################
@@ -724,8 +724,8 @@ Waren anbieten. Sie bleiben nie sehr lange an einem Ort.
 A gateway to a bazaar
 
 Ein Portal, das zu einem Basar führt, auf dem umherziehende Händler ihre
-Waren anbieten. Sie werden auf Euch warten, aber sobald Ihr die Gelegenheit
-habt, in ihrem Inventar zu stöbern, werden die Händler sich auf die Suche
+Waren anbieten. Sie werden auf dich warten, aber sobald du die Gelegenheit
+hast, in ihrem Inventar zu stöbern, werden die Händler sich auf die Suche
 nach anderen Kunden machen.
 %%%%
 A frozen archway
@@ -781,14 +781,14 @@ Ein Tunnel, der nicht mehr passierbar ist.
 A rocky tunnel leading out of this place
 
 Ein instabiler Durchgang im Vulkangestein, der einen kühlen Luftzug aus dem
-Jenseits zulässt. Er führt zurück zu dem Ort, von dem ihr gekommen seid.
-Wenn Ihr ihn durchschritten habt, könnt Ihr nicht mehr hierher zurückkehren.
+Jenseits zulässt. Er führt zurück zu dem Ort, von dem du gekommen bist.
+Wenn du ihn durchschritten hast, kannst du nicht mehr hierher zurückkehren.
 %%%%
 # wizlabs
 A portal leading out of this place
 
-Ein schimmerndes magisches Tor, das zu dem Ort zurückführt, von dem Ihr
-gekommen seid. Wenn Ihr ihn durchschritten habt, könnt Ihr nicht mehr hierher
+Ein schimmerndes magisches Tor, das zu dem Ort zurückführt, von dem du
+gekommen bist. Wenn du ihn durchschritten hast, kannst du nicht mehr hierher
 zurückkehren.
 %%%%
 # wizlab: Wucad Mu
@@ -982,9 +982,9 @@ umschlossen ist.
 %%%%
 An ice covered gate leading back out of this place
 
-Ein Portal, das zurück zu dem Ort führt, von dem Ihr gekommen seid. Seine
+Ein Portal, das zurück zu dem Ort führt, von dem du gekommen bist. Seine
 Magie hält das Eis in Schach und verhindert, dass es das Tor blockiert. Sobald
-Ihr es durchschritten habt, könnt Ihr nicht mehr hierher zurückkehren.
+du es durchschritten hast, kannst du nicht mehr hierher zurückkehren.
 %%%%
 An ice covered rock wall
 
@@ -1071,14 +1071,14 @@ Ein Weg aus dem Dungeon, der es einem ermöglicht, diese Lektion zu beenden.
 ########################################################################
 haloed
 
-Dieser Bereich wird von einem göttlichen Heiligenschein erhellt, der Eure
+Dieser Bereich wird von einem göttlichen Heiligenschein erhellt, der deine
 Heimlichkeit verringert, Unsichtbarkeit verhindert und die Genauigkeit von
 Angriffen gegen beleuchtete Kreaturen erhöht.
 %%%%
 umbraed
 
-Dieser Bereich ist von einer Umbra umhüllt, der Eure Heimlichkeit verbessert,
-wenn Ihr auf die Schatten eingestimmt seid, und die Genauigkeit der Angriffe
+Dieser Bereich ist von einer Umbra umhüllt, der deine Heimlichkeit verbessert,
+wenn du auf die Schatten eingestimmt bist, und die Genauigkeit der Angriffe
 derjenigen verringert, die nicht auf die Schatten eingestimmt sind.
 %%%%
 liquefied

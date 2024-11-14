@@ -20,7 +20,7 @@ SOUND:You hear doubly buggy behaviour!
 %%%%
 __SHOUT
 
-SOUND:Ihr hört einen Schrei!
+SOUND:Du hörst einen Schrei!
 %%%%
 __SHOUT seen
 
@@ -28,7 +28,7 @@ SOUND:@The_monster@ schreit!
 %%%%
 __BARK unseen
 
-SOUND:Ihr hört ein Bellen!
+SOUND:Du hörst ein Bellen!
 %%%%
 __BARK seen
 
@@ -36,7 +36,7 @@ SOUND:@The_monster@ bellt!
 %%%%
 __HOWL unseen
 
-SOUND:Ihr hört ein Heulen!
+SOUND:Du hörst ein Heulen!
 %%%%
 __HOWL seen
 
@@ -44,7 +44,7 @@ SOUND:@The_monster@ heult!
 %%%%
 __TWO_SHOUTS unseen
 
-SOUND:Ihr hört zwei Schreie!
+SOUND:Du hörst zwei Schreie!
 %%%%
 __TWO_SHOUTS seen
 
@@ -52,7 +52,7 @@ SOUND:@The_monster@ schreit in Stereo!
 %%%%
 __ROAR unseen
 
-SOUND:Ihr hört ein Brüllen!
+SOUND:Du hörst ein Brüllen!
 %%%%
 __ROAR seen
 
@@ -60,7 +60,7 @@ SOUND:@The_monster@ brüllt!
 %%%%
 __SCREAM unseen
 
-SOUND:Ihr hört einen grässlichen Schrei!
+SOUND:Du hörst einen grässlichen Schrei!
 %%%%
 __SCREAM seen
 
@@ -68,7 +68,7 @@ SOUND:@The_monster@ stößt einen grässlichen Schrei aus!
 %%%%
 __BELLOW unseen
 
-SOUND:Ihr hört ein Brüllen!
+SOUND:Du hörst ein Brüllen!
 %%%%
 __BELLOW seen
 
@@ -76,7 +76,7 @@ SOUND:@The_monster@ brüllt!
 %%%%
 __BLEAT unseen
 
-SOUND:Ihr hört ein Blöken!
+SOUND:Du hörst ein Blöken!
 %%%%
 __BLEAT seen
 
@@ -84,7 +84,7 @@ SOUND:@The_monster@ blökt!
 %%%%
 __TRUMPET unseen
 
-SOUND:Ihr hört ein Trompeten!
+SOUND:Du hörst ein Trompeten!
 %%%%
 __TRUMPET seen
 
@@ -92,7 +92,7 @@ SOUND:@The_monster@ trompetet!
 %%%%
 __SCREECH unseen
 
-SOUND:Ihr hört ein Kreischen!
+SOUND:Du hörst ein Kreischen!
 %%%%
 __SCREECH seen
 
@@ -100,7 +100,7 @@ SOUND:@The_monster@ kreischt!
 %%%%
 __BUZZ unseen
 
-SOUND:Ihr hört ein wütendes, summendes Geräusch.
+SOUND:Du hörst ein wütendes, summendes Geräusch.
 %%%%
 __BUZZ seen
 
@@ -108,7 +108,7 @@ SOUND:@The_monster@ summt wütend.
 %%%%
 __MOAN unseen
 
-SOUND:Ihr hört ein schauriges Stöhnen.
+SOUND:Du hörst ein schauriges Stöhnen.
 %%%%
 __MOAN seen
 
@@ -116,7 +116,7 @@ SOUND:@The_monster@ gibt ein schauriges Stöhnen von sich.
 %%%%
 __GURGLE unseen
 
-SOUND:Ihr hört ein furchtbares gurgelndes Geräusch!
+SOUND:Du hörst ein furchtbares gurgelndes Geräusch!
 %%%%
 __GURGLE seen
 
@@ -124,9 +124,9 @@ SOUND:@The_monster@ gurgelt entsetzlich!
 %%%%
 __CROAK unseen
 
-SOUND:Ihr hört ein lautes, tiefes Quaken!
+SOUND:Du hörst ein lautes, tiefes Quaken!
 
-SOUND:Ihr hört ein Quaken.
+SOUND:Du hörst ein Quaken.
 %%%%
 __CROAK seen
 
@@ -136,7 +136,7 @@ SOUND:@The_monster@ quakt.
 %%%%
 __GROWL unseen
 
-SOUND:Ihr hört ein wütendes Knurren.
+SOUND:Du hörst ein wütendes Knurren.
 %%%%
 __GROWL seen
 
@@ -144,7 +144,7 @@ SOUND:@The_monster@ knurrt wütend.
 %%%%
 __HISS unseen
 
-SOUND:Ihr hört ein wütendes Zischen.
+SOUND:Du hörst ein wütendes Zischen.
 %%%%
 __HISS seen
 
@@ -152,7 +152,7 @@ SOUND:@The_monster@ zischt wütend.
 %%%%
 __SQUEAL unseen
 
-SOUND:Ihr hört ein wütendes Quietschen.
+SOUND:Du hörst ein wütendes Quietschen.
 %%%%
 __SQUEAL seen
 
@@ -174,17 +174,17 @@ SOUND:@The_monster@s Menschenkopf brüllt!
 %%%%
 __CHERUB unseen
 
-SOUND:Ihr hört einen Schrei.
+SOUND:Du hörst einen Schrei.
 
-SOUND:Ihr hört ein Kreischen.
+SOUND:Du hörst ein Kreischen.
 
-SOUND:Ihr hört ein Brüllen.
+SOUND:Du hörst ein Brüllen.
 
-SOUND:Ihr hört ein Blöken.
+SOUND:Du hörst ein Blöken.
 %%%%
 __LOUD_ROAR unseen
 
-SOUND:Ihr hört ein ohrenbetäubendes Brüllen!
+SOUND:Du hörst ein ohrenbetäubendes Brüllen!
 %%%%
 __LOUD_ROAR seen
 
@@ -201,7 +201,7 @@ SOUND:@The_monster@ brüllt ohrenbetäubend!
 %%%%
 player ghost
 
-VISUAL:@The_monster@ wendet Euch einen bösartigen Blick zu.
+VISUAL:@The_monster@ wendet dir einen bösartigen Blick zu.
 %%%%
 Fighter player ghost
 
@@ -292,7 +292,7 @@ Wanderer player ghost
 %%%%
 'cap-G'
 
-VISUAL:@The_monster@ wendet den Blick zu Euch.
+VISUAL:@The_monster@ wendet den Blick zu dir.
 %%%%
 'cap-J'
 
@@ -303,7 +303,7 @@ VISUAL:@The_monster@ zittert.
 %%%%
 giant slug
 
-VISUAL:@The_monster@ schwenkt die Augenstiele auf Euch zu.
+VISUAL:@The_monster@ schwenkt die Augenstiele auf dich zu.
 ########################################
 # Shouts for specific monsters
 ########################################
@@ -314,7 +314,7 @@ VISUAL:@The_monster@ schwenkt die Rhizome.
 %%%%
 glowing orange brain
 
-VISUAL:@The_monster@ wendet seine Aufmerksamkeit Euch zu.
+VISUAL:@The_monster@ wendet seine Aufmerksamkeit dir zu.
 %%%%
 # Iron imps, shadow imps and white imps copy imps.
 imp
@@ -326,7 +326,7 @@ SOUND:@The_monster@ @says@, "@imp_taunt@"
 %%%%
 moth of wrath
 
-VISUAL:@The_monster@s Fell sträubt sich vor Wut, als sie Euch bemerkt.
+VISUAL:@The_monster@s Fell sträubt sich vor Wut, als sie dich bemerkt.
 %%%%
 iron imp
 

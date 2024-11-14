@@ -50,16 +50,16 @@ SCHROANNG!
 %%%%
 frozen axe "frostbite"
 
-Ihr hört die [brüllendene|heulendene|wütendene] Winde eines [Blizzards|Schwalls|Schneesturms].
+Du hörst die [brüllendene|heulendene|wütendene] Winde eines [Blizzards|Schwalls|Schneesturms].
 
 w:5
-Ihr hört das [Knarren|Knirschen|Knacken] von Eis.
+Du hörst das [Knarren|Knirschen|Knacken] von Eis.
 
 w:1
-Ihr hört Eissplitter [klirren|klimpern].
+Du hörst Eissplitter [klirren|klimpern].
 
 w:1
-Ihr hört das [Rumpeln|Grollen|Krachen] eines [kalbenden Gletschers|zusammenstoßenden Eisbergs].
+Du hörst das [Rumpeln|Grollen|Krachen] eines [kalbenden Gletschers|zusammenstoßenden Eisbergs].
 
 ###############################################################################
 ###############################################################################
@@ -86,7 +86,7 @@ w:2
 @_instrumental_noises_@
 
 w:20
-SOUND:Ihr hört @weapon_noise@
+SOUND:Du hörst @weapon_noise@
 
 ###############################################################################
 # Weapon chatter.
@@ -106,7 +106,7 @@ _weapon_chatter_
 
 @Your_weapon@ sagt, "Pssst! Hast du das gehört?"
 
-@Your_weapon@ feuert Euch an.
+@Your_weapon@ feuert dich an.
 
 @Your_weapon@ spricht ein Gebet.
 
@@ -118,11 +118,11 @@ _weapon_chatter_
 
 @Your_weapon@ plappert immer weiter.
 
-@Your_weapon@ erkundigt sich nach Eurer Familie.
+@Your_weapon@ erkundigt sich nach deiner Familie.
 
 @Your_weapon@ kommentiert das Wetter.
 
-@Your_weapon@ erfreut Euch mit die Lebensgeschichte.
+@Your_weapon@ erfreut dich mit die Lebensgeschichte.
 
 @Your_weapon@ spricht Kauderwelsch.
 
@@ -151,23 +151,23 @@ _rare_chatter_
 
 @Your_weapon@ schreit: "Links! Nein, nein, rechts!".
 
-@Your_weapon@ sagt: "Warum sagt Ihr zur Abwechslung nicht mal was?"
+@Your_weapon@ sagt: "Warum sagst du zur Abwechslung nicht mal was?"
 
-@Your_weapon@ fragt: "Habt Ihr ein Schweigegelübde abgelegt?"
+@Your_weapon@ fragt: "Hast du ein Schweigegelübde abgelegt?"
 
-@Your_weapon@ sagt: "Ihr könnt mir alles sagen! Ich kann ein Geheimnis bewahren!"
+@Your_weapon@ sagt: "Du kannst mir alles sagen! Ich kann ein Geheimnis bewahren!"
 
-@Your_weapon@ fragt: "Wollt Ihr das Handbuch sehen?"
+@Your_weapon@ fragt: "Willst du das Handbuch sehen?"
 
-@Your_weapon@ fragt: "Habt Ihr schon mal von der Kugel von Zot gehört?"
+@Your_weapon@ fragt: "Hast du schon mal von der Kugel von Zot gehört?"
 
 @Your_weapon@ stöhnt: "Mir ist schwindlig."
 
 @Your_weapon@ sagt: "Wir werden das Gold teilen! Fifty-fifty!"
 
-@Your_weapon@ sagt: "Ihr seid ziemlich gut, für {acc}@a_player_genus@."
+@Your_weapon@ sagt: "Du bist ziemlich gut, für {acc}@a_player_genus@."
 
-@Your_weapon@ seufzt, "Ich werde Euch vermissen, wenn Ihr tot seid, @player_name@."
+@Your_weapon@ seufzt, "Ich werde dich vermissen, wenn du tot bist, @player_name@."
 
 ###############################################################################
 # Weapon noises.
@@ -231,7 +231,7 @@ w:20
 
 @Your_weapon@ pfeift unschuldig.
 
-@Your_weapon@ plappert die Geräusche um Euch herum nach.
+@Your_weapon@ plappert die Geräusche um dich herum nach.
 ###############################################################################
 # Instrumental noises.
 ###############################################################################
@@ -315,7 +315,7 @@ das ferne Brüllen eines wütenden Frosches.
 ############ other noises, usually not found in the dungeon ############
 ein Klopfen.
 
-eine Stimme, die Euren Namen ruft.
+eine Stimme, die deinen Namen ruft.
 
 ein sehr seltsames Geräusch.
 
@@ -591,7 +591,7 @@ _singing_no-low_tension_
 
 @The_weapon@ versucht, im Einklang mit sich selbst zu singen.
 
-@The_weapon@ liefert die musikalische Begleitung für jede Eurer Handlungen.
+@The_weapon@ liefert die musikalische Begleitung für jede deiner Handlungen.
 
 @The_weapon@ komponiert ein neues Lied.
 
@@ -603,7 +603,7 @@ _singing_no-low_tension_
 
 @The_weapon@ intoniert [eine Arie|eine Fuge].
 
-@The_weapon@ gibt Euch ein privates [Vorsingen|Konzert].
+@The_weapon@ gibt dich ein privates [Vorsingen|Konzert].
 
 @The_weapon@ [singt|summt] vor sich hin.
 
@@ -656,9 +656,9 @@ w:40
 
 @The_weapon@ [komponiert|singt] eine Hymne zum Lob {acc}@player_god@.
 
-@The_weapon@ [komponiert|singt] eine Ballade über Eure Abenteuer.
+@The_weapon@ [komponiert|singt] eine Ballade über deine Abenteuer.
 
-@The_weapon@ verfasst vorzeitig einen Nachruf auf Euch.
+@The_weapon@ verfasst vorzeitig einen Nachruf auf dich.
 
 ###############################################################################
 # Speaking
@@ -688,15 +688,15 @@ _common_speaking_no_tension_
 
 @The_weapon@ beglückwünscht sich selbst zu der Gesangsstimme.
 
-@The_weapon@ fragt Euch nach Eurer Meinung über @_musical_topic_@.
+@The_weapon@ fragt dich nach deiner Meinung über @_musical_topic_@.
 
 @The_weapon@ wundert sich, dass es nicht mehr so schöne Schwerter gibt.
 
 @The_weapon@ versucht, Reime zu improvisieren, und scheitert kläglich.
 
-@The_weapon@ bietet an, alle Eure Lieblingslieder zu singen.
+@The_weapon@ bietet an, alle deine Lieblingslieder zu singen.
 
-@The_weapon@ bittet Euch um einen Reim für '@_rhyme_word_@'.
+@The_weapon@ bittet dich um einen Reim für '@_rhyme_word_@'.
 
 @The_weapon@ beschwert sich über [doppelte|dreifache|kurze] Schwerter.
 
@@ -706,13 +706,13 @@ _common_speaking_no_tension_
 
 @The_weapon@ jammert, "Ich bin zu jung, um zu rosten!"
 
-@The_weapon@ äußert sich zu Eurem Musikgeschmack.
+@The_weapon@ äußert sich zu deinem Musikgeschmack.
 
-@The_weapon@ beklagt sich über Euren Mangel an musikalischem Enthusiasmus.
+@The_weapon@ beklagt sich über deinen Mangel an musikalischem Enthusiasmus.
 
-@The_weapon@ versucht, Euch in einen Kanon zu locken.
+@The_weapon@ versucht, dich in einen Kanon zu locken.
 
-@The_weapon@ erzählt Euch von seinen Plänen für eine grandiose Oper.
+@The_weapon@ erzählt dich von seinen Plänen für eine grandiose Oper.
 
 @The_weapon@ murrt, "Ein einziges Publikum ist wohl besser als gar keines..."
 
@@ -726,33 +726,33 @@ _common_speaking_no_tension_
 
 @The_weapon@ schreit, "Macht Krieg, nicht Liebe!"
 
-@The_weapon@ schreit, "Ihr könnt mich doch nicht langweilig nennen!"
+@The_weapon@ schreit, "Du kannst mich doch nicht langweilig nennen!"
 
-@The_weapon@ erzählt Euch die Geschichte des [Untergangs|Todes|Unglücks] seines Vorbesitzers.
+@The_weapon@ erzählt dich die Geschichte des [Untergangs|Todes|Unglücks] seines Vorbesitzers.
 
-@The_weapon@ verkündet fröhlich, "Ich habe Euch so viel zu erzählen!"
+@The_weapon@ verkündet fröhlich, "Ich habe dich so viel zu erzählen!"
 
-@The_weapon@ sagt, "Ihr könntet auch etwas sagen, weißt Ihr."
+@The_weapon@ sagt, "Du könntest auch etwas sagen, weißt du."
 
-@The_weapon@ beschwert sich, "Seid Ihr immer so [schweigsam|unkommunikativ|wortkarg|ruhig|langweilig]?
+@The_weapon@ beschwert sich, "Bist du immer so [schweigsam|unkommunikativ|wortkarg|ruhig|langweilig]?
 
 @The_weapon@ motzt, "Schweigen kann so deprimierend sein."
 
 @The_weapon@ schimpft, "Schweigen macht mich immer schmollend."
 
-@The_weapon@ lobt Euch für Euren Waffengeschmack.
+@The_weapon@ lobt dich für deinen Waffengeschmack.
 
-@The_weapon@ versucht, Euch ein paar Zungenbrecher beizubringen.
+@The_weapon@ versucht, dich ein paar Zungenbrecher beizubringen.
 
-@The_weapon@ sagt, "Wenigstens werdet Ihr eines Tages sterben und dieser Langeweile entkommen!"
+@The_weapon@ sagt, "Wenigstens wirst du eines Tages sterben und dieser Langeweile entkommen!"
 
-@The_weapon@ sagt, "Ich kenne das Lied nicht, aber wenn Ihr ein paar Takte summt, kann ich es versuchen."
+@The_weapon@ sagt, "Ich kenne das Lied nicht, aber wenn du ein paar Takte summst, kann ich es versuchen."
 
-@The_weapon@ prahlt, "Ich habe einen Tonumfang von acht Oktaven, weißt Ihr."
+@The_weapon@ prahlt, "Ich habe einen Tonumfang von acht Oktaven, weißt du."
 
 @The_weapon@ seufzt wehmütig, "Ich wünschte, meine Musik würde so viel Aufmerksamkeit bekommen wie meine Morde..."
 
-@The_weapon@ spottet, "Ich habe Eure Stimme gehört, @player_name@. Belassen wir es doch einfach bei einer Solonummer."
+@The_weapon@ spottet, "Ich habe deine Stimme gehört, @player_name@. Belassen wir es doch einfach bei einer Solonummer."
 
 %%%%
 _rare_speaking_no_tension_
@@ -763,7 +763,7 @@ _rare_speaking_no_tension_
 
 @The_weapon@ diktiert einen langen Folianten mit dem Titel 'Die wohltemperierte Klinge'.
 
-@The_weapon@ sagt, "Peitschen sind einfach nichts für mich, meint Ihr nicht auch?"
+@The_weapon@ sagt, "Peitschen sind einfach nichts für mich, meinst du nicht auch?"
 
 @The_weapon@ skandiert, "Lieber stechen als schlagen, lieber schneiden als reiben!"
 
@@ -777,13 +777,13 @@ _rare_speaking_no_tension_
 
 @The_weapon@ schreit, "Pflugscharen zu Schwertern!"
 
-@The_weapon@ fragt, "Welches Lied soll auf Eurer Beerdigung gespielt werden?"
+@The_weapon@ fragt, "Welches Lied soll auf deiner Beerdigung gespielt werden?"
 
 @The_weapon@ verkündet, "Diese Lieder widme ich @player_name@!"
 
 @The_weapon@ erklärt, "Ich singe die Geschichte von @player_name@, dem Krieger!"
 
-@The_weapon@ sagt, "Hey! Hört Ihr überhaupt zu?"
+@The_weapon@ sagt, "Hey! Hörst du überhaupt zu?"
 
 @The_weapon@ sehnt sich nach den Tagen in der Arena zurück.
 
@@ -795,9 +795,9 @@ _rare_speaking_no_tension_
 
 @The_weapon@ schreit, "Ich liebe es, ein Lied in die Herzen der Menschen zu singen. Und in ihre Nieren."
 
-@The_weapon@ schimpft, "Könntet Ihr bitte etwas töten? Es juckt mich am ganzen Körper."
+@The_weapon@ schimpft, "Könntest du bitte etwas töten? Es juckt mich am ganzen Körper."
 
-@The_weapon@ klagt, "Worauf wartet Ihr noch? Ich mache doch schon die ganze Arbeit."
+@The_weapon@ klagt, "Worauf wartest du noch? Ich mache doch schon die ganze Arbeit."
 
 @The_weapon@ erklärt, "Töten ist eine Kunst, kein Zeitvertreib."
 
@@ -835,10 +835,10 @@ w:1
 @The_weapon@ sagt heiser, "Ich brauche einen Drink ... schnell! Sticht etwas."
 
 w:1
-@The_weapon@ sagt, "Ihr habt nicht zufällig gesehen, dass meine Scheide irgendwo herumliegt? Ich fühle mich so entblößt."
+@The_weapon@ sagt, "Du hast nicht zufällig gesehen, dass meine Scheide irgendwo herumliegt? Ich fühle mich so entblößt."
 
 w:1
-@The_weapon@ beschwert sich, "Oh, sind Eure Hände nass und fettig. Aber ich erlaube Euch, mich eine Zeit lang zu führen."
+@The_weapon@ beschwert sich, "Oh, sind deine Hände nass und fettig. Aber ich erlaube dich, mich eine Zeit lang zu führen."
 
 ############ speaking, low tension ############
 %%%%
@@ -851,26 +851,26 @@ w:1
 
 @The_weapon@ merkt, "Wenn wir sie alle umbringen, hört keiner mehr zu!"
 
-@The_weapon@ seufzt, "Wie sehr wünschte ich, Ihr wäret ein besserer Kämpfer."
+@The_weapon@ seufzt, "Wie sehr wünschte ich, du wärest ein besserer Kämpfer."
 
-@The_weapon@ kommentiert Eure Kampftechniken.
+@The_weapon@ kommentiert deine Kampftechniken.
 
-@The_weapon@ vergleicht Euch ungünstig mit seinem Vorbesitzer.
+@The_weapon@ vergleicht dich ungünstig mit seinem Vorbesitzer.
 
 @The_weapon@ beklagt sich, "Das ist eine lästige Pflicht."
 
-@The_weapon@ urteilt, "Ihr seid kein Künstler, bestenfalls ein Handwerker."
+@The_weapon@ urteilt, "Du bist kein Künstler, bestenfalls ein Handwerker."
 
-@The_weapon@ sagt, "Man wird mich aus Euren kalten, toten Händen reißen müssen."
+@The_weapon@ sagt, "Man wird mich aus deinen kalten, toten Händen reißen müssen."
 
 @The_weapon@ moans, "Bei {{ if you.god() == "No God" then return "meiner Klinge"
 else return "@player_god@"; end }}, du bist so [ein Feigling|eine Memme|ein Hasenfuß|ein Schlappschwanz|ein Poltron|ein Weichei]."
 
-@The_weapon@ fragt sich, "Wer ist inkompetenter - Ihr oder die Opposition?"
+@The_weapon@ fragt sich, "Wer ist inkompetenter - du oder die Opposition?"
 
 @The_weapon@ sagt, "Ihr Geschrei, ihre Tränen, ich kann es nicht mehr ertragen."
 
-@The_weapon@ sagt, "Verzeiht Ihr mir einen kleinen Seitenhieb?"
+@The_weapon@ sagt, "Verzeihst du mir einen kleinen Seitenhieb?"
 
 @The_weapon@ sagt, "Dein Kuss, meine Erregung, dein Fehlschuss, meine Tötung."
 
@@ -900,7 +900,7 @@ _speaking_low-high_tension_
 
 @The_weapon@ lehrt, "Übung macht den Meister!"
 
-@The_weapon@ fragt, "Habt Ihr den Willen zur Macht, @player_name@?"
+@The_weapon@ fragt, "Hast du den Willen zur Macht, @player_name@?"
 
 @The_weapon@ lacht, "Ich freue mich immer über eine blutige Ovation!"
 
@@ -912,7 +912,7 @@ _speaking_low-high_tension_
 @The_weapon@ schreit, "Wenn es blutet, können wir es töten!"
 
 # Millennium, referencing William Yeats
-@The_weapon@ sagt, "Ich will Euch auf der blutgetrübten Flut tanzen sehen."
+@The_weapon@ sagt, "Ich will dich auf der blutgetrübten Flut tanzen sehen."
 
 # Star Trek
 @The_weapon@ schreit, "Heute ist ein guter Tag zum Sterben!"
@@ -985,7 +985,7 @@ w:1
 
 @The_weapon@ @_screams_@, "Wir werden auf einem Haufen von Kadavern feiern!"
 
-@The_weapon@ @_screams_@, "@player_name@, Ihr werdet euch heute an feinen @_corpses_@ [laben|spiesen]!"
+@The_weapon@ @_screams_@, "@player_name@, du wirst dich heute an feinen @_corpses_@ [laben|spiesen]!"
 
 @The_weapon@ @_screams_@, "Geht an die Gurgel!"
 

@@ -87,11 +87,11 @@ Airstrike cast
 %%%%
 unseen Airstrike cast
 
-Ihr hört den Wind wehen.
+Du hörst den Wind wehen.
 %%%%
 unseen Animate Dead cast real
 
-Ihr hört, wie @something@ den Toten zuruft.
+Du hörst, wie @something@ den Toten zuruft.
 %%%%
 Animate Dead cast real
 
@@ -213,7 +213,7 @@ Pyroclastic Surge cast
 %%%%
 Eruption cast
 
-@The_monster@ zerreißt die Erde unter Euch!
+@The_monster@ zerreißt die Erde unter dir!
 %%%%
 Chant Word of Entropy cast
 
@@ -237,7 +237,7 @@ Harpoon Shot cast
 %%%%
 Throw Klown Pie cast
 
-@The_monster@ tortet Euch bösartig!
+@The_monster@ tortet dich bösartig!
 %%%%
 Stunning Burst cast
 
@@ -268,7 +268,7 @@ Spit Acid cast
 %%%%
 unseen Spit Acid cast
 
-Ihr hört ein spuckendes Geräusch.
+Du hörst ein spuckendes Geräusch.
 %%%%
 Acid Splash cast
 
@@ -276,11 +276,11 @@ Acid Splash cast
 %%%%
 unseen Acid Splash cast
 
-Ihr hört ein spuckendes Geräusch.
+Du hörst ein spuckendes Geräusch.
 %%%%
 unseen Cold Breath cast
 
-Ihr hört ein Brüllen.
+Du hörst ein Brüllen.
 %%%%
 Cold Breath cast
 
@@ -288,7 +288,7 @@ Cold Breath cast
 %%%%
 unseen Chilling Breath cast
 
-Ihr hört ein Brüllen.
+Du hörst ein Brüllen.
 %%%%
 Chilling Breath cast
 
@@ -317,7 +317,7 @@ Poisonous Cloud natural cast
 %%%%
 unseen Fire Breath cast
 
-Ihr hört ein Brüllen.
+Du hörst ein Brüllen.
 %%%%
 Fire Breath cast
 
@@ -325,7 +325,7 @@ Fire Breath cast
 %%%%
 unseen Searing Breath cast
 
-Ihr hört ein Brüllen.
+Du hörst ein Brüllen.
 %%%%
 Searing Breath cast
 
@@ -345,7 +345,7 @@ Spit Poison cast
 %%%%
 unseen Spit Poison cast
 
-Ihr hört ein spuckendes Geräusch.
+Du hörst ein spuckendes Geräusch.
 %%%%
 Freeze cast
 
@@ -357,7 +357,7 @@ Sticky Flame Splash cast
 %%%%
 unseen Sticky Flame Splash cast
 
-Ihr hört ein spuckendes Geräusch.
+Du hörst ein spuckendes Geräusch.
 %%%%
 Petrifying Cloud cast
 
@@ -377,7 +377,7 @@ Warning Cry cast
 %%%%
 unseen Warning Cry cast
 
-Ihr hört einen lauten Warnschrei!
+Du hörst einen lauten Warnschrei!
 %%%%
 Slug Dart cast
 
@@ -438,7 +438,7 @@ Geryon cast
 %%%%
 unseen Geryon cast
 
-Ihr hört ein seltsames und klagendes Geräusch.
+Du hörst ein seltsames und klagendes Geräusch.
 %%%%
 # Roxanne can't gesture or point either.
 Roxanne cast
@@ -641,7 +641,7 @@ ghost moth cast
 %%%%
 unseen ghost moth cast targeted
 
-Ihr habt das Gefühl, dass Ihr von etwas beobachtet werdet. @player_only@
+Du hast das Gefühl, dass du von etwas beobachtet bist. @player_only@
 %%%%
 golden eye cast targeted
 
@@ -657,7 +657,7 @@ Warning Cry ushabti cast
 %%%%
 unseen Warning Cry ushabti cast
 
-Ihr hört ein ohrenbetäubendes Klappern!
+Du hörst ein ohrenbetäubendes Klappern!
 %%%%
 ushabti cast targeted
 
@@ -685,7 +685,7 @@ Warning Cry seraph cast
 %%%%
 unseen Warning Cry seraph cast
 
-Ihr hört einen lauten Warnschrei!
+Du hörst einen lauten Warnschrei!
 %%%%
 Battlecry seraph cast
 
@@ -701,7 +701,7 @@ Lightning Bolt electric golem cast
 %%%%
 unseen Warning Cry howler monkey cast
 
-Ihr hört ein gewaltiges Gejohle und Geheul!
+Du hörst ein gewaltiges Gejohle und Geheul!
 %%%%
 Warning Cry howler monkey cast
 
@@ -709,7 +709,7 @@ Warning Cry howler monkey cast
 %%%%
 unseen Warning Cry vault sentinel cast
 
-Ihr hört einen Ton, der laut auf einem Horn geblasen wird!
+Du hörst einen Ton, der laut auf einem Horn geblasen wird!
 %%%%
 Warning Cry vault sentinel cast
 
@@ -749,7 +749,7 @@ dragon cast
 %%%%
 unseen dragon cast
 
-Ihr hört ein Brüllen.
+Du hörst ein Brüllen.
 %%%%
 drake cast targeted
 
@@ -765,7 +765,7 @@ silent curse skull cast
 %%%%
 unseen curse skull cast
 
-Ihr hört das Klappern der Zähne.
+Du hörst das Klappern der Zähne.
 %%%%
 floating eye cast targeted
 
@@ -777,7 +777,7 @@ floating eye cast
 %%%%
 unseen floating eye cast targeted
 
-Du spürt, wie Euch etwas anstarrt. @player_only@
+Du spürt, wie dich etwas anstarrt. @player_only@
 %%%%
 guardian serpent cast targeted
 
@@ -829,7 +829,7 @@ polymorphed wizard cast
 %%%%
 polymorphed unseen wizard cast
 
-Ihr hört einige seltsame, gemurmelte Worte.
+Du hörst einige seltsame, gemurmelte Worte.
 ######################################################
 # Generic priest, wizard and magical casting messages.
 ######################################################
@@ -872,15 +872,15 @@ priest cast
 %%%%
 unseen priest cast targeted
 
-Ihr hört, wie @something@ den Zorn {gen}@a_God@ auf {acc}@target@ herabruft.
+Du hörst, wie @something@ den Zorn {gen}@a_God@ auf {acc}@target@ herabruft.
 
-Ihr hört, wie @something@ seltsame Gebete zu {dat}@a_God@ gegen {acc}@target@ murmelt.
+Du hörst, wie @something@ seltsame Gebete zu {dat}@a_God@ gegen {acc}@target@ murmelt.
 
-Ihr hört, wie @something@ die Hilfe {gen}@a_God@ gegen {acc}@target@ anruft.
+Du hörst, wie @something@ die Hilfe {gen}@a_God@ gegen {acc}@target@ anruft.
 %%%%
 unseen priest cast
 
-Ihr hört einige seltsame, gemurmelte Gebete an {acc}@a_God@.
+Du hörst einige seltsame, gemurmelte Gebete an {acc}@a_God@.
 %%%%
 non-humanoid wizard cast targeted
 
@@ -896,7 +896,7 @@ non-humanoid wizard cast
 %%%%
 unseen non-humanoid wizard cast
 
-Ihr hört einige seltsame, gemurmelte Worte.
+Du hörst einige seltsame, gemurmelte Worte.
 %%%%
 wizard cast targeted
 
@@ -916,7 +916,7 @@ wizard cast
 %%%%
 unseen wizard cast
 
-Ihr hört einige seltsame, gemurmelte Worte.
+Du hörst einige seltsame, gemurmelte Worte.
 %%%%
 magical cast targeted
 

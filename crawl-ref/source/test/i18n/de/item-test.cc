@@ -237,15 +237,15 @@ vector<map<string, string>> rings =
     },
    {
         {"en", "your ring of intelligence"},
-        {"nom", "Euer Ring der Intelligenz"},
-        {"acc", "Euren Ring der Intelligenz"},
-        {"dat", "Eurem Ring der Intelligenz"},
+        {"nom", "dein Ring der Intelligenz"},
+        {"acc", "deinen Ring der Intelligenz"},
+        {"dat", "deinem Ring der Intelligenz"},
     },
     {
         {"en", "your ring of ice"},
-        {"nom", "Euer Ring des Eises"},
-        {"acc", "Euren Ring des Eises"},
-        {"dat", "Eurem Ring des Eises"},
+        {"nom", "dein Ring des Eises"},
+        {"acc", "deinen Ring des Eises"},
+        {"dat", "deinem Ring des Eises"},
     },
 };
 

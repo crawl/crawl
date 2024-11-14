@@ -60,7 +60,7 @@ a stacked deck
 ein vorsortiertes Deck
 %%%%
 your stacked deck
-Euer vorsortiertes Deck
+dein vorsortiertes Deck
 %%%%
 
 %%%%

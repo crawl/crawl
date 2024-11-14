@@ -111,11 +111,11 @@ was eine Form annehmen kann.
 Donald
 
 {{
-    local descript = "Ein Abenteurer genau wie Ihr, der versucht, die Kugel "
+    local descript = "Ein Abenteurer genau wie du, der versucht, die Kugel "
                   .. "zu finden."
 
     if you.race() ~= "Merfolk" and you.race() ~= "Octopode" then
-        descript = descript .. " Im Gegensatz zu Euch, und o"
+        descript = descript .. " Im Gegensatz zu dir, und o"
     else
         descript = descript .. " O"
     end
@@ -227,7 +227,7 @@ Harold
 Ein Kopfgeldjäger mittleren Alters, der nach einem letzten Auftrag in Rente
 gehen möchte. Er hofft, sich irgendwo niederzulassen und mit seiner Familie ein
 ruhiges Leben zu führen, und zwar mit dem Geld aus seiner letzten Kopfbeute:
-Euch.
+dich.
 %%%%
 Ignacio
 
@@ -238,7 +238,7 @@ Ewigkeit fortsetzen.
 
 Obwohl aus seinen dämonischen Gliedmaßen in seiner neuen Gestalt eine Reihe
 großer, rasiermesserscharfer Klingen wachsen, hat er seine Lieblingsaxt behalten
-und lässt Euch deren Schneide gerne testen.
+und lässt dich deren Schneide gerne testen.
 %%%%
 Ijyb
 
@@ -285,7 +285,7 @@ Zeit gestorben, sieht aber keinen Grund, warum ihn das aufhalten sollte.
 %%%%
 Kirke
 
-Eine Meisterin der Verwandlung und des Verrats. Passt auf, sonst könnt Ihr das
+Eine Meisterin der Verwandlung und des Verrats. Passt auf, sonst kannst du das
 nächste Schwein sein, das sich ihrer Herde anschließt!
 %%%%
 the Lernaean hydra
@@ -487,7 +487,7 @@ in der Magie.
 Sonja
 
 Eine anmutige Kobold-Attentäterin. Bewundert ihre anmutigen Pirouetten und lasst
-Euch von ihren waghalsigen Sprüngen begeistern! Aber hütet Euch vor ihren
+dich von ihren waghalsigen Sprüngen begeistern! Aber hütet dich vor ihren
 Messern!
 %%%%
 Terence
@@ -507,7 +507,7 @@ Urug
 
 Ein grobschlächtiger und schlaksiger Ork. Urug verlor ihr Auge im Kampf mit
 einer Harpyie und hat geschworen, jede einzelne von ihnen zu töten. Leider ist
-die Sehkraft ihres verbleibenden Auges nicht sehr gut und sie hat Euch für eine
+die Sehkraft ihres verbleibenden Auges nicht sehr gut und sie hat dich für eine
 gehalten.
 {{
     if you.can_smell() then
@@ -1678,7 +1678,7 @@ Eine riesige Biene mit einem tödlichen Widerhaken, der wiederholt stechen kann.
 Killer Klown
 
 Eine komische Figur voller Leben und Lachen. Sie sieht aus, als würde sie sich
-sehr freuen, Euch zu sehen ... aber ist in ihren Gesichtszügen auch ein leicht
+sehr freuen, dich zu sehen ... aber ist in ihren Gesichtszügen auch ein leicht
 bösartiger Anflug zu erkennen? Ist das rote Gesichtsbemalung oder etwas ganz und
 gar weniger Angenehmes?
 %%%%
@@ -2862,7 +2862,7 @@ Eine Leiche, die durch Nekromantie zum Untoten gemacht wurde.
 # Specials
 test spawner
 
-(Wenn Ihr dies außerhalb des Wiz-Modus oder der Arena seht, handelt es sich um
+(Wenn du dies außerhalb des Wiz-Modus oder der Arena siehst, handelt es sich um
 einen Fehler.)
 
 Was auch immer es ist, es kann durch das Beschwören von Schattenkreaturen
@@ -2870,7 +2870,7 @@ zahllose Monster hervorbringen und ist selbst praktisch unzerstörbar.
 
 Um es zu zerstören, senkt die zentrale Aufzugssäule ab und pumpt dann Raketen in
 das Loch in seinem freiliegenden Gehirn, wenn die Säule eine entsprechende Höhe
-erreicht hat. Ihr könnt beim Herunterspringen eine weitere Rakete hinzufügen.
+erreicht hat. Du kannst beim Herunterspringen eine weitere Rakete hinzufügen.
 
 Oh wartet, falsches Spiel.
 %%%%
@@ -3217,7 +3217,7 @@ meat berserker
 
 Eine der Legionen von Abscheulichkeiten, die von den Bildhauern des Fleisches
 erschaffen wurden. Seine Gestalt ist groß und muskulös. Sie bewegt sich schnell
-und mit ungestümer Wut, und ihre einziger Gedanke ist, Euch mit großer Inbrunst
+und mit ungestümer Wut, und ihre einziger Gedanke ist, dich mit großer Inbrunst
 in Stücke zu reißen. Während sie tobt, erzeugt sie einen kakophonischen Lärm.
 %%%%
 meat hydra
@@ -3248,18 +3248,18 @@ Puppen zusammenzusetzen.
 %%%%
 destroyer
 
-Die Zerstörer beginnen, über Euch herzufallen. Sie kommen in großer Zahl und
+Die Zerstörer beginnen, über dich herzufallen. Sie kommen in großer Zahl und
 voller Zorn, ihre Münder klaffen wie Abaddon, bodenlos und abgründig. Sie
-bringen euer Verderben und werden sich an Euren Überresten laben.
+bringen euer Verderben und werden sich an deinen Überresten laben.
 %%%%
 accursed
 
-Die Verfluchten sind diejenigen, die vor Euch kamen. Sie sind gekommen, um
-sicherzustellen, dass Ihr ihr Schicksal teilt.
+Die Verfluchten sind diejenigen, die vor dir kamen. Sie sind gekommen, um
+sicherzustellen, dass du ihr Schicksal teilst.
 %%%%
 tyrant
 
-Eine kolossale Masse aus Knochen und Schädeln, ein wandelndes Grab. Ihr hört
+Eine kolossale Masse aus Knochen und Schädeln, ein wandelndes Grab. Du hörst
 Kreischen und Schreie, wenn es sich nähert, bei jedem zermalmenden Schritt
 Knochen zertrümmert und sich in ewiger Unruhe neu zusammensetzt.
 %%%%
@@ -3267,7 +3267,7 @@ dread
 
 Eine Beleidigung der Existenz, eine Leere, in der es nur Qual und Verdammnis
 gibt. Seine überirdische Form ist zerrissen und verdreht, schwarz und hohl. Es
-ist beraubt rationalen Denkens und kennt nur Hass und den Wunsch, Eure Seele zu
+ist beraubt rationalen Denkens und kennt nur Hass und den Wunsch, deine Seele zu
 entweihen.
 %%%%
 scourge
@@ -3277,10 +3277,10 @@ denen Galle und Eiter sickern und die Gift und Seuchen speit.
 %%%%
 observer
 
-Ihr seht das Unsichtbare, Ihr starrt und sie starren zurück. Sie flüstern und
-lachen, sie grinsen und weinen, sie blicken Euch verächtlich an und starren Euch
-voller Bewunderung an. Sie sind die Beobachter, sie beurteilen Euren Wert und
-werden über Euer Ende entscheiden.
+Du siehst das Unsichtbare, du starrst und sie starren zurück. Sie flüstern und
+lachen, sie grinsen und weinen, sie blicken dich verächtlich an und starren dich
+voller Bewunderung an. Sie sind die Beobachter, sie beurteilen deinen Wert und
+werden über dein Ende entscheiden.
 %%%%
 wretched soul
 
@@ -3314,24 +3314,24 @@ Sein Schild ist mit Bildern höllischer Flammen verziert.
 %%%%
 The Meatlord
 
-Ihr seht die Verkörperung von Schmutz, Verwesung und Verderbtheit, den
+Du siehst die Verkörperung von Schmutz, Verwesung und Verderbtheit, den
 Fleischfürst. Sein widerlicher Körper ist bis zum Äußersten aufgebläht, aus ihm
 sickert zähe Flüssigkeit und der Gestank des Todes. Sein Kopf ist der eines
 Ebers mit hervorquellenden Augen und gespaltenen Stoßzähnen, seine Schnauze bebt
-und sickert, während er bei Eurem Anblick schnaubt und quiekt, sein Mund ist ein
+und sickert, während er bei deinem Anblick schnaubt und quiekt, sein Mund ist ein
 zahnloser Spalt, aus dem Blutlachen sabbern und widerliche Überreste erbrechen.
 Sein Hals ist gestreckt und hängt nach vorne, die Haut hängt herab. Sein
 riesiges Bauch windet und verformt sich, während die Larven darin auf ihre
 widerwärtige Freilassung warten. Seine Beine sind unkenntliche Fleischmassen,
-bedeckt mit Ausstülpungen und pochenden Furunkeln. Euer Verstand taumelt beim
-Anblick dieser abscheulichen Gestalt und Eure Sinne beginnen sich abzuschalten,
-um Euren Verstand zu bewahren, während Ihr an dem bedrückenden Gestank
-ersticken.
+bedeckt mit Ausstülpungen und pochenden Furunkeln. dein Verstand taumelt beim
+Anblick dieser abscheulichen Gestalt und deine Sinne beginnen sich abzuschalten,
+um deinen Verstand zu bewahren, während du an dem bedrückenden Gestank
+erstickst.
 %%%%
 The Unspeakable
 
-Ihr hört das Echo der Planeten hinter dem ohrenbetäubenden Brüllen der Sterne,
+Du hörst das Echo der Planeten hinter dem ohrenbetäubenden Brüllen der Sterne,
 wenn es sich nähert. Es ist das Maul des Abgrunds. Es bringt kriechendes Chaos
-aus seinem Inneren hervor. Es ist der letzte Anblick, den Ihr jemals sehen
-werdet.
+aus seinem Inneren hervor. Es ist der letzte Anblick, den du jemals sehen
+wirst.
 %%%%

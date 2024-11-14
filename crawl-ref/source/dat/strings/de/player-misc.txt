@@ -20,13 +20,13 @@ Intelligenz
 
 %%%%
 your strength
-Eure Stärke
+deine Stärke
 %%%%
 your dexterity
-Eure Geschicklichkeit
+deine Geschicklichkeit
 %%%%
 your intelligence
-Eure Intelligenz
+deine Intelligenz
 %%%%
 
 ##############################################

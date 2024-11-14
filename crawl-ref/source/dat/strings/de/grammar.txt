@@ -58,14 +58,13 @@ GENERATE:acc
 # Masculine and neuter can be difficult to distinguish. Since masculine nouns
 # are more numerous, we assume masculine unless we see proof of neuter.
 
-# Mark any unmarked masculine instances of ein/Euer
-/^(ein|Euer) (?!(\{adj-es\}|[^A-ZÄÖÜ ]+es ))/{m}$1 /
+# Mark any unmarked masculine instances of ein/dein
+/^(ein|dein) (?!(\{adj-es\}|[^A-ZÄÖÜ ]+es ))/{m}$1 /
 
 # determiners
 /^(\{m\})?der /den /
 /^\{m\}ein /einen /
-# temporary lowercase placeholder to make it easier to find noun
-/^\{m\}Euer /euren /
+/^\{m\}dein /deinen /
 
 # masc adjectives
 /^den [^A-ZÄÖÜ]+/e /en /
@@ -80,9 +79,6 @@ GENERATE:acc
 /[A-ZÄÖÜ][^ ,]+/([Rr]iese|[Dd]rache|[Dd]ruide|[Hh]eilige|Ahne)$/$1n/
 # match Affe but not Waffe
 /[A-ZÄÖÜ][^ ,]+/(Affe|[^Ww]affe)$/$1n/
-
-# replace temporary placeholder
-/^euren /Euren /
 
 # fix special cases
 /Blork der Ork/Blork den Ork/
@@ -104,37 +100,34 @@ GENERATE:dat
 # masc/neut determiners
 /^(der|das) /dem /
 /^ein /einem /
-/^Euer /Eurem /
+/^dein /deinem /
 
 # masc/neut adjectives
-/^(d|ein|Eur)em [^A-ZÄÖÜ]+/e[rs]? /en /
-/^(d|ein|Eur)em [^A-ZÄÖÜ]+/\{adj-e[rs]?\}/{adj-en}/
+/^(d|ein|dein)em [^A-ZÄÖÜ]+/e[rs]? /en /
+/^(d|ein|dein)em [^A-ZÄÖÜ]+/\{adj-e[rs]?\}/{adj-en}/
 /^[^A-ZÄÖÜ ][^A-ZÄÖÜ]+/e[rs] /em /
 /^[^A-ZÄÖÜ ][^A-ZÄÖÜ]+/\{adj-e[rs]\}/{adj-em}/
 
 # mark plurals, if not already marked
-/^(die |Eure )?(%d|[0-9]+) /^/{pl}/
+/^(die |deine )?(%d|[0-9]+) /^/{pl}/
 /^(?!\{pl\}).*schuppen\b/^/{pl}/
 
 # plural determiners
 /^\{pl\}die /{pl}den /
-/^\{pl\}Eure /{pl}Euren /
+/^\{pl\}deine /{pl}deinen /
 
 # fem determiners
 /^(\{f\})?die /der /
 /^(\{f\})?eine /einer /
-/^(\{f\})?Eure /Eurer /
-
-# temporary lowercase placeholder to make it easier to find noun
-/^((\{(f|pl)})?)Eur/$1bigeur/
+/^(\{f\})?deine /deiner /
 
 # plural adjectives
 /^\{pl\}[^A-ZÄÖÜ]+/e /en /
 /^\{pl\}[^A-ZÄÖÜ]+/\{adj-e\}/{adj-en}/
 
 # fem adjectives
-/^(\{f\})?(der|einer|bigeurer) [^A-ZÄÖÜ]+/e /en /
-/^(\{f\})?(der|einer|bigeurer) [^A-ZÄÖÜ]+/\{adj-e\}/{adj-en}/
+/^(\{f\})?(der|einer|deiner) [^A-ZÄÖÜ]+/e /en /
+/^(\{f\})?(der|einer|deiner) [^A-ZÄÖÜ]+/\{adj-e\}/{adj-en}/
 /^[^A-ZÄÖÜ ][^A-ZÄÖÜ]+/e /er /
 /^[^A-ZÄÖÜ ][^A-ZÄÖÜ]+/\{adj-e\}/{adj-er}/
 
@@ -152,15 +145,12 @@ GENERATE:dat
 # remove fem/plural gender hint
 /^\{(f|pl)\}//
 
-# replace temporary placeholder
-/^bigeur/Eur/
-
 # fix special cases
 /Blork der Ork/Blork dem Ork/
 /Verrückter /Verrücktem /
 /er Drakonier/em Drakonier/
 /^(dem [A-ZÄÖÜ][^ ,]+)e Drakonier/$1en Drakonier/
-/^(der|einer|Eurer) (.*)Lernäische Hydra/$1 $2Lernäischen Hydra/
+/^(der|einer|deiner) (.*)Lernäische Hydra/$1 $2Lernäischen Hydra/
 /Lernäische Hydra/Lernäischer Hydra/
 # nominalised adjective
 /Unsichtbares\b/Unsichtbarem/
@@ -181,16 +171,16 @@ GENERATE:gen
 
 # adjectives ending in -es
 # (must do before adding -es to determiners)
-/^(Euer )?[^A-ZÄÖÜ]+/es\b/en/
+/^[^A-ZÄÖÜ]+/es\b/en/
 
 # masc/neut determiners
 /^(der|das) /des /
 /^ein /eines /
-/^Euer /Eures /
+/^dein /deines /
 
 # adjectives ending in -er
 # (must do after removing -er from determiners)
-/^(Eures )?[^A-ZÄÖÜ]+/er\b/en/
+/^[^A-ZÄÖÜ]+/er\b/en/
 
 # masc/neut adjectives ending in -e
 /^des [^A-ZÄÖÜ]+/e\b/en/
@@ -198,14 +188,14 @@ GENERATE:gen
 # fem/pl determiners
 /^die /der /
 /^eine /einer /
-/^Eure /Eurer /
+/^deine /deiner /
 
 # fem/pl adjectives
-/^(der|einer|Eurer) [^A-ZÄÖÜ]+/e\b/en/
+/^(der|einer|deiner) [^A-ZÄÖÜ]+/e\b/en/
 /^[^A-ZÄÖÜ]+/e\b/er/
 
 # masc/neuter nouns and unique names
-/^(?!(Eurer |\{adj\-er\}|[a-zäöüß\-]+er )).*?(?=(#|$))/$/s/
+/^(?!(\{adj\-er\}|[a-zäöüß\-]+er )).*?(?=(#|$))/$/s/
 
 # fix up (single-word) unique names ending in s
 /^([A-ZÄÖÜ]\S+s)s$/$1'/
@@ -223,8 +213,8 @@ GENERATE:gen
 /Gelée Royales/Gelée Royale/
 /uss\b/us/
 /(ss|sch|[Gg]eist)s?(?=(#|$))/$1es/
-/^(?!(Eurer |\{adj\-er\}|[a-zäöüß\-]+er ).*?(?=(#|$))/ss$/s'/
-/^(der|einer|Eurer) (.*)Lernäische Hydras?/$1 $2Lernäischen Hydra/
+/^(?!(\{adj\-er\}|[a-zäöüß\-]+er ).*?(?=(#|$))/ss$/s'/
+/^(der|einer|deiner) (.*)Lernäische Hydras?/$1 $2Lernäischen Hydra/
 /Lernäische Hydras?/Lernäischer Hydra/
 
 # remove mark we added

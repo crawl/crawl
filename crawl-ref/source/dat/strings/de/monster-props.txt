@@ -67,7 +67,7 @@ verwirrt
 # hexed - long form. This obviously doesn't work in a sentence, but it
 # doesn't seem to be used at all, so probably doesn't matter.
 control wrested from you
-Kontrolle von Euch entrissen
+Kontrolle von dir entrissen
 %%%%
 # hexed - short form
 hexed
@@ -521,7 +521,7 @@ Ziel eines Verbündeten
 %%%%
 # has custom sentence for #3
 hasn't noticed you
-hat Euch nicht bemerkt
+hat dich nicht bemerkt
 %%%%
 lightly drained
 leicht ausgezehrt
@@ -654,25 +654,25 @@ nicht verwundet
 
 %%%%
 constricted by you
-von Euch umschlungen
+von dir umschlungen
 %%%%
 constricted by %s
 von {dat}%s umschlungen
 %%%%
 held by you
-von Euch gefangen
+von dir gefangen
 %%%%
 held by %s
 von {dat}%s gefangen
 %%%%
 constricting you
-Euch umschlingend
+dich umschlingend
 %%%%
 constricting %s
 {acc}%s umschlingend
 %%%%
 holding you
-Euch haltend
+dich haltend
 %%%%
 holding %s
 {acc}%s haltend

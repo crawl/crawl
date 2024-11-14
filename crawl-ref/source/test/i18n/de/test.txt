@@ -37,5 +37,5 @@ grau
 @The_monster@ trifft Euch.
 %%%%
 You hit @the_monster@.
-Ihr trefft {acc}@the_monster@.
+Du triffst {acc}@the_monster@.
 %%%%

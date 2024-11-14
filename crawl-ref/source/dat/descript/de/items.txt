@@ -9,9 +9,9 @@ leichter und weniger beschwerlich. Außerdem ist sie bemerkenswert glatt und lä
 amulet of faith
 
 Ein Talisman, der die Aufmerksamkeit der Götter auf seinen Träger lenken soll.
-Diese göttliche Aufmerksamkeit macht es einfacher, Eurem Gott zu gefallen, aber
-Euer Gott wird auch mehr Notiz von Euren Übertretungen nehmen. Das Amulett
-entzieht Euch einen Teil Eurer göttlichen Gunst, wenn es abgelegt wird.
+Diese göttliche Aufmerksamkeit macht es einfacher, deinem Gott zu gefallen, aber
+dein Gott wird auch mehr Notiz von deinen Übertretungen nehmen. Das Amulett
+entzieht dich einen Teil deiner göttlichen Gunst, wenn es abgelegt wird.
 %%%%
 amulet of guardian spirit
 
@@ -532,8 +532,8 @@ Eine magische Waffe mit zwei rasiermesserscharfen Klingen.
 %%%%
 eggplant
 
-Eine verfaulte Aubergine, die Ihr auf die Crawl-Entwickler werfen könnt. Wenn
-ihr diese Meldung seht, ist das ein Fehler.
+Eine verfaulte Aubergine, die du auf die Crawl-Entwickler werfen kannst. Wenn
+du diese Meldung seihst, ist das ein Fehler.
 %%%%
 eudemon blade
 
@@ -692,7 +692,7 @@ trifft, hindurch und trifft möglicherweise alle Ziele in seinem Weg, bis er die
 maximale Reichweite erreicht.
 {{
     if you.race() == "Kobold" or you.race() == "Spriggan" then
-        return "Leider ist er zu lang und unhandlich für Euch."
+        return "Leider ist er zu lang und unhandlich für dich."
     end
 }}
 %%%%
@@ -760,8 +760,8 @@ verstricken, die sie nicht kontrollieren konnten
 %%%%
 orb of zot
 
-Ein Artefakt von unschätzbarem Wert. Wenn Ihr mit ihm an die Oberfläche
-entkommen seid, ist Eure Aufgabe beendet.
+Ein Artefakt von unschätzbarem Wert. Wenn du mit ihm an die Oberfläche
+entkommen bist, ist deine Aufgabe beendet.
 %%%%
 ozocubu's autobiography
 

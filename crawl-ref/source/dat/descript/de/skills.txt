@@ -1,24 +1,24 @@
 %%%%
 Fighting
 
-Die Kampffähigkeit erhöht Eure Genauigkeit und Euren Schaden im physischen Kampf
-und erhöht auch Eure maximale Gesundheit.
+Die Kampffähigkeit erhöht deine Genauigkeit und deinen Schaden im physischen Kampf
+und erhöht auch deine maximale Gesundheit.
 %%%%
 Short Blades
 
 Kurzklingen sind effektiver als jeder andere Waffentyp, wenn es darum geht,
 hilflose Feinde zu erstechen.
 
-Mit Kurzklingen geübt zu sein ermöglicht es Euch, mit allen Waffen dieses Typs
-schneller anzugreifen und erhöht Eure Genauigkeit und Euren Schaden mit ihnen.
+Mit Kurzklingen geübt zu sein ermöglicht es dich, mit allen Waffen dieses Typs
+schneller anzugreifen und erhöht deine Genauigkeit und deinen Schaden mit ihnen.
 
 Mit kurzen Klingen geübt zu sein, erhöht die Effektivität mit langen Klingen
 und umgekehrt.
 %%%%
 Long Blades
 
-Mit Langklingen geübt zu sein ermöglicht es Euch, mit allen Waffen dieses Typs
-schneller anzugreifen und erhöht Eure Genauigkeit und Euren Schaden mit ihnen.
+Mit Langklingen geübt zu sein ermöglicht es dich, mit allen Waffen dieses Typs
+schneller anzugreifen und erhöht deine Genauigkeit und deinen Schaden mit ihnen.
 
 Mit langen Klingen geübt zu sein, erhöht die Effektivität mit kurzen Klingen
 und umgekehrt.
@@ -28,16 +28,16 @@ Axes
 Äxte spalten mehrere Feinde mit einem einzigen Schwung und treffen die Feinde
 in einem Bogen um den Träger.
 
-Mit Äxten geübt zu sein ermöglicht es Euch, mit allen Waffen dieses Typs
-schneller anzugreifen und erhöht Eure Genauigkeit und Euren Schaden mit ihnen.
+Mit Äxten geübt zu sein ermöglicht es dich, mit allen Waffen dieses Typs
+schneller anzugreifen und erhöht deine Genauigkeit und deinen Schaden mit ihnen.
 
 Mit Äxten geübt zu sein erhöht die Effektivität mit Keulen & Flegeln und
 Stangenwaffen, und umgekehrt.
 %%%%
 Maces & Flails
 
-Mit Keulen & Flegeln geübt zu sein ermöglicht es Euch, mit allen Waffen dieses
-Typs schneller anzugreifen und erhöht Eure Genauigkeit und Euren Schaden mit
+Mit Keulen & Flegeln geübt zu sein ermöglicht es dich, mit allen Waffen dieses
+Typs schneller anzugreifen und erhöht deine Genauigkeit und deinen Schaden mit
 ihnen.
 
 Mit Keulen & Flegeln geübt zu sein erhöht die Effektivität mit Äxten und
@@ -48,8 +48,8 @@ Polearms
 Stangenwaffen können mit 'v' evoziert werden, um Gegner aus zwei Feldern
 Entfernung anzugreifen.
 
-Mit Stangenwaffen geübt zu sein ermöglicht es Euch, mit allen Waffen dieses Typs
-schneller anzugreifen und erhöht Eure Genauigkeit und Euren Schaden mit ihnen.
+Mit Stangenwaffen geübt zu sein ermöglicht es dich, mit allen Waffen dieses Typs
+schneller anzugreifen und erhöht deine Genauigkeit und deinen Schaden mit ihnen.
 
 Mit Stangenwaffen geübt zu sein erhöht die Effektivität mit Äxten und Stecken,
 und umgekehrt.
@@ -60,8 +60,8 @@ Stecken erfordern ein relativ geringes Maß an Fertigkeit, um möglichst effekti
 eingesetzt zu werden, obwohl sie nicht das hohe Schadenspotenzial einiger
 anderer Waffenklassen haben.
 
-Mit Stecken geübt zu sein ermöglicht es Euch, mit allen Waffen dieses Typs
-schneller anzugreifen und erhöht Eure Genauigkeit und Euren Schaden mit ihnen.
+Mit Stecken geübt zu sein ermöglicht es dich, mit allen Waffen dieses Typs
+schneller anzugreifen und erhöht deine Genauigkeit und deinen Schaden mit ihnen.
 
 Mit Stecken geübt zu sein erhöht die Effektivität mit Keulen & Flegeln und
 Stangenwaffen, und umgekehrt.
@@ -114,23 +114,23 @@ Spur von einem verlieren, wenn man aus ihrem Blickfeld verschwunden ist.
 Beachtet, dass stärkere Monster dazu neigen, misstrauischer und aufmerksamer zu
 sein.
 
-Die Fertigkeit „Heimlichkeit“ bestimmt zusammen mit der Waffenfertigkeit Eurer
-ausgerüsteten Waffe auch die Wahrscheinlichkeit, dass Ihr bei einem Angriff auf
-eine abgelenkte oder hilflose Kreatur eine große Menge Schaden anrichtet, sowie
+Die Fertigkeit „Heimlichkeit“ bestimmt zusammen mit der Waffenfertigkeit deiner
+ausgerüsteten Waffe auch die Wahrscheinlichkeit, dass du bei einem Angriff auf
+eine abgelenkte oder hilflose Kreatur eine große Menge Schaden anrichtest, sowie
 die Höhe des zusätzlichen Schadens.
 %%%%
 Shields
 
-Eine hohe Schild-Fertigkeit hilft Euch, Nahkampfangriffe oder Projektile (sowohl
-magische als auch nichtmagische) mit Eurem ausgerüsteten Schild zu blockieren.
+Eine hohe Schild-Fertigkeit hilft dir, Nahkampfangriffe oder Projektile (sowohl
+magische als auch nichtmagische) mit deinem ausgerüsteten Schild zu blockieren.
 Einige Angriffe, wie z.B. durchdringende Strahlen, können überhaupt nicht
 geblockt werden.
 %%%%
 Unarmed Combat
 
-Die Fertigkeit „Unbewaffneter Kampf“ erhöht Eure Genauigkeit, Euren Schaden und
-Eure Angriffsgeschwindigkeit im Nahkampf, wenn Ihr mit bloßen Händen kämpfst.
-Außerdem könnt Ihr gelegentlich mit Eurer freien Hand als zusätzlichen
+Die Fertigkeit „Unbewaffneter Kampf“ erhöht deine Genauigkeit, deinen Schaden und
+deine Angriffsgeschwindigkeit im Nahkampf, wenn du mit bloßen Händen kämpfst.
+Außerdem kannst du gelegentlich mit deiner freien Hand als zusätzlichen
 Nahkampfangriff zuschlagen, sofern die Hand dafür frei ist.
 %%%%
 Spellcasting
@@ -140,11 +140,11 @@ Spellcasting
         return "Die Fertigkeit Zaubern erhöht die Erfolgsrate und die Kraft " ..
                "aller Zauber."
     else
-        return "Wenn Ihr im Zaubern geübt seid, erhöht sich die Erfolgsrate " ..
-               "und die Kraft aller Zauber, und Eure magischen Reserven " ..
-               "nehmen zu. Durch das Training des Zauberns erhältet Ihr " ..
-               "außerdem mehr Zauberplätze, die Ihr für neue Zauber " ..
-               "ausgeben könnt."
+        return "Wenn du im Zaubern geübt bist, erhöht sich die Erfolgsrate " ..
+               "und die Kraft aller Zauber, und deine magischen Reserven " ..
+               "nehmen zu. Durch das Training des Zauberns erhältst du " ..
+               "außerdem mehr Zauberplätze, die du für neue Zauber " ..
+               "ausgeben kannst."
     end
 }}
 %%%%
@@ -251,8 +251,8 @@ Air Magic
 
 Die Luftmagie bietet Zauber, die direkt mit dem Wind Schaden verursachen, sowie
 laute, aber mächtige Blitzhervorrufungen. Sie bietet auch einige Hilfszauber,
-wie z.B. den Ruf des Windes, um Eure Bewegung zu unterstützen, oder eine
-Verhexung, die den Einsatz von Magie in Eurer Umgebung weitgehend verhindert.
+wie z.B. den Ruf des Windes, um deine Bewegung zu unterstützen, oder eine
+Verhexung, die den Einsatz von Magie in deiner Umgebung weitgehend verhindert.
 
 Diese Fertigkeit erhöht die Erfolgsquote und die Zauberkraft von Zaubern der
 entsprechenden Schule. Viele Zauber gehören zu einer Kombination aus mehreren
@@ -264,7 +264,7 @@ Earth Magic
 Erdmagie enthält Zauber, die große Mengen an direktem körperlichen Schaden
 verursachen, dem nicht wie Feuer-, Kälte- und Blitzschaden widerstanden werden
 kann. Sie ist auch mit einigen Verwandlungen verbunden, mit Zaubern, die die
-Erde um Euch herum verflüssigen oder Eure Feinde in Stein verwandeln.
+Erde um dich herum verflüssigen oder deine Feinde in Stein verwandeln.
 
 Diese Fertigkeit erhöht die Erfolgsquote und die Zauberkraft von Zaubern der
 entsprechenden Schule. Viele Zauber gehören zu einer Kombination aus mehreren
@@ -289,7 +289,7 @@ oft auch die Macht solcher Fähigkeiten.
 
 {{
     if you.race() ~= "Djinni" then
-        return "Die Anrufungsfertigkeit wirkt sich ebenfalls auf Eure " ..
+        return "Die Anrufungsfertigkeit wirkt sich ebenfalls auf deine " ..
                "magischen Reserven aus, allerdings in geringerem Maße als " ..
                "die Zaubern-Fertigkeit. Es wird nur der höhere Beitrag " ..
                "verwendet."
