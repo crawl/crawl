@@ -3920,7 +3920,7 @@ It is quickly crumbling away.
 Es bröckelt schnell weg.
 %%%%
 If this monster is a "program bug", then it's recommended that you save your game and reload.
-Wenn dieses Monster ein „Programmfehler“ ist, empfiehlt es sich, das Spiel zu speichern und neu zu laden.
+Wenn dieses Monster ein "Programmfehler" ist, empfiehlt es sich, das Spiel zu speichern und neu zu laden.
 %%%%
 " Please report monsters who masquerade as program bugs or run around the dungeon without a proper description to the authorities."
 " Bitte Monster, die sich als Programmfehler ausgeben oder ohne richtige Beschreibung im Dungeon herumlaufen, den Behörden melden.
@@ -4414,11 +4414,11 @@ Eine beliebige Taste drücken zum Beenden, Strg-p fürs vollständige Protokoll.
 %%%%
 # death message from Kiku
 %s rasps: "You have failed me! Welcome... oblivion!"
-%s krächzt: „Du hast mich enttäuscht! Grüßt... Vergessenheit!“
+%s krächzt: "Du hast mich enttäuscht! Grüßt... Vergessenheit!"
 %%%%
 # death message from Kiku
 %s rasps: "You have failed me! Welcome... death!"
-%s krächzt: „Du hast mich enttäuscht! Grüßt... den Tod!“
+%s krächzt: "Du hast mich enttäuscht! Grüßt... den Tod!"
 %%%%
 %s claims you as an undead slave.
 %s beansprucht dich als untoten Sklaven.
@@ -5333,7 +5333,7 @@ Really remove and destroy %s?
 {acc}%s wirklich entfernen und zerstören?
 %%%%
 " Ashenzari will withdraw the offered vision and curse!"
-“ Aschenzari wird die angebotene Vision und den Fluch zurückziehen!“
+" Aschenzari wird die angebotene Vision und den Fluch zurückziehen!"
 %%%%
 You shatter the curse binding %s!
 Du zerbrechst den Fluch, der {acc}%s bindet!
@@ -18972,7 +18972,7 @@ Du fühlst dich völlig allein.
 ##################
 %%%%
 Ashenzari says, "See what I see, mortal..."
-Aschenzari sagt: „Sieh, was ich sehe, Sterblicher...“
+Aschenzari sagt: "Sieh, was ich sehe, Sterblicher..."
 %%%%
 You have a sudden vision of the Swamp and the Snake Pit!
 Du hast plötzlich eine Vision vom Sumpf und der Schlangengrube!
@@ -19011,16 +19011,16 @@ Ein Gegenstand taucht aus dem Abgrund auf! Vielleicht ist es eine Aufforderung z
 ##################
 %%%%
 Nemelex Xobeh says, "Care to risk it all for some fabulous prizes, mortal?"
-Nemelex Xobeh sagt: „Willst du alles für einige fabelhafte Preise riskieren, Sterblicher?“
+Nemelex Xobeh sagt: "Willst du alles für einige fabelhafte Preise riskieren, Sterblicher?"
 %%%%
 Nemelex Xobeh says, "Through this portal lies a prize... or peril!"
-Nemelex Xobeh sagt: „Hinter diesem Portal liegt eine Belohnung... oder Gefahr!“
+Nemelex Xobeh sagt: "Hinter diesem Portal liegt eine Belohnung... oder Gefahr!"
 %%%%
 Nemelex Xobeh says, "The prize could be yours... at the risk of your life!"
-Nemelex Xobeh sagt: „Der Preis könnte dir gehören... unter Einsatz deines Lebens!“
+Nemelex Xobeh sagt: "Der Preis könnte dir gehören... unter Einsatz deines Lebens!"
 %%%%
 Nemelex Xobeh says, "Care for a little wager, mortal?"
-Nemelex Xobeh sagt: „Lust auf eine kleine Wette, Sterblicher?“
+Nemelex Xobeh sagt: "Lust auf eine kleine Wette, Sterblicher?"
 %%%%
 \"Beware! This is a limited time offer!\"
 \"Achtung! Dies ist ein zeitlich begrenztes Angebot!\"
@@ -19032,10 +19032,10 @@ Ein Transporter erscheint.
 <white>Der Transporter leuchtet in einem Regenbogen aus seltsamen Farben und verschwindet.</white>
 %%%%
 Nemelex Xobeh says, "You win!"
-Nemelex Xobeh sagt: „Du hast gewonnen!“
+Nemelex Xobeh sagt: "Du hast gewonnen!"
 %%%%
 Nemelex Xobeh says, "You lose!"
-Nemelex Xobeh sagt: „Du hast verloren!“
+Nemelex Xobeh sagt: "Du hast verloren!"
 %%%%
 
 ##################
@@ -19049,7 +19049,7 @@ The doors seal shut behind you!
 Die Türen schließen sich hinter dich!
 %%%%
 Okawaru booms, "Excellent! You may choose a reward."
-Okawaru brummt: „Ausgezeichnet! Du darfst dir eine Belohnung aussuchen.“
+Okawaru brummt: "Ausgezeichnet! Du darfst dir eine Belohnung aussuchen."
 %%%%
 The gates behind the altar rise, and the entry reopens.
 Die Tore hinter dem Altar heben sich, und der Eingang öffnet sich wieder.
@@ -19066,7 +19066,7 @@ Let the past return from memory!
 Lass die Vergangenheit aus der Erinnerung zurückkehren!
 %%%%
 \"WORSHIP ME, MORTAL,\" Xom booms, \"AND I SHALL GRANT YOU THE GREATEST GIFT OF ALL.\"
-\„BETE MICH AN, STERBLICHER,\“ dröhnt Xom, \"UND ICH WERDE DIR DAS GRÖSTE GESCHENK VON ALLEN GEWÄHREN.\“
+\"BETE MICH AN, STERBLICHER,\" dröhnt Xom, \"UND ICH WERDE DIR DAS GRÖSSTE GESCHENK VON ALLEN GEWÄHREN.\"
 %%%%
 A goblin pops into existence! It looks at you with admiration.
 Ein Goblin taucht auf! Er sieht dich mit Bewunderung an.
