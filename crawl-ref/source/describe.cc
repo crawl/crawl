@@ -6662,13 +6662,6 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
                  << " hide, which can be used as armour.\n";
     }
 
-    if (mi.is(MB_SUMMONED_CAPPED))
-    {
-        inf.body << "\nYou have summoned too many monsters of this kind to "
-                    "sustain them all, and thus this one will shortly "
-                    "expire.\n";
-    }
-
     if (!inf.quote.empty())
         inf.quote += "\n";
 

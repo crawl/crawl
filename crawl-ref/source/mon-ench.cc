@@ -2051,9 +2051,8 @@ static const char *enchant_names[] =
 #endif
     "weak", "dimension_anchor",
 #if TAG_MAJOR_VERSION == 34
-     "awaken vines", "control_winds", "wind_aided",
+     "awaken vines", "control_winds", "wind_aided", "summon_capped",
 #endif
-    "summon_capped",
     "toxic_radiance",
 #if TAG_MAJOR_VERSION == 34
     "grasping_roots_source",

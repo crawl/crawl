@@ -3767,13 +3767,7 @@ static string _get_monster_desc(const monster_info& mi)
     if (mi.is(MB_ABJURABLE))
     {
         text += pronoun + " " + conjugate_verb("have", mi.pronoun_plurality())
-                + " been summoned";
-        if (mi.is(MB_SUMMONED_CAPPED))
-        {
-            text += ", and " + conjugate_verb("are", mi.pronoun_plurality())
-                    + " expiring";
-        }
-        text += ".\n";
+                + " been summoned.\n";
     }
     else if (mi.is(MB_MINION))
     {

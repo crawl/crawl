@@ -127,8 +127,8 @@ enum enchant_type
     ENCH_AWAKEN_VINES,
     ENCH_CONTROL_WINDS,
     ENCH_WIND_AIDED,
-#endif
     ENCH_SUMMON_CAPPED,  // Abjuring quickly because a summon cap was hit
+#endif
     ENCH_TOXIC_RADIANCE,
 #if TAG_MAJOR_VERSION == 34
     ENCH_GRASPING_ROOTS_SOURCE, // Not actually entangled, but entangling others

@@ -2172,12 +2172,7 @@ static bool _spell_has_variable_cap(spell_type spell)
 static void _expire_capped_summon(monster* mon, bool recurse)
 {
     // Timeout the summon
-    mon_enchant timer = mon->get_ench(ENCH_SUMMON_TIMER);
-    timer.duration = 10;
-    mon->update_ench(timer);
-    // Mark our cap abjuration so we don't keep abjuring the same
-    // one if creating multiple summons (also, should show a status light).
-    mon->add_ench(ENCH_SUMMON_CAPPED);
+    monster_die(*mon, KILL_TIMEOUT, NON_MONSTER);
 
     if (recurse && mon->props.exists(SUMMON_ID_KEY))
     {
@@ -2188,8 +2183,7 @@ static void _expire_capped_summon(monster* mon, bool recurse)
             // scanning props for all monsters on the level.
             if (mi->summoner == mon->summoner
                 && mi->props.exists(SUMMON_ID_KEY)
-                && mi->props[SUMMON_ID_KEY].get_int() == summon_id
-                && !mi->has_ench(ENCH_SUMMON_CAPPED))
+                && mi->props[SUMMON_ID_KEY].get_int() == summon_id)
             {
                 _expire_capped_summon(*mi, false);
             }
@@ -2262,10 +2256,8 @@ void summoned_monster(const monster *mons, const actor *caster,
 
         count++;
 
-        // If this summon is the oldest (well, the closest to expiry)
-        // remember it (unless already expiring due to a cap)
-        if (!mi->has_ench(ENCH_SUMMON_CAPPED)
-            && (!oldest_summon || summ.duration < oldest_duration))
+        // If this summon is the closest to expiry, remember it
+        if (!oldest_summon || summ.duration < oldest_duration)
         {
             oldest_summon = *mi;
             oldest_duration = summ.duration;

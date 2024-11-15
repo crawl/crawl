@@ -29,7 +29,6 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_MINION, "minion", "minion", "minion"},
     { MB_UNREWARDING, "", "unrewarding", ""},
     { MB_WANDERING, "wandering", "wandering", "wandering"},
-    { MB_SUMMONED_CAPPED, "expiring", "expiring", "expiring"},
     // Bad things for the player
     { MB_MESMERIZING, "mesmerising", "mesmerising", "mesmerising"},
     { MB_BERSERK, "berserk", "berserk", "berserk"},

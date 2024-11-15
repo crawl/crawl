@@ -488,9 +488,6 @@ monster_info::monster_info(const monster* m, int milev)
             mb.set(MB_UNREWARDING);
     }
 
-    if (m->has_ench(ENCH_SUMMON_CAPPED))
-        mb.set(MB_SUMMONED_CAPPED);
-
     if (mons_is_unique(type))
     {
         if (type == MONS_LERNAEAN_HYDRA
