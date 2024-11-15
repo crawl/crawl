@@ -1749,6 +1749,7 @@ static bool _is_valid_battlesphere_target(actor* caster, actor* targ)
 {
     return targ && targ->alive() && !targ->is_firewood()
            && !mons_aligned(caster, targ)
+           && !(caster->is_player() && targ->is_monster() && targ->as_monster()->pacified())
            && caster->can_see(*targ);
 }
 
