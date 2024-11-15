@@ -5,7 +5,6 @@ resists: {fire: 3}
 xp_mult: 3
 will: invuln
 holiness: [nonliving]
-tile: boulder
 attacks:
  - {type: hit, flavour: bomblet, damage: 30}
 hd: 14

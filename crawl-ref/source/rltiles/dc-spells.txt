@@ -23,7 +23,6 @@ orb_of_destruction IOOD
 magic_dart MAGIC_DART
 momentum_strike MOMENTUM_STRIKE
 searing_ray SEARING_RAY
-rending_blade RENDING_BLADE
 
 %sdir gui/spells/earth
 boulder BOULDER
@@ -141,7 +140,6 @@ malign_gateway MALIGN_GATEWAY
 mass_abjuration MASS_ABJURATION
 monstrous_menagerie MONSTROUS_MENAGERIE
 recall RECALL
-summon_blazeheart_golem SUMMON_BLAZEHEART_GOLEM
 summon_cactus_giant SUMMON_CACTUS_GIANT
 summon_demon SUMMON_DEMON
 summon_dragon SUMMON_DRAGON
@@ -150,7 +148,6 @@ summon_greater_demon SUMMON_GREATER_DEMON
 summon_horrible_things SUMMON_HORRIBLE_THINGS
 summon_hydra SUMMON_HYDRA
 summon_ice_beast SUMMON_ICE_BEAST
-summon_lightning_spire SUMMON_LIGHTNING_SPIRE
 summon_mana_viper SUMMON_MANA_VIPER
 summon_seismosaurus_egg SUMMON_SEISMOSAURUS_EGG
 summon_shadow_creatures SUMMON_SHADOW_CREATURES
@@ -174,9 +171,18 @@ electric_charge ELECTRIC_CHARGE
 
 %sdir gui/spells/forgecraft
 awaken_armour AWAKEN_ARMOUR
+construct_spike_launcher SPIKE_LAUNCHER
+forge_blazeheart_golem FORGE_BLAZEHEART_GOLEM
+forge_lightning_spire FORGE_LIGHTNING_SPIRE
+fortress_blast FORTRESS_BLAST
 kinetic_discus KINETIC_DISCUS
+launch_clockwork_bee CLOCKWORK_BEE
+phalanx_beetle PHALANX_BEETLE
 percussive_tempering PERCUSSIVE_TEMPERING
+rending_blade RENDING_BLADE
 spellspark_servitor SPELLSPARK_SERVITOR
+splinterfrost_shell SPLINTERFROST_SHELL
+walking_alembic WALKING_ALEMBIC
 
 # item-based spells
 %sdir gui/spells/misc

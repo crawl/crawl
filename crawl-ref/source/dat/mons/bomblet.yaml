@@ -5,7 +5,6 @@ flags: [flies, peripheral]
 xp_mult: 3
 will: invuln
 holiness: [nonliving]
-tile: blazeheart_core
 attacks:
 hd: 10
 hp_10x: 350

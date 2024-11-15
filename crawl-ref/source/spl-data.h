@@ -2511,7 +2511,7 @@ static const struct spell_desc spelldata[] =
     100,
     -1, -1,
     0,
-    TILEG_SUMMON_LIGHTNING_SPIRE,
+    TILEG_FORGE_LIGHTNING_SPIRE,
 },
 
 {
@@ -2522,7 +2522,7 @@ static const struct spell_desc spelldata[] =
     100,
     -1, -1,
     0,
-    TILEG_SUMMON_BLAZEHEART_GOLEM,
+    TILEG_FORGE_BLAZEHEART_GOLEM,
 },
 
 {
@@ -4145,7 +4145,7 @@ static const struct spell_desc spelldata[] =
     100,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_ERROR,
+    TILEG_CLOCKWORK_BEE,
 },
 
 {
@@ -4156,7 +4156,7 @@ static const struct spell_desc spelldata[] =
     50,
     -1, -1,
     0,
-    TILEG_ERROR,
+    TILEG_SPIKE_LAUNCHER,
 },
 
 {
@@ -4225,7 +4225,7 @@ static const struct spell_desc spelldata[] =
     100,
     -1, -1,
     0,
-    TILEG_AWAKEN_ARMOUR,
+    TILEG_WALKING_ALEMBIC,
 },
 
 {
@@ -4258,7 +4258,7 @@ static const struct spell_desc spelldata[] =
     200,
     1, 1,
     0,
-    TILEG_ERROR,
+    TILEG_SPLINTERFROST_SHELL,
 },
 
 {
@@ -4280,7 +4280,7 @@ static const struct spell_desc spelldata[] =
     75,
     2, 2,
     20,
-    TILEG_ERROR,
+    TILEG_FORTRESS_BLAST,
 },
 
 {
@@ -4302,7 +4302,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     0,
-    TILEG_ERROR,
+    TILEG_PHALANX_BEETLE,
 },
 
 {

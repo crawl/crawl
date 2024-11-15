@@ -258,6 +258,8 @@ boulder_beetle MONS_BOULDER_BEETLE
 boulder_beetle_rolling0 MONS_BOULDER_BEETLE_ROLLING
 boulder_beetle_rolling1
 boulder_beetle_rolling2
+%sdir mon/nonliving
+phalanx_beetle MONS_PHALANX_BEETLE
 %sdir mon/unique
 xakkrixis MONS_XAKKRIXIS
 
@@ -564,6 +566,9 @@ crystal_guardian MONS_CRYSTAL_GUARDIAN
 electric_golem MONS_ELECTRIC_GOLEM
 blazeheart_golem MONS_BLAZEHEART_GOLEM
 blazeheart_core MONS_BLAZEHEART_CORE
+monarch_bomb MONS_MONARCH_BOMB
+bomblet MONS_BOMBLET
+walking_alembic MONS_WALKING_ALEMBIC
 iron_golem MONS_IRON_GOLEM
 ushabti MONS_USHABTI
 peacekeeper MONS_PEACEKEEPER

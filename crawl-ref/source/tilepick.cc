@@ -3930,6 +3930,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_INVENT_GIZMO;
     case ABIL_IMBUE_SERVITOR:
         return TILEG_ABILITY_IMBUE_SERVITOR;
+    case ABIL_IMPRINT_WEAPON:
+        return TILEG_ABILITY_IMPRINT_WEAPON;
 
     // Others
     case ABIL_END_TRANSFORMATION:
