@@ -3201,6 +3201,21 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
         }
     }
 
+    // Keep helpers with somewhat chaotic movement from deliberately breaking
+    // LoS with their owners.
+    if (mons->type == MONS_BATTLESPHERE || mons->type == MONS_RENDING_BLADE)
+    {
+        actor* creator = actor_by_mid(mons->summoner);
+        if (creator && creator->alive())
+        {
+            if (creator->see_cell_no_trans(mons->pos())
+                && !creator->see_cell_no_trans(targ))
+            {
+                return false;
+            }
+        }
+    }
+
     // Submerged water creatures avoid the shallows where
     // they would be forced to surface. -- bwr
     // [dshaligram] Monsters now prefer to head for deep water only if
