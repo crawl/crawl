@@ -4943,6 +4943,18 @@ void barb_player(int turns, int pow)
     }
 }
 
+void crystallize_player()
+{
+    if (x_chance_in_y(3, 4))
+    {
+        if (!you.duration[DUR_VITRIFIED])
+            mpr("Your body becomes as fragile as glass!");
+        else
+            mpr("You feel your fragility will last longer.");
+        you.increase_duration(DUR_VITRIFIED, random_range(8, 18), 50);
+    }
+}
+
 /**
  * Players are rather more susceptible to dazzling: only those who can't
  * be blinded are immune.

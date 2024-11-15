@@ -4448,6 +4448,9 @@ void bolt::affect_player()
     if (flavour == BEAM_ACID)
         you.acid_corrode(5);
 
+    if (flavour == BEAM_CRYSTALLIZING)
+        crystallize_player();
+
     extra_range_used += range_used_on_hit();
 
     knockback_actor(&you, final_dam);

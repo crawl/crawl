@@ -1197,6 +1197,7 @@ bool spell_slow_player(int pow);
 bool slow_player(int turns);
 void dec_slow_player(int delay);
 void barb_player(int turns, int pow);
+void crystallize_player();
 void blind_player(int turns, colour_t flavour_colour = WHITE);
 int player_blind_miss_chance(int distance);
 void dec_berserk_recovery_player(int delay);
