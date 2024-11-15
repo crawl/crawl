@@ -1675,6 +1675,16 @@ static void _martyr_death_wail(monster &mons)
         mons_cast_flay(mons, slot ,_bolt);
     }
 
+    // Remove injury bond from all monsters that were guarded by this
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->has_ench(ENCH_INJURY_BOND)
+            && mi->get_ench(ENCH_INJURY_BOND).agent() == &mons)
+        {
+            mi->del_ench(ENCH_INJURY_BOND);
+        }
+    }
+
     return;
 }
 
