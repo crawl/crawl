@@ -9,7 +9,6 @@
 
 #include <algorithm>
 #include <cmath>
-#include <regex>
 #include <sstream>
 
 #include "act-iter.h"
@@ -4323,59 +4322,88 @@ static string _get_species_insult(const string &species, const string &type)
     // @noloc section end
 }
 
+static string _get_param_value(const map<string, string> &params,
+                               const string &param)
+{
+    auto it = params.find(param);
+    return it == params.end() ? "" : it->second;
+}
+
 // replace [@foo@==bar?A:B] with A if @foo@ == bar or B if not
 // replace [@foo@?A:B] with A if @foo@ is non-empty or B if empty
 static string _resolve_conditional_speech(const string &s,
                                           const map<string, string> &params)
 {
-    static const string elem = "([^:\\?\\[\\]]*)"; // anything but "[?:]"
-    static const regex rgx("\\[" + elem + "\\?" + elem + ":" + elem  + "\\]");
     string result = s;
-    smatch match;
+    size_t start = 0;
+    size_t end = 0;
 
-    string::const_iterator start = s.begin();
-    string::const_iterator end = s.end();
-    while (regex_search(start, end, match, rgx) && match.size() == 4)
+    while (true)
     {
-        string condition = match[1].str();
-        string left, right;
-        size_t pos = condition.find("=");
-        left = condition.substr(0, pos);
-        bool equals_test = false;
-        if (pos != string::npos)
-        {
-            equals_test = true;
-            right = condition.substr(pos+1);
-            // allow "=="
-            if (!right.empty() && right[0] == '=')
-                right = right.substr(1);
-        }
+        start = s.find('[', end);
+        if (start == string::npos)
+            break;
 
-        if (left.length() >= 2 && left[0] == '@' && left[left.length()-1] == '@')
-        {
-            string param = left.substr(1, left.length()-2);
-            auto it = params.find(param);
-            if (it == params.end())
-                left = "";
-            else
-                left = params.at(param);
-        }
+        end = s.find(']', start);
+        if (end == string::npos)
+            break;
 
-        string choice;
-        if (equals_test)
+        string conditional = s.substr(start, end - start + 1);
+
+        size_t question_pos = conditional.find('?');
+        if (question_pos == string::npos)
+            continue;
+
+        size_t colon_pos = conditional.find(':', question_pos);
+        if (colon_pos == string::npos)
+            continue;
+
+        string condition = conditional.substr(1, question_pos - 1);
+
+        bool condition_true;
+        size_t equals_pos = condition.find("==");
+        if (equals_pos == string::npos)
         {
-            // test for left = right
-            choice = left == right ? match[2].str() : match[3].str();
+            // just test that the condition evaluates to something non-empty
+            if (condition.length() > 2 && condition[0] == '@'
+                && condition[condition.length()-1] == '@')
+            {
+                string param_name = condition.substr(1, condition.length() - 2);
+                condition = _get_param_value(params, param_name) != "";
+            }
+            condition_true = condition != "";
         }
         else
         {
-            // just test for left being non-empty
-            choice = !left.empty() ? match[2].str() : match[3].str();
+            string left = condition.substr(0, equals_pos);
+            string right = condition.substr(equals_pos + 2);
+
+            if (left.length() > 2 && left[0] == '@'
+                && left[left.length() - 1] == '@')
+            {
+                // do param replacement
+                string param_name = left.substr(1, left.length() - 2);
+                left = _get_param_value(params, param_name);
+            }
+
+            if (right.length() > 2 && right[0] == '@'
+                && right[right.length() - 1] == '@')
+            {
+                // do param replacement
+                string param_name = right.substr(1, right.length() - 2);
+                right = _get_param_value(params, param_name);
+            }
+
+            condition_true = right == left;
         }
 
-        result = replace_first(result, match[0], choice);
+        string value;
+        if (condition_true)
+            value = conditional.substr(question_pos + 1, colon_pos - question_pos - 1);
+        else
+            value = conditional.substr(colon_pos + 1, conditional.length() - colon_pos - 2);
 
-        start = match.suffix().first;
+        result = replace_first(result, conditional, value);
     }
 
     return result;
