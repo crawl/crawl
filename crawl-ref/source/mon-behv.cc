@@ -122,18 +122,17 @@ static void _set_firing_pos(monster* mon, coord_def target)
     {
         const coord_def p(*di);
         const int range = p.distance_from(target);
+        const int distance = p.distance_from(mon->pos());
 
-        if (!mon->see_cell(*di))
+        if (!in_bounds(p) || range > max_range || distance > best_distance)
             continue;
 
-        if (!in_bounds(p) || range > max_range
+        if (!mon->see_cell(*di)
             || !cell_see_cell(p, target, LOS_NO_TRANS)
             || !mon_can_move_to_pos(mon, p - mon->pos()))
         {
             continue;
         }
-
-        const int distance = p.distance_from(mon->pos());
 
         if (distance < best_distance
             || distance == best_distance
