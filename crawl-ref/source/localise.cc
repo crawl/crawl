@@ -24,7 +24,6 @@ using namespace std;
 #include "stringutil.h"
 #include "unicode.h"
 #include "english.h"
-#include "pattern.h"
 
 #if 0
 #define TRACE(...) fprintf(stderr, "DEBUG: %s: ", __FUNCTION__); fprintf (stderr, __VA_ARGS__); fprintf(stderr, "\n");
@@ -41,8 +40,7 @@ static string _localise_string(const string context, const string& value);
 static string _localise_list(const string context, const string& value);
 static string _localise_player_species_job(const string& s);
 
-// alternative to isdigit(), which is affected by locale
-// this one only ever returns true for 0-9
+// returns true only for 0-9 (unlike isdigit() which is affected by locale)
 static inline bool _is_ascii_digit(char c)
 {
     return c >= '0' && c <= '9';
