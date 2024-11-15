@@ -10,7 +10,6 @@
 #include <vector>
 #include <cstdarg>
 #include <cstdlib>
-#include <regex>
 #include <typeinfo>
 using namespace std;
 
@@ -25,6 +24,7 @@ using namespace std;
 #include "stringutil.h"
 #include "unicode.h"
 #include "english.h"
+#include "pattern.h"
 
 #if 0
 #define TRACE(...) fprintf(stderr, "DEBUG: %s: ", __FUNCTION__); fprintf (stderr, __VA_ARGS__); fprintf(stderr, "\n");
@@ -41,6 +41,13 @@ static string _localise_string(const string context, const string& value);
 static string _localise_list(const string context, const string& value);
 static string _localise_player_species_job(const string& s);
 
+// alternative to isdigit(), which is affected by locale
+// this one only ever returns true for 0-9
+static inline bool _is_ascii_digit(char c)
+{
+    return c >= '0' && c <= '9';
+}
+
 // is this string a whole number (i.e. only digits)
 static bool _is_whole_number(const char *s)
 {
@@ -50,8 +57,7 @@ static bool _is_whole_number(const char *s)
     size_t i = 0;
     while (s[i] != '\0')
     {
-        // note: isdigit() can be affected by locale
-        if (s[i] < '0' || s[i] > '9')
+        if (!_is_ascii_digit(s[i]))
             return false;
         i++;
     }
@@ -305,6 +311,26 @@ static string _strip_menu_id(const string& s, string& id)
         return s;
 }
 
+// extract the first whole number from string and replace with %d
+static void _extract_number(string& s, string& num)
+{
+    size_t start = 0;
+    while (!_is_ascii_digit(s[start]))
+    {
+        if (s[start] == '\0')
+            return;
+        start++;
+    }
+
+    size_t end = start + 1;
+    while (_is_ascii_digit(s[end]))
+        end++;
+
+    num = s.substr(start, end - start);
+
+    s.replace(start, end - start, "%d");
+}
+
 /*
  * Does it start with a count (number followed by space)
  */
@@ -316,7 +342,7 @@ static bool _starts_with_count(const string& s)
         if (ch == ' ' && i > 0)
             return true;
         // note: isdigit() can be affected by locale
-        else if (ch < '0' || ch > '9')
+        else if (!_is_ascii_digit(ch))
             return false;
     }
 
@@ -1546,34 +1572,30 @@ static string _localise_name(const string& context, const string& value)
 
 static string _localise_location(const string& context, const string& value)
 {
-    if (starts_with(value, "on level "))
+    // make pattern static so that it only needs to be compiled once
+    static const text_pattern on_pat("^on level [0-9]+", true);
+    if (on_pat.matches(value))
     {
-        const regex pattern("^on level ([0-9]+) ");
-        smatch sm;
-        if (regex_search(value, sm, pattern) && sm.size() == 2)
-        {
-            string level = sm[1].str();
-            string temp = replace_first(value, level, "%d");
-            string result = cxlate(context, temp, false);
-            return replace_first(result, "%d", level);
-        }
+        string temp = value;
+        string level;
+        _extract_number(temp, level);
+        string result = cxlate(context, temp, false);
+        return replace_first(result, "%d", level);
     }
-    else if (starts_with(value, "between levels "))
-    {
-        const regex pattern("^between levels ([0-9]+) and ([0-9]+) ");
-        smatch sm;
-        if (regex_search(value, sm, pattern) && sm.size() == 2)
-        {
-            string level1 = sm[1].str();
-            string level2 = sm[2].str();
-            string temp = replace_first(value, level1, "%d");
-            temp = replace_first(value, temp, "%d");
 
-            string result = cxlate(context, temp, false);
-            result = replace_first(result, "%d", level1);
-            result = replace_first(result, "%d", level2);
-            return result;
-        }
+    static const text_pattern btwn_pat("^between levels [0-9]+ and [0-9]+", true);
+    if (btwn_pat.matches(value))
+    {
+        string temp = value;
+        string level1, level2;
+
+        _extract_number(temp, level1);
+        _extract_number(temp, level2);
+
+        string result = cxlate(context, temp, false);
+        result = replace_first(result, "%d", level1);
+        result = replace_first(result, "%d", level2);
+        return result;
     }
 
     return "";
@@ -1846,6 +1868,12 @@ static string _localise_string(const string context, const string& value)
         }
     }
 
+    // handle strings like "on level 3 of the dungeon"
+    // must be done before list because can contain the word "and"
+    result = _localise_location(context, value);
+    if (!result.empty())
+        return result;
+
     // try treating as list
     result = _localise_list(context, value);
     if (!result.empty())
@@ -1873,11 +1901,6 @@ static string _localise_string(const string context, const string& value)
         string item = value.substr(4);
         return localise("buy %s", item);
     }
-
-    // handle strings like "on level 3 of the dungeon"
-    result = _localise_location(context, value);
-    if (!result.empty())
-        return result;
 
     // handle strings like "a +0 short sword on level 3 of the dungeon"
     result = _localise_thing_in_location(context, value);

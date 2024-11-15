@@ -7181,13 +7181,13 @@ This branch is %d levels deep.
 Dieser Bereich is %d Levels tief.
 %%%%
 The entrance to this branch can be found %s.
-Der Eingang dieses Bereichs kann %s gefunden werden."
+Der Eingang dieses Bereichs kann %s gefunden werden.
 %%%%
 This branch contains the entrance to %s.
-Dieser Bereich enthaltet die Eingang für {acc}%s.'
+Dieser Bereich enthaltet die Eingang für {acc}%s.
 %%%%
 This branch contains the entrances to %s.
-Dieser Bereich enthaltet die Eingänge für {acc}%s.'
+Dieser Bereich enthaltet die Eingänge für {acc}%s.
 %%%%
 (M)onster
 (M)onster
