@@ -3772,7 +3772,7 @@ static string _get_monster_desc(const monster_info& mi)
     else if (mi.is(MB_MINION))
     {
         text += pronoun + " " + conjugate_verb("have", mi.pronoun_plurality())
-                + " been created by magic";
+                + " been created by magic.\n";
     }
 
     if (mi.is(MB_HALOED))
