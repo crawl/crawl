@@ -3245,13 +3245,13 @@ void clockwork_bee_go_dormant(monster& bee)
 {
     mpr("Your clockwork bee winds down and falls to the ground.");
 
-    int old_hd = bee.get_hit_dice();
+    int old_hd = bee.get_experience_level();
+    int old_max_hp = bee.max_hit_points;
     int old_hp = bee.hit_points;
     change_monster_type(&bee, MONS_CLOCKWORK_BEE_INACTIVE);
-    bee.max_hit_points = bee.max_hit_points * old_hd / bee.get_hit_dice();
     bee.set_hit_dice(old_hd);
-    bee.hit_points = min(bee.max_hit_points, old_hp);
-    bee.del_ench(ENCH_HAUNTING);
+    bee.max_hit_points = old_max_hp;
+    bee.hit_points = old_hp;
 
     // Set duration to no longer than a small-ish amount (since the active bee's
     // duration is deliberately high so that it doesn't expire while active in
@@ -3279,10 +3279,13 @@ bool clockwork_bee_recharge(monster& bee)
 
     mprf("You wind your clockwork bee back up and it locks its sights upon %s!",
          targ->name(DESC_THE).c_str());
-    int old_hd = bee.get_hit_dice();
+    int old_max_hp = bee.max_hit_points;
+    int old_hp = bee.hit_points;
+    int old_hd = bee.get_experience_level();
     change_monster_type(&bee, MONS_CLOCKWORK_BEE);
-    bee.max_hit_points = bee.max_hit_points * old_hd / bee.get_hit_dice();
     bee.set_hit_dice(old_hd);
+    bee.max_hit_points = old_max_hp;
+    bee.hit_points = old_hp;
     bee.heal(roll_dice(2, 10));
     bee.add_ench(mon_enchant(ENCH_SUMMON_TIMER, 0, &you, random_range(400, 500)));
     bee.add_ench(mon_enchant(ENCH_HAUNTING, 0, targ, INFINITE_DURATION));
