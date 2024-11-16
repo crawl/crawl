@@ -960,7 +960,7 @@ and greatness.
 clockwork bee
 
 A mechanical insect powered by an intricate array of gears and springs. It is
-vicious and resiliant to damage, but its clockwork naturally winds down as it
+vicious and resilient to damage, but its clockwork naturally winds down as it
 attacks, eventually leaving it unable to move until its creator winds it again.
 %%%%
 creeping inferno
