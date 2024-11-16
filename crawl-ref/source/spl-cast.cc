@@ -2981,7 +2981,7 @@ static dice_def _spell_damage(spell_type spell, int power)
         case SPELL_DIAMOND_SAWBLADES:
             return diamond_sawblade_damage(power);
         case SPELL_FORTRESS_BLAST:
-            return fortress_blast_damage(you.armour_class(), false);
+            return fortress_blast_damage(you.armour_class_scaled(1), false);
         default:
             break;
     }
