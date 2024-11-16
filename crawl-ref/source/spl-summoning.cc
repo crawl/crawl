@@ -3797,7 +3797,12 @@ spret cast_walking_alembic(const actor& agent, int pow, bool fail)
 
 static void _do_player_potion()
 {
-    if (!you.can_drink())
+    if (player_in_branch(BRANCH_COCYTUS))
+    {
+        mpr("The potion freezes solid before it can reach you!");
+        return;
+    }
+    else if (!you.can_drink())
     {
         mpr("You sigh wistfully at the memory of the taste.");
         return;
