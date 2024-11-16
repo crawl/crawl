@@ -111,6 +111,12 @@ void wizard_level_travel(bool down)
 
     if (down)
         down_stairs(stairs, false, false);
+    else if (stairs == DNGN_EXIT_VAULTS && vaults_is_locked())
+    {
+        unlock_vaults();
+        up_stairs(stairs, false);
+        lock_vaults();
+    }
     else
         up_stairs(stairs, false);
 
