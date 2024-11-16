@@ -286,7 +286,7 @@ A concise catalogue of afflictions, both magical and mundane, often described
 with a disquieting degree of cheerfulness. Most of them operate on timescales
 too slow to be useful to an adventurer, but a few sound remarkably efficacious.
 %%%%
-book of metalwork
+book of metalworking
 
 A tome of advanced Forgecraft magic. Its pages are regularly inlaid with
 technical figures made from elaborate metal filigree, perhaps as an illustration
