@@ -98,26 +98,29 @@ static bool _action_is_bad(xom_event_type action)
 
 // Spells to be cast at tension > 0, i.e. usually in battle situations.
 // Spells later in the list require higher severity to have a chance of being
-// selected.
+// selected. Spells are sorted by level, then very roughly by power when
+// neither planned for nor capability to repeatedly cast it.
 static const vector<spell_type> _xom_random_spells =
 {
     SPELL_SUMMON_SMALL_MAMMAL,
     SPELL_DAZZLING_FLASH,
     SPELL_FUGUE_OF_THE_FALLEN,
     SPELL_OLGREBS_TOXIC_RADIANCE,
+    SPELL_BATTLESPHERE,
     SPELL_AWAKEN_ARMOUR,
     SPELL_MARTYRS_KNELL,
     SPELL_LEDAS_LIQUEFACTION,
     SPELL_FORGE_BLAZEHEART_GOLEM,
-    SPELL_BATTLESPHERE,
-    SPELL_INTOXICATE,
     SPELL_ANIMATE_DEAD,
+    SPELL_INTOXICATE,
     SPELL_SUMMON_MANA_VIPER,
+    SPELL_WALKING_ALEMBIC,
     SPELL_SUMMON_CACTUS,
     SPELL_DISPERSAL,
     SPELL_DEATH_CHANNEL,
     SPELL_SUMMON_HYDRA,
     SPELL_MONSTROUS_MENAGERIE,
+    SPELL_DIAMOND_SAWBLADES,
     SPELL_MALIGN_GATEWAY,
     SPELL_DISCORD,
     SPELL_DISJUNCTION,
