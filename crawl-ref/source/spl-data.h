@@ -4178,7 +4178,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     0,
-    TILEG_ERROR,
+    TILEG_DIAMOND_SAWBLADES,
 },
 
 {
@@ -4214,7 +4214,7 @@ static const struct spell_desc spelldata[] =
     200,
     3, 3,
     10,
-    TILEG_ERROR,
+    TILEG_PLATINUM_PARAGON,
 },
 
 {
@@ -4236,7 +4236,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     0,
-    TILEG_ERROR,
+    TILEG_MONARCH_BOMB,
 },
 
 {

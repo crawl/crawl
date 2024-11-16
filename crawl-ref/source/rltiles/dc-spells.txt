@@ -172,13 +172,16 @@ electric_charge ELECTRIC_CHARGE
 %sdir gui/spells/forgecraft
 awaken_armour AWAKEN_ARMOUR
 construct_spike_launcher SPIKE_LAUNCHER
+diamond_sawblades DIAMOND_SAWBLADES
 forge_blazeheart_golem FORGE_BLAZEHEART_GOLEM
 forge_lightning_spire FORGE_LIGHTNING_SPIRE
 fortress_blast FORTRESS_BLAST
 kinetic_discus KINETIC_DISCUS
 launch_clockwork_bee CLOCKWORK_BEE
+monarch_bomb MONARCH_BOMB
 phalanx_beetle PHALANX_BEETLE
 percussive_tempering PERCUSSIVE_TEMPERING
+platinum_paragon PLATINUM_PARAGON
 rending_blade RENDING_BLADE
 spellspark_servitor SPELLSPARK_SERVITOR
 splinterfrost_shell SPLINTERFROST_SHELL
