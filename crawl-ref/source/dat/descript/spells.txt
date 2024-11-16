@@ -387,7 +387,7 @@ Construct Spike Launcher spell
 Constructs a simple mechanical trap within an adjacent rock wall which
 repeatedly skewers random adjacent enemies. Protected by the wall itself, it is
 invulnerable to most forms of damage, but will fall apart if the caster leaves
-its vacinity.
+its vicinity.
 %%%%
 Corona spell
 
@@ -2010,8 +2010,8 @@ several turns after being summoned to wreck havoc upon its summoner's foes.
 
 Even as a juvenile, a seismosaurus is a force to be reckoned with. It is nearly
 as hardy as a mountain, and its footfalls are capable of creating violent
-seismic shockwaves that deal considerable damage to non-flying enemies and may
-sometimes even cause them to lose their footing altogether.
+seismic shockwaves. Each shockwave deals considerable damage to non-flying
+enemies, and may sometimes even cause them to lose their footing altogether.
 %%%%
 Summon Small Mammal spell
 
