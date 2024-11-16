@@ -277,8 +277,3 @@ Shapeshifting enables the use of magical talismans to change oneself into other
 forms. Sufficient skill allows one to use more powerful forms without gravely
 damaging one's health. Being skilled in Shapeshifting also makes most forms
 somewhat stronger, in ways which vary between forms.
-%%%%
-Forgecraft
-
-Forgecraft does things that should be described!
-%%%%
