@@ -521,7 +521,7 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl,
                 const dungeon_feature_type feat = cell.feat();
                 if (feat_is_door(feat))
                     desc = "door";
-                else
+                else if (feat_is_travelable_stair(feat))
                 {
                     const command_type dir = feat_stair_direction(feat);
                     if (dir == CMD_GO_UPSTAIRS)
