@@ -90,7 +90,7 @@ public:
 
     void init_inugami_from_player(int power);
 
-    void init_platinum_paragon(int power, const item_def& weapon);
+    void init_platinum_paragon(int power);
 
 
 public:

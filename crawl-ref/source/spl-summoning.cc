@@ -3662,25 +3662,16 @@ spret cast_platinum_paragon(const coord_def& target, int pow, bool fail)
     mpr("You craft a gleaming metal champion and it leaps into the fray!");
     you.duration[DUR_PARAGON_ACTIVE] = dur;
 
-    // Use the caster's weapon, if none is imprinted.
-    item_def wpn;
-
+    // Grab our imprinted weapon
     if (you.props.exists(PARAGON_WEAPON_KEY))
-        wpn = you.props[PARAGON_WEAPON_KEY].get_item();
-    else if (you.weapon())
-        wpn = item_def(*you.weapon());
-    // We've never imprinted anything *and* we're unarmed. Just give them a mace.
-    else
     {
-        wpn.base_type = OBJ_WEAPONS;
-        wpn.sub_type = WPN_GREAT_MACE;
-        wpn.quantity = 1;
+        item_def wpn;
+        wpn = you.props[PARAGON_WEAPON_KEY].get_item();
+        wpn.flags |= (ISFLAG_SUMMONED | ISFLAG_REPLICA);
+        give_specific_item(paragon, wpn);
     }
 
-    wpn.flags |= (ISFLAG_SUMMONED | ISFLAG_REPLICA);
-
-    give_specific_item(paragon, wpn);
-    paragon->ghost->init_platinum_paragon(pow, wpn);
+    paragon->ghost->init_platinum_paragon(pow);
     paragon->ghost_demon_init();
 
     // Do the landing shockwave.

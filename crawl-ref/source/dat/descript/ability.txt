@@ -158,9 +158,9 @@ your servitor if it is active.
 %%%%
 Imprint Weapon ability
 
-Analyzes the structural composition of a melee weapon in your inventory and
-imprints it upon your Platinum Paragon spell, allowing it to wield a functional
-replica of it whenever you create one.
+Analyzes the structural composition of an artefact melee weapon in your
+inventory and imprints it upon your Platinum Paragon spell, allowing it to wield
+a functional replica of it whenever you create one.
 %%%%
 # Zin
 Recite ability

@@ -1410,7 +1410,7 @@ Platinum Paragon spell
 
 Constructs a gleaming metal champion whose prowess rivals that of the greatest
 living warriors. It is resistant to all forms of magic and wields a perfect
-replica of any melee weapon the caster chooses.
+replica of any artefact melee weapon the caster chooses.
 
 It creates a damaging shockwave around itself when first deployed and slowly
 gains charge as it attacks enemies. When it has gained sufficient charge, the

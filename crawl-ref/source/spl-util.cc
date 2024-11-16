@@ -1563,6 +1563,12 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_PLATINUM_PARAGON:
         if (temp)
         {
+            if (!you.props.exists(PARAGON_WEAPON_KEY))
+            {
+                return "you must imprint a weapon on your paragon first! "
+                       "(Use the Imprint Weapon ability)";
+            }
+
             monster* paragon = find_player_paragon();
             if (paragon && paragon_charge_level(*paragon) == 0)
                 return "your paragon is already deployed, but not yet charged.";
