@@ -856,7 +856,7 @@ public:
 
     int racial_ac(bool temp) const;
     int base_ac(int scale) const;
-    int armour_class(bool random = true) const override;
+    int armour_class() const override;
     int gdr_perc() const override;
     int evasion(bool ignore_temporary = false,
                 const actor *attacker = nullptr) const override;

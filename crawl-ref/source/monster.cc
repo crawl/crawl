@@ -3241,7 +3241,7 @@ int monster::base_armour_class() const
  * @return              The armour class of this monster, including items,
  *                      statuses, etc.
  */
-int monster::armour_class(bool /*random*/) const
+int monster::armour_class() const
 {
     int ac = base_armour_class();
 

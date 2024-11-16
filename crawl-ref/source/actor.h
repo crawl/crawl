@@ -247,7 +247,7 @@ public:
     virtual bool can_be_dazzled() const = 0;
     virtual bool can_be_blinded() const = 0;
 
-    virtual int armour_class(bool random = true) const = 0;
+    virtual int armour_class() const = 0;
     virtual int gdr_perc() const = 0;
     int apply_ac(int damage, int max_damage = 0,
                  ac_type ac_rule = ac_type::normal,
