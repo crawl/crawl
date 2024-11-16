@@ -6565,9 +6565,12 @@ int player::base_ac(int scale) const
     return base_ac_with_specific_items(scale, armour_items);
 }
 
-int player::armour_class() const
+int player::armour_class(bool random) const
 {
-    return div_rand_round(armour_class_scaled(100), 100);
+    if (random)
+        return div_rand_round(armour_class_scaled(100), 100);
+    else
+        return armour_class_scaled(100) / 100;
 }
 
 int player::armour_class_scaled(int scale) const

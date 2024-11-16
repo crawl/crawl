@@ -474,7 +474,7 @@ public:
     bool is_silenced() const;
 
     int base_armour_class() const;
-    int armour_class() const override;
+    int armour_class(bool /*random*/ = true) const override;
     int gdr_perc() const override { return 0; }
     int base_evasion() const;
     int evasion(bool ignore_temporary = false,
