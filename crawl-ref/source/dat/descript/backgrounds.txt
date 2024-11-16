@@ -104,7 +104,7 @@ other Summonings spells in their library.
 %%%%
 Forgewright
 
-Forgewrights are mages who specialize in the creation of turrets and mechanical
+Forgewrights are mages who specialise in the creation of turrets and mechanical
 companions to fight alongside.
 %%%%
 Shapeshifter
