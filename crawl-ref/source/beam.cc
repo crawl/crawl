@@ -4534,8 +4534,8 @@ bool bolt::ignores_player() const
         return true;
     }
 
-    if (origin_spell == SPELL_PERCUSSIVE_TEMPERING
-        || origin_spell == SPELL_FORTRESS_BLAST
+    if ((origin_spell == SPELL_PERCUSSIVE_TEMPERING
+         || origin_spell == SPELL_FORTRESS_BLAST)
         && attitude == ATT_FRIENDLY)
     {
         return true;
