@@ -597,6 +597,7 @@ obsidian_statue MONS_OBSIDIAN_STATUE
 orange_crystal_statue MONS_ORANGE_STATUE
 wucad_mu_statue MONS_WUCAD_MU_STATUE
 machine_tukima MONS_STRANGE_MACHINE
+diamond_sawblade MONS_DIAMOND_SAWBLADE
 %sdir mon/vault
 air_elementalist_statue MONS_AIR_ELEMENTALIST_STATUE
 earth_elementalist_statue MONS_EARTH_ELEMENTALIST_STATUE
