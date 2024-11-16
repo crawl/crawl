@@ -2285,7 +2285,7 @@ somehow thriving even underground in the absence of the sun.
 %%%%
 platinum paragon
 
-A gleaming warrior, wrought from precious metals and the very pinacle of
+A gleaming warrior, wrought from precious metals and the very pinnacle of
 forgecraft techniques. Its every motion flows with a deadly, fluid grace that
 belies its artifical nature.
 %%%%
@@ -2415,7 +2415,7 @@ mandibles drip with lethal poison.
 rending blade
 
 A crackling weapon formed of condensed magical energy. It can cut through entire
-rows of aversaries whenever its creator lands a melee attack.
+rows of adversaries whenever its creator lands a melee attack.
 %%%%
 revenant
 
