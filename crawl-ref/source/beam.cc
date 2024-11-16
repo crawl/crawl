@@ -1770,30 +1770,6 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             mons->strip_willpower(pbolt.agent(), random_range(20, 30));
         break;
 
-    case BEAM_CRYSTALLIZING:
-        if (doFlavouredEffects && x_chance_in_y(2, 3))
-        {
-            bool had_status = mons->has_ench(ENCH_VITRIFIED);
-            mons->add_ench(mon_enchant(ENCH_VITRIFIED, 0, pbolt.agent(),
-                           random_range(8, 18) * BASELINE_DELAY));
-            {
-                if (you.can_see(*mons))
-                {
-                    if (had_status)
-                    {
-                        mprf("%s looks even more glass-like.",
-                             mons->name(DESC_THE).c_str());
-                    }
-                    else
-                    {
-                        mprf("%s becomes as fragile as glass!",
-                             mons->name(DESC_THE).c_str());
-                    }
-                }
-            }
-        }
-        break;
-
     case BEAM_UMBRAL_TORCHLIGHT:
         if (mons->holiness() & ~(MH_NATURAL | MH_DEMONIC | MH_HOLY))
         {
@@ -2114,6 +2090,36 @@ bool miasma_monster(monster* mons, const actor* who)
     }
 
     return success;
+}
+
+// Actually vitrifies a monster with crystallizing beam (with message).
+static bool crystallize_monster(monster* mons, const actor* who)
+{
+    if (!mons->alive())
+        return false;
+
+    if (x_chance_in_y(1, 4))
+        return false;
+
+    const bool had_status = mons->has_ench(ENCH_VITRIFIED);
+    mons->add_ench(mon_enchant(ENCH_VITRIFIED, 0, who,
+                   random_range(8, 18) * BASELINE_DELAY));
+
+    if (you.can_see(*mons))
+    {
+        if (had_status)
+        {
+            mprf("%s looks even more glass-like.",
+                 mons->name(DESC_THE).c_str());
+        }
+        else
+        {
+            mprf("%s becomes as fragile as glass!",
+                 mons->name(DESC_THE).c_str());
+        }
+    }
+
+    return true;
 }
 
 // Actually applies sticky flame to a monster (with message).
@@ -5220,6 +5226,9 @@ void bolt::monster_post_hit(monster* mon, int dmg)
             mon->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0, agent(), dur));
         }
     }
+
+    if (flavour == BEAM_CRYSTALLIZING)
+        crystallize_monster(mon, agent());
 
     if (dmg)
         beogh_follower_convert(mon, true);
