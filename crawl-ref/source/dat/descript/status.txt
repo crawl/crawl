@@ -1075,13 +1075,28 @@ Blast. status
 
 <Blast status>
 %%%%
-%%%%
 Blast.. status
 
 <Blast status>
 %%%%
-%%%%
 Blast... status
 
 <Blast status>
+%%%%
+Winding status
+
+You are winding up your clockwork bee. It cannot attack its target until it is
+fully wound up.
+%%%%
+Winding. status
+
+<Winding status>
+%%%%
+Winding.. status
+
+<Winding status>
+%%%%
+Winding... status
+
+<Winding status>
 %%%%
