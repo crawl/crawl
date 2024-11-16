@@ -6855,7 +6855,7 @@ KITEM:   d = mundane trident, mundane long sword, mundane mace
 KITEM:   e = randbook disc:fire numspells:1
 KITEM:   f = randbook disc:ice numspells:1
 KITEM:   g = randbook disc:necromancy numspells:1
-KITEM:   h = randbook disc:earth numspells:1
+KITEM:   h = randbook disc:forgecraft numspells:1
 KFEAT:   yYzZ = b
 KFEAT:   m = iron_grate
 KPROP:   Cn" = bloody
@@ -6901,7 +6901,7 @@ xxxxvCCv..vxxxvvvvxxxv..vCCvxxxx
 ENDMAP
 
 # The original draft for Ozocubu's Refrigerator, made into an icy castle.
-# Consider this also randbook_hoarfrost_cannonade.
+# Consider this also randbook_hoarfrost and randbook_splinterfrost.
 NAME:    due_index_antique_fridge
 TAGS:    no_monster_gen no_item_gen no_trap_gen no_wall_fixup vaults_hard
 ORIENT:  float
@@ -6953,7 +6953,7 @@ MONS:    deep elf knight, ironbound frostheart, deep elf death mage
 MONS:    undying armoury
 KFEAT:   ^ = alarm trap / net trap w:4
 SUBST:   @)] = .
-NSUBST:  | = 1:de / 1:e / 1:f / *:d, w = m
+NSUBST:  | = 1:de / 1:e / 1:g / *:d, w = m
 NSUBST:  D = 1:12 / *:D, E = 2:12 / *:E, F = 1:12 / *:F
 :   if you.depth() == dgn.br_depth("Vaults") - 1 then
 SUBST:   > = <
@@ -6982,14 +6982,14 @@ SHUFFLE: )]
 SUBST:   ] = R
 FTILE:   R = floor_hall
 :   end
-NSUBST:  | = 1:d / 1:e / 1:f / * = de
+NSUBST:  | = 1:d / 1:e / 1:g / * = de
 : else   -- Zot
 MONS:    white draconian, white draconian stormcaller
 MONS:    white draconian monk, white draconian knight / white draconian shifter
 MONS:    lich, golden dragon
 KFEAT:   ^ = zot trap
 NSUBST:  ^ = 2:^. / *:., 1 = 1:2 / 1:345 / 1:6 / *:1
-NSUBST:  $ = 1:} / *:$, | = 2:e / 1:f / *:d
+NSUBST:  $ = 1:} / *:$, | = 2:e / 1:g / *:d
 SHUFFLE: })]
 SUBST:   ) = ):70 >, ] = 40:] >, G = P
 MARKER:  U = lua:fog_machine { cloud_type = "freezing vapour", size = 1, \
@@ -6999,7 +6999,8 @@ ITEM:    ice dragon scales w:15 / kite shield ego:cold_resistance / \
          ring of ice randart w:4 / staff of cold w:3
 ITEM:    ice dragon scales randart w:15 / tower shield ego:cold_resistance / \
          ring of protection from cold randart w:4 / staff of cold randart w:3
-ITEM:    randbook spells:frozen_ramparts&hoarfrost_cannonade
+ITEM:    randbook numspells:3 disc1:ice spells:frozen_ramparts&hoarfrost_cannonade
+ITEM:    randbook numspells:5 disc1:ice spells:hoarfrost_cannonade&splinterfrost_shell
 KITEM:   % = $ no_pickup, any weapon ego:freezing no_pickup
 KMONS:   P = pillar of rime
 KFEAT:   M = cache of meat
@@ -7028,10 +7029,10 @@ TILE:    cC = dngn_stone_wall_lightblue
 SUBST:   X = x
 : if you.branch() == "Zot" then
 TILE:    x = wall_ice
-FTILE:   x.%def})]>123456789VUPMG^+ = floor_pebble_lightblue
+FTILE:   x.%defg})]>123456789VUPMG^+ = floor_pebble_lightblue
 : else
 TILE:    x = wall_ice_block
-FTILE:   x.%$*def})]>123456789VUPMG^+ = floor_ice
+FTILE:   x.%$*defg})]>123456789VUPMG^+ = floor_ice
 : end
 COLOUR:  x = white
 : set_feature_name("rock_wall", "ice covered rock wall")

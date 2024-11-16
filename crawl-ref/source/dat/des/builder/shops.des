@@ -940,7 +940,8 @@ DEPTH:   D:12-, Depths
 KMONS:   1 = vampire / bat
 KMONS:   2 = vampire / vampire mage / vampire knight
 KFEAT:   v = general shop type:Blood suffix:Bar count:7 ; \
-             nothing w:70 | any weapon ego:vampirism w:10 | \
+             nothing w:50 | any weapon ego:vampirism w:10 | \
+             randbook numspells:2 spells:sublimation_of_blood w:20 | \
              randbook disc:necromancy w:9 | w:1 book of annihilations
 SUBST:   ? = 2.Y
 : if you.in_branch("D") then
@@ -970,7 +971,7 @@ SUBST:  G : YlG
 :   any weapon ego:vampirism | any weapon ego:chaos w:1 | demon blade w:5 | \
 :   demon trident w:5 | demon whip w:5 | scroll of torment | staff of death | \
 :   book of necromancy | book of death | book of unlife | \
-:   book of decay | \
+:   book of decay | book of the grave | \
 :   randbook disc:necromancy w:5 | necronomicon w:1 | grand grimoire w:1 | \
 :   sceptre_of_torment w:1 | scythe_of_curses w:1 | majin-bo w:1 | \
 :   black_knights_barding w:1 | obsidian_axe w:1 | damnation w:1 | \
@@ -1046,7 +1047,7 @@ MARKER: s = lua:fog_machine { cloud_type = "flame", \
              start_clouds = 1, size = 3, walk_dist = 0, spread_rate= 0 }
 KFEAT: s = general shop type:Demolitions suffix:Depot ; \
    book of conjurations | book of power | book of annihilations | \
-   book of blasting |\
+   book of blasting | book of duality | \
    randbook disc:conjuration | book of storms | book of lightning | \
    any blast wand | wand of flame | wand of mindburst | \
    condenser vane | staff of conjuration | any beam wand | \
@@ -1179,8 +1180,10 @@ DEPTH: D:8-, Depths, Zot
 KFEAT: S = general shop type:Changing suffix:Room count:9 ; \
            potion of mutation w:15 | potion of lignification w:15 | \
            wand of polymorph | any talisman | staff of alchemy | \
-           randbook disc:alchemy | plutonium_sword w:1 | \
-           manual of shapeshifting w:5 | manual of alchemy w:5
+           randbook disc:alchemy spells:irradiate w:6 | \
+           randbook disc:alchemy spells:fulsome_fusillade w:6 | \
+           plutonium_sword w:1 | manual of shapeshifting w:5 | \
+           manual of alchemy w:5
 MARKER: F = lua:fog_machine { cloud_type = "mutagenic fog", pow_min = 50, \
    pow_max = 50, delay = 1, size = 1, walk_dist = 0, start_clouds = 1, \
    spread_rate = 0, excl_rad = 0 }
@@ -1335,8 +1338,9 @@ local kstr = "S = general shop type:Mayhem suffix:Merchandise ; " ..
              "battleaxe | " ..
              "executioner's axe w:2 | " ..
              "book of fire w:5 | " ..
+             "book of ice w:5 | " ..
              "the unrestrained analects w:5 | " ..
-             "wand of iceblast"
+             "any blast wand"
 
 -- Unfortunately this can still result in the unrandart being picked twice or
 -- more in the shop (resulting in the shop having regular clubs/great maces).
@@ -1522,10 +1526,10 @@ KFEAT:  D = armour shop type:Superior suffix:Scales count:3 ; \
 : if you.in_branch("Depths") then
 KMONS:  D = golden dragon / iron dragon / quicksilver dragon / storm dragon /\
         shadow dragon / pearl dragon w:1
-: elseif you.in_branch("D") and you.absdepth() < 13 then
-KMONS:  D = steam dragon / acid dragon
-:else
+: elseif you.in_branch("D") and you.absdepth() > 12 then
 KMONS:  D = fire dragon / ice dragon / swamp dragon
+:else
+KMONS:  D = steam dragon / acid dragon
 :end
 MAP
  xxx
@@ -1627,6 +1631,7 @@ xxxxx@@xxxxx
 ENDMAP
 
 # Using a subvault so only these trees become dead trees.
+# TODO: Fix this not working.
 NAME:   nicolae_sub_dead_trees
 TAGS:   unrand nico_deadtrees
 SUBST:  t = tt.

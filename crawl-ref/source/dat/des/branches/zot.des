@@ -2795,16 +2795,16 @@ DEPTH:  Zot, !Zot:$
 ORIENT: float
 WEIGHT: 5
 MONS:   oklob plant w:4 / lightning spire w:3
-MONS:   obsidian statue / orange crystal statue / curse skull
+MONS:   orange crystal statue / curse skull
 # Not quite the orb, but but close enough
-ITEM:   orb randart no_pickup
+ITEM:   orb randart no_pickup, randbook disc:forgecraft spells:diamond_sawblades
 NSUBST: 1 = 1:1 / 6 = 11. / *:., 3 = 1:1 / 4 = 11....... / *:.
 SUBST:  } = }:80 >, ) = ):80 >, ] = ]:80 >
 : vault_metal_statue_setup(_G, "G", "enigmatic dynamo")
 MAP
         xxxxxxxxx
         xxx.2.xxx
-        xGx...xGx
+        xGx.e.xGx
         xx..1..xx
 xxxxxxxxx1.....1xxxxxxxxx
 xxxxxxx.....).....xxxxxxx

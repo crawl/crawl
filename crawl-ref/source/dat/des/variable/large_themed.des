@@ -3332,14 +3332,16 @@ ITEM:     chain mail ego:fire_resistance good_item / \
           great sword randart ego:flaming / \
           staff of fire / staff of earth w:5 / book of fire / \
           book of scorching / orb randart artprops:Fire&&rF / \
+          randbook disc1:forgecraft spells:forge_monarch_bomb w:5 / \
           dragon-blood talisman / granite talisman w:5
 ITEM:     plate armour ego:fire_resistance good_item / \
           fire dragon scales randart / kite shield ego:fire_resistance w:5 / \
           double sword ego:flaming good_item w:5 ident:type / \
           triple sword ego:flaming good_item ident:type / \
           staff of fire randart / staff of earth randart w:5 / \
-          book of spectacle w:5 / everburning encyclopedia / \
-          book of spontaneous combustion / \
+          book of spectacle w:5 / everburning encyclopedia w:5 / \
+          book of spontaneous combustion w:5 / \
+          randbook disc1:forgecraft spells:hellfire_mortar / \
           orb ego:energy randart artprops:Fire&&rF / \
           dragon-blood talisman randart / \
           granite talisman randart artprops:rF w:5
