@@ -10,6 +10,7 @@
 #include "cloud.h"
 #include "cluautil.h"
 #include "coord.h"
+#include "describe.h"
 #include "env.h"
 #include "l-defs.h"
 #include "losglobal.h"
@@ -72,7 +73,9 @@ LUAFN(view_cloud_at)
 /*** What kind of trap (if any) is here?
  * @tparam int x
  * @tparam int y
- * @treturn string|nil trap name or nil
+ * @treturn string|nil The base trap name or nil. Here the base name doesn't
+ *                     include the word "trap" and is the same string passed to
+ *                     the c_trap_is_safe() hook.
  * @function trap_at
  */
 LUAFN(view_trap_at)
@@ -91,7 +94,7 @@ LUAFN(view_trap_at)
         return 1;
     }
 
-    lua_pushstring(ls, trap->name(DESC_PLAIN).c_str());
+    lua_pushstring(ls, trap_name(trap->type).c_str());
     return 1;
 }
 
