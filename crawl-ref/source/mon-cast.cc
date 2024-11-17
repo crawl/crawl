@@ -6533,7 +6533,9 @@ static void _cast_bestow_arms(monster& caster)
             break;
     }
 
-    caster.add_ench(mon_enchant(ENCH_ARMED, 1, &caster, dur));
+    // Set cooldown (to prevent bestowing different types of arms to different
+    // subsets of visible allies).
+    caster.props[ARMS_COOLDOWN_KEY] = you.elapsed_time + dur;
 }
 
 static bool _mons_cast_prisms(monster& caster, actor& foe, int pow, bool check_only)
@@ -9057,9 +9059,12 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
 
     case SPELL_BESTOW_ARMS:
     {
-        // The self-buff acts as a sort of cooldown, also.
-        if (mon->has_ench(ENCH_ARMED))
+        // Don't use while on cooldown
+        if (mon->props.exists(ARMS_COOLDOWN_KEY)
+            && you.elapsed_time < mon->props[ARMS_COOLDOWN_KEY].get_int())
+        {
             return ai_action::impossible();
+        }
 
         for (monster_near_iterator mi(mon->pos(), LOS_NO_TRANS); mi; ++mi)
         {
