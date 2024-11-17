@@ -1706,7 +1706,7 @@ string cant_transform_reason(transformation which_trans,
     if (!temp)
         return "";
 
-    if (you.transform_uncancellable)
+    if (you.transform_uncancellable && which_trans != transformation::slaughter)
         return "You are stuck in your current form!";
 
     const auto feat = env.grid(you.pos());
