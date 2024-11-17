@@ -213,9 +213,12 @@ bool melee_attack::handle_phase_attempted()
         check_autoberserk();
     }
 
-    // Xom thinks fumbles are funny...
-    if (attacker->fumbles_attack())
+    // Wall jump attacks supposedly happen 'mid-air' and so shouldn't care about
+    // water at the landing spot.
+    if (wu_jian_attack != WU_JIAN_ATTACK_WALL_JUMP
+        && attacker->fumbles_attack())
     {
+        // Xom thinks fumbles are funny...
         // ... and thinks fumbling when trying to hit yourself is just
         // hilarious.
         xom_is_stimulated(attacker == defender ? 200 : 10);
