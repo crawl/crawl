@@ -11,6 +11,20 @@
 #include "database.h"
 #include "stringutil.h"
 
+#ifdef REGEX_PCRE
+    // Statically link pcre on Windows
+    #if defined(TARGET_OS_WINDOWS)
+        #define PCRE_STATIC
+    #endif
+
+    #include <pcrecpp.h>
+    #include <algorithm>
+#else
+    // REGEX_POSIX
+    #include <regex>
+    #include <codecvt>
+#endif
+
 #include <cstring>
 using namespace std;
 
@@ -37,8 +51,83 @@ string cnxlate(const string &context,
 #else
 //// compile with translation logic ////
 
-#include <codecvt>
-#include <regex>
+#ifdef REGEX_PCRE
+
+// return the first substring that matches the pattern
+static string _regex_search(const string& s, const string& pattern)
+{
+    pcrecpp::RE_Options options;
+    options.set_utf8(true);
+
+    // compile the regex
+    pcrecpp::RE re("(" + pattern + ")", options);
+    if (re.error() != "")
+        return "";
+
+    string result;
+    re.PartialMatch(s, &result);
+
+    return result;
+}
+
+// replace all instances of pattern with the specified replacement string
+static string _regex_replace(const string& s, const string& pattern, const string& subst)
+{
+    pcrecpp::RE_Options options;
+    options.set_utf8(true);
+
+    // compile the regex
+    pcrecpp::RE re(pattern, options);
+    if (re.error() != "")
+        return s;
+
+    // PCRE1 uses backslash instead of dollar for backreferences
+    string sub = subst;
+    std::replace(sub.begin(), sub.end(), '$', '\\');
+
+    string result = s;
+    re.GlobalReplace(sub, &result);
+
+    return result;
+}
+
+#else // REGEX_POSIX
+
+// return the first substring that matches the pattern
+static string _regex_search(const string& s, const string& pattern)
+{
+    // std::regex_search doesn't work properly for UTF-8, so we are forced to convert to wstring
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+
+    wstring ws = conv.from_bytes(s);
+    wstring wpattern = conv.from_bytes(pattern);
+
+    wregex wre(wpattern);
+    wsmatch wmatch;
+    if (regex_search(ws, wmatch, wre))
+        return conv.to_bytes(wmatch.str());
+    else
+        return "";
+
+}
+
+// replace all instances of pattern with the specified replacement string
+static string _regex_replace(const string& s, const string& pattern, const string& subst)
+{
+    // std::regex_replace doesn't work properly for UTF-8, so we are forced to convert to wstring
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+
+    wstring ws = conv.from_bytes(s);
+    wstring wpattern = conv.from_bytes(pattern);
+    wstring wsubst = conv.from_bytes(subst);
+
+    wregex wre(wpattern);
+    wstring result = regex_replace(ws, wre, wsubst);
+
+    return conv.to_bytes(result);
+}
+
+#endif
 
 // markers for embedded expressions
 const string exp_start = "((";
@@ -46,24 +135,22 @@ const string exp_end = "))";
 
 static string apply_regex_rule(const string& s, const string& rule)
 {
-    std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
-
     // need to accept empties because replacement could be empty.
     // However, this means "useless" tokens at start and end.
     vector<string> tokens = split_string("/", rule, false, true);
 
     try {
-        wstring condition, pattern, replacement;
+        string condition, pattern, replacement;
         if (tokens.size() == 5)
         {
-            condition = conv.from_bytes(tokens[1]);
-            pattern = conv.from_bytes(tokens[2]);
-            replacement = conv.from_bytes(tokens[3]);
+            condition = tokens[1];
+            pattern = tokens[2];
+            replacement = tokens[3];
         }
         else if (tokens.size() == 4)
         {
-            pattern = conv.from_bytes(tokens[1]);
-            replacement = conv.from_bytes(tokens[2]);
+            pattern = tokens[1];
+            replacement = tokens[2];
         }
         else
         {
@@ -71,23 +158,19 @@ static string apply_regex_rule(const string& s, const string& rule)
             return s;
         }
 
-        wregex re(pattern);
-        wstring swide = conv.from_bytes(s);
-        wstring result;
+        string result;
         if (condition.empty())
-            result = regex_replace(swide, re, replacement);
+            result = _regex_replace(s, pattern, replacement);
         else
         {
-            wregex re_cond(condition);
-            wsmatch match;
-            if (!regex_search(swide, match, re_cond))
+            string match = _regex_search(s, condition);
+            if (match == "")
                 return s;
 
-            result = match.prefix();
-            result += regex_replace(match.str(), re, replacement);
-            result += match.suffix();
+            string replaced = _regex_replace(match, pattern, replacement);
+            result = replace_first(s, match, replaced);
         }
-        return conv.to_bytes(result);
+        return result;
     }
     catch (exception& e)
     {
