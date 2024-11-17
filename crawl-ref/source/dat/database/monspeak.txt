@@ -7691,9 +7691,9 @@ VISUAL:@The_monster@ glitters topaz in the dim dungeon light.
 ################## Hoarfrost cannon ##########################
 default hoarfrost cannon
 
-VISUAL: Water drips from @the_monster_possessive@ barrel.
+VISUAL:Water drips from @the_monster_possessive@ barrel.
 
-VISUAL: A cold fog rises from @the_monster@.
+VISUAL:A cold fog rises from @the_monster@.
 
 @The_monster@ makes a faint grinding noise.
 %%%%
