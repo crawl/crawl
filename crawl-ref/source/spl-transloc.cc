@@ -1726,7 +1726,7 @@ spret cast_gravitas(int pow, const coord_def& where, bool fail)
 
         if (monster* mon = monster_at(*di))
         {
-            if (mon->wont_attack())
+            if (mon->wont_attack() || mons_is_projectile(*mon))
                 continue;
 
             int dmg = zap_damage(ZAP_GRAVITAS, pow, false).roll();
