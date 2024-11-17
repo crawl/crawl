@@ -37,6 +37,7 @@
 #include "god-abil.h"
 #include "god-companions.h"
 #include "god-conduct.h"
+#include "god-item.h"
 #include "god-passive.h"
 #include "hints.h"
 #include "invent.h"
@@ -3244,6 +3245,13 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
 
             if (success == OPER_NONE)
                 return spret::abort;
+
+            if (god_hates_item(*wpn))
+            {
+                mprf(MSGCH_WARN, "%s forbids using such a weapon!",
+                     god_name(you.religion).c_str());
+                return spret::abort;
+            }
 
             static const vector<int> forbidden_unrands =
             {

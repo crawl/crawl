@@ -67,6 +67,7 @@
 #include "shopping.h"
 #include "skills.h"
 #include "spl-book.h"
+#include "spl-summoning.h"
 #include "sprint.h"
 #include "state.h"
 #include "stringutil.h"
@@ -3391,6 +3392,18 @@ static void _god_welcome_handle_gear()
             mprf(MSGCH_GOD, "%s warns you to remove %s.",
                  uppercase_first(god_name(you.religion)).c_str(),
                  item->name(DESC_YOUR, false, false, false).c_str());
+        }
+    }
+
+    if (you.props.exists(PARAGON_WEAPON_KEY))
+    {
+        item_def wpn = you.props[PARAGON_WEAPON_KEY].get_item();
+        if (god_hates_item(wpn))
+        {
+            mprf(MSGCH_GOD, "%s removes the imprint of %s from your paragon.",
+                 god_name(you.religion).c_str(),
+                 wpn.name(DESC_THE).c_str());
+            you.props.erase(PARAGON_WEAPON_KEY);
         }
     }
 
