@@ -4787,7 +4787,7 @@ bool sticky_flame_player(int intensity, int duration, string source, string sour
     }
     else
     {
-        mprf(MSGCH_WARN, "You are covered in %sliquid fire!",
+        mprf(MSGCH_WARN, "You are covered in %sliquid fire! Move or burn!",
                          intensity_str.c_str());
     }
 
