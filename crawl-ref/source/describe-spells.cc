@@ -587,8 +587,10 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
         mult = "3x";
     else if (spell == SPELL_ELECTROLUNGE)
         mult = "+";
-    const char* asterisk = (spell == SPELL_LRD || spell == SPELL_PYRE_ARROW) ? "*" : "";
-    return make_stringf("(%s%dd%d%s)", mult.c_str(), dam.num, dam.size, asterisk);
+    const char* suffix = spell == SPELL_LRD ? "*"
+                       : spell == SPELL_PYRE_ARROW ? "/turn"
+                       : "";
+    return make_stringf("(%s%dd%d%s)", mult.c_str(), dam.num, dam.size, suffix);
 }
 
 /**
