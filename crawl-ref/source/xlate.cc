@@ -11,6 +11,12 @@
 #include "database.h"
 #include "stringutil.h"
 
+#ifndef USE_PCRE
+// if not using system PCRE library then don't use PCRE at all because the one
+// in contribs is borked - it doesn't build everything
+#undef REGEX_PCRE
+#endif
+
 #ifdef REGEX_PCRE
     // Statically link pcre on Windows
     #if defined(TARGET_OS_WINDOWS)
