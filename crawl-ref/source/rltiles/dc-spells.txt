@@ -288,6 +288,7 @@ sprint SPRINT
 steam_ball STEAM_BALL
 sticky_flame_range STICKY_FLAME_RANGE
 sticks_to_snakes STICKS_TO_SNAKES
+stoke_flames STOKE_FLAMES
 strip_willpower STRIP_WILLPOWER
 stunning_burst STUNNING_BURST
 summon_drakes SUMMON_DRAKES

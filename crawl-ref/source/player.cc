@@ -8284,6 +8284,7 @@ bool player::attempt_escape()
 
 void player::sentinel_mark(bool trap)
 {
+    flash_tile(you.pos(), YELLOW, 120, TILE_BOLT_SENTINEL_MARK);
     if (duration[DUR_SENTINEL_MARK])
     {
         mpr("The mark upon you grows brighter.");

@@ -476,6 +476,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_DRAINING_GAZE, {
         _caster_sees_foe,
         [](monster &caster, mon_spell_slot slot, bolt&) {
+            flash_tile(caster.get_foe()->pos(), MAGENTA, 120, TILE_BOLT_DRAINING_GAZE);
             enchant_actor_with_flavour(caster.get_foe(), &caster,
                                        BEAM_DRAIN_MAGIC,
                                        mons_spellpower(caster, slot.spell));
@@ -7648,6 +7649,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_ENTROPIC_WEAVE:
         ASSERT(foe);
+        flash_tile(foe->pos(), YELLOW, 120, TILE_BOLT_ENTROPIC_WEAVE);
         foe->corrode_equipment("the entropic weave");
         return;
 
@@ -8522,6 +8524,7 @@ static void _doom_howl(monster &mon)
     noisy(spell_effect_noise(SPELL_DOOM_HOWL), mon.pos(), mon.mid);
     if (willpower <= 0)
     {
+        flash_tile(you.pos(), BLACK, 120, TILE_BOLT_DOOM_HOWL);
         you.duration[DUR_DOOM_HOWL] = random_range(120, 180);
         mon.props[DOOM_HOUND_HOWLED_KEY] = true;
     }

@@ -3942,6 +3942,7 @@ void bolt::affect_player_enchantment(bool resistible)
     case BEAM_SAP_MAGIC:
         mprf(MSGCH_WARN, "Your magic feels %stainted.",
              you.duration[DUR_SAP_MAGIC] ? "more " : "");
+        flash_tile(you.pos(), GREEN, 120, TILE_BOLT_SAP_MAGIC);
         you.increase_duration(DUR_SAP_MAGIC, random_range(20, 30), 50);
         break;
 
