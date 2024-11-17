@@ -1327,6 +1327,7 @@ static const map<dungeon_feature_type, feature_frag> fraggable_terrain = {
     { DNGN_ORCISH_IDOL, { "rock", "stone idol" } },
     { DNGN_GRANITE_STATUE, { "rock", "statue" } },
     { DNGN_PETRIFIED_TREE, { "rock", "petrified wood" } },
+    { DNGN_SPIKE_LAUNCHER, { "rock", "spike launcher" } },
     // Stone arches and doors
     { DNGN_OPEN_DOOR, { "rock", "stone door frame" } },
     { DNGN_OPEN_CLEAR_DOOR, { "rock", "stone door frame" } },
