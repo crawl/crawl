@@ -705,7 +705,7 @@ While also capable of biting foes, the phalanx beetle will never voluntarily
 leave its creator's side, and if forcibly separated, will prioritize returning
 to them over any other concern.
 
-Spellpower increased the magnitude of the AC increase, as well as the beetle's
+Spellpower increases the magnitude of the AC increase, as well as the beetle's
 own durability.
 %%%%
 Fortress Blast spell
