@@ -5664,7 +5664,7 @@ bool monster::matches_player_speed() const
 {
     if (crawl_state.game_is_arena()
         || !mons_is_recallable(&you, *this)
-        || is_summoned())
+        || has_ench(ENCH_SUMMON_TIMER))
     {
         return false;
     }
