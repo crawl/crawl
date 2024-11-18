@@ -1057,7 +1057,7 @@ DEFINES += -DREGEX_PCRE
 else
   ifdef USE_PCRE
   DEFINES += -DREGEX_PCRE
-  LIBS += -lpcre -lpcrecpp
+  LIBS += -lpcre
   endif
 endif
 

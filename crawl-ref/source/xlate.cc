@@ -10,26 +10,7 @@
 #include "clua.h"
 #include "database.h"
 #include "stringutil.h"
-
-#ifndef USE_PCRE
-// if not using system PCRE library then don't use PCRE at all because the one
-// in contribs is borked - it doesn't build everything
-#undef REGEX_PCRE
-#endif
-
-#ifdef REGEX_PCRE
-    // Statically link pcre on Windows
-    #if defined(TARGET_OS_WINDOWS)
-        #define PCRE_STATIC
-    #endif
-
-    #include <pcrecpp.h>
-    #include <algorithm>
-#else
-    // REGEX_POSIX
-    #include <regex>
-    #include <codecvt>
-#endif
+#include "regex-wrapper.h"
 
 #include <cstring>
 using namespace std;
@@ -56,84 +37,6 @@ string cnxlate(const string &context,
 
 #else
 //// compile with translation logic ////
-
-#ifdef REGEX_PCRE
-
-// return the first substring that matches the pattern
-static string _regex_search(const string& s, const string& pattern)
-{
-    pcrecpp::RE_Options options;
-    options.set_utf8(true);
-
-    // compile the regex
-    pcrecpp::RE re("(" + pattern + ")", options);
-    if (re.error() != "")
-        return "";
-
-    string result;
-    re.PartialMatch(s, &result);
-
-    return result;
-}
-
-// replace all instances of pattern with the specified replacement string
-static string _regex_replace(const string& s, const string& pattern, const string& subst)
-{
-    pcrecpp::RE_Options options;
-    options.set_utf8(true);
-
-    // compile the regex
-    pcrecpp::RE re(pattern, options);
-    if (re.error() != "")
-        return s;
-
-    // PCRE1 uses backslash instead of dollar for backreferences
-    string sub = subst;
-    std::replace(sub.begin(), sub.end(), '$', '\\');
-
-    string result = s;
-    re.GlobalReplace(sub, &result);
-
-    return result;
-}
-
-#else // REGEX_POSIX
-
-// return the first substring that matches the pattern
-static string _regex_search(const string& s, const string& pattern)
-{
-    // std::regex_search doesn't work properly for UTF-8, so we are forced to convert to wstring
-    std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
-
-    wstring ws = conv.from_bytes(s);
-    wstring wpattern = conv.from_bytes(pattern);
-
-    wregex wre(wpattern);
-    wsmatch wmatch;
-    if (regex_search(ws, wmatch, wre))
-        return conv.to_bytes(wmatch.str());
-    else
-        return "";
-
-}
-
-// replace all instances of pattern with the specified replacement string
-static string _regex_replace(const string& s, const string& pattern, const string& subst)
-{
-    // std::regex_replace doesn't work properly for UTF-8, so we are forced to convert to wstring
-    std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
-
-    wstring ws = conv.from_bytes(s);
-    wstring wpattern = conv.from_bytes(pattern);
-    wstring wsubst = conv.from_bytes(subst);
-
-    wregex wre(wpattern);
-    wstring result = regex_replace(ws, wre, wsubst);
-
-    return conv.to_bytes(result);
-}
-
-#endif
 
 // markers for embedded expressions
 const string exp_start = "((";
@@ -166,14 +69,14 @@ static string apply_regex_rule(const string& s, const string& rule)
 
         string result;
         if (condition.empty())
-            result = _regex_replace(s, pattern, replacement);
+            result = regex_replace(s, pattern, replacement);
         else
         {
-            string match = _regex_search(s, condition);
+            string match = regex_search(s, condition);
             if (match == "")
                 return s;
 
-            string replaced = _regex_replace(match, pattern, replacement);
+            string replaced = regex_replace(match, pattern, replacement);
             result = replace_first(s, match, replaced);
         }
         return result;
