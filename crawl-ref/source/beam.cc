@@ -6052,7 +6052,7 @@ bool ench_flavour_affects_monster(actor *agent, beam_type flavour,
         break;
 
     case BEAM_SOUL_SPLINTER:
-        rc = mons_can_be_spectralised(*mon, false, true)
+        rc = mons_can_be_spectralised(*mon, true, true)
              && !mon->props.exists(SOUL_SPLINTERED_KEY);
         break;
 

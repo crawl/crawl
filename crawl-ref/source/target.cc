@@ -2483,7 +2483,7 @@ bool targeter_soul_splinter::affects_monster(const monster_info& mon)
     if (mon.is(MB_SOUL_SPLINTERED))
         return false;
 
-    if (!mons_can_be_spectralised(*monster_at(mon.pos), false, true))
+    if (!mons_can_be_spectralised(*monster_at(mon.pos), true, true))
         return false;
 
     if (agent->is_player())

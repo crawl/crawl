@@ -3079,7 +3079,7 @@ spret cast_hellfire_mortar(const actor& agent, bolt& beam, int pow, bool fail)
 
 bool make_soul_wisp(const actor& agent, actor& victim)
 {
-    if (victim.is_monster() && !mons_can_be_spectralised(*victim.as_monster()))
+    if (victim.is_monster() && !mons_can_be_spectralised(*victim.as_monster(), true))
         return false;
 
     // Don't try to create a wisp from a monster who's already had one made from
