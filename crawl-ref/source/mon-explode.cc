@@ -43,16 +43,17 @@ static void _setup_base_explosion(bolt & beam, const monster& origin)
     beam.target       = origin.pos();
     beam.explode_noise_msg = "You hear an explosion!";
 
-    if (!crawl_state.game_is_arena()
-        && origin.friendly() && origin.was_created_by(you))
+    if (!crawl_state.game_is_arena() && origin.friendly())
     {
-        if (origin.is_abjurable())
+        // Prisms, ball lightning, etc. are considered to have been damage
+        // caused by the player directly.
+        if (!origin.is_abjurable() && origin.was_created_by(you))
+            beam.thrower = KILL_YOU;
+        else
         {
             beam.thrower = KILL_MON;
-            beam.source_id = ANON_FRIENDLY_MONSTER;
+            beam.source_id = MID_ANON_FRIEND;
         }
-        else
-            beam.thrower = KILL_YOU;
     }
     else
         beam.thrower = KILL_MON;
@@ -103,7 +104,7 @@ static void _setup_blazeheart_core_explosion(bolt & beam, const monster& origin)
     // Don't place the player under penance for their golem exploding,
     // but DO give them xp for its kills.
     beam.thrower      = KILL_MON;
-    beam.source_id    = MID_PLAYER;
+    beam.source_id    = MID_ANON_FRIEND;
 
     // This is so it places flame clouds under the explosion
     beam.origin_spell = SPELL_FORGE_BLAZEHEART_GOLEM;
