@@ -667,12 +667,12 @@ spret cast_spike_launcher(int pow, bool fail)
     return spret::success;
 }
 
-static void _fire_spike_launcher(const coord_def& origin, monster* target)
+static void _fire_spike_launcher(monster* target)
 {
     bolt spike;
     zappy(ZAP_SPIKE_LAUNCHER, you.props[SPIKE_LAUNCHER_POWER].get_int(),
             false, spike);
-    spike.source = origin;
+    spike.source = target->pos();
     spike.target = target->pos();
     spike.seen = true;
     spike.range = 1;
@@ -732,7 +732,7 @@ void handle_spike_launcher(int delay)
                     continue;
                 }
 
-                _fire_spike_launcher(pos, targ);
+                _fire_spike_launcher(targ);
                 break;
             }
         }
