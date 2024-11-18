@@ -923,7 +923,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     break;
 
     case ENCH_CURSE_OF_AGONY:
-        simple_monster_message(*this, " is freed from its curse.");
+        if (you.can_see(*this) && !quiet)
+        {
+            mprf("%s is freed from %s curse.", name(DESC_THE).c_str(),
+                 pronoun(PRONOUN_POSSESSIVE).c_str());
+        }
         break;
 
     case ENCH_TOUCH_OF_BEOGH:
