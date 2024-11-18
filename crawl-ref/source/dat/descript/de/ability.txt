@@ -1,7 +1,7 @@
 %%%%
 No ability ability
 
-Wenn du diese Beschreibung seihst, dann ist es ein Fehler.
+Wenn du diese Beschreibung siehst, dann ist es ein Fehler.
 %%%%
 Spit Poison ability
 
@@ -18,7 +18,7 @@ Breathe Fire ability
     local desc = "Einen Feuerstrahl auf eine anvisierte Kreatur speien"
 
     if you.race() == "Red Draconian" then
-        desc = desc .. ", und eine Flammenwolke am Endpunkt hinterlassen"
+        desc = desc .. " und eine Flammenwolke am Endpunkt hinterlassen"
     end
 
     desc = desc .. "."
@@ -60,8 +60,8 @@ Verwandelt den Anwender in eine flinke Vampirfledermaus. Erhöht
 das Ausweichen, schwächt aber Nahkampfangriffe erheblich. Die Verwandlung
 zehrt an den Attributen des Anwenders.
 
-Während der Verwandlung werden alle verwendeten Waffen, Rüstungen und
-Ringe verschmolzen, und der Anwender kann keine Zauber mehr wirken.
+Während der Verwandlung werden alle verwendeten Waffen, Rüstungsgegenstände und
+Ringe verschmolzen und der Anwender kann keine Zauber mehr wirken.
 %%%%
 Exsanguinate ability
 
@@ -108,14 +108,14 @@ nicht grabende Bewegungsaktion aufgehoben.
 Shaft Self ability
 
 Lässt dich an eine zufällige Stelle ein bis drei Ebenen tiefer fallen, als ob du in
-eine Schachtfalle gesprungen wärest. Es dauert einige Zeit, den Schacht zu
+eine Schachtfalle gesprungen wärst. Es dauert einige Zeit, den Schacht zu
 graben.
 %%%%
 Rolling Charge ability
 
 Du rollst mit Schuppenklappern auf einen Gegner zu und
-schlagst ihn im Nahkampf mit erhöhter Treffsicherheit. Je größer die Entfernung
-ist, desto mehr Schwung wird der Wucht deines Schlags hinzugefügt. Du
+schlägst ihn im Nahkampf mit erhöhter Treffsicherheit. Je größer die Entfernung,
+desto mehr Schwung wird der Wucht deines Schlags hinzugefügt. Du
 rollst mit ausreichender Geschwindigkeit, um Fallen und schädlichem Terrain auf
 dem Weg auszuweichen, nicht aber am Zielort.
 %%%%
@@ -157,9 +157,9 @@ wird durch die Fertigkeit Anrufungen und durch Frömmigkeit erhöht.
 Vitalisation ability
 
 Bietet vorübergehend Schutz vor Gift, Verwirrung, Versteinerung und Krankheit
-sowie vor den Wirkungen von Pestilenzwolken. deine Stärke, Intelligenz und
+sowie vor den Wirkungen von Pestilenzwolken. Deine Stärke, Intelligenz und
 Geschicklichkeit werden außerdem vorübergehend um einen Grad erhöht, der von
-der Fertigkeit Anrufungen abhängt, und können nicht ausgezehrt werden,
+der Fertigkeit Anrufungen abhängt und können nicht ausgezehrt werden,
 solange der Effekt aktiv ist.
 %%%%
 Imprison ability
@@ -187,8 +187,8 @@ Stärke und Dauer des Schildes werden durch die Fertigkeit Anrufungen erhöht.
 %%%%
 Cleansing Flame ability
 
-Erzeugt eine riesige Explosion göttlichen Zorns, die auf den Anwender
-zentriert ist und Untoten und Dämonen schweren Schaden zufügt sowie allen
+Erzeugt eine riesige Explosion göttlichen Zorns, die vom Anwender ausgeht
+und Untoten und Dämonen schweren Schaden zufügt sowie allen
 anderen feindlichen Kreaturen Schaden zufügt. Die Kraft der Explosion wird
 durch die Fertigkeit Anrufungen erhöht.
 %%%%
@@ -229,7 +229,7 @@ Zaubersprüche wählen und beide Gaben können nur einmal empfangen werden.
 %%%%
 Receive Forbidden Knowledge ability
 
-Verleiht dich die Kenntnis der mächtigsten und dunkelsten Nekromantie-Zauber.
+Verleiht dir die Kenntnis der mächtigsten und dunkelsten Nekromantie-Zauber.
 Du musst zwischen dieser Gabe und der Gabe, eine Waffe mit Schmerz zu verstärken,
 wählen und beide Gaben können nur einmal erhalten werden.
 %%%%
@@ -441,7 +441,7 @@ Zieht eine Karte aus einem Deck der Macht.
 %%%%
 Triple Draw ability
 
-Zieht drei Karten aus einem beliebigen Deck und erlaubt es dich, eine davon
+Zieht drei Karten aus einem beliebigen Deck und erlaubt es dir, eine davon
 zu spielen, während du die anderen beiden ablegst.
 %%%%
 Deal Four ability
@@ -451,7 +451,7 @@ einer einzigen Karte benötigt wird.
 %%%%
 Stack Five ability
 
-Zieht fünf Karten aus einem Deck deiner Wahl und erlaubt es dich, diese in
+Zieht fünf Karten aus einem Deck deiner Wahl und erlaubt es dir, diese in
 beliebiger Reihenfolge zu sortieren. Anschließend kannst du diesen Kartenstapel in
 der von dir gewählten Reihenfolge ausspielen. Wenn du diese Fähigkeit
 erneut einsetzt, wird der gesamte aktuelle Stapel abgelegt.
@@ -568,7 +568,7 @@ Träger von dem Fluch.
 # Dithmenos
 Shadow Step ability
 
-Erlaubt es dich, in den Schatten einer beliebigen feindlichen Kreatur innerhalb
+Erlaubt es dir, in den Schatten einer beliebigen feindlichen Kreatur innerhalb
 deiner Umbra zu treten und an einem zufälligen Ort in der Nähe des Ziels zu
 landen.
 %%%%
@@ -586,7 +586,7 @@ Anrufungen erhöht die Dauer der Verwandlung.
 # Gozag
 Potion Petition ability
 
-Bittet Gozag, dich die Wirkungen einer Reihe von Tränken zu verkaufen. Gozag
+Bittet Gozag, dir die Wirkungen einer Reihe von Tränken zu verkaufen. Gozag
 bietet jeweils drei Listen mit unterschiedlichen Preisen an.
 %%%%
 Call Merchant ability
@@ -642,7 +642,7 @@ Erfahrungsstufe.
 %%%%
 Apocalypse ability
 
-Enthüllt deinen Feinden Rus Wahrheit und fügt allen Feinden in deinem
+Offenbart deinen Feinden Rus Wahrheit und fügt allen Feinden in deinem
 Sichtfeld schweren Schaden zu. Betroffene Kreaturen können gelähmt oder
 verlangsamt werden oder ihre Magie verlieren. Der zugefügte Schaden steigt
 mit deiner Frömmigkeit und Erfahrungsstufe.
@@ -662,11 +662,11 @@ Opfert die Fähigkeit, Tränke zu trinken, während du bedroht bist.
 %%%%
 Sacrifice Essence ability
 
-Opfert magische Essenz und verursacht eine einzige Mutation.
+Opfert etwas magische Essenz und verursacht eine einzige Mutation.
 %%%%
 Sacrifice Health ability
 
-Opfert körperlichen Gesundheit und verursacht eine einzige Mutation.
+Opfert etwas körperliche Gesundheit und verursacht eine einzige Mutation.
 %%%%
 Sacrifice Stealth ability
 
@@ -675,8 +675,8 @@ Ränge mehr in der Fertigkeit Heimlichkeit haben kannst.
 %%%%
 Sacrifice Artifice ability
 
-Opfert die Fähigkeit, magische Gegenstände zu evozieren, und verhindert, dass
-du Ränge in der Fertigkeit Evozieren hast.
+Opfert die Fähigkeit, magische Gegenstände zu evozieren und verhindert, dass
+du Ränge in der Fertigkeit Evozieren haben kannst.
 %%%%
 Sacrifice Love ability
 
@@ -729,7 +729,7 @@ ausgebildeten Fertigkeiten verlierst.
 %%%%
 Sacrifice an Eye ability
 
-Opfert ein Auge, so dass es dich viel schwerer fällt, Ziele zu treffen.
+Opfert ein Auge, so dass es dir viel schwerer fällt, Ziele zu treffen.
 %%%%
 Sacrifice Resistance ability
 
@@ -762,7 +762,7 @@ Verwirrung mit der Anrufungsfertigkeit zunimmt.
 %%%%
 Grand Finale ability
 
-Du verschmelzt emotional und physisch mit dem Ziel und brichst dann aus ihm heraus,
+Du verschmilzt emotional und physisch mit dem Ziel und brichst dann aus ihm heraus,
 spaltest es gewaltsam und tötest es auf der Stelle. Diese Fähigkeit lässt sich mit
 zunehmender Frömmigkeit und Anrufungsfertigkeit des Anbeters immer leichter einsetzen.
 
@@ -778,7 +778,7 @@ Convert to Beogh ability
 
 Schwört Beogh, dem Gott der Höhlenorks, die Treue. Dieser Gott verlangt den
 Tod aller Ungläubigen, aber neue Gläubige müssen verschont und in
-die Gemeinschaft aufgenommen werden. Nehmt dich in Acht - Orks, die deine Bekehrung
+die Gemeinschaft aufgenommen werden. Nimm dich in Acht - Orks, die deine Bekehrung
 nicht selbst mit ansehen, können immer noch feindselig sein, bis du deinen
 Ruf aufgebaut hast!
 

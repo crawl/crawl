@@ -32,7 +32,7 @@ a missile
 
 %%%%
 a %sclub
-eine {adj-e}%sKeule
+ein {adj-e}%sKnüppel
 %%%%
 a %swhip
 eine {adj-e}%sPeitsche

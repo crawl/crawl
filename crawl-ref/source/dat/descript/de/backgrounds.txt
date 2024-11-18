@@ -11,19 +11,19 @@ an Luftmagie-Zaubern die nötige Flexibilität, um zu überleben.
 %%%%
 Arcane Marksman
 
-Arkane Scharfschützen sind für den Fernkampf bewaffnet und verwenden Magie, um ihre
+Arkane Schützen sind für den Fernkampf bewaffnet und verwenden Magie, um ihre
 Feinde anfälliger für derartige Angriffe zu machen.
 %%%%
 Artificer
 
-Artificer beginnen mit zwei Zauberstäben, einer magischen Schachfigur und einer
-Keule. Sie müssen bessere Waffen und Rüstungen finden, bevor ihre Zauberstäbe
+Artificer beginnen mit zwei Zauberstäben, einer magischen Schachfigur und einem
+Knüppel. Sie müssen bessere Waffen und Rüstungen finden, bevor ihre Zauberstäbe
 aufgebraucht sind.
 %%%%
 Berserker
 
-Berserker glauben an Trog, den Magiehassenden Gott der Raserei. Nicht viel kann
-einen tobenden Berserker anfangs aufhalten, außer die eigene Hybris.
+Berserker glauben an Trog, den magiehassenden Gott der Raserei. Anfangs kann nicht
+viel einen tobenden Berserker aufhalten, außer die eigene Hybris.
 %%%%
 Brigand
 
@@ -32,16 +32,16 @@ Curare-Wurfpfeile.
 %%%%
 Chaos Knight
 
-Chaosritter sind Spielzeuge des unberechenbaren Xom, und sind den ständig
+Chaosritter sind Spielzeuge des unberechenbaren Xom und sind den ständig
 wechselnden Gefühlen des Gottes ausgesetzt.
 %%%%
 Conjurer
 
-Hervorrufer begegnen Probleme mit schädlichen Zaubersprüchen.
+Konjuranten begegnen Problemen mit schädlichen Zaubersprüchen.
 %%%%
 Delver
 
-Gräber beginnen ihre Suche fünf Ebenen unter der Oberfläche. Eine Reihe von
+Entdecker beginnen ihre Suche fünf Ebenen unter der Oberfläche. Eine Reihe von
 mächtigen magischen Gegenstände helfen ihnen, die gefährliche Reise nach oben
 zu überleben.
 %%%%
@@ -53,12 +53,12 @@ Buch der Geomantie.
 %%%%
 Enchanter
 
-Verzauberer kennen eine Vielzahl von Verhexungen, die ihre Feinde außer Gefecht
-setzen können, und sind mit einem verzauberten Dolch ausgerüstet.
+Verhexer kennen eine Vielzahl von Verhexungen, die ihre Feinde außer Gefecht
+setzen können und sind mit einem verzauberten Dolch ausgerüstet.
 %%%%
 Fighter
 
-Kämpfer sind mit Rüstung und Schild ausgrüstet, und auch mit einer Waffe ihrer
+Kämpfer sind mit Rüstung und Schild ausgrüstet sowie mit einer Waffe ihrer
 Wahl und einem Trank der Macht.
 %%%%
 Fire Elementalist
@@ -89,7 +89,7 @@ Startsammlung sind recht vielseitig.
 Monk
 
 Mönche beginnen mit einer einfachen Waffe ihrer Wahl und gewinnen zusätzliche
-Frömmigkeit bei dem ersten Gott, den sie verehren.
+Frömmigkeit beim ersten Gott, den sie verehren.
 %%%%
 Necromancer
 
@@ -98,7 +98,7 @@ mit dem Schmerzfluch.
 %%%%
 Summoner
 
-Beschwörer können am Anfang kleine Säugetiere beschwören, und haben andere
+Beschwörer können am Anfang kleine Säugetiere beschwören und haben andere
 Beschwörungen in ihrer Sammlung.
 %%%%
 Transmuter
@@ -108,12 +108,12 @@ zu mächtigen unbewaffneten Kämpfern macht.
 %%%%
 Venom Mage
 
-Giftmagier beginnen mit dem Zauber Stachel, und ihre Giftmagie ist sehr effektiv
+Giftmagier beginnen mit dem Zauber Stachel und ihre Giftmagie ist sehr effektiv
 gegen anfällige Feinde.
 %%%%
 Wanderer
 
-Wanderer beginnen mit zufälligen Ausrüstung und Fertigkeiten.
+Wanderer beginnen mit zufälliger Ausrüstung und zufälligen Fertigkeiten.
 %%%%
 Warper
 

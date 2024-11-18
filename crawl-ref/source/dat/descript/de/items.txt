@@ -474,7 +474,7 @@ Ein Stoffumhang.
 %%%%
 club
 
-Ein schweres Stück Holz. Obwohl Keulen eher primitive Waffen sind, ist es nach
+Ein schweres Stück Holz. Obwohl Knüppel eher primitive Waffen sind, ist es nach
 wie vor ein sehr beliebtes und wirksames Mittel zur Streitbeilegung, jemandem
 damit den Schädel einzuschlagen.
 %%%%

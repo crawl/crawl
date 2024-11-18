@@ -30,25 +30,25 @@ Gift spucken
 # Draconian breath weapons
 %%%%
 Breathe Fire
-Feuer spucken
+Feuer speien
 %%%%
 Breathe Frost
-Frost spucken
+Frost speien
 %%%%
 Breathe Poison Gas
-Giftgas spucken
+Giftgas speien
 %%%%
 Breathe Noxious Fumes
-Schädliche Dämpfe spucken
+Schädliche Dämpfe speien
 %%%%
 Breathe Lightning
-Blitz spucken
+Blitze speien
 %%%%
 Breathe Dispelling Energy
-Vertreibende Energie spucken
+Entzaubernde Energie speien
 %%%%
 Breathe Steam
-Dampf spucken
+Dampf speien
 %%%%
 Breathe Acid
 Säure spucken
@@ -57,7 +57,7 @@ Säure spucken
 # Vampire
 %%%%
 Bat Form
-Fledermaus-Form
+Fledermausform
 %%%%
 Exsanguinate
 Ausbluten
@@ -78,10 +78,10 @@ Wort des Chaos
 # Formicid
 %%%%
 Dig
-Graben
+Tunnel graben
 %%%%
 Shaft Self
-Selbst schächten
+Schacht graben
 %%%%
 
 # Barachi
@@ -167,19 +167,19 @@ Receive Corpses
 Leichen empfangen
 %%%%
 Torment
-Quälen
+Peinigen
 %%%%
 Receive Forbidden Knowledge
 Verbotenes Wissen erhalten
 %%%%
 Brand Weapon With Pain
-Waffe mit Schmerz branden
+Waffe mit Schmerz besudeln
 %%%%
 
 # Yred
 %%%%
 Injury Mirror
-Verletzungs-Spiegel
+Verletzungsspiegel
 %%%%
 Animate Remains
 Überreste beleben
@@ -227,7 +227,7 @@ Großerer Diener Makhlebs
 # Sif Muna
 %%%%
 Channel Magic
-Magie leiten
+Magie kanalisieren
 %%%%
 Forget Spell
 Zauber vergessen
@@ -275,19 +275,19 @@ Depart the Abyss
 Den Abgrund verlassen
 %%%%
 Bend Space
-Raum beugen
+Raum verbiegen
 %%%%
 Banish
 Verbannen
 %%%%
 Corrupt
-Verderben
+Korrumpieren
 %%%%
 Enter the Abyss
 Den Abgrund betreten
 %%%%
 Brand Weapon With Distortion
-Waffe mit Verzerrung marken
+Waffe mit Verzerrung prägen
 %%%%
 
 # Nemelex card/deck abilities
@@ -302,16 +302,16 @@ Draw Summoning
 Beschwörung ziehen
 %%%%
 Draw Stack
-Vorsortierte ziehen
+Stapel ziehen
 %%%%
 Triple Draw
-Dreifaches Ziehen
+Dreifach ziehen
 %%%%
 Deal Four
-Vier ausgeben
+Vier austeilen
 %%%%
 Stack Five
-Fünf vorsortieren
+Fünf stapeln
 %%%%
 (next: %s)
 (Nächste: %s)
@@ -326,7 +326,7 @@ Convert to Beogh
 Zu Beogh konvertieren
 %%%%
 Smiting
-Zerschlagen
+Zerschmettern
 %%%%
 Recall Orcish Followers
 Orkische Anhänger zurückrufen
@@ -341,7 +341,7 @@ Auferstehung
 # Jiyva
 %%%%
 Request Jelly
-Gelee anfordern
+Gelee erbitten
 %%%%
 # Turns next monster you hit into a slime
 Slimify
@@ -354,10 +354,10 @@ Schlimme Mutation heilen
 # Fedhas
 %%%%
 Wall of Briars
-Dornbusch-Mauer
+Dornenstrauchbarriere
 %%%%
 Grow Ballistomycete
-Ballistomycete wachsen lassen
+Ballistomycet wachsen lassen
 %%%%
 Overgrow
 Überwuchern
@@ -375,7 +375,7 @@ Temporal Distortion
 Temporale Verzerrung
 %%%%
 Slouch
-Latschen
+Durchhängen
 %%%%
 Step From Time
 Aus der Zeit treten
@@ -387,7 +387,7 @@ Curse Item
 Gegenstand verfluchen
 %%%%
 Shatter the Chains
-Die Ketten zerreißen
+Die Ketten sprengen
 %%%%
 (Boost: %s)
 (Erhöhen: %s)
@@ -405,10 +405,10 @@ Schattenform
 # Ru
 %%%%
 Draw Out Power
-Macht entziehen
+Kraft schöpfen 
 %%%%
 Power Leap
-Macht-Sprung
+Mächtiger Sprung
 %%%%
 Apocalypse
 Apokalypse
@@ -433,7 +433,7 @@ Heimlichkeit opfern
 %%%%
 # sacrifice the ability to use evocable items
 Sacrifice Artifice
-Verwendung opfern
+Kunstfertigkeit opfern
 %%%%
 Sacrifice Love
 Liebe opfern
@@ -457,7 +457,7 @@ Sacrifice Experience
 Erfahrung opfern
 %%%%
 Sacrifice Skill
-Geschicklichkeit opfern
+Begabung opfern
 %%%%
 Sacrifice an Eye
 Ein Auge opfern
@@ -466,7 +466,7 @@ Sacrifice Resistance
 Resistanz opfern
 %%%%
 Reject Sacrifices
-Opferungen ablehnen
+Opfer ablehnen
 %%%%
 
 # Gozag
@@ -511,28 +511,28 @@ Recall Ancestor
 Ahne zurückrufen
 %%%%
 Transference
-Übertragen
+Übertragung
 %%%%
 Idealise
 Idealisieren
 %%%%
 Ancestor Life: Knight
-Ahne-Leben: Ritter
+Ahnenleben: Ritter
 %%%%
 Ancestor Life: Battlemage
-Ahne-Leben: Kampfmagier
+Ahnenleben: Kampfmagier
 %%%%
 Ancestor Life: Hexer
-Ahne-Leben: Verzauberer
+Ahnenleben: Verzauberer
 %%%%
 Ancestor Identity
-Ahne-Identität
+Ahnenidentität
 %%%%
 
 # Wu Jian
 %%%%
 Serpent's Lash
-Schlangenpeitsche
+Schlangenschlag
 %%%%
 Heavenly Storm
 Himmlischer Sturm
@@ -628,7 +628,7 @@ Health
 Gesundheit
 %%%%
 Artifice
-Verwendung
+Kunstfertigkeit
 %%%%
 Love
 Liebe

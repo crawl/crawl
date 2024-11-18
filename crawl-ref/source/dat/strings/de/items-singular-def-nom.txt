@@ -32,7 +32,7 @@ das Geschoss
 
 %%%%
 the %sclub
-die {adj-e}%sKeule
+der {adj-e}%sKnüppel
 %%%%
 the %swhip
 die {adj-e}%sPeitsche

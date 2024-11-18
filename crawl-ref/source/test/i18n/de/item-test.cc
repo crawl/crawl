@@ -97,7 +97,7 @@ const vector<string> expected = {
 
     "ein knubbeliger runenverzierter Stecken",
 
-    "Keule",
+    "Knüppel",
     "+9 Streitkolben",
     "ein Pfeil",
     "27 Pfeile",
