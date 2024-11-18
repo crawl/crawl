@@ -15,7 +15,7 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
 
     var defense_boosters = {
         "ac": "ice-armoured|protected from physical damage|sanguine armoured"
-              + "|under a protective aura|fiery-armoured",
+              + "|under a protective aura|fiery-armoured|phalanx barrier",
         "ev": "^agile|acrobatic|in a heavenly storm",
 
         // RIP "I am here because empty strings match everything and this does not"
