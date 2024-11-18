@@ -7033,13 +7033,13 @@ Pick up %s? ((y)es/(n)o/(a)ll/(m)enu/*?g,/q)
 {acc}%s aufheben? ((j)a/(n)ein/(a)lle/(m)enü/*?g,/q)
 %%%%
 You now have 1 gold piece.
-Du hast jetzt 1 Goldstück.
+Du hast jetzt 1 Goldmünze.
 %%%%
 You now have %d gold pieces.
-Du hast jetzt %d Goldstücke.
+Du hast jetzt %d Goldmünzen.
 %%%%
 You now have %d gold pieces (gained %d).
-Du hast jetzt %d Goldstücke (%d bekommen).
+Du hast jetzt %d Goldmünzen (%d bekommen).
 %%%%
 %s burns to shimmering ash in your grasp.
 %s verbrennt in deinem Griff zu schimmernder Asche.
@@ -7628,10 +7628,10 @@ Keine Köcheraktionen zum Durchwechseln verfügbar.
 " <white>Q</white> verwenden, um aus allen Aktionen auszuwählen."
 %%%%
 You have 1 gold piece.
-Du hast 1 Goldstück.
+Du hast 1 Goldmünze.
 %%%%
 You have %d gold pieces.
-Du hast %d Goldstücke.
+Du hast %d Goldmünzen.
 %%%%
 You should not fight recklessly!
 Du sollst nicht rücksichtslos kämpfen!
@@ -10304,10 +10304,10 @@ Der Spriggan fällt von seinem nun toten Reittier.
 %s brüllt vor Wut und verwandelt sich in einen wilden Drachen!
 %%%%
 %s steals 1 gold piece!
-%s stiehlt 1 Goldstück!
+%s stiehlt 1 Goldmünze!
 %%%%
 %s steals %d gold pieces!
-%s stiehlt %d Goldstücke!
+%s stiehlt %d Goldmünzen!
 %%%%
 %s steals %d of %s!
 %s stiehlt %d {gen}%s!
@@ -13398,16 +13398,16 @@ Welcome to %s! What would you like to do?
 Willkommen bei {dat}%s! Was willst du machen?
 %%%%
 You are short 1 gold piece for the purchase.
-Dir fehlt 1 Goldstück für den Kauf.
+Dir fehlt 1 Goldmünze für den Kauf.
 %%%%
 You are short %d gold pieces for the purchase.
-Dir fehlt %d Goldstücke für den Kauf.
+Dir fehlt %d Goldmünzen für den Kauf.
 %%%%
 After the purchase, you will have 1 gold piece.
-Nach dem Kauf wirst du 1 Goldstück haben.
+Nach dem Kauf wirst du 1 Goldmünze haben.
 %%%%
 After the purchase, you will have %d gold pieces.
-Nach dem Kauf wirst du %d Goldstücke haben.
+Nach dem Kauf wirst du %d Goldmünzen haben.
 %%%%
 [<w>Esc</w>/<w>R-Click</w>] exit
 [<w>Esc</w>/<w>R-Klick</w>] abbrechen
@@ -13519,7 +13519,7 @@ You cannot afford %s; travel there anyway? (y/N)
 Du kannst dich {acc}%s nicht leisten; trotzdem dorthin reisen? (j/N)
 %%%%
 %s with an entry fee of %d gold pieces.
-%s mit einer Eintrittsgebühr von %d Goldstücken.
+%s mit einer Eintrittsgebühr von %d Goldmünzen.
 %%%%
 Your shopping list is now empty.
 Deine Einkaufsliste ist jetzt leer.

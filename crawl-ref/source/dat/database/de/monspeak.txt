@@ -3013,11 +3013,11 @@ w:50
 
 @The_monster@ sagt, "Ich hasse blöde Diätgesetze! Wenn ich eine Kuh essen will, dann esse ich eine Kuh!"
 
-@The_monster@ sagt, "Ich habe zweihundert Goldstücke. Reicht das, um diese Mutationen zu heilen?"
+@The_monster@ sagt, "Ich habe zweihundert Goldmünzen. Reicht das, um diese Mutationen zu heilen?"
 
 @The_monster@ sagt, "Mochtest du deine Hörner nicht?"
 
-@The_monster@ sagt, "Wenn ich dich zwanzig Goldstücke gebe, kannst du dann meine fiesen Schuppen loswerden?"
+@The_monster@ sagt, "Wenn ich dich zwanzig Goldmünzen gebe, kannst du dann meine fiesen Schuppen loswerden?"
 
 @The_monster@ hält sich die Ohren zu. "Halt die Klappe!"
 %%%%
