@@ -3048,7 +3048,8 @@ spret cast_plasma_beam(int pow, const actor &agent, bool fail)
     {
         vector<coord_def> known_targs = plasma_beam_targets(agent, pow, false);
         if (warn_about_bad_targets(SPELL_PLASMA_BEAM,
-                                    plasma_beam_paths(you.pos(), known_targs)))
+                                    plasma_beam_paths(you.pos(), known_targs),
+            [](const monster& m) { return m.res_fire() == 3 && m.res_elec() == 3 ;}))
         {
             return spret::abort;
         }
@@ -4854,8 +4855,11 @@ spret cast_magnavolt(coord_def target, int pow, bool fail)
         targets.push_back(target);
     vector<coord_def> paths = get_magnavolt_beam_paths(targets);
 
-    if (warn_about_bad_targets(SPELL_MAGNAVOLT, paths))
+    if (warn_about_bad_targets(SPELL_MAGNAVOLT, paths,
+            [](const monster& m) { return m.res_elec() == 3 ;}))
+    {
         return spret::abort;
+    }
 
     fail_check();
 
