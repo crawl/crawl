@@ -9,7 +9,7 @@
 	url = https://github.com/crawl/crawl-luajit.git
 [submodule "crawl-ref/source/contrib/pcre"]
 	path = crawl-ref/source/contrib/pcre
-	url = https://github.com/crawl/crawl-pcre.git
+	url = https://github.com/powerbf/crawl-pcre.git
 [submodule "crawl-ref/source/contrib/freetype"]
 	path = crawl-ref/source/contrib/freetype
 	url = https://github.com/crawl/crawl-freetype.git
