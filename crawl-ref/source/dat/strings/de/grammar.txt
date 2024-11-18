@@ -213,7 +213,7 @@ GENERATE:gen
 /Gelée Royales/Gelée Royale/
 /uss\b/us/
 /(ss|sch|[Gg]eist)s?(?=(#|$))/$1es/
-/^(?!(\{adj\-er\}|[a-zäöüß\-]+er ).*?(?=(#|$))/ss$/s'/
+/^(?!(\{adj\-er\}|[a-zäöüß\-]+er )).*?(?=(#|$))/ss$/s'/
 /^(der|einer|deiner) (.*)Lernäische Hydras?/$1 $2Lernäischen Hydra/
 /Lernäische Hydras?/Lernäischer Hydra/
 
