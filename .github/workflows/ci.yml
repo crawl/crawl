@@ -129,7 +129,7 @@ jobs:
           util/tag-major-upgrade -t 35
           util/tag-35-upgrade.py
         working-directory: crawl-ref/source
-      - run: make -j$(nproc) ${{ matrix.build_opts }} ${{ matrix.debug }} ${{ matrix.build_all }}
+      - run: make -j$(nproc) i18n-tests ${{ matrix.build_opts }} ${{ matrix.debug }} ${{ matrix.build_all }}
         working-directory: crawl-ref/source
       # Only run `make test` with TAG_MAJOR_VERSION 34 (it fails with 35).
       - if: matrix.debug == 'FULLDEBUG=1' && (matrix.build_opts == '' || matrix.build_opts == 'WEBTILES=1') && matrix.tag_upgrade == false
