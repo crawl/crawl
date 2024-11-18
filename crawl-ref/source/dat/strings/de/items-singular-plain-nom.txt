@@ -32,7 +32,7 @@ Geschoss
 
 %%%%
 %sclub
-{adj-e}%sKnüppel
+{adj-er}%sKnüppel
 %%%%
 %swhip
 {adj-e}%sPeitsche

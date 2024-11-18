@@ -32,7 +32,7 @@ your missile
 
 %%%%
 your %sclub
-dein {adj-e}%sKnüppel
+dein {adj-er}%sKnüppel
 %%%%
 your %swhip
 deine {adj-e}%sPeitsche
