@@ -1875,7 +1875,12 @@ void monster::mark_summoned(int summon_type, int longevity, bool mark_items,
     if (longevity > 0)
         add_ench(mon_enchant(ENCH_SUMMON_TIMER, 1, 0, longevity));
 
-    add_ench(mon_enchant(ENCH_SUMMON, summon_type, 0, INT_MAX));
+    // Fully replace any existing summon source, if we're giving a new one.
+    if (has_ench(ENCH_SUMMON) && summon_type != 0)
+        del_ench(ENCH_SUMMON);
+
+    if (!has_ench(ENCH_SUMMON))
+        add_ench(mon_enchant(ENCH_SUMMON, summon_type, 0, INT_MAX));
 
     if (mark_items)
         for (mon_inv_iterator ii(*this); ii; ++ii)
