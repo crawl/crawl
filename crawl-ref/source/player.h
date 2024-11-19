@@ -878,11 +878,14 @@ public:
     int adjusted_body_armour_penalty(int scale = 1) const;
     int adjusted_shield_penalty(int scale = 1) const;
 
-    // Calculates total permanent EV/SH if the player was/wasn't wearing a given item
-    void ac_ev_sh_with_specific_item(int scale, const item_def& new_item,
-                                     int *ac, int *ev, int *sh);
-    void ac_ev_sh_without_specific_item(int scale, const item_def& item_to_remove,
-                                        int *ac, int *ev, int *sh);
+    // Calculates total permanent AC/EV/SH if the player was/wasn't wearing a
+    // given item, along with the fail rate on all their known spells.
+    void preview_stats_with_specific_item(int scale, const item_def& new_item,
+                                          int *ac, int *ev, int *sh,
+                                          FixedVector<int, MAX_KNOWN_SPELLS> *fail);
+    void preview_stats_without_specific_item(int scale, const item_def& item_to_remove,
+                                             int *ac, int *ev, int *sh,
+                                             FixedVector<int, MAX_KNOWN_SPELLS> *fail);
 
     bool wearing_light_armour(bool with_skill = false) const;
     int  skill(skill_type skill, int scale = 1, bool real = false,

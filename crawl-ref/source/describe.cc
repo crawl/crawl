@@ -1874,14 +1874,15 @@ static string _equipment_switchto_string(const item_def &item)
 
 /**
  * Describe how (un)equipping a piece of equipment might change the player's
- * AC/EV/SH stats. We don't include temporary buffs in this calculation.
+ * AC/EV/SH and spell failure. We don't include temporary buffs in this
+ * calculation.
  *
  * @param item    The item whose description we are writing.
  * @param remove  Whether the item is already equipped, and thus whether to
                   show the change solely from unequipping the item.
  * @return        The description.
  */
-static string _equipment_ac_ev_sh_change_description(const item_def &item,
+static string _equipment_property_change_description(const item_def &item,
                                                      bool remove = false)
 {
     // First, test if there is any AC/EV/SH change at all.
@@ -1889,16 +1890,32 @@ static string _equipment_ac_ev_sh_change_description(const item_def &item,
     const int cur_ev = you.evasion_scaled(100, true);
     const int cur_sh = player_displayed_shield_class(100, true);
     int new_ac, new_ev, new_sh;
+    FixedVector<int, MAX_KNOWN_SPELLS> cur_fail, new_fail;
+    for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
+        cur_fail[i] = raw_spell_fail(you.spells[i]);
 
     if (remove)
-        you.ac_ev_sh_without_specific_item(100, item, &new_ac, &new_ev, &new_sh);
+        you.preview_stats_without_specific_item(100, item, &new_ac, &new_ev, &new_sh, &new_fail);
     else
-        you.ac_ev_sh_with_specific_item(100, item, &new_ac, &new_ev, &new_sh);
+        you.preview_stats_with_specific_item(100, item, &new_ac, &new_ev, &new_sh, &new_fail);
+
+    // Check if any spell failures changed, and save the greatest magnitude that
+    // any of them changed.
+    int fail_change = 0;
+    for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
+    {
+        if (cur_fail[i] != new_fail[i])
+        {
+            if (fail_change == 0 || abs(new_fail[i] - cur_fail[i]) > abs(fail_change))
+                fail_change = new_fail[i] - cur_fail[i];
+        }
+    }
 
     // If we're previewing non-armour and there is no AC/EV/SH change, print no
     // extra description at all (since almost all items of these types will
     // change nothing)
     if (cur_ac == new_ac && cur_ev == new_ev && cur_sh == new_sh
+        && fail_change == 0
         && (item.base_type != OBJ_ARMOUR || item.sub_type == ARM_ORB))
     {
         return "";
@@ -1947,7 +1964,117 @@ static string _equipment_ac_ev_sh_change_description(const item_def &item,
                        + _describe_point_diff(cur_sh, new_sh) + ".";
     }
 
+    if (fail_change != 0)
+    {
+        description += "\nYour spell failure would ";
+        description += (fail_change > 0) ? "worsen" : "improve";
+        if (abs(fail_change) <= 1)
+            description += " trivially.";
+        else
+            description += " (press '!' to view details).";
+    }
+
     return description;
+}
+
+static string _spell_fail_change_description(const item_def &item,
+                                             bool remove = false)
+{
+    int dummy1, dummy2, dummy3;
+    FixedVector<int, MAX_KNOWN_SPELLS> cur_fail, new_fail;
+    for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
+        cur_fail[i] = raw_spell_fail(you.spells[i]);
+
+    if (remove)
+        you.preview_stats_without_specific_item(100, item, &dummy1, &dummy2, &dummy3, &new_fail);
+    else
+        you.preview_stats_with_specific_item(100, item, &dummy1, &dummy2, &dummy3, &new_fail);
+
+    // Check if any spell failures changed.
+    int fail_change = 0;
+    for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
+    {
+        if (cur_fail[i] != new_fail[i])
+        {
+            fail_change = new_fail[i] - cur_fail[i];
+            break;
+        }
+    }
+
+    // If nothing changed, generate no text
+    if (fail_change == 0)
+        return "";
+
+    // If they did, convert all failures into percentages to see whether any
+    // change was non-trivial
+    fail_change = 0;
+    for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
+    {
+        if (cur_fail[i] == new_fail[i])
+            continue;
+
+        cur_fail[i] = failure_rate_to_int(cur_fail[i]);
+        new_fail[i] = failure_rate_to_int(new_fail[i]);
+        fail_change = cur_fail[i] - new_fail[i];
+    }
+
+    // If nothing changed *meaningfully*, generate no text
+    if (fail_change == 0)
+        return "";
+
+    // Otherwise, generate a complete list of all non-trivial changes
+    string desc;
+    desc = make_stringf("If you %s this item, your spell failure would %s:\n",
+                        remove ? "removed" : "equipped",
+                        fail_change < 0 ? "worsen" : "improve");
+
+    // Sort spells by degree of change in their fail rates (and then by
+    // absolute fail rate after that)
+    vector<pair<int, int>> spell_sort;
+    for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
+    {
+        if (cur_fail[i] == new_fail[i])
+            continue;
+
+        spell_sort.push_back({i, abs(cur_fail[i] - new_fail[i])});
+    }
+    sort(spell_sort.begin( ), spell_sort.end( ),
+            [cur_fail](pair<int, int>& a, pair<int, int>& b)
+                { return cur_fail[a.first] > cur_fail[b.first];});
+    sort(spell_sort.begin( ), spell_sort.end( ),
+            [](pair<int, int>& a, pair<int, int>& b)
+                { return a.second > b.second;});
+
+
+    // vector<string> entries;
+    for (size_t i = 0; i < spell_sort.size(); ++i)
+    {
+        int index = spell_sort[i].first;
+
+        int diff = new_fail[index] - cur_fail[index];
+        string colour;
+        if (diff > 20)
+            colour = "magenta";
+        else if (diff > 11)
+            colour = "lightred";
+        else if (diff > 5)
+            colour = "yellow";
+        else if (diff < -11)
+            colour = "lightblue";
+        else if (diff < -5)
+            colour = "white";
+        else
+            colour = "lightgrey";
+
+        string entry = make_stringf("<%s>%s%3d%%-> %3d%%</%s>\n",
+                colour.c_str(),
+                chop_string(spell_title(you.spells[index]), 32).c_str(),
+                cur_fail[index], new_fail[index], colour.c_str());
+
+        desc += entry;
+    }
+
+    return desc;
 }
 
 static bool _you_are_wearing_item(const item_def &item)
@@ -1955,14 +2082,14 @@ static bool _you_are_wearing_item(const item_def &item)
     return get_equip_slot(&item) != EQ_NONE;
 }
 
-static string _equipment_ac_ev_sh_change(const item_def &item)
+static string _equipment_property_change(const item_def &item)
 {
     string description;
 
     if (!_you_are_wearing_item(item))
-        description = _equipment_ac_ev_sh_change_description(item);
+        description = _equipment_property_change_description(item);
     else
-        description = _equipment_ac_ev_sh_change_description(item, true);
+        description = _equipment_property_change_description(item, true);
 
     return description;
 }
@@ -2000,7 +2127,7 @@ static string _describe_weapon(const item_def &item, bool verbose, bool monster)
         description += "\n\n" + art_desc;
 
     if (verbose && crawl_state.need_save && you.could_wield(item, true, true))
-        description += _equipment_ac_ev_sh_change(item);
+        description += _equipment_property_change(item);
 
     if (verbose)
     {
@@ -2351,7 +2478,7 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
         && can_wear_armour(item, false, true)
         && item_ident(item, ISFLAG_KNOW_PLUSES))
     {
-        description += _equipment_ac_ev_sh_change(item);
+        description += _equipment_property_change(item);
     }
 
     const int DELAY_SCALE = 100;
@@ -2633,7 +2760,7 @@ static string _describe_jewellery(const item_def &item, bool verbose)
                && item.sub_type != RING_EVASION
                && item.sub_type != AMU_REFLECTION))
     {
-        description += _equipment_ac_ev_sh_change(item);
+        description += _equipment_property_change(item);
     }
 
     return description;
@@ -2954,7 +3081,7 @@ string get_item_description(const item_def &item,
                 description << "\n\n" + art_desc;
 
             if (verbose && crawl_state.need_save && you.could_wield(item, true, true))
-                description << _equipment_ac_ev_sh_change(item);
+                description << _equipment_property_change(item);
         }
         description << "\n\nIt falls into the 'Staves' category. ";
         description << _handedness_string(item);
@@ -4148,6 +4275,7 @@ command_type describe_item_popup(const item_def &item,
     bool done = false;
     command_type action = CMD_NO_CMD;
     int lastch; // unused??
+    bool show_spell_success = false;
     popup->on_keydown_event([&](const KeyEvent& ev) {
         const auto key = ev.key() == '{' ? 'i' : ev.key();
         lastch = key;
@@ -4156,6 +4284,28 @@ command_type describe_item_popup(const item_def &item,
             done = true;
         else if (scroller->on_event(ev))
             return true;
+        else if (key == '!' && item_type_is_equipment(item.base_type))
+        {
+            string spell_success;
+            // Only switch tab if there's any spell rate changes.
+            if (!show_spell_success)
+            {
+                spell_success = _spell_fail_change_description(item, item_is_equipped(item));
+                if (spell_success.empty())
+                    return false;
+            }
+
+            show_spell_success = !show_spell_success;
+            if (show_spell_success)
+                text->set_text(formatted_string::parse_string(spell_success));
+            else
+                text->set_text(fs_desc.trim());
+#ifdef USE_TILE_WEB
+            tiles.json_open_object();
+            tiles.json_write_string("body", text->get_text().to_colour_string(LIGHTGREY));
+            tiles.ui_state_change("describe-spell-success", -1);
+#endif
+        }
 
         const vector<pair<spell_type,char>> spell_map = map_chars_to_spells(spells);
         auto entry = find_if(spell_map.begin(), spell_map.end(),

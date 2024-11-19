@@ -483,6 +483,16 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player, opt
             $popup.children(".footer").html(msg.prompt).addClass("fg3");
     }
 
+    function describe_item_spell_success(desc)
+    {
+        var $popup = ui.top_popup();
+        if (desc.body !== undefined)
+        {
+            var $body = $popup.find(".simplebar-content");
+            $body.html(fmt_body_txt(desc.body));
+        }
+    }
+
     function describe_monster(desc)
     {
         var $popup = $(".templates > .describe-monster").clone();
@@ -1066,6 +1076,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player, opt
             "formatted-scroller" : formatted_scroller_update,
             "progress-bar" : progress_bar_update,
             "newgame-choice" : newgame_choice_update,
+            "describe-spell-success" : describe_item_spell_success,
         };
         var handler = ui_handlers[msg.type];
         if (handler)

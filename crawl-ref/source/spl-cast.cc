@@ -403,6 +403,9 @@ static int _skill_power(spell_type spell)
  */
 int raw_spell_fail(spell_type spell)
 {
+    if (spell == SPELL_NO_SPELL)
+        return 10000;
+
     int chance = 60;
 
     // Don't cap power for failure rate purposes.
