@@ -405,7 +405,7 @@ Schattenform
 # Ru
 %%%%
 Draw Out Power
-Kraft schöpfen 
+Kraft schöpfen
 %%%%
 Power Leap
 Mächtiger Sprung
