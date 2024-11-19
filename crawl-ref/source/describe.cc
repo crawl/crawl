@@ -1902,12 +1902,18 @@ static string _equipment_property_change_description(const item_def &item,
     // Check if any spell failures changed, and save the greatest magnitude that
     // any of them changed.
     int fail_change = 0;
+    int visible_fail_change = 0;
     for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
     {
         if (cur_fail[i] != new_fail[i])
         {
-            if (fail_change == 0 || abs(new_fail[i] - cur_fail[i]) > abs(fail_change))
-                fail_change = new_fail[i] - cur_fail[i];
+            int new_fail_change = new_fail[i] - cur_fail[i];
+            int new_visible_fail_change = failure_rate_to_int(new_fail[i])
+                                            - failure_rate_to_int(cur_fail[i]);
+            if (abs(new_fail_change) > fail_change)
+                fail_change = new_fail_change;
+            if (abs(new_visible_fail_change) > visible_fail_change)
+                visible_fail_change = new_visible_fail_change;
         }
     }
 
@@ -1968,10 +1974,13 @@ static string _equipment_property_change_description(const item_def &item,
     {
         description += "\nYour spell failure would ";
         description += (fail_change > 0) ? "worsen" : "improve";
-        if (abs(fail_change) <= 1)
+        if (visible_fail_change == 0)
             description += " trivially.";
         else
-            description += " (press '!' to view details).";
+        {
+            description += make_stringf(" by up to %d%% (press '!' for details).",
+                                    abs(visible_fail_change)).c_str();
+        }
     }
 
     return description;
@@ -2015,7 +2024,9 @@ static string _spell_fail_change_description(const item_def &item,
 
         cur_fail[i] = failure_rate_to_int(cur_fail[i]);
         new_fail[i] = failure_rate_to_int(new_fail[i]);
-        fail_change = cur_fail[i] - new_fail[i];
+
+        if (cur_fail[i] != new_fail[i])
+            fail_change = cur_fail[i] - new_fail[i];
     }
 
     // If nothing changed *meaningfully*, generate no text
