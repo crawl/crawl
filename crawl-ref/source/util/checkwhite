@@ -66,12 +66,12 @@ unless (@files)
     if ($modified_only)
     {
         my $cached = $modified_cached ? "--cached" : "";
-        open FLIST, "git diff-index -M --name-only $cached --relative HEAD| grep -v '\.md' |"
+        open FLIST, "git diff-index -M --name-only $cached --relative HEAD| grep -v '\\.md' |"
             or die "Can't run git diff-index";
     }
     else
     {
-        open FLIST, "git ls-files| grep -v '\.md' |" or die "Can't run git ls-files";
+        open FLIST, "git ls-files| grep -v '\\.md' |" or die "Can't run git ls-files";
     }
     @files = <FLIST>;
     close FLIST;
