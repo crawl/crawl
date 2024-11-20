@@ -269,7 +269,7 @@ However, the terms in BG don't always match the meanings in DCSS.
 
 Conjuration: "Herbeirufung holt normalerweise Dinge oder Gegenstände von einem anderen Ort." (In DCSS, Conjuration creates things rather then bringing them from somewhere else.)
 
-Summoning: "Eine Beschwörung ermöglicht es dem Zaubernden, lebende Wesen und Kräfte zu beschwören oder Energien von anderen Ebenen zu kanalisieren." (This is summoning in DCSS.)
+Summoning: "Eine Beschwörung ermöglicht es dem Zaubernden, lebende Wesen und Kräfte zu beschwören oder Energien von anderen Ebenen zu kanalisieren." (The Wesen part at least matches DCSS.)
 
 "Eine Anrufung (Evocation) ruft normalerweise ein höheres Wesen an, das die Energie dann nach Wünschen des Zaubernden einsetzen soll, und bei einer Hervorrufung (Invocation) wird die Energie direkt vom Zaubernden geformt."
 
@@ -278,7 +278,7 @@ Summoning: "Eine Beschwörung ermöglicht es dem Zaubernden, lebende Wesen und K
 This gives us:
 
 - BG Conjuration (no equivalent in DCSS) -> Herbeirufung
-- Summoning -> Beschwörung
+- BG Summoning (~DCSS Summoning) -> Beschwörung
 - BG Evocation (DCSS Invocation) -> Anrufung
 - BG Invocation (DCSS Conjuration) -> Hervorrufung
 
