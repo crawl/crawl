@@ -7,7 +7,6 @@
 2. https://www.duden.de/woerterbuch
 3. https://dict.leo.org/german-english
 4. https://de.wikipedia.org
-
 5. https://www.dnddeutsch.de
 6. https://de.classic.wowhead.com/database
 7. https://lotr.fandom.com/de/wiki
@@ -26,120 +25,287 @@
 
 ## Specific Terms
 
-Choosing translations is not always easy for several reasons:
+DCSS has many terms that have a specific meaning withint the game and so need to be translated consistently
+everywhere they occur. However, choosing translations is not always easy for several reasons:
 
 - Word meanings in the context of DCSS may not match common usage
 - Many words have overlapping meaning in general usage, but specific distinct meanings in DCSS (e.g. pain, agony and torment are all distinct things in DCSS)
 - Sometimes there is no direct translation for an English word
 - Sometimes multiple words with distinct meaning in English translate to a single word in the other language (and vice versa)
 
-I have chosen the following translations (explanations below):
 
-- intelligence = Intelligenz
-- dexterity = Geschicklichkeit
+These have overlapping meanings in general usage, but distinct meanings in DCSS:
+
+- ability = some special action you can do (can be inborn in your species, or be granted by your god or by an item)
+- skill = a competence that is improved through training
+- aptitude = an inborn quality of your species that determines how easy it is to train a specific skill
+
+We used:
+
+- ability = Fähigkeit
+- skill = Fertigkeit
+- aptitude = Begabung
+
+Another set:
+
+- pain = a spell/ability that causes a small amount of damage
+- agony = a spell/ability that causes a large amount of damage
+- torment = a spell/ability that halves the target's HP. There is also a monster with this ability called a tormentor.
+
+We used:
+
+- pain = Schmerz
+- agony = Agonie
+- torment = Qual (proposed change to peinigen/Peinigung (and Peiniger for tomentor))
+
+Another set:
+
+- drain (life) - Whan applied to the player, this reduces max HP. There is a related weapon brand called "draining" and the status "drained"
+- (stat) drain - reduce stats (STR/DEX/INT)
+- drain is also used in a more general sense. For example, ghost moths drain MP (mana)
+- sap (magic) - An effect caused by Demonspawn Warmongers that causes you to be unable to cast spells.
+
+In German, there are many words that have similar meanings: entziehen, auslaugen, zehren, aufzehren, auszehren, abzehren, verzehren.
+Some relevant links:
+
+- https://www.wowhead.com/de/spell=266173/auslaugen
+- https://www.wowhead.com/spell=6770/sap
+- https://www.wowhead.com/spell=151329/sap-magic
+- https://www.wowhead.com/de/spell=151329/magie-entziehen
+- https://www.wowhead.com/de/spell=225420/die-lebenden-auszehren
+- https://www.wowhead.com/de/spell=187340/aufzehren
+- https://www.wowhead.com/de/spell=266173/auslaugen
+- https://www.wowhead.com/de/spell=134776/entziehen
+- https://www.wowhead.com/de/spell=339460/entzug
+
+We used:
+
+- drain/draining/drained = auszehren/Auszehrung/ausgezehrt
+- sap/sapped = auslaugen/ausgelaugt
+
+Another set of synonyms that have distinct meanings in DCSS:
+
+- berserk - a status affect/ability that makes a player/monster faster and stronger, but because they're in wild, unthinking state, they cannot do things like read or cast
+- frenzy - similar to berserk, but it makes the affected being unable to distinguish friend from foe.
+- rage - a property of items that causes a player to go berserk.
+- rampage - a property of items that makes the player rush towards enemies. It does not put them in a berserk/frenzied state.
+
+We used:
+
+- berserk = Berserkerwut
+- berserker (background) = Berserker
+- frenzy = Raserei
+- rage = Kampfrausch (lit. battle frenzy) [5]
+- rampage = randalieren/Randalierung
+
+Another set:
+
+- strength - one of the player's 3 main attributes/stats, along with dexterity and intelligence
+- might - a temporary status effect that increases damage dealt
+- power - spell power, but also in the names of some divine abilities
+
+We used:
+
 - strength = Stärke
 - might = Macht
 - power = Kraft
-- distortion = Verzerrung
-- pain = Schmerzen
-- agony = Agonie
-- torment = Qual
-- magic wand = Zauberstab
-- magic staff = magischer Stecken
-- evoke = evozieren
-- invoke (call on a god) = anrufen
-- summon/summoning = herbeirufen/Herbeirufung
-- conjure/conjuration = hervorrufen/Hervorrufung
-- transmutation = Verwandlung
+
+Different types of magic users:
+
 - mage = Magier
-- wizard = Zauberer
-- barding = Gelieger
-- blink (short-range teleport) = blinzeln
-- resistance = Resistenz
-- put on (jewellery) - anlegen
-- wear (armour) - anlegen
-- remove (jewellery) = ablegen
-- take off (armour) = ablegen
-- drop - hinlegen/absetzen (TODO: standardise)
-- ability = Fähigkeit
-- skill = Fertigkeit
+- wizard (a generalist mage) = Zauberer
+- sorcerer (a powerful mage - orc sorcerers are more dangerous than orc wizards) -> Hexenmeister
+- conjurer (a mage that specialises in conjurations) - Konjurant (see also conjurations below)
+- enchanter (a mage that specialises in hexes) - Verzauberer
+- the Enchantress -> die Zauberin, retaining the double-meaning
+- witch = Hexe
+
+Also, note:
+
+- shapeshifter = Verwandler
+- (draconian) shifter (NOT a shapeshifter - they use translocations magic (teleportation, etc.) = Verschieber
+
+Banishment has a very specific meaning in DCSS:
+
+- banishment (send the player or a monster to the Abyss) = Verbannung [5]
+- abjuration (get rid of a summoned monster) = Annulierung (there is probably a better translation than this)
+
+The German word Zauber can mean both magic and spell.
+
+- spell = Zauber or Zaubersprüch
+- magic = Magie
+
+Stab is the usual German word for both wand and staff. We used:
+
+- magic wand = Zauberstab
+- magic staff = magischer Stecken. Taken from [5].
+
+Lair can be translated as Versteck (which also means stash) or Höhle (cave). We used:
+
+- Lair (of beasts) = Höhle (der Bestien)
+- stash (pile of items) = Versteck
+- ice cave = Eishöhle
+
+Dodging and evasion:
+
 - dodging (skill) = Ausweichen
 - evasion (attribute) = Umgehung
-- Lair (dungeon branch) = Versteck
-- stash (pile of items) = Versteck (one of these will need to be changed)
-- The Shining One (god) = der Glänzende (would der Leuchtende be better?)
+
+DCSS has specific terms for equipping/unequipping jewellery vs armour vs weapons.
+
+Jewellery (rings and amulets):
+
+- put on = anlegen
+- remove = abnehmen
+
+Armour (including body armour, hat, helmet, gloves, boots, barding, cloak):
+
+- wear = anziehen (the usual German word is tragen, but that also means carry)
+- take off = ausziehen
+
+These words work for body armour, but do they work for other things like hats, boots, etc.?
+
+Weapons:
+
+- wield = handhaben (schwingen and führen also considered)
+- unwield = wegstecken (lit. put away - I couldn't think of a better translation)
+
+The word "level" is used in many different things in DCSS:
+
+- Dungeon level (floor) = Ebene
+- Experience level = (Erfahrungs)stufe
+- Skill level = Stufe
+- Spell level (e.g. level 9 spell) = Stufe (Grad, Rang?)
+- Spell level (how much "room" you have to memorise spells) = Zauberplatz
+
+The last one is weird usage by DCSS. Most games would use "spell slots".
+DCSS uses spell slot to mean the letter assigned to the spell in the spell casting menu
+(analogous to item slots in the inventory screen).
+
+- armour = Rüstung (or Panzerung)
+- mail = Panzer
+
+It seems to be common practice to translate leather armour as Lederrüstung, and chainmail as Kettenpanzer, and so on.
+Plate armour (often called plate mail in other games) is Plattenpanzer.
+
+- barding = Gelieger
+
+In real life, horse armour, but in DCSS, armour for the back/lower part of a centaur/naga/palentonga.
+In German, armour for a horse is called der Rossharnisch or das Gelieger. We can't really use the word
+Rossharnisch because Ross is a warhorse, so it doesn't work for naga or palentonga. Nor can we use Harnisch
+by itself, because that just means armour. https://de.wikipedia.org/wiki/Europ%C3%A4ischer_Rossharnisch
+
+Some other terms:
+
+- intelligence = Intelligenz
+- dexterity = Geschicklichkeit
+- distortion = Verzerrung
+- transmutation = Verwandlung
+- resistance = Resistenz
+- drop - hinlegen/absetzen (TODO: standardise)
+- The Shining One (god) = der Strahlende (Glänzende and Leuchtende were also considered)
 - sling bullet = Schleuderkugel (would Schleudergeschoss be better?)
-- shock = Schock
-
-Words that have a very specific meaning in the context of DCSS that may not match common usage, or at least not include all possible meanings in common usage:
-
-- invoke - use a god-given ability (i.e. call forth divine power or call on a god to do something)
-- evoke - use an ability granted by an item (i.e call forth the power of an item)
-- summon - call forth a demon/being/animal
-- conjure - call forth something inanimate like fire, energy, etc. (NOT demons, etc. In common usage, one can conjure a demon/spirit, but not in DCSS.)
-- torment vs. agony - these are two different spells. Agony does moderate amount of damage. Torment halves current HP.
-- blink - short-range teleport
-- strength vs. might vs. power - strength is a player attribute like dexterity and intelligence. It affects damage dealt, but also lowers the effect of armour encumbrance. Might is a temporary status effect that increases damage dealt. Power normally means the strength of a magic spell.
-- berserk vs. frenzy vs. rage vs. rampage - Berserk is a status affect/ability that makes a player/monster faster and stronger, but because they're in wild, unthinking state, they cannot do things like read or cast spells. Frenzy is similar to berserk, but only for monsters. It also makes them unable to distinguish friend from foe. Rage is a property of items that causes a player to go berserk. Rampage is a property of items that makes the player rush towards enemies. It does not put them in a berserk/frenzied state.
-- wizard - a generalist mage
-- conjurer - In common usage, a synonym for wizard, but in DCSS, specifically a mage specialising in conjuration (see above)
-- enchanter - In common usage, a synonym for wizard, but in DCSS, specifically a mage specialising in hexes, which debuff enemies (slow, etc.). There is also an enemy called the Enchantress (feminine form of enchanter), who casts those kinds of spells.
-- shapeshifter/shifter - a shapeshifter changes their shape. A (draconian) shifter moves players/monsters around with magic.
-- shock - the spell gives and electric shock. This would normally be called Stromschlag in German, but the DnD SRD 5.1 on p353 uses Schock for the similarly named Will-o-Wisp (Irrlicht) ability. Also, Google Ngrams finds many hits for "elecktrischer Schock, although Stromschlag and elektrisher Schlag are far more common.
-
-- In everyday English, drain and sap are synonyms, but not in DCSS. Sap is a specific effect that makes magic difficult to use (but it's different from merely draining mana). Also drain is used in a couple of different ways. There is "drain life", which drains the player's max HP, and has the associated brand "drain", and the status "drained". However, it's also possible to drain stats (strength, etc.), and MP (mana).
-- The situation in German is similar. There are many words that have similar meanings: entziehen, auslaugen, zehren, aufzehren, auszehren, abzehren, verzehren.
-https://www.wowhead.com/de/spell=266173/auslaugen
-- Some relevant links:
-- https://www.wowhead.com/spell=6770/sap
-- https://www.wowhead.com/spell=151329/sap-magic
-https://www.wowhead.com/de/spell=151329/magie-entziehen
-https://www.wowhead.com/de/spell=225420/die-lebenden-auszehren
-https://www.wowhead.com/de/spell=187340/aufzehren
-https://www.wowhead.com/de/spell=266173/auslaugen
-https://www.wowhead.com/de/spell=134776/entziehen
-https://www.wowhead.com/de/spell=339460/entzug
-- I went with drain = entziehen for the actual act of draining strength or whatever, drained (of max HP) = (aus)gezehrt, sap = auslaugen
-
-The German word Stab means both staff and wand. One can distinguish Zauberstab (magic wand/staff) from Kampfstab (fighting staff), but how do you distinguish a magical staff from a magic wand? Seems like Harry Potter's wand is a Zauberstab, but so is Gandalf's staff. [5] uses Stecken for magical staves.
-
-- [5] has might = Stärke, but that means strength, so I went for Macht.
 - heroism = Heldenmut [5]
 - transmutation = Verwandlung [5]
 - experience points = Erfahrungspunkte [5]
-- rage = Kampfrausch (lit. battle frenzy) [5]
-- abjuration = Bannmagie [5]
-- banishment = Verbannung [5]
 - melee = Nahkampf [12]
+- ranged combat = Fernkampf
+- potion = Trank
+- gold coins/gold pieces = Goldmünzen
+- teleport = teleportieren
+- blink (short-range teleport) = blinzeln
 
-Conjuration/Summoning/Evocation are problematic. They can be used interchangably in English, and there are also overalapping meanings of the corresponding words in German. [5] has:
+In [5], blink is translated as Flimmern.
+In [6] translated as Blinzeln: https://de.classic.wowhead.com/search?q=blinzeln
 
-- Evocation -> Hervorrufung (Seems to correspond to DCSS Conjuration)
-- Conjuration -> Beschwörung (Seems to be a combination DCSS Conjuration and Summoning)
+- shock = Schock
 
-Comparing http://www.baldurs-gate.ch/bg2/ to https://baldursgate.fandom.com/wiki/Spells_%28Baldur%27s_Gate_II%29#Schools_of_magic:
+The spell gives and electric shock. This would normally be called Stromschlag in German, but the DnD SRD 5.1 on p353 uses Schock for the similarly named Will-o-Wisp (Irrlicht) ability. Also, Google Ngrams finds many hits for "elecktrischer Schock, although Stromschlag and elektrisher Schlag are far more common.
 
-- Conjuration/Summoning -> Herbeirufung/Beschwörung
-- Evocation/Invocation -> Anrufung/Hervorrufung
+Some specific terms from the German D&D System Reference Document [17]:
+
+- cantrip (simple spell) = Zaubertrick
+- spell level = Zaubergrad
+- spell slot = Zauberplatz (in D&D, these are used up when you cast spells, and are replenished by resting)
+- cast spell = einen Zauber wirken
+- (spell) range = Reichweite
+- casting time = Zeitaufwand
+- (spell) duration = Wirkungsdauer
+- area of effect = Wirkungsbereich
+- abjuration = Bannzauber
+- experience points = Erfahrungspunkte
+- hit dice = Trefferwürfel
+- manual = Handbuch
+- breath weapon = Odemwaffe
+- disruption (affects undead) - Zusammenbruch
+
+
+## Conjuration vs Summoning vs Evocation vs Invocation
+
+This was one of the trickiest translations. These have overlapping meanings in general usage, but distinct meanings in DCSS:
+
+- summon = call forth a being (animal, demon, etc.)
+- conjure = call forth something inanimate (e.g. fire, ice, etc.)
+- evoke = use the ability of an item
+- invoke = use a divine ability (i.e. call on a god to do something)
+
+We used:
+
+- summon/summoning/summoner = beschwören/Beschwörung/Beschwörer
+- conjure/conjuration/conjurare = ?/Konjuration/Konjurant
+- evoke/evocation = evozieren/Evozierung
+- invoke/invocation = anrufen/Anrufung
+
+D&D ([5]) has:
+
+- Evocation = Hervorrufung (but this seems to correspond to DCSS Conjuration)
+- Conjuration = Beschwörung (seems to be a combination DCSS Conjuration and Summoning)
+
+Baldurs gate:
+
+Comparing https://www.baldurs-gate.ch/bg2/char/magie/magierschulen.html
+and https://baldursgate.fandom.com/wiki/Spells_%28Baldur%27s_Gate_II%29#Schools_of_magic yields some translations.
+
+However, the terms in BG don't always match the meanings in DCSS.
+
+Conjuration: "Herbeirufung holt normalerweise Dinge oder Gegenstände von einem anderen Ort." (In DCSS, Conjuration creates things rather then bringing them from somewhere else.)
+
+Summoning: "Eine Beschwörung ermöglicht es dem Zaubernden, lebende Wesen und Kräfte zu beschwören oder Energien von anderen Ebenen zu kanalisieren." (This is summoning in DCSS.)
+
+"Eine Anrufung (Evocation) ruft normalerweise ein höheres Wesen an, das die Energie dann nach Wünschen des Zaubernden einsetzen soll, und bei einer Hervorrufung (Invocation) wird die Energie direkt vom Zaubernden geformt."
+
+(So, Baldur's Gate's Evocation/Anrufung is Invocation in DCSS, and BG's Invocation/Hervorrufung is more like DCSS's Conjuration.)
+
+This gives us:
+
+- BG Conjuration (no equivalent in DCSS) -> Herbeirufung
+- Summoning -> Beschwörung
+- BG Evocation (DCSS Invocation) -> Anrufung
+- BG Invocation (DCSS Conjuration) -> Hervorrufung
 
 Looking in the dictionary:
 
 - Herbeirufen clearly means summon: https://de.thefreedictionary.com/herbeirufen
-- Beschwören seems to also mean summon: https://de.thefreedictionary.com/beschw%c3%b6ren
-- Anrufen means to call someone, including a god, for help (i.e. invoke): https://de.thefreedictionary.com/anrufen
+- Beschwören seems to also mean summon: https://www.dwds.de/wb/beschw%C3%B6ren?o=bewschw%C3%B6ren
+- Anrufen means to call someone, including a god, for help: https://de.thefreedictionary.com/anrufen
 - Hervorrufen seems to mean evoke: https://de.thefreedictionary.com/hervorrufen
 - Hervorzaubern seems to unambiguously mean conjure: https://de.pons.com/%C3%BCbersetzung/deutsch-englisch/hervorzaubern
 - Hervorrufer=conjurer: https://www.wowhead.com/de/npc=162288/hervorrufer-des-schwarzen-imperiums
 
-It's difficult to choose translations for the different types of magic users. I've gone with:
 
-- Wizard -> Zauberer (because that's what they used for Harry Potter)
-- the Enchantress -> die Zauberin, retaining the double-meaning
-- Sorcerer -> Hexenmeister
-- Mage -> Magier (so Earth Mage -> Erdmagier, etc.)
-- Shifter -> Verschieber (because verschieben means to move, displace)
+## Monsters
 
-The German for "(hob)goblin" is "Kobold", but there are already kobolds in the game, so I've kept the English names.
+Elf = der Elf (seems to be used in high fantasy in preference to die Elfe)
+
+Kobold is the German word for goblin, but kobolds and goblins are distinct monsters in DCSS. I've kept them the same in German.
+Since the English version uses a German word, I figure the German version can use an English word.
+
+Ball Python is a real animal. It's called Königspython in German.
+
+Ghost/wraith/phantom/spectre are all synonyms in everyday English, but distinct in DCSS.
+Some equivalent German words are Geist, Gespenst, Spuk, Phantom, Schemen, Schreckgespenst, Spukgespenst, Spukgestalt, Spektrum (archaic).
+[5] translates wraith as Todesalb, but it seems to be a pretty uncommon word.
+This needs to be fixed up.
 
 Zyme is an obscure word for something that causes infection. It's related to the word enzyme.
 Since the German word for enzyme is das Enzym, it's logical that Zyme -> das Zym.
@@ -165,39 +331,6 @@ Spriggan is translated as der Zweigling here: https://elderscrolls.fandom.com/de
 
 Deathcap is Knollenblätterpilz in German: https://de.wikipedia.org/wiki/Gr%C3%BCner_Knollenbl%C3%A4tterpilz
 
-Ghost/wraith/spectre/phantom are all synonyms in everyday English, but distinct in DCSS.
-Some equivalent German words are Geist, Gespenst, Spuk, Phantom, Schemen, Schreckgespenst, Spukgespenst, Spukgestalt.
-[5] translates wraith as Todesalb, but it seems to be a pretty uncommon word.
-
-Blink - in [5] translated as Flimmern.
-      - in [6] translated as Blinzeln: https://de.classic.wowhead.com/search?q=blinzeln
-
-Some specific terms from the German D&D System Reference Document [17]:
-
-- spell = Zauber
-- cantrip (simple spell) = Zaubertick
-- spell level = Zaubergrad
-- spell slot = Zauberplatz (in D&D, these are used up when you cast spells, and are replenished by resting)
-- cast spell = einen Zauber wirken
-- (spell) range = Reichweite
-- casting time = Zeitaufwand
-- (spell) duration = Wirkungsdauer
-- area of effect = Wirkungsbereich
-- abjuration = Bannzauber
-- skill = fertigkeit
-- experience points = Erfahrungspunkte
-- hit dice = Trefferwürfel
-- manual = Handbuch
-- potion = Trank
-- breath weapon = Odemwaffe
-- disruption (affects undead) - Zusammenbruch
-
-In DCSS, barding is used to mean the piece of armour that covers the midsection of Nagas and Palentongas (and previously, the horsey part of a centaur).
-This is taken from the word for horse armour, but it's kind of a misnomer because barding refers to the entire suit of horse armour, not just the middle part.
-
-In German, armour for a horse is called der Rossharnisch or das Gelieger. Again, this refers to the entire thing, not just the middle part.
-We can't really use the word Rossharnisch because Ross is a warhorse. Nor can we use Harnisch by itself, because that just means armour.
-https://de.wikipedia.org/wiki/Europ%C3%A4ischer_Rossharnisch
 
 ## Adjectives
 
