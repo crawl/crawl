@@ -25,7 +25,7 @@
 
 ## Specific Terms
 
-DCSS has many terms that have a specific meaning withint the game and so need to be translated consistently
+DCSS has many terms that have a specific meaning within the game and so need to be translated consistently
 everywhere they occur. However, choosing translations is not always easy for several reasons:
 
 - Word meanings in the context of DCSS may not match common usage
@@ -122,8 +122,7 @@ Different types of magic users:
 
 Also, note:
 
-- shapeshifter = Verwandler
-- (draconian) shifter (NOT a shapeshifter - they use translocations magic (teleportation, etc.) = Verschieber
+- (draconian) shifter - (this is NOT a shapeshifter/transmuter (Verwandler) - shift here refers to movement via blinking/teleportation) = Verschieber
 
 Banishment has a very specific meaning in DCSS:
 
@@ -133,14 +132,14 @@ Banishment has a very specific meaning in DCSS:
 The German word Zauber can mean both magic and spell.
 
 - spell = Zauber or Zauberspruch
-- magic = Magie
+- magic = Magie or Zauberei
 
 Stab is the usual German word for both wand and staff. We used:
 
 - magic wand = Zauberstab
 - magic staff = magischer Stecken. Taken from [5].
 
-Lair can be translated as Versteck (which also means stash) or Höhle (cave). We used:
+Lair can be translated as Versteck (which also means stash) or Höhle (which also means cave). We used:
 
 - Lair (of beasts) = Höhle (der Bestien)
 - stash (pile of items) = Versteck
