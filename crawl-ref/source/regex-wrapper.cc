@@ -49,7 +49,7 @@ static pcre* _compile_regex(const string& pattern)
     return re;
 }
 
-string regex_search(const string& s, const string& pattern)
+string regexp_search(const string& s, const string& pattern)
 {
     string result;
     pcre* re = nullptr;
@@ -68,11 +68,11 @@ string regex_search(const string& s, const string& pattern)
         if (rc > 0 && ovector[0] >= 0 && ovector[1] >= 0)
             result = s.substr(ovector[0], ovector[1] - ovector[0]);
         else if (rc != PCRE_ERROR_NOMATCH)
-            debuglog("Error in regex_search(\"%s\", \"%s\"): %d", s.c_str(), pattern.c_str(), rc);
+            debuglog("Error in regexp_search(\"%s\", \"%s\"): %d", s.c_str(), pattern.c_str(), rc);
     }
     catch (exception& e)
     {
-        debuglog("Exception in regex_search(\"%s\", \"%s\"): %s", s.c_str(), pattern.c_str(), e.what());
+        debuglog("Exception in regexp_search(\"%s\", \"%s\"): %s", s.c_str(), pattern.c_str(), e.what());
     }
 
     if (re)
@@ -146,7 +146,7 @@ static string _handle_backreferences(const string &s, const string& subst, int* 
 }
 
 // replace all instances of pattern with the specified replacement string
-string regex_replace(const string& s, const string& pattern, const string& subst)
+string regexp_replace(const string& s, const string& pattern, const string& subst)
 {
     string result;
     pcre* re = nullptr;
@@ -183,7 +183,7 @@ string regex_replace(const string& s, const string& pattern, const string& subst
                 pos = mend;
             }
             else if (rc != PCRE_ERROR_NOMATCH)
-                debuglog("Error in regex_replace(\"%s\", \"%s\", \"%s\"): %d", s.c_str(), pattern.c_str(), subst.c_str(), rc);
+                debuglog("Error in regexp_replace(\"%s\", \"%s\", \"%s\"): %d", s.c_str(), pattern.c_str(), subst.c_str(), rc);
 
         } while (rc > 0);
 
@@ -193,7 +193,7 @@ string regex_replace(const string& s, const string& pattern, const string& subst
     }
     catch (exception& e)
     {
-        debuglog("Exception in regex_replace(\"%s\", \"%s\", \"%s\"): %s", s.c_str(), pattern.c_str(), subst.c_str(), e.what());
+        debuglog("Exception in regexp_replace(\"%s\", \"%s\", \"%s\"): %s", s.c_str(), pattern.c_str(), subst.c_str(), e.what());
         result = s;
     }
 
@@ -205,11 +205,11 @@ string regex_replace(const string& s, const string& pattern, const string& subst
 
 #else // REGEX_POSIX
 
-string regex_search(const string& s, const string& pattern)
+string regexp_search(const string& s, const string& pattern)
 {
     try
     {
-        // std::regex_search doesn't work properly for UTF-8, so we are forced to convert to wstring
+        // std::regexp_search doesn't work properly for UTF-8, so we are forced to convert to wstring
         std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
 
         wstring ws = conv.from_bytes(s);
@@ -222,17 +222,17 @@ string regex_search(const string& s, const string& pattern)
     }
     catch (exception& e)
     {
-        debuglog("Exception in regex_search(\"%s\", \"%s\"): %s", s.c_str(), pattern.c_str(), e.what());
+        debuglog("Exception in regexp_search(\"%s\", \"%s\"): %s", s.c_str(), pattern.c_str(), e.what());
     }
     return "";
 }
 
 // replace all instances of pattern with the specified replacement string
-string regex_replace(const string& s, const string& pattern, const string& subst)
+string regexp_replace(const string& s, const string& pattern, const string& subst)
 {
     try
     {
-        // std::regex_replace doesn't work properly for UTF-8, so we are forced to convert to wstring
+        // std::regexp_replace doesn't work properly for UTF-8, so we are forced to convert to wstring
         std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
 
         wstring ws = conv.from_bytes(s);
@@ -246,7 +246,7 @@ string regex_replace(const string& s, const string& pattern, const string& subst
     }
     catch (exception& e)
     {
-        debuglog("Exception in regex_replace(\"%s\", \"%s\", \"%s\"): %s", s.c_str(), pattern.c_str(), subst.c_str(), e.what());
+        debuglog("Exception in regexp_replace(\"%s\", \"%s\", \"%s\"): %s", s.c_str(), pattern.c_str(), subst.c_str(), e.what());
         return s;
     }
 }

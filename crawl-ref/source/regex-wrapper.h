@@ -10,7 +10,7 @@ using std::string;
 
 
 // return the first substring that matches pattern
-string regex_search(const string& s, const string& pattern);
+string regexp_search(const string& s, const string& pattern);
 
 // replace all instance of pattern with the specified replacement string
-string regex_replace(const string& s, const string& pattern, const string& subst);
+string regexp_replace(const string& s, const string& pattern, const string& subst);

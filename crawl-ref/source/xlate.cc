@@ -69,14 +69,14 @@ static string apply_regex_rule(const string& s, const string& rule)
 
         string result;
         if (condition.empty())
-            result = regex_replace(s, pattern, replacement);
+            result = regexp_replace(s, pattern, replacement);
         else
         {
-            string match = regex_search(s, condition);
+            string match = regexp_search(s, condition);
             if (match == "")
                 return s;
 
-            string replaced = regex_replace(match, pattern, replacement);
+            string replaced = regexp_replace(match, pattern, replacement);
             result = replace_first(s, match, replaced);
         }
         return result;
