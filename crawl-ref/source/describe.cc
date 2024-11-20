@@ -4604,8 +4604,11 @@ static string _miscast_damage_string(spell_type spell)
  */
 static string _player_spell_desc(spell_type spell)
 {
-    if (!crawl_state.need_save || (get_spell_flags(spell) & spflag::monster))
+    if (!crawl_state.need_save || (get_spell_flags(spell) & spflag::monster)
+        || !is_player_book_spell(spell))
+    {
         return ""; // all info is player-dependent
+    }
 
     ostringstream description;
 
