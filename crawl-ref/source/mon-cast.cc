@@ -2421,10 +2421,8 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
         pbolt.target = theBeam.target;
     pbolt.source = mons->pos();
     pbolt.is_tracer = false;
-    if (!pbolt.is_enchantment())
+    if (pbolt.aux_source.empty() && !pbolt.is_enchantment())
         pbolt.aux_source = pbolt.name;
-    else
-        pbolt.aux_source.clear();
 
     return true;
 }
