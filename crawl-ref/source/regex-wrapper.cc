@@ -49,9 +49,10 @@ static pcre* _compile_regex(const string& pattern)
     return re;
 }
 
-string regexp_search(const string& s, const string& pattern)
+bool regexp_match(const string& s, const string& pattern,
+                  size_t* mpos, size_t* mlength)
 {
-    string result;
+    bool result = false;
     pcre* re = nullptr;
 
     try
@@ -66,7 +67,13 @@ string regexp_search(const string& s, const string& pattern)
 
         // if rc is positive, it is a count of matches
         if (rc > 0 && ovector[0] >= 0 && ovector[1] >= 0)
-            result = s.substr(ovector[0], ovector[1] - ovector[0]);
+        {
+            if (mpos)
+                *mpos = (size_t)ovector[0];
+            if (mlength)
+                *mlength = (size_t)(ovector[1] - ovector[0]);
+            result = true;
+        }
         else if (rc != PCRE_ERROR_NOMATCH)
             debuglog("Error in regexp_search(\"%s\", \"%s\"): %d", s.c_str(), pattern.c_str(), rc);
     }
@@ -79,6 +86,18 @@ string regexp_search(const string& s, const string& pattern)
         pcre_free(re);
 
     return result;
+}
+
+string regexp_search(const string& s, const string& pattern)
+{
+    size_t mpos, mlength;
+
+    if (regexp_match(s, pattern, &mpos, &mlength))
+    {
+        if (mpos < s.length() && mpos + mlength <= s.length())
+            return s.substr(mpos, mlength);
+    }
+    return "";
 }
 
 static string _handle_backreferences(const string &s, const string& subst, int* ovector, int num_matches)
@@ -204,6 +223,21 @@ string regexp_replace(const string& s, const string& pattern, const string& subs
 }
 
 #else // REGEX_POSIX
+
+bool regexp_match(const string& s, const string& pattern,
+                  size_t* mpos, size_t* mlength)
+{
+    string match = regexp_search(s, pattern);
+    if (match.empty())
+        return false;
+
+    if (mpos)
+        *mpos = s.find(match);
+    if (mlength)
+        *mlength = match.length();
+
+    return true;
+}
 
 string regexp_search(const string& s, const string& pattern)
 {
