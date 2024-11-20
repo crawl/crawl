@@ -64,6 +64,7 @@ Another set:
 - (stat) drain - reduce stats (STR/DEX/INT)
 - drain is also used in a more general sense. For example, ghost moths drain MP (mana)
 - sap (magic) - An effect caused by Demonspawn Warmongers that causes you to be unable to cast spells.
+- exhaust(ion) - If an ability causes exhaustion, it means you can't use that ability (or any other ability that causes Exhaustion) again until Exhaustion wears off. It has no other effect.
 
 In German, there are many words that have similar meanings: entziehen, auslaugen, zehren, aufzehren, auszehren, abzehren, verzehren.
 Some relevant links:
@@ -82,6 +83,7 @@ We used:
 
 - drain/draining/drained = auszehren/Auszehrung/ausgezehrt
 - sap/sapped = auslaugen/ausgelaugt
+- exhaustion/exhausted = Erschöpfung/erschöpft
 
 Another set of synonyms that have distinct meanings in DCSS:
 
@@ -327,7 +329,7 @@ Eleionoma - German plural is Eleionomai - ref: https://de.wikipedia.org/wiki/Ele
 Efreet is der Ifrit in German: https://de.wikipedia.org/wiki/Ifrit (but Efreet is an archaic form)
 
 Spriggan is translated as der Zweigling here: https://elderscrolls.fandom.com/de/wiki/Zweigling. I guess they did this because a sprig is a small branch.
-I'm not sure that the "sprig" in spriggan really has anything to do with branches, but I guess we can got with that translation.  
+I'm not sure that the "sprig" in spriggan really has anything to do with branches, but I guess we can go with that translation.  
 http://crawl.chaosforge.org/Spriggan  
 https://en.wikipedia.org/wiki/Spriggan  
 
