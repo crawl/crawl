@@ -1791,7 +1791,11 @@ static void _fire_battlesphere(monster* battlesphere, bolt& beam)
     battlesphere->foe = actor_at(beam.target)->mindex();
     battlesphere->target = beam.target;
 
-    simple_monster_message(*battlesphere, " fires at %s!");
+    if (you.can_see(*battlesphere))
+    {
+        mprf("%s fires at %s!", battlesphere->name(DESC_THE).c_str(),
+                                actor_at(beam.target)->name(DESC_THE).c_str());
+    }
     beam.fire();
 
     // Decrement # of volleys left and possibly expire the battlesphere.
