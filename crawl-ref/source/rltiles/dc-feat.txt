@@ -315,6 +315,8 @@ statue_zot_serpent
 %weight 5
 statue_zot_old_guardian
 %syn DNGN_STATUE_ZOT_OLD_GUARDIAN
+statue_zot_tornado
+%syn DNGN_STATUE_ZOT_TORNADO
 %weight 1
 statue_zot_oldest_guardian
 %syn DNGN_STATUE_ZOT_OLDEST_GUARDIAN

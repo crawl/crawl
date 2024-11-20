@@ -3369,6 +3369,8 @@ COLOUR:    r = red, y = yellow, b = blue, g = green, \
 TILE:      r = dngn_transparent_stone_red, y = dngn_transparent_stone_yellow, \
            b = dngn_transparent_stone_blue, m = dngn_transparent_stone_magenta, \
            g = dngn_transparent_stone_green, q = dngn_transparent_stone
+TILE:      G = dngn_statue_zot_serpent / dngn_statue_depths_zot_dragon / \
+               dngn_statue_zot_tornado w:15 / dngn_statue_zot_orb
 TILE:      T = dngn_fountain_novelty_octopode
 : vault_metal_statue_setup(_G, "S", "storm conduit")
 MAP

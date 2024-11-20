@@ -498,7 +498,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_CALL_DOWN_LIGHTNING,
 },
 
 {
@@ -1758,7 +1758,7 @@ static const struct spell_desc spelldata[] =
     200,
     6, 6,
     25,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_PRIMAL_WAVE,
 },
 
 {
@@ -1928,7 +1928,7 @@ static const struct spell_desc spelldata[] =
     200,
     5, 5,
     2,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_HOLY_BREATH,
 },
 
 {
@@ -2186,7 +2186,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_CALL_LOST_SOULS,
 },
 
 {
@@ -2253,7 +2253,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_WATERSTRIKE,
 },
 
 {
@@ -2264,7 +2264,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_WIND_BLAST,
 },
 
 {
@@ -2389,7 +2389,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_CREEPING_FROST,
 },
 
 {
@@ -2752,7 +2752,7 @@ static const struct spell_desc spelldata[] =
     0,
     5, 5,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_THROW_BARBS,
 },
 
 {
@@ -2873,7 +2873,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_PARALYSIS_GAZE,
 },
 
 {
@@ -2917,7 +2917,7 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_MOURNING_WAIL,
 },
 
 {
@@ -2928,7 +2928,7 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_DEATH_RATTLE,
 },
 
 {
@@ -2939,7 +2939,7 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_MARCH_OF_SORROWS,
 },
 
 {
@@ -3116,7 +3116,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_STILL_WINDS,
 },
 
 {
@@ -3404,7 +3404,7 @@ static const struct spell_desc spelldata[] =
     200,
     5, 5,
     0,
-    TILEG_GENERIC_MONSTER_SPELL
+    TILEG_HURL_SLUDGE
 },
 
 {
@@ -3482,7 +3482,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_PYROCLASTIC_SURGE,
 },
 
 {
@@ -3926,7 +3926,7 @@ static const struct spell_desc spelldata[] =
     200,
     4, 4,
     8,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_SEISMIC_STOMP,
 },
 
 {
@@ -4247,7 +4247,7 @@ static const struct spell_desc spelldata[] =
     200,
     4, 4,
     0,
-    TILEG_CALL_DOWN_DAMNATION,
+    TILEG_LAUNCH_BOMBLET,
 },
 
 {

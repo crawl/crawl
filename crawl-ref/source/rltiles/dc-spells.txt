@@ -83,7 +83,6 @@ freezing_cloud FREEZING_CLOUD
 frozen_ramparts FROZEN_RAMPARTS
 hailstorm HAILSTORM
 hoarfrost_cannonade HOARFROST_CANNONADE
-hoarfrost_bullet HOARFROST_BULLET
 ice_form ICE_FORM
 ice_storm ICE_STORM
 metabolic_englaciation METABOLIC_ENGLACIATION
@@ -215,6 +214,8 @@ blink_other BLINK_OTHER
 brain_bite BRAIN_BITE
 call_of_chaos CALL_OF_CHAOS
 call_down_damnation CALL_DOWN_DAMNATION
+call_down_lightning CALL_DOWN_LIGHTNING
+call_lost_souls CALL_LOST_SOULS
 call_tide CALL_TIDE
 cantrip CANTRIP
 chain_of_chaos CHAIN_OF_CHAOS
@@ -225,7 +226,9 @@ confusion_gaze CONFUSION_GAZE
 conjure_living_spells CONJURE_LIVING_SPELLS
 corrupting_pulse CORRUPTING_PULSE
 create_tentacles CREATE_TENTACLES
+creeping_frost CREEPING_FROST
 crystallizing_shot CRYSTALLIZING_SHOT
+death_rattle DEATH_RATTLE
 dimensional_anchor DIMENSIONAL_ANCHOR
 doom_howl DOOM_HOWL
 draining_gaze DRAINING_GAZE
@@ -248,32 +251,42 @@ ghostly_fireball GHOSTLY_FIREBALL
 grasping_roots GRASPING_ROOTS
 harpoon_shot HARPOON_SHOT
 haste_other HASTE_OTHER
+hoarfrost_bullet HOARFROST_BULLET
+holy_breath HOLY_BREATH
 holy_flames HOLY_FLAMES
+hurl_sludge HURL_SLUDGE
 ink_cloud INK_CLOUD
 injury_bond INJURY_BOND
 iron_elementals IRON_ELEMENTALS
+launch_bomblet LAUNCH_BOMBLET
 legendary_destruction LEGENDARY_DESTRUCTION
 magma_barrage MAGMA_BARRAGE
 malmutate MALMUTATE
+march_of_sorrows MARCH_OF_SORROWS
 mesmerise MESMERISE
 metal_splinters METAL_SPLINTERS
 miasma_breath MIASMA_BREATH
 might MIGHT
 mindburst MINDBURST
+mourning_wail MOURNING_WAIL
 noxious_cloud NOXIOUS_CLOUD
 orb_of_electricity ORB_OF_ELECTRICITY
+paralysis_gaze PARALYSIS_GAZE
 petrifying_cloud PETRIFYING_CLOUD
 phantom_blitz PHANTOM_BLITZ
 phantom_mirror PHANTOM_MIRROR
 plane_rend PLANE_REND
 polymorph POLYMORPH
 porkalator PORKALATOR
+primal_wave PRIMAL_WAVE
+pyroclastic_surge PYROCLASTIC_SURGE
 quicksilver_bolt QUICKSILVER_BOLT
 rebounding_blaze REBOUNDING_BLAZE
 rebounding_chill REBOUNDING_CHILL
 resonance_strike RESONANCE_STRIKE
 roll ROLL
 seal_doors SEAL_DOORS
+seismic_stomp SEISMIC_STOMP
 sentinel_mark SENTINEL_MARK
 shezas_dance SHEZAS_DANCE
 siren_song SIREN_SONG
@@ -311,6 +324,7 @@ summon_tzitzimitl SUMMON_TZITZIMITL
 summon_undead SUMMON_UNDEAD
 summon_vermin SUMMON_VERMIN
 throw_ally THROW_ALLY
+throw_barbs THROW_BARBS
 throw_klown_pie THROW_KLOWN_PIE
 thorn_volley THORN_VOLLEY
 virulence VIRULENCE
@@ -319,7 +333,9 @@ vitrifying_gaze VITRIFYING_GAZE
 wall_of_brambles WALL_OF_BRAMBLES
 warning_cry WARNING_CRY
 water_elementals WATER_ELEMENTALS
+waterstrike WATERSTRIKE
 weakening_gaze WEAKENING_GAZE
+wind_blast WIND_BLAST
 woodweal WOODWEAL
 %back none
 
@@ -338,6 +354,7 @@ malign_offering MALIGN_OFFERING
 prayer_of_brilliance PRAYER_OF_BRILLIANCE
 regeneration REGENERATION
 sap_magic SAP_MAGIC
+still_winds STILL_WINDS
 
 # Dithmenos shadow spells
 %sdir gui/spells/monster/shadow

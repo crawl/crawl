@@ -72,6 +72,12 @@ high_mp_3
 low_mp_1 LOW_MP
 low_mp_2
 low_mp_3
+wild_magic_1 WILD_MAGIC
+wild_magic_2
+wild_magic_3
+subdued_magic_1 SUBDUED_MAGIC
+subdued_magic_2
+subdued_magic_3
 efficient_magic_1 EFFICIENT_MAGIC
 efficient_magic_2
 
@@ -183,6 +189,8 @@ forlorn FORLORN
 cold_blooded COLD_BLOODED
 acid_res ACID_RES
 acidic_bite ACIDIC_BITE
+big_wings BIG_WINGS
+inviolate_magic INVIOLATE_MAGIC
 steam_res STEAM_RES
 multilived MULTILIVED
 no_armour NO_ARMOUR
