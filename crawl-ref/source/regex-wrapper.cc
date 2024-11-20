@@ -34,11 +34,13 @@ static const int MAX_SUBMATCHES = 20;
 static const int OVECTOR_SIZE = 3 * (MAX_SUBMATCHES + 1); // extra 1 for main match
 
 // compile regex and return pointer to resul, or nullptr on error
-static pcre* _compile_regex(const string& pattern)
+static pcre* _compile_regex(const string& pattern, bool ignore_case = false)
 {
     const char *error = nullptr;
     int erroffset = -1;
     int flags = PCRE_UTF8;
+    if (ignore_case)
+        flags |= PCRE_CASELESS;
 
     pcre* re = pcre_compile(pattern.c_str(), flags, &error, &erroffset, nullptr);
     if (re == nullptr)
@@ -49,7 +51,7 @@ static pcre* _compile_regex(const string& pattern)
     return re;
 }
 
-bool regexp_match(const string& s, const string& pattern,
+bool regexp_match(const string& s, const string& pattern, bool ignore_case,
                   size_t* mpos, size_t* mlength)
 {
     bool result = false;
@@ -57,7 +59,7 @@ bool regexp_match(const string& s, const string& pattern,
 
     try
     {
-        re = _compile_regex(pattern);
+        re = _compile_regex(pattern, ignore_case);
         if (re == nullptr)
             return "";
 
@@ -88,11 +90,11 @@ bool regexp_match(const string& s, const string& pattern,
     return result;
 }
 
-string regexp_search(const string& s, const string& pattern)
+string regexp_search(const string& s, const string& pattern, bool ignore_case)
 {
     size_t mpos, mlength;
 
-    if (regexp_match(s, pattern, &mpos, &mlength))
+    if (regexp_match(s, pattern, ignore_case, &mpos, &mlength))
     {
         if (mpos < s.length() && mpos + mlength <= s.length())
             return s.substr(mpos, mlength);
@@ -224,10 +226,10 @@ string regexp_replace(const string& s, const string& pattern, const string& subs
 
 #else // REGEX_POSIX
 
-bool regexp_match(const string& s, const string& pattern,
+bool regexp_match(const string& s, const string& pattern, bool ignore_case,
                   size_t* mpos, size_t* mlength)
 {
-    string match = regexp_search(s, pattern);
+    string match = regexp_search(s, pattern, ignore_case);
     if (match.empty())
         return false;
 
@@ -239,7 +241,7 @@ bool regexp_match(const string& s, const string& pattern,
     return true;
 }
 
-string regexp_search(const string& s, const string& pattern)
+string regexp_search(const string& s, const string& pattern, bool ignore_case)
 {
     try
     {
@@ -249,7 +251,10 @@ string regexp_search(const string& s, const string& pattern)
         wstring ws = conv.from_bytes(s);
         wstring wpattern = conv.from_bytes(pattern);
 
-        wregex wre(wpattern);
+        auto flags = regex_constants::ECMAScript; // default for wregex constructor
+        if (ignore_case)
+            flags |= regex_constants::icase;
+        wregex wre(wpattern, flags);
         wsmatch wmatch;
         if (regex_search(ws, wmatch, wre))
             return conv.to_bytes(wmatch.str());
