@@ -1016,7 +1016,8 @@ bool mon_special_ability(monster* mons)
         {
             foxfire_attack(mons, &you);
             check_place_cloud(CLOUD_FLAME, mons->pos(), 2, mons);
-            monster_die(*mons, KILL_RESET, NON_MONSTER, true);
+            if (mons->alive())
+                monster_die(*mons, KILL_RESET, NON_MONSTER, true);
             used = true;
             break;
         }
@@ -1033,7 +1034,8 @@ bool mon_special_ability(monster* mons)
             if (!cell_is_solid(targ->pos()))
             {
                 foxfire_attack(mons, *targ);
-                monster_die(*mons, KILL_RESET, NON_MONSTER, true);
+                if (mons->alive())
+                    monster_die(*mons, KILL_RESET, NON_MONSTER, true);
                 used = true;
                 break;
             }
