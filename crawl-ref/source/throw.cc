@@ -622,9 +622,12 @@ void throw_it(quiver::action &a)
 
     if (you.confused())
     {
-        a.target.target = you.pos();
-        a.target.target.x += random2(13) - 6;
-        a.target.target.y += random2(13) - 6;
+        do
+        {
+            a.target.target.x = you.pos().x + random2(13) - 6;
+            a.target.target.y = you.pos().y + random2(13) - 6;
+        } while (a.target.target == you.pos());
+
         a.target.isValid = true;
         a.target.cmd_result = CMD_FIRE;
     }
