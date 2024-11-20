@@ -5064,7 +5064,9 @@ void fire_fusillade()
     vector<monster*> targs;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (!mi->wont_attack() && !mi->is_firewood() && you.can_see(**mi)
+        if (!mi->wont_attack() && !mi->is_firewood()
+            && !mons_is_projectile(**mi)
+            && you.can_see(**mi)
             && grid_distance(mi->pos(), you.pos()) > 1)
         {
             targs.push_back(*mi);
@@ -5117,7 +5119,7 @@ void fire_fusillade()
     for (it = hit_map.begin(); it != hit_map.end(); it++)
     {
         monster* mon = monster_at(it->first);
-        if (mon)
+        if (mon && !mons_is_projectile(*mon))
             _do_fusillade_hit(mon, pow, it->second);
     }
 
