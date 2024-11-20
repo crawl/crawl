@@ -8,6 +8,9 @@
 #include <string>
 using std::string;
 
+// check if regex is valid
+bool regexp_valid(const string& pattern);
+
 /*
 ** Return whether the string matches the pattern.
 ** If mpos and mlength are not null, the position and length of the first match will be returned there.

@@ -51,6 +51,26 @@ static pcre* _compile_regex(const string& pattern, bool ignore_case = false)
     return re;
 }
 
+bool regexp_valid(const string& pattern)
+{
+    try
+    {
+        pcre* re = _compile_regex(pattern);
+        if (re == nullptr)
+            return false;
+        else
+        {
+            pcre_free(re);
+            return true;
+        }
+
+    }
+    catch (const exception& e)
+    {
+        return false;
+    }
+}
+
 bool regexp_match(const string& s, const string& pattern, bool ignore_case,
                   size_t* mpos, size_t* mlength)
 {
@@ -225,6 +245,20 @@ string regexp_replace(const string& s, const string& pattern, const string& subs
 }
 
 #else // REGEX_POSIX
+
+bool regexp_valid(const string& pattern)
+{
+    try
+    {
+        // constructor will throw an exception if pattern is invalid
+        regex re(pattern);
+        return true;
+    }
+    catch (const exception& e)
+    {
+        return false;
+    }
+}
 
 bool regexp_match(const string& s, const string& pattern, bool ignore_case,
                   size_t* mpos, size_t* mlength)

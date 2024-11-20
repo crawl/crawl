@@ -53,13 +53,13 @@ class text_pattern : public base_pattern
 {
 public:
     text_pattern(const string &s, bool icase = false)
-        : pattern(s), compiled_pattern(nullptr),
+        : pattern(s), validated(false),
           isvalid(true), ignore_case(icase)
     {
     }
 
     text_pattern()
-        : pattern(), compiled_pattern(nullptr),
+        : pattern(), validated(false),
          isvalid(false), ignore_case(false)
     {
     }
@@ -67,7 +67,7 @@ public:
     text_pattern(const text_pattern &tp)
         : base_pattern(tp),
           pattern(tp.pattern),
-          compiled_pattern(nullptr),
+          validated(tp.validated),
           isvalid(tp.isvalid),
           ignore_case(tp.ignore_case)
     {
@@ -81,35 +81,9 @@ public:
 
     bool empty() const { return !pattern.length(); }
 
-    bool valid() const override
-    {
-        return isvalid
-            && (compiled_pattern || (isvalid = compile()));
-    }
-
-    bool matches(const char *s, int length) const;
-
-    bool matches(const char *s) const
-    {
-        return matches(s, strlen(s));
-    }
-
-    bool matches(const string &s) const override
-    {
-        return matches(s.c_str(), s.length());
-    }
-
-    pattern_match match_location(const char *s, int length) const;
-
-    pattern_match match_location(const char *s) const
-    {
-        return match_location(s, strlen(s));
-    }
-
-    pattern_match match_location(const string &s) const override
-    {
-        return match_location(s.c_str(), s.length());
-    }
+    bool valid() const override;
+    bool matches(const string &s) const override;
+    pattern_match match_location(const string &s) const override;
 
     const string &tostring() const override
     {
@@ -118,7 +92,7 @@ public:
 
 private:
     string pattern;
-    mutable void *compiled_pattern;
+    mutable bool validated;
     mutable bool isvalid;
     bool ignore_case;
 };
