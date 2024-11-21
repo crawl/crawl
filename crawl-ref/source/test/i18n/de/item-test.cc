@@ -95,7 +95,7 @@ const vector<string> expected = {
 
     "der Ring von \"Fedhas's Hope\" {MP+9 Int+4 Ges+2}",
 
-    "ein knubbeliger runenverzierter Stecken",
+    "ein knubbeliger runenverzierter Stab",
 
     "Knüppel",
     "+9 Streitkolben",
@@ -310,23 +310,23 @@ vector<map<string, string>> staves =
 {
     {
         {"en", "a weird smoking staff"},
-        {"nom", "ein seltsamer rauchiger Stecken"},
-        {"acc", "einen seltsamen rauchigen Stecken"}
+        {"nom", "ein seltsamer rauchiger Stab"},
+        {"acc", "einen seltsamen rauchigen Stab"}
     },
     {
         {"en", "a cursed weird smoking staff"},
-        {"nom", "ein verfluchter seltsamer rauchiger Stecken"},
-        {"acc", "einen verfluchten seltsamen rauchigen Stecken"}
+        {"nom", "ein verfluchter seltsamer rauchiger Stab"},
+        {"acc", "einen verfluchten seltsamen rauchigen Stab"}
     },
     {
         {"en", "a staff of earth"},
-        {"nom", "ein Stecken der Erde"},
-        {"acc", "einen Stecken der Erde"}
+        {"nom", "ein Stab der Erde"},
+        {"acc", "einen Stab der Erde"}
     },
     {
         {"en", "an cursed staff of fire"},
-        {"nom", "ein verfluchter Stecken des Feuers"},
-        {"acc", "einen verfluchten Stecken des Feuers"}
+        {"nom", "ein verfluchter Stab des Feuers"},
+        {"acc", "einen verfluchten Stab des Feuers"}
     },
 };
 
