@@ -246,15 +246,40 @@ string regexp_replace(const string& s, const string& pattern, const string& subs
 
 #else // REGEX_POSIX
 
+// std::regex doesn't work properly for UTF-8, so we are forced to convert to wstring
+static std::wstring_convert<std::codecvt_utf8<wchar_t>> _conv;
+
+static wregex& _compile_pattern(const string& pattern, bool ignore_case)
+{
+    // cache last compiled regex for performance reasons
+    // even with this, POSIX regex is 5-10 times slower than PCRE, depending on the operation
+    static wregex wre;
+    static string last_pattern;
+    static bool last_ignore_case = false;
+
+    if (pattern != last_pattern || ignore_case != last_ignore_case)
+    {
+        // default for wregex constructor is ECMAScript
+        auto flags = regex_constants::ECMAScript;
+        if (ignore_case)
+            flags |= regex_constants::icase;
+        wstring wpattern = _conv.from_bytes(pattern);
+        wregex wre_new(wpattern, flags);
+        wre = wre_new;
+
+        last_pattern = pattern;
+        last_ignore_case = ignore_case;
+    }
+
+    return wre;
+}
+
 bool regexp_valid(const string& pattern)
 {
     try
     {
-        std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
-        wstring wpattern = conv.from_bytes(pattern);
-
-        // constructor will throw an exception if pattern is invalid
-        wregex wre(wpattern);
+        // wregex constructor will throw an exception if pattern is invalid
+        _compile_pattern(pattern, false);
         return true;
     }
     catch (const exception& e)
@@ -282,19 +307,12 @@ string regexp_search(const string& s, const string& pattern, bool ignore_case)
 {
     try
     {
-        // std::regexp_search doesn't work properly for UTF-8, so we are forced to convert to wstring
-        std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+        wstring ws = _conv.from_bytes(s);
 
-        wstring ws = conv.from_bytes(s);
-        wstring wpattern = conv.from_bytes(pattern);
-
-        auto flags = regex_constants::ECMAScript; // default for wregex constructor
-        if (ignore_case)
-            flags |= regex_constants::icase;
-        wregex wre(wpattern, flags);
+        wregex& wre = _compile_pattern(pattern, ignore_case);
         wsmatch wmatch;
         if (regex_search(ws, wmatch, wre))
-            return conv.to_bytes(wmatch.str());
+            return _conv.to_bytes(wmatch.str());
     }
     catch (exception& e)
     {
@@ -308,17 +326,13 @@ string regexp_replace(const string& s, const string& pattern, const string& subs
 {
     try
     {
-        // std::regexp_replace doesn't work properly for UTF-8, so we are forced to convert to wstring
-        std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+        wstring ws = _conv.from_bytes(s);
+        wstring wsubst = _conv.from_bytes(subst);
 
-        wstring ws = conv.from_bytes(s);
-        wstring wpattern = conv.from_bytes(pattern);
-        wstring wsubst = conv.from_bytes(subst);
-
-        wregex wre(wpattern);
+        wregex& wre = _compile_pattern(pattern, false);
         wstring result = regex_replace(ws, wre, wsubst);
 
-        return conv.to_bytes(result);
+        return _conv.to_bytes(result);
     }
     catch (exception& e)
     {
