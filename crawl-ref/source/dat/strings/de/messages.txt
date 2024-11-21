@@ -17569,7 +17569,7 @@ Verteidigung
 %s, Fertigkeit: %s
 %%%%
 %s: HD %d   AC %d   EV %d
-%s: HD %d   RK %d   EV %d
+%s: HD %d   RK %d   AW %d
 %%%%
 Cannot wield weapon
 Du kannst die Waffe nicht handhaben

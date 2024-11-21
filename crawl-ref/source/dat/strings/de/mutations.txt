@@ -1635,13 +1635,13 @@ gelatinous body
 Gallertkörper
 %%%%
 Your rubbery body absorbs attacks. (AC +1, EV +1)
-Dein gummiartiger Körper absorbiert Angriffe. (RK +1, EV +1)
+Dein gummiartiger Körper absorbiert Angriffe. (RK +1, AW +1)
 %%%%
 Your pliable body absorbs attacks. (AC +2, EV +2)
-Dein biegsamer Körper absorbiert Angriffe. (RK +2, EV +2)
+Dein biegsamer Körper absorbiert Angriffe. (RK +2, AW +2)
 %%%%
 Your gelatinous body deflects attacks. (AC +3, EV +3)
-Dein gallertartiger Körper wehrt Angriffe ab. (RK +3, EV +3)
+Dein gallertartiger Körper wehrt Angriffe ab. (RK +3, AW +3)
 %%%%
 Your body becomes stretchy.
 Dein Körper wird dehnbar.
@@ -1788,13 +1788,13 @@ repulsion field
 Abstoßungsfeld
 %%%%
 You are surrounded by a mild repulsion field. (EV +2)
-Du bist von einem leichten Abstoßungsfeld umgeben. (EV +2)
+Du bist von einem leichten Abstoßungsfeld umgeben. (AW +2)
 %%%%
 You are surrounded by a moderate repulsion field. (EV +3)
-Du bist von einem mäßigen Abstoßungsfeld umgeben. (EV +3)
+Du bist von einem mäßigen Abstoßungsfeld umgeben. (AW +3)
 %%%%
 You are surrounded by a strong repulsion field. (EV +4, RMsl)
-Du bist von einem starken Abstoßungsfeld umgeben. (EV +4, RMsl)
+Du bist von einem starken Abstoßungsfeld umgeben. (AW +4, RMsl)
 %%%%
 You begin to radiate repulsive energy.
 Du beginnst, abstoßende Energie auszustrahlen.
@@ -2577,16 +2577,16 @@ You feel less vulnerable to harm.
 Du fühlst dich weniger anfällig für Schäden.
 %%%%
 reduced EV
-reduzierte EV
+reduziertes AW
 %%%%
 You have somewhat slow reflexes. (EV -5)
-Du hast etwas langsame Reflexe. (EV -5)
+Du hast etwas langsame Reflexe. (AW -5)
 %%%%
 You have slow reflexes. (EV -10)
-Du hast langsame Reflexe. (EV -10)
+Du hast langsame Reflexe. (AW -10)
 %%%%
 You have very slow reflexes. (EV -15)
-Du hast sehr langsame Reflexe. (EV -15)
+Du hast sehr langsame Reflexe. (AW -15)
 %%%%
 Your reflexes slow.
 Deine Reflexe werden langsamer.
@@ -2862,7 +2862,7 @@ You are camouflaged near water. (Stealth+)
 Du bist in der Nähe von Wasser gut getarnt. (Heimlich+)
 %%%%
 You are quick and stealthy near water. (Stealth+, EV+, Speed+++)
-In der Nähe von Wasser bist du schnell und unauffällig. (Heimlich+, EV+, Geschwindigkeit+++)
+In der Nähe von Wasser bist du schnell und unauffällig. (Heimlich+, AW+, Geschwindigkeit+++)
 %%%%
 You feel comfortable near water.
 Du fühlst dich in der Nähe von Wasser wohl.
