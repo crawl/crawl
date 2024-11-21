@@ -355,9 +355,9 @@ kann weitere Informationen hervorbringen.
 %%%%
 HINT_SEEN_STAFF
 
-Du hast einen magischen Stecken<console> ('<w>$item[magical staff]</w>')
+Du hast einen magischen Stab<console> ('<w>$item[magical staff]</w>')
 </console> aufgehoben. Er muss gehandhabt werden, um von Nutzen zu sein. Magier
-verwenden Stecken, um ihre Macht in bestimmten Zauberschulen zu erhöhen. Er kann
+verwenden Stäbe, um ihre Macht in bestimmten Zauberschulen zu erhöhen. Er kann
 auch als Waffe verwendet werden. Er kann mit <w>$cmd[CMD_WIELD_WEAPON]</w>
 <localtiles><w> oder Linksklick</w></localtiles> gehandhabt werden.
 %%%%
@@ -1430,7 +1430,7 @@ Zauber verwendet werden. Abgesehen davon sind sie weitgehend nutzlos.
 %%%%
 HINT_DESCRIBE_MAGICAL_STAFF
 
-Dieser Stecken kann deine Zauberei verbessern, indem er die Zauber der
+Dieser Stab kann deine Zauberei verbessern, indem er die Zauber der
 entsprechenden Zauberschule mächtiger macht.
 %%%%
 HINT_MAGICAL_STAFF_HAS_RESISTANCE

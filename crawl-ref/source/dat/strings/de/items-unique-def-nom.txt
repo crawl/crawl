@@ -46,10 +46,10 @@ the %ssword of Power
 das {adj-e}%sSchwert der Macht
 %%%%
 the %sstaff of Olgreb
-der {adj-e}%sStecken von Olgreb
+der {adj-e}%sStab von Olgreb
 %%%%
 the %sstaff of Wucad Mu
-der {adj-e}%sStecken von Wucad Mu
+der {adj-e}%sStab von Wucad Mu
 %%%%
 the %sVampire's Tooth
 der {adj-e}%sZahn des Vampirs
@@ -67,7 +67,7 @@ the %ssword of Cerebov
 das {adj-e}%sSchwert von Cerebov
 %%%%
 the %sstaff of Dispater
-der {adj-e}%sStecken von Dispater
+der {adj-e}%sStab von Dispater
 %%%%
 the %ssceptre of Asmodeus
 das {adj-e}%sZepter von Asmodeus
@@ -367,7 +367,7 @@ the %sdemon trident "Rift"
 der {adj-e}%sDämonendreizack "Riss"
 %%%%
 the %sstaff of Battle
-der {adj-e}%sStecken der Schlacht
+der {adj-e}%sStab der Schlacht
 %%%%
 the %sCigotuvi's embrace
 die {adj-e}%sUmarmung von Cigotuvi

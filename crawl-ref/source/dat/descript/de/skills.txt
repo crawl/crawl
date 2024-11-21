@@ -41,7 +41,7 @@ Typs schneller anzugreifen und erhöht deine Genauigkeit und deinen Schaden mit
 ihnen.
 
 Mit Keulen & Flegeln geübt zu sein erhöht die Effektivität mit Äxten und
-Stecken, und umgekehrt.
+Stäbe, und umgekehrt.
 %%%%
 Polearms
 
@@ -51,19 +51,19 @@ Entfernung anzugreifen.
 Mit Stangenwaffen geübt zu sein ermöglicht es dich, mit allen Waffen dieses Typs
 schneller anzugreifen und erhöht deine Genauigkeit und deinen Schaden mit ihnen.
 
-Mit Stangenwaffen geübt zu sein erhöht die Effektivität mit Äxten und Stecken,
+Mit Stangenwaffen geübt zu sein erhöht die Effektivität mit Äxten und Stäbe,
 und umgekehrt.
 %%%%
 Staves
 
-Stecken erfordern ein relativ geringes Maß an Fertigkeit, um möglichst effektiv
+Stäbe erfordern ein relativ geringes Maß an Fertigkeit, um möglichst effektiv
 eingesetzt zu werden, obwohl sie nicht das hohe Schadenspotenzial einiger
 anderer Waffenklassen haben.
 
-Mit Stecken geübt zu sein ermöglicht es dich, mit allen Waffen dieses Typs
+Mit Stäben geübt zu sein ermöglicht es dich, mit allen Waffen dieses Typs
 schneller anzugreifen und erhöht deine Genauigkeit und deinen Schaden mit ihnen.
 
-Mit Stecken geübt zu sein erhöht die Effektivität mit Keulen & Flegeln und
+Mit Stäben geübt zu sein erhöht die Effektivität mit Keulen & Flegeln und
 Stangenwaffen, und umgekehrt.
 %%%%
 Slings

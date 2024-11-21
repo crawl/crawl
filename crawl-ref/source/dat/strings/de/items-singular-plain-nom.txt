@@ -779,31 +779,31 @@ Trank der Resistenz
 
 %%%%
 %sstaff of fire
-{adj-er}%sStecken des Feuers
+{adj-er}%sStab des Feuers
 %%%%
 %sstaff of cold
-{adj-er}%sStecken der Kälte
+{adj-er}%sStab der Kälte
 %%%%
 %sstaff of poison
-{adj-er}%sStecken des Giftes
+{adj-er}%sStab des Giftes
 %%%%
 %sstaff of death
-{adj-er}%sStecken des Todes
+{adj-er}%sStab des Todes
 %%%%
 %sstaff of conjuration
-{adj-er}%sStecken der Hervorrufung
+{adj-er}%sStab der Hervorrufung
 %%%%
 %sstaff of air
-{adj-er}%sStecken der Luft
+{adj-er}%sStab der Luft
 %%%%
 %sstaff of earth
-{adj-er}%sStecken der Erde
+{adj-er}%sStab der Erde
 %%%%
 %sstaff of removedness
-{adj-er}%sStecken der Obsoleszenz
+{adj-er}%sStab der Obsoleszenz
 %%%%
 %sstaff
-{adj-er}%sStecken
+{adj-er}%sStab
 %%%%
 
 #################################

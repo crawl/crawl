@@ -731,19 +731,19 @@ You're too close to death to use this item.
 Du bist dem Tod zu nahe, um diesen Gegenstand zu benutzen.
 %%%%
 You feel the staff feeding on your energy!
-Du fühlst, wie der Stecken sich von deiner Energie ernährt!
+Du fühlst, wie der Stab sich von deiner Energie ernährt!
 %%%%
 You smell chlorine.
 Du riechst Chlor.
 %%%%
 The staff glows a sickly green.
-Der Stecken leuchtet kränklich grün.
+Der Stab leuchtet kränklich grün.
 %%%%
 The smell of chlorine vanishes.
 Der Geruch von Chlor verschwindet.
 %%%%
 The staff's sickly green glow vanishes.
-Das kränklich grüne Leuchten des Steckens verschwindet.
+Das kränklich grüne Leuchten des Stabes verschwindet.
 %%%%
 You envenom %s
 Du vergiftest {acc}%s
@@ -1112,7 +1112,7 @@ Your spectral weapon disappears as you unwield.
 Deine Spektralwaffe verschwindet.
 %%%%
 The staff is unable to connect with your magical essence.
-Der Stecken kan mit deiner magischen Essenz nicht verbinden.
+Der Stab kan mit deiner magischen Essenz nicht verbinden.
 %%%%
 You feel ready to stride towards your foes.
 Du fühlst dich bereit, auf deine Feinde zu schreiten.
@@ -17612,8 +17612,9 @@ Sim auf %s abgebrochen
 ) - weapons     ( - missiles  [ - armour  / - wands    ?  - scrolls
 ) - Waffen    ( - Geschosse   [ - Rüstung   / - Zauberstäbe   ? - Schriftrollen
 %%%%
+# options should line up with the line above
 = - jewellery   ! - potions   : - books   | - staves   }  - miscellany
-= - Schmuck   ! - Tränke      : - Bücher    | - Stecken       } - Verschiedenes
+= - Schmuck   ! - Tränke      : - Bücher    | - Stäbe         } - Verschiedenes
 %%%%
 X - corpses     $ - gold    0  - the Orb
 X - Leichen   $ - Gold        0 - die Kugel

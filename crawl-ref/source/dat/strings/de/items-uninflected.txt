@@ -52,10 +52,10 @@ book
 Buch
 %%%%
 staff
-Stecken
+Stab
 %%%%
 magical staff
-magischer Stecken
+magischer Stab
 %%%%
 orb
 Kugel
@@ -176,7 +176,7 @@ dunkle
 
 %%%%
 unknown magical staves
-unerkannte magische Stecken
+unerkannte magische Stäbe
 %%%%
 unknown jewellery
 unerkannter Schmuck
@@ -193,25 +193,25 @@ unerkannte Zaubertränke
 
 %%%%
 staves of earth
-Stecken der Erde
+Stäbe der Erde
 %%%%
 staves of air
-Stecken der Luft
+Stäbe der Luft
 %%%%
 staves of fire
-Stecken des Feuers
+Stäbe des Feuers
 %%%%
 staves of cold
-Stecken der Kälte
+Stäbe der Kälte
 %%%%
 staves of conjuration
-Stecken der Hervorrufung
+Stäbe der Hervorrufung
 %%%%
 staves of death
-Stecken des Todes
+Stäbe des Todes
 %%%%
 staves of poison
-Stecken des Giftes
+Stäbe des Giftes
 %%%%
 
 %%%%

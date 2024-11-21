@@ -761,31 +761,31 @@ ein {adj-er}%ssaphirblauer Zaubertrank
 
 %%%%
 a %sstaff of fire
-ein {adj-er}%sStecken des Feuers
+ein {adj-er}%sStab des Feuers
 %%%%
 a %sstaff of cold
-ein {adj-er}%sStecken der Kälte
+ein {adj-er}%sStab der Kälte
 %%%%
 a %sstaff of poison
-ein {adj-er}%sStecken des Giftes
+ein {adj-er}%sStab des Giftes
 %%%%
 a %sstaff of death
-ein {adj-er}%sStecken des Todes
+ein {adj-er}%sStab des Todes
 %%%%
 a %sstaff of conjuration
-ein {adj-er}%sStecken der Hervorrufung
+ein {adj-er}%sStab der Hervorrufung
 %%%%
 a %sstaff of air
-ein {adj-er}%sStecken der Luft
+ein {adj-er}%sStab der Luft
 %%%%
 a %sstaff of earth
-ein {adj-er}%sStecken der Erde
+ein {adj-er}%sStab der Erde
 %%%%
 a %sstaff of removedness
-ein {adj-er}%sStecken der Obsoleszenz
+ein {adj-er}%sStab der Obsoleszenz
 %%%%
 a %sstaff
-ein {adj-er}%sStecken
+ein {adj-er}%sStab
 %%%%
 
 #################################

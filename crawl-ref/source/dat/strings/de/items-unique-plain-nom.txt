@@ -46,10 +46,10 @@ Kugel von Zot
 {adj-es}%sSchwert der Macht
 %%%%
 %sstaff of Olgreb
-{adj-er}%sStecken von Olgreb
+{adj-er}%sStab von Olgreb
 %%%%
 %sstaff of Wucad Mu
-{adj-er}%sStecken von Wucad Mu
+{adj-er}%sStab von Wucad Mu
 %%%%
 %sVampire's Tooth
 {adj-er}%sZahn des Vampirs
@@ -67,7 +67,7 @@ Kugel von Zot
 {adj-es}%sSchwert von Cerebov
 %%%%
 %sstaff of Dispater
-{adj-er}%sStecken von Dispater
+{adj-er}%sStab von Dispater
 %%%%
 %ssceptre of Asmodeus
 {adj-es}%sZepter von Asmodeus
@@ -367,7 +367,7 @@ Kugel von Zot
 {adj-er}%sDämonendreizack "Riss"
 %%%%
 %sstaff of Battle
-{adj-er}%sStecken der Schlacht
+{adj-er}%sStab der Schlacht
 %%%%
 %sCigotuvi's embrace
 {adj-e}%sUmarmung von Cigotuvi
@@ -392,7 +392,7 @@ großes, flammenförmiges Schwert
 %%%%
 # staff of Dispater
 golden staff
-goldener Stecken
+goldener Stab
 %%%%
 # sceptre of Asmodeus
 ruby sceptre

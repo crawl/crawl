@@ -1506,7 +1506,7 @@ Books
 Bücher
 %%%%
 Magical Staves
-Magische Stecken
+Magische Stäbe
 %%%%
 Orbs of Power
 Kugeln der Macht

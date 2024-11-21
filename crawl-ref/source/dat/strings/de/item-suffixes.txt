@@ -249,7 +249,7 @@
 " der Stangenwaffen"
 %%%%
 " of staves"
-" der Stecken"
+" der Stäbe"
 %%%%
 " of slings"
 " der Schleuder"

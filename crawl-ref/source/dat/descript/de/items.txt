@@ -1184,27 +1184,27 @@ Metallkopf befestigt ist.
 %%%%
 staff of air
 
-Ein Stecken, der die Kraft der von seinem Träger gewirkten Luftzauber erhöht und
+Ein Stab, der die Kraft der von seinem Träger gewirkten Luftzauber erhöht und
 ihn vor Elektrizität isoliert. Wenn der Träger sich mit Evokationen und
 Luftmagie auskennt, kann er diejenigen, die davon getroffen werden, schockieren.
 %%%%
 staff of cold
 
-Ein Stecken, der die Kraft der von seinem Träger gewirkten Eiszauber erhöht und ihn
+Ein Stab, der die Kraft der von seinem Träger gewirkten Eiszauber erhöht und ihn
 vor den Auswirkungen der Kälte schützt. Wenn der Träger sich mit Evokationen und
 Eismagie auskennt, kann er diejenigen, die davon getroffen werden, einfrieren
 und so Kälteschaden verursachen, der die Rüstung umgeht.
 %%%%
 staff of conjuration
 
-Ein Stecken, der die Kraft der von seinem Träger gewirkten Hervorrufungszauber
+Ein Stab, der die Kraft der von seinem Träger gewirkten Hervorrufungszauber
 erhöht. Wenn der Träger sich mit Evokationen und Hervorrufung auskennt, kann er
 diejenigen, die er trifft, mit reiner Energie stoßen und unwiderstehlichen
 Schaden anrichten.
 %%%%
 staff of death
 
-Ein Stecken, der die Kraft der von seinem Träger gewirkten nekromantischen
+Ein Stab, der die Kraft der von seinem Träger gewirkten nekromantischen
 Zauber erhöht und ihn vor negativer Energie schützt. Wenn der Träger sich
 mit Evozierung und Nekromantie auskennt, kann er den lebenden Seelen, die er
 trifft, großen Schmerz zufügen und negativen Energieschaden verursachen, der
@@ -1212,21 +1212,21 @@ die Rüstung umgeht.
 %%%%
 staff of earth
 
-Ein Stecken, der die Macht der von seinem Träger gewirkten Erdzauber erhöht.
+Ein Stab, der die Macht der von seinem Träger gewirkten Erdzauber erhöht.
 Wenn der Träger sich mit Evokationen und Erdmagie auskennt, kann er
 diejenigen, die davon getroffen werden, zerschmettern und dabei erheblichen,
 unwiderstehlichen Schaden verursachen, der durch Rüstung stark reduziert wird.
 %%%%
 staff of fire
 
-Ein Stecken, der die Kraft der von seinem Träger gewirkten Feuerzauber erhöht
+Ein Stab, der die Kraft der von seinem Träger gewirkten Feuerzauber erhöht
 und ihn vor den Auswirkungen des Feuers schützt. Wenn der Träger sich mit
 Evokationen und Feuermagie auskennt, kann er diejenigen, die davon getroffen
 werden, verbrennen und so Feuerschaden verursachen, der die Rüstung umgeht.
 %%%%
 staff of poison
 
-Ein Stecken, der die Kraft der von seinem Träger gewirkten Vergiftungszauber
+Ein Stab, der die Kraft der von seinem Träger gewirkten Vergiftungszauber
 erhöht und ihn vor der Wirkung von Gift schützt. Wenn der Träger sich mit
 Evokationen und Giftmagie auskennt, kann er diejenigen, die davon getroffen
 werden, vergiften und Giftschaden verursachen, der die Rüstung umgeht.

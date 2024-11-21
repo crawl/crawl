@@ -139,7 +139,7 @@ The German word Zauber can mean both magic and spell.
 Stab is the usual German word for both wand and staff. We used:
 
 - magic wand = Zauberstab
-- magic staff = magischer Stecken. Taken from [5].
+- magic staff = magischer Stab
 
 Lair can be translated as Versteck (which also means stash) or Höhle (which also means cave). We used:
 

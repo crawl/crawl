@@ -38,10 +38,10 @@ a sword of Power
 {n}ein Schwert der Macht
 %%%%
 a staff of Olgreb
-{m}ein Stecken von Olgreb
+{m}ein Stab von Olgreb
 %%%%
 a staff of Wucad Mu
-{m}ein Stecken von Wucad Mu
+{m}ein Stab von Wucad Mu
 %%%%
 a Vampire's Tooth
 {m}ein Zahn des Vampirs
@@ -59,7 +59,7 @@ a sword of Cerebov
 {n}ein Schwert von Cerebov
 %%%%
 a staff of Dispater
-{m}ein Stecken von Dispater
+{m}ein Stab von Dispater
 %%%%
 a sceptre of Asmodeus
 {n}ein Zepter von Asmodeus
@@ -359,7 +359,7 @@ a demon trident "Rift"
 {m}ein Dämonendreizack "Riss"
 %%%%
 a staff of Battle
-{m}ein Stecken der Schlacht
+{m}ein Stab der Schlacht
 %%%%
 a Cigotuvi's embrace
 eine Umarmung von Cigotuvi
@@ -384,7 +384,7 @@ a great serpentine sword
 %%%%
 # staff of Dispater
 a golden staff
-{m}ein goldener Stecken
+{m}ein goldener Stab
 %%%%
 # sceptre of Asmodeus
 a ruby sceptre

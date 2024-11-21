@@ -342,10 +342,10 @@ Diese Waffe gehört zur Kategorie '%s'.
 %%%%
 # magical staves can also be used as weapons
 It falls into the 'Staves' category.
-Diese Waffe gehört zur Kategorie 'Stecken'.
+Diese Waffe gehört zur Kategorie 'Stäbe'.
 %%%%
 Your inability to study %s prevents you from drawing on the full power of this staff in melee.
-Deine Unfähigkeit, %s zu studieren, hindert dich daran, die volle Kraft dieses Steckens im Nahkampf zu nutzen.
+Deine Unfähigkeit, %s zu studieren, hindert dich daran, die volle Kraft dieses Stabes im Nahkampf zu nutzen.
 %%%%
 It is a one-handed weapon.
 Sie ist eine Einhandwaffe.

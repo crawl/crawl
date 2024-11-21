@@ -19,7 +19,7 @@ Der Cursor ist normalerweise ausgeblendet; durch Drücken von <w>.</w> oder <w>'
 <h>Kategorie-Verknüpfungen</h>
 Die folgenden Tasten drücken wird Gegenstände nach Art auswählen:
 <w>!</w>   Tränke       <w>(</w>   Waffen         <w>)</w>   Geschosse       <w>[</w>   Rüstung
-<w>/</w>   Zauberstäbe  <w>|</w>   Mag. Stecken   <w>?</w>   Schriftrollen   <w>:</w>   Bücher
+<w>/</w>   Zauberstäbe  <w>|</w>   Magische Stäbe <w>?</w>   Schriftrollen   <w>:</w>   Bücher
 <w>"</w>   Amulette     <w>=</w>   Ringe          <w>}</w>   Verschiedenes
 Globale:  <w>,</w>   alle auswählen     <w>*</w>   alle invertieren    <w>-</w>   alle abwählen
           <w>;</w>   Letzter unausgerüstete wählen
@@ -856,7 +856,7 @@ cmd-help-item-types
 <lightgrey>/</lightgrey> : Zauberstäbe (<w>%</w> evozieren)
 <lightcyan>@book_glyph@</lightcyan> : Bücher (<w>%</w> memorieren, <w>%</w>/<w>%</w> wirken,
     aufheben um zu Sammlung hinzufügen)
-<brown>|</brown> : Stecken (<w>%</w> handhaben)
+<brown>|</brown> : Stäbe (<w>%</w> handhaben)
 <lightgreen>}</lightgreen> : Verschiedenes (e<w>%</w> evozieren)
 <yellow>$</yellow> : Gold (<w>%</w> zählt Gold)
 <lightmagenta>0</lightmagenta> : die Kugel von Zot
@@ -1024,7 +1024,7 @@ cmd-hints-items
 <console><lightcyan>@book_glyph@</lightcyan> : </console>Bücher (<w>%</w> memorieren, <w>%</w>/<w>%</w> wirken,
     aufheben um zu Sammlung zu
     hinzufügen)
-<console><brown>@staff_glyph@</brown> : </console>Stecken (<w>%</w> handhaben)
+<console><brown>@staff_glyph@</brown> : </console>Stäbe (<w>%</w> handhaben)
 %%%%
 cmd-hints-items2
 <w>%</w> : Inventar (Gegenstand wählen um ihn

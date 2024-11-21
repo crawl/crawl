@@ -39,11 +39,11 @@ Schwäche belohnt.
 %%%%
 staff of Olgreb
 
-Ein Stecken, der einst von dem mächtigen Zauberer Olgreb geschwungen wurde.
+Ein Stab, der einst von dem mächtigen Zauberer Olgreb geschwungen wurde.
 %%%%
 staff of Wucad Mu
 
-Ein kristallener Stecken voller magischer Energien, der von einem geschickten
+Ein kristallener Stab voller magischer Energien, der von einem geschickten
 Träger so kanalisiert werden kann, dass er Zauber wirken kann, ohne seine
 eigenen magischen Energien zu verbrauchen - auf die Gefahr hin, dass der Geist
 des Benutzers Schaden nimmt.
@@ -78,7 +78,7 @@ verbrennt die Essenz der Getroffenen.
 %%%%
 staff of Dispater
 
-Ein legendärer Stecken, der die Macht verleiht, Verdammnis zu entfesseln -
+Ein legendärer Stab, der die Macht verleiht, Verdammnis zu entfesseln -
 allerdings nicht, ohne dabei die Lebenskraft des Trägers zu entziehen.
 %%%%
 sceptre of Asmodeus
@@ -180,7 +180,7 @@ verloren wurde.
 %%%%
 Elemental Staff
 
-Ein mächtiger Stecken, der einst dem Anführer der Gilde der Fünf Elemente
+Ein mächtiger Stab, der einst dem Anführer der Gilde der Fünf Elemente
 gehörte. Er ist mit schützenden und offensiven Verbesserungen aus allen
 Elementarmagieschulen ausgestattet.
 %%%%
@@ -547,7 +547,7 @@ magischen Fähigkeiten verstärken. Allerdings ist sie ziemlich schwer...
 %%%%
 Majin-Bo
 
-Ein Stecken, der von einem mächtigen Dämonin bewohnt wird, die vor langer
+Ein Stab, der von einem mächtigen Dämonin bewohnt wird, die vor langer
 Zeit in dieser Form gefangen wurde. Um zu überleben, bietet sie nun große
 arkane Macht in einem schrecklichen Handel an: Im Austausch für einen winzigen
 Teil der Lebensessenz des Zaubernden, die jedes Mal entnommen wird, wenn sein
@@ -604,7 +604,7 @@ können sich auf Befehl des Trägers durch den nahen Raum verformen.
 %%%%
 staff of Battle
 
-Ein Stecken, umhüllt von farbenprächtigen Schuppen, gefertigt von einem
+Ein Stab, umhüllt von farbenprächtigen Schuppen, gefertigt von einem
 längst vergessenen Zauberer. Es war das Lieblingsspielzeug des Magiers
 Iskenderun.
 %%%%

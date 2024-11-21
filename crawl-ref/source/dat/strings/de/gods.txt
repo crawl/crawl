@@ -567,7 +567,7 @@ you train magic skills
 du magische Fähigkeiten trainierst
 %%%%
 you use magical staves or pain-branded weapons
-du magische Stecken oder mit Schmerz versehene Waffen verwendest
+du magische Stäbe oder mit Schmerz versehene Waffen verwendest
 %%%%
 you kill living things while asking for your life to be spared
 du Lebewesen tötest, während du darum bittest, dass dein Leben verschont wird

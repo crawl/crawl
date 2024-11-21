@@ -32,7 +32,7 @@ Macht ist nicht a priori klar.
 %%%%
 staff
 
-Ein Stecken mit unbekannter magischer Kraft.
+Ein Stab mit unbekannter magischer Kraft.
 %%%%
 wand
 

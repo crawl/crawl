@@ -461,9 +461,9 @@ Rupert cast targeted
 %%%%
 Ensnare Arachne cast
 
-@The_monster@ richtet ihren Stecken @at_or_near_target@ und schießt einen Strom Spinnennetz.
+@The_monster@ richtet ihren Stab @at_or_near_target@ und schießt einen Strom Spinnennetz.
 
-{gen}@The_monster@ Stecken schießt einen Strom Spinnennetz.
+{gen}@The_monster@ Stab schießt einen Strom Spinnennetz.
 %%%%
 unseen Ensnare Arachne cast
 

@@ -761,31 +761,31 @@ der {adj-e}%ssaphirblaue Zaubertrank
 
 %%%%
 the %sstaff of fire
-der {adj-e}%sStecken des Feuers
+der {adj-e}%sStab des Feuers
 %%%%
 the %sstaff of cold
-der {adj-e}%sStecken der Kälte
+der {adj-e}%sStab der Kälte
 %%%%
 the %sstaff of poison
-der {adj-e}%sStecken des Giftes
+der {adj-e}%sStab des Giftes
 %%%%
 the %sstaff of death
-der {adj-e}%sStecken des Todes
+der {adj-e}%sStab des Todes
 %%%%
 the %sstaff of conjuration
-der {adj-e}%sStecken der Hervorrufung
+der {adj-e}%sStab der Hervorrufung
 %%%%
 the %sstaff of air
-der {adj-e}%sStecken der Luft
+der {adj-e}%sStab der Luft
 %%%%
 the %sstaff of earth
-der {adj-e}%sStecken der Erde
+der {adj-e}%sStab der Erde
 %%%%
 the %sstaff of removedness
-der {adj-e}%sStecken der Obsoleszenz
+der {adj-e}%sStab der Obsoleszenz
 %%%%
 the %sstaff
-der {adj-e}%sStecken
+der {adj-e}%sStab
 %%%%
 
 #################################

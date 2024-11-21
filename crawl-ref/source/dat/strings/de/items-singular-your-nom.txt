@@ -743,31 +743,31 @@ dein {adj-er}%sZaubertrank
 
 %%%%
 your %sstaff of fire
-dein {adj-er}%sStecken des Feuers
+dein {adj-er}%sStab des Feuers
 %%%%
 your %sstaff of cold
-dein {adj-er}%sStecken der Kälte
+dein {adj-er}%sStab der Kälte
 %%%%
 your %sstaff of poison
-dein {adj-er}%sStecken des Giftes
+dein {adj-er}%sStab des Giftes
 %%%%
 your %sstaff of death
-dein {adj-er}%sStecken des Todes
+dein {adj-er}%sStab des Todes
 %%%%
 your %sstaff of conjuration
-dein {adj-er}%sStecken der Hervorrufung
+dein {adj-er}%sStab der Hervorrufung
 %%%%
 your %sstaff of air
-dein {adj-er}%sStecken der Luft
+dein {adj-er}%sStab der Luft
 %%%%
 your %sstaff of earth
-dein {adj-er}%sStecken der Erde
+dein {adj-er}%sStab der Erde
 %%%%
 your %sstaff of removedness
-dein {adj-er}%sStecken der Obsoleszenz
+dein {adj-er}%sStab der Obsoleszenz
 %%%%
 your %sstaff
-dein {adj-er}%sStecken
+dein {adj-er}%sStab
 %%%%
 
 #################################
