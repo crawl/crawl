@@ -55,7 +55,6 @@
  #include "tilepick.h"
 #endif
 #include "tiles-build-specific.h"
-#include "tileview.h"
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
@@ -1340,11 +1339,8 @@ static void _update_level_state()
 #endif
     for (rectangle_iterator ri(0); ri; ++ri)
     {
-        if (env.grid(*ri) == DNGN_SLIMY_WALL
-            || env.map_knowledge(*ri).feat() == DNGN_SLIMY_WALL)
-        {
+        if (env.grid(*ri) == DNGN_SLIMY_WALL)
             env.level_state |= LSTATE_SLIMY_WALL;
-        }
 
         if (is_icecovered(*ri))
 #if TAG_MAJOR_VERSION == 34
@@ -1377,27 +1373,12 @@ static void _update_level_state()
     }
 }
 
-static void _draw_tiles()
-{
-#ifdef USE_TILE
-    for (rectangle_iterator ri(coord_def(0, 0), coord_def(GXM - 1, GYM - 1));
-        ri; ++ri)
-    {
-        tile_draw_map_cell(*ri);
-    }
-#endif
-}
-
 void new_level(bool restore)
 {
     print_stats_level();
     update_whereis();
 
     _update_level_state();
-
-    // Draw remembered map
-    // Must happen after _update_level_state
-    _draw_tiles();
 
     if (restore)
         return;
