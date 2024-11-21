@@ -6,7 +6,7 @@
 
 %%%%
 Teleport Self
-Selbst teleportieren
+Sich teleportieren
 %%%%
 Cause Fear
 Furcht verursachen
@@ -37,7 +37,7 @@ Lightning Bolt
 Blitz
 %%%%
 Blinkbolt
-Blinzelbolzen
+Blitzsprung
 %%%%
 Bolt of Magma
 Magmastrahl
@@ -49,7 +49,7 @@ Slow
 Verlangsamen
 %%%%
 Haste
-Hast
+Eile
 %%%%
 Petrify
 Versteinern
@@ -67,10 +67,10 @@ Throw Frost
 Frost werfen
 %%%%
 Disjunction
-Unterbrechung
+Trennung
 %%%%
 Freezing Cloud
-Gefrierwolke
+Frostwolke
 %%%%
 Mephitic Cloud
 Mephitische Wolke
@@ -79,10 +79,10 @@ Venom Bolt
 Giftstrahl
 %%%%
 Olgreb's Toxic Radiance
-Olgrebs giftige Ausstrahlung
+Olgrebs toxische Strahlung
 %%%%
 Teleport Other
-Anderen Teleportieren
+Andere teleportieren
 %%%%
 Death's Door
 Pforte des Todes
@@ -98,10 +98,10 @@ Summon Small Mammal
 Kleines Säugetier beschwören
 %%%%
 Abjuration
-Annullierung
+Abjuration
 %%%%
 Bolt of Draining
-Strahl der Entleerung
+Strahl der Auszehrung
 %%%%
 Lehudib's Crystal Spear
 Lehudibs Kristallspeer
@@ -120,23 +120,23 @@ Fire Storm
 Feuersturm
 %%%%
 Call Down Damnation
-Verdammnis beschwören
+Verdammnis herabrufen
 %%%%
 # duplicate of ability
 #Blink
 #Blinzeln
 %%%%
 Blink Range
-Reichweite blinzeln
+In Reichweite blinzeln
 %%%%
 Blink Away
 Wegblinzeln
 %%%%
 Blink Close
-Naheblinzeln
+In die Nähe blinzeln
 %%%%
 Iskenderun's Mystic Blast
-Iskenderuns mystische Explosion
+Iskenderuns mystische Druckwelle
 %%%%
 Summon Horrible Things
 Schreckliche Dinge beschwören
@@ -157,10 +157,10 @@ Animate Skeleton
 Skelett beleben
 %%%%
 Vampiric Draining
-Vampirische Entleerung
+Vampirische Auszehrung
 %%%%
 Haunt
-Spuken
+Heimsuchung
 %%%%
 Borgnjor's Revivification
 Borgnjor's Wiederbelebung
@@ -169,13 +169,13 @@ Freeze
 Einfrieren
 %%%%
 Ozocubu's Refrigeration
-Ozocubu's Kühlung
+Ozocubu's Abkühlung
 %%%%
 Sticky Flame
 Klebrige Flamme
 %%%%
 Summon Ice Beast
-Eis-Bestie beschwören
+Eisbestie beschwören
 %%%%
 Ozocubu's Armour
 Ozocubus Rüstung
@@ -184,19 +184,19 @@ Call Imp
 Teufelchen rufen
 %%%%
 Repel Missiles
-Raketen abwehren
+Geschosse abwenden
 %%%%
 Berserker Rage
 Berserkerwut
 %%%%
 Dispel Undead
-Untote vertreiben
+Untote bannen
 %%%%
 Poison Arrow
 Giftpfeil
 %%%%
 Twisted Resurrection
-Verdrehte Wiederauferstehung
+Grässliche Wiederauferstehung
 %%%%
 Banishment
 Verbannung
@@ -223,7 +223,7 @@ Iron Shot
 Eisenschuss
 %%%%
 Stone Arrow
-Steinpfeil
+Steingeschoss
 %%%%
 Shock
 Schock
@@ -238,25 +238,25 @@ Agony
 Agonie
 %%%%
 Spider Form
-Spinnenform
+Spinnengestalt
 %%%%
 Disintegrate
-Auflösen
+Desintegrieren
 %%%%
 Blade Hands
 Klingenhände
 %%%%
 Statue Form
-Statuenform
+Statuengestalt
 %%%%
 Ice Form
-Eisform
+Eisgestalt
 %%%%
 Dragon Form
-Drachenform
+Drachengestalt
 %%%%
 Hydra Form
-Hydraform
+Hydragestalt
 %%%%
 Necromutation
 Nekromutation
@@ -265,7 +265,7 @@ Death Channel
 Todeskanal
 %%%%
 Symbol of Torment
-Symbol der Qual
+Symbol der Peinigung
 %%%%
 Throw Icicle
 Eiszapfen werfen
@@ -274,7 +274,7 @@ Airstrike
 Luftschlag
 %%%%
 Shadow Creatures
-Schatten-Kreaturen
+Schattenkreaturen
 %%%%
 Confusing Touch
 Verwirrende Berührung
@@ -283,16 +283,16 @@ Flame Tongue
 Flammenzunge
 %%%%
 Passwall
-Passwand
+Wand passieren
 %%%%
 Ignite Poison
 Gift entzünden
 %%%%
 Call Canine Familiar
-Hund-Vertrauten rufen
+Hundefamiliar rufen
 %%%%
 Summon Dragon
-Drache beschwören
+Drachen beschwören
 %%%%
 Ensorcelled Hibernation
 Verhexter Winterschlaf
@@ -301,10 +301,10 @@ Metabolic Englaciation
 Metabolische Vereisung
 %%%%
 Silence
-Schweigen
+Stille
 %%%%
 Shatter
-Zerschmettern
+Erschüttern
 %%%%
 Dispersal
 Streuung
@@ -316,7 +316,7 @@ Corona
 Korona
 %%%%
 Alistair's Intoxication
-Alistairs Berauschung
+Alistairs Rausch
 %%%%
 Lee's Rapid Deconstruction
 Lees schnelle Dekonstruktion
@@ -337,7 +337,7 @@ Excruciating Wounds
 Quälende Wunden
 %%%%
 Portal Projectile
-Portal-Geschoss
+Geschoss teleportieren
 %%%%
 Monstrous Menagerie
 Monströse Menagerie
@@ -365,7 +365,7 @@ Holzwohl
 #Verdammnis schleudern
 %%%%
 Brain Feed
-Hirnnahrung
+Gehirn absaugen
 %%%%
 Noxious Cloud
 Schädliche Wolke
@@ -408,10 +408,10 @@ Summon Drakes
 Drachlinge beschwören
 %%%%
 Blink Other
-Anderen blinzeln
+Andere blinzeln
 %%%%
 Blink Other Close
-Anderen naheblinzeln
+Andere in die Nähe blinzeln
 %%%%
 Summon Mushrooms
 Pilze beschwören
@@ -423,31 +423,31 @@ Acid Splash
 Säurespritzer
 %%%%
 Sticky Flame Range
-Klebrige Flamme Reichweite
+Weitreichende klebrige Flamme
 %%%%
 Fire Breath
-Feuer spucken
+Feuerodem
 %%%%
 Searing Breath
-Versengender Spucken
+Versengender Odem
 %%%%
 Chaos Breath
 Chaos spucken
 %%%%
 Cold Breath
-Kalt spucken
+Kälte speien
 %%%%
 Chilling Breath
-Abkühlender Odem
+Kühler Odem
 %%%%
 Summon Water Elementals
-Wasser-Elementare beschwören
+Wasserelementare beschwören
 %%%%
 Porkalator
-Verschweinen
+Schweinifizieren
 %%%%
 Spawn Tentacles
-Tentakel ergeben
+Tentakel bilden
 %%%%
 Tomb of Doroklohe
 Gruft von Doroklohe
@@ -456,7 +456,7 @@ Summon Eyeballs
 Augäpfel beschwören
 %%%%
 Haste Other
-Andere hasten
+Anderen Eile gewähren
 %%%%
 Summon Earth Elementals
 Erdelementare beschwören
@@ -471,13 +471,13 @@ Sleep
 Schlaf
 %%%%
 Mara Summon
-Mara-Beschwörung
+Maras Beschwörung
 %%%%
 Summon Illusion
 Illusion beschwören
 %%%%
 Primal Wave
-Ursprüngliche Welle
+Urzeitliche Welle
 %%%%
 Call Tide
 Flut rufen
@@ -492,7 +492,7 @@ Might
 Macht
 %%%%
 Might Other
-Anderen verstärken
+Andere ermächtigen
 %%%%
 Awaken Forest
 Wald erwecken
@@ -510,7 +510,7 @@ Summon Spectral Orcs
 Spektrale Orks beschwören
 %%%%
 Summon Holies
-Heiligtümer beschwören
+Heilige beschwören
 %%%%
 #Heal Other
 #Andere heilen
@@ -522,13 +522,13 @@ Holy Breath
 Heiliger Odem
 %%%%
 #Injury Mirror
-#Verletzungs-Spiegel
+#Verletzungsspiegel
 %%%%
 #Drain Life
 #Leben entziehen
 %%%%
 Leda's Liquefaction
-Leda's Verflüssigung
+Ledas Verflüssigung
 %%%%
 Summon Hydra
 Hydra beschwören
@@ -537,7 +537,7 @@ Mesmerise
 Mesmerisieren
 %%%%
 Fire Summon
-Feuer-Beschwörung
+Feuerbeschwörung
 %%%%
 Petrifying Cloud
 Versteinernde Wolke
@@ -546,7 +546,7 @@ Inner Flame
 Innere Flamme
 %%%%
 Beastly Appendage
-Bestialisches Anhängsel
+Bestialische Extremität
 %%%%
 Ensnare
 Umschlingen
@@ -567,7 +567,7 @@ Dazzling Flash
 Blendender Blitz
 %%%%
 Force Lance
-Kraftlanze
+Drucklanze
 %%%%
 Sentinel's Mark
 Zeichen des Wächters
@@ -588,7 +588,7 @@ Call Lost Soul
 Verlorene Seele rufen
 %%%%
 Dimension Anchor
-Dimensions-Anker
+Dimensionsanker
 %%%%
 Blink Allies Encircling
 Verbündete einkreisend blinzeln
@@ -600,7 +600,7 @@ Volley of Thorns
 Dornensalve
 %%%%
 Wall of Brambles
-Dornenbuschmauer
+Dornenbarriere
 %%%%
 Waterstrike
 Wasserschlag
@@ -612,7 +612,7 @@ Strip Willpower
 Willenskraft entziehen
 %%%%
 Wereblood
-Werwolfsblut
+Werblut
 %%%%
 Summon Vermin
 Ungeziefer beschwören
@@ -627,7 +627,7 @@ Discord
 Zwietracht
 %%%%
 Invisibility Other
-Anderen Unsichtbar machen
+Andere unsichtbar machen
 %%%%
 Virulence
 Virulenz
@@ -636,13 +636,13 @@ Orb of Electricity
 Kugel der Elektrizität
 %%%%
 Flash Freeze
-Blitzeinfrieren
+Blitzgefrieren
 %%%%
 Legendary Destruction
 Legendäre Zerstörung
 %%%%
 Forceful Invitation
-Gewaltsame Aufforderung
+Gewaltsame Einladung
 %%%%
 Plane Rend
 Ebene zerreißen
@@ -657,22 +657,22 @@ Black Mark
 Schwarzes Zeichen
 %%%%
 Sap Magic
-Magie zehren
+Magie entziehen
 %%%%
 #Major Destruction
 #Große Zerstörung
 %%%%
 Blink Allies Away
-Verbündeten wegblinzeln
+Verbündete wegblinzeln
 %%%%
 Summon Forest
 Wald beschwören
 %%%%
 Summon Lightning Spire
-Blitz-Spitze beschwören
+Blitzturm beschwören
 %%%%
 Summon Guardian Golem
-Wächter-Golem beschwören
+Wächtergolem beschwören
 %%%%
 Shadow Shard
 Schattensplitter
@@ -681,13 +681,13 @@ Shadow Bolt
 Schattenstrahl
 %%%%
 Crystal Bolt
-Kristall-Strahl
+Kristallstrahl
 %%%%
 Random Bolt
-Zufälliger Strahl
+Zufallsstrahl
 %%%%
 Glaciate
-Vereisen
+Vergletschern
 %%%%
 Dragon's Call
 Drachenruf
@@ -696,34 +696,34 @@ Spellforged Servitor
 Zaubergeschmiedeter Diener
 %%%%
 Summon Mana Viper
-Mana-Viper beschwören
+Manaviper beschwören
 %%%%
 Phantom Mirror
-Phantom-Spiegel
+Phantomspiegel
 %%%%
 Drain Magic
-Magie entziehen
+Magie verzehren
 %%%%
 Corrosive Bolt
 Korrosiver Strahl
 %%%%
 gehenna serpent of hell breath
-Gehenna Schlange der Hölle Odem
+Odem der Höllenschlange von Gehenna
 %%%%
 cocytus serpent of hell breath
-Kokytus Schlange der Hölle Odem
+Odem der Höllenschlange von Kokytus
 %%%%
 dis serpent of hell breath
-Dis Schlange der Hölle Odem
+Odem der Höllenschlange von Dis
 %%%%
 tartarus serpent of hell breath
-Tartarus Schlange der Hölle Odem
+Odem der Höllenschlange von Tartarus
 %%%%
 Summon Emperor Scorpions
 Kaiserskorpione beschwören
 %%%%
 Irradiate
-Bestrahlen
+Verstrahlen
 %%%%
 Spit Lava
 Lava spucken
@@ -741,7 +741,7 @@ Battlecry
 Kampfschrei
 %%%%
 Warning Cry
-Warnschrei
+Warnruf
 %%%%
 Seal Doors
 Türen versiegeln
@@ -750,7 +750,7 @@ Flay
 Schinden
 %%%%
 Berserk Other
-Anderen Berserkerwut geben
+Andere in Berserkerwut versetzen
 %%%%
 Corrupting Pulse
 Korrumpierender Impuls
@@ -759,10 +759,10 @@ Siren Song
 Sirenengesang
 %%%%
 Avatar Song
-Avatar-Lied
+Lied des Avatars
 %%%%
 Paralysis Gaze
-Lähmungsblick
+Lähmender Blick
 %%%%
 Confusion Gaze
 Verwirrender Blick
@@ -786,10 +786,10 @@ Gell's Gravitas
 Gells Gravitas
 %%%%
 Yara's Violent Unravelling
-Yaras gewaltsame Entfesselung
+Yaras gewaltsame Auflösung
 %%%%
 Entropic Weave
-Entropisches Weben
+Entropisches Gewebe
 %%%%
 Summon Executioners
 Scharfrichter beschwören
@@ -819,13 +819,13 @@ Bind Souls
 Seelen binden
 %%%%
 Infestation
-Befall
+Infestation
 %%%%
 Still Winds
-Stille Winde
+Wind stillen
 %%%%
 Resonance Strike
-Resonanz-Schlag
+Resonanzschlag
 %%%%
 Ghostly Sacrifice
 Geisterhafte Aufopferung
@@ -834,7 +834,7 @@ Dream Dust
 Traumstaub
 %%%%
 Lesser Beckoning
-Kleinere Beschwörung
+Kleineres Herbeiwinken
 %%%%
 #Upheaval
 #Umwälzung
@@ -846,7 +846,7 @@ Poisonous Vapours
 Giftige Ausdünstungen
 %%%%
 Ignition
-Zündung
+Entzündung
 %%%%
 Vortex
 Wirbel
@@ -855,13 +855,13 @@ Borgnjor's Vile Clutch
 Borgnjors böser Griff
 %%%%
 Harpoon Shot
-Harpunen-Schuss
+Harpunenschuss
 %%%%
 Grasping Roots
-Greifen der Wurzeln
+Greifende Wurzeln
 %%%%
 Throw Klown Pie
-Klown-Pastete werfen
+Klownpastete werfen
 %%%%
 Sporulate
 Sporen erzeugen
@@ -879,16 +879,16 @@ Hailstorm
 Hagelsturm
 %%%%
 Eringya's Noxious Bog
-Eringyas schädliches Moor
+Eringyas verdorbenes Moor
 %%%%
 Agony Range
-Reichweite von Agonie
+Weitreichende Agonie
 %%%%
 Dispel Undead Range
-Untote vertreiben Reichweite
+Weitreichendes Untote bannen
 %%%%
 Frozen Ramparts
-Gefrorene Wälle
+Gefrorenes Bollwerk
 %%%%
 Absolute Zero
 Absoluter Nullpunkt
@@ -903,19 +903,19 @@ Hurl Sludge
 Schlamm schleudern
 %%%%
 Polar Vortex
-Polarwirbel
+Polarsturm
 %%%%
 Call Down Lightning
-Blitz abrufen
+Blitz herabrufen
 %%%%
 Charm
-Bannen
+Verzaubern
 %%%%
 Mindburst
 Geistesblitz
 %%%%
 Storm Form
-Sturmform
+Sturmgestalt
 %%%%
 Creeping Frost
 Kriechender Frost
@@ -924,25 +924,25 @@ Weakening Gaze
 Schwächender Blick
 %%%%
 Maxwell's Capacitive Coupling
-Maxwells Kapazitive Kopplung
+Maxwells kapazitive Kopplung
 %%%%
 Summon Tzitzimitl
-Tzitzimitl Beschwören
+Tzitzimitl beschwören
 %%%%
 Summon Hell Sentinel
-Höllenwächter Beschwören
+Höllenwächter beschwören
 %%%%
 Animate Armour
-Rüstung Beleben
+Rüstung erwecken
 %%%%
 Manifold Assault
 Vielfältigter Angriff
 %%%%
 Goad Beasts
-Bestien Anstacheln
+Bestien anstacheln
 %%%%
 Concentrate Venom
-Gift Konzentrieren
+Gift konzentrieren
 %%%%
 Eruption
 Eruption

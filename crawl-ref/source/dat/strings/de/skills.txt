@@ -22,19 +22,19 @@ Axes
 Äxte
 %%%%
 Maces & Flails
-Keulen & Flegeln
+Keulen & Flegel
 %%%%
 Polearms
 Stangenwaffen
 %%%%
 Staves
-Stecken
+Stäbe
 %%%%
 Slings
-Schleuder
+Schleudern
 %%%%
 Bows
-Bogen
+Bögen
 %%%%
 Crossbows
 Armbrüste
@@ -52,11 +52,11 @@ Shields
 Schilde
 %%%%
 Unarmed Combat
-Unbewaffneter Kampf
+Unbewaffnet
 %%%%
 # triggering the special property of an item
 Evocations
-Evokation
+Evokationen
 %%%%
 # calling on a god for help
 Invocations
@@ -66,25 +66,25 @@ Spellcasting
 Zaubern
 %%%%
 Conjurations
-Hervorrufung
+Konjurationen
 %%%%
 Hexes
-Verhexung
+Verhexungen
 %%%%
 Charms
-Bannzauber
+Verzauberungen
 %%%%
 Summonings
-Beschwörung
+Beschwörungen
 %%%%
 Necromancy
 Nekromantie
 %%%%
 Translocations
-Translokation
+Translokationen
 %%%%
 Transmutations
-Verwandlung
+Verwandlungen
 %%%%
 Fire Magic
 Feuermagie
@@ -108,7 +108,7 @@ Giftmagie
 
 %%%%
 Conjuration
-Hervorrufung
+Konjuration
 %%%%
 Transmutation
 Verwandlung
@@ -166,7 +166,7 @@ Slg
 Schl
 %%%%
 Bws
-Bog
+Bög
 %%%%
 Crb
 Armb
@@ -193,7 +193,7 @@ Spc
 Zau
 %%%%
 Conj
-Herv
+Konj
 %%%%
 Tmut
 Verw
