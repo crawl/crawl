@@ -278,12 +278,15 @@ bool regexp_valid(const string& pattern)
 {
     try
     {
-        // wregex constructor will throw an exception if pattern is invalid
-        _compile_pattern(pattern, false);
+        // passing ignore_case = true to increase chance of cached pattern being re-used
+        // (this is usually called to check a user's search, so the subsequent
+        // call to regexp_match will use ignore_case = true)
+        _compile_pattern(pattern, true);
         return true;
     }
     catch (const exception& e)
     {
+        // wregex constructor will throw an exception if pattern is invalid
         return false;
     }
 }
