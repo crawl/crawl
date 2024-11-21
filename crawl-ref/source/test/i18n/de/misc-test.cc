@@ -272,7 +272,7 @@ int main()
     show_result(msg, "Automagie wird den Zauber im Platz b (Klingenhände) wirken.");
 
     msg = localise("Automagic enabled, will cast spell in slot c (Ice Form).");
-    show_result(msg, "Automagie aktiviert, wird den Zauber im Platz c (Eisform) wirken.");
+    show_result(msg, "Automagie aktiviert, wird den Zauber im Platz c (Eisgestalt) wirken.");
 
     msg = localise("You hear the whistling of a wind.");
     show_result(msg, "Du hörst das Pfeifen eines Windes.");
