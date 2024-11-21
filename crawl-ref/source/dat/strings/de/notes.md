@@ -150,7 +150,7 @@ Lair can be translated as Versteck (which also means stash) or Höhle (which als
 Dodging and evasion:
 
 - dodging (skill) = Ausweichen
-- evasion (attribute) = Umgehung
+- evasion (derived attribute) = Ausweichen
 
 DCSS has specific terms for equipping/unequipping jewellery vs armour vs weapons.
 
