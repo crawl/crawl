@@ -772,12 +772,12 @@ rElek
 # HP regeneration rate
 %%%%
 HPRegen  %03.2f/turn
-TPRegen  %03.2f/Wendung
+TPRegen  %03.2f/Runde
 %%%%
 # MP regeneration rate
 %%%%
 MPRegen  %03.2f/turn
-MPRegen  %03.2f/Wendung
+MPRegen  %03.2f/Runde
 %%%%
 SeeInvis
 SeheUns
