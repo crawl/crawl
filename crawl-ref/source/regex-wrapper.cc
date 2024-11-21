@@ -250,8 +250,11 @@ bool regexp_valid(const string& pattern)
 {
     try
     {
+        std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+        wstring wpattern = conv.from_bytes(pattern);
+
         // constructor will throw an exception if pattern is invalid
-        regex re(pattern);
+        wregex wre(wpattern);
         return true;
     }
     catch (const exception& e)
