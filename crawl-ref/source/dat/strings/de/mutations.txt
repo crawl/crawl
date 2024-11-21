@@ -744,7 +744,7 @@ see invisible
 Unsichtbares sehen
 %%%%
 You have supernaturally acute eyesight. (SInv)
-Du hast ein übernatürlich scharfes Sehvermögen. (SUns)
+Du hast ein übernatürlich scharfes Sehvermögen. (UnsS)
 %%%%
 Your vision sharpens.
 Deine Sicht wird schärfer.
@@ -1116,7 +1116,7 @@ You have a pair of antennae on your head.
 Du hast ein Paar Antennen auf deinem Kopf.
 %%%%
 You have a pair of large antennae on your head. (SInv)
-Du hast ein Paar große Antennen auf deinem Kopf. (SUns)
+Du hast ein Paar große Antennen auf deinem Kopf. (UnsS)
 %%%%
 A pair of antennae grows on your head!
 Ein Paar Antennen wächst auf deinem Kopf!
@@ -1671,7 +1671,7 @@ Your body has grown many golden eyes which may confuse attackers. (Acc +5)
 Deinem Körper sind viele goldene Augen gewachsen, die Angreifer verwirren können. (Gen +5)
 %%%%
 Your body is covered in golden eyes which may confuse attackers. (Acc +7, SInv)
-Dein Körper ist mit goldenen Augen bedeckt, die Angreifer verwirren können. (Gen +7, SInv)
+Dein Körper ist mit goldenen Augen bedeckt, die Angreifer verwirren können. (Gen +7, UnsS)
 %%%%
 Eyeballs grow over part of your body.
 Augäpfel wachsen über einen Teil deines Körpers.

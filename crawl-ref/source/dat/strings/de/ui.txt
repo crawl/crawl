@@ -780,7 +780,7 @@ MPRegen  %03.2f/turn
 MPRegen  %03.2f/Runde
 %%%%
 SeeInvis
-SeheUns
+UnsSehen
 %%%%
 Faith
 Glaube
