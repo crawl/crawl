@@ -1112,7 +1112,7 @@ Your spectral weapon disappears as you unwield.
 Deine Spektralwaffe verschwindet.
 %%%%
 The staff is unable to connect with your magical essence.
-Der Stab kan mit deiner magischen Essenz nicht verbinden.
+Der Stab kann sich nicht mit deiner magischen Essenz verbinden.
 %%%%
 You feel ready to stride towards your foes.
 Du fühlst dich bereit, auf deine Feinde zu schreiten.

@@ -1430,8 +1430,8 @@ Zauber verwendet werden. Abgesehen davon sind sie weitgehend nutzlos.
 %%%%
 HINT_DESCRIBE_MAGICAL_STAFF
 
-Dieser Stab kann deine Zauberei verbessern, indem er die Zauber der
-entsprechenden Zauberschule mächtiger macht.
+Dieser Stab verstärkt deine Magie, indem er Zauber der entsprechenden
+Zauberschule mächtiger macht.
 %%%%
 HINT_MAGICAL_STAFF_HAS_RESISTANCE
 
