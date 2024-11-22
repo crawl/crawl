@@ -150,7 +150,7 @@ Spellcasting
 %%%%
 Conjurations
 
-Hervorrufungen sind kampforientierte Zauber, bei denen oft ein Stück kurzlebiger
+Konjurationen sind kampforientierte Zauber, bei denen oft ein Stück kurzlebiger
 Materie hervorgerufen und auf das Opfer geschleudert wird, um direkten Schaden
 zu verursachen. Die Beherrschung von Beschwörungen erhöht in der Regel den
 Schaden und die Genauigkeit solcher Zauber und wirkt sich manchmal auch auf
@@ -229,7 +229,7 @@ durchschnittlichen Fertigkeit in diesen Schulen ab.
 Fire Magic
 
 Die Feuermagie konzentriert sich hauptsächlich darauf, Feuerschaden über große
-Entfernungen zu verursachen, mit vielen effektiven Hervorrufungen.
+Entfernungen zu verursachen, mit vielen effektiven Konjurationen.
 
 Diese Fertigkeit erhöht die Erfolgsquote und die Zauberkraft von Zaubern der
 entsprechenden Schule. Viele Zauber gehören zu einer Kombination aus mehreren
@@ -250,7 +250,7 @@ durchschnittlichen Fertigkeit in diesen Schulen ab.
 Air Magic
 
 Die Luftmagie bietet Zauber, die direkt mit dem Wind Schaden verursachen, sowie
-laute, aber mächtige Blitzhervorrufungen. Sie bietet auch einige Hilfszauber,
+laute, aber mächtige Blitzkonjurationen. Sie bietet auch einige Hilfszauber,
 wie z.B. den Ruf des Windes, um deine Bewegung zu unterstützen, oder eine
 Verhexung, die den Einsatz von Magie in deiner Umgebung weitgehend verhindert.
 

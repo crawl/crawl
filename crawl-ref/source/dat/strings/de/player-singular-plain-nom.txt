@@ -366,7 +366,7 @@ Hedge Wizard
 Heckenzauberer
 %%%%
 Conjurer
-Hervorrufer
+Konjurant
 %%%%
 Summoner
 Beschwörer
@@ -453,7 +453,7 @@ Skalde
 %s Heckenzauberer
 %%%%
 %s Conjurer
-%s Hervorrufer
+%s Konjurant
 %%%%
 %s Summoner
 %s Beschwörer

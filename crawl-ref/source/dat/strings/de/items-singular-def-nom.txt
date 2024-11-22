@@ -773,7 +773,7 @@ the %sstaff of death
 der {adj-e}%sStab des Todes
 %%%%
 the %sstaff of conjuration
-der {adj-e}%sStab der Hervorrufung
+der {adj-e}%sStab der Konjuration
 %%%%
 the %sstaff of air
 der {adj-e}%sStab der Luft
@@ -800,7 +800,7 @@ the book of Minor Magic
 das Buch der kleinen Magie
 %%%%
 the book of Conjurations
-das Buch der Hervorrufung
+das Buch der Konjurationen
 %%%%
 the book of Flames
 das Buch der Flammen

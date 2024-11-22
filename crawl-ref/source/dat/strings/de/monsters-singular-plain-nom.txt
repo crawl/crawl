@@ -1674,7 +1674,7 @@
 {adj-er}%sOklob-Setzling-Zauberer
 %%%%
 %soklob plant conjurer
-{adj-er}%sOklob-Pflanze-Hervorrufer
+{adj-er}%sOklob-Pflanze-Konjurant
 %%%%
 %soklob plant summoner
 {adj-er}%sOklob-Pflanze-Beschwörer

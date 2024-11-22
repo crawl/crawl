@@ -919,7 +919,7 @@ du auch dessen Beschreibung lesen.</tiles>
 %%%%
 HINT_ATTACK_MONSTER_MAGIC
 
-Als Hervorrufer wirst du es jedoch mit Magie behandeln wollen. Im
+Als Konjurant wirst du es jedoch mit Magie behandeln wollen. Im
 Hilfe-Eintrag für den Memorierungsreiter (<w>$cmd[CMD_MEMORISE_SPELL]</w>)
 findest du eine Erklärung, wie du das machen kannst.
 %%%%

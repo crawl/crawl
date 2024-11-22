@@ -1078,7 +1078,7 @@ einfarbig braune
 "Bogenschütze-"
 %%%%
 "conjurer "
-"Hervorrufer-"
+"Konjurant-"
 %%%%
 "fire elementalist "
 "Feuermagier-"

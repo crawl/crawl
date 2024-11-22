@@ -155,7 +155,7 @@ schreiben würde, aber es ist hier.
 book of conjurations
 
 Ein Buch, das eine Einführung in die zerstörerischen magischen Künste der
-Hervorrufung enthält.
+Konjurationen enthält.
 %%%%
 book of dangerous friends
 
@@ -1197,8 +1197,8 @@ und so Kälteschaden verursachen, der die Rüstung umgeht.
 %%%%
 staff of conjuration
 
-Ein Stab, der die Kraft der von seinem Träger gewirkten Hervorrufungszauber
-erhöht. Wenn der Träger sich mit Evokationen und Hervorrufung auskennt, kann er
+Ein Stab, der die Kraft der von seinem Träger gewirkten Konjurationszauber
+erhöht. Wenn der Träger sich mit Evokationen und Konjurationen auskennt, kann er
 diejenigen, die er trifft, mit reiner Energie stoßen und unwiderstehlichen
 Schaden anrichten.
 %%%%

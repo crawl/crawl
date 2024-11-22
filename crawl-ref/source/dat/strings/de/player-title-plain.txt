@@ -994,7 +994,7 @@ Erzmagier
 %%%%
 # duplicate (background)
 #Conjurer
-#Hervorrufer
+#Konjurant
 %%%%
 Destroyer
 Zerstörer

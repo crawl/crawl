@@ -682,7 +682,7 @@ battlemage
 Ein humanoides Konstrukt aus körperlosem Gedächtnis, das durch die Luft schwebt.
 Obwohl seine Form vielleicht etwas verändert ist und er kaum erkennbare Merkmale
 aufweist, scheint es dennoch irgendwie einem Krieger aus längst vergangenen
-Zeiten zu ähneln, der sowohl in Hervorrufungen als auch im Nahkampf bewandert
+Zeiten zu ähneln, der sowohl in Konjurationen als auch im Nahkampf bewandert
 ist.
 %%%%
 battlesphere
@@ -1067,7 +1067,7 @@ noch entwickelt werden.
 %%%%
 draconian annihilator
 
-Ein Drakonier, der mächtige Hervorrufungen anwendet, um jeden zu vernichten, der
+Ein Drakonier, der mächtige Konjurationen anwendet, um jeden zu vernichten, der
 es wagt, sich ihm in den Weg zu stellen.
 %%%%
 draconian knight
@@ -2427,7 +2427,7 @@ ihm zugefügte Schaden wird teilweise auf den Zaubernden übertragen.
 %%%%
 spellforged servitor
 
-Ein magisches Konstrukt, das mit einem Teil der Magie eines Hervorrufers
+Ein magisches Konstrukt, das mit einem Teil der Magie eines Konjuranten
 verwoben und mit einer primitiven Elementarintelligenz verbunden ist, die aus
 einer äußeren Ebene beschworen wurde. Die Magie, mit der es geschmiedet wurde,
 verleiht ihm die Fähigkeit, einige der zerstörerischen Zauber seines Schöpfers
@@ -2930,7 +2930,7 @@ Zauberformeln murmelt.
 Master Blaster
 
 Ein mächtiger alter Lich, der dafür berüchtigt ist, Menschen beim geringsten
-Anlass oder einfach aus einer Laune heraus mit mächtigen Hervorrufungen in die
+Anlass oder einfach aus einer Laune heraus mit mächtigen Konjurationen in die
 Luft zu jagen.
 %%%%
 Statue of Wucad Mu
@@ -2977,7 +2977,7 @@ Zauber zu wirken.
 charred statue
 
 Eine mit Flammen erfüllte Statue, die es ihr ermöglicht, einfache, auf Feuer
-basierende Hervorrufungen durchzuführen.
+basierende Konjurationen durchzuführen.
 %%%%
 Cigotuvi's Monster
 
@@ -2987,7 +2987,7 @@ windende Tentakel sprießen.
 %%%%
 conjurer statue
 
-Eine Statue, die die mächtigsten Hervorrufungen beherrscht, die Iskenderun je
+Eine Statue, die die mächtigsten Konjurationen beherrscht, die Iskenderun je
 erdacht hat.
 %%%%
 deformed humanoid

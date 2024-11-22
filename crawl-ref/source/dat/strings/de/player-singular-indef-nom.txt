@@ -48,7 +48,7 @@ a %s Hedge Wizard
 ein %s Heckenzauberer
 %%%%
 a %s Conjurer
-ein %s Hervorrufer
+ein %s Konjurant
 %%%%
 a %s Summoner
 ein %s Beschwörer
@@ -126,7 +126,7 @@ a %s%s Hedge Wizard
 ein {adj-er}%s%s Heckenzauberer
 %%%%
 a %s%s Conjurer
-ein {adj-er}%s%s Hervorrufer
+ein {adj-er}%s%s Konjurant
 %%%%
 a %s%s Summoner
 ein {adj-er}%s%s Beschwörer

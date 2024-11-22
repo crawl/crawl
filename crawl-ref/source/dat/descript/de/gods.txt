@@ -460,7 +460,7 @@ Vehumet powers
 Anhänger von Vehumet können ihre magische Energie schnell wiederherstellen, wenn
 sie Wesen töten. Wenn sie an Gunst gewinnen, werden ihre zerstörerischen Zauber
 verbessert – zunächst erhalten sie Hilfe beim Wirken solcher Zauber und dann
-eine größere Reichweite für Hervorrufungen. Vehumet bietet seinen Anhängern das
+eine größere Reichweite für Konjurationen. Vehumet bietet seinen Anhängern das
 Wissen über immer mächtigere zerstörerische Zauber, wenn sie an Frömmigkeit
 gewinnen.
 %%%%
@@ -667,7 +667,7 @@ Vehumet wrath
 
 Wer Vehumet erzürnt, wird mit großer Vernichtung rechnen müssen. Novizen werden
 von Flammen und Frost getroffen, Erzmagier von Kristallspeeren und Feuerstürmen.
-Auch ihre eigenen Hervorrufungen gehen oft im ungünstigsten Moment fehl.
+Auch ihre eigenen Konjurationen gehen oft im ungünstigsten Moment fehl.
 %%%%
 Wu Jian wrath
 

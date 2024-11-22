@@ -1660,7 +1660,7 @@
 %d Oklob-Setzling-Zauberer
 %%%%
 %d oklob plant conjurers
-%d Oklob-Pflanze-Hervorrufer
+%d Oklob-Pflanze-Konjurant
 %%%%
 %d oklob plant summoners
 %d Oklob-Pflanze-Beschwörer

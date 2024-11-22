@@ -2436,16 +2436,16 @@ You can once more study and cast Air magic.
 Du kannst wieder Luftmagie lernen und wirken.
 %%%%
 no conjurations magic
-keine Hervorrufungsmagie
+keine Konjurationsmagie
 %%%%
 You cannot study or cast Conjurations magic.
-Du kannst keine Hervorrufungsmagie erlernen oder wirken.
+Du kannst keine Konjurationsmagie erlernen oder wirken.
 %%%%
 You can no longer study or cast Conjurations magic.
-Du kannst keine Hervorrufungsmagie mehr erlernen oder wirken.
+Du kannst keine Konjurationsmagie mehr erlernen oder wirken.
 %%%%
 You can once more study and cast Conjurations magic.
-Du kannst wieder Hervorrufungszauber studieren und wirken.
+Du kannst wieder Konjurationsmagie studieren und wirken.
 %%%%
 no earth magic
 keine Erdmagie

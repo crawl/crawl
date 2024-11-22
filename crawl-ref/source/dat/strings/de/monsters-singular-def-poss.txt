@@ -1674,7 +1674,7 @@ the %soklob sapling wizard's
 des {adj-en}%sOklob-Setzling-Zauberers
 %%%%
 the %soklob plant conjurer's
-des {adj-en}%sOklob-Pflanze-Hervorrufers
+des {adj-en}%sOklob-Pflanze-Konjuranten
 %%%%
 the %soklob plant summoner's
 des {adj-en}%sOklob-Pflanze-Beschwörers

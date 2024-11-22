@@ -292,7 +292,7 @@
 " der Nekromantie"
 %%%%
 " of conjurations"
-" der Hervorrufung"
+" der Konjurationen"
 %%%%
 " of hexes"
 " der Verhexung"

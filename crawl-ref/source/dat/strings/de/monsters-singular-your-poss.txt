@@ -1675,7 +1675,7 @@ your %soklob sapling wizard's
 deines {adj-en}%sOklob-Setzling-Zauberers
 %%%%
 your %soklob plant conjurer's
-deines {adj-en}%sOklob-Pflanze-Hervorrufers
+deines {adj-en}%sOklob-Pflanze-Konjuranten
 %%%%
 your %soklob plant summoner's
 deines {adj-en}%sOklob-Pflanze-Beschwörers

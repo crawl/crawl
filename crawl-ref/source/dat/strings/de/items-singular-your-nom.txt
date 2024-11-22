@@ -755,7 +755,7 @@ your %sstaff of death
 dein {adj-er}%sStab des Todes
 %%%%
 your %sstaff of conjuration
-dein {adj-er}%sStab der Hervorrufung
+dein {adj-er}%sStab der Konjuration
 %%%%
 your %sstaff of air
 dein {adj-er}%sStab der Luft
@@ -779,7 +779,7 @@ your book of Minor Magic
 {n}dein Buch der kleinen Magie
 %%%%
 your book of Conjurations
-{n}dein Buch der Hervorrufung
+{n}dein Buch der Konjurationen
 %%%%
 your book of Flames
 {n}dein Buch der Flammen

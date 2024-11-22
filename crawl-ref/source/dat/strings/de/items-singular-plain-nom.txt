@@ -791,7 +791,7 @@ Trank der Resistenz
 {adj-er}%sStab des Todes
 %%%%
 %sstaff of conjuration
-{adj-er}%sStab der Hervorrufung
+{adj-er}%sStab der Konjuration
 %%%%
 %sstaff of air
 {adj-er}%sStab der Luft
@@ -818,7 +818,7 @@ book of Minor Magic
 Buch der kleinen Magie
 %%%%
 book of Conjurations
-Buch der Hervorrufung
+Buch der Konjurationen
 %%%%
 book of Flames
 Buch der Flammen

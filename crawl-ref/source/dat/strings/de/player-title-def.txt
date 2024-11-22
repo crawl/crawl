@@ -999,7 +999,7 @@ der Erzmagier
 # Conjurations
 %%%%
 the Conjurer
-der Hervorrufer
+der Konjurant
 %%%%
 the Destroyer
 der Zerstörer

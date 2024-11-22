@@ -205,7 +205,7 @@ It enhances your poison magic.
 Dieser Gegenstand verstärkt deine Giftmagie
 %%%%
 It enhances your conjuration magic.
-Dieser Gegenstand verstärkt deine Hervorrufungsmagie.
+Dieser Gegenstand verstärkt deine Konjurationsmagie.
 %%%%
 
 # maximum enchantment - applies to weapons and armour
@@ -928,7 +928,7 @@ Er kann evoziert werden, um feurige Dämonen zu beschwören, wobei die Erfolgsqu
 # Staff of Battle
 %%%%
 It summons a battlesphere in combat, with strength depending on Conjurations skill.
-Er ruft im Kampf eine Kampfkugel hervor, deren Stärke von der Hervorrufungsfertigkeit abhängt.
+Er ruft im Kampf eine Kampfkugel hervor, deren Stärke von der Konjurationsfertigkeit abhängt.
 %%%%
 
 # Staff of Dispater

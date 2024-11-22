@@ -205,7 +205,7 @@ staves of cold
 Stäbe der Kälte
 %%%%
 staves of conjuration
-Stäbe der Hervorrufung
+Stäbe der Konjuration
 %%%%
 staves of death
 Stäbe des Todes
