@@ -61,13 +61,22 @@ a
 S
 S
 %%%%
+s
+s
+%%%%
 # dexterity (Geschicklichkeit)
 %%%%
 D
 G
 %%%%
+d
+g
+%%%%
 # intelligence
 %%%%
 I
 I
+%%%%
+i
+i
 %%%%
