@@ -307,6 +307,12 @@ int main()
     msg = localise("show slimy rune");
     show_result(msg, "schleimige Rune zeigen");
 
+    msg = localise("Memorise %s, consuming %d spell level and leaving %d?", "Magic Dart", 1, 4);
+    show_result(msg, "Magisches Geschoss memorieren, dabei 1 Zauberplatz verbrauchen und 4 lassen?");
+
+    msg = localise("Memorise %s, consuming %d spell levels and leaving %d?", "Fireball", 5, 0);
+    show_result(msg, "Feuerball memorieren, dabei 5 Zauberplätze verbrauchen und 0 lassen?");
+
     you.position = coord_def(10, 10);
     env.grid.init(DNGN_FLOOR);
     env.pgrid.init(FPROP_NONE);

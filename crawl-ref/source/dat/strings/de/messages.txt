@@ -13860,7 +13860,7 @@ This spell is %s to cast%s
 Dieser Zauber ist %s zu wirken%s
 %%%%
 Memorise %s, consuming %d spell level and leaving %d?
-%s memorieren, dabei %d Zauberplätze verbrauchen und %d lassen?
+%s memorieren, dabei %d Zauberplatz verbrauchen und %d lassen?
 %%%%
 Memorise %s, consuming %d spell levels and leaving %d?
 %s memorieren, dabei %d Zauberplätze verbrauchen und %d lassen?

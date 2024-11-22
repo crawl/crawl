@@ -1005,7 +1005,7 @@ bool learn_spell(spell_type specspell, bool wizard, bool interactive)
 
     if (interactive)
     {
-        const string prompt = make_stringf(
+        const string prompt = localise(
                  spell_levels_required(specspell) == 1
                  ? "Memorise %s, consuming %d spell level and leaving %d?"
                  : "Memorise %s, consuming %d spell levels and leaving %d?",
