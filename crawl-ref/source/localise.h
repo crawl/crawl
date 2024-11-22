@@ -94,13 +94,19 @@ static string localise(const string& first, Ts const &... rest)
  */
 int localise_char(char ch);
 
+/*
+ * Convert an input char in the current language to an English answer.
+ *
+ * An English input will fall through unchanged, unless that key is
+ * redefined to mean something else in the target language.
+ */
+int convert_input_to_english(const string& english_chars, int input);
 
 /**
  * Localise a string with embedded @foo@ style parameters
  */
 string localise(const string& text, const map<string, string>& params,
                 bool localise_text = true);
-
 
 /**
  * Localise a string with a specific context

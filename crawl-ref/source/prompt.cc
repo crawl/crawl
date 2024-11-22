@@ -23,27 +23,6 @@
 #include "viewchar.h"
 #include "ui.h"
 
-/*
- * Convert an input char in the current language to an English answer.
- *
- * An English answer will fall through unchanged, unless that key is
- * redefined to mean something else in the target language.
- */
-static int _convert_input_to_english(const string& allowed, int answer)
-{
-    if (localisation_active())
-    {
-        for (char c: allowed)
-        {
-            if (answer == localise_char(c))
-                return (int)c;
-        }
-    }
-
-    return answer;
-}
-
-
 // Like yesno, but requires a full typed answer.
 // Unlike yesno, prompt should have no trailing space.
 // Returns true if the user typed "yes", false if something else or cancel.
@@ -157,7 +136,7 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
             tmp = default_answer;
         }
         else
-            tmp = _convert_input_to_english("YyNn", tmp);
+            tmp = convert_input_to_english("YyNn", tmp);
 
         if (Options.easy_confirm == easy_confirm_type::all
             || tmp == default_answer
@@ -264,7 +243,7 @@ int yesnoquit(const char* str, bool allow_lowercase, int default_answer, bool al
 
         int tmp = ui::getch(KMC_CONFIRM);
 
-        tmp = _convert_input_to_english("YyNnAaQq", tmp);
+        tmp = convert_input_to_english("YyNnAaQq", tmp);
 
         if (key_is_escape(tmp) || tmp == 'q' || tmp == 'Q'
             || crawl_state.seen_hups)

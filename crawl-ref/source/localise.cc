@@ -2346,6 +2346,26 @@ int localise_char(char ch)
     }
 }
 
+/*
+ * Convert an input char in the current language to an English answer.
+ *
+ * An English input will fall through unchanged, unless that key is
+ * redefined to mean something else in the target language.
+ */
+int convert_input_to_english(const string& english_chars, int input)
+{
+    if (localisation_active())
+    {
+        for (char c: english_chars)
+        {
+            if (input == localise_char(c))
+                return (int)c;
+        }
+    }
+
+    return input;
+}
+
 /**
  * @brief Fix some stuff that only works in English
  */
