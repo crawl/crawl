@@ -9,7 +9,7 @@ gewarnt: Für Aschenzari sind Macht, Segen und Fluch dasselbe.
 %%%%
 Beogh
 
-Beogh ist eine böse Gottheit, die von den im Dungeon beheimateten Höhlenorks
+Beogh ist eine böse Gottheit, die von den im Kerker beheimateten Höhlenorks
 verehrt wird. Nur Orks dürfen Beogh dienen und müssen ihre Hingabe mit
 Blutvergießen beweisen. Besonders glühende Anhänger Beoghs werden feststellen,
 dass sich orkische Anhänger um ihr Banner scharen: Es ist ein Zeitalter der
@@ -38,7 +38,7 @@ Elyvilon
 
 Elyvilon der Heiler heißt alle guten Seelen willkommen, die bereit sind, anderen
 zu helfen. Diese Personen können mit mächtigen Heilkräften rechnen, mit denen
-sie Blutvergießen vermeiden können. Elyvilon schätzt die Erkundung des Dungeons.
+sie Blutvergießen vermeiden können. Elyvilon schätzt die Erkundung des Kerkers.
 Elyvilons Anhänger können sich zum Strahlenden oder Zin bekehren und dabei etwas
 Frömmigkeit bewahren.
 %%%%
@@ -107,7 +107,7 @@ Nemelex Xobeh
 
 Nemelex ist ein seltsamer und unberechenbarer Trickster-Gott, dessen Kräfte
 durch magische Kartenspiele heraufbeschworen werden, die mit dem Ichor von
-Dämonen bemalt sind. Anhänger erhalten Kartenspiele, während sie den Dungeon
+Dämonen bemalt sind. Anhänger erhalten Kartenspiele, während sie den Kerker
 durchqueren, und werden ermutigt, auf die Karten zu vertrauen, um göttliche
 Hilfe zu erhalten. Der Trickster kann jedoch auch dafür sorgen, dass das Glück
 den Mutigen hold ist.
@@ -177,7 +177,7 @@ untersagt.
 %%%%
 Uskayaw
 
-Uskayaw der Feiernde ist ein Gott des ekstatischen Tanzes. Im Dungeon schätzt
+Uskayaw der Feiernde ist ein Gott des ekstatischen Tanzes. Im Kerker schätzt
 Uskayaw die Leidenschaft und den Rhythmus des Kampfes und belohnt seine Anhänger
 für jeden Schlag, den sie ausführen, und für den Schaden, den sie ihren Feinden
 zufügen. Je länger der Tanz andauert, desto größere Kräfte bietet Uskayaw. Wenn
@@ -230,7 +230,7 @@ dabei etwas Frömmigkeit bewahren.
 Ashenzari powers
 
 Aschenzari fordert seine Anhänger auf, ihre Besitztümer zu verfluchen, und
-bietet diese Flüche regelmäßig seinen Anhängern an während sie den Dungeon
+bietet diese Flüche regelmäßig seinen Anhängern an während sie den Kerker
 erkunden. Verfluchte Ausrüstung kann nicht verzaubert werden und kann nur
 entfernt werden, indem man sie für immer zerschmettert. Diese Flüche verbessern
 jedoch bestimmte Fähigkeiten. Sie gefallen auch Aschenzari, der das Unsichtbare
@@ -295,8 +295,8 @@ Für Gozag sind Fleisch und Geist weniger wichtig als Reichtum, und deshalb
 verwandeln sich alle Monster nach ihrem Tod in Gold. Andere Monster können dann
 kurzzeitig durch die Vorstellung großen Reichtums abgelenkt werden. Getreue
 können sich sofortige Hilfe in Form von Tränken kaufen und können auch dafür
-bezahlen, Ladenbesitzer in den Dungeon zu locken. Besonders wohlhabende Anhänger
-können die Bewohner eines Zweigs des Dungeons bestechen, damit sie ihre
+bezahlen, Ladenbesitzer in den Kerker zu locken. Besonders wohlhabende Anhänger
+können die Bewohner eines Zweigs des Kerkers bestechen, damit sie ihre
 Anwesenheit ignorieren oder sogar ihre Loyalität wechseln.
 %%%%
 Hepliaklqana powers
@@ -316,10 +316,10 @@ Jiyva powers
 
 Jiyvas Anhänger können Gelees anfordern, die in der Nähe befindliche Gegenstände
 verzehren und dabei Gesundheits- und Magiepunkte liefern. Jiyva verzehrt auch
-Gegenstände, die anderswo im Dungeon zurückgelassen werden. Anhänger werden
+Gegenstände, die anderswo im Kerker zurückgelassen werden. Anhänger werden
 später in der Lage sein, Monster in Schleim zu verwandeln und sich schließlich
 selbst umzugestalten, um schädliche Mutationen zu entfernen. Wenn ihre
-Frömmigkeit wächst, wird Jiyva mit zunehmender Häufigkeit Gelees in den Dungeon
+Frömmigkeit wächst, wird Jiyva mit zunehmender Häufigkeit Gelees in den Kerker
 fallen lassen, die Attribute der Anhänger basierend auf ihren Fähigkeiten und
 ihrer Rüstung neu anordnen und Anhänger mutieren lassen, um Jiyvas Bild besser
 widerzuspiegeln.
@@ -399,7 +399,7 @@ verbündete Elementare verwandeln.
 %%%%
 Ru powers
 
-Ru wird seinen Anhängern auf ihrer Reise durch den Dungeon eine Reihe von Opfern
+Ru wird seinen Anhängern auf ihrer Reise durch den Kerker eine Reihe von Opfern
 anbieten. Wenn sie diese Opfer annehmen, erhalten die Anhänger nach und nach
 eine Aura von immenser Macht. Diese Aura lässt Feinde, die versuchen, ihnen
 Schaden zuzufügen, zunächst ins Wanken geraten und sie mit Krankheiten
@@ -588,7 +588,7 @@ dass sie im unvorhergesehenen Moment nach hinten losgeht.
 Lugonu wrath
 
 Lugonus Zorn macht die Barriere zwischen Realität und Abgrund schwach und
-durchlässig. Der Raum verformt sich und schleudert Opfer durch den Dungeon oder
+durchlässig. Der Raum verformt sich und schleudert Opfer durch den Kerker oder
 sogar direkt in den Abgrund. Lugonu streckt auch die Hand aus und schickt die
 chaotischen Bewohner des Abgrunds gegen Opfer, wobei erfahrene Abenteurer den
 größten Schrecken des Abgrunds gegenüberstehen. Lugonu vergibt nicht leicht und

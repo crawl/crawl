@@ -1,10 +1,10 @@
 %%%%
 welcome
 
-<white>Willkommen bei Dungeon Crawl!</white>
+<white>Willkommen bei Kerker Crawl!</white>
 
 Deine Aufgabe ist es einen <w>{{ return you.race() }} {{ return you.class()
-}}</w> sicher durch die Tiefen des Dungeons zu leiten und dabei den sagenhaften
+}}</w> sicher durch die Tiefen des Kerkers zu leiten und dabei den sagenhaften
 Orb von Zot zurück zur Oberfläche zu bringen. Wie auch immer, bei deinen ersten
 Versuchen sollte entdecken das Hauptziel sein. Versuche so tief wie möglich zu
 erforschen, aber nimm dich in Acht: der Tod schleicht um jede Ecke!
@@ -51,7 +51,7 @@ Gegner kämpft. Das ist zwar riskant, macht dich aber schneller und kräftiger.
 death ranger melee
 
 Deine Bogen und Pfeilen sind unheimlich stark gegen entfernte Monster. Denke
-daran alle Pfeile, die im Dungeon liegen, mitzunehmen.
+daran alle Pfeile, die im Kerker liegen, mitzunehmen.
 %%%%
 death random 0
 
@@ -115,7 +115,7 @@ wird ein Druck auf <input>$cmd[CMD_INTERLEVEL_TRAVEL] Enter</input> oder
 %%%%
 finished stashes
 
-Du kannst unter allen Gegenstände im Dungeon mit dem Befehl
+Du kannst unter allen Gegenstände im Kerker mit dem Befehl
 <input>$cmd[CMD_SEARCH_STASHES]</input> suchen. Zum Beispiel,
 <input>$cmd[CMD_SEARCH_STASHES]</input> <w>„dolch“</w> listet alle Dolche auf.
 Dann kannst du zu einem reisen. Es ist genauso möglich Strukture wie
@@ -178,13 +178,13 @@ Opfer, wie z. B. den Verzicht auf die die Fähigkeit, Tränke zu trinken, währe
 man gefährdet ist, oder den Verlust der Fähigkeit, bestimmte Fertigkeiten zu
 trainieren. Je mehr Frömmigkeit du hast, desto mehr Fähigkeiten gewährt dir Ru
 und desto mächtiger werden diese Fähigkeiten. Ru wird dir weitere Opfer
-anbieten, als du die Tiefen des Dungeons erforschst.
+anbieten, als du die Tiefen des Kerkers erforschst.
 %%%%
 HINT_CONVERT Uskayaw
 
 Du bist gerade zur Anbetung von <w>Uskayaw</w> konvertiert. Im Gegensatz zu
 anderen Göttern kann man Uskayaws Gunst nicht nach und nach gewinnen, indem man
-den Dungeon erforscht oder Monster tötet. Stattdessen wird die Gunst von Uskayaw
+den Kerker erforscht oder Monster tötet. Stattdessen wird die Gunst von Uskayaw
 schnell im Kampf gewonnen, wenn man Schaden anrichtet. Je länger man im Kampf
 bleibt und je mehr Schaden man anrichtet, desto größer sind die Kräfte, die ihm
 angeboten werden. Sobald der Kampf endet, geht Uskayaws Gunst schnell verloren
@@ -388,7 +388,7 @@ also beim Abstieg vorsichtig.
 %%%%
 HINT_SEEN_BRANCH
 
-Das<Konsole> '$1'</Konsole> ist der Zugang zu einem anderen Zweig des Dungeons,
+Das<Konsole> '$1'</Konsole> ist der Zugang zu einem anderen Zweig des Kerkers,
 der sich in Gelände, Levelaufbau und Monstern unterscheiden kann, von dem des
 den aktuellen Hauptzweig, in dem du dich befindest. Einige Verzweigungen
 enthalten nur eine einzige Ebene, und andere sind viele Ebenen tief. Sie können
@@ -623,7 +623,7 @@ wissen: Wenn man den Cursor an eine Stelle bewegt und <w>.</w> oder
 <w>Enter</w> drückt, bewegt sich der Charakter von selbst dorthin.
 
 <localtiles>Auch ein Klick mit der <w>rechten Maustaste</w> auf die Minimap auf
-der rechten Seite zoomt in diesen Bereich des Dungeons. Klickt man stattdessen
+der rechten Seite zoomt in diesen Bereich des Kerkers. Klickt man stattdessen
 mit der <w>linken Maustaste</w>, kann man sich dorthin bewegen.</localtiles>
 %%%%
 HINT_AUTO_EXPLORE
@@ -633,11 +633,11 @@ einzusammeln, kann sehr mühsam sein. Um sich diese Mühe zu ersparen, kann man
 <w>$cmd[CMD_EXPLORE]</w> drücken, um die automatische Erkundung zu aktivieren.
 Diese erkundet automatisch unkartierte Gebiete, sammelt automatisch
 interessante Gegenstände ein und hält an, wenn man auf ein Monster oder ein
-interessantes Dungeonmerkmal (Treppe, Altar usw.) trifft.
+interessantes Kerkermerkmal (Treppe, Altar usw.) trifft.
 %%%%
 HINT_DONE_EXPLORE
 
-Hey, du hast die Erkundung des Dungeons in diesem Level beendet! Du kannst
+Hey, du hast die Erkundung des Kerkers in diesem Level beendet! Du kannst
 auf der Levelkarte (<w>$cmd[CMD_DISPLAY_MAP]</w>) nach Treppen suchen, indem
 du <w>></w> drückst. Der Cursor springt zur nächstgelegenen Treppe, und durch
 Drücken von <w>.</w> oder <w>Enter</w> kann sich dein Charakter auch dorthin
@@ -982,7 +982,7 @@ denn, in der kurzen Zeit, in der es nicht zu sehen ist, passiert etwas mit ihm.
 HINT_SEEN_ZERO_EXP_MON
 
 Das<console> $1</console> ist $2. Obwohl das <w>technisch</w> ein Monster ist,
-ist es eher ein Dungeonmöbel, da es harmlos ist und sich nicht bewegt. Wenn es
+ist es eher ein Kerkermöbel, da es harmlos ist und sich nicht bewegt. Wenn es
 dich im Weg steht, kannst du es wie andere Monster angreifen und töten, aber
 du bekommst dafür keine Erfahrung.
 %%%%
@@ -1067,7 +1067,7 @@ Erfahrungsstufe wächst und vor vielen magischen Effekten schützt, und die
 spezifischen Resistenzen gegen bestimmte andere Effekte, z. B. Feuer oder
 Auszehrung.
 
-Du kannst im Dungeon Gegenstände finden oder Mutationen erlangen, die eine
+Du kannst im Kerker Gegenstände finden oder Mutationen erlangen, die eine
 oder mehrere eurer Resistenzen erhöhen (oder senken). Um deine aktuellen
 Resistenzen zu sehen, <localtiles><w>klicke mit der rechten Maustaste</w> auf
 den Spieler-Avatar oder </localtiles>drücke <w>$cmd[CMD_RESISTS_SCREEN]</w>.
@@ -1464,7 +1464,7 @@ ihre magische Konstruktion führt dazu, dass sie trotzdem ausgelöst werden.
 %%%%
 HINT_DESCRIBE_TRAP_SHAFT
 
-Der Dungeon enthält eine Reihe von natürlichen Hindernissen wie Schächte,
+Der Kerker enthält eine Reihe von natürlichen Hindernissen wie Schächte,
 die eine bis drei Ebenen nach unten führen. Wenn du weißt, dass der Schacht
 dort ist, kannst du ihn gefahrlos überqueren. Wenn du dort hinunter springen
 willst, benutze <w>$cmd[CMD_GO_DOWNSTAIRS]</w>, um dies zu tun. Sei gewarnt,
@@ -1472,7 +1472,7 @@ dass es schwierig sein könnte, hierher zurückzukommen.
 %%%%
 HINT_DESCRIBE_TRAP_WEB
 
-Einige Bereiche des Dungeons, wie z. B. das Spinnennest, können mit riesigen
+Einige Bereiche des Kerkers, wie z. B. das Spinnennest, können mit riesigen
 Netzen übersät sein, die man für kurze Zeit gefangen halten können. Spieler
 in Spinnengestalt können sich sicher durch die Netze bewegen (ebenso
 körperlose Wesen und verschiedene Schlamme).
@@ -1491,7 +1491,7 @@ HINT_DESCRIBE_UNKNOWN_STAIRS
 %%%%
 HINT_DESCRIBE_DUNGEON_EXIT
 
-Diese Treppe führt aus dem Dungeon heraus. Wenn du ihnen folgst, endet das
+Diese Treppe führt aus dem Kerker heraus. Wenn du ihnen folgst, endet das
 Spiel. Die einzige Möglichkeit zu gewinnen ist, den sagenumwobenen Kugel von
 Zot nach draußen zu bringen.
 %%%%
@@ -1571,7 +1571,7 @@ drückst.
 %%%%
 HINT_DESCRIBE_BRANCH_ENTRY
 
-Ein Eingang zu einem der vielen Dungeon-Seitenzweige in Crawl.
+Ein Eingang zu einem der vielen Kerker-Seitenzweige in Crawl.
 %%%%
 HINT_DESCRIBE_BRANCH_ENTRY_DANGEROUS
 
@@ -1614,7 +1614,7 @@ zwischen dich und einem Feld befinden, kannst du in diesem Feld nichts sehen.
 %%%%
 HINT_DESCRIBE_UNIQUE_MONSTER
 
-Hast du gedacht, du wärst der einzige Abenteurer im Dungeon? Nun, da hast
+Hast du gedacht, du wärst der einzige Abenteurer im Kerker? Nun, da hast
 du falsch gedacht! Diese einzigartigen Gegner verfügen oft über
 Fähigkeiten, die normale Monster nicht haben, also sei vorsichtig.
 %%%%

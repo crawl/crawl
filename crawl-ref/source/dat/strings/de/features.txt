@@ -225,7 +225,7 @@ gateway to Hell
 Tor zur Hölle
 %%%%
 gateway back into the Dungeon
-Tor zurück in den Dungeon
+Tor zurück in den Kerker
 %%%%
 one-way gate to the infinite horrors of the Abyss
 Einwegtor zu den unendlichen Schrecken des Abgrunds
@@ -318,7 +318,7 @@ staircase to the Orcish Mines
 Treppe zu den Orkischen Minen
 %%%%
 staircase back to the Dungeon
-Treppe zurück in den Dungeon
+Treppe zurück in den Kerker
 %%%%
 staircase to the Dwarven Hall
 Treppe zur Zwergenhalle
@@ -872,7 +872,7 @@ the gateway to Hell
 das Tor zur Hölle
 %%%%
 the gateway back into the Dungeon
-das Tor zurück in den Dungeon
+das Tor zurück in den Kerker
 %%%%
 the one-way gate to the infinite horrors of the Abyss
 das Einwegtor zu den unendlichen Schrecken des Abgrunds
@@ -965,7 +965,7 @@ the staircase to the Orcish Mines
 die Treppe zu den Orkischen Minen
 %%%%
 the staircase back to the Dungeon
-die Treppe zurück in den Dungeon
+die Treppe zurück in den Kerker
 %%%%
 the staircase to the Dwarven Hall
 die Treppe zur Zwergenhalle
@@ -1363,7 +1363,7 @@ a gateway to Hell
 {n}ein Tor zur Hölle
 %%%%
 a gateway back into the Dungeon
-{n}ein Tor zurück in den Dungeon
+{n}ein Tor zurück in den Kerker
 %%%%
 a one-way gate to the infinite horrors of the Abyss
 {n}ein Einwegtor zu den unendlichen Schrecken des Abgrunds
@@ -1456,7 +1456,7 @@ a staircase to the Orcish Mines
 eine Treppe zu den Orkischen Minen
 %%%%
 a staircase back to the Dungeon
-eine Treppe zurück in den Dungeon
+eine Treppe zurück in den Kerker
 %%%%
 a staircase to the Dwarven Hall
 eine Treppe zur Zwergenhalle

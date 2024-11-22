@@ -16,7 +16,7 @@ Aizul
 
 Einst war sie die Hauptwächterschlange eines legendären Schatzes, doch entehrt,
 nachdem Diebe es geplündert hatten, während sie schlief. Jetzt schlängelt sie
-sich durch den Dungeon und sinnt auf Rache an allen potenziellen Plünderern. Sie
+sich durch den Kerker und sinnt auf Rache an allen potenziellen Plünderern. Sie
 ist eine versierte Zauberin, aber im Nahkampf nicht tödlicher als andere ihrer
 Art.
 %%%%
@@ -57,7 +57,7 @@ Ein mächtiger, kriegerischer Efreet. (Gibt es eine andere Art?)
 Bai Suzhen
 
 Ein lebensmüder Drakonier mit fremden und wässrigen Schuppen. Sie ist in den
-Dungeon gekommen, um ihren sterblichen Ehemann wiederzubeleben; eine edle Sache
+Kerker gekommen, um ihren sterblichen Ehemann wiederzubeleben; eine edle Sache
 für ein Wesen, das einst dafür bekannt war, mit Heiligen zu streiten und
 unglückliche Tempel zu überfluten. Wenn sie an ihre Grenzen getrieben wird, wird
 sie ihre wahre Gestalt offenbaren, deren bloßer Anblick ihren Ehemann erschlagen
@@ -151,7 +151,7 @@ seiner teuren Dreschflegel und seinem schnellen Verstand tötet.
 the Enchantress
 
 Die Zauberin ist die Erste und Furchterregendste ihrer Art und herrscht über die
-Spriggans des Dungeons. Sie trägt ein opaleszierendes Outfit aus Drachenhaut,
+Spriggans des Kerkers. Sie trägt ein opaleszierendes Outfit aus Drachenhaut,
 das in vielen Farben schimmert.
 %%%%
 Ereshkigal
@@ -177,7 +177,7 @@ Vorstellungen von Ehre.
 Fannar
 
 Ein kaltherziger Elfenzauberer, gehüllt in die Robe eines hohen Amtes. Er
-flüstert grimmig vor sich hin, während er durch den Dungeon schreitet und
+flüstert grimmig vor sich hin, während er durch den Kerker schreitet und
 Eiskristalle hinter sich herzieht.
 %%%%
 Frances
@@ -259,7 +259,7 @@ dunkleren Künste studieren konnte.
 %%%%
 Jorgrun
 
-Ein Zwergenmagier, der sich besonders gut mit dem ihn umgebenden Dungeon
+Ein Zwergenmagier, der sich besonders gut mit dem ihn umgebenden Kerker
 auskennt. Im Kampf setzt er mächtige Erdmagie ein.
 %%%%
 Jory
@@ -314,7 +314,7 @@ in den Abgrund geworfen und verirrte sich dort hoffnungslos. Von einer höheren
 Macht verführt, saß sie fast ein Jahrzehnt lang auf der feindlichen Ebene fest.
 Als sie schließlich aus dem Abgrund hervortrat, war Louise zwar mächtig
 geworden, aber auch völlig verrückt. Jetzt wandert sie durch die Hallen des
-Dungeons und sucht nach anderen Abenteurern, um ihr Schicksal mit ihnen zu
+Kerkers und sucht nach anderen Abenteurern, um ihr Schicksal mit ihnen zu
 teilen.
 %%%%
 Mara
@@ -328,7 +328,7 @@ Maggie
 
 Vor langer Zeit war Maggie die Lehrlingin der gefürchteten Höllenritter – doch
 sie wurde ungeduldig. Auf der Suche nach einer Abkürzung zu Ruhm und Reichtum
-(und etwas ohne Fantasie) betrat sie den Dungeon und machte sich daran, einen
+(und etwas ohne Fantasie) betrat sie den Kerker und machte sich daran, einen
 Drachen zu töten. Nachdem sie nun einen Drachen getötet hat, sieht Maggie keinen
 Grund mehr aufzuhören.
 %%%%
@@ -380,7 +380,7 @@ Natasha
 Eine magische Katze. Natascha war einst die Vertraute eines mächtigen Zauberers,
 wurde aber verlassen, nachdem ihr Meister von eben jenen nekromantischen Kräften
 verschlungen wurde, die er kontrollieren wollte. Jetzt patrouilliert sie im
-Dungeon und übt mit Zaubersprüchen und Klauen blutige Rache an jedem Abenteurer,
+Kerker und übt mit Zaubersprüchen und Klauen blutige Rache an jedem Abenteurer,
 der ihren Weg kreuzt.
 
 Diese Katze hat keine neun Leben, aber ein einziger Tod wird nicht ausreichen,
@@ -444,7 +444,7 @@ Robin
 
 Ein Bergkobold, der vor Kurzem auf der Suche nach der legendären Kugel war.
 Robin ist nicht tollkühn oder rücksichtslos genug, um allein in die Tiefen des
-Dungeons vorzudringen, und hat eine kleine Armee aus Dienern aufgebaut.
+Kerkers vorzudringen, und hat eine kleine Armee aus Dienern aufgebaut.
 Potenzielle Konkurrenten werden schnell feststellen, dass ihnen ein Schwarm
 schreiender Kobolde entgegenfliegt!
 %%%%
@@ -466,11 +466,11 @@ von Beogh.
 Sigmund
 
 Der Ältere eines Brüderpaars, das wegen der Kugel gekommen war. Niemand weiß,
-was Sigmund im Dungeon sah, das ihn in den Wahnsinn trieb, aber seine
+was Sigmund im Kerker sah, das ihn in den Wahnsinn trieb, aber seine
 raffinierten magischen Taktiken und seine bösartige Sense lassen seinen Opfern
 kaum noch Zeit, sich zu wundern. Trotz seines Rufs als grausamer Mörder hat er
 sich durch sein grandioses und dramatisches Auftreten die Bewunderung vieler
-Bewohner des Dungeons verdient.
+Bewohner des Kerkers verdient.
 %%%%
 Snorg
 
@@ -558,7 +558,7 @@ Schleim tropft.
 %%%%
 adder
 
-Eine häufig vorkommende Dungeonschlange, eine Art höhlenbewohnendes Reptil, das
+Eine häufig vorkommende Kerkerschlange, eine Art höhlenbewohnendes Reptil, das
 häufig in unterirdischen Räumen vorkommt.
 %%%%
 air elemental
@@ -648,7 +648,7 @@ umschlingt und zerquetscht.
 ballistomycete
 
 Ein klumpiger, rötlicher Pilz, der mit knotigen Rhizomen bedeckt ist und in
-feuchten unterirdischen Dungeonen gut wächst. Wenn der Ballistomycet eine
+feuchten unterirdischen Kerker gut wächst. Wenn der Ballistomycet eine
 Bedrohung wahrnimmt, kann er eine tödliche schwebende Spore freisetzen, die auf
 seinen Opfern explodiert.
 %%%%
@@ -803,7 +803,7 @@ bullfrog
 
 Ein ungewöhnlich aggressives Amphibium, das seine Beute mit schnellen Sprüngen
 verfolgt. Sein Quaken ist laut und unverwechselbar, aber im Gegensatz zu seinen
-kleineren Artgenossen über der Erde ist der Dungeon-Ochsenfrosch so groß, wie er
+kleineren Artgenossen über der Erde ist der Kerker-Ochsenfrosch so groß, wie er
 klingt.
 %%%%
 bunyip
@@ -827,7 +827,7 @@ cane toad
 
 Eine abscheuliche Kröte, deren dicke, warzige Haut mit Giftdrüsen bedeckt ist.
 Im Gegensatz zu ihren kleineren, oberirdischen Verwandten ist dieser
-Dungeonbewohner so groß wie ein Wolf.
+Kerkerbewohner so groß wie ein Wolf.
 %%%%
 catoblepas
 
@@ -940,7 +940,7 @@ sich von der Lebensenergie derer ernährt, die das Pech haben, ihm zu begegnen.
 %%%%
 death yak
 
-Ein größerer und kräftigerer Verwandter des gewöhnlichen Dungeonyaks. Seine
+Ein größerer und kräftigerer Verwandter des gewöhnlichen Kerkeryaks. Seine
 kleinen roten Augen glänzen vor Hunger nach lebendigem Fleisch.
 %%%%
 deep elf annihilator
@@ -1267,7 +1267,7 @@ flayed ghost
 
 Eine abscheuliche schwebende untote Kreatur, der gequälte Geist eines
 gefolterten Opfers, dessen zerrissene Haut von einem ausgemergelten Körper
-hängt. Sie schleicht ruhelos durch den Dungeon und fügt den Lebenden die Qualen
+hängt. Sie schleicht ruhelos durch den Kerker und fügt den Lebenden die Qualen
 zu, die sie zu Lebzeiten empfunden hat.
 %%%%
 floating eye
@@ -1298,7 +1298,7 @@ freezing wraith
 
 Eine körperlose Skelettform, umgeben von einer Wolke eisiger Luft,
 wahrscheinlich die Überreste eines unglücklichen Abenteurers. Es schwebt nun
-langsam durch den Dungeon und versucht, sein Schicksal mit anderen zu teilen.
+langsam durch den Kerker und versucht, sein Schicksal mit anderen zu teilen.
 %%%%
 frost giant
 
@@ -1314,7 +1314,7 @@ wahrscheinlich zu einer gewaltigen Explosion.
 %%%%
 fungus
 
-Ein klumpiger grauer Pilz, der im feuchten unterirdischen Dungeon gut wächst.
+Ein klumpiger grauer Pilz, der im feuchten unterirdischen Kerker gut wächst.
 %%%%
 gargoyle
 
@@ -2072,14 +2072,14 @@ bearbeitet wurde.
 %%%%
 plant
 
-Eine Pflanze, die sich an die unangenehme Umgebung eines Dungeons angepasst hat
+Eine Pflanze, die sich an die unangenehme Umgebung eines Kerkers angepasst hat
 und irgendwie sogar unter der Erde ohne Sonne gedeiht.
 %%%%
 player ghost
 
 Die Erscheinung eines unglücklichen Abenteurers, der viele der Fertigkeiten und
 Fähigkeiten, die er zu Lebzeiten besaß, noch besitzt. Er ist dazu verdammt, in
-dieser bestimmten Ebene des Dungeons herumzugeistern und den nächsten
+dieser bestimmten Ebene des Kerkers herumzugeistern und den nächsten
 Abenteurer, der ihm über den Weg läuft, gewaltsam anzugreifen.
 %%%%
 polar bear
@@ -2145,7 +2145,7 @@ grausam.
 %%%%
 rat
 
-Ein schmutziges Nagetier, das in der Dungeonumgebung groß und aggressiv geworden
+Ein schmutziges Nagetier, das in der Kerkerumgebung groß und aggressiv geworden
 ist.
 %%%%
 raiju
@@ -2273,7 +2273,7 @@ zu durchbrechen.
 %%%%
 shadow
 
-Ein Hauch leblosen Schattens, der in die Dunkelheit des Dungeons hinein- und
+Ein Hauch leblosen Schattens, der in die Dunkelheit des Kerkers hinein- und
 wieder hinausgleitet. Er bewegt sich schnell und lautlos von einem Schattenfleck
 zum nächsten und schlägt zielsicher aus den toten Winkeln derer zu, die ihn
 nicht sehen können.
@@ -2722,7 +2722,7 @@ die auf magische Weise mit einem Humanoiden verbunden wurde.
 %%%%
 wandering mushroom
 
-Ein großer, fleischiger Pilz, der langsam durch den Dungeon wandert. Er ist von
+Ein großer, fleischiger Pilz, der langsam durch den Kerker wandert. Er ist von
 Natur aus neugierig und zugleich unglaublich scheu und verfolgt die Objekte
 seiner Neugier nur, wenn sie außer Sichtweite sind. Giftige Sporen schweben um
 seinen Hut.
@@ -2831,7 +2831,7 @@ Feind, mit dem man rechnen muss.
 %%%%
 yak
 
-Ein gewöhnliches Dungeonyak, bedeckt mit zotteligem Yakhaar und mit einem
+Ein gewöhnliches Kerkeryak, bedeckt mit zotteligem Yakhaar und mit einem
 hässlichen Paar Yakhörner.
 %%%%
 yaktaur

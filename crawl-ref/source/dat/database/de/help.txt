@@ -81,7 +81,7 @@ stash-search.prompt
 
 <h>Durchsuchen des Stash-Trackers</h>
 
-Man kann nach Gegenstände oder Dungeon-Einrichtungen anhand des Namens (oder
+Man kann nach Gegenstände oder Kerker-Einrichtungen anhand des Namens (oder
 eines Teils davon) suchen. In der Liste der Suchergebnisse kann man ein davon
 anhand seiner Tastenkombination wählen, um zu seinem Standort zu reisen.
 
@@ -91,7 +91,7 @@ Einige Beispiele für Suchbegriffe:
 <w>laden</w>         alle Läden auflisten. <w>?</w> und den Buchstaben eines Ladens
                      drücken für sein Inventar
 <w>Höhle:2</w>       alles finden, von dem bekannt ist, dass es auf Höhle:2 ist.
-<w>/D:[2-4]</w>      alles auf Dungeon-Ebenen 2-4 finden. Regexes sind erlaubt!
+<w>/D:[2-4]</w>      alles auf den Kerkerebenen 2-4 finden. Regexes sind erlaubt!
               Achtung! /D:[3-10] wird nicht wie vorgesehen funktionieren, da [x-y]
               ein Regex-Zeichenbereich ist.
 <w>rGift</w>         alle Gegenstände mit Giftresistenz finden
@@ -145,11 +145,11 @@ Gegenstände anhand Rüstungsslot suchen:
 und <w>körper</w> für Körperrüstung
 <w>rüstung && !!körper</w> wird alle Rüstungsteile, außer Körperrüstung, finden.
 
-<h>Finden von Dungeon-Einrichtungen:</h>
+<h>Suche nach Kerker-Einrichtungen:</h>
 
-Man kann nach Dungeon-Einrichtungen anhand des Namens suchen: alle Läden werden
+Man kann nach Kerker-Einrichtungen anhand des Namens suchen: alle Läden werden
 durch eine Suche nach <w>laden</w> gefunden (einschließlich Läden, die nicht das
-Wort "Laden" Im Namen haben); andere Dungeon-Einrichtungen können auch anhand
+Wort "Laden" Im Namen haben); andere Kerker-Einrichtungen können auch anhand
 ihres Namens gefunden werden: <w>Zerstreuungsfalle</w>, <w>Altar</w>, usw. Man
 kann auch nach Altären mit dem Namen einer Gottheit suchen: <w>Zin</w>.
 
@@ -256,7 +256,7 @@ annotate.prompt
  <w><<</w>          : Die nächste Ebene oben annotieren.
  <w>></w>          : Die nächste Ebene unten annotieren.
  <w>Strg-P</w>     : Eine Ebene im Zweig über diesem annotieren.
- <w>!</w>          : Liste der Dungeon-Zweige zeigen.
+ <w>!</w>          : Liste der Kerker-Zweige zeigen.
 
 %%%%
 skill-menu
@@ -790,7 +790,7 @@ help-menu-2
 <w>A</w>.      Inhaltsverzeichnis
 <w>B</w>.      Startbildschirm
 <w>C</w>.      Attribute und Statistiken
-<w>D</w>.      Den Dungeon erforschen
+<w>D</w>.      Den Kerker erforschen
 <w>E</w>.      Erfahrungen und Fertigkeiten
 <w>F</w>.      Monsters
 <w>G</w>.      Gegenstände
@@ -860,7 +860,7 @@ cmd-help-item-types
 <lightgreen>}</lightgreen> : Verschiedenes (e<w>%</w> evozieren)
 <yellow>$</yellow> : Gold (<w>%</w> zählt Gold)
 <lightmagenta>0</lightmagenta> : die Kugel von Zot
-    Sie aus dem Dungeon tragen um zu gewinnen!
+    Sie aus dem Kerker tragen um zu gewinnen!
 %%%%
 cmd-help-other-gameplay
 <h>Sonstige Gameplay-Aktionen:
@@ -883,7 +883,7 @@ cmd-help-non-gameplay
 <w>%</w> : Haupt- und Levelkarten löschen
 <w>%</w> : Makro schnell Hinzufügen
 <w>%</w> : Makros bearbeiten
-<w>%</w> : Den Dungeon-Ebene anmerken
+<w>%</w> : Die Kerkerebene anmerken
 <w>%</w> : Charakter-Auszug speichern
 <w>%</w> : Notiz hinzufügen (zum Lesen von
     Notizen <w>%:</w> verwenden)
@@ -919,7 +919,7 @@ cmd-help-character
 <w>%</w> : Erfahrungsinfos anzeigen
 %%%%
 cmd-help-dungeon
-<h>Dungeoninteraktion und Informationen:
+<h>Kerkerinteraktion und Informationen:
 <w>%</w>/<w>%</w>    : Tür öffnen/schließen
 <w>%</w>/<w>%</w>    : Treppe benutzen
 <w>%</w>      : belegte Feld untersuchen und
@@ -931,7 +931,7 @@ cmd-help-dungeon
 <w>%</w> : Monster, Gegenstände,
          Einrichtungen im Sicht auflisten
 <w>%</w>      : Ansichtsebenen umschalten
-<w>%</w> : Dungeonübersicht anzeigen
+<w>%</w> : Kerkerübersicht anzeigen
 <w>%</w> : Automatisches Aufheben
          umschalten
 <w>%</w> : Gehgeschwindigkeit auf die des
@@ -1042,7 +1042,7 @@ cmd-hints-additional
 <w>%</w> : Charakterübersicht anzeigen
 <w>%</w> : Religionsübersicht anzeigen
 <w>%</w> : Ebenenkarte anzeigen
-<w>%</w> : Dungeonsübersicht anzeigen
+<w>%</w> : Kerkersübersicht anzeigen
 %%%%
 cmd-hints-targeting
 <h>Zielen

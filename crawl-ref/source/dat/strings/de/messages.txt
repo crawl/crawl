@@ -2642,7 +2642,7 @@ Upgrade
 Upgrade
 %%%%
 You can bribe the following branches of the dungeon:
-Du kannst die folgenden Zweige des Dungeons bestechen:
+Du kannst die folgenden Zweige des Kerkers bestechen:
 %%%%
 not bribed
 nicht bestochen
@@ -3923,7 +3923,7 @@ If this monster is a "program bug", then it's recommended that you save your gam
 Wenn dieses Monster ein "Programmfehler" ist, empfiehlt es sich, das Spiel zu speichern und neu zu laden.
 %%%%
 " Please report monsters who masquerade as program bugs or run around the dungeon without a proper description to the authorities."
-" Bitte Monster, die sich als Programmfehler ausgeben oder ohne richtige Beschreibung im Dungeon herumlaufen, den Behörden melden.
+" Bitte Monster, die sich als Programmfehler ausgeben oder ohne richtige Beschreibung im Kerker herumlaufen, den Behörden melden.
 %%%%
 It is quickly withering away.
 Es verdorrt schnell.
@@ -3982,7 +3982,7 @@ Wolken dieser Art, die ein Abenteurer erzeugt, verschwinden fast augenblicklich,
 ##################
 %%%%
 Dungeon Overview and Level Annotations
-Dungeon-Überblick und Ebene-Anmerkungen
+Kerker-Überblick und Ebene-Anmerkungen
 %%%%
 Branches:
 Zweige:
@@ -4763,7 +4763,7 @@ Your mindless thralls stay behind.
 Deine hirnlose Sklaven bleiben zurück.
 %%%%
 Generating dungeon...
-Dungeon wird generiert...
+Kerker wird generiert...
 %%%%
 building a lair branch
 Ein Höhle-Zweig wird generiert
@@ -6263,7 +6263,7 @@ the character overview screen (<w>%</w>)
 die Charakterübersichtsseite (<w>%</w>)
 %%%%
 the dungeon overview screen (<w>%</w>)
-die Dungeon-Übersichtsseite (<w>%</w>)
+die Kerker-Übersichtsseite (<w>%</w>)
 %%%%
 %s are good things to check.
 %s sind gut zu überprüfen.
@@ -7089,7 +7089,7 @@ Zot can harm you no longer.
 Zot kann dich nicht mehr schaden.
 %%%%
 Now all you have to do is get back out of the dungeon!
-Jetzt musst du nur noch wieder aus dem Dungeon herauskommen!
+Jetzt musst du nur noch wieder aus dem Kerker herauskommen!
 %%%%
 %s (gained %d)
 %s (%d bekommen)
@@ -9440,7 +9440,7 @@ Das fühlte sich seltsam unergiebig an.
 %s verwelkt und stirbt!
 %%%%
 %s returns to the shadows of the Dungeon!
-%s kehrt zurück in die Schatten des Dungeons!
+%s kehrt zurück in die Schatten des Kerkers!
 %%%%
 %s fades into mist!
 %s verblasst zu Nebel!
@@ -10628,7 +10628,7 @@ Press [p] or [ctrl-v] to paste a seed from the clipboard
 (überschreibt den aktuellen Wert).
 %%%%
 The seed will determine the dungeon layout, monsters, and items
-Die Seed bestimmt den Aufbau des Dungeons, die Monster und die Gegenstände,
+Die Seed bestimmt den Aufbau des Kerkers, die Monster und die Gegenstände,
 %%%%
 that you discover, relative to this version of crawl. Upgrading
 die du entdeckst, bezogen auf diese Version von Crawl. Upgraden
@@ -11088,7 +11088,7 @@ The haze of the repulsion field disappears.
 Der Dunst des Abstoßungsfeldes verschwindet.
 %%%%
 The dungeon's light returns to normal.
-Das Licht im Dungeon wird wieder normal.
+Das Licht im Kerker wird wieder normal.
 %%%%
 %s seems less interested in you.
 %s scheint weniger an dich interessiert zu sein.
@@ -12775,7 +12775,7 @@ Ashenzari warns you of distant threats and treasures.
 Aschenzari warnt dich vor fernen Bedrohungen und Schätzen.
 %%%%
 Ashenzari reveals the structure of the dungeon to you.
-Aschenzari offenbart dich die Struktur des Dungeons.
+Aschenzari offenbart dir die Struktur des Kerkers.
 %%%%
 Ashenzari shows you where magical portals lie.
 Aschenzari zeigt dich, wo magische Portale liegen.
@@ -12847,7 +12847,7 @@ You can petition Gozag for potion effects.
 Du kannst Gozag um Zaubertrank-Effekte bitten.
 %%%%
 You have enough gold to fund merchants seeking to open stores in the dungeon.
-Du hast genug Gold, um Händler zu finanzieren, die im Dungeon Läden eröffnen wollen.
+Du hast genug Gold, um Händler zu finanzieren, die im Kerker Läden eröffnen wollen.
 %%%%
 You no longer have enough gold to fund merchants seeking to open stores in the dungeon.
 Du hast nicht mehr genug Gold, um Händler zu finanzieren, die im Kerker Läden eröffnen wollen.
@@ -13229,7 +13229,7 @@ Du zahlst eine Bearbeitungsgebühr von %d Gold.
 %s beginnt, deine Attribute zu unterstützen, als sich deine Bewegung verlangsamt.
 %%%%
 The plants of the dungeon cease their hostilities.
-Die Pflanzen des Dungeons stellen ihre Feindseligkeiten ein.
+Die Pflanzen des Kerkers stellen ihre Feindseligkeiten ein.
 %%%%
 %s welcomes you back!
 %s heißt dich wieder willkommen!
@@ -14230,10 +14230,10 @@ You shudder%s
 Du schauderst%s
 %%%%
 The dungeon shakes around %s!
-Der Dungeon wackelt um %s!
+Der Kerker wackelt um %s!
 %%%%
 The dungeon rumbles around %s!
-Der Dungeon rumpelt um %s!
+Der Kerker rumpelt um %s!
 %%%%
 %s shudder.
 %s schaudern.
@@ -15416,7 +15416,7 @@ The shadows disperse without effect.
 Die Schatten verziehen sich ohne Wirkung.
 %%%%
 The dungeon shakes, a horrible noise fills the air, and a portal to some otherworldly place is opened!
-Der Dungeon erbebt, ein schreckliches Geräusch erfüllt die Luft, und ein Portal in eine andere Welt wird geöffnet!
+Der Kerker erbebt, ein schreckliches Geräusch erfüllt die Luft und ein Portal in eine andere Welt wird geöffnet!
 %%%%
 A gateway cannot be opened in this cramped space!
 In diesem engen Raum kann kein Tor geöffnet werden!
@@ -18309,7 +18309,7 @@ Kann nicht nochmal in den Erkundungsmodus eintreten.
 <w>n</w>      Zot-Uhr einstellen
 %%%%
 <yellow>Dungeon features</yellow>
-<yellow>Dungeon-Strukturen</yellow>
+<yellow>Kerker-Strukturen</yellow>
 %%%%
 <w>T</w>      make a trap
 <w>T</w>      eine Falle schaffen
@@ -18345,7 +18345,7 @@ Kann nicht nochmal in den Erkundungsmodus eintreten.
 <w>:</w>      Zweige und Überlaufs-
 %%%%
 "       temples in the dungeon"
-"       Tempel im Dungeon finden"
+"       Tempel im Kerker finden"
 %%%%
 <w>;</w>      list known levels and counters
 <w>;</w>      bekannte Ebenen und Zähler listen

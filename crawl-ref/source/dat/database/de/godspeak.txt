@@ -78,7 +78,7 @@ Xom verleiht deiner Umgebung eine persönliche Note.
 
 Xom beschwert sich über die Landschaft.
 
-Xom verändert den Dungeon um dich herum.
+Xom verändert den Kerker um dich herum.
 
 "So, das sieht besser aus."
 
@@ -158,7 +158,7 @@ w:30
 
 "Nein, ich habe es mir anders überlegt."
 
-Xom zieht dich zurück in die vergleichbare Stille des Dungeons.
+Xom zieht dich zurück in die vergleichbare Stille des Kerkers.
 %%%%
 %%%%
 Xom revert other banishment
@@ -167,7 +167,7 @@ Xom revert other banishment
 
 "Nein, tust du nicht!"
 
-Xom zieht dich zurück in die vergleichbare Stille des Dungeons.
+Xom zieht dich zurück in die vergleichbare Stille des Kerkers.
 %%%%
 # Xom upgrades a nearby hostile monster's weapon to a chaos brand
 Xom chaos upgrade
@@ -342,7 +342,7 @@ Xom stößt auf eine nahe gelegene @staircase@.
 
 "Du bist dran!"
 
-Xom verändert den Dungeon um dich herum.
+Xom verändert den Kerker um dich herum.
 %%%%
 Xom good enchant monster
 

@@ -57,7 +57,7 @@ anzeigen.
 %%%%
 CMD_DISPLAY_OVERMAP
 
-Die Dungeon-Übersichtskarte zeigen
+Die Kerker-Übersichtskarte zeigen
 %%%%
 CMD_DISPLAY_OVERMAP verbose
 

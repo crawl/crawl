@@ -106,7 +106,7 @@ dagger "Morg"
 
 Ein hässlicher rostiger Dolch. Vor vielen Jahren war er im Besitz eines
 mächtigen Magiers namens Boris. Er verirrte sich auf der Suche nach der Kugel
-im Dungeon.
+im Kerker.
 %%%%
 scythe "Finisher"
 

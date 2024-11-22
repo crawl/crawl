@@ -383,7 +383,7 @@ zum Leben, verbrennt jedoch den Zauberer.
 Corona spell
 
 Lässt einen Lichtschein um eine Kreatur herumscheinen, der diese deutlich
-umreißt. Dieses Leuchten gleicht die dunkle, muffige Atmosphäre des Dungeons aus
+umreißt. Dieses Leuchten gleicht die dunkle, muffige Atmosphäre des Kerkers aus
 und macht es deutlich einfacher, die betroffene Kreatur zu treffen.
 %%%%
 Corpse Rot spell
@@ -1061,7 +1061,7 @@ ihr Ziel an, doch aufgrund ihrer enormen Trägheit können besonders flinke Gegn
 sie ausmanövrieren. Die Kugeln brauchen etwas Zeit, um sich zu stabilisieren,
 und eine entstehende Kugel verursacht weniger Schaden.
 
-Bewohner des Dungeons können die Kugel behalten, bis sie ein Ziel trifft, doch
+Bewohner des Kerkers können die Kugel behalten, bis sie ein Ziel trifft, doch
 wenn du sie zauberst, löst sie sich auf, sobald sie dein Sichtfeld verlässt.
 %%%%
 Orb of Electricity spell

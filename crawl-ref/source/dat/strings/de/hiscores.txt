@@ -211,13 +211,13 @@ Quit the game
 Beendet das Spiel
 %%%%
 Got out of the dungeon
-Entkam dem Dungeon
+Entkam dem Kerker
 %%%%
 Safely got out of the dungeon
-Entkam sicher dem Dungeon
+Entkam sicher dem Kerker
 %%%%
 Got out of the dungeon alive
-Entkam lebendig dem Dungeon
+Entkam lebendig dem Kerker
 %%%%
 ... with 1 rune
 ... mit 1 Rune

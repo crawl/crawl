@@ -37,7 +37,7 @@ Choose Game Seed
 Spiel-Seed wählen
 %%%%
 Play with a chosen custom dungeon seed.
-Spielen mit einer gewählten Seed für Erzeugung des Dungeons
+Spielen mit einer gewählten Seed für Erzeugung des Kerkers
 %%%%
 Tutorial for Dungeon Crawl
 Tutorial für Dungeon Crawl
@@ -436,7 +436,7 @@ Wähle 0 für eine zufällige Seed. [Tab]/[Shift-Tab] um Fokus zu verwechseln.
 [d] Seed des Tages
 %%%%
 Fully pregenerate the dungeon
-Ganzes Dungeon am Anfang bauen
+Ganzen Kerker am Anfang bauen
 %%%%
 # Dungeon Sprints
 %%%%
@@ -474,7 +474,7 @@ Picks a random sprint map
 Wähle einen zufälligen Dungeon-Sprint-Plan
 %%%%
 Select your previous sprint map and character
-Wähle deine letzte Dungeon-Pan and Charakter
+Wähle deine letzte Sprint-Plan and Charakter
 %%%%
 Custom seed:
 Benutzerdefinierte Seed:

@@ -586,7 +586,7 @@ tutorial5 dungeon_overview
 
 Trog ist nur einer von vielen Göttern. Im richtigen Spiel kannst du dich mit
 <input>$cmd[CMD_DISPLAY_OVERMAP]</input><localtiles> oder mit einem klick auf
-den <input>Dungeon Karten Knopf</input> im Kontrollfeld</localtiles> eine Liste
+den <input>Kerker Karten Knopf</input> im Kontrollfeld</localtiles> eine Liste
 aller Altare und anderen interessanten Merkmalen anzeigen lassen.
 %%%%
 tutorial5 altar
@@ -671,7 +671,7 @@ tutorial5 exit
   <input>$cmd[CMD_REST]</input>  warte und raste bis zu 100 Runden
 
 <yellow>Andere Befehle</yellow>
-  <input>$cmd[CMD_DISPLAY_OVERMAP]</input> zeige eine Übersicht des Dungeons
+  <input>$cmd[CMD_DISPLAY_OVERMAP]</input> zeige eine Übersicht des Kerkers
   <input>$cmd[CMD_DISPLAY_COMMANDS]/</input>  durchsuche die Datenbank nach Beschreibungen
 
                    <cyan>Drücke <input>irgendeine Taste</input> um diese Meldung zu löschen...</cyan>

@@ -238,14 +238,14 @@ int main()
     show_result(localise("Recommended Merfolk"), "Vorgeschlagenes Meervolk");
 
     msg = localise("You found it @in_location@", {{"in_location", "on level 3 of the Dungeon"}});
-    show_result (msg, "Du hast diesen Gegenstand auf Ebene 3 des Dungeons gefunden");
+    show_result (msg, "Du hast diesen Gegenstand auf Ebene 3 des Kerkers gefunden");
 
     msg = localise("You found it @in_location@", {{"in_location", "in a volcano"}});
     show_result(msg, "Du hast diesen Gegenstand in einem Vulkan gefunden");
 
     string place = "between levels 3 and 8 of the Dungeon";
     msg = localise("The entrance to this branch can be found %s.", place);
-    show_result(msg, "Der Eingang dieses Bereichs kann zwischen Ebenen 3 und 8 des Dungeons gefunden werden.");
+    show_result(msg, "Der Eingang dieses Bereichs kann zwischen Ebenen 3 und 8 des Kerkers gefunden werden.");
 
     msg = localise("Sparks fly from your @hands@", {{"hands", "hands"}});
     show_result(msg, "Funken fliegen aus deinen Händen");

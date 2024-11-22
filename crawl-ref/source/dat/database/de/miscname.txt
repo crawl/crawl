@@ -84,11 +84,11 @@ welcome_spam
 
 Wirst du dich durchsetzen, wo andere versagt haben? Wirst du die Kugel von Zot finden?
 
-Der Schoß dieses Dungeons birgt das @_great_adj_@ Artefakt, die Kugel von Zot.
+Der Schoß dieses Kerkers birgt das @_great_adj_@ Artefakt, die Kugel von Zot.
 
 Wirst du derjenige sein, der die @_great_adj_@ Kugel von Zot aus den Tiefen holt?
 
-Es heißt, dass die Kugel von Zot tief in diesem Dungeon existiert.
+Es heißt, dass die Kugel von Zot tief in diesem Kerker existiert.
 %%%%
 # things that surround us on Halloween
 _halloween_things_
@@ -124,7 +124,7 @@ Ein schrecklicher Fluch hat dich auf die Suche nach der Kugel von Zot geschickt.
 
 Während du auf der Suche nach der Kugel hinabsteigst, scharen sich @_halloween_things_@ um dich. An diesem Ort spukt es!
 
-Du hörst das Gackern einer Hexe und bist plötzlich ins Dungeon angekommen. Wenn du die Kugel von Zot nicht findest, verwandelst du dich in @_a_lowly_@!
+Du hörst das Gackern einer Hexe und bist plötzlich ins Kerker angekommen. Wenn du die Kugel von Zot nicht findest, verwandelst du dich in @_a_lowly_@!
 %%%%
 hell_effect_quiet
 

@@ -664,7 +664,7 @@ _confused_humanoid_rare_
 
 VISUAL:@The_monster@ schüttelt.
 
-VISUAL:@The_monster@ scheint plötzlich sehr wütend auf den Dungeon zu sein.
+VISUAL:@The_monster@ scheint plötzlich sehr wütend auf den Kerker zu sein.
 
 @The_monster@ @asks_foe@, "Wer bist du?"
 
@@ -1590,7 +1590,7 @@ VISUAL:@The_monster@ kräuselt sich.
 
 @The_monster@ flüstert, "Die Kugel gibt es nicht." @player_only@
 
-@The_monster@ @_wails_@, "Sie haben dich angelogen. Der Dungeon geht einfach immer weiter runter."
+@The_monster@ @_wails_@, "Sie haben dich angelogen. Der Kerker geht einfach immer weiter runter."
 
 @The_monster@ @_wails_@, "Du wirst dich mir bald anschließen!"
 
@@ -1945,7 +1945,7 @@ VISUAL:@The_monster@ sieht wütend aus.
 
 @The_monster@ @_screams_at_foe_@, "Stirb!"
 
-@The_monster@ @_screams_at_foe_@, "Ich werde den Dungeon mit deinem Blut besudeln!"
+@The_monster@ @_screams_at_foe_@, "Ich werde den Kerker mit deinem Blut besudeln!"
 
 
 %%%%
@@ -4953,7 +4953,7 @@ VISUAL:@The_monster@ gibt sich einen magischen Heiligenschein, der aber schnell 
 %%%%
 _Maggie_rare_
 
-@The_monster@ sagt zu {dat}@foe@, "Wenn man im Dungeon stirbt, aber niemand da ist, um es zu sehen, ist das dann wirklich wichtig?"
+@The_monster@ sagt zu {dat}@foe@, "Wenn man im Kerker stirbt, aber niemand da ist, um es zu sehen, ist das dann wirklich wichtig?"
 
 @The_monster@ sagt zu {dat}@foe@, "Hat Meister Lance dich geschickt?"
 
@@ -6334,7 +6334,7 @@ VISUAL:@The_monster@ rammt {acc}@the_surface@ schwer mit seinem Kopf.
 ################## Crystal guardian ###########################
 crystal guardian
 
-VISUAL:@The_monster@ glitzert spröde im schummrigen Licht des Dungeons.
+VISUAL:@The_monster@ glitzert spröde im schummrigen Licht des Kerkers.
 %%%%
 ################## Death cob ###############################
 death cob
@@ -6382,7 +6382,7 @@ frilled lizard
 ################## Ice statue ##############################
 default ice statue
 
-VISUAL:@The_monster@ glitzert schaurig im schummrigen Licht des Dungeons.
+VISUAL:@The_monster@ glitzert schaurig im schummrigen Licht des Kerkers.
 %%%%
 ################## Hell lords ##############################
 hell lord
@@ -6505,11 +6505,11 @@ __NONE
 ################## Statues ##################
 default orange crystal statue
 
-VISUAL:@The_monster@ glitzert topasfarben im schummrigen Dungeon-Licht.
+VISUAL:@The_monster@ glitzert topasfarben im schummrigen Kerker-Licht.
 %%%%
 default obsidian statue
 
-VISUAL:@The_monster@ schlüpft für einen Moment in die Dunkelheit des Dungeons.
+VISUAL:@The_monster@ schlüpft für einen Moment in die Dunkelheit des Kerkers.
 %%%%
 ################## Silent spectre ##########################
 silenced silent spectre

@@ -13,7 +13,7 @@ Geschichte zu erzählen.
 Temple
 
 Der Ökumenische Tempel ist ein Ort des Friedens und der Zuflucht vor dem
-Irrsinn des Dungeons. Er enthält normalerweise Altäre für die meisten der
+Irrsinn des Kerkers. Er enthält normalerweise Altäre für die meisten der
 bekannten Götter. Götter, die das Erforschen schätzen, gewähren keine
 Frömmigkeit für das Erforschen des Tempels.
 %%%%

@@ -9,7 +9,7 @@
 ##############################################
 %%%%
 Dungeon
-Dungeon
+Kerker
 %%%%
 Temple
 Tempel
@@ -132,7 +132,7 @@ Labyrinth
 ##############################################
 %%%%
 the Dungeon
-der Dungeon
+der Kerker
 %%%%
 the Ecumenical Temple
 der Ökumenische Tempel
@@ -247,11 +247,11 @@ ein Labyrinth
 %%%%
 # This is different to the short name, but do not want to define a global translation for the letter D
 {branch_abbrev}D
-D
+K
 %%%%
 # D is the real English abbreviation, but Dungeon is used in overview screen
 {branch_abbrev}Dungeon
-Dungeon
+Kerker
 %%%%
 {branch_abbrev}Temple
 Tempel
@@ -370,7 +370,7 @@ Lab
 ##############################################
 %%%%
 on level %d of the Dungeon
-auf Ebene %d des Dungeons
+auf Ebene %d des Kerkers
 %%%%
 on level %d of the Orcish Mines
 auf Ebene %d der orkischen Minen
@@ -445,7 +445,7 @@ auf Ebene %d eines Sieles
 ##############################################
 %%%%
 between levels %d and %d of the Dungeon
-zwischen Ebenen %d und %d des Dungeons
+zwischen Ebenen %d und %d des Kerkers
 %%%%
 between levels %d and %d of the Orcish Mines
 zwischen Ebenen %d und %d der orkischen Minen

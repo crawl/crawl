@@ -232,7 +232,7 @@ säuerlich an.
 %%%%
 A metal wall
 
-Eine Wand aus bläulich-grauem Metall. Wie jeder Dungeon-Elektriker weiß,
+Eine Wand aus bläulich-grauem Metall. Wie jeder Kerker-Elektriker weiß,
 erdet sie sogar magische Blitze.
 %%%%
 A rock wall
@@ -244,7 +244,7 @@ Eine Wand aus einfachem Fels.
 ########################################################################
 A shop
 
-Ein Laden im Dungeon, außerhalb der Sichtweite der Welt, der von einem
+Ein Laden im Kerker, außerhalb der Sichtweite der Welt, der von einem
 geheimnisvollen und zurückgezogenen Ladenbesitzer geführt wird, mit dem man
 nicht verhandeln kann, der keine Rückerstattungen gewährt und der an nichts
 interessiert ist, was du zu verkaufen hast. Einige Läden bieten Antiquitäten
@@ -293,7 +293,7 @@ von Hand zerbrochen werden zu können.
 %%%%
 An escape hatch in the floor
 
-Eine federbelastete Einweg-Fluchtluke im Boden des Dungeons, die es dem
+Eine federbelastete Einweg-Fluchtluke im Boden des Kerkers, die es dem
 Abenteurer, der von Gegnern bedrängt wird, ermöglicht, die Gefahren dieser
 Ebene gegen die der nächsten einzutauschen.
 %%%%
@@ -390,7 +390,7 @@ Ein Tor, durch das du zurückkehren kannst, woher du gekommen bist.
 %%%%
 A gate leading out of Pandemonium
 
-Ein Tor, das zurück in den Dungeon führt.
+Ein Tor, das zurück in den Kerker führt.
 %%%%
 A gate leading to another region of Pandemonium
 
@@ -410,7 +410,7 @@ A gate to the Realm of Zot
 
 Ein Tor, das zum Reich von Zot führt.
 %%%%
-A gateway back into the Dungeon
+A gateway back into the Kerker
 
 Ein Tor, das ein Kunststück ermöglicht, das gemeinhin für unmöglich
 gehalten wird: der Hölle lebend zu entkommen.
@@ -464,11 +464,11 @@ Ein Gang, der zurück zur Höhle der Bestien führt.
 %%%%
 An exit through the horrors of the Abyss
 
-Ein Tor, das über den Wahnsinn des Abgrunds zurück in den Dungeon führt.
+Ein Tor, das über den Wahnsinn des Abgrunds zurück in den Kerker führt.
 %%%%
-A staircase back to the Dungeon
+A staircase back to the Kerker
 
-Eine Treppe, die zurück in die Vertrautheit des Dungeons führt.
+Eine Treppe, die zurück in die Vertrautheit des Kerkers führt.
 %%%%
 A staircase back to the Lair
 
@@ -484,9 +484,9 @@ Eine Treppe, die zurück zu den Gewölben führt.
 %%%%
 A staircase leading out of the dungeon
 
-Diese Treppe führt zurück aus dem Dungeon.
+Diese Treppe führt zurück aus dem Kerker.
 
-Eine Treppe, die aus dem Dungeon herausführt. Wenn du diese Treppe
+Eine Treppe, die aus dem Kerker herausführt. Wenn du diese Treppe
 hinaufsteigst, endet deine Suche, egal ob du die Kugel bei dir trägst oder nicht.
 %%%%
 A staircase back to the Crypt
@@ -661,7 +661,7 @@ Ein mechanischer Apparat, der vergiftete Nadeln verschießt.
 %%%%
 A net trap
 
-Ein großer, versteckter Netzwerfer, der von der Decke des Dungeons hängt und
+Ein großer, versteckter Netzwerfer, der von der Decke des Kerkers hängt und
 durch die Kräfte von Zot so verzaubert wurde, dass er nur auf Eindringlingen
 landet.
 %%%%
@@ -679,13 +679,13 @@ Unbefugte aufzuspießen.
 A teleport trap
 
 Eine magische Falle, die jeden, der sie überquert, an einen zufälligen Ort
-auf der gleichen Dungeonebene verschiebt. Sie wird mit dem Alter abgenutzt und
+auf der gleichen Kerkerebene verschiebt. Sie wird mit dem Alter abgenutzt und
 löst sich bei Gebrauch auf.
 %%%%
 A permanent teleport trap
 
 AEine magische Falle, die jeden, der sie überquert, an einen zufälligen Ort
-auf der gleichen Dungeonebene verschiebt.
+auf der gleichen Kerkerebene verschiebt.
 %%%%
 A web
 
@@ -1064,7 +1064,7 @@ Ein Eingang, durch den der Gegner erscheinen kann.
 ########################################################################
 An exit from the tutorial
 
-Ein Weg aus dem Dungeon, der es einem ermöglicht, diese Lektion zu beenden.
+Ein Weg aus dem Kerker, der es einem ermöglicht, diese Lektion zu beenden.
 %%%%
 ########################################################################
 ### Area effects

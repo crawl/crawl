@@ -789,7 +789,7 @@ _rare_speaking_no_tension_
 
 @The_weapon@ amüsiert sich mit detaillierten Beschreibungen vergangener Hinrichtungen.
 
-@The_weapon@ wünscht allen im Dungeon einen [unangenehmen|plötzlichen] [Untergang|Tod].
+@The_weapon@ wünscht allen im Kerker einen [unangenehmen|plötzlichen] [Untergang|Tod].
 
 @The_weapon@ raucht, "Zerschlagen, verbogen und gebrochen zu sein, ist sicher besser als diese Langeweile!"
 
@@ -1280,7 +1280,7 @@ w:1
 @The_weapon@ singt, "Singt, singt ein Lied, singt laut, singt kräftig..."
 
 # Or was it the lion?
-@The_weapon@ singt, "Tief im Dungeon, der Drache schläft heut Nacht."
+@The_weapon@ singt, "Tief im Kerker, der Drache schläft heut Nacht."
 
 # Eminem
 @The_weapon@ singt, "Tötet für das Lachen, tötet für die Tränen..."
@@ -1325,7 +1325,7 @@ w:1
 @The_weapon@ singt, "I am a fighter, not a lover."
 
 # Johnny Cash, "Folsom Prison Blues"
-@The_weapon@ singt, "Ich habe einen Mann im Dungeon erstochen, nur um ihn sterben zu sehen."
+@The_weapon@ singt, "Ich habe einen Mann im Kerker erstochen, nur um ihn sterben zu sehen."
 
 # All below from Richard Wagner's Rheingold
 @The_weapon@ singt, in einem beschwingten Sopran, "[Heiajaheia! Heiajaheia!|Wagala weia! Wallala, weiala weia!|Wallala! Lalaleia! Leialala!|Heia! Heia! Hahei!]"

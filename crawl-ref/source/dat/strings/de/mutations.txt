@@ -1440,13 +1440,13 @@ You passively map a large area around you.
 Du kartierst passiv einen großen Bereich um dich herum.
 %%%%
 You feel a strange attunement to the structure of the dungeons.
-Du fühlst eine seltsame Einstimmung auf die Struktur des Dungeons.
+Du fühlst eine seltsame Einstimmung auf die Struktur des Kerkers.
 %%%%
 Your attunement to dungeon structure grows.
-Dein Gespür für die Struktur des Dungeons wächst.
+Dein Gespür für die Struktur des Kerkers wächst.
 %%%%
 Your attunement to dungeon structure grows further.
-Dein Gespür für die Struktur des Dungeons wächst weiter.
+Dein Gespür für die Struktur des Kerkers wächst weiter.
 %%%%
 You feel slightly disoriented.
 Du fühlst dich leicht desorientiert.
@@ -2652,10 +2652,10 @@ You expend magic power (3 MP) to strengthen your wands.
 Du verbrauchst magische Kraft (3 MP), um deine Zauberstäbe zu stärken.
 %%%%
 You feel your magical essence link to the dungeon's wands.
-Du spürst, wie dich deine magische Essenz mit den Stäben des Dungeons verbindet.
+Du spürst, wie dich deine magische Essenz mit den Zauberstäben des Kerkers verbindet.
 %%%%
 Your magical essence no longer links to wands of the dungeon.
-Deine magische Essenz ist nicht mehr mit den Zauberstäben des Dungeons verbunden.
+Deine magische Essenz ist nicht mehr mit den Zauberstäben des Kerkers verbunden.
 %%%%
 unskilled
 ungelernt
