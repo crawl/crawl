@@ -1669,7 +1669,7 @@ bool StashTracker::display_search_results(
         {
             if (const uint8_t waypoint = travel_cache.is_waypoint(res.pos))
                 matchtitle << "(" << waypoint << ") ";
-            matchtitle << "[" << res.pos.id.describe() << "] ";
+            matchtitle << "[" << res.pos.id.describe(false, true, true) << "] ";
         }
 
         matchtitle << res.match;
