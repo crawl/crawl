@@ -105,7 +105,7 @@ Volcano
 Vulkan
 %%%%
 Wizlab
-Zaublab
+ZaubLab
 %%%%
 Desolation
 Verwüstung
@@ -124,6 +124,46 @@ Wald
 %%%%
 Labyrinth
 Labyrinth
+%%%%
+
+##############################################
+# Short branch names with indefinite article
+##############################################
+# HUD shows some branches as short name with indefinite article
+%%%%
+an Abyss
+ein Abgrund
+%%%%
+a Ziggurat
+eine Zikkurat
+%%%%
+a Bazaar
+ein Basar
+%%%%
+a Trove
+ein Fund
+%%%%
+a Sewer
+ein Siel
+%%%%
+an Ossuary
+ein Beinhaus
+%%%%
+a Bailey
+ein Burghof
+%%%%
+an Ice Cave
+eine Eishöhle
+%%%%
+a Volcano
+ein Vulkan
+%%%%
+a Wizlab
+ein ZaubLab
+%%%%
+# same as long name
+#a Gauntlet
+#eine Spießrute
 %%%%
 
 ##############################################
@@ -344,7 +384,7 @@ Vulkan
 %%%%
 # Note: English short name has small L, but abbreviation has capital L.
 WizLab
-Zaublab
+ZaubLab
 %%%%
 {branch_abbrev}Desolation
 Verwüst
