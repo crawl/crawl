@@ -262,21 +262,6 @@ the Desolation of Salt
 die Verwüstung des Salzes
 %%%%
 
-# obsolete branches
-%%%%
-the Dwarven Hall
-die Zwergenhalle
-%%%%
-the Hall of Blades
-die Halle der Klingen
-%%%%
-the Enchanted Forest
-der Verzauberte Wald
-%%%%
-a Labyrinth
-ein Labyrinth
-%%%%
-
 ##############################################
 # Branch abbreviations
 # These should be 8 characters or less.
@@ -388,21 +373,6 @@ ZaubLab
 %%%%
 {branch_abbrev}Desolation
 Verwüst
-%%%%
-
-# obsolete branches
-%%%%
-# duplicate of player genus
-#Dwarf
-#Zwerg
-%%%%
-# duplicate : also used as HUD abbreviation for blade hands
-#Blade
-#Klinge
-%%%%
-# Labyrinth
-Lab
-Lab
 %%%%
 
 ##############################################
