@@ -6,13 +6,11 @@ ignore += god:Divide and consume
 ignore += You hear.*splatter
 
 ignore += You feel.*sick
-ignore += disappears in a puff of smoke
 ignore += standing in the rain
 ignore += A.*toadstool withers and dies
 ignore += toadstools? grows
 ignore += You walk carefully through the
 ignore += The winds around you calm down.
-ignore += (crumbles|melts) away\.
 ignore += wailing of tortured souls fills the air!
 
 stop += You feel you are being watched
@@ -80,5 +78,7 @@ ignore += friend_spell:
 ignore += friend_enchant:
 ignore += friend_action:
 ignore += sound:
+ignore += monster_timeout:
+ignore += decor_flavour:
 stop += god:
 stop += tutorial:

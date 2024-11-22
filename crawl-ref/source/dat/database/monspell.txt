@@ -152,6 +152,14 @@ Hoarfrost Bullet cast finale
 
 @The_monster@ launches the last of @reflexive@ @at@ @target@ with a shrill rumble.
 %%%%
+Shadow Shot cast
+
+@The_monster@ fires @at@ @target@.
+%%%%
+Launch Bomblet cast
+
+@The_monster@ launches a bomblet.
+%%%%
 Holy Flames cast
 
 @The_monster@ calls forth blessed flames!
@@ -414,6 +422,10 @@ Weakening Gaze cast
 Woodweal cast
 
 @The_monster@ touches a tree and draws upon its vitality.
+%%%%
+Seismic Stomp cast
+
+@The_monster@ stomps @possessive@ heavy feet.
 ########################################################################
 # Unique monsters
 ########################################################################

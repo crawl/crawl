@@ -1148,6 +1148,11 @@ void bolt::affect_cell()
             return;
         if (hit == AUTOMATIC_HIT && !pierce)
             finish_beam();
+        // XXX: If an ally stopped a piercing beam short to avoid hitting the
+        //      player on this cell, don't attempt to hit a monster on the
+        //      cell immediately before them again.
+        if (extra_range_used >= BEAM_STOP)
+            return;
     }
 
     // Stop single target beams from affecting a monster if they already
@@ -1541,7 +1546,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         else if (original < hurted)
         {
             if (doFlavouredEffects)
-                simple_monster_message(*mons, " is frozen!");
+                simple_monster_message(*mons, " is chilled terribly!");
         }
         break;
 
@@ -1807,6 +1812,11 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         }
         break;
 
+    case BEAM_SEISMIC:
+        if (mons->airborne())
+            hurted = hurted / 3;
+        break;
+
     default:
         break;
     }
@@ -1830,7 +1840,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
 {
     // Mass enchantments around lots of plants/fungi shouldn't cause a flood
     // of "is unaffected" messages. --Eino
-    if (mons_is_firewood(*mons))
+    if (mons->is_firewood())
         return true;
     // Jiyva protects from mass enchantments.
     if (have_passive(passive_t::neutral_slimes) && god_protects(*mons))
@@ -2853,14 +2863,16 @@ bool bolt::can_burn_trees() const
     case SPELL_BOLT_OF_FIRE:
     case SPELL_REBOUNDING_BLAZE:
     case SPELL_BOLT_OF_MAGMA:
+    case SPELL_MAGMA_BARRAGE:
     case SPELL_FIREBALL:
     case SPELL_FIRE_STORM:
     case SPELL_IGNITION:
     case SPELL_INNER_FLAME:
     case SPELL_STARBURST:
     case SPELL_FLAME_WAVE:
-    case SPELL_SUMMON_BLAZEHEART_GOLEM: // core breach!
+    case SPELL_FORGE_BLAZEHEART_GOLEM: // core breach!
     case SPELL_HELLFIRE_MORTAR:
+    case SPELL_MONARCH_BOMB:
         return true;
     case SPELL_UNLEASH_DESTRUCTION:
         return flavour == BEAM_FIRE || flavour == BEAM_LAVA;
@@ -3045,7 +3057,7 @@ void bolt::affect_place_explosion_clouds()
     }
 
     // Blazeheart core detonation
-    if (origin_spell == SPELL_SUMMON_BLAZEHEART_GOLEM)
+    if (origin_spell == SPELL_FORGE_BLAZEHEART_GOLEM)
         place_cloud(CLOUD_FIRE, p, 2 + random2avg(5,2), agent());
 
     if (origin_spell == SPELL_FIRE_STORM)
@@ -3930,6 +3942,7 @@ void bolt::affect_player_enchantment(bool resistible)
     case BEAM_SAP_MAGIC:
         mprf(MSGCH_WARN, "Your magic feels %stainted.",
              you.duration[DUR_SAP_MAGIC] ? "more " : "");
+        flash_tile(you.pos(), GREEN, 120, TILE_BOLT_SAP_MAGIC);
         you.increase_duration(DUR_SAP_MAGIC, random_range(20, 30), 50);
         break;
 
@@ -4448,6 +4461,9 @@ void bolt::affect_player()
     if (flavour == BEAM_ACID)
         you.acid_corrode(5);
 
+    if (flavour == BEAM_CRYSTALLIZING)
+        crystallize_player();
+
     extra_range_used += range_used_on_hit();
 
     knockback_actor(&you, final_dam);
@@ -4476,7 +4492,8 @@ bool bolt::ignores_player() const
     if (origin_spell == SPELL_COMBUSTION_BREATH
         || origin_spell == SPELL_NULLIFYING_BREATH
         || origin_spell == SPELL_RIMEBLIGHT
-        || origin_spell == SPELL_SHADOW_PRISM)
+        || origin_spell == SPELL_SHADOW_PRISM
+        || origin_spell == SPELL_SHADOW_SHOT)
     {
         return true;
     }
@@ -4490,7 +4507,8 @@ bool bolt::ignores_player() const
     if (agent() && agent()->is_monster()
         && (mons_is_hepliaklqana_ancestor(agent()->as_monster()->type)
             || mons_is_player_shadow(*agent()->as_monster())
-            || agent()->real_attitude() == ATT_MARIONETTE))
+            || agent()->real_attitude() == ATT_MARIONETTE
+            || agent()->type == MONS_PLATINUM_PARAGON))
     {
         // friends!
         return true;
@@ -4513,6 +4531,13 @@ bool bolt::ignores_player() const
     // explosions, but also reflected lightning bolts or shots from hellmouths)
     if (origin_spell == SPELL_UNLEASH_DESTRUCTION
         && (!agent() || agent()->wont_attack()))
+    {
+        return true;
+    }
+
+    if ((origin_spell == SPELL_PERCUSSIVE_TEMPERING
+         || origin_spell == SPELL_FORTRESS_BLAST)
+        && attitude == ATT_FRIENDLY)
     {
         return true;
     }
@@ -4961,7 +4986,7 @@ static void _add_petrify_chain_candidates(const bolt& beam, coord_def pos,
 
         monster *mon = act->as_monster();
         if (mon && (shoot_through_monster(beam, mon)
-                    || mons_is_firewood(*mon)))
+                    || mon->is_firewood()))
         {
             continue;
         }
@@ -5138,7 +5163,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
             return;
     }
 
-    if (YOU_KILL(thrower) && !mon->wont_attack() && !mons_is_firewood(*mon))
+    if (YOU_KILL(thrower) && !mon->wont_attack() && !mon->is_firewood())
         you.pet_target = mon->mindex();
 
     // We check player Sticky Flame by name and other effects by flavour, since
@@ -5269,6 +5294,9 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         simple_monster_message(*mon, " is pinned in place!");
         mon->add_ench(mon_enchant(ENCH_BOUND, 0, nullptr, random_range(2, 4) * BASELINE_DELAY));
     }
+
+    if (origin_spell == SPELL_KINETIC_GRAPNEL && dmg > 0)
+        mon->add_ench(mon_enchant(ENCH_KINETIC_GRAPNEL, 0, agent(), random_range(30, 50)));
 }
 
 static int _knockback_dist(spell_type origin, int pow)
@@ -5310,7 +5338,11 @@ void bolt::knockback_actor(actor *act, int dam)
                      : 25;
     const int dist = binomial(max_dist, roll - weight, roll); // This is silly! -- PF
 
-    act->knockback(*agent(), dist, _collision_damage(origin_spell, ench_power), name);
+    // not sure this belongs here, but it can't be done in agent::knockback
+    // if the caster is dead, we can't get their former position for knockback
+    auto caster = agent();
+    if (!caster) return;
+    act->knockback(*caster, dist, _collision_damage(origin_spell, ench_power), name);
 }
 
 void bolt::pull_actor(actor *act, int dam)
@@ -5443,12 +5475,8 @@ bool bolt::at_blocking_monster() const
     if (!mon || !you.can_see(*mon))
         return false;
 
-    if (!pierce
-        && !ignores_monster(mon)
-        && mons_is_firewood(*mon))
-    {
+    if (!pierce && !ignores_monster(mon) && mon->is_firewood())
         return true;
-    }
     if (have_passive(passive_t::neutral_slimes)
         && god_protects(agent(), *mon, true)
         && flavour != BEAM_VILE_CLUTCH)
@@ -5522,7 +5550,7 @@ void bolt::affect_monster(monster* mon)
         // Test if this qualifies to trigger Dimensional Bullseye later on.
         if (agent()->is_player() && you.duration[DUR_DIMENSIONAL_BULLSEYE]
             && !can_trigger_bullseye && !special_explosion
-            && !mons_is_firewood(*mon) && mon->summoner != MID_PLAYER)
+            && !mon->is_firewood() && mon->summoner != MID_PLAYER)
         {
             can_trigger_bullseye = true;
         }
@@ -5786,6 +5814,7 @@ bool bolt::ignores_monster(const monster* mon) const
     // Shadow spells have no friendly fire, even against monsters.
     // (These should be the only ones that don't avoid that in other ways.)
     if ((origin_spell == SPELL_SHADOW_PRISM || origin_spell == SPELL_SHADOW_BEAM
+         || origin_spell == SPELL_SHADOW_SHOT
          || origin_spell == SPELL_SHADOW_TORPOR
          || (origin_spell == SPELL_SHADOW_BALL && in_explosion_phase))
         && mons_atts_aligned(attitude, mons_attitude(*mon)))
@@ -5839,6 +5868,13 @@ bool bolt::ignores_monster(const monster* mon) const
 
     if (origin_spell == SPELL_UPHEAVAL && agent() && agent() == mon)
         return true;
+
+    if ((origin_spell == SPELL_PERCUSSIVE_TEMPERING
+         || origin_spell == SPELL_FORTRESS_BLAST)
+        && mons_atts_aligned(attitude, mon->temp_attitude()))
+    {
+        return true;
+    }
 
     return false;
 }
@@ -6016,7 +6052,7 @@ bool ench_flavour_affects_monster(actor *agent, beam_type flavour,
         break;
 
     case BEAM_SOUL_SPLINTER:
-        rc = mons_can_be_spectralised(*mon, false, true)
+        rc = mons_can_be_spectralised(*mon, true, true)
              && !mon->props.exists(SOUL_SPLINTERED_KEY);
         break;
 
@@ -7583,6 +7619,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_HAEMOCLASM:            return "gore";
     case BEAM_BLOODRITE:             return "blood";
     case BEAM_DOUBLE_VIGOUR:         return "vigour-doubling";
+    case BEAM_SEISMIC:               return "seismic shockwave";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

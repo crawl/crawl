@@ -1841,6 +1841,11 @@ int player_spec_summ()
     return you.scan_artefacts(ARTP_ENHANCE_SUMM);
 }
 
+int player_spec_forgecraft()
+{
+    return you.scan_artefacts(ARTP_ENHANCE_FORGECRAFT);
+}
+
 int player_spec_alchemy()
 {
     int sp = 0;
@@ -4782,7 +4787,7 @@ bool sticky_flame_player(int intensity, int duration, string source, string sour
     }
     else
     {
-        mprf(MSGCH_WARN, "You are covered in %sliquid fire!",
+        mprf(MSGCH_WARN, "You are covered in %sliquid fire! Move or burn!",
                          intensity_str.c_str());
     }
 
@@ -4940,6 +4945,18 @@ void barb_player(int turns, int pow)
         you.increase_duration(DUR_BARBS, turns, max_turns);
         you.attribute[ATTR_BARBS_POW] =
             min(max_pow, you.attribute[ATTR_BARBS_POW]++);
+    }
+}
+
+void crystallize_player()
+{
+    if (x_chance_in_y(3, 4))
+    {
+        if (!you.duration[DUR_VITRIFIED])
+            mpr("Your body becomes as fragile as glass!");
+        else
+            mpr("You feel your fragility will last longer.");
+        you.increase_duration(DUR_VITRIFIED, random_range(8, 18), 50);
     }
 }
 
@@ -6619,6 +6636,9 @@ int player::armour_class_with_specific_items(int scale,
     if (you.props.exists(PASSWALL_ARMOUR_KEY))
         AC += you.props[PASSWALL_ARMOUR_KEY].get_int() * 100;
 
+    if (you.duration[DUR_PHALANX_BARRIER])
+        AC += you.props[PHALANX_BARRIER_POWER_KEY].get_int();
+
     AC -= 100 * corrosion_amount();
 
     AC += sanguine_armour_bonus();
@@ -6647,9 +6667,10 @@ void player::refresh_rampage_hints()
   *
   * \return GDR as a percentage.
   **/
-int player::gdr_perc() const
+int player::gdr_perc(bool random) const
 {
-    return (int)(16 * sqrt(sqrt(max(0, you.armour_class()))));
+    int ac = random ? armour_class() : armour_class_scaled(1);
+    return (int)(16 * sqrt(sqrt(max(0, ac))));
 }
 
 /**
@@ -6684,8 +6705,10 @@ int player::evasion_scaled(int scale, bool ignore_temporary, const actor* act) c
 }
 
 /**
- * What would our natural AC/EV/SH be if we wore a given piece of equipment
- * instead of whatever might be in that slot currently (if anything)?
+ * What would our natural AC/EV/SH and fail rate for all known spells be if we
+ * wore a given piece of equipment instead of whatever might be in that slot
+ * currently (if anything)?
+ *
  * Note: non-artefact rings of evasion/protection and amulets of reflection
  * are excepted from using this function.
  *
@@ -6693,14 +6716,17 @@ int player::evasion_scaled(int scale, bool ignore_temporary, const actor* act) c
  * @param ac        The player's AC if this item were equipped.
  * @param ev        The player's EV if this item were equipped.
  * @param sh        The player's SH if this item were equipped.
+ * @param fail      The player's raw spell fail for all spells if this item
+ *                  were equipped.
  */
-void player::ac_ev_sh_with_specific_item(int scale, const item_def& new_item,
-                                         int *ac, int *ev, int *sh)
+void player::preview_stats_with_specific_item(int scale, const item_def& new_item,
+                                              int *ac, int *ev, int *sh,
+                                              FixedVector<int, MAX_KNOWN_SPELLS> *fail)
 {
     // Since there are a lot of things which can affect the calculation of
-    // EV/SH, including artifact properties on either the item we're equipped or
-    // the one we're swapping out for it, we check by very briefly 'putting on'
-    // the new item and calling the normal evasion calculation function.
+    // EV/SH/fail, including artifact properties on either the item we're
+    // equipped or the one we're swapping out for it, we check by very briefly
+    // 'putting on' the new item and calling the normal calculation functions.
     //
     // As we edit the item links directly, this should be invisible to the
     // player, bypass normal equip/unequip routines, and have no side-effects.
@@ -6739,14 +6765,18 @@ void player::ac_ev_sh_with_specific_item(int scale, const item_def& new_item,
     *ev = evasion_scaled(scale, true);
     *sh = player_displayed_shield_class(scale, true);
 
+    for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
+        (*fail)[i] = raw_spell_fail(spells[i]);
+
     // Restore old item and clear out any item copies, just in case.
     you.equip[slot] = old_item;
     you.inv[ENDOFPACK].clear();
 }
 
-void player::ac_ev_sh_without_specific_item(int scale,
-                                            const item_def& item_to_remove,
-                                            int *ac, int *ev, int *sh)
+void player::preview_stats_without_specific_item(int scale,
+                                                 const item_def& item_to_remove,
+                                                 int *ac, int *ev, int *sh,
+                                                 FixedVector<int, MAX_KNOWN_SPELLS> *fail)
 {
     int slot = get_equip_slot(&item_to_remove);
 
@@ -6759,6 +6789,9 @@ void player::ac_ev_sh_without_specific_item(int scale,
     *ac = base_ac(scale);
     *ev = evasion_scaled(scale, true);
     *sh = player_displayed_shield_class(scale, true);
+    for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
+        (*fail)[i] = raw_spell_fail(spells[i]);
+
     you.equip[slot] = item_to_remove.link;
 }
 
@@ -7418,7 +7451,7 @@ void player::paralyse(const actor *who, int str, string source)
 
     stop_delay(true, true);
     stop_directly_constricting_all(false);
-    end_wait_spells();
+    stop_channelling_spells();
     redraw_armour_class = true;
     redraw_evasion = true;
 }
@@ -7472,7 +7505,7 @@ bool player::fully_petrify(bool /*quiet*/)
     _pruneify();
 
     stop_delay(true, true);
-    end_wait_spells();
+    stop_channelling_spells();
 
     return true;
 }
@@ -7842,7 +7875,8 @@ bool player::is_stationary() const
 
 bool player::is_motile() const
 {
-    return !is_stationary() && !you.duration[DUR_NO_MOMENTUM];
+    return !is_stationary() && !you.duration[DUR_NO_MOMENTUM]
+                            && !you.duration[DUR_FORTRESS_BLAST_TIMER];
 }
 
 bool player::malmutate(const string &reason)
@@ -7986,7 +8020,7 @@ void player::put_to_sleep(actor*, int power, bool hibernate)
     _pruneify();
 
     stop_directly_constricting_all(false);
-    end_wait_spells();
+    stop_channelling_spells();
     stop_delay(true, true);
     flash_view(UA_MONSTER, DARKGREY);
 
@@ -8087,7 +8121,7 @@ bool player::can_do_shaft_ability(bool quiet) const
         return false;
     }
 
-    if (you.duration[DUR_NO_MOMENTUM])
+    if (!you.is_motile())
     {
         if (!quiet)
             mpr("You can't shaft yourself while stuck.");
@@ -8263,6 +8297,7 @@ bool player::attempt_escape()
 
 void player::sentinel_mark(bool trap)
 {
+    flash_tile(you.pos(), YELLOW, 120, TILE_BOLT_SENTINEL_MARK);
     if (duration[DUR_SENTINEL_MARK])
     {
         mpr("The mark upon you grows brighter.");

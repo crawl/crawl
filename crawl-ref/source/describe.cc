@@ -442,6 +442,9 @@ static const vector<property_descriptor> & _get_all_artp_desc_data()
         { ARTP_ENHANCE_ALCHEMY,
             "It increases the power of your Alchemy spells.",
             prop_note::plain },
+        { ARTP_ENHANCE_FORGECRAFT,
+            "It increases the power of your Forgecraft spells.",
+            prop_note::plain },
         { ARTP_ACROBAT,
             "It increases your evasion after moving or waiting.",
             prop_note::plain },
@@ -543,6 +546,7 @@ static vector<string> _randart_propnames(const item_def& item,
         ARTP_ENHANCE_HEXES,
         ARTP_ENHANCE_SUMM,
         ARTP_ENHANCE_NECRO,
+        ARTP_ENHANCE_FORGECRAFT,
         ARTP_ENHANCE_TLOC,
         ARTP_ENHANCE_FIRE,
         ARTP_ENHANCE_ICE,
@@ -1450,7 +1454,7 @@ string damage_rating(const item_def *item, int *rating_value)
     // This is just SPWPN_HEAVY.
     const int post_brand_dam = brand_adjust_weapon_damage(base_dam, brand, false);
     const int heavy_dam = post_brand_dam - base_dam;
-    const int extra_base_dam = thrown ? throwing_base_damage_bonus(*item) :
+    const int extra_base_dam = thrown ? throwing_base_damage_bonus(*item, false) :
                                !item ? unarmed_base_damage_bonus(false) :
                                     heavy_dam; // 0 for non-heavy weapons
     const skill_type skill = item ? _item_training_skill(*item) : SK_UNARMED_COMBAT;
@@ -1870,14 +1874,15 @@ static string _equipment_switchto_string(const item_def &item)
 
 /**
  * Describe how (un)equipping a piece of equipment might change the player's
- * AC/EV/SH stats. We don't include temporary buffs in this calculation.
+ * AC/EV/SH and spell failure. We don't include temporary buffs in this
+ * calculation.
  *
  * @param item    The item whose description we are writing.
  * @param remove  Whether the item is already equipped, and thus whether to
                   show the change solely from unequipping the item.
  * @return        The description.
  */
-static string _equipment_ac_ev_sh_change_description(const item_def &item,
+static string _equipment_property_change_description(const item_def &item,
                                                      bool remove = false)
 {
     // First, test if there is any AC/EV/SH change at all.
@@ -1885,16 +1890,38 @@ static string _equipment_ac_ev_sh_change_description(const item_def &item,
     const int cur_ev = you.evasion_scaled(100, true);
     const int cur_sh = player_displayed_shield_class(100, true);
     int new_ac, new_ev, new_sh;
+    FixedVector<int, MAX_KNOWN_SPELLS> cur_fail, new_fail;
+    for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
+        cur_fail[i] = raw_spell_fail(you.spells[i]);
 
     if (remove)
-        you.ac_ev_sh_without_specific_item(100, item, &new_ac, &new_ev, &new_sh);
+        you.preview_stats_without_specific_item(100, item, &new_ac, &new_ev, &new_sh, &new_fail);
     else
-        you.ac_ev_sh_with_specific_item(100, item, &new_ac, &new_ev, &new_sh);
+        you.preview_stats_with_specific_item(100, item, &new_ac, &new_ev, &new_sh, &new_fail);
+
+    // Check if any spell failures changed, and save the greatest magnitude that
+    // any of them changed.
+    int fail_change = 0;
+    int visible_fail_change = 0;
+    for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
+    {
+        if (cur_fail[i] != new_fail[i])
+        {
+            int new_fail_change = new_fail[i] - cur_fail[i];
+            int new_visible_fail_change = failure_rate_to_int(new_fail[i])
+                                            - failure_rate_to_int(cur_fail[i]);
+            if (abs(new_fail_change) > fail_change)
+                fail_change = new_fail_change;
+            if (abs(new_visible_fail_change) > visible_fail_change)
+                visible_fail_change = new_visible_fail_change;
+        }
+    }
 
     // If we're previewing non-armour and there is no AC/EV/SH change, print no
     // extra description at all (since almost all items of these types will
     // change nothing)
     if (cur_ac == new_ac && cur_ev == new_ev && cur_sh == new_sh
+        && fail_change == 0
         && (item.base_type != OBJ_ARMOUR || item.sub_type == ARM_ORB))
     {
         return "";
@@ -1943,7 +1970,122 @@ static string _equipment_ac_ev_sh_change_description(const item_def &item,
                        + _describe_point_diff(cur_sh, new_sh) + ".";
     }
 
+    if (fail_change != 0)
+    {
+        description += "\nYour spell failure would ";
+        description += (fail_change > 0) ? "worsen" : "improve";
+        if (visible_fail_change == 0)
+            description += " trivially.";
+        else
+        {
+            description += make_stringf(" by up to %d%% (press '!' for details).",
+                                    abs(visible_fail_change)).c_str();
+        }
+    }
+
     return description;
+}
+
+static string _spell_fail_change_description(const item_def &item,
+                                             bool remove = false)
+{
+    int dummy1, dummy2, dummy3;
+    FixedVector<int, MAX_KNOWN_SPELLS> cur_fail, new_fail;
+    for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
+        cur_fail[i] = raw_spell_fail(you.spells[i]);
+
+    if (remove)
+        you.preview_stats_without_specific_item(100, item, &dummy1, &dummy2, &dummy3, &new_fail);
+    else
+        you.preview_stats_with_specific_item(100, item, &dummy1, &dummy2, &dummy3, &new_fail);
+
+    // Check if any spell failures changed.
+    int fail_change = 0;
+    for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
+    {
+        if (cur_fail[i] != new_fail[i])
+        {
+            fail_change = new_fail[i] - cur_fail[i];
+            break;
+        }
+    }
+
+    // If nothing changed, generate no text
+    if (fail_change == 0)
+        return "";
+
+    // If they did, convert all failures into percentages to see whether any
+    // change was non-trivial
+    fail_change = 0;
+    for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
+    {
+        if (cur_fail[i] == new_fail[i])
+            continue;
+
+        cur_fail[i] = failure_rate_to_int(cur_fail[i]);
+        new_fail[i] = failure_rate_to_int(new_fail[i]);
+
+        if (cur_fail[i] != new_fail[i])
+            fail_change = cur_fail[i] - new_fail[i];
+    }
+
+    // If nothing changed *meaningfully*, generate no text
+    if (fail_change == 0)
+        return "";
+
+    // Otherwise, generate a complete list of all non-trivial changes
+    string desc;
+    desc = make_stringf("If you %s this item, your spell failure would %s:\n",
+                        remove ? "removed" : "equipped",
+                        fail_change < 0 ? "worsen" : "improve");
+
+    // Sort spells by degree of change in their fail rates (and then by
+    // absolute fail rate after that)
+    vector<pair<int, int>> spell_sort;
+    for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
+    {
+        if (cur_fail[i] == new_fail[i])
+            continue;
+
+        spell_sort.push_back({i, abs(cur_fail[i] - new_fail[i])});
+    }
+    sort(spell_sort.begin( ), spell_sort.end( ),
+            [cur_fail](pair<int, int>& a, pair<int, int>& b)
+                { return cur_fail[a.first] > cur_fail[b.first];});
+    sort(spell_sort.begin( ), spell_sort.end( ),
+            [](pair<int, int>& a, pair<int, int>& b)
+                { return a.second > b.second;});
+
+
+    // vector<string> entries;
+    for (size_t i = 0; i < spell_sort.size(); ++i)
+    {
+        int index = spell_sort[i].first;
+
+        int diff = new_fail[index] - cur_fail[index];
+        string colour;
+        if (diff > 20)
+            colour = "magenta";
+        else if (diff > 11)
+            colour = "lightred";
+        else if (diff > 5)
+            colour = "yellow";
+        else if (diff < -11)
+            colour = "lightblue";
+        else if (diff < -5)
+            colour = "white";
+        else
+            colour = "lightgrey";
+
+        string entry = make_stringf("<%s>%s%3d%%-> %3d%%</%s>\n",
+                colour.c_str(),
+                chop_string(spell_title(you.spells[index]), 32).c_str(),
+                cur_fail[index], new_fail[index], colour.c_str());
+
+        desc += entry;
+    }
+
+    return desc;
 }
 
 static bool _you_are_wearing_item(const item_def &item)
@@ -1951,14 +2093,14 @@ static bool _you_are_wearing_item(const item_def &item)
     return get_equip_slot(&item) != EQ_NONE;
 }
 
-static string _equipment_ac_ev_sh_change(const item_def &item)
+static string _equipment_property_change(const item_def &item)
 {
     string description;
 
     if (!_you_are_wearing_item(item))
-        description = _equipment_ac_ev_sh_change_description(item);
+        description = _equipment_property_change_description(item);
     else
-        description = _equipment_ac_ev_sh_change_description(item, true);
+        description = _equipment_property_change_description(item, true);
 
     return description;
 }
@@ -1996,7 +2138,7 @@ static string _describe_weapon(const item_def &item, bool verbose, bool monster)
         description += "\n\n" + art_desc;
 
     if (verbose && crawl_state.need_save && you.could_wield(item, true, true))
-        description += _equipment_ac_ev_sh_change(item);
+        description += _equipment_property_change(item);
 
     if (verbose)
     {
@@ -2347,7 +2489,7 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
         && can_wear_armour(item, false, true)
         && item_ident(item, ISFLAG_KNOW_PLUSES))
     {
-        description += _equipment_ac_ev_sh_change(item);
+        description += _equipment_property_change(item);
     }
 
     const int DELAY_SCALE = 100;
@@ -2629,7 +2771,7 @@ static string _describe_jewellery(const item_def &item, bool verbose)
                && item.sub_type != RING_EVASION
                && item.sub_type != AMU_REFLECTION))
     {
-        description += _equipment_ac_ev_sh_change(item);
+        description += _equipment_property_change(item);
     }
 
     return description;
@@ -2950,7 +3092,7 @@ string get_item_description(const item_def &item,
                 description << "\n\n" + art_desc;
 
             if (verbose && crawl_state.need_save && you.could_wield(item, true, true))
-                description << _equipment_ac_ev_sh_change(item);
+                description << _equipment_property_change(item);
         }
         description << "\n\nIt falls into the 'Staves' category. ";
         description << _handedness_string(item);
@@ -3631,8 +3773,8 @@ bool describe_feature_wide(const coord_def& pos, bool do_actions)
             formatted_string desc_text = formatted_string::parse_string(feat.body);
             if (!feat.quote.empty())
             {
-                desc_text.cprintf("\n\n");
-                desc_text += formatted_string::parse_string(feat.quote);
+                desc_text.cprintf("\n_________________\n\n");
+                desc_text += formatted_string::parse_string("<darkgrey>" + feat.quote + "</darkgrey>");
             }
             auto text = make_shared<Text>(desc_text);
             if (&feat != &feats.back())
@@ -4065,7 +4207,7 @@ command_type describe_item_popup(const item_def &item,
     if (!(crawl_state.game_is_hints_tutorial()
           || quote.empty()))
     {
-        desc += "\n\n" + quote;
+        desc += "\n_________________\n\n<darkgrey>" + quote + "</darkgrey>";
     }
 
     if (crawl_state.game_is_hints())
@@ -4144,6 +4286,7 @@ command_type describe_item_popup(const item_def &item,
     bool done = false;
     command_type action = CMD_NO_CMD;
     int lastch; // unused??
+    bool show_spell_success = false;
     popup->on_keydown_event([&](const KeyEvent& ev) {
         const auto key = ev.key() == '{' ? 'i' : ev.key();
         lastch = key;
@@ -4152,6 +4295,28 @@ command_type describe_item_popup(const item_def &item,
             done = true;
         else if (scroller->on_event(ev))
             return true;
+        else if (key == '!' && item_type_is_equipment(item.base_type))
+        {
+            string spell_success;
+            // Only switch tab if there's any spell rate changes.
+            if (!show_spell_success)
+            {
+                spell_success = _spell_fail_change_description(item, item_is_equipped(item));
+                if (spell_success.empty())
+                    return false;
+            }
+
+            show_spell_success = !show_spell_success;
+            if (show_spell_success)
+                text->set_text(formatted_string::parse_string(spell_success));
+            else
+                text->set_text(fs_desc.trim());
+#ifdef USE_TILE_WEB
+            tiles.json_open_object();
+            tiles.json_write_string("body", text->get_text().to_colour_string(LIGHTGREY));
+            tiles.ui_state_change("describe-spell-success", -1);
+#endif
+        }
 
         const vector<pair<spell_type,char>> spell_map = map_chars_to_spells(spells);
         auto entry = find_if(spell_map.begin(), spell_map.end(),
@@ -4400,6 +4565,7 @@ static string _miscast_damage_string(spell_type spell)
         { spschool::translocation, "anchors you in place" },
         { spschool::hexes, "slows you" },
         { spschool::alchemy, "poisons you" },
+        { spschool::forgecraft, "corrodes you" },
     };
 
     spschools_type disciplines = get_spell_disciplines(spell);
@@ -4438,8 +4604,11 @@ static string _miscast_damage_string(spell_type spell)
  */
 static string _player_spell_desc(spell_type spell)
 {
-    if (!crawl_state.need_save || (get_spell_flags(spell) & spflag::monster))
+    if (!crawl_state.need_save || (get_spell_flags(spell) & spflag::monster)
+        || !is_player_book_spell(spell))
+    {
         return ""; // all info is player-dependent
+    }
 
     ostringstream description;
 
@@ -4465,7 +4634,7 @@ static string _player_spell_desc(spell_type spell)
         description << ".\n";
     }
 
-    if (spell == SPELL_SPELLFORGED_SERVITOR)
+    if (spell == SPELL_SPELLSPARK_SERVITOR)
     {
         spell_type servitor_spell = player_servitor_spell();
         description << "Your servitor";
@@ -4475,7 +4644,18 @@ static string _player_spell_desc(spell_type spell)
             description << " casts " << spell_title(player_servitor_spell());
         description << ".\n";
     }
-    else if (you.has_spell(SPELL_SPELLFORGED_SERVITOR) && spell_servitorable(spell))
+    else if (spell == SPELL_PLATINUM_PARAGON)
+    {
+        description << "Your paragon wields ";
+
+        if (you.props.exists(PARAGON_WEAPON_KEY))
+            description << you.props[PARAGON_WEAPON_KEY].get_item().name(DESC_A, true).c_str();
+        else
+            description << "your current weapon";
+
+        description << ".\n";
+    }
+    else if (you.has_spell(SPELL_SPELLSPARK_SERVITOR) && spell_servitorable(spell))
     {
         if (failure_rate_to_int(raw_spell_fail(spell)) <= 20)
             description << "Your servitor can be imbued with this spell.\n";
@@ -4612,13 +4792,11 @@ static void _get_spell_description(const spell_type spell,
 
         const int hd = mon_owner->spell_hd();
         const int range = mons_spell_range_for_hd(spell, hd, mon_owner->is(MB_PLAYER_SERVITOR));
+        const int minrange = (spell == SPELL_CALL_DOWN_LIGHTNING
+                                || spell == SPELL_FLASHING_BALESTRA) ? 2 : 0;
+
         description += "\nRange : ";
-        if (spell == SPELL_CALL_DOWN_LIGHTNING)
-            description += stringize_glyph(mons_char(mon_owner->type)) + "..---->";
-        else if (spell == SPELL_FLASHING_BALESTRA)
-            description += stringize_glyph(mons_char(mon_owner->type)) + "..-->";
-        else
-            description += range_string(range, range, mons_char(mon_owner->type));
+        description += range_string(range, -1, minrange);
 
         if (crawl_state.need_save && you_worship(GOD_DITHMENOS))
         {
@@ -4674,7 +4852,7 @@ static void _get_spell_description(const spell_type spell,
 
     const string quote = getQuoteString(string(spell_title(spell)) + " spell");
     if (!quote.empty())
-        description += "\n" + quote;
+        description += "_________________\n\n<darkgrey>" + quote + "</darkgrey>";
 }
 
 /**
@@ -4990,6 +5168,8 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_FOUL_FLAME,        "extra damage, especially to the good" },
         { AF_HELL_HUNT,         "summon demonic beasts" },
         { AF_SWARM,             "summon more of itself" },
+        { AF_ALEMBIC,           "vent poison clouds" },
+        { AF_BOMBLET,           "deploy bomblets" },
         { AF_PLAIN,             "" },
     };
 
@@ -5284,6 +5464,8 @@ static void _attacks_table_row(const monster_info &mi, mon_attack_desc_info &di,
     {
         if (mi.is(MB_STRONG) || mi.is(MB_BERSERK))
             real_dam = real_dam * 3 / 2;
+        if (mi.is(MB_TEMPERED))
+            real_dam = real_dam * 5 / 4;
         if (mi.is(MB_IDEALISED))
             real_dam = real_dam * 2;
         if (mi.is(MB_WEAK))
@@ -6129,7 +6311,7 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
     const string holi = holiness == MH_NONLIVING ? "Nonliv."
                                                  : single_holiness_description(holiness);
     pr.AddRow();
-    if (mi.threat != MTHRT_UNDEF && !mons_is_conjured(mi.type))
+    if (mi.threat != MTHRT_UNDEF && !mons_class_is_peripheral(mi.type))
         pr.AddCell("Threat", _get_threat_desc(mi.threat));
     else // ?/m
         pr.AddCell(); // ensure alignment
@@ -6642,13 +6824,6 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
                     " slain, it may be possible to recover "
                  << mi.pronoun(PRONOUN_POSSESSIVE)
                  << " hide, which can be used as armour.\n";
-    }
-
-    if (mi.is(MB_SUMMONED_CAPPED))
-    {
-        inf.body << "\nYou have summoned too many monsters of this kind to "
-                    "sustain them all, and thus this one will shortly "
-                    "expire.\n";
     }
 
     if (!inf.quote.empty())

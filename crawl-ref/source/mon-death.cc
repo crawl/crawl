@@ -668,9 +668,7 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
         return false;
 
     if (mons->wont_attack()
-        || mons_is_firewood(*mons)
-        || mons_is_object(mons->type)
-        || mons_is_tentacle_or_tentacle_segment(mons->type)
+        || mons->is_peripheral()
         || mons->props.exists(ELY_WRATH_HEALED_KEY)
         || mons->get_experience_level() < random2(you.experience_level)
         || !one_chance_in(3))
@@ -1677,6 +1675,16 @@ static void _martyr_death_wail(monster &mons)
         mons_cast_flay(mons, slot ,_bolt);
     }
 
+    // Remove injury bond from all monsters that were guarded by this
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->has_ench(ENCH_INJURY_BOND)
+            && mi->get_ench(ENCH_INJURY_BOND).agent() == &mons)
+        {
+            mi->del_ench(ENCH_INJURY_BOND);
+        }
+    }
+
     return;
 }
 
@@ -1802,6 +1810,29 @@ static bool _god_will_bless_follower(monster* victim)
            && random2(you.piety) >= piety_breakpoint(0);
 }
 
+static bool should_blame_you_for_kill(int killer_index, bool pet_kill) noexcept
+{
+    if (killer_index == YOU_FAULTLESS)
+        return false;
+
+    if (pet_kill && !invalid_monster_index(killer_index))
+    {
+        const monster& m = env.mons[killer_index];
+
+        // always blame the player for marionette kills
+        if (m.attitude == ATT_MARIONETTE)
+            return true;
+
+        const mon_enchant ench = m.get_ench(ENCH_CONFUSION);
+        bool confused_by_non_ally = ench.ench == ENCH_CONFUSION
+            && (ench.who != KC_YOU && ench.who != KC_FRIENDLY);
+        if (confused_by_non_ally)
+            return false;
+    }
+
+    return true;
+}
+
 /**
  * Trigger the appropriate god conducts for a monster's death.
  *
@@ -1825,9 +1856,10 @@ static void _fire_kill_conducts(const monster &mons, killer_type killer,
     if (!your_kill && !pet_kill)
         return;
 
-    // player gets credit for reflection kills, but not blame
+    // player gets credit for reflection and confused ally kills, but not blame
     const bool blameworthy = god_hates_killing(you.religion, mons)
-                             && killer_index != YOU_FAULTLESS;
+                             && should_blame_you_for_kill(killer_index,
+                                 pet_kill);
 
     // if you can't get piety for it & your god won't give penance/-piety for
     // it, no one cares
@@ -2047,17 +2079,11 @@ static void _player_on_kill_effects(monster& mons, killer_type killer,
     if (YOU_KILL(killer) && gives_player_xp)
     {
         // TSO follower blessing.
-        if (!mons_is_object(mons.type)
-            && _god_will_bless_follower(&mons))
-        {
+        if (_god_will_bless_follower(&mons))
             bless_follower();
-        }
 
-        if (!mons_is_object(mons.type)
-            && you.wearing_ego(EQ_ALL_ARMOUR, SPARM_MAYHEM))
-        {
+        if (you.wearing_ego(EQ_ALL_ARMOUR, SPARM_MAYHEM))
             _orb_of_mayhem(you, mons);
-        }
     }
 
     // Various sources of berserk extension on kills.
@@ -2367,7 +2393,7 @@ item_def* monster_die(monster& mons, killer_type killer,
 
         silent = true;
     }
-    else if (mons.type == MONS_BLAZEHEART_GOLEM && real_death)
+    else if (mons.type == MONS_BLAZEHEART_GOLEM && real_death && !timeout)
     {
         // Only blow up if non-dormant
         if (grid_distance(mons.pos(), you.pos()) <= 1)
@@ -2420,6 +2446,21 @@ item_def* monster_die(monster& mons, killer_type killer,
         temp_change_terrain(mons.pos(), DNGN_SHALLOW_WATER, random_range(50, 80),
                             TERRAIN_CHANGE_FLOOD);
     }
+    else if (mons.type == MONS_SPLINTERFROST_BARRICADE && real_death
+             && !timeout)
+    {
+        coord_def aim;
+        if (!invalid_monster_index(killer_index) && env.mons[killer_index].alive())
+            aim = env.mons[killer_index].pos();
+        else if (killer_index == MHITYOU)
+            aim = you.pos();
+
+        if (!aim.origin())
+        {
+            if (splinterfrost_block_fragment(mons, aim))
+                silent = true;
+        }
+    }
     else if (mons.type == MONS_INUGAMI && real_death)
     {
         if (&mons == find_canine_familiar())
@@ -2433,6 +2474,12 @@ item_def* monster_die(monster& mons, killer_type killer,
         end_battlesphere(&mons, true);
     else if (mons.type == MONS_SPECTRAL_WEAPON)
         end_spectral_weapon(&mons, true, true);
+    else if (mons.type == MONS_RENDING_BLADE)
+    {
+        mprf(MSGCH_DURATION, "Your magic returns to you!");
+        inc_mp(you.props[RENDING_BLADE_MP_KEY].get_int());
+        you.props.erase(RENDING_BLADE_MP_KEY);
+    }
     else if (mons.type == MONS_FLAYED_GHOST)
         end_flayed_effect(&mons);
     else if (mons.type == MONS_PLAYER_SHADOW)
@@ -2587,6 +2634,8 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (mons.hit_points == -1000)
             silent = true;
     }
+    else if (mons.type == MONS_ARMOUR_ECHO)
+        drop_items = false;
 
     const bool death_message = !silent && !did_death_message
                                && you.can_see(mons);
@@ -2777,7 +2826,8 @@ item_def* monster_die(monster& mons, killer_type killer,
             else if (mons.type == MONS_SNAPLASHER_VINE)
                 msg = " falls limply to the ground.";
             else if (mons.type == MONS_HOARFROST_CANNON
-                     || mons.type == MONS_BLOCK_OF_ICE)
+                     || mons.type == MONS_BLOCK_OF_ICE
+                     || mons.type == MONS_SPLINTERFROST_BARRICADE)
             {
                 msg = " melts away.";
             }
@@ -2788,6 +2838,14 @@ item_def* monster_die(monster& mons, killer_type killer,
             {
                 msg = " dissipates.";
             }
+            else if (mons.type == MONS_CLOCKWORK_BEE)
+                msg = " runs out of power.";
+            else if (mons.type == MONS_CLOCKWORK_BEE_INACTIVE)
+                msg = " falls apart.";
+            else if (mons.type == MONS_PLATINUM_PARAGON)
+                msg = " expends the last of its power.";
+            else if (mons.type == MONS_RENDING_BLADE)
+                msg = " implodes with a snap.";
             else
             {
                 if (mons.props.exists(KIKU_WRETCH_KEY))
@@ -2797,6 +2855,9 @@ item_def* monster_die(monster& mons, killer_type killer,
                     mprf(MSGCH_MONSTER_TIMEOUT, "A nearby %s withers and dies.",
                          mons.name(DESC_PLAIN, false).c_str());
                 }
+                // Default message so that at least *something* is printed.
+                else
+                    msg = " fades away.";
             }
 
             if (!msg.empty())
@@ -3248,6 +3309,9 @@ void monster_cleanup(monster* mons)
     {
         invalidate_agrid();
     }
+
+    if (mons->type == MONS_PLATINUM_PARAGON)
+        you.duration[DUR_PARAGON_ACTIVE] = 0;
 
     // May have been constricting something. No message because that depends
     // on the order in which things are cleaned up: If the constrictee is

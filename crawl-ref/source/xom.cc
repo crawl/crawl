@@ -98,26 +98,29 @@ static bool _action_is_bad(xom_event_type action)
 
 // Spells to be cast at tension > 0, i.e. usually in battle situations.
 // Spells later in the list require higher severity to have a chance of being
-// selected.
+// selected. Spells are sorted by level, then very roughly by power when
+// neither planned for nor capability to repeatedly cast it.
 static const vector<spell_type> _xom_random_spells =
 {
     SPELL_SUMMON_SMALL_MAMMAL,
     SPELL_DAZZLING_FLASH,
     SPELL_FUGUE_OF_THE_FALLEN,
     SPELL_OLGREBS_TOXIC_RADIANCE,
-    SPELL_ANIMATE_ARMOUR,
+    SPELL_BATTLESPHERE,
+    SPELL_AWAKEN_ARMOUR,
     SPELL_MARTYRS_KNELL,
     SPELL_LEDAS_LIQUEFACTION,
-    SPELL_SUMMON_BLAZEHEART_GOLEM,
-    SPELL_BATTLESPHERE,
-    SPELL_INTOXICATE,
+    SPELL_FORGE_BLAZEHEART_GOLEM,
     SPELL_ANIMATE_DEAD,
+    SPELL_INTOXICATE,
     SPELL_SUMMON_MANA_VIPER,
+    SPELL_WALKING_ALEMBIC,
     SPELL_SUMMON_CACTUS,
     SPELL_DISPERSAL,
     SPELL_DEATH_CHANNEL,
     SPELL_SUMMON_HYDRA,
     SPELL_MONSTROUS_MENAGERIE,
+    SPELL_DIAMOND_SAWBLADES,
     SPELL_MALIGN_GATEWAY,
     SPELL_DISCORD,
     SPELL_DISJUNCTION,
@@ -1309,7 +1312,7 @@ static monster* _xom_mons_poly_target()
     //      Likewise, there's very few plant polymorph options.
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (_choose_mutatable_monster(**mi) && !mons_is_firewood(**mi)
+        if (_choose_mutatable_monster(**mi) && !mi->is_firewood()
            && ((env.grid(mi->pos()) != DNGN_DEEP_WATER)
                && (env.grid(mi->pos()) != DNGN_LAVA) || you.experience_level > 4)
            && (!(mi->holiness() & MH_PLANT) || you.experience_level > 8))
@@ -1514,6 +1517,73 @@ static void _xom_snakes_to_sticks(int /*sever*/)
         // Dismiss monster silently.
         move_item_to_grid(&item_slot, mi->pos());
         monster_die(**mi, KILL_RESET, NON_MONSTER, true);
+    }
+}
+
+// Xom counts up webs to light on fire.
+static vector<coord_def> _xom_counts_webs()
+{
+    vector<coord_def> webs;
+
+    for (vision_iterator ri(you); ri; ++ri)
+    {
+        if (env.grid(*ri) == DNGN_TRAP_WEB)
+            webs.push_back(*ri);
+    }
+
+    return webs;
+}
+
+// Xom burns down all webs in sight, replacing them with fire clouds.
+// All other sorts of clouds are removed, and anybody in a web is freed.
+static void _xom_lights_up_webs(int /*sever*/)
+{
+    int webs_count = 0;
+    int blaze_time = 3 + random2(4) * 3;
+
+    vector<coord_def> candidates = _xom_counts_webs();
+
+    for (coord_def pos : candidates)
+    {
+        if (env.grid(pos) == DNGN_TRAP_WEB)
+        {
+            flash_tile(pos, RED, 0);
+            animation_delay(20, true);
+
+            if (cloud_at(pos))
+                delete_cloud(pos);
+
+            check_place_cloud(CLOUD_FIRE, pos, blaze_time, nullptr, 0);
+
+            webs_count++;
+            env.map_knowledge(pos).set_feature(DNGN_FLOOR);
+            dungeon_terrain_changed(pos, DNGN_FLOOR);
+
+            if (get_trapping_net(pos, true) == NON_ITEM)
+            {
+                if (monster_at(pos) && monster_at(pos)->has_ench(ENCH_HELD))
+                {
+                    monster_web_cleanup(*monster_at(pos), true);
+                    monster_at(pos)->del_ench(ENCH_HELD);
+                }
+                else if (pos == you.pos() && you.attribute[ATTR_HELD])
+                {
+                    leave_web();
+                    stop_being_held();
+                }
+            }
+        }
+    }
+
+    view_clear_overlays();
+
+    if (webs_count > 0)
+    {
+        god_speaks(GOD_XOM, _get_xom_speech("lights up webs").c_str());
+        mprf("%s %s into flame!", number_in_words(webs_count).c_str(),
+              webs_count == 1 ? "web bursts" : "webs burst");
+        string note = make_stringf("lit up %d webs", webs_count);
+        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
     }
 }
 
@@ -2682,8 +2752,7 @@ static vector<monster*> _xom_find_weak_monsters(bool range)
         // the same target multiple times by checking the most prominent ones.
         // Fuzz the HD range to make it harder to deliberately plan around.
         if (mons_attitude(**mi) == ATT_FRIENDLY
-            && !mons_is_conjured(mi->type)
-            && !mons_is_tentacle_or_tentacle_segment(mi->type)
+            && !mi->is_peripheral()
             && !(mi->has_ench(ENCH_HASTE) && mi->has_ench(ENCH_INVIS)
                  && mi->has_ench(ENCH_EMPOWERED_SPELLS) && mi->has_ench(ENCH_MIGHT))
             && mi->get_hit_dice() < maximum_hd + (range ? random_range(-2, 1) : 0))
@@ -4141,9 +4210,8 @@ static bool _valid_speaker_of_recall(monster* mon)
 {
     return mon->alive() && !mon->wont_attack() && _should_recall(mon)
             && !mon->berserk_or_frenzied() && you.can_see(*mon)
-            && !mons_is_tentacle_or_tentacle_segment(mon->type)
-            && !mons_is_firewood(*mon) && !mons_is_object(mon->type)
             && !mon->is_summoned() && !mons_is_confused(*mon)
+            && !mon->is_peripheral()
             && !mon->petrifying() && !mon->cannot_act() && !mon->asleep()
             && !mon->is_silenced() && !mon->has_ench(ENCH_WORD_OF_RECALL);
 }
@@ -4649,6 +4717,20 @@ static const vector<xom_event_data> _list_xom_good_actions = {
     {
         XOM_GOOD_SNAKES, 405, 0, [](int /*sv*/, int /*tn*/)
         {return mon_nearby(_hostile_snake);}
+    },
+    {
+        XOM_GOOD_LIGHT_UP_WEBS, 205, 0, [](int /*sv*/, int tn)
+        {
+            // Since this is meant to be a good action, don't set the player's
+            // tile on fire if they're close to death.
+            if (env.grid(you.pos()) == DNGN_TRAP_WEB
+                && you.hp <= (27 - you.res_fire() * 4))
+            {
+                return false;
+            }
+
+            return tn > 0 && !_xom_counts_webs().empty();
+        }
     },
     {
         XOM_GOOD_ANIMATE_MON_WPN, 325, 0,[](int /*sv*/, int tn)
@@ -5440,6 +5522,7 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_GOOD_FLORA_RING, {"flora ring", _xom_harmless_flora }},
     { XOM_GOOD_DOOR_RING, {"good door ring enclosure", _xom_good_door_ring }},
     { XOM_GOOD_SNAKES, { "snakes to sticks", _xom_snakes_to_sticks }},
+    { XOM_GOOD_LIGHT_UP_WEBS, { "light up webs", _xom_lights_up_webs }},
     { XOM_GOOD_DESTRUCTION, { "mass fireball", _xom_real_destruction }},
     { XOM_GOOD_FAKE_DESTRUCTION, { "fake fireball", _xom_fake_destruction }},
     { XOM_GOOD_FORCE_LANCE_FLEET, {"living force lance fleet",

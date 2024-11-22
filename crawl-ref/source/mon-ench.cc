@@ -419,7 +419,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_DOUBLED_VIGOUR:
         scale_hp(1, 2);
         if (!quiet)
-            mprf("%s excess vigour fades away.", name(DESC_ITS).c_str());
+            simple_monster_message(*this, " excess vigour fades away.", true);
         break;
 
     case ENCH_HASTE:
@@ -736,7 +736,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_HAUNTING:
-        if (type != MONS_SOUL_WISP)
+        if (type != MONS_SOUL_WISP && type != MONS_CLOCKWORK_BEE)
         {
             mon_enchant timer = get_ench(ENCH_SUMMON_TIMER);
             timer.degree = 1;
@@ -923,7 +923,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     break;
 
     case ENCH_CURSE_OF_AGONY:
-        simple_monster_message(*this, " is freed from its curse.");
+        if (you.can_see(*this) && !quiet)
+        {
+            mprf("%s is freed from %s curse.", name(DESC_THE).c_str(),
+                 pronoun(PRONOUN_POSSESSIVE).c_str());
+        }
         break;
 
     case ENCH_TOUCH_OF_BEOGH:
@@ -963,6 +967,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_CHANGED_APPEARANCE:
         props.erase(MONSTER_TILE_KEY);
+        break;
+
+    case ENCH_KINETIC_GRAPNEL:
+        if (you.can_see(*this) && !quiet)
+            mprf("The grapnel comes loose from %s.", name(DESC_THE).c_str());
         break;
 
     default:
@@ -1371,6 +1380,8 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_REPEL_MISSILES:
     case ENCH_MISDIRECTED:
     case ENCH_CHANGED_APPEARANCE:
+    case ENCH_KINETIC_GRAPNEL:
+    case ENCH_TEMPERED:
         decay_enchantment(en);
         break;
 
@@ -1713,7 +1724,12 @@ void monster::apply_enchantment(const mon_enchant &me)
 
     case ENCH_HAUNTING:
         if (!me.agent() || !me.agent()->alive())
-            del_ench(ENCH_HAUNTING);
+        {
+            if (type != MONS_CLOCKWORK_BEE)
+                del_ench(ENCH_HAUNTING);
+            else
+                clockwork_bee_pick_new_target(*this);
+        }
         break;
 
     case ENCH_TOXIC_RADIANCE:
@@ -1859,7 +1875,12 @@ void monster::mark_summoned(int summon_type, int longevity, bool mark_items,
     if (longevity > 0)
         add_ench(mon_enchant(ENCH_SUMMON_TIMER, 1, 0, longevity));
 
-    add_ench(mon_enchant(ENCH_SUMMON, summon_type, 0, INT_MAX));
+    // Fully replace any existing summon source, if we're giving a new one.
+    if (has_ench(ENCH_SUMMON) && summon_type != 0)
+        del_ench(ENCH_SUMMON);
+
+    if (!has_ench(ENCH_SUMMON))
+        add_ench(mon_enchant(ENCH_SUMMON, summon_type, 0, INT_MAX));
 
     if (mark_items)
         for (mon_inv_iterator ii(*this); ii; ++ii)
@@ -2039,9 +2060,8 @@ static const char *enchant_names[] =
 #endif
     "weak", "dimension_anchor",
 #if TAG_MAJOR_VERSION == 34
-     "awaken vines", "control_winds", "wind_aided",
+     "awaken vines", "control_winds", "wind_aided", "summon_capped",
 #endif
-    "summon_capped",
     "toxic_radiance",
 #if TAG_MAJOR_VERSION == 34
     "grasping_roots_source",
@@ -2105,6 +2125,7 @@ static const char *enchant_names[] =
     "magnetised",
     "armed",
     "misdirected", "changed appearance", "shadowless", "doubled_vigour",
+    "grapnel", "tempered", "hatching",
     "buggy", // NUM_ENCHANTMENTS
 };
 

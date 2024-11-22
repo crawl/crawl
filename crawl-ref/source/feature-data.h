@@ -732,4 +732,11 @@ FOUNTAIN(DNGN_RUNELIGHT, "runelight", "runelight", ETC_DISJUNCTION),
     FFT_NONE, MF_FLOOR,
 },
 
+{
+    DNGN_SPIKE_LAUNCHER, "spike launcher", "spike_launcher",
+    DCHAR_WALL, DCHAR_WALL_MAGIC,
+    COLOUR_IS(LIGHTRED),
+    FFT_OPAQUE | FFT_WALL | FFT_SOLID, MF_WALL,
+},
+
 };

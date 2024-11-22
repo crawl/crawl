@@ -1,6 +1,6 @@
 name: "fire vortex"
 glyph: {char: "v", colour: red}
-flags: [flies, confused, insubstantial, no_exp_gain, conjured]
+flags: [flies, confused, insubstantial, no_exp_gain, peripheral]
 resists: {elec: 1, fire: 3, cold: -1}
 xp_mult: 5
 holiness: [nonliving]

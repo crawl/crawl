@@ -9,14 +9,14 @@ spells:
   - SPELL_SUMMON_SMALL_MAMMAL
   - SPELL_CALL_IMP
   - SPELL_CALL_CANINE_FAMILIAR
-  - SPELL_SUMMON_BLAZEHEART_GOLEM
-  - SPELL_SUMMON_LIGHTNING_SPIRE
+  - SPELL_SURPRISING_CROCODILE
+  - SPELL_SUMMON_SEISMOSAURUS_EGG
 equipment:
   - "robe"
   - "potion of magic"
 recommended_species:
   - deep elf
-  - mountain dwarf
+  - oni
   - vine stalker
   - merfolk
   - tengu

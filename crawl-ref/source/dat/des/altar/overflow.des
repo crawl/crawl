@@ -1924,13 +1924,21 @@ ENDMAP
 NAME:   nemelex_lonely_heart_becter
 TAGS:   uniq_altar_nemelex_xobeh transparent decor
 TAGS:   temple_overflow_1 temple_overflow_nemelex
-TAGS:   no_rotate no_vmirror no_monster_gen no_item_gen
+TAGS:   no_rotate no_vmirror no_monster_gen no_item_gen vaults_room_empty
+DEPTH:  D:3-, Vaults, Depths
+# Boris misses Natasha, Bai Suzhen misses Xu Xian,
+# Maggie fled her order, and Jessica wants to study alone.
 : if you.in_branch("Depths") then
-MONS:   nothing w:4 / boris w:1
-:else
-MONS:   nothing w:4 / jessica w:1
-:end
+MONS:   boris
+: elseif you.in_branch("Vaults") then
+MONS:   bai suzhen
+: elseif you.depth() > 7 then
+MONS:   maggie
+: else
+MONS:   jessica
+: end
 KFEAT:  _ = altar_nemelex_xobeh
+SUBST:  1 = 1....
 TILE:   x = wall_pebble_red
 : interest_check(_G)
 MAP
@@ -4469,7 +4477,7 @@ KFEAT:   B = altar_sif_muna
 KFEAT:   C = altar_vehumet
 ITEM:    randbook owner:Kikubaaqudgha disc:necromancy spells:soul_splinter \
          numspells:1
-# You already get a direct damage spell by looting the other gods' altars.
+# You already get a direct damage spell from other god altars.
 ITEM:    randbook owner:Sif_Muna disc:hexes numspells:1 slevels:1 / \
          randbook owner:Sif_Muna disc:summoning numspells:1 slevels:1 / \
          randbook owner:Sif_Muna disc:translocation numspells:1 slevels:1
@@ -4648,7 +4656,8 @@ KMONS:   xyzXYZ~ = orc wizard
 KFEAT:   xX = altar_sif_muna
 KFEAT:   yY = altar_kikubaaqudgha
 KFEAT:   zZ = altar_vehumet
-KITEM:   X = randbook owner:Sif_Muna disc:summoning numspells:1 slevels:1
+: local coinflip = util.random_from({"summoning", "forgecraft"})
+: kitem("X = randbook owner:Sif_Muna disc:" .. coinflip .. " numspells:1 slevels:1")
 KITEM:   Y = randbook owner:Kikubaaqudgha disc:necromancy numspells:1 slevels:1
 KITEM:   Z = randbook owner:Vehumet disc:conjuration numspells:1 slevels:1
 SHUFFLE: x'y"z` / x'y"z` / X~y"z` / x'Y~z` / x'y"Z~

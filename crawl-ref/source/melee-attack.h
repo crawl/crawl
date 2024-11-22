@@ -46,6 +46,8 @@ public:
     int          charge_pow;      // electric charge bonus damage
     bool         never_cleave;    // if this attack shouldn't trigger cleave
                                   // followups, but still do 100% damage
+    int          dmg_mult;        // percentage multiplier to max damage roll
+    int          flat_dmg_bonus;  // flat slaying to add to this attack
     wu_jian_attack_type wu_jian_attack;
     int wu_jian_number_of_targets;
     coord_def attack_position;
@@ -66,6 +68,7 @@ public:
     static void chaos_affect_actor(actor *victim);
 
     bool player_do_aux_attack(unarmed_attack_type atk);
+    bool do_drag();
 
 private:
     /* Attack phases */
@@ -128,7 +131,6 @@ private:
 
     /* Brand / Attack Effects */
     bool do_knockback(bool slippery);
-    bool do_drag();
 
     /* Output methods */
     void set_attack_verb(int damage) override;

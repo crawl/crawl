@@ -134,9 +134,8 @@ static bool _mons_is_always_safe(const monster *mon)
 bool mons_is_safe(const monster* mon, const bool want_move,
                   const bool consider_user_options, bool check_dist)
 {
-    // Short-circuit plants, some vaults have tons of those. Except for both
-    // active and inactive ballistos, players may still want these.
-    if (mons_is_firewood(*mon) && mon->type != MONS_BALLISTOMYCETE)
+    // Short-circuit plants, some vaults have tons of those.
+    if (mon->is_firewood())
         return true;
 
     int  dist    = grid_distance(you.pos(), mon->pos());
@@ -484,7 +483,7 @@ void revive()
     you.los_noise_level = 0;
     you.los_noise_last_turn = 0; // silence in death
 
-    end_wait_spells(true);
+    stop_channelling_spells();
 
     if (you.duration[DUR_FROZEN_RAMPARTS])
         end_frozen_ramparts();

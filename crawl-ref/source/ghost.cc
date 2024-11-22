@@ -149,6 +149,14 @@ void ghost_demon::reset()
     umbra_rad        = -1;
 }
 
+// Set values to the bare minimum required to function, in cases where full
+// setup will be done later.
+void ghost_demon::barebones_init()
+{
+    max_hp = 1;
+    xl = 1;
+}
+
 #define ADD_SPELL(which_spell) \
     do { \
         const auto spell = (which_spell); \
@@ -1057,6 +1065,21 @@ void ghost_demon::init_inugami_from_player(int power)
     xl = 3 + div_rand_round(power, 15);
     move_energy = stats->energy_usage.move;
     see_invis = true;
+}
+
+void ghost_demon::init_platinum_paragon(int power)
+{
+    const monster_type type = MONS_PLATINUM_PARAGON;
+    const monsterentry* stats = get_monster_data(type);
+
+    speed = stats->speed;
+    ev = stats->ev;
+    ac = stats->AC + div_rand_round(power, 10);
+    max_hp = 50 + div_rand_round(power, 2);
+    xl = 10 + div_rand_round(power, 10);
+    move_energy = stats->energy_usage.move;
+    see_invis = true;
+    damage = 10 + div_rand_round(power, 5);
 }
 
 // Used when creating ghosts: goes through and finds spells for the

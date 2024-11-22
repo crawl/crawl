@@ -26,10 +26,11 @@ enum class spschool
   alchemy        = 1<<7,
   earth          = 1<<8,
   air            = 1<<9,
-  LAST_SCHOOL    = spschool::air,
+  forgecraft     = 1<<10,
+  LAST_SCHOOL    = spschool::forgecraft,
   random         = spschool::LAST_SCHOOL << 1,
 };
-DEF_BITFIELD(spschools_type, spschool, 9);
+DEF_BITFIELD(spschools_type, spschool, 10);
 const int SPSCHOOL_LAST_EXPONENT = spschools_type::last_exponent;
 COMPILE_CHECK(spschools_type::exponent(SPSCHOOL_LAST_EXPONENT)
               == spschool::LAST_SCHOOL);
@@ -141,9 +142,9 @@ bool spell_no_hostile_in_range(spell_type spell);
 bool spell_is_soh_breath(spell_type spell);
 const vector<spell_type> *soh_breath_spells(spell_type spell);
 
+bool spell_has_variable_range(spell_type spell);
+
 bool spell_removed(spell_type spell);
 #if TAG_MAJOR_VERSION == 34
 bool spell_was_form(spell_type spell);
 #endif
-
-void end_wait_spells(bool quiet = false);

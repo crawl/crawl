@@ -1,0 +1,18 @@
+name: "monarch bomb"
+glyph: {char: "E", colour: lightred}
+flags: [flies]
+resists: {fire: 3}
+xp_mult: 3
+will: invuln
+holiness: [nonliving]
+attacks:
+ - {type: hit, flavour: bomblet, damage: 30}
+hd: 14
+hp_10x: 400
+ac: 14
+ev: 9
+intelligence: brainless
+speed: 13
+spells: monarch_bomb
+size: medium
+shape: orb

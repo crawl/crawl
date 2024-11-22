@@ -822,18 +822,6 @@ bool mons_class_is_test(monster_type mc)
         || mc == MONS_TEST_BLOB;
 }
 
-/**
- * Is this monster firewood?
- *
- * Firewood monsters are stationary monsters than don't give xp.
- * @param mon             The monster
- * @returns True if the monster is firewood, false otherwise.
- */
-bool mons_is_firewood(const monster& mon)
-{
-    return mons_class_is_firewood(mon.type);
-}
-
 // "body" in a purely grammatical sense.
 bool mons_has_body(const monster& mon)
 {
@@ -842,7 +830,7 @@ bool mons_has_body(const monster& mon)
         || mons_species(mon.type) == MONS_CURSE_SKULL // including Murray
         || mon.type == MONS_CURSE_TOE
         || mon.type == MONS_DEATH_COB
-        || mon.type == MONS_ANIMATED_ARMOUR
+        || mon.type == MONS_ARMOUR_ECHO
         || mons_class_is_animated_weapon(mon.type)
         || mons_is_tentacle_or_tentacle_segment(mon.type))
     {
@@ -888,21 +876,6 @@ bool mons_is_projectile(monster_type mc)
 bool mons_is_projectile(const monster& mon)
 {
     return mons_is_projectile(mon.type);
-}
-
-// Conjuration or Hexes. Summoning and Necromancy make the monster a creature
-// at least in some degree, golems have a chem granting them that.
-bool mons_is_object(monster_type mc)
-{
-    return mons_is_conjured(mc)
-           || mc == MONS_TWISTER
-           // unloading seeds helps the species
-           || mc == MONS_BALLISTOMYCETE_SPORE
-           || mc == MONS_LURKING_HORROR
-           || mc == MONS_DANCING_WEAPON
-           || mc == MONS_LIGHTNING_SPIRE
-           || mc == MONS_HOARFROST_CANNON
-           || mc == MONS_CREEPING_INFERNO;
 }
 
 bool mons_has_blood(monster_type mc)
@@ -1080,11 +1053,8 @@ bool actor_is_susceptible_to_vampirism(const actor& act, bool only_known)
         return false;
     }
 
-    // Don't allow HP draining from temporary monsters, spectralised monsters,
-    // or firewood.
-    return !testbits(mon->flags, MF_SPECTRALISED)
-           && !mons_is_conjured(mon->type)
-           && !mons_is_firewood(*mon);
+    // Don't allow HP draining from firewood.
+    return !mon->is_firewood();
 }
 
 bool invalid_monster(const monster* mon)
@@ -1249,15 +1219,12 @@ bool mons_is_base_draconian(monster_type mc)
     return mc >= MONS_FIRST_DRACONIAN && mc <= MONS_LAST_BASE_DRACONIAN;
 }
 
-// Conjured (as opposed to summoned) monsters are actually here, even
-// though they're typically volatile (like, made of real fire). As such,
-// they should be immune to Abjuration or Recall. Also, they count as
-// things rather than beings.
-bool mons_is_conjured(monster_type mc)
+bool mons_class_is_peripheral(monster_type mc)
 {
     return mons_is_projectile(mc)
            || mons_is_avatar(mc)
-           || mons_class_flag(mc, M_CONJURED);
+           || mons_class_flag(mc, M_PERIPHERAL)
+           || mons_class_is_firewood(mc);
 }
 
 size_type mons_class_body_size(monster_type mc)
@@ -1730,7 +1697,7 @@ bool mons_class_is_remnant(monster_type mc)
 bool mons_class_is_animated_object(monster_type type)
 {
     return mons_class_is_animated_weapon(type)
-        || type == MONS_ANIMATED_ARMOUR;
+        || type == MONS_ARMOUR_ECHO;
 }
 
 bool mons_is_zombified(const monster& mon)
@@ -2130,7 +2097,7 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
         return mbase->attack[1];
     }
 
-    if (mon.type == MONS_ANIMATED_ARMOUR)
+    if (mon.type == MONS_ARMOUR_ECHO)
     {
         item_def *def = mon.get_defining_object();
         if (def)
@@ -2593,7 +2560,7 @@ int exper_value(const monster& mon, bool real, bool legacy)
             case SPELL_CHAIN_LIGHTNING:
             case SPELL_LEGENDARY_DESTRUCTION:
             case SPELL_SUMMON_ILLUSION:
-            case SPELL_SPELLFORGED_SERVITOR:
+            case SPELL_SPELLSPARK_SERVITOR:
             case SPELL_CONJURE_LIVING_SPELLS:
                 diff += 25;
                 break;
@@ -3120,20 +3087,13 @@ void define_monster(monster& mons, bool friendly)
     // before placement without crashing (proper setup is done later here)
     case MONS_DANCING_WEAPON:
     case MONS_SPECTRAL_WEAPON:
+    case MONS_INUGAMI:
+    case MONS_PLATINUM_PARAGON:
     {
         ghost_demon ghost;
+        ghost.barebones_init();
         mons.set_ghost(ghost);
         break;
-    }
-
-    case MONS_INUGAMI:
-    {
-        ghost_demon ghost;
-        mons.set_ghost(ghost);
-        mons.inugami_init();
-        // this does not finish setting up the inugami! See
-        // `cast_call_canine_familiar` for where the ghost_demon details are
-        // finalized.
     }
 
     default:
@@ -3544,8 +3504,7 @@ bool mons_self_destructs(const monster& m)
 /// Does this monster trigger your shoutitis? (Random.)
 bool should_shout_at_mons(const monster &m)
 {
-    return !mons_is_tentacle_or_tentacle_segment(m.type)
-        && !mons_is_conjured(m.type)
+    return !m.is_peripheral()
         && x_chance_in_y(you.get_mutation_level(MUT_SCREAM) * 6, 100);
 }
 
@@ -3556,7 +3515,7 @@ bool should_attract_mons(const monster &m)
         && one_chance_in(3)
         && grid_distance(you.pos(), m.pos()) > 2
         && !mons_is_tentacle_or_tentacle_segment(m.type)
-        && !mons_is_conjured(m.type)
+        && !m.is_peripheral()
         && !m.is_summoned() // XXX: unsure about this
         && !m.no_tele();
 }
@@ -3632,7 +3591,7 @@ bool mons_just_slept(const monster& m)
 // So does preparing resurrect, struggling against a net, etc.
 bool mons_is_immotile(const monster& mons)
 {
-    return mons_is_firewood(mons)
+    return mons.is_firewood()
         || mons.petrified()
         || mons.asleep()
         || mons.paralysed();
@@ -5422,7 +5381,7 @@ bool mons_is_recallable(const actor* caller, const monster& targ)
 
     return targ.alive()
            && !mons_class_is_stationary(targ.type)
-           && !mons_is_conjured(targ.type)
+           && !targ.is_peripheral()
            && mons_class_is_threatening(targ.type);
 }
 

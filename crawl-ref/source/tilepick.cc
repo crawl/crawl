@@ -555,6 +555,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_BINDING_SIGIL;
     case DNGN_ORB_DAIS:
         return TILE_DNGN_ORB_DAIS;
+    case DNGN_SPIKE_LAUNCHER:
+        return TILE_DNGN_SPIKE_LAUNCHER;
     default:
         return TILE_DNGN_ERROR;
     }
@@ -1671,6 +1673,9 @@ tileidx_t tileidx_monster_base(int type, int mon_id, bool in_water, int colour,
                                  number <= 5 ?
                                  number - 1 : 4 + (number - 1)/5);
 
+    case MONS_SEISMOSAURUS_EGG:
+        return tileidx_mon_clamp(TILEP_MONS_SEISMOSAURUS_EGG, number);
+
     // draconian ('d')
     case MONS_TIAMAT:
     {
@@ -2347,12 +2352,15 @@ static const map<monster_info_flags, tileidx_t> monster_status_icons = {
     { MB_LOWERED_WL, TILEI_WEAK_WILLED },
     { MB_SIGN_OF_RUIN, TILEI_SIGN_OF_RUIN },
     { MB_DOUBLED_VIGOUR, TILEI_DOUBLED_VIGOUR },
+    { MB_KINETIC_GRAPNEL, TILEI_KINETIC_GRAPNEL },
+    { MB_TEMPERED, TILEI_TEMPERED },
+    { MB_HATCHING, TILEI_HEART },
 };
 
 set<tileidx_t> status_icons_for(const monster_info &mons)
 {
     set<tileidx_t> icons;
-    if (mons.type == MONS_DANCING_WEAPON || mons.type == MONS_ANIMATED_ARMOUR)
+    if (mons.type == MONS_DANCING_WEAPON)
         icons.insert(TILEI_ANIMATED_WEAPON);
     if (!mons.constrictor_name.empty())
         icons.insert(TILEI_CONSTRICTED);
@@ -3439,7 +3447,13 @@ tileidx_t tileidx_bolt(const bolt &bolt)
     switch (col)
     {
     case WHITE:
-        if (bolt.name == "crystal spear")
+        if (bolt.origin_spell == SPELL_ICEBLAST ||
+            bolt.origin_spell == SPELL_SERACFALL ||
+            bolt.origin_spell == SPELL_GLACIATE)
+        {
+            return TILE_BOLT_ICEBLAST;
+        }
+        else if (bolt.name == "crystal spear")
             return TILE_BOLT_CRYSTAL_SPEAR + dir;
         else if (bolt.name == "puff of frost")
             return TILE_BOLT_FROST;
@@ -3450,6 +3464,8 @@ tileidx_t tileidx_bolt(const bolt &bolt)
         {
             return TILE_BOLT_ICICLE + dir;
         }
+        else if (bolt.name == "salvo of icicles")
+            return TILE_BOLT_ICICLE_SALVO + dir;
         else if (bolt.name == "searing ray")
             return TILE_BOLT_SEARING_RAY;
         else if (bolt.name == "bolt of light"
@@ -3457,6 +3473,8 @@ tileidx_t tileidx_bolt(const bolt &bolt)
         {
             return TILE_BOLT_LIGHT + dir;
         }
+        else if (bolt.name == "fortress blast")
+            return TILE_BOLT_FORTRESS_BLAST;
         break;
 
     case LIGHTCYAN:
@@ -3471,7 +3489,14 @@ tileidx_t tileidx_bolt(const bolt &bolt)
     case RED:
         if (bolt.name == "puff of flame")
             return TILE_BOLT_FLAME;
-        if (bolt.name == "rain of gore")
+        else if (bolt.origin_spell == SPELL_SPIT_LAVA ||
+                 bolt.origin_spell == SPELL_BOLT_OF_MAGMA)
+        {
+            return TILE_BOLT_MAGMA;
+        }
+        else if (bolt.origin_spell == SPELL_FIRE_STORM)
+            return TILE_BOLT_FIRE_STORM;
+        else if (bolt.name == "rain of gore")
             return TILE_BOLT_HAEMOCLASM;
         break;
 
@@ -3485,6 +3510,8 @@ tileidx_t tileidx_bolt(const bolt &bolt)
     case LIGHTMAGENTA:
         if (bolt.name == "magic dart")
             return TILE_BOLT_MAGIC_DART;
+        else if (bolt.origin_spell == SPELL_WARP_SPACE)
+            return TILE_BOLT_WARP_SPACE;
         break;
 
     case BROWN:
@@ -3529,6 +3556,8 @@ tileidx_t tileidx_bolt(const bolt &bolt)
         }
         if (bolt.origin_spell == SPELL_SHADOW_SHARD)
             return TILE_BOLT_SHADOW_SHARD;
+        if (bolt.origin_spell == SPELL_SHADOW_SHOT)
+            return TILE_BOLT_SHADOW_SHOT + dir;
         break;
 
     case CYAN:
@@ -3570,10 +3599,14 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dist)
     case TILE_BOLT_STING:
         return tile + (dist - 1) % tile_main_count(tile);
     case TILE_BOLT_FLAME:
+    case TILE_BOLT_MAGMA:
     case TILE_BOLT_IRRADIATE:
     case TILE_BOLT_SHADOW_BLAST:
     case TILE_BOLT_HAEMOCLASM:
     case TILE_BOLT_GHOSTLY_FIREBALL:
+    case TILE_BOLT_BOMBLET_BLAST:
+    case TILE_BOLT_MANIFOLD_ASSAULT:
+    case TILE_BOLT_PARAGON_TEMPEST:
         return tile + ui_random(tile_main_count(tile));
     case TILE_MI_BOOMERANG0:
         return tile + ui_random(4);
@@ -3652,6 +3685,7 @@ tileidx_t tileidx_skill(skill_type skill, int train)
     case SK_CONJURATIONS:   ch = TILEG_CONJURATIONS_ON; break;
     case SK_HEXES:          ch = TILEG_HEXES_ON; break;
     case SK_SUMMONINGS:     ch = TILEG_SUMMONINGS_ON; break;
+    case SK_FORGECRAFT:     ch = TILEG_FORGECRAFT_ON; break;
     case SK_NECROMANCY:
         ch = you.religion == GOD_KIKUBAAQUDGHA ? TILEG_NECROMANCY_K_ON
                                                : TILEG_NECROMANCY_ON; break;
@@ -3897,6 +3931,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_INVENT_GIZMO;
     case ABIL_IMBUE_SERVITOR:
         return TILEG_ABILITY_IMBUE_SERVITOR;
+    case ABIL_IMPRINT_WEAPON:
+        return TILEG_ABILITY_IMPRINT_WEAPON;
 
     // Others
     case ABIL_END_TRANSFORMATION:
@@ -4371,6 +4407,8 @@ static tileidx_t _tileidx_player_job_base(const job_type job)
             return TILEG_JOB_ICE_ELEMENTALIST;
         case JOB_SUMMONER:
             return TILEG_JOB_SUMMONER;
+        case JOB_FORGEWRIGHT:
+            return TILEG_JOB_FORGEWRIGHT;
         case JOB_AIR_ELEMENTALIST:
             return TILEG_JOB_AIR_ELEMENTALIST;
         case JOB_EARTH_ELEMENTALIST:

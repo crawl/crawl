@@ -873,9 +873,7 @@ static bool _skill_useless_with_god(int skill)
     {
         // No active invocations, or uses a different skill.
         return invo_skill() != SK_INVOCATIONS
-               || you_worship(GOD_XOM)
-               || you_worship(GOD_VEHUMET)
-               || you_worship(GOD_NO_GOD);
+               || you.has_mutation(MUT_FORLORN);
     }
 
     switch (you.religion)

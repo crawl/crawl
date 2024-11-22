@@ -616,6 +616,8 @@ public:
     bool      was_created_by(int) const override { return false; };
     bool      was_created_by(const actor&, int = SPELL_NO_SPELL) const override
                              { return false; };
+    bool      is_firewood() const override { return false; };
+    bool      is_peripheral() const override { return false; };
 
     bool        swimming() const override;
     bool        floundering() const override;
@@ -855,7 +857,7 @@ public:
     int racial_ac(bool temp) const;
     int base_ac(int scale) const;
     int armour_class() const override;
-    int gdr_perc() const override;
+    int gdr_perc(bool random = true) const override;
     int evasion(bool ignore_temporary = false,
                 const actor *attacker = nullptr) const override;
     int evasion_scaled(int scale, bool ignore_temporary = false,
@@ -876,11 +878,14 @@ public:
     int adjusted_body_armour_penalty(int scale = 1) const;
     int adjusted_shield_penalty(int scale = 1) const;
 
-    // Calculates total permanent EV/SH if the player was/wasn't wearing a given item
-    void ac_ev_sh_with_specific_item(int scale, const item_def& new_item,
-                                     int *ac, int *ev, int *sh);
-    void ac_ev_sh_without_specific_item(int scale, const item_def& item_to_remove,
-                                        int *ac, int *ev, int *sh);
+    // Calculates total permanent AC/EV/SH if the player was/wasn't wearing a
+    // given item, along with the fail rate on all their known spells.
+    void preview_stats_with_specific_item(int scale, const item_def& new_item,
+                                          int *ac, int *ev, int *sh,
+                                          FixedVector<int, MAX_KNOWN_SPELLS> *fail);
+    void preview_stats_without_specific_item(int scale, const item_def& item_to_remove,
+                                             int *ac, int *ev, int *sh,
+                                             FixedVector<int, MAX_KNOWN_SPELLS> *fail);
 
     bool wearing_light_armour(bool with_skill = false) const;
     int  skill(skill_type skill, int scale = 1, bool real = false,
@@ -1083,6 +1088,7 @@ int player_spec_fire();
 int player_spec_hex();
 int player_spec_alchemy();
 int player_spec_summ();
+int player_spec_forgecraft();
 int player_spec_tloc();
 
 int player_speed();
@@ -1197,6 +1203,7 @@ bool spell_slow_player(int pow);
 bool slow_player(int turns);
 void dec_slow_player(int delay);
 void barb_player(int turns, int pow);
+void crystallize_player();
 void blind_player(int turns, colour_t flavour_colour = WHITE);
 int player_blind_miss_chance(int distance);
 void dec_berserk_recovery_player(int delay);

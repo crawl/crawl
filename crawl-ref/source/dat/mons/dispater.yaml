@@ -7,7 +7,7 @@ genus: hell_lord
 holiness: [demonic]
 will: invuln
 attacks:
- - {type: hit, damage: 50}
+ - {type: hit, flavour: corrode, damage: 50}
 hd: 16
 hp_10x: 4480
 ac: 35

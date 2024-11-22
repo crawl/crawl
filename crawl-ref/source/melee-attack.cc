@@ -72,7 +72,8 @@ melee_attack::melee_attack(actor *attk, actor *defn,
 
     attack_number(attack_num), effective_attack_number(effective_attack_num),
     cleaving(false), is_multihit(false), is_riposte(false),
-    is_projected(false), charge_pow(0), never_cleave(false),
+    is_projected(false), charge_pow(0), never_cleave(false), dmg_mult(0),
+    flat_dmg_bonus(0),
     wu_jian_attack(WU_JIAN_ATTACK_NONE),
     wu_jian_number_of_targets(1),
     is_shadow_stab(false)
@@ -212,9 +213,12 @@ bool melee_attack::handle_phase_attempted()
         check_autoberserk();
     }
 
-    // Xom thinks fumbles are funny...
-    if (attacker->fumbles_attack())
+    // Wall jump attacks supposedly happen 'mid-air' and so shouldn't care about
+    // water at the landing spot.
+    if (wu_jian_attack != WU_JIAN_ATTACK_WALL_JUMP
+        && attacker->fumbles_attack())
     {
+        // Xom thinks fumbles are funny...
         // ... and thinks fumbling when trying to hit yourself is just
         // hilarious.
         xom_is_stimulated(attacker == defender ? 200 : 10);
@@ -251,6 +255,19 @@ bool melee_attack::handle_phase_attempted()
              && attacker->type == MONS_DROWNED_SOUL)
     {
         to_hit = AUTOMATIC_HIT;
+    }
+    else if (defender && defender->is_monster()
+             && defender->as_monster()->has_ench(ENCH_KINETIC_GRAPNEL))
+    {
+        mon_enchant grapnel = defender->as_monster()->get_ench(ENCH_KINETIC_GRAPNEL);
+        if (grapnel.agent() == attacker)
+        {
+            to_hit = AUTOMATIC_HIT;
+            flat_dmg_bonus = random_range(0, 3);
+            defender->as_monster()->del_ench(ENCH_KINETIC_GRAPNEL, true);
+            if (attacker->is_player())
+                mpr("The grapnel guides your strike.");
+        }
     }
 
     attack_occurred = true;
@@ -748,12 +765,8 @@ bool melee_attack::handle_phase_hit()
 
 static void _inflict_deathly_blight(monster &m)
 {
-    if (m.holiness() & MH_NONLIVING
-        || mons_is_conjured(m.type)
-        || mons_is_tentacle_or_tentacle_segment(m.type))
-    {
+    if (m.holiness() & MH_NONLIVING || m.is_peripheral())
         return;
-    }
 
     const int dur = random_range(3, 6) * BASELINE_DELAY;
     bool worked = false;
@@ -943,7 +956,7 @@ bool melee_attack::handle_phase_killed()
     const bool execute = attacker->is_player() && defender->is_monster()
                             && you.has_mutation(MUT_MAKHLEB_MARK_EXECUTION)
                             && !you.duration[DUR_EXECUTION]
-                            && !mons_is_firewood(*defender->as_monster())
+                            && !defender->is_firewood()
                             && defender->real_attitude() != ATT_FRIENDLY
                             && one_chance_in(7)
     // It's unsatisfying to repeatedly trigger a transformation on the final
@@ -1023,6 +1036,11 @@ bool melee_attack::handle_phase_end()
                                mon_attacker->max_hit_points / 3 + 1,
                                BEAM_MISSILE);
         }
+        else if (mon_attacker->type == MONS_CLOCKWORK_BEE && did_hit)
+        {
+            if (--mon_attacker->number == 0)
+                clockwork_bee_go_dormant(*mon_attacker);
+        }
     }
 
     if (defender && !is_multihit)
@@ -1033,6 +1051,10 @@ bool melee_attack::handle_phase_end()
         if (weapon && is_unrandom_artefact(*weapon, UNRAND_GUARD))
             handle_spectral_brand();
     }
+
+    // Give our rending blade one trigger per hit we land.
+    if (did_hit && attacker->is_player() && you.props.exists(RENDING_BLADE_MP_KEY))
+        trigger_rending_blade();
 
     // Dead but not yet reset, most likely due to an attack flavour that
     // destroys the attacker on-hit.
@@ -1128,7 +1150,7 @@ bool melee_attack::launch_attack_set(bool allow_rev)
                             && allow_rev
                             && defender && !defender->is_player()
                             && !defender->wont_attack()
-                            && !mons_is_firewood(*defender->as_monster())
+                            && !defender->is_firewood()
                             && one_chance_in(wu_jian_number_of_targets);
     bool success = run_attack_set();
     if (should_rev)
@@ -1337,16 +1359,19 @@ bool melee_attack::attack()
 
         if (ev_margin >= 0)
         {
-            bool cont = handle_phase_hit();
-
-            if (cont)
-                attacker_sustain_passive_damage();
-            else
+            if (!paragon_defends_player())
             {
-                if (!defender->alive())
-                    handle_phase_killed();
-                handle_phase_end();
-                return false;
+                bool cont = handle_phase_hit();
+
+                if (cont)
+                    attacker_sustain_passive_damage();
+                else
+                {
+                    if (!defender->alive())
+                        handle_phase_killed();
+                    handle_phase_end();
+                    return false;
+                }
             }
         }
         else
@@ -1380,7 +1405,7 @@ bool melee_attack::attack()
 
 void melee_attack::check_autoberserk()
 {
-    if (defender->is_monster() && mons_is_firewood(*defender->as_monster()))
+    if (defender->is_firewood())
         return;
 
     if (x_chance_in_y(attacker->angry(), 100))
@@ -2029,7 +2054,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 
                 if (you.magic_points != you.max_magic_points
                     && !defender->is_summoned()
-                    && !mons_is_firewood(*defender->as_monster()))
+                    && !defender->is_firewood())
                 {
                     int drain = random2(damage_done * 2) + 1;
                     // Augment mana drain--1.25 "standard" effectiveness at 0 mp,
@@ -2089,6 +2114,8 @@ int melee_attack::player_apply_misc_modifiers(int damage)
 {
     if (you.duration[DUR_MIGHT] || you.duration[DUR_BERSERK])
         damage += 1 + random2(10);
+
+    damage += flat_dmg_bonus;
 
     return damage;
 }
@@ -2394,11 +2421,8 @@ void melee_attack::set_attack_verb(int damage)
 
 void melee_attack::player_exercise_combat_skills()
 {
-    if (defender && defender->is_monster()
-        && !mons_is_firewood(*defender->as_monster()))
-    {
+    if (!defender->is_firewood())
         practise_hitting(weapon);
-    }
 }
 
 /*
@@ -3008,16 +3032,15 @@ bool melee_attack::mons_attack_effects()
 
     // Monsters attacking themselves don't get attack flavour.
     // The message sequences look too weird. Also, stealing
-    // attacks aren't handled until after the damage msg. Also,
-    // no attack flavours for dead defenders
-    if (attacker != defender && defender->alive())
+    // attacks aren't handled until after the damage msg.
+    if (attacker != defender)
     {
         mons_apply_attack_flavour();
 
         if (needs_message && !special_damage_message.empty())
             mpr(special_damage_message);
 
-        if (special_damage > 0)
+        if (special_damage > 0 && defender->alive())
         {
             inflict_damage(special_damage, special_damage_flavour);
             special_damage = 0;
@@ -3090,6 +3113,27 @@ bool melee_attack::mons_attack_effects()
     return true;
 }
 
+static bool _attack_flavour_needs_living_defender(attack_flavour flavour)
+{
+    switch (flavour)
+    {
+        case AF_SCARAB:
+        case AF_VAMPIRIC:
+        case AF_BLINK:
+        case AF_SHADOWSTAB:
+        case AF_SPIDER:
+        case AF_HELL_HUNT:
+        case AF_SWARM:
+        case AF_BLOODZERK:
+        case AF_ALEMBIC:
+        case AF_BOMBLET:
+            return false;
+
+        default:
+            return true;
+    }
+}
+
 void melee_attack::mons_apply_attack_flavour()
 {
     // Most of this is from BWR 4.1.2.
@@ -3097,6 +3141,14 @@ void melee_attack::mons_apply_attack_flavour()
     attack_flavour flavour = attk_flavour;
     if (flavour == AF_CHAOTIC)
         flavour = random_chaos_attack_flavour();
+
+    // Most attack flavours don't make sense against a dead target, but some do.
+    if (_attack_flavour_needs_living_defender(flavour) && !defender->alive())
+        return;
+
+    // Don't announce the speed draining component against dead targets.
+    if (!defender->alive() && flavour == AF_SCARAB)
+        flavour = AF_VAMPIRIC;
 
     const int base_damage = flavour_damage(flavour, attacker->get_hit_dice());
 
@@ -3440,9 +3492,7 @@ void melee_attack::mons_apply_attack_flavour()
 
             monster* vine = attacker->as_monster();
             if (vine->has_ench(ENCH_ANTIMAGIC)
-                && (defender->is_player()
-                    || (!defender->is_summoned()
-                        && !mons_is_firewood(*defender->as_monster()))))
+                && !defender->is_summoned() && !defender->is_firewood())
             {
                 mon_enchant me = vine->get_ench(ENCH_ANTIMAGIC);
                 vine->lose_ench_duration(me, random2(damage_done) + 1);
@@ -3634,11 +3684,9 @@ void melee_attack::mons_apply_attack_flavour()
     }
 
     case AF_SWARM:
-    {
-        if (!defender->is_monster() || !mons_is_firewood(*defender->as_monster()))
+        if (!defender->is_firewood())
             summon_swarm_clone(*attacker->as_monster(), defender->pos());
         break;
-    }
 
     case AF_BLOODZERK:
     {
@@ -3678,7 +3726,45 @@ void melee_attack::mons_apply_attack_flavour()
         }
         defender->put_to_sleep(attacker, attacker->get_experience_level() * 3);
         break;
+
+
+    case AF_ALEMBIC:
+    {
+        if (needs_message)
+            mprf("%s vents fumes.", attacker->name(DESC_THE).c_str());
+
+        int dur = random_range(3, 7);
+        place_cloud(CLOUD_POISON, defender->pos(), dur, attacker);
+
+        if (coinflip())
+        {
+            vector<coord_def> cloud_pos;
+            for (adjacent_iterator ai(defender->pos()); ai; ++ai)
+            {
+                if (!cell_is_solid(*ai) && !cloud_at(*ai)
+                    && !(actor_at(*ai) && mons_aligned(attacker, actor_at(*ai))))
+                {
+                    cloud_pos.push_back(*ai);
+                }
+            }
+            shuffle_array(cloud_pos);
+
+            const unsigned int num_clouds = random_range(3, 4);
+            for (size_t i = 0; i < cloud_pos.size() && i < num_clouds; ++i)
+                place_cloud(CLOUD_POISON, cloud_pos[i], dur, attacker);
+        }
+
+        if (--attacker->as_monster()->number == 0)
+            alembic_brew_potion(*attacker->as_monster());
     }
+    break;
+
+    case AF_BOMBLET:
+        monarch_deploy_bomblet(*attacker->as_monster(), defender->pos());
+        break;
+
+    }
+
 }
 
 void melee_attack::do_fiery_armour_burn()
@@ -4260,6 +4346,9 @@ int melee_attack::apply_damage_modifiers(int damage)
     if (as_mon->has_ench(ENCH_MIGHT) || as_mon->has_ench(ENCH_BERSERK))
         damage = damage * 3 / 2;
 
+    if (as_mon->has_ench(ENCH_TEMPERED))
+        damage = damage * 5 / 4;
+
     if (as_mon->has_ench(ENCH_IDEALISED))
         damage *= 2; // !
 
@@ -4289,6 +4378,11 @@ int melee_attack::apply_damage_modifiers(int damage)
 
     if (cleaving)
         damage = cleave_damage_mod(damage);
+
+    if (dmg_mult)
+        damage = damage * (100 + dmg_mult) / 100;
+
+    damage += flat_dmg_bonus;
 
     return damage;
 }

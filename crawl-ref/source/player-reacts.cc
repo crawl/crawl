@@ -136,6 +136,8 @@ static bool _decrement_a_duration(duration_type dur, int delay,
 
     if (dur == DUR_SENTINEL_MARK && aura_is_active_on_player(OPHAN_MARK_KEY))
         return false;
+    else if (dur == DUR_PHALANX_BARRIER && aura_is_active_on_player(PHALANX_BARRIER_KEY))
+        return false;
 
     const int old_dur = you.duration[dur];
     you.duration[dur] -= delay;
@@ -510,6 +512,9 @@ void player_reacts_to_monsters()
             you.duration[DUR_BLOOD_FOR_BLOOD] = 1;
     }
 
+    if (_decrement_a_duration(DUR_PHALANX_BARRIER, you.time_taken))
+        you.redraw_armour_class = true;
+
     _maybe_melt_armour();
     _update_cowardice();
     if (you_worship(GOD_USKAYAW))
@@ -762,6 +767,24 @@ static void _decrement_durations()
                                   "The winds around you start to calm down."))
         {
             you.duration[DUR_VORTEX_COOLDOWN] = random_range(35, 45);
+        }
+    }
+
+    if (you.duration[DUR_FORTRESS_BLAST_TIMER])
+    {
+        if (you.pos() != you.props[FORTRESS_BLAST_POS_KEY].get_coord())
+        {
+            mprf(MSGCH_DURATION, "Your fortress blast dissipates harmlessly.");
+            you.duration[DUR_FORTRESS_BLAST_TIMER] = 0;
+        }
+        else
+        {
+            you.duration[DUR_FORTRESS_BLAST_TIMER] -= you.time_taken;
+            if (you.duration[DUR_FORTRESS_BLAST_TIMER] <= 0)
+            {
+                unleash_fortress_blast(you);
+                you.duration[DUR_FORTRESS_BLAST_TIMER] = 0;
+            }
         }
     }
 
@@ -1108,6 +1131,9 @@ void player_reacts()
         you.props.erase(BLASTMOTE_IMMUNE_KEY);
 
     actor_apply_toxic_bog(&you);
+
+    if (you.duration[DUR_SPIKE_LAUNCHER_ACTIVE])
+        handle_spike_launcher(you.time_taken);
 
     _decrement_durations();
 

@@ -45,6 +45,7 @@
 #include "random.h"
 #include "religion.h"
 #include "spl-damage.h"
+#include "spl-summoning.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
@@ -52,6 +53,7 @@
 #include "teleport.h"
 #include "terrain.h"
 #include "view.h"
+#include "viewchar.h"
 
 static bool _slime_split_merge(monster* thing);
 
@@ -897,6 +899,45 @@ static void _weeping_skull_cloud_aura(monster* mons)
         place_cloud(CLOUD_MISERY, pos[i], random2(3) + 2, mons);
 }
 
+static void _seismosaurus_egg_hatch(monster* mons)
+{
+    mon_enchant hatch = mons->get_ench(ENCH_HATCHING);
+    hatch.duration -= 1;
+
+    if (hatch.duration  == 4)
+    {
+        simple_monster_message(*mons, " cracks slightly.");
+        mons->number = 1;
+    }
+    else if (hatch.duration  == 2)
+    {
+        simple_monster_message(*mons, " shakes eagerly.");
+        mons->number = 2;
+    }
+    // Hatching time!
+    else if (hatch.duration  == 0)
+    {
+        simple_monster_message(*mons, " hatches with a roar like a landslide!",
+                                false, MSGCH_MONSTER_SPELL);
+
+        change_monster_type(mons, MONS_SEISMOSAURUS, true);
+        mons->heal(mons->max_hit_points);
+
+        mon_enchant timer = mons->get_ench(ENCH_SUMMON_TIMER);
+        timer.duration = random_range(40, 55) * BASELINE_DELAY;
+        mons->update_ench(timer);
+        mons->del_ench(ENCH_HATCHING);
+
+        // Immediately stomp if anything is in range
+        mons->speed_increment = 80;
+        try_mons_cast(*mons, SPELL_SEISMIC_STOMP);
+
+        return;
+    }
+
+    mons->update_ench(hatch);
+}
+
 static inline void _mons_cast_abil(monster* mons, bolt &pbolt,
                                    spell_type spell_cast)
 {
@@ -914,7 +955,7 @@ bool mon_special_ability(monster* mons)
     // Slime creatures can split while out of sight.
     if ((!mons->near_foe() || mons->asleep())
          && mons->type != MONS_SLIME_CREATURE
-         && mons->type != MONS_LOST_SOUL)
+         && mons->type != MONS_SEISMOSAURUS_EGG)
     {
         return false;
     }
@@ -950,7 +991,7 @@ bool mon_special_ability(monster* mons)
 
         for (monster_near_iterator targ(mons, LOS_NO_TRANS); targ; ++targ)
         {
-            if (mons_aligned(mons, *targ) || mons_is_firewood(**targ)
+            if (mons_aligned(mons, *targ) || targ->is_firewood()
                 || grid_distance(mons->pos(), targ->pos()) > 2
                 || !you.see_cell(targ->pos()))
             {
@@ -975,14 +1016,15 @@ bool mon_special_ability(monster* mons)
         {
             foxfire_attack(mons, &you);
             check_place_cloud(CLOUD_FLAME, mons->pos(), 2, mons);
-            monster_die(*mons, KILL_RESET, NON_MONSTER, true);
+            if (mons->alive())
+                monster_die(*mons, KILL_RESET, NON_MONSTER, true);
             used = true;
             break;
         }
 
         for (monster_near_iterator targ(mons, LOS_NO_TRANS); targ; ++targ)
         {
-            if (mons_aligned(mons, *targ) || mons_is_firewood(**targ)
+            if (mons_aligned(mons, *targ) || targ->is_firewood()
                 || grid_distance(mons->pos(), targ->pos()) > 1
                 || !you.see_cell(targ->pos()))
             {
@@ -992,7 +1034,8 @@ bool mon_special_ability(monster* mons)
             if (!cell_is_solid(targ->pos()))
             {
                 foxfire_attack(mons, *targ);
-                monster_die(*mons, KILL_RESET, NON_MONSTER, true);
+                if (mons->alive())
+                    monster_die(*mons, KILL_RESET, NON_MONSTER, true);
                 used = true;
                 break;
             }
@@ -1145,6 +1188,14 @@ bool mon_special_ability(monster* mons)
         _weeping_skull_cloud_aura(mons);
         break;
 
+    case MONS_SEISMOSAURUS_EGG:
+        if (egg_is_incubating(*mons))
+        {
+            _seismosaurus_egg_hatch(mons);
+            used = true;
+        }
+        break;
+
     default:
         break;
     }
@@ -1153,4 +1204,29 @@ bool mon_special_ability(monster* mons)
         mons->lose_energy(EUT_SPECIAL);
 
     return used;
+}
+
+bool egg_is_incubating(const monster& egg)
+{
+    if (!egg.has_ench(ENCH_HATCHING))
+        return false;
+
+    mon_enchant hatch = egg.get_ench(ENCH_HATCHING);
+
+    // Check if we're near our 'parent'
+    const actor* parent = hatch.agent();
+    if (!parent || !adjacent(parent->pos(), egg.pos()))
+        return false;
+
+    // Finally, check that there are foes sufficiently nearby
+    for (monster_near_iterator mi(&egg, LOS_NO_TRANS); mi; ++mi)
+    {
+        if (!mons_aligned(*mi, &egg) && !mi->is_firewood()
+            && grid_distance(egg.pos(), mi->pos()) <= 4)
+        {
+            return true;
+        }
+    }
+
+    return false;
 }

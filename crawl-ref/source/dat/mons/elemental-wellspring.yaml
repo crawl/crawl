@@ -12,7 +12,7 @@ hp_10x: 620
 ac: 8
 ev: 8
 spells: elemental_wellspring
-intelligence: brainless
+intelligence: animal
 habitat: water
 size: large
 shape: misc

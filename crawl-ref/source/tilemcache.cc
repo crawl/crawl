@@ -464,6 +464,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_PLAYER_SHADOW_DEMIGOD:
     case TILEP_MONS_KIRKE:
     case TILEP_MONS_FREDERICK:
+    case TILEP_MONS_PLATINUM_PARAGON:
         *ofs_x = -1;
         *ofs_y = -3;
         break;
@@ -1577,7 +1578,7 @@ int mcache_armour::info(tile_draw_info *dinfo) const
 
 bool mcache_armour::valid(const monster_info& mon)
 {
-    return mon.type == MONS_ANIMATED_ARMOUR;
+    return mon.type == MONS_ARMOUR_ECHO;
 }
 
 /////////////////////////////////////////////////////////////////////////////

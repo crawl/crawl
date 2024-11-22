@@ -315,6 +315,8 @@ statue_zot_serpent
 %weight 5
 statue_zot_old_guardian
 %syn DNGN_STATUE_ZOT_OLD_GUARDIAN
+statue_zot_tornado
+%syn DNGN_STATUE_ZOT_TORNADO
 %weight 1
 statue_zot_oldest_guardian
 %syn DNGN_STATUE_ZOT_OLDEST_GUARDIAN
@@ -478,6 +480,9 @@ fountain_xom DNGN_FOUNTAIN_NOVELTY_XOM
 ##
 stone_smooth_beogh_0 STONE_SMOOTH_WALL_BEOGH
 stone_smooth_beogh_1
+
+%sdir dngn/wall
+spike_launcher DNGN_SPIKE_LAUNCHER
 
 ## Wall assets are not usable as is, edit on them top of the
 ## desired wall texture as needed (ie TILE_NAME_banner_beogh)

@@ -53,8 +53,7 @@ static bool _monster_clone_exists(monster* mons)
 
 static bool _mons_is_illusion_cloneable(monster* mons)
 {
-    return !mons_is_conjured(mons->type)
-           && !mons_is_tentacle_or_tentacle_segment(mons->type)
+    return !mons->is_peripheral()
            && !mons->is_illusion()
            && !_monster_clone_exists(mons);
 }
@@ -257,8 +256,7 @@ bool mons_clonable(const monster* mon, bool needs_adjacent)
     if (mons_is_unique(mon->type)
         || mon->type == MONS_INUGAMI
         || mon->is_named()
-        || mons_is_conjured(mon->type)
-        || mons_is_tentacle_or_tentacle_segment(mon->type))
+        || mon->is_peripheral())
     {
         return false;
     }

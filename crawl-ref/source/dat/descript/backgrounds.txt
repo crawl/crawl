@@ -102,6 +102,11 @@ Summoner
 Summoners are able to cast Summon Small Mammal from the start, and begin with
 other Summonings spells in their library.
 %%%%
+Forgewright
+
+Forgewrights are mages who specialise in the creation of turrets and mechanical
+companions to fight alongside.
+%%%%
 Shapeshifter
 
 Shapeshifters use talismans to shift their form, making them powerful melee

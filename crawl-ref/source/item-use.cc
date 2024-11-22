@@ -3203,7 +3203,7 @@ bool has_drunken_brawl_targets()
 
 // Perform a melee attack against every adjacent hostile target, and print a
 // special message if there are any.
-static bool _oni_drunken_swing()
+bool oni_drunken_swing()
 {
     // Use the same logic for target-picking that cleaving does
     list<actor*> targets;
@@ -3315,7 +3315,7 @@ bool drink(item_def* potion)
     if (you.has_mutation(MUT_DRUNKEN_BRAWLING)
         && oni_likes_potion(static_cast<potion_type>(potion->sub_type)))
     {
-        _oni_drunken_swing();
+        oni_drunken_swing();
     }
 
     // Check for Delatra's gloves before potentially melding them.

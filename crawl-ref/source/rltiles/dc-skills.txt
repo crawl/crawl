@@ -24,6 +24,7 @@ conjurations CONJURATIONS_ON
 hexes HEXES_ON
 summonings SUMMONINGS_ON
 necromancy NECROMANCY_ON
+forgecraft FORGECRAFT_ON
 translocations TRANSLOCATIONS_ON
 transmutations TRANSMUTATIONS_ON
 fire_magic FIRE_MAGIC_ON
@@ -78,6 +79,7 @@ conjurations CONJURATIONS_FOCUS
 hexes HEXES_FOCUS
 summonings SUMMONINGS_FOCUS
 necromancy NECROMANCY_FOCUS
+forgecraft FORGECRAFT_FOCUS
 translocations TRANSLOCATIONS_FOCUS
 transmutations TRANSMUTATIONS_FOCUS
 fire_magic FIRE_MAGIC_FOCUS
@@ -132,6 +134,7 @@ conjurations CONJURATIONS_OFF
 hexes HEXES_OFF
 summonings SUMMONINGS_OFF
 necromancy NECROMANCY_OFF
+forgecraft FORGECRAFT_OFF
 translocations TRANSLOCATIONS_OFF
 transmutations TRANSMUTATIONS_OFF
 fire_magic FIRE_MAGIC_OFF
@@ -186,6 +189,7 @@ conjurations CONJURATIONS_INACTIVE
 hexes HEXES_INACTIVE
 summonings SUMMONINGS_INACTIVE
 necromancy NECROMANCY_INACTIVE
+forgecraft FORGECRAFT_INACTIVE
 translocations TRANSLOCATIONS_INACTIVE
 transmutations TRANSMUTATIONS_INACTIVE
 fire_magic FIRE_MAGIC_INACTIVE

@@ -1,0 +1,16 @@
+name: "bomblet"
+glyph: {char: "*", colour: lightred}
+resists: {fire: 3}
+flags: [flies, peripheral]
+xp_mult: 3
+will: invuln
+holiness: [nonliving]
+attacks:
+hd: 10
+hp_10x: 350
+ac: 10
+ev: 17
+intelligence: brainless
+speed: 10
+size: tiny
+shape: orb

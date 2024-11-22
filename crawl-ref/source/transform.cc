@@ -32,6 +32,7 @@
 #include "player-stats.h"
 #include "prompt.h"
 #include "religion.h"
+#include "skills.h"
 #include "spl-cast.h"
 #include "state.h"
 #include "stringutil.h"
@@ -1705,7 +1706,7 @@ string cant_transform_reason(transformation which_trans,
     if (!temp)
         return "";
 
-    if (you.transform_uncancellable)
+    if (you.transform_uncancellable && which_trans != transformation::slaughter)
         return "You are stuck in your current form!";
 
     const auto feat = env.grid(you.pos());
@@ -2217,23 +2218,30 @@ void unset_default_form()
 
     if (is_artefact(talisman))
         unequip_artefact_effect(talisman, nullptr, false, EQ_NONE, false);
+    item_skills(talisman, you.skills_to_hide);
 }
 
 void set_default_form(transformation t, const item_def *source)
 {
     item_def talisman = you.active_talisman;
     you.active_talisman.clear();
-    you.default_form = t;
 
     if (is_artefact(talisman))
         unequip_artefact_effect(talisman, nullptr, false, EQ_NONE, false);
+    item_skills(talisman, you.skills_to_hide);
 
     if (source)
     {
         you.active_talisman = *source; // iffy
         if (is_artefact(you.active_talisman))
             equip_artefact_effect(you.active_talisman, nullptr, false, EQ_NONE);
+        item_skills(you.active_talisman, you.skills_to_show);
     }
+
+    // This has to be done after checking item skills, otherwise the new active
+    // talisman might count as a useless item (the you.form != you.default_form
+    // check in cannot_evoke_item_reason)
+    you.default_form = t;
 }
 
 void vampire_update_transformations()

@@ -104,9 +104,7 @@ static const char *skill_titles[NUM_SKILLS][7] =
     {"Summonings",     "Caller",        "Summoner",        "Convoker",        "Worldbinder",    "Planerender",  "Summ"},
     {"Necromancy",     "Grave Robber",  "Reanimator",      "Necromancer",     "Thanatomancer",  "@Genus_Short@ of Death", "Necr"},
     {"Translocations", "Grasshopper",   "Placeless @Genus@", "Blinker",       "Portalist",      "Plane @Walker@", "Tloc"},
-#if TAG_MAJOR_VERSION == 34
-    {"Transmutations", "Destabilizer",  "Alchemist",       "Transmogrifier",  "Entropist",      "Reality Shaper", "Tmut"},
-#endif
+    {"Forgecraft",     "Tinkerer",      "Fabricator",      "Mechanist",       "Siegecrafter",   "Architect of Ages", "Frge"},
 
     {"Fire Magic",     "Firebug",       "Arsonist",        "Scorcher",        "Pyromancer",     "Infernalist",  "Fire"},
     {"Ice Magic",      "Chiller",       "Frost Mage",      "Gelid",           "Cryomancer",     "Englaciator",  "Ice"},
@@ -519,6 +517,16 @@ static void _check_abil_skills()
     }
 }
 
+static void _check_active_talisman_skills()
+{
+    skill_set skills;
+    if (you.active_talisman.defined()
+        && item_skills(you.active_talisman, skills))
+    {
+        _erase_from_skills_to_hide(skills);
+    }
+}
+
 /// Check to see if the player is a djinn with at least one magic skill
 /// un-hidden. If so, unhide all of them.
 static void _check_innate_magic_skills()
@@ -565,6 +573,7 @@ static void _check_skills_to_hide()
     _check_inventory_skills();
     _check_spell_skills();
     _check_abil_skills();
+    _check_active_talisman_skills();
     _check_innate_magic_skills();
 
     if (you.skills_to_hide.empty())
@@ -2201,7 +2210,6 @@ bool is_removed_skill(skill_type skill)
     case SK_CHARMS:
     case SK_SLINGS:
     case SK_CROSSBOWS:
-    case SK_TRANSMUTATIONS:
         return true;
     default:
         break;
@@ -2222,6 +2230,7 @@ static map<skill_type, mutation_type> skill_sac_muts = {
     { SK_TRANSLOCATIONS, MUT_NO_TRANSLOCATION_MAGIC },
     { SK_CONJURATIONS,   MUT_NO_CONJURATION_MAGIC },
     { SK_NECROMANCY,     MUT_NO_NECROMANCY_MAGIC },
+    { SK_FORGECRAFT,     MUT_NO_FORGECRAFT_MAGIC },
     { SK_SUMMONINGS,     MUT_NO_SUMMONING_MAGIC },
 
     { SK_DODGING,        MUT_NO_DODGING },

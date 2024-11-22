@@ -105,6 +105,11 @@ bool stop_summoning_prompt(resists_t resists = MR_NO_FLAGS,
                            monclass_flags_t flags = M_NO_FLAGS,
                            string verb = "summon");
 
+bool warn_about_bad_targets(spell_type spell, vector<coord_def> targets,
+                            function<bool(const monster& mon)> should_ignore = nullptr);
+bool warn_about_bad_targets(const char* source_name, vector<coord_def> targets,
+                            function<bool(const monster&)> should_ignore = nullptr);
+
 bool can_reach_attack_between(coord_def source, coord_def target,
                               reach_type range);
 dice_def spines_damage(monster_type mon);
@@ -116,7 +121,7 @@ bool weapon_uses_strength(skill_type wpn_skill, bool using_weapon);
 int stat_modify_damage(int base_dam, skill_type wpn_skill, bool using_weapon);
 int apply_weapon_skill(int base_dam, skill_type wpn_skill, bool random);
 int apply_fighting_skill(int base_dam, bool aux, bool random);
-int throwing_base_damage_bonus(const item_def &projectile);
+int throwing_base_damage_bonus(const item_def &projectile, bool random);
 int brand_adjust_weapon_damage(int base_dam, int brand, bool random);
 
 int unarmed_base_damage(bool random);

@@ -140,8 +140,8 @@ enum monster_info_flags
     MB_CONTROL_WINDS,
     MB_WIND_AIDED,
     MB_SUMMONED_NO_STAIRS, // Temp. summoned and capped monsters
-#endif
     MB_SUMMONED_CAPPED,    // Expiring due to summons cap
+#endif
     MB_TOXIC_RADIANCE,
     MB_GRASPING_ROOTS,
     MB_FIRE_VULN,
@@ -244,6 +244,9 @@ enum monster_info_flags
     MB_ABJURABLE,
     MB_UNREWARDING,
     MB_MINION,
+    MB_KINETIC_GRAPNEL,
+    MB_TEMPERED,
+    MB_HATCHING,
     NUM_MB_FLAGS
 };
 

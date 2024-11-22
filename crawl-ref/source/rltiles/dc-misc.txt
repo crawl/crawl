@@ -10,23 +10,60 @@ bolt06
 bolt07
 bolt08
 
-crystal_spear0 BOLT_CRYSTAL_SPEAR
-crystal_spear1
-crystal_spear2
-crystal_spear3
-crystal_spear4
-crystal_spear5
-crystal_spear6
-crystal_spear7
+# Fire bolts
+flame0 BOLT_FLAME
+flame1
+flame2
 
-light_beam0 BOLT_LIGHT
-light_beam1
-light_beam2
-light_beam3
-light_beam4
-light_beam5
-light_beam6
-light_beam7
+magma0 BOLT_MAGMA
+magma1
+
+fire_storm0 BOLT_FIRE_STORM
+
+# Ice bolts
+frost0 BOLT_FROST
+frost1
+
+icicle0 BOLT_ICICLE
+icicle1
+icicle2
+icicle3
+icicle4
+icicle5
+icicle6
+icicle7
+
+# also used for hoarfrost cannonade
+iceblast0 BOLT_ICEBLAST
+
+icicle_salvo0 BOLT_ICICLE_SALVO
+icicle_salvo1
+icicle_salvo2
+icicle_salvo3
+icicle_salvo4
+icicle_salvo5
+icicle_salvo6
+icicle_salvo7
+
+# Air bolts
+zap0 BOLT_ZAP
+zap1
+zap2
+zap3
+
+# Earth bolts
+sandblast0 BOLT_SANDBLAST
+sandblast1
+sandblast2
+
+stone_arrow0 BOLT_STONE_ARROW
+stone_arrow1
+stone_arrow2
+stone_arrow3
+stone_arrow4
+stone_arrow5
+stone_arrow6
+stone_arrow7
 
 iron_shot0 BOLT_IRON_SHOT
 iron_shot1
@@ -37,24 +74,71 @@ iron_shot5
 iron_shot6
 iron_shot7
 
-splinters_thornwood0 BOLT_SPLINTERSPRAY
-splinters_thornwood1
-splinters_thornwood2
-splinters_thornwood3
-splinters_thornwood4
-splinters_thornwood5
-splinters_thornwood6
-splinters_thornwood7
+crystal_spear0 BOLT_CRYSTAL_SPEAR
+crystal_spear1
+crystal_spear2
+crystal_spear3
+crystal_spear4
+crystal_spear5
+crystal_spear6
+crystal_spear7
 
-splinters_metal0 BOLT_METAL_SPLINTERS
-splinters_metal1
-splinters_metal2
-splinters_metal3
-splinters_metal4
-splinters_metal5
-splinters_metal6
-splinters_metal7
+magic_dart0 BOLT_MAGIC_DART
+magic_dart1
+magic_dart2
+magic_dart3
+magic_dart4
+magic_dart5
 
+damnation BOLT_DAMNATION
+
+# Pure conjurations bolts
+searing_ray4 BOLT_SEARING_RAY
+searing_ray5
+
+# Forgecraft bolts
+percussive_tempering BOLT_PERCUSSIVE_TEMPERING
+
+fortress_blast BOLT_FORTRESS_BLAST
+
+bomblet_blast0 BOLT_BOMBLET_BLAST
+bomblet_blast1
+
+paragon_tempest0 BOLT_PARAGON_TEMPEST
+paragon_tempest1
+
+# Necromantic bolts
+drain0 BOLT_DRAIN
+drain1
+drain2
+
+# Alchemy bolts
+sting0 BOLT_STING
+sting1
+sting2
+
+irradiate0 BOLT_IRRADIATE
+irradiate1
+irradiate2
+irradiate3
+
+# Translocations bolts
+manifold_assault0 BOLT_MANIFOLD_ASSAULT
+manifold_assault1
+
+# Wand-first bolts
+light_beam0 BOLT_LIGHT
+light_beam1
+light_beam2
+light_beam3
+light_beam4
+light_beam5
+light_beam6
+light_beam7
+
+warping_blast0 BOLT_WARP_SPACE
+
+# Monster bolts
 force_lance0 BOLT_FORCE_LANCE
 force_lance1
 force_lance2
@@ -73,15 +157,6 @@ harpoon_shot5
 harpoon_shot6
 harpoon_shot7
 
-stone_arrow0 BOLT_STONE_ARROW
-stone_arrow1
-stone_arrow2
-stone_arrow3
-stone_arrow4
-stone_arrow5
-stone_arrow6
-stone_arrow7
-
 poison_arrow0 BOLT_POISON_ARROW
 poison_arrow1
 poison_arrow2
@@ -91,60 +166,32 @@ poison_arrow5
 poison_arrow6
 poison_arrow7
 
-icicle0 BOLT_ICICLE
-icicle1
-icicle2
-icicle3
-icicle4
-icicle5
-icicle6
-icicle7
+splinters_thornwood0 BOLT_SPLINTERSPRAY
+splinters_thornwood1
+splinters_thornwood2
+splinters_thornwood3
+splinters_thornwood4
+splinters_thornwood5
+splinters_thornwood6
+splinters_thornwood7
 
-flame0 BOLT_FLAME
-flame1
-flame2
+entropic_weave BOLT_ENTROPIC_WEAVE
 
-frost0 BOLT_FROST
-frost1
+draining_gaze BOLT_DRAINING_GAZE
 
-magic_dart0 BOLT_MAGIC_DART
-magic_dart1
-magic_dart2
-magic_dart3
-magic_dart4
-magic_dart5
+sentinel_mark BOLT_SENTINEL_MARK
 
-sandblast0 BOLT_SANDBLAST
-sandblast1
-sandblast2
-
-sting0 BOLT_STING
-sting1
-sting2
-
-zap0 BOLT_ZAP
-zap1
-zap2
-zap3
-
-drain0 BOLT_DRAIN
-drain1
-drain2
-
-searing_ray4 BOLT_SEARING_RAY
-searing_ray5
-
-damnation BOLT_DAMNATION
-
-umbral_torchlight BOLT_UMBRAL_TORCHLIGHT
+splinters_metal0 BOLT_METAL_SPLINTERS
+splinters_metal1
+splinters_metal2
+splinters_metal3
+splinters_metal4
+splinters_metal5
+splinters_metal6
+splinters_metal7
 
 ghostfire0 BOLT_GHOSTLY_FIREBALL
 ghostfire1
-
-irradiate0 BOLT_IRRADIATE
-irradiate1
-irradiate2
-irradiate3
 
 pie0 BOLT_PIE
 pie1
@@ -155,8 +202,13 @@ pie5
 pie6
 pie7
 
+sap_magic BOLT_SAP_MAGIC
+
+doom_howl BOLT_DOOM_HOWL
+
 phantom_blitz BOLT_PHANTOM_BLITZ
 
+# Divine bolts
 shadow_beam0 BOLT_SHADOW_BEAM
 shadow_beam1
 shadow_beam2
@@ -168,6 +220,15 @@ shadow_blast0 BOLT_SHADOW_BLAST
 shadow_blast1
 shadow_blast2
 shadow_blast3
+
+shadow_shot0 BOLT_SHADOW_SHOT
+shadow_shot1
+shadow_shot2
+shadow_shot3
+shadow_shot4
+shadow_shot5
+shadow_shot6
+shadow_shot7
 
 haemoclasm0 BOLT_HAEMOCLASM
 haemoclasm1
@@ -182,6 +243,8 @@ blood_arrow4
 blood_arrow5
 blood_arrow6
 blood_arrow7
+
+umbral_torchlight BOLT_UMBRAL_TORCHLIGHT
 
 ###### Priority indicators (for Fedhas' growth)
 indicator_1 INDICATOR

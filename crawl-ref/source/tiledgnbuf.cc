@@ -519,7 +519,7 @@ static map<tileidx_t, int> status_icon_sizes = {
     { TILEI_TOUCH_OF_BEOGH, FIXED_LOC_ICON },
 
     // These are always in the top left. They may overlap.
-    // (E.g. for summoned dancing weapons or animated armour.)
+    // (E.g. for summoned dancing weapons.)
     { TILEI_ANIMATED_WEAPON, FIXED_LOC_ICON },
     { TILEI_SUMMONED,        FIXED_LOC_ICON },
     { TILEI_MINION,          FIXED_LOC_ICON },

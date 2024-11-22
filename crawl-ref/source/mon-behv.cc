@@ -122,18 +122,17 @@ static void _set_firing_pos(monster* mon, coord_def target)
     {
         const coord_def p(*di);
         const int range = p.distance_from(target);
+        const int distance = p.distance_from(mon->pos());
 
-        if (!mon->see_cell(*di))
+        if (!in_bounds(p) || range > max_range || distance > best_distance)
             continue;
 
-        if (!in_bounds(p) || range > max_range
+        if (!mon->see_cell(*di)
             || !cell_see_cell(p, target, LOS_NO_TRANS)
             || !mon_can_move_to_pos(mon, p - mon->pos()))
         {
             continue;
         }
-
-        const int distance = p.distance_from(mon->pos());
 
         if (distance < best_distance
             || distance == best_distance
@@ -197,7 +196,7 @@ static void _decide_monster_firing_position(monster* mon, actor* owner)
             _set_firing_pos(mon, mon->target);
         }
         // Hold position if we've reached our ideal range
-        else if (mon->type == MONS_SPELLFORGED_SERVITOR
+        else if (mon->type == MONS_SPELLSPARK_SERVITOR
                  && (mon->pos() - target->pos()).rdist()
                  <= mon->props[IDEAL_RANGE_KEY].get_int()
                  && !one_chance_in(8))
@@ -315,14 +314,33 @@ void handle_behaviour(monster* mon)
     if (proxPlayer && !you.visible_to(mon))
         proxPlayer = _monster_guesses_invis_player(*mon);
 
+    // Handle phalanx beetle behavior: return to its creator if non-adjacent,
+    // otherwise try to pick a monster in reach to attack.
+    if (mon->type == MONS_PHALANX_BEETLE && owner)
+    {
+        if (!adjacent(owner->pos(), mon->pos()))
+        {
+            mon->foe = MHITYOU;
+            mon->behaviour = BEH_SEEK;
+        }
+        else
+        {
+            actor* foe = mon->get_foe();
+            // If foe is clearly unreachable while next to creator, pick another
+            // one if possible. (This doesn't perfectly account for reachability
+            // but should be adequate in practice.)
+            if (!foe || grid_distance(foe->pos(), owner->pos()) > 2)
+                set_nearest_monster_foe(mon, true);
+        }
+    }
     // Set friendly target, if they don't already have one.
     // Berserking allies ignore your commands!
-    if (isFriendly
-        && (mon->foe == MHITNOT || mon->foe == MHITYOU)
-        && !mon->berserk_or_frenzied()
-        && mon->behaviour != BEH_WITHDRAW
-        && !mons_self_destructs(*mon)
-        && !mons_is_avatar(mon->type))
+    else if (isFriendly
+             && (mon->foe == MHITNOT || mon->foe == MHITYOU)
+             && !mon->berserk_or_frenzied()
+             && mon->behaviour != BEH_WITHDRAW
+             && !mons_self_destructs(*mon)
+             && !mons_is_avatar(mon->type))
     {
         if (you.pet_target != MHITNOT)
             mon->foe = you.pet_target;
@@ -894,7 +912,7 @@ static bool _mons_check_foe(monster* mon, const coord_def& p,
            && !mons_is_projectile(*foe)
            && monster_los_is_valid(mon, p)
            && (friendly || !is_sanctuary(p))
-           && !mons_is_firewood(*foe)
+           && !foe->is_firewood()
            && !foe->props.exists(KIKU_WRETCH_KEY)
            || p == you.pos() && mon->has_ench(ENCH_FRENZIED);
 }
@@ -1137,8 +1155,9 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         if (mon->behaviour == BEH_WITHDRAW || mons_just_slept(*mon))
             break;
 
-        // Avoid moving friendly explodey things out of BEH_WANDER.
-        if (mon->friendly() && mons_self_destructs(*mon))
+        // Avoid making friendly explodey things cluster around the player
+        // when there are no enemies around.
+        if (mon->friendly() && mons_self_destructs(*mon) && !mon->get_foe())
             break;
 
         // [ds] Neutral monsters don't react to your presence.

@@ -76,7 +76,7 @@ static bool _act_worth_targeting(const actor &caster, const actor &a)
     if (a.is_player())
         return true;
     const monster &m = *a.as_monster();
-    if (mons_is_firewood(m) || mons_is_conjured(m.type))
+    if (m.is_peripheral())
         return false;
     if (!caster.is_player())
         return true;
@@ -291,44 +291,6 @@ vector<coord_def> chain_lightning_targets()
     }
 
     return targets;
-}
-
-bool warn_about_bad_targets(spell_type spell, vector<coord_def> targets)
-{
-    vector<const monster*> bad_targets;
-    for (coord_def p : targets)
-    {
-        const monster* mon = monster_at(p);
-        // XXX: maybe check for ioods/bspheres instead of all conjured mons..?
-        // feels a little bad to blow up a prism with a plasma beam, maybe?
-        if (!mon || god_protects(&you, *mon) || mons_is_conjured(mon->type))
-            continue;
-        string adj, suffix;
-        bool penance;
-        if (bad_attack(mon, adj, suffix, penance, you.pos()))
-            bad_targets.push_back(mon);
-    }
-
-    if (bad_targets.empty())
-        return false;
-
-    const monster* ex_mon = bad_targets.back();
-    string adj, suffix;
-    bool penance;
-    bad_attack(ex_mon, adj, suffix, penance, you.pos());
-    const string and_more = bad_targets.size() > 1 ?
-            make_stringf(" (and %zu other bad targets)",
-                         bad_targets.size() - 1) : "";
-    const string prompt = make_stringf("%s might hit %s%s. Cast it anyway?",
-                                       spell_title(spell),
-                                       ex_mon->name(DESC_THE).c_str(),
-                                       and_more.c_str());
-    if (!yesno(prompt.c_str(), false, 'n'))
-    {
-        canned_msg(MSG_OK);
-        return true;
-    }
-    return false;
 }
 
 spret cast_chain_lightning(int pow, const actor &caster, bool fail)
@@ -684,12 +646,8 @@ int adjacent_huddlers(coord_def pos, bool only_in_sight)
         if (only_in_sight && !you.can_see(*act))
             continue;
 
-        const monster* mon = act->as_monster();
-        if (!mons_is_firewood(*mon) && !mons_is_conjured(mon->type)
-            && mons_aligned(act, mon))
-        {
+        if (!act->is_firewood() && mons_aligned(act, actor_at(pos)))
             ++adj_count;
-        }
     }
     return adj_count;
 }
@@ -1276,10 +1234,21 @@ static const map<monster_type, monster_frag> fraggable_monsters = {
     { MONS_STATUE,            { "rock", BROWN } },
     { MONS_GARGOYLE,          { "rock", BROWN } },
     { MONS_VV,                { "rock", BROWN } },
+    { MONS_HELLFIRE_MORTAR,   { "rock", BROWN } },
     { MONS_IRON_ELEMENTAL,    { "metal", CYAN, frag_damage_type::metal } },
     { MONS_IRON_GOLEM,        { "metal", CYAN, frag_damage_type::metal } },
     { MONS_PEACEKEEPER,       { "metal", CYAN, frag_damage_type::metal } },
     { MONS_WAR_GARGOYLE,      { "metal", CYAN, frag_damage_type::metal } },
+    { MONS_CLOCKWORK_BEE,     { "metal", CYAN, frag_damage_type::metal } },
+    { MONS_CLOCKWORK_BEE_INACTIVE, { "metal", CYAN, frag_damage_type::metal } },
+    { MONS_LIGHTNING_SPIRE,   { "metal", CYAN, frag_damage_type::metal } },
+    { MONS_BLAZEHEART_GOLEM,  { "metal", CYAN, frag_damage_type::metal } },
+    { MONS_WALKING_ALEMBIC,   { "metal", CYAN, frag_damage_type::metal } },
+    { MONS_MONARCH_BOMB,      { "metal", CYAN, frag_damage_type::metal } },
+    { MONS_BOMBLET,           { "metal", CYAN, frag_damage_type::metal } },
+    { MONS_PHALANX_BEETLE,    { "metal", CYAN, frag_damage_type::metal } },
+    { MONS_SPELLSPARK_SERVITOR, { "metal", CYAN, frag_damage_type::metal } },
+    { MONS_PLATINUM_PARAGON,  { "platinum", CYAN, frag_damage_type::metal } },
     { MONS_GLASS_EYE,         { "glass", LIGHTCYAN,
                                 frag_damage_type::crystal } },
     { MONS_CRYSTAL_GUARDIAN,  { "crystal", GREEN,
@@ -1291,6 +1260,8 @@ static const map<monster_type, monster_frag> fraggable_monsters = {
     { MONS_OBSIDIAN_BAT,      { "obsidian", MAGENTA,
                                 frag_damage_type::crystal } },
     { MONS_OBSIDIAN_STATUE,   { "obsidian", MAGENTA,
+                                frag_damage_type::crystal } },
+    { MONS_DIAMOND_SAWBLADE,  { "diamond", WHITE,
                                 frag_damage_type::crystal } },
     { MONS_ROXANNE,           { "sapphire", BLUE, frag_damage_type::crystal } },
 };
@@ -1356,6 +1327,7 @@ static const map<dungeon_feature_type, feature_frag> fraggable_terrain = {
     { DNGN_ORCISH_IDOL, { "rock", "stone idol" } },
     { DNGN_GRANITE_STATUE, { "rock", "statue" } },
     { DNGN_PETRIFIED_TREE, { "rock", "petrified wood" } },
+    { DNGN_SPIKE_LAUNCHER, { "rock", "spike launcher" } },
     // Stone arches and doors
     { DNGN_OPEN_DOOR, { "rock", "stone door frame" } },
     { DNGN_OPEN_CLEAR_DOOR, { "rock", "stone door frame" } },
@@ -1597,8 +1569,11 @@ static int _shatter_monsters(coord_def where, int pow, actor *agent)
 {
     monster* mon = monster_at(where);
 
-    if (!mon || !mon->alive() || mon == agent || mons_is_conjured(mon->type))
+    if (!mon || !mon->alive() || mon == agent
+        || always_shoot_through_monster(agent, *mon))
+    {
         return 0;
+    }
 
     const dice_def dam_dice = shatter_damage(pow, mon);
     int damage = max(0, dam_dice.roll() - random2(1 + mon->armour_class()));
@@ -1699,8 +1674,7 @@ static bool _shatterable(const actor *act)
 {
     if (act->is_player())
         return _shatter_player_dice();
-    return !mons_is_conjured(act->as_monster()->type)
-           && _shatter_mon_dice(act->as_monster());
+    return _shatter_mon_dice(act->as_monster());
 }
 
 spret cast_shatter(int pow, bool fail)
@@ -1710,6 +1684,7 @@ spret cast_shatter(int pow, bool fail)
     {
         return !act->is_player()
                && !god_protects(*act->as_monster())
+               && !always_shoot_through_monster(&you, *act->as_monster())
                && _shatterable(act);
     };
     if (stop_attack_prompt(hitfunc, "attack", vulnerable))
@@ -2001,13 +1976,13 @@ dice_def irradiate_damage(int pow, bool random)
  *
  * @param where     The cell in question.
  * @param pow       The power with which the spell is being cast.
- * @param agent    The agent (player or monster) doing the irradiating.
+ * @param agent     The agent (player or monster) doing the irradiating.
  */
 static int _irradiate_cell(coord_def where, int pow, const actor &agent)
 {
     actor *act = actor_at(where);
     if (!act || !act->alive()
-        || act->is_monster() && mons_is_conjured(act->as_monster()->type))
+        || act->is_monster() && always_shoot_through_monster(&agent, *act->as_monster()))
     {
         return 0;
     }
@@ -2060,7 +2035,7 @@ spret cast_irradiate(int powc, actor &caster, bool fail)
     auto vulnerable = [&caster](const actor *act) -> bool
     {
         return !act->is_player()
-               && !mons_is_conjured(act->as_monster()->type)
+               && !always_shoot_through_monster(&caster, *act->as_monster())
                && !god_protects(&caster, *act->as_monster());
     };
 
@@ -2493,10 +2468,9 @@ vector<coord_def> get_ignition_blast_sources(const actor *agent, bool tracer)
     for (actor_near_iterator ai(agent->pos(), LOS_NO_TRANS);
          ai; ++ai)
     {
-        if (ai->is_monster()
-            && !ai->as_monster()->wont_attack()
-            && !mons_is_firewood(*ai->as_monster())
-            && !mons_is_tentacle_segment(ai->as_monster()->type)
+        if (!ai->wont_attack()
+            && !ai->is_firewood()
+            && !mons_is_tentacle_segment(ai->type)
             && !mons_is_projectile(*ai->as_monster())
             && (!tracer || agent->can_see(**ai)))
         {
@@ -3074,7 +3048,8 @@ spret cast_plasma_beam(int pow, const actor &agent, bool fail)
     {
         vector<coord_def> known_targs = plasma_beam_targets(agent, pow, false);
         if (warn_about_bad_targets(SPELL_PLASMA_BEAM,
-                                    plasma_beam_paths(you.pos(), known_targs)))
+                                    plasma_beam_paths(you.pos(), known_targs),
+            [](const monster& m) { return m.res_fire() == 3 && m.res_elec() == 3 ;}))
         {
             return spret::abort;
         }
@@ -3806,7 +3781,7 @@ spret cast_mercury_vapours(int pow, const coord_def target, bool fail)
     return spret::success;
 }
 
-static bool _prep_flame_wave(bolt &beam, int pow, int lvl)
+static bool _prep_flame_wave(bolt &beam, int pow, int lvl, bool skip_tracer = false)
 {
     zappy(ZAP_FLAME_WAVE, pow, false, beam);
     beam.set_agent(&you);
@@ -3814,10 +3789,15 @@ static bool _prep_flame_wave(bolt &beam, int pow, int lvl)
     beam.ex_size       = lvl;
     beam.source = beam.target = you.pos();
 
-    bolt tracer_beam = beam;
-    tracer_beam.is_tracer = true;
-    tracer_beam.explode(false, true);
-    return !tracer_beam.beam_cancelled;
+    if (!skip_tracer)
+    {
+        bolt tracer_beam = beam;
+        tracer_beam.is_tracer = true;
+        tracer_beam.explode(false, true);
+        return !tracer_beam.beam_cancelled;
+    }
+
+    return true;
 }
 
 spret cast_flame_wave(int pow, bool fail)
@@ -3828,49 +3808,19 @@ spret cast_flame_wave(int pow, bool fail)
 
     fail_check();
 
-    beam.apply_beam_conducts();
-    beam.refine_for_explosion();
-    beam.explode(true, true);
-
-    you.props[FLAME_WAVE_KEY] = 0;
     you.props[FLAME_WAVE_POWER_KEY].get_int() = pow;
-
-    string msg = "(Press <w>%</w> to intensify the flame waves.)";
-    insert_commands(msg, { CMD_WAIT });
-    mpr(msg);
+    start_channelling_spell(SPELL_FLAME_WAVE, "intensify the flame waves");
 
     return spret::success;
 }
 
-void handle_flame_wave()
+void handle_flame_wave(int lvl)
 {
-    if (!you.props.exists(FLAME_WAVE_KEY))
-        return;
-
-    int &lvl = you.props[FLAME_WAVE_KEY].get_int();
-    ++lvl;
-    if (lvl == 1) // just cast it this turn
-        return;
-
-    if (crawl_state.prev_cmd != CMD_WAIT || !can_cast_spells(true))
-    {
-        end_flame_wave();
-        return;
-    }
-
-    if (!enough_mp(1, true))
-    {
-        mpr("Without enough magic to sustain them, the waves of flame dissipate.");
-        end_flame_wave();
-        return;
-    }
-
     const int pow = you.props[FLAME_WAVE_POWER_KEY].get_int();
     bolt beam;
-    if (!_prep_flame_wave(beam, pow, lvl))
+    if (!_prep_flame_wave(beam, pow, lvl, lvl == 1))
     {
-        mpr("You stop channelling waves of flame.");
-        end_flame_wave();
+        stop_channelling_spells();
         return;
     }
 
@@ -3879,108 +3829,60 @@ void handle_flame_wave()
     beam.explode(true, true);
     trigger_battlesphere(&you);
 
-    pay_mp(1);
-    finalize_mp_cost();
+    if (lvl > 1)
+    {
+        pay_mp(1);
+        finalize_mp_cost();
+    }
 
     if (lvl >= spell_range(SPELL_FLAME_WAVE, pow))
     {
-        mpr("You finish channelling waves of flame.");
-        end_flame_wave();
+        mpr("Your wave of flame reaches its maximum intensity and dissipates.");
+        stop_channelling_spells(true);
     }
-}
-
-void end_flame_wave()
-{
-    you.props.erase(FLAME_WAVE_KEY);
 }
 
 spret cast_searing_ray(actor& agent, int pow, bolt &beam, bool fail)
 {
-    spret ret = spret::success;
-
     if (agent.is_player())
-        ret = zapping(ZAP_SEARING_RAY, pow, beam, true, nullptr, fail);
+    {
+        if (!player_tracer(ZAP_SEARING_RAY, pow, beam))
+            return spret::abort;
+
+        fail_check();
+    }
     else
     {
         zappy(ZAP_SEARING_RAY, pow, false, beam);
         beam.fire();
     }
 
-    if (ret == spret::success)
+    actor* targ = actor_at(beam.target);
+    agent.props[SEARING_RAY_AIM_SPOT_KEY].get_bool() = beam.aimed_at_spot
+                                                        || !targ;
+    agent.props[SEARING_RAY_TARGET_KEY].get_coord() = beam.target;
+    agent.props[SEARING_RAY_POWER_KEY].get_int() = pow;
+
+    if (targ)
+        agent.props[SEARING_RAY_MID_KEY].get_int() = targ->mid;
+    else
+        agent.props.erase(SEARING_RAY_MID_KEY);
+
+    if (agent.is_player())
+        start_channelling_spell(SPELL_SEARING_RAY, "maintain the ray");
+    else
     {
-        actor* targ = actor_at(beam.target);
-        agent.props[SEARING_RAY_AIM_SPOT_KEY].get_bool() = beam.aimed_at_spot
-                                                           || !targ;
-        agent.props[SEARING_RAY_TARGET_KEY].get_coord() = beam.target;
-        agent.props[SEARING_RAY_POWER_KEY].get_int() = pow;
-
-        if (targ)
-            agent.props[SEARING_RAY_MID_KEY].get_int() = targ->mid;
-
-        if (agent.is_player())
-        {
-            // Special value, used to avoid terminating ray immediately, since we
-            // took a non-wait action on this turn (ie: casting it)
-            you.attribute[ATTR_SEARING_RAY] = -1;
-
-            string msg = "(Press <w>%</w> to maintain the ray.)";
-            insert_commands(msg, { CMD_WAIT });
-            mpr(msg);
-        }
-        else
-        {
-            int dur = min(3 + pow / 60, 5);
-            mon_enchant ench(ENCH_CHANNEL_SEARING_RAY, 0, &agent, dur);
-            agent.as_monster()->add_ench(ench);
-        }
+        int dur = min(3 + pow / 60, 5);
+        mon_enchant ench(ENCH_CHANNEL_SEARING_RAY, 0, &agent, dur);
+        agent.as_monster()->add_ench(ench);
     }
 
-    return ret;
-}
-
-static bool _handle_player_searing_ray()
-{
-    if (you.attribute[ATTR_SEARING_RAY] == 0)
-        return false;
-
-    // Convert prepping value into stage one value (so it can fire next turn)
-    if (you.attribute[ATTR_SEARING_RAY] == -1)
-    {
-        you.attribute[ATTR_SEARING_RAY] = 1;
-        return false;
-    }
-
-    if (crawl_state.prev_cmd != CMD_WAIT)
-    {
-        end_searing_ray(you);
-        return false;
-    }
-
-    ASSERT_RANGE(you.attribute[ATTR_SEARING_RAY], 1, 4);
-
-    if (!can_cast_spells(true))
-    {
-        end_searing_ray(you);
-        return false;
-    }
-
-    if (!enough_mp(1, true))
-    {
-        mpr("Without enough magic to sustain it, your searing ray dissipates.");
-        end_searing_ray(you);
-        return false;
-    }
-
-    return true;
+    return spret::success;
 }
 
 // Returns true if the searing ray still fired this turn
-bool handle_searing_ray(actor& agent)
+bool handle_searing_ray(actor& agent, int turn)
 {
-    // If a player ray was cancelled or unable to continue, do nothing
-    if (agent.is_player() && !_handle_player_searing_ray())
-        return false;
-
     const zap_type zap = zap_type(ZAP_SEARING_RAY);
     const int pow = agent.props[SEARING_RAY_POWER_KEY].get_int();
 
@@ -4004,8 +3906,7 @@ bool handle_searing_ray(actor& agent)
     // If friendlies have moved into the beam path, give a chance to abort
     if (agent.is_player() && !player_tracer(zap, pow, beam))
     {
-        mpr("You stop channelling your searing ray.");
-        end_searing_ray(you);
+        stop_channelling_spells();
         return false;
     }
 
@@ -4020,7 +3921,6 @@ bool handle_searing_ray(actor& agent)
         {
             simple_monster_message(*agent.as_monster(), " stops channelling.");
             agent.as_monster()->del_ench(ENCH_CHANNEL_SEARING_RAY);
-            end_searing_ray(agent);
             return false;
         }
     }
@@ -4033,10 +3933,10 @@ bool handle_searing_ray(actor& agent)
         pay_mp(1);
         finalize_mp_cost();
 
-        if (++you.attribute[ATTR_SEARING_RAY] > 3)
+        if (turn > 3)
         {
             mpr("You finish channelling your searing ray.");
-            end_searing_ray(agent);
+            stop_channelling_spells(true);
         }
     }
     else
@@ -4046,24 +3946,10 @@ bool handle_searing_ray(actor& agent)
         mon_enchant me = mons->get_ench(ENCH_CHANNEL_SEARING_RAY);
         mons->lose_ench_duration(me, 1);
         if (!mons->has_ench(ENCH_CHANNEL_SEARING_RAY))
-        {
             simple_monster_message(*mons, " finishes channelling their searing ray.");
-            end_searing_ray(agent);
-        }
     }
 
     return true;
-}
-
-void end_searing_ray(actor& agent)
-{
-    if (agent.is_player())
-        you.attribute[ATTR_SEARING_RAY] = 0;
-    else
-        agent.as_monster()->del_ench(ENCH_CHANNEL_SEARING_RAY);
-
-    agent.props.erase(SEARING_RAY_TARGET_KEY);
-    agent.props.erase(SEARING_RAY_AIM_SPOT_KEY);
 }
 
 /**
@@ -4405,7 +4291,7 @@ spret cast_hailstorm(int pow, bool fail, bool tracer)
       // actor guaranteed to be monster from usage,
       // but we'll verify it as a matter of good hygiene.
         const monster* mon = act->as_monster();
-        return mon && !mons_is_firewood(*mon)
+        return mon && !mon->is_firewood()
             && !god_protects(*mon)
             && !mons_is_projectile(*mon)
             && !(mons_is_avatar(mon->type) && mons_aligned(&you, mon))
@@ -4485,7 +4371,7 @@ spret cast_imb(int pow, bool fail)
     bool (*vulnerable) (const actor *) = [](const actor * act) -> bool
     {
         return !(act->is_monster()
-                 && (mons_is_conjured(act->as_monster()->type)
+                 && (always_shoot_through_monster(&you, *act->as_monster())
                      || god_protects(*act->as_monster())));
     };
 
@@ -4502,12 +4388,8 @@ spret cast_imb(int pow, bool fail)
 
     for (actor_near_iterator ai(source, LOS_SOLID_SEE); ai; ++ai)
     {
-        if (ai->pos().distance_from(you.pos()) > range
-            || ai->pos() == you.pos() // so it's never aimed_at_feet
-            || mons_is_conjured(ai->as_monster()->type)) // skip prisms &c.
-        {
+        if (ai->pos().distance_from(you.pos()) > range || ai->pos() == you.pos())
             continue;
-        }
 
         act_list.push_back(*ai);
     }
@@ -4691,17 +4573,6 @@ static bool _maxwells_target_check(const monster &m)
             && !m.wont_attack();
 }
 
-bool wait_spell_active(spell_type spell)
-{
-    // XX deduplicate code somehow
-    return spell == SPELL_SEARING_RAY
-                && you.attribute[ATTR_SEARING_RAY] != 0
-            || spell == SPELL_MAXWELLS_COUPLING
-                && you.props.exists(COUPLING_TIME_KEY)
-            || spell == SPELL_FLAME_WAVE
-                && you.props.exists(FLAME_WAVE_KEY);
-}
-
 // returns the closest target to the player, choosing randomly if there are more
 // than one (see `fair` argument to distance_iterator).
 static monster* _find_maxwells_target(bool tracer)
@@ -4752,12 +4623,12 @@ spret cast_maxwells_coupling(int pow, bool fail, bool tracer)
     fail_check();
 
     mpr("You begin accumulating electric charge.");
-    string msg = "(Press <w>%</w> to continue charging.)";
-    insert_commands(msg, { CMD_WAIT });
-    mpr(msg);
 
     you.props[COUPLING_TIME_KEY] =
-        - (30 + div_rand_round(random2((200 - pow) * 40), 200));
+       you.elapsed_time + (30 + div_rand_round(random2((200 - pow) * 40), 200));
+
+    start_channelling_spell(SPELL_MAXWELLS_COUPLING, "continue charging", false);
+
     return spret::success;
 }
 
@@ -4813,51 +4684,17 @@ static void _discharge_maxwells_coupling()
 
 void handle_maxwells_coupling()
 {
-    if (!you.props.exists(COUPLING_TIME_KEY))
-        return;
+    const int discharge_time = you.props[COUPLING_TIME_KEY].get_int();
 
-    if (!can_cast_spells(true))
+    if (you.elapsed_time >= discharge_time)
     {
-        end_maxwells_coupling();
-        return;
-    }
-
-    int charging_auts_remaining = you.props[COUPLING_TIME_KEY].get_int();
-
-    if (charging_auts_remaining < 0)
-    {
-        mpr("You feel charge building up...");
-        you.props[COUPLING_TIME_KEY] = - (charging_auts_remaining
-                                            + you.time_taken);
-        return;
-    }
-
-    if (crawl_state.prev_cmd != CMD_WAIT)
-    {
-        end_maxwells_coupling();
-        return;
-    }
-
-    if (charging_auts_remaining <= you.time_taken)
-    {
-        you.time_taken = charging_auts_remaining;
         you.props.erase(COUPLING_TIME_KEY);
         _discharge_maxwells_coupling();
+        stop_channelling_spells(true);
         return;
     }
 
-    you.props[COUPLING_TIME_KEY] = charging_auts_remaining
-                                      - you.time_taken;
     mpr("You feel charge building up...");
-}
-
-void end_maxwells_coupling(bool quiet)
-{
-    if (!you.props.exists(COUPLING_TIME_KEY))
-        return;
-    if (!quiet)
-        mpr("The insufficient charge dissipates harmlessly.");
-    you.props.erase(COUPLING_TIME_KEY);
 }
 
 vector<coord_def> find_bog_locations(const coord_def &center, int pow)
@@ -4918,9 +4755,7 @@ bool siphon_essence_affects(const monster &m)
 {
     return !m.wont_attack()
         && !m.res_torment()
-        && !mons_is_conjured(m.type) // redundant?
-        && !mons_is_tentacle_or_tentacle_segment(m.type); // dubious
-        // intentionally allowing firewood, i guess..?
+        && !m.is_peripheral();
 }
 
 dice_def boulder_damage(int pow, bool random)
@@ -5020,8 +4855,11 @@ spret cast_magnavolt(coord_def target, int pow, bool fail)
         targets.push_back(target);
     vector<coord_def> paths = get_magnavolt_beam_paths(targets);
 
-    if (warn_about_bad_targets(SPELL_MAGNAVOLT, paths))
+    if (warn_about_bad_targets(SPELL_MAGNAVOLT, paths,
+            [](const monster& m) { return m.res_elec() == 3 ;}))
+    {
         return spret::abort;
+    }
 
     fail_check();
 
@@ -5122,13 +4960,9 @@ static void _show_fusillade_explosion(map<coord_def, beam_type>& hit_map,
         const coord_def pos = exp_map[j];
         if (you.see_cell(pos))
         {
-#ifdef USE_TILE
-            view_add_tile_overlay(pos, concoction_colour[hit_map[pos]] == YELLOW
-                                       ? (tileidx_t)TILE_BOLT_IRRADIATE
-                                       : tileidx_zap(concoction_colour[hit_map[pos]]));
-#else
-            flash_tile(pos, concoction_colour[hit_map[pos]], 0);
-#endif
+            colour_t colour = concoction_colour[hit_map[pos]];
+            flash_tile(pos, concoction_colour[hit_map[pos]], 0,
+                       colour == YELLOW ? int{TILE_BOLT_IRRADIATE} : 0);
         }
     }
 
@@ -5226,11 +5060,13 @@ void fire_fusillade()
     map<coord_def, beam_type> hit_map; // Map of which flavour to apply on which tile
     vector<coord_def> exp_map[3];      // Individual explosions, for animation
 
-    // Determine which monster's we're hitting
+    // Determine which monsters we're hitting
     vector<monster*> targs;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (!mi->wont_attack() && !mons_is_firewood(**mi) && you.can_see(**mi)
+        if (!mi->wont_attack() && !mi->is_firewood()
+            && !mons_is_projectile(**mi)
+            && you.can_see(**mi)
             && grid_distance(mi->pos(), you.pos()) > 1)
         {
             targs.push_back(*mi);
@@ -5283,7 +5119,7 @@ void fire_fusillade()
     for (it = hit_map.begin(); it != hit_map.end(); it++)
     {
         monster* mon = monster_at(it->first);
-        if (mon)
+        if (mon && !mons_is_projectile(*mon))
             _do_fusillade_hit(mon, pow, it->second);
     }
 
@@ -5360,4 +5196,60 @@ void gain_grave_claw_soul(bool silent, bool wizard)
                                  "Grave Claw an additional time.");
         }
     }
+}
+
+spret cast_fortress_blast(actor& caster, int pow, bool fail)
+{
+    fail_check();
+
+    if (caster.is_player())
+    {
+        const int delay = 70 - div_rand_round(pow * 10, 25);
+        you.duration[DUR_FORTRESS_BLAST_TIMER] = delay;
+        mprf("You steady yourself in place and focus your resilience into a mighty blast.");
+    }
+    // Todo: Add monster implementation here
+
+    caster.props[FORTRESS_BLAST_POS_KEY] = caster.pos();
+
+    return spret::success;
+}
+
+void unleash_fortress_blast(actor& caster)
+{
+    // Hits power cap at 70 AC
+    int power = min(200, (int)pow(caster.armour_class(), 1.343) * 2 / 3);
+
+    if (caster.is_player())
+    {
+        string desc = "a";
+        if (power < 30)
+            desc = "a weak";
+        else if (power > 180)
+            desc = "an overpowering";
+        else if (power > 135)
+            desc = "a very strong";
+        else if (power > 80)
+            desc = "a strong";
+        mprf(MSGCH_DURATION, "You unleash %s concussive blast!", desc.c_str());
+    }
+
+    bolt blast;
+    zappy(ZAP_FORTRESS_BLAST, power, caster.is_monster(), blast);
+    blast.set_agent(&caster);
+    blast.attitude = caster.temp_attitude();
+    blast.source = caster.pos();
+    blast.target = caster.pos();
+    blast.origin_spell = SPELL_FORTRESS_BLAST;
+    blast.is_explosion = true;
+    blast.ex_size = spell_range(SPELL_FORTRESS_BLAST, 0);
+
+    blast.explode(true, true);
+}
+
+// For UI purposes. Non-random.
+dice_def fortress_blast_damage(int AC, bool is_monster)
+{
+    int power = min(200, (int)pow(AC, 1.343) * 2 / 3);
+    return zap_damage(ZAP_FORTRESS_BLAST, power, is_monster, false);
 }

@@ -148,6 +148,9 @@ killer_bee MONS_KILLER_BEE
 queen_bee MONS_QUEEN_BEE
 %sdir mon/demihumanoids
 meliai MONS_MELIAI
+%sdir mon/nonliving
+clockwork_bee MONS_CLOCKWORK_BEE
+clockwork_bee_inert MONS_CLOCKWORK_BEE_INACTIVE
 %sdir mon/animals
 
 ## Reptiles and lizards ('l')
@@ -156,6 +159,10 @@ iguana MONS_IGUANA
 crocodile MONS_CROCODILE
 %rim 0
 basilisk MONS_BASILISK
+seismosaurus MONS_SEISMOSAURUS
+seismosaurus_egg1 MONS_SEISMOSAURUS_EGG
+seismosaurus_egg2
+seismosaurus_egg3
 %rim 1
 komodo_dragon MONS_KOMODO_DRAGON
 alligator MONS_ALLIGATOR
@@ -251,6 +258,8 @@ boulder_beetle MONS_BOULDER_BEETLE
 boulder_beetle_rolling0 MONS_BOULDER_BEETLE_ROLLING
 boulder_beetle_rolling1
 boulder_beetle_rolling2
+%sdir mon/nonliving
+phalanx_beetle MONS_PHALANX_BEETLE
 %sdir mon/unique
 xakkrixis MONS_XAKKRIXIS
 
@@ -377,6 +386,7 @@ living_spell_crystal MONS_LIVING_SPELL_CRYSTAL
 living_spell_earth MONS_LIVING_SPELL_EARTH
 living_spell_holy MONS_LIVING_SPELL_HOLY
 living_spell_ice MONS_LIVING_SPELL_ICE
+splinterfrost_barricade MONS_SPLINTERFROST_BARRICADE
 %rim 1
 ball_lightning MONS_BALL_LIGHTNING /*'*'*/
 creeping_inferno1 MONS_CREEPING_INFERNO
@@ -556,11 +566,15 @@ crystal_guardian MONS_CRYSTAL_GUARDIAN
 electric_golem MONS_ELECTRIC_GOLEM
 blazeheart_golem MONS_BLAZEHEART_GOLEM
 blazeheart_core MONS_BLAZEHEART_CORE
+monarch_bomb MONS_MONARCH_BOMB
+bomblet MONS_BOMBLET
+walking_alembic MONS_WALKING_ALEMBIC
 iron_golem MONS_IRON_GOLEM
 ushabti MONS_USHABTI
 peacekeeper MONS_PEACEKEEPER
 saltling MONS_SALTLING
-animated_armour MONS_ANIMATED_ARMOUR
+armour_echo MONS_ARMOUR_ECHO
+platinum_paragon MONS_PLATINUM_PARAGON
 %rim 1
 toenail_golem MONS_TOENAIL_GOLEM
 # For the Cigotuvi WizLab
@@ -583,6 +597,7 @@ obsidian_statue MONS_OBSIDIAN_STATUE
 orange_crystal_statue MONS_ORANGE_STATUE
 wucad_mu_statue MONS_WUCAD_MU_STATUE
 machine_tukima MONS_STRANGE_MACHINE
+diamond_sawblade MONS_DIAMOND_SAWBLADE
 %sdir mon/vault
 air_elementalist_statue MONS_AIR_ELEMENTALIST_STATUE
 earth_elementalist_statue MONS_EARTH_ELEMENTALIST_STATUE
@@ -608,8 +623,9 @@ obelisk MONS_DIAMOND_OBELISK
 lightning_spire MONS_LIGHTNING_SPIRE
 hoarfrost_cannon MONS_HOARFROST_CANNON
 hellfire_mortar MONS_HELLFIRE_MORTAR
+shadow_turret MONS_SHADOW_TURRET
 %sdir mon/nonliving
-spellforged_servitor MONS_SPELLFORGED_SERVITOR
+spellspark_servitor MONS_SPELLSPARK_SERVITOR
 %rim 1
 
 ## Gargoyles ('9')
@@ -629,6 +645,7 @@ spectral_axe MONS_SPECTRAL_AXE
 spectral_mace MONS_SPECTRAL_MACE
 spectral_whip MONS_SPECTRAL_WHIP
 spectral_spear MONS_SPECTRAL_SPEAR
+rending_blade MONS_RENDING_BLADE
 
 ## Walking Tomes (';')
 %rim 0

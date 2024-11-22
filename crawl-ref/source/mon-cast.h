@@ -17,6 +17,7 @@ struct dice_def;
 
 #define OLD_ARMS_KEY "old_arms"
 #define OLD_ARMS_ALT_KEY "old_arms_alt"
+#define ARMS_COOLDOWN_KEY "bestow_arms_timer"
 
 void init_mons_spells();
 bool is_valid_mon_spell(spell_type spell);

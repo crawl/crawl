@@ -2414,29 +2414,38 @@ ENDMAP
 
 NAME:   nicolae_lair_yak_garden
 TAGS:   no_monster_gen no_item_gen no_trap_gen transparent
-DEPTH:  Lair:4-
-KMONS:  Y = yak
-KMONS:  D = death yak
-KMONS:  C = catoblepas
+DEPTH:  Lair:2-, Crypt
+SUBST:  P = P., f = ffF.
+: local d = you.depth()
+: if you.in_branch("Lair") then
+MONS:   yak, death yak, catoblepas
 KMONS:  P = plant
-KITEM:  f = stone
-SUBST:  P = P., f = f...
-NSUBST: D = 1:D / *:.
+KFEAT:  F = cache of fruit
+:   d = d - 1
+: else
+TAGS:   no_pool_fixup
+MONS:   death yak zombie, lich / revenant, ancient lich / dread lich
+KMONS:  P = withered plant
+KFEAT:  t = petrified_tree
+:   decorative_floor(_G, 'F', "mourning vase")
+: end
+KITEM:  f = large rock q:1
+: nsubst("2 = " .. d .. ":2 / *:.")
 MAP
         .@@@.
       .........
     tt...P.P....tt
    tttttPPPPPPPtttt.
-  .ttDfPP.Y....tDtt...
+  .tt2fPP.1....t2tt...
  .PPttP..P.P.PP.ftP...
  .P....PPP...PPP.PP..@
-..PP..PPPwwwC.P..PPP.@
-......Y.wwwwww.Y.ttP.@
+..PP..PPPwww3.P..PPP.@
+......1.wwwwww.1.ttP.@
 .@.PP..Pwwwwww...fttt.
  @..P..PP.wwwPP.ttttt
   @.PP.PPP..PP..PPttt
   ...Ptt.P.PPPPPP....
-  ...ttfDttPP.......
+  ...ttf2ttPP.......
     .tttttt......@
      ..tt.......
         .....

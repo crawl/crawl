@@ -23,7 +23,7 @@ end
 local function test_random_unique(branch, depth)
   crawl.message("Running random monster unique tests in branch " .. branch
                 .. " through depth " .. depth)
-  debug.flush_map_memory()
+  debug.reset_player_data()
   for d = 1, depth do
     debug.goto_place(branch .. ":" .. d)
     dgn.grid(place2.x, place2.y, "floor")

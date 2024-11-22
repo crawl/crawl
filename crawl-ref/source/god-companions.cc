@@ -910,11 +910,11 @@ void beogh_swear_vegeance(monster& apostle)
     for (radius_iterator ri(apostle.pos(), LOS_NO_TRANS, true); ri; ++ri)
     {
         monster* mon = monster_at(*ri);
-        if (mon && !mon->wont_attack() && !mons_is_firewood(*mon)
+        if (mon && !mon->wont_attack() && !mon->is_firewood()
             // This isn't redundant with wont_attack here, but additionally
             // prevents marking frenzied apostles
             && mon->attitude != ATT_FRIENDLY
-            && !mon->is_summoned() && !mons_is_conjured(mon->type)
+            && !mon->is_summoned() && !mon->is_peripheral()
             && !mon->has_ench(ENCH_VENGEANCE_TARGET))
         {
             you.duration[DUR_BEOGH_SEEKING_VENGEANCE] += 1;

@@ -1,6 +1,6 @@
 name: "foxfire"
 glyph: {char: "v", colour: lightred}
-flags: [flies, see_invis, insubstantial, no_exp_gain, no_poly_to, conjured, no_threat]
+flags: [flies, see_invis, insubstantial, no_exp_gain, no_poly_to, peripheral, no_threat]
 resists: {fire: 3}
 xp_mult: 0
 holiness: [nonliving]

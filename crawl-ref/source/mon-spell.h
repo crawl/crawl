@@ -323,6 +323,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_SEISMOSAURUS,
+      {
+       { SPELL_SEISMIC_STOMP, 56, MON_SPELL_NATURAL },
+      }
+    },
+
     // ('m') Merfolk and friends.
     {  MST_MERFOLK_SIREN,
       {
@@ -960,6 +966,12 @@ static const mon_spellbook mspell_list[] =
        { SPELL_IRON_SHOT, 21, MON_SPELL_MAGICAL },
        { SPELL_METAL_SPLINTERS, 21, MON_SPELL_MAGICAL },
        { SPELL_SLOW, 21, MON_SPELL_MAGICAL },
+      }
+    },
+
+    {  MST_MONARCH_BOMB,
+      {
+       { SPELL_DEPLOY_BOMBLET, 100, MON_SPELL_NATURAL},
       }
     },
 
@@ -1682,7 +1694,13 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_HELLFIRE_MORTAR,
       {
-       { SPELL_BOLT_OF_MAGMA, 200, MON_SPELL_MAGICAL },
+       { SPELL_MAGMA_BARRAGE, 200, MON_SPELL_MAGICAL },
+      }
+    },
+
+    {  MST_SHADOW_TURRET,
+      {
+       { SPELL_SHADOW_SHOT, 200, MON_SPELL_MAGICAL },
       }
     },
 
@@ -1712,6 +1730,12 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BOLT_OF_FIRE, 32, MON_SPELL_MAGICAL },
        { SPELL_FIREBALL, 32, MON_SPELL_MAGICAL },
        { SPELL_MALMUTATE, 16, MON_SPELL_MAGICAL },
+      }
+    },
+
+    {  MST_SAWBLADE,
+      {
+        { SPELL_SHRED, 200, MON_SPELL_NATURAL },
       }
     },
 
@@ -2313,7 +2337,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_PLASMA_BEAM, 24, MON_SPELL_WIZARD },
        { SPELL_BOMBARD, 24, MON_SPELL_WIZARD },
-       { SPELL_SPELLFORGED_SERVITOR, 32, MON_SPELL_WIZARD },
+       { SPELL_SPELLSPARK_SERVITOR, 32, MON_SPELL_WIZARD },
       }
     },
 

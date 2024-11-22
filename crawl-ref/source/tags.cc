@@ -3079,14 +3079,15 @@ static void _tag_read_you(reader &th)
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_SHAPESHIFTING)
     {
-        you.skills[SK_SHAPESHIFTING]              = you.skills[SK_TRANSMUTATIONS];
-        you.train[SK_SHAPESHIFTING]               = you.train[SK_TRANSMUTATIONS];
-        you.train_alt[SK_SHAPESHIFTING]           = you.train_alt[SK_TRANSMUTATIONS];
-        you.training[SK_SHAPESHIFTING]            = you.training[SK_TRANSMUTATIONS];
-        you.skill_points[SK_SHAPESHIFTING]        = you.skill_points[SK_TRANSMUTATIONS];
-        you.skill_order[SK_SHAPESHIFTING]         = you.skill_order[SK_TRANSMUTATIONS] + 1;
-        you.training_targets[SK_SHAPESHIFTING]    = you.training_targets[SK_TRANSMUTATIONS];
-        you.skill_manual_points[SK_SHAPESHIFTING] = you.skill_manual_points[SK_TRANSMUTATIONS];
+        // Historical note: SK_FORGECRAFT was SK_TRANSMUTATIONS at the time
+        you.skills[SK_SHAPESHIFTING]              = you.skills[SK_FORGECRAFT];
+        you.train[SK_SHAPESHIFTING]               = you.train[SK_FORGECRAFT];
+        you.train_alt[SK_SHAPESHIFTING]           = you.train_alt[SK_FORGECRAFT];
+        you.training[SK_SHAPESHIFTING]            = you.training[SK_FORGECRAFT];
+        you.skill_points[SK_SHAPESHIFTING]        = you.skill_points[SK_FORGECRAFT];
+        you.skill_order[SK_SHAPESHIFTING]         = you.skill_order[SK_FORGECRAFT] + 1;
+        you.training_targets[SK_SHAPESHIFTING]    = you.training_targets[SK_FORGECRAFT];
+        you.skill_manual_points[SK_SHAPESHIFTING] = you.skill_manual_points[SK_FORGECRAFT];
     }
 #endif
 
@@ -3158,15 +3159,28 @@ static void _tag_read_you(reader &th)
 
     if (th.getMinorVersion() < TAG_MINOR_ALCHEMY_MERGER)
     {
+        // Historical note: SK_FORGECRAFT was SK_TRANSMUTATIONS at the time
         if (you.species != SP_GNOLL)
-            you.skill_points[SK_ALCHEMY] += you.skill_points[SK_TRANSMUTATIONS];
+            you.skill_points[SK_ALCHEMY] += you.skill_points[SK_FORGECRAFT];
 
         you.train[SK_ALCHEMY] = max(you.train[SK_ALCHEMY],
-                                    you.train[SK_TRANSMUTATIONS]);
+                                    you.train[SK_FORGECRAFT]);
         you.train_alt[SK_ALCHEMY] = max(you.train_alt[SK_ALCHEMY],
-                                        you.train_alt[SK_TRANSMUTATIONS]);
+                                        you.train_alt[SK_FORGECRAFT]);
         you.training_targets[SK_ALCHEMY] = max(you.training_targets[SK_ALCHEMY],
-                                               you.training_targets[SK_TRANSMUTATIONS]);
+                                               you.training_targets[SK_FORGECRAFT]);
+    }
+
+    if (th.getMinorVersion() < TAG_MINOR_ADD_FORGECRAFT)
+    {
+        you.skills[SK_FORGECRAFT]              = you.skills[SK_SUMMONINGS];
+        you.train[SK_FORGECRAFT]               = you.train[SK_SUMMONINGS];
+        you.train_alt[SK_FORGECRAFT]           = you.train_alt[SK_SUMMONINGS];
+        you.training[SK_FORGECRAFT]            = you.training[SK_SUMMONINGS];
+        you.skill_points[SK_FORGECRAFT]        = you.skill_points[SK_SUMMONINGS];
+        you.skill_order[SK_FORGECRAFT]         = you.skill_order[SK_SUMMONINGS] + 1;
+        you.training_targets[SK_FORGECRAFT]    = you.training_targets[SK_SUMMONINGS];
+        you.skill_manual_points[SK_FORGECRAFT] = you.skill_manual_points[SK_SUMMONINGS];
     }
 #endif
 
@@ -3229,8 +3243,6 @@ static void _tag_read_you(reader &th)
                                            you.duration[DUR_REGENERATION]);
         you.duration[DUR_REGENERATION] = 0;
     }
-    if (you.attribute[ATTR_SEARING_RAY] > 3)
-        you.attribute[ATTR_SEARING_RAY] = 0;
 
     if (you.attribute[ATTR_DELAYED_FIREBALL])
         you.attribute[ATTR_DELAYED_FIREBALL] = 0;
@@ -4365,6 +4377,39 @@ static void _tag_read_you(reader &th)
         && you.has_spell(SPELL_GRAVE_CLAW))
     {
         gain_grave_claw_soul(true);
+    }
+
+    // Unify handling of multiple wait spells into common attributes
+    if (th.getMinorVersion() < TAG_MINOR_REFACTOR_CHANNEL_SPELLS)
+    {
+        const string FLAME_WAVE_KEY = "flame_waves";
+
+        if (you.props.exists(FLAME_WAVE_KEY))
+        {
+            you.attribute[ATTR_CHANNELLED_SPELL] = SPELL_FLAME_WAVE;
+            you.attribute[ATTR_CHANNEL_DURATION] = you.props[FLAME_WAVE_KEY].get_int();
+        }
+        else if (you.props.exists(COUPLING_TIME_KEY))
+        {
+            you.attribute[ATTR_CHANNELLED_SPELL] = SPELL_MAXWELLS_COUPLING;
+            you.attribute[ATTR_CHANNEL_DURATION] = 1; // Irrelevant in this case.
+            you.props[COUPLING_TIME_KEY].get_int() += you.elapsed_time - 10;
+        }
+        // Old Searing Ray handling
+        else if (you.attribute[ATTR_CHANNEL_DURATION] != 0)
+        {
+            // -1 used to be special-cased for the first turn of channelling.
+            // This is no longer done.
+            if (you.attribute[ATTR_CHANNEL_DURATION] == -1)
+                you.attribute[ATTR_CHANNEL_DURATION] = 1;
+
+            you.attribute[ATTR_CHANNELLED_SPELL] = SPELL_SEARING_RAY;
+        }
+        else
+        {
+            you.attribute[ATTR_CHANNELLED_SPELL] = SPELL_NO_SPELL;
+            you.attribute[ATTR_CHANNEL_DURATION] = 0;
+        }
     }
 #endif
 }
@@ -6486,7 +6531,7 @@ void _unmarshallMonsterInfo(reader &th, monster_info& mi)
 #if TAG_MAJOR_VERSION == 34
     if ((mons_is_ghost_demon(mi.type)
          || (mi.type == MONS_LICH || mi.type == MONS_ANCIENT_LICH
-             || mi.type == MONS_SPELLFORGED_SERVITOR)
+             || mi.type == MONS_SPELLSPARK_SERVITOR)
             && th.getMinorVersion() < TAG_MINOR_EXORCISE)
         && th.getMinorVersion() >= TAG_MINOR_GHOST_SINV
         && th.getMinorVersion() < TAG_MINOR_GHOST_NOSINV)
@@ -7358,7 +7403,7 @@ void unmarshallMonster(reader &th, monster& m)
     else if (th.getMinorVersion() < TAG_MINOR_EXORCISE
         && th.getMinorVersion() >= TAG_MINOR_RANDLICHES
         && (m.type == MONS_LICH || m.type == MONS_ANCIENT_LICH
-            || m.type == MONS_SPELLFORGED_SERVITOR))
+            || m.type == MONS_SPELLSPARK_SERVITOR))
     {
         m.spells = _unmarshallGhost(th).spells;
     }

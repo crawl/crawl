@@ -2513,7 +2513,7 @@ MONS:   electric golem
 KFEAT:  ^ = permanent teleport trap / dispersal trap
 KFEAT:  m = iron_grate
 NSUBST: 1 = 1:1 / 1:. / * = 1.
-: vault_metal_statue_setup(_G, "Z", "nascence conduit")
+: vault_metal_statue_setup(_G, "Z", "nascence circuit")
 MAP
   mmmm
  mm..mm
@@ -2795,16 +2795,16 @@ DEPTH:  Zot, !Zot:$
 ORIENT: float
 WEIGHT: 5
 MONS:   oklob plant w:4 / lightning spire w:3
-MONS:   obsidian statue / orange crystal statue / curse skull
+MONS:   orange crystal statue / curse skull
 # Not quite the orb, but but close enough
-ITEM:   orb randart no_pickup
+ITEM:   orb randart no_pickup, randbook disc:forgecraft spells:diamond_sawblades
 NSUBST: 1 = 1:1 / 6 = 11. / *:., 3 = 1:1 / 4 = 11....... / *:.
 SUBST:  } = }:80 >, ) = ):80 >, ] = ]:80 >
 : vault_metal_statue_setup(_G, "G", "enigmatic dynamo")
 MAP
         xxxxxxxxx
         xxx.2.xxx
-        xGx...xGx
+        xGx.e.xGx
         xx..1..xx
 xxxxxxxxx1.....1xxxxxxxxx
 xxxxxxx.....).....xxxxxxx
@@ -3369,6 +3369,8 @@ COLOUR:    r = red, y = yellow, b = blue, g = green, \
 TILE:      r = dngn_transparent_stone_red, y = dngn_transparent_stone_yellow, \
            b = dngn_transparent_stone_blue, m = dngn_transparent_stone_magenta, \
            g = dngn_transparent_stone_green, q = dngn_transparent_stone
+TILE:      G = dngn_statue_zot_serpent / dngn_statue_depths_zot_dragon / \
+               dngn_statue_zot_tornado w:15 / dngn_statue_zot_orb
 TILE:      T = dngn_fountain_novelty_octopode
 : vault_metal_statue_setup(_G, "S", "storm conduit")
 MAP
@@ -4045,7 +4047,7 @@ ENDMAP
 ##############################################################################
 NAME:    hangedman_player_shredder
 TAGS:    transparent no_monster_gen no_item_gen no_pool_fixup
-DEPTH:   Zot:1-4
+DEPTH:   Zot, !Zot:$
 KMONS:   01 = ghost moth
 KMONS:   23 = golden dragon
 KMONS:   45 = nonbase draconian
@@ -4057,7 +4059,7 @@ KMONS:   E = orb of fire
 KMONS:   F = ancient lich / dread lich
 KMONS:   ! = base draconian w:30 ; cloak . great sword good_item | \
              battleaxe good_item | bardiche good_item | great mace good_item / \
-             fire dragon / ice dragon / storm dragon / bone dragon w:5
+             storm dragon / quicksilver dragon / bone dragon w:5
 KMONS:   ? = moth of wrath / death cob w:3
 KITEM:   % = % / * w:2
 KMONS:   H = iron dragon

@@ -2168,6 +2168,7 @@ KMONS:  C = deep elf zephyrmancer
 KMONS:  D = deep elf annihilator
 KMONS:  E = lich
 KMONS:  F = ancient lich / Boris w:2, ancient lich / dread lich
+ITEM:   randbook disc:forgecraft / manual of forgecraft w:5
 KFEAT:  S = metal_statue
 KFEAT:  yz = .
 COLOUR: y = yellow
@@ -2188,7 +2189,7 @@ MAP
  cycccccc.....cczcccccc...6$c
  c.....cc*.E5.cc.....cc..F.$S
  cccccycc|.5..cccccczcc.6.>$c
- c.....cc*$$..+......cc|||||c
+ c.....cc*$$..+......cc||||dc
  c.cccccccccccccccccccccccccc
  c+cccccccccccccccccccccccccc
  c.....cllllllcc%$$..cwwwwwwc

@@ -74,7 +74,7 @@ static void _player_moveto(const coord_def &c, bool real_movement, bool clear_ne
 
         // we need to do this even for fake movement -- otherwise nothing ends
         // the dur for temporal distortion. (I'm not actually sure why?)
-        end_wait_spells();
+        stop_channelling_spells();
         if (real_movement)
         {
             // Remove spells that break upon movement

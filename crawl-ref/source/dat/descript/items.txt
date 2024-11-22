@@ -167,6 +167,19 @@ book of conjurations
 A book containing an introduction to the destructive magical arts of
 Conjurations.
 %%%%
+book of contraptions
+
+A book of schematics and spells to construct a variety of elaborate mechanisms.
+The obvious safety hazards involved with many of them are relegated to a single
+footnote on page 157, but to an enterprising adventurer, that might be
+considered an upside.
+%%%%
+book of cryoformation
+
+An illustrated guide to shaping ice into both practical and artistic forms. An
+entire chapter is devoted to tables of mineral impurities and their effect on
+colour and melting point.
+%%%%
 book of dangerous friends
 
 A book describing the creation and use of magical entities best kept at arm's
@@ -200,6 +213,14 @@ book of dreams
 The somniloquent utterings of a famed mystic, using uniquely bizarre imagery
 and cryptic digressions to describe spells drawn from the mystic's visions.
 %%%%
+book of duality
+
+An eclectic spellbook, mingled with rambling philosophical anecdotes about the
+twin nature of every action. Even by the end, it remains unclear whether the
+author considered there to be some spiritual purity to spells which incorporate
+offense and defense into a single motion, or if they just lived a life extremely
+pressed for time.
+%%%%
 book of fire
 
 A book containing advanced spells in the elemental school of Fire, stolen from
@@ -223,10 +244,22 @@ book of frost
 A book of magic spells, often used as an introduction to the elemental magics
 of Ice. Its pages feel unusually brittle, as if they'd crumble at a touch.
 %%%%
+book of the fortress
+
+A book of spells that purports to make their caster as resilient as a stone
+fortress. Its cover is fashioned from thick, magically-reinforced steel, making
+the book unreasonably heavy for no obvious benefit.
+%%%%
 book of geomancy
 
 A book containing basic spells involving the element of Earth. Readers are
 recommended to wear a pair of gardening gloves.
+%%%%
+book of the grave
+
+A heavy tome whose vellum smells faintly of dirt and decay. Those who touch it
+frequently report a palpable sense of unease, as if something unwholesome were
+buried between its very pages.
 %%%%
 book of hexes
 
@@ -252,6 +285,12 @@ book of maladies
 A concise catalogue of afflictions, both magical and mundane, often described
 with a disquieting degree of cheerfulness. Most of them operate on timescales
 too slow to be useful to an adventurer, but a few sound remarkably efficacious.
+%%%%
+book of metalworking
+
+A tome of advanced Forgecraft magic. Its pages are regularly inlaid with
+technical figures made from elaborate metal filigree, perhaps as an illustration
+of the author's own skill with the art described herein.
 %%%%
 book of minor magic
 
@@ -366,7 +405,6 @@ book of the senses
 A scholarly work, describing the senses used by living creatures to perceive the
 world around them. A handful of spells are included to demonstrate the principles
 being described.
-%%%%
 %%%%
 book of transmutation
 
@@ -756,6 +794,11 @@ projectiles to fall forward instead of down, others bewitch the slugs with a
 fatal attraction to their targets. All are slow, loud, and blast out thick
 smoke with each shot.
 %%%%
+handbook of applied construction
+
+A practical introduction to Forgecraft, covering basic principles and their
+common applications.
+%%%%
 hat
 
 A cloth hat.
@@ -900,6 +943,14 @@ Though it drips with mud and muck, still a peculiar dignity attaches itself to
 this gem. The people of the Swamp, who first carried this stone, struggled
 against insurmountable odds. They failed, but there is much to admire even in
 the ruin of their efforts.
+%%%%
+my sojourn through swampland
+
+While purporting itself to be the personal account of a famous naturalist, it
+becomes clear upon reading that this book was compiled from multiple unrelated
+sources, including notes from a stagehand of a travelling magical circus. The
+travelogue may be fictitious, but but some of the spell diagrams carefully
+transcribed in the margins seem quite real.
 %%%%
 necronomicon
 
@@ -1510,6 +1561,12 @@ repelling the lightweight fragments of rock from a tremorstone's explosion, so
 a well-armoured wielder has little to fear. Evocations skill increases the
 number of explosions.
 %%%%
+treatise on traps
+
+An analytical volume discussing methods and materials with which to construct a
+dizzying array of traps - from those intended to safeguard a pantry from ants to
+ones which would please even the most sadistic dungeon architect.
+%%%%
 trident
 
 A fishing spear improved with a longer shaft and a three-pronged metal head.
@@ -1579,7 +1636,7 @@ of victims' resistance to cold.
 wand of light
 
 A magical device which fires a ray of searing light, injuring and blinding
-those struck. Only living, demonic and angelic monsters can be blinded. and
+those struck. Only living, demonic and angelic monsters can be blinded, and
 tougher monsters will recover their vision more quickly.
 %%%%
 wand of mindburst

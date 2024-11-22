@@ -670,13 +670,6 @@ angel
 A divine warrior of the Shining One. It is a towering winged figure of
 unnatural beauty surrounded by an aura of brilliant white light.
 %%%%
-animated armour
-
-The sweat and toil of the armourer working leather and steel infuses a spirit
-into their creation, a unique spark within every cuirass, pauldron and vambrace.
-A skilled wizard can draw those sparks together, allowing their armour to
-protect its wearer in a more aggressive fashion than armour customarily does.
-%%%%
 apis
 
 A placid, sacred bull of Elyvilon. Its status as an exalted envoy of the Healer
@@ -696,6 +689,14 @@ existence.
 armataur
 
 A curious quadraped, resembling a cross between an armadillo and a yaktaur.
+%%%%
+armour echo
+
+The sweat and toil of the armourer working leather and steel infuses an
+intention into their creation, a unique spark within every cuirass, pauldron and
+vambrace. A skilled forgewright can manifest these intentions in physical form,
+allowing their armour to protect its wearer in a more aggressive fashion than
+armour customarily does.
 %%%%
 aspiring flesh
 
@@ -756,8 +757,9 @@ skilled with both conjurations and melee combat.
 %%%%
 battlesphere
 
-A small globe of magical energy. Each time its creator casts a destructive
-Conjuration, it will launch a magical missile at a random foe.
+A small globe of destructive energy. Each time its creator casts an offensive
+spell, it will launch a magical barrage at the most injured nearby foe it can
+reach.
 %%%%
 bennu
 
@@ -823,6 +825,12 @@ An unassuming beetle filled with an incredible amount of hypergolic fluid. The
 sticky spray it fires is capable of igniting predators and unwary adventurers
 alike, though more experienced ones know to keep moving if they wish to avoid
 a fiery grave.
+%%%%
+bomblet
+
+A small metal sphere surrounding a core of dormant fire magic. When given the
+proper command, it will detonate in a blast of metal and flame that is only
+partially affected by fire resistance.
 %%%%
 bone dragon
 
@@ -948,6 +956,12 @@ A throne-bearer of the gods, whose head is beset by four faces: one of a man,
 one of an ox, one of a lion, one of an eagle. It is one of the angelic beings
 who stand before the good gods, singing eternal hymns of praise to their glory
 and greatness.
+%%%%
+clockwork bee
+
+A mechanical insect powered by an intricate array of gears and springs. It is
+vicious and resilient to damage, but its clockwork naturally winds down as it
+attacks, eventually leaving it unable to move until its creator winds it again.
 %%%%
 creeping inferno
 
@@ -1157,6 +1171,11 @@ A half-mortal, half-demonic creature, now more beast than whatever species it
 is descended from. It is devoted to martial combat, disrupting the magic of its
 foes as it feasts off of endless conflict.
 %%%%
+diamond sawblade
+
+An serrated disc forged of razor-sharp material. It spins in place at high
+velocity, shredding through flesh and metal alike.
+%%%%
 diamond obelisk
 
 A towering obelisk surrounded by a powerful storm.
@@ -1176,6 +1195,11 @@ A demon lapdog of the queen of Tartarus, bound to hunt her enemies. The first
 time a foe hears its howl, it will echo in their mind, calling nightmarish
 creatures to hunt them. Those who survive have the small consolation of being
 inoculated against that particular hound's howl.
+%%%%
+dormant clockwork bee
+
+A mechanical insect powered by an intricate array of gears and springs. It has
+run out of power and can only be rewound by its creator moving into it.
 %%%%
 draconian
 
@@ -1398,8 +1422,8 @@ as it slides along. Surely such a mockery of life could not be natural..?
 %%%%
 foxfire
 
-A thin wisp of flaming swamp gas. It will burn anything that ventures too
-close, friend or foe.
+A thin wisp of flaming swamp gas. It will burn the first hostile thing it
+touches and then dissipate.
 %%%%
 freezing wraith
 
@@ -1852,8 +1876,8 @@ skeletal, desiccated corpse kept intact by a mighty exercise of dark magic.
 %%%%
 lightning spire
 
-A buzzing contraption made from a coil and a rod. It zaps electricity towards
-nearby creatures.
+A buzzing contraption made from a coil and a rod. It irregularly zaps
+electricity at the most distant enemy in its range.
 %%%%
 lindwurm
 
@@ -1950,6 +1974,13 @@ molten gargoyle
 
 A hideous molten stone statue come to life, with flames licking across its
 body.
+%%%%
+monarch bomb
+
+A flying munitions factory, held aloft on jets of fiery exhaust and packed to
+the brim with explosives. It can rapidly fill an area with bomblets, and when
+commanded by its creator, will explode them all (and itself) to devastating
+effect.
 %%%%
 moth of wrath
 
@@ -2200,6 +2231,15 @@ pearl dragon
 A dragon consecrated to the holy divine powers. Its breath is blessed fire, and
 its claws sear its victims with divine wrath.
 %%%%
+phalanx beetle
+
+An intricate mechanical beetle covered in reinforced metal plates that resemble
+a shield. It projects a kinetic barrier around its creator while adjacent to
+them, increasing their armour class.
+
+It will never voluntarily leave its creator's side, and if forcibly seperated,
+will prioritize returning to them over any other concerns.
+%%%%
 phantasmal warrior
 
 A hideous translucent green spirit of a warrior fallen in battle but recalled
@@ -2242,6 +2282,12 @@ plant
 
 A plant that has adapted to grow in the unpleasant dungeon environment,
 somehow thriving even underground in the absence of the sun.
+%%%%
+platinum paragon
+
+A gleaming warrior, wrought from precious metals and the very pinnacle of
+forgecraft techniques. Its every motion flows with a deadly, fluid grace that
+belies its artifical nature.
 %%%%
 player ghost
 
@@ -2366,6 +2412,11 @@ redback
 A vicious black spider with a splash of red on its swollen abdomen. Its
 mandibles drip with lethal poison.
 %%%%
+rending blade
+
+A crackling weapon formed of condensed magical energy. It can cut through entire
+rows of adversaries whenever its creator lands a melee attack.
+%%%%
 revenant
 
 An animated skeleton wreathed in cold blue fire, standing astride this life and
@@ -2460,6 +2511,18 @@ searing wretch
 An animated corpse alight with terrible fire. The flames are fueled by its
 regenerating flesh, which bubbles and melts as it grows.
 %%%%
+seismosaurus
+
+A stubborn and fiercely territorial lizard with the strength of a mountain. Its
+thunderous footfalls herald violent tremors.
+%%%%
+seismosaurus egg
+
+A lizard egg the size of a small boulder and nearly as hard. Perhaps as a
+defense mechanism, they hatch rapidly in the presence of predators and even a
+newborn can give all but the most ambitious of monsters a reason to consider an
+easier meal.
+%%%%
 seraph
 
 A six-winged servant of the good gods, of the highest rank of the angelic
@@ -2511,6 +2574,12 @@ familiar.
 
 The strength of its attacks increases in proportion with the power of the spell
 which summoned it.
+%%%%
+shadow turret
+
+A strangely static silhouette whose form suggests a large cannon. Though it uses
+no gunpowder, the depths of its bore flickers angrily with every shot, as if
+remembering the fiery light of its ignition.
 %%%%
 shadow wraith
 
@@ -2655,17 +2724,22 @@ spectral weapon
 A spirit drawn from a weapon — it never strikes on its own. Damage done to it
 will be partially mirrored onto the caster.
 %%%%
-spellforged servitor
+spellspark servitor
 
-A magical construct woven with a portion of a conjurer's magic and bonded with
-a primitive elemental intelligence, summoned from an outer plane. The magic it
-is forged with gives it the capacity to wield some of its creator's destructive
-spells.
+A magical construct forged around a spark of its creator's own arcane power,
+allowing it to wield some of their destructive magics directly.
 %%%%
 sphinx
 
 A fearsome hybrid with a woman's head, a lion's body and the wings of an eagle,
 able to cloud the minds of its foes and wield fell magics.
+%%%%
+splinterfrost barricade
+
+A durable barricade made of ice reinforced with forgecraft magic. A lattice of
+precise hairline cracks are visible just beneath its surface which allow it to
+fracture into a barrage of razor-sharp projectiles whenever it sustains critical
+damage.
 %%%%
 spriggan
 
@@ -2986,6 +3060,13 @@ The viscous detritus of a thousand failed spells, surging forward with a speed
 that defies its towering size. Its very substance is a hole in the fabric of
 magic; enchantments find no purchase there and it leaches magical power from
 anything it touches like a dry sponge in water.
+%%%%
+walking alembic
+
+A mobile and combat-capable alchemical manufactory that uses the friction of
+melee combat to brew a variety of useful potions. When it has built up enough
+heat to complete its synthesis, it will automatically dispense the finished
+potions to nearby allies and fall apart.
 %%%%
 walking earthen tome
 

@@ -40,6 +40,7 @@
 #include "skills.h"
 #include "spl-damage.h"
 #include "spl-selfench.h"
+#include "spl-summoning.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stepdown.h"
@@ -1192,12 +1193,8 @@ bool attack::apply_damage_brand(const char *what)
     switch (brand)
     {
     case SPWPN_PROTECTION:
-        if (attacker->is_player())
-        {
-            const monster* mon = defender->as_monster();
-            if (mon && !mons_is_firewood(*mon))
-                refresh_weapon_protection();
-        }
+        if (attacker->is_player() && !defender->is_firewood())
+            refresh_weapon_protection();
         break;
 
     case SPWPN_FLAMING:
@@ -1660,4 +1657,17 @@ void attack::maybe_trigger_autodazzler()
             proj.fire();
         }
     }
+}
+
+bool attack::paragon_defends_player()
+{
+    if (defender->is_player() && paragon_defense_bonus_active()
+        && one_chance_in(3))
+    {
+        mprf("Your paragon deflects %s attack away from you.",
+                    attacker->name(DESC_ITS).c_str());
+        return true;
+    }
+
+    return false;
 }

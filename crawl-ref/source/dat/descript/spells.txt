@@ -31,17 +31,19 @@ poison-resistant creatures may resist the effects). The caster will experience
 vertigo briefly if they successfully make contact with other minds. It is
 frequently used as an icebreaker at wizard parties.
 %%%%
+Alistair's Walking Alembic spell
+
+Constructs a mobile and combat-capable alchemical manufactory. It uses the
+friction of melee combat to brew a variety of useful potions, venting clouds of
+their toxic byproducts at whatever it punches. When it has built up enough heat
+to complete its synthesis, it will automatically dispense the finished potions
+to nearby allies before falling apart.
+%%%%
 Anguish spell
 
 Afflicts nearby foes with supernatural anguish, causing all damage they deal to
 rebound on them for the duration of the effect. Strong-willed foes can resist the
 necromantic visions of pain and suffering, and mindless creatures are unaffected.
-%%%%
-Animate Armour spell
-
-Calls upon the spirit of your worn armour to fight alongside you. The spirit
-moves slowly, but draws strength from the inherent protection of your own
-armour. At higher power, the spirit becomes more durable.
 %%%%
 Animate Dead spell
 
@@ -71,6 +73,15 @@ Avatar Song spell
 Sings a powerfully haunting song; in addition to making nearby victims
 unwilling to move away from the singer, it calls forth drowned souls from
 any nearby bodies of deep water.
+%%%%
+Awaken Armour spell
+
+Draws upon the memory of your worn armour to manifest an echo of it that fights
+alongside you. This echo moves slowly, but the power of its blows increases
+dramatically with the weight of the armour used to form it. It possesses all
+the defensive properties of the armour itself.
+
+Spellpower increases its durability.
 %%%%
 Awaken Forest spell
 
@@ -173,9 +184,8 @@ Fires a penetrating bolt of flames.
 %%%%
 Bolt of Light spell
 
-Fires a ray of searing light, injuring those struck. Inhabitants of the dungeon
-will also be blinded, while adventurers (more accustomed to light) will merely
-suffer momentary confusion.
+Fires a ray of searing light, which may blind any living, demonic, or holy
+creature it strikes.
 %%%%
 Bolt of Magma spell
 
@@ -372,6 +382,13 @@ Conjure Living Spells spell
 Creates several living, autonomous spells, which cast themselves at the first foe
 to enter their range. Once cast, they dissipate.
 %%%%
+Construct Spike Launcher spell
+
+Constructs a simple mechanical trap within an adjacent rock wall which
+repeatedly skewers random adjacent enemies. Protected by the wall itself, it is
+invulnerable to most forms of damage, but will fall apart if the caster leaves
+its vicinity.
+%%%%
 Corona spell
 
 Causes a halo of glowing light to surround and effectively outline a creature.
@@ -444,6 +461,11 @@ who are already undead.
 Debugging Ray spell
 
 Fires a ray which does massive damage (1500 hp) and always hits.
+%%%%
+Diamond Sawblades spell
+
+Forges up to four razor-sharp sawblades at fixed positions around the caster
+which shred any enemies adjacent to them over several turns.
 %%%%
 Dig spell
 
@@ -569,6 +591,14 @@ features, nor on areas that lack solid floor, like deep water or lava. The
 transformation is temporary and cannot be sustained out of the caster's sight.
 Spellpower will increase how long the bog lingers.
 %%%%
+Eringya's Surprising Crocodile spell
+
+Summons a toothy crocodile to assault an adjacent enemy. The crocodile will
+appear beneath the caster in a surge of murky water and perform an empowered
+attack against the chosen target, dragging both it and the caster backward
+before allowing the latter to dismount safely behind it. It cannot be recast
+while the crocodile is still active.
+%%%%
 Eruption spell
 
 Splits the earth to draw up a localised, short-lived volcano under the target.
@@ -635,6 +665,59 @@ Forceful Invitation spell
 Summons some creatures from one of the Snake Pit, the Spider Nest, the Swamp,
 the Shoals, the Elven Halls, the Vaults, or the Crypt; the specific branch
 varies with the caster.
+%%%%
+Forge Blazeheart Golem spell
+
+Constructs a shell of slag iron around a volatile elemental spark. It is capable
+of raining down powerful blows on its creator's adversaries - so powerful that
+the golem itself is often damaged by their impact.
+
+Only tenuously independent of its creator's magic, the flames within it will
+rapidly go dormant if the two ever leave each other's side. If its shell is
+destroyed while the golem is still active, its exposed core will violently
+detonate a moment later.
+
+It gains greater explosive damage at higher power.
+%%%%
+Forge Lightning Spire spell
+
+Constructs an immobile lightning spire at a nearby location. This spire
+irregularly discharges bolts of electricity at the caster's foes, prioritizing
+whichever of them is most distant from it.
+%%%%
+Forge Monarch Bomb spell
+
+Constructs a flying incendiary factory, packed to the brim with cluster bomblets
+which it can deploy both in melee and launch at range. While the monarch's
+bomblets have no attack of their own, they will pursue the caster's enemies
+until given the signal to explode.
+
+Recasting this spell while anything created by is still active will detonate the
+monarch bomb and all bomblets, dealing a combination of fire and physical damage
+to everything adjacent to them besides the caster themselves.
+%%%%
+Forge Phalanx Beetle spell
+
+Constructs a small mechanical guardian which bolsters its creator's armour
+class for as long as it remains adjacent to them.
+
+While also capable of biting foes, the phalanx beetle will never voluntarily
+leave its creator's side, and if forcibly separated, will prioritize returning
+to them over any other concern.
+
+Spellpower increased the magnitude of the AC increase, as well as the beetle's
+own durability.
+%%%%
+Fortress Blast spell
+
+Draws upon the caster's own physical integrity to create a kinetic shockwave
+that damages foes in a large area. The caster is locked in place for several
+turns as the shockwave starts to form, and the spell will be cancelled if they
+are displaced during that time, but they may otherwise perform other actions
+freely.
+
+Spellpower causes the spell to complete more quickly, but the damage depends
+entirely upon the caster's AC.
 %%%%
 Foxfire spell
 
@@ -822,8 +905,8 @@ even those resistant to poison.
 %%%%
 Hoarfrost Bullet spell
 
-Fires a shard of alchemical ice that coats whatever it hits with a layer of
-brittle frost, which slows their movement.
+Fires a shard of ice that coats whatever it hits with a layer of brittle frost
+which slows their movement.
 
 Each shot fired will deplete the cannon's remaining durability, but if it
 survives to fire 5 times, the final shot will fragment to hit all enemies around
@@ -831,9 +914,9 @@ the primary target for additional damage.
 %%%%
 Hoarfrost Cannonade spell
 
-Sculpts a pair of cannons from alchemical ice that assail the caster's enemies
-from long range. The frigid shards they fire rapidly coat their targets with a
-layer of brittle frost, which slows their movement.
+Sculpts a pair of icy cannons that assail the caster's enemies from long range.
+The frigid shards they fire rapidly coat their targets with a layer of brittle
+frost which slows their movement.
 
 The cannons are short-lived and consume a part of themselves with every shard
 they fire, but if they survive to fire their final salvo without interference,
@@ -917,11 +1000,12 @@ dangerously contaminated after a few castings.
 %%%%
 Iskenderun's Battlesphere spell
 
-Conjures a small globe of magical energy. Each time its creator casts a
-destructive spell (other than Battlesphere itself or Spellforged Servitor), the
-battlesphere will launch its own volley of energy at a random foe. With
-increasing power, the battlesphere lasts longer and deals more damage per
-volley.
+Conjures a small globe of destructive energy. Each time its creator casts a
+offensive spell, the battlesphere will also fire an unerring volley of energy at
+the most injured nearby foe it can reach.
+
+The battlesphere's creator can freely fire through its position without harming
+it.
 %%%%
 Iskenderun's Mystic Blast spell
 
@@ -939,12 +1023,38 @@ Fae assistance is fickle, however; they cannot be beckoned unless a susceptible
 victim is visible, and will depart rapidly once no more remain. Calling on the
 fae also reduces the caster's own willpower for a time.
 %%%%
+Kinetic Grapnel spell
+
+Weaves a thin kinetic filiment around the caster's melee weapon and launches the
+other end of it at a nearby enemy. If this grapnel successfully hits and does
+damage, it will become lodged in them, allowing the next melee attack the caster
+performs against them to strike with perfect accuracy and a small slaying bonus.
+%%%%
 Volatile Blastmotes spell
 
 Brings forth a cloud of volatile blastmotes around the caster. These explode
 on contact with open flame or with creatures - including any caster foolish
 enough to linger in them! The explosion is concussive, knocking adjacent
 creatures away. Damage done rises with the spell's power.
+%%%%
+Launch Bomblet spell
+
+Fires a bomblet on a ballistic trajectory that ignores line of fire, dealing
+minor damage to a single target within range and deploying the bomblet near it.
+
+Cannot target enemies adjacent to the caster or those with no nearby room for
+the bomblet to land.
+%%%%
+Launch Clockwork Bee spell
+
+Constructs a mechanical bee and winds its clockwork mechanisms over several
+turns before unleashing it against a targeted foe. The bee is swift and
+powerful, but its clockwork quickly winds down as it attacks, eventually leaving
+it helpless and unable to move.
+
+The caster may repair and rewind a dormant bee by attempting to move into it.
+Spellpower increases the number of attacks the bee may perform before going
+dormant.
 %%%%
 Leda's Liquefaction spell
 
@@ -989,6 +1099,11 @@ armour, and it can be bounced off walls to hit targets twice.
 Magic Dart spell
 
 Fires a small bolt of magical energy which never misses.
+%%%%
+Magma Barrage spell
+
+Fires penetrating bolts of molten rock at up to two different enemy targets.
+Half of its damage bypasses fire resistance.
 %%%%
 Magnavolt spell
 
@@ -1162,6 +1277,15 @@ Mud Breath spell
 
 <Mud Breath ability>
 %%%%
+Nazja's Percussive Tempering spell
+
+Manifests a magical hammer that repairs and temporarily augments the offensive
+capabilities of any construct that was created by the caster's own Forgecraft
+spells. This process results in a flurry of sparks, slag, and concussive
+shockwaves that do considerable damage to any enemies adjacent to the targeted
+construct, but it cannot be recast upon the same object until the enhancement
+wears off.
+%%%%
 Noxious Breath spell
 
 <Noxious Breath ability>
@@ -1282,6 +1406,22 @@ Fires a penetrating beam of plasma at one of the caster's most distant foes.
 The ionised beam bypasses half of defenders' armour, and a second beam of fire
 follows in its wake.
 %%%%
+Platinum Paragon spell
+
+Constructs a gleaming metal champion whose prowess rivals that of the greatest
+living warriors. It is resistant to all forms of magic and wields a perfect
+replica of any artefact melee weapon the caster chooses.
+
+It creates a damaging shockwave around itself when first deployed and slowly
+gains charge as it attacks enemies. When it has gained sufficient charge, the
+spell may be recast to overload the paragon, unleashing a flurry of attacks
+in a wide area which inflict increased damage, but destroying the paragon in the
+process.
+
+Due to the magical link it maintains with its creator, it will perform an
+extra attack whenever they do, and will sometimes even parry attacks directed at
+them, if they are close enough together.
+%%%%
 Poison Arrow spell
 
 Fires a magical arrow coated with the most vile and noxious toxin. Even those
@@ -1358,6 +1498,18 @@ Regenerate Other spell
 
 Causes another creature to rapidly regenerate over a short period of time.
 This regeneration is proportional to that creature's maximum health.
+%%%%
+Rending Blade spell
+
+Condenses the caster's magical energy into the form of a violently crackling
+blade. Each time the caster successfully hits with a melee attack while the
+spell is active, this blade will rend a path back and forth through nearby foes,
+dealing irresistible damage.
+
+Casting this spell temporarily drains *all* of the caster's remaining magical
+power to constitute the blade, but this energy will be returned to them as soon
+as the blade ceases to exist. Each point of magical power sequestered this way
+slightly increases the damage the blade inflicts.
 %%%%
 Repel Missiles spell
 
@@ -1440,6 +1592,14 @@ Searing Breath spell
 Breathes a blast of fire at a targeted creature, leaving a cloud of flames at
 the endpoint.
 %%%%
+Seismic Stomp spell
+
+Stomps heavily upon the ground, sending out violent shockwaves that fracture the
+ground beneath multiple nearby enemies. Flying creatures take greatly reduced
+damage from this attack, but those on the ground may sometimes to lose their
+footing altogether, delaying their next action as they struggle to regain
+balance on the uneven terrain.
+%%%%
 Sentinel's Mark spell
 
 Bestows a strong beacon upon a targeted creature. It announces the presence
@@ -1488,6 +1648,10 @@ Shadow Shard spell
 
 Fires a shard of hardened shadow at a single enemy.
 %%%%
+Shadow Shot spell
+
+Fires a small bullet of hardened shadow at a single enemy.
+%%%%
 Shadow Tempest spell
 
 Calls down shadowy lightning upon up to half of all visible enemies, dealing
@@ -1498,6 +1662,11 @@ Shadow Torpor spell
 Saps the energy from a line of enemies, slowing them for a short while.
 Spellpower increases the duration of this effect, but stronger creatures may
 shake off their lethargy more quickly.
+%%%%
+Shadow Turret spell
+
+Forms a stationary turret of solidified shadow that repeatedly fires upon the
+caster's enemies.
 %%%%
 Shatter spell
 
@@ -1517,6 +1686,11 @@ animating them and sending them out to attack.
 Shock spell
 
 Throws a bouncing bolt of electricity. It bypasses half of defenders' armour.
+%%%%
+Shred spell
+
+Spins in place, dealing grievous damage to adjacent enemies with its serrated
+body.
 %%%%
 Sigil of Binding spell
 
@@ -1591,11 +1765,11 @@ Creates a cloud of spectral mist, dealing minor damage to all creatures other
 than the undead. Dangerous but short-lived spectral undead creatures will
 coalesce from the mist over time.
 %%%%
-Spellforged Servitor spell
+Spellspark Servitor spell
 
-Summons an extraplanar elemental and binds it to a durable shell forged from
-the caster's own magic. The servitor is capable of unleashing some of the
-destructive spells known to its creator, though the strongest and most volatile
+Constructs a metallic servant with a spark of the caster's own arcane knowledge
+at its core. This spark allows the servitor to unleash some of the destructive
+spells known to its creator, though the strongest and most volatile
 of magics cannot be imbued in this fashion. The strength of the servitor
 increases with spell power.
 
@@ -1613,6 +1787,16 @@ Spits lava at a targeted creature. Half of its damage bypasses fire resistance.
 Spit Poison spell
 
 <Spit Poison ability>
+%%%%
+Splinterfrost Shell spell
+
+Constructs a frangible shell of reinforced ice in a half-circle around the
+caster, pushing creatures out of the way to make space for it, if possible.
+
+This barricade is durable, and whenever a segment of it is destroyed, will
+fracture into a salvo of icy projectiles launched at whatever destroyed it.
+
+If the caster strays too far away from their barrier, it will melt rapidly.
 %%%%
 Splinterspray spell
 
@@ -1756,18 +1940,6 @@ Summon Greater Demon spell
 
 Calls forth one of the greater demons of Pandemonium to serve the caster.
 %%%%
-Summon Blazeheart Golem spell
-
-Summons a volatile elemental spark encased in a shell of slag iron. It is
-capable of raining down powerful blows on its summoner's adversaries - so
-powerful that the golem itself is often damaged by their impact.
-
-Only tenuously bound to this world, the flames within it will rapidly go
-dormant whenever its summoner leaves its side. If its shell is ever destroyed
-while still active, the exposed core will violently detonate a moment later.
-
-It gains greater explosive damage at higher power.
-%%%%
 Summon Sin Beast spell
 
 Summons a deadly sin beast.
@@ -1802,12 +1974,6 @@ Summon Illusion spell
 Summons a temporary mirror image of an enemy. Such a copy has the same physical
 prowess as the original, and can cast the same spells.
 %%%%
-Summon Lightning Spire spell
-
-Constructs a lightning spire in a nearby location. It can fire bouncing bolts
-of electricity at the caster's foes, but is completely immobile. The strength
-of the spire depends on spell power.
-%%%%
 Summon Mana Viper spell
 
 Summons a violet-scaled serpent whose bite can swiftly drain the magical
@@ -1835,6 +2001,17 @@ Calls forth a swarm of death scarabs.
 Summon Scorpions spell
 
 Calls forth a swarm of venomous scorpions.
+%%%%
+Summon Seismosaurus Egg spell
+
+Summons the egg of a brutish lizard, just on the verge of hatching. So long as
+there are foes nearby and the caster remains adjacent to the egg, it will hatch
+several turns after being summoned to wreck havoc upon its summoner's foes.
+
+Even as a juvenile, a seismosaurus is a force to be reckoned with. It is nearly
+as hardy as a mountain, and its footfalls are capable of creating violent
+seismic shockwaves. Each shockwave deals considerable damage to non-flying
+enemies, and may sometimes even cause them to lose their footing altogether.
 %%%%
 Summon Small Mammal spell
 

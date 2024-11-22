@@ -164,6 +164,8 @@ protected:
     void maybe_trigger_fugue_wail(const coord_def pos);
     void maybe_trigger_autodazzler();
 
+    bool paragon_defends_player();
+
     virtual int inflict_damage(int dam, beam_type flavour = NUM_BEAMS,
                                bool clean = false);
 

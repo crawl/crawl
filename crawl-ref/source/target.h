@@ -101,6 +101,7 @@ class targeter_smite : public targeter
 public:
     targeter_smite(const actor *act, int range = LOS_RADIUS,
                     int exp_min = 0, int exp_max = 0, bool wall_ok = false,
+                    bool monster_okay = true,
                     bool (*affects_pos_func)(const coord_def &) = 0);
     virtual bool set_aim(coord_def a) override;
     virtual bool valid_aim(coord_def a) override;
@@ -114,6 +115,7 @@ protected:
     int range;
 private:
     bool affects_walls;
+    bool can_target_monsters;
     bool (*affects_pos)(const coord_def &);
 };
 
@@ -664,4 +666,33 @@ class targeter_soul_splinter : public targeter_beam
 public:
     targeter_soul_splinter(const actor *act, int r);
     bool affects_monster(const monster_info& mon) override;
+};
+
+class targeter_surprising_crocodile : public targeter_smite
+{
+public:
+    targeter_surprising_crocodile(const actor* caster);
+    bool valid_aim(coord_def a) override;
+    bool set_aim(coord_def a) override;
+    aff_type is_affected(coord_def loc) override;
+private:
+    vector<coord_def> landing_spots;
+};
+
+class targeter_wall_arc : public targeter_smite
+{
+public:
+    targeter_wall_arc(const actor* caster, int size);
+    bool set_aim(coord_def a) override;
+    aff_type is_affected(coord_def loc) override;
+private:
+    int wall_num;
+    vector<coord_def> spots;
+};
+
+class targeter_tempering : public targeter_smite
+{
+public:
+    targeter_tempering();
+    bool valid_aim(coord_def a) override;
 };

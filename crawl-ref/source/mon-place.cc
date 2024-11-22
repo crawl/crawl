@@ -2714,10 +2714,18 @@ monster* mons_place(mgen_data mg)
         behaviour_event(creation, ME_EVAL);
     }
 
+    // If MG_AUTOFOE is set, find the nearest valid foe and point this monster
+    // towards it immediately.
     if (mg.flags & MG_AUTOFOE && (creation->attitude == ATT_FRIENDLY
                                   || mg.behaviour == BEH_CHARMED))
     {
         set_nearest_monster_foe(creation, true);
+        const actor* foe = creation->get_foe();
+        if (foe)
+        {
+            creation->behaviour = BEH_SEEK;
+            creation->target = foe->pos();
+        }
     }
 
     return creation;
@@ -2877,10 +2885,8 @@ conduct_type god_hates_monster(monster_type type)
 bool mons_can_hate(monster_type type)
 {
     return you.allies_forbidden()
-        // don't turn foxfire, guardian golem, etc hostile
-        && !mons_is_conjured(type)
-        // ignore things like tentacles, butterflies, plants, etc
-        && mons_class_gives_xp(type);
+        // don't turn foxfire, blocks of ice, etc hostile
+        && !mons_class_is_peripheral(type);
 }
 
 void check_lovelessness(monster &mons)

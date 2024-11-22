@@ -117,22 +117,6 @@ static void _mark_expiring(status_info& inf, bool expiring)
     }
 }
 
-static string _ray_text()
-{
-    const int n_plusses = max(you.attribute[ATTR_SEARING_RAY] - 1, 0);
-    return "Ray" + string(n_plusses, '+');
-}
-
-static vector<string> _charge_strings = { "Charge-", "Charge/",
-                                          "Charge|", "Charge\\"};
-
-static string _charge_text()
-{
-    static int charge_index = 0;
-    charge_index = (charge_index + 1) % 4;
-    return _charge_strings[charge_index];
-}
-
 /**
  * Populate a status_info struct from the duration_data struct corresponding
  * to the given duration_type.
@@ -172,6 +156,7 @@ static void _describe_invisible(status_info& inf);
 static void _describe_zot(status_info& inf);
 static void _describe_gem(status_info& inf);
 static void _describe_rev(status_info& inf);
+static void _describe_channelled_spell(status_info& inf);
 
 bool fill_status_info(int status, status_info& inf)
 {
@@ -646,24 +631,8 @@ bool fill_status_info(int status, status_info& inf)
         break;
 
     }
-    case STATUS_RAY:
-        if (you.attribute[ATTR_SEARING_RAY] && can_cast_spells(true))
-        {
-            inf.light_colour = WHITE;
-            inf.light_text   = _ray_text().c_str();
-        }
-        break;
-
-    case STATUS_FLAME_WAVE:
-        if (you.props.exists(FLAME_WAVE_KEY) && can_cast_spells(true))
-        {
-            // It's only possible to hit the prop = 0 case if we reprint the
-            // screen after the spell was cast but before the end of the
-            // player's turn, which mostly happens in webtiles. Great!
-            const int lvl = max(you.props[FLAME_WAVE_KEY].get_int() - 1, 0);
-            inf.light_colour = WHITE;
-            inf.light_text   = "Wave" + string(lvl, '+');
-        }
+    case STATUS_CHANNELLING_SPELL:
+        _describe_channelled_spell(inf);
         break;
 
     case STATUS_DIG:
@@ -715,7 +684,7 @@ bool fill_status_info(int status, status_info& inf)
     case DUR_HORROR:
     {
         const int horror = you.props[HORROR_PENALTY_KEY].get_int();
-        inf.light_text = make_stringf("Horr(%d)", -1 * horror);
+        inf.light_text = make_stringf("Horr (%d)", -1 * horror);
         if (horror >= HORROR_LVL_OVERWHELMING)
         {
             inf.light_colour = RED;
@@ -786,14 +755,6 @@ bool fill_status_info(int status, status_info& inf)
         {
             inf.light_colour = BROWN;
             inf.light_text = "-Clouds";
-        }
-        break;
-
-    case STATUS_MAXWELLS:
-        if (you.props.exists(COUPLING_TIME_KEY) && can_cast_spells(true))
-        {
-            inf.light_colour = LIGHTCYAN;
-            inf.light_text   = _charge_text().c_str();
         }
         break;
 
@@ -898,6 +859,23 @@ bool fill_status_info(int status, status_info& inf)
         }
         break;
     }
+
+    case DUR_PARAGON_ACTIVE:
+    {
+        if (paragon_defense_bonus_active())
+        {
+            inf.light_colour = WHITE;
+            inf.light_text = "Protected";
+        }
+        break;
+    }
+
+    case DUR_FORTRESS_BLAST_TIMER:
+        inf.light_colour = WHITE;
+        inf.light_text = "Blast" + string(max(0, (40 - you.duration[DUR_FORTRESS_BLAST_TIMER]) / 10), '.');
+        inf.short_text = "fortress blast";
+        inf.long_text = "Preparing a Fortress Blast.";
+        break;
 
     default:
         if (!found)
@@ -1212,6 +1190,54 @@ static void _describe_invisible(status_info& inf)
     }
     inf.long_text = "You are " + inf.short_text + ".";
     _mark_expiring(inf, dur_expiring(DUR_INVIS));
+}
+
+static vector<string> _charge_strings = { "Charge-", "Charge/",
+                                          "Charge|", "Charge\\"};
+
+static string _charge_text()
+{
+    static int charge_index = 0;
+    charge_index = (charge_index + 1) % 4;
+    return _charge_strings[charge_index];
+}
+
+static void _describe_channelled_spell(status_info& inf)
+{
+    const spell_type spell = (spell_type)you.attribute[ATTR_CHANNELLED_SPELL];
+    if (spell == SPELL_NO_SPELL)
+        return;
+
+    const int turns = you.attribute[ATTR_CHANNEL_DURATION];
+
+    switch (spell)
+    {
+        // It's only possible to hit the prop = 0 case if we reprint the
+        // screen after the spell was cast but before the end of the
+        // player's turn, which mostly happens in webtiles. Great!
+        case SPELL_FLAME_WAVE:
+            inf.light_colour = WHITE;
+            inf.light_text   = "Wave" + string(max(turns - 1, 0), '+');
+            break;
+
+        case SPELL_SEARING_RAY:
+            inf.light_colour = WHITE;
+            inf.light_text   = "Ray" + string(max(turns - 1, 0), '+');
+            break;
+
+        case SPELL_MAXWELLS_COUPLING:
+            inf.light_colour = LIGHTCYAN;
+            inf.light_text   = _charge_text().c_str();
+            break;
+
+        case SPELL_CLOCKWORK_BEE:
+            inf.light_colour = CYAN;
+            inf.light_text = "Winding" + string(max(turns - 1, 0), '.');
+            break;
+
+        default:
+            break;
+    }
 }
 
 /**

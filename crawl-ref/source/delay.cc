@@ -230,12 +230,14 @@ bool EquipOffDelay::try_interrupt(bool force)
 bool AscendingStairsDelay::try_interrupt(bool /*force*/)
 {
     mpr("You stop ascending the stairs.");
+    untag_followers();
     return true;  // short... and probably what people want
 }
 
 bool DescendingStairsDelay::try_interrupt(bool /*force*/)
 {
     mpr("You stop descending the stairs.");
+    untag_followers();
     return true;  // short... and probably what people want
 }
 
@@ -352,6 +354,12 @@ bool ImbueDelay::try_interrupt(bool force)
         return true;
     }
     return false;
+}
+
+bool ImprintDelay::try_interrupt(bool /*force*/)
+{
+    mpr("Your concentration is interrupted.");
+    return true;
 }
 
 void stop_delay(bool stop_relocations, bool force)
@@ -514,6 +522,12 @@ void ImbueDelay::start()
     mprf(MSGCH_MULTITURN_ACTION, "You begin to imbue your servitor with "
          "knowledge of %s.",
          spell_title(spell));
+}
+
+void ImprintDelay::start()
+{
+    mprf(MSGCH_MULTITURN_ACTION, "You begin to imprint %s upon your paragon.",
+         wpn.name(DESC_THE).c_str());
 }
 
 void TransformDelay::start()
@@ -980,6 +994,13 @@ void ImbueDelay::finish()
     you.props[SERVITOR_SPELL_KEY] = spell;
 }
 
+void ImprintDelay::finish()
+{
+    mprf("You finish imprinting the physical structure of %s upon your paragon.",
+            wpn.name(DESC_THE).c_str());
+    you.props[PARAGON_WEAPON_KEY].get_item() = wpn;
+}
+
 bool TransformDelay::invalidated()
 {
     // Got /poly'd while mid-transform?
@@ -1305,8 +1326,7 @@ static inline bool _monster_warning(activity_interrupt ai,
             if (player_under_penance(GOD_GOZAG)
                 && !mon->wont_attack()
                 && !mon->is_stationary()
-                && !mons_is_object(mon->type)
-                && !mons_is_tentacle_or_tentacle_segment(mon->type))
+                && !mon->is_peripheral())
             {
                 if (coinflip()
                     && mon->get_experience_level() >=

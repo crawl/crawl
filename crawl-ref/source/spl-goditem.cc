@@ -535,6 +535,11 @@ void debuff_player(bool ignore_resistance)
             mprf(MSGCH_DURATION, "You are no longer on fire.");
             end_sticky_flame_player();
         }
+        else if (duration == DUR_FORTRESS_BLAST_TIMER)
+        {
+            len = 0;
+            mprf(MSGCH_DURATION, "Your fortress blast dissipates harmlessly.");
+        }
         else if (len > 1)
         {
             len = 1;

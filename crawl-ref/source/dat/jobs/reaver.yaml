@@ -9,6 +9,7 @@ spells:
   - SPELL_KISS_OF_DEATH
   - SPELL_MOMENTUM_STRIKE
   - SPELL_HAILSTORM
+  - SPELL_RENDING_BLADE
 equipment:
   - "leather armour"
 weapon_choice: plain

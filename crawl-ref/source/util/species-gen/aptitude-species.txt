@@ -18,6 +18,7 @@
     {{{enum}, SK_HEXES,          {hexes}}},
     {{{enum}, SK_SUMMONINGS,     {summoning}}},
     {{{enum}, SK_NECROMANCY,     {necromancy}}},
+    {{{enum}, SK_FORGECRAFT,     {forgecraft}}},
     {{{enum}, SK_TRANSLOCATIONS, {translocations}}},
     {{{enum}, SK_FIRE_MAGIC,     {fire_magic}}},
     {{{enum}, SK_ICE_MAGIC,      {ice_magic}}},
@@ -33,6 +34,5 @@
     {{{enum}, SK_CHARMS,         UNUSABLE_SKILL}},
     {{{enum}, SK_SLINGS,         UNUSABLE_SKILL}},
     {{{enum}, SK_CROSSBOWS,      UNUSABLE_SKILL}},
-    {{{enum}, SK_TRANSMUTATIONS, UNUSABLE_SKILL}},
 #endif
 {tag_major_version_closer}

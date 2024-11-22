@@ -291,6 +291,16 @@ static const map<spschool, miscast_datum> miscast_effects = {
             },
         },
     },
+    {
+        spschool::forgecraft,
+        {
+            BEAM_NONE,
+            [] (actor& target, actor* /*source*/, miscast_source_info /*mc_info*/,
+                int /*dam*/, string /*cause*/) {
+                target.corrode_equipment("wild magic");
+            }
+        },
+    },
 };
 
 // Spell miscasts, contamination pluss the miscast effect

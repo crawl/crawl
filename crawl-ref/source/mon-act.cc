@@ -90,6 +90,8 @@ int monster::get_hit_dice() const
     // temp malmuts (-25% HD)
     if (has_ench(ENCH_WRETCHED))
         return max(drained_hd * 3 / 4, 1);
+    else if (has_ench(ENCH_TEMPERED))
+        return max(drained_hd + 4, 1);
     return max(drained_hd, 1);
 }
 
@@ -195,9 +197,9 @@ static bool _handle_ru_melee_redirection(monster &mons, monster **new_target)
         for (adjacent_iterator ai(mons.pos(), false); ai; ++ai)
         {
             monster* candidate = monster_at(*ai);
-            if (candidate == nullptr
+            if (!candidate
                 || mons_is_projectile(candidate->type)
-                || mons_is_firewood(*candidate)
+                || candidate->is_firewood()
                 || candidate->friendly())
             {
                 continue;
@@ -832,7 +834,8 @@ static bool _handle_swoop_or_flank(monster& mons)
     if (mons.confused() || !defender || !mons.can_see(*defender)
         || (mons_aligned(&mons, defender) && !mons.has_ench(ENCH_FRENZIED))
         || mons_is_fleeing(mons) || mons.pacified()
-        || is_sanctuary(mons.pos()) || is_sanctuary(defender->pos()))
+        || is_sanctuary(mons.pos()) || is_sanctuary(defender->pos())
+        || mons.has_ench(ENCH_BOUND))
     {
         return false;
     }
@@ -885,7 +888,10 @@ static bool _handle_swoop_or_flank(monster& mons)
                 defender->name(DESC_THE).c_str());
             }
         }
+        const coord_def old_pos = mons.pos();
         mons.move_to_pos(tracer.path_taken[j+1]);
+        // Apply traps and other location effects to the monster.
+        mons.apply_location_effects(old_pos);
         fight_melee(&mons, defender);
         mons.props[SWOOP_COOLDOWN_KEY].get_int() = you.elapsed_time
                                                   + 40 + random2(51);
@@ -1024,6 +1030,8 @@ static void _handle_boulder_movement(monster& boulder)
                 blocker_name = blocker->name(DESC_THE);
             else
                 blocker_name = feature_description_at(targ + dir);
+            if (blocker_name.empty())
+                blocker_name = "something";
 
             if (blocker || cell_is_solid(targ + dir))
             {
@@ -1095,7 +1103,7 @@ static void _handle_hellfire_mortar(monster& mortar)
     {
         if (!mons_aligned(&mortar, *ai) && monster_los_is_valid(&mortar, *ai))
         {
-            bolt tracer = mons_spell_beam(&mortar, SPELL_BOLT_OF_MAGMA, 100);
+            bolt tracer = mons_spell_beam(&mortar, SPELL_MAGMA_BARRAGE, 100);
             tracer.source = mortar.pos();
             tracer.target = ai->pos();
 
@@ -1121,10 +1129,10 @@ static void _handle_hellfire_mortar(monster& mortar)
         mortar.foe = actor_at(targs[i])->mindex();
 
         bolt beam;
-        setup_mons_cast(&mortar, beam, SPELL_BOLT_OF_MAGMA);
+        setup_mons_cast(&mortar, beam, SPELL_MAGMA_BARRAGE);
         beam.target = targs[i];
-        mons_cast(&mortar, beam, SPELL_BOLT_OF_MAGMA,
-                    mortar.spell_slot_flags(SPELL_BOLT_OF_MAGMA));
+        mons_cast(&mortar, beam, SPELL_MAGMA_BARRAGE,
+                    mortar.spell_slot_flags(SPELL_MAGMA_BARRAGE));
 
         ++shots_fired;
     }
@@ -1205,6 +1213,155 @@ static void _check_blazeheart_golem_link(monster& mons)
 
         // Give the golem another turn before it goes cold.
         mons.blazeheart_heat = 2;
+    }
+}
+
+static bool _handle_rending_blade_trigger(monster* blade)
+{
+    if (blade->number <= 0)
+        return false;
+
+    const int pow = blade->props[RENDING_BLADE_POWER_KEY].get_int();
+
+    coord_def best_targ;
+    int best_weight = 0;
+    int best_range = 0;
+    int num_best_found = 0;
+
+    // Look at all hostile enemies both you and the blade can see, then
+    // trace a path towards each of them, going as far as possible without
+    // exceeding the blade's maximum range (4), hitting an ally, or leaving
+    // the player's LoS. If no path is productive and safe, do nothing and
+    // hope we'll be in a better position next turn.
+    for (monster_near_iterator mi(blade, LOS_NO_TRANS); mi; ++mi)
+    {
+        if (mons_aligned(*mi, blade) || !you.can_see(**mi)
+            || grid_distance(mi->pos(), blade->pos()) > 4)
+        {
+            continue;
+        }
+
+        ray_def ray;
+        if (!find_ray(blade->pos(), mi->pos(), ray, opc_solid_see))
+            continue;
+
+        // Examine spaces one at a time, stopping if we hit a friendly
+        // monster, wall, or leave the player's LoS, and otherwise keep
+        // track of the furthest safe empty space we can occupy (to determine
+        // the maximal range of this shot).
+        int steps_taken = 0;
+        int furthest_safe = 0;
+        int enemy_power = 0;
+        int enemy_power_reachable = 0;
+
+        while (ray.advance() && steps_taken < 4)
+        {
+            ++steps_taken;
+            const coord_def p = ray.pos();
+
+            // Don't leave the player's LoS.
+            if (!you.see_cell_no_trans(p) || p == you.pos())
+                break;
+
+            if (monster* targ = monster_at(p))
+            {
+                // Don't hurt allies.
+                if (mons_aligned(blade, targ))
+                    break;
+
+                if (!targ->is_firewood())
+                    enemy_power += targ->get_experience_level();
+            }
+            // We need somewhere safe to end our path.
+            else if (monster_habitable_grid(MONS_RENDING_BLADE, p))
+            {
+                furthest_safe = steps_taken;
+                enemy_power_reachable = enemy_power;
+            }
+        }
+
+        if (furthest_safe > 0)
+        {
+            if (enemy_power_reachable > best_weight)
+            {
+                best_weight = enemy_power_reachable;
+                best_range = furthest_safe;
+                best_targ = mi->pos();
+                num_best_found = 0;
+            }
+            // Choose randomly among ties for best shot
+            else if (enemy_power_reachable > 0
+                     && enemy_power_reachable == best_weight
+                     && one_chance_in(++num_best_found))
+            {
+                best_weight = enemy_power_reachable;
+                best_range = furthest_safe;
+                best_targ = mi->pos();
+            }
+        }
+    }
+
+    // If we found no valid path, bail.
+    if (best_targ.origin())
+        return false;
+
+    // Point blade at foe, so it won't wander off
+    blade->foe = monster_at(best_targ)->mindex();
+
+    bolt slash;
+    zappy(ZAP_RENDING_SLASH, pow, true, slash);
+    slash.range = best_range;
+    slash.source = blade->pos();
+    slash.source_id = blade->mid;
+    slash.thrower = KILL_MON_MISSILE;
+    slash.origin_spell = SPELL_RENDING_BLADE;
+    slash.target = best_targ;
+    slash.hit_verb = "slices through";
+
+    simple_monster_message(*blade, " flashes!");
+
+    slash.fire();
+    blade->blink_to(slash.path_taken[slash.path_taken.size() - 1], true, true);
+    blade->number -= 1;
+
+    return true;
+}
+
+static void _handle_lightning_spire(monster& spire)
+{
+    // 50% chance of casting each turn
+    if (coinflip() || spire.is_silenced())
+        return;
+
+    // Gather all eligable targets in sight
+    vector<actor*> targs;
+    for (actor_near_iterator ai(&spire, LOS_NO_TRANS); ai; ++ai)
+    {
+        if (mons_aligned(*ai, &spire) || !monster_los_is_valid(&spire, *ai))
+            continue;
+
+        if (ai->is_peripheral())
+            continue;
+
+        targs.push_back(*ai);
+    }
+
+    // Sort farthest-to-nearest (with ties randomized)
+    shuffle_array(targs);
+    sort(targs.begin( ), targs.end( ), [spire](actor* a, actor* b)
+    {
+        return grid_distance(a->pos(), spire.pos())
+               > grid_distance(b->pos(), spire.pos());
+    });
+
+    // Now attempt to cast electrical bolt on each target, in order of
+    // decreasing priority.
+    for (size_t i = 0; i < targs.size(); ++i)
+    {
+        spire.foe = targs[i]->mindex();
+        spire.target = targs[i]->pos();
+        if (try_mons_cast(spire, SPELL_ELECTRICAL_BOLT))
+            return;
     }
 }
 
@@ -1408,9 +1565,9 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
             {
                 monster* new_target = monster_at(*ri);
 
-                if (new_target == nullptr
+                if (!new_target
                     || mons_is_projectile(new_target->type)
-                    || mons_is_firewood(*new_target)
+                    || new_target->is_firewood()
                     || new_target->friendly())
                 {
                     continue;
@@ -1565,8 +1722,6 @@ static void _pre_monster_move(monster& mons)
             mons.props.erase(FAUX_PAS_KEY);
     }
 
-    reset_battlesphere(&mons);
-
     fedhas_neutralise(&mons);
     slime_convert(&mons);
 
@@ -1712,6 +1867,16 @@ static bool _mons_take_special_action(monster &mons, int old_energy)
     return false;
 }
 
+static bool _beetle_must_return(const monster* mons)
+{
+    if (mons->type != MONS_PHALANX_BEETLE)
+        return false;
+
+    actor* creator = actor_by_mid(mons->summoner);
+    return creator && creator->alive()
+           && !adjacent(mons->pos(), creator->pos());
+}
+
 void handle_monster_move(monster* mons)
 {
     ASSERT(mons); // XXX: change to monster &mons
@@ -1777,12 +1942,6 @@ void handle_monster_move(monster* mons)
         return;
     }
 
-    if (mons->type == MONS_BATTLESPHERE)
-    {
-        if (fire_battlesphere(mons))
-            mons->lose_energy(EUT_SPECIAL);
-    }
-
     if (mons->type == MONS_FULMINANT_PRISM
         || mons->type == MONS_SHADOW_PRISM)
     {
@@ -1830,10 +1989,53 @@ void handle_monster_move(monster* mons)
         return;
     }
 
+    if (mons->type == MONS_DIAMOND_SAWBLADE)
+    {
+        // XXX: If its foe gets set to something that is no longer in sight, it
+        //      will refuse to shred entirely.
+        mons->foe = MHITNOT;
+        try_mons_cast(*mons, SPELL_SHRED);
+        mons->lose_energy(EUT_SPELL);
+        return;
+    }
+
+    if (mons->type == MONS_LIGHTNING_SPIRE)
+    {
+        _handle_lightning_spire(*mons);
+        mons->lose_energy(EUT_SPELL);
+        return;
+    }
+
+    // Melt barricades whose creator has moved too far away.
+    if (mons->type == MONS_SPLINTERFROST_BARRICADE)
+    {
+        actor* agent = actor_by_mid(mons->summoner);
+        if (!agent || grid_distance(agent->pos(), mons->pos()) > 2)
+        {
+            monster_die(*mons, KILL_TIMEOUT, NON_MONSTER);
+            return;
+        }
+    }
+
     if (mons->type == MONS_BLAZEHEART_CORE)
     {
         mons->suicide();
         return;
+    }
+
+    if (mons->type == MONS_RENDING_BLADE)
+    {
+        // Perform as many slashes as we are able and have charge for.
+        bool did_slash = false;
+        while (_handle_rending_blade_trigger(mons))
+            did_slash = true;
+
+        // Pause in place after attacking (for slightly better visuals).
+        if (did_slash)
+        {
+            mons->speed_increment = 60;
+            return;
+        }
     }
 
     // Friendly player shadows don't act independently (though hostile ones from
@@ -1895,7 +2097,9 @@ void handle_monster_move(monster* mons)
     if (mons->has_ench(ENCH_CHANNEL_SEARING_RAY))
     {
         // If we are continuing to fire searing ray, remain in place.
-        if (handle_searing_ray(*mons))
+        // XXX: Doesn't track how many turns this has been channelled, but that
+        //      doesn't presently matter.
+        if (handle_searing_ray(*mons, 1))
         {
             mons->speed_increment -= non_move_energy;
             return;
@@ -1920,9 +2124,7 @@ void handle_monster_move(monster* mons)
         && have_passive(passive_t::gold_aura)
         && you.see_cell(mons->pos())
         && !mons->asleep()
-        && !mons_is_conjured(mons->type)
-        && !mons_is_tentacle_or_tentacle_segment(mons->type)
-        && !mons_is_firewood(*mons)
+        && !mons->is_peripheral()
         && !mons->wont_attack())
     {
         const int gold = you.props[GOZAG_GOLD_AURA_KEY].get_int();
@@ -2059,6 +2261,7 @@ void handle_monster_move(monster* mons)
         if (targ
             && targ != mons
             && mons->behaviour != BEH_WITHDRAW
+            && !_beetle_must_return(mons)
             && (!(mons_aligned(mons, targ) || targ->type == MONS_FOXFIRE)
                 || mons->has_ench(ENCH_FRENZIED))
             && monster_los_is_valid(mons, targ))
@@ -2070,7 +2273,7 @@ void handle_monster_move(monster* mons)
                 return;
             }
             // Figure out if they fight.
-            else if ((!mons_is_firewood(*targ)
+            else if ((!targ->is_firewood()
                       || mons->is_child_tentacle())
                           && fight_melee(mons, targ))
             {
@@ -2373,11 +2576,8 @@ void clear_monster_flags()
 **/
 static void _update_monster_attitude(monster *mon)
 {
-    if (you.allies_forbidden()
-        && !mons_is_conjured(mon->type))
-    {
+    if (you.allies_forbidden() && !mon->is_peripheral())
         mon->attitude = ATT_HOSTILE;
-    }
 }
 
 vector<monster *> just_seen_queue;
@@ -2779,12 +2979,9 @@ static bool _mons_can_displace(const monster* mpusher,
     if (invalid_monster_index(ipushee))
         return false;
 
-    // Foxfires can always be pushed
-    if (mpushee->type == MONS_FOXFIRE)
-        return !mons_aligned(mpushee, mpusher); // But allies won't do it
-
     if (!mpushee->has_action_energy()
-        && !_same_tentacle_parts(mpusher, mpushee))
+        && !_same_tentacle_parts(mpusher, mpushee)
+        && mpushee->type != MONS_FOXFIRE)
     {
         return false;
     }
@@ -2801,6 +2998,10 @@ static bool _mons_can_displace(const monster* mpusher,
     {
         return false;
     }
+
+    // Foxfires can always be pushed
+    if (mpushee->type == MONS_FOXFIRE)
+        return !mons_aligned(mpushee, mpusher); // But allies won't do it
 
     // OODs should crash into things, not push them around.
     if (mons_is_projectile(*mpusher) || mons_is_projectile(*mpushee))
@@ -2949,7 +3150,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     }
 
     // Try to avoid deliberately blocking the player's line of fire.
-    if (mons->type == MONS_SPELLFORGED_SERVITOR)
+    if (mons->type == MONS_SPELLSPARK_SERVITOR)
     {
         const actor * const summoner = actor_by_mid(mons->summoner);
 
@@ -2974,6 +3175,43 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
                     else if (ray.pos() == targ)
                         return false;
                 }
+            }
+        }
+    }
+
+    // Never voluntarily leave your creator's side if you're already next to
+    // them (but can freely move to catch up with them, if not.)
+    if (mons->type == MONS_PHALANX_BEETLE)
+    {
+        actor* creator = actor_by_mid(mons->summoner);
+        if (creator && creator->alive())
+        {
+            if (adjacent(creator->pos(), mons->pos())
+                && !adjacent(creator->pos(), targ))
+            {
+                return false;
+            }
+            // Don't consider moving into enemies good enough if we're trying
+            // to return to our creator.
+            else if (!adjacent(creator->pos(), mons->pos())
+                     && actor_at(targ))
+            {
+                return false;
+            }
+        }
+    }
+
+    // Keep helpers with somewhat chaotic movement from deliberately breaking
+    // LoS with their owners.
+    if (mons->type == MONS_BATTLESPHERE || mons->type == MONS_RENDING_BLADE)
+    {
+        actor* creator = actor_by_mid(mons->summoner);
+        if (creator && creator->alive())
+        {
+            if (creator->see_cell_no_trans(mons->pos())
+                && !creator->see_cell_no_trans(targ))
+            {
+                return false;
             }
         }
     }
@@ -3014,7 +3252,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
 
         // Cut down plants only when no alternative, or they're
         // our target.
-        if (mons_is_firewood(*targmonster) && mons->target != targ)
+        if (targmonster->is_firewood() && mons->target != targ)
             return false;
 
         if ((mons_aligned(mons, targmonster)
@@ -3068,7 +3306,7 @@ static bool _may_cutdown(monster* mons, monster* targ)
     }
     // Outside of that case, can always cut mundane plants
     // (but don't try to attack briars unless their damage will be insignificant)
-    return mons_is_firewood(*targ)
+    return targ->is_firewood()
         && (targ->type != MONS_BRIAR_PATCH
             || (targ->friendly() && !mons_aligned(mons, targ))
             || mons->type == MONS_THORN_HUNTER

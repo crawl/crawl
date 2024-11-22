@@ -1,6 +1,6 @@
 name: "eldritch tentacle segment"
 glyph: {char: "*", colour: colour_undef}
-flags: [flies, see_invis, stationary, no_exp_gain, no_poly_to, no_threat]
+flags: [flies, see_invis, stationary, no_exp_gain, no_poly_to, no_threat, peripheral]
 resists: {elec: 3, fire: 3, cold: 3, acid: 3}
 genus: eldritch_tentacle
 holiness: [nonliving]

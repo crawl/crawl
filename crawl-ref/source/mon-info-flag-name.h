@@ -29,7 +29,6 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_MINION, "minion", "minion", "minion"},
     { MB_UNREWARDING, "", "unrewarding", ""},
     { MB_WANDERING, "wandering", "wandering", "wandering"},
-    { MB_SUMMONED_CAPPED, "expiring", "expiring", "expiring"},
     // Bad things for the player
     { MB_MESMERIZING, "mesmerising", "mesmerising", "mesmerising"},
     { MB_BERSERK, "berserk", "berserk", "berserk"},
@@ -153,4 +152,6 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_FROZEN_IN_TERROR, "paralysed with fear", "paralysed with fear", "paralysed with fear"},
     { MB_SOUL_SPLINTERED, "soul-splintered", "soul-splintered", "soul-splintered"},
     { MB_ENGULFING_PLAYER, "engulfing you", "engulfing you", "engulfing you"},
+    { MB_KINETIC_GRAPNEL, "grapneled", "grapneled", "grapneled"},
+    { MB_TEMPERED, "tempered", "tempered", "tempered"},
 };

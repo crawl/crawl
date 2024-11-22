@@ -7,8 +7,8 @@ genus: fire_vortex
 holiness: [nonliving]
 will: invuln
 attacks:
- - {type: hit, flavour: fire, damage: 18}
- - {type: hit, flavour: cold, damage: 14}
+ - {type: touch, flavour: fire, damage: 18}
+ - {type: engulf, flavour: cold, damage: 14}
 hd: 10
 hp_10x: 380
 ac: 4

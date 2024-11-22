@@ -944,13 +944,15 @@ void dismiss_divine_allies_fineff::fire()
 
 void death_spawn_fineff::fire()
 {
-    if (monster *pillar = create_monster(mgen_data(mon_type,
-                                                   BEH_HOSTILE, posn,
-                                                   MHITNOT, MG_FORCE_PLACE),
-                                         false))
-    {
-        pillar->add_ench(mon_enchant(ENCH_SLOWLY_DYING, 1, &you, duration));
-    }
+    create_monster(mg);
+}
+
+void splinterfrost_fragment_fineff::fire()
+{
+    if (!msg.empty())
+        mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s", msg.c_str());
+
+    beam.fire();
 }
 
 // Effects that occur after all other effects, even if the monster is dead.

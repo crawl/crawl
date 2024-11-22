@@ -434,3 +434,13 @@ The air has a green tinge for a moment
 Sulphurous heat explodes from thin air
 
 An unseen figure is coated in salt
+%%%%
+forgecraft miscast player
+
+You lose structural integrity
+
+You feel yourself deconstruct slightly
+%%%%%
+forgecraft miscast monster
+
+@The_monster@ loses structural integrity

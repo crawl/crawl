@@ -43,6 +43,8 @@ static const mutation_def mut_data[] =
   {"Your magical power and effects resist disruption.", "", ""},
   {"Your magical power grows resistant to disruption.", "", ""},
   {"Your magical power loses its resistance to disruption.", "", ""},
+
+  TILEG_MUT_INVIOLATE_MAGIC,
   0, {"Your magical power will grow resistant to disruption."}
 },
 
@@ -1018,6 +1020,7 @@ static const mutation_def mut_data[] =
   {"Your large and strong wings let you fly.", "", ""},
   {"Your wings grow larger and stronger.", "", ""},
   {"Your wings shrivel and weaken.", "", ""},
+  TILEG_MUT_BIG_WINGS,
 },
 #if TAG_MAJOR_VERSION == 34
 
@@ -1190,7 +1193,7 @@ static const mutation_def mut_data[] =
   {"You regain control of your magic.",
    "You feel more in control of your magic.",
    "You feel more in control of your magic."},
-  TILEG_MUT_GENERIC_GOOD_MUTATION,
+  TILEG_MUT_WILD_MAGIC,
 },
 
 { MUT_SUBDUED_MAGIC, 6, 3, mutflag::bad, false,
@@ -1207,7 +1210,7 @@ static const mutation_def mut_data[] =
   {"Your magic regains its normal vibrancy.",
    "Your connection to magic feels less subdued.",
    "Your connection to magic feels less subdued."},
-  TILEG_MUT_GENERIC_BAD_MUTATION,
+  TILEG_MUT_SUBDUED_MAGIC,
 },
 
 { MUT_EFFICIENT_MAGIC, 4, 2, mutflag::good, false,
@@ -2263,6 +2266,15 @@ static const mutation_def mut_data[] =
   {"You can no longer study or cast Alchemy magic.", "", ""},
   {"You can once more study and cast Alchemy magic.", "", ""},
   TILEG_MUT_NO_ALCHEMY_MAGIC,
+},
+
+{ MUT_NO_FORGECRAFT_MAGIC, 0, 1, mutflag::bad, false,
+  "no forgecraft magic",
+
+  {"You cannot study or cast Forgecraft magic.", "", ""},
+  {"You can no longer study or cast Forgecraft magic.", "", ""},
+  {"You can once more study and cast Forgecraft magic.", "", ""},
+  TILEG_MUT_NO_FORGECRAFT_MAGIC,
 },
 
 { MUT_NO_SUMMONING_MAGIC, 0, 1, mutflag::bad, false,

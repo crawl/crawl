@@ -518,8 +518,7 @@ bool valid_electric_charge_target(const actor& agent, coord_def target, string* 
     }
 
     // No charging at friends or firewood.
-    if (mons_aligned(act, &agent)
-        || act->is_monster() && mons_is_firewood(*act->as_monster()))
+    if (mons_aligned(act, &agent) || act->is_firewood())
     {
         if (fail_reason)
             *fail_reason = "Why would you want to do that?";
@@ -1273,7 +1272,7 @@ spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
         monster* mon = ai->is_monster() ? ai->as_monster() : nullptr;
         if (mons_aligned(&agent, *ai) || mon && mon->neutral())
             continue; // this should be enough to avoid penance?
-        if (mon && (mons_is_firewood(*mon) || mons_is_projectile(*mon)))
+        if (mon && (mon->is_firewood() || mons_is_projectile(*mon)))
             continue;
         if (!agent.can_see(**ai)
             || (agent.is_monster() && !monster_los_is_valid(agent.as_monster(), *ai)))
@@ -1346,18 +1345,25 @@ spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
             mpr("Space momentarily warps into an impossible shape!");
     }
 
-    const bool animate = (Options.use_animations & UA_BEAM) != UA_NONE;
-
     shuffle_array(targets);
     // UC is worse at launching multiple manifold assaults, since
     // shapeshifters have a much easier time casting it.
     const size_t max_targets = weapon ? 4 + div_rand_round(pow, 25)
                                       : 2 + div_rand_round(pow, 50);
+    const int animation_delay = 80 / max_targets;
+
+    if ((Options.use_animations & UA_BEAM) != UA_NONE)
+    {
+        for (size_t i = 0; i < max_targets && i < targets.size(); i++)
+        {
+            flash_tile(targets[i]->pos(), LIGHTMAGENTA, animation_delay,
+                       TILE_BOLT_MANIFOLD_ASSAULT);
+            view_clear_overlays();
+        }
+    }
+
     for (size_t i = 0; i < max_targets && i < targets.size(); i++)
     {
-        if (animate)
-            flash_tile(targets[i]->pos(), LIGHTMAGENTA, 0);
-
         melee_attack atk(&agent, targets[i]);
         atk.is_projected = true;
         if (katana_defender)
@@ -1382,9 +1388,6 @@ spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
             break;
         }
     }
-
-    if (animate)
-        animation_delay(50, true);
 
     return spret::success;
 }
@@ -1631,6 +1634,62 @@ spret cast_dispersal(int pow, bool fail)
     return spret::success;
 }
 
+void pull_monsters_inward(const coord_def& center, int radius)
+{
+    vector<coord_def> empty[LOS_RADIUS];
+    vector<monster*> targ;
+
+    // Build lists of valid monsters and empty spaces, sorted in order of distance
+    for (distance_iterator di(center, true, false, radius); di; ++di)
+    {
+        if (!you.see_cell_no_trans(*di))
+            continue;
+
+        const int dist = grid_distance(center, *di);
+        monster* mon = monster_at(*di);
+        if (mon && !mon->is_stationary() && !mons_is_projectile(*mon))
+            targ.push_back(mon);
+        else if (!mon && !feat_is_solid(env.grid(*di)))
+            empty[dist].push_back(*di);
+    }
+
+    // Move each monster to a nearer space, if we can
+    for (monster* mon : targ)
+    {
+        bool moved = false;
+        for (int dist = 0; dist <= radius; ++dist)
+        {
+            if (grid_distance(mon->pos(), center) <= dist)
+                break;
+
+            for (unsigned int i = 0; i < empty[dist].size(); ++i)
+            {
+                const coord_def new_pos = empty[dist][i];
+
+                if (monster_habitable_grid(mon, new_pos))
+                {
+                    const coord_def old_pos = mon->pos();
+                    mon->move_to_pos(new_pos);
+                    mon->apply_location_effects(old_pos);
+                    mons_relocated(mon);
+
+                    empty[dist].erase(empty[dist].begin() + i);
+
+                    if (grid_distance(center, old_pos) < 2)
+                        empty[grid_distance(center, old_pos) - 1].push_back(old_pos);
+
+                    moved = true;
+
+                    break;
+                }
+            }
+
+            if (moved)
+                break;
+        }
+    }
+}
+
 int gravitas_radius(int pow)
 {
     return 2 + (pow / 48);
@@ -1654,74 +1713,8 @@ spret cast_gravitas(int pow, const coord_def& where, bool fail)
                                                                      DESC_THE)
                                                                     .c_str() : "");
 
-    // Show animation
-    for (int i = radius; i >= 0; --i)
-    {
-        for (distance_iterator di(where, false, false, i); di; ++di)
-        {
-            if (grid_distance(where, *di) == i && !feat_is_solid(env.grid(*di))
-                && you.see_cell_no_trans(*di))
-            {
-                flash_tile(*di, LIGHTMAGENTA, 0);
-            }
-        }
-
-        animation_delay(50, true);
-        view_clear_overlays();
-    }
-
-    vector<coord_def> empty[LOS_RADIUS];
-    vector<monster*> targ;
-
-    // Build lists of valid monsters and empty spaces, sorted in order of distance
-    for (distance_iterator di(where, true, false, radius); di; ++di)
-    {
-        if (!you.see_cell_no_trans(*di))
-            continue;
-
-        const int dist = grid_distance(where, *di);
-        monster* mon = monster_at(*di);
-        if (mon && !mon->is_stationary() && !mons_is_projectile(*mon))
-            targ.push_back(mon);
-        else if (!mon && !feat_is_solid(env.grid(*di)))
-            empty[dist].push_back(*di);
-    }
-
-    // Move each monster to a nearer space, if we can
-    for (monster* mon : targ)
-    {
-        bool moved = false;
-        for (int dist = 0; dist <= radius; ++dist)
-        {
-            if (grid_distance(mon->pos(), where) <= dist)
-                break;
-
-            for (unsigned int i = 0; i < empty[dist].size(); ++i)
-            {
-                const coord_def new_pos = empty[dist][i];
-
-                if (monster_habitable_grid(mon, new_pos))
-                {
-                    const coord_def old_pos = mon->pos();
-                    mon->move_to_pos(new_pos);
-                    mon->apply_location_effects(old_pos);
-                    mons_relocated(mon);
-
-                    empty[dist].erase(empty[dist].begin() + i);
-
-                    if (grid_distance(where, old_pos) < 2)
-                        empty[grid_distance(where, old_pos) - 1].push_back(old_pos);
-
-                    moved = true;
-
-                    break;
-                }
-            }
-
-            if (moved)
-                break;
-        }
-    }
+    draw_ring_animation(where, radius, LIGHTMAGENTA);
+    pull_monsters_inward(where, radius);
 
     // Bind all hostile monsters in place and damage them
     // (friendlies are exempt from this part)
@@ -1733,7 +1726,7 @@ spret cast_gravitas(int pow, const coord_def& where, bool fail)
 
         if (monster* mon = monster_at(*di))
         {
-            if (mon->wont_attack())
+            if (mon->wont_attack() || mons_is_projectile(*mon))
                 continue;
 
             int dmg = zap_damage(ZAP_GRAVITAS, pow, false).roll();
@@ -1874,7 +1867,7 @@ vector<monster *> find_chaos_targets(bool just_check)
     {
         if (!mons_is_tentacle_or_tentacle_segment(mi->type)
             && !mons_class_is_stationary(mi->type)
-            && !mons_is_conjured(mi->type)
+            && !mi->is_peripheral()
             && !mi->friendly())
         {
             if (!just_check || you.can_see(**mi))
@@ -1940,7 +1933,7 @@ spret blinkbolt(int power, bolt &beam, bool fail)
         return spret::abort;
     }
 
-    if (mons_aligned(mons, &you) || mons_is_firewood(*mons))
+    if (mons_aligned(mons, &you) || mons->is_firewood())
     {
         canned_msg(MSG_UNTHINKING_ACT);
         return spret::abort;
@@ -1980,7 +1973,7 @@ spret blinkbolt(int power, bolt &beam, bool fail)
 
 static bool _valid_piledriver_target(monster* targ)
 {
-    return targ && !targ->friendly() && !mons_is_firewood(*targ)
+    return targ && !targ->friendly() && !targ->is_firewood()
            && !targ->is_stationary() && you.can_see(*targ);
 }
 
@@ -2146,11 +2139,8 @@ static void _maybe_penance_for_collision(god_conduct_trigger conducts[3], actor&
     if (victim.is_monster() && victim.alive())
     {
         //potentially penance
-        if (!mons_is_conjured(victim.as_monster()->type))
-        {
-            set_attack_conducts(conducts, *victim.as_monster(),
-                you.can_see(*victim.as_monster()));
-        }
+        set_attack_conducts(conducts, *victim.as_monster(),
+            you.can_see(*victim.as_monster()));
     }
 }
 

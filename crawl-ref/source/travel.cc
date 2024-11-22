@@ -547,12 +547,8 @@ static bool _is_safe_move(const coord_def& c)
     {
         // Stop before wasting energy on plants and fungi,
         // unless worshipping Fedhas.
-        if (you.can_see(*mon)
-            && mons_class_is_firewood(mon->type)
-            && !fedhas_passthrough(mon))
-        {
+        if (you.can_see(*mon) && mon->is_firewood() && !fedhas_passthrough(mon))
             return false;
-        }
 
         // If this is any *other* monster, it'll be visible and
         // a) Friendly, in which case we'll displace it, no problem.
@@ -4594,12 +4590,8 @@ bool runrest::run_should_stop() const
     const coord_def targ = you.pos() + pos;
     const map_cell& tcell = env.map_knowledge(targ);
 
-    // XXX: probably this should ignore cosmetic clouds (non-opaque)
-    if (tcell.cloud() != CLOUD_NONE
-        && !you.cloud_immune())
-    {
+    if (!_is_safe_cloud(targ))
         return true;
-    }
 
     if (is_excluded(targ) && !is_stair_exclusion(targ))
     {
@@ -4614,7 +4606,7 @@ bool runrest::run_should_stop() const
     if (mon && !fedhas_passthrough(tcell.monsterinfo()))
         return true;
 
-    if (count_adjacent_slime_walls(targ))
+    if (slime_wall_neighbour(targ) && !actor_slime_wall_immune(&you))
         return true;
 
     for (int i = 0; i < 3; i++)

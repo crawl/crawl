@@ -122,7 +122,7 @@ bool ranged_attack::attack()
     {
         if (ev_margin >= 0)
         {
-            if (!handle_phase_hit())
+            if (!paragon_defends_player() && !handle_phase_hit())
             {
                 if (!defender->alive())
                     handle_phase_killed();
@@ -392,7 +392,7 @@ int ranged_attack::calc_base_unarmed_damage() const
 {
     if (clumsy_throwing())
         return 0;
-    return throwing_base_damage_bonus(*projectile);
+    return throwing_base_damage_bonus(*projectile, true);
 }
 
 int ranged_attack::calc_mon_to_hit_base()

@@ -83,6 +83,7 @@
     Mike Adams
     Aj Adamson
     Nikhil Addleman
+    adelrune
     Alcon
     Brandon Allbery
     Warwick Allison
@@ -251,6 +252,7 @@
     Maciej Lapinski
     Lamil Lerran
     Jordan Lewis
+    Lici
     Sami Liedes
     Dom 'Bodrick' Light
     Lightli

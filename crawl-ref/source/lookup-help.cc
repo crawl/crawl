@@ -128,6 +128,7 @@ public:
 private:
     MenuEntry* make_menu_entry(char letter, string &key) const;
     string key_to_menu_str(const string &key) const;
+    vector<string> get_desc_keys(string regex) const;
 
     /**
      * Does this lookup type support toggling the sort order of results?
@@ -308,12 +309,38 @@ namespace
     };
 }
 
-static vector<string> _get_desc_keys(string regex, db_find_filter filter)
+vector<string> LookupType::get_desc_keys(string regex) const
 {
-    vector<string> key_matches = getLongDescKeysByRegex(regex, filter);
-    vector<string> body_matches = getLongDescBodiesByRegex(regex, filter);
+    vector<string> key_matches, body_matches;
 
-    // Merge key_matches and body_matches, discarding duplicates.
+    // Search by school skips regular searching.
+    if (type == "spell" && starts_with(regex, "@"))
+    {
+        regex.erase(0, 1);
+        spschools_type school;
+        text_pattern tpat(regex, true);
+        for (const auto _school : spschools_type::range())
+        {
+            if (tpat.matches(spelltype_long_name(_school)))
+                school = _school;
+        }
+
+        for (spell_type i = SPELL_NO_SPELL; i < NUM_SPELLS; ++i)
+        {
+            if ((get_spell_disciplines(i) & school) && is_player_book_spell(i))
+            {
+                string str = lowercase_string(make_stringf("%s spell", spell_title(i)));
+                key_matches.push_back(str);
+            }
+        }
+    }
+    else
+    {
+        key_matches = getLongDescKeysByRegex(regex, filter_forbid);
+        body_matches = getLongDescBodiesByRegex(regex, filter_forbid);
+    }
+
+    // Merge all types of matches, discarding duplicates.
     vector<string> tmp = key_matches;
     tmp.insert(tmp.end(), body_matches.begin(), body_matches.end());
     sort(tmp.begin(), tmp.end());
@@ -849,7 +876,7 @@ vector<string> LookupType::matching_keys(string regex) const
     else if (regex.size() == 1 && supports_glyph_lookup())
         key_list = glyph_fetch(regex[0]);
     else
-        key_list = _get_desc_keys(regex, filter_forbid);
+        key_list = get_desc_keys(regex);
 
     if (recap != nullptr)
         (*recap)(key_list);
@@ -1385,8 +1412,9 @@ static string _prompt_for_regex(const LookupType &lookup_type, string &err)
     const string type = lowercase_string(lookup_type.type);
     const string extra = lookup_type.supports_glyph_lookup() ?
         make_stringf(" Enter a single letter to list %s displayed by that"
-                     " symbol.", pluralise(type).c_str()) :
-        "";
+                     " symbol.", pluralise(type).c_str())
+        : lookup_type.type == "spell" ? " Preface with '@' to search by school."
+        : "";
     const string prompt = make_stringf(
          "Describe a %s; partial names and regexps are fine.%s\n"
          "Describe what? ",

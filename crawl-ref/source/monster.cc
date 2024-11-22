@@ -525,7 +525,7 @@ item_def *monster::get_defining_object() const
     // really guarantee these items
     if (mons_class_is_animated_weapon(type) && inv[MSLOT_WEAPON] != NON_ITEM)
         return &env.item[inv[MSLOT_WEAPON]];
-    else if (type == MONS_ANIMATED_ARMOUR && inv[MSLOT_ARMOUR] != NON_ITEM)
+    else if (type == MONS_ARMOUR_ECHO && inv[MSLOT_ARMOUR] != NON_ITEM)
         return &env.item[inv[MSLOT_ARMOUR]];
 
     return nullptr;
@@ -1045,8 +1045,15 @@ bool monster::unequip(item_def &item, bool msg, bool force)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        if (!force && mons_class_is_animated_object(type))
+        // In specific circumstances, it is possible for a launcher-wielding
+        // paragon to put their launcher away to punch something instead (which
+        // causes problems with its abilities). So try to prevent them from
+        // doing this.
+        if (!force && mons_class_is_animated_object(type)
+            && type != MONS_PLATINUM_PARAGON)
+        {
             return false;
+        }
         unequip_weapon(item, msg);
         break;
 
@@ -3201,7 +3208,7 @@ int monster::base_armour_class() const
         return get_experience_level() / 2;
     }
 
-    if (type == MONS_ANIMATED_ARMOUR)
+    if (type == MONS_ARMOUR_ECHO)
     {
         // Armour spirits get double AC from their armour.
         const int armour_slot = inv[MSLOT_ARMOUR];
@@ -4101,6 +4108,7 @@ int monster::skill(skill_type sk, int scale, bool /*real*/, bool /*temp*/) const
     case SK_EARTH_MAGIC:
     case SK_AIR_MAGIC:
     case SK_SUMMONINGS:
+    case SK_FORGECRAFT:
         return is_actual_spellcaster() ? hd : hd / 3;
 
     // Weapon skills for spectral weapon
@@ -4382,7 +4390,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
            did_hurt_conduct(DID_HURT_FOE, *this, amount);
         }
 
-        if (amount && !mons_is_firewood(*this)
+        if (amount && !is_firewood()
             && agent && agent->alive() && agent->is_monster()
             && agent->as_monster()->has_ench(ENCH_ANGUISH))
         {
@@ -4555,19 +4563,10 @@ void monster::uglything_init(bool only_mutate)
     colour          = ghost->colour;
 }
 
-void monster::inugami_init()
-{
-    hit_dice            = ghost->xl;
-    // these `max`es let an incomplete inugami be valid long enough to get
-    // fully set up
-    max_hit_points      = max(static_cast<int>(ghost->max_hp), 1);
-    hit_points          = max(max_hit_points, 1);
-}
-
 void monster::ghost_demon_init()
 {
-    hit_dice        = ghost->xl;
-    max_hit_points  = min<short int>(ghost->max_hp, MAX_MONSTER_HP);
+    hit_dice        = max<short int>(ghost->xl, 1);
+    max_hit_points  = max<short int>(1, min<short int>(ghost->max_hp, MAX_MONSTER_HP));
     hit_points      = max_hit_points;
     speed           = ghost->speed;
     speed_increment = 70;
@@ -4774,7 +4773,7 @@ bool monster::needs_abyss_transit() const
                && get_experience_level() > 8 + random2(25)
                && mons_can_use_stairs(*this))
         && !is_summoned()
-        && !mons_is_conjured(type)
+        && !is_peripheral()
         // We want to 'kill' banished apostles for real, so that they can escape
         // on their own instead of being actually lost in the abyss
         && type != MONS_ORC_APOSTLE;
@@ -4968,7 +4967,6 @@ bool monster::can_get_mad() const
         return false;
 
     // Brainless natural monsters can still be berserked/frenzied.
-    // This could maybe all be replaced by mons_is_object()?
     if (mons_intel(*this) == I_BRAINLESS && !(holiness() & MH_NATURAL))
         return false;
 
@@ -5272,7 +5270,8 @@ static bool _mons_is_icy(int mc)
            || mc == MONS_BLOCK_OF_ICE
            || mc == MONS_NARGUN
            || mc == MONS_HOARFROST_CANNON
-           || mc == MONS_PILLAR_OF_RIME;
+           || mc == MONS_PILLAR_OF_RIME
+           || mc == MONS_SPLINTERFROST_BARRICADE;
 }
 
 bool monster::is_icy() const
@@ -5590,7 +5589,7 @@ bool monster::do_shaft()
     // If a pacified monster is leaving the level via a shaft trap, and
     // has reached its goal, vaporize it instead of moving it.
     // ditto, non-monsters like battlespheres and prisms.
-    if (!pacified() && !mons_is_conjured(type))
+    if (!pacified() && !is_peripheral())
         set_transit(lev);
 
     string msg = make_stringf(" %s a shaft!",
@@ -5665,7 +5664,7 @@ bool monster::matches_player_speed() const
 {
     if (crawl_state.game_is_arena()
         || !mons_is_recallable(&you, *this)
-        || is_summoned())
+        || has_ench(ENCH_SUMMON_TIMER))
     {
         return false;
     }
@@ -5675,11 +5674,8 @@ bool monster::matches_player_speed() const
     for (radius_iterator ri(pos(), 5, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
     {
         const monster* m = monster_at(*ri);
-        if (m && !m->wont_attack() && !mons_is_firewood(*m)
-              && m->visible_to(this))
-        {
+        if (m && !m->wont_attack() && !m->is_firewood() && m->visible_to(this))
             return false;
-        }
     }
     return true;
 }
@@ -6520,11 +6516,8 @@ bool monster::angered_by_attacks() const
             && !mons_is_avatar(type)
             && !mons_class_is_zombified(type)
             && !is_divine_companion()
-            && type != MONS_SPELLFORGED_SERVITOR
-            && type != MONS_HOARFROST_CANNON
-            && type != MONS_BLOCK_OF_ICE
-            && !mons_is_conjured(type)
             && !testbits(flags, MF_DEMONIC_GUARDIAN)
+            && !((holiness() & MH_NONLIVING) && mons_intel(*this) == I_BRAINLESS)
             // allied fed plants, hep ancestor:
             && !god_protects(*this);
 }
@@ -6559,4 +6552,14 @@ monster* monster::get_band_leader() const
 void monster::set_band_leader(const monster& leader)
 {
     props[BAND_LEADER_KEY].get_int() = leader.mid;
+}
+
+bool monster::is_firewood() const
+{
+    return mons_class_is_firewood(type);
+}
+
+bool monster::is_peripheral() const
+{
+    return mons_class_is_peripheral(type);
 }

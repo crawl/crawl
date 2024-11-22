@@ -1060,3 +1060,43 @@ Escape! status
 
 A path out of the Crucible has opened. Find it and claim your freedom again. For
 a time.
+%%%%
+Shield status
+
+You are protected by a divine shield. Enemies that strike it in melee will have
+their attacks completely blocked, and they may also be blinded by its light.
+%%%%
+Blast status
+
+You are preparing to unleash a kinetic shockwave and cannot move until this is
+complete.
+%%%%
+Blast. status
+
+<Blast status>
+%%%%
+Blast.. status
+
+<Blast status>
+%%%%
+Blast... status
+
+<Blast status>
+%%%%
+Winding status
+
+You are winding up your clockwork bee. It cannot attack its target until it is
+fully wound up.
+%%%%
+Winding. status
+
+<Winding status>
+%%%%
+Winding.. status
+
+<Winding status>
+%%%%
+Winding... status
+
+<Winding status>
+%%%%

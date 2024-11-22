@@ -254,8 +254,6 @@ static unordered_set<int> _player_nonbook_spells =
     SPELL_CAUSTIC_BREATH,
     SPELL_GALVANIC_BREATH,
     SPELL_MUD_BREATH,
-    // Activate component of Seismic Cannonade
-    SPELL_SEISMIC_SHOCKWAVE,
 };
 
 bool is_player_spell(spell_type which_spell)
@@ -528,7 +526,7 @@ protected:
     virtual formatted_string calc_title() override
     {
         return formatted_string::parse_string(
-                    make_stringf("<w>Spells %s                 Type                          %sLevel",
+                    make_stringf("<w>Spells %s                   Type                      %sLevel",
                         current_action == action::cast ? "(Cast)    "
                         : current_action == action::memorise ? "(Memorise)"
                         : current_action == action::describe ? "(Describe)"
@@ -788,12 +786,12 @@ private:
             desc << "<" << colour_to_str(colour) << ">";
 
             desc << left;
-            desc << chop_string(spell.name, 30);
+            desc << chop_string(spell.name, 32);
             desc << spell.school;
 
             int so_far = strwidth(desc.str()) - (colour_to_str(colour).length()+2);
-            if (so_far < 60)
-                desc << string(60 - so_far, ' ');
+            if (so_far < 58)
+                desc << string(58 - so_far, ' ');
             desc << "</" << colour_to_str(colour) << ">";
 
             if (you.divine_exegesis)
@@ -850,7 +848,7 @@ public:
                 you.magic_points);
         }
         else if (default_action == action::imbue)
-            spell_levels_str = "<lightgreen>Select a spell to imbue your Spellforged Servitor with:</lightgreen>";
+            spell_levels_str = "<lightgreen>Select a spell to imbue your Spellspark Servitor with:</lightgreen>";
         else
         {
             spell_levels_str = make_stringf("<lightgreen>%d spell level%s"

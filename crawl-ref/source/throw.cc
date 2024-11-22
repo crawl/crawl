@@ -42,6 +42,7 @@
 #include "showsymb.h"
 #include "skills.h"
 #include "sound.h"
+#include "spl-summoning.h"
 #include "state.h"
 #include "stringutil.h"
 #include "tag-version.h"
@@ -621,9 +622,12 @@ void throw_it(quiver::action &a)
 
     if (you.confused())
     {
-        a.target.target = you.pos();
-        a.target.target.x += random2(13) - 6;
-        a.target.target.y += random2(13) - 6;
+        do
+        {
+            a.target.target.x = you.pos().x + random2(13) - 6;
+            a.target.target.y = you.pos().y + random2(13) - 6;
+        } while (a.target.target == you.pos());
+
         a.target.isValid = true;
         a.target.cmd_result = CMD_FIRE;
     }
@@ -740,6 +744,9 @@ void throw_it(quiver::action &a)
     {
         dithmenos_shadow_shoot(a.target, item);
     }
+
+    if (aimed_at_foe && launcher && you.duration[DUR_PARAGON_ACTIVE])
+        paragon_attack_trigger();
 }
 
 // Once the player has committed to a target, shoot/throw/toss at it.

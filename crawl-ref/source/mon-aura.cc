@@ -3,6 +3,7 @@
 #include "mon-aura.h"
 
 #include "act-iter.h"
+#include "coord.h"
 #include "fprop.h"
 #include "monster.h"
 #include "mon-ench.h"
@@ -17,18 +18,21 @@ struct mon_aura_data
     string player_key;
     function<bool(const actor& targ)> valid_target;
     function<void(const monster& source)> player_msg;
+    bool adjacent_only;
 
     mon_aura_data(monster_type _mon_source, enchant_type _ench_type,
                   int _base_duration, bool _is_hostile,
                   duration_type _dur_type = NUM_DURATIONS,
                   string _player_key = "",
                   function<bool(const actor& targ)> _valid_target = nullptr,
-                  function<void(const monster& source)> _player_msg = nullptr):
+                  function<void(const monster& source)> _player_msg = nullptr,
+                  bool _adjacent_only = false):
                   mon_source(_mon_source), ench_type(_ench_type),
                   base_duration(_base_duration), is_hostile(_is_hostile),
                   dur_type(_dur_type), player_key(_player_key),
                   valid_target(_valid_target),
-                  player_msg(_player_msg)
+                  player_msg(_player_msg),
+                  adjacent_only(_adjacent_only)
                   {}
 };
 
@@ -65,6 +69,10 @@ static const vector<mon_aura_data> aura_map =
         ENCH_DOUBLED_VIGOUR, 1, false,
         NUM_DURATIONS, "",
         [](const actor& targ) { return targ.type != MONS_APIS ;}},
+
+    {MONS_PHALANX_BEETLE,
+        ENCH_NONE, 1, false, DUR_PHALANX_BARRIER, PHALANX_BARRIER_KEY,
+         nullptr, nullptr, true},
 };
 
 static mon_aura_data _get_aura_for(const monster& mon)
@@ -142,6 +150,9 @@ bool mons_has_aura_of_type(const monster& mon, duration_type type)
 static bool _aura_could_affect(const mon_aura_data& aura, const monster& source,
                                const actor& victim)
 {
+    if (aura.adjacent_only && !adjacent(source.pos(), victim.pos()))
+        return false;
+
     // Auras do not apply to self
     if (victim.is_monster() && victim.as_monster() == &source)
         return false;
@@ -151,11 +162,10 @@ static bool _aura_could_affect(const mon_aura_data& aura, const monster& source,
         return false;
 
     // Is the aura something that should affect firewood?
-    if (victim.is_monster() && mons_is_firewood(*victim.as_monster())
-         && aura.ench_type != ENCH_INJURY_BOND)
-    {
+    // (Guarding firewood may sound silly, but is quite relevant for Fedhas
+    // + Martyr's Knell)
+    if (victim.is_firewood() && aura.ench_type != ENCH_INJURY_BOND)
         return false;
-    }
 
     // If the aura suppressed by sanctuary?
     if (aura.is_hostile && (is_sanctuary(source.pos()) || is_sanctuary(victim.pos())))
@@ -216,7 +226,12 @@ void mons_update_aura(const monster& mon)
         return;
 
     if (!you.duration[aura.dur_type])
-        aura.player_msg(mon);
+    {
+        if (aura.player_msg)
+            aura.player_msg(mon);
+        if (aura.dur_type == DUR_PHALANX_BARRIER)
+            you.redraw_armour_class = true;
+    }
 
     you.duration[aura.dur_type] = aura.base_duration;
     you.props[aura.player_key].get_bool() = true;

@@ -1,0 +1,31 @@
+enum: JOB_FORGEWRIGHT
+name: "Forgewright"
+short_name: "Fw"
+category: Mage
+category_priority: 80
+str: 2
+int: 7
+dex: 3
+spells:
+  - SPELL_KINETIC_GRAPNEL
+  - SPELL_SPIKE_LAUNCHER
+  - SPELL_CLOCKWORK_BEE
+  - SPELL_FORGE_BLAZEHEART_GOLEM
+  - SPELL_FORGE_LIGHTNING_SPIRE
+equipment:
+  - "robe"
+  - "potion of magic"
+  - "mace tile:wpn_hammer wtile:hammer itemname:hammer"
+recommended_species:
+  - mountain dwarf
+  - coglin
+  - barachi
+  - human
+  - vine stalker
+  - merfolk
+skills:
+  dodging: 2
+  stealth: 2
+  spellcasting: 2
+  forgecraft: 4
+create_enum: false

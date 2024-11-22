@@ -155,6 +155,8 @@ public:
                         int summon_type = SPELL_NO_SPELL) const override;
     bool is_abjurable() const;
     bool is_unrewarding() const;
+    bool is_firewood() const override;
+    bool is_peripheral() const override;
     bool has_action_energy() const;
     void drain_action_energy();
     bool matches_player_speed() const;
@@ -244,7 +246,6 @@ public:
     void set_ghost(const ghost_demon &ghost);
     void ghost_init(bool need_pos = true);
     void ghost_demon_init();
-    void inugami_init();
     void uglything_init(bool only_mutate = false);
     void uglything_mutate(colour_t force_colour = COLOUR_UNDEF);
     void destroy_inventory();
@@ -474,7 +475,7 @@ public:
 
     int base_armour_class() const;
     int armour_class() const override;
-    int gdr_perc() const override { return 0; }
+    int gdr_perc(bool) const override { return 0; }
     int base_evasion() const;
     int evasion(bool ignore_temporary = false,
                 const actor* /*attacker*/ = nullptr) const override;

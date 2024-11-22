@@ -26,6 +26,8 @@ aptitudes:
   shields: 1
   spellcasting: -2
   translocations: -2
+  forgecraft: 2
+  summoning: -2
   shapeshifting: -2
   fire_magic: 2
   earth_magic: 1

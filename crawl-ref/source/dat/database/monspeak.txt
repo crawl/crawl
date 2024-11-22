@@ -1316,6 +1316,13 @@ VISUAL:@The_monster@ briefly looks inexplicably like a @_form_@.
 
 VISUAL:@The_monster@ briefly turns into a @_form_@ and back.
 %%%%
+Forgecraft player ghost
+
+# Ozymandias
+@The_monster@ says @to_foe@, "Look on my works and despair!"
+
+@The_monster@ says @to_foe@, "My constructs will outlast you."
+%%%%
 Ashenzari player ghost
 
 @The_monster@ says @to_foe@, "Life is a curse, you will soon understand."
@@ -7684,9 +7691,9 @@ VISUAL:@The_monster@ glitters topaz in the dim dungeon light.
 ################## Hoarfrost cannon ##########################
 default hoarfrost cannon
 
-VISUAL: Water drips from @the_monster_possessive@ barrel.
+VISUAL:Water drips from @the_monster_possessive@ barrel.
 
-VISUAL: A cold fog rises from @the_monster@.
+VISUAL:A cold fog rises from @the_monster@.
 
 @The_monster@ makes a faint grinding noise.
 %%%%

@@ -26,6 +26,7 @@ aptitudes:
   conjurations: -1
   hexes: -1
   alchemy: +1
+  forgecraft: +2
   fire_magic: -1
   ice_magic: -1
   air_magic: -1

@@ -44,6 +44,7 @@ cat1 CORPSE_FELID
 frilled_lizard CORPSE_FRILLED_LIZARD
 iguana CORPSE_IGUANA
 basilisk CORPSE_BASILISK
+seismosaurus CORPSE_SEISMOSAURUS
 komodo_dragon CORPSE_KOMODO_DRAGON
 
 ## Rodents ('r')

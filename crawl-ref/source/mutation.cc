@@ -359,6 +359,8 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
                 return mutation_activity_type::FULL;
             if (mut == MUT_STEAM_RESISTANCE && drag == MONS_STEAM_DRAGON)
                 return mutation_activity_type::FULL;
+            if (mut == MUT_IRON_FUSED_SCALES && drag == MONS_IRON_DRAGON)
+                return mutation_activity_type::FULL;
         }
         // Vampire bats keep their fangs.
         if (you.form == transformation::bat
@@ -2844,7 +2846,7 @@ string get_mutation_desc(mutation_type mut)
 
     const string quote = getQuoteString(key);
     if (!quote.empty())
-        desc << "\n\n" << quote;
+        desc << "\n_________________\n\n<darkgrey>" << quote << "</darkgrey>";
     return desc.str();
 }
 
@@ -3383,6 +3385,7 @@ void roll_demonspawn_mutations()
 bool perma_mutate(mutation_type which_mut, int how_much, const string &reason)
 {
     ASSERT(_is_valid_mutation(which_mut));
+    ASSERT(!mut_check_conflict(which_mut, true));
 
     int cap = get_mutation_cap(which_mut);
     how_much = min(how_much, cap);
@@ -3571,7 +3574,7 @@ void check_monster_detect()
                 cell.clear_monster();
             continue;
         }
-        if (mons_is_firewood(*mon))
+        if (mon->is_firewood())
             continue;
 
         // [ds] If the PC remembers the correct monster at this

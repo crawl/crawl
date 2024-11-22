@@ -19,6 +19,7 @@
 #include "spl-util.h"
 #include "stringutil.h" // make_stringf
 #include "terrain.h"
+#include "rltiles/tiledef-main.h"
 #include "view.h"
 
 int englaciate(coord_def where, int pow, actor *agent)
@@ -34,12 +35,8 @@ int englaciate(coord_def where, int pow, actor *agent)
     monster* mons = victim->as_monster();
 
     // Skip some ineligable monster categories
-    if (mons &&
-        (mons_is_conjured(mons->type) || mons_is_firewood(*mons)
-        || mons_is_tentacle_segment(mons->type)))
-    {
+    if (victim->is_peripheral())
         return 0;
-    }
 
     if (victim->res_cold() > 0)
     {
@@ -239,8 +236,7 @@ string describe_rimeblight_damage(int pow, bool terse)
 bool maybe_spread_rimeblight(monster& victim, int power, bool test_only)
 {
     if (!victim.has_ench(ENCH_RIMEBLIGHT)
-        && !mons_is_firewood(victim)
-        && !mons_is_conjured(victim.type)
+        && !victim.is_peripheral()
         && x_chance_in_y(2, 3)
         && you.see_cell_no_trans(victim.pos()))
     {
@@ -341,20 +337,7 @@ spret cast_sign_of_ruin(actor& caster, coord_def target, int duration, bool chec
         return spret::abort;
 
     // Show animation
-    for (int i = 2; i >= 0; --i)
-    {
-        for (distance_iterator di(target, false, false, i); di; ++di)
-        {
-            if (grid_distance(target, *di) == i && !feat_is_solid(env.grid(*di))
-                && you.see_cell_no_trans(*di))
-            {
-                flash_tile(*di, random_choose(DARKGRAY, RED), 0);
-            }
-        }
-
-        animation_delay(50, true);
-        view_clear_overlays();
-    }
+    draw_ring_animation(target, 2, DARKGRAY, RED);
 
     // Apply signs
     for (actor* act : targets)
@@ -375,4 +358,55 @@ spret cast_sign_of_ruin(actor& caster, coord_def target, int duration, bool chec
     }
 
     return spret::success;
+}
+
+spret cast_percussive_tempering(const actor& caster, monster& target, int power,
+                                bool fail)
+{
+    ASSERT(is_valid_tempering_target(target, caster));
+
+    fail_check();
+
+    if (you.can_see(target))
+    {
+        mprf("A magical hammer augments %s in a flurry of sparks and slag.",
+             target.name(DESC_THE).c_str());
+    }
+
+    flash_tile(target.pos(), WHITE, 0, TILE_BOLT_PERCUSSIVE_TEMPERING);
+
+    bolt shockwave;
+    shockwave.set_agent(&caster);
+    shockwave.attitude = caster.temp_attitude();
+    shockwave.source = target.pos();
+    shockwave.target = target.pos();
+    shockwave.is_explosion = true;
+    shockwave.ex_size = 1;
+    shockwave.origin_spell = SPELL_PERCUSSIVE_TEMPERING;
+    zappy(ZAP_PERCUSSIVE_TEMPERING, power, true, shockwave);
+    shockwave.explode(true, true);
+
+    target.heal(roll_dice(3, 10));
+    target.add_ench(mon_enchant(ENCH_TEMPERED, 0, &caster, random_range(70, 100)));
+
+    return spret::success;
+}
+
+bool is_valid_tempering_target(const monster& mon, const actor& caster)
+{
+    if (!mon.was_created_by(caster) || mon.has_ench(ENCH_TEMPERED))
+        return false;
+
+    mon_enchant summ = mon.get_ench(ENCH_SUMMON);
+    if (summ.degree > 0)
+    {
+        const spell_type spell = (spell_type)summ.degree;
+        // XXX: Bomblets are marked as created by the player cast of Monarch
+        //      Bomb in order to track all detontation targets, but should *not*
+        //      count as valid targets for Percussive Tempering despite this.
+        if (!!(get_spell_disciplines(spell) & spschool::forgecraft))
+            return mon.type != MONS_BOMBLET;
+    }
+
+    return false;
 }

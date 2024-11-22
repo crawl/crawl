@@ -182,6 +182,9 @@ int artefact_value(const item_def &item)
         if (prop[i])
             ret += 8;
 
+    if (prop[ARTP_ENHANCE_FORGECRAFT])
+        ret += 8;
+
     return (ret > 0) ? ret : 0;
 }
 

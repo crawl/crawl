@@ -67,6 +67,7 @@
 #include "shopping.h"
 #include "skills.h"
 #include "spl-book.h"
+#include "spl-summoning.h"
 #include "sprint.h"
 #include "state.h"
 #include "stringutil.h"
@@ -1670,7 +1671,7 @@ bool is_follower(const monster& mon)
     else
     {
         return mon.alive() && mon.attitude == ATT_FRIENDLY
-               && !mons_is_conjured(mon.type);
+                           && !mon.is_summoned();
     }
 }
 
@@ -3270,7 +3271,8 @@ bool god_hates_attacking_friend(god_type god, const monster& fr)
 
     monster_type species = fr.mons_species();
 
-    if (mons_is_object(species))
+    // Nobody minds you hurting inanimate objects
+    if ((fr.holiness() & MH_NONLIVING) && mons_intel(fr) == I_BRAINLESS)
         return false;
     switch (god)
     {
@@ -3390,6 +3392,18 @@ static void _god_welcome_handle_gear()
             mprf(MSGCH_GOD, "%s warns you to remove %s.",
                  uppercase_first(god_name(you.religion)).c_str(),
                  item->name(DESC_YOUR, false, false, false).c_str());
+        }
+    }
+
+    if (you.props.exists(PARAGON_WEAPON_KEY))
+    {
+        item_def wpn = you.props[PARAGON_WEAPON_KEY].get_item();
+        if (god_hates_item(wpn))
+        {
+            mprf(MSGCH_GOD, "%s removes the imprint of %s from your paragon.",
+                 god_name(you.religion).c_str(),
+                 wpn.name(DESC_THE).c_str());
+            you.props.erase(PARAGON_WEAPON_KEY);
         }
     }
 
@@ -4112,13 +4126,6 @@ bool god_hates_killing(god_type god, const monster& mon)
 {
     if (invalid_monster(&mon))
         return false;
-    // Must be at least a creature of sorts. Smacking down an enchanted
-    // weapon or disrupting a lightning doesn't count. Technically, this
-    // might raise a concern about necromancy but zombies traditionally
-    // count as creatures and that's the average person's (even if not ours)
-    // intuition.
-    if (mons_is_object(mon.type))
-        return false;
 
     // kill as many illusions as you want.
     if (mon.is_illusion())
@@ -4547,7 +4554,7 @@ int get_monster_tension(const monster& mons, god_type god)
     // or bomb is offhand, but they should count for _some_ minimal tension.
     if (exper <= 0)
     {
-        if (mons_is_conjured(mons.type))
+        if (mons.is_peripheral())
             exper = 50;
         else
             return 0;

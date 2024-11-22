@@ -23,6 +23,7 @@
 #include "ray.h"
 #include "spl-damage.h"
 #include "spl-goditem.h" // player_is_debuffable
+#include "spl-monench.h"
 #include "spl-summoning.h"
 #include "spl-other.h"
 #include "spl-transloc.h"
@@ -392,9 +393,11 @@ aff_type targeter_view::is_affected(coord_def loc)
 
 targeter_smite::targeter_smite(const actor* act, int ran,
                                  int exp_min, int exp_max, bool wall_ok,
+                                 bool monster_ok,
                                  bool (*affects_pos_func)(const coord_def &)):
     exp_range_min(exp_min), exp_range_max(exp_max), range(ran),
-    affects_walls(wall_ok), affects_pos(affects_pos_func)
+    affects_walls(wall_ok), can_target_monsters(monster_ok),
+    affects_pos(affects_pos_func)
 {
     ASSERT(act);
     ASSERT(exp_min >= 0);
@@ -417,6 +420,12 @@ bool targeter_smite::valid_aim(coord_def a)
         return notify_fail("Out of range.");
     if (!affects_walls && cell_is_solid(a))
         return notify_fail(_wallmsg(a));
+    if (!can_target_monsters && monster_at(a) && you.can_see(*monster_at(a))
+        // XXX: To let Paragon Tempest be cast without moving the Paragon.
+        && monster_at(a) != agent)
+    {
+        return notify_fail("There's something in the way.");
+    }
     return true;
 }
 
@@ -482,7 +491,7 @@ aff_type targeter_smite::is_affected(coord_def loc)
 }
 
 targeter_walljump::targeter_walljump() :
-    targeter_smite(&you, LOS_RADIUS, 1, 1, false, nullptr)
+    targeter_smite(&you, LOS_RADIUS, 1, 1)
 {
 }
 
@@ -510,7 +519,7 @@ aff_type targeter_walljump::is_affected(coord_def loc)
 }
 
 targeter_passwall::targeter_passwall(int max_range) :
-    targeter_smite(&you, max_range, 1, 1, true, nullptr)
+    targeter_smite(&you, max_range, 1, 1, true)
 {
 }
 
@@ -643,7 +652,7 @@ aff_type targeter_dig::is_affected(coord_def loc)
 }
 
 targeter_transference::targeter_transference(const actor* act, int aoe) :
-    targeter_smite(act, LOS_RADIUS, aoe, aoe, false, nullptr)
+    targeter_smite(act, LOS_RADIUS, aoe, aoe)
 {
 }
 
@@ -695,7 +704,7 @@ aff_type targeter_permafrost::is_affected(coord_def loc)
 }
 
 targeter_inner_flame::targeter_inner_flame(const actor* act, int r) :
-    targeter_smite(act, r, 0, 0, false, nullptr)
+    targeter_smite(act, r, 0, 0, false)
 {
 }
 
@@ -711,7 +720,7 @@ bool targeter_inner_flame::valid_aim(coord_def a)
 }
 
 targeter_simulacrum::targeter_simulacrum(const actor* act, int r) :
-    targeter_smite(act, r, 0, 0, false, nullptr)
+    targeter_smite(act, r, 0, 0)
 {
 }
 
@@ -727,7 +736,7 @@ bool targeter_simulacrum::valid_aim(coord_def a)
 }
 
 targeter_unravelling::targeter_unravelling()
-    : targeter_smite(&you, LOS_RADIUS, 1, 1, false, nullptr)
+    : targeter_smite(&you, LOS_RADIUS, 1, 1)
 {
 }
 
@@ -867,7 +876,7 @@ aff_type targeter_passage::is_affected(coord_def loc)
 }
 
 targeter_fragment::targeter_fragment(const actor* act, int power, int ran) :
-    targeter_smite(act, ran, 1, 1, true, nullptr),
+    targeter_smite(act, ran, 1, 1, true),
     pow(power)
 {
 }
@@ -1214,11 +1223,6 @@ aff_type targeter_flame_wave::is_affected(coord_def loc)
     const int dist = (loc - origin).rdist();
     if (dist == 1)
         return AFF_YES;
-    if (you.props.exists(FLAME_WAVE_KEY)
-        && dist <= you.props[FLAME_WAVE_KEY].get_int() + 1)
-    {
-        return AFF_YES;
-    }
     return AFF_MAYBE;
 }
 
@@ -1896,7 +1900,7 @@ targeter_englaciate::targeter_englaciate()
 bool targeter_englaciate::affects_monster(const monster_info& mon)
 {
     return get_resist(mon.resists(), MR_RES_COLD) <= 0
-           && !mons_is_conjured(mon.type) && !mons_class_is_firewood(mon.type);
+           && !mons_class_is_peripheral(mon.type);
 }
 
 targeter_fear::targeter_fear()
@@ -2081,7 +2085,7 @@ aff_type targeter_petrify::is_affected(coord_def loc)
 }
 
 targeter_bind_soul::targeter_bind_soul() :
-    targeter_smite(&you, LOS_MAX_RANGE, 0, 0, false, nullptr)
+    targeter_smite(&you, LOS_MAX_RANGE)
 {
 }
 
@@ -2280,7 +2284,7 @@ aff_type targeter_gavotte::is_affected(coord_def loc)
 }
 
 targeter_magnavolt::targeter_magnavolt(const actor* act, int _range) :
-    targeter_smite(act, _range, 0, 0, false, nullptr)
+    targeter_smite(act, _range)
 {
 }
 
@@ -2415,7 +2419,7 @@ aff_type targeter_slouch::is_affected(coord_def loc)
 }
 
 targeter_marionette::targeter_marionette() :
-    targeter_smite(&you, LOS_RADIUS, 0, 0, false, nullptr)
+    targeter_smite(&you, LOS_RADIUS)
 {
 }
 
@@ -2425,11 +2429,8 @@ bool targeter_marionette::valid_aim(coord_def a)
         return false;
 
     monster* mons = monster_at(a);
-    if (!mons || !you.can_see(*mons) || mons_is_firewood(*mons)
-        || mons->friendly())
-    {
+    if (!mons || !you.can_see(*mons) || mons->is_firewood() || mons->friendly())
         return notify_fail("");
-    }
 
     if (mons->has_ench(ENCH_SHADOWLESS))
         return notify_fail("Their shadow is too faded to take hold of.");
@@ -2444,7 +2445,7 @@ bool targeter_marionette::valid_aim(coord_def a)
 }
 
 targeter_putrefaction::targeter_putrefaction(int r) :
-    targeter_smite(&you, r, 0, 0, false, nullptr)
+    targeter_smite(&you, r)
 {
 }
 
@@ -2482,7 +2483,7 @@ bool targeter_soul_splinter::affects_monster(const monster_info& mon)
     if (mon.is(MB_SOUL_SPLINTERED))
         return false;
 
-    if (!mons_can_be_spectralised(*monster_at(mon.pos), false, true))
+    if (!mons_can_be_spectralised(*monster_at(mon.pos), true, true))
         return false;
 
     if (agent->is_player())
@@ -2499,4 +2500,93 @@ bool targeter_soul_splinter::affects_monster(const monster_info& mon)
 
     // No visible free spots found
     return false;
+}
+
+targeter_surprising_crocodile::targeter_surprising_crocodile(const actor* caster)
+    : targeter_smite(caster, 1)
+{
+}
+
+bool targeter_surprising_crocodile::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    string msg = surprising_crocodile_unusable_reason(*agent, a, false);
+    if (!msg.empty())
+        return notify_fail(msg);
+
+    return true;
+}
+
+bool targeter_surprising_crocodile::set_aim(coord_def a)
+{
+    landing_spots.clear();
+    if (!targeter_smite::set_aim(a) || !valid_aim(a))
+        return false;
+
+    const coord_def drag_shift = -(a - agent->pos()).sgn();
+    landing_spots.push_back(agent->pos() + drag_shift);
+
+    if (surprising_crocodile_can_drag(*agent, a, false))
+        landing_spots.push_back(agent->pos() + drag_shift + drag_shift);
+
+    return true;
+}
+
+aff_type targeter_surprising_crocodile::is_affected(coord_def loc)
+{
+    for (coord_def spot : landing_spots)
+        if (spot == loc)
+            return AFF_YES;
+
+    return AFF_NO;
+}
+
+targeter_wall_arc::targeter_wall_arc(const actor* caster, int size)
+    : targeter_smite(caster, 1, 0, 0, true), wall_num(size)
+{
+}
+
+bool targeter_wall_arc::set_aim(coord_def a)
+{
+    spots.clear();
+    if (!targeter_smite::set_aim(a) || !valid_aim(a) || a == agent->pos())
+        return false;
+
+    spots = get_splinterfrost_block_spots(*agent, a, 4);
+
+    return true;
+}
+
+aff_type targeter_wall_arc::is_affected(coord_def loc)
+{
+    for (coord_def spot : spots)
+        if (spot == loc)
+            return AFF_YES;
+
+    return AFF_NO;
+}
+
+targeter_tempering::targeter_tempering() :
+    targeter_smite(&you, LOS_RADIUS, 1, 1)
+{
+}
+
+bool targeter_tempering::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    monster* mons = monster_at(a);
+    if (!mons || !you.can_see(*mons) || !mons->friendly())
+        return false;
+
+    if (mons->has_ench(ENCH_TEMPERED))
+        return notify_fail("You cannot target a construct which is already augmented.");
+
+    if (!is_valid_tempering_target(*mons, *agent))
+        return notify_fail("You can only target your own Forgecraft constructs.");
+
+    return true;
 }

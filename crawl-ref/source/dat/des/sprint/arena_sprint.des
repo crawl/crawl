@@ -1032,12 +1032,12 @@ KFEAT:  { = {
 # grouped by category.
 
 KFEAT:  C = scroll shop type:Identification suffix:Station count:17 greed:25 ; scroll of identify q:3
-KFEAT:  D = book shop type:Must-Have suffix:Magic greed:7 count:17 use_all ; \
+KFEAT:  D = book shop type:Must-Have suffix:Magic greed:7 count:16 use_all ; \
             book of the wilderness | book of spatial translocations | book of hexes |\
             book of death | book of displacement |\
             book of the earth | book of burglary | book of annihilations |\
             grand grimoire | necronomicon | book of power | book of chaos |\
-            book of the moon | book of blasting
+            book of the moon | book of blasting | book of weapons | book of duality
 KFEAT:  EP = scroll shop greed:10 use_all count:14 ; \
             scroll of blinking q:3 | scroll of blinking q:4 | scroll of blinking q:5 |\
             scroll of fog q:3 | scroll of fog q:4 | scroll of fog q:5 |\

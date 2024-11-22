@@ -1063,7 +1063,6 @@ static const char* _book_type_name(int booktype)
     case BOOK_TRANSFIGURATIONS:       return "Transfigurations";
 #endif
     case BOOK_BATTLE:                 return "Battle";
-    case BOOK_VAPOURS:                return "Vapours";
     case BOOK_NECROMANCY:             return "Necromancy";
     case BOOK_CALLINGS:               return "Callings";
 #if TAG_MAJOR_VERSION == 34
@@ -1126,6 +1125,12 @@ static const char* _book_type_name(int booktype)
     case BOOK_MOVEMENT:               return "Movement";
     case BOOK_WICKED_CREATION:        return "Wicked Creation";
     case BOOK_MALADIES:               return "Maladies";
+    case BOOK_FORTRESS:               return "the Fortress";
+    case BOOK_CRYOFORMATION:          return "Cryoformation";
+    case BOOK_GRAVE:                  return "the Grave";
+    case BOOK_METALWORKING:           return "Metalworking";
+    case BOOK_DUALITY:                return "Duality";
+    case BOOK_CONTRAPTIONS:           return "Contraptions";
     case BOOK_RANDART_LEVEL:          return "Fixed Level";
     case BOOK_RANDART_THEME:          return "Fixed Theme";
     default:                          return "Bugginess";
@@ -1251,6 +1256,12 @@ string sub_type_string(const item_def &item, bool known)
             return "Compendium of Siegecraft";
         case BOOK_CONDUCTIVITY:
             return "Codex of Conductivity";
+        case BOOK_CONSTRUCTION:
+            return "Handbook of Applied Construction";
+        case BOOK_TRAPS:
+            return "Treatise on Traps";
+        case BOOK_SWAMP_SOJURN:
+            return "My Sojourn through Swampland";
 #if TAG_MAJOR_VERSION == 34
         case BOOK_AKASHIC_RECORD:
             return "Akashic Record";
@@ -1475,10 +1486,11 @@ static string _name_weapon(const item_def &weap, description_level_type desc,
     const string curse_prefix = !dbname && !terse && weap.cursed() ? "cursed " : "";
     const string plus_text = know_pluses ? _plus_prefix(weap) : "";
     const string chaotic = testbits(weap.flags, ISFLAG_CHAOTIC) ? "chaotic " : "";
+    const string replica = testbits(weap.flags, ISFLAG_REPLICA) ? "replica " : "";
 
     if (is_artefact(weap) && !dbname)
     {
-        const string long_name = curse_prefix + chaotic + plus_text
+        const string long_name = curse_prefix + chaotic + plus_text + replica
                                  + get_artefact_name(weap, ident);
 
         // crop long artefact names when not controlled by webtiles -
@@ -1515,7 +1527,8 @@ static string _name_weapon(const item_def &weap, description_level_type desc,
         }
 
         const string short_name
-            = curse_prefix + plus_text + get_artefact_base_name(weap, true);
+            = curse_prefix + chaotic + plus_text + replica
+              + get_artefact_base_name(weap, true);
         return short_name;
     }
 

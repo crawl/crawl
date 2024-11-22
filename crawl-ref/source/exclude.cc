@@ -99,7 +99,7 @@ void add_auto_excludes()
             continue;
 
         // Something of a speed hack, but some vaults have a TON of plants.
-        if (mons_is_firewood(*mon))
+        if (mon->is_firewood())
             continue;
         if (_need_auto_exclude(mon) && !is_exclude_root(*ri))
         {

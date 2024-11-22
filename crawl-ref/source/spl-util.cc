@@ -27,6 +27,7 @@
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
+#include "mon-place.h"
 #include "notes.h"
 #include "options.h"
 #include "orb.h"
@@ -349,11 +350,18 @@ bool add_spell_to_memory(spell_type spell)
         mprf("Spell assigned to '%c'.", index_to_letter(letter_j));
 
     // A hint, for those who may not be aware.
-    if (spell == SPELL_SPELLFORGED_SERVITOR)
+    if (spell == SPELL_SPELLSPARK_SERVITOR)
     {
         mprf(MSGCH_TUTORIAL,
              "(You may use Imbue Servitor from the <w>%s</w>bility menu to change "
-             "which spell your servitor casts)",
+             "which spell your servitor casts.)",
+                command_to_string(CMD_USE_ABILITY).c_str());
+    }
+    else if (spell == SPELL_PLATINUM_PARAGON)
+    {
+        mprf(MSGCH_TUTORIAL,
+             "(You may use Imprint Weapon from the <w>%s</w>bility menu to change "
+             "which weapon your Paragon wields.)",
                 command_to_string(CMD_USE_ABILITY).c_str());
     }
     // Give a free charge upon learning this spell for the first time, so the
@@ -456,7 +464,11 @@ bool spell_harms_area(spell_type spell)
     const spell_flags flags = _seekspell(spell)->flags;
 
     if (flags & (spflag::helpful | spflag::neutral))
-        return false;
+    {
+        // XXX: This is a 'helpful' spell that also does area damage, so monster
+        //      logic should account for this, regarding Sanctuary.
+        return spell == SPELL_PERCUSSIVE_TEMPERING;
+    }
 
     if (flags & spflag::area)
         return true;
@@ -878,6 +890,8 @@ const char* spelltype_short_name(spschool which_spelltype)
         return "Necr";
     case spschool::summoning:
         return "Summ";
+    case spschool::forgecraft:
+        return "Frge";
     case spschool::translocation:
         return "Tloc";
     case spschool::alchemy:
@@ -909,6 +923,8 @@ const char* spelltype_long_name(spschool which_spelltype)
         return "Necromancy";
     case spschool::summoning:
         return "Summoning";
+    case spschool::forgecraft:
+        return "Forgecraft";
     case spschool::translocation:
         return "Translocation";
     case spschool::alchemy:
@@ -933,6 +949,7 @@ skill_type spell_type2skill(spschool spelltype)
     case spschool::fire:           return SK_FIRE_MAGIC;
     case spschool::ice:            return SK_ICE_MAGIC;
     case spschool::necromancy:     return SK_NECROMANCY;
+    case spschool::forgecraft:     return SK_FORGECRAFT;
     case spschool::summoning:      return SK_SUMMONINGS;
     case spschool::translocation:  return SK_TRANSLOCATIONS;
     case spschool::alchemy:        return SK_ALCHEMY;
@@ -957,6 +974,7 @@ spschool skill2spell_type(skill_type spell_skill)
     case SK_ICE_MAGIC:       return spschool::ice;
     case SK_NECROMANCY:      return spschool::necromancy;
     case SK_SUMMONINGS:      return spschool::summoning;
+    case SK_FORGECRAFT:      return spschool::forgecraft;
     case SK_TRANSLOCATIONS:  return spschool::translocation;
     case SK_ALCHEMY:         return spschool::alchemy;
     case SK_EARTH_MAGIC:     return spschool::earth;
@@ -1195,6 +1213,15 @@ string casting_uselessness_reason(spell_type spell, bool temp)
     case SPELL_TUKIMAS_DANCE:
     case SPELL_HOARFROST_CANNONADE:
     case SPELL_SOUL_SPLINTER:
+    case SPELL_CLOCKWORK_BEE:
+    case SPELL_PLATINUM_PARAGON:
+    case SPELL_WALKING_ALEMBIC:
+    case SPELL_MONARCH_BOMB:
+    case SPELL_PHALANX_BEETLE:
+    case SPELL_SPELLSPARK_SERVITOR:
+    case SPELL_FORGE_BLAZEHEART_GOLEM:
+    case SPELL_FORGE_LIGHTNING_SPIRE:
+    case SPELL_AWAKEN_ARMOUR:
         if (you.allies_forbidden())
             return "you cannot coerce anything to obey you.";
         break;
@@ -1421,7 +1448,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you cannot sustain more bogs right now.";
         break;
 
-    case SPELL_ANIMATE_ARMOUR:
+    case SPELL_AWAKEN_ARMOUR:
         if (!you_can_wear(EQ_BODY_ARMOUR, temp))
             return "you cannot wear body armour.";
         if (temp && !you.slot_item(EQ_BODY_ARMOUR))
@@ -1506,6 +1533,53 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you must harvest more living souls to recharge this spell.";
         break;
 
+    case SPELL_SPIKE_LAUNCHER:
+    {
+        if (!temp)
+            break;
+
+        for (adjacent_iterator ai(you.pos()); ai; ++ai)
+            if (env.grid(*ai) == DNGN_ROCK_WALL)
+                return "";
+
+        return "there are no nearby rock walls to construct a spike launcher in.";
+    }
+
+    case SPELL_DIAMOND_SAWBLADES:
+        if (temp && diamond_sawblade_spots(false).empty())
+            return "there is no room to construct a sawblade.";
+        break;
+
+    case SPELL_SURPRISING_CROCODILE:
+        if (temp)
+        {
+            if (!monster_habitable_grid(MONS_CROCODILE, you.pos()))
+                return "a crocodile could not survive beneath you.";
+            else if (count_summons(&you, SPELL_SURPRISING_CROCODILE))
+                return "your pet crocodile is still here.";
+        }
+        break;
+
+    case SPELL_PLATINUM_PARAGON:
+        if (temp)
+        {
+            if (!you.props.exists(PARAGON_WEAPON_KEY))
+            {
+                return "you must imprint a weapon on your paragon first! "
+                       "(Use the Imprint Weapon ability)";
+            }
+
+            monster* paragon = find_player_paragon();
+            if (paragon && paragon_charge_level(*paragon) == 0)
+                return "your paragon is already deployed, but not yet charged.";
+        }
+        break;
+
+    case SPELL_FORTRESS_BLAST:
+        if (temp && you.duration[DUR_FORTRESS_BLAST_TIMER])
+            return "you are already charging a Fortress Blast.";
+        break;
+
     default:
         break;
     }
@@ -1563,10 +1637,12 @@ bool spell_no_hostile_in_range(spell_type spell)
     // case SPELL_LRD: // TODO: LRD logic here is a bit confusing, it should error
     //                 // now that it doesn't destroy walls
     case SPELL_FULMINANT_PRISM:
-    case SPELL_SUMMON_LIGHTNING_SPIRE:
+    case SPELL_FORGE_LIGHTNING_SPIRE:
     case SPELL_NOXIOUS_BOG:
     case SPELL_BOULDER:
     case SPELL_GELLS_GAVOTTE:
+    case SPELL_PLATINUM_PARAGON:
+    case SPELL_SPLINTERFROST_SHELL:
     // This can always potentially hit out-of-LOS, although this is conditional
     // on spell-power.
     case SPELL_FIRE_STORM:
@@ -1784,7 +1860,6 @@ bool spell_no_hostile_in_range(spell_type spell)
     return false;
 }
 
-
 // a map of schools to the corresponding sacrifice 'mutations'.
 static const mutation_type arcana_sacrifice_map[] = {
     MUT_NO_CONJURATION_MAGIC,
@@ -1796,7 +1871,8 @@ static const mutation_type arcana_sacrifice_map[] = {
     MUT_NO_TRANSLOCATION_MAGIC,
     MUT_NO_ALCHEMY_MAGIC,
     MUT_NO_EARTH_MAGIC,
-    MUT_NO_AIR_MAGIC
+    MUT_NO_AIR_MAGIC,
+    MUT_NO_FORGECRAFT_MAGIC,
 };
 
 /**
@@ -1873,6 +1949,12 @@ const vector<spell_type> *soh_breath_spells(spell_type spell)
     };
 
     return map_find(soh_breaths, spell);
+}
+
+bool spell_has_variable_range(spell_type spell)
+{
+    return spell_range(spell, 0, false)
+            != spell_range(spell, spell_power_cap(spell), false);
 }
 
 /* How to regenerate this:
@@ -2007,10 +2089,3 @@ bool spell_was_form(spell_type spell)
     return form_spells.count(spell);
 }
 #endif
-
-void end_wait_spells(bool quiet)
-{
-    end_searing_ray(you);
-    end_maxwells_coupling(quiet);
-    end_flame_wave();
-}

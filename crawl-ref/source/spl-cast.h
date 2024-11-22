@@ -140,10 +140,15 @@ string spell_damage_string(spell_type spell, bool evoked = false, int pow = -1,
 string spell_max_damage_string(spell_type spell);
 int spell_acc(spell_type spell);
 string spell_range_string(spell_type spell);
-string range_string(int range, int maxrange, char32_t caster_char);
+string range_string(int range, int maxrange = -1, int minrange = 0);
 string spell_schools_string(spell_type spell);
 string spell_failure_rate_string(spell_type spell);
 string spell_noise_string(spell_type spell, int chop_wiz_display_width = 0);
 
 void spell_skills(spell_type spell, set<skill_type> &skills);
 void do_demonic_magic(int pow, int rank);
+
+bool channelled_spell_active(spell_type spell);
+void start_channelling_spell(spell_type spell, string reminder_msg = "", bool do_effect = true);
+void stop_channelling_spells(bool quiet = false);
+void handle_channelled_spell();

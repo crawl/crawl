@@ -656,7 +656,8 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
                 || extant_props[ARTP_ENHANCE_ICE]
                 || extant_props[ARTP_ENHANCE_AIR]
                 || extant_props[ARTP_ENHANCE_EARTH]
-                || extant_props[ARTP_ENHANCE_ALCHEMY])
+                || extant_props[ARTP_ENHANCE_ALCHEMY]
+                || extant_props[ARTP_ENHANCE_FORGECRAFT])
             {
                 return false;
             }
@@ -689,6 +690,7 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
         case ARTP_ENHANCE_AIR:
         case ARTP_ENHANCE_EARTH:
         case ARTP_ENHANCE_ALCHEMY:
+        case ARTP_ENHANCE_FORGECRAFT:
             // Maybe we should allow these for robes, too?
             // And hats? And gloves and cloaks and scarves?
             return !extant_props[ARTP_PREVENT_SPELLCASTING]
@@ -865,7 +867,7 @@ static const artefact_prop_data artp_data[] =
         []() {return 1;}, nullptr, 0, 0},
     { "Earth", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_EARTH,
         []() {return 1;}, nullptr, 0, 0},
-    { "Alchemy", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_ALCHEMY,
+    { "Alch", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_ALCHEMY,
         []() {return 1;}, nullptr, 0, 0},
 
     { "Acrobat", ARTP_VAL_BOOL, 0, // ARTP_ACROBAT,
@@ -874,6 +876,8 @@ static const artefact_prop_data artp_data[] =
         []() { return 1; }, nullptr, 0, 0 },
     { "Wiz", ARTP_VAL_BOOL, 0,   // ARTP_WIZARDRY,
         []() { return 1; }, nullptr, 0, 0 },
+    { "Forge", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_FORGECRAFT,
+        []() {return 1;}, nullptr, 0, 0},
 };
 COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);
 // weights sum to 1000

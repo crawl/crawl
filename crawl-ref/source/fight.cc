@@ -474,6 +474,9 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         if (you.duration[DUR_EXECUTION])
             you.duration[DUR_EXECUTION] += you.time_taken;
 
+        if (you.duration[DUR_PARAGON_ACTIVE])
+            paragon_attack_trigger();
+
         return true;
     }
 
@@ -564,6 +567,11 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         fire_final_effects();
     }
 
+    // Here, rather than in melee_attack, so that it only triggers on attack
+    // actions, rather than additional times for bonus attacks (ie: from Autumn Katana)
+    if (attacker->as_monster()->type == MONS_PLATINUM_PARAGON)
+        paragon_charge_up(*attacker->as_monster());
+
     return true;
 }
 
@@ -596,7 +604,7 @@ stab_type find_stab_type(const actor *attacker,
     // No stabbing monsters that cannot fight (e.g. plants) or monsters
     // the attacker can't see (either due to invisibility or being behind
     // opaque clouds).
-    if (def && mons_is_firewood(*def))
+    if (def && def->is_firewood())
         return STAB_NO_STAB;
 
     if (attacker && !attacker->can_see(defender))
@@ -1478,6 +1486,61 @@ string stop_summoning_reason(resists_t resists, monclass_flags_t flags)
     return "";
 }
 
+bool warn_about_bad_targets(spell_type spell, vector<coord_def> targets,
+                            function<bool(const monster&)> should_ignore)
+{
+    return warn_about_bad_targets(spell_title(spell), targets, should_ignore);
+}
+
+bool warn_about_bad_targets(const char* source_name, vector<coord_def> targets,
+                            function<bool(const monster&)> should_ignore)
+{
+    vector<const monster*> bad_targets;
+    for (coord_def p : targets)
+    {
+        const monster* mon = monster_at(p);
+        if (!mon || god_protects(&you, *mon)
+            || always_shoot_through_monster(&you, *mon))
+        {
+            continue;
+        }
+
+        if (should_ignore && should_ignore(*mon))
+            continue;
+
+        // If we've already found and marked this target as bad, don't include
+        // it a second time (or it will produce a confusing prompt).
+        if (find(bad_targets.begin(), bad_targets.end(), mon) != bad_targets.end())
+            continue;
+
+        string adj, suffix;
+        bool penance;
+        if (bad_attack(mon, adj, suffix, penance, you.pos()))
+            bad_targets.push_back(mon);
+    }
+
+    if (bad_targets.empty())
+        return false;
+
+    const monster* ex_mon = bad_targets.back();
+    string adj, suffix;
+    bool penance;
+    bad_attack(ex_mon, adj, suffix, penance, you.pos());
+    const string and_more = bad_targets.size() > 1 ?
+            make_stringf(" (and %zu other bad targets)",
+                         bad_targets.size() - 1) : "";
+    const string prompt = make_stringf("%s might hit %s%s. Cast it anyway?",
+                                       source_name,
+                                       ex_mon->name(DESC_THE).c_str(),
+                                       and_more.c_str());
+    if (!yesno(prompt.c_str(), false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return true;
+    }
+    return false;
+}
+
 /**
  * Does the player have a hostile duration up that would/could cause
  * a summon to be abjured? If so, prompt the player as to whether they
@@ -1606,11 +1669,13 @@ int apply_fighting_skill(int damage, bool aux, bool random)
     return damage;
 }
 
-int throwing_base_damage_bonus(const item_def &proj)
+int throwing_base_damage_bonus(const item_def &proj, bool random)
 {
     // Stones get half bonus; everything else gets full bonus.
-    return div_rand_round(you.skill_rdiv(SK_THROWING)
-                          * min(4, property(proj, PWPN_DAMAGE)), 4);
+    int damage_mult = min(4, property(proj, PWPN_DAMAGE));
+    if (random)
+        return div_rand_round(you.skill_rdiv(SK_THROWING) * damage_mult, 4);
+    return (you.skill(SK_THROWING) * damage_mult) / 4;
 }
 
 int brand_adjust_weapon_damage(int base_dam, int brand, bool random)

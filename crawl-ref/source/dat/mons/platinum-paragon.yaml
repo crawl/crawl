@@ -1,0 +1,17 @@
+name: "platinum paragon"
+glyph: {char: "9", colour: white}
+flags: [see_invis, prefer_ranged, ghost_demon]
+resists: {elec: 1, fire: 1, cold: 1}
+genus: golem
+holiness: [nonliving]
+will: invuln
+attacks:
+hd: 15
+hp_10x: 1000
+ac: 20
+ev: 20
+intelligence: brainless
+speed: 10
+uses: starting_equipment
+size: medium
+shape: humanoid

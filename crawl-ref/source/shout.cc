@@ -428,9 +428,8 @@ void noisy_equipment(const item_def &weapon)
 static bool _follows_orders(monster* mon)
 {
     return mon->friendly()
-           && mon->type != MONS_BALLISTOMYCETE_SPORE
            && !mon->berserk_or_frenzied()
-           && !mons_is_conjured(mon->type)
+           && !mon->is_peripheral()
            && !mon->has_ench(ENCH_HAUNTING);
 }
 

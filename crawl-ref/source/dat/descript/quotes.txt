@@ -382,6 +382,14 @@ Agony spell
 
 <Curse of Agony spell>
 %%%%
+Alistair's Walking Alembic spell
+
+Despite its unwieldy appearance, it is widely considered Alistair's most popular
+work; countless variations of this spell can be found in surface libraries,
+customized to prepare everything from floor polish to vegetable soup. In the
+depths of the dungeon, however, most mages favor the combat utility of the
+classic iteration.
+%%%%
 Animate Dead spell
 
 “Remember, I am not recording the vision of a madman. The sun does not more
@@ -392,6 +400,12 @@ Animate Dead spell
  myself capable of bestowing animation upon lifeless matter.”
     -Mary Shelley, _Frankenstein, or the Modern Prometheus_,
      Vol. I, Chapter 3. 1818 (1st Ed.)
+%%%%
+Animate Armour spell
+
+"A blacksmith shapes the heart of their steel just as much as any leader shapes
+the hearts of their soldiers. If this armour of mine could speak, I know it
+would say that we fight for the same cause."
 %%%%
 Awaken Forest spell
 
@@ -506,6 +520,12 @@ Ensorcelled Hibernation spell
 “Sweet dreams are made of this; who am I to disagree?”
     -Eurythmics, “Sweet Dreams (Are Made of This)”. 1983.
 %%%%
+Eringya's Surprising Crocodile
+
+A popular legend states that Eringya first demonstrated this spell as the
+closing remark of a particularly acrimonious debate about wetlands conservation,
+but most modern scholars consider this apocryphal.
+%%%%
 Fire Storm spell
 
 “Some have said there is no subtlety to destruction. You know what? They're
@@ -589,6 +609,13 @@ Mephitic Cloud spell
  folgend, ihre Schrecken bis Astrachan, ja selbst bis Moskau getragen.”
     -Thomas Mann, _Der Tod in Venedig_, 1911.
 %%%%
+Nazja's Percussive Tempering spell
+
+Scholars long considered the hammer mere theatrics to mask the complex
+structual enhancement magics which must underpin this spell, and yet every
+attempt to remove it from the incantation has caused the spell to lose its
+effectiveness. The implications of this remain hotly debated.
+%%%%
 Passwall spell
 
 “He says the best way out is always through.”
@@ -661,9 +688,9 @@ Slouch ability
  And the void would be calling”
     -Richard O'Brien, “Time Warp”. 1975.
 %%%%
-Spellforged Servitor spell
+Spellspark Servitor spell
 
-<spellforged servitor>
+<spellspark servitor>
 %%%%
 Sticky Flame spell
 
@@ -708,6 +735,17 @@ Summon Illusion spell
 
 # Sadly, player illusions don't seem to work with the database, so I can't
 # associate this quote with player illusions themselves.
+%%%%
+Summon Seismosaurus Egg spell
+
+Zoologists famously considered this animal to have been extinct for centuries
+until copies of this spell were unearthed among the affairs of a misanthropic
+hermit who'd finally made the wrong noble's hair fall out.
+
+Several well-funded expeditions were launched in the wake of the discovery, but
+despite (or perhaps because of) the sometimes-violent competitiveness these
+naturalists had for each other, the location of the lizards' nesting grounds
+remains unknown to this day.
 %%%%
 Swiftness spell
 
@@ -3870,7 +3908,7 @@ spectral thing
  My Spectre follows thee behind.”
     -William Blake, “Broken Love”. ca. 1800.
 %%%%
-spellforged servitor
+spellspark servitor
 
 “When you think
  Your toys have gone berserk

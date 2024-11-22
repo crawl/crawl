@@ -33,3 +33,6 @@ bool apply_rimeblight(monster& victim, int power, bool quiet = false);
 void tick_rimeblight(monster& victim);
 
 spret cast_sign_of_ruin(actor& caster, coord_def target, int duration, bool check_only = false);
+
+spret cast_percussive_tempering(const actor& caster, monster& target, int power, bool fail);
+bool is_valid_tempering_target(const monster& mon, const actor& caster);

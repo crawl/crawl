@@ -91,10 +91,10 @@ LUAFN(debug_enter_dungeon)
 LUAWRAP(debug_down_stairs, down_stairs(DNGN_STONE_STAIRS_DOWN_I))
 LUAWRAP(debug_up_stairs, up_stairs(DNGN_STONE_STAIRS_UP_I))
 
-LUAFN(debug_flush_map_memory)
+LUAFN(debug_reset_player_data)
 {
     UNUSED(ls);
-    dgn_flush_map_memory();
+    dgn_reset_player_data();
     init_level_connectivity();
     return 0;
 }
@@ -474,7 +474,7 @@ const struct luaL_reg debug_dlib[] =
 { "enter_dungeon", debug_enter_dungeon },
 { "down_stairs", debug_down_stairs },
 { "up_stairs", debug_up_stairs },
-{ "flush_map_memory", debug_flush_map_memory },
+{ "reset_player_data", debug_reset_player_data },
 { "builder_ignore_depth", debug_builder_ignore_depth },
 { "generate_level", debug_generate_level },
 { "reveal_mimics", debug_reveal_mimics },

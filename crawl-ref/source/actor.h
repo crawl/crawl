@@ -51,6 +51,9 @@ public:
     virtual bool was_created_by(const actor& summoner,
                                 int summon_type = SPELL_NO_SPELL) const = 0;
 
+    virtual bool is_firewood() const = 0;
+    virtual bool is_peripheral() const = 0;
+
     // [ds] Low-level moveto() - moves the actor without updating relevant
     // grids, such as env.mgrid.
     virtual void moveto(const coord_def &c, bool clear_net = true,
@@ -245,7 +248,7 @@ public:
     virtual bool can_be_blinded() const = 0;
 
     virtual int armour_class() const = 0;
-    virtual int gdr_perc() const = 0;
+    virtual int gdr_perc(bool random = true) const = 0;
     int apply_ac(int damage, int max_damage = 0,
                  ac_type ac_rule = ac_type::normal,
                  bool for_real = true) const;

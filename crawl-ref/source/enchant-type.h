@@ -127,8 +127,8 @@ enum enchant_type
     ENCH_AWAKEN_VINES,
     ENCH_CONTROL_WINDS,
     ENCH_WIND_AIDED,
-#endif
     ENCH_SUMMON_CAPPED,  // Abjuring quickly because a summon cap was hit
+#endif
     ENCH_TOXIC_RADIANCE,
 #if TAG_MAJOR_VERSION == 34
     ENCH_GRASPING_ROOTS_SOURCE, // Not actually entangled, but entangling others
@@ -230,6 +230,9 @@ enum enchant_type
     ENCH_CHANGED_APPEARANCE,  // Visual change for player shadow during Shadowslip
     ENCH_SHADOWLESS,
     ENCH_DOUBLED_VIGOUR,
+    ENCH_KINETIC_GRAPNEL,
+    ENCH_TEMPERED,
+    ENCH_HATCHING,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

@@ -859,6 +859,15 @@ Xom touches your surroundings.
 
 @Xom good monster polymorph@
 %%%%
+Xom lights up webs
+
+Xom [gleefully|mirthfully] wrecks local arachnid artwork.
+
+The light of Xom [brushes upon|sweeps through] your surroundings.
+
+w:1
+@Xom fake destruction@
+%%%%
 Xom destruction
 
 "Burn, baby, burn!"

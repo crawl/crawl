@@ -151,6 +151,7 @@ static void _assign_wanderer_stats(skill_type sk1, skill_type sk2,
             case SK_SPELLCASTING:
             case SK_SUMMONINGS:
             case SK_NECROMANCY:
+            case SK_FORGECRAFT:
             case SK_TRANSLOCATIONS:
             case SK_ALCHEMY:
             case SK_CONJURATIONS:
@@ -701,6 +702,7 @@ static vector<spell_type> _wanderer_good_equipment(skill_type skill)
     case SK_CONJURATIONS:
     case SK_SUMMONINGS:
     case SK_NECROMANCY:
+    case SK_FORGECRAFT:
     case SK_TRANSLOCATIONS:
     case SK_FIRE_MAGIC:
     case SK_ICE_MAGIC:
@@ -786,6 +788,7 @@ static vector<spell_type> _wanderer_decent_equipment(skill_type skill,
     case SK_CONJURATIONS:
     case SK_SUMMONINGS:
     case SK_NECROMANCY:
+    case SK_FORGECRAFT:
     case SK_TRANSLOCATIONS:
     case SK_FIRE_MAGIC:
     case SK_ICE_MAGIC:

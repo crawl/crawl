@@ -546,6 +546,8 @@ string no_selectables_message(int item_selector)
         return "You aren't carrying any weapons that can be branded.";
     case OSEL_ENCHANTABLE_WEAPON:
         return "You aren't carrying any weapons that can be enchanted.";
+    case OSEL_ARTEFACT_WEAPON:
+        return "You aren't carrying any artefact melee weapons.";
     case OSEL_CURSABLE:
         return "You aren't wearing any cursable items.";
     case OSEL_UNCURSED_WORN_RINGS:
@@ -1162,6 +1164,9 @@ bool item_is_selected(const item_def &i, int selector)
     case OBJ_WEAPONS:
     case OSEL_WIELD:
         return item_is_wieldable(i);
+
+    case OSEL_ARTEFACT_WEAPON:
+        return is_melee_weapon(i) && is_artefact(i);
 
     case OSEL_EVOKABLE:
         return item_ever_evokable(i);

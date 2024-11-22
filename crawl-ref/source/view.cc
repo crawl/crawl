@@ -269,7 +269,7 @@ static bool _is_mon_equipment_worth_listing(const monster_info &mi)
 static bool _does_core_name_include_inventory(const monster *mon)
 {
     return mon->type == MONS_DANCING_WEAPON || mon->type == MONS_SPECTRAL_WEAPON
-           || mon->type == MONS_ANIMATED_ARMOUR;
+           || mon->type == MONS_ARMOUR_ECHO;
 }
 
 /// Return a warning for the player about newly-seen monsters, as appropriate.
@@ -522,8 +522,7 @@ static void _maybe_gozag_incite(vector<monster*> monsters)
         // XXX: some of this is probably redundant with interrupt_activity
         if (mon->wont_attack()
             || mon->is_stationary()
-            || mons_is_object(mon->type)
-            || mons_is_tentacle_or_tentacle_segment(mon->type))
+            || mon->is_peripheral())
         {
             continue;
         }
@@ -1339,11 +1338,6 @@ static animation *animations[NUM_ANIMATIONS] = {
 
 void run_animation(animation_type anim, use_animation_type type, bool cleanup)
 {
-#ifdef USE_TILE_WEB
-    // XXX this doesn't work in webtiles yet
-    if (is_tiles())
-        return;
-#endif
     if (Options.use_animations & type)
     {
         animation *a = animations[anim];
@@ -1526,7 +1520,7 @@ void view_add_glyph_overlay(const coord_def &gc, cglyph_t glyph)
 }
 
 // Simple helper function to reduce duplication with repeatedly used animation code
-void flash_tile(coord_def p, colour_t colour, int delay)
+void flash_tile(coord_def p, colour_t colour, int delay, tileidx_t tile)
 {
     if (!(Options.use_animations & UA_BEAM))
         return;
@@ -1535,7 +1529,12 @@ void flash_tile(coord_def p, colour_t colour, int delay)
         return;
 
 #ifdef USE_TILE
-        view_add_tile_overlay(p, tileidx_zap(colour));
+        // Use a bolt tile if one is specified. Otherwise, just use the default
+        // for the colour provied.
+        if (tile > 0)
+            view_add_tile_overlay(p, vary_bolt_tile(tile, 0));
+        else
+            view_add_tile_overlay(p, tileidx_zap(colour));
 #endif
         view_add_glyph_overlay(p, {dchar_glyph(DCHAR_FIRED_ZAP),
                                    static_cast<unsigned short>(colour)});
@@ -1550,6 +1549,28 @@ void view_clear_overlays()
     tile_overlays.clear();
 #endif
     glyph_overlays.clear();
+}
+
+void draw_ring_animation(const coord_def& center, int radius, colour_t colour,
+                         colour_t colour_alt, int delay)
+{
+    for (int i = radius; i >= 0; --i)
+    {
+        for (distance_iterator di(center, false, false, i); di; ++di)
+        {
+            if (grid_distance(center, *di) == i && !feat_is_solid(env.grid(*di))
+                && you.see_cell_no_trans(*di))
+            {
+                colour_t draw_colour = colour_alt != BLACK ? coinflip() ? colour
+                                                                        : colour_alt
+                                                           : colour;
+                flash_tile(*di, draw_colour, 0);
+            }
+        }
+
+        animation_delay(delay, true);
+        view_clear_overlays();
+    }
 }
 
 /**

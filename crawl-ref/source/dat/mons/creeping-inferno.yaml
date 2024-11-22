@@ -1,6 +1,6 @@
 name: "creeping inferno"
 glyph: {char: "*", colour: lightred}
-flags: [flies, insubstantial]
+flags: [flies, insubstantial, peripheral]
 resists: {fire: 3}
 xp_mult: 3
 holiness: [nonliving]

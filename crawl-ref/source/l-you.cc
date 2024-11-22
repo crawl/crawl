@@ -343,6 +343,12 @@ LUARET1(you_stealth_pips, number, stealth_pips())
  */
 LUARET1(you_willpower, number, player_willpower() / WL_PIP)
 
+/*** Are you currently immune to torment?
+ * @treturn boolean
+ * @function torment_immune
+ */
+LUARET1(you_torment_immune, boolean, you.res_torment())
+
 /*** Drowning resistance (rDrown).
  * @treturn boolean
  * @function res_drowning
@@ -1371,6 +1377,8 @@ LUAFN(you_quiver_allows_autofight)
     PLUARET(boolean, quiver::get_secondary_action()->allow_autofight());
 }
 
+LUARET1(you_is_web_immune, boolean, you.is_web_immune())
+
 static const struct luaL_reg you_clib[] =
 {
     { "turn_is_over", you_turn_is_over },
@@ -1429,6 +1437,7 @@ static const struct luaL_reg you_clib[] =
     { "res_shock"   , you_res_shock },
     { "stealth_pips", you_stealth_pips },
     { "willpower"   , you_willpower },
+    { "torment_immune", you_torment_immune },
     { "res_drowning", you_res_drowning },
     { "res_mutation", you_res_mutation },
     { "see_invisible", you_see_invisible },
@@ -1513,6 +1522,7 @@ static const struct luaL_reg you_clib[] =
     { "quiver_uses_mp",     you_quiver_uses_mp},
     { "quiver_allows_autofight", you_quiver_allows_autofight },
     { "activate_ability",        you_activate_ability},
+    { "is_web_immune",     you_is_web_immune },
 
     { nullptr, nullptr },
 };

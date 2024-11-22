@@ -62,9 +62,11 @@ end
 
 function crypt_entry(e)
     e.tags("crypt_entry vaults_entry_crypt")
-    e.kmons("0 = laughing skull band w:5 / death knight w:5 / \
+    e.kmons("0 = necromancer w:5 / death knight w:5 / \
                  skeletal warrior / ancient champion / ghoul / \
                  phantasmal warrior / flayed ghost / eidolon")
+    e.kmons("9 = laughing skull band")
+    e.nsubst("0 = 2 = 9 0:130 / *:0")
     e.kfeat("O = enter_crypt")
     e.tile("c = wall_crypt")
     e.tile("G = dngn_statue_wraith / dngn_statue_sigmund / dngn_statue_angel")
@@ -833,7 +835,7 @@ TAGS:    transparent extra
 DEPTH:   Crypt
 : if you.depth() == 1 then
 SUBST:   { = }, [ = ]
-: elseif you.depth_fraction() < 1 then
+: elseif you.depth() ~= dgn.br_depth(you.branch()) then
 SUBST:   [ = ]
 : end
 SHUFFLE: {[(, }]), DEFHJKLMNOPQRSZa, pqrs

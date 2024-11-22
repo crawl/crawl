@@ -299,6 +299,25 @@ protected:
     string poof_message;
 };
 
+class splinterfrost_fragment_fineff : public final_effect
+{
+public:
+    bool mergeable(const final_effect &) const override { return false; }
+    void fire() override;
+
+    static void schedule(bolt &beam, string msg)
+    {
+        final_effect::schedule(new splinterfrost_fragment_fineff(beam, msg));
+    }
+protected:
+    splinterfrost_fragment_fineff(bolt beem, string _msg)
+        : final_effect(0, 0, coord_def()), beam(beem), msg(_msg)
+    {
+    }
+    bolt beam;
+    string msg;
+};
+
 // A fineff that triggers a daction; otherwise the daction
 // occurs immediately (and then later) -- this might actually
 // be too soon in some cases.
@@ -586,15 +605,22 @@ public:
 
     static void schedule(monster_type mon_type, coord_def pos, int dur)
     {
-        final_effect::schedule(new death_spawn_fineff(mon_type, pos, dur));
+        mgen_data _mg = mgen_data(mon_type, BEH_HOSTILE, pos,
+                                    MHITNOT, MG_FORCE_PLACE);
+        _mg.set_summoned(nullptr, SPELL_NO_SPELL, dur, false, false);
+        final_effect::schedule(new death_spawn_fineff(_mg));
+    }
+
+    static void schedule(mgen_data mg)
+    {
+        final_effect::schedule(new death_spawn_fineff(mg));
     }
 protected:
-    death_spawn_fineff(monster_type type, coord_def pos, int dur)
-        : final_effect(0, 0, pos), mon_type(type), duration(dur)
+    death_spawn_fineff(mgen_data _mg)
+        : final_effect(0, 0, _mg.pos), mg(_mg)
     {
     }
-    const monster_type mon_type;
-    const int duration;
+    const mgen_data mg;
 };
 
 void fire_final_effects();

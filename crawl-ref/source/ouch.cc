@@ -295,19 +295,6 @@ int check_your_resists(int hurted, beam_type flavour, string source,
             you.strip_willpower(beam->agent(), random_range(8, 14));
         break;
 
-    case BEAM_CRYSTALLIZING:
-        if (doEffects)
-        {
-            if (x_chance_in_y(3, 4)) {
-                if (!you.duration[DUR_VITRIFIED])
-                    mpr("Your body becomes as fragile as glass!");
-                else
-                    mpr("You feel your fragility will last longer.");
-                you.increase_duration(DUR_VITRIFIED, random_range(8, 18), 50);
-            }
-        }
-        break;
-
     case BEAM_UMBRAL_TORCHLIGHT:
         if (you.holiness() & ~(MH_NATURAL | MH_DEMONIC | MH_HOLY)
             || beam->agent(true)->is_player())
@@ -322,6 +309,11 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         {
             you.blink();
         }
+        break;
+
+    case BEAM_SEISMIC:
+        if (you.airborne())
+            hurted = hurted / 3;
         break;
 
     default:
@@ -646,8 +638,7 @@ void _maybe_blood_hastes_allies()
         if (mi->alive() && mons_attitude(**mi) == ATT_FRIENDLY
             && !mi->berserk_or_frenzied() && you.can_see(**mi)
             && !mi->has_ench(ENCH_HASTE)
-            && !mons_is_tentacle_or_tentacle_segment(mi->type)
-            && !mons_is_firewood(**mi) && !mons_is_object(mi->type))
+            && !mi->is_peripheral())
         {
             targetable.emplace_back(*mi);
         }

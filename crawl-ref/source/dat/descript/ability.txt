@@ -148,13 +148,19 @@ concentration is required.
 %%%%
 Imbue Servitor ability
 
-Chooses one of the caster's destructive spells to grant to Spellforged Servitors
-they summon in the future, replacing any spell granted to them previously. The
+Chooses one of the caster's destructive spells to grant to Spellspark Servitors
+they create in the future, replacing any spell granted to them previously. The
 caster must be capable of casting this spell themselves with a failure rate of
 no more than 20%.
 
 Note: imbuing a spell in this manner will take several turns and also dismiss
 your servitor if it is active.
+%%%%
+Imprint Weapon ability
+
+Analyzes the structural composition of an artefact melee weapon in your
+inventory and imprints it upon your Platinum Paragon spell, allowing it to wield
+a functional replica of it whenever you create one.
 %%%%
 # Zin
 Recite ability

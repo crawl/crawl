@@ -1,4 +1,4 @@
-name: "spellforged servitor"
+name: "spellspark servitor"
 glyph: {char: "9", colour: lightmagenta}
 flags: [flies, no_exp_gain, no_poly_to]
 resists: {elec: 1, fire: 2, cold: 2}

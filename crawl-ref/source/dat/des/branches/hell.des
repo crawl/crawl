@@ -1172,14 +1172,14 @@ MAP
                ...
 ENDMAP
 
-NAME: vestibule_geh_grunt_obsidian_fortress
-TAGS: vestibule_geh
-KFEAT: G = enter_gehenna
-MONS: balrug / hellion, sin beast / hell hog
-MONS: sun demon / smoke demon / hell knight
-NSUBST: 2 = 3:2 / *:.
-NSUBST: 3 = 3:3 / *:.
-FTILE: 123+G = floor_infernal_blank
+NAME:   vestibule_geh_grunt_obsidian_fortress
+TAGS:   vestibule_geh
+KFEAT:  G = enter_gehenna
+MONS:   balrug / hellion, sin beast / hell hog
+MONS:   sun demon / smoke demon / hell knight
+NSUBST: 2 = 3:2 / *:., 3 = 3:3 / *:.
+FTILE:  123+G = floor_infernal_blank
+TILE:   c = stone_wall_pyre
 : hell_lava_spawns(_G)
 MAP
 lllllllllccccccccccccccclllllllll
@@ -1234,7 +1234,7 @@ KMONS:   D = balrug band / sin beast band / hell hog band / \
 KFEAT:   D = enter_gehenna
 SHUFFLE: Pp/Qq/Rr/Ss
 SUBST:   P = +, p = ., QRS = c, qrs = l, L = l.
-TILE:    c = dngn_stone_wall_red
+TILE:    c = stone_wall_pyre
 FTILE:   +D' = floor_infernal_blank
 COLOUR:  c = red
 MAP

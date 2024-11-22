@@ -2431,9 +2431,12 @@ void give_apostle_equipment(monster* apostle)
                 make_item_for_monster(apostle, OBJ_ARMOUR, *arm_type,
                                       100, true, ISFLAG_KNOW_TYPE);
 
-            armour->plus += roll_dice(2, 2);
-            if (x_chance_in_y(max(0, pow - 50), 50))
+            if (!is_unrandom_artefact(*armour))
+            {
                 armour->plus += roll_dice(2, 2);
+                if (x_chance_in_y(max(0, pow - 50), 50))
+                    armour->plus += roll_dice(2, 2);
+            }
 
             // If we have no spell besides battlecry, have a chance for
             // boomerangs or javelins.
@@ -2508,7 +2511,8 @@ void give_apostle_equipment(monster* apostle)
                 make_item_for_monster(apostle, OBJ_ARMOUR, *arm_type,
                                       100, true, ISFLAG_KNOW_TYPE);
 
-            armour->plus += roll_dice(2, 2);
+            if (!is_unrandom_artefact(*armour))
+                armour->plus += roll_dice(2, 2);
         }
         break;
     }

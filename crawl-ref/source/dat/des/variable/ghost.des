@@ -159,6 +159,7 @@ MAP
 .............
 ENDMAP
 
+# The ghost version of gammafunk_sealed_arena.
 NAME:   gammafunk_ghost_arena
 TAGS:   transparent passable allow_dup vaults_orient_w
 ORIENT: float

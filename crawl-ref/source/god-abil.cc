@@ -1283,7 +1283,7 @@ spret zin_imprison(const coord_def& target, bool fail)
         return spret::abort;
     }
 
-    if (mons_is_firewood(*mons) || mons_is_conjured(mons->type))
+    if (mons->is_peripheral())
     {
         mpr("You cannot imprison that!");
         return spret::abort;
@@ -1500,7 +1500,7 @@ void yred_end_conquest()
     int souls_remaining = 0;
     for (monster_iterator mi; mi; ++mi)
     {
-        if (!mi->wont_attack() && !mons_is_firewood(**mi)
+        if (!mi->wont_attack() && !mi->is_firewood()
             && mons_can_be_spectralised(**mi, true)
             // Ignore monsters in no-tele-into areas, since these are often
             // literally unreachable, and we also don't want Yred to be unhappy
@@ -1584,8 +1584,7 @@ static bool _is_isolated_soul(monster* mons)
         if (!act || !act->is_monster())
             continue;
 
-        const monster* mon = act->as_monster();
-        if (!mons_is_firewood(*mon) && mons_aligned(mons, mon))
+        if (!act->is_firewood() && mons_aligned(mons, act))
             return false;
     }
     return true;
@@ -1648,7 +1647,7 @@ void yred_fathomless_shackles_effect(int delay)
     for (monster_near_iterator mi(p); mi; ++mi)
     {
         if (grid_distance(mi->pos(), p) > radius
-            || mi->wont_attack() || mons_is_firewood(**mi))
+            || mi->wont_attack() || mi->is_firewood())
         {
             continue;
         }
@@ -2164,7 +2163,7 @@ static map<curse_type, curse_data> _ashenzari_curses =
     } },
     { CURSE_COMPANIONS, {
         "Companions", "Comp",
-        { SK_SUMMONINGS, SK_NECROMANCY },
+        { SK_SUMMONINGS, SK_NECROMANCY, SK_FORGECRAFT },
     } },
     { CURSE_BEGUILING, {
         "Beguiling", "Bglg",
@@ -2420,6 +2419,7 @@ bool ashenzari_uncurse_item()
     }
 
     mprf("You shatter the curse binding %s!", item.name(DESC_THE).c_str());
+    item_skills(item, you.skills_to_hide);
     unequip_item(item_equip_slot(you.inv[item_slot]));
     ash_check_bondage();
 
@@ -2916,7 +2916,7 @@ spret dithmenos_shadowslip(bool fail)
     int dur = random_range(40, 60 + you.skill(SK_INVOCATIONS, 2));
     for (monster_near_iterator mi(shadow->pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (mons_is_firewood(**mi))
+        if (mi->is_firewood())
             continue;
 
         // For every monster in sight of both the player *and* their shadow, and
@@ -3027,6 +3027,7 @@ bool valid_marionette_spell(spell_type spell)
         case SPELL_CORRUPTING_PULSE:
         case SPELL_SUMMON_ILLUSION:
         case SPELL_PHANTOM_BLITZ:
+        case SPELL_AWAKEN_FOREST:
             return false;
 
         default:
@@ -3061,7 +3062,7 @@ static vector<monster*> _get_marionette_targets()
     vector<monster*> valid_targs;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (you.can_see(**mi) && !mi->wont_attack() && !mons_is_firewood(**mi))
+        if (you.can_see(**mi) && !mi->wont_attack() && !mi->is_firewood())
             valid_targs.push_back(*mi);
     }
 
@@ -3110,7 +3111,7 @@ void dithmenos_cache_marionette_viability()
 {
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (!you.can_see(**mi) || mi->wont_attack() || mons_is_firewood(**mi))
+        if (!you.can_see(**mi) || mi->wont_attack() || mi->is_firewood())
             continue;
 
         if (!mi->has_ench(ENCH_SHADOWLESS))
@@ -3132,7 +3133,7 @@ string dithmenos_cannot_marionette_reason()
 {
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (!you.can_see(**mi) || mi->wont_attack() || mons_is_firewood(**mi))
+        if (!you.can_see(**mi) || mi->wont_attack() || mi->is_firewood())
             continue;
 
         if (!mi->has_ench(ENCH_SHADOWLESS))
@@ -4336,6 +4337,7 @@ static const vector<mutation_type> _moderate_arcane_sacrifices =
 {
     MUT_NO_ALCHEMY_MAGIC,
     MUT_NO_HEXES_MAGIC,
+    MUT_NO_FORGECRAFT_MAGIC,
 };
 
 /// School-disabling mutations that are mostly easy to deal with.
@@ -4599,12 +4601,7 @@ static int _piety_for_skill_by_sacrifice(ability_type sacrifice)
     const sacrifice_def &sac_def = _get_sacrifice_def(sacrifice);
 
     piety_gain += _piety_for_skill(sac_def.sacrifice_skill);
-    if (sacrifice == ABIL_RU_SACRIFICE_HAND
-        && species::size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
-    {
-        // No one-handed staves for small races.
-        piety_gain += _piety_for_skill(SK_STAVES);
-    }
+
     return piety_gain;
 }
 
@@ -5301,16 +5298,6 @@ bool ru_do_sacrifice(ability_type sac)
     else if (sac_def.sacrifice_skill != SK_NONE)
         _ru_kill_skill(sac_def.sacrifice_skill);
 
-    // Maybe this should go in _extra_sacrifice_code, but it would be
-    // inconsistent for the milestone to have reduced Shields skill
-    // but not the others.
-    if (sac == ABIL_RU_SACRIFICE_HAND
-        && species::size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
-    {
-        // No one-handed staves for small races.
-        _ru_kill_skill(SK_STAVES);
-    }
-
     mark_milestone("sacrifice", mile_text);
 
     // Any special handling that's needed.
@@ -5710,7 +5697,7 @@ static int _apply_apocalypse(coord_def where)
     enchant_type enchantment = ENCH_NONE;
 
     int effect = random2(4);
-    if (mons_is_firewood(*mons))
+    if (mons->is_firewood())
         effect = 99; // > 2 is just damage -- no slowed toadstools
 
     int num_dice;
@@ -6218,7 +6205,7 @@ static void _transfer_drain_nearby(coord_def destination)
     for (adjacent_iterator it(destination); it; ++it)
     {
         monster* mon = monster_at(*it);
-        if (!mon || god_protects(*mon) || mons_is_firewood(*mon))
+        if (!mon || mon->is_firewood() || god_protects(*mon))
             continue;
 
         const int dur = random_range(60, 150);
@@ -6522,9 +6509,10 @@ bool wu_jian_do_wall_jump(coord_def targ)
     }
 
     auto initial_position = you.pos();
-    move_player_to_grid(wall_jump_landing_spot, false);
+    you.moveto(wall_jump_landing_spot);
     wu_jian_wall_jump_effects();
     you.clear_far_engulf(false, true);
+    you.apply_location_effects(initial_position);
 
     int wall_jump_modifier = (you.attribute[ATTR_SERPENTS_LASH] != 1) ? 2
                                                                       : 1;
@@ -6671,9 +6659,7 @@ spret okawaru_duel(const coord_def& target, bool fail)
         return spret::abort;
     }
 
-    if (mons_is_firewood(*mons)
-        || mons_is_conjured(mons->type)
-        || mons_is_tentacle_or_tentacle_segment(mons->type)
+    if (mons->is_peripheral()
         || mons_primary_habitat(*mons) == HT_LAVA
         || mons_primary_habitat(*mons) == HT_WATER
         || mons->wont_attack())
@@ -6956,7 +6942,7 @@ static void _makhleb_atrocity_trigger(int power)
     vector<monster*> targs;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (!mi->wont_attack() && !mons_is_firewood(**mi))
+        if (!mi->wont_attack() && !mi->is_firewood())
             targs.push_back(*mi);
     }
 
@@ -7079,13 +7065,8 @@ static monster* _find_carnage_target(monster_type demon_type, coord_def& demon_s
     // First, find all possible valid enemies
     vector<monster*> targs;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-    {
-        if (!mi->wont_attack() && !mons_is_firewood(**mi)
-            && you.can_see(**mi))
-        {
+        if (!mi->wont_attack() && !mi->is_firewood() && you.can_see(**mi))
             targs.push_back(*mi);
-        }
-    }
     shuffle_array(targs);
 
     // Now iterate through these in random order, looking for a place that this

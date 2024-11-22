@@ -2016,7 +2016,7 @@ WEIGHT: 50
 # Heavily customized in flavour and power to emphasize Xom's love of risks.
 ##########################################################################
 
-NAME:    regret_index_bazaar_x_original
+NAME:    regret_index_bazaar_xom_original
 TAGS:    allow_dup xom_bazaar
 ORIENT:  encompass
 KMONS:   p = pile of debris
@@ -2091,9 +2091,12 @@ local necrospells = util.random_subset({ "kiss_of_death", "sublimation_of_blood"
 local tlocspells = util.random_subset({ "maxwell's_portable_piledriver",
                                         "volatile_blastmotes", "gell's_gavotte",
                                         "dispersal", "malign_gateway" }, 2)
-local summspells = util.random_subset({ "call_imp", "animate_armour",
-                                        "summon_blazeheart_golem", "summon_forest",
+local summspells = util.random_subset({ "call_imp", "martyr's_knell",
+                                        "summon_forest", "summon_cactus_giant",
                                         "summon_horrible_things" }, 2)
+local forgespells = util.random_subset({ "iskenderun's_battlesphere", "awaken_armour",
+                                         "forge_blazeheart_golem", "alistair's_walking_alembic",
+                                         "diamond_sawblades" }, 2)
 
 local hexbook = "randbook owner:Xom title:Mystic_Anarchy disc:hexes " ..
                 "numspells:2 spells:" .. table.concat(hexspells, '&&' )
@@ -2103,17 +2106,19 @@ local necrobook = "randbook owner:Xom title:Vocational_Suffering disc:necromancy
                   "numspells:2 spells:" .. table.concat(necrospells, '&&' )
 local tlocbook = "randbook owner:Xom title:Spontaneous_Journeys disc:translocation " ..
                  "numspells:2 spells:" .. table.concat(tlocspells, '&&' )
-local summbook = "randbook owner:Xom title:New_Friends disc:summoning " ..
+local summbook = "randbook owner:Xom title:Meeting_Friends disc:summoning " ..
                  "numspells:2 spells:" .. table.concat(summspells, '&&' )
+local forgebook = "randbook owner:Xom title:Making_Friends disc:forgecraft " ..
+                  "numspells:2 spells:" .. table.concat(forgespells, '&&' )
 
-local use_books = table.concat(util.random_subset({
-                  hexbook, alchbook, necrobook, tlocbook, summbook}, 3), ' | ')
+local use_books = table.concat(util.random_subset({hexbook, alchbook,
+                  necrobook, tlocbook, summbook, forgebooks}, 3), ' | ')
 
 -- Manual options: above spell schools, other magical items offered in the same
 -- shop, and a joke dud of Stealth since Xom will break it constantly.
 local manuals = {"hexes", "alchemy", "necromancy", "translocations",
-                 "summonings", "evocations", "shapeshifting", "stealth",
-                 "stealth", "stealth"}
+                 "summonings", "forgecraft", "evocations", "shapeshifting",
+                 "stealth", "stealth", "stealth", "stealth"}
 local manual = "manual of " .. util.random_from(manuals)
 
 local wand = table.concat(util.random_subset({
