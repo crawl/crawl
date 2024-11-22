@@ -23,6 +23,27 @@
 #include "viewchar.h"
 #include "ui.h"
 
+/*
+ * Convert an input char in the current language to an English answer.
+ *
+ * An English answer will fall through unchanged, unless that key is
+ * redefined to mean something else in the target language.
+ */
+static int _convert_input_to_english(const string& allowed, int answer)
+{
+    if (localisation_active())
+    {
+        for (char c: allowed)
+        {
+            if (answer == localise_char(c))
+                return (int)c;
+        }
+    }
+
+    return answer;
+}
+
+
 // Like yesno, but requires a full typed answer.
 // Unlike yesno, prompt should have no trailing space.
 // Returns true if the user typed "yes", false if something else or cancel.
@@ -55,7 +76,7 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
         interrupt_activity(activity_interrupt::force);
 
     // Allow players to answer prompts via clua.
-    maybe_bool res = clua.callmaybefn("c_answer_prompt", "s", str); // @noloc
+    maybe_bool res = clua.callmaybefn("c_answer_prompt", "s", str);
     if (res == MB_TRUE)
         return true;
     if (res == MB_FALSE)
@@ -129,15 +150,14 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
         if (map && map->find(tmp) != map->end())
             tmp = map->find(tmp)->second;
 
-        if (default_answer)
-            default_answer = localise_char(default_answer);
-
         if (default_answer
             && (tmp == ' ' || key_is_escape(tmp)
                 || tmp == '\r' || tmp == '\n' || crawl_state.seen_hups))
         {
             tmp = default_answer;
         }
+        else
+            tmp = _convert_input_to_english("YyNn", tmp);
 
         if (Options.easy_confirm == easy_confirm_type::all
             || tmp == default_answer
@@ -150,14 +170,14 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
         if (clear_after)
             clear_messages();
 
-        if (tmp == localise_char('N'))
+        if (tmp == 'N')
             return false;
-        else if (tmp == localise_char('Y'))
+        else if (tmp == 'Y')
             return true;
         else if (!noprompt)
         {
             bool upper = !allow_lowercase
-                         && (tmp == localise_char('n') || tmp == localise_char('y')
+                         && (tmp == 'n' || tmp == 'y'
                              || crawl_state.game_is_hints_tutorial());
             string pr;
             if (upper)
@@ -244,6 +264,8 @@ int yesnoquit(const char* str, bool allow_lowercase, int default_answer, bool al
 
         int tmp = ui::getch(KMC_CONFIRM);
 
+        tmp = _convert_input_to_english("YyNnAaQq", tmp);
+
         if (key_is_escape(tmp) || tmp == 'q' || tmp == 'Q'
             || crawl_state.seen_hups)
         {
@@ -264,19 +286,18 @@ int yesnoquit(const char* str, bool allow_lowercase, int default_answer, bool al
         if (clear_after)
             clear_messages();
 
-        if (tmp == localise_char('N'))
+        if (tmp == 'N')
             return 0;
-        else if (tmp == localise_char('Y') || tmp == localise_char(alt_yes) || tmp == localise_char(alt_yes2))
+        else if (tmp == 'Y' || tmp == alt_yes || tmp == alt_yes2)
             return 1;
         else if (allow_all)
         {
-            if (tmp == localise_char('A'))
+            if (tmp == 'A')
                 return 2;
             else
             {
                 bool upper = !allow_lowercase
-                             && (tmp == localise_char('n') || tmp == localise_char('y')
-                                 || tmp == localise_char('a')
+                             && (tmp == 'n' || tmp == 'y' || tmp == 'a'
                                  || crawl_state.game_is_hints_tutorial());
                 mprf(upper ? "Choose uppercase [Y]es%s, [N]o, [Q]uit, or [A]ll!" :
                              "Choose [Y]es%s, [N]o, [Q]uit, or [A]ll!",
@@ -286,7 +307,7 @@ int yesnoquit(const char* str, bool allow_lowercase, int default_answer, bool al
         else
         {
             bool upper = !allow_lowercase
-                         && (tmp == localise_char('n') || tmp == localise_char('y')
+                         && (tmp == 'n' || tmp == 'y'
                              || crawl_state.game_is_hints_tutorial());
             mprf(upper ? "Uppercase [Y]es%s, [N]o or [Q]uit only, please." :
                          "[Y]es%s, [N]o or [Q]uit only, please.",
