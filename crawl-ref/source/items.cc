@@ -4117,9 +4117,7 @@ static void _rune_from_specs(const char* _specs, item_def &item)
 {
     string specs = replace_all(_specs, " of zot", "");
     if (localisation_active())
-    {
         specs = replace_all(specs, lowercase_string(localise(" of Zot")), "");
-    }
 
     if (specs.length() > 4)
     {
