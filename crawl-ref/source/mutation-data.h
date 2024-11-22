@@ -43,9 +43,8 @@ static const mutation_def mut_data[] =
   {"Your magical power and effects resist disruption.", "", ""},
   {"Your magical power grows resistant to disruption.", "", ""},
   {"Your magical power loses its resistance to disruption.", "", ""},
-
   TILEG_MUT_INVIOLATE_MAGIC,
-  0, {"Your magical power will grow resistant to disruption."}
+  {"Your magical power will grow resistant to disruption."}
 },
 
 { MUT_TOUGH_SKIN, 0, 3, mutflag::good, true,
