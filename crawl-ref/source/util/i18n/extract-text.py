@@ -1378,8 +1378,7 @@ def process_cplusplus_file(filename):
             if re.search(r'\bdie(_noline)? *\(', line) or \
                re.search(r'dprf? *\(', line) or \
                re.search(r'dprintf *\(', line) or \
-               re.search(r'debug_dump_item *\(', line) or \
-               re.search(r'dump_test_fails *\(', line) or \
+               re.search(r'(debuglog|debug_dump_item|dump_test_fails) *\(', line) or \
                re.search(r'bad_level_id', line) or \
                'game_ended_with_error' in line or \
                re.search(r'ASSERTM? *\(', line) or \
