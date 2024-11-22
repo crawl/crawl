@@ -1625,6 +1625,12 @@ def process_cplusplus_file(filename):
                 strings.append(string.replace('while %s', 'while caught in a web'))
                 continue
 
+            if 'convert_input_to_english' in line:
+                # separate input chars
+                for c in string:
+                    strings.append(c)
+                continue
+
             if section != last_section:
                 strings.append('# section: ' + section)
                 last_section = section
