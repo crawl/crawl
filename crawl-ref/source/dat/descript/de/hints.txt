@@ -919,9 +919,9 @@ du auch dessen Beschreibung lesen.</tiles>
 %%%%
 HINT_ATTACK_MONSTER_MAGIC
 
-Als Konjurant wirst du es jedoch mit Magie behandeln wollen. Im
-Hilfe-Eintrag für den Memorierungsreiter (<w>$cmd[CMD_MEMORISE_SPELL]</w>)
-findest du eine Erklärung, wie du das machen kannst.
+Als Konjurant solltest du jedoch mit Magie bevorzugen. Im Hilfe-Eintrag für den
+"Auswendig lernen"-Reiter (<w>$cmd[CMD_MEMORISE_SPELL]</w>) findest du eine
+Erklärung, wie du das machen kannst.
 %%%%
 HINT_FLEEING_MONSTER
 
