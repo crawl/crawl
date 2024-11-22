@@ -4115,23 +4115,19 @@ bool item_def::is_mundane() const
 
 static void _rune_from_specs(const char* _specs, item_def &item)
 {
-    char specs[80];
-
-    if (strstr(_specs, "rune of zot"))
+    string specs = replace_all(_specs, " of zot", "");
+    if (localisation_active())
     {
-        strlcpy(specs, _specs, min(strlen(_specs) - strlen(" of zot") + 1,
-                                   sizeof(specs)));
+        specs = replace_all(specs, lowercase_string(localise(" of Zot")), "");
     }
-    else
-        strlcpy(specs, _specs, sizeof(specs));
 
-    if (strlen(specs) > 4)
+    if (specs.length() > 4)
     {
         for (int i = 0; i < NUM_RUNE_TYPES; ++i)
         {
             item.sub_type = i;
 
-            if (lowercase_string(item.name(DESC_PLAIN)).find(specs) != string::npos)
+            if (find_specs(item.name(DESC_PLAIN), specs) != string::npos)
                 return;
         }
     }
@@ -4141,7 +4137,8 @@ static void _rune_from_specs(const char* _specs, item_def &item)
         string line;
         for (int i = 0; i < NUM_RUNE_TYPES; i++)
         {
-            line += localise("[%c] %s ", i + 'a', rune_type_name(i)); // @noloc
+            string name = localise(rune_type_name(i));
+            line += make_stringf("[%c] %s ", i + 'a', name.c_str());
             if (i % 5 == 4 || i == NUM_RUNE_TYPES - 1)
             {
                 mpr_nolocalise(MSGCH_PROMPT, line);
@@ -4232,7 +4229,7 @@ bool get_item_by_name(item_def *item, const char* specs,
         for (const auto i : all_item_subtypes(item->base_type))
         {
             item->sub_type = i;
-            size_t pos = lowercase_string(item->name(DESC_PLAIN)).find(specs);
+            const size_t pos = find_specs(item->name(DESC_PLAIN), specs);
             if (pos != string::npos)
             {
                 // Earliest match is the winner.
@@ -4275,7 +4272,7 @@ bool get_item_by_name(item_def *item, const char* specs,
                     int index = unrand + UNRAND_START;
                     const unrandart_entry* entry = get_unrand_entry(index);
 
-                    size_t pos = lowercase_string(entry->name).find(specs);
+                    size_t pos = find_specs(entry->name, specs);
                     if (pos != string::npos && entry->base_type == class_wanted)
                     {
                         make_item_unrandart(*item, index);
@@ -4336,7 +4333,7 @@ bool get_item_by_name(item_def *item, const char* specs,
             for (int i = SPWPN_NORMAL + 1; i < SPWPN_DEBUG_RANDART; ++i)
             {
                 item->brand = i;
-                size_t pos = lowercase_string(item->name(DESC_PLAIN)).find(buf_lwr);
+                size_t pos = find_specs(item->name(DESC_PLAIN), buf_lwr);
                 if (pos != string::npos)
                 {
                     // earliest match is the winner

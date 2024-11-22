@@ -24,6 +24,7 @@
 #include "item-prop.h"
 #include "level-state-type.h"
 #include "libutil.h"
+#include "localise.h"
 #include "message.h"
 #include "notes.h"
 #include "options.h"
@@ -175,6 +176,11 @@ bool spell_data_initialized()
     return _get_spell_name_cache().size() > 0;
 }
 
+static string _spell_title_translated(spell_type spell)
+{
+    return localise(spell_title(spell));
+}
+
 spell_type spell_by_name(string name, bool partial_match)
 {
     if (name.empty())
@@ -185,8 +191,22 @@ spell_type spell_by_name(string name, bool partial_match)
     if (!partial_match)
         return lookup(_get_spell_name_cache(), name, SPELL_NO_SPELL);
 
-    const spell_type sp = find_earliest_match(name, SPELL_NO_SPELL, NUM_SPELLS,
-                                              is_valid_spell, spell_title);
+    spell_type sp = NUM_SPELLS;
+
+    if (localisation_active())
+    {
+        // search in target language
+        sp = find_earliest_match(name, SPELL_NO_SPELL, NUM_SPELLS,
+                                 is_valid_spell, _spell_title_translated);
+    }
+
+    if (sp == NUM_SPELLS)
+    {
+        // search in English
+        sp = find_earliest_match(name, SPELL_NO_SPELL, NUM_SPELLS,
+                                 is_valid_spell, spell_title);
+    }
+
     return sp == NUM_SPELLS ? SPELL_NO_SPELL : sp;
 }
 

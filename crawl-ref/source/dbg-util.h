@@ -39,3 +39,7 @@ void wizard_toggle_dprf();
 void debug_list_vacant_keys();
 
 vector<string> level_vault_names(bool force_all=false);
+
+// try to find specs in name in current language and English
+// returns pos where specs found or string::npos is not found
+size_t find_specs(const string& name, const string& specs);

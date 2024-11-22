@@ -13,6 +13,7 @@
 #include "format.h"
 #include "item-name.h"
 #include "libutil.h"
+#include "localise.h"
 #include "macro.h"
 #include "message.h"
 #include "options.h"
@@ -446,9 +447,7 @@ skill_type skill_from_name(const char *name)
 
     for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
     {
-        string sk_name = lowercase_string(skill_name(sk));
-
-        size_t pos = sk_name.find(name);
+        size_t pos = find_specs(skill_name(sk), name);
         if (pos != string::npos)
         {
             skill = sk;
@@ -594,3 +593,19 @@ void wizard_toggle_dprf()
     }
 }
 #endif
+
+// try to find specs in name in current language and English
+// returns pos where specs found or string::npos is not found
+size_t find_specs(const string& name, const string& specs)
+{
+    if (localisation_active())
+    {
+        // search in target language
+        size_t pos = lowercase_string(localise(name)).find(specs);
+        if (pos != string::npos)
+            return pos;
+    }
+
+    // search in English
+    return lowercase_string(name).find(specs);
+}

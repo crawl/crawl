@@ -1668,7 +1668,7 @@ static string show_prompt(string prompt)
 
     // FIXME: duplicating mpr code.
     msg_colour_type colour = prepare_message(prompt, MSGCH_PROMPT, 0);
-    return colour_string(prompt, colour_msg(colour));
+    return colour_string(localise(prompt), colour_msg(colour));
 }
 
 static string _prompt;

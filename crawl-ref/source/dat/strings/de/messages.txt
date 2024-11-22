@@ -17623,7 +17623,7 @@ ESC - exit
 ESC - abbrechen
 %%%%
 "What class of item? "
-"Welche Art von Gegenstand? "
+"Welche Art Gegenstand? "
 %%%%
 Could not allocate item.
 Artikel konnte nicht zugeordnet werden.
