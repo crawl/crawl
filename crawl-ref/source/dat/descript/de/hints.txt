@@ -773,7 +773,7 @@ davon zu benutzen.
 %%%%
 HINT_ITEM_FLIGHT
 
-Der Flug ermöglicht es dich, tiefes Wasser oder Lava zu überqueren.
+Der Flug ermöglicht es dir, tiefes Wasser oder Lava zu überqueren.
 Gegenstände, die dich das Fliegen ermöglichen, werden automatisch aktiviert,
 wenn du sie an hast.
 %%%%
