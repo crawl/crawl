@@ -66,10 +66,9 @@ spret word_of_chaos(int pow, bool fail);
 spret blinkbolt(int power, bolt &beam, bool fail);
 
 dice_def piledriver_collision_damage(int pow, int dist, bool random);
-vector<coord_def> piledriver_beam_paths(const vector<coord_def> &targets,
-                                        bool actual);
-vector<coord_def> possible_piledriver_targets(bool actual);
-spret cast_piledriver(int pow, bool fail);
+bool piledriver_target_exists();
+int piledriver_path_distance(const coord_def& target, bool actual);
+spret cast_piledriver(const coord_def& target, int pow, bool fail);
 
 dice_def gavotte_impact_damage(int pow, int dist, bool random);
 spret cast_gavotte(int pow, const coord_def dir, bool fail);

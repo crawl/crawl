@@ -2590,3 +2590,57 @@ bool targeter_tempering::valid_aim(coord_def a)
 
     return true;
 }
+
+targeter_piledriver::targeter_piledriver()
+    : targeter_smite(&you, 1)
+{
+    // Cache length of piledriver line in all directions
+    for (int i = 0; i < 8; ++i)
+        piledriver_lengths[i] = piledriver_path_distance(you.pos() + Compass[i], false);
+}
+
+bool targeter_piledriver::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    coord_def delta = (a - you.pos());
+    for (int i = 0; i < 8; ++i)
+    {
+        if (Compass[i] == delta)
+        {
+            if (piledriver_lengths[i] > 0)
+                return true;
+            else
+                return notify_fail("You see nothing there you can launch.");
+        }
+    }
+
+    return false;
+}
+
+bool targeter_piledriver::set_aim(coord_def a)
+{
+    spots.clear();
+
+    coord_def delta = (a - you.pos());
+    for (int i = 0; i < 8; ++i)
+    {
+        if (Compass[i] == delta)
+        {
+            for (int j = 1; j < piledriver_lengths[i] + 2; ++j)
+                spots.push_back(agent->pos() + delta * j);
+        }
+    }
+
+    return true;
+}
+
+aff_type targeter_piledriver::is_affected(coord_def loc)
+{
+    for (coord_def p : spots)
+        if (loc == p)
+            return AFF_YES;
+
+    return AFF_NO;
+}

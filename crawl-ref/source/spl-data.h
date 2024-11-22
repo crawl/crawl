@@ -3865,7 +3865,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_PILEDRIVER, "Maxwell's Portable Piledriver",
     spschool::translocation,
-    spflag::none,
+    spflag::target,
     3,
     100,
     5, 5,

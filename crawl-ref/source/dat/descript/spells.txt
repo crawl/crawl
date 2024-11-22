@@ -1200,14 +1200,11 @@ Higher spell power will allow the caster to accumulate charge more rapidly.
 %%%%
 Maxwell's Portable Piledriver spell
 
-Compresses an envelope of space around the caster and an adjacent enemy, then
-allows it to decompress abruptly, propelling both of them forward until the
-latter collides with something, inflicting damage proportional to the distance
+Compresses an envelope of space around the caster and an adjacent enemy (or a
+contiguous line of enemies), then allows it to decompress abruptly, propelling
+everyone forward until the unfortunate being at the far end collides with
+something solid, inflicting damage on them proportional to the distance
 travelled.
-
-Originally designed for use in construction, it will automatically target the
-nearest mass with the longest clear path towards a wall or other solid object
-(such as another monster).
 %%%%
 Mephitic Cloud spell
 

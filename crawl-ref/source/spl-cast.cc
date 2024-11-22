@@ -1264,12 +1264,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_multiposition>(&you, plasma_paths, a);
     }
     case SPELL_PILEDRIVER:
-    {
-        auto piledriver_targets = possible_piledriver_targets(false);
-        auto piledriver_paths = piledriver_beam_paths(piledriver_targets, false);
-        const aff_type a = piledriver_targets.size() == 1 ? AFF_YES : AFF_MAYBE;
-        return make_unique<targeter_multiposition>(&you, piledriver_paths, a);
-    }
+        return make_unique<targeter_piledriver>();
     case SPELL_CHAIN_LIGHTNING:
         return make_unique<targeter_chain_lightning>();
     case SPELL_MAXWELLS_COUPLING:
@@ -2652,7 +2647,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
         return cast_permafrost_eruption(you, powc, fail);
 
     case SPELL_PILEDRIVER:
-        return cast_piledriver(powc, fail);
+        return cast_piledriver(beam.target, powc, fail);
 
     // Just to do extra messaging; spell is handled by default zapping
     case SPELL_COMBUSTION_BREATH:

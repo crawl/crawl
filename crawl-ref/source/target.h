@@ -696,3 +696,16 @@ public:
     targeter_tempering();
     bool valid_aim(coord_def a) override;
 };
+
+class targeter_piledriver : public targeter_smite
+{
+public:
+    targeter_piledriver();
+    bool valid_aim(coord_def a) override;
+    bool set_aim(coord_def a) override;
+    aff_type is_affected(coord_def loc) override;
+
+private:
+    int piledriver_lengths[8];
+    vector<coord_def> spots;
+};
