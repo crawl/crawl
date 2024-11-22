@@ -1567,7 +1567,7 @@ string MenuEntry::get_text(const bool) const
         return make_stringf(" %s %c %s",
             keycode_to_name(hotkeys[0]).c_str(),
             preselected ? '+' : '-',
-            text.c_str());
+            localise(text).c_str());
     }
     else if (level == MEL_ITEM && indent_no_hotkeys)
         return "     " + text;

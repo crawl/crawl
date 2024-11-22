@@ -1456,7 +1456,7 @@ class AcquireEntry : public InvEntry
                             need_cursor ? ']' : ' ',
                             keystr.c_str(),
                             itemstr.c_str(),
-                            text.c_str(),
+                            localise(text).c_str(),
                             gold_text.c_str(),
                             itemstr.c_str());
     }

@@ -85,8 +85,6 @@ InvEntry::InvEntry(const item_def &i)
     else
         text = i.name(DESC_A, false);
 
-    text = localise(text);
-
     if (item_is_stationary_net(i))
     {
         actor *trapped = actor_at(i.pos);
@@ -239,7 +237,7 @@ string InvEntry::get_text(bool need_cursor) const
         tstr << "(" << relpos.x << ", " << -relpos.y << ")" << " ";
     }
 
-    tstr << text;
+    tstr << localise(text);
     return tstr.str();
 }
 
