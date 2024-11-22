@@ -664,7 +664,7 @@ your scroll of teleportation
 deine Schriftrolle der Teleportation
 %%%%
 your scroll of torment
-deine Schriftrolle der Qual
+deine Schriftrolle der Peinigung
 %%%%
 your scroll of vulnerability
 deine Schriftrolle der Vulnerabilität

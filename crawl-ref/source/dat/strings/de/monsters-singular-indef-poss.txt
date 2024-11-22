@@ -1235,7 +1235,7 @@ a %slorocyproca's
 einer {adj-en}%sLorocyproca
 %%%%
 a %stormentor's
-eines {adj-en}%sQuälers
+eines {adj-en}%sPeinigers
 %%%%
 a %sBrimstone Fiend's
 eines {adj-en}%sSchwefelunterweltlers

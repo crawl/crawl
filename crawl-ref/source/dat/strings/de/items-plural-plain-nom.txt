@@ -158,7 +158,7 @@ scrolls of teleportation
 Schriftrollen der Teleportation
 %%%%
 scrolls of torment
-Schriftrollen der Qual
+Schriftrollen der Peinigung
 %%%%
 scrolls of vulnerability
 Schriftrollen der Vulnerabilität

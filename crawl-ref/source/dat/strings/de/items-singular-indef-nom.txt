@@ -664,7 +664,7 @@ a scroll of teleportation
 eine Schriftrolle der Teleportation
 %%%%
 a scroll of torment
-eine Schriftrolle der Qual
+eine Schriftrolle der Peinigung
 %%%%
 a scroll of vulnerability
 eine Schriftrolle der Vulnerabilität

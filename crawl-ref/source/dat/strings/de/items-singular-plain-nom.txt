@@ -682,7 +682,7 @@ scroll of teleportation
 Schriftrolle der Teleportation
 %%%%
 scroll of torment
-Schriftrolle der Qual
+Schriftrolle der Peinigung
 %%%%
 scroll of vulnerability
 Schriftrolle der Vulnerabilität

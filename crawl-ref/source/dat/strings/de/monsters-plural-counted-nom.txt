@@ -1234,7 +1234,7 @@
 %d Lorocyprocas
 %%%%
 %d tormentors
-%d Quäler
+%d Peiniger
 %%%%
 %d Brimstone Fiends
 %d Schwefelunterweltler

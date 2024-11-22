@@ -58,7 +58,7 @@ the %sscythe of Curses
 die {adj-e}%sSense der Flüche
 %%%%
 the %ssceptre of Torment
-das {adj-e}%sZepter der Qual
+das {adj-e}%sZepter der Peinigung
 %%%%
 the %ssword of Zonguldrok
 das {adj-e}%sSchwert von Zonguldrok
@@ -340,7 +340,7 @@ the %sMaxwell's etheric cage
 der {adj-e}%sÄtherkäfig von Maxwell
 %%%%
 the %scrown of Eternal Torment
-die {adj-e}%sKrone der ewigen Qual
+die {adj-e}%sKrone der ewigen Peinigung
 %%%%
 the %srobe of Vines
 das {adj-e}%sGewand der Reben

@@ -1763,7 +1763,7 @@ die letzten Spuren ihres Daseins in den Erinnerungen an das Leben anderer.
 %%%%
 lurking horror
 
-Eine formlose Masse negativer Energie, die schreckliche Qualen bringen wird,
+Eine formlose Masse negativer Energie, die schreckliche Peinigung bringen wird,
 sobald die Kräfte, die sie zusammenhalten, sich auflösen. Die fremde Präsenz von
 Eindringlingen im Abgrund wird sie mit Sicherheit auflösen, doch sie scheint auf
 perverse Weise von ihnen angezogen zu werden; dennoch scheint sie sich irgendwie
@@ -2602,8 +2602,8 @@ besteht. Manche Leute haben einfach zu viel Zeit.
 tormentor
 
 Ein bösartiger Teufel, der mit allerlei Klauen, Stacheln und grausamen Haken
-ausgestattet ist. Er kann jedem, der dumm genug ist, ihn anzuschauen, qualvolle
-Qualen zufügen.
+ausgestattet ist. Er kann jeden, der dumm genug ist, ihn anzusehen, qualvoll
+peinigen.
 %%%%
 torpor snail
 
@@ -3227,7 +3227,7 @@ erschaffen wurden. Jeder ihrer acht Hälse ist aufgebläht und verlängert und m
 einem kolossalen, zerknitterten und von Eiter triefenden Körper verbunden. Ihre
 vielen Köpfe spucken Blut, während sie sich vor Schmerzen winden und zucken,
 während sie sich selbst und allen anderen, die ihr widerliches Antlitz
-erblicken, Qualen zufügt.
+erblicken, peinigen.
 %%%%
 meat beast
 
@@ -3265,7 +3265,7 @@ Knochen zertrümmert und sich in ewiger Unruhe neu zusammensetzt.
 %%%%
 dread
 
-Eine Beleidigung der Existenz, eine Leere, in der es nur Qual und Verdammnis
+Eine Beleidigung der Existenz, eine Leere, in der es nur Peinigung und Verdammnis
 gibt. Seine überirdische Form ist zerrissen und verdreht, schwarz und hohl. Es
 ist beraubt rationalen Denkens und kennt nur Hass und den Wunsch, deine Seele zu
 entweihen.

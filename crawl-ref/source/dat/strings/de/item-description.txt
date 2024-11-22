@@ -801,10 +801,10 @@ Er kann besonders weit reichen, und seine weitreichenden Angriffe ignorieren and
 # Sceptre of Torment (eveningstar)
 %%%%
 torment
-Qual
+Peinigung
 %%%%
 It occasionally torments all nearby living foes when it strikes in combat.
-Es quält gelegentlich alle lebenden Feinde in der Nähe, wenn es im Kampf zuschlägt.
+Es peinigt gelegentlich alle lebenden Feinde in der Nähe, wenn es im Kampf zuschlägt.
 %%%%
 
 # Scythe of Curses
@@ -1100,7 +1100,7 @@ RegenMP+
 # Crown of Eternal Torment
 %%%%
 rTorment HP--
-rQual TP--
+rPeinigung TP--
 %%%%
 
 # Robe of Vines

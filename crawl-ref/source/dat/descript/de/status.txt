@@ -536,7 +536,7 @@ Lich status
 
 Du wurdest in einen Lich verwandelt. Du bist resistent gegen Kälte und
 feindliche Verhexungen und für die Dauer der Verwandlung vollkommen immun gegen
-Gift, negative Energie und Qual. Deine Nekromantie-Zauber werden stärker und du
+Gift, negative Energie und Peinigung. Deine Nekromantie-Zauber werden stärker und du
 erhältst einen auszehrenden Nahkampfangriff. Du bist jedoch auch anfällig für
 heiligen Schaden und Untote Vertreiben und kannst keine Tränke zu dir nehmen.
 %%%%
@@ -611,7 +611,7 @@ deiner Erfahrungsstufe und nicht auf deiner Fertigkeit im waffenlosen Kampf.
 Shadow status
 
 Du wurdest in eine wirbelnde Masse dunkler Schatten verwandelt. Du bist
-dauerhaft unsichtbar und immun gegen Gift, Auszehrung und Qual. Ankommender
+dauerhaft unsichtbar und immun gegen Gift, Auszehrung und Peinigung. Ankommender
 Schaden wird halbiert, du blutest bei jedem Angriff Rauch und verfügst über
 unendliche Willenskraft. Allerdings ist deine Fähigkeit, im Nahkampf und mit
 Fernkampfangriffen Schaden zuzufügen, halbiert, deine Zauberkraft wird stark
@@ -675,7 +675,7 @@ Bloodless status
 Dein Körper ist völlig blutleer, was deine maximale Gesundheit verringert und
 deine Gesundheit daran hindert, sich zu regenerieren, wenn Monster sichtbar sind.
 Du bist immun gegen Gift und negative Energie, widerstehen Kälte erheblich und
-bist resistent gegen Qualen.
+bist resistent gegen Peinigung.
 %%%%
 Bribe status
 

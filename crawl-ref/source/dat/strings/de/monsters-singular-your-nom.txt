@@ -1234,7 +1234,7 @@ your %slorocyproca
 deine {adj-e}%sLorocyproca
 %%%%
 your %stormentor
-dein {adj-er}%sQuäler
+dein {adj-er}%sPeiniger
 %%%%
 your %sBrimstone Fiend
 dein {adj-er}%sSchwefelunterweltler

@@ -58,7 +58,7 @@ Kugel von Zot
 {adj-e}%sSense der Flüche
 %%%%
 %ssceptre of Torment
-{adj-es}%sZepter der Qual
+{adj-es}%sZepter der Peinigung
 %%%%
 %ssword of Zonguldrok
 {adj-es}%sSchwert von Zonguldrok
@@ -340,7 +340,7 @@ Kugel von Zot
 {adj-er}%sÄtherkäfig von Maxwell
 %%%%
 %scrown of Eternal Torment
-{adj-e}%sKrone der ewigen Qual
+{adj-e}%sKrone der ewigen Peinigung
 %%%%
 %srobe of Vines
 {adj-es}%sGewand der Reben

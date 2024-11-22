@@ -1235,7 +1235,7 @@ the %slorocyproca
 die {adj-e}%sLorocyproca
 %%%%
 the %stormentor
-der {adj-e}%sQuäler
+der {adj-e}%sPeiniger
 %%%%
 the %sBrimstone Fiend
 der {adj-e}%sSchwefelunterweltler

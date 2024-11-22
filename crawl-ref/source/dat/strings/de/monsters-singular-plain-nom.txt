@@ -1234,7 +1234,7 @@
 {adj-e}%sLorocyproca
 %%%%
 %stormentor
-{adj-er}%sQuäler
+{adj-er}%sPeiniger
 %%%%
 %sBrimstone Fiend
 {adj-er}%sSchwefelunterweltler

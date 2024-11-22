@@ -56,7 +56,7 @@ We used:
 
 - pain = Schmerz
 - agony = Agonie
-- torment = Qual (proposed change to peinigen/Peinigung (and Peiniger for tomentor))
+- torment = Peinigung (and Peiniger for tomentor)
 
 Another set:
 

@@ -1234,7 +1234,7 @@ a %slorocyproca
 eine {adj-e}%sLorocyproca
 %%%%
 a %stormentor
-ein {adj-er}%sQuäler
+ein {adj-er}%sPeiniger
 %%%%
 a %sBrimstone Fiend
 ein {adj-er}%sSchwefelunterweltler

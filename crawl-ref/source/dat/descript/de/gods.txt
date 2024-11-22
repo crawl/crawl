@@ -330,7 +330,7 @@ Kikubaaqudgha schickt seinen Anhängern Leichen und verbessert die
 nekromantischen Fähigkeiten seiner Diener durch die Gabe von
 Nekromantie-Zaubersprüchen. Kikubaaqudgha schützt seine Anhänger vor den
 Auswirkungen nekromantischer Fehlzauber und Todesflüchen und kann sie sogar vor
-unheiliger Qual bewahren. Besonders eifrige Anhänger können sich selbst Qualen
+unheiliger Peinigung bewahren. Besonders eifrige Anhänger können sich selbst Peinigung
 zufügen, indem sie eine Leiche opfern, und Kikubaaqudgha ermöglicht es seinen
 Anhängern schließlich, entweder Wissen über die mächtigste und verbotenste
 nekromantische Magie zu erlangen oder ihre Waffe mit Schmerz zu erfüllen.
@@ -579,7 +579,7 @@ ihnen werden alle Gaben der Schleimmutationen genommen.
 Kikubaaqudgha wrath
 
 Kikubaaqudghas Zorn bringt alle schrecklichen Kräfte der Nekromantie hervor. Die
-Opfer werden von Qualen gefoltern, von Untoten angegriffen, von Miasma erstickt
+Opfer werden von Peinigung gefoltert, von Untoten angegriffen, von Miasma erstickt
 und von einer Vielzahl anderer nekromantischer Leiden heimgesucht. Darüber
 hinaus werden Kikubaaqudghas Gaben verdorben; diejenigen, die versuchen,
 nekromantische Magie zu verwenden, um den Zorn abzuwehren, werden feststellen,
@@ -606,7 +606,7 @@ Nemelex Xobeh wrath
 
 Wer Nemelex Xobeh verlässt, verliert sofort alle seine Gabendecks. Außerdem sind
 sie regelmäßig gezwungen, vom Deck der Bestrafung zu ziehen, was eine Reihe
-unangenehmer Effekte verursacht, darunter Entzug, Qual und Verwandlung, und
+unangenehmer Effekte verursacht, darunter Auszehrung, Peinigung und Verwandlung, und
 andere Götter werden angerufen, um beim Erzeugen von Zorn zu helfen.
 %%%%
 Okawaru wrath

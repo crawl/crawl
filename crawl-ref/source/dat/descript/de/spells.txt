@@ -1038,7 +1038,7 @@ Necromutation spell
 
 Verwandelt den Zauberer in einen Lich – eine mächtige Skelettfigur. Der Zauberer
 wird willensstärker, kälteresistenter und für die Dauer des Zaubers vollkommen
-immun gegen Gift, Miasma, negative Energie und Qual. Die Kraft der
+immun gegen Gift, Miasma, negative Energie und Peinigung. Die Kraft der
 Nekromantie-Zauber des Zauberers wird erhöht und er erhält einen entzehrenden
 Nahkampfangriff. Der Zauberer erhält außerdem einige der zweifelhafteren
 Vorteile eines untoten Körpers, wie eine Anfälligkeit für heiligen Schaden und

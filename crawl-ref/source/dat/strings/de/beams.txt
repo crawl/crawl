@@ -162,7 +162,7 @@ the splash of acid
 der Säurespritzer
 %%%%
 the agony
-die Qualen
+die Agonie
 %%%%
 the ball of steam
 die Dampfkugel
@@ -519,7 +519,7 @@ a splash of acid
 ein Säurespritzer
 %%%%
 a agony
-eine Qualen
+eine Agonie
 %%%%
 a ball of steam
 eine Dampfkugel
@@ -874,7 +874,7 @@ splash of acid
 Säurespritzer
 %%%%
 agony
-Qualen
+Agonie
 %%%%
 ball of steam
 Dampfkugel
@@ -1260,7 +1260,7 @@ visual effects
 Visuelle Effekte
 %%%%
 torment damage
-Qual-Schaden
+Peinigungsschaden
 %%%%
 air
 Luft

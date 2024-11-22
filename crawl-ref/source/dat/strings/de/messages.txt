@@ -261,7 +261,7 @@ There are no corpses to sacrifice!
 Es gibt keine Leichen zu opfern!
 %%%%
 %s torments the living!
-%s quält die Lebenden!
+%s peinigt die Lebenden!
 %%%%
 %s will bloody one of your weapons with pain.
 %s wird eine deiner Waffen mit Schmerz erfüllen.
@@ -2215,7 +2215,7 @@ You radiate a wave of entropy!
 Du strahlst eine Welle der Entropie aus!
 %%%%
 You reveal a symbol of torment!
-Du deckst ein Symbol der Qual auf!
+Du deckst ein Symbol der Peinigung auf!
 %%%%
 Aiming: %s
 Anvisieren: %s
@@ -9833,7 +9833,7 @@ You hear an high-pitched explosion!
 Du hörst eine hellklingende Explosion!
 %%%%
 By Zin's power, %s torment is averted.
-Durch Zins Macht wird %s Qualen abgewendet.
+Durch Zins Macht wird %s Peinigung abgewendet.
 %%%%
 By Zin's power, %s fires are quelled.
 Durch Zins Kraft werden %s Brände gelöscht.
@@ -10534,7 +10534,7 @@ Miasma resistance
 Miasma-Resistenz
 %%%%
 Torment resistance
-Qual-Resistenz
+Peinigungsresistenz
 %%%%
 Transformations
 Verwandlungen
@@ -11497,7 +11497,7 @@ Your scales feel tougher.
 Deine Schuppen fühlen sich härter an.
 %%%%
 In your current blood state, you are immune to poison, significantly resist cold, are immune to negative energy, resist torment, and do not heal with monsters in sight.
-In deinem derzeitigen Blutzustand bist du immun gegen Gift, hast einen hohen Widerstand gegen Kälte, bist immun gegen negative Energie, widerstehst Qualen und heilst nicht, wenn Monster in Sicht sind.
+In deinem derzeitigen Blutzustand bist du immun gegen Gift, hast einen hohen Widerstand gegen Kälte, bist immun gegen negative Energie, widerstehst Peinigung und heilst nicht, wenn Monster in Sicht sind.
 %%%%
 In your current blood state, you heal quickly.
 In deinem jetzigen Blutzustand heilst du dich schnell.
@@ -12475,16 +12475,16 @@ Kikubaaqudgha protects you from necromantic miscasts and death curses.
 Kikubaaqudgha schützt dich vor nekromantischen Fehlzauber und Todesflüchen.
 %%%%
 Kikubaaqudgha is now protecting you from unholy torment.
-Kikubaaqudgha schützt dich jetzt vor unheiliger Qual.
+Kikubaaqudgha schützt dich jetzt vor unheiliger Peinigung.
 %%%%
 Kikubaaqudgha will no longer protect you from unholy torment.
-Kikubaaqudgha wird dich nicht länger vor unheiliger Qual schützen.
+Kikubaaqudgha wird dich nicht länger vor unheiliger Peinigung schützen.
 %%%%
 Kikubaaqudgha protects you from unholy torment.
-Kikubaaqudgha schützt dich vor unheiliger Qual.
+Kikubaaqudgha schützt dich vor unheiliger Peinigung.
 %%%%
 invoke torment by sacrificing a corpse
-Qual durch das Opfern einer Leiche heraufbeschwören
+Peinigung durch das Opfern einer Leiche heraufbeschwören
 %%%%
 Kikubaaqudgha will grant you forbidden knowledge or bloody your weapon with pain... once.
 Kikubaaqudgha wird dir verbotenes Wissen gewähren oder deine Waffe mit Schmerzen bluten lassen... einmal.
@@ -14550,7 +14550,7 @@ the Shining One's holy word
 des Strahlenden heiliges Wort
 %%%%
 the Torment card
-die Karte der Qual
+die Karte der Peinigung
 %%%%
 %s is blasted by Zin's holy word!
 %s wird von Zins heiligem Wort geschlagen!
@@ -14565,10 +14565,10 @@ Du sprechst ein Wort von immenser Macht!
 %s spricht ein Wort von immenser Macht!
 %%%%
 %s shields you from torment!
-%s schirmt dich vor Qual ab!
+%s schirmt dich von Peinigung ab!
 %%%%
 %s partially shields you from torment!
-%s schirmt dich teilweise vor Qual ab!
+%s schirmt dich teilweise von Peinigung ab!
 %%%%
 You feel a surge of unholy energy.
 Du fühlst eine Welle unheiliger Energie.
@@ -14577,16 +14577,16 @@ Your body is wracked with pain!
 Dein Körper ist von Schmerz geplagt!
 %%%%
 Xom's torment
-Xoms Qual
+Xoms Peinigung
 %%%%
 Kikubaaqudgha's torment
-Kikubaaqudghas Qual
+Kikubaaqudghas Peinigung
 %%%%
 an exploding lurking horror
 ein explodierendes lauerndes Grauen
 %%%%
 by torment
-durch die Qual
+durch Peinigung
 %%%%
 Something is bathed in an unholy light!
 Etwas ist in ein unheiliges Licht getaucht!

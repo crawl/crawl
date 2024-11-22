@@ -114,7 +114,7 @@ Klar
 %%%%
 # torment
 rTorment
-rQual
+rPeinigung
 %%%%
 # mutation
 rMut

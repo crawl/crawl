@@ -50,7 +50,7 @@ a scythe of Curses
 eine Sense der Flüche
 %%%%
 a sceptre of Torment
-{n}ein Zepter der Qual
+{n}ein Zepter der Peinigung
 %%%%
 a sword of Zonguldrok
 {n}ein Schwert von Zonguldrok
@@ -332,7 +332,7 @@ a Maxwell's etheric cage
 {m}ein Ätherkäfig von Maxwell
 %%%%
 a crown of Eternal Torment
-eine Krone der ewigen Qual
+eine Krone der ewigen Peinigung
 %%%%
 a robe of Vines
 {n}ein Gewand der Reben

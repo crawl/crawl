@@ -1234,7 +1234,7 @@ the %slorocyproca's
 der {adj-en}%sLorocyproca
 %%%%
 the %stormentor's
-des {adj-en}%sQuälers
+des {adj-en}%sPeinigers
 %%%%
 the %sBrimstone Fiend's
 des {adj-en}%sSchwefelunterweltlers

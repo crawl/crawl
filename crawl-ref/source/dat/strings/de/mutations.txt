@@ -147,10 +147,10 @@ Your actions are slow, but your melee attacks are powerful.
 Deine Aktionen sind langsam, aber deine Nahkampfangriffe sind mächtig.
 %%%%
 torment resistance 1
-Qualresistenz 1
+Peinigungsresistenz 1
 %%%%
 You are resistant to unholy torment.
-Du bist resistent gegen unheilige Qualen.
+Du bist resistent gegen unheilige Peinigung.
 %%%%
 
 # ice form
@@ -217,10 +217,10 @@ Du kannst nicht teleportiert werden.
 # lich form and tree form
 %%%%
 torment immunity
-Qualimmunität
+Peinigungsimmunität
 %%%%
 You are immune to unholy pain and torment.
-Du bist immun gegen unheilige Schmerzen und Qualen.
+Du bist immun gegen unheilige Schmerzen und Peinigung.
 %%%%
 
 # wisp form
@@ -258,7 +258,7 @@ shadow resist
 Schattenresistenz
 %%%%
 You are immune to unholy torment and to willpower attacks.
-Du bist immun gegen unheilige Qualen und Angriffe gegen Willenskraft.
+Du bist immun gegen unheilige Peinigung und Angriffe gegen Willenskraft.
 %%%%
 half damage
 Halbschaden
@@ -942,7 +942,7 @@ You are extremely robust. (+30% HP)
 Du bist extrem robust. (+30% HP)
 %%%%
 torment resistance
-Qualresiztenz
+Peinigungsresistenz
 %%%%
 You feel a strange anaesthesia.
 Du spürst eine merkwürdige Anästhesie.

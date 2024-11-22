@@ -575,7 +575,7 @@ landen.
 Shadow Form ability
 
 Verwandelt dich in eine wirbelnde Masse aus dunklen Schatten. In dieser Form
-bist du dauerhaft unsichtbar und immun gegen Gift, Auszehrung und Qual. Der
+bist du dauerhaft unsichtbar und immun gegen Gift, Auszehrung und Peinigung. Der
 gesamte eingehende Schaden wird halbiert, du blutest Rauch bei jedem
 eingehenden Angriff und hast unendlich viel Willenskraft. Allerdings wird deine
 Fähigkeit halbiert, im Nahkampf und mit Fernkampfangriffen Schaden zu verursachen,
