@@ -126,7 +126,7 @@ static string _spell_base_description(spell_type spell, bool viewing)
     desc << "<" << colour_to_str(highlight) << ">" << left;
 
     // spell name
-    desc << chop_string(spell_title(spell), 30);
+    desc << chop_string(localise(spell_title(spell)), 30);
 
     // spell schools
     desc << spell_schools_string(spell);
@@ -155,7 +155,7 @@ static string _spell_extra_description(spell_type spell, bool viewing)
     desc << "<" << colour_to_str(highlight) << ">" << left;
 
     // spell name
-    desc << chop_string(spell_title(spell), 30);
+    desc << chop_string(localise(spell_title(spell)), 30);
 
     // spell power, spell range, noise
     const string rangestring = spell_range_string(spell);
