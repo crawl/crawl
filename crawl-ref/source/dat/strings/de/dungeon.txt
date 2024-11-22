@@ -105,7 +105,7 @@ Volcano
 Vulkan
 %%%%
 Wizlab
-ZaubLab
+Labor
 %%%%
 Desolation
 Verwüstung
@@ -159,7 +159,7 @@ a Volcano
 ein Vulkan
 %%%%
 a Wizlab
-ein ZaubLab
+ein Labor
 %%%%
 # same as long name
 #a Gauntlet
@@ -369,7 +369,7 @@ Vulkan
 %%%%
 # Note: English short name has small L, but abbreviation has capital L.
 WizLab
-ZaubLab
+Labor
 %%%%
 {branch_abbrev}Desolation
 Verwüst
