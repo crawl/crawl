@@ -1705,7 +1705,6 @@ static int _mons_power_hd_factor(spell_type spell)
         case SPELL_FREEZE:
         case SPELL_FULMINANT_PRISM:
         case SPELL_IGNITE_POISON:
-        case SPELL_HELLFIRE_MORTAR:
             return 8;
 
         case SPELL_MONSTROUS_MENAGERIE:
@@ -1719,6 +1718,7 @@ static int _mons_power_hd_factor(spell_type spell)
         case SPELL_SUMMON_DRAGON:
         case SPELL_SUMMON_HYDRA:
         case SPELL_MARTYRS_KNELL:
+        case SPELL_HELLFIRE_MORTAR:
             return 5;
 
         case SPELL_CHAIN_OF_CHAOS:
