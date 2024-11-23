@@ -22,7 +22,7 @@ Branches, Environment
 Character
 ---------
 * New skill: Forgecraft, used for Forgecraft spells.
-  - Most species have Forgecraft apts similiar to their Summoning apts,
+  - Most species have Forgecraft apts similar to their Summoning apts,
     with the exceptions of Mountain Dwarves, Coglins, Yellow Draconians (all
     +2), Demonspawn, Felids (all -1), Ghouls, Minotaurs, and Tengu (all -2).
 * New background: Forgewright, which starts with a +0 hammer (a reskinned mace),
@@ -46,7 +46,7 @@ Gods
 * Cheibriados's wrath has been simplified.
 * Dithmenos's shadow mimic also works for Forgecraft spells, creating a shadow
   turret that can fire through allies.
-* Xom has recieved more adjustments:
+* Xom has received more adjustments:
   * Bazaars have more variety and are less common.
   * Polymorph and draining effects are less dangerous early on.
   * New actions: hyperbuff weak ally, burn webs.
@@ -73,7 +73,7 @@ Monsters
   * Nekomata, self-cloning ranged cat demons for Pan.
   * Fravashi, mid-tier warrior-summoning angels.
 * Returning monster: ironbound beastmasters, now with a passive animal and slime
-  hasting aura plus the ability to throw bolases to bind foes in place.
+  hasting aura plus the ability to throw bolas to bind foes in place.
 * Apises now have a passive aura that doubles the health of other monsters.
 * Arcanists now have more health and EV.
 * Ball pythons deal less damage.
@@ -137,7 +137,7 @@ Spells
   - Summon Lightning Spire: now "Forge Lightning Spire", Summ/Air -> FC/Air.
   - Summon Blazeheart Golem: now "Forge Blazeheart Golem", Summ/Fire -> FC/Fire.
   - Animate Armour: now "Awaken Armour", Summ/Earth -> FC/Earth.
-  - Iskedenrun's Battlesphere: L5 Conj -> L4 FC/Conj.
+  - Iskenderun's Battlesphere: L5 Conj -> L4 FC/Conj.
   - Hoarfrost Cannonade: Alch/Ice -> FC/Ice.
   - Spellforged Servitor: now "Spellspark Servitor" Summ/Conj -> FC/Conj.
   - Hellfire Mortar: Fire/Earth -> FC/Fire/Earth.
