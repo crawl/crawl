@@ -8,7 +8,7 @@ will: invuln
 attacks:
  - {type: sting, damage: 13}
 hd: 5
-hp_10x: 260
+hp_10x: 280
 ac: 6
 ev: 16
 shout: buzz

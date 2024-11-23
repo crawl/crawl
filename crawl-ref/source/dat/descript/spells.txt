@@ -1052,7 +1052,9 @@ turns before unleashing it against a targeted foe. The bee is swift and
 powerful, but its clockwork quickly winds down as it attacks, eventually leaving
 it helpless and unable to move.
 
-The caster may repair and rewind a dormant bee by attempting to move into it.
+The caster may repair and rewind a dormant bee by attempting to move into it, at
+the cost of 1 MP.
+
 Spellpower increases the number of attacks the bee may perform before going
 dormant.
 %%%%

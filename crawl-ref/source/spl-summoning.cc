@@ -3281,6 +3281,15 @@ bool clockwork_bee_recharge(monster& bee)
         return false;
     }
 
+    if (!enough_mp(1, true))
+    {
+        mpr("You lack sufficient magical power to recharge your bee.");
+        return false;
+    }
+
+    pay_mp(1);
+    finalize_mp_cost();
+
     mprf("You wind your clockwork bee back up and it locks its sights upon %s!",
          targ->name(DESC_THE).c_str());
     int old_max_hp = bee.max_hit_points;
@@ -3290,7 +3299,7 @@ bool clockwork_bee_recharge(monster& bee)
     bee.set_hit_dice(old_hd);
     bee.max_hit_points = old_max_hp;
     bee.hit_points = old_hp;
-    bee.heal(roll_dice(2, 10));
+    bee.heal(roll_dice(3, 5));
     bee.add_ench(mon_enchant(ENCH_SUMMON_TIMER, 0, &you, random_range(400, 500)));
     bee.add_ench(mon_enchant(ENCH_HAUNTING, 0, targ, INFINITE_DURATION));
     bee.number = 3 + div_rand_round(calc_spell_power(SPELL_CLOCKWORK_BEE), 15);
