@@ -233,15 +233,13 @@ string describe_rimeblight_damage(int pow, bool terse)
                         shards_damage.num, shards_damage.size);
 }
 
-bool maybe_spread_rimeblight(monster& victim, int power, bool test_only)
+bool maybe_spread_rimeblight(monster& victim, int power)
 {
     if (!victim.has_ench(ENCH_RIMEBLIGHT)
         && !victim.is_peripheral()
-        && x_chance_in_y(2, 3)
         && you.see_cell_no_trans(victim.pos()))
     {
-        if (!test_only)
-            apply_rimeblight(victim, power);
+        apply_rimeblight(victim, power);
         return true;
     }
 
@@ -253,7 +251,7 @@ bool apply_rimeblight(monster& victim, int power, bool quiet)
     if (victim.has_ench(ENCH_RIMEBLIGHT))
         return false;
 
-    int duration = (random_range(7, 11) + div_rand_round(power, 30))
+    int duration = (random_range(8, 12) + div_rand_round(power, 30))
                     * BASELINE_DELAY;
     victim.add_ench(mon_enchant(ENCH_RIMEBLIGHT, 0, &you, duration));
     victim.props[RIMEBLIGHT_POWER_KEY] = power;

@@ -563,10 +563,10 @@ private:
     map<coord_def, aff_type> boulder_sim;
 };
 
-class targeter_petrify : public targeter_beam
+class targeter_chain : public targeter_beam
 {
 public:
-    targeter_petrify(const actor *act, int r);
+    targeter_chain(const actor *act, int r, zap_type ztype);
     bool set_aim(coord_def a) override;
     aff_type is_affected(coord_def loc) override;
 

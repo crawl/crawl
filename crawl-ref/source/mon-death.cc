@@ -3036,31 +3036,20 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     if (mons.has_ench(ENCH_RIMEBLIGHT) && !was_banished && !mons_reset)
     {
-        // Potentially infect everyone around the dead monster
-        bool did_spread_message = false;
-        for (adjacent_iterator ai(mons.pos()); ai; ++ai)
+        if (you.can_see(mons))
+            mprf("Plague seeps from the dead %s.", mons.name(DESC_PLAIN).c_str());
+
+        // Potentially infect everyone around the dead monster.
+        // (100% chance at range 1, 50% chance at range 2)
+        for (radius_iterator ri(mons.pos(), 2, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
         {
-            monster* victim = monster_at(*ai);
+            monster* victim = monster_at(*ri);
             if (victim && !victim->friendly())
             {
-                // We only 'test' for spread here, and then manually apply later
-                // on, so that we only print the message about the plague
-                // spreading if it *does* spread, but still print it before other
-                // things get infected by it.
-                if (maybe_spread_rimeblight(*victim,
-                                            mons.props[RIMEBLIGHT_POWER_KEY].get_int(),
-                                            true))
+                if (grid_distance(*ri, mons.pos()) == 1 || coinflip())
                 {
-                    if (!did_spread_message)
-                    {
-                        if (you.can_see(mons))
-                        {
-                            mprf("Plague seeps from the dead %s.",
-                                 mons.name(DESC_PLAIN).c_str());
-                        }
-                        did_spread_message = true;
-                    }
-                    apply_rimeblight(*victim, mons.props[RIMEBLIGHT_POWER_KEY].get_int());
+                    maybe_spread_rimeblight(*victim,
+                                            mons.props[RIMEBLIGHT_POWER_KEY].get_int());
                 }
             }
         }

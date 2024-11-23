@@ -4043,7 +4043,7 @@ void bolt::affect_player_enchantment(bool resistible)
         }
     }
 
-    handle_petrify_chaining(you.pos());
+    handle_enchant_chaining(you.pos());
 
     // Regardless of effect, we need to know if this is a stopper
     // or not - it seems all of the above are.
@@ -4977,7 +4977,7 @@ void bolt::enchantment_affect_monster(monster* mon)
             beogh_follower_convert(mon, true);
     }
 
-    handle_petrify_chaining(mon->pos());
+    handle_enchant_chaining(mon->pos());
 
     extra_range_used += range_used_on_hit();
 
@@ -4989,7 +4989,7 @@ void bolt::enchantment_affect_monster(monster* mon)
         behaviour_event(mon, ME_ALERT, agent());
 }
 
-static void _add_petrify_chain_candidates(const bolt& beam, coord_def pos,
+static void _add_chain_candidates(const bolt& beam, coord_def pos,
                                           set<coord_def> &candidates)
 {
     for (adjacent_iterator ai(pos); ai; ++ai)
@@ -5005,7 +5005,7 @@ static void _add_petrify_chain_candidates(const bolt& beam, coord_def pos,
 
         monster *mon = act->as_monster();
         if (mon && (shoot_through_monster(beam, mon)
-                    || mon->is_firewood()))
+                    || mon->is_peripheral()))
         {
             continue;
         }
@@ -5014,16 +5014,16 @@ static void _add_petrify_chain_candidates(const bolt& beam, coord_def pos,
     }
 }
 
-void fill_petrify_chain_targets(const bolt& beam, coord_def centre,
-                                vector<coord_def> &targs, bool random)
+void fill_chain_targets(const bolt& beam, coord_def centre,
+                        vector<coord_def> &targs, bool random)
 {
     set<coord_def> candidates;
-    _add_petrify_chain_candidates(beam, centre, candidates);
+    _add_chain_candidates(beam, centre, candidates);
     if (candidates.empty())
         return;
 
-    const size_t MAX_PETRIFY_BOUNCES = 2;
-    if (candidates.size() >= MAX_PETRIFY_BOUNCES)
+    const size_t MAX_CHAIN_BOUNCES = 2;
+    if (candidates.size() >= MAX_CHAIN_BOUNCES)
     {
         for (coord_def candidate : candidates)
             targs.push_back(candidate);
@@ -5031,7 +5031,7 @@ void fill_petrify_chain_targets(const bolt& beam, coord_def centre,
             return;
 
         shuffle_array(targs);
-        targs.resize(MAX_PETRIFY_BOUNCES);
+        targs.resize(MAX_CHAIN_BOUNCES);
         return;
     }
 
@@ -5041,7 +5041,7 @@ void fill_petrify_chain_targets(const bolt& beam, coord_def centre,
     {
         targs.push_back(candidate);
         // Ensure adjacent targets show up before later-ring ones.
-        _add_petrify_chain_candidates(beam, candidate, scs);
+        _add_chain_candidates(beam, candidate, scs);
     }
     if (random)
         shuffle_array(targs);
@@ -5054,7 +5054,7 @@ void fill_petrify_chain_targets(const bolt& beam, coord_def centre,
     if (random)
     {
         vector<coord_def> subcand_array(scs.begin(), scs.end());
-        // Assumes MAX_PETRIFY_BOUNCES = 2. Sorry!
+        // Assumes MAX_CHAIN_BOUNCES = 2. Sorry!
         targs.push_back(*random_iterator(subcand_array));
         return;
     }
@@ -5063,14 +5063,17 @@ void fill_petrify_chain_targets(const bolt& beam, coord_def centre,
         targs.push_back(sc);
 }
 
-void bolt::handle_petrify_chaining(coord_def centre)
+void bolt::handle_enchant_chaining(coord_def centre)
 {
     // Handle ray bounces
-    if (origin_spell != SPELL_PETRIFY || hit_count.size() != 1)
+    if (!(origin_spell == SPELL_PETRIFY || origin_spell == SPELL_RIMEBLIGHT)
+        || hit_count.size() != 1)
+    {
         return;
+    }
 
     vector<coord_def> chain_targs;
-    fill_petrify_chain_targets(*this, centre, chain_targs, true);
+    fill_chain_targets(*this, centre, chain_targs, true);
     if (chain_targs.empty())
         return;
 
@@ -5304,9 +5307,6 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         mon->speed_increment += 10;
         simple_monster_message(*mon, " is empowered.");
     }
-
-    if (origin_spell == SPELL_RIMEBLIGHT)
-        maybe_spread_rimeblight(*mon, ench_power);
 
     if (origin_spell == SPELL_GRAVE_CLAW && !mon->has_ench(ENCH_BOUND))
     {

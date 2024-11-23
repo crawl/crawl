@@ -1414,7 +1414,9 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_PERMAFROST_ERUPTION:
         return make_unique<targeter_permafrost>(you, pow);
     case SPELL_PETRIFY:
-        return make_unique<targeter_petrify>(&you, range);
+        return make_unique<targeter_chain>(&you, range, ZAP_PETRIFY);
+    case SPELL_RIMEBLIGHT:
+        return make_unique<targeter_chain>(&you, range, ZAP_RIMEBLIGHT);
     case SPELL_COMBUSTION_BREATH:
         return make_unique<targeter_explosive_beam>(&you, pow, range);
     case SPELL_NOXIOUS_BREATH:

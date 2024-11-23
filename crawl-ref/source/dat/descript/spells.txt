@@ -1522,10 +1522,11 @@ each one standing near the target.
 %%%%
 Rimeblight spell
 
-Afflicts a creature with a magical plague that slowly freezes them from the
-inside out. Victims take AC-ignoring cold damage each turn, and as the disease
-progresses, shards of crystalline ice may erupt violently from their body,
-damaging nearby enemies and even spreading the affliction to others.
+Afflicts a creature (and up to two others near it) with a magical plague that
+slowly freezes them from the inside out. Victims take AC-ignoring cold damage
+each turn, and as the disease progresses, shards of crystalline ice will start
+erupting violently from their body, damaging nearby enemies. When they finally
+succumb, the plague may spread to those around them.
 
 In living, holy, or demonic creatures, the disease is especially virulent,
 feeding off the necromantic energies released by its host's suffering. As they

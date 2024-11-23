@@ -2035,12 +2035,12 @@ aff_type targeter_boulder::is_affected(coord_def loc)
     return AFF_NO;
 }
 
-targeter_petrify::targeter_petrify(const actor* caster, int r)
-    : targeter_beam(caster, r, ZAP_PETRIFY, 0, 0, 0)
+targeter_chain::targeter_chain(const actor* caster, int r, zap_type ztype)
+    : targeter_beam(caster, r, ztype, 0, 0, 0)
 {
 }
 
-bool targeter_petrify::set_aim(coord_def a)
+bool targeter_chain::set_aim(coord_def a)
 {
     if (!targeter::set_aim(a))
         return false;
@@ -2061,12 +2061,12 @@ bool targeter_petrify::set_aim(coord_def a)
         return true;
 
     vector<coord_def> chain_targs;
-    fill_petrify_chain_targets(tempbeam, pos, chain_targs, false);
+    fill_chain_targets(tempbeam, pos, chain_targs, false);
     chain_targ.insert(chain_targs.begin(), chain_targs.end());
     return true;
 }
 
-aff_type targeter_petrify::is_affected(coord_def loc)
+aff_type targeter_chain::is_affected(coord_def loc)
 {
     for (auto pc : path_taken)
     {
