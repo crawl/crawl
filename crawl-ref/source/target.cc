@@ -2644,3 +2644,27 @@ aff_type targeter_piledriver::is_affected(coord_def loc)
 
     return AFF_NO;
 }
+
+targeter_teleport_other::targeter_teleport_other(const actor* act, int r) :
+    targeter_smite(act, r, 0, 0, false)
+{
+}
+
+bool targeter_teleport_other::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    const monster_info* mi = env.map_knowledge(a).monsterinfo();
+
+    if (!mi)
+        return false;
+
+    if (mi->is(MB_NO_TELE))
+        return notify_fail("That cannot be teleported.");
+
+    if (mi->willpower() == WILL_INVULN)
+        return false;
+
+    return true;
+}

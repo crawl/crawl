@@ -356,8 +356,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_TELEPORT_OTHER, "Teleport Other",
     spschool::translocation,
-    spflag::dir_or_target | spflag::not_self | spflag::escape
-        | spflag::needs_tracer | spflag::WL_check,
+    spflag::target | spflag::not_self | spflag::escape | spflag::WL_check,
     3,
     100,
     LOS_RADIUS, LOS_RADIUS,

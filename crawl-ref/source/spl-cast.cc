@@ -1278,6 +1278,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
                                                   0, 1);
     case SPELL_INNER_FLAME:
         return make_unique<targeter_inner_flame>(&you, range);
+    case SPELL_TELEPORT_OTHER:
+        return make_unique<targeter_teleport_other>(&you, range);
     case SPELL_SOUL_SPLINTER:
         return make_unique<targeter_soul_splinter>(&you, range);
     case SPELL_SIMULACRUM:
@@ -2603,6 +2605,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_INNER_FLAME:
         return cast_inner_flame(spd.target, powc, fail);
+
+    case SPELL_TELEPORT_OTHER:
+        return cast_teleport_other(spd.target, powc, fail);
 
     case SPELL_SIMULACRUM:
         return cast_simulacrum(spd.target, powc, fail);

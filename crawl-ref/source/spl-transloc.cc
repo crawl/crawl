@@ -2401,3 +2401,15 @@ vector<monster*> gavotte_affected_monsters(const coord_def dir)
 
     return affected;
 }
+
+spret cast_teleport_other(const coord_def& target, int power, bool fail)
+{
+    fail_check();
+
+    bolt beam;
+    beam.source = target;
+    beam.target = target;
+    beam.set_agent(&you);
+
+    return zapping(ZAP_TELEPORT_OTHER, power, beam, false, nullptr, fail);
+}

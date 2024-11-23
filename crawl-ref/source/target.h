@@ -709,3 +709,10 @@ private:
     int piledriver_lengths[8];
     vector<coord_def> spots;
 };
+
+class targeter_teleport_other : public targeter_smite
+{
+public:
+    targeter_teleport_other(const actor *act, int range);
+    bool valid_aim(coord_def a) override;
+};
