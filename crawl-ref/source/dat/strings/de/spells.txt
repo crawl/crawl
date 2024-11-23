@@ -21,7 +21,7 @@ Apportation
 Apportation
 %%%%
 Conjure Flame
-Flamme hervorrufen
+Flamme manifestieren
 %%%%
 # duplicate of ability
 #Dig
@@ -328,7 +328,7 @@ Simulacrum
 Simulakrum
 %%%%
 Conjure Ball Lightning
-Kugelblitz hervorrufen
+Kugelblitz
 %%%%
 Chain Lightning
 Kettenblitz
