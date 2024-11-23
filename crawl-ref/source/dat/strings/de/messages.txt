@@ -12742,7 +12742,7 @@ encircle yourself with summoned briar patches
 dich mit beschworenen Dornensträuchern umgeben
 %%%%
 grow a ballistomycete
-einen Ballistomyceten züchten
+einen Ballistomyceten wachsen lassen
 %%%%
 transform dungeon walls and trees into plant allies
 Wände und Bäume in pflanzliche Verbündete verwandeln
@@ -15549,7 +15549,7 @@ Aiming: <white>Overgrow</white>
 Zielen: <white>Überwuchern</white>
 %%%%
 You can't grow a ballistomycete there.
-Du kannst dort keinen Ballistomyceten züchten.
+Du kannst dort keinen Ballistomyceten wachsen lassen.
 %%%%
 That space is already occupied.
 Dieser Raum ist bereits belegt.
@@ -15561,7 +15561,7 @@ A ballistomycete grows from the ground.
 Ein Ballistomycet wächst aus dem Boden.
 %%%%
 You can't grow an oklob plant there.
-Du kannst dort keine Oklobpflanze züchten.
+Du kannst dort keine Oklobpflanze wachsen lassen.
 %%%%
 Something you can't see is occupying that space!
 Etwas, das du nicht sehen kannst, besetzt diesen Raum!
