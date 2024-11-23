@@ -55,7 +55,7 @@ mit der Kraft der Karte.
 # Destruction
 Vitriol card
 
-Auf der Karte ist eine Oklob-Pflanze abgebildet, die mit ihrem
+Auf der Karte ist eine Oklobpflanze abgebildet, die mit ihrem
 charakteristischen ätzenden Saft trieft.
 
 Das Ziehen dieser Karte löst einen ätzenden Angriffszauber aus.

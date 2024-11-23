@@ -12748,7 +12748,7 @@ transform dungeon walls and trees into plant allies
 Wände und Bäume in pflanzliche Verbündete verwandeln
 %%%%
 grow an oklob plant
-eine Oklob-Pflanze wachsen lassen
+eine Oklobpflanze wachsen lassen
 %%%%
 bend time to slow others
 die Zeit verbiegen, um andere zu verlangsamen
@@ -15561,7 +15561,7 @@ A ballistomycete grows from the ground.
 Ein Ballistomycet wächst aus dem Boden.
 %%%%
 You can't grow an oklob plant there.
-Du kannst dort keine Oklob-Pflanze züchten.
+Du kannst dort keine Oklobpflanze züchten.
 %%%%
 Something you can't see is occupying that space!
 Etwas, das du nicht sehen kannst, besetzt diesen Raum!

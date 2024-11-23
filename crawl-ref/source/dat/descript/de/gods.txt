@@ -286,7 +286,7 @@ deren Stärke und Dauer mit der Anrufungsfertigkeit zunimmt. Anbeter können ein
 Schutzmauer aus Dornengestrüpp wachsen lassen, sowie Ballistomyceten, die
 schädliche Sporen abfeuern, deren Explosionen Lebewesen verwirren. Gläubige
 Anhänger können einen Abschnitt festen Geländes mit einer Ansammlung von
-Pflanzenverbündeten überwuchern oder sogar eine mächtige Oklob-Pflanze
+Pflanzenverbündeten überwuchern oder sogar eine mächtige Oklobpflanze
 beschwören.
 %%%%
 Gozag powers
@@ -546,7 +546,7 @@ Fedhas wrath
 Wer Fedhas beleidigt, wird mit Naturgewalten konfrontiert, die pure
 Elementarzerstörung darstellen. Wellen von Ballistomycetensporen steigen aus
 nahegelegenen Leichen auf und die schlimmsten Übeltäter werden von belebten
-Pilzen und säurespeienden Oklob-Pflanzen umzingelt.
+Pilzen und säurespeienden Oklobpflanzen umzingelt.
 %%%%
 Hepliaklqana wrath
 

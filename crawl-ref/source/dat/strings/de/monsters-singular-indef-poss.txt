@@ -845,10 +845,10 @@ a %swithered plant's
 einer {adj-en}%sverwelkten Pflanze
 %%%%
 a %soklob sapling's
-eines {adj-en}%sOklob-Setzlings
+eines {adj-en}%sOklobsetzlings
 %%%%
 a %soklob plant's
-einer {adj-en}%sOklob-Pflanze
+einer {adj-en}%sOklobpflanze
 %%%%
 a %sbush's
 eines {adj-en}%sBusches
@@ -1669,28 +1669,28 @@ a %sMaster Blaster's
 eines {adj-en}%sMaster-Blasters
 %%%%
 a %soklob sapling priest's
-eines {adj-en}%sOklob-Setzling-Priesters
+eines {adj-en}%sOklobsetzlingspriesters
 %%%%
 a %soklob sapling wizard's
-eines {adj-en}%sOklob-Setzling-Zauberers
+eines {adj-en}%sOklobsetzlingszauberers
 %%%%
 a %soklob plant conjurer's
-eines {adj-en}%sOklob-Pflanze-Konjuranten
+eines {adj-en}%sOklobpflanzenkonjuranten
 %%%%
 a %soklob plant summoner's
-eines {adj-en}%sOklob-Pflanze-Beschwörers
+eines {adj-en}%sOklobpflanzenbeschwörers
 %%%%
 a %soklob plant shifter's
-eines {adj-en}%sOklob-Pflanze-Wandlers
+eines {adj-en}%sOklobpflanzenverschiebers
 %%%%
 a %soklob plant meteorologist's
-eines {adj-en}%sOklob-Pflanze-Meteorologen
+eines {adj-en}%sOklobpflanzenmeteorologen
 %%%%
 a %soklob plant demonologist's
-eines {adj-en}%sOklob-Pflanze-Dämonologen
+eines {adj-en}%sOklobpflanzendämonologen
 %%%%
 a %soklob plant annihilator's
-eines {adj-en}%sOklob-Pflanze-Vernichters
+eines {adj-en}%sOklobpflanzenvernichters
 %%%%
 a %sbag of meat's
 eines {adj-en}%sFleischklopses

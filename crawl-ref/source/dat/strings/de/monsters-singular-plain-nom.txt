@@ -844,10 +844,10 @@
 {adj-e}%sverwelkte Pflanze
 %%%%
 %soklob sapling
-{adj-er}%sOklob-Setzling
+{adj-er}%sOklobsetzling
 %%%%
 %soklob plant
-{adj-e}%sOklob-Pflanze
+{adj-e}%sOklobpflanze
 %%%%
 %sbush
 {adj-er}%sBusch
@@ -1668,28 +1668,28 @@
 {adj-er}%sMaster-Blaster
 %%%%
 %soklob sapling priest
-{adj-er}%sOklob-Setzling-Priester
+{adj-er}%sOklobsetzlingspriester
 %%%%
 %soklob sapling wizard
-{adj-er}%sOklob-Setzling-Zauberer
+{adj-er}%sOklobsetzlingszauberer
 %%%%
 %soklob plant conjurer
-{adj-er}%sOklob-Pflanze-Konjurant
+{adj-er}%sOklobpflanzenkonjurant
 %%%%
 %soklob plant summoner
-{adj-er}%sOklob-Pflanze-Beschwörer
+{adj-er}%sOklobpflanzenbeschwörer
 %%%%
 %soklob plant shifter
-{adj-er}%sOklob-Pflanze-Wandler
+{adj-er}%sOklobpflanzenverschieber
 %%%%
 %soklob plant meteorologist
-{adj-er}%sOklob-Pflanze-Meteorologe
+{adj-er}%sOklobpflanzenmeteorologe
 %%%%
 %soklob plant demonologist
-{adj-er}%sOklob-Pflanze-Dämonologe
+{adj-er}%sOklobpflanzendämonologe
 %%%%
 %soklob plant annihilator
-{adj-er}%sOklob-Pflanze-Vernichter
+{adj-er}%sOklobpflanzenvernichter
 %%%%
 %sbag of meat
 {adj-er}%sFleischklops

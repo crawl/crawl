@@ -844,10 +844,10 @@ the %swithered plant's
 der {adj-en}%sverwelkten Pflanze
 %%%%
 the %soklob sapling's
-des {adj-en}%sOklob-Setzlings
+des {adj-en}%sOklobsetzlings
 %%%%
 the %soklob plant's
-der {adj-en}%sOklob-Pflanze
+der {adj-en}%sOklobpflanze
 %%%%
 the %sbush's
 des {adj-en}%sBusches
@@ -1668,28 +1668,28 @@ the %sMaster Blaster's
 des {adj-en}%sMaster-Blasters
 %%%%
 the %soklob sapling priest's
-des {adj-en}%sOklob-Setzling-Priesters
+des {adj-en}%sOklobsetzlingspriesters
 %%%%
 the %soklob sapling wizard's
-des {adj-en}%sOklob-Setzling-Zauberers
+des {adj-en}%sOklobsetzlingszauberers
 %%%%
 the %soklob plant conjurer's
-des {adj-en}%sOklob-Pflanze-Konjuranten
+des {adj-en}%sOklobpflanzenkonjuranten
 %%%%
 the %soklob plant summoner's
-des {adj-en}%sOklob-Pflanze-Beschwörers
+des {adj-en}%sOklobpflanzenbeschwörers
 %%%%
 the %soklob plant shifter's
-des {adj-en}%sOklob-Pflanze-Wandlers
+des {adj-en}%sOklobpflanzenverschiebers
 %%%%
 the %soklob plant meteorologist's
-des {adj-en}%sOklob-Pflanze-Meteorologen
+des {adj-en}%sOklobpflanzenmeteorologen
 %%%%
 the %soklob plant demonologist's
-des {adj-en}%sOklob-Pflanze-Dämonologen
+des {adj-en}%sOklobpflanzendämonologen
 %%%%
 the %soklob plant annihilator's
-des {adj-en}%sOklob-Pflanze-Vernichters
+des {adj-en}%sOklobpflanzenvernichters
 %%%%
 the %sbag of meat's
 des {adj-en}%sFleischklopses

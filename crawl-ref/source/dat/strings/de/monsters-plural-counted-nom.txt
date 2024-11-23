@@ -844,10 +844,10 @@
 %d verwelkte Pflanzen
 %%%%
 %d oklob saplings
-%d Oklob-Setzlinge
+%d Oklobsetzlinge
 %%%%
 %d oklob plants
-%d Oklob-Pflanzen
+%d Oklobpflanzen
 %%%%
 %d bushes
 %d Busche
@@ -1654,28 +1654,28 @@
 %d Master-Blasters
 %%%%
 %d oklob sapling priests
-%d Oklob-Setzling-Priester
+%d Oklobsetzlingspriester
 %%%%
 %d oklob sapling wizards
-%d Oklob-Setzling-Zauberer
+%d Oklobsetzlingszauberer
 %%%%
 %d oklob plant conjurers
-%d Oklob-Pflanze-Konjurant
+%d Oklobpflanzenkonjuranten
 %%%%
 %d oklob plant summoners
-%d Oklob-Pflanze-Beschwörer
+%d Oklobpflanzenbeschwörer
 %%%%
 %d oklob plant shifters
-%d Oklob-Pflanze-Wandler
+%d Oklobpflanzenverschieber
 %%%%
 %d oklob plant meteorologists
-%d Oklob-Pflanze-Meteorologen
+%d Oklobpflanzenmeteorologen
 %%%%
 %d oklob plant demonologists
-%d Oklob-Pflanze-Dämonologen
+%d Oklobpflanzendämonologen
 %%%%
 %d oklob plant annihilators
-%d Oklob-Pflanze-Vernichter
+%d Oklobpflanzenvernichter
 %%%%
 %d bags of meat
 %d Fleischklopse

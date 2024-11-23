@@ -1937,11 +1937,11 @@ oklob plant
 
 Eine sehr gefährliche Pflanze, die ihre Fressfeinde abwehrt, indem sie ätzendes
 Vitriol auf sie sprüht. Selbst erfahrene Abenteurer machen einen großen Bogen um
-Oklob-Pflanzen.
+Oklobpflanzen.
 %%%%
 oklob sapling
 
-Eine junge Oklob-Pflanze. Sie ist zerbrechlicher als das ausgewachsene Exemplar,
+Eine junge Oklobpflanze. Sie ist zerbrechlicher als das ausgewachsene Exemplar,
 aber die Säure, die sie versprüht, ist genauso tödlich.
 %%%%
 ophan
@@ -3099,7 +3099,7 @@ oklob plant summoner
 %%%%
 oklob sapling priest
 
-Eine unreife Oklob-Pflanze, die ein paar Gebete zu murmeln scheint... äh, was?!?
+Eine unreife Oklobpflanze, die ein paar Gebete zu murmeln scheint... äh, was?!?
 %%%%
 oklob sapling wizard
 

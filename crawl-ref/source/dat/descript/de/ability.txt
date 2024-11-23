@@ -507,10 +507,10 @@ Wände sind gegen diese Macht immun.
 %%%%
 Grow Oklob ability
 
-Lässt eine kurzlebige Oklob-Pflanze an dem von dir gewählten Ort wachsen.
+Lässt eine kurzlebige Oklobpflanze an dem von dir gewählten Ort wachsen.
 Diese gefährlichen Pflanzen sprühen ätzendes Vitriol auf deine Feinde.
 
-Die Fertigkeit Anrufungen erhöht die Gesundheit und Lebensdauer der Oklob-Pflanze
+Die Fertigkeit Anrufungen erhöht die Gesundheit und Lebensdauer der Oklobpflanze
 sowie die Häufigkeit, mit der sie ihre Säure versprüht.
 %%%%
 # Cheibriados

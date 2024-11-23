@@ -844,10 +844,10 @@ your %swithered plant
 deine {adj-e}%sverwelkte Pflanze
 %%%%
 your %soklob sapling
-dein {adj-er}%sOklob-Setzling
+dein {adj-er}%sOklobsetzling
 %%%%
 your %soklob plant
-deine {adj-e}%sOklob-Pflanze
+deine {adj-e}%sOklobpflanze
 %%%%
 your %sbush
 dein {adj-er}%sBusch
@@ -1668,28 +1668,28 @@ your %sMaster Blaster
 dein {adj-er}%sMaster-Blaster
 %%%%
 your %soklob sapling priest
-dein {adj-er}%sOklob-Setzling-Priester
+dein {adj-er}%sOklobsetzlingspriester
 %%%%
 your %soklob sapling wizard
-dein {adj-er}%sOklob-Setzling-Zauberer
+dein {adj-er}%sOklobsetzlingszauberer
 %%%%
 your %soklob plant conjurer
-dein {adj-er}%sOklob-Pflanze-Konjurant
+dein {adj-er}%sOklobpflanzenkonjurant
 %%%%
 your %soklob plant summoner
-dein {adj-er}%sOklob-Pflanze-Beschwörer
+dein {adj-er}%sOklobpflanzenbeschwörer
 %%%%
 your %soklob plant shifter
-dein {adj-er}%sOklob-Pflanze-Wandler
+dein {adj-er}%sOklobpflanzenverschieber
 %%%%
 your %soklob plant meteorologist
-dein {adj-er}%sOklob-Pflanze-Meteorologe
+dein {adj-er}%sOklobpflanzenmeteorologe
 %%%%
 your %soklob plant demonologist
-dein {adj-er}%sOklob-Pflanze-Dämonologe
+dein {adj-er}%sOklobpflanzendämonologe
 %%%%
 your %soklob plant annihilator
-dein {adj-er}%sOklob-Pflanze-Vernichter
+dein {adj-er}%sOklobpflanzenvernichter
 %%%%
 your %sbag of meat
 dein {adj-er}%sFleischklops

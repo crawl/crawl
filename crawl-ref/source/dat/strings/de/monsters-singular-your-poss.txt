@@ -845,10 +845,10 @@ your %swithered plant's
 deiner {adj-en}%sverwelkten Pflanze
 %%%%
 your %soklob sapling's
-deines {adj-en}%sOklob-Setzlings
+deines {adj-en}%sOklobsetzlings
 %%%%
 your %soklob plant's
-deiner {adj-en}%sOklob-Pflanze
+deiner {adj-en}%sOklobpflanze
 %%%%
 your %sbush's
 deines {adj-en}%sBusches
@@ -1669,28 +1669,28 @@ your %sMaster Blaster's
 deines {adj-en}%sMaster-Blasters
 %%%%
 your %soklob sapling priest's
-deines {adj-en}%sOklob-Setzling-Priesters
+deines {adj-en}%sOklobsetzlingspriesters
 %%%%
 your %soklob sapling wizard's
-deines {adj-en}%sOklob-Setzling-Zauberers
+deines {adj-en}%sOklobsetzlingszauberers
 %%%%
 your %soklob plant conjurer's
-deines {adj-en}%sOklob-Pflanze-Konjuranten
+deines {adj-en}%sOklobpflanzenkonjuranten
 %%%%
 your %soklob plant summoner's
-deines {adj-en}%sOklob-Pflanze-Beschwörers
+deines {adj-en}%sOklobpflanzenbeschwörers
 %%%%
 your %soklob plant shifter's
-deines {adj-en}%sOklob-Pflanze-Wandlers
+deines {adj-en}%sOklobpflanzenverschiebers
 %%%%
 your %soklob plant meteorologist's
-deines {adj-en}%sOklob-Pflanze-Meteorologen
+deines {adj-en}%sOklobpflanzenmeteorologen
 %%%%
 your %soklob plant demonologist's
-deines {adj-en}%sOklob-Pflanze-Dämonologen
+deines {adj-en}%sOklobpflanzendämonologen
 %%%%
 your %soklob plant annihilator's
-deines {adj-en}%sOklob-Pflanze-Vernichters
+deines {adj-en}%sOklobpflanzenvernichters
 %%%%
 your %sbag of meat's
 deines {adj-en}%sFleischklopses
