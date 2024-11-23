@@ -7,8 +7,8 @@ will: invuln
 holiness: [nonliving]
 attacks:
 hd: 10
-hp_10x: 350
-ac: 10
+hp_10x: 150
+ac: 5
 ev: 17
 intelligence: brainless
 speed: 10

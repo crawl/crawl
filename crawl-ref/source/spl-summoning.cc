@@ -3966,7 +3966,7 @@ bool monarch_deploy_bomblet(monster& original, const coord_def& target,
                                                 : BEH_HOSTILE,
                              target, MG_AUTOFOE);
     mg.set_summoned(actor_by_mid(original.summoner),
-                    SPELL_MONARCH_BOMB, summ_dur(3), false);
+                    SPELL_MONARCH_BOMB, random_range(90, 160), false);
     mg.set_range(0, 2);
     if (create_monster(mg))
     {
