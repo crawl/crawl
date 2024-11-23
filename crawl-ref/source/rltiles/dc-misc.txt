@@ -35,6 +35,7 @@ icicle7
 
 # also used for hoarfrost cannonade
 iceblast0 BOLT_ICEBLAST
+iceblast1
 
 icicle_salvo0 BOLT_ICICLE_SALVO
 icicle_salvo1

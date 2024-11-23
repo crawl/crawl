@@ -3602,6 +3602,7 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dist)
         return tile + (dist - 1) % tile_main_count(tile);
     case TILE_BOLT_FLAME:
     case TILE_BOLT_MAGMA:
+    case TILE_BOLT_ICEBLAST:
     case TILE_BOLT_IRRADIATE:
     case TILE_BOLT_SHADOW_BLAST:
     case TILE_BOLT_HAEMOCLASM:
