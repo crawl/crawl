@@ -334,9 +334,10 @@ jobs:
         run: |
           find /usr/local/bin -type l -exec sh -c 'readlink -f "$1" \
           | grep -q ^/Library/Frameworks/Python.framework/Versions/' _ {} \; -exec rm -v {} \;
-      - name: Install Dependencies
-        run: |
-          brew install pkg-config libpng
+      # this isn't needed with current GHA MacOS images
+      #- name: Install Dependencies
+      #  run: |
+      #    brew install pkg-config libpng
       # To fix an error running new version of pip3 in virtualised environments.
       # > You may restore the old behavior of pip by passing
       # > the '--break-system-packages' flag to pip, or by adding
