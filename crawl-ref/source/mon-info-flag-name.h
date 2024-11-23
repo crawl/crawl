@@ -154,4 +154,5 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_ENGULFING_PLAYER, "engulfing you", "engulfing you", "engulfing you"},
     { MB_KINETIC_GRAPNEL, "grapneled", "grapneled", "grapneled"},
     { MB_TEMPERED, "tempered", "tempered", "tempered"},
+    { MB_BLINKITIS, "untethered", "untethered in space", "untethered"},
 };

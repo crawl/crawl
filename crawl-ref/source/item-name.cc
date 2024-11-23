@@ -413,6 +413,8 @@ const char* missile_brand_name(const item_def &item, mbn_type t)
         return "chaos";
     case SPMSL_DISPERSAL:
         return t == MBN_TERSE ? "disperse" : "dispersal";
+    case SPMSL_DISJUNCTION:
+        return t == MBN_TERSE ? "disjunct" : "disjunction";
     case SPMSL_BLINDING:
         return t == MBN_NAME ? "atropa-tipped" : "atropa";
     case SPMSL_NORMAL:

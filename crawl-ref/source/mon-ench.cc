@@ -974,6 +974,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             mprf("The grapnel comes loose from %s.", name(DESC_THE).c_str());
         break;
 
+    case ENCH_BLINKITIS:
+        if (!quiet)
+            simple_monster_message(*this, " looks more stable.");
+
     default:
         break;
     }
@@ -1864,6 +1868,20 @@ void monster::apply_enchantment(const mon_enchant &me)
         decay_enchantment(en);
         break;
 
+    case ENCH_BLINKITIS:
+    {
+        actor* agent = me.agent();
+        if (agent)
+            blink_away(this, agent, false, false, 3);
+        else
+            blink();
+
+        hurt(agent, roll_dice(2, 2));
+        if (alive())
+            decay_enchantment(en);
+        break;
+    }
+
     default:
         break;
     }
@@ -2125,7 +2143,7 @@ static const char *enchant_names[] =
     "magnetised",
     "armed",
     "misdirected", "changed appearance", "shadowless", "doubled_vigour",
-    "grapnel", "tempered", "hatching",
+    "grapnel", "tempered", "hatching", "blinkitis",
     "buggy", // NUM_ENCHANTMENTS
 };
 

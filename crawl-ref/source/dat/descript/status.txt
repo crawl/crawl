@@ -1100,3 +1100,7 @@ Winding... status
 
 <Winding status>
 %%%%
+Unstable status
+
+You have become untethered in space, blinking randomly each turn and suffering a
+small amount of damage each time you do so.

@@ -2355,6 +2355,7 @@ static const map<monster_info_flags, tileidx_t> monster_status_icons = {
     { MB_KINETIC_GRAPNEL, TILEI_KINETIC_GRAPNEL },
     { MB_TEMPERED, TILEI_TEMPERED },
     { MB_HATCHING, TILEI_HEART },
+    { MB_BLINKITIS, TILEI_UNSTABLE },
 };
 
 set<tileidx_t> status_icons_for(const monster_info &mons)
@@ -4582,6 +4583,7 @@ tileidx_t tileidx_known_brand(const item_def &item)
             return TILE_BRAND_PENETRATION;
 #endif
         case SPMSL_DISPERSAL:
+        case SPMSL_DISJUNCTION:
             return TILE_BRAND_DISPERSAL;
         case SPMSL_EXPLODING:
             return TILE_BRAND_EXPLOSION;

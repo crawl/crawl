@@ -2225,6 +2225,12 @@ static string _describe_ammo(const item_def &item)
                            "tendency towards blinking further away from the "
                            "one who threw it.";
             break;
+        case SPMSL_DISJUNCTION:
+            description += "It causes any target it hits to become temporarily "
+                           "untethered in space, blinking uncontrollably for "
+                           "several turns and taking minor damage each time it "
+                           "does so.";
+
         case SPMSL_SILVER:
             description += "It deals increased damage compared to normal ammo "
                            "and substantially increased damage to chaotic "
@@ -5593,6 +5599,8 @@ static void _attacks_table_row_throwing(const monster_info &mi,
         case SPMSL_DISPERSAL:
             bonus_desc = "Blink the defender away";
             break;
+        case SPMSL_DISJUNCTION:
+            bonus_desc = "Blink the defender repeatedly";
         default:
             break;
         }

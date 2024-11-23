@@ -1725,7 +1725,7 @@ TAGS:    no_pool_fixup
 KMONS:   1 = jumping spider w:15 / redback / orb spider w:5
 KMONS:   3 = ghost moth w:15 / entropy weaver / broodmother w:5
 {{
- local distoquip = "boomerang ego:dispersal w:20 | " ..
+ local distoquip = "dart ego:disjunction w:20 | " ..
                    "whip ego:distortion | spear ego:distortion | nothing w:5"
  local lowtier = "large abomination w:20 / unseen horror / " ..
                  "thrashing horror w:20 / raiju w:35 / worldbinder w:35 / " ..

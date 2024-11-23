@@ -552,6 +552,7 @@ enum special_missile_type // to separate from weapons in general {dlb}
 #endif
     SPMSL_FRENZY,                      // Datura
     SPMSL_BLINDING,                    // Atropa
+    SPMSL_DISJUNCTION,
     NUM_REAL_SPECIAL_MISSILES,
     NUM_SPECIAL_MISSILES = NUM_REAL_SPECIAL_MISSILES,
 };

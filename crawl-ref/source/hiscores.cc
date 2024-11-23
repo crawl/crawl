@@ -666,7 +666,7 @@ static const char *kill_method_names[] =
     "beogh_smiting", "divine_wrath", "bounce", "reflect", "self_aimed",
     "falling_through_gate", "disintegration", "headbutt", "rolling",
     "mirror_damage", "spines", "frailty", "barbs", "being_thrown",
-    "collision", "zot", "constriction", "exploremode",
+    "collision", "zot", "constriction", "exploremode", "blinking",
 };
 
 static const char *_kill_method_name(kill_method_type kmt)
@@ -1494,6 +1494,12 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
     {
         death_source_name = you.props[STICKY_FLAMER_KEY].get_string();
         auxkilldata = you.props[STICKY_FLAME_AUX_KEY].get_string();
+    }
+
+    if (death_type == KILLED_BY_BLINKING)
+    {
+        death_source_name = you.props[BLINKITIS_SOURCE_KEY].get_string();
+        auxkilldata = you.props[BLINKITIS_AUX_KEY].get_string();
     }
 }
 
@@ -2471,6 +2477,20 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         }
         else
             desc += "Burnt to a crisp";
+
+        needs_damage = true;
+        break;
+
+    case KILLED_BY_BLINKING:     // disjunction darts
+        if (terse)
+            desc += "disjoined";
+        else if (!death_source_desc().empty())
+        {
+            desc += "Disjoined by " + death_source_desc();
+
+            if (!auxkilldata.empty())
+                needs_beam_cause_line = true;
+        }
 
         needs_damage = true;
         break;

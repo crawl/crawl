@@ -548,7 +548,7 @@ static special_missile_type _determine_missile_brand(const item_def& item,
 
         rc = random_choose_weighted(60, SPMSL_BLINDING,
                                     20, SPMSL_FRENZY,
-                                    20, SPMSL_DISPERSAL,
+                                    20, SPMSL_DISJUNCTION,
                                     pw, SPMSL_POISONED);
         break;
     case MI_JAVELIN:
@@ -591,6 +591,7 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
 #endif
     case SPMSL_FRENZY:
     case SPMSL_DISPERSAL:
+    case SPMSL_DISJUNCTION:
         return type == MI_DART;
 
     case SPMSL_BLINDING:

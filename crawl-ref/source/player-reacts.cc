@@ -524,6 +524,12 @@ void player_reacts_to_monsters()
 
     if (player_in_branch(BRANCH_ARENA) && !okawaru_duel_active())
         okawaru_end_duel();
+
+    if (you.duration[DUR_BLINKITIS])
+    {
+        uncontrolled_blink(false, 3);
+        ouch(roll_dice(2, 2), KILLED_BY_BLINKING);
+    }
 }
 
 static bool _check_recite()

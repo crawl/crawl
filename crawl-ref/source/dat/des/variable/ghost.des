@@ -2331,7 +2331,7 @@ ORIENT: float
 KMASK:  -DEFHNOQRdeqrsyuz1234|*%$^ = opaque
 KITEM:  N = scroll of teleportation q:3 ident:all w:20 \
             / scroll of blinking ident:all w:20 \
-            / dart ego:dispersal ident:all \
+            / dart ego:disjunction ident:all \
             / book of spatial translocations \
             / book of the warp \
             / there-and-back book \

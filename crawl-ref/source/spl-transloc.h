@@ -13,7 +13,7 @@ spret cast_disjunction(int pow, bool fail);
 void disjunction_spell();
 
 spret cast_blink(int pow, bool fail = false);
-void uncontrolled_blink(bool override_stasis = false);
+void uncontrolled_blink(bool override_stasis = false, int max_dist = LOS_RADIUS);
 spret controlled_blink(bool safe_cancel = true, dist *target = nullptr);
 void wizard_blink();
 

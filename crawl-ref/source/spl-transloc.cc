@@ -126,8 +126,9 @@ void disjunction_spell()
  *
  * @param override_stasis       Whether to blink even if the player is under
  *                              stasis (& thus normally unable to).
+ * @param max_distance          The maximum distance we are allowed to blink.
  */
-void uncontrolled_blink(bool override_stasis)
+void uncontrolled_blink(bool override_stasis, int max_distance)
 {
     if (you.no_tele(true) && !override_stasis)
     {
@@ -138,8 +139,8 @@ void uncontrolled_blink(bool override_stasis)
     coord_def target;
     // First try to find a random square not adjacent to the player,
     // then one adjacent if that fails.
-    if (!random_near_space(&you, you.pos(), target)
-        && !random_near_space(&you, you.pos(), target, true))
+    if (!random_near_space(&you, you.pos(), target, false, max_distance)
+        && !random_near_space(&you, you.pos(), target, true, max_distance))
     {
         mpr("You feel jittery for a moment.");
         return;

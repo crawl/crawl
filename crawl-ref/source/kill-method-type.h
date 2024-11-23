@@ -57,5 +57,6 @@ enum kill_method_type
     KILLED_BY_ZOT,
     KILLED_BY_CONSTRICTION,
     KILLED_BY_EXPLORING,
+    KILLED_BY_BLINKING,
     NUM_KILLBY
 };

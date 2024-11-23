@@ -15,7 +15,7 @@ spells:
 equipment:
   - "leather armour"
   - "scroll of blinking"
-  - "dart ego:dispersal q:7"
+  - "dart ego:disjunction q:4"
 weapon_choice: plain
 recommended_species:
   - felid

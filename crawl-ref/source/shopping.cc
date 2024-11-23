@@ -295,6 +295,7 @@ unsigned int item_value(item_def item, bool ident)
             case SPMSL_FRENZY:
             case SPMSL_SILVER:
             case SPMSL_DISPERSAL:
+            case SPMSL_DISJUNCTION:
 #if TAG_MAJOR_VERSION == 34
             case SPMSL_PARALYSIS:
             case SPMSL_PENETRATION:

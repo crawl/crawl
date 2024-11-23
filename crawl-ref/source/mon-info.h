@@ -247,6 +247,7 @@ enum monster_info_flags
     MB_KINETIC_GRAPNEL,
     MB_TEMPERED,
     MB_HATCHING,
+    MB_BLINKITIS,
     NUM_MB_FLAGS
 };
 
