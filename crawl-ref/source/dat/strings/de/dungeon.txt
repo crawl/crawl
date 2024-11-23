@@ -159,7 +159,7 @@ a Volcano
 ein Vulkan
 %%%%
 a Wizlab
-ein Labor
+{n}ein Labor
 %%%%
 # same as long name
 #a Gauntlet
