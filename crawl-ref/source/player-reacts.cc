@@ -186,7 +186,7 @@ static void _decrement_petrification(int delay)
 
         mprf(MSGCH_DURATION, "You turn to %s%s.",
              flesh_equiv.c_str(),
-             you.paralysed() ? "" : " and can move again");
+             you.paralysed() ? "" : " and can act again");
 
         if (you.props.exists(PETRIFIED_BY_KEY))
             you.props.erase(PETRIFIED_BY_KEY);
@@ -240,7 +240,7 @@ static void _decrement_paralysis(int delay)
         return;
     }
 
-    mprf(MSGCH_DURATION, "You can move again.");
+    mprf(MSGCH_DURATION, "You can act again.");
     you.redraw_armour_class = true;
     you.redraw_evasion = true;
 }

@@ -2069,6 +2069,11 @@ Throw Barbs spell
 Fires a volley of barbs at the target, skewering them and making movement
 painful.
 %%%%
+Throw Bolas spell
+
+Hurls a colossal bolas at the target, wrapping around even the largest of
+of foes and binding them in place.
+%%%%
 Throw Flame spell
 
 Throws a small puff of flame.

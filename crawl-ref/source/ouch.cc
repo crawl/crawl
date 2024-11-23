@@ -316,6 +316,19 @@ int check_your_resists(int hurted, beam_type flavour, string source,
             hurted = hurted / 3;
         break;
 
+    case BEAM_BOLAS:
+        if (doEffects)
+        {
+            if (you.is_insubstantial() || you.is_amorphous())
+                mpr("The bolas passes through you!");
+            else
+            {
+                you.set_duration(DUR_NO_MOMENTUM, random_range(4, 8), 0,
+                "The bolas wraps around you and binds you in place!");
+            }
+        }
+        break;
+
     default:
         break;
     }                           // end switch

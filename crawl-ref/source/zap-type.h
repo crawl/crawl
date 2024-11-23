@@ -175,5 +175,6 @@ enum zap_type
     ZAP_RENDING_SLASH,
     ZAP_MAGMA_BARRAGE,
     ZAP_SHADOW_SHOT,
+    ZAP_BOLAS,
     NUM_ZAPS
 };

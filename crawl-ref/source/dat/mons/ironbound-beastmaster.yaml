@@ -1,0 +1,19 @@
+name: "ironbound beastmaster"
+glyph: {char: "p", colour: brown}
+flags: [speaks, warm_blood, has_aura]
+xp_mult: 12
+species: human
+will: 40
+attacks:
+ - {type: hit, damage: 45}
+hd: 13
+hp_10x: 660
+ac: 0
+ev: 14
+spells: ironbound_beastmaster
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

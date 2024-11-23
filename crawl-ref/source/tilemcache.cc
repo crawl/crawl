@@ -500,6 +500,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         break;
     case TILEP_MONS_BOGGART:
     case TILEP_MONS_NECROMANCER:
+    case TILEP_MONS_IRONBOUND_BEASTMASTER:
     case TILEP_MONS_DEEP_ELF_ELEMENTALIST:
     case TILEP_MONS_DEEP_ELF_ELEMENTALIST_1:
     case TILEP_MONS_DEEP_ELF_ELEMENTALIST_2:

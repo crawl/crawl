@@ -473,6 +473,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_IRONBOUND_BEASTMASTER,
+      {
+       { SPELL_THROW_BOLAS, 40, MON_SPELL_WIZARD },
+      }
+    },
+
     {  MST_IRONBOUND_CONVOKER,
       {
        { SPELL_WORD_OF_RECALL, 30, MON_SPELL_WIZARD },

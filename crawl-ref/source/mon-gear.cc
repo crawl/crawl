@@ -664,6 +664,12 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             { { { WPN_DIRE_FLAIL,       9 },
                 { WPN_GREAT_MACE,       1 },
         } } },
+        { MONS_IRONBOUND_BEASTMASTER,
+            { { { WPN_WHIP,             6 },
+                { WPN_TRIDENT,          4 },
+                { WPN_DEMON_WHIP,       2 },
+                { WPN_DEMON_TRIDENT,    1 },
+        } } },
         { MONS_IRONBOUND_THUNDERHULK,
             { { { WPN_DIRE_FLAIL,       9 },
                 { WPN_GREAT_MACE,       1 },
@@ -1931,6 +1937,7 @@ int make_mons_armour(monster_type type, int level)
     case MONS_ROBIN:
     case MONS_SPRIGGAN_BERSERKER:
     case MONS_IRONBOUND_THUNDERHULK:
+    case MONS_IRONBOUND_BEASTMASTER:
     case MONS_GRUNN:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ANIMAL_SKIN;

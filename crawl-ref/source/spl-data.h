@@ -3253,6 +3253,18 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_THROW_BOLAS, "Throw Bolas",
+    spschool::conjuration,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
+    4,
+    200,
+    6, 6,
+    0,
+    TILEG_THROW_BOLAS,
+},
+
+
+{
     SPELL_THROW_PIE, "Throw Klown Pie",
     spschool::conjuration | spschool::hexes,
     spflag::dir_or_target | spflag::needs_tracer | spflag::monster,

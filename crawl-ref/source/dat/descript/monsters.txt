@@ -1698,11 +1698,6 @@ ice statue
 An imposing idol of some nameless arctic god, carved in glistening deep blue
 ice. Freezing vapours swirl about it, and a chill pervades the air.
 %%%%
-ironbound frostheart
-
-An emaciated warrior-mage, bound to guard long-coveted treasures. It calls
-forth deadly frost from its surrounds, freezing foes that are next to walls.
-%%%%
 iguana
 
 A green lizard with strong jaws and sharp teeth, prized for its flesh.
@@ -1752,16 +1747,27 @@ iron troll
 A great troll, mighty of limb and plated with thick scales that resemble
 lightly rusted iron, especially in their hardness.
 %%%%
-ironbound thunderhulk
+ironbound beastmaster
 
-A brutish figure, hastily armoured in scraps of leather and metal to combat
-a fearsome intruder. On its back is an antique, arcane 'lightning rod', which
-calls down thunder on distant foes, although it cannot hit nearby targets.
+A cruel and unruly brute who growls in the language of the untamed. Its very
+presence provokes and overworks non-sapient, living beasts and slimes alike into
+a rapid fury.
 %%%%
 ironbound convoker
 
 A guardian mage clad in pattern-etched armour. It can recite words of power
 to summon distant allies and imbue them with unnatural might.
+%%%%
+ironbound frostheart
+
+An emaciated warrior-mage, bound to guard long-coveted treasures. It calls
+forth deadly frost from its surrounds, freezing foes that are next to walls.
+%%%%
+ironbound thunderhulk
+
+A brutish figure, hastily armoured in scraps of leather and metal to combat
+a fearsome intruder. On its back is an antique, arcane 'lightning rod', which
+calls down thunder on distant foes, although it cannot hit nearby targets.
 %%%%
 ironbound preserver
 

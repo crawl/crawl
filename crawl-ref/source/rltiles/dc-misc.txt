@@ -179,6 +179,8 @@ entropic_weave BOLT_ENTROPIC_WEAVE
 
 draining_gaze BOLT_DRAINING_GAZE
 
+bolas BOLT_BOLAS
+
 sentinel_mark BOLT_SENTINEL_MARK
 
 splinters_metal0 BOLT_METAL_SPLINTERS

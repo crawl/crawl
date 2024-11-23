@@ -623,5 +623,6 @@ enum spell_type : int
     SPELL_MAGMA_BARRAGE,
     SPELL_SHADOW_TURRET,
     SPELL_SHADOW_SHOT,
+    SPELL_THROW_BOLAS,
     NUM_SPELLS
 };

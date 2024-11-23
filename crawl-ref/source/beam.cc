@@ -1817,6 +1817,25 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             hurted = hurted / 3;
         break;
 
+    case BEAM_BOLAS:
+        if (doFlavouredEffects)
+        {
+            if (mons->is_insubstantial() || mons->is_amorphous())
+            {
+                mprf("The bolas passes through %s!",
+                      mons->name(DESC_THE).c_str());
+            }
+            else
+            {
+                mons->add_ench(mon_enchant(ENCH_BOUND, 0, pbolt.agent(),
+                                           random_range(4, 8)));
+                mprf("The bolas warps around %s and binds %s in place!",
+                     mons->name(DESC_THE).c_str(),
+                     mons->pronoun(PRONOUN_OBJECTIVE).c_str());
+            }
+        }
+        break;
+
     default:
         break;
     }
@@ -7620,6 +7639,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_BLOODRITE:             return "blood";
     case BEAM_DOUBLE_VIGOUR:         return "vigour-doubling";
     case BEAM_SEISMIC:               return "seismic shockwave";
+    case BEAM_BOLAS:                 return "entwining bolas";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

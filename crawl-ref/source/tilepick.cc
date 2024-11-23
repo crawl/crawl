@@ -3520,6 +3520,8 @@ tileidx_t tileidx_bolt(const bolt &bolt)
         else if (bolt.name == "volley of thorns" ||
                  bolt.name == "spray of wooden splinters")
             return TILE_BOLT_SPLINTERSPRAY + dir;
+        else if (bolt.origin_spell == SPELL_THROW_BOLAS)
+            return TILE_BOLT_BOLAS;
         else if (bolt.name == "klown pie")
             return TILE_BOLT_PIE + dir;
         break;
