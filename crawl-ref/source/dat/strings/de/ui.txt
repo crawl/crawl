@@ -471,10 +471,10 @@ Sprint IX: "|||||||||||||||||||||||||||||"
 * - zufälliger Plan
 %%%%
 Picks a random sprint map
-Wähle einen zufälligen Dungeon-Sprint-Plan
+Wähle eine zufällige Sprintkarte
 %%%%
 Select your previous sprint map and character
-Wähle deine letzte Sprint-Plan and Charakter
+Wähle deine letzte Sprintkarte and Charakter
 %%%%
 Custom seed:
 Benutzerdefinierte Seed:
