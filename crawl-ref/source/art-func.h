@@ -54,6 +54,7 @@
 #include "spl-transloc.h"  // For Autumn Katana's Manifold Assault
 #include "tag-version.h"
 #include "terrain.h"       // For storm bow
+#include "rltiles/tiledef-main.h"
 #include "unwind.h"        // For autumn katana
 #include "view.h"          // For arc blade's discharge effect
 
@@ -904,6 +905,7 @@ static void _DAMNATION_launch(bolt* beam)
     expl->is_explosion = true;
     expl->damage = dice_def(2, 14);
     expl->name   = "damnation";
+    expl->tile_explode = TILE_BOLT_DAMNATION;
 
     beam->special_explosion = expl;
 }

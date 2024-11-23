@@ -2057,6 +2057,7 @@ spret cast_irradiate(int powc, actor &caster, bool fail)
     beam.flavour = BEAM_VISUAL;
     beam.set_agent(&caster);
     beam.colour = ETC_MUTAGENIC;
+    beam.tile_explode = TILE_BOLT_IRRADIATE;
     beam.glyph = dchar_glyph(DCHAR_EXPLOSION);
     beam.range = 1;
     beam.ex_size = 1;
@@ -2582,9 +2583,6 @@ static int _discharge_monsters(const coord_def &where, int pow,
     beam.flavour    = BEAM_ELECTRICITY; // used for mons_adjust_flavoured
     beam.glyph      = dchar_glyph(DCHAR_FIRED_ZAP);
     beam.colour     = LIGHTBLUE;
-#ifdef USE_TILE
-    beam.tile_beam  = -1;
-#endif
     beam.draw_delay = 0;
 
     dprf("Static discharge on (%d,%d) pow: %d", where.x, where.y, pow);
@@ -2792,9 +2790,6 @@ static void _do_chain_jolt(const actor& agent, vector<coord_def>& targets, dice_
     beam.thrower = agent.is_player() ? KILL_YOU : KILL_MON;
     beam.glyph      = dchar_glyph(DCHAR_FIRED_ZAP);
     beam.colour     = LIGHTBLUE;
-#ifdef USE_TILE
-    beam.tile_beam  = -1;
-#endif
     beam.draw_delay = 10;
 
     // Do the full animation first, so it doesn't get interrupted mid-way by messages
@@ -3147,9 +3142,6 @@ spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
     beam.ac_rule           = ac_type::half;
     beam.loudness          = spell_effect_noise(SPELL_THUNDERBOLT);
     beam.set_agent(caster);
-#ifdef USE_TILE
-    beam.tile_beam = -1;
-#endif
     beam.draw_delay = 0;
 
     if (Options.use_animations & UA_BEAM)
@@ -3999,15 +3991,13 @@ spret cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
     beam.flavour           = BEAM_ICE;
     beam.glyph             = dchar_glyph(DCHAR_EXPLOSION);
     beam.colour            = WHITE;
+    beam.tile_beam         = TILE_BOLT_ICEBLAST;
     beam.range             = 1;
     beam.hit               = AUTOMATIC_HIT;
     beam.source_id         = caster->mid;
     beam.hit_verb          = "engulfs";
     beam.origin_spell      = SPELL_GLACIATE;
     beam.set_agent(caster);
-#ifdef USE_TILE
-    beam.tile_beam = -1;
-#endif
     beam.draw_delay = 0;
 
     if (Options.use_animations & UA_BEAM)
@@ -4269,9 +4259,6 @@ static void _hailstorm_cell(coord_def where, int pow, actor *agent)
     beam.thrower    = agent->is_player() ? KILL_YOU : KILL_MON;
     beam.source_id  = agent->mid;
     beam.attitude   = agent->temp_attitude();
-#ifdef USE_TILE
-    beam.tile_beam  = -1;
-#endif
     beam.draw_delay = 0;
     beam.redraw_per_cell = false;
     beam.source     = where;

@@ -1,14 +1,15 @@
 %sdir effect
 #### Magic Bolts
 %back none
-bolt01 SYM_BOLT_OFS
-bolt02
-bolt03
-bolt04
-bolt05
-bolt06
-bolt07
-bolt08
+bolt01 BOLT_DEFAULT_BLUE
+%syn SYM_BOLT_OFS
+bolt02 BOLT_DEFAULT_GREEN
+bolt03 BOLT_DEFAULT_CYAN
+bolt04 BOLT_DEFAULT_RED
+bolt05 BOLT_DEFAULT_MAGENTA
+bolt06 BOLT_DEFAULT_YELLOW
+bolt07 BOLT_DEFAULT_WHITE
+bolt08 BOLT_DEFAULT_BLACK
 
 # Fire bolts
 flame0 BOLT_FLAME

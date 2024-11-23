@@ -27,6 +27,7 @@
 #include "stringutil.h"
 #include "target.h"
 #include "terrain.h"
+#include "rltiles/tiledef-main.h"
 #include "torment-source-type.h"
 #include "view.h"
 #include "viewchar.h"
@@ -170,6 +171,7 @@ static void _setup_shadow_prism_explosion(bolt& beam, const monster& origin)
     beam.damage  = prism_damage(origin.get_hit_dice(), origin.prism_charge == 2);
     beam.name    = "blast of shadow";
     beam.colour  = MAGENTA;
+    beam.tile_explode = TILE_BOLT_SHADOW_BLAST;
     beam.ex_size = origin.prism_charge;
     beam.origin_spell = SPELL_SHADOW_PRISM;
 }
@@ -218,6 +220,7 @@ static void _setup_haemoclasm_explosion(bolt& beam, const monster& origin)
     beam.name        = "rain of gore";
     beam.hit_verb    = "batters";
     beam.colour      = RED;
+    beam.tile_explode= TILE_BOLT_HAEMOCLASM;
     beam.ex_size     = 1;
     beam.source_name = origin.name(DESC_PLAIN, true);
     beam.thrower     = KILL_YOU_MISSILE;

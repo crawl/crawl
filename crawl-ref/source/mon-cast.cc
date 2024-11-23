@@ -6236,9 +6236,6 @@ static void _mons_upheaval(monster& mons, actor& /*foe*/, bool randomize)
     beam.hit         = AUTOMATIC_HIT;
     beam.glyph       = dchar_glyph(DCHAR_EXPLOSION);
     beam.loudness    = 10;
-#ifdef USE_TILE
-    beam.tile_beam   = -1;
-#endif
     beam.draw_delay  = 0;
     beam.target = mons.target;
     string message = "";

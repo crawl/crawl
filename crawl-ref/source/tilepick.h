@@ -49,7 +49,9 @@ tileidx_t tileidx_known_base_item(tileidx_t label);
 
 tileidx_t tileidx_cloud(const cloud_info &cl);
 tileidx_t tileidx_bolt(const bolt &bolt);
-tileidx_t vary_bolt_tile(tileidx_t tile, int dist);
+tileidx_t vary_bolt_tile(tileidx_t tile, const coord_def& origin,
+                                         const coord_def& target);
+tileidx_t vary_bolt_tile(tileidx_t tile, int dir = 0, int dist = 0);
 tileidx_t tileidx_zap(int colour);
 tileidx_t tileidx_spell(const spell_type spell);
 tileidx_t tileidx_skill(const skill_type skill, int train);

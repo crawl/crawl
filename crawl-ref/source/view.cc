@@ -1532,7 +1532,7 @@ void flash_tile(coord_def p, colour_t colour, int delay, tileidx_t tile)
         // Use a bolt tile if one is specified. Otherwise, just use the default
         // for the colour provied.
         if (tile > 0)
-            view_add_tile_overlay(p, vary_bolt_tile(tile, 0));
+            view_add_tile_overlay(p, vary_bolt_tile(tile));
         else
             view_add_tile_overlay(p, tileidx_zap(colour));
 #else

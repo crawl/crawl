@@ -410,6 +410,8 @@ struct zap_info
     dungeon_char_type glyph;
     bool can_beam;
     bool is_explosion;
+    tileidx_t tile_beam;
+    tileidx_t tile_explode;
 };
 
 #include "zap-data.h"
@@ -587,6 +589,9 @@ void zappy(zap_type z_type, int power, bool is_monster, bolt &pbolt)
 
     if (pbolt.loudness == 0)
         pbolt.loudness = _zap_loudness(z_type, pbolt.origin_spell);
+
+    pbolt.tile_beam = zinfo->tile_beam;
+    pbolt.tile_explode = zinfo->tile_explode;
 }
 
 bool bolt::can_affect_actor(const actor *act) const
@@ -860,14 +865,10 @@ void bolt::draw(const coord_def& p, bool force_refresh)
         return;
 
 #ifdef USE_TILE
-    if (tile_beam == -1)
-        tile_beam = tileidx_bolt(*this);
-
-    if (tile_beam != -1)
-    {
-        int dist = (p - source).rdist();
-        view_add_tile_overlay(p, vary_bolt_tile(tile_beam, dist));
-    }
+    // Set default value if none specified.
+    if (tile_beam == 0)
+        tile_beam = tileidx_zap(colour);
+    view_add_tile_overlay(p, vary_bolt_tile(tile_beam, source, target));
 #endif
     const unsigned short c = colour == BLACK ? random_colour(true)
                                              : element_colour(colour);
@@ -1248,14 +1249,15 @@ void bolt::do_fire()
     cursor_control coff(false);
 
 #ifdef USE_TILE
-    tile_beam = -1;
-
-    if (item && !is_tracer && (flavour == BEAM_MISSILE
-                               || flavour == BEAM_VISUAL))
+    // Set up uninitialized / item-based beam tile, if we're actually firing.
+    if (!is_tracer)
     {
-        const coord_def diff = target - source;
-        tile_beam = tileidx_item_throw(
-                                get_item_known_info(*item), diff.x, diff.y);
+        if (item && (flavour == BEAM_MISSILE || flavour == BEAM_VISUAL))
+        {
+            const coord_def diff = target - source;
+            tile_beam = tileidx_item_throw(
+                                    get_item_known_info(*item), diff.x, diff.y);
+        }
     }
 #endif
 
@@ -2297,6 +2299,8 @@ void bolt_parent_init(const bolt &parent, bolt &child)
     child.origin_spell   = parent.origin_spell;
     child.glyph          = parent.glyph;
     child.colour         = parent.colour;
+    child.tile_beam      = parent.tile_beam;
+    child.tile_explode   = parent.tile_explode;
 
     child.flavour        = parent.flavour;
 
@@ -7186,9 +7190,15 @@ bool bolt::explosion_draw_cell(const coord_def& p)
         if (in_los_bounds_v(drawpos))
         {
 #ifdef USE_TILE
-            int dist = (p - source).rdist();
-            tileidx_t tile = tileidx_bolt(*this);
-            view_add_tile_overlay(p, vary_bolt_tile(tile, dist));
+            // Use default value if none specified.
+            if (tile_explode == 0)
+            {
+                if (tile_beam != 0)
+                    tile_explode = tile_beam;
+                else
+                    tile_explode = tileidx_zap(colour);
+            }
+            view_add_tile_overlay(p, vary_bolt_tile(tile_explode, source, target));
 #endif
             const unsigned short c = colour == BLACK ?
                     random_colour(true) : element_colour(colour, false, p);

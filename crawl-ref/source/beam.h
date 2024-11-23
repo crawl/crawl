@@ -171,7 +171,9 @@ struct bolt
 
     ray_def     ray;             // shoot on this specific ray
 
-    int         tile_beam; // only used if USE_TILE is defined
+    // only used if USE_TILE is defined
+    tileidx_t tile_beam = 0;
+    tileidx_t tile_explode = 0;
 
 private:
     bool can_see_invis = false;
