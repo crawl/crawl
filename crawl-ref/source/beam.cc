@@ -4450,13 +4450,6 @@ void bolt::affect_player()
         }
     }
 
-    if (origin_spell == SPELL_THROW_PIE && final_dam > 0)
-    {
-        const pie_effect effect = _random_pie_effect(you);
-        mprf("%s!", effect.desc);
-        effect.effect(you, *this);
-    }
-
     dprf(DIAG_BEAM, "Damage: %d", final_dam);
 
     if (final_dam > 0 || old_hp < you.hp || was_affected)
@@ -4488,6 +4481,13 @@ void bolt::affect_player()
 
     if (flavour == BEAM_CRYSTALLIZING)
         crystallize_player();
+
+    if (origin_spell == SPELL_THROW_PIE && final_dam > 0)
+    {
+        const pie_effect effect = _random_pie_effect(you);
+        mprf("%s!", effect.desc);
+        effect.effect(you, *this);
+    }
 
     extra_range_used += range_used_on_hit();
 
