@@ -1154,7 +1154,12 @@ static void _handle_hellfire_mortar(monster& mortar)
 
             coord_def new_pos = path[i+1].get_coord();
 
-            // We're blocked!
+            // We're blocked by someone! Try to push them backwards first, if we can.
+            if (actor_at(new_pos))
+                actor_at(new_pos)->stumble_away_from(mortar.pos());
+
+            // If there's *still* someone in the way (or we've run out of lava),
+            // die.
             if (env.grid(new_pos) != DNGN_LAVA || actor_at(new_pos))
             {
                 const string reason = actor_at(new_pos)
