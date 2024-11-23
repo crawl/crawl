@@ -1535,6 +1535,8 @@ void flash_tile(coord_def p, colour_t colour, int delay, tileidx_t tile)
             view_add_tile_overlay(p, vary_bolt_tile(tile, 0));
         else
             view_add_tile_overlay(p, tileidx_zap(colour));
+#else
+        UNUSED(tile);
 #endif
         view_add_glyph_overlay(p, {dchar_glyph(DCHAR_FIRED_ZAP),
                                    static_cast<unsigned short>(colour)});
