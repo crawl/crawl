@@ -500,6 +500,16 @@ void revive()
     // TODO: this doesn't seem to call any duration end effects?
     for (int dur = 0; dur < NUM_DURATIONS; dur++)
     {
+        // Heal these statuses if our restored stats take us over the threshold,
+        // but don't remove them if we're still stuck at 0 due to mutations or
+        // equipment.
+        if (dur == DUR_COLLAPSE && you.strength() <= 0
+            || dur == DUR_BRAINLESS && you.intel() <= 0
+            || dur == DUR_CLUMSY && you.dex() <= 0)
+        {
+            continue;
+        }
+
         if (dur != DUR_PIETY_POOL
             && dur != DUR_TRANSFORMATION
             && dur != DUR_BEOGH_SEEKING_VENGEANCE
