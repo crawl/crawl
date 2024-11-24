@@ -62,6 +62,8 @@ int main()
     test("Ork", "orc");
     test("Du triffst den Ork", "You hit %s", "the orc");
     test("Du kollidierst mit dem Ork!", "You collide with %s!", "the orc");
+    test("Du blockierst den Angriff des Orks.", "You block %s attack.", "the orc's");
+    test("Die Wunden des Orks heilen von selbst!", "%s's wounds heal themselves!", "the orc");
     cout << endl;
 
     // simple feminine
@@ -71,6 +73,8 @@ int main()
     test("Königspython", "ball python");
     test("Du triffst die Königspython", "You hit %s", "the ball python");
     test("Du kollidierst mit der Königspython!", "You collide with %s!", "the ball python");
+    test("Du blockierst den Angriff der Königspython.", "You block %s attack.", "the ball python's");
+    test("Die Wunden der Königspython heilen von selbst!", "%s's wounds heal themselves!", "the ball python");
     cout << endl;
 
     // simple neuter
@@ -80,7 +84,9 @@ int main()
     test("Skelett", "skeleton");
     test("Du triffst das Skelett", "You hit %s", "the skeleton");
     test("Du kollidierst mit dem Skelett!", "You collide with %s!", "the skeleton");
-    cout << endl;
+    test("Du blockierst den Angriff des Skeletts.", "You block %s attack.", "the skeleton's");
+    test("Die Wunden des Skeletts heilen von selbst!", "%s's wounds heal themselves!", "the skeleton");
+     cout << endl;
 
     // masculine with adjective
     test("der hilflose Ork", "the helpless orc");
@@ -89,6 +95,8 @@ int main()
     test("hilfloser Ork", "helpless orc");
     test("Du triffst den hilflosen Ork", "You hit %s", "the helpless orc");
     test("Du kollidierst mit dem hilflosen Ork!", "You collide with %s!", "the helpless orc");
+    test("Du blockierst den Angriff des geisterhaften Orks.", "You block %s attack.", "the spectral orc's");
+    test("Die Wunden des geisterhaften Orks heilen von selbst!", "%s's wounds heal themselves!", "the spectral orc");
     cout << endl;
 
     // feminine with adjective
@@ -98,6 +106,8 @@ int main()
     test("hilflose Königspython", "helpless ball python");
     test("Du triffst die hilflose Königspython", "You hit %s", "the helpless ball python");
     test("Du kollidierst mit der hilflosen Königspython!", "You collide with %s!", "the helpless ball python");
+    test("Du blockierst den Angriff der geisterhaften Königspython.", "You block %s attack.", "the spectral ball python's");
+    test("Die Wunden der geisterhaften Königspython heilen von selbst!", "%s's wounds heal themselves!", "the spectral ball python");
     cout << endl;
 
     // neuter with adjective
@@ -107,6 +117,8 @@ int main()
     test("hilfloses Skelett", "helpless skeleton");
     test("Du triffst das hilflose Skelett", "You hit %s", "the helpless skeleton");
     test("Du kollidierst mit dem hilflosen Skelett!", "You collide with %s!", "the helpless skeleton");
+    test("Du blockierst den Angriff des geisterhaften Schweins.", "You block %s attack.", "the spectral hog's");
+    test("Die Wunden des geisterhaften Schweins heilen von selbst!", "%s's wounds heal themselves!", "the spectral hog");
     cout << endl;
 
     // masculine with weak declension
@@ -122,6 +134,8 @@ int main()
     test("Du triffst den hilflosen Feuerdrachen", "You hit %s", "the helpless fire dragon");
     test("Du kollidierst mit dem Feuerdrachen!", "You collide with %s!", "the fire dragon");
     test("Du kollidierst mit dem hilflosen Feuerdrachen!", "You collide with %s!", "the helpless fire dragon");
+    test("Du blockierst den Angriff des geisterhaften Feuerdrachen.", "You block %s attack.", "the spectral fire dragon's");
+    test("Die Wunden des geisterhaften Feuerdrachen heilen von selbst!", "%s's wounds heal themselves!", "the spectral fire dragon");
     cout << endl;
 
     // unique with simple name
@@ -130,6 +144,8 @@ int main()
     test("Du triffst die hilflose Natascha", "You hit %s", "the helpless Natasha");
     test("Du kollidierst mit Natascha!", "You collide with %s!", "Natascha");
     test("Du kollidierst mit der hilflosen Natascha!", "You collide with %s!", "the helpless Natasha");
+    test("Du blockierst den Angriff Nataschas.", "You block %s attack.", "Natasha's");
+    test("Die Wunden Nataschas heilen von selbst!", "%s's wounds heal themselves!", "Natasha");
     cout << endl;
 
     // unique with definite article in name
@@ -139,6 +155,8 @@ int main()
     test("Du triffst die hilflose Zauberin", "You hit %s", "the helpless Enchantress");
     test("Du kollidierst mit der Zauberin!", "You collide with %s!", "the Enchantress");
     test("Du kollidierst mit der hilflosen Zauberin!", "You collide with %s!", "the helpless Enchantress");
+    test("Du blockierst den Angriff der Zauberin.", "You block %s attack.", "the Enchantress's");
+    test("Die Wunden der Zauberin heilen von selbst!", "%s's wounds heal themselves!", "the Enchantress");
     cout << endl;
 
     // unique with weak declension
@@ -149,6 +167,8 @@ int main()
     test("Du triffst den hilflosen Prinzen Ribbit", "You hit %s", "the helpless Prince Ribbit");
     test("Du kollidierst mit Prinzen Ribbit!", "You collide with %s!", "Prince Ribbit");
     test("Du kollidierst mit dem hilflosen Prinzen Ribbit!", "You collide with %s!", "the helpless Prince Ribbit");
+    test("Du blockierst den Angriff Prinzen Ribbits.", "You block %s attack.", "Prince Ribbit's");
+    test("Die Wunden Prinzen Ribbits heilen von selbst!", "%s's wounds heal themselves!", "Prince Ribbit");
     cout << endl;
 
     // unique with a capitalised adjective in the name
@@ -159,6 +179,8 @@ int main()
     test("Du triffst den hilflosen Verrückten Yiuf", "You hit %s", "the helpless Crazy Yiuf");
     test("Du kollidierst mit Verrücktem Yiuf!", "You collide with %s!", "Crazy Yiuf");
     test("Du kollidierst mit dem hilflosen Verrückten Yiuf!", "You collide with %s!", "the helpless Crazy Yiuf");
+    test("Du blockierst den Angriff Verrückten Yiufs.", "You block %s attack.", "Crazy Yiuf's");
+    test("Die Wunden Verrückten Yiufs heilen von selbst!", "%s's wounds heal themselves!", "Crazy Yiuf");
     cout << endl;
 
     // another unique with a capitalised adjective in the name
@@ -169,6 +191,8 @@ int main()
     test("die hilflose 27-köpfige Lernäische Hydra", "the helpless 27-headed Lernaean hydra");
     test("Du triffst die hilflose 27-köpfige Lernäische Hydra", "You hit %s", "the helpless 27-headed Lernaean hydra");
     test("Du kollidierst mit der hilflosen 27-köpfigen Lernäischen Hydra!", "You collide with %s!", "the helpless 27-headed Lernaean hydra");
+    test("Du blockierst den Angriff der 27-köpfigen Lernäischen Hydra.", "You block %s attack.", "the 27-headed Lernaean hydra's");
+    test("Die Wunden der 27-köpfigen Lernäischen Hydra heilen von selbst!", "%s's wounds heal themselves!", "the 27-headed Lernaean hydra");
     cout << endl;
 
     // unique with "of" in the English name (this could mess things up)
@@ -179,6 +203,8 @@ int main()
     test("Du triffst die hilflose Höllenschlange", "You hit %s", "the helpless Serpent of Hell");
     test("Du kollidierst mit der Höllenschlange!", "You collide with %s!", "the Serpent of Hell");
     test("Du kollidierst mit der hilflosen Höllenschlange!", "You collide with %s!", "the helpless Serpent of Hell");
+    test("Du blockierst den Angriff der Höllenschlange.", "You block %s attack.", "the Serpent of Hell's");
+    test("Die Wunden der Höllenschlange heilen von selbst!", "%s's wounds heal themselves!", "the Serpent of Hell");
     cout << endl;
 
     // unique with definite article in the middle
@@ -188,6 +214,8 @@ int main()
     //test("hilfloser Blork der Ork", "helpless Blork the orc");
     test("Du triffst Blork den Ork", "You hit %s", "Blork the orc");
     test("Du kollidierst mit Blork dem Ork!", "You collide with %s!", "Blork the orc");
+    test("Du blockierst den Angriff Blork des Orks.", "You block %s attack.", "Blork the orc's");
+    test("Die Wunden Blork des Orks heilen von selbst!", "%s's wounds heal themselves!", "Blork the orc");
     cout << endl;
 
     // named ally
