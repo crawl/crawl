@@ -1,4 +1,4 @@
-Stone Soup 0.33 (through 0.33-a0-467-ga4cb51f6ed)
+Stone Soup 0.33 (through 0.33-a0-481-5524b393d5d)
 -------------------------------------------------
 
 Highlights
@@ -17,14 +17,16 @@ Branches, Environment
 * Walking over fountains now has a chance to produce flavour messages partially
   related to one's god, depending on the fountain's contents and the absence
   of nearby hostile enemies.
-* Ziggurats have more exponential scaling for those doing multiple ziggurats.
+* Ziggurats have even more exponential scaling for those doing multiple
+  ziggurats.
 
 Character
 ---------
 * New skill: Forgecraft, used for Forgecraft spells.
   - Most species have Forgecraft apts similar to their Summoning apts,
     with the exceptions of Mountain Dwarves, Coglins, Yellow Draconians (all
-    +2), Demonspawn, Felids (all -1), Ghouls, Minotaurs, and Tengu (all -2).
+    +2), Barachi (+1), Demonspawn, Felids (all -1), Ghouls, Minotaurs, and Tengu
+    (all -2).
 * New background: Forgewright, which starts with a +0 hammer (a reskinned mace),
   a potion of magic, and a variety of Forgecraft spells.
 * Reavers now start with knowledge of Rending Blade.
@@ -39,8 +41,8 @@ Character
 
 Gods
 ----
-* Ashenzari's curse of Companions now supports Forgecraft as well as both
-  Summoning and Necromancy.
+* Ashenzari's curse of Companions now supports Forgecraft as well as its prior
+  skills of Summoning and Necromancy.
 * Cheibriados worshippers are never hasted by potions of haste, and can't
   enter penance by deliberately drinking potions of haste.
 * Cheibriados's wrath has been simplified.
@@ -139,7 +141,7 @@ Spells
   - Animate Armour: now "Awaken Armour", Summ/Earth -> FC/Earth.
   - Iskenderun's Battlesphere: L5 Conj -> L4 FC/Conj.
   - Hoarfrost Cannonade: Alch/Ice -> FC/Ice.
-  - Spellforged Servitor: now "Spellspark Servitor" Summ/Conj -> FC/Conj.
+  - Spellforged Servitor: now "Spellspark Servitor", Summ/Conj -> FC/Conj.
   - Hellfire Mortar: Fire/Earth -> FC/Fire/Earth.
 * New other spells:
   - Eringya's Surprising Crocodile (L4 Summ): Creates temporary shallow water
@@ -148,7 +150,7 @@ Spells
     into a mighty dinosaur if the caster stays next to it with visible enemies.
 * Spell changes:
   * Awakened Armours now equip a replica of the body armour they're echoing.
-  * Battlespheres now target the most proportionally damage foe, if possible.
+  * Battlespheres now target the most proportionally damaged foe, if possible.
   * Hellfire Mortar now scales heavily with spellpower, deals more damage,
     has longer mortar range, and pushes back singular flying foes.
   * Lightning Spires now target the furtherest-away foe, if possible.
@@ -185,6 +187,7 @@ Tiles and Other Art
 * Pandemonium now has unique stone tiles for regular floors and unique wall
   tiles for each of the unrand Pan lord vaults.
 * Gehenna now has unique stone tiles.
+* Webtiles now has the banishment animation offline tiles uses.
 * New oni splash screen by benadryl.
 
 Stone Soup 0.32.1 (20240925)
