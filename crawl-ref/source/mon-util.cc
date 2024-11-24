@@ -5399,9 +5399,7 @@ bool mons_is_beast(monster_type mc)
     {
         return false;
     }
-    else if ((mons_genus(mc) == MONS_DRAGON
-              && mc != MONS_SWAMP_DRAGON)
-             || mons_genus(mc) == MONS_UGLY_THING
+    else if (mons_genus(mc) == MONS_UGLY_THING
              || mc == MONS_ICE_BEAST
              || mc == MONS_SKY_BEAST
              || mc == MONS_BUTTERFLY)
