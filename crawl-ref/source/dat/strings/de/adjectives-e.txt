@@ -852,7 +852,7 @@ einfarbig braune
 "verhexte "
 %%%%
 "charmed "
-"verzuaberte "
+"verzauberte "
 %%%%
 "bribed "
 "bestochene "
