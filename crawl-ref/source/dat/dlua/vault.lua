@@ -352,7 +352,7 @@ function index_vaults_room_themes (e, set, hard)
            'sphinx w:' .. 2 + d * 2)
     e.mons('ironbound preserver w:' .. 10 - d * 2 .. ' / ' ..
            'entropy weaver w:' .. 2 + d * 3 .. ' / ' ..
-           'ironbound beastmaster w:' .. 0 + d * 5)
+           'ironbound beastmaster w:' .. -2 + d * 4)
     e.kmons('S = bush')
     e.kfeat('F = cache of fruit')
     e.ftile('`SF = floor_lair')

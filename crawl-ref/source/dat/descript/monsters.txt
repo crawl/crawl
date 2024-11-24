@@ -1751,7 +1751,7 @@ ironbound beastmaster
 
 A cruel and unruly brute who growls in the language of the untamed. Its very
 presence provokes and overworks non-sapient, living beasts and slimes alike into
-a rapid fury.
+a rapid fervour.
 %%%%
 ironbound convoker
 

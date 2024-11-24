@@ -2065,7 +2065,8 @@ static band_type _choose_band(monster_type mon_type, int *band_size_p,
         break;
 
     case MONS_LINDWURM:
-        if (player_in_branch(BRANCH_VAULTS) && x_chance_in_y(max(you.depth, 4), 4))
+        if (player_in_branch(BRANCH_VAULTS)
+            && x_chance_in_y(min(you.depth, 3), 3))
         {
             band = BAND_WURMS_AND_MASTER;
             band_size += 1;
@@ -2073,16 +2074,21 @@ static band_type _choose_band(monster_type mon_type, int *band_size_p,
         break;
 
     case MONS_SLIME_CREATURE:
-        if (player_in_branch(BRANCH_VAULTS) && x_chance_in_y(max(you.depth, 4), 4))
+        if (player_in_branch(BRANCH_VAULTS)
+            && x_chance_in_y(min(you.depth - 1, 5), 5))
         {
             band = BAND_SLIMES_AND_MASTER;
-            band_size += 1;
+            if (x_chance_in_y(you.depth, 4))
+                band_size += 1;
         }
         break;
 
     case MONS_DIRE_ELEPHANT:
-        if (player_in_branch(BRANCH_VAULTS) && x_chance_in_y(max(you.depth, 4), 4))
+        if (player_in_branch(BRANCH_VAULTS)
+            && x_chance_in_y(3 + min(you.depth, 7), 10))
+        {
             band = BAND_ELEPHANTS_AND_MASTER;
+        }
         break;
 
     case MONS_LAUGHING_SKULL:

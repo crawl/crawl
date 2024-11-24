@@ -2276,7 +2276,7 @@ SUBST:  fg = |*, h = *, i = $%, j= -
 # blademasters, but reduce the monster count.
 NSUBST: - = 1 / 2=1- / 2=L / 3=2- / -
 : elseif you.in_branch("Vaults") then
-MONS:   deep troll w:5 / ironbound beastmaster
+MONS:   deep troll w:5 / vault guard w:5 / ironbound beastmaster w:5
 MONS:   ettin / stone giant
 SUBST:  fgh = |*, i = *, j= %$
 NSUBST: - = 2=1 / 1- / 4=2 / 4=2- / 3 / 2=3- / EF / EF-- / -
