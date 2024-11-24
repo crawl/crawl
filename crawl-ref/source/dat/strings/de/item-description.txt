@@ -178,7 +178,7 @@ Dieser Gegenstand wurde entfernt.
 %s missbilligt die Verwendung eines solchen Gegenstandes.
 %%%%
 "Stash search prefixes: "
-"Versteck-Suche Präfixe: "
+"Suchpräfixe: "
 %%%%
 "Menu/colouring prefixes: "
 "Menü/Färbung Präfixe: "
