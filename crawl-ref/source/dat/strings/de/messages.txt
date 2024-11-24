@@ -4136,7 +4136,7 @@ trap
 Fall
 %%%%
 No monsters, items or features are visible.
-Es sind keine Monster, Gegenstände oder Einrichtungen sichtbar.
+Es sind keine Monster, Gegenstände oder Merkmale sichtbar.
 %%%%
 target/travel
 zielen/reisen
@@ -7226,10 +7226,10 @@ item
 Objekt
 %%%%
 (F)eature
-(E)inrichtung
+Me(R)kmal
 %%%%
 feature
-Einrichtung
+Merkmal
 %%%%
 (G)od
 (G)ott
@@ -17397,19 +17397,19 @@ Creating upstairs.
 Treppen nach oben erschafft.
 %%%%
 "Create what kind of feature mimic? "
-Welche Art von Einrichtung-Mimik erstellen?
+Welche Art Merkmalmimik erstellen?
 %%%%
 "Create which feature? "
-"Welche Einrichtung erstellen? "
+"Welches Merkmal erstellen? "
 %%%%
 Set fprops "%s" at (%d,%d)
 Fprops "%s" auf (%d,%d) eingesetzt
 %%%%
 "No exact match for feature '%s', possible matches are: "
-"Keine Einrichtung passt exakt zu '%s'. Möglichkeiten sind: "
+"Kein Merkmal passt exakt zu '%s'. Möglichkeiten sind: "
 %%%%
 "This isn't a valid feature mimic. Create it anyway? "
-"Das ist keine gültige Einrichtung-Mimik. Trotzdem erstellen? "
+"Das ist keine gültige Merkmalmimik. Trotzdem erstellen? "
 %%%%
 Force level to be mappable?
 Erzwingen, dass die Ebene kartierbar ist?
@@ -18309,7 +18309,7 @@ Kann nicht nochmal in den Erkundungsmodus eintreten.
 <w>n</w>      Zot-Uhr einstellen
 %%%%
 <yellow>Dungeon features</yellow>
-<yellow>Kerker-Strukturen</yellow>
+<yellow>Kerkermerkmale</yellow>
 %%%%
 <w>T</w>      make a trap
 <w>T</w>      eine Falle schaffen
@@ -18318,7 +18318,7 @@ Kann nicht nochmal in den Erkundungsmodus eintreten.
 <w>,</w>/<w>.</w>    Treppe nach oben/unten schaffen
 %%%%
 <w>(</w>      turn cell into feature
-<w>(</w>      Feld in Einrichtung verwandeln
+<w>(</w>      Feld in Merkmal verwandeln
 %%%%
 <w>\</w>      make a shop
 <w>\</w>      Laden schaffen
