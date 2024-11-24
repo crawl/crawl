@@ -189,12 +189,13 @@ DCSS uses spell slot to mean the letter assigned to the spell in the spell casti
 It seems to be common practice to translate leather armour as Lederrüstung, and chainmail as Kettenpanzer, and so on.
 Plate armour (often called plate mail in other games) is Plattenpanzer.
 
-- barding = Gelieger
+- barding = der Harnisch
 
 In real life, horse armour, but in DCSS, armour for the back/lower part of a centaur/naga/palentonga.
-In German, armour for a horse is called der Rossharnisch or das Gelieger. We can't really use the word
-Rossharnisch because Ross is a warhorse, so it doesn't work for naga or palentonga. Nor can we use Harnisch
-by itself, because that just means armour. https://de.wikipedia.org/wiki/Europ%C3%A4ischer_Rossharnisch
+In German, armour for a horse is called der Rossharnisch. However, ein Ross is a warhorse, so it
+doesn't really work for naga or palentonga. Harnisch by itself just means armour, but since we haven't
+used that word for anything else, it's ok.
+https://de.wikipedia.org/wiki/Europ%C3%A4ischer_Rossharnisch
 
 Some other terms:
 
