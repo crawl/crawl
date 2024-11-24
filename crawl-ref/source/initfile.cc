@@ -2459,31 +2459,11 @@ string game_options::expand_vars(const string &field) const
 void game_options::add_message_colour_mappings(const string &field,
                                                bool prepend, bool subtract)
 {
-    vector<string> fragments;
-    string saved;
-    size_t frag_start = 0, pos = 0, search_from = 0;
-    do
-    {
-        pos = field.find(',', search_from);
-
-        if (pos != string::npos)
-        {
-            search_from = pos + 1;
-
-            // don't split on escaped comma
-            if (pos > 0 && field[pos-1] == '\\')
-                continue;
-        }
-
-        string frag = trimmed_string(field.substr(frag_start, pos - frag_start));
-        if (!frag.empty())
-        {
-            frag = replace_all(frag, "\\,", ",");
-            fragments.push_back(frag);
-        }
-        frag_start = search_from;
-    }
-    while (pos != string::npos);
+    // don't split on escaped commas
+    string fld = replace_all(field, "\\,", "@comma@");
+    vector<string> fragments = split_string(",", fld);
+    for (size_t i = 0; i < fragments.size(); i++)
+        fragments[i] = replace_all(fragments[i], "@comma@", ",");
 
     if (prepend)
         reverse(fragments.begin(), fragments.end());
