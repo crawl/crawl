@@ -397,6 +397,7 @@ static map<jewellery_type, vector<jewellery_fake_artp>> jewellery_artps = {
     { AMU_REGENERATION, { { ARTP_REGENERATION, 1 } } },
     { AMU_MANA_REGENERATION, { { ARTP_MANA_REGENERATION, 1} } },
     { AMU_REFLECTION, { { ARTP_SHIELDING, AMU_REFLECT_SH / 2} } },
+    { AMU_ACROBAT, { { ARTP_ACROBAT, 1 } } },
 
     { RING_MAGICAL_POWER, { { ARTP_MAGICAL_POWER, 9 } } },
     { RING_WIZARDRY, { { ARTP_WIZARDRY, 1} } },
@@ -411,8 +412,8 @@ static map<jewellery_type, vector<jewellery_fake_artp>> jewellery_artps = {
     { RING_WILLPOWER, { { ARTP_WILLPOWER, 1 } } },
     { RING_RESIST_CORROSION, { { ARTP_RCORR, 1 } } },
 
-    { RING_FIRE, { { ARTP_FIRE, 1 }, { ARTP_COLD, -1 } } },
-    { RING_ICE, { { ARTP_COLD, 1 }, { ARTP_FIRE, -1 } } },
+    { RING_FIRE, { { ARTP_FIRE, 1 }, { ARTP_COLD, -1 }, { ARTP_ENHANCE_FIRE, 1} } },
+    { RING_ICE, { { ARTP_COLD, 1 }, { ARTP_FIRE, -1 }, { ARTP_ENHANCE_ICE, 1} } },
 
     { RING_STRENGTH, { { ARTP_STRENGTH, 0 } } },
     { RING_INTELLIGENCE, { { ARTP_INTELLIGENCE, 0 } } },

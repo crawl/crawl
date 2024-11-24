@@ -248,17 +248,10 @@ const char* jewellery_base_ability_string(int subtype)
     {
 #if TAG_MAJOR_VERSION == 34
     case RING_SUSTAIN_ATTRIBUTES: return "SustAt";
-#endif
-    case RING_FIRE:               return "Fire";
-    case RING_ICE:                return "Ice";
-#if TAG_MAJOR_VERSION == 34
     case RING_TELEPORTATION:      return "*Tele";
     case RING_TELEPORT_CONTROL:   return "+cTele";
     case AMU_HARM:                return "Harm";
     case AMU_THE_GOURMAND:        return "Gourm";
-#endif
-    case AMU_ACROBAT:             return "Acrobat";
-#if TAG_MAJOR_VERSION == 34
     case AMU_CONSERVATION:        return "Cons";
     case AMU_CONTROLLED_FLIGHT:   return "cFly";
 #endif
@@ -297,8 +290,6 @@ struct property_descriptor
 // structure?
 static const vector<property_descriptor> & _get_all_artp_desc_data()
 {
-    // order here determines order of long form descriptions
-    // TODO: why not just use the same order as annotations?
     static vector<property_descriptor> data =
     {
         { ARTP_AC,
@@ -479,6 +470,73 @@ static string _randart_prop_abbrev(artefact_prop_type prop, int val)
     return "buggy";
 }
 
+static const vector<artefact_prop_type> artprop_annotation_order =
+{
+    // (Generally) negative attributes
+    // These come first, so they don't get chopped off!
+    ARTP_PREVENT_SPELLCASTING,
+    ARTP_PREVENT_TELEPORTATION,
+    ARTP_CONTAM,
+    ARTP_ANGRY,
+    ARTP_NOISE,
+    ARTP_HARM,
+    ARTP_RAMPAGING,
+    ARTP_ACROBAT,
+    ARTP_CORRODE,
+    ARTP_DRAIN,
+    ARTP_SLOW,
+    ARTP_FRAGILE,
+
+    // Evokable abilities come second
+    ARTP_BLINK,
+    ARTP_INVISIBLE,
+    ARTP_FLY,
+
+    // Resists, also really important
+    ARTP_ELECTRICITY,
+    ARTP_POISON,
+    ARTP_FIRE,
+    ARTP_COLD,
+    ARTP_NEGATIVE_ENERGY,
+    ARTP_WILLPOWER,
+    ARTP_REGENERATION,
+    ARTP_MANA_REGENERATION,
+    ARTP_RMUT,
+    ARTP_RCORR,
+
+    // Quantitative attributes
+    ARTP_HP,
+    ARTP_MAGICAL_POWER,
+    ARTP_WIZARDRY,
+    ARTP_AC,
+    ARTP_EVASION,
+    ARTP_STRENGTH,
+    ARTP_INTELLIGENCE,
+    ARTP_DEXTERITY,
+    ARTP_SLAYING,
+    ARTP_SHIELDING,
+
+    // Qualitative attributes (and Stealth)
+    ARTP_SEE_INVISIBLE,
+    ARTP_STEALTH,
+    ARTP_CLARITY,
+    ARTP_RMSL,
+
+    // spell enhancers
+    ARTP_ARCHMAGI,
+    ARTP_ENHANCE_CONJ,
+    ARTP_ENHANCE_HEXES,
+    ARTP_ENHANCE_SUMM,
+    ARTP_ENHANCE_NECRO,
+    ARTP_ENHANCE_FORGECRAFT,
+    ARTP_ENHANCE_TLOC,
+    ARTP_ENHANCE_FIRE,
+    ARTP_ENHANCE_ICE,
+    ARTP_ENHANCE_AIR,
+    ARTP_ENHANCE_EARTH,
+    ARTP_ENHANCE_ALCHEMY,
+};
+
 static vector<string> _randart_propnames(const item_def& item,
                                          bool no_comma = false)
 {
@@ -487,73 +545,6 @@ static vector<string> _randart_propnames(const item_def& item,
     artefact_desc_properties(item, proprt, known);
 
     vector<string> propnames;
-
-    static const vector<artefact_prop_type> annotation_order =
-    {
-        // (Generally) negative attributes
-        // These come first, so they don't get chopped off!
-        ARTP_PREVENT_SPELLCASTING,
-        ARTP_PREVENT_TELEPORTATION,
-        ARTP_CONTAM,
-        ARTP_ANGRY,
-        ARTP_NOISE,
-        ARTP_HARM,
-        ARTP_RAMPAGING,
-        ARTP_ACROBAT,
-        ARTP_CORRODE,
-        ARTP_DRAIN,
-        ARTP_SLOW,
-        ARTP_FRAGILE,
-
-        // Evokable abilities come second
-        ARTP_BLINK,
-        ARTP_INVISIBLE,
-        ARTP_FLY,
-
-        // Resists, also really important
-        ARTP_ELECTRICITY,
-        ARTP_POISON,
-        ARTP_FIRE,
-        ARTP_COLD,
-        ARTP_NEGATIVE_ENERGY,
-        ARTP_WILLPOWER,
-        ARTP_REGENERATION,
-        ARTP_MANA_REGENERATION,
-        ARTP_RMUT,
-        ARTP_RCORR,
-
-        // Quantitative attributes
-        ARTP_HP,
-        ARTP_MAGICAL_POWER,
-        ARTP_WIZARDRY,
-        ARTP_AC,
-        ARTP_EVASION,
-        ARTP_STRENGTH,
-        ARTP_INTELLIGENCE,
-        ARTP_DEXTERITY,
-        ARTP_SLAYING,
-        ARTP_SHIELDING,
-
-        // Qualitative attributes (and Stealth)
-        ARTP_SEE_INVISIBLE,
-        ARTP_STEALTH,
-        ARTP_CLARITY,
-        ARTP_RMSL,
-
-        // spell enhancers
-        ARTP_ARCHMAGI,
-        ARTP_ENHANCE_CONJ,
-        ARTP_ENHANCE_HEXES,
-        ARTP_ENHANCE_SUMM,
-        ARTP_ENHANCE_NECRO,
-        ARTP_ENHANCE_FORGECRAFT,
-        ARTP_ENHANCE_TLOC,
-        ARTP_ENHANCE_FIRE,
-        ARTP_ENHANCE_ICE,
-        ARTP_ENHANCE_AIR,
-        ARTP_ENHANCE_EARTH,
-        ARTP_ENHANCE_ALCHEMY,
-    };
 
     const unrandart_entry *entry = nullptr;
     if (is_unrandom_artefact(item))
@@ -588,7 +579,7 @@ static vector<string> _randart_propnames(const item_def& item,
         {
             // XXX: Ugly hack for adding a comma if needed.
             bool extra_props = false;
-            for (const artefact_prop_type &other_prop : annotation_order)
+            for (const artefact_prop_type &other_prop : artprop_annotation_order)
                 if (known_proprt(other_prop) && other_prop != ARTP_BRAND)
                 {
                     extra_props = true;
@@ -609,28 +600,11 @@ static vector<string> _randart_propnames(const item_def& item,
     if (is_unrandom_artefact(item) && entry && entry->inscrip != nullptr)
         propnames.push_back(entry->inscrip);
 
-    for (const artefact_prop_type &prop : annotation_order)
+    for (const artefact_prop_type &prop : artprop_annotation_order)
     {
         if (known_proprt(prop))
         {
             const int val = proprt[prop];
-
-            // Don't show rF+/rC- for =Fire, or vice versa for =Ice.
-            if (item.base_type == OBJ_JEWELLERY)
-            {
-                if (item.sub_type == RING_FIRE
-                    && (prop == ARTP_FIRE && val == 1
-                        || prop == ARTP_COLD && val == -1))
-                {
-                    continue;
-                }
-                if (item.sub_type == RING_ICE
-                    && (prop == ARTP_COLD && val == 1
-                        || prop == ARTP_FIRE && val == -1))
-                {
-                    continue;
-                }
-            }
 
             // Don't show the rF+ rC+ twice.
             if (get_armour_ego_type(item) == SPARM_RESISTANCE
@@ -681,14 +655,6 @@ static const char* _jewellery_base_ability_description(int subtype)
 #if TAG_MAJOR_VERSION == 34
     case RING_SUSTAIN_ATTRIBUTES:
         return "It sustains your strength, intelligence and dexterity.";
-#endif
-    case RING_WIZARDRY:
-        return "It improves your spell success rate.";
-    case RING_FIRE:
-        return "It enhances your fire magic.";
-    case RING_ICE:
-        return "It enhances your ice magic.";
-#if TAG_MAJOR_VERSION == 34
     case RING_TELEPORTATION:
         return "It may teleport you next to monsters.";
     case RING_TELEPORT_CONTROL:
@@ -697,12 +663,6 @@ static const char* _jewellery_base_ability_description(int subtype)
         return "It increases damage dealt and taken.";
     case AMU_THE_GOURMAND:
         return "It allows you to eat raw meat even when not hungry.";
-#endif
-    case AMU_MANA_REGENERATION:
-        return "It increases your rate of magic regeneration.";
-    case AMU_ACROBAT:
-        return "It increases your evasion while moving and waiting.";
-#if TAG_MAJOR_VERSION == 34
     case AMU_CONSERVATION:
         return "It protects your inventory from destruction.";
 #endif
@@ -757,15 +717,15 @@ void desc_randart_props(const item_def &item, vector<string> &lines)
     artefact_known_props_t known;
     artefact_desc_properties(item, proprt, known);
 
-    for (const property_descriptor &desc : _get_all_artp_desc_data())
+    for (artefact_prop_type prop : artprop_annotation_order)
     {
-        if (!known_proprt(desc.property)) // can this ever happen..?
+        if (!known_proprt(prop))
             continue;
 
-        const int stval = proprt[desc.property];
+        const int stval = proprt[prop];
 
         // these two have some custom string replacement
-        if (desc.property == ARTP_WILLPOWER)
+        if (prop == ARTP_WILLPOWER)
         {
             lines.push_back(make_stringf("%s It %s%s your willpower.",
                      _padded_artp_name(ARTP_WILLPOWER, stval).c_str(),
@@ -773,7 +733,7 @@ void desc_randart_props(const item_def &item, vector<string> &lines)
                      (stval < 0) ? "decreases" : "increases"));
             continue;
         }
-        else if (desc.property == ARTP_STEALTH)
+        else if (prop == ARTP_STEALTH)
         {
             lines.push_back(make_stringf("%s It makes you %s%s stealthy.",
                      _padded_artp_name(ARTP_STEALTH, stval).c_str(),
@@ -783,7 +743,7 @@ void desc_randart_props(const item_def &item, vector<string> &lines)
         }
 
         // otherwise, we use desc.desc in some form
-
+        const property_descriptor& desc = _get_artp_desc_data(prop);
         string sdesc = desc.desc;
 
         if (sdesc.find("%d") != string::npos)
