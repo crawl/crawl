@@ -595,7 +595,7 @@ the %sseraph's
 des {adj-en}%sSeraphs
 %%%%
 the %sdaeva's
-des {adj-en}%sDaevas
+der {adj-en}%sDaeva
 %%%%
 the %sprofane servitor's
 des {adj-en}%sprofanen Dieners
