@@ -2788,7 +2788,7 @@ w:50
 
 @The_monster@ sagt, "Wozu brauchen Naga Harnische?"
 
-@The_monster@ sagt, "Was ist ein Nagaharnisch überhaupt? Singt es für sein Abendbrot?"
+@The_monster@ sagt, "Was ist ein Nagaharnisch überhaupt? Brauchen diese Schlangen Windeln?"
 
 @The_monster@ sagt, "Roben sind für Weicheier. Echte Krieger tragen schwere Rüstungen!"
 
