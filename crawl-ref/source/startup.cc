@@ -139,6 +139,9 @@ static void _initialize()
     _loading_message("Loading databases...");
     databaseSystemInit();
 
+    // must be done after databaseSystemInit
+    init_localisation(Options.lang_name);
+
     _loading_message("Loading spells and features...");
     init_feat_desc_cache();
     init_spell_name_cache();
@@ -1043,6 +1046,9 @@ static void _do_language_selection()
                 // redo db init for the new language
                 // not ideal to do it twice, but we can't show this menu any earlier
                 databaseSystemInit();
+
+                // must be done after databaseSystemInit
+                init_localisation(Options.lang_name);
             }
         }
     }

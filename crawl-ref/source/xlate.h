@@ -9,6 +9,9 @@
 #include <string>
 using std::string;
 
+// initialise xlate
+void init_xlate();
+
 // translate with context
 //
 // context = the context in which the text is being used (optional, default=none)

@@ -24,6 +24,10 @@ using namespace std;
 #ifdef NO_TRANSLATE
 //// compile without translation logic ////
 
+void init_xlate()
+{
+}
+
 string cxlate(const string &context, const string &text_en)
 {
     return text_en;
@@ -42,7 +46,7 @@ string cnxlate(const string &context,
 const string exp_start = "((";
 const string exp_end = "))";
 
-static string apply_regex_rule(const string& s, const string& rule)
+static string apply_regex_rule(const string& rule, const string& s)
 {
     // need to accept empties because replacement could be empty.
     // However, this means "useless" tokens at start and end.
@@ -87,14 +91,80 @@ static string apply_regex_rule(const string& s, const string& rule)
     }
 }
 
-static string apply_regex_rules(string s, const string& rulesStr)
+static string apply_regex_rules(const string& rulesStr, string s)
 {
     vector<string> rules = split_string("\n", rulesStr, true, false);
     for (string rule: rules)
-        s = apply_regex_rule(s, rule);
+        s = apply_regex_rule(rule, s);
     return s;
 }
 
+// initialise xlate
+void init_xlate()
+{
+    dprintf("init_xlate\n");
+
+    // do pregeneration
+    for (int i = 0; i <= 100; i++)
+    {
+        string rulesKey = "PREGENERATE:" + to_string(i);
+        string rulesStr = getTranslatedString(rulesKey);
+        if (rulesStr.empty())
+            continue;
+
+        dprintf("**** Handle %s ****\n", rulesKey.c_str());
+
+        vector<string> rules = split_string("\n", rulesStr, true, false);
+
+        // get key selection regex
+        string key_select_regex;
+        for (string rule: rules)
+        {
+            if (starts_with(rule, "SELECT:"))
+            {
+                rule = trimmed_string(replace_first(rule, "SELECT:", ""));
+                if (starts_with(rule, "/"))
+                    rule = rule.substr(1);
+                if (ends_with(rule, "/"))
+                    rule = rule.substr(0, rule.length()-1);
+
+                key_select_regex = rule;
+                break;
+            }
+        }
+
+        dprintf("Key selection rule: /%s/\n", key_select_regex.c_str());
+        if (key_select_regex.empty())
+            continue;
+
+        vector<string> keys = getTranslationKeysByRegex(key_select_regex);
+        dprintf("%lu keys matched\n", keys.size());
+        for (const string& orig_key: keys)
+        {
+            string key = orig_key;
+            string value = getTranslatedString(key);
+            for (string rule: rules)
+            {
+                if (starts_with(rule, "KEY:"))
+                {
+                    rule = rule.substr(4);
+                    key = apply_regex_rule(rule, key);
+                }
+                else
+                    value = apply_regex_rule(rule, value);
+            }
+
+            if (key == orig_key || getTranslatedString(key) != "")
+            {
+                // don't overwrite existing entries
+                continue;
+            }
+
+            dprintf("Adding entry: \"%s\" -> \"%s\"\n", key.c_str(), value.c_str());
+            setTranslatedString(key, value);
+        }
+    }
+}
 
 // translate with context
 //
@@ -132,7 +202,7 @@ string cxlate(const string &context, const string &text_en, bool fallback_en)
                 if (!rules.empty())
                 {
                     // convert default string to context using rules
-                    translation = apply_regex_rules(translation, rules);
+                    translation = apply_regex_rules(rules, translation);
                 }
             }
         }

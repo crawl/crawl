@@ -232,20 +232,25 @@ static void _split_tags(string s, vector<string>& results)
 // TODO: Come up with a better name for this function
 static string _shift_context(const string& str)
 {
-    // Must keep context for parameters
-    if (!starts_with(str, "{"))
-        return str;
-
-    bool first = true;
-    string result;
-    for (string s: _split_format(str))
+    string result = str;
+    while (starts_with(result, "{"))
     {
-        if (first && s.length() >= 2 && s[0] == '{' && s[s.length()-1] == '}')
-            _context = s.substr(1, s.length()-2);
-        else
-            result += s;
-        first = false;
+        size_t pos = result.find('}');
+        if (pos == string::npos)
+            break;
+
+        _context = result.substr(1, pos - 1);
+        result = result.substr(pos + 1);
     }
+
+    return result;
+}
+
+static string _discard_context(const string& str)
+{
+    string saved_context = _context;
+    string result = _shift_context(str);
+    _context = saved_context;
     return result;
 }
 
@@ -771,11 +776,7 @@ static size_t _find_embedded_name(const vector<string>& words, const size_t end,
         }
         if (!name.empty())
         {
-            // discard context
-            string ctx = _context;
-            name = _shift_context(name);
-            _context = ctx;
-
+            name = _discard_context(name);
             return start;
         }
     }
@@ -2067,16 +2068,18 @@ LocalisationArg::LocalisationArg(const long double value, bool translat)
 void init_localisation(const string& lang)
 {
     _language = lang;
-#ifdef UNIX
+
     if (lang != "" && lang != "en")
     {
+#ifdef UNIX
         if (strcasecmp(nl_langinfo(CODESET), "UTF-8"))
         {
             fprintf(stderr, "Languages other than English require a UTF-8 locale.\n");
             exit(1);
         }
-    }
 #endif
+        init_xlate();
+    }
 }
 
 void pause_localisation()
@@ -2178,6 +2181,7 @@ static string _build_string(const vector<LocalisationArg>& args, bool translate)
                         else
                         {
                             string argx = _localise_string(_context, arg);
+                            argx = _shift_context(argx);
                             ss << format_utf8_string(fmt_spec, argx);
                         }
                     }
@@ -2235,7 +2239,10 @@ string localise(const vector<LocalisationArg>& args)
     else if (args.size() == 1)
     {
         if (localisation_active())
-            return _localise_string("", args.at(0).stringVal);
+        {
+            string result = _localise_string("", args.at(0).stringVal);
+            return _shift_context(result);
+        }
         else
             return args.at(0).stringVal;
     }

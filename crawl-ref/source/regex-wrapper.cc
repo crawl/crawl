@@ -25,6 +25,17 @@ using namespace std;
 #define debuglog(...) {}
 #endif
 
+// warn about bad regexes, but only once each
+static void _warn_bad_regex(const string& re)
+{
+    static vector<string> _bad_regexes;
+    if (find(_bad_regexes.begin(), _bad_regexes.end(), re) == _bad_regexes.end())
+    {
+        fprintf(stderr, "WARNING: Bad regex: /%s/\n", re.c_str());
+        _bad_regexes.push_back(re);
+    }
+}
+
 #ifdef REGEX_PCRE
 
 // ovector needs to be big enough for all submatches (capture groups),
@@ -101,7 +112,7 @@ bool regexp_match(const string& s, const string& pattern, bool ignore_case,
     }
     catch (exception& e)
     {
-        debuglog("Exception in regexp_search(\"%s\", \"%s\"): %s", s.c_str(), pattern.c_str(), e.what());
+        _warn_bad_regex(pattern);
     }
 
     if (re)
@@ -166,15 +177,11 @@ static string _handle_backreferences(const string &s, const string& subst, int* 
                 success = true;
             }
             else
-                 debuglog("Bad indexes for backreference %d: %d, %d", id, start, end);
+                debuglog("Bad indexes for backreference %d: %d, %d", id, start, end);
         }
 
         if (!success)
-        {
             debuglog("Bad regex backreference %d in \"%s\"", id, subst.c_str());
-            // keep backreference
-            result += subst.substr(prev, pos - prev);
-        }
 
         prev = pos;
     }
@@ -234,7 +241,7 @@ string regexp_replace(const string& s, const string& pattern, const string& subs
     }
     catch (exception& e)
     {
-        debuglog("Exception in regexp_replace(\"%s\", \"%s\", \"%s\"): %s", s.c_str(), pattern.c_str(), subst.c_str(), e.what());
+        _warn_bad_regex(pattern);
         result = s;
     }
 
@@ -319,7 +326,7 @@ string regexp_search(const string& s, const string& pattern, bool ignore_case)
     }
     catch (exception& e)
     {
-        debuglog("Exception in regexp_search(\"%s\", \"%s\"): %s", s.c_str(), pattern.c_str(), e.what());
+        _warn_bad_regex(pattern);
     }
     return "";
 }
@@ -339,7 +346,7 @@ string regexp_replace(const string& s, const string& pattern, const string& subs
     }
     catch (exception& e)
     {
-        debuglog("Exception in regexp_replace(\"%s\", \"%s\", \"%s\"): %s", s.c_str(), pattern.c_str(), subst.c_str(), e.what());
+        _warn_bad_regex(pattern);
         return s;
     }
 }

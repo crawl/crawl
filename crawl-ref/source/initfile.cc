@@ -3839,7 +3839,6 @@ bool game_options::set_lang(const char *lc)
         if (l == lang)
         {
             lang_name = l;
-            init_localisation(l);
             return true;
         }
     }

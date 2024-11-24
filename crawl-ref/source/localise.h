@@ -47,6 +47,7 @@ private:
 
 /**
  * Initialize the localisation system
+ * This must be called after databaseSystemInit
  */
 void init_localisation(const string& lang);
 

@@ -32,6 +32,83 @@
 ###############################################################################
 
 #################################
+# Pregeneration
+#################################
+
+# generate indefinite (nominative) from definite
+%%%%
+PREGENERATE:1
+
+SELECT:/^the .*[^']{2}$/
+
+# transform (English) key
+KEY:/^the one-/a one-/
+KEY:/^the ([aeiouAEIOU])/an $1/
+KEY:/^the /a /
+
+# articles
+/^(\{m\})?der /ein /
+/^(\{f\})?die /eine /
+/^(\{n\})?das /{n}ein /
+
+# masc adjectives
+/^ein [^A-ZÄÖÜ]+/e /er /
+/^ein [^A-ZÄÖÜ]+/\{adj-e\}/{adj-er}/
+
+# fix some special cases
+/e (Drakonier|Yiuf)/er $1/
+
+# neuter adjectives
+/^\{n\}ein [^A-ZÄÖÜ]+/e /es /
+/^\{n\}ein [^A-ZÄÖÜ]+/\{adj-e\}/{adj-es}/
+%%%%
+
+# generate indefinite (possessive) from definite
+%%%%
+PREGENERATE:2
+
+SELECT:/^the .*('s|')$/
+
+# articles
+/^(\{f\})?der /einer /
+/^des /eines /
+%%%%
+
+
+# generate "your" (nominative and possessive) from indefinite
+# (easier than generating from definite because adjectives will already be in the right form)
+%%%%
+PREGENERATE:3
+
+SELECT:/^(a|an) /
+
+# transform (English) key
+KEY:/^(a|an) /your /
+
+# determiner
+/^(\{[mfn]\})?ein/$1dein/
+%%%%
+
+# generate no determiner (nominative) from indefinite
+%%%%
+PREGENERATE:4
+
+# exclude possessives
+SELECT:/^(a|an) .*[^']{2}$/
+
+# remove article from key
+KEY:/^(a|an) //
+
+# remove article from value
+/^(\{m\})?ein /{m}/
+/^eine /{f}/
+/^\{n\}ein /{n}/
+
+# if there are now two context markers in a row, remove the first one (it's superfluous).
+/^\{.\}\{/{/
+%%%%
+
+#################################
 # Adjectives
 #################################
 %%%%
@@ -82,9 +159,10 @@ GENERATE:acc
 
 # fix special cases
 /Blork der Ork/Blork den Ork/
-/Verrückter /Verrückten /
+/er? Yiuf/en Yiuf/
 /er Drakonier/en Drakonier/
-/^(den [A-ZÄÖÜ][^ ,]+)e Drakonier/$1en Drakonier/
+# make sure it's not plural
+/^den [^,]+ Drakonier/e Drakonier/en Drakonier/
 
 %%%%
 
@@ -147,9 +225,8 @@ GENERATE:dat
 
 # fix special cases
 /Blork der Ork/Blork dem Ork/
-/Verrückter /Verrücktem /
-/er Drakonier/em Drakonier/
-/^(dem [A-ZÄÖÜ][^ ,]+)e Drakonier/$1en Drakonier/
+/er? (Yiuf|Drakonier)/em $1/
+/^(dem|einem|deinem) (.*)em (Yiuf|Drakonier)/$1 $2en $3/
 /^(der|einer|deiner) (.*)Lernäische Hydra/$1 $2Lernäischen Hydra/
 /Lernäische Hydra/Lernäischer Hydra/
 # nominalised adjective

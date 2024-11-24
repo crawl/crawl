@@ -227,8 +227,8 @@ Prinzen Ribbits
 Crazy Yiuf's
 Verrückten Yiufs
 %%%%
-the Enchantress's
-der Zauberin
+the %sEnchantress's
+der {adj-en}%sZauberin
 %%%%
 Blork the orc's
 Blork des Orks
@@ -239,8 +239,8 @@ Blorks
 the Royal Jelly's
 des Gelée Royale
 %%%%
-the Serpent of Hell's
-der Höllenschlange
+the %sSerpent of Hell's
+der {adj-en}%sHöllenschlange
 %%%%
 the %sLernaean hydra's
 der {adj-en}%sLernäischen Hydra
@@ -248,8 +248,8 @@ der {adj-en}%sLernäischen Hydra
 Cigotuvi's Monster's
 des Cigotuvis Monsters
 %%%%
-the Statue of Wucad Mu's
-der Statue von Wucad Mu
+the %sStatue of Wucad Mu's
+der {adj-en}%sStatue von Wucad Mu
 
 # not really uniques, but gramatically similar
 

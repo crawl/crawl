@@ -1657,6 +1657,9 @@ make-stringf-test: $(MAKE_STRINGF_TEST_OBJS) $(CONTRIB_LIBS) all
 check-regex-rules: test/i18n/check-regex-rules.o $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS) all
 	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(OBJECTS) $< $(EXTRA_OBJECTS) -o $@ $(LIBS)
 
+de-mon-test: test/i18n/de/mon-test.o $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS) all
+	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(OBJECTS) $< $(EXTRA_OBJECTS) -o $@ $(LIBS)
+
 de-item-test: test/i18n/de/item-test.o $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS) all
 	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(OBJECTS) $< $(EXTRA_OBJECTS) -o $@ $(LIBS)
 
@@ -1669,8 +1672,9 @@ fr-misc-test: test/i18n/fr/misc-test.o $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIB
 ru-misc-test: test/i18n/ru/misc-test.o $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS) all
 	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(OBJECTS) $< $(EXTRA_OBJECTS) -o $@ $(LIBS)
 
-i18n-tests: $(GAME) make-stringf-test check-regex-rules de-item-test de-misc-test fr-misc-test ru-misc-test
+i18n-tests: $(GAME) make-stringf-test check-regex-rules de-mon-test de-item-test de-misc-test fr-misc-test ru-misc-test
 	./make-stringf-test
+	./de-mon-test
 	./de-item-test
 	./de-misc-test
 	./fr-misc-test
@@ -1691,7 +1695,7 @@ clean-plug-and-play-tests:
 	$(RM) plug-and-play-tests plug-and-play-tests.exe
 
 clean-i18n-tests:
-	$(RM) make-stringf-test de-item-test de-misc-test fr-misc-test test/i18n/*/*.o
+	$(RM) make-stringf-test de-mon-test de-item-test de-misc-test fr-misc-test test/i18n/*/*.o
 
 debug: all
 debug-lite: all

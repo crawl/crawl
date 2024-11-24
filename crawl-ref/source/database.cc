@@ -196,7 +196,7 @@ bool TextDB::open_db()
         return true;
 
     const string full_db_path = _db_cache_path(_db_name, lang());
-    _db = dbm_open(full_db_path.c_str(), O_RDONLY, 0660);
+    _db = dbm_open(full_db_path.c_str(), O_RDWR, 0660);
     if (!_db)
         return false;
 
@@ -458,12 +458,14 @@ static string _localise_key(const string& key)
 static vector<string> _database_find_keys(DBM *database,
                                           const string &regex,
                                           bool ignore_case,
+                                          bool check_translation = false,
                                           db_find_filter filter = nullptr)
 {
     text_pattern             tpat(regex, ignore_case);
     vector<string> matches;
 
-    bool localising = localisation_active();
+    if (check_translation && !localisation_active())
+        check_translation = false; // no point
 
     datum dbKey = dbm_firstkey(database);
 
@@ -473,7 +475,7 @@ static vector<string> _database_find_keys(DBM *database,
 
         // try to match in both English and the user's language
         bool matched = tpat.matches(key);
-        if (!matched && localising)
+        if (!matched && check_translation)
             matched = tpat.matches(_localise_key(key));
 
         if (matched
@@ -928,7 +930,7 @@ vector<string> getLongDescKeysByRegex(const string &regex,
         return empty;
     }
 
-    return _database_find_keys(DescriptionDB.get(), regex, true, filter);
+    return _database_find_keys(DescriptionDB.get(), regex, true, true, filter);
 }
 
 vector<string> getLongDescBodiesByRegex(const string &regex,
@@ -1060,4 +1062,24 @@ string getHintString(const string &key)
 string getTranslatedString(const string &key)
 {
     return _query_database(TranslateDB, key, false, false);
+}
+
+void setTranslatedString(const string &key, const string& value)
+{
+    if (!TranslateDB.translation || !TranslateDB.translation->get())
+        return;
+
+    string val(value); // _add_entry param is non-const
+    _add_entry(TranslateDB.translation->get(), key, val);
+}
+
+vector<string> getTranslationKeysByRegex(const string &regex)
+{
+    if (!TranslateDB.translation || !TranslateDB.translation->get())
+    {
+        vector<string> empty;
+        return empty;
+    }
+
+    return _database_find_keys(TranslateDB.translation->get(), regex, false);
 }
