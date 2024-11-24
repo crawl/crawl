@@ -2190,6 +2190,7 @@ static string _describe_ammo(const item_def &item)
                            "untethered in space, blinking uncontrollably for "
                            "several turns and taking minor damage each time it "
                            "does so.";
+            break;
 
         case SPMSL_SILVER:
             description += "It deals increased damage compared to normal ammo "
