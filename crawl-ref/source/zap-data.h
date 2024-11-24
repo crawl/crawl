@@ -21,6 +21,8 @@ struct zap_info
     dungeon_char_type glyph;
     bool can_beam;
     bool is_explosion;
+    tileidx_t tile_beam;
+    tileidx_t tile_explode;
 }
 */
 
