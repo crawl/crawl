@@ -289,7 +289,7 @@ your %spair of %sboots
 dein {adj-es}%sPaar {adj-e}%sStiefel
 %%%%
 your %sbarding
-dein {adj-es}%sGelieger
+dein {adj-er}%sHarnisch
 %%%%
 your %sbuckler
 dein {adj-er}%sBuckler

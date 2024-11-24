@@ -901,7 +901,7 @@ Stiefel
 # Centaurs and Nagas have barding instead of boots
 %%%%
 barding
-Gelieger
+Harnisch
 %%%%
 shield
 Schild
@@ -934,7 +934,7 @@ keine Stiefel
 # Centaurs and Nagas have barding instead of boots
 %%%%
 no barding
-kein Gelieger
+kein Harnisch
 %%%%
 no shield
 kein Schild
@@ -973,7 +973,7 @@ Stiefel
 %%%%
 # some species (e.g. Naga) wear barding instead of boots
 Barding
-Gelieger
+Harnisch
 %%%%
 unknown
 unbekannt

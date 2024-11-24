@@ -1336,7 +1336,7 @@ angeborenen Fähigkeiten zu sehen.)
 %%%%
 HINT_CANNOT_WEAR_BARDING
 
-Nur Nagas und Palentongas können Gelieger tragen.
+Nur Nagas und Palentongas können Harnische tragen.
 %%%%
 HINT_EQUIP_UNEQUIP_ARMOUR
 

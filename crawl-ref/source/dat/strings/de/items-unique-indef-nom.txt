@@ -278,7 +278,7 @@ a lightning scales
 eine Blitzschuppen
 %%%%
 a Black Knight's barding
-{n}ein Gelieger des schwarzen Ritters
+ein Harnisch des schwarzen Ritters
 %%%%
 an amulet of Vitality
 {n}ein Amulett der Vitalität

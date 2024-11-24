@@ -286,7 +286,7 @@ the %slightning scales
 die {adj-en}%sBlitzschuppen
 %%%%
 the %sBlack Knight's barding
-das {adj-e}%sGelieger des schwarzen Ritters
+der {adj-e}%sHarnisch des schwarzen Ritters
 %%%%
 the %samulet of Vitality
 das {adj-e}%sAmulett der Vitalität

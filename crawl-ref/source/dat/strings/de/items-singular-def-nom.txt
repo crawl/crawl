@@ -289,7 +289,7 @@ the %spair of %sboots
 das {adj-e}%sPaar {adj-e}%sStiefel
 %%%%
 the %sbarding
-das {adj-e}%sGelieger
+der {adj-e}%sHarnisch
 %%%%
 the %sbuckler
 der {adj-e}%sBuckler

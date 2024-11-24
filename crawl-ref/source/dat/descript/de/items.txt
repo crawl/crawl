@@ -1072,7 +1072,7 @@ way.
 scroll of enchant armour
 
 Eine Schriftrolle, die ein vom Leser ausgewähltes Rüstungsteil verzaubert.
-Körperrüstungen und Gelieger können bis zum gleichen Wert ihrer
+Körperrüstungen und Harnische können bis zum gleichen Wert ihrer
 Grundrüstungsstufe verzaubert werden. Buckler, Kiteschilde und Turmschilde
 können bis zu +3, +5 bzw. +8 verzaubert werden, und andere Rüstungen können
 bis zu +2 verzaubert werden. Magische Artefakte können überhaupt nicht

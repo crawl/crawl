@@ -289,7 +289,7 @@ a %spair of %sboots
 ein {adj-es}%sPaar {adj-e}%sStiefel
 %%%%
 a %sbarding
-ein {adj-es}%sGelieger
+ein {adj-er}%sHarnisch
 %%%%
 a %sbuckler
 ein {adj-er}%sBuckler

@@ -307,7 +307,7 @@ Silberbumerang
 {adj-es}%sPaar {adj-e}%sStiefel
 %%%%
 %sbarding
-{adj-es}%sGelieger
+{adj-er}%sHarnisch
 %%%%
 %sbuckler
 {adj-er}%sBuckler

@@ -286,7 +286,7 @@ Kugel von Zot
 {adj-e}%sBlitzschuppen
 %%%%
 %sBlack Knight's barding
-{adj-es}%sGelieger des schwarzen Ritters
+{adj-er}%sHarnisch des schwarzen Ritters
 %%%%
 %samulet of Vitality
 {adj-es}%sAmulett der Vitalität
