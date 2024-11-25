@@ -59,9 +59,7 @@ static int _gold_level()
            (you.gold >=  5000) ? 5 :
            (you.gold >=  1000) ? 4 :
            (you.gold >=   500) ? 3 :
-           (you.gold >=   100) ? 2 :
-           (you.props.exists(DESCENT_DEBT_KEY)) ? 0
-                               : 1;
+           (you.gold >=   100) ? 2 : 1;
 }
 
 static int _invocations_level()

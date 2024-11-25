@@ -858,6 +858,8 @@ static void _print_stats_gold(int x, int y)
     }
     if (you.duration[DUR_GOZAG_GOLD_AURA])
         textcolour(LIGHTBLUE);
+    else if (you.attribute[ATTR_VOUCHER] > 0)
+        textcolour(MAGENTA);
     else
         textcolour(HUD_VALUE_COLOUR);
     CPRINTF("%-6d", you.gold);

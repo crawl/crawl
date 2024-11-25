@@ -2223,7 +2223,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     if (load_mode != LOAD_VISITOR)
         you.set_level_visited(level_id::current());
-    
+
     const bool descent_downclimb = crawl_state.game_is_descent()
                                    && feat_stair_direction(stair_taken) == CMD_GO_DOWNSTAIRS
                                    && !feat_is_descent_exitable(stair_taken);

@@ -433,6 +433,7 @@ void check_item_knowledge(bool unknown_items)
         {
             if (i == MISC_HORN_OF_GERYON
                 || i == MISC_ZIGGURAT
+                || i == MISC_SHOP_VOUCHER
 #if TAG_MAJOR_VERSION == 34
                 || is_deck_type(i)
                 || i == MISC_BUGGY_EBONY_CASKET

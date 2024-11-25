@@ -103,5 +103,6 @@ enum attribute_type
     ATTR_WALL_JUMP_READY,      // Ready to perform a wall jump.
 #endif
     ATTR_DEATHS_DOOR_HP,       // How much HP we should have under Death's Door
+    ATTR_VOUCHER,              // How many shop vouchers you have
     NUM_ATTRIBUTES
 };

@@ -5423,34 +5423,6 @@ int count_worn_ego(int which_ego)
     return result;
 }
 
-static int _apply_descent_debt(int gold)
-{
-    if (gold < 0)
-    {
-        // This is necessary because shop purchases are made individually in an
-        // unintuitive (for players) order. Stacking debt is prevented elsewhere.
-        if (!you.props.exists(DESCENT_DEBT_KEY))
-            you.props[DESCENT_DEBT_KEY] = 0;
-        you.props[DESCENT_DEBT_KEY].get_int() -= gold;
-        return 0;
-    }
-
-    if (you.props.exists(DESCENT_DEBT_KEY))
-    {
-        int &debt = you.props[DESCENT_DEBT_KEY].get_int();
-        if (gold >= debt)
-        {
-            gold = gold - debt;
-            you.props.erase(DESCENT_DEBT_KEY);
-            return gold;
-        }
-        debt -= gold;
-        return 0;
-    }
-
-    return gold;
-}
-
 player::player()
 {
     // warning: this constructor is called for `you` in an indeterminate order
@@ -8188,9 +8160,6 @@ void player::del_gold(int delta)
 
 void player::set_gold(int amount)
 {
-    if (crawl_state.game_is_descent())
-        amount = _apply_descent_debt(amount);
-
     ASSERT(amount >= 0);
 
     if (amount != gold)
