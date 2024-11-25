@@ -1412,7 +1412,7 @@ of this piece of art.
 %%%%
 shop voucher
 
-A coupon good for one item of any price from any store in the dungeon, to be 
+A coupon good for one item of any price from any store in the dungeon, to be
 used automatically when you would make a purchase that exceeds your funds. How
 generous! No refunds. One coupon per purchase per customer. Offer limited by
 availability. Void if defaced or otherwise altered. Valid only within the
