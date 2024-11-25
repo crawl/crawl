@@ -3277,7 +3277,8 @@ bool clockwork_bee_recharge(monster& bee)
     // Nothing around for it to attack.
     if (!targ)
     {
-        mpr("You see no target in range to command your bee to attack.");
+        mpr("You need a visible target to rewind your bee! "
+            "(Use ctrl+direction or * direction to deconstruct it instead.)");
         return false;
     }
 
