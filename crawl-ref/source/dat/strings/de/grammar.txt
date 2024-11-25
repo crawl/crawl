@@ -272,7 +272,7 @@ GENERATE:gen
 /^[^A-ZÄÖÜ]+/e\b/er/
 
 # masc/neuter nouns and unique names
-/^(?!(\{adj\-er\}|[a-zäöüß\-]+er )).*?(?=(#|$))/$/s/
+/^(?!(\{adj\-er\}|[a-zäöüß\-]+er ))[^#]*/(.)$/$1s/
 
 # fix up (single-word) unique names ending in s
 /^([A-ZÄÖÜ]\S+s)s$/$1'/
@@ -280,19 +280,20 @@ GENERATE:gen
 # fixup weak nouns
 /herzs\b/herzens/
 /(Prinz|Akolyth)\b/$1en/
-/^.*?(?=(#|$))/(Mensch|[Bb]är|[^e]ist|ant|taur|myzet|[Ff]ürst)s$/$1en/
-/^.*?(?=(#|$))/([Ss]chamane|[Ss]chütze|Sklave|[Hh]err|loge|mycete)s$/$1n/
-/^.*?(?=(#|$))/([Rr]iese|[Dd]rache|[Dd]ruide|[Hh]eilige|Ahne)s$/$1n/
+/^[^#]*/(Mensch|[Bb]är|[^e]ist|ant|taur|myzet|[Ff]ürst)s$/$1en/
+/^[^#]*/([Ss]chamane|[Ss]chütze|Sklave|[Hh]err|loge|mycete)s$/$1n/
+/^[^#]*/([Rr]iese|[Dd]rache|[Dd]ruide|[Hh]eilige|Ahne)s$/$1n/
 # match Affe but not Waffe
-/^.*?(?=(#|$))/(Affe|[^Ww]affe)s$/$1n/
+/^[^#]*/(Affe|[^Ww]affe)s$/$1n/
 
 # fixup other special cases
 /Gelée Royales/Gelée Royale/
 /uss\b/us/
-/(ss|sch|[Gg]eist)s?(?=(#|$))/$1es/
-/^(?!(\{adj\-er\}|[a-zäöüß\-]+er )).*?(?=(#|$))/ss$/s'/
-/^(der|einer|deiner) (.*)Lernäische Hydras?/$1 $2Lernäischen Hydra/
-/Lernäische Hydras?/Lernäischer Hydra/
+/^[^#]*/(ss|sch|[Gg]eist)s/$1es/
+/^(?!(\{adj\-er\}|[a-zäöüß\-]+er ))[^#]*/ss$/s'/
+/Lernäische /Lernäischer /
+/^(der|einer|deiner) .*/Lernäischer /Lernäischen /
+/\bder Ork$/des Orks/
 
 # remove mark we added
 /# / /
