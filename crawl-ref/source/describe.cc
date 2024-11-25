@@ -4262,7 +4262,9 @@ command_type describe_item_popup(const item_def &item,
             done = true;
         else if (scroller->on_event(ev))
             return true;
-        else if (key == '!' && item_type_is_equipment(item.base_type))
+        else if (key == '!'
+                 && is_equippable_item(item)
+                 && item_ident(item, ISFLAG_KNOW_PROPERTIES))
         {
             string spell_success;
             // Only switch tab if there's any spell rate changes.

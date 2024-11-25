@@ -3593,3 +3593,24 @@ bool oni_likes_potion(potion_type type)
             return false;
     }
 }
+
+// Returns whether this item could theoretically be equipped by the player
+// character, ignoring temporary effects, curses, etc.
+bool is_equippable_item(const item_def& item)
+{
+    switch (item.base_type)
+    {
+        case OBJ_WEAPONS:
+        case OBJ_STAVES:
+            return can_wield(&item, false, true, false);
+
+        case OBJ_ARMOUR:
+            return can_wear_armour(item, false, true);
+
+        case OBJ_JEWELLERY:
+            return !you.has_mutation(MUT_NO_JEWELLERY);
+
+        default:
+            return false;
+    }
+}
