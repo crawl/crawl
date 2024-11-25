@@ -2097,8 +2097,11 @@ static string _describe_weapon(const item_def &item, bool verbose, bool monster)
     if (!art_desc.empty())
         description += "\n\n" + art_desc;
 
-    if (verbose && crawl_state.need_save && you.could_wield(item, true, true))
+    if (verbose && crawl_state.need_save && you.could_wield(item, true, true)
+        && item_ident(item, ISFLAG_KNOW_PROPERTIES))
+    {
         description += _equipment_property_change(item);
+    }
 
     if (verbose)
     {
