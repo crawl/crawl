@@ -204,8 +204,8 @@ a book of the Hunter
 #################################
 
 # If listed with "a/an", it can also appear with no article, but never with "the".
-# If listed with "the", it can also appear with no article, but never with "a/an".
-# If listed with no article, it never appears with "the" or "a/an".
+# If listed with "the", it always appears that way.
+# If listed with no article, it always appears that way.
 
 %%%%
 a Necronomicon
@@ -250,4 +250,8 @@ Great Wizards, Vol. VII
 Große Zauberer, Band VII
 %%%%
 
-# TODO: Handle randart spellbooks from dat/database/randbook.txt
+#################################
+# Randart spellbooks
+#################################
+
+# TODO: Handle titles generated from dat/database/randbook.txt
