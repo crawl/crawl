@@ -47,6 +47,13 @@ static const int OVECTOR_SIZE = 3 * (MAX_SUBMATCHES + 1); // extra 1 for main ma
 // compile regex and return pointer to resul, or nullptr on error
 static pcre* _compile_regex(const string& pattern, bool ignore_case = false)
 {
+    if (pattern == "^" || pattern == "$")
+    {
+        // this will compile successfully (on Linux, at least), but using it
+        // will send PCRE into an infinite loop
+        return nullptr;
+    }
+
     const char *error = nullptr;
     int erroffset = -1;
     int flags = PCRE_UTF8;
