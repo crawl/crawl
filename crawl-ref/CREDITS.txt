@@ -342,6 +342,7 @@
     Edward Randtke
     Derek Ray
     RealzHS
+    Robert J. Redelmeier
     Terence Reeves
     Tobias Rehbein
     Remsleep
