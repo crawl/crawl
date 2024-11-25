@@ -314,17 +314,6 @@ bool fill_status_info(int status, status_info& inf)
         }
         break;
 
-    case STATUS_IN_DEBT:
-        if (you.props.exists(DESCENT_DEBT_KEY))
-        {
-            inf.light_colour = RED;
-            inf.light_text = make_stringf("Debt (%d)",
-                          you.props[DESCENT_DEBT_KEY].get_int());
-            inf.short_text   = "in debt";
-            inf.long_text    = "You are in debt. Gold earned will pay it off.";
-        }
-        break;
-
     case STATUS_CONTAMINATION:
         _describe_glow(inf);
         break;
