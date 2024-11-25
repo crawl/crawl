@@ -2285,8 +2285,8 @@ ENDMAP
 NAME:   nicolae_crypt_lichyard
 TAGS:   transparent
 DEPTH:  Crypt
-MONS:   lich, ancient lich / dread lich
-NSUBST: 1 = 3 = 111112 / *:1
+MONS:   lich, alderking, ancient lich / dread lich
+NSUBST: 1 = 3 = 111123 / *:1
 SUBST:  t = ttt., G = GGG., ` = ._, L = LL...
 CLEAR:  _
 TILE:   t = dngn_tree_dead
@@ -2957,12 +2957,14 @@ ORIENT: encompass
 PLACE:  Crypt:$
 MONS:   w:3 patrolling lich / w:1 patrolling revenant
 MONS:   patrolling zombie / nothing
-MONS:   jumping spider / wolf spider / redback / w:19 nothing
+MONS:   alderking
 MONS:   w:5 wraith / phantasmal warrior / eidolon / w:5 freezing wraith / w:5 nothing
 MONS:   wyvern skeleton / w:30 nothing
 MONS:   w:2 ushabti / w:3 guardian mummy / w:2 mummy
 MONS:   w:5 patrolling mummy priest / w:1 patrolling royal mummy
 KMONS:  z = patrolling curse skull
+KMONS:  s = meliai zombie / spriggan berserker zombie / \
+            spectral broodmother / spectral spriggan defender
 KMONS:  p = withered plant
 : if crawl.coinflip() then
 # Temple of yred
@@ -3033,8 +3035,8 @@ ttttttT.t.".v-4-v4-v...c------ccccc------c....T.vvvT...t..t......Ttttt.ttcnnnctt
 ttttT.t.....vvvvvvvv..cccc+cccc$$$cccc+cccc.....v4--.T..t....t..tTttttt..c***ctt
 tttT.t........v-%-4v..ccc--Bcc0---0ccB--ccc.T...v4%4-v.T...t.....Ttttt...c%%%ctt
 ttT....T...T..v4--.....n--cccccc+cccccc--n......vvvvvv...T..T..t..Tttcc+cc---ctt
-tttT.t........vvvvvv...n--ccccc---ccccc--n.........T...............Ttc3333333ctt
-ttttT.t.T.............ccc-cccc-C'C-cccc-ccc..T...............T...t..tc3333333ctt
+tttT.t........vvvvvv...n--ccccc---ccccc--n.........T...............Ttc.s...s.ctt
+ttttT.t.T.............ccc-cccc-C'C-cccc-ccc..T...............T...t..tc3.s.s.3ctt
 tttttT.....cccccccccccccc-cVcC-'''-CcVc-cccccccccccccc.........T...tpcccnnnccctt
 ttttT..t..cc----+---------c-+-''Z''-+-c---------+--E-cc....vvvv.T.t.Tttttttttttt
 ttttTt.....n-B--cccmmcccccc-c--'''--c-ccccccmmcccEEE-n..T..v44vT....Tttttttttttt

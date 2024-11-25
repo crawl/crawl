@@ -99,11 +99,13 @@ function base_monster_setup(e)
                rockslime / moth of wrath w:15 / ghost moth /\
                killer klown / draconian monk w:4 / draconian stormcaller w:7 /\
                draconian scorcher w:7 / draconian annihilator w:7 /\
-               draconian knight w:7 / ancient champion / curse skull /\
-               royal mummy w:3 / hellephant / balrug band w:5 / cacodemon /\
-               hellion / tormentor / executioner / nekomata / nargun w:5 /\
-               demonspawn warmonger band w:5 / demonspawn blood saint band w:5 /\
-               demonspawn corrupter band w:5 / demonspawn soul scholar band w:5 /\
+               draconian knight w:7 / alderking / ancient champion /\
+               curse skull / royal mummy w:3 / hellephant / balrug band w:5 /\
+               cacodemon / hellion / tormentor / executioner / nekomata /\
+               nargun w:5 / demonspawn warmonger band w:5 /\
+               demonspawn blood saint band w:5 /\
+               demonspawn corrupter band w:5 /\
+               demonspawn soul scholar band w:5 /\
                quicksilver elemental w:5 / putrid mouth / doom hound w:5 /\
                bennu w:5 / fravashi w:5 / pearl dragon / apis w:2 /\
                primal mutant beast w:2 / iron elemental w:3")

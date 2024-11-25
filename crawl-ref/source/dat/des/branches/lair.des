@@ -2424,7 +2424,8 @@ KFEAT:  F = cache of fruit
 :   d = d - 1
 : else
 TAGS:   no_pool_fixup
-MONS:   death yak zombie, lich / revenant, ancient lich / dread lich
+MONS:   death yak zombie, lich / revenant
+MONS:   ancient lich / dread lich / alderking
 KMONS:  P = withered plant
 KFEAT:  t = petrified_tree
 :   decorative_floor(_G, 'F', "mourning vase")

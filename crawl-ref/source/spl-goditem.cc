@@ -1089,7 +1089,7 @@ void holy_word(int pow, holy_word_source_type source, const coord_def& where,
     holy_word_monsters(where, pow, source, attacker);
 }
 
-void torment_player(const actor *attacker, torment_source_type taux)
+int torment_player(const actor *attacker, torment_source_type taux)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -1136,7 +1136,7 @@ void torment_player(const actor *attacker, torment_source_type taux)
     if (!hploss)
     {
         mpr("You feel a surge of unholy energy.");
-        return;
+        return 0;
     }
 
     mpr("Your body is wracked with pain!");
@@ -1190,17 +1190,19 @@ void torment_player(const actor *attacker, torment_source_type taux)
 
     ouch(hploss, type, attacker ? attacker->mid : MID_NOBODY, aux);
 
-    return;
+    return hploss;
 }
 
-void torment_cell(coord_def where, actor *attacker, torment_source_type taux)
+int torment_cell(coord_def where, actor *attacker, torment_source_type taux)
 {
+    int damage = 0;
+
     if (where == you.pos()
         // The Sceptre of Torment and pain card do not affect the user.
         && !(attacker && attacker->is_player()
             && (taux == TORMENT_SCEPTRE || taux == TORMENT_CARD_PAIN)))
     {
-        torment_player(attacker, taux);
+        damage = torment_player(attacker, taux);
     }
     // Don't return, since you could be standing on a monster.
 
@@ -1214,7 +1216,7 @@ void torment_cell(coord_def where, actor *attacker, torment_source_type taux)
            && mons == attacker->as_monster()
            && taux == TORMENT_SCEPTRE)
     {
-        return;
+        return damage;
     }
 
     god_conduct_trigger conducts[3];
@@ -1264,6 +1266,9 @@ void torment_cell(coord_def where, actor *attacker, torment_source_type taux)
     }
 
     mons->hurt(attacker, hploss, BEAM_TORMENT_DAMAGE);
+    damage += hploss;
+
+    return damage;
 }
 
 void torment(actor *attacker, torment_source_type taux, const coord_def& where)

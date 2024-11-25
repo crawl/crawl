@@ -289,6 +289,7 @@ seal_doors SEAL_DOORS
 seismic_stomp SEISMIC_STOMP
 sentinel_mark SENTINEL_MARK
 shezas_dance SHEZAS_DANCE
+siphon_essence SIPHON_ESSENCE
 siren_song SIREN_SONG
 sleep SLEEP
 slug_dart SLUG_DART

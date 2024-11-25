@@ -46,6 +46,7 @@ KMONS:  V = Agnes
 KMONS:  W = spriggan defender
 KMONS:  X = spriggan rider ; storm_bow
 KMONS:  Y = bush
+KMONS:  Z = alderking
 KMONS:  a = hornet
 KMONS:  b = ghost moth
 KMONS:  d = oklob plant name:meteorologist n_suf \

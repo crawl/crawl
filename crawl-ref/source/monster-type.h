@@ -380,6 +380,7 @@ enum monster_type                      // env.mons[].type
     MONS_THORN_HUNTER,
     MONS_BRIAR_PATCH,
     MONS_SHAMBLING_MANGROVE,
+    MONS_ALDERKING,
     MONS_VINE_STALKER,
     MONS_ANIMATED_TREE,
     MONS_DEMONIC_PLANT,
@@ -1305,6 +1306,7 @@ enum monster_type                      // env.mons[].type
     MONS_PHALANX_BEETLE,
     MONS_RENDING_BLADE,
     MONS_SHADOW_TURRET,
+    MONS_ALDERKING,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

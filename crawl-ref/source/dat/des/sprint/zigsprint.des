@@ -460,7 +460,7 @@ local rnd = crawl.random2(142)
     e.kmons("1 = pandemonium lord / place:Abyss w:500")
 -- "Forest"
   elseif rnd < 47 then
-    e.kmons("1 = place:Lair:$ w:50 / spriggan defender /\
+    e.kmons("1 = place:Lair:$ w:50 / alderking w:3 / spriggan defender /\
                spriggan air mage / spriggan druid w:3 / spriggan berserker")
 -- Shoals
   elseif rnd < 52 then

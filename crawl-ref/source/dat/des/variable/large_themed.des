@@ -408,14 +408,14 @@ ORIENT: northwest
 DEPTH:  Depths
 MONS:   plant, bush
 MONS:   spriggan w:70 / spriggan druid / spriggan berserker / spriggan rider
-MONS:   spriggan defender
+MONS:   spriggan defender, alderking
 KFEAT:  % = cache of fruit
-SUBST:  1 : 12t p:1, p = 12t, c : xc, 3 = 3, 4 = 444., % : %$
+SUBST:  1 : 12t p:1, p = 12t, c : xc, 3 = 3, 4 = 444., 5 = 55., % : %$
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xccccccccccccccccccccccccccccxx
 xc11111111111111111111111111c1.
-xc1.........3.............31c13
+xc15......................51c13
 xc1........................1c1.
 xc1..111........3.....111..1c1.
 xc13.1c1..3...........1c1..1c1.
@@ -930,7 +930,7 @@ MONS:   ogre mage / deep elf pyromancer / deep elf zephyrmancer / occultist / \
         necromancer / merfolk aquamancer / \
         spriggan air mage / orc sorcerer / kobold demonologist
 MONS:   draconian shifter / draconian annihilator / lich / deep elf sorcerer / \
-        deep elf annihilator / deep elf demonologist
+        deep elf annihilator / deep elf demonologist / alderking w:5
 MONS:   patrolling curse skull, ancient lich / dread lich
 SUBST:  d = def
 NSUBST: D = 6 / *=33., 4 = 1 / 6=4 / 6=5 / 6=45.. / . , 7 = 7 / 75
@@ -1246,7 +1246,7 @@ MONS:   tormentor / reaper, deep elf death mage
 : else
 MONS:   zombie place:Depths:4 / skeleton place:Depths:4 / simulacrum \
         / spectral thing
-MONS:   necromancer / deep elf death mage / vampire mage
+MONS:   necromancer w:8 / deep elf death mage / vampire mage / alderking w:2
 MONS:   flayed ghost / tormentor
 MONS:   reaper / executioner, tzitzimitl
 : end
@@ -2732,8 +2732,8 @@ SUBST:   ( = ), [ = ]
 MONS:    very ugly thing / glowing orange brain w:5 / spriggan rider
 MONS:    flayed ghost w:5 / spriggan berserker / glowing shapeshifter
 MONS:    spark wasp / glass eye w:5 / spriggan defender
-MONS:    shadow dragon / golden dragon
-MONS:    tentacled monstrosity / caustic shrike
+MONS:    shadow dragon w:4 / tentacled monstrosity w:6 / golden dragon
+MONS:    alderking / caustic shrike
 KFEAT:   ^ = alarm trap / dispersal trap w:2
 SHUFFLE: {([ / })] / %%% / %%% / %%%
 SUBST:   { = {:50 <, ( = (:50 <, } = }:50 >, ) = ):50 >
@@ -3151,7 +3151,7 @@ SUBST:    })] = **|, ! = +, ? = c, ` = W:40 ., . = .:60 W
 : elseif you.branch() == "Depths" then
 MONS:    jiangshi / phantasmal warrior / spriggan defender zombie
 MONS:    spark wasp zombie, vampire knight, vampire mage
-MONS:    flayed ghost, ancient lich / dread lich
+MONS:    flayed ghost, alderking
 MONS:    spriggan berserker
 KMONS:   8 = spriggan defender
 KMONS:   9 = sphinx
@@ -3443,7 +3443,7 @@ NSUBST:  | = 1:f / 2:g / 2:h / 1:i / * = ffg
 NSUBST:  % = 1:d / 2:e / 1:f / 1:g / * = def., . = 4:5 / *:.
 : elseif you.in_branch("Depths") then
 :   if you.where() ~= dgn.level_name(dgn.br_entrance("Zot")) then
-MONS:    tengu reaver / titan / lich
+MONS:    tengu reaver / titan / lich / alderking w:5
 MONS:    frost giant / vampire mage / vampire knight w:5
 MONS:    walking crystal tome / walking frostbound tome / \
          walking divine tome / walking earthen tome

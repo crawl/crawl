@@ -2262,7 +2262,7 @@ NAME:   kb_forest_paths
 DEPTH:  D, Depths, Lair
 ORIENT: float
 MONS:   spriggan, spriggan rider, spriggan defender
-MONS:   boggart, spriggan druid
+MONS:   boggart, spriggan druid, alderking
 KFEAT:  d = cache of fruit
 KFEAT:  e = cache of baked goods
 : if you.absdepth() < 8 then
@@ -2272,10 +2272,11 @@ SUBST:  1 = 1., 2 = 1, 35 = 0.
 : elseif you.absdepth() < 22 then
 SUBST:  3 = 0, 5 = 4
 : else
-SUBST:  2 = 3, 1 = 2
+SUBST:  2 = 3, 1 = 2, * = |
+NSUBST: %* = 1:| / 1:6 / * = *
 : end
-SUBST:  d : dd., e = ee.
-FTILE:  .det0@%*12345 = floor_moss
+SUBST:  d : dd., e = ee., } = }])
+FTILE:  .det0@%*123456 = floor_moss
 MAP
         xxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxxxx
     xxxxxtttttttttttttttttt.tttttttttttttttttttttxx
@@ -2981,16 +2982,14 @@ NAME:    hangedman_six_sided_sadism
 TAGS:    patrolling no_monster_gen no_item_gen
 DEPTH:   Depths
 ORIENT:  float
-MONS:    tengu warrior / deep troll earth mage / rakshasa \
-         / necromancer / vampire knight
-MONS:    tengu conjurer / ancient champion / stone giant / occultist \
-         / deep elf high priest / phantasmal warrior \
-         / spriggan berserker / salamander mystic / caustic shrike w:5
-MONS:    fire giant / frost giant / stone giant / ettin / hell knight \
-         / vampire knight / vampire mage / spriggan berserker \
-         / spriggan air mage / deep troll earth mage / deep elf death mage
-MONS:    titan / lich / deep elf annihilator / deep elf sorcerer \
-         / sphinx / salamander tyrant / mummy priest w:5 / draconian knight w:5
+MONS:    tengu warrior / deep troll / rakshasa / necromancer
+MONS:    tengu conjurer / ancient champion / stone giant / occultist / \
+         phantasmal warrior / salamander mystic / caustic shrike w:5
+MONS:    fire giant / frost giant / stone giant / ettin / hell knight / \
+         vampire knight / vampire mage / spriggan berserker / sphinx / \
+         spriggan air mage / deep troll earth mage
+MONS:    titan / lich / alderking / \
+         salamander tyrant / ancient lich w:5 / dread lich w:5
 SHUFFLE: AB, CD, EF, GH, IJ, KL / MN, OP / QR, ST, ST / UV
 SUBST:   ACEG : x, BDFH : ., c : cccvb, x : x:70 cb
 SUBST:   IKO = 1, LPS = 2, T = 3, JMNQRUV = %
@@ -3041,9 +3040,9 @@ MONS:    plant w:14 / fungus w:4 / bush w:2
 MONS:    fire dragon / ice dragon / lindwurm / hell hog
 MONS:    spark wasp w:5 / catoblepas / bunyip / emperor scorpion
 MONS:    12-headed hydra / anaconda / torpor snail w:5 / \
-         demonic crawler w:5 / skyshark / bunyip w:5
+         demonic crawler w:5 / skyshark / bunyip w:5 / sin beast w:5
 MONS:    spriggan druid, spriggan berserker / spriggan defender
-MONS:    sphinx / sin beast w:5 / caustic shrike
+MONS:    sphinx / alderking w:5 / caustic shrike
 KFEAT:   d = cache of fruit
 NSUBST:  ' : 1:2 / 1:3 / 1:4 / 2 = 233444. / *:.
 NSUBST:  " : 2:2 / 2:3 / 2:4 / 4 = 233444. / *:.
@@ -6228,12 +6227,12 @@ TAGS:    no_monster_gen transparent
 DEPTH:   Depths
 ORIENT:  float
 MONS:    centaur warrior / deep elf archer
-MONS:    deep elf master archer
+MONS:    deep elf master archer, alderking
 KMONS:   ? = deep elf master archer ; longbow good_item
 KITEM:   ? = quick blade good_item / cloak good_item / q:1000 gold
 KFEAT:   % = cache of fruit
 SUBST:   - = .tt, ' = ..t, % : %..
-NSUBST:  . = 2 = 22. / 4:1 / 4 = 1. / .
+NSUBST:  . = 1:3 / 2 = 22. / 3:1 / 4 = 1. / .
 TILE:    G = dngn_statue_archer
 : set_feature_name("granite_statue", "a statue of an archer")
 MAP
@@ -6727,7 +6726,7 @@ NSUBST:  4 = 3 = 77. / *:4
 : else
 MONS:    tengu conjurer / phantasmal warrior / necromancer
 MONS:    frost giant / stone giant / ettin / spriggan air mage w:15
-MONS:    titan w:5 / tengu reaver / spriggan defender
+MONS:    titan w:5 / tengu reaver / spriggan defender w:5 / alderking w:5
 MONS:    rakshasa, vampire knight, shadow dragon
 SUBST:   ' = 12, " = 56
 : end

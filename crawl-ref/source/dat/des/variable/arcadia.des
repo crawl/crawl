@@ -30,10 +30,11 @@ KMONS:   0 = spark wasp / caustic shrike w:1 / stone giant w:5 / \
 KMONS:   9 = ettin ; giant club randart . giant club randart / \
              glowing shapeshifter hd:13 w:5 / quicksilver dragon w:15 / \
              tengu reaver w:5 / juggernaut w:5
+KMONS:   aA = alderking
 KMONS:   J = caustic shrike skeleton
 KMONS:   K = spriggan rider
 KMONS:   L = spriggan col:white name:baker n_suf ; robe . dagger
-KMONS:   M = death yak / thorn hunter w:5
+KMONS:   M = death yak / thorn hunter w:3
 KMONS:   N = spriggan ; quarterstaff . robe
 KMONS:   O = dire elephant / emperor scorpion / anaconda w:5
 KMONS:   Q = bush
@@ -45,13 +46,13 @@ KFEAT:   B7 = cache of baked goods
 ITEM:    dagger / short sword / rapier / flail / whip / shortbow
 ITEM:    robe / cloak / hat / buckler / steam dragon scales w:1
 KFEAT:   _ = altar_trog
-NSUBST:  . = 10:0 / 8 = 00... / 1:9 / 2:O / 1:3 / 1:5 / *:.
-NSUBST:  6 = 1:9 / 2 = 669 / *:6
+NSUBST:  . = 10:0 / 8 = 00... / 1:9 / 1:A / 2:O / 1:3 / 1:5 / *:.
+NSUBST:  6 = 1:A9 / 2 = 669 / *:6
 SUBST:   T = t:20 P .:40, P = RRQ., F = F..
 : old_forest_ends(_G)
 SUBST:   C = c
 COLOUR:  "MN = green
-FTILE:   -~de$*|679{}()[]Gu = floor_depthstone
+FTILE:   -~de$*|679A{}()[]Gu = floor_depthstone
 LFLOORTILE: floor_grass
 veto {{
   return crawl.game_started() and you.uniques("the Enchantress")
@@ -124,7 +125,7 @@ ttT""MM"MM"TTTttttttttttttt..tttttttttttttttttttttt...ttttttttt....xxxxxxxxxxxxx
 tt""""M""""Tttttttttttttttttt..ttt.......ttttttttt.......tttt...xxxxxxxxJxxxJxxx
 tt".MM""NTTtttttttttttttttttttt....tttt.......ttt...ttttt.......xxxxx..JxxxxJJxx
 tt""M""""Ttttttttttttttttttttttttttttttt...ttt..t..ttttttttxxxxx......xx.Jxx..xx
-ttt""""TTTtttttttttttttttttttttttttttttttttttttt.tttttttxxxxxxxxxx....xxx.1.xxxx
+ttt""""TTTtttttttttttttttttttttttttttttttttttttt.tttttttxxxxxxxxxx....xxx.a.xxxx
 tttttttttttttttttttttttttttttttttttttttttttttttttttttttttxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
@@ -139,8 +140,8 @@ MONS:   tengu warrior / ettin ; dire flail . dire flail / \
 MONS:   tengu conjurer w:20 / occultist w:5 / eleionoma w:20 / \
         rakshasa / glowing orange brain w:5
 KMONS:  8 = ettin ; giant club randart . giant club randart / \
-            glowing shapeshifter hd:13 w:5 / quicksilver dragon w:15 / \
-            tengu reaver w:5 / juggernaut w:5
+            glowing shapeshifter hd:13 w:5 / quicksilver dragon / \
+            tengu reaver w:5 / alderking w:15
 KFEAT:  C = cache of fruit
 NSUBST: 3 = 6:3 / 4:6 / * = 36., 7 = 4:7 / * = 77., 1 = 1:8 / 2 = 118 / *:1
 SUBST:  C : CC.
@@ -203,7 +204,7 @@ NAME:   grunt_forest_end_winery
 TAGS:   no_pool_fixup
 ORIENT: northeast
 MONS:   the Enchantress patrolling, thorn hunter / spriggan defender
-MONS:   tengu reaver / glowing shapeshifter hd:13
+MONS:   tengu reaver / glowing shapeshifter hd:13 w:5 / alderking
 MONS:   satyr w:15 / spriggan berserker w:15 / spriggan air mage, faun
 MONS:   tengu conjurer ; quarterstaff . robe . longbow | arbalest / \
         glowing orange brain w:5 / rakshasa w:20 / eleionoma w:15
@@ -261,7 +262,7 @@ NAME:   grunt_forest_end_shrine
 ORIENT: float
 MONS:   the Enchantress patrolling
 MONS:   spriggan defender w:14 / thorn hunter
-MONS:   sphinx w:20 / tengu reaver w:15 / quicksilver dragon / \
+MONS:   sphinx w:20 / tengu reaver w:15 / alderking w:15 / \
         ettin w:5 ; giant club randart . giant club randart / caustic shrike
 MONS:   spriggan air mage w:15 / spriggan druid / spriggan berserker / \
         dire elephant w:5 / shambling mangrove w:3 / anaconda w:2

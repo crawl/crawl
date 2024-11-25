@@ -1057,6 +1057,8 @@ starflower_2
 %rim 0
 thorn_hunter MONS_THORN_HUNTER
 treant MONS_TREANT
+alderking0 MONS_ALDERKING
+alderking1
 briar_patch MONS_BRIAR_PATCH
 %rim 1
 vine_stalker MONS_VINE_STALKER

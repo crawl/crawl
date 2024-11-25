@@ -628,6 +628,12 @@ air elemental
 A spirit drawn from the elemental plane of air. It exists in this world as a
 lightning-spitting spirit, stunning foes with its crackling bursts.
 %%%%
+alderking
+
+A self-styled monarch of a shambling black alder, half respected and half
+ridiculed by other fae. It backs up its aspirations to sovereignty with
+unearthly vile magic quite close to a touch of death.
+%%%%
 alligator
 
 An aggressive crocodilian with great crunching jaws full of sharp teeth.

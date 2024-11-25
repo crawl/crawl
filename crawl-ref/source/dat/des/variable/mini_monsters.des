@@ -492,7 +492,7 @@ NSUBST:  0 = 1:. / *:0, % = 4:% / *:.
 MONS:    orb spider perm_ench:glowing_shapeshifter / \
          swamp worm perm_ench:glowing_shapeshifter
 MONS:    spriggan rider, spark wasp
-MONS:    spriggan berserker / lich
+MONS:    spriggan berserker / lich / alderking w:2
 NSUBST:  10 = 2:3 / 1:2, % = 1:| / 1:* / 1:d / * = *%%
 : end
 ITEM:    throwing net q:1 no_pickup / rapier ego:venom no_pickup / \
@@ -2586,7 +2586,7 @@ MONS:   deep elf master archer; longbow good_item | longbow randart \
             . chain mail good_item | quicksilver dragon scales
 MONS:   deep elf blademaster; lajatang good_item | lajatang randart \
             . shadow dragon scales good_item | shadow dragon scales randart
-MONS:   hellephant, shadow dragon
+MONS:   hellephant, alderking w:5 / shadow dragon
 SUBST:  56 = -
 : end
 : if you.in_branch("Crypt") then

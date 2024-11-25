@@ -534,7 +534,7 @@ function arena_sprint_get_monster_set(round, boss)
                     void ooze",
                 "dancing weapon ; bardiche",
                 "spriggan defender / spriggan air mage / spriggan druid /\
-                    spriggan berserker / spriggan rider",
+                    spriggan berserker / alderking",
                 "lich / w:5 ancient lich / w:1 curse skull / w:5 curse toe",
                 "any demon w:20 / pandemonium lord",
                 "place:Tomb:$ w:30 / sphinx w:20 / royal mummy",
@@ -607,7 +607,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "nagaraja w:20 / guardian serpent / salamander tyrant",
                 "acid blob w:30 / rockslime / glass eye / void ooze",
                 "dancing weapon ; bardiche ego:speed",
-                "spriggan air mage",
+                "spriggan air mage / alderking",
                 "ancient lich / w:6 curse skull",
                 "greater demon / pandemonium lord",
                 "sphinx w:20 / royal mummy",

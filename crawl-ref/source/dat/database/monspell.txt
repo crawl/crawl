@@ -136,6 +136,14 @@ Eruption cast
 
 @The_monster@ rends the earth beneath @target@!
 %%%%
+Grasping Roots cast
+
+@The_monster@ reaches out to the roots within the earth.
+%%%%
+Grasping Roots natural cast
+
+@The_monster@ runs its roots beneath @target@!
+%%%%
 Harpoon Shot cast
 
 @The_monster@ fires a harpoon shot @at@ @target@.
@@ -152,14 +160,6 @@ Hoarfrost Bullet cast finale
 
 @The_monster@ launches the last of @reflexive@ @at@ @target@ with a shrill rumble.
 %%%%
-Shadow Shot cast
-
-@The_monster@ fires @at@ @target@.
-%%%%
-Launch Bomblet cast
-
-@The_monster@ launches a bomblet.
-%%%%
 Holy Flames cast
 
 @The_monster@ calls forth blessed flames!
@@ -167,6 +167,10 @@ Holy Flames cast
 unseen Holy Flames cast
 
 Blessed flames are called forth!
+%%%%
+Launch Bomblet cast
+
+@The_monster@ launches a bomblet.
 %%%%
 Legendary Destruction cast
 
@@ -217,6 +221,14 @@ Phantom Mirror cast
 Pyroclastic Surge cast
 
 @The_monster@ calls gouts of flame from the lava!
+%%%%
+Shadow Shot cast
+
+@The_monster@ fires @at@ @target@.
+%%%%
+Siphon Essence cast
+
+@The_monster@ draws nearby souls into @reflexive@!
 %%%%
 Symbol of Torment cast
 

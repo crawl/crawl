@@ -989,6 +989,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_SIPHON_ESSENCE, "Siphon Essence",
+    spschool::necromancy,
+    spflag::area | spflag::monster,
+    7,
+    0,
+    2, 2,
+    0,
+    TILEG_SIPHON_ESSENCE,
+},
+
+{
     SPELL_THROW_ICICLE, "Throw Icicle",
     spschool::conjuration | spschool::ice,
     spflag::dir_or_target | spflag::needs_tracer | spflag::monster,

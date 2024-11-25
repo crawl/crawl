@@ -1136,8 +1136,7 @@ TAGS:   arrival no_monster_gen transparent
 ORIENT: float
 SUBST:  T : t.TTTTT
 SUBST:  T = t:66 .:33 >:1
-COLOUR: . = brown
-COLOUR: t = lightgrey w:5 / brown
+COLOUR: .t = brown
 TILE:   t = dngn_tree_dead
 : set_feature_name("tree", "dead tree")
 MAP

@@ -1721,6 +1721,11 @@ usable while silenced.
 The effect starts out with a radius depending on power, which will then shrink,
 eventually covering only the caster, before it times out.
 %%%%
+Siphon Essence spell
+
+Torments nearby living foes, cutting their health in half. This damage is never
+directly lethal. The pain inflicted then heals the user.
+%%%%
 Siren Song spell
 
 Sings a haunting song, making nearby victims unwilling to move away from the
@@ -2071,8 +2076,8 @@ painful.
 %%%%
 Throw Bolas spell
 
-Hurls a colossal bolas at the target, wrapping around even the largest of
-of foes and binding them in place.
+Hurls a colossal bolas at the target, wrapping around even the largest of foes
+and binding them in place.
 %%%%
 Throw Flame spell
 

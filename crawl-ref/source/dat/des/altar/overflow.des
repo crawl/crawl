@@ -3812,13 +3812,16 @@ TAGS: transparent patrolling uniq_altar_yredelemnul
 # Statistically, the probability that none of the edge glyphs will end up as .
 # and the level builder won't be able to connect the vault is extremely small.
 # ...but not zero. Thus:
-MONS:   zombie
-NSUBST: D = . / E
-NSUBST: t = . / ttE
-SUBST:  E = tt.
-: nsubst( ". = " .. you.absdepth() .. "=1 / 1=1. / ." )
+MONS:   zombie, alderking
+NSUBST: D = 1:. / *:E, t = 1:. / * = TTE
 KFEAT:  _ = altar_yredelemnul
-COLOUR: t = lightgrey w:5 / brown
+KFEAT:  T = petrified_tree
+SUBST:  E = t:4 T:2 .:3
+: nsubst( ". = " .. you.absdepth() .. " = 1 / 1 = 1. / ." )
+: if you.in_branch("Depths") then
+NSUBST: 1 = 1:2 / *:1
+: end
+COLOUR: t = brown
 TILE:   t = dngn_tree_dead
 : set_feature_name("tree", "dead tree")
 MAP

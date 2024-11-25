@@ -65,9 +65,9 @@ KMASK:  - = no_monster_gen
 KPROP:  - = no_tele_into
 SUBST:  - = tt.
 : if crawl.one_chance_in(4) then
-: set_feature_name("tree", "dead tree")
 TILE:   t = dngn_tree_dead
-COLOUR: t = w:5 lightgrey / brown
+COLOUR: t = brown
+:   set_feature_name("tree", "dead tree")
 : elseif crawl.one_chance_in(4) then
 COLOUR: t = lightred / red w:4 / yellow w:4
 TILE:   t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4

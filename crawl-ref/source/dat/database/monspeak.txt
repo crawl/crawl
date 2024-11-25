@@ -7388,6 +7388,21 @@ orb spider charge
 
 @The_monster@ begins to weave its threads into a brightly glowing ball.
 %%%%
+################## Alderking ###############################
+alderking
+
+VISUAL:@The_monster@ beckons and sways in an unseen wind.
+
+VISUAL:@The_monster_possessive@ foilage glows and foams.
+
+@The_monster@ says, "If you're unwilling to [dance|bow], then I'll see you out." @player_only@
+
+w:20
+__NONE
+%%%%
+alderking triumphant
+
+@The_monster@ vanishes in a satisfied sigh of withering leaves.
 ################## Bennu ###################################
 %%%%
 bennu

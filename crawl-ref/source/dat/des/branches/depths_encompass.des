@@ -176,7 +176,7 @@
         elseif set_weight == 10 then
             e.mons("spriggan rider")
             e.mons("spriggan air mage / spriggan berserker / spriggan defender")
-            e.mons("spriggan defender")
+            e.mons("spriggan defender / alderking w:3")
             e.kmons("D = the Enchantress")
             e.subst("3 = D3")
             e.subst("A = t")
@@ -339,7 +339,7 @@ MONS:   tengu reaver / deep elf annihilator / deep elf high priest \
 : else
 MONS:   spriggan berserker / spriggan air mage / ettin / stone giant \
         / frost giant / fire giant / nothing
-MONS:   spriggan defender / titan / juggernaut
+MONS:   spriggan defender / alderking / titan / juggernaut
 : end
 KMONS:   L = fire dragon
 KMONS:   ~ = ice dragon
@@ -786,8 +786,8 @@ MONS:    sphinx / spark wasp / flayed ghost / \
          tentacled monstrosity / juggernaut zombie w:2
 MONS:    spriggan defender w:30 / titan w:30 / ancient lich w:30 / \
          walking crystal tome / walking frostbound tome / \
-         draconian monk / draconian annihilator / draconian knight / \
-         juggernaut w:20
+         juggernaut w:20 / alderking w:15 / draconian monk / \
+         draconian annihilator / draconian knight
 KMONS:   Z = draconian knight / draconian annihilator
 KITEM:   Z = midnight gem
 KFEAT:   z^ = zot trap / dispersal trap

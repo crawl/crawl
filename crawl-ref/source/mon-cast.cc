@@ -179,6 +179,9 @@ static bool _mons_cast_hellfire_mortar(monster& caster, actor& foe, int pow, boo
 static ai_action::goodness _hoarfrost_cannonade_goodness(const monster &caster);
 static void _cast_wall_burst(monster &caster, bolt &beam, int radius = LOS_RADIUS);
 static bool _cast_seismic_stomp(const monster& caster, bolt& beam, bool check_only = false);
+static ai_action::goodness _foe_siphon_essence_goodness(const monster &caster);
+static vector<actor*> _siphon_essence_victims (const actor& caster);
+static void _cast_siphon_essence(monster &caster, mon_spell_slot, bolt&);
 
 enum spell_logic_flag
 {
@@ -885,6 +888,8 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             _cast_seismic_stomp(caster, beam);
         },
         _zap_setup(SPELL_SEISMIC_STOMP) } },
+    { SPELL_SIPHON_ESSENCE, { _foe_siphon_essence_goodness,
+                              _cast_siphon_essence } },
     { SPELL_SOUL_SPLINTER, _hex_logic(SPELL_SOUL_SPLINTER, _foe_soul_splinter_goodness) },
 };
 
@@ -1100,6 +1105,12 @@ static ai_action::goodness _foe_soul_splinter_goodness(const monster &caster)
     return ai_action::good_or_impossible(!!(foe->holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY)));
 }
 
+static ai_action::goodness _foe_siphon_essence_goodness(const monster &caster)
+{
+    vector<actor*> victims = _siphon_essence_victims(caster);
+    return ai_action::good_or_impossible(!victims.empty());
+}
+
 /**
  * Build a function to set up a beam to buff the caster.
  *
@@ -1292,7 +1303,6 @@ static void _cast_grasping_roots(monster &caster, mon_spell_slot, bolt&)
     const int turns = 1 + random_range(div_rand_round(pow, 20),
                                        div_rand_round(pow, 12) + 1);
     dprf("Grasping roots turns: %d", turns);
-    mpr("Roots burst forth from the earth!");
     start_ranged_constriction(caster, *foe, turns, CONSTRICT_ROOTS);
 }
 
@@ -1405,6 +1415,54 @@ static bool _cast_seismic_stomp(const monster& caster, bolt& beam, bool check_on
     }
 
     return true;
+}
+
+static vector<actor*> _siphon_essence_victims (const actor& caster) {
+
+    vector<actor*> victims;
+
+    for (actor_near_iterator acti(caster.pos(), LOS_NO_TRANS); acti; ++acti)
+    {
+        if (grid_distance(caster.pos(), acti->pos()) <= siphon_essence_range()
+            && !acti->res_torment() && !acti->is_peripheral()
+            && !mons_aligned(&caster, *acti))
+        {
+            victims.push_back(*acti);
+        }
+    }
+
+    return victims;
+}
+
+// XXX: Unite with siphon_essence in ability.cc?
+static void _cast_siphon_essence(monster &caster, mon_spell_slot, bolt&)
+{
+    int damage = 0;
+    bool seen = false;
+
+    if (you.see_cell(caster.pos()))
+    {
+        targeter_radius hitfunc(&caster, LOS_SOLID, 2);
+        flash_view_delay(UA_MONSTER, DARKGREY, 200, &hitfunc);
+        seen = true;
+    }
+
+    vector<actor*> victims = _siphon_essence_victims(caster);
+
+    for (actor* victim : victims)
+        damage += torment_cell(victim->pos(), &caster, TORMENT_SPELL);
+
+    if (caster.hit_points != caster.max_hit_points && damage > 0)
+    {
+        int cap = 19 + caster.spell_hd(SPELL_SIPHON_ESSENCE) * 1.5;
+        int heal = div_rand_round(min(damage, cap) * 2, 3);
+        caster.heal(heal);
+
+        if (seen)
+            mprf("Stolen life floods into %s!", caster.name(DESC_THE).c_str());
+        else
+            mpr("Stolen life floods into an unseen void!");
+    }
 }
 
 /// Is the given full-LOS attack spell worth casting for the given monster?

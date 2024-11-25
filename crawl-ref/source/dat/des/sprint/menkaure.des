@@ -843,7 +843,7 @@ NSUBST: a = 3:1 / 3:2 / 27:$ / *:'
 SUBST:  ' = '............
 KFEAT:  ' = net trap
 KITEM:  $ = gold q:27
-MONS:   quicksilver dragon, sin beast, ballistomycete spore
+MONS:   quicksilver dragon / alderking w:2, sin beast, ballistomycete spore
 COLOUR: X = magenta
 COLOUR: + = magenta
 COLOUR: o = magenta

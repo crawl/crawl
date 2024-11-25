@@ -2653,6 +2653,18 @@ ADDER, n. A species of snake. So called from its habit of adding funeral outlays
 to the other expenses of living.
     -Ambrose Bierce, _The Devil's Dictionary_, 1906.
 %%%%
+alderking
+
+““My father, my father, he seizes me fast,
+ Full sorely the Erl-King has hurt me at last.”
+
+ The father now gallops, with terror half wild,
+ He grasps in his arms the poor shuddering child;
+ He reaches his courtyard with toil and with dread,
+ The child in his arms finds he motionless, dead.”
+    -Johann Wolfgang von Goethe, _Erlkönig_, 1782.
+    trans. Edgar Alfred Bowring, 1853.
+%%%%
 alligator
 
 “Alligators commit errors of diet.”
