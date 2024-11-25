@@ -1067,7 +1067,7 @@ void ShopMenu::update_help()
     else if (total_cost)
     {
         top_line +=
-            make_stringf(" After the puarchase, you will have %d gold piece%s.",
+            make_stringf(" After the purchase, you will have %d gold piece%s.",
                          you.gold - total_cost,
                          (you.gold - total_cost != 1) ? "s" : "");
     }
