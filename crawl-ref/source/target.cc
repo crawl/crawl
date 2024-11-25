@@ -414,7 +414,11 @@ bool targeter_smite::valid_aim(coord_def a)
         // Scrying/glass/tree/grate.
         if (agent && agent->see_cell(a))
             return notify_fail("There's something in the way.");
-        return notify_fail("You cannot see that place.");
+        else if (agent && agent->is_player())
+            return notify_fail("You cannot see that place.");
+        // When aiming something from a different actor's perspective
+        else
+            return notify_fail("Out of range.");
     }
     if ((origin - a).rdist() > range)
         return notify_fail("Out of range.");
