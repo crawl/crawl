@@ -1092,163 +1092,203 @@ def process_lua_file(filename):
 
 
 # special handling for strings in item-name.cc
-def special_handling_for_item_name_cc(section, line, string, strings):
-    if section in ['_random_vowel', '_random_cons', '_random_consonant_set', 'make_name']:
-        # random-name generation - ignore
-        return
-    elif '_test' in section:
-        # test stuff
-        return
-    elif section.endswith('_secondary_string') or section == 'staff_primary_string':
-        # extract adjective as separate word
-        if not string.endswith(' '):
-            string += ' '
-    elif section.endswith('_primary_string'):
-        # extract as adjective + noun
-        noun = re.sub('_.*', '', section)
-        if not string.endswith(' '):
-            string += ' '
-        string = '%s' + string + noun
-    elif section == 'item_def::name':
-        if string == ' (in ':
-            strings.append(' (in hand)')
-            strings.append(' (in claw)')
-            strings.append(' (in tentacle)')
-            return
-        elif string in ['right', 'left']:
-            strings.append(' (' + string + ' hand)');
-            strings.append(' (' + string + ' claw)');
-            strings.append(' (' + string + ' paw)');
-            strings.append(' (' + string + ' tentacle)');
-            strings.append(' (' + string + ' branch)');
-            strings.append(' (' + string + ' front leg)');
-            strings.append(' (' + string + ' blade hand)');
-            return
-    elif section == 'missile_brand_name':
-        if string == 'poisoned' or string.endswith('-tipped'):
-            # hard code dart types
-            string = string + ' dart'
-        elif string == 'dispersal':
+def special_handling_for_item_name_cc(strings):
+    result = []
+    extras1 = []
+    extras2 = []
+    section = ''
+
+    for string in strings:
+        if string.startswith('# section:'):
+            # new section starts
+            result.extend(extras1)
+            result.extend(extras2)
+            extras1 = []
+            extras2 = []
+            section = string.replace('# section:', '').strip()
+        elif string.startswith('#'):
+            string = string # null op
+        elif section in ['_random_vowel', '_random_cons', '_random_consonant_set', 'make_name']:
+            # random-name generation - ignore
+            continue
+        elif '_test' in section:
+            # test stuff
+            continue
+        elif section.endswith('_secondary_string') or section == 'staff_primary_string':
+            # extract adjective as separate word
+            if not string.endswith(' '):
+                string += ' '
+        elif section.endswith('_primary_string'):
+            # primary adjective (closest to the noun)
+            noun = re.sub('_.*', '', section)
+            if not string.endswith(' '):
+                string += ' '
+            string = 'the %s' + string + noun
+        elif section == 'item_def::name':
+            if string == ' (in ':
+                result.append(' (in hand)')
+                result.append(' (in claw)')
+                result.append(' (in tentacle)')
+                continue
+            elif string in ['right', 'left']:
+                result.append(' (' + string + ' hand)');
+                result.append(' (' + string + ' claw)');
+                result.append(' (' + string + ' paw)');
+                result.append(' (' + string + ' tentacle)');
+                result.append(' (' + string + ' branch)');
+                result.append(' (' + string + ' front leg)');
+                result.append(' (' + string + ' blade hand)');
+                continue
+        elif section == 'missile_brand_name':
+            if string.endswith(' dart'):
+                extras1.append(pluralise(string))
+                extras2.append('%d ' + pluralise(string))
+                string = 'the ' + string
+        elif section == 'weapon_brands_terse':
+            if string == 'confuse':
+                # not a real weapon brand - used on hands for confusing touch
+                continue
+            elif string == 'flame':
+                # terse version also used after "of" (see _item_ego_name in religion.cc)
+                result.append(' of ' + string)
+        elif section == 'weapon_brands_verbose':
+            if string == 'confusion':
+                # not a real weapon brand - used on hands for confusing touch
+                continue
+            elif string in ['vampirism', 'antimagic', 'vorpality', 'spectralizing']:
+                # verbose name is never used (see brand_prefers_adj)
+                continue
             string = ' of ' + string
-        elif 'MBN_NAME' in line:
-            # first string is long name, second is terse
-            if not line.endswith('"' + string + '";'):
-                string += ' '
-        elif 'MBN_TERSE' in line:
-            # first string is terse name, second is long name
-            if line.endswith('"' + string + '";'):
-                string += ' '
-        else:
-            # string acts as both long and terse name
-            if string == 'silver':
-                strings.append(string + ' ')
+        elif section == 'weapon_brands_adj':
+            # adjectives defined for all, but only used for some (see brand_prefers_adj)
+            if string in ['vampiric', 'antimagic', 'vorpal', 'spectral']:
+                string = string + ' '
             else:
-                strings.append(' of ' + string)
-    elif section == 'weapon_brands_terse':
-        if string == 'confuse':
-            # not a real weapon brand - used on hands for confusing touch
-            return
-        elif string == 'flame':
-            # terse version also used after "of" (see _item_ego_name in religion.cc)
-            strings.append(' of ' + string)
-    elif section == 'weapon_brands_verbose':
-        if string == 'confusion':
-            # not a real weapon brand - used on hands for confusing touch
-            return
-        elif string in ['vampirism', 'antimagic', 'vorpality', 'spectralizing']:
-            # verbose name is never used (see brand_prefers_adj)
-            return
-        string = ' of ' + string
-    elif section == 'weapon_brands_adj':
-        # adjectives defined for all, but only used for some (see brand_prefers_adj)
-        if string in ['vampiric', 'antimagic', 'vorpal', 'spectral']:
-            string = string + ' '
-        else:
-            return
-    elif section == 'armour_ego_name':
-        string = ' of ' + string
-    elif section == 'armour_ego_name(terse)':
-        if string == 'rC+ rF+':
-            # handled as two separate strings
-            return
-        # the plus is handled separately
-        string = re.sub(r'\+.*', '', string)
-    elif section == '_wand_type_name':
-        string = 'wand of ' + string
-    elif section == 'potion_type_name':
-        string = 'potion of ' + string
-    elif section == 'scroll_type_name':
-        string = 'scroll of ' + string
-    elif section == 'jewellery_effect_name':
-        string = ' of ' + string
-    elif section == 'jewellery_effect_name(terse)':
-        # the plus is handled separately
-        string = re.sub(r'\+.*', '', string)
-    elif section == 'rune_type_name':
-        if string in ['mossy', 'elven']:
-            # obsolete
-            return
-        else:
-            strings.append(string + ' rune')
-    elif section == '_book_type_name':
-        if string == 'Fixed Level' or string == 'Fixed Theme':
-            return
-        string = 'book of ' + string
-    elif section == 'staff_type_name':
-        string = '%sstaff of ' + string
-    elif section == 'ghost_brand_name':
-        if string == '%s weapon':
-            string = 'the %sweapon'
-        elif string == 'weapon of %s':
-            # suffixes handles separately
-            return
-        elif string == '%s touch':
+                continue
+        elif section == 'armour_ego_name':
+            string = ' of ' + string
+        elif section == 'armour_ego_name(terse)':
+            if string == 'rC+ rF+':
+                # handled as two separate strings
+                continue
+            # the plus is handled separately
+            string = re.sub(r'\+.*', '', string)
+        elif section == '_wand_type_name':
+            string = 'wand of ' + string
+            if not string.endswith('removedness'):
+                # uncounted plural for known items menu
+                extras1.append(pluralise(string))
+            string = 'the ' + string
+        elif section == 'potion_type_name':
+            string = 'potion of ' + string
+            # uncounted plural for known items menu
+            extras1.append(pluralise(string))
+            # counted plural for stacks
+            extras2.append('%d ' + pluralise(string))
+            string = 'the ' + string
+        elif section == 'scroll_type_name':
+            string = 'scroll of ' + string
+            # uncounted plural for known items menu
+            extras1.append(pluralise(string))
+            # counted plural for stacks
+            extras2.append('%d ' + pluralise(string))
+            string = 'the ' + string
+        elif section == 'jewellery_effect_name':
+            string = ' of ' + string
+        elif section == 'jewellery_effect_name(terse)':
+            # the plus is handled separately
+            string = re.sub(r'\+.*', '', string)
+        elif section == 'rune_type_name':
+            if string in ['mossy', 'elven']:
+                # obsolete
+                continue
+            else:
+                extras1.append('the ' + string + ' rune')
+        elif section == 'misc_type_name':
+            # uncounted plural for known items menu
+            if string != 'horn of Geryon':
+                extras1.append(pluralise(string))
+            if string == 'figurine of a ziggurat':
+                # can have an enchantment
+                string = 'the %s' + string
+            else:
+                string = 'the ' + string
+        elif section == '_book_type_name':
+            if string == 'Fixed Level' or string == 'Fixed Theme':
+                continue
+            string = 'a book of ' + string
+        elif section == 'sub_type_string':
+            if string == 'manual':
+                result.append(string)
+                string = pluralise(string)
+            elif is_spellbook(string):
+                string = add_spellbook_article(string)
+        elif section == 'staff_type_name':
+            extras1.append('staves of ' + string)
+            string = 'the %sstaff of ' + string
+        elif section == 'ghost_brand_name':
+            if string == '%s weapon':
+                string = 'the %sweapon'
+            elif string == 'weapon of %s':
+                # suffixes handles separately
+                continue
+            elif string == '%s touch':
+                # there's only one possibility
+                string = 'confusing touch'
+        elif section == 'potion_colours':
+            if not string.endswith(' '):
+                string += ' '
+        elif section == 'display_runes':
+            if string == "green":
+                # text colour tag
+                continue
+        elif section == 'item_prefix':
+            # undisplayed, but (supposedly) searchable prefixes
+            # many of these don't even work in English
+            continue
+
+        if string in ['wand of ', 'potion of ', 'scroll of', 'ring of', 'amulet of', 'staff of ', 'book of ']:
+            # all subtypes already covered above
+            continue
+        elif string in [' wand', ' potion', ' ring', ' amulet', ' rune']:
+            # all subtypes already covered above
+            continue
+        elif string in ['manual of ', '%s of %s', ' of ', 'of '] or (string.endswith(' of Zot') and string != "The Orb of Zot"):
+            # other "of <foo>" suffixes are handled separately
+            continue
+        elif string == "gold piece":
+            result.append('the ' + string)
+            result.append('%d ' + pluralise(string))
+            continue
+        elif string == 'enchanted %s':
+            # will be handled the other way round, with "enchanted" as added adjective
+            string = 'enchanted '
+        elif string == "damnation ":
             # there's only one possibility
-            string = 'confusing touch'
-    elif section == 'potion_colours':
-        if not string.endswith(' '):
-            string += ' '
-    elif section == 'display_runes':
-        if string == "green":
-            # text colour tag
-            return
-    elif section == 'item_prefix':
-        # undisplayed, but (supposedly) searchable prefixes
-        # many of these don't even work in English
-        return
+            result.append("the damnation bolt")
+            result.append('%d damnation bolts')
+            continue
+        elif string == "labelled ":
+            string = "the scroll labelled %s"
+        elif string == "x) ":
+            # ignore - just used for size
+            continue
+        elif string == "pair of ":
+            # handled in item-prop.cc
+            continue
+        elif string == "decaying skeleton":
+            # dbname (just used as a lookup key, not displayed)
+            continue
+        elif "bug" in string or "bad item" in string or "bogus" in string:
+            # case that should never happen - ignore
+            continue
 
-    if string in ['wand of ', 'potion of ', 'scroll of', 'ring of', 'amulet of', 'staff of ', 'book of ']:
-        # all subtypes already covered above
-        return
-    elif string in [' wand', ' potion', ' ring', ' amulet', ' rune']:
-        # all subtypes already covered above
-        return
-    elif string in ['manual of ', '%s of %s', ' of ', 'of '] or (string.endswith(' of Zot') and string != "The Orb of Zot"):
-        # other "of <foo>" suffixes are handled separately
-        return
-    elif string == 'enchanted %s':
-        # will be handled the other way round, with "enchanted" as added adjective
-        string = 'enchanted '
-    elif string == "damnation ":
-        # there's only one possibility
-        string = "damnation bolt"
-    elif string == "labelled ":
-        string = "scroll labelled %s"
-    elif string == "x) ":
-        # ignore - just used for size
-        return
-    elif string == "pair of ":
-        # handled in item-prop.cc
-        return
-    elif string == "decaying skeleton":
-        # dbname (just used as a lookup key, not displayed)
-        return
-    elif "bug" in string or "bad item" in string or "bogus" in string:
-        # case that should never happen - ignore
-        return
+        result.append(string)
 
-    strings.append(string)
+    result.extend(extras1)
+    result.extend(extras2)
 
+    return result
 
 def process_cplusplus_file(filename):
     lazy = (filename in LAZY_FILES)
@@ -1641,8 +1681,23 @@ def process_cplusplus_file(filename):
                     # literal commands (and % placeholder)
                     continue
             elif filename == 'item-name.cc':
-                special_handling_for_item_name_cc(section, line, string, strings)
-                continue
+                if section == 'missile_brand_name':
+                    if 'MBN_NAME' in line:
+                        # first string is long name, second is terse
+                        if not line.endswith('"' + string + '";'):
+                            # used as adjective on darts
+                            string += ' dart'
+                    elif 'MBN_TERSE' in line:
+                        # first string is terse name, second is long name
+                        if line.endswith('"' + string + '";'):
+                            # used as suffix
+                            string = ' of ' + string
+                    else:
+                        # string acts as both long and terse name
+                        if string == 'silver':
+                            strings.append(string + ' ')
+                        else:
+                            strings.append(' of ' + string)
             elif filename == 'message.cc':
                 if section == 'wu_jian_sifu_message':
                     # this function adds a prefix to the message parameter
@@ -1775,15 +1830,16 @@ def pluralise(string):
     # so separate the suffix, pluralise the main noun, then put the suffix back
     pos = string.find(" of ")
     if pos < 0:
+        pos = string.find(" from ")
+    if pos < 0:
         pos = string.find(" labelled ")
     if pos >= 0:
         prefix = string[0:pos]
         suffix = string[pos:]
         return pluralise(prefix) + suffix
 
-    for ending in ["ch", "sh", "ss"]:
-        if string.endswith(ending):
-            return string + "es"
+    if re.search('(ch|sh|ss|x)$', string):
+        return string + "es"
 
     # staves
     if string.endswith("ff"):
@@ -1828,9 +1884,6 @@ def is_unique_noun(string, is_monster = False):
     else:
         return False
 
-def is_miscellaneous_item(string):
-    return string in ['lightning rod', 'quad damage', 'phial of floods', 'phantom mirror', 'box of beasts', 'condenser vane', 'tin of tremorstones', "piece from Xom's chessboard", 'figurine of a ziggurat']
-
 def is_missile(string):
     for s in ["dart", "boomerang", "javelin", "throwing net", "stone", "large rock", "bullet", "arrow", "bolt"]:
         if string.endswith(s):
@@ -1838,7 +1891,7 @@ def is_missile(string):
     return False
 
 def is_spellbook(string):
-    if string.startswith("book of "):
+    if string.startswith("book of ") and not string == "book of ":
         return True
 
     return string in [
@@ -1867,29 +1920,6 @@ def add_spellbook_article(string):
         # can have a/an
         return article_a(string)
 
-def can_have_adjective(string):
-    for s in ["scroll", "potion of ", "wand of ", " rune", "gold piece", "manual"]:
-        if s in string:
-            return False
-
-    if is_missile(string) or is_miscellaneous_item(string) or is_spellbook(string):
-        return False
-
-    return True
-
-# does this item stack?
-def stacks(string):
-    if is_missile(string):
-        return True
-    elif string.endswith("gold piece"):
-        return True
-    elif string.startswith("scroll") and string != "scroll":
-        return True
-    elif "potion" in string and string != "potion":
-        return True
-    else:
-        return False
-
 def get_noun_permutations(string, is_monster = False):
     list = []
 
@@ -1897,8 +1927,6 @@ def get_noun_permutations(string, is_monster = False):
         list.append(string)
         if is_monster:
             list.append(string + "'s")
-    elif is_spellbook(string):
-        list.append(add_spellbook_article(string))
     else:
         is_unique = is_unique_noun(string, is_monster)
         base = re.sub("^(the|a|an) ", "", string)
@@ -1906,7 +1934,7 @@ def get_noun_permutations(string, is_monster = False):
 
         full = base
         # add placeholder for adjective(s), if applicable
-        if can_have_adjective(base):
+        if not is_missile(base):
             full = "%s" + base
         full = "the " + full
 
@@ -1918,15 +1946,6 @@ def get_noun_permutations(string, is_monster = False):
                 list.append(possessive(string))
             else:
                 list.append(possessive(full))
-
-        # plurals
-        if not is_unique:
-            if not is_monster:
-                # add plural with count for items that stack
-                # (note: wands meld rather than stacking)
-                if stacks(string):
-                    list.append(pluralise(base))
-                    list.append("%d " + pluralise(base))
 
     return list
 
@@ -1940,8 +1959,11 @@ def add_strings_to_output(filename, strings, output):
     if len(strings) == 0:
         return
 
+    if filename == 'item-name.cc':
+        strings = special_handling_for_item_name_cc(strings)
+
     is_monsters = (filename == 'mon-data.h')
-    is_special_file = (filename in ['mon-data.h', 'feature-data.h', 'item-prop.cc', 'item-name.cc'])
+    is_special_file = (filename in ['mon-data.h', 'feature-data.h', 'item-prop.cc'])
 
     # separate unique and non-unique names
     names = []
@@ -1985,28 +2007,6 @@ def add_strings_to_output(filename, strings, output):
             elif filename == 'item-prop.cc':
                 # everything here is a non-unique item name
                 names.append(string)
-            elif filename == 'item-name.cc':
-                # despite the filename, not everything in here is a name
-                special = False
-                if is_spellbook(string):
-                    # special, but doesn't need a bunch of forms
-                    string = add_spellbook_article(string)
-                elif string.startswith('" '):
-                    special = False
-                elif is_miscellaneous_item(string):
-                    special = True
-                elif string in ["rune", "scroll"]:
-                    output.append(string)
-                    output.append(pluralise(string))
-                else:
-                    for item in ["dart", "wand", "potion", "scroll", "ring", "amulet", "rune", "staff", "bolt"]:
-                        if item in string:
-                            special = True
-                            break
-                if special:
-                    names.append(string)
-                elif string == 'horn of Geryon':
-                    string = "the " + string
             elif not re.search('^(a|an|the|some) ', string) and string not in ['explore horizon', 'unseen']:
                 names.append(string)
             else:
@@ -2154,7 +2154,7 @@ for filename in files:
             # error condition
             if string == 'Yak':
                 continue
-        else:
+        elif filename != 'item-name.cc':
             if string == 'runed door':
                 # this should be already covered above (feature-data.h), but just in case...
                 words = separate_adjectives(string)
