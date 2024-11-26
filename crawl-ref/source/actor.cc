@@ -973,7 +973,8 @@ void actor::collide(coord_def newpos, const actor *agent, int damage)
     actor *other = actor_at(newpos);
     // TODO: should the first of these check agent?
     const bool immune = never_harm_monster(agent, as_monster());
-    const bool immune_other = never_harm_monster(agent, other->as_monster());
+    const bool immune_other = other ? never_harm_monster(agent, other->as_monster())
+                                    : false;
 
     ASSERT(this != other);
     ASSERT(alive());
