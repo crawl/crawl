@@ -4218,7 +4218,8 @@ static coord_def _mons_bomblet_target(const monster& caster)
     vector<coord_def> targs;
     for (actor_near_iterator ai(caster.pos()); ai; ++ai)
     {
-        if (!mons_aligned(&caster, *ai)
+        if (!ai->is_peripheral()
+            && !mons_aligned(&caster, *ai)
             && grid_distance(caster.pos(), ai->pos()) > 1
             && grid_distance(caster.pos(), ai->pos()) <= spell_range(SPELL_DEPLOY_BOMBLET, 0)
             && caster.can_see(**ai)
