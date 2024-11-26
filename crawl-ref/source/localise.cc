@@ -1277,7 +1277,7 @@ static string _localise_list(const string context, const string& s)
         if (!context.empty() || determiner_patt.matches(sub))
             _context = context;
 
-        result += _localise_string(_context, sub);
+        result += _discard_context(_localise_string(_context, sub));
     }
 
     return result;
@@ -2243,7 +2243,7 @@ string localise(const vector<LocalisationArg>& args)
         if (localisation_active())
         {
             string result = _localise_string("", args.at(0).stringVal);
-            return _shift_context(result);
+            return _discard_context(result);
         }
         else
             return args.at(0).stringVal;
@@ -2259,7 +2259,7 @@ string localise(const vector<LocalisationArg>& args)
         return _shift_context(result);
 
     // translate piecemeal
-    return _build_string(args, true);
+    return _discard_context(_build_string(args, true));
 }
 
 string vlocalise(const string& fmt_str, va_list argp)
@@ -2535,8 +2535,9 @@ string localise_contextual(const string& context, const string& text_en)
 {
     if (!localisation_active())
         return text_en;
-    else
-        return _localise_string(context, text_en);
+    
+    string result = _localise_string(context, text_en);
+    return _discard_context(result);
 }
 
 // localise a string like "amateur Deep Elf Earth Elementalist" or "Random Deep Elf"
