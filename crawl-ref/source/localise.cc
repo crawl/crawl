@@ -228,6 +228,20 @@ static void _split_tags(string s, vector<string>& results)
         results.push_back(s);
 }
 
+// escape curly brackets so they don't get mistaken for context markers
+static string _escape_curlies(const string& s)
+{
+    string result = replace_all(s, "{", "@opencurly@");
+    return replace_all(result, "}", "@closecurly@");
+}
+
+// restore curlies
+static string _unescape_curlies(const string& s)
+{
+    string result = replace_all(s, "@opencurly@", "{");
+    return replace_all(result, "@closecurly@", "}");
+}
+
 // if string starts with a context, remove it and set current context to that
 // TODO: Come up with a better name for this function
 static string _shift_context(const string& str)
@@ -539,7 +553,6 @@ static string _localise_annotation_element(const string& s)
     }
 
     return result;
-
 }
 
 static string _localise_annotation(const string& s)
@@ -552,14 +565,17 @@ static string _localise_annotation(const string& s)
     // try translating whole thing
     string result = xlate(s, false);
     if (!result.empty())
-        return result;
+        return _escape_curlies(result);
 
     // try without the leading space
     if (s[0] == ' ')
     {
         result = xlate(s.substr(1), false);
         if (!result.empty())
-            return string(" ") + result;
+        {
+            result = string(" ") + result;
+            return _escape_curlies(result);
+       }
     }
 
     string rest = s;
@@ -578,7 +594,10 @@ static string _localise_annotation(const string& s)
     rest = rest.substr(0, pos+1);
 
     if (!prefix.empty() || !suffix.empty())
-        return prefix + _localise_annotation(rest) + suffix;
+    {
+        result = prefix + _localise_annotation(rest) + suffix;
+        return _escape_curlies(result);
+    }
 
     vector<string> tokens = split_string(",", s, false, true);
 
@@ -592,7 +611,7 @@ static string _localise_annotation(const string& s)
         result += _localise_annotation_element(token);
     }
 
-    return result;
+    return _escape_curlies(result);
 }
 
 static list<string> _localise_annotations(const list<string>& input)
@@ -2243,7 +2262,7 @@ string localise(const vector<LocalisationArg>& args)
         if (localisation_active())
         {
             string result = _localise_string("", args.at(0).stringVal);
-            return _discard_context(result);
+            return _unescape_curlies(_discard_context(result));
         }
         else
             return args.at(0).stringVal;
@@ -2256,10 +2275,11 @@ string localise(const vector<LocalisationArg>& args)
     // check for translation of completed english string
     string result = xlate(english, false);
     if (!result.empty())
-        return _shift_context(result);
+        return _discard_context(result);
 
     // translate piecemeal
-    return _discard_context(_build_string(args, true));
+    result = _build_string(args, true);
+    return _unescape_curlies(_discard_context(result));
 }
 
 string vlocalise(const string& fmt_str, va_list argp)
@@ -2535,9 +2555,9 @@ string localise_contextual(const string& context, const string& text_en)
 {
     if (!localisation_active())
         return text_en;
-    
+
     string result = _localise_string(context, text_en);
-    return _discard_context(result);
+    return _unescape_curlies(_discard_context(result));
 }
 
 // localise a string like "amateur Deep Elf Earth Elementalist" or "Random Deep Elf"

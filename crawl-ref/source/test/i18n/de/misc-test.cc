@@ -297,6 +297,10 @@ int main()
     msg = localise("Memorise %s, consuming %d spell levels and leaving %d?", "Fireball", 5, 0);
     show_result(msg, "Feuerball memorieren, dabei 5 Zauberplätze verbrauchen und 0 lassen?");
 
+    // test annotation
+    msg = localise("{book}");
+    show_result(msg, "{Buch}");
+
     you.position = coord_def(10, 10);
     env.grid.init(DNGN_FLOOR);
     env.pgrid.init(FPROP_NONE);
