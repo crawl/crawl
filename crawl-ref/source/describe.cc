@@ -4618,14 +4618,13 @@ static string _player_spell_desc(spell_type spell)
     }
     else if (spell == SPELL_PLATINUM_PARAGON)
     {
-        description << "Your paragon wields ";
-
         if (you.props.exists(PARAGON_WEAPON_KEY))
-            description << you.props[PARAGON_WEAPON_KEY].get_item().name(DESC_A, true).c_str();
-        else
-            description << "your current weapon";
-
-        description << ".\n";
+        {
+            description << "Your paragon wields "
+                        << you.props[PARAGON_WEAPON_KEY].get_item()
+                           .name(DESC_A, true).c_str()
+                        << ".\n";
+        }
     }
     else if (you.has_spell(SPELL_SPELLSPARK_SERVITOR) && spell_servitorable(spell))
     {
