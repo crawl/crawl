@@ -106,6 +106,25 @@ Zusatzpanzerung
 %%%%
 
 #################################
+# Terse weapon types
+#################################
+# These are used when showing base type for artefacts.
+# Not sure where though.
+%%%%
+# executioner's axe
+%sexec axe
+{adj-e}%sHenkersaxt
+%%%%
+# giant spiked club
+%sg.spiked club
+{adj-e}%sries. Stachelkeule
+%%%%
+# triple crossbow
+%striple xbow
+{adj-e}%s3fach-Armbrust
+%%%%
+
+#################################
 # Runes(terse form for char overview screen)
 #################################
 
