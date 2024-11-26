@@ -2027,9 +2027,8 @@ coord_def direction_chooser::find_summoner()
     if (mon && mon->is_summoned() && you.can_see(*mon))
     {
         monster_info mi(mon);
-        const monster *summ = monster_by_mid(mi.summoner_id);
-        // Don't leak information about invisible summoners.
-        if (summ && you.can_see(*summ))
+        const monster *summ = mi.get_known_summoner();
+        if (summ)
             return summ->pos();
     }
     return INVALID_COORD;

@@ -477,6 +477,8 @@ struct monster_info : public monster_info_base
     bool has_trivial_ench(enchant_type ench) const;
     bool unravellable() const;
 
+    monster* get_known_summoner() const;
+
 protected:
     string _core_name() const;
     string _base_name() const;

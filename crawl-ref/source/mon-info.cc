@@ -2153,3 +2153,19 @@ string description_for_ench(enchant_type type)
 
     return "";
 }
+
+monster* monster_info::get_known_summoner() const
+{
+    monster* summoner = monster_by_mid(summoner_id);
+
+    // Don't leak information about invisible summoners.
+    if (!summoner || !you.can_see(*summoner))
+        return nullptr;
+
+    // Don't leak the real Mara, if this happened to be made by them.
+    // (Note: the fake ones never make illusions)
+    if (summoner->type == MONS_MARA)
+        return nullptr;
+
+    return summoner;
+}
