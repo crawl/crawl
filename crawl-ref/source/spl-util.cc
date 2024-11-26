@@ -1625,7 +1625,6 @@ bool spell_no_hostile_in_range(spell_type spell)
         return true;
 
     const int range = calc_spell_range(spell, 0);
-    const int minRange = get_dist_to_nearest_monster();
     const int pow = calc_spell_power(spell);
 
     switch (spell)
@@ -1649,11 +1648,16 @@ bool spell_no_hostile_in_range(spell_type spell)
         return false;
 
     case SPELL_OLGREBS_TOXIC_RADIANCE:
+        return cast_toxic_radiance(&you, pow, false, true) == spret::abort;
+
     case SPELL_IGNITION:
     case SPELL_FROZEN_RAMPARTS:
     case SPELL_FULSOME_FUSILLADE:
     case SPELL_HELLFIRE_MORTAR:
+    {
+        const int minRange = get_dist_to_nearest_monster();
         return minRange > you.current_vision;
+    }
 
     // Special handling for cloud spells.
     case SPELL_FREEZING_CLOUD:
@@ -1756,6 +1760,7 @@ bool spell_no_hostile_in_range(spell_type spell)
         break;
     }
 
+    const int minRange = get_dist_to_nearest_monster();
     if (minRange < 0 || range < 0)
         return false;
 
