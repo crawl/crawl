@@ -393,7 +393,8 @@ Stone tentacles
 Steintentakeln
 %%%%
 # flesh type
-# duplicate: stone
+stone
+Stein
 %%%%
 
 ################################

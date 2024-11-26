@@ -7,29 +7,13 @@
 ###############################################################################
 
 #################################
-# Weapon Types
-#################################
-
-# these are used in monster pane in console version
-
-%%%%
-the %sweapon
-die {adj-e}%sWaffe
-%%%%
-the polearm
-die Stangenwaffe
-%%%%
-the launcher
-der Werfer
-%%%%
-the missile
-das Geschoss
-%%%%
-
-#################################
 # Melee Weapons
 #################################
 
+%%%%
+# for player ghosts
+the %sweapon
+die {adj-e}%sWaffe
 %%%%
 the %sclub
 der {adj-e}%sKnüppel
@@ -196,7 +180,7 @@ der Bolzen
 %%%%
 # the artefact arbalest "Damnation" shoots these
 the damnation bolt
-der Verdammnis-Bolzen
+der Verdammnisbolzen
 %%%%
 the dart
 der Wurfpfeil
@@ -563,6 +547,9 @@ der Zauberstab der Obsoleszenz
 %%%%
 
 # unidentified
+%%%%
+the %swand
+der {adj-e}%sZauberstab
 %%%%
 the %siron wand
 der {adj-e}%sEisenzauberstab

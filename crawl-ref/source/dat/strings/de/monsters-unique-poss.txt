@@ -236,8 +236,8 @@ Blork des Orks
 Blork's
 Blorks
 %%%%
-the Royal Jelly's
-des Gelée Royale
+the %sRoyal Jelly's
+des {adj-en}%sGelée Royale
 %%%%
 the %sSerpent of Hell's
 der {adj-en}%sHöllenschlange

@@ -42,6 +42,10 @@ arrows
 bolts
 {pl}Bolzen
 %%%%
+# fired by artefact crossbow "Damnation"
+damnation bolts
+{pl}Verdammnisbolzen
+%%%%
 darts
 {pl}Wurfpfeile
 %%%%

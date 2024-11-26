@@ -1667,6 +1667,9 @@ des {adj-en}%sHaupttresorwächters
 the %sMaster Blaster's
 des {adj-en}%sMaster-Blasters
 %%%%
+Master Blaster's
+Master-Blasters
+%%%%
 the %soklob sapling priest's
 des {adj-en}%sOklobsetzlingspriesters
 %%%%

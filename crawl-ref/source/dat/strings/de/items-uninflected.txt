@@ -51,6 +51,9 @@ Trank
 book
 Buch
 %%%%
+manual
+Handbuch
+%%%%
 staff
 Stab
 %%%%
@@ -103,6 +106,23 @@ Körperpanzerung
 %%%%
 auxiliary armor
 Zusatzpanzerung
+%%%%
+
+# these are used in monster pane in console version
+
+%%%%
+# duplicate
+#weapon
+#Waffe
+%%%%
+polearm
+Stangenwaffe
+%%%%
+launcher
+Werfer
+%%%%
+missile
+Geschoss
 %%%%
 
 #################################
@@ -338,6 +358,9 @@ wands of mindburst
 Zauberstäbe des Gehirnschlags
 %%%%
 
+%%%%
+scrolls
+Schriftrollen
 %%%%
 spellbooks
 Zauberbücher

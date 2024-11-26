@@ -42,6 +42,10 @@
 %d bolts
 %d Bolzen
 %%%%
+# fired by artefact crossbow "Damnation"
+%d damnation bolts
+%d Verdammnisbolzen
+%%%%
 %d darts
 %d Wurfpfeile
 %%%%
