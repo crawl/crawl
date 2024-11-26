@@ -1648,7 +1648,6 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_FIRE_STORM:
         return false;
 
-    case SPELL_OLGREBS_TOXIC_RADIANCE:
     case SPELL_IGNITION:
     case SPELL_FROZEN_RAMPARTS:
     case SPELL_FULSOME_FUSILLADE:
@@ -1681,6 +1680,9 @@ bool spell_no_hostile_in_range(spell_type spell)
 
         return true;
     }
+
+    case SPELL_OLGREBS_TOXIC_RADIANCE:
+        return cast_toxic_radiance(&you, pow, false, true) == spret::abort;
 
     case SPELL_IGNITE_POISON:
         return cast_ignite_poison(&you, -1, false, true) == spret::abort;
