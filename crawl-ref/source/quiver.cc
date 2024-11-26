@@ -684,7 +684,7 @@ namespace quiver
                 bool success = true;
                 monster *midmons;
                 if ((midmons = monster_at(middle))
-                    && !god_protects(&you, *midmons, true)
+                    && !never_harm_monster(&you, *midmons)
                     && (midmons->type != MONS_SPECTRAL_WEAPON
                         || !midmons->wont_attack())
                     && coinflip())

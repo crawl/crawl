@@ -784,15 +784,6 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
 
     const monster * const mons = monster_at(ctarget);
 
-    // Fedhas et al protect their chosen ones from damaging clouds.
-    // XX demonic guardians? This logic mostly doesn't apply because protected
-    // monsters are also cloud immune, mostly
-    if (god_protects(agent, mons)
-        && !actor_cloud_immune(*mons, cl_type))
-    {
-        return;
-    }
-
     ASSERT(!cell_is_solid(ctarget));
 
     god_conduct_trigger conducts[3];
@@ -995,9 +986,7 @@ bool actor_cloud_immune(const actor &act, const cloud_struct &cloud)
 
     const bool player = act.is_player();
 
-    if (!player
-        && (god_protects(*act.as_monster())
-            || testbits(act.as_monster()->flags, MF_DEMONIC_GUARDIAN))
+    if (!player && never_harm_monster(&you, act.as_monster())
         && (cloud.whose == KC_YOU || cloud.whose == KC_FRIENDLY)
         && (act.as_monster()->friendly() || act.as_monster()->neutral())
         && (cloud.whose == KC_YOU || cloud.whose == KC_FRIENDLY))

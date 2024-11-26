@@ -2772,7 +2772,7 @@ static void _swing_at_target(coord_def move)
     dist target;
     target.target = you.pos() + move;
 
-    if (god_protects(monster_at(target.target), false))
+    if (never_harm_monster(&you, monster_at(target.target), true))
         return;
 
     // Don't warn the player "too injured to fight recklessly" when they

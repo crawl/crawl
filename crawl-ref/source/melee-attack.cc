@@ -99,7 +99,7 @@ bool melee_attack::bad_attempt()
     if (!attacker->is_player() || !defender || !defender->is_monster())
         return false;
 
-    if (god_protects(attacker, defender->as_monster(), false))
+    if (never_harm_monster(attacker, defender->as_monster(), true))
         return true;
 
     if (player_unrand_bad_attempt(offhand_weapon()))

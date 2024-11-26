@@ -2690,116 +2690,6 @@ void lose_piety(int pgn)
     you.props[MIN_IGNIS_PIETY_KEY] = you.piety;
 }
 
-// Fedhas worshipers are on the hook for most plants and fungi
-//
-// If fedhas worshipers kill a protected monster they lose piety,
-// if they attack a friendly one they get penance,
-// if a friendly one dies they lose piety.
-static bool _fedhas_protects_species(monster_type mc)
-{
-    return mons_class_is_plant(mc)
-           && mons_class_holiness(mc) & MH_PLANT;
-}
-
-/// Whether fedhas would protect `target` from harm if called on to do so.
-bool fedhas_protects(const monster &target)
-{
-    return _fedhas_protects_species(mons_base_type(target));
-}
-
-/**
- * Does some god protect monster `target` from harm triggered by `agent`?
- * @param agent  The source of the damage. If nullptr, the damage has no source.
- *               (Currently, no god does protect in this case.)
- * @param target A monster that is the target of the damage.
- * @param quiet  If false, do messaging to indicate that target has escaped
- *               damage.
- * @return       Whether target should escape damage.
- */
-bool god_protects(const actor *agent, const monster &target, bool quiet)
-{
-    // The alignment check is to allow a penanced player to continue to fight
-    // hostiles that would otherwise be protected, in case what they angered can
-    // fight back
-
-    const bool aligned = agent
-        && ((agent->is_player()
-                ? target.friendly()
-                : mons_atts_aligned(target.attitude,
-                                    agent->as_monster()->attitude))
-            || target.neutral());
-    // XX does it matter whether this just checks fedhas vs.
-    // the shoot_through_plants passive
-    if (aligned
-        && ((agent->is_player() || agent->as_monster()->friendly())
-                        && have_passive(passive_t::shoot_through_plants)
-            || agent->is_monster() && agent->deity() == GOD_FEDHAS) // purely theoretical?
-        && fedhas_protects(target))
-    {
-        if (!quiet && you.can_see(target))
-        {
-            simple_god_message(
-                        make_stringf(" protects %s plant from harm.",
-                            agent->is_player() ? "your" : "a").c_str(),
-                        false, GOD_FEDHAS);
-        }
-        return true;
-    }
-
-    if (agent && agent->is_player()
-        && mons_is_hepliaklqana_ancestor(target.type))
-    {
-        // TODO: this message does not work very well for all sorts of attacks
-        // should this be a god message?
-        if (!quiet && you.can_see(target))
-            mprf("%s avoids your attack.", target.name(DESC_THE).c_str());
-        return true;
-    }
-
-    if (aligned && agent->is_player()
-        && will_have_passive(passive_t::shadow_attacks)
-        && mons_is_player_shadow(target))
-    {
-        return true;
-    }
-
-    if (aligned
-        && agent->is_player()
-        && have_passive(passive_t::neutral_slimes)
-        && mons_is_slime(target))
-    {
-        if (!quiet && you.can_see(target))
-        {
-            simple_god_message(" protects your slime from harm.", false,
-                               GOD_JIYVA);
-        }
-        return true;
-    }
-    return false;
-}
-
-/**
- * Does some god protect monster `target` from harm triggered by the player?
- * @param target A monster that is the target of the damage.
- * @param quiet  If false, do messaging to indicate that target has escaped
- *               damage.
- * @return       Whether target should escape damage.
- */
-bool god_protects(const monster &target, bool quiet)
-{
-    return god_protects(&you, target, quiet);
-}
-
-bool god_protects(const monster *target, bool quiet)
-{
-    return target && god_protects(&you, *target, quiet);
-}
-
-bool god_protects(const actor *agent, const monster *target, bool quiet)
-{
-    return target && god_protects(agent, *target, quiet);
-}
-
 /// Whether Fedhas would set `target` to a neutral attitude
 bool fedhas_neutralises(const monster& target)
 {
@@ -4138,9 +4028,6 @@ bool god_hates_killing(god_type god, const monster& mon)
         retval = (is_good_god(god));
     else if (holiness & MH_NATURAL)
         retval = (god == GOD_ELYVILON);
-
-    if (god == GOD_FEDHAS)
-        retval = fedhas_protects(mon);
 
     return retval;
 }

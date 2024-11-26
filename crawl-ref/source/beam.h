@@ -381,9 +381,6 @@ void bolt_parent_init(const bolt &parent, bolt &child);
 
 int explosion_noise(int rad);
 
-bool always_shoot_through_monster(const actor *agent, const monster &mon);
-bool shoot_through_monster(const bolt& beam, const monster* victim);
-
 int omnireflect_chance_denom(int SH);
 
 void glaciate_freeze(monster* mon, killer_type englaciator,

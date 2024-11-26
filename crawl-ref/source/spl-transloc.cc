@@ -2183,12 +2183,11 @@ static void _maybe_penance_for_collision(god_conduct_trigger conducts[3], actor&
 
 static void _push_actor(actor& victim, coord_def dir, int dist, int pow)
 {
-    const bool god_prot = victim.is_monster()
-                                && god_protects(&you, victim.as_monster());
+    const bool immune = never_harm_monster(&you, victim.as_monster());
 
     god_conduct_trigger conducts[3];
 
-    if (victim.is_monster() && !god_prot)
+    if (victim.is_monster() && !immune)
     {
         behaviour_event(victim.as_monster(), ME_ALERT, &you, you.pos());
         victim.as_monster()->speed_increment -= 10;

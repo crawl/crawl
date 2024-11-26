@@ -773,10 +773,9 @@ bool targeter_unravelling::valid_aim(coord_def a)
     }
 
     if (mons && you.can_see(*mons) && _unravelling_explodes_at(a)
-        && god_protects(&you, mons))
+        && never_harm_monster(&you, mons))
     {
-        return notify_fail(mons->name(DESC_THE) + " is protected by " +
-                           god_name(you.religion) + ".");
+        return notify_fail("You cannot do harm to " + mons->name(DESC_THE));
     }
 
     return true;
@@ -1399,7 +1398,7 @@ aff_type targeter_refrig::is_affected(coord_def loc)
     const actor* act = actor_at(loc);
     if (!act || act == agent || !agent->can_see(*act))
         return AFF_NO;
-    if (god_protects(agent, act->as_monster(), true))
+    if (never_harm_monster(agent, act->as_monster()))
         return AFF_NO;
     switch (adjacent_huddlers(loc, true))
     {

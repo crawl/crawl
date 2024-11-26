@@ -1210,7 +1210,7 @@ int torment_cell(coord_def where, actor *attacker, torment_source_type taux)
     if (!mons
         || !mons->alive()
         || mons->res_torment()
-        || attacker && god_protects(attacker, *mons, false)
+        || attacker && never_harm_monster(attacker, *mons, true)
         // Monsters can't currently use the sceptre, but just in case.
         || attacker
            && mons == attacker->as_monster()

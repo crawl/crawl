@@ -1839,8 +1839,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
     // of "is unaffected" messages. --Eino
     if (mons->is_firewood())
         return true;
-    // Jiyva protects from mass enchantments.
-    if (have_passive(passive_t::neutral_slimes) && god_protects(*mons))
+    if (never_harm_monster(&you, mons))
         return true;
 
     switch (wh_enchant)
@@ -5014,7 +5013,7 @@ static void _add_chain_candidates(const bolt& beam, coord_def pos,
             continue;
 
         monster *mon = act->as_monster();
-        if (mon && (shoot_through_monster(beam, mon)
+        if (mon && (shoot_through_monster(beam.agent(), mon)
                     || mon->is_peripheral()))
         {
             continue;
@@ -5121,20 +5120,6 @@ void bolt::kill_monster(monster &mon)
     _print_pre_death_message(mon, goldify, origin_spell);
 
     int kindex = actor_to_death_source(agent());
-    // Prevent spore explosions killing plants from being registered
-    // as a Fedhas misconduct. Deaths can trigger the ally dying or
-    // plant dying conducts, but spore explosions shouldn't count
-    // for either of those.
-    //
-    // FIXME: Should be a better way of doing this. For now, we are
-    // just falsifying the death report... -cao
-    if (flavour == BEAM_SPORE && god_protects(mon) && fedhas_protects(mon))
-    {
-        if (mon.attitude == ATT_FRIENDLY)
-            mon.attitude = ATT_HOSTILE;
-        monster_die(mon, KILL_MON, kindex);
-        return;
-    }
 
     killer_type ref_killer = thrower;
     if (!YOU_KILL(thrower) && reflector == MID_PLAYER)
@@ -5510,7 +5495,7 @@ bool bolt::at_blocking_monster() const
     if (!pierce && !ignores_monster(mon) && mon->is_firewood())
         return true;
     if (have_passive(passive_t::neutral_slimes)
-        && god_protects(agent(), *mon, true)
+        && never_harm_monster(agent(), mon)
         && flavour != BEAM_VILE_CLUTCH)
     {
         return true;
@@ -5530,7 +5515,7 @@ void bolt::affect_monster(monster* mon)
     if (agent()
         && flavour != BEAM_VILE_CLUTCH
         && have_passive(passive_t::neutral_slimes)
-        && god_protects(agent(), *mon, true))
+        && mons_is_slime(*mon))
     {
         if (!is_tracer && you.see_cell(mon->pos()))
         {
@@ -5543,16 +5528,9 @@ void bolt::affect_monster(monster* mon)
         return;
     }
 
-    if (shoot_through_monster(*this, mon) && !is_tracer)
-    {
-        if (you.see_cell(mon->pos()))
-        {
-            if (testbits(mon->flags, MF_DEMONIC_GUARDIAN))
-                mpr("Your demonic guardian avoids your attack.");
-            else
-                god_protects(agent(), *mon, false); // messaging
-        }
-    }
+    // Print messages for monsters avoiding attacks.
+    if (!is_tracer)
+        shoot_through_monster(agent(), mon, true);
 
     if (flavour == BEAM_WATER && mon->type == MONS_WATER_ELEMENTAL && !is_tracer)
     {
@@ -5854,16 +5832,14 @@ bool bolt::ignores_monster(const monster* mon) const
         return true;
     }
 
-    // All kinds of beams go past orbs of destruction and friendly
-    // battlespheres.
-    if (always_shoot_through_monster(agent(), *mon))
+    // All kinds of beams go past orbs of destruction, the player can shoot
+    // through friendly battlespheres, their own ancestor, plants if they're
+    // worshipping Fedhas, etc.
+    if (shoot_through_monster(agent(), *mon))
         return true;
 
     // Missiles go past bushes and briar patches, unless aimed directly at them
     if (bush_immune(*mon))
-        return true;
-
-    if (shoot_through_monster(*this, mon))
         return true;
 
     // Fire storm creates these, so we'll avoid affecting them.
@@ -6062,11 +6038,9 @@ bool ench_flavour_affects_monster(actor *agent, beam_type flavour,
     }
         break;
 
-    // These are special allies whose loyalty can't be so easily bent
+    // Special allies whose loyalty can't be so easily bent
     case BEAM_CHARM:
-        rc = !(god_protects(*mon)
-               || testbits(mon->flags, MF_DEMONIC_GUARDIAN))
-             && !mons_aligned(agent, mon);
+        rc = !(never_harm_monster(agent, mon));
         break;
 
     case BEAM_MINDBURST:
@@ -7761,29 +7735,6 @@ int _ench_pow_to_dur(int pow)
     int base_dur = stepdown(pow * BASELINE_DELAY, 70);
 
     return div_rand_round(base_dur, 2) + random2(1 + base_dur);
-}
-
-// Do all beams skip past a particular monster?
-// see also shoot_through_monsters
-// can these be consolidated? Some checks there don't need a bolt arg
-bool always_shoot_through_monster(const actor *originator, const monster &victim)
-{
-    return mons_is_projectile(victim)
-        || (mons_is_avatar(victim.type)
-            && originator && mons_aligned(originator, &victim));
-}
-
-// Can a particular beam go through a particular monster?
-// Fedhas worshipers can shoot through non-hostile plants,
-// and players can shoot through their demonic guardians.
-bool shoot_through_monster(const bolt& beam, const monster* victim)
-{
-    actor *originator = beam.agent();
-    if (!victim || !originator)
-        return false;
-    return god_protects(originator, *victim)
-           || (originator->is_player()
-               && testbits(victim->flags, MF_DEMONIC_GUARDIAN));
 }
 
 /**

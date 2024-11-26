@@ -35,7 +35,7 @@ int englaciate(coord_def where, int pow, actor *agent)
     monster* mons = victim->as_monster();
 
     // Skip some ineligable monster categories
-    if (victim->is_peripheral())
+    if (victim->is_peripheral() || never_harm_monster(agent, mons))
         return 0;
 
     if (victim->res_cold() > 0)

@@ -706,8 +706,7 @@ static spret _phantom_mirror(dist *target)
 static bool _valid_tremorstone_target(const monster &m)
 {
     return !m.is_firewood()
-        && !god_protects(m)
-        && !always_shoot_through_monster(&you, m);
+        && !never_harm_monster(&you, m);
 }
 
 /**

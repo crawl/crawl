@@ -688,7 +688,6 @@ bool tukima_affects(const actor &target)
            && !target.is_player()
            && !is_special_unrandom_artefact(*wpn)
            && !mons_class_is_animated_weapon(target.type)
-           // XX use god_protects here. But, need to know the caster too...
            && !mons_is_hepliaklqana_ancestor(target.type)
            && !(target.is_monster() && target.as_monster()->type == MONS_ORC_APOSTLE);
 }
