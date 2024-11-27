@@ -1923,17 +1923,16 @@ def process_cplusplus_file(filename):
 # get rid of unnecessary section markers
 def remove_unnecessary_section_markers(strings):
     section = None
-    strings_temp = []
+    output = []
     for string in strings:
         if string.startswith('# section:'):
             section = string
         else:
             if section is not None:
-                strings_temp.append(section)
+                output.append(section)
                 section = None
-            strings_temp.append(string)
-    strings.clear()
-    strings.extend(strings_temp)
+            output.append(string)
+    return output
 
 # separate adjectives from noun
 # adjectives will have space appended
@@ -2112,14 +2111,6 @@ def get_noun_permutations(string, is_monster = False):
 def append_monster_permutations(list, string):
     list.extend(get_noun_permutations(string, True))
 
-
-# we will store in canonical form. Other forms will be auto-generated from there.
-# add other forms to ignore list so they don't get picked up anywhere else
-def add_permutations_to_ignore_list(strings):
-    for string in strings:
-        IGNORE_STRINGS.append(string)
-        IGNORE_STRINGS.append(article_a(string))
-
 def add_strings_to_output(filename, strings, output):
     if len(strings) == 0:
         return
@@ -2212,72 +2203,66 @@ for filename in files:
         strings = process_cplusplus_file(filename)
 
     # the strings in some files need special handling
-    if filename in ['feature-data.h', 'item-name.cc', 'item-prop.cc', 'mon-data.h']:
-
-        # we will store in canonical form. Other forms will be auto-generated from there.
-        # add other forms to ignore list so they don't get picked up anywhere else
-        if filename in ['mon-data.h', 'feature-data.h']:
-            add_permutations_to_ignore_list(strings)
-
-        if filename == 'feature-data.h':
-            strings = special_handling_for_feature_data_h(strings)
-        elif filename == 'item-name.cc':
-            strings = special_handling_for_item_name_cc(strings)
-        elif filename == 'item-prop.cc':
-            strings = special_handling_for_item_prop_cc(strings)
-        elif filename == 'mon-data.h':
-            strings = special_handling_for_mon_data_h(strings)
-
-    # filter out strings we want to ignore
-    filtered_strings = []
-    for string in strings:
-
-        extras = []
-
-        if string.startswith('# note:') or string.startswith('# section:'):
-            filtered_strings.append(string)
-            continue
-
-        if ignore_string(string):
-            continue
-
-        if filename == 'species-data.h':
-            # error condition
-            if string == 'Yak':
+    canonicalised = True
+    if filename == 'feature-data.h':
+        strings = special_handling_for_feature_data_h(strings)
+    elif filename == 'item-name.cc':
+        strings = special_handling_for_item_name_cc(strings)
+    elif filename == 'item-prop.cc':
+        strings = special_handling_for_item_prop_cc(strings)
+    elif filename == 'mon-data.h':
+        strings = special_handling_for_mon_data_h(strings)
+    else:
+        canonicalised = False
+        filtered_strings = []
+        for string in strings:
+            if string.startswith('# note:') or string.startswith('# section:'):
+                filtered_strings.append(string)
+            elif filename == 'species-data.h' and string == "Yak":
+                # error condition
                 continue
-        elif filename not in ['feature-data.h', 'item-name.cc', 'item-prop.h', 'mon-data.h']:
-            if string == "a damnation bolt":
-                # should be already covered, but just in case
-                string = article_the(string[2:]);
-            if string in ["damnation bolt", "quad damage"]:
-                # again, should be already covered, but just in case
-                string = article_the(string);
+            elif string == "runed door":
+                # should be covered by feature-data.h, but just in case...
+                words = separate_adjectives(string)
+                filtered_strings.extend(words)
             elif string.startswith("shaped "):
                 # separate "shaped" out as an adjective
                 filtered_strings.append("shaped ");
                 filtered_strings.append("@monster@ shaped ");
                 append_monster_permutations(filtered_strings, string.replace("shaped ", ""))
-                continue
             elif string in ["spectre", "wavering orb of destruction"]:
                 # treat like monsters in mon-data.h
                 append_monster_permutations(filtered_strings, string)
-                continue
             elif string == " the pandemonium lord":
-                string = "the %spandemonium lord"
+                filtered_strings.append("the %spandemonium lord")
             elif string == "deck of " or string == "decks of ":
                 for suffix in ["destruction", "escape", "summoning"]:
-                    extras.append(string + suffix);
-                string = None
+                    filtered_strings.append(string + suffix);
+            else:
+                filtered_strings.append(string)
+        strings = filtered_strings
 
-        if string is not None and string not in filtered_strings:
+    # remove duplicates and strings that should be ignored
+    filtered_strings = []
+    for string in strings:
+        if string.startswith("# section") or string.startswith("# note"):
             filtered_strings.append(string)
-        for extra in extras:
-            if extra not in filtered_strings:
-                filtered_strings.append(extra)
+        elif not ignore_string(string) and string not in filtered_strings:
+            filtered_strings.append(string)
+    strings = filtered_strings
 
-    remove_unnecessary_section_markers(filtered_strings)
+    strings = remove_unnecessary_section_markers(strings)
 
-    add_strings_to_output(filename, filtered_strings, output)
+    add_strings_to_output(filename, strings, output)
+
+    if canonicalised:
+        # We will store in canonical form. Other forms will be auto-generated from that.
+        # Add other forms to ignore list so they don't get picked up anywhere else.
+        for string in strings:
+            if string.startswith("the ") and not string.endswith("'s"):
+                string = re.sub("^the (%s)?", "", string)
+                IGNORE_STRINGS.append(string)
+                IGNORE_STRINGS.append(article_a(string))
 
 for line in output:
     print(line)
