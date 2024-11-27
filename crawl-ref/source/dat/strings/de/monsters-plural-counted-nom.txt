@@ -138,7 +138,7 @@
 %d deep elf zephyrmancers
 %d Tiefenelf-Zephyrmanten
 %%%%
-%d deep elf pyromancer
+%d deep elf pyromancers
 %d Tiefenelf-Pyromanten
 %%%%
 %d deep elf high priests
@@ -1038,7 +1038,7 @@
 %d hellephants
 %d Höllefanten
 %%%%
-%d apises
+%d apis
 %d Apisen
 %%%%
 %d ice beasts

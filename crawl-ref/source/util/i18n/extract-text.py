@@ -1137,8 +1137,11 @@ def special_handling_for_mon_data_h(strings):
             output.append(possessive(string))
 
     # plural non-unique
-    #for string in names:
-    #    output.append('%d ' + pluralise(string))
+    for string in names:
+        # slime creatures have a size adjective and ugly things have a colour adjective
+        if string in ["slime creature", "ugly thing", "very ugly thing"]:
+            string = "%s" + string
+        output.append('%d ' + pluralise(string))
 
     return output
 
@@ -1877,6 +1880,7 @@ def article_a(string):
     else:
         return "a " + string
 
+# pluralise a string - replicates the logic of the equivalent function in english.cc
 def pluralise(string):
     # if it's something like "potion of healing" then we want "potions of healing", not "potion of healings"
     # so separate the suffix, pluralise the main noun, then put the suffix back
@@ -1890,21 +1894,49 @@ def pluralise(string):
         suffix = string[pos:]
         return pluralise(prefix) + suffix
 
-    if re.search('(ch|sh|ss|x)$', string):
+    if string.endswith("us"):
+        if string.endswith("lotus") or string.endswith("status"):
+            return string + "es"
+        else:
+            return string[:-2] + "i";
+    elif string.endswith("ex"):
+        return string[:-2] + "ices"
+    elif string.endswith("mosquito") or string.endswith("ss"):
         return string + "es"
-
-    # staves
-    if string.endswith("ff"):
-        return string[:-2] + "ves"
-
-    # dwarves, wolves
-    if string.endswith("f"):
-        return string[:-1] + "ves"
-
-    if string.endswith("y") and not string.endswith("ey"):
+    elif string.endswith("cyclops"):
+        return string[:-1] + "es"
+    elif string.endswith("catoblepas"):
+        return string[:-1] + "e"
+    elif string.endswith("s"):
+        return string
+    elif string.endswith("y") and not string.endswith("ey"):
         return string[:-1] + "ies"
-
-    return string + "s"
+    elif string.endswith("staff"):
+        return string[:-1] + "ves"
+    elif string.endswith("f") and not string.endswith("ff"):
+        return string[:-1] + "ves"
+    elif string.endswith("mage") and not string.endswith("damage"):
+        return string[:-1] + "i"
+    elif re.search('(gold|fish|folk|spawn|tengu|sheep|swine|efreet|jiangshi|raiju|meliai)$', string):
+        return string
+    elif re.search('(ch|sh|x)$', string):
+        return string + "es"
+    elif re.search('(simulacrum|eidolon)$', string):
+        return string[:-2] + "a"
+    elif string.endswith("djinni"):
+        return string[:-1]
+    elif string.endswith("foot"):
+        return string[:-4] + feet
+    elif re.search('(ophan|cherub|seraph)$', string):
+        return string + "im"
+    elif string.endswith("arachi"):
+        return string + "m"
+    elif string.endswith("ushabti"):
+        return string + "u"
+    elif string.endswith("mitl"):
+        return string[:-2] + "meh"
+    else:
+        return string + "s"
 
 def possessive(string):
     return string + "'s"
