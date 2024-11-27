@@ -1148,14 +1148,17 @@ def special_handling_for_mon_data_h(strings):
     unique_names.sort()
 
     # adjectives
+    output.append("# section: adjectives")
     for string in adjectives:
         output.append(string)
 
     # singular non-unique
+    output.append("# section: non-unique monsters, singular")
     for string in names:
         output.append('the %s' + string)
 
     # singular unique
+    output.append("# section: unique monsters")
     for string in unique_names:
         if string.startswith('the '):
             output.append(re.sub('^the ', 'the %s', string))
@@ -1163,10 +1166,12 @@ def special_handling_for_mon_data_h(strings):
             output.append('the %s' + string)
 
     # possessive non-unique
+    output.append("# section: non-unique monsters, singular possessive")
     for string in names:
         output.append('the %s' + possessive(string))
 
     # possessive unique
+    output.append("# section: unique monsters, possessive")
     for string in unique_names:
         if string.startswith('the '):
             output.append(re.sub('^the ', 'the %s', possessive(string)))
@@ -1174,6 +1179,7 @@ def special_handling_for_mon_data_h(strings):
             output.append(possessive(string))
 
     # plural non-unique
+    output.append("# section: non-unique monsters, plural")
     for string in names:
         # slime creatures have a size adjective and ugly things have a colour adjective
         if string in ["slime creature", "ugly thing", "very ugly thing"]:
