@@ -36,12 +36,13 @@ IGNORE_STRINGS = [
     'a', 'a ', 'an', 'an ',
     'you', 'you ', 'your', 'your ', 'its ',
     ' of ', ' of', 'of ', 's',
+    'The ', 'Your ',
     'debugging ray', 'debug', 'bugger',
     'bug', 'null', 'invalid', 'DEAD MONSTER',
     'true', 'false', 'veto',
     'You hear the sound of one hand!',
     # property keys
-    'brand', 'bacc', 'bdam', 'nupgr', 'cap-',
+    'Brand', 'BAcc', 'BDam', 'nupgr', 'cap-',
     # text colour tags
     'lightgrey', 'darkgrey', 'lightgreen', 'darkgreen', 'lightcyan', 'darkcyan',
     'lightred', 'darkred', 'lightmagenta', 'darkmagenta', 'lightyellow', 'darkyellow'
@@ -581,8 +582,6 @@ def ignore_string(string):
     # ignore articles, pronouns, etc.
     if string in IGNORE_STRINGS:
         return True
-    if string.lower() in IGNORE_STRINGS:
-        return True
 
     # the name of the game
     if string.startswith('Crawl'):
@@ -1089,6 +1088,59 @@ def process_lua_file(filename):
         strings.extend(alternatives)
 
     return strings
+
+# special handling for strings in mon-data.h
+def special_handling_for_mon_data_h(strings):
+    output = []
+    names = []
+    unique_names = []
+    adjectives = []
+
+    # separate unqiue from non-unique
+    for string in strings:
+        if string.startswith('#'):
+            continue
+        if string.endswith(' '):
+            adjectives.append(string)
+        elif is_unique_monster(string):
+            unique_names.append(string)
+        else:
+            names.append(string)
+
+    names.sort()
+    unique_names.sort()
+
+    # adjectives
+    for string in adjectives:
+        output.append(string)
+
+    # singular non-unique
+    for string in names:
+        output.append('the %s' + string)
+
+    # singular unique
+    for string in unique_names:
+        if string.startswith('the '):
+            output.append(re.sub('^the ', 'the %s', string))
+        else:
+            output.append('the %s' + string)
+
+    # possessive non-unique
+    for string in names:
+        output.append('the %s' + possessive(string))
+
+    # possessive unique
+    for string in unique_names:
+        if string.startswith('the '):
+            output.append(re.sub('^the ', 'the %s', possessive(string)))
+        else:
+            output.append(possessive(string))
+
+    # plural non-unique
+    #for string in names:
+    #    output.append('%d ' + pluralise(string))
+
+    return output
 
 
 # special handling for strings in item-name.cc
@@ -1955,15 +2007,26 @@ def append_noun_permutations(list, string, is_monster = False):
 def append_monster_permutations(list, string):
     list.extend(get_noun_permutations(string, True))
 
+
+# we will store in canonical form. Other forms will be auto-generated from there.
+# add other forms to ignore list so they don't get picked up anywhere else
+def add_permutations_to_ignore_list(strings):
+    for string in strings:
+        IGNORE_STRINGS.append(string)
+        IGNORE_STRINGS.append(article_a(string))
+
 def add_strings_to_output(filename, strings, output):
     if len(strings) == 0:
         return
 
     if filename == 'item-name.cc':
         strings = special_handling_for_item_name_cc(strings)
+    elif filename == 'mon-data.h':
+        add_permutations_to_ignore_list(strings)
+        strings = special_handling_for_mon_data_h(strings)
 
     is_monsters = (filename == 'mon-data.h')
-    is_special_file = (filename in ['mon-data.h', 'feature-data.h', 'item-prop.cc'])
+    is_special_file = (filename in ['feature-data.h', 'item-prop.cc'])
 
     # separate unique and non-unique names
     names = []
@@ -1998,12 +2061,6 @@ def add_strings_to_output(filename, strings, output):
             special = True
             if string.endswith(' ') or string.endswith(' "'):
                 adjectives.append(string)
-            elif filename == 'mon-data.h':
-                # everything here is a monster name
-                if is_unique_monster(string):
-                    unique_names.append(string)
-                else:
-                    names.append(string)
             elif filename == 'item-prop.cc':
                 # everything here is a non-unique item name
                 names.append(string)
@@ -2111,21 +2168,7 @@ for filename in files:
             continue
 
         # some names have adjectives added for display
-        if filename == 'mon-data.h':
-            # put in a placeholder for adjective and make sure version without
-            # placeholder is not picked up elsewhere
-            if is_unique_monster(string):
-                if string.startswith("the "):
-                    IGNORE_STRINGS.append(string)
-                    IGNORE_STRINGS.append(string.replace("the ", ""))
-                    string = string.replace('the ', 'the %s')
-            elif not string.endswith(" "):
-                if (string != "player"):
-                    IGNORE_STRINGS.append(string)
-                    IGNORE_STRINGS.append(article_a(string))
-                    IGNORE_STRINGS.append(article_the(string))
-                string = "%s" + string
-        elif filename == 'feature-data.h':
+        if filename == 'feature-data.h':
             # we handle door adjectives as separate strings
             if string.endswith(' door') or string.endswith(' gate'):
                 words = separate_adjectives(string)
