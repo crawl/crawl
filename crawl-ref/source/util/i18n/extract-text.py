@@ -1188,8 +1188,41 @@ def special_handling_for_mon_data_h(strings):
 
     return output
 
+# special handling for strings in item-prop.cc
+def special_handling_for_item_prop_cc(strings):
+    output = []
+    plurals = []
+
+    for string in strings:
+        if string.startswith('#'):
+            # comment
+            output.append(string)
+            continue
+        elif string in ['steam', 'acid', 'quicksilver', 'swamp', 'fire', 'ice', 'pearl', 'storm', 'shadow', 'gold']:
+            string = string + ' dragon scales'
+        elif string == ' dragon scales':
+            # all possibilities covered above
+            continue
+        elif string in ['gloves', 'boots']:
+            string = 'pair of %s' + string
+        elif string in ['javelin', 'boomerang']:
+            output.append("the " + string)
+            string = 'silver ' + string
+
+        if not is_missile(string):
+            # placeholder for adjective
+            string = "%s" + string
+
+        if is_missile(string) or "potion" in string or "scroll" in string:
+            plurals.append('%d ' + pluralise(string))
+
+        output.append("the " + string)
+
+    output.extend(plurals)
+    return output
 
 # special handling for strings in item-name.cc
+# you'd think from the filename that everything in here would be a name, but you'd be wrong
 def special_handling_for_item_name_cc(strings):
     result = []
     extras1 = []
@@ -1955,7 +1988,7 @@ def pluralise(string):
     elif string.endswith("y") and not string.endswith("ey"):
         return string[:-1] + "ies"
     elif string.endswith("staff"):
-        return string[:-1] + "ves"
+        return string[:-2] + "ves"
     elif string.endswith("f") and not string.endswith("ff"):
         return string[:-1] + "ves"
     elif string.endswith("mage") and not string.endswith("damage"):
@@ -2060,10 +2093,8 @@ def get_noun_permutations(string, is_monster = False):
         base = re.sub("^%s", "", base)
 
         full = base
-        # add placeholder for adjective(s), if applicable
-        if not is_missile(base):
-            full = "%s" + base
-        full = "the " + full
+        # add placeholder for adjective(s)
+        full = "the %s" + full
 
         list.append(full)
 
@@ -2075,9 +2106,6 @@ def get_noun_permutations(string, is_monster = False):
                 list.append(possessive(full))
 
     return list
-
-def append_noun_permutations(list, string, is_monster = False):
-    list.extend(get_noun_permutations(string, is_monster))
 
 def append_monster_permutations(list, string):
     list.extend(get_noun_permutations(string, True))
@@ -2093,14 +2121,6 @@ def add_permutations_to_ignore_list(strings):
 def add_strings_to_output(filename, strings, output):
     if len(strings) == 0:
         return
-
-    is_monsters = (filename == 'mon-data.h')
-    is_special_file = (filename in ['item-prop.cc'])
-
-    # separate unique and non-unique names
-    names = []
-    unique_names = []
-    adjectives = []
 
     output.append("")
     output.append("##################")
@@ -2124,33 +2144,10 @@ def add_strings_to_output(filename, strings, output):
             string = string.replace(r'\"', '"')
         string = string.replace(r'\\', '\\')
 
-        # we need to treat names of monsters/features/items differently
-        special = False
-        if is_special_file:
-            special = True
-            if string.endswith(' ') or string.endswith(' "'):
-                adjectives.append(string)
-            elif filename == 'item-prop.cc':
-                # everything here is a non-unique item name
-                names.append(string)
-            else:
-                special = False
-
-        if not special:
-            if string in output:
-                output.append('# duplicate: ' + string)
-            else:
-                output.append(string)
-
-    for string in names:
-        append_noun_permutations(output, string, is_monsters)
-
-    for string in unique_names:
-        append_noun_permutations(output, string, is_monsters)
-
-    for string in adjectives:
-        output.append(string)
-
+        if string in output:
+            output.append('# duplicate: ' + string)
+        else:
+            output.append(string)
 
 #################
 # Main
@@ -2213,7 +2210,7 @@ for filename in files:
         strings = process_cplusplus_file(filename)
 
     # the strings in some files need special handling
-    if filename in ['feature-data.h', 'item-name.cc', 'mon-data.h']:
+    if filename in ['feature-data.h', 'item-name.cc', 'item-prop.cc', 'mon-data.h']:
 
         # we will store in canonical form. Other forms will be auto-generated from there.
         # add other forms to ignore list so they don't get picked up anywhere else
@@ -2224,6 +2221,8 @@ for filename in files:
             strings = special_handling_for_feature_data_h(strings)
         elif filename == 'item-name.cc':
             strings = special_handling_for_item_name_cc(strings)
+        elif filename == 'item-prop.cc':
+            strings = special_handling_for_item_prop_cc(strings)
         elif filename == 'mon-data.h':
             strings = special_handling_for_mon_data_h(strings)
 
@@ -2240,24 +2239,11 @@ for filename in files:
         if ignore_string(string):
             continue
 
-        if filename == 'item-prop.cc':
-            if string in ['steam', 'acid', 'quicksilver', 'swamp', 'fire', 'ice', 'pearl', 'storm', 'shadow', 'gold']:
-                string = '%s' + string + ' dragon scales'
-            elif string == ' dragon scales':
-                continue
-            elif string in ['gloves', 'boots']:
-                string = '%spair of %s' + string
-            elif string in ['javelin', 'boomerang']:
-                filtered_strings.append(string)
-                filtered_strings.append('silver ' + string)
-                continue
-            elif string not in ['dart', 'stone', 'arrow', 'bolt', 'large rock', 'sling bullet', 'throwing net']:
-                string = '%s' + string
-        elif filename == 'species-data.h':
+        if filename == 'species-data.h':
             # error condition
             if string == 'Yak':
                 continue
-        elif filename not in ['feature-data.h', 'item-name.cc', 'mon-data.h']:
+        elif filename not in ['feature-data.h', 'item-name.cc', 'item-prop.h', 'mon-data.h']:
             if string == "a damnation bolt":
                 # should be already covered, but just in case
                 string = article_the(string[2:]);
