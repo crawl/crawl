@@ -9885,7 +9885,7 @@ DEPTH:  D:7-11
 KITEM:  D = box of beasts
 # Even on juveniles, blinkbolt can be overwhelming, especially if you roll more
 # than one shock beast. Explicitly specify beast facets here to avoid rolling
-# any shock ones for the juveniles. The larval one, being the "boss" here, can 
+# any shock ones for the juveniles. The larval one, being the "boss" here, can
 # still roll shock for now.
 KMONS:  D = juvenile bat-sting mutant beast / juvenile fire-bat mutant beast / \
         juvenile bat-weird mutant beast / juvenile ox-bat mutant beast / \
