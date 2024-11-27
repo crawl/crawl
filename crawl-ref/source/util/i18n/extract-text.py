@@ -1092,14 +1092,18 @@ def process_lua_file(filename):
 # special handling for strings in feature-data.h
 def special_handling_for_feature_data_h(strings):
     output = []
+    adjectives = []
     for string in strings:
         if string.startswith('#'):
             output.append(string)
         elif string.endswith(' door') or string.endswith(' gate'):
             # we handle door adjectives as separate strings
             words = separate_adjectives(string)
-            for word in words:
-                output.append(word);
+            for i in range(len(words)):
+                if i == len(words) - 1:
+                    output.append(words[i]);
+                else:
+                    adjectives.append(words[i])
         elif string.endswith("golubria"):
             # the version with a small g is an internal id
             continue
@@ -1113,6 +1117,10 @@ def special_handling_for_feature_data_h(strings):
             output.append("the " + string[2:])
         else:
             output.append("the " + string)
+
+    output.append("# section: door/gate adjectives")
+    for string in adjectives:
+        output.append(string)
 
     # do we need plurals?
 
