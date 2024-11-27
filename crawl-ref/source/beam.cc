@@ -6040,7 +6040,8 @@ bool ench_flavour_affects_monster(actor *agent, beam_type flavour,
 
     // Special allies whose loyalty can't be so easily bent
     case BEAM_CHARM:
-        rc = !(never_harm_monster(agent, mon));
+        rc = !never_harm_monster(agent, mon)
+             && !mons_aligned(agent, mon);
         break;
 
     case BEAM_MINDBURST:
