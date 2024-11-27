@@ -1089,6 +1089,35 @@ def process_lua_file(filename):
 
     return strings
 
+# special handling for strings in feature-data.h
+def special_handling_for_feature_data_h(strings):
+    output = []
+    for string in strings:
+        if string.startswith('#'):
+            output.append(string)
+        elif string.endswith(' door') or string.endswith(' gate'):
+            # we handle door adjectives as separate strings
+            words = separate_adjectives(string)
+            for word in words:
+                output.append(word);
+        elif string.endswith("golubria"):
+            # the version with a small g is an internal id
+            continue
+        elif string in ['explore horizon', 'unseen']:
+            output.append(string)
+        elif string.startswith('some '):
+            output.append(string)
+        elif string.startswith('the '):
+            output.append(string)
+        elif string.startswith('a '):
+            output.append("the " + string[2:])
+        else:
+            output.append("the " + string)
+
+    # do we need plurals?
+
+    return output
+
 # special handling for strings in mon-data.h
 def special_handling_for_mon_data_h(strings):
     output = []
@@ -2051,14 +2080,8 @@ def add_strings_to_output(filename, strings, output):
     if len(strings) == 0:
         return
 
-    if filename == 'item-name.cc':
-        strings = special_handling_for_item_name_cc(strings)
-    elif filename == 'mon-data.h':
-        add_permutations_to_ignore_list(strings)
-        strings = special_handling_for_mon_data_h(strings)
-
     is_monsters = (filename == 'mon-data.h')
-    is_special_file = (filename in ['feature-data.h', 'item-prop.cc'])
+    is_special_file = (filename in ['item-prop.cc'])
 
     # separate unique and non-unique names
     names = []
@@ -2096,8 +2119,6 @@ def add_strings_to_output(filename, strings, output):
             elif filename == 'item-prop.cc':
                 # everything here is a non-unique item name
                 names.append(string)
-            elif not re.search('^(a|an|the|some) ', string) and string not in ['explore horizon', 'unseen']:
-                names.append(string)
             else:
                 special = False
 
@@ -2107,17 +2128,8 @@ def add_strings_to_output(filename, strings, output):
             else:
                 output.append(string)
 
-    if filename == 'feature-data.h':
-        for string in names:
-            if string in ["door", "gate"]:
-                output.append("the %s" + string)
-            else:
-                output.append("the " + string)
-            if string in ['lava', 'shallow water', 'deep water']:
-                output.append("some " + string)
-    else:
-        for string in names:
-            append_noun_permutations(output, string, is_monsters)
+    for string in names:
+        append_noun_permutations(output, string, is_monsters)
 
     for string in unique_names:
         append_noun_permutations(output, string, is_monsters)
@@ -2186,6 +2198,21 @@ for filename in files:
     else:
         strings = process_cplusplus_file(filename)
 
+    # the strings in some files need special handling
+    if filename in ['feature-data.h', 'item-name.cc', 'mon-data.h']:
+
+        # we will store in canonical form. Other forms will be auto-generated from there.
+        # add other forms to ignore list so they don't get picked up anywhere else
+        if filename in ['mon-data.h', 'feature-data.h']:
+            add_permutations_to_ignore_list(strings)
+
+        if filename == 'feature-data.h':
+            strings = special_handling_for_feature_data_h(strings)
+        elif filename == 'item-name.cc':
+            strings = special_handling_for_item_name_cc(strings)
+        elif filename == 'mon-data.h':
+            strings = special_handling_for_mon_data_h(strings)
+
     # filter out strings we want to ignore
     filtered_strings = []
     for string in strings:
@@ -2199,20 +2226,7 @@ for filename in files:
         if ignore_string(string):
             continue
 
-        # some names have adjectives added for display
-        if filename == 'feature-data.h':
-            # we handle door adjectives as separate strings
-            if string.endswith(' door') or string.endswith(' gate'):
-                words = separate_adjectives(string)
-                for word in words:
-                    if not word in filtered_strings:
-                        filtered_strings.append(word);
-                continue
-            elif string.startswith('some '):
-                string2 = re.sub('^some ', '', string)
-                if string2 not in filtered_strings:
-                    filtered_strings.append(string2)
-        elif filename == 'item-prop.cc':
+        if filename == 'item-prop.cc':
             if string in ['steam', 'acid', 'quicksilver', 'swamp', 'fire', 'ice', 'pearl', 'storm', 'shadow', 'gold']:
                 string = '%s' + string + ' dragon scales'
             elif string == ' dragon scales':
@@ -2229,18 +2243,11 @@ for filename in files:
             # error condition
             if string == 'Yak':
                 continue
-        elif filename != 'item-name.cc':
-            if string == 'runed door':
-                # this should be already covered above (feature-data.h), but just in case...
-                words = separate_adjectives(string)
-                for word in words:
-                    if not word in filtered_strings:
-                        filtered_strings.append(word);
-                continue
-            elif string == "a damnation bolt":
-                # again, should be already covered, but just in case
+        elif filename not in ['feature-data.h', 'item-name.cc', 'mon-data.h']:
+            if string == "a damnation bolt":
+                # should be already covered, but just in case
                 string = article_the(string[2:]);
-            elif string in ["damnation bolt", "gold piece", "quad damage"]:
+            if string in ["damnation bolt", "quad damage"]:
                 # again, should be already covered, but just in case
                 string = article_the(string);
             elif string.startswith("shaped "):
