@@ -1213,6 +1213,7 @@ def special_handling_for_item_prop_cc(strings):
             # placeholder for adjective
             string = "%s" + string
 
+        # stackable items need a plural with count
         if is_missile(string) or "potion" in string or "scroll" in string:
             plurals.append('%d ' + pluralise(string))
 
@@ -1400,7 +1401,8 @@ def special_handling_for_item_name_cc(strings):
             result.append('%d damnation bolts')
             continue
         elif string == "labelled ":
-            string = "the scroll labelled %s"
+            result.append("the scroll labelled %s")
+            string = "%d scrolls labelled %s"
         elif string == "x) ":
             # ignore - just used for size
             continue
