@@ -58,7 +58,7 @@
 "verzauberte "
 %%%%
 "melded "
-"verschmolzen "
+"verschmolzene "
 %%%%
 
 ################################
@@ -92,7 +92,7 @@
 %%%%
 # only used in "creamy pearl robe"
 "creamy "
-"cremefarbige "
+"cremefarbene "
 %%%%
 "crooked "
 "krumme "
@@ -104,7 +104,7 @@
 "gebogene "
 %%%%
 "dazzling "
-"schillernde "
+"glanzvolle "
 %%%%
 "dented "
 "verbeulte "
@@ -156,7 +156,7 @@
 "brummende "
 %%%%
 "ichor-stained "
-"ichorgefleckte "
+"eiterbefleckte "
 %%%%
 "iridescent "
 "irisierende "
@@ -175,7 +175,7 @@
 "klumpige "
 %%%%
 "masterwork "
-"Meisterwerk-"
+"meistervoll gefertigte "
 %%%%
 "non-descript "
 "unscheinbare "
@@ -184,19 +184,19 @@
 "gekerbte "
 %%%%
 "opalescent "
-"opalisierende "
+"opaleszente "
 %%%%
 "ornate "
 "verschnörkelte "
 %%%%
 "pitted "
-"löchrig "
+"löchrige "
 %%%%
 "polished "
 "polierte "
 %%%%
 "ripped "
-"gerissene "
+"zerrissene "
 %%%%
 "scintillating "
 "schillernde "
@@ -239,19 +239,19 @@
 "schwelende "
 %%%%
 "sparkling "
-"glitzernde "
+"funkelnde "
 %%%%
 "spiked "
-"sprudelnde "
+"stachlige "
 %%%%
 "square "
 "quadratische "
 %%%%
 "steaming "
-"dämpfende "
+"dampfende "
 %%%%
 "tapered "
-"verjüngte "
+"kegelförmige "
 %%%%
 "tattered "
 "zerfledderte "
@@ -263,7 +263,7 @@
 "dünne "
 %%%%
 "transparent "
-"dusrchsichtige "
+"durchsichtige "
 %%%%
 "triangular "
 "dreieckige "
@@ -284,7 +284,7 @@
 "verzogene"
 %%%%
 "wavering "
-"schwankende "
+"wankende "
 %%%%
 "weird "
 "seltsame "
@@ -319,67 +319,67 @@
 
 %%%%
 "agate-encrusted "
-"Achat-verkrustete "
+"achatverkrustete "
 %%%%
 "amber-encrusted "
-"Bernstein-verkrustete "
+"bernsteinverkrustete "
 %%%%
 "amethyst-encrusted "
-"Amethyst-verkrustete "
+"amethystverkrustete "
 %%%%
 "aquamarine-encrusted "
-"Aquamarin-verkrustete "
+"aquamarinverkrustete "
 %%%%
 "black opal-encrusted "
-"Schwarzer-Opal-verkrustete "
+"mit schwarzen Opalen verkrustete "
 %%%%
 "citrine-encrusted "
-"Zitrin-verkrustete "
+"zitrinverkrustete "
 %%%%
 "diamond-encrusted "
-"Diamant-verkrustete "
+"diamantverkrustete "
 %%%%
 "emerald-encrusted "
-"Smaragd-verkrustete "
+"smaragdverkrustete "
 %%%%
 "garnet-encrusted "
-"Granat-verkrustete "
+"granatverkrustete "
 %%%%
 "jacinth-encrusted "
-"jacinth-verkrustete "
+"jacinthverkrustete "
 %%%%
 "jade-encrusted "
-"Jade-verkrustete "
+"jadeverkrustete "
 %%%%
 "jasper-encrusted "
-"Jaspis-verkrustete "
+"jaspisverkrustete "
 %%%%
 "jet-encrusted "
-"Jet-verkrustete "
+"gagatverkrustete "
 %%%%
 "obsidian-encrusted "
-"Obsidian-verkrustete "
+"obsidianverkrustete "
 %%%%
 "opal-encrusted "
-"Opal-verkrustete "
+"opalverkrustete "
 %%%%
 "pearl-encrusted "
-"perlverkrustete "
+"perlenverkrustete "
 %%%%
 "ruby-encrusted "
-"Rubin-verkrustete "
+"rubinverkrustete "
 %%%%
 "sapphire-encrusted "
-"Saphir-verkrustete "
+"saphirverkrustete "
 %%%%
 "tiger eye-encrusted "
-"Tigerauge-verkrustete "
+"tigeraugenverkrustete "
 %%%%
 "topaz-encrusted "
-"Topas-verkrustete "
+"topasverkrustete "
 %%%%
 "turquoise-encrusted "
-"Türkis-verkrustete "
+"türkisverkrustete "
 %%%%
 
 %%%%
@@ -396,7 +396,7 @@
 "aquamarinbesetzte "
 %%%%
 "black opal-studded "
-"Schwarzer-Opal-besetzte "
+"mit schwarzen Opalen besetzte "
 %%%%
 "citrine-studded "
 "citrinbesetzte "
@@ -420,7 +420,7 @@
 "jaspisbesetzte "
 %%%%
 "jet-studded "
-"jetbesetzte "
+"gagatbesetzte "
 %%%%
 "obsidian-studded "
 "obsidianbesetzte "
@@ -438,7 +438,7 @@
 "saphirbesetzte "
 %%%%
 "tiger eye-studded "
-"tigeraugebesetzte "
+"tigeraugenbesetzte "
 %%%%
 "topaz-studded "
 "topasbesetzte "
@@ -503,7 +503,7 @@
 "Marmor-"
 %%%%
 "pearl "
-"Perle-"
+"Perlen-"
 %%%%
 "pewter "
 "Zinn-"
@@ -533,10 +533,10 @@
 # these ones are a jewellery material and a rune
 %%%%
 "gossamer "
-"Spinnfäden-"
+"hauchdünne "
 %%%%
 "bone "
-"Knochen-"
+"knöcherne "
 %%%%
 "iron "
 "eiserne "
@@ -570,7 +570,7 @@
 ################################
 %%%%
 "vorpal "
-"Vorpal-"
+"scharfe "
 %%%%
 "antimagic "
 "antimagische "
@@ -667,13 +667,13 @@
 # potion qualifiers (optionally added in front of colour - cosmetic)
 %%%%
 "bubbling "
-"sprudelnde "
+"blubbernde "
 %%%%
 "fuming "
 "rauchende "
 %%%%
 "fizzy "
-"zischende "
+"sprudelnde "
 %%%%
 "viscous "
 "dickflüssige "
@@ -717,13 +717,13 @@
 
 %%%%
 "decaying "
-"verfallende "
+"verwesende "
 %%%%
 "barnacled "
-"Kletten-"
+"seepockenbefallene "
 %%%%
 "abyssal "
-"Abgrund-"
+"abgründige "
 %%%%
 "icy "
 "eisige "
@@ -738,7 +738,7 @@
 "feurige "
 %%%%
 "obsidian "
-"Obsidian-"
+"vulkanische "
 
 ################################
 # doors/gates
@@ -817,10 +817,10 @@ rich purple
 dunkelviolette
 %%%%
 pale cyan-grey
-blasse cyan-graue
+blasse blaugraue
 %%%%
 plain brown
-einfarbig braune
+schlichte braune
 %%%%
 
 ################################
@@ -828,7 +828,7 @@ einfarbig braune
 ################################
 %%%%
 "nearby "
-"nahgelegene "
+"in der Nähe befindliche "
 %%%%
 "helpless "
 "hilflose "
@@ -837,13 +837,13 @@ einfarbig braune
 "untergetauchte "
 %%%%
 "spectral "
-"geisterhafte "
+"spektrale "
 %%%%
 "ghostly "
-"gespenstische "
+"geisterhafte "
 %%%%
 "active "
-"active "
+"aktive "
 %%%%
 "sensed "
 "gespürte "
@@ -861,7 +861,7 @@ einfarbig braune
 "neutrale "
 %%%%
 "non-hostile "
-"nicht-feindliche "
+"nicht feindliche "
 %%%%
 "charred "
 "verkohlte "
@@ -879,7 +879,7 @@ einfarbig braune
 "scheußliche "
 %%%%
 "febrile "
-"febrile "
+"fiebrige "
 %%%%
 "sickly "
 "kränkliche "
@@ -903,7 +903,7 @@ einfarbig braune
 "gehäutete "
 %%%%
 "rotten "
-"verdorbene "
+"verfaulte "
 %%%%
 # used for obsolete monsters
 "removed "
@@ -961,7 +961,7 @@ einfarbig braune
 "monströse "
 %%%%
 "gelid "
-"gelide "
+"eisige "
 %%%%
 "infernal "
 "höllische "
@@ -1075,10 +1075,10 @@ einfarbig braune
 "Zot-"
 %%%%
 "archer "
-"Bogenschütze-"
+"Bogenschützen-"
 %%%%
 "conjurer "
-"Konjurant-"
+"Konjuranten-"
 %%%%
 "fire elementalist "
 "Feuermagier-"
@@ -1133,7 +1133,7 @@ einfarbig braune
 "laute "
 %%%%
 "ear-piercing "
-"gellende "
+"durchdringende "
 %%%%
 "thunderous "
 "donnernde "
