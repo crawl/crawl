@@ -1,0 +1,170 @@
+%%%%
+Zin lastname
+
+Zin le Législateur
+%%%%
+Yredelemnul lastname
+
+Yredelemnul le Sombre
+%%%%
+Okawaru lastname
+
+Maître de guerre Okawaru
+%%%%
+Makhleb lastname
+
+Makhleb le Destructeur
+%%%%
+Sif Muna lastname
+
+Sif Muna le Gardien des Secrets
+%%%%
+Trog lastname
+
+Trog le Furieux
+%%%%
+Elyvilon lastname
+
+Elyvilon le Guérisseur
+%%%%
+Lugonu lastname
+
+Lugonu l'Informé
+%%%%
+Beogh lastname
+
+Beogh le Brigand
+%%%%
+Fedhas lastname
+
+Fedhas Madash
+%%%%
+Cheibriados lastname
+
+Cheibriados le Réfléchi
+%%%%
+Ashenzari lastname
+
+Ashenzari le Lié
+%%%%
+Dithmenos lastname
+
+Dithmenos l'Ombreux
+%%%%
+Nemelex Xobeh lastname
+
+Nemelex Xobeh le Trompeur
+%%%%
+Gozag lastname
+
+Gozag Ym Sagoz l'Avidité
+%%%%
+Qazlal lastname
+
+Qazlal l'Apporteur de Tempêtes
+%%%%
+Ru lastname
+
+Ru l'Éveillé
+%%%%
+Pakellas lastname
+
+Pakellas l'Inventif
+%%%%
+Uskayaw lastname
+
+Uskayaw le Fêtard
+%%%%
+Hepliaklqana lastname
+
+Hepliaklqana l'Oublié
+%%%%
+Wu Jian lastname
+
+le Conseil Wu Jian
+%%%%
+# Xom est neutre
+Xom lastname
+
+w:280
+Xom du Chaos
+
+w:5
+Xom l'Aléatoire
+
+w:5
+Xom le Dieu des Nombres Aléatoires
+
+w:5
+Xom le Dieu Ancien du Chaos
+
+Xom le Rusé
+
+w:5
+Xom le Moins Prévisible
+
+w:5
+Xom l'Imprévisible
+
+Xom aux Nombreuses Portes
+
+Xom le Capricieux
+
+w:5
+Xom de l'Humeur Sanglante
+
+w:5
+Xom de l'Humeur Forcée
+
+Xom de l'Humour Sec Comme un Os
+
+w:5
+Xom du Rire Malveillant
+
+w:5
+Xom du Rire Malicieux
+
+w:5
+Xom le Psychotique
+%%%%
+
+w:5
+Xom le Psychopathe
+
+w:2
+Xom de l'Intention Gnomique
+
+w:2
+Xom de l'Intention Indicible
+
+w:2
+Xom de l'Intention Changeante
+
+w:2
+Xom de l'Intention Instable
+
+w:2
+Xom de l'Intention Inconnue
+
+Xom l'Instable
+
+Xom aux Intentions Inconnues
+
+w:4
+Le Maître Xom
+
+w:2
+Le Maître Xom, Xom-a-lom-a-ding-dong
+
+w:2
+Le Maître Xom, Xom-o-Rama
+
+w:2
+Le Maître Xom, Xom-Xom-bo-Bom, Banana-Fana-fo-Fom
+
+w:5
+Xom le Créateur de Turbulences
+
+w:5
+Xom l'Instigateur de Discontinuités
+%%%%
