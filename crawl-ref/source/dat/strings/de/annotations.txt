@@ -139,11 +139,11 @@ fallengelassen
 
 %%%%
 corrosion resistance
-Korrosionresistenz
+Korrosionsresistenz
 %%%%
 # magic resistance is an old name for will
 magic resistance
-Magie-Resistenz
+Magieresistenz
 %%%%
 MR
 MR
@@ -255,7 +255,7 @@ flame
 Flamme
 %%%%
 freeze
-Frieren
+gefrieren
 %%%%
 holy
 heilig
@@ -276,7 +276,7 @@ speed
 Geschw
 %%%%
 vorpal
-Vorpal
+Schärfe
 %%%%
 vamp
 vamp
@@ -301,7 +301,7 @@ ernten
 %%%%
 # spectral
 spect
-geist
+spekt
 %%%%
 acid
 Säure
@@ -348,7 +348,7 @@ Archmagi
 Erzmagier
 %%%%
 reflect
-Reflex
+Reflekt
 %%%%
 Spirit
 Geist
