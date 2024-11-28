@@ -19,22 +19,22 @@ the bolt of energy
 der Energiestrahl
 %%%%
 the spray of metal splinters
-die Gischt der Metallsplitter
+die Metallsplittersalve
 %%%%
 the spray of wooden splinters
-die Gischt der Holzsplitter
+die Holzsplittersalve
 %%%%
 the burst of rock shards
-die Gischt der Steinsplitter
+die Felssplittersalve
 %%%%
 the volley of thorns
 die Dornensalve
 %%%%
 the volley of spikes
-die Salve der Stacheln
+die Stachelsalve
 %%%%
 the toxic sludge
-der giftige Schlamm
+der toxische Schlamm
 %%%%
 the damnation
 die Verdammnis
@@ -44,11 +44,11 @@ der faulige Dunst
 %%%%
 # this blasts outwards from the player in all directions
 the blast of cleansing flame
-die Wolken der reinigenden Flamme
+die reinigenden Flammenwolken
 %%%%
 # this creates a single straight line of clouds
 the blast of calcifying dust
-der Strahl des verkalkenden Staubs
+der verkalkende Staubstrahl
 %%%%
 the ghostly fireball
 der geisterhafte Feuerball
@@ -61,21 +61,21 @@ der Lavaklumpen
 %%%%
 # chaos crab area effect
 the blast of chaos
-der Chaosstrahl
+die Chaoswolken
 %%%%
 # fire breath (beam), flame clouds (area)
 the blast of flame
-die Wolke der Flammen
+die Flammenwolken
 %%%%
 the blast of cold
-die Wolke des Frostes
+die Frostwolken
 %%%%
 # searing breath (beam), similar to fire breath
 the searing blast
-die sengende Wolke
+der sengende Strahl
 %%%%
 the bolt of electricity
-der Elektrizitätbolzen
+der elektrische Blitz
 %%%%
 the puff of flame
 der Flammenhauch
@@ -87,13 +87,13 @@ the stinking cloud
 die stinkende Wolke
 %%%%
 the magic dart
-der magische Pfeil
+das magische Geschoss
 %%%%
 the bolt of fire
-der Feuerbolzen
+der Feuerstrahl
 %%%%
 the bolt of cold
-der Frostbolzen
+der Froststrahl
 %%%%
 the torrent of water
 der Wasserschwall
@@ -109,10 +109,10 @@ the thunderbolt
 der Donnerkeil
 %%%%
 the bolt of poison
-der Giftblitz
+der Giftstrahl
 %%%%
 the bolt of negative energy
-der Bolzen der negativen Energie
+der Blitz negativer Energie
 %%%%
 the crystal spear
 der Kristallspeer
@@ -128,11 +128,11 @@ the iron shot
 der Eisenschuss
 %%%%
 the stone arrow
-der Steinpfeil
+das Steingeschoss
 %%%%
 # Shock spell (electricity)
 the zap
-das Zappen
+der Schock
 %%%%
 the stunning burst
 die betäubende Explosion
@@ -156,7 +156,7 @@ the poison gas
 das Giftgas
 %%%%
 the bolt of dispelling energy
-der Blitz der vertreibenden Energie
+der Strahl entzaubernder Energie
 %%%%
 the splash of acid
 der Säurespritzer
@@ -177,28 +177,28 @@ the blast of sand
 der Sandstrahl
 %%%%
 the bolt of magma
-der Magmabolzen
+der Magmastrahl
 %%%%
 the poison arrow
 der Giftpfeil
 %%%%
 the blast of choking fumes
-die Explosion der erstickenden Dämpfe
+die Explosion erstickender Dämpfe
 %%%%
 the lance of force
-die Lanze der Kraft
+die Drucklanze
 %%%%
 the searing ray
-der sengende Strahl
+der versengende Strahl
 %%%%
 the crystal bolt
-der Kristallbolzen
+der Kristallblitz
 %%%%
 the bolt of acid
-der Säurebolzen
+der Säurestrahl
 %%%%
 the unravelling
-die Aufdröseln
+die Auflösung
 %%%%
 the iceblast
 der Eisblitz
@@ -216,19 +216,19 @@ the harpoon shot
 der Harpunenschuss
 %%%%
 the beckoning
-die Lockung
+das Herbeiwinken
 %%%%
 the great blast of fire
 der große Feuerstoß
 %%%%
 the malmutate
-das Malmutat
+die Malmutation
 %%%%
 the refrigeration
 die Kühlung
 %%%%
 the drain life
-der Lebensentzug
+die Lebensauszehrung
 %%%%
 the sonic wave
 die Schallwelle
@@ -244,23 +244,23 @@ the hail
 der Hagel
 %%%%
 the mystic blast
-die mystische Explosion
+die mystische Druckwelle
 %%%%
 the chilling breath
 der kühlende Atem
 %%%%
 the porkalator
-der Verschweiner
+die Schweinifizierung
 %%%%
 the stream of webbing
-der Strom Gewebe
+der Gewebestrahl
 %%%%
 # duplicate of cloud
 #the spectral mist
 #
 %%%%
 the shadow bolt
-der Schattenbolzen
+der Schattenstrahl
 %%%%
 the shadow shard
 der Schattensplitter
@@ -272,29 +272,29 @@ the flame surge
 die Flammenwoge
 %%%%
 the explosion of spores
-die Explosion der Sporen
+die Sporenexplosion
 %%%%
 the blast of lightning
-der Einschlag des Blitzes
+die Blitzeinschlag
 %%%%
 the blast of energy
-der Einschlag der Energie
+die Energieexplosion
 %%%%
 the blast of putrescent gases
-der Einschlag faulender Gase
+der Schwall faulender Gase
 %%%%
 the pyre of ghostly fire
-der Scheiterhaufen des geisterhaften Feuers
+der Scheiterhaufen geisterhaften Feuers
 %%%%
 the fiery explosion
 die feurige Explosion
 %%%%
 the arc of chaos
-der Lichtbogen des Chaos
+der Chaosbogen
 %%%%
 # Englaciate - freezes the whole area
 the great icy blast
-der große eisige Stoß
+der große eisige Strom
 %%%%
 the golden flame
 die goldene Flamme
@@ -313,47 +313,47 @@ die elektrische Entladung
 %%%%
 # from stone/rock walls or stone enemies
 the blast of rock fragments
-die Explosion von Steinsplittern
+die Explosion aus Felsfragmenten
 %%%%
 the blast of petrified fragments
-die Explosion von Steinsplittern
+die Explosion aus versteinerten Fragmenten
 %%%%
 # fragments from a monster made of ice
 the icy blast
-die Explosion des Eises
+die eisige Explosion
 %%%%
 the blast of toenail fragments
-die Explosion von Zehennagelsplittern
+die Explosion aus Zehennagelfragmenten
 %%%%
 the blast of metal fragments
-die Explosion von Metallsplittern
+die Explosion aus Metallfragmenten
 %%%%
 the blast of crystal shards
-die Explosion von Kristallscherben
+die Explosion aus Kristallscherben
 %%%%
 the blast of orange crystal shards
-die Explosion von orangen Kristallscherben
+die Explosion aus orangen Kristallscherben
 %%%%
 the blast of salt crystal shards
-die Explosion von Salzkristallscherben
+die Explosion aus Salzkristallscherben
 %%%%
 the blast of obsidian shards
-die Explosion von Obsidianscherben
+die Explosion aus Obsidianscherben
 %%%%
 the blast of sapphire shards
-die Explosion von Saphirscherben
+die Explosion aus Saphirscherben
 %%%%
 the blast of bone shards
-die Explosion von Knochensplittern
+die Explosion aus Knochensplittern
 %%%%
 
 # Qazlal Upheaval
 %%%%
 the blast of magma
-die Explosion von Magma
+die Magmaexplosion
 %%%%
 the blast of ice
-die Explosion von Eis
+die eisige Explosion
 %%%%
 the cutting wind
 der schneidende Wind
@@ -377,22 +377,22 @@ a bolt of energy
 ein Energiestrahl
 %%%%
 a spray of metal splinters
-eine Gischt der Metallsplitter
+eine Metallsplittersalve
 %%%%
 a spray of wooden splinters
-eine Gischt der Holzsplitter
+eine Holzsplittersalve
 %%%%
 a burst of rock shards
-eine Gischt der Steinsplitter
+eine Felssplittersalve
 %%%%
 a volley of thorns
 eine Dornensalve
 %%%%
 a volley of spikes
-eine Salve der Stacheln
+eine Stachelsalve
 %%%%
 a toxic sludge
-ein giftiger Schlamm
+ein toxischer Schlamm
 %%%%
 a damnation
 eine Verdammnis
@@ -402,11 +402,11 @@ ein fauliger Dunst
 %%%%
 # this blasts outwards from the player in all directions
 a blast of cleansing flame
-eine Wolken der reinigenden Flamme
+eine reinigende Flammenwolke
 %%%%
 # this creates a single straight line of clouds
 a blast of calcifying dust
-ein Strahl des verkalkenden Staubs
+ein verkalkender Staubstrahl
 %%%%
 a ghostly fireball
 ein geisterhafter Feuerball
@@ -419,21 +419,21 @@ ein Lavaklumpen
 %%%%
 # chaos crab area effect
 a blast of chaos
-ein Chaosstrahl
+eine Chaoswolke
 %%%%
 # fire breath (beam), flame clouds (area)
 a blast of flame
-eine Wolke der Flammen
+eine Flammenwolke
 %%%%
 a blast of cold
-eine Wolke des Frostes
+eine Frostwolke
 %%%%
 # searing breath (beam), similar to fire breath
 a searing blast
-eine sengende Wolke
+ein sengender Strahl
 %%%%
 a bolt of electricity
-ein Elektrizitätbolzen
+ein elektrischer Blitz
 %%%%
 a puff of flame
 ein Flammenhauch
@@ -445,13 +445,13 @@ a stinking cloud
 eine stinkende Wolke
 %%%%
 a magic dart
-ein magischer Pfeil
+ein magisches Geschoss
 %%%%
 a bolt of fire
-ein Feuerbolzen
+ein Feuerstrahl
 %%%%
 a bolt of cold
-ein Frostbolzen
+ein Froststrahl
 %%%%
 a torrent of water
 ein Wasserschwall
@@ -466,10 +466,10 @@ a thunderbolt
 ein Donnerkeil
 %%%%
 a bolt of poison
-ein Giftblitz
+ein Giftstrahl
 %%%%
 a bolt of negative energy
-ein Bolzen der negativen Energie
+ein Blitz negativer Energie
 %%%%
 a crystal spear
 ein Kristallspeer
@@ -485,11 +485,11 @@ a iron shot
 ein Eisenschuss
 %%%%
 a stone arrow
-ein Steinpfeil
+ein Steingeschoss
 %%%%
 # Shock spell (electricity)
 a zap
-{n}ein Zappen
+{n}ein Schock
 %%%%
 a stunning burst
 eine betäubende Explosion
@@ -513,7 +513,7 @@ a poison gas
 {n}ein Giftgas
 %%%%
 a bolt of dispelling energy
-ein Blitz der vertreibenden Energie
+ein Strahl entzaubernder Energie
 %%%%
 a splash of acid
 ein Säurespritzer
@@ -534,28 +534,28 @@ a blast of sand
 ein Sandstrahl
 %%%%
 a bolt of magma
-ein Magmabolzen
+ein Magmastrahl
 %%%%
 a poison arrow
 ein Giftpfeil
 %%%%
 a blast of choking fumes
-eine Explosion der erstickenden Dämpfe
+eine Explosion erstickender Dämpfe
 %%%%
 a lance of force
-eine Lanze der Kraft
+eine Drucklanze
 %%%%
 a searing ray
-ein sengender Strahl
+ein versengender Strahl
 %%%%
 a crystal bolt
-ein Kristallbolzen
+ein Kristallblitz
 %%%%
 a bolt of acid
-ein Säurebolzen
+ein Säurestrahl
 %%%%
 a unravelling
-eine Aufdröseln
+eine Auflösung
 %%%%
 a iceblast
 ein Eisblitz
@@ -573,19 +573,19 @@ a harpoon shot
 ein Harpunenschuss
 %%%%
 a beckoning
-eine Lockung
+ein Heranwinken
 %%%%
 a great blast of fire
 ein großer Feuerstoß
 %%%%
 a malmutate
-{n}ein Malmutat
+{n}eine Malmutation
 %%%%
 a refrigeration
 eine Kühlung
 %%%%
 a drain life
-ein Lebensentzug
+eine Lebensauszehrung
 %%%%
 a sonic wave
 eine Schallwelle
@@ -601,23 +601,23 @@ a hail
 ein Hagel
 %%%%
 a mystic blast
-eine mystische Explosion
+eine mystische Druckwelle
 %%%%
 a chilling breath
 ein kühlender Atem
 %%%%
 a porkalator
-ein Verschweiner
+eine Schweinifizierung
 %%%%
 a stream of webbing
-ein Strom Gewebe
+ein Gewebestrahl
 %%%%
 # duplicate of cloud
 #the spectral mist
 #
 %%%%
 a shadow bolt
-ein Schattenbolzen
+ein Schattenstrahl
 %%%%
 a shadow shard
 ein Schattensplitter
@@ -629,29 +629,29 @@ a flame surge
 eine Flammenwoge
 %%%%
 a explosion of spores
-eine Explosion der Sporen
+eine Sporenexplosion
 %%%%
 a blast of lightning
-ein Einschlag des Blitzes
+ein Blitzeinschlag
 %%%%
 a blast of energy
-ein Einschlag der Energie
+eine Energieexplosion
 %%%%
 a blast of putrescent gases
-ein Einschlag faulender Gase
+ein Schwall faulender Gase
 %%%%
 a pyre of ghostly fire
-ein Scheiterhaufen des geisterhaften Feuers
+ein Scheiterhaufen geisterhaften Feuers
 %%%%
 a fiery explosion
 eine feurige Explosion
 %%%%
 a arc of chaos
-ein Lichtbogen des Chaos
+ein Chaosbogen
 %%%%
 # Englaciate - freezes the whole area
 a great icy blast
-ein großer eisiger Stoß
+ein großer eisiger Strom
 %%%%
 a golden flame
 eine goldene Flamme
@@ -667,47 +667,47 @@ eine elektrische Entladung
 %%%%
 # from stone/rock walls or stone enemies
 a blast of rock fragments
-eine Explosion von Steinsplittern
+eine Explosion aus Felsfragmenten
 %%%%
 a blast of petrified fragments
-eine Explosion von Steinsplittern
+eine Explosion aus versteinerten Fragmenten
 %%%%
 # fragments from a monster made of ice
 a icy blast
-eine Explosion des Eises
+eine eisige Explosion
 %%%%
 a blast of toenail fragments
-eine Explosion von Zehennagelsplittern
+eine Explosion aus Zehennagelfragmenten
 %%%%
 a blast of metal fragments
-eine Explosion von Metallsplittern
+eine Explosion aus Metallfragmenten
 %%%%
 a blast of crystal shards
-eine Explosion von Kristallscherben
+eine Explosion aus Kristallscherben
 %%%%
 a blast of orange crystal shards
-eine Explosion von orangen Kristallscherben
+eine Explosion aus orangen Kristallscherben
 %%%%
 a blast of salt crystal shards
-eine Explosion von Salzkristallscherben
+eine Explosion aus Salzkristallscherben
 %%%%
 a blast of obsidian shards
-eine Explosion von Obsidianscherben
+eine Explosion aus Obsidianscherben
 %%%%
 a blast of sapphire shards
-eine Explosion von Saphirscherben
+eine Explosion aus Saphirscherben
 %%%%
 a blast of bone shards
-eine Explosion von Knochensplittern
+eine Explosion aus Knochensplittern
 %%%%
 
 # Qazlal Upheaval
 %%%%
 a blast of magma
-eine Explosion von Magma
+eine Magmaexplosion
 %%%%
 a blast of ice
-eine Explosion von Eis
+eine eisige Explosion
 %%%%
 a cutting wind
 ein schneidender Wind
@@ -731,22 +731,22 @@ bolt of energy
 Energiestrahl
 %%%%
 spray of metal splinters
-Gischt der Metallsplitter
+Metallsplittersalve
 %%%%
 spray of wooden splinters
-Gischt der Holzsplitter
+Holzsplittersalve
 %%%%
 burst of rock shards
-Gischt der Steinsplitter
+Felssplittersalve
 %%%%
 volley of thorns
 Dornensalve
 %%%%
 volley of spikes
-Salve der Stacheln
+Stachelsalve
 %%%%
 toxic sludge
-giftiger Schlamm
+toxischer Schlamm
 %%%%
 damnation
 Verdammnis
@@ -756,11 +756,11 @@ fauliger Dunst
 %%%%
 # this blasts outwards from the player in all directions
 blast of cleansing flame
-Wolken der reinigenden Flamme
+reinigende Flammenwolken
 %%%%
 # this creates a single straight line of clouds
 blast of calcifying dust
-Strahl des verkalkenden Staubs
+verkalkender Staubstrahl
 %%%%
 ghostly fireball
 geisterhafter Feuerball
@@ -773,21 +773,21 @@ Lavaklumpen
 %%%%
 # chaos crab area effect
 blast of chaos
-Chaosstrahl
+Chaoswolke
 %%%%
 # fire breath (beam), flame clouds (area)
 blast of flame
-Wolke der Flammen
+Flammenwolke
 %%%%
 blast of cold
-Wolke des Frostes
+Frostwolke
 %%%%
 # searing breath (beam), similar to fire breath
 searing blast
-sengende Wolke
+sengender Strahl
 %%%%
 bolt of electricity
-Elektrizitätbolzen
+elektrischer Blitz
 %%%%
 puff of flame
 Flammenhauch
@@ -799,13 +799,13 @@ stinking cloud
 stinkende Wolke
 %%%%
 magic dart
-magischer Pfeil
+magisches Geschoss
 %%%%
 bolt of fire
-Feuerbolzen
+Feuerstrahl
 %%%%
 bolt of cold
-Frostbolzen
+Froststrahl
 %%%%
 torrent of water
 Wasserschwall
@@ -820,10 +820,10 @@ thunderbolt
 Donnerkeil
 %%%%
 bolt of poison
-Giftblitz
+Giftstrahl
 %%%%
 bolt of negative energy
-Bolzen der negativen Energie
+Blitz negativer Energie
 %%%%
 crystal spear
 Kristallspeer
@@ -839,11 +839,11 @@ iron shot
 Eisenschuss
 %%%%
 stone arrow
-Steinpfeil
+Steingeschoss
 %%%%
 # Shock spell (electricity)
 zap
-Zappen
+Schock
 %%%%
 stunning burst
 betäubende Explosion
@@ -868,7 +868,7 @@ Säureklumpen
 #Giftgas
 %%%%
 bolt of dispelling energy
-Blitz der vertreibenden Energie
+Strahl entzaubernder Energie
 %%%%
 splash of acid
 Säurespritzer
@@ -889,28 +889,28 @@ blast of sand
 Sandstrahl
 %%%%
 bolt of magma
-Magmabolzen
+Magmastrahl
 %%%%
 poison arrow
 Giftpfeil
 %%%%
 blast of choking fumes
-Explosion der erstickenden Dämpfe
+Explosion erstickender Dämpfe
 %%%%
 lance of force
-Lanze der Kraft
+Drucklanze
 %%%%
 searing ray
-sengender Strahl
+versengender Strahl
 %%%%
 crystal bolt
-Kristallbolzen
+Kristallblitz
 %%%%
 bolt of acid
-Säurebolzen
+Säurestrahl
 %%%%
 unravelling
-Aufdröseln
+Auflösung
 %%%%
 iceblast
 Eisblitz
@@ -928,20 +928,20 @@ harpoon shot
 Harpunenschuss
 %%%%
 beckoning
-Lockung
+Heranwinken
 %%%%
 great blast of fire
 großer Feuerstoß
 %%%%
 malmutate
-Malmutat
+Malmutation
 %%%%
 refrigeration
 Kühlung
 %%%%
 # also used in monster attack description ("It can %s.")
 drain life
-Leben entziehen
+Leben auszehren
 %%%%
 sonic wave
 Schallwelle
@@ -957,23 +957,23 @@ hail
 Hagel
 %%%%
 mystic blast
-mystische Explosion
+mystische Druckwelle
 %%%%
 chilling breath
 kühlender Atem
 %%%%
 porkalator
-Verschweiner
+Schweinifizierung
 %%%%
 stream of webbing
-Strom Gewebe
+Gewebestrahl
 %%%%
 # duplicate of cloud
 #the spectral mist
 #
 %%%%
 shadow bolt
-Schattenbolzen
+Schattenstrahl
 %%%%
 shadow shard
 Schattensplitter
@@ -985,29 +985,29 @@ flame surge
 Flammenwoge
 %%%%
 explosion of spores
-Explosion der Sporen
+Sporenexplosion
 %%%%
 blast of lightning
-Einschlag des Blitzes
+Blitzeinschlag
 %%%%
 blast of energy
-Einschlag der Energie
+Energieexplosion
 %%%%
 blast of putrescent gases
-Einschlag faulender Gase
+Schwall faulender Gase
 %%%%
 pyre of ghostly fire
-Scheiterhaufen des geisterhaften Feuers
+Scheiterhaufen geisterhaften Feuers
 %%%%
 fiery explosion
 feurige Explosion
 %%%%
 arc of chaos
-Lichtbogen des Chaos
+Chaosbogen
 %%%%
 # Englaciate - freezes the whole area
 great icy blast
-großer eisiger Stoß
+großer eisiger Strom
 %%%%
 golden flame
 goldene Flamme
@@ -1026,47 +1026,47 @@ elektrische Entladung
 %%%%
 # from stone/rock walls or stone enemies
 blast of rock fragments
-Explosion von Steinsplittern
+Explosion aus Felsfragmenten
 %%%%
 blast of petrified fragments
-Explosion von Steinsplittern
+Explosion aus versteinerten Fragmenten
 %%%%
 # fragments from a monster made of ice
 icy blast
-Explosion des Eises
+Explosion aus Eisfragmenten
 %%%%
 blast of toenail fragments
-Explosion von Zehennagelsplittern
+Explosion aus Zehennagelfragmenten
 %%%%
 blast of metal fragments
-Explosion von Metallsplittern
+Explosion aus Metallfragmenten
 %%%%
 blast of crystal shards
-Explosion von Kristallscherben
+Explosion aus Kristallscherben
 %%%%
 blast of orange crystal shards
-Explosion von orangen Kristallscherben
+Explosion aus orangen Kristallscherben
 %%%%
 blast of salt crystal shards
-Explosion von Salzkristallscherben
+Explosion aus Salzkristallscherben
 %%%%
 blast of obsidian shards
-Explosion von Obsidianscherben
+Explosion aus Obsidianscherben
 %%%%
 blast of sapphire shards
-Explosion von Saphirscherben
+Explosion aus Saphirscherben
 %%%%
 blast of bone shards
-Explosion von Knochensplittern
+Explosion aus Knochensplittern
 %%%%
 
 # Qazlal Upheaval
 %%%%
 blast of magma
-Explosion von Magma
+Magmaexplosion
 %%%%
 blast of ice
-Explosion von Eis
+eisige Explosion
 %%%%
 cutting wind
 schneidender Wind
@@ -1099,7 +1099,7 @@ lightning
 Blitz
 %%%%
 dispelling energy
-vertreibende Energie
+entzaubernde Energie
 %%%%
 # duplicate of item type
 #missile
@@ -1189,7 +1189,7 @@ zufällig
 #Langsamkeit
 %%%%
 haste
-Hast
+Eile
 %%%%
 might
 Macht
@@ -1216,7 +1216,7 @@ polymorph
 Polymorph
 %%%%
 malmutation
-Fehlmutation
+Malmutation
 %%%%
 charming
 Verzauberung
@@ -1238,7 +1238,7 @@ blink
 Blinzeln
 %%%%
 blink close
-Nahblinzeln
+in die Nähe blinzeln
 %%%%
 petrify
 versteinern
@@ -1285,7 +1285,7 @@ vulnerability
 Verwundbarkeit
 %%%%
 malign offering
-bösartiges Angebot
+bösartige Opfergabe
 %%%%
 virulence
 Virulenz
@@ -1294,11 +1294,11 @@ agility
 Beweglichkeit
 %%%%
 sap magic
-Magie auslaugen
+Magie entziehen
 %%%%
 # also used in monster attack description ("It can %s.")
 drain magic
-Magie entziehen
+Magie verzehren
 %%%%
 tukima's dance
 Tukimas Tanz
@@ -1311,19 +1311,19 @@ Atem der Toten
 #Resistenz
 %%%%
 unravelled magic
-aufgedröselte Magie
+aufgelöste Magie
 %%%%
 shared pain
 geteilter Schmerz
 %%%%
 infestation
-Befall
+Infestation
 %%%%
 vile clutch
-widerliche Umklammerung
+böser Griff
 %%%%
 vampiric draining
-vampirischer Entzug
+vampirische Auszehrung
 %%%%
 concentrate venom
 Gift konzentrieren
