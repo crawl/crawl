@@ -1988,10 +1988,13 @@ static int _irradiate_cell(coord_def where, int pow, const actor &agent)
     if (never_harm_monster(&agent, act->as_monster()))
         return 0;
 
-    mprf("%s %s blasted with magical radiation%s",
-         act->name(DESC_THE).c_str(),
-         conjugate_verb("are", hitting_player).c_str(),
-         attack_strength_punctuation(dam).c_str());
+    if (you.see_cell(act->pos()))
+    {
+        mprf("%s %s blasted with magical radiation%s",
+             act->name(DESC_THE).c_str(),
+             conjugate_verb("are", hitting_player).c_str(),
+             attack_strength_punctuation(dam).c_str());
+    }
 
     if (agent.is_player())
         _player_hurt_monster(*act->as_monster(), dam, BEAM_MMISSILE);
