@@ -1179,7 +1179,7 @@ foes as it feasts off of endless conflict.
 %%%%
 diamond sawblade
 
-An serrated disc forged of razor-sharp material. It spins in place at high
+A serrated disc forged of razor-sharp material. It spins in place at high
 velocity, shredding through flesh and metal alike.
 %%%%
 diamond obelisk
