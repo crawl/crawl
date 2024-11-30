@@ -4189,7 +4189,7 @@ static const struct spell_desc spelldata[] =
     25,
     4, 4,
     0,
-    TILEG_KINETIC_DISCUS,
+    TILEG_KINETIC_GRAPNEL,
 },
 
 {
