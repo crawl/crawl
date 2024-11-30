@@ -145,7 +145,7 @@ bool check_next_floor_warning()
 
 static void _player_change_level_reset()
 {
-    you.prev_targ  = MHITNOT;
+    you.prev_targ  = MID_NOBODY;
     if (you.pet_target != MHITYOU)
         you.pet_target = MHITNOT;
 

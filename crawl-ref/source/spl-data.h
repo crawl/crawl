@@ -84,7 +84,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_DIG, "Dig",
     spschool::earth,
-    spflag::dir_or_target | spflag::not_self | spflag::neutral
+    spflag::dir_or_target | spflag::not_self | spflag::aim_at_space
         | spflag::utility,
     4,
     200,
@@ -1271,7 +1271,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_GOLUBRIAS_PASSAGE, "Passage of Golubria",
     spschool::translocation,
-    spflag::target | spflag::neutral | spflag::escape | spflag::selfench,
+    spflag::target | spflag::aim_at_space | spflag::escape | spflag::selfench,
     4,
     100,
     2, LOS_RADIUS,
@@ -3675,7 +3675,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_JINXBITE, "Jinxbite",
     spschool::hexes,
-    spflag::neutral | spflag::selfench,
+    spflag::selfench,
     2,
     50,
     -1, -1,
@@ -3886,7 +3886,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_GELLS_GAVOTTE, "Gell's Gavotte",
     spschool::translocation,
-    spflag::target,
+    spflag::target | spflag::aim_at_space,
     6,
     200,
     1, 1,

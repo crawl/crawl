@@ -1589,7 +1589,7 @@ static void _generic_level_reset()
 {
     // TODO: can more be pulled into here?
 
-    you.prev_targ = MHITNOT;
+    you.prev_targ = MID_NOBODY;
     you.prev_grd_targ.reset();
 
     // Lose all listeners.

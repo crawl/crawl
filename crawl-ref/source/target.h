@@ -60,6 +60,7 @@ public:
     virtual aff_type is_affected(coord_def loc) = 0;
     virtual bool can_affect_unseen();
     virtual bool affects_monster(const monster_info& mon);
+    virtual bool harmful_to_player();
 
     targeting_iterator affected_iterator(aff_type threshold = AFF_YES);
 protected:
@@ -77,6 +78,7 @@ public:
     bool can_affect_outside_range() override;
     virtual aff_type is_affected(coord_def loc) override;
     virtual bool affects_monster(const monster_info& mon) override;
+    bool harmful_to_player() override;
 protected:
     vector<coord_def> path_taken; // Path beam took.
     void set_explosion_aim(bolt tempbeam);
@@ -100,20 +102,23 @@ class targeter_smite : public targeter
 {
 public:
     targeter_smite(const actor *act, int range = LOS_RADIUS,
-                    int exp_min = 0, int exp_max = 0, bool wall_ok = false,
-                    bool monster_okay = true,
+                    int exp_min = 0, int exp_max = 0,
+                    bool harmless_to_player = false,
+                    bool wall_ok = false, bool monster_okay = true,
                     bool (*affects_pos_func)(const coord_def &) = 0);
     virtual bool set_aim(coord_def a) override;
     virtual bool valid_aim(coord_def a) override;
     virtual bool can_affect_outside_range() override;
     bool can_affect_walls() override;
     aff_type is_affected(coord_def loc) override;
+    bool harmful_to_player() override;
 protected:
     // assumes exp_map is valid only if >0, so let's keep it private
     int exp_range_min, exp_range_max;
     explosion_map exp_map_min, exp_map_max;
     int range;
 private:
+    bool cannot_harm_player;
     bool affects_walls;
     bool can_target_monsters;
     bool (*affects_pos)(const coord_def &);
@@ -612,6 +617,7 @@ public:
     bool valid_aim(coord_def a) override;
     bool set_aim(coord_def a) override;
     aff_type is_affected(coord_def loc) override;
+    bool harmful_to_player() override { return false; };
 private:
     vector<coord_def> affected_monsters;
 };
@@ -695,6 +701,7 @@ class targeter_tempering : public targeter_smite
 public:
     targeter_tempering();
     bool valid_aim(coord_def a) override;
+    bool preferred_aim(coord_def a) override;
 };
 
 class targeter_piledriver : public targeter_smite

@@ -3982,9 +3982,9 @@ monster* cast_phantom_mirror(monster* mons, monster* targ, int hp_perc,
     mons_clear_trapping_net(targ);
 
     // Don't leak the real one with the targeting interface.
-    if (you.prev_targ == targ->mindex())
+    if (you.prev_targ == targ->mid)
     {
-        you.prev_targ = MHITNOT;
+        you.prev_targ = MID_NOBODY;
         crawl_state.cancel_cmd_repeat();
     }
     targ->reset_client_id();

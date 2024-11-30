@@ -946,7 +946,7 @@ bool player_unrand_bad_attempt(const item_def &weapon,
     if (is_unrandom_artefact(weapon, UNRAND_DEVASTATOR))
     {
 
-        targeter_smite hitfunc(&you, 1, 1, 1, false);
+        targeter_smite hitfunc(&you, 1, 1, 1);
         hitfunc.set_aim(defender->pos());
 
         return stop_attack_prompt(hitfunc, "attack",

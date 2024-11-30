@@ -491,7 +491,7 @@ static void _set_allies_withdraw(const coord_def &target)
 /// Does the player have a 'previous target' to issue targeting orders at?
 static bool _can_target_prev()
 {
-    return !(you.prev_targ == MHITNOT || you.prev_targ == MHITYOU);
+    return !(you.prev_targ == MID_NOBODY || you.prev_targ == MID_PLAYER);
 }
 
 /// Prompt the player to issue orders. Returns the key pressed.
@@ -510,7 +510,7 @@ static int _issue_orders_prompt()
         string previous;
         if (_can_target_prev())
         {
-            const monster* target = &env.mons[you.prev_targ];
+            const monster* target = monster_by_mid(you.prev_targ);
             if (target->alive() && you.can_see(*target))
                 previous = "   p - Attack previous target.";
         }
@@ -581,7 +581,9 @@ static bool _issue_order(int keyn, int &mons_targd)
 
             if (_can_target_prev())
             {
-                mons_targd = you.prev_targ;
+                monster* mon = monster_by_mid(you.prev_targ);
+                if (mon)
+                    mons_targd = mon->mindex();
                 break;
             }
 
