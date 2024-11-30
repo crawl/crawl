@@ -1038,7 +1038,13 @@ plant_07
 plant_08
 plant_09
 plant_10
-plant_crypt MONS_WITHERED_PLANT
+%weight 10
+withered_plant0 MONS_WITHERED_PLANT
+withered_plant1
+withered_plant2
+withered_plant3
+%weight 8
+withered_plant4
 plant_demonic MONS_DEMONIC_PLANT
 %rim 0
 bush MONS_BUSH

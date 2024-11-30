@@ -1874,8 +1874,9 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     false,
     BEAM_MMISSILE,
     DCHAR_FIRED_ZAP,
-    true,
     false,
+    false,
+    TILE_BOLT_MYSTIC_BLAST,
 },
 
 {
