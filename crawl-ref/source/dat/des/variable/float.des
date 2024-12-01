@@ -6925,7 +6925,7 @@ MONS:    tengu warrior / tengu conjurer w:1 / \
 MONS:    ice statue, spriggan rider simulacrum, white very ugly thing
 :     mons("rakshasa ; long blade " .. f .. " | mace " .. f .. " . robe ")
 MONS:    frost giant
-KFEAT:   ) = enter_zot
+KFEAT:   ) = enter_depths
 KITEM:   R = smoky gem
 SHUFFLE: )]
 SUBST:   ^V = ., ] = R
