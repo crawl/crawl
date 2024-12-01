@@ -11,12 +11,12 @@
   local bag_of_meat =
     "orc hp:400 hd:30 name:bag_of_meat n_rpl n_des n_spe n_zom " ..
     "col:red tile:mons_bag_of_meat generate_awake ; ring of slaying plus:30 " ..
-    ". war axe plus:9 ego:none"
+    ". war axe plus:5 ego:none"
 
   local meat_berserker =
     "ogre hp:500 hd:50 name:meat_berserker n_rpl n_des n_spe n_zom " ..
     "always_corpse col:red tile:mons_meatzerker perm_ench:berserk generate_awake " ..
-    "; ring of slaying plus:30 . battleaxe plus:9 ego:none"
+    "; ring of slaying plus:30 . battleaxe plus:10 ego:none"
 
   local tyrant =
     "lich hp:500 hd:35 name:tyrant n_rpl n_des n_spe n_zom " ..
@@ -40,13 +40,13 @@
   local large_bag =
     "two-headed ogre hp:400 hd:40 name:large_bag_of_meat n_rpl n_des " ..
     "n_spe n_zom  col:red tile:mons_large_bag_of_meat generate_awake perm_ench:inner_flame " ..
-    "; ring of slaying plus:100 . giant spiked club plus:9 ego:none"
+    "; ring of slaying plus:100 . giant spiked club plus:12 ego:none"
 
   local destroyer =
     "vampire knight hp:500 hd:40 name:destroyer n_rpl n_des n_spe " ..
     "never_corpse col:red tile:mons_destroyer generate_awake " ..
     "spells:blink_close.90.wizard " ..
-    "; ring of slaying plus:200 . great sword plus:9 ego:heavy"
+    "; ring of slaying plus:200 . great sword plus:14 ego:heavy"
 
   local plague =
     "sea snake hp:500 hd:30 name:scourge n_rpl n_des n_spe " ..
@@ -58,7 +58,8 @@
   local sculptor =
     "skeletal warrior hp:500 hd:30 name:sculptor_of_flesh n_rpl " ..
     "n_des n_spe n_zom never_corpse col:red generate_awake " ..
-    "; ring of slaying plus:250 . great sword plus:9 ego:none"
+    "spells:summon_executioners.44.wizard " ..
+    "; ring of slaying plus:250 . great sword plus:16 ego:none"
 
   local observer =
     "great orb of eyes hp:2000 hd:30 name:observer n_rpl n_des " ..
@@ -86,31 +87,32 @@
     "hell knight hp:3000 hd:60 name:fleshlord n_rpl n_des n_spe never_corpse " ..
     "col:lightmagenta generate_awake " ..
     "spells:slow.55.wizard;haste.55.wizard " ..
-    "; ring of slaying plus:400 . great mace plus:9 ego:none"
+    "; ring of slaying plus:400 . great mace plus:27 ego:none"
 
   local vile =
     "molten gargoyle hp:7000 hd:80 name:vile n_rpl n_des n_spe never_corpse " ..
     "col:lightred generate_awake perm_ench:haste " ..
     "spells:dig.26.natural;confuse.52.natural;" ..
-           "miasma_breath.26.natural;call_down_damnation.26.natural"
+           "miasma_breath.26.natural;call_down_damnation.26.natural " ..
+    "; eveningstar plus:30 ego:none"
 
   -- Uniques --
   local servant =
     "harold hp:650 hd:40 name:The_Servant n_rpl col:yellow " ..
     "generate_awake never_corpse spells:none " ..
-    "; ring of slaying plus:130 . glaive plus:9 ego:flaming"
+    "; ring of slaying plus:130 . glaive plus:13 ego:flaming"
 
   local captor =
     "sigmund hp:850 hd:40 name:The_Captor n_rpl col:lightcyan " ..
     "generate_awake never_corpse " ..
     "spells:sentinel's_mark.30.wizard;haste.30.wizard;ensnare.30.wizard " ..
-    "; ring of slaying plus:200 . triple sword plus:9 ego:heavy"
+    "; ring of slaying plus:200 . triple sword plus:20 ego:heavy"
 
   local defiler =
     "edmund hp:1000 hd:50 name:The_Defiler n_rpl col:white " ..
     "generate_awake never_corpse " ..
     "spells:fireball.60.natural;poisonous_cloud.20.natural " ..
-    "; ring of slaying plus:250 . demon whip plus:9 ego:heavy . tower shield plus:12 ego:none"
+    "; ring of slaying plus:250 . demon whip plus:25 ego:heavy . tower shield plus:12 ego:none"
 
   -- Meatlord shadow creatures will be tzitzimimeh
   local meatlord =
@@ -428,53 +430,53 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxx3111111+1111113xxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxx111111111111111111111xxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx1111111111xx1xx1xxxxx111111xxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxx21111111..................1111111xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxx11111....xxxx.....xx.xx............1121xxxxxxxxxxxxxxxx
-xxxxxxxxxxxx2211111....x...........................111122xxxxxxxxxxxxx
-xxxxxxxxxxxx221111......x.........1x.x.......x......11122xxxxxxxxxxxxx
-xxxxxxxxxxxx1111........x..................xxxx.....11111xxxxxxxxxxxxx
-xxxxxxxxxxxx111....xxx...x..........................11111xxxxxxxxxxxxx
-xxxxxxxxxxxx11...xxx......x.......................x....11xxxxxxxxxxxxx
-xxxxxxxxxxxx11..x...............'''''..................11xxxxxxxxxxxxx
-xxxxxxxxxxxx11......x..........'''''''............x....11xxxxxxxxxxxxx
-xxxxxxxxxxxx11.......x......11x'''''''x11..............11xxxxxxxxxxxxx
-xxxxxxxxxxxx41..........x...11x'''''''x11.........xx...14xxxxxxxxxxxxx
-xxxxxxxxxxxx11.......x......xxx'''''''xxx..............11xxxxxxxxxxxxx
-xxxxxxxxxxxx11..x..........'''''.xxx.'''''.......xxx2..11xxxxxxxxxxxxx
-xxxxxxxxxxxx111.xx.......x'''''..._...'''''............11xxxxxxxxxxxxx
-xxxxxxxxxxxx11.1.x.....x..'''''x.....x'''''..x.x.......11xxxxxxxxxxxxx
-xxxxxxxxxxxx*1.1.2xxx.....'''''x_.{._x'''''...........11*xxxxxxxxxxxxx
-xxxxxxxxxxxx11.1.xx....x..'''''x.....x'''''.x.x.x....1111xxxxxxxxxxxxx
-xxxxxxxxxxxx11.1x........x'''''..._...'''''............11xxxxxxxxxxxxx
-xxxxxxxxxxxx11..x..........'''''.xxx.'''''...x.x.x..x..11xxxxxxxxxxxxx
-xxxxxxxxxxxx11..............xxx'''''''xxx..........x...11xxxxxxxxxxxxx
-xxxxxxxxxxxx41..............11x'''''''x11...........x..14xxxxxxxxxxxxx
-xxxxxxxxxxxx11..............11x'''''''x11..........x...11xxxxxxxxxxxxx
-xxxxxxxxxxxx11.......x.........'''''''.................11xxxxxxxxxxxxx
-xxxxxxxxxxxx11......x.x.x.......'''''.....x...x......xx11xxxxxxxxxxxxx
-xxxxxxxxxxxx11.......x.x.................x....x.....xx.11xxxxxxxxxxxxx
-xxxxxxxxxxxx11xxx...x.x.x..............xx.....x.....x2221xxxxxxxxxxxxx
-xxxxxxxxxxxx1122xx...x.x.....x........x......x....xx22211xxxxxxxxxxxxx
-xxxxxxxxxxxx11122x....................x...xxx....x1111111xxxxxxxxxxxxx
-xxxxxxxxxxxx3111111xx.......xx.x...............x111111113xxxxxxxxxxxxx
-xxxxxxxxxxxxxxx11111xx.......................111111111xxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxx211111xxxx....x.....xxxx111111112xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx1111111............x1111111xxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxx111111.........111111xxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxx3111111+1111113xxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxxxxxxxx
+xxxxxxxXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXxxxxxxxx
+xxxxxxxXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXxxxxxxxx
+xxxxxxxXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXxxxxxxxx
+xxxxxxxXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXxxxxxxxx
+xxxxxxxXxxxxxxxxxxxxxxxxxxx3111111+1111113xxxxxxxxxxxxxxxxxxxXxxxxxxxx
+xxxxxxxXxxxxxxxxxxxxxxxx111111111111111111111xxxxxxxxxxxxxxxxXxxxxxxxx
+xxxxxxxXxxxxxxxxxxxxx1111111111xx1xx1xxxxx111111xxxxxxxxxxxxxXxxxxxxxx
+xxxxxxxXxxxxxxxxxx21111111..................1111111xxxxxxxxxxXxxxxxxxx
+xxxxxxxXxxxxxxx11111....xxxx.....xx.xx............1121xxxxxxxXxxxxxxxx
+xxxxxxxXxxxx2211111....x...........................111122xxxxXxxxxxxxx
+xxxxxxxXxxxx221111......x.........1x.x.......x......11122xxxxXxxxxxxxx
+xxxxxxxXxxxx1111........x..................xxxx.....11111xxxxXxxxxxxxx
+xxxxxxxXxxxx111....xxx...x..........................11111xxxxXxxxxxxxx
+xxxxxxxXxxxx11...xxx......x.......................x....11xxxxXxxxxxxxx
+xxxxxxxXxxxx11..x...............'''''..................11xxxxXxxxxxxxx
+xxxxxxxXxxxx11......x..........'''''''............x....11xxxxXxxxxxxxx
+xxxxxxxXxxxx11.......x......11x'''''''x11..............11xxxxXxxxxxxxx
+xxxxxxxXxxxx41..........x...11x'''''''x11.........xx...14xxxxXxxxxxxxx
+xxxxxxxXxxxx11.......x......xxx'''''''xxx..............11xxxxXxxxxxxxx
+xxxxxxxXxxxx11..x..........'''''.xxx.'''''.......xxx2..11xxxxXxxxxxxxx
+xxxxxxxXxxxx111.xx.......x'''''..._...'''''............11xxxxXxxxxxxxx
+xxxxxxxXxxxx11.1.x.....x..'''''x.....x'''''..x.x.......11xxxxXxxxxxxxx
+xxxxxxxXxxxx*1.1.2xxx.....'''''x_.{._x'''''...........11*xxxxXxxxxxxxx
+xxxxxxxXxxxx11.1.xx....x..'''''x.....x'''''.x.x.x....1111xxxxXxxxxxxxx
+xxxxxxxXxxxx11.1x........x'''''..._...'''''............11xxxxXxxxxxxxx
+xxxxxxxXxxxx11..x..........'''''.xxx.'''''...x.x.x..x..11xxxxXxxxxxxxx
+xxxxxxxXxxxx11..............xxx'''''''xxx..........x...11xxxxXxxxxxxxx
+xxxxxxxXxxxx41..............11x'''''''x11...........x..14xxxxXxxxxxxxx
+xxxxxxxXxxxx11..............11x'''''''x11..........x...11xxxxXxxxxxxxx
+xxxxxxxXxxxx11.......x.........'''''''.................11xxxxXxxxxxxxx
+xxxxxxxXxxxx11......x.x.x.......'''''.....x...x......xx11xxxxXxxxxxxxx
+xxxxxxxXxxxx11.......x.x.................x....x.....xx.11xxxxXxxxxxxxx
+xxxxxxxXxxxx11xxx...x.x.x..............xx.....x.....x2221xxxxXxxxxxxxx
+xxxxxxxXxxxx1122xx...x.x.....x........x......x....xx22211xxxxXxxxxxxxx
+xxxxxxxXxxxx11122x....................x...xxx....x1111111xxxxXxxxxxxxx
+xxxxxxxXxxxx3111111xx.......xx.x...............x111111113xxxxXxxxxxxxx
+xxxxxxxXxxxxxxx11111xx.......................111111111xxxxxxxXxxxxxxxx
+xxxxxxxXxxxxxxxxxx211111xxxx....x.....xxxx111111112xxxxxxxxxxXxxxxxxxx
+xxxxxxxXxxxxxxxxxxxxx1111111............x1111111xxxxxxxxxxxxxXxxxxxxxx
+xxxxxxxXxxxxxxxxxxxxxxxx111111.........111111xxxxxxxxxxxxxxxxXxxxxxxxx
+xxxxxxxXxxxxxxxxxxxxxxxxxxx3111111+1111113xxxxxxxxxxxxxxxxxxxXxxxxxxxx
+xxxxxxxXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXxxxxxxxx
+xxxxxxxXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXxxxxxxxx
+xxxxxxxXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXxxxxxxxx
+xxxxxxxXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXxxxxxxxx
+xxxxxxxXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
