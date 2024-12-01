@@ -34,7 +34,7 @@ the %sdemon whip
 die {adj-e}%sDämonenpeitsche
 %%%%
 the %ssacred scourge
-die {adj-e}%sgeistliche Geißel
+die {adj-e}%heilige Geißel
 %%%%
 the %sdire flail
 der {adj-e}%sSchreckensflegel
@@ -43,7 +43,7 @@ the %seveningstar
 der {adj-e}%sAbendstern
 %%%%
 the %sgreat mace
-der {adj-e}%sgroße Streitkolben
+der {adj-e}%sgroßer Streitkolben
 %%%%
 the %sgiant club
 die {adj-e}%sRiesenkeule
@@ -85,7 +85,7 @@ the %sgreat sword
 das {adj-e}%sGroßschwert
 %%%%
 the %striple sword
-das {adj-e}%sDreifach-Schwert
+das {adj-e}%sDreifachschwert
 %%%%
 the %shand axe
 das {adj-e}%sHandbeil
@@ -158,7 +158,7 @@ the %sarbalest
 die {adj-e}%sArmbrust
 %%%%
 the %striple crossbow
-die {adj-e}%sDreifach-Armbrust
+die {adj-e}%sDreifacharmbrust
 %%%%
 the %sshortbow
 der {adj-e}%sKurzbogen
@@ -201,7 +201,7 @@ the stone
 der Stein
 %%%%
 the large rock
-der Felsblock
+der große Felsbrocken
 %%%%
 the sling bullet
 die Schleuderkugel
@@ -246,10 +246,10 @@ the %schain mail
 der {adj-e}%sKettenpanzer
 %%%%
 the %splate armour
-der {adj-e}%sPlattenpanzer
+die {adj-e}%sPlattenrüstung
 %%%%
 the %scrystal plate armour
-der {adj-e}%sKristallplattenpanzer
+die {adj-e}%sKristallplattenrüstung
 %%%%
 the %stroll leather armour
 die {adj-e}%sTrolllederrüstung
@@ -279,7 +279,7 @@ the %sbuckler
 der {adj-e}%sBuckler
 %%%%
 the %skite shield
-der {adj-e}%sKiteschild
+der {adj-e}%sDrachenschild
 %%%%
 the %stower shield
 der {adj-e}%sTurmschild
@@ -288,7 +288,7 @@ the %ssteam dragon scales
 die {adj-en}%sDampfdrachenschuppen
 %%%%
 the %sacid dragon scales
-die {adj-en}%sSauredrachenschuppen
+die {adj-en}%sSäuredrachenschuppen
 %%%%
 the %squicksilver dragon scales
 die {adj-en}%sQuecksilberdrachenschuppen
@@ -462,7 +462,7 @@ the %splatinum amulet
 das {adj-e}%sPlatinamulett
 %%%%
 the %sjade amulet
-das {adj-e}%sJade-Amulett
+das {adj-e}%sJadeamulett
 %%%%
 the %sfluorescent amulet
 das {adj-e}%sfluoreszierende Amulett
@@ -471,7 +471,7 @@ the %samethyst amulet
 das {adj-e}%sAmethystamulett
 %%%%
 the %scameo amulet
-das {adj-e}%sCameo-Amulett
+das {adj-e}%sCameoamulett
 %%%%
 the %spearl amulet
 das {adj-e}%sPerlenamulett
@@ -480,7 +480,7 @@ the %sblue amulet
 das {adj-e}%sblaue Amulett
 %%%%
 the %speridot amulet
-das {adj-e}%sPeridot-Amulett
+das {adj-e}%sPeridotamulett
 %%%%
 the %sjasper amulet
 das {adj-e}%sJaspisamulett
@@ -495,7 +495,7 @@ the %ssteel amulet
 das {adj-e}%sStahlamulett
 %%%%
 the %scabochon amulet
-das {adj-e}%sCabochon-Amulett
+das {adj-e}%sCabochonamulett
 %%%%
 the %ssilver amulet
 das {adj-e}%sSilberamulett
@@ -519,7 +519,7 @@ das {adj-e}%sBeryllamulett
 
 %%%%
 the wand of flame
-der Zauberstab des Flammens
+der Zauberstab der Flammen
 %%%%
 the wand of paralysis
 der Zauberstab der Paralyse
@@ -528,7 +528,7 @@ the wand of digging
 der Zauberstab des Grabens
 %%%%
 the wand of iceblast
-der Zauberstab des Eisstrahls
+der Zauberstab des Eisblitzes
 %%%%
 the wand of polymorph
 der Zauberstab der Verwandlung
@@ -540,7 +540,7 @@ the wand of acid
 der Zauberstab der Säure
 %%%%
 the wand of mindburst
-der Zauberstab des Gehirnschlags
+der Zauberstab des Kopfzerplatzens
 %%%%
 the wand of removedness
 der Zauberstab der Obsoleszenz
@@ -558,7 +558,7 @@ the %sbrass wand
 der {adj-e}%sMessingzauberstab
 %%%%
 the %sbone wand
-der {adj-e}%sZauberstab aus Knochen
+der {adj-e}%sKnochenzauberstab
 %%%%
 the %swooden wand
 der {adj-e}%sHolzzauberstab
@@ -573,16 +573,16 @@ the %ssilver wand
 der {adj-e}%sSilberzauberstab
 %%%%
 the %sbronze wand
-der {adj-e}%sZauberstab aus Bronze
+der {adj-e}%sBronzezauberstab
 %%%%
 the %sivory wand
 der {adj-e}%sElfenbeinzauberstab
 %%%%
 the %sglass wand
-der {adj-e}%sgläserner Zauberstab
+der {adj-e}%sGlaszauberstab
 %%%%
 the %slead wand
-der {adj-e}%sZauberstab aus Blei
+der {adj-e}%sBleizauberstab
 %%%%
 the %sfluorescent wand
 der {adj-e}%sfluoreszierender Zauberstab
@@ -597,7 +597,7 @@ the scroll labelled %s
 die Schriftrolle beschriftet mit %s
 %%%%
 the scroll of acquirement
-die Schriftrolle des Erwerbs
+die Schriftrolle der Erwerbung
 %%%%
 the scroll of amnesia
 die Schriftrolle der Amnesie
@@ -606,7 +606,7 @@ the scroll of blinking
 die Schriftrolle des Blinzelns
 %%%%
 the scroll of brand weapon
-die Schriftrolle der Waffenmark
+die Schriftrolle der Waffenprägung
 %%%%
 the scroll of enchant armour
 die Schriftrolle der Rüstungsverzauberung
@@ -636,7 +636,7 @@ the scroll of noise
 die Schriftrolle des Lärms
 %%%%
 the scroll of remove curse
-die Schriftrolle des Segnens
+die Schriftrolle des Fluchaufhebens
 %%%%
 the scroll of silence
 die Schriftrolle der Stille
@@ -672,7 +672,7 @@ the potion of attraction
 der Trank der Anziehung
 %%%%
 the potion of berserk rage
-der Trank der Berserker-Wut
+der Trank der Berserkerwut
 %%%%
 the potion of brilliance
 der Trank der Brillanz
@@ -693,16 +693,16 @@ the potion of flight
 der Trank des Fliegens
 %%%%
 the potion of haste
-der Trank der Hast
+der Trank der Eile
 %%%%
 the potion of heal wounds
-der Heiltrank
+der Trank der Wundheilung
 %%%%
 the potion of invisibility
 der Trank der Unsichtbarkeit
 %%%%
 the potion of lignification
-der Trank der Verholzung
+der Trank der Lignifizierung
 %%%%
 the potion of magic
 der Trank der Magie
@@ -811,10 +811,10 @@ the piece from Xom's chessboard
 die Figur von Xoms Schachbrett
 %%%%
 the tin of tremorstones
-die Dose Zittersteine
+die Dose Erdbebensteine
 %%%%
 the quad damage
-der Vierfach-Schaden
+der Vierfachschaden
 %%%%
 
 #################################
@@ -827,16 +827,16 @@ der Vierfach-Schaden
 
 %%%%
 the decaying rune
-die verfallende Rune
+die verwesende Rune
 %%%%
 the barnacled rune
-die Kletten-Rune
+die seepockenbefallene Rune
 %%%%
 the gossamer rune
-die Spinnfäden-Rune
+die Spinnfadenrune
 %%%%
 the serpentine rune
-die Schlangen-Rune
+die Schlangenrune
 %%%%
 the slimy rune
 die schleimige Rune
@@ -860,7 +860,7 @@ the icy rune
 die eisige Rune
 %%%%
 the bone rune
-die Knochen-Rune
+die Knochenrune
 %%%%
 the iron rune
 die eiserne Rune
