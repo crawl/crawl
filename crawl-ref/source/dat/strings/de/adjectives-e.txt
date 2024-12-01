@@ -570,7 +570,7 @@
 ################################
 %%%%
 "vorpal "
-"scharfe "
+"gebiffte "
 %%%%
 "antimagic "
 "antimagische "
