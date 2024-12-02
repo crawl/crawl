@@ -1065,7 +1065,11 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             return;
         }
 
-        mon->foe = src_idx;
+        // ANON_FRENDLY_MONSTER is mostly used for blame attribution for
+        // friendly monsters that are *dead* by the time of doing damage, so
+        // monsters shouldn't check if they need to run away from it.
+        if (src_idx != ANON_FRIENDLY_MONSTER)
+            mon->foe = src_idx;
 
         // If the monster can't reach its target and can't attack it
         // either, retreat.

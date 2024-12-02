@@ -7483,7 +7483,21 @@ actor* bolt::agent(bool ignore_reflection) const
     if (YOU_KILL(nominal_ktype))
         return &you;
     else
-        return actor_by_mid(nominal_source);
+    {
+        actor* act = actor_by_mid(nominal_source);
+        if (act)
+            return act;
+        // If this is an explosion caused by a dead friendly monster, set its
+        // agent to MID_ANON_FRIEND, so that the player gets XP attribution for
+        // the damage.
+        else if (monster* mon = cached_monster_copy_by_mid(nominal_source))
+        {
+            if (mon->friendly())
+                return monster_by_mid(MID_ANON_FRIEND);
+        }
+
+        return nullptr;
+    }
 }
 
 bool bolt::is_enchantment() const

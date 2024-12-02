@@ -51,10 +51,7 @@ static void _setup_base_explosion(bolt & beam, const monster& origin)
         if (!origin.is_abjurable() && origin.was_created_by(you))
             beam.thrower = KILL_YOU;
         else
-        {
             beam.thrower = KILL_MON;
-            beam.source_id = MID_ANON_FRIEND;
-        }
     }
     else
         beam.thrower = KILL_MON;
@@ -101,11 +98,7 @@ static void _setup_blazeheart_core_explosion(bolt & beam, const monster& origin)
     beam.colour       = RED;
     beam.ex_size      = 1;
     beam.source_name  = origin.name(DESC_PLAIN, true);
-
-    // Don't place the player under penance for their golem exploding,
-    // but DO give them xp for its kills.
     beam.thrower      = KILL_MON;
-    beam.source_id    = MID_ANON_FRIEND;
 
     // This is so it places flame clouds under the explosion
     beam.origin_spell = SPELL_FORGE_BLAZEHEART_GOLEM;
