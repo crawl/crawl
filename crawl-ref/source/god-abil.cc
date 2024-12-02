@@ -3966,7 +3966,7 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
         if (!player_target)
             player_target = &target_local;
 
-        targeter_smite tgt(&you, LOS_RADIUS, max_radius-1, max_radius);
+        targeter_smite tgt(&you, LOS_RADIUS, max_radius-1, max_radius, true);
         direction_chooser_args args;
         args.restricts = DIR_TARGET;
         args.mode = TARG_HOSTILE;

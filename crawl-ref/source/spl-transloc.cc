@@ -317,7 +317,7 @@ private:
     bool incl_unseen;
 public:
     targeter_hop(int hop_range, bool include_unseen)
-        : targeter_smite(&you, hop_range, 0, HOP_FUZZ_RADIUS, false),
+        : targeter_smite(&you, hop_range, 0, HOP_FUZZ_RADIUS, true),
           incl_unseen(include_unseen)
     {
         ASSERT(agent);

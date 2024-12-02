@@ -448,7 +448,7 @@ bool spell_harms_target(spell_type spell)
 {
     const spell_flags flags = _seekspell(spell)->flags;
 
-    if (flags & (spflag::helpful | spflag::neutral))
+    if (flags & (spflag::helpful | spflag::aim_at_space))
         return false;
 
     if (flags & spflag::targeting_mask)
@@ -463,7 +463,7 @@ bool spell_harms_area(spell_type spell)
 {
     const spell_flags flags = _seekspell(spell)->flags;
 
-    if (flags & (spflag::helpful | spflag::neutral))
+    if (flags & (spflag::helpful | spflag::aim_at_space))
     {
         // XXX: This is a 'helpful' spell that also does area damage, so monster
         //      logic should account for this, regarding Sanctuary.
@@ -1768,8 +1768,7 @@ bool spell_no_hostile_in_range(spell_type spell)
     // For choosing default targets and prompting we don't treat Inner Flame as
     // neutral, since the seeping flames trigger conducts and harm the monster
     // before it explodes.
-    const bool allow_friends = testbits(flags, spflag::neutral)
-                               || spell == SPELL_INNER_FLAME;
+    const bool allow_friends = spell == SPELL_INNER_FLAME;
 
     bolt beam;
     beam.flavour = BEAM_VISUAL;

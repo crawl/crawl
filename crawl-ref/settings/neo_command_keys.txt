@@ -27,7 +27,6 @@ bindkey = [ö] CMD_SHOUT
 
 # bindkey = [^R] CMD_REDRAW_SCREEN
 # bindkey = [^Z] CMD_SUSPEND_GAME
-# bindkey = [t] CMD_TARGET_MAYBE_PREV_TARGET
 # bindkey = [T] CMD_MAP_WIZARD_TELEPORT
 # bindkey = [s]  CMD_TARGET_WIZARD_MAKE_SHOUT
 # bindkey = [S]  CMD_TARGET_WIZARD_MAKE_SUMMONED

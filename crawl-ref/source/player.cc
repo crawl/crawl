@@ -5655,7 +5655,7 @@ player::player()
     last_cast_spell = SPELL_NO_SPELL;
 
     // Non-saved UI state:
-    prev_targ        = MHITNOT;
+    prev_targ        = MID_NOBODY;
     prev_grd_targ.reset();
     divine_exegesis  = false;
 

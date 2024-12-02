@@ -9883,9 +9883,17 @@ NAME:   nicolae_beast_mode
 TAGS:   transparent
 DEPTH:  D:7-11
 KITEM:  D = box of beasts
-KMONS:  D = juvenile mutant beast
+# Even on juveniles, blinkbolt can be overwhelming, especially if you roll more
+# than one shock beast. Explicitly specify beast facets here to avoid rolling
+# any shock ones for the juveniles. The larval one, being the "boss" here, can
+# still roll shock for now.
+KMONS:  D = juvenile bat-sting mutant beast / juvenile fire-bat mutant beast / \
+        juvenile bat-weird mutant beast / juvenile ox-bat mutant beast / \
+        juvenile sting-fire mutant beast / juvenile weird-sting mutant beast / \
+        juvenile sting-ox mutant beast / juvenile fire-weird mutant beast / \
+        juvenile ox-fire mutant beast / juvenile weird-ox mutant beast
 KMONS:  L = larval mutant beast
-NSUBST: D = D / L / ., L = 3=L / 3=-L / -
+NSUBST: D = D / L / ., L = 2=L / 3=-L / -
 SUBST:  - = .x, ` = x_
 CLEAR:  _
 veto {{

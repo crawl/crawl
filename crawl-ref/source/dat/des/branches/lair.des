@@ -3436,8 +3436,7 @@ KITEM:  R = earthy gem
 MONS:   yak, death yak, manticore
 KMONS:  4C = patrolling catoblepas
 # These are still living plants for all intents and purposes...
-KMONS:  P = plant perm_ench:petrified dbname:petrified_plant \
-            col:lightgrey tile:mons_withered_plant
+KMONS:  P = withered plant perm_ench:petrified
 SUBST:  P = P.
 NSUBST: 0 = 3:1 / 1:2 / * = 1112
 NSUBST: 9 = 1:C / 2:2 / 3:3 / * = 11222

@@ -908,7 +908,7 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
 
         if ((Options.use_animations & UA_RANGE) && Options.darken_beyond_range)
         {
-            targeter_smite range(&you, calc_spell_range(spell), 0, 0, true);
+            targeter_smite range(&you, calc_spell_range(spell), 0, 0, false, true);
             range_view_annotator show_range(&range);
             delay(50);
         }
@@ -1231,7 +1231,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_VIOLENT_UNRAVELLING:
         return make_unique<targeter_unravelling>();
     case SPELL_INFESTATION:
-        return make_unique<targeter_smite>(&you, range, 2, 2, false, true,
+        return make_unique<targeter_smite>(&you, range, 2, 2, true, false, true,
                                            [](const coord_def& p) -> bool {
                                               return you.pos() != p; });
     case SPELL_PASSWALL:
@@ -1367,11 +1367,11 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     {
         const monster* paragon = find_player_paragon();
         if (!paragon)
-            return make_unique<targeter_smite>(&you, range, 1, 1, false, false);
+            return make_unique<targeter_smite>(&you, range, 1, 1, true, false, false);
         else if (paragon_charge_level(*paragon) == 2)
-            return make_unique<targeter_smite>(paragon, 3, 3, 3, false, false);
+            return make_unique<targeter_smite>(paragon, 3, 3, 3, true, false, false);
         else
-            return make_unique<targeter_smite>(paragon, 3, 2, 2, false, false);
+            return make_unique<targeter_smite>(paragon, 3, 2, 2, true, false, false);
     }
     case SPELL_MONARCH_BOMB:
     {
@@ -2045,10 +2045,10 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
     if (use_targeter)
     {
         const targ_mode_type targ =
-              testbits(flags, spflag::neutral)    ? TARG_ANY :
-              testbits(flags, spflag::helpful)    ? TARG_FRIEND :
-              testbits(flags, spflag::obj)        ? TARG_MOVABLE_OBJECT :
-                                                   TARG_HOSTILE;
+              testbits(flags, spflag::aim_at_space)     ? TARG_ANY :
+              testbits(flags, spflag::helpful)          ? TARG_FRIEND :
+              testbits(flags, spflag::obj)              ? TARG_MOVABLE_OBJECT :
+                                                          TARG_HOSTILE;
 
         // TODO: if any other spells ever need this, add an spflag
         // (right now otherwise used only on god abilities)
@@ -2105,6 +2105,9 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
 
         if (testbits(flags, spflag::prefer_farthest))
             args.prefer_farthest = true;
+
+        if (spell == SPELL_SHOCK)
+            args.try_multizap = true;
 
         // if the spell is useless and we have somehow gotten this far, it's
         // a forced cast. Setting this prevents the direction chooser from

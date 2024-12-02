@@ -175,7 +175,7 @@ diamond_sawblades DIAMOND_SAWBLADES
 forge_blazeheart_golem FORGE_BLAZEHEART_GOLEM
 forge_lightning_spire FORGE_LIGHTNING_SPIRE
 fortress_blast FORTRESS_BLAST
-kinetic_discus KINETIC_DISCUS
+kinetic_grapnel KINETIC_GRAPNEL
 launch_clockwork_bee CLOCKWORK_BEE
 monarch_bomb MONARCH_BOMB
 phalanx_beetle PHALANX_BEETLE

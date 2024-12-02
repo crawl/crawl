@@ -639,7 +639,7 @@ static spret _phantom_mirror(dist *target)
     if (!target)
         target = &target_local;
 
-    targeter_smite tgt(&you, LOS_RADIUS, 0, 0);
+    targeter_smite tgt(&you, LOS_RADIUS);
 
     direction_chooser_args args;
     args.restricts = DIR_TARGET;

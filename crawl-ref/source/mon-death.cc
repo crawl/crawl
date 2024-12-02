@@ -2312,9 +2312,9 @@ item_def* monster_die(monster& mons, killer_type killer,
         mons.props[MAKHLEB_HAEMOCLASM_KEY] = true;
     }
 
-    if (you.prev_targ == monster_killed)
+    if (you.prev_targ == mons.mid)
     {
-        you.prev_targ = MHITNOT;
+        you.prev_targ = MID_NOBODY;
         crawl_state.cancel_cmd_repeat();
     }
 

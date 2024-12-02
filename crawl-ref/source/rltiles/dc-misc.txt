@@ -125,6 +125,8 @@ irradiate2
 irradiate3
 
 # Translocations bolts
+mystic_blast BOLT_MYSTIC_BLAST
+
 manifold_assault0 BOLT_MANIFOLD_ASSAULT
 manifold_assault1
 

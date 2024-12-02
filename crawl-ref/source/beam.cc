@@ -1144,6 +1144,7 @@ void bolt::affect_cell()
     if (hit_player && can_affect_actor(&you))
     {
         const int prev_reflections = reflections;
+        const coord_def old_pos = pos();
         affect_player();
         if (reflections != prev_reflections)
             return;
@@ -1152,7 +1153,7 @@ void bolt::affect_cell()
         // XXX: If an ally stopped a piercing beam short to avoid hitting the
         //      player on this cell, don't attempt to hit a monster on the
         //      cell immediately before them again.
-        if (extra_range_used >= BEAM_STOP)
+        if (pos() != old_pos)
             return;
     }
 
