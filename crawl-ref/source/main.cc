@@ -2687,6 +2687,8 @@ void world_reacts()
     // the loudest noise tracking for the next world_reacts cycle.
     you.los_noise_last_turn = you.los_noise_level;
     you.los_noise_level = 0;
+
+    mpr("DISCORD TODO: Labyrinth check for kicking player out goes here");
 }
 
 static command_type _get_next_cmd()

@@ -261,6 +261,8 @@ static void _give_player_experience(int experience, killer_type killer,
                                     bool pet_kill, bool was_visible,
                                     xp_tracking_type xp_tracking)
 {
+    mpr("DISCORD TODO: XP Modification Code goes here");
+    
     if (experience <= 0 || crawl_state.game_is_arena())
         return;
 
@@ -3165,6 +3167,8 @@ item_def* monster_die(monster& mons, killer_type killer,
         // don't clutter up env.item[].
         mons.destroy_inventory();
     }
+
+    mpr("DISCORD TODO: Essence code goes here");
 
     if (leaves_corpse && corpse)
     {

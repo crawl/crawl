@@ -1,0 +1,37 @@
+Juan Barbosa Notes:
+RAFDONIA / SHOPS:
+    - Support for custom shops like I wanted seem to be straightforward to implement. Related files.
+    Related Files for custom shops
+        shop-type.h
+        shopping.h
+        shopping.cc
+        god-abil.cc (because of GOZAG God apparently, so its just for compatibility)
+    
+    files for drawing custom shops
+        dgn-overview.cc
+        dungeon.cc
+        tilepick.cc
+    
+    - Need to look into summon code or Beogh code for creating followers that do no despawn.
+
+ESSENCES:
+    - Essences can be implemented as mutations, all relevant files are explained in mutation_creation.txt
+    - May need to expand mutation code support stats and abilities, I don't exactly know by how much yet.
+    - Support for the monster dropping an essence should be done in mon-death.cc
+    - Need to read monster_creation.txt to learn how to create monsters for the game and learn about relevant files regarding monsters for supporting an essence,
+    util/mon-gen.py generates all the monster data for the game, careful study of this must be done to configure which essence goes with which monster.
+
+XP:
+    - mon-death.cc has code for giving player experience, function _give_player_experience seems to be the proper place to check for whether a monster was defeated 
+    or not by the player and award experience. player.cc gain_exp or close by would need to be modified to set the amount of xp needed to level
+
+TIME:
+    - Game tracks player time already, I need to expand this feature so that Labyrinth time is tracked when inside the labyrinth and rafdonia time is tracked separately
+    - main.cc, method world_reacts is probably a good place to check the amount of time passed to kick out player from labyrinth
+    need to figure out how time is drawn on the screen to properly represent time passed to the player
+
+DUNGEON:
+    - Need to create spawn points that refresh every few hours when the player is not around.
+    - Need to look into how HUGE (50k tiles by 50k tiles) can affect the game, game seems to support bigger rooms just fine like mines or lair
+    - Need to look into removing all item drops from inside the dungeon, there should be no scrolls, gold, potions, weapons, armor, etc. Only thing that
+    should be supported are mana stones upon defeat.
