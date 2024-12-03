@@ -403,7 +403,7 @@ bool is_valid_tempering_target(const monster& mon, const actor& caster)
         //      Bomb in order to track all detontation targets, but should *not*
         //      count as valid targets for Percussive Tempering despite this.
         if (!!(get_spell_disciplines(spell) & spschool::forgecraft))
-            return mon.type != MONS_BOMBLET;
+            return mon.type != MONS_BOMBLET && mon.type != MONS_BLAZEHEART_CORE;
     }
 
     return false;
