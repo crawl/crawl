@@ -450,119 +450,24 @@
 ################################
 # materials
 ################################
-# mostly for rings/amulets, but a few are for armour/weapons as well/instead
-# these are also just cosmetic
-%%%%
-"amber "
-"Bernstein-"
-%%%%
-"brass "
-"Messing-"
-%%%%
-"bronze "
-"Bronze-"
-%%%%
-"copper "
-"Kupfer-"
+
+# used for randart weapons
+# (also used for jewellery, and in some cases, potion or rune, but we've given specific translations for those)
 %%%%
 "crystal "
 "Kristall-"
 %%%%
-"diamond "
-"Diamant-"
-%%%%
-"ebony "
-"Ebenholz-"
-%%%%
-"garnet "
-"Granat-"
-%%%%
-"glass "
-"Glas-"
-%%%%
-"granite "
-"Granit-"
-%%%%
 "ivory "
 "Elfenbein-"
-%%%%
-"jade "
-"Jade-"
-%%%%
-# "lapis lazuli" will be split into two words
-"lapis "
-"Lapis"
-%%%%
-"lazuli "
-"lazuli-"
-%%%%
-"lead "
-"Blei-"
-%%%%
-"marble "
-"Marmor-"
-%%%%
-"pearl "
-"Perlen-"
-%%%%
-"pewter "
-"Zinn-"
-%%%%
-"platinum "
-"Platin-"
-%%%%
-"silken "
-"Seide-"
-%%%%
-"steel "
-"Stahl-"
-%%%%
-"tin "
-"Zinn-"
-%%%%
-"turquoise "
-"Türkis-"
-%%%%
-"wooden "
-"Holz-"
-%%%%
-"zirconium "
-"Zirkonium-"
-%%%%
-
-# these ones are a jewellery material and a rune
-%%%%
-"gossamer "
-"hauchdünne "
 %%%%
 "bone "
 "knöcherne "
 %%%%
-"iron "
-"eiserne "
-%%%%
-"silver "
-"silberne "
-%%%%
-# used for potion colour, jewellery material, and rune
-"golden "
-"goldene "
-%%%%
-
-# These ones are a jewellery material, and also a potion colour
-# so we have to distinguish them
-%%%%
-"amethyst "
-"Amethyst-"
-%%%%
-"emerald "
-"Smaragd-"
-%%%%
-"ruby "
-"Rubin-"
-%%%%
 "sapphire "
 "Saphir-"
+%%%%
+"ebony "
+"Ebenholz-"
 %%%%
 
 ################################
@@ -660,6 +565,15 @@
 #"saphirblaue "
 %%%%
 
+# used to mean both metal and colour
+%%%%
+"silver "
+"silberne "
+%%%%
+"golden "
+"goldene "
+%%%%
+
 ################################
 # potions
 ################################
@@ -703,42 +617,6 @@
 "slimy "
 "schleimige "
 %%%%
-
-################################
-# runes
-################################
-# Not really used because we have defined the entire strings (e.g. "the golden rune")
-# There are 17 runes in total.
-# 2 (glowing, sepentine) covered under general adjectives
-# 5 (gossamer, bone, iron, silver, golden) covered in materials section
-# 1 (dark) covered under colours
-# 1 (slimy) covered under potions
-# 8 covered here
-
-%%%%
-"decaying "
-"verwesende "
-%%%%
-"barnacled "
-"seepockenbefallene "
-%%%%
-"abyssal "
-"abgründige "
-%%%%
-"icy "
-"eisige "
-%%%%
-"demonic "
-"dämonische "
-%%%%
-"magical "
-"magische "
-%%%%
-"fiery "
-"feurige "
-%%%%
-"obsidian "
-"vulkanische "
 
 ################################
 # doors/gates

@@ -319,60 +319,40 @@ die {adj-en}%sGolddrachenschuppen
 # Rings
 #################################
 
+# general catch-all
 %%%%
 the %sring
 der {adj-e}%sRing
 %%%%
 
-# unidentified
-%%%%
-the %swooden ring
-der {adj-e}%sHolzring
-%%%%
-the %ssilver ring
-der {adj-e}%sSilberring
-%%%%
-the %sgolden ring
-der {adj-e}%sGoldring
-%%%%
-the %siron ring
-der {adj-e}%sEisenring
-%%%%
-the %ssteel ring
-der {adj-e}%sStahlring
-%%%%
-the %stourmaline ring
-der {adj-e}%sTurmalinring
-%%%%
-the %sbrass ring
-der {adj-e}%sMessingring
-%%%%
-the %scopper ring
-der {adj-e}%sKupferring
-%%%%
-the %sgranite ring
-der {adj-e}%sGranitring
-%%%%
-the %sivory ring
-der {adj-e}%sElfenbeinring
-%%%%
-the %sruby ring
-der {adj-e}%sRubinring
-%%%%
-the %smarble ring
-der {adj-e}%sMarmorring
-%%%%
-the %sjade ring
-der {adj-e}%sJadering
-%%%%
-the %sglass ring
-der {adj-e}%sGlasring
+# unidentified rings have two adjectives
+# the one closest to the noun is a material, which in German is usually combined with the noun
+
+# this is combined list from item-name.cc and descript/randname.txt
 %%%%
 the %sagate ring
 der {adj-e}%sAchatring
 %%%%
+the %samber ring
+der {adj-e}%sBernsteinring
+%%%%
 the %sbone ring
 der {adj-e}%sKnochenring
+%%%%
+the %sbrass ring
+der {adj-e}%sMessingring
+%%%%
+the %sbronze ring
+der {adj-e}%sBronzering
+%%%%
+the %scabochon ring
+der {adj-e}%sCabochonring
+%%%%
+the %scopper ring
+der {adj-e}%sKupferring
+%%%%
+the %scoral ring
+der {adj-e}%sKorallenring
 %%%%
 the %sdiamond ring
 der {adj-e}%sDiamantring
@@ -380,11 +360,47 @@ der {adj-e}%sDiamantring
 the %semerald ring
 der {adj-e}%sSmaragdring
 %%%%
-the %speridot ring
-der {adj-e}%sPeridotring
-%%%%
 the %sgarnet ring
 der {adj-e}%sGranatring
+%%%%
+the %sgilded ring
+der {adj-e}%svergoldete Ring
+%%%%
+the %sglass ring
+der {adj-e}%sGlasring
+%%%%
+the %sgossamer ring
+der {adj-e}%sSpinnfadenring
+%%%%
+the %sgolden ring
+der {adj-e}%sGoldring
+%%%%
+the %sgranite ring
+der {adj-e}%sGranitring
+%%%%
+the %siron ring
+der {adj-e}%sEisenring
+%%%%
+the %sivory ring
+der {adj-e}%sElfenbeinring
+%%%%
+the %sjade ring
+der {adj-e}%sJadering
+%%%%
+the %slapis lazuli ring
+der {adj-e}%sLapislazuliring
+%%%%
+the %slead ring
+der {adj-e}%sBleiring
+%%%%
+the %smarble ring
+der {adj-e}%sMarmorring
+%%%%
+the %smoonstone ring
+der {adj-e}%sMondsteinring
+%%%%
+the %sonyx ring
+der {adj-e}%sOnyxring
 %%%%
 the %sopal ring
 der {adj-e}%sOpalring
@@ -392,38 +408,54 @@ der {adj-e}%sOpalring
 the %spearl ring
 der {adj-e}%sPerlenring
 %%%%
-the %scoral ring
-der {adj-e}%sKorallenring
+the %speridot ring
+der {adj-e}%sPeridotring
+%%%%
+the %spewter ring
+der {adj-e}%sHartzinnring
+%%%%
+the %splatinum ring
+der {adj-e}%sPlatinring
+%%%%
+the %sruby ring
+der {adj-e}%sRubinring
 %%%%
 the %ssapphire ring
 der {adj-e}%sSaphirring
 %%%%
-the %scabochon ring
-der {adj-e}%sCabochonring
+the %ssilver ring
+der {adj-e}%sSilberring
 %%%%
-the %sgilded ring
-der {adj-e}%svergoldete Ring
+the %ssteel ring
+der {adj-e}%sStahlring
 %%%%
-the %sonyx ring
-der {adj-e}%sOnyxring
+the %stin ring
+der {adj-e}%sZinnring
 %%%%
-the %sbronze ring
-der {adj-e}%sBronzering
+the %stourmaline ring
+der {adj-e}%sTurmalinring
 %%%%
-the %smoonstone ring
-der {adj-e}%sMondsteinring
+the %sturquoise ring
+der {adj-e}%sTürkisring
+%%%%
+the %swooden ring
+der {adj-e}%sHolzring
 %%%%
 
 #################################
 # Amulets
 #################################
 
+# general catch-all
 %%%%
 the %samulet
 das {adj-e}%sAmulett
 %%%%
 
-# unidentified
+# unidentified amulets have two adjectives
+# the one closest to the noun is (usually) a material, which in German is usually combined with the noun
+
+# from item-name.txt
 %%%%
 the %ssapphire amulet
 das {adj-e}%sSaphiramulett
@@ -504,13 +536,37 @@ the %ssoapstone amulet
 das {adj-e}%sSpecksteinamulett
 %%%%
 the %slapis lazuli amulet
-das {adj-e}%sLapislazuli-Amulett
+das {adj-e}%sLapislazuliamulett
 %%%%
 the %sfiligree amulet
 das {adj-e}%sFiligranamulett
 %%%%
 the %sberyl amulet
 das {adj-e}%sBeryllamulett
+%%%%
+
+# extras from database/randname.txt
+%%%%
+the %scrystal amulet
+das {adj-e}%sKristallamulett
+%%%%
+the %sgraven amulet
+das {adj-e}%sgravierte amulett
+%%%%
+the %siron amulet
+das {adj-e}%sEisenamulett
+%%%%
+the %sivory amulet
+das {adj-e}%sElfenbeinamulett
+%%%%
+the %slead amulet
+das {adj-e}%sBleiamulett
+%%%%
+the %spewter amulet
+das {adj-e}%sHartzinnamulett
+%%%%
+the %stin amulet
+das {adj-e}%sZinnamulett
 %%%%
 
 #################################
@@ -740,6 +796,9 @@ der {adj-e}%srubinrote Zaubertrank
 %%%%
 the %ssapphire potion
 der {adj-e}%ssaphirblaue Zaubertrank
+%%%%
+the %sgolden potion
+der {adj-e}%sgoldene Zaubertrank
 %%%%
 
 #################################
