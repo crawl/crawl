@@ -80,7 +80,7 @@ const vector<string> expected = {
     "ein amethystfarbener Zaubertrank",
     "10 rauchige schwarze Zaubertränke",
 
-    "ein Heiltrank",
+    "ein Trank der Wundheilung",
     "5 Tränke des Gegenmittels",
 
     "ein +4 Ring des Schutzes (468 Gold)",
@@ -107,12 +107,12 @@ const vector<string> expected = {
     "a - eine +9 Breitaxt des heiligen Zorns",
     "eine +0 riesige Stachelkeule",
     "eine verfluchte -1 Riesenkeule",
-    "eine +0 Vorpal-Streitaxt",
+    "eine +0 gebiffte Streitaxt",
     "eine +0 Breitaxt des Flammens",
     "eine -1 Breitaxt des Einfrierens",
     "eine verfluchte -2 Breitaxt der Auszehrung",
-    "die +11 Breitaxt \"Jetioplo\" (Waffe) {Vorpal, Stä+4}",
-    "der +9 Dreizack von \"the Crushed Allies\" {Vorpal, Fragil +Uns Stä+3 Int+3}",
+    "die +11 Breitaxt \"Jetioplo\" (Waffe) {Gebifft, Stä+4}",
+    "der +9 Dreizack von \"the Crushed Allies\" {Gebifft, Fragil +Uns Stä+3 Int+3}",
     "das +7 Paar Schnellklingen \"Gyre\" und \"Gimble\"",
     "+7 Paar Schnellklingen",
 
@@ -151,7 +151,7 @@ const vector<string> armour_de =
     "ein verfluchtes +0 Paar Stiefel",
     "ein verfluchtes +2 Paar glühende Stiefel",
     "ein verfluchtes +2 Paar Handschuhe der Schießkunst",
-    "der +1 Plattenpanzer von Würfel, Beutel, und Flasche {Stä+6 Int-3 Ges+4 UnsS} (5390 Gold)"
+    "die +1 Plattenrüstung von Würfel, Beutel, und Flasche {Stä+6 Int-3 Ges+4 UnsS} (5390 Gold)"
 };
 
 vector<map<string, string>> wands =
@@ -168,8 +168,8 @@ vector<map<string, string>> wands =
     },
     {
         {"en", "a wand of flame (13)"},
-        {"nom", "ein Zauberstab des Flammens (13)"},
-        {"acc", "einen Zauberstab des Flammens (13)"}
+        {"nom", "ein Zauberstab der Flammen (13)"},
+        {"acc", "einen Zauberstab der Flammen (13)"}
     },
 };
 

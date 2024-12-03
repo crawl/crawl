@@ -102,12 +102,12 @@ int main()
 
     // test list with acc context
     msg = localise("You see here %s.", "a potion of lignification, a +0 short sword and a +2 arbalest");
-    expected = "Du siehst hier einen Trank der Verholzung, ein +0 Kurzschwert und eine +2 Armbrust.";
+    expected = "Du siehst hier einen Trank der Lignifizierung, ein +0 Kurzschwert und eine +2 Armbrust.";
     show_result(msg, expected);
 
     // test list with dat context
     msg = localise("You begin with the following equipment: %s", "a potion of lignification, a +0 short sword and a +2 arbalest");
-    expected = "Du beginnst mit der folgenden Ausrüstung: einem Trank der Verholzung, einem +0 Kurzschwert und einer +2 Armbrust";
+    expected = "Du beginnst mit der folgenden Ausrüstung: einem Trank der Lignifizierung, einem +0 Kurzschwert und einer +2 Armbrust";
     show_result(msg, expected);
 
     // test mutant beasts
@@ -274,7 +274,7 @@ int main()
     show_result(msg, "Du hörst das Zischen einer Sandlawine ganz in der Nähe.");
 
     msg = localise("This portal requires the presence of the gossamer rune to function.");
-    show_result(msg, "Dieses Portal erfordert das Vorhandensein der Spinnfäden-Rune, um zu funktionieren.");
+    show_result(msg, "Dieses Portal erfordert das Vorhandensein der Spinnfadenrune, um zu funktionieren.");
 
     msg = localise("This portal needs a +8 mace to function.");
     show_result(msg, "Dieses Portal benötigt einen +8 Streitkolben, um zu funktionieren.");

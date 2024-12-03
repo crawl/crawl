@@ -95,8 +95,8 @@ int main()
     test("hilfloser Ork", "helpless orc");
     test("Du triffst den hilflosen Ork", "You hit %s", "the helpless orc");
     test("Du kollidierst mit dem hilflosen Ork!", "You collide with %s!", "the helpless orc");
-    test("Du blockierst den Angriff des geisterhaften Orks.", "You block %s attack.", "the spectral orc's");
-    test("Die Wunden des geisterhaften Orks heilen von selbst!", "%s's wounds heal themselves!", "the spectral orc");
+    test("Du blockierst den Angriff des spektralen Orks.", "You block %s attack.", "the spectral orc's");
+    test("Die Wunden des spektralen Orks heilen von selbst!", "%s's wounds heal themselves!", "the spectral orc");
     cout << endl;
 
     // feminine with adjective
@@ -106,8 +106,8 @@ int main()
     test("hilflose Königspython", "helpless ball python");
     test("Du triffst die hilflose Königspython", "You hit %s", "the helpless ball python");
     test("Du kollidierst mit der hilflosen Königspython!", "You collide with %s!", "the helpless ball python");
-    test("Du blockierst den Angriff der geisterhaften Königspython.", "You block %s attack.", "the spectral ball python's");
-    test("Die Wunden der geisterhaften Königspython heilen von selbst!", "%s's wounds heal themselves!", "the spectral ball python");
+    test("Du blockierst den Angriff der spektralen Königspython.", "You block %s attack.", "the spectral ball python's");
+    test("Die Wunden der spektralen Königspython heilen von selbst!", "%s's wounds heal themselves!", "the spectral ball python");
     cout << endl;
 
     // neuter with adjective
@@ -117,8 +117,8 @@ int main()
     test("hilfloses Skelett", "helpless skeleton");
     test("Du triffst das hilflose Skelett", "You hit %s", "the helpless skeleton");
     test("Du kollidierst mit dem hilflosen Skelett!", "You collide with %s!", "the helpless skeleton");
-    test("Du blockierst den Angriff des geisterhaften Schweins.", "You block %s attack.", "the spectral hog's");
-    test("Die Wunden des geisterhaften Schweins heilen von selbst!", "%s's wounds heal themselves!", "the spectral hog");
+    test("Du blockierst den Angriff des spektralen Schweins.", "You block %s attack.", "the spectral hog's");
+    test("Die Wunden des spektralen Schweins heilen von selbst!", "%s's wounds heal themselves!", "the spectral hog");
     cout << endl;
 
     // masculine with weak declension
@@ -134,8 +134,8 @@ int main()
     test("Du triffst den hilflosen Feuerdrachen", "You hit %s", "the helpless fire dragon");
     test("Du kollidierst mit dem Feuerdrachen!", "You collide with %s!", "the fire dragon");
     test("Du kollidierst mit dem hilflosen Feuerdrachen!", "You collide with %s!", "the helpless fire dragon");
-    test("Du blockierst den Angriff des geisterhaften Feuerdrachen.", "You block %s attack.", "the spectral fire dragon's");
-    test("Die Wunden des geisterhaften Feuerdrachen heilen von selbst!", "%s's wounds heal themselves!", "the spectral fire dragon");
+    test("Du blockierst den Angriff des spektralen Feuerdrachen.", "You block %s attack.", "the spectral fire dragon's");
+    test("Die Wunden des spektralen Feuerdrachen heilen von selbst!", "%s's wounds heal themselves!", "the spectral fire dragon");
     cout << endl;
 
     // unique with simple name
