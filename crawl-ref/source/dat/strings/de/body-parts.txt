@@ -22,10 +22,10 @@ antenna
 Antenne
 %%%%
 eye-stalk
-Augenstiel
+Stielauge
 %%%%
 leaf
-Blat
+Blatt
 %%%%
 rhizome
 Rhizom
@@ -67,7 +67,7 @@ knochiger Arm
 # these ones only used in singular
 %%%%
 body
-Leib
+Körper
 %%%%
 tail
 Schwanz
@@ -100,7 +100,7 @@ antennae
 {pl}Antennen
 %%%%
 eye-stalks
-{pl}Augenstiele
+{pl}Stielaugen
 %%%%
 leaves
 {pl}Blätter

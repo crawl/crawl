@@ -34,7 +34,7 @@ caterwaul
 maunzt
 %%%%
 hiss
-zischst
+fauchst
 %%%%
 
 # gnoll (doglike)
@@ -91,7 +91,7 @@ a caterwaul
 {n}ein Maunzen
 %%%%
 a hiss
-{n}ein Zischen
+{n}ein Fauchen
 %%%%
 
 # gnoll (doglike)
@@ -146,22 +146,22 @@ deine Schildhand
 # claw (troll/ghoul)
 %%%%
 claw
-Kralle
+Klaue
 %%%%
 claws
-Krallen
+Klauen
 %%%%
 your claw
-deine Kralle
+deine Klaue
 %%%%
 your claws
-{pl}deine Krallen
+{pl}deine Klauen
 %%%%
 your weapon claw
-deine Waffenkralle
+deine Waffenklaue
 %%%%
 your shield claw
-deine Schildkralle
+deine Schildklaue
 %%%%
 
 # paw (felid)
@@ -189,7 +189,7 @@ tentacles
 Tentakel
 %%%%
 main tentacles
-Haupttentakeln
+Haupttentakel
 %%%%
 # duplicate: also a monster
 #your tentacle
@@ -251,14 +251,14 @@ deine Haut
 %%%%
 # long name
 spider-form
-Spinnen-Form
+Spinnengestalt
 %%%%
 # wizmode name
 # duplicate: spider
 %%%%
 # description
 a venomous arachnid creature
-eine giftige Arachnide
+eine giftige arachnide Kreatur
 %%%%
 # unarmed attack
 Fangs
@@ -267,11 +267,11 @@ Giftzähne
 # shout-equivalent
 # same as felid
 #hiss
-#zischst
+#fauchst
 %%%%
 # shout-equivalent as noun
 #a hiss
-#{n}ein Zischen
+#{n}ein Fauchen
 %%%%
 # hand-equivalent
 front leg
@@ -363,7 +363,7 @@ Statue
 %%%%
 # long name
 statue-form
-Statue-Form
+Statuengestalt
 %%%%
 # wizmode name
 # duplicate: statue
@@ -374,7 +374,7 @@ eine Steinstatue
 %%%%
 # description (transformation message)
 a living statue of rough stone
-eine lebende Statue aus rohem Stein
+eine lebende Statue aus grobem Stein
 %%%%
 # unarmed attack
 Stone fists
@@ -386,11 +386,11 @@ Steinfaust
 %%%%
 # unarmed attack (felid)
 Stone claws
-Steinkrallen
+Steinklauen
 %%%%
 # unarmed attack (octopode)
 Stone tentacles
-Steintentakeln
+Steintentakel
 %%%%
 # flesh type
 stone
@@ -406,7 +406,7 @@ Stein
 %%%%
 # long name
 ice-form
-Eis-Form
+Eisgestalt
 %%%%
 # wizmode name
 # duplicate: ice
@@ -458,7 +458,7 @@ Drache
 %%%%
 # long name
 dragon-form
-Drachen-Form
+Drachengestalt
 %%%%
 # wizmode name
 # duplicate: dragon
@@ -469,7 +469,7 @@ ein furchterregender Drache
 %%%%
 # unarmed attack
 Teeth and claws
-Zähne und Krallen
+Zähne und Klauen
 %%%%
 # shout-equivalent
 roar
@@ -477,26 +477,26 @@ brüllst
 %%%%
 # shout-equivalent as noun
 a roar
-{n}ein Gebrüll
+{n}ein Brüllen
 %%%%
 # hand-equivalent
 foreclaw
-Vorderkralle
+Vorderklaue
 %%%%
 foreclaws
-Vorderkrallen
+Vorderklauen
 %%%%
 your foreclaw
-deine Vorderkralle
+deine Vorderklaue
 %%%%
 your foreclaws
-{pl}deine Vorderkrallen
+{pl}deine Vorderklauen
 %%%%
 your weapon foreclaw
-deine Waffenvorderkralle
+deine Waffenvorderklaue
 %%%%
 your shield foreclaw
-deine Schildvorderkralle
+deine Schildvorderklaue
 %%%%
 
 # draconians transform into specific types of dragon based on their colour
@@ -536,7 +536,7 @@ Lich
 %%%%
 # long name
 lich-form
-Lich-Form
+Lichgestalt
 %%%%
 # wizmode name
 # duplicate: lich
@@ -559,11 +559,11 @@ Flmaus
 %%%%
 # long name
 bat-form
-Fledermaus-Form
+Fledermausgestalt
 %%%%
 # long name (vampire)
 vampire-bat-form
-Vampirfledermaus-Form
+Vampirfledermausgestalt
 %%%%
 # wizmode name
 # duplicate: bat
@@ -599,7 +599,7 @@ Schwein
 %%%%
 # long name
 pig-form
-Schweine-Form
+Schweinegestalt
 %%%%
 # wizmode name
 pig
@@ -611,11 +611,11 @@ ein dreckiges Schwein
 %%%%
 # shout-equivalent
 squeal
-kreischst
+quiekst
 %%%%
 # shout-equivalent as noun
 a squeal
-{n}ein Kreischen
+{n}ein Quieken
 %%%%
 # hand-equivalent
 front trotter
@@ -647,11 +647,11 @@ Fuß
 %%%%
 # abbreviation for HUD
 App
-Gliede
+Extr
 %%%%
 # long name / wizmode name
 appendages
-Körpergliede
+Extremitäten
 %%%%
 
 # untransform messages
@@ -688,7 +688,7 @@ Tree
 Baum
 %%%%
 tree-form
-Baum-Form
+Baumgestalt
 %%%%
 # wizmode name
 # duplicate: tree
@@ -703,7 +703,7 @@ Branches
 %%%%
 # shout-equivalent
 creak
-ächzt
+knarrst
 %%%%
 # shout-equivalent as noun
 a creak
@@ -747,7 +747,7 @@ Stach
 %%%%
 # long name
 porcupine-form
-Stachelschwein-Form
+Stachelschweingestalt
 %%%%
 # wizmode name
 # duplicate of monster name
@@ -768,7 +768,7 @@ Irrlicht
 %%%%
 # long name
 wisp-form
-Irrlicht-Form
+Irrlichtgestalt
 %%%%
 # wizmode name
 wisp
@@ -780,7 +780,7 @@ irrlicht
 %%%%
 # unarmed attack
 Misty tendrils
-Neblige Ranken
+Nebelschwaden
 %%%%
 # shout
 whoosh
@@ -792,26 +792,26 @@ a whoosh
 %%%%
 # hand
 misty tendril
-Nebelranke
+Nebelschwade
 %%%%
 misty tendrils
-Nebelranken
+Nebelschwaden
 %%%%
 your misty tendril
-deine Nebelranke
+deine Nebelschwade
 %%%%
 your misty tendrils
-{pl}deine Nebelranken
+{pl}deine Nebelschwaden
 %%%%
 your weapon misty tendril
-deine Waffennebelranke
+deine Waffennebelschwade
 %%%%
 your shield misty tendril
-deine Schildnebelranke
+deine Schildnebelschwade
 %%%%
 # foot
 strand
-Strähne
+Nebelfahne
 %%%%
 # flesh
 vapour
@@ -827,7 +827,7 @@ Dunst
 %%%%
 # long name
 jelly-form
-Gelee-Form
+Geleegestalt
 %%%%
 # wizmode name
 # duplicate: jelly
@@ -847,7 +847,7 @@ Pilz
 %%%%
 # long name
 fungus-form
-Pilz-Form
+Pilzgestalt
 %%%%
 # wizmode name
 # duplicate: fungus
@@ -899,7 +899,7 @@ Schatte
 %%%%
 # long name
 shadow-form
-Schatten-Form
+Schattengestalt
 %%%%
 # wizmode name
 # duplicate: shadow
@@ -919,7 +919,7 @@ Hydra
 %%%%
 # long name
 hydra-form
-Hydra-Form
+Hydragestalt
 %%%%
 # wizmode name
 # duplicate: hydra
@@ -942,10 +942,10 @@ storm
 Sturm
 %%%%
 storm-form
-Sturm-Form
+Sturmgestalt
 %%%%
 a lightning-filled tempest!
-ein blitzvolles Unwetter!
+ein heftig blitzendes Unwetter!
 %%%%
 Storm fists
 Sturmfäuste
@@ -962,7 +962,7 @@ Sturmfäuste
 %%%%
 # description
 your old self
-dein altes Ich
+dein altes Selbst
 %%%%
 
 ################################
@@ -976,7 +976,7 @@ Du kniest vor dem Altar von {dat}%s.
 %%%%
 # default for felid
 You sit before the altar of %s.
-Du sitzt vor dem Altar von {dat}%s.
+Du setzst dich vor den Altar von {dat}%s.
 %%%%
 # default for octopode
 You curl up in front of the altar of %s.
@@ -992,11 +992,11 @@ Du schwebst feierlich vor dem Altar von {dat}%s.
 %%%%
 # porcupine form
 You curl into a sanctuary of spikes before the altar of %s.
-Du rollst dich zu einem Heiligtum aus Stacheln vor dem Altar von {dat}%s zusammen.
+Du rollst dich vor dem Altar von {dat}%s zu einem Heiligtum aus Stacheln zusammen.
 %%%%
 # spider form
 You crawl onto the altar of %s.
-Du kriechst auf den Altar von {dat}%s.
+Du krabbelst auf den Altar von {dat}%s.
 %%%%
 # tree form
 You sway towards the altar of %s.
@@ -1016,11 +1016,11 @@ Du verneigst deine Köpfe vor dem Altar von {dat}%s.
 %%%%
 # statue/storm form
 You place yourself before the altar of %s.
-Du stellst dich vor dem Altar von {dat}%s.
+Du stellst dich vor den Altar von {dat}%s.
 %%%%
 # fungus form
 You release spores on the altar of %s.
-Du setzt Sporen auf den Altar von {dat}%s frei.
+Du gibst Sporen auf den Altar von {dat}%s ab.
 %%%%
 # wisp form
 You swirl around the altar of %s.
