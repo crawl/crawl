@@ -43,7 +43,7 @@ the %seveningstar
 der {adj-e}%sAbendstern
 %%%%
 the %sgreat mace
-der {adj-e}%sgroßer Streitkolben
+der {adj-e}%sgroße Streitkolben
 %%%%
 the %sgiant club
 die {adj-e}%sRiesenkeule
