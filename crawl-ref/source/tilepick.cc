@@ -2566,6 +2566,7 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
     case WPN_TRIDENT:               return TILE_WPN_TRIDENT;
     case WPN_HALBERD:               return TILE_WPN_HALBERD;
     case WPN_GLAIVE:                return TILE_WPN_GLAIVE;
+    case WPN_PARTISAN:              return TILE_WPN_PARTISAN;
 #if TAG_MAJOR_VERSION == 34
     case WPN_STAFF:                 return TILE_WPN_STAFF;
 #endif

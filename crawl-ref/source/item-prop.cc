@@ -675,6 +675,9 @@ static const weapon_def Weapon_prop[] =
         SK_POLEARMS,     SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_SLICING, 0, 0, 0, POLEARM_BRANDS },
 #endif
+    { WPN_PARTISAN,           "partisan",          14, 1, 17,
+        SK_POLEARMS,     SIZE_LITTLE, SIZE_MEDIUM, MI_NONE,
+        DAMV_PIERCING, 3, 25, 40, POLEARM_BRANDS },
     { WPN_DEMON_TRIDENT,     "demon trident",      12,  1, 13,
         SK_POLEARMS,     SIZE_LITTLE, SIZE_MEDIUM, MI_NONE,
         DAMV_PIERCING, 0, 25, 150, DEMON_BRANDS },

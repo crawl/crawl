@@ -134,6 +134,10 @@ glaive3
 bardiche1 WPN_BARDICHE
 bardiche2
 bardiche3
+partisan1 WPN_PARTISAN
+partisan2
+partisan3
+
 demon_trident WPN_DEMON_TRIDENT
 demon_trident2
 demon_trident3

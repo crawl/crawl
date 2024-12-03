@@ -192,6 +192,9 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_TRIDENT:
         tile = TILEP_HAND1_TRIDENT2;
         break;
+    case WPN_PARTISAN:
+        tile = TILEP_HAND1_PARTISAN;
+        break;
     case WPN_DEMON_TRIDENT:
         tile = TILEP_HAND1_DEMON_TRIDENT;
         break;
