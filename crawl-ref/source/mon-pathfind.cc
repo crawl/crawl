@@ -133,10 +133,19 @@ bool monster_pathfind::init_pathfind(coord_def src, coord_def dest, bool doors,
 void monster_pathfind::fill_traversability(const monster* mon, int _range,
                                            bool no_actors)
 {
+    mons   = mon;
+    start  = mon->pos();
+    target = coord_def();
+    pos    = start;
+    allow_diagonals = true;
+    traverse_unmapped = false;
+    traverse_in_sight = (!crawl_state.game_is_arena()
+                         && mon->friendly() && mon->is_summoned()
+                         && you.see_cell_no_trans(mon->pos()));
     fill_range = true;
     traverse_no_actors = no_actors;
     set_range(_range);
-    init_pathfind(mon, coord_def());
+    start_pathfind();
 }
 
 bool monster_pathfind::start_pathfind(bool msg)
