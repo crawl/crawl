@@ -73,7 +73,7 @@ a book of Battle
 {n}ein Buch der Schlacht
 %%%%
 a book of Vapours
-{n}ein Buch der Dämpfe
+{n}ein Buch der Dünste
 %%%%
 a book of Necromancy
 {n}ein Buch der Nekromantie
@@ -82,7 +82,7 @@ a book of Callings
 {n}ein Buch der Rufe
 %%%%
 a book of Maledictions
-{n}ein Buch der Flüche
+{n}ein Buch der Verwünschungen
 %%%%
 a book of Air
 {n}ein Buch der Luft
@@ -154,7 +154,7 @@ a book of Displacement
 {n}ein Buch der Verdrängung
 %%%%
 a book of Rime
-{n}ein Buch des Reims
+{n}ein Buch des Raureifs
 %%%%
 a book of Stone
 {n}ein Buch des Steins
@@ -178,7 +178,7 @@ a book of Storms
 {n}ein Buch der Stürme
 %%%%
 a book of Weapons
-{n}ein Buch der Gewehre
+{n}ein Buch der Waffen
 %%%%
 a book of Sloth
 {n}ein Buch der Faulheit
@@ -212,31 +212,31 @@ a Necronomicon
 {n}ein Necronomicon
 %%%%
 a Grand Grimoire
-{n}ein Grand Grimoire
+{n}ein grandioses Grimoire
 %%%%
 an Everburning Encyclopedia
 eine ewig brennende Enzyklopädie
 %%%%
 a Young Poisoner's Handbook
 # don't use Handbuch because that's the word we used for Manual
-{m}ein Leitfaden für junge Giftmörder
+{m}ein Leitfaden für junge Giftmischer
 %%%%
 a Fen Folio
 {n}ein Fenn-Folio
 %%%%
 an Inescapable Atlas
-{m}ein unumgänglicher Atlas
+{m}ein unvermeidlicher Atlas
 %%%%
 a There-And-Back Book
 {n}ein Hin-und-Zurück-Buch
 %%%%
 a Trismegistus Codex
-{m}ein Trismegistus-Codex
+{m}ein Kodex Trismegistus
 %%%%
 
 %%%%
 the Unrestrained Analects
-{pl}die hemmungslosen Analekten
+{pl}die uneingeschränkten Analekten
 %%%%
 
 %%%%
