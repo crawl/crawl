@@ -797,7 +797,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_STING, "Sting",
     spschool::conjuration | spschool::alchemy,
-    spflag::dir_or_target | spflag::needs_tracer,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
     1,
     25,
     4, 4,
@@ -3186,14 +3186,25 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_MERCURY_VAPOURS, "Mercury Vapours",
-    spschool::alchemy | spschool::air,
-    spflag::target | spflag::destructive,
+    SPELL_MERCURY_ARROW, "Mercury Arrow",
+    spschool::alchemy | spschool::conjuration,
+    spflag::dir_or_target | spflag::needs_tracer,
     2,
     50,
+    4, 4,
+    0,
+    TILEG_STING,
+},
+
+{
+    SPELL_POISONOUS_VAPOURS, "Poisonous Vapours",
+    spschool::alchemy | spschool::air,
+    spflag::target | spflag::destructive,
+    1,
+    25,
     3, 3,
     0,
-    TILEG_MERCURY_VAPOURS,
+    TILEG_POISONOUS_CLOUD,
 },
 
 {

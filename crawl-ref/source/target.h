@@ -589,7 +589,8 @@ public:
 class targeter_explosive_beam : public targeter_beam
 {
 public:
-    targeter_explosive_beam(const actor *act, int pow, int range,
+    targeter_explosive_beam(const actor *act, zap_type ztype,
+                            int pow, int range,
                             bool explode_on_monsters = true,
                             bool always_explode = false);
     bool set_aim(coord_def a) override;

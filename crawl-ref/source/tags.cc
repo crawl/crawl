@@ -2514,6 +2514,9 @@ static spell_type _fixup_removed_spells(spell_type s)
         case SPELL_ANIMATE_SKELETON:
             return SPELL_SOUL_SPLINTER;
 
+        case SPELL_STING:
+            return SPELL_POISONOUS_VAPOURS;
+
         default:
             return s;
     }

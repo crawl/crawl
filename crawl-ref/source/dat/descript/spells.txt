@@ -1259,11 +1259,14 @@ Summons a powerful exotic creature to the caster's aid: a manticore, a lindwurm,
 or, at high power, even a sphinx. Casting the spell at higher power also
 increases the strength of the beasts themselves.
 %%%%
-Mercury Vapours spell
+Mercury Arrow spell
 
-Briefly transmutes the air around a target into gaseous mercury, poisoning those
-who breathe it in. Further, the target and adjacent creatures (living or otherwise)
-may be weakened by mere exposure to the alchemical substance.
+Conjures an arrow of elemental mercury which deals direct poison damage to
+whatever it hits and may also weaken their melee attacks for a short while.
+
+The physical force of the arrow inflicts a small amount of damage even to those
+immune to poison, and the weakening effect can splash to adjacent targets and
+ignores poison resistance altogether.
 %%%%
 Mourning Wail spell
 
@@ -1430,6 +1433,14 @@ damage bypasses poison resistance.
 Poisonous Cloud spell
 
 Conjures forth a great cloud of lethal gases.
+%%%%
+Poisonous Vapours spell
+
+Transmutes a small amount of the air around a target into toxic vapours,
+poisoning anyone unfortunate enough to breathe them in. The quantity of air
+affected is small and it will not persist beyond the turn in which it is cast.
+
+It cannot affect those with any resistance to poison.
 %%%%
 Polar Vortex spell
 

@@ -2136,10 +2136,12 @@ bool targeter_bind_soul::valid_aim(coord_def a)
     return true;
 }
 
-targeter_explosive_beam::targeter_explosive_beam(const actor *act, int pow, int r,
+targeter_explosive_beam::targeter_explosive_beam(const actor *act,
+                                                 zap_type ztype,
+                                                 int pow, int r,
                                                  bool _explode_on_monsters,
                                                  bool _always_explode) :
-                          targeter_beam(act, r, ZAP_COMBUSTION_BREATH, pow, 0, 0),
+                          targeter_beam(act, r, ztype, pow, 0, 0),
                           explode_on_monsters(_explode_on_monsters),
                           always_explode(_always_explode)
 {

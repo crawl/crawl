@@ -3698,71 +3698,49 @@ int get_mercury_weaken_chance(int victim_hd, int pow)
     return max(0, 100 - max(0, (victim_hd * 12 - pow * 3 / 2 - 17) * 115 / 100));
 }
 
-spret cast_mercury_vapours(int pow, const coord_def target, bool fail)
+dice_def poisonous_vapours_damage(int pow, bool random)
 {
-    if (cell_is_solid(target))
-    {
-        canned_msg(MSG_UNTHINKING_ACT);
-        return spret::abort;
-    }
+    if (random)
+        return dice_def(1, 2 + div_rand_round(pow, 8));
+    else
+        return dice_def(1, 2 + pow / 8);
+}
 
-    monster* mons = monster_at(target);
-    if (mons && you.can_see(*mons) && !never_harm_monster(&you, *mons)
-        && mons->res_poison() <= 0
-        && stop_attack_prompt(mons, false, you.pos()))
-    {
-        return spret::abort;
-    }
-    else if (you.pos() == target && you.res_poison() <= 0
-             && !yesno("Really target yourself?", false, 'n'))
+spret cast_poisonous_vapours(const actor& agent, int pow, const coord_def target, bool fail)
+{
+    actor* act = actor_at(target);
+    if (agent.is_player() && act && you.can_see(*act) && act->res_poison() <= 0
+        && !never_harm_monster(&you, act->as_monster())
+        && stop_attack_prompt(act->as_monster(), false, you.pos()))
     {
         return spret::abort;
     }
 
     fail_check();
 
-    if (mons && you.can_see(*mons))
-        mprf("Fumes of mercury billow around %s!", mons->name(DESC_THE).c_str());
-    else if (target == you.pos())
-        mpr("Fumes of mercury billow around yourself!");
+    if (act && you.can_see(*act))
+        mprf("Poisonous fumes billow around %s!", act->name(DESC_THE).c_str());
     else
-        mpr("Fumes of mercury billow through the air!");
+        mpr("Poisonous fumes billow in the air!");
 
-    // Attempt to poison the central monster, if there is one.
-    if (mons && mons->res_poison() <= 0 && !never_harm_monster(&you, *mons))
+    if (!act || act->res_poison() > 0)
+        return spret::success;
+
+    int dmg = resist_adjust_damage(act, BEAM_POISON,
+                                   poisonous_vapours_damage(pow, true).roll());
+    act->hurt(&agent, dmg, BEAM_POISON);
+
+    // Attempt to poison the target.
+    if (act->is_monster() && !never_harm_monster(&you, act->as_monster()))
     {
-        // Be a little more generous with poisoning unpoisoned monsters.
-        int amount = max(1, div_rand_round(pow, 25));
-        if (!mons->has_ench(ENCH_POISON))
-            ++amount;
-
-        poison_monster(mons, &you, amount);
-
-        behaviour_event(mons, ME_WHACK, &you);
-        if (mons->alive())
-            you.pet_target = mons->mindex();
+        poison_monster(act->as_monster(), &you, 1);
+        behaviour_event(act->as_monster(), ME_WHACK, &you);
+        if (act->alive())
+            you.pet_target = act->mindex();
     }
-    // Trying to cast on self - presumably for the AoE weak.
+    // A monster casting the spell on the player.
     else if (you.pos() == target && you.res_poison() <= 0)
-        you.poison(&you, roll_dice(2, 6));
-
-    // Now attempt to weaken all monsters adjacent to the target
-    for (adjacent_iterator ai(target, false); ai; ++ai)
-    {
-        actor* actor = actor_at(*ai);
-        if (!actor || never_harm_monster(&you, actor->as_monster()))
-            continue;
-
-        int chance = get_mercury_weaken_chance(actor->get_hit_dice(), pow);
-
-        // Adjacent targets have moderately less chance of weakness than the
-        // central target.
-        if (*ai != target)
-            chance = chance * 2 / 3;
-
-        if (actor && x_chance_in_y(chance, 100))
-            actor->weaken(&you, 5);
-    }
+        you.poison(&you, roll_dice(2, 4 + pow / 10));
 
     return spret::success;
 }

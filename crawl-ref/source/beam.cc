@@ -1633,6 +1633,43 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
     }
 
+    case BEAM_MERCURY:
+    {
+        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
+        if (doFlavouredEffects)
+        {
+            int chance = get_mercury_weaken_chance(mons->get_hit_dice(), pbolt.ench_power);
+            if (x_chance_in_y(chance, 100))
+                mons->weaken(pbolt.agent(), 5);
+
+            // Splash to adjacent actors.
+            bool did_splash_msg = false;
+            for (adjacent_iterator ai(mons->pos()); ai; ++ai)
+            {
+                if (actor* act = actor_at(*ai))
+                {
+                    if (act == pbolt.agent()
+                        || never_harm_monster(pbolt.agent(), act->as_monster()))
+                    {
+                        continue;
+                    }
+
+                    if (!did_splash_msg)
+                    {
+                        if (you.see_cell(mons->pos()))
+                            mprf("The mercury splashes!");
+                        did_splash_msg = true;
+                    }
+
+                    chance = get_mercury_weaken_chance(act->get_hit_dice(), pbolt.ench_power);
+                    if (x_chance_in_y(chance, 100))
+                        act->weaken(pbolt.agent(), 5);
+                }
+            }
+        }
+        break;
+    }
+
     case BEAM_NEG:
         if (mons->res_negative_energy() == 3)
         {
@@ -7653,6 +7690,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_DOUBLE_VIGOUR:         return "vigour-doubling";
     case BEAM_SEISMIC:               return "seismic shockwave";
     case BEAM_BOLAS:                 return "entwining bolas";
+    case BEAM_MERCURY:               return "mercury";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

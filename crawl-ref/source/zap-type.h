@@ -176,5 +176,6 @@ enum zap_type
     ZAP_MAGMA_BARRAGE,
     ZAP_SHADOW_SHOT,
     ZAP_BOLAS,
+    ZAP_MERCURY_ARROW,
     NUM_ZAPS
 };

@@ -2647,4 +2647,21 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     TILE_BOLT_MAGMA,
 },
 
+{
+    ZAP_MERCURY_ARROW,
+    "glob of mercury",
+    50,
+    new calcdice_calculator<2, 11, 1, 5>,
+    new tohit_calculator<12, 1, 5>,
+    new dicedef_calculator<2, 4, 1, 10>,
+    new tohit_calculator<12, 1, 5>,
+    GREEN,
+    false,
+    BEAM_MERCURY,
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+    TILE_BOLT_STING,
+},
+
 };
