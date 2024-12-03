@@ -1870,9 +1870,9 @@ static string _equipment_property_change_description(const item_def &item,
             int new_fail_change = new_fail[i] - cur_fail[i];
             int new_visible_fail_change = failure_rate_to_int(new_fail[i])
                                             - failure_rate_to_int(cur_fail[i]);
-            if (abs(new_fail_change) > fail_change)
+            if (abs(new_fail_change) > abs(fail_change))
                 fail_change = new_fail_change;
-            if (abs(new_visible_fail_change) > visible_fail_change)
+            if (abs(new_visible_fail_change) > abs(visible_fail_change))
                 visible_fail_change = new_visible_fail_change;
         }
     }
