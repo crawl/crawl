@@ -1904,6 +1904,7 @@ bool trigger_battlesphere(actor* agent)
         battlesphere->check_redraw(old_pos);
         battlesphere->speed_increment -= 30;
 
+        beam.source = fallback_pos;
         _fire_battlesphere(battlesphere, beam);
         battlesphere->apply_location_effects(old_pos);
         return true;
