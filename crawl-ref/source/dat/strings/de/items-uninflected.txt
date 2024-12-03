@@ -150,22 +150,22 @@ Geschoss
 
 %%%%
 decaying
-verfallende
+verwesende
 %%%%
 barnacled
-Kletten-
+seepockenbefallene
 %%%%
 gossamer
-Spinnfäden-
+Spinnfaden
 %%%%
 serpentine
-Schlangen-
+Schlangen
 %%%%
 slimy
 schleimige
 %%%%
 abyssal
-Abgrunds-
+Abgrunds
 %%%%
 # duplicate of missile brand
 #silver
@@ -178,13 +178,13 @@ goldene
 # hell runes
 %%%%
 obsidian
-Obsidian-
+Obsidian
 %%%%
 icy
 eisige
 %%%%
 bone
-Knochen-
+Knochen
 %%%%
 iron
 eiserne
