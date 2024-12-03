@@ -165,11 +165,11 @@ slimy
 schleimige
 %%%%
 abyssal
-Abgrunds
+Abgrund
 %%%%
 # duplicate of missile brand
 #silver
-#silberne
+#Silber
 %%%%
 golden
 goldene
