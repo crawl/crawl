@@ -698,9 +698,9 @@ NAME:    hangedman_relentless_pull
 TAGS:    no_monster_gen no_item_gen
 MONS:    ugly thing / large abomination / ynoxinul / unseen horror / smoke demon
 MONS:    tentacled starspawn / starcursed mass
-MONS:    very ugly thing, wretched star, lurking horror, ancient zyme
-ITEM:    glaive good_item / demon trident ego:distortion / \
-         glaive ego:chaos good_item w:5 / demon trident ego:chaos w:5 / \
+MONS:    very ugly thing / reaper, wretched star, lurking horror, ancient zyme
+ITEM:    partisan good_item / demon trident ego:distortion / \
+         bardiche ego:chaos good_item w:5 / demon trident ego:chaos w:5 / \
          flux talisman randart / gold q:100
 SHUFFLE: 2d, 34eAB / 34eAB / '''CD, 34 / 56
 SUBST:   e = d, AB = x, C = ., D = @, x = xxccb

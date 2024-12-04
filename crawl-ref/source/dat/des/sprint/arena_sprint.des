@@ -1091,7 +1091,7 @@ KFEAT:  Q = weapon shop type:Weapon suffix:Rack count:17 use_all greed:30 ; \
             mundane triple sword | mundane broad axe |\
             mundane executioner's axe | mundane demon whip |\
             mundane great mace | mundane giant spiked club |\
-            mundane demon trident | mundane bardiche |\
+            mundane partisan | mundane bardiche |\
             mundane lajatang | mundane longbow |\
             mundane hand cannon | mundane triple crossbow
 KFEAT:  H = distillery shop type:Bottled suffix:Wisdom count:5 use_all greed:6 ; \

@@ -1038,7 +1038,7 @@ dgn.delayed_decay_extra(_G, "F", "spriggan skeleton",
 
  -- Merfolk gladiator. 3 guaranteed items, 3.25 on-average.
 dgn.delayed_decay_extra(_G, "H", "merfolk skeleton",
-    "trident good_item / demon trident / glaive good_item / bardiche" ..
+    "partisan good_item / demon trident / glaive good_item / bardiche" ..
     ", leather armour good_item w:100 / ring mail good_item w:100" ..
     "    / " .. light_scales .. " / " .. medium_scales ..
     -- Give this a 1/4 in chance of placing since we guarantee 3 items above.
@@ -1061,7 +1061,7 @@ dgn.delayed_decay_extra(_G, "J", "orc skeleton",
 
  -- Ogre, maybe an ogre mage of some kind.
 dgn.delayed_decay_extra(_G, "K", "ogre skeleton",
-    "trident good_item / demon trident / glaive good_item / bardiche" ..
+    " demon trident / partisan good_item / glaive good_item / bardiche" ..
     "    / war axe randart / broad axe good_item / battleaxe good_item" ..
     "    / executioner's axe w:2 / giant club good_item" ..
     "    / giant spiked club good_item / quarterstaff good_item / lajatang" ..

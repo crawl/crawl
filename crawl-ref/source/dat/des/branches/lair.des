@@ -3541,10 +3541,10 @@ KITEM:   % = any
 KITEM:   * = star_item
 KITEM:   | = superb_item
 : kitem("d = " .. dgn.loot_potions)
-KITEM:   e = throwing net q:3 / rapier good_item / captain's cutlass w:2 \
-         / trident randart / trident of the octopus king w:2 \
-         / demon trident w:5 / phial of floods / ring of the octopus king w:2, \
-         earthy gem
+KITEM:   e = throwing net q:3 / rapier good_item / captain's cutlass w:2 / \
+             trident randart w:8 / trident of the octopus king w:2 / \
+             partisan good_item w:2 / demon trident w:5 / phial of floods / \
+             ring of the octopus king w:2, earthy gem
 KMONS:   p = plant
 KMONS:   1 = hornet / wyvern / blink frog / cane toad / steam dragon
 KMONS:   2 = elephant / komodo dragon / polar bear / rime drake

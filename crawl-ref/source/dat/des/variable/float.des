@@ -3652,7 +3652,7 @@ MONS:   jumping spider / wolf spider / tarantella
 MONS:   emperor scorpion / w:8 green death / w:3 ghost moth
 : else
 MONS:   skeletal warrior ; long sword ego:venom | broad axe ego:venom \
-        | halberd ego:venom
+        | partisan ego:venom
 MONS:   reaper ; halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:venom \
         / w:8 green death / ancient champion ; great mace ego:venom | \
         battleaxe ego:venom | glaive ego:venom
@@ -3863,7 +3863,7 @@ KMONS:  1 = red very ugly thing / white very ugly thing / \
             cyan very ugly thing w:15
 KMONS:  2 = fire dragon / ice dragon
 KMONS:  3 = dancing weapon ; broad axe ego:flaming | scimitar ego:freezing | \
-                             trident ego:electrocution | flail ego:heavy
+                             partisan ego:electrocution | flail ego:heavy
 KMONS:  4 = stone giant w:15 / fire giant / frost giant
 KMONS:  5 = spark wasp / catoblepas
 KMONS:  6 = storm dragon / iron dragon / titan / war gargoyle
@@ -5419,7 +5419,7 @@ KMONS:  4 = two-headed ogre zombie \
            / orc knight zombie ; war axe ego:venom | battleaxe ego:venom \
                | long sword ego:venom | great sword ego:venom \
                | dire flail ego:venom | great mace ego:venom \
-           / tengu warrior zombie ; halberd ego:venom | glaive ego:venom \
+           / tengu warrior zombie ; partisan ego:venom | glaive ego:venom \
                | bardiche ego:venom
 KMONS:  5 = jelly / acid dragon
 KMONS:  6 = acid dragon
@@ -11380,7 +11380,7 @@ ITEM:    executioner's axe good_item no_pickup w:5 / \
          eveningstar good_item no_pickup / \
          bardiche good_item no_pickup w:5 / \
          glaive good_item randart no_pickup / \
-         demon trident good_item no_pickup
+         partisan good_item no_pickup
 ITEM:    plate armour good_item randart w:20 no_pickup / \
          crystal plate armour good_item no_pickup / \
          chain mail good_item randart no_pickup

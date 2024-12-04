@@ -1471,15 +1471,15 @@ ITEM:       any scroll q:2 w:8 / scroll of enchant weapon ident:type w:2 / \
 # Shortlist of one-handed skeletal warrior weapons.
 : local d = "ego:draining plus:6 "
 : local p = "ego:pain plus:6 "
-: item("morningstar " .. d .. " / morningstar " .. p .. " / war axe " .. d ..
-:      " / war axe " .. p .. " / trident " .. d .. " / trident " .. p ..
+: item("morningstar " .. d .. " / morningstar " .. p .. " / broad axe " .. d ..
+:      " / broad axe " .. p .. " / partisan " .. d .. " / partisan " .. p ..
 :      " / scimitar " .. d .. " / scimitar " .. p)
 ITEM:       shadow dragon scales good_item / shadow dragon scales randart / \
             crystal plate armour good_item / crystal plate armour randart / \
             plate armour good_item w:15 / plate armour randart w:15 / \
             chain mail good_item / chain mail randart / \
             kite shield randart / tower shield randart / \
-            talisman of death randart artprops:str:2&dex:2&slay:2
+            talisman of death randart artprops:str:2&dex:2&slay:2 w:15
 KFEAT:      GW = G
 KFEAT:      T = petrified_tree
 NSUBST:     Z = Z / ', d = 5:e / 3:f / * = d:20 e:2, G = 22:G / 5 = G. / *:.
@@ -2250,7 +2250,7 @@ TAGS:   no_rotate
 {{
   local anti = "ego:antimagic"
   local will = "ego:willpower"
-  local gear = "halberd " .. anti .. " | scimitar " .. anti
+  local gear = "partisan " .. anti .. " | scimitar " .. anti
                 .. " | morningstar " .. anti .. " | dire flail " .. anti
                 .. " . ring mail " .. will .. " w:3 | scale mail | chain mail "
   local greatweap = "double sword " .. anti .. " | demon blade " .. anti

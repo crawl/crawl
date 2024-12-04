@@ -270,7 +270,7 @@ function ice_cave_natural_monster_set(e)
         e.kmons("4 = ice dragon")
         e.kmons("5 = ironbound frostheart")
         e.kmons("6 = white draconian ; " ..
-            dgn.random_item_def({["scimitar"] = 2, ["halberd"] = 2,
+            dgn.random_item_def({["scimitar"] = 2, ["partisan"] = 2,
                                  ["broad axe"] = 1, ["morningstar"] = 2},
                                 "freezing", nil, "|") .. " . cloak")
         e.kmons("7 = frost giant")
@@ -362,7 +362,7 @@ function ice_cave_weapon_loot(e, glyphs)
     local weapons = {
         ["morningstar"] = 10, ["eveningstar"] = 5, ["demon whip"] = 5,
         ["great mace"] = 10, ["giant club"] = 5, ["giant spiked club"] = 5,
-        ["demon trident"] = 5, ["halberd"] = 10, ["glaive"] = 10,
+        ["demon trident"] = 5, ["partisan"] = 10, ["glaive"] = 10,
         ["bardiche"] = 5, ["scimitar"] = 10, ["demon blade"] = 5,
         ["double sword"] = 5, ["maxwell's thermic engine"] = 2,
         ["great sword"] = 10, ["triple sword"] = 5, ["lajatang"] = 10,

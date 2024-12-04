@@ -878,10 +878,11 @@ DEPTH:   D:4-, Depths
 MONS:    ball python w:5 / adder, water moccasin
 MONS:    black mamba w:20 / naga ; sling, naga mage / naga ritualist, nagaraja
 KFEAT:   v = general shop type:Serpentskin suffix:Sales count:7 ; \
-         w:8 dart ego:poisoned | w:4 dart ego:curare | w:5 scroll of poison | \
-         w:3 ring of poison resistance | w:6 randbook disc:alchemy | \
-         w:2 staff of alchemy | w:6 any weapon ego:venom | w:1 serpent talisman | \
-         w:6 any armour ego:poison_resistance | w:1 swamp dragon scales
+         dart ego:poisoned w:8 | dart ego:curare w:4 | scroll of poison w:5 | \
+         ring of poison resistance w:3 | randbook disc:alchemy w:6 | \
+         staff of alchemy w:2 | any weapon ego:venom w:4 | \
+         partisan ego:venom w:1 | serpent talisman randart w:2 | \
+         any armour ego:poison_resistance w:6 | w:1 swamp dragon scales
 NSUBST:  ? = 2:? / 2 = ?.. / *:.
 : if you.absdepth() < 7 then
 SUBST:   ? = 1
@@ -937,21 +938,22 @@ ENDMAP
 NAME:    guppyfry_shop_blood
 TAGS:    no_monster_gen transparent
 DEPTH:   D:12-, Depths
-KMONS:   1 = vampire / bat
-KMONS:   2 = vampire / vampire mage / vampire knight
-KFEAT:   v = general shop type:Blood suffix:Bar count:7 ; \
-             nothing w:50 | any weapon ego:vampirism w:10 | \
+KMONS:   1 = vampire / vampire bat
+KMONS:   2 = vampire mage / vampire knight
+KFEAT:   v = general shop type:Blood suffix:Bar count:8 ; \
+             dagger ego:vampirism w:30 | any weapon ego:vampirism w:15 | \
              randbook numspells:2 spells:sublimation_of_blood w:20 | \
              randbook disc:necromancy w:9 | w:1 book of annihilations
-SUBST:   ? = 2.Y
-: if you.in_branch("D") then
-SUBST:   2 = 1
+SHUFFLE: ABCD
+SUBST:   A = 1, B = Y, C : 1Y., D = .
+: if you.in_branch("Depths") then
+SUBST:   1 = 2
 : end
 MAP
 xxxxx
-x???x
-+?v?+
-x???x
+xABCx
++DvD+
+xCBAx
 xxxxx
 ENDMAP
 
@@ -1246,6 +1248,7 @@ KFEAT:   S = general shop type:Lightly-Used suffix:Armoury ; \
              damaged ego:none double sword | \
              damaged ego:none triple sword | \
              damaged ego:none executioner's axe | \
+             damaged ego:none partisan | \
              damaged ego:none demon trident | \
              damaged ego:none bardiche | \
              damaged ego:none lajatang | \
@@ -1869,7 +1872,7 @@ local metal_goods = {"ring mail", "scale mail", "chain mail", "plate armour",
    "short sword", "scimitar", "great sword", "broad axe", "battleaxe", "glaive",
    "morningstar", "dire flail", "great mace", "trident", "arbalest", "bardiche",
    "executioner's axe", "eveningstar", "lajatang", "hand cannon",
-   "triple crossbow"}
+   "triple crossbow", "partisan"}
 local inventory = {}
 for _, good in ipairs(metal_goods) do
    table.insert(inventory, good .. " damaged w:13")

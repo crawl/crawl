@@ -2112,7 +2112,7 @@ local forgebook = "randbook owner:Xom title:Making_Friends disc:forgecraft " ..
                   "numspells:2 spells:" .. table.concat(forgespells, '&&' )
 
 local use_books = table.concat(util.random_subset({hexbook, alchbook,
-                  necrobook, tlocbook, summbook, forgebooks}, 3), ' | ')
+                  necrobook, tlocbook, summbook, forgebook}, 3), ' | ')
 
 -- Manual options: above spell schools, other magical items offered in the same
 -- shop, and a joke dud of Stealth since Xom will break it constantly.
@@ -2131,7 +2131,7 @@ local wand = table.concat(util.random_subset({
 -- or very niche build support.
 local equip_count = 7
 local weaps = { "demon blade", "double sword", "triple sword",
-                "demon trident", "glaive", "bardiche", "demon whip",
+                "demon trident", "partisan", "bardiche", "demon whip",
                 "eveningstar", "great mace", "broad axe", "battleaxe",
                 "executioner's axe", "lajatang", "hand cannon", "longbow",
                 "triple crossbow", "rapier", "quick blade"}

@@ -188,11 +188,13 @@ function setup_loot (e)
                                  "fire dragon scales w:8 / granite talisman w:2 / " ..
                                  "dragon-blood talisman w:2")
     e.item(dgn.loot_potions)
-    e.item(make_fiery_weapon(e, {"rapier w:10", "quick blade w:5", "eveningstar w:2",
-                                 "demon whip w:2", "great mace w:16", "demon blade w:2",
-                                 "great sword w:16", "triple sword w:2", "broad axe w:3",
-                                 "battleaxe w:16", "executioner's axe w:1",
-                                 "demon trident w:2", "glaive w:16", "bardiche w:2",
+    e.item(make_fiery_weapon(e, {"rapier w:10", "quick blade w:5",
+                                 "demon whip w:2", "eveningstar w:2",
+                                 "great mace w:16", "demon blade w:2",
+                                 "great sword w:16", "triple sword w:2",
+                                 "broad axe w:3", "battleaxe w:16",
+                                 "executioner's axe w:1", "demon trident w:2",
+                                 "partisan w:2", "glaive w:16", "bardiche w:2",
                                  "longbow w:8", "arbalest w:8", "hand cannon w:8",
                                  "quarterstaff", "lajatang w:5"}))
     e.item("any / star_item w:4")

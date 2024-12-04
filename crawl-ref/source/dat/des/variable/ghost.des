@@ -982,8 +982,8 @@ ITEM:   quick blade good_item w:5 / rapier good_item / scimitar good_item / \
         eveningstar good_item w:5 / demon whip good_item w:5 / \
         dire flail good_item / great mace good_item / broad axe good_item / \
         battleaxe good_item / executioner's axe good_item w:5 / \
-        demon trident good_item w:5 / glaive good_item / \
-        bardiche good_item w:5 / lajatang good_item w:5
+        demon trident good_item w:5 / partisan good_item w:5 / \
+        glaive good_item / bardiche good_item w:5 / lajatang good_item w:5
 # An "Oka armour gift" on 'e'
 ITEM:   any armour good_item / any armour randart
 # Rarely place the robe of misfortune or a bad randart robe.

@@ -1220,7 +1220,7 @@ ORIENT:  encompass
 -- higher quality of weapons doesn't guarantee one gets their current weapon
 -- school, but it's much better than otherwise getting whips and short swords.
 local weaps = { "double sword", "great sword w:30", "triple sword w:5",
-                "halberd w:30", "glaive", "bardiche w:5", "morningstar w:30",
+                "partisan", "glaive w:30", "bardiche w:5", "morningstar w:30",
                 "eveningstar w:5", "great mace", "war axe w:30", "broad axe",
                 "battleaxe", "executioner's axe w:5", "quarterstaff w:40",
                 "lajatang w:15", "rapier w:45" }

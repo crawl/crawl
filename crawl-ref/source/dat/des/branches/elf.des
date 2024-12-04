@@ -1708,10 +1708,10 @@ local chaos_types = { ["spear"] = 2, ["trident"] = 2, ["mace"] = 2,
 local disto_types = { ["halberd"] = 1, ["morningstar"] = 1, ["great mace"] = 1,
     ["giant club"] = 1, ["great sword"] = 1, ["battleaxe"] = 1}
 -- Highest quality types we'll degrade and will have venom.
-local venom_types = { ["demon trident"] = 1, ["bardiche"] = 2,
-    ["giant spiked club"] = 2, ["lajatang"] = 1, ["double sword"] = 1,
-    ["triple sword"] = 1, ["broad axe"] = 1, ["battleaxe"] = 2,
-    ["executioner's axe"] = 1 }
+local venom_types = { ["demon trident"] = 1, ["partisan"] = 1,
+    ["bardiche"] = 2, ["giant spiked club"] = 2, ["lajatang"] = 1,
+    ["double sword"] = 1, ["triple sword"] = 1, ["broad axe"] = 1,
+    ["battleaxe"] = 2, ["executioner's axe"] = 1 }
 kmons("1 = dancing weapon perm_ench:vitrified ; " ..
     dgn.random_item_def(chaos_types, "chaos", nil, "|"))
 kmons("2 = dancing weapon perm_ench:slow ; " ..
@@ -2136,11 +2136,13 @@ MAP
 .............
 ENDMAP
 
-NAME: nicolae_vaults_blade_armed_guards
-KMONS: 2 = deep elf knight ; battleaxe | broad axe | flail | glaive | great mace | \
-   halberd | hand axe | long sword | morningstar | scimitar | short sword | \
-   trident | war axe . chain mail | plate armour . \
-   kite shield | buckler w:20 | nothing w:60
+NAME:  nicolae_vaults_blade_armed_guards
+KMONS: 2 = deep elf knight ; hand axe | war axe | broad axe | battleaxe | \
+                             flail | morningstar | great mace | \
+                             short sword | long sword | scimitar | \
+                             trident | partisan | glaive | . \
+                             chain mail | plate armour .  kite shield | \
+                             buckler w:20 | nothing w:60
 : elven_blade_entry(_G)
 MAP
       =

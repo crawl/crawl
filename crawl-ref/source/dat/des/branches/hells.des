@@ -78,7 +78,7 @@ KMONS:   1 = brimstone fiend
 KMONS:   2 = searing wretch / balrug
 KMONS:   34 = fire giant / hellephant w:5
 KMONS:   56 = ancient champion ; plate armour . broad axe ego:flaming | \
-         halberd ego:flaming w:7 | morningstar ego:flaming
+              partisan ego:flaming w:7 | morningstar ego:flaming
 KMONS:   7 = hell hog
 SUBST:   w = l, W = .
 KPROP:   l = no_cloud_gen
@@ -196,7 +196,7 @@ KMONS:  2 = sin beast / hellion / reaper / tormentor / shadow demon / balrug
 KMONS:  1 = ice fiend
 KMONS:  2 = sin beast / hellion / reaper / tormentor / shadow demon / \
             blizzard demon
-: else
+: else -- Tar
 KMONS:  1 = tzitzimitl
 KMONS:  2 = sin beast / hellion / reaper / tormentor / shadow demon / \
             green death

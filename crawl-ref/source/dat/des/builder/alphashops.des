@@ -143,8 +143,8 @@
       elseif s == "O" then i = { "orcbow" }
 
       elseif s == "P" then i = { "book of party tricks", "book of power",
-       "pearl dragon scales",
-       "plate armour", "ring of poison resistance", "manual of polearms",
+       "partisan", "pearl dragon scales", "plate armour",
+       "ring of poison resistance", "manual of polearms",
        "wand of polymorph", "ring of positive energy",
        "wand of paralysis", "ring of protection",
        "ring of protection from fire", "scroll of poison",

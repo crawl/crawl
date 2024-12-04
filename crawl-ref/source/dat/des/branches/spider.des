@@ -1499,7 +1499,7 @@ KMONS: - = dancing weapon ; short sword / dancing weapon ; mace \
            / dancing weapon ; war axe / dancing weapon ; trident \
            / dancing weapon ; mace
 KMONS: " = dancing weapon ; rapier / dancing weapon ; scimitar \
-           / dancing weapon ; broad axe / dancing weapon ; halberd \
+           / dancing weapon ; broad axe / dancing weapon ; partisan \
            / dancing weapon ; morningstar
 KITEM: - = plate armour / plate armour good_item w:1 / chain mail \
            / chain mail good_item w:1 / scale mail / scale mail good_item w:1 \

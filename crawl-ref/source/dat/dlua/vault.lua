@@ -124,9 +124,10 @@ end
 function hall_of_blades_weapon(e)
   local long_blade_type = crawl.one_chance_in(2) and "double sword"
                                                   or "triple sword"
-  local types = {"quick blade", long_blade_type,
-                 "executioner's axe", "eveningstar", "bardiche",
-                 "lajatang"}
+  local polearm_type = crawl.one_chance_in(2) and "partisan"
+                                               or "bardiche"
+  local types = {"eveningstar", "executioner's axe", polearm_type,
+                 "lajatang",  "quick blade", long_blade_type}
   local egos = {"flaming", "freezing", "electrocution", "heavy",
                 "holy_wrath", "pain", "vampirism",
                 "antimagic", "distortion", "spectral"}

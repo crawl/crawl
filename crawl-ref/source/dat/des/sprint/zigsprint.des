@@ -737,6 +737,7 @@ KITEM:    D = broad axe mundane ident:all plus:5, \
               battleaxe mundane ident:all plus:5, \
               executioner's axe mundane ident:all plus:5
 KITEM:    E = demon trident mundane ident:all plus:5, \
+              partisan mundane ident:all plus:5, \
               bardiche mundane ident:all plus:5
 KITEM:    F = demon whip mundane ident:all plus:5, \
               great mace mundane ident:all plus:5, \

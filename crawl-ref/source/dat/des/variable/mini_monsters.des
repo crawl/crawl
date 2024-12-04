@@ -495,9 +495,10 @@ MONS:    spriggan rider, spark wasp
 MONS:    spriggan berserker / lich / alderking w:2
 NSUBST:  10 = 2:3 / 1:2, % = 1:| / 1:* / 1:d / * = *%%
 : end
-ITEM:    throwing net q:1 no_pickup / rapier ego:venom no_pickup / \
-         scimitar ego:venom no_pickup / any hex wand charges:8 no_pickup / \
-         fen folio w:3 / potion of ambrosia w:3 ident:type / \
+ITEM:    throwing net q:1 no_pickup / rapier ego:venom no_pickup w:12 / \
+         scimitar ego:venom no_pickup w:8 / any hex wand charges:8 no_pickup / \
+         fen folio w:3 / my sojourn through swmapland w:3 / \
+         potion of ambrosia w:3 ident:type / \
          potion of curing w:3 ident:type / dart ego:curare no_pickup w:3
 : if you.in_branch("Vaults") then
 SUBST:   "'@W = .
@@ -9634,10 +9635,10 @@ KMONS:   a = war gargoyle ; broad axe | battleaxe / \
              stone giant ; broad axe | battleaxe / \
              orc warlord ; broad axe | battleaxe / \
              ettin w:5 ; broad axe | battleaxe . broad axe | battleaxe
-KMONS:   p = war gargoyle ; demon trident | glaive / \
-             stone giant ; demon trident | glaive / \
-             orc warlord ; demon trident | glaive / \
-             ettin w:5 ; demon trident | glaive . demon trident | glaive
+KMONS:   p = war gargoyle ; partisan | glaive / \
+             stone giant ; partisan | glaive / \
+             orc warlord ; partisan | glaive / \
+             ettin w:5 ; partisan | glaive . partisan | glaive
 KMONS:   L = deep elf blademaster ; executioner's axe . bardiche
 KMONS:   P = phantasmal warrior / nothing w:5
 : end

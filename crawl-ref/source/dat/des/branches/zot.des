@@ -130,7 +130,7 @@ FTILE:   "OADx = floor_marble
 FTILE:   .+cm^012349$ = floor_hall
 TILE:    x = wall_zot_magenta
 : zot_entry_setup(_G)
-MONS:   base draconian ; glaive | halberd
+MONS:   base draconian ; partisan | glaive
 MAP
 '''''''''''''''''''''''''''''''''''''''''
 'wwwwwwwww'''''''''''''''''''''wwwwwwwww'
@@ -3831,12 +3831,12 @@ MONS:   patrolling black draconian annihilator ; cloak good_item . \
 KMONS:  O = diamond obelisk
 KMONS:  S = lightning spire
 ITEM:   storm talisman, randbook disc:air spells:chain_lightning
-: local e = "ego:electrocution good_item ident:type"
+: local e = "ego:electrocution good_item ident:type no_pickup"
 : item("quickblade " .. e .. " w:5 / double sword " .. e .. " w:5 / " ..
 :      "executioner's axe " .. e .. " w:5 / eveningstar " .. e .. " w:5 / " ..
-:      "bardiche " .. e .. "w:5 / lajatang " .. e .. " w:5 / " ..
+:      "bardiche " .. e .. " w:5 / lajatang " .. e .. " w:5 / " ..
 :      "rapier " .. e .. " / scimitar " .. e .. " / dire flail " .. " / " ..
-:      "broad axe " .. e .. " / trident " .. e .. " / quarterstaff " .. e)
+:      "broad axe " .. e .. " / partisan w:5 " .. e .. " / quarterstaff " .. e)
 ITEM:   scroll of blinking q:1 / scroll of blinking q:2 / \
         scroll of teleportation q:3 w:30 / any scroll good_item / \
         staff of air randart
@@ -3844,7 +3844,7 @@ KFEAT:  yz = w
 KFEAT:  YZ" = W
 KFEAT:  # = iron_grate
 NSUBST: . = 4:1 / 4:2 / 3:3 / 3 = 123. / *:., ' = 2:3 / 6:4 / 4 = 34455 / *:.
-NSUBST: d = 1:d / 1:|ee / *:f, f = 2:f / *:g, G = 2:GG. / *:.
+NSUBST: d = 1:d / 1:|ee / *:f, f = 4:f / *:g, G = 2:GG. / *:.
 SUBST:  ` = ., ) = )>>
 KPROP:  -_ly"O> = no_tele_into
 MARKER: - = lua:fog_machine { cloud_type = "steam", walk_dist = 3, \
@@ -3861,7 +3861,7 @@ MAP
                  vvvvvvvvv
                  vd`d`d`dv
                  v```7```v         vvvvv
-                 vf``'``fv         vyyyv
+                 vf`f'f`fv         vyyyv
                  v``6`6``v         vyyyv
                  vf`````fv         vyyyv
    vvvvvvvvvvvvvvv###S###v         vyyyv

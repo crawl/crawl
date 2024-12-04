@@ -237,9 +237,9 @@ KITEM:    e = rapier plus:2 ego:electrocution ident:all /\
            morningstar plus:2 ego:protection ident:all /\
            morningstar plus:2 ego:heavy ident:all /\
            morningstar plus:2 good_item ident:all w:5, \
-           halberd plus:2 ego:protection ident:all /\
-           halberd plus:2 ego:venom ident:all /\
-           halberd plus:2 good_item ident:all w:5, \
+           partisan plus:2 ego:protection ident:all /\
+           partisan plus:2 ego:venom ident:all /\
+           partisan plus:2 good_item ident:all w:5, \
            lajatang plus:0 ident:all /\
            quarterstaff plus:4 ego:speed ident:all w:15 /\
            quarterstaff plus:4 good_item ident:all w:5, \
@@ -414,6 +414,7 @@ KITEM:    b = any weapon level:27 ident:all /\
           broad axe plus:3 ident:all /\
           battleaxe plus:1 ident:all /\
           executioner's axe plus:0 ident:all w:3 /\
+          partisan plus:1 ident:all /\
           glaive plus:1 ident:all /\
           bardiche plus:0 ident:all w:3 /\
           dire flail plus:3 ident:all /\
@@ -592,8 +593,8 @@ KITEM:    b = battleaxe plus:4 ego:none ident:all /\
     executioner's axe plus:0 good_item ident:all /\
     broad axe plus:7 ego:none ident:all /\
     broad axe plus:3 good_item ident:all /\
-    glaive plus:4 ego:none ident:all /\
-    glaive plus:2 good_item ident:all /\
+    partisan plus:4 ego:none ident:all /\
+    partisan plus:2 good_item ident:all /\
     bardiche plus:2 ego:none ident:all /\
     bardiche plus:0 good_item ident:all /\
     demon trident plus:4 ego:none ident:all /\
@@ -804,8 +805,8 @@ KITEM:    b = battleaxe plus:5 good_item ident:all /\
     executioner's axe plus:5 randart ident:all w:5 /\
     broad axe plus:5 good_item ident:all /\
     broad axe plus:5 randart ident:all w:5 /\
-    glaive plus:5 good_item ident:all /\
-    glaive plus:5 randart ident:all w:5 /\
+    partisan plus:5 good_item ident:all /\
+    partisan plus:5 randart ident:all w:5 /\
     bardiche plus:5 good_item ident:all /\
     bardiche plus:5 randart ident:all w:5 /\
     demon trident plus:5 good_item ident:all /\

@@ -2608,12 +2608,13 @@ KMONS:   4 = bloated husk
 KMONS:   5 = spectral spriggan rider / spectral spriggan berserker
 KMONS:   6 = freezing wraith / will-o-the-wisp w:5
 ITEM:    executioner's axe
-ITEM:    great sword / triple sword w:5 / great mace / eveningstar \
-         / glaive / bardiche / lajatang / hand cannon w:5 / triple crossbow w:5
-ITEM:    chain mail / plate armour / crystal plate armour w:5 \
-         / kite shield / tower shield / helmet / pair of boots / pair of gloves
-ITEM:    wand of charming w:30 / wand of paralysis w:30 / any wand w:5 \
-         / wand of mindburst / lightning rod w:1
+ITEM:    great sword / triple sword w:5 / great mace / eveningstar / \
+         partisan w:5 / glaive w:5 / bardiche / lajatang / hand cannon w:5 / \
+         triple crossbow w:5
+ITEM:    chain mail / plate armour / crystal plate armour w:5 / \
+         kite shield / tower shield / helmet / pair of boots / pair of gloves
+ITEM:    wand of charming w:30 / wand of paralysis w:30 / any wand w:5 / \
+         wand of mindburst / lightning rod w:1
 ITEM:    large rock q:1
 KPROP:   dh = bloody
 KFEAT:   ; = iron_grate
@@ -2796,7 +2797,7 @@ ITEM:   gold q:1 / gold q:2 / gold q:3 / gold q:4
 ITEM:   buckler w:30 / robe w:30 / swamp dragon scales w:20 \
         / steam dragon scales / acid dragon scales / troll leather armour
 ITEM:   short sword / rapier / quick blade / long sword / scimitar \
-        / war axe / morningstar / eveningstar / trident / quarterstaff \
+        / war axe / morningstar / eveningstar / partisan / quarterstaff \
         / lajatang
 ITEM:   any magical staff, any jewellery, any book, any wand
 NSUBST: L = e / f / eeffhj$ / ghhijj$

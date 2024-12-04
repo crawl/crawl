@@ -109,21 +109,22 @@ end
 
 function orc_warrior_with_polearm(e)
   e.mons("orc warrior ; \
-          spear w:5 | trident w:5 | halberd | glaive | bardiche w:1 . \
+          spear w:5 | trident w:5 | partisan w:1 | \
+          halberd | glaive | bardiche w:1 . \
           ring mail | scale mail | chain mail | plate armour |\
           crystal plate armour w:1")
 end
 
 function orc_knight_with_polearm(e)
   e.mons("orc knight ; \
-          trident w:5 | halberd | glaive | bardiche w:1 . \
+          trident w:5 | partisan w:2 | halberd | glaive | bardiche w:1 . \
           ring mail | scale mail | chain mail | plate armour | \
           crystal plate armour w:1")
 end
 
 function orc_warlord_with_polearm(e)
   e.mons("orc warlord ; \
-          halberd good_item | glaive good_item | bardiche good_item w:1 . \
+          partisan good_item | glaive good_item | bardiche good_item w:1 . \
           chain mail w:20 | plate armour | crystal plate armour w:1")
 end
 
@@ -850,7 +851,7 @@ TAGS:   bailey_polearm no_item_gen no_monster_gen no_pool_fixup
 MONS:   gnoll ; spear | trident | halberd . \
             ring mail | scale mail | chain mail . \
             throwing net | nothing
-MONS:   gnoll sergeant ; halberd | glaive | bardiche w:1 . \
+MONS:   gnoll sergeant ; halberd | glaive w:11 | parisan w:1 | bardiche w:1 . \
             chain mail w:20 | plate armour | crystal plate armour w:1
 MONS:   gnoll bouda ; spear | trident | halberd . \
             ring mail | scale mail
@@ -1100,16 +1101,16 @@ ITEM:    any armour good_item
 MONS:    wolf zombie, vampire bat
 MONS:    orc zombie, orc warrior zombie
 MONS:    gargoyle
-MONS:    vampire ; halberd ego:vampirism w:15 | glaive ego:vampirism w:3 \
-             | bardiche ego:vampirism w:1 \
-             . scale mail | chain mail
+MONS:    vampire ; halberd ego:vampirism w:15 | glaive ego:vampirism w:2 | \
+                   bardiche ego:vampirism w:1 | partisan ego:vampirism w:1 . \
+                   scale mail | chain mail
 NSUBST:  d = 2=d / 2=e / | /  dde|, f = f / f..
 NSUBST:  ; = 20=t. / ., - = 4=G / 12=1. / .
 NSUBST:  2 = 5=2 / 2., 3 = 6=3 / 3..., 4 = 3=4 / 4., 5 = 5 / G
 NSUBST:  ! = 6 / G
 SHUFFLE: A<
 TILE:    t = dngn_tree_dead
-COLOUR:  t = w:5 lightgrey / w:5 darkgrey / brown
+COLOUR:  t = brown
 KITEM:   f = orc skeleton
 : set_feature_name("tree", "dead tree")
 : vault_granite_statue_setup(_G, "G", "gravestone")
@@ -1220,13 +1221,13 @@ NAME:   bailey_polearm_enchanted_keep_hellmonk
 TAGS:   bailey_polearm no_item_gen no_monster_gen no_pool_fixup
 ORIENT: encompass
 MONS:   ogre ; halberd | glaive w:3
-MONS:   spriggan ; spear | trident
+MONS:   spriggan ; spear w:16 | trident w:16 | partisan w:1
 MONS:   two-headed ogre ; halberd | glaive w:3 | bardiche w:1 . \
                           halberd | glaive w:3 | bardiche w:1
 KMONS:  D = steam dragon / acid dragon w:3
 : item(dgn.loot_potions .. " / " .. dgn.loot_scrolls)
 ITEM:   rapier good_item / quarterstaff good_item / lajatang good_item w:5 / \
-        broad axe good_item w:5 / scimitar good_item w:5
+        broad axe good_item w:5 / partisan good_item w:5 / scimitar good_item w:5
 ITEM:   good_item ice dragon scales w:3 /\
         good_item fire dragon scales w:3 / good_item swamp dragon scales w:3 /\
         good_item acid dragon scales w:3 / good_item steam dragon scales w:3 /\

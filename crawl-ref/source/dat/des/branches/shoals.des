@@ -2021,7 +2021,7 @@ KMONS:   3 = merfolk avatar / merfolk javelineer / merfolk impaler / \
 -- They're all owned by the same person.
 local owner = string.gsub(crawl.make_name(), " ", "_")
 kfeat("D = weapon shop name:" .. owner .. " type:Merfolk suffix:Weapons ; \
-      spear | trident | halberd | demon trident | bardiche | glaive | \
+      spear | trident | halberd | partisan | demon trident | glaive | bardiche | \
       dagger | quick blade | short sword | rapier | dart | javelin | \
       throwing net | boomerang" )
 kfeat("E = armour shop name:" .. owner .. " type:Merfolk suffix:Armours ; \

@@ -223,6 +223,8 @@ function general_item_setup(e)
     executioner's axe plus:5 randart ident:all /\
     broad axe plus:11 good_item ident:all /\
     broad axe plus:9 randart ident:all /\
+    partisan plus:9 good_item ident:all /\
+    partisan plus:7 randart ident:all /\
     glaive plus:9 good_item ident:all /\
     glaive plus:7 randart ident:all /\
     bardiche plus:7 good_item ident:all /\
@@ -284,6 +286,8 @@ function general_item_setup(e)
     executioner's axe plus:0 good_item ident:all /\
     broad axe plus:9 ego:none ident:all /\
     broad axe plus:6 good_item ident:all /\
+    partisan plus:6 ego:none ident:all /\
+    partisan plus:3 good_item ident:all /\
     glaive plus:6 ego:none ident:all /\
     glaive plus:3 good_item ident:all /\
     bardiche plus:3 ego:none ident:all /\
@@ -436,6 +440,7 @@ function armoury_setup(e)
           broad axe plus:5 ident:all /\
           battleaxe plus:3 ident:all /\
           executioner's axe plus:1 ident:all w:3 /\
+          partisan plus:5 ident:all /\
           glaive plus:3 ident:all /\
           bardiche plus:1 ident:all w:3 /\
           dire flail plus:5 ident:all /\

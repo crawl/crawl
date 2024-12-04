@@ -3426,8 +3426,8 @@ MONS:   orc ; club ego:chaos | dagger ego:chaos | spear ego:chaos
 MONS:   gnoll ; club ego:chaos | dagger ego:chaos | spear ego:chaos
 MONS:   boggart ; flail ego:chaos | rapier ego:chaos | trident ego:chaos
 MONS:   tengu warrior ; flail ego:chaos | rapier ego:chaos | trident ego:chaos
-MONS:   occultist ; dire flail ego:chaos | scimitar ego:chaos | glaive ego:chaos
-MONS:   rakshasa ; dire flail ego:chaos | scimitar ego:chaos | glaive ego:chaos
+MONS:   occultist ; dire flail ego:chaos | scimitar ego:chaos | partisan ego:chaos
+MONS:   rakshasa ; dire flail ego:chaos | scimitar ego:chaos | partisan ego:chaos
 ITEM:   gold q:1 no_pickup
 KFEAT:  _ = altar_xom
 :  if you.depth() == dgn.br_depth(you.branch()) then
@@ -4861,7 +4861,7 @@ KITEM:   2 = randbook owner:Sif_Muna numspells:2 slevels:2
 KMONS:   1 = troll
 KMONS:   2 = ynoxinul
 {{
-local weapons = {["trident"] = 1, ["war axe"] = 1, ["morningstar"] = 1,
+local weapons = {["partisan"] = 1, ["war axe"] = 1, ["morningstar"] = 1,
                  ["scimitar"] = 1}
 kitem("1 = " .. dgn.random_item_def(weapons, egos, "plus:0"))
 }}

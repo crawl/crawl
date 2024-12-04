@@ -1808,8 +1808,8 @@ MONS:    orc warrior w:1 ; orcbow . halberd | war axe | morningstar . \
          orc w:10 ; orcbow . trident | hand axe | mace . leather armour
 MONS:    orc warrior ; orcbow . glaive | broad axe | battleaxe | great mace . \
                                 leather armour | ring mail
-MONS:    orc knight ; arbalest . glaive | broad axe | great mace . \
-                                 leather armour | ring mail
+MONS:    orc knight ; arbalest . glaive w:7 | partisan w:3 | broad axe | \
+                                 great mace . leather armour | ring mail
 MONS:    orc warrior
 MONS:    centaur w:20 / centaur warrior w:1, kobold blastminer
 SUBST:   3 = 23
