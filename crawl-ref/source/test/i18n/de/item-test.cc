@@ -334,9 +334,9 @@ vector<map<string, string>> books =
 {
     {
         {"en", "a book of Vapours"},
-        {"nom", "ein Buch der Dämpfe"},
-        {"acc", "ein Buch der Dämpfe"},
-        {"dat", "einem Buch der Dämpfe"},
+        {"nom", "ein Buch der Dünste"},
+        {"acc", "ein Buch der Dünste"},
+        {"dat", "einem Buch der Dünste"},
     },
 };
 
