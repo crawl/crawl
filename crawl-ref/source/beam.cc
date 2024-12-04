@@ -2423,7 +2423,7 @@ static void _unravelling_explode(bolt &beam)
 bool bolt::is_bouncy(dungeon_feature_type feat) const
 {
     // Beams with no directionality will assert if we try to bounce them.
-    if (aimed_at_spot)
+    if (aimed_at_feet)
         return false;
 
     // Don't bounce off open sea.
