@@ -5620,6 +5620,10 @@ void monster::put_to_sleep(actor */*attacker*/, int /*strength*/, bool hibernate
 
 void monster::weaken(const actor *attacker, int pow)
 {
+    // Don't weaken monsters where it wouldn't do anything.
+    if (!mons_has_attacks(*this, false))
+        return;
+
     if (!has_ench(ENCH_WEAK))
         simple_monster_message(*this, " looks weaker.");
     else

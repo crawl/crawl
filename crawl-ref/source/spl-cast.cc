@@ -1672,6 +1672,9 @@ static vector<string> _desc_airstrike_bonus(const monster_info& mi)
 
 static vector<string> _desc_mercury_weak_chance(const monster_info& mi, int pow)
 {
+    if (mi.is(MB_NO_ATTACKS))
+        return vector<string>{};
+
     return vector<string>{make_stringf("chance to weaken: %d%%",
                             get_mercury_weaken_chance(mi.hd, pow))};
 }
