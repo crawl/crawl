@@ -3504,6 +3504,10 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         dec_hp(pain, false);
         mons->add_ench(mon_enchant(ENCH_SOUL_RIPE, pain, &you,
                                    INFINITE_DURATION));
+
+        if (mons->mons_species() == MONS_HYDRA)
+            mons->props[OLD_HEADS_KEY].get_int() = mons->num_heads;
+
         mprf("You wrap your dark will around %s soul!",
               mons->name(DESC_ITS).c_str());
         break;

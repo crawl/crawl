@@ -1702,8 +1702,8 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
     remove_bound_soul_companion();
     add_daction(DACT_OLD_CHARMD_SOULS_POOF);
 
-    const string whose = you.can_see(*mon) ? apostrophise(mon->name(DESC_THE))
-                                           : mon->pronoun(PRONOUN_POSSESSIVE);
+    string whose = you.can_see(*mon) ? apostrophise(mon->name(DESC_THE))
+                                     : mon->pronoun(PRONOUN_POSSESSIVE);
 
     // Heal the health we paid wrestling for this soul
     you.heal(mon->get_ench(ENCH_SOUL_RIPE).degree);
@@ -1742,6 +1742,20 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
     // Use the original monster type as the zombified type here, to get
     // the proper stats from it.
     define_zombie(mon, mon->type, MONS_BOUND_SOUL);
+
+    if (orig.mons_species() == MONS_HYDRA)
+    {
+        if (orig.heads() < mon->props[OLD_HEADS_KEY].get_int())
+        {
+            mprf("Yredelemnul restores the hydra's soul to it's natural glory!");
+            mon->num_heads = mon->props[OLD_HEADS_KEY].get_int();
+        }
+        else
+            mon->num_heads = orig.heads();
+
+        whose = you.can_see(*mon) ? apostrophise(orig.name(DESC_THE))
+                                           : orig.pronoun(PRONOUN_POSSESSIVE);
+    }
 
     // Modify health based on invocations skill
     mon->max_hit_points = yred_get_bound_soul_hp(orig.type);
