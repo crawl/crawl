@@ -3053,9 +3053,12 @@ string get_item_description(const item_def &item,
 
     case OBJ_STAVES:
         {
-            string stats = mode == IDM_MONSTER ? "" : "\n\n";
-            _append_weapon_stats(stats, item);
-            description << stats;
+            if (verbose)
+            {
+                string stats = mode == IDM_MONSTER ? "" : "\n\n";
+                _append_weapon_stats(stats, item);
+                description << stats;
+            }
 
             string art_desc = _artefact_descrip(item);
             if (!art_desc.empty())
@@ -3064,8 +3067,11 @@ string get_item_description(const item_def &item,
             if (verbose && crawl_state.need_save && you.could_wield(item, true, true))
                 description << _equipment_property_change(item);
         }
-        description << "\n\nIt falls into the 'Staves' category. ";
-        description << _handedness_string(item);
+        if (verbose)
+        {
+            description << "\n\nIt falls into the 'Staves' category. ";
+            description << _handedness_string(item);
+        }
         break;
 
     case OBJ_MISCELLANY:
