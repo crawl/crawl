@@ -139,13 +139,6 @@ enum band_type
     NUM_BANDS                   // always last
 };
 
-enum dragon_class_type
-{
-    DRAGON_LIZARD,
-    DRAGON_DRACONIAN,
-    DRAGON_DRAGON,
-};
-
 enum proximity_type   // proximity to player to create monster
 {
     PROX_ANYWHERE,
