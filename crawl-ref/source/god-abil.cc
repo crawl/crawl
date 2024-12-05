@@ -1747,7 +1747,7 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
     {
         if (orig.heads() < mon->props[OLD_HEADS_KEY].get_int())
         {
-            mprf("Yredelemnul restores the hydra's soul to its natural glory!");
+            mpr("Yredelemnul restores the hydra's soul to its natural glory!");
             mon->num_heads = mon->props[OLD_HEADS_KEY].get_int();
         }
         else
