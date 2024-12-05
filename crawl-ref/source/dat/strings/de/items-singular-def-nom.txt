@@ -315,6 +315,13 @@ the %sgold dragon scales
 die {adj-en}%sGolddrachenschuppen
 %%%%
 
+# this unidentified armour needs special handling because one of
+# the English adjectives is joined to the noun in German
+%%%%
+the creamy pearl robe
+die cremefarbene Perlenrobe
+%%%%
+
 #################################
 # Rings
 #################################

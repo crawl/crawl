@@ -212,7 +212,7 @@ a Necronomicon
 {n}ein Necronomicon
 %%%%
 a Grand Grimoire
-{n}ein grandioses Grimoire
+{n}ein großes Grimoire
 %%%%
 an Everburning Encyclopedia
 eine ewig brennende Enzyklopädie
