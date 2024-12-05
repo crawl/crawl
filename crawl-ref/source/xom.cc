@@ -15,6 +15,7 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
+#include "branch.h"
 #include "cloud.h"
 #include "corpse.h"
 #include "coordit.h"
@@ -835,14 +836,22 @@ static void _do_chaos_upgrade(item_def &item, const monster* mon)
 // with visuals pretending it's banishment.
 static void _xom_bazaar_trip(int /*sever*/)
 {
-    stop_delay(true);
-    god_speaks(GOD_XOM, _get_xom_speech("bazaar trip").c_str());
-    run_animation(ANIMATION_BANISH, UA_BRANCH_ENTRY, false);
-    dlua.callfn("dgn_set_persistent_var", "sb", "xom_bazaar", true);
-    down_stairs(DNGN_ENTER_BAZAAR);
-    you.props[XOM_BAZAAR_TRIP_COUNT].get_int()++;
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "banished to a bazaar"),
+    if (brdepth[BRANCH_ABYSS] == -1)
+    {
+        // Only possible in wizmode, as the message implies, but it crashes.
+        mprf(MSGCH_ERROR, "Not even Xom can make wizards leave Sprint. "
+                          "Aborting Xom's Bazaar banishment.");
+    }
+    else
+    {
+        god_speaks(GOD_XOM, _get_xom_speech("bazaar trip").c_str());
+        run_animation(ANIMATION_BANISH, UA_BRANCH_ENTRY, false);
+        dlua.callfn("dgn_set_persistent_var", "sb", "xom_bazaar", true);
+        down_stairs(DNGN_ENTER_BAZAAR);
+        you.props[XOM_BAZAAR_TRIP_COUNT].get_int()++;
+        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "banished to a bazaar"),
                   true);
+    }
 }
 
 static const vector<random_pick_entry<monster_type>> _xom_summons =
@@ -4762,8 +4771,10 @@ static const vector<xom_event_data> _list_xom_good_actions = {
         XOM_GOOD_BAZAAR_TRIP, 60, 280, [](int sv, int tn)
         {
            // Nesting bazaars makes exploration and shopping lists complain.
+           // No leaving Sprint floors in Sprint.
            if (is_level_on_stack(level_id(BRANCH_BAZAAR))
-              || player_in_branch(BRANCH_BAZAAR))
+              || player_in_branch(BRANCH_BAZAAR)
+              || brdepth[BRANCH_ABYSS] == -1)
            {
               return false;
            }
