@@ -164,6 +164,8 @@ function ($, comm, cr, map_knowledge, options, dngn, util, view_data, enums,
                              r * this.cell_height);
             this.init(this.element);
             this.clear(); // clear the canvas and override default alpha fill
+
+            comm.send_message("resize_viewport", {x: c, y:r});
         },
 
         set_view_center: function(x, y)
