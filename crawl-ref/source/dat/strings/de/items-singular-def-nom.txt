@@ -315,6 +315,7 @@ the %sgold dragon scales
 die {adj-en}%sGolddrachenschuppen
 %%%%
 
+# Usually, we handle any adjectives as separate words, but
 # this unidentified armour needs special handling because one of
 # the English adjectives is joined to the noun in German
 %%%%
