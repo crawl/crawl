@@ -24,6 +24,7 @@ function debug_wrath()
     crawl.redraw_stats()
   end
 
+  crawl.getch()
   crawl.flush_input()
   debug.disable("death", false)
 end

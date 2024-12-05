@@ -73,6 +73,8 @@ public:
 
     virtual void update() override;
     virtual int handle_mouse(wm_mouse_event &event) override;
+    virtual bool handle_mouse_for_map_view(wm_mouse_event &event) override;
+    virtual bool handle_mouse_for_targeting(wm_mouse_event &event) override;
     virtual bool update_tip_text(string &tip) override;
     virtual bool update_tab_tip_text(string &tip, bool active) override;
     virtual bool update_alt_text(string &alt) override;

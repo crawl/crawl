@@ -372,6 +372,8 @@ bool get_look_position(coord_def *c);
 #ifdef USE_TILE
 bool targeting_mouse_select(const coord_def &gc);
 bool targeting_mouse_move(const coord_def &gc);
+
+void process_targeting_command(command_type cmd);
 #endif
 
 extern const struct coord_def Compass[9];

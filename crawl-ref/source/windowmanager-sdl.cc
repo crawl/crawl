@@ -149,16 +149,18 @@ static int _apply_alt(int key, int mod)
     if ((mod == TILES_MOD_ALT) && key >= 0 && key < 128)
         return 0;
 #endif
-    // don't mess with SDL internal special keycodes
-    if (key > 0 && !!(key & (1<<30)))
-        return key;
-    // TODO: does this work on windows / linux?
-    if ((mod & TILES_MOD_ALT) && key > CK_NO_KEY)
-        key = key + CK_ALT_BASE;
 
-    if ((mod & TILES_MOD_CMD) && key > CK_NO_KEY)
-        key += CK_CMD_BASE;
-    return key;
+    int modifier = 0;
+    if (key >= CK_MIN_INTERNAL && key <= CK_MAX_NORMAL_CHARACTER_SDL)
+    {
+        if (mod & TILES_MOD_ALT)
+            modifier += CK_ALT_BASE;
+
+        if (mod & TILES_MOD_CMD)
+            modifier += CK_CMD_BASE;
+    }
+
+    return key + modifier;
 }
 
 static int _apply_ctrlshift(int key, int mod)
@@ -432,7 +434,10 @@ static void _translate_wheel_event(const SDL_MouseWheelEvent &sdl_event,
 }
 
 SDLWrapper::SDLWrapper():
-    m_window(nullptr), m_context(nullptr), prev_keycode(0)
+    m_window(nullptr),
+    m_context(nullptr),
+    m_next_event{ WME_NOEVENT },
+    prev_keycode(0)
 {
     m_cursors.fill(nullptr);
 }
@@ -896,7 +901,7 @@ static char32_t _key_suppresses_textinput(int keycode)
     return result;
 }
 
-int SDLWrapper::send_textinput(wm_event *event)
+void SDLWrapper::send_textinput(wm_event *event)
 {
     event->type = WME_KEYDOWN;
     do
@@ -920,116 +925,28 @@ int SDLWrapper::send_textinput(wm_event *event)
             if (!m_textinput_queue.empty())
                 continue;
             event->key.keysym.sym = CK_NO_KEY;
-            return 1;
+            return;
         }
         event->key.keysym.sym = wc;
     }
     while (false);
-
-    return 1;
 }
 
-int SDLWrapper::wait_event(wm_event *event, int timeout)
+bool SDLWrapper::peek_next_event(wm_event& event, int timeout)
 {
-    SDL_Event sdlevent;
+    _pump_next_event(timeout);
+    if (!_has_next_event())
+        return false;
+    event = m_next_event;
+    return true;
+}
 
-    if (!m_textinput_queue.empty())
-    {
-        int ret = send_textinput(event);
-        if (event->key.keysym.sym != CK_NO_KEY)
-            return ret;
-        // textinput event was suppressed, don't return the event.
-        // N.b. it is still possible to return CK_NO_KEY via an SDL_TEXTINPUT
-        // event below.
-    }
-
-    if (!SDL_WaitEventTimeout(&sdlevent, timeout))
-        return 0;
-
-    if (sdlevent.type != SDL_TEXTINPUT)
-        prev_keycode = 0;
-
-    // translate the SDL_Event into the almost-analogous wm_event
-    switch (sdlevent.type)
-    {
-    case SDL_WINDOWEVENT:
-        SDL_SetModState(KMOD_NONE);
-        _translate_window_event(sdlevent.window, *event);
-        break;
-    case SDL_KEYDOWN:
-        if (Options.tile_key_repeat_delay <= 0 && sdlevent.key.repeat != 0)
-            return 0;
-        event->type = WME_KEYDOWN;
-        event->key.state = sdlevent.key.state;
-        event->key.keysym.scancode = sdlevent.key.keysym.scancode;
-        event->key.keysym.key_mod = _get_modifiers(sdlevent.key.keysym);
-        event->key.keysym.unicode = sdlevent.key.keysym.sym; // ???
-        event->key.keysym.sym = _translate_keysym(sdlevent.key.keysym);
-        // n.b. for many "regular" keypresses, a SDL_TEXTINPUT is produced
-        // instead. For some cases (e.g. alt-combos), both may be produced.
-
-        if (!event->key.keysym.unicode && event->key.keysym.sym > 0)
-            return 0;
-
-        // If we're going to accept this keydown, don't generate subsequent
-        // textinput events for the same key. This mechanism assumes that a
-        // fake textinput will arrive as the immediately following SDL event.
-        prev_keycode = sdlevent.key.keysym.sym;
-
-/*
- * LShift = scancode 0x30; tiles_key_mod 0x1; unicode 0x130; sym 0x130 SDLK_LSHIFT
- * LCtrl  = scancode 0x32; tiles_key_mod 0x2; unicode 0x132; sym 0x132 SDLK_LCTRL
- * LAlt   = scancode 0x34; tiles_key_mod 0x4; unicode 0x134; sym 0x134 SDLK_LALT
- */
-        break;
-    case SDL_KEYUP:
-        event->type = WME_KEYUP;
-        event->key.state = sdlevent.key.state;
-        event->key.keysym.scancode = sdlevent.key.keysym.scancode;
-        event->key.keysym.key_mod = _get_modifiers(sdlevent.key.keysym);
-        event->key.keysym.unicode = sdlevent.key.keysym.sym; // ???
-        event->key.keysym.sym = _translate_keysym(sdlevent.key.keysym);
-
-        break;
-    case SDL_TEXTINPUT:
-    {
-        ASSERT(m_textinput_queue.empty());
-        m_textinput_queue = string(sdlevent.text.text);
-        return send_textinput(event);
-    }
-    case SDL_MOUSEMOTION:
-        event->type = WME_MOUSEMOTION;
-        _translate_event(sdlevent.motion, event->mouse_event);
-        break;
-    case SDL_MOUSEBUTTONUP:
-        event->type = WME_MOUSEBUTTONUP;
-        _translate_event(sdlevent.button, event->mouse_event);
-        break;
-    case SDL_MOUSEBUTTONDOWN:
-        event->type = WME_MOUSEBUTTONDOWN;
-        _translate_event(sdlevent.button, event->mouse_event);
-        break;
-    case SDL_MOUSEWHEEL:
-        event->type = WME_MOUSEWHEEL;
-        _translate_wheel_event(sdlevent.wheel, event->mouse_event);
-        break;
-    case SDL_QUIT:
-        event->type = WME_QUIT;
-        break;
-
-    // I leave these as the same, because the original tilesdl does, too
-    case SDL_USEREVENT:
-        event->type = WME_CUSTOMEVENT;
-        event->custom.code = sdlevent.user.code;
-        event->custom.data1 = sdlevent.user.data1;
-        event->custom.data2 = sdlevent.user.data2;
-        break;
-
-    default:
-        return 0;
-    }
-
-    return 1;
+bool SDLWrapper::pop_next_event()
+{
+    _pump_next_event(0);
+    bool result = _has_next_event();
+    _clear_next_event();
+    return result;
 }
 
 static unsigned int _timer_callback(unsigned int ticks, void *param)
@@ -1067,73 +984,6 @@ void SDLWrapper::swap_buffers()
 void SDLWrapper::delay(unsigned int ms)
 {
     SDL_Delay(ms);
-}
-
-bool SDLWrapper::next_event_is(wm_event_type type)
-{
-    // check for enqueued characters from a multi-char textinput event
-    // count is floored to 1 for consistency with other event types
-    if (type == WME_KEYDOWN && m_textinput_queue.size() > 0)
-        return true;
-
-    // Look for the presence of any keyboard events in the queue.
-    Uint32 event;
-    switch (type)
-    {
-    case WME_ACTIVEEVENT:
-    case WME_RESIZE: // XXX
-    case WME_MOVE:
-    case WME_EXPOSE: // XXX
-        event = SDL_WINDOWEVENT;
-        break;
-
-    case WME_KEYDOWN:
-        event = SDL_KEYDOWN;
-        break;
-
-    case WME_KEYUP:
-        event = SDL_KEYUP;
-        break;
-
-    case WME_MOUSEMOTION:
-        event = SDL_MOUSEMOTION;
-        break;
-
-    case WME_MOUSEBUTTONUP:
-        event = SDL_MOUSEBUTTONUP;
-        break;
-
-    case WME_MOUSEBUTTONDOWN:
-        event = SDL_MOUSEBUTTONDOWN;
-        break;
-
-    case WME_MOUSEWHEEL:
-        event = SDL_MOUSEWHEEL;
-        break;
-
-    case WME_QUIT:
-        event = SDL_QUIT;
-        break;
-
-    case WME_CUSTOMEVENT:
-        event = SDL_USEREVENT;
-        break;
-
-    default:
-        // Error
-        return 0;
-    }
-
-    SDL_Event store;
-    SDL_PumpEvents();
-
-    // Note: this returns -1 for error.
-    int count = SDL_PeepEvents(&store, 1, SDL_PEEKEVENT, event, event);
-    if (type == WME_KEYDOWN)
-        count += SDL_PeepEvents(&store, 1, SDL_PEEKEVENT, SDL_TEXTINPUT, SDL_TEXTINPUT);
-    ASSERT(count >= 0);
-
-    return count != 0;
 }
 
 bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,
@@ -1349,6 +1199,138 @@ SDL_Surface *SDLWrapper::load_image(const char *file) const
 void SDLWrapper::glDebug(const char* msg)
 {
     UNUSED(msg);
+}
+
+void SDLWrapper::_pump_next_event(int timeout)
+{
+    if (_has_next_event())
+        return;
+    while (true)
+    {
+        if (!m_textinput_queue.empty())
+        {
+            send_textinput(&m_next_event);
+            if (m_next_event.key.keysym.sym != CK_NO_KEY)
+                return;
+            else
+            {
+                // textinput event was suppressed, don't return the event.
+                _clear_next_event();
+            }
+        }
+
+        SDL_Event sdlevent;
+        if (!SDL_WaitEventTimeout(&sdlevent, timeout))
+        {
+            _clear_next_event();
+            if (timeout == INT_MAX)
+                continue;
+            return;
+        }
+
+        if (sdlevent.type != SDL_TEXTINPUT)
+            prev_keycode = 0;
+
+        // translate the SDL_Event into the almost-analogous wm_event
+        switch (sdlevent.type)
+        {
+        case SDL_WINDOWEVENT:
+            SDL_SetModState(KMOD_NONE);
+            _translate_window_event(sdlevent.window, m_next_event);
+            if (!_has_next_event())
+                continue;
+            break;
+        case SDL_KEYDOWN:
+            if (Options.tile_key_repeat_delay <= 0 && sdlevent.key.repeat != 0)
+                continue;
+            m_next_event.type = WME_KEYDOWN;
+            m_next_event.key.state = sdlevent.key.state;
+            m_next_event.key.keysym.scancode = sdlevent.key.keysym.scancode;
+            m_next_event.key.keysym.key_mod = _get_modifiers(sdlevent.key.keysym);
+            m_next_event.key.keysym.unicode = sdlevent.key.keysym.sym; // ???
+            m_next_event.key.keysym.sym = _translate_keysym(sdlevent.key.keysym);
+            // n.b. for many "regular" keypresses, a SDL_TEXTINPUT is produced
+            // instead. For some cases (e.g. alt-combos), both may be produced.
+
+            if (!m_next_event.key.keysym.unicode
+                && m_next_event.key.keysym.sym > 0)
+            {
+                _clear_next_event();
+                continue;
+            }
+
+            // If we're going to accept this keydown, don't generate subsequent
+            // textinput events for the same key. This mechanism assumes that a
+            // fake textinput will arrive as the immediately following SDL event.
+            prev_keycode = sdlevent.key.keysym.sym;
+
+            break;
+        case SDL_KEYUP:
+            m_next_event.type = WME_KEYUP;
+            m_next_event.key.state = sdlevent.key.state;
+            m_next_event.key.keysym.scancode = sdlevent.key.keysym.scancode;
+            m_next_event.key.keysym.key_mod = _get_modifiers(sdlevent.key.keysym);
+            m_next_event.key.keysym.unicode = sdlevent.key.keysym.sym; // ???
+            m_next_event.key.keysym.sym = _translate_keysym(sdlevent.key.keysym);
+
+            break;
+        case SDL_TEXTINPUT:
+        {
+            ASSERT(m_textinput_queue.empty());
+            m_textinput_queue = string(sdlevent.text.text);
+            send_textinput(&m_next_event);
+            if (m_next_event.key.keysym.sym == CK_NO_KEY)
+            {
+                _clear_next_event();
+                continue;
+            }
+            break;
+        }
+        case SDL_MOUSEMOTION:
+            m_next_event.type = WME_MOUSEMOTION;
+            _translate_event(sdlevent.motion, m_next_event.mouse_event);
+            break;
+        case SDL_MOUSEBUTTONUP:
+            m_next_event.type = WME_MOUSEBUTTONUP;
+            _translate_event(sdlevent.button, m_next_event.mouse_event);
+            break;
+        case SDL_MOUSEBUTTONDOWN:
+            m_next_event.type = WME_MOUSEBUTTONDOWN;
+            _translate_event(sdlevent.button, m_next_event.mouse_event);
+            break;
+        case SDL_MOUSEWHEEL:
+            m_next_event.type = WME_MOUSEWHEEL;
+            _translate_wheel_event(sdlevent.wheel, m_next_event.mouse_event);
+            break;
+        case SDL_QUIT:
+            m_next_event.type = WME_QUIT;
+            break;
+
+            // I leave these as the same, because the original tilesdl does, too
+        case SDL_USEREVENT:
+            m_next_event.type = WME_CUSTOMEVENT;
+            m_next_event.custom.code = sdlevent.user.code;
+            m_next_event.custom.data1 = sdlevent.user.data1;
+            m_next_event.custom.data2 = sdlevent.user.data2;
+            break;
+
+        default:
+            continue;
+        }
+
+        ASSERT(_has_next_event());
+        return;
+    }
+}
+
+bool SDLWrapper::_has_next_event() const noexcept
+{
+    return m_next_event.type != WME_NOEVENT;
+}
+
+void SDLWrapper::_clear_next_event() noexcept
+{
+    m_next_event.type = WME_NOEVENT;
 }
 #endif // USE_SDL
 #endif // USE_TILE_LOCAL
