@@ -3199,7 +3199,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_POISONOUS_VAPOURS, "Poisonous Vapours",
     spschool::alchemy | spschool::air,
-    spflag::target | spflag::destructive,
+    spflag::target | spflag::destructive | spflag::not_self,
     1,
     25,
     3, 3,
