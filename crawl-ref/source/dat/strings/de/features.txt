@@ -462,7 +462,7 @@ fountain
 Brunnen
 %%%%
 fountain of clear blue water
-Brunnen mit klaren blauem Wasser
+Brunnen mit klarem blauen Wasser
 %%%%
 fountain of sparkling water
 Brunnen mit sprudelndem Wasser
