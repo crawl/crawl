@@ -49,7 +49,7 @@ steam
 Dampf
 %%%%
 a cloud of scalding steam
-eine Wolke aus brühendem Dampf
+eine Wolke aus brühend heißem Dampf
 %%%%
 ink
 Tinte
@@ -88,13 +88,13 @@ whirling frost
 wirbelnder Frost
 %%%%
 sparse dust
-spärlicher Staub
+ein wenig Staub
 %%%%
 spectral mist
 spektraler Nebel
 %%%%
 acidic fog
-säurehaltiger Nebel
+saurer Nebel
 %%%%
 thunder
 Donner
@@ -103,7 +103,7 @@ a thunderstorm
 {n}ein Gewitter
 %%%%
 negative energy
-Negativ-Energie
+negative Energie
 %%%%
 white fluffiness
 weiße Flaumigkeit
@@ -121,5 +121,5 @@ embers
 Glut
 %%%%
 wisps of flame
-Flammensträhnen
+Flammenzungen
 %%%%
