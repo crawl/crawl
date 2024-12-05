@@ -36,7 +36,7 @@ tree
 Baum
 %%%%
 awoken tree
-geweckter Baum
+erwachter Baum
 %%%%
 demonic tree
 dämonischer Baum
@@ -75,7 +75,7 @@ translucent unnaturally hard rock wall
 durchsichtige unnatürlich harte Felswand
 %%%%
 wall of the weird stuff which makes up Pandemonium
-Wand aus dem seltsamen Zeug, aus dem Pandemonium gemacht ist
+Wand aus dem seltsamen Zeug, aus dem das Pandämonium gemacht ist
 %%%%
 grate
 Gitter
@@ -93,7 +93,7 @@ endless expanse of salt
 endlose Weite des Salzes
 %%%%
 orcish idol
-orkisches Idol
+orkisches Götzenbild
 %%%%
 granite statue
 Granitstatue
@@ -114,7 +114,7 @@ shallow water
 seichtes Wasser
 %%%%
 toxic bog
-giftiges Moor
+toxischer Morast
 %%%%
 floor
 Boden
@@ -147,7 +147,7 @@ pressure plate
 Druckplatte
 %%%%
 dispersal trap
-Zerstreuungsfalle
+Streuungsfalle
 %%%%
 teleport trap
 Teleportfalle
@@ -174,7 +174,7 @@ shaft
 Schacht
 %%%%
 web
-Gewebe
+Gespinst
 %%%%
 shop
 Laden
@@ -228,7 +228,7 @@ gateway back into the Dungeon
 Tor zurück in den Kerker
 %%%%
 one-way gate to the infinite horrors of the Abyss
-Einwegtor zu den unendlichen Schrecken des Abgrunds
+Einbahntor zu den unendlichen Schrecken des Abgrunds
 %%%%
 exit through the horrors of the Abyss
 Ausgang durch die Schrecken des Abgrunds
@@ -237,13 +237,13 @@ gateway leading out of the Abyss
 Tor, das aus dem Abgrund herausführt
 %%%%
 one-way gate leading to the halls of Pandemonium
-Einwegtor, das in die Hallen des Pandämoniums führt
+Einbahntor, das in die Hallen des Pandämoniums führt
 %%%%
 gate leading to another region of Pandemonium
-Tor, das in eine andere Region von Pandämonium führt
+Tor, das in eine andere Region des Pandämoniums führt
 %%%%
 gate leading out of Pandemonium
-Tor, das aus Pandämonium herausführt
+Tor, das aus dem Pandämonium herausführt
 %%%%
 gate to the Vaults
 Tor zu den Gewölben
@@ -267,10 +267,10 @@ flickering gateway to a bazaar
 flackerndes Tor zu einem Basar
 %%%%
 portal to a secret trove of treasure
-Tor zu einer geheimen Fundgrube von Schätzen
+Tor zu einer geheimen Schatzkammer
 %%%%
 glowing drain
-glühender Abfluss
+schimmernder Abfluss
 %%%%
 sand-covered staircase
 sandbedeckte Treppe
@@ -279,7 +279,7 @@ flagged portal
 beflaggtes Portal
 %%%%
 gate leading to a gauntlet
-Tor, das zu einem Spießrute führt
+Tor, das zu einem Spießrutenlauf führt
 %%%%
 frozen archway
 gefrorener Torbogen
@@ -351,7 +351,7 @@ staircase back to the Mines
 Treppe zurück zu den Minen
 %%%%
 staircase to the Tomb
-Treppe zur Gruft
+Treppe zum Grab
 %%%%
 staircase back to the Crypt
 Treppe zurück zur Krypta
@@ -366,7 +366,7 @@ hole to the Spider Nest
 Loch zum Spinnennest
 %%%%
 crawl-hole back to the Lair
-Krabbelloch zurück zur Höhle
+Kriechloch zurück zur Höhle
 %%%%
 staircase to the Depths
 Treppe zu den Tiefen
@@ -378,10 +378,10 @@ detected altar
 entdeckter Altar
 %%%%
 glowing silver altar of Zin
-glühender silberner Altar von Zin
+glänzender silberner Altar von Zin
 %%%%
 glowing golden altar of the Shining One
-glühender goldener Altar des Strahlenden
+glänzender goldener Altar des Strahlenden
 %%%%
 ancient bone altar of Kikubaaqudgha
 uralter Knochenaltar von Kikubaaqudgha
@@ -432,7 +432,7 @@ broken altar of Ashenzari
 zerbrochener Altar von Ashenzari
 %%%%
 shadowy altar of Dithmenos
-schattenhafter Altar von Dithmenos
+schattenumwobener Altar von Dithmenos
 %%%%
 opulent altar of Gozag
 opulenter Altar von Gozag
@@ -456,22 +456,22 @@ hazy altar of Hepliaklqana
 dunstiger Altar von Hepliaklqana
 %%%%
 ornate altar of the Wu Jian Council
-verschnörkelter Altar des Wu-Jian-Rates
+kunstvoller Altar des Wu-Jian-Rates
 %%%%
 fountain
 Brunnen
 %%%%
 fountain of clear blue water
-Brunnen klaren blauen Wassers
+Brunnen mit klaren blauem Wasser
 %%%%
 fountain of sparkling water
-Brunnen sprudelnden Wassers
+Brunnen mit sprudelndem Wasser
 %%%%
 fountain of blood
-Brunnen des Blutes
+Brunnen voller Blut
 %%%%
 dry fountain
-trockener Brunnen
+ausgetrockneter Brunnen
 %%%%
 short-range portal
 Kurzstreckenportal
@@ -522,7 +522,7 @@ broken pillar
 zerbrochene Säule
 %%%%
 broken wreckage
-zerbrochenes Wrack
+zerbrochene Wrackteile
 %%%%
 carved rock wall
 gemeißelte Felswand
@@ -549,10 +549,10 @@ golden wall
 goldene Wand
 %%%%
 granite statue wielding a fearsome trident
-Granitstatue, die einen furchterregenden Dreizack schwingt
+Granitstatue, die einen furchterregenden Dreizack hält
 %%%%
 granite statue wielding a mighty axe
-Granitstatue, die eine mächtige Axt schwingt
+Granitstatue, die eine mächtige Axt hält
 %%%%
 gravestone
 {m}Grabstein
@@ -585,7 +585,7 @@ large window
 großes Fenster
 %%%%
 merfolk statue
-Meervolk-Statue
+Meervolkstatue
 %%%%
 one-way staircase leading down
 Einbahntreppe, die nach unten führt
@@ -594,13 +594,13 @@ one-way staircase leading up
 Einbahntreppe, die nach oben führt
 %%%%
 otherworldly statue
-jenseitige Statue
+Statue wie aus einer anderen Welt
 %%%%
 pulsating floor
 pulsierender Boden
 %%%%
 rock-blocked tunnel
-felsengesperrter Tunnel
+durch Felsen blockierter Tunnel
 %%%%
 rough-hewn floor
 grob behauener Boden
@@ -609,10 +609,10 @@ ruined idol
 zerstörtes Götzenbild
 %%%%
 rune-carved clear stone wall
-in Runen gemeißelte Wand aus klarem Stein
+mit Runen behauene Wand aus klarem Stein
 %%%%
 rune-carved stone wall
-in Runen gemeißelte Steinmauer
+mit Runen behauene Steinmauer
 %%%%
 sarcophagus
 {m}Sarkophag
@@ -683,7 +683,7 @@ the tree
 der Baum
 %%%%
 the awoken tree
-der geweckte Baum
+der erwachte Baum
 %%%%
 the demonic tree
 der dämonische Baum
@@ -722,7 +722,7 @@ the translucent unnaturally hard rock wall
 die durchsichtige unnatürlich harte Felswand
 %%%%
 the wall of the weird stuff which makes up Pandemonium
-die Wand aus dem seltsamen Zeug, aus dem Pandemonium gemacht ist
+die Wand aus dem seltsamen Zeug, aus dem das Pandämonium gemacht ist
 %%%%
 the grate
 das Gitter
@@ -740,7 +740,7 @@ the endless expanse of salt
 die endlose Weite des Salzes
 %%%%
 the orcish idol
-das orkische Idol
+das orkische Götzenbild
 %%%%
 the granite statue
 die Granitstatue
@@ -761,7 +761,7 @@ the shallow water
 das seichte Wasser
 %%%%
 the toxic bog
-das giftige Moor
+der toxische Morast
 %%%%
 the floor
 der Boden
@@ -794,7 +794,7 @@ the pressure plate
 die Druckplatte
 %%%%
 the dispersal trap
-die Zerstreuungsfalle
+die Streuungsfalle
 %%%%
 the teleport trap
 die Teleportfalle
@@ -821,7 +821,7 @@ the shaft
 der Schacht
 %%%%
 the web
-das Gewebe
+das Gespinst
 %%%%
 the shop
 der Laden
@@ -875,7 +875,7 @@ the gateway back into the Dungeon
 das Tor zurück in den Kerker
 %%%%
 the one-way gate to the infinite horrors of the Abyss
-das Einwegtor zu den unendlichen Schrecken des Abgrunds
+das Einbahntor zu den unendlichen Schrecken des Abgrunds
 %%%%
 the exit through the horrors of the Abyss
 der Ausgang durch die Schrecken des Abgrunds
@@ -884,13 +884,13 @@ the gateway leading out of the Abyss
 das Tor, das aus dem Abgrund herausführt
 %%%%
 the one-way gate leading to the halls of Pandemonium
-das Einwegtor, das in die Hallen des Pandämoniums führt
+das Einbahntor, das in die Hallen des Pandämoniums führt
 %%%%
 the gate leading to another region of Pandemonium
-das Tor, das in eine andere Region von Pandämonium führt
+das Tor, das in eine andere Region des Pandämoniums führt
 %%%%
 the gate leading out of Pandemonium
-das Tor, das aus Pandämonium herausführt
+das Tor, das aus dem Pandämonium herausführt
 %%%%
 the gate to the Vaults
 das Tor zu den Gewölben
@@ -914,10 +914,10 @@ the flickering gateway to a bazaar
 das flackernde Tor zu einem Basar
 %%%%
 the portal to a secret trove of treasure
-das Tor zu einer geheimen Fundgrube von Schätzen
+das Tor zu einer geheimen Schatzkammer
 %%%%
 the glowing drain
-der glühende Abfluss
+der schimmernde Abfluss
 %%%%
 the sand-covered staircase
 die sandbedeckte Treppe
@@ -926,7 +926,7 @@ the flagged portal
 das beflaggte Portal
 %%%%
 the gate leading to a gauntlet
-das Tor, das zu einem Spießrute führt
+das Tor, das zu einem Spießrutenlauf führt
 %%%%
 the frozen archway
 der gefrorene Torbogen
@@ -998,7 +998,7 @@ the staircase back to the Mines
 die Treppe zurück zu den Minen
 %%%%
 the staircase to the Tomb
-die Treppe zur Gruft
+die Treppe zum Grab
 %%%%
 the staircase back to the Crypt
 die Treppe zurück zur Krypta
@@ -1013,7 +1013,7 @@ the hole to the Spider Nest
 das Loch zum Spinnennest
 %%%%
 the crawl-hole back to the Lair
-das Krabbelloch zurück zur Höhle
+das Kriechloch zurück zur Höhle
 %%%%
 the staircase to the Depths
 die Treppe zu den Tiefen
@@ -1025,10 +1025,10 @@ the detected altar
 der entdeckte Altar
 %%%%
 the glowing silver altar of Zin
-der glühende silberne Altar von Zin
+der glänzende silberne Altar von Zin
 %%%%
 the glowing golden altar of the Shining One
-der glühende goldene Altar des Strahlenden
+der glänzende goldene Altar des Strahlenden
 %%%%
 the ancient bone altar of Kikubaaqudgha
 der uralte Knochenaltar von Kikubaaqudgha
@@ -1079,7 +1079,7 @@ the broken altar of Ashenzari
 der zerbrochene Altar von Ashenzari
 %%%%
 the shadowy altar of Dithmenos
-der schattenhafte Altar von Dithmenos
+der schattenumwobene Altar von Dithmenos
 %%%%
 the opulent altar of Gozag
 der opulente Altar von Gozag
@@ -1103,22 +1103,22 @@ the hazy altar of Hepliaklqana
 der dunstige Altar von Hepliaklqana
 %%%%
 the ornate altar of the Wu Jian Council
-der verschnörkelte Altar des Wu-Jian-Rates
+der kunstvolle Altar des Wu-Jian-Rates
 %%%%
 the fountain
 der Brunnen
 %%%%
 the fountain of clear blue water
-der Brunnen klaren blauen Wassers
+der Brunnen mit klarem blauen Wasser
 %%%%
 the fountain of sparkling water
-der Brunnen sprudelnden Wassers
+der Brunnen mit sprudelndem Wasser
 %%%%
 the fountain of blood
-der Brunnen des Blutes
+der Brunnen voller Blut
 %%%%
 the dry fountain
-der trockene Brunnen
+der ausgetrocknete Brunnen
 %%%%
 the short-range portal
 das Kurzstreckenportal
@@ -1180,7 +1180,7 @@ a tree
 ein Baum
 %%%%
 an awoken tree
-ein geweckter Baum
+ein erwachter Baum
 %%%%
 a demonic tree
 ein dämonischer Baum
@@ -1222,7 +1222,7 @@ a translucent unnaturally hard rock wall
 eine durchsichtige unnatürlich harte Felswand
 %%%%
 a wall of the weird stuff which makes up Pandemonium
-eine Wand aus dem seltsamen Zeug, aus dem Pandemonium gemacht ist
+eine Wand aus dem seltsamen Zeug, aus dem das Pandämonium gemacht ist
 %%%%
 a grate
 {n}ein Gitter
@@ -1234,7 +1234,7 @@ an endless expanse of salt
 eine endlose Weite des Salzes
 %%%%
 an orcish idol
-ein orkisches Idol
+ein orkisches Götzenbild
 %%%%
 a granite statue
 eine Granitstatue
@@ -1255,7 +1255,7 @@ some shallow water
 etwas seichtes Wasser
 %%%%
 a toxic bog
-ein giftiges Moor
+ein toxischer Morast
 %%%%
 a collapsed entrance
 ein eingestürzter Eingang
@@ -1285,7 +1285,7 @@ a pressure plate
 eine Druckplatte
 %%%%
 a dispersal trap
-eine Zerstreuungsfalle
+eine Streuungsfalle
 %%%%
 a teleport trap
 eine Teleportfalle
@@ -1312,7 +1312,7 @@ a shaft
 ein Schacht
 %%%%
 a web
-{n}ein Gewebe
+{n}ein Gespinst
 %%%%
 a shop
 ein Laden
@@ -1366,7 +1366,7 @@ a gateway back into the Dungeon
 {n}ein Tor zurück in den Kerker
 %%%%
 a one-way gate to the infinite horrors of the Abyss
-{n}ein Einwegtor zu den unendlichen Schrecken des Abgrunds
+{n}ein Einbahntor zu den unendlichen Schrecken des Abgrunds
 %%%%
 an exit through the horrors of the Abyss
 ein Ausgang durch die Schrecken des Abgrunds
@@ -1375,13 +1375,13 @@ a gateway leading out of the Abyss
 {n}ein Tor, das aus dem Abgrund herausführt
 %%%%
 a one-way gate leading to the halls of Pandemonium
-{n}ein Einwegtor, das in die Hallen des Pandämoniums führt
+{n}ein Einbahntor, das in die Hallen des Pandämoniums führt
 %%%%
 a gate leading to another region of Pandemonium
-{n}ein Tor, das in eine andere Region von Pandämonium führt
+{n}ein Tor, das in eine andere Region des Pandämoniums führt
 %%%%
 a gate leading out of Pandemonium
-{n}ein Tor, das aus Pandämonium herausführt
+{n}ein Tor, das aus dem Pandämonium herausführt
 %%%%
 a gate to the Vaults
 {n}ein Tor zu den Gewölben
@@ -1405,10 +1405,10 @@ a flickering gateway to a bazaar
 {n}ein flackerndes Tor zu einem Basar
 %%%%
 a portal to a secret trove of treasure
-{n}ein Tor zu einer geheimen Fundgrube von Schätzen
+{n}ein Tor zu einer geheimen Schatzkammer
 %%%%
 a glowing drain
-ein glühender Abfluss
+ein schimmernder Abfluss
 %%%%
 a sand-covered staircase
 eine sandbedeckte Treppe
@@ -1417,7 +1417,7 @@ a flagged portal
 ein beflaggtes Portal
 %%%%
 a gate leading to a gauntlet
-{n}ein Tor, das zu einem Spießrute führt
+{n}ein Tor, das zu einem Spießrutenlauf führt
 %%%%
 a frozen archway
 ein gefrorener Torbogen
@@ -1489,7 +1489,7 @@ a staircase back to the Mines
 eine Treppe zurück zu den Minen
 %%%%
 a staircase to the Tomb
-eine Treppe zur Gruft
+eine Treppe zum Grab
 %%%%
 a staircase back to the Crypt
 eine Treppe zurück zur Krypta
@@ -1504,7 +1504,7 @@ a hole to the Spider Nest
 {n}ein Loch zum Spinnennest
 %%%%
 a crawl-hole back to the Lair
-{n}ein Krabbelloch zurück zur Höhle
+{n}ein Kriechloch zurück zur Höhle
 %%%%
 a staircase to the Depths
 eine Treppe zu den Tiefen
@@ -1516,10 +1516,10 @@ a detected altar
 ein entdeckter Altar
 %%%%
 a glowing silver altar of Zin
-ein glühender silberner Altar von Zin
+ein glänzender silberner Altar von Zin
 %%%%
 a glowing golden altar of the Shining One
-ein glühender goldener Altar des Strahlenden
+ein glänzender goldener Altar des Strahlenden
 %%%%
 an ancient bone altar of Kikubaaqudgha
 ein uralter Knochenaltar von Kikubaaqudgha
@@ -1570,7 +1570,7 @@ a broken altar of Ashenzari
 ein zerbrochener Altar von Ashenzari
 %%%%
 a shadowy altar of Dithmenos
-ein schattenhafter Altar von Dithmenos
+ein schattenumwobener Altar von Dithmenos
 %%%%
 an opulent altar of Gozag
 ein opulenter Altar von Gozag
@@ -1594,22 +1594,22 @@ a hazy altar of Hepliaklqana
 ein dunstiger Altar von Hepliaklqana
 %%%%
 an ornate altar of the Wu Jian Council
-ein verschnörkelter Altar des Wu-Jian-Rates
+ein kunstvoller Altar des Wu-Jian-Rates
 %%%%
 a fountain
 ein Brunnen
 %%%%
 a fountain of clear blue water
-ein Brunnen klaren blauen Wassers
+ein Brunnen mit klarem blauen Wasser
 %%%%
 a fountain of sparkling water
-ein Brunnen sprudelnden Wassers
+ein Brunnen mit sprudelndem Wasser
 %%%%
 a fountain of blood
-ein Brunnen des Blutes
+ein Brunnen voller Blut
 %%%%
 a dry fountain
-ein trockener Brunnen
+ein ausgetrockneter Brunnen
 %%%%
 a short-range portal
 {n}ein Kurzstreckenportal
@@ -1636,10 +1636,10 @@ a gateway leading deeper into the Abyss
 # extras from .des files
 %%%%
 Some ice crusted deep water
-Tiefes Wasser mit Eiskruste
+Tiefes eisverkrustetes Wasser
 %%%%
 Some ice crusted shallow water
-Seiches Wasser mit Eiskruste
+Seichtes eisverkrustetes Wasser
 %%%%
 an adventurer's gravestone
 der Grabstein eines Abenteurers
@@ -1657,7 +1657,7 @@ a broken pillar
 eine zerbrochene Säule
 %%%%
 a broken wreckage
-ein zerbrochenes Wrack
+ein zerbrochenes Wrackteil
 %%%%
 a carved rock wall
 eine gemeißelte Felswand
@@ -1684,10 +1684,10 @@ a golden wall
 eine goldene Wand
 %%%%
 a granite statue wielding a fearsome trident
-eine Granitstatue, die einen furchterregenden Dreizack schwingt
+eine Granitstatue, die einen furchterregenden Dreizack hält
 %%%%
 a granite statue wielding a mighty axe
-eine Granitstatue, die eine mächtige Axt schwingt
+eine Granitstatue, die eine mächtige Axt hält
 %%%%
 a gravestone
 {m}ein Grabstein
@@ -1720,7 +1720,7 @@ a large window
 ein großes Fenster
 %%%%
 a merfolk statue
-eine Meervolk-Statue
+eine Meervolkstatue
 %%%%
 a one-way staircase leading down
 eine Einbahntreppe, die nach unten führt
@@ -1729,13 +1729,13 @@ a one-way staircase leading up
 eine Einbahntreppe, die nach oben führt
 %%%%
 an otherworldly statue
-eine jenseitige Statue
+eine Statue wie aus einer anderen Welt
 %%%%
 a pulsating floor
 ein pulsierender Boden
 %%%%
 a rock-blocked tunnel
-ein felsengesperrter Tunnel
+ein mit Felsen blockierter Tunnel
 %%%%
 a rough-hewn floor
 ein grob behauener Boden
@@ -1744,10 +1744,10 @@ a ruined idol
 ein zerstörtes Götzenbild
 %%%%
 a rune-carved clear stone wall
-eine in Runen gemeißelte Wand aus klarem Stein
+eine mit Runen behauene Wand aus klarem Stein
 %%%%
 a rune-carved stone wall
-eine in Runen gemeißelte Steinmauer
+eine mit Runen behauene Steinmauer
 %%%%
 a sarcophagus
 ein Sarkophag
@@ -1835,19 +1835,19 @@ Zin's Purification Station
 Zins Reinigungsstation
 %%%%
 Gozag's Platinum Reserve
-Gozags Platin-Reserve
+Gozags Platinbank
 %%%%
 The Legendary @owner@'s Legendary Smithy
-Des Legendären @owner@s Legendäre Schmiede
+Des legendären @owner@s legendäre Schmiede
 %%%%
 @owner@'s Merfolk Weapons
-@owner@s Meervolk-Waffen
+@owner@s Meervolkwaffen
 %%%%
 @owner@'s Merfolk Armours
-@owner@s Meervolk-Rüstungen
+@owner@s Meervolkrüstungen
 %%%%
 @owner@'s Merfolk Magic
-@owner@s Meervolk-Magie
+@owner@s Meervolkmagie
 %%%%
 @owner@'s Visitors' Centre
 @owner@s Besucherzentrum

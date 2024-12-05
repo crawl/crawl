@@ -45,7 +45,7 @@ Crypt
 Krypta
 %%%%
 Tomb
-Gruft
+Grab
 %%%%
 Depths
 Tiefen
@@ -84,10 +84,10 @@ Bazaar
 Basar
 %%%%
 Trove
-Fund
+Schatzkammer
 %%%%
 Sewer
-Siel
+Kanal
 %%%%
 Ossuary
 Beinhaus
@@ -96,7 +96,7 @@ Bailey
 Burghof
 %%%%
 Gauntlet
-Spießrute
+Spießrutenlauf
 %%%%
 Ice Cave
 Eishöhle
@@ -108,7 +108,7 @@ Wizlab
 Labor
 %%%%
 Desolation
-Verwüstung
+Trostlosigkeit
 %%%%
 
 # obsolete branches
@@ -141,10 +141,10 @@ a Bazaar
 ein Basar
 %%%%
 a Trove
-ein Fund
+eine Schatzkammer
 %%%%
 a Sewer
-ein Siel
+ein Kanal
 %%%%
 an Ossuary
 ein Beinhaus
@@ -163,7 +163,7 @@ a Wizlab
 %%%%
 # same as long name
 #a Gauntlet
-#eine Spießrute
+#ein Spießrutenlauf
 %%%%
 
 ##############################################
@@ -208,7 +208,7 @@ the Crypt
 die Krypta
 %%%%
 the Tomb of the Ancients
-die Gruft der Antiker
+das Grab der Uralten
 %%%%
 the Depths
 die Tiefen
@@ -235,10 +235,10 @@ a bazaar
 ein Basar
 %%%%
 a treasure trove
-ein Schatzfund
+eine Schatzkammer
 %%%%
 a sewer
-ein Siel
+ein Kanal
 %%%%
 an ossuary
 ein Beinhaus
@@ -247,7 +247,7 @@ a bailey
 ein Burghof
 %%%%
 a Gauntlet
-eine Spießrute
+ein Spießrutenlauf
 %%%%
 an ice cave
 eine Eishöhle
@@ -259,7 +259,7 @@ a wizard's laboratory
 das Labor eines Zauberers
 %%%%
 the Desolation of Salt
-die Verwüstung des Salzes
+die Trostlosigkeit des Salzes
 %%%%
 
 ##############################################
@@ -314,7 +314,7 @@ Gewölbe
 Krypta
 %%%%
 {branch_abbrev}Tomb
-Gruft
+Grab
 %%%%
 {branch_abbrev}Depths
 Tiefen
@@ -347,10 +347,10 @@ Abgrund
 Basar
 %%%%
 {branch_abbrev}Trove
-Fund
+Schatz
 %%%%
 {branch_abbrev}Sewer
-Siel
+Kanal
 %%%%
 {branch_abbrev}Ossuary
 Beinhaus
@@ -359,7 +359,7 @@ Beinhaus
 Burghof
 %%%%
 {branch_abbrev}Gauntlet
-Spießrute
+Spieß
 %%%%
 IceCv
 Eishöhle
@@ -372,7 +372,7 @@ WizLab
 Labor
 %%%%
 {branch_abbrev}Desolation
-Verwüst
+Trostlos
 %%%%
 
 ##############################################
@@ -413,7 +413,7 @@ on level %d of the Crypt
 auf Ebene %d der Krypta
 %%%%
 on level %d of the Tomb of the Ancients
-auf Ebene %d der Gruft der Antiker
+auf Ebene %d des Grabs der Uralten
 %%%%
 on level %d of the Depths
 auf Ebene %d der Tiefen
@@ -447,7 +447,7 @@ auf Ebene %d einer Zikkurat
 %%%%
 # should be "in a sewer", but for some reason, we get this in hiscores
 on level %d of a sewer
-auf Ebene %d eines Sieles
+auf Ebene %d eines Kanals
 %%%%
 
 ##############################################
@@ -488,7 +488,7 @@ between levels %d and %d of the Crypt
 zwischen Ebenen %d und %d der Krypta
 %%%%
 between levels %d and %d of the Tomb of the Ancients
-zwischen Ebenen %d und %d der Gruft der Antiker
+zwischen Ebenen %d und %d des Grabs der Uralten
 %%%%
 between levels %d and %d of the Depths
 zwischen Ebenen %d und %d der Tiefen
@@ -520,10 +520,10 @@ in a bazaar
 in einem Basar
 %%%%
 in a treasure trove
-in einem Schatzfund
+in einer Schatzkammer
 %%%%
 in a sewer
-in einem Siel
+in einem Kanal
 %%%%
 in an ossuary
 in einem Beinhaus
@@ -532,7 +532,7 @@ in a bailey
 in einem Burghof
 %%%%
 in a Gauntlet
-in einer Spießrute
+in einem Spießrutenlauf
 %%%%
 in an ice cave
 in einer Eishöhle
@@ -544,5 +544,5 @@ in a wizard's laboratory
 im Labor eines Zauberers
 %%%%
 in the Desolation of Salt
-in der Verwüstung des Salzes
+in der Trostlosigkeit des Salzes
 %%%%
