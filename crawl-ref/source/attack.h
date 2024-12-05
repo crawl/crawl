@@ -79,6 +79,8 @@ public:
     string     no_damage_message;
     string     special_damage_message;
     string     aux_attack, aux_verb;
+    // stored to have the descr even when the attacker disappears
+    string     attacker_descr;
 
     item_def        *defender_shield;
 
@@ -114,6 +116,7 @@ protected:
     virtual void init_attack(skill_type unarmed_skill, int attack_number);
 
     /* Attack Phases */
+    // These methods return true if the attack should continue
     virtual bool handle_phase_attempted();
     virtual bool handle_phase_dodged() = 0;
     virtual bool handle_phase_blocked();
@@ -143,6 +146,10 @@ protected:
         UNUSED(verbose);
         return false;
     }
+
+    // Computes brand effects (flaming weapons, etc.), and brandlike effects.
+    // Returns true when further damage calculation
+    // should be aborted (e.g. because the defender has been banished).
     virtual bool apply_damage_brand(const char *what = nullptr);
     void calc_elemental_brand_damage(beam_type flavour,
                                      const char *verb,
@@ -154,6 +161,10 @@ protected:
     /* Attack Effects */
     virtual bool mons_attack_effects() = 0;
     void alert_defender();
+
+    // Computes the distortion effect, such as banishment, additional damage,
+    // teleport or blinking.
+    // Returns true when the defender has been banished, false otherwise.
     bool distortion_affects_defender();
     void antimagic_affects_defender(int pow);
     void pain_affects_defender();
