@@ -384,8 +384,8 @@ to enter their range. Once cast, they dissipate.
 %%%%
 Construct Spike Launcher spell
 
-Constructs a simple mechanical trap within an adjacent rock wall which
-repeatedly skewers random adjacent enemies. Protected by the wall itself, it is
+Constructs a simple mechanical trap within an adjacent wall which repeatedly
+skewers random adjacent enemies. Protected by the wall itself, it is
 invulnerable to most forms of damage, but will fall apart if the caster leaves
 its vicinity.
 %%%%

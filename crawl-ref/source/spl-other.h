@@ -58,6 +58,7 @@ bool passwall_simplified_check(const actor &act);
 spret cast_passwall(const coord_def& delta, int pow, bool fail);
 spret cast_intoxicate(int pow, bool fail, bool tracer = false);
 
+vector<coord_def> find_spike_launcher_walls();
 spret cast_spike_launcher(int pow, bool fail);
 void handle_spike_launcher(int delay);
 void end_spike_launcher();

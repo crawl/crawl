@@ -1539,10 +1539,10 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             break;
 
         for (adjacent_iterator ai(you.pos()); ai; ++ai)
-            if (env.grid(*ai) == DNGN_ROCK_WALL)
+            if (feat_is_wall(env.grid(*ai)))
                 return "";
 
-        return "there are no nearby rock walls to construct a spike launcher in.";
+        return "there are no nearby walls to construct a spike launcher in.";
     }
 
     case SPELL_DIAMOND_SAWBLADES:

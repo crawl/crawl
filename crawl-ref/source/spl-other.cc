@@ -631,7 +631,7 @@ spret cast_spike_launcher(int pow, bool fail)
     coord_def spot;
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
     {
-        if (env.grid(*ai) == DNGN_ROCK_WALL)
+        if (feat_is_wall(env.grid(*ai)))
         {
             if (one_chance_in(++valid))
                 spot = *ai;
@@ -667,7 +667,7 @@ spret cast_spike_launcher(int pow, bool fail)
     return spret::success;
 }
 
-static void _fire_spike_launcher(monster* target)
+static void _fire_spike_launcher(monster* target, const coord_def& origin)
 {
     bolt spike;
     zappy(ZAP_SPIKE_LAUNCHER, you.props[SPIKE_LAUNCHER_POWER].get_int(),
@@ -677,6 +677,28 @@ static void _fire_spike_launcher(monster* target)
     spike.seen = true;
     spike.range = 1;
     spike.hit_verb = "skewers";
+
+    dungeon_feature_type feat = orig_terrain(origin);
+    switch (feat)
+    {
+        case DNGN_STONE_WALL:
+        case DNGN_CLEAR_STONE_WALL:
+            spike.name = "stone spike";
+            break;
+
+        case DNGN_METAL_WALL:
+            spike.name = "metal spike";
+            break;
+
+        case DNGN_CRYSTAL_WALL:
+            spike.name = "crystalline spike";
+            break;
+
+        // Rock already handled by zappy()
+        default:
+            break;
+    }
+
     flash_tile(target->pos(), CYAN);
     spike.fire();
 }
@@ -732,7 +754,7 @@ void handle_spike_launcher(int delay)
                     continue;
                 }
 
-                _fire_spike_launcher(targ);
+                _fire_spike_launcher(targ, pos);
                 break;
             }
         }
@@ -755,4 +777,15 @@ void end_spike_launcher()
             return;
         }
     }
+}
+
+vector<coord_def> find_spike_launcher_walls()
+{
+    vector<coord_def> wall_locs;
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+    {
+        if (feat_is_wall(env.grid(*ai)))
+            wall_locs.push_back(*ai);
+    }
+    return wall_locs;
 }

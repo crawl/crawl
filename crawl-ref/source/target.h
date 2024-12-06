@@ -419,6 +419,7 @@ public:
 
     void add_position(const coord_def &c, bool force=false);
     bool valid_aim(coord_def) override { return true; }
+    bool can_affect_walls() override { return true; }
     aff_type is_affected(coord_def loc) override;
 
 protected:

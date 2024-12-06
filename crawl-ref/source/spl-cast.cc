@@ -1463,6 +1463,14 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_FORTRESS_BLAST:
         return make_unique<targeter_radius>(&you, LOS_NO_TRANS, range);
 
+    case SPELL_SPIKE_LAUNCHER:
+    {
+        vector<coord_def> walls = find_spike_launcher_walls();
+        return make_unique<targeter_multiposition>(&you, walls, walls.size() > 1
+                                                                    ? AFF_MAYBE
+                                                                    : AFF_YES);
+    }
+
     default:
         break;
     }
