@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# Items - unique, definite article, nominative
+# Items - unique, nominative
 #
 # Note that %s is a placeholder for any adjectives
 #
