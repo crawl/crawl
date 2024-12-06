@@ -1771,7 +1771,7 @@ Durch Zins Macht wird %s eingedämmt.
 ##################
 %%%%
 %s's singing sounds muted, and has no effect on you.
-{gen}%s Gesang klingt gedämpft und hat keinen Einfluss auf dich.
+Der Gesang {gen}%s klingt gedämpft und hat keinen Einfluss auf dich.
 %%%%
 The melody is strangely muted, and has no effect on you.
 Die Melodie ist seltsam gedämpft und hat keinen Einfluss auf dich.
@@ -1786,7 +1786,7 @@ You are mesmerised by %s!
 Du bist fasziniert von {dat}%s!
 %%%%
 %s's singing becomes strangely muted.
-{gen}%s Gesang wird seltsam gedämpft.
+Der Gesang {gen}%s wird seltsam gedämpft.
 %%%%
 Something's singing becomes strangely muted.
 Der Gesang von irgendetwas wird seltsam gedämpft.
@@ -4053,7 +4053,7 @@ Anmerkung gelöscht.
 ##################
 %%%%
 The tide is released from %s call.
-Die Flut wird von {gen}%s Anruf befreit.
+Die Flut wird vom Anruf {gen}%s befreit.
 %%%%
 Not in Shoals or no heightmap; tide not available.
 Nicht in Shoals oder keine Höhenkarte; Gezeiten nicht verfügbar.
@@ -5084,13 +5084,13 @@ Du bist noch nicht bereit, noch einmal zu rezitieren.
 %s ist betäubt vom Zorn des Zin!
 %%%%
 %s's chaotic flesh sizzles and spatters!
-{gen}%s chaotisches Fleisch brutzelt und spritzt!
+Das chaotische Fleisch {gen}%s brutzelt und spritzt!
 %%%%
 %s's chaotic flesh bubbles and boils.
-{gen}%s chaotisches Fleisch blubbert und kocht.
+Das chaotische Fleisch {gen}%s blubbert und kocht.
 %%%%
 %s's chaotic flesh runs like molten wax.
-{gen}%s chaotisches Fleisch fließt wie geschmolzenes Wachs.
+Das chaotische Fleisch {gen}%s fließt wie geschmolzenes Wachs.
 %%%%
 %s melts away into a sizzling puddle of chaotic flesh.
 %s schmilzt zu einer brutzelnden Pfütze aus chaotischem Fleisch.
@@ -5354,7 +5354,7 @@ Something blocks your shadow step.
 Etwas blockiert deinen Schattenschritt.
 %%%%
 You step into %s shadow.
-Du trittst in {gen}%s Schatten.
+Du trittst in den Schatten {gen}%s.
 %%%%
 You need at least %d gold to purchase potions right now!
 Derzeit brauchst du mindestens %d Gold, um Tränke zu kaufen!
@@ -8457,7 +8457,7 @@ der Schlamm
 %s überflutet {acc}%s!
 %%%%
 %s willpower is stripped away!
-{gen}%s Willenskraft wird abgebaut!
+Die Willenskraft {gen}%s wird abgebaut!
 %%%%
 %s drowns you
 %s ertränkt dich
@@ -9338,7 +9338,7 @@ With an infernal noise, the power ruling this place vanishes!
 Mit einem infernalischen Geräusch verschwindet die Macht, die diesen Ort beherrscht!
 %%%%
 %s's corpse
-{gen}%s
+die Leiche {gen}%s
 %%%%
 A freezing mist gathers momentarily, then fades.
 Ein eisiger Nebel sammelt sich kurz, dann vergeht.
@@ -9368,10 +9368,10 @@ Mit seinem letzten Atemzug opfert der Spriggan-Druide seine Kraft den Bestien de
 %s erscheint aus der Luft!
 %%%%
 %s's shape twists and changes in death.
-{gen}%s Gestalt verdreht und verändert sich im Tod.
+Die Gestalt {gen}%s verdreht und verändert sich im Tod.
 %%%%
 %s's body returns to its original shape.
-{gen}%s Leiche verwandlt sich in ihre ursprüngliche Form.
+Die Leiche {gen}%s verwandlt sich in ihre ursprüngliche Form.
 %%%%
 Lua death function for monster '%s' didn't load: %s
 Die Lua-Todesfunktion für das Monster '%s' wurde nicht geladen: %s
@@ -9933,6 +9933,7 @@ Die Kugeln kollidieren in einer blendenden Explosion!
 You hear a loud magical explosion!
 Du hörst eine laute magische Explosion!
 %%%%
+# TODO: Fix this
 %s's %s reflects %s!
 {gen}%s {nom}%s reflektiert {acc}%s!
 %%%%
@@ -14523,7 +14524,7 @@ Your magical effects are unravelling.
 Deine magischen Effekte lösen sich auf.
 %%%%
 %s's magical effects unravel!
-{gen}%s magische Effekte entwirren sich!
+Die magische Effekte {gen}%s entwirren sich!
 %%%%
 You briefly glimpse something next to %s.
 Du siehst kurz etwas neben {dat}%s.
@@ -14936,7 +14937,7 @@ The air around @the_monster@ burns with energy
 Die Luft um {ac}@the_monster@ brennt vor Energie
 %%%%
 Dim flames ripple over @the_monster@'s body
-Dumpfe Flammen züngeln über {gen}@the_monster@ Körper
+Dumpfe Flammen züngeln über den Körper {gen}@the_monster@
 %%%%
 Dim flames ripple over @the_monster@
 Dumpfe Flammen kräuseln sich über {acc}@the_monster@
@@ -14999,7 +15000,7 @@ You are encased in ice
 Du bist in Eis gehüllt
 %%%%
 Frost covers @the_monster@'s body
-Frost bedeckt {gen}@the_monster@ Körper
+Frost bedeckt den Körper {gen}@the_monster@
 %%%%
 Frost covers @the_monster@
 Frost bedeckt {acc}@the_monster@

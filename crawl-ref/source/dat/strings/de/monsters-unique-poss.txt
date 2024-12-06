@@ -6,235 +6,235 @@
 
 %%%%
 Mennas's
-Mennas'
+von Mennas
 %%%%
 Nessos's
-Nessos'
+von Nessos
 %%%%
 Chuck's
-Chucks
+von Chuck
 %%%%
 Polyphemus's
-Polyphems
+von Polyphem
 %%%%
 Antaeus's
-Antaeus'
+von Antaeus
 %%%%
 Tiamat's
-Tiamats
+von Tiamat
 %%%%
 Bai Suzhen's
-Bai Suzhens
+von Bai Suzhen
 %%%%
 Xtahua's
-Xtahuas
+von Xtahua
 %%%%
 Ijyb's
-Ijybs
+von Ijyb
 %%%%
 Robin's
-Robins
+von Robin
 %%%%
 Grum's
-Grums
+von Grum
 %%%%
 Duvessa's
-Duvessas
+von Duvessa
 %%%%
 Dowan's
-Dowans
+von Dowan
 %%%%
 Fannar's
-Fannars
+von Fannar
 %%%%
 Jorgrun's
-Jorgruns
+von Jorgrun
 %%%%
 Natasha's
-Nataschas
+von Natascha
 %%%%
 Arachne's
-Arachnes
+von Arachne
 %%%%
 Asterion's
-Asterions
+von Asterion
 %%%%
 Agnes's
-Agnes'
+von Agnes
 %%%%
 Dissolution's
-Dissolutions
+von Dissolution
 %%%%
 Sonja's
-Sonjas
+von Sonja
 %%%%
 Pikel's
-Pikels
+von Pikel
 %%%%
 Boris's
-Boris'
+von Boris
 %%%%
 Menkaure's
-Menkaures
+von Menkaure
 %%%%
 Khufu's
-Khufus
+von Khufu
 %%%%
 Ilsuiw's
-Ilsuiws
+von Ilsuiw
 %%%%
 Vashnia's
-Vashnias
+von Vashnia
 %%%%
 Erolcha's
-Erolchas
+von Erolcha
 %%%%
 Urug's
-Urugs
+von Urug
 %%%%
 Nergalle's
-Nergalles
+von Nergalle
 %%%%
 Saint Roka's
-Sankt Rokas
+von Sankt Roka
 %%%%
 Sojobo's
-Sojobos
+von Sojobo
 %%%%
 Azrael's
-Azraels
+von Azrael
 %%%%
 Mara's
-Maras
+von Mara
 %%%%
 Aizul's
-Aizuls
+von Aizul
 %%%%
 Snorg's
-Snorgs
+von Snorg
 %%%%
 Purgy's
-Purgys
+von Purgy
 %%%%
 Jory's
-Jorys
+von Jory
 %%%%
 Gastronok's
-Gastronoks
+von Gastronok
 %%%%
 Nellie's
-Nellies
+von Nellie
 %%%%
 Murray's
-Murrays
+von Murray
 %%%%
 Ignacio's
-Ignacios
+von Ignacio
 %%%%
 Grinder's
-Grinders
+von Grinder
 %%%%
 Roxanne's
-Roxannes
+von Roxanne
 %%%%
 Terence's
-Terences
+von Terence
 %%%%
 Jessica's
-Jessicas
+von Jessica
 %%%%
 Sigmund's
-Sigmunds
+von Sigmund
 %%%%
 Edmund's
-Edmunds
+von Edmund
 %%%%
 Psyche's
-Psyches
+von Psyche
 %%%%
 Donald's
-Donalds
+von Donald
 %%%%
 Joseph's
-Josephs
+von Joseph
 %%%%
 Erica's
-Ericas
+von Erica
 %%%%
 Josephine's
-Josephines
+von Josephine
 %%%%
 Harold's
-Harolds
+von Harold
 %%%%
 Louise's
-Louises
+von Louise
 %%%%
 Frances's
-Frances'
+von Frances
 %%%%
 Rupert's
-Ruperts
+von Rupert
 %%%%
 Kirke's
-Kirkes
+von Kirke
 %%%%
 Frederick's
-Fredericks
+von Frederick
 %%%%
 Margery's
-Margerys
+von Margery
 %%%%
 Maggie's
-Maggies
+von Maggie
 %%%%
 Eustachio's
-Eustachios
+von Eustachio
 %%%%
 Maurice's
-Maurices
+von Maurice
 %%%%
 Nikola's
-Nikolas
+von Nikola
 %%%%
 Mnoleg's
-Mnolegs
+von Mnoleg
 %%%%
 Lom Lobon's
-Lom Lobons
+von Lom Lobon
 %%%%
 Cerebov's
-Cerebovs
+von Cerebov
 %%%%
 Gloorx Vloq's
-Gloorx Vloqs
+von Gloorx Vloq
 %%%%
 Geryon's
-Geryons
+von Geryon
 %%%%
 Dispater's
-Dispaters
+von Dispater
 %%%%
 Asmodeus's
-Asmodäus'
+von Asmodäus
 %%%%
 Ereshkigal's
-Ereshkigals
+von Ereshkigal
 %%%%
 Prince Ribbit's
-Prinzen Ribbits
+von Prinz Ribbit
 %%%%
 Crazy Yiuf's
-Verrückten Yiufs
+vom Verrückten Yiuf
 %%%%
 the %sEnchantress's
 der {adj-en}%sZauberin
 %%%%
 Blork the orc's
-Blork des Orks
+von Blork dem Ork
 %%%%
 Blork's
-Blorks
+von Blork
 %%%%
 the %sRoyal Jelly's
 des {adj-en}%sGelée Royale
@@ -246,7 +246,7 @@ the %sLernaean hydra's
 der {adj-en}%sLernäischen Hydra
 %%%%
 Cigotuvi's Monster's
-des Cigotuvis Monsters
+von Cigotuvis Monster
 %%%%
 the %sStatue of Wucad Mu's
 der {adj-en}%sStatue von Wucad Mu
@@ -259,7 +259,7 @@ something's
 des Etwas
 %%%%
 %s's ghost's
-%ss Geistes
+des Geistes von %s
 %%%%
 
 ##################

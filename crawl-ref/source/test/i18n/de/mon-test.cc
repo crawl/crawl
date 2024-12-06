@@ -144,8 +144,8 @@ int main()
     test("Du triffst die hilflose Natascha", "You hit %s", "the helpless Natasha");
     test("Du kollidierst mit Natascha!", "You collide with %s!", "Natascha");
     test("Du kollidierst mit der hilflosen Natascha!", "You collide with %s!", "the helpless Natasha");
-    test("Du blockierst den Angriff Nataschas.", "You block %s attack.", "Natasha's");
-    test("Die Wunden Nataschas heilen von selbst!", "%s's wounds heal themselves!", "Natasha");
+    test("Du blockierst den Angriff von Natascha.", "You block %s attack.", "Natasha's");
+    test("Die Wunden von Natascha heilen von selbst!", "%s's wounds heal themselves!", "Natasha");
     cout << endl;
 
     // unique with definite article in name
@@ -167,8 +167,8 @@ int main()
     test("Du triffst den hilflosen Prinzen Ribbit", "You hit %s", "the helpless Prince Ribbit");
     test("Du kollidierst mit Prinzen Ribbit!", "You collide with %s!", "Prince Ribbit");
     test("Du kollidierst mit dem hilflosen Prinzen Ribbit!", "You collide with %s!", "the helpless Prince Ribbit");
-    test("Du blockierst den Angriff Prinzen Ribbits.", "You block %s attack.", "Prince Ribbit's");
-    test("Die Wunden Prinzen Ribbits heilen von selbst!", "%s's wounds heal themselves!", "Prince Ribbit");
+    test("Du blockierst den Angriff von Prinz Ribbit.", "You block %s attack.", "Prince Ribbit's");
+    test("Die Wunden von Prinz Ribbit heilen von selbst!", "%s's wounds heal themselves!", "Prince Ribbit");
     cout << endl;
 
     // unique with a capitalised adjective in the name
@@ -179,8 +179,8 @@ int main()
     test("Du triffst den hilflosen Verrückten Yiuf", "You hit %s", "the helpless Crazy Yiuf");
     test("Du kollidierst mit Verrücktem Yiuf!", "You collide with %s!", "Crazy Yiuf");
     test("Du kollidierst mit dem hilflosen Verrückten Yiuf!", "You collide with %s!", "the helpless Crazy Yiuf");
-    test("Du blockierst den Angriff Verrückten Yiufs.", "You block %s attack.", "Crazy Yiuf's");
-    test("Die Wunden Verrückten Yiufs heilen von selbst!", "%s's wounds heal themselves!", "Crazy Yiuf");
+    test("Du blockierst den Angriff vom Verrückten Yiuf.", "You block %s attack.", "Crazy Yiuf's");
+    test("Die Wunden vom Verrückten Yiuf heilen von selbst!", "%s's wounds heal themselves!", "Crazy Yiuf");
     cout << endl;
 
     // another unique with a capitalised adjective in the name
@@ -214,8 +214,8 @@ int main()
     //test("hilfloser Blork der Ork", "helpless Blork the orc");
     test("Du triffst Blork den Ork", "You hit %s", "Blork the orc");
     test("Du kollidierst mit Blork dem Ork!", "You collide with %s!", "Blork the orc");
-    test("Du blockierst den Angriff Blork des Orks.", "You block %s attack.", "Blork the orc's");
-    test("Die Wunden Blork des Orks heilen von selbst!", "%s's wounds heal themselves!", "Blork the orc");
+    test("Du blockierst den Angriff von Blork dem Ork.", "You block %s attack.", "Blork the orc's");
+    test("Die Wunden von Blork dem Ork heilen von selbst!", "%s's wounds heal themselves!", "Blork the orc");
     cout << endl;
 
     // named ally

@@ -4,23 +4,6 @@
 #
 ###############################################################################
 
-%%%%
-{gen}Prince Ribbit
-Prinzen Ribbits
-%%%%
-{gen}Crazy Yiuf
-Verrückten Yiufs
-%%%%
-{gen}Blork the orc
-Blork des Orks
-%%%%
-{gen}Cigotuvi's Monster
-des Cigotuvis Monsters
-%%%%
-{gen}the Statue of Wucad Mu
-der Statue von Wucad Mu
-%%%%
-
 # not really uniques, but grammatically similar
 
 %%%%
@@ -29,8 +12,8 @@ der Statue von Wucad Mu
 des Etwas
 %%%%
 {gen}%s's ghost
-%ss Geistes
+des Geistes von %s
 %%%%
 {gen}%s's illusion
-%ss Illusions
+der Illusion von %s
 %%%%
