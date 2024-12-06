@@ -3892,10 +3892,13 @@ bool handle_searing_ray(actor& agent, int turn)
     beam.fire();
     trigger_battlesphere(&agent);
 
-    if (agent.is_player() && turn > 1)
+    if (agent.is_player())
     {
-        pay_mp(1);
-        finalize_mp_cost();
+        if (turn > 1)
+        {
+            pay_mp(1);
+            finalize_mp_cost();
+        }
 
         if (turn > 3)
         {
