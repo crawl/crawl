@@ -3754,6 +3754,10 @@ void melee_attack::mons_apply_attack_flavour()
                 place_cloud(CLOUD_POISON, cloud_pos[i], dur, attacker);
         }
 
+        // No brewing potions via punching plants.
+        if (!defender || defender->is_firewood())
+            break;
+
         if (--attacker->as_monster()->number == 0)
             alembic_brew_potion(*attacker->as_monster());
     }
