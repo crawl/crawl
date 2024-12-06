@@ -1146,7 +1146,7 @@ void direction_chooser::fill_object_cycle_points()
             cycle_pos.push_back(*ri);
     }
 
-    sort(cycle_pos.begin(), cycle_pos.end(), [](coord_def& a, coord_def& b)
+    sort(cycle_pos.begin(), cycle_pos.end(), [](const coord_def& a, const coord_def& b)
     {
         return grid_distance(a, you.pos())
                < grid_distance(b, you.pos());
@@ -1212,12 +1212,12 @@ void direction_chooser::calculate_target_info()
     }
 
     // Sort found targets from near to far (from the player).
-    sort(cycle_pos.begin(), cycle_pos.end(), [](coord_def& a, coord_def& b)
+    sort(cycle_pos.begin(), cycle_pos.end(), [](const coord_def& a, const coord_def& b)
     {
         return grid_distance(a, you.pos())
                < grid_distance(b, you.pos());
     });
-    sort(preferred_targs.begin(), preferred_targs.end(), [](coord_def& a, coord_def& b)
+    sort(preferred_targs.begin(), preferred_targs.end(), [](const coord_def& a, const coord_def& b)
     {
         return grid_distance(a, you.pos())
                < grid_distance(b, you.pos());
@@ -1529,7 +1529,7 @@ void direction_chooser::fill_feature_cycle_points(char feature_class)
     }
 
     // Sort from near to far.
-    sort(feature_cycle_pos.begin(), feature_cycle_pos.end(), [](coord_def& a, coord_def& b)
+    sort(feature_cycle_pos.begin(), feature_cycle_pos.end(), [](const coord_def& a, const coord_def& b)
     {
         return grid_distance(a, you.pos())
                < grid_distance(b, you.pos());

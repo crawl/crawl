@@ -2010,10 +2010,10 @@ static string _spell_fail_change_description(const item_def &item,
         spell_sort.push_back({i, abs(cur_fail[i] - new_fail[i])});
     }
     sort(spell_sort.begin( ), spell_sort.end( ),
-            [cur_fail](pair<int, int>& a, pair<int, int>& b)
+            [cur_fail](const pair<int, int>& a, const pair<int, int>& b)
                 { return cur_fail[a.first] > cur_fail[b.first];});
     sort(spell_sort.begin( ), spell_sort.end( ),
-            [](pair<int, int>& a, pair<int, int>& b)
+            [](const pair<int, int>& a, const pair<int, int>& b)
                 { return a.second > b.second;});
 
 
