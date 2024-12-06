@@ -61,9 +61,6 @@ const vector<string> test_items = {
     "a cursed -2 broad axe of draining",
     "the +11 broad axe \"Jetioplo\" (weapon) {vorpal, Str+4}",
     "the +9 trident of the Crushed Allies {vorpal, Fragile +Inv Str+3 Int+3}",
-    "the +7 pair of quick blades \"Gyre\" and \"Gimble\"",
-    "+7 pair of quick blades",
-
 
     "a long sword, 30 bolts and an arbalest",
 };
@@ -113,9 +110,6 @@ const vector<string> expected = {
     "eine verfluchte -2 Breitaxt der Auszehrung",
     "die +11 Breitaxt \"Jetioplo\" (Waffe) {Gebifft, Stä+4}",
     "der +9 Dreizack von \"the Crushed Allies\" {Gebifft, Fragil +Uns Stä+3 Int+3}",
-    "das +7 Paar Schnellklingen \"Gyre\" und \"Gimble\"",
-    "+7 Paar Schnellklingen",
-
 
     "ein Langschwert, 30 Bolzen und eine Armbrust"
 };
@@ -152,6 +146,116 @@ const vector<string> armour_de =
     "ein verfluchtes +2 Paar glühende Stiefel",
     "ein verfluchtes +2 Paar Handschuhe der Schießkunst",
     "die +1 Plattenrüstung von Würfel, Beutel, und Flasche {Stä+6 Int-3 Ges+4 UnsS} (5390 Gold)"
+};
+
+vector<map<string, string>> weapons =
+{
+    {
+        {"en", "the lance \"Wyrmbane\""},
+        {"nom", "die Lanze \"Wyrmbane\""},
+        {"acc", "die Lanze \"Wyrmbane\""},
+        {"dat", "der Lanze \"Wyrmbane\""},
+    },
+    {
+        {"en", "a lance"},
+        {"nom", "eine Lanze"},
+        {"acc", "eine Lanze"},
+        {"dat", "einer Lanze"},
+    },
+    {
+        {"en", "lance"},
+        {"nom", "Lanze"},
+        {"acc", "Lanze"},
+        {"dat", "Lanze"},
+    },
+    {
+        {"en", "the +9 sword of Cerebov"},
+        {"nom", "das +9 Schwert von Cerebov"},
+        {"acc", "das +9 Schwert von Cerebov"},
+        {"dat", "dem +9 Schwert von Cerebov"},
+    },
+    {
+        {"en", "+9 sword of Cerebov"},
+        {"nom", "+9 Schwert von Cerebov"},
+        {"acc", "+9 Schwert von Cerebov"},
+        {"dat", "+9 Schwert von Cerebov"},
+    },
+    {
+        // unidentified sword of Cerebov
+        {"en", "a great serpentine sword"},
+        {"nom", "ein großes, flammenförmiges Schwert"},
+        {"acc", "ein großes, flammenförmiges Schwert"},
+        //{"dat", "einem großen, flammenförmigen Schwert"},
+    },
+    {
+        // sword of Cerebov base type
+        {"en", "a flamberge"},
+        {"nom", "ein Flamberg"},
+        {"acc", "einen Flamberg"},
+        {"dat", "einem Flamberg"},
+    },
+    {
+        // sword of Cerebov base type
+        {"en", "flamberge"},
+        {"nom", "Flamberg"},
+        {"acc", "Flamberg"},
+        {"dat", "Flamberg"},
+    },
+    {
+        {"en", "the +8 Wrath of Trog {antimagic, *Rage Rampage}"},
+        {"nom", "der +8 Zorn von Trog {Antimagie, *Wut Randale}"},
+        {"acc", "den +8 Zorn von Trog {Antimagie, *Wut Randale}"},
+        {"dat", "dem +8 Zorn von Trog {Antimagie, *Wut Randale}"},
+    },
+    {
+        // unidentified Wrath of Trog
+        {"en", "a Wrath of Trog"},
+        {"nom", "ein Zorn von Trog"},
+        {"acc", "einen Zorn von Trog"},
+        {"dat", "einem Zorn von Trog"},
+    },
+    {
+        {"en", "Wrath of Trog"},
+        {"nom", "Zorn von Trog"},
+        {"acc", "Zorn von Trog"},
+        {"dat", "Zorn von Trog"},
+    },
+    {
+        {"en", "the +7 pair of quick blades \"Gyre\" and \"Gimble\""},
+        {"nom", "das +7 Paar Schnellklingen \"Gyre\" und \"Gimble\""},
+        {"acc", "das +7 Paar Schnellklingen \"Gyre\" und \"Gimble\""},
+        {"dat", "dem +7 Paar Schnellklingen \"Gyre\" und \"Gimble\""},
+    },
+    {
+        {"en", "the +7 pair of quick blades"},
+        {"nom", "das +7 Paar Schnellklingen"},
+        {"acc", "das +7 Paar Schnellklingen"},
+        {"dat", "dem +7 Paar Schnellklingen"},
+    },
+    {
+        {"en", "a +7 pair of quick blades"},
+        {"nom", "ein +7 Paar Schnellklingen"},
+        {"acc", "ein +7 Paar Schnellklingen"},
+        {"dat", "einem +7 Paar Schnellklingen"},
+    },
+    {
+        {"en", "the cursed +5 scythe \"Finisher\" {speed, eviscerate}"},
+        {"nom", "die verfluchte +5 Sense \"Beender\" {Geschw, ausweiden}"},
+        {"acc", "die verfluchte +5 Sense \"Beender\" {Geschw, ausweiden}"},
+        {"dat", "der verfluchten +5 Sense \"Beender\" {Geschw, ausweiden}"},
+    },
+    {
+        {"en", "a scythe \"Finisher\""},
+        {"nom", "eine Sense \"Beender\""},
+        {"acc", "eine Sense \"Beender\""},
+        {"dat", "einer Sense \"Beender\""},
+    },
+    {
+        {"en", "scythe \"Finisher\""},
+        {"nom", "Sense \"Beender\""},
+        {"acc", "Sense \"Beender\""},
+        {"dat", "Sense \"Beender\""},
+    },
 };
 
 vector<map<string, string>> wands =
@@ -340,6 +444,24 @@ vector<map<string, string>> books =
     },
 };
 
+vector<map<string, string>> others =
+{
+    {
+        {"en", "the Orb of Zot"},
+        {"nom", "die Kugel von Zot"},
+        {"acc", "die Kugel von Zot"},
+        {"dat", "der Kugel von Zot"},
+    },
+    {
+        {"en", "The Orb of Zot"},
+        {"nom", "Die Kugel von Zot"},
+    },
+    {
+        {"en", "Orb of Zot"},
+        {"nom", "Kugel von Zot"},
+    },
+};
+
 int num_passes = 0;
 int num_fails = 0;
 
@@ -395,12 +517,14 @@ int main()
     {
         string cse = cases[i];
 
+        test_group(cse, "WEAPONS", weapons);
         test_group(cse, "RINGS", rings);
         test_group(cse, "AMULETS", amulets);
         test_group(cse, "WANDS", wands);
         test_group(cse, "STAVES", staves);
         test_group(cse, "BOOKS", books);
         test_group(cse, "RUNES", runes);
+        test_group(cse, "OTHERS", others);
     }
 
     cout << endl << num_passes << " TESTS PASSED" << endl;

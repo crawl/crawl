@@ -11,6 +11,10 @@
 # The Orb
 #################################
 %%%%
+the Orb of Zot
+die Kugel von Zot
+%%%%
+# in some places, it appears with an uppercase T
 The Orb of Zot
 Die Kugel von Zot
 %%%%
