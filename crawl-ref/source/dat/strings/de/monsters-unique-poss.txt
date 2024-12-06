@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# Monsters - unique, genitive (translating English possessive)
+# Monsters - unique - translation for English possessive
 #
 ###############################################################################
 
