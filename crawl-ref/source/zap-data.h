@@ -1010,6 +1010,7 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
     DCHAR_FIRED_MISSILE,
     false,
     false,
+    TILE_BOLT_IRON_SHOT,
 },
 
 {
