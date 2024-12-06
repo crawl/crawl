@@ -606,16 +606,6 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
         // (possibly just as a string, like the lua API for this)
         process_command(CMD_GAME_MENU);
     }
-    else if (msgtype == "resize_viewport")
-    {
-        JsonWrapper x = json_find_member(obj.node, "x");
-        JsonWrapper y = json_find_member(obj.node, "y");
-        x.check(JSON_NUMBER);
-        y.check(JSON_NUMBER);
-        coord_def size = coord_def((int) x->number_, (int) y->number_);
-        crawl_view.viewsz = size;
-        crawl_view.init_view();
-    }
 
     return c;
 }
