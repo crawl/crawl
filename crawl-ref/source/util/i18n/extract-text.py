@@ -196,7 +196,7 @@ def process_art_data_txt():
         elif line.startswith('TYPE:'):
             string = line.replace('TYPE:', '').strip()
             result.append('# note: base type of ' + name)
-            result.append(string)
+            result.append(article_a(string))
         elif line.startswith('INSCRIP:'):
             string = line.replace('INSCRIP:', '').strip()
             if string.endswith(','):
@@ -2212,7 +2212,7 @@ for filename in files:
         strings = special_handling_for_item_prop_cc(strings)
     elif filename == 'mon-data.h':
         strings = special_handling_for_mon_data_h(strings)
-    else:
+    elif filename != 'art-data.txt':
         canonicalised = False
         filtered_strings = []
         for string in strings:
@@ -2240,6 +2240,9 @@ for filename in files:
                     string = "the " + string
                 for suffix in ["destruction", "escape", "summoning", "punishment"]:
                     filtered_strings.append(string + suffix);
+            elif string.endswith(" Sword"):
+                # alternative names for Singing Sword based on mood
+                filtered_strings.append("the %s" + string)
             else:
                 filtered_strings.append(string)
         strings = filtered_strings
@@ -2261,10 +2264,11 @@ for filename in files:
         # We will store in canonical form. Other forms will be auto-generated from that.
         # Add other forms to ignore list so they don't get picked up anywhere else.
         for string in strings:
-            if string.startswith("the ") and not string.endswith("'s"):
-                string = re.sub("^the (%s)?", "", string)
-                IGNORE_STRINGS.append(string)
-                IGNORE_STRINGS.append(article_a(string))
+            if re.search("^(the|a|an) ", string) and not string.endswith("'s"):
+                string2 = re.sub("^(the|a|an) (%s)?", "", string)
+                IGNORE_STRINGS.append(string2)
+                if string.startswith("the "):
+                    IGNORE_STRINGS.append(article_a(string2))
 
 for line in output:
     print(line)
