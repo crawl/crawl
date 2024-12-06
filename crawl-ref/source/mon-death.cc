@@ -2510,7 +2510,8 @@ item_def* monster_die(monster& mons, killer_type killer,
         }
         death_spawn_fineff::schedule(MONS_PILLAR_OF_RIME,
                                     mons.pos(),
-                                    random_range(3, 11) * BASELINE_DELAY);
+                                    random_range(4, 14) * BASELINE_DELAY,
+                                    SPELL_RIMEBLIGHT);
     }
 
     if (monster_explodes(mons))

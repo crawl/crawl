@@ -603,11 +603,12 @@ public:
     bool mergeable(const final_effect &) const override { return false; }
     void fire() override;
 
-    static void schedule(monster_type mon_type, coord_def pos, int dur)
+    static void schedule(monster_type mon_type, coord_def pos, int dur,
+                         int summon_type = SPELL_NO_SPELL)
     {
         mgen_data _mg = mgen_data(mon_type, BEH_HOSTILE, pos,
                                     MHITNOT, MG_FORCE_PLACE);
-        _mg.set_summoned(nullptr, SPELL_NO_SPELL, dur, false, false);
+        _mg.set_summoned(nullptr, summon_type, dur, false, false);
         final_effect::schedule(new death_spawn_fineff(_mg));
     }
 
