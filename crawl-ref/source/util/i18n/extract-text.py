@@ -2236,7 +2236,9 @@ for filename in files:
             elif string == " the pandemonium lord":
                 filtered_strings.append("the %spandemonium lord")
             elif string == "deck of " or string == "decks of ":
-                for suffix in ["destruction", "escape", "summoning"]:
+                if string == "deck of ":
+                    string = "the " + string
+                for suffix in ["destruction", "escape", "summoning", "punishment"]:
                     filtered_strings.append(string + suffix);
             else:
                 filtered_strings.append(string)

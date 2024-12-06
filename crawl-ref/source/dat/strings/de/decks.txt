@@ -18,31 +18,6 @@ punishment
 Strafe
 %%%%
 
-# used with the above
-%%%%
-a %s card
-eine %s-Karte
-%%%%
-
-
-%%%%
-deck of escape
-Deck der Flucht
-%%%%
-deck of destruction
-Deck der Zerstörung
-%%%%
-deck of summoning
-Deck der Beschwörung
-%%%%
-deck of punishment
-Deck der Strafe
-%%%%
-stacked deck
-vorsortiertes Deck
-%%%%
-
-
 %%%%
 the deck of escape
 das Deck der Flucht
@@ -56,11 +31,8 @@ das Deck der Beschwörung
 the deck of punishment
 das Deck der Strafe
 %%%%
-a stacked deck
-ein vorsortiertes Deck
-%%%%
-your stacked deck
-dein vorsortiertes Deck
+the stacked deck
+das vorsortierte Deck
 %%%%
 
 %%%%
@@ -84,6 +56,20 @@ vorsortierte Decks
 ####################
 # Cards
 ####################
+
+%%%%
+an escape card
+eine Fluchtkarte
+%%%%
+a destruction card
+eine Zerstörungskarte
+%%%%
+a summoning card
+eine Beschwörungskarte
+%%%%
+a punishment card
+eine Strafkarte
+%%%%
 
 %%%%
 Velocity
