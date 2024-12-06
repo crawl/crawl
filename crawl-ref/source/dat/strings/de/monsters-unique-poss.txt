@@ -275,7 +275,7 @@ The Servant's
 des Dieners
 %%%%
 The Captor's
-des sFängers
+des Fängers
 %%%%
 The Defiler's
 des Schänders
