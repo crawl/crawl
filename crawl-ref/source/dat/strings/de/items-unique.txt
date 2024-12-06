@@ -382,3 +382,72 @@ das {adj-es}%sPaar Siebenmeilenstiefel
 the horn of Geryon
 das Horn von Geryon
 %%%%
+
+#################################
+# Appearance when unidentified
+#################################
+
+# a few have a special appearance when unidentified
+%%%%
+# sword of Cerebov
+# the English description says serpentine, but in the tile, the blade is shaped like flames
+a great serpentine sword
+{n}ein großes, flammenförmiges Schwert
+%%%%
+# staff of Dispater
+a golden staff
+{m}ein goldener Stab
+%%%%
+# sceptre of Asmodeus
+a ruby sceptre
+{n}ein Rubin-Zepter
+%%%%
+# dragonskin cloak
+an opalescent scaly cloak
+{m}ein schillernder schuppiger Umhang
+%%%%
+
+# the rest just look like what they are, but get the indefinite article
+# instead of the definite article
+
+#################################
+# Special base types for some unrands
+#################################
+
+%%%%
+# sword of Cerebov
+a flamberge
+{m}ein Flamberg
+%%%%
+# heavy crossbow "Sniper"
+a heavy crossbow
+eine schwere Armbrust
+%%%%
+# lance "Wyrmbane"
+a lance
+eine Lanze
+%%%%
+# Spriggan's Knife
+a knife
+{n}ein Messer
+%%%%
+# captain's cutlass
+a cutlass
+{n}ein Entermesser
+%%%%
+# autumn katana
+a katana
+{n}ein Katana
+%%%%
+# shillelagh "Devastator"
+a shillelagh
+{m}ein Shillelagh
+%%%%
+# dark maul
+a maul
+{m}ein Kriegshammer
+%%%%
+# "Gyre" and "Gimble"
+a pair of quick blades
+{n}ein Paar Schnellklingen
+%%%%
