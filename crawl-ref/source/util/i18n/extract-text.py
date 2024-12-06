@@ -2242,6 +2242,10 @@ for filename in files:
                     string = "the " + string
                 for suffix in ["destruction", "escape", "summoning", "punishment"]:
                     filtered_strings.append(string + suffix);
+            elif string == "your stacked deck":
+                filtered_strings.append("the stacked deck")
+                IGNORE_STRINGS.append("a stacked deck")
+                IGNORE_STRINGS.append("stacked deck")
             elif string.endswith(" Sword"):
                 # alternative names for Singing Sword based on mood
                 filtered_strings.append("the %s" + string)
