@@ -1385,6 +1385,8 @@ def special_handling_for_item_name_cc(strings):
         elif string in [' wand', ' potion', ' ring', ' amulet', ' rune']:
             # all subtypes already covered above
             continue
+        elif string == "Orb of Zot":
+            string = "the " + string
         elif string in ['manual of ', '%s of %s', ' of ', 'of '] or (string.endswith(' of Zot') and string != "The Orb of Zot"):
             # other "of <foo>" suffixes are handled separately
             continue
