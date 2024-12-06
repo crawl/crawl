@@ -258,8 +258,11 @@ der {adj-en}%sStatue von Wucad Mu
 something's
 des Etwas
 %%%%
-%s's ghost's
-des Geistes von %s
+%s%s's ghost's
+des {adj-en}%sGeistes von %s
+%%%%
+%s%s's illusion's
+der {adj-en}%sIllusion von %s
 %%%%
 
 ##################

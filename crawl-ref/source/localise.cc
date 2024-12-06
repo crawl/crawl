@@ -1396,20 +1396,58 @@ static string _localise_shop_name(const string& context, const string& value)
 // localise ghost/illusion name
 static string _localise_ghost_name(const string& context, const string& value)
 {
-    static const string ghost_suffix = "'s ghost";
-    static const string illusion_suffix = "'s illusion";
-    string suffix;
-
-    if (ends_with(value, ghost_suffix))
-        suffix = ghost_suffix;
-    else if (ends_with(value, illusion_suffix))
-        suffix = illusion_suffix;
-    else
+    bool matched = false;
+    if (ends_with(value, "'s illusion") || ends_with(value, "'s illusion's"))
+        matched = true;
+    else if (ends_with(value, "'s ghost") || ends_with(value, "'s ghost's"))
+        matched = true;
+    if (!matched)
         return "";
 
-    string name = value.substr(0, value.length() - suffix.length());
-    string fmt = cxlate(context, string("%s") + suffix);
-    return make_stringf(fmt.c_str(), name.c_str());
+    TRACE("context='%s', value='%s'", context.c_str(), value.c_str());
+
+    string determiner, name, suffix;
+    vector<string> adjs;
+
+    vector<string> words = split_string(" ", value, true, false);
+
+    for (size_t i = 0; i < words.size(); i++)
+    {
+        const string& word = words[i];
+        if (i == words.size() - 1)
+            suffix = word;
+        else if (i == 0 && (word == "the" || word == "a" || word == "an"))
+            determiner = word == "an" ? "a" : word;
+        else if (words.size() > 2 && i < words.size() - 2 && name.empty())
+            if (xlate(word + " ", false) != "")
+                adjs.push_back(word);
+            else
+                name = word;
+        else
+        {
+            if (!name.empty())
+                name += " ";
+            name += word;
+        }
+    }
+
+    // strip 's from name
+    if (ends_with(name, "'s"))
+        name = name.substr(0, name.length() - 2);
+
+    string base;
+    if (!determiner.empty())
+        base = determiner + " ";
+    base += "%s";   // placeholder for adjectives
+    base += "%s's"; // placeholder for name
+    base += " " + suffix;
+
+    TRACE("calling cxlate(\"%s\", \"%s\")", context.c_str(), base.c_str());
+    string result = cxlate(context, base);
+    result = replace_last(result, "%s", name);
+    result = _localise_adjectives(result, adjs);
+
+    return result;
 }
 
 static string _localise_jiyva_long_name(const string& context, const string& value)

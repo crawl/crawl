@@ -262,11 +262,11 @@ etwas
 something you cannot see
 etwas Unsichtbares
 %%%%
-%s's ghost
-%ss Geist
+%s%s's ghost
+der {adj-e}%sGeist von %s
 %%%%
-%s's illusion
-%ss Illusion
+%s%s's illusion
+die {adj-e}%sIllusion von %s
 %%%%
 
 ##################

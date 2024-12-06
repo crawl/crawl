@@ -230,6 +230,30 @@ int main()
     test("eine Ork-förmige Salzsäule", "an orc shaped pillar of salt");
     test("Du siehst hier einen Mennas-förmigen Eisblock.", "You see here %s.", "a Mennas shaped block of ice");
     test("Du siehst hier einen Tarantella-förmigen Eisblock.", "You see here %s.", "a tarantella shaped block of ice");
+    cout << endl;
+
+    // player ghost
+    test("der Geist von MrDizzy", "MrDizzy's ghost");
+    test("der hilflose Geist von MrDizzy", "the helpless MrDizzy's ghost");
+    test("Du triffst den Geist von MrDizzy", "You hit %s", "MrDizzy's ghost");
+    test("Du triffst den hilflosen Geist von MrDizzy", "You hit %s", "the helpless MrDizzy's ghost");
+    test("Du kollidierst mit dem Geist von MrDizzy!", "You collide with %s!", "MrDizzy's ghost");
+    test("Du kollidierst mit dem hilflosen Geist von MrDizzy!", "You collide with %s!", "the helpless MrDizzy's ghost");
+    test("Du blockierst den Angriff des Geistes von MrDizzy.", "You block %s attack.", "MrDizzy's ghost's");
+    test("Die Wunden des Geistes von MrDizzy heilen von selbst!", "%s's wounds heal themselves!", "MrDizzy's ghost");
+    cout << endl;
+
+    // player illusion
+    test("die Illusion von MrDizzy", "MrDizzy's illusion");
+    test("die hilflose Illusion von MrDizzy", "the helpless MrDizzy's illusion");
+    test("Du triffst die Illusion von MrDizzy", "You hit %s", "MrDizzy's illusion");
+    test("Du triffst die hilflose Illusion von MrDizzy", "You hit %s", "the helpless MrDizzy's illusion");
+    test("Du kollidierst mit der Illusion von MrDizzy!", "You collide with %s!", "MrDizzy's illusion");
+    test("Du kollidierst mit der hilflosen Illusion von MrDizzy!", "You collide with %s!", "the helpless MrDizzy's illusion");
+    test("Du blockierst den Angriff der Illusion von MrDizzy.", "You block %s attack.", "MrDizzy's illusion's");
+    test("Die Wunden der Illusion von MrDizzy heilen von selbst!", "%s's wounds heal themselves!", "MrDizzy's illusion");
+    cout << endl;
+
 
     // show results summary
     cout << num_passes << " TESTS PASSED" << endl;

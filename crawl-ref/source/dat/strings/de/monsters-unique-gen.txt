@@ -11,9 +11,9 @@
 {gen}something
 des Etwas
 %%%%
-{gen}%s's ghost
-des Geistes von %s
+{gen}%s%s's ghost
+des {adj-en}%sGeistes von %s
 %%%%
-{gen}%s's illusion
-der Illusion von %s
+{gen}%s%s's illusion
+der {adj-en}%sIllusion von %s
 %%%%

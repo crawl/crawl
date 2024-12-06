@@ -263,10 +263,10 @@ the %ssomething
 das {adj-e}%sEtwas
 %%%%
 the %s%s's ghost
-der {adj-e}%s Geist %s's
+der {adj-e}%sGeist von %s
 %%%%
 the %s%s's illusion
-die {adj-e}%s Illusion %s's
+die {adj-e}%sIllusion von %s
 %%%%
 
 ##################
