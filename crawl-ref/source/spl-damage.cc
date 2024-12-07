@@ -3440,23 +3440,25 @@ static bool _toxic_can_affect(const actor *act)
     return act->res_poison() < (act->is_player() ? 3 : 1);
 }
 
-spret cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer)
+spret cast_toxic_radiance(actor *agent, int pow, bool fail, bool tracer)
 {
-    // XXX: This must come before the player check, due to Marionette.
-    if (mon_tracer)
+    if (tracer)
     {
-        for (actor_near_iterator ai(agent->pos(), LOS_NO_TRANS); ai; ++ai)
+        for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
         {
             if (!_toxic_can_affect(*ai) || mons_aligned(agent, *ai))
                 continue;
-            else
-                return spret::success;
+            const monster* mons = ai->as_monster();
+            if (mons && !mons_is_threatening(*mons))
+                continue;
+            return spret::success;
         }
 
         // Didn't find any susceptible targets
         return spret::abort;
     }
-    else if (agent->is_player())
+
+    if (agent->is_player())
     {
         targeter_radius hitfunc(&you, LOS_NO_TRANS);
         if (stop_attack_prompt(hitfunc, "poison", _toxic_can_affect))
