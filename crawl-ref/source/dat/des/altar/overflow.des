@@ -318,17 +318,6 @@ ENDMAP
 
 ### Cheibriados overflow altars ###############################################
 
-NAME:  cheibriados_altar_1
-TAGS:  uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
-TAGS:  transparent decor
-KFEAT: _ = altar_cheibriados
-: interest_check(_G)
-MAP
-...
-._.
-...
-ENDMAP
-
 NAME:   cheibriados_altar_2
 TAGS:   uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
 TAGS:   transparent decor
@@ -355,24 +344,28 @@ ENDMAP
 NAME:  slow_altar_1
 TAGS:  patrolling no_monster_gen no_item_gen transparent
 TAGS:  uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
+DEPTH: D:3-, Snake, Depths
 : if you.in_branch("Depths") then
 KMONS: _ = iron dragon
-:else
+: elseif you.in_branch("Snake") then
+KMONS: _ = naga sharpshooter
+: else
 KMONS: _ = ribbon worm / bombardier beetle
-:end
+SUBST: v : vx
+: end
 KFEAT: _ = altar_cheibriados
 SUBST: x : xxxcccmnvb
 : interest_check(_G)
 MAP
 xxx..@..xxx
 xxx.....xxx
-xxx.....xxx
+xxv.....vxx
 ...........
 ...........
 @...._....@
 ...........
 ...........
-xxx.....xxx
+xxv.....vxx
 xxx.....xxx
 xxx..@..xxx
 ENDMAP
@@ -380,11 +373,15 @@ ENDMAP
 NAME:    slow_altar_2
 TAGS:    patrolling no_monster_gen no_item_gen transparent
 TAGS:    uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
+DEPTH: D:3-, Snake, Depths
 : if you.in_branch("Depths") then
 KMONS: _ = iron dragon
-:else
+: elseif you.in_branch("Snake") then
+KMONS: _ = naga sharpshooter
+: else
 KMONS: _ = ribbon worm / bombardier beetle
-:end
+SUBST: v : vx
+: end
 KFEAT:   _ = altar_cheibriados
 SUBST:   x : xxxcccvb
 : interest_check(_G)
@@ -1986,7 +1983,7 @@ ENDMAP
 NAME:    okawaru_metal_pillars_1_2
 TAGS:    temple_overflow_1 temple_overflow_okawaru uniq_altar_okawaru
 TAGS:    transparent decor
-DEPTH:   D, Orc
+DEPTH:   D:3-, Orc
 WEIGHT:  7
 KFEAT:   _ = altar_okawaru
 SHUFFLE: v'
@@ -2003,7 +2000,7 @@ ENDMAP
 NAME:   okawaru_metal_pillars_3
 TAGS:   temple_overflow_1 temple_overflow_okawaru uniq_altar_okawaru
 TAGS:   transparent decor vaults_empty
-DEPTH:  D, Vaults, Orc
+DEPTH:  D:3-, Vaults, Orc
 WEIGHT: 3
 KFEAT:  _ = altar_okawaru
 : interest_check(_G)
@@ -2059,7 +2056,7 @@ ENDMAP
 NAME:   okawaru_ov_weapons_minmay
 TAGS:   temple_overflow_1 temple_overflow_okawaru uniq_altar_okawaru
 TAGS:   transparent decor vaults_empty
-DEPTH:  D:3-, Vaults, !Vaults:$
+DEPTH:  D:3-, Snake, Vaults, !Vaults:$
 WEIGHT: 3 (Vaults), 10
 ITEM:   hand axe, falchion, mace, spear
 KFEAT: _ = altar_okawaru
@@ -2106,8 +2103,8 @@ ENDMAP
 NAME:   okawaru_gym_becter
 TAGS:   uniq_altar_okawaru temple_overflow_1 temple_overflow_okawaru
 TAGS:   transparent decor vaults_empty
-DEPTH:  D:3-, Vaults, !Vaults:$
-WEIGHT: 3 (Vaults), 10
+DEPTH:  D:3-, Snake, Vaults, !Vaults:$
+WEIGHT: 3 (Snake, Vaults), 10
 KFEAT:  _ = altar_okawaru
 : interest_check(_G)
 MAP
@@ -3809,13 +3806,13 @@ ENDMAP
 NAME: nicolae_yredelemnul_corpse_copse
 TAGS: temple_overflow_yredelemnul temple_overflow_1 no_monster_gen
 TAGS: transparent patrolling uniq_altar_yredelemnul
+MONS:   zombie, alderking
+KFEAT:  _ = altar_yredelemnul
+KFEAT:  T = petrified_tree
 # Statistically, the probability that none of the edge glyphs will end up as .
 # and the level builder won't be able to connect the vault is extremely small.
 # ...but not zero. Thus:
-MONS:   zombie, alderking
 NSUBST: D = 1:. / *:E, t = 1:. / * = TTE
-KFEAT:  _ = altar_yredelemnul
-KFEAT:  T = petrified_tree
 SUBST:  E = t:4 T:2 .:3
 : nsubst( ". = " .. you.absdepth() .. " = 1 / 1 = 1. / ." )
 : if you.in_branch("Depths") then

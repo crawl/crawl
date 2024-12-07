@@ -480,7 +480,7 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Misc
                 "centaur warrior",
                 "yaktaur / yaktaur captain",
-                "ugly thing",
+                "very ugly thing",
                 "lich / w:5 ancient lich / w:2 boris",
                 "stone giant / frost giant / fire giant / titan / w:1 chuck",
                 "fire dragon / ice dragon / storm dragon / shadow dragon /\
@@ -526,8 +526,8 @@ function arena_sprint_get_monster_set(round, boss)
                     deep elf master archer / place:Elf:$ w:20",
                 "place:Shoals:$ / merfolk javelineer / merfolk impaler /\
                     merfolk aquamancer",
-                "green death / death drake",
-                "place:Spider:$ w:5 / orb spider w:5 / emperor scorpion /\
+                "fenstrider witch w:5 / green death / death drake",
+                "broodmother w:5 / orb spider w:5 / emperor scorpion /\
                     ghost moth / moth of wrath",
                 "place:Snake:$ w:2 / w:40 nagaraja / guardian serpent / w:5 anaconda",
                 "place:Slime:$ / w:30 acid blob / azure jelly / glass eye /\
@@ -553,7 +553,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "daeva / angel / cherub / fravashi w:15 / pearl dragon w:15 /\
                      ophan / apis w:5",
                 -- Misc
-                "yaktaur captain / vashnia w:1",
+                "naga sharpshooter w:3 / yaktaur captain / vashnia w:1",
                 "lich / ancient lich",
                 "stone giant / w:15 frost giant / w:15 fire giant / w:15 titan",
                 "w:5 fire dragon / w:5 ice dragon / w:7 storm dragon / shadow dragon /\
@@ -583,7 +583,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "air elemental name:greater n_adj perm_ench:polar_vortex col:lightcyan / air elemental w:20",
                 "iron golem hd:20 col:magenta name:orb_golem n_rpl n_des n_spe spells:orb_of_destruction.70.natural",
                 "brimstone fiend / ice fiend / tzitzimitl / executioner / hell sentinel",
-                "titan / spriggan air mage / blizzard demon / w:20 sky beast",
+                "titan / spriggan air mage / blizzard demon / w:20 air elemental",
                 "sphinx / place:Tomb:$",
                 "orb of fire / orb of fire name:orb_of_ice n_rpl n_des spells:glaciate.80.magical col:lightblue tile:mons_orb_of_ice /\
                   orb of fire name:orb_of_electricity n_rpl n_des spells:chain_lightning.80.magical col:yellow tile:mons_orb_of_electricity",
@@ -593,15 +593,15 @@ function arena_sprint_get_monster_set(round, boss)
             mon_set = {
                 -- Branches: Vaults, Orc, Elf, Shoals, Swamp, Spider, Snake, Slime,
                 -- Blade, Forest, Crypt, Pan, Tomb, Hell
-                "vault guard / ancient lich w:15 / deep elf master archer w:3 /\
-                    titan w:15 / golden dragon w:20 / glowing shapeshifter hd:20",
-                "orc sorcerer / orc warlord w:20 / stone giant w:5 /\
-                    orc high priest / moth of wrath",
-                "deep elf high priest / deep elf demonologist / deep elf annihilator /\
-                    deep elf sorcerer / deep elf blademaster w:20 /\
-                    deep elf master archer w:20",
+                "ironbound thunderhulk / vault warden w:3 / deep elf master archer w:3 /\
+                    titan w:15 / golden dragon w:20 / glowing shapeshifter hd:20 /\
+                    undying armoury / ancient lich w:15",
+                "orc warlord w:25 / juggernaut w:5 /\
+                    orc high priest w:15 / moth of wrath",
+                "deep elf high priest / deep elf elementalist / thermic dynamo /\
+                    deep elf blademaster w:20 / deep elf master archer w:20",
                 "merfolk javelineer / merfolk aquamancer / water nymph /\
-                    blizzard demon / ice fiend",
+                    elemental wellspring / ice fiend",
                 "thorn hunter w:5 / green death / death drake w:15",
                 "orb spider / emperor scorpion / ghost moth / moth of wrath",
                 "nagaraja w:20 / guardian serpent / salamander tyrant",
@@ -609,7 +609,10 @@ function arena_sprint_get_monster_set(round, boss)
                 "dancing weapon ; bardiche ego:speed",
                 "spriggan air mage / alderking",
                 "ancient lich / w:6 curse skull",
-                "greater demon / pandemonium lord",
+                "demonspawn warmonger / demonspawn soul scholar /\
+                    demonspawn corrupter / demonspawn blood saint /\
+                    brimstone fiend / ice fiend / tzitzimitl / hell sentinel /\
+                    pandemonium lord w:80",
                 "sphinx w:20 / royal mummy",
                 "hellephant w:15 / w:1 nellie",
                 -- Elements/hells, Holy
@@ -633,7 +636,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "storm dragon w:7 / golden dragon w:15 /\
                     quicksilver dragon w:15 / iron dragon",
                 "protean progenitor",
-                "nonbase draconian",
+                "draconian stormcaller / draconian knight / draconian shifter",
                 "golden eye / shining eye / glass eye w:15 / eye of devastation /\
                     great orb of eyes / w:5 ophan",
                 "w:30 hellion / hell sentinel / sin beast / hell hog / hell knight /\
@@ -643,7 +646,7 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Gimmicks
                 "cacodemon", "sun moth", "catoblepas / iron golem w:5",
                 "moth of wrath / w:20 juggernaut", "orb spider", "apocalypse crab",
-                "sphinx", "tormentor",
+                "sphinx / walking divine tome", "tormentor",
                 "unseen horror / shadow wraith / ghost moth w:15",
                 "reaper / sin beast / geryon w:1",
                 "ghost moth / void ooze / demonspawn warmonger",
@@ -652,6 +655,7 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Just die already!
                 "daeva",
                 "nekomata",
+                "antique champion ; shadow dragon scales . kite shield . double sword",
                 "royal mummy / mummy priest",
                 "air elemental name:greater n_adj perm_ench:polar_vortex col:lightcyan",
                 "iron golem hd:20 col:magenta name:orb_golem n_rpl n_des n_spe spells:orb_of_destruction.70.natural",

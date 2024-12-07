@@ -2244,9 +2244,9 @@ TAGS:   ruin transparent
 DEPTH:  Lair
 MONS:   rat, river rat, hell rat
 KMONS:  D = pile of debris
-KITEM:  d = gold
+ITEM:   beast talisman / beast talisman randart w:2
 KFEAT:  C = cache of fruit / cache of baked goods w:4
-NSUBST: d = 1:d / 1:C / 1:F / 1:* / 1:9 / 1:3 / * = d11223.......
+NSUBST: d = 1:d / 1:C / 1:F / 1:* / 1:d / 1:9 / 1:3 / * = $11223.......
 NSUBST: c = 5:Dc / *:c
 : decorative_floor(_G, 'F', "broken floral vase")
 MAP
@@ -2530,7 +2530,7 @@ ORIENT:  southeast
 KMONS:   A = adder
 KMONS:   B = water moccasin
 KMONS:   C = black mamba
-ITEM:    snakebite no_pickup
+KITEM:   d = serpent talisman randart, snakebite no_pickup
 SUBST:   1 = A B:2 .:48, 2 = A B:5 .:60, 3 = A B C:2 .:88, 4 = A:2 B C:4 .:64
 SUBST:   5 = A:1 B C .:84, 6 = B:5 C .:60, 7 = B.
 MAP

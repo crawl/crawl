@@ -1633,7 +1633,7 @@ NAME:   rand_demon_1
 : pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
 ............
-.xx.xx.x.xx.
+.xx.xxCx.xx.
 ..x.xC.x.x..
 ..x.x..x.x..
 ..x.x..x.x..
@@ -1642,7 +1642,7 @@ MAP
 ..x.x..x.x..
 ..x.x..x.x..
 ..x.x.Cx.x..
-.xx.x.xx.xx.
+.xx.xCxx.xx.
 ............
 ENDMAP
 
@@ -1655,12 +1655,12 @@ MAP
 ............
 .xxxxxxxxBx.
 .B.....xx.x.
-.xxxxxxBx.x.
+.xxxxxxAx.x.
 .xxBx..xx.x.
 .x.x.C<.x.x.
 .x.x.PC.x.x.
 .x.xx..xBxx.
-.x.xBxxxxxx.
+.x.xAxxxxxx.
 .x.xx.....B.
 .xBxxxxxxxx.
 ............
@@ -1697,7 +1697,7 @@ SHUFFLE: $(|
 MAP
 ............
 .xxxxxxxxx..
-.x$+*+A+(x..
+.x$+*+C+(x..
 .xxxxxxx+x..
 .xA+A+A+|x..
 .x+xxxxx+x..
@@ -1717,16 +1717,16 @@ MONS:   pandemonium lord
 : pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
 ............
-...xxxxxx...
-..xx....xx..
+..mxxxxxxm..
+.mxx....xxm.
 .xx......xx.
-.x..AAAA..x.
+.x..AAAC..x.
 .x..A|PA..x.
 .x..A(|A..x.
-.x..A1AA..x.
+.x..C1AA..x.
 .xx......xx.
-..xx....xx..
-...xxxxxx...
+.mxx....xxm.
+..mxxxxxxm..
 ............
 ENDMAP
 
@@ -1740,12 +1740,12 @@ MAP
 ............
 ......A.....
 ............
-.A..........
+.C..........
 ..........A.
 .....(P.....
 ............
 ............
-.A.......A..
+.A.......C..
 ............
 ............
 ENDMAP
@@ -1762,8 +1762,8 @@ MAP
 .x|xx=xxx|x.
 .xx+....+xx.
 ..x.x++x.x..
-..x.+PA+.=..
-..=.+AC+.x..
+..x.+PC+.=..
+..=.+CA+.x..
 ..x.x++x.x..
 .xx+....+xx.
 .x|xxx=xx|x.
@@ -3063,11 +3063,11 @@ KFEAT: { = {
 NSUBST:  - = 2:7 / 7:0 / 5 = 00. / *:.
 SHUFFLE: 123, 456
 COLOUR:  D = random
-COLOUR:  P.xp01234567dO = disco
+COLOUR:  P.xp012345678dO = disco
 # WALL_ZOT_BLUE and FLOOR_PEBBLE are the bases
 # for disco-coloured variants of the tiles thereof.
 RTILE:   x = wall_zot_blue
-FTILE:   D.xpP01234567dO = floor_pebble
+FTILE:   D.xpP012345678dO = floor_pebble
 FTILE:   _{+S = floor_hall
 TILE:    D = dngn_disco_ball
 : vault_metal_statue_setup(_G, "S", "dimensional conduit")

@@ -2904,7 +2904,7 @@ TAGS:    no_rotate
 PLACE:   Snake:$
 ORIENT:  southwest
 MONS:    naga, naga warrior / naga sharpshooter w:5
-MONS:    naga mage w:30 / naga ritualist / naga sharpshooter / \
+MONS:    naga mage w:25 / naga ritualist / naga sharpshooter / \
          salamander mystic
 MONS:    nagaraja / salamander tyrant w:5
 KITEM:   O = serpentine rune of Zot

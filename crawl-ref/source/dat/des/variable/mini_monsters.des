@@ -666,7 +666,7 @@ TAGS:   no_monster_gen no_pool_fixup transparent
 DEPTH:  D:3-5
 KMONS:  S = w:3 adder / w:4 ball python / w:5 plant / nothing
 KFEAT:  SX = W
-KITEM:  X = gold
+KITEM:  X = gold, serpent talisman
 KPROP:  W = no_tele_into
 MAP
 .xxxxxx.@..
@@ -1027,9 +1027,9 @@ ITEM:   young poisoner's handbook / fen folio / \
         randbook numspells:4 title:Nature \
         spells:summon_small_mammal&call_canine_familiar&hailstorm&summon_forest / \
         randbook numspells:3 title:Nature \
-        spells:sting&stone_arrow&hailstorm&summon_forest
+        spells:mercury_arrow&stone_arrow&hailstorm&summon_forest
 KITEM:  f = dart ego:poisoned / dart ego:curare / dart ego:atropa
-KITEM:  g = any potion q:2
+KITEM:  g = beast talisman randart, any potion q:2
 MONS:   plant, oklob sapling, ball python
 MONS:   adder, oklob plant, water moccasin
 KMONS:  7 = hornet
@@ -1077,9 +1077,9 @@ ITEM:   young poisoner's handbook / fen folio / \
         randbook numspells:4 title:Nature \
         spells:summon_small_mammal&call_canine_familiar&hailstorm&summon_forest / \
         randbook numspells:4 title:Nature \
-        spells:sting&stone_arrow&hailstorm&summon_forest
+        spells:mercury_arrow&stone_arrow&hailstorm&summon_forest
 KITEM:  f = dart ego:poisoned / dart ego:curare / dart ego:atropa
-KITEM:  g = any potion q:2 / any potion q:3
+KITEM:  g = beast talisman randart, any potion q:2 / any potion q:3
 MONS:   plant, oklob sapling, ball python
 MONS:   adder, oklob plant, water moccasin
 KMONS:  7 = hornet
@@ -1496,16 +1496,16 @@ ENDMAP
 # Sigmund has been educating the oppressed masses in guerrilla warfare.
 NAME:    sigmund_army
 DEPTH:   D:4-7
-MONS:    gnoll ; halberd itemname:scythe tile:wpn_scythe wtile:scythe . robe, \
-         hobgoblin ; halberd itemname:scythe tile:wpn_scythe wtile:scythe . robe, \
-         orc ; halberd itemname:scythe tile:wpn_scythe wtile:scythe . robe
+: local s = "halberd itemname:scythe tile:wpn_scythe wtile:scythe . robe"
+: mons("gnoll ; " .. s)
+: mons("hobgoblin ; " .. s)
+: mons("orc ; " .. s)
+MONS:    Sigmund
 SUBST:   n = 1:20 n:5
-KMONS:   n = Sigmund, gnoll ; halberd itemname:scythe tile:wpn_scythe wtile:scythe . robe / \
-             hobgoblin ; halberd itemname:scythe tile:wpn_scythe wtile:scythe . robe / \
-             orc ; halberd itemname:scythe tile:wpn_scythe wtile:scythe . robe
 SHUFFLE: x+1 / x+1 / x+1 / y-5
 SUBST:   - = y , y = 5, 5 = 1..
 SUBST:   1 : 123444, 4 = 1223.., 1 = 1., 3 = 33.
+veto {{ return you.uniques("Sigmund") }}
 MAP
 xxxxx
 x1n1x
@@ -3389,18 +3389,19 @@ c@.....@c
 ENDMAP
 
 NAME:   hangedman_blasphemy
-TAGS:   no_monster_gen
-DEPTH:  Depths, Crypt
-MONS:   patrolling hell hog
-MONS:   apis skeleton, pearl dragon zombie
+TAGS:   no_monster_gen vaults_hard
+DEPTH:  Vaults, !Vaults:$, Crypt
+MONS:   phantasmal warrior, apis skeleton, pearl dragon zombie
 MONS:   patrolling profane servitor, death knight
 COLOUR: t = brown, c = white
 FTILE:  t' = floor_pebble_brown
-: if you.in_branch("Depths") then
-TILE:   G = dngn_statue_depths_zot_angel
+: if you.in_branch("Vaults") then
+SUBST:  @ = .
+CLEAR:  X
 : else
-TILE:   G = dngn_statue_angel
+SUBST:  X = x
 : end
+TILE:   G = dngn_statue_angel
 TILE:   t = dngn_tree_dead, c = wall_stone_gray
 KFEAT:  _ = altar_yredelemnul
 MARKER: _ = lua:fog_machine { cloud_type = "foul pestilence", \
@@ -3409,22 +3410,23 @@ MARKER: _ = lua:fog_machine { cloud_type = "foul pestilence", \
 : decorative_floor(_G, 'V', "broken floral vase")
 TILE:   V = dngn_flower_pot_broken / dngn_dark_flower_pot_broken
 : set_feature_name("tree", "dead tree")
+KMASK:  _ = no_item_gen
 MAP
-@@xxxxxxxxxxxx
-@..t....xxxxxxx
-x...'''..cV2xxx
+@@xxxxxxxXXXXX
+@..t....xxxxxXX
+x...'''..cV2xXX
 xt...tc'.c..xxx
 x.'.11c'...G.2x
 x.'t1cc't....Vx
 x.'ccc'G...ccxx
-x..'''G'''...xx
-xx...t.'_ccc.xx
-xxcc...'cc3*.xx
-xxV.....c34.xxx
-xx2.G.c.c*.5xxx
-xxxx..c...xxxx
-xxxx2Vxxxxxxxx
- xxxxxxxxxxx
+x..'''G'''...xX
+xx...t.'_ccc.xX
+Xxcc...'cc3*%xX
+XxV.....c34$xxX
+Xx2.G.c.c*$5xxX
+Xxxx..c..%xxxx
+XXXx2Vxxxxxxxx
+ XXxxxxXXXXX
 ENDMAP
 
 NAME:    hangedman_devilish_allure
@@ -3950,28 +3952,32 @@ ENDMAP
 
 # Rather shallow depth but you cannot randomly teleport in there.
 NAME:    minmay_crystal_box
-TAGS:    no_monster_gen patrolling transparent no_descent
-DEPTH:   D:12-, Depths, !Depths:$
+TAGS:    no_monster_gen patrolling transparent no_descent vaults_hard allow_dup
+DEPTH:   D:12-, Vaults, !Vaults:$
 MONS:    crystal guardian, thermic dynamo, orange crystal statue
+KFEAT:   + = closed_clear_door
 SUBST:   . = .:80 %$*|
 KPROP:   .012 = no_tele_into
-: if you.absdepth() < 16 then
-SUBST:   1 = 0
+: if you.in_branch("D") then
+SUBST:   1 = 0, + = =
+CLEAR:   `
 : end
 MAP
-WWWWWWWWWWWWWW
-WbbbbbbbbbbbbW
-Wbb2.......1bW
-Wbb.........bW
-Wbb.........bW
-Wnn.........bW
-WW=....3.1..bW
-Wnn.........bW
-Wbb.........bW
-Wbb.........bW
-Wbb2.......1bW
-WbbbbbbbbbbbbW
-WWWWWWWWWWWWWW
+````````````````
+`WWWWWWWWWWWWWW`
+`WbbbbbbbbbbbbW`
+`Wbb2.......1bW`
+`Wbb.........bW`
+`Wbb.........bW`
+`Wnn.........bW`
+`WW+....3.1..bW`
+`Wnn.........bW`
+`Wbb.........bW`
+`Wbb.........bW`
+`Wbb2.......1bW`
+`WbbbbbbbbbbbbW`
+`WWWWWWWWWWWWWW`
+````````````````
 ENDMAP
 
 NAME:  minmay_more_statues
@@ -4111,44 +4117,6 @@ ENDMAP
 #       Slime denizens, insubstantial monsters, everything else...
 #
 ###################################################################
-
-NAME:    minislime_mu
-TAGS:    no_monster_gen no_item_gen transparent
-DEPTH:   Depths, !Depths:$
-MONS:    large slime creature, great orb of eyes
-KMASK:   %$de = opaque
-KITEM:   R = gold
-ITEM:    scroll of teleportation ident:type q:2 / wand of digging
-ITEM:    scroll of teleportation ident:type q:2 w:20 / wand of digging w:20 / \
-         dagger ego:distortion ident:type
-SUBST:   J = 1111111122
-SHUFFLE: %!'"
-NSUBST:  % = 1:d / * = %$
-NSUBST:  ! = 1:d / * = %$
-NSUBST:  ' = 1:d / * = %$
-NSUBST:  " = 1:e / * = %$
-MAP
-...................
-..J.............J..
-.JJ...mmmm.mmm...J.
-....mmm%m.Jm'mm....
-...mm%%%m..m''mm...
-...m%%%%m.mm'''mm..
-..mm%%%%mJ.m''''m..
-..m%%%%%mm.m''''m..
-..mmmmmmm..mmmmmm..
-...J..mJm.....mJ...
-..mmm.....R.mJ..m..
-..m!mmmmm...mmmmm..
-..m!!!!!m..mm"""m..
-..mm!!!!m.mm""""m..
-...mm!!!m.Jm"""mm..
-....mm!mmm.m""mm...
-.J...m!mJ..m"mm....
-..J..mmmm.mmmm..J..
-...............JJ..
-...................
-ENDMAP
 
 NAME:    onia_ninara_cookie
 TAGS:    transparent

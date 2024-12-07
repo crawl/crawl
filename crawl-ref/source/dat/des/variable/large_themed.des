@@ -27,11 +27,10 @@ function grandhive_vaults(e, hivewallglyph)
     -- avoid hornets and bears, because nature or whatever.
     if you.in_branch("Lair") then
         e.kmons('0 = yak / wolf w:8 / water moccasin w:8 / wyvern w:8 / \
-                     basilisk w:8 / river rat w:2 / \
-                     steam dragon w:2')
-        e.kmons('9 = elephant / cane toad / rime drake / \
+                     basilisk w:8 / steam dragon w:2')
+        e.kmons('9 = elephant / cane toad / rime drake / komodo dragon w:6 / \
                      blink frog w:8 / manticore w:4 / hell rat w:4')
-        e.kmons('8 = death yak w:14 / hydra / komodo dragon / \
+        e.kmons('8 = death yak w:14 / hydra / skyshark w:4 / \
                      black mamba / lindwurm w:8 / torpor snail w:4 / \
                      boulder beetle w:2 / catoblepas w:2')
     end
@@ -726,82 +725,6 @@ xxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:   minmay_crystal_thing
-TAGS:   no_monster_gen no_item_gen no_pool_fixup
-ORIENT: west
-DEPTH:  Depths, !Depths:$
-MONS:   crystal guardian, orange crystal statue
-ITEM:   any magical staff / any book / any jewellery w:15 / any scroll w:20 / \
-        potion of magic ident:type / potion of brilliance ident:type / \
-        phial of floods w:3 / tin of tremorstones w:5 / gold w:30
-KFEAT:  _ = altar_sif_muna
-MAP
-            bbbbb
-            bdddb
-            bd1db
-            bdddb
-     bbbbbbbbb.bbbbbbbbb
-     bdddb.........bdddb
-     bd1d....._.....d1db
-     bdddb.........bdddb
-     bbbbbWW.....WWbbbbb
-         bwW.....Wwb
-         bwWW1.1WWwb
-         bwwWW.WWwwb
-         bbwwW.Wwwbb
-          bbwW.Wwbb
-           bwW.Wwb
-           bwW.Wwb
-           bwW.Wwb
-          bbwW.Wwbb
-         bbwwW.Wwwbb
-        bbwwWW.WWwwbb
-       bbwwWW...WWwwbb
-      bbwwWW..W..WWwwbb
-     bbwwWW..WWW..WWwwbb
-    bbwwWW..WWwWW..WWwwbb
-   bbwwWW..WWwwwWW..WWwwbb
-  bbwwWW..WWwwwwwWW..WWwwbb
- bbwwWW..WWwwbWbwwWW..WWwwbb
-bbwwWW1.WWwwwW2WwwwWW.1WWwwbb
-xbbwwWW..WWwwbWbwwWW..WWwwbb
-xxbbwwWW..WWwwwwwWW..WWwwbb
-xxxbbwwWW..WWwwwWW..WWwwbb
-xxxxbbwwWW..WWwWW..WWwwbb
-xxxxxbbwwWW..WWW..WWwwbb
-xxxxxxbbwwWW..W..WWwwbb
-xxxxxxxbbwwWW...WWwwbb
-xxxxxxxxbbwwWW.WWwwbb
-xxxxxxxxxbbwwW.Wwwbb
-xxxxxxxxxxbbwW.Wwbb
-xxxxxxxxxxxbwW.Wwb
-xxxxxxxxxxxbwW.Wwb
-xxxxxxxxxxxbwW.Wwb
-xxxxxxxxbbbbwW.Wwbbbb
-xxxxxxxxbwwwwW.Wwwwwb
-xxxxxxxxbwWWWW.WWWWwb
-xxxxxxxxbwWb.....bWwb
-bbbbbbbbbwW.......Wwbbbbbbbbb
-bwwwwwwwbwW.......Wwbwwwwwwwb
-bwWWWWWwbwW.......WwbwWWWWWwb
-bwWb.bWwbwW.......WwbwWb.bWwb
-bwW.1.WwwwW.......WwwwW.1.Wwb
-bwW...WWWWWb.....bWWWWW...Wwb
-bwW.......................Wwb
-bwW...WWWWWb.....bWWWWW...Wwb
-bwW.1.WwwwW.......WwwwW.1.Wwb
-bwWb.bWwbwW.......WwbwWb.bWwb
-bwWWWWWwbwW.......WwbwWWWWWwb
-bwwwwwwwbwW.......Wwbwwwwwwwb
-bbbbbbbbbWW.......WWbbbbbbbbb
-        xxxx.....xxxxxxxxxxxx
-           xx+++xxxxxxxxxxxxx
-            x................
-            x...............@
-            x................
-            xxxxxxxxxxxxxxxxx
-ENDMAP
-
 NAME:   minmay_twisted_water
 ORIENT: north
 TAGS:   no_descent
@@ -874,13 +797,7 @@ SUBST:  'V = .
 TILE:   M = dngn_dark_flower_pot_broken
 :       vault_metal_statue_setup(_G, "g", "mystic cage")
 :       dgn.delayed_decay(_G, '%', 'human corpse / human skeleton')
-veto {{
-    if you.uniques("Jory") then
-      return true
-    else
-      return false
-    end
-}}
+veto {{ return you.uniques("Jory") }}
 MAP
   @@@@@@ @@@@@@@@@@@@@@@@@@@ @@@@@@
 xx......v...................v.......xxxxxxxxxxxxxxxxx
@@ -930,7 +847,7 @@ MONS:   ogre mage / deep elf pyromancer / deep elf zephyrmancer / occultist / \
         necromancer / merfolk aquamancer / \
         spriggan air mage / orc sorcerer / kobold demonologist
 MONS:   draconian shifter / draconian annihilator / lich / deep elf sorcerer / \
-        deep elf annihilator / deep elf demonologist / alderking w:5
+        deep elf annihilator / deep elf demonologist
 MONS:   patrolling curse skull, ancient lich / dread lich
 SUBST:  d = def
 NSUBST: D = 6 / *=33., 4 = 1 / 6=4 / 6=5 / 6=45.. / . , 7 = 7 / 75

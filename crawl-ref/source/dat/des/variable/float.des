@@ -2094,6 +2094,7 @@ ORIENT:  float
 MONS:    frilled lizard, iguana, komodo dragon
 MONS:    rime drake / swamp drake
 MONS:    adder, water moccasin
+ITEM:    d = serpent talisman / serpent talisman randart w:2
 SUBST:   4 = 34
 SUBST:   3 = 3:20 2
 SUBST:   2 = 2:20 1
@@ -2107,9 +2108,9 @@ SUBST:   Z=xWw
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxXW**wwxxxxxxxxxxxxxxX**XXx
-xZwWwwwZxxxxxxX33xxxxxX423Xx
-xZWww232ZxxxxX121xxxxX.13Xxx
-xZZWww2ZxxxxxX.1xxxxxw222Xxx
+xZwWwwwZxxxxxxX3dxxxxxX423Xx
+xZWww232ZxxxxX131xxxxX.13Xxx
+xZZWww2ZxxxxxX21xxxxxw222Xxx
 xxZZWwwWaaxxxxXWxxaaaw1121Xx
 xxxZWww1XaaaaaWwaaaxZWw211Xx
 xxxxZW23xxxxxaWwwxxxZww11XXx
