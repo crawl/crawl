@@ -262,11 +262,11 @@ die {adj-e}%sStatue von Wucad Mu
 the %ssomething
 das {adj-e}%sEtwas
 %%%%
-the %s%s's ghost
-der {adj-e}%sGeist von %s
+the %s@name@'s ghost
+der {adj-e}%sGeist von @name@
 %%%%
-the %s%s's illusion
-die {adj-e}%sIllusion von %s
+the %s@name@'s illusion
+die {adj-e}%sIllusion von @name@
 %%%%
 
 ##################

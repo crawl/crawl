@@ -1440,12 +1440,12 @@ static string _localise_ghost_name(const string& context, const string& value)
     if (!determiner.empty())
         base = determiner + " ";
     base += "%s";   // placeholder for adjectives
-    base += "%s's"; // placeholder for name
+    base += "@name@'s"; // placeholder for name
     base += " " + suffix;
 
     TRACE("calling cxlate(\"%s\", \"%s\")", context.c_str(), base.c_str());
     string result = cxlate(context, base);
-    result = replace_last(result, "%s", name);
+    result = replace_all(result, "@name@", name);
     result = _localise_adjectives(result, adjs);
 
     return result;

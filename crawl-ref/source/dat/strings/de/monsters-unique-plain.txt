@@ -262,11 +262,12 @@ etwas
 something you cannot see
 etwas Unsichtbares
 %%%%
-%s%s's ghost
-der {adj-e}%sGeist von %s
+# note: we use a definite article in German, even though there isn't one in English
+%s@name@'s ghost
+der {adj-e}%sGeist von @name@
 %%%%
-%s%s's illusion
-die {adj-e}%sIllusion von %s
+%s@name@'s illusion
+die {adj-e}%sIllusion von @name@
 %%%%
 
 ##################

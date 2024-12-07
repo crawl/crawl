@@ -11,9 +11,9 @@
 {gen}something
 des Etwas
 %%%%
-{gen}%s%s's ghost
-des {adj-en}%sGeistes von %s
+{gen}%s@name@'s ghost
+des {adj-en}%sGeistes von @name@
 %%%%
-{gen}%s%s's illusion
-der {adj-en}%sIllusion von %s
+{gen}%s@name@'s illusion
+der {adj-en}%sIllusion von @name@
 %%%%
