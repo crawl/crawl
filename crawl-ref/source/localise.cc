@@ -39,6 +39,7 @@ static string _context;
 static string _localise_string(const string context, const string& value);
 static string _localise_list(const string context, const string& value);
 static string _localise_player_species_job(const string& s);
+static string _localise_player_title(const string& context, const string& text);
 
 // returns true only for 0-9 (unlike isdigit() which is affected by locale)
 static inline bool _is_ascii_digit(char c)
@@ -1580,6 +1581,10 @@ static string _localise_name(const string& context, const string& value)
             return _shift_context(prefix) + base;
     }
 
+    result = _localise_player_title(context, value);
+    if (!result.empty())
+        return result;
+
     result = _localise_ghost_name(context, value);
     if (!result.empty())
         return result;
@@ -2657,15 +2662,20 @@ static string _localise_player_species_job(const string& s)
  * We can't localise at point of generation because we need the English version
  * to be stored in the scores file, so we have to deconstruct after the fact.
  */
-string localise_player_title(const string& text)
+static string _localise_player_title(const string& context, const string& text)
 {
     if (text.empty() || !localisation_active())
         return text;
 
+    TRACE("context='%s', value='%s'", context.c_str(), text.c_str());
+
     // try simple translation first
-    string result = xlate(text, false);
+    string result = cxlate(context, text, false);
     if (!result.empty())
+    {
+        TRACE("simple cxlate: result='%s'", result.c_str());
         return result;
+    }
 
     string determiner;
     string title;
@@ -2708,8 +2718,18 @@ string localise_player_title(const string& text)
         string param_name = param.substr(1, param.length()-2);
         string param_val = replace_first(title, rest, "");
         map<string, string> params = { { param_name, param_val } };
-        return localise(determiner + vtitle, params);
+        string base = determiner + vtitle;
+        base = _localise_string(context, base);
+        result = localise(base, params, false);
+        TRACE("result='%s'", result.c_str());
+        return result;
     }
 
-    return text;
+    return "";
+}
+
+string localise_player_title(const string& text)
+{
+    string result = _localise_player_title("", text);
+    return result.empty() ? text : result;
 }

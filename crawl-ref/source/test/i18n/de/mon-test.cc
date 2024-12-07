@@ -241,6 +241,9 @@ int main()
     test("Du kollidierst mit dem hilflosen Geist von MrDizzy!", "You collide with %s!", "the helpless MrDizzy's ghost");
     test("Du blockierst den Angriff des Geistes von MrDizzy.", "You block %s attack.", "MrDizzy's ghost's");
     test("Die Wunden des Geistes von MrDizzy heilen von selbst!", "%s's wounds heal themselves!", "MrDizzy's ghost");
+    // long-form description
+    test("Die Erscheinung von MrDizzy der Minotaur Barrikade, einem legendären Minotaur Kämpfer von Beogh.",
+         "The apparition of %s.", "MrDizzy the Minotaur Barricade, a legendary Minotaur Fighter of Beogh");
     cout << endl;
 
     // player illusion
@@ -252,8 +255,10 @@ int main()
     test("Du kollidierst mit der hilflosen Illusion von MrDizzy!", "You collide with %s!", "the helpless MrDizzy's illusion");
     test("Du blockierst den Angriff der Illusion von MrDizzy.", "You block %s attack.", "MrDizzy's illusion's");
     test("Die Wunden der Illusion von MrDizzy heilen von selbst!", "%s's wounds heal themselves!", "MrDizzy's illusion");
+    // long-form description
+    test("Eine Illusion von MrDizzy der Minotaur Barrikade, einem legendären Minotaur Kämpfer von Beogh.",
+         "An illusion of %s.", "MrDizzy the Minotaur Barricade, a legendary Minotaur Fighter of Beogh");
     cout << endl;
-
 
     // show results summary
     cout << num_passes << " TESTS PASSED" << endl;
