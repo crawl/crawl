@@ -1952,16 +1952,17 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 
     if (sub_type == ARM_BARDING)
     {
-        if (you.can_wear_barding(ignore_temporary))
-            return true;
-        if (verbose)
+        if (!you.can_wear_barding(ignore_temporary))
         {
-            if (ignore_temporary)
-                mprf(MSGCH_PROMPT, "You can't wear that!");
-            else
-                mprf(MSGCH_PROMPT, "You can wear that only in your normal form.");
+            if (verbose)
+            {
+                if (ignore_temporary)
+                    mprf(MSGCH_PROMPT, "You can't wear that!");
+                else
+                    mprf(MSGCH_PROMPT, "You can wear that only in your normal form.");
+            }
+            return false;
         }
-        return false;
     }
 
     const bool offhand = is_offhand(item);
