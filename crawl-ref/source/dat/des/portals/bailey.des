@@ -851,7 +851,7 @@ TAGS:   bailey_polearm no_item_gen no_monster_gen no_pool_fixup
 MONS:   gnoll ; spear | trident | halberd . \
             ring mail | scale mail | chain mail . \
             throwing net | nothing
-MONS:   gnoll sergeant ; halberd | glaive w:11 | parisan w:1 | bardiche w:1 . \
+MONS:   gnoll sergeant ; halberd | glaive w:11 | partisan w:1 | bardiche w:1 . \
             chain mail w:20 | plate armour | crystal plate armour w:1
 MONS:   gnoll bouda ; spear | trident | halberd . \
             ring mail | scale mail
