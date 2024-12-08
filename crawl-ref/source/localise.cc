@@ -2743,7 +2743,7 @@ static string _localise_player_title(const string& context, const string& text)
                 if (suffix.empty())
                 {
                     // adjectives can't be at the end
-                    if (param == "@Adj" || param == "@Walking@")
+                    if (param == "@Adj@" || param == "@Walking@")
                         continue;
                 }
 
