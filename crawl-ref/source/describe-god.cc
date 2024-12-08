@@ -245,8 +245,7 @@ static const char *divine_title[][8] =
 };
 COMPILE_CHECK(ARRAYSZ(divine_title) == NUM_GODS);
 
-string god_title(god_type which_god, species_type which_species, int piety,
-                 bool the)
+string god_title(god_type which_god, species_type which_species, int piety)
 {
     string title;
     if (player_under_penance(which_god))
@@ -258,9 +257,6 @@ string god_title(god_type which_god, species_type which_species, int piety,
     else
         title = divine_title[which_god][_piety_level(piety)];
 
-    if (the)
-        title = "the " + title;
-
     const map<string, string> replacements =
     {
         { "Adj", species::name(which_species, species::SPNAME_ADJ) },
@@ -269,7 +265,7 @@ string god_title(god_type which_god, species_type which_species, int piety,
         { "Walker", species::walker_noun(which_species) },
     };
 
-    return localise(title, replacements);
+    return replace_keys(title, replacements);
 }
 
 static string _describe_item_curse(const item_def& item)
@@ -1136,6 +1132,7 @@ static formatted_string _god_overview_description(god_type which_god)
         desc.textcolour(god_colour(which_god));
 
         string title = god_title(which_god, you.species, you.piety);
+        title = localise(title);
         desc.cprintf("%s", title.c_str());
     }
 
@@ -1287,7 +1284,10 @@ static void _send_god_ui(god_type god, bool is_altar)
 
     tiles.json_write_string("description", getLongDescription(god_name(god)));
     if (you_worship(god))
-        tiles.json_write_string("title", god_title(god, you.species, you.piety));
+    {
+        string title = localise(god_title(god, you.species, you.piety));
+        tiles.json_write_string("title", title);
+    }
     tiles.json_write_string("favour", you_worship(god) ?
             _describe_favour(god) : _god_penance_message(god));
     tiles.json_write_string("powers_list",
