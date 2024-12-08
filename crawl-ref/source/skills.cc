@@ -1629,18 +1629,6 @@ const char * skill_abbr(skill_type which_skill)
     return skill_titles[which_skill][6];
 }
 
-void get_variable_player_titles(vector<string>& result)
-{
-    for (int skill_id = 0; skill_id < NUM_SKILLS; skill_id++)
-    {
-        for (int i = 1; i < 6; i++)
-        {
-            if (contains(skill_titles[skill_id][i], "@"))
-                result.push_back(skill_titles[skill_id][i]);
-        }
-    }
-}
-
 /**
  * Get a skill_type from an (exact, case-insensitive) skill name.
  *
