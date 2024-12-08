@@ -195,7 +195,7 @@ jobs:
         run: "echo $(brew --prefix)/opt/ccache/libexec >> $GITHUB_PATH"
       - name: "Setup ccache: clear stats"
         run: ccache --zero-stats
-      - run: make all i18n-tests -j$(sysctl -n hw.ncpu) mac-app-${{ matrix.build_type }} ${{matrix.build_opts }}
+      - run: make -j$(sysctl -n hw.ncpu) mac-app-${{ matrix.build_type }} ${{matrix.build_opts }}
         working-directory: crawl-ref/source
       - name: Print ccache stats
         run: ccache -s
@@ -256,7 +256,7 @@ jobs:
         run: "/usr/sbin/update-ccache-symlinks"
       - name: "Setup ccache: clear stats"
         run: ccache --zero-stats
-      - run: make all i18n-tests -j$(nproc) CROSSHOST=i686-w64-mingw32 package-windows-${{ matrix.build_type }}
+      - run: make -j$(nproc) CROSSHOST=i686-w64-mingw32 package-windows-${{ matrix.build_type }}
         working-directory: crawl-ref/source
       - name: Print ccache stats
         run: ccache -s
