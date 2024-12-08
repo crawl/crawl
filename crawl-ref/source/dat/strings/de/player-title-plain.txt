@@ -1,12 +1,14 @@
 ###############################################################################
 #
-# Translations for player titles (definite article)
+# Translations for player titles (without article)
+#
+# These are used in the HUD if player name is long. The god-given ones
+# are also shown on the religion screen.
 #
 ###############################################################################
 
 ##############################################
 # God-given titles
-# (without article - used in religion screen)
 ##############################################
 # Zin
 %%%%
@@ -71,7 +73,7 @@ Purveyor of Pain
 Schmerzensbringer
 %%%%
 Scholar of Death
-Gelehrte des Todes
+Gelehrter des Todes
 %%%%
 Merchant of Misery
 Händler des Elends
@@ -692,7 +694,6 @@ Sifu
 
 ##############################################
 # Skill-based titles
-# (without article)
 ##############################################
 
 # Fighting
@@ -1344,6 +1345,7 @@ Wandbrecher
 Highly Combustible
 Leicht Brennbarer
 %%%%
+# formicid skilled in translocations
 Teletunneler
 Teletunneler
 %%%%
@@ -1353,7 +1355,7 @@ Corpseflower
 Leichenblume
 %%%%
 
-# draconian titles
+# draconian-specific titles for various magic schools
 %%%%
 Fire Dragon
 Feuerdrache

@@ -227,7 +227,7 @@ the Scholar
 der Gelehrte
 %%%%
 the Sage
-der Weiser
+der Weise
 %%%%
 the Genius of the Arcane
 das Genie der Arkana
@@ -1064,6 +1064,7 @@ der Nekromant
 the Thanatomancer
 der Thanatomant
 %%%%
+# avoid using definite article because genders
 the @Genus_Short@ of Death
 @Genus_Short@ des Todes
 %%%%
