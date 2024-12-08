@@ -20,7 +20,6 @@ using namespace std;
 
 #include "localise.h"
 #include "xlate.h"
-#include "skills.h"
 #include "stringutil.h"
 #include "unicode.h"
 #include "english.h"
@@ -2667,69 +2666,121 @@ static string _localise_player_title(const string& context, const string& text)
     if (text.empty() || !localisation_active())
         return text;
 
-    TRACE("context='%s', value='%s'", context.c_str(), text.c_str());
+    string determiner, rest;
+    if (starts_with(text, "the "))
+    {
+        determiner = "the ";
+        rest = text.substr(4);
+    }
+    else
+        rest = text;
 
+    // all titles start with a capital letter
+    if (rest.empty() || rest[0] < 'A' || rest[0] > 'Z')
+        return "";
+
+    TRACE("context='%s', value='%s'", context.c_str(), text.c_str());
+    TRACE("rest='%s'", rest.c_str());
+
+    // do sanity check on number of words
+    vector<string> words = split_string(" ", rest, true, false);
+    if (words.size() > 5)
+        return "";
+
+    string base, param_name, param_val;
+    bool base_translated = false;
+
+    const string& lastWord = words[words.size() - 1];
+    TRACE("lastWord='%s'", lastWord.c_str());
+    if (lastWord == "Champion")
+    {
+        if (words.size() != 2)
+            return "";
+
+        base = determiner + "@Weight@ " + lastWord;
+        param_name = "Weight";
+        param_val = words[0];
+    }
+    else if (starts_with(lastWord, "Marks"))
+    {
+        if (words.size() != 1)
+            return "";
+
+        base = determiner + "Marks@genus@";
+        param_name = "genus";
+        param_val = replace_first(lastWord, "Marks", "");
+    }
+    else
+    {
+        if (words.size() < 2)
+            return "";
+
+        static const vector<string> params =
+        {
+            "@Adj@", "@Genus@", "@Genus_Short@", "@Walking@", "@Walker@"
+        };
+
+        for (size_t i = 0; i < words.size(); i++)
+        {
+            string prefix = determiner;
+            for (size_t j = 0; j < i; j++)
+                prefix += words[j] + " ";
+
+            string suffix;
+            for (size_t j = i + 1; j < words.size(); j++)
+                suffix += " " + words[j];
+
+            string word = words[i];
+            if (word == "Stalker" && ends_with(prefix, "Vine "))
+            {
+                word = "Vine Stalker";
+                prefix = replace_last(prefix, "Vine ", "");
+            }
+
+            for (const string& param: params)
+            {
+                // skip some permutations that can't happen
+                if (suffix.empty())
+                {
+                    // adjectives can't be at the end
+                    if (param == "@Adj" || param == "@Walking@")
+                        continue;
+                }
+
+                base = prefix + param + suffix;
+                base = cxlate(context, base, false);
+                if (!base.empty())
+                {
+                    base_translated = true;
+                    param_name = replace_all(param, "@", "");
+                    param_val = word;
+                    break;
+                }
+            }
+            if (!base.empty())
+                break;
+        }
+    }
+
+    if (base.empty())
+        return "";
+
+    map<string, string> params = { { param_name, param_val } };
+    string result = localise(base, params, !base_translated);
+    TRACE("result='%s'", result.c_str());
+    return result;
+}
+
+string localise_player_title(const string& text)
+{
     // try simple translation first
-    string result = cxlate(context, text, false);
+    string result = xlate(text, false);
     if (!result.empty())
     {
         TRACE("simple cxlate: result='%s'", result.c_str());
         return result;
     }
 
-    string determiner;
-    string title;
-    if (starts_with(text, "the "))
-    {
-        determiner = text.substr(0, 4);
-        title = text.substr(4);
-    }
-    else
-        title = text;
-
-    vector<string> vtitles;
-    get_variable_player_titles(vtitles);
-
-    for (const string& vtitle: vtitles)
-    {
-        size_t param_start = vtitle.find('@');
-        size_t param_end = vtitle.rfind('@');
-        if (param_start == string::npos || param_start == param_end)
-            continue;
-
-        string param = vtitle.substr(param_start, param_end - param_start + 1);
-
-        string rest;
-        if (param_start == 0)
-        {
-            // param is at start
-            rest = vtitle.substr(param_end+1);
-            if (!ends_with(title, rest))
-                continue;
-        }
-        else if (param_end == vtitle.length() - 1)
-        {
-            // param is at end
-            rest = vtitle.substr(0, param_start);
-            if (!starts_with(title, rest))
-                continue;
-        }
-
-        string param_name = param.substr(1, param.length()-2);
-        string param_val = replace_first(title, rest, "");
-        map<string, string> params = { { param_name, param_val } };
-        string base = determiner + vtitle;
-        base = _localise_string(context, base);
-        result = localise(base, params, false);
-        TRACE("result='%s'", result.c_str());
-        return result;
-    }
-
-    return "";
-}
-
-string localise_player_title(const string& text)
-{
-    string result = _localise_player_title("", text);
+    result = _localise_player_title("", text);
     return result.empty() ? text : result;
 }

@@ -211,7 +211,7 @@ int main()
                " Weitermachen?";
     show_result(msg, expected);
 
-    // player character selections
+    // player characters
     show_result(localise("Hill Orc Fighter"), "Hügelork Kämpfer");
     show_result(localise("the Hill Orc Fighter"), "der Hügelork Kämpfer");
     show_result(localise("Hill Orc Gladiator"), "Hügelork Gladiator");
@@ -220,6 +220,30 @@ int main()
     show_result(localise("Recommended Hill Orc"), "Vorgeschlagener Hügelork");
     show_result(localise("Recommended Mummy"), "Vorgeschlagene Mumie");
     show_result(localise("Recommended Merfolk"), "Vorgeschlagenes Meervolk");
+    show_result(localise("Grey Draconian Berserker of Trog"), "Grauer Drakonier Berserker von Trog");
+
+    // player character titles
+    // simple
+    show_result(localise("the Blasphemer"), "der Blasphemist");
+    show_result(localise("Blasphemer"), "Blasphemist");
+    // nominalised adjectives
+    show_result(localise("the Tainted"), "der Verdorbene");
+    show_result(localise("Tainted"), "Verdorbener");
+    show_result(localise("the Black Crusader"), "der Schwarze Kreuzritter");
+    show_result(localise("Black Crusader"), "Schwarzer Kreuzritter");
+    // includes species adjective @Adj@
+    show_result(localise("the Minotaur Barricade"), "die Minotaur Barrikade");
+    show_result(localise("Minotaur Barricade"), "Minotaur Barrikade");
+    show_result(localise("the Ghoulish Barricade"), "die Ghulische Barrikade");
+    show_result(localise("Ghoulish Barricade"), "Ghulische Barrikade");
+    // includes species-specific movement word (@Walking@)
+    show_result(localise("the Walking Fertiliser"), "der Wandernde Dünger");
+    show_result(localise("Walking Fertiliser"), "Wandernder Dünger");
+    show_result(localise("the Gliding Fertiliser"), "der Gleitende Dünger");
+    show_result(localise("Gliding Fertiliser"), "Gleitender Dünger");
+    // includes @Genus_Short@ (which is "God" for Demigods)
+    show_result(localise("the God of Death"), "Gott des Todes");
+    show_result(localise("God of Death"), "Gott des Todes");
 
     msg = localise("You found it @in_location@", {{"in_location", "on level 3 of the Dungeon"}});
     show_result (msg, "Du hast diesen Gegenstand auf Ebene 3 des Kerkers gefunden");
