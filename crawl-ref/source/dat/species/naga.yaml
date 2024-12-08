@@ -50,6 +50,5 @@ recommended_jobs:
 create_enum: false
 # end TAG_MAJOR_VERSION
 
-walking_verb: Slithering
-walker_noun: Slitherer
+walking_verb: Slither
 altar_action: You coil in front of the altar of %s.

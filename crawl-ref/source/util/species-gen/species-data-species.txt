@@ -13,7 +13,7 @@
 {fake_mutations_short},
     {{ {recommended_jobs} }},
     {{ {recommended_weapons} }},
-    {walking_verb}, {walker_noun},
+    {walking_verb},
     {altar_action},
 }} }},
 {tag_major_version_closer}

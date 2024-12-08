@@ -422,7 +422,6 @@ const char *decline_pronoun(gender_type gender, pronoun_type variant)
 // TODO: make this more general. (Does english have rules?)
 string walk_verb_to_present(string verb)
 {
-    verb = replace_last(verb, "ing", "");
     if (verb == "wriggl")
         return "wriggle";
     if (verb == "glid")

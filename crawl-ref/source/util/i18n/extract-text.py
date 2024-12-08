@@ -41,6 +41,8 @@ IGNORE_STRINGS = [
     'bug', 'null', 'invalid', 'DEAD MONSTER',
     'true', 'false', 'veto',
     'You hear the sound of one hand!',
+    # suffixes for walking verb
+    'ing', 'er',
     # property keys
     'Brand', 'BAcc', 'BDam', 'nupgr', 'cap-',
     # text colour tags
@@ -2223,6 +2225,10 @@ for filename in files:
             elif filename == 'species-data.h' and string == "Yak":
                 # error condition
                 continue
+            elif string in ["Walk", "Slither", "Wriggl", "Glid", "Stalk"]:
+                # species walk verbs and associated nouns
+                filtered_strings.append(string + "ing")
+                filtered_strings.append(string + "er")
             elif string == "runed door":
                 # should be covered by feature-data.h, but just in case...
                 words = separate_adjectives(string)

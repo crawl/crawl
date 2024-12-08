@@ -17,7 +17,7 @@
  *   row 11: { fake mutation names for % screen }
  *   row 12: recommended jobs for character selection
  *   row 13: recommended weapons for character selection
- *   row 14: custom walking action (or nullptr), custom walker noun (or nullptr)
+ *   row 14: custom walking action, or nullptr
  *   row 15: custom prayer action, or nullptr
  */
 

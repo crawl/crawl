@@ -1882,7 +1882,7 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank, bool the,
         { "genus", lowercase_string(species::name(species, species::SPNAME_GENUS)) },
         { "Genus_Short", species == SP_DEMIGOD ? "God" :
                            species::name(species, species::SPNAME_GENUS) },
-        { "Walker", species::walker_noun(species) },
+        { "Walker", species::walking_verb(species) + "er" },
         { "Weight", _stk_weight(species) },
     };
 

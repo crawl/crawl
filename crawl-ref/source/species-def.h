@@ -53,8 +53,8 @@ struct species_def
     /// No recommended jobs = species is disabled.
     vector<job_type> recommended_jobs;
     vector<skill_type> recommended_weapons; ///< Which weapons types are "good"
-    const char* walking_verb; ///<an -ing word describing species' movement
-    const char* walker_noun; ///<an -er word describing species' movement
+    const char* walking_verb; ///<a "word" to which "-er" or "-ing" can be
+                              /// appended. If null, use "Walk"
     const char* altar_action; ///<"You %s the altar of foo.". If null, use
                               ///"kneel at"
 };

@@ -42,7 +42,7 @@ class Species(MutableMapping):
             'undead_type', 'size', 'str', 'int', 'dex', 'levelup_stats',
             'levelup_stat_frequency', 'recommended_jobs', 'recommended_weapons',
             'difficulty', 'difficulty_priority', 'create_enum', 'walking_verb',
-            'walker_noun','altar_action', 'mutations'}
+            'altar_action', 'mutations'}
 
     def __init__(self, yaml_dict):
         self.backing_dict = dict()
@@ -147,7 +147,6 @@ class Species(MutableMapping):
         self['create_enum'] = validate_bool(
                                     s.get('create_enum', True), 'create_enum')
         self['walking_verb'] = quote_or_nullptr('walking_verb', s)
-        self['walker_noun'] = quote_or_nullptr('walker_noun', s)
         self['altar_action'] = quote_or_nullptr('altar_action', s)
 
         if 'TAG_MAJOR_VERSION' in s:
