@@ -1651,28 +1651,28 @@ plug-and-play-tests: $(CATCH2_PNP_OBJECTS) $(CONTRIB_LIBS) dat/dlua/tags.lua
 catch2-tests: catch2-tests-executable
 	./catch2-tests-executable
 
-make-stringf-test: $(MAKE_STRINGF_TEST_OBJS) $(CONTRIB_LIBS) all
+make-stringf-test: $(MAKE_STRINGF_TEST_OBJS) $(CONTRIB_LIBS)
 	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(MAKE_STRINGF_TEST_OBJS) -o $@ $(LIBS)
 
-check-regex-rules: test/i18n/check-regex-rules.o $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS) all
+check-regex-rules: test/i18n/check-regex-rules.o $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS)
 	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(OBJECTS) $< $(EXTRA_OBJECTS) -o $@ $(LIBS)
 
-de-mon-test: test/i18n/de/mon-test.o $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS) all
+de-mon-test: test/i18n/de/mon-test.o $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS)
 	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(OBJECTS) $< $(EXTRA_OBJECTS) -o $@ $(LIBS)
 
-de-item-test: test/i18n/de/item-test.o $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS) all
+de-item-test: test/i18n/de/item-test.o $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS)
 	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(OBJECTS) $< $(EXTRA_OBJECTS) -o $@ $(LIBS)
 
-de-misc-test: test/i18n/de/misc-test.o $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS) all
+de-misc-test: test/i18n/de/misc-test.o $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS)
 	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(OBJECTS) $< $(EXTRA_OBJECTS) -o $@ $(LIBS)
 
-fr-misc-test: test/i18n/fr/misc-test.o $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS) all
+fr-misc-test: test/i18n/fr/misc-test.o $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS)
 	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(OBJECTS) $< $(EXTRA_OBJECTS) -o $@ $(LIBS)
 
-ru-misc-test: test/i18n/ru/misc-test.o $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS) all
+ru-misc-test: test/i18n/ru/misc-test.o $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS)
 	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(OBJECTS) $< $(EXTRA_OBJECTS) -o $@ $(LIBS)
 
-i18n-tests: $(GAME) make-stringf-test check-regex-rules de-mon-test de-item-test de-misc-test fr-misc-test ru-misc-test
+i18n-tests: make-stringf-test check-regex-rules de-mon-test de-item-test de-misc-test fr-misc-test ru-misc-test
 	./make-stringf-test
 	./de-mon-test
 	./de-item-test
