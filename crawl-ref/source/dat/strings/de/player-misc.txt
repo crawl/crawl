@@ -359,6 +359,13 @@ VS
 Rp
 %%%%
 
+# obsolete, but could appear in high scores list or as player ghost
+%%%%
+# Halfling
+Ha
+Ha
+%%%%
+
 ##############################################
 # Background (aka job) abbreviations
 ##############################################

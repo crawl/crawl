@@ -58,7 +58,7 @@ SPECIAL_FILES = [
     'spl-data.h', 'zap-data.h', 'feature-data.h',
     'item-prop.cc', 'item-name.cc',
     'art-data.txt', # art-data.h generated from art-data.txt
-    'species-data.h', 'job-data.h', 'form-data.h'
+    'job-data.h', 'form-data.h'
 ]
 
 # These files are evaluated differently. We ignore all strings unless we have a reason to extract them,
@@ -71,6 +71,8 @@ LAZY_FILES = [
 SKIP_FILES = [
     # art-data.h generated from art-data.txt
     'art-data.h',
+    # generated from yaml files
+    'species-data.h',
     # covered in a way that doesn't use the literal strings from the file
     'mutant-beast.h',
     # these just contain a bunch of compile flags, etc.
@@ -212,6 +214,50 @@ def process_art_data_txt():
 
     return result
 
+def process_yaml_file(filename):
+    MAIN_KEYS = ["name", "short_name", "adjective", "genus", "walking_verb", "altar_action"]
+
+
+    infile = open(filename)
+    data = infile.read()
+    infile.close()
+
+    species = {}
+    species["mutations"] = []
+    lines = data.splitlines()
+    for line in lines:
+        line = line.strip()
+        if line.startswith('#') or ":" not in line:
+            continue
+
+        tokens = line.split(':')
+        if len(tokens) != 2:
+            continue
+
+        key = tokens[0].replace('-', '').strip()
+        if key in MAIN_KEYS:
+            value = tokens[1].strip().replace('"', '')
+            species[key] = value
+
+            # by default short_name is first 2 chars of name
+            if key == "name" and "short_name" not in species:
+                species["short_name"] = value[0:2]
+
+        elif key in ["long", "short"]:
+            value = tokens[1].strip().replace('"', '')
+            species["mutations"].append(value)
+
+    result = []
+    for key in MAIN_KEYS:
+        if key in species:
+            if key == "walking_verb":
+                result.append(species["walking_verb"] + "ing")
+                result.append(species["walking_verb"] + "er")
+            else:
+                result.append(species[key])
+    result.extend(species["mutations"])
+
+    return result
 
 # strip (potentially) multi-line comments (i.e. /*...*/)
 def strip_multiline_comments(data):
@@ -2167,6 +2213,11 @@ else:
     for i in range(len(source_files)):
         source_files[i] = source_files[i].replace('.a', '.h')
 
+    yaml_files = glob.glob("dat/species/*.yaml")
+    yaml_deprec = glob.glob("dat/species/*deprecated*.yaml")
+    yaml_files = list(set(yaml_files) - set(yaml_deprec))
+    yaml_files.sort()
+
     lua_files = glob.glob("dat/clua/*.lua")
     lua_files.append("dat/dlua/lm_timed.lua")
     lua_files.append("dat/dlua/lm_tmsg.lua")
@@ -2185,6 +2236,7 @@ else:
     # put some important files first
     # (because if there are duplicate strings, we want them put under these files)
     files = SPECIAL_FILES.copy()
+    files.extend(yaml_files)
 
     # add wanted source files to list to be processed
     for fname in source_files:
@@ -2201,6 +2253,8 @@ for filename in files:
     strings = []
     if filename == 'art-data.txt':
         strings = process_art_data_txt()
+    elif filename.endswith('.yaml'):
+        strings = process_yaml_file(filename)
     elif filename.endswith('.lua') or filename.endswith('.des'):
         strings = process_lua_file(filename)
     else:
@@ -2225,8 +2279,8 @@ for filename in files:
             elif filename == 'species-data.h' and string == "Yak":
                 # error condition
                 continue
-            elif string in ["Walk", "Slither", "Wriggl", "Glid", "Stalk"]:
-                # species walk verbs and associated nouns
+            elif string == "Walk":
+                # species walk verb and associated noun
                 filtered_strings.append(string + "ing")
                 filtered_strings.append(string + "er")
             elif string == "runed door":
