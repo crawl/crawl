@@ -53,7 +53,7 @@ Demonic
 Dämonische
 %%%%
 Feline
-Feline
+Katzenartige
 %%%%
 Ghoulish
 Ghulische
@@ -83,7 +83,7 @@ Orkische
 Drakonische
 %%%%
 {adj-e}Formicid
-Formicidische
+Insektoide
 %%%%
 {adj-e}Gargoyle
 Gargylische
@@ -110,7 +110,7 @@ Schlängelnde
 Geschuppte
 %%%%
 {adj-e}Spriggan
-Dürre
+Leichtfüßige
 %%%%
 {adj-e}Tengu
 Fliegende
