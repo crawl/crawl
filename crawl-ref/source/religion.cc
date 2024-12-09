@@ -1977,7 +1977,7 @@ void upgrade_hepliaklqana_weapon(monster_type mtyp, item_def &item)
     item.brand = _hepliaklqana_weapon_brand(mtyp,
                                             _hepliaklqana_ally_hd());
     item.plus = 0;
-    item.flags |= ISFLAG_KNOW_TYPE | ISFLAG_SUMMONED;
+    item.flags |= ISFLAG_IDENTIFIED | ISFLAG_SUMMONED;
 }
 
 /**
@@ -2022,7 +2022,7 @@ void upgrade_hepliaklqana_shield(const monster &ancestor, item_def &item)
     item.sub_type = shield_type;
     item.brand = _hepliaklqana_shield_ego(HD);
     item.plus = 0;
-    item.flags |= ISFLAG_KNOW_TYPE | ISFLAG_SUMMONED;
+    item.flags |= ISFLAG_IDENTIFIED | ISFLAG_SUMMONED;
     item.quantity = 1;
 }
 
@@ -2452,7 +2452,7 @@ static void _gain_piety_point()
             you.duration[DUR_CONF] = 0;
         }
         if (rank >= rank_for_passive(passive_t::identify_items))
-            auto_id_inventory();
+            ash_id_inventory();
 
         // TODO: add one-time ability check in have_passive
         if (have_passive(passive_t::unlock_slime_vaults)
@@ -3268,7 +3268,7 @@ static void _god_welcome_handle_gear()
     }
 
     if (have_passive(passive_t::identify_items))
-        auto_id_inventory();
+        ash_id_inventory();
 
     if (have_passive(passive_t::detect_portals))
         ash_detect_portals(true);

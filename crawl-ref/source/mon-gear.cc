@@ -1151,7 +1151,6 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             item.sub_type = WPN_QUARTERSTAFF;
             set_item_ego_type(item, OBJ_WEAPONS, SPWPN_HEAVY);
         }
-        item.flags |= ISFLAG_KNOW_TYPE;
         break;
 
     case MONS_CYCLOPS:
@@ -1215,7 +1214,6 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             item.sub_type = WPN_QUARTERSTAFF;
             set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FREEZING);
         }
-        item.flags |= ISFLAG_KNOW_TYPE;
         break;
 
     case MONS_NIKOLA:
@@ -1243,7 +1241,6 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         force_item = true;
         item.base_type = OBJ_STAVES;
         item.sub_type = STAFF_ALCHEMY;
-        item.flags    |= ISFLAG_KNOW_TYPE;
         if (one_chance_in(100) && !get_unique_item_status(UNRAND_OLGREB))
             make_item_unrandart(item, UNRAND_OLGREB);
         break;
@@ -1436,16 +1433,10 @@ static void _give_weapon(monster *mon, int level, bool second_weapon = false)
     }
 
     if (mon->type == MONS_ERICA && i.is_type(OBJ_WEAPONS, WPN_SCIMITAR))
-    {
-        make_item_for_monster(mon, OBJ_JEWELLERY, NUM_RINGS,
-                              0, 1, ISFLAG_KNOW_TYPE);
-    }
+        make_item_for_monster(mon, OBJ_JEWELLERY, NUM_RINGS, 0, 1);
 
     if (mon->type == MONS_FANNAR && i.is_type(OBJ_WEAPONS, WPN_QUARTERSTAFF))
-    {
-        make_item_for_monster(mon, OBJ_JEWELLERY, RING_ICE,
-                              0, 1, ISFLAG_KNOW_TYPE);
-    }
+        make_item_for_monster(mon, OBJ_JEWELLERY, RING_ICE, 0, 1);
 
     if (mon->type == MONS_WIGLAF)
     {
@@ -1459,10 +1450,7 @@ static void _give_weapon(monster *mon, int level, bool second_weapon = false)
     }
 
     if (mon->type == MONS_JOSEPHINA)
-    {
-        make_item_for_monster(mon, OBJ_JEWELLERY, RING_ICE,
-                              ISPEC_RANDART, true, ISFLAG_KNOW_TYPE);
-    }
+        make_item_for_monster(mon, OBJ_JEWELLERY, RING_ICE, ISPEC_RANDART, true);
 }
 
 // Hands out ammunition fitting the monster's launcher (if any), or else any
@@ -2124,7 +2112,6 @@ int make_mons_armour(monster_type type, int level)
         item.sub_type  = ARM_ROBE;
         item.plus = 1 + coinflip();
         set_item_ego_type(item, OBJ_ARMOUR, SPARM_COLD_RESISTANCE);
-        item.flags |= ISFLAG_KNOW_TYPE;
         break;
     }
 
@@ -2343,10 +2330,8 @@ void view_monster_equipment(monster* mon)
             continue;
 
         item_def &item = env.item[mon->inv[i]];
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
+        identify_item(item);
         item.flags |= ISFLAG_SEEN;
-        if (item.base_type == OBJ_WANDS)
-            set_ident_type(item, true);
     }
 }
 
@@ -2426,8 +2411,7 @@ void give_apostle_equipment(monster* apostle)
 
             item_def* weapon =
                 make_item_for_monster(apostle, OBJ_WEAPONS, *wpn_type,
-                                      randart ? ISPEC_RANDART : ISPEC_GIFT,
-                                      true, ISFLAG_KNOW_TYPE);
+                                      randart ? ISPEC_RANDART : ISPEC_GIFT, true);
 
             // Sometimes give a shield if we rolled a one-handed weapon (with it
             // being more likely at higher apostle power)
@@ -2448,7 +2432,7 @@ void give_apostle_equipment(monster* apostle)
 
             item_def* armour =
                 make_item_for_monster(apostle, OBJ_ARMOUR, *arm_type,
-                                      100, true, ISFLAG_KNOW_TYPE);
+                                      100, true);
 
             if (!is_unrandom_artefact(*armour))
             {
@@ -2478,12 +2462,12 @@ void give_apostle_equipment(monster* apostle)
             make_item_for_monster(apostle, OBJ_WEAPONS, WPN_DAGGER,
                                   x_chance_in_y(pow, 250) ? ISPEC_RANDART
                                                           : ISPEC_GIFT,
-                                  true, ISFLAG_KNOW_TYPE);
+                                  true);
 
             make_item_for_monster(apostle, OBJ_ARMOUR, ARM_ROBE,
                                   x_chance_in_y(pow, 550) ? ISPEC_RANDART
                                                           : ISPEC_GIFT,
-                                  true, ISFLAG_KNOW_TYPE);
+                                  true);
 
             // Slim chance at higher levels of a random ring or orb of energy
             if (x_chance_in_y(max(0, pow - 40), 280))
@@ -2503,8 +2487,7 @@ void give_apostle_equipment(monster* apostle)
                                                      RING_PROTECTION);
 
                 make_item_for_monster(apostle, OBJ_JEWELLERY, rtype, 0,
-                                      x_chance_in_y(pow, 125)? ISPEC_RANDART : 0,
-                                      ISFLAG_KNOW_TYPE);
+                                      x_chance_in_y(pow, 125)? ISPEC_RANDART : 0);
             }
         }
         break;
@@ -2516,7 +2499,7 @@ void give_apostle_equipment(monster* apostle)
 
             make_item_for_monster(apostle, OBJ_WEAPONS, *wpn_type,
                                     randart ? ISPEC_RANDART : ISPEC_GIFT,
-                                    true, ISFLAG_KNOW_TYPE);
+                                    true);
 
             // No shields for priests
 
@@ -2527,8 +2510,7 @@ void give_apostle_equipment(monster* apostle)
             const armour_type *arm_type = random_choose_weighted(alist);
 
             item_def* armour =
-                make_item_for_monster(apostle, OBJ_ARMOUR, *arm_type,
-                                      100, true, ISFLAG_KNOW_TYPE);
+                make_item_for_monster(apostle, OBJ_ARMOUR, *arm_type, 100, true);
 
             if (!is_unrandom_artefact(*armour))
                 armour->plus += roll_dice(2, 2);

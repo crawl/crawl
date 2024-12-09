@@ -3096,13 +3096,13 @@ tileidx_t tileidx_item(const item_def &item)
             return _tileidx_armour(item);
 
     case OBJ_WANDS:
-        if (item.flags & ISFLAG_KNOW_TYPE)
+        if (item.is_identified())
             return TILE_WAND_ID_FIRST + type;
         else
             return TILE_WAND_OFFSET + subtype_rnd % NDSC_WAND_PRI;
 
     case OBJ_SCROLLS:
-        if (item.flags & ISFLAG_KNOW_TYPE)
+        if (item.is_identified())
             return TILE_SCR_ID_FIRST + type;
         return TILE_SCROLL;
 
@@ -3123,7 +3123,7 @@ tileidx_t tileidx_item(const item_def &item)
                 return TILE_RING_RANDART_OFFSET + offset;
             }
 
-            if (item.flags & ISFLAG_KNOW_TYPE)
+            if (item.is_identified())
             {
                 return TILE_RING_ID_FIRST + type - RING_FIRST_RING
 #if TAG_MAJOR_VERSION == 34
@@ -3143,12 +3143,12 @@ tileidx_t tileidx_item(const item_def &item)
             return TILE_AMU_RANDART_OFFSET + offset;
         }
 
-        if (item.flags & ISFLAG_KNOW_TYPE)
+        if (item.is_identified())
             return TILE_AMU_ID_FIRST + type - AMU_FIRST_AMULET;
         return TILE_AMU_NORMAL_OFFSET + subtype_rnd % NDSC_JEWEL_PRI;
 
     case OBJ_POTIONS:
-        if (item.flags & ISFLAG_KNOW_TYPE)
+        if (item.is_identified())
             return TILE_POT_ID_FIRST + type;
         else
             return TILE_POTION_OFFSET + item.subtype_rnd % NDSC_POT_PRI;
@@ -3173,7 +3173,7 @@ tileidx_t tileidx_item(const item_def &item)
             return TILE_STAFF_RANDART_OFFSET + off;
         }
 
-        if (item.flags & ISFLAG_KNOW_TYPE)
+        if (item.is_identified())
             return TILE_STAFF_ID_FIRST + type;
 
         return TILE_STAFF_OFFSET
@@ -3330,7 +3330,7 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
         int type = label - TILE_POT_ID_FIRST;
         int desc = you.item_description[IDESC_POTIONS][type] % NDSC_POT_PRI;
 
-        if (!get_ident_type(OBJ_POTIONS, type))
+        if (!type_is_identified(OBJ_POTIONS, type))
             return TILE_UNSEEN_POTION;
         else
             return TILE_POTION_OFFSET + desc;
@@ -3345,7 +3345,7 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
             ;
         int desc = you.item_description[IDESC_RINGS][type] % NDSC_JEWEL_PRI;
 
-        if (!get_ident_type(OBJ_JEWELLERY, type))
+        if (!type_is_identified(OBJ_JEWELLERY, type))
             return TILE_UNSEEN_RING;
         else
             return TILE_RING_NORMAL_OFFSET + desc;
@@ -3356,7 +3356,7 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
         int type = label - TILE_AMU_ID_FIRST + AMU_FIRST_AMULET;
         int desc = you.item_description[IDESC_RINGS][type] % NDSC_JEWEL_PRI;
 
-        if (!get_ident_type(OBJ_JEWELLERY, type))
+        if (!type_is_identified(OBJ_JEWELLERY, type))
             return TILE_UNSEEN_AMULET;
         else
             return TILE_AMU_NORMAL_OFFSET + desc;
@@ -3370,7 +3370,7 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
         int type = label - TILE_WAND_ID_FIRST;
         int desc = you.item_description[IDESC_WANDS][type] % NDSC_WAND_PRI;
 
-        if (!get_ident_type(OBJ_WANDS, type))
+        if (!type_is_identified(OBJ_WANDS, type))
             return TILE_UNSEEN_WAND;
         else
             return TILE_WAND_OFFSET + desc;
@@ -3382,7 +3382,7 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
         int desc = you.item_description[IDESC_STAVES][type];
         desc = (desc / NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
 
-        if (!get_ident_type(OBJ_STAVES, type))
+        if (!type_is_identified(OBJ_STAVES, type))
             return TILE_UNSEEN_STAFF;
         else
             return TILE_STAFF_OFFSET + desc;
@@ -4420,7 +4420,7 @@ tileidx_t tileidx_player_job(const job_type job, bool recommended)
 
 tileidx_t tileidx_known_brand(const item_def &item)
 {
-    if (!item_type_known(item))
+    if (!item.is_identified())
         return 0;
 
     switch (item.base_type)

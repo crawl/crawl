@@ -4850,7 +4850,7 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
         item_set_appearance(item);
     }
     if (props.exists(IDENT_KEY))
-        item.flags |= props[IDENT_KEY].get_int();
+        item.flags |= ISFLAG_IDENTIFIED;
     if (props.exists(UNOBTAINABLE_KEY))
     {
         item.flags |= ISFLAG_UNOBTAINABLE;
@@ -6205,7 +6205,7 @@ static void _stock_shop_item(int j, shop_type shop_type_,
 
     // Identify the item, unless we don't do that.
     if (shoptype_identifies_stock(shop_type_))
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
+        item.flags |= ISFLAG_IDENTIFIED;
 
     // Now move it into the shop!
     dec_mitm_item_quantity(item_index, item.quantity, false);

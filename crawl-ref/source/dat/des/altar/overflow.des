@@ -2168,7 +2168,7 @@ TAGS:   transparent decor vaults_empty vaults_orient_s
 DEPTH:  D:3-, Vaults
 WEIGHT: 1 (Vaults), 5
 KFEAT:  _ = altar_okawaru
-KITEM:  ' = any weapon plus:0 ego:spectral ident:all no_pickup
+KITEM:  ' = any weapon plus:0 ego:spectral pre_id no_pickup
 : if you.in_branch("Vaults") then
 SUBST:  @ = .
 : end
@@ -2681,7 +2681,7 @@ TAGS:   temple_overflow_sif_muna temple_overflow_1 no_trap_gen
 TAGS:   uniq_altar_sif_muna vaults_orient_n vaults_orient_e vaults_orient_s
 DEPTH:  D:3-, Vaults, Depths
 WEIGHT: 3 (Vaults), 10
-KITEM:  a = any randbook ident:all owner:Sif_Muna slevels:1
+KITEM:  a = any randbook pre_id owner:Sif_Muna slevels:1
 KFEAT:  _ = altar_sif_muna
 COLOUR: a.mc+ = blue
 FTILE:  a._mc+ = floor_marble
@@ -2844,21 +2844,21 @@ TAGS:   transparent
 DEPTH:  D:3-12
 WEIGHT: 4
 : if you.absdepth() > 5 then
-KMONS:  1 = ogre god:trog ; giant club ego:antimagic ident:type | w:3 giant club / \
-        ogre god:trog ; giant spiked club ego:antimagic ident:type | w:5 giant spiked club / \
-        orc warrior god:trog ; halberd ego:antimagic ident:type | war axe ego:antimagic ident:type | \
-        flail ego:antimagic ident:type | great mace ego:antimagic ident:type | any weapon / \
-        kobold brigand god:trog ; short sword ego:antimagic ident:type | dagger ego:antimagic ident:type | \
-        rapier ego:antimagic ident:type | rapier
+KMONS:  1 = ogre god:trog ; giant club ego:antimagic pre_id | w:3 giant club / \
+        ogre god:trog ; giant spiked club ego:antimagic pre_id | w:5 giant spiked club / \
+        orc warrior god:trog ; halberd ego:antimagic pre_id | war axe ego:antimagic pre_id | \
+        flail ego:antimagic pre_id | great mace ego:antimagic pre_id | any weapon / \
+        kobold brigand god:trog ; short sword ego:antimagic pre_id | dagger ego:antimagic pre_id | \
+        rapier ego:antimagic pre_id | rapier
 SUBST:  2 = 1
 : else
-KMONS:  1 = orc god:trog ; spear ego:antimagic ident:type | hand axe ego:antimagic ident:type | \
-        war axe ego:antimagic ident:type | any weapon / \
-        kobold god:trog ; short sword ego:antimagic ident:type | hand axe ego:antimagic ident:type | \
-        club ego:antimagic ident:type | whip ego:antimagic ident:type | any weapon / \
-        goblin god:trog ; dagger ego:antimagic ident:type | short sword ego:antimagic ident:type / \
-        gnoll god:trog ; spear ego:antimagic ident:type | trident ego:antimagic ident:type | \
-        halberd ego:antimagic ident:type | whip ego:antimagic ident:type | halberd | any weapon
+KMONS:  1 = orc god:trog ; spear ego:antimagic pre_id | hand axe ego:antimagic pre_id | \
+        war axe ego:antimagic pre_id | any weapon / \
+        kobold god:trog ; short sword ego:antimagic pre_id | hand axe ego:antimagic pre_id | \
+        club ego:antimagic pre_id | whip ego:antimagic pre_id | any weapon / \
+        goblin god:trog ; dagger ego:antimagic pre_id | short sword ego:antimagic pre_id / \
+        gnoll god:trog ; spear ego:antimagic pre_id | trident ego:antimagic pre_id | \
+        halberd ego:antimagic pre_id | whip ego:antimagic pre_id | halberd | any weapon
 KMONS:  2 = brain worm
 SUBST:  2 = 112
 : end
@@ -3660,8 +3660,8 @@ TAGS:    transparent temple_overflow_1 temple_overflow_xom
 TAGS:    uniq_altar_xom extra decor
 ITEM:    stone q:1 no_pickup
 KMONS:   ! = pile of debris
-KITEM:   ! = plate armour randart plus:-12 ident:all / \
-             kite shield randart plus:-12 ident:all / mundane club w:9980
+KITEM:   ! = plate armour randart plus:-12 pre_id / \
+             kite shield randart plus:-12 pre_id / mundane club w:9980
 KITEM:   ? = mundane club / gold q:1 w:9970, large rock q:1
 KFEAT:   _ = altar_xom
 SHUFFLE: ?" / ?" / !!
@@ -4303,7 +4303,7 @@ ENDMAP
 NAME:   grunt_temple_overflow_champion_of_chaos
 TAGS:   temple_overflow_2 temple_overflow_makhleb temple_overflow_xom
 TAGS:   no_monster_gen transparent
-MONS:   crimson imp ; dagger ego:chaos ident:type
+MONS:   crimson imp ; dagger ego:chaos pre_id
 KFEAT:  A = altar_makhleb
 KFEAT:  B = altar_xom
 : vault_granite_statue_setup(_G, "G", "scintillating statue")
@@ -4932,7 +4932,7 @@ NSUBST:  . = 1:i / *:.
 KPROP:   1 = no_tele_into
 MONS:    generate_awake chaos spawn
 KMONS:   g = pile of debris
-KITEM:   i = any damaged weapon ego:chaos ident:all
+KITEM:   i = any damaged weapon ego:chaos pre_id
 COLOUR:  b = lightred
 TILE:    b = dngn_crystal_lightred
 KMASK:   1 = opaque

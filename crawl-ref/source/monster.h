@@ -606,9 +606,6 @@ private:
 
     int armour_bonus(const item_def &item) const;
 
-    void id_if_worn(mon_inv_type mslot, object_class_type base_type,
-                    int sub_type) const;
-
     bool decay_enchantment(enchant_type en, bool decay_degree = true);
 
     bool wants_weapon(const item_def &item) const;

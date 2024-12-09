@@ -3237,9 +3237,9 @@ static string _describe_monster_weapon(const monster_info& mi, bool ident)
     const item_def *weap = mi.inv[MSLOT_WEAPON].get();
     const item_def *alt  = mi.inv[MSLOT_ALT_WEAPON].get();
 
-    if (weap && (!ident || item_type_known(*weap)))
+    if (weap && (!ident || weap->is_identified()))
         name1 = weap->name(DESC_A, false, false, true, false);
-    if (alt && (!ident || item_type_known(*alt)) && mi.wields_two_weapons())
+    if (alt && (!ident || alt->is_identified()) && mi.wields_two_weapons())
         name2 = alt->name(DESC_A, false, false, true, false);
 
     if (name1.empty() && !name2.empty())

@@ -323,8 +323,8 @@ function index_vaults_room_themes (e, set, hard)
     e.tile('c = wall_studio')
   elseif set == 'icebox' then
     e.tags('no_wall_fixup')
-    local f = 'ego:freezing ident:type'
-    local c = 'ego:cold_resistance ident:type'
+    local f = 'ego:freezing pre_id'
+    local c = 'ego:cold_resistance pre_id'
     e.mons('white ugly thing w:' .. 8 - d * 2 .. ' / ' ..
            'redback simulacrum w:' .. 8 - d * 2 .. ' / ' ..
            'freezing wraith w:2 / sphinx simulacrum w:' .. d - 1)

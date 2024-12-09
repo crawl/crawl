@@ -411,8 +411,7 @@ void noisy_equipment(const item_def &weapon)
 
     if (is_unrandom_artefact(weapon))
     {
-        string name = weapon.name(DESC_PLAIN, false, true, false, false,
-                                  ISFLAG_IDENT_MASK);
+        string name = weapon.name(DESC_PLAIN, false, true, false, false);
         msg = getSpeakString(name);
         if (msg == "NONE")
             return;

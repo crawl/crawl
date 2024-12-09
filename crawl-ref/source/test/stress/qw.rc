@@ -845,7 +845,7 @@ function armour_value(it, cur, it2)
   local val1,val2 = total_resist_value(it, cur, it2)
   local ego = it.ego()
   if it.artefact then
-    if not it.fully_identified then -- could be good or bad
+    if not it.is_identified then -- could be good or bad
       val2 = val2 + 400
       val1 = val1 + (cur and 400 or -400)
     end
@@ -983,7 +983,7 @@ function weapon_value(it, cur, it2, sit)
       return -1,-1
     elseif name:find("runed") or name:find("glowing")
            or name:find("enchanted")
-           or it.ego() and not it.fully_identified then
+           or it.ego() and not it.is_identified then
       val2 = val2 + 150
       val1 = val1 + (cur and 150 or -150)
     end
@@ -1032,7 +1032,7 @@ function weapon_value(it, cur, it2, sit)
     end
   end
   local val1,val2 = total_resist_value(it, cur, it2)
-  if it.artefact and not it.fully_identified or
+  if it.artefact and not it.is_identified or
      name:find("runed") or name:find("glowing") then
     val2 = val2 + 500
     val1 = val1 + (cur and 500 or -250)
@@ -1153,7 +1153,7 @@ function amulet_value(it, cur, it2)
       return 1000,1000 -- fixed value so we don't unequip for a randart one
     end
   end
-  if it.artefact and not it.fully_identified or not (it.artefact or name:find("amulet of")) then
+  if it.artefact and not it.is_identified or not (it.artefact or name:find("amulet of")) then
     if cur then
       return 800,800
     else
@@ -1205,7 +1205,7 @@ function ring_value(it, cur, it2)
   if subtype == "ring of teleportation" and you.race() ~= "Formicid" then
     return -1,-1
   end
-  if it.artefact and not it.fully_identified or not (it.artefact or name:find("ring of")) then
+  if it.artefact and not it.is_identified or not (it.artefact or name:find("ring of")) then
     if cur then
       return 5000,5000
     else
@@ -1379,7 +1379,7 @@ function should_upgrade(it,old_it,sit)
   if not old_it then
     return should_equip(it,sit)
   end
-  if not it.fully_identified and not should_drop(it) then
+  if not it.is_identified and not should_drop(it) then
     if equip_slot(it) == "Weapon" and it.weap_skill ~= wskill() then
       return (count_item("scroll", "remove curse") > 0)
     end
@@ -4854,7 +4854,7 @@ end
 function plan_quaff_id()
   for it in inventory() do
     if it.class(true) == "potion" and it.quantity > 1 and
-       not it.fully_identified then
+       not it.is_identified then
       return drink(it)
     end
   end
@@ -4867,7 +4867,7 @@ function plan_read_id()
   end
   for it in inventory() do
     if it.class(true) == "scroll" and
-       not it.fully_identified then
+       not it.is_identified then
       items.swap_slots(it.slot, items.letter_to_index('Y'), false)
       weap = items.equipped_at("Weapon")
       scroll_letter = 'Y'
@@ -4902,7 +4902,7 @@ function plan_use_id_scrolls()
   local newslots = {[0] = 'B', [1] = 'N', [2] = 'Y'} -- harmless keys
   local count = 0
   for it in inventory() do
-    if it.class(true) == "wand" and not it.fully_identified and
+    if it.class(true) == "wand" and not it.is_identified and
        (it.name():find("empty") or
         it.name():find("digging")
         and (where:find("Depths") or where:find("Zot"))) then
@@ -4914,7 +4914,7 @@ function plan_use_id_scrolls()
     end
   end
   for it in inventory() do
-    if it.class(true) == "jewellery" and not it.fully_identified then
+    if it.class(true) == "jewellery" and not it.is_identified then
       oldname = it.name()
       if read2(id_scroll, letter(it)) then
         say("IDENTIFYING " .. oldname)
@@ -4924,7 +4924,7 @@ function plan_use_id_scrolls()
   end
   if id_scroll.quantity > 1 then
     for it in inventory() do
-      if it.class(true) == "potion" and not it.fully_identified then
+      if it.class(true) == "potion" and not it.is_identified then
         oldname = it.name()
         if read2(id_scroll, letter(it)) then
           say("IDENTIFYING " .. oldname)
@@ -5288,7 +5288,7 @@ function plan_upgrade_amulet()
   swappable = can_swap("Amulet")
   for it in inventory() do
     if it and equip_slot(it) == "Amulet"
-          and (it.fully_identified or count_item("scroll", "remove curse") > 1)
+          and (it.is_identified or count_item("scroll", "remove curse") > 1)
           and not it.equipped then
       local equip = false
       local drop = false
@@ -5328,7 +5328,7 @@ function plan_upgrade_rings()
   local empty = (empty_ring_slots() > 0)
   for it in inventory() do
     if it and equip_slot(it) == "Ring"
-          and (it.fully_identified or count_item("scroll", "remove curse") > 1)
+          and (it.is_identified or count_item("scroll", "remove curse") > 1)
           and not it.equipped then
       local equip = false
       local drop = false

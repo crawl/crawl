@@ -78,9 +78,9 @@ function crypt_loot_plus(e)
   -- provide some unreliable but high quality incentives.
   -- TODO: shove this into an extra-greedy shop so people actually notice the
   -- existence of this and thus are more incentivized for optional branch #3.
-  local drain = "ego:draining good_item ident:type"
-  local pain = "ego:pain ident:type"
-  local vamp = "ego:vampirism ident:type"
+  local drain = "ego:draining good_item pre_id"
+  local pain = "ego:pain pre_id"
+  local vamp = "ego:vampirism pre_id"
   local book = "randbook disc:necromancy numspells:6 spells:"
   local ring = "any ring randart artprops:rN:2"
   local amulet = "any amulet randart artprops:Regen:1"
@@ -1738,8 +1738,8 @@ KMONS:   B = ancient champion
 KMONS:   C = mummy priest
 KMONS:   0 = zombie
 ITEM:    any weapon good_item ego:draining, any weapon ego:pain
-ITEM:    scroll of torment ident:type, randbook disc:necromancy numspells:3
-ITEM:    staff of death ident:type
+ITEM:    scroll of torment pre_id, randbook disc:necromancy numspells:3
+ITEM:    staff of death pre_id
 ITEM:    amulet of regeneration randart good_item
 KITEM:   $ = $ no_pickup
 KFEAT:   D = altar_yredelemnul
@@ -1909,8 +1909,8 @@ DEPTH:  Crypt
 ORIENT: east
 MONS:   freezing wraith, shadow wraith
 KMONS:  | = ancient lich / dread lich
-: local rc = "good_item ego:cold_resistance ident:type"
-: local f = "good_item ego:freezing ident:type"
+: local rc = "good_item ego:cold_resistance pre_id"
+: local f = "good_item ego:freezing pre_id"
 : local lt = "plate armour " .. rc .. " / " ..
 :            "ice dragon scales good_item / " ..
 :            "crystal plate armour " .. rc .. " w:5 / " ..
@@ -2057,7 +2057,7 @@ TAGS:    no_monster_gen no_item_gen no_trap_gen no_pool_fixup no_descent
 DEPTH:   Crypt
 ORIENT:  float
 WEIGHT:  5
-ITEM:    scroll of enchant weapon ident:type, blade talisman
+ITEM:    scroll of enchant weapon pre_id, blade talisman
 ITEM:    mundane dagger, dagger good_item
 : local q = "quick blade randart ego:"
 : item(q .. "draining / " .. q .. "vampirism / " .. q ..
@@ -2557,7 +2557,7 @@ MONS:   w:20 skeletal warrior / skeleton w:50  / nothing
 KMONS:  1 = vampire knight / Jory w:5, vampire knight
 KMONS:  2 = undying armoury
 KMONS:  3 = vampire knight w:15 / \
-            dancing weapon ; long sword ego:vampirism ident:type
+            dancing weapon ; long sword ego:vampirism pre_id
 KMONS:  4 = vampire mage
 KMONS:  5 = phantasmal warrior / \
             skeletal warrior ; halberd ego:vampirism | war axe ego:vampirism | \

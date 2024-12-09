@@ -613,7 +613,7 @@ ENDMAP
 
 NAME:  hellmonk_ecumenical_altar_blasted
 TAGS:  transparent
-KITEM: _ = scroll of immolation ident:type
+KITEM: _ = scroll of immolation pre_id
 SUBST: x = ..x
 SUBST: x : xc
 : ecumenical_altar_setup(_G)

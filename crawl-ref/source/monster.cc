@@ -818,13 +818,11 @@ bool monster::likes_wand(const item_def &item) const
 void monster::equip_weapon_message(item_def &item)
 {
     const string str = " wields " +
-                       item.name(DESC_A, false, false, true, false,
-                                 ISFLAG_CURSED) + ".";
+                       item.name(DESC_A, false, false, true, false) + ".";
     simple_monster_message(*this, str.c_str());
 
     const int brand = get_weapon_brand(item);
 
-    bool message_given = true;
     switch (brand)
     {
     case SPWPN_FLAMING:
@@ -878,17 +876,7 @@ void monster::equip_weapon_message(item_def &item)
         break;
 
     default:
-        // A ranged weapon without special message is known to be unbranded.
-        if (brand != SPWPN_NORMAL || !is_range_weapon(item))
-            message_given = false;
-    }
-
-    if (message_given)
-    {
-        if (is_artefact(item) && !is_unrandom_artefact(item))
-            artefact_learn_prop(item, ARTP_BRAND);
-        else
-            set_ident_flags(item, ISFLAG_KNOW_TYPE);
+        break;
     }
 }
 
@@ -953,15 +941,13 @@ void monster::unequip_weapon(item_def &item, bool msg)
     if (msg)
     {
         const string str = " unwields " +
-                           item.name(DESC_A, false, false, true, false,
-                                     ISFLAG_CURSED) + ".";
+                           item.name(DESC_A, false, false, true, false) + ".";
         msg = simple_monster_message(*this, str.c_str());
     }
 
     const int brand = get_weapon_brand(item);
     if (msg && brand != SPWPN_NORMAL)
     {
-        bool message_given = true;
         switch (brand)
         {
         case SPWPN_FLAMING:
@@ -986,14 +972,7 @@ void monster::unequip_weapon(item_def &item, bool msg)
             break;
 
         default:
-            message_given = false;
-        }
-        if (message_given)
-        {
-            if (is_artefact(item) && !is_unrandom_artefact(item))
-                artefact_learn_prop(item, ARTP_BRAND);
-            else
-                set_ident_flags(item, ISFLAG_KNOW_TYPE);
+            break;
         }
     }
 
@@ -6379,15 +6358,6 @@ bool monster::shove(const char* feat_name)
         }
 
     return false;
-}
-
-void monster::id_if_worn(mon_inv_type mslot, object_class_type base_type,
-                          int sub_type) const
-{
-    item_def *item = mslot_item(mslot);
-
-    if (item && item->is_type(base_type, sub_type))
-        set_ident_type(*item, true);
 }
 
 bool monster::stasis() const

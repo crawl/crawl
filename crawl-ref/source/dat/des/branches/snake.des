@@ -1712,7 +1712,7 @@ WEIGHT: 5
 KMONS:  123 = black mamba / nothing
 KMONS:  4 = guardian serpent
 KMONS:  5 = naga mage / nothing
-KITEM:  1235 = potion of degeneration w:20 ident:type / scroll of poison /\
+KITEM:  1235 = potion of degeneration w:20 pre_id / scroll of poison /\
                nothing w:20
 KITEM:  4 = any weapon good_item ego:venom q:1 / \
             any weapon good_item ego:venom q:2

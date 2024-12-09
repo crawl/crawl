@@ -21,20 +21,20 @@ function line_setup(e)
 end
 
 function general_item_setup(e)
-  e.kitem("| = superb_item ident:all w:66 / star_item ident:all w:33")
-  e.kitem("* = star_item ident:all w:66 / any ident:all w:33")
-  e.kitem("% = any ident:all")
-  e.kitem("! = potion of heal wounds ident:all q:2 w:30 /\
-          potion of curing ident:all w:20 /\
-          potion of might ident:all /\
-          potion of haste ident:all /\
-          potion of resistance ident:all w:5 / potion of brilliance ident:all /\
-          potion of berserk rage ident:all /\
-          potion of mutation ident:all")
-  e.kitem("? = scroll of blinking ident:all /\
-          scroll of identify ident:all / scroll of fog ident:all /\
-          scroll of fear ident:all / scroll of enchant weapon ident:all q:2 /\
-          scroll of enchant armour ident:all q:2")
+  e.kitem("| = superb_item pre_id w:66 / star_item pre_id w:33")
+  e.kitem("* = star_item pre_id w:66 / any pre_id w:33")
+  e.kitem("% = any pre_id")
+  e.kitem("! = potion of heal wounds pre_id q:2 w:30 /\
+          potion of curing pre_id w:20 /\
+          potion of might pre_id /\
+          potion of haste pre_id /\
+          potion of resistance pre_id w:5 / potion of brilliance pre_id /\
+          potion of berserk rage pre_id /\
+          potion of mutation pre_id")
+  e.kitem("? = scroll of blinking pre_id /\
+          scroll of identify pre_id / scroll of fog pre_id /\
+          scroll of fear pre_id / scroll of enchant weapon pre_id q:2 /\
+          scroll of enchant armour pre_id q:2")
 end
 
 }}
@@ -212,53 +212,53 @@ ENDMAP
 
 NAME:     items_1
 TAGS:     items_1
-KITEM:    a = potion of curing q:4 ident:all, \
-              potion of heal wounds q:2 ident:all, \
-              potion of invisibility q:1 ident:all, \
-              potion of magic q:2 ident:all
-KITEM:    b = scroll of blinking q:1 ident:all, \
-              scroll of amnesia q:2 ident:all
-KITEM:    d = any blast wand charges:10 ident:all /\
-              any beam wand charges:10 ident:all, \
-KITEM:    e = rapier plus:2 ego:electrocution ident:all /\
-           rapier plus:2 ego:draining ident:all /\
-           rapier plus:2 ego:venom ident:all /\
-           rapier plus:2 ego:distortion ident:all /\
-           rapier plus:2 good_item ident:all, \
-           war axe plus:3 ego:freezing ident:all /\
-           war axe plus:3 ego:heavy ident:all /\
-           war axe plus:3 good_item ident:all w:5 /\
-           broad axe plus:1 ego:freezing ident:all /\
-           broad axe plus:1 ego:heavy ident:all /\
-           broad axe plus:1 good_item ident:all w:5, \
-           dire flail plus:2 ego:protection ident:all /\
-           dire flail plus:2 ego:heavy ident:all /\
-           dire flail plus:2 good_item ident:all w:5 /\
-           morningstar plus:2 ego:protection ident:all /\
-           morningstar plus:2 ego:heavy ident:all /\
-           morningstar plus:2 good_item ident:all w:5, \
-           partisan plus:2 ego:protection ident:all /\
-           partisan plus:2 ego:venom ident:all /\
-           partisan plus:2 good_item ident:all w:5, \
-           lajatang plus:0 ident:all /\
-           quarterstaff plus:4 ego:speed ident:all w:15 /\
-           quarterstaff plus:4 good_item ident:all w:5, \
-           scimitar plus:2 ego:flaming ident:all /\
-           scimitar plus:2 ego:holy_wrath ident:all /\
-           scimitar plus:2 good_item ident:all
-KITEM:    f = pair of gloves mundane ident:all /\
-           pair of boots mundane ident:all /\
-           helmet mundane ident:all /\
-           cloak mundane ident:all
-KITEM:    g = chain mail plus:1 ident:all w:20 /\
-           ring mail plus:2 ident:all /\
-           scale mail plus:1 ident:all /\
-           plate armour plus:0 ident:all
-KITEM:    h = ring of protection plus:2 ident:all /\
-           ring of evasion plus:2 ident:all /\
-           ring of strength plus:3 ident:all /\
-           ring of intelligence plus:3 ident:all /\
-           ring of dexterity plus:3 ident:all
+KITEM:    a = potion of curing q:4 pre_id, \
+              potion of heal wounds q:2 pre_id, \
+              potion of invisibility q:1 pre_id, \
+              potion of magic q:2 pre_id
+KITEM:    b = scroll of blinking q:1 pre_id, \
+              scroll of amnesia q:2 pre_id
+KITEM:    d = any blast wand charges:10 pre_id /\
+              any beam wand charges:10 pre_id, \
+KITEM:    e = rapier plus:2 ego:electrocution pre_id /\
+           rapier plus:2 ego:draining pre_id /\
+           rapier plus:2 ego:venom pre_id /\
+           rapier plus:2 ego:distortion pre_id /\
+           rapier plus:2 good_item pre_id, \
+           war axe plus:3 ego:freezing pre_id /\
+           war axe plus:3 ego:heavy pre_id /\
+           war axe plus:3 good_item pre_id w:5 /\
+           broad axe plus:1 ego:freezing pre_id /\
+           broad axe plus:1 ego:heavy pre_id /\
+           broad axe plus:1 good_item pre_id w:5, \
+           dire flail plus:2 ego:protection pre_id /\
+           dire flail plus:2 ego:heavy pre_id /\
+           dire flail plus:2 good_item pre_id w:5 /\
+           morningstar plus:2 ego:protection pre_id /\
+           morningstar plus:2 ego:heavy pre_id /\
+           morningstar plus:2 good_item pre_id w:5, \
+           partisan plus:2 ego:protection pre_id /\
+           partisan plus:2 ego:venom pre_id /\
+           partisan plus:2 good_item pre_id w:5, \
+           lajatang plus:0 pre_id /\
+           quarterstaff plus:4 ego:speed pre_id w:15 /\
+           quarterstaff plus:4 good_item pre_id w:5, \
+           scimitar plus:2 ego:flaming pre_id /\
+           scimitar plus:2 ego:holy_wrath pre_id /\
+           scimitar plus:2 good_item pre_id
+KITEM:    f = pair of gloves mundane pre_id /\
+           pair of boots mundane pre_id /\
+           helmet mundane pre_id /\
+           cloak mundane pre_id
+KITEM:    g = chain mail plus:1 pre_id w:20 /\
+           ring mail plus:2 pre_id /\
+           scale mail plus:1 pre_id /\
+           plate armour plus:0 pre_id
+KITEM:    h = ring of protection plus:2 pre_id /\
+           ring of evasion plus:2 pre_id /\
+           ring of strength plus:3 pre_id /\
+           ring of intelligence plus:3 pre_id /\
+           ring of dexterity plus:3 pre_id
 : line_setup(_G)
 MAP
 xxxxxxxxxx
@@ -337,10 +337,10 @@ ENDMAP
 NAME:     items_3
 TAGS:     items_3
 KITEM:    a = gold
-KITEM:    b = pair of gloves mundane ident:all /\
-           pair of boots mundane ident:all /\
-           helmet mundane ident:all /\
-           cloak mundane ident:all
+KITEM:    b = pair of gloves mundane pre_id /\
+           pair of boots mundane pre_id /\
+           helmet mundane pre_id /\
+           cloak mundane pre_id
 : line_setup(_G)
 : general_item_setup(_G)
 MAP
@@ -402,53 +402,53 @@ ENDMAP
 
 NAME:     items_4
 TAGS:     items_4
-KITEM:    a = ring of protection from fire ident:all /\
-          ring of protection from cold ident:all /\
-          ring of willpower ident:all /\
-          ring of fire ident:all /\
-          ring of ice ident:all /\
-          ring of see invisible ident:all /\
-          ring of poison resistance ident:all /\
-          any jewellery ident:all
-KITEM:    b = any weapon level:27 ident:all /\
-          broad axe plus:3 ident:all /\
-          battleaxe plus:1 ident:all /\
-          executioner's axe plus:0 ident:all w:3 /\
-          partisan plus:1 ident:all /\
-          glaive plus:1 ident:all /\
-          bardiche plus:0 ident:all w:3 /\
-          dire flail plus:3 ident:all /\
-          great mace plus:1 ident:all /\
-          demon whip plus:1 ident:all w:5 /\
-          giant spiked club plus:1 ident:all /\
-          quick blade plus:3 ident:all /\
-          great sword plus:1 ident:all /\
-          double sword plus:1 ident:all /\
-          demon blade plus:1 ident:all w:3 /\
-          triple sword plus:0 ident:all w:3 /\
-          lajatang plus:1 ident:all /\
-          longbow plus:1 ident:all /\
-          triple crossbow plus:0 ident:all /\
-          any weapon good_item ident:all w:30
-KITEM:    d = any armour level:27 ident:all /\
-          pair of gloves plus:1 ident:all /\
-          pair of boots plus:1 ident:all /\
-          helmet plus:1 ident:all /\
-          cloak plus:1 ident:all /\
-          chain mail plus:3 ident:all w:20 /\
-          ring mail plus:2 ident:all /\
-          scale mail plus:3 ident:all /\
-          plate armour plus:2 ident:all /\
-          fire dragon scales plus:1 ident:all /\
-          ice dragon scales plus:1 ident:all /\
-          swamp dragon scales plus:0 ident:all /\
-          acid dragon scales plus:0 ident:all /\
-          storm dragon scales plus:0 ident:all w:5 /\
-          shadow dragon scales plus:0 ident:all w:5 /\
-          tower shield plus:1 ident:all /\
-          any armour good_item ident:all w:20
-KITEM:    e = any weapon good_item ident:all
-KITEM:    f = any armour good_item ident:all
+KITEM:    a = ring of protection from fire pre_id /\
+          ring of protection from cold pre_id /\
+          ring of willpower pre_id /\
+          ring of fire pre_id /\
+          ring of ice pre_id /\
+          ring of see invisible pre_id /\
+          ring of poison resistance pre_id /\
+          any jewellery pre_id
+KITEM:    b = any weapon level:27 pre_id /\
+          broad axe plus:3 pre_id /\
+          battleaxe plus:1 pre_id /\
+          executioner's axe plus:0 pre_id w:3 /\
+          partisan plus:1 pre_id /\
+          glaive plus:1 pre_id /\
+          bardiche plus:0 pre_id w:3 /\
+          dire flail plus:3 pre_id /\
+          great mace plus:1 pre_id /\
+          demon whip plus:1 pre_id w:5 /\
+          giant spiked club plus:1 pre_id /\
+          quick blade plus:3 pre_id /\
+          great sword plus:1 pre_id /\
+          double sword plus:1 pre_id /\
+          demon blade plus:1 pre_id w:3 /\
+          triple sword plus:0 pre_id w:3 /\
+          lajatang plus:1 pre_id /\
+          longbow plus:1 pre_id /\
+          triple crossbow plus:0 pre_id /\
+          any weapon good_item pre_id w:30
+KITEM:    d = any armour level:27 pre_id /\
+          pair of gloves plus:1 pre_id /\
+          pair of boots plus:1 pre_id /\
+          helmet plus:1 pre_id /\
+          cloak plus:1 pre_id /\
+          chain mail plus:3 pre_id w:20 /\
+          ring mail plus:2 pre_id /\
+          scale mail plus:3 pre_id /\
+          plate armour plus:2 pre_id /\
+          fire dragon scales plus:1 pre_id /\
+          ice dragon scales plus:1 pre_id /\
+          swamp dragon scales plus:0 pre_id /\
+          acid dragon scales plus:0 pre_id /\
+          storm dragon scales plus:0 pre_id w:5 /\
+          shadow dragon scales plus:0 pre_id w:5 /\
+          tower shield plus:1 pre_id /\
+          any armour good_item pre_id w:20
+KITEM:    e = any weapon good_item pre_id
+KITEM:    f = any armour good_item pre_id
 : line_setup(_G)
 : general_item_setup(_G)
 MAP
@@ -578,71 +578,71 @@ ENDMAP
 
 NAME:     items_5
 TAGS:     items_5
-KITEM:    a = ring of slaying plus:2 ident:all /\
-          amulet of regeneration ident:all /\
-          ring of protection plus:4 ident:all /\
-          ring of evasion plus:4 ident:all /\
-          ring of strength plus:6 ident:all /\
-          ring of intelligence plus:6 ident:all /\
-          ring of dexterity plus:6 ident:all /\
-          ring of wizardry ident:all /\
-          any jewellery ident:all
-KITEM:    b = battleaxe plus:4 ego:none ident:all /\
-    battleaxe plus:1 good_item ident:all /\
-    executioner's axe plus:2 ego:none ident:all /\
-    executioner's axe plus:0 good_item ident:all /\
-    broad axe plus:7 ego:none ident:all /\
-    broad axe plus:3 good_item ident:all /\
-    partisan plus:4 ego:none ident:all /\
-    partisan plus:2 good_item ident:all /\
-    bardiche plus:2 ego:none ident:all /\
-    bardiche plus:0 good_item ident:all /\
-    demon trident plus:4 ego:none ident:all /\
-    demon trident plus:1 good_item ident:all /\
-    great mace plus:4 ego:none ident:all /\
-    great mace plus:1 good_item ident:all /\
-    giant spiked club plus:4 ego:none ident:all /\
-    giant spiked club plus:1 good_item ident:all /\
-    demon whip plus:4 ego:none ident:all /\
-    demon whip plus:1 good_item ident:all /\
-    double sword plus:4 ego:none ident:all /\
-    double sword plus:1 good_item ident:all /\
-    triple sword plus:2 ego:none ident:all /\
-    triple sword plus:0 good_item ident:all /\
-    demon blade plus:4 ego:none ident:all /\
-    demon blade plus:1 good_item ident:all /\
-    great sword plus:4 ego:none ident:all /\
-    great sword plus:1 good_item ident:all /\
-    lajatang plus:4 ego:none ident:all /\
-    lajatang plus:1 good_item ident:all /\
-    longbow plus:3 good_item ident:all w:15 /\
-    triple crossbow plus:0 good_item ident:all w:15
-KITEM:    d = plate armour plus:5 ident:all /\
-    plate armour plus:3 good_item ident:all /\
-    chain mail plus:5 ident:all w:20 /\
-    chain mail plus:2 good_item ident:all w:20 /\
-    robe plus:4 ident:all /\
-    robe plus:1 good_item ident:all /\
-    fire dragon scales plus:3 ident:all /\
-    ice dragon scales plus:3 ident:all /\
-    swamp dragon scales plus:1 ident:all /\
-    acid dragon scales plus:1 ident:all /\
-    storm dragon scales plus:2 ident:all w:5 /\
-    shadow dragon scales plus:2 ident:all w:5 /\
-    golden dragon scales plus:0 ident:all /\
-    pair of gloves plus:1 ident:all /\
-    pair of gloves plus:0 good_item ident:all /\
-    pair of boots plus:1 ident:all /\
-    pair of boots plus:0 good_item ident:all /\
-    helmet plus:1 ident:all /\
-    helmet plus:0 good_item ident:all /\
-    cloak plus:1 ident:all /\
-    cloak plus:0 good_item ident:all /\
-    hat plus:1 ident:all /\
-    hat plus:0 good_item ident:all /\
-    tower shield plus:3 ident:all /\
-    tower shield plus:0 good_item ident:all /\
-    barding plus:2 ident:all w:5
+KITEM:    a = ring of slaying plus:2 pre_id /\
+          amulet of regeneration pre_id /\
+          ring of protection plus:4 pre_id /\
+          ring of evasion plus:4 pre_id /\
+          ring of strength plus:6 pre_id /\
+          ring of intelligence plus:6 pre_id /\
+          ring of dexterity plus:6 pre_id /\
+          ring of wizardry pre_id /\
+          any jewellery pre_id
+KITEM:    b = battleaxe plus:4 ego:none pre_id /\
+    battleaxe plus:1 good_item pre_id /\
+    executioner's axe plus:2 ego:none pre_id /\
+    executioner's axe plus:0 good_item pre_id /\
+    broad axe plus:7 ego:none pre_id /\
+    broad axe plus:3 good_item pre_id /\
+    partisan plus:4 ego:none pre_id /\
+    partisan plus:2 good_item pre_id /\
+    bardiche plus:2 ego:none pre_id /\
+    bardiche plus:0 good_item pre_id /\
+    demon trident plus:4 ego:none pre_id /\
+    demon trident plus:1 good_item pre_id /\
+    great mace plus:4 ego:none pre_id /\
+    great mace plus:1 good_item pre_id /\
+    giant spiked club plus:4 ego:none pre_id /\
+    giant spiked club plus:1 good_item pre_id /\
+    demon whip plus:4 ego:none pre_id /\
+    demon whip plus:1 good_item pre_id /\
+    double sword plus:4 ego:none pre_id /\
+    double sword plus:1 good_item pre_id /\
+    triple sword plus:2 ego:none pre_id /\
+    triple sword plus:0 good_item pre_id /\
+    demon blade plus:4 ego:none pre_id /\
+    demon blade plus:1 good_item pre_id /\
+    great sword plus:4 ego:none pre_id /\
+    great sword plus:1 good_item pre_id /\
+    lajatang plus:4 ego:none pre_id /\
+    lajatang plus:1 good_item pre_id /\
+    longbow plus:3 good_item pre_id w:15 /\
+    triple crossbow plus:0 good_item pre_id w:15
+KITEM:    d = plate armour plus:5 pre_id /\
+    plate armour plus:3 good_item pre_id /\
+    chain mail plus:5 pre_id w:20 /\
+    chain mail plus:2 good_item pre_id w:20 /\
+    robe plus:4 pre_id /\
+    robe plus:1 good_item pre_id /\
+    fire dragon scales plus:3 pre_id /\
+    ice dragon scales plus:3 pre_id /\
+    swamp dragon scales plus:1 pre_id /\
+    acid dragon scales plus:1 pre_id /\
+    storm dragon scales plus:2 pre_id w:5 /\
+    shadow dragon scales plus:2 pre_id w:5 /\
+    golden dragon scales plus:0 pre_id /\
+    pair of gloves plus:1 pre_id /\
+    pair of gloves plus:0 good_item pre_id /\
+    pair of boots plus:1 pre_id /\
+    pair of boots plus:0 good_item pre_id /\
+    helmet plus:1 pre_id /\
+    helmet plus:0 good_item pre_id /\
+    cloak plus:1 pre_id /\
+    cloak plus:0 good_item pre_id /\
+    hat plus:1 pre_id /\
+    hat plus:0 good_item pre_id /\
+    tower shield plus:3 pre_id /\
+    tower shield plus:0 good_item pre_id /\
+    barding plus:2 pre_id w:5
 : line_setup(_G)
 : general_item_setup(_G)
 MAP
@@ -777,91 +777,91 @@ ENDMAP
 NAME:     items_6
 TAGS:     items_6
 ORIENT:   encompass
-KITEM:    a = amulet of faith randart ident:all /\
-    amulet of guardian spirit randart ident:all /\
-    amulet of magic regeneration randart ident:all /\
-    amulet of reflection randart ident:all /\
-    amulet of regeneration randart ident:all /\
-    ring of slaying plus:3 randart ident:all /\
-    any jewellery randart level:27 ident:all w:40 /\
-    ring of protection from fire randart ident:all /\
-    ring of protection from cold randart ident:all /\
-    ring of willpower randart ident:all /\
-    ring of fire randart ident:all /\
-    ring of ice randart ident:all /\
-    ring of see invisible randart ident:all /\
-    ring of poison resistance randart ident:all /\
-    ring of slaying plus:3 ident:all /\
-    ring of resist corrosion randart ident:all /\
-    ring of protection plus:3 randart ident:all /\
-    ring of evasion plus:3 randart ident:all /\
-    ring of strength plus:3 randart ident:all /\
-    ring of intelligence plus:3 randart ident:all /\
-    ring of dexterity plus:3 randart ident:all /\
-    ring of wizardry ident:all randart
-KITEM:    b = battleaxe plus:5 good_item ident:all /\
-    battleaxe plus:5 randart ident:all w:5 /\
-    executioner's axe plus:5 good_item ident:all /\
-    executioner's axe plus:5 randart ident:all w:5 /\
-    broad axe plus:5 good_item ident:all /\
-    broad axe plus:5 randart ident:all w:5 /\
-    partisan plus:5 good_item ident:all /\
-    partisan plus:5 randart ident:all w:5 /\
-    bardiche plus:5 good_item ident:all /\
-    bardiche plus:5 randart ident:all w:5 /\
-    demon trident plus:5 good_item ident:all /\
-    demon trident plus:5 randart ident:all w:5 /\
-    great mace plus:5 good_item ident:all /\
-    great mace plus:5 randart ident:all w:5 /\
-    giant spiked club plus:5 good_item ident:all /\
-    giant spiked club plus:5 randart ident:all w:5 /\
-    demon whip plus:5 good_item ident:all /\
-    demon whip plus:5 randart ident:all w:5 /\
-    double sword plus:5 good_item ident:all /\
-    double sword plus:5 randart ident:all w:5 /\
-    triple sword plus:5 good_item ident:all /\
-    triple sword plus:5 randart ident:all w:5 /\
-    demon blade plus:5 good_item ident:all /\
-    demon blade plus:5 randart ident:all w:5 /\
-    great sword plus:5 good_item ident:all /\
-    great sword plus:5 randart ident:all w:5 /\
-    lajatang plus:5 good_item ident:all /\
-    lajatang plus:5 randart ident:all w:5 /\
-    longbow plus:5 ego:heavy ident:all w:15 /\
-    triple crossbow plus:5 good_item ident:all w:15
-KITEM:    d = plate armour plus:6 ident:all /\
-    plate armour plus:4 good_item ident:all /\
-    chain mail plus:6 ident:all /\
-    chain mail plus:4 good_item ident:all /\
-    robe plus:4 ego:resistance ident:all /\
-    fire dragon scales plus:6 ident:all /\
-    ice dragon scales plus:6 ident:all /\
-    swamp dragon scales plus:4 ident:all /\
-    swamp dragon scales plus:2 good_item ident:all /\
-    acid dragon scales plus:4 ident:all /\
-    acid dragon scales plus:2 good_item ident:all /\
-    quicksilver dragon scales ident:all w:5 /\
-    storm dragon scales plus:5 ident:all w:5 /\
-    storm dragon scales plus:3 good_item ident:all w:5 /\
-    shadow dragon scales plus:5 ident:all w:5 /\
-    shadow dragon scales plus:3 good_item ident:all w:5 /\
-    golden dragon scales plus:4 ident:all /\
-    golden dragon scales plus:0 good_item ident:all /\
-    pair of gloves plus:2 ident:all /\
-    pair of gloves plus:0 good_item ident:all /\
-    pair of boots plus:2 ident:all /\
-    pair of boots plus:0 good_item ident:all /\
-    helmet plus:2 ident:all /\
-    helmet plus:0 good_item ident:all /\
-    cloak plus:2 ident:all /\
-    cloak plus:0 good_item ident:all /\
-    hat plus:2 ident:all /\
-    hat plus:0 good_item ident:all /\
-    tower shield plus:5 ident:all /\
-    tower shield plus:3 good_item ident:all /\
-    barding plus:4 ident:all w:5
-KITEM:     e = potion of haste q:5 ident:all
-KITEM:     f = potion of magic q:5 ident:all
+KITEM:    a = amulet of faith randart pre_id /\
+    amulet of guardian spirit randart pre_id /\
+    amulet of magic regeneration randart pre_id /\
+    amulet of reflection randart pre_id /\
+    amulet of regeneration randart pre_id /\
+    ring of slaying plus:3 randart pre_id /\
+    any jewellery randart level:27 pre_id w:40 /\
+    ring of protection from fire randart pre_id /\
+    ring of protection from cold randart pre_id /\
+    ring of willpower randart pre_id /\
+    ring of fire randart pre_id /\
+    ring of ice randart pre_id /\
+    ring of see invisible randart pre_id /\
+    ring of poison resistance randart pre_id /\
+    ring of slaying plus:3 pre_id /\
+    ring of resist corrosion randart pre_id /\
+    ring of protection plus:3 randart pre_id /\
+    ring of evasion plus:3 randart pre_id /\
+    ring of strength plus:3 randart pre_id /\
+    ring of intelligence plus:3 randart pre_id /\
+    ring of dexterity plus:3 randart pre_id /\
+    ring of wizardry pre_id randart
+KITEM:    b = battleaxe plus:5 good_item pre_id /\
+    battleaxe plus:5 randart pre_id w:5 /\
+    executioner's axe plus:5 good_item pre_id /\
+    executioner's axe plus:5 randart pre_id w:5 /\
+    broad axe plus:5 good_item pre_id /\
+    broad axe plus:5 randart pre_id w:5 /\
+    partisan plus:5 good_item pre_id /\
+    partisan plus:5 randart pre_id w:5 /\
+    bardiche plus:5 good_item pre_id /\
+    bardiche plus:5 randart pre_id w:5 /\
+    demon trident plus:5 good_item pre_id /\
+    demon trident plus:5 randart pre_id w:5 /\
+    great mace plus:5 good_item pre_id /\
+    great mace plus:5 randart pre_id w:5 /\
+    giant spiked club plus:5 good_item pre_id /\
+    giant spiked club plus:5 randart pre_id w:5 /\
+    demon whip plus:5 good_item pre_id /\
+    demon whip plus:5 randart pre_id w:5 /\
+    double sword plus:5 good_item pre_id /\
+    double sword plus:5 randart pre_id w:5 /\
+    triple sword plus:5 good_item pre_id /\
+    triple sword plus:5 randart pre_id w:5 /\
+    demon blade plus:5 good_item pre_id /\
+    demon blade plus:5 randart pre_id w:5 /\
+    great sword plus:5 good_item pre_id /\
+    great sword plus:5 randart pre_id w:5 /\
+    lajatang plus:5 good_item pre_id /\
+    lajatang plus:5 randart pre_id w:5 /\
+    longbow plus:5 ego:heavy pre_id w:15 /\
+    triple crossbow plus:5 good_item pre_id w:15
+KITEM:    d = plate armour plus:6 pre_id /\
+    plate armour plus:4 good_item pre_id /\
+    chain mail plus:6 pre_id /\
+    chain mail plus:4 good_item pre_id /\
+    robe plus:4 ego:resistance pre_id /\
+    fire dragon scales plus:6 pre_id /\
+    ice dragon scales plus:6 pre_id /\
+    swamp dragon scales plus:4 pre_id /\
+    swamp dragon scales plus:2 good_item pre_id /\
+    acid dragon scales plus:4 pre_id /\
+    acid dragon scales plus:2 good_item pre_id /\
+    quicksilver dragon scales pre_id w:5 /\
+    storm dragon scales plus:5 pre_id w:5 /\
+    storm dragon scales plus:3 good_item pre_id w:5 /\
+    shadow dragon scales plus:5 pre_id w:5 /\
+    shadow dragon scales plus:3 good_item pre_id w:5 /\
+    golden dragon scales plus:4 pre_id /\
+    golden dragon scales plus:0 good_item pre_id /\
+    pair of gloves plus:2 pre_id /\
+    pair of gloves plus:0 good_item pre_id /\
+    pair of boots plus:2 pre_id /\
+    pair of boots plus:0 good_item pre_id /\
+    helmet plus:2 pre_id /\
+    helmet plus:0 good_item pre_id /\
+    cloak plus:2 pre_id /\
+    cloak plus:0 good_item pre_id /\
+    hat plus:2 pre_id /\
+    hat plus:0 good_item pre_id /\
+    tower shield plus:5 pre_id /\
+    tower shield plus:3 good_item pre_id /\
+    barding plus:4 pre_id w:5
+KITEM:     e = potion of haste q:5 pre_id
+KITEM:     f = potion of magic q:5 pre_id
 : line_setup(_G)
 : general_item_setup(_G)
 MAP

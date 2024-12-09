@@ -3646,7 +3646,7 @@ NAME:   water_maze_lemuel
 TAGS:   no_pool_fixup uniq_water_maze_lemuel no_descent
 WEIGHT: 5
 DEPTH:  D:5-, Depths
-KITEM:  > = scroll of teleportation ident:type q:3
+KITEM:  > = scroll of teleportation pre_id q:3
 KFEAT:  > = >
 MAP
    wwwwwwwww
@@ -4430,7 +4430,7 @@ ENDMAP
 NAME:   lemuel_flamethrower_hall
 TAGS:   layout_rooms layout_city no_item_gen ruin_abyss
 DEPTH:  D:9-, Depths, Elf, Geh, Abyss
-ITEM:   any weapon good_item ego:flaming / scroll of immolation ident:type
+ITEM:   any weapon good_item ego:flaming / scroll of immolation pre_id
 ITEM:   fire dragon scales good_item / randbook disc:fire numspells:1
 SUBST:  $ : $$*|.c
 :  if you.in_branch("Geh") then

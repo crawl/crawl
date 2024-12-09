@@ -1141,17 +1141,17 @@ KMONS:      | = ancient lich / royal mummy / executioner / tzitzimitl
 :           end
 
 #           Hints.
-KITEM:      ' = wand of digging charges:1 ident:type
-KITEM:      " = scroll of revelation q:1 ident:type
+KITEM:      ' = wand of digging charges:1 pre_id
+KITEM:      " = scroll of revelation q:1 pre_id
 #           Loot.
 #           0 = scrolls. 1 = armours. 2 = mixed.
 :           local lrnd = crawl.random2(3)
 :           if lrnd == 0 then
 KITEM:      % = any scroll / any scroll q:2 w:3 / any scroll q:3 w:1
 :           kitem("* = " .. dgn.good_scrolls)
-KITEM:      | = scroll of acquirement q:1 ident:type / \
-                scroll of enchant weapon q:3 ident:type / \
-                scroll of blinking q:2 ident:type, scroll of fog q:2 ident:type
+KITEM:      | = scroll of acquirement q:1 pre_id / \
+                scroll of enchant weapon q:3 pre_id / \
+                scroll of blinking q:2 pre_id, scroll of fog q:2 pre_id
 :           elseif lrnd == 1 then
 KITEM:      % = any armour
 KITEM:      * = any good_item armour
@@ -1284,13 +1284,13 @@ KMONS:      0 = col:red iron golem hd:5 spells:corrupting_pulse.36.magical \
                 tile:mons_flesh_golem name_descriptor
 KMONS:      & = col:mutagenic primal ox-ox-weird mutant beast \
                 name:Cigotuvi's_Monster name_replace tile:mons_cigotuvis_monster
-ITEM:       potion of mutation q:1 ident:type
+ITEM:       potion of mutation q:1 pre_id
 ITEM:       randbook disc:alchemy disc2:necromancy owner:Cigotuvi
 ITEM:       flux talisman randart / maw talisman randart / \
             serpent talisman randart / statue talisman w:8 / \
             dragon-blood talisman / storm talisman w:8 / \
             talisman of death w:2
-ITEM:       staff of death ident:type, scroll of poison ident:type
+ITEM:       staff of death pre_id, scroll of poison pre_id
 ITEM:       w:5 any jewellery randart / w:5 hat_of_the_alchemist / \
             cigotuvi's_embrace
 KFEAT:      ? = fountain_eyes
@@ -1395,7 +1395,7 @@ MONS:       statue hd:12 spells:orb_of_destruction.62.magical \
             tile:mons_statue_mage col:vehumet name:conjurer n_adj
 KMONS:      3DEF = purple draconian
 KMONS:      4 = orb spider
-KITEM:      D = robe ego:archmagi ident:type, star_item / superb_item, star_item
+KITEM:      D = robe ego:archmagi pre_id, star_item / superb_item, star_item
 KITEM:      E = any book, randbook disc:conjuration owner:Iskenderun \
                 spells:iskenderun's_mystic_blast&iskenderun's_battlesphere, \
                 randbook disc:conjuration owner:Iskenderun
@@ -1466,7 +1466,7 @@ ENDMAP
 NAME:       wizlab_zonguldrok
 TAGS:       no_rotate patrolling
 MONS:       skeletal warrior, ancient champion, lich
-ITEM:       any scroll q:2 w:8 / scroll of enchant weapon ident:type w:2 / \
+ITEM:       any scroll q:2 w:8 / scroll of enchant weapon pre_id w:2 / \
             randbook disc:necromancy numspells:1 w:2
 # Shortlist of one-handed skeletal warrior weapons.
 : local d = "ego:draining plus:6 "
@@ -1614,7 +1614,7 @@ KFEAT:      ' = open_door
 KFEAT:      1234567 = .
 KMONS:      1234567 = nothing
 LROCKCOL:   darkgrey
-ITEM:       potion of experience q:1 ident:all
+ITEM:       potion of experience q:1 pre_id
 ITEM:       manual of fighting / manual of armour / manual of spellcasting / \
             manual of staves / manual of fighting / manual of dodging
 ITEM:       book of hexes / book of dreams / book of dangerous friends
@@ -2060,8 +2060,8 @@ ITEM:       any book, any magical staff
 : item("demon blade " .. s .. "w:3 / demon whip " .. s .. "w:3 / " ..
 :      "demon trident " .. s .. "w:3 / broad axe " .. s .. "w:2 / " ..
 :      "lajatang " .. s .. "w:4 / quarterstaff randart plus:12 " .. s .. " w:1")
-KITEM:      h = potion of lignification ident:type q:4 / \
-                scroll of poison q:4 ident:type, \
+KITEM:      h = potion of lignification pre_id q:4 / \
+                scroll of poison q:4 pre_id, \
                 randbook owner:Eringya numspells:1 spells:eringya's_noxious_bog
 KFEAT:      - = stone_arch
 KFEAT:      _ = altar_fedhas
@@ -2165,8 +2165,8 @@ ITEM:       scarf ego:harm w:25 / boots ego:rampaging w:25 /\
             maxwell's patent armour w:2 / maxwell's thermic engine w:2
 ITEM:       any armour good_item w:20 / any weapon good_item w:20 /\
             any weapon randart / any armour randart / any jewellery randart w:5
-ITEM:       potion of attraction ident:all / any scroll w:20 /\
-            scroll of vulnerability ident:all / any potion w:20
+ITEM:       potion of attraction pre_id / any scroll w:20 /\
+            scroll of vulnerability pre_id / any potion w:20
 SHUFFLE:    DE/JK, pqrs, ;~
 SUBST:      D : b+, E:., J:., K: b+, F:.+, p:v, q:b., r: v.., s:b...
 SUBST:      ;:v+., -:v+.., ~:., 1 = 1..., 2 = 2..
@@ -2279,7 +2279,7 @@ kmons("5 = patrolling Head Instructor dbname:Head_Instructor name:"
             . triple sword ego:antimagic . plate armour ego:willpower")
 }}
 ITEM:   any book w:15 / randbook disc:hexes owner:Yara w:4 / spellbinder w:1
-ITEM:   scroll of enchant armour ident:all / scroll of enchant weapon ident:all
+ITEM:   scroll of enchant armour pre_id / scroll of enchant weapon pre_id
 KFEAT:  C = cache of fruit / cache of meat / cache of baked goods
 NSUBST: * = 4:d / 4:e / *=*., 5 = 1:5 / *:1, D = 1:2 / * = 1G
 NSUBST: E = 1:2 / *:1, 3 = 1:4 / * = 3", A = 1:< / *:A, C = 3 = C.. / *:.
@@ -2362,12 +2362,12 @@ ITEM:    randbook disc:necromancy numspells:6 owner:Borgnjor w:5 / any book /\
          macabre finger necklace w:1 / sceptre of torment w:1
 : local p = "good_item ego:pain w:3"
 : local v = "good_item ego:vampirism w:3"
-: item("any book w:12 / scroll of torment ident:all q:3 w:12 / " ..
+: item("any book w:12 / scroll of torment pre_id q:3 w:12 / " ..
 :       "great mace " .. p .. " / great sword " .. p .. " / " ..
 :       "glaive " .. p .. " / battleaxe " .. p .. " / " ..
 :       "demon whip " .. v .. " / demon blade " .. v .. " / " ..
 :       "demon trident " .. v .. " / quick blade " .. v)
-ITEM:    any book / scroll of torment ident:all q:3 /\
+ITEM:    any book / scroll of torment pre_id q:3 /\
          any weapon good_item ego:pain / any weapon good_item ego:vampirism
 ITEM:    any ring / any amulet w:5
 : if crawl.one_chance_in(4) then
@@ -2548,14 +2548,14 @@ KMONS:  F = spriggan druid / deep elf pyromancer / arcanist w:5 / occultist w:5
 KMONS:  E = water nymph / merfolk aquamancer / merfolk javelineer /\
             merfolk aquamancer / arcanist ; nothing / occultist ; nothing
 KMONS:  D = stone giant / ettin
-ITEM:       potion of degeneration ident:all
+ITEM:       potion of degeneration pre_id
 : item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
-ITEM:   scroll of acquirement ident:all q:1
+ITEM:   scroll of acquirement pre_id q:1
 ITEM:   any book w:30 / randbook disc:alchemy / condenser vane w:1
 KITEM:  " = gold q:1 no_pickup
 KITEM:  H = any magical staff no_pickup
 KITEM:  Q = star_item
-KITEM:  JKL = potion of degeneration ident:all
+KITEM:  JKL = potion of degeneration pre_id
 KFEAT:  C = cache of meat / cache of fruit / cache of baked goods
 KFEAT:  E = shallow_water
 KFEAT:  N = granite_statue

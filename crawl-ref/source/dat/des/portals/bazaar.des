@@ -844,7 +844,7 @@ WEIGHT:  5
 ORIENT:  encompass
 KFEAT:   A = scroll shop
 KFEAT:   B = distillery shop
-ITEM:    ring of flight ident:type no_pickup
+ITEM:    ring of flight pre_id no_pickup
 SHUFFLE: lAB/wBA
 : bazaar_setup(_G)
 : local colour = dgn.get_floor_colour()
@@ -1813,7 +1813,7 @@ TAGS:    no_rotate
 WEIGHT:  1
 ORIENT:  encompass
 SUBST:   B = ., N = ., n = T, t = ., ' = ., " = .
-KITEM:   ? = wand of digging ident:type no_pickup
+KITEM:   ? = wand of digging pre_id no_pickup
 KFEAT:   ? = antiques shop
 KFEAT:   ! = any shop
 SUBST:   T = V T U:1
@@ -2022,7 +2022,7 @@ ORIENT:  encompass
 KMONS:   p = pile of debris
 KMONS:   E = demonic plant
 KMONS:   f = butterfly perm_ench:paralysis
-KITEM:   d = potion of degeneration ident:all
+KITEM:   d = potion of degeneration pre_id
 KITEM:   r = large rock
 KITEM:   s = human skeleton / kobold skeleton / orc skeleton / \
              naga skeleton / merfolk skeleton / spriggan skeleton

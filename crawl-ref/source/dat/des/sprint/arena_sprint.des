@@ -127,7 +127,7 @@ function arena_sprint_end_round(data)
             data.style_mult = data.style_mult + 1
             -- Reward for boss kills. Doesn't come identified...
             dgn.create_item(you_x, you_y, "acquire any")
-            dgn.create_item(you_x, you_y, "potion of experience q:1 ident:all")
+            dgn.create_item(you_x, you_y, "potion of experience q:1 pre_id")
         else
             crawl.mpr("<yellow>Victory!</yellow>", "warning")
         end
@@ -1017,11 +1017,11 @@ KFEAT:  n = altar_qazlal
 KFEAT:  o = altar_ru
 KFEAT:  p = altar_uskayaw
 KFEAT:  q = altar_wu_jian
-KITEM:  { = scroll of blinking q:3, scroll of fog q:3 ident:all, \
+KITEM:  { = scroll of blinking q:3, scroll of fog q:3 pre_id, \
             potion of heal wounds q:3, potion of haste q:3, \
-            any blast wand charges:5 ident:all, \
-            any beam wand charges:5 ident:all, \
-            potion of resistance ident:all, gold q:200
+            any blast wand charges:5 pre_id, \
+            any beam wand charges:5 pre_id, \
+            potion of resistance pre_id, gold q:200
 KFEAT:  { = {
 
 # Shops have the same prices and (largely) the same items. Early on, you can

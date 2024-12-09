@@ -638,12 +638,12 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
         item_def *item;
         if (you.slot_item(EQ_WEAPON))
         {
-            item = new item_def(get_item_known_info(*you.slot_item(EQ_WEAPON)));
+            item = new item_def(*you.slot_item(EQ_WEAPON));
             minfo.inv[MSLOT_WEAPON].reset(item);
         }
         if (you.slot_item(EQ_OFFHAND))
         {
-            item = new item_def(get_item_known_info(*you.slot_item(EQ_OFFHAND)));
+            item = new item_def(*you.slot_item(EQ_OFFHAND));
             minfo.inv[MSLOT_SHIELD].reset(item);
         }
         tileidx_t mcache_idx = mcache.register_monster(minfo);

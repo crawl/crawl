@@ -21,6 +21,7 @@
 #include "item-prop.h"
 #include "item-status-flag-type.h"
 #include "item-use.h"
+#include "items.h"
 #include "message.h"
 #include "mutation.h"
 #include "nearby-danger.h"
@@ -917,8 +918,7 @@ bool quaff_potion(item_def &potion)
 
     if (!was_known)
     {
-        set_ident_flags(potion, ISFLAG_IDENT_MASK);
-        set_ident_type(potion, true);
+        identify_item(potion);
         mprf("It was a %s.", potion.name(DESC_QUALNAME).c_str());
     }
 

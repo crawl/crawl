@@ -12,7 +12,6 @@
 #include "fight.h" // spines_damage
 #include "item-name.h"
 #include "item-prop.h"
-#include "item-status-flag-type.h" // ISFLAG_IDENT_MASK
 #include "los.h"
 #include "mapdef.h" // item_list
 #include "message.h"
@@ -735,7 +734,7 @@ static bool _try_print_item(string target)
 
     it.quantity = 1;
     it.rnd = 1;
-    set_ident_flags(it, ISFLAG_IDENT_MASK);
+    identify_item(it);
 
     string desc = get_item_description(it, IDM_MONSTER).c_str();
     desc = trim_string(desc);

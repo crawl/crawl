@@ -143,8 +143,8 @@ ENDMAP
 NAME:    hangedman_research_toxicology
 MONS:    sea snake, mana viper, tarantella, death drake
 KMONS:   5D = radroach
-KITEM:   E = potion of degeneration ident:type / \
-             potion of mutation ident:type
+KITEM:   E = potion of degeneration pre_id / \
+             potion of mutation pre_id
 COLOUR:  .012345DE = lightgreen
 FTILE:   .+n012345DE = floor_moss
 SHUFFLE: 12, 34

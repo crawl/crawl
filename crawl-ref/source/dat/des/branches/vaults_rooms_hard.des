@@ -1948,9 +1948,9 @@ MONS:    slime creature, large slime creature, very large slime creature
 MONS:    great orb of eyes, entropy weaver, glowing orange brain
 MONS:    formless jellyfish
 KITEM:   R = gold no_pickup q:1
-ITEM:    scroll of teleportation ident:type q:2 / wand of digging charges:2
-ITEM:    scroll of teleportation ident:type q:2 w:20 / \
-         wand of digging charges:2 w:20 / dagger ego:distortion ident:type
+ITEM:    scroll of teleportation pre_id q:2 / wand of digging charges:2
+ITEM:    scroll of teleportation pre_id q:2 w:20 / \
+         wand of digging charges:2 w:20 / dagger ego:distortion pre_id
 : local d = you.depth()
 : nsubst('J = ' .. d .. ':4 / 3 = 5 6:' .. d * 4 .. ' 7:' .. d * 3 .. ' / *:1')
 : subst('1 = 1 2:' .. 4 + d * 3 .. ' 3:' .. 3 + d * 2)
@@ -1989,7 +1989,7 @@ WEIGHT: 30
 DEPTH:  Vaults, !Vaults:$
 MONS:   crystal guardian, orange crystal statue
 ITEM:   any magical staff / any book / any jewellery w:15 / any scroll w:30 / \
-        potion of magic ident:type / potion of brilliance ident:type / \
+        potion of magic pre_id / potion of brilliance pre_id / \
         phial of floods w:3 / tin of tremorstones w:5 / gold w:40
 KFEAT:  _ = altar_sif_muna
 KFEAT:  ~ = W
@@ -2198,8 +2198,8 @@ KMONS:   K = patrolling hell knight
 KMONS:   M = patrolling Margery w:1 / patrolling hell knight, \
              patrolling hell knight
 # and snacks
-KITEM:   ? = potion of degeneration ident:type q:3, \
-             any potion w:30 / potion of mutation ident:type q:1
+KITEM:   ? = potion of degeneration pre_id q:3, \
+             any potion w:30 / potion of mutation pre_id q:1
 : kitem("$ = gold q:" .. crawl.random_range(33, 133) .. " no_pickup")
 KITEM:   MK` = human skeleton
 KFEAT:   Y = fountain_blood

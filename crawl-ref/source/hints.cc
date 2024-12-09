@@ -613,7 +613,7 @@ static bool _advise_use_healing_potion()
         if (obj.base_type != OBJ_POTIONS)
             continue;
 
-        if (!item_type_known(obj))
+        if (!obj.is_identified())
             continue;
 
         if (obj.sub_type == POT_CURING
@@ -2073,7 +2073,7 @@ string hints_describe_item(const item_def &item)
     {
         case OBJ_WEAPONS:
         {
-            if (is_artefact(item) && item_type_known(item))
+            if (is_artefact(item) && item.is_identified())
             {
                 if (gives_ability(item))
                 {
@@ -2224,7 +2224,7 @@ string hints_describe_item(const item_def &item)
                         "cannot be used with an offhand item.";
             }
 
-            if (!item_type_known(item)
+            if (!item.is_identified()
                 && (is_artefact(item)
                     || get_equip_desc(item) != ISFLAG_NO_DESC))
             {

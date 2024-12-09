@@ -32,8 +32,8 @@ ENDMAP
 NAME: david_orc_1_choice
 TAGS: orc_entry
 MONS: orc, warg / orc priest / orc warrior, orc warrior / orc
-ITEM: % / scroll of teleportation ident:type / scroll of identify ident:type
-ITEM: % / w:2 * / scroll of blinking ident:type / scroll of fear ident:type
+ITEM: % / scroll of identify pre_id / scroll of teleportation pre_id
+ITEM: % / w:2 * / scroll of blinking pre_id / scroll of fear pre_id
 SHUFFLE: %1
 ORIENT: float
 KFEAT: O = enter_orcish_mines
@@ -187,11 +187,11 @@ MONS:    orc, orc priest / orc wizard
 MONS:    w:50 orc warrior / ogre, swamp drake
 # The drake's name is Bobby. Since you did ask.
 KITEM:   1 = gold w:5 / nothing / animal skin / \
-             potion of degeneration ident:type w:20 / \
-             potion of haste ident:type w:2 / \
-             potion of might ident:type w:2
-ITEM:    club, potion of degeneration ident:type, gold w:5
-ITEM:    gold w:2 / nothing, potion of degeneration ident:type
+             potion of degeneration pre_id w:20 / \
+             potion of haste pre_id w:2 / \
+             potion of might pre_id w:2
+ITEM:    club, potion of degeneration pre_id, gold w:5
+ITEM:    gold w:2 / nothing, potion of degeneration pre_id
 KFEAT:   C = cache of meat
 KFEAT:   O = enter_orcish_mines
 SHUFFLE: defO
@@ -1696,7 +1696,7 @@ TAGS:  transparent
 DEPTH: Orc
 MONS:  orc priest
 KMONS: _ = orc high priest
-KITEM: _ = manual of invocations ident:all / amulet of faith ident:all w:40
+KITEM: _ = manual of invocations pre_id / amulet of faith pre_id w:40
 KFEAT: _ = altar_beogh
 SUBST: 1 = 1 .:15
 MAP

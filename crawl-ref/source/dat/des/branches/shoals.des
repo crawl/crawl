@@ -2430,7 +2430,7 @@ ORIENT: west
 KITEM:  pr = $ w:80 / any jewellery
 KITEM:  q = $ w:50 / $ good_item w:30 / any jewellery good_item / \
             any weapon good_item w:5 / any armour good_item w:5
-KITEM:  S = scroll of acquirement ident:all
+KITEM:  S = scroll of acquirement pre_id
 KMONS:  p = merfolk siren / nothing w:40
 KMONS:  qS = merfolk impaler / merfolk javelineer / merfolk aquamancer / \
              merfolk avatar / nothing w:35
@@ -2479,7 +2479,7 @@ KITEM:  p = leather armour / ring mail / scale mail / chain mail, \
 KITEM:  12 = nothing w:30 / any book / any scroll / any potion
 # Deep elves have to bring the high-strength sunscreen. At least one potion
 # of resistance is guaranteed in the changing room.
-KITEM:  s = potion of resistance ident:all
+KITEM:  s = potion of resistance pre_id
 # 1/3 chance of rudely walking in on a deep elf changing.
 KMONS:  p = deep elf knight ; nothing / nothing w:20
 KMONS:  1 = deep elf pyromancer w:20 / deep elf zephyrmancer w:20 / \

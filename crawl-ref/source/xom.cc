@@ -793,11 +793,8 @@ static void _do_chaos_upgrade(item_def &item, const monster* mon)
            || item.base_type == OBJ_WEAPONS);
     ASSERT(!is_unrandom_artefact(item));
 
-    bool seen = false;
     if (mon && you.can_see(*mon) && item.base_type == OBJ_WEAPONS)
     {
-        seen = true;
-
         const description_level_type desc = mon->friendly() ? DESC_YOUR
                                                             : DESC_THE;
         mprf("%s %s erupts in a glittering mayhem of colour.",
@@ -809,18 +806,10 @@ static void _do_chaos_upgrade(item_def &item, const monster* mon)
                                                       : (int) SPMSL_CHAOS;
 
     if (is_random_artefact(item))
-    {
         artefact_set_property(item, ARTP_BRAND, brand);
-
-        if (seen)
-            artefact_learn_prop(item, ARTP_BRAND);
-    }
     else
     {
         item.brand = brand;
-
-        if (seen)
-            set_ident_flags(item, ISFLAG_KNOW_TYPE);
 
         // Make sure it's visibly special.
         if (!(item.flags & ISFLAG_COSMETIC_MASK))

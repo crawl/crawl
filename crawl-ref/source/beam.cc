@@ -1256,8 +1256,7 @@ void bolt::do_fire()
         if (item && (flavour == BEAM_MISSILE || flavour == BEAM_VISUAL))
         {
             const coord_def diff = target - source;
-            tile_beam = tileidx_item_throw(
-                                    get_item_known_info(*item), diff.x, diff.y);
+            tile_beam = tileidx_item_throw(*item, diff.x, diff.y);
         }
     }
 #endif
@@ -7553,10 +7552,7 @@ string bolt::get_short_name() const
         return short_name;
 
     if (item != nullptr && item->defined())
-    {
-        return item->name(DESC_A, false, false, false, false,
-                          ISFLAG_IDENT_MASK | ISFLAG_COSMETIC_MASK);
-    }
+        return item->name(DESC_A, false, false, false, false);
 
     if (real_flavour == BEAM_RANDOM
         || real_flavour == BEAM_CHAOS)

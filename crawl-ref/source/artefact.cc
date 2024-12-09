@@ -249,14 +249,6 @@ static const unrandart_entry unranddata[] =
 
 static const unrandart_entry *_seekunrandart(const item_def &item);
 
-bool is_known_artefact(const item_def &item)
-{
-    if (!item_type_known(item))
-        return false;
-
-    return is_artefact(item);
-}
-
 bool is_artefact(const item_def &item)
 {
     return item.flags & ISFLAG_ARTEFACT_MASK;
@@ -285,17 +277,6 @@ bool is_special_unrandom_artefact(const item_def &item)
 {
     return item.flags & ISFLAG_UNRANDART
            && (_seekunrandart(item)->flags & UNRAND_FLAG_SPECIAL);
-}
-
-void autoid_unrand(item_def &item)
-{
-    if (!(item.flags & ISFLAG_UNRANDART) || item.flags & ISFLAG_KNOW_TYPE)
-        return;
-    const uint16_t uflags = _seekunrandart(item)->flags;
-    if (uflags & UNRAND_FLAG_UNIDED)
-        return;
-
-    set_ident_flags(item, ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID);
 }
 
 unique_item_status_type get_unique_item_status(int art)
@@ -428,26 +409,17 @@ static map<jewellery_type, vector<jewellery_fake_artp>> jewellery_artps = {
  *
  * @param arm           The jewellery in question.
  * @param proprt[out]   The properties list to be populated.
- * @param known[out]    The props which are known.
  */
 static void _populate_jewel_intrinsic_artps(const item_def &item,
-                                              artefact_properties_t &proprt,
-                                              artefact_known_props_t &known)
+                                              artefact_properties_t &proprt)
 {
     const jewellery_type jewel = (jewellery_type)item.sub_type;
     vector<jewellery_fake_artp> *props = map_find(jewellery_artps, jewel);
     if (!props)
         return;
 
-    const bool id_props = item_ident(item, ISFLAG_KNOW_PROPERTIES)
-                          || item_ident(item, ISFLAG_KNOW_TYPE);
-
     for (const auto &fake_artp : *props)
-    {
         proprt[fake_artp.artp] += fake_artp.plus ? fake_artp.plus : item.plus;
-        if (id_props)
-            known[fake_artp.artp] = true;
-    }
 }
 
 
@@ -456,11 +428,9 @@ static void _populate_jewel_intrinsic_artps(const item_def &item,
  *
  * @param arm           The item in question.
  * @param proprt[out]   The properties list to be populated.
- * @param known[out]    The props which are known.
  */
 static void _populate_item_intrinsic_artps(const item_def &item,
-                                             artefact_properties_t &proprt,
-                                             artefact_known_props_t &known)
+                                             artefact_properties_t &proprt)
 {
     switch (item.base_type)
     {
@@ -472,7 +442,7 @@ static void _populate_item_intrinsic_artps(const item_def &item,
             _populate_staff_intrinsic_artps((stave_type)item.sub_type, proprt);
             break;
         case OBJ_JEWELLERY:
-            _populate_jewel_intrinsic_artps(item, proprt, known);
+            _populate_jewel_intrinsic_artps(item, proprt);
             break;
 
         default:
@@ -481,8 +451,7 @@ static void _populate_item_intrinsic_artps(const item_def &item,
 }
 
 void artefact_desc_properties(const item_def &item,
-                              artefact_properties_t &proprt,
-                              artefact_known_props_t &known)
+                              artefact_properties_t &proprt)
 {
     // Randart books have no randart properties.
     if (item.base_type == OBJ_BOOKS)
@@ -490,10 +459,9 @@ void artefact_desc_properties(const item_def &item,
 
     // actual artefact properties
     artefact_properties(item, proprt);
-    artefact_known_properties(item, known);
 
     // fake artefact properties (intrinsics)
-    _populate_item_intrinsic_artps(item, proprt, known);
+    _populate_item_intrinsic_artps(item, proprt);
 }
 
 static void _add_randart_weapon_brand(const item_def &item,
@@ -607,8 +575,7 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
 
     artefact_properties_t intrinsic_proprt;
     intrinsic_proprt.init(0);
-    artefact_known_props_t _;
-    _populate_item_intrinsic_artps(item, intrinsic_proprt, _);
+    _populate_item_intrinsic_artps(item, intrinsic_proprt);
     if (intrinsic_proprt[prop])
         return false; // don't duplicate intrinsic props
 
@@ -1210,32 +1177,6 @@ static bool _init_artefact_properties(item_def &item)
     return true;
 }
 
-void artefact_known_properties(const item_def &item,
-                               artefact_known_props_t &known)
-{
-    ASSERT(is_artefact(item));
-    if (!item.props.exists(KNOWN_PROPS_KEY)) // randbooks
-        return;
-
-    const CrawlStoreValue &_val = item.props[KNOWN_PROPS_KEY];
-    ASSERT(_val.get_type() == SV_VEC);
-    const CrawlVector &known_vec = _val.get_vector();
-    ASSERT(known_vec.get_type()     == SV_BOOL);
-    ASSERT(known_vec.size()         == ART_PROPERTIES);
-    ASSERT(known_vec.get_max_size() == ART_PROPERTIES);
-
-    if (item_ident(item, ISFLAG_KNOW_PROPERTIES))
-    {
-        for (vec_size i = 0; i < ART_PROPERTIES; i++)
-            known[i] = static_cast<bool>(true);
-    }
-    else
-    {
-        for (vec_size i = 0; i < ART_PROPERTIES; i++)
-            known[i] = known_vec[i];
-    }
-}
-
 void artefact_properties(const item_def &item,
                          artefact_properties_t  &proprt)
 {
@@ -1282,34 +1223,6 @@ int artefact_property(const item_def &item, artefact_prop_type prop)
     }
 }
 
-/**
- * Check whether a particular property's value is known to the player.
- */
-bool artefact_property_known(const item_def &item, artefact_prop_type prop)
-{
-    ASSERT(is_artefact(item));
-    if (item_ident(item, ISFLAG_KNOW_PROPERTIES))
-        return true;
-
-    if (!item.props.exists(KNOWN_PROPS_KEY)) // randbooks
-        return false;
-
-    const CrawlVector &known_vec = item.props[KNOWN_PROPS_KEY].get_vector();
-    ASSERT(known_vec.get_type()     == SV_BOOL);
-    ASSERT(known_vec.size()         == ART_PROPERTIES);
-
-    return known_vec[prop].get_bool();
-}
-
-/**
- * check what the player knows about an a particular property.
- */
-int artefact_known_property(const item_def &item, artefact_prop_type prop)
-{
-    return artefact_property_known(item, prop) ? artefact_property(item, prop)
-                                               : 0;
-}
-
 static int _artefact_num_props(const artefact_properties_t &proprt)
 {
     int num = 0;
@@ -1320,23 +1233,6 @@ static int _artefact_num_props(const artefact_properties_t &proprt)
             num++;
 
     return num;
-}
-
-void artefact_learn_prop(item_def &item, artefact_prop_type prop)
-{
-    ASSERT(is_artefact(item));
-    ASSERT(item.props.exists(KNOWN_PROPS_KEY));
-    CrawlStoreValue &_val = item.props[KNOWN_PROPS_KEY];
-    ASSERT(_val.get_type() == SV_VEC);
-    CrawlVector &known_vec = _val.get_vector();
-    ASSERT(known_vec.get_type()     == SV_BOOL);
-    ASSERT(known_vec.size()         == ART_PROPERTIES);
-    ASSERT(known_vec.get_max_size() == ART_PROPERTIES);
-
-    if (item_ident(item, ISFLAG_KNOW_PROPERTIES))
-        return;
-
-    known_vec[prop] = static_cast<bool>(true);
 }
 
 static string _get_artefact_type(const item_def &item, bool appear = false)
@@ -1548,7 +1444,7 @@ string get_artefact_name(const item_def &item, bool force_known)
 {
     ASSERT(is_artefact(item));
 
-    if (item_ident(item, ISFLAG_KNOW_PROPERTIES) || force_known)
+    if (item.is_identified() || force_known)
     {
         // print artefact's real name, if that's set
         if (item.props.exists(ARTEFACT_NAME_KEY))
@@ -1843,15 +1739,6 @@ static void _artefact_setup_prop_vectors(item_def &item)
 
     for (vec_size i = 0; i < ART_PROPERTIES; i++)
         rap[i].get_short() = 0;
-
-    if (!item.props.exists(KNOWN_PROPS_KEY))
-    {
-        props[KNOWN_PROPS_KEY].new_vector(SV_BOOL).resize(ART_PROPERTIES);
-        CrawlVector &known = item.props[KNOWN_PROPS_KEY].get_vector();
-        known.set_max_size(ART_PROPERTIES);
-        for (vec_size i = 0; i < ART_PROPERTIES; i++)
-            known[i] = static_cast<bool>(false);
-    }
 }
 
 // If force_mundane is true, normally mundane items are forced to
@@ -1896,7 +1783,6 @@ bool make_item_randart(item_def &item, bool force_mundane)
             // Something went wrong that no amount of rerolling will fix.
             item.unrand_idx = 0;
             item.props.erase(ARTEFACT_PROPS_KEY);
-            item.props.erase(KNOWN_PROPS_KEY);
             item.flags &= ~ISFLAG_RANDART;
             return false;
         }
@@ -1965,7 +1851,7 @@ void make_ashenzari_randart(item_def &item)
     // Ash randarts get no props
     _artefact_setup_prop_vectors(item);
     item.flags |= ISFLAG_RANDART;
-    item.flags |= ISFLAG_KNOW_PROPERTIES;
+    item.flags |= ISFLAG_IDENTIFIED;
 
     if (brand != SPWPN_NORMAL)
         set_artefact_brand(item, brand);
@@ -2208,11 +2094,8 @@ bool make_item_unrandart(item_def &item, int unrand_index)
         item.sub_type = WPN_BROAD_AXE;
     }
 
-    if (!(unrand->flags & UNRAND_FLAG_UNIDED)
-        && !strcmp(unrand->name, unrand->unid_name))
-    {
-        set_ident_flags(item, ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID);
-    }
+    if (!(unrand->flags & UNRAND_FLAG_UNIDED))
+        item.flags |= ISFLAG_IDENTIFIED;
 
     return true;
 }
@@ -2281,9 +2164,6 @@ void artefact_fixup_props(item_def &item)
     CrawlHashTable &props = item.props;
     if (props.exists(ARTEFACT_PROPS_KEY))
         artefact_pad_store_vector(props[ARTEFACT_PROPS_KEY], short(0));
-
-    if (props.exists(KNOWN_PROPS_KEY))
-        artefact_pad_store_vector(props[KNOWN_PROPS_KEY], false);
 
     // As of 0.30, it seems like there is some rare circumstance that can
     // cause a Hepliaklqana ancestor's weapon to become a half-baked artefact -

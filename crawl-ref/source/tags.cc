@@ -4736,7 +4736,7 @@ static void _tag_read_you_items(reader &th)
 
     for (int i = 0; i < ENDOFPACK; ++i)
         if (you.inv[i].defined())
-            god_id_item(you.inv[i], true);
+            ash_id_item(you.inv[i], true);
 
     if (you.duration[DUR_EXCRUCIATING_WOUNDS])
     {
@@ -5393,13 +5393,6 @@ void unmarshallItem(reader &th, item_def &item)
         }
     }
 
-    // Upgrade item knowledge to cope with the fix for #1083
-    if (item.base_type == OBJ_JEWELLERY)
-    {
-        if (item.flags & ISFLAG_KNOW_PROPERTIES)
-            item.flags |= ISFLAG_KNOW_TYPE;
-    }
-
     if (item.base_type == OBJ_POTIONS)
     {
         switch (item.sub_type)
@@ -5656,6 +5649,17 @@ void unmarshallItem(reader &th, item_def &item)
 
             item.plus = slay;
             item.plus2 = 0; // probably harmless but might as well
+        }
+    }
+
+    if (th.getMinorVersion() < TAG_MINOR_SIMPLIFY_ID)
+    {
+        // If this item has any of the old ID flags, give it the new one.
+        constexpr int OLD_ISFLAG_IDENT_MASK = 0x0000000F;
+        if (item.flags & OLD_ISFLAG_IDENT_MASK)
+        {
+            item.flags &= ~OLD_ISFLAG_IDENT_MASK;
+            item.flags |= ISFLAG_IDENTIFIED;
         }
     }
 

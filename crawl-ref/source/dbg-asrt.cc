@@ -369,24 +369,9 @@ static void _dump_player(FILE *file)
             fprintf(file, " <invalid>\n");
             continue;
         }
-        const bool unknown = !item_type_known(you.inv[eq]);
-        const bool melded  = you.melded[i];
-        string suffix = "";
-        if (unknown || melded)
-        {
-            suffix = " (";
-            if (unknown)
-            {
-                suffix += "unknown";
-                if (melded)
-                    suffix += ", ";
-            }
-            if (melded)
-                suffix += "melded";
-            suffix += ")";
-        }
         fprintf(file, ": %s%s\n",
-                you.inv[eq].name(DESC_PLAIN, false, true).c_str(), suffix.c_str());
+                you.inv[eq].name(DESC_PLAIN, false, true).c_str(),
+                you.melded[i] ? "(melded)" : "");
     }
     fprintf(file, "\n");
 

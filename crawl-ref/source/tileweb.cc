@@ -1230,7 +1230,7 @@ void TilesFramework::_send_player(bool force_full)
     for (unsigned int i = 0; i < ENDOFPACK; ++i)
     {
         json_open_object(to_string(i));
-        item_def item = get_item_known_info(you.inv[i]);
+        item_def item = you.inv[i];
         if (((char)i == you.equip[EQ_WEAPON] && is_weapon(item)
              || (char)i == you.equip[EQ_OFFHAND] && you.offhand_weapon())
             && you.corrosion_amount())
@@ -1283,7 +1283,7 @@ static int _useful_consumable_order(const item_def &item, const string &name)
 
     if (item.quantity < 1
         || order == base_types.end() // covers the empty case
-        || (!Options.action_panel_show_unidentified && !fully_identified(item)))
+        || (!Options.action_panel_show_unidentified && !item.is_identified()))
     {
         return -1;
     }
@@ -1697,18 +1697,10 @@ void TilesFramework::_send_cell(const coord_def &gc,
                     minfo.props[MONSTER_TILE_KEY] =
                         int(last_player_doll.parts[TILEP_PART_BASE]);
                     item_def *item;
-                    if (you.slot_item(EQ_WEAPON))
-                    {
-                        item = new item_def(
-                            get_item_known_info(*you.slot_item(EQ_WEAPON)));
+                    if (item = you.slot_item(EQ_WEAPON))
                         minfo.inv[MSLOT_WEAPON].reset(item);
-                    }
-                    if (you.slot_item(EQ_OFFHAND))
-                    {
-                        item = new item_def(
-                            get_item_known_info(*you.slot_item(EQ_OFFHAND)));
+                    if (item = you.slot_item(EQ_OFFHAND))
                         minfo.inv[MSLOT_SHIELD].reset(item);
-                    }
                     tileidx_t mcache_idx = mcache.register_monster(minfo);
                     mcache_entry *entry = mcache.get(mcache_idx);
                     if (entry)

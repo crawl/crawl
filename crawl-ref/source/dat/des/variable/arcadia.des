@@ -211,7 +211,7 @@ MONS:   tengu conjurer ; quarterstaff . robe . longbow | arbalest / \
 KMONS:  L = water nymph
 KMONS:  P = plant
 ITEM:   gold q:1 / stone q:1 no_pickup w:20
-ITEM:   any potion, potion of degeneration ident:all
+ITEM:   any potion, potion of degeneration pre_id
 KFEAT:  L = deep_water
 KFEAT:  F = cache of fruit
 NSUBST: w = 2:L / *:w

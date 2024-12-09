@@ -741,19 +741,19 @@ static bool _dump_item_origin(const item_def &item)
         return true;
 
     if (fs(IODS_ARTEFACTS)
-        && is_artefact(item) && item_ident(item, ISFLAG_KNOW_PROPERTIES))
+        && is_artefact(item) && item.is_identified())
     {
         return true;
     }
     if (fs(IODS_EGO_ARMOUR) && item.base_type == OBJ_ARMOUR
-        && item_type_known(item))
+        && item.is_identified())
     {
         const int spec_ench = get_armour_ego_type(item);
         return spec_ench != SPARM_NORMAL;
     }
 
     if (fs(IODS_EGO_WEAPON) && item.base_type == OBJ_WEAPONS
-        && item_type_known(item))
+        && item.is_identified())
     {
         return get_weapon_brand(item) != SPWPN_NORMAL;
     }

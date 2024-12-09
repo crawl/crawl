@@ -331,7 +331,7 @@ static int l_item_do_subtype(lua_State *ls)
     // existing scripts.
     if (item->base_type == OBJ_ARMOUR)
         s = item_slot_name(get_armour_slot(*item));
-    else if (item_type_known(*item) || item->base_type == OBJ_WEAPONS)
+    else if (item->is_identified() || item->base_type == OBJ_WEAPONS)
     {
         // must keep around the string until we call lua_pushstring
         saved = sub_type_string(*item);
@@ -365,7 +365,7 @@ static int l_item_do_ego(lua_State *ls)
     if (lua_isboolean(ls, 1))
         terse = lua_toboolean(ls, 1);
 
-    if (item_type_known(*item) || item->base_type == OBJ_MISSILES)
+    if (item->is_identified() || item->base_type == OBJ_MISSILES)
     {
         const string s = ego_type_string(*item, terse);
         if (!s.empty())
@@ -727,9 +727,8 @@ IDEF(branded)
     if (!item || !item->defined())
         return 0;
 
-    lua_pushboolean(ls, item_is_branded(*item)
-                        || item->flags & ISFLAG_COSMETIC_MASK
-                           && !item_type_known(*item));
+    lua_pushboolean(ls, item->is_identified() ? item_is_branded(*item)
+                                : item->flags & ISFLAG_COSMETIC_MASK);
     return 1;
 }
 
@@ -758,14 +757,14 @@ IDEF(god_gift)
 }
 
 /*** Is this fully identified?
- * @field fully_identified boolean
+ * @field is_identified boolean
  */
-IDEF(fully_identified)
+IDEF(is_identified)
 {
     if (!item || !item->defined())
         return 0;
 
-    lua_pushboolean(ls, fully_identified(*item));
+    lua_pushboolean(ls, item->is_identified());
 
     return 1;
 }
@@ -778,7 +777,7 @@ IDEF(plus)
     if (!item || !item->defined())
         return 0;
 
-    if (item_ident(*item, ISFLAG_KNOW_PLUSES)
+    if (item->is_identified()
         && (item->base_type == OBJ_WEAPONS || item->base_type == OBJ_ARMOUR
             || item->base_type == OBJ_WANDS
             || item->base_type == OBJ_JEWELLERY
@@ -812,7 +811,7 @@ IDEF(is_enchantable)
         lua_pushboolean(ls, false);
     }
     // We assume unidentified non-artefact items are enchantable.
-    else if (!item_ident(*item, ISFLAG_KNOW_PLUSES))
+    else if (!item->is_identified())
         lua_pushboolean(ls, true);
     else if (item->base_type == OBJ_WEAPONS)
         lua_pushboolean(ls, is_enchantable_weapon(*item));
@@ -859,7 +858,7 @@ IDEF(spells)
 IDEF(artprops)
 {
     if (!item || !item->defined() || !is_artefact(*item)
-        || !item_ident(*item, ISFLAG_KNOW_PROPERTIES)
+        || !item->is_identified()
         || item->base_type == OBJ_BOOKS)
     {
         return 0;
@@ -1056,7 +1055,7 @@ static int l_item_do_pluses(lua_State *ls)
 
     UDATA_ITEM(item);
 
-    if (!item || !item->defined() || !item_ident(*item, ISFLAG_KNOW_PLUSES))
+    if (!item || !item->defined() || !item->is_identified())
     {
         lua_pushboolean(ls, false);
         return 1;
@@ -1143,58 +1142,6 @@ static int l_item_do_inc_quantity(lua_State *ls)
 
 IDEFN(inc_quantity, do_inc_quantity)
 
-static iflags_t _str_to_item_status_flags(string flag)
-{
-    iflags_t flags = 0;
-    // type is dealt with using item_type_known.
-    //if (flag.find("type") != string::npos)
-    //    flags &= ISFLAG_KNOW_TYPE;
-    if (flag.find("pluses") != string::npos)
-        flags &= ISFLAG_KNOW_PLUSES;
-    if (flag.find("properties") != string::npos)
-        flags &= ISFLAG_KNOW_PROPERTIES;
-    if (flag == "any")
-        flags = ISFLAG_IDENT_MASK;
-
-    return flags;
-}
-
-static int l_item_do_identified(lua_State *ls)
-{
-    ASSERT_DLUA;
-
-    UDATA_ITEM(item);
-
-    if (!item || !item->defined())
-    {
-        lua_pushnil(ls);
-        return 1;
-    }
-
-    bool known_status = false;
-    if (lua_isstring(ls, 1))
-    {
-        string flags = luaL_checkstring(ls, 1);
-        if (trimmed_string(flags).empty())
-            known_status = item_ident(*item, ISFLAG_IDENT_MASK);
-        else
-        {
-            const bool check_type = strip_tag(flags, "type");
-            iflags_t item_flags = _str_to_item_status_flags(flags);
-            known_status = ((item_flags || check_type)
-                            && (!item_flags || item_ident(*item, item_flags))
-                            && (!check_type || item_type_known(*item)));
-        }
-    }
-    else
-        known_status = item_ident(*item, ISFLAG_IDENT_MASK);
-
-    lua_pushboolean(ls, known_status);
-    return 1;
-}
-
-IDEFN(identified, do_identified)
-
 // Some dLua convenience functions.
 IDEF(base_type)
 {
@@ -1214,7 +1161,7 @@ IDEF(sub_type)
 
 IDEF(ego_type)
 {
-    if (CLua::get_vm(ls).managed_vm && !item_type_known(*item)
+    if (CLua::get_vm(ls).managed_vm && !item->is_identified()
         && item->base_type != OBJ_MISSILES)
     {
         lua_pushstring(ls, "unknown");
@@ -1227,7 +1174,7 @@ IDEF(ego_type)
 
 IDEF(ego_type_terse)
 {
-    if (CLua::get_vm(ls).managed_vm && !item_type_known(*item)
+    if (CLua::get_vm(ls).managed_vm && !item->is_identified()
         && item->base_type != OBJ_MISSILES)
     {
         lua_pushstring(ls, "unknown");
@@ -1751,7 +1698,7 @@ static ItemAccessor item_attrs[] =
     { "artefact",          l_item_artefact },
     { "branded",           l_item_branded },
     { "god_gift",          l_item_god_gift },
-    { "fully_identified",  l_item_fully_identified },
+    { "is_identified",     l_item_is_identified },
     { PLUS_KEY,            l_item_plus },
     { "is_enchantable",    l_item_is_enchantable },
     { "plus2",             l_item_plus2 },
@@ -1801,7 +1748,6 @@ static ItemAccessor item_attrs[] =
     { "destroy",           l_item_destroy },
     { "dec_quantity",      l_item_dec_quantity },
     { "inc_quantity",      l_item_inc_quantity },
-    { "identified",        l_item_identified },
     { "base_type",         l_item_base_type },
     { "sub_type",          l_item_sub_type },
     { "ego_type",          l_item_ego_type },

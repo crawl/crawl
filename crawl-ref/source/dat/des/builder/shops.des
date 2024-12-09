@@ -128,7 +128,7 @@ NAME:   shop_scrolls
 TAGS:   allow_dup extra shop transparent
 WEIGHT: 1
 KFEAT:  O = scroll shop
-ITEM:   nothing w:30 / scroll of noise ident:all
+ITEM:   nothing w:30 / scroll of noise pre_id
 MAP
 ddd
 dOd

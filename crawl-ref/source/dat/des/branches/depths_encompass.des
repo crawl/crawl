@@ -55,10 +55,10 @@
         e.shuffle("ghij")
         e.shuffle("JH")
         e.shuffle("34")
-        e.kitem("p = potion of mutation ident:type")
+        e.kitem("p = potion of mutation pre_id")
         e.kitem("P = any jewellery good_item")
-        e.kitem("Q = potion of mutation ident:type")
-        e.kitem("R = potion of mutation ident:type / nothing")
+        e.kitem("Q = potion of mutation pre_id")
+        e.kitem("R = potion of mutation pre_id / nothing")
         e.nsubst("u = 2:Q / 1:P / 1:R / *:u")
         e.nsubst("G = 1:G / *:2")
         e.nsubst("H = 2:8 / 2:3")
@@ -239,7 +239,7 @@ TAGS:    no_rotate no_monster_gen no_item_gen uniq_d_encompass no_descent
 ORIENT:  encompass
 KITEM:   r = any scroll
 KITEM:   e = any / any good_item w:4
-KITEM:   DP = potion of experience ident:type / any good_item
+KITEM:   DP = potion of experience pre_id / any good_item
 KITEM:   E = |
 KMONS:   p = plant / fungus w:2
 MONS:    spectral thing

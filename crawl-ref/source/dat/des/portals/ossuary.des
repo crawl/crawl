@@ -590,12 +590,12 @@ MONS:    human zombie / elf zombie / centaur zombie
 # mix of good items with useless ones. sometimes mostly useless ones,
 # and occasional raw random ones.
 : item( dgn.loot_scrolls .. " / " .. dgn.loot_potions .. " / " ..
-:       "scroll of noise ident:type w:33 / " ..
-:       "potion of degeneration ident:type w:33" )
+:       "scroll of noise pre_id w:33 / " ..
+:       "potion of degeneration pre_id w:33" )
 # and sometimes mostly useless ones
-ITEM:    scroll of noise ident:type w:30 / scroll of poison ident:type / \
-         potion of mutation ident:type w:5 / \
-         potion of degeneration ident:type w:40
+ITEM:    scroll of noise pre_id w:30 / scroll of poison pre_id / \
+         potion of mutation pre_id w:5 / \
+         potion of degeneration pre_id w:40
 # occasionally just use this
 ITEM:    any potion / any scroll w:5
 KFEAT:   ^ = alarm trap

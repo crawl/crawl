@@ -1255,7 +1255,7 @@ string weapon_unprojectability_reason(const item_def* wpn)
         if (is_unrandom_artefact(*wpn, urand))
         {
             return make_stringf("%s would react catastrophically with paradoxical space!",
-                                you.weapon()->name(DESC_THE, false, false, false, false, ISFLAG_KNOW_PLUSES).c_str());
+                                you.weapon()->name(DESC_THE, false, false, false, false).c_str());
         }
     }
     return "";

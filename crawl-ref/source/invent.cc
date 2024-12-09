@@ -144,7 +144,7 @@ bool InvEntry::is_cursed() const
 
 bool InvEntry::is_glowing() const
 {
-    return !item_ident(*item, ISFLAG_KNOW_TYPE)
+    return !item->is_identified()
            && (get_equip_desc(*item)
                || (is_artefact(*item)
                    && (item->base_type == OBJ_WEAPONS
@@ -154,7 +154,7 @@ bool InvEntry::is_glowing() const
 
 bool InvEntry::is_ego() const
 {
-    return item_ident(*item, ISFLAG_KNOW_TYPE) && !is_artefact(*item)
+    return item->is_identified() && !is_artefact(*item)
            && item->brand != 0
            && (item->base_type == OBJ_WEAPONS
                || item->base_type == OBJ_MISSILES
@@ -163,7 +163,7 @@ bool InvEntry::is_ego() const
 
 bool InvEntry::is_art() const
 {
-    return item_ident(*item, ISFLAG_KNOW_TYPE) && is_artefact(*item);
+    return item->is_identified() && is_artefact(*item);
 }
 
 bool InvEntry::is_equipped() const
@@ -576,7 +576,7 @@ void InvMenu::load_inv_items(int item_selector, int excluded_slot,
 
 bool get_tiles_for_item(const item_def &item, vector<tile_def>& tileset, bool show_background)
 {
-    tileidx_t idx = tileidx_item(get_item_known_info(item));
+    tileidx_t idx = tileidx_item(item);
     if (!idx)
         return false;
 
@@ -735,7 +735,7 @@ int sort_item_slot(const InvEntry *a)
 
 bool sort_item_identified(const InvEntry *a)
 {
-    return !item_type_known(*(a->item));
+    return !a->item->is_identified();
 }
 
 bool sort_item_charged(const InvEntry *a)
@@ -1150,7 +1150,7 @@ bool item_is_selected(const item_def &i, int selector)
         return itype == OBJ_ARMOUR && item_is_equipped(i);
 
     case OSEL_UNIDENT:
-        return !fully_identified(i) && itype != OBJ_BOOKS;
+        return !i.is_identified() && itype != OBJ_BOOKS;
 
     case OBJ_MISSILES:
         return itype == OBJ_MISSILES || itype == OBJ_WEAPONS;
@@ -1585,10 +1585,10 @@ static bool _is_wielded(const item_def &item)
 
 static bool _is_known_no_tele_item(const item_def &item)
 {
-    if (!is_artefact(item))
+    if (!item.is_identified() || !is_artefact(item))
         return false;
 
-    return artefact_known_property(item, ARTP_PREVENT_TELEPORTATION);
+    return artefact_property(item, ARTP_PREVENT_TELEPORTATION);
 }
 
 bool needs_notele_warning(const item_def &item, operation_types oper)
@@ -1625,7 +1625,7 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
     }
 
     // Everything else depends on knowing the item subtype/brand.
-    if (!item_type_known(item))
+    if (!item.is_identified())
         return false;
 
     if (oper == OPER_REMOVE
@@ -1773,11 +1773,8 @@ bool check_warning_inscriptions(const item_def& item,
         string prompt = "Really " + _operation_verb(oper) + " ";
         prompt += (in_inventory(item) ? item.name(DESC_INVENTORY)
                                       : item.name(DESC_A));
-        if (needs_notele_warning(item, oper)
-            && item_ident(item, ISFLAG_KNOW_TYPE))
-        {
+        if (needs_notele_warning(item, oper))
             prompt += " while about to teleport";
-        }
         prompt += "?";
         if (god_despises_item(item, you.religion))
             prompt += " You'd be excommunicated if you did!";
@@ -2060,11 +2057,6 @@ void list_charging_evokers(FixedVector<item_def*, NUM_MISCELLANY> &evokers)
 void identify_inventory()
 {
     for (auto &item : you.inv)
-    {
         if (item.defined())
-        {
-            set_ident_type(item, true);
-            set_ident_flags(item, ISFLAG_IDENT_MASK);
-        }
-    }
+            identify_item(item);
 }

@@ -106,11 +106,6 @@ void item_colour(item_def &item)
     // it in appearance at some point, since sub_type isn't public information
     // for un-id'd items, and therefore can't be used to do a lookup at the
     // time item names/colours are calculated.
-    // it would probably be better to store this at the time that item_def is
-    // generated (get_item_known_info), but that requires some save compat work
-    // (and would be wrong if we ever try to get item colour/names directly...?)
-    // possibly a todo for a later date.
-
     if (auto idesc = map_find(_type_to_idesc, item.base_type))
         item.subtype_rnd = you.item_description[*idesc][item.sub_type];
 }
@@ -1335,7 +1330,7 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
         // Set number of bonus skill points.
         item.skill_points = random_range(2000, 3000);
         // Preidentify.
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
+        item.flags |= ISFLAG_IDENTIFIED;
         return; // rare enough without being replaced with randarts
     }
 
@@ -1996,7 +1991,7 @@ int items(bool allow_uniques,
           && !is_missile_brand_ok(item.sub_type, item.brand, false))
     {
         mprf(MSGCH_ERROR, "Invalid brand on item %s, annulling.",
-            item.name(DESC_PLAIN, false, true, false, false, ISFLAG_KNOW_PLUSES).c_str());
+            item.name(DESC_PLAIN, false, true, false, false).c_str());
         item.brand = 0;
     }
 

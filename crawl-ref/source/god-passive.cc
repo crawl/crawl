@@ -471,49 +471,55 @@ void ash_check_bondage()
     calc_mp(true);
 }
 
+void ash_id_inventory()
+{
+    for (int slot = 0; slot < ENDOFPACK; ++slot)
+    {
+        item_def &item = you.inv[slot];
+        if (item.defined() && !item.is_identified())
+        {
+            ash_id_item(item, false);
+            item_def * moved = auto_assign_item_slot(item);
+            // We moved the item to later in the pack, so don't
+            // miss what we swapped with.
+            if (moved != nullptr && moved->link > slot)
+                --slot;
+        }
+    }
+}
+
 // XXX: If this is called on an item in inventory, then auto_assign_item_slot
 // needs to be called subsequently. However, moving an item in inventory
 // invalidates its reference, which is a different behavior than for floor
 // items, so we don't do it in this function.
-bool god_id_item(item_def& item, bool silent)
+void ash_id_item(item_def& item, bool silent)
 {
-    iflags_t old_ided = item.flags & ISFLAG_IDENT_MASK;
+    if (!have_passive(passive_t::identify_items))
+        return;
 
-    if (have_passive(passive_t::identify_items))
+    // Don't identify runes, gems, or the orb, since this has no purpose
+    // and might mess up other things.
+    if (item_is_collectible(item))
+        return;
+
+    if (item.is_identified())
+        return;
+
+    if ((item.base_type == OBJ_JEWELLERY || item.base_type == OBJ_STAVES)
+        && item_needs_autopickup(item))
     {
-        // Don't identify runes, gems, or the orb, since this has no purpose
-        // and might mess up other things.
-        if (item_is_collectible(item))
-            return false;
-
-        if ((item.base_type == OBJ_JEWELLERY || item.base_type == OBJ_STAVES)
-            && item_needs_autopickup(item))
-        {
-            item.props[NEEDS_AUTOPICKUP_KEY] = true;
-        }
-        set_ident_type(item, true);
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
+        item.props[NEEDS_AUTOPICKUP_KEY] = true;
     }
 
-    iflags_t ided = item.flags & ISFLAG_IDENT_MASK;
+    identify_item(item);
 
-    if (ided & ~old_ided)
-    {
-        if (item.props.exists(NEEDS_AUTOPICKUP_KEY) && is_useless_item(item))
-            item.props.erase(NEEDS_AUTOPICKUP_KEY);
+    if (item.props.exists(NEEDS_AUTOPICKUP_KEY) && is_useless_item(item))
+        item.props.erase(NEEDS_AUTOPICKUP_KEY);
 
-        if (&item == you.weapon())
-            you.wield_change = true;
+    if (!silent)
+        mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
 
-        if (!silent)
-            mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
-
-        seen_item(item);
-        return true;
-    }
-
-    // nothing new
-    return false;
+    seen_item(item);
 }
 
 static bool is_ash_portal(dungeon_feature_type feat)

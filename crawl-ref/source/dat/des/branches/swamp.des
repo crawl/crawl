@@ -1799,8 +1799,8 @@ ENDMAP
 NAME:   grunt_witch_cave
 MONS:   fenstrider witch
 MONS:   hydra
-KITEM:  K = potion of degeneration ident:type w:20 / \
-            potion of mutation ident:type
+KITEM:  K = potion of degeneration pre_id w:20 / \
+            potion of mutation pre_id
 KITEM:  * = *
 KFEAT:  K = shallow_water
 KFEAT:  * = cache of baked goods
@@ -2344,7 +2344,7 @@ KMONS:  . = plant w:5 / fungus w:5 / nothing w:100
 KMONS:  - = plant / fungus / nothing w:80
 KITEM:  h^m = % / * w:5
 KITEM:  o = * / | w:5
-KITEM:  b = Fen Folio ident:type
+KITEM:  b = Fen Folio pre_id
 NSUBST: M = M / H / 2=hmm / 2=A / ., O = O / o / Hh / h^ / 1=b
 SUBST:  T = t., Z = ttW, _ = t_, v = t--
 KFEAT:  ^, = .

@@ -35,7 +35,7 @@ function callback.spider_trap_warn(data, triggerable, triggerer, marker, ev)
 end
 
 function setup_endvault_loot(e)
-  e.item("potion of ambrosia ident:all")
+  e.item("potion of ambrosia pre_id")
   e.item(dgn.loot_potions)
   e.item("hat good_item w:20 / pair of gloves good_item / " ..
          "pair of boots good_item / scarf w:40 / orb w:40")
@@ -699,7 +699,7 @@ TAGS:   no_item_gen no_monster_gen
 DEPTH:  Spider:3-
 MONS:   patrolling ghost moth
 SUBST:  | = %%d, * = ..%%d
-ITEM:   potion of ambrosia ident:type
+ITEM:   potion of ambrosia pre_id
 MAP
      ........
     ..xxxxxx..
@@ -723,8 +723,8 @@ NAME:   spiders_nest_ghost_moth_duel
 TAGS:   no_item_gen no_monster_gen
 DEPTH:  Spider:3-
 MONS:   ghost moth, tarantella
-ITEM:   potion of ambrosia ident:type q:1 / \
-        potion of ambrosia ident:type q:2 w:5
+ITEM:   potion of ambrosia pre_id q:1 / \
+        potion of ambrosia pre_id q:2 w:5
 KFEAT:  ^ = web
 MAP
     ........
@@ -770,7 +770,7 @@ SUBST:   6 = 6 *:2
 KMONS:   6 = redback / wolf spider w:4 / jumping spider w:1
 SUBST:   7 = 7 .:75
 KMONS:   7 = redback
-KITEM:   t = potion of ambrosia ident:type
+KITEM:   t = potion of ambrosia pre_id
 MAP
      ..........   ......  ........
      .xwxxxxxx3....xxxx....xxxxwx..
@@ -2239,7 +2239,7 @@ MONS:   redback
 MONS:   orb spider
 MONS:   moth of wrath / ghost moth / sun moth
 KITEM:  R = milky-white gem
-KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot
+KITEM:  O = potion of ambrosia pre_id, gossamer rune of Zot
 NSUBST: 1 = 2:1 / 1:41 / *:4
 SUBST:  4 = 444.., 5 = 55..., 6 = 6.
 NSUBST: ' = 3:3 / 4:2 / 4=32'' / 2:d / 4 = dee / 4 = ff' / *:'
@@ -2336,7 +2336,7 @@ MONS:    redback
 MONS:    orb spider
 KMONS:   * = emperor scorpion
 KMONS:   O = ghost moth
-KITEM:   * = potion of ambrosia ident:type
+KITEM:   * = potion of ambrosia pre_id
 KITEM:   P = milky-white gem
 KITEM:   O = gossamer rune of Zot
 KFEAT:   C = c
@@ -2590,7 +2590,7 @@ MONS:   emperor scorpion / jorogumo w:5, ghost moth, moth of wrath
 : setup_endvault_loot(_G)
 ITEM:   gold good_item
 KITEM:  R = milky-white gem
-KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot
+KITEM:  O = potion of ambrosia pre_id, gossamer rune of Zot
 KFEAT:  M = stone_wall
 KFEAT:  P = granite_statue
 NSUBST: S = 4:1 / 6 = 1. / *:., H = 4:5 / 1:6 / 1:7 / *:K
@@ -2653,7 +2653,7 @@ MONS:   emperor scorpion w:30 / ghost moth w:20 / moth of wrath / sun moth
 MONS:   jorogumo w:15 / radroach / spark wasp w:5
 MONS:   broodmother
 KITEM:  P = milky-white gem
-KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot
+KITEM:  O = potion of ambrosia pre_id, gossamer rune of Zot
 KFEAT:  ^ = web
 NSUBST: . = 80 = 1... / *:., 2 = 2:2 / *=2...
 NSUBST: 6 = 4:6 / 4 = 456. / *= 4..
@@ -2719,7 +2719,7 @@ MONS:   ghost moth w:15 / sun moth / moth of wrath w:5
 MONS:   emperor scorpion
 MONS:   radroach / spark wasp
 KITEM:  R = milky-white gem
-KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot
+KITEM:  O = potion of ambrosia pre_id, gossamer rune of Zot
 NSUBST: 7 = 4:7 / 1:. / * = 7..
 # bias the big monsters, randomly
 : if crawl.one_chance_in(3) then

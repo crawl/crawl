@@ -1618,7 +1618,7 @@ ENDMAP
 NAME:    regret_index_zotdec_decaying_basic
 TAGS:    extra no_pool_fixup no_trap_gen zotdec luniq_zotdec_rune
 DEPTH:   Zot, !Zot:$
-ITEM:    swamp dragon scales, spear, wand of flame ident:type charges:1
+ITEM:    swamp dragon scales, spear, wand of flame pre_id charges:1
 KFEAT:   ^ = shaft trap
 KFEAT:   t = petrified_tree
 KFEAT:   C = altar_fedhas
@@ -1877,7 +1877,7 @@ ENDMAP
 NAME:    regret_index_zotdec_abyssal_star_handed
 TAGS:    extra no_rotate no_pool_fixup luniq_zotdec_rune
 DEPTH:   Zot, !Zot:$
-ITEM:    dagger ego:distortion ident:type no_pickup
+ITEM:    dagger ego:distortion pre_id no_pickup
 KFEAT:   C = altar_lugonu
 KFEAT:   mn = m
 SUBST:   C = {([})]>>>CCC<d$
@@ -1912,7 +1912,7 @@ NAME:    regret_index_zotdec_abyssal_contain_seething_sorcery
 TAGS:    extra transparent zotdec luniq_zotdec_rune
 DEPTH:   Zot, !Zot:$
 WEIGHT:  5
-ITEM:    dagger ego:distortion ident:type no_pickup
+ITEM:    dagger ego:distortion pre_id no_pickup
 KFEAT:   C = altar_lugonu
 KFEAT:   mn = m
 KFEAT:   - = +
@@ -2088,7 +2088,7 @@ NAME:    regret_index_zotdec_magical_s
 TAGS:    extra transparent zotdec no_pool_fixup
 TAGS:    luniq_zotdec_rune luniq_zotdec_large luniq_zotdec_liquid
 DEPTH:   Zot, !Zot:$
-ITEM:    mundane ring of magical power ident:type
+ITEM:    mundane ring of magical power pre_id
 KFEAT:   CD = altar_sif_muna
 SHUFFLE: MNmn, <CD>{$d, pqrs
 SUBST:   MNn : ., V = m, { = {([})]
@@ -2128,7 +2128,7 @@ NAME:    regret_index_zotdec_fiery_em
 TAGS:    extra transparent zotdec
 TAGS:    luniq_zotdec_rune luniq_zotdec_large luniq_zotdec_liquid
 DEPTH:   Zot, !Zot:$
-ITEM:    mundane great sword ego:flaming plus:0 ident:type
+ITEM:    mundane great sword ego:flaming plus:0 pre_id
 KFEAT:   C = altar_okawaru
 SHUFFLE: DEF, pqrs, lx', lxV
 SUBST:   D : ++., EF = v, p : v., q : v., rs : v
@@ -2737,8 +2737,8 @@ MARKER:  F = lua:fog_machine { cloud_type = "flame", pow_min = 5, \
 ITEM:    book of the dragon, staff of fire, book of fire, book of annihilations
 :   vault_metal_statue_setup(_G, "G", "fiery conduit")
 : end
-ITEM:    potion of enlightenment ident:type q:1
-ITEM:    ring of flight randart ident:type no_pickup
+ITEM:    potion of enlightenment pre_id q:1
+ITEM:    ring of flight randart pre_id no_pickup
 SHUFFLE: defg, hi
 SUBST:   HIJ = c
 SUBST:   1 = 112., 2 = 221.
@@ -3831,7 +3831,7 @@ MONS:   patrolling black draconian annihilator ; cloak good_item . \
 KMONS:  O = diamond obelisk
 KMONS:  S = lightning spire
 ITEM:   storm talisman, randbook disc:air spells:chain_lightning
-: local e = "ego:electrocution good_item ident:type no_pickup"
+: local e = "ego:electrocution good_item pre_id no_pickup"
 : item("quickblade " .. e .. " w:5 / double sword " .. e .. " w:5 / " ..
 :      "executioner's axe " .. e .. " w:5 / eveningstar " .. e .. " w:5 / " ..
 :      "bardiche " .. e .. " w:5 / lajatang " .. e .. " w:5 / " ..

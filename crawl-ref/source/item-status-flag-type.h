@@ -4,11 +4,11 @@
 
 enum item_status_flag_type  // per item flags: ie. ident status, cursed status
 {
-                             //0x00000001,  // was: ISFLAG_KNOW_CURSE
-    ISFLAG_KNOW_TYPE         = 0x00000002,  // artefact name, sub/special types
-    ISFLAG_KNOW_PLUSES       = 0x00000004,  // to hit/to dam/to AC
-    ISFLAG_KNOW_PROPERTIES   = 0x00000008,  // know special artefact properties
-    ISFLAG_IDENT_MASK        = 0x0000000F,  // mask of all id related flags
+    ISFLAG_IDENTIFIED        = 0x00000001,  // Item is fully identified
+                             //0x00000002,  // was: ISFLAG_KNOW_TYPE
+                             //0x00000004,  // was: ISFLAG_KNOW_PLUSES
+                             //0x00000008,  // was: ISFLAG_KNOW_PROPERTIES
+                             //0x0000000F,  // was: ISFLAG_IDENT_MASK
 
     ISFLAG_CURSED            = 0x00000100,  // cursed
     ISFLAG_HANDLED           = 0x00000200,  // player has handled this item

@@ -38,7 +38,6 @@
 #include "god-wrath.h"
 #include "hints.h"
 #include "items.h"
-#include "item-name.h" // item_type_known
 #include "item-prop.h" // get_weapon_brand
 #include "libutil.h"
 #include "macro.h"

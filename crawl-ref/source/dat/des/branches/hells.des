@@ -87,7 +87,7 @@ KMONS:   1 = ice fiend
 KMONS:   2 = wendigo band / nargun
 KMONS:   34 = frost giant / shard shrike w:5
 KMONS:   56 = reaper ; halberd itemname:scythe tile:wpn_scythe wtile:scythe \
-         ego:freezing ident:type
+         ego:freezing pre_id
 KMONS:   7 = simulacrum
 SUBST:   l = w, W = .
 :  else -- Zot
@@ -95,8 +95,8 @@ KMONS:   1 = shard shrike
 KMONS:   2 = seven-headed hydra simulacrum / eight-headed hydra simulacrum
 KMONS:   3 = orb of fire / hellephant w:5
 KMONS:   4 = draconian scorcher
-KMONS:   5 = red draconian ; cloak . mace ego:freezing ident:type
-KMONS:   6 = white draconian ; cloak . mace ego:flaming ident:type
+KMONS:   5 = red draconian ; cloak . mace ego:freezing pre_id
+KMONS:   6 = white draconian ; cloak . mace ego:flaming pre_id
 KFEAT:   1 = w
 KFEAT:   3 = l
 NSUBST:  0 = 1:5 / 1:6
@@ -133,7 +133,7 @@ MONS:    wendigo band / simulacrum w:20
 SUBST:   l = w, F = f, %* = ., 2 = 1, 3456 = 2
 :  elseif you.in_branch("Abyss") then
 MONS:    blizzard demon / frost giant / \
-         dancing weapon ; battleaxe ego:freezing ident:type w:5
+         dancing weapon ; battleaxe ego:freezing pre_id w:5
 MONS:    simulacrum w:12 / white draconian / water elemental w:5 / \
          white very ugly thing w:15 / ice devil w:8
 MONS:    balrug / hellion / fire crab w:5 / hellephant w:5
@@ -141,10 +141,10 @@ MONS:    hell hound w:8 / red draconian / fire elemental w:5 / \
          red very ugly thing w:15 / efreet w:12
 SUBST:   * = *||, {} = ***|, xc = xxxccb, 5 = 2, 6 = 4
 :  else
-KMONS:   123 = red draconian ; cloak . long sword ego:freezing ident:type
-KMONS:   456 = white draconian ; cloak . long sword ego:flaming ident:type
-KMONS:   789 = red draconian scorcher ; cloak . staff of fire ident:type
-KMONS:   ABC = white draconian knight ; cloak . staff of cold ident:type
+KMONS:   123 = red draconian ; cloak . long sword ego:freezing pre_id
+KMONS:   456 = white draconian ; cloak . long sword ego:flaming pre_id
+KMONS:   789 = red draconian scorcher ; cloak . staff of fire pre_id
+KMONS:   ABC = white draconian knight ; cloak . staff of cold pre_id
 KMONS:   D = golden dragon
 SUBST:   c : c:5 b:2 n:1
 SHUFFLE: 123456 / 1784AB / 789ABC / 1D'4D'

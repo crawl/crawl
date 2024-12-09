@@ -806,35 +806,6 @@ string attack::def_name(description_level_type desc)
     return actor_name(defender, desc, defender_visible);
 }
 
-/* Returns the attacking weapon's name
- *
- * Sets upthe appropriate descriptive level and obtains the name of a weapon
- * based on if the attacker is a player or non-player (non-players use a
- * plain name and a manually entered pronoun)
- */
-string attack::wep_name(description_level_type desc, iflags_t ignre_flags)
-{
-    ASSERT(weapon != nullptr);
-
-    if (attacker->is_player())
-        return weapon->name(desc, false, false, false, false, ignre_flags);
-
-    string name;
-    bool possessive = false;
-    if (desc == DESC_YOUR)
-    {
-        desc       = DESC_THE;
-        possessive = true;
-    }
-
-    if (possessive)
-        name = apostrophise(atk_name(desc)) + " ";
-
-    name += weapon->name(DESC_PLAIN, false, false, false, false, ignre_flags);
-
-    return name;
-}
-
 /* TODO: Remove this!
  * Removing it may not really be practical, in retrospect. Its only used
  * below, in calc_elemental_brand_damage, which is called for both frost and
@@ -1161,12 +1132,8 @@ bool attack::apply_poison_damage_brand()
 
 bool attack::apply_damage_brand(const char *what)
 {
-    bool brand_was_known = false;
     int brand = 0;
     bool ret = false;
-
-    if (using_weapon())
-        brand_was_known = item_brand_known(*weapon);
 
     special_damage = 0;
     obvious_effect = false;
@@ -1419,7 +1386,7 @@ bool attack::apply_damage_brand(const char *what)
     if (damage_brand == SPWPN_CHAOS)
     {
         if (responsible->is_player())
-            did_god_conduct(DID_CHAOS, 2 + random2(3), brand_was_known);
+            did_god_conduct(DID_CHAOS, 2 + random2(3));
     }
 
     if (!obvious_effect)

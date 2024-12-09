@@ -39,8 +39,6 @@
 #include "xom.h"
 #include "xp-evoker-data.h"
 
-static iflags_t _full_ident_mask(const item_def& item);
-
 typedef pair<special_armour_type, int> ego_weight_tuple;
 
 // XXX: Name strings in most of the following are currently unused!
@@ -1096,23 +1094,6 @@ bool item_is_cursable(const item_def &item)
     return true;
 }
 
-void auto_id_inventory()
-{
-    for (int slot = 0; slot < ENDOFPACK; ++slot)
-    {
-        item_def &item = you.inv[slot];
-        if (item.defined() && !fully_identified(item))
-        {
-            god_id_item(item, false);
-            item_def * moved = auto_assign_item_slot(item);
-            // We moved the item to later in the pack, so don't
-            // miss what we swapped with.
-            if (moved != nullptr && moved->link > slot)
-                --slot;
-        }
-    }
-}
-
 /**
  * Make a net stationary (because it currently traps a victim).
  *
@@ -1167,113 +1148,6 @@ static bool _is_affordable(const item_def &item)
 
     // On the ground or a monster has it. Violence is the answer.
     return true;
-}
-
-//
-// Item identification status:
-//
-bool item_ident(const item_def &item, iflags_t flags)
-{
-    return (item.flags & flags) == flags;
-}
-
-void set_ident_flags(item_def &item, iflags_t flags)
-{
-    if ((item.flags & flags) != flags)
-    {
-        item.flags |= flags;
-        request_autoinscribe();
-
-        if (in_inventory(item))
-        {
-            shopping_list.cull_identical_items(item);
-            item_skills(item, you.skills_to_show);
-        }
-    }
-
-    if (fully_identified(item))
-    {
-        if (notes_are_active() && !(item.flags & ISFLAG_NOTED_ID)
-            && !get_ident_type(item)
-            && is_interesting_item(item))
-        {
-            if (!_maybe_note_found_unrand(item))
-            {
-                // Make a note of this non-unrand item
-                take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_A),
-                               origin_desc(item)));
-            }
-
-            // Sometimes (e.g. shops) you can ID an item before you get it;
-            // don't note twice in those cases.
-            item.flags |= (ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
-        }
-    }
-
-    if (item.flags & ISFLAG_KNOW_TYPE && !is_artefact(item)
-        && _is_affordable(item))
-    {
-        if (item.base_type == OBJ_MISCELLANY)
-            you.seen_misc.set(item.sub_type);
-        if (item.base_type == OBJ_TALISMANS)
-            you.seen_talisman.set(item.sub_type);
-    }
-}
-
-void unset_ident_flags(item_def &item, iflags_t flags)
-{
-    item.flags &= (~flags);
-}
-
-// Returns the mask of interesting identify bits for this item
-// (e.g., missiles don't have know-type).
-static iflags_t _full_ident_mask(const item_def& item)
-{
-    // KNOW_PROPERTIES is only relevant for artefacts, handled later.
-    iflags_t flagset = ISFLAG_IDENT_MASK & ~ISFLAG_KNOW_PROPERTIES;
-    switch (item.base_type)
-    {
-    case OBJ_CORPSES:
-    case OBJ_MISSILES:
-    case OBJ_ORBS:
-    case OBJ_RUNES:
-    case OBJ_GEMS:
-    case OBJ_GOLD:
-    case OBJ_BOOKS:
-    case OBJ_MISCELLANY:
-#if TAG_MAJOR_VERSION == 34
-    case OBJ_FOOD:
-    case OBJ_RODS:
-#endif
-        flagset = 0;
-        break;
-    case OBJ_SCROLLS:
-    case OBJ_POTIONS:
-    case OBJ_WANDS:
-    case OBJ_STAVES:
-    case OBJ_JEWELLERY:
-        flagset = ISFLAG_KNOW_TYPE;
-        break;
-    case OBJ_WEAPONS:
-    case OBJ_ARMOUR:
-    case OBJ_TALISMANS:
-        // All flags necessary for full identification.
-    default:
-        break;
-    }
-
-    if (item_type_known(item.base_type, item.sub_type) && !is_artefact(item))
-        flagset &= (~ISFLAG_KNOW_TYPE);
-
-    if (is_artefact(item))
-        flagset |= ISFLAG_KNOW_PROPERTIES;
-
-    return flagset;
-}
-
-bool fully_identified(const item_def& item)
-{
-    return item_ident(item, _full_ident_mask(item));
 }
 
 //
@@ -1719,7 +1593,7 @@ bool is_known_empty_wand(const item_def &item)
     if (item.base_type != OBJ_WANDS)
         return false;
 
-    return item_ident(item, ISFLAG_KNOW_TYPE) && item.charges <= 0;
+    return item.is_identified() && item.charges <= 0;
 }
 #endif
 
@@ -1765,7 +1639,7 @@ bool is_enchantable_armour(const item_def &arm, bool unknown)
         return false;
 
     // If we don't know the plusses, assume enchanting is possible.
-    if (unknown && !is_artefact(arm) && !item_ident(arm, ISFLAG_KNOW_PLUSES))
+    if (unknown && !is_artefact(arm) && !arm.is_identified())
         return true;
 
     // Artefacts or highly enchanted armour cannot be enchanted.
@@ -1785,7 +1659,7 @@ bool is_enchantable_weapon(const item_def &weapon, bool unknown)
        && (!is_artefact(weapon)
            || (!is_unrandom_artefact(weapon)
                && you.has_mutation(MUT_ARTEFACT_ENCHANTING)))
-       && (unknown && !item_ident(weapon, ISFLAG_KNOW_PLUSES)
+       && (unknown && !weapon.is_identified()
            || weapon.plus < MAX_WPN_ENCHANT);
 }
 
@@ -2435,7 +2309,7 @@ bool jewellery_has_pluses(const item_def &item)
     ASSERT(item.base_type == OBJ_JEWELLERY);
 
     // not known -> no plusses
-    if (!item_type_known(item))
+    if (!item.is_identified())
         return false;
 
     return jewellery_type_has_plusses(item.sub_type);
@@ -2467,7 +2341,7 @@ bool ring_has_stackable_effect(const item_def &item)
     ASSERT(item.base_type == OBJ_JEWELLERY);
     ASSERT(!jewellery_is_amulet(item));
 
-    if (!item_type_known(item))
+    if (!item.is_identified())
         return false;
 
     if (jewellery_has_pluses(item))
@@ -2923,7 +2797,7 @@ int armour_prop(int armour, int prop_type)
 // Returns true if item is evokable.
 bool gives_ability(const item_def &item)
 {
-    if (!item_type_known(item))
+    if (!item.is_identified())
         return false;
 
     if (item.base_type == OBJ_ARMOUR
@@ -2951,7 +2825,7 @@ bool gives_ability(const item_def &item)
 // for the purposes of giving information in hints mode.
 bool gives_resistance(const item_def &item)
 {
-    if (!item_type_known(item))
+    if (!item.is_identified())
         return false;
 
     switch (item.base_type)
@@ -3254,13 +3128,14 @@ void seen_item(item_def &item)
         item.plus = (you_worship(GOD_ZIN)) ? TS_FULL_TITHE : TS_NO_PIETY;
 
     if (item_type_has_ids(item.base_type) && !is_artefact(item)
-        && item_ident(item, ISFLAG_KNOW_TYPE)
+        && item.is_identified()
         && !you.type_ids[item.base_type][item.sub_type])
     {
+        fprintf(stderr, "ID by sight!");
         // Can't cull shop items here -- when called from view, we shouldn't
         // access the UI. Old ziggurat prompts are a very minor case of what
         // could go wrong.
-        set_ident_type(item.base_type, item.sub_type, true);
+        identify_item_type(item.base_type, item.sub_type);
     }
 }
 

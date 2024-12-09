@@ -283,9 +283,7 @@ void equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
     const bool msg          = !show_msgs || *show_msgs;
 
     artefact_properties_t  proprt;
-    artefact_known_props_t known;
     artefact_properties(item, proprt);
-    artefact_known_properties(item, known);
 
     if (proprt[ARTP_AC] || proprt[ARTP_SHIELDING])
         you.redraw_armour_class = true;
@@ -295,12 +293,6 @@ void equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
 
     if (proprt[ARTP_SEE_INVISIBLE])
         autotoggle_autopickup(false);
-
-    if (proprt[ARTP_MAGICAL_POWER] && !known[ARTP_MAGICAL_POWER] && msg)
-    {
-        canned_msg(proprt[ARTP_MAGICAL_POWER] > 0 ? MSG_MANA_INCREASE
-                                                  : MSG_MANA_DECREASE);
-    }
 
     // Modify ability scores.
     notify_stat_change(STAT_STR, proprt[ARTP_STRENGTH],
@@ -1140,8 +1132,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         break;
 
     case RING_SEE_INVISIBLE:
-        if (item_type_known(item))
-            autotoggle_autopickup(false);
+        autotoggle_autopickup(false);
         break;
 
     case RING_FLIGHT:

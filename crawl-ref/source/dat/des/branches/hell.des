@@ -79,8 +79,8 @@ MONS:   sun demon / smoke demon / soul eater / hell hog
 MONS:   hellion / balrug / reaper / sin beast / hell knight
 ITEM:   good_item demon blade / good_item demon whip / \
         good_item demon trident
-ITEM:   ring of fire ident:type / Necronomicon / \
-        grand grimoire / scroll of torment ident:type
+ITEM:   ring of fire pre_id / Necronomicon / \
+        grand grimoire / scroll of torment pre_id
 SUBST:  d=de, ?:?.l, ?=l.
 : hell_entry_feature(_G, 'A')
 : hell_entry_tier(_G, "mid")
@@ -115,8 +115,8 @@ MONS:   sun demon / smoke demon / soul eater / hell hog / nothing w:20
 MONS:   hellion / balrug / reaper / sin beast / hell knight
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident
-ITEM:   ring of fire ident:type / Necronomicon / \
-        grand grimoire / scroll of torment ident:type
+ITEM:   ring of fire pre_id / Necronomicon / \
+        grand grimoire / scroll of torment pre_id
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident / w:30 nothing
 SUBST:  d=de, ?:?.l, ?=l.
@@ -420,7 +420,7 @@ ENDMAP
 NAME:   pf_dread_powers_of_hell
 TAGS:   transparent uniq_hell_entry_geh
 WEIGHT: 2
-KMONS:  i = reaper ; wand of flame / balrug ; wand of flame ident:type
+KMONS:  i = reaper ; wand of flame / balrug ; wand of flame pre_id
 TILE:   c = dngn_stone_wall_red
 COLOUR: c = red
 FTILE:  'iO = floor_infernal_blank

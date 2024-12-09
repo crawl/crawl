@@ -159,9 +159,7 @@ static void _fully_identify_item(item_def *item)
     if (!item || !item->defined())
         return;
 
-    set_ident_flags(*item, ISFLAG_IDENT_MASK);
-    if (item->base_type != OBJ_WEAPONS)
-        set_ident_type(*item, true);
+    identify_item(*item);
 }
 
 // ----------------------------------------------------------------------
@@ -282,7 +280,7 @@ void Stash::update()
     // Now, grab all items on that square and fill our vector
     for (stack_iterator si(pos, true); si; ++si)
     {
-        god_id_item(*si);
+        ash_id_item(*si);
         maybe_identify_base_type(*si);
         if (!(si->flags & ISFLAG_UNOBTAINABLE))
             add_item(*si);
@@ -429,7 +427,7 @@ void Stash::_update_identification()
 {
     for (int i = items.size() - 1; i >= 0; i--)
     {
-        god_id_item(items[i]);
+        ash_id_item(items[i]);
         maybe_identify_base_type(items[i]);
     }
 }
@@ -578,7 +576,7 @@ string ShopInfo::shop_item_desc(const item_def &it) const
     unwind_var<iflags_t>(item.flags);
 
     if (shoptype_identifies_stock(shop.type))
-        item.flags |= ISFLAG_IDENT_MASK;
+        item.flags |= ISFLAG_IDENTIFIED;
 
     if (is_dumpable_artefact(item))
     {
@@ -1153,7 +1151,7 @@ static bool _is_potentially_boring(stash_search_result res)
             || res.item.base_type == OBJ_ARMOUR
             || res.item.base_type == OBJ_MISSILES
             || res.item.base_type == OBJ_TALISMANS) // TODO: also misc?
-        && (item_type_known(res.item) || !item_is_branded(res.item))
+        && (res.item.is_identified() || !item_is_branded(res.item))
         || res.match_type == MATCH_FEATURE && feat_is_trap(res.feat);
 }
 

@@ -259,7 +259,7 @@ spret cast_awaken_armour(int pow, bool fail)
     item_def &fake_armour = env.item[mitm_slot];
     fake_armour.clear();
     fake_armour = *armour;
-    fake_armour.flags |= ISFLAG_SUMMONED | ISFLAG_KNOW_PLUSES;
+    fake_armour.flags |= ISFLAG_SUMMONED | ISFLAG_IDENTIFIED;
 
     spirit->pickup_item(fake_armour, false, true);
 

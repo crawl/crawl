@@ -510,8 +510,7 @@ static void _setup_missile_beam(const actor *agent, bolt &beam,
             expl->name   += " fragments";
 
             const string short_name =
-                item.name(DESC_BASENAME, true, false, false, false,
-                          ISFLAG_IDENT_MASK | ISFLAG_COSMETIC_MASK);
+                item.name(DESC_BASENAME, true, false, false, false);
 
             expl->name = replace_all(expl->name, item.name(DESC_PLAIN),
                                      short_name);

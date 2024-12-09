@@ -410,7 +410,7 @@ void debug_dump_item(const char *name, int num, const item_def &item,
          item.plus, item.plus2, item.special);
 
     mprf("    quant: %d; ident: 0x%08" PRIx32"; ident_type: %d",
-         item.quantity, item.flags, get_ident_type(item));
+         item.quantity, item.flags, type_is_identified(item));
 
     mprf("    x: %d; y: %d; link: %d", item.pos.x, item.pos.y, item.link);
 

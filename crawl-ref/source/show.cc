@@ -273,7 +273,7 @@ void update_item_at(const coord_def &gp, bool wizard)
         if (stash.size() > 1)
             more_items = true;
     }
-    env.map_knowledge(gp).set_item(get_item_known_info(eitem), more_items);
+    env.map_knowledge(gp).set_item(eitem, more_items);
 }
 
 static void _update_cloud(cloud_struct& cloud)

@@ -1394,10 +1394,7 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
             // is alive (for notes), so make sure we don't reveal info we
             // shouldn't.
             if (you.hp <= 0)
-            {
-                set_ident_flags(env.item[mons->inv[MSLOT_WEAPON]],
-                                 ISFLAG_IDENT_MASK);
-            }
+                identify_item(env.item[mons->inv[MSLOT_WEAPON]]);
 
             // Setting this is redundant for dancing weapons, however
             // we do care about the above identification. -- bwr

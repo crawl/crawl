@@ -818,7 +818,7 @@ static int _item_name_specialness(const item_def& item)
         return 1;
     }
 
-    if (item_type_known(item))
+    if (item.is_identified())
     {
         if (item_is_branded(item))
             return 1;
@@ -938,42 +938,61 @@ void item_check()
     }
 }
 
+bool item_def::is_identified() const
+{
+    if (flags & ISFLAG_IDENTIFIED)
+        return true;
+
+    if (item_type_known(*this))
+        return true;
+
+    return false;
+}
+
 void identify_item(item_def& item)
 {
-    // items_stack() has strict flag conditions to prevent a shop info leak,
-    // so we need set_ident_type() here to permit stacking shop purchases.
-    if (is_stackable_item(item))
-        set_ident_type(item, true);
+    if (item.is_identified())
+        return;
 
-    set_ident_flags(item, ISFLAG_IDENT_MASK);
+    item.flags |= ISFLAG_IDENTIFIED;
 
-    if (is_artefact(item) && !(item.flags & ISFLAG_NOTED_ID))
+    request_autoinscribe();
+
+    if (!is_artefact(item) && !crawl_state.game_is_arena())
+        identify_item_type(item.base_type, item.sub_type);
+
+    if (in_inventory(item))
     {
-        item.flags |= ISFLAG_NOTED_ID;
+        shopping_list.cull_identical_items(item);
+        item_skills(item, you.skills_to_show);
+    }
 
+    if (notes_are_active()
+        && is_interesting_item(item)
+        && !(item.flags & (ISFLAG_NOTED_ID)))
+    {
         // Make a note of it.
         take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_A),
                        origin_desc(item)));
+
+        // Sometimes (e.g. shops) you can ID an item before you get it;
+        // don't note twice in those cases.
+        item.flags |= (ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
     }
 }
 
-// Identify the object the player stepped on.
-// Books are fully identified.
-// Wands are only type-identified.
-// Equipment items are fully identified,
-// but artefact equipment skips some type-id checks.
+// Identify a wand or equipment item the player stepped on.
+// Returns true if the player learned something.
 static bool _id_floor_item(item_def &item)
 {
-    if (item.base_type == OBJ_BOOKS)
-        return true;
     if (item.base_type == OBJ_WANDS)
     {
-        if (!get_ident_type(item))
+        if (!type_is_identified(item))
         {
             // If the player doesn't want unknown wands picked up, assume
             // they won't want this wand after it is identified.
             bool should_pickup = item_needs_autopickup(item);
-            set_ident_type(item, true);
+            identify_item(item);
             if (!should_pickup)
                 set_item_autopickup(item, AP_FORCE_OFF);
             return true;
@@ -982,7 +1001,7 @@ static bool _id_floor_item(item_def &item)
     else if (item_type_is_equipment(item.base_type)
              || item.base_type == OBJ_TALISMANS)
     {
-        if (fully_identified(item))
+        if (item.is_identified())
             return false;
 
         // autopickup hack for previously-unknown items
@@ -1158,7 +1177,7 @@ static void _check_note_item(item_def &item)
 
         // If it's already fully identified when picked up, don't take
         // further notes.
-        if (fully_identified(item))
+        if (item.is_identified())
             item.flags |= ISFLAG_NOTED_ID;
         milestone_check(item);
     }
@@ -1598,7 +1617,7 @@ bool items_stack(const item_def &item1, const item_def &item2)
     return items_similar(item1, item2)
         // Don't leak information when checking if an "(unknown)" shop item
         // matches an unidentified item in inventory.
-        && fully_identified(item1) == fully_identified(item2);
+        && item1.is_identified() == item2.is_identified();
 }
 
 static int _userdef_find_free_slot(const item_def &i)
@@ -1824,7 +1843,7 @@ static void _get_book(item_def& it)
     }
     // This is mainly for save compat: if a manual generated somehow that is not
     // id'd, the following message is completely useless
-    set_ident_flags(it, ISFLAG_IDENT_MASK);
+    identify_item(it);
     const skill_type sk = static_cast<skill_type>(it.plus);
 
     if (is_useless_skill(sk))
@@ -2161,16 +2180,8 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
     // Remove "unobtainable" as it was just proven false.
     item.flags &= ~ISFLAG_UNOBTAINABLE;
 
-    god_id_item(item);
-    if (item.base_type == OBJ_WANDS)
-    {
-        set_ident_type(item, true);
-        set_ident_flags(item, ISFLAG_KNOW_PLUSES);
-    }
-
+    ash_id_item(item);
     maybe_identify_base_type(item);
-    if (item.base_type == OBJ_BOOKS)
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
 
     note_inscribe_item(item);
 
@@ -2344,7 +2355,7 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
                 {
                     // XXX: Is it actually necessary to identify when the
                     // new item merged with a stack?
-                    god_id_item(*si);
+                    ash_id_item(*si);
                     maybe_identify_base_type(*si);
                 }
                 return true;
@@ -2389,7 +2400,7 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
 
     if (you.see_cell(p))
     {
-        god_id_item(item);
+        ash_id_item(item);
         maybe_identify_base_type(item);
     }
 
@@ -3154,9 +3165,8 @@ static bool _similar_jewellery(const item_def& pickup_item,
     // For jewellery of the same sub-type, unidentified jewellery is
     // always considered similar, as is identified jewellery whose
     // effect doesn't stack.
-    return !item_type_known(inv_item)
-           || (!jewellery_is_amulet(inv_item)
-               && !ring_has_stackable_effect(inv_item));
+    return !jewellery_is_amulet(inv_item)
+           && !ring_has_stackable_effect(inv_item);
 }
 
 static bool _item_different_than_inv(const item_def& pickup_item,
@@ -3207,7 +3217,7 @@ static bool _interesting_explore_pickup(const item_def& item)
         return true;
 
     // Possbible ego items.
-    if (!item_type_known(item) && (item.flags & ISFLAG_COSMETIC_MASK))
+    if (!item.is_identified() && (item.flags & ISFLAG_COSMETIC_MASK))
         return true;
 
     switch (item.base_type)
@@ -4347,8 +4357,7 @@ bool get_item_by_name(item_def *item, const char* specs,
     item->special   = 0;
     item->flags     = 0;
     item->quantity  = 1;
-    // Don't use set_ident_flags(), to avoid getting a spurious ID note.
-    item->flags    |= ISFLAG_IDENT_MASK;
+    item->flags    |= ISFLAG_IDENTIFIED;
 
     if (class_wanted == OBJ_RUNES && strstr(specs, "rune"))
     {
@@ -4582,8 +4591,7 @@ bool get_item_by_exact_name(item_def &item, const char* name)
 {
     item.clear();
     item.quantity = 1;
-    // Don't use set_ident_flags(), to avoid getting a spurious ID note.
-    item.flags |= ISFLAG_IDENT_MASK;
+    item.flags |= ISFLAG_IDENTIFIED;
 
     string name_lc = lowercase_string(string(name));
 
@@ -4640,170 +4648,6 @@ void move_items(const coord_def r, const coord_def p)
     // Move entire stack over to p.
     env.igrid(p) = env.igrid(r);
     env.igrid(r) = NON_ITEM;
-}
-
-// erase everything the player doesn't know
-item_def get_item_known_info(const item_def& item)
-{
-    item_def ii;
-
-    ii.base_type = item.base_type;
-    ii.quantity = item.quantity;
-    ii.inscription = item.inscription;
-    ii.flags = item.flags & (0
-            | ISFLAG_IDENT_MASK
-            | ISFLAG_ARTEFACT_MASK | ISFLAG_DROPPED | ISFLAG_THROWN
-            | ISFLAG_COSMETIC_MASK | ISFLAG_CURSED | ISFLAG_CHAOTIC
-            | ISFLAG_REPLICA);
-
-    if (in_inventory(item))
-    {
-        ii.link = item.link;
-        ii.slot = item.slot;
-        ii.pos = ITEM_IN_INVENTORY;
-    }
-    else
-        ii.pos = item.pos;
-
-    ii.rnd = item.rnd; // XXX: may (?) leak cosmetic (?) info...?
-    if (ii.rnd == 0)
-        ii.rnd = 1; // don't leave "uninitialized" item infos around
-
-    // keep god number
-    if (item.orig_monnum < 0)
-        ii.orig_monnum = item.orig_monnum;
-
-    if (is_unrandom_artefact(item))
-    {
-        // Unrandart index
-        // Since the appearance of unrandarts is fixed anyway, this
-        // is not an information leak.
-        ii.unrand_idx = item.unrand_idx;
-    }
-
-    switch (item.base_type)
-    {
-    case OBJ_MISSILES:
-        if (item_ident(ii, ISFLAG_KNOW_PLUSES))
-            ii.net_placed = item.net_placed;
-        // intentional fall-through
-    case OBJ_WEAPONS:
-        ii.sub_type = item.sub_type;
-        if (item_ident(ii, ISFLAG_KNOW_PLUSES))
-            ii.plus = item.plus;
-        if (item_type_known(item))
-            ii.brand = item.brand;
-        break;
-    case OBJ_ARMOUR:
-        ii.sub_type = item.sub_type;
-        if (item_ident(ii, ISFLAG_KNOW_PLUSES))
-            ii.plus = item.plus;
-        if (item_type_known(item))
-            ii.brand = item.brand;
-        break;
-    case OBJ_WANDS:
-        if (item_type_known(item))
-        {
-            ii.sub_type = item.sub_type;
-            ii.charges = item.charges;
-        }
-        else
-            ii.sub_type = NUM_WANDS;
-        ii.subtype_rnd = item.subtype_rnd;
-        break;
-    case OBJ_POTIONS:
-        if (item_type_known(item))
-            ii.sub_type = item.sub_type;
-        else
-            ii.sub_type = NUM_POTIONS;
-        ii.subtype_rnd = item.subtype_rnd;
-        break;
-    case OBJ_CORPSES:
-        ii.sub_type = item.sub_type;
-        ii.mon_type = item.mon_type;
-        ii.freshness = 100;
-        break;
-    case OBJ_SCROLLS:
-        if (item_type_known(item))
-            ii.sub_type = item.sub_type;
-        else
-            ii.sub_type = NUM_SCROLLS;
-        ii.subtype_rnd = item.subtype_rnd;    // name seed
-        break;
-    case OBJ_JEWELLERY:
-        if (item_type_known(item))
-        {
-            ii.sub_type = item.sub_type;
-            if (jewellery_has_pluses(item))
-                ii.plus = item.plus;
-        }
-        else
-            ii.sub_type = jewellery_is_amulet(item) ? NUM_JEWELLERY : NUM_RINGS;
-        ii.subtype_rnd = item.subtype_rnd;
-        break;
-    case OBJ_BOOKS:
-        ii.sub_type = item.sub_type;
-        ii.subtype_rnd = item.subtype_rnd;
-        if (item.sub_type == BOOK_MANUAL && item_type_known(item))
-            ii.skill = item.skill; // manual skill
-        break;
-#if TAG_MAJOR_VERSION == 34
-    case OBJ_RODS:
-        ii.sub_type = NUM_RODS;
-        break;
-#endif
-    case OBJ_STAVES:
-        ii.sub_type = item_type_known(item) ? item.sub_type : int{NUM_STAVES};
-        ii.subtype_rnd = item.subtype_rnd;
-        break;
-    case OBJ_TALISMANS:
-    case OBJ_MISCELLANY:
-    case OBJ_GOLD:
-    case OBJ_ORBS:
-    case OBJ_RUNES:
-    case OBJ_GEMS:
-    default:
-        ii.sub_type = item.sub_type;
-        break;
-    }
-
-    if (item_type_known(item))
-    {
-        ii.flags |= ISFLAG_KNOW_TYPE;
-
-        if (item.props.exists(ARTEFACT_NAME_KEY))
-            ii.props[ARTEFACT_NAME_KEY] = item.props[ARTEFACT_NAME_KEY];
-    }
-
-    static const char* copy_props[] =
-    {
-        ARTEFACT_APPEAR_KEY, KNOWN_PROPS_KEY, CORPSE_NAME_KEY,
-        CORPSE_NAME_TYPE_KEY, ITEM_TILE_KEY, ITEM_TILE_NAME_KEY,
-        WORN_TILE_KEY, WORN_TILE_NAME_KEY, NEEDS_AUTOPICKUP_KEY,
-        FORCED_ITEM_COLOUR_KEY, SPELL_LIST_KEY, ITEM_NAME_KEY,
-    };
-    for (const char *prop : copy_props)
-        if (item.props.exists(prop))
-            ii.props[prop] = item.props[prop];
-
-    if (item.props.exists(ARTEFACT_PROPS_KEY))
-    {
-        CrawlVector props = item.props[ARTEFACT_PROPS_KEY].get_vector();
-        const CrawlVector &known = item.props[KNOWN_PROPS_KEY].get_vector();
-
-        if (!item_ident(item, ISFLAG_KNOW_PROPERTIES))
-        {
-            for (unsigned i = 0; i < props.size(); ++i)
-            {
-                if (i >= known.size() || !known[i].get_bool())
-                    props[i] = (short)0;
-            }
-        }
-
-        ii.props[ARTEFACT_PROPS_KEY] = props;
-    }
-
-    return ii;
 }
 
 int runes_in_pack()
@@ -4897,7 +4741,7 @@ static void _identify_last_item(item_def &item)
         item.props[NEEDS_AUTOPICKUP_KEY] = true;
     }
 
-    set_ident_type(item, true, false);
+    identify_item(item);
 
     if (item.props.exists(NEEDS_AUTOPICKUP_KEY) && is_useless_item(item))
         item.props.erase(NEEDS_AUTOPICKUP_KEY);
@@ -4930,7 +4774,7 @@ bool maybe_identify_base_type(item_def &item)
 
     maybe_mark_set_known(item.base_type, item.sub_type);
 
-    if (get_ident_type(item))
+    if (type_is_identified(item))
         return false;
 
     const int item_count = _items_in_category(item);

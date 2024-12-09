@@ -170,7 +170,7 @@ NAME:   lemuel_castle_interior_carwin_2
 TAGS:   lemuel_castle_interior unrand
 : castle_lemuel_setup(_G)
 SUBST:  $ = $:5 .
-ITEM:   nothing w:20 / potion of ambrosia ident:type
+ITEM:   nothing w:20 / potion of ambrosia pre_id
 MAP
 +c....+.......1.............*|c+
 ...1..cccccccccccccccccccccccDc.

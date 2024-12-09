@@ -117,8 +117,8 @@ function sroom_beehive(e)
     end
 
     e.kitem('1 = black bear skeleton / \
-                 potion of ambrosia ident:all / nothing w:20')
-    e.kitem('2M = potion of ambrosia ident:all / nothing w:25')
+                 potion of ambrosia pre_id / nothing w:20')
+    e.kitem('2M = potion of ambrosia pre_id / nothing w:25')
     decorative_floor(e, '2M', "flower patch")
 end
 
@@ -130,13 +130,13 @@ function sroom_morgue(e)
     local bodies_chance
     local weap = ""
     if you.in_branch("Geh") then
-        weap = " ego:flaming ident:type"
+        weap = " ego:flaming pre_id"
     elseif you.in_branch("Coc") then
-        weap = " ego:freezing ident:type"
+        weap = " ego:freezing pre_id"
     elseif you.in_branch("Dis") then
         weap = " good_item"
     elseif you.in_branch("Tar") then
-        weap = " ego:draining ident:type"
+        weap = " ego:draining pre_id"
     end
 
     local mons = {}

@@ -110,7 +110,7 @@ MONS:    orange crystal statue
 MONS:    ice statue / obsidian statue / orange crystal statue
 : end
 SUBST:   *:*$, ?:x., '=w.
-ITEM:    ring of flight ident:type
+ITEM:    ring of flight pre_id
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxwwwxxxxxxxxxxx
@@ -186,7 +186,7 @@ NAME:    dragon1_lemuel
 ORIENT:  northeast
 DEPTH:   D:9-, Lair
 MONS:    patrolling fire dragon, patrolling ice dragon
-ITEM:    potion of enlightenment ident:type / scroll of teleportation ident:type
+ITEM:    potion of enlightenment pre_id / scroll of teleportation pre_id
 SUBST:   ! : ?x
 SHUFFLE: 1?/2W
 SUBST:   2=2:20 1
@@ -585,8 +585,8 @@ DEPTH:   D:10-, !D:$
 ORIENT:  south
 TAGS:    no_pool_fixup no_rotate uniq_rubicon no_descent
 WEIGHT:  6
-ITEM:    ring of flight ident:type / potion of enlightenment ident:type / nothing
-ITEM:    potion of enlightenment ident:type / nothing, nothing, nothing, nothing
+ITEM:    ring of flight pre_id / potion of enlightenment pre_id / nothing
+ITEM:    potion of enlightenment pre_id / nothing, nothing, nothing, nothing
 SHUFFLE: {[(, )gh
 SUBST:   ?:?.w, ?=w., w:lw, ':'.c, '=cx.
 MAP
@@ -616,8 +616,8 @@ DEPTH:   D:10-, !D:$
 ORIENT:  south
 TAGS:    no_rotate uniq_rubicon no_descent
 WEIGHT:  4
-ITEM:    ring of flight ident:type / potion of enlightenment ident:type / nothing
-ITEM:    potion of enlightenment ident:type, nothing, nothing, nothing, nothing
+ITEM:    ring of flight pre_id / potion of enlightenment pre_id / nothing
+ITEM:    potion of enlightenment pre_id, nothing, nothing, nothing, nothing
 SHUFFLE: {[(, fgW, )hi
 SUBST:   ?:?.wW, ?=wW., ':'.c, '=c.
 MAP
@@ -840,7 +840,7 @@ TAGS:   no_monster_gen no_item_gen no_trap_gen
 DEPTH:  Depths, Crypt
 ORIENT: southeast
 KPROP:  -47 = no_tele_into
-ITEM:   any jewellery randart, scroll of acquirement ident:type
+ITEM:   any jewellery randart, scroll of acquirement pre_id
 : item(dgn.randart_aux_armour)
 MONS:   human att:neutral, silent spectre, patrolling soul eater
 MONS:   ogre mage / deep elf pyromancer / deep elf zephyrmancer / occultist / \
@@ -2069,7 +2069,7 @@ KMONS:   _ = tzitzimitl
 ITEM:    robe_of_night, ring_of_shadows
 ITEM:    cloak_of_the_thief, hood_of_the_assassin
 ITEM:    shadow dragon scales randart
-ITEM:    phantom mirror, potion of invisibility ident:type q:2
+ITEM:    phantom mirror, potion of invisibility pre_id q:2
 KFEAT:   F = floor
 KFEAT:   _ = altar_dithmenos
 SHUFFLE: 56, defgh, ij|
@@ -2277,17 +2277,17 @@ ORIENT: south
 # an Ice Cave. Any thematic type info is pre-identified, since this item always
 # places and always at the same location.
 {{
-local coldres = " ego:cold_resistance ident:type"
-local ego = " ego:freezing ident:type"
+local coldres = " ego:cold_resistance pre_id"
+local ego = " ego:freezing pre_id"
 item("any weapon good_item w:100" .. ego .. " / cloak" .. coldres ..
-     " / scarf ego:resistance ident:type / buckler" .. coldres ..
+     " / scarf ego:resistance pre_id / buckler" .. coldres ..
      " / kite shield" .. coldres .. " / tower shield" .. coldres ..
      " / ice dragon scales / chain mail good_item" .. coldres ..
      " / plate armour" .. coldres .. " / crystal plate armour" .. coldres ..
      " / book of ice / book of the tundra" ..
-     " / randbook disc:ice / manual of ice magic / staff of cold ident:type" ..
-     " / ring of ice ident:type / ring of protection from cold ident:type" ..
-     " / wand of iceblast ident:type / phial of floods / condenser vane")
+     " / randbook disc:ice / manual of ice magic / staff of cold pre_id" ..
+     " / ring of ice pre_id / ring of protection from cold pre_id" ..
+     " / wand of iceblast pre_id / phial of floods / condenser vane")
 }}
 : if you.in_branch("D") and you.depth() < 14 or you.in_branch("Lair") then
 MONS:   two-headed ogre simulacrum / troll simulacrum / naga simulacrum \
@@ -2678,8 +2678,8 @@ TILE:    t = dngn_demonic_tree_1 w:3 / dngn_demonic_tree_16 w:3 / \
 # Swamp flavour loot: dragon scales, witch / elei wands, consumables, rings.
 KITEM:   & = swamp dragon scales randart / swamp dragon scales good_item / \
              any beam wand w:4 / any blast wand w:6 / \
-             scroll of poison q:4 ident:type / \
-             potion of lignification q:4 ident:type / \
+             scroll of poison q:4 pre_id / \
+             potion of lignification q:4 pre_id / \
              ring of poison resistance randart / ring of flight randart
 KFEAT:   ~ = w
 NSUBST:  1 = 1:. / 3 = 1. / *:1, 2 = 2 = 2. / *:2
@@ -2774,7 +2774,7 @@ SUBST:   " = 1
 TILE:    v = dngn_metal_wall_red
 : end
 KITEM:   & = demon whip / demon blade / demon trident / \
-             plate armor ego:fire_resistance ident:type / \
+             plate armor ego:fire_resistance pre_id / \
              fire dragon scales good_item / fire dragon scales randart
 KITEM:   d = large rock q:1 / stone q:10
 KITEM:   e = any weapon
@@ -2898,7 +2898,7 @@ ITEM:    any potion, any scroll
 :   item(dgn.loot_scrolls)
 : end
 ITEM:    any armour, any weapon, any ring, any amulet
-ITEM:    any wand charges:1, wand of digging charges:1 ident:type
+ITEM:    any wand charges:1, wand of digging charges:1 pre_id
 : kitem("| = randbook disc:necromancy disc2:alchemy numspells:5 " ..
 :       "slevels:" .. you.absdepth())
 KFEAT:   F = G
@@ -3097,7 +3097,7 @@ SUBST:   * = <, ( = (:60 <, [ = [:60 <, ) = ):60 >, ] = ]:60 >, ~ = P
 KITEM:   & = quick blade good_item / rapier randart / \
              swamp dragon scales randart / shadow dragon scales randart / \
              randbook disc:necromancy / randbook spells:summon_forest / \
-             potion of lignification q:4 ident:type
+             potion of lignification q:4 pre_id
 KMONS:   P = withered plant
 KMONS:   p = fungus
 SUBST:   p = p.., !- = +, ?X = c, " = .
@@ -3253,8 +3253,8 @@ ITEM:     chain mail ego:fire_resistance good_item / \
           dragon-blood talisman / granite talisman w:5
 ITEM:     plate armour ego:fire_resistance good_item / \
           fire dragon scales randart / kite shield ego:fire_resistance w:5 / \
-          double sword ego:flaming good_item w:5 ident:type / \
-          triple sword ego:flaming good_item ident:type / \
+          double sword ego:flaming good_item w:5 pre_id / \
+          triple sword ego:flaming good_item pre_id / \
           staff of fire randart / staff of earth randart w:5 / \
           book of spectacle w:5 / everburning encyclopedia w:5 / \
           book of spontaneous combustion w:5 / \
@@ -3418,10 +3418,10 @@ SUBST:   X = x
 :   end
 : end
 KMONS:   D = pile of debris
-ITEM:    potion of brilliance ident:type / potion of magic ident:type / \
-         potion of enlightenment ident:type / potion of ambrosia ident:type
-ITEM:    scroll of identify q:1 ident:type / scroll of amnesia q:1 ident:type
-ITEM:    any scroll / orb ego:light ident:type w:1, randbook numspells:1
+ITEM:    potion of brilliance pre_id / potion of magic pre_id / \
+         potion of enlightenment pre_id / potion of ambrosia pre_id
+ITEM:    scroll of identify q:1 pre_id / scroll of amnesia q:1 pre_id
+ITEM:    any scroll / orb ego:light pre_id w:1, randbook numspells:1
 # Books with notable spells at level 6 or higher, across each school.
 ITEM:    book of spontaneous combustion / book of ice / book of spectacle / \
          book of power / book of chaos / book of the warp / book of death / \

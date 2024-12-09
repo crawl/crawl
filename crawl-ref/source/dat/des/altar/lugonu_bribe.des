@@ -25,33 +25,33 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
                  "broad axe", "battleaxe", "quarterstaff",
                  "lajatang", "morningstar", "great mace"})
     local item = {
-         ["No God"] = "amulet of faith ident:type",
-         Ashenzari = "ring of see invisible ident:type",
+         ["No God"] = "amulet of faith pre_id",
+         Ashenzari = "ring of see invisible pre_id",
          Beogh = "orc corpse",
-         Cheibriados = "potion of haste ident:type q:3 /\
-                        orb ego:mayhem ident:type",
-         Dithmenos = "scroll of noise ident:type q:3",
+         Cheibriados = "potion of haste pre_id q:3 /\
+                        orb ego:mayhem pre_id",
+         Dithmenos = "scroll of noise pre_id q:3",
          Elyvilon = "book of Necromancy / book of Death / book of Unlife",
          Gozag = "randbook owner:Lugonu spells:animate_dead numspells:1",
          Kikubaaqudgha = "rat corpse / kobold corpse",
-         Okawaru = "any ally scroll ident:type q:3 / any ally misc /\
+         Okawaru = "any ally scroll pre_id q:3 / any ally misc /\
                     phantom mirror",
          ["Sif Muna"] = "plate armour randart plus:-1 artprops:-cast:1&&int:-6",
          Trog = "manual of Spellcasting / manual of Air Magic w:5 /\
                  manual of Earth Magic w:5 / manual of Fire Magic w:5 /\
                  manual of Ice Magic w:5 / manual of Alchemy w:5 /\
-                 any magical staff ident:type / ring of wizardry ident:type",
+                 any magical staff pre_id / ring of wizardry pre_id",
          Vehumet = "tower shield randart plus:-1 artprops:-cast:1&&int:-6",
-         ["Wu Jian"] = "mundane ring of slaying ident:type",
+         ["Wu Jian"] = "mundane ring of slaying pre_id",
          Xom = "manual of Invocations",
-         Yredelemnul = "good_item " .. weapon .. " ego:holy_wrath ident:type",
-         Zin = "good_item " .. weapon .. " ego:chaos ident:type /\
-                wand of polymorph ident:type /\
-                potion of lignification ident:type q:3",
-         ["the Shining One"] = "good_item " .. weapon .. " ego:pain ident:type /\
-              good_item " .. weapon .. " ego:draining ident:type /\
-              good_item " .. weapon .. " ego:vampirism ident:type /\
-              potion of invisibility ident:type q:3 / orb of light",
+         Yredelemnul = "good_item " .. weapon .. " ego:holy_wrath pre_id",
+         Zin = "good_item " .. weapon .. " ego:chaos pre_id /\
+                wand of polymorph pre_id /\
+                potion of lignification pre_id q:3",
+         ["the Shining One"] = "good_item " .. weapon .. " ego:pain pre_id /\
+              good_item " .. weapon .. " ego:draining pre_id /\
+              good_item " .. weapon .. " ego:vampirism pre_id /\
+              potion of invisibility pre_id q:3 / orb of light",
     }
     data.triggered = true
     if item[you.god()] ~= nil then

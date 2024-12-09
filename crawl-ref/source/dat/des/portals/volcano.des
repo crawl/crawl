@@ -164,7 +164,7 @@ end
 function make_fiery_armour (e, armour)
     local armour_string = ""
     for _, at in ipairs(armour) do
-        armour_string = armour_string .. " / " .. at .. " ego:fire_resistance ident:type good_item"
+        armour_string = armour_string .. " / " .. at .. " ego:fire_resistance pre_id good_item"
     end
     return string.gsub(armour_string, "%s*/$", "")
 end
@@ -172,7 +172,7 @@ end
 function make_fiery_weapon (e, weapon)
     local weapon_string = ""
     for _, wt in ipairs(weapon) do
-       weapon_string = weapon_string .. " / " .. wt .. " ego:flaming ident:type"
+       weapon_string = weapon_string .. " / " .. wt .. " ego:flaming pre_id"
     end
     local n_weapon = string.gsub(weapon_string, "%s*/$", "")
     e.item(n_weapon)
@@ -987,9 +987,9 @@ TAGS:    no_vmirror unrand
 MONS:    gargoyle w:99 / toenail golem w:1
 MONS:    troll skeleton / spriggan skeleton / naga skeleton
 MONS:    alligator skeleton / harpy skeleton / anaconda skeleton
-MONS:    skeletal warrior ; halberd ego:flaming ident:type | \
-                            dire flail ego:flaming ident:type | \
-                            great sword ego:flaming ident:type
+MONS:    skeletal warrior ; halberd ego:flaming pre_id | \
+                            dire flail ego:flaming pre_id | \
+                            great sword ego:flaming pre_id
 KMONS:   D = pile of debris
 KFEAT:   ? = broken_door
 # Only one loot chamber. Scatter tomb residents.
@@ -1026,9 +1026,9 @@ TAGS:    no_vmirror unrand
 MONS:    gargoyle w:99 / toenail golem w:1
 MONS:    troll skeleton / spriggan skeleton / naga skeleton
 MONS:    alligator skeleton / harpy skeleton / anaconda skeleton
-MONS:    skeletal warrior ; halberd ego:flaming ident:type | \
-                            dire flail ego:flaming ident:type | \
-                            great sword ego:flaming ident:type
+MONS:    skeletal warrior ; halberd ego:flaming pre_id | \
+                            dire flail ego:flaming pre_id | \
+                            great sword ego:flaming pre_id
 SHUFFLE: 23
 NSUBST:  5 = 1:1 / 1:23 / 1:4
 NSUBST:  X = 1:+ / *:v, Y = 1:+ / *:c
@@ -1245,7 +1245,7 @@ WEIGHT: 20
 MONS:   steam dragon / steam dragon / smoke demon / hell hound
 MONS:   sun demon, lindwurm
 KMONS:  4 = fire dragon
-KITEM:  4 = scroll of fog q:2 ident:all w:20 / condensation vane / \
+KITEM:  4 = scroll of fog q:2 pre_id w:20 / condensation vane / \
             cloak of the thief w:1
 SUBST:  a = ..xxl, p = ..'xl, q = .x, ' = '.
 NSUBST: 1 = 1:1 / 2:. / * = 1.., D2 = 1:., $ = 1:4 / *:$

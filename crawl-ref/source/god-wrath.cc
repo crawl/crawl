@@ -831,7 +831,7 @@ static bool _beogh_retribution()
                 wpn.plus  = random2(3);
                 wpn.sub_type = wpn_type;
 
-                set_ident_flags(wpn, ISFLAG_KNOW_TYPE);
+                identify_item(wpn);
 
                 item_colour(wpn);
 
@@ -1955,7 +1955,7 @@ static int _wu_jian_summon_weapons()
             wpn.plus = random2(5);
             wpn.sub_type = subtype;
 
-            set_ident_flags(wpn, ISFLAG_KNOW_TYPE);
+            identify_item(wpn);
 
             item_colour(wpn);
 

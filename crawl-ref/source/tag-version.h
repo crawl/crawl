@@ -312,6 +312,7 @@ enum tag_minor_version
     TAG_MINOR_NO_FAKE_ABJ,         // Remove ENCH_FAKE_ABJURATION
     TAG_MINOR_ADD_FORGECRAFT,      // Add Forgecraft skill by replacing unused Transmutations
     TAG_MINOR_REFACTOR_CHANNEL_SPELLS, // Refactor tracking of channelled spells
+    TAG_MINOR_SIMPLIFY_ID,         // Crunch all item identification flags into just one
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

@@ -118,8 +118,8 @@ FTILE:   ABdefghi = tutorial_pad
 RTILE:   c = wall_vines
 ITEM:    potion of curing q:1
 ITEM:    cloak_of_starlight
-ITEM:    wand of flame charges:9 ident:all
-ITEM:    wand of digging charges:15 ident:all
+ITEM:    wand of flame charges:9 pre_id
+ITEM:    wand of digging charges:15 pre_id
 ITEM:    amulet of faith
 MONS:    goblin ; sling ego:none . stone q:30 . dagger \
          ego:none

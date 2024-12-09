@@ -46,8 +46,8 @@ end
 
 -- Some thematic, limited extra rewards for opening the Hall of Blades.
 function hall_of_blades_extra_rewards(e)
-    e.kitem("d = scroll of enchant weapon ident:type q:1")
-    e.kitem("e = scroll of brand weapon ident:type q:1")
+    e.kitem("d = scroll of enchant weapon pre_id q:1")
+    e.kitem("e = scroll of brand weapon pre_id q:1")
     e.kitem("f = blade talisman / blade talisman randart w:2")
 end
 
@@ -1434,9 +1434,9 @@ MONS:    deep elf pyromancer, deep elf elementalist
 MONS:    deep elf zephyrmancer, deep elf annihilator
 MONS:    deep elf knight, deep elf blademaster, deep elf archer
 KMONS:   8 = deep elf master archer
-ITEM:    staff of fire ident:type / staff of air ident:type / \
-         ring of wizardry ident:type / ring of slaying ident:type / \
-         ring of dexterity ident:type / longbow good_item
+ITEM:    staff of fire pre_id / staff of air pre_id / \
+         ring of wizardry pre_id / ring of slaying pre_id / \
+         ring of dexterity pre_id / longbow good_item
 NSUBST:  1 = 2 = 111.. / 1:. / 2:1, 3 = 2 = 333.. / 1:. / 2:3
 SHUFFLE: 12 / 34, 56 / 78
 SUBST:   ' : x., " : x.
@@ -1694,8 +1694,8 @@ ENDMAP
 NAME:  nicolae_gammafunk_elf_defective_weapons_storage
 TAGS:  transparent no_monster_gen
 DEPTH: Elf
-KITEM: 123 = % w:20 / scroll of enchant weapon ident:type w:5 \
-       / scroll of brand weapon ident:type w:5
+KITEM: 123 = % w:20 / scroll of enchant weapon pre_id w:5 \
+       / scroll of brand weapon pre_id w:5
 {{
 -- Fast dancing weapons. This will have chaos, but will be nerfed a lot by
 -- vitrification

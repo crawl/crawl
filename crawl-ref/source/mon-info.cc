@@ -544,22 +544,16 @@ monster_info::monster_info(const monster* m, int milev)
         if (mons_class_is_animated_weapon(type))
         {
             if (m->get_defining_object())
-            {
-                inv[MSLOT_WEAPON].reset(new item_def(
-                    get_item_known_info(*m->get_defining_object())));
-            }
+                inv[MSLOT_WEAPON].reset(new item_def(*m->get_defining_object()));
             // animated launchers may have a missile too
             if (m->inv[MSLOT_MISSILE] != NON_ITEM)
             {
                 inv[MSLOT_MISSILE].reset(new item_def(
-                    get_item_known_info(env.item[m->inv[MSLOT_MISSILE]])));
+                    env.item[m->inv[MSLOT_MISSILE]]));
             }
         }
         else if (type == MONS_ARMOUR_ECHO && m->get_defining_object())
-        {
-            inv[MSLOT_ARMOUR].reset(new item_def(
-                get_item_known_info(*m->get_defining_object())));
-        }
+            inv[MSLOT_ARMOUR].reset(new item_def(*m->get_defining_object()));
         return;
     }
 
@@ -775,8 +769,7 @@ monster_info::monster_info(const monster* m, int milev)
             ok = true;
         if (ok)
         {
-            inv[i].reset(
-                new item_def(get_item_known_info(env.item[m->inv[i]])));
+            inv[i].reset(new item_def(env.item[m->inv[i]]));
             // Monsters have unlimited ammo for wands and for non-net throwing.
             if (i == MSLOT_WAND)
                 inv[i]->charges = 0;
@@ -990,12 +983,7 @@ static string _mutant_beast_facet(int facet)
 string monster_info::db_name() const
 {
     if (type == MONS_DANCING_WEAPON && inv[MSLOT_WEAPON])
-    {
-        iflags_t ignore_flags = ISFLAG_KNOW_PLUSES;
-        bool     use_inscrip  = false;
-        return inv[MSLOT_WEAPON]->name(DESC_DBNAME, false, false, use_inscrip, false,
-                         ignore_flags);
-    }
+        return inv[MSLOT_WEAPON]->name(DESC_DBNAME, false, false, false, false);
 
     if (type == MONS_SENSED)
         return get_monster_data(base_type)->name;
@@ -1056,7 +1044,7 @@ string monster_info::_core_name() const
             if (inv[MSLOT_WEAPON])
             {
                 const item_def& item = *inv[MSLOT_WEAPON];
-                s = item.name(DESC_PLAIN, false, false, true, false);
+                s = item.name(DESC_PLAIN);
             }
             break;
 
@@ -1064,7 +1052,7 @@ string monster_info::_core_name() const
             if (inv[MSLOT_ARMOUR])
             {
                 const item_def& item = *inv[MSLOT_ARMOUR];
-                s = "echoed " + item.name(DESC_PLAIN, false, false, true, false, ISFLAG_KNOW_PLUSES);
+                s = "echoed " + item.name(DESC_PLAIN);
             }
             break;
 

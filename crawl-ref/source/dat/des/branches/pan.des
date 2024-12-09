@@ -646,7 +646,7 @@ MONS:     neqoxec / chaos spawn w:2, very ugly thing, brain worm
 MONS:     shadow demon, tentacled monstrosity, tormentor
 KMONS:    A = cacodemon
 KMONS:    B = protean progenitor
-ITEM:     potion of mutation q:1 ident:type
+ITEM:     potion of mutation q:1 pre_id
 SUBST:    D = 5:20 6 7 A B
 SHUFFLE:  qep
 NSUBST:   q = 2:6 / 1:7 / *:.,  e = 2:A / *:., p = 3:B / *:.
@@ -698,7 +698,7 @@ MONS:     patrolling mnoleg
 MONS:     glass eye / eye of devastation / golden eye w:2
 MONS:     protean progenitor, shadow demon / tentacled monstrosity
 MONS:     cacodemon, neqoxec / chaos spawn w:2 / great orb of eyes w:2
-ITEM:     potion of mutation ident:type
+ITEM:     potion of mutation pre_id
 KFEAT:    T = fountain_eyes
 SHUFFLE:  '-
 NSUBST:   O = 1:O / 1:d / *:|
@@ -756,7 +756,7 @@ ORIENT:   west
 MONS:     patrolling Mnoleg, patrolling cacodemon
 MONS:     neqoxec / chaos spawn w:2, protean progenitor
 MONS:     shadow demon, tentacled monstrosity, very ugly thing
-ITEM:     potion of mutation ident:type q:1
+ITEM:     potion of mutation pre_id q:1
 SHUFFLE:  Od, 1e
 SUBST:    e = 4
 : pan_lord_setup(_G, 'Mnoleg')
@@ -808,7 +808,7 @@ MONS:     neqoxec / chaos spawn w:2, protean progenitor
 MONS:     shadow demon / tentacled monstrosity
 MONS:     very ugly thing / glass eye band w:15 / golden eye band w:5 / \
           eye of devastation / great orb of eyes
-ITEM:     potion of mutation ident:type q:1
+ITEM:     potion of mutation pre_id q:1
 KFEAT:    T = fountain_eyes
 NSUBST:   O = 1:O / 1:d / *:|
 : pan_lord_setup(_G, 'Mnoleg')
@@ -2708,7 +2708,7 @@ KMONS:  6O = ghost moth
 : if demonic_rune_vault_is_decoy() then
 KITEM:  O = superb_item / demonic rune of zot mimic
 : else
-KITEM:  O = potion of mutation ident:type, demonic rune of zot
+KITEM:  O = potion of mutation pre_id, demonic rune of zot
 epilogue{{
 if not you.have_rune("demonic") then
   pan_declare_demonic_rune()
@@ -2803,7 +2803,7 @@ KMONS:   O = pandemonium lord
 : if demonic_rune_vault_is_decoy() then
 KITEM:   O = superb_item / demonic rune of zot mimic
 : else
-KITEM:   O = potion of mutation ident:type, demonic rune of zot
+KITEM:   O = potion of mutation pre_id, demonic rune of zot
 KFEAT:   { = {
 epilogue{{
 if not you.have_rune("demonic") then
@@ -2881,7 +2881,7 @@ MONS:    tormentor, smoke demon, any demon
 : if demonic_rune_vault_is_decoy() then
 KITEM:   O = superb_item / demonic rune of zot mimic
 : else
-KITEM:   O = potion of mutation ident:type, demonic rune of zot
+KITEM:   O = potion of mutation pre_id, demonic rune of zot
 epilogue{{
 if not you.have_rune("demonic") then
   pan_declare_demonic_rune()
@@ -2953,7 +2953,7 @@ KMONS:  P = pandemonium lord
 : if demonic_rune_vault_is_decoy() then
 KITEM:  O = superb_item / demonic rune of zot mimic
 : else
-KITEM:  O = potion of mutation ident:type, demonic rune of zot
+KITEM:  O = potion of mutation pre_id, demonic rune of zot
 epilogue{{
 if not you.have_rune("demonic") then
   pan_declare_demonic_rune()
@@ -3048,7 +3048,7 @@ ITEM:    any potion
 : if demonic_rune_vault_is_decoy() then
 KITEM:   O = superb_item / demonic rune of zot mimic
 : else
-KITEM:   O = potion of mutation ident:type, demonic rune of zot
+KITEM:   O = potion of mutation pre_id, demonic rune of zot
 epilogue{{
 if not you.have_rune("demonic") then
   pan_declare_demonic_rune()

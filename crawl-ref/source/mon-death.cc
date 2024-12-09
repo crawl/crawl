@@ -390,7 +390,7 @@ static void _create_monster_hide(monster_type mtyp, monster_type montype,
 
     if (pos.origin())
     {
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
+        item.flags |= ISFLAG_IDENTIFIED;
         return;
     }
 
@@ -408,8 +408,7 @@ static void _create_monster_hide(monster_type mtyp, monster_type montype,
                                                       // XXX: refactor
     }
 
-    // after messaging, for better results
-    set_ident_flags(item, ISFLAG_IDENT_MASK);
+    item.flags |= ISFLAG_IDENTIFIED;
 }
 
 static void _create_monster_wand(monster_type mtyp, coord_def pos, bool silent)
@@ -434,7 +433,8 @@ static void _create_monster_wand(monster_type mtyp, coord_def pos, bool silent)
              item.name(DESC_A).c_str());
     }
 
-    set_ident_flags(item, ISFLAG_IDENT_MASK);
+    // Don't immediately gain knowledge of the wand if we died out of sight.
+    item.flags |= ISFLAG_IDENTIFIED;
 }
 
 void maybe_drop_monster_organ(monster_type mon, monster_type orig,
@@ -3154,7 +3154,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     if (drop_items)
     {
         // monster_drop_things may lead to a level excursion (via
-        // god_id_item -> ... -> ShoppingList::item_type_identified),
+        // ash_id_item -> ... -> ShoppingList::item_type_identified),
         // which fails to save/restore the dead monster. Keep it alive
         // since we still need it.
         unwind_var<int> fakehp(mons.hit_points, 1);

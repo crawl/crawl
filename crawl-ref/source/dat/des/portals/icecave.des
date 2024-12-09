@@ -310,8 +310,8 @@ function ice_cave_armour_loot(e, glyphs)
         glyphs = "def"
     end
 
-    local coldres = " ego:cold_resistance ident:type"
-    local res = " ego:resistance ident:type"
+    local coldres = " ego:cold_resistance pre_id"
+    local res = " ego:resistance pre_id"
 
     local quality = ""
     if dgn.persist.ice_cave_hard then
@@ -350,7 +350,7 @@ function ice_cave_weapon_loot(e, glyphs)
         glyphs = "gh"
     end
 
-    local ego = " ego:freezing ident:type"
+    local ego = " ego:freezing pre_id"
     if dgn.persist.ice_cave_hard then
         e.kitem(glyphs:sub(1,1) .. " = any weapon" .. ego .. " good_item")
     else
@@ -375,7 +375,7 @@ function ice_cave_weapon_loot(e, glyphs)
         quality = " good_item"
     end
     e.kitem(glyphs:sub(2,2) .. " = " ..
-        dgn.random_item_def(weapons, "freezing", "ident:type" .. quality))
+        dgn.random_item_def(weapons, "freezing", "pre_id" .. quality))
 end
 
 --[[
@@ -1591,9 +1591,9 @@ TAGS:    no_item_gen no_monster_gen
 ORIENT:  encompass
 : ice_cave_common_loot(_G)
 # Loot always includes at least one randart so Jiyva worshipers get something
-KITEM:   j = any weapon randart ego:freezing ident:all / any armour randart \
-             / ring of ice randart ident:all / ice dragon scales randart w:5 \
-             / ring of protection from cold randart ident:all \
+KITEM:   j = any weapon randart ego:freezing pre_id / any armour randart \
+             / ring of ice randart pre_id / ice dragon scales randart w:5 \
+             / ring of protection from cold randart pre_id \
              / any ring randart / any amulet randart \
              / randbook disc:ice numspells:3
 KMONS:   _ = azure jelly

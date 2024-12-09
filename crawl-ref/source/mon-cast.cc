@@ -6542,7 +6542,7 @@ static void _cast_bestow_arms(monster& caster)
                                        1,  SPWPN_DISTORTION);
 
     wpn.plus = random_range(4, 9);
-    wpn.flags |= (ISFLAG_SUMMONED | ISFLAG_IDENT_MASK);
+    wpn.flags |= (ISFLAG_SUMMONED | ISFLAG_IDENTIFIED);
     wpn.quantity = 1;
 
     if (you.can_see(caster))
