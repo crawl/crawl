@@ -2001,6 +2001,11 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
             return TILEP_MONS_SIGMUND_SCYTHELESS;
         }
 
+        case MONS_QUOKKA:
+            if (today_is_serious())
+                return TILEP_MONS_QUOKKA_LORD_OF_SKULLS;
+            return base;
+
         case MONS_OGRE:
             if (today_is_serious())
                 return TILEP_MONS_SWAMP_OGRE;

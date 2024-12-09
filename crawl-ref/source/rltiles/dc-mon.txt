@@ -185,9 +185,12 @@ orange_rat MONS_HELL_RAT
 crystal_echidna MONS_CRYSTAL_ECHIDNA
 %rim 1
 quokka MONS_QUOKKA
+%rim 0
+quokka_lord_of_skulls MONS_QUOKKA_LORD_OF_SKULLS
 %sdir mon/animals
 
 ## Spiders and insects ('s')
+%rim 1
 scorpion MONS_SCORPION
 emperor_scorpion MONS_EMPEROR_SCORPION
 tarantella MONS_TARANTELLA
