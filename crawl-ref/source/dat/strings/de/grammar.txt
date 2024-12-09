@@ -136,16 +136,16 @@ KEY:/^\{adj-e\}/{adj-em}/
 #################################
 %%%%
 GENERATE:adj-er
-/e /er /
+/e(?=( |$))/er/
 %%%%
 GENERATE:adj-es
-/e /es /
+/e(?=( |$))/es/
 %%%%
 GENERATE:adj-en
-/e /en /
+/e(?=( |$))/en/
 %%%%
 GENERATE:adj-em
-/e /em /
+/e(?=( |$))/em/
 %%%%
 
 #################################
