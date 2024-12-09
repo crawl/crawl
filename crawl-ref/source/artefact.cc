@@ -619,6 +619,7 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
     // Categorise items by whether they're quick to swap or not. Some artefact
     // properties aren't appropriate on easily swappable items.
     const bool non_swappable = item_class == OBJ_ARMOUR
+                               || item_class == OBJ_TALISMANS
                                || item_class == OBJ_JEWELLERY
                                   && jewellery_is_amulet(item);
 
@@ -664,6 +665,9 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
             }
             // fallthrough
         case ARTP_REGENERATION:
+            // XXX: regen disabled on talismans because of an untransform crash
+            // related to talismans being slotless
+            return non_swappable && item_class != OBJ_TALISMANS;
         case ARTP_INVISIBLE:
         case ARTP_HARM:
         case ARTP_RAMPAGING:
