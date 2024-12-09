@@ -232,10 +232,12 @@ int main()
     show_result(localise("the Black Crusader"), "der Schwarze Kreuzritter");
     show_result(localise("Black Crusader"), "Schwarzer Kreuzritter");
     // includes species adjective @Adj@
-    show_result(localise("the Minotaur Barricade"), "die Minotaur Barrikade");
-    show_result(localise("Minotaur Barricade"), "Minotaur Barrikade");
+    show_result(localise("the Minotaur Barricade"), "die Minotaurische Barrikade");
+    show_result(localise("Minotaur Barricade"), "Minotaurische Barrikade");
     show_result(localise("the Ghoulish Barricade"), "die Ghulische Barrikade");
     show_result(localise("Ghoulish Barricade"), "Ghulische Barrikade");
+    show_result(localise("the Dwarven Disaster"), "das Zwergische Desaster");
+    show_result(localise("Dwarven Disaster"), "Zwergisches Desaster");
     // includes species-specific movement word (@Walking@)
     show_result(localise("the Walking Fertiliser"), "der Wandernde Dünger");
     show_result(localise("Walking Fertiliser"), "Wandernder Dünger");

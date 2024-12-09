@@ -108,6 +108,29 @@ KEY:/^(a|an) //
 /^\{.\}\{/{/
 %%%%
 
+# if adjective already has a context, we can't generate other forms on the fly, so pre-generate
+%%%%
+PREGENERATE:10
+SELECT:/^\{adj-e\}/
+KEY:/^\{adj-e\}/{adj-er}/
+/e$/er/
+%%%%
+PREGENERATE:11
+SELECT:/^\{adj-e\}/
+KEY:/^\{adj-e\}/{adj-es}/
+/e$/es/
+%%%%
+PREGENERATE:12
+SELECT:/^\{adj-e\}/
+KEY:/^\{adj-e\}/{adj-en}/
+/e$/en/
+%%%%
+PREGENERATE:13
+SELECT:/^\{adj-e\}/
+KEY:/^\{adj-e\}/{adj-em}/
+/e$/em/
+%%%%
+
 #################################
 # Adjectives
 #################################

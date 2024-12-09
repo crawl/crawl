@@ -242,7 +242,7 @@ int main()
     test("Du blockierst den Angriff des Geistes von MrDizzy.", "You block %s attack.", "MrDizzy's ghost's");
     test("Die Wunden des Geistes von MrDizzy heilen von selbst!", "%s's wounds heal themselves!", "MrDizzy's ghost");
     // long-form description
-    test("Die Erscheinung von MrDizzy der Minotaur Barrikade, einem legendären Minotaur Kämpfer von Beogh.",
+    test("Die Erscheinung von MrDizzy der Minotaurischen Barrikade, einem legendären Minotaur Kämpfer von Beogh.",
          "The apparition of %s.", "MrDizzy the Minotaur Barricade, a legendary Minotaur Fighter of Beogh");
     cout << endl;
 
@@ -256,7 +256,7 @@ int main()
     test("Du blockierst den Angriff der Illusion von MrDizzy.", "You block %s attack.", "MrDizzy's illusion's");
     test("Die Wunden der Illusion von MrDizzy heilen von selbst!", "%s's wounds heal themselves!", "MrDizzy's illusion");
     // long-form description
-    test("Eine Illusion von MrDizzy der Minotaur Barrikade, einem legendären Minotaur Kämpfer von Beogh.",
+    test("Eine Illusion von MrDizzy der Minotaurischen Barrikade, einem legendären Minotaur Kämpfer von Beogh.",
          "An illusion of %s.", "MrDizzy the Minotaur Barricade, a legendary Minotaur Fighter of Beogh");
     cout << endl;
 
