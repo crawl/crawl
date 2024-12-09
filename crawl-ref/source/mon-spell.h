@@ -261,7 +261,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_DOOM_HOUND,
       {
-       { SPELL_DOOM_HOWL, 30, MON_SPELL_NATURAL },
+       { SPELL_DOOM_HOWL, 30, MON_SPELL_NATURAL | MON_SPELL_NOISY },
       }
     },
 
@@ -751,7 +751,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_WEEPING_SKULL,
       {
-       { SPELL_MOURNING_WAIL, 48, MON_SPELL_MAGICAL},
+       { SPELL_MOURNING_WAIL, 48, MON_SPELL_MAGICAL },
       }
     },
 
@@ -813,28 +813,28 @@ static const mon_spellbook mspell_list[] =
     // ('B') Beetles and other insects
     {  MST_BOMBARDIER_BEETLE,
       {
-       { SPELL_PYRE_ARROW, 40, MON_SPELL_NATURAL},
+       { SPELL_PYRE_ARROW, 40, MON_SPELL_NATURAL },
       }
     },
 
     {  MST_BOULDER_BEETLE,
       {
-       { SPELL_ROLL, 50, MON_SPELL_NATURAL},
-       { SPELL_BLINK_AWAY, 20, MON_SPELL_NATURAL},
+       { SPELL_ROLL, 50, MON_SPELL_NATURAL },
+       { SPELL_BLINK_AWAY, 20, MON_SPELL_NATURAL },
       }
     },
 
     {  MST_RADROACH,
       {
-       { SPELL_IRRADIATE, 50, MON_SPELL_NATURAL},
+       { SPELL_IRRADIATE, 50, MON_SPELL_NATURAL },
       }
     },
 
     {  MST_XAKKRIXIS,
       {
-       { SPELL_VENOM_BOLT, 24, MON_SPELL_WIZARD},
-       { SPELL_IGNITE_POISON, 35, MON_SPELL_WIZARD},
-       { SPELL_FULMINANT_PRISM, 21, MON_SPELL_WIZARD},
+       { SPELL_VENOM_BOLT, 24, MON_SPELL_WIZARD },
+       { SPELL_IGNITE_POISON, 35, MON_SPELL_WIZARD },
+       { SPELL_FULMINANT_PRISM, 21, MON_SPELL_WIZARD },
       }
     },
 
@@ -964,7 +964,7 @@ static const mon_spellbook mspell_list[] =
     // ('E') Elementals.
     {  MST_AIR_ELEMENTAL,
       {
-       { SPELL_STUNNING_BURST, 50, MON_SPELL_NATURAL},
+       { SPELL_STUNNING_BURST, 50, MON_SPELL_NATURAL },
       }
     },
 
