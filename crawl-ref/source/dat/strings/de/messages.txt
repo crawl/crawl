@@ -401,7 +401,7 @@ This place is already infused with evil and corruption.
 Dieser Ort ist bereits voller Übel und Korruption.
 %%%%
 %s's Hand of Corruption reaches out!
-%ss Hand der Korruption streckt sich aus!
+Lugonus Hand der Korruption streckt sich aus!
 %%%%
 The substance of the Abyss twists violently, and a gateway leading down appears!
 Die Substanz des Abgrunds verdreht sich heftig, und ein Tor, das nach unten führt, erscheint!
@@ -2699,13 +2699,13 @@ Die Kräfte {gen}%s basieren auf {dat}%s statt auf der Anrufungsfertigkeit.
 %s ist fast bereit, dich deine Sünden zu vergeben.
 %%%%
 %s's wrath is upon you!
-{gen}%s Zorn ist über dich gekommen!
+Der Zorn {gen}%s ist über dich gekommen!
 %%%%
 %s well remembers your sins.
 %s erinnert sich gut an deine Sünden.
 %%%%
 %s's wrath is beginning to fade.
-{gen}%s Zorn beginnt zu schwinden.
+Der Zorn {gen}%s beginnt zu schwinden.
 %%%%
 %s is neutral towards you.
 %s ist dir gegenüber neutral.
@@ -6032,7 +6032,7 @@ Kikubaaqudghas Bosheit konzentriert sich auf dich.
 %s schickt einen Diener, um dich zu bestrafen.
 %%%%
 %s's servants fail to arrive.
-{gen}%s Diener kommen nicht an.
+Die Diener {gen}%s kommen nicht an.
 %%%%
 %s's anger turns toward you for a moment.
 Der Zorn {gen}%s richtet sich für einen Moment gegen dich.
@@ -6047,7 +6047,7 @@ Der Zorn {gen}%s richtet sich für einen Moment gegen dich.
 %s hat keine Zeit, dich zu bestrafen... jetzt.
 %%%%
 %s's voice booms out, "Feel my wrath!"
-{gen}%s Stimme dröhnt: "Fühle meinen Zorn!"
+Die Stimme {gen}%s dröhnt: "Fühle meinen Zorn!"
 %%%%
 You suddenly pass out!
 Du wirst plötzlich ohnmächtig!
@@ -6075,14 +6075,14 @@ Du fühlst dich plötzlich träge!
 %s schickt Truppen gegen dich!
 %%%%
 %s's forces are busy with other wars.
-{gen}%s Truppen sind mit anderen Kriegen beschäftigt.
+Die Truppen {gen}%s sind mit anderen Kriegen beschäftigt.
 %%%%
 %s's wrath finds you.
-{gen}%s Zorn findet dich.
+Der Zorn {gen}%s findet dich.
 %%%%
 # Lugonu teleports player
 %s's wrath scatters you!
-{gen}%s Zorn zerstreut dich!
+Der Zorn {gen}%s zerstreut dich!
 %%%%
 Space warps around you!
 Der Raum verzieht sich um dich!
@@ -6098,7 +6098,7 @@ You feel Jiyva alter your body.
 Du spürst, wie Jiyva deinen Körper verändert.
 %%%%
 %s's gift of slime is revoked.
-{gen}%s Gabe des Schleims ist widerrufen.
+Jiyvas Gabe des Schleims ist widerrufen.
 %%%%
 Mutagenic energy floods into your body!
 Mutagene Energie strömt in deinen Körper!
@@ -6164,7 +6164,7 @@ Sifu %s says: Suffer, mortal!
 Sifu %s sagt: Leide, Sterblicher!
 %%%%
 %s's divine weapons fail to arrive.
-{gen}%s göttlichen Waffen kommen nicht an.
+Die göttlichen Waffen {gen}%s kommen nicht an.
 %%%%
 %s drives %s into a dance frenzy!
 %s treibt {acc}%s in einen Tanzrausch!
@@ -8974,8 +8974,9 @@ In die Enge getrieben, wendet sich @the_monster@ dem Kampf zu!
 # mon-cast.cc
 ##################
 %%%%
+# 2nd param is <god>'s
 %s invokes %s protection!
-%s ruft %s Schutz auf!
+%s ruft den Schutz %s auf!
 %%%%
 # params: 1. monster name 2. reflexive pronoun
 %s liquefies the ground around %s!
@@ -11304,7 +11305,7 @@ Please choose an option below
 Bitte wähle unten eine Option aus
 %%%%
 %s's power touches on your attributes.
-Die Macht von %s berührt deine Attribute.
+Die Macht {gen}%s berührt deine Attribute.
 %%%%
 weaker
 swächer
@@ -13635,8 +13636,8 @@ Den Buchstaben einer Fertigkeit drücken, um auszuwählen, ob sie trainiert wird
 Press the letter of a skill to cycle between <darkgrey>disabled</darkgrey> (<darkgrey>-</darkgrey>), enabled (+) and <white>focused</white> (<white>*</white>). Focused skills train twice as fast relative to others.
 Den Buchstaben einer Fertigkeit drücken, um zwischen <darkgrey>deaktiviert</darkgrey> (<darkgrey>-</darkgrey>), aktiviert (+) und <white>fokussiert</white> (<white>*</white>) zu wechseln. Fokussierte Fertigkeiten trainieren im Vergleich zu anderen doppelt so schnell.
 %%%%
-@god_possessive@ power
-@god_possessive@ Macht
+Ashenzari's power
+Aschenzaris Macht
 %%%%
 cross-training
 Cross-Skilling
@@ -15341,7 +15342,7 @@ A mana viper appears with a sibilant hiss.
 Eine Manaviper erscheint mit einem Zischen.
 %%%%
 the rage of %s
-{gen}%s Zorn
+der Zorn {gen}%s
 %%%%
 You are momentarily dazzled by a brilliant light.
 Du wirst für einen Moment von einem strahlenden Licht geblendet.
@@ -16630,7 +16631,7 @@ Es konnte kein gültiges Fensterlayout gefunden werden: Bildschirm zu klein oder
 ##################
 %%%%
 %s's power protects you from the chaos of Hell!
-{gen}%s Macht schützt dich vor dem Chaos der Hölle!
+Die Macht {gen}%s schützt dich vor dem Chaos der Hölle!
 %%%%
 Your body shudders with the violent release of wild energies!
 Dein Körper zittert unter der heftigen Freisetzung von wilden Energien!

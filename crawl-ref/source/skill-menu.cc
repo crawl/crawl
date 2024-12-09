@@ -538,7 +538,7 @@ string SkillMenuSwitch::get_help()
             if (!you.skill_boost.empty()
                 && have_passive(passive_t::bondage_skill_boost))
             {
-                causes.push_back("@god_possessive@ power");
+                causes.push_back("Ashenzari's power");
             }
             if (_any_crosstrained())
                 causes.push_back("cross-training");
@@ -546,8 +546,6 @@ string SkillMenuSwitch::get_help()
             string fmt = "Skills enhanced by %s are in <green>green</green>.";
             string cause_str = comma_separated_line(causes.begin(), causes.end());
             result = localise(fmt, cause_str);
-            string god_poss = apostrophise(god_name(you.religion));
-            result = replace_all(result, "@god_possessive@", localise(god_poss));
         }
 
         if (skm.is_set(SKMF_REDUCED))

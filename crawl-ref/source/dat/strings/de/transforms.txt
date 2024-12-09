@@ -972,15 +972,15 @@ dein altes Selbst
 %%%%
 # default for most species
 You kneel at the altar of %s.
-Du kniest vor dem Altar von {dat}%s.
+Du kniest vor dem Altar {gen}%s.
 %%%%
 # default for felid
 You sit before the altar of %s.
-Du setzst dich vor den Altar von {dat}%s.
+Du setzst dich vor den Altar {gen}%s.
 %%%%
 # default for octopode
 You curl up in front of the altar of %s.
-Du rollst dich vor dem Altar von {dat}%s zusammen.
+Du rollst dich vor dem Altar {gen}%s zusammen.
 %%%%
 # default for naga (snakelike)
 You coil in front of the altar of %s.
@@ -988,41 +988,41 @@ Du windest dich vor dem Altar von {dat}%s.
 %%%%
 # flying
 You hover solemnly before the altar of %s.
-Du schwebst feierlich vor dem Altar von {dat}%s.
+Du schwebst feierlich vor dem Altar {gen}%s.
 %%%%
 # porcupine form
 You curl into a sanctuary of spikes before the altar of %s.
-Du rollst dich vor dem Altar von {dat}%s zu einem Heiligtum aus Stacheln zusammen.
+Du rollst dich vor dem Altar {gen}%s zu einem Heiligtum aus Stacheln zusammen.
 %%%%
 # spider form
 You crawl onto the altar of %s.
-Du krabbelst auf den Altar von {dat}%s.
+Du krabbelst auf den Altar {gen}%s.
 %%%%
 # tree form
 You sway towards the altar of %s.
-Du schwankst zum Altar von {dat}%s.
+Du schwankst zum Altar {gen}%s.
 %%%%
 # bat form
 You perch on the altar of %s.
-Du hockst dich auf den Altar von {acc}%s.
+Du hockst dich auf den Altar {gen}%s.
 %%%%
 # ice/pig/dragon form
 You bow your head before the altar of %s.
-Du verneigst deinen Kopf vor dem Altar von {dat}%s.
+Du verneigst deinen Kopf vor dem Altar {gen}%s.
 %%%%
 # hydra form
 You bow your heads before the altar of %s.
-Du verneigst deine Köpfe vor dem Altar von {dat}%s.
+Du verneigst deine Köpfe vor dem Altar {gen}%s.
 %%%%
 # statue/storm form
 You place yourself before the altar of %s.
-Du stellst dich vor den Altar von {dat}%s.
+Du stellst dich vor den Altar {gen}%s.
 %%%%
 # fungus form
 You release spores on the altar of %s.
-Du gibst Sporen auf den Altar von {dat}%s ab.
+Du gibst Sporen auf den Altar {gen}%s ab.
 %%%%
 # wisp form
 You swirl around the altar of %s.
-Du wirbelst um den Altar von {dat}%s.
+Du wirbelst um den Altar {gen}%s.
 %%%%

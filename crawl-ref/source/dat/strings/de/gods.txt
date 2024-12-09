@@ -176,73 +176,73 @@ Jiyva %s das Formlose
 ########################
 %%%%
 {gen}Ashenzari
-Aschenzaris
+von Aschenzari
 %%%%
 {gen}Beogh
-Beoghs
+von Beogh
 %%%%
 {gen}Cheibriados
-Cheibriados'
+von Cheibriados
 %%%%
 {gen}Dithmenos
-Dithmenos'
+von Dithmenos
 %%%%
 {gen}Elyvilon
-Elyvilons
+von Elyvilon
 %%%%
 {gen}Fedhas
-Fedhas'
+von Fedhas
 %%%%
 {gen}Gozag
-Gozags
+von Gozag
 %%%%
 {gen}Hepliaklqana
-Hepliaklqanas
+von Hepliaklqana
 %%%%
 {gen}Jiyva
-Jiyvas
+von Jiyva
 %%%%
 {gen}Kikubaaqudgha
-Kikubaaqudghas
+von Kikubaaqudgha
 %%%%
 {gen}Lugonu
-Lugonus
+von Lugonu
 %%%%
 {gen}Makhleb
-Makhlebs
+von Makhleb
 %%%%
 {gen}Nemelex Xobeh
-Nemelex Xobehs
+von Nemelex Xobeh
 %%%%
 {gen}Okawaru
-Okawarus
+von Okawaru
 %%%%
 {gen}Qazlal
-Qazlals
+von Qazlal
 %%%%
 {gen}Ru
-Rus
+von Ru
 %%%%
 {gen}Sif Muna
-Sif Munas
+von Sif Muna
 %%%%
 {gen}Trog
-Trogs
+von Trog
 %%%%
 {gen}Uskayaw
-Uskayaws
+von Uskayaw
 %%%%
 {gen}Vehumet
-Vehumets
+von Vehumet
 %%%%
 {gen}Xom
-Xoms
+von Xom
 %%%%
 {gen}Yredelemnul
-Yredelemnuls
+von Yredelemnul
 %%%%
 {gen}Zin
-Zins
+von Zin
 %%%%
 {gen}the Shining One
 des Strahlenden
@@ -286,73 +286,73 @@ eines Gottes
 ########################
 %%%%
 Ashenzari's
-Aschenzaris
+von Aschenzari
 %%%%
 Beogh's
-Beoghs
+von Beogh
 %%%%
 Cheibriados's
-Cheibriados'
+von Cheibriados
 %%%%
 Dithmenos's
-Dithmenos'
+von Dithmenos
 %%%%
 Elyvilon's
-Elyvilons
+von Elyvilon
 %%%%
 Fedhas's
-Fedhas'
+von Fedhas
 %%%%
 Gozag's
-Gozags
+von Gozag
 %%%%
 Hepliaklqana's
-Hepliaklqanas
+von Hepliaklqana
 %%%%
 Jiyva's
-Jiyvas
+von Jiyva
 %%%%
 Kikubaaqudgha's
-Kikubaaqudghas
+von Kikubaaqudgha
 %%%%
 Lugonu's
-Lugonus
+von Lugonu
 %%%%
 Makhleb's
-Makhlebs
+von Makhleb
 %%%%
 Nemelex Xobeh's
-Nemelex Xobehs
+von Nemelex Xobeh
 %%%%
 Okawaru's
-Okawarus
+von Okawaru
 %%%%
 Qazlal's
-Qazlals
+von Qazlal
 %%%%
 Ru's
-Rus
+von Ru
 %%%%
 Sif Muna's
-Sif Munas
+von Sif Muna
 %%%%
 Trog's
-Trogs
+von Trog
 %%%%
 Uskayaw's
-Uskayaws
+von Uskayaw
 %%%%
 Vehumet's
-Vehumets
+von Vehumet
 %%%%
 Xom's
-Xoms
+von Xom
 %%%%
 Yredelemnul's
-Yredelemnuls
+von Yredelemnul
 %%%%
 Zin's
-Zins
+von Zin
 %%%%
 the Shining One's
 des Strahlenden
