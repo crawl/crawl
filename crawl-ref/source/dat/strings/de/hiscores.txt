@@ -163,7 +163,7 @@ War %s {gen}%s{nom}%s.
 # titles used above, in declining order of piety
 %%%%
 the Champion
-der Kämpe
+der Auserwählte
 %%%%
 a High Priest
 ein Hohepriester
@@ -187,7 +187,7 @@ ein Novize
 # optional penitent suffix
 %%%%
 " (penitent)"
-" (Pönitent)"
+" (reuig)"
 %%%%
 
 ########################
@@ -208,16 +208,16 @@ Entkam mit der Kugel
 
 %%%%
 Quit the game
-Beendet das Spiel
+Beendete das Spiel
 %%%%
 Got out of the dungeon
 Entkam dem Kerker
 %%%%
 Safely got out of the dungeon
-Entkam sicher dem Kerker
+Entkam dem Kerker unversehrt
 %%%%
 Got out of the dungeon alive
-Entkam lebendig dem Kerker
+Entkam dem Kerker lebend
 %%%%
 ... with 1 rune
 ... mit 1 Rune
@@ -269,7 +269,7 @@ Mangled
 Zerfetzt
 %%%%
 Demolished
-Eemoliert
+Demoliert
 %%%%
 Annihilated
 Vernichtet
@@ -278,10 +278,10 @@ Vernichtet
 %%%%
 # killed by missile from a launcher (arrow, bolt, sling bullet)
 shot by themself
-ershießen von sich selbst
+erschossen von sich selbst
 %%%%
 shot by %s
-ershießen von {dat}%s
+erschossen von {dat}%s
 %%%%
 # killed by thrown weapon (boomerang, javelin, manticore spikes)
 hit from afar by %s
@@ -289,10 +289,10 @@ aus der Ferne von {dat}%s getroffen
 %%%%
 # wand, etc.
 blasted by themself
-eingeschlagen von sich selbst
+gesprengt von sich selbst
 %%%%
 blasted by %s
-eingeschlagen von {dat}%s
+gesprengt von {dat}%s
 %%%%
 slain by %s
 erschlagen von {dat}%s
@@ -318,7 +318,7 @@ Impaled on %s spines
 Aufgespießt von %s Stacheln
 %%%%
 Succumbed to poison
-Dem Gift erlegen
+Einem Gift erlegen
 %%%%
 poisoned by %s
 vergiftet von {dat}%s
@@ -362,7 +362,7 @@ Verschlungen von {dat}%s
 %%%%
 # killed by their own <beam>
 Killed by their own %s
-Getötet von seinem eigenen {dat}%s
+Getötet vom eigenen {dat}%s
 %%%%
 Killed by %s
 Getötet von {dat}%s
@@ -390,16 +390,16 @@ fell apart
 zerfiel
 %%%%
 Soaked and fell apart
-Durchnässt und zerfiel
+Wurde durchnässt und zerfiel
 %%%%
 Sank and fell apart
-Sank und zerfiel
+Versank und zerfiel
 %%%%
 drowned by %s
-ertrunken von {dat}%s
+ertränkt von {dat}%s
 %%%%
 Drowned by %s
-Ertrunken von {dat}%s
+Ertränkt von {dat}%s
 %%%%
 drowned
 ertrank
@@ -408,7 +408,7 @@ Drowned
 Ertrank
 %%%%
 stupidity
-dummheit
+Dummheit
 %%%%
 Forgot to exist
 Vergaß zu existieren
@@ -420,26 +420,26 @@ collapsed
 zusammengebrochen
 %%%%
 Collapsed under their own weight
-Zusammengebrochen unter eigenem Gewicht
+Zusammengebrochen unter dem eigenen Gewicht
 %%%%
 clumsiness
-ungeschicklichkeit
+Ungeschicktheit
 %%%%
 Slipped on a banana peel
 Auf einer Bananenschale ausgerutscht
 %%%%
 Killed by triggering %s
-Getötet durch Auslösen von {dat}%s
+Getötet durch das Auslösen von {dat}%s
 %%%%
 # duplicate definition
 #drained
 #ausgezehrt
 %%%%
 Drained of all life by %s
-Alles Leben von {dat}%s entzogen
+Alles Leben von {dat}%s verzehrt
 %%%%
 Drained of all life
-Alles Leben entzogen
+Alles Leben ausgezehrt
 %%%%
 starvation
 verhungert
@@ -480,13 +480,13 @@ Killed for Xom's enjoyment
 Getötet zu Xoms Vergnügen
 %%%%
 rotting
-verrottet
+verrottend
 %%%%
 Rotted away
 Verrottet
 %%%%
 shot self
-selbst erschossen
+sich selbst erschossen
 %%%%
 Killed themself with bad targeting
 Tötete sich selbst durch schlechtes Zielen
@@ -496,10 +496,10 @@ Killed themself with a badly aimed %s
 Tötete sich selbst mit einem schlecht gezielten {dat}%s
 %%%%
 reflected bolt
-reflektierter Bolzen
+reflektierter Strahl
 %%%%
 Killed by a reflected bolt
-Getötet durch einen reflektierten Bolzen
+Getötet durch einen reflektierten Strahl
 %%%%
 Killed by a reflected %s
 Getötet durch einen reflektierten %s
@@ -520,31 +520,31 @@ suicidal targeting
 Selbstmörderisches Zielen
 %%%%
 Shot themself with a beam
-Hat sich selbst mit einem Strahl angeschossen
+Hat sich selbst mit einem Strahl abgeschossen
 %%%%
 Shot themself with %s
-Sich selbst mit %s beschossen
+Sich selbst mit %s abgeschossen
 %%%%
 spore
-Sporen
+Spore
 %%%%
 Killed by an exploding spore
 Getötet durch eine explodierende Spore
 %%%%
 Killed by an exploding %s
-Getötet durch explodierende %s
+Getötet durch ein explodierendes %s
 %%%%
 smitten by Shining One
-vom Strahlenden zerschlagen
+vom Strahlenden zerschmettert
 %%%%
 Smitten by the Shining One
-Vom Strahlenden zerschlagen
+Vom Strahlenden zerschmettert
 %%%%
 smitten by Beogh
-von Beogh zerschlagen
+von Beogh zerschmettert
 %%%%
 Smitten by Beogh
-Von Beogh zerschlagen
+Von Beogh zerschmettert
 %%%%
 # duplicate definition
 #petrified
@@ -569,7 +569,7 @@ fell through a gate
 fiel durch ein Tor
 %%%%
 Fell down through a gate
-Durch ein Tor gefallen
+Fiel durch ein Tor
 %%%%
 # duplicate definition
 #acid
@@ -606,7 +606,7 @@ mirror damage
 Spiegelschaden
 %%%%
 Killed by mirror damage
-Tötung durch Spiegelschaden
+Getötet durch Spiegelschaden
 %%%%
 frailty
 Schwäche
@@ -618,7 +618,7 @@ barbs
 Widerhaken
 %%%%
 Succumbed to barbed spike wounds
-Durch Stachelstacheln verwundet
+Erlag Wunden durch Stachel mit Widerhaken
 %%%%
 %s throw
 %s Wurf
@@ -671,17 +671,17 @@ Zu Tode geknabbert durch Software-Bugs
 %%%%
 # %s could be a monster or a thing
 ... while paralysed by %s
-... während der Lähmung von {dat}%s
+... während einer Lähmung durch {dat}%s
 %%%%
 ... while paralysed
-... während er gelähmt ist
+... während einer Lähmung
 %%%%
 # %s is always a monster
 ... while petrified by %s
-... während der Versteinerung von {dat}%s
+... während einer Versteinerung durch {dat}%s
 %%%%
 ... while petrified
-... während der Versteinerung
+... während einer Versteinerung
 %%%%
 
 %%%%
@@ -689,7 +689,7 @@ Hit by %s thrown by %s
 Getroffen von {dat}%s geworfen von {dat}%s
 %%%%
 Shot with %s by %s
-Geschossen mit {dat}%s von {dat}%s
+Erschossen mit {dat}%s von {dat}%s
 %%%%
 
 ########################
@@ -704,7 +704,7 @@ geführt von {dat}%s
 %%%%
 # inc this context, can be something created (e.g. fireball)
 summoned by %s
-beschwören von {dat}%s
+beschworen von {dat}%s
 %%%%
 woven by %s
 gewebt von {dat}%s
@@ -714,11 +714,11 @@ animiert von {dat}%s
 %%%%
 # for some reason eldritch tentacle is called rather than summoned
 called by %s
-aufgerufen von {dat}%s
+herbeigerufen von {dat}%s
 %%%%
 # spectral cloud
 called from beyond by %s
-von jenseits von {dat}%s aufgerufen
+aus dem Jenseits gerufen von {dat}%s
 %%%%
 created by %s
 erschaffen von {dat}%s
@@ -729,7 +729,7 @@ erschaffen durch den Zorn {gen}%s
 %%%%
 # tentacle attached to monster
 attached to %s
-angehängt an {dat}%s
+anhängig an {dat}%s
 %%%%
 
 ########################
@@ -740,19 +740,19 @@ themself
 sich selbst
 %%%%
 their own shadow
-sein eigener Schatten
+der eigene Schatten
 %%%%
 {acc}their own shadow
-seinen eigenen Schatten
+den eigenen Schatten
 %%%%
 {dat}their own shadow
-seinem eigenen Schatten
+dem eigenen Schatten
 %%%%
 unknown source
 unbekannte Quelle
 %%%%
 an accursed screaming
-{n}ein verfluchtes Gekreisch
+{n}ein verfluchtes Gekreische
 %%%%
 static electricity
 statische Elektrizität
