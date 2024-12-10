@@ -459,7 +459,7 @@ einem Gott
 ##################
 %%%%
 Beogh blesses you with reinforcements.
-Beogh segnet dich mit Verstärkungen.
+Beogh segnet dich mit Verstärkung.
 %%%%
 %s blesses %s with %s.
 %s segnet %s mit %s.
@@ -521,7 +521,7 @@ mehr Zeit in dieser Welt
 %s mag es nicht, wenn %s.
 %%%%
 %s strongly dislikes it when %s.
-%s mag es besonders nicht, wenn %s.
+%s mag es überhaupt nicht, wenn %s.
 %%%%
 
 # These are the conducts the gods like/dislike:
@@ -540,7 +540,7 @@ you attack neutral beings
 du neutrale Wesen angreifst
 %%%%
 you attack allies
-du Verbündete angreift
+du Verbündete angreifst
 %%%%
 you attack monsters in a sanctuary
 du Monster in einem Heiligtum angreifst
@@ -558,7 +558,7 @@ you use holy magic or items
 du heilige Magie oder Gegenstände verwendest
 %%%%
 you memorise spells
-du Zaubersprüche memorierst
+du Zaubersprüche erlernst
 %%%%
 you attempt to cast spells
 du versuchst, Zaubersprüche zu wirken
@@ -567,7 +567,7 @@ you train magic skills
 du magische Fähigkeiten trainierst
 %%%%
 you use magical staves or pain-branded weapons
-du magische Stäbe oder mit Schmerz versehene Waffen verwendest
+du magische Stäbe oder mit Schmerz geprägte Waffen verwendest
 %%%%
 you kill living things while asking for your life to be spared
 du Lebewesen tötest, während du darum bittest, dass dein Leben verschont wird
@@ -645,7 +645,7 @@ you hurt your foes; however, effects that cause damage over time do not interest
 du deine Feinde verletzt; Effekte, die Schaden über Zeit verursachen, interessieren Uskayaw jedoch nicht
 %%%%
 you sacrifice items by allowing slimes to consume them
-du Gegenstände opferst, indem du ihnen von Schleimen verzehren lässt
+du Gegenstände opferst, indem du Schleimen erlaubst, sie zu verzehren
 %%%%
 you collect gold
 du Gold sammelst
@@ -657,5 +657,5 @@ you donate money
 du Geld spendest
 %%%%
 you bind yourself with curses
-du dich mit flüchen bindest
+du dich mit Flüchen bindest
 %%%%
