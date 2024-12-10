@@ -45,6 +45,7 @@
 #include "travel.h"
 #include "viewgeom.h"
 #include "viewchar.h"
+#include "viewmap.h"
 
 static VColour _flash_colours[NUM_TERM_COLOURS] =
 {
@@ -431,7 +432,7 @@ bool DungeonRegion::inside(int x, int y)
     return x >= 0 && y >= 0 && x <= tile_iw && y <= tile_ih;
 }
 
-static bool _handle_distant_monster(monster* mon, unsigned char mod)
+static command_type _handle_distant_monster(monster* mon, unsigned char mod)
 {
     const bool shift = (mod & TILES_MOD_SHIFT);
     const bool ctrl  = (mod & TILES_MOD_CTRL);
@@ -439,7 +440,7 @@ static bool _handle_distant_monster(monster* mon, unsigned char mod)
 
     // TODO: is see_cell_no_trans too strong?
     if (!mon || mon->friendly() || !you.see_cell_no_trans(mon->pos()))
-        return false;
+        return CMD_NO_CMD;
 
     // TODO: unify code with tooltip construction?
     const item_def* weapon = you.weapon();
@@ -449,21 +450,48 @@ static bool _handle_distant_monster(monster* mon, unsigned char mod)
     if (!ctrl && !shift && !alt
         && (primary_ranged || (mon->pos() - you.pos()).rdist() <= melee_dist))
     {
-        dist t;
-        t.target = mon->pos();
-        quiver::get_primary_action()->trigger(t);
-        return true;
+        const coord_def gc = mon->pos();
+        const command_type cmd = (command_type)(CMD_PRIMARY_ATTACK_AT_MIN +
+            (gc.y - Y_BOUND_1) * X_WIDTH + (gc.x - X_BOUND_1));
+        ASSERT(cmd >= CMD_PRIMARY_ATTACK_AT_MIN
+            && cmd <= CMD_PRIMARY_ATTACK_AT_MAX);
+        return cmd;
     }
 
     if (!ctrl && shift && quiver::get_secondary_action()->is_valid())
     {
-        dist t;
-        t.target = mon->pos();
-        quiver::get_secondary_action()->trigger(t);
-        return true;
+        const coord_def gc = mon->pos();
+        const command_type cmd = (command_type)(CMD_SECONDARY_ATTACK_AT_MIN +
+            (gc.y - Y_BOUND_1) * X_WIDTH + (gc.x - X_BOUND_1));
+        ASSERT(cmd >= CMD_SECONDARY_ATTACK_AT_MIN
+            && cmd <= CMD_SECONDARY_ATTACK_AT_MAX);
+        return cmd;
     }
 
-    return false;
+    return CMD_NO_CMD;
+}
+
+static void _update_cell_desc(const coord_def gc)
+{
+    string desc = get_terse_square_desc(gc);
+    // Suppress floor description
+    if (desc == "floor")
+        desc = "";
+
+    if (you.see_cell(gc))
+    {
+        if (cloud_struct* cloud = cloud_at(gc))
+        {
+            string terrain_desc = desc;
+            desc = cloud->cloud_name(true);
+
+            if (!terrain_desc.empty())
+                desc += "\n" + terrain_desc;
+        }
+    }
+
+    if (!desc.empty())
+        tiles.add_text_tag(TAG_CELL_DESC, desc, gc);
 }
 
 int DungeonRegion::handle_mouse(wm_mouse_event &event)
@@ -472,20 +500,6 @@ int DungeonRegion::handle_mouse(wm_mouse_event &event)
 
     if (!inside(event.px, event.py))
         return 0;
-
-    if (mouse_control::current_mode() == MOUSE_MODE_NORMAL
-        && event.event == wm_mouse_event::PRESS
-        && event.button == wm_mouse_event::LEFT)
-    {
-        m_last_clicked_grid = m_cursor[CURSOR_MOUSE];
-
-        int cx, cy;
-        mouse_pos(event.px, event.py, cx, cy);
-        const coord_def gc(cx + m_cx_to_gx, cy + m_cy_to_gy);
-        tiles.place_cursor(CURSOR_MOUSE, gc);
-
-        return CK_MOUSE_CLICK;
-    }
 
     if (mouse_control::current_mode() == MOUSE_MODE_MACRO
         || mouse_control::current_mode() == MOUSE_MODE_MORE
@@ -497,61 +511,24 @@ int DungeonRegion::handle_mouse(wm_mouse_event &event)
 
     int cx;
     int cy;
-
     bool on_map = mouse_pos(event.px, event.py, cx, cy);
 
     const coord_def gc(cx + m_cx_to_gx, cy + m_cy_to_gy);
     tiles.place_cursor(CURSOR_MOUSE, gc);
 
     if (event.event == wm_mouse_event::MOVE)
-    {
-        string desc = get_terse_square_desc(gc);
-        // Suppress floor description
-        if (desc == "floor")
-            desc = "";
-
-        if (you.see_cell(gc))
-        {
-            if (cloud_struct* cloud = cloud_at(gc))
-            {
-                string terrain_desc = desc;
-                desc = cloud->cloud_name(true);
-
-                if (!terrain_desc.empty())
-                    desc += "\n" + terrain_desc;
-            }
-        }
-
-        if (!desc.empty())
-            tiles.add_text_tag(TAG_CELL_DESC, desc, gc);
-    }
-
-    if (mouse_control::current_mode() == MOUSE_MODE_NORMAL)
-        return 0;
+        _update_cell_desc(gc);
 
     if (!on_map)
         return 0;
-
-    if (mouse_control::current_mode() == MOUSE_MODE_TARGET
-        || mouse_control::current_mode() == MOUSE_MODE_TARGET_PATH
-        || mouse_control::current_mode() == MOUSE_MODE_TARGET_DIR)
-    {
-        if (event.event == wm_mouse_event::MOVE)
-            return CK_MOUSE_MOVE;
-        else if (event.event == wm_mouse_event::PRESS
-                 && event.button == wm_mouse_event::LEFT && on_screen(gc))
-        {
-            m_last_clicked_grid = m_cursor[CURSOR_MOUSE];
-            return CK_MOUSE_CLICK;
-        }
-
-        return 0;
-    }
 
     if (event.event != wm_mouse_event::PRESS)
         return 0;
 
     m_last_clicked_grid = m_cursor[CURSOR_MOUSE];
+
+    if (mouse_control::current_mode() == MOUSE_MODE_NORMAL)
+        return 0;
 
     if (you.pos() == gc)
     {
@@ -567,48 +544,37 @@ int DungeonRegion::handle_mouse(wm_mouse_event &event)
                 {
                     // if on stairs, travel them
                     const dungeon_feature_type feat = env.grid(gc);
-                    switch (feat_stair_direction(feat))
+                    const command_type stair_command = feat_stair_direction(feat);
+                    switch (stair_command)
                     {
                     case CMD_GO_DOWNSTAIRS:
                     case CMD_GO_UPSTAIRS:
-                        return command_to_key(feat_stair_direction(feat));
+                        return encode_command_as_key(stair_command);
                     default:
                         // otherwise wait
-                        return command_to_key(CMD_WAIT);
+                        return encode_command_as_key(CMD_WAIT);
                     }
                 }
                 else
-                {
-
-                    // pick up menu
-                    // More than a single item -> open menu right away.
-                    if (count_movable_items(o) > 1)
-                    {
-                        pickup_menu(o);
-                        flush_prev_message();
-                        redraw_screen();
-                        update_screen();
-                        return CK_MOUSE_CMD;
-                    }
-                    return command_to_key(CMD_PICKUP);
-                }
+                    return encode_command_as_key(CMD_PICKUP_WITH_MENU_FOR_MULTIPLE_ITEMS);
             }
 
             const dungeon_feature_type feat = env.grid(gc);
-            switch (feat_stair_direction(feat))
+            const command_type stair_command = feat_stair_direction(feat);
+            switch (stair_command)
             {
             case CMD_GO_DOWNSTAIRS:
             case CMD_GO_UPSTAIRS:
-                return command_to_key(feat_stair_direction(feat));
+                return encode_command_as_key(stair_command);
             default:
                 return 0;
             }
         }
         case wm_mouse_event::RIGHT:
             if (!(event.mod & TILES_MOD_SHIFT))
-                return command_to_key(CMD_RESISTS_SCREEN); // Character overview.
+                return encode_command_as_key(CMD_RESISTS_SCREEN); // Character overview.
             if (!you_worship(GOD_NO_GOD))
-                return command_to_key(CMD_DISPLAY_RELIGION); // Religion screen.
+                return encode_command_as_key(CMD_DISPLAY_RELIGION); // Religion screen.
 
             // fall through...
         default:
@@ -621,8 +587,11 @@ int DungeonRegion::handle_mouse(wm_mouse_event &event)
     {
         if (map_bounds(gc) && env.map_knowledge(gc).known())
         {
-            full_describe_square(gc);
-            return CK_MOUSE_CMD;
+            const command_type cmd = (command_type)(CMD_DESCRIBE_SQUARE_MIN +
+                (gc.y - Y_BOUND_1) * X_WIDTH + (gc.x - X_BOUND_1));
+            ASSERT(cmd >= CMD_DESCRIBE_SQUARE_MIN
+                && cmd <= CMD_DESCRIBE_SQUARE_MAX);
+            return encode_command_as_key(cmd);
         }
         else
             return 0;
@@ -634,22 +603,82 @@ int DungeonRegion::handle_mouse(wm_mouse_event &event)
     return tile_click_cell(gc, event.mod);
 }
 
+bool DungeonRegion::handle_mouse_for_map_view(wm_mouse_event &event)
+{
+    tiles.clear_text_tags(TAG_CELL_DESC);
+
+    if (!inside(event.px, event.py))
+        return false;
+
+    int cx;
+    int cy;
+    mouse_pos(event.px, event.py, cx, cy);
+
+    const coord_def gc(cx + m_cx_to_gx, cy + m_cy_to_gy);
+    tiles.place_cursor(CURSOR_MOUSE, gc);
+
+    if (mouse_control::current_mode() == MOUSE_MODE_NORMAL
+        && event.event == wm_mouse_event::PRESS
+        && event.button == wm_mouse_event::LEFT)
+    {
+        m_last_clicked_grid = m_cursor[CURSOR_MOUSE];
+        process_map_command(CMD_MAP_TARGET_CURSOR);
+        return true;
+    }
+
+    if (event.event == wm_mouse_event::MOVE)
+        _update_cell_desc(gc);
+    return false;
+}
+
+bool DungeonRegion::handle_mouse_for_targeting(wm_mouse_event &event)
+{
+    tiles.clear_text_tags(TAG_CELL_DESC);
+
+    if (!inside(event.px, event.py))
+        return false;
+
+    int cx;
+    int cy;
+    bool on_map = mouse_pos(event.px, event.py, cx, cy);
+
+    const coord_def gc(cx + m_cx_to_gx, cy + m_cy_to_gy);
+    targeting_mouse_move(gc);
+
+    if (event.event == wm_mouse_event::MOVE)
+        _update_cell_desc(gc);
+
+    if (!on_map)
+        return false;
+
+    if (event.event == wm_mouse_event::PRESS
+        && event.button == wm_mouse_event::LEFT && on_screen(gc))
+    {
+        m_last_clicked_grid = m_cursor[CURSOR_MOUSE];
+        targeting_mouse_select(gc);
+        return true;
+    }
+    return false;
+}
+
 int tile_click_cell(const coord_def &gc, unsigned char mod)
 {
     monster* mon = monster_at(gc);
     if (mon && you.can_see(*mon))
     {
-        if (_handle_distant_monster(mon, mod))
-            return CK_MOUSE_CMD;
+        command_type cmd = _handle_distant_monster(mon, mod);
+        if (cmd != CMD_NO_CMD)
+            return encode_command_as_key(cmd);
     }
 
-    if ((mod & TILES_MOD_CTRL) && adjacent(you.pos(), gc))
+    if ((mod & (TILES_MOD_CTRL | TILES_MOD_SHIFT)) && adjacent(you.pos(), gc))
     {
-        const int cmd = click_travel(gc, mod & TILES_MOD_CTRL);
-        if (cmd != CK_MOUSE_CMD)
-            process_command((command_type) cmd);
+        const command_type cmd = click_travel(gc, mod & TILES_MOD_CTRL,
+            mod & TILES_MOD_SHIFT);
+        if (cmd == CMD_NO_CMD)
+            return CK_MOUSE_CMD;
 
-        return CK_MOUSE_CMD;
+        return encode_command_as_key(cmd);
     }
 
     // Don't move if we've tried to fire/cast/evoke when there's nothing
@@ -658,11 +687,11 @@ int tile_click_cell(const coord_def &gc, unsigned char mod)
         return CK_MOUSE_CMD;
 
     dprf("click_travel");
-    const int cmd = click_travel(gc, mod & TILES_MOD_CTRL);
-    if (cmd != CK_MOUSE_CMD)
-        process_command((command_type) cmd);
+    const command_type cmd = click_travel(gc, false, false);
+    if (cmd == CMD_NO_CMD)
+        return CK_MOUSE_CMD;
 
-    return CK_MOUSE_CMD;
+    return encode_command_as_key(cmd);
 }
 
 void DungeonRegion::to_screen_coords(const coord_def &gc, coord_def *pc) const
@@ -909,7 +938,14 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
         else if (!cell_is_solid(gc)) // no monster or player
         {
             if (adjacent(gc, you.pos()))
+            {
                 _add_tip(tip, "[L-Click] Move");
+                if (feat_is_open_door(env.grid(gc)))
+                {
+                    _add_tip(tip, "[Shift + L-Click] Close (%)");
+                    cmd.push_back(CMD_CLOSE_DOOR);
+                }
+            }
             else if (env.map_knowledge(gc).feat() != DNGN_UNSEEN)
             {
                 if (click_travel_safe(gc))

@@ -2438,10 +2438,9 @@ public:
             || ev.type() == ui::Event::Type::MouseDown)
         {
             auto wm_event = to_wm_event(static_cast<const ui::MouseEvent&>(ev));
-            tiles.handle_mouse(wm_event);
-            process_command(ev.type() == ui::Event::Type::MouseMove ?
-                                CMD_TARGET_MOUSE_MOVE :
-                                CMD_TARGET_MOUSE_SELECT);
+            tiles.handle_mouse_for_targeting(wm_event);
+            if (tiles.need_redraw())
+                _expose();
             return true;
         }
 #endif
@@ -2545,6 +2544,13 @@ bool targeting_mouse_move(const coord_def &gc)
     if (auto view = dynamic_cast<UIDirectionChooserView *>(l.get()))
         return view->mouse_move(gc);
     return false;
+}
+
+void process_targeting_command(command_type cmd)
+{
+    auto l = ui::top_layout();
+    if (auto view = dynamic_cast<UIDirectionChooserView *>(l.get()))
+        view->process_command(cmd);
 }
 #endif
 

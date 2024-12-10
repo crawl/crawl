@@ -632,6 +632,9 @@ int line_reader::read_line_core(bool reset_cursor)
     do
     {
         ret = process_key_core(getkey());
+#ifdef USE_TILE
+        tiles.set_need_redraw();
+#endif
     }
     while (ret == -1);
     return ret;
