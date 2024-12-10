@@ -8,6 +8,48 @@
 ###############################################################################
 
 ##############################################
+# Player genus
+# NOTE: If not listed then species is used
+##############################################
+%%%%
+# Barachi
+Frogs
+Frösch
+%%%%
+# genus for draconians of all colours
+Draconians
+Drakonier
+%%%%
+# Deep Dwarf
+Dwarves
+Zwerge
+%%%%
+# Deep Elf
+Elves
+Elfen
+%%%%
+# Demigod
+Gods
+Götter
+%%%%
+# Felid
+Cats
+Katzen
+%%%%
+# Formicid
+Ants
+Ameisen
+%%%%
+# Octopode
+Octopi
+Oktopusse
+%%%%
+# Hill Orc
+Orcs
+Orks
+%%%%
+
+##############################################
 # Player species
 ##############################################
 %%%%
@@ -28,9 +70,6 @@ Dämonenbruten
 %%%%
 Djinn
 Dschinns
-%%%%
-Draconians
-Drakonier
 %%%%
 Felids
 Felids
@@ -94,91 +133,3 @@ Vine Stalkers
 Rebpirscher
 %%%%
 
-# obsolete (can you still get player ghosts of these species?)
-%%%%
-Halflings
-Halblinge
-%%%%
-Centaurs
-Zentauren
-%%%%
-Sludge Elves
-Schlammelfen
-%%%%
-High Elves
-Hochelfen
-%%%%
-Lava Orcs
-Lava-Orks
-%%%%
-
-##############################################
-# Draconian subspecies
-# Do we need plurals of these?
-##############################################
-%%%%
-Mottled Draconians
-Fleckige Drakonier
-%%%%
-Black Draconians
-Schwarze Drakonier
-%%%%
-Green Draconians
-Grüne Drakonier
-%%%%
-Grey Draconians
-Graue Drakonier
-%%%%
-Pale Draconians
-Helle Drakonier
-%%%%
-Purple Draconians
-Purpurne Drakonier
-%%%%
-Red Draconians
-Rote Drakonier
-%%%%
-White Draconians
-Weiße Drakonier
-%%%%
-Yellow Draconians
-Gelbe Drakonier
-%%%%
-
-##############################################
-# Player genus
-# NOTE: If not listed then species is used
-##############################################
-%%%%
-# Barachi
-Frogs
-Frösch
-%%%%
-# Deep Dwarf
-Dwarves
-Zwerge
-%%%%
-# Deep Elf
-Elves
-Elfen
-%%%%
-# Demigod
-Gods
-Götter
-%%%%
-# Felid
-Cats
-Katzen
-%%%%
-# Formicid
-Ants
-Ameisen
-%%%%
-# Octopode
-Octopi
-Oktopusse
-%%%%
-# Hill Orc
-Orcs
-Orks
-%%%%
