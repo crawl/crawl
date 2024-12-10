@@ -108,7 +108,7 @@ bool dazzle_target(actor *victim, const actor *agent, int pow);
 spret cast_dazzling_flash(const actor *caster, int pow, bool fail, bool tracer = false);
 
 spret cast_toxic_radiance(actor *caster, int pow, bool fail = false,
-                               bool mon_tracer = false);
+                               bool tracer = false);
 void toxic_radiance_effect(actor* agent, int mult, bool on_cast = false);
 
 dice_def glaciate_damage(int pow, int eff_range);
