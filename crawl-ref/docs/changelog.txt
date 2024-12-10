@@ -1,4 +1,4 @@
-Stone Soup 0.33 (through 0.33-a0-481-5524b393d5d)
+Stone Soup 0.33 (through 0.33-a0-570-f9d81107089)
 -------------------------------------------------
 
 Highlights
@@ -19,6 +19,8 @@ Branches, Environment
   of nearby hostile enemies.
 * Ziggurats have even more exponential scaling for those doing multiple
   ziggurats.
+* Sprint VII ("The Pits") has been rescaled and renewed heavily, with many more
+  monster options and mildly-less-aggressive earlier chamber difficulty scaling.
 
 Character
 ---------
@@ -38,6 +40,8 @@ Character
   * time-warped blood, which hastes some of your allies when you fall below 50%
     health, and can only be used again after returning to full health.
 * Berserk players are now immune to fear.
+* Constructs the player makes with their own Forgecraft spells can be
+  nonviolently deconstructed by pressing ctrl+[direction] while adjacent.
 
 Gods
 ----
@@ -49,7 +53,7 @@ Gods
 * Dithmenos's shadow mimic also works for Forgecraft spells, creating a shadow
   turret that can fire through allies.
 * Xom has received more adjustments:
-  * Bazaars have more variety and are less common.
+  * Xom's bazaars have more variety and are less common.
   * Polymorph and draining effects are less dangerous early on.
   * New actions: hyperbuff weak ally, burn webs.
 * All three good gods that care about injuring allies now consistently don't
@@ -61,19 +65,32 @@ Interface and Options
   spell success chances for each spell if they switched to using that item.
 * Examining monsters shows if they can open doors.
 * Spell range is now indicated with numbers instead of diagrams.
+* Default target-picking behavior for spells, abilities, and items has been
+  improved: it is now more consistent at avoiding the player or their allies
+  when aiming harmful area effects and choose more sensible default aims for
+  some utility effects.
+* Ranged autofight should no longer sometimes cast spells at invalid targets
+  (such as Dispel Undead against living monsters in melee).
 * Non-monster UI now darkens quote text and can rarely contain flavour text
   instead of just quotes.
 
 Items
 -----
+* New weapon: partisans, uncommon one-handed polearms with higher base damage
+  than demon tridents and the longest swing delay of any one-handed weapon.
 * Darts of dispersal are now darts of disjunction, which now repeatedly blink
   a target each turn for several turns and deal damage with each blink.
+* +Invis, Harm, and Rampage artifact properties can now be found on talisman
+  randarts.
 
 Monsters
 --------
 * New monsters:
-  * Nekomata, self-cloning ranged cat demons for Pan.
+  * Alderkings, fae trees and necromantic masters of Depths.
   * Fravashi, mid-tier warrior-summoning angels.
+  * Nekomata, self-cloning ranged cat demons for Pan.
+  * Oni incarcerators, Manifold Assault users for Gehenna.
+  * Wyrmholes, terrifying relocations drakes for Depths and rarely Zot.
 * Returning monster: ironbound beastmasters, now with a passive animal and slime
   hasting aura plus the ability to throw bolas to bind foes in place.
 * Apises now have a passive aura that doubles the health of other monsters.
@@ -86,11 +103,15 @@ Monsters
 * Crystal echidnas deal more damage and are now speed 13.
 * Crystal guardians deal more damage.
 * Elementals in general now have animal intelligence instead of being mindless.
+* Endoplasms no longer have rPois.
 * Iron golems now have less health and EV.
+* Mutant beasts count as chaotic.
 * Occultists now have more health and EV.
 * Quicksilver oozes have been renamed, rethemed, and retiled to void oozes.
 * Searing wretches can now swim across lava.
 * Sin beasts now come in duos in Pan.
+* Sky beasts lose electric damage and random invisibility to instead deal damage
+  depending on the number of open spaces next to what they hit in melee.
 * Thermic dynamos and undying armouries reward more experience.
 * Water elementals and elemental wellsprings are now amorphous, gaining the
   same immunity to nets, constriction, and webs jellies have.
@@ -113,7 +134,7 @@ Spells
   - Kinetic Grapnel (L1 FC): A weak physical projectile connected to one's
     weapon that guarantees the next melee attack hits and deals extra damage.
   - Construct Spike Launcher (L2 FC): Builds a spike launcher in a random
-    adjacent rock wall, which launches spikes at random adjacent targets.
+    adjacent wall, which launches spikes at random adjacent targets.
   - Launch Clockwork Bee (L3 FC): Targets a monster to wind up and ready a
     clockwork bee over several turns, which can be rewound up when it collapses.
   - Rending Blade (L4 FC / Conj): Temporarily transforms all of the caster's mp
@@ -133,8 +154,9 @@ Spells
   - Splinterfrost Shell (L7 FC / Ice): Raises up several sturdy walls around
     the player that fire off as heavily damaging icicle salvos if broken.
   - Platinum Paragon (L9 FC): A metallic apotheosis of a single ally that
-    replicates a given artefact weapon, blocks attacks for the caster, and can
-    attack more quickly or an entire targetted area with charge-up.
+    replicates a given artefact weapon, blocks attacks for the caster, does
+    extra attacks with player attacks, and can hit large areas by recasting the
+    spell when charged-up.
 * The following spells have moved to Forgecraft:
   - Summon Lightning Spire: now "Forge Lightning Spire", Summ/Air -> FC/Air.
   - Summon Blazeheart Golem: now "Forge Blazeheart Golem", Summ/Fire -> FC/Fire.
@@ -156,8 +178,14 @@ Spells
   * Lightning Spires now target the furtherest-away foe, if possible.
   * Maxwell's Portable Piledriver can now be aimed and can push a connected
     line of lined-up enemies all at once.
+  * Mercury Vapours is now Poisonous Vapours, moved to level 1, no longer
+    inflicts Weak, inflicts less poison status, and deals a small amount of flat
+    AC-ignoring damage against targets without rPois.
   * Rimeblight now chains to two other targets on cast and now reliably spreads
     on death instead of also spreading through its explosions.
+  * Sting is now Mercury Arrow, moved to level 2, no longer inflicts the poison
+    status (but still partially checks rPois), and gains Mercury Vapours'
+    previous HD-check area-of-effect Weak status.
   * Teleport Other is now smite targetted.
 
 Tiles and Other Art
@@ -171,8 +199,9 @@ Tiles and Other Art
     great orbs of eyes, living spells, ophanim, rakshasa, scrub nettles,
     shapeshifters and glowing shapeshifters, all tengu types.
   * Mutation icons: big wings, mertail, subdued magic, wild magic.
-  * Plants.
+  * Plants, both regular and withered.
   * Player dolls: Coglins.
+  * The prune curse from the glaive of Prune.
   * Unrands: the robe of Augmentation, Brilliance and its brand, Firestarter,
     Punk's acid brand, the robe of Folly, the sword of the Doom Knight, and
     the toga "Victory".
@@ -181,8 +210,8 @@ Tiles and Other Art
     Hoarfrost Cannonade, Lightning Spire, Magnavolt, Permafrost Eruption,
     Spellspark Servitor, all remaining monster-only spells.
   * Visual effects: draining gaze, doom howl, entropic weave, fire storm, ice
-    blasts, magma, manifold assault, sap magic, sentinel's mark, wand of
-    warping.
+    blasts, magma, manifold assault, mystic blast, sap magic, sentinel's mark,
+    wand of warping.
   * Walls: Vaults and Trove rock.
 * Pandemonium now has unique stone tiles for regular floors and unique wall
   tiles for each of the unrand Pan lord vaults.
