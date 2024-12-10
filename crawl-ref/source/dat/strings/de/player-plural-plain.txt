@@ -26,9 +26,8 @@ Halbgötter
 Demonspawns
 Dämonenbruten
 %%%%
-# conflicts with the adjective
-#Djinn
-#Dschinns
+Djinn
+Dschinns
 %%%%
 Draconians
 Drakonier

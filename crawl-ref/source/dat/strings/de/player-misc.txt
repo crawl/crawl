@@ -46,9 +46,6 @@ Elfische
 Divine
 Göttliche
 %%%%
-Djinn
-Magische
-%%%%
 Demonic
 Dämonische
 %%%%
@@ -78,6 +75,10 @@ Orkische
 %%%%
 
 # English adjective is same as the noun, so context required
+%%%%
+# this one same as plural noun
+{adj-e}Djinn
+Magische
 %%%%
 {adj-e}Draconian
 Drakonische
