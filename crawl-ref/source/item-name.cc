@@ -1560,7 +1560,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             buff << "cursed ";
 
         // Don't list unenchantable armor as +0.
-        if (identified && armour_is_enchantable(*this))
+        if (identified && !dbname && armour_is_enchantable(*this))
             buff << make_stringf("%+d ", plus);
 
         if ((item_typ == ARM_GLOVES || item_typ == ARM_BOOTS)
