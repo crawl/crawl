@@ -1698,9 +1698,15 @@ void TilesFramework::_send_cell(const coord_def &gc,
                         int(last_player_doll.parts[TILEP_PART_BASE]);
                     item_def *item;
                     if (item = you.slot_item(EQ_WEAPON))
+                    {
+                        item = new item_def(*you.slot_item(EQ_WEAPON));
                         minfo.inv[MSLOT_WEAPON].reset(item);
+                    }
                     if (item = you.slot_item(EQ_OFFHAND))
+                    {
+                        item = new item_def(*you.slot_item(EQ_OFFHAND));
                         minfo.inv[MSLOT_SHIELD].reset(item);
+                    }
                     tileidx_t mcache_idx = mcache.register_monster(minfo);
                     mcache_entry *entry = mcache.get(mcache_idx);
                     if (entry)
