@@ -671,14 +671,14 @@ Zu Tode geknabbert durch Software-Bugs
 %%%%
 # %s could be a monster or a thing
 ... while paralysed by %s
-... während einer Lähmung durch {dat}%s
+... während einer Lähmung durch {acc}%s
 %%%%
 ... while paralysed
 ... während einer Lähmung
 %%%%
 # %s is always a monster
 ... while petrified by %s
-... während einer Versteinerung durch {dat}%s
+... während einer Versteinerung durch {acc}%s
 %%%%
 ... while petrified
 ... während einer Versteinerung
