@@ -1160,7 +1160,7 @@ void direction_chooser::fill_object_cycle_points()
 void direction_chooser::calculate_target_info()
 {
     // No cycle points make sense for Dig/Passage.
-    if (!just_looking && mode == TARG_ANY)
+    if (mode == TARG_NON_ACTOR)
         return;
 
     // Apportation uses a different model.
@@ -1228,7 +1228,7 @@ void direction_chooser::calculate_target_info()
 
 coord_def direction_chooser::find_default_target()
 {
-    if (cycle_pos.empty() || mode == TARG_ANY)
+    if (cycle_pos.empty() || mode == TARG_NON_ACTOR)
         return you.pos();
 
     if (mode == TARG_MOVABLE_OBJECT)
@@ -1544,7 +1544,7 @@ void direction_chooser::update_previous_target() const
 {
     // If we're aiming something that doesn't take a monster target (ie: Dig),
     // don't bother to save one.
-    if (mode == TARG_ANY)
+    if (mode == TARG_NON_ACTOR)
         return;
 
     // Reset memory.
@@ -2880,6 +2880,8 @@ static bool _want_target_monster(const monster *mon, targ_mode_type mode,
     case TARG_MOBILE_MONSTER:
         return !(mons_is_tentacle_or_tentacle_segment(mon->type)
                  || mon->is_stationary());
+    case TARG_NON_ACTOR:
+        return false;
     case TARG_NUM_MODES:
         break;
     // intentionally no default

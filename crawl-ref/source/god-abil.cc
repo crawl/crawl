@@ -5535,7 +5535,7 @@ bool ru_power_leap()
     {
         direction_chooser_args args;
         args.restricts = DIR_ENFORCE_RANGE;
-        args.mode = TARG_ANY;
+        args.mode = TARG_HOSTILE;
         args.range = 3;
         args.needs_path = false;
         args.top_prompt = "Aiming: <white>Power Leap</white>";
@@ -6579,7 +6579,7 @@ spret wu_jian_wall_jump_ability()
     {
         direction_chooser_args args;
         args.restricts = DIR_TARGET;
-        args.mode = TARG_ANY;
+        args.mode = TARG_NON_ACTOR;
         args.range = 1;
         args.needs_path = false; // TODO: overridden by hitfunc?
         args.top_prompt = "Aiming: <white>Wall Jump</white>";

@@ -642,7 +642,7 @@ static bool _issue_order(int keyn, int &mons_targd)
         {
             direction_chooser_args args;
             args.restricts = DIR_TARGET;
-            args.mode = TARG_ANY;
+            args.mode = TARG_NON_ACTOR;
             args.needs_path = false;
             args.top_prompt = "Retreat in which direction?";
             dist targ;
