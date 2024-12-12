@@ -820,13 +820,15 @@ static bool _purchase(shop_struct& shop, const level_pos& pos, int index)
 
     origin_purchased(item);
 
-    if (shoptype_identifies_stock(shop.type)
-        || item_type_is_equipment(item.base_type)
-        || item.base_type == OBJ_TALISMANS)
+    // Unidentified potions/scrolls are the only shop items that don't become
+    // auto-ID'd when the player purchases them. (But identified potions/scrolls
+    // should still be re-identified, so the player can potentially learn their
+    // type.)
+    if ((item.base_type != OBJ_POTIONS && item.base_type != OBJ_SCROLLS)
+         || item.is_identified())
+
     {
-        // Identify the item. This also takes the ID note if necessary.
-        // (We force identification, even for pre-ID'd items, so the player can
-        // learn its type.)
+        // (Re-)identify the item. This also takes the ID note if necessary.
         item.flags &= ~ISFLAG_IDENTIFIED;
         identify_item(item);
     }
