@@ -1398,8 +1398,16 @@ void TilesFramework::_send_item(item_def& current, const item_def& next,
                 json_write_int("col", macro_colour(prefcol));
         }
 
+        // We have to check identification flags directly for exactly the case
+        // of gaining item type knowledge of items the player already had.
+        // Because item_def::is_identified() includes item knowledge, the old
+        // copy of the item will appear to already be identified, but its tile
+        // should be updated regardless.
+        const bool id_state_changed = (current.flags & ISFLAG_IDENTIFIED)
+                                        != (next.flags & ISFLAG_IDENTIFIED);
         tileidx_t tile = tileidx_item(next);
-        if (force_full || tileidx_item(current) != tile || xp_evoker_changed)
+        if (force_full || tileidx_item(current) != tile || xp_evoker_changed
+            || id_state_changed)
         {
             json_open_array("tile");
             tileidx_t base_tile = tileidx_known_base_item(tile);
