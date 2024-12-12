@@ -393,7 +393,7 @@ static bool _item_is_permadrop_candidate(const item_def &item)
 {
     // Known, non-artefact items of the types you see on the '\' menu proper.
     // (No disabling autopickup for "green fizzy potion", "+3 whip", etc.)
-    if (item_type_unknown(item))
+    if (!item.is_identified())
         return false;
     return item.base_type == OBJ_MISCELLANY
         || item.base_type == OBJ_TALISMANS

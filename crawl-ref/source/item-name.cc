@@ -1980,17 +1980,6 @@ bool item_type_known(const item_def& item)
     return you.type_ids[item.base_type][item.sub_type];
 }
 
-bool item_type_unknown(const item_def& item)
-{
-    if (item_type_known(item))
-        return false;
-
-    if (is_artefact(item))
-        return true;
-
-    return item_type_has_ids(item.base_type);
-}
-
 bool item_type_known(const object_class_type base_type, const int sub_type)
 {
     if (!item_type_has_ids(base_type))
