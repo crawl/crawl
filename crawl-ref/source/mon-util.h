@@ -498,7 +498,7 @@ bool mons_can_traverse(const monster& mon, const coord_def& pos,
                        bool only_in_sight = false,
                        bool checktraps = true);
 
-mon_inv_type equip_slot_to_mslot(equipment_type eq);
+mon_inv_type equip_slot_to_mslot(equipment_slot eq);
 mon_inv_type item_to_mslot(const item_def &item);
 
 bool player_or_mon_in_sanct(const monster& mons);

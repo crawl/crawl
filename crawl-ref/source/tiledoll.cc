@@ -387,7 +387,6 @@ void fill_doll_equipment(dolls_data &result)
     // Main hand.
     if (result.parts[TILEP_PART_HAND1] == TILEP_SHOW_EQUIP)
     {
-        const int item = you.melded[EQ_WEAPON] ? -1 : you.equip[EQ_WEAPON];
         if (you.form == transformation::blade_hands)
         {
             const bool natasha = Options.tile_use_monster == MONS_NATASHA;
@@ -405,15 +404,18 @@ void fill_doll_equipment(dolls_data &result)
             else
                 result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND;
         }
-        else if (item == -1)
-            result.parts[TILEP_PART_HAND1] = 0;
         else
-            result.parts[TILEP_PART_HAND1] = tilep_equ_weapon(you.inv[item]);
+        {
+            item_def* wpn = you.weapon();
+            if (wpn)
+                result.parts[TILEP_PART_HAND1] = tilep_equ_weapon(*wpn);
+            else
+                result.parts[TILEP_PART_HAND1] = 0;
+        }
     }
     // Off hand.
     if (result.parts[TILEP_PART_HAND2] == TILEP_SHOW_EQUIP)
     {
-        const int item = you.melded[EQ_OFFHAND] ? -1 : you.equip[EQ_OFFHAND];
         if (you.form == transformation::blade_hands)
         {
             if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_OCTOPODE))
@@ -423,47 +425,47 @@ void fill_doll_equipment(dolls_data &result)
                 result.parts[TILEP_PART_HAND2] = TILEP_HAND1_BLADEHAND_FE;
             else result.parts[TILEP_PART_HAND2] = TILEP_HAND1_BLADEHAND;
         }
-        else if (item == -1)
-            result.parts[TILEP_PART_HAND2] = 0;
-        else if (you.offhand_weapon())
-            result.parts[TILEP_PART_HAND2] = mirror_weapon(you.inv[item]);
         else
-            result.parts[TILEP_PART_HAND2] = tilep_equ_shield(you.inv[item]);
+        {
+            if (item_def* wpn = you.offhand_weapon())
+                result.parts[TILEP_PART_HAND2] = mirror_weapon(*wpn);
+            else if (item_def* item = you.equipment.get_first_slot_item(SLOT_OFFHAND))
+                result.parts[TILEP_PART_HAND2] = tilep_equ_shield(*item);
+            else
+                result.parts[TILEP_PART_HAND2] = 0;
+        }
     }
     // Body armour.
     if (result.parts[TILEP_PART_BODY] == TILEP_SHOW_EQUIP)
     {
-        const int item = you.melded[EQ_BODY_ARMOUR] ? -1 : you.equip[EQ_BODY_ARMOUR];
-        if (item != -1)
-            result.parts[TILEP_PART_BODY] = tilep_equ_armour(you.inv[item]);
-        else if (you.form == transformation::maw
+        if (you.form == transformation::maw
                  // non-body-armour wearing species would need this tile to go elswhere
                  // except for draconians
-                 && (!species::bans_eq(you.species, EQ_BODY_ARMOUR)
-                    || species::is_draconian(you.species)))
+                 && (species::is_draconian(you.species)
+                     || you_can_wear(SLOT_BODY_ARMOUR, false) != false))
         {
             const auto maw = TILEP_BODY_MAW_FORM;
             const int count = tile_player_count(maw);
             result.parts[TILEP_PART_BODY] = maw + you.frame_no % count;
         }
+        else if (item_def* armour = you.body_armour())
+            result.parts[TILEP_PART_BODY] = tilep_equ_armour(*armour);
         else
             result.parts[TILEP_PART_BODY] = 0;
     }
     // Cloak.
     if (result.parts[TILEP_PART_CLOAK] == TILEP_SHOW_EQUIP)
     {
-        const int item = you.melded[EQ_CLOAK] ? -1 : you.equip[EQ_CLOAK];
-        if (item == -1)
-            result.parts[TILEP_PART_CLOAK] = 0;
+        if (item_def* cloak = you.equipment.get_first_slot_item(SLOT_CLOAK))
+            result.parts[TILEP_PART_CLOAK] = tilep_equ_cloak(*cloak);
         else
-            result.parts[TILEP_PART_CLOAK] = tilep_equ_cloak(you.inv[item]);
+            result.parts[TILEP_PART_CLOAK] = 0;
     }
     // Helmet.
     if (result.parts[TILEP_PART_HELM] == TILEP_SHOW_EQUIP)
     {
-        const int item = you.melded[EQ_HELMET] ? -1 : you.equip[EQ_HELMET];
-        if (item != -1)
-            result.parts[TILEP_PART_HELM] = tilep_equ_helm(you.inv[item]);
+        if (item_def* helm = you.equipment.get_first_slot_item(SLOT_HELMET))
+            result.parts[TILEP_PART_HELM] = tilep_equ_helm(*helm);
         else if (you.get_mutation_level(MUT_HORNS) > 0)
         {
             if (you.species == SP_FELID)
@@ -513,20 +515,18 @@ void fill_doll_equipment(dolls_data &result)
     // Boots.
     if (result.parts[TILEP_PART_BOOTS] == TILEP_SHOW_EQUIP)
     {
-        const int item = you.melded[EQ_BOOTS] ? -1 : you.equip[EQ_BOOTS];
-        if (item != -1)
-            result.parts[TILEP_PART_BOOTS] = tilep_equ_boots(you.inv[item]);
-        else if (you.get_mutation_level(MUT_HOOVES) >= 3)
-            result.parts[TILEP_PART_BOOTS] = TILEP_BOOTS_HOOVES;
+        if (item_def* boots = you.equipment.get_first_slot_item(SLOT_BOOTS))
+            result.parts[TILEP_PART_BOOTS] = tilep_equ_boots(*boots);
+        else if (item_def* barding = you.equipment.get_first_slot_item(SLOT_BARDING))
+            result.parts[TILEP_PART_BOOTS] = tilep_equ_boots(*barding);
         else
             result.parts[TILEP_PART_BOOTS] = 0;
     }
     // Gloves.
     if (result.parts[TILEP_PART_ARM] == TILEP_SHOW_EQUIP)
     {
-        const int item = you.melded[EQ_GLOVES] ? -1 : you.equip[EQ_GLOVES];
-        if (item != -1)
-            result.parts[TILEP_PART_ARM] = tilep_equ_gloves(you.inv[item]);
+        if (item_def* gloves = you.equipment.get_first_slot_item(SLOT_GLOVES))
+            result.parts[TILEP_PART_ARM] = tilep_equ_gloves(*gloves);
         else if (you.has_mutation(MUT_TENTACLE_SPIKE))
             result.parts[TILEP_PART_ARM] = TILEP_ARM_OCTOPODE_SPIKE;
         else if (you.has_claws(false) >= 3)
@@ -636,14 +636,14 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
         monster_info minfo(MONS_PLAYER, MONS_PLAYER);
         minfo.props[MONSTER_TILE_KEY] = int(doll.parts[TILEP_PART_BASE]);
         item_def *item;
-        if (you.slot_item(EQ_WEAPON))
+        if (const item_def* eq = you.equipment.get_first_slot_item(SLOT_WEAPON))
         {
-            item = new item_def(*you.slot_item(EQ_WEAPON));
+            item = new item_def(*eq);
             minfo.inv[MSLOT_WEAPON].reset(item);
         }
-        if (you.slot_item(EQ_OFFHAND))
+        if (const item_def* eq = you.equipment.get_first_slot_item(SLOT_OFFHAND))
         {
-            item = new item_def(*you.slot_item(EQ_OFFHAND));
+            item = new item_def(*eq);
             minfo.inv[MSLOT_SHIELD].reset(item);
         }
         tileidx_t mcache_idx = mcache.register_monster(minfo);
@@ -671,8 +671,8 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
             continue;
 
         int ofs_x = 0, ofs_y = 0;
-        if ((p == TILEP_PART_HAND1 && you.slot_item(EQ_WEAPON)
-             || p == TILEP_PART_HAND2 && you.slot_item(EQ_OFFHAND))
+        if ((p == TILEP_PART_HAND1 && you.equipment.get_first_slot_item(SLOT_WEAPON)
+             || p == TILEP_PART_HAND2 && you.equipment.get_first_slot_item(SLOT_OFFHAND))
             && dind < draw_info_count - 1)
         {
             ofs_x = dinfo[draw_info_count - dind - 1].ofs_x;

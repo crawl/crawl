@@ -837,7 +837,7 @@ bool noisy(int original_loudness, const coord_def& where,
     {
         if (have_passive(passive_t::dampen_noise))
             adj_loudness = div_rand_round(adj_loudness, 2);
-        if (player_equip_unrand(UNRAND_THIEF))
+        if (you.unrand_equipped(UNRAND_THIEF))
             adj_loudness = div_rand_round(adj_loudness, 2);
     }
 

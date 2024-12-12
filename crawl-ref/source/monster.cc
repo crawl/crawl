@@ -539,93 +539,15 @@ hands_reqd_type monster::hands_reqd(const item_def &item, bool base) const
     return actor::hands_reqd(item, base);
 }
 
-bool monster::can_wield(const item_def& item, bool ignore_curse,
-                         bool ignore_brand, bool ignore_shield,
-                         bool ignore_transform) const
-{
-    // Monsters can only wield weapons or go unarmed (OBJ_UNASSIGNED
-    // means unarmed).
-    if (item.base_type != OBJ_WEAPONS && item.base_type != OBJ_UNASSIGNED)
-        return false;
-
-    // These *are* weapons, so they can't wield another weapon or
-    // unwield themselves.
-    if (mons_class_is_animated_object(type))
-        return false;
-
-    // MF_HARD_RESET means that all items the monster is carrying will
-    // disappear when it does, so it can't accept new items or give up
-    // the ones it has.
-    if (flags & MF_HARD_RESET)
-        return false;
-
-    // Summoned items can only be held by summoned monsters.
-    if ((item.flags & ISFLAG_SUMMONED) && !is_summoned())
-        return false;
-
-    item_def* weap1 = nullptr;
-    if (inv[MSLOT_WEAPON] != NON_ITEM)
-        weap1 = &env.item[inv[MSLOT_WEAPON]];
-
-    int       avail_slots = 1;
-    item_def* weap2       = nullptr;
-    if (mons_wields_two_weapons(*this))
-    {
-        if (!weap1 || hands_reqd(*weap1) != HANDS_TWO)
-            avail_slots = 2;
-
-        const int offhand = _mons_offhand_weapon_index(this);
-        if (offhand != NON_ITEM)
-            weap2 = &env.item[offhand];
-    }
-
-    // If we're already wielding it, then of course we can wield it.
-    if (&item == weap1 || &item == weap2)
-        return true;
-
-    // Barehanded needs two hands.
-    const bool two_handed = item.base_type == OBJ_UNASSIGNED
-                            || hands_reqd(item) == HANDS_TWO;
-
-    item_def* _shield = nullptr;
-    if (inv[MSLOT_SHIELD] != NON_ITEM)
-    {
-        ASSERT(!(weap1 && weap2));
-
-        if (two_handed && !ignore_shield)
-            return false;
-
-        _shield = &env.item[inv[MSLOT_SHIELD]];
-    }
-
-    if (!ignore_curse)
-    {
-        int num_cursed = 0;
-        if (weap1 && weap1->cursed())
-            num_cursed++;
-        if (weap2 && weap2->cursed())
-            num_cursed++;
-        if (_shield && _shield->cursed())
-            num_cursed++;
-
-        if (two_handed && num_cursed > 0 || num_cursed >= avail_slots)
-            return false;
-    }
-
-    return could_wield(item, ignore_brand, ignore_transform);
-}
-
 /**
  * Checks whether the monster could ever wield the given item, regardless of
  * what they're currently wielding or any other state.
  *
  * @param item              The item to wield.
- * @param ignore_brand      Whether to disregard the item's brand.
  * @return                  Whether the monster could potentially wield the
  *                          item.
  */
-bool monster::could_wield(const item_def &item, bool ignore_brand,
-                           bool /* ignore_transform */, bool /* quiet */) const
+bool monster::could_wield(const item_def &item) const
 {
     ASSERT(item.defined());
 
@@ -638,49 +560,8 @@ bool monster::could_wield(const item_def &item, bool ignore_brand,
         return false;
 
     // Wimpy monsters (e.g. kobolds, goblins) can't use halberds, etc.
-    if (is_weapon(item) && !is_weapon_wieldable(item, body_size()))
+    if (is_weapon(item) && is_weapon_too_large(item, body_size()))
         return false;
-
-    if (!ignore_brand)
-    {
-        // Undead and demonic monsters and monsters that are
-        // gifts/worshippers of Yredelemnul won't use holy weapons.
-        // They could, they just don't want to.
-        if ((undead_or_demonic() || god == GOD_YREDELEMNUL)
-            && is_holy_item(item))
-        {
-            return false;
-        }
-
-        // Holy monsters that aren't gifts/worshippers of chaotic gods
-        // and monsters that are gifts/worshippers of good gods won't
-        // use potentially evil weapons.
-        if (((is_holy() && !is_chaotic_god(god))
-                || is_good_god(god))
-            && is_potentially_evil_item(item))
-        {
-            return false;
-        }
-
-        // Holy monsters and monsters that are gifts/worshippers of good
-        // gods won't use evil weapons.
-        if ((is_holy() || is_good_god(god)) && is_evil_item(item))
-            return false;
-
-        // Monsters that are gifts/worshippers of Zin won't use unclean
-        // weapons.
-        if (god == GOD_ZIN && is_unclean_item(item))
-            return false;
-
-        // Holy monsters that aren't gifts/worshippers of chaotic gods
-        // and monsters that are gifts/worshippers of good gods won't
-        // use chaotic weapons.
-        if (((is_holy() && !is_chaotic_god(god)) || is_good_god(god))
-            && is_chaotic_item(item))
-        {
-            return false;
-        }
-    }
 
     return true;
 }
@@ -1563,6 +1444,44 @@ bool monster::wants_weapon(const item_def &weap) const
     if (is_giant_club_type(weap.sub_type))
         return false;
 
+    // Undead and demonic monsters and monsters that are
+    // gifts/worshippers of Yredelemnul won't use holy weapons.
+    // They could, they just don't want to.
+    if ((undead_or_demonic() || god == GOD_YREDELEMNUL)
+        && is_holy_item(weap))
+    {
+        return false;
+    }
+
+    // Holy monsters that aren't gifts/worshippers of chaotic gods
+    // and monsters that are gifts/worshippers of good gods won't
+    // use potentially evil weapons.
+    if (((is_holy() && !is_chaotic_god(god))
+            || is_good_god(god))
+        && is_potentially_evil_item(weap))
+    {
+        return false;
+    }
+
+    // Holy monsters and monsters that are gifts/worshippers of good
+    // gods won't use evil weapons.
+    if ((is_holy() || is_good_god(god)) && is_evil_item(weap))
+        return false;
+
+    // Monsters that are gifts/worshippers of Zin won't use unclean
+    // weapons.
+    if (god == GOD_ZIN && is_unclean_item(weap))
+        return false;
+
+    // Holy monsters that aren't gifts/worshippers of chaotic gods
+    // and monsters that are gifts/worshippers of good gods won't
+    // use chaotic weapons.
+    if (((is_holy() && !is_chaotic_god(god)) || is_good_god(god))
+        && is_chaotic_item(weap))
+    {
+        return false;
+    }
+
     return true;
 }
 
@@ -1673,7 +1592,7 @@ bool monster::pickup_armour(item_def &item, bool msg, bool force)
     const monster_type genus = mons_genus(mons_species(true));
     const monster_type base_type = mons_is_zombified(*this) ? base_monster
                                                             : type;
-    equipment_type eq = EQ_NONE;
+    equipment_slot slot = SLOT_UNUSED;
 
     // HACK to allow nagas to wear bardings. (jpeg)
     switch (item.sub_type)
@@ -1682,16 +1601,16 @@ bool monster::pickup_armour(item_def &item, bool msg, bool force)
         if (genus == MONS_NAGA || genus == MONS_SALAMANDER
             || genus == MONS_CENTAUR || genus == MONS_YAKTAUR)
         {
-            eq = EQ_BODY_ARMOUR;
+            slot = SLOT_BODY_ARMOUR;
         }
         break;
     // And another hack or two...
     case ARM_HAT:
         if (base_type == MONS_GASTRONOK || genus == MONS_OCTOPODE)
-            eq = EQ_BODY_ARMOUR;
+            slot = SLOT_BODY_ARMOUR;
         // The worst one
         else if (base_type == MONS_WIGLAF)
-            eq = EQ_RINGS;
+            slot = SLOT_RING;
         break;
     case ARM_CLOAK:
         if (base_type == MONS_MAURICE
@@ -1699,27 +1618,27 @@ bool monster::pickup_armour(item_def &item, bool msg, bool force)
             || base_type == MONS_CRAZY_YIUF
             || genus == MONS_DRACONIAN)
         {
-            eq = EQ_BODY_ARMOUR;
+            slot = SLOT_BODY_ARMOUR;
         }
         break;
     case ARM_GLOVES:
         if (base_type == MONS_NIKOLA)
-            eq = EQ_OFFHAND;
+            slot = SLOT_OFFHAND;
         break;
     case ARM_HELMET:
         if (base_type == MONS_ROBIN)
-            eq = EQ_OFFHAND;
+            slot = SLOT_OFFHAND;
         break;
     default:
-        eq = get_armour_slot(item);
+        slot = get_armour_slot(item);
 
-        if (eq == EQ_BODY_ARMOUR && genus == MONS_DRACONIAN)
+        if (slot == SLOT_BODY_ARMOUR && genus == MONS_DRACONIAN)
             return false;
 
-        if (eq != EQ_HELMET && base_type == MONS_GASTRONOK)
+        if (slot != SLOT_HELMET && base_type == MONS_GASTRONOK)
             return false;
 
-        if (eq != EQ_HELMET && eq != EQ_OFFHAND
+        if (slot != SLOT_HELMET && slot != SLOT_OFFHAND
             && genus == MONS_OCTOPODE)
         {
             return false;
@@ -1727,14 +1646,14 @@ bool monster::pickup_armour(item_def &item, bool msg, bool force)
     }
 
     // Bardings are only wearable by the appropriate monster.
-    if (eq == EQ_NONE)
+    if (slot == SLOT_UNUSED)
         return false;
 
     // XXX: Monsters can only equip body armour and shields (as of 0.4).
-    if (!force && eq != EQ_BODY_ARMOUR && eq != EQ_OFFHAND)
+    if (!force && slot != SLOT_BODY_ARMOUR && slot != SLOT_OFFHAND)
         return false;
 
-    const mon_inv_type mslot = equip_slot_to_mslot(eq);
+    const mon_inv_type mslot = equip_slot_to_mslot(slot);
     if (mslot == NUM_MONSTER_SLOTS)
         return false;
 
@@ -1745,7 +1664,7 @@ bool monster::pickup_armour(item_def &item, bool msg, bool force)
         return pickup(item, mslot, msg);
 
     // Simplistic armour evaluation (comparing AC and resistances).
-    if (const item_def *existing_armour = slot_item(eq, false))
+    if (const item_def *existing_armour = mslot_item(mslot))
     {
         if (!force)
         {
@@ -1822,7 +1741,7 @@ bool monster::pickup_jewellery(item_def &item, bool msg, bool force)
     if (!force && !wants_jewellery(item))
         return false;
 
-    equipment_type eq = EQ_RINGS;
+    equipment_slot eq = SLOT_RING;
 
     const mon_inv_type mslot = equip_slot_to_mslot(eq);
     if (mslot == NUM_MONSTER_SLOTS)
@@ -1835,7 +1754,7 @@ bool monster::pickup_jewellery(item_def &item, bool msg, bool force)
         return pickup(item, mslot, msg);
 
     // Simplistic jewellery evaluation (comparing AC and resistances).
-    if (const item_def *existing_jewellery = slot_item(eq, false))
+    if (const item_def *existing_jewellery = mslot_item(mslot))
     {
         if (!force)
         {
@@ -2061,15 +1980,19 @@ void monster::wield_melee_weapon(maybe_bool msg)
     }
 }
 
-item_def *monster::slot_item(equipment_type eq, bool /*include_melded*/) const
-{
-    return mslot_item(equip_slot_to_mslot(eq));
-}
-
 item_def *monster::mslot_item(mon_inv_type mslot) const
 {
     const int mi = (mslot == NUM_MONSTER_SLOTS) ? NON_ITEM : inv[mslot];
     return mi == NON_ITEM ? nullptr : &env.item[mi];
+}
+
+bool monster::unrand_equipped(int unrand_index, bool /*include_melded*/) const
+{
+    const unrandart_entry* entry = get_unrand_entry(unrand_index);
+    const mon_inv_type mslot = equip_slot_to_mslot(get_item_slot(entry->base_type, entry->sub_type));
+    const item_def *item = mslot_item(mslot);
+
+    return item && is_unrandom_artefact(*item, unrand_index);
 }
 
 item_def *monster::shield() const
@@ -2079,6 +2002,11 @@ item_def *monster::shield() const
     if (shield && shield->sub_type != ARM_ORB)
         return shield;
     return nullptr;
+}
+
+item_def* monster::body_armour() const
+{
+    return mslot_item(MSLOT_ARMOUR);
 }
 
 /**
@@ -3038,7 +2966,7 @@ bool monster::can_feel_fear(bool /*include_unknown*/) const
  */
 bool monster::shielded() const
 {
-    return shield() || wearing(EQ_AMULET, AMU_REFLECTION);
+    return shield() || wearing_jewellery(AMU_REFLECTION);
 }
 
 /// I honestly don't know what this means, really. It's vaguely similar
@@ -3664,7 +3592,7 @@ int monster::res_fire() const
 int monster::res_steam() const
 {
     int res = get_mons_resist(*this, MR_RES_STEAM);
-    if (wearing(EQ_BODY_ARMOUR, ARM_STEAM_DRAGON_ARMOUR))
+    if (wearing(OBJ_ARMOUR, ARM_STEAM_DRAGON_ARMOUR))
         res += 3;
 
     res += (res_fire() + 1) / 2;
@@ -5036,9 +4964,9 @@ bool monster::can_see_invisible() const
 
     if (scan_artefacts(ARTP_SEE_INVISIBLE) > 0)
         return true;
-    else if (wearing(EQ_RINGS, RING_SEE_INVISIBLE))
+    else if (wearing_jewellery(RING_SEE_INVISIBLE))
         return true;
-    else if (wearing_ego(EQ_ALL_ARMOUR, SPARM_SEE_INVISIBLE))
+    else if (wearing_ego(OBJ_ARMOUR, SPARM_SEE_INVISIBLE))
         return true;
 
     return false;
@@ -5694,7 +5622,7 @@ int monster::action_energy(energy_use_type et) const
     if (has_ench(ENCH_ROLLING))
         move_cost -= 5;
 
-    if (wearing_ego(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS))
+    if (wearing_ego(OBJ_ARMOUR, SPARM_PONDEROUSNESS))
         move_cost += 1;
 
     // Shadowghasts move more quickly when blended with the darkness.

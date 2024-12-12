@@ -1049,8 +1049,6 @@ static bool _update_statuses(player_info& c)
 player_info::player_info()
 {
     _state_ever_synced = false;
-    for (auto &eq : equip)
-        eq = -1;
     position = coord_def(-1, -1);
 }
 
@@ -1231,22 +1229,13 @@ void TilesFramework::_send_player(bool force_full)
     {
         json_open_object(to_string(i));
         item_def item = you.inv[i];
-        if (((char)i == you.equip[EQ_WEAPON] && is_weapon(item)
-             || (char)i == you.equip[EQ_OFFHAND] && you.offhand_weapon())
-            && you.corrosion_amount())
+        if (you.corrosion_amount() && is_weapon(item)
+            && you.equipment.find_equipped_slot(item) != SLOT_UNUSED)
         {
             item.plus -= 1 * you.corrosion_amount();
         }
         _send_item(c.inv[i], item, c.inv_uselessness[i], force_full);
         json_close_object(true);
-    }
-    json_close_object(true);
-
-    json_open_object("equip");
-    for (unsigned int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
-    {
-        const int8_t equip = !you.melded[i] ? you.equip[i] : -1;
-        _update_int(force_full, c.equip[i], equip, to_string(i));
     }
     json_close_object(true);
 
@@ -1705,14 +1694,14 @@ void TilesFramework::_send_cell(const coord_def &gc,
                     minfo.props[MONSTER_TILE_KEY] =
                         int(last_player_doll.parts[TILEP_PART_BASE]);
                     item_def *item;
-                    if (item = you.slot_item(EQ_WEAPON))
+                    if (item = you.equipment.get_first_slot_item(SLOT_WEAPON))
                     {
-                        item = new item_def(*you.slot_item(EQ_WEAPON));
+                        item = new item_def(*item);
                         minfo.inv[MSLOT_WEAPON].reset(item);
                     }
-                    if (item = you.slot_item(EQ_OFFHAND))
+                    if (item = you.equipment.get_first_slot_item(SLOT_OFFHAND))
                     {
-                        item = new item_def(*you.slot_item(EQ_OFFHAND));
+                        item = new item_def(*item);
                         minfo.inv[MSLOT_SHIELD].reset(item);
                     }
                     tileidx_t mcache_idx = mcache.register_monster(minfo);

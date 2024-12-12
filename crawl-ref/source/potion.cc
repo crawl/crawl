@@ -302,7 +302,7 @@ public:
                 *reason = "Trog doesn't allow you to cast spells!";
             return false;
         }
-        if (temp && player_equip_unrand(UNRAND_FOLLY))
+        if (temp && you.unrand_equipped(UNRAND_FOLLY))
         {
             if (reason)
                 *reason = "Your robe already provides the effects of brilliance.";
@@ -603,11 +603,10 @@ public:
             mpr("Magic washes over you without effect.");
         else
         {
-            if (is_potion && player_equip_unrand(UNRAND_KRYIAS))
+            if (is_potion && you.unrand_equipped(UNRAND_KRYIAS))
             {
-                item_def* item = you.slot_item(EQ_BODY_ARMOUR);
                 mprf("%s enhances the restoration.",
-                     item->name(DESC_THE, false, false, false).c_str());
+                     you.body_armour()->name(DESC_THE, false, false, false).c_str());
             }
             else if (is_potion && you.has_mutation(MUT_DOUBLE_POTION_HEAL))
                 mpr("You savour every drop.");
@@ -738,11 +737,8 @@ public:
     {
         if (was_known)
         {
-            if (!check_known_quaff()
-                || !check_form_stat_safety(transformation::tree))
-            {
+            if (!check_known_quaff())
                 return false;
-            }
 
             const cloud_type cloud = cloud_type_at(you.pos());
             if (cloud_damages_over_time(cloud, false)

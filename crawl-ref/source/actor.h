@@ -7,7 +7,6 @@
 #include "conduct-type.h"
 #include "constrict-type.h"
 #include "energy-use-type.h"
-#include "equipment-type.h"
 #include "god-type.h"
 #include "item-prop-enum.h"
 #include "kill-method-type.h"
@@ -115,30 +114,17 @@ public:
                                     bool rescale = true) const = 0;
     virtual int has_claws(bool allow_tran = true) const = 0;
     virtual item_def *shield() const = 0;
-    virtual item_def *slot_item(equipment_type eq,
-                                bool include_melded=false) const = 0;
-    virtual int wearing(equipment_type slot, int sub_type) const = 0;
-    virtual int wearing_ego(equipment_type slot, int sub_type) const = 0;
+    virtual item_def *body_armour() const = 0;
+    virtual int wearing(object_class_type obj_type, int sub_type,
+                        bool count_plus = 0, bool check_attuned = false) const = 0;
+    virtual int wearing_ego(object_class_type obj_type, int ego) const = 0;
+    int wearing_jewellery(int sub_type) const;
     virtual int scan_artefacts(artefact_prop_type which_property,
                                vector<const item_def *> *matches = nullptr) const = 0;
+    virtual bool unrand_equipped(int unrand_index, bool include_melded = false) const = 0;
 
     virtual hands_reqd_type hands_reqd(const item_def &item,
                                        bool base = false) const;
-
-            bool can_wield(const item_def* item,
-                           bool ignore_curse = false,
-                           bool ignore_brand = false,
-                           bool ignore_shield = false,
-                           bool ignore_transform = false) const;
-    virtual bool can_wield(const item_def &item,
-                           bool ignore_curse = false,
-                           bool ignore_brand = false,
-                           bool ignore_shield = false,
-                           bool ignore_transform = false) const = 0;
-    virtual bool could_wield(const item_def &item,
-                             bool ignore_brand = false,
-                             bool ignore_transform = false,
-                             bool quiet = true) const = 0;
 
     virtual string name(description_level_type type,
                         bool force_visible = false,

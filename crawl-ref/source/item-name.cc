@@ -243,70 +243,42 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
 
     if (descrip == DESC_INVENTORY_EQUIP)
     {
-        equipment_type eq = item_equip_slot(*this);
-        if (eq != EQ_NONE)
+        equipment_slot eq = item_equip_slot(*this);
+        if (eq != SLOT_UNUSED)
         {
-            if (you.melded[eq])
+            if (item_is_melded(*this))
                 buff << " (melded)";
             else
             {
                 switch (eq)
                 {
-                case EQ_WEAPON:
+                case SLOT_WEAPON:
                     if (is_weapon(*this))
                         buff << " (weapon)";
-                    else if (you.has_mutation(MUT_NO_GRASPING))
-                        buff << " (in mouth)";
-                    else
-                        buff << " (in " << you.hand_name(false) << ")";
                     break;
-                case EQ_OFFHAND:
+                case SLOT_WEAPON_OR_OFFHAND:
                     if (is_weapon(*this))
                     {
                         buff << " (offhand)";
                         break;
                     }
-                    // fallthrough to EQ_CLOAK...EQ_BODY_ARMOUR
-                case EQ_CLOAK:
-                case EQ_HELMET:
-                case EQ_GLOVES:
-                case EQ_BOOTS:
-                case EQ_BODY_ARMOUR:
+                    // fallthrough for non-weapons in that slot
+                case SLOT_OFFHAND:
+                case SLOT_CLOAK:
+                case SLOT_HELMET:
+                case SLOT_GLOVES:
+                case SLOT_BOOTS:
+                case SLOT_BARDING:
+                case SLOT_BODY_ARMOUR:
+                case SLOT_RING:
+                case SLOT_AMULET:
                     buff << " (worn)";
                     break;
-                case EQ_LEFT_RING:
-                case EQ_RIGHT_RING:
-                case EQ_RING_ONE:
-                case EQ_RING_TWO:
-                    buff << " (";
-                    buff << ((eq == EQ_LEFT_RING || eq == EQ_RING_ONE)
-                             ? "left" : "right");
-                    buff << " ";
-                    buff << you.hand_name(false);
-                    buff << ")";
-                    break;
-                case EQ_AMULET:
-                    if (you.species == SP_OCTOPODE && form_keeps_mutations())
-                        buff << " (around mantle)";
-                    else
-                        buff << " (around neck)";
-                    break;
-                case EQ_RING_THREE:
-                case EQ_RING_FOUR:
-                case EQ_RING_FIVE:
-                case EQ_RING_SIX:
-                case EQ_RING_SEVEN:
-                case EQ_RING_EIGHT:
-                    buff << " (on tentacle)";
-                    break;
-                case EQ_RING_AMULET:
-                    buff << " (on amulet)";
-                    break;
-                case EQ_GIZMO:
+                case SLOT_GIZMO:
                     buff << " (installed)";
                     break;
                 default:
-                    die("Item in an invalid slot");
+                    die("Item in an invalid slot (%d)", eq);
                 }
             }
         }
@@ -1584,9 +1556,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             case ISFLAG_EMBROIDERED_SHINY:
                 if (item_typ == ARM_ROBE || item_typ == ARM_CLOAK
                     || item_typ == ARM_GLOVES || item_typ == ARM_BOOTS
-                    || item_typ == ARM_SCARF
-                    || get_armour_slot(*this) == EQ_HELMET
-                       && !is_hard_helmet(*this))
+                    || item_typ == ARM_SCARF || item_typ == ARM_HAT)
                 {
                     buff << "embroidered ";
                 }
@@ -3251,8 +3221,8 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        return you.has_mutation(MUT_NO_GRASPING)
-            || !you.could_wield(item, true, !temp);
+    case OBJ_STAVES:
+        return !can_equip_item(item);
 
     case OBJ_MISSILES:
         // All missiles are useless for felids.
@@ -3262,10 +3232,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         return !is_throwable(&you, item);
 
     case OBJ_ARMOUR:
-        if (!can_wear_armour(item, false, true))
-            return true;
-
-        if (is_shield(item) && you.get_mutation_level(MUT_MISSING_HAND))
+        if (!can_equip_item(item))
             return true;
 
         if (is_unrandom_artefact(item, UNRAND_WUCAD_MU))
@@ -3367,9 +3334,6 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         if (temp && bool(!you_can_wear(get_item_slot(item))))
             return true;
 
-        if (you.has_mutation(MUT_NO_JEWELLERY))
-            return true;
-
         if (!ident && !item.is_identified())
             return false;
 
@@ -3438,20 +3402,6 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
     case OBJ_RODS:
             return true;
 #endif
-
-    case OBJ_STAVES:
-        if (you.has_mutation(MUT_NO_GRASPING))
-            return true;
-        if (!you.could_wield(item, true, !temp))
-        {
-            // Weapon is too large (or small) to be wielded and cannot
-            // be thrown either.
-            return true;
-        }
-        if (!item.is_identified())
-            return false;
-
-        return false;
 
     case OBJ_CORPSES:
         return true;

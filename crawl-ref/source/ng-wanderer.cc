@@ -619,7 +619,7 @@ static void _give_wanderer_aux_armour(int plus = 0)
     for (armour_type aux : auxs)
     {
         dummy.sub_type = aux;
-        if (!can_wear_armour(dummy, false, true))
+        if (!can_equip_item(dummy))
             continue;
 
         if (one_chance_in(++seen))
@@ -651,7 +651,7 @@ static vector<spell_type> _wanderer_good_equipment(skill_type skill)
         break;
 
     case SK_ARMOUR:
-        if (you_can_wear(EQ_BODY_ARMOUR) != true)
+        if (you_can_wear(SLOT_BODY_ARMOUR) != true)
             newgame_make_item(OBJ_ARMOUR, ARM_ACID_DRAGON_ARMOUR);
         else if (coinflip())
             newgame_make_item(OBJ_ARMOUR, ARM_SCALE_MAIL, 1, 2);
@@ -772,7 +772,7 @@ static vector<spell_type> _wanderer_decent_equipment(skill_type skill,
         // Dragon scales/tla is too good for "decent" quality
         // Just give an aux piece to On/Tr/Sp. Note: armour skill will later be
         // converted to dodging skill by reassess_starting_skills in this case.
-        if (you_can_wear(EQ_BODY_ARMOUR) != true)
+        if (you_can_wear(SLOT_BODY_ARMOUR) != true)
             _give_wanderer_aux_armour();
         else if (coinflip())
             newgame_make_item(OBJ_ARMOUR, ARM_RING_MAIL);
@@ -835,14 +835,14 @@ static vector<spell_type> _wanderer_decent_equipment(skill_type skill,
 // dungeon.
 static void _wanderer_cover_equip_holes()
 {
-    if (you.equip[EQ_BODY_ARMOUR] == -1)
+    if (!you.body_armour())
     {
         newgame_make_item(OBJ_ARMOUR,
                           you.strength() > you.intel() ? ARM_LEATHER_ARMOUR : ARM_ROBE);
     }
 
     // Give weapon, unless we started with some unarmed skill
-    if (you.equip[EQ_WEAPON] == -1 && you.skills[SK_UNARMED_COMBAT] == 0)
+    if (!you.weapon() && you.skills[SK_UNARMED_COMBAT] == 0)
     {
         newgame_make_item(OBJ_WEAPONS,
                           you.dex() > you.strength() ? WPN_DAGGER : WPN_CLUB);

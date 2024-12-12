@@ -2082,7 +2082,7 @@ static void _player_on_kill_effects(monster& mons, killer_type killer,
         if (_god_will_bless_follower(&mons))
             bless_follower();
 
-        if (you.wearing_ego(EQ_ALL_ARMOUR, SPARM_MAYHEM))
+        if (you.wearing_ego(OBJ_ARMOUR, SPARM_MAYHEM))
             _orb_of_mayhem(you, mons);
     }
 
@@ -2100,13 +2100,13 @@ static void _player_on_kill_effects(monster& mons, killer_type killer,
                  "You feel the power of %s in you as your rage grows.",
                  uppercase_first(god_name(you.religion)).c_str());
         }
-        else if (player_equip_unrand(UNRAND_BLOODLUST) && coinflip())
+        else if (you.unrand_equipped(UNRAND_BLOODLUST) && coinflip())
         {
             const int bonus = (2 + random2(4)) / 2;
             you.increase_duration(DUR_BERSERK, bonus);
             mpr("The necklace of Bloodlust glows a violent red.");
         }
-        else if (player_equip_unrand(UNRAND_TROG) && coinflip())
+        else if (you.unrand_equipped(UNRAND_TROG) && coinflip())
         {
             const int bonus = (2 + random2(4)) / 2;
             you.increase_duration(DUR_BERSERK, bonus);
@@ -2736,7 +2736,7 @@ item_def* monster_die(monster& mons, killer_type killer,
 
             monster* killer_mon = &env.mons[killer_index];
 
-            if (killer_mon->wearing_ego(EQ_ALL_ARMOUR, SPARM_MAYHEM))
+            if (killer_mon->wearing_ego(OBJ_ARMOUR, SPARM_MAYHEM))
                 _orb_of_mayhem(*killer_mon, mons);
 
             if (pet_kill && _god_will_bless_follower(&mons))

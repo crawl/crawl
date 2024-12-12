@@ -55,12 +55,12 @@
 #include "unwind.h"
 #include "ui.h"
 
-static equipment_type _acquirement_armour_slot(int);
-static armour_type _acquirement_armour_for_slot(equipment_type);
+static equipment_slot _acquirement_armour_slot(int);
+static armour_type _acquirement_armour_for_slot(equipment_slot);
 static armour_type _acquirement_shield_type();
 static armour_type _acquirement_body_armour();
 static armour_type _useless_armour_type();
-static bool _armour_slot_seen(equipment_type);
+static bool _armour_slot_seen(equipment_slot);
 
 /**
  * Get a randomly rounded value for the player's specified skill, unmodified
@@ -89,7 +89,7 @@ static int _skill_rdiv(skill_type skill, int mult = 1)
  */
 static int _acquirement_armour_subtype(int & /*quantity*/, int agent)
 {
-    const equipment_type slot_type = _acquirement_armour_slot(agent);
+    const equipment_slot slot_type = _acquirement_armour_slot(agent);
     return _acquirement_armour_for_slot(slot_type);
 }
 
@@ -130,27 +130,28 @@ M filtered_vector_select(vector<pair<M, int>> weights, function<bool(M)> filter)
  * Guaranteed to be wearable, in principle.
  *
  * @param agent     The source of the acquirement (e.g. a god)
- * @return          A random equipment slot; e.g. EQ_OFFHAND, EQ_BODY_ARMOUR...
+ * @return          A random equipment slot; e.g. SLOT_OFFHAND, SLOT_BODY_ARMOUR...
  */
-static equipment_type _acquirement_armour_slot(int agent)
+static equipment_slot _acquirement_armour_slot(int agent)
 {
     if (you.can_wear_barding()
         && one_chance_in(you.seen_armour[ARM_BARDING] ? 4 : 2))
     {
-        return EQ_BOOTS;
+        return SLOT_BARDING;
     }
 
-    vector<pair<equipment_type, int>> weights = {
-        { EQ_BODY_ARMOUR,   (agent == GOD_OKAWARU ? 6 : 2) },
-        { EQ_OFFHAND,       1 },
-        { EQ_CLOAK,         (_armour_slot_seen(EQ_CLOAK) ? 1 : 3) },
-        { EQ_HELMET,        (_armour_slot_seen(EQ_HELMET) ? 1 : 3) },
-        { EQ_GLOVES,        (_armour_slot_seen(EQ_GLOVES) ? 1 : 3) },
-        { EQ_BOOTS,         (_armour_slot_seen(EQ_BOOTS) ? 1 : 3) },
+    vector<pair<equipment_slot, int>> weights = {
+        { SLOT_BODY_ARMOUR,   (agent == GOD_OKAWARU ? 6 : 2) },
+        { SLOT_OFFHAND,       1 },
+        { SLOT_CLOAK,         (_armour_slot_seen(SLOT_CLOAK)   ? 1 : 3) },
+        { SLOT_HELMET,        (_armour_slot_seen(SLOT_HELMET)  ? 1 : 3) },
+        { SLOT_GLOVES,        (_armour_slot_seen(SLOT_GLOVES)  ? 1 : 3) },
+        { SLOT_BOOTS,         (_armour_slot_seen(SLOT_BOOTS)   ? 1 : 3) },
+        { SLOT_BARDING,       (_armour_slot_seen(SLOT_BARDING) ? 1 : 3) },
     };
 
-    return filtered_vector_select<equipment_type>(weights,
-        [] (equipment_type etyp) {
+    return filtered_vector_select<equipment_slot>(weights,
+        [] (equipment_slot etyp) {
             // return true if the player can wear at least something in this
             // equipment type
             return you_can_wear(etyp) != false;
@@ -168,28 +169,25 @@ static equipment_type _acquirement_armour_slot(int agent)
  *
  * @return          The armour_type of the armour to be generated.
  */
-static armour_type _acquirement_armour_for_slot(equipment_type slot_type)
+static armour_type _acquirement_armour_for_slot(equipment_slot slot_type)
 {
     switch (slot_type)
     {
-        case EQ_CLOAK:
-            if (you_can_wear(EQ_CLOAK))
-                return random_choose(ARM_CLOAK, ARM_SCARF);
-            return ARM_SCARF;
-        case EQ_GLOVES:
+        case SLOT_CLOAK:
+            return random_choose(ARM_CLOAK, ARM_SCARF);
+        case SLOT_GLOVES:
             return ARM_GLOVES;
-        case EQ_BOOTS:
-            if (you.can_wear_barding())
-                return ARM_BARDING;
-            else
-                return ARM_BOOTS;
-        case EQ_HELMET:
-            if (you_can_wear(EQ_HELMET))
+        case SLOT_BOOTS:
+            return ARM_BOOTS;
+        case SLOT_BARDING:
+            return ARM_BARDING;
+        case SLOT_HELMET:
+            if (you_can_wear(SLOT_HELMET))
                 return random_choose(ARM_HELMET, ARM_HAT);
             return ARM_HAT;
-        case EQ_OFFHAND:
+        case SLOT_OFFHAND:
             return _acquirement_shield_type();
-        case EQ_BODY_ARMOUR:
+        case SLOT_BODY_ARMOUR:
             return _acquirement_body_armour();
         default:
             die("Unknown armour slot %d!", slot_type);
@@ -245,7 +243,7 @@ static armour_type _acquirement_body_armour()
     for (int i = ARM_FIRST_MUNDANE_BODY; i < NUM_ARMOURS; ++i)
     {
         const armour_type armour = (armour_type)i;
-        if (get_armour_slot(armour) != EQ_BODY_ARMOUR)
+        if (get_armour_slot(armour) != SLOT_BODY_ARMOUR)
             continue;
 
         if (!check_armour_size(armour, you.body_size(PSIZE_TORSO, true)))
@@ -273,40 +271,38 @@ static armour_type _acquirement_body_armour()
  */
 static armour_type _useless_armour_type()
 {
-    vector<pair<equipment_type, int>> weights = {
-        { EQ_BODY_ARMOUR, 1 }, { EQ_OFFHAND, 1 }, { EQ_CLOAK, 1 },
-        { EQ_HELMET, 1 }, { EQ_GLOVES, 1 }, { EQ_BOOTS, 1 },
+    vector<pair<equipment_slot, int>> weights = {
+        { SLOT_BODY_ARMOUR, 1 }, { SLOT_OFFHAND, 1 }, { SLOT_CLOAK, 1 },
+        { SLOT_HELMET, 1 }, { SLOT_GLOVES, 1 }, { SLOT_BOOTS, 1 },
+        { SLOT_BARDING, 1},
     };
 
-    // everyone has some kind of boot-slot item they can't wear, regardless
-    // of what you_can_wear() claims
     for (auto &weight : weights)
-        if (bool(you_can_wear(weight.first)) && weight.first != EQ_BOOTS)
+        if (bool(you_can_wear(weight.first)))
             weight.second = 0;
 
-    const equipment_type* slot_ptr = random_choose_weighted(weights);
-    const equipment_type slot = slot_ptr ? *slot_ptr : EQ_BOOTS;
+    const equipment_slot* slot_ptr = random_choose_weighted(weights);
+    const equipment_slot slot = slot_ptr ? *slot_ptr : SLOT_BARDING;
 
     switch (slot)
     {
-        case EQ_BOOTS:
-            // Boots-wearers get bardings, everyone else gets boots.
-            if (you_can_wear(EQ_BOOTS))
-                return ARM_BARDING;
+        case SLOT_BOOTS:
             return ARM_BOOTS;
-        case EQ_GLOVES:
+        case SLOT_BARDING:
+            return ARM_BARDING;
+        case SLOT_GLOVES:
             return ARM_GLOVES;
-        case EQ_HELMET:
-            if (you_can_wear(EQ_HELMET) != false)
+        case SLOT_HELMET:
+            if (you_can_wear(SLOT_HELMET) != false)
                 return ARM_HELMET;
             return random_choose(ARM_HELMET, ARM_HAT);
-        case EQ_CLOAK:
-            return ARM_CLOAK;
-        case EQ_OFFHAND:
+        case SLOT_CLOAK:
+            return random_choose(ARM_CLOAK, ARM_SCARF);
+        case SLOT_OFFHAND:
         {
             vector<pair<armour_type, int>> shield_weights = {
                 { ARM_BUCKLER,       1 },
-                { ARM_KITE_SHIELD,        1 },
+                { ARM_KITE_SHIELD,   1 },
                 { ARM_TOWER_SHIELD,  1 },
             };
 
@@ -316,9 +312,9 @@ static armour_type _useless_armour_type()
                                           you.body_size(PSIZE_TORSO, true));
             });
         }
-        case EQ_BODY_ARMOUR:
+        case SLOT_BODY_ARMOUR:
             // only the rarest & most precious of unwearable armours for Xom
-            if (you_can_wear(EQ_BODY_ARMOUR) != false)
+            if (you_can_wear(SLOT_BODY_ARMOUR) != false)
                 return ARM_CRYSTAL_PLATE_ARMOUR;
             // arbitrary selection of [unwearable] dragon armours
             return random_choose(ARM_FIRE_DRAGON_ARMOUR,
@@ -475,7 +471,7 @@ static int _acquirement_jewellery_subtype(int & /*quantity*/,
     int result = 0;
 
     // Rings are (number of usable rings) times as common as amulets.
-    const int ring_num = you.arm_count();
+    const int ring_num = you.equipment.num_slots[SLOT_RING];
 
     // Try ten times to give something the player hasn't seen.
     for (int i = 0; i < 10; i++)
@@ -1081,7 +1077,7 @@ static int _weapon_brand_reroll_denom(int brand)
     }
 }
 
-static bool _armour_slot_seen(equipment_type slot)
+static bool _armour_slot_seen(equipment_slot slot)
 {
     item_def item;
     item.base_type = OBJ_ARMOUR;
@@ -1095,7 +1091,7 @@ static bool _armour_slot_seen(equipment_type slot)
 
         // having seen a helmet means nothing about your decision to go
         // bare-headed if you have horns
-        if (!can_wear_armour(item, false, true))
+        if (!can_equip_item(item))
             continue;
 
         if (you.seen_armour[i])
@@ -1155,10 +1151,8 @@ static void _adjust_brand(item_def &item, int agent)
 static string _why_reject(const item_def &item, int agent)
 {
     if (agent != GOD_XOM
-        && (item.base_type == OBJ_WEAPONS
-                && !can_wield(&item, false, true)
-            || item.base_type == OBJ_ARMOUR
-                && !can_wear_armour(item, false, true)))
+        && ((item.base_type == OBJ_WEAPONS || item.base_type == OBJ_ARMOUR)
+             && !can_equip_item(item)))
     {
         return "Destroying unusable weapon or armour!";
     }
@@ -1484,7 +1478,7 @@ static void _create_acquirement_item(item_def &item, string items_key,
             {
                 mprf("You assemble %s and install it in your exoskeleton!",
                      item.name(DESC_A).c_str());
-                equip_item(EQ_GIZMO, i, false);
+                equip_item(SLOT_GIZMO, i, false);
                 break;
             }
         }

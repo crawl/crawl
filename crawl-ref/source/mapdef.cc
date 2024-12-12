@@ -4276,8 +4276,8 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
                     ? unrand->sub_type : item.sub_type;
 
                 const auto def_slot = mons_class_is_animated_weapon(type)
-                    ? EQ_WEAPON
-                    : EQ_BODY_ARMOUR;
+                    ? SLOT_WEAPON
+                    : SLOT_BODY_ARMOUR;
 
                 if (get_item_slot(base, sub) != def_slot)
                 {

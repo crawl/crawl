@@ -18,6 +18,7 @@
 #include "branch.h" // gem_time_limit
 #include "describe.h"
 #include "english.h" // number_in_words
+#include "equipment-slot.h"
 #include "evoke.h"
 #include "god-passive.h"
 #include "invent.h"
@@ -55,8 +56,8 @@ struct armour_def
     /// The base price of the item in shops.
     int                 price;
 
-    /// The slot the armour is equipped into; e.g. EQ_BOOTS.
-    equipment_type      slot;
+    /// The slot the armour is equipped into; e.g. SLOT_BOOTS.
+    equipment_slot      slot;
     /// The smallest size creature the armour will fit.
     size_type           fit_min;
     /// The largest size creature the armour will fit.
@@ -105,13 +106,13 @@ static const vector<ego_weight_tuple> SHIELD_EGOS = {
 #if TAG_MAJOR_VERSION == 34
 #define DRAGON_ARMOUR(id, name, ac, evp, prc, res)                          \
     { ARM_ ## id ## _DRAGON_HIDE, "removed " name " dragon hide", 0, 0, 0,  \
-      EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, 0, {}, res },             \
+      SLOT_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, 0, {}, res },             \
     { ARM_ ## id ## _DRAGON_ARMOUR, name " dragon scales",  ac, evp, prc,   \
-      EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, 37, {}, res }
+      SLOT_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, 37, {}, res }
 #else
 #define DRAGON_ARMOUR(id, name, ac, evp, prc, res)                          \
     { ARM_ ## id ## _DRAGON_ARMOUR, name " dragon scales",  ac, evp, prc,   \
-      EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, 37, {}, res }
+      SLOT_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, 37, {}, res }
 #endif
 
 // Note: the Little-Giant range is used to make armours which are very
@@ -121,9 +122,9 @@ static int Armour_index[NUM_ARMOURS];
 static const armour_def Armour_prop[] =
 {
     { ARM_ANIMAL_SKIN,          "animal skin",            2,   0,     3,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, true, 1 },
+        SLOT_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, true, 1 },
     { ARM_ROBE,                 "robe",                   2,   0,     7,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_LARGE, true, 100, {
+        SLOT_BODY_ARMOUR, SIZE_LITTLE, SIZE_LARGE, true, 100, {
             { SPARM_RESISTANCE,      1 },
             { SPARM_COLD_RESISTANCE, 2 },
             { SPARM_FIRE_RESISTANCE, 2 },
@@ -132,36 +133,36 @@ static const armour_def Armour_prop[] =
             { SPARM_WILLPOWER,       4 },
     }},
     { ARM_LEATHER_ARMOUR,       "leather armour",         3,  -40,   20,
-        EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, true, 10, BASIC_BODY_EGOS },
+        SLOT_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, true, 10, BASIC_BODY_EGOS },
     { ARM_RING_MAIL,            "ring mail",              5,  -70,   40,
-        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, 100, BASIC_BODY_EGOS },
+        SLOT_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, 100, BASIC_BODY_EGOS },
     { ARM_SCALE_MAIL,           "scale mail",             6, -100,   40,
-        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, 10, BASIC_BODY_EGOS },
+        SLOT_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, 10, BASIC_BODY_EGOS },
     { ARM_CHAIN_MAIL,           "chain mail",             8, -140,   45,
-        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, 10, HEAVY_BODY_EGOS },
+        SLOT_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, 10, HEAVY_BODY_EGOS },
     { ARM_PLATE_ARMOUR,         "plate armour",          10, -180,   230,
-        EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, true, 150, HEAVY_BODY_EGOS },
+        SLOT_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, true, 150, HEAVY_BODY_EGOS },
     { ARM_CRYSTAL_PLATE_ARMOUR, "crystal plate armour",  14, -230,   800,
-        EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, false, 150 },
+        SLOT_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, false, 150 },
 
 #if TAG_MAJOR_VERSION == 34
     { ARM_TROLL_HIDE, "removed troll hide",              0,    0,      0,
-       EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, 0, {},
+       SLOT_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, 0, {},
        ARMF_REGENERATION, },
 #endif
     { ARM_TROLL_LEATHER_ARMOUR, "troll leather armour",  3,  -40,    150,
-       EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, 100, {},
+       SLOT_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, 100, {},
        ARMF_REGENERATION },
 
     { ARM_CLOAK,                "cloak",                  1,   0,   45,
-        EQ_CLOAK,       SIZE_LITTLE, SIZE_LARGE, true, 0, {
+        SLOT_CLOAK,       SIZE_LITTLE, SIZE_LARGE, true, 0, {
             { SPARM_POISON_RESISTANCE, 1 },
             { SPARM_WILLPOWER,         1 },
             { SPARM_STEALTH,           1 },
             { SPARM_PRESERVATION,      1 },
     }},
     { ARM_SCARF,                "scarf",                  0,   0,   50,
-        EQ_CLOAK,       SIZE_LITTLE, SIZE_LARGE, true, 0, {
+        SLOT_CLOAK,       SIZE_LITTLE, SIZE_LARGE, true, 0, {
             { SPARM_RESISTANCE,   1 },
             { SPARM_REPULSION,    1 },
             { SPARM_INVISIBILITY, 1 },
@@ -170,7 +171,7 @@ static const armour_def Armour_prop[] =
     }},
 
     { ARM_GLOVES,               "gloves",                 1,   0,   45,
-        EQ_GLOVES,      SIZE_SMALL,  SIZE_MEDIUM, true, 0, {
+        SLOT_GLOVES,      SIZE_SMALL,  SIZE_MEDIUM, true, 0, {
             { SPARM_DEXTERITY, 1 },
             { SPARM_STRENGTH,  1 },
             { SPARM_HURLING,   1 },
@@ -179,18 +180,18 @@ static const armour_def Armour_prop[] =
     }},
 
     { ARM_HELMET,               "helmet",                 1,   0,   45,
-        EQ_HELMET,      SIZE_SMALL,  SIZE_MEDIUM, true, 0, {
+        SLOT_HELMET,      SIZE_SMALL,  SIZE_MEDIUM, true, 0, {
             { SPARM_SEE_INVISIBLE, 1 },
             { SPARM_INTELLIGENCE,  1 },
     }},
 
 #if TAG_MAJOR_VERSION == 34
     { ARM_CAP,                  "cap",                    0,   0,   45,
-        EQ_HELMET,      SIZE_LITTLE, SIZE_LARGE, true },
+        SLOT_HELMET,      SIZE_LITTLE, SIZE_LARGE, true },
 #endif
 
     { ARM_HAT,                  "hat",                    0,   0,   40,
-        EQ_HELMET,      SIZE_TINY, SIZE_LARGE, true, 0, {
+        SLOT_HELMET,      SIZE_TINY, SIZE_LARGE, true, 0, {
             { SPARM_NORMAL,        10 },
             { SPARM_STEALTH,       3 },
             { SPARM_WILLPOWER,     3 },
@@ -202,7 +203,7 @@ static const armour_def Armour_prop[] =
     // needs to fit medium, but that doesn't matter as much as race
     // and shapeshift status.
     { ARM_BOOTS,                "boots",                  1,   0,   45,
-        EQ_BOOTS,       SIZE_SMALL,  SIZE_MEDIUM, true, 0, {
+        SLOT_BOOTS,       SIZE_SMALL,  SIZE_MEDIUM, true, 0, {
             { SPARM_FLYING,    1 },
             { SPARM_STEALTH,   1 },
             { SPARM_RAMPAGING, 1 },
@@ -211,10 +212,10 @@ static const armour_def Armour_prop[] =
     // monster types (monsters don't differentiate between torso and general).
 #if TAG_MAJOR_VERSION == 34
     { ARM_CENTAUR_BARDING,      "centaur barding",        4,  -60,  230,
-        EQ_BOOTS,       SIZE_MEDIUM, SIZE_LARGE, true },
+        SLOT_BARDING,     SIZE_MEDIUM, SIZE_LARGE, true },
 #endif
     { ARM_BARDING,         "barding",           4,  -60,  230,
-        EQ_BOOTS,       SIZE_MEDIUM, SIZE_LARGE, true, 0, {
+        SLOT_BARDING,     SIZE_MEDIUM, SIZE_LARGE, true, 0, {
             { SPARM_FLYING,          1 },
             { SPARM_COLD_RESISTANCE, 1 },
             { SPARM_FIRE_RESISTANCE, 1 },
@@ -224,7 +225,7 @@ static const armour_def Armour_prop[] =
     // Note: shields use ac-value as sh-value, EV pen is used as the basis
     // to calculate adjusted shield penalty.
     { ARM_ORB,                 "orb",                     0,   0,   90,
-        EQ_OFFHAND,      SIZE_LITTLE, SIZE_GIANT, true, 0, {
+        SLOT_OFFHAND,      SIZE_LITTLE, SIZE_GIANT, true, 0, {
             { SPARM_LIGHT,  1 },
             { SPARM_RAGE,   1 },
             { SPARM_MAYHEM, 1 },
@@ -232,11 +233,11 @@ static const armour_def Armour_prop[] =
             { SPARM_ENERGY, 1 },
     }},
     { ARM_BUCKLER,             "buckler",                 3,  -50,  45,
-        EQ_OFFHAND,      SIZE_LITTLE, SIZE_MEDIUM, true, 0, SHIELD_EGOS },
+        SLOT_OFFHAND,      SIZE_LITTLE, SIZE_MEDIUM, true, 0, SHIELD_EGOS },
     { ARM_KITE_SHIELD,         "kite shield",             8, -100,  45,
-        EQ_OFFHAND,      SIZE_SMALL,  SIZE_LARGE, true, 0, SHIELD_EGOS },
+        SLOT_OFFHAND,      SIZE_SMALL,  SIZE_LARGE, true, 0, SHIELD_EGOS },
     { ARM_TOWER_SHIELD,        "tower shield",           13, -150,  45,
-        EQ_OFFHAND,      SIZE_MEDIUM, SIZE_GIANT, true, 0, SHIELD_EGOS },
+        SLOT_OFFHAND,      SIZE_MEDIUM, SIZE_GIANT, true, 0, SHIELD_EGOS },
 
     // Following all ARM_ entries for the benefit of util/gather_items
     DRAGON_ARMOUR(STEAM,       "steam",                   5,   0,   400,
@@ -1335,12 +1336,12 @@ int armour_max_enchant(const item_def &item)
     if (!armour_is_enchantable(item))
         return 0;
 
-    const int eq_slot = get_armour_slot(item);
+    const equipment_slot eq_slot = get_armour_slot(item);
 
     int max_plus = MAX_SEC_ENCHANT;
-    if (eq_slot == EQ_BODY_ARMOUR || item.sub_type == ARM_BARDING)
+    if (eq_slot == SLOT_BODY_ARMOUR || item.sub_type == ARM_BARDING)
         max_plus = property(item, PARM_AC);
-    else if (eq_slot == EQ_OFFHAND)
+    else if (eq_slot == SLOT_OFFHAND)
         // 3 / 5 / 8 for bucklers/shields/lg. shields
         max_plus = (property(item, PARM_AC) - 3)/2 + 3;
 
@@ -1452,17 +1453,14 @@ int armour_acq_weight(const armour_type armour)
     return Armour_prop[ Armour_index[armour] ].acquire_weight;
 }
 
-equipment_type get_armour_slot(const item_def &item)
+equipment_slot get_armour_slot(const item_def &item)
 {
-    if (you.has_mutation(MUT_WIELD_OFFHAND) && item.base_type != OBJ_ARMOUR)
-        return EQ_OFFHAND;
-
     ASSERT(item.base_type == OBJ_ARMOUR);
 
     return Armour_prop[ Armour_index[item.sub_type] ].slot;
 }
 
-equipment_type get_armour_slot(armour_type arm)
+equipment_slot get_armour_slot(armour_type arm)
 {
     return Armour_prop[ Armour_index[arm] ].slot;
 }
@@ -2057,13 +2055,15 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
 }
 
 /**
- * Checks if the provided weapon is wieldable by a creature of the given size.
+ * Checks if the provided weapon is too large to be wieldable by a creature of
+ * the given size.
  *
  * @param item      The weapon in question.
  * @param size      The size of the creature trying to wield the weapon.
- * @return          Whether a creature of the given size can wield the weapon.
+ * @return          Whether the weapon is too large to be wielded by a creature
+ *                  of the given size.
  */
-bool is_weapon_wieldable(const item_def &item, size_type size)
+bool is_weapon_too_large(const item_def &item, size_type size)
 {
     ASSERT(is_weapon(item));
 
@@ -2071,7 +2071,7 @@ bool is_weapon_wieldable(const item_def &item, size_type size)
                                                      : item.sub_type;
     // Check we aren't about to index with a bogus subtype for weapons
     ASSERT(item.base_type != OBJ_WEAPONS || subtype < get_max_subtype(item.base_type));
-    return Weapon_prop[Weapon_index[subtype]].min_2h_size <= size;
+    return Weapon_prop[Weapon_index[subtype]].min_2h_size > size;
 }
 
 //
@@ -2851,8 +2851,8 @@ bool gives_resistance(const item_def &item)
         break;
     case OBJ_ARMOUR:
     {
-        const equipment_type eq = get_armour_slot(item);
-        if (eq == EQ_NONE)
+        const equipment_slot eq = get_armour_slot(item);
+        if (eq == SLOT_UNUSED)
             return false;
 
         const int ego = get_armour_ego_type(item);
@@ -2930,33 +2930,98 @@ bool item_is_jelly_edible(const item_def &item)
     return true;
 }
 
-equipment_type get_item_slot(const item_def& item)
+equipment_slot get_item_slot(const item_def& item)
 {
     return get_item_slot(item.base_type, item.sub_type);
 }
 
-equipment_type get_item_slot(object_class_type type, int sub_type)
+equipment_slot get_item_slot(object_class_type type, int sub_type)
 {
     switch (type)
     {
     case OBJ_WEAPONS:
     case OBJ_STAVES:
-        return EQ_WEAPON;
+        return SLOT_WEAPON;
 
     case OBJ_ARMOUR:
         return get_armour_slot(static_cast<armour_type>(sub_type));
 
     case OBJ_JEWELLERY:
-        return jewellery_is_amulet(sub_type) ? EQ_AMULET : EQ_RINGS;
+        return jewellery_is_amulet(sub_type) ? SLOT_AMULET : SLOT_RING;
 
     case OBJ_GIZMOS:
-        return EQ_GIZMO;
+        return SLOT_GIZMO;
 
     default:
         break;
     }
 
-    return EQ_NONE;
+    return SLOT_UNUSED;
+}
+
+/**
+ * Returns *all* equipment slots a given item occupies while equipped. In most
+ * cases, this is the same as is returned by get_item_slot(), but some things
+ * such as two-handed weapons or Lear's Hauberk must occupy multiple at once,
+ * and this accounts for that.
+ */
+vector<equipment_slot> get_all_item_slots(const item_def& item)
+{
+    switch (item.base_type)
+    {
+    case OBJ_WEAPONS:
+    case OBJ_STAVES:
+        if (you.hands_reqd(item) == HANDS_TWO)
+            return {SLOT_WEAPON_STRICT, SLOT_OFFHAND};
+        else
+            return {SLOT_WEAPON};
+
+    case OBJ_ARMOUR:
+        switch (get_armour_slot(static_cast<armour_type>(item.sub_type)))
+        {
+            case SLOT_OFFHAND:
+                return {SLOT_OFFHAND};
+
+            case SLOT_BODY_ARMOUR:
+                if (is_unrandom_artefact(item, UNRAND_LEAR))
+                    return {SLOT_BODY_ARMOUR, SLOT_HELMET, SLOT_GLOVES, SLOT_BOOTS};
+                else
+                    return {SLOT_BODY_ARMOUR};
+
+            case SLOT_BOOTS:
+                return {SLOT_BOOTS};
+
+            case SLOT_BARDING:
+                return {SLOT_BARDING};
+
+            case SLOT_CLOAK:
+                return {SLOT_CLOAK};
+
+            case SLOT_HELMET:
+                return {SLOT_HELMET};
+
+            case SLOT_GLOVES:
+                return {SLOT_GLOVES};
+
+            default:
+                break;
+        }
+        break;
+
+    case OBJ_JEWELLERY:
+        if (jewellery_is_amulet(item.sub_type))
+            return {SLOT_AMULET};
+        else
+            return {SLOT_RING};
+
+    case OBJ_GIZMOS:
+        return {SLOT_GIZMO};
+
+    default:
+        break;
+    }
+
+    return {SLOT_UNUSED};
 }
 
 bool is_shield(const item_def *item)
@@ -2967,14 +3032,14 @@ bool is_shield(const item_def *item)
 bool is_shield(const item_def &item)
 {
     return item.base_type == OBJ_ARMOUR
-           && get_armour_slot(item) == EQ_OFFHAND
+           && get_armour_slot(item) == SLOT_OFFHAND
            && item.sub_type != ARM_ORB;
 }
 
 bool is_offhand(const item_def &item)
 {
     return item.base_type == OBJ_ARMOUR
-           && get_armour_slot(item) == EQ_OFFHAND;
+           && get_armour_slot(item) == SLOT_OFFHAND;
 }
 
 // Returns true if the given item cannot be wielded _by you_ with the given shield.
@@ -3496,10 +3561,8 @@ bool is_equippable_item(const item_def& item)
     {
         case OBJ_WEAPONS:
         case OBJ_STAVES:
-            return can_wield(&item, false, true, false);
-
         case OBJ_ARMOUR:
-            return can_wear_armour(item, false, true);
+            return can_equip_item(item);
 
         case OBJ_JEWELLERY:
             return !you.has_mutation(MUT_NO_JEWELLERY);
@@ -3507,4 +3570,43 @@ bool is_equippable_item(const item_def& item)
         default:
             return false;
     }
+}
+
+bool ring_plusses_matter(int ring_subtype)
+{
+    switch (ring_subtype)
+    {
+        case RING_PROTECTION:
+        case RING_STRENGTH:
+        case RING_SLAYING:
+        case RING_EVASION:
+        case RING_DEXTERITY:
+        case RING_INTELLIGENCE:
+            return true;
+
+        default:
+            return false;
+    }
+}
+
+bool item_gives_equip_slots(const item_def& item)
+{
+    if (!is_unrandom_artefact(item))
+        return false;
+
+    switch (item.unrand_idx)
+    {
+        case UNRAND_FINGER_AMULET:
+            return true;
+
+        default:
+            return false;
+    }
+}
+
+bool item_grants_flight(const item_def& item)
+{
+    return item.base_type == OBJ_JEWELLERY && item.sub_type == RING_FLIGHT
+           || item.base_type == OBJ_ARMOUR && item.brand == SPARM_FLYING
+           || is_artefact(item) && artefact_property(item, ARTP_FLY);
 }

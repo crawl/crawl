@@ -1535,7 +1535,7 @@ static void _append_weapon_stats(string &description, const item_def &item)
         description += "\n";
         if (armour_penalty)
         {
-            const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, false);
+            const item_def *body_armour = you.body_armour();
             description += (body_armour ? uppercase_first(
                                               body_armour->name(DESC_YOUR))
                                         : "Your heavy armour");
@@ -1911,7 +1911,7 @@ static string _equipment_property_change_description(const item_def &item,
     }
 
     // Always display AC line on proper armour, even if there is no change
-    if (item.base_type == OBJ_ARMOUR && get_armour_slot(item) != EQ_OFFHAND
+    if (item.base_type == OBJ_ARMOUR && get_armour_slot(item) != SLOT_OFFHAND
         || cur_ac != new_ac)
     {
         description += "\nYour AC would "
@@ -2052,16 +2052,11 @@ static string _spell_fail_change_description(const item_def &item,
     return desc;
 }
 
-static bool _you_are_wearing_item(const item_def &item)
-{
-    return get_equip_slot(&item) != EQ_NONE;
-}
-
 static string _equipment_property_change(const item_def &item)
 {
     string description;
 
-    if (!_you_are_wearing_item(item))
+    if (!item_is_equipped(item))
         description = _equipment_property_change_description(item);
     else
         description = _equipment_property_change_description(item, true);
@@ -2088,7 +2083,7 @@ static string _describe_weapon(const item_def &item, bool verbose, bool monster)
     if (!art_desc.empty())
         description += "\n\n" + art_desc;
 
-    if (verbose && crawl_state.need_save && you.could_wield(item, true, true)
+    if (verbose && crawl_state.need_save && can_equip_item(item)
         && item.is_identified())
     {
         description += _equipment_property_change(item);
@@ -2103,8 +2098,12 @@ static string _describe_weapon(const item_def &item, bool verbose, bool monster)
         // XX this is shown for felids, does that actually make sense?
         description += _handedness_string(item);
 
-        if (!you.could_wield(item, true, true) && crawl_state.need_save)
+        if (crawl_state.need_save
+            && is_weapon_too_large(item, you.body_size(PSIZE_TORSO))
+            && !you.has_mutation(MUT_QUADRUMANOUS))
+        {
             description += "\nIt is too large for you to wield.";
+        }
     }
 
     if (!is_artefact(item) && !monster)
@@ -2372,7 +2371,7 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
             const int evp = property(item, PARM_EVASION);
             description += "Base armour rating: "
                         + to_string(property(item, PARM_AC));
-            if (get_armour_slot(item) == EQ_BODY_ARMOUR)
+            if (get_armour_slot(item) == SLOT_BODY_ARMOUR)
             {
                 description += "       Encumbrance rating: "
                             + to_string(-evp / 10);
@@ -2447,7 +2446,7 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
     // or for morgues).
     if (verbose
         && crawl_state.need_save
-        && can_wear_armour(item, false, true)
+        && can_equip_item(item)
         && item.is_identified())
     {
         description += _equipment_property_change(item);
@@ -2459,7 +2458,7 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
         && verbose
         && aevp
         && !is_shield(item)
-        && _you_are_wearing_item(item)
+        && item_is_equipped(item)
         && is_slowed_by_armour(you.weapon()))
     {
         // TODO: why doesn't this show shield effect? Reconcile with
@@ -2479,10 +2478,10 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
 static string _describe_lignify_ac()
 {
     const Form* tree_form = get_form(transformation::tree);
-    vector<const item_def *> treeform_items;
+    vector<item_def*> treeform_items;
 
-    for (auto item : you.get_armour_items())
-        if (tree_form->slot_available(get_equip_slot(item)))
+    for (auto item : you.equipment.get_slot_items(SLOT_ALL_ARMOUR, true))
+        if (!tree_form->slot_is_blocked(get_item_slot(*item)))
             treeform_items.push_back(item);
 
     const int treeform_ac =
@@ -2562,7 +2561,7 @@ static string _describe_talisman_form(const item_def &item, bool monster)
     const int ac = form->get_ac_bonus();
     const int ev = form->ev_bonus();
     const int body_ac_loss_percent = form->get_base_ac_penalty(100);
-    const bool loses_body_ac = body_ac_loss_percent && you_can_wear(EQ_BODY_ARMOUR) != false;
+    const bool loses_body_ac = body_ac_loss_percent && you_can_wear(SLOT_BODY_ARMOUR) != false;
     if (below_target || hp != 100 || ac || ev || loses_body_ac)
     {
         if (!monster)
@@ -2579,7 +2578,7 @@ static string _describe_talisman_form(const item_def &item, bool monster)
 
         if (body_ac_loss_percent)
         {
-            const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, false);
+            const item_def *body_armour = you.body_armour();
             const int base_ac = body_armour ? property(*body_armour, PARM_AC) : 0;
             const int ac_penalty = form->get_base_ac_penalty(base_ac);
             description += make_stringf("\nAC:           -%d (-%d%% of your body armour's %d base AC)",
@@ -3054,7 +3053,7 @@ string get_item_description(const item_def &item,
             if (!art_desc.empty())
                 description << "\n\n" + art_desc;
 
-            if (verbose && crawl_state.need_save && you.could_wield(item, true, true))
+            if (verbose && crawl_state.need_save && can_equip_item(item))
                 description << _equipment_property_change(item);
         }
         if (verbose)
@@ -3917,7 +3916,7 @@ static vector<command_type> _allowed_actions(const item_def& item)
             if (item_is_wieldable(item))
                 actions.push_back(CMD_WIELD_WEAPON);
         }
-        else if (item_equip_slot(item) == EQ_WEAPON)
+        else if (item_equip_slot(item) == SLOT_WEAPON)
             actions.push_back(CMD_UNWIELD_WEAPON);
         break;
     case OBJ_ARMOUR:
@@ -4096,15 +4095,22 @@ static bool _do_action(item_def &item, const command_type action)
 
     switch (action)
     {
-    case CMD_WIELD_WEAPON:     wield_weapon(slot);            break;
-    case CMD_UNWIELD_WEAPON:   wield_weapon(SLOT_BARE_HANDS); break;
+    case CMD_WIELD_WEAPON:
+    case CMD_WEAR_JEWELLERY:
+    case CMD_WEAR_ARMOUR:
+        try_equip_item(item);
+        break;
+
+    case CMD_REMOVE_ARMOUR:
+    case CMD_UNWIELD_WEAPON:
+    case CMD_REMOVE_JEWELLERY:
+        try_unequip_item(item);
+        break;
+
     case CMD_QUIVER_ITEM:
         quiver::set_to_quiver(quiver::slot_to_action(slot), you.quiver_action); // ugh
         break;
-    case CMD_WEAR_ARMOUR:      wear_armour(slot);             break;
-    case CMD_REMOVE_ARMOUR:    takeoff_armour(slot);          break;
-    case CMD_WEAR_JEWELLERY:   puton_ring(you.inv[slot]);     break;
-    case CMD_REMOVE_JEWELLERY: remove_ring(slot, true);       break;
+
     case CMD_DROP:
         // TODO: it would be better if the inscription was checked before the
         // popup closes, but that is hard

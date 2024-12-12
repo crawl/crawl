@@ -489,101 +489,6 @@ namespace species
         return species == SP_OCTOPODE ? 8 : 2;
     }
 
-    equipment_type sacrificial_arm(species_type species)
-    {
-        // this is a bit special-case-y because the sac slot doesn't follow
-        // from the enum; for 2-armed species it is the left ring (which is first),
-        // but for 8-armed species it is ring 8 (which is last).
-        // XX maybe swap the targeted sac hand? But this requires some painful
-        // save compat
-        return arm_count(species) == 2 ? EQ_LEFT_RING : EQ_RING_EIGHT;
-    }
-
-    /**
-     *  Checks some species-level equipment slot constraints. Anything hard-coded
-     *  per species, but not handled by a mutation should be here. See also
-     *  player.cc::you_can_wear and item-use.cc::can_wear_armour for the full
-     *  division of labor. This function is guaranteed to handle species ring
-     *  slots.
-     *
-     *  @param species the species type to check
-     *  @param eq the equipment slot to check
-     *  @return true if the equipment slot is not used by the species; false
-     *          indicates only that nothing in this check bans the slot. For
-     *          example, this function does not check felid mutations.
-     */
-    bool bans_eq(species_type species, equipment_type eq)
-    {
-        const int arms = arm_count(species);
-        // only handles 2 or 8
-        switch (eq)
-        {
-        case EQ_LEFT_RING:
-        case EQ_RIGHT_RING:
-            return arms > 2;
-        case EQ_RING_ONE:
-        case EQ_RING_TWO:
-        case EQ_RING_THREE:
-        case EQ_RING_FOUR:
-        case EQ_RING_FIVE:
-        case EQ_RING_SIX:
-        case EQ_RING_SEVEN:
-        case EQ_RING_EIGHT:
-            return arms <= 2;
-        // not banned by any species
-        case EQ_AMULET:
-        case EQ_RING_AMULET:
-        // not handled here:
-        case EQ_WEAPON:
-        case EQ_STAFF:
-        case EQ_RINGS:
-        case EQ_RINGS_PLUS: // what is this stuff
-        case EQ_ALL_ARMOUR:
-            return false;
-        default:
-            break;
-        }
-        // remaining should be armour only
-        if (species == SP_OCTOPODE && eq != EQ_HELMET && eq != EQ_OFFHAND)
-            return true;
-
-        if (is_draconian(species) && eq == EQ_BODY_ARMOUR)
-            return true;
-
-        // for everything else that is handled by mutations, including felid
-        // restrictions, see item-use.cc::can_wear_armour. (TODO: move more of the
-        // code here to mutations?)
-        return false;
-    }
-
-    /**
-     * Get ring slots available to a species.
-     * @param species the species to check
-     * @param missing_hand if true, removes a designated hand from the result
-     */
-    vector<equipment_type> ring_slots(species_type species, bool missing_hand)
-    {
-        vector<equipment_type> result;
-        if (you.has_mutation(MUT_NO_JEWELLERY))
-            return result;
-
-        const equipment_type missing = missing_hand
-                            ? sacrificial_arm(species) : EQ_NONE;
-
-        for (int i = EQ_FIRST_JEWELLERY; i <= EQ_LAST_JEWELLERY; i++)
-        {
-            const auto eq = static_cast<equipment_type>(i);
-            if (eq != EQ_AMULET
-                && eq != EQ_RING_AMULET
-                && eq != missing
-                && !bans_eq(species, eq))
-            {
-                result.push_back(eq);
-            }
-        }
-        return result;
-    }
-
     int get_exp_modifier(species_type species)
     {
         return get_species_def(species).xp_mod;
@@ -746,14 +651,6 @@ void species_stat_gain(species_type species)
         modify_stat(*random_iterator(sd.level_stats), 1, false);
 }
 
-static void _swap_equip(equipment_type a, equipment_type b)
-{
-    swap(you.equip[a], you.equip[b]);
-    bool tmp = you.melded[a];
-    you.melded.set(a, you.melded[b]);
-    you.melded.set(b, tmp);
-}
-
 /**
  * Change the player's species to something else.
  *
@@ -775,11 +672,10 @@ void change_species_to(species_type sp)
                                 / species_apt_factor(sk);
     }
 
-    species_type old_sp = you.species;
-    you.species = sp;
     you.chr_species_name = species::name(sp);
-    dprf("Species change: %s -> %s", species::name(old_sp).c_str(),
+    dprf("Species change: %s -> %s", species::name(you.species).c_str(),
         you.chr_species_name.c_str());
+    you.species = sp;
 
     // Change permanent mutations, but preserve non-permanent ones.
     uint8_t prev_muts[NUM_MUTATIONS];
@@ -825,42 +721,21 @@ void change_species_to(species_type sp)
 
     update_vision_range(); // for Ba, and for Ko
 
-    // XX not general if there are ever any other options
-    if ((old_sp == SP_OCTOPODE) != (sp == SP_OCTOPODE))
+    // Update equipment slots for new species, then quietly remove unsuitable items.
+    vector<item_def*> to_remove = you.equipment.get_forced_removal_list();
+    for (item_def* item : to_remove)
     {
-        _swap_equip(EQ_LEFT_RING, EQ_RING_ONE);
-        _swap_equip(EQ_RIGHT_RING, EQ_RING_TWO);
-        // All species allow exactly one amulet.
+        mprf("%s falls away.", item->name(DESC_YOUR).c_str());
+        you.equipment.remove(*item);
     }
+    you.equipment.update();
 
-    // FIXME: this checks only for valid slots, not for suitability of the
-    // item in question. This is enough to make assertions happy, though.
-    for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
+    // Coglins wielding unnamed weapons can assert when unwielding, so name them.
+    if (sp == SP_COGLIN)
     {
-        if (you.equip[i] != -1)
-        {
-            if (i == EQ_WEAPON && you.inv[you.equip[i]].base_type == OBJ_WEAPONS
-                && sp == SP_COGLIN)
-            {
-                // Coglins' wielded non-offhand weapons need names. Without
-                // them, wielding a non-offhand weapon, changing species to
-                // coglin, and then trying to unwield that weapon will assert.
-                maybe_name_weapon(you.inv[you.equip[i]], true);
-            }
-
-            if (bool(!you_can_wear(static_cast<equipment_type>(i)))
-                // XXX: This can't be caught by you_can_wear as everyone has offhand slots
-                || (i == EQ_OFFHAND && you.inv[you.equip[i]].base_type == OBJ_WEAPONS
-                    && !you.has_mutation(MUT_WIELD_OFFHAND)))
-            {
-                mprf("%s fall%s away.",
-                     you.inv[you.equip[i]].name(DESC_YOUR).c_str(),
-                     you.inv[you.equip[i]].quantity > 1 ? "" : "s");
-                // Unwear items without the usual processing.
-                you.equip[i] = -1;
-                you.melded.set(i, false);
-            }
-        }
+        vector<item_def*> equip = you.equipment.get_slot_items(SLOT_WEAPON, true);
+        for (item_def* item : equip)
+            maybe_name_weapon(*item);
     }
 
     // Sanitize skills.
@@ -876,4 +751,6 @@ void change_species_to(species_type sp)
 #endif
     redraw_screen();
     update_screen();
+
+    you.equipment.update();
 }

@@ -6,7 +6,6 @@
 #include "clua.h"
 #include "delay.h"
 #include "duration-type.h"
-#include "equipment-type.h"
 #include "files.h"
 #include "god-passive.h"
 #include "hints.h"
@@ -321,10 +320,10 @@ static int _strength_modifier(bool innate_only)
         result += chei_stat_boost();
 
         // ego items of strength
-        result += 3 * count_worn_ego(SPARM_STRENGTH);
+        result += 3 * you.wearing_ego(OBJ_ARMOUR, SPARM_STRENGTH);
 
         // rings of strength
-        result += you.wearing(EQ_RINGS_PLUS, RING_STRENGTH);
+        result += you.wearing_jewellery(RING_STRENGTH);
 
         // randarts of strength
         result += you.scan_artefacts(ARTP_STRENGTH);
@@ -351,10 +350,10 @@ static int _int_modifier(bool innate_only)
         result += chei_stat_boost();
 
         // ego items of intelligence
-        result += 3 * count_worn_ego(SPARM_INTELLIGENCE);
+        result += 3 * you.wearing_ego(OBJ_ARMOUR, SPARM_INTELLIGENCE);
 
         // rings of intelligence
-        result += you.wearing(EQ_RINGS_PLUS, RING_INTELLIGENCE);
+        result += you.wearing_jewellery(RING_INTELLIGENCE);
 
         // randarts of intelligence
         result += you.scan_artefacts(ARTP_INTELLIGENCE);
@@ -378,10 +377,10 @@ static int _dex_modifier(bool innate_only)
         result += chei_stat_boost();
 
         // ego items of dexterity
-        result += 3 * count_worn_ego(SPARM_DEXTERITY);
+        result += 3 * you.wearing_ego(OBJ_ARMOUR, SPARM_DEXTERITY);
 
         // rings of dexterity
-        result += you.wearing(EQ_RINGS_PLUS, RING_DEXTERITY);
+        result += you.wearing_jewellery(RING_DEXTERITY);
 
         // randarts of dexterity
         result += you.scan_artefacts(ARTP_DEXTERITY);

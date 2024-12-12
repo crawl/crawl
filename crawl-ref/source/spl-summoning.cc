@@ -226,7 +226,7 @@ spret cast_summon_cactus(int pow, bool fail)
 
 spret cast_awaken_armour(int pow, bool fail)
 {
-    const item_def *armour = you.slot_item(EQ_BODY_ARMOUR);
+    const item_def *armour = you.body_armour();
     if (armour == nullptr)
     {
         // I don't think we can ever reach this line, but let's be safe.

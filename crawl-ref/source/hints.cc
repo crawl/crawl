@@ -2100,10 +2100,7 @@ string hints_describe_item(const item_def &item)
                     return "";
             }
 
-            item_def *weap = you.slot_item(EQ_WEAPON, false);
-            bool wielded = (weap && weap->slot == item.slot);
-
-            if (!wielded)
+            if (!item_is_equipped(item))
             {
                 ostr << "You can wield this weapon with <w>%</w>, or use "
                         "<w>%</w> to switch between the weapons in slot "
@@ -2201,7 +2198,7 @@ string hints_describe_item(const item_def &item)
             }
 
             if (Hints.hints_type == HINT_MAGIC_CHAR
-                && get_armour_slot(item) == EQ_BODY_ARMOUR
+                && get_armour_slot(item) == SLOT_BODY_ARMOUR
                 && !is_effectively_light_armour(&item))
             {
                 ostr << "\nNote that body armour with a high encumbrance "

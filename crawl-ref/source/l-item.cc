@@ -29,6 +29,7 @@
 #include "mpr.h"
 #include "output.h"
 #include "player.h"
+#include "player-equip.h"
 #include "prompt.h"
 #include "shopping.h"
 #include "skills.h"
@@ -127,72 +128,26 @@ static void _lua_push_inv_items(lua_State *ls = nullptr)
  * @type Item
  */
 
-static int l_item_do_wield(lua_State *ls)
+static int l_item_do_equip(lua_State *ls)
 {
     if (you.turn_is_over)
         return 0;
 
     UDATA_ITEM(item);
 
-    if (item)
-    {
-        int slot = -1;
-        if (item && item->defined() && in_inventory(*item))
-            slot = item->link;
-        lua_pushboolean(ls, wield_weapon(slot));
-    }
-    else
-        lua_pushboolean(ls, use_an_item(OPER_WIELD));
-
-    return 1;
-}
-
-/*** Wield this item.
- * @treturn boolean successfully wielded
- * @function wield
- */
-IDEFN(wield, do_wield)
-
-static int l_item_do_wear(lua_State *ls)
-{
-    if (you.turn_is_over)
+    if (!item || !in_inventory(*item) || !is_equippable_item(*item))
         return 0;
 
-    UDATA_ITEM(item);
-
-    if (!item || !in_inventory(*item))
-        return 0;
-
-    bool success = wear_armour(item->link);
+    bool success = try_equip_item(*item);
     lua_pushboolean(ls, success);
     return 1;
 }
 
-/*** Wear this item (as armour).
- * @treturn boolean successfully worn
- * @function wear
+/*** Equip this item.
+ * @treturn boolean successfully equipped
+ * @function equip
  */
-IDEFN(wear, do_wear)
-
-static int l_item_do_puton(lua_State *ls)
-{
-    if (you.turn_is_over)
-        return 0;
-
-    UDATA_ITEM(item);
-
-    if (!item || !in_inventory(*item))
-        return 0;
-
-    lua_pushboolean(ls, puton_ring(*item));
-    return 1;
-}
-
-/*** Put this item on (as jewellry).
- * @treturn boolean successfully put on
- * @function puton
- */
-IDEFN(puton, do_puton)
+IDEFN(equip, do_equip)
 
 static int l_item_do_remove(lua_State *ls)
 {
@@ -210,20 +165,13 @@ static int l_item_do_remove(lua_State *ls)
         return 0;
     }
 
-    int eq = get_equip_slot(item);
-    if (eq < EQ_FIRST_EQUIP || eq >= NUM_EQUIP)
+    if (!item_is_equipped(*item))
     {
         mpr("Item is not equipped");
         return 0;
     }
 
-    bool result = false;
-    if (is_weapon(*item))
-        result = unwield_weapon(*item);
-    else if (eq >= EQ_FIRST_JEWELLERY && eq <= EQ_LAST_JEWELLERY)
-        result = remove_ring(item->link);
-    else
-        result = takeoff_armour(item->link);
+    bool result = try_unequip_item(*item);
     lua_pushboolean(ls, result);
     return 1;
 }
@@ -245,11 +193,10 @@ static int l_item_do_drop(lua_State *ls)
     if (!item || !in_inventory(*item))
         return 0;
 
-    int eq = get_equip_slot(item);
-    if (eq >= EQ_FIRST_EQUIP && eq < NUM_EQUIP)
+    if (item_is_equipped(*item))
     {
         lua_pushboolean(ls, false);
-        lua_pushstring(ls, "Can't drop worn items");
+        lua_pushstring(ls, "Can't drop equipped items");
         return 2;
     }
 
@@ -277,14 +224,7 @@ IDEFN(drop, do_drop)
  */
 IDEF(equipped)
 {
-    if (!item || !in_inventory(*item))
-        lua_pushboolean(ls, false);
-
-    int eq = get_equip_slot(item);
-    if (eq < EQ_FIRST_EQUIP || eq >= NUM_EQUIP)
-        lua_pushboolean(ls, false);
-    else
-        lua_pushboolean(ls, true);
+    lua_pushboolean(ls, item_is_equipped(*item));
 
     return 1;
 }
@@ -330,7 +270,7 @@ static int l_item_do_subtype(lua_State *ls)
     // Special-case OBJ_ARMOUR behavior to maintain compatibility with
     // existing scripts.
     if (item->base_type == OBJ_ARMOUR)
-        s = item_slot_name(get_armour_slot(*item));
+        s = equip_slot_name(get_armour_slot(*item));
     else if (item->is_identified() || item->base_type == OBJ_WEAPONS)
     {
         // must keep around the string until we call lua_pushstring
@@ -393,24 +333,6 @@ IDEF(cursed)
 {
     lua_pushboolean(ls, item && item->cursed());
     return 1;
-}
-
-/*** Are we wearing this item?
- * @field worn slot index
- */
-// XXX: this should be defined by IDEFN so that it can have multiple returns.
-IDEF(worn)
-{
-    int worn = get_equip_slot(item);
-    if (worn != -1)
-        lua_pushnumber(ls, worn);
-    else
-        lua_pushnil(ls);
-    if (worn != -1)
-        lua_pushstring(ls, equip_slot_to_name(worn));
-    else
-        lua_pushnil(ls);
-    return 2;
 }
 
 static string _item_name(lua_State *ls, item_def* item)
@@ -534,35 +456,21 @@ IDEF(ininventory)
     PLUARET(boolean, item && in_inventory(*item));
 }
 
-/*** The slot number this item goes in.
+/*** The default slot type this item goes in.
  * @field equip_type int
  */
-// XXX: another multiple return dropped by lua
 IDEF(equip_type)
 {
     if (!item || !item->defined())
         return 0;
 
-    equipment_type eq = EQ_NONE;
+    equipment_slot eq = get_item_slot(*item);
 
-    if (is_weapon(*item))
-        eq = EQ_WEAPON;
-    else if (item->base_type == OBJ_ARMOUR)
-        eq = get_armour_slot(*item);
-    else if (item->base_type == OBJ_JEWELLERY)
-        eq = item->sub_type >= AMU_FIRST_AMULET ? EQ_AMULET : EQ_RINGS;
-
-    if (eq != EQ_NONE)
-    {
+    if (eq != SLOT_UNUSED)
         lua_pushnumber(ls, eq);
-        lua_pushstring(ls, equip_slot_to_name(eq));
-    }
     else
-    {
         lua_pushnil(ls);
-        lua_pushnil(ls);
-    }
-    return 2;
+    return 1;
 }
 
 /*** The weapon skill this item requires.
@@ -734,7 +642,7 @@ IDEF(branded)
 
 IDEF(hands)
 {
-    if (!item || !item->defined())
+    if (!item || !item->defined() || !is_weapon(*item))
         return 0;
 
     int hands = you.hands_reqd(*item) == HANDS_TWO ? 2 : 1;
@@ -1372,30 +1280,36 @@ static int l_item_pickup(lua_State *ls)
 
 /*** Get the Item in a given equipment slot.
  * Takes either a slot name or a slot number.
- * @tparam string|int where
+ * @tparam string|int Slot type name or index
+ * @tparam int[opt] Index of item in that slot type (ie: ring #2). Default 1.
  * @treturn Item|nil returns nil for nothing equipped or invalid slot
  * @function equipped_at
  */
 static int l_item_equipped_at(lua_State *ls)
 {
-    int eq = -1;
+    int slot = -1;
     if (lua_isnumber(ls, 1))
-        eq = luaL_safe_checkint(ls, 1);
+        slot = luaL_safe_checkint(ls, 1);
     else if (lua_isstring(ls, 1))
     {
-        const char *eqname = lua_tostring(ls, 1);
-        if (!eqname)
+        const char *slotname = lua_tostring(ls, 1);
+        if (!slotname)
             return 0;
-        eq = equip_name_to_slot(eqname);
+        slot = equip_slot_by_name(slotname);
     }
 
-    if (eq < EQ_FIRST_EQUIP || eq >= NUM_EQUIP)
+    int index = 0;
+    if (lua_isnumber(ls, 2))
+        index = luaL_safe_checkint(ls, 2) - 1;
+
+    if (slot < SLOT_WEAPON || slot >= NUM_EQUIP_SLOTS || index < 0)
         return 0;
 
-    if (you.equip[eq] != -1)
-        clua_push_item(ls, &you.inv[you.equip[eq]]);
-    else
+    vector<item_def*> eq = you.equipment.get_slot_items(static_cast<equipment_slot>(slot), true);
+    if ((int)eq.size() <= index)
         lua_pushnil(ls);
+    else
+        clua_push_item(ls, eq[index]);
 
     return 1;
 }
@@ -1701,16 +1615,13 @@ static ItemAccessor item_attrs[] =
     { "subtype",           l_item_subtype },
     { "ego",               l_item_ego },
     { "cursed",            l_item_cursed },
-    { "worn",              l_item_worn },
     { "name",              l_item_name },
     { "name_coloured",     l_item_name_coloured },
     { "stacks",            l_item_stacks },
     { "quantity",          l_item_quantity },
     { "slot",              l_item_slot },
     { "ininventory",       l_item_ininventory },
-    { "wield",             l_item_wield },
-    { "wear",              l_item_wear },
-    { "puton",             l_item_puton },
+    { "equip",             l_item_equip },
     { "remove",            l_item_remove },
     { "drop",              l_item_drop },
     { "equipped",          l_item_equipped },

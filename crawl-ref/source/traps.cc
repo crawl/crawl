@@ -53,7 +53,7 @@
 
 static string _net_immune_reason()
 {
-    if (player_equip_unrand(UNRAND_SLICK_SLIPPERS))
+    if (you.unrand_equipped(UNRAND_SLICK_SLIPPERS))
         return "You slip through the net.";
     return "";
 }

@@ -1365,7 +1365,7 @@ static void _update_level_state()
     env.orb_pos = coord_def();
     if (item_def* orb = find_floor_item(OBJ_ORBS, ORB_ZOT))
         env.orb_pos = orb->pos;
-    else if (player_has_orb() || player_equip_unrand(UNRAND_CHARLATANS_ORB))
+    else if (player_has_orb() || you.unrand_equipped(UNRAND_CHARLATANS_ORB))
     {
         if (player_has_orb())
             env.orb_pos = you.pos();

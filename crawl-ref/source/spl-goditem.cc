@@ -1326,7 +1326,7 @@ void cleansing_flame(int pow, cleansing_flame_source caster, coord_def where,
 
 void majin_bo_vampirism(monster &mon, int damage)
 {
-    if (!player_equip_unrand(UNRAND_MAJIN) || crawl_state.is_god_acting())
+    if (!you.unrand_equipped(UNRAND_MAJIN) || crawl_state.is_god_acting())
         return;
 
     dprf("Majin bo might trigger, dam: %d.", damage);
@@ -1352,8 +1352,20 @@ void majin_bo_vampirism(monster &mon, int damage)
  **/
 void dreamshard_shatter()
 {
-    ASSERT(player_equip_unrand(UNRAND_DREAMSHARD_NECKLACE));
-    you.slot_item(EQ_AMULET, true)->unrand_idx = UNRAND_DREAMDUST_NECKLACE;
+    ASSERT(you.unrand_equipped(UNRAND_DREAMSHARD_NECKLACE));
+    for (player_equip_entry& entry: you.equipment.items)
+    {
+        if (entry.slot != SLOT_AMULET)
+            continue;
+        item_def& item = entry.get_item();
+        if (is_unrandom_artefact(item, UNRAND_DREAMSHARD_NECKLACE))
+        {
+            you.equipment.remove(item);
+            item.unrand_idx = UNRAND_DREAMDUST_NECKLACE;
+            you.equipment.add(item, SLOT_AMULET);
+            break;
+        }
+    }
     mpr("Your necklace shatters, unleashing a wave of protective dreams!");
     mark_milestone("dreamshard", "was saved by the dreamshard necklace!");
     take_note(NOTE_DREAMSHARD);

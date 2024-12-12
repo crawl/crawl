@@ -1593,7 +1593,7 @@ void attack::maybe_trigger_fugue_wail(const coord_def pos)
 
 void attack::maybe_trigger_autodazzler()
 {
-    if (defender->is_player() && you.wearing_ego(EQ_GIZMO, SPGIZMO_AUTODAZZLE)
+    if (defender->is_player() && you.wearing_ego(OBJ_GIZMOS, SPGIZMO_AUTODAZZLE)
         && one_chance_in(20))
     {
         bolt proj;

@@ -2197,7 +2197,7 @@ bool make_item_unrandart(item_def &item, int unrand_index)
     else if (unrand_index == UNRAND_OCTOPUS_KING_RING)
         _make_octoring(item);
     else if (unrand_index == UNRAND_WOE && !you.has_mutation(MUT_NO_GRASPING)
-             && !you.could_wield(item, true, true))
+             && !can_equip_item(item))
     {
         // always wieldable, always 2-handed
         item.sub_type = WPN_BROAD_AXE;
@@ -2211,31 +2211,52 @@ bool make_item_unrandart(item_def &item, int unrand_index)
 
 void unrand_reacts()
 {
-    for (int i = 0; i < NUM_EQUIP; i++)
+    if (you.equipment.do_unrand_reacts == 0)
+        return;
+
+    int count = 0;
+    for (player_equip_entry& entry : you.equipment.items)
     {
-        if (!you.unrand_reacts[i])
+        if (entry.melded || entry.is_overflow)
             continue;
 
-        item_def&        item  = you.inv[you.equip[i]];
-        const unrandart_entry* entry = get_unrand_entry(item.unrand_idx);
-        ASSERT(entry);
+        item_def& item = entry.get_item();
+        if (is_unrandom_artefact(item))
+        {
+            const unrandart_entry* uentry = get_unrand_entry(item.unrand_idx);
 
-        entry->world_reacts_func(&item);
+            if (uentry->world_reacts_func)
+            {
+                uentry->world_reacts_func(&item);
+                if (++count == you.equipment.do_unrand_reacts)
+                    return;
+            }
+        }
     }
 }
 
 void unrand_death_effects(monster* mons, killer_type killer)
 {
-    for (int i = 0; i < NUM_EQUIP; i++)
+    if (you.equipment.do_unrand_death_effects == 0)
+        return;
+
+    int count = 0;
+    for (player_equip_entry& entry : you.equipment.items)
     {
-        item_def* item = you.slot_item(static_cast<equipment_type>(i));
+        if (entry.melded || entry.is_overflow)
+            continue;
 
-        if (item && is_unrandom_artefact(*item))
+        item_def& item = entry.get_item();
+        if (is_unrandom_artefact(item))
         {
-            const unrandart_entry* entry = get_unrand_entry(item->unrand_idx);
+            const unrandart_entry* uentry = get_unrand_entry(item.unrand_idx);
 
-            if (entry->death_effects)
-                entry->death_effects(item, mons, killer);
+            if (uentry->death_effects)
+            {
+                uentry->death_effects(&item, mons, killer);
+                if (++count == you.equipment.do_unrand_death_effects)
+                    return;
+            }
         }
     }
 }

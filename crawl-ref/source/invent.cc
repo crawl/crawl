@@ -171,11 +171,7 @@ bool InvEntry::is_equipped() const
     if (item->link == -1 || item->pos != ITEM_IN_INVENTORY)
         return false;
 
-    for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; i++)
-        if (item->link == you.equip[i])
-            return true;
-
-    return false;
+    return item_is_equipped(*item);
 }
 
 void InvEntry::select(int qty)
@@ -458,21 +454,12 @@ void InvEntry::set_star(bool val)
     _has_star = val;
 }
 
-static bool _has_melded_armour()
-{
-    for (int e = EQ_CLOAK; e <= EQ_BODY_ARMOUR; e++)
-        if (you.melded[e])
-            return true;
-    return false;
-}
-
 static bool _has_temp_unwearable_armour()
 {
     for (const auto &item : you.inv)
     {
         if (item.defined() && item.base_type == OBJ_ARMOUR
-            && can_wear_armour(item, false, true)
-            && !can_wear_armour(item, false, false))
+            && can_equip_item(item) && !can_equip_item(item, true))
         {
             return true;
         }
@@ -501,9 +488,7 @@ string no_selectables_message(int item_selector)
         return "You aren't carrying any weapons that can be blessed.";
     case OBJ_ARMOUR:
     {
-        if (_has_melded_armour())
-            return "Your armour is currently melded into you.";
-        else if (_has_temp_unwearable_armour())
+        if (_has_temp_unwearable_armour())
             return "You aren't carrying any currently wearable armour.";
         else
             return "You aren't carrying any wearable armour.";
@@ -582,8 +567,8 @@ bool get_tiles_for_item(const item_def &item, vector<tile_def>& tileset, bool sh
 
     if (in_inventory(item))
     {
-        const equipment_type eq = item_equip_slot(item);
-        if (eq != EQ_NONE)
+        const equipment_slot eq = item_equip_slot(item);
+        if (eq != SLOT_UNUSED)
         {
             if (item.cursed())
                 tileset.emplace_back(TILE_ITEM_SLOT_EQUIP_CURSED);
@@ -601,7 +586,7 @@ bool get_tiles_for_item(const item_def &item, vector<tile_def>& tileset, bool sh
             tileset.emplace_back(base_item);
         tileset.emplace_back(idx);
 
-        if (eq != EQ_NONE && you.melded[eq])
+        if (item_is_melded(item))
             tileset.emplace_back(TILEI_MESH);
     }
     else
@@ -1082,17 +1067,23 @@ const char *item_class_name(int type, bool terse)
     return "";
 }
 
-const char* item_slot_name(equipment_type type)
+const char* equip_slot_name(equipment_slot type, bool terse)
 {
     switch (type)
     {
-    case EQ_CLOAK:       return "cloak";
-    case EQ_HELMET:      return "helmet";
-    case EQ_GLOVES:      return "gloves";
-    case EQ_BOOTS:       return "boots";
-    case EQ_OFFHAND:     return "shield";
-    case EQ_BODY_ARMOUR: return "body";
-    default:             return "";
+    case SLOT_WEAPON:      return "Weapon";
+    case SLOT_CLOAK:       return "Cloak";
+    case SLOT_HELMET:      return "Helmet";
+    case SLOT_GLOVES:      return "Gloves";
+    case SLOT_BOOTS:       return "Boots";
+    case SLOT_WEAPON_OR_OFFHAND:
+    case SLOT_OFFHAND:     return "Offhand";
+    case SLOT_BODY_ARMOUR: return terse ? "Armour" : "Body Armour";
+    case SLOT_BARDING:     return "Barding";
+    case SLOT_RING:        return "Ring";
+    case SLOT_AMULET:      return "Amulet";
+    case SLOT_GIZMO:       return "Gizmo";
+    default:               return "";
     }
 }
 
@@ -1144,7 +1135,7 @@ bool item_is_selected(const item_def &i, int selector)
     switch (selector)
     {
     case OBJ_ARMOUR:
-        return itype == OBJ_ARMOUR && can_wear_armour(i, false, false);
+        return itype == OBJ_ARMOUR && can_equip_item(i, true);
 
     case OSEL_WORN_ARMOUR:
         return itype == OBJ_ARMOUR && item_is_equipped(i);
@@ -1225,6 +1216,9 @@ bool item_is_selected(const item_def &i, int selector)
         return item_is_selected(i, OBJ_ARMOUR)
             || item_is_selected(i, OSEL_WIELD)
             || item_is_selected(i, OBJ_JEWELLERY);
+
+    case OSEL_MARKED_ITEMS:
+        return i.flags & ISFLAG_MARKED_FOR_MENU;
 
     default:
         return false;
@@ -1337,8 +1331,7 @@ static string _drop_selitem_text(const vector<MenuEntry*> *s)
     for (MenuEntry *entry : *s)
     {
         const item_def *item = static_cast<item_def *>(entry->data);
-        const int eq = get_equip_slot(item);
-        if (eq > EQ_WEAPON && eq < NUM_EQUIP)
+        if (item_is_equipped(*item))
         {
             extraturns = true;
             break;
@@ -1474,78 +1467,27 @@ static bool _has_warning_inscription(const item_def& item,
     return false;
 }
 
-// In order to equip this item, we may need to remove an old item in the
-// corresponding slot which has a warning inscription. If this is the case,
-// prompt the user for confirmation.
-bool check_old_item_warning(const item_def& item,
-                            operation_types oper,
-                            bool check_melded)
+// Returns whether the player either confirmed the removal, or did not need to
+// be prompted.
+bool maybe_warn_about_removing(const item_def& item)
 {
-    item_def old_item;
     string prompt;
     bool penance = false;
-    if (oper == OPER_WIELD) // can we safely unwield old item?
-    {
-        if (you.has_mutation(MUT_WIELD_OFFHAND))
-            return true; // defer until unwielding
 
-        if (!you.slot_item(EQ_WEAPON, check_melded))
-            return true;
-
-        int equip = you.equip[EQ_WEAPON];
-        if (equip == -1 || item.link == equip)
-            return true;
-
-        old_item = *you.slot_item(EQ_WEAPON, check_melded);
-        if (!needs_handle_warning(old_item, OPER_WIELD, penance))
-            return true;
-
-        prompt += "Really unwield ";
-    }
-    else if (oper == OPER_WEAR) // can we safely take off old item?
-    {
-        if (item.base_type != OBJ_ARMOUR)
-            return true;
-
-        equipment_type eq_slot = get_armour_slot(item);
-        int equip = you.equip[eq_slot];
-        if (equip == -1 || item.link == equip)
-            return true;
-
-        old_item = you.inv[you.equip[eq_slot]];
-
-        if (!needs_handle_warning(old_item, OPER_TAKEOFF, penance))
-            return true;
-
-        prompt += "Really take off ";
-    }
-    else if (oper == OPER_PUTON) // can we safely remove old item?
-    {
-        if (item.base_type != OBJ_JEWELLERY)
-            return true;
-
-        if (jewellery_is_amulet(item))
-        {
-            int equip = you.equip[EQ_AMULET];
-            if (equip == -1 || item.link == equip)
-                return true;
-
-            old_item = you.inv[equip];
-            if (!needs_handle_warning(old_item, OPER_REMOVE, penance))
-                return true;
-
-            prompt += "Really remove ";
-        }
-        else // rings handled in prompt_ring_to_remove
-            return true;
-    }
-    else // anything else doesn't have a counterpart
+    if (!needs_handle_warning(item, OPER_UNEQUIP, penance))
         return true;
 
+    if (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES)
+        prompt += "Really unwield ";
+    else if (item.base_type == OBJ_ARMOUR)
+        prompt += "Really take off ";
+    else
+        prompt += "Really remove ";
+
     // now ask
-    if (old_item.cursed())
+    if (item.cursed())
         prompt += "and destroy ";
-    prompt += old_item.name(DESC_INVENTORY);
+    prompt += item.name(DESC_INVENTORY);
     prompt += "?";
     if (penance)
         prompt += " This could place you under penance!";
@@ -1577,12 +1519,6 @@ static string _operation_verb(operation_types oper)
     }
 }
 
-static bool _is_wielded(const item_def &item)
-{
-    int equip = you.equip[EQ_WEAPON];
-    return equip != -1 && item.link == equip;
-}
-
 static bool _is_known_no_tele_item(const item_def &item)
 {
     if (!item.is_identified() || !is_artefact(item))
@@ -1593,8 +1529,7 @@ static bool _is_known_no_tele_item(const item_def &item)
 
 bool needs_notele_warning(const item_def &item, operation_types oper)
 {
-    return (oper == OPER_PUTON || oper == OPER_WEAR
-                || oper == OPER_WIELD && !_is_wielded(item))
+    return (oper == OPER_EQUIP)
                 && (_is_known_no_tele_item(item) && you.duration[DUR_TELEPORT]);
 }
 
@@ -1603,9 +1538,6 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
 {
     if (_has_warning_inscription(item, oper))
         return true;
-
-    // note: equip/unequip are not handled be the following code; they should
-    // be converted to their specific oper beforehand.
 
     // Curses first. Warn if something would take off (i.e. destroy) the cursed item.
     if (item.cursed()
@@ -1616,29 +1548,9 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
         return true;
     }
 
-    // The consequences of evokables are generally known.
-    if (item.base_type == OBJ_MISCELLANY
-        && oper == OPER_EVOKE && god_hates_item(item))
+    if (oper == OPER_EVOKE && god_hates_item(item))
     {
         penance = true;
-        return true;
-    }
-
-    // Everything else depends on knowing the item subtype/brand.
-    if (!item.is_identified())
-        return false;
-
-    if (oper == OPER_REMOVE
-        && item.is_type(OBJ_JEWELLERY, AMU_FAITH)
-        && faith_has_penalty())
-    {
-        return true;
-    }
-
-    if (oper == OPER_PUTON
-        && item.is_type(OBJ_JEWELLERY, AMU_FAITH)
-        && faith_has_penalty())
-    {
         return true;
     }
 
@@ -1651,53 +1563,28 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
         return true;
     }
 
-    if (oper == OPER_WIELD // unwielding uses OPER_WIELD too
-        && is_weapon(item))
+    if ((oper == OPER_EQUIP || oper == OPER_UNEQUIP))
     {
-        if (get_weapon_brand(item) == SPWPN_DISTORTION
+        if (item.is_type(OBJ_JEWELLERY, AMU_FAITH)
+            && faith_has_penalty())
+        {
+            return true;
+        }
+
+        if (is_weapon(item) && get_weapon_brand(item) == SPWPN_DISTORTION
             && !have_passive(passive_t::safe_distortion))
         {
             return true;
         }
 
         if (is_artefact(item) && artefact_property(item, ARTP_CONTAM))
-        {
-            if (_is_wielded(item) && you_worship(GOD_ZIN))
-                penance = true;
             return true;
-        }
 
         if (is_artefact(item) && (artefact_property(item, ARTP_DRAIN)
                                   || artefact_property(item, ARTP_FRAGILE)))
         {
             return true;
         }
-    }
-
-    if (oper == OPER_PUTON || oper == OPER_WEAR || oper == OPER_TAKEOFF
-        || oper == OPER_REMOVE)
-    {
-        if (is_artefact(item) && artefact_property(item, ARTP_CONTAM))
-        {
-            if ((oper == OPER_TAKEOFF || oper == OPER_REMOVE)
-                 && you_worship(GOD_ZIN))
-            {
-                penance = true;
-            }
-            return true;
-        }
-
-        if (is_artefact(item) && (artefact_property(item, ARTP_DRAIN)
-                                  || artefact_property(item, ARTP_FRAGILE)))
-        {
-            return true;
-        }
-    }
-
-    if (oper == OPER_EVOKE && god_hates_item(item))
-    {
-        penance = true;
-        return true;
     }
 
     return false;
@@ -1713,56 +1600,7 @@ bool check_warning_inscriptions(const item_def& item,
     if (item.defined()
         && needs_handle_warning(item, oper, penance))
     {
-        // Common pattern for wield/wear/put:
-        // - if the player isn't capable of equipping it, return true
-        //   immediately. No point warning, since the op is impossible.
-        // - if the item is already worn, treat this as the corresponding
-        //   unequip operation
-        if (oper == OPER_WIELD)
-        {
-            // Can't use can_wield in item-use.cc because it wants
-            // a non-const item_def.
-            if (!you.can_wield(item))
-                return true;
-
-            int equip = you.equip[EQ_WEAPON];
-            if (equip != -1 && item.link == equip)
-                return check_old_item_warning(item, oper);
-        }
-        else if (oper == OPER_WEAR)
-        {
-            if (!can_wear_armour(item, false, false))
-                return true;
-
-            int equip = you.equip[get_armour_slot(item)];
-            if (equip != -1 && item.link == equip)
-                return check_old_item_warning(item, oper);
-        }
-        else if (oper == OPER_PUTON)
-        {
-            if (item.base_type != OBJ_JEWELLERY)
-                return true;
-
-            if (jewellery_is_amulet(item))
-            {
-                int equip = you.equip[EQ_AMULET];
-                if (equip != -1 && item.link == equip)
-                    return check_old_item_warning(item, oper);
-            }
-            else
-            {
-                for (int slots = EQ_FIRST_JEWELLERY; slots <= EQ_LAST_JEWELLERY; ++slots)
-                {
-                    if (slots == EQ_AMULET)
-                        continue;
-
-                    int equip = you.equip[slots];
-                    if (equip != -1 && item.link == equip)
-                        return check_old_item_warning(item, oper);
-                }
-            }
-        }
-        else if (oper == OPER_REMOVE || oper == OPER_TAKEOFF)
+        if (oper == OPER_UNEQUIP)
         {
             // Don't ask if it will fail anyway.
             if (item.cursed())
@@ -1780,11 +1618,10 @@ bool check_warning_inscriptions(const item_def& item,
             prompt += " You'd be excommunicated if you did!";
         else if (penance)
             prompt += " This could place you under penance!";
-        return yesno(prompt.c_str(), false, 'n')
-               && check_old_item_warning(item, oper);
+        return yesno(prompt.c_str(), false, 'n');
     }
-    else
-        return check_old_item_warning(item, oper);
+
+    return true;
 }
 
 /**
@@ -2027,8 +1864,6 @@ bool prompt_failed(int retval)
     return true;
 }
 
-// Most items are wieldable, but this function check for items that needs to be
-// wielded to be used normally.
 bool item_is_wieldable(const item_def &item)
 {
     return is_weapon(item) && !you.has_mutation(MUT_NO_GRASPING);

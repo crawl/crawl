@@ -1202,15 +1202,10 @@ static int _octorings_worn()
 {
     int worn = 0;
 
-    for (int i = EQ_LEFT_RING; i < NUM_EQUIP; ++i)
-    {
-        if (you.melded[i] || you.equip[i] == -1)
-            continue;
-
-        item_def& ring = you.inv[you.equip[i]];
-        if (is_unrandom_artefact(ring, UNRAND_OCTOPUS_KING_RING))
+    vector<item_def*> rings = you.equipment.get_slot_items(SLOT_RING);
+    for (item_def* ring : rings)
+        if (is_unrandom_artefact(*ring, UNRAND_OCTOPUS_KING_RING))
             worn++;
-    }
 
     return worn;
 }
@@ -1736,7 +1731,7 @@ static void _reset_victory_stats(item_def *item)
 
 static void _VICTORY_unequip(item_def *item, bool */*show_msgs*/)
 {
-    if (!player_equip_unrand(UNRAND_VICTORY, true))
+    if (!you.unrand_equipped(UNRAND_VICTORY, true))
         _reset_victory_stats(item);
 }
 

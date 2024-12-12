@@ -156,7 +156,7 @@ int wand_power(spell_type wand_spell)
         return -1;
     const int mp_cost = wand_mp_cost();
     int pow = (15 + you.skill(SK_EVOCATIONS, 7) / 2) * (mp_cost + 9) / 9;
-    if (player_equip_unrand(UNRAND_GADGETEER))
+    if (you.unrand_equipped(UNRAND_GADGETEER))
         pow = pow * 130 / 100;
     return min(pow, cap);
 }
@@ -198,10 +198,6 @@ void zap_wand(int slot, dist *_target)
     if (!item_currently_evokable(&wand))
         return;
 
-    // If you happen to be wielding the wand, its display might change.
-    if (you.equip[EQ_WEAPON] == item_slot)
-        you.wield_change = true;
-
     const int mp_cost = wand_mp_cost();
     const spell_type spell =
         spell_in_wand(static_cast<wand_type>(wand.sub_type));
@@ -231,8 +227,8 @@ void zap_wand(int slot, dist *_target)
         finalize_mp_cost();
 
     // Take off a charge (unless gadgeteer procs)
-    if ((you.wearing_ego(EQ_GIZMO, SPGIZMO_GADGETEER)
-        || player_equip_unrand(UNRAND_GADGETEER))
+    if ((you.wearing_ego(OBJ_GIZMOS, SPGIZMO_GADGETEER)
+        || you.unrand_equipped(UNRAND_GADGETEER))
         && x_chance_in_y(3, 10))
     {
         mpr("You conserve a charge of your wand.");
@@ -976,7 +972,7 @@ static transformation _form_for_talisman(const item_def &talisman)
 static bool _evoke_talisman(const item_def &talisman)
 {
     const transformation trans = _form_for_talisman(talisman);
-    if (!check_transform_into(trans) || !check_form_stat_safety(trans))
+    if (!check_transform_into(trans, false, &talisman))
         return false;
     if (!i_feel_safe(true) && !yesno("Still begin transforming?", true, 'n'))
     {
@@ -1117,21 +1113,6 @@ bool evoke_item(item_def& item, dist *preselect)
         ASSERT(in_inventory(item));
         zap_wand(item.link, preselect);
         return true;
-
-    case OBJ_WEAPONS:
-    {
-#ifdef ASSERTS
-        ASSERT(in_inventory(item));
-        const int equip = you.equip[EQ_WEAPON];
-        ASSERT(equip != -1 && item.link == equip);
-#endif
-        dist targ_local;
-        if (!preselect)
-            preselect = &targ_local;
-
-        quiver::get_primary_action()->trigger(*preselect);
-        return you.turn_is_over;
-    }
 
     case OBJ_TALISMANS:
         return _evoke_talisman(item);

@@ -963,11 +963,11 @@ static void _maybe_attune_items(bool attune_regen, bool attune_mana_regen)
     bool gained_regen = false;
     bool gained_mana_regen = false;
 
-    for (int slot = EQ_MIN_ARMOUR; slot <= EQ_MAX_WORN; ++slot)
+    for (player_equip_entry& entry : you.equipment.items)
     {
-        if (you.melded[slot] || you.equip[slot] == -1 || you.activated[slot])
+        if (entry.melded || entry.attuned || entry.is_overflow)
             continue;
-        const item_def &arm = you.inv[you.equip[slot]];
+        const item_def &arm = entry.get_item();
 
         if ((attune_regen && is_regen_item(arm)
              && (you.magic_points == you.max_magic_points || !is_mana_regen_item(arm)))
@@ -981,17 +981,13 @@ static void _maybe_attune_items(bool attune_regen, bool attune_mana_regen)
                 gained_mana_regen = true;
 
             eq_list.push_back(is_artefact(arm) ? get_artefact_name(arm) :
-                slot == EQ_AMULET ? "amulet" :
-                slot != EQ_BODY_ARMOUR ?
-                    item_slot_name(static_cast<equipment_type>(slot)) :
-                    "armour");
+                entry.slot == SLOT_AMULET ? "amulet" :
+                entry.slot == SLOT_BODY_ARMOUR ? "armour" :
+                    equip_slot_name(entry.slot));
 
-            if (slot == EQ_BOOTS && arm.sub_type != ARM_BARDING
-                || slot == EQ_GLOVES)
-            {
+            if (entry.slot == SLOT_BOOTS || entry.slot == SLOT_GLOVES)
                 plural = true;
-            }
-            you.activated.set(slot);
+            entry.attuned = true;
         }
     }
 
@@ -1102,8 +1098,7 @@ void player_reacts()
     mprf(MSGCH_DIAGNOSTICS, "stealth: %d", stealth);
 #endif
 
-    if (you.unrand_reacts.any())
-        unrand_reacts();
+    unrand_reacts();
 
     _handle_fugue(you.time_taken);
     if (you.has_mutation(MUT_WARMUP_STRIKES))

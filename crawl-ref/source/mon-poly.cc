@@ -772,7 +772,7 @@ void seen_monster(monster* mons)
         take_note(Note(NOTE_SEEN_MONSTER, mons->type, 0, name));
     }
 
-    if (player_equip_unrand(UNRAND_WYRMBANE))
+    if (you.unrand_equipped(UNRAND_WYRMBANE))
     {
         const item_def *wyrmbane = you.weapon();
         if (wyrmbane && mons->dragon_level() > wyrmbane->plus)

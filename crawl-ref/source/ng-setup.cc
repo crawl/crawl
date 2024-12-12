@@ -128,6 +128,8 @@ item_def* newgame_make_item(object_class_type base,
     item.quantity  = qty;
     item.plus      = plus;
     item.brand     = force_ego;
+    item.pos       = ITEM_IN_INVENTORY;
+    item.link      = slot;
 
     // To mitigate higher shield penalties for smaller races, give small
     // races bucklers instead of shields.
@@ -136,8 +138,7 @@ item_def* newgame_make_item(object_class_type base,
 
     // If the character is restricted in wearing the requested armour,
     // hand out a replacement instead.
-    if (item.base_type == OBJ_ARMOUR
-        && !can_wear_armour(item, false, true))
+    if (item.base_type == OBJ_ARMOUR && !can_equip_item(item))
     {
         if (item.sub_type == ARM_HELMET || item.sub_type == ARM_HAT)
             item.sub_type = ARM_HAT;
@@ -162,21 +163,8 @@ item_def* newgame_make_item(object_class_type base,
     // Make sure branded and/or enchanted items appear as such.
     item_set_appearance(item);
 
-    if ((item.base_type == OBJ_WEAPONS && can_wield(&item, false, false)
-        || item.base_type == OBJ_ARMOUR && can_wear_armour(item, false, false))
-        && you.equip[get_item_slot(item)] == -1)
-    {
-        you.equip[get_item_slot(item)] = slot;
-    }
-    else if (item.base_type == OBJ_WEAPONS
-             && you.species == SP_COGLIN
-             && you.hands_reqd(item) == HANDS_ONE
-             && you.equip[EQ_OFFHAND] == -1
-             && you.weapon() // should always be true here
-             && you.hands_reqd(*you.weapon()) == HANDS_ONE)
-    {
-        you.equip[EQ_OFFHAND] = slot;
-    }
+    if (item_type_is_equipment(item.base_type))
+        autoequip_item(item);
 
     if (item.base_type == OBJ_MISSILES)
         _autopickup_ammo(static_cast<missile_type>(item.sub_type));
@@ -240,6 +228,10 @@ static void _give_offhand_weapon()
 
 void give_items_skills(const newgame_def& ng)
 {
+    // Set available equipment slots for the player before trying to give them
+    // any items.
+    you.equipment.update();
+
     create_wanderer();
 
     switch (you.char_class)
@@ -248,7 +240,7 @@ void give_items_skills(const newgame_def& ng)
         you.religion = GOD_TROG;
         you.piety = 35;
 
-        if (you_can_wear(EQ_BODY_ARMOUR) != false)
+        if (you_can_wear(SLOT_BODY_ARMOUR) != false)
             you.skills[SK_ARMOUR] += 2;
         else
         {
@@ -315,8 +307,10 @@ void give_items_skills(const newgame_def& ng)
         if (you.char_class == JOB_HUNTER)
         {
             item_def *wpn = you.weapon();
+            unequip_item(*wpn, false, true);
             wpn->sub_type = WPN_SLING;
             wpn->plus = 2;
+            autoequip_item(*wpn);
         }
         _give_offhand_weapon();
     }
@@ -579,8 +573,9 @@ static void _setup_generic(const newgame_def& ng,
         item_colour(item);  // set correct special and colour
     }
 
-    if (you.equip[EQ_WEAPON] > 0)
-        swap_inv_slots(0, you.equip[EQ_WEAPON], false);
+    // Put our weapon in our first item slot, if we have one.
+    if (item_def* wpn = you.weapon())
+        swap_inv_slots(0, wpn->link, false);
 
     // A second pass to apply the item_slot option.
     for (auto &item : you.inv)

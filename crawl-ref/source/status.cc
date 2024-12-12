@@ -253,7 +253,7 @@ bool fill_status_info(int status, status_info& inf)
         break;
 
     case DUR_BERSERK:
-        if (player_equip_unrand(UNRAND_BEAR_SPIRIT))
+        if (you.unrand_equipped(UNRAND_BEAR_SPIRIT))
             inf.light_text = "Bearserk";
         break;
 
@@ -725,7 +725,7 @@ bool fill_status_info(int status, status_info& inf)
             inf.light_colour = LIGHTMAGENTA;
             inf.light_text = "Orb";
         }
-        else if (player_equip_unrand(UNRAND_CHARLATANS_ORB))
+        else if (you.unrand_equipped(UNRAND_CHARLATANS_ORB))
         {
             inf.light_colour = LIGHTMAGENTA;
             inf.light_text = "Orb?";

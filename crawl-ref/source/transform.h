@@ -87,9 +87,8 @@ private:
 protected:
     Form(transformation tran);
 public:
-    bool slot_available(int slot) const;
-    bool can_wield() const { return slot_available(EQ_WEAPON); }
-    virtual bool can_wear_item(const item_def& item) const;
+    bool slot_is_blocked(equipment_slot slot) const;
+    bool can_wield() const { return !slot_is_blocked(SLOT_WEAPON); }
 
     int get_duration(int pow) const;
 
@@ -131,7 +130,7 @@ public:
     virtual string get_transform_description() const { return description; }
 
     virtual string get_description(bool past_tense = false) const;
-    virtual string transform_message(bool was_flying) const;
+    virtual string transform_message() const;
     virtual string get_untransform_message() const;
 
     virtual int res_fire() const;
@@ -204,8 +203,8 @@ public:
     const int dex_mod;
 
     /// Equipment types unusable in this form.
-    /** A bitfield representing a union of (1 << equipment_type) values for
-     * equipment types that are unusable in this form.
+    /** A bitfield representing a union of (1 << equipment_slot) values for
+     * equipment slots that are melded in this form.
      */
     const int blocked_slots; // XX check enum size at compile time?
     /// size of the form
@@ -273,9 +272,6 @@ protected:
                         bool max = false, int scale = 1) const;
 
 private:
-    bool all_blocked(int slotflags) const;
-
-private:
     /// Can this form fly?
     /** Whether the form enables, forbids, or does nothing to the player's
      * ability to fly.
@@ -331,14 +327,15 @@ bool form_has_feet(transformation form = you.form);
 bool form_has_ears(transformation form = you.form);
 
 bool feat_dangerous_for_form(transformation which_trans,
-                             dungeon_feature_type feat);
-
-bool check_form_stat_safety(transformation new_form, bool quiet = false);
+                             dungeon_feature_type feat,
+                             const item_def* talisman = nullptr);
 
 string cant_transform_reason(transformation which_trans, bool involuntary = false,
                              bool temp = true);
-bool check_transform_into(transformation which_trans, bool involuntary = false);
-bool transform(int pow, transformation which_trans, bool involuntary = false);
+bool check_transform_into(transformation which_trans, bool involuntary = false,
+                          const item_def* talisman = nullptr);
+bool transform(int pow, transformation which_trans, bool involuntary = false,
+               bool using_talisman = false);
 
 // skip_move: don't make player re-enter current cell
 void untransform(bool skip_move = false);
@@ -348,10 +345,6 @@ void set_default_form(transformation t, const item_def *source);
 
 void set_form(transformation which_trans, int dur);
 void return_to_default_form();
-
-void remove_one_equip(equipment_type eq, bool meld = true,
-                      bool mutation = false);
-void unmeld_one_equip(equipment_type eq);
 
 monster_type transform_mons();
 string blade_parts(bool terse = false);

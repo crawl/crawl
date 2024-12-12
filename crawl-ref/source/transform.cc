@@ -16,6 +16,7 @@
 #include "describe.h"
 #include "english.h"
 #include "env.h"
+#include "equipment-slot.h"
 #include "god-abil.h"
 #include "god-item.h"
 #include "god-passive.h" // passive_t::resist_polymorph
@@ -45,32 +46,29 @@
 #define SLOTF(s) (1 << s)
 
 static const int EQF_NONE = 0;
-// "hand" slots (not rings)
-static const int EQF_HANDS = SLOTF(EQ_WEAPON) | SLOTF(EQ_OFFHAND)
-                             | SLOTF(EQ_GLOVES);
+
+// Weapons and offhand items
+static const int EQF_HELD = SLOTF(SLOT_WEAPON) | SLOTF(SLOT_OFFHAND)
+                             | SLOTF(SLOT_WEAPON_OR_OFFHAND);
 // auxen
-static const int EQF_AUXES = SLOTF(EQ_GLOVES) | SLOTF(EQ_BOOTS)
-                              | SLOTF(EQ_CLOAK) | SLOTF(EQ_HELMET);
+static const int EQF_AUXES = SLOTF(SLOT_GLOVES) | SLOTF(SLOT_BOOTS)
+                              | SLOTF(SLOT_BARDING)
+                              | SLOTF(SLOT_CLOAK) | SLOTF(SLOT_HELMET);
 // core body slots (statue form)
-static const int EQF_STATUE = SLOTF(EQ_GLOVES) | SLOTF(EQ_BOOTS)
-                              | SLOTF(EQ_BODY_ARMOUR);
-// more core body slots (Lear's Hauberk)
-static const int EQF_LEAR = EQF_STATUE | SLOTF(EQ_HELMET);
+static const int EQF_STATUE = SLOTF(SLOT_GLOVES) | SLOTF(SLOT_BOOTS)
+                              | SLOTF(SLOT_BARDING)
+                              | SLOTF(SLOT_BODY_ARMOUR);
 // everything you can (W)ear
-static const int EQF_WEAR = EQF_AUXES | SLOTF(EQ_BODY_ARMOUR)
-                            | SLOTF(EQ_OFFHAND);
+static const int EQF_WEAR = EQF_AUXES | SLOTF(SLOT_BODY_ARMOUR)
+                            | SLOTF(SLOT_OFFHAND) | SLOTF(SLOT_WEAPON_OR_OFFHAND);
 // everything but jewellery
-static const int EQF_PHYSICAL = EQF_HANDS | EQF_WEAR;
-// all rings (except for the macabre finger amulet's)
-static const int EQF_RINGS = SLOTF(EQ_LEFT_RING) | SLOTF(EQ_RIGHT_RING)
-                             | SLOTF(EQ_RING_ONE) | SLOTF(EQ_RING_TWO)
-                             | SLOTF(EQ_RING_THREE) | SLOTF(EQ_RING_FOUR)
-                             | SLOTF(EQ_RING_FIVE) | SLOTF(EQ_RING_SIX)
-                             | SLOTF(EQ_RING_SEVEN) | SLOTF(EQ_RING_EIGHT);
-// amulet & pal
-static const int EQF_AMULETS = SLOTF(EQ_AMULET) | SLOTF(EQ_RING_AMULET);
+static const int EQF_PHYSICAL = EQF_HELD | EQF_WEAR;
+// just rings
+static const int EQF_RINGS = SLOTF(SLOT_RING);
+// all jewellery
+static const int EQF_JEWELLERY = SLOTF(SLOT_RING) | SLOTF(SLOT_AMULET);
 // everything
-static const int EQF_ALL = EQF_PHYSICAL | EQF_RINGS | EQF_AMULETS;
+static const int EQF_ALL = EQF_PHYSICAL | EQF_JEWELLERY;
 
 string Form::melding_description() const
 {
@@ -83,9 +81,10 @@ string Form::melding_description() const
     else if ((blocked_slots & EQF_PHYSICAL) == EQF_PHYSICAL)
         return "Your equipment is almost entirely melded.";
     else if ((blocked_slots & EQF_STATUE) == EQF_STATUE
-             && (you_can_wear(EQ_GLOVES, false) != false
-                 || you_can_wear(EQ_BOOTS, false) != false
-                 || you_can_wear(EQ_BODY_ARMOUR, false) != false))
+             && (you_can_wear(SLOT_GLOVES, false) != false
+                 || you_can_wear(SLOT_BOOTS, false) != false
+                 || you_can_wear(SLOT_BARDING, false) != false
+                 || you_can_wear(SLOT_BODY_ARMOUR, false) != false))
     {
         return "Your equipment is partially melded.";
     }
@@ -143,51 +142,15 @@ Form::Form(transformation tran)
     : Form(_find_form_entry(tran))
 { }
 /**
- * Is the given equipment slot available for use in this form?
+ * Is the given equipment slot blocked by this form?
  *
- * @param slot      The equipment slot in question. (May be a weird fake
- *                  slot - EQ_STAFF or EQ_ALL_ARMOUR.)
- * @return          Whether at least some items can be worn in this slot in
- *                  this form.
- *                  (The player's race, or mutations, may still block the
- *                  slot, or it may be restricted to subtypes.)
+ * @param slot      The equipment slot in question.
+ * @return          True if this slot is fully blocked by this form.
  */
-bool Form::slot_available(int slot) const
+bool Form::slot_is_blocked(equipment_slot slot) const
 {
-    if (slot == EQ_ALL_ARMOUR)
-        return !all_blocked(EQF_WEAR);
-    if (slot == EQ_RINGS || slot == EQ_RINGS_PLUS)
-        return !all_blocked(EQF_RINGS);
-
-    if (slot == EQ_STAFF)
-        slot = EQ_WEAPON;
-    return !(blocked_slots & SLOTF(slot));
-}
-
-/**
- * Can the player wear the given item while in this form?
- *
- * Does not take mutations into account.
- *
- * @param item  The item in question
- * @return      Whether this form prevents the player from wearing the
- *              item. (Other things may also prevent it, of course)
- */
-bool Form::can_wear_item(const item_def& item) const
-{
-    if (item.base_type == OBJ_JEWELLERY)
-    {
-        if (jewellery_is_amulet(item))
-            return slot_available(EQ_AMULET);
-        return !all_blocked(EQF_RINGS);
-    }
-
-    if (is_unrandom_artefact(item, UNRAND_LEAR))
-        return !(blocked_slots & EQF_LEAR); // ok if no body slots blocked
-
-    const equipment_type slot = is_weapon(item) ? EQ_OFFHAND
-                                                : get_armour_slot(item);
-    return slot_available(slot);
+    ASSERT_RANGE(slot, 0, NUM_EQUIP_SLOTS);
+    return (1 << slot) & blocked_slots;
 }
 
 /**
@@ -256,27 +219,9 @@ string Form::get_description(bool past_tense) const
  *
  * @return The message for turning into this form.
  */
-string Form::transform_message(bool was_flying) const
+string Form::transform_message() const
 {
-    // XXX: refactor this into a second function (and also rethink the logic)
-    string start = "Buggily, y";
-    if (!was_flying
-        && player_can_fly()
-        && feat_is_water(env.grid(you.pos())))
-    {
-        start = "You fly out of the water as y";
-    }
-    else if (was_flying
-             && player_can_swim()
-             && feat_is_water(env.grid(you.pos())))
-    {
-        start = "As you dive into the water, y";
-    }
-    else
-        start = "Y";
-
-    return make_stringf("%sou turn into %s", start.c_str(),
-                        get_transform_description().c_str());
+    return make_stringf("You turn into %s", get_transform_description().c_str());
 }
 
 /**
@@ -500,18 +445,6 @@ bool Form::player_can_swim() const
 }
 
 /**
- * Are all of the given equipment slots blocked while in this form?
- *
- * @param slotflags     A set of flags, corresponding to the union of
- (1 << the slot enum) for each slot in question.
- * @return              Whether all of the given slots are blocked.
- */
-bool Form::all_blocked(int slotflags) const
-{
-    return slotflags == (blocked_slots & slotflags);
-}
-
-/**
  * What message should be printed when the player prays at an altar?
  * To be inserted into "You %s the altar of foo."
  *
@@ -630,7 +563,7 @@ public:
     /**
      * Get a message for transforming into this form.
      */
-    string transform_message(bool /*was_flying*/) const override
+    string transform_message() const override
     {
         const bool singular = you.arm_count() == 1;
 
@@ -689,7 +622,7 @@ public:
     /**
      * Get a message for transforming into this form.
      */
-    string transform_message(bool was_flying) const override
+    string transform_message() const override
     {
 #if TAG_MAJOR_VERSION == 34
         if (you.species == SP_DEEP_DWARF && one_chance_in(10))
@@ -697,7 +630,7 @@ public:
 #endif
         if (you.species == SP_GARGOYLE)
             return "Your body stiffens and grows slower.";
-        return Form::transform_message(was_flying);
+        return Form::transform_message();
     }
 
     /**
@@ -828,7 +761,7 @@ public:
     /**
      * Get a message for transforming into this form.
      */
-    string transform_message(bool /*was_flying*/) const override
+    string transform_message() const override
     {
         return "Your flesh twists and warps into a mockery of life!";
     }
@@ -1312,199 +1245,6 @@ bool form_has_ears(transformation form)
         return species::has_ears(you.species);
 }
 
-static set<equipment_type>
-_init_equipment_removal(transformation form)
-{
-    set<equipment_type> result;
-    if (!form_can_wield(form))
-    {
-        if (you.weapon() || you.melded[EQ_WEAPON])
-            result.insert(EQ_WEAPON);
-        if (you.offhand_weapon() || you.melded[EQ_OFFHAND])
-            result.insert(EQ_OFFHAND); // ^ dubious!
-    }
-
-    for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
-    {
-        if (i == EQ_WEAPON)
-            continue;
-        const equipment_type eq = static_cast<equipment_type>(i);
-        const item_def *pitem = you.slot_item(eq, true);
-
-        if (pitem && (get_form(form)->blocked_slots & SLOTF(i)
-                      || (i != EQ_RING_AMULET && i != EQ_GIZMO
-                          && !get_form(form)->can_wear_item(*pitem))))
-        {
-            result.insert(eq);
-        }
-    }
-    return result;
-}
-
-static void _remove_equipment(const set<equipment_type>& removed,
-                              transformation form,
-                              bool meld = true, bool mutation = false)
-{
-    // Meld items into you in (reverse) order. (set is a sorted container)
-    for (const equipment_type e : removed)
-    {
-        item_def *equip = you.slot_item(e, true);
-        if (equip == nullptr)
-            continue;
-
-        bool unequip = !meld;
-        if (!unequip && e == EQ_WEAPON)
-        {
-            if (form_can_wield(form))
-                unequip = true;
-            if (!is_weapon(*equip))
-                unequip = true;
-        }
-
-        const string msg = make_stringf("%s %s%s %s",
-             equip->name(DESC_YOUR).c_str(),
-             unequip ? "fall" : "meld",
-             equip->quantity > 1 ? "" : "s",
-             unequip ? "away" : "into your body.");
-
-        if (you_worship(GOD_ASHENZARI) && unequip && equip->cursed())
-            mprf(MSGCH_GOD, "%s, shattering the curse!", msg.c_str());
-        else if (unequip)
-            mprf("%s!", msg.c_str());
-        else
-            mpr(msg);
-
-        if (unequip)
-        {
-            if (e == EQ_WEAPON)
-            {
-                unwield_item(*you.weapon(), !you.berserk());
-                canned_msg(MSG_EMPTY_HANDED_NOW);
-            }
-            else
-                unequip_item(e);
-
-            if (mutation)
-            {
-                // A mutation made us not only lose an equipment slot
-                // but actually removed a worn item: Funny!
-                xom_is_stimulated(is_artefact(*equip) ? 200 : 100);
-            }
-        }
-        else
-            meld_slot(e);
-    }
-
-    if (meld)
-    {
-        for (const equipment_type e : removed)
-            if (you.slot_item(e, true) != nullptr)
-                unequip_effect(e, you.equip[e], true, true);
-    }
-}
-
-static void _unmeld_equipment_type(equipment_type e)
-{
-    item_def& item = you.inv[you.equip[e]];
-    bool force_remove = false;
-
-    if (e == EQ_WEAPON)
-    {
-        if (you.slot_item(EQ_OFFHAND)
-            && is_shield_incompatible(item, you.slot_item(EQ_OFFHAND)))
-        {
-            force_remove = true;
-        }
-    }
-    else if (item.base_type == OBJ_ARMOUR)
-    {
-        // This could happen if the player was mutated during the form.
-        if (!can_wear_armour(item, false, true))
-            force_remove = true;
-
-        // If you switched weapons during the transformation, make
-        // sure you can still wear your shield.
-        // (This is only possible with Statue Form.)
-        if (e == EQ_OFFHAND
-            && you.weapon()
-            && is_shield_incompatible(*you.weapon(), &item))
-        {
-            force_remove = true;
-        }
-    }
-
-    if (force_remove)
-    {
-        mprf("%s is pushed off your body!", item.name(DESC_YOUR).c_str());
-        unequip_item(e);
-    }
-    else
-    {
-        mprf("%s unmelds from your body.", item.name(DESC_YOUR).c_str());
-        unmeld_slot(e);
-    }
-}
-
-static void _unmeld_equipment(const set<equipment_type>& melded)
-{
-    // Unmeld items in order.
-    for (const equipment_type e : melded)
-    {
-        if (you.equip[e] == -1)
-            continue;
-
-        _unmeld_equipment_type(e);
-    }
-
-    for (const equipment_type e : melded)
-        if (you.equip[e] != -1)
-            equip_effect(e, you.equip[e], true, true);
-}
-
-static bool _lears_takes_slot(equipment_type eq)
-{
-    return eq >= EQ_HELMET && eq <= EQ_BOOTS
-        || eq == EQ_BODY_ARMOUR;
-}
-
-static bool _form_melds_lears(transformation which_trans)
-{
-    for (equipment_type eq : _init_equipment_removal(which_trans))
-        if (_lears_takes_slot(eq))
-            return true;
-    return false;
-}
-
-void unmeld_one_equip(equipment_type eq)
-{
-    if (_lears_takes_slot(eq))
-    {
-        const item_def* arm = you.slot_item(EQ_BODY_ARMOUR, true);
-        if (arm && is_unrandom_artefact(*arm, UNRAND_LEAR))
-        {
-            // Don't unmeld lears when de-fishtailing if you're in
-            // a form that should keep it melded.
-            if (_form_melds_lears(you.form))
-                return;
-            eq = EQ_BODY_ARMOUR;
-        }
-    }
-
-    set<equipment_type> e;
-    e.insert(eq);
-    _unmeld_equipment(e);
-}
-
-void remove_one_equip(equipment_type eq, bool meld, bool mutation)
-{
-    if (player_equip_unrand(UNRAND_LEAR) && _lears_takes_slot(eq))
-        eq = EQ_BODY_ARMOUR;
-
-    set<equipment_type> r;
-    r.insert(eq);
-    _remove_equipment(r, you.form, meld, mutation);
-}
-
 /**
  * Get an monster type corresponding to the player's current form.
  *
@@ -1536,7 +1276,9 @@ string blade_parts(bool terse)
     return str;
 }
 
-static bool _flying_in_new_form(transformation which_trans)
+// Checks whether the player would be flying in a given form (possibly caused by
+// using a given talisman).
+static bool _flying_in_new_form(transformation which_trans, const item_def* talisman)
 {
     if (get_form(which_trans)->forbids_flight())
         return false;
@@ -1545,34 +1287,67 @@ static bool _flying_in_new_form(transformation which_trans)
     if (you.racial_permanent_flight())
         return true;
 
-    // not airborne right now (XX does this handle emergency flight correctly?)
-    if (!you.duration[DUR_FLIGHT] && !you.attribute[ATTR_PERM_FLIGHT])
-        return false;
-
     // tempflight (e.g. from potion) enabled, no need for equip check
     if (you.duration[DUR_FLIGHT])
         return true;
 
-    // Finally, do the calculation about what would be melded: are there equip
-    // sources left?
-    int sources = you.equip_flight();
-    int sources_removed = 0;
-    for (auto eq : _init_equipment_removal(which_trans))
+    // We know for sure this can't get melded or fall off.
+    if (which_trans != transformation::none && talisman && is_artefact(*talisman)
+        && artefact_property(*talisman, ARTP_FLY))
     {
-        item_def *item = you.slot_item(eq, true);
-        if (item == nullptr)
-            continue;
-
-        //similar code to safe_to_remove from item-use.cc
-        if (item->is_type(OBJ_JEWELLERY, RING_FLIGHT))
-            sources_removed++;
-        if (item->base_type == OBJ_ARMOUR && item->brand == SPARM_FLYING)
-            sources_removed++;
-        if (is_artefact(*item) && artefact_property(*item, ARTP_FLY))
-            sources_removed++;
+        return true;
     }
 
-    return sources > sources_removed;
+    // At this point, check the player's gear to see if anything they have can
+    // theoretically grant flight (whether currently melded or not).
+    bool has_flight_item = false;
+    for (player_equip_entry& entry : you.equipment.items)
+    {
+        if (entry.is_overflow)
+            continue;
+
+        if (item_grants_flight(entry.get_item()))
+        {
+            has_flight_item = true;
+            break;
+        }
+    }
+
+    // If there's no relevant item, we can abort before doing a full melding sim.
+    if (!has_flight_item)
+        return false;
+
+    // Finally, test actually transforming to see if there will be equip sources
+    // left. This is a bit heavyweight, but should only be called when a player
+    // tries to evoke a talisman (or a monster tries to polymorph you) and only
+    // while it is possible that this could return true.
+    //
+    // It would be nice to have a simpler way to do this, but overflow items and
+    // items which grant equipment slots can cause effects that are hard to
+    // predict without actually simulating them.
+    unwind_var<player_equip_set> unwind_eq(you.equipment);
+    unwind_var<item_def> unwind_talisman(you.active_talisman);
+    unwind_var<transformation> unwind_default_form(you.default_form);
+    unwind_var<transformation> unwind_form(you.form);
+
+    you.default_form = which_trans;
+    you.form = which_trans;
+    if (talisman)
+        you.active_talisman = *talisman;
+    else
+        you.active_talisman.clear();
+
+    you.equipment.unmeld_all_equipment(true);
+    you.equipment.meld_equipment(get_form(which_trans)->blocked_slots, true);
+
+    // Pretend incompatible items fell away.
+    vector<item_def*> forced_remove = you.equipment.get_forced_removal_list();
+    for (item_def* item : forced_remove)
+        you.equipment.remove(*item);
+
+    you.equipment.update();
+
+    return you.equip_flight();
 }
 
 /**
@@ -1584,56 +1359,26 @@ static bool _flying_in_new_form(transformation which_trans)
  *
  * @param which_trans       The form being checked.
  * @param feat              The dungeon feature to be checked for danger.
+ * @param talisman          The talisman by which the player is entering this
+ *                          form. (Can be nullptr if untransforming, or no
+ *                          talisman is involved - polymorph, etc.)
  * @return                  If the feat is lethal for the player in the form.
  */
 bool feat_dangerous_for_form(transformation which_trans,
-                             dungeon_feature_type feat)
+                             dungeon_feature_type feat,
+                             const item_def* talisman)
 {
-    // Everything is okay if we can fly.
-    if (form_can_fly(which_trans) || _flying_in_new_form(which_trans))
+    // Only these terrain are potentially dangerous.
+    if (feat != DNGN_DEEP_WATER && feat != DNGN_LAVA)
         return false;
 
-    if (feat == DNGN_LAVA)
-        return true;
-
-    if (feat == DNGN_DEEP_WATER)
-        return !you.can_water_walk() && !form_can_swim(which_trans);
-
-    return false;
-}
-
-/**
- * If we transform into the given form, will all of our stats remain above 0,
- * based purely on the stat modifiers of the current & destination form?
- *
- * May prompt the player.
- *
- * @param new_form  The form to check the safety of.
- * @param quiet     Whether to prompt the player.
- * @return          Whether it's okay to go ahead with the transformation.
- */
-bool check_form_stat_safety(transformation new_form, bool quiet)
-{
-    const int str_mod = get_form(new_form)->str_mod - get_form()->str_mod;
-    const int dex_mod = get_form(new_form)->dex_mod - get_form()->dex_mod;
-
-    const bool bad_str = you.strength() > 0 && str_mod + you.strength() <= 0;
-    const bool bad_dex = you.dex() > 0 && dex_mod + you.dex() <= 0;
-    if (!bad_str && !bad_dex)
-        return true;
-    if (quiet)
+    // Check for swimming first (since _flying_in_new_form is potentially
+    // heavyweight if it has do a melding sim).
+    if (feat == DNGN_DEEP_WATER && (you.can_water_walk() || form_can_swim(which_trans)))
         return false;
 
-    string prompt = make_stringf("%s will reduce your %s to zero. Continue?",
-                                 new_form == transformation::none
-                                     ? "Turning back"
-                                     : "Transforming",
-                                 bad_str ? "strength" : "dexterity");
-    if (yesno(prompt.c_str(), false, 'n'))
-        return true;
-
-    canned_msg(MSG_OK);
-    return false;
+    // Beyond this, we require flight.
+    return !form_can_fly(which_trans) && !_flying_in_new_form(which_trans, talisman);
 }
 
 static int _transform_duration(transformation which_trans, int pow)
@@ -1708,28 +1453,37 @@ string cant_transform_reason(transformation which_trans,
     if (you.transform_uncancellable && which_trans != transformation::slaughter)
         return "You are stuck in your current form!";
 
-    const auto feat = env.grid(you.pos());
-    if (feat_dangerous_for_form(which_trans, feat))
-    {
-        return make_stringf("You would %s in your new form.",
-                            feat == DNGN_DEEP_WATER ? "drown" : "burn");
-    }
-
     if (which_trans == transformation::death && you.duration[DUR_DEATHS_DOOR])
         return "You cannot mock death while in death's door.";
 
     return "";
 }
 
-bool check_transform_into(transformation which_trans, bool involuntary)
+bool check_transform_into(transformation which_trans, bool involuntary,
+                          const item_def* talisman)
 {
-    const string reason = cant_transform_reason(which_trans, involuntary);
+    const string reason = cant_transform_reason(which_trans, involuntary, true);
     if (!reason.empty())
     {
         if (!involuntary)
             mpr(reason);
         return false;
     }
+
+    // XXX: This is left out of cant_transform_reason because it can involve
+    //      melding and unwinding the player's entire inventory, which feels a
+    //      bit heavyweight for item_is_useless()
+    const auto feat = env.grid(you.pos());
+    if (feat_dangerous_for_form(which_trans, feat, talisman))
+    {
+        if (!involuntary)
+        {
+            mprf("Transforming right now would cause you to %s!",
+                        feat == DNGN_DEEP_WATER ? "drown" : "burn");
+        }
+        return false;
+    }
+
     return true;
 }
 
@@ -1849,20 +1603,20 @@ void set_form(transformation which_trans, int dur)
     quiver::set_needs_redraw();
 }
 
-static void _enter_form(int pow, transformation which_trans, bool was_flying)
+static void _enter_form(int pow, transformation which_trans)
 {
-    set<equipment_type> rem_stuff = _init_equipment_removal(which_trans);
+    const bool was_flying = you.airborne();
 
     if (form_changes_physiology(which_trans))
         merfolk_stop_swimming();
 
     // Give the transformation message.
-    mpr(get_form(which_trans)->transform_message(was_flying));
+    mpr(get_form(which_trans)->transform_message());
 
     // Update your status.
     // Order matters here, take stuff off (and handle attendant HP and stat
     // changes) before adjusting the player to be transformed.
-    _remove_equipment(rem_stuff, which_trans);
+    you.equipment.meld_equipment(get_form(which_trans)->blocked_slots);
 
     set_form(which_trans, _transform_duration(which_trans, pow));
 
@@ -1873,6 +1627,10 @@ static void _enter_form(int pow, transformation which_trans, bool was_flying)
     }
 
     _on_enter_form(which_trans);
+
+    // Update flight status now (won't actually land the player if we're still flying).
+    if (was_flying)
+        land_player();
 
     // Stop constricting, if appropriate. In principle, we could be switching
     // from one form that allows constricting to another, but that seems too
@@ -1913,10 +1671,6 @@ static void _enter_form(int pow, transformation which_trans, bool was_flying)
     if (crawl_state.which_god_acting() == GOD_XOM)
        you.transform_uncancellable = true;
 
-    // Land the player if we stopped flying.
-    if (was_flying && !you.airborne())
-        move_player_to_grid(you.pos(), false);
-
     // Stop emergency flight if it's activated and this form can fly
     if (you.props[EMERGENCY_FLIGHT_KEY]
         && form_can_fly()
@@ -1952,11 +1706,14 @@ static void _enter_form(int pow, transformation which_trans, bool was_flying)
  * @param which_trans       The form which the player should become.
  * @param involuntary       Checks for inscription warnings are skipped, and
  *                          failure is silent.
+ * @param using_talisman    True if this transformation was caused by the player
+ *                          evoking a talisman.
  * @return                  If the player was transformed, or if they were
  *                          already in the given form, returns true.
  *                          Otherwise, false.
  */
-bool transform(int pow, transformation which_trans, bool involuntary)
+bool transform(int pow, transformation which_trans, bool involuntary,
+               bool using_talisman)
 {
     // Zin's protection.
     if (have_passive(passive_t::resist_polymorph)
@@ -1970,8 +1727,11 @@ bool transform(int pow, transformation which_trans, bool involuntary)
     if (!involuntary && crawl_state.is_god_acting())
         involuntary = true;
 
-    if (!check_transform_into(which_trans, involuntary))
+    if (!check_transform_into(which_trans, involuntary,
+                                using_talisman ? &you.active_talisman : nullptr))
+    {
         return false;
+    }
 
     // This must occur before the untransform().
     if (you.form == which_trans)
@@ -1997,12 +1757,10 @@ bool transform(int pow, transformation which_trans, bool involuntary)
         return true;
     }
 
-    const bool was_flying = you.airborne();
-
     if (you.form != transformation::none)
         untransform(true);
 
-    _enter_form(pow, which_trans, was_flying);
+    _enter_form(pow, which_trans);
 
     return true;
 }
@@ -2016,13 +1774,9 @@ bool transform(int pow, transformation which_trans, bool involuntary)
 void untransform(bool skip_move)
 {
     const transformation old_form = you.form;
-    const bool was_flying = you.airborne();
 
     if (!form_can_wield(old_form))
         you.received_weapon_warning = false;
-
-    // We may have to unmeld a couple of equipment types.
-    set<equipment_type> melded = _init_equipment_removal(old_form);
 
     const string message = get_form(old_form)->get_untransform_message();
     if (!message.empty())
@@ -2039,25 +1793,28 @@ void untransform(bool skip_move)
     if (dex_mod)
         notify_stat_change(STAT_DEX, -dex_mod, true);
 
+    you.equipment.unmeld_all_equipment();
+
     // If you're a mer in water, boots stay melded even after the form ends.
     if (you.fishtail)
-    {
-        melded.erase(EQ_BOOTS);
-        const item_def* arm = you.slot_item(EQ_BODY_ARMOUR, true);
-        if (arm && is_unrandom_artefact(*arm, UNRAND_LEAR))
-        {
-            // I hate you, King Lear.
-            melded.erase(EQ_HELMET);
-            melded.erase(EQ_GLOVES);
-            melded.erase(EQ_BODY_ARMOUR);
-        }
-    }
-    _unmeld_equipment(melded);
+        you.equipment.meld_equipment(1 << SLOT_BOOTS);
 
     if (old_form == transformation::death)
     {
         _print_death_brand_changes(you.weapon(), false);
         _print_death_brand_changes(you.offhand_weapon(), false);
+    }
+
+    // If the player is no longer be eligible to equip some of the items that
+    // they were wearing (possibly due to losing slots from their default form
+    // changing), calculate that now and make the fall off.
+    vector<item_def*> forced_remove = you.equipment.get_forced_removal_list(true);
+    for (item_def* item : forced_remove)
+    {
+        mprf("%s falls away%s!", item->name(DESC_YOUR).c_str(),
+                item->cursed() ? ", shattering the curse!" : "");
+
+        unequip_item(*item, false);
     }
 
     // Update skill boosts for the current state of equipment melds
@@ -2066,11 +1823,9 @@ void untransform(bool skip_move)
 
     if (!skip_move)
     {
-        // Land the player if we stopped flying.
+        // Activate emergency flight, if we have to.
         if (is_feat_dangerous(env.grid(you.pos())))
             enable_emergency_flight();
-        else if (was_flying && !you.airborne())
-            move_player_to_grid(you.pos(), false);
 
         // Update merfolk swimming for the form change.
         if (you.has_innate_mutation(MUT_MERTAIL))
@@ -2116,7 +1871,7 @@ void return_to_default_form()
         // will refuse to do that on its own)
         if (you.transform_uncancellable)
             untransform(true);
-        transform(0, you.default_form, true);
+        transform(0, you.default_form, true, true);
     }
     ASSERT(you.form == you.default_form);
 }
@@ -2163,9 +1918,10 @@ void merfolk_start_swimming(bool stepped)
     you.fishtail = true;
     you.redraw_evasion = true;
 
-    if (!you.melded[EQ_BOOTS])
+    // Don't meld boots if we're in a form that already melded them.
+    if (!get_form()->slot_is_blocked(SLOT_BOOTS))
     {
-        remove_one_equip(EQ_BOOTS);
+        you.equipment.meld_equipment(1 << SLOT_BOOTS);
         ash_check_bondage();
     }
 
@@ -2182,9 +1938,10 @@ void merfolk_stop_swimming()
     you.fishtail = false;
     you.redraw_evasion = true;
 
-    if (!_init_equipment_removal(you.form).count(EQ_BOOTS))
+    // Don't unmeld boots if we're in a form that would meld them on its own.
+    if (!get_form()->slot_is_blocked(SLOT_BOOTS))
     {
-        unmeld_one_equip(EQ_BOOTS);
+        you.equipment.unmeld_slot(SLOT_BOOTS);
         ash_check_bondage();
     }
 
@@ -2201,7 +1958,7 @@ void unset_default_form()
     you.active_talisman.clear();
 
     if (is_artefact(talisman))
-        unequip_artefact_effect(talisman, nullptr, false, EQ_NONE, false);
+        unequip_artefact_effect(talisman, nullptr, false);
     item_skills(talisman, you.skills_to_hide);
 }
 
@@ -2211,14 +1968,14 @@ void set_default_form(transformation t, const item_def *source)
     you.active_talisman.clear();
 
     if (is_artefact(talisman))
-        unequip_artefact_effect(talisman, nullptr, false, EQ_NONE, false);
+        unequip_artefact_effect(talisman, nullptr, false);
     item_skills(talisman, you.skills_to_hide);
 
     if (source)
     {
         you.active_talisman = *source; // iffy
         if (is_artefact(you.active_talisman))
-            equip_artefact_effect(you.active_talisman, nullptr, false, EQ_NONE);
+            equip_artefact_effect(you.active_talisman, nullptr, false);
         item_skills(you.active_talisman, you.skills_to_show);
     }
 
@@ -2337,10 +2094,10 @@ void describe_talisman_form(transformation form_type, talisman_form_desc &d,
                                             form->ev_bonus(true));
 
     const int body_ac_loss_percent = form->get_base_ac_penalty(100);
-    const bool loses_body_ac = body_ac_loss_percent && you_can_wear(EQ_BODY_ARMOUR) != false;
+    const bool loses_body_ac = body_ac_loss_percent && you_can_wear(SLOT_BODY_ARMOUR) != false;
     if (loses_body_ac)
     {
-        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, false);
+        const item_def *body_armour = you.body_armour();
         const int base_ac = body_armour ? property(*body_armour, PARM_AC) : 0;
         const int ac_penalty = form->get_base_ac_penalty(base_ac);
         const string body_loss = make_stringf("-%d (-%d%% of your body armour's %d base AC)",

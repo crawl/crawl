@@ -56,7 +56,7 @@ static string _future_mutation_description(mutation_type mut, int levels);
 
 struct body_facet_def
 {
-    equipment_type eq;
+    equipment_slot slot;
     mutation_type mut;
 };
 
@@ -92,15 +92,18 @@ COMPILE_CHECK(mutflags::exponent(mutflags::last_exponent) == mutflag::last);
 
 #include "mutation-data.h"
 
+// XXX: Any normal mutation which removes a slot should be in this list, whether
+//      or not it is actually part of a demonspawn facet, as this is used in
+//      code which protects against mutations shattering cursed equipment.
 static const body_facet_def _body_facets[] =
 {
-    { EQ_HELMET, MUT_HORNS },
-    { EQ_HELMET, MUT_ANTENNAE },
-    { EQ_HELMET, MUT_BEAK },
-    { EQ_GLOVES, MUT_CLAWS },
-    { EQ_GLOVES, MUT_DEMONIC_TOUCH },
-    { EQ_BOOTS, MUT_HOOVES },
-    { EQ_CLOAK, MUT_WEAKNESS_STINGER }
+    { SLOT_HELMET, MUT_HORNS },
+    { SLOT_HELMET, MUT_ANTENNAE },
+    { SLOT_HELMET, MUT_BEAK },
+    { SLOT_GLOVES, MUT_CLAWS },
+    { SLOT_GLOVES, MUT_DEMONIC_TOUCH },
+    { SLOT_BOOTS, MUT_HOOVES },
+    { SLOT_CLOAK, MUT_WEAKNESS_STINGER }
 };
 
 vector<mutation_type> get_removed_mutations()
@@ -891,7 +894,7 @@ static vector<string> _get_form_fakemuts(bool terse)
     }
 
     if (you.form == transformation::blade_hands
-        && you_can_wear(EQ_BODY_ARMOUR, false) != false)
+        && you_can_wear(SLOT_BODY_ARMOUR, false) != false)
     {
         const int penalty_percent = form->get_base_ac_penalty(100);
         if (penalty_percent)
@@ -1027,7 +1030,7 @@ static vector<string> _get_fakemuts(bool terse)
 
     if (species::arm_count(you.species) > 2)
     {
-        const bool rings_melded = !get_form()->slot_available(EQ_RING_EIGHT);
+        const bool rings_melded = get_form()->slot_is_blocked(SLOT_RING);
         const int arms = you.arm_count();
         if (terse)
         {
@@ -1750,117 +1753,42 @@ int mut_check_conflict(mutation_type mut, bool innate_only)
     return 0;
 }
 
-/// Does the given mut at the given level block use of the given item? If so, why?
-static string _mut_blocks_item_reason(const item_def &item, mutation_type mut, int level)
+static void _maybe_remove_equipment(mutation_type mut)
 {
-    if (level <= 0) return "";
+    vector<item_def*> to_remove = you.equipment.get_forced_removal_list();
 
-    if (is_unrandom_artefact(item, UNRAND_LEAR))
+    for (item_def* item : to_remove)
     {
-        switch (mut)
+        if (mut == MUT_MISSING_HAND)
         {
-        case MUT_CLAWS:
-        case MUT_DEMONIC_TOUCH:
-            if (level < 3)
-                return "";
-            // XXX: instead say demonic touch would destroy the hauberk?
-            return make_stringf("The hauberk won't fit your %s.",
-                                you.hand_name(true).c_str());
-        case MUT_HORNS:
-        case MUT_ANTENNAE:
-            if (level < 3)
-                return "";
-            return "The hauberk won't fit your head.";
-        default:
-            return "";
+            mprf("You can no longer %s %s!",
+                    item->base_type == OBJ_JEWELLERY ? "wear" : "hold",
+                    item->name(DESC_YOUR).c_str());
         }
-    }
-    switch (get_armour_slot(item))
-    {
-    case EQ_GLOVES:
-        if (level < 3)
-            break;
-        if (mut == MUT_CLAWS)
+        else
         {
-            return make_stringf("You can't wear gloves with your huge claw%s!",
-                                you.arm_count() == 1 ? "" : "s");
+            if (item_is_melded(*item))
+            {
+                mprf("%s is forced from your body%s!",
+                        item->name(DESC_YOUR).c_str(),
+                        item->cursed() ? ", shattering the curse!" : "");
+            }
+            else
+            {
+                mprf("%s falls away%s!", item->name(DESC_YOUR).c_str(),
+                        item->cursed() ? ", shattering the curse!" : "");
+            }
+
+            // A mutation made us not only lose an equipment slot
+            // but actually removed a worn item: Funny!
+            xom_is_stimulated(is_artefact(*item) ? 200 : 100);
         }
-        if (mut == MUT_DEMONIC_TOUCH)
-            return "Your demonic touch would destroy the gloves!";
-        break;
 
-    case EQ_BOOTS:
-        if (mut == MUT_FLOAT)
-            return "You have no feet!"; // or legs
-        if (level < 3 || item.sub_type == ARM_BARDING)
-            break;
-        if (mut == MUT_HOOVES)
-            return "You can't wear boots with hooves!";
-        if (mut == MUT_TALONS)
-            return "Boots don't fit your talons!";
-        break;
-
-    case EQ_HELMET:
-        if (mut == MUT_HORNS && level >= 3)
-            return "You can't wear any headgear with your large horns!";
-        if (mut == MUT_ANTENNAE && level >= 3)
-            return "You can't wear any headgear with your large antennae!";
-        // Soft helmets (caps and wizard hats) always fit, otherwise.
-        // Caps and wizard hats haven't existed for many years, but I find this
-        // comment quaint and wish to preserve it. -- pf
-        if (!is_hard_helmet(item))
-            return "";
-        if (mut == MUT_HORNS)
-            return "You can't wear that with your horns!";
-        if (mut == MUT_BEAK)
-            return "You can't wear that with your beak!";
-        if (mut == MUT_ANTENNAE)
-            return "You can't wear that with your antennae!";
-        break;
-
-    case EQ_CLOAK:
-        if (mut == MUT_WEAKNESS_STINGER && level == 3)
-            return "You can't wear that with your sharp stinger!";
-        break;
-
-    default:
-        break;
+        unequip_item(*item, false);
     }
-    return "";
-}
 
-/**
- * Does the player have a mutation that blocks equipping the given item?
- *
- * @param temp Whether to consider your current form, probably.
- * @return A reason why the item can't be worn, or the empty string if it's fine.
- */
-string mut_blocks_item_reason(const item_def &item, bool temp)
-{
-    for (int i = 0; i < NUM_MUTATIONS; ++i)
-    {
-        const auto mut = (mutation_type)i;
-        const int level = you.get_mutation_level(mut, temp);
-        const string reason = _mut_blocks_item_reason(item, mut, level);
-        if (!reason.empty())
-            return reason;
-    }
-    return "";
-}
-
-static void _maybe_remove_armour(mutation_type mut, int level)
-{
-    for (int i = EQ_MIN_ARMOUR; i <= EQ_BODY_ARMOUR; ++i)
-    {
-        if (you.melded[i])
-            continue;
-        const int slot = you.equip[i];
-        if (slot == -1)
-            continue;
-        if (_mut_blocks_item_reason(you.inv[slot], mut, level).empty())
-            continue;
-        remove_one_equip((equipment_type)i, false, true);
-    }
+    // Update slot counts, even if no item was changed.
+    you.equipment.update();
 }
 
 // Tries to give you the mutation by deleting a conflicting
@@ -1941,14 +1869,14 @@ static int _handle_conflicting_mutations(mutation_type mutation,
     return 0;
 }
 
-static equipment_type _eq_type_for_mut(mutation_type mutat)
+static equipment_slot _eq_type_for_mut(mutation_type mutat)
 {
     if (!is_body_facet(mutat))
-        return EQ_NONE;
+        return SLOT_UNUSED;
     for (const body_facet_def &facet : _body_facets)
         if (mutat == facet.mut)
-            return facet.eq;
-    return EQ_NONE;
+            return facet.slot;
+    return SLOT_UNUSED;
 }
 
 // Make Ashenzari suppress mutations that would shatter your cursed item.
@@ -1957,19 +1885,32 @@ static bool _ashenzari_blocks(mutation_type mutat)
     if (GOD_ASHENZARI != you.religion)
         return false;
 
-    const equipment_type eq_type = _eq_type_for_mut(mutat);
-    if (eq_type == EQ_NONE || you.equip[eq_type] == -1)
+    if (!is_body_facet(mutat))
         return false;
 
-    const item_def &it = you.inv[you.equip[eq_type]];
-    if (!it.cursed())
-        return false;
+    // Temporarily give the player this mutation, then test if doing so would
+    // remove a cursed item.
+    you.mutation[mutat] += 1;
 
-    if (_mut_blocks_item_reason(it, mutat, you.get_mutation_level(mutat) + 1).empty())
+    item_def* cursed_item = nullptr;
+    vector<item_def*> items = you.equipment.get_forced_removal_list();
+    for (item_def* item : items)
+    {
+        if (item->cursed())
+        {
+            cursed_item = item;
+            break;
+        }
+    }
+
+    // Remember to remove it again!
+    you.mutation[mutat] -= 1;
+
+    if (!cursed_item)
         return false;
 
     const string msg = make_stringf(" prevents a mutation which would have shattered %s.",
-                                    it.name(DESC_YOUR).c_str());
+                                    cursed_item->name(DESC_YOUR).c_str());
     simple_god_message(msg.c_str());
     return true;
 }
@@ -1977,13 +1918,13 @@ static bool _ashenzari_blocks(mutation_type mutat)
 /// Do you have an existing mutation in the same body slot? (E.g., gloves, helmet...)
 static bool _body_facet_blocks(mutation_type mutat)
 {
-    const equipment_type eq_type = _eq_type_for_mut(mutat);
-    if (eq_type == EQ_NONE)
+    const equipment_slot eq_type = _eq_type_for_mut(mutat);
+    if (eq_type == SLOT_UNUSED)
         return false;
 
     for (const body_facet_def &facet : _body_facets)
     {
-        if (eq_type == facet.eq
+        if (eq_type == facet.slot
             && mutat != facet.mut
             && you.get_base_mutation_level(facet.mut))
         {
@@ -2462,7 +2403,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             break;
         }
 
-        _maybe_remove_armour(mutat, cur_base_level);
+        _maybe_remove_equipment(mutat);
         ash_check_bondage();
 
         xom_is_stimulated(_calc_mutation_amusement_value(mutat));
@@ -2619,6 +2560,8 @@ static bool _delete_single_mutation_level(mutation_type mutat,
     you.redraw_armour_class = true;
 
     notify_stat_change();
+
+    you.equipment.update();
 
     if (lose_msg)
         mprf(MSGCH_MUTATION, "%s", mdef.lose[you.mutation[mutat]]);
@@ -3200,23 +3143,23 @@ typedef decltype(facet_def().muts) mut_array_t;
 static bool _slot_is_unique(const mut_array_t &mut,
                             set<const facet_def *> facets_used)
 {
-    set<equipment_type> eq;
+    set<equipment_slot> slots;
 
     // find the equipment slot(s) used by mut
     for (const body_facet_def &facet : _body_facets)
     {
         for (mutation_type slotmut : mut)
             if (facet.mut == slotmut)
-                eq.insert(facet.eq);
+                slots.insert(facet.slot);
     }
 
-    if (eq.empty())
+    if (slots.empty())
         return true;
 
     for (const facet_def *used : facets_used)
     {
         for (const body_facet_def &facet : _body_facets)
-            if (facet.mut == used->muts[0] && eq.count(facet.eq))
+            if (facet.mut == used->muts[0] && slots.count(facet.slot))
                 return false;
     }
 

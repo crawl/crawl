@@ -2315,7 +2315,7 @@ static void _do_curse_item(item_def &item)
     mprf("Your %s glows black for a moment.", item.name(DESC_PLAIN).c_str());
     item.flags |= ISFLAG_CURSED;
 
-    if (you.equip[EQ_WEAPON] == item.link)
+    if (item.base_type == OBJ_WEAPONS)
     {
         // Redraw the weapon.
         you.wield_change = true;
@@ -2390,14 +2390,6 @@ bool ashenzari_uncurse_item()
         return false;
     }
 
-    if (is_unrandom_artefact(item, UNRAND_FINGER_AMULET)
-        && you.equip[EQ_RING_AMULET] != -1)
-    {
-        mprf(MSGCH_PROMPT, "You must shatter the curse binding the ring to "
-                           "the amulet's finger first!");
-        return false;
-    }
-
     if (item_is_melded(item))
     {
         mprf(MSGCH_PROMPT, "You cannot shatter the curse on %s while it is "
@@ -2420,7 +2412,7 @@ bool ashenzari_uncurse_item()
 
     mprf("You shatter the curse binding %s!", item.name(DESC_THE).c_str());
     item_skills(item, you.skills_to_hide);
-    unequip_item(item_equip_slot(you.inv[item_slot]));
+    unequip_item(item);
     ash_check_bondage();
 
     you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 0;
@@ -5041,63 +5033,6 @@ static void _extra_sacrifice_code(ability_type sac)
 {
     switch (_get_sacrifice_def(sac).sacrifice)
     {
-    case ABIL_RU_SACRIFICE_HAND:
-    {
-        auto ring_slots = species::ring_slots(you.species, true);
-        equipment_type sac_ring_slot = species::sacrificial_arm(you.species);
-
-        item_def* const shield = you.slot_item(EQ_OFFHAND, true);
-        item_def* const weapon = you.slot_item(EQ_WEAPON, true);
-        item_def* const ring = you.slot_item(sac_ring_slot, true);
-        int ring_inv_slot = you.equip[sac_ring_slot];
-        equipment_type open_ring_slot = EQ_NONE;
-
-        // Drop your shield if there is one
-        if (shield != nullptr)
-        {
-            mprf("You can no longer hold %s!",
-                 shield->name(DESC_YOUR).c_str());
-            unequip_item(EQ_OFFHAND);
-        }
-
-        // And your two-handed weapon
-        if (weapon != nullptr)
-        {
-            if (you.hands_reqd(*weapon) == HANDS_TWO)
-            {
-                mprf("You can no longer hold %s!",
-                     weapon->name(DESC_YOUR).c_str());
-                unequip_item(EQ_WEAPON);
-            }
-        }
-
-        // And one ring
-        if (ring != nullptr)
-        {
-            // XX does not handle an open slot on the finger amulet
-            for (const auto &eq : ring_slots)
-                if (!you.slot_item(eq, true))
-                {
-                    open_ring_slot = eq;
-                    break;
-                }
-
-            const bool can_keep = open_ring_slot != EQ_NONE;
-
-            mprf("You can no longer wear %s!",
-                 ring->name(DESC_YOUR).c_str());
-            unequip_item(sac_ring_slot, true, can_keep);
-            if (can_keep)
-            {
-                mprf("You put %s back on %s %s!",
-                     ring->name(DESC_YOUR).c_str(),
-                     (ring_slots.size() > 1 ? "another" : "your other"),
-                     you.hand_name(true).c_str());
-                equip_item(open_ring_slot, ring_inv_slot, false, true);
-            }
-        }
-        break;
-    }
     case ABIL_RU_SACRIFICE_EXPERIENCE:
         level_change();
         break;

@@ -4,7 +4,6 @@
 
 #include "enum.h"
 #include "ability-type.h"
-#include "equipment-type.h"
 #include "item-prop-enum.h"
 #include "job-type.h"
 #include "size-part-type.h"
@@ -70,9 +69,6 @@ namespace species
     string arm_name(species_type species);
     string hand_name(species_type species);
     int arm_count(species_type species);
-    equipment_type sacrificial_arm(species_type species);
-    bool bans_eq(species_type species, equipment_type eq);
-    vector<equipment_type> ring_slots(species_type species, bool missing_hand);
 
     int get_exp_modifier(species_type species);
     int get_hp_modifier(species_type species);

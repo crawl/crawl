@@ -3103,17 +3103,7 @@ static void _xom_fog(int /*sever*/)
 
 static item_def* _xom_get_random_worn_ring()
 {
-    item_def* item;
-    vector<item_def*> worn_rings;
-
-    for (int slots = EQ_FIRST_JEWELLERY; slots <= EQ_LAST_JEWELLERY; slots++)
-    {
-        if (slots == EQ_AMULET)
-            continue;
-
-        if (item = you.slot_item(static_cast<equipment_type>(slots)))
-            worn_rings.push_back(item);
-    }
+    vector<item_def*> worn_rings = you.equipment.get_slot_items(SLOT_RING);
 
     if (worn_rings.empty())
         return nullptr;
@@ -3260,7 +3250,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
 
     if (get_form()->flesh_equivalent.empty()
         && starts_with(species::skin_name(you.species), "bandage")
-        && you_can_wear(EQ_BODY_ARMOUR, true) != false)
+        && you_can_wear(SLOT_BODY_ARMOUR, true) != false)
     {
         string str = _get_xom_speech(
                 (!you.airborne() && !you.swimming()) ? "floor bandages"
@@ -3340,10 +3330,9 @@ static void _xom_pseudo_miscast(int /*sever*/)
     ///////////////////////////
     // Equipment related stuff.
 
-    if (you_can_wear(EQ_WEAPON, true) != false
-        && !you.slot_item(EQ_WEAPON))
+    if (you_can_wear(SLOT_WEAPON, true) != false && !you.weapon())
     {
-        const bool one_handed = you.slot_item(EQ_OFFHAND)
+        const bool one_handed = you.equipment.get_first_slot_item(SLOT_OFFHAND)
                                 || you.get_mutation_level(MUT_MISSING_HAND);
         string str = _get_xom_speech(one_handed ? "unarmed one hand"
                                                 : "unarmed two hands");
@@ -3354,7 +3343,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
-    if (item_def* item = you.slot_item(EQ_CLOAK))
+    if (item_def* item = you.equipment.get_first_slot_item(SLOT_CLOAK))
     {
         string name = "your " + item->name(DESC_BASENAME, false, false, false);
         string str = _get_xom_speech("cloak slot");
@@ -3365,7 +3354,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
-    if (item_def* item = you.slot_item(EQ_HELMET))
+    if (item_def* item = you.equipment.get_first_slot_item(SLOT_HELMET))
     {
         string name = "your " + item->name(DESC_BASENAME, false, false, false);
         string str = _get_xom_speech("helmet slot");
@@ -3376,7 +3365,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
-    if (item_def* item = you.slot_item(EQ_OFFHAND))
+    if (item_def* item = you.equipment.get_first_slot_item(SLOT_OFFHAND))
     {
         string name = "your " + item->name(DESC_BASENAME, false, false, false);
         string str = _get_xom_speech("offhand slot");
@@ -3387,7 +3376,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
-    if (item_def* item = you.slot_item(EQ_GLOVES))
+    if (item_def* item = you.equipment.get_first_slot_item(SLOT_GLOVES))
     {
         string gloves_name = item->name(DESC_BASENAME, false, false, false);
         // XXX: If the gloves' name doesn't start with "pair of", make it do so,
@@ -3406,7 +3395,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
-    if (item_def* item = you.slot_item(EQ_BOOTS))
+    if (item_def* item = you.equipment.get_first_slot_item(SLOT_LOWER_BODY))
     {
         string name = "your " + item->name(DESC_BASENAME, false, false, false);
         string str = _get_xom_speech("boots slot");
@@ -3417,7 +3406,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
-    if (item_def* item = you.slot_item(EQ_GIZMO))
+    if (item_def* item = you.equipment.get_first_slot_item(SLOT_GIZMO))
     {
         string name = "your " + item->name(DESC_BASENAME, false, false, false);
         string str = _get_xom_speech("gizmo slot");
@@ -3440,26 +3429,8 @@ static void _xom_pseudo_miscast(int /*sever*/)
         string ring_holder_singular;
         string ring_holder_plural;
 
-        // The ring on the amulet slot is on a neck/mantle, not a hand.
-        if (item == you.slot_item(EQ_RING_AMULET))
-        {
-            // XXX: Logic duplicated from item_def::name().
-            if (you.species == SP_OCTOPODE && form_keeps_mutations())
-            {
-                ring_holder_singular = "mantle";
-                ring_holder_plural = "mantles";
-            }
-            else
-            {
-                ring_holder_singular = "neck";
-                ring_holder_plural = "necks";
-            }
-        }
-        else
-        {
-            ring_holder_singular = you.hand_name(false);
-            ring_holder_plural = you.hand_name(true);
-        }
+        ring_holder_singular = you.hand_name(false);
+        ring_holder_plural = you.hand_name(true);
 
         str = replace_all(str, "@hand@", ring_holder_singular);
         str = replace_all(str, "@hands@", ring_holder_plural);
@@ -3467,7 +3438,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
-    if (item_def* item = you.slot_item(EQ_BODY_ARMOUR))
+    if (item_def* item = you.body_armour())
     {
         string name = "your " + item->name(DESC_BASENAME, false, false, false);
         string str;

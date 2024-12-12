@@ -293,24 +293,19 @@ static string _describe_ash_skill_boost()
     desc << setw(30) << "Curse bonuses";
     desc << "</white>\n";
 
-    for (int j = EQ_FIRST_EQUIP; j < NUM_EQUIP; j++)
+    vector<item_def*> eq = you.equipment.get_slot_items(SLOT_ALL_EQUIPMENT, true);
+    for (item_def* item : eq)
     {
-        const equipment_type i = static_cast<equipment_type>(j);
-        if (you.equip[i] != -1)
+        if (item->cursed())
         {
-            const item_def& item = you.inv[you.equip[i]];
-            const bool meld = item_is_melded(item);
-            if (item.cursed())
-            {
-                desc << (meld ? "<darkgrey>" : "<lightred>");
-                desc << setw(40) << item.name(DESC_QUALNAME, true, false, false);
-                desc << setw(30) << (meld ? "melded" : _describe_item_curse(item));
-                desc << (meld ? "</darkgrey>" : "</lightred>");
-                desc << "\n";
-            }
+            const bool meld = item_is_melded(*item);
+            desc << (meld ? "<darkgrey>" : "<lightred>");
+            desc << setw(40) << item->name(DESC_QUALNAME, true, false, false);
+            desc << setw(30) << (meld ? "melded" : _describe_item_curse(*item));
+            desc << (meld ? "</darkgrey>" : "</lightred>");
+            desc << "\n";
         }
     }
-
 
     return desc.str();
 }

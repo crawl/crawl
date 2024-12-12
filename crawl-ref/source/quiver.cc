@@ -363,7 +363,8 @@ namespace quiver
 
         int get_item() const override
         {
-            return you.equip[EQ_WEAPON];
+            const item_def* wpn = you.weapon();
+            return wpn ? wpn->link : -1;
         };
 
         string quiver_verb() const override
@@ -758,7 +759,8 @@ namespace quiver
 
         int get_item() const override
         {
-            return you.equip[EQ_WEAPON];
+            const item_def* wpn = you.weapon();
+            return wpn ? wpn->link : -1;
         };
 
         vector<shared_ptr<action>> get_fire_order(bool allow_disabled=true, bool=false) const override
@@ -996,27 +998,15 @@ namespace quiver
 
     bool toss_validate_item(int slot, string *err)
     {
-        // misc tossing restrictions go here
-
-        // No tossing cursed weapons.
-        // this check would be safe to remove, but it's useful for
-        // messaging purposes to see that the action is invalid. (It's
-        // otherwise handled by the unwield call.)
-        if (slot == you.equip[EQ_WEAPON]
-            && is_weapon(you.inv[slot])
-            && you.inv[slot].cursed())
-        {
-            if (err)
-                *err = "That weapon is stuck to your " + you.hand_name(false) + "!";
-            return false;
-        }
-
         // make people manually take stuff off if they want to toss it
-        // (weapons are still ok for some reason)
         if (item_is_worn(slot))
         {
             if (err)
-                *err = "You are wearing that object!";
+            {
+                *err = make_stringf("You are %s that object!",
+                            you.inv[slot].base_type == OBJ_WEAPONS ? "wielding"
+                                                                   : "wearing");
+            }
             return false;
         }
         return true;
@@ -3117,7 +3107,7 @@ namespace quiver
     {
         if (Options.launcher_autoquiver && you.weapon()
             && is_range_weapon(*you.weapon())
-            && _fireorder_inscription_ok(you.equip[EQ_WEAPON], false) != false)
+            && _fireorder_inscription_ok(you.weapon()->link, false) != false)
         {
             you.quiver_action.set(get_primary_action());
         }

@@ -365,7 +365,7 @@ bool melee_attack::handle_phase_dodged()
                     return false;
             }
 
-            if (defender->is_player() && player_equip_unrand(UNRAND_STARLIGHT))
+            if (defender->is_player() && you.unrand_equipped(UNRAND_STARLIGHT))
                 do_starlight();
         }
 
@@ -386,7 +386,7 @@ void melee_attack::maybe_riposte()
     // monsters can't use
     const bool using_fencers =
                 defender->is_player()
-                    && player_equip_unrand(UNRAND_FENCERS)
+                    && you.unrand_equipped(UNRAND_FENCERS)
                     && (!defender->weapon()
                         || is_melee_weapon(*defender->weapon()));
     if (using_fencers
@@ -530,7 +530,7 @@ void melee_attack::try_parry_disarm()
         && defender->is_monster()
         && defender->alive()
         && you.rev_percent() > FULL_REV_PERCENT
-        && you.wearing_ego(EQ_GIZMO, SPGIZMO_PARRYREV)
+        && you.wearing_ego(OBJ_GIZMOS, SPGIZMO_PARRYREV)
         && one_chance_in(50 + defender->get_experience_level() * 2
                          - you.get_experience_level()))
     {
@@ -787,7 +787,7 @@ bool melee_attack::handle_phase_damaged()
 
     if (attacker->is_player())
     {
-        if (player_equip_unrand(UNRAND_POWER_GLOVES))
+        if (you.unrand_equipped(UNRAND_POWER_GLOVES))
             inc_mp(div_rand_round(damage_done, 8));
         if (you.form == transformation::death && defender->alive()
             && defender->is_monster())
@@ -2845,7 +2845,7 @@ bool melee_attack::player_good_stab()
 {
     return wpn_skill == SK_SHORT_BLADES
            || you.get_mutation_level(MUT_PAWS)
-           || player_equip_unrand(UNRAND_HOOD_ASSASSIN)
+           || you.unrand_equipped(UNRAND_HOOD_ASSASSIN)
               && (!weapon || is_melee_weapon(*weapon));
 }
 
@@ -3081,7 +3081,7 @@ bool melee_attack::mons_attack_effects()
         const bool slippery = defender->is_player()
                           && adjacent(attacker->pos(), defender->pos())
                           && !player_stair_delay() // feet otherwise occupied
-                          && player_equip_unrand(UNRAND_SLICK_SLIPPERS);
+                          && you.unrand_equipped(UNRAND_SLICK_SLIPPERS);
         if (attacker != defender && !is_projected
             && (attk_flavour == AF_TRAMPLE
                 || slippery && attk_flavour != AF_DRAG))

@@ -378,24 +378,8 @@ bool dec_inv_item_quantity(int obj, int amount)
 {
     bool ret = false;
 
-    if (you.equip[EQ_WEAPON] == obj)
-        you.wield_change = true;
-
     if (you.inv[obj].quantity <= amount)
     {
-        for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; i++)
-        {
-            if (you.equip[i] == obj)
-            {
-                if (i == EQ_WEAPON)
-                {
-                    unwield_item(*you.weapon());
-                    canned_msg(MSG_EMPTY_HANDED_NOW);
-                }
-                you.equip[i] = -1;
-            }
-        }
-
         item_skills(you.inv[obj], you.skills_to_hide);
 
         you.inv[obj].base_type = OBJ_UNASSIGNED;
@@ -446,8 +430,6 @@ bool dec_mitm_item_quantity(int obj, int amount, bool player_action)
 
 void inc_inv_item_quantity(int obj, int amount)
 {
-    if (you.equip[EQ_WEAPON] == obj)
-        you.wield_change = true;
     you.inv[obj].quantity += amount;
 }
 
@@ -2648,7 +2630,6 @@ static bool _check_dangerous_drop(const item_def & item)
  */
 bool drop_item(int item_dropped, int quant_drop)
 {
-
     item_def &item = you.inv[item_dropped];
 
     if (quant_drop < 0 || quant_drop > item.quantity)
@@ -2657,99 +2638,31 @@ bool drop_item(int item_dropped, int quant_drop)
     if (!_check_dangerous_drop(item))
         return false;
 
-    if (item_dropped == you.equip[EQ_GIZMO])
+    if (item_is_equipped(item))
     {
-        mpr("That is permanently installed in your exoskeleton.");
-        return false;
-    }
+        if (item.base_type == OBJ_GIZMOS)
+        {
+            mpr("That is permanently installed in your exoskeleton.");
+            return false;
+        }
 
-    if (item_dropped == you.equip[EQ_LEFT_RING]
-     || item_dropped == you.equip[EQ_RIGHT_RING]
-     || item_dropped == you.equip[EQ_AMULET]
-     || item_dropped == you.equip[EQ_RING_ONE]
-     || item_dropped == you.equip[EQ_RING_TWO]
-     || item_dropped == you.equip[EQ_RING_THREE]
-     || item_dropped == you.equip[EQ_RING_FOUR]
-     || item_dropped == you.equip[EQ_RING_FIVE]
-     || item_dropped == you.equip[EQ_RING_SIX]
-     || item_dropped == you.equip[EQ_RING_SEVEN]
-     || item_dropped == you.equip[EQ_RING_EIGHT]
-     || item_dropped == you.equip[EQ_RING_AMULET])
-    {
-        if (!Options.easy_unequip)
-            mpr("You will have to take that off first.");
-        else if (remove_ring(item_dropped, true))
+        const bool is_wpn = is_weapon(item);
+        if (!Options.easy_unequip && !is_wpn)
+        {
+            mprf(MSGCH_PROMPT, "You will have to take that off first.");
+            return false;
+        }
+
+        if (try_unequip_item(item))
         {
             // The delay handles the case where the item disappeared.
             start_delay<DropItemDelay>(1, item);
-            // We didn't actually succeed yet, but remove_ring took time,
-            // so return true anyway.
+            // We didn't actually finish yet, but try_unequip_item either took
+            // time or queued up delays, so return true.
             return true;
         }
-
-        return false;
-    }
-
-    if (item_dropped == you.equip[EQ_WEAPON]
-        && item.base_type == OBJ_WEAPONS && item.cursed())
-    {
-        mprf("%s is stuck to you!", item.name(DESC_THE).c_str());
-        return false;
-    }
-
-    if (you.has_mutation(MUT_SLOW_WIELD)
-        && is_weapon(item)
-        && (you.equip[EQ_WEAPON] == item_dropped
-            || you.equip[EQ_OFFHAND] == item_dropped))
-    {
-        if (!Options.easy_unequip)
-        {
-            mpr("You will have to unwield that first.");
+        else
             return false;
-        }
-        if (!unwield_weapon(item))
-            return false;
-        start_delay<DropItemDelay>(1, item);
-        return true;
-    }
-
-    for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; i++)
-    {
-        if (item_dropped == you.equip[i] && you.equip[i] != -1)
-        {
-            if (!Options.easy_unequip)
-                mpr("You will have to take that off first.");
-            else if (check_warning_inscriptions(item, OPER_TAKEOFF))
-            {
-                // If we take off the item, cue up the item being dropped
-                if (takeoff_armour(item_dropped))
-                {
-                    // The delay handles the case where the item disappeared.
-                    start_delay<DropItemDelay>(1, item);
-                    // We didn't actually succeed yet, but takeoff_armour
-                    // took a turn to start up, so return true anyway.
-                    return true;
-                }
-            }
-            return false;
-        }
-    }
-
-    // [ds] easy_unequip does not apply to weapons.
-    //
-    // Unwield needs to be done before copy in order to clear things
-    // like temporary brands. -- bwr
-    if (item_dropped == you.equip[EQ_WEAPON] && quant_drop >= item.quantity)
-    {
-        // Dropping a held weapon is not faster than dropping other items.
-        // Though I suppose it'd be fine if it was, really.
-        unwind_var<int> reset_speed(you.time_taken, you.time_taken);
-        if (!wield_weapon(SLOT_BARE_HANDS))
-            return false;
-        // May have been destroyed by removal. Returning true because we took
-        // time to swap away.
-        else if (!item.defined())
-            return true;
     }
 
     ASSERT(item.defined());
@@ -2805,31 +2718,6 @@ void drop_last()
     }
 }
 
-/** Get the equipment slot an item is equipped in. If the item is not
- * equipped by the player, return -1 instead.
- *
- * @param item The item to check.
- *
- * @returns The equipment slot (equipment_type) the item is in or -1
- * (EQ_NONE)
-*/
-int get_equip_slot(const item_def *item)
-{
-    int worn = -1;
-    if (item && in_inventory(*item))
-    {
-        for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
-        {
-            if (you.equip[i] == item->link)
-            {
-                worn = i;
-                break;
-            }
-        }
-    }
-    return worn;
-}
-
 mon_inv_type get_mon_equip_slot(const monster* mon, const item_def &item)
 {
     ASSERT(mon->alive());
@@ -2853,24 +2741,15 @@ mon_inv_type get_mon_equip_slot(const monster* mon, const item_def &item)
 static vector<SelItem> items_for_multidrop;
 
 // Arrange items that have been selected for multidrop so that
-// equipped items are dropped after other items, and equipped items
-// are dropped in the same order as their EQ_ slots are numbered.
+// equipped items are dropped after other items.
 static bool _drop_item_order(const SelItem &first, const SelItem &second)
 {
-    const item_def &i1 = you.inv[first.slot];
-    const item_def &i2 = you.inv[second.slot];
-
-    const int slot1 = get_equip_slot(&i1),
-              slot2 = get_equip_slot(&i2);
-
-    if (slot1 != -1 && slot2 != -1)
-        return slot1 < slot2;
-    else if (slot1 != -1 && slot2 == -1)
+    if (item_is_equipped(you.inv[first.slot]))
         return false;
-    else if (slot2 != -1 && slot1 == -1)
+    else if (item_is_equipped(you.inv[second.slot]))
         return true;
-
-    return first.slot < second.slot;
+    else
+        return first.slot < second.slot;
 }
 
 void set_item_autopickup(const item_def &item, autopickup_level_type ap)
@@ -2932,10 +2811,7 @@ void drop()
 
 static void _multidrop(vector<SelItem> tmp_items)
 {
-    // Sort the dropped items so we don't see weird behaviour when
-    // dropping a worn robe before a cloak (old behaviour: remove
-    // cloak, remove robe, wear cloak, drop robe, remove cloak, drop
-    // cloak).
+    // Sort the dropped items so that we drop unequipped items first.
     sort(tmp_items.begin(), tmp_items.end(), _drop_item_order);
 
     // If the user answers "no" to an item an with a warning inscription,
@@ -3189,9 +3065,9 @@ static bool _identical_types(const item_def& pickup_item,
 static bool _similar_equip(const item_def& pickup_item,
                            const item_def& inv_item)
 {
-    const equipment_type inv_slot = get_item_slot(inv_item);
+    const equipment_slot inv_slot = get_item_slot(inv_item);
 
-    if (inv_slot == EQ_NONE)
+    if (inv_slot == SLOT_UNUSED)
         return false;
 
     if (get_item_slot(pickup_item) != inv_slot)
@@ -3484,29 +3360,24 @@ int get_max_subtype(object_class_type base_type)
     return max_subtype[base_type];
 }
 
-equipment_type item_equip_slot(const item_def& item)
+equipment_slot item_equip_slot(const item_def& item)
 {
     if (!item.defined() || !in_inventory(item))
-        return EQ_NONE;
+        return SLOT_UNUSED;
 
-    for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; i++)
-        if (item.link == you.equip[i])
-            return static_cast<equipment_type>(i);
-
-    return EQ_NONE;
+    return you.equipment.find_equipped_slot(item);
 }
 
 // Includes melded items.
 bool item_is_equipped(const item_def &item, bool quiver_too)
 {
-    return item_equip_slot(item) != EQ_NONE
+    return item_equip_slot(item) != SLOT_UNUSED
            || quiver_too && you.quiver_action.item_is_quivered(item);
 }
 
 bool item_is_melded(const item_def& item)
 {
-    equipment_type eq = item_equip_slot(item);
-    return eq != EQ_NONE && you.melded[eq];
+    return you.equipment.is_melded(item);
 }
 
 ////////////////////////////////////////////////////////////////////////

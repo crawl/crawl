@@ -356,22 +356,18 @@ static void _dump_player(FILE *file)
     fprintf(file, "\n");
 
     fprintf(file, "Equipment:\n");
-    for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
+    for (player_equip_entry& entry : you.equipment.items)
     {
-        int8_t eq = you.equip[i];
-
-        if (eq == -1)
-            continue;
-
-        fprintf(file, "    eq slot #%d, inv slot #%d", i, (int) eq);
-        if (eq < 0 || eq >= ENDOFPACK)
+        fprintf(file, "    eq slot #%d, inv slot #%d", entry.slot, entry.item);
+        if (entry.item < 0 || entry.item >= ENDOFPACK)
         {
             fprintf(file, " <invalid>\n");
             continue;
         }
-        fprintf(file, ": %s%s\n",
-                you.inv[eq].name(DESC_PLAIN, false, true).c_str(),
-                you.melded[i] ? "(melded)" : "");
+        fprintf(file, ": %s%s%s\n",
+                entry.get_item().name(DESC_PLAIN, false, true).c_str(),
+                entry.melded ? "(melded)" : "",
+                entry.is_overflow ? "(overflow)" : "");
     }
     fprintf(file, "\n");
 

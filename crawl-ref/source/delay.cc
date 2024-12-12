@@ -207,7 +207,7 @@ bool EquipOffDelay::try_interrupt(bool force)
     {
         const bool is_armour = equip.base_type == OBJ_ARMOUR
                                // Shields and orbs aren't clothes.
-                               && get_armour_slot(equip) != EQ_OFFHAND;
+                               && get_armour_slot(equip) != SLOT_OFFHAND;
         const char* verb = is_armour ? "disrobing" : "removing your equipment";
         const string prompt = make_stringf("Keep %s?", verb);
         if (!crawl_state.disables[DIS_CONFIRMATIONS]
@@ -686,14 +686,6 @@ void MultidropDelay::tick()
     items.erase(items.begin());
 }
 
-void JewelleryOnDelay::tick()
-{
-    // This is a 1-turn delay where the time cost is handled
-    // in finish().
-    // FIXME: get rid of this hack!
-    you.time_taken = 0;
-}
-
 void DropItemDelay::tick()
 {
     // This is a 1-turn delay where the time cost is handled
@@ -757,32 +749,6 @@ void handle_delay()
     delay->handle();
 }
 
-void JewelleryOnDelay::finish()
-{
-    // Recheck -Tele here, since our condition may have changed since starting
-    // the amulet swap process.
-    // Just breaking here is okay because swapping jewellery is a one-turn
-    // action, so conceptually there is nothing to interrupt - in other words,
-    // this is equivalent to if the user took off the previous amulet and was
-    // affected by tele other before putting the -Tele amulet on as a separate
-    // action on the next turn.
-    // XXX: duplicates a check in invent.cc:check_warning_inscriptions()
-    if (!crawl_state.disables[DIS_CONFIRMATIONS]
-        && needs_notele_warning(jewellery, OPER_PUTON))
-    {
-        string prompt = "Really put on ";
-        prompt += jewellery.name(DESC_INVENTORY);
-        prompt += " while about to teleport?";
-        if (!yesno(prompt.c_str(), false, 'n'))
-            return;
-    }
-
-#ifdef USE_SOUND
-    parse_sound(WEAR_JEWELLERY_SOUND);
-#endif
-    puton_ring(jewellery, false, false, true);
-}
-
 bool EquipOnDelay::invalidated()
 {
     return !equip.defined();
@@ -790,30 +756,12 @@ bool EquipOnDelay::invalidated()
 
 void EquipOnDelay::finish()
 {
-    const unsigned int old_talents = your_talents(false).size();
-    const bool is_amulet = equip.base_type == OBJ_JEWELLERY;
-    const equipment_type eq_slot = is_amulet ?      EQ_AMULET :
-                                   primary_weapon ? EQ_WEAPON :
-                                                    get_armour_slot(equip);
-
-#ifdef USE_SOUND
-    if (is_weapon(equip))
-        parse_sound(WIELD_WEAPON_SOUND);
-    else if (!is_amulet)
-        parse_sound(EQUIP_ARMOUR_SOUND);
-#endif
     mprf("You finish %s %s.", get_verb(), equip.name(DESC_YOUR).c_str());
 
-    equip_item(eq_slot, equip.link);
-
-    check_item_hint(equip, old_talents);
-
-    if (is_weapon(equip))
-    {
+    if (is_weapon(equip) && you.has_mutation(MUT_SLOW_WIELD))
         maybe_name_weapon(equip);
-        you.wield_change  = true;
-        quiver::on_weapon_changed();
-    }
+
+    equip_item(slot, equip.link);
 }
 
 bool EquipOffDelay::invalidated()
@@ -823,30 +771,8 @@ bool EquipOffDelay::invalidated()
 
 void EquipOffDelay::finish()
 {
-    const bool is_amu = equip.base_type == OBJ_JEWELLERY;
-    const equipment_type slot = is_amu ?         EQ_AMULET :
-                                primary_weapon ? EQ_WEAPON :
-                                                 get_armour_slot(equip);
-    ASSERTM(you.equip[slot] == equip.link,
-        "Mismatched link in EquipOffDelay::finish: slot is %d with link %d, link is %d",
-        slot, you.equip[slot], equip.link);
-
-#ifdef USE_SOUND
-    parse_sound(is_amu ?           REMOVE_JEWELLERY_SOUND :
-                is_weapon(equip) ? WIELD_NOTHING_SOUND :
-                                   DEQUIP_ARMOUR_SOUND);
-#endif
-    if (is_weapon(equip))
-        say_farewell_to_weapon(equip);
-
     mprf("You finish %s %s.", get_verb(), equip.name(DESC_YOUR).c_str());
-    unequip_item(slot);
-
-    if (is_weapon(equip))
-    {
-        you.wield_change  = true;
-        quiver::on_weapon_changed();
-    }
+    unequip_item(equip);
 }
 
 void MemoriseDelay::finish()
@@ -1010,8 +936,8 @@ void TransformDelay::finish()
 {
     if (form == transformation::none)
     {
-        untransform();
         unset_default_form();
+        untransform();
         return;
     }
 

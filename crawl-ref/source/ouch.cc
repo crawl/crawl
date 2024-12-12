@@ -577,7 +577,7 @@ static void _maybe_spawn_rats(int dam, kill_method_type death_type)
 {
     if (dam <= 0
         || death_type == KILLED_BY_POISON
-        || !player_equip_unrand(UNRAND_RATSKIN_CLOAK))
+        || !you.unrand_equipped(UNRAND_RATSKIN_CLOAK))
     {
         return;
     }
@@ -1128,7 +1128,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             return;
         // the dreamshard necklace protects from any fatal blow or death source
         // that death's door would protect from.
-        else if (player_equip_unrand(UNRAND_DREAMSHARD_NECKLACE)
+        else if (you.unrand_equipped(UNRAND_DREAMSHARD_NECKLACE)
                  && dam >= you.hp)
         {
             dreamshard_shatter();

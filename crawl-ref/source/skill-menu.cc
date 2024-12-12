@@ -507,7 +507,7 @@ static bool _any_crosstrained()
 
 static bool _charlatan_bonus()
 {
-    if (player_equip_unrand(UNRAND_CHARLATANS_ORB)
+    if (you.unrand_equipped(UNRAND_CHARLATANS_ORB)
         && you.skill(SK_EVOCATIONS, 10, true) > 0)
     {
         return true;
@@ -517,7 +517,7 @@ static bool _charlatan_bonus()
 
 static bool _hermit_bonus()
 {
-    if (player_equip_unrand(UNRAND_HERMITS_PENDANT)
+    if (you.unrand_equipped(UNRAND_HERMITS_PENDANT)
         && you.skill(SK_INVOCATIONS, 10,  true) < 140)
     {
         return true;
@@ -527,7 +527,7 @@ static bool _hermit_bonus()
 
 static bool _hermit_penalty()
 {
-    if (player_equip_unrand(UNRAND_HERMITS_PENDANT))
+    if (you.unrand_equipped(UNRAND_HERMITS_PENDANT))
     {
         if (you.skill(SK_EVOCATIONS, 10, true) > 0
             || you.skill(SK_INVOCATIONS, 10, true) > 140)

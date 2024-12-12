@@ -857,8 +857,8 @@ bool string_matches_ability_name(const string& key)
 
 static bool _invis_causes_drain()
 {
-    return !player_equip_unrand(UNRAND_AMULET_INVISIBILITY)
-               && !player_equip_unrand(UNRAND_SCARF_INVISIBILITY);
+    return !you.unrand_equipped(UNRAND_AMULET_INVISIBILITY)
+               && !you.unrand_equipped(UNRAND_SCARF_INVISIBILITY);
 }
 
 /**
@@ -1838,42 +1838,6 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return false;
     }
 
-    // Doing these would outright kill the player.
-    // (or, in the case of the stat-zeros, they'd at least be extremely
-    // dangerous.)
-    if (abil.ability == ABIL_END_TRANSFORMATION
-        || abil.ability == ABIL_BEGIN_UNTRANSFORM)
-    {
-        const auto form = abil.ability == ABIL_END_TRANSFORMATION ?
-                            you.default_form : transformation::none;
-        if (feat_dangerous_for_form(form, env.grid(you.pos())))
-        {
-            if (!quiet)
-            {
-                mprf("Turning back right now would cause you to %s!",
-                    env.grid(you.pos()) == DNGN_LAVA ? "burn" : "drown");
-            }
-
-            return false;
-        }
-    }
-    else if ((abil.ability == ABIL_EXSANGUINATE
-              || abil.ability == ABIL_REVIVIFY)
-            && you.form != transformation::none)
-    {
-        if (feat_dangerous_for_form(transformation::none, env.grid(you.pos())))
-        {
-            if (!quiet)
-            {
-                mprf("Becoming %s right now would cause you to %s!",
-                    abil.ability == ABIL_EXSANGUINATE ? "bloodless" : "alive",
-                    env.grid(you.pos()) == DNGN_LAVA ? "burn" : "drown");
-            }
-
-            return false;
-        }
-    }
-
     if (abil.ability == ABIL_TROG_BERSERK
         && !you.can_go_berserk(true, false, quiet))
     {
@@ -2523,24 +2487,6 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     }
 }
 
-static bool _check_ability_dangerous(const ability_type ability,
-                                     bool quiet = false)
-{
-    if (ability == ABIL_TRAN_BAT)
-        return !check_form_stat_safety(transformation::bat, quiet);
-    if (ability == ABIL_END_TRANSFORMATION
-        && !feat_dangerous_for_form(you.default_form, env.grid(you.pos())))
-    {
-        return !check_form_stat_safety(you.default_form, quiet);
-    }
-    if (ability == ABIL_BEGIN_UNTRANSFORM
-        && !feat_dangerous_for_form(transformation::none, env.grid(you.pos())))
-    {
-        return !check_form_stat_safety(transformation::none, quiet);
-    }
-    return false;
-}
-
 bool check_ability_possible(const ability_type ability, bool quiet)
 {
     return _check_ability_possible(get_ability_def(ability), quiet);
@@ -2774,7 +2720,7 @@ bool activate_talent(const talent& tal, dist *target)
     if (!target)
         target = &target_local;
 
-    if (_check_ability_dangerous(abil.ability) || !_check_ability_possible(abil))
+    if (!_check_ability_possible(abil))
     {
         crawl_state.zero_turns_taken();
         return false;
@@ -3343,10 +3289,22 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         break;
 
     case ABIL_END_TRANSFORMATION:
+        if (feat_dangerous_for_form(you.default_form, env.grid(you.pos())))
+        {
+            mprf("Turning back right now would cause you to %s!",
+                    env.grid(you.pos()) == DNGN_LAVA ? "burn" : "drown");
+            return spret::abort;
+        }
         return_to_default_form();
         break;
 
     case ABIL_BEGIN_UNTRANSFORM:
+        if (feat_dangerous_for_form(transformation::none, env.grid(you.pos())))
+        {
+            mprf("Turning back right now would cause you to %s!",
+                    env.grid(you.pos()) == DNGN_LAVA ? "burn" : "drown");
+            return spret::abort;
+        }
         if (!i_feel_safe(true) && !yesno("Still begin untransforming?", true, 'n'))
         {
             canned_msg(MSG_OK);
@@ -3789,10 +3747,21 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         break;
 
     case ABIL_EXSANGUINATE:
+        if (feat_dangerous_for_form(transformation::none, env.grid(you.pos())))
+        {
+            mprf("Becoming bloodless right now would cause you to %s!",
+                    env.grid(you.pos()) == DNGN_LAVA ? "burn" : "drown");
+            return spret::abort;
+        }
         start_delay<ExsanguinateDelay>(5);
         break;
 
     case ABIL_REVIVIFY:
+        if (feat_dangerous_for_form(transformation::none, env.grid(you.pos())))
+        {
+            mprf("Becoming alive right now would cause you to %s!",
+                    env.grid(you.pos()) == DNGN_LAVA ? "burn" : "drown");
+        }
         start_delay<RevivifyDelay>(5);
         break;
 
@@ -4147,8 +4116,6 @@ int choose_ability_menu(const vector<talent>& talents)
                 me->colour = COL_INAPPLICABLE;
                 me->add_tile(tile_def(TILEI_MESH));
             }
-            else if (_check_ability_dangerous(talents[i].which, true))
-                me->colour = COL_DANGEROUS;
             abil_menu.add_entry(me);
         }
     }
@@ -4177,8 +4144,6 @@ int choose_ability_menu(const vector<talent>& talents)
                     me->colour = COL_INAPPLICABLE;
                     me->add_tile(tile_def(TILEI_MESH));
                 }
-                else if (_check_ability_dangerous(talents[i].which, true))
-                    me->colour = COL_DANGEROUS;
                 abil_menu.add_entry(me);
             }
         }
@@ -4331,10 +4296,10 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         return you.evokable_invis()
                && !you.get_mutation_level(MUT_NO_ARTIFICE);
     case ABIL_EVOKE_DISPATER:
-        return player_equip_unrand(UNRAND_DISPATER)
+        return you.unrand_equipped(UNRAND_DISPATER)
                && !you.has_mutation(MUT_NO_ARTIFICE);
     case ABIL_EVOKE_OLGREB:
-        return player_equip_unrand(UNRAND_OLGREB)
+        return you.unrand_equipped(UNRAND_OLGREB)
                && !you.has_mutation(MUT_NO_ARTIFICE);
     default:
         // removed abilities handled here

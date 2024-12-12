@@ -169,8 +169,6 @@ int InventoryRegion::handle_mouse(wm_mouse_event &event)
         {
             if (event.mod & TILES_MOD_SHIFT)
                 tile_item_drop(idx, (event.mod & TILES_MOD_CTRL));
-            if (event.mod & TILES_MOD_CTRL)
-                tile_item_use_secondary(idx);
             else
                 tile_item_use(idx);
         }
@@ -195,21 +193,6 @@ int InventoryRegion::handle_mouse(wm_mouse_event &event)
     }
 
     return 0;
-}
-
-// NOTE: Assumes the item is equipped in the first place!
-static bool _is_true_equipped_item(const item_def &item)
-{
-    // Weapons and staves are only truly equipped if wielded.
-    if (is_weapon(item))
-    {
-        return item.link == you.equip[EQ_WEAPON]
-               || you.has_mutation(MUT_WIELD_OFFHAND)
-               && item.link == you.equip[EQ_OFFHAND];
-    }
-
-    // Cursed armour and rings are only truly equipped if *not* wielded.
-    return item.link != you.equip[EQ_WEAPON];
 }
 
 // Returns whether there's any action you can take with an item in inventory
@@ -325,7 +308,7 @@ bool InventoryRegion::update_tip_text(string& tip)
 
         int type = item.base_type;
         const bool equipped = m_items[item_idx].flag & TILEI_FLAG_EQUIP;
-        bool wielded = (you.equip[EQ_WEAPON] == idx);
+        bool wielded = (&item == you.weapon());
 
         const int EQUIP_OFFSET = NUM_OBJECT_CLASSES;
 
@@ -420,8 +403,7 @@ bool InventoryRegion::update_tip_text(string& tip)
 
         tip += "\n[R-Click] Describe";
         // Has to be non-equipped or non-cursed to drop.
-        if (!equipped || !_is_true_equipped_item(you.inv[idx])
-            || !you.inv[idx].cursed())
+        if (!equipped || !you.inv[idx].cursed())
         {
             tip += "\n[Shift + L-Click] Drop (%)";
             cmd.push_back(CMD_DROP);
@@ -604,12 +586,12 @@ void InventoryRegion::update()
             if (disable_all)
                 desc.flag |= TILEI_FLAG_INVALID;
 
-            for (int eq = EQ_FIRST_EQUIP; eq < NUM_EQUIP; ++eq)
+            for (const auto& entry : you.equipment.items)
             {
-                if (you.equip[eq] == i)
+                if (entry.item == i)
                 {
                     desc.flag |= TILEI_FLAG_EQUIP;
-                    if (you.melded[eq])
+                    if (entry.melded)
                         desc.flag |= TILEI_FLAG_MELDED;
                     break;
                 }

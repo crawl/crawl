@@ -12,7 +12,7 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
 
     ISFLAG_CURSED            = 0x00000100,  // cursed
     ISFLAG_HANDLED           = 0x00000200,  // player has handled this item
-                             //0x00000400,  // was: ISFLAG_SEEN_CURSED
+    ISFLAG_MARKED_FOR_MENU   = 0x00000400,  // marked for UI swap menu
                              //0x00000800,  // was: ISFLAG_TRIED
 
     ISFLAG_RANDART           = 0x00001000,  // special value is seed

@@ -546,13 +546,13 @@ int spell_mana(spell_type which_spell, bool real_spell)
     if (real_spell)
     {
         int cost = level;
-        if (you.wearing_ego(EQ_GIZMO, SPGIZMO_SPELLMOTOR))
+        if (you.wearing_ego(OBJ_GIZMOS, SPGIZMO_SPELLMOTOR))
             cost = max(1, cost - you.rev_tier());
 
         if (you.has_mutation(MUT_EFFICIENT_MAGIC))
             cost = max(1, cost - you.get_mutation_level(MUT_EFFICIENT_MAGIC));
 
-        if (you.duration[DUR_BRILLIANCE] || player_equip_unrand(UNRAND_FOLLY))
+        if (you.duration[DUR_BRILLIANCE] || you.unrand_equipped(UNRAND_FOLLY))
             cost = cost/2 + cost%2; // round up
 
         return cost;
@@ -1349,7 +1349,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_OZOCUBUS_ARMOUR:
-        if (temp && player_equip_unrand(UNRAND_SALAMANDER))
+        if (temp && you.unrand_equipped(UNRAND_SALAMANDER))
             return "your ring of flames would instantly melt the ice.";
         break;
 
@@ -1449,9 +1449,9 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_AWAKEN_ARMOUR:
-        if (!you_can_wear(EQ_BODY_ARMOUR, temp))
+        if (!you_can_wear(SLOT_BODY_ARMOUR, temp))
             return "you cannot wear body armour.";
-        if (temp && !you.slot_item(EQ_BODY_ARMOUR))
+        if (temp && !you.equipment.get_slot_items(SLOT_BODY_ARMOUR).empty())
             return "you have no body armour to summon the spirit of.";
         break;
 

@@ -2770,19 +2770,16 @@ static void _ash_uncurse()
     bool uncursed = false;
     // iterate backwards so we shatter a ring on the macabre finger
     // necklace before the amulet
-    for (int eq_typ = NUM_EQUIP - 1; eq_typ >= EQ_FIRST_EQUIP; eq_typ--)
+    for (player_equip_entry& entry : you.equipment.items)
     {
-        const int slot = you.equip[eq_typ];
-        if (slot == -1)
-            continue;
-        if (!you.inv[slot].cursed())
+        if (!entry.get_item().cursed())
             continue;
         if (!uncursed)
         {
             mprf(MSGCH_GOD, GOD_ASHENZARI, "Your curses shatter.");
             uncursed = true;
         }
-        unequip_item(static_cast<equipment_type>(eq_typ));
+        unequip_item(entry.get_item());
     }
 }
 
@@ -3258,10 +3255,8 @@ bool player_can_join_god(god_type which_god, bool temp)
 static void _god_welcome_handle_gear()
 {
     // Check for amulets of faith.
-    item_def *amulet = you.slot_item(EQ_AMULET, false);
-    if (amulet && amulet->sub_type == AMU_FAITH
-        && !you.has_mutation(MUT_FAITH)
-        && ignore_faith_reason().empty())
+    if (!you.has_mutation(MUT_FAITH) && ignore_faith_reason().empty()
+        && you.wearing_jewellery(AMU_FAITH))
     {
         mprf(MSGCH_GOD, "Your amulet flashes!");
         flash_view_delay(UA_PLAYER, god_colour(you.religion), 300);
@@ -3274,10 +3269,10 @@ static void _god_welcome_handle_gear()
         ash_detect_portals(true);
 
     // Give a reminder to remove any disallowed equipment.
-    for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; i++)
+    vector<item_def*> all_eq = you.equipment.get_slot_items(SLOT_ALL_EQUIPMENT, true);
+    for (item_def* item : all_eq)
     {
-        const item_def* item = you.slot_item(static_cast<equipment_type>(i));
-        if (item && god_hates_item(*item))
+        if (god_hates_item(*item))
         {
             mprf(MSGCH_GOD, "%s warns you to remove %s.",
                  uppercase_first(god_name(you.religion)).c_str(),

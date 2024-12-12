@@ -14,7 +14,6 @@
 #include <sys/un.h>
 
 #include "cursor-type.h"
-#include "equipment-type.h"
 #include "map-cell.h"
 #include "map-knowledge.h"
 #include "status.h"
@@ -83,7 +82,6 @@ struct player_info
 
     FixedVector<item_def, ENDOFPACK> inv;
     FixedVector<bool, ENDOFPACK> inv_uselessness;
-    FixedVector<int8_t, NUM_EQUIP> equip;
     bool offhand_weapon;
     int8_t quiver_item;
     string quiver_desc;

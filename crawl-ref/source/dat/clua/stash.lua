@@ -61,14 +61,14 @@ function ch_stash_search_annotate_item(it)
     do
         annot = annot .. "{" .. skills[i] .. "} "
     end
-    local hands = it.hands
-    local hands_adj
-    if hands == 2 then
-      hands_adj = "two-handed"
-    else
-      hands_adj = "one-handed"
-    end
     if skill ~= "Throwing" then
+      local hands = it.hands
+      local hands_adj
+      if hands == 2 then
+        hands_adj = "two-handed"
+      else
+        hands_adj = "one-handed"
+      end
       annot = annot .. "{" .. hands_adj .. "} "
     end
   end

@@ -563,7 +563,7 @@ static int _spell_enhancement(spell_type spell)
     if (typeflags & spschool::air)
         enhanced += player_spec_air();
 
-    if (player_equip_unrand(UNRAND_BATTLE))
+    if (you.unrand_equipped(UNRAND_BATTLE))
     {
         if (vehumet_supports_spell(spell))
             enhanced++;
@@ -573,7 +573,7 @@ static int _spell_enhancement(spell_type spell)
 
     enhanced += you.archmagi();
     enhanced += you.duration[DUR_BRILLIANCE] > 0
-                || player_equip_unrand(UNRAND_FOLLY);
+                || you.unrand_equipped(UNRAND_FOLLY);
 
     // These are used in an exponential way, so we'll limit them a bit. -- bwr
     if (enhanced > 3)
@@ -738,7 +738,7 @@ static void _majin_speak(spell_type spell)
 
 static bool _majin_charge_hp()
 {
-    return player_equip_unrand(UNRAND_MAJIN) && !you.duration[DUR_DEATHS_DOOR];
+    return you.unrand_equipped(UNRAND_MAJIN) && !you.duration[DUR_DEATHS_DOOR];
 }
 
 
@@ -961,7 +961,7 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
     _handle_channelling(cost, cast_result);
     if (cast_result == spret::success)
     {
-        if (player_equip_unrand(UNRAND_MAJIN) && one_chance_in(500))
+        if (you.unrand_equipped(UNRAND_MAJIN) && one_chance_in(500))
             _majin_speak(spell);
         did_god_conduct(DID_SPELL_CASTING, 1 + random2(5));
         count_action(CACT_CAST, spell);
@@ -1829,7 +1829,7 @@ vector<string> desc_wl_success_chance(const monster_info& mi, int pow,
     int wl = mi.willpower();
     if (wl == WILL_INVULN)
         return vector<string>{"infinite will"};
-    if (you.wearing_ego(EQ_ALL_ARMOUR, SPARM_GUILE))
+    if (you.wearing_ego(OBJ_ARMOUR, SPARM_GUILE))
         wl = guile_adjust_willpower(wl);
     if (hitfunc && !hitfunc->affects_monster(mi))
         return vector<string>{"not susceptible"};
@@ -2271,7 +2271,7 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
             dithmenos_shadow_spell(spell);
         _spellcasting_side_effects(spell, god, !actual_spell);
 
-        if (you.wearing_ego(EQ_GIZMO, SPGIZMO_SPELLMOTOR) && actual_spell)
+        if (you.wearing_ego(OBJ_GIZMOS, SPGIZMO_SPELLMOTOR) && actual_spell)
             coglin_spellmotor_attack();
 
         return spret::success;

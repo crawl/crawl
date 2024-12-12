@@ -327,20 +327,26 @@ int mon_beat_sh_pct(int bypass, int scaled_sh)
  */
 static bool _autoswitch_to_melee()
 {
+    // It's not a good idea to quietly replace an attack action with one that
+    // takes 5 times as long. Even prompting would be better.
+    if (you.has_mutation(MUT_SLOW_WIELD))
+        return false;
+
+    item_def* weapon = you.weapon();
     bool penance;
-    if (!you.weapon()
+    if (!weapon
         // don't autoswitch from a weapon that needs a warning
-        || is_melee_weapon(*you.weapon())
-            && !needs_handle_warning(*you.weapon(), OPER_ATTACK, penance))
+        || is_melee_weapon(*weapon)
+            && !needs_handle_warning(*weapon, OPER_ATTACK, penance))
     {
         return false;
     }
 
-    // don't autoswitch if a or b is not selected
+    // Only try autoswapping if weapon is in slot a or b
     int item_slot;
-    if (you.equip[EQ_WEAPON] == letter_to_index('a'))
+    if (weapon->link == letter_to_index('a'))
         item_slot = letter_to_index('b');
-    else if (you.equip[EQ_WEAPON] == letter_to_index('b'))
+    else if (weapon->link == letter_to_index('b'))
         item_slot = letter_to_index('a');
     else
         return false;
@@ -898,7 +904,7 @@ static bool _missing_weapon(const item_def *weapon, const item_def *offhand)
            && you.form != transformation::tree
            && any_of(you.inv.begin(), you.inv.end(),
                      [](item_def &it) {
-               return is_melee_weapon(it) && can_wield(&it);
+               return is_melee_weapon(it) && can_equip_item(it);
             });
 }
 

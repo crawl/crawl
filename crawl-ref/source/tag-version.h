@@ -314,6 +314,7 @@ enum tag_minor_version
     TAG_MINOR_REFACTOR_CHANNEL_SPELLS, // Refactor tracking of channelled spells
     TAG_MINOR_SIMPLIFY_ID,         // Crunch all item identification flags into just one
     TAG_MINOR_STACKABLE_EVOKERS_TWO, // XP evokers stack for a recharge speed boost
+    TAG_MINOR_EQUIP_SLOT_REWRITE,  // Convert all player equipment handling over to a new system
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

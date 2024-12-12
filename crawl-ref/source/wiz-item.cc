@@ -346,7 +346,7 @@ void wizard_tweak_object()
     if (prompt_failed(item))
         return;
 
-    if (item == you.equip[EQ_WEAPON])
+    if (you.weapon() && you.weapon()->link == item)
         you.wield_change = true;
 
     const bool is_art = is_artefact(you.inv[item]);
@@ -581,12 +581,12 @@ void wizard_make_object_randart()
         return;
     }
 
-    const equipment_type eq = item_equip_slot(item);
+    const equipment_slot eq = item_equip_slot(item);
     int invslot = 0;
-    if (eq != EQ_NONE)
+    if (eq != SLOT_UNUSED)
     {
-        invslot = you.equip[eq];
-        unequip_item(eq);
+        invslot = item.link;
+        unequip_item(item);
     }
 
     if (is_random_artefact(item))
@@ -631,7 +631,7 @@ void wizard_make_object_randart()
     }
 
     // If it was equipped, requip the item.
-    if (eq != EQ_NONE)
+    if (eq != SLOT_UNUSED)
         equip_item(eq, invslot);
 
     mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
@@ -900,37 +900,20 @@ static void _debug_acquirement_stats()
             species::name(you.species).c_str(),
             get_job_name(you.char_class), godname.c_str());
 
-    // Print player equipment.
-    const int e_order[] =
-    {
-        EQ_WEAPON, EQ_BODY_ARMOUR, EQ_OFFHAND, EQ_HELMET, EQ_CLOAK,
-        EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_RIGHT_RING, EQ_LEFT_RING,
-        EQ_RING_ONE, EQ_RING_TWO, EQ_RING_THREE, EQ_RING_FOUR,
-        EQ_RING_FIVE, EQ_RING_SIX, EQ_RING_SEVEN, EQ_RING_EIGHT,
-        EQ_RING_AMULET
-    };
-
     bool naked = true;
-    for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; i++)
+    for (player_equip_entry& entry : you.equipment.items)
     {
-        // We can't acquire for the gizmo or preview ring slots. Skip them.
-        if (i == EQ_GIZMO || i == EQ_PREVIEW_RING)
+        // We can't acquire for the gizmo slots. Skip it.
+        if (entry.slot = SLOT_GIZMO)
             continue;
 
-        int eqslot = e_order[i];
+        if (entry.is_overflow)
+            continue;
 
-        // Only output filled slots.
-        if (you.equip[ e_order[i] ] != -1)
-        {
-            // The player has something equipped.
-            const int item_idx   = you.equip[e_order[i]];
-            const item_def& item = you.inv[item_idx];
-
-            fprintf(ostat, "%-7s: %s %s\n", equip_slot_to_name(eqslot),
-                    item.name(DESC_PLAIN, true).c_str(),
-                    you.melded[i] ? "(melded)" : "");
-            naked = false;
-        }
+        fprintf(ostat, "%-7s: %s %s\n", equip_slot_name(entry.slot),
+                entry.get_item().name(DESC_PLAIN, true).c_str(),
+                entry.melded ? "(melded)" : "");
+        naked = false;
     }
     if (naked)
         fprintf(ostat, "Not wearing or wielding anything.\n");
