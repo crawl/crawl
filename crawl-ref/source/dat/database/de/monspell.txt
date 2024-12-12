@@ -836,15 +836,15 @@ Du hörst einige seltsame, gemurmelte Worte.
 %%%%
 Haste Other priest cast
 
-@The_monster@ ruft {acc}@a_God@ an, um {acc}@target@ zu beschleunigen.
+@The_monster@ ruft {acc}@a_God@ an, {acc}@target@ zu beschleunigen.
 %%%%
 Heal Other priest cast
 
-@The_monster@ ruft {acc}@a_God@ an, um {acc}@target@ zu heilen.
+@The_monster@ ruft {acc}@a_God@ an, {acc}@target@ zu heilen.
 %%%%
 Might Other priest cast
 
-@The_monster@ ruft {acc}@a_God@ an, um {acc}@target@ zu stärken.
+@The_monster@ ruft {acc}@a_God@ an, {acc}@target@ zu stärken.
 %%%%
 Malign Offering priest cast
 
