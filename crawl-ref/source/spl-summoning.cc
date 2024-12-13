@@ -3578,6 +3578,8 @@ spret cast_surprising_crocodile(actor& agent, const coord_def& targ, int pow, bo
         }
     }
 
+    agent.apply_location_effects(start_pos);
+
     return spret::success;
 }
 
