@@ -58,7 +58,7 @@ function trove.get_trove_item(e, value, base_item)
   floorlist, shoplist = dgn.stash_items(value, true)
   if #shoplist ~= 0 then
     shop_item = shoplist[crawl.random2(#shoplist)+1]
-    if not shop_item.is_identified() then
+    if not shop_item.is_identified then
       shop_item = shoplist[crawl.random2(#shoplist)+1]
     end
     local jwith_pluses = {"ring of protection", "ring of evasion",
@@ -67,7 +67,7 @@ function trove.get_trove_item(e, value, base_item)
                           "amulet of reflection"}
     local bt = shop_item.base_type
     if bt == "armour" or bt == "weapon" or bt == "jewellery" then
-      if shop_item.is_identified() then
+      if shop_item.is_identified then
         item.quantity = shop_item.quantity
         item.base_type = shop_item.base_type
         item.sub_type = shop_item.sub_type
