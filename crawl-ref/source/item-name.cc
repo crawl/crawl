@@ -1610,7 +1610,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
         buff << item_base_name(*this);
 
-        if (identified && !is_artefact(*this))
+        if (identified && !dbname && !qualname && !is_artefact(*this))
         {
             const special_armour_type sparm = get_armour_ego_type(*this);
 
