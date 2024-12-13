@@ -2,8 +2,6 @@
 #
 # Items - singular, definite article, nominative
 #
-# Note that %s is a placeholder for any adjectives
-#
 ###############################################################################
 
 #################################
@@ -12,132 +10,132 @@
 
 %%%%
 # for player ghosts
-the %sweapon
-die {adj-e}%sWaffe
+the weapon
+die Waffe
 %%%%
-the %sclub
-der {adj-e}%sKnüppel
+the club
+der Knüppel
 %%%%
-the %swhip
-die {adj-e}%sPeitsche
+the whip
+die Peitsche
 %%%%
-the %smace
-der {adj-e}%sStreitkolben
+the mace
+der Streitkolben
 %%%%
-the %sflail
-der {adj-e}%sFlegel
+the flail
+der Flegel
 %%%%
-the %smorningstar
-der {adj-e}%sMorgenstern
+the morningstar
+der Morgenstern
 %%%%
-the %sdemon whip
-die {adj-e}%sDämonenpeitsche
+the demon whip
+die Dämonenpeitsche
 %%%%
-the %ssacred scourge
+the sacred scourge
 die {adj-e}%heilige Geißel
 %%%%
-the %sdire flail
-der {adj-e}%sSchreckensflegel
+the dire flail
+der Schreckensflegel
 %%%%
-the %seveningstar
-der {adj-e}%sAbendstern
+the eveningstar
+der Abendstern
 %%%%
-the %sgreat mace
-der {adj-e}%sgroße Streitkolben
+the great mace
+der große Streitkolben
 %%%%
-the %sgiant club
-die {adj-e}%sRiesenkeule
+the giant club
+die Riesenkeule
 %%%%
-the %sgiant spiked club
-die {adj-e}%sriesige Stachelkeule
+the giant spiked club
+die riesige Stachelkeule
 %%%%
-the %sdagger
-der {adj-e}%sDolch
+the dagger
+der Dolch
 %%%%
-the %squick blade
-die {adj-e}%sSchnellklinge
+the quick blade
+die Schnellklinge
 %%%%
-the %sshort sword
-das {adj-e}%sKurzschwert
+the short sword
+das Kurzschwert
 %%%%
-the %srapier
-das {adj-e}%sRapier
+the rapier
+das Rapier
 %%%%
-the %sfalchion
-das {adj-e}%sFalchion
+the falchion
+das Falchion
 %%%%
-the %slong sword
-das {adj-e}%sLangschwert
+the long sword
+das Langschwert
 %%%%
-the %sscimitar
-der {adj-e}%sKrummsäbel
+the scimitar
+der Krummsäbel
 %%%%
-the %sdemon blade
-die {adj-e}%sDämonenklinge
+the demon blade
+die Dämonenklinge
 %%%%
-the %seudemon blade
-die {adj-e}%sEudämonenklinge
+the eudemon blade
+die Eudämonenklinge
 %%%%
-the %sdouble sword
-das {adj-e}%sDoppelschwert
+the double sword
+das Doppelschwert
 %%%%
-the %sgreat sword
-das {adj-e}%sGroßschwert
+the great sword
+das Großschwert
 %%%%
-the %striple sword
-das {adj-e}%sDreifachschwert
+the triple sword
+das Dreifachschwert
 %%%%
-the %shand axe
-das {adj-e}%sHandbeil
+the hand axe
+das Handbeil
 %%%%
-the %swar axe
-die {adj-e}%sKriegsaxt
+the war axe
+die Kriegsaxt
 %%%%
-the %sbroad axe
-die {adj-e}%sBreitaxt
+the broad axe
+die Breitaxt
 %%%%
-the %sbattleaxe
-die {adj-e}%sStreitaxt
+the battleaxe
+die Streitaxt
 %%%%
-the %sexecutioner's axe
-die {adj-e}%sHenkersaxt
+the executioner's axe
+die Henkersaxt
 %%%%
-the %sspear
-der {adj-e}%sSpeer
+the spear
+der Speer
 %%%%
-the %strident
-der {adj-e}%sDreizack
+the trident
+der Dreizack
 %%%%
-the %shalberd
-die {adj-e}%sHellebarde
+the halberd
+die Hellebarde
 %%%%
-the %sscythe
-die {adj-e}%sSense
+the scythe
+die Sense
 %%%%
-the %sdemon trident
-der {adj-e}%sDämonendreizack
+the demon trident
+der Dämonendreizack
 %%%%
-the %strishula
-der {adj-e}%sTrishula
+the trishula
+der Trishula
 %%%%
-the %sglaive
-die {adj-e}%sGleve
+the glaive
+die Gleve
 %%%%
-the %sbardiche
-die {adj-e}%sBardiche
+the bardiche
+die Bardiche
 %%%%
-the %squarterstaff
-der {adj-e}%sKampfstab
+the quarterstaff
+der Kampfstab
 %%%%
-the %slajatang
-der {adj-e}%sLajatang
+the lajatang
+der Lajatang
 %%%%
-the %slance
-die {adj-e}%sLanze
+the lance
+die Lanze
 %%%%
 # "Gyre" and "Gimble" - base name
-the %spair of quick blades
-das {adj-e}%sPaar Schnellklingen
+the pair of quick blades
+das Paar Schnellklingen
 %%%%
 
 #################################
@@ -145,26 +143,26 @@ das {adj-e}%sPaar Schnellklingen
 #################################
 
 %%%%
-the %shunting sling
-die {adj-e}%sSchleuder
+the hunting sling
+die Schleuder
 %%%%
-the %sfustibalus
-der {adj-e}%sFustibalus
+the fustibalus
+der Fustibalus
 %%%%
-the %shand crossbow
-die {adj-e}%sHandarmbrust
+the hand crossbow
+die Handarmbrust
 %%%%
-the %sarbalest
-die {adj-e}%sArmbrust
+the arbalest
+die Armbrust
 %%%%
-the %striple crossbow
-die {adj-e}%sDreifacharmbrust
+the triple crossbow
+die Dreifacharmbrust
 %%%%
-the %sshortbow
-der {adj-e}%sKurzbogen
+the shortbow
+der Kurzbogen
 %%%%
-the %slongbow
-der {adj-e}%sLangbogen
+the longbow
+der Langbogen
 %%%%
 
 #################################
@@ -227,92 +225,92 @@ der Silberbumerang
 #################################
 
 %%%%
-the %sanimal skin
-die {adj-e}%sTierhaut
+the animal skin
+die Tierhaut
 %%%%
-the %srobe
-die {adj-e}%sRobe
+the robe
+die Robe
 %%%%
-the %sleather armour
-die {adj-e}%sLederrüstung
+the leather armour
+die Lederrüstung
 %%%%
-the %sring mail
-der {adj-e}%sRingpanzer
+the ring mail
+der Ringpanzer
 %%%%
-the %sscale mail
-der {adj-e}%sSchuppenpanzer
+the scale mail
+der Schuppenpanzer
 %%%%
-the %schain mail
-der {adj-e}%sKettenpanzer
+the chain mail
+der Kettenpanzer
 %%%%
-the %splate armour
-die {adj-e}%sPlattenrüstung
+the plate armour
+die Plattenrüstung
 %%%%
-the %scrystal plate armour
-die {adj-e}%sKristallplattenrüstung
+the crystal plate armour
+die Kristallplattenrüstung
 %%%%
-the %stroll leather armour
-die {adj-e}%sTrolllederrüstung
+the troll leather armour
+die Trolllederrüstung
 %%%%
-the %scloak
-der {adj-e}%sUmhang
+the cloak
+der Umhang
 %%%%
-the %sscarf
-der {adj-e}%sSchal
+the scarf
+der Schal
 %%%%
-the %spair of %sgloves
-das {adj-e}%sPaar {adj-e}%sHandschuhe
+the pair of gloves
+das Paar Handschuhe
 %%%%
-the %shelmet
-der {adj-e}%sHelm
+the helmet
+der Helm
 %%%%
-the %shat
-der {adj-e}%sHut
+the hat
+der Hut
 %%%%
-the %spair of %sboots
-das {adj-e}%sPaar {adj-e}%sStiefel
+the pair of boots
+das Paar Stiefel
 %%%%
-the %sbarding
-der {adj-e}%sHarnisch
+the barding
+der Harnisch
 %%%%
-the %sbuckler
-der {adj-e}%sBuckler
+the buckler
+der Buckler
 %%%%
-the %skite shield
-der {adj-e}%sDrachenschild
+the kite shield
+der Drachenschild
 %%%%
-the %stower shield
-der {adj-e}%sTurmschild
+the tower shield
+der Turmschild
 %%%%
-the %ssteam dragon scales
-die {adj-en}%sDampfdrachenschuppen
+the steam dragon scales
+{pl}die Dampfdrachenschuppen
 %%%%
-the %sacid dragon scales
-die {adj-en}%sSäuredrachenschuppen
+the acid dragon scales
+{pl}die Säuredrachenschuppen
 %%%%
-the %squicksilver dragon scales
-die {adj-en}%sQuecksilberdrachenschuppen
+the quicksilver dragon scales
+{pl}die Quecksilberdrachenschuppen
 %%%%
-the %sswamp dragon scales
-die {adj-en}%sSumpfdrachenschuppen
+the swamp dragon scales
+{pl}die Sumpfdrachenschuppen
 %%%%
-the %sfire dragon scales
-die {adj-en}%sFeuerdrachenschuppen
+the fire dragon scales
+{pl}die Feuerdrachenschuppen
 %%%%
-the %sice dragon scales
-die {adj-en}%sEisdrachenschuppen
+the ice dragon scales
+{pl}die Eisdrachenschuppen
 %%%%
-the %spearl dragon scales
-die {adj-en}%sPerlendrachenschuppen
+the pearl dragon scales
+{pl}die Perlendrachenschuppen
 %%%%
-the %sstorm dragon scales
-die {adj-en}%sSturmdrachenschuppen
+the storm dragon scales
+{pl}die Sturmdrachenschuppen
 %%%%
-the %sshadow dragon scales
-die {adj-en}%sSchattendrachenschuppen
+the shadow dragon scales
+{pl}die Schattendrachenschuppen
 %%%%
-the %sgold dragon scales
-die {adj-en}%sGolddrachenschuppen
+the gold dragon scales
+{pl}die Golddrachenschuppen
 %%%%
 
 # Usually, we handle any adjectives as separate words, but
@@ -329,8 +327,8 @@ die cremefarbene Perlenrobe
 
 # general catch-all
 %%%%
-the %sring
-der {adj-e}%sRing
+the ring
+der Ring
 %%%%
 
 # unidentified rings have two adjectives
@@ -338,116 +336,116 @@ der {adj-e}%sRing
 
 # this is combined list from item-name.cc and descript/randname.txt
 %%%%
-the %sagate ring
-der {adj-e}%sAchatring
+the agate ring
+der Achatring
 %%%%
-the %samber ring
-der {adj-e}%sBernsteinring
+the amber ring
+der Bernsteinring
 %%%%
-the %sbone ring
-der {adj-e}%sKnochenring
+the bone ring
+der Knochenring
 %%%%
-the %sbrass ring
-der {adj-e}%sMessingring
+the brass ring
+der Messingring
 %%%%
-the %sbronze ring
-der {adj-e}%sBronzering
+the bronze ring
+der Bronzering
 %%%%
-the %scabochon ring
-der {adj-e}%sCabochonring
+the cabochon ring
+der Cabochonring
 %%%%
-the %scopper ring
-der {adj-e}%sKupferring
+the copper ring
+der Kupferring
 %%%%
-the %scoral ring
-der {adj-e}%sKorallenring
+the coral ring
+der Korallenring
 %%%%
-the %sdiamond ring
-der {adj-e}%sDiamantring
+the diamond ring
+der Diamantring
 %%%%
-the %semerald ring
-der {adj-e}%sSmaragdring
+the emerald ring
+der Smaragdring
 %%%%
-the %sgarnet ring
-der {adj-e}%sGranatring
+the garnet ring
+der Granatring
 %%%%
-the %sgilded ring
-der {adj-e}%svergoldete Ring
+the gilded ring
+der vergoldete Ring
 %%%%
-the %sglass ring
-der {adj-e}%sGlasring
+the glass ring
+der Glasring
 %%%%
-the %sgossamer ring
-der {adj-e}%sSpinnfadenring
+the gossamer ring
+der Spinnfadenring
 %%%%
-the %sgolden ring
-der {adj-e}%sGoldring
+the golden ring
+der Goldring
 %%%%
-the %sgranite ring
-der {adj-e}%sGranitring
+the granite ring
+der Granitring
 %%%%
-the %siron ring
-der {adj-e}%sEisenring
+the iron ring
+der Eisenring
 %%%%
-the %sivory ring
-der {adj-e}%sElfenbeinring
+the ivory ring
+der Elfenbeinring
 %%%%
-the %sjade ring
-der {adj-e}%sJadering
+the jade ring
+der Jadering
 %%%%
-the %slapis lazuli ring
-der {adj-e}%sLapislazuliring
+the lapis lazuli ring
+der Lapislazuliring
 %%%%
-the %slead ring
-der {adj-e}%sBleiring
+the lead ring
+der Bleiring
 %%%%
-the %smarble ring
-der {adj-e}%sMarmorring
+the marble ring
+der Marmorring
 %%%%
-the %smoonstone ring
-der {adj-e}%sMondsteinring
+the moonstone ring
+der Mondsteinring
 %%%%
-the %sonyx ring
-der {adj-e}%sOnyxring
+the onyx ring
+der Onyxring
 %%%%
-the %sopal ring
-der {adj-e}%sOpalring
+the opal ring
+der Opalring
 %%%%
-the %spearl ring
-der {adj-e}%sPerlenring
+the pearl ring
+der Perlenring
 %%%%
-the %speridot ring
-der {adj-e}%sPeridotring
+the peridot ring
+der Peridotring
 %%%%
-the %spewter ring
-der {adj-e}%sHartzinnring
+the pewter ring
+der Hartzinnring
 %%%%
-the %splatinum ring
-der {adj-e}%sPlatinring
+the platinum ring
+der Platinring
 %%%%
-the %sruby ring
-der {adj-e}%sRubinring
+the ruby ring
+der Rubinring
 %%%%
-the %ssapphire ring
-der {adj-e}%sSaphirring
+the sapphire ring
+der Saphirring
 %%%%
-the %ssilver ring
-der {adj-e}%sSilberring
+the silver ring
+der Silberring
 %%%%
-the %ssteel ring
-der {adj-e}%sStahlring
+the steel ring
+der Stahlring
 %%%%
-the %stin ring
-der {adj-e}%sZinnring
+the tin ring
+der Zinnring
 %%%%
-the %stourmaline ring
-der {adj-e}%sTurmalinring
+the tourmaline ring
+der Turmalinring
 %%%%
-the %sturquoise ring
-der {adj-e}%sTürkisring
+the turquoise ring
+der Türkisring
 %%%%
-the %swooden ring
-der {adj-e}%sHolzring
+the wooden ring
+der Holzring
 %%%%
 
 #################################
@@ -456,8 +454,8 @@ der {adj-e}%sHolzring
 
 # general catch-all
 %%%%
-the %samulet
-das {adj-e}%sAmulett
+the amulet
+das Amulett
 %%%%
 
 # unidentified amulets have two adjectives
@@ -465,116 +463,116 @@ das {adj-e}%sAmulett
 
 # from item-name.txt
 %%%%
-the %ssapphire amulet
-das {adj-e}%sSaphiramulett
+the sapphire amulet
+das Saphiramulett
 %%%%
-the %szirconium amulet
-das {adj-e}%sZirkoniumamulett
+the zirconium amulet
+das Zirkoniumamulett
 %%%%
-the %sgolden amulet
-das {adj-e}%sGoldamulett
+the golden amulet
+das Goldamulett
 %%%%
-the %semerald amulet
-das {adj-e}%sSmaragdamulett
+the emerald amulet
+das Smaragdamulett
 %%%%
-the %sgarnet amulet
-das {adj-e}%sGranatamulett
+the garnet amulet
+das Granatamulett
 %%%%
-the %sbronze amulet
-das {adj-e}%sBronzeamulett
+the bronze amulet
+das Bronzeamulett
 %%%%
-the %sbrass amulet
-das {adj-e}%sMessingamulett
+the brass amulet
+das Messingamulett
 %%%%
-the %scopper amulet
-das {adj-e}%sKupferamulett
+the copper amulet
+das Kupferamulett
 %%%%
-the %sruby amulet
-das {adj-e}%sRubinamulett
+the ruby amulet
+das Rubinamulett
 %%%%
-the %scitrine amulet
-das {adj-e}%sCitrinamulett
+the citrine amulet
+das Citrinamulett
 %%%%
-the %sbone amulet
-das {adj-e}%sKnochenamulett
+the bone amulet
+das Knochenamulett
 %%%%
-the %splatinum amulet
-das {adj-e}%sPlatinamulett
+the platinum amulet
+das Platinamulett
 %%%%
-the %sjade amulet
-das {adj-e}%sJadeamulett
+the jade amulet
+das Jadeamulett
 %%%%
-the %sfluorescent amulet
-das {adj-e}%sfluoreszierende Amulett
+the fluorescent amulet
+das fluoreszierende Amulett
 %%%%
-the %samethyst amulet
-das {adj-e}%sAmethystamulett
+the amethyst amulet
+das Amethystamulett
 %%%%
-the %scameo amulet
-das {adj-e}%sCameoamulett
+the cameo amulet
+das Cameoamulett
 %%%%
-the %spearl amulet
-das {adj-e}%sPerlenamulett
+the pearl amulet
+das Perlenamulett
 %%%%
-the %sblue amulet
-das {adj-e}%sblaue Amulett
+the blue amulet
+das blaue Amulett
 %%%%
-the %speridot amulet
-das {adj-e}%sPeridotamulett
+the peridot amulet
+das Peridotamulett
 %%%%
-the %sjasper amulet
-das {adj-e}%sJaspisamulett
+the jasper amulet
+das Jaspisamulett
 %%%%
-the %sdiamond amulet
-das {adj-e}%sDiamantamulett
+the diamond amulet
+das Diamantamulett
 %%%%
-the %smalachite amulet
-das {adj-e}%sMalachitamulett
+the malachite amulet
+das Malachitamulett
 %%%%
-the %ssteel amulet
-das {adj-e}%sStahlamulett
+the steel amulet
+das Stahlamulett
 %%%%
-the %scabochon amulet
-das {adj-e}%sCabochonamulett
+the cabochon amulet
+das Cabochonamulett
 %%%%
-the %ssilver amulet
-das {adj-e}%sSilberamulett
+the silver amulet
+das Silberamulett
 %%%%
-the %ssoapstone amulet
-das {adj-e}%sSpecksteinamulett
+the soapstone amulet
+das Specksteinamulett
 %%%%
-the %slapis lazuli amulet
-das {adj-e}%sLapislazuliamulett
+the lapis lazuli amulet
+das Lapislazuliamulett
 %%%%
-the %sfiligree amulet
-das {adj-e}%sFiligranamulett
+the filigree amulet
+das Filigranamulett
 %%%%
-the %sberyl amulet
-das {adj-e}%sBeryllamulett
+the beryl amulet
+das Beryllamulett
 %%%%
 
 # extras from database/randname.txt
 %%%%
-the %scrystal amulet
-das {adj-e}%sKristallamulett
+the crystal amulet
+das Kristallamulett
 %%%%
-the %sgraven amulet
-das {adj-e}%sgravierte amulett
+the graven amulet
+das gravierte amulett
 %%%%
-the %siron amulet
-das {adj-e}%sEisenamulett
+the iron amulet
+das Eisenamulett
 %%%%
-the %sivory amulet
-das {adj-e}%sElfenbeinamulett
+the ivory amulet
+das Elfenbeinamulett
 %%%%
-the %slead amulet
-das {adj-e}%sBleiamulett
+the lead amulet
+das Bleiamulett
 %%%%
-the %spewter amulet
-das {adj-e}%sHartzinnamulett
+the pewter amulet
+das Hartzinnamulett
 %%%%
-the %stin amulet
-das {adj-e}%sZinnamulett
+the tin amulet
+das Zinnamulett
 %%%%
 
 #################################
@@ -612,44 +610,44 @@ der Zauberstab der Obsoleszenz
 
 # unidentified
 %%%%
-the %swand
-der {adj-e}%sZauberstab
+the wand
+der Zauberstab
 %%%%
-the %siron wand
-der {adj-e}%sEisenzauberstab
+the iron wand
+der Eisenzauberstab
 %%%%
-the %sbrass wand
-der {adj-e}%sMessingzauberstab
+the brass wand
+der Messingzauberstab
 %%%%
-the %sbone wand
-der {adj-e}%sKnochenzauberstab
+the bone wand
+der Knochenzauberstab
 %%%%
-the %swooden wand
-der {adj-e}%sHolzzauberstab
+the wooden wand
+der Holzzauberstab
 %%%%
-the %scopper wand
-der {adj-e}%sKupferzauberstab
+the copper wand
+der Kupferzauberstab
 %%%%
-the %sgold wand
-der {adj-e}%sGoldzauberstab
+the gold wand
+der Goldzauberstab
 %%%%
-the %ssilver wand
-der {adj-e}%sSilberzauberstab
+the silver wand
+der Silberzauberstab
 %%%%
-the %sbronze wand
-der {adj-e}%sBronzezauberstab
+the bronze wand
+der Bronzezauberstab
 %%%%
-the %sivory wand
-der {adj-e}%sElfenbeinzauberstab
+the ivory wand
+der Elfenbeinzauberstab
 %%%%
-the %sglass wand
-der {adj-e}%sGlaszauberstab
+the glass wand
+der Glaszauberstab
 %%%%
-the %slead wand
-der {adj-e}%sBleizauberstab
+the lead wand
+der Bleizauberstab
 %%%%
-the %sfluorescent wand
-der {adj-e}%sfluoreszierender Zauberstab
+the fluorescent wand
+der fluoreszierender Zauberstab
 %%%%
 
 #################################
@@ -784,8 +782,8 @@ der Trank der Resistenz
 # unidentified potions are named "<colour> <potion>"
 # or "<qualifier> <colour> potion"
 %%%%
-the %spotion
-der {adj-e}%sZaubertrank
+the potion
+der Zaubertrank
 %%%%
 
 # Some potion colours are the names of gemstones, etc., and are used elsewhere
@@ -793,20 +791,20 @@ der {adj-e}%sZaubertrank
 # its colour. In English, we can get away with using the same word for both
 # meanings, but that's not necessarily the case in other languages.
 %%%%
-the %samethyst potion
-der {adj-e}%samethystfarbene Zaubertrank
+the amethyst potion
+der amethystfarbene Zaubertrank
 %%%%
-the %semerald potion
-der {adj-e}%ssmaragdgrüne Zaubertrank
+the emerald potion
+der smaragdgrüne Zaubertrank
 %%%%
-the %sruby potion
-der {adj-e}%srubinrote Zaubertrank
+the ruby potion
+der rubinrote Zaubertrank
 %%%%
-the %ssapphire potion
-der {adj-e}%ssaphirblaue Zaubertrank
+the sapphire potion
+der saphirblaue Zaubertrank
 %%%%
-the %sgolden potion
-der {adj-e}%sgoldene Zaubertrank
+the golden potion
+der goldene Zaubertrank
 %%%%
 
 #################################
@@ -814,32 +812,32 @@ der {adj-e}%sgoldene Zaubertrank
 #################################
 
 %%%%
-the %sstaff of fire
-der {adj-e}%sStab des Feuers
+the staff of fire
+der Stab des Feuers
 %%%%
-the %sstaff of cold
-der {adj-e}%sStab der Kälte
+the staff of cold
+der Stab der Kälte
 %%%%
-the %sstaff of poison
-der {adj-e}%sStab des Giftes
+the staff of poison
+der Stab des Giftes
 %%%%
-the %sstaff of death
-der {adj-e}%sStab des Todes
+the staff of death
+der Stab des Todes
 %%%%
-the %sstaff of conjuration
-der {adj-e}%sStab der Konjuration
+the staff of conjuration
+der Stab der Konjuration
 %%%%
-the %sstaff of air
-der {adj-e}%sStab der Luft
+the staff of air
+der Stab der Luft
 %%%%
-the %sstaff of earth
-der {adj-e}%sStab der Erde
+the staff of earth
+der Stab der Erde
 %%%%
-the %sstaff of removedness
-der {adj-e}%sStab der Obsoleszenz
+the staff of removedness
+der Stab der Obsoleszenz
 %%%%
-the %sstaff
-der {adj-e}%sStab
+the staff
+der Stab
 %%%%
 
 #################################
@@ -847,8 +845,8 @@ der {adj-e}%sStab
 #################################
 
 %%%%
-the %s@monster@ corpse
-die {adj-e}%s@monster@-Leiche
+the @monster@ corpse
+die @monster@-Leiche
 %%%%
 
 #################################
@@ -868,8 +866,8 @@ die Phiole der Fluten
 the phantom mirror
 der Phantomspiegel
 %%%%
-the %sfigurine of a ziggurat
-die %sFigur einer Zikkurat
+the figurine of a ziggurat
+die Figur einer Zikkurat
 %%%%
 the condenser vane
 die Kondensationsfahne
@@ -957,8 +955,8 @@ die dunkle Rune
 
 # Most are unique, but this one isn't
 %%%%
-the %sring of the Octopus King
-der {adj-e}%sRing des Krakenkönigs
+the ring of the Octopus King
+der Ring des Krakenkönigs
 %%%%
 
 #################################

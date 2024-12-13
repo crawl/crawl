@@ -227,8 +227,8 @@ von Prinz Ribbit
 Crazy Yiuf's
 vom Verrückten Yiuf
 %%%%
-the %sEnchantress's
-der {adj-en}%sZauberin
+the Enchantress's
+{f}der Zauberin
 %%%%
 Blork the orc's
 von Blork dem Ork
@@ -236,20 +236,20 @@ von Blork dem Ork
 Blork's
 von Blork
 %%%%
-the %sRoyal Jelly's
-des {adj-en}%sGelée Royale
+the Royal Jelly's
+des Gelée Royale
 %%%%
-the %sSerpent of Hell's
-der {adj-en}%sHöllenschlange
+the Serpent of Hell's
+{f}der Höllenschlange
 %%%%
-the %sLernaean hydra's
-der {adj-en}%sLernäischen Hydra
+the Lernaean hydra's
+{f}der Lernäischen Hydra
 %%%%
 Cigotuvi's Monster's
 von Cigotuvis Monster
 %%%%
-the %sStatue of Wucad Mu's
-der {adj-en}%sStatue von Wucad Mu
+the Statue of Wucad Mu's
+{f}der Statue von Wucad Mu
 
 # not really uniques, but gramatically similar
 
@@ -258,11 +258,11 @@ der {adj-en}%sStatue von Wucad Mu
 something's
 des Etwas
 %%%%
-%s@name@'s ghost's
-des {adj-en}%sGeistes von @name@
+@name@'s ghost's
+des Geistes von @name@
 %%%%
-%s@name@'s illusion's
-der {adj-en}%sIllusion von @name@
+@name@'s illusion's
+{f}der Illusion von @name@
 %%%%
 
 ##################

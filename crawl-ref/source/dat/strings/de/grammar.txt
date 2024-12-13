@@ -35,6 +35,33 @@
 # Pregeneration
 #################################
 
+# Note: These are run in numbered order, and the results of earlier runs are
+# available to later runs (and later runs must take into account the fact that
+# the results of the earlier runs exist).
+
+#############
+# select all nouns with definite article and generate a version with an
+# adjective placeholder after the article
+%%%%
+PREGENERATE:0
+
+SELECT:/^the (?!%s)/
+
+# English
+KEY:/^the /the %s/
+# "pair of boots/gloves" (but not quick blades) needs a second adjective placeholder
+KEY:/pair of (?!quick blades)/pair of %s/
+
+# German
+# nominative singular
+/^(der|die|das) /$1 {adj-e}%s/
+# plural and genitive
+/^(\{pl\}die|\{f\}der|\{n\}des|\{m\}des|des) /$1 {adj-en}%s/
+# "pair of boots/gloves" (but not quick blades) needs a second adjective placeholder
+/Paar (?!Schnellklingen)/Paar {adj-e}%s/
+%%%%
+
+#############
 # generate indefinite (nominative) from definite
 %%%%
 PREGENERATE:1
@@ -89,9 +116,18 @@ KEY:/^(a|an) /your /
 /^(\{[mfn]\})?ein/$1dein/
 %%%%
 
-# generate no determiner (nominative) from indefinite
+# player ghost/illusion can have no determiner in English, but needs definite article in German
 %%%%
 PREGENERATE:4
+
+SELECT:/^the (%s)?@name@'s/
+
+KEY:/^the //
+%%%%
+
+# generate no determiner (nominative) from indefinite
+%%%%
+PREGENERATE:5
 
 # exclude possessives
 SELECT:/^(a|an) .*[^']{2}$/

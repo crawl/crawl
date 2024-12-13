@@ -23,14 +23,8 @@ Reiseroute
 door
 Tür
 %%%%
-%sdoor
-%sTür
-%%%%
 gate
 Tor
-%%%%
-%sgate
-{adj-es}%sTor
 %%%%
 tree
 Baum
@@ -653,8 +647,8 @@ Wand aus weißem Kristall
 weirdly glowing ball
 seltsam leuchtende Kugel
 %%%%
-%sfleshy orifice
-{adj-e}%sfleischige Öffnung
+fleshy orifice
+fleischige Öffnung
 %%%%
 
 ################################
@@ -670,14 +664,8 @@ die Reiseroute
 the door
 die Tür
 %%%%
-the %sdoor
-die %sTür
-%%%%
 the gate
 das Tor
-%%%%
-the %sgate
-das %sTor
 %%%%
 the tree
 der Baum
@@ -1167,14 +1155,8 @@ eine Reiseroute
 a door
 eine Tür
 %%%%
-a %sdoor
-eine %sTür
-%%%%
 a gate
 {n}ein Tor
-%%%%
-a %sgate
-ein {adj-es}%sTor
 %%%%
 a tree
 ein Baum
@@ -1788,8 +1770,8 @@ eine Wand aus weißem Kristall
 a weirdly glowing ball
 eine seltsam leuchtende Kugel
 %%%%
-a %sfleshy orifice
-eine {adj-e}%sfleischige Öffnung
+a fleshy orifice
+eine fleischige Öffnung
 %%%%
 
 ################################

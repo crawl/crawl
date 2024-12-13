@@ -137,8 +137,9 @@ der Schock
 the stunning burst
 die betäubende Explosion
 %%%%
-the orb of electricity
-die Elektrizitätskugel
+# duplicate of monster
+#the orb of electricity
+#die Elektrizitätskugel
 %%%%
 the splash of poison
 der Giftspritzer

@@ -132,16 +132,16 @@ Geschoss
 # Not sure where though.
 %%%%
 # executioner's axe
-%sexec axe
-{adj-e}%sHenkersaxt
+exec axe
+Henkersaxt
 %%%%
 # giant spiked club
-%sg.spiked club
-{adj-e}%sries. Stachelkeule
+g.spiked club
+ries. Stachelkeule
 %%%%
 # triple crossbow
-%striple xbow
-{adj-e}%s3fach-Armbrust
+triple xbow
+3fach-Armbrust
 %%%%
 
 #################################

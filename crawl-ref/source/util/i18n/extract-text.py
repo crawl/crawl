@@ -190,7 +190,7 @@ def process_art_data_txt():
             if re.search('(boots|gloves|gauntlets|quick blades)', name):
                 if not 'pair of ' in name:
                     name = 'pair of ' + name
-            result.append('the %s' + name)
+            result.append('the ' + name)
         elif 'DUMMY' in name:
             continue
         elif line.startswith('APPEAR:'):
@@ -1203,26 +1203,26 @@ def special_handling_for_mon_data_h(strings):
     # singular non-unique
     output.append("# section: non-unique monsters, singular")
     for string in names:
-        output.append('the %s' + string)
+        output.append('the ' + string)
 
     # singular unique
     output.append("# section: unique monsters")
     for string in unique_names:
         if string.startswith('the '):
-            output.append(re.sub('^the ', 'the %s', string))
+            output.append(string)
         else:
-            output.append('the %s' + string)
+            output.append('the ' + string)
 
     # possessive non-unique
     output.append("# section: non-unique monsters, singular possessive")
     for string in names:
-        output.append('the %s' + possessive(string))
+        output.append('the ' + possessive(string))
 
     # possessive unique
     output.append("# section: unique monsters, possessive")
     for string in unique_names:
         if string.startswith('the '):
-            output.append(re.sub('^the ', 'the %s', possessive(string)))
+            output.append(possessive(string))
         else:
             output.append(possessive(string))
 
@@ -1252,14 +1252,10 @@ def special_handling_for_item_prop_cc(strings):
             # all possibilities covered above
             continue
         elif string in ['gloves', 'boots']:
-            string = 'pair of %s' + string
+            string = 'pair of ' + string
         elif string in ['javelin', 'boomerang']:
             output.append("the " + string)
             string = 'silver ' + string
-
-        if not is_missile(string):
-            # placeholder for adjective
-            string = "%s" + string
 
         # stackable items need a plural with count
         if is_missile(string) or "potion" in string or "scroll" in string:
@@ -1303,7 +1299,7 @@ def special_handling_for_item_name_cc(strings):
             noun = re.sub('_.*', '', section)
             if not string.endswith(' '):
                 string += ' '
-            string = 'the %s' + string + noun
+            string = 'the ' + string + noun
         elif section == 'item_def::name':
             if string == ' (in ':
                 result.append(' (in hand)')
@@ -1388,11 +1384,7 @@ def special_handling_for_item_name_cc(strings):
             # uncounted plural for known items menu
             if string != 'horn of Geryon':
                 extras1.append(pluralise(string))
-            if string == 'figurine of a ziggurat':
-                # can have an enchantment
-                string = 'the %s' + string
-            else:
-                string = 'the ' + string
+            string = 'the ' + string
         elif section == '_book_type_name':
             if string == 'Fixed Level' or string == 'Fixed Theme':
                 continue
@@ -1405,10 +1397,10 @@ def special_handling_for_item_name_cc(strings):
                 string = add_spellbook_article(string)
         elif section == 'staff_type_name':
             extras1.append('staves of ' + string)
-            string = 'the %sstaff of ' + string
+            string = 'the staff of ' + string
         elif section == 'ghost_brand_name':
             if string == '%s weapon':
-                string = 'the %sweapon'
+                string = 'the weapon'
             elif string == 'weapon of %s':
                 # suffixes handles separately
                 continue
@@ -1992,7 +1984,7 @@ def separate_adjectives(string):
         if i != len(words) - 1:
             words[i] = words[i] + " "
         else:
-            words[i] = "the %s" + words[i]
+            words[i] = "the " + words[i]
     return words
 
 def article_the(string):
@@ -2141,12 +2133,8 @@ def get_noun_permutations(string, is_monster = False):
     else:
         is_unique = is_unique_noun(string, is_monster)
         base = re.sub("^(the|a|an) ", "", string)
-        base = re.sub("^%s", "", base)
 
-        full = base
-        # add placeholder for adjective(s)
-        full = "the %s" + full
-
+        full = "the " + base
         list.append(full)
 
         # possessive (for monsters)
@@ -2296,7 +2284,7 @@ for filename in files:
                 # treat like monsters in mon-data.h
                 append_monster_permutations(filtered_strings, string)
             elif string == " the pandemonium lord":
-                filtered_strings.append("the %spandemonium lord")
+                filtered_strings.append(string.strip())
             elif string == "deck of " or string == "decks of ":
                 if string == "deck of ":
                     string = "the " + string
@@ -2308,7 +2296,7 @@ for filename in files:
                 IGNORE_STRINGS.append("stacked deck")
             elif string.endswith(" Sword"):
                 # alternative names for Singing Sword based on mood
-                filtered_strings.append("the %s" + string)
+                filtered_strings.append("the " + string)
             else:
                 filtered_strings.append(string)
         strings = filtered_strings
@@ -2331,7 +2319,7 @@ for filename in files:
         # Add other forms to ignore list so they don't get picked up anywhere else.
         for string in strings:
             if re.search("^(the|a|an) ", string) and not string.endswith("'s"):
-                string2 = re.sub("^(the|a|an) (%s)?", "", string)
+                string2 = re.sub("^(the|a|an) ", "", string)
                 IGNORE_STRINGS.append(string2)
                 if string.startswith("the "):
                     IGNORE_STRINGS.append(article_a(string2))

@@ -242,8 +242,8 @@ Gelée Royale
 Serpent of Hell
 Höllenschlange
 %%%%
-%sLernaean hydra
-{adj-e}%sLernäische Hydra
+Lernaean hydra
+Lernäische Hydra
 %%%%
 Cigotuvi's Monster
 Cigotuvis Monster
@@ -263,11 +263,11 @@ something you cannot see
 etwas Unsichtbares
 %%%%
 # note: we use a definite article in German, even though there isn't one in English
-%s@name@'s ghost
-der {adj-e}%sGeist von @name@
+@name@'s ghost
+der Geist von @name@
 %%%%
-%s@name@'s illusion
-die {adj-e}%sIllusion von @name@
+@name@'s illusion
+die Illusion von @name@
 %%%%
 
 ##################

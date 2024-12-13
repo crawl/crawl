@@ -8,265 +8,265 @@
 ###############################################################################
 
 %%%%
-the %sMennas
-der {adj-e}%sMennas
+the Mennas
+der Mennas
 %%%%
-the %sNessos
-das {adj-e}%sNessos
+the Nessos
+das Nessos
 %%%%
-the %sChuck
-der {adj-e}%sChuck
+the Chuck
+der Chuck
 %%%%
-the %sPolyphemus
-der {adj-e}%sPolyphem
+the Polyphemus
+der Polyphem
 %%%%
-the %sAntaeus
-der {adj-e}%sAntaeus
+the Antaeus
+der Antaeus
 %%%%
-the %sTiamat
-die {adj-e}%sTiamat
+the Tiamat
+die Tiamat
 %%%%
-the %sBai Suzhen
-die {adj-e}%sBai Suzhen
+the Bai Suzhen
+die Bai Suzhen
 %%%%
-the %sXtahua
-das {adj-e}%sXtahua
+the Xtahua
+das Xtahua
 %%%%
-the %sIjyb
-die {adj-e}%sIjyb
+the Ijyb
+die Ijyb
 %%%%
-the %sRobin
-das {adj-e}%sRobin
+the Robin
+das Robin
 %%%%
-the %sGrum
-der {adj-e}%sGrum
+the Grum
+der Grum
 %%%%
-the %sDuvessa
-die {adj-e}%sDuvessa
+the Duvessa
+die Duvessa
 %%%%
-the %sDowan
-der {adj-e}%sDowan
+the Dowan
+der Dowan
 %%%%
-the %sFannar
-das {adj-e}%sFannar
+the Fannar
+das Fannar
 %%%%
-the %sJorgrun
-der {adj-e}%sJorgrun
+the Jorgrun
+der Jorgrun
 %%%%
-the %sNatasha
-die {adj-e}%sNatascha
+the Natasha
+die Natascha
 %%%%
-the %sArachne
-die {adj-e}%sArachne
+the Arachne
+die Arachne
 %%%%
-the %sAsterion
-der {adj-e}%sAsterion
+the Asterion
+der Asterion
 %%%%
-the %sAgnes
-die {adj-e}%sAgnes
+the Agnes
+die Agnes
 %%%%
-the %sDissolution
-die {adj-e}%sDissolution
+the Dissolution
+die Dissolution
 %%%%
-the %sSonja
-die {adj-e}%sSonja
+the Sonja
+die Sonja
 %%%%
-the %sPikel
-der {adj-e}%sPikel
+the Pikel
+der Pikel
 %%%%
-the %sBoris
-der {adj-e}%sBoris
+the Boris
+der Boris
 %%%%
-the %sMenkaure
-der {adj-e}%sMenkaure
+the Menkaure
+der Menkaure
 %%%%
-the %sKhufu
-der {adj-e}%sKhufu
+the Khufu
+der Khufu
 %%%%
-the %sIlsuiw
-die {adj-e}%sIlsuiw
+the Ilsuiw
+die Ilsuiw
 %%%%
-the %sVashnia
-die {adj-e}%sVashnia
+the Vashnia
+die Vashnia
 %%%%
-the %sErolcha
-die {adj-e}%sErolcha
+the Erolcha
+die Erolcha
 %%%%
-the %sUrug
-die {adj-e}%sUrug
+the Urug
+die Urug
 %%%%
-the %sNergalle
-die {adj-e}%sNergalle
+the Nergalle
+die Nergalle
 %%%%
-the %sSaint Roka
-der {adj-e}%sSankt Roka
+the Saint Roka
+der Sankt Roka
 %%%%
-the %sSojobo
-die {adj-e}%sSojobo
+the Sojobo
+die Sojobo
 %%%%
-the %sAzrael
-der {adj-e}%sAzrael
+the Azrael
+der Azrael
 %%%%
-the %sMara
-der {adj-e}%sMara
+the Mara
+der Mara
 %%%%
-the %sAizul
-die {adj-e}%sAizul
+the Aizul
+die Aizul
 %%%%
-the %sSnorg
-die {adj-e}%sSnorg
+the Snorg
+die Snorg
 %%%%
-the %sPurgy
-der {adj-e}%sPurgy
+the Purgy
+der Purgy
 %%%%
-the %sJory
-der {adj-e}%sJory
+the Jory
+der Jory
 %%%%
-the %sGastronok
-der {adj-e}%sGastronok
+the Gastronok
+der Gastronok
 %%%%
-the %sNellie
-die {adj-e}%sNellie
+the Nellie
+die Nellie
 %%%%
-the %sMurray
-der {adj-e}%sMurray
+the Murray
+der Murray
 %%%%
-the %sIgnacio
-der {adj-e}%sIgnacio
+the Ignacio
+der Ignacio
 %%%%
-the %sGrinder
-die {adj-e}%sGrinder
+the Grinder
+die Grinder
 %%%%
-the %sRoxanne
-die {adj-e}%sRoxanne
+the Roxanne
+die Roxanne
 %%%%
-the %sTerence
-der {adj-e}%sTerence
+the Terence
+der Terence
 %%%%
-the %sJessica
-die {adj-e}%sJessica
+the Jessica
+die Jessica
 %%%%
-the %sSigmund
-der {adj-e}%sSigmund
+the Sigmund
+der Sigmund
 %%%%
-the %sEdmund
-der {adj-e}%sEdmund
+the Edmund
+der Edmund
 %%%%
-the %sPsyche
-die {adj-e}%sPsyche
+the Psyche
+die Psyche
 %%%%
-the %sDonald
-der {adj-e}%sDonald
+the Donald
+der Donald
 %%%%
-the %sJoseph
-der {adj-e}%sJoseph
+the Joseph
+der Joseph
 %%%%
-the %sErica
-die {adj-e}%sErica
+the Erica
+die Erica
 %%%%
-the %sJosephine
-die {adj-e}%sJosephine
+the Josephine
+die Josephine
 %%%%
-the %sHarold
-der {adj-e}%sHarold
+the Harold
+der Harold
 %%%%
-the %sLouise
-die {adj-e}%sLouise
+the Louise
+die Louise
 %%%%
-the %sFrances
-die {adj-e}%sFrances
+the Frances
+die Frances
 %%%%
-the %sRupert
-der {adj-e}%sRupert
+the Rupert
+der Rupert
 %%%%
-the %sKirke
-die {adj-e}%sKirke
+the Kirke
+die Kirke
 %%%%
-the %sFrederick
-der {adj-e}%sFrederick
+the Frederick
+der Frederick
 %%%%
-the %sMargery
-die {adj-e}%sMargery
+the Margery
+die Margery
 %%%%
-the %sMaggie
-die {adj-e}%sMaggie
+the Maggie
+die Maggie
 %%%%
-the %sEustachio
-der {adj-e}%sEustachio
+the Eustachio
+der Eustachio
 %%%%
-the %sMaurice
-der {adj-e}%sMaurice
+the Maurice
+der Maurice
 %%%%
-the %sNikola
-der {adj-e}%sNikola
+the Nikola
+der Nikola
 %%%%
-the %sMnoleg
-das {adj-e}%sMnoleg
+the Mnoleg
+das Mnoleg
 %%%%
-the %sLom Lobon
-das {adj-e}%sLom Lobon
+the Lom Lobon
+das Lom Lobon
 %%%%
-the %sCerebov
-der {adj-e}%sCerebov
+the Cerebov
+der Cerebov
 %%%%
-the %sGloorx Vloq
-das {adj-e}%sGloorx Vloq
+the Gloorx Vloq
+das Gloorx Vloq
 %%%%
-the %sGeryon
-der {adj-e}%sGeryon
+the Geryon
+der Geryon
 %%%%
-the %sDispater
-der {adj-e}%sDispater
+the Dispater
+der Dispater
 %%%%
-the %sAsmodeus
-der {adj-e}%sAsmodäus
+the Asmodeus
+der Asmodäus
 %%%%
-the %sEreshkigal
-die {adj-e}%sEreshkigal
+the Ereshkigal
+die Ereshkigal
 %%%%
-the %sPrince Ribbit
-der {adj-e}%sPrinz Ribbit
+the Prince Ribbit
+der Prinz Ribbit
 %%%%
-the %sCrazy Yiuf
-der {adj-e}%sVerrückte Yiuf
+the Crazy Yiuf
+der Verrückte Yiuf
 %%%%
-the %sEnchantress
-die {adj-e}%sZauberin
+the Enchantress
+die Zauberin
 %%%%
-the %sBlork the orc
-der {adj-e}%sBlork der Ork
+the Blork the orc
+der Blork der Ork
 %%%%
-the %sBlork
-der {adj-e}%sBlork
+the Blork
+der Blork
 %%%%
-the %sRoyal Jelly
-das {adj-e}%sGelée Royale
+the Royal Jelly
+das Gelée Royale
 %%%%
-the %sSerpent of Hell
-die {adj-e}%sHöllenschlange
+the Serpent of Hell
+die Höllenschlange
 %%%%
-the %sLernaean hydra
-die {adj-e}%sLernäische Hydra
+the Lernaean hydra
+die Lernäische Hydra
 %%%%
-the %sCigotuvi's Monster
-das {adj-e}%sCigotuvis Monster
+the Cigotuvi's Monster
+das Cigotuvis Monster
 %%%%
-the %sStatue of Wucad Mu
-die {adj-e}%sStatue von Wucad Mu
+the Statue of Wucad Mu
+die Statue von Wucad Mu
 %%%%
 
 # not really uniques, but gramatically similar
 
 %%%%
 # unseen monster
-the %ssomething
-das {adj-e}%sEtwas
+the something
+das Etwas
 %%%%
-the %s@name@'s ghost
-der {adj-e}%sGeist von @name@
+the @name@'s ghost
+der Geist von @name@
 %%%%
-the %s@name@'s illusion
-die {adj-e}%sIllusion von @name@
+the @name@'s illusion
+die Illusion von @name@
 %%%%
 
 ##################

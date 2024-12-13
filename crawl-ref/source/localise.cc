@@ -834,12 +834,6 @@ static bool _find_base_name(const string& s, string& base_en, string& base_xlate
             break;
         }
 
-        // try with space not in base name (e.g. "the %sbroad axe")
-        base_en = prefix + base;
-        base_xlated = _localise_possibly_counted_string(_context, base_en);
-        if (!base_xlated.empty())
-            return true;
-
         // try with space in base name (e.g. "the %s broad axe")
         base_en = prefix + " " + base;
         base_xlated = _localise_possibly_counted_string(_context, base_en);
@@ -850,6 +844,12 @@ static bool _find_base_name(const string& s, string& base_en, string& base_xlate
                 rest = main.substr(0, pos - 1);
             return true;
         }
+
+        // try with space not in base name (e.g. "the %sbroad axe")
+        base_en = prefix + base;
+        base_xlated = _localise_possibly_counted_string(_context, base_en);
+        if (!base_xlated.empty())
+            return true;
 
         pos = main.find(' ', pos+1);
         if (pos == string::npos)
@@ -1438,7 +1438,8 @@ static string _localise_ghost_name(const string& context, const string& value)
     string base;
     if (!determiner.empty())
         base = determiner + " ";
-    base += "%s";   // placeholder for adjectives
+    if (!adjs.empty())
+        base += "%s";   // placeholder for adjectives
     base += "@name@'s"; // placeholder for name
     base += " " + suffix;
 

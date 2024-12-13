@@ -2,8 +2,6 @@
 #
 # Items - unique, nominative
 #
-# Note that %s is a placeholder for any adjectives
-#
 ###############################################################################
 
 
@@ -23,361 +21,361 @@ Die Kugel von Zot
 # Unrand Artefacts
 #################################
 %%%%
-the %sSinging Sword
-das {adj-e}%ssingende Schwert
+the Singing Sword
+das singende Schwert
 %%%%
 # alternative name for the Singing Sword
-the %sScreaming Sword
-das {adj-e}%sschreiende Schwert
+the Screaming Sword
+das schreiende Schwert
 %%%%
 # alternative name for the Singing Sword
-the %sSulking Sword
-das {adj-e}%sschmollende Schwert
+the Sulking Sword
+das schmollende Schwert
 %%%%
-the %spair of quick blades "Gyre" and "Gimble"
-das {adj-e}%sPaar Schnellklingen "Gyre" und "Gimble"
+the pair of quick blades "Gyre" and "Gimble"
+das Paar Schnellklingen "Gyre" und "Gimble"
 %%%%
-the %sWrath of Trog
-der {adj-e}%sZorn von Trog
+the Wrath of Trog
+der Zorn von Trog
 %%%%
-the %smace of Variability
-der {adj-e}%sStreitkolben der Variabilität
+the mace of Variability
+der Streitkolben der Variabilität
 %%%%
-the %sglaive of Prune
-die {adj-e}%sGleve der Prünelle
+the glaive of Prune
+die Gleve der Prünelle
 %%%%
-the %ssword of Power
-das {adj-e}%sSchwert der Macht
+the sword of Power
+das Schwert der Macht
 %%%%
-the %sstaff of Olgreb
-der {adj-e}%sStab von Olgreb
+the staff of Olgreb
+der Stab von Olgreb
 %%%%
-the %sstaff of Wucad Mu
-der {adj-e}%sStab von Wucad Mu
+the staff of Wucad Mu
+der Stab von Wucad Mu
 %%%%
-the %sVampire's Tooth
-der {adj-e}%sZahn des Vampirs
+the Vampire's Tooth
+der Zahn des Vampirs
 %%%%
-the %sscythe of Curses
-die {adj-e}%sSense der Flüche
+the scythe of Curses
+die Sense der Flüche
 %%%%
-the %ssceptre of Torment
-das {adj-e}%sZepter der Peinigung
+the sceptre of Torment
+das Zepter der Peinigung
 %%%%
-the %ssword of Zonguldrok
-das {adj-e}%sSchwert von Zonguldrok
+the sword of Zonguldrok
+das Schwert von Zonguldrok
 %%%%
-the %ssword of Cerebov
-das {adj-e}%sSchwert von Cerebov
+the sword of Cerebov
+das Schwert von Cerebov
 %%%%
-the %sstaff of Dispater
-der {adj-e}%sStab von Dispater
+the staff of Dispater
+der Stab von Dispater
 %%%%
-the %ssceptre of Asmodeus
-das {adj-e}%sZepter von Asmodeus
+the sceptre of Asmodeus
+das Zepter von Asmodeus
 %%%%
-the %sfaerie dragon scales
-die {adj-en}%sFeen-Drachenschuppen
+the faerie dragon scales
+{pl}die Feen-Drachenschuppen
 %%%%
-the %sdemon blade "Bloodbane"
-die {adj-e}%sDämonenklinge "Blutfluch"
+the demon blade "Bloodbane"
+die Dämonenklinge "Blutfluch"
 %%%%
-the %sscimitar of Flaming Death
-der {adj-e}%sKrummsäbel des flammenden Todes
+the scimitar of Flaming Death
+der Krummsäbel des flammenden Todes
 %%%%
-the %seveningstar "Brilliance"
-der {adj-e}%sAbendstern "Brillanz"
+the eveningstar "Brilliance"
+der Abendstern "Brillanz"
 %%%%
-the %sdemon blade "Leech"
-die {adj-e}%sDämonenklinge "Egel"
+the demon blade "Leech"
+die Dämonenklinge "Egel"
 %%%%
-the %sdagger of Chilly Death
-der {adj-e}%sDolch des kühlen Todes
+the dagger of Chilly Death
+der Dolch des kühlen Todes
 %%%%
-the %sdagger "Morg"
-der {adj-e}%sDolch "Morg"
+the dagger "Morg"
+der Dolch "Morg"
 %%%%
-the %sscythe "Finisher"
-die {adj-e}%sSense "Beender"
+the scythe "Finisher"
+die Sense "Beender"
 %%%%
-the %ssling "Punk"
-die {adj-e}%sSchleuder "Punk"
+the sling "Punk"
+die Schleuder "Punk"
 %%%%
-the %slongbow "Zephyr"
-der {adj-e}%sLangbogen "Zephyr"
+the longbow "Zephyr"
+der Langbogen "Zephyr"
 %%%%
-the %sgiant club "Skullcrusher"
-die {adj-e}%sRiesenkeule "Schädelbrecher"
+the giant club "Skullcrusher"
+die Riesenkeule "Schädelbrecher"
 %%%%
-the %sglaive of the Guard
-die {adj-e}%sGleve der Wache
+the glaive of the Guard
+die Gleve der Wache
 %%%%
-the %szealot's sword
-das {adj-e}%sSchwert des Zeloten
+the zealot's sword
+das Schwert des Zeloten
 %%%%
-the %sarbalest "Damnation"
-die {adj-e}%sArmbrust "Verdammnis"
+the arbalest "Damnation"
+die Armbrust "Verdammnis"
 %%%%
-the %ssword of the Doom Knight
-das {adj-e}%sSchwert des Verhängnis-Ritters
+the sword of the Doom Knight
+das Schwert des Verhängnis-Ritters
 %%%%
-the %smorningstar "Eos"
-der {adj-e}%sMorgenstern "Eos"
+the morningstar "Eos"
+der Morgenstern "Eos"
 %%%%
-the %sspear of the Botono
-der {adj-e}%sSpeer des Botonos
+the spear of the Botono
+der Speer des Botonos
 %%%%
-the %strident of the Octopus King
-der {adj-e}%sDreizack des Krakenkönigs
+the trident of the Octopus King
+der Dreizack des Krakenkönigs
 %%%%
-the %smithril axe "Arga"
-die {adj-e}%sMithrilaxt "Arga"
+the mithril axe "Arga"
+die Mithrilaxt "Arga"
 %%%%
-the %sElemental Staff
-der {adj-e}%sElementarstecken
+the Elemental Staff
+der Elementarstecken
 %%%%
-the %sheavy crossbow "Sniper"
-die {adj-e}%sschwere Armbrust "Scharfschütze"
+the heavy crossbow "Sniper"
+die schwere Armbrust "Scharfschütze"
 %%%%
-the %slongbow "Piercer"
-der {adj-e}%sLangbogen "Stecher"
+the longbow "Piercer"
+der Langbogen "Stecher"
 %%%%
-the %sblowgun of the Assassin
-das {adj-e}%sBlasrohr des Assassinen
+the blowgun of the Assassin
+das Blasrohr des Assassinen
 %%%%
-the %slance "Wyrmbane"
-die {adj-e}%sLanze "Wyrmbane"
+the lance "Wyrmbane"
+die Lanze "Wyrmbane"
 %%%%
-the %sSpriggan's Knife
-das {adj-e}%sMesser des Spriggans
+the Spriggan's Knife
+das Messer des Spriggans
 %%%%
-the %splutonium sword
-das {adj-e}%sPlutoniumschwert
+the plutonium sword
+das Plutoniumschwert
 %%%%
-the %sgreat mace "Undeadhunter"
-der {adj-e}%sgroße Streitkolben "Untotenjäger"
+the great mace "Undeadhunter"
+der große Streitkolben "Untotenjäger"
 %%%%
-the %swhip "Snakebite"
-die {adj-e}%sPeitsche "Schlangenbiss"
+the whip "Snakebite"
+die Peitsche "Schlangenbiss"
 %%%%
-the %sknife of Accuracy
-das {adj-e}%sMesser der Genauigkeit
+the knife of Accuracy
+das Messer der Genauigkeit
 %%%%
-the %sLehudib's crystal spear
-der {adj-e}%sKristallspeer Lehudibs
+the Lehudib's crystal spear
+der Kristallspeer Lehudibs
 %%%%
-the %scaptain's cutlass
-das {adj-e}%sEntermesser des Kapitäns
+the captain's cutlass
+das Entermesser des Kapitäns
 %%%%
-the %sstorm bow
-der {adj-e}%sSturmbogen
+the storm bow
+der Sturmbogen
 %%%%
-the %stower shield of Ignorance
-der {adj-e}%sTurmschild des Nichtwissens
+the tower shield of Ignorance
+der Turmschild des Nichtwissens
 %%%%
-the %srobe of Augmentation
-das {adj-e}%sGewand der Augmentation
+the robe of Augmentation
+das Gewand der Augmentation
 %%%%
-the %scloak of the Thief
-der {adj-e}%sUmhang des Diebes
+the cloak of the Thief
+der Umhang des Diebes
 %%%%
-the %stower shield "Bullseye"
-der {adj-e}%sTurmschild "Volltreffer"
+the tower shield "Bullseye"
+der Turmschild "Volltreffer"
 %%%%
-the %scrown of Dyrovepreva
-die {adj-e}%sKrone von Dyrovepreva
+the crown of Dyrovepreva
+die Krone von Dyrovepreva
 %%%%
-the %shat of the Bear Spirit
-der {adj-e}%sHut des Bärengeistes
+the hat of the Bear Spirit
+der Hut des Bärengeistes
 %%%%
-the %srobe of Misfortune
-die {adj-e}%sRobe des Unglücks
+the robe of Misfortune
+die Robe des Unglücks
 %%%%
-the %scloak of Flash
-der {adj-e}%sUmhang von Flash
+the cloak of Flash
+der Umhang von Flash
 %%%%
-the %shood of the Assassin
-die {adj-e}%sKapuze des Assassinen
+the hood of the Assassin
+die Kapuze des Assassinen
 %%%%
-the %sLear's hauberk
-die {adj-e}%sHalsberge Lears
+the Lear's hauberk
+die Halsberge Lears
 %%%%
-the %sskin of Zhor
-die {adj-e}%sHaut von Zhor
+the skin of Zhor
+die Haut von Zhor
 %%%%
-the %ssalamander hide armour
-die {adj-e}%sSalamanderhaut-Rüstung
+the salamander hide armour
+die Salamanderhaut-Rüstung
 %%%%
-the %spair of gauntlets of War
-das {adj-e}%sPaar Gantelets des Krieges
+the pair of gauntlets of War
+das Paar Gantelets des Krieges
 %%%%
-the %sshield of Resistance
-der {adj-e}%sSchild der Resistenz
+the shield of Resistance
+der Schild der Resistenz
 %%%%
-the %srobe of Folly
-das {adj-e}%sGewand der Torheit
+the robe of Folly
+das Gewand der Torheit
 %%%%
-the %sMaxwell's patent armour
-die {adj-e}%spatentierte Rüstung Maxwells
+the Maxwell's patent armour
+die patentierte Rüstung Maxwells
 %%%%
-the %smask of the Dragon
-die {adj-e}%sMaske des Drachens
+the mask of the Dragon
+die Maske des Drachens
 %%%%
-the %srobe of Night
-die {adj-e}%sRobe der Nacht
+the robe of Night
+die Robe der Nacht
 %%%%
-the %sscales of the Dragon King
-die {adj-en}%sSchuppen des Drachenkönigs
+the scales of the Dragon King
+die Schuppen des Drachenkönigs
 %%%%
-the %shat of the Alchemist
-der {adj-e}%sHut des Alchemisten
+the hat of the Alchemist
+der Hut des Alchemisten
 %%%%
-the %spair of fencer's gloves
-das {adj-e}%sPaar Handschuhe des Fechters
+the pair of fencer's gloves
+das Paar Handschuhe des Fechters
 %%%%
-the %scloak of Starlight
-der {adj-e}%sUmhang des Sternenlichts
+the cloak of Starlight
+der Umhang des Sternenlichts
 %%%%
-the %sratskin cloak
-der {adj-e}%sRattenfellumhang
+the ratskin cloak
+der Rattenfellumhang
 %%%%
-the %sshield of the Gong
-der {adj-e}%sSchild des Gongs
+the shield of the Gong
+der Schild des Gongs
 %%%%
-the %samulet of the Air
-das {adj-e}%sAmulett der Luft
+the amulet of the Air
+das Amulett der Luft
 %%%%
-the %sring of Shadows
-der {adj-e}%sRing der Schatten
+the ring of Shadows
+der Ring der Schatten
 %%%%
-the %samulet of Cekugob
-das {adj-e}%sAmulett von Cekugob
+the amulet of Cekugob
+das Amulett von Cekugob
 %%%%
-the %samulet of the Four Winds
-das {adj-e}%sAmulett der vier Winde
+the amulet of the Four Winds
+das Amulett der vier Winde
 %%%%
-the %snecklace of Bloodlust
-die {adj-e}%sKette des Blutrausches
+the necklace of Bloodlust
+die Kette des Blutrausches
 %%%%
-the %sring of Phasing
-der {adj-e}%sRing der Phase
+the ring of Phasing
+der Ring der Phase
 %%%%
-the %sring of Robustness
-der {adj-e}%sRing der Robustheit
+the ring of Robustness
+der Ring der Robustheit
 %%%%
-the %sring of the Mage
-der {adj-e}%sRing des Magiers
+the ring of the Mage
+der Ring des Magiers
 %%%%
-the %sring of the Hare
-der {adj-e}%sRing des Hasen
+the ring of the Hare
+der Ring des Hasen
 %%%%
-the %sring of the Tortoise
-der {adj-e}%sRing der Schildkröte
+the ring of the Tortoise
+der Ring der Schildkröte
 %%%%
-the %sbrooch of Shielding
-die {adj-e}%sBrosche der Abschirmung
+the brooch of Shielding
+die Brosche der Abschirmung
 %%%%
-the %srobe of Clouds
-die {adj-e}%sRobe der Wolken
+the robe of Clouds
+die Robe der Wolken
 %%%%
-the %shat of Pondering
-der {adj-e}%sHut der Schwerfälligkeit
+the hat of Pondering
+der Hut der Schwerfälligkeit
 %%%%
-the %sobsidian axe
-die {adj-e}%sObsidianaxt
+the obsidian axe
+die Obsidianaxt
 %%%%
-the %slightning scales
-die {adj-en}%sBlitzschuppen
+the lightning scales
+{pl}die Blitzschuppen
 %%%%
-the %sBlack Knight's barding
-der {adj-e}%sHarnisch des schwarzen Ritters
+the Black Knight's barding
+der Harnisch des schwarzen Ritters
 %%%%
-the %samulet of Vitality
-das {adj-e}%sAmulett der Vitalität
+the amulet of Vitality
+das Amulett der Vitalität
 %%%%
-the %sautumn katana
-das {adj-e}%sHerbstkatana
+the autumn katana
+das Herbstkatana
 %%%%
-the %sshillelagh "Devastator"
-der {adj-e}%sShillelagh "Verwüster"
+the shillelagh "Devastator"
+der Shillelagh "Verwüster"
 %%%%
-the %sdragonskin cloak
-der {adj-e}%sDrachenhautumhang
+the dragonskin cloak
+der Drachenhautumhang
 %%%%
-the %sAxe of Woe
-die {adj-e}%sAxt des Wehs
+the Axe of Woe
+die Axt des Wehs
 %%%%
-the %smoon troll leather armour
-die {adj-e}%sMondtroll-lederrüstung
+the moon troll leather armour
+die Mondtroll-lederrüstung
 %%%%
-the %smacabre finger necklace
-die {adj-e}%smakabere Fingerhalskette
+the macabre finger necklace
+die makabere Fingerhalskette
 %%%%
-the %spair of boots of the spider
-das {adj-e}%sPaar Stiefel der Spinne
+the pair of boots of the spider
+das Paar Stiefel der Spinne
 %%%%
-the %sdark maul
-der {adj-e}%sdunkle Kriegshammer
+the dark maul
+der dunkle Kriegshammer
 %%%%
-the %shat of the High Council
-der {adj-e}%sHut des Hohen Rates
+the hat of the High Council
+der Hut des Hohen Rates
 %%%%
-the %sarc blade
-die {adj-e}%sLichtbogenklinge
+the arc blade
+die Lichtbogenklinge
 %%%%
-the %sdemon whip "Spellbinder"
-die {adj-e}%sDämonenpeitsche "Verzauberer"
+the demon whip "Spellbinder"
+die Dämonenpeitsche "Verzauberer"
 %%%%
-the %slajatang of Order
-der {adj-e}%sLajatang der Ordnung
+the lajatang of Order
+der Lajatang der Ordnung
 %%%%
-the %sgreat mace "Firestarter"
-der {adj-e}%sgroße Streitkolben "Brandstifter"
+the great mace "Firestarter"
+der große Streitkolben "Brandstifter"
 %%%%
-the %sorange crystal plate armour
-der {adj-e}%sorange Kristallplattenpanzer
+the orange crystal plate armour
+der orange Kristallplattenpanzer
 %%%%
-the %sMajin-Bo
-der {adj-e}%sMajin-Bo
+the Majin-Bo
+der Majin-Bo
 %%%%
-the %sMaxwell's etheric cage
-der {adj-e}%sÄtherkäfig von Maxwell
+the Maxwell's etheric cage
+der Ätherkäfig von Maxwell
 %%%%
-the %scrown of Eternal Torment
-die {adj-e}%sKrone der ewigen Peinigung
+the crown of Eternal Torment
+die Krone der ewigen Peinigung
 %%%%
-the %srobe of Vines
-das {adj-e}%sGewand der Reben
+the robe of Vines
+das Gewand der Reben
 %%%%
-the %sKryia's mail coat
-der {adj-e}%sSchuppenpanzer von Kryia
+the Kryia's mail coat
+der Schuppenpanzer von Kryia
 %%%%
-the %sfrozen axe "Frostbite"
-die {adj-e}%sgefrorene Axt "Erfrierungen"
+the frozen axe "Frostbite"
+die gefrorene Axt "Erfrierungen"
 %%%%
-the %sarmour of Talos
-die {adj-e}%sRüstung von Talos
+the armour of Talos
+die Rüstung von Talos
 %%%%
-the %swarlock's mirror
-der {adj-e}%sSpiegel des Hexenmeisters
+the warlock's mirror
+der Spiegel des Hexenmeisters
 %%%%
-the %samulet of invisibility
-das {adj-e}%sAmulett der Unsichtbarkeit
+the amulet of invisibility
+das Amulett der Unsichtbarkeit
 %%%%
-the %sMaxwell's thermic engine
-das {adj-e}%sthermische Gerät von Maxwell
+the Maxwell's thermic engine
+das thermische Gerät von Maxwell
 %%%%
-the %sdemon trident "Rift"
-der {adj-e}%sDämonendreizack "Riss"
+the demon trident "Rift"
+der Dämonendreizack "Riss"
 %%%%
-the %sstaff of Battle
-der {adj-e}%sStab der Schlacht
+the staff of Battle
+der Stab der Schlacht
 %%%%
-the %sCigotuvi's embrace
-die {adj-e}%sUmarmung von Cigotuvi
+the Cigotuvi's embrace
+die Umarmung von Cigotuvi
 %%%%
-the %spair of seven-league boots
-das {adj-es}%sPaar Siebenmeilenstiefel
+the pair of seven-league boots
+das Paar Siebenmeilenstiefel
 %%%%
 the horn of Geryon
 das Horn von Geryon

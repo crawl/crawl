@@ -13,6 +13,7 @@
 #include "regex-wrapper.h"
 
 #include <cstring>
+#include <chrono>
 using namespace std;
 
 #if 0
@@ -113,6 +114,8 @@ void init_xlate()
             continue;
 
         dprintf("**** Handle %s ****\n", rulesKey.c_str());
+        auto start = chrono::high_resolution_clock::now();
+        unsigned entries_added = 0;
 
         vector<string> rules = split_string("\n", rulesStr, true, false);
 
@@ -162,7 +165,13 @@ void init_xlate()
 
             dprintf("Adding entry: \"%s\" -> \"%s\"\n", key.c_str(), value.c_str());
             setTranslatedString(key, value);
+            entries_added++;
         }
+
+        auto end = chrono::high_resolution_clock::now();
+        auto millis = chrono::duration_cast<chrono::milliseconds>(end - start);
+        dprintf("%s - %u entries added in %ld ms\n",
+               rulesKey.c_str(), entries_added, millis.count());
     }
 }
 
