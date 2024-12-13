@@ -278,7 +278,7 @@ Du bist verschlungen und kannst nicht mehr atmen.
 # Drained
 %%%%
 Drain
-Entleert
+ausgezehrt
 %%%%
 extremely drained
 extrem ausgezehrt
