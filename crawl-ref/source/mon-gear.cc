@@ -683,6 +683,12 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         } } },
         { MONS_OGRE,                    { OGRE_WEAPONS } },
         { MONS_EROLCHA,                 { OGRE_WEAPONS } },
+        { MONS_ONI_INCARCERATOR, {
+            { { WPN_GLAIVE,             3 },
+              { WPN_BARDICHE,           1 }, },
+            { 1, 1, 3 },
+            { { SPWPN_FLAMING, 1 } }
+        } },
         { MONS_ILSUIW, {
             { { WPN_TRIDENT,            1 } },
             { 1, -1, 6, 2 },
@@ -745,7 +751,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         } },
         { MONS_FRAVASHI,
           // it'd be kinda weird to use trishulas considering they're from
-          // the literal opposing faith in the region.
+          // a literal opposing faith in the region.
             { { { WPN_HALBERD,       3 },
                 { WPN_GLAIVE,        6 },
                 { WPN_PARTISAN,      5 },
@@ -2223,6 +2229,13 @@ int make_mons_armour(monster_type type, int level)
                                                   5, ARM_FIRE_DRAGON_ARMOUR,
                                                   5, ARM_ICE_DRAGON_ARMOUR,
                                                   5, ARM_ACID_DRAGON_ARMOUR);
+        break;
+
+    case MONS_ONI_INCARCERATOR:
+        if (coinflip())
+            level = ISPEC_GOOD_ITEM;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type  = ARM_FIRE_DRAGON_ARMOUR;
         break;
 
     default:

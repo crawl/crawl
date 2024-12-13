@@ -1244,7 +1244,7 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    // ('O') Ogres.
+    // ('O') Ogres and oni.
     {  MST_OGRE_MAGE,
       {
        { SPELL_BOLT_OF_MAGMA, 15, MON_SPELL_WIZARD },
@@ -1258,6 +1258,13 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_CALL_DOWN_LIGHTNING, 50, MON_SPELL_MAGICAL },
        { SPELL_BLINK_RANGE, 20, MON_SPELL_MAGICAL },
+      }
+    },
+
+    {  MST_ONI_INCARCERATOR,
+      {
+       { SPELL_MANIFOLD_ASSAULT, 50, MON_SPELL_WIZARD },
+       { SPELL_THROW_BOLAS, 12, MON_SPELL_WIZARD },
       }
     },
 

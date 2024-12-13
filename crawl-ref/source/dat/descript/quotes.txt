@@ -2282,6 +2282,14 @@ the Lernaean hydra
  the flow of the blood.”
     -Diodorus Siculus, _Bibliotheca Historica_. [4. 11. 5.]. c. 100.
 %%%%
+Lodul
+
+“Cat:  But who can say what a thing is worth.
+ Girl: The free market, supposedly.
+ Cat:  What _price_ do we put on a _soul_?
+ Girl: $7.25 an hour.”
+    -Dorothy Gambrell, _Cat and Girl_, 2010.
+%%%%
 Mara
 
 “This night the Lord of Illusion passed among you, Mara, mighty among dreamers,
@@ -2593,22 +2601,6 @@ __cap-K_suffix
  places where they dig for Oare. The Greekes and Germans call them Cobali.”
     -Thomas Heywood, _The Hierarchy of the Blessed Angels_, Book IX, l. 568.
 1635.
-%%%%
-__cap-O_suffix
-
-“The little princess, asleep in her cradle, floated on the water, and at last
- she was cast up on the shore of a beautiful country, where, however, very few
- people dwelt since the ogre Ravagio and his wife Tourmentine had gone to live
- there-for they ate up everybody. Ogres are terrible people. When once they
- have tasted raw human flesh they will hardly eat anything else, and
- Tourmentine always knew how to make some body come their way, for she was half
- a fairy.”
-    -Marie-Catherine Le Jumel de Barneville, Baronne d'Aulnoy, “'Orangier et
-l'Abeille”. 1697.
-
-“NO. Layers. Onions have layers. Ogres have layers. Onions have layers. You get
- it? We both have layers.”
-    -Shrek. 2001.
 %%%%
 __cap-S_suffix
 
@@ -2954,6 +2946,12 @@ emperor scorpion
  on his feet.’”
     -Cassius Dio, _Roman History_, LXVI, xvii, 2. 222 A.D.
      trans. Earnest Cary, 1925.
+%%%%
+endoplasm
+
+“Sea horses floundering in the slimy mud,
+ Tossed up their heads, and dashed the ooze about them.”
+    -John Dryden. _All For Love_, I, i, 15-17. 1678.
 %%%%
 entropy weaver
 
@@ -3511,6 +3509,26 @@ octopode
  presently gone.”
     -Thomas Pynchon, _Gravity's Rainbow_. 1973.
 %%%%
+ogre
+
+“The little princess, asleep in her cradle, floated on the water, and at last
+ she was cast up on the shore of a beautiful country, where, however, very few
+ people dwelt since the ogre Ravagio and his wife Tourmentine had gone to live
+ there-for they ate up everybody. Ogres are terrible people. When once they
+ have tasted raw human flesh they will hardly eat anything else, and
+ Tourmentine always knew how to make some body come their way, for she was half
+ a fairy.”
+    -Marie-Catherine Le Jumel de Barneville, Baronne d'Aulnoy, “'Orangier et
+l'Abeille”. 1697.
+
+“NO. Layers. Onions have layers. Ogres have layers. Onions have layers. You get
+ it? We both have layers.”
+    -Shrek. 2001.
+%%%%
+ogre mage
+
+<ogre>
+%%%%
 oklob plant
 
 “Carbonic acid is one of the three materials which together form the starting
@@ -3529,11 +3547,18 @@ oklob sapling
 
 <oklob plant>
 %%%%
-endoplasm
+oni incarcerator
 
-“Sea horses floundering in the slimy mud,
- Tossed up their heads, and dashed the ooze about them.”
-    -John Dryden. _All For Love_, I, i, 15-17. 1678.
+“The popularity and longevity of the oni myth is no doubt partially based on
+ the beings’ conventional demonic accoutrements, which have remained
+ relatively constant through the ages: they are dreadful super-natural
+ beings emerging from the abyss of Buddhist hell to terrify wicked mortals;
+ their grotesque and savage demeanor and form instill instant fear; and the
+ oni’s omnipresence in the socio-historical and cultural archive of Japan is
+ directly attributable to the moral, social, and religious edification that
+ stories about oni engender.”
+    -Noriko T. Reider, _Japanese Demon Lore: Oni from Ancient Times to the
+     Present_, ch. 1, 2010.
 %%%%
 ophan
 
@@ -4080,6 +4105,10 @@ training dummy
      Mescaline 1927-1934_, “Protocol II: Highlights of the Second Hashish
      Impression”. 15 January 1928.
      trans. Scott J. Thompson, 1997.
+%%%%
+two-headed ogre
+
+<ogre>
 %%%%
 tyrant leech
  Scully: “Where the hell did it come from?”

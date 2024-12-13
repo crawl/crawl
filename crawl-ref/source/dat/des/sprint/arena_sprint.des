@@ -618,8 +618,8 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Elements/hells, Holy
                 "hell sentinel / quicksilver dragon /\
                     iron giant / caustic shrike / walking crystal tome",
-                "orb of fire w:20 / brimstone fiend / balrug / hellion w:20 /\
-                    fire giant / searing wretch w:5",
+                "orb of fire w:25 / brimstone fiend / balrug / hellion w:25 /\
+                    fire giant / searing wretch w:5 / oni incarcerator w:5",
                 "ice fiend / blizzard demon w:5 / shard shrike /\
                     white draconian knight / walking frostbound tome",
                 "spriggan air mage / titan / electric golem w:20 /\

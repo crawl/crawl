@@ -1240,16 +1240,18 @@ ENDMAP
 ##############################################################################
 # Vestibules
 #
-# Vestibule 1, basic
+# Vestibule 1, ranged semi-nostalgia
 NAME: sprint_mu_vestibule_basic
 TAGS: sprint_mu_vestibule no_rotate no_hmirror no_vmirror
-MONS: patrolling Geryon, yaktaur, yaktaur captain, stone giant
+MONS: patrolling Geryon, oni incarcerator, stone giant
+MONS: demonspawn warmonger ; plate armour . hand cannon good_item . \
+                             battleaxe good_item . kite shield
 MAP
-............................
-..........222.4.............
-..........2321..............
-..........222.4.............
-............................
+..........3.................
+.........2.3..4.............
+.............1..............
+.........2.3..4.............
+..........3.................
 ENDMAP
 
 ##############################################################################
@@ -1273,6 +1275,7 @@ MARKER: # = lua:props_marker({ \
             door_description_noun="gateway", \
          })
 MARKER: # = lua:restrict_door()
+TILE:   v = dngn_metal_iron
 MAP
 vvvvvvvvvvvvvv
 v.+34v.......v
@@ -1308,23 +1311,24 @@ MARKER:  G = lua:fog_machine { \
                 size_buildup_time = 1000, cloud_type = "flame" }
 COLOUR: #vG = red
 KFEAT: # = closed_door
+TILE:   c = stone_wall_pyre
 MARKER: # = lua:props_marker({ \
             door_description_suffix=" to the ashen valley of Gehenna", \
             door_description_noun="gateway", \
          })
 MARKER: # = lua:restrict_door()
 MAP
-vvvvvvvvvvvvvv
-vl.$$2$$2$!?%v
-vll..322.vvvov
-vllll.22.llllv
-v.llllllllll.v
-v.llllllllll.v
-v...llllll...v
-v.....ll.....v
-v............v
-vG..........Gv
-vvvvvv#vvvvvvv
+cccccccccccccc
+cl.$$2$$2$!?%c
+cll..322.cccoc
+cllll.22.llllc
+c.llllllllll.c
+c.llllllllll.c
+c...llllll...c
+c.....ll.....c
+c............c
+cG..........Gc
+cccccc#ccccccc
 ENDMAP
 
 
@@ -1337,7 +1341,7 @@ NAME: sprint_mu_cocytus_islands
 TAGS: sprint_mu_cocytus no_rotate no_hmirror no_vmirror
 KMONS: 1 = patrolling Antaeus ; tower shield ego:reflection
 KMONS: 2 = patrolling ice fiend
-KMONS: 3 = kraken simulacrum
+KMONS: 3 = shard shrike / elemental wellspring
 KFEAT: 3 = deep_water
 NSUBST: w = 3:3 / *:w
 NSUBST: 2 = 1:1 / 1:! /*:2
@@ -1354,6 +1358,7 @@ KITEM: ! = potion of resistance pre_id q:3, \
            potion of attraction pre_id q:3, potion of haste pre_id q:5
 COLOUR: #c = lightcyan
 KFEAT: # = closed_door
+TILE:   c = wall_icy_stone
 MARKER: # = lua:props_marker({ \
             door_description_suffix=" to the freezing wastes of Cocytus", \
             door_description_noun="gateway", \
@@ -1398,6 +1403,7 @@ KITEM: ? = potion of curing pre_id q:2, potion of heal wounds pre_id q:8
 COLOUR: # = darkgrey
 COLOUR: c = lightgrey
 KFEAT: # = closed_door
+TILE:   c = wall_cobalt_stone
 MARKER: # = lua:props_marker({ \
         door_description_suffix=" to the decaying netherworld of Tartarus", \
         door_description_noun="gateway", \

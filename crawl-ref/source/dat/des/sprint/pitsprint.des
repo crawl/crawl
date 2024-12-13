@@ -114,8 +114,9 @@ function base_monster_setup(e)
                orb of fire w:12 / electric golem / protean progenitor band w:6 /\
                ancient lich w:6 / dread lich w:6 / royal mummy / curse toe w:2 /\
                antique champion w:5 ; shadow dragon scales . kite shield . double sword /\
-               iron giant / hell sentinel w:12 / brimstone fiend / ice fiend /\
-               tzitzimitl / demonspawn corrupter w:2 / purple draconian shifter w:6 /\
+               oni incarcerator w:6 / iron giant / hell sentinel w:12 /\
+               brimstone fiend / ice fiend / tzitzimitl /\
+               demonspawn corrupter w:2 / purple draconian shifter w:6 /\
                pandemonium lord w:20 / seraph w:2")
 
   -- FIXME: this should probably use a huge comma uniq fallbacks syntax instead,

@@ -309,7 +309,7 @@ mset(with_props(spec_fn(function ()
   local e = 5 + you.zigs_completed() * 6
   local f = 10 + you.zigs_completed() * 15
   return "place:Geh:$ w:" .. d .. " / hellion w:" .. e .. " / " ..
-         "hellephant w:" .. e .. " / brimstone fiend w:" .. f
+         "oni incarcerator w:" .. e .. " / brimstone fiend w:" .. f
 end), { weight = 5 }))
 
 mset(with_props(spec_fn(function ()

@@ -693,14 +693,16 @@ POP_DEPTHS,
   // "branch flavour" threats
   {  1,  7,  450, SEMI, MONS_BALRUG },
   {  7, 14,  450, FALL, MONS_BALRUG },
+  {  1,  7,   30, FLAT, MONS_CREEPING_INFERNO },
   {  1,  7,  450, SEMI, MONS_SEARING_WRETCH },
   {  7, 14,  450, FALL, MONS_SEARING_WRETCH },
+  {  1,  7,  300, SEMI, MONS_HELLEPHANT },
+  {  8, 14,  300, FALL, MONS_HELLEPHANT },
   // cut these off for deep super-ood
-  {  1, 12,   70, FLAT, MONS_STOKER },
-  {  1, 12,   30, FLAT, MONS_CREEPING_INFERNO },
+  {  1, 10,   70, FLAT, MONS_STOKER },
   // "top tier" signature threats
-  {  1,  7,  400, RISE, MONS_HELLEPHANT },
-  {  8, 14,  400, FLAT, MONS_HELLEPHANT },
+  {  1,  8,  225, RISE, MONS_ONI_INCARCERATOR },
+  {  9, 14,  225, FLAT, MONS_ONI_INCARCERATOR },
   {  1, 14,  400, RISE, MONS_BRIMSTONE_FIEND },
 },
 
@@ -1318,8 +1320,9 @@ COMPILE_CHECK(ARRAYSZ(population_water) == NUM_BRANCHES);
 #define HELL_LAVA_POP {\
   {  1,  8,   300, FALL, MONS_NO_MONSTER }, \
   {  1,  7,    50, RISE, MONS_STOKER },\
-  {  1,  7,    50, FLAT, MONS_CREEPING_INFERNO },\
-  {  1,  7,   100, FLAT, MONS_NO_MONSTER },\
+  {  1,  7,    60, FLAT, MONS_CREEPING_INFERNO },\
+  {  1,  7,    20, FLAT, MONS_SEARING_WRETCH },\
+  {  1,  7,    70, FLAT, MONS_NO_MONSTER },\
 }
 
 // This is done to avoid duplicating the Depths list and can be

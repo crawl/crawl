@@ -1351,7 +1351,11 @@ spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
     // shapeshifters have a much easier time casting it.
     const size_t max_targets = weapon ? 4 + div_rand_round(pow, 25)
                                       : 2 + div_rand_round(pow, 50);
-    const int animation_delay = 80 / max_targets;
+    int animation_delay = 80 / (min(max_targets, targets.size()));
+
+    // Players cast it a lot, but only a few enemies do and should be noticed.
+    if (!(mons_aligned(&agent, &you)))
+        animation_delay *= 1.5;
 
     if ((Options.use_animations & UA_BEAM) != UA_NONE)
     {

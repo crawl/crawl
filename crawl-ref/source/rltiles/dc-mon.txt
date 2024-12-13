@@ -1020,6 +1020,7 @@ erolcha MONS_EROLCHA
 lodul MONS_LODUL
 %sdir mon/humanoids
 oni MONS_ONI
+oni_incarcerator MONS_ONI_INCARCERATOR
 %rim 1
 ogre MONS_OGRE
 two_headed_ogre MONS_TWO_HEADED_OGRE

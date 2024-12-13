@@ -2126,6 +2126,12 @@ oni
 A large, rowdy, and drink-loving creature. When they're not busy with their
 duties serving any number of gods, oni mostly love a good fight.
 %%%%
+oni incarcerator
+
+An infamous, dutiful retainer of Gehenna. These immense and indomitable oni
+weave their weapons through reality itself to reach and capture the innumerable
+damned souls owed to the hells upon their deaths.
+%%%%
 ophan
 
 A creature from the heavenly realms. It consists of a wheel within a wheel, and

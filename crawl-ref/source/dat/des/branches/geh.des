@@ -72,7 +72,7 @@ NAME:    hangedman_generic_boss_arena
 TAGS:    no_monster_gen
 DEPTH:   Geh, !Geh:$
 ORIENT:  encompass
-MONS:    salamander tyrant, hellion, balrug, balrug
+MONS:    salamander tyrant, hellion, balrug, oni incarcerator
 MONS:    fire giant, searing wretch, hell hog
 KFEAT:   L = l
 SHUFFLE: dD, eE / fF / 56, 56 / 65 / 55 / 66 / 77 / '', ABC / 234 / <<<, 234 / 322
@@ -106,17 +106,18 @@ ENDMAP
 NAME:    hangedman_hellfire_club
 TAGS:    transparent no_monster_gen
 DEPTH:   Geh, !Geh:$, Zot:1-4
-MONS:    red draconian scorcher, red draconian stormcaller, hellion
+MONS:    red draconian scorcher, red draconian stormcaller
+MONS:    hellion, oni incarcerator
 KMONS:   L = patrolling creeping inferno / nothing w:15
 ITEM:    any potion good_item
 KFEAT:   L = l
 SHUFFLE: 13 / 13 / 31, 24 / 24 / 42
 SHUFFLE: 12 / 12 / 12 / 11 / 11 / 22, {}~- / {}~- / -~{}
-SUBST:   4 = 3, { = {( <:4, }) = } >:4, ~- = .
+SUBST:   { = {( <:4, }) = } >:4, ~- = .
 : if you.in_branch("Geh") then
-SUBST:   d$ = .
+SUBST:   d$ = ., 2 = 1
 : else
-SUBST:   L = l
+SUBST:   L = l, 4 = 3
 : end
 SUBST:   g : GGg
 KPROP:   l = no_cloud_gen
@@ -580,6 +581,7 @@ NAME:  nicolae_geh_niches_of_the_damned
 TAGS:  transparent
 DEPTH: Geh, !Geh:$
 KMONS: 2 = stoker / searing wretch / spectral thing
+KMONS: 3 = oni incarcerator
 SUBST: ` = lx
 MAP
 xxxxxxxxxxxxxxx
@@ -588,7 +590,7 @@ xxxlx2xlx`xxx`x
 xxx2...2xlx`xlx
 x`x`...``2xlx2x
 xl2.......`2`.@
-x`x..}........@
+x`x3.}........@
 xl2.......`2`.@
 x`x`...``2xlx2x
 xxx2...2xlx`xlx
@@ -771,13 +773,15 @@ KMONS:   O = ghost crab
 KMONS:   P = apocalypse crab
 KMONS:   Q = fire crab
 # The hellephants kept blinking out of their enclosure, they get to roam around
-KMONS:   1} = balrug w:8 / fire giant w:8 / hellephant w:4 / nothing w:5
+KMONS:   1} = fire giant w:8 / balrug w:6 / \
+              hellephant w:4 / oni incarcerator w:2
 KMONS:   2 = salamander tyrant
 KMONS:   3 = sin beast / nothing w:5
 KFEAT:   } = }
 KMASK:   JKLMNOPQ- = opaque
 KMASK:   JKLMNOPQ- = no_monster_gen
 SHUFFLE: JKLMNO, OPQ
+SUBST:   1 = 1:24 .:5
 NSUBST:  J = 2=J / 2=J- / -, K = 2=K / 2=K- / -, L = 2=L / 2=L- / -, \
          M = 2=M / 2=M- / -, N = 2=N / 2=N- / -, O = 2=O / 2=O- / -, \
          P = 2=P / 2=P- / -, Q = 2=Q / 2=Q- / -, } = } / 1
@@ -827,8 +831,9 @@ ENDMAP
 NAME:   geh_old
 TAGS:   no_rotate
 ORIENT: encompass
-MONS:   patrolling Asmodeus, brimstone fiend, Balrug, searing wretch / stoker w:1
-NSUBST: { = 1:{ / *:.
+MONS:   patrolling Asmodeus, brimstone fiend
+MONS:   balrug, searing wretch / stoker w:1, oni incarcerator
+NSUBST: { = 1:{ / *:., 3 = 1 = 5 3:1 / *:3
 : serpent_of_hell_setup(_G)
 : geh_setup(_G)
 MAP
@@ -903,12 +908,12 @@ NAME:   geh_mu
 ORIENT: encompass
 TAGS:   no_rotate
 MONS:   patrolling Asmodeus, brimstone fiend
-MONS:   balrug, searing wretch, hellion, fire giant
-KMONS:  7 = hellephant
+MONS:   balrug, searing wretch, hellion, fire giant, hellephant
+KMONS:  8 = oni incarcerator
 # Place one Serpent in the inner circle.
 : serpent_of_hell_setup(_G)
 KFEAT:  D = lava
-NSUBST: X = 1:D / *:l
+NSUBST: X = 1:D / *:l, 8 = 1 = 8 4:1 / 1 = 4 8:1 / *:4
 SUBST:  4 = 3445677, % = $|
 SUBST:  " : """.l , " : ""; , " = .l , ; = ...l
 SUBST:  ' : '''.x , ' : ''; , ' = .x , ; = ...x
@@ -931,12 +936,12 @@ x'."llllv.v....lllllllccc..........ccccccccccclllllllll....v.vlll".'xx
 x'."llllv.v....lllllllccc..........c..c....ccclllllllll....v.vlll"..'x
 x'."llllv.v...lllcccccc.+..........c..+..1.cccllllllllll...v.vllll".'x
 x'.."lllv.v...lllc$$$$c.+..........c..c....cccccccclllll...v.vllll".{x
-xx."llllv.v...lllc$$$$c.c.44....44.c..c2.2.c|||.nOclllll...v.vllll".'x
+xx."llllv.v...lllc$$$$c.c.48....84.c..c2.2.c|||.nOclllll...v.vllll".'x
 x'.."lllv.v...lllc$2..c.cccccccccccc..c....c|||.n.clllll...v.vllll".'x
 x'.."lllv.v...lllc$...c.+..........c..c....c|||.n+clllll...v.vlll"..'x
 x'.."lllv.v...lllcccc+c.+..4..vvvv.c..cc++cc......clllll...v.vll"...'x
 x'."llllv.v...llllllc.ccc.....n||+.c..c....c.%%%%%clllll...v.vll"...'x
-x'.."lllv.v...llllllc.ccc..4..n||+.c..c%%%.c.%%%%%clllll...v.vll"...'x
+x'.."lllv.v...llllllc.ccc..8..n||+.c..c%%%.c.%%%%%clllll...v.vll"...'x
 x'.."lllv.v...llllllc...+.....vvvv.c..c%%%.+.%%%%%clllll...v.vll"...'x
 xx.."lllv.v....lllllccccc..........c..c%%%.c.%%%%%cllll....v.vll"...'x
 xx.."lllv.v....lllllcccccccc+ccccccc..cccccc.%%%%%cllll....v.vll"...'x
@@ -956,7 +961,7 @@ x'.."lvv.4.++............................................++.4.vvl"..'x
 x'."llvv.4.vvvvvnnnvvvvvvnnnvvvvvv+++vvvvvvnnnvvvvvvnnnvvvv.4.vvll".'x
 x'."llvv...vvvvvnnnvvvvvvnnnvvvvvv+++vvvvvvnnnvvvvvvnnnvvvv...vvll".'x
 x'.."lvvvvvvvllllllllllllllllllll.....lllllllllllllllllllvvvvvvvll".'x
-x'.."llvvvvvlllllllllllllllllllll.4.4.llllllllllllllllllllvvvvvll"..'x
+x'.."llvvvvvlllllllllllllllllllll.8.8.llllllllllllllllllllvvvvvll"..'x
 x'.."llllllllllllllllllllllllllll.....llllllllllllllllllllllllll"".'xx
 x'..."lllllllllllllllllllllllllll.....lllllllllllllllllllllllll"..'xxx
 x'..."lllllllllllllllllllllllllll.....lllllllllllllllllllllllll".'xxxx
@@ -1093,11 +1098,13 @@ NAME:    geh_grunt
 ORIENT:  encompass
 MONS:    patrolling Asmodeus, Brimstone Fiend, balrug
 MONS:    hellion, searing wretch, fire giant, salamander tyrant / stoker w:1
+KMONS:   8 = oni incarcerator
 KMONS:   9 = molten gargoyle
+KFEAT:   L = endless_lava
 SHUFFLE: {<
 SUBST:   - = ll.
 SUBST:   _ = ..l
-KFEAT:   L = endless_lava
+NSUBST:  9 = 1 = 8 9:1 / 1 = 9 8:1 / *:9
 : serpent_of_hell_setup(_G)
 : set_border_fill_type("endless_lava")
 : geh_setup(_G)
@@ -1176,7 +1183,8 @@ ENDMAP
 
 ##############################################################################
 # Asmodeus (Gehenna) by Lightli
-# XXX: Disabled pending rebalancing. Needs new monsters now
+# XXX: Disabled pending rebalancing and updated monsters.
+# Probably should just cut it in half for Gehenna encompass vaults?
 ##############################################################################
 
 NAME: lightli_geh_unto_the_cruel
@@ -1352,11 +1360,12 @@ NAME:    geh_grunt_pentagon
 ORIENT:  encompass
 MONS:    patrolling Asmodeus, Brimstone Fiend, balrug
 MONS:    hellion, searing wretch, fire giant, salamander tyrant
+KMONS:   8 = oni incarcerator
 KMONS:   9 = molten gargoyle
 SUBST:   - = ll.
 SUBST:   _ = ..l
 SUBST:   d = x.
-NSUBST:  P = 1:O / *:|
+NSUBST:  P = 1:O / *:|, 9 = 1 = 8 9:1 / 1 = 9 8:1 / *:9
 KFEAT:   L = endless_lava
 : serpent_of_hell_setup(_G)
 : set_border_fill_type("endless_lava")

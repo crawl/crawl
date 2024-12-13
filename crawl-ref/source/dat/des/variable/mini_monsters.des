@@ -10364,7 +10364,7 @@ KMONS:  1 = tormentor / hellion / shadow demon / tzitzimitl / \
             iron giant w:15 / place:Dis:$ w:30
 : elseif you.in_branch("Geh") then
 KMONS:  1 = tormentor / hellion / balrug / brimstone fiend w:15 / \
-            hell sentinel / ancient lich / dread lich / place:Geh:$ w:20
+            oni incarcerator / ancient lich / dread lich / place:Geh:$ w:20
 : elseif you.in_branch("Tar") then
 KMONS:  1 = doom hound w:15 / death drake / bone dragon / tormentor / \
             shadow demon / tzitzimitl w:15 / ancient lich / dread lich / \
