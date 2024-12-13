@@ -159,6 +159,19 @@ KEY:/^%d /%d %s/
 %%%%
 
 #############
+# English possessive translates to German genitive (or von + dative for named monsters).
+# Re-use these entries for the situation when English nominative has to be translated
+# to German genitive.
+%%%%
+PREGENERATE:7
+
+SELECT:/'s$/
+
+# only the English key needs to change
+KEY:/^(.*)'s$/{gen}$1/
+%%%%
+
+#############
 # if adjective already has a context, we can't generate other forms on the fly, so pre-generate
 %%%%
 PREGENERATE:10
@@ -314,16 +327,8 @@ GENERATE:dat
 %%%%
 GENERATE:gen
 
-# unique names (use von + dative rather than genitive)
-/Verrückter Yiuf/vom Verrückten Yiuf/
-/ der Ork/ dem Ork/
-/^([A-Z])/von $1/
-
 # mark genitive/dative suffix so we can exclude it from later expressions
 / (der|des|einer|eines|von|vom) /# $1 /
-
-# also mark uniques for exclusion from subsequent rules
-/^(von|vom) /#$1 /
 
 # remove gender hints, to simplify following regexps
 /^\{(m|n|f|pl)\}//
@@ -355,26 +360,6 @@ GENERATE:gen
 
 # masc/neuter nouns
 /^(?!(\{adj\-er\}|[a-zäöüß\-]+er ))[^#]*/(.)$/$1s/
-
-# fix up (single-word) unique names ending in s
-/^([A-ZÄÖÜ]\S+s)s$/$1'/
-
-# fixup weak nouns
-/herzs\b/herzens/
-/(Akolyth)\b/$1en/
-/^[^#]*/(Mensch|[Bb]är|[^e]ist|ant|taur|myzet|[Ff]ürst)s$/$1en/
-/^[^#]*/([Ss]chamane|[Ss]chütze|Sklave|[Hh]err|loge|mycete)s$/$1n/
-/^[^#]*/([Rr]iese|[Dd]rache|[Dd]ruide|[Hh]eilige|Ahne)s$/$1n/
-# match Affe but not Waffe
-/^[^#]*/(Affe|[^Ww]affe)s$/$1n/
-
-# fixup other special cases
-/Gelée Royales/Gelée Royale/
-/uss\b/us/
-/^[^#]*/(ss|sch|[Gg]eist)s/$1es/
-/^(?!(\{adj\-er\}|[a-zäöüß\-]+er ))[^#]*/ss$/s'/
-/Lernäische /Lernäischer /
-/^(der|einer|deiner) .*/Lernäischer /Lernäischen /
 
 # remove mark we added
 /#//
