@@ -144,6 +144,18 @@ KEY:/^(a|an) //
 /^\{.\}\{/{/
 %%%%
 
+#############
+# generate counted plural with adjective placeholder
+PREGENERATE:6
+
+SELECT:/^%d (?!%s)/
+
+KEY:/^%d /%d %s/
+
+/^%d /%d {adj-e}%s/
+%%%%
+
+#############
 # if adjective already has a context, we can't generate other forms on the fly, so pre-generate
 %%%%
 PREGENERATE:10

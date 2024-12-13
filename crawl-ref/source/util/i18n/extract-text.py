@@ -1229,9 +1229,6 @@ def special_handling_for_mon_data_h(strings):
     # plural non-unique
     output.append("# section: non-unique monsters, plural")
     for string in names:
-        # slime creatures have a size adjective and ugly things have a colour adjective
-        if string in ["slime creature", "ugly thing", "very ugly thing"]:
-            string = "%s" + string
         output.append('%d ' + pluralise(string))
 
     return output

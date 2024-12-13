@@ -2,8 +2,6 @@
 #
 # Items - plural, counted, nominative
 #
-# Note that %s is a placeholder for any adjectives
-#
 ###############################################################################
 
 #################################
@@ -228,11 +226,10 @@
 %d Tränke der Resistenz
 %%%%
 
-# unidentified potions are named "<colour> <potion>"
-# or "<qualifier> <colour> potion"
+# generic
 %%%%
-%d %spotions
-%d {adj-e}%sZaubertränke
+%d potions
+%d Zaubertränke
 %%%%
 
 # Some potion colours are the names of gemstones, etc., and are used elsewhere
@@ -240,17 +237,17 @@
 # its colour. In English, we can get away with using the same word for both
 # meanings, but that's not necessarily the case in other languages.
 %%%%
-%d %samethyst potions
-%d {adj-e}%samethystfarbene Zaubertränke
+%d amethyst potions
+%d amethystfarbene Zaubertränke
 %%%%
-%d %semerald potions
-%d {adj-e}%ssmaragdgrüne Zaubertränke
+%d emerald potions
+%d smaragdgrüne Zaubertränke
 %%%%
-%d %sruby potions
-%d {adj-e}%srubinrote Zaubertränke
+%d ruby potions
+%d rubinrote Zaubertränke
 %%%%
-%d %ssapphire potions
-%d {adj-e}%ssaphirblaue Zaubertränke
+%d sapphire potions
+%d saphirblaue Zaubertränke
 %%%%
 
 #################################

@@ -2,8 +2,6 @@
 #
 # Items - plural, plain, nominative
 #
-# Note that %s is a placeholder for any adjectives
-#
 ###############################################################################
 
 #################################
@@ -228,29 +226,10 @@ potions of resistance
 {pl}Tränke der Resistenz
 %%%%
 
-# unidentified potions are named "<colour> <potion>"
-# or "<qualifier> <colour> potion"
+# generic
 %%%%
-%spotions
-{pl}{adj-e}%sZaubertränke
-%%%%
-
-# Some potion colours are the names of gemstones, etc., and are used elsewhere
-# in Crawl to mean actually made of/with that thing, rather than merely having
-# its colour. In English, we can get away with using the same word for both
-# meanings, but that's not necessarily the case in other languages.
-%%%%
-%samethyst potions
-{pl}{adj-e}%samethystfarbene Zaubertränke
-%%%%
-%semerald potions
-{pl}{adj-e}%ssmaragdgrüne Zaubertränke
-%%%%
-%sruby potions
-{pl}{adj-e}%srubinrote Zaubertränke
-%%%%
-%ssapphire potions
-{pl}{adj-e}%ssaphirblaue Zaubertränke
+potions
+{pl}Zaubertränke
 %%%%
 
 #################################
