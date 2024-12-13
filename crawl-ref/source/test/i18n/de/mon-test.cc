@@ -221,6 +221,11 @@ int main()
     // named ally
     test("Boghold der Ork-Warlord", "Boghold the orc warlord");
     //test("der hilflose Boghold der Ork-Warlord", "the helpless Boghold the orc warlord");
+    test("Du triffst Boghold den Ork-Warlord", "You hit %s", "Boghold the orc warlord");
+    test("Du kollidierst mit Boghold dem Ork-Warlord!", "You collide with %s!", "Boghold the orc warlord");
+    // TODO: Change possessive to von + dative like Blork
+    test("Du blockierst den Angriff Boghold des Ork-Warlords.", "You block %s attack.", "Boghold the orc warlord's");
+    test("Die Wunden Boghold des Ork-Warlords heilen von selbst!", "%s's wounds heal themselves!", "Boghold the orc warlord");
     cout << endl;
 
     // derived monsters (should have the gender of the derived monster, not the original)
