@@ -2,17 +2,24 @@
 #
 # Monsters - unique, definite article, nominative
 #
-# Note: All uniques can appear with definite article
-# For example: "You hit the helpless Ijyb from behind."
-#
 ###############################################################################
+
+# Notes:
+#
+# It might seem weird to list named monsters with the definite article, but it's
+# needed for message like: "You hit the helpless Sigmund."
+#
+# Some uniques are gender-neutral in English. This is different to neuter.
+# (neuter -> it, gender neutral -> they). While German has neuter, it can't do
+# gender neutral, so in order to avoid calling people "it", we've used the
+# genders those monsters had in older versions of DCSS.
 
 %%%%
 the Mennas
 der Mennas
 %%%%
 the Nessos
-das Nessos
+der Nessos
 %%%%
 the Chuck
 der Chuck
@@ -30,13 +37,13 @@ the Bai Suzhen
 die Bai Suzhen
 %%%%
 the Xtahua
-das Xtahua
+die Xtahua
 %%%%
 the Ijyb
 die Ijyb
 %%%%
 the Robin
-das Robin
+die Robin
 %%%%
 the Grum
 der Grum
@@ -48,7 +55,7 @@ the Dowan
 der Dowan
 %%%%
 the Fannar
-das Fannar
+der Fannar
 %%%%
 the Jorgrun
 der Jorgrun
@@ -201,16 +208,16 @@ the Nikola
 der Nikola
 %%%%
 the Mnoleg
-das Mnoleg
+der Mnoleg
 %%%%
 the Lom Lobon
-das Lom Lobon
+der Lom Lobon
 %%%%
 the Cerebov
 der Cerebov
 %%%%
 the Gloorx Vloq
-das Gloorx Vloq
+der Gloorx Vloq
 %%%%
 the Geryon
 der Geryon
