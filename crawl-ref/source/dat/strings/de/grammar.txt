@@ -62,7 +62,7 @@ KEY:/pair of (?!quick blades)/pair of %s/
 %%%%
 
 #############
-# generate indefinite (nominative) from definite
+# generate indefinite nominative from definite nominative
 %%%%
 PREGENERATE:1
 
@@ -90,7 +90,8 @@ KEY:/^the /a /
 /^\{n\}ein [^A-ZÄÖÜ]+/\{adj-e\}/{adj-es}/
 %%%%
 
-# generate indefinite (possessive) from definite
+#############
+# generate indefinite possessive from definite posessive
 %%%%
 PREGENERATE:2
 
@@ -101,7 +102,7 @@ SELECT:/^the .*('s|')$/
 /^des /eines /
 %%%%
 
-
+#############
 # generate "your" (nominative and possessive) from indefinite
 # (easier than generating from definite because adjectives will already be in the right form)
 %%%%
@@ -116,6 +117,7 @@ KEY:/^(a|an) /your /
 /^(\{[mfn]\})?ein/$1dein/
 %%%%
 
+#############
 # player ghost/illusion can have no determiner in English, but needs definite article in German
 %%%%
 PREGENERATE:4
@@ -125,6 +127,7 @@ SELECT:/^the (%s)?@name@'s/
 KEY:/^the //
 %%%%
 
+#############
 # generate no determiner (nominative) from indefinite
 %%%%
 PREGENERATE:5
@@ -145,7 +148,7 @@ KEY:/^(a|an) //
 %%%%
 
 #############
-# generate counted plural with adjective placeholder
+# generate counted plural with adjective placeholder from counted plural without
 PREGENERATE:6
 
 SELECT:/^%d (?!%s)/
