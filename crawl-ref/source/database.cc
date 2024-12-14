@@ -7,6 +7,9 @@
 
 #include "database.h"
 
+#ifdef DEBUG_DIAGNOSTICS
+#include <chrono>
+#endif
 #include <cstdlib>
 #include <fcntl.h>
 #include <sys/stat.h>
@@ -22,6 +25,7 @@
 #include "localise.h"
 #include "options.h"
 #include "random.h"
+#include "regex-rules.h"
 #include "stringutil.h"
 #include "syscalls.h"
 #include "unicode.h"
@@ -74,6 +78,9 @@ static void _store_text_db(const string &in, DBM *db, bool canonicalise_key, boo
 static string _query_database(TextDB &db, string key, bool canonicalise_key,
                               bool run_lua, bool untranslated = false);
 static void _add_entry(DBM *db, const string &k, string &v);
+
+// do pre-generation for translated strings
+static void _doPregeneration(TextDB& db);
 
 static TextDB AllDBs[] =
 {
@@ -196,7 +203,7 @@ bool TextDB::open_db()
         return true;
 
     const string full_db_path = _db_cache_path(_db_name, lang());
-    _db = dbm_open(full_db_path.c_str(), O_RDWR, 0660);
+    _db = dbm_open(full_db_path.c_str(), O_RDONLY, 0660);
     if (!_db)
         return false;
 
@@ -363,6 +370,10 @@ void TextDB::_regenerate_db()
             _store_text_db(full_input_path, _db, _canonicalise_key, !_canonicalise_key);
         }
     }
+
+    if (strcmp(_db_name, "strings") == 0)
+        _doPregeneration(*this);
+
     _add_entry(_db, "TIMESTAMP", ts);
 
     dbm_close(_db);
@@ -1064,22 +1075,82 @@ string getTranslatedString(const string &key)
     return _query_database(TranslateDB, key, false, false);
 }
 
-void setTranslatedString(const string &key, const string& value)
+// do pre-generation for translated strings
+static void _doPregeneration(TextDB& db)
 {
-    if (!TranslateDB.translation || !TranslateDB.translation->get())
-        return;
-
-    string val(value); // _add_entry param is non-const
-    _add_entry(TranslateDB.translation->get(), key, val);
-}
-
-vector<string> getTranslationKeysByRegex(const string &regex)
-{
-    if (!TranslateDB.translation || !TranslateDB.translation->get())
+    for (int i = 0; i <= 100; i++)
     {
-        vector<string> empty;
-        return empty;
-    }
+        string rulesKey = "PREGENERATE:" + to_string(i);
+        string rulesStr = _query_database(db, rulesKey, false, false);
+        if (rulesStr.empty())
+            continue;
 
-    return _database_find_keys(TranslateDB.translation->get(), regex, false);
+#ifdef DEBUG_DIAGNOSTICS
+        printf("**** Handle %s ****\n", rulesKey.c_str());
+        auto start = chrono::high_resolution_clock::now();
+        unsigned entries_added = 0;
+#endif
+
+        vector<string> rules = split_string("\n", rulesStr, true, false);
+
+        // get key selection regex
+        string key_select_regex;
+        for (string rule: rules)
+        {
+            if (starts_with(rule, "SELECT:"))
+            {
+                rule = trimmed_string(replace_first(rule, "SELECT:", ""));
+                if (starts_with(rule, "/"))
+                    rule = rule.substr(1);
+                if (ends_with(rule, "/"))
+                    rule = rule.substr(0, rule.length()-1);
+
+                key_select_regex = rule;
+                break;
+            }
+        }
+
+#ifdef DEBUG_DIAGNOSTICS
+        printf("Key selection rule: /%s/\n", key_select_regex.c_str());
+#endif
+        if (key_select_regex.empty())
+            continue;
+
+        vector<string> keys = _database_find_keys(db, key_select_regex, false);
+        for (const string& orig_key: keys)
+        {
+            string key = orig_key;
+            string value = _query_database(db, key, false, false);
+            for (string rule: rules)
+            {
+                if (starts_with(rule, "KEY:"))
+                {
+                    rule = rule.substr(4);
+                    key = apply_regex_rule(rule, key);
+                }
+                else
+                    value = apply_regex_rule(rule, value);
+            }
+
+            if (key == orig_key || _query_database(db, key, false, false) != "")
+            {
+                // don't overwrite existing entries
+                continue;
+            }
+
+            _add_entry(db, key, value);
+
+#ifdef DEBUG_DIAGNOSTICS
+            printf("Added entry: \"%s\" -> \"%s\"\n", key.c_str(), value.c_str());
+            entries_added++;
+#endif
+        }
+
+#ifdef DEBUG_DIAGNOSTICS
+        auto end = chrono::high_resolution_clock::now();
+        auto millis = chrono::duration_cast<chrono::milliseconds>(end - start);
+        printf("%s - %u entries added in %ld ms\n",
+               rulesKey.c_str(), entries_added, millis.count());
+#endif
+    }
 }

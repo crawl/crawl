@@ -54,8 +54,3 @@ string getFAQ_Question(const string &key);
 string getFAQ_Answer(const string &question);
 
 string getTranslatedString(const string &key);
-
-// insert or update translated string
-void setTranslatedString(const string &key, const string& value);
-
-vector<string> getTranslationKeysByRegex(const string &regex);

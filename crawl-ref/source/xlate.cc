@@ -13,7 +13,6 @@
 #include "regex-rules.h"
 
 #include <cstring>
-#include <chrono>
 using namespace std;
 
 #if 0
@@ -46,81 +45,6 @@ string cnxlate(const string &context,
 // markers for embedded expressions
 const string exp_start = "((";
 const string exp_end = "))";
-
-// initialise xlate
-void init_xlate()
-{
-    dprintf("init_xlate\n");
-
-    // do pregeneration
-    for (int i = 0; i <= 100; i++)
-    {
-        string rulesKey = "PREGENERATE:" + to_string(i);
-        string rulesStr = getTranslatedString(rulesKey);
-        if (rulesStr.empty())
-            continue;
-
-        dprintf("**** Handle %s ****\n", rulesKey.c_str());
-        auto start = chrono::high_resolution_clock::now();
-        unsigned entries_added = 0;
-
-        vector<string> rules = split_string("\n", rulesStr, true, false);
-
-        // get key selection regex
-        string key_select_regex;
-        for (string rule: rules)
-        {
-            if (starts_with(rule, "SELECT:"))
-            {
-                rule = trimmed_string(replace_first(rule, "SELECT:", ""));
-                if (starts_with(rule, "/"))
-                    rule = rule.substr(1);
-                if (ends_with(rule, "/"))
-                    rule = rule.substr(0, rule.length()-1);
-
-                key_select_regex = rule;
-                break;
-            }
-        }
-
-        dprintf("Key selection rule: /%s/\n", key_select_regex.c_str());
-        if (key_select_regex.empty())
-            continue;
-
-        vector<string> keys = getTranslationKeysByRegex(key_select_regex);
-        dprintf("%lu keys matched\n", keys.size());
-        for (const string& orig_key: keys)
-        {
-            string key = orig_key;
-            string value = getTranslatedString(key);
-            for (string rule: rules)
-            {
-                if (starts_with(rule, "KEY:"))
-                {
-                    rule = rule.substr(4);
-                    key = apply_regex_rule(rule, key);
-                }
-                else
-                    value = apply_regex_rule(rule, value);
-            }
-
-            if (key == orig_key || getTranslatedString(key) != "")
-            {
-                // don't overwrite existing entries
-                continue;
-            }
-
-            dprintf("Adding entry: \"%s\" -> \"%s\"\n", key.c_str(), value.c_str());
-            setTranslatedString(key, value);
-            entries_added++;
-        }
-
-        auto end = chrono::high_resolution_clock::now();
-        auto millis = chrono::duration_cast<chrono::milliseconds>(end - start);
-        dprintf("%s - %u entries added in %ld ms\n",
-               rulesKey.c_str(), entries_added, millis.count());
-    }
-}
 
 // translate with context
 //

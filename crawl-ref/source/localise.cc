@@ -2136,7 +2136,6 @@ LocalisationArg::LocalisationArg(const long double value, bool translat)
 
 void init_localisation(const string& lang)
 {
-    bool changed = (lang != _language);
     _language = lang;
 
     if (lang != "" && lang != "en")
@@ -2148,8 +2147,6 @@ void init_localisation(const string& lang)
             exit(1);
         }
 #endif
-        if (changed)
-            init_xlate();
     }
 }
 
