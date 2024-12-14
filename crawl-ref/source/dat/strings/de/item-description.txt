@@ -509,7 +509,7 @@ der Träger macht einen freien Schritt, wenn er sich auf Feinde zubewegt.
 %%%%
 # Warlock's Mirror
 With your current SH, it has a %d%% chance to reflect attacks against your willpower and other normally unblockable effects.
-Mit deiner aktuellen SCH hat diese Rüstung eine Chance von %d%%, Angriffe gegen deine Willenskraft und andere normalerweise unblockbare Effekte zu reflektieren.
+Mit deinem aktuellen Schildwert hat diese Rüstung eine Chance von %d%%, Angriffe gegen deine Willenskraft und andere normalerweise unblockbare Effekte zu reflektieren.
 %%%%
 
 #################################
