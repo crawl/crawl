@@ -5,7 +5,6 @@
 
 #pragma once
 
-#include <stddef.h>
 #include <string>
 using std::string;
 

@@ -8,9 +8,6 @@
 
 #include <sstream>
 #include <vector>
-#include <cstdarg>
-#include <cstdlib>
-#include <typeinfo>
 using namespace std;
 
 #ifdef UNIX
