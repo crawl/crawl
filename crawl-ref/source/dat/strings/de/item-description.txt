@@ -681,7 +681,7 @@ shatter
 zerschmettern
 %%%%
 It releases a powerful concussive burst when it strikes, dealing extra damage to the target and all other foes adjacent to them.
-Er veruracht bei einem Treffer eine mächtige Erschütterung, die dem Ziel und allen anderen Feinden in seiner Nähe zusätzlichen Schaden zufügt.
+Er verursacht bei einem Treffer eine mächtige Erschütterung, die dem Ziel und allen anderen Feinden in seiner Nähe zusätzlichen Schaden zufügt.
 %%%%
 
 # Eos (morningstar)
@@ -786,7 +786,7 @@ Sie kann nicht abgelegt werden, solange Feinde sichtbar sind.
 # Plutonium sword
 %%%%
 It occasionally inflicts wild transmutation effects on those it strikes, inflicting malmutation or extra damage, or polymorphing them into a new form.
-Gelegentlich fügt es jenen, die es tifft, wilde Transmutationseffekte zu, die Malmutation oder zusätzlichen Schaden auslösen oder sie in eine neue Form polymorphisiert.
+Gelegentlich fügt es jenen, die es trifft, wilde Transmutationseffekte zu, die Malmutation oder zusätzlichen Schaden auslösen oder sie in eine neue Form polymorphisiert.
 %%%%
 
 # Rift (demon trident)
