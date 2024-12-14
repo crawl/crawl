@@ -300,6 +300,31 @@ vector<map<string, string>> armour =
         {"acc", "die +1 Plattenrüstung von Würfel, Beutel, und Flasche {Stä+6 Int-3 Ges+4 UnsS} (5390 Gold)"},
         {"dat", "der +1 Plattenrüstung von Würfel, Beutel, und Flasche {Stä+6 Int-3 Ges+4 UnsS} (5390 Gold)"},
     },
+    // plural
+    {
+        {"en", "the cursed +12 storm dragon scales"},
+        {"nom", "die verfluchten +12 Sturmdrachenschuppen"},
+        {"acc", "die verfluchten +12 Sturmdrachenschuppen"},
+        {"dat", "den verfluchten +12 Sturmdrachenschuppen"},
+    },
+    {
+        {"en", "your cursed +12 storm dragon scales"},
+        {"nom", "deine verfluchten +12 Sturmdrachenschuppen"},
+        {"acc", "deine verfluchten +12 Sturmdrachenschuppen"},
+        {"dat", "deinen verfluchten +12 Sturmdrachenschuppen"},
+    },
+    {
+        {"en", "cursed +12 storm dragon scales"},
+        {"nom", "verfluchte +12 Sturmdrachenschuppen"},
+        {"acc", "verfluchte +12 Sturmdrachenschuppen"},
+        {"dat", "verfluchten +12 Sturmdrachenschuppen"},
+    },
+    {
+        {"en", "storm dragon scales"},
+        {"nom", "Sturmdrachenschuppen"},
+        {"acc", "Sturmdrachenschuppen"},
+        {"dat", "Sturmdrachenschuppen"},
+    },
 };
 
 vector<map<string, string>> wands =

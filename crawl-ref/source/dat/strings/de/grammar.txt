@@ -77,6 +77,8 @@ KEY:/^the /a /
 /^(\{m\})?der /ein /
 /^(\{f\})?die /eine /
 /^(\{n\})?das /{n}ein /
+# plural
+/^(\{pl\})?die /{pl}/
 
 # masc adjectives
 /^ein [^A-ZÄÖÜ]+/e\b/er/
@@ -86,6 +88,9 @@ KEY:/^the /a /
 
 # neuter adjectives
 /^\{n\}ein [^A-ZÄÖÜ]+/e\b/es/
+
+# plural adjectives
+/^\{pl\}[^A-ZÄÖÜ]+/en\b/e/
 %%%%
 
 #############
@@ -111,8 +116,12 @@ SELECT:/^(a|an) /
 # transform (English) key
 KEY:/^(a|an) /your /
 
-# determiner
+# singular
 /^(\{[mfn]\})?ein/$1dein/
+
+# plural
+/^\{pl\}[^A-ZÄÖÜ]+/e\b/en/
+/^\{pl\}/{pl}deine /
 %%%%
 
 #############
