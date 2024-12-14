@@ -1488,6 +1488,12 @@ the lunar statue's
 {f}der Mond-Statue
 %%%%
 
+# unseen monster
+%%%%
+something's
+des Etwas
+%%%%
+
 # derived monsters containing the name of the original monster
 # "elf zombie", "orc skeleton", etc.
 %%%%

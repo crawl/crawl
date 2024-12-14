@@ -1490,6 +1490,19 @@ the lunar statue
 die Mond-Statue
 %%%%
 
+# unseen monster
+%%%%
+something
+Etwas
+%%%%
+something unseen
+etwas Unsichtbares
+%%%%
+# avoid "etwas, das du nicht sehen kannst" because it would require a following komma in some situations and not others
+something you cannot see
+etwas Unsichtbares
+%%%%
+
 # derived monsters containing the name of the original monster
 # "elf zombie", "orc skeleton", etc.
 %%%%

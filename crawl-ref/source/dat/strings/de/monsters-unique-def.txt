@@ -269,10 +269,6 @@ die Statue von Wucad Mu
 # not really uniques, but gramatically similar
 
 %%%%
-# unseen monster
-the something
-das Etwas
-%%%%
 the @name@'s ghost
 der Geist von @name@
 %%%%
