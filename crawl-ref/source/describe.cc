@@ -610,7 +610,7 @@ static string _randart_descrip(const item_def &item)
         const char* type = _jewellery_base_ability_description(item.sub_type);
         if (*type)
         {
-            description += type;
+            description += localise(type);
             need_newline = true;
         }
     }
