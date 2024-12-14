@@ -114,40 +114,6 @@ const vector<string> expected = {
     "ein Langschwert, 30 Bolzen und eine Armbrust"
 };
 
-const vector<string> armour_en =
-{
-    "a leather armour",
-    "a brightly glowing leather armour",
-    "a +1 scale mail",
-    "an cursed robe",
-    "a cursed -1 chain mail",
-    "a pair of gloves",
-    "an enchanted pair of boots",
-    "a pair of runed gloves",
-    "a cursed pair of runed gloves",
-    "an cursed +0 pair of boots",
-    "a cursed +2 pair of glowing boots",
-    "an cursed +2 pair of gloves of archery",
-    "the +1 plate armour of Dice, Bag, and Bottle {Str+6 Int-3 Dex+4 SInv} (5390 gold)"
-};
-
-const vector<string> armour_de =
-{
-    "eine Lederrüstung",
-    "eine hell glühende Lederrüstung",
-    "ein +1 Schuppenpanzer",
-    "eine verfluchte Robe",
-    "ein verfluchter -1 Kettenpanzer",
-    "ein Paar Handschuhe",
-    "ein verzaubertes Paar Stiefel",
-    "ein Paar runenverzierte Handschuhe",
-    "ein verfluchtes Paar runenverzierte Handschuhe",
-    "ein verfluchtes +0 Paar Stiefel",
-    "ein verfluchtes +2 Paar glühende Stiefel",
-    "ein verfluchtes +2 Paar Handschuhe der Schießkunst",
-    "die +1 Plattenrüstung von Würfel, Beutel, und Flasche {Stä+6 Int-3 Ges+4 UnsS} (5390 Gold)"
-};
-
 vector<map<string, string>> weapons =
 {
     {
@@ -255,6 +221,88 @@ vector<map<string, string>> weapons =
         {"nom", "Sense \"Beender\""},
         {"acc", "Sense \"Beender\""},
         {"dat", "Sense \"Beender\""},
+    },
+};
+
+vector<map<string, string>> armour =
+{
+    {
+        {"en", "a leather armour"},
+        {"nom", "eine Lederrüstung"},
+        {"acc", "eine Lederrüstung"},
+        {"dat", "einer Lederrüstung"},
+    },
+    {
+        {"en", "a brightly glowing leather armour"},
+        {"nom", "eine hell glühende Lederrüstung"},
+        {"acc", "eine hell glühende Lederrüstung"},
+        {"dat", "einer hell glühenden Lederrüstung"},
+    },
+    {
+        {"en", "a +1 scale mail"},
+        {"nom", "ein +1 Schuppenpanzer"},
+        {"acc", "einen +1 Schuppenpanzer"},
+        {"dat", "einem +1 Schuppenpanzer"},
+    },
+    {
+        {"en", "an cursed robe"},
+        {"nom", "eine verfluchte Robe"},
+        {"acc", "eine verfluchte Robe"},
+        {"dat", "einer verfluchten Robe"},
+    },
+    {
+        {"en", "a cursed -1 chain mail"},
+        {"nom", "ein verfluchter -1 Kettenpanzer"},
+        {"acc", "einen verfluchten -1 Kettenpanzer"},
+        {"dat", "einem verfluchten -1 Kettenpanzer"},
+    },
+    {
+        {"en", "a pair of gloves"},
+        {"nom", "ein Paar Handschuhe"},
+        {"acc", "ein Paar Handschuhe"},
+        {"dat", "einem Paar Handschuhe"},
+    },
+    {
+        {"en", "an enchanted pair of boots"},
+        {"nom", "ein verzaubertes Paar Stiefel"},
+        {"acc", "ein verzaubertes Paar Stiefel"},
+        {"dat", "einem verzauberten Paar Stiefel"},
+    },
+    {
+        {"en", "a pair of runed gloves"},
+        {"nom", "ein Paar runenverzierte Handschuhe"},
+        {"acc", "ein Paar runenverzierte Handschuhe"},
+        {"dat", "einem Paar runenverzierte Handschuhe"},
+    },
+    {
+        {"en", "a cursed pair of runed gloves"},
+        {"nom", "ein verfluchtes Paar runenverzierte Handschuhe"},
+        {"acc", "ein verfluchtes Paar runenverzierte Handschuhe"},
+        {"dat", "einem verfluchten Paar runenverzierte Handschuhe"},
+    },
+    {
+        {"en", "an cursed +0 pair of boots"},
+        {"nom", "ein verfluchtes +0 Paar Stiefel"},
+        {"acc", "ein verfluchtes +0 Paar Stiefel"},
+        {"dat", "einem verfluchten +0 Paar Stiefel"},
+    },
+    {
+        {"en", "a cursed +2 pair of glowing boots"},
+        {"nom", "ein verfluchtes +2 Paar glühende Stiefel"},
+        {"acc", "ein verfluchtes +2 Paar glühende Stiefel"},
+        {"dat", "einem verfluchten +2 Paar glühende Stiefel"},
+    },
+    {
+        {"en", "an cursed +2 pair of gloves of archery"},
+        {"nom", "ein verfluchtes +2 Paar Handschuhe der Schießkunst"},
+        {"acc", "ein verfluchtes +2 Paar Handschuhe der Schießkunst"},
+        {"dat", "einem verfluchten +2 Paar Handschuhe der Schießkunst"},
+    },
+    {
+        {"en", "the +1 plate armour of Dice, Bag, and Bottle {Str+6 Int-3 Dex+4 SInv} (5390 gold)"},
+        {"nom", "die +1 Plattenrüstung von Würfel, Beutel, und Flasche {Stä+6 Int-3 Ges+4 UnsS} (5390 Gold)"},
+        {"acc", "die +1 Plattenrüstung von Würfel, Beutel, und Flasche {Stä+6 Int-3 Ges+4 UnsS} (5390 Gold)"},
+        {"dat", "der +1 Plattenrüstung von Würfel, Beutel, und Flasche {Stä+6 Int-3 Ges+4 UnsS} (5390 Gold)"},
     },
 };
 
@@ -509,15 +557,12 @@ int main()
     for (int j = 0; j < num_items; j++)
         test("nom", test_items[j], expected[j]);
 
-    cout << endl << "ARMOUR:" << endl;
-    for (size_t j = 0; j < armour_en.size(); j++)
-        test("nom", armour_en[j], armour_de[j]);
-
     for (int i = 0; i < num_cases; i++)
     {
         string cse = cases[i];
 
         test_group(cse, "WEAPONS", weapons);
+        test_group(cse, "ARMOUR", armour);
         test_group(cse, "RINGS", rings);
         test_group(cse, "AMULETS", amulets);
         test_group(cse, "WANDS", wands);
