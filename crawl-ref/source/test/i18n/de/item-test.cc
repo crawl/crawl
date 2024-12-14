@@ -325,6 +325,11 @@ vector<map<string, string>> armour =
         {"acc", "Sturmdrachenschuppen"},
         {"dat", "Sturmdrachenschuppen"},
     },
+    {
+        // with inventory letter
+        {"en", "c - cursed +12 storm dragon scales"},
+        {"nom", "c - verfluchte +12 Sturmdrachenschuppen"},
+    },
 };
 
 vector<map<string, string>> wands =

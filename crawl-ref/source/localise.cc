@@ -1905,7 +1905,8 @@ static string _localise_string(const string context, const string& value)
     {
         string id;
         string rest = _strip_menu_id(value, id);
-        return id + _localise_string(context, rest);
+        result = _localise_string(context, rest);
+        return id + _shift_context(result);
     }
 
     // if value is a list separator and we didn't get a hit from cxlate(),
