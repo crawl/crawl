@@ -12,10 +12,6 @@
 using namespace std;
 
 
-const vector<string> cases = {
-    "nom", "acc", "dat"
-};
-
 const vector<string> test_items = {
 
     "a scroll labelled BLAHDEY BLAH",
@@ -532,14 +528,21 @@ static void test(const string& context, const string& item, const string& expect
     cout << status << ": \"" << item << "\" (" << context << ")" << " -> \"" << actual << "\"" << endl;
 }
 
-static void test_group(const string& casus, const string& group_name, vector<map<string, string>>& items)
+static void test_group(const string& group_name, vector<map<string, string>>& items)
 {
+    static const vector<string> cases = {"nom", "acc", "dat"};
+
     cout << endl << group_name << ":" << endl;
     for (size_t i = 0; i < items.size(); i++)
     {
+        cout << endl;
         map<string, string>& item = items.at(i);
-        if (item.count(casus) != 0)
-            test(casus, item["en"], item[casus]);
+
+        for (const string& casus: cases)
+        {
+            if (item.count(casus) != 0)
+                test(casus, item["en"], item[casus]);
+        }
     }
 }
 
@@ -551,26 +554,20 @@ int main()
     databaseSystemInit(true);
     init_localisation("de");
 
-    const int num_cases = cases.size();
     const int num_items = test_items.size();
 
     for (int j = 0; j < num_items; j++)
         test("nom", test_items[j], expected[j]);
 
-    for (int i = 0; i < num_cases; i++)
-    {
-        string cse = cases[i];
-
-        test_group(cse, "WEAPONS", weapons);
-        test_group(cse, "ARMOUR", armour);
-        test_group(cse, "RINGS", rings);
-        test_group(cse, "AMULETS", amulets);
-        test_group(cse, "WANDS", wands);
-        test_group(cse, "STAVES", staves);
-        test_group(cse, "BOOKS", books);
-        test_group(cse, "RUNES", runes);
-        test_group(cse, "OTHERS", others);
-    }
+    test_group("WEAPONS", weapons);
+    test_group("ARMOUR", armour);
+    test_group("RINGS", rings);
+    test_group("AMULETS", amulets);
+    test_group("WANDS", wands);
+    test_group("STAVES", staves);
+    test_group("BOOKS", books);
+    test_group("RUNES", runes);
+    test_group("OTHERS", others);
 
     cout << endl << num_passes << " TESTS PASSED" << endl;
     if (num_fails > 0)
