@@ -203,6 +203,7 @@ random.o \
 random-var.o \
 ranged-attack.o \
 ray.o \
+regex-rules.o \
 regex-wrapper.o \
 religion.o \
 scroller.o \
