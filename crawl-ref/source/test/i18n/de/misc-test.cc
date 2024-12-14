@@ -380,6 +380,42 @@ int main()
     expected = "VISUAL:Etwas schreit entsetzt auf.";
     show_result(msg, expected);
 
+    // test "his god"
+    msg = getSpeakString("Haste Other priest cast");
+    params.clear();
+    params["the_monster"] = "Dowan";
+    params["possessive_God"] = "his god";
+    params["target"] = "Duvessa";
+    msg = localise(msg, params, false);
+    show_result(msg, "Dowan ruft seinen Gott an, Duvessa zu beschleunigen.");
+
+    // test "her god"
+    msg = getSpeakString("Heal Other priest cast");
+    params.clear();
+    params["the_monster"] = "Duvessa";
+    params["possessive_God"] = "her god";
+    params["target"] = "Dowan";
+    msg = localise(msg, params, false);
+    show_result(msg, "Duvessa ruft ihren Gott an, Dowan zu heilen.");
+
+    // test "her god"
+    msg = getSpeakString("Heal Other priest cast");
+    params.clear();
+    params["the_monster"] = "the orc priest";
+    params["possessive_God"] = "its god";
+    params["target"] = "the orc";
+    msg = localise(msg, params, false);
+    show_result(msg, "Der Ork-Priester ruft einen Gott an, den Ork zu heilen.");
+
+    // test "their god"
+    msg = getSpeakString("Major Destruction cast");
+    params.clear();
+    params["the_monster"] = "Robin";
+    params["possessive_God"] = "their god";
+    params["target"] = "the orc";
+    msg = localise(msg, params, false);
+    show_result(msg, "Robin ruft eine zerstörerische Kraft im Namen eines Gottes hervor!");
+
     cout << "TEST INSULTS: " << endl;
     you.species = SP_MINOTAUR;
     orc->foe = MHITYOU;

@@ -193,7 +193,7 @@ Haste Plants cast
 %%%%
 Major Destruction cast
 
-@The_monster@ ruft eine zerstörerische Kraft im Namen {gen}@a_God@ hervor!
+@The_monster@ ruft eine zerstörerische Kraft im Namen {gen}@possessive_God@ hervor!
 %%%%
 Druid's Call cast
 
@@ -733,7 +733,7 @@ Woodweal cast
 %%%%
 angel cast targeted
 
-@The_monster@ ruft den Zorn {gen}@a_God@ auf {acc}@target@ ab.
+@The_monster@ ruft den Zorn {gen}@possessive_God@ auf {acc}@target@ ab.
 %%%%
 crab cast targeted
 
@@ -836,15 +836,15 @@ Du hörst einige seltsame, gemurmelte Worte.
 %%%%
 Haste Other priest cast
 
-@The_monster@ ruft {acc}@a_God@ an, {acc}@target@ zu beschleunigen.
+@The_monster@ ruft {acc}@possessive_God@ an, {acc}@target@ zu beschleunigen.
 %%%%
 Heal Other priest cast
 
-@The_monster@ ruft {acc}@a_God@ an, {acc}@target@ zu heilen.
+@The_monster@ ruft {acc}@possessive_God@ an, {acc}@target@ zu heilen.
 %%%%
 Might Other priest cast
 
-@The_monster@ ruft {acc}@a_God@ an, {acc}@target@ zu stärken.
+@The_monster@ ruft {acc}@possessive_God@ an, {acc}@target@ zu stärken.
 %%%%
 Malign Offering priest cast
 
@@ -856,19 +856,19 @@ __NONE
 %%%%
 priest cast targeted
 
-@The_monster@ ruft den Zorn {gen}@a_God@ auf {acc}@target@ herab.
+@The_monster@ ruft den Zorn {gen}@possessive_God@ auf {acc}@target@ herab.
 
-@The_monster@ murmelt ein paar seltsame Gebete zu {dat}@a_God@ gegen {acc}@target@.
+@The_monster@ murmelt ein paar seltsame Gebete zu {dat}@possessive_God@ gegen {acc}@target@.
 
-@The_monster@ beschwört die Hilfe von @a_God@ gegen {acc}@target@.
+@The_monster@ beschwört die Hilfe {gen}@possessive_God@ gegen {acc}@target@.
 %%%%
 priest cast
 
-@The_monster@ betet zu {dat}@a_God@.
+@The_monster@ betet zu {dat}@possessive_God@.
 
-@The_monster@ murmelt einige seltsame Gebete zu {dat}@a_God@.
+@The_monster@ murmelt einige seltsame Gebete zu {dat}@possessive_God@.
 
-@The_monster@ spricht eine Anrufung an {acc}@a_God@ aus.
+@The_monster@ spricht eine Anrufung an {acc}@possessive_God@ aus.
 %%%%
 unseen priest cast targeted
 

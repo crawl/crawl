@@ -122,14 +122,17 @@ dein Gott
 
 # These are used in messages like "@The_monster@ calls down the wrath of @possessive_God@ upon @target@.",
 # where @possessive_God@ is replaced with "its god", etc.
-# This is tricky because English uses the monster's actual gender, but German uses grammatical gender.
-# Therefore, we use "a god" instead of "his/her/its god"
+# "His" is only used for male uniques, which will be masculine in German.
+# "Her" is used for female uniques plus harpies and nymphs, which are all feminine in German.
+# "Its" is used for most non-unique monsters, but they can be masculine, feminine or neuter in German.
+# "Their" is used for gender-neutral uniques - this doesn't work in German.
+# Therefore, we use "a god" instead of "its/their god".
 %%%%
 his god
-ein Gott
+sein Gott
 %%%%
 her god
-ein Gott
+ihr Gott
 %%%%
 its god
 ein Gott
@@ -263,14 +266,14 @@ meines Gottes
 deines Gottes
 %%%%
 
-# We use "a god" instead of "his/her/its/their god"
+# We use "a god" instead of its/their god"
 # see note in nominative section
 %%%%
 {gen}his god
-eines Gottes
+seines Gottes
 %%%%
 {gen}her god
-eines Gottes
+ihres Gottes
 %%%%
 {gen}its god
 eines Gottes
@@ -384,14 +387,14 @@ meinen Gott
 deinen Gott
 %%%%
 
-# We use "a god" instead of "his/her/its/their god"
+# We use "a god" instead of "its/their god"
 # see note in nominative section
 %%%%
 {acc}his god
-einen Gott
+seinen Gott
 %%%%
 {acc}her god
-einen Gott
+ihren Gott
 %%%%
 {acc}its god
 einen Gott
@@ -424,14 +427,14 @@ meinem Gott
 deinem Gott
 %%%%
 
-# We use "a god" instead of "his/her/its/their god"
+# We use "a god" instead of "its/their god"
 # see note in nominative section
 %%%%
 {dat}his god
-einem Gott
+seinem Gott
 %%%%
 {dat}her god
-einem Gott
+ihrem Gott
 %%%%
 {dat}its god
 einem Gott
