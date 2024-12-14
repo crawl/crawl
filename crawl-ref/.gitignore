@@ -76,6 +76,7 @@ map.dump
 mapstat.log
 *.out
 *.stat
+*.log
 objstat_*.txt
 fsim.txt
 fsim.csv
