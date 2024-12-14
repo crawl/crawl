@@ -3110,10 +3110,10 @@ static void _describe_oos_feature(const coord_def& where)
     if (!env.map_knowledge(where).seen())
         return;
 
-    string desc = feature_description(env.map_knowledge(where).feat()) + ".";
+    string desc = feature_description(env.map_knowledge(where).feat());
 
     if (!desc.empty())
-        mprf(MSGCH_EXAMINE_FILTER, "[%s]", desc.c_str());
+        mprf(MSGCH_EXAMINE_FILTER, "[%s.]", desc.c_str());
 }
 
 // Returns a vector of features matching the given pattern.
