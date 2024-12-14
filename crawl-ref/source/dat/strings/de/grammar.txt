@@ -69,8 +69,8 @@ PREGENERATE:1
 SELECT:/^the .*[^']{2}$/
 
 # transform (English) key
-KEY:/^the one-/a one-/
-KEY:/^the ([aeiouAEIOU])/an $1/
+KEY:/^the (?=one-)/a /
+KEY:/^the (?=[aeiouAEIOU])/an /
 KEY:/^the /a /
 
 # articles
@@ -79,15 +79,13 @@ KEY:/^the /a /
 /^(\{n\})?das /{n}ein /
 
 # masc adjectives
-/^ein [^A-ZÄÖÜ]+/e /er /
-/^ein [^A-ZÄÖÜ]+/\{adj-e\}/{adj-er}/
+/^ein [^A-ZÄÖÜ]+/e\b/er/
 
 # fix some special cases
-/e (Drakonier|Yiuf)/er $1/
+/e (?=(Drakonier|Yiuf))/er /
 
 # neuter adjectives
-/^\{n\}ein [^A-ZÄÖÜ]+/e /es /
-/^\{n\}ein [^A-ZÄÖÜ]+/\{adj-e\}/{adj-es}/
+/^\{n\}ein [^A-ZÄÖÜ]+/e\b/es/
 %%%%
 
 #############
