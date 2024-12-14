@@ -7,7 +7,10 @@
 # Notes:
 #
 # It might seem weird to list named monsters with the definite article, but it's
-# needed for message like: "You hit the helpless Sigmund."
+# needed for message like: "You hit the helpless Sigmund." Also, it's easier to
+# generate the "plain" version (without article) from the one with the article
+# than the other way round because it's very hard to identify plain unique names
+# (there are hundreds of other one-word strings that start with a capital).
 #
 # Some uniques are gender-neutral in English. This is different to neuter.
 # (neuter -> it, gender neutral -> they). While German has neuter, it can't do
