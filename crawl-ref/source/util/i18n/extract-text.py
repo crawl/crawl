@@ -2282,6 +2282,8 @@ for filename in files:
                 append_monster_permutations(filtered_strings, string)
             elif string == " the pandemonium lord":
                 filtered_strings.append(string.strip())
+            elif string == "Blork":
+                filtered_strings.append("the " + string)
             elif string == "deck of " or string == "decks of ":
                 if string == "deck of ":
                     string = "the " + string
