@@ -890,6 +890,8 @@ static bool _check_adjectives(const vector<string>& adjs)
 // it's assumed that the main string is already localised
 static string _localise_adjectives(const string& s, const vector<string>& adjs)
 {
+    TRACE("_context='%s', s='%s'", _context.c_str(), s.c_str());
+
     string result = s;
     size_t pos = result.find("%s");
     if (pos == string:: npos)
@@ -906,6 +908,8 @@ static string _localise_adjectives(const string& s, const vector<string>& adjs)
             result.erase(ctx_pos, ctx_end - ctx_pos + 1);
         }
     }
+
+    TRACE("_context='%s', provisional result='%s'", _context.c_str(), s.c_str());
 
     // check for "<monster> shaped" as an adjective
     string monster;
@@ -970,6 +974,9 @@ static string _localise_string_with_adjectives(const string& s)
     string base_en, base_xlated, rest;
     if (!_find_base_name(s, base_en, base_xlated, rest))
         return "";
+
+    TRACE("base_en='%s', base_xlated='%s', rest='%s'",
+          base_en.c_str(),base_xlated.c_str(), rest.c_str());
 
     vector<string> adjectives = split_string(" ", rest, true, false);
     if (!_check_adjectives(adjectives))
