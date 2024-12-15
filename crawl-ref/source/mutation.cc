@@ -436,7 +436,7 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
     if (mut == MUT_BERSERK && you.is_lifeless_undead())
         return mutation_activity_type::INACTIVE;
 
-    if (!form_has_blood(you.form) && mut == MUT_SANGUINE_ARMOUR)
+    if (mut == MUT_SANGUINE_ARMOUR && !form_has_blood(you.form))
         return mutation_activity_type::INACTIVE;
 
     if (mut == MUT_TIME_WARPED_BLOOD && (!form_has_blood(you.form)
@@ -577,9 +577,15 @@ int player::get_temp_mutation_level(mutation_type mut) const
 int player::get_mutation_level(mutation_type mut, mutation_activity_type minact) const
 {
     ASSERT_RANGE(mut, 0, NUM_MUTATIONS);
-    if (mutation_activity_level(mut) < minact)
-        return 0;
-    return get_base_mutation_level(mut, true, true);
+    if (const int level = get_base_mutation_level(mut, true, true))
+    {
+        if (mutation_activity_level(mut) < minact)
+            return 0;
+        else
+            return level;
+    }
+
+    return 0;
 }
 
 /*
