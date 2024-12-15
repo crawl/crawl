@@ -146,7 +146,7 @@
             e.mons("acid dragon / swamp dragon / fire dragon / ice dragon")
             e.mons("storm dragon / shadow dragon / bone dragon")
             e.mons("golden dragon w:15 / quicksilver dragon / iron dragon / " ..
-                   "pearl dragon w:1")
+                   "wyrmhole w:5 / pearl dragon w:1")
             e.subst("+ = ...+")
             e.subst("A = $")
             e.subst("B = $")
@@ -177,7 +177,7 @@
             e.mons("spriggan rider")
             e.mons("spriggan air mage / spriggan berserker / spriggan defender")
             e.mons("spriggan defender / alderking w:3")
-            e.kmons("D = the Enchantress")
+            e.kmons("D = the Enchantress, alderking / nothing")
             e.subst("3 = D3")
             e.subst("A = t")
             e.subst("B = tT")
@@ -438,7 +438,7 @@ KMASK:    1290KLMN = !no_monster_gen
 KMONS:    K = storm dragon
 KMONS:    L = shadow dragon
 KMONS:    M = quicksilver dragon
-KMONS:    N = golden dragon
+KMONS:    N = golden dragon / wyrmhole w:2
 SUBST:    }])> = G
 NSUBST:   D = 1:K / 1:L / 1:M / 1:N
 SUBVAULT: H : grunt_zot_portal
@@ -711,7 +711,7 @@ TAGS:    grunt_profane_loot no_monster_gen
 KMONS:   K = storm dragon
 KMONS:   L = shadow dragon
 KMONS:   M = quicksilver dragon
-KMONS:   N = golden dragon
+KMONS:   N = golden dragon / wyrmhole w:5
 KITEM:   KLMN> = any good_item
 KITEM:   12 = any
 SHUFFLE: KLMN
@@ -786,7 +786,7 @@ MONS:    sphinx / spark wasp / flayed ghost / \
          tentacled monstrosity / juggernaut zombie w:2
 MONS:    spriggan defender w:30 / titan w:30 / ancient lich w:30 / \
          walking crystal tome / walking frostbound tome / \
-         juggernaut w:20 / alderking w:15 / draconian monk / \
+         juggernaut w:20 / alderking w:15 / wyrmhole / draconian monk / \
          draconian annihilator / draconian knight
 KMONS:   Z = draconian knight / draconian annihilator
 KITEM:   Z = midnight gem

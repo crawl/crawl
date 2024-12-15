@@ -4526,6 +4526,17 @@ void bolt::affect_player()
     if (flavour == BEAM_CRYSTALLIZING)
         crystallize_player();
 
+    if (origin_spell == SPELL_SOJOURNING_BOLT
+        && final_dam > 0 && x_chance_in_y(2, 3))
+    {
+        you.teleport();
+        if (you.duration[DUR_TELEPORT])
+        {
+            mprf(MSGCH_DANGER, "You feel a distressing malevolence running through your instability!");
+            you.props[SJ_TELEPORTITIS_SOURCE].get_int() = agent(true)->mid;
+        }
+    }
+
     if (origin_spell == SPELL_THROW_PIE && final_dam > 0)
     {
         const pie_effect effect = _random_pie_effect(you);
@@ -5255,6 +5266,12 @@ void bolt::monster_post_hit(monster* mon, int dmg)
                             * BASELINE_DELAY;
             mon->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0, agent(), dur));
         }
+    }
+
+    if (origin_spell == SPELL_SOJOURNING_BOLT
+        && x_chance_in_y(2, 3) && !(mon->no_tele()))
+    {
+        monster_teleport(mon, false);
     }
 
     if (flavour == BEAM_CRYSTALLIZING)

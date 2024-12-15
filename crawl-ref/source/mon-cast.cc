@@ -182,6 +182,7 @@ static bool _cast_seismic_stomp(const monster& caster, bolt& beam, bool check_on
 static ai_action::goodness _foe_siphon_essence_goodness(const monster &caster);
 static vector<actor*> _siphon_essence_victims (const actor& caster);
 static void _cast_siphon_essence(monster &caster, mon_spell_slot, bolt&);
+static ai_action::goodness _sojourning_bolt_goodness(const monster &caster);
 
 enum spell_logic_flag
 {
@@ -1111,6 +1112,14 @@ static ai_action::goodness _foe_siphon_essence_goodness(const monster &caster)
     return ai_action::good_or_impossible(!victims.empty());
 }
 
+static ai_action::goodness _sojourning_bolt_goodness(const monster &caster)
+{
+    const actor* foe = caster.get_foe();
+    ASSERT(foe);
+    return ai_action::good_or_impossible(!(foe->is_player()
+                                           && you.props.exists(SJ_TELEPORTITIS_SOURCE)));
+}
+
 /**
  * Build a function to set up a beam to buff the caster.
  *
@@ -2019,6 +2028,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_SANDBLAST:
     case SPELL_THROW_BOLAS:
     case SPELL_HARPOON_SHOT:
+    case SPELL_SOJOURNING_BOLT:
     case SPELL_THROW_PIE:
     case SPELL_NOXIOUS_CLOUD:
     case SPELL_POISONOUS_CLOUD:
@@ -8762,6 +8772,9 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
     case SPELL_BLINK_OTHER:
     case SPELL_BLINK_OTHER_CLOSE:
         return _foe_effect_viable(*mon, DUR_DIMENSION_ANCHOR, ENCH_DIMENSION_ANCHOR);
+
+    case SPELL_SOJOURNING_BOLT:
+        return ai_action::good_or_impossible(_sojourning_bolt_goodness(*mon).first);
 
     case SPELL_DREAM_DUST:
         return _foe_sleep_viable(*mon);

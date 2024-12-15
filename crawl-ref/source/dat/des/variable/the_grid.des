@@ -1630,7 +1630,7 @@ TAGS:    the_grid unrand
 MONS:    steam dragon / acid dragon
 MONS:    fire dragon / ice dragon / swamp dragon w:5
 MONS:    shadow dragon / iron dragon / golden dragon / storm dragon / \
-         quicksilver dragon
+         quicksilver dragon / wyrmhole w:2
 : if you.absdepth() < 10 then
 SUBST:   $ = $$$$$%
 : elseif you.absdepth() < 16 then
@@ -1655,7 +1655,7 @@ TAGS:    the_grid unrand
 MONS:    steam dragon / acid dragon
 MONS:    fire dragon / ice dragon / swamp dragon w:5
 MONS:    shadow dragon / iron dragon / golden dragon / storm dragon / \
-         quicksilver dragon
+         quicksilver dragon / wyrmhole w:2
 : if you.absdepth() < 10 then
 SUBST:   $ = $$$$$%
 : elseif you.absdepth() < 16 then

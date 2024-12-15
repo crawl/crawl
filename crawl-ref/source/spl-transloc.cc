@@ -969,6 +969,29 @@ static void _handle_teleport_update(bool large_change, const coord_def old_pos)
     you.clear_far_engulf();
 }
 
+// Not called for wizmode teleports.
+static bool _real_teleport_cleanup(coord_def oldpos, coord_def newpos)
+{
+    bool large_change = false;
+
+    if (newpos == oldpos)
+        mpr("Your surroundings flicker for a moment.");
+    else if (you.see_cell(newpos))
+        mpr("Your surroundings seem slightly different.");
+    else
+    {
+        mpr("Your surroundings suddenly seem different.");
+        large_change = true;
+    }
+
+    cancel_polar_vortex(true);
+    _place_tloc_cloud(oldpos);
+    move_player_to_grid(newpos, false);
+    stop_delay(true);
+
+    return large_change;
+}
+
 static bool _teleport_player(bool wizard_tele, bool teleportitis,
                              string reason="")
 {
@@ -1094,28 +1117,103 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis,
             }
         }
 
-        if (newpos == old_pos)
-            mpr("Your surroundings flicker for a moment.");
-        else if (you.see_cell(newpos))
-            mpr("Your surroundings seem slightly different.");
-        else
-        {
-            mpr("Your surroundings suddenly seem different.");
-            large_change = true;
-        }
-
-        cancel_polar_vortex(true);
-        // Leave a purple cloud.
-        _place_tloc_cloud(old_pos);
-
-        move_player_to_grid(newpos, false);
-        stop_delay(true);
+        large_change = _real_teleport_cleanup(old_pos, newpos);
     }
 
     crawl_state.potential_pursuers.clear();
 
     _handle_teleport_update(large_change, old_pos);
     return !wizard_tele;
+}
+
+// Teleportitis is currently balanced around it silently failing constantly.
+// For the rare circumstance we want to guarantee danger via monster teleport
+// other (and its equivalents), instead check for every monster and then every
+// place near a monster we could move to, and also bring the source of the spell
+// to you, so there's still some risk of escaping towards rats instead.
+// Worst-case calculation scenarios should be rare; the uses of it are rare.
+static bool hostile_teleport_player()
+{
+    const coord_def oldpos = you.pos();
+    coord_def newpos = you.pos();
+    bool large_change = false;
+    vector<monster*> targets;
+    monster* source = monster_by_mid(you.props[SJ_TELEPORTITIS_SOURCE].get_int());
+
+    if (you.no_tele())
+    {
+        canned_msg(MSG_STRANGE_STASIS);
+        return false;
+    }
+
+    // Presume any monster stuck in a no_tele box isn't worth investigating.
+    // Since the source monster is coming along, don't count it as an option.
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mons_is_threatening(**mi)
+            && mons_attitude(**mi) == ATT_HOSTILE
+            && !(env.pgrid(mi->pos()) & (FPROP_NO_TELE_INTO))
+            && !(mi->mid == source->mid))
+        {
+            targets.push_back(*mi);
+        }
+    }
+
+    if (targets.empty())
+        _teleport_player(false, false);
+    else
+    {
+        shuffle_array(targets);
+        int mons_near_target = 0;
+
+        for (monster *tele_target : targets)
+        {
+            for (radius_iterator ri(tele_target->pos(), LOS_NO_TRANS, true);
+                    ri; ++ri)
+            {
+                int square_count = 0;
+                if (cell_vetoes_teleport(*ri) || *ri == you.pos())
+                    continue;
+
+                if (one_chance_in(++square_count))
+                {
+                    newpos = *ri;
+
+                    for (monster_near_iterator mi(newpos, LOS_NO_TRANS); mi; ++mi)
+                        mons_near_target++;
+
+                    break;
+                }
+            }
+        }
+
+        if (!(oldpos == newpos))
+        {
+            mprf("The spatial malevolence pulls you towards %s monster%s!",
+                mons_near_target > 1 ? "some" : "a",
+                mons_near_target > 1 ? "s" : "");
+        }
+
+        interrupt_activity(activity_interrupt::teleport);
+        large_change = _real_teleport_cleanup(oldpos, newpos);
+        crawl_state.potential_pursuers.clear();
+        _handle_teleport_update(large_change, oldpos);
+    }
+
+    if (source && source->alive())
+    {
+        coord_def source_newpos;
+        if (find_habitable_spot_near(newpos, source->type, you.current_vision,
+                                     source_newpos, 0, &you))
+        {
+            _place_tloc_cloud(source->pos());
+            source->move_to_pos(source_newpos);
+            mprf(MSGCH_WARN, "%s tunnels through space-time and arrives with you!",
+                 source->name(DESC_THE).c_str());
+        }
+    }
+
+    return true;
 }
 
 bool you_teleport_to(const coord_def where_to, bool move_monsters)
@@ -1187,7 +1285,15 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
 
 void you_teleport_now(bool wizard_tele, bool teleportitis, string reason)
 {
-    const bool randtele = _teleport_player(wizard_tele, teleportitis, reason);
+    bool randtele;
+
+    if (you.props.exists(SJ_TELEPORTITIS_SOURCE))
+    {
+        randtele = hostile_teleport_player();
+        you.props.erase(SJ_TELEPORTITIS_SOURCE);
+    }
+    else
+        randtele = _teleport_player(wizard_tele, teleportitis, reason);
 
     // Xom is amused by teleports that land you in a dangerous place, unless
     // the player is in the Abyss and teleported to escape from all the

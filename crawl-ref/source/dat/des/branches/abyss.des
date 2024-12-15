@@ -57,6 +57,7 @@ ENDMAP
 NAME:    minmay_room_of_horrors
 TAGS:    nolayout_encompass luniq_hellpanabyss_threat_entry
 MONS:    small abomination, large abomination, unseen horror / chaos spawn
+KMONS:   _ = wyrmhole w:2 / nothing w:20
 SHUFFLE: 123
 : abyss_entry(_G, '_')
 MAP
@@ -187,7 +188,8 @@ ENDMAP
 NAME:    regret_index_abyss_entry_already_here
 TAGS:    nolayout_encompass transparent no_monster_gen patrolling
 WEIGHT:  5
-MONS:    tentacled monstrosity / lich, glowing shapeshifter, glass eye
+MONS:    tentacled monstrosity / lich / wyrmhole w:2
+MONS:    glowing shapeshifter, glass eye
 NSUBST:  1 = 1:1 / 1:2 / 1:3 / *:., b = 1:O / *:b
 TILE:    b = bedevilled_crystal_abyss
 :   set_feature_name("crystal_wall", "bedevilled crystal wall")
@@ -1434,7 +1436,7 @@ MONS:    wretched star / starcursed mass / apocalypse crab / lurking horror / \
 MONS:    balrug w:12 / hellion / tormentor / cacodemon w:12 / reaper w:12 / \
          blizzard demon w:12 / hellephant / angel / daeva
 KMONS:   R = hellephant / ancient lich / dread lich / \
-             hell sentinel / profane servitor / executioner
+             hell sentinel / profane servitor / executioner / wyrmhole w:2
 KITEM:   O = abyssal rune of Zot
 KFEAT:   ! = runelight
 MARKER:  P = lua:transp_loc("reverse_zot_entry")

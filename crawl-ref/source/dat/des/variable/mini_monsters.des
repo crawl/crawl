@@ -1294,7 +1294,7 @@ DEPTH:   Snake, !Snake:$, Zot, !Zot:$
 KMONS:   A = base draconian / green draconian w:4
 KMONS:   B = fire dragon w:5 / ice dragon w:5 / storm dragon / shadow dragon
 KMONS:   C = nonbase draconian / draconian annihilator
-KMONS:   D = golden dragon / quicksilver dragon / iron dragon
+KMONS:   D = golden dragon / quicksilver dragon / wyrmhole
 : else
 KMONS:   A = naga warrior / naga mage
 KMONS:   B = mana viper / anaconda
@@ -9051,16 +9051,16 @@ TAGS:   patrolling uniq_guarded_rift
 DEPTH:  D:13-, Depths
 WEIGHT: 2
 ITEM:   rift no_pickup
-MONS:   arcanist, occultist, tentacled starspawn, starcursed mass
+MONS:   arcanist, occultist, tentacled starspawn, starcursed mass, wyrmhole
 KFEAT:  t = demonic_tree
 KFEAT:  _ = altar_lugonu / enter_abyss
 : if you.in_branch("D") then
 SUBST:  1 = 12..
-NSUBST: D = d / 3 / 4
+NSUBST: D = 1:d / 1:3 / *:4
 # Depths
 : else
 SUBST:  1 = 23..
-NSUBST: D = d / 4
+NSUBST: D = 1:d / 1 = 4 5:2 / *:4
 : end
 SUBST:  c = ccvbx t:5
 SUBST:  E = xxxcvlWbtTG_....

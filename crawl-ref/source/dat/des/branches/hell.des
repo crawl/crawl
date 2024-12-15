@@ -745,7 +745,7 @@ WEIGHT: 2
 : hell_entry_tier(_G, "low")
 KMONS: S = balrug band / hell knight band / jiangshi band / \
            ancient champion band / deep troll shaman band / \
-           salamander tyrant band / wendigo band
+           salamander tyrant band / wyrmhole
 SUBST: L = l., ` = lx
 MAP
   xxxx

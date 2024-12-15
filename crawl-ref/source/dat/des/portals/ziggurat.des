@@ -129,7 +129,8 @@ MONS:    ghost crab / fenstrider witch
 MONS:    nagaraja / naga sharpshooter
 MONS:    merfolk aquamancer / merfolk javelineer
 MONS:    emperor scorpion / torpor snail
-KMONS:   O = ancient lich / dread lich / titan / juggernaut / glass eye
+KMONS:   O = ancient lich / dread lich / titan /\
+             alderking / wyrmhole / glass eye
 KFEAT:   O = enter_ziggurat no_mimic
 SHUFFLE: 1234
 SUBST:   ' : 'w, W : nw

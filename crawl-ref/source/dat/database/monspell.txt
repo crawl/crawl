@@ -244,6 +244,10 @@ Sheza's Dance cast
 
 @The_monster@ gestures, and weapons take to the air!
 %%%%
+Sojourning Bolt cast
+
+@The_monster@ breathes a rupture in space-time @at@ @target@.
+%%%%
 Sticks to Snakes cast
 
 @The_monster@ drops twin branches, and they both wriggle to life!

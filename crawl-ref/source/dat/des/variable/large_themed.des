@@ -651,7 +651,7 @@ TAGS:   no_monster_gen no_descent
 DEPTH:  Depths, !Depths:$
 MONS:   golden dragon, any draconian
 MONS:   rime drake / swamp drake / lindwurm
-KMONS:  D = rime drake w:5 / wind drake w:5 / death drake / lindwurm w:5
+KMONS:  D = wind drake w:5 / death drake / lindwurm w:5 / wyrmhole w:5
 KMONS:  f = fungus
 KMONS:  p = plant
 KITEM:  D = $
@@ -2650,7 +2650,7 @@ MONS:    very ugly thing / glowing orange brain w:5 / spriggan rider
 MONS:    flayed ghost w:5 / spriggan berserker / glowing shapeshifter
 MONS:    spark wasp / glass eye w:5 / spriggan defender
 MONS:    shadow dragon w:4 / tentacled monstrosity w:6 / golden dragon
-MONS:    alderking / caustic shrike
+MONS:    alderking / caustic shrike / wyrmhole w:2
 KFEAT:   ^ = alarm trap / dispersal trap w:2
 SHUFFLE: {([ / })] / %%% / %%% / %%%
 SUBST:   { = {:50 <, ( = (:50 <, } = }:50 >, ) = ):50 >
@@ -2747,7 +2747,7 @@ KMONS:   L = fire dragon
 MONS:    hell knight / rakshasa w:5 / spriggan defender zombie w:5, fire giant
 MONS:    vampire knight, deep troll earth mage, tengu reaver
 KMONS:   6 : juggernaut w:15 / iron dragon
-KMONS:   7 : ancient lich / dread lich
+KMONS:   7 : ancient lich / dread lich / wyrmhole w:2
 NSUBST:  V> = 1:} / 1 = ) >:6 / 1 = ] >:6
 TILE:    v = dngn_metal_wall_brown
 :   else
@@ -3364,7 +3364,7 @@ MONS:    tengu reaver / titan / lich / alderking w:5
 MONS:    frost giant / vampire mage / vampire knight w:5
 MONS:    walking crystal tome / walking frostbound tome / \
          walking divine tome / walking earthen tome
-MONS:    sphinx / spark wasp / caustic shrike / glass eye
+MONS:    sphinx / spark wasp / caustic shrike / glass eye / wyrmhole w:2
 MONS:    spriggan air mage / very ugly thing / glowing orange brain / \
          glowing shapeshifter w:20 / rakshasa
 SHUFFLE: }])

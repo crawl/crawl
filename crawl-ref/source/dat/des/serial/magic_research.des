@@ -186,9 +186,13 @@ ENDMAP
 
 NAME:   hangedman_research_quantum
 MONS:   blink frog / jumping spider w:7, spatial vortex
+: if you.in_branch("Depths") then
+KMONS:  D = wyrmhole
+: else
 KMONS:  D = eldritch tentacle
 MARKER: D = lua:fog_machine { cloud_type = "translocational energy", \
             pow_min = 3, pow_max = 10, delay = 50, size = 1, walk_dist = 1 }
+: end
 COLOUR: .012D = magenta
 FTILE:  .n+012D = floor_demonic_red
 : init_research(_G, 'translocation')

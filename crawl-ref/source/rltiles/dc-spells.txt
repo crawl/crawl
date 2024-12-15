@@ -293,6 +293,7 @@ siphon_essence SIPHON_ESSENCE
 siren_song SIREN_SONG
 sleep SLEEP
 slug_dart SLUG_DART
+sojourning_bolt SOJOURNING_BOLT
 spectral_cloud SPECTRAL_CLOUD
 spit_acid SPIT_ACID
 spit_poison SPIT_POISON

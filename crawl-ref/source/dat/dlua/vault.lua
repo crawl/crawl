@@ -91,8 +91,8 @@ function zot_entry_setup(e)
   e.kitem("R = midnight gem")
   e.kfeat("O = enter_zot")
   e.mons("patrolling base draconian")
-  e.mons("fire dragon / ice dragon / storm dragon / \
-          shadow dragon / bone dragon / golden dragon")
+  e.mons("fire dragon w:12 / ice dragon w:12 / storm dragon / \
+          shadow dragon / golden dragon w:12 / wyrmhole w:4")
   e.mons("patrolling nonbase draconian")
   e.kmons("0 = ettin / rakshasa / glowing shapeshifter w:5 / \
               stone giant w:12 / spriggan berserker w:8 / hell knight w:5")

@@ -137,6 +137,7 @@ enum monster_type                      // env.mons[].type
     MONS_DEATH_DRAKE,
 #if TAG_MAJOR_VERSION > 34
     MONS_WIND_DRAKE,
+    MONS_WYRMHOLE,
     MONS_DRAGON,                // genus
 #endif
     MONS_STEAM_DRAGON,
@@ -1309,6 +1310,7 @@ enum monster_type                      // env.mons[].type
     MONS_SHADOW_TURRET,
     MONS_ALDERKING,
     MONS_ONI_INCARCERATOR,
+    MONS_WYRMHOLE,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

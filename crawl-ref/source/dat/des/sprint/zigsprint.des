@@ -511,7 +511,7 @@ local rnd = crawl.random2(142)
     e.kmons("1 = swamp drake / rime drake / acid dragon / steam dragon /\
                death drake / swamp dragon / fire dragon / ice dragon /\
                shadow dragon / iron dragon / quicksilver dragon /\
-               golden dragon / wyvern / hydra")
+               golden dragon / wyrmhole / wyvern / hydra")
 -- Ranged
   elseif rnd < 93 then
     e.kmons("1 = centaur / yaktaur / cyclops / centaur warrior /\

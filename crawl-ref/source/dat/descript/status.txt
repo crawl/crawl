@@ -17,6 +17,12 @@ You are about to teleport. While waiting to teleport, attempting to apply the
 status again (such as by using a scroll of teleportation) will cancel the
 teleportation.
 %%%%
+!Tele! status
+
+You are about to teleport towards hostile monsters, if possible. Before this
+happens, attempting to teleport again (such as by using a scroll of
+teleportation) will cancel this teleportation.
+%%%%
 Fly status
 
 You are flying above the ground, and are able to cross water and lava or fight

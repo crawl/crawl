@@ -812,20 +812,22 @@ cactus_giant MONS_CACTUS_GIANT
 tainted_leviathan MONS_TAINTED_LEVIATHAN
 %rim 1
 
-## Drakes (also 'l')
+## Drakes ('k')
 %sdir mon/dragons
+wyvern MONS_WYVERN
 swamp_drake MONS_SWAMP_DRAKE
 rime_drake MONS_RIME_DRAKE
 lindwurm MONS_LINDWURM
 death_drake MONS_DEATH_DRAKE
 wind_drake MONS_WIND_DRAKE
-
+wyrmhole0 MONS_WYRMHOLE
+wyrmhole1
+wyrmhole2
 
 ## Dragons ('D')
 %sdir mon/unique
 xtahua MONS_XTAHUA
 %sdir mon/dragons
-wyvern MONS_WYVERN
 fire_dragon MONS_FIRE_DRAGON
 hydra1 MONS_HYDRA
 hydra2

@@ -3252,6 +3252,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_SOJOURNING_BOLT, "Sojourning Bolt",
+    spschool::conjuration | spschool::translocation,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
+    6,
+    200,
+    5, 5,
+    0,
+    TILEG_SOJOURNING_BOLT,
+},
+
+{
     SPELL_HARPOON_SHOT, "Harpoon Shot",
     spschool::conjuration | spschool::earth,
     spflag::dir_or_target | spflag::needs_tracer | spflag::monster,

@@ -877,6 +877,16 @@ bool fill_status_info(int status, status_info& inf)
         inf.long_text = "Preparing a Fortress Blast.";
         break;
 
+    case DUR_TELEPORT:
+        if (you.props.exists(SJ_TELEPORTITIS_SOURCE))
+        {
+            inf.light_text   = "!Tele!";
+            inf.light_colour = RED;
+            inf.short_text   = "teleporting to hostiles";
+            inf.long_text    = "You are about to teleport to other enemies.";
+        }
+        break;
+
     default:
         if (!found)
         {

@@ -18,13 +18,13 @@
 function st_zot_vaults_setup(e)
     e.tags("no_item_gen")
     e.depth("Zot, !Zot:$")
-    e.kmons("D = acid dragon / fire dragon w:25 / ice dragon w:25 /\
-               storm dragon w:20 / shadow dragon w:20 / golden dragon /\
-               iron dragon w:5 / quicksilver dragon w:5 / bone dragon w:5 /\
-               lindwurm w:2 / rime drake w:2 / death drake w:2 /\
-               swamp dragon w:5")
+    e.kmons("D = acid dragon / swamp dragon / fire dragon w:25 /\
+                 ice dragon w:25 / storm dragon w:20 / shadow dragon w:20 /\
+                 golden dragon / iron dragon w:5 / quicksilver dragon w:5 /\
+                 bone dragon w:5 / lindwurm w:2 / rime drake w:2 /\
+                 death drake w:2 / wyrmhole")
     e.kmons("d = base draconian / nonbase draconian")
-    e.kmons("Y = patrolling golden dragon")
+    e.kmons("Y = patrolling golden dragon / patrolling wyrmhole w:1")
     e.kitem("Y = |")
 end
 }}
@@ -197,7 +197,7 @@ KMONS:  8 = quicksilver dragon
 : end
 # boss: 9, 0
 KMONS:  9 = nonbase draconian
-KMONS:  0 = golden dragon
+KMONS:  0 = golden dragon / wyrmhole w:2
 MAP
 ccc+ccccccccccccccccccc
 cvb.bvcccvb.bvccccccccc
@@ -3580,8 +3580,8 @@ TAGS:   no_monster_gen
 DEPTH:  Zot, !Zot:$
 ORIENT: east
 MONS:   nonbase draconian, base draconian, moth of wrath
-MONS:   fire dragon w:30 / ice dragon w:30 / shadow dragon w:20 / \
-        storm dragon w:50 / bone dragon w:30 / golden dragon w:35
+MONS:   fire dragon w:35 / ice dragon w:35 / shadow dragon w:25 / \
+        storm dragon w:50 / wyrmhole w:15 / golden dragon w:35
 MONS:   Killer Klown / electric golem w:5 / \
         curse toe w:5 / protean progenitor w:5
 MONS:   orb of fire
@@ -3737,7 +3737,7 @@ MONS:    hell knight w:6 / very ugly thing / caustic shrike zombie / \
          tentacled starspawn / spark wasp / glowing shapeshifter
 MONS:    guardian serpent / deep elf annihilator / balrug / \
          deep elf high priest / will-o-the-wisp / acid blob
-MONS:    halazid warlock / revenant / apocalypse crab
+MONS:    halazid warlock / revenant / apocalypse crab / wyrmhole w:2
 MONS:    butterfly
 ITEM:    stone q:1 no_pickup, large rock q:1 no_pickup
 KITEM:   O = charlatans_orb no_pickup
@@ -4010,7 +4010,7 @@ NSUBST:  E = 3 = r. / 6 = ss. / *:.
 KMONS:   r = moth of wrath / ghost moth
 KMONS:   s = quicksilver dragon / storm dragon / \
              shadow dragon / iron dragon / \
-             bone dragon / golden dragon w:5
+             wyrmhole / golden dragon w:5
 # The Freakshow: death cobs and maybe a curse toe or protean
 NSUBST:  F = 8 = z. / 1 = y .:50 / *:.
 KMONS:   y = curse toe
@@ -4365,7 +4365,7 @@ KMONS:   A = green draconian / green death w:2
 KMONS:   B = green draconian monk
 KMONS:   C = protean progenitor band
 KMONS:   d = purple draconian / ghost moth w:4
-KMONS:   e = purple draconian shifter
+KMONS:   e = purple draconian shifter / wyrmhole w:2
 KMONS:   f = quicksilver dragon
 KMONS:   g = death cob / storm dragon zombie w:4
 KMONS:   h = shadow dragon

@@ -91,7 +91,7 @@ function base_monster_setup(e)
                balrug / green death / blizzard demon / reaper / \
                searing wretch / imperial myrmidon / halazid warlock")
   e.kmons("F = storm dragon w:12 / shadow dragon / golden dragon w:12 /\
-               iron dragon / quicksilver dragon w:15 / spark wasp /\
+               iron dragon / quicksilver dragon w:15 / wyrmhole / spark wasp /\
                tengu reaver / juggernaut / titan / lich /\
                tentacled monstrosity / undying armoury w:5 /\
                deep elf blademaster / deep elf master archer /\
@@ -177,7 +177,7 @@ function base_monster_setup(e)
                storm dragon / swamp drake / lindwurm / rime drake /\
                shadow dragon w:5")
   e.kmons("X = shadow dragon / iron dragon / quicksilver dragon /\
-               golden dragon")
+               golden dragon / wyrmhole")
   e.kmons("Y = base draconian")
   e.kmons("Z = nonbase draconian")
   e.subst("1 = A:30 H:2")

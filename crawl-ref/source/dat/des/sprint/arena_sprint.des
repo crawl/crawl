@@ -557,7 +557,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "lich / ancient lich",
                 "stone giant / w:15 frost giant / w:15 fire giant / w:15 titan",
                 "w:5 fire dragon / w:5 ice dragon / w:7 storm dragon / shadow dragon /\
-                    golden dragon / quicksilver dragon / iron dragon",
+                    golden dragon / quicksilver dragon / iron dragon / wyrmhole w:3",
                 "glowing shapeshifter hd:18",
                 "w:5 base draconian / nonbase draconian",
                 "golden eye / shining eye / glass eye / eye of devastation /\
@@ -634,7 +634,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "ancient lich / dread lich",
                 "frost giant / fire giant / w:15 titan / iron giant",
                 "storm dragon w:7 / golden dragon w:15 /\
-                    quicksilver dragon w:15 / iron dragon",
+                    quicksilver dragon w:15 / iron dragon w:7 / wyrmhole",
                 "protean progenitor",
                 "draconian stormcaller / draconian knight / draconian shifter",
                 "golden eye / shining eye / glass eye w:15 / eye of devastation /\

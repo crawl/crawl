@@ -19,6 +19,10 @@
 #include "spl-cast.h"
 #include "zap-type.h"
 
+using std::string;
+
+#define SJ_TELEPORTITIS_SOURCE "SJ_TELEPORTITIS_SOURCE"
+
 using std::vector;
 
 #define BEAM_STOP       1000        // all beams stopped by subtracting this

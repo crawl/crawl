@@ -3717,6 +3717,14 @@ reaper
 
     -Buck Dharma, Blue Öyster Cult, “(Don't Fear) The Reaper”. 1976.
 %%%%
+ribbon worm
+
+“While the angels, all pallid and wan,
+   Uprising, unveiling, affirm
+ That the play is the tragedy, ‘Man’,
+   And its hero, the Conqueror Worm.”
+    -Edgar Allan Poe
+%%%%
 royal mummy
 
 <mummy>
@@ -4241,11 +4249,7 @@ wight
 %%%%
 worm
 
-“While the angels, all pallid and wan,
-   Uprising, unveiling, affirm
- That the play is the tragedy, ‘Man’,
-   And its hero, the Conqueror Worm.”
-    -Edgar Allan Poe
+<ribbon worm>
 %%%%
 wraith
 
@@ -4266,6 +4270,20 @@ wretched star
  Whatever doesn’t kill you
  Only makes you stranger”
     -The Sunbeams, “The Tug”. 2020
+%%%%
+wyrmhole
+
+“My complete answer to the late 19th century question 'what is electrodynamics
+ trying to tell us' would simply be this:
+
+ Fields in empty space have physical reality; the medium that supports them does
+ not.
+
+ Having thus removed the mystery from electrodynamics, let me immediately do the
+ same for quantum mechanics:
+
+ Correlations have physical reality; that which they correlate does not.”
+    -N. David Mermin, _What is quantum mechanics trying to tell us?_, 1998.
 %%%%
 ynoxinul
 

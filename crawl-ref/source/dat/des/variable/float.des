@@ -3219,7 +3219,7 @@ PLACE:  Depths:$
      kmons("1 = nonbase draconian")
      kmons("2 = base draconian")
      nsubst("3 = 4:2 / 2 = 2. / *:.")
-     kmons("* = golden dragon / shadow dragon / storm dragon / bone dragon"
+     kmons("* = golden dragon / shadow dragon / storm dragon / wyrmhole w:5"
            .. " / fire dragon / ice dragon")
      colour("c = lightmagenta")
   else
@@ -3314,7 +3314,7 @@ TILE:    b = bedevilled_crystal_gehenna
 :   else
 MONS:    black draconian knight, yellow draconian
 MONS:    black draconian, juggernaut zombie, flayed ghost
-KMONS:   )]b = nonbase draconian w:30 / \
+KMONS:   )]b = nonbase draconian w:30 / wyrmhole / \
                shadow dragon / golden dragon / storm dragon
 KITEM:   b = midnight gem
 KFEAT:   } = enter_zot
@@ -5166,7 +5166,8 @@ NSUBST: - = 3=1 / 4=1. / 2=2. / 2=3 / 4=3. / 2=4. / .
 :   end
 : elseif you.in_branch("Depths") then
 MONS:   very ugly thing / thrashing horror / large abomination
-MONS:   lurking horror / ancient zyme / worldbinder / apocalypse crab
+MONS:   lurking horror / ancient zyme / worldbinder / apocalypse crab / \
+        wyrmhole w:2
 MONS:   tentacled starspawn / glowing shapeshifter / tentacled monstrosity w:5
 MONS:   starcursed mass / wretched star
 NSUBST: ' = 2=d / f / 3=|* / *% / %$-- / -

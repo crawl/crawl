@@ -682,7 +682,7 @@ static void _WYRMBANE_melee_effects(item_def* weapon, actor* attacker,
         return;
 
     // The cap can be reached by:
-    // * iron dragon, golden dragon, pearl dragon (18)
+    // * iron dragon, golden dragon, pearl dragon, wyrmhole (18)
     // * Xtahua (19)
     // * bone dragon, Serpent of Hell (20)
     // * Tiamat (22)

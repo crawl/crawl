@@ -551,7 +551,7 @@ SUBST:   L = ':30 9:20 d:20 8 *, * = *|
 SUBST:   y = G:70 1, W = '
 : elseif you.in_branch("Depths") then
 MONS:    orange crystal statue
-MONS:    caustic shrike / juggernaut / titan
+MONS:    caustic shrike / juggernaut / alderking w:5 / wyrmhole w:5 / titan
 NSUBST:  M = O / 2 / * = * O:15 8:5
 SUBST:   L = ':30 9:20 d:20 8 *, * = *|
 SUBST:   y = G:30 1, c : cvb, W : Wwl
@@ -2569,7 +2569,7 @@ MONS:   glowing shapeshifter / crystal guardian / tentacled monstrosity \
         / daeva god:Xom / executioner / profane servitor
 MONS:   lurking horror / wretched star / hellion / apocalypse crab \
         / starcursed mass
-MONS:   ancient lich / dread lich / hellephant / hell sentinel
+MONS:   ancient lich / dread lich / hellephant / hell sentinel / wyrmhole w:4
 SUBST:  fgh = |*, i = *, j= %$
 NSUBST: - = Hqr / 4=1 / 4=1- / 2=2 / 2=2- / 3 / 3- / 4 / 4- / -
 : elseif you.in_branch("Zot") then
@@ -2586,7 +2586,7 @@ MONS:   draconian shifter / daeva god:Xom / executioner / profane servitor \
         / killer klown
 MONS:   lurking horror / wretched star / hellion / apocalypse crab \
         / starcursed mass
-MONS:   ancient lich / dread lich / hellephant / hell sentinel
+MONS:   ancient lich / dread lich / hellephant / hell sentinel / wyrmhole w:4
 SUBST:  fghij = |*
 NSUBST: - = qr / 4=1 / 4=1- / 2=2 / 3=2- / 3 / 3- / 4 / 2=4- / -
 : end

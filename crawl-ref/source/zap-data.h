@@ -2027,6 +2027,23 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
 },
 
 {
+    ZAP_SOJOURNING,
+    "destabilizing rupture",
+    200,
+    nullptr,
+    nullptr,
+    new dicedef_calculator<3, 7, 1, 12>,
+    new tohit_calculator<40>,
+    LIGHTMAGENTA,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    true,
+    false,
+    TILE_BOLT_WARP_SPACE,
+},
+
+{
     ZAP_CAUSTIC_BREATH,
     "acid spray",
     200,
