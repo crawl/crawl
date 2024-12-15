@@ -815,8 +815,9 @@ Sie fügt jedem lebenden Feind, den sie trifft, mächtige nekromantische Flüche
 
 # Singing Sword
 %%%%
+# note: Previous sentence starts with "Diese Waffe..." hence pronoun is "sie".
 It radiates damaging sonic waves as it strikes, especially in combat involving dangerous or numerous foes.
-Es strahlt schädliche Schallwellen aus, wenn es trifft, vor allem im Kampf mit gefährlichen oder zahlreichen Gegnern.
+Sie strahlt schädliche Schallwellen aus, wenn sie trifft, vor allem im Kampf mit gefährlichen oder zahlreichen Gegnern.
 %%%%
 
 # Snakebite (whip)
