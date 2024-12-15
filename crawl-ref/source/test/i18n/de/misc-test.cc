@@ -62,8 +62,43 @@ int main()
     msg = uppercase_first(msg);
     show_result(msg, "Eine graue Kuh ist glücklich.");
 
+    // features/terrain
+
+    show_result(localise("the floor"), "der Boden");
+    show_result(localise("a floor"), "ein Boden");
+    show_result(localise("floor"), "Boden");
+
+    msg = localise("the large runed gate");
+    show_result(msg, "das große runenverzierte Tor");
+
+    msg = localise("a large runed gate");
+    show_result(msg, "ein großes runenverziertes Tor");
+
+    msg = localise("large runed gate");
+    show_result(msg, "großes runenverziertes Tor");
+
+    msg = localise("the large closed door, spattered with blood");
+    show_result(msg, "die große geschlossene Tür, mit Blut bespritzt");
+
+    msg = localise("a large closed door, spattered with blood");
+    show_result(msg, "eine große geschlossene Tür, mit Blut bespritzt");
+
     msg = localise("large closed door, spattered with blood");
     show_result(msg, "große geschlossene Tür, mit Blut bespritzt");
+
+    msg = localise("the deep water");
+    show_result(msg, "das tiefe Wasser");
+
+    msg = localise("some deep water");
+    show_result(msg, "etwas tiefes Wasser");
+
+    msg = localise("deep water");
+    show_result(msg, "tiefes Wasser");
+
+    msg = localise("a detected shop or portal");
+    show_result(msg, "ein entdeckter Laden oder ein entdecktes Portal");
+
+    // monsters (TODO: move into mon-test.cc or delete)
 
     msg = localise("a great orb of eyes");
     show_result(msg, "eine große Kugel der Augen");

@@ -1053,14 +1053,15 @@ def process_lua_file(filename):
             substrings = string.split("\\n")
             for ss in substrings:
                 if ss != "":
-                    strings.append(ss)
-                    if re.search(r'\bset_feature_name', line):
-                        if ss.startswith('a '):
-                            strings.append(ss[2:]);
-                        elif ss.startswith('an '):
-                            strings.append(ss[3:]);
-                        elif not re.match('^([A-Z]|the |some )', ss):
+                    if 'set_feature_name' in line or 'desc =' in line:
+                        if re.match('^([A-Z]|the |some |a |an )', ss):
+                            strings.append(ss);
+                        elif 'set_feature_name' in line:
                             strings.append(article_a(ss));
+                        else:
+                            strings.append(article_the(ss));
+                    else:
+                        strings.append(ss)
 
     # separate and clean up annotations
     if filename.endswith('stash.lua'):
@@ -1835,6 +1836,9 @@ def process_cplusplus_file(filename):
                 elif section == "_abil_type_vuln_core":
                     # will be joined to string from _ability_type_vulnerabilities before translation
                     string = ", which are affected by " + string
+            elif filename == 'directn.cc' and section == "_base_feature_desc":
+                    IGNORE_STRINGS.append(string)
+                    string = article_the(string)
             elif filename == 'god-wrath.cc':
                 # god wratch names are mostly used only in notes.
                 # the exception is the Wu Jian one
@@ -1917,6 +1921,9 @@ def process_cplusplus_file(filename):
             elif filename == 'spl-goditem.cc':
                 if string.startswith('a scroll of '):
                     string = string.replace('a scroll', 'the scroll')
+            elif filename == 'terrain.cc' and section == "feat_type_name":
+                    IGNORE_STRINGS.append(string)
+                    string = article_the(string)
             elif filename == 'throw.cc' and section == '_setup_missile_beam':
                 if string in ["explosion of ", " fragments"]:
                     # beam for explosive brand - now only used for Damnation artefact, and not displayed
@@ -2282,7 +2289,7 @@ for filename in files:
                 append_monster_permutations(filtered_strings, string)
             elif string == " the pandemonium lord":
                 filtered_strings.append(string.strip())
-            elif string == "Blork":
+            elif string in ["Blork", "gate", "deep water"]:
                 filtered_strings.append("the " + string)
             elif string == "deck of " or string == "decks of ":
                 if string == "deck of ":
