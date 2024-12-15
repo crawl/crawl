@@ -2568,11 +2568,19 @@ void queue_monster_for_action(monster* mons)
 
 void clear_monster_flags()
 {
-    // Clear any summoning flags so that lower indiced
-    // monsters get their actions in the next round.
-    // Also clear one-turn deep sleep flag.
-    for (auto &mons : menv_real)
-        mons.flags &= ~MF_JUST_SUMMONED & ~MF_JUST_SLEPT;
+    // Clear any summoning flags so that lower indiced monsters get their
+    // actions in the next round. Also clear one-turn deep sleep flag.
+    // Finally, track the highest index of monster still alive, for
+    // monster_iterator optimisation purposes.
+    env.max_mon_index = 0;
+    for (int i = 0; i < MAX_MONSTERS; ++i)
+    {
+        if (env.mons[i].defined())
+        {
+            env.max_mon_index = i;
+            env.mons[i].flags &= ~MF_JUST_SUMMONED & ~MF_JUST_SLEPT;
+        }
+    }
 }
 
 /**

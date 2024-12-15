@@ -7562,6 +7562,7 @@ static void _tag_read_level_monsters(reader &th)
     count = unmarshallShort(th);
     ASSERT_RANGE(count, 0, MAX_MONSTERS + 1);
 
+    env.max_mon_index = count;
     for (int i = 0; i < count; i++)
     {
         monster& m = env.mons[i];

@@ -835,6 +835,9 @@ monster* get_free_monster()
     for (auto &mons : menv_real)
         if (mons.type == MONS_NO_MONSTER)
         {
+            if (mons.mindex() > env.max_mon_index)
+                env.max_mon_index = mons.mindex();
+
             mons.reset();
             return &mons;
         }

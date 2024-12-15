@@ -6,14 +6,14 @@
 #include "losglobal.h"
 
 actor_near_iterator::actor_near_iterator(coord_def c, los_type los)
-    : center(c), _los(los), viewer(nullptr), i(-1)
+    : center(c), _los(los), viewer(nullptr), i(-1), max(env.max_mon_index)
 {
     if (!valid(&you))
         advance();
 }
 
 actor_near_iterator::actor_near_iterator(const actor* a, los_type los)
-    : center(a->pos()), _los(los), viewer(a), i(-1)
+    : center(a->pos()), _los(los), viewer(a), i(-1), max(env.max_mon_index)
 {
     if (!valid(&you))
         advance();
@@ -28,7 +28,7 @@ actor* actor_near_iterator::operator*() const
 {
     if (i == -1)
         return &you;
-    else if (i < MAX_MONSTERS)
+    else if (i <= max)
         return &env.mons[i];
     else
         return nullptr;
@@ -64,7 +64,7 @@ bool actor_near_iterator::valid(const actor* a) const
 void actor_near_iterator::advance()
 {
     do
-         if (++i >= MAX_MONSTERS)
+         if (++i > max)
              return;
     while (!valid(**this));
 }
@@ -72,7 +72,7 @@ void actor_near_iterator::advance()
 //////////////////////////////////////////////////////////////////////////
 
 monster_near_iterator::monster_near_iterator(coord_def c, los_type los)
-    : center(c), _los(los), viewer(nullptr), i(0)
+    : center(c), _los(los), viewer(nullptr), i(0), max(env.max_mon_index)
 {
     if (!valid(&env.mons[0]))
         advance();
@@ -80,7 +80,7 @@ monster_near_iterator::monster_near_iterator(coord_def c, los_type los)
 }
 
 monster_near_iterator::monster_near_iterator(const actor *a, los_type los)
-    : center(a->pos()), _los(los), viewer(a), i(0)
+    : center(a->pos()), _los(los), viewer(a), i(0), max(env.max_mon_index)
 {
     if (!valid(&env.mons[0]))
         advance();
@@ -94,7 +94,7 @@ monster_near_iterator::operator bool() const
 
 monster* monster_near_iterator::operator*() const
 {
-    if (i < MAX_MONSTERS)
+    if (i <= max)
         return &env.mons[i];
     else
         return nullptr;
@@ -138,7 +138,7 @@ monster_near_iterator monster_near_iterator::begin()
 monster_near_iterator monster_near_iterator::end()
 {
     monster_near_iterator copy = *this;
-    copy.i = MAX_MONSTERS;
+    copy.i = max + 1;
     return copy;
 }
 
@@ -154,7 +154,7 @@ bool monster_near_iterator::valid(const monster* a) const
 void monster_near_iterator::advance()
 {
     do
-         if (++i >= MAX_MONSTERS)
+         if (++i > max)
              return;
     while (!valid(**this));
 }
@@ -162,15 +162,15 @@ void monster_near_iterator::advance()
 //////////////////////////////////////////////////////////////////////////
 
 monster_iterator::monster_iterator()
-    : i(0)
+    : i(0), max(env.max_mon_index)
 {
-    while (i < MAX_MONSTERS && !env.mons[i].alive())
+    while (i <= max && !env.mons[i].alive())
         i++;
 }
 
 monster_iterator::operator bool() const
 {
-    return i < MAX_MONSTERS && (*this)->alive();
+    return i <= max && (*this)->alive();
 }
 
 monster* monster_iterator::operator*() const
@@ -188,7 +188,7 @@ monster* monster_iterator::operator->() const
 
 monster_iterator& monster_iterator::operator++()
 {
-    while (++i < MAX_MONSTERS)
+    while (++i <= max)
         if (env.mons[i].alive())
             break;
     return *this;
@@ -204,7 +204,7 @@ monster_iterator monster_iterator::operator++(int)
 void monster_iterator::advance()
 {
     do
-         if (++i >= MAX_MONSTERS)
+         if (++i > max)
              return;
     while (!(*this)->alive());
 }
