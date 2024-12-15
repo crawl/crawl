@@ -1,0 +1,44 @@
+TAG_MAJOR_VERSION: 34
+enum: SP_SLUDGE_ELF
+monster: MONS_ELF
+name: Sludge Elf
+short_name: SE
+adjective: Elven
+genus: Elf
+difficulty: False
+aptitudes:
+  xp: 0
+  hp: -1
+  mp_mod: 1
+  wl: 3
+  fighting: 1
+  short_blades: -1
+  long_blades: -1
+  axes: -2
+  maces_and_flails: -2
+  polearms: -2
+  armour: -2
+  dodging: 2
+  stealth: 2
+  shields: -2
+  unarmed_combat: 1
+  spellcasting: 1
+  conjurations: -2
+  summoning: 1
+  necromancy: 1
+  fire_magic: 1
+  ice_magic: 1
+  air_magic: 1
+  earth_magic: 1
+  alchemy: 1
+  invocations: 1
+  shapeshifting: 1
+str: 8
+int: 8
+dex: 8
+levelup_stat_frequency: 4
+levelup_stats:
+  - dex
+  - int
+
+orc_name: Sludge Orc

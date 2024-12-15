@@ -30,9 +30,11 @@
  */
 const species_def& get_species_def(species_type species)
 {
-    if (species != SP_UNKNOWN)
-        ASSERT_RANGE(species, 0, NUM_SPECIES);
-    return species_data.at(species);
+    if (species == SP_UNKNOWN)
+        return species_data[NUM_SPECIES];
+
+    ASSERT_RANGE(species, 0, NUM_SPECIES);
+    return species_data[species];
 }
 
 namespace species
@@ -118,8 +120,8 @@ namespace species
             return SP_BASE_DRACONIAN;
 
         for (auto& entry : species_data)
-            if (lowercase_string(abbrev) == lowercase_string(entry.second.abbrev))
-                return entry.first;
+            if (lowercase_string(abbrev) == lowercase_string(entry.abbrev))
+                return entry.species;
 
         return SP_UNKNOWN;
     }
