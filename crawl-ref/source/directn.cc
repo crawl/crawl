@@ -1228,7 +1228,7 @@ void direction_chooser::calculate_target_info()
 
 coord_def direction_chooser::find_default_target()
 {
-    if (cycle_pos.empty() || mode == TARG_NON_ACTOR)
+    if (cycle_pos.empty() || mode == TARG_NON_ACTOR || just_looking)
         return you.pos();
 
     if (mode == TARG_MOVABLE_OBJECT)
