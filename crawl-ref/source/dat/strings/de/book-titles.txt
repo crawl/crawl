@@ -1856,8 +1856,9 @@ der Geheimnisse
 {gen}Rituals
 der Rituale
 %%%%
-{gen}Magic
-der Magie
+# duplicate
+#{gen}Magic
+#der Magie
 %%%%
 
 # Summoning genitive
