@@ -645,6 +645,18 @@ int main()
     test("The Handbook of Greatest Risks and Utility", "Das Handbuch der größten Risiken und des höchsten Nutzens");
     // if part of the title has no translation, we should not translate any of it
     test("The Handbook of something that has no translation", "The Handbook of something that has no translation");
+    // single school
+    test("the Compendium of Curses", "das Kompendium der Flüche");
+    test("the Handbook of Fire", "das Handbuch des Feuers");
+    test("the Handbook of Ice", "das Handbuch des Eises");
+    test("the Disquisition on Rituals", "die Abhandlung über Rituale");
+    // two schools
+    test("the Almanac of Darkness and the Frostbite", "der Almanach der Dunkelheit und der Erfrierung");
+    test("the Almanac of Battle Magic and Calling", "der Almanach der Kampfmagie und des Rufens");
+    test("the Handbook of Fire and Ice", "das Handbuch des Feuers und des Eises");
+    test("the Reference Book on the Oath and Snow", "das Nachschlagewerk über den Schwur und Schnee");
+    test("the Compendium of Fiery Attacks", "das Kompendium der feurigen Angriffe");
+    test("the Guide on Toxic Damage Dealing", "der Leitfaden für toxischen Schaden");
 
     // randomly-generated with owner
     cout << endl;
@@ -678,16 +690,13 @@ int main()
     test("Ereshkigal's Intricacies of Spellcraft", "Ereshkigals Feinheiten der Zauberkunst");
     test("Gloorx Vloq's Mastering Spellweaving", "Gloorx Vloqs Beherrschung des Zauberwebens");
     test("Mnoleg's Handbook of Greatest Risks and Utility", "Mnolegs Handbuch der größten Risiken und des höchsten Nutzens");
-
     // single school
-    test("the Compendium of Curses", "das Kompendium der Flüche");
-    test("the Handbook of Fire", "das Handbuch des Feuers");
-    test("the Handbook of Ice", "das Handbuch des Eises");
-    // two schools
-    test("the Almanac of Darkness and the Frostbite", "der Almanach der Dunkelheit und der Erfrierung");
-    test("the Almanac of Battle Magic and Calling", "der Almanach der Kampfmagie und des Rufens");
-    test("the Handbook of Fire and Ice", "das Handbuch des Feuers und des Eises");
-    test("the Compendium of Fiery Attacks", "das Kompendium der feurigen Angriffe");
+    test ("Kikubaaqudgha's Collected Works on Unholy Magic", "Kikubaaqudghas gesammelte Werke über unheilige Magie");
+    // two schooles
+    test("Olgreb's Almanac of Darkness and the Frostbite", "Olgrebs Almanach der Dunkelheit und der Erfrierung");
+    test("Vehumet's Almanac of Battle Magic and Calling", "Vehumets Almanach der Kampfmagie und des Rufens");
+    test("Golubria's Handbook of Fire and Ice", "Golubrias Handbuch des Feuers und des Eises");
+    test("Borgnjor's Compendium of Fiery Attacks", "Borgnjors Kompendium der feurigen Angriffe");
 
     cout << endl << num_passes << " TESTS PASSED" << endl;
     if (num_fails > 0)

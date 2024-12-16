@@ -2919,7 +2919,10 @@ static string _localise_player_title(const string& context, const string& text)
                     base_translated = true;
                     param_name = replace_all(param, "@", "");
                     param_val = word;
-                    break;
+                    if (xlate(param_val, false) == "")
+                        base = "";
+                    else
+                        break;
                 }
             }
             if (!base.empty())
@@ -2930,6 +2933,7 @@ static string _localise_player_title(const string& context, const string& text)
     if (base.empty())
         return "";
 
+    TRACE("base='%s'", base.c_str());
     map<string, string> params = { { param_name, param_val } };
     string result = localise(base, params, !base_translated);
     TRACE("result='%s'", result.c_str());

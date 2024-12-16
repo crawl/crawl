@@ -2088,7 +2088,7 @@ der Federn
 "unheilvoll "
 %%%%
 "Unholy "
-"unheilig "
+"unheilige "
 %%%%
 # duplicate
 #"Lethal "
