@@ -1669,7 +1669,7 @@ der {adj-en}%sErde
 der {adj-en}%sSteine
 %%%%
 {gen}%sClay
-dse {adj-en}%sLehms
+des {adj-en}%sLehms
 %%%%
 {gen}the %sMountains
 der {adj-en}%sBerge
@@ -1944,7 +1944,7 @@ der Erde
 der Steine
 %%%%
 {gen}Clay
-dse Lehms
+des Lehms
 %%%%
 {gen}the Mountains
 der Berge
