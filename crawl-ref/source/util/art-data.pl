@@ -31,6 +31,7 @@ my %field_type = (
     COLOUR   => "enum",
     CORRODE  => "bool",
     DBRAND   => "str",
+    DELETED  => "bool",
     DEX      => "num",
     DESCRIP  => "str",
     DRAIN    => "bool",
