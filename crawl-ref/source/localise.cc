@@ -1784,9 +1784,23 @@ static string _localise_book_title(const string& context, const string& value)
 
     result = localise(result, params, false);
 
-    // avoid half-translated title
+    // check for untranslated book magic
     if (!book_magic.empty() && contains(result, book_magic))
-        return value;
+    {
+        pos = value.find(" of ");
+        if (pos == string::npos)
+        {
+            // return English title
+            return value;
+        }
+
+        // translate suffix separately
+        string suffix = " of " + book_magic;
+        suffix = _localise_suffix(suffix);
+        if (contains(result, " " + book_magic))
+            book_magic = " " + book_magic;
+        result = replace_last(result, book_magic, suffix);
+    }
 
     return result;
 }

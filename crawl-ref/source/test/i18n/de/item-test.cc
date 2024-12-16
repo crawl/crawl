@@ -643,8 +643,8 @@ int main()
     test("The Last Tome of the Archmage", "Der letzte Foliant des Erzmagiers");
     test("The Lost Papyrus of the Deep Elf Lorekeeper", "Der verlorene Papyrus des Weisen der Tiefelfen");
     test("The Handbook of Greatest Risks and Utility", "Das Handbuch der größten Risiken und des höchsten Nutzens");
-    // if part of the title has no translation, we should not translate any of it
-    test("The Handbook of something that has no translation", "The Handbook of something that has no translation");
+    // if suffix no translation...
+    test("The Catalogue of suffix that has no translation", "Der Katalog von \"suffix that has no translation\"");
     // single school
     test("the Compendium of Curses", "das Kompendium der Flüche");
     test("the Handbook of Fire", "das Handbuch des Feuers");
