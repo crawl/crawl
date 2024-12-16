@@ -1042,21 +1042,6 @@ bool mon_special_ability(monster* mons)
         }
         break;
 
-    case MONS_SKY_BEAST:
-        if (one_chance_in(8))
-        {
-            // If we're invisible, become visible.
-            if (mons->invisible())
-            {
-                mons->del_ench(ENCH_INVIS);
-                place_cloud(CLOUD_RAIN, mons->pos(), 2, mons);
-            }
-            // Otherwise, go invisible.
-            else
-                enchant_monster_invisible(mons, "flickers out of sight");
-        }
-        break;
-
     case MONS_STARCURSED_MASS:
         if (x_chance_in_y(mons->blob_size,8) && x_chance_in_y(2,3)
             && mons->hit_points >= 8)
