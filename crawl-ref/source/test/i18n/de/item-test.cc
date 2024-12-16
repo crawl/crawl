@@ -295,6 +295,18 @@ vector<map<string, string>> armour =
         {"dat", "einem verfluchten +2 Paar Handschuhe der Schießkunst"},
     },
     {
+        {"en", "the pair of seven-league boots"},
+        {"nom", "das Paar Siebenmeilenstiefel"},
+        {"acc", "das Paar Siebenmeilenstiefel"},
+        {"dat", "dem Paar Siebenmeilenstiefel"},
+    },
+    {
+        {"en", "the +3 pair of seven-league boots"},
+        {"nom", "das +3 Paar Siebenmeilenstiefel"},
+        {"acc", "das +3 Paar Siebenmeilenstiefel"},
+        {"dat", "dem +3 Paar Siebenmeilenstiefel"},
+    },
+    {
         {"en", "the +1 plate armour of Dice, Bag, and Bottle {Str+6 Int-3 Dex+4 SInv} (5390 gold)"},
         {"nom", "die +1 Plattenrüstung von Würfel, Beutel, und Flasche {Stä+6 Int-3 Ges+4 UnsS} (5390 Gold)"},
         {"acc", "die +1 Plattenrüstung von Würfel, Beutel, und Flasche {Stä+6 Int-3 Ges+4 UnsS} (5390 Gold)"},

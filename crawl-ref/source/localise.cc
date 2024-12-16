@@ -1146,7 +1146,7 @@ static string _localise_pair(const string& context, const string& name)
         adj_group1.push_back(words[i]);
     }
 
-    // check for unrand artefact
+    // try with only one adjective placeholder
     string candidate = determiner + " %s" + rest;
     trim_string(candidate);
     TRACE("candidate='%s'", candidate.c_str());
@@ -1158,8 +1158,12 @@ static string _localise_pair(const string& context, const string& name)
     }
 
     // break it up further
+    string base = determiner.empty() ? "" : determiner + " ";
+    base += "%s" + pair_of + "%s";
+    rest = replace_first(rest, pair_of, "");
+
     string suffix;
-    pos = rest.find(" of ", pair_of.length());
+    pos = rest.find(" of ");
     if (pos != string::npos)
     {
         suffix = rest.substr(pos);
@@ -1170,43 +1174,47 @@ static string _localise_pair(const string& context, const string& name)
           determiner.c_str(), rest.c_str(), suffix.c_str());
 
     vector<string> adj_group2;
-    string base = determiner.empty() ? string("%s") : (determiner + " %s");
-    base += pair_of + "%s";
-    rest = rest.substr(pair_of.length());
-    vector<string> words2 = split_string(" ", rest, true);
 
-    size_t cnt = words2.size();
-    if (cnt >= 2 && words2[cnt-2] == "quick" && words2[cnt-1] == "blades")
+    bool suffix_translated = false;
+    do
     {
-        base += words2[cnt-2] + " " + words2[cnt-1];
-        cnt -= 2;
-    }
-    else if (cnt > 0)
-    {
-        base += words2[cnt-1];
-        cnt--;
-    }
+        candidate = base + rest;
 
-    for (size_t i = 0; i < cnt; i++)
-         adj_group2.push_back(words2[i]);
+        // try with suffix
+        result = cxlate(context, base + rest + suffix, false);
+        if (result != "")
+        {
+            suffix_translated = true;
+            break;
+        }
 
-    TRACE("base='%s', suffix='%s'", base.c_str(), suffix.c_str());
+        // try without suffix
+        result = cxlate(context, base + rest, false);
+        if (result != "")
+            break;
 
-    if (suffix.empty())
-        result = cxlate(context, base);
-    else
-    {
-        result = cxlate(context, base + suffix, false);
-        if (result.empty())
-            result = cxlate(context, base) + cxlate(context, suffix);
-    }
+        // move one more word into adjectives list
+        pos = rest.find(' ');
+        if (pos == string::npos)
+            break;
+        string word = rest.substr(0, pos);
+        TRACE("adding adjective: '%s'", word.c_str());
+        adj_group2.push_back(word);
+        rest = rest.substr(pos + 1);
+    } while (true);
+
+    if (result == "")
+        return "";
+
+    if (!suffix_translated && !suffix.empty())
+        result += _localise_suffix(suffix);
 
     TRACE("before inserting adjectives: result='%s'", result.c_str());
 
     // first set of adjectives (before the word "pair")
     result = _insert_adjectives(result, adj_group1);
 
-    // second set of adjectives (before the word "boots"/"gloves")
+    // second set of adjectives (after "pair")
     result = _insert_adjectives(result, adj_group2);
 
     TRACE("result='%s'", result.c_str());
