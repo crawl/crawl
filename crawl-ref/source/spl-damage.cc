@@ -932,6 +932,16 @@ int airstrike_space_around(coord_def target, bool count_unseen)
     return empty_space;
 }
 
+string airstrike_intensity_line(int empty_space)
+{
+    if (empty_space < 3)
+        return "The confined air twists around weakly";
+    else if (empty_space < 6)
+        return "The air twists around";
+    else
+        return "The open air twists around violently";
+}
+
 spret cast_airstrike(int pow, coord_def target, bool fail)
 {
     if (cell_is_solid(target))
@@ -971,8 +981,8 @@ spret cast_airstrike(int pow, coord_def target, bool fail)
 #endif
     hurted = mons->apply_ac(mons->beam_resists(pbeam, hurted, false));
     dprf("preac: %d, postac: %d", preac, hurted);
-
-    mprf("The air twists around and strikes %s%s%s",
+    mprf("%s and strikes %s%s%s",
+         airstrike_intensity_line(empty_space).c_str(),
          mons->name(DESC_THE).c_str(),
          hurted ? "" : " but does no damage",
          attack_strength_punctuation(hurted).c_str());

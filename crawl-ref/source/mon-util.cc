@@ -2267,6 +2267,7 @@ bool flavour_triggers_damageless(attack_flavour flavour)
     return flavour == AF_CRUSH
         || flavour == AF_ENGULF
         || flavour == AF_PURE_FIRE
+        || flavour == AF_AIRSTRIKE
         || flavour == AF_SHADOWSTAB
         || flavour == AF_DROWN
         || flavour == AF_CORRODE;
@@ -2317,6 +2318,9 @@ int flavour_damage(attack_flavour flavour, int HD, bool random)
             if (random)
                 return roll_dice(4, 3);
             return 12;
+        // Just show max damage: this number's only used for display.
+        case AF_AIRSTRIKE:
+            return pow(HD + 1, 1.33) * 11 / 6;
         default:
             return 0;
     }

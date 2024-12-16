@@ -6899,9 +6899,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
         if (you.can_see(*foe))
         {
-                mprf("The air twists around and strikes %s%s",
-                     foe->name(DESC_THE).c_str(),
-                     attack_strength_punctuation(damage_taken).c_str());
+            mprf("%s and strikes %s%s",
+                 airstrike_intensity_line(empty_space).c_str(),
+                 foe->name(DESC_THE).c_str(),
+                 attack_strength_punctuation(damage_taken).c_str());
         }
 
         foe->hurt(mons, damage_taken, BEAM_MISSILE, KILLED_BY_BEAM,

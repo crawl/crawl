@@ -1025,6 +1025,11 @@ int main(int argc, char* argv[])
                     monsterattacks +=
                         colour(YELLOW, damage_flavour("acid", "4d3"));
                     break;
+                case AF_AIRSTRIKE:
+                    short int min = pow(hd, 1.33) / 2;
+                    short int max = pow(hd + 1, 1.33) * 11 / 6;
+                    monsterattacks +=
+                        colour(LIGHTBLUE, damage_flavour("airstrike", min, max));
                 case AF_BLINK:
                     monsterattacks += colour(MAGENTA, "(blink self)");
                     break;
