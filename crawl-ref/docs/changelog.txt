@@ -65,7 +65,7 @@ Interface and Options
   spell success chances for each spell if they switched to using that item.
 * Examining monsters shows if they can open doors.
 * Spell range is now indicated with numbers instead of diagrams.
-* Default target-picking behavior for spells, abilities, and items has been
+* Default target-picking behaviour for spells, abilities, and items has been
   improved: it is now more consistent at avoiding the player or their allies
   when aiming harmful area effects and choose more sensible default aims for
   some utility effects.
