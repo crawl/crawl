@@ -510,7 +510,7 @@ static int _issue_orders_prompt()
         if (_can_target_prev())
         {
             const monster* target = monster_by_mid(you.prev_targ);
-            if (target->alive() && you.can_see(*target))
+            if (target && target->alive() && you.can_see(*target))
                 previous = "   p - Attack previous target.";
         }
 
