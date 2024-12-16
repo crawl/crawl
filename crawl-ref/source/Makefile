@@ -1672,7 +1672,7 @@ fr-misc-test: test/i18n/fr/misc-test.o $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIB
 ru-misc-test: test/i18n/ru/misc-test.o $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS)
 	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(OBJECTS) $< $(EXTRA_OBJECTS) -o $@ $(LIBS)
 
-i18n-tests: make-stringf-test check-regex-rules de-mon-test de-item-test de-misc-test fr-misc-test ru-misc-test
+i18n-tests: $(GAME) make-stringf-test check-regex-rules de-mon-test de-item-test de-misc-test fr-misc-test ru-misc-test
 	./make-stringf-test
 	./de-mon-test
 	./de-item-test
