@@ -1135,10 +1135,11 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis,
 static bool hostile_teleport_player()
 {
     const coord_def oldpos = you.pos();
-    coord_def newpos = you.pos();
+    coord_def newpos;
     bool large_change = false;
     vector<monster*> targets;
-    monster* source = monster_by_mid(you.props[SJ_TELEPORTITIS_SOURCE].get_int());
+    const mid_t source_mid = you.props[SJ_TELEPORTITIS_SOURCE].get_int();
+    monster* source = monster_by_mid(source_mid);
 
     if (you.no_tele())
     {
@@ -1152,68 +1153,90 @@ static bool hostile_teleport_player()
     {
         if (mons_is_threatening(**mi)
             && mons_attitude(**mi) == ATT_HOSTILE
-            && !(env.pgrid(mi->pos()) & (FPROP_NO_TELE_INTO))
-            && !(mi->mid == source->mid))
+            && !testbits(env.pgrid(mi->pos()), FPROP_NO_TELE_INTO)
+            && mi->mid != source_mid)
         {
             targets.push_back(*mi);
         }
     }
 
+    // If there aren't any other monsters, teleport randomly.
+    bool did_teleport = false;
     if (targets.empty())
-        _teleport_player(false, false);
+        did_teleport = _teleport_player(false, false);
     else
     {
         shuffle_array(targets);
-        int mons_near_target = 0;
 
+        // Test each valid monster on the floor in random order, seeing if there
+        // is anywhere valid we can place the player in sight of them. Stop at
+        // the first possible match.
         for (monster *tele_target : targets)
         {
+            // Choose a random destination in sight of this target. If one does
+            // not exist, move on to the next monster.
+            int square_count = 0;
             for (radius_iterator ri(tele_target->pos(), LOS_NO_TRANS, true);
                     ri; ++ri)
             {
-                int square_count = 0;
-                if (cell_vetoes_teleport(*ri) || *ri == you.pos())
+                if (*ri == you.pos()
+                    || testbits(env.pgrid(*ri), FPROP_NO_TELE_INTO)
+                    || cell_vetoes_teleport(*ri))
+                {
                     continue;
+                }
 
                 if (one_chance_in(++square_count))
-                {
                     newpos = *ri;
-
-                    for (monster_near_iterator mi(newpos, LOS_NO_TRANS); mi; ++mi)
-                        mons_near_target++;
-
-                    break;
-                }
             }
+
+            // We found a spot, and can stop searching other monsters.
+            if (!newpos.origin())
+                break;
         }
 
-        if (!(oldpos == newpos))
+        // Somehow found no valid spots. Teleport randomly.
+        if (newpos.origin())
+            did_teleport = _teleport_player(false, false);
+    }
+
+    if (!newpos.origin())
+    {
+        int mons_near_target = 0;
+        for (monster_near_iterator mi(newpos, LOS_NO_TRANS); mi; ++mi)
         {
-            mprf("The spatial malevolence pulls you towards %s monster%s!",
-                mons_near_target > 1 ? "some" : "a",
-                mons_near_target > 1 ? "s" : "");
+            if (++mons_near_target > 1)
+                break;
         }
+
+        mprf("The spatial malevolence pulls you towards %s monster%s!",
+            mons_near_target > 1 ? "some" : "a",
+            mons_near_target > 1 ? "s" : "");
 
         interrupt_activity(activity_interrupt::teleport);
         large_change = _real_teleport_cleanup(oldpos, newpos);
         crawl_state.potential_pursuers.clear();
         _handle_teleport_update(large_change, oldpos);
+        did_teleport = true;
     }
 
+    // Now, move the caster to follow. (Attempt this even in the case where the
+    // player themselves doesn't teleport.)
     if (source && source->alive())
     {
         coord_def source_newpos;
-        if (find_habitable_spot_near(newpos, source->type, you.current_vision,
+        if (find_habitable_spot_near(you.pos(), source->type, you.current_vision,
                                      source_newpos, 0, &you))
         {
             _place_tloc_cloud(source->pos());
             source->move_to_pos(source_newpos);
+            source->target = you.pos();
             mprf(MSGCH_WARN, "%s tunnels through space-time and arrives with you!",
                  source->name(DESC_THE).c_str());
         }
     }
 
-    return true;
+    return did_teleport;
 }
 
 bool you_teleport_to(const coord_def where_to, bool move_monsters)
@@ -1287,7 +1310,7 @@ void you_teleport_now(bool wizard_tele, bool teleportitis, string reason)
 {
     bool randtele;
 
-    if (you.props.exists(SJ_TELEPORTITIS_SOURCE))
+    if (!wizard_tele && you.props.exists(SJ_TELEPORTITIS_SOURCE))
     {
         randtele = hostile_teleport_player();
         you.props.erase(SJ_TELEPORTITIS_SOURCE);

@@ -4533,7 +4533,7 @@ void bolt::affect_player()
         if (you.duration[DUR_TELEPORT])
         {
             mprf(MSGCH_DANGER, "You feel a distressing malevolence running through your instability!");
-            you.props[SJ_TELEPORTITIS_SOURCE].get_int() = agent(true)->mid;
+            you.props[SJ_TELEPORTITIS_SOURCE].get_int() = agent(true) ? agent(true)->mid : MID_NOBODY;
         }
     }
 
