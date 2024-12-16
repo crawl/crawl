@@ -555,7 +555,15 @@ static void test(const string& context, const string& item, const string& expect
         status = "*FAIL*";
     }
 
-    cout << status << ": \"" << item << "\" (" << context << ")" << " -> \"" << actual << "\"" << endl;
+    cout << status << ": \"" << item << "\"";
+    if (!context.empty())
+        cout << " (" << context << ")";
+    cout << " -> \"" << actual << "\"" << endl;
+}
+
+static void test(const string& item, const string& expect)
+{
+    return test("", item, expect);
 }
 
 static void test_group(const string& group_name, vector<map<string, string>>& items)
@@ -598,6 +606,79 @@ int main()
     test_group("BOOKS", books);
     test_group("RUNES", runes);
     test_group("OTHERS", others);
+
+    cout << endl << "BOOK TITLES: " << endl;
+
+    // randomly-generated
+    test("the Almanac of Magic", "der Almanach der Magie");
+    test("The Compendium of the Arcane Arts", "Das Kompendium der arkanen Künste");
+    test("Wizardry, Part One", "Zauberei, Band Eins");
+    test("Easy Theurgy", "Einfache Theurgie");
+    test("Advanced Sorcery", "Fortgeschrittenes Hexenwerk");
+    test("Sophisticated Witchcraft", "Raffinierte Hexerei");
+    test("A Beginning Course on Rites and Rhymes", "Ein Einstiegskurs für Riten und Reime");
+    test("An Introduction to Thaumaturgy", "Eine Einführung in Thaumaturgie");
+    test("First Steps in Casting", "Erste Schritte im Zauberwirken");
+    test("Spellcasting for Beginners", "Zaubern für Anfänger");
+    test("Witchery 101", "Hexerei 101");
+    test("A Primer on Spellcraft", "Eine Fibel für Zauberkunst");
+    test("An Early Guide to the Hermit's Heritage", "Ein früher Leitfaden für das Erbe des Eremiten");
+    test("The Foundations of Spellweaving", "Die Grundlagen des Zauberwebens");
+    test("Secret Knowledge in Simple Steps", "Geheimwissen in einfachen Schritten");
+    test("Hermeneutics Continued", "Hermeneutik fortgefahren");
+    test("Magic, and How To Use It", "Magie, und die Verwendung davon");
+    test("Advanced Steps in the Arcane Arts", "Fortgeschrittene Schritte in den arkanen Künsten");
+    test("The Advanced Guide to Theurgy", "Der fortgeschrittene Leitfaden für Theurgie");
+    test("Further Steps in the Hermit's Heritage", "Weitere Schritte im Erbe des Eremiten");
+    test("Further Progress in Thaumaturgy", "Weitere Fortschritte in der Thaumaturgie");
+    test("The Second Course in Casting", "Der Zweite Kurs im Zauberwirken");
+    test("Improving Your Spellcasting", "Verbessert Euer Zaubern");
+    test("A Thorough Guide to Wizardry", "Ein gründlicher Leitfaden für Zauberei");
+    test("The Last Secrets of Sorcery", "Die letzte Geheimnisse des Hexenwerks");
+    test("The Lost Secrets of Witchcraft", "Die verlorene Geheimnisse der Hexerei");
+    test("The Arcane Secrets of Witchery", "Die arkanen Geheimnisse der Hexerei");
+    test("The Intricacies of Spellcraft", "Die Feinheiten der Zauberkunst");
+    test("Mastering Spellweaving", "Beherrschung des Zauberwebens");
+    test("The Testament of Boris", "Der Testament von Boris");
+    test("The Last Tome of the Archmage", "Der letzte Foliant des Erzmagiers");
+    test("The Lost Papyrus of the Deep Elf Lorekeeper", "Der verlorene Papyrus des Weisen der Tiefelfen");
+    test("The Handbook of Greatest Risks and Utility", "Das Handbuch der größten Risiken und des höchsten Nutzens");
+    // if part of the title has no translation, we should not translate any of it
+    test("The Handbook of something that has no translation", "The Handbook of something that has no translation");
+
+    // randomly-generated with owner
+    cout << endl;
+    test("Alistair's Incunabulum of Magic", "Alistairs Inkunabel der Magie");
+    test("Borgnjor's Collected Works on the Arcane Arts", "Borgnjors gesammelte Werke über die arkanen Künste");
+    test("Cigotuvi's Wizardry, Part Six", "Cigotuvis Zauberei, Band Sechs");
+    test("Iskenderun's Easy Theurgy", "Iskenderuns einfache Theurgie");
+    test("Lee's Advanced Sorcery", "Lees fortgeschrittenes Hexenwerk");
+    test("Lehudib's Sophisticated Witchcraft", "Lehudibs raffinierte Hexerei");
+    test("Olgreb's Beginning Course on Rites and Rhymes", "Olgrebs Einstiegskurs für Riten und Reime");
+    test("Ozocubu's Introduction to Thaumaturgy", "Ozocubus Einführung in Thaumaturgie");
+    test("Sif Muna's First Steps in Casting", "Sif Munas erste Schritte im Zauberwirken");
+    test("Vehumet's Spellcasting for Beginners", "Vehumets Zaubern für Anfänger");
+    test("Kikubaaqudgha's Witchery 101", "Kikubaaqudghas Hexerei 101");
+    test("Ts'ui Pên's Primer on Spellcraft", "Ts'ui Pêns Fibel für Zauberkunst");
+    test("Ts'ui Pên's Early Guide to the Hermit's Heritage", "Ts'ui Pêns früher Leitfaden für das Erbe des Eremiten");
+    test("Ypeomyrph's Foundations of Spellweaving", "Ypeomyrphs Grundlagen des Zauberwebens");
+    test("Kikubaaqudgha's Secret Knowledge in Simple Steps", "Kikubaaqudghas Geheimwissen in einfachen Schritten");
+    test("Olgreb's Hermeneutics Continued", "Olgrebs Hermeneutik fortgefahren");
+    test("Lee's Magic, and How To Use It", "Lees Magie, und die Verwendung davon");
+    test("Alistair's Advanced Steps in the Arcane Arts", "Alistairs fortgeschrittene Schritte in den arkanen Künsten");
+    test("Borgnjor's Advanced Guide to Theurgy", "Borgnjors fortgeschrittener Leitfaden für Theurgie");
+    test("Golubria's Further Steps in the Hermit's Heritage", "Golubrias weitere Schritte im Erbe des Eremiten");
+    test("Gell's Further Progress in Thaumaturgy", "Gells weitere Fortschritte in der Thaumaturgie");
+    test("Mara's Second Course in Casting", "Maras zweiter Kurs im Zauberwirken");
+    test("Eringya's Improving Your Spellcasting", "Eringyas Verbessert Euer Zaubern");
+    test("Khufu's Thorough Guide to Wizardry", "Khufus gründlicher Leitfaden für Zauberei");
+    test("Xom's Last Secrets of Sorcery", "Xoms letzte Geheimnisse des Hexenwerks");
+    test("Asmodeus's Lost Secrets of Witchcraft", "Asmodäus' verlorene Geheimnisse der Hexerei");
+    test("Dispater's Arcane Secrets of Witchery", "Dispaters arkane Geheimnisse der Hexerei");
+    test("Ereshkigal's Intricacies of Spellcraft", "Ereshkigals Feinheiten der Zauberkunst");
+    test("Gloorx Vloq's Mastering Spellweaving", "Gloorx Vloqs Beherrschung des Zauberwebens");
+    test("Mnoleg's Handbook of Greatest Risks and Utility", "Mnolegs Handbuch der größten Risiken und des höchsten Nutzens");
+
 
     cout << endl << num_passes << " TESTS PASSED" << endl;
     if (num_fails > 0)

@@ -200,7 +200,7 @@ a book of the Hunter
 %%%%
 
 #################################
-# "Special" spellbooks
+# Fixed artefact spellbooks
 #################################
 
 # If listed with "a/an", it can also appear with no article, but never with "the".
@@ -251,7 +251,903 @@ Große Zauberer, Band VII
 %%%%
 
 #################################
-# Randart spellbooks
+# Random artefact spellbooks
 #################################
 
-# TODO: Handle titles generated from dat/database/randbook.txt
+# generic names
+%%%%
+the Tome of @book_magic@
+der Foliant {gen}@book_magic@
+%%%%
+the Grimoire of @book_magic@
+das Grimoire {gen}@book_magic@
+%%%%
+the Almanac of @book_magic@
+der Almanach {gen}@book_magic@
+%%%%
+the Volume of @book_magic@
+der Band {gen}@book_magic@
+%%%%
+the Compendium of @book_magic@
+das Kompendium {gen}@book_magic@
+%%%%
+the Handbook of @book_magic@
+das Handbuch {gen}@book_magic@
+%%%%
+the Incunabulum of @book_magic@
+die Inkunabel {gen}@book_magic@
+%%%%
+the Papyrus of @book_magic@
+der Papyrus {gen}@book_magic@
+%%%%
+the Catalogue of @book_magic@
+der Katalog {gen}@book_magic@
+%%%%
+the Guide on @book_magic@
+der Leitfaden für {acc}@book_magic@
+%%%%
+the Collected Works on @book_magic@
+die gesammelten Werke über {acc}@book_magic@
+%%%%
+the Disquisition on @book_magic@
+die Abhandlung über {acc}@book_magic@
+%%%%
+the Reference Book on @book_magic@
+das Nachschlagewerk über {acc}@book_magic@
+%%%%
+
+# generic names capitalised
+%%%%
+The Tome of @book_magic@
+Der Foliant {gen}@book_magic@
+%%%%
+The Grimoire of @book_magic@
+Das Grimoire {gen}@book_magic@
+%%%%
+The Almanac of @book_magic@
+Der Almanach {gen}@book_magic@
+%%%%
+The Volume of @book_magic@
+Der Band {gen}@book_magic@
+%%%%
+The Compendium of @book_magic@
+Das Kompendium {gen}@book_magic@
+%%%%
+The Handbook of @book_magic@
+Das Handbuch {gen}@book_magic@
+%%%%
+The Incunabulum of @book_magic@
+Die Inkunabel {gen}@book_magic@
+%%%%
+The Papyrus of @book_magic@
+Der Papyrus {gen}@book_magic@
+%%%%
+The Catalogue of @book_magic@
+Der Katalog {gen}@book_magic@
+%%%%
+The Guide on @book_magic@
+Der Leitfaden für {acc}@book_magic@
+%%%%
+The Collected Works on @book_magic@
+Die gesammelten Werke über {acc}@book_magic@
+%%%%
+The Disquisition on @book_magic@
+Die Abhandlung über {acc}@book_magic@
+%%%%
+The Reference Book on @book_magic@
+Das Nachschlagewerk über {acc}@book_magic@
+%%%%
+
+# generic names with owner
+%%%%
+@owner@'s Tome of @book_magic@
+@owner@s Foliant {gen}@book_magic@
+%%%%
+@owner@'s Grimoire of @book_magic@
+@owner@s Grimoire {gen}@book_magic@
+%%%%
+@owner@'s Almanac of @book_magic@
+@owner@s Almanach {gen}@book_magic@
+%%%%
+@owner@'s Volume of @book_magic@
+@owner@s Band {gen}@book_magic@
+%%%%
+@owner@'s Compendium of @book_magic@
+@owner@s Kompendium {gen}@book_magic@
+%%%%
+@owner@'s Handbook of @book_magic@
+@owner@s Handbuch {gen}@book_magic@
+%%%%
+@owner@'s Incunabulum of @book_magic@
+@owner@s Inkunabel {gen}@book_magic@
+%%%%
+@owner@'s Papyrus of @book_magic@
+@owner@s Papyrus {gen}@book_magic@
+%%%%
+@owner@'s Catalogue of @book_magic@
+@owner@s Katalog {gen}@book_magic@
+%%%%
+@owner@'s Guide on @book_magic@
+@owner@s Leitfaden für {acc}@book_magic@
+%%%%
+@owner@'s Collected Works on @book_magic@
+@owner@s gesammelte Werke über {acc}@book_magic@
+%%%%
+@owner@'s Disquisition on @book_magic@
+@owner@s Abhandlung über {acc}@book_magic@
+%%%%
+@owner@'s Reference Book on @book_magic@
+@owner@s Nachschlagewerk über {acc}@book_magic@
+%%%%
+
+# owners who are not listed elsewhere as gods or unique monsters
+# note: a randomly-generated name is also possible
+%%%%
+Alistair
+Alistair
+%%%%
+Borgnjor
+Borgnjor
+%%%%
+Cigotuvi
+Cigotuvi
+%%%%
+Iskenderun
+Iskenderun
+%%%%
+Lee
+Lee
+%%%%
+Lehudib
+Lehudib
+%%%%
+Olgreb
+Olgreb
+%%%%
+Ozocubu
+Ozocubu
+%%%%
+
+# titles of the form "@book_magic@, Part @level@"
+%%%%
+@book_magic@, Part One
+@book_magic@, Band Eins
+%%%%
+@book_magic@, Part Two
+@book_magic@, Band Zwei
+%%%%
+@book_magic@, Part Three
+@book_magic@, Band Drei
+%%%%
+@book_magic@, Part Four
+@book_magic@, Band Vier
+%%%%
+@book_magic@, Part Five
+@book_magic@, Band Fünf
+%%%%
+@book_magic@, Part Six
+@book_magic@, Band Sechs
+%%%%
+
+%%%%
+@owner@'s @book_magic@, Part One
+@owner@s @book_magic@, Band Eins
+%%%%
+@owner@'s @book_magic@, Part Two
+@owner@s @book_magic@, Band Zwei
+%%%%
+@owner@'s @book_magic@, Part Three
+@owner@s @book_magic@, Band Drei
+%%%%
+@owner@'s @book_magic@, Part Four
+@owner@s @book_magic@, Band Vier
+%%%%
+@owner@'s @book_magic@, Part Five
+@owner@s @book_magic@, Band Fünf
+%%%%
+@owner@'s @book_magic@, Part Six
+@owner@s @book_magic@, Band Sechs
+%%%%
+
+# titles of the form "Easy/Advanced/Sophisticated @book_magic@"
+%%%%
+@Adj@ Magic
+{adj-e}@Adj@ Magie
+%%%%
+@Adj@ Theurgy
+{adj-e}@Adj@ Theurgie
+%%%%
+@Adj@ Thaumaturgy
+{adj-e}@Adj@ Thaumaturgie
+%%%%
+@Adj@ Casting
+{adj-es}@Adj@ Zauberwirken
+%%%%
+@Adj@ Spellcasting
+{adj-es}@Adj@ Zaubern
+%%%%
+@Adj@ Wizardry
+{adj-e}@Adj@ Zauberei
+%%%%
+@Adj@ Sorcery
+{adj-es}@Adj@ Hexenwerk
+%%%%
+@Adj@ Witchcraft
+{adj-e}@Adj@ Hexerei
+%%%%
+@Adj@ Witchery
+{adj-e}@Adj@ Hexerei
+%%%%
+@Adj@ Spellcraft
+{adj-e}@Adj@ Zauberkunst
+%%%%
+@Adj@ Spellweaving
+{adj-es}@Adj@ Zauberweben
+%%%%
+@Adj@ Secret Knowledge
+{adj-es}@Adj@ Geheimwissen
+%%%%
+@Adj@ Rites and Rhymes
+{adj-e}@Adj@ Riten und Reime
+%%%%
+@Adj@ Hermeneutics
+{adj-e}@Adj@ Hermeneutik
+%%%%
+
+%%%%
+@owner@'s @Adj@ Magic
+@owner@s {adj-e}@adj@ Magie
+%%%%
+@owner@'s @Adj@ Theurgy
+@owner@s {adj-e}@adj@ Theurgie
+%%%%
+@owner@'s @Adj@ Thaumaturgy
+@owner@s {adj-e}@adj@ Thaumaturgie
+%%%%
+@owner@'s @Adj@ Casting
+@owner@s {adj-es}@adj@ Zauberwirken
+%%%%
+@owner@'s @Adj@ Spellcasting
+@owner@s {adj-es}@adj@ Zaubern
+%%%%
+@owner@'s @Adj@ Wizardry
+@owner@s {adj-e}@adj@ Zauberei
+%%%%
+@owner@'s @Adj@ Sorcery
+@owner@s {adj-es}@adj@ Hexenwerk
+%%%%
+@owner@'s @Adj@ Witchcraft
+@owner@s {adj-e}@adj@ Hexerei
+%%%%
+@owner@'s @Adj@ Witchery
+@owner@s {adj-e}@adj@ Hexerei
+%%%%
+@owner@'s @Adj@ Spellcraft
+@owner@s {adj-e}@adj@ Zauberkunst
+%%%%
+@owner@'s @Adj@ Spellweaving
+@owner@s {adj-es}@adj@ Zauberweben
+%%%%
+@owner@'s @Adj@ Secret Knowledge
+@owner@s {adj-es}@adj@ Geheimwissen
+%%%%
+@owner@'s @Adj@ Rites and Rhymes
+@owner@s {adj-e}@adj@ Riten und Reime
+%%%%
+@owner@'s @Adj@ Hermeneutics
+@owner@s {adj-e}@adj@ Hermeneutik
+%%%%
+
+# adjectives for above
+%%%%
+{adj-e}Easy
+einfache
+%%%%
+{adj-e}Advanced
+fortgeschrittene
+%%%%
+{adj-e}Sophisticated
+raffinierte
+%%%%
+
+%%%%
+{adj-es}Easy
+einfaches
+%%%%
+{adj-es}Advanced
+fortgeschrittenes
+%%%%
+{adj-es}Sophisticated
+raffiniertes
+%%%%
+
+# level 1
+# starting level book
+#
+# A Beginning Course on @_the_book_magic_@
+# An Introduction to @_the_book_magic_@
+# An Initiation to @_the_book_magic_@
+# First Steps in @_the_book_magic_@
+# @_the_book_magic_@ for @_beginners_@
+# @_the_book_magic_@ 101
+# @_the_book_magic_@, Part One
+
+%%%%
+A Beginning Course on @book_magic@
+Ein Einstiegskurs für {acc}@book_magic@
+%%%%
+An Introduction to @book_magic@
+Eine Einführung in {acc}@book_magic@
+%%%%
+An Initiation to @book_magic@
+Eine Einweihung in {acc}@book_magic@
+%%%%
+First Steps in @book_magic@
+Erste Schritte {in-dat}@book_magic@
+%%%%
+
+%%%%
+@owner@'s Beginning Course on @book_magic@
+@owner@s Einstiegskurs für {acc}@book_magic@
+%%%%
+@owner@'s Introduction to @book_magic@
+@owner@s Einführung in {acc}@book_magic@
+%%%%
+@owner@'s Initiation to @book_magic@
+@owner@s Einweihung in {acc}@book_magic@
+%%%%
+@owner@'s First Steps in @book_magic@
+@owner@s erste Schritte {in-dat}@book_magic@
+%%%%
+
+%%%%
+@book_magic@ for Beginners
+@book_magic@ für Anfänger
+%%%%
+@book_magic@ for Neophytes
+@book_magic@ für Neophyten
+%%%%
+@book_magic@ for Novices
+@book_magic@ für Neulinge
+%%%%
+@book_magic@ for Rookies
+@book_magic@ für Frischlinge
+%%%%
+@book_magic@ for Absolute Beginners
+@book_magic@ für blutige Anfänger
+%%%%
+@book_magic@ for Dummies
+@book_magic@ für Dummies
+%%%%
+@book_magic@ 101
+@book_magic@ 101
+%%%%
+
+%%%%
+@owner@'s @book_magic@ for Beginners
+@owner@s @book_magic@ für Anfänger
+%%%%
+@owner@'s @book_magic@ for Neophytes
+@owner@s @book_magic@ für Neophyten
+%%%%
+@owner@'s @book_magic@ for Novices
+@owner@s @book_magic@ für Neulinge
+%%%%
+@owner@'s @book_magic@ for Rookies
+@owner@s @book_magic@ für Frischlinge
+%%%%
+@owner@'s @book_magic@ for Absolute Beginners
+@owner@s @book_magic@ für blutige Anfänger
+%%%%
+@owner@'s @book_magic@ for Dummies
+@owner@s @book_magic@ für Dummies
+%%%%
+@owner@'s @book_magic@ 101
+@owner@s @book_magic@ 101
+%%%%
+
+# level 2-4
+# easy level book
+#
+# A Primer on @_the_book_magic_@
+# An Early Guide to @_the_book_magic_@
+# The Foundations of @_book_magic_@
+# @_the_book_magic_@ in Simple Steps
+# Easy @_book_magic_@
+# @_the_book_magic_@, Part @level@
+# @_the_book_magic_@ Continued
+# @_book_magic_@, and How To Use It
+
+%%%%
+A Primer on @book_magic@
+Eine Fibel für {acc}@book_magic@
+%%%%
+An Early Guide to @book_magic@
+Ein früher Leitfaden für {acc}@book_magic@
+%%%%
+The Foundations of @book_magic@
+Die Grundlagen {gen}@book_magic@
+%%%%
+@book_magic@ in Simple Steps
+@book_magic@ in einfachen Schritten
+%%%%
+@book_magic@ Continued
+@book_magic@ fortgefahren
+%%%%
+@book_magic@, and How To Use It
+@book_magic@, und die Verwendung davon
+%%%%
+
+%%%%
+@owner@'s Primer on @book_magic@
+@owner@s Fibel für {acc}@book_magic@
+%%%%
+@owner@'s Early Guide to @book_magic@
+@owner@s früher Leitfaden für {acc}@book_magic@
+%%%%
+@owner@'s Foundations of @book_magic@
+@owner@s Grundlagen {gen}@book_magic@
+%%%%
+@owner@'s @book_magic@ in Simple Steps
+@owner@s @book_magic@ in einfachen Schritten
+%%%%
+@owner@'s @book_magic@ Continued
+@owner@s @book_magic@ fortgefahren
+%%%%
+@owner@'s @book_magic@, and How To Use It
+@owner@s @book_magic@, und die Verwendung davon
+%%%%
+
+# level 4-6
+# moderate level book
+#
+# Advanced Steps in @_the_book_magic_@
+# The Advanced Guide to @_the_book_magic_@
+# Further Steps in @_the_book_magic_@
+# @_the_book_magic_@, Part @level@
+# Advanced @_book_magic_@
+# Sophisticated @_book_magic_@
+# Further Progress in @_book_magic_@
+# The Second Course in @_book_magic_@
+# Improving Your @_book_magic_@
+
+%%%%
+Advanced Steps in @book_magic@
+Fortgeschrittene Schritte {in-dat}@book_magic@
+%%%%
+The Advanced Guide to @book_magic@
+Der fortgeschrittene Leitfaden für {acc}@book_magic@
+%%%%
+Further Steps in @book_magic@
+Weitere Schritte {in-dat}@book_magic@
+%%%%
+Further Progress in @book_magic@
+Weitere Fortschritte {in-dat}@book_magic@
+%%%%
+The Second Course in @book_magic@
+Der Zweite Kurs {in-dat}@book_magic@
+%%%%
+
+%%%%
+@owner@'s Advanced Steps in @book_magic@
+@owner@s fortgeschrittene Schritte {in-dat}@book_magic@
+%%%%
+@owner@'s Advanced Guide to @book_magic@
+@owner@s fortgeschrittener Leitfaden für {acc}@book_magic@
+%%%%
+@owner@'s Further Steps in @book_magic@
+@owner@s weitere Schritte {in-dat}@book_magic@
+%%%%
+@owner@'s Further Progress in @book_magic@
+@owner@s weitere Fortschritte {in-dat}@book_magic@
+%%%%
+@owner@'s Second Course in @book_magic@
+@owner@s zweiter Kurs {in-dat}@book_magic@
+%%%%
+
+# Improving Your @book_magic@
+%%%%
+Improving Your Magic
+Verbessert Eure Magie
+%%%%
+Improving Your Theurgy
+Verbessert Eure Theurgie
+%%%%
+Improving Your Thaumaturgy
+Verbessert Eure Thaumaturgie
+%%%%
+Improving Your Casting
+Verbessert Euer Zauberwirken
+%%%%
+Improving Your Spellcasting
+Verbessert Euer Zaubern
+%%%%
+Improving Your Wizardry
+Verbessert Eure Zauberei
+%%%%
+Improving Your Sorcery
+Verbessert Euer Hexenwerk
+%%%%
+Improving Your Witchcraft
+Verbessert Eure Hexerei
+%%%%
+Improving Your Witchery
+Verbessert Eure Hexerei
+%%%%
+Improving Your Spellcraft
+Verbessert Eure Zauberkunst
+%%%%
+Improving Your Spellweaving
+Verbessert Euer Zauberweben
+%%%%
+Improving Your Secret Knowledge
+Verbessert Euer Geheimwissen
+%%%%
+Improving Your Rites and Rhymes
+Verbessert Eure Riten und Reime
+%%%%
+Improving Your Hermeneutics
+Verbessert Eure Hermeneutik
+%%%%
+
+# @owner@'s Improving Your @book_magic@
+%%%%
+@owner@'s Improving Your Magic
+@owner@s Verbessert Eure Magie
+%%%%
+@owner@'s Improving Your Theurgy
+@owner@s Verbessert Eure Theurgie
+%%%%
+@owner@'s Improving Your Thaumaturgy
+@owner@s Verbessert Eure Thaumaturgie
+%%%%
+@owner@'s Improving Your Casting
+@owner@s Verbessert Euer Zauberwirken
+%%%%
+@owner@'s Improving Your Spellcasting
+@owner@s Verbessert Euer Zaubern
+%%%%
+@owner@'s Improving Your Wizardry
+@owner@s Verbessert Eure Zauberei
+%%%%
+@owner@'s Improving Your Sorcery
+@owner@s Verbessert Euer Hexenwerk
+%%%%
+@owner@'s Improving Your Witchcraft
+@owner@s Verbessert Eure Hexerei
+%%%%
+@owner@'s Improving Your Witchery
+@owner@s Verbessert Eure Hexerei
+%%%%
+@owner@'s Improving Your Spellcraft
+@owner@s Verbessert Eure Zauberkunst
+%%%%
+@owner@'s Improving Your Spellweaving
+@owner@s Verbessert Euer Zauberweben
+%%%%
+@owner@'s Improving Your Secret Knowledge
+@owner@s Verbessert Euer Geheimwissen
+%%%%
+@owner@'s Improving Your Rites and Rhymes
+@owner@s Verbessert Eure Riten und Reime
+%%%%
+@owner@'s Improving Your Hermeneutics
+@owner@s Verbessert Eure Hermeneutik
+%%%%
+
+# level 7-9
+# difficult level book
+#
+# A Thorough Guide to @_the_book_magic_@
+# The @_last_or_lost_@ Secrets of @_the_book_magic_@
+# The Arcane Secrets of @_book_magic_@
+# The Intricacies of @_the_book_magic_@
+# The @book_noun@ of Greatest Risks and Utility
+# Mastering @_book_magic_@
+# The Testament of @_the_powerful_caster_@
+# The @_last_or_lost_@ @book_noun@ of @_the_powerful_caster_@
+
+%%%%
+A Thorough Guide to @book_magic@
+Ein gründlicher Leitfaden für {acc}@book_magic@
+%%%%
+The Last Secrets of @book_magic@
+Die letzte Geheimnisse {gen}@book_magic@
+%%%%
+The Lost Secrets of @book_magic@
+Die verlorene Geheimnisse {gen}@book_magic@
+%%%%
+The Arcane Secrets of @book_magic@
+Die arkanen Geheimnisse {gen}@book_magic@
+%%%%
+The Intricacies of @book_magic@
+Die Feinheiten {gen}@book_magic@
+%%%%
+Mastering @book_magic@
+Beherrschung {gen}@book_magic@
+%%%%
+The Testament of @spellcaster@
+Der Testament {gen}@spellcaster@
+%%%%
+
+%%%%
+The Last Tome of @spellcaster@
+Der letzte Foliant {gen}@spellcaster@
+%%%%
+The Last Grimoire of @spellcaster@
+Das letzte Grimoire {gen}@spellcaster@
+%%%%
+The Last Almanac of @spellcaster@
+Der letzte Almanach {gen}@spellcaster@
+%%%%
+The Last Volume of @spellcaster@
+Der letzte Band {gen}@spellcaster@
+%%%%
+The Last Compendium of @spellcaster@
+Das letzte Kompendium {gen}@spellcaster@
+%%%%
+The Last Handbook of @spellcaster@
+Das letzte Handbuch {gen}@spellcaster@
+%%%%
+The Last Incunabulum of @spellcaster@
+Die letzte Inkunabel {gen}@spellcaster@
+%%%%
+The Last Papyrus of @spellcaster@
+Der letzte Papyrus {gen}@spellcaster@
+%%%%
+The Last Catalogue of @spellcaster@
+Der letzte Katalog {gen}@spellcaster@
+%%%%
+
+%%%%
+The Lost Tome of @spellcaster@
+Der verlorene Foliant {gen}@spellcaster@
+%%%%
+The Lost Grimoire of @spellcaster@
+Das verlorene Grimoire {gen}@spellcaster@
+%%%%
+The Lost Almanac of @spellcaster@
+Der verlorene Almanach {gen}@spellcaster@
+%%%%
+The Lost Volume of @spellcaster@
+Der verlorene Band {gen}@spellcaster@
+%%%%
+The Lost Compendium of @spellcaster@
+Das verlorene Kompendium {gen}@spellcaster@
+%%%%
+The Lost Handbook of @spellcaster@
+Das verlorene Handbuch {gen}@spellcaster@
+%%%%
+The Lost Incunabulum of @spellcaster@
+Die verlorene Inkunabel {gen}@spellcaster@
+%%%%
+The Lost Papyrus of @spellcaster@
+Der verlorene Papyrus {gen}@spellcaster@
+%%%%
+The Lost Catalogue of @spellcaster@
+Der verlorene Katalog {gen}@spellcaster@
+%%%%
+
+# suffix: of @spellcaster@
+%%%%
+{gen}Boris
+von Boris
+%%%%
+# duplicate (see gods.txt)
+#{gen}Sif Muna
+#von Sif Muna
+%%%%
+{gen}the Archmage
+des Erzmagiers
+%%%%
+{gen}the Deep Elf Lorekeeper
+des Weisen der Tiefelfen
+%%%%
+{gen}the Blind Seer
+des blinden Sehers
+%%%%
+{gen}the Prophet
+des Propheten
+%%%%
+{gen}the Greatest Mummy
+der größten Mumie
+%%%%
+
+# The @book_noun@ of Greatest Risks and Utility
+# Turn it around and handle the suffix as "of @book magic@"
+%%%%
+{gen}Greatest Risks and Utility
+der größten Risiken und des höchsten Nutzens
+%%%%
+
+# level 7-9, books in the form of "XYZ's <bookname>"
+# _difficult level book owner_
+#
+# (the ones with the suffix " of @spellcaster@" won't be used in this form)
+
+%%%%
+@owner@'s Thorough Guide to @book_magic@
+@owner@s gründlicher Leitfaden für {acc}@book_magic@
+%%%%
+@owner@'s Last Secrets of @book_magic@
+@owner@s letzte Geheimnisse {gen}@book_magic@
+%%%%
+@owner@'s Lost Secrets of @book_magic@
+@owner@s verlorene Geheimnisse {gen}@book_magic@
+%%%%
+@owner@'s Arcane Secrets of @book_magic@
+@owner@s arkane Geheimnisse {gen}@book_magic@
+%%%%
+@owner@'s Intricacies of @book_magic@
+@owner@s Feinheiten {gen}@book_magic@
+%%%%
+@owner@'s Mastering @book_magic@
+@owner@s Beherrschung {gen}@book_magic@
+%%%%
+
+
+# @book_magic@ nominative
+%%%%
+the Arcane Arts
+die arkanen Künste
+%%%%
+the Hermit's Heritage
+das Erbe des Eremiten
+%%%%
+Magic
+Magie
+%%%%
+Theurgy
+Theurgie
+%%%%
+Thaumaturgy
+Thaumaturgie
+%%%%
+# duplicate: This is also used for the targeter when casting targeted spells
+#Casting
+#Wirken
+%%%%
+# duplicate (see skills.txt)
+#Spellcasting
+#Zaubern
+%%%%
+Wizardry
+Zauberei
+%%%%
+Sorcery
+Hexenwerk
+%%%%
+Witchcraft
+Hexerei
+%%%%
+Witchery
+Hexerei
+%%%%
+Spellcraft
+Zauberkunst
+%%%%
+Spellweaving
+Zauberweben
+%%%%
+Secret Knowledge
+Geheimwissen
+%%%%
+Rites and Rhymes
+Riten und Reime
+%%%%
+Hermeneutics
+Hermeneutik
+%%%%
+
+# @book_magic@ accusative
+# since there is no masculine, these are all the same as nominative
+
+# of @book_magic@
+%%%%
+{gen}the Arcane Arts
+der arkanen Künste
+%%%%
+{gen}the Hermit's Heritage
+des Erbes des Eremiten
+%%%%
+{gen}Magic
+der Magie
+%%%%
+{gen}Theurgy
+der Theurgie
+%%%%
+{gen}Thaumaturgy
+der Thaumaturgie
+%%%%
+{gen}Casting
+des Zauberwirkens
+%%%%
+{gen}Spellcasting
+des Zauberns
+%%%%
+{gen}Wizardry
+der Zauberei
+%%%%
+{gen}Sorcery
+des Hexenwerks
+%%%%
+{gen}Witchcraft
+der Hexerei
+%%%%
+{gen}Witchery
+der Hexerei
+%%%%
+{gen}Spellcraft
+der Zauberkunst
+%%%%
+{gen}Spellweaving
+des Zauberwebens
+%%%%
+{gen}Secret Knowledge
+des Geheimwissens
+%%%%
+{gen}Rites and Rhymes
+von Riten und Reimen
+%%%%
+{gen}Hermeneutics
+der Hermeneutik
+%%%%
+
+# in @book_magic@ (dative)
+%%%%
+{in-dat}the Arcane Arts
+in den arkanen Künsten
+%%%%
+{in-dat}the Hermit's Heritage
+im Erbe des Eremiten
+%%%%
+{in-dat}Magic
+in der Magie
+%%%%
+{in-dat}Theurgy
+in der Theurgie
+%%%%
+{in-dat}Thaumaturgy
+in der Thaumaturgie
+%%%%
+{in-dat}Casting
+im Zauberwirken
+%%%%
+{in-dat}Spellcasting
+im Zaubern
+%%%%
+{in-dat}Wizardry
+in der Zauberei
+%%%%
+{in-dat}Sorcery
+im Hexenwerk
+%%%%
+{in-dat}Witchcraft
+in der Hexerei
+%%%%
+{in-dat}Witchery
+in der Hexerei
+%%%%
+{in-dat}Spellcraft
+in der Zauberkunst
+%%%%
+{in-dat}Spellweaving
+im Zauberweben
+%%%%
+{in-dat}Secret Knowledge
+im Geheimwissen
+%%%%
+{in-dat}in Rites and Rhymes
+in Riten und Reimen
+%%%%
+{in-dat}Hermeneutics
+in der Hermeneutik
+%%%%
+
+# TODO:
+# a) (@owner@'s) @book_name@ of @<secondary school adj@ @<primary school>@
+# b) (@owner@'s) @book_name@ of @<primary school>@ and @<secondary school>@
+# c) (@owner@'s) @book_name@ of @<primary school>@
+# d) @owner@'s @book_name@ of @Xom_book_title@
+# d) @owner@'s @book_name@ of @random_book_title@
+# d) @book_name@ of @random_book_title@

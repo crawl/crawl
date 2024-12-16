@@ -471,6 +471,46 @@
 %%%%
 
 ################################
+# cosmetic adjectives for unidentified books
+################################
+
+# extracted from dat/database/randbook.txt
+# books can also get black, blackened, colourful, graven, sparkling,
+# but those are covered elsewhere
+
+%%%%
+"antique "
+"antike "
+%%%%
+"conspicuous "
+"auffallende "
+%%%%
+"droning "
+"dröhnende "
+%%%%
+"engraved "
+"eingravierte "
+%%%%
+"glistering "
+"gleißende "
+%%%%
+"inconspicuous "
+"unscheinbare "
+%%%%
+"levitating "
+"schwebende "
+%%%%
+"rare "
+"seltene "
+%%%%
+"torn "
+"zerrissene "
+%%%%
+"yellowed "
+"vergilbte "
+%%%%
+
+################################
 # weapon brands applied as adjectives
 ################################
 %%%%
