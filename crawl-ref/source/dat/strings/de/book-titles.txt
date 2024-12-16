@@ -1144,10 +1144,1065 @@ in Riten und Reimen
 in der Hermeneutik
 %%%%
 
+# for generic books, @book_magic@ can be related to 1 or 2 spell schools:
+# a) (@owner@'s) <whatever> of/on @<primary school>@
+# b) (@owner@'s) <whatever> of/on @<primary school>@ and @<secondary school>@
+# c) (@owner@'s) <whatever> of/on @<secondary school adj>@ @<primary school>@
+
+# conjuration
+%%%%
+%sConjuration
+{adj-e}%sKonjuration
+%%%%
+%sConfrontation
+{adj-e}%sKonfrontation
+%%%%
+%sAttacks
+{adj-e}%sAngriffe
+%%%%
+%sBattle Magic
+{adj-e}%sKampfmagie
+%%%%
+%sCombat Magic
+{adj-e}%sKampfmagie
+%%%%
+%sArcane Weapons
+{adj-e}%sarkane Waffen
+%%%%
+# "Blows and Bruises" are one thing in English, but here we separate because we
+# could have "and" between two schools and the code won't know not to separate these
+%sBlows
+{adj-e}%sSchläge
+%%%%
+%sBruises
+{adj-e}%sPrellungen
+%%%%
+%sDamage Dealing
+{adj-er}%sSchaden
+%%%%
+
+# Fire
+%%%%
+%sFire
+{adj-es}%sFeuer
+%%%%
+%sFlames
+{adj-e}%sFlammen
+%%%%
+%sHeat
+{adj-e}%sHitze
+%%%%
+the %sVolcanoes
+{adj-e}die %sVulkane
+%%%%
+the %sBlaze
+die {adj-e}%sFlamme
+%%%%
+%sIgnition
+{adj-e}%sZündung
+%%%%
+the %sArsonist
+der {adj-e}%sBrandstifter
+%%%%
+
+# Hexes
+%%%%
+%sHexes
+{adj-e}%sVerhexungen
+%%%%
+%sCurses
+{adj-e}%sFlüche
+%%%%
+%sMalediction
+{adj-e}%sVerhexung
+%%%%
+the %sOath
+der {adj-e}%sSchwur
+%%%%
+%sExecration
+{adj-e}%sVerwünschung
+%%%%
+%sEnchantment
+{adj-e}%sVerzauberung
+%%%%
+%sBewitchment
+{adj-e}%sVerhexung
+%%%%
+%sGlamour
+{adj-e}%sVerzauberung
+%%%%
+%sFascination
+{adj-e}%sFaszination
+%%%%
+%sBeguiling
+{adj-e}%sVerführung
+%%%%
+
+# Ice
+%%%%
+%sIce
+{adj-es}%sEis
+%%%%
+%sSnow
+{adj-er}%sSchnee
+%%%%
+%sCold
+{adj-e}%sKälte
+%%%%
+the %sSnowflakes
+die {adj-e}%sSchneeflocken
+%%%%
+the %sGlacier
+der {adj-e}%sGletscher
+%%%%
+the %sFrostbite
+die {adj-e}%sErfrierung
+%%%%
+
+# Transmutation
+%%%%
+%sTransmigration
+{adj-e}%sSeelenwanderung
+%%%%
+%sTransmutation
+{adj-e}%sVerwandlung
+%%%%
+%sTransformation
+{adj-e}%sUmwandlung
+%%%%
+%sShape Shifting
+{adj-e}%sFormveränderung
+%%%%
+%sChanging
+{adj-es}%sÄndern
+%%%%
+%sMoulding
+{adj-es}%sFormen
+%%%%
+
+# Necromancy
+%%%%
+%sNecromancy
+{adj-e}%sNekromantie
+%%%%
+%sEvil
+{adj-es}%sBöse
+%%%%
+%sDarkness
+{adj-e}%sDunkelheit
+%%%%
+%sStolen Souls
+{adj-e}%sgestohlene Seelen
+%%%%
+%sRites
+{adj-e}%sRiten
+%%%%
+%sArts
+{adj-e}%sKünste
+%%%%
+%sSecrets
+{adj-e}%sGeheimnisse
+%%%%
+%sRituals
+{adj-e}%sRituale
+%%%%
+%sMagic
+{adj-e}%sMagie
+%%%%
+
+# Summoning
+%%%%
+%sSummoning
+{adj-e}%sBeschwörung
+%%%%
+%sCalling
+{adj-es}%sRufen
+%%%%
+%sCreation
+{adj-e}%sSchöpfung
+%%%%
+the %sEntourage
+die {adj-e}%sEntourage
+%%%%
+%sCompanions
+{adj-e}%sGefährten
+%%%%
+the %sEscort
+die {adj-e}%sEskorte
+%%%%
+%sIllusion
+{adj-e}%sIllusion
+%%%%
+%sSlavery
+{adj-e}%sSklaverei
+%%%%
+
+# Translocation
+%%%%
+%sTranslocation
+{adj-e}%sTranslokation
+%%%%
+%sDisplacement
+{adj-e}%sUmschiebung
+%%%%
+%sDislocation
+{adj-e}%sVersetzung
+%%%%
+%sOrientation
+{adj-e}%sOrientierung
+%%%%
+the %sTraveller
+der {adj-e}%sReisende
+%%%%
+the %sCompass
+der {adj-e}%sKompass
+%%%%
+the %sVoyage
+die {adj-e}%sReise
+%%%%
+
+# Poison
+%%%%
+%sPoison
+{adj-es}%sGift
+%%%%
+%sVenom
+{adj-e}%sGift
+%%%%
+%sToxins
+{adj-e}%sToxine
+%%%%
+%sPoisoning
+{adj-e}%sVergiftung
+%%%%
+%sIntoxication
+{adj-e}%sIntoxikation
+%%%%
+%sEnvenoming
+{adj-es}%sVergiften
+%%%%
+%sContamination
+{adj-e}%sVerseuchung
+%%%%
+
+# Earth
+%%%%
+%sEarth
+{adj-e}%sErde
+%%%%
+%sStones
+{adj-e}%sSteine
+%%%%
+%sClay
+{adj-er}%sLehm
+%%%%
+the %sMountains
+die {adj-e}%sBerge
+%%%%
+the %sRocks
+die {adj-e}%sFelsen
+%%%%
+
+# Air
+%%%%
+%sAir
+{adj-e}%sLuft
+%%%%
+%sLightness
+{adj-e}%sLeichtigkeit
+%%%%
+%sWeightlessness
+{adj-e}%sSchwerelosigkeit
+%%%%
+%sFlight
+{adj-er}%sFlug
+%%%%
+the %sBirds
+die {adj-e}%sVögel
+%%%%
+%sFeathers
+{adj-e}%sFedern
+%%%%
+
+# genitive
+
+# conjuration genitive
+%%%%
+{gen}%sConjuration
+der {adj-en}%sKonjuration
+%%%%
+{gen}%sConfrontation
+der {adj-en}%sKonfrontation
+%%%%
+{gen}%sAttacks
+der {adj-en}%sAngriffe
+%%%%
+{gen}%sBattle Magic
+der {adj-en}%sKampfmagie
+%%%%
+{gen}%sCombat Magic
+der {adj-en}%sKampfmagie
+%%%%
+{gen}%sArcane Weapons
+der {adj-en}%sarkanen Waffen
+%%%%
+{gen}%sBlows
+der {adj-en}%sSchläge
+%%%%
+{gen}%sBruises
+der {adj-en}%sPrellungen
+%%%%
+{gen}%sDamage Dealing
+des {adj-en}%sSchadens
+%%%%
+
+# Fire genitive
+%%%%
+{gen}%sFire
+des {adj-en}%sFeuers
+%%%%
+{gen}%sFlames
+der {adj-en}%sFlammen
+%%%%
+{gen}%sHeat
+der {adj-en}%sHitze
+%%%%
+{gen}the %sVolcanoes
+der {adj-en}%sVulkane
+%%%%
+{gen}the %sBlaze
+der {adj-en}%sFlamme
+%%%%
+{gen}%sIgnition
+der {adj-en}%sZündung
+%%%%
+{gen}the %sArsonist
+des {adj-en}%sBrandstifters
+%%%%
+
+# Hexes genitive
+%%%%
+{gen}%sHexes
+der {adj-en}%sVerhexungen
+%%%%
+{gen}%sCurses
+der {adj-en}%sFlüche
+%%%%
+{gen}%sMalediction
+der {adj-en}%sVerhexung
+%%%%
+{gen}the %sOath
+des {adj-en}%sSchwurs
+%%%%
+{gen}%sExecration
+der {adj-en}%sVerwünschung
+%%%%
+{gen}%sEnchantment
+der {adj-en}%sVerzauberung
+%%%%
+{gen}%sBewitchment
+der {adj-en}%sVerhexung
+%%%%
+{gen}%sGlamour
+der {adj-en}%sVerzauberung
+%%%%
+{gen}%sFascination
+der {adj-en}%sFaszination
+%%%%
+{gen}%sBeguiling
+der {adj-en}%sVerführung
+%%%%
+
+# Ice genitive
+%%%%
+{gen}%sIce
+des {adj-en}%sEises
+%%%%
+{gen}%sSnow
+des {adj-en}%sSchnees
+%%%%
+{gen}%sCold
+der {adj-en}%sKälte
+%%%%
+{gen}the %sSnowflakes
+die {adj-en}%sSchneeflocken
+%%%%
+{gen}the %sGlacier
+der {adj-en}%sGletscher
+%%%%
+{gen}the %sFrostbite
+der {adj-en}%sErfrierung
+%%%%
+
+# Transmutation genitive
+%%%%
+{gen}%sTransmigration
+der {adj-en}%sSeelenwanderung
+%%%%
+{gen}%sTransmutation
+der {adj-en}%sVerwandlung
+%%%%
+{gen}%sTransformation
+der {adj-en}%sUmwandlung
+%%%%
+{gen}%sShape Shifting
+der {adj-en}%sFormveränderung
+%%%%
+{gen}%sChanging
+des {adj-en}%sÄnderns
+%%%%
+{gen}%sMoulding
+des {adj-en}%sFormens
+%%%%
+
+# Necromancy genitive
+%%%%
+{gen}%sNecromancy
+der {adj-en}%sNekromantie
+%%%%
+{gen}%sEvil
+des {adj-en}%sBöses
+%%%%
+{gen}%sDarkness
+der {adj-en}%sDunkelheit
+%%%%
+{gen}%sStolen Souls
+der {adj-en}%sgestohlenen Seelen
+%%%%
+{gen}%sRites
+der {adj-en}%sRiten
+%%%%
+{gen}%sArts
+der {adj-en}%sKünste
+%%%%
+{gen}%sSecrets
+der {adj-en}%sGeheimnisse
+%%%%
+{gen}%sRituals
+der {adj-en}%sRituale
+%%%%
+{gen}%sMagic
+der {adj-en}%sMagie
+%%%%
+
+# Summoning genitive
+%%%%
+{gen}%sSummoning
+der {adj-en}%sBeschwörung
+%%%%
+{gen}%sCalling
+des {adj-en}%sRufens
+%%%%
+{gen}%sCreation
+der {adj-en}%sSchöpfung
+%%%%
+{gen}the %sEntourage
+der {adj-en}%sEntourage
+%%%%
+{gen}%sCompanions
+der {adj-en}%sGefährten
+%%%%
+{gen}the %sEscort
+der {adj-en}%sEskorte
+%%%%
+{gen}%sIllusion
+der {adj-en}%sIllusion
+%%%%
+{gen}%sSlavery
+der {adj-en}%sSklaverei
+%%%%
+
+# Translocation genitive
+%%%%
+{gen}%sTranslocation
+der {adj-en}%sTranslokation
+%%%%
+{gen}%sDisplacement
+der {adj-en}%sUmschiebung
+%%%%
+{gen}%sDislocation
+der {adj-en}%sVersetzung
+%%%%
+{gen}%sOrientation
+der {adj-en}%sOrientierung
+%%%%
+{gen}the %sTraveller
+des {adj-en}%sReisendes
+%%%%
+{gen}the %sCompass
+des {adj-en}%sKompasses
+%%%%
+{gen}the %sVoyage
+der {adj-en}%sReise
+%%%%
+
+# Poison genitive
+%%%%
+{gen}%sPoison
+des {adj-en}%sGiftes
+%%%%
+{gen}%sVenom
+des {adj-en}%sGiftes
+%%%%
+{gen}%sToxins
+der {adj-en}%sToxine
+%%%%
+{gen}%sPoisoning
+der {adj-en}%sVergiftung
+%%%%
+{gen}%sIntoxication
+der {adj-en}%sIntoxikation
+%%%%
+{gen}%sEnvenoming
+der {adj-en}%sVergiften
+%%%%
+{gen}%sContamination
+der {adj-en}%sVerseuchung
+%%%%
+
+# Earth genitive
+%%%%
+{gen}%sEarth
+der {adj-en}%sErde
+%%%%
+{gen}%sStones
+der {adj-en}%sSteine
+%%%%
+{gen}%sClay
+dse {adj-en}%sLehms
+%%%%
+{gen}the %sMountains
+der {adj-en}%sBerge
+%%%%
+{gen}the %sRocks
+der {adj-en}%sFelsen
+%%%%
+
+# Air genitive
+%%%%
+{gen}%sAir
+der {adj-en}%sLuft
+%%%%
+{gen}%sLightness
+der {adj-en}%sLeichtigkeit
+%%%%
+{gen}%sWeightlessness
+der {adj-en}%sSchwerelosigkeit
+%%%%
+{gen}%sFlight
+des {adj-en}%sFlugs
+%%%%
+{gen}the %sBirds
+der {adj-en}%sVögel
+%%%%
+{gen}%sFeathers
+der {adj-en}%sFedern
+%%%%
+
+# genitive without adjective
+
+# conjuration genitive
+%%%%
+{gen}Conjuration
+der Konjuration
+%%%%
+{gen}Confrontation
+der Konfrontation
+%%%%
+{gen}Attacks
+der Angriffe
+%%%%
+{gen}Battle Magic
+der Kampfmagie
+%%%%
+{gen}Combat Magic
+der Kampfmagie
+%%%%
+{gen}Arcane Weapons
+der arkanen Waffen
+%%%%
+{gen}Blows
+der Schläge
+%%%%
+{gen}Bruises
+der Prellungen
+%%%%
+{gen}Damage Dealing
+des Schadens
+%%%%
+
+# Fire genitive
+%%%%
+{gen}Fire
+des Feuers
+%%%%
+{gen}Flames
+der Flammen
+%%%%
+{gen}Heat
+der Hitze
+%%%%
+{gen}the Volcanoes
+der Vulkane
+%%%%
+{gen}the Blaze
+der Flamme
+%%%%
+{gen}Ignition
+der Zündung
+%%%%
+{gen}the Arsonist
+des Brandstifters
+%%%%
+
+# Hexes genitive
+%%%%
+{gen}Hexes
+der Verhexungen
+%%%%
+{gen}Curses
+der Flüche
+%%%%
+{gen}Malediction
+der Verhexung
+%%%%
+{gen}the Oath
+des Schwurs
+%%%%
+{gen}Execration
+der Verwünschung
+%%%%
+{gen}Enchantment
+der Verzauberung
+%%%%
+{gen}Bewitchment
+der Verhexung
+%%%%
+{gen}Glamour
+der Verzauberung
+%%%%
+{gen}Fascination
+der Faszination
+%%%%
+{gen}Beguiling
+der Verführung
+%%%%
+
+# Ice genitive
+%%%%
+{gen}Ice
+des Eises
+%%%%
+{gen}Snow
+des Schnees
+%%%%
+{gen}Cold
+der Kälte
+%%%%
+{gen}the Snowflakes
+die Schneeflocken
+%%%%
+{gen}the Glacier
+der Gletscher
+%%%%
+{gen}the Frostbite
+der Erfrierung
+%%%%
+
+# Transmutation genitive
+%%%%
+{gen}Transmigration
+der Seelenwanderung
+%%%%
+{gen}Transmutation
+der Verwandlung
+%%%%
+{gen}Transformation
+der Umwandlung
+%%%%
+{gen}Shape Shifting
+der Formveränderung
+%%%%
+{gen}Changing
+des Änderns
+%%%%
+{gen}Moulding
+des Formens
+%%%%
+
+# Necromancy genitive
+%%%%
+{gen}Necromancy
+der Nekromantie
+%%%%
+{gen}Evil
+des Böses
+%%%%
+{gen}Darkness
+der Dunkelheit
+%%%%
+{gen}Stolen Souls
+der gestohlenen Seelen
+%%%%
+{gen}Rites
+der Riten
+%%%%
+{gen}Arts
+der Künste
+%%%%
+{gen}Secrets
+der Geheimnisse
+%%%%
+{gen}Rituals
+der Rituale
+%%%%
+{gen}Magic
+der Magie
+%%%%
+
+# Summoning genitive
+%%%%
+{gen}Summoning
+der Beschwörung
+%%%%
+{gen}Calling
+des Rufens
+%%%%
+{gen}Creation
+der Schöpfung
+%%%%
+{gen}the Entourage
+der Entourage
+%%%%
+{gen}Companions
+der Gefährten
+%%%%
+{gen}the Escort
+der Eskorte
+%%%%
+{gen}Illusion
+der Illusion
+%%%%
+{gen}Slavery
+der Sklaverei
+%%%%
+
+# Translocation genitive
+%%%%
+{gen}Translocation
+der Translokation
+%%%%
+{gen}Displacement
+der Umschiebung
+%%%%
+{gen}Dislocation
+der Versetzung
+%%%%
+{gen}Orientation
+der Orientierung
+%%%%
+{gen}the Traveller
+des Reisendes
+%%%%
+{gen}the Compass
+des Kompasses
+%%%%
+{gen}the Voyage
+der Reise
+%%%%
+
+# Poison genitive
+%%%%
+{gen}Poison
+des Giftes
+%%%%
+{gen}Venom
+des Giftes
+%%%%
+{gen}Toxins
+der Toxine
+%%%%
+{gen}Poisoning
+der Vergiftung
+%%%%
+{gen}Intoxication
+der Intoxikation
+%%%%
+{gen}Envenoming
+der Vergiften
+%%%%
+{gen}Contamination
+der Verseuchung
+%%%%
+
+# Earth genitive
+%%%%
+{gen}Earth
+der Erde
+%%%%
+{gen}Stones
+der Steine
+%%%%
+{gen}Clay
+dse Lehms
+%%%%
+{gen}the Mountains
+der Berge
+%%%%
+{gen}the Rocks
+der Felsen
+%%%%
+
+# Air genitive
+%%%%
+{gen}Air
+der Luft
+%%%%
+{gen}Lightness
+der Leichtigkeit
+%%%%
+{gen}Weightlessness
+der Schwerelosigkeit
+%%%%
+{gen}Flight
+des Flugs
+%%%%
+{gen}the Birds
+der Vögel
+%%%%
+{gen}Feathers
+der Federn
+%%%%
+
+# Conjuration adj
+%%%%
+"Destructive "
+"zerstörerisch "
+%%%%
+"Harmful "
+"Schädliche "
+%%%%
+"Damaging "
+"Schädliche "
+%%%%
+"Hurtful "
+"verletzend "
+%%%%
+"Excruciating "
+"quälende "
+%%%%
+"Lethal "
+"tödliche "
+%%%%
+
+# Hexes adj
+%%%%
+"Enchanting "
+"bezaubernde "
+%%%%
+"Bewitching "
+"betörende "
+%%%%
+"Captivating "
+"fesselnde "
+%%%%
+"Fetching "
+"abrufbare "
+%%%%
+"Enthralling "
+"hinreißende "
+%%%%
+"Ensnaring "
+"verzaubernde "
+%%%%
+"Entrancing "
+"verlockende "
+%%%%
+
+# Fire adj
+%%%%
+"Fiery "
+"feurige "
+%%%%
+"Scorching "
+"versengende "
+%%%%
+"Burning "
+"brennende "
+%%%%
+"Blistering "
+"glühende "
+%%%%
+"Igneous "
+"vulkanische "
+%%%%
+"Flamy "
+"flammende "
+%%%%
+"Torrid "
+"sengende "
+%%%%
+
+# Ice adj
+%%%%
+"Glacial "
+"glaziale "
+%%%%
+"Freezing "
+"gefrierene "
+%%%%
+"Icy "
+"eisige "
+%%%%
+"Congealing "
+"erstarrende "
+%%%%
+"Frigorific "
+"külende "
+%%%%
+
+# Transmutation adj
+%%%%
+"Shifting "
+"verschiebende "
+%%%%
+"Mutagenic "
+"mutagene "
+%%%%
+"Unstable "
+"instabile "
+%%%%
+
+# Necromancy adj
+%%%%
+"Evil "
+"böse "
+%%%%
+"Dark "
+"dunkle "
+%%%%
+"Black "
+"schwarze"
+%%%%
+"Sinister "
+"unheilvoll "
+%%%%
+"Unholy "
+"unheilig "
+%%%%
+# duplicate
+#"Lethal "
+#"tödliche "
+%%%%
+"Doomed "
+"verdammte "
+%%%%
+"Ghastly "
+"grässliche "
+%%%%
+"Twisted "
+"verdrehte "
+%%%%
+
+# Summoning adj
+%%%%
+"Creative "
+"kreative "
+%%%%
+"Supportive "
+"unterstützende "
+%%%%
+
+# Translocation adj
+%%%%
+"Spatial "
+"räumliche "
+%%%%
+"Displaced "
+"versetzte "
+%%%%
+"Dislocated "
+"versetzte "
+%%%%
+"Warped "
+"verzogene "
+%%%%
+# duplicate
+#"Unstable "
+#"instabile "
+%%%%
+# duplicate
+#"Twisted "
+#"verdrehte "
+%%%%
+"Quantum "
+"Quanten-"
+%%%%
+
+# Poison adj
+%%%%
+"Poisonous "
+"giftige "
+%%%%
+"Venomous "
+"giftige "
+%%%%
+"Toxic "
+"toxische "
+%%%%
+"Cankerous "
+"fressende "
+%%%%
+"Nocuous "
+"schädliche "
+%%%%
+"Noxious "
+"schädliche "
+%%%%
+"Virous "
+"gifthaltige "
+%%%%
+"Vitriolic "
+"vitriolische "
+%%%%
+"Viperous "
+"vipernartige "
+%%%%
+
+# Earth adj
+%%%%
+"Earthen "
+"irdene "
+%%%%
+"Ashen "
+"aschige "
+%%%%
+"Dusty "
+"staubige "
+%%%%
+
+# Air adj
+%%%%
+"Aerial "
+"luftige "
+%%%%
+"Flying "
+"fliegende "
+%%%%
+"Floating "
+"schwebende "
+%%%%
+"Feathery "
+"federleichte "
+%%%%
+"Cloudy "
+"wolkige "
+%%%%
+"Gliding "
+"gleitende "
+%%%%
+
 # TODO:
-# a) (@owner@'s) @book_name@ of @<secondary school adj@ @<primary school>@
-# b) (@owner@'s) @book_name@ of @<primary school>@ and @<secondary school>@
-# c) (@owner@'s) @book_name@ of @<primary school>@
 # d) @owner@'s @book_name@ of @Xom_book_title@
 # d) @owner@'s @book_name@ of @random_book_title@
 # d) @book_name@ of @random_book_title@

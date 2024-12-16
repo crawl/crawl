@@ -66,12 +66,6 @@ def ignore(key, ignore_vals):
     # adjective
     if '"' + key + ' "' in ignore_vals:
         return True
-    # noun with adjective(s)
-    if key.startswith("the "):
-        if key.replace("the ", "the %s", 1) in ignore_vals:
-            return True
-    elif "%s" + key in ignore_vals:
-        return True
     # suffix
     if key.startswith("of "):
         if '" of %s"' in ignore_vals and key[3:] in ignore_vals:

@@ -679,6 +679,15 @@ int main()
     test("Gloorx Vloq's Mastering Spellweaving", "Gloorx Vloqs Beherrschung des Zauberwebens");
     test("Mnoleg's Handbook of Greatest Risks and Utility", "Mnolegs Handbuch der größten Risiken und des höchsten Nutzens");
 
+    // single school
+    test("the Compendium of Curses", "das Kompendium der Flüche");
+    test("the Handbook of Fire", "das Handbuch des Feuers");
+    test("the Handbook of Ice", "das Handbuch des Eises");
+    // two schools
+    test("the Almanac of Darkness and the Frostbite", "der Almanach der Dunkelheit und der Erfrierung");
+    test("the Almanac of Battle Magic and Calling", "der Almanach der Kampfmagie und des Rufens");
+    test("the Handbook of Fire and Ice", "das Handbuch des Feuers und des Eises");
+    test("the Compendium of Fiery Attacks", "das Kompendium der feurigen Angriffe");
 
     cout << endl << num_passes << " TESTS PASSED" << endl;
     if (num_fails > 0)

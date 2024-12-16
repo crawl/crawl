@@ -995,6 +995,7 @@ static string _localise_adjectives(const string& s, const vector<string>& adjs)
         result = replace_first(result, "%s", postfix_adjs);
     }
 
+    TRACE("result='%s'", result.c_str());
     return result;
 }
 
@@ -1334,7 +1335,9 @@ static string _localise_list(const string context, const string& s)
         if (!context.empty() || determiner_patt.matches(sub))
             _context = context;
 
-        result += _discard_context(_localise_string(_context, sub));
+        string temp = _discard_context(_localise_string(_context, sub));
+        TRACE("substring '%s' -> '%s'",  sub.c_str(), temp.c_str());
+        result += temp;
     }
 
     return result;
@@ -1758,7 +1761,7 @@ static string _localise_book_title(const string& context, const string& value)
         format_str = replace_first(format_str, book_magic, "@book_magic@");
     }
 
-    TRACE("_localise_book_title: format_str='%s'", format_str.c_str());
+    TRACE("format_str='%s'", format_str.c_str());
     result = cxlate(context, format_str, false);
     if (result.empty())
         return "";

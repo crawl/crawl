@@ -366,7 +366,7 @@ GENERATE:gen
 /^[^A-ZÄÖÜ]+/e\b/er/
 
 # masc/neuter nouns
-/^(?!(\{adj\-er\}|[a-zäöüß\-]+er ))[^#]*/(.)$/$1s/
+/^(?!(\{adj\-er\}|[a-zäöüß\-]+er ))[^#]*/([a-zäöü])$/$1s/
 
 # remove mark we added
 /#//

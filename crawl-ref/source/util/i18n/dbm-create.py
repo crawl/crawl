@@ -43,6 +43,8 @@ new_value = True
 with open(valuefile_name) as valuefile:
     for line in valuefile:
         line = line.rstrip('\n')
+        if len(line) == 0 or line.startswith('#'):
+            continue
         if line == '%%%%':
             new_value = True
             continue
