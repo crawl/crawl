@@ -628,6 +628,42 @@ jobs:
         run: gradle :app:assembleBuildTest
         working-directory: crawl-ref/source/android-project
 
+  build_monster:
+    permissions:
+      contents: read #  to fetch code (actions/checkout)
+
+    name: Build monster ${{ matrix.compiler }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        compiler:
+          - gcc
+          - clang
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # all history
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+      - name: Install dependencies
+        run: ./deps.py --compiler ${{ matrix.compiler }}
+        working-directory: .github/workflows
+      - name: Setup ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: build-monster-${{ matrix.compiler }}
+          restore-keys: |
+            build-monster-${{ matrix.compiler }}
+            build-monster
+      - name: "Setup ccache: prepend path"
+        run: "echo /usr/lib/ccache >> $GITHUB_PATH"
+      - name: "Setup ccache: update symlinks"
+        run: "/usr/sbin/update-ccache-symlinks"
+      - run: make -j$(nproc) monster
+        working-directory: crawl-ref/source
+
   notify_irc:
     name: "Notify #crawl-dev of build failure"
     needs:
@@ -637,6 +673,7 @@ jobs:
       - build_mingw64_crosscompile
       - codecov_catch2
       - webserver
+      - build_monster
     if: failure() && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
