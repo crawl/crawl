@@ -968,14 +968,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     mon->base_monster = mg.base_type;
     mon->xp_tracking  = mg.xp_tracking;
 
-    // Set pos and link monster into monster grid.
-    if (!dont_place && !mon->move_to_pos(fpos))
-    {
-        env.mid_cache.erase(mon->mid);
-        mon->reset();
-        return 0;
-    }
-
     // Pick the correct Serpent of Hell.
     if (mon->type == MONS_SERPENT_OF_HELL)
     {
@@ -1297,6 +1289,16 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         }
 
         mon->behaviour = BEH_WANDER;
+    }
+
+    // Set pos and link monster into monster grid.
+    // This must be done after setting the monster's attitude as `move_to_pos`
+    // might check it.
+    if (!dont_place && !mon->move_to_pos(fpos))
+    {
+        env.mid_cache.erase(mon->mid);
+        mon->reset();
+        return 0;
     }
 
     if (mg.is_summoned())
