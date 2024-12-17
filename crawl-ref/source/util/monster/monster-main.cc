@@ -1034,11 +1034,17 @@ int main(int argc, char* argv[])
                         colour(LIGHTBLUE, damage_flavour("airstrike", min, max));
                     break;
                 }
+                case AF_ALEMBIC:
+                    monsterattacks += colour(LIGHTGREEN, "(alembic)");
+                    break;
                 case AF_BLINK:
                     monsterattacks += colour(MAGENTA, "(blink self)");
                     break;
                 case AF_BLINK_WITH:
                     monsterattacks += colour(MAGENTA, "(blink together)");
+                    break;
+                case AF_BOMBLET:
+                    monsterattacks += colour(LIGHTRED, "(bomblet)");
                     break;
                 case AF_COLD:
                     monsterattacks += colour(
