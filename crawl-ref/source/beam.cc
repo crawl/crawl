@@ -2052,7 +2052,7 @@ static bool _curare_hits_monster(actor *agent, monster* mons, int bonus_poison)
     simple_monster_message(*mons, " struggles to breathe.");
     mons->hurt(agent, roll_dice(2, 6), BEAM_POISON);
 
-    if (mons->alive())
+    if (mons->alive() && !mons->stasis())
     {
         if (!mons->cannot_act())
         {

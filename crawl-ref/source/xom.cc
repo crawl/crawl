@@ -4380,7 +4380,7 @@ static void _xom_blink_monsters(int /*sever*/)
         if (blink_to_player)
             blink_other_close(*mi, you.pos());
         else
-            monster_blink(*mi, false);
+            monster_blink(*mi, true);
 
         blinks++;
     }

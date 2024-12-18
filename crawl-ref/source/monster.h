@@ -501,7 +501,7 @@ public:
              bool attacker_effects = true) override;
     bool heal(int amount) override;
     void blame_damage(const actor *attacker, int amount);
-    void blink() override;
+    void blink(bool ignore_stasis = false) override;
     void teleport(bool right_now = false,
                   bool wizard_tele = false) override;
     bool shift(coord_def p = coord_def(0, 0));

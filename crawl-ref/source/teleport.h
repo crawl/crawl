@@ -11,7 +11,7 @@ bool blink_away(monster* mon, actor* caster, bool from_seen = true,
 void blink_range(monster &mon);
 void blink_close(monster &mon);
 void mons_relocated(monster* mons);
-bool monster_blink(monster* mons, bool quiet = false);
+bool monster_blink(monster* mons, bool ignore_stasis = false, bool quiet = false);
 bool monster_space_valid(const monster* mons, coord_def target,
                          bool forbid_sanctuary);
 void monster_teleport(monster* mons, bool instan, bool silent = false,

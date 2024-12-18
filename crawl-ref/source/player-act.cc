@@ -104,7 +104,7 @@ player_vanishes::~player_vanishes()
     if (monster *mon = monster_at(source))
     {
         mon->props[FAKE_BLINK_KEY].get_bool() = true;
-        mon->blink();
+        mon->blink(true);
         mon->props.erase(FAKE_BLINK_KEY);
         if (monster *stubborn = monster_at(source))
             monster_teleport(stubborn, true, true);

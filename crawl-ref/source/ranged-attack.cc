@@ -723,6 +723,8 @@ bool ranged_attack::apply_missile_brand()
         {
             if (defender->is_player())
                 canned_msg(MSG_STRANGE_STASIS);
+            else
+                simple_monster_message(*defender->as_monster(), " is unaffected.");
             break;
         }
 

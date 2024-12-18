@@ -156,8 +156,11 @@ static coord_def _random_monster_nearby_habitable_space(const monster& mon)
     return target;
 }
 
-bool monster_blink(monster* mons, bool quiet)
+bool monster_blink(monster* mons, bool ignore_stasis, bool quiet)
 {
+    if (!ignore_stasis && mons->no_tele())
+        return false;
+
     coord_def near = _random_monster_nearby_habitable_space(*mons);
     return mons->blink_to(near, quiet);
 }

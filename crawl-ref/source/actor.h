@@ -198,7 +198,7 @@ public:
     virtual bool heal(int amount) = 0;
     virtual void banish(const actor *agent, const string &who = "",
                         const int power = 0, bool force = false) = 0;
-    virtual void blink() = 0;
+    virtual void blink(bool ignore_stasis = false) = 0;
     virtual void teleport(bool right_now = false,
                           bool wizard_tele = false) = 0;
     virtual bool poison(actor *attacker, int amount = 1, bool force = false) = 0;
