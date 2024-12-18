@@ -3131,7 +3131,6 @@ void seen_item(item_def &item)
         && item.is_identified()
         && !you.type_ids[item.base_type][item.sub_type])
     {
-        fprintf(stderr, "ID by sight!");
         // Can't cull shop items here -- when called from view, we shouldn't
         // access the UI. Old ziggurat prompts are a very minor case of what
         // could go wrong.
