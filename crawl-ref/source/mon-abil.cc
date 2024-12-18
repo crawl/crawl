@@ -1205,11 +1205,13 @@ bool egg_is_incubating(const monster& egg)
     if (!parent || !adjacent(parent->pos(), egg.pos()))
         return false;
 
-    // Finally, check that there are foes sufficiently nearby
+    // Finally, check that there are foes sufficiently nearby (and also in the
+    // parent's LoS)
     for (monster_near_iterator mi(&egg, LOS_NO_TRANS); mi; ++mi)
     {
         if (!mons_aligned(*mi, &egg) && !mi->is_firewood()
-            && grid_distance(egg.pos(), mi->pos()) <= 4)
+            && grid_distance(egg.pos(), mi->pos()) <= 4
+            && parent->see_cell(mi->pos()))
         {
             return true;
         }
