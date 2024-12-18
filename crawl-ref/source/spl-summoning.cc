@@ -4239,7 +4239,7 @@ spret cast_summon_seismosaurus_egg(const actor& agent, int pow, bool fail)
 
     mgen_data egg = _summon_data(agent, MONS_SEISMOSAURUS_EGG, summ_dur(3),
                                  SPELL_SUMMON_SEISMOSAURUS_EGG);
-    egg.hd = (7 + div_rand_round(pow, 22));
+    egg.hd = (7 + div_rand_round(pow, 20));
     egg.set_range(3, 3, 1);
 
     if (monster* mons = create_monster(egg))

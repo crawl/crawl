@@ -920,8 +920,10 @@ static void _seismosaurus_egg_hatch(monster* mons)
         simple_monster_message(*mons, " hatches with a roar like a landslide!",
                                 false, MSGCH_MONSTER_SPELL);
 
+        const int old_hd = mons->get_experience_level();
         change_monster_type(mons, MONS_SEISMOSAURUS, true);
         mons->heal(mons->max_hit_points);
+        mons->set_hit_dice(old_hd);
 
         mon_enchant timer = mons->get_ench(ENCH_SUMMON_TIMER);
         timer.duration = random_range(40, 55) * BASELINE_DELAY;
