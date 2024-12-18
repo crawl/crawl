@@ -1119,7 +1119,8 @@ bool book_has_title(const item_def &book)
     if (book.sub_type == BOOK_BIOGRAPHIES_II
         || book.sub_type == BOOK_BIOGRAPHIES_VII
         || book.sub_type == BOOK_MAXWELL
-        || book.sub_type == BOOK_UNRESTRAINED)
+        || book.sub_type == BOOK_UNRESTRAINED
+        || book.sub_type == BOOK_SWAMP_SOJURN)
     {
         return true;
     }
