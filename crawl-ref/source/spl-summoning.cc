@@ -3289,6 +3289,12 @@ void clockwork_bee_go_dormant(monster& bee)
 // Returns false if we lacked the MP to do so or there was no valid target for it.
 bool clockwork_bee_recharge(monster& bee)
 {
+    if (you.berserk())
+    {
+        mpr("If you tried to rewind gears in your present state, you'd only break them.");
+        return false;
+    }
+
     monster* targ = _get_clockwork_bee_target(&bee);
 
     // Nothing around for it to attack.
