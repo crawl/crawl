@@ -620,7 +620,7 @@ Erste Schritte {in-dat}@book_magic@
 @book_magic@ für Dummies
 %%%%
 @book_magic@ 101
-@book_magic@ 101
+@book_magic@ Basiskurs
 %%%%
 
 %%%%
@@ -643,7 +643,7 @@ Erste Schritte {in-dat}@book_magic@
 @owner@s @book_magic@ für Dummies
 %%%%
 @owner@'s @book_magic@ 101
-@owner@s @book_magic@ 101
+@owner@s @book_magic@ Basiskurs
 %%%%
 
 # level 2-4
@@ -663,7 +663,7 @@ A Primer on @book_magic@
 Eine Fibel für {acc}@book_magic@
 %%%%
 An Early Guide to @book_magic@
-Ein früher Leitfaden für {acc}@book_magic@
+Ein erster Leitfaden für {acc}@book_magic@
 %%%%
 The Foundations of @book_magic@
 Die Grundlagen {gen}@book_magic@
@@ -672,10 +672,10 @@ Die Grundlagen {gen}@book_magic@
 @book_magic@ in einfachen Schritten
 %%%%
 @book_magic@ Continued
-@book_magic@ fortgefahren
+@book_magic@ fortgesetzt
 %%%%
 @book_magic@, and How To Use It
-@book_magic@, und die Verwendung davon
+@book_magic@ und die Verwendung davon
 %%%%
 
 %%%%
@@ -683,7 +683,7 @@ Die Grundlagen {gen}@book_magic@
 @owner@s Fibel für {acc}@book_magic@
 %%%%
 @owner@'s Early Guide to @book_magic@
-@owner@s früher Leitfaden für {acc}@book_magic@
+@owner@s erster Leitfaden für {acc}@book_magic@
 %%%%
 @owner@'s Foundations of @book_magic@
 @owner@s Grundlagen {gen}@book_magic@
@@ -692,10 +692,10 @@ Die Grundlagen {gen}@book_magic@
 @owner@s @book_magic@ in einfachen Schritten
 %%%%
 @owner@'s @book_magic@ Continued
-@owner@s @book_magic@ fortgefahren
+@owner@s @book_magic@ fortgesetzt
 %%%%
 @owner@'s @book_magic@, and How To Use It
-@owner@s @book_magic@, und die Verwendung davon
+@owner@s @book_magic@ und die Verwendung davon
 %%%%
 
 # level 4-6
@@ -713,7 +713,7 @@ Die Grundlagen {gen}@book_magic@
 
 %%%%
 Advanced Steps in @book_magic@
-Fortgeschrittene Schritte {in-dat}@book_magic@
+Weitere Schritte {in-dat}@book_magic@
 %%%%
 The Advanced Guide to @book_magic@
 Der fortgeschrittene Leitfaden für {acc}@book_magic@
@@ -730,7 +730,7 @@ Der Zweite Kurs {in-dat}@book_magic@
 
 %%%%
 @owner@'s Advanced Steps in @book_magic@
-@owner@s fortgeschrittene Schritte {in-dat}@book_magic@
+@owner@s weitere Schritte {in-dat}@book_magic@
 %%%%
 @owner@'s Advanced Guide to @book_magic@
 @owner@s fortgeschrittener Leitfaden für {acc}@book_magic@
@@ -852,10 +852,10 @@ A Thorough Guide to @book_magic@
 Ein gründlicher Leitfaden für {acc}@book_magic@
 %%%%
 The Last Secrets of @book_magic@
-Die letzte Geheimnisse {gen}@book_magic@
+Die letzten Geheimnisse {gen}@book_magic@
 %%%%
 The Lost Secrets of @book_magic@
-Die verlorene Geheimnisse {gen}@book_magic@
+Die verlorenen Geheimnisse {gen}@book_magic@
 %%%%
 The Arcane Secrets of @book_magic@
 Die arkanen Geheimnisse {gen}@book_magic@
@@ -867,7 +867,7 @@ Mastering @book_magic@
 Beherrschung {gen}@book_magic@
 %%%%
 The Testament of @spellcaster@
-Der Testament {gen}@spellcaster@
+Das Testament {gen}@spellcaster@
 %%%%
 
 %%%%
@@ -1561,7 +1561,7 @@ des {adj-en}%sFormens
 der {adj-en}%sNekromantie
 %%%%
 {gen}%sEvil
-des {adj-en}%sBöses
+des {adj-en}%sBösen
 %%%%
 {gen}%sDarkness
 der {adj-en}%sDunkelheit
@@ -1627,7 +1627,7 @@ der {adj-en}%sVersetzung
 der {adj-en}%sOrientierung
 %%%%
 {gen}the %sTraveller
-des {adj-en}%sReisendes
+des {adj-en}%sReisenden
 %%%%
 {gen}the %sCompass
 des {adj-en}%sKompasses
@@ -1836,7 +1836,7 @@ des Formens
 der Nekromantie
 %%%%
 {gen}Evil
-des Böses
+des Bösen
 %%%%
 {gen}Darkness
 der Dunkelheit
@@ -1903,7 +1903,7 @@ der Versetzung
 der Orientierung
 %%%%
 {gen}the Traveller
-des Reisendes
+des Reisenden
 %%%%
 {gen}the Compass
 des Kompasses
@@ -1978,7 +1978,7 @@ der Federn
 # Conjuration adj
 %%%%
 "Destructive "
-"zerstörerisch "
+"zerstörerische "
 %%%%
 "Harmful "
 "Schädliche "
@@ -1987,7 +1987,7 @@ der Federn
 "Schädliche "
 %%%%
 "Hurtful "
-"verletzend "
+"verletzende "
 %%%%
 "Excruciating "
 "quälende "
@@ -2059,7 +2059,7 @@ der Federn
 "erstarrende "
 %%%%
 "Frigorific "
-"külende "
+"kühlende "
 %%%%
 
 # Transmutation adj
@@ -2086,7 +2086,7 @@ der Federn
 "schwarze"
 %%%%
 "Sinister "
-"unheilvoll "
+"unheilvolle "
 %%%%
 "Unholy "
 "unheilige "
@@ -2152,7 +2152,7 @@ der Federn
 "toxische "
 %%%%
 "Cankerous "
-"fressende "
+"krebsartige "
 %%%%
 "Nocuous "
 "schädliche "
