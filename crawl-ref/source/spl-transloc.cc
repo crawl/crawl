@@ -891,6 +891,7 @@ void you_teleport()
     {
         mpr("You feel strangely stable.");
         you.duration[DUR_TELEPORT] = 0;
+        you.props.erase(SJ_TELEPORTITIS_SOURCE);
     }
     else
     {
