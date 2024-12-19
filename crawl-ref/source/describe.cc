@@ -5761,15 +5761,19 @@ static void _describe_aux_hit_chance(ostringstream &result, vector<string>& auxe
  *                          one will be created if not provided.
  * @param distance          Distance from which the attack is being made. If not
  *                          provided, assume distance between player and the target.
+ * @retval 0                if the player is unarmed or wielding a weapon.
+ * @retval 1                if the player is wielding a non-weapon item.
+ *
  */
-void describe_to_hit(const monster_info &mi, ostringstream &result,
+bool describe_to_hit(const monster_info &mi, ostringstream &result,
                      const item_def *weapon, bool verbose, attack *source,
                      int distance)
 {
     if (weapon != nullptr
         && !(is_weapon(*weapon) || is_throwable(&you, *weapon)))
     {
-        return; // breadwielding
+        result << "a non-weapon item in your " << (you.species == SP_FELID ? "mouth" : you.hand_name(true));
+        return true; // breadwielding
     }
 
     const bool melee = weapon == nullptr || !(is_range_weapon(*weapon)
@@ -5797,7 +5801,7 @@ void describe_to_hit(const monster_info &mi, ostringstream &result,
             _describe_aux_hit_chance(result, aux_names, acc_pct);
         }
 
-        return;
+        return false;
     }
     else if (weapon->base_type == OBJ_MISSILES)
     {
@@ -5815,6 +5819,7 @@ void describe_to_hit(const monster_info &mi, ostringstream &result,
     }
 
     describe_hit_chance(acc_pct, result, weapon, verbose, distance_from);
+    return false;
 }
 
 /**
@@ -6296,12 +6301,15 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
     if (crawl_state.game_started)
     {
         result << "You have ";
-        describe_to_hit(mi, result, you.weapon(), true);
-        if (mi.incapacitated()) // Affects ev and sh
-            result << " (while incapacitated)";
-        else if (mi.base_ev != mi.ev)
-            result << " (at present)";
-        result << ".\n";
+        bool not_a_weapon = describe_to_hit(mi, result, you.weapon(), true);
+        if (!not_a_weapon)
+        {
+            if (mi.incapacitated()) // Affects ev and sh
+                result << " (while incapacitated)";
+            else if (mi.base_ev != mi.ev)
+                result << " (at present)";
+        }
+        result << (not_a_weapon ? "!\n" : ".\n");
     }
     result << _monster_attacks_description(mi);
 
