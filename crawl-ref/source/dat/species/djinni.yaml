@@ -54,11 +54,12 @@ fake_mutations:
   - long: You are immune to sickness and miasma.
   - short: sickness immunity
 recommended_jobs:
-  - gladiator
-  - shapeshifter
+  - conjurer
+  - warper
   - hedge wizard
   - fire elementalist
   - ice elementalist
+  - air elementalist
 recommended_weapons:
   - short blades
   - long blades
