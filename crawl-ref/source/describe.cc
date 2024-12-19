@@ -5772,7 +5772,7 @@ bool describe_to_hit(const monster_info &mi, ostringstream &result,
     if (weapon != nullptr
         && !(is_weapon(*weapon) || is_throwable(&you, *weapon)))
     {
-        result << "a non-weapon item in your " << (you.species == SP_FELID ? "mouth" : you.hand_name(true));
+        result << "a non-weapon item in your " << (you.species == SP_FELID ? "mouth" : you.hand_name(false));
         return true; // breadwielding
     }
 
