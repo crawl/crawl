@@ -589,10 +589,7 @@ void macro_buf_add_cmd(command_type cmd, bool reverse)
 {
     ASSERT_RANGE(cmd, CMD_NO_CMD + 1, CMD_MIN_SYNTHETIC);
 
-    // There should be plenty of room between the synthetic keys
-    // (KEY_MACRO_MORE_PROTECT == -10) and USERFUNCBASE (-10000) for
-    // command_type to fit (currently 1000 through 2069).
-    macro_buf_add(-((int) cmd), reverse, true);
+    macro_buf_add(encode_command_as_key(cmd), reverse, true);
 }
 
 /*
@@ -758,6 +755,7 @@ int macro_buf_get()
     return key;
 }
 
+// Note: this only works for commands that have a key that maps to them
 void process_command_on_record(command_type cmd)
 {
     const int key = command_to_key(cmd);
@@ -838,6 +836,11 @@ static keyseq _getch_mul()
     // have a vague recollection of it being a kludge for conio support.
     do
     {
+        // It would be nice to assert that the player's turn isn't over when
+        // waiting for input. However, sometimes we set the player's turns as
+        // over then promt if the player really wants to do an action and then
+        // set the player's turn as not over if they don't.
+
         a = getch_ck();
         if (a != CK_NO_KEY)
             keys.push_back(a);
@@ -1854,15 +1857,15 @@ string keycode_to_name(int keycode, bool shorten)
 
     string prefix = "";
 
-    // ugh
-    if (keycode - CK_CMD_BASE < 256)
+    if (keycode >= CK_CMD_MIN && keycode <= CK_CMD_MAX
+        || keycode >= CK_CMD_ALT_MIN && keycode <= CK_CMD_ALT_MAX)
     {
         // could still also have alt on top of this
         prefix = (shorten ? "Cmd-" : "Command-");
         keycode -= CK_CMD_BASE;
     }
 
-    if (keycode - CK_ALT_BASE >= CK_MIN_INTERNAL && keycode - CK_ALT_BASE <= 256)
+    if (keycode >= CK_ALT_MIN && keycode <= CK_ALT_MAX)
     {
         prefix += "Alt-";
         keycode -= CK_ALT_BASE;
@@ -2167,21 +2170,24 @@ string command_to_name(command_type cmd)
 
 command_type key_to_command(int key, KeymapContext context)
 {
-    if (CMD_NO_CMD < -key && -key < CMD_MIN_SYNTHETIC)
+    if (CK_COMMAND_AS_KEY_MIN <= key && key <= CK_COMMAND_AS_KEY_MAX)
     {
-        const auto cmd = static_cast<command_type>(-key);
+        const auto cmd = static_cast<command_type>(key - CK_COMMAND_AS_KEY_MIN);
         const auto cmd_context = context_for_command(cmd);
 
         if (cmd == CMD_NO_CMD)
             return CMD_NO_CMD;
 
-        if (cmd_context != context)
+        // Allow synthetic commands in any context as there isn't currently
+        // any way to give them a context
+        if (cmd_context != context
+            && cmd < CMD_MIN_SYNTHETIC)
         {
             mprf(MSGCH_ERROR,
                  "key_to_command(): command '%s' (%d:%d) wrong for desired "
                  "context %d",
-                 command_to_name(cmd).c_str(), -key - CMD_NO_CMD,
-                 CMD_MAX_CMD + key, (int) context);
+                 command_to_name(cmd).c_str(), cmd,
+                 CMD_MAX_CMD - cmd, (int) context);
             if (is_processing_macro())
                 flush_input_buffer(FLUSH_ABORT_MACRO);
             if (crawl_state.is_replaying_keys()
