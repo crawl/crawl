@@ -497,7 +497,7 @@ NSUBST:  10 = 2:3 / 1:2, % = 1:| / 1:* / 1:d / * = *%%
 : end
 ITEM:    throwing net q:1 no_pickup / rapier ego:venom no_pickup w:12 / \
          scimitar ego:venom no_pickup w:8 / any hex wand charges:8 no_pickup / \
-         fen folio w:3 / my sojourn through swmapland w:3 / \
+         fen folio w:3 / my sojourn through swampland w:3 / \
          potion of ambrosia w:3 pre_id / \
          potion of curing w:3 pre_id / dart ego:curare no_pickup w:3
 : if you.in_branch("Vaults") then
