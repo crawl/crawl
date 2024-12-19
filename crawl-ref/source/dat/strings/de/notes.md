@@ -237,7 +237,7 @@ Some specific terms from the German D&D System Reference Document [17]:
 - abjuration = Bannzauber
 - experience points = Erfahrungspunkte
 - hit dice = Trefferwürfel
-- manual = Handbuch
+- manual = Anleitung
 - breath weapon = Odemwaffe
 - disruption (affects undead) - Zusammenbruch
 

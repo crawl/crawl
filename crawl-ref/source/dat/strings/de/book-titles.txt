@@ -15,7 +15,7 @@
 
 %%%%
 a manual
-{n}ein Handbuch
+{f}eine Anleitung
 %%%%
 
 #################################
@@ -218,8 +218,8 @@ an Everburning Encyclopedia
 eine ewig brennende Enzyklopädie
 %%%%
 a Young Poisoner's Handbook
-# don't use Handbuch because that's the word we used for Manual
-{m}ein Leitfaden für junge Giftmischer
+# we use Anleitung for manual so we can use Handbuch here
+{m}ein Handbuch für junge Giftmischer
 %%%%
 a Fen Folio
 {n}ein Fenn-Folio

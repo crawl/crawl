@@ -52,7 +52,7 @@ book
 Buch
 %%%%
 manual
-Handbuch
+Anleitung
 %%%%
 staff
 Stab
@@ -366,7 +366,7 @@ spellbooks
 Zauberbücher
 %%%%
 manuals
-Handbücher
+Anleitungen
 %%%%
 runes
 Runen

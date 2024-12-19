@@ -1413,9 +1413,9 @@ einfach auf ihn <w>linksklicken</w></tiles>.
 %%%%
 HINT_DESCRIBE_MANUAL
 
-Ein Handbuch kann dir beim Training einer Fertigkeit sehr helfen. Wenn du es
+Eine Anleitung kann dir beim Training einer Fertigkeit sehr helfen. Wenn du sie
 in die Hand nimmst, wird die betreffende Fertigkeit effizienter trainiert und
-steigt schneller auf, bis du den Inhalt des Handbuchs aufgebraucht hast.
+steigt schneller auf, bis du die Anleitung zu Ende gelesen hast.
 %%%%
 HINT_DESCRIBE_SPELLBOOK
 

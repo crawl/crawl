@@ -746,7 +746,7 @@ Eine kurze Keule mit einem Metallkopf.
 %%%%
 manual
 
-Ein wertvolles Buch, mit dem man eine bestimmte Fertigkeit schneller erlernen kann.
+Ein wertvolles Büchlein, mit dem man eine bestimmte Fertigkeit schneller erlernen kann.
 %%%%
 morningstar
 

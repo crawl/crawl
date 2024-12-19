@@ -7058,10 +7058,10 @@ Du hebst {acc}%s auf, aber es hat dich nichts mehr zu lehren.
 %%%%
 # note: pick up manual
 You pick up another %s and continue studying.
-Du hebst noch ein {acc}%s auf und studiert weiter.
+Du hebst noch eine {acc}%s auf und studierst weiter.
 %%%%
 You pick up %s and begin studying.
-Du hebst {acc}%s auf und fangt an zu lernen.
+Du hebst {acc}%s auf und fängst an zu lernen.
 %%%%
 # note: pick up rune
 You pick up %s and feel its power.
@@ -7129,7 +7129,7 @@ Dein Gepäck ist voll.
 "Welches Ego? "
 %%%%
 "A manual for which skill? "
-"Ein Hundbuch für welche Fertigkeit? "
+"Eine Anleitung für welche Fertigkeit? "
 %%%%
 Sorry, no books on that skill today.
 Sorry, heute keine Bücher über diese Fertigkeit.
@@ -7655,7 +7655,7 @@ Edit macros
 Macros bearbeiten
 %%%%
 Help and manual
-Hilfe und Handbuch
+Hilfe und Spielanleitung
 %%%%
 Quit and <lightred>abandon character</lightred>
 Das Spiel beenden und <lightred>Charakter aufgeben</lightred>
@@ -10636,7 +10636,7 @@ that you discover, relative to this version of crawl. Upgrading
 die du entdeckst, bezogen auf diese Version von Crawl. Upgraden
 %%%%
 mid-game may affect seeding. (See the manual for more details.)
-mitten im Spiel kann Seeding beeinflussen. (Sieht die Anleitung für Details.)
+mitten im Spiel kann Seeding beeinflussen. (Siehe Spielanleitung für Details.)
 %%%%
 Warning: your build of crawl does not support stable seeding!
 Warnung: deine Version von Crawl eignet sich nicht für stabiles Seeding!
@@ -13663,7 +13663,7 @@ The percentage of the progress done before reaching next level is in <cyan>cyan<
 Der Prozentsatz des Fortschritts vor Erreichen des nächsten Levels ist <cyan>cyan</cyan>.
 %%%%
 The relative cost of raising each skill is in <cyan>cyan</cyan> (or <lightred>red</lightred> if enhanced by a manual).
-Die relativen Kosten für die Verbesserung jeder Fertigkeit sind <cyan>cyan</cyan> (oder <lightred>rot</lightred>, wenn sie durch ein Handbuch verbessert wird).
+Die relativen Kosten für die Verbesserung jeder Fertigkeit sind <cyan>cyan</cyan> (oder <lightred>rot</lightred>, wenn sie durch eine Anleitung verbessert wird).
 %%%%
 "Enter a skill target for %s: "
 "Ein Trainingsziel für %s eingeben: "
@@ -13711,7 +13711,7 @@ The species aptitude is in <white>white</white>.
 Die Speziesbegebung ist <white>weiß</white>.
 %%%%
 Bonus from skill manuals is in <lightred>red</lightred>.
-Der Bonus von Handbüchern ist <lightred>rot</lightred>.
+Der Bonus von Anleitungen ist <lightred>rot</lightred>.
 %%%%
 You have quaffed a potion of experience. Select the skills to train.
 Du hast einen Trank der Erfahrung getrunken. Fertigkeiten zum Trainieren auswählen.
@@ -13764,7 +13764,7 @@ Training target %.1f for %s reached!
 Trainingsziel %.1f für {acc}%s erreicht!
 %%%%
 You have finished your manual of %s and toss it away.
-Du hast dein Handbuch von {dat}%s zu Ende gelesen und wirft es weg.
+Du hast deine Anleitung für {acc}%s zu Ende gelesen und wirfst sie weg.
 %%%%
 You can't set training targets!
 Du kannst dich keine Trainingsziele setzen!
