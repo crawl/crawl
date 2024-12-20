@@ -219,7 +219,7 @@ eine ewig brennende Enzyklopädie
 %%%%
 a Young Poisoner's Handbook
 # we use Anleitung for manual so we can use Handbuch here
-{m}ein Handbuch für junge Giftmischer
+{n}ein Handbuch für junge Giftmischer
 %%%%
 a Fen Folio
 {n}ein Fenn-Folio
