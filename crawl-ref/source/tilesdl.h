@@ -155,6 +155,9 @@ public:
     void shutdown();
     void load_dungeon(const crawl_view_buffer &vbuf, const coord_def &gc);
     void load_dungeon(const coord_def &gc);
+    // Returns true if the next call to getch_ck is guaranteed to return
+    // without waiting for user input.
+    bool has_pending_keycode();
     int getch_ck();
     void resize();
     void resize_event(int w, int h);
@@ -199,9 +202,9 @@ public:
 
     void draw_doll_edit();
 
-    void set_map_display(const bool display);
-    bool get_map_display();
-    void do_map_display();
+    void start_map_display();
+    void stop_map_display();
+    bool get_map_display() const noexcept;
 
     bool is_fullscreen() { return m_fullscreen; }
 
@@ -218,6 +221,8 @@ public:
     int to_lines(int num_tiles, int tile_height = TILE_Y);
 
     int handle_mouse(wm_mouse_event &event);
+    bool handle_mouse_for_map_view(wm_mouse_event &event);
+    bool handle_mouse_for_targeting(wm_mouse_event &event);
 
     void grid_to_screen(const coord_def &gc, coord_def *pc) const;
 
@@ -225,8 +230,6 @@ protected:
     void reconfigure_fonts();
     FontWrapper* load_font(const char *font_file, int font_size,
                   bool default_on_fail, bool use_cached=true);
-
-    bool m_map_mode_enabled;
 
     // screen pixel dimensions
     coord_def m_windowsz;
@@ -343,7 +346,14 @@ protected:
         int cx, cy;
         mouse_mode mode;
     };
-    cursor_loc m_cur_loc;
+    cursor_loc m_cursor_location;
+
+private:
+    bool _has_next_keycode_cached() noexcept;
+    void _clear_next_keycode() noexcept;
+    void _pull_next_keycode(int timeout);
+
+    int m_next_keycode = 0;
 };
 
 // Main interface for tiles functions

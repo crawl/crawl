@@ -135,6 +135,9 @@
 #ifdef USE_TILE
  #include "rltiles/tiledef-dngn.h"
 #endif
+#ifdef USE_TILE_LOCAL
+#include "tiles-build-specific.h"
+#endif
 #include "tilepick.h"
 #include "timed-effects.h"
 #include "transform.h"
@@ -2033,6 +2036,194 @@ void process_command(command_type cmd, command_type prev_cmd)
         cmd = m.cmd;
     }
 
+#ifdef USE_TILE_LOCAL
+    if (cmd >= CMD_ACTIVATE_ABILITY_MIN && cmd <= CMD_ACTIVATE_ABILITY_MAX)
+    {
+        const ability_type ability =
+            (ability_type)(cmd - CMD_ACTIVATE_ABILITY_MIN);
+
+        if (!player_has_ability(ability, true))
+            return;
+
+        // TODO get_talent returns ABIL_NON_ABILITY if you are confused,
+        // but not if you're silenced/penanced, so you only get a message in
+        // the latter case. We'd like these three cases to behave similarly.
+        talent tal = get_talent(ability, true);
+        if (tal.which == ABIL_NON_ABILITY || !activate_talent(tal))
+            flush_input_buffer(FLUSH_ON_FAILURE);
+
+        return;
+    }
+
+    if (cmd >= CMD_MEMORISE_SPELL_MIN && cmd <= CMD_MEMORISE_SPELL_MAX)
+    {
+        const spell_type spell = (spell_type)(cmd - CMD_MEMORISE_SPELL_MIN);
+
+        const bool succeeded = learn_spell(spell);
+        if (!succeeded)
+            flush_input_buffer(FLUSH_ON_FAILURE);
+
+        return;
+    }
+
+    if (cmd >= CMD_CAST_SPELL_MIN && cmd <= CMD_CAST_SPELL_MAX)
+    {
+        const spell_type spell = (spell_type)(cmd - CMD_CAST_SPELL_MIN);
+
+        if (!you.has_spell(spell))
+            return;
+        if (cast_a_spell(false, spell) == spret::abort)
+            flush_input_buffer(FLUSH_ON_FAILURE);
+
+        return;
+    }
+
+#ifdef WIZARD
+    if (cmd >= CMD_WIZARD_SET_SKILL_MIN && cmd <= CMD_WIZARD_SET_SKILL_MAX)
+    {
+        if (!you.wizard)
+            return;
+        const skill_type skill = (skill_type)(cmd - CMD_WIZARD_SET_SKILL_MIN);
+        wizard_set_skill_level(skill);
+        return;
+    }
+#endif
+
+    if (cmd >= CMD_TRAVEL_TO_MIN && cmd <= CMD_TRAVEL_TO_MAX)
+    {
+        const int compressed_coord = cmd - CMD_TRAVEL_TO_MIN;
+        const int y = compressed_coord / X_WIDTH + Y_BOUND_1;
+        const int x = compressed_coord % X_WIDTH + X_BOUND_1;
+        const coord_def gc{ x, y };
+        start_travel(gc);
+        return;
+    }
+
+    if (cmd >= CMD_PRIMARY_ATTACK_AT_MIN && cmd <= CMD_PRIMARY_ATTACK_AT_MAX)
+    {
+        const int compressed_coord = cmd - CMD_PRIMARY_ATTACK_AT_MIN;
+        const int y = compressed_coord / X_WIDTH + Y_BOUND_1;
+        const int x = compressed_coord % X_WIDTH + X_BOUND_1;
+        const coord_def gc{ x, y };
+        if (!in_bounds(gc))
+            return;
+
+        dist t;
+        t.target = gc;
+        quiver::get_primary_action()->trigger(t);
+        return;
+    }
+
+    if (cmd >= CMD_SECONDARY_ATTACK_AT_MIN
+        && cmd <= CMD_SECONDARY_ATTACK_AT_MAX)
+    {
+        const int compressed_coord = cmd - CMD_SECONDARY_ATTACK_AT_MIN;
+        const int y = compressed_coord / X_WIDTH + Y_BOUND_1;
+        const int x = compressed_coord % X_WIDTH + X_BOUND_1;
+        const coord_def gc{ x, y };
+        if (!in_bounds(gc))
+            return;
+
+        dist t;
+        t.target = gc;
+        quiver::get_secondary_action()->trigger(t);
+        return;
+    }
+
+    if (cmd >= CMD_DROP_ITEM_AT_INDEX_MIN && cmd <= CMD_DROP_ITEM_AT_INDEX_MAX)
+    {
+        const int item_index = cmd - CMD_DROP_ITEM_AT_INDEX_MIN;
+        if (!you.inv[item_index].defined())
+            return;
+        tile_item_drop(item_index, false);
+        return;
+    }
+
+    if (cmd >= CMD_DROP_ITEM_QUANTITY_AT_INDEX_MIN && cmd <= CMD_DROP_ITEM_QUANTITY_AT_INDEX_MAX)
+    {
+        const int item_index = cmd - CMD_DROP_ITEM_QUANTITY_AT_INDEX_MIN;
+        if (!you.inv[item_index].defined())
+            return;
+        tile_item_drop(item_index, true);
+        return;
+    }
+
+    if (cmd >= CMD_PICKUP_ITEM_BY_INDEX_MIN && cmd <= CMD_PICKUP_TIEM_BY_INDEX_MAX)
+    {
+        const int item_index = cmd - CMD_PICKUP_ITEM_BY_INDEX_MIN;
+        if (!env.item[item_index].defined())
+            return;
+        if (env.item[item_index].pos != you.pos())
+            return;
+        tile_item_pickup(item_index, false);
+        return;
+    }
+
+    if (cmd >= CMD_PICKUP_ITEM_QUANTITY_BY_INDEX_MIN && cmd <= CMD_PICKUP_TIEM_QUANTITY_BY_INDEX_MAX)
+    {
+        const int item_index = cmd - CMD_PICKUP_ITEM_QUANTITY_BY_INDEX_MIN;
+        if (!env.item[item_index].defined())
+            return;
+        if (env.item[item_index].pos != you.pos())
+            return;
+        tile_item_pickup(item_index, true);
+        return;
+    }
+
+    if (cmd >= CMD_USE_ITEM_BY_INDEX_MIN && cmd <= CMD_USE_ITEM_BY_INDEX_MAX)
+    {
+        const int item_index = cmd - CMD_USE_ITEM_BY_INDEX_MIN;
+        if (!you.inv[item_index].defined())
+            return;
+        tile_item_use(item_index);
+        return;
+    }
+
+    if (cmd >= CMD_USE_ITEM_SECONDARY_BY_INDEX_MIN
+        && cmd <= CMD_USE_ITEM_SECONDARY_BY_INDEX_MAX)
+    {
+        const int item_index = cmd - CMD_USE_ITEM_SECONDARY_BY_INDEX_MIN;
+        if (!you.inv[item_index].defined())
+            return;
+        tile_item_use_secondary(item_index);
+        return;
+    }
+
+    if (cmd >= CMD_DESCRIBE_SQUARE_MIN
+        && cmd <= CMD_DESCRIBE_SQUARE_MAX)
+    {
+        const int compressed_coord = cmd - CMD_DESCRIBE_SQUARE_MIN;
+        const int y = compressed_coord / X_WIDTH + Y_BOUND_1;
+        const int x = compressed_coord % X_WIDTH + X_BOUND_1;
+        const coord_def gc{ x, y };
+
+        full_describe_square(gc);
+        return;
+    }
+
+    if (cmd >= CMD_DESCRIBE_INVENTORY_ITEM_MIN
+        && cmd <= CMD_DESCRIBE_INVENTORY_ITEM_MAX)
+    {
+        const int item_index = cmd - CMD_DESCRIBE_INVENTORY_ITEM_MIN;
+        item_def& item = you.inv[item_index];
+        if (!item.defined())
+            return;
+        describe_item(item);
+        return;
+    }
+
+    if (cmd >= CMD_DESCRIBE_FLOOR_ITEM_MIN
+        && cmd <= CMD_DESCRIBE_FLOOR_ITEM_MAX)
+    {
+        const int item_index = cmd - CMD_DESCRIBE_FLOOR_ITEM_MIN;
+        item_def& item = env.item[item_index];
+        if (!item.defined())
+            return;
+        describe_item(item);
+        return;
+    }
+#endif
+
     switch (cmd)
     {
 #ifdef USE_TILE
@@ -2165,8 +2356,14 @@ void process_command(command_type cmd, command_type prev_cmd)
 
     case CMD_PICKUP:
     case CMD_PICKUP_QUANTITY:
-        pickup(cmd != CMD_PICKUP);
+        pickup(cmd == CMD_PICKUP_QUANTITY);
         break;
+
+#ifdef USE_TILE_LOCAL
+    case CMD_PICKUP_WITH_MENU_FOR_MULTIPLE_ITEMS:
+        pickup(false, true);
+        break;
+#endif
 
         // Action commands.
     case CMD_CAST_SPELL:           do_cast_spell_cmd(false); break;

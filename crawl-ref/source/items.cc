@@ -1430,7 +1430,7 @@ bool player_on_single_stack()
  * @param partial_quantity If true, prompt for a quantity to pick up when
  *                         picking up a single stack.
 */
-void pickup(bool partial_quantity)
+void pickup(bool partial_quantity, bool force_menu_for_multiple_items)
 {
     int keyin = 'x';
 
@@ -1439,8 +1439,16 @@ void pickup(bool partial_quantity)
 
     // Store last_pickup in case we need to restore it.
     // Then clear it to fill with items picked up.
-    map<int,int> tmp_l_p = you.last_pickup;
+    map<int,int> tmp_l_p = std::move(you.last_pickup);
     you.last_pickup.clear();
+
+    int number_of_items_without_menu = 1;
+    if (!force_menu_for_multiple_items)
+    {
+        number_of_items_without_menu = Options.pickup_menu_limit > 0
+            ? Options.pickup_menu_limit
+            : Options.item_stack_summary_minimum - 1;
+    }
 
     if (o == NON_ITEM)
         mpr("There are no items here.");
@@ -1451,13 +1459,8 @@ void pickup(bool partial_quantity)
             o = env.item[o].link;
         pickup_single_item(o, partial_quantity ? 0 : env.item[o].quantity);
     }
-    else if (Options.pickup_menu_limit
-             && num_items > (Options.pickup_menu_limit > 0
-                             ? Options.pickup_menu_limit
-                             : Options.item_stack_summary_minimum - 1))
-    {
+    else if (num_items > number_of_items_without_menu)
         pickup_menu(o);
-    }
     else
     {
         int next;
