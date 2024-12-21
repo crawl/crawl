@@ -405,6 +405,7 @@ void attack::init_attack(skill_type unarmed_skill, int attack_number)
     attacker_visible   = attacker->observable();
     defender_visible   = defender && defender->observable();
     needs_message      = (attacker_visible || defender_visible);
+    attacker_descr     = atk_name(DESC_THE);
 
     if (attacker->is_monster())
     {
@@ -677,7 +678,7 @@ void attack::drain_defender()
             special_damage_message =
                 make_stringf(
                     "%s %s %s%s",
-                    atk_name(DESC_THE).c_str(),
+                    attacker_descr.c_str(),
                     attacker->conj_verb("drain").c_str(),
                     defender_name(true).c_str(),
                     attack_strength_punctuation(special_damage).c_str());
@@ -690,7 +691,7 @@ void attack::drain_defender_speed()
     if (needs_message)
     {
         mprf("%s %s %s vigour!",
-             atk_name(DESC_THE).c_str(),
+             attacker_descr.c_str(),
              attacker->conj_verb("drain").c_str(),
              def_name(DESC_ITS).c_str());
     }
@@ -1428,7 +1429,7 @@ void attack::calc_elemental_brand_damage(beam_type flavour,
         // XXX: assumes "what" is singular
         special_damage_message = make_stringf(
             "%s %s %s%s",
-            what ? what : atk_name(DESC_THE).c_str(),
+            what ? what : attacker_descr.c_str(),
             what ? conjugate_verb(verb, false).c_str()
                  : attacker->conj_verb(verb).c_str(),
             // Don't allow reflexive if the subject wasn't the attacker.

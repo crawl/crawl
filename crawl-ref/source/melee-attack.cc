@@ -686,14 +686,6 @@ bool melee_attack::handle_phase_hit()
     // Check for weapon brand & inflict that damage too
     apply_damage_brand();
 
-    if (weapon && testbits(weapon->flags, ISFLAG_CHAOTIC)
-        && defender->alive())
-    {
-        unwind_var<brand_type> save_brand(damage_brand);
-        damage_brand = SPWPN_CHAOS;
-        apply_damage_brand();
-    }
-
     // Apply flux form's sfx.
     if (attacker->is_player() && you.form == transformation::flux
         && defender->alive() && defender->is_monster())
@@ -4470,7 +4462,21 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
 bool melee_attack::apply_damage_brand(const char *what)
 {
     // Staff damage overrides any brands
-    return apply_staff_damage() || attack::apply_damage_brand(what);
+    bool did_work = apply_staff_damage();
+    bool result = false;
+    if (!did_work)
+    {
+        result = result || attack::apply_damage_brand(what);
+        // if the defender did no disappear and the weapon is chaotic
+        if (!result && weapon && testbits(weapon->flags, ISFLAG_CHAOTIC)
+            && defender->alive())
+        {
+            unwind_var<brand_type> save_brand(damage_brand);
+            damage_brand = SPWPN_CHAOS;
+            result = result || attack::apply_damage_brand(what);
+        }
+    }
+    return result;
 }
 
 bool melee_attack::_vamp_wants_blood_from_monster(const monster* mon)
