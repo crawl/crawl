@@ -67,7 +67,7 @@
 " des Tötens"
 %%%%
 " of see invisible"
-" von Unsichtbares sehen"
+" des Sehens von Unsichtbarem"
 %%%%
 " of evasion"
 " des Ausweichens"
@@ -94,7 +94,7 @@
 " der Regeneration"
 %%%%
 " of magic regeneration"
-" der Magie-Regeneration"
+" der Magieregeneration"
 %%%%
 " of the acrobat"
 " des Akrobaten"
@@ -131,7 +131,7 @@
 " des Flammens"
 %%%%
 " of flame"
-" des Flammens"
+" der Flamme"
 %%%%
 " of freezing"
 " des Einfrierens"
@@ -222,7 +222,7 @@
 " des Mondes"
 %%%%
 " of Dice, Bag, and Bottle"
-" von Würfel, Beutel, und Flasche"
+" von Würfel, Beutel und Flasche"
 %%%%
 
 #################################
@@ -231,7 +231,7 @@
 # note: these names should match the skill names
 %%%%
 " of fighting"
-" des Kämpfen"
+" des Kämpfens"
 %%%%
 " of short blades"
 " der Kurzklingen"
@@ -243,7 +243,7 @@
 " der Äxte"
 %%%%
 " of maces & flails"
-" der Keulen & Flegeln"
+" der Keulen & Flegel"
 %%%%
 " of polearms"
 " der Stangenwaffen"
@@ -252,10 +252,10 @@
 " der Stäbe"
 %%%%
 " of slings"
-" der Schleuder"
+" der Schleudern"
 %%%%
 " of bows"
-" der Bogen"
+" der Bögen"
 %%%%
 " of crossbows"
 " der Armbrüste"
@@ -267,7 +267,7 @@
 " der Rüstung"
 %%%%
 " of dodging"
-" des Ausweichen"
+" des Ausweichens"
 %%%%
 # also used on items that increase stealth
 " of stealth"
@@ -295,19 +295,19 @@
 " der Konjurationen"
 %%%%
 " of hexes"
-" der Verhexung"
+" der Verhexungen"
 %%%%
 " of charms"
 " der Bannzauber"
 %%%%
 " of summonings"
-" der Beschwörung"
+" der Beschwörungen"
 %%%%
 " of translocations"
-" der Translokation"
+" der Translokationen"
 %%%%
 " of transmutations"
-" der Verwandlung"
+" der Verwandlungen"
 %%%%
 " of fire magic"
 " der Feuermagie"
