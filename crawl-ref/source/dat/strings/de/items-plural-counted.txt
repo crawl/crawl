@@ -51,7 +51,7 @@
 %d vergiftete Wurfpfeile
 %%%%
 %d curare-tipped darts
-%d Kurare-Wurfpfeile
+%d Curare-Wurfpfeile
 %%%%
 %d atropa-tipped darts
 %d Atropa-Wurfpfeile
@@ -63,7 +63,7 @@
 %d Steine
 %%%%
 %d large rocks
-%d Felsblöcke
+%d große Felsbrocken
 %%%%
 %d sling bullets
 %d Schleuderkugeln
@@ -109,7 +109,7 @@
 %d Schriftrollen beschriftet mit %s
 %%%%
 %d scrolls of acquirement
-%d Schriftrollen des Erwerbs
+%d Schriftrollen der Erwerbung
 %%%%
 %d scrolls of amnesia
 %d Schriftrollen der Amnesie
@@ -118,7 +118,7 @@
 %d Schriftrollen des Blinzelns
 %%%%
 %d scrolls of brand weapon
-%d Schriftrollen der Waffenmark
+%d Schriftrollen der Waffenprägung
 %%%%
 %d scrolls of enchant armour
 %d Schriftrollen der Rüstungsverzauberung
@@ -148,7 +148,7 @@
 %d Schriftrollen des Lärms
 %%%%
 %d scrolls of remove curse
-%d Schriftrollen des Segnens
+%d Schriftrollen des Fluchaufhebens
 %%%%
 %d scrolls of silence
 %d Schriftrollen der Stille
@@ -181,7 +181,7 @@
 %d Tränke der Anziehung
 %%%%
 %d potions of berserk rage
-%d Tränke der Berserker-Wut
+%d Tränke der Berserkerwut
 %%%%
 %d potions of brilliance
 %d Tränke der Brillanz
@@ -202,16 +202,16 @@
 %d Tränke des Fliegens
 %%%%
 %d potions of haste
-%d Tränke der Hast
+%d Tränke der Eile
 %%%%
 %d potions of heal wounds
-%d Heiltränke
+%d Tränke der Wundheilung
 %%%%
 %d potions of invisibility
 %d Tränke der Unsichtbarkeit
 %%%%
 %d potions of lignification
-%d Tränke der Verholzung
+%d Tränke der Lignifizierung
 %%%%
 %d potions of magic
 %d Tränke der Magie

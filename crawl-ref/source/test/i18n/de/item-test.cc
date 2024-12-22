@@ -67,7 +67,7 @@ const vector<string> expected = {
     "3 Schriftrollen beschriftet mit FOO",
 
     "eine Schriftrolle des Blinzelns",
-    "2 Schriftrollen des Segnens",
+    "2 Schriftrollen des Fluchaufhebens",
 
     "ein grüner Zaubertrank",
     "ein amethystfarbener Zaubertrank",
