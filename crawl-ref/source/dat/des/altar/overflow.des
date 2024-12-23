@@ -840,6 +840,7 @@ MONS:    plant, fungus, oklob plant, bush, toadstool
 KMONS:   S = sacred lotus
 KFEAT:   d = floor
 KFEAT:   S = w
+KFEAT:   C = c
 SUBST:   x = TTPPPPP.
 # Only make "oklob behind bushes" situation possible a bit deeper.
 : if you.absdepth() > 5 then
@@ -852,9 +853,11 @@ SUBST:   T = xt, U = xx
 SUBST:   " = .....5
 COLOUR:  . = green / none
 COLOUR:  ' = green
+TILE:    c = dngn_stone_wall_green
+TILE:    C = wall_stone_puffball
 : interest_check(_G)
 MAP
-ccccccccccccccccccccccc
+cccccccccCcCcCccccccccc
 cxxxxxxxxxxxxxxxxxxxxxc
 cxxxxxxxxxxxxxxPxxd3xxc
 cxxxxxxxxxxxxxxPddddxxc
@@ -863,18 +866,18 @@ cxxxxxxx.......xxPPxxxc
 cxxxxxx..ww.ww..xxPPxxc
 cxxxxx..www.www..xxxPxc
 cxxxx..wwww.wwww..xxxxc
-cxxxx.wwwww.wwwww.xxxxc
+Cxxxx.wwwww.wwwww.xxxxC
 cxxxx.wwww'''wwww.xxxxc
-cxxxx.wSww'_'wwSw.xxxxc
+Cxxxx.wSww'_'wwSw.xxxxC
 cxxxx.wwww'''wwww.xxxxc
-cxxxx.wwwwwwwwwww.xxxxc
+Cxxxx.wwwwwwwwwww.xxxxC
 cxxxx..wwwwwwwww..xxxxc
 cxxxxx..wwwwwww..xxxxxc
 cxxxxxx..wwwww..xxxxxxc
 cxxxxxxx.......xxxxxxxc
+cxxxxxxxxxC.Cxxxxxxxxxc
 cxxxxxxxxxc.cxxxxxxxxxc
-cxxxxxxxxxc.cxxxxxxxxxc
-ccccccccccc@ccccccccccc
+ccccccccCcC@CcCcccccccc
 ENDMAP
 
 NAME:   fedhas_ov_isle_minmay
@@ -2314,7 +2317,7 @@ ENDMAP
 NAME:    nicolae_qazlal_style_of_elements
 TAGS:    temple_overflow_qazlal temple_overflow_1 uniq_altar_qazlal
 TAGS:    no_trap_gen no_item_gen no_monster_gen transparent decor
-SHUFFLE: faew
+SHUFFLE: Cf / Da / Ee / Fw
 KPROP:   faew = no_tele_into
 KMASK:   faew = opaque
 KMONS:   f = fire elemental
@@ -2324,6 +2327,7 @@ KMONS:   w = water elemental
 KFEAT:   _ = altar_qazlal
 KFEAT:   f = lava
 KFEAT:   w = deep_water
+KFEAT:   CDEF = c
 MARKER:  a = lua:fog_machine { cloud_type = "thin mist", \
                                pow_min = 100, pow_max = 100, delay = 1, \
                                size = 1, walk_dist = 0, start_clouds = 1 }
@@ -2331,16 +2335,18 @@ MARKER:  e = lua:fog_machine { cloud_type = "sparse dust", \
                                pow_min = 100, pow_max = 100, delay = 1, \
                                size = 1, walk_dist = 0, start_clouds = 1 }
 : interest_check(_G)
+TILE:   C = wall_stone_scorched
+TILE:   DEF = wall_stone_gray
 MAP
-ccc.@.ccc
-cfn...nac
-cnn...nnc
+CCC.@.DDD
+Cfn...naD
+Cnn...nnD
 .........
 ...._....
 .........
-cnn...nnc
-cwn...nec
-ccc...ccc
+Fnn...nnE
+Fwn...neE
+FFF...EEE
 ENDMAP
 
 # general_overflow_altar cannot contain the power of Qazlal
@@ -3225,6 +3231,7 @@ TAGS:    decor uniq_altar_vehumet
 SHUFFLE: DEFHJKLM / FHDELMJK, DE, JK
 SUBST:   DJ = N, EKFHLM = ., N : cb
 KFEAT:   _ = altar_vehumet
+TILE:    c = wall_stone_scorched
 : interest_check(_G)
 MAP
      xxxxx

@@ -947,28 +947,32 @@ xG-G-G-
 ENDMAP
 
 # goal of this is to feel hidden in something, so no b seen from outside
-NAME: shapermc_ecumenical_altar_petra
-TAGS: transparent
+NAME:    shapermc_ecumenical_altar_petra
+TAGS:    transparent
 : if crawl.coinflip() then
-SUBST:  ' = pf......
-KMONS:  p = plant
-KMONS:  f = fungus
+KMONS:   p = plant
+KMONS:   f = fungus
+KFEAT:   C = c
+SHUFFLE: bB / cC / cC
+SUBST:   ' = f...
+TILE:    C = wall_stone_puffball
 : else
-NSUBST: ' = 3=^^. / .
-KFEAT:  ^ = web trap
+NSUBST:  ' = 3 = ^^. / .
+KFEAT:   ^ = web trap
 : end
+SUBST:   B = b
 : ecumenical_altar_setup(_G)
 MAP
  xxxxxx
 xxbbbbxx
 xbb_G'bx
-xbG''bbx
+xbG''bBx
 xb'b''bx
-xbbb''bx
+xbBb''bx
 xbb'''bx
-xb''bbbx
+xb''bBbx
 xbb''bxx
-xxbb''bx
+xxBb''bx
  xxG'Gxx
 ENDMAP
 

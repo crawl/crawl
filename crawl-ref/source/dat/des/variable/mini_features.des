@@ -486,8 +486,8 @@ ENDMAP
 NAME:  minmay_misc_feat_square
 TAGS:  transparent extra decor
 DEPTH: D, Depths
-SUBST: x = x.
-KPROP: x = no_tele_into
+SUBST: x = x'
+KPROP: x' = no_tele_into
 MAP
 .......
 .xxxxx.

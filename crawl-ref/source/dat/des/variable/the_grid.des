@@ -115,6 +115,9 @@ function the_grid_main_setup(e,no_doors)
   e.subst('Y = cb')
   e.subst('Z = vb')
   e.subst('Q = ccvb')
+  if you.in_branch("Depths") then
+    e.tile('v = dngn_metal_wall_magenta')
+  end
 end
 }}
 

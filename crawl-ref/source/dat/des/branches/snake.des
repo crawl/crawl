@@ -2074,7 +2074,7 @@ KMONS:  E = salamander mystic
 KMONS:  F = salamander tyrant
 SUBST:  E = El, H = EEEF, D = Dl
 NSUBST: ' = '''l
-
+TILE:   c = wall_stone_scorched
 MAP
     ccccccccccccccc
    ccccccccccccccccc
@@ -2321,6 +2321,7 @@ MONS:   naga / salamander / nothing w:5, naga warrior band
 NSUBST: D = . / x, E = . / x, F = . / x, H = . / x, J = . / x, K = . / x, \
         L = . / x, M = . / x, N = . / x, O = . / x, P = . / x, Q = . / x
 SUBST:  x = x:30 .
+TILE:   c : wall_stone_scorched / stone_wall_snake
 MAP
 cc...........cc
 ccDDDcJJJcEEEcc
@@ -2510,6 +2511,7 @@ KMONS:  L = salamander
 KFEAT:  L = l
 NSUBST: D = + / +c / +cc
 SUBST:  l = Ll, E : cGl
+TILE:   c = wall_stone_scorched
 MAP
 xx           xx
 xxx         xxx

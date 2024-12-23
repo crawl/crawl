@@ -2455,6 +2455,7 @@ TAGS:  no_pool_fixup
 DEPTH: D:4-, Depths
 : if you.in_branch("Depths") then
 MONS:  fire giant / frost giant / titan
+TILE:  c : wall_stone_scorched / stone_wall_depths
 : elseif you.absdepth () > 11 then
 MONS:  orc knight band
 : elseif you.absdepth () > 8 then
@@ -2510,19 +2511,20 @@ MONS:   occultist / sun demon, lich
 ITEM:   randbook / any scroll
 NSUBST: 1 = 1:1 / 1:. / * = 1.
 SUBST:  - = .lx
+TILE:   c = wall_stone_scorched
 : decorative_floor(_G, 'V', "broken floral vase")
 MAP
 llllll
 llllllllll
 .l-x-llllllllllllll
 @.+1xlxx-lllllllllll
-.lx.-l-1xlxx-lxxxxll
+.lx.-l-1xlxx-lcxxcll
 lll.llx...+1xlxddxll
 llx.xlll.l-.xlx22xll
 ll+1.l-x.lx..lx..xll
 llx--..1+l-.xlx..xll
 llllll-xxlx1+.+.Vxll
-llllllllll-xxlxxxxll
+llllllllll-xxlcxxcll
     llllllllllllllll
         lllllllllll
 ENDMAP
@@ -3114,7 +3116,7 @@ MARKER: O = lua:fog_machine { cloud_type = "flame", pow_min = 15, \
                               pow_max = 20, delay = 15, size = 2, \
                               walk_dist = 1, excl_rad = 1}
 TILE:   x = wall_catacombs
-TILE:   c = wall_stone_smooth
+TILE:   c = wall_stone_scorched
 MAP
   ..
  .xxd  ...

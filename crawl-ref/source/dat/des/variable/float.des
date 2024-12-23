@@ -3307,6 +3307,7 @@ KMONS:   )] = occultist / rakshasa w:5
 KITEM:   b = smoky gem
 KFEAT:   } = enter_depths
 :   end
+TILE:    c = wall_stone_scorched
 : else
 :   if you.where() ~= dgn.level_name(dgn.br_entrance("Zot")) then
 MONS:    juggernaut, hell knight, rakshasa, fire giant, flayed ghost
@@ -3901,6 +3902,7 @@ SUBST:  1 = q, 2 = r, 3 = s, 4 = t, 56 = u
 NSUBST: ! = 1:1 / 1:2 / *:?, | = 2:| / *:*
 SUBST:  } = Y, ] = $, ) = y
 FTILE:  ?_$|*yY12 = floor_depthstone
+TILE:   c = wall_stone_scorched
 : elseif you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
 SUBST:  } = Z, ] = $, ) = z, 1 = 9
 NSUBST: ! = 1:8 / 1:9 / 2  = 80
@@ -4669,17 +4671,19 @@ MONS:   kobold, endoplasm, jelly
 ITEM:   goblin skeleton / hobgoblin skeleton / rat skeleton / bat skeleton
 ITEM:   human skeleton, star_item
 KFEAT:  M = cache of meat
+KFEAT:  P = c
 NSUBST: ' = 3:1 / 5 = 1. / 1:% / 2 = %.
 NSUBST: " = 5:2 / 5 = 2' / 1:3 / 2 = 3` / 2:d / 3 = d` / *:`
 NSUBST: A = 2 = dAA` / 1:` / * = A`, B = 2 = dAA. / 1:` / * = A`
 NSUBST: C = 2 = dAA` / 1:` / * = A`, D = 2 = dAA` / 1:` / * = A`
 SUBST:  M = M..
-FTILE:  `ABCDd = floor_mud
-COLOUR: `ABCDd = brown
+TILE:   P = wall_stone_puffball
+FTILE:  `2ABCDd = floor_mud
+COLOUR: `2ABCDd = brown
 MAP
         xxxxxxxxxxxxx
-  xxxxxxxxxxxxxxxxxxx
- xxxxxxxxxxxx""""""xx
+  xxxxxxxxxxxxxxxxcPx
+ xxxxxxxxxxxx""""""cx
  xxx'''''Mxx+AAAAAAxx
 .xx'''''''x1x""""""xx
 .+.'''''''x.xBBBBBBxx
@@ -4687,8 +4691,8 @@ MAP
 .+.'''''x+x.xCCCCCCxx
 .xx'''''x.x.x""""""xx
  xxx''''x.x.xDDDDDDxx
- xxxxxxxxx.xx"""""exx
-  xxxxxxxxxxxxxxxxxxx
+ xxxxxxxxx.xx"""""ecx
+  xxxxxxxxxxxxxxxxcPx
         xxxxxxxxxxxxx
 ENDMAP
 
@@ -11433,6 +11437,7 @@ MARKER:  E = lua:fog_machine { \
 SUBST:   v = x
 : else
 CLEAR:   `
+TILE:    v = dngn_metal_wall_darkgray
 : end
 MARKER:  P = lua:transp_loc("trogsanc_entry")
 MARKER:  Q = lua:transp_dest_loc("trogsanc_entry")

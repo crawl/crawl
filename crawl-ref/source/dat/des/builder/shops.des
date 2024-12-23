@@ -1620,17 +1620,20 @@ KFEAT:    P = general shop type:Fire suffix:Supplies ; ring of fire | \
           any weapon ego:flaming w:30 | scroll of immolation | \
           randbook disc:fire w:20 | manual of fire magic w:1 | \
           any armour ego:fire_resistance w:30 | fire dragon scales w:5
+KFEAT:    C = c
 SUBVAULT: ' : nico_deadtrees
 MARKER:   O = lua:fog_machine { cloud_type = "black smoke", pow_min = 10, \
               pow_max = 20, delay = 40, size = 1, walk_dist = 0 }
+TILE:     c = wall_stone_gray
+TILE:     C = wall_stone_scorched
 MAP
-xxxxx@@xxxxx
+xxxCC@@ccxxx
 xx''....ttxx
 x''......ttx
 x'O.V..T.Ptx
 x''......ttx
 xx''....ttxx
-xxxxx@@xxxxx
+xxxCC@@ccxxx
 ENDMAP
 
 # Using a subvault so only these trees become dead trees.
@@ -1638,7 +1641,7 @@ ENDMAP
 NAME:   nicolae_sub_dead_trees
 TAGS:   unrand nico_deadtrees
 SUBST:  t = tt.
-COLOUR: t = lightgrey / darkgrey
+COLOUR: t = brown
 TILE:   t = dngn_tree_dead
 : set_feature_name("tree", "dead tree")
 MAP

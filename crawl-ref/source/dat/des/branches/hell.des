@@ -14,6 +14,7 @@ function hell_entry_feature(e, glyph)
     e.depth_chance("D:21-", 10000)
 -- end TAG_MAJOR_VERSION
     e.kfeat(glyph .. " = enter_hell")
+    e.tile("v = dngn_metal_wall_darkgray")
 end
 
 function hell_entry_tier(e, tier)

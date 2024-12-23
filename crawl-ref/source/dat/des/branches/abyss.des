@@ -1115,6 +1115,7 @@ ITEM:    randbook disc:fire numspells:1 / wand of flame charges:32 / \
 SHUFFLE: ABCDEF / ABCDEF / ABCDEF / ACEBDF / ACEBDF / GGGGGG
 SHUFFLE: 1234 / 1234 / 1234 / 1212 / 1212 / 1212 / 3434 / 3434 / 3434
 SUBST:   ACE = w, BDF = l, G : wl, x = x:50 cb
+TILE:    c = wall_stone_scorched
 MAP
 %2xxAAxxxx
 1.xx..xx2x

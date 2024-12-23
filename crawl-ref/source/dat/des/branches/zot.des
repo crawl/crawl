@@ -2602,6 +2602,7 @@ MONS:   efreet
 SUBST:  1=122, 3=322
 SUBST:  4 = 2:20 4:5 3:15 .:20
 SUBST:  G : G.
+TILE:   c = wall_stone_scorched
 : vault_metal_statue_setup(_G, "G", "fiery conduit")
 MAP
           lllll
@@ -2614,14 +2615,14 @@ MAP
   llll..xx2...2xx..llll
  llll..xx...5...xx..llll
  llll..x...2.2...x..llll
-llll...x.2xx+xx2.x...llll
-llll..Gx.xx444xx.xG..llll
-llll...x.x44444x.x...llll
- llll..x.x44F44x.x..llll
- llll..x.x44444x.x..llll
-  llll.x.xx444xx.x.llll
-  llll.x.1x...x1.x.llll
-   llllxxxx+++xxxxllll
+llll...x.2cc+cc2.x...llll
+llll..Gx.cc444cc.xG..llll
+llll...x.c44444c.x...llll
+ llll..x.c44F44c.x..llll
+ llll..x.c44444c.x..llll
+  llll.x.cc444cc.x.llll
+  llll.x.1c...c1.x.llll
+   llllxxxc+++cxxxllll
     llll333...333llll
      lllll.....lllll
        lllll.lllll

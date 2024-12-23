@@ -1345,7 +1345,14 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
     {
         if (orig == TILE_DNGN_STONE_WALL)
             orig = TILE_STONE_WALL_DEPTHS;
-        else if  (orig ==TILE_DNGN_GRANITE_STATUE)
+        else if (orig == TILE_DNGN_METAL_WALL)
+        {
+            if (!((gc.x + gc.y) % 3) == !((gc.x - gc.y) % 3))
+                orig = TILE_WALL_DEPTHS_METAL;
+            else
+                orig = TILE_WALL_DEPTHS_METAL_LEAFY;
+        }
+        else if  (orig == TILE_DNGN_GRANITE_STATUE)
         {
             int hash = hash3(gc.x * gc.x * 10, gc.y * gc.y * 10,
                              you.depth * gc.x * gc.y * 27);

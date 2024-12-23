@@ -2320,18 +2320,19 @@ DEPTH:  Lair
 MONS:   torpor snail
 KFEAT:  a = altar_cheibriados
 NSUBST: 1 = 1:1 / * = 1.
+TILE:   c = wall_stone_puffball
 MAP
  @
 x.x   xxxxxxxxx
 x.x  xx...1....@
 x.x xx.xxxxxxxx
-x.x x.xxbbbbbbxxxx
-x.xxx.xbbWWWWW...xx
-x.xx.xbbWbbbbbbxx.xxx
+x.xxx.xxbbbbbbxxxx
+x.xx..xbbWWWWW...xx
+x.cc.xbbWbbbbbbcc.xxx
 x...1.WWW1a1WWW..1...@
 xxx.xxbbbbbbWbbx.xxxx
-  xx...WWWWWbbx.xx
-   xxxxxbbbbbxx.x
+  xx...WWWWWbbx..x
+   xxxxxbbbbbxx.xx
    xxxxxxxxxxx.xx
   @.......1...xx
    xxxxxxxxxxxx
@@ -2732,18 +2733,19 @@ NAME:   nicolae_lair_lil_pond
 TAGS:   transparent ruin decor extra
 DEPTH:  Lair
 NSUBST: D = 1:. / *:x
-SUBST:  - = .W
+SUBST:  - = .W, c : cx
+TILE:   c = wall_stone_puffball
 MAP
 ............
 ....xxxx....
-..DDDxxxxx..
+..DDDxxxxc..
 ..x------x..
 .xx-wwww-xx.
 .xx-wwww-xx.
 .xx-wwww-xx.
 .xx-wwww-xx.
 ..x------x..
-..xxxxxxxx..
+..cxxxxxxc..
 ....xxxx....
 ............
 ENDMAP

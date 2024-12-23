@@ -902,6 +902,16 @@ wall_stone_depths2
 wall_stone_depths3
 wall_stone_depths4
 
+%weight 10
+wall_metal_depths0 WALL_DEPTHS_METAL
+wall_metal_depths1
+%weight 7
+wall_metal_depths2
+wall_metal_depths_leafy0 WALL_DEPTHS_METAL_LEAFY
+wall_metal_depths_leafy1
+wall_metal_depths_leafy2
+wall_metal_depths_leafy3
+
 zot_blue0 WALL_ZOT WALL_ZOT_BLUE
 zot_blue1
 zot_blue2
@@ -1923,8 +1933,17 @@ studio3
 studio4
 studio5
 
-mirrored_wall DNGN_MIRROR_WALL
+stone_wall_puffball0 WALL_STONE_PUFFBALL
+stone_wall_puffball1
+stone_wall_puffball2
+stone_wall_puffball3
 
+stone_wall_scorched0 WALL_STONE_SCORCHED
+stone_wall_scorched1
+stone_wall_scorched2
+stone_wall_scorched3
+
+mirrored_wall DNGN_MIRROR_WALL
 
 emerald1 WALL_EMERALD
 emerald2

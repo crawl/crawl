@@ -147,6 +147,8 @@
             e.mons("storm dragon / shadow dragon / bone dragon")
             e.mons("golden dragon w:15 / quicksilver dragon / iron dragon / " ..
                    "wyrmhole w:5 / pearl dragon w:1")
+            e.subst("x = c")
+            e.tile("c = wall_stone_scorched")
             e.subst("+ = ...+")
             e.subst("A = $")
             e.subst("B = $")
