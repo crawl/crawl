@@ -550,12 +550,9 @@ static const vector<pop_entry> population[] =
   {  5, 12,  260, FALL, MONS_SPHINX },
   {  5, 12,  260, FALL, MONS_WAR_GARGOYLE },
   {  5, 12,  300, FALL, MONS_POLTERGUARDIAN },
-  // V:5 chaff we should really get rid of
+  // V:5 chaff from earlier floors
   {  5,  5,  650, FLAT, MONS_ORC_KNIGHT },
-  {  5,  5,   60, FLAT, MONS_REDBACK },
-  {  5,  5,   60, FLAT, MONS_WOLF_SPIDER },
-  {  5,  5,   60, FLAT, MONS_HORNET },
-  {  5,  5,   60, FLAT, MONS_HARPY },
+  {  5,  5,  180, FLAT, MONS_FORMLESS_JELLYFISH },
   {  5,  5,   60, FLAT, MONS_DANCING_WEAPON },
   {  5,  5,   60, FLAT, MONS_GREAT_ORB_OF_EYES },
 
