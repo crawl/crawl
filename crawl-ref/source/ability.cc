@@ -3420,6 +3420,8 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
 
     case ABIL_TSO_SUMMON_DIVINE_WARRIOR:
         fail_check();
+        if (stop_summoning_prompt(MR_RES_POISON, M_FLIES))
+            return spret::abort;
         summon_holy_warrior(you.skill(SK_INVOCATIONS, 4), false);
         break;
 
