@@ -308,9 +308,9 @@ vector<map<string, string>> armour =
     },
     {
         {"en", "the +1 plate armour of Dice, Bag, and Bottle {Str+6 Int-3 Dex+4 SInv} (5390 gold)"},
-        {"nom", "die +1 Plattenrüstung von Würfel, Beutel, und Flasche {Stä+6 Int-3 Ges+4 UnsS} (5390 Gold)"},
-        {"acc", "die +1 Plattenrüstung von Würfel, Beutel, und Flasche {Stä+6 Int-3 Ges+4 UnsS} (5390 Gold)"},
-        {"dat", "der +1 Plattenrüstung von Würfel, Beutel, und Flasche {Stä+6 Int-3 Ges+4 UnsS} (5390 Gold)"},
+        {"nom", "die +1 Plattenrüstung von Würfel, Beutel und Flasche {Stä+6 Int-3 Ges+4 UnsS} (5390 Gold)"},
+        {"acc", "die +1 Plattenrüstung von Würfel, Beutel und Flasche {Stä+6 Int-3 Ges+4 UnsS} (5390 Gold)"},
+        {"dat", "der +1 Plattenrüstung von Würfel, Beutel und Flasche {Stä+6 Int-3 Ges+4 UnsS} (5390 Gold)"},
     },
     // plural
     {
