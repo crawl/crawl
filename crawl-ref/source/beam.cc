@@ -5553,7 +5553,7 @@ bool bolt::at_blocking_monster() const
     if (!pierce && !ignores_monster(mon) && mon->is_firewood())
         return true;
     if (have_passive(passive_t::neutral_slimes)
-        && never_harm_monster(agent(), mon)
+        && mons_is_slime(*mon)
         && flavour != BEAM_VILE_CLUTCH)
     {
         return true;
