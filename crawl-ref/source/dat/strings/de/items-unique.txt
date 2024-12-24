@@ -22,15 +22,15 @@ Die Kugel von Zot
 #################################
 %%%%
 the Singing Sword
-das singende Schwert
+das Singende Schwert
 %%%%
 # alternative name for the Singing Sword
 the Screaming Sword
-das schreiende Schwert
+das Schreiende Schwert
 %%%%
 # alternative name for the Singing Sword
 the Sulking Sword
-das schmollende Schwert
+das Schmollende Schwert
 %%%%
 the pair of quick blades "Gyre" and "Gimble"
 das Paar Schnellklingen "Gyre" und "Gimble"
@@ -42,7 +42,7 @@ the mace of Variability
 der Streitkolben der Variabilität
 %%%%
 the glaive of Prune
-die Gleve der Prünelle
+die Gleve der Pflaume
 %%%%
 the sword of Power
 das Schwert der Macht
@@ -75,7 +75,7 @@ the sceptre of Asmodeus
 das Zepter von Asmodeus
 %%%%
 the faerie dragon scales
-{pl}die Feen-Drachenschuppen
+{pl}die Feendrachenschuppen
 %%%%
 the demon blade "Bloodbane"
 die Dämonenklinge "Blutfluch"
@@ -87,7 +87,7 @@ the eveningstar "Brilliance"
 der Abendstern "Brillanz"
 %%%%
 the demon blade "Leech"
-die Dämonenklinge "Egel"
+die Dämonenklinge "Blutegel"
 %%%%
 the dagger of Chilly Death
 der Dolch des kühlen Todes
@@ -117,7 +117,7 @@ the arbalest "Damnation"
 die Armbrust "Verdammnis"
 %%%%
 the sword of the Doom Knight
-das Schwert des Verhängnis-Ritters
+das Schwert des Verhängnisritters
 %%%%
 the morningstar "Eos"
 der Morgenstern "Eos"
@@ -132,7 +132,7 @@ the mithril axe "Arga"
 die Mithrilaxt "Arga"
 %%%%
 the Elemental Staff
-der Elementarstecken
+der Elementarstab
 %%%%
 the heavy crossbow "Sniper"
 die schwere Armbrust "Scharfschütze"
@@ -144,7 +144,7 @@ the blowgun of the Assassin
 das Blasrohr des Assassinen
 %%%%
 the lance "Wyrmbane"
-die Lanze "Wyrmbane"
+die Lanze "Drachenfluch"
 %%%%
 the Spriggan's Knife
 das Messer des Spriggans
@@ -171,7 +171,7 @@ the storm bow
 der Sturmbogen
 %%%%
 the tower shield of Ignorance
-der Turmschild des Nichtwissens
+der Turmschild der Ignoranz
 %%%%
 the robe of Augmentation
 das Gewand der Augmentation
@@ -204,10 +204,10 @@ the skin of Zhor
 die Haut von Zhor
 %%%%
 the salamander hide armour
-die Salamanderhaut-Rüstung
+die Salamanderhautrüstung
 %%%%
 the pair of gauntlets of War
-das Paar Gantelets des Krieges
+das Paar Panzerhandschuhe des Krieges
 %%%%
 the shield of Resistance
 der Schild der Resistenz
@@ -303,10 +303,10 @@ the dragonskin cloak
 der Drachenhautumhang
 %%%%
 the Axe of Woe
-die Axt des Wehs
+die Axt des Leids
 %%%%
 the moon troll leather armour
-die Mondtroll-lederrüstung
+die Mondtrolllederrüstung
 %%%%
 the macabre finger necklace
 die makabere Fingerhalskette
@@ -324,7 +324,7 @@ the arc blade
 die Lichtbogenklinge
 %%%%
 the demon whip "Spellbinder"
-die Dämonenpeitsche "Verzauberer"
+die Dämonenpeitsche "Zauberbann"
 %%%%
 the lajatang of Order
 der Lajatang der Ordnung
@@ -351,7 +351,7 @@ the Kryia's mail coat
 der Schuppenpanzer von Kryia
 %%%%
 the frozen axe "Frostbite"
-die gefrorene Axt "Erfrierungen"
+die gefrorene Axt "Erfrierung"
 %%%%
 the armour of Talos
 die Rüstung von Talos
@@ -398,7 +398,7 @@ a golden staff
 %%%%
 # sceptre of Asmodeus
 a ruby sceptre
-{n}ein Rubin-Zepter
+{n}ein rubinrotes Zepter
 %%%%
 # dragonskin cloak
 an opalescent scaly cloak
@@ -415,7 +415,7 @@ an opalescent scaly cloak
 %%%%
 # sword of Cerebov
 a flamberge
-{m}ein Flamberg
+{m}ein Flamberge
 %%%%
 # heavy crossbow "Sniper"
 a heavy crossbow
