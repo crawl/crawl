@@ -3448,11 +3448,12 @@ tileidx_t tileidx_cloud(const cloud_info &cl)
 }
 
 #ifdef USE_TILE
-tileidx_t vary_bolt_tile(tileidx_t tile, const coord_def& origin, const coord_def& target)
+tileidx_t vary_bolt_tile(tileidx_t tile, const coord_def& origin,
+                         const coord_def& target, const coord_def& pos)
 {
     const coord_def diff = target - origin;
     const int dir = _tile_bolt_dir(diff.x, diff.y);
-    const int dist = diff.rdist();
+    const int dist = (pos - origin).rdist();
 
     return vary_bolt_tile(tile, dir, dist);
 }
