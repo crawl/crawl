@@ -334,7 +334,7 @@ Amulette der Regeneration
 
 %%%%
 wands of flame
-Zauberstäbe des Flammens
+Zauberstäbe der Flammen
 %%%%
 wands of paralysis
 Zauberstäbe der Paralyse
@@ -343,7 +343,7 @@ wands of digging
 Zauberstäbe des Grabens
 %%%%
 wands of iceblast
-Zauberstäbe des Eisstrahls
+Zauberstäbe des Eisblitzes
 %%%%
 wands of polymorph
 Zauberstäbe der Verwandlung
@@ -355,7 +355,7 @@ wands of acid
 Zauberstäbe der Säure
 %%%%
 wands of mindburst
-Zauberstäbe des Gehirnschlags
+Zauberstäbe des Kopfzerplatzens
 %%%%
 
 %%%%
