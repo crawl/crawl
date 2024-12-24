@@ -22,7 +22,9 @@
 #  if defined(__MACOSX__)
 #   include <OpenGL/glu.h>
 #  else
-#   include <GL/glu.h>
+#   ifndef USE_GLVND
+#    include <GL/glu.h>
+#   endif
 #  endif
 # endif
 #endif
@@ -386,7 +388,7 @@ void OGLStateManager::load_texture(unsigned char *pixels, unsigned int width,
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glDebug("glTexParameterf GL_TEXTURE_WRAP_T");
 #endif
-#ifndef USE_GLES
+#if !defined(USE_GLES) && !defined(USE_GLVND)
     if (mip_opt == MIPMAP_CREATE)
     {
         // TODO: should min react to Options.tile_filter_scaling?
