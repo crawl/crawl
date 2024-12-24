@@ -145,3 +145,5 @@ void unrand_reacts();
 void unrand_death_effects(monster* mons, killer_type killer);
 
 bool item_type_can_be_artefact(object_class_type typ);
+
+bool are_fixed_props_ok(item_def& item);
