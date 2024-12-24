@@ -677,6 +677,7 @@ static void _fire_spike_launcher(monster* target, const coord_def& origin)
     spike.seen = true;
     spike.range = 1;
     spike.hit_verb = "skewers";
+    spike.thrower = KILL_YOU;
 
     dungeon_feature_type feat = orig_terrain(origin);
     switch (feat)
