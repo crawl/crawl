@@ -20,10 +20,10 @@ DECIMAL_POINT
 "; "
 %%%%
 ", and "
-", und "
+" und "
 %%%%
 ", or "
-", oder "
+" oder "
 %%%%
 "; and "
 "; und "
@@ -222,13 +222,13 @@ the acid
 die Säure
 %%%%
 the entropic weave
-das entropisches Weben
+das entropische Weben
 %%%%
 Your corrosive artefact
 Dein ätzendes Artefakt
 %%%%
 Your corrupting presence
-Deine verderbliche Präsenz
+Deine verderbende Präsenz
 %%%%
 # a flying bit of exploded monster (used directly after monster explosion
 # message, so it will be obvious what it refers to)
