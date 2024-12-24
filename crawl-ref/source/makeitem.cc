@@ -362,16 +362,22 @@ bool is_weapon_brand_ok(int type, int brand, bool /*strict*/)
     return true;
 }
 
+// Choose a random weapon type compatible with any supplied brand and fixed
+// artprops. If no weapon type is compatible with both of these, use the last
+// chosen type, set no brand, and ignore the fixed artprops.
 static void _roll_weapon_type(item_def& item, int item_level)
 {
     for (int i = 0; i < 1000; ++i)
     {
         item.sub_type = _determine_weapon_subtype(item_level);
-        if (is_weapon_brand_ok(item.sub_type, item.brand, true))
+        if (is_weapon_brand_ok(item.sub_type, item.brand, true)
+            && are_fixed_props_ok(item))
+        {
             return;
+        }
     }
 
-    item.brand = SPWPN_NORMAL; // fall back to no brand
+    item.brand = SPWPN_NORMAL;
 }
 
 /// Plusses for a non-artefact weapon with positive plusses.
@@ -988,8 +994,11 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
         for (int i = 0; i < 1000; ++i)
         {
             item.sub_type = _get_random_armour_type(item_level);
-            if (is_armour_brand_ok(item.sub_type, item.brand, true))
+            if (is_armour_brand_ok(item.sub_type, item.brand, true)
+                && are_fixed_props_ok(item))
+            {
                 break;
+            }
         }
     }
 
@@ -1357,16 +1366,28 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
     }
 }
 
-static stave_type _get_random_stave_type()
+stave_type get_random_stave_type()
 {
-    stave_type r;
-    do
-    {
-        r = static_cast<stave_type>(random2(NUM_STAVES));
-    }
-    while (item_type_removed(OBJ_STAVES, r));
+    static vector<stave_type> valid_types;
+    if (valid_types.empty())
+        for (int i = STAFF_FIRST_STAFF; i < NUM_STAVES; i++)
+            if (!item_type_removed(OBJ_STAVES, (stave_type)i))
+                valid_types.push_back((stave_type)i);
 
-    return r;
+    return *random_iterator(valid_types);
+}
+
+// Choose a random stave type compatible with any fixed artprops. If no stave
+// type is compatible, we use the last chosen type and ignore the fixed
+// artprops.
+static void _roll_stave_type(item_def& item)
+{
+    for (int i = 0; i < 1000; ++i)
+    {
+        item.sub_type = get_random_stave_type();
+        if (are_fixed_props_ok(item))
+            return;
+    }
 }
 
 static void _try_make_staff_artefact(item_def& item, bool allow_uniques,
@@ -1402,7 +1423,7 @@ static void _generate_staff_item(item_def& item, bool allow_uniques,
                                  int force_type, int item_level, int agent)
 {
     if (force_type == OBJ_RANDOM)
-        item.sub_type = _get_random_stave_type();
+        _roll_stave_type(item);
     else
         item.sub_type = force_type;
 
@@ -1489,6 +1510,33 @@ static short _determine_ring_plus(int subtype)
     return _good_jewellery_plus(subtype);
 }
 
+// Choose a random ring type compatible with any fixed artprops. If no ring
+// type is compatible, we use the last chosen type and ignore the fixed
+// artprops.
+static void _roll_ring_type(item_def& item)
+{
+    for (int i = 0; i < 1000; ++i)
+    {
+        item.sub_type = get_random_ring_type();
+        if (are_fixed_props_ok(item))
+            return;
+    }
+}
+
+// Choose a random amulet type compatible with any fixed artprops. If no amulet
+// type is compatible, we use the last chosen type and ignore the fixed
+// artprops.
+static void _roll_amulet_type(item_def& item)
+{
+    for (int i = 0; i < 1000; ++i)
+    {
+        item.sub_type = get_random_amulet_type();
+        if (are_fixed_props_ok(item))
+            return;
+    }
+
+}
+
 static void _generate_jewellery_item(item_def& item, bool allow_uniques,
                                      int force_type, int item_level,
                                      int agent)
@@ -1500,23 +1548,20 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
     }
 
     // Determine subtype.
-    // Note: removed double probability reduction for some subtypes
     if (force_type != OBJ_RANDOM
+        // These values request a random ring or a random amulet, respectively.
         && force_type != NUM_RINGS
         && force_type != NUM_JEWELLERY)
     {
         item.sub_type = force_type;
     }
-    else
+    else if (force_type == NUM_RINGS
+             || force_type == OBJ_RANDOM && one_chance_in(4))
     {
-        if (force_type == NUM_RINGS)
-            item.sub_type = get_random_ring_type();
-        else if (force_type == NUM_JEWELLERY)
-            item.sub_type = get_random_amulet_type();
-        else
-            item.sub_type = (one_chance_in(4) ? get_random_amulet_type()
-                                              : get_random_ring_type());
+        _roll_ring_type(item);
     }
+    else
+        _roll_amulet_type(item);
 
     item.plus = _determine_ring_plus(item.sub_type);
 
@@ -1527,6 +1572,26 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
     {
         make_item_randart(item);
     }
+}
+
+jewellery_type get_random_amulet_type()
+{
+    static vector<jewellery_type> valid_types;
+    if (valid_types.empty())
+        for (int i = AMU_FIRST_AMULET; i < NUM_JEWELLERY; i++)
+            if (!item_type_removed(OBJ_JEWELLERY, (jewellery_type)i))
+                valid_types.push_back((jewellery_type)i);
+    return *random_iterator(valid_types);
+}
+
+jewellery_type get_random_ring_type()
+{
+    static vector<jewellery_type> valid_types;
+    if (valid_types.empty())
+        for (int i = RING_FIRST_RING; i < NUM_RINGS; i++)
+            if (!item_type_removed(OBJ_JEWELLERY, (jewellery_type)i))
+                valid_types.push_back((jewellery_type)i);
+    return *random_iterator(valid_types);
 }
 
 /// For a given dungeon depth (or item level), how much weight should we give
@@ -1577,19 +1642,30 @@ static int _talisman_level(int item_level)
     }
 }
 
-static int _pick_talisman_type(int force_type, int lvl)
+// Choose a random talisman type compatible with any fixed artprops. If no
+// talisman type is compatible, we use the last chosen type and ignore the
+// fixed artprops.
+static void _roll_talisman_type(item_def &item, int lvl)
 {
-    if (force_type != OBJ_RANDOM)
-        return force_type;
-
     random_picker<talisman_type, NUM_TALISMANS * 3 /*ew*/> picker;
-    return picker.pick(talisman_weights, lvl, NUM_TALISMANS);
+
+    for (int i = 0; i < 1000; ++i)
+    {
+        item.sub_type = picker.pick(talisman_weights, lvl, NUM_TALISMANS);
+        if (are_fixed_props_ok(item))
+            return;
+    }
 }
 
 static void _generate_talisman_item(item_def& item, int force_type, int item_level)
 {
     const int lvl = _talisman_level(item_level);
-    item.sub_type = _pick_talisman_type(force_type, lvl);
+
+    if (force_type != OBJ_RANDOM)
+        item.sub_type = force_type;
+    else
+        _roll_talisman_type(item, lvl);
+
     if (item_level == ISPEC_RANDART || x_chance_in_y(lvl, 270))
         make_item_randart(item);
 }
@@ -2060,37 +2136,6 @@ static bool _armour_is_visibly_special(const item_def &item)
         return true;
 
     return false;
-}
-
-
-jewellery_type get_random_amulet_type()
-{
-    static vector<jewellery_type> valid_types;
-    if (valid_types.empty())
-        for (int i = AMU_FIRST_AMULET; i < NUM_JEWELLERY; i++)
-            if (!item_type_removed(OBJ_JEWELLERY, (jewellery_type)i))
-                valid_types.push_back((jewellery_type)i);
-    return *random_iterator(valid_types);
-}
-
-static jewellery_type _get_raw_random_ring_type()
-{
-    static vector<jewellery_type> valid_types;
-    if (valid_types.empty())
-        for (int i = RING_FIRST_RING; i < NUM_RINGS; i++)
-            if (!item_type_removed(OBJ_JEWELLERY, (jewellery_type)i))
-                valid_types.push_back((jewellery_type)i);
-    return *random_iterator(valid_types);
-}
-
-jewellery_type get_random_ring_type()
-{
-    const jewellery_type j = _get_raw_random_ring_type();
-    // Adjusted distribution here. - bwr
-    if (j == RING_SLAYING && !one_chance_in(3))
-        return _get_raw_random_ring_type();
-
-    return j;
 }
 
 // Sets item appearance to match brands, if any.
