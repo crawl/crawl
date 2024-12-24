@@ -100,7 +100,7 @@ string get_skill_description(skill_type skill, bool need_title = false);
 void describe_skill(skill_type skill);
 
 int hex_chance(const spell_type spell, const monster_info* mon_owner);
-void describe_to_hit(const monster_info& mi, ostringstream &result,
+bool describe_to_hit(const monster_info& mi, ostringstream &result,
                      const item_def* weapon = nullptr, bool verbose = false,
                      attack *source = nullptr, int distance = 0);
 
