@@ -398,7 +398,7 @@ a golden staff
 %%%%
 # sceptre of Asmodeus
 a ruby sceptre
-{n}ein rubinrotes Zepter
+{n}ein rubinbesetztes Zepter
 %%%%
 # dragonskin cloak
 an opalescent scaly cloak
@@ -415,7 +415,7 @@ an opalescent scaly cloak
 %%%%
 # sword of Cerebov
 a flamberge
-{m}ein Flamberge
+{m}ein Flamberg
 %%%%
 # heavy crossbow "Sniper"
 a heavy crossbow
