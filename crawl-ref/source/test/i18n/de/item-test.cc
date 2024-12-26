@@ -114,9 +114,9 @@ vector<map<string, string>> weapons =
 {
     {
         {"en", "the lance \"Wyrmbane\""},
-        {"nom", "die Lanze \"Wyrmbane\""},
-        {"acc", "die Lanze \"Wyrmbane\""},
-        {"dat", "der Lanze \"Wyrmbane\""},
+        {"nom", "die Lanze \"Drachenfluch\""},
+        {"acc", "die Lanze \"Drachenfluch\""},
+        {"dat", "der Lanze \"Drachenfluch\""},
     },
     {
         {"en", "a lance"},
