@@ -3409,7 +3409,10 @@ bool gozag_potion_petition()
     you.attribute[ATTR_GOZAG_GOLD_USED] += prices[keyin];
 
     for (auto pot : *pots[keyin])
+    {
         potionlike_effect(static_cast<potion_type>(pot.get_int()), 40);
+        flash_tile(you.pos(), YELLOW, 120, TILE_BOLT_POTION_PETITION);
+    }
 
     for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
     {

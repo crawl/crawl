@@ -538,6 +538,8 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_ZAP,
     false,
     true,
+    TILE_BOLT_MEPHITIC_FLASK,
+    TILE_BOLT_DEFAULT_GREEN,
 },
 
 {

@@ -3864,7 +3864,8 @@ static void _do_player_potion()
     if (weights.empty())
         return;
 
-    flash_tile(you.pos(), random_choose(LIGHTBLUE, LIGHTGREEN, LIGHTMAGENTA));
+    flash_tile(you.pos(), random_choose(LIGHTBLUE, LIGHTGREEN, LIGHTMAGENTA),
+               120, TILE_BOLT_ALEMBIC_POTION);
 
     potion_type potion = *random_choose_weighted(weights);
 
@@ -3896,7 +3897,8 @@ static bool _do_monster_potion(monster& mons, monster& alembic)
 
     potion_type potion = *random_choose_weighted(weights);
 
-    flash_tile(mons.pos(), random_choose(LIGHTBLUE, LIGHTGREEN, LIGHTMAGENTA));
+    flash_tile(mons.pos(), random_choose(LIGHTBLUE, LIGHTGREEN, LIGHTMAGENTA),
+               60, TILE_BOLT_ALEMBIC_POTION);
 
     switch (potion)
     {

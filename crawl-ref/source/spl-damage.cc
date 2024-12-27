@@ -4903,6 +4903,15 @@ static map<beam_type, colour_t> concoction_colour =
     { BEAM_MMISSILE, YELLOW },
 };
 
+static map<beam_type, tileidx_t> concoction_tile =
+{
+    { BEAM_FIRE, TILE_BOLT_FULSOME_FIRE },
+    { BEAM_COLD, TILE_BOLT_FULSOME_ICE },
+    { BEAM_POISON_ARROW, TILE_BOLT_FULSOME_POISON },
+    { BEAM_ELECTRICITY, TILE_BOLT_FULSOME_ELECTRIC },
+    { BEAM_MMISSILE, TILE_BOLT_FULSOME_QUINTESSENCE },
+};
+
 static vector<pair<beam_type, int>> reaction_effects =
 {
     { BEAM_NONE, 200 },
@@ -4916,7 +4925,7 @@ static vector<pair<beam_type, int>> reaction_effects =
 
 static void _show_fusillade_explosion(map<coord_def, beam_type>& hit_map,
                                       vector<coord_def>& exp_map,
-                                      bool quick_anim)
+                                      coord_def center, bool quick_anim)
 {
     if (!(Options.use_animations & UA_BEAM))
         return;
@@ -4931,6 +4940,10 @@ static void _show_fusillade_explosion(map<coord_def, beam_type>& hit_map,
                        colour == YELLOW ? int{TILE_BOLT_IRRADIATE} : 0);
         }
     }
+
+    // Flash a visible flask at the center spot after the explosions.
+    flash_tile(center, concoction_colour[hit_map[center]], 0,
+                       concoction_tile[hit_map[center]]);
 
     animation_delay(quick_anim ? 0 : 50, true);
 }
@@ -5001,7 +5014,7 @@ static void _calc_fusillade_explosion(coord_def center, beam_type flavour,
 
     noisy(15, center, MID_PLAYER);
 
-    _show_fusillade_explosion(hit_map, exp_map, quick_anim);
+    _show_fusillade_explosion(hit_map, exp_map, center, quick_anim);
 }
 
 void fire_fusillade()

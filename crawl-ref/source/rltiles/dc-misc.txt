@@ -119,10 +119,27 @@ sting0 BOLT_STING
 sting1
 sting2
 
+meph_flask0 BOLT_MEPHITIC_FLASK
+meph_flask1
+meph_flask2
+meph_flask3
+
+alembic_potion0 BOLT_ALEMBIC_POTION
+alembic_potion1
+alembic_potion2
+alembic_potion3
+alembic_potion4
+
 irradiate0 BOLT_IRRADIATE
 irradiate1
 irradiate2
 irradiate3
+
+fulsome_fire BOLT_FULSOME_FIRE
+fulsome_ice BOLT_FULSOME_ICE
+fulsome_electric BOLT_FULSOME_ELECTRIC
+fulsome_poison BOLT_FULSOME_POISON
+fulsome_quintessence BOLT_FULSOME_QUINTESSENCE
 
 # Translocations bolts
 mystic_blast BOLT_MYSTIC_BLAST
@@ -235,6 +252,13 @@ shadow_shot4
 shadow_shot5
 shadow_shot6
 shadow_shot7
+
+potion_petition0 BOLT_POTION_PETITION
+potion_petition1
+potion_petition2
+potion_petition3
+potion_petition4
+potion_petition5
 
 haemoclasm0 BOLT_HAEMOCLASM
 haemoclasm1

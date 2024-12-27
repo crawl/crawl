@@ -6888,8 +6888,8 @@ const map<spell_type, explosion_sfx> spell_explosions = {
         "a raging storm",
     } },
     { SPELL_MEPHITIC_CLOUD, {
-        "The ball explodes into a vile cloud!",
-        "a loud \'bang\'",
+        "The flask of dizzying concoctions shatters into a vile cloud!",
+        "a loud shattering of glass",
     } },
     { SPELL_GHOSTLY_FIREBALL, {
         "The ghostly flame explodes!",
