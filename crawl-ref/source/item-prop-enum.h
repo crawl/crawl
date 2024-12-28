@@ -570,6 +570,7 @@ enum stave_type
     STAFF_POWER,
 #endif
     STAFF_FIRE,
+    STAFF_FIRST_STAFF = STAFF_FIRE,
     STAFF_COLD,
     STAFF_ALCHEMY,
 #if TAG_MAJOR_VERSION == 34

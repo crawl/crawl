@@ -704,6 +704,37 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, int prop_val,
     }
 }
 
+bool are_fixed_props_ok(item_def& item)
+{
+    if (!item.props.exists(FIXED_PROPS_KEY))
+        return true;
+
+    artefact_properties_t intrinsic_props;
+    intrinsic_props.init(0);
+    _populate_item_intrinsic_artps(item, intrinsic_props);
+
+    artefact_properties_t props;
+    props.init(0);
+
+    CrawlHashTable const *fixed_props;
+    fixed_props = &item.props[FIXED_PROPS_KEY].get_table();
+    for (auto const &kv : *fixed_props)
+    {
+        const auto prop = artp_type_from_name(kv.first);
+        const auto &final_val = kv.second.get_int();
+        const auto prop_val = final_val - intrinsic_props[prop];
+        if (!_artp_can_go_on_item(prop, prop_val, item, intrinsic_props,
+                                  props))
+        {
+            return false;
+        }
+
+        props[prop] = prop_val;
+    }
+
+    return true;
+}
+
 /// Generation info for a type of artefact property.
 struct artefact_prop_data
 {
