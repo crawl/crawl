@@ -14,6 +14,7 @@ generic_jiyva_mutation_1 GENERIC_JIYVA_MUTATION
 generic_jiyva_mutation_2
 generic_jiyva_mutation_3
 
+# Scales
 shaggy_fur_1 SHAGGY_FUR
 shaggy_fur_2
 shaggy_fur_3
@@ -48,6 +49,7 @@ yellow_scales_1 YELLOW_SCALES
 yellow_scales_2
 yellow_scales_3
 
+# Generic stats and magic
 strong_1 STRONG
 strong_2
 weak_1 WEAK
@@ -81,6 +83,7 @@ subdued_magic_3
 efficient_magic_1 EFFICIENT_MAGIC
 efficient_magic_2
 
+# Generic resists and vulnerabilities
 cold_res_1 COLD_RESISTANCE
 cold_res_2
 cold_res_3
@@ -102,7 +105,11 @@ elec_vuln SHOCK_VULNERABILITY
 strong_willed_1 STRONG_WILLED
 strong_willed_2
 strong_willed_3
+mutres_1 MUTATION_RESISTANCE
+mutres_2
+mutres_3
 
+# Generic aux slots
 fangs_1 FANGS
 fangs_2
 fangs_3
@@ -123,6 +130,7 @@ hooves_1 HOOVES
 hooves_2
 hooves_3
 
+# Good mutations also used by regular species
 camouflage_1 CAMOUFLAGE
 camouflage_2
 camouflage_3
@@ -130,27 +138,30 @@ passive_mapping_1 PASSIVE_MAPPING
 passive_mapping_2
 passive_mapping_3
 
-clarity CLARITY
+# Miscellaneous good mutations
 acute_vision ACUTE_VISION
-mutres_1 MUTATION_RESISTANCE
-mutres_2
-mutres_3
+clarity CLARITY
+ephemeral_shield EPHEMERAL_SHIELD
+mp_wands MP_WANDS
 passive_freeze PASSIVE_FREEZE
 regeneration_1 REGENERATION
 regeneration_2
 regeneration_3
-ephemeral_shield EPHEMERAL_SHIELD
 time_warped_blood_1 TIME_WARPED_BLOOD
 time_warped_blood_2
 
+# Generic bad mutations
 berserk_1 BERSERK
 berserk_2
 deterioration_1 DETERIORATION
 deterioration_2
 persistent_drain PERSISTENT_DRAIN
+scream_1 SCREAM
+scream_2
 teleport_1 TELEPORT
 teleport_2
 
+# Demonspawn mutations
 icemail_1 ICEMAIL
 icemail_2
 condensation_shield CONDENSATION_SHIELD
@@ -185,7 +196,13 @@ hurl_damnation HURL_DAMNATION
 silence_aura SILENCE_AURA
 word_of_chaos WORD_OF_CHAOS
 
+# Per-species effects mutations
+hop_1 HOP
+hop_2
 forlorn FORLORN
+flat_hp_1 FLAT_HP
+flat_hp_2
+flat_hp_3
 cold_blooded COLD_BLOODED
 acid_res ACID_RES
 acidic_bite ACIDIC_BITE
@@ -211,6 +228,7 @@ antimagic_bite ANTIMAGIC_BITE
 no_potion_heal_1 NO_POTION_HEAL
 no_potion_heal_2
 
+# Makhleb mutations
 major_destruction_of_cocytus MAJOR_DESTRUCTION_OF_COCYTUS
 major_destruction_of_dis MAJOR_DESTRUCTION_OF_DIS
 major_destruction_of_gehenna MAJOR_DESTRUCTION_OF_GEHENNA
@@ -226,6 +244,7 @@ mark_of_the_fanatic MARK_OF_THE_FANATIC
 mark_of_the_legion MARK_OF_THE_LEGION
 mark_of_the_tyrant MARK_OF_THE_TYRANT
 
+# Jiyva mutations
 engulf ENGULF
 eyeballs_1 EYEBALLS
 eyeballs_2
@@ -235,6 +254,8 @@ gelatinous_body_2
 gelatinous_body_3
 jelly_growth JELLY_GROWTH
 
+# Ru sacrifices
+missing_hand MISSING_HAND
 no_armour_skill NO_ARMOUR_SKILL
 no_dodging NO_DODGING
 no_stealth NO_STEALTH

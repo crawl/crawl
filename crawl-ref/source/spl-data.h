@@ -2116,7 +2116,7 @@ static const struct spell_desc spelldata[] =
     50,
     2, 3,
     0,
-    TILEG_DAZZLING_SPRAY,
+    TILEG_DAZZLING_FLASH,
 },
 
 {

@@ -795,6 +795,7 @@ MARKER: V = lua:fog_machine { \
 SUBST:  'V = .
 : decorative_floor(_G, 'M', "broken floral vase")
 TILE:   M = dngn_dark_flower_pot_broken
+TILE:   v = dngn_metal_wall_red
 :       vault_metal_statue_setup(_G, "g", "mystic cage")
 :       dgn.delayed_decay(_G, '%', 'human corpse / human skeleton')
 veto {{ return you.uniques("Jory") }}

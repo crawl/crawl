@@ -14,7 +14,6 @@ swiftness SWIFTNESS
 
 %sdir gui/spells/conjuration
 battlesphere BATTLESPHERE
-dazzling_spray DAZZLING_SPRAY
 force_lance FORCE_LANCE
 fulminant_prism FULMINANT_PRISM
 irradiate IRRADIATE
@@ -45,6 +44,7 @@ cause_fear CAUSE_FEAR
 confuse CONFUSE
 confusing_touch CONFUSING_TOUCH
 corona CORONA
+dazzling_flash DAZZLING_FLASH
 discord DISCORD
 enfeeble ENFEEBLE
 charming CHARMING
@@ -128,7 +128,6 @@ noxious_bog NOXIOUS_BOG
 olgrebs_toxic_radiance OLGREBS_TOXIC_RADIANCE
 poison_arrow POISON_ARROW
 poisonous_cloud POISONOUS_CLOUD
-spider_form SPIDER_FORM
 sting STING
 venom_bolt VENOM_BOLT
 
@@ -259,7 +258,6 @@ ink_cloud INK_CLOUD
 injury_bond INJURY_BOND
 iron_elementals IRON_ELEMENTALS
 launch_bomblet LAUNCH_BOMBLET
-legendary_destruction LEGENDARY_DESTRUCTION
 magma_barrage MAGMA_BARRAGE
 malmutate MALMUTATE
 march_of_sorrows MARCH_OF_SORROWS
@@ -353,6 +351,7 @@ drain_life DRAIN_LIFE
 druids_call DRUIDS_CALL
 funeral_dirge FUNERAL_DIRGE
 injury_mirror INJURY_MIRROR
+legendary_destruction LEGENDARY_DESTRUCTION
 malign_offering MALIGN_OFFERING
 prayer_of_brilliance PRAYER_OF_BRILLIANCE
 regeneration REGENERATION

@@ -136,6 +136,12 @@ plus2 NUM_PLUS2
 plus3 NUM_PLUS3
 plus4 NUM_PLUS4
 plus5 NUM_PLUS5
+plus6 NUM_PLUS6
+plus7 NUM_PLUS7
+plus8 NUM_PLUS8
+plus9 NUM_PLUS9
+plus10 NUM_PLUS10
+plus11 NUM_PLUS11
 
 %sdir misc/icons
 demon_pentagram1 DEMON_NUM1
