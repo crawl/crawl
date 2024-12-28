@@ -1145,8 +1145,17 @@ static void _get_randart_properties(const item_def &item,
         const artefact_prop_type prop = *prop_ptr;
 
         // Should we try to generate a good or bad version of the prop?
-        const bool can_gen_good = good > 0 && artp_potentially_good(prop);
-        const bool can_gen_bad = bad > 0 && artp_potentially_bad(prop);
+        const bool can_gen_good = good > 0
+            && artp_potentially_good(prop)
+            // When assigning a good property, we don't ever want to increase
+            // the already negative level of an assigned bad property.
+            && item_props[prop] >= 0;
+        const bool can_gen_bad = bad > 0
+            && artp_potentially_bad(prop)
+            // When assigning a bad property, we don't ever want to:
+            //   1) lower the already negative level of an assigned bad property.
+            //   2) lower the already positive level of an assigned good property.
+            && item_props[prop] == 0;
         const bool gen_good = can_gen_good && (!can_gen_bad || coinflip());
 
         if (gen_good)
