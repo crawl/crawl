@@ -102,7 +102,7 @@
        "ring of fire", "scroll of fear", "staff of fire", "fen folio",
        "ring of flight", "scroll of fog", "wand of flame",
        "manual of fighting", "amulet of faith", "manual of fire magic",
-       "manual of forgercraft", "book of the fortress" }
+       "manual of forgecraft", "book of the fortress" }
 
       elseif s == "G" then i = { "amulet of guardian spirit", "giant club",
        "giant spiked club", "book of geomancy", "granite talisman",
