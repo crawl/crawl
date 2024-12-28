@@ -2657,9 +2657,9 @@ A skeleton compelled to unlife by the exercise of necromancy.
 %%%%
 sky beast
 
-A strange aerial creature formed of fleshy clouds and sparkling electricity.
-It commands the faint wind currents of the Dungeon with every strike, which
-will buffet its victims in dramatic correlation to the amount of open air around
+A strange aerial creature formed of fleshy clouds and electric feathers. It
+commands the faint wind currents of the Dungeon with every strike, which will
+buffet its victims in dramatic correlation to the amount of open air around
 said prey.
 %%%%
 skyshark
