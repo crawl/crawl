@@ -2029,7 +2029,7 @@ Summon Seismosaurus Egg spell
 
 Summons the egg of a brutish lizard, just on the verge of hatching. So long as
 there are foes nearby and the caster remains adjacent to the egg, it will hatch
-several turns after being summoned to wreck havoc upon its summoner's foes.
+several turns after being summoned to wreak havoc upon its summoner's foes.
 
 Even as a juvenile, a seismosaurus is a force to be reckoned with. It is nearly
 as hardy as a mountain, and its footfalls are capable of creating violent
