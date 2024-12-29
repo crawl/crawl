@@ -982,9 +982,9 @@ static void _handle_boulder_movement(monster& boulder)
     {
         if (you.can_see(boulder))
         {
-            mprf("%s slams into a %s and falls apart!",
+            mprf("%s slams into %s and falls apart!",
                  boulder.name(DESC_THE).c_str(),
-                 feat_type_name(env.grid(targ)));
+                 article_a(feat_type_name(env.grid(targ))).c_str());
         }
         monster_die(boulder, KILL_NONE, true);
         return;

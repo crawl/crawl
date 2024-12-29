@@ -48,6 +48,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "end.h"
+#include "english.h"
 #include "tile-env.h"
 #include "errors.h"
 #include "player-save-info.h"
@@ -3199,8 +3200,8 @@ static bool _restore_game(const string& filename)
     if (!crawl_state.bypassed_startup_menu
         && menu_game_type != crawl_state.type)
     {
-        if (!yesno(("You already have a "
-                        + _type_name_processed(save_info.saved_game_type) +
+        auto atype = article_a(_type_name_processed(save_info.saved_game_type));
+        if (!yesno(("You already have " + atype +
                     " game saved under the name '" + save_info.name + "';\n"
                     "do you want to load that instead?").c_str(),
                    true, 'n'))
