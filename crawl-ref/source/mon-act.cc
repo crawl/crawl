@@ -1148,7 +1148,7 @@ static void _handle_hellfire_mortar(monster& mortar)
             if (i + 1 == path.size())
             {
                 simple_monster_message(mortar, " sinks back into the magma.");
-                monster_die(mortar, KILL_NON_ACTOR, true);
+                monster_die(mortar, KILL_NON_ACTOR, NON_MONSTER, true);
                 return;
             }
 
@@ -1162,18 +1162,21 @@ static void _handle_hellfire_mortar(monster& mortar)
             // die.
             if (env.grid(new_pos) != DNGN_LAVA || actor_at(new_pos))
             {
-                const string reason = actor_at(new_pos)
-                                        ? actor_at(new_pos)->name(DESC_THE).c_str()
-                                        : article_a(feat_type_name(env.grid(new_pos)));
-
                 if (you.can_see(mortar))
                 {
-                    mprf("%s collides with %s and sinks back into the magma.",
-                         mortar.name(DESC_THE).c_str(),
-                         reason.c_str());
+                    string barrier, collides = " collides with ", _and = " and";
+                    if (actor_at(new_pos))
+                        barrier = actor_at(new_pos)->name(DESC_THE);
+                    else if (cell_is_solid(new_pos))
+                        barrier = article_a(feat_type_name(env.grid(new_pos)));
+                    else
+                        collides = _and = "";
+
+                    mpr(mortar.name(DESC_THE) + collides + barrier + _and +
+                        " sinks back into the magma.");
                 }
 
-                monster_die(mortar, KILL_NON_ACTOR, true);
+                monster_die(mortar, KILL_NON_ACTOR, NON_MONSTER, true);
                 return;
             }
 
