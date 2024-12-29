@@ -1416,9 +1416,9 @@ static string _prompt_for_regex(const LookupType &lookup_type, string &err)
         : lookup_type.type == "spell" ? " Preface with '@' to search by school."
         : "";
     const string prompt = make_stringf(
-         "Describe a %s; partial names and regexps are fine.%s\n"
+         "Describe %s; partial names and regexps are fine.%s\n"
          "Describe what? ",
-         type.c_str(), extra.c_str());
+         article_a(type).c_str(), extra.c_str());
 
     char buf[80];
     if (msgwin_get_line(prompt, buf, sizeof(buf)) || buf[0] == '\0')

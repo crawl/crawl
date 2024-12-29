@@ -13,6 +13,7 @@
 
 #include "art-enum.h"
 #include "cloud.h"
+#include "english.h"
 #include "god-conduct.h"
 #include "god-passive.h"
 #include "god-wrath.h" // reduce_xp_penance
@@ -919,7 +920,7 @@ bool quaff_potion(item_def &potion)
     if (!was_known)
     {
         identify_item(potion);
-        mprf("It was a %s.", potion.name(DESC_QUALNAME).c_str());
+        mprf("It was %s.", article_a(potion.name(DESC_QUALNAME)).c_str());
     }
 
     const potion_type ptyp = static_cast<potion_type>(potion.sub_type);

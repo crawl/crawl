@@ -770,9 +770,9 @@ void yell(const actor* mon)
             }
             else
             {
-                mprf("You feel a %s rip itself from your throat, "
+                mprf("You feel %s rip itself from your throat, "
                      "but you make no sound!",
-                     shout_verb.c_str());
+                     article_a(shout_verb).c_str());
             }
         }
         else
