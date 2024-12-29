@@ -866,8 +866,7 @@ void hints_monster_seen(const monster& mon)
     if (is_tiles())
     {
         text +=
-            string("monster is a ") +
-            mon.name(DESC_PLAIN).c_str() +
+            "monster is " + mon.name(DESC_A) +
             ". You can learn about any monster by hovering your mouse over it,"
             " and read its description by <w>right-clicking</w> on it.";
     }

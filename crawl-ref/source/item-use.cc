@@ -4440,9 +4440,9 @@ bool read(item_def* scroll, dist *target)
         && which_scroll != SCR_AMNESIA
         && which_scroll != SCR_ACQUIREMENT)
     {
-        mprf("It %s a %s.",
+        mprf("It %s %s.",
              scroll->quantity < prev_quantity ? "was" : "is",
-             scroll_name.c_str());
+             article_a(scroll_name).c_str());
     }
 
     if (!alreadyknown)

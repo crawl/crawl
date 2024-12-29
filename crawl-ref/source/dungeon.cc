@@ -34,6 +34,7 @@
 #include "dgn-overview.h"
 #include "dgn-shoals.h"
 #include "end.h"
+#include "english.h"
 #include "fight.h"
 #include "files.h"
 #include "flood-find.h"
@@ -3599,7 +3600,7 @@ static void _place_traps()
         env.grid(ts.pos) = ts.feature();
         ts.prepare_ammo();
         env.trap[ts.pos] = ts;
-        dprf("placed a %s trap", trap_name(type).c_str());
+        dprf("placed %s trap", article_a(trap_name(type)).c_str());
     }
 
     if (player_in_branch(BRANCH_SPIDER))
@@ -6437,7 +6438,7 @@ static void _place_specific_trap(const coord_def& where, trap_spec* spec,
     env.grid(where) = trap_feature(spec_type);
     t.prepare_ammo(charges);
     env.trap[where] = t;
-    dprf("placed a %s trap", trap_name(spec_type).c_str());
+    dprf("placed %s trap", article_a(trap_name(spec_type)).c_str());
 }
 
 /**

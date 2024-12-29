@@ -1568,8 +1568,8 @@ bool stop_summoning_prompt(resists_t resists, monclass_flags_t flags,
     if (noun.empty())
         return false;
 
-    string prompt = make_stringf("Really %s while emitting a %s?",
-                                 verb.c_str(), noun.c_str());
+    string prompt = make_stringf("Really %s while emitting %s?",
+                                 verb.c_str(), article_a(noun).c_str());
 
     if (yesno(prompt.c_str(), false, 'n'))
         return false;
