@@ -1943,6 +1943,7 @@ int make_mons_armour(monster_type type, int level)
     case MONS_IRONBOUND_THUNDERHULK:
     case MONS_IRONBOUND_BEASTMASTER:
     case MONS_GRUNN:
+    case MONS_EROLCHA:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ANIMAL_SKIN;
         break;
@@ -2152,7 +2153,6 @@ int make_mons_armour(monster_type type, int level)
     case MONS_JESSICA:
     case MONS_KOBOLD_DEMONOLOGIST:
     case MONS_OGRE_MAGE:
-    case MONS_EROLCHA:
     case MONS_ARCANIST:
     case MONS_OCCULTIST:
     case MONS_ILSUIW:
