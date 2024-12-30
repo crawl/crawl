@@ -998,6 +998,11 @@ zot_blue3
 %resetcol
 
 %sdir dngn/wall
+wall_metal_zot0 DNGN_METAL_ZOT
+wall_metal_zot1
+wall_metal_zot2
+wall_metal_zot3
+
 crystal_wall_zot_0 CRYSTAL_WALL_ZOT
 crystal_wall_zot_1
 crystal_wall_zot_2

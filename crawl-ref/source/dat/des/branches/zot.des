@@ -164,15 +164,10 @@ TAGS:   no_monster_gen
 PLACE:  Depths:$
 ORIENT: float
 WEIGHT: 8
-SUBST:  b: v.., v: c.
-TILE:   X = wall_zot_magenta
-FTILE:  -ROD = floor_hall
-COLOUR: -RD = magenta
-COLOUR: X = lightmagenta
-SUBST:  X = x
-SUBST:  - = ., D = +
 KITEM:  R = midnight gem
 KFEAT:  O = enter_zot
+KFEAT:  D = +
+SUBST:  b : a.., a : c., v : xv
 # entry: 1, 2
 MONS:   place:Depths:1, place:Depths:$
 # easy: 3, 4
@@ -198,29 +193,34 @@ KMONS:  8 = quicksilver dragon
 # boss: 9, 0
 KMONS:  9 = nonbase draconian
 KMONS:  0 = golden dragon / wyrmhole w:2
+TILE:   x = wall_zot_magenta
+TILE:   v = dngn_metal_zot
+FTILE:  -ROD = floor_hall
+COLOUR: -R = magenta
+COLOUR: x = lightmagenta
 MAP
 ccc+ccccccccccccccccccc
-cvb.bvcccvb.bvccccccccc
+cab.bacccab.baccccccccc
 cb...bcccb.9.bccccccccc
 c.1.1.ccc.0...+.ccccccc
 cb222bcccb.9.bc..cccccc
-cvb.bvcccvb.bvcc..ccccc
+cab.bacccab.bacc..ccccc
 ccc+ccccccc+ccccc..cccc
 ccc.ccccccc.cccccc..ccc
-ccc+ccccccXDXcccccc+ccc
-cvb.bvcccXX-XXcccvb.bvc
-cb...bccXX---XXccb.8.bc
-c.3.3.ccX--O--Xcc.7.7.c
-cb444bccXX---XXccb...bc
-cvb.bvcccXXRXXcccvb.bvc
-ccc+ccccccXXXcccccc+ccc
+ccc+ccccccxDxcccccc+ccc
+cab.bacccxx-xxcccab.bac
+cb...bccxx---xxccb.8.bc
+c.3.3.ccv--O--vcc.7.7.c
+cb444bccxx---xxccb...bc
+cab.bacccxxRxxcccab.bac
+ccc+ccccccxvxcccccc+ccc
 ccc..ccccccccccccc..ccc
 cccc..ccccccccccc..cccc
-ccccc..ccvb.bvcc..ccccc
+ccccc..ccab.bacc..ccccc
 cccccc..cb.56bc..cccccc
 ccccccc.+.....+.ccccccc
 cccccccccb.56bccccccccc
-cccccccccvb.bvccccccccc
+cccccccccab.baccccccccc
 ccccccccccccccccccccccc
 ENDMAP
 
@@ -228,20 +228,22 @@ NAME:   evilmike_zot_entry_argh
 TAGS:   no_monster_gen zot_entry patrolling transparent
 SUBST:  G: GXm., m: mmlw
 KMONS:  O = nonbase draconian
-KMASK:  4 = opaque
 KFEAT:  m = iron_grate
-SUBST:  x: Xccv
+KFEAT:  V = v
+KFEAT:  X = x
+SUBST:  V : Vx, x : Xccv
 NSUBST: 2 = 2:2 / 1:R / *:-
-TILE:   X = wall_zot_magenta
+: zot_entry_setup(_G)
+MONS:   draconian stormcaller
+KMASK:  4 = opaque
 COLOUR: X = lightmagenta
-SUBST:  X = x
 COLOUR: . = white
 FTILE:  -12RO = floor_hall
-: zot_entry_setup(_G)
-MONS:    draconian stormcaller
+TILE:   X = wall_zot_magenta
+TILE:   V = dngn_metal_zot
 MAP
 xxxxxxxxxxxx@xxxxxxxxxxxx
-xxx........---........xxx
+xVx........---........xVx
 xxmmm.....G.-.G.....mmmxx
 x.m4m.......-.......m4m.x
 x.mmm...G...-...G...mmm.x
@@ -263,7 +265,7 @@ x..........---..........x
 x.mmm...G...-...G...mmm.x
 x.m4m.......-.......m4m.x
 xxmmm.....G.-.G.....mmmxx
-xxx........---........xxx
+xVx........---........xVx
 xxxxxxxxxxxx@xxxxxxxxxxxx
 ENDMAP
 
@@ -271,7 +273,7 @@ NAME:   evilmike_zot_entry_hall
 TAGS:   no_monster_gen patrolling
 KFEAT:  X = x
 COLOUR: X+- = magenta
-SUBST:  v: ....cnblw, z:..cnblw
+SUBST:  v : ....cnblw, z :..cnblw
 NSUBST: d = 1:0 / 4:1 / 2:2 / *:.
 SUBST:  D = +
 FTILE:  -OR+ = floor_hall
@@ -1949,31 +1951,33 @@ DEPTH:   Zot, !Zot:$
 ITEM:    mundane arbalest
 KFEAT:   ^ = alarm trap
 KFEAT:   C = altar_gozag
+KFEAT:   V = v
 SHUFFLE: opqrstu
 SUBST:   op = ., q : v.., r : v.., stu = v
 SUBST:   { = {([<d$
 NSUBST:  > = 1:})]>>>> / * : d$>C^
 TILE:    m = dngn_transparent_wall_white
+TILE:    V = dngn_metal_wall_darkgray
 MAP
 ............
 .vvvvvvvvv..
 .v..................
-.v.q.r.s.v..vv..v.t.
-.v..>v...v.....p.o..
-.v.rvvvq.v..v.v.>.v.
-.v...vm..v..v..o.p..
-.v.s.q...v......v...
+.v.q.r.s.v..vv..V.t.
+.v..>V...v.....p.o..
+.v.rVVVq.v..v.V.>.V.
+.v...Vm..v..v..o.p..
+.v.s.q...v......V...
 .v.......v..us....v.
 .v.vvvvvvt..vu.v.vv.
 ...........<..........
 ..........{...........
   .vv.v.uv..tvvvvvv.v.
   .v....su..v.......v.
-  ...v......v...q.s.v.
-  ..p.o..v..v..mv...v.
-  .v.>.v....v.qvvvr.v.
-  ..o.p..v..v...v>..v.
-  .t.v..vv..v.s.r.q.v.
+  ...V......v...q.s.v.
+  ..p.o..v..v..mV...v.
+  .V.>.V....v.qVVVr.v.
+  ..o.p..v..v...V>..v.
+  .t.V..vv..v.s.r.q.v.
   ..................v.
           ..vvvvvvvvv.
           ............
@@ -1986,33 +1990,35 @@ DEPTH:   Zot, !Zot:$
 ITEM:    mundane arbalest
 KFEAT:   ^ = alarm trap
 KFEAT:   C = altar_gozag
+KFEAT:   V = v
 SHUFFLE: opqrst
-SUBST:   op = ., q : vx.., r : vx.., st = v
+SUBST:   op = ., q : Vx.., r : Vx.., st = V
 NSUBST:  { = 1:{([<<<d$ / * : d$, } = 1:})]>>>>C / * : d$>^
 TILE:    m = dngn_transparent_wall_white
+TILE:    V = dngn_metal_wall_darkgray
 MAP
               .p.vvvvvvvvvvvv
               p...........m}v
               .............mv
-              v....vvvvv....v
-              v..vvv....vv..v
-              v..v..vvv..v..v
-              q..v.vv}vv.v..v
-              v..v...vv..v..v
-              v..vvv...vvv..v
-              v....vvvvv....v
+              v....VVVVV....v
+              v..VVV....VV..v
+              v..V..vvv..V..v
+              q..V.vv}vv.V..v
+              v..V...vv..V..v
+              v..VVV...VVV..v
+              v....VVVVV....v
             .................
 ............................o
 ..vvvvvvvvv.{.{..vvvvrvvvv.o.
-.v.v.v.v.r.v....
-v.o.v.v.v.v.v.
-vv.v.v.v.v.qv.
-v.v.v.v.v.v.v.
-vv.v.v.v.v.vv.
-v}v.v.v.v.v.v.
-vv.v.v.v.v.vv.
-v.v.v.v.v.p.v.
-vm.v}v.v.v.v..
+.v.V.V.V.r.v....
+v.o.V.V.V.V.v.
+vV.V.v.v.v.qv.
+v.V.v.v.v.V.v.
+vV.v.v.v.v.Vv.
+v}V.v.v.v.V.v.
+vV.V.v.v.V.Vv.
+v.V.V.V.V.p.v.
+vm.V}V.V.V.v..
 vvvvvvvvvvv...
 ENDMAP
 
@@ -3482,6 +3488,7 @@ MONS:    titan / lich / deep elf annihilator w:3 / deep elf high priest w:4 / \
 MONS:    nonbase draconian w:20 / protean progenitor / killer klown / \
          death cob / curse toe w:5 / ancient lich / dread lich / \
          electric golem / orb of fire w:5
+KFEAT:   V = v
 SHUFFLE: EF
 SUBST:   E : .
 SHUFFLE: ABCDF, GH / GH / GH / HG
@@ -3489,40 +3496,41 @@ NSUBST:  1 = 3:1 / 2:2 / 2:112 / 1:122, 0 = 3:1 / 2:2 / 2:112 / 1:122
 NSUBST:  3 = 3:3 / 2:4 / 2:334 / 1:344, 6 = 3:5 / 2:6 / 2:556 / 1:566
 SUBST:   % = $%, * = %:3 *:1, | = %:60 *:25 |:15, 1 = 1:3 ':2
 SUBST:   2 = 2:2 ':1, 3 = 3:4 ':1, 4 = 4:6 ':1, 5 = 5:6 ':1, 6 = 6:5 ':1
-SUBST:   A : v:4 .:1, B : v:7 .:3, C : v:1 .:4, DFH = .
-SUBST:   G : v:7 G:2 .:1, - : +., + : +:5 .:1, { : {:2 }:3 .:2
+SUBST:   A : V:4 .:1, B : V:7 .:3, C : V:1 .:4, DFH = .
+SUBST:   G : V:7 G:2 .:1, - : +., + : +:5 .:1, { : {:2 }:3 .:2
 NSUBST:  { = 1:{ / 1:( / 1:[ / 1:<, } = 1:} / 1:) / 1:] / 1:>
 SUBST:   ( = (:14 >:1 <:1 ):2, [ = [:14 >:1 <:1 ]:2, ) = ):70 >(, ] = ]:70 >[
 FTILE:   '$%*|123456+ = floor_vault
+TILE:    V = dngn_metal_wall_magenta
 : vault_metal_statue_setup(_G, "G", "silver statue")
 MAP
-       xx@@vvvvv@@xx
-      xx..vvvvvvv..xx
-      x..vvv6v6vvv..x
-     xx.vvv'*v*'vvv.xx
-    xx..vv3*|-|*3vv..xx
-   xx..Gvvvv+v+vvvvG..xx
- xxx..H.vv0$%-%$0vv.H..xxx
-xx...G...vv4$v$4vv...G...xx
-x..vvvv...vv'v'vv...vvvv..x
-@.vvvvvv.'1v...v1'.vvvvvv.@
-@vvv3v0vv1'..A..'1vv0v3vvv@
-vvv'*v$4vv.BC{DB.vv4$v*'vvv
-vv6*|+%$'..DEFEC..'$%+|*6vv
-vvvv-v-vv.A{F<F{A.vv-v-vvvv
-vv6*|+%$'..CEFED..'$%+|*6vv
-vvv'*v$4vv.BD{CB.vv4$v*'vvv
-@vvv3v0vv1'..A..'1vv0v3vvv@
-@.vvvvvv.'1v...v1'.vvvvvv.@
-x..vvvv...vv'v'vv...vvvv..x
-xx...G...vv4$v$4vv...G...xx
- xxx..H.vv0$%-%$0vv.H..xxx
-   xx..Gvvvv+v+vvvvG..xx
-    xx..vv3*|-|*3vv..xx
-     xx.vvv'*v*'vvv.xx
-      x..vvv6v6vvv..x
-      xx..vvvvvvv..xx
-       xx@@vvvvv@@xx
+       xx@@VVVVV@@xx
+      xx..VvvvvvV..xx
+      x..Vvv6v6vvV..x
+     xx.Vvv'*v*'vvV.xx
+    xx..Vv3*|-|*3vV..xx
+   xx..GVvvv+v+vvvVG..xx
+ xxx..H.Vv0$%-%$0vV.H..xxx
+xx...G...Vv4$v$4vV...G...xx
+x..VVVV...Vv'v'vV...VVVV..x
+@.VvvvvV.'1V...V1'.VvvvvV.@
+@Vvv3v0vV1'..A..'1Vv0v3vvV@
+Vvv'*v$4vV.BC{DB.Vv4$v*'vvV
+Vv6*|+%$'..DEFEC..'$%+|*6vV
+Vvvv-v-vv.A{F<F{A.vv-v-vvvV
+Vv6*|+%$'..CEFED..'$%+|*6vV
+Vvv'*v$4vV.BD{CB.Vv4$v*'vvV
+@Vvv3v0vV1'..A..'1Vv0v3vvV@
+@.VvvvvV.'1V...V1'.VvvvvV.@
+x..VVVV...Vv'v'vV...VVVV..x
+xx...G...Vv4$v$4vV...G...xx
+ xxx..H.Vv0$%-%$0vV.H..xxx
+   xx..GVvvv+v+vvvVG..xx
+    xx..Vv3*|-|*3vV..xx
+     xx.Vvv'*v*'vvV.xx
+      x..Vvv6v6vvV..x
+      xx..VvvvvvV..xx
+       xx@@VVVVV@@xx
 ENDMAP
 
 ####
@@ -3851,7 +3859,6 @@ KPROP:  -_ly"O> = no_tele_into
 MARKER: - = lua:fog_machine { cloud_type = "steam", walk_dist = 3, \
                               pow_max = 100, pow_min = 10, delay = 20, \
                               size = 1, start_clouds = 5, excl_rad = 0 }
-TILE:   v = dngn_metal_iron
 FTILE:  -_ = floor_pebble_darkgray
 : if crawl.coinflip() then
 :   vault_metal_statue_setup(_G, "G", "storm conduit")

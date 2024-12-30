@@ -1393,6 +1393,8 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
             else if (you.depth == 5)
                 orig = TILE_DNGN_STONE_WALL_LIGHTMAGENTA;
         }
+        else if (orig == TILE_DNGN_METAL_WALL)
+            orig = TILE_DNGN_METAL_ZOT;
         else if (orig == TILE_DNGN_GRANITE_STATUE)
         {
             int hash = hash3(gc.x * gc.x * 10, gc.y * gc.y * 10,
