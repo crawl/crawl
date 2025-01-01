@@ -5851,6 +5851,7 @@ bool uskayaw_line_pass()
     line_pass.range = range;
     line_pass.ench_power = pow;
     line_pass.pierce = true;
+    line_pass.aimed_at_spot = true;
 
     while (1)
     {
