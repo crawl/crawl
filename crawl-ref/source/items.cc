@@ -2056,11 +2056,9 @@ static bool _merge_evokers(const item_def &it, int &inv_slot, bool quiet)
         }
 
         if (you.inv[inv_slot].plus + it.plus +1 > MAX_EVOKER_ENCHANT)
-        {
             continue;
 
         you.inv[inv_slot].plus += it.plus +1;
-        }
 
         if (!quiet)
         {
