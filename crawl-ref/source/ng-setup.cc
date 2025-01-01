@@ -331,6 +331,9 @@ void give_items_skills(const newgame_def& ng)
         if (!you_worship(GOD_XOM))
             you.piety_max[you.religion] = you.piety;
     }
+
+    if (crawl_state.game_is_descent())
+        you.attribute[ATTR_VOUCHER] = 1;
 }
 
 static void _setup_tutorial_miscs()

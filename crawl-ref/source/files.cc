@@ -2224,12 +2224,6 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (load_mode != LOAD_VISITOR)
         you.set_level_visited(level_id::current());
 
-    // Markers must be activated early, since they may rely on
-    // events issued later, e.g. DET_ENTERING_LEVEL or
-    // the DET_TURN_ELAPSED from update_level.
-    if (make_changes || load_mode == LOAD_RESTART_GAME)
-        env.markers.activate_all();
-
     const bool descent_downclimb = crawl_state.game_is_descent()
                                    && feat_stair_direction(stair_taken) == CMD_GO_DOWNSTAIRS
                                    && !feat_is_descent_exitable(stair_taken);
@@ -2237,6 +2231,15 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                               && !feat_is_escape_hatch(stair_taken)
                               && stair_taken != DNGN_TRAP_SHAFT
                               && old_level.branch == you.where_are_you;
+
+    // Markers must be activated early, since they may rely on
+    // events issued later, e.g. DET_ENTERING_LEVEL or
+    // the DET_TURN_ELAPSED from update_level.
+    if (make_changes || load_mode == LOAD_RESTART_GAME)
+    {
+        bool message = !(load_mode == LOAD_RESTART_GAME && descent_peek);
+        env.markers.activate_all(message);
+    }
 
     if (make_changes && env.elapsed_time && !just_created_level && !descent_peek)
         update_level(you.elapsed_time - env.elapsed_time);

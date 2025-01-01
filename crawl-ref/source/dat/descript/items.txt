@@ -1414,6 +1414,14 @@ archmage who first built the Elven Halls. Countless generations of elves
 flocked to learn from her, but her foremost pursuit was always the perfection
 of this piece of art.
 %%%%
+shop voucher
+
+A coupon good for one item of any price from any store in the dungeon, to be
+used automatically when you would make a purchase that exceeds your funds. How
+generous! No refunds. One coupon per purchase per customer. Offer limited by
+availability. Void if defaced or otherwise altered. Valid only within the
+dungeon of Zot and its subsidiary branches. Additional purchase not required.
+%%%%
 shortbow
 
 A curved piece of wood and string, for shooting arrows.

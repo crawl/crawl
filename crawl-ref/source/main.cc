@@ -1818,7 +1818,12 @@ static void _do_cycle_quiver(int dir)
 static void _do_list_gold()
 {
     if (shopping_list.empty())
+    {
         mprf("You have %d gold piece%s.", you.gold, you.gold != 1 ? "s" : "");
+        int vouchers = you.attribute[ATTR_VOUCHER];
+        if (vouchers > 0)
+            mprf("You also have %d voucher%s.", vouchers, vouchers > 1 ? "s" : "");
+    }
     else
         shopping_list.display();
 }

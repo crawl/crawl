@@ -1554,7 +1554,8 @@ bool is_stackable_item(const item_def &item)
 #endif
             return true;
         case OBJ_MISCELLANY:
-            return item.sub_type == MISC_ZIGGURAT;
+            return item.sub_type == MISC_ZIGGURAT
+                    || item.sub_type == MISC_SHOP_VOUCHER;
         default:
             break;
     }
@@ -1866,6 +1867,16 @@ static void _get_book(item_def& it)
         mprf("You pick up %s and begin studying.", it.name(DESC_A).c_str());
     you.skill_manual_points[sk] += it.skill_points;
     you.skills_to_show.insert(sk);
+}
+
+static void _get_voucher(item_def& it)
+{
+    if (it.sub_type != MISC_SHOP_VOUCHER)
+        return;
+
+    you.attribute[ATTR_VOUCHER]++;
+
+    taken_new_item(it.base_type);
 }
 
 // Adds all books in the player's inventory to library.
@@ -2236,6 +2247,11 @@ static bool _merge_items_into_inv(item_def &it, int quant_got,
     if (it.base_type == OBJ_BOOKS)
     {
         _get_book(it);
+        return true;
+    }
+    if (it.base_type == OBJ_MISCELLANY && it.sub_type == MISC_SHOP_VOUCHER)
+    {
+        _get_voucher(it);
         return true;
     }
     // Runes and gems are also massless.
