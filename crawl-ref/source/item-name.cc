@@ -1852,6 +1852,8 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     {
         if (!dbname && item_typ == MISC_ZIGGURAT && you.zigs_completed > 0)
             buff << "+" << you.zigs_completed << " ";
+        else if (!dbname)
+            buff << "+" << plus << " ";
 
         buff << misc_type_name(item_typ);
 

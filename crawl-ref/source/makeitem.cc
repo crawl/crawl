@@ -1601,12 +1601,10 @@ static void _generate_talisman_item(item_def& item, int force_type, int item_lev
 misc_item_type get_misc_item_type(int force_type, bool exclude)
 {
     if (force_type != OBJ_RANDOM)
-    {
-        if (exclude && you.generated_misc.count((misc_item_type)force_type))
-            return NUM_MISCELLANY;
         return (misc_item_type)force_type;
-    }
+
     set<misc_item_type> choices;
+
     if (exclude)
     {
         choices = {
@@ -1616,8 +1614,6 @@ misc_item_type get_misc_item_type(int force_type, bool exclude)
             MISC_PHANTOM_MIRROR,
             (misc_item_type)item_for_set(ITEM_SET_AREA_MISCELLANY)
         };
-        for (auto it : you.generated_misc)
-            choices.erase(it);
     }
     else
     {
@@ -1636,26 +1632,6 @@ misc_item_type get_misc_item_type(int force_type, bool exclude)
     return NUM_MISCELLANY;
 }
 
-// May also be called when a wanderer gets assigned a misc evoker at start
-void handle_generated_misc(misc_item_type typ)
-{
-    switch (typ)
-    {
-    case MISC_SACK_OF_SPIDERS:
-    case MISC_BOX_OF_BEASTS:
-    case MISC_LIGHTNING_ROD:
-    case MISC_PHIAL_OF_FLOODS:
-    case MISC_PHANTOM_MIRROR:
-    case MISC_TIN_OF_TREMORSTONES:
-    case MISC_CONDENSER_VANE:
-    case MISC_GRAVITAMBOURINE:
-        you.generated_misc.insert(typ);
-        break;
-    default:
-        break;
-    }
-}
-
 static void _generate_misc_item(item_def& item, int force_type, int item_level)
 {
     const auto typ = get_misc_item_type(force_type);
@@ -1666,7 +1642,6 @@ static void _generate_misc_item(item_def& item, int force_type, int item_level)
         return;
     }
     item.sub_type = typ;
-    handle_generated_misc(typ);
 }
 
 /**
