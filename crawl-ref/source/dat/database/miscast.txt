@@ -440,7 +440,7 @@ forgecraft miscast player
 You lose structural integrity
 
 You feel yourself deconstruct slightly
-%%%%%
+%%%%
 forgecraft miscast monster
 
 @The_monster@ loses structural integrity
