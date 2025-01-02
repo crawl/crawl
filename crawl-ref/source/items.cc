@@ -3024,7 +3024,8 @@ static int _autopickup_subtype(const item_def &item)
     case OBJ_JEWELLERY:
     case OBJ_POTIONS:
     case OBJ_STAVES:
-        return item_type_known(item) ? item.sub_type : max_type;
+        return item_type_known(item.base_type, item.sub_type) ? item.sub_type
+                                                              : max_type;
     case OBJ_BOOKS:
         if (item.sub_type == BOOK_MANUAL)
             return item.sub_type;
