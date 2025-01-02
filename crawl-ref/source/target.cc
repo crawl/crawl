@@ -699,6 +699,13 @@ bool targeter_transference::valid_aim(coord_def a)
     return true;
 }
 
+bool targeter_transference::affects_monster(const monster_info& mon)
+{
+    return !mons_is_hepliaklqana_ancestor(mon.type)
+            && !mons_class_is_stationary(mon.type)
+            && !mons_is_tentacle_or_tentacle_segment(mon.type);
+}
+
 targeter_permafrost::targeter_permafrost(const actor &act, int power) :
     targeter_smite(&act)
 {
