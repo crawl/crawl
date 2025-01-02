@@ -465,29 +465,16 @@ static int _mons_offhand_weapon_index(const monster* m)
 item_def *monster::weapon(int which_attack) const
 {
     const mon_attack_def attk = mons_attack_spec(*this, which_attack);
-    if (attk.type != AT_HIT && attk.type != AT_WEAP_ONLY)
-        return nullptr;
 
-    // Even/odd attacks use main/offhand weapon.
-    if (which_attack > 1)
-        which_attack &= 1;
+    const int weap = inv[MSLOT_WEAPON];
+    item_def *main_weapon = weap == NON_ITEM ? nullptr : &env.item[weap];
 
-    // This randomly picks one of the wielded weapons for monsters that can use
-    // two weapons. Not ideal, but better than nothing. fight.cc does it right,
-    // for various values of right.
-    int weap = inv[MSLOT_WEAPON];
+    const int offhand = _mons_offhand_weapon_index(this);
+    item_def *offhand_weapon = offhand == NON_ITEM ? nullptr
+                                                   : &env.item[offhand];
 
-    if (which_attack && mons_wields_two_weapons(*this))
-    {
-        const int offhand = _mons_offhand_weapon_index(this);
-        if (offhand != NON_ITEM
-            && (weap == NON_ITEM || which_attack == 1 || coinflip()))
-        {
-            weap = offhand;
-        }
-    }
-
-    return weap == NON_ITEM ? nullptr : &env.item[weap];
+    return mons_weapon_for_attack(attk.type, mons_wields_two_weapons(*this),
+                                  which_attack, main_weapon, offhand_weapon);
 }
 
 /**
