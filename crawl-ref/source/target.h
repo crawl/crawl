@@ -148,6 +148,7 @@ class targeter_transference : public targeter_smite
 public:
     targeter_transference(const actor *act, int aoe);
     bool valid_aim(coord_def a) override;
+    bool affects_monster(const monster_info& mon) override;
 };
 
 class targeter_inner_flame : public targeter_smite
