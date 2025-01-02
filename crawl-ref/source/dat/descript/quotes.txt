@@ -1572,7 +1572,11 @@ ring of slaying
 %%%%
 ring of stealth
 
-<ring>
+“Then as part of the game
+ She completely forgot where she'd hidden herself
+ And she spent the rest of her time
+ Trying to find the parts”
+    -Howard Jones, “Hide and Seek”. 1984.
 %%%%
 ring of strength
 
