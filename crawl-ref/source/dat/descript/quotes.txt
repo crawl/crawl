@@ -386,7 +386,7 @@ Alistair's Walking Alembic spell
 
 Despite its unwieldy appearance, it is widely considered Alistair's most popular
 work; countless variations of this spell can be found in surface libraries,
-customized to prepare everything from floor polish to vegetable soup. In the
+customised to prepare everything from floor polish to vegetable soup. In the
 depths of the dungeon, however, most mages favor the combat utility of the
 classic iteration.
 %%%%
