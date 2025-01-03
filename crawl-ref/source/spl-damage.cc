@@ -3842,6 +3842,10 @@ spret cast_searing_ray(actor& agent, int pow, bolt &beam, bool fail)
     else
         agent.props.erase(SEARING_RAY_MID_KEY);
 
+    // Announce lock-on, if this causes one.
+    if (targ && !beam.aimed_at_spot && agent.is_player())
+        mprf("You focus your ray upon %s.", targ->name(DESC_THE).c_str());
+
     if (agent.is_player())
         start_channelling_spell(SPELL_SEARING_RAY, "maintain the ray");
     else
