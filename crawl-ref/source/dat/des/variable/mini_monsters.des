@@ -1424,6 +1424,51 @@ MAP
      x3
 ENDMAP
 
+# Original by Lemuel - Stranded yaks
+NAME:   lemuel_tekkud_yak_island
+TAGS:   no_pool_fixup no_monster_gen
+DEPTH:  Lair:2-, Swamp, !Swamp:$, Shoals
+WEIGHT: 5
+: if crawl.coinflip() then
+SUBST:  - = W , > = .
+: else
+SUBST:  - = w
+: end
+NSUBST: . = 6:1 / 1:2 / 1:% / *:.
+: if you.branch() == "Lair" then
+MONS:   yak w:8 / dream sheep w:20 / death yak w:20 / elephant / catoblepas w:2
+MONS:   catoblepas w:25 / dream sheep band / yak band w:15 / elephant band
+SUBST:  W = W:30 .
+: elseif you.branch() == "Swamp" then
+MONS:   spectral death yak w:25 / spectral catoblepas / spectral dream sheep w:5 /\
+        spectral centaur warrior / spectral yaktaur / spectral dire elephant w:5
+NSUBST: . = 2:1 / 1:$ / *:WW.
+SUBST:  2 = 1
+: elseif you.branch() == "Shoals" and you.depth() < 4 then
+MONS:   death yak w:30 / dream sheep w:15 / catoblepas / centaur / centaur warrior w:20
+MONS:   yaktaur ; arbalest good_item / death yak band / cyclops band w:20
+NSUBST: . = 1:1 / 1:$ / *:.
+: else -- Shoals:4
+MONS:   death yak / catoblepas / centaur warrior w:15 / yaktaur w:15
+MONS:   apis / stone giant / yaktaur captain
+NSUBST: . = 2:1 / 2:$ / 1:% / *:.
+: end
+MAP
+   WWWWWWWWW
+  WWWWWwWWWWW
+ WWWWwwwwwWWWW
+WWWwwwwwwwwwWWW
+WWwwww...wwwwWW
+WWwww.....wwwWW
+Wwwww..>..wwwwW
+WWwww.....wwwWW
+WWww--...wwwwWW
+WWW---wwwwwwWWW
+ WWWWwwwwwWWWW
+  WWWWWwWWWWW
+   WWWWWWWWW
+ENDMAP
+
 ###############################################################################
 #
 # <<3>> Humanoids
