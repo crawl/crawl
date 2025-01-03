@@ -1082,7 +1082,10 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         mon->mname = mg.mname;
 
     if (mg.props.exists(MGEN_NUM_HEADS))
+    {
         mon->num_heads = mg.props[MGEN_NUM_HEADS];
+        mon->props[OLD_HEADS_KEY] = mon->num_heads;
+    }
     if (mg.props.exists(MGEN_BLOB_SIZE))
         mon->blob_size = mg.props[MGEN_BLOB_SIZE];
     if (mg.props.exists(MGEN_TENTACLE_CONNECT))
