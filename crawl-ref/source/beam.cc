@@ -4578,6 +4578,11 @@ bool bolt::ignores_player() const
         return true;
     }
 
+    // XXX: Mostly to stop the targeter being weird with trying to keep you
+    //      out of splash damage.
+    if (origin_spell == SPELL_MERCURY_ARROW && agent() && agent()->is_player())
+        return true;
+
     if (origin_spell == SPELL_HOARFROST_BULLET && is_explosion
         && agent() && agent()->wont_attack())
     {
