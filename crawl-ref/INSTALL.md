@@ -88,6 +88,11 @@ libfreetype6-dev libpng-dev fonts-dejavu-core advancecomp pngcrush
 
 Then follow [the above compilation steps](#compiling).
 
+Note: Ubuntu 24.04+ and related distros (such as Pop!_OS 24.04) may require a few more packages: 
+```sh
+sudo apt install libglu1-mesa libglu1-mesa-dev
+```
+
 ### Fedora
 
 These instructions may work for other RPM-based distros.
@@ -598,6 +603,11 @@ To solve this, run:
 
 If this doesn't resolve the problem, you can try creating `util/release_ver`
 manually, with contents along the lines of `0.31-a0`.
+
+When compiling on Ubuntu 24.04+, you may run into build errors like:
+    glwrapper-ogl.cc:25:13: fatal error: GL/glu.h: No such file or directory
+       25 | #   include <GL/glu.h>
+See the Ubuntu section; you likely need to install libglu1-mesa and libglu1-mesa-dev
 
 ## Getting Help
 
