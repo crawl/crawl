@@ -14,7 +14,7 @@ jobs:
       contents: read #  to fetch code (actions/checkout)
 
     name: Code Linting
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
       - name: Checkwhite
@@ -29,7 +29,7 @@ jobs:
       contents: write #  for release creation (svenstaro/upload-release-action)
 
     name: Source Packages ${{ matrix.arch }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     if: github.event.release.tag_name != null
     steps:
       - uses: actions/checkout@v3
@@ -54,7 +54,7 @@ jobs:
       contents: read #  to fetch code (actions/checkout)
 
     name: Linux ${{ matrix.compiler }} ${{ matrix.build_opts }} ${{ matrix.debug }} ${{ matrix.build_all }} tag_upgrade=${{ matrix.tag_upgrade }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         compiler:
@@ -171,7 +171,7 @@ jobs:
       contents: write #  for release creation (svenstaro/upload-release-action)
 
     name: Linux AppImage ${{ matrix.build_type }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     if: github.event.release.tag_name != null
     strategy:
       matrix:
@@ -222,7 +222,7 @@ jobs:
       contents: write #  for release creation (svenstaro/upload-release-action)
 
     name: Debian Packages ${{ matrix.arch }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     if: github.event.release.tag_name != null
     steps:
       - uses: actions/checkout@v3
@@ -378,7 +378,7 @@ jobs:
       contents: write #  for release creation (svenstaro/upload-release-action)
 
     name: mingw64 ${{ matrix.build_type }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         build_type:
@@ -452,7 +452,7 @@ jobs:
       contents: read #  to fetch code (actions/checkout)
 
     name: Catch2 (GCC/Linux) + Codecov
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
         with:
@@ -535,7 +535,7 @@ jobs:
       contents: read #  to fetch code (actions/checkout)
 
     name: Build headers ${{ matrix.compiler }} ${{ matrix.build_opts }} ${{ matrix.debug }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         compiler:
@@ -582,7 +582,7 @@ jobs:
 
   build_android:
     name: Android
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         build_opts:
@@ -633,7 +633,7 @@ jobs:
       contents: read #  to fetch code (actions/checkout)
 
     name: Build monster ${{ matrix.compiler }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         compiler:
@@ -680,7 +680,7 @@ jobs:
       - webserver
       - build_monster
     if: failure() && github.event_name == 'push'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Build message
         id: message
