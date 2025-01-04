@@ -2988,14 +2988,18 @@ string get_item_description(const item_def &item,
                 description << ", this device is rendered temporarily inert. "
                             << "However, it recharges as you gain experience.";
 
-                if (item.plus < MAX_EVOKER_ENCHANT)
+                if (evoker_plus(item.sub_type) < MAX_EVOKER_ENCHANT)
                 {
                     description << "\n\nAdditional devices of the same type "
-                            << "can be combined with it to improve its "
-                            << " recharge rate.";
+                            << "can be combined with it to improve the rate at "
+                            << "which it recharges.";
                 }
-                else
-                    description << "\n\nIt cannot be improved further.";
+                if (!is_useless_skill(SK_EVOCATIONS)
+                       && you.skill(SK_EVOCATIONS) < MAX_SKILL_LEVEL)
+                {
+                    description << "\n\nIncreasing your evocations skill will "
+                                << "improve the rate at which it recharges.";
+                }
 
                 const string damage_str = evoke_damage_string(item);
                 if (damage_str != "")

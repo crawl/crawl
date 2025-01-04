@@ -2055,20 +2055,25 @@ static bool _merge_evokers(const item_def &it, int &inv_slot, bool quiet)
             continue;
         }
 
-        if (you.inv[inv_slot].plus + it.plus +1 > MAX_EVOKER_ENCHANT)
-            continue;
+        bool improved = evoker_plus(it.sub_type) < MAX_EVOKER_ENCHANT;
 
-        you.inv[inv_slot].plus += it.plus +1;
+        if (improved)
+            evoker_plus(it.sub_type)++;
 
-        if (!quiet)
+        if (!quiet && improved)
         {
 #ifdef USE_SOUND
             parse_sound(PICKUP_SOUND);
 #endif
-            mprf_nocap("%s (improved by %d)",
+            mprf_nocap("%s (improved by +1).",
                         menu_colour_item_name(you.inv[inv_slot],
-                                                    DESC_INVENTORY).c_str(),
-                        it.plus + 1);
+                                                    DESC_INVENTORY).c_str());
+        }
+        else if (!quiet)
+        {
+            mprf_nocap("%s can't be improved any further.",
+                        menu_colour_item_name(you.inv[inv_slot],
+                                                    DESC_INVENTORY).c_str());
         }
 
         return true;
@@ -2309,7 +2314,7 @@ static bool _merge_items_into_inv(item_def &it, int quant_got,
     }
 
     // attempt to merge into an existing stack, if possible
-    if (it.base_type == OBJ_MISCELLANY
+    if (is_xp_evoker(it)
         && _merge_evokers(it, inv_slot, quiet))
     {
         quant_got = 1;
