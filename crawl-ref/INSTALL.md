@@ -83,7 +83,8 @@ libsqlite3-dev libz-dev pkg-config python3-yaml binutils-gold python-is-python3
 
 # Dependencies for tiles builds
 sudo apt install libsdl2-image-dev libsdl2-mixer-dev libsdl2-dev \
-libfreetype6-dev libpng-dev fonts-dejavu-core advancecomp pngcrush
+libfreetype6-dev libglu1-mesa libglu1-mesa-dev libpng-dev fonts-dejavu-core \
+advancecomp pngcrush
 ```
 
 Then follow [the above compilation steps](#compiling).
