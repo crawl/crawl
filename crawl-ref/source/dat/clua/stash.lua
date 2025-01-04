@@ -138,7 +138,7 @@ function ch_stash_search_annotate_item(it)
       ["shadow"] = "Stlth++++",
       ["golden"] = "rF+ rC+ rPois"
     }
-    local t = it.name("base"):match("%w+")
+    local t = it.name("base"):match("%a+")
     if props[t] then
       annot = annot .. "{" .. props[t] .. "} "
     end
