@@ -629,7 +629,7 @@ Mercury Arrow spell
 Nazja's Percussive Tempering spell
 
 Scholars long considered the hammer mere theatrics to mask the complex
-structual enhancement magics which must underpin this spell, and yet every
+structural enhancement magics which must underpin this spell, and yet every
 attempt to remove it from the incantation has caused the spell to lose its
 effectiveness. The implications of this remain hotly debated.
 %%%%
