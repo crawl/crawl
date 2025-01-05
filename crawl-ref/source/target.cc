@@ -380,7 +380,7 @@ bool targeter_beam::affects_monster(const monster_info& mon)
 
 bool targeter_beam::harmful_to_player()
 {
-    return !beam.ignores_player();
+    return !beam.ignores_player() && !beam.harmless_to_player();
 }
 
 targeter_view::targeter_view()
