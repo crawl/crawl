@@ -75,7 +75,7 @@ public:
     ImageManager();
     virtual ~ImageManager();
 
-    bool load_textures(bool need_mips);
+    bool load_textures(MipMapOptions mip_opts);
     void unload_textures();
     inline const tile_info &tile_def_info(tile_def tile) const;
     const TilesTexture &get_texture(TextureID t) const;

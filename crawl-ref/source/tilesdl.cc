@@ -358,7 +358,8 @@ bool TilesFramework::initialise()
     // have to be shrunk. If this isn't the case, then don't create mipmaps,
     // as this appears to make things blurry on some users machines.
     bool need_mips = (m_windowsz.y < 32 * VIEW_MIN_HEIGHT);
-    if (!m_image->load_textures(need_mips))
+    MipMapOptions mip_opts = need_mips ? MIPMAP_CREATE : MIPMAP_NONE;
+    if (!m_image->load_textures(mip_opts))
         return false;
 
     calculate_default_options();

@@ -173,14 +173,11 @@ ImageManager::~ImageManager()
     unload_textures();
 }
 
-bool ImageManager::load_textures(bool need_mips)
+bool ImageManager::load_textures(MipMapOptions mip_opts)
 {
-    MipMapOptions mip = need_mips ?
-        MIPMAP_CREATE : MIPMAP_NONE;
-
     int i = 0;
     for (const auto &f : get_texture_filenames())
-        if (!m_textures[i++].load_texture(f.c_str(), mip))
+        if (!m_textures[i++].load_texture(f.c_str(), mip_opts))
             return false;
 
     m_textures[TEX_FLOOR].set_info(TILE_FLOOR_MAX, &tile_floor_info);
