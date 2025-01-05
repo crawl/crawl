@@ -2390,6 +2390,11 @@ tile_filter_scaling = false
         Setting it to true filters the textures resulting in a smoother but
         blurrier image.
 
+tile_use_mipmaps = auto
+        Used in conjunction with tile_cell_pixels or tile_sidebar_pixels.
+        Setting it to true filters the textures resulting in a smoother but
+        blurrier image.
+
 tile_force_overlay = false
         Setting this option to true will force the message window to appear as
         an overlay on top of the screen. If you use this option, making your

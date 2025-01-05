@@ -908,6 +908,7 @@ public:
     fixedp<>    tile_viewport_scale;
     fixedp<>    tile_map_scale;
     bool        tile_filter_scaling;
+    maybe_bool  tile_use_mipmaps;
     int         tile_map_pixels;
 
     bool        tile_force_overlay;
