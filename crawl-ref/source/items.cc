@@ -2705,8 +2705,12 @@ bool drop_item(int item_dropped, int quant_drop)
 
     ASSERT(item.defined());
 
-    if (Options.drop_disables_autopickup && item.base_type != OBJ_MISSILES)
+    if (Options.drop_disables_autopickup
+        && !is_artefact(item)
+        && item.base_type != OBJ_MISSILES)
+    {
         set_item_autopickup(item, AP_FORCE_OFF);
+    }
 
     if (copy_item_to_grid(item, you.pos(), quant_drop, true, true) == NON_ITEM)
     {
