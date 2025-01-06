@@ -155,19 +155,8 @@ bool FTFontWrapper::configure_font()
 
     // atlas[0] always contains a full-white block (never evicted)
     // this is currently used by colour_bar
-    // TODO: couldn't this loop be reduced to a memset??
     {
-        for (int y = 0; y < m_max_advance.y; y++)
-            for (int x = 0; x < m_max_advance.x; x++)
-            {
-                unsigned int idx = x + y * charsz.x;
-                idx *= 4;
-                pixels[idx]     = 255;
-                pixels[idx + 1] = 255;
-                pixels[idx + 2] = 255;
-                pixels[idx + 3] = 255;
-            }
-
+        memset(pixels.data(), 255, sizeof(unsigned char) * pixels.size());
         LoadTextureArgs texture_args = LoadTextureArgs::CreateSubtextureForFont(
             pixels.data(),
             charsz.x, charsz.y,
