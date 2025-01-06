@@ -1787,8 +1787,6 @@ static void _tag_construct_you(writer &th)
 
     marshallUByte(th, you.octopus_king_rings);
 
-    marshallSet(th, you.generated_misc, _marshall_as_int);
-
     marshallUnsigned(th, you.uncancel.size());
     for (const pair<uncancellable_type, int>& unc : you.uncancel)
     {
@@ -4144,7 +4142,8 @@ static void _tag_read_you(reader &th)
     you.octopus_king_rings = unmarshallUByte(th);
 
 #if TAG_MAJOR_VERSION == 34
-    if (th.getMinorVersion() >= TAG_MINOR_GENERATED_MISC)
+    if (th.getMinorVersion() >= TAG_MINOR_GENERATED_MISC
+        && th.getMinorVersion() < TAG_MINOR_STACKABLE_EVOKERS_TWO)
 #endif
         unmarshallSet(th, you.generated_misc, _unmarshall_misc_item_type);
 
