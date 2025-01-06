@@ -395,7 +395,7 @@ void OGLStateManager::load_texture(LoadTextureArgs texture)
         gluBuild2DMipmaps(GL_TEXTURE_2D, bpp, texture.width, texture.height,
                           texture_format, format, texture.pixels);
         // TODO: glGenerateMipmap()
-        ASSERT(texture.xoffset == -1 && texture.yoffset == -1);
+        // Note: LoadTextureArgs enforces that offset == NO_OFFSET if mip_opt = MIPMAP_CREATE
     }
     else
 #endif
@@ -404,8 +404,7 @@ void OGLStateManager::load_texture(LoadTextureArgs texture)
                         Options.tile_filter_scaling ? GL_LINEAR : GL_NEAREST);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
                         Options.tile_filter_scaling ? GL_LINEAR : GL_NEAREST);
-        ASSERT((texture.xoffset >= 0) == (texture.yoffset >= 0));
-        if (texture.xoffset >= 0 && texture.yoffset >= 0)
+        if (texture.has_offset())
         {
             glTexSubImage2D(GL_TEXTURE_2D, 0, texture.xoffset, texture.yoffset, texture.width, texture.height,
                          texture_format, format, texture.pixels);

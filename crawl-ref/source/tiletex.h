@@ -6,6 +6,7 @@
 #pragma once
 
 #include "tilepick.h"
+#include "debug.h"
 
 enum MipMapOptions
 {
@@ -52,6 +53,11 @@ public:
     const MipMapOptions mip_opt;
     const int xoffset;
     const int yoffset;
+
+    inline bool has_offset() const
+    {
+        return xoffset != NO_OFFSET || yoffset != NO_OFFSET;
+    }
 private:
     LoadTextureArgs(unsigned char *my_pixels,
                     unsigned int my_width,
@@ -65,7 +71,16 @@ private:
             mip_opt(my_mip_opt),
             xoffset(my_xoffset),
             yoffset(my_yoffset)
-    {}
+    {
+        // It's valid for xoffset or yoffset to be zero alone.
+        // But they should only be the "magic" NO_OFFSET value together
+        ASSERT((xoffset == NO_OFFSET) == (yoffset == NO_OFFSET));
+        if (this->has_offset())
+        {
+            // offset with mipmap not supported, this should be impossible to reach
+            ASSERT(mip_opt == MIPMAP_NONE);
+        }
+    }
 };
 
 // Arbitrary post-load texture processing
