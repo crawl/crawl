@@ -6,6 +6,7 @@
 #include <set>
 #include <string>
 #include <vector>
+#include <cstdint>
 #ifdef USE_ZLIB
 #include <zlib.h>
 #endif
@@ -87,7 +88,7 @@ public:
 
     // statistics
     plen_t get_slack();
-    plen_t get_size() const { return file_len; };
+    plen_t get_size() const { return file_len; }
     plen_t get_chunk_fragmentation(const string &name);
     plen_t get_chunk_compressed_length(const string &name);
 private:
