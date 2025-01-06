@@ -27,10 +27,10 @@ public:
     // It's unclear if it even would be desirable to handle it
     // Also, the pixels aren't provided - presumably because they're already in some texture that's a font atlas?
     // If you understand the surrounding code better, please clarify why this works at all.
-    static LoadTextureArgs CreateForFont(unsigned int width, unsigned int height,
+    static LoadTextureArgs CreateForFont(unsigned char* pixels, unsigned int width, unsigned int height,
                                              int xoffset, int yoffset)
     {
-        return LoadTextureArgs(nullptr,
+        return LoadTextureArgs(pixels,
                                width, height,
                                MIPMAP_NONE,
                                xoffset, yoffset);
