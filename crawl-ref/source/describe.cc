@@ -1797,6 +1797,11 @@ static string _describe_point_diff(int original,
     if (original == changed)
         return "remain unchanged";
 
+    // Truncate to 1 decimal place, rather than round (so that it matches what
+    // will be displayed as the player's AC/EV if they actually put this on.)
+    original = original / (scale / 10) * 10;
+    changed = changed / (scale / 10) * 10;
+
     float difference = ((float)(changed - original)) / scale;
 
     description += _describe_point_change(difference);
