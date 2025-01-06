@@ -69,7 +69,7 @@ FTFontWrapper::FTFontWrapper() :
     m_max_height(0),
     ttf(nullptr),
     face(nullptr),
-    pixels(nullptr),
+    pixels(),
     fsize(0)
 {
     m_buf = GLShapeBuffer::create(true, true);
@@ -78,7 +78,6 @@ FTFontWrapper::FTFontWrapper() :
 FTFontWrapper::~FTFontWrapper()
 {
     delete[] m_atlas;
-    delete[] pixels;
     delete m_buf;
     if (face)
         FT_Done_Face(face);
@@ -131,10 +130,12 @@ bool FTFontWrapper::configure_font()
     m_ft_width  = GLYPHS_PER_ROWCOL * charsz.x;
     m_ft_height = GLYPHS_PER_ROWCOL * charsz.y;
 
-    delete[] pixels; // for repeated calls
+    // Instead of allocating a new buffer each time this is called
+    // which used to just delete and reallocate
+    // just clear the buffer...
+    pixels.resize(sizeof(unsigned char) * 4 * charsz.x * charsz.y);
+    memset(pixels.data(), 0, sizeof(unsigned char) * pixels.size());
 
-    pixels = new unsigned char[4 * charsz.x * charsz.y];
-    memset(pixels, 0, sizeof(unsigned char) * 4 * charsz.x * charsz.y);
 
     dprintf("new font tex %d x %d x 4 = %dpx %d bytes\n",
             m_ft_width, m_ft_height, m_ft_width * m_ft_height,
@@ -168,7 +169,7 @@ bool FTFontWrapper::configure_font()
             }
 
         LoadTextureArgs texture_args = LoadTextureArgs::CreateSubtextureForFont(
-            pixels,
+            pixels.data(),
             charsz.x, charsz.y,
             0, 0
         );
@@ -295,7 +296,7 @@ void FTFontWrapper::load_glyph(unsigned int c, char32_t uchar)
         // Horizontal offset stored in m_atlas and handled when drawing
         const unsigned int offset_x = 0;
         const unsigned int offset_y = 0;
-        memset(pixels, 0, sizeof(unsigned char) * 4 * charsz.x * charsz.y);
+        memset(pixels.data(), 0, sizeof(unsigned char) * pixels.size());
 
         // Some fonts have wrong size info
         const ftint charw = bmp->width;
@@ -319,7 +320,7 @@ void FTFontWrapper::load_glyph(unsigned int c, char32_t uchar)
 
         unwind_bool noscaling(Options.tile_filter_scaling, false);
         LoadTextureArgs texture_args = LoadTextureArgs::CreateSubtextureForFont(
-            pixels,
+            pixels.data(),
             charsz.x, charsz.y,
             (c % GLYPHS_PER_ROWCOL) * charsz.x,
             (c / GLYPHS_PER_ROWCOL) * charsz.y
