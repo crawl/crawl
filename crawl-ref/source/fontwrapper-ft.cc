@@ -142,11 +142,12 @@ bool FTFontWrapper::configure_font()
 
     // initialise empty texture of correct size
     unwind_bool noscaling(Options.tile_filter_scaling, false);
-    // Note: unclear why this is NO_OFFSET, NO_OFFSET, but 0, 0 for the other call.
-    // It may be that we can treat NO_OFFSET == 0, unclear...
-    LoadTextureArgs texture_args = LoadTextureArgs::CreateForFont(
+    // Note: this is loading the original font atlas, if I understand right
+    // We never mipmap it (should we??)
+    LoadTextureArgs texture_args = LoadTextureArgs::CreateForTexture(
+        pixels,
         m_ft_width, m_ft_height,
-        LoadTextureArgs::NO_OFFSET, LoadTextureArgs::NO_OFFSET
+        MIPMAP_NONE
     );
     m_tex.load_texture(texture_args);
 
@@ -169,7 +170,9 @@ bool FTFontWrapper::configure_font()
                 pixels[idx + 3] = 255;
             }
 
-        // Note: Offsets of 0 not the same as NO_OFFSET... unclear if we can change this
+        // Note: Offsets of 0 not the same as NO_OFFSET
+        // This is instead taking part of the font atlas texture.
+        // Whereas NO_OFFSET is taking just a portion of the texture
         LoadTextureArgs texture_args2 = LoadTextureArgs::CreateForFont(
             charsz.x, charsz.y,
             0, 0

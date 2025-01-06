@@ -37,7 +37,6 @@ public:
     }
 
     // Textures don't have offsets, but may be mipmapped (if mipmaps are enabled globally)
-
     static LoadTextureArgs CreateForTexture(unsigned char *pixels, unsigned int width,
                                              unsigned int height, MipMapOptions mip_opt)
     {

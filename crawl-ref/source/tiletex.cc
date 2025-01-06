@@ -59,7 +59,7 @@ bool GenericTexture::load_texture(LoadTextureArgs texture)
     // 2. we bind the texture name for writing
     // 3. load the texture with the actual tile sheet (or other texture data)
     //    in question
-    if (texture.xoffset == LoadTextureArgs::NO_OFFSET && texture.yoffset == LoadTextureArgs::NO_OFFSET)
+    if (!texture.has_offset())
     {
         m_width = texture.width;
         m_height = texture.height;
