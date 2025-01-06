@@ -781,7 +781,14 @@ ifneq ($(uname_S),Darwin)
 ifeq ($(msys),Yes)
 LIBS += -lopengl32 -lglu32
 else
-LIBS += -lGL -lGLU
+
+ifdef GLVND
+LIBS += -lOpenGL   # Use modern vendor-neutral OpenGL
+DEFINES_L += -DUSE_GLVND
+else
+LIBS += -lGL -lGLU # Use legacy GLX
+endif
+
 endif
 endif
 endif
