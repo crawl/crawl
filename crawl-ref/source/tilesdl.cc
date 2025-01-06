@@ -369,8 +369,6 @@ bool TilesFramework::initialise()
     {
         need_mips = bool(Options.tile_use_mipmaps);
     }
-    // TODO: remove
-    cout << "need_mips: '" << need_mips << ":\n";
 
     MipMapOptions mip_opts = need_mips ? MIPMAP_CREATE : MIPMAP_NONE;
     if (!m_image->load_textures(mip_opts))
