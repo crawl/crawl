@@ -142,14 +142,10 @@ bool FTFontWrapper::configure_font()
 
     // initialise empty texture of correct size
     unwind_bool noscaling(Options.tile_filter_scaling, false);
-    // Note: this is loading the original font atlas, if I understand right
-    // We never mipmap it (should we??)
-    LoadTextureArgs texture_args = LoadTextureArgs::CreateForFont(
-        nullptr,
-        m_ft_width, m_ft_height,
-        LoadTextureArgs::NO_OFFSET, LoadTextureArgs::NO_OFFSET
+    LoadTextureArgs empty_texture_args = LoadTextureArgs::CreateEmptyTextureForFont(
+        m_ft_width, m_ft_height
     );
-    m_tex.load_texture(texture_args);
+    m_tex.load_texture(empty_texture_args);
 
     m_glyphs.clear();
 
@@ -158,6 +154,7 @@ bool FTFontWrapper::configure_font()
 
     // atlas[0] always contains a full-white block (never evicted)
     // this is currently used by colour_bar
+    // TODO: couldn't this loop be reduced to a memset??
     {
         for (int x = 0; x < m_max_advance.x; x++)
             for (int y = 0; y < m_max_advance.y; y++)
@@ -170,15 +167,12 @@ bool FTFontWrapper::configure_font()
                 pixels[idx + 3] = 255;
             }
 
-        // Note: Offsets of 0 not the same as NO_OFFSET
-        // This is instead taking part of the font atlas texture.
-        // Whereas NO_OFFSET would create? a new texture
-        LoadTextureArgs texture_args2 = LoadTextureArgs::CreateForFont(
+        LoadTextureArgs texture_args = LoadTextureArgs::CreateSubtextureForFont(
             pixels,
             charsz.x, charsz.y,
             0, 0
         );
-        bool success = m_tex.load_texture(texture_args2);
+        bool success = m_tex.load_texture(texture_args);
         ASSERT(success);
     }
 
@@ -324,7 +318,7 @@ void FTFontWrapper::load_glyph(unsigned int c, char32_t uchar)
             }
 
         unwind_bool noscaling(Options.tile_filter_scaling, false);
-        LoadTextureArgs texture_args = LoadTextureArgs::CreateForFont(
+        LoadTextureArgs texture_args = LoadTextureArgs::CreateSubtextureForFont(
             pixels,
             charsz.x, charsz.y,
             (c % GLYPHS_PER_ROWCOL) * charsz.x,

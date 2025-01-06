@@ -22,14 +22,24 @@ class LoadTextureArgs
 {
 public:
     static constexpr int NO_OFFSET = -1;
+    // Create an empty texture
+    static LoadTextureArgs CreateEmptyTextureForFont(unsigned int width, unsigned int height)
+    {
+        return LoadTextureArgs(nullptr,
+                               width, height,
+                               MIPMAP_NONE,
+                               NO_OFFSET, NO_OFFSET);
+    }
+
     // Fonts aren't being mipmapped.
     // Currently, glwrapper-ogl.cc does not support generating mipmaps for offset textures.
     // It's unclear if it even would be desirable to handle it
     // Also, the pixels aren't provided - presumably because they're already in some texture that's a font atlas?
     // If you understand the surrounding code better, please clarify why this works at all.
-    static LoadTextureArgs CreateForFont(unsigned char* pixels, unsigned int width, unsigned int height,
+    static LoadTextureArgs CreateSubtextureForFont(unsigned char* pixels, unsigned int width, unsigned int height,
                                              int xoffset, int yoffset)
     {
+        ASSERT(pixels != nullptr);
         return LoadTextureArgs(pixels,
                                width, height,
                                MIPMAP_NONE,
@@ -40,6 +50,7 @@ public:
     static LoadTextureArgs CreateForTexture(unsigned char *pixels, unsigned int width,
                                              unsigned int height, MipMapOptions mip_opt)
     {
+        ASSERT(pixels != nullptr);
         return LoadTextureArgs(pixels,
                                width, height,
                                mip_opt,
