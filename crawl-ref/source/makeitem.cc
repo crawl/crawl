@@ -1576,7 +1576,7 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
         item.sub_type = force_type;
     }
     else if (force_type == NUM_RINGS
-             || force_type == OBJ_RANDOM && one_chance_in(4))
+             || force_type == OBJ_RANDOM && !one_chance_in(4))
     {
         _roll_ring_type(item);
     }
