@@ -4295,11 +4295,12 @@ NAME:   hellmonk_zupermarket
 TAGS:   no_monster_gen no_descent
 DEPTH:  Zot:2-4
 WEIGHT: 5
-MONS:   death cob
+MONS:   death cob, nonbase draconian
 SHUFFLE: -"'1
 SUBST:  - = ---., " = """., ' = '''., 1 = 1., T = TccV
 SUBST:  > = )}], < = ({[
 SUBST:  c:xc
+NSUBST: 2 = 1:2 / 2...
 KFEAT:  - = cache of baked goods
 KFEAT:  " = cache of fruit
 KFEAT:  ' = cache of meat
@@ -4310,14 +4311,14 @@ cc..>..cc
 c.......c
 cc.ccc.cc
 c-.-c"."c
-c-.-c"."c
+c-2-c"2"c
 c-.-c"."c
 cc.cTc.cc
 c'.'c1.1c
-c'.'c1.1c
+c'2'c121c
 c'.'c1.1c
 cc.ccc.cc
-c.......c
+c.2...2.c
 cc..<..cc
  cc...cc
   ccccc
