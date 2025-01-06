@@ -142,7 +142,13 @@ bool FTFontWrapper::configure_font()
 
     // initialise empty texture of correct size
     unwind_bool noscaling(Options.tile_filter_scaling, false);
-    m_tex.load_texture(nullptr, m_ft_width, m_ft_height, MIPMAP_NONE);
+    // Note: unclear why this is NO_OFFSET, NO_OFFSET, but 0, 0 for the other call.
+    // It may be that we can treat NO_OFFSET == 0, unclear...
+    LoadTextureArgs texture_args = LoadTextureArgs::CreateForFont(
+        m_ft_width, m_ft_height,
+        LoadTextureArgs::NO_OFFSET, LoadTextureArgs::NO_OFFSET
+    );
+    m_tex.load_texture(texture_args);
 
     m_glyphs.clear();
 
@@ -163,8 +169,12 @@ bool FTFontWrapper::configure_font()
                 pixels[idx + 3] = 255;
             }
 
-        bool success = m_tex.load_texture(pixels, charsz.x, charsz.y,
-                                          MIPMAP_NONE, 0, 0);
+        // Note: Offsets of 0 not the same as NO_OFFSET... unclear if we can change this
+        LoadTextureArgs texture_args2 = LoadTextureArgs::CreateForFont(
+            charsz.x, charsz.y,
+            0, 0
+        );
+        bool success = m_tex.load_texture(texture_args2);
         ASSERT(success);
     }
 
@@ -310,10 +320,12 @@ void FTFontWrapper::load_glyph(unsigned int c, char32_t uchar)
             }
 
         unwind_bool noscaling(Options.tile_filter_scaling, false);
-        bool success = m_tex.load_texture(pixels, charsz.x, charsz.y,
-                            MIPMAP_NONE,
-                            (c % GLYPHS_PER_ROWCOL) * charsz.x,
-                            (c / GLYPHS_PER_ROWCOL) * charsz.y);
+        LoadTextureArgs texture_args = LoadTextureArgs::CreateForFont(
+            charsz.x, charsz.y,
+            (c % GLYPHS_PER_ROWCOL) * charsz.x,
+            (c / GLYPHS_PER_ROWCOL) * charsz.y
+        );
+        bool success = m_tex.load_texture(texture_args);
         ASSERT(success);
     }
 }

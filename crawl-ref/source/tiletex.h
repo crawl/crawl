@@ -14,10 +14,63 @@ enum MipMapOptions
     MIPMAP_MAX,
 };
 
+// Convenience structure to encapsulate parameters that always go together
+// Not all combinations of parameters are valid, so this class's factory methods
+// enforce that only valid combinations can be created
+class LoadTextureArgs
+{
+public:
+    static constexpr int NO_OFFSET = -1;
+    // Fonts aren't being mipmapped.
+    // Currently, glwrapper-ogl.cc does not support generating mipmaps for offset textures.
+    // It's unclear if it even would be desirable to handle it
+    // Also, the pixels aren't provided - presumably because they're already in some texture that's a font atlas?
+    // If you understand the surrounding code better, please clarify why this works at all.
+    static LoadTextureArgs CreateForFont(unsigned int width, unsigned int height,
+                                             int xoffset, int yoffset)
+    {
+        return LoadTextureArgs(nullptr,
+                               width, height,
+                               MIPMAP_NONE,
+                               xoffset, yoffset);
+    }
+
+    // Textures don't have offsets, but may be mipmapped (if mipmaps are enabled globally)
+
+    static LoadTextureArgs CreateForTexture(unsigned char *pixels, unsigned int width,
+                                             unsigned int height, MipMapOptions mip_opt)
+    {
+        return LoadTextureArgs(pixels,
+                               width, height,
+                               mip_opt,
+                               NO_OFFSET, NO_OFFSET);
+    }
+
+    const unsigned char *pixels;
+    const unsigned int width;
+    const unsigned int height;
+    const MipMapOptions mip_opt;
+    const int xoffset;
+    const int yoffset;
+private:
+    LoadTextureArgs(unsigned char *my_pixels,
+                    unsigned int my_width,
+                    unsigned int my_height,
+                    MipMapOptions my_mip_opt,
+                    int my_xoffset,
+                    int my_yoffset):
+            pixels(my_pixels),
+            width(my_width),
+            height(my_height),
+            mip_opt(my_mip_opt),
+            xoffset(my_xoffset),
+            yoffset(my_yoffset)
+    {}
+};
+
 // Arbitrary post-load texture processing
 typedef bool(*tex_proc_func)(unsigned char *pixels, unsigned int w,
     unsigned int h);
-
 class GenericTexture
 {
 public:
@@ -27,8 +80,7 @@ public:
     bool load_texture(const char *filename, MipMapOptions mip_opt,
                       tex_proc_func proc = nullptr,
                       bool force_power_of_two = true);
-    bool load_texture(unsigned char *pixels, unsigned int w, unsigned int h,
-                      MipMapOptions mip_opt, int offsetx=-1, int offsety=-1);
+    bool load_texture(LoadTextureArgs texture);
     void unload_texture();
 
     unsigned int width() const { return m_width; }
