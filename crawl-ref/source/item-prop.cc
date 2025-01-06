@@ -3299,8 +3299,7 @@ int &evoker_debt(int evoker_type)
  * Asserts that the given evoker type actually corresponds to an xp evoker.
  *
  * @param evoker_type       The misc_item_type of the evoker in question.
- * @return                  The level of xp debt the given evoker type has
- *                          before it can be used again.
+ * @return                  The evoker's enchantment level.
  */
 int &evoker_plus(int evoker_type)
 {
