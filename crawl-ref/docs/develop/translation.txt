@@ -1,13 +1,15 @@
 Guide to translating Crawl's text
 =================================
 
-There are three sets of text files. They are in the following directories:
+There are three sets of text files. They are in the following directories, which
+are under crawl-ref/source in the github repo or under the top-level folder in
+the release package:
 
-1. crawl-ref/source/dat/descript
-2. crawl-ref/source/dat/database
-3. crawl-ref/source/dat/strings
+1. dat/strings - most of the text for the UI and in-game messages is here
+2. dat/descript - detailed descriptions for items, monsters, spells, etc.
+3. dat/database - some specialised game messages (e.g. things monsters say)
 
-The English files are in the directory itself (for #1 and #2 only. #3 has no English files) .
+The English files are in the directory itself (for #2 and #3 only. #1 has no English files) .
 
 The equivalent files for other languages go in a subdirectory named with the
 2-letter ISO code for that language (e.g. de for German, fr for French, es for
@@ -31,7 +33,18 @@ Do not put whitespace at the end of lines.
 A description of the different file sets:
 
 
-1. crawl-ref/source/dat/descript
+1. dat/strings
+--------------------------------
+
+These hold translations for English strings hardcoded in the game code.
+Therefore, there are no files for English itself, only for other languages.
+The keys are the actual English strings that are displayed to the user.
+
+If the string includes leading or trailing whitespace, it must be surrounded
+with double-quotes ("). Generally, you will want to keep any such whitespace
+the same as in the English version.
+
+2. dat/descript
 --------------------------------
 
 These hold verbose description text for various things in the game (items, monsters, etc.).
@@ -46,7 +59,7 @@ The translation of the quotes.txt file is optional since it's just flavour text
 (quotes from books, etc.) without any game-relevant information.
 
 
-2. crawl-ref/source/dat/database
+3. dat/database
 --------------------------------
 
 There are a couple of different kinds of files in here.
@@ -62,25 +75,13 @@ The way they are used for English may not work for the target language, so you
 may need to re-work that aspect.
 
 
-3. crawl-ref/source/dat/strings
---------------------------------
-
-These hold translations for English strings hardcoded in the game code.
-Therefore, there are no files for English itself, only for other languages.
-The keys are the actual English strings that are displayed to the user.
-
-If the string includes leading or trailing whitespace, it must be surrounded
-with double-quotes ("). Generally, you will want to keep any such whitespace
-the same as in the English version.
-
-
-The following sections apply to crawl-ref/source/dat/strings only...
+The following sections apply to dat/strings only...
 
 
 printf-style placeholders (%s, etc.)
 ------------------------------------
 
-In addition to placeholders like @the monster@, you will also see printf-style
+In addition to placeholders like @the monster@, you will also see so-called printf-style
 placeholders that start with a percent sign:
 %s = string (i.e. text)
 %c = single character
