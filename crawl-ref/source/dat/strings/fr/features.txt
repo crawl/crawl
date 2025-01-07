@@ -5,478 +5,43 @@
 ###############################################################################
 
 ################################
-# Without article
-################################
-%%%%
-unseen
-hors de la vue
-%%%%
-explore horizon
-
-%%%%
-travel trail
-
-%%%%
-%sdoor
-{f}%sporte%s
-%%%%
-# make sure translucide is first postnominal adjective
-%stranslucent door
-{f}%sporte translucide%s
-%%%%
-%sgate
-{m}%sportail%s
-%%%%
-# make sure translucide is first postnominal adjective
-%stranslucent gate
-{m}%sportail translucide%s
-%%%%
-tree
-
-%%%%
-metal wall
-
-%%%%
-crystal wall
-
-%%%%
-rock wall
-
-%%%%
-slime covered rock wall
-
-%%%%
-stone wall
-
-%%%%
-unnaturally hard rock wall
-
-%%%%
-translucent rock wall
-
-%%%%
-translucent stone wall
-
-%%%%
-translucent unnaturally hard rock wall
-
-%%%%
-iron grate
-
-%%%%
-open sea
-
-%%%%
-endless lava
-
-%%%%
-endless expanse of salt
-
-%%%%
-orcish idol
-
-%%%%
-granite statue
-
-%%%%
-portal to somewhere
-
-%%%%
-lava
-
-%%%%
-deep water
-
-%%%%
-shallow water
-
-%%%%
-toxic bog
-
-%%%%
-floor
-
-%%%%
-collapsed entrance
-
-%%%%
-mechanical trap
-
-%%%%
-arrow trap
-
-%%%%
-spear trap
-
-%%%%
-blade trap
-
-%%%%
-dart trap
-
-%%%%
-bolt trap
-
-%%%%
-net trap
-
-%%%%
-pressure plate
-
-%%%%
-dispersal trap
-
-%%%%
-teleport trap
-
-%%%%
-permanent teleport trap
-
-%%%%
-shadow trap
-
-%%%%
-dormant shadow trap
-
-%%%%
-alarm trap
-
-%%%%
-Zot trap
-
-%%%%
-passage of Golubria
-
-%%%%
-shaft
-
-%%%%
-web
-
-%%%%
-shop
-
-%%%%
-abandoned shop
-
-%%%%
-empty arch of ancient stone
-
-%%%%
-detected shop or portal
-
-%%%%
-stone staircase leading down
-
-%%%%
-stone staircase leading up
-
-%%%%
-escape hatch in the floor
-
-%%%%
-escape hatch in the ceiling
-
-%%%%
-labyrinth entrance
-
-%%%%
-gateway to the Iron City of Dis
-
-%%%%
-gateway to the ashen valley of Gehenna
-
-%%%%
-gateway to the freezing wastes of Cocytus
-
-%%%%
-gateway to the decaying netherworld of Tartarus
-
-%%%%
-gateway to Hell
-
-%%%%
-gateway back into the Dungeon
-
-%%%%
-one-way gate to the infinite horrors of the Abyss
-
-%%%%
-exit through the horrors of the Abyss
-
-%%%%
-gateway leading out of the Abyss
-
-%%%%
-one-way gate leading to the halls of Pandemonium
-
-%%%%
-gate leading to another region of Pandemonium
-
-%%%%
-gate leading out of Pandemonium
-
-%%%%
-gate to the Vaults
-
-%%%%
-gate leading back out of this place
-
-%%%%
-gate to the Realm of Zot
-
-%%%%
-gate leading to a distant place
-
-%%%%
-gateway to a ziggurat
-
-%%%%
-gateway to a bazaar
-
-%%%%
-portal to a secret trove of treasure
-
-%%%%
-glowing drain
-
-%%%%
-sand-covered staircase
-
-%%%%
-flagged portal
-
-%%%%
-gate leading to a gauntlet
-
-%%%%
-frozen archway
-
-%%%%
-dark tunnel
-
-%%%%
-magical portal
-
-%%%%
-ruined gateway
-
-%%%%
-ice covered gate leading back out of this place
-
-%%%%
-rocky tunnel leading out of this place
-
-%%%%
-portal leading out of this place
-
-%%%%
-staircase leading out of the dungeon
-
-%%%%
-staircase to the Slime Pits
-
-%%%%
-staircase back to the Lair
-
-%%%%
-staircase to the Orcish Mines
-
-%%%%
-staircase back to the Dungeon
-
-%%%%
-staircase to the Dwarven Hall
-
-%%%%
-staircase to the Enchanted Forest
-
-%%%%
-staircase to the Hall of Blades
-
-%%%%
-staircase back to the Vaults
-
-%%%%
-staircase to the Lair
-
-%%%%
-staircase to the Crypt
-
-%%%%
-staircase to the Ecumenical Temple
-
-%%%%
-staircase to the Snake Pit
-
-%%%%
-staircase to the Elven Halls
-
-%%%%
-staircase back to the Mines
-
-%%%%
-staircase to the Tomb
-
-%%%%
-staircase back to the Crypt
-
-%%%%
-staircase to the Swamp
-
-%%%%
-staircase to the Shoals
-
-%%%%
-hole to the Spider Nest
-
-%%%%
-crawl-hole back to the Lair
-
-%%%%
-staircase to the Depths
-
-%%%%
-detected altar
-
-%%%%
-glowing silver altar of Zin
-
-%%%%
-glowing golden altar of the Shining One
-
-%%%%
-ancient bone altar of Kikubaaqudgha
-
-%%%%
-basalt altar of Yredelemnul
-
-%%%%
-shimmering altar of Xom
-
-%%%%
-radiant altar of Vehumet
-
-%%%%
-iron altar of Okawaru
-
-%%%%
-burning altar of Makhleb
-
-%%%%
-shimmering blue altar of Sif Muna
-
-%%%%
-bloodstained altar of Trog
-
-%%%%
-sparkling altar of Nemelex Xobeh
-
-%%%%
-white marble altar of Elyvilon
-
-%%%%
-corrupted altar of Lugonu
-
-%%%%
-roughly hewn altar of Beogh
-
-%%%%
-viscous altar of Jiyva
-
-%%%%
-blossoming altar of Fedhas
-
-%%%%
-snail-covered altar of Cheibriados
-
-%%%%
-broken altar of Ashenzari
-
-%%%%
-shadowy altar of Dithmenos
-
-%%%%
-opulent altar of Gozag
-
-%%%%
-stormy altar of Qazlal
-
-%%%%
-sacrificial altar of Ru
-
-%%%%
-faded altar of an unknown god
-
-%%%%
-oddly glowing altar of Pakellas
-
-%%%%
-hide-covered altar of Uskayaw
-
-%%%%
-hazy altar of Hepliaklqana
-
-%%%%
-ornate altar of the Wu Jian Council
-
-%%%%
-fountain of clear blue water
-
-%%%%
-fountain of sparkling water
-
-%%%%
-fountain of blood
-
-%%%%
-dry fountain
-
-%%%%
-short-range portal
-
-%%%%
-teleporter
-
-%%%%
-transporter
-
-%%%%
-transporter landing site
-
-%%%%
-sealed passage leading up
-
-%%%%
-sealed passage leading down
-
-%%%%
-gateway leading deeper into the Abyss
-
-%%%%
-
-################################
 # Definite article
 ################################
+%%%%
+the unknown terrain
+
 %%%%
 the travel trail
 
 %%%%
-the %sdoor
-{f}la %sporte%s
+the door
+la porte
+%%%%
+the gate
+le portail
 %%%%
 # make sure translucide is first postnominal adjective
-the %stranslucent door
-{f}la %sporte translucide%s
-%%%%
-the %sgate
-{m}le %sportail%s
+the translucent door
+la porte translucide
 %%%%
 # make sure translucide is first postnominal adjective
-the %stranslucent gate
-{m}le %sportail translucide%s
+the translucent gate
+le portail translucide
+%%%%
 %%%%
 the tree
+l'arbre
+%%%%
+the awoken tree
+
+%%%%
+the demonic tree
+
+%%%%
+the petrified tree
+
+%%%%
+the mangrove
 
 %%%%
 the metal wall
@@ -506,6 +71,12 @@ the translucent stone wall
 the translucent unnaturally hard rock wall
 
 %%%%
+the wall of the weird stuff which makes up Pandemonium
+
+%%%%
+the grate
+
+%%%%
 the iron grate
 
 %%%%
@@ -522,6 +93,9 @@ the orcish idol
 
 %%%%
 the granite statue
+
+%%%%
+the portal
 
 %%%%
 the portal to somewhere
@@ -543,6 +117,9 @@ the floor
 
 %%%%
 the collapsed entrance
+
+%%%%
+the trap
 
 %%%%
 the mechanical trap
@@ -611,10 +188,16 @@ the empty arch of ancient stone
 the detected shop or portal
 
 %%%%
+the staircase
+
+%%%%
 the stone staircase leading down
 
 %%%%
 the stone staircase leading up
+
+%%%%
+the escape hatch
 
 %%%%
 the escape hatch in the floor
@@ -680,6 +263,9 @@ the gateway to a ziggurat
 the gateway to a bazaar
 
 %%%%
+the flickering gateway to a bazaar
+
+%%%%
 the portal to a secret trove of treasure
 
 %%%%
@@ -705,6 +291,9 @@ the magical portal
 
 %%%%
 the ruined gateway
+
+%%%%
+the crumbling gateway
 
 %%%%
 the ice covered gate leading back out of this place
@@ -780,6 +369,9 @@ the crawl-hole back to the Lair
 
 %%%%
 the staircase to the Depths
+
+%%%%
+the altar
 
 %%%%
 the detected altar
@@ -866,6 +458,9 @@ the hazy altar of Hepliaklqana
 the ornate altar of the Wu Jian Council
 
 %%%%
+the fountain
+
+%%%%
 the fountain of clear blue water
 
 %%%%
@@ -900,70 +495,190 @@ the gateway leading deeper into the Abyss
 
 %%%%
 
+# from .des files
+%%%%
+The dimension's edge
+
+%%%%
+the damp floor
+
+%%%%
+the pulsating floor
+
+%%%%
+the rough-hewn floor
+
+%%%%
+
 ################################
 # Indefinite article
 ################################
-%%%%
-a travel trail
+
+# note: No need to repeat any that are listed with a definite article because
+# a version with the indefinite article will be generated by grammar.txt
 
 %%%%
-a %sdoor
-{f}une %sporte%s
-%%%%
-# make sure translucide is first postnominal adjective
-a %stranslucent door
-{f}une %sporte translucide%s
-%%%%
-a %sgate
-{m}un %sportail%s
-%%%%
-# make sure translucide is first postnominal adjective
-a %stranslucent gate
-{m}un %sportail translucide%s
-%%%%
-a tree
+# this one won't be properly generated by grammar.txt due to the 2nd article in German
+a detected shop or portal
 
 %%%%
-a metal wall
+
+# extras from .des files
+%%%%
+an adventurer's gravestone
 
 %%%%
-a crystal wall
+an ash-covered pillar
 
 %%%%
-a rock wall
+an autumnal tree
 
 %%%%
-a slime covered rock wall
+a black wall
 
 %%%%
-a stone wall
+a broken pillar
 
 %%%%
-an unnaturally hard rock wall
+a broken wreckage
 
 %%%%
-a translucent rock wall
+a carved rock wall
 
 %%%%
-a translucent stone wall
+a crumbled stone wall
 
 %%%%
-a translucent unnaturally hard rock wall
+a damp floor
 
 %%%%
-an iron grate
+a dead mangrove
 
 %%%%
-an endless expanse of salt
+a dead tree
 
 %%%%
-an orcish idol
+a glass window
 
 %%%%
-a granite statue
+a golden statue
 
 %%%%
-a portal to somewhere
+a golden wall
+
+%%%%
+a granite statue wielding a fearsome trident
+
+%%%%
+a granite statue wielding a mighty axe
+
+%%%%
+a gravestone
+
+%%%%
+a heavily etched crystal wall
+
+%%%%
+a heavily etched metal wall
+
+%%%%
+a highly decorated stone wall
+
+%%%%
+an ice choked empty arch of ancient stone
+
+%%%%
+an ice covered rock wall
+
+%%%%
+an ice-covered rock wall
+
+%%%%
+an ice-covered stone wall
+
+%%%%
+an iron statue
+
+%%%%
+a large window
+
+%%%%
+a merfolk statue
+
+%%%%
+a one-way staircase leading down
+
+%%%%
+a one-way staircase leading up
+
+%%%%
+an otherworldly statue
+
+%%%%
+a pulsating floor
+
+%%%%
+a rock-blocked tunnel
+
+%%%%
+a rough-hewn floor
+
+%%%%
+a ruined idol
+
+%%%%
+a rune-carved clear stone wall
+
+%%%%
+a rune-carved stone wall
+
+%%%%
+a sarcophagus
+
+%%%%
+a sealed sarcophagus
+
+%%%%
+a silver wall
+
+%%%%
+a sinewy wall
+
+%%%%
+a spawn point
+
+%%%%
+a statue of a hideous four-limbed creature
+
+%%%%
+a strange rock wall
+
+%%%%
+a strange statue
+
+%%%%
+a tempered metal wall
+
+%%%%
+a thin membrane
+
+%%%%
+a wall of crystal
+
+%%%%
+a wall of white crystal
+
+%%%%
+a weirdly glowing ball
+
+%%%%
+a fleshy orifice
+
+%%%%
+
+################################
+# With "some" as determiner
+################################
 
 %%%%
 some lava
@@ -975,371 +690,56 @@ some deep water
 some shallow water
 
 %%%%
-a toxic bog
 
+# extras from .des files
 %%%%
-a collapsed entrance
+Some ice crusted deep water
 
 %%%%
-a mechanical trap
-
-%%%%
-an arrow trap
-
-%%%%
-a spear trap
-
-%%%%
-a blade trap
-
-%%%%
-a dart trap
-
-%%%%
-a bolt trap
-
-%%%%
-a net trap
-
-%%%%
-a pressure plate
-
-%%%%
-a dispersal trap
-
-%%%%
-a teleport trap
-
-%%%%
-a permanent teleport trap
-
-%%%%
-a shadow trap
-
-%%%%
-a dormant shadow trap
-
-%%%%
-an alarm trap
-
-%%%%
-a Zot trap
-
-%%%%
-a passage of Golubria
-
-%%%%
-a shaft
-
-%%%%
-a web
-
-%%%%
-a shop
-
-%%%%
-an abandoned shop
-
-%%%%
-an empty arch of ancient stone
-
-%%%%
-a detected shop or portal
-
-%%%%
-a stone staircase leading down
-
-%%%%
-a stone staircase leading up
-
-%%%%
-an escape hatch in the floor
-
-%%%%
-an escape hatch in the ceiling
-
-%%%%
-a labyrinth entrance
-
-%%%%
-a gateway to the Iron City of Dis
-
-%%%%
-a gateway to the ashen valley of Gehenna
-
-%%%%
-a gateway to the freezing wastes of Cocytus
-
-%%%%
-a gateway to the decaying netherworld of Tartarus
-
-%%%%
-a gateway to Hell
-
-%%%%
-a gateway back into the Dungeon
-
-%%%%
-a one-way gate to the infinite horrors of the Abyss
-
-%%%%
-an exit through the horrors of the Abyss
-
-%%%%
-a gateway leading out of the Abyss
-
-%%%%
-a one-way gate leading to the halls of Pandemonium
-
-%%%%
-a gate leading to another region of Pandemonium
-
-%%%%
-a gate leading out of Pandemonium
-
-%%%%
-a gate to the Vaults
-
-%%%%
-a gate leading back out of this place
-
-%%%%
-a gate to the Realm of Zot
-
-%%%%
-a gate leading to a distant place
-
-%%%%
-a gateway to a ziggurat
-
-%%%%
-a gateway to a bazaar
-
-%%%%
-a portal to a secret trove of treasure
-
-%%%%
-a glowing drain
-
-%%%%
-a sand-covered staircase
-
-%%%%
-a flagged portal
-
-%%%%
-a gate leading to a gauntlet
-
-%%%%
-a frozen archway
-
-%%%%
-a dark tunnel
-
-%%%%
-a magical portal
-
-%%%%
-a ruined gateway
-
-%%%%
-an ice covered gate leading back out of this place
-
-%%%%
-a rocky tunnel leading out of this place
-
-%%%%
-a portal leading out of this place
-
-%%%%
-a staircase leading out of the dungeon
-
-%%%%
-a staircase to the Slime Pits
-
-%%%%
-a staircase back to the Lair
-
-%%%%
-a staircase to the Orcish Mines
-
-%%%%
-a staircase back to the Dungeon
-
-%%%%
-a staircase to the Dwarven Hall
-
-%%%%
-a staircase to the Enchanted Forest
-
-%%%%
-a staircase to the Hall of Blades
-
-%%%%
-a staircase back to the Vaults
-
-%%%%
-a staircase to the Lair
-
-%%%%
-a staircase to the Crypt
-
-%%%%
-a staircase to the Ecumenical Temple
-
-%%%%
-a staircase to the Snake Pit
-
-%%%%
-a staircase to the Elven Halls
-
-%%%%
-a staircase back to the Mines
-
-%%%%
-a staircase to the Tomb
-
-%%%%
-a staircase back to the Crypt
-
-%%%%
-a staircase to the Swamp
-
-%%%%
-a staircase to the Shoals
-
-%%%%
-a hole to the Spider Nest
-
-%%%%
-a crawl-hole back to the Lair
-
-%%%%
-a staircase to the Depths
-
-%%%%
-a detected altar
-
-%%%%
-a glowing silver altar of Zin
-
-%%%%
-a glowing golden altar of the Shining One
-
-%%%%
-an ancient bone altar of Kikubaaqudgha
-
-%%%%
-a basalt altar of Yredelemnul
-
-%%%%
-a shimmering altar of Xom
-
-%%%%
-a radiant altar of Vehumet
-
-%%%%
-an iron altar of Okawaru
-
-%%%%
-a burning altar of Makhleb
-
-%%%%
-a shimmering blue altar of Sif Muna
-
-%%%%
-a bloodstained altar of Trog
-
-%%%%
-a sparkling altar of Nemelex Xobeh
-
-%%%%
-a white marble altar of Elyvilon
-
-%%%%
-a corrupted altar of Lugonu
-
-%%%%
-a roughly hewn altar of Beogh
-
-%%%%
-a viscous altar of Jiyva
-
-%%%%
-a blossoming altar of Fedhas
-
-%%%%
-a snail-covered altar of Cheibriados
-
-%%%%
-a broken altar of Ashenzari
-
-%%%%
-a shadowy altar of Dithmenos
-
-%%%%
-an opulent altar of Gozag
-
-%%%%
-a stormy altar of Qazlal
-
-%%%%
-a sacrificial altar of Ru
-
-%%%%
-a faded altar of an unknown god
-
-%%%%
-an oddly glowing altar of Pakellas
-
-%%%%
-a hide-covered altar of Uskayaw
-
-%%%%
-a hazy altar of Hepliaklqana
-
-%%%%
-an ornate altar of the Wu Jian Council
-
-%%%%
-a fountain of clear blue water
-
-%%%%
-a fountain of sparkling water
-
-%%%%
-a fountain of blood
-
-%%%%
-a dry fountain
-
-%%%%
-a short-range portal
-
-%%%%
-a teleporter
-
-%%%%
-a transporter
-
-%%%%
-a transporter landing site
-
-%%%%
-a sealed passage leading up
-
-%%%%
-a sealed passage leading down
-
-%%%%
-a gateway leading deeper into the Abyss
+Some ice crusted shallow water
 
 %%%%
 
 ################################
-# Plural
+# Without article
+################################
+
+# note: No need to repeat any that are listed with a definite or indefinite
+# article because a version with no article will be generated by grammar.txt
+
+%%%%
+unseen
+
+%%%%
+explore horizon
+
+%%%%
+
+# extras from .des files
+%%%%
+Ashen ground
+
+%%%%
+Frost-covered floor
+
+%%%%
+Viscous fluid
+
+%%%%
+
+################################
+# Counted
 # (used in dungeon overview screen)
 ################################
+%%%%
+1 runed door
+
+%%%%
+1 runed translucent door
+
+%%%%
+1 transporter
+
 %%%%
 %d runed doors
 
@@ -1356,16 +756,34 @@ a gateway leading deeper into the Abyss
 ################################
 %%%%
 covered with ice
-couvert de glace
+covert de glace
 %%%%
 spattered with blood
 éclaboussé de sang
 %%%%
 
+################################
+# Shop names
+################################
 %%%%
-{f}covered with ice
-couverte de glace
+Zin's Purification Station
+
 %%%%
-{f}spattered with blood
-éclaboussée de sang
+Gozag's Platinum Reserve
+
+%%%%
+The Legendary @owner@'s Legendary Smithy
+
+%%%%
+@owner@'s Merfolk Weapons
+
+%%%%
+@owner@'s Merfolk Armours
+
+%%%%
+@owner@'s Merfolk Magic
+
+%%%%
+@owner@'s Visitors' Centre
+
 %%%%

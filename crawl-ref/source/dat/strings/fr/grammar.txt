@@ -180,19 +180,31 @@ KEY:/^(.*)'s$/{poss}$1/
 # Generate feminine singular adjective from masculine singular
 %%%%
 GENERATE:f
-/([^e ])(?=( |$))/$1e/
+# temporary marker to tell us where to stop
+/ de /# de /
+/^[^#]*/([^e ])(?=( |$))/$1e/
+# remove temporary marker
+/# de / de /
 %%%%
 
 # Generate masculine plural adjective from masculine singular
 %%%%
 GENERATE:mpl
-/([^ ])(?=( |$))/$1s/
+# temporary marker to tell us where to stop
+/ de /# de /
+/^[^#]*/([^ ])(?=( |$))/$1s/
+# remove temporary marker
+/# de / de /
 %%%%
 
 # Generate feminine plural adjective from masculine singular
 %%%%
 GENERATE:fpl
-/([^e ])(?=( |$))/$1es/
-/e(?=( |$))/es/
+# temporary marker to tell us where to stop
+/ de /# de /
+/^[^#]*/([^e ])(?=( |$))/$1es/
+/^[^#]*/e(?=( |$))/es/
+# remove temporary marker
+/# de / de /
 %%%%
 

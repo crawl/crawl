@@ -51,6 +51,12 @@ int main()
     msg = uppercase_first(msg);
     show_result(msg, "La vache grise est heureuse.");
 
+    msg = localise("the runed translucent gate");
+    show_result(msg, "le portail translucide décoré de runes");
+
+    msg = localise("a runed translucent door");
+    show_result(msg, "une porte translucide décorée de runes");
+
     msg = localise("large closed door, spattered with blood");
     show_result(msg, "grande porte fermée, éclaboussée de sang");
 }
