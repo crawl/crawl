@@ -11300,6 +11300,8 @@ ITEM:   any randart jewellery
 KFEAT:  H = >
 KFEAT:  K = {
 KFEAT:  p = n
+SUBST:  V = |V
+KITEM:  V = victory no_pickup
 # Do these substs now so they can be cleaned up by branch.
 NSUBST: D = 8 / 2=9 / 0, F = 8 / 2=9 / 0, J = 8 / 2=9 / 0, f = 2=f / |
 SUBST:  E = 89--, e = ee$
@@ -11350,7 +11352,7 @@ MAP
  `c-----mmmmmmmmmmmmmmmmmmmp`
  `c-----mmmmmmmmmmmmmp*memep`
 ..p-----mmmmmmmmmmJJmmmmmmmp..
-@PpQ-d---------mmmHJmp|mRm|pS@
+@PpQ-d---------mmmHJmp|mRmVpS@
 ..p-----mmmmmmmmmmJJmmmmmmmp..
  `c-----mmmmmmmmmmmmmp*memep`
  `c-----mmmmmmmmmmmmmmmmmmmp`
