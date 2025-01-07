@@ -9,27 +9,658 @@
 # they come after the noun (e.g. " ouvert" in French).
 
 ################################
-# General adjectives
-# (used for more than one type of thing)
+# size
 ################################
+
+# used for doors/gates, slimes, and also for item flavour
+# slime creatures: large, very large, enormous, titanic
+# doors/gates: miniscule, large, huge
+# item flavour: tiny, small, large (isn't really meaningful in this context)
+
+%%%%
+"miniscule "
+"miniscule "
+%%%%
+"tiny "
+"infime "
+%%%%
+"small "
+"petit "
 %%%%
 "large "
 "grand "
 %%%%
-"runed "
-" décoré de runes"
+"very large "
+"très grand "
 %%%%
-
+"huge "
+"immense "
 %%%%
-"{f}large "
-"grande "
+"enormous "
+"énorme "
 %%%%
-"{f}runed "
-" décorée de runes"
+"titanic "
+"titanesque "
 %%%%
 
 ################################
-# Adjectives for doors/gates
+# Meaningful item adjectives
+################################
+
+%%%%
+# affected by Animate Armour spell
+"animated "
+
+%%%%
+"cursed "
+
+%%%%
+"enchanted "
+
+%%%%
+"melded "
+
+%%%%
+
+################################
+# Cosmetic adjectives for unidentified items
+# (don't have any gameplay meaning)
+################################
+%%%%
+"ancient "
+
+%%%%
+"blackened "
+
+%%%%
+"bloodstained "
+
+%%%%
+"bound "
+
+%%%%
+"buzzing "
+
+%%%%
+"clouded "
+
+%%%%
+"coiled "
+
+%%%%
+"colourful "
+
+%%%%
+# only used in "creamy pearl robe"
+"creamy "
+
+%%%%
+"crooked "
+
+%%%%
+"crude "
+
+%%%%
+"curved "
+
+%%%%
+"dazzling "
+
+%%%%
+"dented "
+
+%%%%
+"dull "
+
+%%%%
+"dyed "
+
+%%%%
+"embroidered "
+
+%%%%
+"encrusted "
+
+%%%%
+"fading "
+
+%%%%
+"fine "
+
+%%%%
+"flickering "
+
+%%%%
+"forked "
+
+%%%%
+"glimmering "
+
+%%%%
+"glittering "
+
+%%%%
+# also a rune
+"glowing "
+
+%%%%
+"gnarled "
+
+%%%%
+"graven "
+
+%%%%
+"heavy "
+
+%%%%
+"humming "
+
+%%%%
+"ichor-stained "
+
+%%%%
+"iridescent "
+
+%%%%
+"jewelled "
+
+%%%%
+"knobbly "
+
+%%%%
+"long "
+
+%%%%
+# used for amulets and potions
+"lumpy "
+
+%%%%
+"masterwork "
+
+%%%%
+"non-descript "
+
+%%%%
+"notched "
+
+%%%%
+"opalescent "
+
+%%%%
+"ornate "
+
+%%%%
+"pitted "
+
+%%%%
+"polished "
+
+%%%%
+"ripped "
+
+%%%%
+"scintillating "
+
+%%%%
+"scorched "
+
+%%%%
+"scratched "
+
+%%%%
+# also a rune
+"serpentine "
+
+%%%%
+"shadowed "
+
+%%%%
+"sharpened "
+
+%%%%
+"sheer "
+
+%%%%
+"shimmering "
+
+%%%%
+"shiny "
+
+%%%%
+"short "
+
+%%%%
+"smelly "
+
+%%%%
+"smoking "
+
+%%%%
+"smouldering "
+
+%%%%
+"sparkling "
+
+%%%%
+"spiked "
+
+%%%%
+"square "
+
+%%%%
+"steaming "
+
+%%%%
+"tapered "
+
+%%%%
+"tattered "
+
+%%%%
+"thick "
+
+%%%%
+"thin "
+
+%%%%
+"transparent "
+
+%%%%
+"triangular "
+
+%%%%
+"tubular "
+
+%%%%
+"twisted "
+
+%%%%
+"twitching "
+
+%%%%
+"vibrating "
+
+%%%%
+"warped "
+
+%%%%
+"wavering "
+
+%%%%
+"weird "
+
+%%%%
+"wizard "
+
+%%%%
+"worn "
+
+%%%%
+
+#adverbs (e.g. brightly glowing)
+%%%%
+"brightly "
+
+%%%%
+"distressingly "
+
+%%%%
+"fabulously "
+
+%%%%
+"faintly "
+
+%%%%
+"heavily "
+
+%%%%
+"ominously "
+
+%%%%
+
+%%%%
+"agate-encrusted "
+
+%%%%
+"amber-encrusted "
+
+%%%%
+"amethyst-encrusted "
+
+%%%%
+"aquamarine-encrusted "
+
+%%%%
+"black opal-encrusted "
+
+%%%%
+"citrine-encrusted "
+
+%%%%
+"diamond-encrusted "
+
+%%%%
+"emerald-encrusted "
+
+%%%%
+"garnet-encrusted "
+
+%%%%
+"jacinth-encrusted "
+
+%%%%
+"jade-encrusted "
+
+%%%%
+"jasper-encrusted "
+
+%%%%
+"jet-encrusted "
+
+%%%%
+"obsidian-encrusted "
+
+%%%%
+"opal-encrusted "
+
+%%%%
+"pearl-encrusted "
+
+%%%%
+"ruby-encrusted "
+
+%%%%
+"sapphire-encrusted "
+
+%%%%
+"tiger eye-encrusted "
+
+%%%%
+"topaz-encrusted "
+
+%%%%
+"turquoise-encrusted "
+
+%%%%
+
+%%%%
+"agate-studded "
+
+%%%%
+"amber-studded "
+
+%%%%
+"amethyst-studded "
+
+%%%%
+"aquamarine-studded "
+
+%%%%
+"black opal-studded "
+
+%%%%
+"citrine-studded "
+
+%%%%
+"diamond-studded "
+
+%%%%
+"emerald-studded "
+
+%%%%
+"garnet-studded "
+
+%%%%
+"jacinth-studded "
+
+%%%%
+"jade-studded "
+
+%%%%
+"jasper-studded "
+
+%%%%
+"jet-studded "
+
+%%%%
+"obsidian-studded "
+
+%%%%
+"opal-studded "
+
+%%%%
+"pearl-studded "
+
+%%%%
+"ruby-studded "
+
+%%%%
+"sapphire-studded "
+
+%%%%
+"tiger eye-studded "
+
+%%%%
+"topaz-studded "
+
+%%%%
+"turquoise-studded "
+
+%%%%
+
+################################
+# materials
+################################
+
+# used for randart weapons
+# (also used for jewellery, and in some cases, potion or rune, but we've given specific translations for those)
+%%%%
+"crystal "
+
+%%%%
+"ivory "
+
+%%%%
+"bone "
+
+%%%%
+"sapphire "
+
+%%%%
+"ebony "
+
+%%%%
+
+################################
+# cosmetic adjectives for unidentified books
+################################
+
+# extracted from dat/database/randbook.txt
+# books can also get black, blackened, colourful, graven, sparkling,
+# but those are covered elsewhere
+
+%%%%
+"antique "
+
+%%%%
+"conspicuous "
+
+%%%%
+"droning "
+
+%%%%
+"engraved "
+
+%%%%
+"glistering "
+
+%%%%
+"inconspicuous "
+
+%%%%
+"levitating "
+
+%%%%
+"rare "
+
+%%%%
+"torn "
+
+%%%%
+"yellowed "
+
+%%%%
+
+################################
+# weapon brands applied as adjectives
+################################
+%%%%
+"vorpal "
+
+%%%%
+"antimagic "
+
+%%%%
+"vampiric "
+
+%%%%
+
+################################
+# colours
+################################
+
+# used for draconians, (very) ugly things, unidentified potions
+# for potions, these are cosmetic, but they are meaningful on monsters
+
+%%%%
+"blue "
+
+%%%%
+"black "
+
+%%%%
+"silvery "
+
+%%%%
+"cyan "
+
+%%%%
+"purple "
+
+%%%%
+"orange "
+
+%%%%
+"inky "
+
+%%%%
+"red "
+
+%%%%
+"yellow "
+
+%%%%
+"green "
+
+%%%%
+"brown "
+
+%%%%
+"white "
+
+%%%%
+"grey "
+
+%%%%
+"pink "
+
+%%%%
+"coppery "
+
+%%%%
+"puce "
+
+%%%%
+"pale "
+
+%%%%
+# used for potion and rune
+"dark "
+
+%%%%
+
+# These ones are a material for jewellery, etc., and also a potion colour.
+# Since potions are the only items that use them as colours, we define
+# specific strings with this usage in items*.txt.
+%%%%
+#"amethyst "
+#"amethystfarbene "
+%%%%
+#"emerald "
+#"smaragdgrüne "
+%%%%
+#"ruby "
+#"rubinrote "
+%%%%
+#"sapphire "
+#"saphirblaue "
+%%%%
+
+# used to mean both metal and colour
+%%%%
+"silver "
+
+%%%%
+"golden "
+
+%%%%
+
+################################
+# potions
+################################
+
+# potion qualifiers (optionally added in front of colour - cosmetic)
+%%%%
+"bubbling "
+
+%%%%
+"fuming "
+
+%%%%
+"fizzy "
+
+%%%%
+"viscous "
+
+%%%%
+"smoky "
+
+%%%%
+"sedimented "
+
+%%%%
+"metallic "
+
+%%%%
+"murky "
+
+%%%%
+"gluggy "
+
+%%%%
+"oily "
+
+%%%%
+"emulsified "
+
+%%%%
+# also a rune
+"slimy "
+
+%%%%
+
+################################
+# doors/gates
 ################################
 %%%%
 "open "
@@ -38,23 +669,394 @@
 "closed "
 " fermé"
 %%%%
+# also used for items
+"runed "
+" décoré de runes"
+%%%%
 "sealed "
-" scellé"
+" scellée"
 %%%%
 "translucent "
 " translucide"
 %%%%
-"huge "
-"énorme "
+
+################################
+# body parts
+################################
 %%%%
+"bony "
 
 %%%%
-"{f}open "
-" ouverte"
+"shadowy "
+
 %%%%
-"{f}closed "
-" fermée"
+"scaled "
+
 %%%%
-"{f}sealed "
-" scellée"
+"feathered "
+
+%%%%
+"furry "
+
+%%%%
+"bandage-wrapped "
+
+%%%%
+"fleshy "
+
+%%%%
+# blade hands/paws/etc.
+"blade "
+
+%%%%
+
+################################
+# player draconian scale colours
+################################
+%%%%
+fiery red
+
+%%%%
+icy white
+
+%%%%
+lurid green
+
+%%%%
+golden yellow
+
+%%%%
+dull iron-grey
+
+%%%%
+glossy black
+
+%%%%
+rich purple
+
+%%%%
+pale cyan-grey
+
+%%%%
+plain brown
+
+%%%%
+
+################################
+# monsters
+################################
+%%%%
+"nearby "
+
+%%%%
+"helpless "
+
+%%%%
+"submerged "
+
+%%%%
+"spectral "
+
+%%%%
+"ghostly "
+
+%%%%
+"active "
+
+%%%%
+"sensed "
+
+%%%%
+"hexed "
+
+%%%%
+"charmed "
+
+%%%%
+"bribed "
+
+%%%%
+"neutral "
+
+%%%%
+"non-hostile "
+
+%%%%
+"charred "
+
+%%%%
+"frost-covered "
+
+%%%%
+"deformed "
+
+%%%%
+"grotesque "
+
+%%%%
+"hideous "
+
+%%%%
+"febrile "
+
+%%%%
+"sickly "
+
+%%%%
+"malarious "
+
+%%%%
+"drunken "
+
+%%%%
+"greater "
+
+%%%%
+"giant "
+
+%%%%
+"pristine "
+
+%%%%
+"skinned "
+
+%%%%
+"rotten "
+
+%%%%
+# used for obsolete monsters
+"removed "
+
+%%%%
+
+# mutant beasts from a box of beasts
+%%%%
+"larval "
+
+%%%%
+"juvenile "
+
+%%%%
+"mature "
+
+%%%%
+"elder "
+
+%%%%
+"primal "
+
+%%%%
+
+# player ghost ranks
+%%%%
+"weakling "
+
+%%%%
+"amateur "
+
+%%%%
+"novice "
+
+%%%%
+"journeyman "
+
+%%%%
+"adept "
+
+%%%%
+"veteran "
+
+%%%%
+"master "
+
+%%%%
+"legendary "
+
+%%%%
+
+# demonspawn
+%%%%
+"monstrous "
+
+%%%%
+"gelid "
+
+%%%%
+"infernal "
+
+%%%%
+"torturous "
+
+%%%%
+
+# hydras
+%%%%
+"Lernaean "
+
+%%%%
+"one-headed "
+
+%%%%
+"two-headed "
+
+%%%%
+"three-headed "
+
+%%%%
+"four-headed "
+
+%%%%
+"five-headed "
+
+%%%%
+"six-headed "
+
+%%%%
+"seven-headed "
+
+%%%%
+"eight-headed "
+
+%%%%
+"nine-headed "
+
+%%%%
+"ten-headed "
+
+%%%%
+"11-headed "
+
+%%%%
+"12-headed "
+
+%%%%
+"13-headed "
+
+%%%%
+"14-headed "
+
+%%%%
+"15-headed "
+
+%%%%
+"16-headed "
+
+%%%%
+"17-headed "
+
+%%%%
+"18-headed "
+
+%%%%
+"19-headed "
+
+%%%%
+"20-headed "
+
+%%%%
+"21-headed "
+
+%%%%
+"22-headed "
+
+%%%%
+"23-headed "
+
+%%%%
+"24-headed "
+
+%%%%
+"25-headed "
+
+%%%%
+"26-headed "
+
+%%%%
+"27-headed "
+
+%%%%
+
+# polymorphed monsters or pillars of salt, etc.
+%%%%
+"@monster@ shaped "
+
+%%%%
+
+# shaped can also appear without a monster name in front of it
+%%%%
+"shaped "
+
+%%%%
+
+# not actually adjectives, but put in front of "statue" like an adjective
+%%%%
+"zot "
+
+%%%%
+"archer "
+
+%%%%
+"conjurer "
+
+%%%%
+"fire elementalist "
+
+%%%%
+# no, this is not a mistake - water not ice
+"water elementalist "
+
+%%%%
+"earth elementalist "
+
+%%%%
+"air elementalist "
+
+%%%%
+
+################################
+# timed portal noises
+################################
+
+%%%%
+"slow "
+
+%%%%
+"stately "
+
+%%%%
+"steady "
+
+%%%%
+"brisk "
+
+%%%%
+"quick "
+
+%%%%
+"rapid "
+
+%%%%
+"urgent "
+
+%%%%
+"frantic "
+
+%%%%
+"faint "
+
+%%%%
+"quiet "
+
+%%%%
+"loud "
+
+%%%%
+"ear-piercing "
+
+%%%%
+"thunderous "
+
+%%%%
+"deafening "
+
 %%%%
