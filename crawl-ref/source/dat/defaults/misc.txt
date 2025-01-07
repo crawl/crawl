@@ -17,4 +17,4 @@ note_monsters += orb of fire, ancient lich, dread lich, Sigmund
 
 monster_item_view_features += stair, trap
 
-lang_menu=en:English,de:Deutsch
+lang_menu=en:English,de:Deutsch,fr:Français (travail en cours)
