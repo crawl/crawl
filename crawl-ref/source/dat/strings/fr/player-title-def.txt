@@ -1,0 +1,1401 @@
+###############################################################################
+#
+# Translations for player titles (definite article)
+#
+###############################################################################
+
+##############################################
+# God-given titles
+# (with article - used in HUD)
+##############################################
+
+# Zin
+%%%%
+the Blasphemer
+
+%%%%
+the Anchorite
+
+%%%%
+the Apologist
+
+%%%%
+the Pious
+
+%%%%
+the Devout
+
+%%%%
+the Orthodox
+
+%%%%
+the Immaculate
+
+%%%%
+the Bringer of Law
+
+%%%%
+
+# Shining One
+%%%%
+the Honourless
+
+%%%%
+the Acolyte
+
+%%%%
+the Righteous
+
+%%%%
+the Unflinching
+
+%%%%
+the Holy Warrior
+
+%%%%
+the Exorcist
+
+%%%%
+the Demon Slayer
+
+%%%%
+the Bringer of Light
+
+%%%%
+
+# Kiku
+%%%%
+the Tormented
+
+%%%%
+the Purveyor of Pain
+
+%%%%
+the Scholar of Death
+
+%%%%
+the Merchant of Misery
+
+%%%%
+the Artisan of Death
+
+%%%%
+the Dealer of Despair
+
+%%%%
+the Black Sun
+
+%%%%
+the Lord of Darkness
+
+%%%%
+
+# Yred
+%%%%
+the Traitor
+
+%%%%
+the Tainted
+
+%%%%
+the Torchbearer
+
+%%%%
+# discard @Genus@ to avoid having to handle genders
+the Fey @Genus@
+
+%%%%
+the Black Crusader
+
+%%%%
+the Sculptor of Flesh
+
+%%%%
+the Harbinger of Death
+
+%%%%
+the Grim Reaper
+
+%%%%
+
+# Xom
+%%%%
+the Toy
+
+%%%%
+
+# Vehumet
+%%%%
+the Meek
+
+%%%%
+the Sorcerer's Apprentice
+
+%%%%
+the Scholar of Destruction
+
+%%%%
+the Caster of Ruination
+
+%%%%
+the Traumaturge
+
+%%%%
+the Battlemage
+
+%%%%
+the Warlock
+
+%%%%
+the Luminary of Lethal Lore
+
+%%%%
+
+# Okawaru
+%%%%
+the Coward
+
+%%%%
+the Struggler
+
+%%%%
+the Combatant
+
+%%%%
+the Warrior
+
+%%%%
+the Knight
+
+%%%%
+the Warmonger
+
+%%%%
+the Commander
+
+%%%%
+the Victor of a Thousand Battles
+
+%%%%
+
+# Makhleb
+%%%%
+the Orderly
+
+%%%%
+the Spawn of Chaos
+
+%%%%
+the Disciple of Destruction
+
+%%%%
+the Fanfare of Bloodshed
+
+%%%%
+the Fiendish
+
+%%%%
+# discard genus to avoid gender issues
+the Demolition @Genus@
+
+%%%%
+the Pandemonic
+
+%%%%
+the Champion of Chaos
+
+%%%%
+
+# Sif Muna
+%%%%
+the Ignorant
+
+%%%%
+the Disciple
+
+%%%%
+the Student
+
+%%%%
+the Adept
+
+%%%%
+the Scribe
+
+%%%%
+the Scholar
+
+%%%%
+the Sage
+
+%%%%
+the Genius of the Arcane
+
+%%%%
+
+# Trog
+%%%%
+the Puny
+
+%%%%
+the Troglodyte
+
+%%%%
+the Angry Troglodyte
+
+%%%%
+the Frenzied
+
+%%%%
+# discard genus to avoid gender issues
+the @Genus@ of Prey
+
+%%%%
+the Rampant
+
+%%%%
+# discard genus to avoid gender issues
+the Wild @Genus@
+
+%%%%
+the Bane of Scribes
+
+%%%%
+
+# Nemelex
+%%%%
+# discard genus to avoid gender issues
+the Unlucky @Genus@
+
+%%%%
+the Pannier
+
+%%%%
+the Jester
+
+%%%%
+the Fortune-Teller
+
+%%%%
+the Soothsayer
+
+%%%%
+the Magus
+
+%%%%
+the Cardsharp
+
+%%%%
+the Hand of Fortune
+
+%%%%
+
+# Elyvilon
+%%%%
+the Sinner
+
+%%%%
+the Practitioner
+
+%%%%
+the Comforter
+
+%%%%
+the Caregiver
+
+%%%%
+the Mender
+
+%%%%
+the Pacifist
+
+%%%%
+# discard genus to avoid gender issues
+the Purifying @Genus@
+
+%%%%
+the Bringer of Life
+
+%%%%
+
+# Lugonu
+%%%%
+the Pure
+
+%%%%
+the Abyss-Baptised
+
+%%%%
+the Unweaver
+
+%%%%
+# discard genus to avoid gender issues
+the Distorting @Genus@
+
+%%%%
+the Agent of Entropy
+
+%%%%
+the Schismatic
+
+%%%%
+the Envoy of Void
+
+%%%%
+the Corrupter of Planes
+
+%%%%
+
+# Beogh
+%%%%
+the Apostate
+
+%%%%
+the Messenger
+
+%%%%
+the Proselytiser
+
+%%%%
+the Priest
+
+%%%%
+the Missionary
+
+%%%%
+the Evangelist
+
+%%%%
+the Apostle
+
+%%%%
+the Messiah
+
+%%%%
+
+# Jiyva
+%%%%
+the Scum
+
+%%%%
+the Squelcher
+
+%%%%
+the Ooze
+
+%%%%
+the Jelly
+
+%%%%
+the Slime Creature
+
+%%%%
+# discard genus to avoid gender issues
+the Dissolving @Genus@
+
+%%%%
+the Blob
+
+%%%%
+# duplicate (monster)
+#the Royal Jelly
+#das Gelee Royale
+%%%%
+
+# Fedhas
+%%%%
+the @Walking@ Fertiliser
+
+%%%%
+the Fungal
+
+%%%%
+# discard genus to avoid gender issues
+the Green @Genus@
+
+%%%%
+the Cultivator
+
+%%%%
+the Fruitful
+
+%%%%
+the Photosynthesist
+
+%%%%
+the Green Death
+
+%%%%
+the Force of Nature
+
+%%%%
+
+# Cheibriados
+%%%%
+the Hasty
+
+%%%%
+# discard genus to avoid gender issues
+the Sluggish @Genus@
+
+%%%%
+the Deliberate
+
+%%%%
+the Unhurried
+
+%%%%
+the Contemplative
+
+%%%%
+the Epochal
+
+%%%%
+the Timeless
+
+%%%%
+the @Adj@ Aeon
+
+%%%%
+
+# Ashenzari
+%%%%
+the Star-crossed
+
+%%%%
+the Cursed
+
+%%%%
+the Initiated
+
+%%%%
+the Seer
+
+%%%%
+the Oracle
+
+%%%%
+the Illuminatus
+
+%%%%
+the Omniscient
+
+%%%%
+
+# Dithmenos
+%%%%
+the Ember
+
+%%%%
+the Gloomy
+
+%%%%
+the Darkened
+
+%%%%
+the Extinguished
+
+%%%%
+the Caliginous
+
+%%%%
+the Umbral
+
+%%%%
+the Hand of Shadow
+
+%%%%
+the Eternal Night
+
+%%%%
+
+# Gozag
+%%%%
+the Profligate
+
+%%%%
+the Pauper
+
+%%%%
+the Entrepreneur
+
+%%%%
+the Capitalist
+
+%%%%
+the Rich
+
+%%%%
+the Opulent
+
+%%%%
+the Tycoon
+
+%%%%
+the Plutocrat
+
+%%%%
+
+# Qazlal
+%%%%
+the Unspoiled
+
+%%%%
+the @Adj@ Mishap
+
+%%%%
+the Lightning Rod
+
+%%%%
+the @Adj@ Disaster
+
+%%%%
+the Eye of the Storm
+
+%%%%
+the @Adj@ Catastrophe
+
+%%%%
+the @Adj@ Cataclysm
+
+%%%%
+the End of an Era
+
+%%%%
+
+# Ru
+%%%%
+the Sleeper
+
+%%%%
+the Questioner
+
+%%%%
+the Initiate
+
+%%%%
+the Seeker of Truth
+
+%%%%
+the @Walker@ of the Path
+
+%%%%
+the Lifter of the Veil
+
+%%%%
+the Transcendent
+
+%%%%
+the Drop of Water
+
+%%%%
+
+# Pakellas (obsolete)
+%%%%
+the Reactionary
+
+%%%%
+the Apprentice
+
+%%%%
+the Inquisitive
+
+%%%%
+the Experimenter
+
+%%%%
+the Inventor
+
+%%%%
+the Pioneer
+
+%%%%
+the Brilliant
+
+%%%%
+the Grand Gadgeteer
+
+%%%%
+
+# Uskayaw
+%%%%
+the Prude
+
+%%%%
+the Wallflower
+
+%%%%
+the Party-goer
+
+%%%%
+the Dancer
+
+%%%%
+the Impassioned
+
+%%%%
+the Rapturous
+
+%%%%
+the Ecstatic
+
+%%%%
+the Rhythm of Life and Death
+
+%%%%
+
+# Hepliaklqana
+%%%%
+the Damnatio Memoriae
+
+%%%%
+the Hazy
+
+%%%%
+the @Adj@ Child
+
+%%%%
+the Storyteller
+
+%%%%
+the Brooding
+
+%%%%
+the Anamnesiscian
+
+%%%%
+the Grand Scion
+
+%%%%
+the Unforgettable
+
+%%%%
+
+# Wu Jian
+%%%%
+the Wooden Rat
+
+%%%%
+the Young Dog
+
+%%%%
+the Young Crane
+
+%%%%
+the Young Tiger
+
+%%%%
+the Young Dragon
+
+%%%%
+the Red Sash
+
+%%%%
+the Golden Sash
+
+%%%%
+the Sifu
+
+%%%%
+
+##############################################
+# Skill-based titles
+# (with article - used in HUD)
+##############################################
+
+# Fighting
+%%%%
+the Skirmisher
+
+%%%%
+the Fighter
+
+%%%%
+# duplicate (Okawaru title)
+#the Warrior
+#der Krieger
+%%%%
+the Slayer
+
+%%%%
+the Conqueror
+
+%%%%
+
+# Short Blades
+%%%%
+the Cutter
+
+%%%%
+the Slicer
+
+%%%%
+the Swashbuckler
+
+%%%%
+the Cutthroat
+
+%%%%
+the Politician
+
+%%%%
+
+# Long Blades
+%%%%
+the Slasher
+
+%%%%
+the Carver
+
+%%%%
+the Fencer
+
+%%%%
+the @Adj@ Blade
+
+%%%%
+the Swordmaster
+
+%%%%
+
+# Axes
+%%%%
+the Chopper
+
+%%%%
+the Cleaver
+
+%%%%
+the Severer
+
+%%%%
+# duplicate of monster
+#the Executioner
+#der Scharfrichter
+%%%%
+the Axe Maniac
+
+%%%%
+
+# Maces & Flails
+%%%%
+the Cudgeller
+
+%%%%
+the Basher
+
+%%%%
+the Bludgeoner
+
+%%%%
+the Shatterer
+
+%%%%
+the Skullcrusher
+
+%%%%
+
+# Polearms
+%%%%
+the Poker
+
+%%%%
+the Spear-Bearer
+
+%%%%
+the Impaler
+
+%%%%
+the Phalangite
+
+%%%%
+the @Adj@ Porcupine
+
+%%%%
+# palentonga
+the Prickly Pangolin
+
+%%%%
+
+# Staves
+%%%%
+the Twirler
+
+%%%%
+the Cruncher
+
+%%%%
+the Stickfighter
+
+%%%%
+the Pulveriser
+
+%%%%
+the Chief of Staff
+
+%%%%
+
+# Slings
+%%%%
+the Vandal
+
+%%%%
+the Slinger
+
+%%%%
+the Whirler
+
+%%%%
+the Slingshot
+
+%%%%
+the @Adj@ Catapult
+
+%%%%
+
+# Bows
+%%%%
+the Shooter
+
+%%%%
+the Archer
+
+%%%%
+the Marks@genus@
+
+%%%%
+the Crack Shot
+
+%%%%
+the Merry @Genus@
+
+%%%%
+
+# Crossbows
+%%%%
+the Bolt Thrower
+
+%%%%
+the Quickloader
+
+%%%%
+the Sharpshooter
+
+%%%%
+the Sniper
+
+%%%%
+the @Adj@ Arbalest
+
+%%%%
+
+# Throwing
+%%%%
+the Chucker
+
+%%%%
+the Thrower
+
+%%%%
+the Deadly Accurate
+
+%%%%
+the Hawkeye
+
+%%%%
+the @Adj@ Ballista
+
+%%%%
+
+# Armour
+%%%%
+the Covered
+
+%%%%
+the Protected
+
+%%%%
+the Tortoise
+
+%%%%
+the Impregnable
+
+%%%%
+the Invulnerable
+
+%%%%
+
+# Dodging
+%%%%
+the Ducker
+
+%%%%
+the Nimble
+
+%%%%
+the Spry
+
+%%%%
+the Acrobat
+
+%%%%
+the Intangible
+
+%%%%
+
+# Stealth
+%%%%
+the Sneak
+
+%%%%
+the Covert
+
+%%%%
+the Unseen
+
+%%%%
+the Imperceptible
+
+%%%%
+the Ninja
+
+%%%%
+
+# Shields
+%%%%
+the Shield-Bearer
+
+%%%%
+the Blocker
+
+%%%%
+the Peltast
+
+%%%%
+the Hoplite
+
+%%%%
+the @Adj@ Barricade
+
+%%%%
+
+# Spellcasting
+%%%%
+the Magician
+
+%%%%
+the Thaumaturge
+
+%%%%
+the Eclecticist
+
+%%%%
+the Sorcerer
+
+%%%%
+the Archmage
+
+%%%%
+
+# Conjurations
+%%%%
+the Conjurer
+
+%%%%
+the Destroyer
+
+%%%%
+the Devastator
+
+%%%%
+the Ruinous
+
+%%%%
+the Annihilator
+
+%%%%
+
+# Hexes
+%%%%
+the Vexing
+
+%%%%
+the Jinx
+
+%%%%
+the Bewitcher
+
+%%%%
+the Maledictor
+
+%%%%
+the Spellbinder
+
+%%%%
+
+# Summonings
+%%%%
+the Caller
+
+%%%%
+the Summoner
+
+%%%%
+the Convoker
+
+%%%%
+the Demonologist
+
+%%%%
+# duplicate of monster
+#the Hellbinder
+#der Höllenbinder
+%%%%
+
+# Necromancy
+%%%%
+the Grave Robber
+
+%%%%
+the Reanimator
+
+%%%%
+the Necromancer
+
+%%%%
+the Thanatomancer
+
+%%%%
+# avoid using definite article because genders
+the @Genus_Short@ of Death
+
+%%%%
+
+# Translocations
+%%%%
+the Grasshopper
+
+%%%%
+the Placeless @Genus@
+
+%%%%
+the Blinker
+
+%%%%
+the Portalist
+
+%%%%
+the Plane @Walker@
+
+%%%%
+
+# Transmutations
+%%%%
+the Changer
+
+%%%%
+the Transmogrifier
+
+%%%%
+the Alchemist
+
+%%%%
+the Malleable
+
+%%%%
+the Shapeless @Genus@
+
+%%%%
+
+# Fire Magic
+%%%%
+the Firebug
+
+%%%%
+the Arsonist
+
+%%%%
+the Scorcher
+
+%%%%
+the Pyromancer
+
+%%%%
+the Infernalist
+
+%%%%
+
+# Ice Magic
+%%%%
+the Chiller
+
+%%%%
+the Frost Mage
+
+%%%%
+the Gelid
+
+%%%%
+the Cryomancer
+
+%%%%
+the Englaciator
+
+%%%%
+
+# Air Magic
+%%%%
+the Gusty
+
+%%%%
+the Zephyrmancer
+
+%%%%
+the Stormcaller
+
+%%%%
+# duplicate of monster
+#the Cloud Mage
+#der Wolkenmagier
+%%%%
+the Meteorologist
+
+%%%%
+
+# Earth Magic
+%%%%
+the Digger
+
+%%%%
+the Geomancer
+
+%%%%
+the Earth Mage
+
+%%%%
+the Metallomancer
+
+%%%%
+the Petrodigitator
+
+%%%%
+
+# Poison Magic
+%%%%
+the Stinger
+
+%%%%
+the Tainter
+
+%%%%
+the Polluter
+
+%%%%
+the Contaminator
+
+%%%%
+the Envenomancer
+
+%%%%
+
+# Invocations
+%%%%
+the Unbeliever
+
+%%%%
+the Agnostic
+
+%%%%
+the Dissident
+
+%%%%
+the Heretic
+
+%%%%
+# duplicate (Beogh title)
+#the Apostate
+#der Apostat
+%%%%
+
+# Evocations
+%%%%
+the Charlatan
+
+%%%%
+the Prestidigitator
+
+%%%%
+the Fetichist
+
+%%%%
+the Evocator
+
+%%%%
+the Talismancer
+
+%%%%
+
+# Unarmed Combat
+%%%%
+the Ruffian
+
+%%%%
+the Grappler
+
+%%%%
+the Brawler
+
+%%%%
+the Wrestler
+
+%%%%
+the @Weight@ Champion
+
+%%%%
+# Djinni
+the Weightless Champion
+
+%%%%
+# mummy
+the Pharaoh
+
+%%%%
+
+# Weight classes
+%%%%
+Heavyweight
+
+%%%%
+Cruiserweight
+
+%%%%
+Featherweight
+
+%%%%
+Flyweight
+
+%%%%
+Lightweight
+
+%%%%
+Middleweight
+
+%%%%
+
+# Unarmed (martial arts)
+%%%%
+the Insei
+
+%%%%
+the Martial Artist
+
+%%%%
+the Black Belt
+
+%%%%
+the Sensei
+
+%%%%
+the Grand Master
+
+%%%%
+
+# Unarmed (tooth and claw)
+%%%%
+the Scratcher
+
+%%%%
+the Gouger
+
+%%%%
+the Ripper
+
+%%%%
+the Eviscerator
+
+%%%%
+the Sabretooth
+
+%%%%
+
+# special cases
+%%%%
+the Adventurer
+
+%%%%
+the Worldbinder
+
+%%%%
+the Planerender
+
+%%%%
+the Blademaster
+
+%%%%
+the Blood Saint
+
+%%%%
+the Master Archer
+
+%%%%
+the Ogre Mage
+
+%%%%
+la Petite Mort
+
+%%%%
+the Swordfish
+
+%%%%
+the Rolling Thunder
+
+%%%%
+the Holy Roller
+
+%%%%
+the Forbidden One
+
+%%%%
+the Black Lotus
+
+%%%%
+the Rockslime
+
+%%%%
+the God-Hated
+
+%%%%
+the Wallbreaker
+
+%%%%
+the Highly Combustible
+
+%%%%
+the Teletunneler
+
+%%%%
+# vine stalker skilled in necromancy
+the Corpseflower
+
+%%%%
+
+# draconian titles
+%%%%
+the Fire Dragon
+
+%%%%
+the Ice Dragon
+
+%%%%
+the Iron Dragon
+
+%%%%
+the Storm Dragon
+
+%%%%
+the Swamp Dragon
+
+%%%%
+the Faerie Dragon
+
+%%%%

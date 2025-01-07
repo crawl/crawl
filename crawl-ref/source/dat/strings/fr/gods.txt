@@ -1,0 +1,664 @@
+###############################################################################
+#
+# Translations - gods
+#
+###############################################################################
+%%%%
+
+########################
+# God names - nominative
+########################
+%%%%
+Ashenzari
+
+%%%%
+Beogh
+
+%%%%
+Cheibriados
+
+%%%%
+Dithmenos
+
+%%%%
+Elyvilon
+
+%%%%
+Fedhas
+
+%%%%
+Fedhas Madash
+
+%%%%
+Gozag
+
+%%%%
+Hepliaklqana
+
+%%%%
+Jiyva
+
+%%%%
+# Jiyva has a randomly-generated second name
+Jiyva %s
+
+%%%%
+Kikubaaqudgha
+
+%%%%
+Lugonu
+
+%%%%
+Makhleb
+
+%%%%
+Nemelex
+
+%%%%
+Nemelex Xobeh
+
+%%%%
+Okawaru
+
+%%%%
+Qazlal
+
+%%%%
+Ru
+
+%%%%
+Sif Muna
+
+%%%%
+Trog
+
+%%%%
+Uskayaw
+
+%%%%
+Vehumet
+
+%%%%
+Xom
+
+%%%%
+Yredelemnul
+
+%%%%
+Zin
+
+%%%%
+the Shining One
+
+%%%%
+# The Shining One short form (for "travel to altar" menu, must be 14 chars or less)
+#             |<-
+TSO
+
+%%%%
+the Wu Jian Council
+
+%%%%
+# Wu Jian Council - short form
+Wu Jian
+
+%%%%
+# Wu Jian Council - another short form
+the Council
+
+%%%%
+an unknown god
+
+%%%%
+a god
+
+%%%%
+my god
+
+%%%%
+your god
+
+%%%%
+
+# These are used in messages like "@The_monster@ calls down the wrath of @possessive_God@ upon @target@.",
+# where @possessive_God@ is replaced with "its god", etc.
+# "His" is only used for male uniques, which will be masculine in German.
+# "Her" is used for female uniques plus harpies and nymphs, which are all feminine in German.
+# "Its" is used for most non-unique monsters, but they can be masculine, feminine or neuter in German.
+# "Their" is used for gender-neutral uniques - this doesn't work in German.
+# Therefore, we use "a god" instead of "its/their god".
+%%%%
+his god
+
+%%%%
+her god
+
+%%%%
+its god
+
+%%%%
+# note: singular "their"
+their god
+
+%%%%
+
+# Sifus (individual members of the Wu Jian Council)
+%%%%
+Yunchang
+
+%%%%
+Lu Zhishen
+
+%%%%
+Xiang Ba
+
+%%%%
+Ma Yunglu
+
+%%%%
+Hu Sanniang
+
+%%%%
+Gene Jian Bin
+
+%%%%
+Cai Fang
+
+%%%%
+
+# long names
+# the others are currently in dat/database/de/gods.txt
+# These are only used in milestone notes (which are not translated) and as title on god description screen, so currently no need to decline
+%%%%
+Jiyva %s the Shapeless
+
+%%%%
+
+########################
+# God names - genitive
+########################
+%%%%
+{gen}Ashenzari
+
+%%%%
+{gen}Beogh
+
+%%%%
+{gen}Cheibriados
+
+%%%%
+{gen}Dithmenos
+
+%%%%
+{gen}Elyvilon
+
+%%%%
+{gen}Fedhas
+
+%%%%
+{gen}Gozag
+
+%%%%
+{gen}Hepliaklqana
+
+%%%%
+{gen}Jiyva
+
+%%%%
+{gen}Kikubaaqudgha
+
+%%%%
+{gen}Lugonu
+
+%%%%
+{gen}Makhleb
+
+%%%%
+{gen}Nemelex Xobeh
+
+%%%%
+{gen}Okawaru
+
+%%%%
+{gen}Qazlal
+
+%%%%
+{gen}Ru
+
+%%%%
+{gen}Sif Muna
+
+%%%%
+{gen}Trog
+
+%%%%
+{gen}Uskayaw
+
+%%%%
+{gen}Vehumet
+
+%%%%
+{gen}Xom
+
+%%%%
+{gen}Yredelemnul
+
+%%%%
+{gen}Zin
+
+%%%%
+{gen}the Shining One
+
+%%%%
+{gen}the Wu Jian Council
+
+%%%%
+{gen}an unknown god
+
+%%%%
+{gen}a god
+
+%%%%
+{gen}my god
+
+%%%%
+{gen}your god
+
+%%%%
+
+# We use "a god" instead of its/their god"
+# see note in nominative section
+%%%%
+{gen}his god
+
+%%%%
+{gen}her god
+
+%%%%
+{gen}its god
+
+%%%%
+# note: singular "their"
+{gen}their god
+
+%%%%
+
+########################
+# God names - genitive as translation of English posessive
+# This is used on skills menu when God is boosting skills
+########################
+%%%%
+Ashenzari's
+
+%%%%
+Beogh's
+
+%%%%
+Cheibriados's
+
+%%%%
+Dithmenos's
+
+%%%%
+Elyvilon's
+
+%%%%
+Fedhas's
+
+%%%%
+Gozag's
+
+%%%%
+Hepliaklqana's
+
+%%%%
+Jiyva's
+
+%%%%
+Kikubaaqudgha's
+
+%%%%
+Lugonu's
+
+%%%%
+Makhleb's
+
+%%%%
+Nemelex Xobeh's
+
+%%%%
+Okawaru's
+
+%%%%
+Qazlal's
+
+%%%%
+Ru's
+
+%%%%
+Sif Muna's
+
+%%%%
+Trog's
+
+%%%%
+Uskayaw's
+
+%%%%
+Vehumet's
+
+%%%%
+Xom's
+
+%%%%
+Yredelemnul's
+
+%%%%
+Zin's
+
+%%%%
+the Shining One's
+
+%%%%
+the Wu Jian Council's
+
+%%%%
+
+########################
+# God names - accusative
+########################
+%%%%
+{acc}the Shining One
+
+%%%%
+{acc}the Wu Jian Council
+
+%%%%
+{acc}an unknown god
+
+%%%%
+{acc}a god
+
+%%%%
+{acc}my god
+
+%%%%
+{acc}your god
+
+%%%%
+
+# We use "a god" instead of "its/their god"
+# see note in nominative section
+%%%%
+{acc}his god
+
+%%%%
+{acc}her god
+
+%%%%
+{acc}its god
+
+%%%%
+# note: singular "their"
+{acc}their god
+
+%%%%
+
+########################
+# God names - dative
+########################
+%%%%
+{dat}the Shining One
+
+%%%%
+{dat}the Wu Jian Council
+
+%%%%
+{dat}an unknown god
+
+%%%%
+{dat}a god
+
+%%%%
+{dat}my god
+
+%%%%
+{dat}your god
+
+%%%%
+
+# We use "a god" instead of "its/their god"
+# see note in nominative section
+%%%%
+{dat}his god
+
+%%%%
+{dat}her god
+
+%%%%
+{dat}its god
+
+%%%%
+# note: singular "their"
+{dat}their god
+
+%%%%
+
+########################
+# " of <god>"
+########################
+%%%%
+# generic
+" of %s"
+
+%%%%
+# specific override
+" of the Shining One"
+
+%%%%
+
+##################
+# god blessings
+##################
+%%%%
+Beogh blesses you with reinforcements.
+
+%%%%
+%s blesses %s with %s.
+
+%%%%
+# when recipient is an unnamed follower
+a follower
+
+%%%%
+# The following are the blessings that come after the word "with"
+%%%%
+uncursed armament
+
+%%%%
+superior armament
+
+%%%%
+ammunition
+
+%%%%
+ranged armament
+
+%%%%
+armament
+
+%%%%
+a shield
+
+%%%%
+improved armour
+
+%%%%
+divine balms
+
+%%%%
+priesthood
+
+%%%%
+friendliness
+
+%%%%
+more time in this world
+
+%%%%
+
+########################
+# God conducts
+########################
+%%%%
+%s doesn't like anything? This is a bug; please report it.
+
+%%%%
+%s likes it when %s.
+
+%%%%
+%s especially likes it when %s.
+
+%%%%
+%s dislikes it when %s.
+
+%%%%
+%s strongly dislikes it when %s.
+
+%%%%
+
+# These are the conducts the gods like/dislike:
+# (i.e. these go after the word "when")
+%%%%
+you use evil magic or items
+
+%%%%
+you attack non-hostile holy beings
+
+%%%%
+you kill non-hostile holy beings
+
+%%%%
+you attack neutral beings
+
+%%%%
+you attack allies
+
+%%%%
+you attack monsters in a sanctuary
+
+%%%%
+you use unclean or chaotic magic or items
+
+%%%%
+you polymorph monsters
+
+%%%%
+you deliberately mutate or transform yourself
+
+%%%%
+you use holy magic or items
+
+%%%%
+you memorise spells
+
+%%%%
+you attempt to cast spells
+
+%%%%
+you train magic skills
+
+%%%%
+you use magical staves or pain-branded weapons
+
+%%%%
+you kill living things while asking for your life to be spared
+
+%%%%
+you desecrate orcish remains
+
+%%%%
+you attack allied orcs
+
+%%%%
+you kill slimes
+
+%%%%
+you attack fellow slimes
+
+%%%%
+you destroy plants
+
+%%%%
+you hasten yourself or others
+
+%%%%
+you channel magical energy
+
+%%%%
+use unnaturally quick items
+
+%%%%
+you kill living beings
+
+%%%%
+you destroy the undead
+
+%%%%
+you kill demons
+
+%%%%
+you kill holy beings
+
+%%%%
+you destroy nonliving beings
+
+%%%%
+you explore the world
+
+%%%%
+you kill unclean or chaotic beings
+
+%%%%
+you kill the undead
+
+%%%%
+you kill evil beings
+
+%%%%
+you encounter other hostile creatures
+
+%%%%
+you kill wizards and other users of magic
+
+%%%%
+you banish creatures to the Abyss
+
+%%%%
+you kill the priests of other religions
+
+%%%%
+you kill fast things, relative to your speed
+
+%%%%
+you explore the world (preferably while bound by curses)
+
+%%%%
+you hurt your foes; however, effects that cause damage over time do not interest Uskayaw
+
+%%%%
+you sacrifice items by allowing slimes to consume them
+
+%%%%
+you collect gold
+
+%%%%
+you make personal sacrifices
+
+%%%%
+you donate money
+
+%%%%
+you bind yourself with curses
+
+%%%%

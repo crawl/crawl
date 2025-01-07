@@ -1,0 +1,966 @@
+###############################################################################
+#
+# Items - singular, definite article, nominative
+#
+###############################################################################
+
+#################################
+# Melee Weapons
+#################################
+
+%%%%
+# for player ghosts
+the weapon
+
+%%%%
+the club
+
+%%%%
+the whip
+
+%%%%
+the mace
+
+%%%%
+the flail
+
+%%%%
+the morningstar
+
+%%%%
+the demon whip
+
+%%%%
+the sacred scourge
+
+%%%%
+the dire flail
+
+%%%%
+the eveningstar
+
+%%%%
+the great mace
+
+%%%%
+the giant club
+
+%%%%
+the giant spiked club
+
+%%%%
+the dagger
+
+%%%%
+the quick blade
+
+%%%%
+the short sword
+
+%%%%
+the rapier
+
+%%%%
+the falchion
+
+%%%%
+the long sword
+
+%%%%
+the scimitar
+
+%%%%
+the demon blade
+
+%%%%
+the eudemon blade
+
+%%%%
+the double sword
+
+%%%%
+the great sword
+
+%%%%
+the triple sword
+
+%%%%
+the hand axe
+
+%%%%
+the war axe
+
+%%%%
+the broad axe
+
+%%%%
+the battleaxe
+
+%%%%
+the executioner's axe
+
+%%%%
+the spear
+
+%%%%
+the trident
+
+%%%%
+the halberd
+
+%%%%
+the scythe
+
+%%%%
+the demon trident
+
+%%%%
+the trishula
+
+%%%%
+the glaive
+
+%%%%
+the bardiche
+
+%%%%
+the quarterstaff
+
+%%%%
+the lajatang
+
+%%%%
+the lance
+
+%%%%
+# "Gyre" and "Gimble" - base name
+the pair of quick blades
+
+%%%%
+
+#################################
+# Launchers
+#################################
+
+%%%%
+the hunting sling
+
+%%%%
+the fustibalus
+
+%%%%
+the hand crossbow
+
+%%%%
+the arbalest
+
+%%%%
+the triple crossbow
+
+%%%%
+the shortbow
+
+%%%%
+the longbow
+
+%%%%
+
+#################################
+# Missiles
+#################################
+
+%%%%
+the arrow
+
+%%%%
+the bolt
+
+%%%%
+# the artefact arbalest "Damnation" shoots these
+the damnation bolt
+
+%%%%
+the dart
+
+%%%%
+the poisoned dart
+
+%%%%
+the atropa-tipped dart
+
+%%%%
+the curare-tipped dart
+
+%%%%
+the datura-tipped dart
+
+%%%%
+the stone
+
+%%%%
+the large rock
+
+%%%%
+the sling bullet
+
+%%%%
+the javelin
+
+%%%%
+the silver javelin
+
+%%%%
+the throwing net
+
+%%%%
+the boomerang
+
+%%%%
+the silver boomerang
+
+%%%%
+
+#################################
+# Armour
+#################################
+
+%%%%
+the animal skin
+
+%%%%
+the robe
+
+%%%%
+the leather armour
+
+%%%%
+the ring mail
+
+%%%%
+the scale mail
+
+%%%%
+the chain mail
+
+%%%%
+the plate armour
+
+%%%%
+the crystal plate armour
+
+%%%%
+the troll leather armour
+
+%%%%
+the cloak
+
+%%%%
+the scarf
+
+%%%%
+the pair of gloves
+
+%%%%
+the helmet
+
+%%%%
+the hat
+
+%%%%
+the pair of boots
+
+%%%%
+the barding
+
+%%%%
+the buckler
+
+%%%%
+the kite shield
+
+%%%%
+the tower shield
+
+%%%%
+the steam dragon scales
+
+%%%%
+the acid dragon scales
+
+%%%%
+the quicksilver dragon scales
+
+%%%%
+the swamp dragon scales
+
+%%%%
+the fire dragon scales
+
+%%%%
+the ice dragon scales
+
+%%%%
+the pearl dragon scales
+
+%%%%
+the storm dragon scales
+
+%%%%
+the shadow dragon scales
+
+%%%%
+the gold dragon scales
+
+%%%%
+
+# Usually, we handle any adjectives as separate words, but
+# this unidentified armour needs special handling
+%%%%
+the creamy pearl robe
+
+%%%%
+
+#################################
+# Rings
+#################################
+
+# general catch-all
+%%%%
+the ring
+
+%%%%
+
+# unidentified rings have two adjectives
+# the one closest to the noun is a material, which in French is not treated like an adjective
+
+# this is combined list from item-name.cc and descript/randname.txt
+%%%%
+the agate ring
+
+%%%%
+the amber ring
+
+%%%%
+the bone ring
+
+%%%%
+the brass ring
+
+%%%%
+the bronze ring
+
+%%%%
+the cabochon ring
+
+%%%%
+the copper ring
+
+%%%%
+the coral ring
+
+%%%%
+the diamond ring
+
+%%%%
+the emerald ring
+
+%%%%
+the garnet ring
+
+%%%%
+the gilded ring
+
+%%%%
+the glass ring
+
+%%%%
+the gossamer ring
+
+%%%%
+the golden ring
+
+%%%%
+the granite ring
+
+%%%%
+the iron ring
+
+%%%%
+the ivory ring
+
+%%%%
+the jade ring
+
+%%%%
+the lapis lazuli ring
+
+%%%%
+the lead ring
+
+%%%%
+the marble ring
+
+%%%%
+the moonstone ring
+
+%%%%
+the onyx ring
+
+%%%%
+the opal ring
+
+%%%%
+the pearl ring
+
+%%%%
+the peridot ring
+
+%%%%
+the pewter ring
+
+%%%%
+the platinum ring
+
+%%%%
+the ruby ring
+
+%%%%
+the sapphire ring
+
+%%%%
+the silver ring
+
+%%%%
+the steel ring
+
+%%%%
+the tin ring
+
+%%%%
+the tourmaline ring
+
+%%%%
+the turquoise ring
+
+%%%%
+the wooden ring
+
+%%%%
+
+#################################
+# Amulets
+#################################
+
+# general catch-all
+%%%%
+the amulet
+
+%%%%
+
+# unidentified amulets have two adjectives
+# the one closest to the noun is (usually) a material, which is not treated like an adjective in French
+
+# from item-name.txt
+%%%%
+the sapphire amulet
+
+%%%%
+the zirconium amulet
+
+%%%%
+the golden amulet
+
+%%%%
+the emerald amulet
+
+%%%%
+the garnet amulet
+
+%%%%
+the bronze amulet
+
+%%%%
+the brass amulet
+
+%%%%
+the copper amulet
+
+%%%%
+the ruby amulet
+
+%%%%
+the citrine amulet
+
+%%%%
+the bone amulet
+
+%%%%
+the platinum amulet
+
+%%%%
+the jade amulet
+
+%%%%
+the fluorescent amulet
+
+%%%%
+the amethyst amulet
+
+%%%%
+the cameo amulet
+
+%%%%
+the pearl amulet
+
+%%%%
+the blue amulet
+
+%%%%
+the peridot amulet
+
+%%%%
+the jasper amulet
+
+%%%%
+the diamond amulet
+
+%%%%
+the malachite amulet
+
+%%%%
+the steel amulet
+
+%%%%
+the cabochon amulet
+
+%%%%
+the silver amulet
+
+%%%%
+the soapstone amulet
+
+%%%%
+the lapis lazuli amulet
+
+%%%%
+the filigree amulet
+
+%%%%
+the beryl amulet
+
+%%%%
+
+# extras from database/randname.txt
+%%%%
+the crystal amulet
+
+%%%%
+the graven amulet
+
+%%%%
+the iron amulet
+
+%%%%
+the ivory amulet
+
+%%%%
+the lead amulet
+
+%%%%
+the pewter amulet
+
+%%%%
+the tin amulet
+
+%%%%
+
+#################################
+# Wands
+#################################
+
+%%%%
+the wand of flame
+
+%%%%
+the wand of paralysis
+
+%%%%
+the wand of digging
+
+%%%%
+the wand of iceblast
+
+%%%%
+the wand of polymorph
+
+%%%%
+the wand of charming
+
+%%%%
+the wand of acid
+
+%%%%
+the wand of mindburst
+
+%%%%
+the wand of removedness
+
+%%%%
+
+# unidentified
+%%%%
+the wand
+
+%%%%
+the iron wand
+
+%%%%
+the brass wand
+
+%%%%
+the bone wand
+
+%%%%
+the wooden wand
+
+%%%%
+the copper wand
+
+%%%%
+the gold wand
+
+%%%%
+the silver wand
+
+%%%%
+the bronze wand
+
+%%%%
+the ivory wand
+
+%%%%
+the glass wand
+
+%%%%
+the lead wand
+
+%%%%
+the fluorescent wand
+
+%%%%
+
+#################################
+# Scrolls
+#################################
+
+%%%%
+the scroll labelled %s
+
+%%%%
+the scroll of acquirement
+
+%%%%
+the scroll of amnesia
+
+%%%%
+the scroll of blinking
+
+%%%%
+the scroll of brand weapon
+
+%%%%
+the scroll of enchant armour
+
+%%%%
+the scroll of enchant weapon
+
+%%%%
+the scroll of fear
+
+%%%%
+the scroll of fog
+
+%%%%
+the scroll of holy word
+
+%%%%
+the scroll of identify
+
+%%%%
+the scroll of immolation
+
+%%%%
+the scroll of magic mapping
+
+%%%%
+the scroll of noise
+
+%%%%
+the scroll of remove curse
+
+%%%%
+the scroll of silence
+
+%%%%
+# Note: In DCSS, there is a distinction between summoning and conjuration
+%%%%
+the scroll of summoning
+
+%%%%
+the scroll of teleportation
+
+%%%%
+the scroll of torment
+
+%%%%
+the scroll of vulnerability
+
+%%%%
+the scroll of removedness
+
+%%%%
+
+#################################
+# Potions
+#################################
+
+%%%%
+the potion of ambrosia
+
+%%%%
+the potion of attraction
+
+%%%%
+the potion of berserk rage
+
+%%%%
+the potion of brilliance
+
+%%%%
+the potion of cancellation
+
+%%%%
+the potion of curing
+
+%%%%
+the potion of degeneration
+
+%%%%
+the potion of experience
+
+%%%%
+the potion of flight
+
+%%%%
+the potion of haste
+
+%%%%
+the potion of heal wounds
+
+%%%%
+the potion of invisibility
+
+%%%%
+the potion of lignification
+
+%%%%
+the potion of magic
+
+%%%%
+the potion of might
+
+%%%%
+the potion of mutation
+
+%%%%
+the potion of resistance
+
+%%%%
+
+# unidentified potions are named "<colour> <potion>"
+# or "<qualifier> <colour> potion"
+%%%%
+the potion
+
+%%%%
+
+# Some potion colours are the names of gemstones, etc., and are used elsewhere
+# in Crawl to mean actually made of/with that thing, rather than merely having
+# its colour. In English, we can get away with using the same word for both
+# meanings, but that's not necessarily the case in other languages.
+%%%%
+the amethyst potion
+
+%%%%
+the emerald potion
+
+%%%%
+the ruby potion
+
+%%%%
+the sapphire potion
+
+%%%%
+the golden potion
+
+%%%%
+
+#################################
+# Magical Staves
+#################################
+
+%%%%
+the staff of fire
+
+%%%%
+the staff of cold
+
+%%%%
+the staff of poison
+
+%%%%
+the staff of death
+
+%%%%
+the staff of conjuration
+
+%%%%
+the staff of air
+
+%%%%
+the staff of earth
+
+%%%%
+the staff of removedness
+
+%%%%
+the staff
+
+%%%%
+
+#################################
+# Corpses
+#################################
+
+%%%%
+the @monster@ corpse
+
+%%%%
+
+#################################
+# Miscellaneous Items
+#################################
+
+%%%%
+the box of beasts
+
+%%%%
+the lightning rod
+
+%%%%
+the phial of floods
+
+%%%%
+the phantom mirror
+
+%%%%
+the figurine of a ziggurat
+
+%%%%
+the condenser vane
+
+%%%%
+the piece from Xom's chessboard
+
+%%%%
+the tin of tremorstones
+
+%%%%
+the quad damage
+
+%%%%
+
+#################################
+# Runes
+#################################
+
+# These are unique, but there is at least one place where gramatically they're
+# treated as non-unique: "You found a <whatever> rune of Zot.", so we need to
+# decline as per non-unique items.
+
+%%%%
+the decaying rune
+
+%%%%
+the barnacled rune
+
+%%%%
+the gossamer rune
+
+%%%%
+the serpentine rune
+
+%%%%
+the slimy rune
+
+%%%%
+the abyssal rune
+
+%%%%
+the silver rune
+
+%%%%
+the golden rune
+
+%%%%
+
+# hell runes
+%%%%
+the obsidian rune
+
+%%%%
+the icy rune
+
+%%%%
+the bone rune
+
+%%%%
+the iron rune
+
+%%%%
+
+# pandemonium runes
+%%%%
+the demonic rune
+
+%%%%
+the glowing rune
+
+%%%%
+the magical rune
+
+%%%%
+the fiery rune
+
+%%%%
+the dark rune
+
+%%%%
+
+#################################
+# Artefacts
+#################################
+
+# Most are unique, but this one isn't
+%%%%
+the ring of the Octopus King
+
+%%%%
+
+#################################
+# Gold
+#################################
+%%%%
+the gold piece
+
+%%%%

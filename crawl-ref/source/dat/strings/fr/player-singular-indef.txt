@@ -1,0 +1,160 @@
+###############################################################################
+#
+# Player - indefinite, nominative
+#
+###############################################################################
+
+##############################################
+# "a <species> <background>"
+##############################################
+%%%%
+a %s Fighter
+
+%%%%
+a %s Gladiator
+
+%%%%
+a %s Monk
+
+%%%%
+a %s Hunter
+
+%%%%
+a %s Berserker
+
+%%%%
+a %s Brigand
+
+%%%%
+a %s Abyssal Knight
+
+%%%%
+a %s Chaos Knight
+
+%%%%
+a %s Enchanter
+
+%%%%
+a %s Transmuter
+
+%%%%
+a %s Arcane Marksman
+
+%%%%
+a %s Warper
+
+%%%%
+a %s Hedge Wizard
+
+%%%%
+a %s Conjurer
+
+%%%%
+a %s Summoner
+
+%%%%
+a %s Necromancer
+
+%%%%
+a %s Fire Elementalist
+
+%%%%
+a %s Ice Elementalist
+
+%%%%
+a %s Air Elementalist
+
+%%%%
+a %s Earth Elementalist
+
+%%%%
+a %s Venom Mage
+
+%%%%
+a %s Artificer
+
+%%%%
+a %s Delver
+
+%%%%
+a %s Wanderer
+
+%%%%
+
+##############################################
+# "a <rank> <species> <background>"
+# Normally used for player ghosts
+##############################################
+%%%%
+a %s%s Fighter
+
+%%%%
+a %s%s Gladiator
+
+%%%%
+a %s%s Monk
+
+%%%%
+a %s%s Hunter
+
+%%%%
+a %s%s Berserker
+
+%%%%
+a %s%s Brigand
+
+%%%%
+a %s%s Abyssal Knight
+
+%%%%
+a %s%s Chaos Knight
+
+%%%%
+a %s%s Enchanter
+
+%%%%
+a %s%s Transmuter
+
+%%%%
+a %s%s Arcane Marksman
+
+%%%%
+a %s%s Warper
+
+%%%%
+a %s%s Hedge Wizard
+
+%%%%
+a %s%s Conjurer
+
+%%%%
+a %s%s Summoner
+
+%%%%
+a %s%s Necromancer
+
+%%%%
+a %s%s Fire Elementalist
+
+%%%%
+a %s%s Ice Elementalist
+
+%%%%
+a %s%s Air Elementalist
+
+%%%%
+a %s%s Earth Elementalist
+
+%%%%
+a %s%s Venom Mage
+
+%%%%
+a %s%s Artificer
+
+%%%%
+a %s%s Delver
+
+%%%%
+a %s%s Wanderer
+
+%%%%

@@ -1,0 +1,1331 @@
+###############################################################################
+#
+# Translations for beams/rays/explosions/etc.
+#
+###############################################################################
+
+#################################
+# full names - definite article
+#################################
+
+%%%%
+the noxious blast
+
+%%%%
+the blast of poison
+
+%%%%
+the bolt of energy
+
+%%%%
+the spray of metal splinters
+
+%%%%
+the spray of wooden splinters
+
+%%%%
+the burst of rock shards
+
+%%%%
+the volley of thorns
+
+%%%%
+the volley of spikes
+
+%%%%
+the toxic sludge
+
+%%%%
+the damnation
+
+%%%%
+the foul vapour
+
+%%%%
+# this blasts outwards from the player in all directions
+the blast of cleansing flame
+
+%%%%
+# this creates a single straight line of clouds
+the blast of calcifying dust
+
+%%%%
+the ghostly fireball
+
+%%%%
+the flash freeze
+
+%%%%
+the glob of lava
+
+%%%%
+# chaos crab area effect
+the blast of chaos
+
+%%%%
+# fire breath (beam), flame clouds (area)
+the blast of flame
+
+%%%%
+the blast of cold
+
+%%%%
+# searing breath (beam), similar to fire breath
+the searing blast
+
+%%%%
+the bolt of electricity
+
+%%%%
+the puff of flame
+
+%%%%
+the puff of frost
+
+%%%%
+the stinking cloud
+
+%%%%
+the magic dart
+
+%%%%
+the bolt of fire
+
+%%%%
+the bolt of cold
+
+%%%%
+the torrent of water
+
+%%%%
+the fireball
+
+%%%%
+the bolt of lightning
+
+%%%%
+# not sure of the difference between thunderbolt and bolt of lightning, but both exist in the code
+the thunderbolt
+
+%%%%
+the bolt of poison
+
+%%%%
+the bolt of negative energy
+
+%%%%
+the crystal spear
+
+%%%%
+the sticky flame
+
+%%%%
+# a physical stinger on the caster's limb
+the sting
+
+%%%%
+the iron shot
+
+%%%%
+the stone arrow
+
+%%%%
+# Shock spell (electricity)
+the zap
+
+%%%%
+the stunning burst
+
+%%%%
+# duplicate of monster
+#the orb of electricity
+#die Elektrizitätskugel
+%%%%
+the splash of poison
+
+%%%%
+the fiery breath
+
+%%%%
+the freezing breath
+
+%%%%
+the glob of acid
+
+%%%%
+the poison gas
+
+%%%%
+the bolt of dispelling energy
+
+%%%%
+the splash of acid
+
+%%%%
+the agony
+
+%%%%
+the ball of steam
+
+%%%%
+the shard of ice
+
+%%%%
+the flame tongue
+
+%%%%
+the blast of sand
+
+%%%%
+the bolt of magma
+
+%%%%
+the poison arrow
+
+%%%%
+the blast of choking fumes
+
+%%%%
+the lance of force
+
+%%%%
+the searing ray
+
+%%%%
+the crystal bolt
+
+%%%%
+the bolt of acid
+
+%%%%
+the unravelling
+
+%%%%
+the iceblast
+
+%%%%
+the slug dart
+
+%%%%
+the living lightning
+
+%%%%
+the freezing blast
+
+%%%%
+the harpoon shot
+
+%%%%
+the beckoning
+
+%%%%
+the great blast of fire
+
+%%%%
+the malmutate
+
+%%%%
+the refrigeration
+
+%%%%
+the drain life
+
+%%%%
+the sonic wave
+
+%%%%
+the klown pie
+
+%%%%
+# duplicate of monster
+#the foxfire
+#das Fuchsfeuer
+%%%%
+the hail
+
+%%%%
+the mystic blast
+
+%%%%
+the chilling breath
+
+%%%%
+the porkalator
+
+%%%%
+the stream of webbing
+
+%%%%
+# duplicate of cloud
+#the spectral mist
+#
+%%%%
+the shadow bolt
+
+%%%%
+the shadow shard
+
+%%%%
+the vile air
+
+%%%%
+the flame surge
+
+%%%%
+the explosion of spores
+
+%%%%
+the blast of lightning
+
+%%%%
+the blast of energy
+
+%%%%
+the blast of putrescent gases
+
+%%%%
+the pyre of ghostly fire
+
+%%%%
+the fiery explosion
+
+%%%%
+the arc of chaos
+
+%%%%
+# Englaciate - freezes the whole area
+the great icy blast
+
+%%%%
+the golden flame
+
+%%%%
+the effects of Hell
+
+%%%%
+the magical storm
+
+%%%%
+the electrical discharge
+
+%%%%
+
+# Fragments created by Lee's Rapid Deconstruction
+%%%%
+# from stone/rock walls or stone enemies
+the blast of rock fragments
+
+%%%%
+the blast of petrified fragments
+
+%%%%
+# fragments from a monster made of ice
+the icy blast
+
+%%%%
+the blast of toenail fragments
+
+%%%%
+the blast of metal fragments
+
+%%%%
+the blast of crystal shards
+
+%%%%
+the blast of orange crystal shards
+
+%%%%
+the blast of salt crystal shards
+
+%%%%
+the blast of obsidian shards
+
+%%%%
+the blast of sapphire shards
+
+%%%%
+the blast of bone shards
+
+%%%%
+
+# Qazlal Upheaval
+%%%%
+the blast of magma
+
+%%%%
+the blast of ice
+
+%%%%
+the cutting wind
+
+%%%%
+the blast of rubble
+
+%%%%
+
+#################################
+# full names - indefinite article
+#################################
+
+%%%%
+a noxious blast
+
+%%%%
+a blast of poison
+
+%%%%
+a bolt of energy
+
+%%%%
+a spray of metal splinters
+
+%%%%
+a spray of wooden splinters
+
+%%%%
+a burst of rock shards
+
+%%%%
+a volley of thorns
+
+%%%%
+a volley of spikes
+
+%%%%
+a toxic sludge
+
+%%%%
+a damnation
+
+%%%%
+a foul vapour
+
+%%%%
+# this blasts outwards from the player in all directions
+a blast of cleansing flame
+
+%%%%
+# this creates a single straight line of clouds
+a blast of calcifying dust
+
+%%%%
+a ghostly fireball
+
+%%%%
+a flash freeze
+
+%%%%
+a glob of lava
+
+%%%%
+# chaos crab area effect
+a blast of chaos
+
+%%%%
+# fire breath (beam), flame clouds (area)
+a blast of flame
+
+%%%%
+a blast of cold
+
+%%%%
+# searing breath (beam), similar to fire breath
+a searing blast
+
+%%%%
+a bolt of electricity
+
+%%%%
+a puff of flame
+
+%%%%
+a puff of frost
+
+%%%%
+a stinking cloud
+
+%%%%
+a magic dart
+
+%%%%
+a bolt of fire
+
+%%%%
+a bolt of cold
+
+%%%%
+a torrent of water
+
+%%%%
+a fireball
+
+%%%%
+a bolt of lightning
+
+%%%%
+a thunderbolt
+
+%%%%
+a bolt of poison
+
+%%%%
+a bolt of negative energy
+
+%%%%
+a crystal spear
+
+%%%%
+a sticky flame
+
+%%%%
+# a physical stinger on the caster's limb
+a sting
+
+%%%%
+a iron shot
+
+%%%%
+a stone arrow
+
+%%%%
+# Shock spell (electricity)
+a zap
+
+%%%%
+a stunning burst
+
+%%%%
+a orb of electricity
+
+%%%%
+a splash of poison
+
+%%%%
+a fiery breath
+
+%%%%
+a freezing breath
+
+%%%%
+a glob of acid
+
+%%%%
+a poison gas
+
+%%%%
+a bolt of dispelling energy
+
+%%%%
+a splash of acid
+
+%%%%
+a agony
+
+%%%%
+a ball of steam
+
+%%%%
+a shard of ice
+
+%%%%
+a flame tongue
+
+%%%%
+a blast of sand
+
+%%%%
+a bolt of magma
+
+%%%%
+a poison arrow
+
+%%%%
+a blast of choking fumes
+
+%%%%
+a lance of force
+
+%%%%
+a searing ray
+
+%%%%
+a crystal bolt
+
+%%%%
+a bolt of acid
+
+%%%%
+a unravelling
+
+%%%%
+a iceblast
+
+%%%%
+a slug dart
+
+%%%%
+a living lightning
+
+%%%%
+a freezing blast
+
+%%%%
+a harpoon shot
+
+%%%%
+a beckoning
+
+%%%%
+a great blast of fire
+
+%%%%
+a malmutate
+
+%%%%
+a refrigeration
+
+%%%%
+a drain life
+
+%%%%
+a sonic wave
+
+%%%%
+a klown pie
+
+%%%%
+# duplicate of monster
+#the foxfire
+#das Fuchsfeuer
+%%%%
+a hail
+
+%%%%
+a mystic blast
+
+%%%%
+a chilling breath
+
+%%%%
+a porkalator
+
+%%%%
+a stream of webbing
+
+%%%%
+# duplicate of cloud
+#the spectral mist
+#
+%%%%
+a shadow bolt
+
+%%%%
+a shadow shard
+
+%%%%
+a vile air
+
+%%%%
+a flame surge
+
+%%%%
+a explosion of spores
+
+%%%%
+a blast of lightning
+
+%%%%
+a blast of energy
+
+%%%%
+a blast of putrescent gases
+
+%%%%
+a pyre of ghostly fire
+
+%%%%
+a fiery explosion
+
+%%%%
+a arc of chaos
+
+%%%%
+# Englaciate - freezes the whole area
+a great icy blast
+
+%%%%
+a golden flame
+
+%%%%
+a magical storm
+
+%%%%
+a electrical discharge
+
+%%%%
+
+# Fragments created by Lee's Rapid Deconstruction
+%%%%
+# from stone/rock walls or stone enemies
+a blast of rock fragments
+
+%%%%
+a blast of petrified fragments
+
+%%%%
+# fragments from a monster made of ice
+a icy blast
+
+%%%%
+a blast of toenail fragments
+
+%%%%
+a blast of metal fragments
+
+%%%%
+a blast of crystal shards
+
+%%%%
+a blast of orange crystal shards
+
+%%%%
+a blast of salt crystal shards
+
+%%%%
+a blast of obsidian shards
+
+%%%%
+a blast of sapphire shards
+
+%%%%
+a blast of bone shards
+
+%%%%
+
+# Qazlal Upheaval
+%%%%
+a blast of magma
+
+%%%%
+a blast of ice
+
+%%%%
+a cutting wind
+
+%%%%
+a blast of rubble
+
+%%%%
+
+#################################
+# full names without article
+#################################
+
+%%%%
+noxious blast
+
+%%%%
+blast of poison
+
+%%%%
+bolt of energy
+
+%%%%
+spray of metal splinters
+
+%%%%
+spray of wooden splinters
+
+%%%%
+burst of rock shards
+
+%%%%
+volley of thorns
+
+%%%%
+volley of spikes
+
+%%%%
+toxic sludge
+
+%%%%
+damnation
+
+%%%%
+foul vapour
+
+%%%%
+# this blasts outwards from the player in all directions
+blast of cleansing flame
+
+%%%%
+# this creates a single straight line of clouds
+blast of calcifying dust
+
+%%%%
+ghostly fireball
+
+%%%%
+flash freeze
+
+%%%%
+glob of lava
+
+%%%%
+# chaos crab area effect
+blast of chaos
+
+%%%%
+# fire breath (beam), flame clouds (area)
+blast of flame
+
+%%%%
+blast of cold
+
+%%%%
+# searing breath (beam), similar to fire breath
+searing blast
+
+%%%%
+bolt of electricity
+
+%%%%
+puff of flame
+
+%%%%
+puff of frost
+
+%%%%
+stinking cloud
+
+%%%%
+magic dart
+
+%%%%
+bolt of fire
+
+%%%%
+bolt of cold
+
+%%%%
+torrent of water
+
+%%%%
+fireball
+
+%%%%
+bolt of lightning
+
+%%%%
+thunderbolt
+
+%%%%
+bolt of poison
+
+%%%%
+bolt of negative energy
+
+%%%%
+crystal spear
+
+%%%%
+sticky flame
+
+%%%%
+# a physical stinger on the caster's limb
+sting
+
+%%%%
+iron shot
+
+%%%%
+stone arrow
+
+%%%%
+# Shock spell (electricity)
+zap
+
+%%%%
+stunning burst
+
+%%%%
+orb of electricity
+
+%%%%
+splash of poison
+
+%%%%
+fiery breath
+
+%%%%
+freezing breath
+
+%%%%
+glob of acid
+
+%%%%
+# duplicate of cloud
+#poison gas
+#Giftgas
+%%%%
+bolt of dispelling energy
+
+%%%%
+splash of acid
+
+%%%%
+agony
+
+%%%%
+ball of steam
+
+%%%%
+shard of ice
+
+%%%%
+flame tongue
+
+%%%%
+blast of sand
+
+%%%%
+bolt of magma
+
+%%%%
+poison arrow
+
+%%%%
+blast of choking fumes
+
+%%%%
+lance of force
+
+%%%%
+searing ray
+
+%%%%
+crystal bolt
+
+%%%%
+bolt of acid
+
+%%%%
+unravelling
+
+%%%%
+iceblast
+
+%%%%
+slug dart
+
+%%%%
+living lightning
+
+%%%%
+freezing blast
+
+%%%%
+harpoon shot
+
+%%%%
+beckoning
+
+%%%%
+great blast of fire
+
+%%%%
+malmutate
+
+%%%%
+refrigeration
+
+%%%%
+# also used in monster attack description ("It can %s.")
+drain life
+
+%%%%
+sonic wave
+
+%%%%
+klown pie
+
+%%%%
+# duplicate of monster
+#the foxfire
+#das Fuchsfeuer
+%%%%
+hail
+
+%%%%
+mystic blast
+
+%%%%
+chilling breath
+
+%%%%
+porkalator
+
+%%%%
+stream of webbing
+
+%%%%
+# duplicate of cloud
+#the spectral mist
+#
+%%%%
+shadow bolt
+
+%%%%
+shadow shard
+
+%%%%
+vile air
+
+%%%%
+flame surge
+
+%%%%
+explosion of spores
+
+%%%%
+blast of lightning
+
+%%%%
+blast of energy
+
+%%%%
+blast of putrescent gases
+
+%%%%
+pyre of ghostly fire
+
+%%%%
+fiery explosion
+
+%%%%
+arc of chaos
+
+%%%%
+# Englaciate - freezes the whole area
+great icy blast
+
+%%%%
+golden flame
+
+%%%%
+effects of Hell
+
+%%%%
+magical storm
+
+%%%%
+electrical discharge
+
+%%%%
+
+# Fragments created by Lee's Rapid Deconstruction
+%%%%
+# from stone/rock walls or stone enemies
+blast of rock fragments
+
+%%%%
+blast of petrified fragments
+
+%%%%
+# fragments from a monster made of ice
+icy blast
+
+%%%%
+blast of toenail fragments
+
+%%%%
+blast of metal fragments
+
+%%%%
+blast of crystal shards
+
+%%%%
+blast of orange crystal shards
+
+%%%%
+blast of salt crystal shards
+
+%%%%
+blast of obsidian shards
+
+%%%%
+blast of sapphire shards
+
+%%%%
+blast of bone shards
+
+%%%%
+
+# Qazlal Upheaval
+%%%%
+blast of magma
+
+%%%%
+blast of ice
+
+%%%%
+cutting wind
+
+%%%%
+blast of rubble
+
+%%%%
+
+#################################
+# short names
+#################################
+
+%%%%
+metal splinters
+
+%%%%
+splinters
+
+%%%%
+flames
+
+%%%%
+frost
+
+%%%%
+sticky fire
+
+%%%%
+lightning
+
+%%%%
+dispelling energy
+
+%%%%
+# duplicate of item type
+#missile
+#Geschoss
+%%%%
+magic missile
+
+%%%%
+fire
+
+%%%%
+cold
+
+%%%%
+water
+
+%%%%
+magic
+
+%%%%
+electricity
+
+%%%%
+# duplicate of cloud
+#noxious fumes
+#schädliche Dämpfe
+%%%%
+# duplicate of item brand
+#poison
+#Gift
+%%%%
+# duplicate of cloud
+#negative energy
+#negative Energie
+%%%%
+# duplicate of item brand
+#acid
+#Säure
+%%%%
+miasma
+
+%%%%
+spores
+
+%%%%
+poison sting
+
+%%%%
+# duplicate of cloud
+#steam
+#Dampf
+%%%%
+energy
+
+%%%%
+cleansing flame
+
+%%%%
+fragments
+
+%%%%
+magma
+
+%%%%
+ice
+
+%%%%
+# duplicate of cloud
+#thunder
+#Donner
+%%%%
+stunning bolt
+
+%%%%
+devastation
+
+%%%%
+random
+
+%%%%
+# duplicate of item brand
+#chaos
+#Chaos
+%%%%
+# duplicate of mutation
+#slow
+#Langsamkeit
+%%%%
+haste
+
+%%%%
+might
+
+%%%%
+healing
+
+%%%%
+paralysis
+
+%%%%
+confusion
+
+%%%%
+invisibility
+
+%%%%
+digging
+
+%%%%
+teleportation
+
+%%%%
+polymorph
+
+%%%%
+malmutation
+
+%%%%
+charming
+
+%%%%
+banishment
+
+%%%%
+# duplicate of item brand
+#pain
+#Schmerz
+%%%%
+dispel undead
+
+%%%%
+mindburst
+
+%%%%
+blink
+
+%%%%
+blink close
+
+%%%%
+petrify
+
+%%%%
+backlight
+
+%%%%
+hibernation
+
+%%%%
+sleep
+
+%%%%
+# duplicate of monster status
+#berserk
+#Berserker
+%%%%
+visual effects
+
+%%%%
+torment damage
+
+%%%%
+air
+
+%%%%
+inner flame
+
+%%%%
+# duplicate of cloud
+#calcifying dust
+#verkalkender Staub
+%%%%
+magic web
+
+%%%%
+sentinel's mark
+
+%%%%
+dimension anchor
+
+%%%%
+vulnerability
+
+%%%%
+malign offering
+
+%%%%
+virulence
+
+%%%%
+agility
+
+%%%%
+sap magic
+
+%%%%
+# also used in monster attack description ("It can %s.")
+drain magic
+
+%%%%
+tukima's dance
+
+%%%%
+breath of the dead
+
+%%%%
+# duplicate of status
+#resistance
+#Resistenz
+%%%%
+unravelled magic
+
+%%%%
+shared pain
+
+%%%%
+infestation
+
+%%%%
+vile clutch
+
+%%%%
+vampiric draining
+
+%%%%
+concentrate venom
+
+%%%%

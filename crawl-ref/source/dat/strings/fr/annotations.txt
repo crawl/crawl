@@ -1,0 +1,494 @@
+###############################################################################
+#
+# Item annotations
+#
+###############################################################################
+
+%%%%
+" (gone by now)"
+
+%%%%
+" (skeletalised by now)"
+
+%%%%
+" (curse)"
+
+%%%%
+" (unknown)"
+
+%%%%
+" (inert)"
+
+%%%%
+" (damnation)"
+
+%%%%
+" (the Realm of Zot)"
+
+%%%%
+god gift
+
+%%%%
+Fragile
+
+%%%%
+branded
+
+%%%%
+# for some reason, brands on armour are called egos
+ego
+
+%%%%
+two-handed
+
+%%%%
+one-handed
+
+%%%%
+willpower
+
+%%%%
+
+# attribute +/-
+%%%%
+# strength
+Str
+
+%%%%
+# dexterity
+Dex
+
+%%%%
+# intelligence
+Int
+
+%%%%
+HP
+
+%%%%
+MP
+
+%%%%
+# armour class
+AC
+
+%%%%
+# evasion
+EV
+
+%%%%
+# shields
+SH
+
+%%%%
+# stealth
+Stlth
+
+%%%%
+
+# resistances +/-
+%%%%
+# fire
+rF
+
+%%%%
+# cold
+rC
+
+%%%%
+# negative energy
+rN
+
+%%%%
+# poison
+rPois
+
+%%%%
+# corrosion
+rCorr
+
+%%%%
+# clarity (immunity to confusion, etc.)
+Clar
+
+%%%%
+# torment
+rTorment
+
+%%%%
+# mutation
+rMut
+
+%%%%
+rMiasma
+
+%%%%
+rSteam
+
+%%%%
+# will (magic resistance)
+Will
+
+%%%%
+dropped
+
+%%%%
+
+
+# long-form resistances (some are covered under mutations)
+
+%%%%
+corrosion resistance
+
+%%%%
+# magic resistance is an old name for will
+magic resistance
+
+%%%%
+MR
+
+%%%%
+
+%%%%
+resist magic
+
+%%%%
+resist cold
+
+%%%%
+resist corrosion
+
+%%%%
+resist electricity
+
+%%%%
+resist fire
+
+%%%%
+resist mutation
+
+%%%%
+resist negative energy
+
+%%%%
+resist poison
+
+%%%%
+
+
+# benefits
+%%%%
+# wizardry (reduces spell failure rate)
+Wiz
+
+%%%%
+# blink ability
++Blink
+
+%%%%
+# invisibility ability
++Inv
+
+%%%%
+# see invisible
+SInv
+
+%%%%
+# alternative abbreviation for see invisible
+sInv
+
+%%%%
+# HP regeneration
+Regen
+
+%%%%
+# MP regeneration
+RegenMP
+
+%%%%
+# Extra move when moving towards enemy
+Rampage
+
+%%%%
+Acrobat
+
+%%%%
+# random rat summoning
+*Rats
+
+%%%%
+# berserk ability
++Rage
+
+%%%%
+
+# disadvantages
+%%%%
+# random involuntary berserking
+*Rage
+
+%%%%
+# no casting spells
+-Cast
+
+%%%%
+# random noise
+*Noise
+
+%%%%
+# random corrosion
+*Corrode
+
+%%%%
+# random slowing
+*Slow
+
+%%%%
+# random teleport
+*Tele
+
+%%%%
+
+# weapon brands
+%%%%
+flame
+
+%%%%
+freeze
+
+%%%%
+holy
+
+%%%%
+elec
+
+%%%%
+venom
+
+%%%%
+protect
+
+%%%%
+drain
+
+%%%%
+speed
+
+%%%%
+vorpal
+
+%%%%
+vamp
+
+%%%%
+pain
+
+%%%%
+antimagic
+
+%%%%
+distort
+
+%%%%
+chaos
+
+%%%%
+penet
+
+%%%%
+reap
+
+%%%%
+# spectral
+spect
+
+%%%%
+acid
+
+%%%%
+# accuracy
+Acc
+
+%%%%
+
+# missile brands
+%%%%
+poison
+
+%%%%
+curare
+
+%%%%
+datura
+
+%%%%
+atropa
+
+%%%%
+silver
+
+%%%%
+disperse
+
+%%%%
+# dragon/draconian slaying (Wyrmbane)
+slay drac
+
+%%%%
+
+# armour egos
+%%%%
+ponderous
+
+%%%%
+Fly
+
+%%%%
+Archmagi
+
+%%%%
+reflect
+
+%%%%
+Spirit
+
+%%%%
+archery
+
+%%%%
+repulsion
+
+%%%%
+harm
+
+%%%%
+shadows
+
+%%%%
+
+#################################
+# Item slots
+#################################
+%%%%
+" (melded)"
+
+%%%%
+" (weapon)"
+
+%%%%
+" (worn)"
+
+%%%%
+# yes, this is supposed to have leading AND trailing space
+" (carried) "
+
+%%%%
+" (quivered)"
+
+%%%%
+" (quivered ammo)"
+
+%%%%
+Item in an invalid slot
+
+%%%%
+
+# holding something that isn't a weapon
+%%%%
+" (in hand)"
+
+%%%%
+" (in claw)"
+
+%%%%
+" (in tentacle)"
+
+%%%%
+# ...and can't grasp things
+# (I don't think it's actually possible to hold something in this situation, but the eventuality is handled in the code)
+" (in mouth)"
+
+%%%%
+
+# amulet slots
+%%%%
+" (around neck)"
+
+%%%%
+# octopodes have a mantle rather than a neck
+" (around mantle)"
+
+%%%%
+
+# ring slots
+%%%%
+" (left hand)"
+
+%%%%
+" (right hand)"
+
+%%%%
+" (left paw)"
+
+%%%%
+" (right paw)"
+
+%%%%
+" (left claw)"
+
+%%%%
+" (right claw)"
+
+%%%%
+" (left tentacle)"
+
+%%%%
+" (right tentacle)"
+
+%%%%
+# octopode rings after the first two
+" (on tentacle)"
+
+%%%%
+# the macabre finger amulet can wear a ring
+" (on amulet)"
+
+%%%%
+# tree form
+" (left branch)"
+
+%%%%
+" (right branch)"
+
+%%%%
+# spider form
+" (left front leg)"
+
+%%%%
+" (right front leg)"
+
+%%%%
+# blade hands
+" (left blade hand)"
+
+%%%%
+" (right blade hand)"
+
+%%%%
+
+#################################
+# Other Locations
+#################################
+%%%%
+" (under bush)"
+
+%%%%
+" (under plant)"
+
+%%%%
+in_shop
+
+%%%%
+inventory
+
+%%%%

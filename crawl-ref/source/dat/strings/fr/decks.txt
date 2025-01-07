@@ -1,0 +1,134 @@
+###############################################################################
+#
+# Translations for Nemelex card decks
+#
+###############################################################################
+
+%%%%
+escape
+
+%%%%
+destruction
+
+%%%%
+summoning
+
+%%%%
+punishment
+
+%%%%
+
+%%%%
+the deck of escape
+
+%%%%
+the deck of destruction
+
+%%%%
+the deck of summoning
+
+%%%%
+the deck of punishment
+
+%%%%
+the stacked deck
+
+%%%%
+
+%%%%
+decks of escape
+
+%%%%
+decks of destruction
+
+%%%%
+decks of summoning
+
+%%%%
+decks of punishment
+
+%%%%
+stacked decks
+
+%%%%
+
+
+####################
+# Cards
+####################
+
+%%%%
+an escape card
+
+%%%%
+a destruction card
+
+%%%%
+a summoning card
+
+%%%%
+a punishment card
+
+%%%%
+
+%%%%
+Velocity
+
+%%%%
+Exile
+
+%%%%
+the Elixir
+
+%%%%
+the Stairs
+
+%%%%
+the Tomb
+
+%%%%
+Wild Magic
+
+%%%%
+the Elements
+
+%%%%
+the Pentagram
+
+%%%%
+the Dance
+
+%%%%
+the Swarm
+
+%%%%
+the Rangers
+
+%%%%
+Vitriol
+
+%%%%
+the Cloud
+
+%%%%
+the Storm
+
+%%%%
+Wrath
+
+%%%%
+the Wraith
+
+%%%%
+the Swine
+
+%%%%
+the Orb
+
+%%%%
+the Illusion
+
+%%%%
+Degeneration
+
+%%%%

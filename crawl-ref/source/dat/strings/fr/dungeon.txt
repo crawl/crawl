@@ -1,0 +1,548 @@
+###############################################################################
+#
+# Translations for dungeon-related stuff
+#
+###############################################################################
+
+##############################################
+# Short branch names
+##############################################
+%%%%
+Dungeon
+
+%%%%
+Temple
+
+%%%%
+Orcish Mines
+
+%%%%
+Elven Halls
+
+%%%%
+Lair
+
+%%%%
+Swamp
+
+%%%%
+Shoals
+
+%%%%
+Snake Pit
+
+%%%%
+Spider Nest
+
+%%%%
+Slime Pits
+
+%%%%
+Vaults
+
+%%%%
+Crypt
+
+%%%%
+Tomb
+
+%%%%
+Depths
+
+%%%%
+Hells
+
+%%%%
+Hell
+
+%%%%
+Dis
+
+%%%%
+Gehenna
+
+%%%%
+Cocytus
+
+%%%%
+Tartarus
+
+%%%%
+Pandemonium
+
+%%%%
+Zot
+
+%%%%
+Abyss
+
+%%%%
+Ziggurat
+
+%%%%
+Bazaar
+
+%%%%
+Trove
+
+%%%%
+Sewer
+
+%%%%
+Ossuary
+
+%%%%
+Bailey
+
+%%%%
+Gauntlet
+
+%%%%
+Ice Cave
+
+%%%%
+Volcano
+
+%%%%
+Wizlab
+
+%%%%
+Desolation
+
+%%%%
+
+# obsolete branches
+%%%%
+Dwarven Hall
+
+%%%%
+Hall of Blades
+
+%%%%
+Forest
+
+%%%%
+Labyrinth
+
+%%%%
+
+##############################################
+# Short branch names with indefinite article
+##############################################
+# HUD shows some branches as short name with indefinite article
+%%%%
+an Abyss
+
+%%%%
+a Ziggurat
+
+%%%%
+a Bazaar
+
+%%%%
+a Trove
+
+%%%%
+a Sewer
+
+%%%%
+an Ossuary
+
+%%%%
+a Bailey
+
+%%%%
+an Ice Cave
+
+%%%%
+a Volcano
+
+%%%%
+a Wizlab
+
+%%%%
+# same as long name
+#a Gauntlet
+#ein Spießrutenlauf
+%%%%
+
+##############################################
+# Long branch names
+# (where different to short name)
+##############################################
+%%%%
+the Dungeon
+
+%%%%
+the Ecumenical Temple
+
+%%%%
+the Orcish Mines
+
+%%%%
+the Elven Halls
+
+%%%%
+the Lair of Beasts
+
+%%%%
+the Swamp
+
+%%%%
+the Shoals
+
+%%%%
+the Snake Pit
+
+%%%%
+the Spider Nest
+
+%%%%
+the Pits of Slime
+
+%%%%
+the Vaults
+
+%%%%
+the Crypt
+
+%%%%
+the Tomb of the Ancients
+
+%%%%
+the Depths
+
+%%%%
+the Hells
+
+%%%%
+the Vestibule of Hell
+
+%%%%
+the Iron City of Dis
+
+%%%%
+the Realm of Zot
+
+%%%%
+the Abyss
+
+%%%%
+a ziggurat
+
+%%%%
+a bazaar
+
+%%%%
+a treasure trove
+
+%%%%
+a sewer
+
+%%%%
+an ossuary
+
+%%%%
+a bailey
+
+%%%%
+a Gauntlet
+
+%%%%
+an ice cave
+
+%%%%
+a volcano
+
+%%%%
+a wizard's laboratory
+
+%%%%
+the Desolation of Salt
+
+%%%%
+
+##############################################
+# Branch abbreviations
+# These should be 8 characters or less.
+#
+# Note: Some of the English abbreviations are the same as the short names (or player genus).
+# To force specific translation for abbreviation in that case, use {branch_abbrev} annotation.
+##############################################
+%%%%
+# This is different to the short name, but do not want to define a global translation for the letter D
+{branch_abbrev}D
+
+%%%%
+# D is the real English abbreviation, but Dungeon is used in overview screen
+{branch_abbrev}Dungeon
+
+%%%%
+{branch_abbrev}Temple
+
+%%%%
+# also a player genus
+{branch_abbrev}Orc
+
+%%%%
+# also a player genus
+{branch_abbrev}Elf
+
+%%%%
+{branch_abbrev}Lair
+
+%%%%
+{branch_abbrev}Swamp
+
+%%%%
+{branch_abbrev}Shoals
+
+%%%%
+Snake
+
+%%%%
+Spider
+
+%%%%
+Slime
+
+%%%%
+{branch_abbrev}Vaults
+
+%%%%
+{branch_abbrev}Crypt
+
+%%%%
+{branch_abbrev}Tomb
+
+%%%%
+{branch_abbrev}Depths
+
+%%%%
+{branch_abbrev}Hell
+
+%%%%
+{branch_abbrev}Dis
+
+%%%%
+Geh
+
+%%%%
+Coc
+
+%%%%
+Tar
+
+%%%%
+Pan
+
+%%%%
+Zig
+
+%%%%
+{branch_abbrev}Abyss
+
+%%%%
+{branch_abbrev}Bazaar
+
+%%%%
+{branch_abbrev}Trove
+
+%%%%
+{branch_abbrev}Sewer
+
+%%%%
+{branch_abbrev}Ossuary
+
+%%%%
+{branch_abbrev}Bailey
+
+%%%%
+{branch_abbrev}Gauntlet
+
+%%%%
+IceCv
+
+%%%%
+{branch_abbrev}Volcano
+
+%%%%
+# Note: English short name has small L, but abbreviation has capital L.
+WizLab
+
+%%%%
+{branch_abbrev}Desolation
+
+%%%%
+
+##############################################
+# on branch level
+##############################################
+%%%%
+on level %d of the Dungeon
+
+%%%%
+on level %d of the Orcish Mines
+
+%%%%
+on level %d of the Elven Halls
+
+%%%%
+on level %d of the Lair of Beasts
+
+%%%%
+on level %d of the Swamp
+
+%%%%
+on level %d of the Shoals
+
+%%%%
+on level %d of the Snake Pit
+
+%%%%
+on level %d of the Spider Nest
+
+%%%%
+on level %d of the Pits of Slime
+
+%%%%
+on level %d of the Vaults
+
+%%%%
+on level %d of the Crypt
+
+%%%%
+on level %d of the Tomb of the Ancients
+
+%%%%
+on level %d of the Depths
+
+%%%%
+on level %d of the Vestibule of Hell
+
+%%%%
+on level %d of Tartarus
+
+%%%%
+on level %d of Gehenna
+
+%%%%
+on level %d of Cocytus
+
+%%%%
+on level %d of the Iron City of Dis
+
+%%%%
+on level %d of Pandemonium
+
+%%%%
+on level %d of the Realm of Zot
+
+%%%%
+on level %d of the Abyss
+
+%%%%
+on level %d of a ziggurat
+
+%%%%
+# should be "in a sewer", but for some reason, we get this in hiscores
+on level %d of a sewer
+
+%%%%
+
+##############################################
+# between branch levels
+##############################################
+%%%%
+between levels %d and %d of the Dungeon
+
+%%%%
+between levels %d and %d of the Orcish Mines
+
+%%%%
+between levels %d and %d of the Elven Halls
+
+%%%%
+between levels %d and %d of the Lair of Beasts
+
+%%%%
+between levels %d and %d of the Swamp
+
+%%%%
+between levels %d and %d of the Shoals
+
+%%%%
+between levels %d and %d of the Snake Pit
+
+%%%%
+between levels %d and %d of the Spider Nest
+
+%%%%
+between levels %d and %d of the Pits of Slime
+
+%%%%
+between levels %d and %d of the Vaults
+
+%%%%
+between levels %d and %d of the Crypt
+
+%%%%
+between levels %d and %d of the Tomb of the Ancients
+
+%%%%
+between levels %d and %d of the Depths
+
+%%%%
+between levels %d and %d of the Vestibule of Hell
+
+%%%%
+between levels %d and %d of the Iron City of Dis
+
+%%%%
+between levels %d and %d of the Realm of Zot
+
+%%%%
+between levels %d and %d of the Abyss
+
+%%%%
+between levels %d and %d of a ziggurat
+
+%%%%
+
+##############################################
+# in single-level branch
+##############################################
+%%%%
+in the Ecumenical Temple
+
+%%%%
+in a bazaar
+
+%%%%
+in a treasure trove
+
+%%%%
+in a sewer
+
+%%%%
+in an ossuary
+
+%%%%
+in a bailey
+
+%%%%
+in a Gauntlet
+
+%%%%
+in an ice cave
+
+%%%%
+in a volcano
+
+%%%%
+in a wizard's laboratory
+
+%%%%
+in the Desolation of Salt
+
+%%%%

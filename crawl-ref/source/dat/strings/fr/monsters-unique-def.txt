@@ -1,0 +1,297 @@
+###############################################################################
+#
+# Monsters - unique, definite article, nominative
+#
+###############################################################################
+
+# Notes:
+#
+# It might seem weird to list named monsters with the definite article, but it's
+# needed for messages like: "You hit the helpless Sigmund." Also, it's easier to
+# generate the "plain" version (without article) from the one with the article
+# than the other way round because it's very hard to identify plain unique names
+# (there are hundreds of other one-word strings that start with a capital
+# letter).
+#
+# Some uniques are gender-neutral in English. This is different to neuter.
+# (neuter -> it, gender neutral -> they). I'm not sure if this is possible in
+# French.
+
+%%%%
+the Mennas
+
+%%%%
+the Nessos
+
+%%%%
+the Chuck
+
+%%%%
+the Polyphemus
+
+%%%%
+the Antaeus
+
+%%%%
+the Tiamat
+
+%%%%
+the Bai Suzhen
+
+%%%%
+the Xtahua
+
+%%%%
+the Ijyb
+
+%%%%
+the Robin
+
+%%%%
+the Grum
+
+%%%%
+the Duvessa
+
+%%%%
+the Dowan
+
+%%%%
+the Fannar
+
+%%%%
+the Jorgrun
+
+%%%%
+the Natasha
+
+%%%%
+the Arachne
+
+%%%%
+the Asterion
+
+%%%%
+the Agnes
+
+%%%%
+the Dissolution
+
+%%%%
+the Sonja
+
+%%%%
+the Pikel
+
+%%%%
+the Boris
+
+%%%%
+the Menkaure
+
+%%%%
+the Khufu
+
+%%%%
+the Ilsuiw
+
+%%%%
+the Vashnia
+
+%%%%
+the Erolcha
+
+%%%%
+the Urug
+
+%%%%
+the Nergalle
+
+%%%%
+the Saint Roka
+
+%%%%
+the Sojobo
+
+%%%%
+the Azrael
+
+%%%%
+the Mara
+
+%%%%
+the Aizul
+
+%%%%
+the Snorg
+
+%%%%
+the Purgy
+
+%%%%
+the Jory
+
+%%%%
+the Gastronok
+
+%%%%
+the Nellie
+
+%%%%
+the Murray
+
+%%%%
+the Ignacio
+
+%%%%
+the Grinder
+
+%%%%
+the Roxanne
+
+%%%%
+the Terence
+
+%%%%
+the Jessica
+
+%%%%
+the Sigmund
+
+%%%%
+the Edmund
+
+%%%%
+the Psyche
+
+%%%%
+the Donald
+
+%%%%
+the Joseph
+
+%%%%
+the Erica
+
+%%%%
+the Josephine
+
+%%%%
+the Harold
+
+%%%%
+the Louise
+
+%%%%
+the Frances
+
+%%%%
+the Rupert
+
+%%%%
+the Kirke
+
+%%%%
+the Frederick
+
+%%%%
+the Margery
+
+%%%%
+the Maggie
+
+%%%%
+the Eustachio
+
+%%%%
+the Maurice
+
+%%%%
+the Nikola
+
+%%%%
+the Mnoleg
+
+%%%%
+the Lom Lobon
+
+%%%%
+the Cerebov
+
+%%%%
+the Gloorx Vloq
+
+%%%%
+the Geryon
+
+%%%%
+the Dispater
+
+%%%%
+the Asmodeus
+
+%%%%
+the Ereshkigal
+
+%%%%
+the Prince Ribbit
+
+%%%%
+the Crazy Yiuf
+
+%%%%
+the Enchantress
+
+%%%%
+the Blork the orc
+
+%%%%
+the Blork
+
+%%%%
+the Royal Jelly
+
+%%%%
+the Serpent of Hell
+
+%%%%
+the Lernaean hydra
+
+%%%%
+the Cigotuvi's Monster
+
+%%%%
+the Statue of Wucad Mu
+
+%%%%
+
+# not really uniques, but gramatically similar
+
+%%%%
+the @name@'s ghost
+
+%%%%
+the @name@'s illusion
+
+%%%%
+
+##################
+# Sprint Monsters
+##################
+
+%%%%
+The Meatlord
+
+%%%%
+The Servant
+
+%%%%
+The Captor
+
+%%%%
+The Defiler
+
+%%%%
+The Unspeakable
+
+%%%%

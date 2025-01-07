@@ -1,0 +1,451 @@
+###############################################################################
+#
+# Items - unique, nominative
+#
+###############################################################################
+
+
+#################################
+# The Orb
+#################################
+%%%%
+the Orb of Zot
+
+%%%%
+# in some places, it appears with an uppercase T
+The Orb of Zot
+
+%%%%
+
+#################################
+# Unrand Artefacts
+#################################
+%%%%
+the Singing Sword
+
+%%%%
+# alternative name for the Singing Sword
+the Screaming Sword
+
+%%%%
+# alternative name for the Singing Sword
+the Sulking Sword
+
+%%%%
+the pair of quick blades "Gyre" and "Gimble"
+
+%%%%
+the Wrath of Trog
+
+%%%%
+the mace of Variability
+
+%%%%
+the glaive of Prune
+
+%%%%
+the sword of Power
+
+%%%%
+the staff of Olgreb
+
+%%%%
+the staff of Wucad Mu
+
+%%%%
+the Vampire's Tooth
+
+%%%%
+the scythe of Curses
+
+%%%%
+the sceptre of Torment
+
+%%%%
+the sword of Zonguldrok
+
+%%%%
+the sword of Cerebov
+
+%%%%
+the staff of Dispater
+
+%%%%
+the sceptre of Asmodeus
+
+%%%%
+the faerie dragon scales
+
+%%%%
+the demon blade "Bloodbane"
+
+%%%%
+the scimitar of Flaming Death
+
+%%%%
+the eveningstar "Brilliance"
+
+%%%%
+the demon blade "Leech"
+
+%%%%
+the dagger of Chilly Death
+
+%%%%
+the dagger "Morg"
+
+%%%%
+the scythe "Finisher"
+
+%%%%
+the sling "Punk"
+
+%%%%
+the longbow "Zephyr"
+
+%%%%
+the giant club "Skullcrusher"
+
+%%%%
+the glaive of the Guard
+
+%%%%
+the zealot's sword
+
+%%%%
+the arbalest "Damnation"
+
+%%%%
+the sword of the Doom Knight
+
+%%%%
+the morningstar "Eos"
+
+%%%%
+the spear of the Botono
+
+%%%%
+the trident of the Octopus King
+
+%%%%
+the mithril axe "Arga"
+
+%%%%
+the Elemental Staff
+
+%%%%
+the heavy crossbow "Sniper"
+
+%%%%
+the longbow "Piercer"
+
+%%%%
+the blowgun of the Assassin
+
+%%%%
+the lance "Wyrmbane"
+
+%%%%
+the Spriggan's Knife
+
+%%%%
+the plutonium sword
+
+%%%%
+the great mace "Undeadhunter"
+
+%%%%
+the whip "Snakebite"
+
+%%%%
+the knife of Accuracy
+
+%%%%
+the Lehudib's crystal spear
+
+%%%%
+the captain's cutlass
+
+%%%%
+the storm bow
+
+%%%%
+the tower shield of Ignorance
+
+%%%%
+the robe of Augmentation
+
+%%%%
+the cloak of the Thief
+
+%%%%
+the tower shield "Bullseye"
+
+%%%%
+the crown of Dyrovepreva
+
+%%%%
+the hat of the Bear Spirit
+
+%%%%
+the robe of Misfortune
+
+%%%%
+the cloak of Flash
+
+%%%%
+the hood of the Assassin
+
+%%%%
+the Lear's hauberk
+
+%%%%
+the skin of Zhor
+
+%%%%
+the salamander hide armour
+
+%%%%
+the pair of gauntlets of War
+
+%%%%
+the shield of Resistance
+
+%%%%
+the robe of Folly
+
+%%%%
+the Maxwell's patent armour
+
+%%%%
+the mask of the Dragon
+
+%%%%
+the robe of Night
+
+%%%%
+the scales of the Dragon King
+
+%%%%
+the hat of the Alchemist
+
+%%%%
+the pair of fencer's gloves
+
+%%%%
+the cloak of Starlight
+
+%%%%
+the ratskin cloak
+
+%%%%
+the shield of the Gong
+
+%%%%
+the amulet of the Air
+
+%%%%
+the ring of Shadows
+
+%%%%
+the amulet of Cekugob
+
+%%%%
+the amulet of the Four Winds
+
+%%%%
+the necklace of Bloodlust
+
+%%%%
+the ring of Phasing
+
+%%%%
+the ring of Robustness
+
+%%%%
+the ring of the Mage
+
+%%%%
+the ring of the Hare
+
+%%%%
+the ring of the Tortoise
+
+%%%%
+the brooch of Shielding
+
+%%%%
+the robe of Clouds
+
+%%%%
+the hat of Pondering
+
+%%%%
+the obsidian axe
+
+%%%%
+the lightning scales
+
+%%%%
+the Black Knight's barding
+
+%%%%
+the amulet of Vitality
+
+%%%%
+the autumn katana
+
+%%%%
+the shillelagh "Devastator"
+
+%%%%
+the dragonskin cloak
+
+%%%%
+the Axe of Woe
+
+%%%%
+the moon troll leather armour
+
+%%%%
+the macabre finger necklace
+
+%%%%
+the pair of boots of the spider
+
+%%%%
+the dark maul
+
+%%%%
+the hat of the High Council
+
+%%%%
+the arc blade
+
+%%%%
+the demon whip "Spellbinder"
+
+%%%%
+the lajatang of Order
+
+%%%%
+the great mace "Firestarter"
+
+%%%%
+the orange crystal plate armour
+
+%%%%
+the Majin-Bo
+
+%%%%
+the Maxwell's etheric cage
+
+%%%%
+the crown of Eternal Torment
+
+%%%%
+the robe of Vines
+
+%%%%
+the Kryia's mail coat
+
+%%%%
+the frozen axe "Frostbite"
+
+%%%%
+the armour of Talos
+
+%%%%
+the warlock's mirror
+
+%%%%
+the amulet of invisibility
+
+%%%%
+the Maxwell's thermic engine
+
+%%%%
+the demon trident "Rift"
+
+%%%%
+the staff of Battle
+
+%%%%
+the Cigotuvi's embrace
+
+%%%%
+the pair of seven-league boots
+
+%%%%
+the horn of Geryon
+
+%%%%
+
+#################################
+# Appearance when unidentified
+#################################
+
+# a few have a special appearance when unidentified
+%%%%
+# sword of Cerebov
+# the English description says serpentine, but in the tile, the blade is shaped like flames
+a great serpentine sword
+
+%%%%
+# staff of Dispater
+a golden staff
+
+%%%%
+# sceptre of Asmodeus
+a ruby sceptre
+
+%%%%
+# dragonskin cloak
+an opalescent scaly cloak
+
+%%%%
+
+# the rest just look like what they are, but get the indefinite article
+# instead of the definite article
+
+#################################
+# Special base types for some unrands
+#################################
+
+%%%%
+# sword of Cerebov
+a flamberge
+
+%%%%
+# heavy crossbow "Sniper"
+a heavy crossbow
+
+%%%%
+# lance "Wyrmbane"
+a lance
+
+%%%%
+# Spriggan's Knife
+a knife
+
+%%%%
+# captain's cutlass
+a cutlass
+
+%%%%
+# autumn katana
+a katana
+
+%%%%
+# shillelagh "Devastator"
+a shillelagh
+
+%%%%
+# dark maul
+a maul
+
+%%%%
+# "Gyre" and "Gimble"
+a pair of quick blades
+
+%%%%

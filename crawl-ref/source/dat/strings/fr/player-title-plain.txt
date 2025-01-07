@@ -1,0 +1,1437 @@
+###############################################################################
+#
+# Translations for player titles (without article)
+#
+# These are used in the HUD if player name is long. The god-given ones
+# are also shown on the religion screen.
+#
+###############################################################################
+
+##############################################
+# God-given titles
+##############################################
+# Zin
+%%%%
+Blasphemer
+
+%%%%
+Anchorite
+
+%%%%
+Apologist
+
+%%%%
+Pious
+
+%%%%
+Devout
+
+%%%%
+Orthodox
+
+%%%%
+Immaculate
+
+%%%%
+Bringer of Law
+
+%%%%
+
+# Shining One
+%%%%
+Honourless
+
+%%%%
+Acolyte
+
+%%%%
+Righteous
+
+%%%%
+Unflinching
+
+%%%%
+Holy Warrior
+
+%%%%
+Exorcist
+
+%%%%
+Demon Slayer
+
+%%%%
+Bringer of Light
+
+%%%%
+
+# Kiku
+%%%%
+Tormented
+
+%%%%
+Purveyor of Pain
+
+%%%%
+Scholar of Death
+
+%%%%
+Merchant of Misery
+
+%%%%
+Artisan of Death
+
+%%%%
+Dealer of Despair
+
+%%%%
+Black Sun
+
+%%%%
+Lord of Darkness
+
+%%%%
+
+# Yred
+%%%%
+Traitor
+
+%%%%
+Tainted
+
+%%%%
+Torchbearer
+
+%%%%
+# @Genus@ may have different genders in French, so may need special handling...
+Fey @Genus@
+
+%%%%
+Black Crusader
+
+%%%%
+Sculptor of Flesh
+
+%%%%
+Harbinger of Death
+
+%%%%
+Grim Reaper
+
+%%%%
+
+# Xom
+%%%%
+Toy
+
+%%%%
+
+# Vehumet
+%%%%
+Meek
+
+%%%%
+Sorcerer's Apprentice
+
+%%%%
+Scholar of Destruction
+
+%%%%
+Caster of Ruination
+
+%%%%
+Traumaturge
+
+%%%%
+Battlemage
+
+%%%%
+Warlock
+
+%%%%
+Luminary of Lethal Lore
+
+%%%%
+
+# Okawaru
+%%%%
+Coward
+
+%%%%
+Struggler
+
+%%%%
+Combatant
+
+%%%%
+# duplicate (archetype)
+#Warrior
+#Krieger
+%%%%
+Knight
+
+%%%%
+Warmonger
+
+%%%%
+Commander
+
+%%%%
+Victor of a Thousand Battles
+
+%%%%
+
+# Makhleb
+%%%%
+Orderly
+
+%%%%
+Spawn of Chaos
+
+%%%%
+Disciple of Destruction
+
+%%%%
+Fanfare of Bloodshed
+
+%%%%
+Fiendish
+
+%%%%
+# workaround genus gender issue
+Demolition @Genus@
+
+%%%%
+Pandemonic
+
+%%%%
+Champion of Chaos
+
+%%%%
+
+# Sif Muna
+%%%%
+Ignorant
+
+%%%%
+Disciple
+
+%%%%
+Student
+
+%%%%
+Adept
+
+%%%%
+Scribe
+
+%%%%
+Scholar
+
+%%%%
+Sage
+
+%%%%
+Genius of the Arcane
+
+%%%%
+
+# Trog
+%%%%
+Puny
+
+%%%%
+Troglodyte
+
+%%%%
+Angry Troglodyte
+
+%%%%
+Frenzied
+
+%%%%
+@Genus@ of Prey
+
+%%%%
+Rampant
+
+%%%%
+Wild @Genus@
+
+%%%%
+Bane of Scribes
+
+%%%%
+
+# Nemelex
+%%%%
+Unlucky @Genus@
+
+%%%%
+Pannier
+
+%%%%
+Jester
+
+%%%%
+Fortune-Teller
+
+%%%%
+Soothsayer
+
+%%%%
+Magus
+
+%%%%
+Cardsharp
+
+%%%%
+Hand of Fortune
+
+%%%%
+
+# Elyvilon
+%%%%
+Sinner
+
+%%%%
+Practitioner
+
+%%%%
+Comforter
+
+%%%%
+Caregiver
+
+%%%%
+Mender
+
+%%%%
+Pacifist
+
+%%%%
+Purifying @Genus@
+
+%%%%
+Bringer of Life
+
+%%%%
+
+# Lugonu
+%%%%
+Pure
+
+%%%%
+Abyss-Baptised
+
+%%%%
+Unweaver
+
+%%%%
+Distorting @Genus@
+
+%%%%
+Agent of Entropy
+
+%%%%
+Schismatic
+
+%%%%
+Envoy of Void
+
+%%%%
+Corrupter of Planes
+
+%%%%
+
+# Beogh
+%%%%
+Apostate
+
+%%%%
+Messenger
+
+%%%%
+Proselytiser
+
+%%%%
+Priest
+
+%%%%
+Missionary
+
+%%%%
+Evangelist
+
+%%%%
+Apostle
+
+%%%%
+Messiah
+
+%%%%
+
+# Jiyva
+%%%%
+Scum
+
+%%%%
+Squelcher
+
+%%%%
+Ooze
+
+%%%%
+Jelly
+
+%%%%
+Slime Creature
+
+%%%%
+Dissolving @Genus@
+
+%%%%
+Blob
+
+%%%%
+# duplicate of monster
+#Royal Jelly
+#Gelee Royale
+%%%%
+
+# Fedhas
+%%%%
+@Walking@ Fertiliser
+
+%%%%
+Fungal
+
+%%%%
+Green @Genus@
+
+%%%%
+Cultivator
+
+%%%%
+Fruitful
+
+%%%%
+Photosynthesist
+
+%%%%
+Green Death
+
+%%%%
+Force of Nature
+
+%%%%
+
+# Cheibriados
+%%%%
+Hasty
+
+%%%%
+Sluggish @Genus@
+
+%%%%
+Deliberate
+
+%%%%
+Unhurried
+
+%%%%
+Contemplative
+
+%%%%
+Epochal
+
+%%%%
+Timeless
+
+%%%%
+@Adj@ Aeon
+
+%%%%
+
+# Ashenzari
+%%%%
+Star-crossed
+
+%%%%
+Cursed
+
+%%%%
+Initiated
+
+%%%%
+Seer
+
+%%%%
+Oracle
+
+%%%%
+Illuminatus
+
+%%%%
+Omniscient
+
+%%%%
+
+# Dithmenos
+%%%%
+Ember
+
+%%%%
+Gloomy
+
+%%%%
+Darkened
+
+%%%%
+Extinguished
+
+%%%%
+Caliginous
+
+%%%%
+Umbral
+
+%%%%
+Hand of Shadow
+
+%%%%
+Eternal Night
+
+%%%%
+
+# Gozag
+%%%%
+Profligate
+
+%%%%
+Pauper
+
+%%%%
+Entrepreneur
+
+%%%%
+Capitalist
+
+%%%%
+Rich
+
+%%%%
+Opulent
+
+%%%%
+Tycoon
+
+%%%%
+Plutocrat
+
+%%%%
+
+# Qazlal
+%%%%
+Unspoiled
+
+%%%%
+@Adj@ Mishap
+
+%%%%
+Lightning Rod
+
+%%%%
+@Adj@ Disaster
+
+%%%%
+Eye of the Storm
+
+%%%%
+@Adj@ Catastrophe
+
+%%%%
+@Adj@ Cataclysm
+
+%%%%
+End of an Era
+
+%%%%
+
+# Ru
+%%%%
+Sleeper
+
+%%%%
+Questioner
+
+%%%%
+Initiate
+
+%%%%
+Seeker of Truth
+
+%%%%
+@Walker@ of the Path
+
+%%%%
+Lifter of the Veil
+
+%%%%
+Transcendent
+
+%%%%
+Drop of Water
+
+%%%%
+
+# Pakellas (obsolete)
+%%%%
+Reactionary
+
+%%%%
+Apprentice
+
+%%%%
+Inquisitive
+
+%%%%
+Experimenter
+
+%%%%
+Inventor
+
+%%%%
+Pioneer
+
+%%%%
+Brilliant
+
+%%%%
+Grand Gadgeteer
+
+%%%%
+
+# Uskayaw
+%%%%
+Prude
+
+%%%%
+Wallflower
+
+%%%%
+Party-goer
+
+%%%%
+Dancer
+
+%%%%
+Impassioned
+
+%%%%
+Rapturous
+
+%%%%
+Ecstatic
+
+%%%%
+Rhythm of Life and Death
+
+%%%%
+
+# Hepliaklqana
+%%%%
+Damnatio Memoriae
+
+%%%%
+Hazy
+
+%%%%
+@Adj@ Child
+
+%%%%
+Storyteller
+
+%%%%
+Brooding
+
+%%%%
+Anamnesiscian
+
+%%%%
+Grand Scion
+
+%%%%
+Unforgettable
+
+%%%%
+
+# Wu Jian
+%%%%
+Wooden Rat
+
+%%%%
+Young Dog
+
+%%%%
+Young Crane
+
+%%%%
+Young Tiger
+
+%%%%
+Young Dragon
+
+%%%%
+Red Sash
+
+%%%%
+Golden Sash
+
+%%%%
+Sifu
+
+%%%%
+
+##############################################
+# Skill-based titles
+##############################################
+
+# Fighting
+%%%%
+Skirmisher
+
+%%%%
+# duplicate (background)
+#Fighter
+#Kämpfer
+%%%%
+# duplicate (Okawaru title & archetype)
+#Warrior
+#Krieger
+%%%%
+Slayer
+
+%%%%
+Conqueror
+
+%%%%
+
+# Short Blades
+%%%%
+Cutter
+
+%%%%
+Slicer
+
+%%%%
+Swashbuckler
+
+%%%%
+Cutthroat
+
+%%%%
+Politician
+
+%%%%
+
+# Long Blades
+%%%%
+Slasher
+
+%%%%
+Carver
+
+%%%%
+Fencer
+
+%%%%
+@Adj@ Blade
+
+%%%%
+Swordmaster
+
+%%%%
+
+# Axes
+%%%%
+Chopper
+
+%%%%
+Cleaver
+
+%%%%
+Severer
+
+%%%%
+Executioner
+
+%%%%
+Axe Maniac
+
+%%%%
+
+# Maces & Flails
+%%%%
+Cudgeller
+
+%%%%
+Basher
+
+%%%%
+Bludgeoner
+
+%%%%
+Shatterer
+
+%%%%
+Skullcrusher
+
+%%%%
+
+# Polearms
+%%%%
+Poker
+
+%%%%
+Spear-Bearer
+
+%%%%
+Impaler
+
+%%%%
+Phalangite
+
+%%%%
+@Adj@ Porcupine
+
+%%%%
+# palentonga
+Prickly Pangolin
+
+%%%%
+
+# Staves
+%%%%
+Twirler
+
+%%%%
+Cruncher
+
+%%%%
+Stickfighter
+
+%%%%
+Pulveriser
+
+%%%%
+Chief of Staff
+
+%%%%
+
+# Slings
+%%%%
+Vandal
+
+%%%%
+Slinger
+
+%%%%
+Whirler
+
+%%%%
+Slingshot
+
+%%%%
+@Adj@ Catapult
+
+%%%%
+
+# Bows
+%%%%
+Shooter
+
+%%%%
+Archer
+
+%%%%
+Marks@genus@
+
+%%%%
+Crack Shot
+
+%%%%
+Merry @Genus@
+
+%%%%
+
+# Crossbows
+%%%%
+Bolt Thrower
+
+%%%%
+Quickloader
+
+%%%%
+Sharpshooter
+
+%%%%
+Sniper
+
+%%%%
+@Adj@ Arbalest
+
+%%%%
+
+# Throwing
+%%%%
+Chucker
+
+%%%%
+Thrower
+
+%%%%
+Deadly Accurate
+
+%%%%
+Hawkeye
+
+%%%%
+@Adj@ Ballista
+
+%%%%
+
+# Armour
+%%%%
+Covered
+
+%%%%
+Protected
+
+%%%%
+Tortoise
+
+%%%%
+Impregnable
+
+%%%%
+Invulnerable
+
+%%%%
+
+# Dodging
+%%%%
+Ducker
+
+%%%%
+Nimble
+
+%%%%
+Spry
+
+%%%%
+# duplicate (item property)
+#Acrobat
+#Akrobat
+%%%%
+Intangible
+
+%%%%
+
+# Stealth
+%%%%
+Sneak
+
+%%%%
+Covert
+
+%%%%
+Unseen
+
+%%%%
+Imperceptible
+
+%%%%
+Ninja
+
+%%%%
+
+# Shields
+%%%%
+Shield-Bearer
+
+%%%%
+Blocker
+
+%%%%
+Peltast
+
+%%%%
+Hoplite
+
+%%%%
+@Adj@ Barricade
+
+%%%%
+
+# Spellcasting
+%%%%
+Magician
+
+%%%%
+Thaumaturge
+
+%%%%
+Eclecticist
+
+%%%%
+Sorcerer
+
+%%%%
+Archmage
+
+%%%%
+
+# Conjurations
+%%%%
+# duplicate (background)
+#Conjurer
+#Konjurant
+%%%%
+Destroyer
+
+%%%%
+Devastator
+
+%%%%
+Ruinous
+
+%%%%
+Annihilator
+
+%%%%
+
+# Hexes
+%%%%
+Vexing
+
+%%%%
+Jinx
+
+%%%%
+Bewitcher
+
+%%%%
+Maledictor
+
+%%%%
+Spellbinder
+
+%%%%
+
+# Summonings
+%%%%
+Caller
+
+%%%%
+# duplicate (background)
+#Summoner
+#Beschwörer
+%%%%
+Convoker
+
+%%%%
+Demonologist
+
+%%%%
+Hellbinder
+
+%%%%
+
+# Necromancy
+%%%%
+Grave Robber
+
+%%%%
+Reanimator
+
+%%%%
+# duplicate (background)
+#Necromancer
+#Nekromant
+%%%%
+Thanatomancer
+
+%%%%
+@Genus_Short@ of Death
+
+%%%%
+
+# Translocations
+%%%%
+Grasshopper
+
+%%%%
+Placeless @Genus@
+
+%%%%
+Blinker
+
+%%%%
+Portalist
+
+%%%%
+Plane @Walker@
+
+%%%%
+
+# Transmutations
+%%%%
+Changer
+
+%%%%
+Transmogrifier
+
+%%%%
+Alchemist
+
+%%%%
+Malleable
+
+%%%%
+Shapeless @Genus@
+
+%%%%
+
+# Fire Magic
+%%%%
+Firebug
+
+%%%%
+Arsonist
+
+%%%%
+Scorcher
+
+%%%%
+Pyromancer
+
+%%%%
+Infernalist
+
+%%%%
+
+# Ice Magic
+%%%%
+Chiller
+
+%%%%
+Frost Mage
+
+%%%%
+Gelid
+
+%%%%
+Cryomancer
+
+%%%%
+Englaciator
+
+%%%%
+
+# Air Magic
+%%%%
+Gusty
+
+%%%%
+Zephyrmancer
+
+%%%%
+Stormcaller
+
+%%%%
+Cloud Mage
+
+%%%%
+Meteorologist
+
+%%%%
+
+# Earth Magic
+%%%%
+Digger
+
+%%%%
+Geomancer
+
+%%%%
+Earth Mage
+
+%%%%
+Metallomancer
+
+%%%%
+Petrodigitator
+
+%%%%
+
+# Poison Magic
+%%%%
+Stinger
+
+%%%%
+Tainter
+
+%%%%
+Polluter
+
+%%%%
+Contaminator
+
+%%%%
+Envenomancer
+
+%%%%
+
+# Invocations
+%%%%
+Unbeliever
+
+%%%%
+Agnostic
+
+%%%%
+Dissident
+
+%%%%
+Heretic
+
+%%%%
+# duplicate (Beogh title)
+#Apostate
+#Apostat
+%%%%
+
+# Evocations
+%%%%
+Charlatan
+
+%%%%
+Prestidigitator
+
+%%%%
+Fetichist
+
+%%%%
+Evocator
+
+%%%%
+Talismancer
+
+%%%%
+
+# Unarmed Combat
+%%%%
+Ruffian
+
+%%%%
+Grappler
+
+%%%%
+Brawler
+
+%%%%
+Wrestler
+
+%%%%
+@Weight@ Champion
+
+%%%%
+# Djinni
+Weightless Champion
+
+%%%%
+# mummy
+Pharaoh
+
+%%%%
+
+# Unarmed (martial arts)
+%%%%
+Insei
+
+%%%%
+Martial Artist
+
+%%%%
+Black Belt
+
+%%%%
+Sensei
+
+%%%%
+Grand Master
+
+%%%%
+
+# Unarmed (tooth and claw)
+%%%%
+Scratcher
+
+%%%%
+Gouger
+
+%%%%
+Ripper
+
+%%%%
+Eviscerator
+
+%%%%
+Sabretooth
+
+%%%%
+
+# special cases
+%%%%
+# duplicate (archetype)
+#Adventurer
+#Abenteurer
+%%%%
+Worldbinder
+
+%%%%
+Planerender
+
+%%%%
+Blademaster
+
+%%%%
+Blood Saint
+
+%%%%
+Master Archer
+
+%%%%
+Ogre Mage
+
+%%%%
+Petite Mort
+
+%%%%
+Swordfish
+
+%%%%
+Rolling Thunder
+
+%%%%
+Holy Roller
+
+%%%%
+Forbidden One
+
+%%%%
+Black Lotus
+
+%%%%
+Rockslime
+
+%%%%
+God-Hated
+
+%%%%
+Wallbreaker
+
+%%%%
+Highly Combustible
+
+%%%%
+# formicid skilled in translocations
+Teletunneler
+
+%%%%
+# vine stalker skilled in necromancy
+Corpseflower
+
+%%%%
+
+# draconian-specific titles for various magic schools
+%%%%
+Fire Dragon
+
+%%%%
+Ice Dragon
+
+%%%%
+Iron Dragon
+
+%%%%
+Storm Dragon
+
+%%%%
+Swamp Dragon
+
+%%%%
+Faerie Dragon
+
+%%%%
+
+# Charms (obsolete)
+%%%%
+# obsolete
+Charmwright
+
+%%%%
+# obsolete
+Infuser
+
+%%%%
+# obsolete
+Anointer
+
+%%%%
+# obsolete
+Gracecrafter
+
+%%%%
+# obsolete
+Miracle Worker
+
+%%%%
+
+# Stabbing (obsolete)
+%%%%
+# obsolete
+Miscreant
+
+%%%%
+# obsolete
+Blackguard
+
+%%%%
+# obsolete
+Backstabber
+
+%%%%
+
+# Traps (obsolete)
+%%%%
+# obsolete
+Scout
+
+%%%%
+# obsolete
+Disarmer
+
+%%%%
+# obsolete
+Vigilant
+
+%%%%
+# obsolete
+Perceptive
+
+%%%%
+# obsolete
+Dungeon Master
+
+%%%%

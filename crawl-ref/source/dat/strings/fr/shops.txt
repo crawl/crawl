@@ -1,0 +1,133 @@
+###############################################################################
+#
+# Translations for shop names
+#
+###############################################################################
+
+###################################################################
+# These shop types are invariable, apart from the owner's name
+###################################################################
+
+%%%%
+@Owner@'s General Store
+
+%%%%
+@Owner@'s Distillery
+
+%%%%
+@Owner@'s Assorted Antiques
+
+%%%%
+{dat}@Owner@'s Assorted Antiques
+
+%%%%
+
+###################################################################
+# These shop types can be called Shop, Shoppe, Boutique or Emporium
+###################################################################
+
+%%%%
+@Owner@'s Weapon Shop
+
+%%%%
+@Owner@'s Antique Weapon Shop
+
+%%%%
+@Owner@'s Armour Shop
+
+%%%%
+@Owner@'s Antique Armour Shop
+
+%%%%
+@Owner@'s Jewellery Shop
+
+%%%%
+@Owner@'s Magic Scroll Shop
+
+%%%%
+@Owner@'s Book Shop
+
+%%%%
+@Owner@'s Gadget Shop
+
+%%%%
+
+
+%%%%
+@Owner@'s Weapon Shoppe
+
+%%%%
+@Owner@'s Antique Weapon Shoppe
+
+%%%%
+@Owner@'s Armour Shoppe
+
+%%%%
+@Owner@'s Antique Armour Shoppe
+
+%%%%
+@Owner@'s Jewellery Shoppe
+
+%%%%
+@Owner@'s Magic Scroll Shoppe
+
+%%%%
+@Owner@'s Book Shoppe
+
+%%%%
+@Owner@'s Gadget Shoppe
+
+%%%%
+
+
+%%%%
+@Owner@'s Weapon Boutique
+
+%%%%
+@Owner@'s Antique Weapon Boutique
+
+%%%%
+@Owner@'s Armour Boutique
+
+%%%%
+@Owner@'s Antique Armour Boutique
+
+%%%%
+@Owner@'s Jewellery Boutique
+
+%%%%
+@Owner@'s Magic Scroll Boutique
+
+%%%%
+@Owner@'s Book Boutique
+
+%%%%
+@Owner@'s Gadget Boutique
+
+%%%%
+
+%%%%
+@Owner@'s Weapon Emporium
+
+%%%%
+@Owner@'s Antique Weapon Emporium
+
+%%%%
+@Owner@'s Armour Emporium
+
+%%%%
+@Owner@'s Antique Armour Emporium
+
+%%%%
+@Owner@'s Jewellery Emporium
+
+%%%%
+@Owner@'s Magic Scroll Emporium
+
+%%%%
+@Owner@'s Book Emporium
+
+%%%%
+@Owner@'s Gadget Emporium
+
+%%%%

@@ -1,0 +1,2209 @@
+###############################################################################
+#
+# Translations for book titles
+#
+###############################################################################
+
+#################################
+# Skill manuals
+# "a manual of <whatever>"
+#################################
+
+# these never get the definite article ("the")
+# they can appear with no article though
+# suffixes are in item-suffixes.txt
+
+%%%%
+a manual
+
+%%%%
+
+#################################
+# Standard spellbooks
+# "a book of <whatever>"
+#################################
+
+# these never get the definite article ("the")
+# they can appear with no article though
+
+%%%%
+a book of Minor Magic
+
+%%%%
+a book of Conjurations
+
+%%%%
+a book of Flames
+
+%%%%
+a book of Frost
+
+%%%%
+a book of the Dryads
+
+%%%%
+a book of Fire
+
+%%%%
+a book of Ice
+
+%%%%
+a book of Spatial Translocations
+
+%%%%
+a book of Hexes
+
+%%%%
+a book of Lightning
+
+%%%%
+a book of Death
+
+%%%%
+a book of Misfortune
+
+%%%%
+a book of Changes
+
+%%%%
+a book of Transfigurations
+
+%%%%
+a book of Battle
+
+%%%%
+a book of Vapours
+
+%%%%
+a book of Necromancy
+
+%%%%
+a book of Callings
+
+%%%%
+a book of Maledictions
+
+%%%%
+a book of Air
+
+%%%%
+a book of the Sky
+
+%%%%
+a book of the Warp
+
+%%%%
+a book of Annihilations
+
+%%%%
+a book of Unlife
+
+%%%%
+a book of Geomancy
+
+%%%%
+a book of the Earth
+
+%%%%
+a book of Power
+
+%%%%
+a book of Cantrips
+
+%%%%
+a book of Party Tricks
+
+%%%%
+a book of Debilitation
+
+%%%%
+a book of the Dragon
+
+%%%%
+a book of Burglary
+
+%%%%
+a book of Dreams
+
+%%%%
+a book of Alchemy
+
+%%%%
+a book of Beasts
+
+%%%%
+a book of Spectacle
+
+%%%%
+a book of Winter
+
+%%%%
+a book of the Spheres
+
+%%%%
+a book of Armaments
+
+%%%%
+a book of Pain
+
+%%%%
+a book of Decay
+
+%%%%
+a book of Displacement
+
+%%%%
+a book of Rime
+
+%%%%
+a book of Stone
+
+%%%%
+a book of the Senses
+
+%%%%
+a book of Blasting
+
+%%%%
+a book of Iron
+
+%%%%
+a book of the Tundra
+
+%%%%
+a book of the Moon
+
+%%%%
+a book of Storms
+
+%%%%
+a book of Weapons
+
+%%%%
+a book of Sloth
+
+%%%%
+a book of Blood
+
+%%%%
+a book of Dangerous Friends
+
+%%%%
+a book of Touch
+
+%%%%
+a book of Chaos
+
+%%%%
+a book of the Hunter
+
+%%%%
+
+#################################
+# Fixed artefact spellbooks
+#################################
+
+# If listed with "a/an", it can also appear with no article, but never with "the".
+# If listed with "the", it always appears that way.
+# If listed with no article, it always appears that way.
+
+%%%%
+a Necronomicon
+
+%%%%
+a Grand Grimoire
+
+%%%%
+an Everburning Encyclopedia
+
+%%%%
+# we use Anleitung for manual so we can use Handbuch here
+a Young Poisoner's Handbook
+
+%%%%
+a Fen Folio
+
+%%%%
+an Inescapable Atlas
+
+%%%%
+a There-And-Back Book
+
+%%%%
+a Trismegistus Codex
+
+%%%%
+
+%%%%
+the Unrestrained Analects
+
+%%%%
+
+%%%%
+Ozocubu's Autobiography
+
+%%%%
+Great Wizards, Vol. II
+
+%%%%
+Great Wizards, Vol. VII
+
+%%%%
+
+#################################
+# Random artefact spellbooks
+#################################
+
+# generic names
+%%%%
+the Tome of @book_magic@
+
+%%%%
+the Grimoire of @book_magic@
+
+%%%%
+the Almanac of @book_magic@
+
+%%%%
+the Volume of @book_magic@
+
+%%%%
+the Compendium of @book_magic@
+
+%%%%
+the Handbook of @book_magic@
+
+%%%%
+the Incunabulum of @book_magic@
+
+%%%%
+the Papyrus of @book_magic@
+
+%%%%
+the Catalogue of @book_magic@
+
+%%%%
+the Guide on @book_magic@
+
+%%%%
+the Collected Works on @book_magic@
+
+%%%%
+the Disquisition on @book_magic@
+
+%%%%
+the Reference Book on @book_magic@
+
+%%%%
+
+# generic names capitalised
+%%%%
+The Tome of @book_magic@
+
+%%%%
+The Grimoire of @book_magic@
+
+%%%%
+The Almanac of @book_magic@
+
+%%%%
+The Volume of @book_magic@
+
+%%%%
+The Compendium of @book_magic@
+
+%%%%
+The Handbook of @book_magic@
+
+%%%%
+The Incunabulum of @book_magic@
+
+%%%%
+The Papyrus of @book_magic@
+
+%%%%
+The Catalogue of @book_magic@
+
+%%%%
+The Guide on @book_magic@
+
+%%%%
+The Collected Works on @book_magic@
+
+%%%%
+The Disquisition on @book_magic@
+
+%%%%
+The Reference Book on @book_magic@
+
+%%%%
+
+# generic names with owner
+%%%%
+@owner@'s Tome of @book_magic@
+
+%%%%
+@owner@'s Grimoire of @book_magic@
+
+%%%%
+@owner@'s Almanac of @book_magic@
+
+%%%%
+@owner@'s Volume of @book_magic@
+
+%%%%
+@owner@'s Compendium of @book_magic@
+
+%%%%
+@owner@'s Handbook of @book_magic@
+
+%%%%
+@owner@'s Incunabulum of @book_magic@
+
+%%%%
+@owner@'s Papyrus of @book_magic@
+
+%%%%
+@owner@'s Catalogue of @book_magic@
+
+%%%%
+@owner@'s Guide on @book_magic@
+
+%%%%
+@owner@'s Collected Works on @book_magic@
+
+%%%%
+@owner@'s Disquisition on @book_magic@
+
+%%%%
+@owner@'s Reference Book on @book_magic@
+
+%%%%
+
+# owners who are not listed elsewhere as gods or unique monsters
+# note: a randomly-generated name is also possible
+%%%%
+Alistair
+
+%%%%
+Borgnjor
+
+%%%%
+Cigotuvi
+
+%%%%
+Iskenderun
+
+%%%%
+Lee
+
+%%%%
+Lehudib
+
+%%%%
+Olgreb
+
+%%%%
+Ozocubu
+
+%%%%
+
+# titles of the form "@book_magic@, Part @level@"
+%%%%
+@book_magic@, Part One
+
+%%%%
+@book_magic@, Part Two
+
+%%%%
+@book_magic@, Part Three
+
+%%%%
+@book_magic@, Part Four
+
+%%%%
+@book_magic@, Part Five
+
+%%%%
+@book_magic@, Part Six
+
+%%%%
+
+%%%%
+@owner@'s @book_magic@, Part One
+
+%%%%
+@owner@'s @book_magic@, Part Two
+
+%%%%
+@owner@'s @book_magic@, Part Three
+
+%%%%
+@owner@'s @book_magic@, Part Four
+
+%%%%
+@owner@'s @book_magic@, Part Five
+
+%%%%
+@owner@'s @book_magic@, Part Six
+
+%%%%
+
+# titles of the form "Easy/Advanced/Sophisticated @book_magic@"
+%%%%
+@Adj@ Magic
+
+%%%%
+@Adj@ Theurgy
+
+%%%%
+@Adj@ Thaumaturgy
+
+%%%%
+@Adj@ Casting
+
+%%%%
+@Adj@ Spellcasting
+
+%%%%
+@Adj@ Wizardry
+
+%%%%
+@Adj@ Sorcery
+
+%%%%
+@Adj@ Witchcraft
+
+%%%%
+@Adj@ Witchery
+
+%%%%
+@Adj@ Spellcraft
+
+%%%%
+@Adj@ Spellweaving
+
+%%%%
+@Adj@ Secret Knowledge
+
+%%%%
+@Adj@ Rites and Rhymes
+
+%%%%
+@Adj@ Hermeneutics
+
+%%%%
+
+%%%%
+@owner@'s @Adj@ Magic
+
+%%%%
+@owner@'s @Adj@ Theurgy
+
+%%%%
+@owner@'s @Adj@ Thaumaturgy
+
+%%%%
+@owner@'s @Adj@ Casting
+
+%%%%
+@owner@'s @Adj@ Spellcasting
+
+%%%%
+@owner@'s @Adj@ Wizardry
+
+%%%%
+@owner@'s @Adj@ Sorcery
+
+%%%%
+@owner@'s @Adj@ Witchcraft
+
+%%%%
+@owner@'s @Adj@ Witchery
+
+%%%%
+@owner@'s @Adj@ Spellcraft
+
+%%%%
+@owner@'s @Adj@ Spellweaving
+
+%%%%
+@owner@'s @Adj@ Secret Knowledge
+
+%%%%
+@owner@'s @Adj@ Rites and Rhymes
+
+%%%%
+@owner@'s @Adj@ Hermeneutics
+
+%%%%
+
+# adjectives for above
+%%%%
+{adj-e}Easy
+
+%%%%
+{adj-e}Advanced
+
+%%%%
+{adj-e}Sophisticated
+
+%%%%
+
+%%%%
+{adj-es}Easy
+
+%%%%
+{adj-es}Advanced
+
+%%%%
+{adj-es}Sophisticated
+
+%%%%
+
+# level 1
+# starting level book
+#
+# A Beginning Course on @_the_book_magic_@
+# An Introduction to @_the_book_magic_@
+# An Initiation to @_the_book_magic_@
+# First Steps in @_the_book_magic_@
+# @_the_book_magic_@ for @_beginners_@
+# @_the_book_magic_@ 101
+# @_the_book_magic_@, Part One
+
+%%%%
+A Beginning Course on @book_magic@
+
+%%%%
+An Introduction to @book_magic@
+
+%%%%
+An Initiation to @book_magic@
+
+%%%%
+First Steps in @book_magic@
+
+%%%%
+
+%%%%
+@owner@'s Beginning Course on @book_magic@
+
+%%%%
+@owner@'s Introduction to @book_magic@
+
+%%%%
+@owner@'s Initiation to @book_magic@
+
+%%%%
+@owner@'s First Steps in @book_magic@
+
+%%%%
+
+%%%%
+@book_magic@ for Beginners
+
+%%%%
+@book_magic@ for Neophytes
+
+%%%%
+@book_magic@ for Novices
+
+%%%%
+@book_magic@ for Rookies
+
+%%%%
+@book_magic@ for Absolute Beginners
+
+%%%%
+@book_magic@ for Dummies
+
+%%%%
+@book_magic@ 101
+
+%%%%
+
+%%%%
+@owner@'s @book_magic@ for Beginners
+
+%%%%
+@owner@'s @book_magic@ for Neophytes
+
+%%%%
+@owner@'s @book_magic@ for Novices
+
+%%%%
+@owner@'s @book_magic@ for Rookies
+
+%%%%
+@owner@'s @book_magic@ for Absolute Beginners
+
+%%%%
+@owner@'s @book_magic@ for Dummies
+
+%%%%
+@owner@'s @book_magic@ 101
+
+%%%%
+
+# level 2-4
+# easy level book
+#
+# A Primer on @_the_book_magic_@
+# An Early Guide to @_the_book_magic_@
+# The Foundations of @_book_magic_@
+# @_the_book_magic_@ in Simple Steps
+# Easy @_book_magic_@
+# @_the_book_magic_@, Part @level@
+# @_the_book_magic_@ Continued
+# @_book_magic_@, and How To Use It
+
+%%%%
+A Primer on @book_magic@
+
+%%%%
+An Early Guide to @book_magic@
+
+%%%%
+The Foundations of @book_magic@
+
+%%%%
+@book_magic@ in Simple Steps
+
+%%%%
+@book_magic@ Continued
+
+%%%%
+@book_magic@, and How To Use It
+
+%%%%
+
+%%%%
+@owner@'s Primer on @book_magic@
+
+%%%%
+@owner@'s Early Guide to @book_magic@
+
+%%%%
+@owner@'s Foundations of @book_magic@
+
+%%%%
+@owner@'s @book_magic@ in Simple Steps
+
+%%%%
+@owner@'s @book_magic@ Continued
+
+%%%%
+@owner@'s @book_magic@, and How To Use It
+
+%%%%
+
+# level 4-6
+# moderate level book
+#
+# Advanced Steps in @_the_book_magic_@
+# The Advanced Guide to @_the_book_magic_@
+# Further Steps in @_the_book_magic_@
+# @_the_book_magic_@, Part @level@
+# Advanced @_book_magic_@
+# Sophisticated @_book_magic_@
+# Further Progress in @_book_magic_@
+# The Second Course in @_book_magic_@
+# Improving Your @_book_magic_@
+
+%%%%
+Advanced Steps in @book_magic@
+
+%%%%
+The Advanced Guide to @book_magic@
+
+%%%%
+Further Steps in @book_magic@
+
+%%%%
+Further Progress in @book_magic@
+
+%%%%
+The Second Course in @book_magic@
+
+%%%%
+
+%%%%
+@owner@'s Advanced Steps in @book_magic@
+
+%%%%
+@owner@'s Advanced Guide to @book_magic@
+
+%%%%
+@owner@'s Further Steps in @book_magic@
+
+%%%%
+@owner@'s Further Progress in @book_magic@
+
+%%%%
+@owner@'s Second Course in @book_magic@
+
+%%%%
+
+# Improving Your @book_magic@
+%%%%
+Improving Your Magic
+
+%%%%
+Improving Your Theurgy
+
+%%%%
+Improving Your Thaumaturgy
+
+%%%%
+Improving Your Casting
+
+%%%%
+Improving Your Spellcasting
+
+%%%%
+Improving Your Wizardry
+
+%%%%
+Improving Your Sorcery
+
+%%%%
+Improving Your Witchcraft
+
+%%%%
+Improving Your Witchery
+
+%%%%
+Improving Your Spellcraft
+
+%%%%
+Improving Your Spellweaving
+
+%%%%
+Improving Your Secret Knowledge
+
+%%%%
+Improving Your Rites and Rhymes
+
+%%%%
+Improving Your Hermeneutics
+
+%%%%
+
+# @owner@'s Improving Your @book_magic@
+%%%%
+@owner@'s Improving Your Magic
+
+%%%%
+@owner@'s Improving Your Theurgy
+
+%%%%
+@owner@'s Improving Your Thaumaturgy
+
+%%%%
+@owner@'s Improving Your Casting
+
+%%%%
+@owner@'s Improving Your Spellcasting
+
+%%%%
+@owner@'s Improving Your Wizardry
+
+%%%%
+@owner@'s Improving Your Sorcery
+
+%%%%
+@owner@'s Improving Your Witchcraft
+
+%%%%
+@owner@'s Improving Your Witchery
+
+%%%%
+@owner@'s Improving Your Spellcraft
+
+%%%%
+@owner@'s Improving Your Spellweaving
+
+%%%%
+@owner@'s Improving Your Secret Knowledge
+
+%%%%
+@owner@'s Improving Your Rites and Rhymes
+
+%%%%
+@owner@'s Improving Your Hermeneutics
+
+%%%%
+
+# level 7-9
+# difficult level book
+#
+# A Thorough Guide to @_the_book_magic_@
+# The @_last_or_lost_@ Secrets of @_the_book_magic_@
+# The Arcane Secrets of @_book_magic_@
+# The Intricacies of @_the_book_magic_@
+# The @book_noun@ of Greatest Risks and Utility
+# Mastering @_book_magic_@
+# The Testament of @_the_powerful_caster_@
+# The @_last_or_lost_@ @book_noun@ of @_the_powerful_caster_@
+
+%%%%
+A Thorough Guide to @book_magic@
+
+%%%%
+The Last Secrets of @book_magic@
+
+%%%%
+The Lost Secrets of @book_magic@
+
+%%%%
+The Arcane Secrets of @book_magic@
+
+%%%%
+The Intricacies of @book_magic@
+
+%%%%
+Mastering @book_magic@
+
+%%%%
+The Testament of @spellcaster@
+
+%%%%
+
+%%%%
+The Last Tome of @spellcaster@
+
+%%%%
+The Last Grimoire of @spellcaster@
+
+%%%%
+The Last Almanac of @spellcaster@
+
+%%%%
+The Last Volume of @spellcaster@
+
+%%%%
+The Last Compendium of @spellcaster@
+
+%%%%
+The Last Handbook of @spellcaster@
+
+%%%%
+The Last Incunabulum of @spellcaster@
+
+%%%%
+The Last Papyrus of @spellcaster@
+
+%%%%
+The Last Catalogue of @spellcaster@
+
+%%%%
+
+%%%%
+The Lost Tome of @spellcaster@
+
+%%%%
+The Lost Grimoire of @spellcaster@
+
+%%%%
+The Lost Almanac of @spellcaster@
+
+%%%%
+The Lost Volume of @spellcaster@
+
+%%%%
+The Lost Compendium of @spellcaster@
+
+%%%%
+The Lost Handbook of @spellcaster@
+
+%%%%
+The Lost Incunabulum of @spellcaster@
+
+%%%%
+The Lost Papyrus of @spellcaster@
+
+%%%%
+The Lost Catalogue of @spellcaster@
+
+%%%%
+
+# suffix: of @spellcaster@
+%%%%
+{gen}Boris
+
+%%%%
+# duplicate (see gods.txt)
+#{gen}Sif Muna
+#von Sif Muna
+%%%%
+{gen}the Archmage
+
+%%%%
+{gen}the Deep Elf Lorekeeper
+
+%%%%
+{gen}the Blind Seer
+
+%%%%
+{gen}the Prophet
+
+%%%%
+{gen}the Greatest Mummy
+
+%%%%
+
+# The @book_noun@ of Greatest Risks and Utility
+# Turn it around and handle the suffix as "of @book magic@"
+%%%%
+{gen}Greatest Risks and Utility
+
+%%%%
+
+# level 7-9, books in the form of "XYZ's <bookname>"
+# _difficult level book owner_
+#
+# (the ones with the suffix " of @spellcaster@" won't be used in this form)
+
+%%%%
+@owner@'s Thorough Guide to @book_magic@
+
+%%%%
+@owner@'s Last Secrets of @book_magic@
+
+%%%%
+@owner@'s Lost Secrets of @book_magic@
+
+%%%%
+@owner@'s Arcane Secrets of @book_magic@
+
+%%%%
+@owner@'s Intricacies of @book_magic@
+
+%%%%
+@owner@'s Mastering @book_magic@
+
+%%%%
+
+
+# @book_magic@ nominative
+%%%%
+the Arcane Arts
+
+%%%%
+the Hermit's Heritage
+
+%%%%
+Magic
+
+%%%%
+Theurgy
+
+%%%%
+Thaumaturgy
+
+%%%%
+# duplicate: This is also used for the targeter when casting targeted spells
+#Casting
+#Wirken
+%%%%
+# duplicate (see skills.txt)
+#Spellcasting
+#Zaubern
+%%%%
+Wizardry
+
+%%%%
+Sorcery
+
+%%%%
+Witchcraft
+
+%%%%
+Witchery
+
+%%%%
+Spellcraft
+
+%%%%
+Spellweaving
+
+%%%%
+Secret Knowledge
+
+%%%%
+Rites and Rhymes
+
+%%%%
+Hermeneutics
+
+%%%%
+
+# @book_magic@ accusative
+# since there is no masculine, these are all the same as nominative
+
+# of @book_magic@
+%%%%
+{gen}the Arcane Arts
+
+%%%%
+{gen}the Hermit's Heritage
+
+%%%%
+{gen}Magic
+
+%%%%
+{gen}Theurgy
+
+%%%%
+{gen}Thaumaturgy
+
+%%%%
+{gen}Casting
+
+%%%%
+{gen}Spellcasting
+
+%%%%
+{gen}Wizardry
+
+%%%%
+{gen}Sorcery
+
+%%%%
+{gen}Witchcraft
+
+%%%%
+{gen}Witchery
+
+%%%%
+{gen}Spellcraft
+
+%%%%
+{gen}Spellweaving
+
+%%%%
+{gen}Secret Knowledge
+
+%%%%
+{gen}Rites and Rhymes
+
+%%%%
+{gen}Hermeneutics
+
+%%%%
+
+# in @book_magic@ (dative)
+%%%%
+{in-dat}the Arcane Arts
+
+%%%%
+{in-dat}the Hermit's Heritage
+
+%%%%
+{in-dat}Magic
+
+%%%%
+{in-dat}Theurgy
+
+%%%%
+{in-dat}Thaumaturgy
+
+%%%%
+{in-dat}Casting
+
+%%%%
+{in-dat}Spellcasting
+
+%%%%
+{in-dat}Wizardry
+
+%%%%
+{in-dat}Sorcery
+
+%%%%
+{in-dat}Witchcraft
+
+%%%%
+{in-dat}Witchery
+
+%%%%
+{in-dat}Spellcraft
+
+%%%%
+{in-dat}Spellweaving
+
+%%%%
+{in-dat}Secret Knowledge
+
+%%%%
+{in-dat}in Rites and Rhymes
+
+%%%%
+{in-dat}Hermeneutics
+
+%%%%
+
+# for generic books, @book_magic@ can be related to 1 or 2 spell schools:
+# a) (@owner@'s) <whatever> of/on @<primary school>@
+# b) (@owner@'s) <whatever> of/on @<primary school>@ and @<secondary school>@
+# c) (@owner@'s) <whatever> of/on @<secondary school adj>@ @<primary school>@
+
+# conjuration
+%%%%
+%sConjuration
+
+%%%%
+%sConfrontation
+
+%%%%
+%sAttacks
+
+%%%%
+%sBattle Magic
+
+%%%%
+%sCombat Magic
+
+%%%%
+%sArcane Weapons
+
+%%%%
+# "Blows and Bruises" are one thing in English, but here we separate because we
+# could have "and" between two schools and the code won't know not to separate these
+%sBlows
+
+%%%%
+%sBruises
+
+%%%%
+%sDamage Dealing
+
+%%%%
+
+# Fire
+%%%%
+%sFire
+
+%%%%
+%sFlames
+
+%%%%
+%sHeat
+
+%%%%
+the %sVolcanoes
+
+%%%%
+the %sBlaze
+
+%%%%
+%sIgnition
+
+%%%%
+the %sArsonist
+
+%%%%
+
+# Hexes
+%%%%
+%sHexes
+
+%%%%
+%sCurses
+
+%%%%
+%sMalediction
+
+%%%%
+the %sOath
+
+%%%%
+%sExecration
+
+%%%%
+%sEnchantment
+
+%%%%
+%sBewitchment
+
+%%%%
+%sGlamour
+
+%%%%
+%sFascination
+
+%%%%
+%sBeguiling
+
+%%%%
+
+# Ice
+%%%%
+%sIce
+
+%%%%
+%sSnow
+
+%%%%
+%sCold
+
+%%%%
+the %sSnowflakes
+
+%%%%
+the %sGlacier
+
+%%%%
+the %sFrostbite
+
+%%%%
+
+# Transmutation
+%%%%
+%sTransmigration
+
+%%%%
+%sTransmutation
+
+%%%%
+%sTransformation
+
+%%%%
+%sShape Shifting
+
+%%%%
+%sChanging
+
+%%%%
+%sMoulding
+
+%%%%
+
+# Necromancy
+%%%%
+%sNecromancy
+
+%%%%
+%sEvil
+
+%%%%
+%sDarkness
+
+%%%%
+%sStolen Souls
+
+%%%%
+%sRites
+
+%%%%
+%sArts
+
+%%%%
+%sSecrets
+
+%%%%
+%sRituals
+
+%%%%
+%sMagic
+
+%%%%
+
+# Summoning
+%%%%
+%sSummoning
+
+%%%%
+%sCalling
+
+%%%%
+%sCreation
+
+%%%%
+the %sEntourage
+
+%%%%
+%sCompanions
+
+%%%%
+the %sEscort
+
+%%%%
+%sIllusion
+
+%%%%
+%sSlavery
+
+%%%%
+
+# Translocation
+%%%%
+%sTranslocation
+
+%%%%
+%sDisplacement
+
+%%%%
+%sDislocation
+
+%%%%
+%sOrientation
+
+%%%%
+the %sTraveller
+
+%%%%
+the %sCompass
+
+%%%%
+the %sVoyage
+
+%%%%
+
+# Poison
+%%%%
+%sPoison
+
+%%%%
+%sVenom
+
+%%%%
+%sToxins
+
+%%%%
+%sPoisoning
+
+%%%%
+%sIntoxication
+
+%%%%
+%sEnvenoming
+
+%%%%
+%sContamination
+
+%%%%
+
+# Earth
+%%%%
+%sEarth
+
+%%%%
+%sStones
+
+%%%%
+%sClay
+
+%%%%
+the %sMountains
+
+%%%%
+the %sRocks
+
+%%%%
+
+# Air
+%%%%
+%sAir
+
+%%%%
+%sLightness
+
+%%%%
+%sWeightlessness
+
+%%%%
+%sFlight
+
+%%%%
+the %sBirds
+
+%%%%
+%sFeathers
+
+%%%%
+
+# genitive
+
+# conjuration genitive
+%%%%
+{gen}%sConjuration
+
+%%%%
+{gen}%sConfrontation
+
+%%%%
+{gen}%sAttacks
+
+%%%%
+{gen}%sBattle Magic
+
+%%%%
+{gen}%sCombat Magic
+
+%%%%
+{gen}%sArcane Weapons
+
+%%%%
+{gen}%sBlows
+
+%%%%
+{gen}%sBruises
+
+%%%%
+{gen}%sDamage Dealing
+
+%%%%
+
+# Fire genitive
+%%%%
+{gen}%sFire
+
+%%%%
+{gen}%sFlames
+
+%%%%
+{gen}%sHeat
+
+%%%%
+{gen}the %sVolcanoes
+
+%%%%
+{gen}the %sBlaze
+
+%%%%
+{gen}%sIgnition
+
+%%%%
+{gen}the %sArsonist
+
+%%%%
+
+# Hexes genitive
+%%%%
+{gen}%sHexes
+
+%%%%
+{gen}%sCurses
+
+%%%%
+{gen}%sMalediction
+
+%%%%
+{gen}the %sOath
+
+%%%%
+{gen}%sExecration
+
+%%%%
+{gen}%sEnchantment
+
+%%%%
+{gen}%sBewitchment
+
+%%%%
+{gen}%sGlamour
+
+%%%%
+{gen}%sFascination
+
+%%%%
+{gen}%sBeguiling
+
+%%%%
+
+# Ice genitive
+%%%%
+{gen}%sIce
+
+%%%%
+{gen}%sSnow
+
+%%%%
+{gen}%sCold
+
+%%%%
+{gen}the %sSnowflakes
+
+%%%%
+{gen}the %sGlacier
+
+%%%%
+{gen}the %sFrostbite
+
+%%%%
+
+# Transmutation genitive
+%%%%
+{gen}%sTransmigration
+
+%%%%
+{gen}%sTransmutation
+
+%%%%
+{gen}%sTransformation
+
+%%%%
+{gen}%sShape Shifting
+
+%%%%
+{gen}%sChanging
+
+%%%%
+{gen}%sMoulding
+
+%%%%
+
+# Necromancy genitive
+%%%%
+{gen}%sNecromancy
+
+%%%%
+{gen}%sEvil
+
+%%%%
+{gen}%sDarkness
+
+%%%%
+{gen}%sStolen Souls
+
+%%%%
+{gen}%sRites
+
+%%%%
+{gen}%sArts
+
+%%%%
+{gen}%sSecrets
+
+%%%%
+{gen}%sRituals
+
+%%%%
+{gen}%sMagic
+
+%%%%
+
+# Summoning genitive
+%%%%
+{gen}%sSummoning
+
+%%%%
+{gen}%sCalling
+
+%%%%
+{gen}%sCreation
+
+%%%%
+{gen}the %sEntourage
+
+%%%%
+{gen}%sCompanions
+
+%%%%
+{gen}the %sEscort
+
+%%%%
+{gen}%sIllusion
+
+%%%%
+{gen}%sSlavery
+
+%%%%
+
+# Translocation genitive
+%%%%
+{gen}%sTranslocation
+
+%%%%
+{gen}%sDisplacement
+
+%%%%
+{gen}%sDislocation
+
+%%%%
+{gen}%sOrientation
+
+%%%%
+{gen}the %sTraveller
+
+%%%%
+{gen}the %sCompass
+
+%%%%
+{gen}the %sVoyage
+
+%%%%
+
+# Poison genitive
+%%%%
+{gen}%sPoison
+
+%%%%
+{gen}%sVenom
+
+%%%%
+{gen}%sToxins
+
+%%%%
+{gen}%sPoisoning
+
+%%%%
+{gen}%sIntoxication
+
+%%%%
+{gen}%sEnvenoming
+
+%%%%
+{gen}%sContamination
+
+%%%%
+
+# Earth genitive
+%%%%
+{gen}%sEarth
+
+%%%%
+{gen}%sStones
+
+%%%%
+{gen}%sClay
+
+%%%%
+{gen}the %sMountains
+
+%%%%
+{gen}the %sRocks
+
+%%%%
+
+# Air genitive
+%%%%
+{gen}%sAir
+
+%%%%
+{gen}%sLightness
+
+%%%%
+{gen}%sWeightlessness
+
+%%%%
+{gen}%sFlight
+
+%%%%
+{gen}the %sBirds
+
+%%%%
+{gen}%sFeathers
+
+%%%%
+
+# genitive without adjective
+
+# conjuration genitive
+%%%%
+{gen}Conjuration
+
+%%%%
+{gen}Confrontation
+
+%%%%
+{gen}Attacks
+
+%%%%
+{gen}Battle Magic
+
+%%%%
+{gen}Combat Magic
+
+%%%%
+{gen}Arcane Weapons
+
+%%%%
+{gen}Blows
+
+%%%%
+{gen}Bruises
+
+%%%%
+{gen}Damage Dealing
+
+%%%%
+
+# Fire genitive
+%%%%
+{gen}Fire
+
+%%%%
+{gen}Flames
+
+%%%%
+{gen}Heat
+
+%%%%
+{gen}the Volcanoes
+
+%%%%
+{gen}the Blaze
+
+%%%%
+{gen}Ignition
+
+%%%%
+{gen}the Arsonist
+
+%%%%
+
+# Hexes genitive
+%%%%
+{gen}Hexes
+
+%%%%
+{gen}Curses
+
+%%%%
+{gen}Malediction
+
+%%%%
+{gen}the Oath
+
+%%%%
+{gen}Execration
+
+%%%%
+{gen}Enchantment
+
+%%%%
+{gen}Bewitchment
+
+%%%%
+{gen}Glamour
+
+%%%%
+{gen}Fascination
+
+%%%%
+{gen}Beguiling
+
+%%%%
+
+# Ice genitive
+%%%%
+{gen}Ice
+
+%%%%
+{gen}Snow
+
+%%%%
+{gen}Cold
+
+%%%%
+{gen}the Snowflakes
+
+%%%%
+{gen}the Glacier
+
+%%%%
+{gen}the Frostbite
+
+%%%%
+
+# Transmutation genitive
+%%%%
+{gen}Transmigration
+
+%%%%
+{gen}Transmutation
+
+%%%%
+{gen}Transformation
+
+%%%%
+{gen}Shape Shifting
+
+%%%%
+{gen}Changing
+
+%%%%
+{gen}Moulding
+
+%%%%
+
+# Necromancy genitive
+%%%%
+{gen}Necromancy
+
+%%%%
+{gen}Evil
+
+%%%%
+{gen}Darkness
+
+%%%%
+{gen}Stolen Souls
+
+%%%%
+{gen}Rites
+
+%%%%
+{gen}Arts
+
+%%%%
+{gen}Secrets
+
+%%%%
+{gen}Rituals
+
+%%%%
+# duplicate
+#{gen}Magic
+#der Magie
+%%%%
+
+# Summoning genitive
+%%%%
+{gen}Summoning
+
+%%%%
+{gen}Calling
+
+%%%%
+{gen}Creation
+
+%%%%
+{gen}the Entourage
+
+%%%%
+{gen}Companions
+
+%%%%
+{gen}the Escort
+
+%%%%
+{gen}Illusion
+
+%%%%
+{gen}Slavery
+
+%%%%
+
+# Translocation genitive
+%%%%
+{gen}Translocation
+
+%%%%
+{gen}Displacement
+
+%%%%
+{gen}Dislocation
+
+%%%%
+{gen}Orientation
+
+%%%%
+{gen}the Traveller
+
+%%%%
+{gen}the Compass
+
+%%%%
+{gen}the Voyage
+
+%%%%
+
+# Poison genitive
+%%%%
+{gen}Poison
+
+%%%%
+{gen}Venom
+
+%%%%
+{gen}Toxins
+
+%%%%
+{gen}Poisoning
+
+%%%%
+{gen}Intoxication
+
+%%%%
+{gen}Envenoming
+
+%%%%
+{gen}Contamination
+
+%%%%
+
+# Earth genitive
+%%%%
+{gen}Earth
+
+%%%%
+{gen}Stones
+
+%%%%
+{gen}Clay
+
+%%%%
+{gen}the Mountains
+
+%%%%
+{gen}the Rocks
+
+%%%%
+
+# Air genitive
+%%%%
+{gen}Air
+
+%%%%
+{gen}Lightness
+
+%%%%
+{gen}Weightlessness
+
+%%%%
+{gen}Flight
+
+%%%%
+{gen}the Birds
+
+%%%%
+{gen}Feathers
+
+%%%%
+
+# Conjuration adj
+%%%%
+"Destructive "
+
+%%%%
+"Harmful "
+
+%%%%
+"Damaging "
+
+%%%%
+"Hurtful "
+
+%%%%
+"Excruciating "
+
+%%%%
+"Lethal "
+
+%%%%
+
+# Hexes adj
+%%%%
+"Enchanting "
+
+%%%%
+"Bewitching "
+
+%%%%
+"Captivating "
+
+%%%%
+"Fetching "
+
+%%%%
+"Enthralling "
+
+%%%%
+"Ensnaring "
+
+%%%%
+"Entrancing "
+
+%%%%
+
+# Fire adj
+%%%%
+"Fiery "
+
+%%%%
+"Scorching "
+
+%%%%
+"Burning "
+
+%%%%
+"Blistering "
+
+%%%%
+"Igneous "
+
+%%%%
+"Flamy "
+
+%%%%
+"Torrid "
+
+%%%%
+
+# Ice adj
+%%%%
+"Glacial "
+
+%%%%
+"Freezing "
+
+%%%%
+"Icy "
+
+%%%%
+"Congealing "
+
+%%%%
+"Frigorific "
+
+%%%%
+
+# Transmutation adj
+%%%%
+"Shifting "
+
+%%%%
+"Mutagenic "
+
+%%%%
+"Unstable "
+
+%%%%
+
+# Necromancy adj
+%%%%
+"Evil "
+
+%%%%
+"Dark "
+
+%%%%
+"Black "
+
+%%%%
+"Sinister "
+
+%%%%
+"Unholy "
+
+%%%%
+# duplicate
+#"Lethal "
+#"tödliche "
+%%%%
+"Doomed "
+
+%%%%
+"Ghastly "
+
+%%%%
+"Twisted "
+
+%%%%
+
+# Summoning adj
+%%%%
+"Creative "
+
+%%%%
+"Supportive "
+
+%%%%
+
+# Translocation adj
+%%%%
+"Spatial "
+
+%%%%
+"Displaced "
+
+%%%%
+"Dislocated "
+
+%%%%
+"Warped "
+
+%%%%
+# duplicate
+#"Unstable "
+#"instabile "
+%%%%
+# duplicate
+#"Twisted "
+#"verdrehte "
+%%%%
+"Quantum "
+
+%%%%
+
+# Poison adj
+%%%%
+"Poisonous "
+
+%%%%
+"Venomous "
+
+%%%%
+"Toxic "
+
+%%%%
+"Cankerous "
+
+%%%%
+"Nocuous "
+
+%%%%
+"Noxious "
+
+%%%%
+"Virous "
+
+%%%%
+"Vitriolic "
+
+%%%%
+"Viperous "
+
+%%%%
+
+# Earth adj
+%%%%
+"Earthen "
+
+%%%%
+"Ashen "
+
+%%%%
+"Dusty "
+
+%%%%
+
+# Air adj
+%%%%
+"Aerial "
+
+%%%%
+"Flying "
+
+%%%%
+"Floating "
+
+%%%%
+"Feathery "
+
+%%%%
+"Cloudy "
+
+%%%%
+"Gliding "
+
+%%%%
+
+# TODO:
+# d) @owner@'s @book_name@ of @Xom_book_title@
+# d) @owner@'s @book_name@ of @random_book_title@
+# d) @book_name@ of @random_book_title@

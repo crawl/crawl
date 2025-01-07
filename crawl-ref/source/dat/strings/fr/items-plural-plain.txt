@@ -1,0 +1,279 @@
+###############################################################################
+#
+# Items - plural, plain, nominative
+#
+###############################################################################
+
+#################################
+# Weapon Types
+#################################
+
+# these are used in monster pane in console version
+
+%%%%
+polearms
+
+%%%%
+launchers
+
+%%%%
+missiles
+
+%%%%
+
+#################################
+# Melee Weapons
+#################################
+
+#################################
+# Launchers
+#################################
+
+#################################
+# Missiles
+#################################
+
+%%%%
+arrows
+
+%%%%
+bolts
+
+%%%%
+# fired by artefact crossbow "Damnation"
+damnation bolts
+
+%%%%
+darts
+
+%%%%
+poisoned darts
+
+%%%%
+curare-tipped darts
+
+%%%%
+atropa-tipped darts
+
+%%%%
+datura-tipped darts
+
+%%%%
+stones
+
+%%%%
+large rocks
+
+%%%%
+sling bullets
+
+%%%%
+javelins
+
+%%%%
+silver javelins
+
+%%%%
+throwing nets
+
+%%%%
+boomerangs
+
+%%%%
+silver boomerangs
+
+%%%%
+
+#################################
+# Armour
+#################################
+
+#################################
+# Rings
+#################################
+
+#################################
+# Amulets
+#################################
+
+#################################
+# Wands
+#################################
+
+#################################
+# Scrolls
+#################################
+
+%%%%
+scrolls labelled %s
+
+%%%%
+scrolls of acquirement
+
+%%%%
+scrolls of amnesia
+
+%%%%
+scrolls of blinking
+
+%%%%
+scrolls of brand weapon
+
+%%%%
+scrolls of enchant armour
+
+%%%%
+scrolls of enchant weapon
+
+%%%%
+scrolls of fear
+
+%%%%
+scrolls of fog
+
+%%%%
+scrolls of holy word
+
+%%%%
+scrolls of identify
+
+%%%%
+scrolls of immolation
+
+%%%%
+scrolls of magic mapping
+
+%%%%
+scrolls of noise
+
+%%%%
+scrolls of remove curse
+
+%%%%
+scrolls of silence
+
+%%%%
+scrolls of summoning
+
+%%%%
+scrolls of teleportation
+
+%%%%
+scrolls of torment
+
+%%%%
+scrolls of vulnerability
+
+%%%%
+scrolls of removedness
+
+%%%%
+
+#################################
+# Potions
+#################################
+
+%%%%
+potions of ambrosia
+
+%%%%
+potions of attraction
+
+%%%%
+potions of berserk rage
+
+%%%%
+potions of brilliance
+
+%%%%
+potions of cancellation
+
+%%%%
+potions of curing
+
+%%%%
+potions of degeneration
+
+%%%%
+potions of experience
+
+%%%%
+potions of flight
+
+%%%%
+potions of haste
+
+%%%%
+potions of heal wounds
+
+%%%%
+potions of invisibility
+
+%%%%
+potions of lignification
+
+%%%%
+potions of magic
+
+%%%%
+potions of might
+
+%%%%
+potions of mutation
+
+%%%%
+potions of resistance
+
+%%%%
+
+# generic
+%%%%
+potions
+
+%%%%
+
+#################################
+# Magical Staves
+#################################
+
+#################################
+# Corpses
+#################################
+
+#################################
+# Miscellaneous Items
+#################################
+
+%%%%
+boxes of beasts
+
+%%%%
+lightning rods
+
+%%%%
+phials of floods
+
+%%%%
+phantom mirrors
+
+%%%%
+figurines of a ziggurat
+
+%%%%
+condenser vanes
+
+%%%%
+pieces from Xom's chessboard
+
+%%%%
+tins of tremorstones
+
+%%%%
+# due to a bug (#4063), the English plural is "damagi" (coz mage -> magi)
+quad damagi
+
+%%%%
+# for when the bug is fixed
+quad damages
+
+%%%%

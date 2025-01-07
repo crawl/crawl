@@ -1,0 +1,1028 @@
+###############################################################################
+#
+# Translations for transformations
+#
+###############################################################################
+
+################################
+# Untransformed
+################################
+
+# shout-equivalent (finite verb, as in "You @shout@.")
+
+# standard
+%%%%
+shout
+
+%%%%
+yell
+
+%%%%
+scream
+
+%%%%
+
+# felid
+%%%%
+meow
+
+%%%%
+yowl
+
+%%%%
+caterwaul
+
+%%%%
+hiss
+
+%%%%
+
+# gnoll (doglike)
+%%%%
+bark
+
+%%%%
+# context needed to avoid collision with howl status
+{verb-du}howl
+
+%%%%
+screech
+
+%%%%
+growl
+
+%%%%
+
+# barachi (froglike)
+%%%%
+croak
+
+%%%%
+ribbit
+
+%%%%
+bellow
+
+%%%%
+
+# shout-equivalent as noun with indefinite article
+
+# standard
+%%%%
+a shout
+
+%%%%
+a yell
+
+%%%%
+a scream
+
+%%%%
+
+# felid
+%%%%
+a meow
+
+%%%%
+a yowl
+
+%%%%
+a caterwaul
+
+%%%%
+a hiss
+
+%%%%
+
+# gnoll (doglike)
+%%%%
+a bark
+
+%%%%
+a howl
+
+%%%%
+a screech
+
+%%%%
+a growl
+
+%%%%
+
+# barachi (froglike)
+%%%%
+a croak
+
+%%%%
+a ribbit
+
+%%%%
+a bellow
+
+%%%%
+
+
+# hand
+%%%%
+hand
+
+%%%%
+hands
+
+%%%%
+your hand
+
+%%%%
+your hands
+
+%%%%
+your weapon hand
+
+%%%%
+your shield hand
+
+%%%%
+
+# claw (troll/ghoul)
+%%%%
+claw
+
+%%%%
+claws
+
+%%%%
+your claw
+
+%%%%
+your claws
+
+%%%%
+your weapon claw
+
+%%%%
+your shield claw
+
+%%%%
+
+# paw (felid)
+%%%%
+paw
+
+%%%%
+paws
+
+%%%%
+your paw
+
+%%%%
+your paws
+
+%%%%
+
+# tentacle (octopode)
+%%%%
+# duplicate: also a monster
+#tentacle
+#Tentakel
+%%%%
+tentacles
+
+%%%%
+main tentacles
+
+%%%%
+# duplicate: also a monster
+#your tentacle
+#dein Tentakel
+%%%%
+your tentacles
+
+%%%%
+your weapon tentacle
+
+%%%%
+your shield tentacle
+
+%%%%
+
+# skin
+%%%%
+scales
+
+%%%%
+feathers
+
+%%%%
+fur
+
+%%%%
+bandages
+
+%%%%
+skin
+
+%%%%
+
+# your skin
+%%%%
+your scales
+
+%%%%
+your feathers
+
+%%%%
+your fur
+
+%%%%
+your bandages
+
+%%%%
+your skin
+
+%%%%
+
+################################
+# Spider-form
+################################
+%%%%
+# abbreviation for HUD
+# duplicate (also abbreviation for Spider Nest branch)
+#Spider
+%%%%
+# long name
+spider-form
+
+%%%%
+# wizmode name
+# duplicate: spider
+%%%%
+# description
+a venomous arachnid creature
+
+%%%%
+# unarmed attack
+Fangs
+
+%%%%
+# shout-equivalent
+# same as felid
+#hiss
+#fauchst
+%%%%
+# shout-equivalent as noun
+#a hiss
+#{n}ein Fauchen
+%%%%
+# hand-equivalent
+front leg
+
+%%%%
+front legs
+
+%%%%
+your front leg
+
+%%%%
+your front legs
+
+%%%%
+your weapon front leg
+
+%%%%
+your shield front leg
+
+%%%%
+# flesh type
+flesh
+
+%%%%
+
+################################
+# Blade hands
+################################
+%%%%
+# abbreviation for HUD
+Blade
+
+%%%%
+# long name (default)
+blade hands
+
+%%%%
+# long name (missing hand)
+blade hand
+
+%%%%
+# long name (felid)
+blade paws
+
+%%%%
+# long name (felid, missing hand)
+blade paw
+
+%%%%
+# long name (octopode)
+blade tentacles
+
+%%%%
+# long name (octopode, missing hand)
+blade tentacle
+
+%%%%
+# wizmode name
+blade
+
+%%%%
+# hand-equivalent
+scythe-like blade
+
+%%%%
+scythe-like blades
+
+%%%%
+your scythe-like blade
+
+%%%%
+your scythe-like blades
+
+%%%%
+your weapon scythe-like blade
+
+%%%%
+your shield scythe-like blade
+
+%%%%
+
+################################
+# Statue-form
+################################
+%%%%
+# abbreviation for HUD
+Statue
+
+%%%%
+# long name
+statue-form
+
+%%%%
+# wizmode name
+# duplicate: statue
+%%%%
+# description (@ command)
+a stone statue
+
+%%%%
+# description (transformation message)
+a living statue of rough stone
+
+%%%%
+# unarmed attack
+Stone fists
+
+%%%%
+# unarmed attack (missing hand)
+Stone fist
+
+%%%%
+# unarmed attack (felid)
+Stone claws
+
+%%%%
+# unarmed attack (octopode)
+Stone tentacles
+
+%%%%
+# flesh type
+stone
+
+%%%%
+
+################################
+# Ice-form
+################################
+%%%%
+# abbreviation for HUD
+# duplicate: Ice
+%%%%
+# long name
+ice-form
+
+%%%%
+# wizmode name
+# duplicate: ice
+%%%%
+# description
+a creature of crystalline ice
+
+%%%%
+# unarmed attack
+Ice paws
+
+%%%%
+# unarmed attack (missing hand)
+Ice paw
+
+%%%%
+# hand-equivalent
+front paw
+
+%%%%
+front paws
+
+%%%%
+your front paw
+
+%%%%
+your front paws
+
+%%%%
+your weapon front paw
+
+%%%%
+your shield front paw
+
+%%%%
+# foot equivalent
+# duplicate: felids also have paws
+#paw
+#Pfote
+%%%%
+
+################################
+# Dragon-form
+################################
+%%%%
+# abbreviation for HUD
+Dragon
+
+%%%%
+# long name
+dragon-form
+
+%%%%
+# wizmode name
+# duplicate: dragon
+%%%%
+# description
+a fearsome dragon
+
+%%%%
+# unarmed attack
+Teeth and claws
+
+%%%%
+# shout-equivalent
+roar
+
+%%%%
+# shout-equivalent as noun
+a roar
+
+%%%%
+# hand-equivalent
+foreclaw
+
+%%%%
+foreclaws
+
+%%%%
+your foreclaw
+
+%%%%
+your foreclaws
+
+%%%%
+your weapon foreclaw
+
+%%%%
+your shield foreclaw
+
+%%%%
+
+# draconians transform into specific types of dragon based on their colour
+%%%%
+a fearsome fire dragon
+
+%%%%
+a fearsome ice dragon
+
+%%%%
+a fearsome swamp dragon
+
+%%%%
+a fearsome golden dragon
+
+%%%%
+a fearsome iron dragon
+
+%%%%
+a fearsome storm dragon
+
+%%%%
+a fearsome quicksilver dragon
+
+%%%%
+a fearsome steam dragon
+
+%%%%
+
+################################
+# Lich-form
+################################
+%%%%
+# abbreviation for HUD
+Lich
+
+%%%%
+# long name
+lich-form
+
+%%%%
+# wizmode name
+# duplicate: lich
+%%%%
+# description
+an undead lich
+
+%%%%
+# flesh type
+# duplicate: bone
+%%%%
+
+################################
+# Bat-form
+################################
+%%%%
+# abbreviation for HUD
+Bat
+
+%%%%
+# long name
+bat-form
+
+%%%%
+# long name (vampire)
+vampire-bat-form
+
+%%%%
+# wizmode name
+# duplicate: bat
+%%%%
+# description
+# duplicate of monster name
+#a bat
+%%%%
+# description (vampire)
+# duplicate of monster name
+#a vampire bat
+%%%%
+# unarmed attack
+Teeth
+
+%%%%
+# shout-equivalent
+squeak
+
+%%%%
+# shout-equivalent as noun
+a squeak
+
+%%%%
+
+################################
+# Pig-form
+################################
+%%%%
+# abbreviation for HUD
+Pig
+
+%%%%
+# long name
+pig-form
+
+%%%%
+# wizmode name
+pig
+
+%%%%
+# description
+a filthy swine
+
+%%%%
+# shout-equivalent
+squeal
+
+%%%%
+# shout-equivalent as noun
+a squeal
+
+%%%%
+# hand-equivalent
+front trotter
+
+%%%%
+front trotters
+
+%%%%
+your front trotter
+
+%%%%
+your front trotters
+
+%%%%
+your weapon front trotter
+
+%%%%
+your shield front trotter
+
+%%%%
+# foot-equivalent
+trotter
+
+%%%%
+
+################################
+# Beastly Appendage
+################################
+%%%%
+# abbreviation for HUD
+App
+
+%%%%
+# long name / wizmode name
+appendages
+
+%%%%
+
+# untransform messages
+%%%%
+Your horns disappear.
+
+%%%%
+Your talons disappear.
+
+%%%%
+# this one is for octopode only
+Your tentacle spike disappears.
+
+%%%%
+
+# untransform messages (when player keeps appendage due to mutation)
+%%%%
+Your horns shrink.
+
+%%%%
+Your talons shrink.
+
+%%%%
+# this one is for octopode only
+Your tentacle spike shrinks.
+
+%%%%
+
+################################
+# Tree-form
+################################
+%%%%
+Tree
+
+%%%%
+tree-form
+
+%%%%
+# wizmode name
+# duplicate: tree
+%%%%
+# description
+# duplicate (also a dungeon feature)
+#a tree
+%%%%
+# unarmed attack
+Branches
+
+%%%%
+# shout-equivalent
+creak
+
+%%%%
+# shout-equivalent as noun
+a creak
+
+%%%%
+# hand-equivalent
+branch
+
+%%%%
+branches
+
+%%%%
+your branch
+
+%%%%
+your branches
+
+%%%%
+your weapon branch
+
+%%%%
+your shield branch
+
+%%%%
+# foot-equivalent
+root
+
+%%%%
+# flesh type
+wood
+
+%%%%
+
+################################
+# Porcupine-form
+################################
+%%%%
+# abbreviation for HUD
+Porc
+
+%%%%
+# long name
+porcupine-form
+
+%%%%
+# wizmode name
+# duplicate of monster name
+#porcupine
+%%%%
+# description
+a spiny porcupine
+
+%%%%
+
+################################
+# Wisp-form
+################################
+%%%%
+# abbreviation for HUD
+Wisp
+
+%%%%
+# long name
+wisp-form
+
+%%%%
+# wizmode name
+wisp
+
+%%%%
+# description
+# duplicate of monster
+#an insubstantial wisp
+%%%%
+# unarmed attack
+Misty tendrils
+
+%%%%
+# shout
+whoosh
+
+%%%%
+# shout-equivalent as noun
+a whoosh
+
+%%%%
+# hand
+misty tendril
+
+%%%%
+misty tendrils
+
+%%%%
+your misty tendril
+
+%%%%
+your misty tendrils
+
+%%%%
+your weapon misty tendril
+
+%%%%
+your shield misty tendril
+
+%%%%
+# foot
+strand
+
+%%%%
+# flesh
+vapour
+
+%%%%
+
+################################
+# Jelly-form
+################################
+%%%%
+# abbreviation for HUD
+# duplicate: Jelly
+%%%%
+# long name
+jelly-form
+
+%%%%
+# wizmode name
+# duplicate: jelly
+%%%%
+# description
+a lump of jelly
+
+%%%%
+
+################################
+# Fungus-form
+################################
+%%%%
+# abbreviation for HUD
+Fungus
+
+%%%%
+# long name
+fungus-form
+
+%%%%
+# wizmode name
+# duplicate: fungus
+%%%%
+# description
+a sentient fungus
+
+%%%%
+# unarmed attack
+Spores
+
+%%%%
+# shout
+sporulate
+
+%%%%
+# shout-equivalent as noun
+# should be "a sporulation", but code just puts indefinite article in front of verb
+a sporulate
+
+%%%%
+# hand
+hypha
+
+%%%%
+hyphae
+
+%%%%
+your hypha
+
+%%%%
+your hyphae
+
+%%%%
+your weapon hypha
+
+%%%%
+your shield hypha
+
+%%%%
+
+################################
+# Shadow-form
+################################
+%%%%
+# abbreviation for HUD
+Shadow
+
+%%%%
+# long name
+shadow-form
+
+%%%%
+# wizmode name
+# duplicate: shadow
+%%%%
+# description
+a swirling mass of dark shadows
+
+%%%%
+
+################################
+# Hydra-form
+################################
+%%%%
+# abbreviation for HUD
+Hydra
+
+%%%%
+# long name
+hydra-form
+
+%%%%
+# wizmode name
+# duplicate: hydra
+%%%%
+# unarmed attack
+Bite (x%d)
+
+%%%%
+
+################################
+# Storm-form
+################################
+%%%%
+# abbreviation for HUD
+Storm
+
+%%%%
+# abbreviation for wiz mode
+storm
+
+%%%%
+storm-form
+
+%%%%
+a lightning-filled tempest!
+
+%%%%
+Storm fists
+
+%%%%
+# shout-equivalent
+# duplicate of barachi
+#bellow
+#brüllt
+%%%%
+
+################################
+# Untransform
+################################
+%%%%
+# description
+your old self
+
+%%%%
+
+################################
+# Pray actions
+################################
+
+%%%%
+# default for most species
+You kneel at the altar of %s.
+
+%%%%
+# default for felid
+You sit before the altar of %s.
+
+%%%%
+# default for octopode
+You curl up in front of the altar of %s.
+
+%%%%
+# default for naga (snakelike)
+You coil in front of the altar of %s.
+
+%%%%
+# flying
+You hover solemnly before the altar of %s.
+
+%%%%
+# porcupine form
+You curl into a sanctuary of spikes before the altar of %s.
+
+%%%%
+# spider form
+You crawl onto the altar of %s.
+
+%%%%
+# tree form
+You sway towards the altar of %s.
+
+%%%%
+# bat form
+You perch on the altar of %s.
+
+%%%%
+# ice/pig/dragon form
+You bow your head before the altar of %s.
+
+%%%%
+# hydra form
+You bow your heads before the altar of %s.
+
+%%%%
+# statue/storm form
+You place yourself before the altar of %s.
+
+%%%%
+# fungus form
+You release spores on the altar of %s.
+
+%%%%
+# wisp form
+You swirl around the altar of %s.
+
+%%%%

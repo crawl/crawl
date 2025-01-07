@@ -1,0 +1,496 @@
+###############################################################################
+#
+# Player - no article, nominative
+#
+###############################################################################
+
+##############################################
+# Player species
+##############################################
+%%%%
+Barachi
+
+%%%%
+Deep Dwarf
+
+%%%%
+Deep Elf
+
+%%%%
+Demigod
+
+%%%%
+Demonspawn
+
+%%%%
+Djinni
+
+%%%%
+Draconian
+
+%%%%
+Felid
+
+%%%%
+Formicid
+
+%%%%
+Gargoyle
+
+%%%%
+Ghoul
+
+%%%%
+Gnoll
+
+%%%%
+Hill Orc
+
+%%%%
+Human
+
+%%%%
+Kobold
+
+%%%%
+Merfolk
+
+%%%%
+Minotaur
+
+%%%%
+Mummy
+
+%%%%
+Naga
+
+%%%%
+Octopode
+
+%%%%
+Ogre
+
+%%%%
+Palentonga
+
+%%%%
+Spriggan
+
+%%%%
+Tengu
+
+%%%%
+Troll
+
+%%%%
+Vampire
+
+%%%%
+Vine Stalker
+
+%%%%
+
+# obsolete (can still appear in highscores list, and maybe as ghosts)
+%%%%
+Halfling
+
+%%%%
+Centaur
+
+%%%%
+Sludge Elf
+
+%%%%
+High Elf
+
+%%%%
+Lava Orc
+
+%%%%
+
+##############################################
+# Player species with adjective
+##############################################
+%%%%
+%sBarachi
+
+%%%%
+%sDeep Dwarf
+
+%%%%
+%sDeep Elf
+
+%%%%
+%sDemigod
+
+%%%%
+%sDemonspawn
+
+%%%%
+%sDjinni
+
+%%%%
+%sDraconian
+
+%%%%
+%sFelid
+
+%%%%
+%sFormicid
+
+%%%%
+%sGargoyle
+
+%%%%
+%sGhoul
+
+%%%%
+%sGnoll
+
+%%%%
+%sHill Orc
+
+%%%%
+%sHuman
+
+%%%%
+%sKobold
+
+%%%%
+%sMerfolk
+
+%%%%
+%sMinotaur
+
+%%%%
+%sMummy
+
+%%%%
+%sNaga
+
+%%%%
+%sOctopode
+
+%%%%
+%sOgre
+
+%%%%
+%sPalentonga
+
+%%%%
+%sSpriggan
+
+%%%%
+%sTengu
+
+%%%%
+%sTroll
+
+%%%%
+%sVampire
+
+%%%%
+%sVine Stalker
+
+%%%%
+
+# obsolete (can you still get player ghosts of these species?)
+%%%%
+%sHalfling
+
+%%%%
+%sCentaur
+
+%%%%
+%sSludge Elf
+
+%%%%
+%sHigh Elf
+
+%%%%
+%sLava Orc
+
+%%%%
+
+##############################################
+# Draconian subspecies
+##############################################
+%%%%
+Mottled Draconian
+
+%%%%
+Black Draconian
+
+%%%%
+Green Draconian
+
+%%%%
+Grey Draconian
+
+%%%%
+Pale Draconian
+
+%%%%
+Purple Draconian
+
+%%%%
+Red Draconian
+
+%%%%
+White Draconian
+
+%%%%
+Yellow Draconian
+
+%%%%
+
+##############################################
+# Player genus
+# NOTE: If not listed then species is used
+##############################################
+%%%%
+# Barachi
+Frog
+
+%%%%
+# Deep Dwarf
+Dwarf
+
+%%%%
+# Deep Elf
+Elf
+
+%%%%
+# Demigod
+God
+
+%%%%
+# Felid
+Cat
+
+%%%%
+# Formicid
+Ant
+
+%%%%
+# Octopode
+Octopus
+
+%%%%
+# Hill Orc
+Orc
+
+%%%%
+
+##############################################
+# Player genus uncapitalised
+##############################################
+%%%%
+# Barachi
+frog
+
+%%%%
+# Deep Dwarf
+# duplicate of monster
+#the dwarf
+#der Zwerg
+%%%%
+# Deep Elf
+# duplicate of monster
+#the elf
+#der Elf
+%%%%
+# Demigod
+god
+
+%%%%
+# Felid
+cat
+
+%%%%
+# Formicid
+ant
+
+%%%%
+# Octopode
+octopus
+
+%%%%
+# Hill Orc
+# duplicate of monster
+#the orc
+#der Ork
+%%%%
+
+##############################################
+# Player Backgrounds (aka Jobs)
+##############################################
+%%%%
+Fighter
+
+%%%%
+Gladiator
+
+%%%%
+Monk
+
+%%%%
+Hunter
+
+%%%%
+Berserker
+
+%%%%
+Brigand
+
+%%%%
+Abyssal Knight
+
+%%%%
+Chaos Knight
+
+%%%%
+Enchanter
+
+%%%%
+Transmuter
+
+%%%%
+Arcane Marksman
+
+%%%%
+Warper
+
+%%%%
+Hedge Wizard
+
+%%%%
+Conjurer
+
+%%%%
+Summoner
+
+%%%%
+Necromancer
+
+%%%%
+Fire Elementalist
+
+%%%%
+Ice Elementalist
+
+%%%%
+Air Elementalist
+
+%%%%
+Earth Elementalist
+
+%%%%
+Venom Mage
+
+%%%%
+Artificer
+
+%%%%
+Delver
+
+%%%%
+Wanderer
+
+%%%%
+
+# obsolete (but can still appear in highscores and maybe as ghosts)
+%%%%
+Assassin
+
+%%%%
+Skald
+
+%%%%
+
+##############################################
+# "<species> <background>"
+# Used for character selection menu
+##############################################
+%%%%
+%s Fighter
+
+%%%%
+%s Gladiator
+
+%%%%
+%s Monk
+
+%%%%
+%s Hunter
+
+%%%%
+%s Berserker
+
+%%%%
+%s Brigand
+
+%%%%
+%s Abyssal Knight
+
+%%%%
+%s Chaos Knight
+
+%%%%
+%s Enchanter
+
+%%%%
+%s Transmuter
+
+%%%%
+%s Arcane Marksman
+
+%%%%
+%s Warper
+
+%%%%
+%s Hedge Wizard
+
+%%%%
+%s Conjurer
+
+%%%%
+%s Summoner
+
+%%%%
+%s Necromancer
+
+%%%%
+%s Fire Elementalist
+
+%%%%
+%s Ice Elementalist
+
+%%%%
+%s Air Elementalist
+
+%%%%
+%s Earth Elementalist
+
+%%%%
+%s Venom Mage
+
+%%%%
+%s Artificer
+
+%%%%
+%s Delver
+
+%%%%
+%s Wanderer
+
+%%%%
+
+# obsolete
+%%%%
+%s Assassin
+
+%%%%
+%s Skald
+
+%%%%

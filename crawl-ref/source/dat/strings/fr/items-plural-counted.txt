@@ -1,0 +1,271 @@
+###############################################################################
+#
+# Items - plural, counted, nominative
+#
+###############################################################################
+
+#################################
+# Weapon Types
+#################################
+
+# these are used in monster pane in console version
+
+%%%%
+%d polearms
+
+%%%%
+%d launchers
+
+%%%%
+%d missiles
+
+%%%%
+
+#################################
+# Melee Weapons
+#################################
+
+#################################
+# Launchers
+#################################
+
+#################################
+# Missiles
+#################################
+
+%%%%
+%d arrows
+
+%%%%
+%d bolts
+
+%%%%
+# fired by artefact crossbow "Damnation"
+%d damnation bolts
+
+%%%%
+%d darts
+
+%%%%
+%d poisoned darts
+
+%%%%
+%d curare-tipped darts
+
+%%%%
+%d atropa-tipped darts
+
+%%%%
+%d datura-tipped darts
+
+%%%%
+%d stones
+
+%%%%
+%d large rocks
+
+%%%%
+%d sling bullets
+
+%%%%
+%d javelins
+
+%%%%
+%d silver javelins
+
+%%%%
+%d throwing nets
+
+%%%%
+%d boomerangs
+
+%%%%
+%d silver boomerangs
+
+%%%%
+
+#################################
+# Armour
+#################################
+
+#################################
+# Rings
+#################################
+
+#################################
+# Amulets
+#################################
+
+#################################
+# Wands
+#################################
+
+#################################
+# Scrolls
+#################################
+
+%%%%
+%d scrolls labelled %s
+
+%%%%
+%d scrolls of acquirement
+
+%%%%
+%d scrolls of amnesia
+
+%%%%
+%d scrolls of blinking
+
+%%%%
+%d scrolls of brand weapon
+
+%%%%
+%d scrolls of enchant armour
+
+%%%%
+%d scrolls of enchant weapon
+
+%%%%
+%d scrolls of fear
+
+%%%%
+%d scrolls of fog
+
+%%%%
+%d scrolls of holy word
+
+%%%%
+%d scrolls of identify
+
+%%%%
+%d scrolls of immolation
+
+%%%%
+%d scrolls of magic mapping
+
+%%%%
+%d scrolls of noise
+
+%%%%
+%d scrolls of remove curse
+
+%%%%
+%d scrolls of silence
+
+%%%%
+%d scrolls of summoning
+
+%%%%
+%d scrolls of teleportation
+
+%%%%
+%d scrolls of torment
+
+%%%%
+%d scrolls of vulnerability
+
+%%%%
+%d scrolls of removedness
+
+%%%%
+
+#################################
+# Potions
+#################################
+
+%%%%
+%d potions of ambrosia
+
+%%%%
+%d potions of attraction
+
+%%%%
+%d potions of berserk rage
+
+%%%%
+%d potions of brilliance
+
+%%%%
+%d potions of cancellation
+
+%%%%
+%d potions of curing
+
+%%%%
+%d potions of degeneration
+
+%%%%
+%d potions of experience
+
+%%%%
+%d potions of flight
+
+%%%%
+%d potions of haste
+
+%%%%
+%d potions of heal wounds
+
+%%%%
+%d potions of invisibility
+
+%%%%
+%d potions of lignification
+
+%%%%
+%d potions of magic
+
+%%%%
+%d potions of might
+
+%%%%
+%d potions of mutation
+
+%%%%
+%d potions of resistance
+
+%%%%
+
+# generic
+%%%%
+%d potions
+
+%%%%
+
+# Some potion colours are the names of gemstones, etc., and are used elsewhere
+# in Crawl to mean actually made of/with that thing, rather than merely having
+# its colour. In English, we can get away with using the same word for both
+# meanings, but that's not necessarily the case in other languages.
+%%%%
+%d amethyst potions
+
+%%%%
+%d emerald potions
+
+%%%%
+%d ruby potions
+
+%%%%
+%d sapphire potions
+
+%%%%
+
+#################################
+# Magical Staves
+#################################
+
+#################################
+# Corpses
+#################################
+
+#################################
+# Miscellaneous Items
+#################################
+
+#################################
+# Gold
+#################################
+%%%%
+%d gold pieces
+
+%%%%

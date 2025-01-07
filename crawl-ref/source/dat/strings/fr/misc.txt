@@ -1,0 +1,292 @@
+###############################################################################
+#
+# Translations - miscellaneous
+#
+###############################################################################
+
+%%%%
+DECIMAL_POINT
+
+%%%%
+
+####################
+# List construction
+####################
+%%%%
+", "
+
+%%%%
+"; "
+
+%%%%
+", and "
+
+%%%%
+", or "
+
+%%%%
+"; and "
+
+%%%%
+"; or "
+
+%%%%
+" and "
+
+%%%%
+" or "
+
+%%%%
+
+##############################
+# Attack strength punctuation
+##############################
+# Exclamation marks show amount of damage.
+# The %s is a placeholder for the sentence. It's done this way
+# because some languages don't simply append punctuation to the end.
+# For example, in Spanish, you would translate "%s!" as "¡%s!"
+%%%%
+%s!
+
+%%%%
+%s!!
+
+%%%%
+%s!!!
+
+%%%%
+%s!!!!
+
+%%%%
+%s!!!!!
+
+%%%%
+%s!!!!!!
+
+%%%%
+%s!!!!!!!
+
+%%%%
+%s!!!!!!!!
+
+%%%%
+%s!!!!!!!!!
+
+%%%%
+
+####################
+# General punctuation
+####################
+
+%s!!!!!!!!!!
+
+%%%%
+" "
+
+%%%%
+.
+
+%%%%
+%s.
+
+%%%%
+
+
+####################
+# "Times" indicator
+####################
+
+# When the same thing happens multiple times, the message is just shown once
+# with x2, x3, etc. appended, e.g. "The orc hits you! x2"
+%%%%
+" x%d"
+
+%%%%
+
+####################
+# Keys and key combos
+####################
+%%%%
+Escape
+
+%%%%
+Enter
+
+%%%%
+Ctrl-A
+
+%%%%
+Ctrl-B
+
+%%%%
+Ctrl-C
+
+%%%%
+%%%%
+Ctrl-D
+
+%%%%
+Ctrl-E
+
+%%%%
+Ctrl-F
+
+%%%%
+Ctrl-G
+
+%%%%
+Ctrl-H
+
+%%%%
+Ctrl-I
+
+%%%%
+Ctrl-J
+
+%%%%
+Ctrl-K
+
+%%%%
+Ctrl-L
+
+%%%%
+Ctrl-M
+
+%%%%
+Ctrl-N
+
+%%%%
+Ctrl-O
+
+%%%%
+Ctrl-P
+
+%%%%
+Ctrl-Q
+
+%%%%
+Ctrl-R
+
+%%%%
+Ctrl-S
+
+%%%%
+Ctrl-T
+
+%%%%
+Ctrl-U
+
+%%%%
+Ctrl-V
+
+%%%%
+Ctrl-W
+
+%%%%
+Ctrl-X
+
+%%%%
+Ctrl-Y
+
+%%%%
+Ctrl-Z
+
+%%%%
+
+# status indicators for substitute keys
+%%%%
+CTRL
+
+%%%%
+SHIFT
+
+%%%%
+
+####################
+# Messages for obsolete items
+####################
+%%%%
+This item has been removed, sorry!
+
+%%%%
+
+####################
+# Corrosion sources
+####################
+
+# These are used as subject in the messages "<source> corrodes you!"
+# and "<source> corrodes <monster>!"
+
+%%%%
+the acid
+
+%%%%
+the entropic weave
+
+%%%%
+Your corrosive artefact
+
+%%%%
+Your corrupting presence
+
+%%%%
+# a flying bit of exploded monster (used directly after monster explosion
+# message, so it will be obvious what it refers to)
+a flying bit
+
+%%%%
+
+#################################
+# Cost
+#################################
+%%%%
+%d gold
+
+%%%%
+# capitalised form used on abilities menu
+%d Gold
+
+%%%%
+
+#################################
+# Pronouns
+#################################
+%%%%
+you
+
+%%%%
+{acc}you
+
+%%%%
+{dat}you
+
+%%%%
+# when something hits you after you're already dead
+# declension will be handled by grammar.txt
+your lifeless body
+
+%%%%
+
+#################################
+# Klown pie flavours
+#################################
+# These are only used alone as an exclamation, e.g. "Plum!"
+%%%%
+plum
+
+%%%%
+lemon
+
+%%%%
+blueberry
+
+%%%%
+raspberry
+
+%%%%
+cherry
+
+%%%%
+moon pie
+
+%%%%

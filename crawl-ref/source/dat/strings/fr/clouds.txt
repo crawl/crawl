@@ -1,0 +1,125 @@
+###############################################################################
+#
+# Translations for clouds - nominative
+#
+###############################################################################
+
+%%%%
+# duplicate of item brand
+#flame
+#Flamme
+%%%%
+blazing flames
+
+%%%%
+noxious fumes
+
+%%%%
+freezing vapour
+
+%%%%
+freezing vapours
+
+%%%%
+poison gas
+
+%%%%
+black smoke
+
+%%%%
+grey smoke
+
+%%%%
+blue smoke
+
+%%%%
+purple smoke
+
+%%%%
+translocational energy
+
+%%%%
+spreading flames
+
+%%%%
+a forest fire
+
+%%%%
+steam
+
+%%%%
+a cloud of scalding steam
+
+%%%%
+ink
+
+%%%%
+calcifying dust
+
+%%%%
+blessed fire
+
+%%%%
+foul pestilence
+
+%%%%
+dark miasma
+
+%%%%
+thin mist
+
+%%%%
+seething chaos
+
+%%%%
+rain
+
+%%%%
+the rain
+
+%%%%
+mutagenic fog
+
+%%%%
+magical condensation
+
+%%%%
+whirling frost
+
+%%%%
+sparse dust
+
+%%%%
+spectral mist
+
+%%%%
+acidic fog
+
+%%%%
+thunder
+
+%%%%
+a thunderstorm
+
+%%%%
+negative energy
+
+%%%%
+white fluffiness
+
+%%%%
+salt
+
+%%%%
+golden dust
+
+%%%%
+smouldering embers
+
+%%%%
+embers
+
+%%%%
+wisps of flame
+
+%%%%

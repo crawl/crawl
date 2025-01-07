@@ -1,0 +1,779 @@
+###############################################################################
+#
+# Translations for high score table and player death message
+#
+###############################################################################
+
+# heading
+%%%%
+Dungeon Crawl Stone Soup: High Scores
+
+%%%%
+
+# Examples of high score entries (verbose format):
+#
+#  2. 1797852 Fred the Slayer (level 22, 226/229 HPs)
+#             Began as a Minotaur Berserker on Jan 31, 2022.
+#             Was an Elder of Trog.
+#             Escaped with the Orb
+#             ... and 3 runes!
+#
+#             The game lasted 02:00:23 (50312 turns).
+#
+# 16.  292913 Ziggy the Fighter (level 20, -5/159 HPs)
+#             Began as a Demonspawn Fire Elementalist on Apr 7, 2023.
+#             Was an Initiate of Gozag.
+#             Killed from afar by a war gargoyle (42 damage)
+#             ... with a spray of metal splinters
+#             ... led by a peacekeeper
+#             ... on level 4 of the Vaults on Apr 10, 2023.
+#             The game lasted 06:34:14 (66612 turns).
+#
+# 40.      12 Bob the Digger (level 2, -3/20 HPs)
+#             Began as a Meteoran Earth Elementalist on June 16, 2022.
+#             Was a Follower of Nemelex Xobeh.
+#             Slain by Terence
+#             ... wielding a +0 flail
+#              (7 damage)
+#             ... on level 3 of the Dungeon.
+#             The game lasted 00:02:01 (174 turns).
+
+
+%%%%
+Began as %s
+
+%%%%
+(%d damage)
+
+%%%%
+The game lasted %s (%d turns).
+
+%%%%
+
+%%%%
+# wizard mode
+*WIZ*
+
+%%%%
+# explore mode
+*EXPLORE*
+
+%%%%
+
+%%%%
+# wizard mode (terse)
+W
+
+%%%%
+# explore mode (terse)
+E
+
+%%%%
+
+########################
+# Player level and HP
+########################
+
+%%%%
+# if current max HP less than max max HP (i.e. drained)
+(level %d, %d/%d (%d) HPs)
+
+%%%%
+# if not drained
+(level %d, %d/%d HPs)
+
+%%%%
+# without HP
+(level %d)
+
+%%%%
+
+########################
+# Date
+########################
+
+# available date fields are:
+# @d@ = day without leading zero (1-31)
+# @dd@ = 2-digit day (01-31)
+# @mm@ = 2-digit month (01-12)
+# @mon@ = month abbreviation (you must provide translations for these if you want to use them)
+# @yy@ = 2-digit year (00-99)
+# @yyyy@ = full year
+
+%%%%
+" on @mon@ @d@, @yyyy@"
+
+%%%%
+
+# month abbreviations used by @mon@
+%%%%
+Jan
+
+%%%%
+Feb
+
+%%%%
+Mar
+
+%%%%
+Apr
+
+%%%%
+May
+
+%%%%
+June
+
+%%%%
+July
+
+%%%%
+Aug
+
+%%%%
+Sept
+
+%%%%
+Oct
+
+%%%%
+Nov
+
+%%%%
+Dec
+
+%%%%
+
+########################
+# Religion line
+########################
+
+%%%%
+Was a Favourite Plaything of Xom.
+
+%%%%
+Was a Plaything of Xom.
+
+%%%%
+# Was <title> of <god>[ (penitent)]
+Was %s of %s%s.
+
+%%%%
+
+# titles used above, in declining order of piety
+%%%%
+the Champion
+
+%%%%
+a High Priest
+
+%%%%
+an Elder
+
+%%%%
+a Priest
+
+%%%%
+a Believer
+
+%%%%
+a Follower
+
+%%%%
+an Initiate
+
+%%%%
+
+# optional penitent suffix
+%%%%
+" (penitent)"
+
+%%%%
+
+########################
+# Won
+########################
+
+%%%%
+Escaped with the Orb
+
+%%%%
+... and %d runes
+
+%%%%
+
+########################
+# Quit or left without Orb
+########################
+
+%%%%
+Quit the game
+
+%%%%
+Got out of the dungeon
+
+%%%%
+Safely got out of the dungeon
+
+%%%%
+Got out of the dungeon alive
+
+%%%%
+... with 1 rune
+
+%%%%
+... with %d runes
+
+%%%%
+Entered wizard mode
+
+%%%%
+
+# terse form
+%%%%
+left
+
+%%%%
+escaped
+
+%%%%
+quit
+
+%%%%
+wizmode
+
+%%%%
+
+
+########################
+# Died
+########################
+
+# NOTE: strings starting with a lowercase letter are the terse/oneline form
+
+%%%%
+# <verbed> by <noun>
+%s by %s
+
+%%%%
+%s by themself
+
+%%%%
+
+# verbs used above
+%%%%
+Slain
+
+%%%%
+Mangled
+
+%%%%
+Demolished
+
+%%%%
+Annihilated
+
+%%%%
+
+%%%%
+# killed by missile from a launcher (arrow, bolt, sling bullet)
+shot by themself
+
+%%%%
+shot by %s
+
+%%%%
+# killed by thrown weapon (boomerang, javelin, manticore spikes)
+hit from afar by %s
+
+%%%%
+# wand, etc.
+blasted by themself
+
+%%%%
+blasted by %s
+
+%%%%
+slain by %s
+
+%%%%
+# <monster's> headbutt (terse)
+%s headbutt
+
+%%%%
+Headbutted by %s
+
+%%%%
+squashed by %s
+
+%%%%
+Rolled over by %s
+
+%%%%
+# <monster's> spines (terse)
+%s spines
+
+%%%%
+Impaled on %s spines
+
+%%%%
+Succumbed to poison
+
+%%%%
+poisoned by %s
+
+%%%%
+# duplicate definition
+#poison
+#Gift
+%%%%
+Succumbed to %s
+
+%%%%
+Succumbed to their own poison
+
+%%%%
+Succumbed to their own %s
+
+%%%%
+# succumbed to <monster's> poison
+Succumbed to %s poison
+
+%%%%
+# succumbed to <monster's> <poison>
+# no genitive context because English is already possessive
+Succumbed to %s %s
+
+%%%%
+cloud of %s
+
+%%%%
+self
+
+%%%%
+Engulfed by a cloud of %s
+
+%%%%
+Engulfed by their own cloud of %s
+
+%%%%
+Engulfed by %s
+
+%%%%
+# killed by their own <beam>
+Killed by their own %s
+
+%%%%
+Killed by %s
+
+%%%%
+Killed by themself
+
+%%%%
+Killed from afar by themself
+
+%%%%
+Killed from afar by %s
+
+%%%%
+# duplicate definition
+#lava
+#Lava
+%%%%
+Turned to ash by lava
+
+%%%%
+Took a swim in molten lava
+
+%%%%
+fell apart
+
+%%%%
+Soaked and fell apart
+
+%%%%
+Sank and fell apart
+
+%%%%
+drowned by %s
+
+%%%%
+Drowned by %s
+
+%%%%
+drowned
+
+%%%%
+Drowned
+
+%%%%
+stupidity
+
+%%%%
+Forgot to exist
+
+%%%%
+Forgot to breathe
+
+%%%%
+collapsed
+
+%%%%
+Collapsed under their own weight
+
+%%%%
+clumsiness
+
+%%%%
+Slipped on a banana peel
+
+%%%%
+Killed by triggering %s
+
+%%%%
+# duplicate definition
+#drained
+#ausgezehrt
+%%%%
+Drained of all life by %s
+
+%%%%
+Drained of all life
+
+%%%%
+starvation
+
+%%%%
+Starved to death
+
+%%%%
+# duplicate definition
+#frozen
+#gefroren
+%%%%
+Frozen to death
+
+%%%%
+Frozen to death by %s
+
+%%%%
+burnt
+
+%%%%
+Incinerated by %s
+
+%%%%
+Burnt to a crisp
+
+%%%%
+# duplicate of mutation name
+#wild magic
+#wilde Magie
+%%%%
+Killed by wild magic
+
+%%%%
+xom
+
+%%%%
+Killed for Xom's enjoyment
+
+%%%%
+rotting
+
+%%%%
+Rotted away
+
+%%%%
+shot self
+
+%%%%
+Killed themself with bad targeting
+
+%%%%
+# TODO: fix this. It will be wrong for feminine
+Killed themself with a badly aimed %s
+
+%%%%
+reflected bolt
+
+%%%%
+Killed by a reflected bolt
+
+%%%%
+Killed by a reflected %s
+
+%%%%
+... reflected by %s
+
+%%%%
+bounced beam
+
+%%%%
+Killed themself with a bounced beam
+
+%%%%
+Killed themself with a bounced %s
+
+%%%%
+suicidal targeting
+
+%%%%
+Shot themself with a beam
+
+%%%%
+Shot themself with %s
+
+%%%%
+spore
+
+%%%%
+Killed by an exploding spore
+
+%%%%
+Killed by an exploding %s
+
+%%%%
+smitten by Shining One
+
+%%%%
+Smitten by the Shining One
+
+%%%%
+smitten by Beogh
+
+%%%%
+Smitten by Beogh
+
+%%%%
+# duplicate definition
+#petrified
+#versteinert
+%%%%
+Turned to stone
+
+%%%%
+died
+
+%%%%
+Died
+
+%%%%
+fell downstairs
+
+%%%%
+Fell down a flight of stairs
+
+%%%%
+fell through a gate
+
+%%%%
+Fell down through a gate
+
+%%%%
+# duplicate definition
+#acid
+#Säure
+%%%%
+Splashed by %s acid
+
+%%%%
+Splashed with acid
+
+%%%%
+asphyx
+
+%%%%
+Asphyxiated
+
+%%%%
+divine wrath
+
+%%%%
+Killed by divine wrath
+
+%%%%
+disintegration
+
+%%%%
+Blew themself up
+
+%%%%
+Blown up by %s
+
+%%%%
+mirror damage
+
+%%%%
+Killed by mirror damage
+
+%%%%
+frailty
+
+%%%%
+Became unviable by %s
+
+%%%%
+barbs
+
+%%%%
+Succumbed to barbed spike wounds
+
+%%%%
+%s throw
+
+%%%%
+Thrown by %s
+
+%%%%
+%s collision
+
+%%%%
+Collided with %s
+
+%%%%
+Tarried too long and was consumed by Zot
+
+%%%%
+constriction
+
+%%%%
+Constricted to death by %s
+
+%%%%
+Nibbled to death by software bugs
+
+%%%%
+... caused by %s
+
+%%%%
+... wielding %s
+
+%%%%
+... with damnation
+
+%%%%
+... by creeping frost
+
+%%%%
+... with %s
+
+%%%%
+# trees awoken by spriggan druid
+... awakened by %s
+
+%%%%
+... generated by %s
+
+%%%%
+... invoked by %s
+
+%%%%
+# %s could be a monster or a thing
+... while paralysed by %s
+
+%%%%
+... while paralysed
+
+%%%%
+# %s is always a monster
+... while petrified by %s
+
+%%%%
+... while petrified
+
+%%%%
+
+%%%%
+Hit by %s thrown by %s
+
+%%%%
+Shot with %s by %s
+
+%%%%
+
+########################
+# Killer origin
+########################
+%%%%
+"... "
+
+%%%%
+led by %s
+
+%%%%
+# inc this context, can be something created (e.g. fireball)
+summoned by %s
+
+%%%%
+woven by %s
+
+%%%%
+animated by %s
+
+%%%%
+# for some reason eldritch tentacle is called rather than summoned
+called by %s
+
+%%%%
+# spectral cloud
+called from beyond by %s
+
+%%%%
+created by %s
+
+%%%%
+# god rage
+created by the rage of %s
+
+%%%%
+# tentacle attached to monster
+attached to %s
+
+%%%%
+
+########################
+# Killers (that aren't defined in other files)
+########################
+%%%%
+themself
+
+%%%%
+their own shadow
+
+%%%%
+{acc}their own shadow
+
+%%%%
+{dat}their own shadow
+
+%%%%
+unknown source
+
+%%%%
+an accursed screaming
+
+%%%%
+static electricity
+
+%%%%
+
+# suffixes
+%%%%
+" (shapeshifter)"
+
+%%%%
+" (glowing shapeshifter)"
+
+%%%%
+" (illusionary)"
+
+%%%%
+
+########################
+# Sources of paraysis
+########################
+%%%%
+Death's Door abortion
+
+%%%%

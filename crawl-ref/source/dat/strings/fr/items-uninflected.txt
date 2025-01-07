@@ -1,0 +1,373 @@
+###############################################################################
+#
+# Translations for item names (uninflected)
+#
+# There's no need to provide inflected
+# forms (e.g. accusative, dative, genitive) for these strings as they are only
+# used in very specific contexts
+#
+###############################################################################
+
+#################################
+# Item Types (terse)
+# Used in item search, plus one specific message
+# (and also some unlocalised contexts)
+#################################
+%%%%
+weapon
+
+%%%%
+melee weapon
+
+%%%%
+ranged weapon
+
+%%%%
+throwable
+
+%%%%
+# duplicate
+#missile
+#Geschoss
+%%%%
+robe
+
+%%%%
+wand
+
+%%%%
+food
+
+%%%%
+scroll
+
+%%%%
+jewellery
+
+%%%%
+potion
+
+%%%%
+book
+
+%%%%
+manual
+
+%%%%
+staff
+
+%%%%
+magical staff
+
+%%%%
+orb
+
+%%%%
+miscellaneous
+
+%%%%
+misc
+
+%%%%
+corpse
+
+%%%%
+gold
+
+%%%%
+rune
+
+%%%%
+artefact
+
+%%%%
+artifact
+
+%%%%
+
+%%%%
+armour
+
+%%%%
+body armour
+
+%%%%
+auxiliary armour
+
+%%%%
+
+# stash.lua adds "armor" as well as "armour", which allows us to give alternative search terms
+%%%%
+armor
+
+%%%%
+body armor
+
+%%%%
+auxiliary armor
+
+%%%%
+
+# these are used in monster pane in console version
+
+%%%%
+# duplicate
+#weapon
+#Waffe
+%%%%
+polearm
+
+%%%%
+launcher
+
+%%%%
+missile
+
+%%%%
+
+#################################
+# Terse weapon types
+#################################
+# These are used when showing base type for artefacts.
+# Not sure where though.
+%%%%
+# executioner's axe
+exec axe
+
+%%%%
+# giant spiked club
+g.spiked club
+
+%%%%
+# triple crossbow
+triple xbow
+
+%%%%
+
+#################################
+# Runes(terse form for char overview screen)
+#################################
+
+%%%%
+decaying
+
+%%%%
+barnacled
+
+%%%%
+gossamer
+
+%%%%
+serpentine
+
+%%%%
+slimy
+
+%%%%
+abyssal
+
+%%%%
+# duplicate of missile brand
+#silver
+#Silber
+%%%%
+golden
+
+%%%%
+
+# hell runes
+%%%%
+obsidian
+
+%%%%
+icy
+
+%%%%
+bone
+
+%%%%
+iron
+
+%%%%
+
+# pan runes
+%%%%
+demonic
+
+%%%%
+glowing
+
+%%%%
+magical
+
+%%%%
+fiery
+
+%%%%
+dark
+
+%%%%
+
+#################################
+# Uncounted plural forms that are only used in known items menu
+# (Some others are used elsewhere and do need to be inflected)
+#################################
+
+%%%%
+unknown magical staves
+
+%%%%
+unknown jewellery
+
+%%%%
+unknown wands
+
+%%%%
+unknown scrolls
+
+%%%%
+unknown potions
+
+%%%%
+
+%%%%
+staves of earth
+
+%%%%
+staves of air
+
+%%%%
+staves of fire
+
+%%%%
+staves of cold
+
+%%%%
+staves of conjuration
+
+%%%%
+staves of death
+
+%%%%
+staves of poison
+
+%%%%
+
+%%%%
+rings of protection
+
+%%%%
+rings of protection from fire
+
+%%%%
+rings of poison resistance
+
+%%%%
+rings of protection from cold
+
+%%%%
+rings of strength
+
+%%%%
+rings of slaying
+
+%%%%
+rings of see invisible
+
+%%%%
+rings of resist corrosion
+
+%%%%
+rings of evasion
+
+%%%%
+rings of stealth
+
+%%%%
+rings of dexterity
+
+%%%%
+rings of intelligence
+
+%%%%
+rings of wizardry
+
+%%%%
+rings of magical power
+
+%%%%
+rings of flight
+
+%%%%
+rings of positive energy
+
+%%%%
+rings of willpower
+
+%%%%
+rings of fire
+
+%%%%
+rings of ice
+
+%%%%
+
+%%%%
+amulets of magic regeneration
+
+%%%%
+amulets of the acrobat
+
+%%%%
+amulets of guardian spirit
+
+%%%%
+amulets of faith
+
+%%%%
+amulets of reflection
+
+%%%%
+amulets of regeneration
+
+%%%%
+
+%%%%
+wands of flame
+
+%%%%
+wands of paralysis
+
+%%%%
+wands of digging
+
+%%%%
+wands of iceblast
+
+%%%%
+wands of polymorph
+
+%%%%
+wands of charming
+
+%%%%
+wands of acid
+
+%%%%
+wands of mindburst
+
+%%%%
+
+%%%%
+scrolls
+
+%%%%
+spellbooks
+
+%%%%
+manuals
+
+%%%%
+runes
+
+%%%%

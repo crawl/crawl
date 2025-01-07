@@ -1,0 +1,338 @@
+###############################################################################
+#
+# Translations for item suffixes
+#
+###############################################################################
+
+#################################
+# General
+#################################
+
+# protection from fire and fire resistance are equivalent
+# the former name is used on rings and the latter on armour
+%%%%
+" of protection from fire"
+
+%%%%
+" of fire resistance"
+
+%%%%
+
+# protection from cold and cold resistance are equivalent
+# the former name is used on rings and the latter on armour
+%%%%
+" of protection from cold"
+
+%%%%
+" of cold resistance"
+
+%%%%
+
+# resist corrosion and preservation are equivalent
+# the former name is used on rings and the latter on armour
+%%%%
+" of resist corrosion"
+
+%%%%
+" of preservation"
+
+%%%%
+
+%%%%
+# grants more AC
+" of protection"
+
+%%%%
+# grants both fire and cold resistance
+" of resistance"
+
+%%%%
+" of poison resistance"
+
+%%%%
+# negative energy resistance
+" of positive energy"
+
+%%%%
+" of strength"
+
+%%%%
+" of dexterity"
+
+%%%%
+" of intelligence"
+
+%%%%
+" of slaying"
+
+%%%%
+" of see invisible"
+
+%%%%
+" of evasion"
+
+%%%%
+" of wizardry"
+
+%%%%
+" of magical power"
+
+%%%%
+" of flight"
+
+%%%%
+" of willpower"
+
+%%%%
+" of fire"
+
+%%%%
+" of ice"
+
+%%%%
+" of regeneration"
+
+%%%%
+" of magic regeneration"
+
+%%%%
+" of the acrobat"
+
+%%%%
+# base type of some artefact amulets
+" of nothing"
+
+%%%%
+" of guardian spirit"
+
+%%%%
+" of faith"
+
+%%%%
+" of reflection"
+
+%%%%
+" of acid"
+
+%%%%
+" of chaos"
+
+%%%%
+" of distortion"
+
+%%%%
+" of draining"
+
+%%%%
+" of electrocution"
+
+%%%%
+" of flaming"
+
+%%%%
+" of flame"
+
+%%%%
+" of freezing"
+
+%%%%
+" of holy wrath"
+
+%%%%
+" of pain"
+
+%%%%
+" of penetration"
+
+%%%%
+" of speed"
+
+%%%%
+" of venom"
+
+%%%%
+" of dispersal"
+
+%%%%
+" of speedy slithering"
+
+%%%%
+" of running"
+
+%%%%
+" of invisibility"
+
+%%%%
+" of ponderousness"
+
+%%%%
+" of flying"
+
+%%%%
+" of the Archmagi"
+
+%%%%
+" of spirit shield"
+
+%%%%
+" of archery"
+
+%%%%
+" of repulsion"
+
+%%%%
+" of harm"
+
+%%%%
+" of shadows"
+
+%%%%
+" of rampaging"
+
+%%%%
+# only on artefact "Sword of Zonguldrok"
+" of reaping"
+
+%%%%
+# only on artefact lance "Wyrmbane"
+" of dragon slaying"
+
+%%%%
+
+#################################
+# Artefact name suffixes
+#################################
+# generic
+%%%%
+" of "%s""
+
+%%%%
+# generic
+%%%%
+" "%s""
+
+%%%%
+" of Zot"
+
+%%%%
+# specific artefacts don't necessarily need to be translated
+# if there's no specific translation, the English text will put in quotes.
+%%%%
+" of the Moon"
+
+%%%%
+" of Dice, Bag, and Bottle"
+
+%%%%
+
+#################################
+# Manual suffixes
+#################################
+# note: these names should match the skill names
+%%%%
+" of fighting"
+
+%%%%
+" of short blades"
+
+%%%%
+" of long blades"
+
+%%%%
+" of axes"
+
+%%%%
+" of maces & flails"
+
+%%%%
+" of polearms"
+
+%%%%
+" of staves"
+
+%%%%
+" of slings"
+
+%%%%
+" of bows"
+
+%%%%
+" of crossbows"
+
+%%%%
+" of throwing"
+
+%%%%
+" of armour"
+
+%%%%
+" of dodging"
+
+%%%%
+# also used on items that increase stealth
+" of stealth"
+
+%%%%
+" of shields"
+
+%%%%
+" of unarmed combat"
+
+%%%%
+" of evocations"
+
+%%%%
+" of invocations"
+
+%%%%
+" of spellcasting"
+
+%%%%
+" of necromancy"
+
+%%%%
+" of conjurations"
+
+%%%%
+" of hexes"
+
+%%%%
+" of charms"
+
+%%%%
+" of summonings"
+
+%%%%
+" of translocations"
+
+%%%%
+" of transmutations"
+
+%%%%
+" of fire magic"
+
+%%%%
+" of ice magic"
+
+%%%%
+" of air magic"
+
+%%%%
+" of earth magic"
+
+%%%%
+" of poison magic"
+
+%%%%
+
+#################################
+# Obsolete items
+#################################
+# these can occur if player loads a savegame from an earlier version of the game
+%%%%
+" of obsoleteness"
+
+%%%%
+" of removedness"
+
+%%%%

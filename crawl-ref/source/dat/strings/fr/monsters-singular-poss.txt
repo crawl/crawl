@@ -1,0 +1,1744 @@
+###############################################################################
+#
+# Monsters - singular, definite article, genitive (translating English possessive)
+#
+###############################################################################
+
+%%%%
+the program bug's
+
+%%%%
+the formicid's
+
+%%%%
+the entropy weaver's
+
+%%%%
+the bat's
+
+%%%%
+the butterfly's
+
+%%%%
+the vampire bat's
+
+%%%%
+the fire bat's
+
+%%%%
+the ice bat's
+
+%%%%
+# rebadged spectral bat
+the ghost-faced bat's
+
+%%%%
+the phase bat's
+
+%%%%
+the skeletal bat's
+
+%%%%
+the microbat's
+
+%%%%
+the megabat's
+
+%%%%
+the giga bat's
+
+%%%%
+the bennu's
+
+%%%%
+the caustic shrike's
+
+%%%%
+the shard shrike's
+
+%%%%
+the centaur's
+
+%%%%
+the centaur warrior's
+
+%%%%
+the yaktaur's
+
+%%%%
+the yaktaur captain's
+
+%%%%
+the faun's
+
+%%%%
+the satyr's
+
+%%%%
+the draconian's
+
+%%%%
+the black draconian's
+
+%%%%
+the yellow draconian's
+
+%%%%
+the pale draconian's
+
+%%%%
+the green draconian's
+
+%%%%
+the purple draconian's
+
+%%%%
+the red draconian's
+
+%%%%
+the white draconian's
+
+%%%%
+the grey draconian's
+
+%%%%
+the draconian stormcaller's
+
+%%%%
+the draconian monk's
+
+%%%%
+the draconian shifter's
+
+%%%%
+the draconian annihilator's
+
+%%%%
+the draconian knight's
+
+%%%%
+the draconian scorcher's
+
+%%%%
+the elf's
+
+%%%%
+the deep elf knight's
+
+%%%%
+the deep elf archer's
+
+%%%%
+the deep elf blademaster's
+
+%%%%
+the deep elf master archer's
+
+%%%%
+the deep elf zephyrmancer's
+
+%%%%
+the deep elf pyromancer's
+
+%%%%
+the deep elf high priest's
+
+%%%%
+the deep elf demonologist's
+
+%%%%
+the deep elf annihilator's
+
+%%%%
+the deep elf sorcerer's
+
+%%%%
+the deep elf death mage's
+
+%%%%
+the deep elf elementalist's
+
+%%%%
+the wandering mushroom's
+
+%%%%
+the deathcap's
+
+%%%%
+the thorn hunter's
+
+%%%%
+the shambling mangrove's
+
+%%%%
+the vine stalker's
+
+%%%%
+the goblin's
+
+%%%%
+the hobgoblin's
+
+%%%%
+the gnoll's
+
+%%%%
+the gnoll shaman's
+
+%%%%
+the gnoll sergeant's
+
+%%%%
+the boggart's
+
+%%%%
+the dwarf's
+
+%%%%
+the deep dwarf's
+
+%%%%
+the jackal's
+
+%%%%
+the hound's
+
+%%%%
+the howler monkey's
+
+%%%%
+the warg's
+
+%%%%
+the wolf's
+
+%%%%
+the hog's
+
+%%%%
+the hell hound's
+
+%%%%
+the doom hound's
+
+%%%%
+the raiju's
+
+%%%%
+the hell hog's
+
+%%%%
+the holy swine's
+
+%%%%
+the felid's
+
+%%%%
+the bear's
+
+%%%%
+the polar bear's
+
+%%%%
+the black bear's
+
+%%%%
+the spriggan's
+
+%%%%
+the spriggan rider's
+
+%%%%
+the spriggan druid's
+
+%%%%
+the spriggan berserker's
+
+%%%%
+the spriggan air mage's
+
+%%%%
+the spriggan defender's
+
+%%%%
+the spriggan baker's
+
+%%%%
+the spriggan hatter's
+
+%%%%
+the drake's
+
+%%%%
+the swamp drake's
+
+%%%%
+the rime drake's
+
+%%%%
+the wind drake's
+
+%%%%
+the lindwurm's
+
+%%%%
+the death drake's
+
+%%%%
+the giant lizard's
+
+%%%%
+the frilled lizard's
+
+%%%%
+the iguana's
+
+%%%%
+the basilisk's
+
+%%%%
+the wyvern's
+
+%%%%
+the komodo dragon's
+
+%%%%
+the merfolk's
+
+%%%%
+the merfolk impaler's
+
+%%%%
+the merfolk javelineer's
+
+%%%%
+the merfolk aquamancer's
+
+%%%%
+the merfolk siren's
+
+%%%%
+the merfolk avatar's
+
+%%%%
+the water nymph's
+
+%%%%
+the bog body's
+
+%%%%
+the necrophage's
+
+%%%%
+the bloated husk's
+
+%%%%
+the ghoul's
+
+%%%%
+the orc's
+
+%%%%
+the orc wizard's
+
+%%%%
+the orc priest's
+
+%%%%
+the orc warrior's
+
+%%%%
+the orc knight's
+
+%%%%
+the orc warlord's
+
+%%%%
+the orc sorcerer's
+
+%%%%
+the orc high priest's
+
+%%%%
+the human's
+
+%%%%
+the hell knight's
+
+%%%%
+the death knight's
+
+%%%%
+the necromancer's
+
+%%%%
+the wizard's
+
+%%%%
+the vault guard's
+
+%%%%
+the vault sentinel's
+
+%%%%
+the vault warden's
+
+%%%%
+the ironbound convoker's
+
+%%%%
+the ironbound frostheart's
+
+%%%%
+the ironbound preserver's
+
+%%%%
+the ironbound beastmaster's
+
+%%%%
+the ironbound thunderhulk's
+
+%%%%
+the imperial myrmidon's
+
+%%%%
+the servant of whispers's
+
+%%%%
+the ragged hierophant's
+
+%%%%
+the shapeshifter's
+
+%%%%
+the glowing shapeshifter's
+
+%%%%
+the Killer Klown's
+
+%%%%
+the demigod's
+
+%%%%
+the halfling's
+
+%%%%
+the rat's
+
+%%%%
+the quokka's
+
+%%%%
+the river rat's
+
+%%%%
+the hell rat's
+
+%%%%
+the giant cockroach's
+
+%%%%
+the scorpion's
+
+%%%%
+the emperor scorpion's
+
+%%%%
+the death scarab's
+
+%%%%
+the spider's
+
+%%%%
+the tarantella's
+
+%%%%
+the jumping spider's
+
+%%%%
+the wolf spider's
+
+%%%%
+the redback's
+
+%%%%
+the demonic crawler's
+
+%%%%
+the orb spider's
+
+%%%%
+the alligator's
+
+%%%%
+the snapping turtle's
+
+%%%%
+the alligator snapping turtle's
+
+%%%%
+the crab's
+
+%%%%
+the fire crab's
+
+%%%%
+the ghost crab's
+
+%%%%
+the apocalypse crab's
+
+%%%%
+the ugly thing's
+
+%%%%
+the very ugly thing's
+
+%%%%
+the fire vortex's
+
+%%%%
+the spatial vortex's
+
+%%%%
+the spatial maelstrom's
+
+%%%%
+the insubstantial wisp's
+
+%%%%
+the twister's
+
+%%%%
+the worm's
+
+%%%%
+the swamp worm's
+
+%%%%
+the tyrant leech's
+
+%%%%
+the dart slug's
+
+%%%%
+the torpor snail's
+
+%%%%
+the elephant slug's
+
+%%%%
+the unseen horror's
+
+%%%%
+the small abomination's
+
+%%%%
+the ancient zyme's
+
+%%%%
+the worldbinder's
+
+%%%%
+the killer bee's
+
+%%%%
+the queen bee's
+
+%%%%
+the vampire mosquito's
+
+%%%%
+the hornet's
+
+%%%%
+the meliai's
+
+%%%%
+the spark wasp's
+
+%%%%
+the moth's
+
+%%%%
+the ghost moth's
+
+%%%%
+the moth of wrath's
+
+%%%%
+the wight's
+
+%%%%
+the skeletal warrior's
+
+%%%%
+the ancient champion's
+
+%%%%
+the flying skull's
+
+%%%%
+the curse skull's
+
+%%%%
+the curse toe's
+
+%%%%
+the angel's
+
+%%%%
+the cherub's
+
+%%%%
+the seraph's
+
+%%%%
+the daeva's
+
+%%%%
+the profane servitor's
+
+%%%%
+the giant's
+
+%%%%
+the cyclops's
+
+%%%%
+the ettin's
+
+%%%%
+the fire giant's
+
+%%%%
+the frost giant's
+
+%%%%
+the stone giant's
+
+%%%%
+the titan's
+
+%%%%
+the juggernaut's
+
+%%%%
+the iron giant's
+
+%%%%
+the dragon's
+
+%%%%
+the fire dragon's
+
+%%%%
+the hydra's
+
+%%%%
+the ice dragon's
+
+%%%%
+the steam dragon's
+
+%%%%
+the swamp dragon's
+
+%%%%
+the acid dragon's
+
+%%%%
+the quicksilver dragon's
+
+%%%%
+the iron dragon's
+
+%%%%
+the storm dragon's
+
+%%%%
+the golden dragon's
+
+%%%%
+the shadow dragon's
+
+%%%%
+the bone dragon's
+
+%%%%
+the pearl dragon's
+
+%%%%
+the elemental's
+
+%%%%
+the earth elemental's
+
+%%%%
+the fire elemental's
+
+%%%%
+the water elemental's
+
+%%%%
+the air elemental's
+
+%%%%
+the iron elemental's
+
+%%%%
+the elemental wellspring's
+
+%%%%
+the giant frog's
+
+%%%%
+the bullfrog's
+
+%%%%
+the spiny frog's
+
+%%%%
+the blink frog's
+
+%%%%
+the barachi's
+
+%%%%
+the floating eye's
+
+%%%%
+the glowing orange brain's
+
+%%%%
+the great orb of eyes's
+
+%%%%
+the greater orb of eyes's
+
+%%%%
+the shining eye's
+
+%%%%
+the eye of devastation's
+
+%%%%
+the golden eye's
+
+%%%%
+the ophan's
+
+%%%%
+the manticore's
+
+%%%%
+the minotaur's
+
+%%%%
+the sphinx's
+
+%%%%
+the harpy's
+
+%%%%
+the mutant beast's
+
+%%%%
+the ancestor's
+
+%%%%
+the knight's
+
+%%%%
+the battlemage's
+
+%%%%
+the hexer's
+
+%%%%
+the jelly's
+
+%%%%
+the slime creature's
+
+%%%%
+the merged slime creature's
+
+%%%%
+the azure jelly's
+
+%%%%
+the acid blob's
+
+%%%%
+the kobold's
+
+%%%%
+the big kobold's
+
+%%%%
+the kobold demonologist's
+
+%%%%
+the lich's
+
+%%%%
+the ancient lich's
+
+%%%%
+the antique lich's
+
+%%%%
+the revenant's
+
+%%%%
+the halazid warlock's
+
+%%%%
+the mummy's
+
+%%%%
+the guardian mummy's
+
+%%%%
+the greater mummy's
+
+%%%%
+the mummy priest's
+
+%%%%
+the naga's
+
+%%%%
+the naga mage's
+
+%%%%
+the naga sharpshooter's
+
+%%%%
+the naga ritualist's
+
+%%%%
+the naga warrior's
+
+%%%%
+the nagaraja's
+
+%%%%
+the ogre's
+
+%%%%
+the two-headed ogre's
+
+%%%%
+the ogre mage's
+
+%%%%
+the plant's
+
+%%%%
+the demonic plant's
+
+%%%%
+the withered plant's
+
+%%%%
+the oklob sapling's
+
+%%%%
+the oklob plant's
+
+%%%%
+the bush's
+
+%%%%
+the burning bush's
+
+%%%%
+the toadstool's
+
+%%%%
+the fungus's
+
+%%%%
+the ballistomycete's
+
+%%%%
+the hyperactive ballistomycete's
+
+%%%%
+the briar patch's
+
+%%%%
+the tengu's
+
+%%%%
+the tengu conjurer's
+
+%%%%
+the tengu warrior's
+
+%%%%
+the tengu reaver's
+
+%%%%
+the efreet's
+
+%%%%
+the rakshasa's
+
+%%%%
+the dryad's
+
+%%%%
+the snaplasher vine's
+
+%%%%
+the snaplasher vine segment's
+
+%%%%
+the snake's
+
+%%%%
+the ball python's
+
+%%%%
+the adder's
+
+%%%%
+the water moccasin's
+
+%%%%
+the black mamba's
+
+%%%%
+the sea snake's
+
+%%%%
+the anaconda's
+
+%%%%
+the guardian serpent's
+
+%%%%
+the shock serpent's
+
+%%%%
+the mana viper's
+
+%%%%
+the troll's
+
+%%%%
+the iron troll's
+
+%%%%
+the deep troll's
+
+%%%%
+the deep troll earth mage's
+
+%%%%
+the deep troll shaman's
+
+%%%%
+the vampire's
+
+%%%%
+the vampire knight's
+
+%%%%
+the vampire mage's
+
+%%%%
+the jiangshi's
+
+%%%%
+the ghost's
+
+%%%%
+the phantom's
+
+%%%%
+the hungry ghost's
+
+%%%%
+the flayed ghost's
+
+%%%%
+the player ghost's
+
+%%%%
+the shadow's
+
+%%%%
+the silent spectre's
+
+%%%%
+the drowned soul's
+
+%%%%
+the wraith's
+
+%%%%
+the shadow wraith's
+
+%%%%
+the freezing wraith's
+
+%%%%
+the eidolon's
+
+%%%%
+the phantasmal warrior's
+
+%%%%
+the large abomination's
+
+%%%%
+the thrashing horror's
+
+%%%%
+the tentacled monstrosity's
+
+%%%%
+the Orb Guardian's
+
+%%%%
+the tentacled starspawn's
+
+%%%%
+the starspawn tentacle's
+
+%%%%
+the starspawn tentacle segment's
+
+%%%%
+the starcursed mass's
+
+%%%%
+the dream sheep's
+
+%%%%
+the yak's
+
+%%%%
+the death yak's
+
+%%%%
+the catoblepas's
+
+%%%%
+the elephant's
+
+%%%%
+the dire elephant's
+
+%%%%
+the hellephant's
+
+%%%%
+the apis's
+
+%%%%
+the ice beast's
+
+%%%%
+the sky beast's
+
+%%%%
+the zombie's
+
+%%%%
+the skeleton's
+
+%%%%
+the simulacrum's
+
+%%%%
+the small zombie's
+
+%%%%
+the small skeleton's
+
+%%%%
+the small simulacrum's
+
+%%%%
+the large zombie's
+
+%%%%
+the large skeleton's
+
+%%%%
+the large simulacrum's
+
+%%%%
+the spectral thing's
+
+%%%%
+the electric eel's
+
+%%%%
+the kraken's
+
+%%%%
+the tentacle's
+
+%%%%
+the tentacle segment's
+
+%%%%
+the octopode's
+
+%%%%
+the lava snake's
+
+%%%%
+the salamander's
+
+%%%%
+the salamander mystic's
+
+%%%%
+the Hellbinder's
+
+%%%%
+the Cloud Mage's
+
+%%%%
+the player's
+
+%%%%
+the player illusion's
+
+%%%%
+the dancing weapon's
+
+%%%%
+the spectral weapon's
+
+%%%%
+the eldritch tentacle's
+
+%%%%
+the eldritch tentacle segment's
+
+%%%%
+the demonspawn's
+
+%%%%
+the monstrous demonspawn's
+
+%%%%
+the gelid demonspawn's
+
+%%%%
+the infernal demonspawn's
+
+%%%%
+the torturous demonspawn's
+
+%%%%
+the blood saint's
+
+%%%%
+the warmonger's
+
+%%%%
+the corrupter's
+
+%%%%
+the black sun's
+
+%%%%
+the crimson imp's
+
+%%%%
+the quasit's
+
+%%%%
+the white imp's
+
+%%%%
+the ufetubus's
+
+%%%%
+the iron imp's
+
+%%%%
+the shadow imp's
+
+%%%%
+the rust devil's
+
+%%%%
+the orange demon's
+
+%%%%
+the red devil's
+
+%%%%
+the hellwing's
+
+%%%%
+the ice devil's
+
+%%%%
+the chaos spawn's
+
+%%%%
+the sun demon's
+
+%%%%
+the soul eater's
+
+%%%%
+the smoke demon's
+
+%%%%
+the neqoxec's
+
+%%%%
+the ynoxinul's
+
+%%%%
+the sixfirhy's
+
+%%%%
+the shadow demon's
+
+%%%%
+the green death's
+
+%%%%
+the blizzard demon's
+
+%%%%
+the balrug's
+
+%%%%
+the cacodemon's
+
+%%%%
+the hell beast's
+
+%%%%
+the hellion's
+
+%%%%
+the reaper's
+
+%%%%
+the lorocyproca's
+
+%%%%
+the tormentor's
+
+%%%%
+the Brimstone Fiend's
+
+%%%%
+the Ice Fiend's
+
+%%%%
+the Tzitzimitl's
+
+%%%%
+the Hell Sentinel's
+
+%%%%
+the Executioner's
+
+%%%%
+the animated tree's
+
+%%%%
+the golem's
+
+%%%%
+the saltling's
+
+%%%%
+the peacekeeper's
+
+%%%%
+the iron golem's
+
+%%%%
+the crystal guardian's
+
+%%%%
+the toenail golem's
+
+%%%%
+the electric golem's
+
+%%%%
+the ushabti's
+
+%%%%
+the guardian golem's
+
+%%%%
+the flesh golem's
+
+%%%%
+the spellforged servitor's
+
+%%%%
+the ice statue's
+
+%%%%
+the obsidian statue's
+
+%%%%
+the orange crystal statue's
+
+%%%%
+the statue's
+
+%%%%
+the training dummy's
+
+%%%%
+the pillar of salt's
+
+%%%%
+the block of ice's
+
+%%%%
+the diamond obelisk's
+
+%%%%
+the lightning spire's
+
+%%%%
+the gargoyle's
+
+%%%%
+the war gargoyle's
+
+%%%%
+the molten gargoyle's
+
+%%%%
+the pandemonium lord's
+
+%%%%
+the hell lord's
+
+%%%%
+the ball lightning's
+
+%%%%
+the ballistomycete spore's
+
+%%%%
+the lost soul's
+
+%%%%
+the lurking horror's
+
+%%%%
+the orb of fire's
+
+%%%%
+the orb of destruction's
+
+%%%%
+the wavering orb of destruction's
+
+%%%%
+the fulminant prism's
+
+%%%%
+the wretched star's
+
+%%%%
+the battlesphere's
+
+%%%%
+the death cob's
+
+%%%%
+the moon troll's
+
+%%%%
+the foxfire's
+
+%%%%
+the nameless horror's
+
+%%%%
+the will-o-the-wisp's
+
+%%%%
+the bunyip's
+
+%%%%
+the boulder beetle's
+
+%%%%
+the cane toad's
+
+%%%%
+the goliath frog's
+
+%%%%
+the fenstrider witch's
+
+%%%%
+the palentonga's
+
+%%%%
+the royal mummy's
+
+%%%%
+the eleionoma's
+
+%%%%
+the lemure's
+
+%%%%
+the endoplasm's
+
+%%%%
+the rockslime's
+
+%%%%
+the quicksilver ooze's
+
+%%%%
+the kobold brigand's
+
+%%%%
+the dread lich's
+
+%%%%
+the djinni's
+
+%%%%
+the salamander tyrant's
+
+%%%%
+the animated armour's
+
+%%%%
+# Test monsters can be created in Arena
+%%%%
+the test spawner's
+
+%%%%
+the test statue's
+
+%%%%
+the test blob's
+
+%%%%
+the sensed monster's
+
+%%%%
+the friendly sensed monster's
+
+%%%%
+the trivial sensed monster's
+
+%%%%
+the easy sensed monster's
+
+%%%%
+the tough sensed monster's
+
+%%%%
+the nasty sensed monster's
+
+%%%%
+the sting beast's
+
+%%%%
+the bat beast's
+
+%%%%
+the fire beast's
+
+%%%%
+the weird beast's
+
+%%%%
+the shock beast's
+
+%%%%
+the ox beast's
+
+%%%%
+the spectre's
+
+%%%%
+the centipede's
+
+%%%%
+the mad acolyte of Lugonu's
+
+%%%%
+the bog mummy's
+
+%%%%
+the lunar statue's
+
+%%%%
+
+# unseen monster
+%%%%
+something's
+
+%%%%
+
+# derived monsters containing the name of the original monster
+# "elf zombie", "orc skeleton", etc.
+%%%%
+the @monster@ zombie's
+
+%%%%
+the @monster@ skeleton's
+
+%%%%
+the @monster@ simulacrum's
+
+%%%%
+
+# irregular derived monsters
+
+%%%%
+the Lernaean hydra zombie's
+
+%%%%
+the monstrous demonspawn zombie's
+
+%%%%
+the gelid demonspawn zombie's
+
+%%%%
+the infernal demonspawn zombie's
+
+%%%%
+the torturous demonspawn zombie's
+
+%%%%
+the black draconian zombie's
+
+%%%%
+the yellow draconian zombie's
+
+%%%%
+the pale draconian zombie's
+
+%%%%
+the green draconian zombie's
+
+%%%%
+the purple draconian zombie's
+
+%%%%
+the red draconian zombie's
+
+%%%%
+the white draconian zombie's
+
+%%%%
+the grey draconian zombie's
+
+%%%%
+
+%%%%
+the Lernaean hydra skeleton's
+
+%%%%
+the monstrous demonspawn skeleton's
+
+%%%%
+the gelid demonspawn skeleton's
+
+%%%%
+the infernal demonspawn skeleton's
+
+%%%%
+the torturous demonspawn skeleton's
+
+%%%%
+the black draconian skeleton's
+
+%%%%
+the yellow draconian skeleton's
+
+%%%%
+the pale draconian skeleton's
+
+%%%%
+the green draconian skeleton's
+
+%%%%
+the purple draconian skeleton's
+
+%%%%
+the red draconian skeleton's
+
+%%%%
+the white draconian skeleton's
+
+%%%%
+the grey draconian skeleton's
+
+%%%%
+
+%%%%
+the Lernaean hydra simulacrum's
+
+%%%%
+the monstrous demonspawn simulacrum's
+
+%%%%
+the gelid demonspawn simulacrum's
+
+%%%%
+the infernal demonspawn simulacrum's
+
+%%%%
+the torturous demonspawn simulacrum's
+
+%%%%
+the black draconian simulacrum's
+
+%%%%
+the yellow draconian simulacrum's
+
+%%%%
+the pale draconian simulacrum's
+
+%%%%
+the green draconian simulacrum's
+
+%%%%
+the purple draconian simulacrum's
+
+%%%%
+the red draconian simulacrum's
+
+%%%%
+the white draconian simulacrum's
+
+%%%%
+the grey draconian simulacrum's
+
+%%%%
+
+##################
+# Sprint Monsters
+##################
+
+%%%%
+the kamikaze kobold's
+
+%%%%
+the orb golem's
+
+%%%%
+the orb of ice's
+
+%%%%
+the orb of electricity's
+
+%%%%
+the naga warlord's
+
+%%%%
+the witch's
+
+%%%%
+the dire wolf spider's
+
+%%%%
+the phase spider's
+
+%%%%
+the dimme's
+
+%%%%
+the sulfuric acid blob's
+
+%%%%
+the vault guard captain's
+
+%%%%
+the Master Blaster's
+
+%%%%
+Master Blaster's
+
+%%%%
+the oklob sapling priest's
+
+%%%%
+the oklob sapling wizard's
+
+%%%%
+the oklob plant conjurer's
+
+%%%%
+the oklob plant summoner's
+
+%%%%
+the oklob plant shifter's
+
+%%%%
+the oklob plant meteorologist's
+
+%%%%
+the oklob plant demonologist's
+
+%%%%
+the oklob plant annihilator's
+
+%%%%
+the bag of meat's
+
+%%%%
+the meat berserker's
+
+%%%%
+the tyrant's
+
+%%%%
+the meat hydra's
+
+%%%%
+the dread's
+
+%%%%
+the destroyer's
+
+%%%%
+the scourge's
+
+%%%%
+the sculptor of flesh's
+
+%%%%
+the observer's
+
+%%%%
+the accursed's
+
+%%%%
+the vile's
+
+%%%%
+the meat beast's
+
+%%%%
+the wretched soul's
+
+%%%%
+the fleshlord's
+
+%%%%

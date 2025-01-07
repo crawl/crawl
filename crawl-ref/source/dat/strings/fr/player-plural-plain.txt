@@ -1,0 +1,134 @@
+###############################################################################
+#
+# Player - plural, plain, nominative
+#
+# The parameter @player_genus_plural@ is included in some messages in
+# monspeak.txt and wpnnoise.txt. Species is used for genus in many cases.
+#
+###############################################################################
+
+##############################################
+# Player genus
+# NOTE: If not listed then species is used
+##############################################
+%%%%
+# Barachi
+Frogs
+
+%%%%
+# genus for draconians of all colours
+Draconians
+
+%%%%
+# Deep Dwarf
+Dwarves
+
+%%%%
+# Deep Elf
+Elves
+
+%%%%
+# Demigod
+Gods
+
+%%%%
+# Felid
+Cats
+
+%%%%
+# Formicid
+Ants
+
+%%%%
+# Octopode
+Octopi
+
+%%%%
+# Hill Orc
+Orcs
+
+%%%%
+
+##############################################
+# Player species
+##############################################
+%%%%
+Barachim
+
+%%%%
+Deep Dwarves
+
+%%%%
+Deep Elves
+
+%%%%
+Demigods
+
+%%%%
+Demonspawns
+
+%%%%
+Djinn
+
+%%%%
+Felids
+
+%%%%
+Formicids
+
+%%%%
+Gargoyles
+
+%%%%
+Ghouls
+
+%%%%
+Gnolls
+
+%%%%
+Hill Orcs
+
+%%%%
+Humans
+
+%%%%
+Kobolds
+
+%%%%
+# same as singular
+#Merfolk
+#Meervolk
+%%%%
+Minotaurs
+
+%%%%
+Mummies
+
+%%%%
+Nagas
+
+%%%%
+Octopodes
+
+%%%%
+Ogres
+
+%%%%
+Palentongas
+
+%%%%
+Spriggans
+
+%%%%
+Tengus
+
+%%%%
+Trolls
+
+%%%%
+Vampires
+
+%%%%
+Vine Stalkers
+
+%%%%

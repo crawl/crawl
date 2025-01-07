@@ -1,0 +1,688 @@
+###############################################################################
+#
+# Monster properties
+#
+# Used in a couple of places:
+#  1. When targeting
+#  2. When examining with xv in brackets after the monster name
+#  3. On mouse hover, in the sentence: "This monster is %s."
+#  4. In a message when monster comes into view
+#
+# For #3, a custom sentence is used for some props, instead of sticking the
+# property string into the generic sentence above.
+#
+# Additionally, some properties have a different short form (some even have
+# singular and plural short forms), but all the above places use the long form,
+# so not sure where the short forms are used.
+#
+###############################################################################
+
+%%%%
+friendly
+
+%%%%
+peaceful
+
+%%%%
+neutral
+
+%%%%
+indifferent
+
+%%%%
+wandering
+
+%%%%
+drifting
+
+%%%%
+sleepwalking
+
+%%%%
+charmed
+
+%%%%
+regenerating
+
+%%%%
+engulfed
+
+%%%%
+paralysed
+
+%%%%
+petrified
+
+%%%%
+petrifying slowly
+
+%%%%
+# short form
+petrifying
+
+%%%%
+confused
+
+%%%%
+# hexed - long form. This obviously doesn't work in a sentence, but it
+# doesn't seem to be used at all, so probably doesn't matter.
+control wrested from you
+
+%%%%
+# hexed - short form
+hexed
+
+%%%%
+summoned
+
+%%%%
+durably summoned
+
+%%%%
+expiring
+
+%%%%
+mesmerising
+
+%%%%
+berserk
+
+%%%%
+rolling
+
+%%%%
+# duplicate of zap
+#inner flame
+#innere Flamme
+%%%%
+# reflecting damage - long form
+# not used in sentence
+reflecting injuries
+
+%%%%
+# reflecting damage - short singular
+reflects damage
+
+%%%%
+# reflecting damage - short plural
+reflect damage
+
+%%%%
+soul bound
+
+%%%%
+# short form plural
+souls bound
+
+%%%%
+strong
+
+%%%%
+spells empowered
+
+%%%%
+# short form
+empowered
+
+%%%%
+fully charged
+
+%%%%
+# fully charged - short form
+charged
+
+%%%%
+partially charged
+
+%%%%
+# partially charged - short form
+charging
+
+%%%%
+# agile - long form
+unusually agile
+
+%%%%
+# agile - short form
+agile
+
+%%%%
+# swift - long form
+covering ground quickly
+
+%%%%
+# swift - short form
+swift
+
+%%%%
+stilling the winds
+
+%%%%
+stilling wind
+
+%%%%
+# silencing - long form
+radiating silence
+
+%%%%
+# silencing - short form
+silencing
+
+%%%%
+ready to howl
+
+%%%%
+# ready to howl - short form
+can howl
+
+%%%%
+brilliance aura
+
+%%%%
+# brilliance aura - short form plural
+brilliance auras
+
+%%%%
+surrounded by a freezing vortex
+
+%%%%
+vortex
+
+%%%%
+vortices
+
+%%%%
+# vortex cooldown - long form
+surrounded by restless winds
+
+%%%%
+# vortex cooldown - short form
+gusty
+
+%%%%
+frenzied and insane
+
+%%%%
+insane
+
+%%%%
+inspiring fear
+
+%%%%
+scary
+
+%%%%
+chanting recall
+
+%%%%
+repelling missiles
+
+%%%%
+# short form singular
+repels missiles
+
+%%%%
+# short form plural
+repel missiles
+
+%%%%
+radiating toxic energy
+
+%%%%
+# short form singular
+toxic aura
+
+%%%%
+# short form plural
+toxic auras
+
+%%%%
+concentrated venom
+
+%%%%
+# black mark - long form
+absorbing vital energies
+
+%%%%
+black mark
+
+%%%%
+black marks
+
+%%%%
+# icemail - long form
+surrounded by an icy envelope
+
+%%%%
+icemail
+
+%%%%
+unusually resistant
+
+%%%%
+resistant
+
+%%%%
+slightly transparent
+
+%%%%
+invisible
+
+%%%%
+strong-willed
+
+%%%%
+sheltered from injuries
+
+%%%%
+sheltered
+
+%%%%
+incited by Gozag
+
+%%%%
+incited
+
+%%%%
+surrounded by thunder
+
+%%%%
+surrounded by flames
+
+%%%%
+surrounded by chaotic energy
+
+%%%%
+surrounded by mutagenic energy
+
+%%%%
+surrounded by fog
+
+%%%%
+surrounded by freezing clouds
+
+%%%%
+surrounded by negative energy
+
+%%%%
+surrounded by acidic fog
+
+%%%%
+surrounded by foul miasma
+
+%%%%
+# short form of all the "surrounded by..." props
+clouds
+
+%%%%
+possessable
+
+%%%%
+entangled in a net
+
+%%%%
+# short form
+caught
+
+%%%%
+entangled in a web
+
+%%%%
+# short form
+webbed
+
+%%%%
+asleep
+
+%%%%
+# the equivalent of asleep for monsters that don't sleep (e.g. Orbs of Fire)
+dormant
+
+%%%%
+unaware
+
+%%%%
+blind
+
+%%%%
+infested
+
+%%%%
+stupefied
+
+%%%%
+withering away
+
+%%%%
+# short form
+withering
+
+%%%%
+crumbling away
+
+%%%%
+# short form
+crumbling
+
+%%%%
+lost in madness
+
+%%%%
+# short form
+mad
+
+%%%%
+fleeing
+
+%%%%
+dazed
+
+%%%%
+mute
+
+%%%%
+encased in ice
+
+%%%%
+# short form
+frozen
+
+%%%%
+asphyxiating
+
+%%%%
+covered in liquid flames
+
+%%%%
+# short form
+burning
+
+%%%%
+poisoned
+
+%%%%
+very poisoned
+
+%%%%
+extremely poisoned
+
+%%%%
+catching @possessive@ breath
+
+%%%%
+# short form
+catching breath
+
+%%%%
+weak-willed
+
+%%%%
+more vulnerable to fire
+
+%%%%
+# short form
+inflammable
+
+%%%%
+more vulnerable to poison
+
+%%%%
+# short form
+easily poisoned
+
+%%%%
+misshapen and mutated
+
+%%%%
+# short form
+misshapen
+
+%%%%
+covered in acid
+
+%%%%
+# short form
+corroded
+
+%%%%
+# flayed - long form
+covered in terrible wounds
+
+%%%%
+# short form
+flayed
+
+%%%%
+constricted by roots
+
+%%%%
+# short form
+rooted
+
+%%%%
+constricted by zombie hands
+
+%%%%
+# short form
+clutched
+
+%%%%
+skewered by barbs
+
+%%%%
+# short form
+skewered
+
+%%%%
+sick
+
+%%%%
+weak
+
+%%%%
+magic-sapped
+
+%%%%
+# corona - long form
+softly glowing
+
+%%%%
+corona
+
+%%%%
+coronas
+
+%%%%
+waterlogged
+
+%%%%
+# anchored - long form
+unable to translocate
+
+%%%%
+anchored
+
+%%%%
+covering ground slowly
+
+%%%%
+# short form
+struggling
+
+%%%%
+idealised
+
+%%%%
+disembodied soul
+
+%%%%
+ally target
+
+%%%%
+# has custom sentence for #3
+hasn't noticed you
+
+%%%%
+lightly drained
+
+%%%%
+heavily drained
+
+%%%%
+# short form for lightly/heavily drained
+drained
+
+%%%%
+haloed
+
+%%%%
+umbra
+
+%%%%
+
+# affected by Usk pain bond
+%%%%
+sharing its pain
+
+%%%%
+sharing her pain
+
+%%%%
+sharing his pain
+
+%%%%
+sharing their pain
+
+%%%%
+sharing @possessive@ pain
+
+%%%%
+# short form
+pain bonded
+
+%%%%
+
+# duplicate of item property
+%%%%
+#curare
+#Curare
+%%%%
+
+%%%%
+tiny
+
+%%%%
+very small
+
+%%%%
+small
+
+%%%%
+medium
+
+%%%%
+large
+
+%%%%
+very large
+
+%%%%
+giant
+
+%%%%
+
+# how fast
+%%%%
+extremely fast
+
+%%%%
+very fast
+
+%%%%
+fast
+
+%%%%
+# never actually displayed, but it's in the code
+normal
+
+%%%%
+slow
+
+%%%%
+very slow
+
+%%%%
+
+# how wounded?
+%%%%
+almost destroyed
+
+%%%%
+almost dead
+
+%%%%
+severely damaged
+
+%%%%
+severely wounded
+
+%%%%
+heavily damaged
+
+%%%%
+heavily wounded
+
+%%%%
+moderately damaged
+
+%%%%
+moderately wounded
+
+%%%%
+lightly damaged
+
+%%%%
+lightly wounded
+
+%%%%
+not damaged
+
+%%%%
+not wounded
+
+%%%%
+
+%%%%
+constricted by you
+
+%%%%
+constricted by %s
+
+%%%%
+held by you
+
+%%%%
+held by %s
+
+%%%%
+constricting you
+
+%%%%
+constricting %s
+
+%%%%
+holding you
+
+%%%%
+holding %s
+
+%%%%
+
+#############################
+# Counted plural forms
+#############################
+
+%%%%
+%d ally target
+
+%%%%

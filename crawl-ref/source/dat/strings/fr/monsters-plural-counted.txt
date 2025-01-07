@@ -1,0 +1,1721 @@
+###############################################################################
+#
+# Monsters - plural, counted, nominative
+#
+###############################################################################
+
+%%%%
+%d program bugs
+
+%%%%
+%d formicids
+
+%%%%
+%d entropy weavers
+
+%%%%
+%d bats
+
+%%%%
+%d butterflies
+
+%%%%
+%d vampire bats
+
+%%%%
+%d fire bats
+
+%%%%
+%d ice bats
+
+%%%%
+# rebadged spectral bat
+%d ghost-faced bats
+
+%%%%
+%d phase bats
+
+%%%%
+%d skeletal bats
+
+%%%%
+%d microbats
+
+%%%%
+%d megabats
+
+%%%%
+%d giga bats
+
+%%%%
+%d bennus
+
+%%%%
+%d caustic shrikes
+
+%%%%
+%d shard shrikes
+
+%%%%
+%d centaurs
+
+%%%%
+%d centaur warriors
+
+%%%%
+%d yaktaurs
+
+%%%%
+%d yaktaur captains
+
+%%%%
+%d fauns
+
+%%%%
+%d satyrs
+
+%%%%
+%d draconians
+
+%%%%
+%d black draconians
+
+%%%%
+%d yellow draconians
+
+%%%%
+%d pale draconians
+
+%%%%
+%d green draconians
+
+%%%%
+%d purple draconians
+
+%%%%
+%d red draconians
+
+%%%%
+%d white draconians
+
+%%%%
+%d grey draconians
+
+%%%%
+%d draconian stormcallers
+
+%%%%
+%d draconian monks
+
+%%%%
+%d draconian shifters
+
+%%%%
+%d draconian annihilators
+
+%%%%
+%d draconian knights
+
+%%%%
+%d draconian scorchers
+
+%%%%
+%d elves
+
+%%%%
+%d deep elf knights
+
+%%%%
+%d deep elf archers
+
+%%%%
+%d deep elf blademasters
+
+%%%%
+%d deep elf master archers
+
+%%%%
+%d deep elf zephyrmancers
+
+%%%%
+%d deep elf pyromancers
+
+%%%%
+%d deep elf high priests
+
+%%%%
+%d deep elf demonologists
+
+%%%%
+%d deep elf annihilators
+
+%%%%
+%d deep elf sorcerers
+
+%%%%
+%d deep elf death magi
+
+%%%%
+%d deep elf elementalists
+
+%%%%
+%d wandering mushrooms
+
+%%%%
+%d deathcaps
+
+%%%%
+%d thorn hunters
+
+%%%%
+%d shambling mangroves
+
+%%%%
+%d vine stalkers
+
+%%%%
+%d goblins
+
+%%%%
+%d hobgoblins
+
+%%%%
+%d gnolls
+
+%%%%
+%d gnoll shamans
+
+%%%%
+%d gnoll sergeants
+
+%%%%
+%d boggarts
+
+%%%%
+%d dwarves
+
+%%%%
+%d deep dwarves
+
+%%%%
+%d jackals
+
+%%%%
+%d hounds
+
+%%%%
+%d howler monkeys
+
+%%%%
+%d wargs
+
+%%%%
+%d wolves
+
+%%%%
+%d hogs
+
+%%%%
+%d hell hounds
+
+%%%%
+%d doom hounds
+
+%%%%
+%d raiju
+
+%%%%
+%d hell hogs
+
+%%%%
+%d holy swine
+
+%%%%
+%d felids
+
+%%%%
+%d bears
+
+%%%%
+%d polar bears
+
+%%%%
+%d black bears
+
+%%%%
+%d spriggans
+
+%%%%
+%d spriggan riders
+
+%%%%
+%d spriggan druids
+
+%%%%
+%d spriggan berserkers
+
+%%%%
+%d spriggan air magi
+
+%%%%
+%d spriggan defenders
+
+%%%%
+%d spriggan bakers
+
+%%%%
+%d spriggan hatters
+
+%%%%
+%d drakes
+
+%%%%
+%d swamp drakes
+
+%%%%
+%d rime drakes
+
+%%%%
+%d wind drakes
+
+%%%%
+%d lindwurms
+
+%%%%
+%d death drakes
+
+%%%%
+%d giant lizards
+
+%%%%
+%d frilled lizards
+
+%%%%
+%d iguanas
+
+%%%%
+%d basilisks
+
+%%%%
+%d wyverns
+
+%%%%
+%d komodo dragons
+
+%%%%
+%d merfolk
+
+%%%%
+%d merfolk impalers
+
+%%%%
+%d merfolk javelineers
+
+%%%%
+%d merfolk aquamancers
+
+%%%%
+%d merfolk sirens
+
+%%%%
+%d merfolk avatars
+
+%%%%
+%d water nymphs
+
+%%%%
+%d bog bodies
+
+%%%%
+%d necrophages
+
+%%%%
+%d bloated husks
+
+%%%%
+%d ghouls
+
+%%%%
+%d orcs
+
+%%%%
+%d orc wizards
+
+%%%%
+%d orc priests
+
+%%%%
+%d orc warriors
+
+%%%%
+%d orc knights
+
+%%%%
+%d orc warlords
+
+%%%%
+%d orc sorcerers
+
+%%%%
+%d orc high priests
+
+%%%%
+%d humans
+
+%%%%
+%d hell knights
+
+%%%%
+%d death knights
+
+%%%%
+%d necromancers
+
+%%%%
+%d wizards
+
+%%%%
+%d vault guards
+
+%%%%
+%d vault sentinels
+
+%%%%
+%d vault wardens
+
+%%%%
+%d ironbound convokers
+
+%%%%
+%d ironbound frosthearts
+
+%%%%
+%d ironbound preservers
+
+%%%%
+%d ironbound beastmasters
+
+%%%%
+%d ironbound thunderhulks
+
+%%%%
+%d imperial myrmidons
+
+%%%%
+%d servants of whispers
+
+%%%%
+%d ragged hierophants
+
+%%%%
+%d shapeshifters
+
+%%%%
+%d glowing shapeshifters
+
+%%%%
+%d Killer Klowns
+
+%%%%
+%d demigods
+
+%%%%
+%d halflings
+
+%%%%
+%d rats
+
+%%%%
+%d quokkas
+
+%%%%
+%d river rats
+
+%%%%
+%d hell rats
+
+%%%%
+%d giant cockroaches
+
+%%%%
+%d scorpions
+
+%%%%
+%d emperor scorpions
+
+%%%%
+%d death scarabs
+
+%%%%
+%d spiders
+
+%%%%
+%d tarantellas
+
+%%%%
+%d jumping spiders
+
+%%%%
+%d wolf spiders
+
+%%%%
+%d redbacks
+
+%%%%
+%d demonic crawlers
+
+%%%%
+%d orb spiders
+
+%%%%
+%d alligators
+
+%%%%
+%d snapping turtles
+
+%%%%
+%d alligator snapping turtles
+
+%%%%
+%d crabs
+
+%%%%
+%d fire crabs
+
+%%%%
+%d ghost crabs
+
+%%%%
+%d apocalypse crabs
+
+%%%%
+%d ugly things
+
+%%%%
+%d very ugly things
+
+%%%%
+%d fire vortices
+
+%%%%
+%d spatial vortices
+
+%%%%
+%d spatial maelstroms
+
+%%%%
+%d insubstantial wisps
+
+%%%%
+%d twisters
+
+%%%%
+%d worms
+
+%%%%
+%d swamp worms
+
+%%%%
+%d tyrant leeches
+
+%%%%
+%d dart slugs
+
+%%%%
+%d torpor snails
+
+%%%%
+%d elephant slugs
+
+%%%%
+%d unseen horrors
+
+%%%%
+%d small abominations
+
+%%%%
+%d ancient zymes
+
+%%%%
+%d worldbinders
+
+%%%%
+%d killer bees
+
+%%%%
+%d queen bees
+
+%%%%
+%d vampire mosquitoes
+
+%%%%
+%d hornets
+
+%%%%
+%d meliai
+
+%%%%
+%d spark wasps
+
+%%%%
+%d moths
+
+%%%%
+%d ghost moths
+
+%%%%
+%d moths of wrath
+
+%%%%
+%d wights
+
+%%%%
+%d skeletal warriors
+
+%%%%
+%d ancient champions
+
+%%%%
+%d flying skulls
+
+%%%%
+%d curse skulls
+
+%%%%
+%d curse toes
+
+%%%%
+%d angels
+
+%%%%
+%d cherubim
+
+%%%%
+%d seraphim
+
+%%%%
+%d daevas
+
+%%%%
+%d profane servitors
+
+%%%%
+%d giants
+
+%%%%
+%d cyclopes
+
+%%%%
+%d ettins
+
+%%%%
+%d fire giants
+
+%%%%
+%d frost giants
+
+%%%%
+%d stone giants
+
+%%%%
+%d titans
+
+%%%%
+%d juggernauts
+
+%%%%
+%d iron giants
+
+%%%%
+%d dragons
+
+%%%%
+%d fire dragons
+
+%%%%
+%d hydras
+
+%%%%
+%d ice dragons
+
+%%%%
+%d steam dragons
+
+%%%%
+%d swamp dragons
+
+%%%%
+%d acid dragons
+
+%%%%
+%d quicksilver dragons
+
+%%%%
+%d iron dragons
+
+%%%%
+%d storm dragons
+
+%%%%
+%d golden dragons
+
+%%%%
+%d shadow dragons
+
+%%%%
+%d bone dragons
+
+%%%%
+%d pearl dragons
+
+%%%%
+%d elementals
+
+%%%%
+%d earth elementals
+
+%%%%
+%d fire elementals
+
+%%%%
+%d water elementals
+
+%%%%
+%d air elementals
+
+%%%%
+%d iron elementals
+
+%%%%
+%d elemental wellsprings
+
+%%%%
+%d giant frogs
+
+%%%%
+%d bullfrogs
+
+%%%%
+%d spiny frogs
+
+%%%%
+%d blink frogs
+
+%%%%
+%d barachim
+
+%%%%
+%d floating eyes
+
+%%%%
+%d glowing orange brains
+
+%%%%
+%d great orbs of eyes
+
+%%%%
+%d greater orbs of eyes
+
+%%%%
+%d shining eyes
+
+%%%%
+%d eyes of devastation
+
+%%%%
+%d golden eyes
+
+%%%%
+%d ophanim
+
+%%%%
+%d manticores
+
+%%%%
+%d minotaurs
+
+%%%%
+%d sphinxes
+
+%%%%
+%d harpies
+
+%%%%
+%d mutant beasts
+
+%%%%
+%d ancestors
+
+%%%%
+%d knights
+
+%%%%
+%d battlemagi
+
+%%%%
+%d hexers
+
+%%%%
+%d jellies
+
+%%%%
+%d slime creatures
+
+%%%%
+%d merged slime creatures
+
+%%%%
+%d azure jellies
+
+%%%%
+%d acid blobs
+
+%%%%
+%d kobolds
+
+%%%%
+%d big kobolds
+
+%%%%
+%d kobold demonologists
+
+%%%%
+%d liches
+
+%%%%
+%d ancient liches
+
+%%%%
+%d antique liches
+
+%%%%
+%d revenants
+
+%%%%
+%d halazid warlocks
+
+%%%%
+%d mummies
+
+%%%%
+%d guardian mummies
+
+%%%%
+%d greater mummies
+
+%%%%
+%d mummy priests
+
+%%%%
+%d nagas
+
+%%%%
+%d naga magi
+
+%%%%
+%d naga sharpshooters
+
+%%%%
+%d naga ritualists
+
+%%%%
+%d naga warriors
+
+%%%%
+%d nagarajas
+
+%%%%
+%d ogres
+
+%%%%
+%d two-headed ogres
+
+%%%%
+%d ogre magi
+
+%%%%
+%d plants
+
+%%%%
+%d demonic plants
+
+%%%%
+%d withered plants
+
+%%%%
+%d oklob saplings
+
+%%%%
+%d oklob plants
+
+%%%%
+%d bushes
+
+%%%%
+%d burning bushes
+
+%%%%
+%d toadstools
+
+%%%%
+%d fungi
+
+%%%%
+%d ballistomycetes
+
+%%%%
+%d hyperactive ballistomycetes
+
+%%%%
+%d briar patches
+
+%%%%
+%d tengu
+
+%%%%
+%d tengu conjurers
+
+%%%%
+%d tengu warriors
+
+%%%%
+%d tengu reavers
+
+%%%%
+%d efreet
+
+%%%%
+%d rakshasas
+
+%%%%
+%d dryads
+
+%%%%
+%d snaplasher vines
+
+%%%%
+%d snaplasher vine segments
+
+%%%%
+%d snakes
+
+%%%%
+%d ball pythons
+
+%%%%
+%d adders
+
+%%%%
+%d water moccasins
+
+%%%%
+%d black mambas
+
+%%%%
+%d sea snakes
+
+%%%%
+%d anacondas
+
+%%%%
+%d guardian serpents
+
+%%%%
+%d shock serpents
+
+%%%%
+%d mana vipers
+
+%%%%
+%d trolls
+
+%%%%
+%d iron trolls
+
+%%%%
+%d deep trolls
+
+%%%%
+%d deep troll earth magi
+
+%%%%
+%d deep troll shamans
+
+%%%%
+%d vampires
+
+%%%%
+%d vampire knights
+
+%%%%
+%d vampire magi
+
+%%%%
+%d jiangshi
+
+%%%%
+%d ghosts
+
+%%%%
+%d phantoms
+
+%%%%
+%d hungry ghosts
+
+%%%%
+%d flayed ghosts
+
+%%%%
+%d player ghosts
+
+%%%%
+%d shadows
+
+%%%%
+%d silent spectres
+
+%%%%
+%d drowned souls
+
+%%%%
+%d wraiths
+
+%%%%
+%d shadow wraiths
+
+%%%%
+%d freezing wraiths
+
+%%%%
+%d eidola
+
+%%%%
+%d phantasmal warriors
+
+%%%%
+%d large abominations
+
+%%%%
+%d thrashing horrors
+
+%%%%
+%d tentacled monstrosities
+
+%%%%
+%d Orb Guardians
+
+%%%%
+%d tentacled starspawn
+
+%%%%
+%d starspawn tentacles
+
+%%%%
+%d starspawn tentacle segments
+
+%%%%
+%d starcursed masses
+
+%%%%
+%d dream sheep
+
+%%%%
+%d yaks
+
+%%%%
+%d death yaks
+
+%%%%
+%d catoblepae
+
+%%%%
+%d elephants
+
+%%%%
+%d dire elephants
+
+%%%%
+%d hellephants
+
+%%%%
+%d apis
+
+%%%%
+%d ice beasts
+
+%%%%
+%d sky beasts
+
+%%%%
+%d zombies
+
+%%%%
+%d skeletons
+
+%%%%
+%d simulacra
+
+%%%%
+%d small zombies
+
+%%%%
+%d small skeletons
+
+%%%%
+%d small simulacra
+
+%%%%
+%d large zombies
+
+%%%%
+%d large skeletons
+
+%%%%
+%d large simulacra
+
+%%%%
+%d spectral things
+
+%%%%
+%d electric eels
+
+%%%%
+%d krakens
+
+%%%%
+%d tentacles
+
+%%%%
+%d tentacle segments
+
+%%%%
+%d octopodes
+
+%%%%
+%d lava snakes
+
+%%%%
+%d salamanders
+
+%%%%
+%d salamander mystics
+
+%%%%
+%d Hellbinders
+
+%%%%
+%d Cloud Mages
+
+%%%%
+%d players
+
+%%%%
+%d player illusions
+
+%%%%
+%d dancing weapons
+
+%%%%
+%d spectral weapons
+
+%%%%
+%d eldritch tentacles
+
+%%%%
+%d eldritch tentacle segments
+
+%%%%
+%d demonspawn
+
+%%%%
+%d monstrous demonspawn
+
+%%%%
+%d gelid demonspawn
+
+%%%%
+%d infernal demonspawn
+
+%%%%
+%d torturous demonspawn
+
+%%%%
+%d blood saints
+
+%%%%
+%d warmongers
+
+%%%%
+%d corrupters
+
+%%%%
+%d black suns
+
+%%%%
+%d crimson imps
+
+%%%%
+%d quasits
+
+%%%%
+%d white imps
+
+%%%%
+%d ufetubi
+
+%%%%
+%d iron imps
+
+%%%%
+%d shadow imps
+
+%%%%
+%d rust devils
+
+%%%%
+%d orange demons
+
+%%%%
+%d red devils
+
+%%%%
+%d hellwings
+
+%%%%
+%d ice devils
+
+%%%%
+%d chaos spawn
+
+%%%%
+%d sun demons
+
+%%%%
+%d soul eaters
+
+%%%%
+%d smoke demons
+
+%%%%
+%d neqoxecs
+
+%%%%
+%d ynoxinuls
+
+%%%%
+%d sixfirhies
+
+%%%%
+%d shadow demons
+
+%%%%
+%d green deaths
+
+%%%%
+%d blizzard demons
+
+%%%%
+%d balrugs
+
+%%%%
+%d cacodemons
+
+%%%%
+%d hell beasts
+
+%%%%
+%d hellions
+
+%%%%
+%d reapers
+
+%%%%
+%d lorocyprocas
+
+%%%%
+%d tormentors
+
+%%%%
+%d Brimstone Fiends
+
+%%%%
+%d Ice Fiends
+
+%%%%
+%d Tzitzimimeh
+
+%%%%
+%d Hell Sentinels
+
+%%%%
+%d Executioners
+
+%%%%
+%d animated trees
+
+%%%%
+%d golems
+
+%%%%
+%d saltlings
+
+%%%%
+%d peacekeepers
+
+%%%%
+%d iron golems
+
+%%%%
+%d crystal guardians
+
+%%%%
+%d toenail golems
+
+%%%%
+%d electric golems
+
+%%%%
+%d ushabtiu
+
+%%%%
+%d guardian golems
+
+%%%%
+%d flesh golems
+
+%%%%
+%d spellforged servitors
+
+%%%%
+%d ice statues
+
+%%%%
+%d obsidian statues
+
+%%%%
+%d orange crystal statues
+
+%%%%
+%d statues
+
+%%%%
+%d training dummies
+
+%%%%
+%d pillars of salt
+
+%%%%
+%d blocks of ice
+
+%%%%
+%d diamond obelisks
+
+%%%%
+%d lightning spires
+
+%%%%
+%d gargoyles
+
+%%%%
+%d war gargoyles
+
+%%%%
+%d molten gargoyles
+
+%%%%
+%d pandemonium lords
+
+%%%%
+%d hell lords
+
+%%%%
+%d ball lightnings
+
+%%%%
+%d ballistomycete spores
+
+%%%%
+%d lost souls
+
+%%%%
+%d lurking horrors
+
+%%%%
+%d orbs of fire
+
+%%%%
+%d orbs of destruction
+
+%%%%
+%d fulminant prisms
+
+%%%%
+%d wretched stars
+
+%%%%
+%d battlespheres
+
+%%%%
+%d death cobs
+
+%%%%
+%d moon trolls
+
+%%%%
+%d foxfires
+
+%%%%
+%d nameless horrors
+
+%%%%
+%d will-o-the-wisps
+
+%%%%
+%d bunyips
+
+%%%%
+%d boulder beetles
+
+%%%%
+%d cane toads
+
+%%%%
+%d goliath frogs
+
+%%%%
+%d fenstrider witches
+
+%%%%
+%d palentongas
+
+%%%%
+%d royal mummies
+
+%%%%
+%d eleionomas
+
+%%%%
+%d lemures
+
+%%%%
+%d endoplasms
+
+%%%%
+%d rockslimes
+
+%%%%
+%d quicksilver oozes
+
+%%%%
+%d kobold brigands
+
+%%%%
+%d dread liches
+
+%%%%
+%d djinn
+
+%%%%
+%d salamander tyrants
+
+%%%%
+%d animated armours
+
+%%%%
+%d test spawners
+
+%%%%
+%d test statues
+
+%%%%
+%d test blobs
+
+%%%%
+%d sensed monsters
+
+%%%%
+%d friendly sensed monsters
+
+%%%%
+%d trivial sensed monsters
+
+%%%%
+%d easy sensed monsters
+
+%%%%
+%d tough sensed monsters
+
+%%%%
+%d nasty sensed monsters
+
+%%%%
+%d sting beasts
+
+%%%%
+%d bat beasts
+
+%%%%
+%d fire beasts
+
+%%%%
+%d weird beasts
+
+%%%%
+%d shock beasts
+
+%%%%
+%d ox beasts
+
+%%%%
+%d spectres
+
+%%%%
+%d centipedes
+
+%%%%
+%d mad acolytes of Lugonu
+
+%%%%
+%d bog mummies
+
+%%%%
+%d lunar statues
+
+%%%%
+
+# derived monsters containing the name of the original monster
+# "elf zombie", "orc skeleton", etc.
+%%%%
+%d @monster@ zombies
+
+%%%%
+%d @monster@ skeletons
+
+%%%%
+%d @monster@ simulacra
+
+%%%%
+
+# irregular derived monsters
+
+%%%%
+%d monstrous demonspawn zombies
+
+%%%%
+%d gelid demonspawn zombies
+
+%%%%
+%d infernal demonspawn zombies
+
+%%%%
+%d torturous demonspawn zombies
+
+%%%%
+%d black draconian zombies
+
+%%%%
+%d yellow draconian zombies
+
+%%%%
+%d pale draconian zombies
+
+%%%%
+%d green draconian zombies
+
+%%%%
+%d purple draconian zombies
+
+%%%%
+%d red draconian zombies
+
+%%%%
+%d white draconian zombies
+
+%%%%
+%d grey draconian zombies
+
+%%%%
+
+%%%%
+%d monstrous demonspawn skeletons
+
+%%%%
+%d gelid demonspawn skeletons
+
+%%%%
+%d infernal demonspawn skeletons
+
+%%%%
+%d torturous demonspawn skeletons
+
+%%%%
+%d black draconian skeletons
+
+%%%%
+%d yellow draconian skeletons
+
+%%%%
+%d pale draconian skeletons
+
+%%%%
+%d green draconian skeletons
+
+%%%%
+%d purple draconian skeletons
+
+%%%%
+%d red draconian skeletons
+
+%%%%
+%d white draconian skeletons
+
+%%%%
+%d grey draconian skeletons
+
+%%%%
+
+%%%%
+%d monstrous demonspawn simulacrum
+
+%%%%
+%d gelid demonspawn simulacrum
+
+%%%%
+%d infernal demonspawn simulacrum
+
+%%%%
+%d torturous demonspawn simulacrum
+
+%%%%
+%d black draconian simulacrum
+
+%%%%
+%d yellow draconian simulacrum
+
+%%%%
+%d pale draconian simulacrum
+
+%%%%
+%d green draconian simulacrum
+
+%%%%
+%d purple draconian simulacrum
+
+%%%%
+%d red draconian simulacrum
+
+%%%%
+%d white draconian simulacrum
+
+%%%%
+%d grey draconian simulacrum
+
+%%%%
+
+##################
+# Sprint Monsters
+##################
+
+%%%%
+%d kamikaze kobolds
+
+%%%%
+%d orb golems
+
+%%%%
+%d orbs of ice
+
+%%%%
+%d orbs of electricity
+
+%%%%
+%d naga warlords
+
+%%%%
+%d witches
+
+%%%%
+%d dire wolf spiders
+
+%%%%
+%d phase spiders
+
+%%%%
+%d dimmes
+
+%%%%
+%d sulfuric acid blobs
+
+%%%%
+%d vault guard captains
+
+%%%%
+%d Master Blasters
+
+%%%%
+%d oklob sapling priests
+
+%%%%
+%d oklob sapling wizards
+
+%%%%
+%d oklob plant conjurers
+
+%%%%
+%d oklob plant summoners
+
+%%%%
+%d oklob plant shifters
+
+%%%%
+%d oklob plant meteorologists
+
+%%%%
+%d oklob plant demonologists
+
+%%%%
+%d oklob plant annihilators
+
+%%%%
+%d bags of meat
+
+%%%%
+%d meat berserkers
+
+%%%%
+%d tyrants
+
+%%%%
+%d meat hydras
+
+%%%%
+%d dreads
+
+%%%%
+%d destroyers
+
+%%%%
+%d scourges
+
+%%%%
+%d sculptors of flesh
+
+%%%%
+%d observers
+
+%%%%
+%d accurseds
+
+%%%%
+%d viles
+
+%%%%
+%d meat beasts
+
+%%%%
+%d wretched souls
+
+%%%%
+%d fleshlords
+
+%%%%

@@ -1,0 +1,2992 @@
+###############################################################################
+#
+# Translations for mutations
+#
+###############################################################################
+
+########################################
+# Mutation categories
+########################################
+
+%%%%
+any
+
+%%%%
+good
+
+%%%%
+bad
+
+%%%%
+slime
+
+%%%%
+nonslime
+
+%%%%
+corrupt
+
+%%%%
+qazlal
+
+%%%%
+
+########################################
+# Innate mutations for player species
+########################################
+
+%%%%
+damage resistance
+
+%%%%
+You are resistant to damage.
+
+%%%%
+heal wounds
+
+%%%%
+You can heal yourself by infusing magical energy.
+
+%%%%
+sickness immunity
+
+%%%%
+You are immune to sickness and miasma.
+
+%%%%
+breathe lightning
+
+%%%%
+You can breathe wild blasts of lightning.
+
+%%%%
+breathe noxious fumes
+
+%%%%
+You can breathe blasts of noxious fumes.
+
+%%%%
+breathe steam
+
+%%%%
+You can breathe blasts of scalding, opaque steam.
+
+%%%%
+breathe power
+
+%%%%
+You can breathe bolts of dispelling energy.
+
+%%%%
+breathe fire
+
+%%%%
+You can breathe blasts of fire.
+
+%%%%
+breathe frost
+
+%%%%
+You can breathe waves of freezing cold which knock back foes.
+
+%%%%
+spit acid
+
+%%%%
+You can spit globs of acid.
+
+%%%%
+permanent stasis
+
+%%%%
+You cannot be hasted, slowed, berserked, paralysed or teleported.
+
+%%%%
+dig shafts and tunnels
+
+%%%%
+You can dig through walls and to a lower floor.
+
+%%%%
+almost no armour
+
+%%%%
+You cannot wear most types of armour.
+
+%%%%
+# unnamed ghoul mutation
+You thrive by killing the living.
+
+%%%%
+
+########################################
+# Mutations from being transformed
+########################################
+
+# unnamed mutation for spider/bat form
+%%%%
+You are tiny and dextrous.
+
+%%%%
+
+# spider form
+%%%%
+venomous fangs
+
+%%%%
+You have poisonous fangs.
+
+%%%%
+
+# statue form
+%%%%
+slow and powerful
+
+%%%%
+Your actions are slow, but your melee attacks are powerful.
+
+%%%%
+torment resistance 1
+
+%%%%
+You are resistant to unholy torment.
+
+%%%%
+
+# ice form
+%%%%
+freezing attack
+
+%%%%
+You have a powerful freezing melee attack.
+
+%%%%
+
+# dragon form
+%%%%
+dragon claw
+
+%%%%
+You have a powerful clawing attack.
+
+%%%%
+dragon scales
+
+%%%%
+Your giant scaled body is strong and resiliant, but less evasive.
+
+%%%%
+# breathe fire (same as red draconian mutation)
+%%%%
+You can breathe fire.
+
+%%%%
+# red draconian gets a special message
+Your breath weapon is enhanced in this form.
+
+%%%%
+
+# lich form
+%%%%
+draining attack
+
+%%%%
+Your unarmed attacks are suffused with negative energy.
+
+%%%%
+# unnamed mutation
+Your necromantic spells are more powerful.
+
+%%%%
+
+# tree form
+%%%%
+stationary
+
+%%%%
+Your roots penetrate the ground, keeping you stationary.
+
+%%%%
+stasis
+
+%%%%
+You cannot be teleported.
+
+%%%%
+
+# lich form and tree form
+%%%%
+torment immunity
+
+%%%%
+You are immune to unholy pain and torment.
+
+%%%%
+
+# wisp form
+%%%%
+# Code literally says "insubstial".
+insubstial
+
+%%%%
+Your tiny insubstantial body is highly resistant to most damage types.
+
+%%%%
+
+# fungus form
+%%%%
+melee confuse
+
+%%%%
+Your melee attack releases spores that confuse breathing creatures.
+
+%%%%
+terrified
+
+%%%%
+<lightred>You become terrified and freeze when enemies are visible.</lightred>
+
+%%%%
+# unnamed mutation
+You are tiny and evasive.
+
+%%%%
+
+# shadow form
+%%%%
+shadow resist
+
+%%%%
+You are immune to unholy torment and to willpower attacks.
+
+%%%%
+half damage
+
+%%%%
+Damage taken is halved, but you are drained when taking damage.
+
+%%%%
+bleed smoke
+
+%%%%
+You bleed smoke when taking damage.
+
+%%%%
+# unnamed mutation
+Your attacks are insubstantial and do half damage.
+
+%%%%
+
+# storm form
+%%%%
+cleaving
+
+%%%%
+Your stormy fists strike out in all directions at once.
+
+%%%%
+# unnamed mutation
+You are incredibly evasive.
+
+%%%%
+
+########################################
+# Others defined in mutation.cc
+# These are mostly also from species or transformation
+########################################
+
+%%%%
+You move quickly.
+
+%%%%
+amphibious
+
+%%%%
+You are amphibious.
+
+%%%%
+boosted hp
+
+%%%%
+Your maximum health is increased.
+
+%%%%
+Your maximum health is greatly increased.
+
+%%%%
+reduced hp
+
+%%%%
+Your maximum health is decreased.
+
+%%%%
+You are immune to poison.
+
+%%%%
+Your spellcasting is less reliable in this form.
+
+%%%%
+no casting
+
+%%%%
+You cannot cast spells.
+
+%%%%
+You cannot drink.
+
+%%%%
+alive
+
+%%%%
+Your natural rate of healing is accelerated.
+
+%%%%
+You are frail without blood (-20% HP).
+
+%%%%
+You can heal yourself when you bite living creatures.
+
+%%%%
+walk on water
+
+%%%%
+You can walk on water.
+
+%%%%
+You can walk on water until reaching land.
+
+%%%%
+reduced essence
+
+%%%%
+Your life essence is reduced to manifest your ancestor. (-10% HP)
+
+%%%%
+AC +%d
+
+%%%%
+Your serpentine skin is tough. (AC +%d)
+
+%%%%
+Your stone body is resilient. (AC +%d)
+
+%%%%
+Your %s scales are very hard. (AC +%d)
+
+%%%%
+Your %s scales are hard. (AC +%d)
+
+%%%%
+%d rings
+
+%%%%
+You can wear up to %d rings at the same time.
+
+%%%%
+unfitting armour
+
+%%%%
+You are too small for most types of armour.
+
+%%%%
+no large weapons
+
+%%%%
+You are very small and have problems with some larger weapons.
+
+%%%%
+You are small and have problems with some larger weapons.
+
+%%%%
+You are too large for most types of armour.
+
+%%%%
+You cannot fit into any form of body armour.
+
+%%%%
+Your attributes grow dramatically as you level up.
+
+%%%%
+You expend health (3 HP) to strengthen your wands.
+
+%%%%
+You have tentacles for arms and can constrict up to %d enemies at once.
+
+%%%%
+You have sharp claws.
+
+%%%%
+Your bite disrupts the magic of your enemies.
+
+%%%%
+
+%%%%
+no striking features
+
+%%%%
+You are rather mundane.
+
+%%%%
+
+########################################
+# Others defined in mutation-data.h
+# These mostly have 3 levels
+########################################
+
+%%%%
+tough skin
+
+%%%%
+You have tough skin. (AC +1)
+
+%%%%
+You have very tough skin. (AC +2)
+
+%%%%
+You have extremely tough skin. (AC +3)
+
+%%%%
+Your skin toughens.
+
+%%%%
+Your skin feels delicate.
+
+%%%%
+Your muscles are strong. (Str +2)
+
+%%%%
+Your muscles are very strong. (Str +4)
+
+%%%%
+clever
+
+%%%%
+Your mind is acute. (Int +2)
+
+%%%%
+Your mind is very acute. (Int +4)
+
+%%%%
+You are agile. (Dex +2)
+
+%%%%
+You are very agile. (Dex +4)
+
+%%%%
+poison resistance
+
+%%%%
+Your system is resistant to poisons. (rPois)
+
+%%%%
+You feel resistant to poisons.
+
+%%%%
+You feel less resistant to poisons.
+
+%%%%
+fire resistance
+
+%%%%
+Your flesh is heat resistant. (rF+)
+
+%%%%
+Your flesh is very heat resistant. (rF++)
+
+%%%%
+Your flesh is almost immune to the effects of heat. (rF+++)
+
+%%%%
+You feel resistant to heat.
+
+%%%%
+You feel more resistant to heat.
+
+%%%%
+You no longer feel heat resistant.
+
+%%%%
+You feel less heat resistant.
+
+%%%%
+cold resistance
+
+%%%%
+Your flesh is cold resistant. (rC+)
+
+%%%%
+Your flesh is very cold resistant. (rC++)
+
+%%%%
+Your flesh is almost immune to the effects of cold. (rC+++)
+
+%%%%
+You feel resistant to cold.
+
+%%%%
+You feel more resistant to cold.
+
+%%%%
+You no longer feel cold resistant.
+
+%%%%
+You feel less cold resistant.
+
+%%%%
+heat vulnerability
+
+%%%%
+You are vulnerable to heat. (rF-)
+
+%%%%
+You are very vulnerable to heat. (rF--)
+
+%%%%
+You are extremely vulnerable to heat. (rF---)
+
+%%%%
+You feel vulnerable to heat.
+
+%%%%
+You no longer feel vulnerable to heat.
+
+%%%%
+You feel less vulnerable to heat.
+
+%%%%
+cold vulnerability
+
+%%%%
+You are vulnerable to cold. (rC-)
+
+%%%%
+You are very vulnerable to cold. (rC--)
+
+%%%%
+You are extremely vulnerable to cold. (rC---)
+
+%%%%
+You feel vulnerable to cold.
+
+%%%%
+You no longer feel vulnerable to cold.
+
+%%%%
+You feel less vulnerable to cold.
+
+%%%%
+A weak demonic guardian rushes to your aid.
+
+%%%%
+A demonic guardian rushes to your aid.
+
+%%%%
+A powerful demonic guardian rushes to your aid.
+
+%%%%
+You feel the presence of a demonic guardian.
+
+%%%%
+Your guardian grows in power.
+
+%%%%
+Your demonic guardian is gone.
+
+%%%%
+Your demonic guardian is weakened.
+
+%%%%
+electricity resistance
+
+%%%%
+You are resistant to electric shocks. (rElec)
+
+%%%%
+You feel insulated.
+
+%%%%
+You feel conductive.
+
+%%%%
+electricity vulnerability
+
+%%%%
+You are vulnerable to electric shocks.
+
+%%%%
+You feel vulnerable to electricity.
+
+%%%%
+You feel less vulnerable to electricity.
+
+%%%%
+regeneration
+
+%%%%
+Your natural rate of healing is unusually fast.
+
+%%%%
+You heal very quickly.
+
+%%%%
+You regenerate.
+
+%%%%
+You begin to heal more quickly.
+
+%%%%
+You begin to regenerate.
+
+%%%%
+Your rate of healing slows.
+
+%%%%
+inhibited regeneration
+
+%%%%
+You do not regenerate when monsters are visible.
+
+%%%%
+Your regeneration stops near monsters.
+
+%%%%
+You begin to regenerate regardless of the presence of monsters.
+
+%%%%
+You are weak. (Str -2)
+
+%%%%
+You are very weak. (Str -4)
+
+%%%%
+dopey
+
+%%%%
+You are dopey. (Int -2)
+
+%%%%
+You are very dopey. (Int -4)
+
+%%%%
+You are clumsy. (Dex -2)
+
+%%%%
+You are very clumsy. (Dex -4)
+
+%%%%
+teleportitis
+
+%%%%
+You are occasionally teleported next to monsters.
+
+%%%%
+You are sometimes teleported next to monsters.
+
+%%%%
+You are often teleported next to monsters.
+
+%%%%
+You feel weirdly uncertain.
+
+%%%%
+You feel even more weirdly uncertain.
+
+%%%%
+You feel stable.
+
+%%%%
+You are strong-willed. (Will+)
+
+%%%%
+You are highly strong-willed. (Will++)
+
+%%%%
+You are extremely strong-willed. (Will+++)
+
+%%%%
+You feel more strong-willed.
+
+%%%%
+You feel your will become almost unbreakable.
+
+%%%%
+You no longer feel strong-willed.
+
+%%%%
+You cover ground quickly. (Speed+)
+
+%%%%
+You cover ground very quickly. (Speed++)
+
+%%%%
+You cover ground extremely quickly. (Speed+++)
+
+%%%%
+You feel quick.
+
+%%%%
+You feel sluggish.
+
+%%%%
+slowness
+
+%%%%
+You cover ground slowly.
+
+%%%%
+You cover ground very slowly.
+
+%%%%
+You cover ground extremely slowly.
+
+%%%%
+see invisible
+
+%%%%
+You have supernaturally acute eyesight. (SInv)
+
+%%%%
+Your vision sharpens.
+
+%%%%
+Your vision seems duller.
+
+%%%%
+deformed body
+
+%%%%
+Armour fits poorly on your strangely shaped body.
+
+%%%%
+Your body twists and deforms.
+
+%%%%
+Your body's shape seems more normal.
+
+%%%%
+spit poison
+
+%%%%
+You can spit poison.
+
+%%%%
+You can exhale a cloud of poison.
+
+%%%%
+There is a nasty taste in your mouth for a moment.
+
+%%%%
+You feel an ache in your throat.
+
+%%%%
+screaming
+
+%%%%
+You occasionally shout uncontrollably at your foes.
+
+%%%%
+You frequently scream uncontrollably at your foes.
+
+%%%%
+You feel the urge to shout.
+
+%%%%
+You feel a strong urge to scream.
+
+%%%%
+Your urge to shout disappears.
+
+%%%%
+Your urge to scream lessens.
+
+%%%%
+noise suppression
+
+%%%%
+You passively dampen the noise of your surroundings.
+
+%%%%
+You feel your surroundings grow quieter.
+
+%%%%
+You feel your surroundings grow louder
+
+%%%%
+clarity
+
+%%%%
+You possess an exceptional clarity of mind.
+
+%%%%
+Your thoughts seem clearer.
+
+%%%%
+Your thinking seems confused.
+
+%%%%
+You tend to lose your temper in combat.
+
+%%%%
+You often lose your temper in combat.
+
+%%%%
+You have an uncontrollable temper.
+
+%%%%
+You feel a little pissed off.
+
+%%%%
+You feel angry.
+
+%%%%
+You feel extremely angry at everything!
+
+%%%%
+You feel a little more calm.
+
+%%%%
+You feel a little less angry.
+
+%%%%
+deterioration
+
+%%%%
+Your body sometimes deteriorates upon taking damage.
+
+%%%%
+Your body often deteriorates upon taking damage.
+
+%%%%
+You feel yourself wasting away.
+
+%%%%
+You feel your body start to fall apart.
+
+%%%%
+You feel healthier.
+
+%%%%
+You feel a little healthier.
+
+%%%%
+mutation resistance
+
+%%%%
+You are somewhat resistant to further mutation.
+
+%%%%
+You are somewhat resistant to both further mutation and mutation removal.
+
+%%%%
+You are almost entirely resistant to further mutation and mutation removal.
+
+%%%%
+You feel genetically stable.
+
+%%%%
+You feel genetically immutable.
+
+%%%%
+You feel genetically unstable.
+
+%%%%
+evolution
+
+%%%%
+You evolve.
+
+%%%%
+You rapidly evolve.
+
+%%%%
+You feel nature experimenting on you. Don't worry, failures die fast.
+
+%%%%
+Your genes go into a fast flux.
+
+%%%%
+Nature stops experimenting on you.
+
+%%%%
+Your wild genetic ride slows down.
+
+%%%%
+frail
+
+%%%%
+You are frail. (-10% HP)
+
+%%%%
+You are very frail. (-20% HP)
+
+%%%%
+You are extremely frail. (-30% HP)
+
+%%%%
+You feel frail.
+
+%%%%
+You feel robust.
+
+%%%%
+robust
+
+%%%%
+You are robust. (+10% HP)
+
+%%%%
+You are very robust. (+20% HP)
+
+%%%%
+You are extremely robust. (+30% HP)
+
+%%%%
+torment resistance
+
+%%%%
+You feel a strange anaesthesia.
+
+%%%%
+You feel a very strange anaesthesia.
+
+%%%%
+negative energy resistance
+
+%%%%
+You resist negative energy. (rN+)
+
+%%%%
+You are quite resistant to negative energy. (rN++)
+
+%%%%
+You are immune to negative energy. (rN+++)
+
+%%%%
+You feel resistant to negative energy.
+
+%%%%
+You feel more resistant to negative energy.
+
+%%%%
+in touch with death
+
+%%%%
+You are in touch with the powers of death.
+
+%%%%
+You are strongly in touch with the powers of death.
+
+%%%%
+You feel more in touch with the powers of death.
+
+%%%%
+nimble flight
+
+%%%%
+Your magical nature lets you fly swiftly and evasively.
+
+%%%%
+Your magical nature develops, letting you fly swiftly and evasively.
+
+%%%%
+hurl damnation
+
+%%%%
+You can hurl damnation.
+
+%%%%
+You smell a hint of brimstone.
+
+%%%%
+horns
+
+%%%%
+You have a pair of small horns on your head.
+
+%%%%
+You have a pair of horns on your head.
+
+%%%%
+You have a pair of large horns on your head.
+
+%%%%
+A pair of horns grows on your head!
+
+%%%%
+The horns on your head grow some more.
+
+%%%%
+The horns on your head shrink away.
+
+%%%%
+The horns on your head shrink a bit.
+
+%%%%
+beak
+
+%%%%
+You have a beak for a mouth.
+
+%%%%
+Your mouth lengthens and hardens into a beak!
+
+%%%%
+Your beak shortens and softens into a mouth.
+
+%%%%
+You have sharp fingernails.
+
+%%%%
+You have very sharp fingernails.
+
+%%%%
+You have claws for hands.
+
+%%%%
+Your fingernails lengthen.
+
+%%%%
+Your fingernails sharpen.
+
+%%%%
+Your hands twist into claws.
+
+%%%%
+Your fingernails shrink to normal size.
+
+%%%%
+Your fingernails look duller.
+
+%%%%
+Your hands feel fleshier.
+
+%%%%
+fangs
+
+%%%%
+You have very sharp teeth.
+
+%%%%
+You have extremely sharp teeth.
+
+%%%%
+You have razor-sharp teeth.
+
+%%%%
+Your teeth lengthen and sharpen.
+
+%%%%
+Your teeth lengthen and sharpen some more.
+
+%%%%
+Your teeth grow very long and razor-sharp.
+
+%%%%
+Your teeth shrink to normal size.
+
+%%%%
+Your teeth shrink and become duller.
+
+%%%%
+You have large cloven feet.
+
+%%%%
+You have hoof-like feet.
+
+%%%%
+You have hooves in place of feet.
+
+%%%%
+Your feet thicken and deform.
+
+%%%%
+Your feet have mutated into hooves.
+
+%%%%
+Your hooves expand and flesh out into feet!
+
+%%%%
+Your hooves look more like feet.
+
+%%%%
+You have a pair of small antennae on your head.
+
+%%%%
+You have a pair of antennae on your head.
+
+%%%%
+You have a pair of large antennae on your head. (SInv)
+
+%%%%
+A pair of antennae grows on your head!
+
+%%%%
+The antennae on your head grow some more.
+
+%%%%
+The antennae on your head shrink away.
+
+%%%%
+The antennae on your head shrink a bit.
+
+%%%%
+You have sharp toenails.
+
+%%%%
+You have razor-sharp toenails.
+
+%%%%
+You have claws for feet.
+
+%%%%
+Your toenails lengthen and sharpen.
+
+%%%%
+Your feet stretch into talons.
+
+%%%%
+Your talons dull and shrink into feet.
+
+%%%%
+Your talons look more like feet.
+
+%%%%
+tentacle spike
+
+%%%%
+One of your tentacles bears a spike.
+
+%%%%
+One of your tentacles bears a nasty spike.
+
+%%%%
+One of your tentacles bears a large vicious spike.
+
+%%%%
+One of your lower tentacles grows a sharp spike.
+
+%%%%
+Your tentacle spike grows bigger.
+
+%%%%
+Your tentacle spike grows even bigger.
+
+%%%%
+Your tentacle spike becomes smaller.
+
+%%%%
+Your tentacle spike recedes somewhat.
+
+%%%%
+naga tail
+
+%%%%
+You have a snake-like lower body.
+
+%%%%
+You can use your snake-like lower body to constrict enemies.
+
+%%%%
+Your lower body turns into a snake tail.
+
+%%%%
+Your tail grows strong enough to constrict your enemies.
+
+%%%%
+Your lower body returns to normal.
+
+%%%%
+Your snake tail weakens and can no longer constrict your enemies.
+
+%%%%
+stinger
+
+%%%%
+Your tail ends in a poisonous barb.
+
+%%%%
+Your tail ends in a sharp poisonous barb.
+
+%%%%
+Your tail ends in a wickedly sharp and poisonous barb.
+
+%%%%
+A poisonous barb forms on the end of your tail.
+
+%%%%
+The barb on your tail looks sharper.
+
+%%%%
+The barb on your tail looks very sharp.
+
+%%%%
+The barb on your tail disappears.
+
+%%%%
+The barb on your tail seems less sharp.
+
+%%%%
+big wings
+
+%%%%
+Your large and strong wings let you fly.
+
+%%%%
+Your wings grow larger and stronger.
+
+%%%%
+Your wings shrivel and weaken.
+
+%%%%
+strong legs
+
+%%%%
+You can hop short distances.
+
+%%%%
+You can hop long distances.
+
+%%%%
+Your legs feel stronger.
+
+%%%%
+roll
+
+%%%%
+You can roll at nearby foes to attack.
+
+%%%%
+You can roll at foes to attack.
+
+%%%%
+You can roll a great distance at foes to attack.
+
+%%%%
+You feel you can roll further.
+
+%%%%
+You feel you can roll even further.
+
+%%%%
+You can no longer roll as far.
+
+%%%%
+armoured tail
+
+%%%%
+You have a long armoured tail.
+
+%%%%
+reflexive curl
+
+%%%%
+You curl defensively after being hit.
+
+%%%%
+You now curl defensively after being hit.
+
+%%%%
+shaggy fur
+
+%%%%
+You are covered in fur. (AC +1)
+
+%%%%
+You are covered in thick fur. (AC +2)
+
+%%%%
+Your thick and shaggy fur keeps you warm. (AC +3, rC+)
+
+%%%%
+Fur sprouts all over your body.
+
+%%%%
+Your fur grows into a thick mane.
+
+%%%%
+Your thick fur grows shaggy and warm.
+
+%%%%
+You shed all your fur.
+
+%%%%
+Your thick fur recedes somewhat.
+
+%%%%
+Your shaggy fur recedes somewhat.
+
+%%%%
+high mp
+
+%%%%
+You have an increased reservoir of magic. (+10% MP)
+
+%%%%
+You have a considerably increased reservoir of magic. (+20% MP)
+
+%%%%
+You have a greatly increased reservoir of magic. (+30% MP)
+
+%%%%
+You feel more energetic.
+
+%%%%
+You feel less energetic.
+
+%%%%
+low mp
+
+%%%%
+Your magical capacity is low. (-10% MP)
+
+%%%%
+Your magical capacity is very low. (-20% MP)
+
+%%%%
+Your magical capacity is extremely low. (-30% MP)
+
+%%%%
+Your spells are a little harder to cast, but a little more powerful.
+
+%%%%
+Your spells are harder to cast, but more powerful.
+
+%%%%
+Your spells are much harder to cast, but much more powerful.
+
+%%%%
+You feel less in control of your magic.
+
+%%%%
+You feel your magical power running wild!
+
+%%%%
+You regain control of your magic.
+
+%%%%
+You feel more in control of your magic.
+
+%%%%
+subdued magic
+
+%%%%
+Your spells are a little easier to cast, but a little less powerful.
+
+%%%%
+Your spells are easier to cast, but less powerful.
+
+%%%%
+Your spells are much easier to cast, but much less powerful.
+
+%%%%
+Your connection to magic feels subdued.
+
+%%%%
+Your connection to magic feels more subdued.
+
+%%%%
+Your connection to magic feels nearly dormant.
+
+%%%%
+Your magic regains its normal vibrancy.
+
+%%%%
+Your connection to magic feels less subdued.
+
+%%%%
+demonic magic
+
+%%%%
+Spells you cast may paralyse adjacent enemies.
+
+%%%%
+Spells you cast may paralyse nearby enemies.
+
+%%%%
+Spells you cast and wands you use may paralyse nearby enemies.
+
+%%%%
+A menacing aura infuses your magic.
+
+%%%%
+Your magic grows more menacing.
+
+%%%%
+Your wands become infused with your menacing aura.
+
+%%%%
+forlorn
+
+%%%%
+You shall have no god before yourself.
+
+%%%%
+You feel forlorn.
+
+%%%%
+You feel more spiritual.
+
+%%%%
+sense surroundings
+
+%%%%
+You passively map a small area around you.
+
+%%%%
+You passively map the area around you.
+
+%%%%
+You passively map a large area around you.
+
+%%%%
+You feel a strange attunement to the structure of the dungeons.
+
+%%%%
+Your attunement to dungeon structure grows.
+
+%%%%
+Your attunement to dungeon structure grows further.
+
+%%%%
+You feel slightly disoriented.
+
+%%%%
+A meltable icy envelope protects you from harm. (AC +%d)
+
+%%%%
+A thick, meltable icy envelope protects you from harm. (AC +%d)
+
+%%%%
+An icy envelope takes form around you.
+
+%%%%
+Your icy envelope grows thicker.
+
+%%%%
+condensation shield
+
+%%%%
+A meltable shield of frost defends you. (SH +%d)
+
+%%%%
+Frost condenses into a shield before you.
+
+%%%%
+passive freeze
+
+%%%%
+A frigid envelope surrounds you and freezes all who hurt you.
+
+%%%%
+Your skin feels very cold.
+
+%%%%
+Your skin warms up.
+
+%%%%
+nightstalker
+
+%%%%
+You are slightly more attuned to the shadows.
+
+%%%%
+You are significantly more attuned to the shadows.
+
+%%%%
+You are completely attuned to the shadows.
+
+%%%%
+You slip into the darkness of the dungeon.
+
+%%%%
+You slip further into the darkness.
+
+%%%%
+You are surrounded by darkness.
+
+%%%%
+Your affinity for the darkness vanishes.
+
+%%%%
+Your affinity for the darkness weakens.
+
+%%%%
+spiny
+
+%%%%
+You are partially covered in sharp spines.
+
+%%%%
+You are mostly covered in sharp spines.
+
+%%%%
+You are completely covered in sharp spines.
+
+%%%%
+Sharp spines emerge from parts of your body.
+
+%%%%
+Sharp spines emerge from more of your body.
+
+%%%%
+Sharp spines emerge from your entire body.
+
+%%%%
+Your sharp spines disappear entirely.
+
+%%%%
+Your sharp spines retract somewhat.
+
+%%%%
+powered by death
+
+%%%%
+You regenerate a little health from kills.
+
+%%%%
+You regenerate health from kills.
+
+%%%%
+You regenerate a lot of health from kills.
+
+%%%%
+A wave of death washes over you.
+
+%%%%
+The wave of death grows in power.
+
+%%%%
+Your control of surrounding life forces is gone.
+
+%%%%
+Your control of surrounding life forces weakens.
+
+%%%%
+powered by pain
+
+%%%%
+You sometimes gain a little power by taking damage.
+
+%%%%
+You sometimes gain power by taking damage.
+
+%%%%
+You are powered by pain.
+
+%%%%
+You feel energised by your suffering.
+
+%%%%
+You feel even more energised by your suffering.
+
+%%%%
+You feel completely energised by your suffering.
+
+%%%%
+augmentation
+
+%%%%
+Your magical and physical power is slightly enhanced at high health.
+
+%%%%
+Your magical and physical power is enhanced at high health.
+
+%%%%
+Your magical and physical power is greatly enhanced at high health.
+
+%%%%
+You feel power flowing into your body.
+
+%%%%
+You feel power rushing into your body.
+
+%%%%
+You feel saturated with power.
+
+%%%%
+magic shield
+
+%%%%
+When hurt, damage is shared between your health and your magic reserves.
+
+%%%%
+You feel your magical essence form a protective shroud around your flesh.
+
+%%%%
+magic regeneration
+
+%%%%
+You regenerate magic rapidly.
+
+%%%%
+Your magic begins to regenerate rapidly.
+
+%%%%
+magic link
+
+%%%%
+When low on magic, you restore magic in place of health.
+
+%%%%
+You feel your life force and your magical essence meld.
+
+%%%%
+gelatinous body
+
+%%%%
+Your rubbery body absorbs attacks. (AC +1, EV +1)
+
+%%%%
+Your pliable body absorbs attacks. (AC +2, EV +2)
+
+%%%%
+Your gelatinous body deflects attacks. (AC +3, EV +3)
+
+%%%%
+Your body becomes stretchy.
+
+%%%%
+Your body becomes more malleable.
+
+%%%%
+Your body becomes viscous.
+
+%%%%
+Your body returns to its normal consistency.
+
+%%%%
+Your body becomes less malleable.
+
+%%%%
+Your body becomes less viscous.
+
+%%%%
+eyeballs
+
+%%%%
+Your body has grown golden eyes which may confuse attackers. (Acc +3)
+
+%%%%
+Your body has grown many golden eyes which may confuse attackers. (Acc +5)
+
+%%%%
+Your body is covered in golden eyes which may confuse attackers. (Acc +7, SInv)
+
+%%%%
+Eyeballs grow over part of your body.
+
+%%%%
+Eyeballs cover a large portion of your body.
+
+%%%%
+Eyeballs cover you completely.
+
+%%%%
+The eyeballs on your body disappear.
+
+%%%%
+The eyeballs on your body recede somewhat.
+
+%%%%
+translucent skin
+
+%%%%
+Your translucent skin slightly reduces your foes' accuracy. (Stealth+)
+
+%%%%
+Your translucent skin reduces your foes' accuracy. (Stealth+)
+
+%%%%
+Your transparent skin significantly reduces your foes' accuracy. (Stealth+)
+
+%%%%
+Your skin becomes partially translucent.
+
+%%%%
+Your skin becomes more translucent.
+
+%%%%
+Your skin becomes completely transparent.
+
+%%%%
+Your skin returns to its normal opacity.
+
+%%%%
+Your skin's translucency fades.
+
+%%%%
+Your skin's transparency fades.
+
+%%%%
+Armour fits poorly on your pseudopods.
+
+%%%%
+Armour fits poorly on your large pseudopods.
+
+%%%%
+Armour fits poorly on your massive pseudopods.
+
+%%%%
+Pseudopods emerge from your body.
+
+%%%%
+Your pseudopods grow in size.
+
+%%%%
+Your pseudopods retract into your body.
+
+%%%%
+Your pseudopods become smaller.
+
+%%%%
+acidic bite
+
+%%%%
+You have acidic saliva.
+
+%%%%
+Acid begins to drip from your mouth.
+
+%%%%
+Your mouth feels dry.
+
+%%%%
+antimagic bite
+
+%%%%
+Your bite disrupts and absorbs the magic of your enemies.
+
+%%%%
+You feel a sudden thirst for magic.
+
+%%%%
+Your magical appetite wanes.
+
+%%%%
+no potion heal
+
+%%%%
+Potions are less effective at restoring your health.
+
+%%%%
+Potions cannot restore your health.
+
+%%%%
+Your system partially rejects the healing effects of potions.
+
+%%%%
+Your system completely rejects the healing effects of potions.
+
+%%%%
+Your system completely accepts the healing effects of potions.
+
+%%%%
+Your system partly accepts the healing effects of potions.
+
+%%%%
+repulsion field
+
+%%%%
+You are surrounded by a mild repulsion field. (EV +2)
+
+%%%%
+You are surrounded by a moderate repulsion field. (EV +3)
+
+%%%%
+You are surrounded by a strong repulsion field. (EV +4, RMsl)
+
+%%%%
+You begin to radiate repulsive energy.
+
+%%%%
+Your repulsive radiation grows stronger.
+
+%%%%
+You feel less repulsive.
+
+%%%%
+icy blue scales
+
+%%%%
+You are partially covered in icy blue scales. (AC +2)
+
+%%%%
+You are mostly covered in icy blue scales. (AC +3)
+
+%%%%
+You are completely covered in icy blue scales. (AC +4, rC+)
+
+%%%%
+Icy blue scales grow over part of your body.
+
+%%%%
+Icy blue scales spread over more of your body.
+
+%%%%
+Icy blue scales cover your body completely.
+
+%%%%
+Your icy blue scales disappear.
+
+%%%%
+Your icy blue scales recede somewhat.
+
+%%%%
+iridescent scales
+
+%%%%
+You are partially covered in iridescent scales. (AC +2)
+
+%%%%
+You are mostly covered in iridescent scales. (AC +4)
+
+%%%%
+You are completely covered in iridescent scales. (AC +6)
+
+%%%%
+Iridescent scales grow over part of your body.
+
+%%%%
+Iridescent scales spread over more of your body.
+
+%%%%
+Iridescent scales cover your body completely.
+
+%%%%
+Your iridescent scales disappear.
+
+%%%%
+Your iridescent scales recede somewhat.
+
+%%%%
+large bone plates
+
+%%%%
+You are partially covered in large bone plates. (SH +4)
+
+%%%%
+You are mostly covered in large bone plates. (SH +6)
+
+%%%%
+You are completely covered in large bone plates. (SH +8)
+
+%%%%
+Large bone plates grow over parts of your arms.
+
+%%%%
+Large bone plates spread over more of your arms.
+
+%%%%
+Large bone plates cover your arms completely.
+
+%%%%
+Your large bone plates disappear.
+
+%%%%
+Your large bone plates recede somewhat.
+
+%%%%
+molten scales
+
+%%%%
+You are partially covered in molten scales. (AC +2)
+
+%%%%
+You are mostly covered in molten scales. (AC +3)
+
+%%%%
+You are completely covered in molten scales. (AC +4, rF+)
+
+%%%%
+Molten scales grow over part of your body.
+
+%%%%
+Molten scales spread over more of your body.
+
+%%%%
+Molten scales cover your body completely.
+
+%%%%
+Your molten scales disappear.
+
+%%%%
+Your molten scales recede somewhat.
+
+%%%%
+rugged brown scales
+
+%%%%
+You are partially covered in rugged brown scales. (AC +1, +3% HP)
+
+%%%%
+You are mostly covered in rugged brown scales. (AC +2, +5% HP)
+
+%%%%
+You are completely covered in rugged brown scales. (AC +3, +7% HP)
+
+%%%%
+Rugged brown scales grow over part of your body.
+
+%%%%
+Rugged brown scales spread over more of your body.
+
+%%%%
+Rugged brown scales cover your body completely.
+
+%%%%
+Your rugged brown scales disappear.
+
+%%%%
+Your rugged brown scales recede somewhat.
+
+%%%%
+slimy green scales
+
+%%%%
+You are partially covered in slimy green scales. (AC +2)
+
+%%%%
+You are mostly covered in slimy green scales. (AC +3)
+
+%%%%
+You are completely covered in slimy green scales. (AC +4, rPois)
+
+%%%%
+Slimy green scales grow over part of your body.
+
+%%%%
+Slimy green scales spread over more of your body.
+
+%%%%
+Slimy green scales cover your body completely.
+
+%%%%
+Your slimy green scales disappear.
+
+%%%%
+Your slimy green scales recede somewhat.
+
+%%%%
+thin metallic scales
+
+%%%%
+You are partially covered in thin metallic scales. (AC +2)
+
+%%%%
+You are mostly covered in thin metallic scales. (AC +3)
+
+%%%%
+You are completely covered in thin metallic scales. (AC +4, rElec)
+
+%%%%
+Thin metallic scales grow over part of your body.
+
+%%%%
+Thin metallic scales spread over more of your body.
+
+%%%%
+Thin metallic scales cover your body completely.
+
+%%%%
+Your thin metallic scales disappear.
+
+%%%%
+Your thin metallic scales recede somewhat.
+
+%%%%
+thin skeletal structure
+
+%%%%
+You have a somewhat thin skeletal structure. (Dex +2, Stealth+)
+
+%%%%
+You have a moderately thin skeletal structure. (Dex +4, Stealth++)
+
+%%%%
+You have an unnaturally thin skeletal structure. (Dex +6, Stealth+++)
+
+%%%%
+Your bones become slightly less dense.
+
+%%%%
+Your bones become somewhat less dense.
+
+%%%%
+Your bones become less dense.
+
+%%%%
+Your skeletal structure returns to normal.
+
+%%%%
+Your skeletal structure densifies.
+
+%%%%
+yellow scales
+
+%%%%
+You are partially covered in yellow scales. (AC +2)
+
+%%%%
+You are mostly covered in yellow scales. (AC +3)
+
+%%%%
+You are completely covered in yellow scales. (AC +4, rCorr)
+
+%%%%
+Yellow scales grow over part of your body.
+
+%%%%
+Yellow scales spread over more of your body.
+
+%%%%
+Yellow scales cover your body completely.
+
+%%%%
+Your yellow scales disappear.
+
+%%%%
+Your yellow scales recede somewhat.
+
+%%%%
+sharp scales
+
+%%%%
+You are partially covered in razor-sharp scales. (AC +1, Slay +1)
+
+%%%%
+You are mostly covered in razor-sharp scales. (AC +2, Slay +2)
+
+%%%%
+You are completely covered in razor-sharp scales. (AC +3, Slay +3)
+
+%%%%
+Sharp scales grow over part of your body.
+
+%%%%
+Sharp scales spread over more of your body.
+
+%%%%
+Sharp scales cover your body completely.
+
+%%%%
+Your sharp scales disappear.
+
+%%%%
+Your sharp scales recede somewhat.
+
+%%%%
+sturdy frame
+
+%%%%
+Your movements are slightly less encumbered by armour. (ER -2)
+
+%%%%
+Your movements are less encumbered by armour. (ER -4)
+
+%%%%
+Your movements are significantly less encumbered by armour. (ER -6)
+
+%%%%
+You feel less encumbered by your armour.
+
+%%%%
+You feel more encumbered by your armour.
+
+%%%%
+When seriously injured, your bleeding wounds create armour. (AC +%d)
+
+%%%%
+When seriously injured, your bleeding wounds create thick armour. (AC +%d)
+
+%%%%
+When seriously injured, your bleeding wounds create very thick armour. (AC +%d)
+
+%%%%
+You feel your blood ready itself to protect you.
+
+%%%%
+You feel your blood thicken.
+
+%%%%
+You feel your blood become entirely quiescent.
+
+%%%%
+You feel your blood thin.
+
+%%%%
+big brain
+
+%%%%
+You have an unusually large brain. (Int +2)
+
+%%%%
+You have an extremely huge brain. (Int +4)
+
+%%%%
+You have an absolutely massive brain. (Int +6, Wiz)
+
+%%%%
+Your brain expands.
+
+%%%%
+Your brain expands to incredible size.
+
+%%%%
+Your brain returns to normal size.
+
+%%%%
+Your brain shrinks.
+
+%%%%
+camouflage
+
+%%%%
+Your skin changes colour to match your surroundings (Stealth+).
+
+%%%%
+Your skin blends seamlessly with your surroundings (Stealth++).
+
+%%%%
+Your skin perfectly mimics your surroundings (Stealth+++).
+
+%%%%
+Your skin functions as natural camouflage.
+
+%%%%
+Your natural camouflage becomes more effective.
+
+%%%%
+Your skin no longer functions as natural camouflage.
+
+%%%%
+Your natural camouflage becomes less effective.
+
+%%%%
+ignite blood
+
+%%%%
+Your demonic aura sometimes causes spilled blood to erupt in flames.
+
+%%%%
+Your demonic aura often causes spilled blood to erupt in flames.
+
+%%%%
+Your demonic aura causes all spilled blood to erupt in flames.
+
+%%%%
+Your blood heats up.
+
+%%%%
+Your blood runs red-hot!
+
+%%%%
+Your blood burns even hotter!
+
+%%%%
+foul stench
+
+%%%%
+You may rarely emit foul miasma when damaged in melee.
+
+%%%%
+You sometimes emit foul miasma when damaged in melee.
+
+%%%%
+You frequently emit foul miasma when damaged in melee.
+
+%%%%
+You begin to emit a foul stench of rot and decay.
+
+%%%%
+Your foul stench grows more powerful.
+
+%%%%
+You begin to radiate miasma.
+
+%%%%
+tendrils
+
+%%%%
+You are covered in slimy tendrils that may disarm your opponents.
+
+%%%%
+Thin, slimy tendrils emerge from your body.
+
+%%%%
+Your tendrils retract into your body.
+
+%%%%
+jelly sensing items
+
+%%%%
+You have a small jelly attached to you that senses nearby items.
+
+%%%%
+Your body partially splits into a small jelly.
+
+%%%%
+The jelly growth is reabsorbed into your body.
+
+%%%%
+jelly absorbing missiles
+
+%%%%
+You have a small jelly attached to you that may absorb incoming projectiles.
+
+%%%%
+petrification resistance
+
+%%%%
+You are immune to petrification.
+
+%%%%
+Your body vibrates.
+
+%%%%
+You briefly stop moving.
+
+%%%%
+Your melee attacks may debilitate your foes.
+
+%%%%
+An ominous black mark forms on your body.
+
+%%%%
+aura of silence
+
+%%%%
+You are surrounded by an aura of silence.
+
+%%%%
+An unnatural silence shrouds you.
+
+%%%%
+bedeviling
+
+%%%%
+Your hexes are more powerful.
+
+%%%%
+You feel devilish.
+
+%%%%
+corrupting presence
+
+%%%%
+Your presence sometimes corrodes those you injure.
+
+%%%%
+Your presence sometimes corrodes or deforms those you injure.
+
+%%%%
+You feel corrupt.
+
+%%%%
+Your corrupting presence intensifies.
+
+%%%%
+word of chaos
+
+%%%%
+You can speak a Word of Chaos.
+
+%%%%
+Your tongue twists.
+
+%%%%
+demonic willpower
+
+%%%%
+You punish those that try to bend your will. (Will+)
+
+%%%%
+You feel willful.
+
+%%%%
+cold-blooded
+
+%%%%
+You are cold-blooded and may be slowed by cold attacks.
+
+%%%%
+You feel cold-blooded.
+
+%%%%
+You feel warm-blooded.
+
+%%%%
+inability to drink while threatened
+
+%%%%
+You sometimes lose the ability to drink potions when taking damage.
+
+%%%%
+You lose the ability to drink potions when threatened.
+
+%%%%
+You can once more drink potions while threatened.
+
+%%%%
+inability to read while threatened
+
+%%%%
+You sometimes lose the ability to read scrolls when taking damage.
+
+%%%%
+You lose the ability to read scrolls when threatened.
+
+%%%%
+You can once more read scrolls while threatened.
+
+%%%%
+missing a hand
+
+%%%%
+You are missing a hand.
+
+%%%%
+One of your hands has vanished, leaving only a stump!
+
+%%%%
+Your stump has regrown into a hand!
+
+%%%%
+no stealth
+
+%%%%
+You cannot be stealthy.
+
+%%%%
+You can no longer be stealthy.
+
+%%%%
+You can once more be stealthy.
+
+%%%%
+inability to use devices
+
+%%%%
+You cannot study or use magical devices.
+
+%%%%
+You can no longer study or use magical devices.
+
+%%%%
+You can once more study and use magical devices.
+
+%%%%
+hated by all
+
+%%%%
+You are hated by all.
+
+%%%%
+You are now hated by all.
+
+%%%%
+You are no longer hated by all.
+
+%%%%
+cowardly
+
+%%%%
+Your cowardice makes you less effective in combat with threatening monsters.
+
+%%%%
+You have lost your courage.
+
+%%%%
+You have regained your courage.
+
+%%%%
+inability to train dodging
+
+%%%%
+You cannot train Dodging skill.
+
+%%%%
+You can no longer train Dodging skill.
+
+%%%%
+You can once more train Dodging skill.
+
+%%%%
+inability to train armour
+
+%%%%
+You cannot train Armour skill.
+
+%%%%
+You can no longer train Armour skill.
+
+%%%%
+You can once more train Armour skill.
+
+%%%%
+no air magic
+
+%%%%
+You cannot study or cast Air magic.
+
+%%%%
+You can no longer study or cast Air magic.
+
+%%%%
+You can once more study and cast Air magic.
+
+%%%%
+no conjurations magic
+
+%%%%
+You cannot study or cast Conjurations magic.
+
+%%%%
+You can no longer study or cast Conjurations magic.
+
+%%%%
+You can once more study and cast Conjurations magic.
+
+%%%%
+no earth magic
+
+%%%%
+You cannot study or cast Earth magic.
+
+%%%%
+You can no longer study or cast Earth magic.
+
+%%%%
+You can once more study and cast Earth magic.
+
+%%%%
+no fire magic
+
+%%%%
+You cannot study or cast Fire magic.
+
+%%%%
+You can no longer study or cast Fire magic.
+
+%%%%
+You can once more study and cast Fire magic.
+
+%%%%
+no hexes magic
+
+%%%%
+You cannot study or cast Hexes magic.
+
+%%%%
+You can no longer study or cast Hexes magic.
+
+%%%%
+You can once more study and cast Hexes magic.
+
+%%%%
+no ice magic
+
+%%%%
+You cannot study or cast Ice magic.
+
+%%%%
+You can no longer study or cast Ice magic.
+
+%%%%
+You can once more study and cast Ice magic.
+
+%%%%
+no necromancy magic
+
+%%%%
+You cannot study or cast Necromancy magic.
+
+%%%%
+You can no longer study or cast Necromancy magic.
+
+%%%%
+You can once more study and cast Necromancy magic.
+
+%%%%
+no poison magic
+
+%%%%
+You cannot study or cast Poison magic.
+
+%%%%
+You can no longer study or cast Poison magic.
+
+%%%%
+You can once more study and cast Poison magic.
+
+%%%%
+no summoning magic
+
+%%%%
+You cannot study or cast Summoning magic.
+
+%%%%
+You can no longer study or cast Summoning magic.
+
+%%%%
+You can once more study and cast Summoning magic.
+
+%%%%
+no translocations magic
+
+%%%%
+You cannot study or cast Translocations magic.
+
+%%%%
+You can no longer study or cast Translocations magic.
+
+%%%%
+You can once more study and cast Translocations magic.
+
+%%%%
+no transmutations magic
+
+%%%%
+You cannot study or cast Transmutations magic.
+
+%%%%
+You can no longer study or cast Transmutations magic.
+
+%%%%
+You can once more study and cast Transmutations magic.
+
+%%%%
+reduced AC
+
+%%%%
+You take slightly more damage. (AC -5)
+
+%%%%
+You take more damage. (AC -10)
+
+%%%%
+You take considerably more damage. (AC -15)
+
+%%%%
+You feel more vulnerable to harm.
+
+%%%%
+You no longer feel extra vulnerable to harm.
+
+%%%%
+You feel less vulnerable to harm.
+
+%%%%
+reduced EV
+
+%%%%
+You have somewhat slow reflexes. (EV -5)
+
+%%%%
+You have slow reflexes. (EV -10)
+
+%%%%
+You have very slow reflexes. (EV -15)
+
+%%%%
+Your reflexes slow.
+
+%%%%
+Your reflexes slow further.
+
+%%%%
+You reflexes return to normal.
+
+%%%%
+You reflexes speed back up.
+
+%%%%
+You are slightly weak-willed. (Will-)
+
+%%%%
+You are weak-willed. (Will--)
+
+%%%%
+You are extremely weak-willed. (Will---)
+
+%%%%
+You feel weak-willed.
+
+%%%%
+You feel more weak-willed.
+
+%%%%
+You no longer feel weak-willed.
+
+%%%%
+You feel less weak-willed.
+
+%%%%
+disrupted magic
+
+%%%%
+Your casting is slightly disrupted.
+
+%%%%
+Your casting is disrupted.
+
+%%%%
+Your casting is seriously disrupted.
+
+%%%%
+Your ability to control magic is disrupted.
+
+%%%%
+Your ability to control magic is more disrupted.
+
+%%%%
+Your ability to control magic is no longer disrupted.
+
+%%%%
+Your ability to control magic is less disrupted.
+
+%%%%
+MP-powered wands
+
+%%%%
+You expend magic power (3 MP) to strengthen your wands.
+
+%%%%
+You feel your magical essence link to the dungeon's wands.
+
+%%%%
+Your magical essence no longer links to wands of the dungeon.
+
+%%%%
+unskilled
+
+%%%%
+You are somewhat unskilled. (-1 Apt)
+
+%%%%
+You are unskilled. (-2 Apt)
+
+%%%%
+You are extremely unskilled. (-3 Apt)
+
+%%%%
+You feel less skilled.
+
+%%%%
+You regain all your skill.
+
+%%%%
+You regain some skill.
+
+%%%%
+inexperienced
+
+%%%%
+You are somewhat inexperienced. (-2 XL)
+
+%%%%
+You are inexperienced. (-4 XL)
+
+%%%%
+You are extremely inexperienced. (-6 XL)
+
+%%%%
+You feel less experienced.
+
+%%%%
+You regain all your potential.
+
+%%%%
+You regain some potential.
+
+%%%%
+stealthy paws
+
+%%%%
+Your paws help you pounce on unaware monsters.
+
+%%%%
+missing an eye
+
+%%%%
+You are missing an eye, making it more difficult to aim.
+
+%%%%
+Your right eye vanishes! The world loses its depth.
+
+%%%%
+Your right eye suddenly reappears! The world regains its depth.
+
+%%%%
+temperature sensitive
+
+%%%%
+You are sensitive to extremes of temperature. (rF-, rC-)
+
+%%%%
+You feel sensitive to extremes of temperature.
+
+%%%%
+You no longer feel sensitive to extremes of temperature
+
+%%%%
+no regeneration
+
+%%%%
+You do not regenerate.
+
+%%%%
+You stop regenerating.
+
+%%%%
+You start regenerating.
+
+%%%%
+strong nose
+
+%%%%
+Your uncanny sense of smell can sniff out nearby items.
+
+%%%%
+Your sense of smell grows stronger.
+
+%%%%
+Your sense of smell gets weaker.
+
+%%%%
+acid resistance
+
+%%%%
+You are resistant to acid. (rCorr)
+
+%%%%
+You feel resistant to acid.
+
+%%%%
+You feel less resistant to acid.
+
+%%%%
+four strong arms
+
+%%%%
+Your four strong arms can wield two-handed weapons with a shield.
+
+%%%%
+Two of your arms shrink away.
+
+%%%%
+You grow two extra arms.
+
+%%%%
+You do not drink.
+
+%%%%
+Your mouth dries to ashes.
+
+%%%%
+You gain the ability to drink.
+
+%%%%
+retaliatory headbutt
+
+%%%%
+You reflexively headbutt those who attack you in melee.
+
+%%%%
+Your retaliatory reflexes feel sharp.
+
+%%%%
+Your retaliatory reflexes feel dull.
+
+%%%%
+steam resistance
+
+%%%%
+You are immune to the effects of steam.
+
+%%%%
+You are now immune to the effects of steam.
+
+%%%%
+You are no longer immune to the effects of steam.
+
+%%%%
+no weapons or thrown items
+
+%%%%
+You are incapable of wielding weapons or throwing items.
+
+%%%%
+You can no longer grasp objects.
+
+%%%%
+You can now grasp objects.
+
+%%%%
+You cannot wear armour.
+
+%%%%
+You can no longer wear armour.
+
+%%%%
+You can now wear armour.
+
+%%%%
+multi-lived
+
+%%%%
+You gain extra lives every three experience levels.
+
+%%%%
+You are no longer multi-lived.
+
+%%%%
+You can now gain extra lives.
+
+%%%%
+distributed training
+
+%%%%
+Your experience applies equally to all skills.
+
+%%%%
+Your experience now applies equally to all skills.
+
+%%%%
+Your experience no longer applies equally to all skills.
+
+%%%%
+nimble swimmer
+
+%%%%
+You are camouflaged near water. (Stealth+)
+
+%%%%
+You are quick and stealthy near water. (Stealth+, EV+, Speed+++)
+
+%%%%
+You feel comfortable near water.
+
+%%%%
+You feel very comfortable near water.
+
+%%%%
+You feel less comfortable near water.
+
+%%%%
+You have tentacles for arms and can constrict enemies.
+
+%%%%
+Your arms feel tentacular.
+
+%%%%
+Your arms no longer feel tentacular.
+
+%%%%
+vampiric
+
+%%%%
+You are afflicted with vampirism.
+
+%%%%
+You are afflicted with vampirism and can become a bat while bloodless.
+
+%%%%
+You feel a craving for blood.
+
+%%%%
+You can now turn into a vampire bat when bloodless.
+
+%%%%
+Your craving for blood subsides.
+
+%%%%
+You can no longer turn into a bat.
+
+%%%%
+mertail
+
+%%%%
+Your lower body shifts to a powerful aquatic tail in water.
+
+%%%%
+Your legs feel aquatic.
+
+%%%%
+Your legs no longer feel aquatic.
+
+%%%%
+float
+
+%%%%
+You float through the air rather than walking.
+
+%%%%
+You feel both weightless and legless.
+
+%%%%
+You feel dragged down by the weight of the world.
+
+%%%%
+innate caster
+
+%%%%
+You learn spells naturally, not from books.
+
+%%%%
+You feel mystic power welling inside you.
+
+%%%%
+You feel a greater respect for book-learning.
+
+%%%%
+hp casting
+
+%%%%
+Your magical power is your life essence.
+
+%%%%
+Your magical power and health merge together.
+
+%%%%
+Your life and magic unlink.
+
+%%%%
+extra vitality
+
+%%%%
+You have superior vitality. (+4 HP)
+
+%%%%
+You have much superior vitality. (+8 MHP)
+
+%%%%
+You have exceptionally superior vitality. (+12 MHP)
+
+%%%%
+You feel less vital.
+
+%%%%
+You feel more vital.
+
+%%%%
+Your melee attacks may engulf your foes in ooze.
+
+%%%%
+You begin exuding ooze.
+
+%%%%
+You stop exuding ooze.
+
+%%%%
++LOS
+
+%%%%
+You have an extended range of vision and can be seen from far away.
+
+%%%%
+The darkness flees at your approach.
+
+%%%%
+The shadows grow bolder once more.
+
+%%%%

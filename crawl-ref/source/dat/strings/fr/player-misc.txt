@@ -1,0 +1,382 @@
+###############################################################################
+#
+# Translations for player-related stuff
+#
+###############################################################################
+
+#################################
+# Attributes
+#################################
+%%%%
+strength
+
+%%%%
+dexterity
+
+%%%%
+intelligence
+
+%%%%
+
+%%%%
+your strength
+
+%%%%
+your dexterity
+
+%%%%
+your intelligence
+
+%%%%
+
+##############################################
+# Species adjectives
+# (only used in titles)
+##############################################
+%%%%
+Barachian
+
+%%%%
+Dwarven
+
+%%%%
+Elven
+
+%%%%
+Divine
+
+%%%%
+Demonic
+
+%%%%
+Feline
+
+%%%%
+Ghoulish
+
+%%%%
+Merfolkian
+
+%%%%
+Octopoid
+
+%%%%
+Ogreish
+
+%%%%
+Trollish
+
+%%%%
+Vampiric
+
+%%%%
+Orcish
+
+%%%%
+
+# English adjective is same as the noun, so context required
+%%%%
+# this one same as plural noun
+{adj-e}Djinn
+
+%%%%
+{adj-e}Draconian
+
+%%%%
+{adj-e}Formicid
+
+%%%%
+{adj-e}Gargoyle
+
+%%%%
+{adj-e}Gnoll
+
+%%%%
+{adj-e}Human
+
+%%%%
+{adj-e}Kobold
+
+%%%%
+{adj-e}Minotaur
+
+%%%%
+{adj-e}Mummy
+
+%%%%
+{adj-e}Naga
+
+%%%%
+{adj-e}Palentonga
+
+%%%%
+{adj-e}Spriggan
+
+%%%%
+{adj-e}Tengu
+
+%%%%
+{adj-e}Vine Stalker
+
+%%%%
+
+##############################################
+# Species walking type (used in titles)
+##############################################
+%%%%
+# Default
+Walker
+
+%%%%
+# Naga (snake-like)
+Slitherer
+
+%%%%
+# Octopode (octopus-like)
+Wriggler
+
+%%%%
+# Tengu (bird-like)
+Glider
+
+%%%%
+# Vine Stalker
+Stalker
+
+%%%%
+
+%%%%
+Walking
+
+%%%%
+Slithering
+
+%%%%
+Wriggling
+
+%%%%
+Gliding
+
+%%%%
+Stalking
+
+%%%%
+
+##############################################
+# Species abbreviations
+##############################################
+
+%%%%
+# Barachi
+Ba
+
+%%%%
+# Deep Dwarf
+DD
+
+%%%%
+# Deep Elf
+DE
+
+%%%%
+# Demigod
+Dg
+
+%%%%
+# Demonspawn
+Ds
+
+%%%%
+# Djinni
+Dj
+
+%%%%
+# Draconian
+Dr
+
+%%%%
+# Felid
+Fe
+
+%%%%
+# Formicid
+Fo
+
+%%%%
+# Gargoyle
+Gr
+
+%%%%
+# Ghoul
+Gh
+
+%%%%
+# Gnoll
+Gn
+
+%%%%
+# Hill Orc
+HO
+
+%%%%
+# Human
+Hu
+
+%%%%
+# Kobold
+Ko
+
+%%%%
+# Merfolk
+Mf
+
+%%%%
+# Minotaur
+Mi
+
+%%%%
+# Mummy
+Mu
+
+%%%%
+# Naga
+Na
+
+%%%%
+# Octopode
+Op
+
+%%%%
+# Ogre
+Og
+
+%%%%
+# Palentonga
+Pa
+
+%%%%
+# Spriggan
+Sp
+
+%%%%
+# Tengu
+Te
+
+%%%%
+# Troll
+Tr
+
+%%%%
+# Vampire
+Vp
+
+%%%%
+# Vine Stalker
+VS
+
+%%%%
+
+# obsolete, but could appear in high scores list or as player ghost
+%%%%
+# Halfling
+Ha
+
+%%%%
+
+##############################################
+# Background (aka job) abbreviations
+##############################################
+
+%%%%
+# Abyssal Knight
+AK
+
+%%%%
+# Air Elementalist
+AE
+
+%%%%
+# Arcane Marksman
+AM
+
+%%%%
+# Artificer
+Ar
+
+%%%%
+# Berserker
+Be
+
+%%%%
+# Brigand
+Br
+
+%%%%
+# Chaos Knight
+CK
+
+%%%%
+# Conjurer
+Cj
+
+%%%%
+# Earth Elementalist
+EE
+
+%%%%
+# Enchanter
+En
+
+%%%%
+# Fighter
+Fi
+
+%%%%
+# Fire Elementalist
+FE
+
+%%%%
+# Gladiator
+Gl
+
+%%%%
+# Ice Elementalist
+IE
+
+%%%%
+# Delver
+De
+
+%%%%
+# Monk
+Mo
+
+%%%%
+# Necromancer
+Ne
+
+%%%%
+# Summoner
+Su
+
+%%%%
+# Transmuter
+Tm
+
+%%%%
+# Venom Mage
+VM
+
+%%%%
+# Wanderer
+Wn
+
+%%%%
+# Warper
+Wr
+
+%%%%
+# (Hedge) Wizard
+Wz
+
+%%%%

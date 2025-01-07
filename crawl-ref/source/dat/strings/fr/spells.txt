@@ -1,0 +1,958 @@
+###############################################################################
+#
+# Translations for spells
+#
+###############################################################################
+
+%%%%
+Teleport Self
+
+%%%%
+Cause Fear
+
+%%%%
+Magic Dart
+
+%%%%
+Fireball
+
+%%%%
+Apportation
+
+%%%%
+Conjure Flame
+
+%%%%
+# duplicate of ability
+#Dig
+#Graben
+%%%%
+Bolt of Fire
+
+%%%%
+Bolt of Cold
+
+%%%%
+Lightning Bolt
+
+%%%%
+Blinkbolt
+
+%%%%
+Bolt of Magma
+
+%%%%
+Polymorph
+
+%%%%
+Slow
+
+%%%%
+Haste
+
+%%%%
+Petrify
+
+%%%%
+Confuse
+
+%%%%
+Invisibility
+
+%%%%
+Throw Flame
+
+%%%%
+Throw Frost
+
+%%%%
+Disjunction
+
+%%%%
+Freezing Cloud
+
+%%%%
+Mephitic Cloud
+
+%%%%
+Venom Bolt
+
+%%%%
+Olgreb's Toxic Radiance
+
+%%%%
+Teleport Other
+
+%%%%
+Death's Door
+
+%%%%
+Mass Confusion
+
+%%%%
+# duplicate of ability
+#Smiting
+#Zerschlagen
+%%%%
+Summon Small Mammal
+
+%%%%
+Abjuration
+
+%%%%
+Bolt of Draining
+
+%%%%
+Lehudib's Crystal Spear
+
+%%%%
+# short form of the spell name above
+Crystal Spear
+
+%%%%
+Tornado
+
+%%%%
+Poisonous Cloud
+
+%%%%
+Fire Storm
+
+%%%%
+Call Down Damnation
+
+%%%%
+# duplicate of ability
+#Blink
+#Blinzeln
+%%%%
+Blink Range
+
+%%%%
+Blink Away
+
+%%%%
+Blink Close
+
+%%%%
+Iskenderun's Mystic Blast
+
+%%%%
+Summon Horrible Things
+
+%%%%
+Malign Gateway
+
+%%%%
+Enslavement
+
+%%%%
+#Animate Dead
+#Tote beleben
+%%%%
+Pain
+
+%%%%
+Animate Skeleton
+
+%%%%
+Vampiric Draining
+
+%%%%
+Haunt
+
+%%%%
+Borgnjor's Revivification
+
+%%%%
+Freeze
+
+%%%%
+Ozocubu's Refrigeration
+
+%%%%
+Sticky Flame
+
+%%%%
+Summon Ice Beast
+
+%%%%
+Ozocubu's Armour
+
+%%%%
+Call Imp
+
+%%%%
+Repel Missiles
+
+%%%%
+Berserker Rage
+
+%%%%
+Dispel Undead
+
+%%%%
+Poison Arrow
+
+%%%%
+Twisted Resurrection
+
+%%%%
+Banishment
+
+%%%%
+Sting
+
+%%%%
+Sublimation of Blood
+
+%%%%
+Tukima's Dance
+
+%%%%
+Summon Demon
+
+%%%%
+Summon Greater Demon
+
+%%%%
+Corpse Rot
+
+%%%%
+Iron Shot
+
+%%%%
+Stone Arrow
+
+%%%%
+Shock
+
+%%%%
+Swiftness
+
+%%%%
+Debugging Ray
+
+%%%%
+Agony
+
+%%%%
+Spider Form
+
+%%%%
+Disintegrate
+
+%%%%
+Blade Hands
+
+%%%%
+Statue Form
+
+%%%%
+Ice Form
+
+%%%%
+Dragon Form
+
+%%%%
+Hydra Form
+
+%%%%
+Necromutation
+
+%%%%
+Death Channel
+
+%%%%
+Symbol of Torment
+
+%%%%
+Throw Icicle
+
+%%%%
+Airstrike
+
+%%%%
+Shadow Creatures
+
+%%%%
+Confusing Touch
+
+%%%%
+Flame Tongue
+
+%%%%
+Passwall
+
+%%%%
+Ignite Poison
+
+%%%%
+Call Canine Familiar
+
+%%%%
+Summon Dragon
+
+%%%%
+Ensorcelled Hibernation
+
+%%%%
+Metabolic Englaciation
+
+%%%%
+Silence
+
+%%%%
+Shatter
+
+%%%%
+Dispersal
+
+%%%%
+Static Discharge
+
+%%%%
+Corona
+
+%%%%
+Alistair's Intoxication
+
+%%%%
+Lee's Rapid Deconstruction
+
+%%%%
+Sandblast
+
+%%%%
+Simulacrum
+
+%%%%
+Conjure Ball Lightning
+
+%%%%
+Chain Lightning
+
+%%%%
+Excruciating Wounds
+
+%%%%
+Portal Projectile
+
+%%%%
+Monstrous Menagerie
+
+%%%%
+Passage of Golubria
+
+%%%%
+Fulminant Prism
+
+%%%%
+Paralyse
+
+%%%%
+Minor Healing
+
+%%%%
+Major Healing
+
+%%%%
+Woodweal
+
+%%%%
+# duplicate of ability
+#Hurl Damnation
+#Verdammnis schleudern
+%%%%
+Brain Feed
+
+%%%%
+Noxious Cloud
+
+%%%%
+Steam Ball
+
+%%%%
+Summon Ufetubus
+
+%%%%
+Summon Hell Beast
+
+%%%%
+Energy Bolt
+
+%%%%
+# duplicate of ability
+#Spit Poison
+#Gift spucken
+%%%%
+Summon Undead
+
+%%%%
+Cantrip
+
+%%%%
+Quicksilver Bolt
+
+%%%%
+Metal Splinters
+
+%%%%
+Splinterspray
+
+%%%%
+Miasma Breath
+
+%%%%
+Summon Drakes
+
+%%%%
+Blink Other
+
+%%%%
+Blink Other Close
+
+%%%%
+Summon Mushrooms
+
+%%%%
+Spit Acid
+
+%%%%
+Acid Splash
+
+%%%%
+Sticky Flame Range
+
+%%%%
+Fire Breath
+
+%%%%
+Searing Breath
+
+%%%%
+Chaos Breath
+
+%%%%
+Cold Breath
+
+%%%%
+Chilling Breath
+
+%%%%
+Summon Water Elementals
+
+%%%%
+Porkalator
+
+%%%%
+Spawn Tentacles
+
+%%%%
+Tomb of Doroklohe
+
+%%%%
+Summon Eyeballs
+
+%%%%
+Haste Other
+
+%%%%
+Summon Earth Elementals
+
+%%%%
+Summon Air Elementals
+
+%%%%
+Summon Fire Elementals
+
+%%%%
+Sleep
+
+%%%%
+Mara Summon
+
+%%%%
+Summon Illusion
+
+%%%%
+Primal Wave
+
+%%%%
+Call Tide
+
+%%%%
+Orb of Destruction
+
+%%%%
+Ink Cloud
+
+%%%%
+Might
+
+%%%%
+Might Other
+
+%%%%
+Awaken Forest
+
+%%%%
+Druid's Call
+
+%%%%
+#Brothers in Arms
+#Gebrüder in Waffen
+%%%%
+#Trog's Hand
+#Trogs Hand
+%%%%
+Summon Spectral Orcs
+
+%%%%
+Summon Holies
+
+%%%%
+#Heal Other
+#Andere heilen
+%%%%
+Holy Flames
+
+%%%%
+Holy Breath
+
+%%%%
+#Injury Mirror
+#Verletzungsspiegel
+%%%%
+#Drain Life
+#Leben entziehen
+%%%%
+Leda's Liquefaction
+
+%%%%
+Summon Hydra
+
+%%%%
+Mesmerise
+
+%%%%
+Fire Summon
+
+%%%%
+Petrifying Cloud
+
+%%%%
+Inner Flame
+
+%%%%
+Beastly Appendage
+
+%%%%
+Ensnare
+
+%%%%
+Thunderbolt
+
+%%%%
+Iskenderun's Battlesphere
+
+%%%%
+Summon Minor Demon
+
+%%%%
+Malmutate
+
+%%%%
+Dazzling Flash
+
+%%%%
+Force Lance
+
+%%%%
+Sentinel's Mark
+
+%%%%
+Word of Recall
+
+%%%%
+Injury Bond
+
+%%%%
+Spectral Cloud
+
+%%%%
+Ghostly Fireball
+
+%%%%
+Call Lost Soul
+
+%%%%
+Dimension Anchor
+
+%%%%
+Blink Allies Encircling
+
+%%%%
+Awaken Vines
+
+%%%%
+Volley of Thorns
+
+%%%%
+Wall of Brambles
+
+%%%%
+Waterstrike
+
+%%%%
+Wind Blast
+
+%%%%
+Strip Willpower
+
+%%%%
+Wereblood
+
+%%%%
+Summon Vermin
+
+%%%%
+Malign Offering
+
+%%%%
+Searing Ray
+
+%%%%
+Discord
+
+%%%%
+Invisibility Other
+
+%%%%
+Virulence
+
+%%%%
+Orb of Electricity
+
+%%%%
+Flash Freeze
+
+%%%%
+Legendary Destruction
+
+%%%%
+Forceful Invitation
+
+%%%%
+Plane Rend
+
+%%%%
+Chain of Chaos
+
+%%%%
+Call of Chaos
+
+%%%%
+Black Mark
+
+%%%%
+Sap Magic
+
+%%%%
+#Major Destruction
+#Große Zerstörung
+%%%%
+Blink Allies Away
+
+%%%%
+Summon Forest
+
+%%%%
+Summon Lightning Spire
+
+%%%%
+Summon Guardian Golem
+
+%%%%
+Shadow Shard
+
+%%%%
+Shadow Bolt
+
+%%%%
+Crystal Bolt
+
+%%%%
+Random Bolt
+
+%%%%
+Glaciate
+
+%%%%
+Dragon's Call
+
+%%%%
+Spellforged Servitor
+
+%%%%
+Summon Mana Viper
+
+%%%%
+Phantom Mirror
+
+%%%%
+Drain Magic
+
+%%%%
+Corrosive Bolt
+
+%%%%
+gehenna serpent of hell breath
+
+%%%%
+cocytus serpent of hell breath
+
+%%%%
+dis serpent of hell breath
+
+%%%%
+tartarus serpent of hell breath
+
+%%%%
+Summon Emperor Scorpions
+
+%%%%
+Irradiate
+
+%%%%
+Spit Lava
+
+%%%%
+Electrical Bolt
+
+%%%%
+Flaming Cloud
+
+%%%%
+Throw Barbs
+
+%%%%
+Battlecry
+
+%%%%
+Warning Cry
+
+%%%%
+Seal Doors
+
+%%%%
+Flay
+
+%%%%
+Berserk Other
+
+%%%%
+Corrupting Pulse
+
+%%%%
+Siren Song
+
+%%%%
+Avatar Song
+
+%%%%
+Paralysis Gaze
+
+%%%%
+Confusion Gaze
+
+%%%%
+Draining Gaze
+
+%%%%
+Death Rattle
+
+%%%%
+Summon Scarabs
+
+%%%%
+Throw Ally
+
+%%%%
+#Cleansing Flame
+#Läuternde Flamme
+%%%%
+Gell's Gravitas
+
+%%%%
+Yara's Violent Unravelling
+
+%%%%
+Entropic Weave
+
+%%%%
+Summon Executioners
+
+%%%%
+Doom Howl
+
+%%%%
+Awaken Earth
+
+%%%%
+Aura of Brilliance
+
+%%%%
+Iceblast
+
+%%%%
+Slug Dart
+
+%%%%
+Sprint
+
+%%%%
+#Greater Servant of Makhleb
+#Großer Diener des Makhleb
+%%%%
+Bind Souls
+
+%%%%
+Infestation
+
+%%%%
+Still Winds
+
+%%%%
+Resonance Strike
+
+%%%%
+Ghostly Sacrifice
+
+%%%%
+Dream Dust
+
+%%%%
+Lesser Beckoning
+
+%%%%
+#Upheaval
+#Umwälzung
+%%%%
+Random Effects
+
+%%%%
+Poisonous Vapours
+
+%%%%
+Ignition
+
+%%%%
+Vortex
+
+%%%%
+Borgnjor's Vile Clutch
+
+%%%%
+Harpoon Shot
+
+%%%%
+Grasping Roots
+
+%%%%
+Throw Klown Pie
+
+%%%%
+Sporulate
+
+%%%%
+Starburst
+
+%%%%
+Foxfire
+
+%%%%
+Marshlight
+
+%%%%
+Hailstorm
+
+%%%%
+Eringya's Noxious Bog
+
+%%%%
+Agony Range
+
+%%%%
+Dispel Undead Range
+
+%%%%
+Frozen Ramparts
+
+%%%%
+Absolute Zero
+
+%%%%
+Sonic wave
+
+%%%%
+Roll
+
+%%%%
+Hurl Sludge
+
+%%%%
+Polar Vortex
+
+%%%%
+Call Down Lightning
+
+%%%%
+Charm
+
+%%%%
+Mindburst
+
+%%%%
+Storm Form
+
+%%%%
+Creeping Frost
+
+%%%%
+Weakening Gaze
+
+%%%%
+Maxwell's Capacitive Coupling
+
+%%%%
+Summon Tzitzimitl
+
+%%%%
+Summon Hell Sentinel
+
+%%%%
+Animate Armour
+
+%%%%
+Manifold Assault
+
+%%%%
+Goad Beasts
+
+%%%%
+Concentrate Venom
+
+%%%%
+Eruption
+
+%%%%
+Pyroclastic Surge
+
+%%%%
+Stunning Burst
+
+%%%%
+nonexistent spell
+
+%%%%
