@@ -1,13 +1,12 @@
 ###############################################################################
 #
 # Translations for abilities
-# NOTE: The abilities menu will truncate these to 32 characters if they are longer than that
 #
 ###############################################################################
 
 #################################
 # Ability names
-# Note: max chars in ability menu column is 30
+# Note: max chars in ability menu column is 31
 #################################
 
 %%%%
