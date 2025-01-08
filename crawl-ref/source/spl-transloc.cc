@@ -180,6 +180,7 @@ static bool _find_cblink_target(dist &target, bool safe_cancel,
         args.needs_path = false;
         args.top_prompt = uppercase_first(verb) + " to where?";
         args.hitfunc = hitfunc;
+        args.mode = TARG_NON_ACTOR;
         direction(target, args);
 
         if (crawl_state.seen_hups)
