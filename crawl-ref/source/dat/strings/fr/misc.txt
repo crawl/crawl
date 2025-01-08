@@ -6,7 +6,7 @@
 
 %%%%
 DECIMAL_POINT
-
+,
 %%%%
 
 ####################
@@ -14,28 +14,28 @@ DECIMAL_POINT
 ####################
 %%%%
 ", "
-
+", "
 %%%%
 "; "
-
+"; "
 %%%%
 ", and "
-
+" et "
 %%%%
 ", or "
-
+" ou "
 %%%%
 "; and "
-
+"; et "
 %%%%
 "; or "
-
+"; ou "
 %%%%
 " and "
-
+" et "
 %%%%
 " or "
-
+" ou "
 %%%%
 
 ##############################
@@ -47,48 +47,48 @@ DECIMAL_POINT
 # For example, in Spanish, you would translate "%s!" as "¡%s!"
 %%%%
 %s!
-
+%s!
 %%%%
 %s!!
-
+%s!!
 %%%%
 %s!!!
-
+%s!!!
 %%%%
 %s!!!!
-
+%s!!!!
 %%%%
 %s!!!!!
-
+%s!!!!!
 %%%%
 %s!!!!!!
-
+%s!!!!!!
 %%%%
 %s!!!!!!!
-
+%s!!!!!!!
 %%%%
 %s!!!!!!!!
-
+%s!!!!!!!!
 %%%%
 %s!!!!!!!!!
-
+%s!!!!!!!!!
 %%%%
+%s!!!!!!!!!!
+%s!!!!!!!!!!
 
 ####################
 # General punctuation
 ####################
 
-%s!!!!!!!!!!
-
 %%%%
 " "
-
+" "
 %%%%
-.
-
+"."
+"."
 %%%%
-%s.
-
+"%s."
+"%s."
 %%%%
 
 
@@ -100,7 +100,7 @@ DECIMAL_POINT
 # with x2, x3, etc. appended, e.g. "The orc hits you! x2"
 %%%%
 " x%d"
-
+" x%d"
 %%%%
 
 ####################
@@ -108,98 +108,98 @@ DECIMAL_POINT
 ####################
 %%%%
 Escape
-
+Échappement
 %%%%
 Enter
-
+Éntrée
 %%%%
 Ctrl-A
-
+Ctrl-A
 %%%%
 Ctrl-B
-
+Ctrl-B
 %%%%
 Ctrl-C
-
+Ctrl-C
 %%%%
 %%%%
 Ctrl-D
-
+Ctrl-D
 %%%%
 Ctrl-E
-
+Ctrl-E
 %%%%
 Ctrl-F
-
+Ctrl-F
 %%%%
 Ctrl-G
-
+Ctrl-G
 %%%%
 Ctrl-H
-
+Ctrl-H
 %%%%
 Ctrl-I
-
+Ctrl-I
 %%%%
 Ctrl-J
-
+Ctrl-J
 %%%%
 Ctrl-K
-
+Ctrl-K
 %%%%
 Ctrl-L
-
+Ctrl-L
 %%%%
 Ctrl-M
-
+Ctrl-M
 %%%%
 Ctrl-N
-
+Ctrl-N
 %%%%
 Ctrl-O
-
+Ctrl-O
 %%%%
 Ctrl-P
-
+Ctrl-P
 %%%%
 Ctrl-Q
-
+Ctrl-Q
 %%%%
 Ctrl-R
-
+Ctrl-R
 %%%%
 Ctrl-S
-
+Ctrl-S
 %%%%
 Ctrl-T
-
+Ctrl-T
 %%%%
 Ctrl-U
-
+Ctrl-U
 %%%%
 Ctrl-V
-
+Ctrl-V
 %%%%
 Ctrl-W
-
+Ctrl-W
 %%%%
 Ctrl-X
-
+Ctrl-X
 %%%%
 Ctrl-Y
-
+Ctrl-Y
 %%%%
 Ctrl-Z
-
+Ctrl-Z
 %%%%
 
 # status indicators for substitute keys
 %%%%
 CTRL
-
+CTRL
 %%%%
 SHIFT
-
+MAJ
 %%%%
 
 ####################
@@ -207,7 +207,7 @@ SHIFT
 ####################
 %%%%
 This item has been removed, sorry!
-
+Cet article a été supprimé, désolé !
 %%%%
 
 ####################
@@ -219,21 +219,21 @@ This item has been removed, sorry!
 
 %%%%
 the acid
-
+l'acide
 %%%%
 the entropic weave
-
+le tissage entropique
 %%%%
 Your corrosive artefact
-
+Votre artefact corrosif
 %%%%
 Your corrupting presence
-
+Votre présence corrompue
 %%%%
 # a flying bit of exploded monster (used directly after monster explosion
 # message, so it will be obvious what it refers to)
 a flying bit
-
+un morceau volant
 %%%%
 
 #################################
@@ -241,11 +241,11 @@ a flying bit
 #################################
 %%%%
 %d gold
-
+%d or
 %%%%
 # capitalised form used on abilities menu
 %d Gold
-
+%d Or
 %%%%
 
 #################################
@@ -253,18 +253,12 @@ a flying bit
 #################################
 %%%%
 you
-
-%%%%
-{acc}you
-
-%%%%
-{dat}you
-
+vous
 %%%%
 # when something hits you after you're already dead
 # declension will be handled by grammar.txt
 your lifeless body
-
+votre corps sans vie
 %%%%
 
 #################################
@@ -273,20 +267,20 @@ your lifeless body
 # These are only used alone as an exclamation, e.g. "Plum!"
 %%%%
 plum
-
+prune
 %%%%
 lemon
-
+citron
 %%%%
 blueberry
-
+myrtille
 %%%%
 raspberry
-
+framboise
 %%%%
 cherry
-
+cerise
 %%%%
 moon pie
-
+moon pie
 %%%%
