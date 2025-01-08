@@ -354,7 +354,7 @@ TAGS:   transparent vaults_orient_w
 WEIGHT: 5 (D:3-7)
 KPROP:  cn'O = w:5 bloody / nothing
 KMONS:  O = player_ghost
-KITEM:  O = scroll of immolation ident:all
+KITEM:  O = scroll of immolation pre_id
 NSUBST: ' = |* / |*$ / 998 / 2=F. / .
 MARKER: F = lua:fog_machine { cloud_type = "black smoke", \
             pow_min = 10000, pow_max = 10000, delay = 1, \
@@ -551,7 +551,7 @@ SUBST:   L = ':30 9:20 d:20 8 *, * = *|
 SUBST:   y = G:70 1, W = '
 : elseif you.in_branch("Depths") then
 MONS:    orange crystal statue
-MONS:    caustic shrike / juggernaut / titan
+MONS:    caustic shrike / juggernaut / alderking w:5 / wyrmhole w:5 / titan
 NSUBST:  M = O / 2 / * = * O:15 8:5
 SUBST:   L = ':30 9:20 d:20 8 *, * = *|
 SUBST:   y = G:30 1, c : cvb, W : Wwl
@@ -968,13 +968,13 @@ ORIENT: float
 KFEAT:  OP = altar_okawaru
 KMONS:  OP = player ghost
 # Bad Oka gift.
-KITEM:  O = hat damaged ident:all / cloak damaged ident:all / \
-        animal skin damaged ident:all / robe damaged ident:all / \
-        leather armour damaged ident:all / whip damaged ident:all / \
-        spear damaged ident:all / short sword damaged ident:all / \
-        dagger damaged ident:all / hand axe damaged ident:all / \
-        club damaged ident:all / sling damaged ident:all
-KITEM:  P = robe plus:-8 randart ident:all
+KITEM:  O = hat damaged pre_id / cloak damaged pre_id / \
+        animal skin damaged pre_id / robe damaged pre_id / \
+        leather armour damaged pre_id / whip damaged pre_id / \
+        spear damaged pre_id / short sword damaged pre_id / \
+        dagger damaged pre_id / hand axe damaged pre_id / \
+        club damaged pre_id / sling damaged pre_id
+KITEM:  P = robe plus:-8 randart pre_id
 # An "Oka weapon gift" using the more useful types on 'd'
 ITEM:   quick blade good_item w:5 / rapier good_item / scimitar good_item / \
         double sword good_item w:5 / demon blade good_item w:5 / \
@@ -982,8 +982,8 @@ ITEM:   quick blade good_item w:5 / rapier good_item / scimitar good_item / \
         eveningstar good_item w:5 / demon whip good_item w:5 / \
         dire flail good_item / great mace good_item / broad axe good_item / \
         battleaxe good_item / executioner's axe good_item w:5 / \
-        demon trident good_item w:5 / glaive good_item / \
-        bardiche good_item w:5 / lajatang good_item w:5
+        demon trident good_item w:5 / partisan good_item w:5 / \
+        glaive good_item / bardiche good_item w:5 / lajatang good_item w:5
 # An "Oka armour gift" on 'e'
 ITEM:   any armour good_item / any armour randart
 # Rarely place the robe of misfortune or a bad randart robe.
@@ -1154,7 +1154,7 @@ ENDMAP
 
 NAME:   biasface_ghost_demon_polymorph
 DEPTH:  Depths
-KITEM:  O = wand of polymorph ident:type
+KITEM:  O = wand of polymorph pre_id
 KMONS:  O = player ghost
 MONS:   any common demon
 MONS:   balrug / blizzard demon / cacodemon / \
@@ -1182,7 +1182,7 @@ NAME:   ebering_ghost_funeral_grove
 DEPTH:  D:8-, Lair, Swamp
 ORIENT: float
 # Monsters and loot
-KITEM:  O = potion of lignification ident:all
+KITEM:  O = potion of lignification pre_id
 KMONS:  O = player ghost
 MONS:   wolf / black bear / polar bear
 MONS:   spriggan ; spear | trident, spriggan ; spear randart | trident randart
@@ -1316,37 +1316,37 @@ KMONS:  E = ice fiend
 : ghost_good_loot(_G)
 : if you.in_branch("D") then
 :     if you.depth() < 4 then
-KITEM:  O = ring of fire ident:type
+KITEM:  O = ring of fire pre_id
 SUBST:  d = *%, e = %$, fghij = -
 NSUBST: - = 3=1 / 4=1' / 2''' / '
 :     elseif you.depth() < 6 then
-KITEM:  O = ring of fire ident:type
+KITEM:  O = ring of fire pre_id
 SUBST:  d = *%, e = %$, fghij = -
 NSUBST: - = 3=1 / 4=1' / 23 / 23'' / '
 :     elseif you.depth() < 9 then
-KITEM:  O = ring of fire ident:type / ring of fire randart ident:all w:5
+KITEM:  O = ring of fire pre_id / ring of fire randart pre_id w:5
 SUBST:  d = *, e = *%, f = %$--, ghij = -
 NSUBST: - = 3=12 / 4=12'' / 3 / 3=3' / '
 :     elseif you.depth() < 12 then
-KITEM:  O = ring of fire ident:type / ring of fire randart ident:all w:5
+KITEM:  O = ring of fire pre_id / ring of fire randart pre_id w:5
 SUBST:  e = *, f = %$, ghij = -
 NSUBST: - = 3=12 / 4=12'' / 2=3 / 3=3' / 45'''''' / '
 :     elseif you.depth() < 14 then
-KITEM:  O = ring of fire ident:type / ring of fire randart ident:all
+KITEM:  O = ring of fire pre_id / ring of fire randart pre_id
 SUBST:  f = *, g = %$, hij = -
 NSUBST: - = 4=1 / 6=1' / 2=45 / 3=45'' / 67'''''' / '
 :     else
-KITEM:  O = ring of fire ident:type / ring of fire randart ident:all
+KITEM:  O = ring of fire pre_id / ring of fire randart pre_id
 SUBST:  f = |*, g = *%, h = %$--, ij = -
 NSUBST: - = 4=1 / 6=1' / 2=45 / 3=45'' / 67 / D''' / '
 :     end
 : elseif you.in_branch("Lair") then
-KITEM:  O = ring of fire ident:type / ring of fire randart ident:all
+KITEM:  O = ring of fire pre_id / ring of fire randart pre_id
 SUBST:  f = *%, g = %$--, hij = -
 NSUBST: - = 4=1 / 5=1' / 2=4 / 2=4' / 7''' / '
 # Depths
 : else
-KITEM:  O = ring of fire randart ident:all
+KITEM:  O = ring of fire randart pre_id
 SUBST:  fghij = |*
 NSUBST: - = 4=1 / 6=1' / 5 / 2=5' / 6 / 2=6' / 2=7D / 2=7D'' / E' / '
 : end
@@ -1503,14 +1503,14 @@ NAME:   ploomutoo_gammafunk_ghost_potion_laboratory
 TAGS:   transparent allow_dup vaults_orient_s
 DEPTH:  D:8-, Elf, Vaults, !Vaults:$, Depths
 ORIENT: float
-ITEM:   potion of mutation ident:type q:1
+ITEM:   potion of mutation pre_id q:1
 : item(dgn.loot_potions)
 ITEM:   hat / robe good_item / pair of gloves / pair of boots / cloak
 ITEM:   hat good_item / robe good_item / pair of gloves good_item \
         / pair of boots good_item / cloak good_item
 ITEM:   hat randart / robe randart / pair of gloves randart \
         / pair of boots randart / cloak randart
-KITEM:  O = potion of cancellation q:2 ident:type
+KITEM:  O = potion of cancellation q:2 pre_id
 KMONS:  O = player ghost
 MONS:   ugly thing, neqoxec, shapeshifter, glowing orange brain, very ugly thing
 MONS:   glowing shapeshifter, cacodemon
@@ -1574,41 +1574,41 @@ NSUBST: R = R / -
 : ghost_good_loot(_G)
 : if you.in_branch("D") then
 :     if you.depth() < 6 then
-KITEM:  O = ring of dexterity ident:type
+KITEM:  O = ring of dexterity pre_id
 SUBST:  d = *%, e = %$, fgh = -
 NSUBST: - = 2=1 / 2=1- / -
 :     elseif you.depth() < 9 then
-KITEM:  O = ring of dexterity ident:type / \
-            ring of dexterity good_item ident:type w:5
+KITEM:  O = ring of dexterity pre_id / \
+            ring of dexterity good_item pre_id w:5
 SUBST:  d = *, e = *%, f = %$--, gh = -
 NSUBST: - = 2=1 / 4=1- / -
 :     elseif you.depth() < 12 then
-KITEM:  O = ring of dexterity ident:type / \
-            ring of dexterity good_item ident:type w:5 / \
-            ring of intelligence ident:type / \
-            ring of intelligence good_item ident:type w:5
+KITEM:  O = ring of dexterity pre_id / \
+            ring of dexterity good_item pre_id w:5 / \
+            ring of intelligence pre_id / \
+            ring of intelligence good_item pre_id w:5
 SUBST:  e = *, f = %$, gh = -
 NSUBST: - = 2=1 / 2=1- / 2 / 2=2- / -
 :     elseif you.depth() < 14 then
-KITEM:  O = ring of dexterity good_item ident:type / \
-            ring of dexterity randart ident:all w:5 / \
-            ring of intelligence good_item ident:type / \
-            ring of intelligence randart ident:all w:5
+KITEM:  O = ring of dexterity good_item pre_id / \
+            ring of dexterity randart pre_id w:5 / \
+            ring of intelligence good_item pre_id / \
+            ring of intelligence randart pre_id w:5
 SUBST:  f = *, g = %$, h = -
 NSUBST: - = 2=1 / 2=1- / 2=2 / 4=2- / -
 :     else
-KITEM:  O = ring of dexterity good_item ident:type / \
-            ring of dexterity randart ident:all / \
-            ring of intelligence good_item ident:type / \
-            ring of intelligence randart ident:all
+KITEM:  O = ring of dexterity good_item pre_id / \
+            ring of dexterity randart pre_id / \
+            ring of intelligence good_item pre_id / \
+            ring of intelligence randart pre_id
 SUBST:  f = |*, g = *%, h = %$--
 NSUBST: - = 2=1 / 2=1- / 3=2 / 4=2- / -
 :     end
 : elseif you.in_branch("Orc") then
-KITEM:  O = ring of dexterity good_item ident:type / \
-            ring of dexterity randart ident:all w:5 / \
-            ring of intelligence good_item ident:type / \
-            ring of intelligence randart ident:all w:5
+KITEM:  O = ring of dexterity good_item pre_id / \
+            ring of dexterity randart pre_id w:5 / \
+            ring of intelligence good_item pre_id / \
+            ring of intelligence randart pre_id w:5
 SUBST:  f = *, g = %$, h = -
 NSUBST: - = 2=1 / 2=1- / 2=2 / 4=2- / -
 : end
@@ -1797,7 +1797,7 @@ ENDMAP
 
 NAME:   gammafunk_ghost_hive
 DEPTH:  D:5-, Lair
-KITEM:  ' = potion of ambrosia ident:type
+KITEM:  ' = potion of ambrosia pre_id
 KMONS:  O = player ghost
 MONS:   killer bee, queen bee, hornet, meliai
 # Chance to make a partial wall in each of the full cells. Add 0-4 ambrosias.
@@ -2276,7 +2276,7 @@ SUBST:  fg = |*, h = *, i = $%, j= -
 # blademasters, but reduce the monster count.
 NSUBST: - = 1 / 2=1- / 2=L / 3=2- / -
 : elseif you.in_branch("Vaults") then
-MONS:   deep troll w:5 / vault guard
+MONS:   deep troll w:5 / vault guard w:5 / ironbound beastmaster w:5
 MONS:   ettin / stone giant
 SUBST:  fgh = |*, i = *, j= %$
 NSUBST: - = 2=1 / 1- / 4=2 / 4=2- / 3 / 2=3- / EF / EF-- / -
@@ -2329,14 +2329,14 @@ NAME:   gammafunk_ghost_abyssal_escape
 TAGS:   transparent passable no_wall_fixup
 ORIENT: float
 KMASK:  -DEFHNOQRdeqrsyuz1234|*%$^ = opaque
-KITEM:  N = scroll of teleportation q:3 ident:all w:20 \
-            / scroll of blinking ident:all w:20 \
-            / dart ego:dispersal ident:all \
+KITEM:  N = scroll of teleportation q:3 pre_id w:20 \
+            / scroll of blinking pre_id w:20 \
+            / dart ego:disjunction pre_id \
             / book of spatial translocations \
             / book of the warp \
             / there-and-back book \
             / book of displacement \
-            / randbook owner:Lugonu disc:translocation ident:all w:5 \
+            / randbook owner:Lugonu disc:translocation pre_id w:5 \
             / manual of translocations w:2 / rift w:2
 KMONS:  O = player ghost
 KFEAT:  O = enter_abyss
@@ -2569,7 +2569,7 @@ MONS:   glowing shapeshifter / crystal guardian / tentacled monstrosity \
         / daeva god:Xom / executioner / profane servitor
 MONS:   lurking horror / wretched star / hellion / apocalypse crab \
         / starcursed mass
-MONS:   ancient lich / dread lich / hellephant / hell sentinel
+MONS:   ancient lich / dread lich / hellephant / hell sentinel / wyrmhole w:4
 SUBST:  fgh = |*, i = *, j= %$
 NSUBST: - = Hqr / 4=1 / 4=1- / 2=2 / 2=2- / 3 / 3- / 4 / 4- / -
 : elseif you.in_branch("Zot") then
@@ -2586,7 +2586,7 @@ MONS:   draconian shifter / daeva god:Xom / executioner / profane servitor \
         / killer klown
 MONS:   lurking horror / wretched star / hellion / apocalypse crab \
         / starcursed mass
-MONS:   ancient lich / dread lich / hellephant / hell sentinel
+MONS:   ancient lich / dread lich / hellephant / hell sentinel / wyrmhole w:4
 SUBST:  fghij = |*
 NSUBST: - = qr / 4=1 / 4=1- / 2=2 / 3=2- / 3 / 3- / 4 / 2=4- / -
 : end
@@ -2647,7 +2647,7 @@ ITEM:   hat / hat good_item, pair of boots
 KMONS:  D = ancient champion / deep elf annihilator / iron giant
 # Zot
 : else
-ITEM:   hat good_item, pair of boots, scroll of blinking ident:all
+ITEM:   hat good_item, pair of boots, scroll of blinking pre_id
 KMONS:  D = draconian annihilator / iron giant / hell sentinel
 : end
 KFEAT:  ~ = abandoned_shop

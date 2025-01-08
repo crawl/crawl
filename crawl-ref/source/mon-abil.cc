@@ -920,8 +920,10 @@ static void _seismosaurus_egg_hatch(monster* mons)
         simple_monster_message(*mons, " hatches with a roar like a landslide!",
                                 false, MSGCH_MONSTER_SPELL);
 
+        const int old_hd = mons->get_experience_level();
         change_monster_type(mons, MONS_SEISMOSAURUS, true);
         mons->heal(mons->max_hit_points);
+        mons->set_hit_dice(old_hd);
 
         mon_enchant timer = mons->get_ench(ENCH_SUMMON_TIMER);
         timer.duration = random_range(40, 55) * BASELINE_DELAY;
@@ -1016,7 +1018,8 @@ bool mon_special_ability(monster* mons)
         {
             foxfire_attack(mons, &you);
             check_place_cloud(CLOUD_FLAME, mons->pos(), 2, mons);
-            monster_die(*mons, KILL_RESET, NON_MONSTER, true);
+            if (mons->alive())
+                monster_die(*mons, KILL_RESET, NON_MONSTER, true);
             used = true;
             break;
         }
@@ -1033,25 +1036,11 @@ bool mon_special_ability(monster* mons)
             if (!cell_is_solid(targ->pos()))
             {
                 foxfire_attack(mons, *targ);
-                monster_die(*mons, KILL_RESET, NON_MONSTER, true);
+                if (mons->alive())
+                    monster_die(*mons, KILL_RESET, NON_MONSTER, true);
                 used = true;
                 break;
             }
-        }
-        break;
-
-    case MONS_SKY_BEAST:
-        if (one_chance_in(8))
-        {
-            // If we're invisible, become visible.
-            if (mons->invisible())
-            {
-                mons->del_ench(ENCH_INVIS);
-                place_cloud(CLOUD_RAIN, mons->pos(), 2, mons);
-            }
-            // Otherwise, go invisible.
-            else
-                enchant_monster_invisible(mons, "flickers out of sight");
         }
         break;
 
@@ -1216,11 +1205,13 @@ bool egg_is_incubating(const monster& egg)
     if (!parent || !adjacent(parent->pos(), egg.pos()))
         return false;
 
-    // Finally, check that there are foes sufficiently nearby
+    // Finally, check that there are foes sufficiently nearby (and also in the
+    // parent's LoS)
     for (monster_near_iterator mi(&egg, LOS_NO_TRANS); mi; ++mi)
     {
         if (!mons_aligned(*mi, &egg) && !mi->is_firewood()
-            && grid_distance(egg.pos(), mi->pos()) <= 4)
+            && grid_distance(egg.pos(), mi->pos()) <= 4
+            && parent->see_cell(mi->pos()))
         {
             return true;
         }

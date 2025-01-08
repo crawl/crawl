@@ -399,7 +399,7 @@ function TroveMarker:search_for_item(marker, pname, iter_table, dry_run)
     else -- Most of the loop's body is in this block.
     if dry_run ~= nil then crawl.mpr("Checking item: " .. it.name()) end
 
-    if not it.identified("type properties pluses") then
+    if not it.is_identified then
       if dry_run ~= nil then crawl.mpr("Item not identified.") end
       this_item = false
     end

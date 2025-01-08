@@ -1939,12 +1939,13 @@ Draconian types
 
 Red Draconians
   feel at home in fiery surroundings. They are bad with ice magic but very
-  proficient with fire. Their scorchingly hot breath will leave a lingering
-  cloud of flame.
+  proficient with fire. They can breathe highly combustible embers which
+  cause a fiery explosion whenever they hits a foe.
 
 White Draconians
-  stem from frost-bitten lands, and are naturally resistant to frost. Their
-  breath is piercing cold. They are versed in ice magic, but bad at fire.
+  stem from frost-bitten lands, and are naturally resistant to frost. They
+  beathe piercing cold which encases anything it kills in a solid block of
+  ice. They are versed in ice magic, but bad at fire.
 
 Green Draconians
   are used to venomous surroundings and breathe clouds of mephitic vapours. They
@@ -1952,30 +1953,35 @@ Green Draconians
   magic realms. Later on, they will develop a poisonous stinger.
 
 Yellow Draconians
-  have a sulphurous breath full of corrosive acid, and later gain an acidic bite
-  attack. They are acid resistant, too.
+  have a sulphurous breath full of corrosive acid, and are naturally acid
+  resistant. Their knowledge of corrosion makes them especially good in the
+  maintenance of Forgecraft machinery. Later on, they gain an acidic bite
+  attack.
 
 Grey Draconians
-  have no breath weapon, but their bodies are adapted to the water, allowing
-  them to swim. They are proficient with earth magic but bad with air magic, and
-  they also have harder scales than other Draconians.
+  can breathe torrents of mud which impede the movement and attacks of
+  non-flying enemies. They are proficient with earth magic but bad with air
+  magic. Later on, iron fuses onto their scales to make them hardier than
+  other Draconians.
 
 Black Draconians
-  can unleash huge electrical discharges, and are naturally insulated. They are
-  good at air magic but feel cumbersome with earth magic. Their wings will
+  can unleash arcing electrical discharges, and are naturally insulated. They
+  are good at air magic but feel cumbersome with earth magic. Their wings will
   eventually grow larger, which allows them to fly when combined with their
   natural skill with air magic.
 
 Purple Draconians
   are highly adapted to all spellcasting in general, and to hexes in
   particular. They are a bit better at evoking things than most other
-  Draconians. They can breathe dispelling energy which strips those it hits of
-  their enchantments, and are naturally stronger-willed than other draconians.
+  Draconians. They can breathe dispelling energy which strips those it hits
+  of enchantments and impairs their spellcasting. They are stronger-willed
+  than other draconians, and later on, they gain resistance to both external
+  mana draining and to enchantment stripping.
 
 Pale Draconians
   are better at air and fire magic, and have no deficiencies in other schools.
-  They breathe steam and, like their Purple cousins, have a slight advantage at
-  Evocations.
+  They breathe sight-obscuring steam and, like their Purple cousins, have a
+  slight advantage at Evocations.
 
 ****************************************
 2. List of character backgrounds

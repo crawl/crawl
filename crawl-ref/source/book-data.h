@@ -93,8 +93,8 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Young Poisoner's Handbook
-    SPELL_STING,
-    SPELL_MERCURY_VAPOURS,
+    SPELL_POISONOUS_VAPOURS,
+    SPELL_MERCURY_ARROW,
     SPELL_OLGREBS_TOXIC_RADIANCE,
 },
 
@@ -135,7 +135,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // My Sojourn Through Swamps
-    SPELL_MERCURY_VAPOURS,
+    SPELL_MERCURY_ARROW,
     SPELL_CLOCKWORK_BEE,
     SPELL_SURPRISING_CROCODILE,
 },
@@ -228,7 +228,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Cantrips
-    SPELL_STING,
+    SPELL_POISONOUS_VAPOURS,
     SPELL_KINETIC_GRAPNEL,
     SPELL_SUMMON_SMALL_MAMMAL,
     SPELL_APPORTATION,

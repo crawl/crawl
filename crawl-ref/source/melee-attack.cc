@@ -99,7 +99,7 @@ bool melee_attack::bad_attempt()
     if (!attacker->is_player() || !defender || !defender->is_monster())
         return false;
 
-    if (god_protects(attacker, defender->as_monster(), false))
+    if (never_harm_monster(attacker, defender->as_monster(), true))
         return true;
 
     if (player_unrand_bad_attempt(offhand_weapon()))
@@ -3754,6 +3754,10 @@ void melee_attack::mons_apply_attack_flavour()
                 place_cloud(CLOUD_POISON, cloud_pos[i], dur, attacker);
         }
 
+        // No brewing potions via punching plants.
+        if (!defender || defender->is_firewood())
+            break;
+
         if (--attacker->as_monster()->number == 0)
             alembic_brew_potion(*attacker->as_monster());
     }
@@ -3761,6 +3765,21 @@ void melee_attack::mons_apply_attack_flavour()
 
     case AF_BOMBLET:
         monarch_deploy_bomblet(*attacker->as_monster(), defender->pos());
+        break;
+
+    case AF_AIRSTRIKE:
+        const int spaces = airstrike_space_around(defender->pos(), true);
+        const int min = pow(attacker->get_hit_dice(), 1.33) * (spaces + 3) / 6;
+        const int max = pow(attacker->get_hit_dice() + 1, 1.33) * (spaces + 3) / 6;
+        special_damage = defender->apply_ac(random_range(min, max), 0);
+
+        if (needs_message && special_damage)
+        {
+            mprf("%s and strikes %s%s",
+                 airstrike_intensity_line(spaces).c_str(),
+                 defender->name(DESC_THE).c_str(),
+                 attack_strength_punctuation(special_damage).c_str());
+        }
         break;
 
     }

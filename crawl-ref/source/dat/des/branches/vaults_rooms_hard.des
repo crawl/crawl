@@ -1940,6 +1940,92 @@ ENDMAP
 #
 ###############################################################################
 
+NAME:    minislime_mu
+TAGS:    no_monster_gen no_item_gen transparent vaults_hard
+DEPTH:   Vaults, !Vaults:$
+WEIGHT:  15
+MONS:    slime creature, large slime creature, very large slime creature
+MONS:    great orb of eyes, entropy weaver, glowing orange brain
+MONS:    formless jellyfish
+KITEM:   R = gold no_pickup q:1
+ITEM:    scroll of teleportation pre_id q:2 / wand of digging charges:2
+ITEM:    scroll of teleportation pre_id q:2 w:20 / \
+         wand of digging charges:2 w:20 / dagger ego:distortion pre_id
+: local d = you.depth()
+: nsubst('J = ' .. d .. ':4 / 3 = 5 6:' .. d * 4 .. ' 7:' .. d * 3 .. ' / *:1')
+: subst('1 = 1 2:' .. 4 + d * 3 .. ' 3:' .. 3 + d * 2)
+SHUFFLE: %!'"
+NSUBST:  % = 1:d / * = %$, ! = 1:d / * = %$, ' = 1:d / * = %$, " = 1:e / * = %$
+KMASK:   %$de = opaque
+TILE:    m = dngn_transparent_wall_green
+MAP
+  ........ ......
+  ..............J
+..JJ..mmmm.mmm...J.
+..J.mmm%m.Jm'mm....
+...mm%%%m..m''mm...
+...m%%%%m.mm'''mm..
+..mm%%%%mJ.m''''m..
+..m%%%%%mm.m''''m..
+..mmmmmmm..mmmmmm..
+ ..Jm..Jm.....mJ..
+..m...m...R.mJ..m..
+..mmmmmmm...mmmmm..
+..m!!!!!m..mm"""m..
+..mm!!!!m.mm""""m..
+...mm!!!m.Jm"""mm..
+....mm!mmm.m""mm...
+.J...m!mJ..m"mm....
+..J..mmmm.mmmm..J..
+  .............JJ
+  ....... .......
+ENDMAP
+
+NAME:   minmay_crystal_thing
+TAGS:   no_monster_gen no_item_gen no_pool_fixup vaults_hard vault_orient_e
+ORIENT: float
+# Extra-large vaults get higher weight in V to help with layout restrictions.
+WEIGHT: 30
+DEPTH:  Vaults, !Vaults:$
+MONS:   crystal guardian, orange crystal statue
+ITEM:   any magical staff / any book / any jewellery w:15 / any scroll w:30 / \
+        potion of magic pre_id / potion of brilliance pre_id / \
+        phial of floods w:3 / tin of tremorstones w:5 / gold w:40
+KFEAT:  _ = altar_sif_muna
+KFEAT:  ~ = W
+KPROP:  ~ = no_tele_into
+MAP
+                                     bbbbbbbbbbbbb
+                                     bwwwwwwwwwwwb
+                      bbb            bwWWWWWWWWWwb
+                     bbwbb           bwWb.....bWwb
+                    bbwwwbb          bwW.1...1.Wwb
+   bbbbb           bbwwWwwbb         bwWb.....bWwb
+   bdddb          bbwwWWWwwbb        bwWWWW.WWWWwb
+   bd1db         bbwwWW1WWwwbb       bwwwwW.Wwwwwb
+   bdddb        bbwwWW...WWwwbb   bbbbbbbwW.Wwbbbb
+   bb.bbbbbb   bbwwWW..W..WWwwbb  bwwwwwwwW.Wwwwwx
+   b...WwwwbbbbbwwWW..WWW..WWwwbb bwWWWWWWW.WWWWWx
+   b...WWWwwbbbwwWW..WWwWW..WWwwbbbwwWb...b.b....x.
+bbbbb...WWwwwwwwWW..WWwwwWW..WWwwwwwwW...........x.
+bdddb...1WWWWWWWW..WWwb~bwWW..WWWWWWWW...........+.
+bd1d.._...........WWww~2~wwWW....................+.
+bdddb...1WWWWWWWW..WWwb~bwWW..WWWWWWWW...........+.
+bbbbb...WWwwwwwwWW..WWwwwWW..WWwwwwwwW...........x.
+   b...WWWwwbbbwwWW..WWwWW..WWwwbbbwwWb...b.b....x.
+   b...WwwwbbbbbwwWW..WWW..WWwwbb bwWWWWWWW.WWWWWx
+   bb.bbbbbb   bbwwWW..W..WWwwbb  bwwwwwwwW.Wwwwwx
+   bdddb        bbwwWW...WWwwbb   bbbbbbbwW.Wwbbbb
+   bd1db         bbwwWW1WWwwbb       bwwwwW.Wwwwwb
+   bdddb          bbwwWWWwwbb        bwWWWW.WWWWwb
+   bbbbb           bbwwWwwbb         bwWb.....bWwb
+                    bbwwwbb          bwW.1...1.Wwb
+                     bbwbb           bwWb.....bWwb
+                      bbb            bwWWWWWWWWWwb
+                                     bwwwwwwwwwwwb
+                                     bbbbbbbbbbbbb
+ENDMAP
+
 NAME:    abrahamwl_protected_by_tso_1
 TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup
 TAGS:    vaults_hard vaults_orient_e
@@ -2112,8 +2198,8 @@ KMONS:   K = patrolling hell knight
 KMONS:   M = patrolling Margery w:1 / patrolling hell knight, \
              patrolling hell knight
 # and snacks
-KITEM:   ? = potion of degeneration ident:type q:3, \
-             any potion w:30 / potion of mutation ident:type q:1
+KITEM:   ? = potion of degeneration pre_id q:3, \
+             any potion w:30 / potion of mutation pre_id q:1
 : kitem("$ = gold q:" .. crawl.random_range(33, 133) .. " no_pickup")
 KITEM:   MK` = human skeleton
 KFEAT:   Y = fountain_blood

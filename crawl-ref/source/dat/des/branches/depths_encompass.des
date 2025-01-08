@@ -55,10 +55,10 @@
         e.shuffle("ghij")
         e.shuffle("JH")
         e.shuffle("34")
-        e.kitem("p = potion of mutation ident:type")
+        e.kitem("p = potion of mutation pre_id")
         e.kitem("P = any jewellery good_item")
-        e.kitem("Q = potion of mutation ident:type")
-        e.kitem("R = potion of mutation ident:type / nothing")
+        e.kitem("Q = potion of mutation pre_id")
+        e.kitem("R = potion of mutation pre_id / nothing")
         e.nsubst("u = 2:Q / 1:P / 1:R / *:u")
         e.nsubst("G = 1:G / *:2")
         e.nsubst("H = 2:8 / 2:3")
@@ -146,7 +146,9 @@
             e.mons("acid dragon / swamp dragon / fire dragon / ice dragon")
             e.mons("storm dragon / shadow dragon / bone dragon")
             e.mons("golden dragon w:15 / quicksilver dragon / iron dragon / " ..
-                   "pearl dragon w:1")
+                   "wyrmhole w:5 / pearl dragon w:1")
+            e.subst("x = c")
+            e.tile("c = wall_stone_scorched")
             e.subst("+ = ...+")
             e.subst("A = $")
             e.subst("B = $")
@@ -176,8 +178,8 @@
         elseif set_weight == 10 then
             e.mons("spriggan rider")
             e.mons("spriggan air mage / spriggan berserker / spriggan defender")
-            e.mons("spriggan defender")
-            e.kmons("D = the Enchantress")
+            e.mons("spriggan defender / alderking w:3")
+            e.kmons("D = the Enchantress, alderking / nothing")
             e.subst("3 = D3")
             e.subst("A = t")
             e.subst("B = tT")
@@ -239,7 +241,7 @@ TAGS:    no_rotate no_monster_gen no_item_gen uniq_d_encompass no_descent
 ORIENT:  encompass
 KITEM:   r = any scroll
 KITEM:   e = any / any good_item w:4
-KITEM:   DP = potion of experience ident:type / any good_item
+KITEM:   DP = potion of experience pre_id / any good_item
 KITEM:   E = |
 KMONS:   p = plant / fungus w:2
 MONS:    spectral thing
@@ -339,7 +341,7 @@ MONS:   tengu reaver / deep elf annihilator / deep elf high priest \
 : else
 MONS:   spriggan berserker / spriggan air mage / ettin / stone giant \
         / frost giant / fire giant / nothing
-MONS:   spriggan defender / titan / juggernaut
+MONS:   spriggan defender / alderking / titan / juggernaut
 : end
 KMONS:   L = fire dragon
 KMONS:   ~ = ice dragon
@@ -438,7 +440,7 @@ KMASK:    1290KLMN = !no_monster_gen
 KMONS:    K = storm dragon
 KMONS:    L = shadow dragon
 KMONS:    M = quicksilver dragon
-KMONS:    N = golden dragon
+KMONS:    N = golden dragon / wyrmhole w:2
 SUBST:    }])> = G
 NSUBST:   D = 1:K / 1:L / 1:M / 1:N
 SUBVAULT: H : grunt_zot_portal
@@ -711,7 +713,7 @@ TAGS:    grunt_profane_loot no_monster_gen
 KMONS:   K = storm dragon
 KMONS:   L = shadow dragon
 KMONS:   M = quicksilver dragon
-KMONS:   N = golden dragon
+KMONS:   N = golden dragon / wyrmhole w:5
 KITEM:   KLMN> = any good_item
 KITEM:   12 = any
 SHUFFLE: KLMN
@@ -786,8 +788,8 @@ MONS:    sphinx / spark wasp / flayed ghost / \
          tentacled monstrosity / juggernaut zombie w:2
 MONS:    spriggan defender w:30 / titan w:30 / ancient lich w:30 / \
          walking crystal tome / walking frostbound tome / \
-         draconian monk / draconian annihilator / draconian knight / \
-         juggernaut w:20
+         juggernaut w:20 / alderking w:15 / wyrmhole / draconian monk / \
+         draconian annihilator / draconian knight
 KMONS:   Z = draconian knight / draconian annihilator
 KITEM:   Z = midnight gem
 KFEAT:   z^ = zot trap / dispersal trap

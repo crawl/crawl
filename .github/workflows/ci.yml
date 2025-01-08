@@ -14,7 +14,7 @@ jobs:
       contents: read #  to fetch code (actions/checkout)
 
     name: Code Linting
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
       - name: Checkwhite
@@ -29,7 +29,7 @@ jobs:
       contents: write #  for release creation (svenstaro/upload-release-action)
 
     name: Source Packages ${{ matrix.arch }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     if: github.event.release.tag_name != null
     steps:
       - uses: actions/checkout@v3
@@ -54,7 +54,7 @@ jobs:
       contents: read #  to fetch code (actions/checkout)
 
     name: Linux ${{ matrix.compiler }} ${{ matrix.build_opts }} ${{ matrix.debug }} ${{ matrix.build_all }} tag_upgrade=${{ matrix.tag_upgrade }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         compiler:
@@ -171,7 +171,7 @@ jobs:
       contents: write #  for release creation (svenstaro/upload-release-action)
 
     name: Linux AppImage ${{ matrix.build_type }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     if: github.event.release.tag_name != null
     strategy:
       matrix:
@@ -222,7 +222,7 @@ jobs:
       contents: write #  for release creation (svenstaro/upload-release-action)
 
     name: Debian Packages ${{ matrix.arch }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     if: github.event.release.tag_name != null
     steps:
       - uses: actions/checkout@v3
@@ -334,9 +334,10 @@ jobs:
         run: |
           find /usr/local/bin -type l -exec sh -c 'readlink -f "$1" \
           | grep -q ^/Library/Frameworks/Python.framework/Versions/' _ {} \; -exec rm -v {} \;
-      - name: Install Dependencies
-        run: |
-          brew install pkg-config libpng
+      # this isn't needed with current GHA MacOS images
+      #- name: Install Dependencies
+      #  run: |
+      #    brew install pkg-config libpng
       # To fix an error running new version of pip3 in virtualised environments.
       # > You may restore the old behavior of pip by passing
       # > the '--break-system-packages' flag to pip, or by adding
@@ -377,7 +378,7 @@ jobs:
       contents: write #  for release creation (svenstaro/upload-release-action)
 
     name: mingw64 ${{ matrix.build_type }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         build_type:
@@ -451,7 +452,7 @@ jobs:
       contents: read #  to fetch code (actions/checkout)
 
     name: Catch2 (GCC/Linux) + Codecov
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
         with:
@@ -534,7 +535,7 @@ jobs:
       contents: read #  to fetch code (actions/checkout)
 
     name: Build headers ${{ matrix.compiler }} ${{ matrix.build_opts }} ${{ matrix.debug }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         compiler:
@@ -581,7 +582,7 @@ jobs:
 
   build_android:
     name: Android
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         build_opts:
@@ -627,6 +628,47 @@ jobs:
         run: gradle :app:assembleBuildTest
         working-directory: crawl-ref/source/android-project
 
+  build_monster:
+    permissions:
+      contents: read #  to fetch code (actions/checkout)
+
+    name: Build monster ${{ matrix.compiler }}
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        compiler:
+          - gcc
+          - clang
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # all history
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+      - name: Install requirements.txt
+        run: |
+            python -m pip install --upgrade pip
+            pip install -r webserver/requirements/dev.py3.txt # use this until we have a repo-wide requirements.txt
+        working-directory: crawl-ref/source
+      - name: Install dependencies
+        run: ./deps.py --compiler ${{ matrix.compiler }}
+        working-directory: .github/workflows
+      - name: Setup ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: build-monster-${{ matrix.compiler }}
+          restore-keys: |
+            build-monster-${{ matrix.compiler }}
+            build-monster
+      - name: "Setup ccache: prepend path"
+        run: "echo /usr/lib/ccache >> $GITHUB_PATH"
+      - name: "Setup ccache: update symlinks"
+        run: "/usr/sbin/update-ccache-symlinks"
+      - run: make -j$(nproc) monster
+        working-directory: crawl-ref/source
+
   notify_irc:
     name: "Notify #crawl-dev of build failure"
     needs:
@@ -636,8 +678,9 @@ jobs:
       - build_mingw64_crosscompile
       - codecov_catch2
       - webserver
+      - build_monster
     if: failure() && github.event_name == 'push'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Build message
         id: message

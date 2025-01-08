@@ -385,7 +385,7 @@ public:
     // -------------------
     // Non-saved UI state:
     // -------------------
-    unsigned short prev_targ;
+    mid_t          prev_targ;
     coord_def      prev_grd_targ;
     // Examining spell library spells for Sif Muna's ability
     bool           divine_exegesis;
@@ -734,7 +734,7 @@ public:
     void backlight();
     void banish(const actor* /*agent*/, const string &who = "", const int power = 0,
                 bool force = false) override;
-    void blink() override;
+    void blink(bool ignore_stasis = false) override;
     void teleport(bool right_now = false,
                   bool wizard_tele = false) override;
     void drain_stat(stat_type stat, int amount) override;
@@ -856,7 +856,7 @@ public:
     int racial_ac(bool temp) const;
     int base_ac(int scale) const;
     int armour_class() const override;
-    int gdr_perc() const override;
+    int gdr_perc(bool random = true) const override;
     int evasion(bool ignore_temporary = false,
                 const actor *attacker = nullptr) const override;
     int evasion_scaled(int scale, bool ignore_temporary = false,
@@ -877,11 +877,14 @@ public:
     int adjusted_body_armour_penalty(int scale = 1) const;
     int adjusted_shield_penalty(int scale = 1) const;
 
-    // Calculates total permanent EV/SH if the player was/wasn't wearing a given item
-    void ac_ev_sh_with_specific_item(int scale, const item_def& new_item,
-                                     int *ac, int *ev, int *sh);
-    void ac_ev_sh_without_specific_item(int scale, const item_def& item_to_remove,
-                                        int *ac, int *ev, int *sh);
+    // Calculates total permanent AC/EV/SH if the player was/wasn't wearing a
+    // given item, along with the fail rate on all their known spells.
+    void preview_stats_with_specific_item(int scale, const item_def& new_item,
+                                          int *ac, int *ev, int *sh,
+                                          FixedVector<int, MAX_KNOWN_SPELLS> *fail);
+    void preview_stats_without_specific_item(int scale, const item_def& item_to_remove,
+                                             int *ac, int *ev, int *sh,
+                                             FixedVector<int, MAX_KNOWN_SPELLS> *fail);
 
     bool wearing_light_armour(bool with_skill = false) const;
     int  skill(skill_type skill, int scale = 1, bool real = false,

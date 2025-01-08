@@ -1952,16 +1952,17 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 
     if (sub_type == ARM_BARDING)
     {
-        if (you.can_wear_barding(ignore_temporary))
-            return true;
-        if (verbose)
+        if (!you.can_wear_barding(ignore_temporary))
         {
-            if (ignore_temporary)
-                mprf(MSGCH_PROMPT, "You can't wear that!");
-            else
-                mprf(MSGCH_PROMPT, "You can wear that only in your normal form.");
+            if (verbose)
+            {
+                if (ignore_temporary)
+                    mprf(MSGCH_PROMPT, "You can't wear that!");
+                else
+                    mprf(MSGCH_PROMPT, "You can wear that only in your normal form.");
+            }
+            return false;
         }
-        return false;
     }
 
     const bool offhand = is_offhand(item);
@@ -2449,8 +2450,10 @@ static void _item_stat_bonus(const item_def &item, int &prop_str,
 {
     prop_str = prop_dex = prop_int = 0;
 
-    if (item.base_type == OBJ_JEWELLERY
-        && item_ident(item, ISFLAG_KNOW_PLUSES))
+    if (!item.is_identified())
+        return;
+
+    if (item.base_type == OBJ_JEWELLERY)
     {
         switch (item.sub_type)
         {
@@ -2470,7 +2473,7 @@ static void _item_stat_bonus(const item_def &item, int &prop_str,
             break;
         }
     }
-    else if (item.base_type == OBJ_ARMOUR && item_type_known(item))
+    else if (item.base_type == OBJ_ARMOUR)
     {
         switch (item.brand)
         {
@@ -2490,9 +2493,9 @@ static void _item_stat_bonus(const item_def &item, int &prop_str,
 
     if (is_artefact(item))
     {
-        prop_str += artefact_known_property(item, ARTP_STRENGTH);
-        prop_int += artefact_known_property(item, ARTP_INTELLIGENCE);
-        prop_dex += artefact_known_property(item, ARTP_DEXTERITY);
+        prop_str += artefact_property(item, ARTP_STRENGTH);
+        prop_int += artefact_property(item, ARTP_INTELLIGENCE);
+        prop_dex += artefact_property(item, ARTP_DEXTERITY);
     }
 
     if (!remove)
@@ -2596,13 +2599,11 @@ static bool _safe_to_remove_or_wear(const item_def &item, bool remove,
 // player to fall to their death.
 bool safe_to_remove(const item_def &item, bool quiet)
 {
-    item_def inf = get_item_known_info(item);
-
     const bool grants_flight =
-         inf.is_type(OBJ_JEWELLERY, RING_FLIGHT)
-         || inf.base_type == OBJ_ARMOUR && inf.brand == SPARM_FLYING
-         || is_artefact(inf)
-            && artefact_known_property(inf, ARTP_FLY);
+         item.is_type(OBJ_JEWELLERY, RING_FLIGHT)
+         || item.base_type == OBJ_ARMOUR && item.brand == SPARM_FLYING
+         || is_artefact(item)
+            && artefact_property(item, ARTP_FLY);
 
     // assumes item can't grant flight twice
     const bool removing_ends_flight = you.airborne()
@@ -3501,8 +3502,6 @@ static void _brand_weapon(item_def &wpn)
     if (success)
     {
         item_set_appearance(wpn);
-        // Message would spoil this even if we didn't identify.
-        set_ident_flags(wpn, ISFLAG_KNOW_TYPE);
         mprf_nocap("%s", wpn.name(DESC_INVENTORY_EQUIP).c_str());
         // Might be rebranding to/from protection or evasion.
         you.redraw_armour_class = true;
@@ -3639,7 +3638,7 @@ static bool _identify(bool alreadyknown, const string &pre_msg, int &link)
     else if (isalpha(letter.c_str()[0]))
     {
         item_def &item = you.inv[letter_to_index(letter.c_str()[0])];
-        if (item.defined() && !fully_identified(item))
+        if (item.defined() && !item.is_identified())
             itemp = &item;
     }
 
@@ -3656,8 +3655,7 @@ static bool _identify(bool alreadyknown, const string &pre_msg, int &link)
     if (alreadyknown)
         mpr(pre_msg);
 
-    set_ident_type(item, true);
-    set_ident_flags(item, ISFLAG_IDENT_MASK);
+    identify_item(item);
 
     // Output identified item.
     mprf_nocap("%s", menu_colour_item_name(item, DESC_INVENTORY_EQUIP).c_str());
@@ -3832,7 +3830,7 @@ static bool _scroll_will_harm(const scroll_type scr, const actor &m)
 {
     return m.alive() && scr == SCR_TORMENT
         && !m.res_torment()
-        && (!m.is_monster() || !god_protects(&you, *m.as_monster(), true));
+        && !never_harm_monster(&you, m.as_monster());
 }
 
 static vector<string> _desc_finite_wl(const monster_info& mi)
@@ -4226,7 +4224,7 @@ bool read(item_def* scroll, dist *target)
 
         // included in default force_more_message
         // Identify it early in case the player checks the '\' screen.
-        set_ident_type(*scroll, true);
+        identify_item(*scroll);
 
         if (feat_eliminates_items(env.grid(you.pos())))
         {
@@ -4285,8 +4283,7 @@ bool read(item_def* scroll, dist *target)
                 continue;
 
             // Jivya is a killjoy when it comes to slime bombing.
-            // TODO: consider extending this to all god_protects() effects.
-            if (have_passive(passive_t::neutral_slimes) && god_protects(**mi))
+            if (have_passive(passive_t::neutral_slimes) && mons_is_slime(**mi))
                 continue;
 
             if (mi->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, &you)))
@@ -4342,7 +4339,7 @@ bool read(item_def* scroll, dist *target)
             mpr("It is a scroll of identify.");
             // included in default force_more_message (to show it before menu)
             // Do this here so it doesn't turn up in the ID menu.
-            set_ident_type(*scroll, true);
+            identify_item(*scroll);
         }
         {
             const int old_link = link;
@@ -4421,8 +4418,7 @@ bool read(item_def* scroll, dist *target)
     if (cancel_scroll)
         you.turn_is_over = false;
 
-    set_ident_type(*scroll, true);
-    set_ident_flags(*scroll, ISFLAG_KNOW_TYPE); // for notes
+    identify_item(*scroll);
 
     string scroll_name = scroll->name(DESC_QUALNAME);
 
@@ -4444,9 +4440,9 @@ bool read(item_def* scroll, dist *target)
         && which_scroll != SCR_AMNESIA
         && which_scroll != SCR_ACQUIREMENT)
     {
-        mprf("It %s a %s.",
+        mprf("It %s %s.",
              scroll->quantity < prev_quantity ? "was" : "is",
-             scroll_name.c_str());
+             article_a(scroll_name).c_str());
     }
 
     if (!alreadyknown)

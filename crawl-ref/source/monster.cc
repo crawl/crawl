@@ -818,13 +818,11 @@ bool monster::likes_wand(const item_def &item) const
 void monster::equip_weapon_message(item_def &item)
 {
     const string str = " wields " +
-                       item.name(DESC_A, false, false, true, false,
-                                 ISFLAG_CURSED) + ".";
+                       item.name(DESC_A, false, false, true, false) + ".";
     simple_monster_message(*this, str.c_str());
 
     const int brand = get_weapon_brand(item);
 
-    bool message_given = true;
     switch (brand)
     {
     case SPWPN_FLAMING:
@@ -878,17 +876,7 @@ void monster::equip_weapon_message(item_def &item)
         break;
 
     default:
-        // A ranged weapon without special message is known to be unbranded.
-        if (brand != SPWPN_NORMAL || !is_range_weapon(item))
-            message_given = false;
-    }
-
-    if (message_given)
-    {
-        if (is_artefact(item) && !is_unrandom_artefact(item))
-            artefact_learn_prop(item, ARTP_BRAND);
-        else
-            set_ident_flags(item, ISFLAG_KNOW_TYPE);
+        break;
     }
 }
 
@@ -953,15 +941,13 @@ void monster::unequip_weapon(item_def &item, bool msg)
     if (msg)
     {
         const string str = " unwields " +
-                           item.name(DESC_A, false, false, true, false,
-                                     ISFLAG_CURSED) + ".";
+                           item.name(DESC_A, false, false, true, false) + ".";
         msg = simple_monster_message(*this, str.c_str());
     }
 
     const int brand = get_weapon_brand(item);
     if (msg && brand != SPWPN_NORMAL)
     {
-        bool message_given = true;
         switch (brand)
         {
         case SPWPN_FLAMING:
@@ -986,14 +972,7 @@ void monster::unequip_weapon(item_def &item, bool msg)
             break;
 
         default:
-            message_given = false;
-        }
-        if (message_given)
-        {
-            if (is_artefact(item) && !is_unrandom_artefact(item))
-                artefact_learn_prop(item, ARTP_BRAND);
-            else
-                set_ident_flags(item, ISFLAG_KNOW_TYPE);
+            break;
         }
     }
 
@@ -3551,6 +3530,7 @@ int monster::known_chaos(bool check_spells_god) const
         || type == MONS_VERY_UGLY_THING
         || type == MONS_ABOMINATION_SMALL
         || type == MONS_ABOMINATION_LARGE
+        || type == MONS_MUTANT_BEAST
         || type == MONS_WRETCHED_STAR
         || type == MONS_KILLER_KLOWN      // For their random attacks.
         || type == MONS_TIAMAT            // For her colour-changing.
@@ -4166,9 +4146,9 @@ bool monster::shift(coord_def p)
 
     return count > 0;
 }
-void monster::blink()
+void monster::blink(bool ignore_stasis)
 {
-    monster_blink(this);
+    monster_blink(this, ignore_stasis);
 }
 
 void monster::teleport(bool now, bool)
@@ -4988,11 +4968,8 @@ bool monster::can_go_frenzy() const
         return false;
 
     // These allies have a special loyalty
-    if (god_protects(*this)
-        || testbits(flags, MF_DEMONIC_GUARDIAN))
-    {
+    if (never_harm_monster(&you, this))
         return false;
-    }
 
     return true;
 }
@@ -5622,6 +5599,10 @@ void monster::put_to_sleep(actor */*attacker*/, int /*strength*/, bool hibernate
 
 void monster::weaken(const actor *attacker, int pow)
 {
+    // Don't weaken monsters where it wouldn't do anything.
+    if (!mons_has_attacks(*this, false))
+        return;
+
     if (!has_ench(ENCH_WEAK))
         simple_monster_message(*this, " looks weaker.");
     else
@@ -6379,15 +6360,6 @@ bool monster::shove(const char* feat_name)
     return false;
 }
 
-void monster::id_if_worn(mon_inv_type mslot, object_class_type base_type,
-                          int sub_type) const
-{
-    item_def *item = mslot_item(mslot);
-
-    if (item && item->is_type(base_type, sub_type))
-        set_ident_type(*item, true);
-}
-
 bool monster::stasis() const
 {
     return mons_genus(type) == MONS_FORMICID
@@ -6450,7 +6422,7 @@ bool monster::is_jumpy() const
 }
 
 // HD for spellcasting purposes.
-// Currently only used for Aura of Brilliance and Hep ancestors.
+// Currently only used for Brilliance buffs and Hep ancestors.
 int monster::spell_hd(spell_type spell) const
 {
     UNUSED(spell);
@@ -6518,8 +6490,8 @@ bool monster::angered_by_attacks() const
             && !is_divine_companion()
             && !testbits(flags, MF_DEMONIC_GUARDIAN)
             && !((holiness() & MH_NONLIVING) && mons_intel(*this) == I_BRAINLESS)
-            // allied fed plants, hep ancestor:
-            && !god_protects(*this);
+            // XXX: Is this relevant if we can't harm them in the first place?
+            && !never_harm_monster(&you, *this);
 }
 
 bool monster::is_band_follower_of(const monster& leader) const

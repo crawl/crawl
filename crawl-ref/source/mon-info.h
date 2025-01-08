@@ -247,6 +247,8 @@ enum monster_info_flags
     MB_KINETIC_GRAPNEL,
     MB_TEMPERED,
     MB_HATCHING,
+    MB_BLINKITIS,
+    MB_NO_TELE,
     NUM_MB_FLAGS
 };
 
@@ -474,6 +476,8 @@ struct monster_info : public monster_info_base
 
     bool has_trivial_ench(enchant_type ench) const;
     bool unravellable() const;
+
+    monster* get_known_summoner() const;
 
 protected:
     string _core_name() const;

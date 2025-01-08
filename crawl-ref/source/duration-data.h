@@ -433,7 +433,7 @@ static const duration_def duration_data[] =
       RED, "-Move",
       "immotile", "",
       "You are unable to move around.", D_DISPELLABLE,
-      {{ "You are no longer robbed of momentum." }}},
+      {{ "You are able to move again." }}},
     { DUR_ENLIGHTENED,
       BLUE, "Will+",
       "enlightened", "",
@@ -677,6 +677,9 @@ static const duration_def duration_data[] =
       "growing destruction", "growing destruction",
       "Your Destruction is growing increasingly wild.", D_EXPIRES,
       {{ "", _end_growing_destruction}}},
+    { DUR_BLINKITIS, RED, "Unstable",
+      "blinking rapidly", "blinkitis",
+      "You are untethered in space.", D_DISPELLABLE, {{"You feel more stable."}} },
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

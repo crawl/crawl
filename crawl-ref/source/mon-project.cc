@@ -54,7 +54,7 @@ spret cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
                 (is_player) ? BEH_FRIENDLY :
                     ((monster*)caster)->friendly() ? BEH_FRIENDLY : BEH_HOSTILE,
                 coord_def(),
-                mtarg).set_summoned(caster, SPELL_IOOD), true, true);
+                mtarg).set_summoned(caster, SPELL_IOOD, 0, false, false), true, true);
     if (!mon)
     {
         mprf(MSGCH_ERROR, "Failed to spawn projectile.");

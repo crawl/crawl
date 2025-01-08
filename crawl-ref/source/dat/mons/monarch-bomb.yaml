@@ -6,9 +6,9 @@ xp_mult: 3
 will: invuln
 holiness: [nonliving]
 attacks:
- - {type: hit, flavour: bomblet, damage: 30}
+ - {type: hit, flavour: bomblet, damage: 24}
 hd: 14
-hp_10x: 400
+hp_10x: 440
 ac: 14
 ev: 9
 intelligence: brainless

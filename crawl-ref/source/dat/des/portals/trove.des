@@ -58,7 +58,7 @@ function trove.get_trove_item(e, value, base_item)
   floorlist, shoplist = dgn.stash_items(value, true)
   if #shoplist ~= 0 then
     shop_item = shoplist[crawl.random2(#shoplist)+1]
-    if not shop_item.identified() then
+    if not shop_item.is_identified then
       shop_item = shoplist[crawl.random2(#shoplist)+1]
     end
     local jwith_pluses = {"ring of protection", "ring of evasion",
@@ -67,7 +67,7 @@ function trove.get_trove_item(e, value, base_item)
                           "amulet of reflection"}
     local bt = shop_item.base_type
     if bt == "armour" or bt == "weapon" or bt == "jewellery" then
-      if shop_item.identified() then
+      if shop_item.is_identified then
         item.quantity = shop_item.quantity
         item.base_type = shop_item.base_type
         item.sub_type = shop_item.sub_type
@@ -1220,7 +1220,7 @@ ORIENT:  encompass
 -- higher quality of weapons doesn't guarantee one gets their current weapon
 -- school, but it's much better than otherwise getting whips and short swords.
 local weaps = { "double sword", "great sword w:30", "triple sword w:5",
-                "halberd w:30", "glaive", "bardiche w:5", "morningstar w:30",
+                "partisan", "glaive w:30", "bardiche w:5", "morningstar w:30",
                 "eveningstar w:5", "great mace", "war axe w:30", "broad axe",
                 "battleaxe", "executioner's axe w:5", "quarterstaff w:40",
                 "lajatang w:15", "rapier w:45" }
@@ -1443,7 +1443,7 @@ ITEM:   acquire weapon / acquire armour / any useful good_item
 ITEM:   gold q:1
 KITEM:  D = stone mimic
 KITEM:  E = wand of flame mimic / potion of degeneration mimic / scroll of noise mimic
-KITEM:  F = any weapon damaged ident:all mimic / any armour damaged ident:all mimic
+KITEM:  F = any weapon damaged pre_id mimic / any armour damaged pre_id mimic
 KFEAT:  X = rock_wall mimic
 : trove.setup_features(_G)
 MAP

@@ -126,8 +126,9 @@ void disjunction_spell()
  *
  * @param override_stasis       Whether to blink even if the player is under
  *                              stasis (& thus normally unable to).
+ * @param max_distance          The maximum distance we are allowed to blink.
  */
-void uncontrolled_blink(bool override_stasis)
+void uncontrolled_blink(bool override_stasis, int max_distance)
 {
     if (you.no_tele(true) && !override_stasis)
     {
@@ -138,8 +139,8 @@ void uncontrolled_blink(bool override_stasis)
     coord_def target;
     // First try to find a random square not adjacent to the player,
     // then one adjacent if that fails.
-    if (!random_near_space(&you, you.pos(), target)
-        && !random_near_space(&you, you.pos(), target, true))
+    if (!random_near_space(&you, you.pos(), target, false, max_distance)
+        && !random_near_space(&you, you.pos(), target, true, max_distance))
     {
         mpr("You feel jittery for a moment.");
         return;
@@ -316,7 +317,7 @@ private:
     bool incl_unseen;
 public:
     targeter_hop(int hop_range, bool include_unseen)
-        : targeter_smite(&you, hop_range, 0, HOP_FUZZ_RADIUS, false),
+        : targeter_smite(&you, hop_range, 0, HOP_FUZZ_RADIUS, true),
           incl_unseen(include_unseen)
     {
         ASSERT(agent);
@@ -890,6 +891,7 @@ void you_teleport()
     {
         mpr("You feel strangely stable.");
         you.duration[DUR_TELEPORT] = 0;
+        you.props.erase(SJ_TELEPORTITIS_SOURCE);
     }
     else
     {
@@ -966,6 +968,29 @@ static void _handle_teleport_update(bool large_change, const coord_def old_pos)
 #endif
 
     you.clear_far_engulf();
+}
+
+// Not called for wizmode teleports.
+static bool _real_teleport_cleanup(coord_def oldpos, coord_def newpos)
+{
+    bool large_change = false;
+
+    if (newpos == oldpos)
+        mpr("Your surroundings flicker for a moment.");
+    else if (you.see_cell(newpos))
+        mpr("Your surroundings seem slightly different.");
+    else
+    {
+        mpr("Your surroundings suddenly seem different.");
+        large_change = true;
+    }
+
+    cancel_polar_vortex(true);
+    _place_tloc_cloud(oldpos);
+    move_player_to_grid(newpos, false);
+    stop_delay(true);
+
+    return large_change;
 }
 
 static bool _teleport_player(bool wizard_tele, bool teleportitis,
@@ -1093,28 +1118,126 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis,
             }
         }
 
-        if (newpos == old_pos)
-            mpr("Your surroundings flicker for a moment.");
-        else if (you.see_cell(newpos))
-            mpr("Your surroundings seem slightly different.");
-        else
-        {
-            mpr("Your surroundings suddenly seem different.");
-            large_change = true;
-        }
-
-        cancel_polar_vortex(true);
-        // Leave a purple cloud.
-        _place_tloc_cloud(old_pos);
-
-        move_player_to_grid(newpos, false);
-        stop_delay(true);
+        large_change = _real_teleport_cleanup(old_pos, newpos);
     }
 
     crawl_state.potential_pursuers.clear();
 
     _handle_teleport_update(large_change, old_pos);
     return !wizard_tele;
+}
+
+// Teleportitis is currently balanced around it silently failing constantly.
+// For the rare circumstance we want to guarantee danger via monster teleport
+// other (and its equivalents), instead check for every monster and then every
+// place near a monster we could move to, and also bring the source of the spell
+// to you, so there's still some risk of escaping towards rats instead.
+// Worst-case calculation scenarios should be rare; the uses of it are rare.
+static bool hostile_teleport_player()
+{
+    const coord_def oldpos = you.pos();
+    coord_def newpos;
+    bool large_change = false;
+    vector<monster*> targets;
+    const mid_t source_mid = you.props[SJ_TELEPORTITIS_SOURCE].get_int();
+    monster* source = monster_by_mid(source_mid);
+
+    if (you.no_tele())
+    {
+        canned_msg(MSG_STRANGE_STASIS);
+        return false;
+    }
+
+    // Presume any monster stuck in a no_tele box isn't worth investigating.
+    // Since the source monster is coming along, don't count it as an option.
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mons_is_threatening(**mi)
+            && mons_attitude(**mi) == ATT_HOSTILE
+            && !testbits(env.pgrid(mi->pos()), FPROP_NO_TELE_INTO)
+            && mi->mid != source_mid)
+        {
+            targets.push_back(*mi);
+        }
+    }
+
+    // If there aren't any other monsters, teleport randomly.
+    bool did_teleport = false;
+    if (targets.empty())
+        did_teleport = _teleport_player(false, false);
+    else
+    {
+        shuffle_array(targets);
+
+        // Test each valid monster on the floor in random order, seeing if there
+        // is anywhere valid we can place the player in sight of them. Stop at
+        // the first possible match.
+        for (monster *tele_target : targets)
+        {
+            // Choose a random destination in sight of this target. If one does
+            // not exist, move on to the next monster.
+            int square_count = 0;
+            for (radius_iterator ri(tele_target->pos(), LOS_NO_TRANS, true);
+                    ri; ++ri)
+            {
+                if (*ri == you.pos()
+                    || testbits(env.pgrid(*ri), FPROP_NO_TELE_INTO)
+                    || cell_vetoes_teleport(*ri))
+                {
+                    continue;
+                }
+
+                if (one_chance_in(++square_count))
+                    newpos = *ri;
+            }
+
+            // We found a spot, and can stop searching other monsters.
+            if (!newpos.origin())
+                break;
+        }
+
+        // Somehow found no valid spots. Teleport randomly.
+        if (newpos.origin())
+            did_teleport = _teleport_player(false, false);
+    }
+
+    if (!newpos.origin())
+    {
+        int mons_near_target = 0;
+        for (monster_near_iterator mi(newpos, LOS_NO_TRANS); mi; ++mi)
+        {
+            if (++mons_near_target > 1)
+                break;
+        }
+
+        mprf("The spatial malevolence pulls you towards %s monster%s!",
+            mons_near_target > 1 ? "some" : "a",
+            mons_near_target > 1 ? "s" : "");
+
+        interrupt_activity(activity_interrupt::teleport);
+        large_change = _real_teleport_cleanup(oldpos, newpos);
+        crawl_state.potential_pursuers.clear();
+        _handle_teleport_update(large_change, oldpos);
+        did_teleport = true;
+    }
+
+    // Now, move the caster to follow. (Attempt this even in the case where the
+    // player themselves doesn't teleport.)
+    if (source && source->alive())
+    {
+        coord_def source_newpos;
+        if (find_habitable_spot_near(you.pos(), source->type, you.current_vision,
+                                     source_newpos, 0, &you))
+        {
+            _place_tloc_cloud(source->pos());
+            source->move_to_pos(source_newpos);
+            source->target = you.pos();
+            mprf(MSGCH_WARN, "%s tunnels through space-time and arrives with you!",
+                 source->name(DESC_THE).c_str());
+        }
+    }
+
+    return did_teleport;
 }
 
 bool you_teleport_to(const coord_def where_to, bool move_monsters)
@@ -1186,7 +1309,15 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
 
 void you_teleport_now(bool wizard_tele, bool teleportitis, string reason)
 {
-    const bool randtele = _teleport_player(wizard_tele, teleportitis, reason);
+    bool randtele;
+
+    if (!wizard_tele && you.props.exists(SJ_TELEPORTITIS_SOURCE))
+    {
+        randtele = hostile_teleport_player();
+        you.props.erase(SJ_TELEPORTITIS_SOURCE);
+    }
+    else
+        randtele = _teleport_player(wizard_tele, teleportitis, reason);
 
     // Xom is amused by teleports that land you in a dangerous place, unless
     // the player is in the Abyss and teleported to escape from all the
@@ -1254,7 +1385,7 @@ string weapon_unprojectability_reason(const item_def* wpn)
         if (is_unrandom_artefact(*wpn, urand))
         {
             return make_stringf("%s would react catastrophically with paradoxical space!",
-                                you.weapon()->name(DESC_THE, false, false, false, false, ISFLAG_KNOW_PLUSES).c_str());
+                                you.weapon()->name(DESC_THE, false, false, false, false).c_str());
         }
     }
     return "";
@@ -1350,7 +1481,11 @@ spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
     // shapeshifters have a much easier time casting it.
     const size_t max_targets = weapon ? 4 + div_rand_round(pow, 25)
                                       : 2 + div_rand_round(pow, 50);
-    const int animation_delay = 80 / max_targets;
+    int animation_delay = 80 / (min(max_targets, targets.size()));
+
+    // Players cast it a lot, but only a few enemies do and should be noticed.
+    if (!(mons_aligned(&agent, &you)))
+        animation_delay *= 1.5;
 
     if ((Options.use_animations & UA_BEAM) != UA_NONE)
     {
@@ -1973,93 +2108,122 @@ spret blinkbolt(int power, bolt &beam, bool fail)
 
 static bool _valid_piledriver_target(monster* targ)
 {
-    return targ && !targ->friendly() && !targ->is_firewood()
-           && !targ->is_stationary() && you.can_see(*targ);
+    return targ && !targ->wont_attack() && !targ->is_stationary()
+           && you.can_see(*targ);
 }
 
-vector<coord_def> piledriver_beam_paths(const vector<coord_def> &targets, bool actual)
+// Returns a vector of how many connected pushable monstes are in a row here,
+// for Piledriver.
+//
+// Returns an empty vector if there is some reason the line isn't pushable.
+static vector<monster*> _get_monster_line(coord_def start, bool actual)
 {
-    const int max_range = 5;
+    ASSERT(monster_at(start));
 
-    vector<coord_def> path;
-    for (unsigned int j = 0; j < targets.size(); ++j)
+    const coord_def delta = start - you.pos();
+    vector<monster*> move_targets;
+    move_targets.push_back(monster_at(start));
+    coord_def pos = start + delta;
+    // Iterate to find how many connected monsters are in a row here.
+    while (monster* mon = monster_at(pos))
     {
-        monster* targ = monster_at(targets[j]);
-        coord_def delta = targ->pos() - you.pos();
+        // If the player can't see the monster here, don't leak its position to
+        // the targeter.
+        if (!mon || !actual && !you.can_see(*mon))
+            break;
 
-        // Iterate through all tiles in the appropriate direction, testing at each
-        // step whether the monster can occupy its new space and whether the player
-        // can occupy the space immediately before that. Stop as soon as this is not
-        // true or we reach our maximum range.
-        for (int i = 0; i <= max_range; ++i)
-        {
-            const coord_def new_pos = targ->pos() + (delta * i);
+        // Can't move anything with a stationary monster (or friend) in its cluster.
+        if (mon->is_stationary() || mon->wont_attack())
+            return vector<monster*>();
 
-            // Check if this is where our movement stops
-            if (i > 0
-                && (actor_at(new_pos) && (actual || you.can_see(*actor_at(new_pos)))
-                    || !monster_habitable_grid(targ, new_pos)
-                    || is_feat_dangerous(env.grid(new_pos - delta))))
-            {
-                path.push_back(new_pos);
-                break;
-            }
+        // If the line extends past the player's sight, it definitely isn't usable.
+        if (!you.see_cell_no_trans(pos))
+            return vector<monster*>();
 
-            path.push_back(new_pos);
-        }
+        // Add this monster to the line and advance one step
+        move_targets.push_back(mon);
+        pos += delta;
     }
 
-    return path;
+    return move_targets;
 }
 
-static int calc_piledriver_dist(const monster& targ, bool actual)
+bool piledriver_target_exists()
 {
-    vector<coord_def> path = piledriver_beam_paths(vector<coord_def>{targ.pos()}, actual);
-
-    // Test if the final space of the path would hit something and only consider
-    // paths that would do so.
-    if (path.size() > 2)
-    {
-        if (actor_at(path.back()) || feat_is_solid(env.grid(path.back())))
-            return path.size();
-    }
-
-    return 0;
-}
-
-vector<coord_def> possible_piledriver_targets(bool actual)
-{
-    vector<coord_def> targs;
-    int furthest_dist = 0;
-
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
     {
-        monster* targ = monster_at(*ai);
-        if (_valid_piledriver_target(targ))
-        {
-            int dist = calc_piledriver_dist(*targ, actual);
-
-            // Skip targets that will not move the player at all.
-            // (This needs at least 3 tiles, since the target monster will be
-            // on the 1st, and a possible blocker on the 2nd)
-            if (dist < 3)
-                continue;
-
-            // Better than any target yet found
-            if (dist > furthest_dist)
-            {
-                targs.clear();
-                furthest_dist = dist;
-                targs.push_back(*ai);
-            }
-            // Tied with a target already found
-            else if (dist == furthest_dist)
-                targs.push_back(*ai);
-            // Otherwise, ignore it
-        }
+        if (piledriver_path_distance(*ai, false) > 0)
+            return true;
     }
 
-    return targs;
+    return false;
+}
+
+/**
+ * Calculates the total distance between the player and whatever obstacle would
+ * stop a piledriver aimed in a given direction.
+ *
+ * @param target  What cell to aim the piledriver at.
+ * @param actual  Whether the player is casting the spell for real (and this
+ *                should account for even invisible monsters).
+ *
+ * @return Total distance of a piledriver path in this direction.
+ *         0 if this is not currently a valid direction for piledriver.
+ */
+int piledriver_path_distance(const coord_def& target, bool actual)
+{
+    // Skip directions with no valid starter monster.
+    monster* targ = monster_at(target);
+    if (!_valid_piledriver_target(targ))
+        return 0;
+
+    // Check how many pushable monsters are in a row here.
+    vector<monster*> line = _get_monster_line(target, actual);
+    if (line.empty())
+        return 0;
+
+    // Now see if a collidable obstacle is both within the player's sight
+    // and piledriver's maximum range.
+    const coord_def delta = target - you.pos();
+    coord_def pos = you.pos() + (delta * (line.size() + 1));
+    int move_dist = 0;
+    while (true)
+    {
+        // Abort if we leave the player's LoS without finding something to hit.
+        if (!you.see_cell_no_trans(pos)
+            || grid_distance(target, pos) > spell_range(SPELL_PILEDRIVER, 100))
+        {
+            return 0;
+        }
+
+        // Found something to hit; this is where we stop.
+        if (cell_is_solid(pos)
+            || monster_at(pos) && (actual || you.can_see(*monster_at(pos))))
+        {
+            break;
+        }
+
+        ++move_dist;
+        pos += delta;
+    }
+
+    // We didn't find a collidable object in LoS
+    if (move_dist == 0)
+        return 0;
+
+    // Now, finally test that every space in a row can be occupied by each
+    // monster in sequence (and the player) and stop when this isn't true.
+    for (int i = 1; i <= move_dist; ++i)
+    {
+        for (size_t j = 0; j < line.size(); ++j)
+            if (!monster_habitable_grid(line[j], line[j]->pos() + (delta * i)))
+                return 0;
+
+        if (is_feat_dangerous(env.grid(you.pos() + (delta * i))))
+            return 0;
+    }
+
+    return move_dist + line.size();
 }
 
 dice_def piledriver_collision_damage(int pow, int dist, bool random)
@@ -2070,57 +2234,64 @@ dice_def piledriver_collision_damage(int pow, int dist, bool random)
         return dice_def(1 + (dist * 2), 2 + (div_rand_round(pow + 10, 15)));
 }
 
-spret cast_piledriver(int pow, bool fail)
+spret cast_piledriver(const coord_def& target, int pow, bool fail)
 {
     // Calculate all possible valid targets first, so we can prompt the player
     // about anything they *might* hit.
-    vector<coord_def> targs = possible_piledriver_targets(false);
-    vector<coord_def> path = piledriver_beam_paths(targs, false);
-    if (warn_about_bad_targets(SPELL_PILEDRIVER, path))
+
+    int length = piledriver_path_distance(target, false);
+    vector<coord_def> path;
+    const coord_def delta = target - you.pos();
+    const coord_def impact = target + (delta * length);
+
+    vector<monster*> mons = _get_monster_line(target, false);
+    if (warn_about_bad_targets(SPELL_PILEDRIVER, {impact}))
         return spret::abort;
 
     fail_check();
 
-    // Now that they've confirmed, pick the *real* target
-    targs = possible_piledriver_targets(true);
+    // Now that they've confirmed, find what we're *actually* moving.
+    length = piledriver_path_distance(target, true);
 
     // There must be something invisible blocking all possible paths, so 'fail'.
-    if (targs.empty())
+    if (length == 0)
     {
         mprf("Space begins to contract around you, but something blocks your path.");
         return spret::success;
     }
 
-    shuffle_array(targs);
-    targs.resize(1);
-    monster* mon = monster_at(targs[0]);
-    path = piledriver_beam_paths(targs, true);
+    mons = _get_monster_line(target, true);
     mprf("Space contracts around you and %s and then re-expands violently!",
-            mon->name(DESC_THE).c_str());
+            mons.size() == 1 ? mons[0]->name(DESC_THE).c_str()
+                             : make_stringf("%s other creatures",
+                                    number_in_words(mons.size()).c_str()).c_str());
 
     // Animate the player and their victim flying forward together
     bolt anim;
     anim.source = you.pos();
-    anim.target = path.back();
+    anim.target = target;
     anim.flavour = BEAM_VISUAL;
-    anim.range = path.size();
+    anim.range = length;
     anim.fire();
 
-    // Move both the player and their target to their destination first
+    // Move both everything to their destination first.
+    const int move_dist = length - mons.size();
     const coord_def old_pos = you.pos();
-    const coord_def old_targ_pos = mon->pos();
-
-    mon->move_to_pos(path[path.size() - 2]);
-    you.move_to_pos(path[path.size() - 3]);
+    for (int i = (int)mons.size() - 1; i >= 0; --i)
+        mons[i]->move_to_pos(old_pos + delta * (move_dist + i + 1));
+    you.move_to_pos(old_pos + (delta * move_dist));
 
     // Apply collision damage (scaling with distance covered)
-    const int dmg = piledriver_collision_damage(pow, path.size() - 2, true).roll();
-    mon->collide(path.back(), &you, dmg);
+    const int dmg = piledriver_collision_damage(pow, move_dist, true).roll();
+    mons.back()->collide(target + (delta * length), &you, dmg);
 
     // Now trigger location effects (to avoid dispersal traps causing all sorts
     // of problems with keeping the two of us together in the middle)
-    if (mon->alive())
-        mon->apply_location_effects(old_targ_pos);
+    for (size_t i = 0; i < mons.size(); ++i)
+    {
+        if (mons[i]->alive())
+            mons[i]->apply_location_effects(target + (delta * i));
+    }
     you.apply_location_effects(old_pos);
 
     return spret::success;
@@ -2146,12 +2317,11 @@ static void _maybe_penance_for_collision(god_conduct_trigger conducts[3], actor&
 
 static void _push_actor(actor& victim, coord_def dir, int dist, int pow)
 {
-    const bool god_prot = victim.is_monster()
-                                && god_protects(&you, victim.as_monster());
+    const bool immune = never_harm_monster(&you, victim.as_monster());
 
     god_conduct_trigger conducts[3];
 
-    if (victim.is_monster() && !god_prot)
+    if (victim.is_monster() && !immune)
     {
         behaviour_event(victim.as_monster(), ME_ALERT, &you, you.pos());
         victim.as_monster()->speed_increment -= 10;
@@ -2363,4 +2533,16 @@ vector<monster*> gavotte_affected_monsters(const coord_def dir)
     }
 
     return affected;
+}
+
+spret cast_teleport_other(const coord_def& target, int power, bool fail)
+{
+    fail_check();
+
+    bolt beam;
+    beam.source = target;
+    beam.target = target;
+    beam.set_agent(&you);
+
+    return zapping(ZAP_TELEPORT_OTHER, power, beam, false, nullptr, fail);
 }

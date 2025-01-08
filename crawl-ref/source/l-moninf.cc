@@ -863,8 +863,8 @@ LUAFN(moninf_get_summoner_pos)
 {
     MONINF(ls, 1, mi);
 
-    const auto *summoner = monster_by_mid(mi->summoner_id);
-    if (summoner && you.can_see(*summoner))
+    const auto *summoner = mi->get_known_summoner();
+    if (summoner)
     {
         lua_pushnumber(ls, summoner->pos().x - you.pos().x);
         lua_pushnumber(ls, summoner->pos().y - you.pos().y);

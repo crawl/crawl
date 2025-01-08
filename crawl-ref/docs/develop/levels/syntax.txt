@@ -564,16 +564,23 @@ ITEM:     (list of items, separated by comma)
             inscriptions, (e.g. rPois, +Inv, ^Contam, *Slow), and the match is
             case-insensitive. The value defaults to 1 level of the property, so
             boolean values like rPois can omit the value entirely, otherwise
-            specify e.g. "rF:3" to give rF+++.
+            specify e.g. "rF:3" to give rF+++. Note that property values you
+            specify will be adjusted for any intrinsic values the item already
+            has for that property before being applied. Hence "ring of
+            protection from fire artprops:rF:2" will yield a ring with rF++.
+            You can specify a value of 0 for any property to guarantee that
+            it will never be present on the item.
 
-            Note that certain artefact properties are only supported on
-            specific item classes. You can test your specification with the
-            "&%" wizmode command if you're unsure. Also note that any good
-            fixed properties use up quality points for adding additional good
-            properties. Hence the more good properties you fix, the fewer good
-            random properties will be added, on average. Additionally, fixed
-            bad properties count towards the limit of adding at most 2 random
-            bad properties.
+            Certain artefact properties are only supported on specific item
+            classes. You can test your specification with the "&%" wizmode
+            command if you're unsure. For specification of the form "any TYPE
+            artprops:..." that generate an item of TYPE with a random subtype,
+            the random subtype chosen will always be one compatible with all
+            specified artprops, if possible. Any good fixed properties use up
+            quality points for adding additional good properties. Hence the
+            more good properties you fix, the fewer good random properties will
+            be added, on average. Additionally, fixed bad properties count
+            towards the limit of adding at most 2 random bad properties.
           * "mundane" acts as a shortcut for "ego:none" and forces the plusses
              to be +0.
           * "ident:" will make the item pre-identified. You need to specify

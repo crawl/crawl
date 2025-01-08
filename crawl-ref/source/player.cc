@@ -5627,7 +5627,7 @@ player::player()
     last_cast_spell = SPELL_NO_SPELL;
 
     // Non-saved UI state:
-    prev_targ        = MHITNOT;
+    prev_targ        = MID_NOBODY;
     prev_grd_targ.reset();
     divine_exegesis  = false;
 
@@ -6639,9 +6639,10 @@ void player::refresh_rampage_hints()
   *
   * \return GDR as a percentage.
   **/
-int player::gdr_perc() const
+int player::gdr_perc(bool random) const
 {
-    return (int)(16 * sqrt(sqrt(max(0, you.armour_class()))));
+    int ac = random ? armour_class() : armour_class_scaled(1);
+    return (int)(16 * sqrt(sqrt(max(0, ac))));
 }
 
 /**
@@ -6676,8 +6677,10 @@ int player::evasion_scaled(int scale, bool ignore_temporary, const actor* act) c
 }
 
 /**
- * What would our natural AC/EV/SH be if we wore a given piece of equipment
- * instead of whatever might be in that slot currently (if anything)?
+ * What would our natural AC/EV/SH and fail rate for all known spells be if we
+ * wore a given piece of equipment instead of whatever might be in that slot
+ * currently (if anything)?
+ *
  * Note: non-artefact rings of evasion/protection and amulets of reflection
  * are excepted from using this function.
  *
@@ -6685,14 +6688,17 @@ int player::evasion_scaled(int scale, bool ignore_temporary, const actor* act) c
  * @param ac        The player's AC if this item were equipped.
  * @param ev        The player's EV if this item were equipped.
  * @param sh        The player's SH if this item were equipped.
+ * @param fail      The player's raw spell fail for all spells if this item
+ *                  were equipped.
  */
-void player::ac_ev_sh_with_specific_item(int scale, const item_def& new_item,
-                                         int *ac, int *ev, int *sh)
+void player::preview_stats_with_specific_item(int scale, const item_def& new_item,
+                                              int *ac, int *ev, int *sh,
+                                              FixedVector<int, MAX_KNOWN_SPELLS> *fail)
 {
     // Since there are a lot of things which can affect the calculation of
-    // EV/SH, including artifact properties on either the item we're equipped or
-    // the one we're swapping out for it, we check by very briefly 'putting on'
-    // the new item and calling the normal evasion calculation function.
+    // EV/SH/fail, including artifact properties on either the item we're
+    // equipped or the one we're swapping out for it, we check by very briefly
+    // 'putting on' the new item and calling the normal calculation functions.
     //
     // As we edit the item links directly, this should be invisible to the
     // player, bypass normal equip/unequip routines, and have no side-effects.
@@ -6731,14 +6737,18 @@ void player::ac_ev_sh_with_specific_item(int scale, const item_def& new_item,
     *ev = evasion_scaled(scale, true);
     *sh = player_displayed_shield_class(scale, true);
 
+    for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
+        (*fail)[i] = raw_spell_fail(spells[i]);
+
     // Restore old item and clear out any item copies, just in case.
     you.equip[slot] = old_item;
     you.inv[ENDOFPACK].clear();
 }
 
-void player::ac_ev_sh_without_specific_item(int scale,
-                                            const item_def& item_to_remove,
-                                            int *ac, int *ev, int *sh)
+void player::preview_stats_without_specific_item(int scale,
+                                                 const item_def& item_to_remove,
+                                                 int *ac, int *ev, int *sh,
+                                                 FixedVector<int, MAX_KNOWN_SPELLS> *fail)
 {
     int slot = get_equip_slot(&item_to_remove);
 
@@ -6751,6 +6761,9 @@ void player::ac_ev_sh_without_specific_item(int scale,
     *ac = base_ac(scale);
     *ev = evasion_scaled(scale, true);
     *sh = player_displayed_shield_class(scale, true);
+    for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
+        (*fail)[i] = raw_spell_fail(spells[i]);
+
     you.equip[slot] = item_to_remove.link;
 }
 
@@ -7225,15 +7238,14 @@ void player::expose_to_element(beam_type element, int _strength,
     ::expose_player_to_element(element, _strength, slow_cold_blood);
 }
 
-void player::blink()
+void player::blink(bool ignore_stasis)
 {
-    uncontrolled_blink();
+    uncontrolled_blink(ignore_stasis);
 }
 
 void player::teleport(bool now, bool wizard_tele)
 {
     ASSERT(!crawl_state.game_is_arena());
-
     if (now)
         you_teleport_now(wizard_tele);
     else
@@ -7939,7 +7951,10 @@ bool player::can_smell() const
 
 bool player::can_sleep(bool holi_only) const
 {
-    return !you.duration[DUR_SLEEP_IMMUNITY] && actor::can_sleep(holi_only);
+    return !you.duration[DUR_SLEEP_IMMUNITY]
+           && actor::can_sleep(holi_only)
+           && !(you.form == transformation::fungus)
+           && !(you.form == transformation::tree);
 }
 
 /**

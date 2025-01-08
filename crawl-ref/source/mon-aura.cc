@@ -70,6 +70,12 @@ static const vector<mon_aura_data> aura_map =
         NUM_DURATIONS, "",
         [](const actor& targ) { return targ.type != MONS_APIS ;}},
 
+    {MONS_IRONBOUND_BEASTMASTER,
+        ENCH_HASTE, 1, false,
+        NUM_DURATIONS, "",
+        [](const actor& targ) { return (targ.holiness() & MH_NATURAL)
+        && targ.is_monster() && (mons_intel(*targ.as_monster()) != I_HUMAN) ;}},
+
     {MONS_PHALANX_BEETLE,
         ENCH_NONE, 1, false, DUR_PHALANX_BARRIER, PHALANX_BARRIER_KEY,
          nullptr, nullptr, true},

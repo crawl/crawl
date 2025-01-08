@@ -526,7 +526,7 @@ static void _fill_item_info(InventoryTile &desc, const item_def &item)
         // -1 specifies don't display anything
         desc.quantity = (item.quantity == 1) ? -1 : item.quantity;
     }
-    else if (type == OBJ_WANDS && item.flags & ISFLAG_KNOW_TYPE)
+    else if (type == OBJ_WANDS && item.flags & ISFLAG_IDENTIFIED)
         desc.quantity = item.charges;
     else
         desc.quantity = -1;
@@ -599,7 +599,7 @@ void InventoryRegion::update()
             }
 
             InventoryTile desc;
-            _fill_item_info(desc, get_item_known_info(you.inv[i]));
+            _fill_item_info(desc, you.inv[i]);
             desc.idx = i;
             if (disable_all)
                 desc.flag |= TILEI_FLAG_INVALID;
@@ -708,7 +708,7 @@ void InventoryRegion::update()
                 continue;
 
             InventoryTile desc;
-            _fill_item_info(desc, get_item_known_info(env.item[i]));
+            _fill_item_info(desc, env.item[i]);
             desc.idx = i;
             ground_shown[i] = true;
             if (disable_all)

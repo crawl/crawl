@@ -231,8 +231,7 @@ public:
         }
         else
         {
-            name = item->name(DESC_PLAIN, false, true, false, false,
-                              ISFLAG_KNOW_PLUSES);
+            name = item->name(DESC_PLAIN, false, true, false, false);
             name = pluralise(name);
         }
 
@@ -303,8 +302,7 @@ public:
         description_level_type desctype =
             item->base_type == OBJ_WANDS ? DESC_DBNAME : DESC_PLAIN;
 
-        return " " + item->name(desctype, false, true, false, false,
-                                ISFLAG_KNOW_PLUSES);
+        return " " + item->name(desctype, false, true, false, false);
     }
 };
 
@@ -328,8 +326,8 @@ static bool _identified_item_names(const item_def *it1,
     description_level_type desc =
         it1->base_type == OBJ_JEWELLERY ? DESC_DBNAME : DESC_PLAIN;
 
-    return it1->name(desc, false, true, false, false, ISFLAG_KNOW_PLUSES)
-         < it2->name(desc, false, true, false, false, ISFLAG_KNOW_PLUSES);
+    return it1->name(desc, false, true, false, false)
+         < it2->name(desc, false, true, false, false);
 }
 
 // Allocate (with new) a new item_def with the given base and sub types,
@@ -353,7 +351,7 @@ static void _add_fake_item(object_class_type base, int sub,
         ptmp->quantity = 18;
 
     if (force_known_type)
-        ptmp->flags |= ISFLAG_KNOW_TYPE;
+        ptmp->flags |= ISFLAG_IDENTIFIED;
 
     items.push_back(ptmp);
 

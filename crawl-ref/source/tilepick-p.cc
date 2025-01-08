@@ -192,6 +192,9 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_TRIDENT:
         tile = TILEP_HAND1_TRIDENT2;
         break;
+    case WPN_PARTISAN:
+        tile = TILEP_HAND1_PARTISAN;
+        break;
     case WPN_DEMON_TRIDENT:
         tile = TILEP_HAND1_DEMON_TRIDENT;
         break;
@@ -1313,7 +1316,8 @@ void tilep_print_parts(char *fbuf, const dolls_data &doll)
 bool player_uses_monster_tile()
 {
     return Options.tile_use_monster != MONS_0
-            || you.duration[DUR_EXECUTION];
+            || you.duration[DUR_EXECUTION]
+            || (you.may_pruneify() && you.cannot_act());
 }
 
 #endif

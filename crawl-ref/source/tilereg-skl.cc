@@ -183,6 +183,12 @@ static int _get_aptitude_tile(const int apt)
     case  3: return TILEI_NUM_PLUS3;
     case  4: return TILEI_NUM_PLUS4;
     case  5: return TILEI_NUM_PLUS5;
+    case  6: return TILEI_NUM_PLUS6;
+    case  7: return TILEI_NUM_PLUS7;
+    case  8: return TILEI_NUM_PLUS8;
+    case  9: return TILEI_NUM_PLUS9;
+    case 10: return TILEI_NUM_PLUS10;
+    case 11: return TILEI_NUM_PLUS11;
     case 0:
     default: return TILEI_NUM_ZERO;
     }

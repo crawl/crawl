@@ -1338,7 +1338,7 @@ static void _summon_dancing_weapon(int power)
     if (one_chance_in(3))
     {
         make_item_randart(wpn, true);
-        set_ident_flags(wpn, ISFLAG_KNOW_PROPERTIES| ISFLAG_KNOW_TYPE);
+        identify_item(wpn);
     }
 
     // Don't leave a trail of weapons behind. (Especially not randarts!)

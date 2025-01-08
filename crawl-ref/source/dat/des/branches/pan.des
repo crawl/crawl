@@ -646,7 +646,7 @@ MONS:     neqoxec / chaos spawn w:2, very ugly thing, brain worm
 MONS:     shadow demon, tentacled monstrosity, tormentor
 KMONS:    A = cacodemon
 KMONS:    B = protean progenitor
-ITEM:     potion of mutation q:1 ident:type
+ITEM:     potion of mutation q:1 pre_id
 SUBST:    D = 5:20 6 7 A B
 SHUFFLE:  qep
 NSUBST:   q = 2:6 / 1:7 / *:.,  e = 2:A / *:., p = 3:B / *:.
@@ -698,7 +698,7 @@ MONS:     patrolling mnoleg
 MONS:     glass eye / eye of devastation / golden eye w:2
 MONS:     protean progenitor, shadow demon / tentacled monstrosity
 MONS:     cacodemon, neqoxec / chaos spawn w:2 / great orb of eyes w:2
-ITEM:     potion of mutation ident:type
+ITEM:     potion of mutation pre_id
 KFEAT:    T = fountain_eyes
 SHUFFLE:  '-
 NSUBST:   O = 1:O / 1:d / *:|
@@ -756,7 +756,7 @@ ORIENT:   west
 MONS:     patrolling Mnoleg, patrolling cacodemon
 MONS:     neqoxec / chaos spawn w:2, protean progenitor
 MONS:     shadow demon, tentacled monstrosity, very ugly thing
-ITEM:     potion of mutation ident:type q:1
+ITEM:     potion of mutation pre_id q:1
 SHUFFLE:  Od, 1e
 SUBST:    e = 4
 : pan_lord_setup(_G, 'Mnoleg')
@@ -808,7 +808,7 @@ MONS:     neqoxec / chaos spawn w:2, protean progenitor
 MONS:     shadow demon / tentacled monstrosity
 MONS:     very ugly thing / glass eye band w:15 / golden eye band w:5 / \
           eye of devastation / great orb of eyes
-ITEM:     potion of mutation ident:type q:1
+ITEM:     potion of mutation pre_id q:1
 KFEAT:    T = fountain_eyes
 NSUBST:   O = 1:O / 1:d / *:|
 : pan_lord_setup(_G, 'Mnoleg')
@@ -1633,7 +1633,7 @@ NAME:   rand_demon_1
 : pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
 ............
-.xx.xx.x.xx.
+.xx.xxCx.xx.
 ..x.xC.x.x..
 ..x.x..x.x..
 ..x.x..x.x..
@@ -1642,7 +1642,7 @@ MAP
 ..x.x..x.x..
 ..x.x..x.x..
 ..x.x.Cx.x..
-.xx.x.xx.xx.
+.xx.xCxx.xx.
 ............
 ENDMAP
 
@@ -1655,12 +1655,12 @@ MAP
 ............
 .xxxxxxxxBx.
 .B.....xx.x.
-.xxxxxxBx.x.
+.xxxxxxAx.x.
 .xxBx..xx.x.
 .x.x.C<.x.x.
 .x.x.PC.x.x.
 .x.xx..xBxx.
-.x.xBxxxxxx.
+.x.xAxxxxxx.
 .x.xx.....B.
 .xBxxxxxxxx.
 ............
@@ -1697,7 +1697,7 @@ SHUFFLE: $(|
 MAP
 ............
 .xxxxxxxxx..
-.x$+*+A+(x..
+.x$+*+C+(x..
 .xxxxxxx+x..
 .xA+A+A+|x..
 .x+xxxxx+x..
@@ -1717,16 +1717,16 @@ MONS:   pandemonium lord
 : pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
 ............
-...xxxxxx...
-..xx....xx..
+..mxxxxxxm..
+.mxx....xxm.
 .xx......xx.
-.x..AAAA..x.
+.x..AAAC..x.
 .x..A|PA..x.
 .x..A(|A..x.
-.x..A1AA..x.
+.x..C1AA..x.
 .xx......xx.
-..xx....xx..
-...xxxxxx...
+.mxx....xxm.
+..mxxxxxxm..
 ............
 ENDMAP
 
@@ -1740,12 +1740,12 @@ MAP
 ............
 ......A.....
 ............
-.A..........
+.C..........
 ..........A.
 .....(P.....
 ............
 ............
-.A.......A..
+.A.......C..
 ............
 ............
 ENDMAP
@@ -1762,8 +1762,8 @@ MAP
 .x|xx=xxx|x.
 .xx+....+xx.
 ..x.x++x.x..
-..x.+PA+.=..
-..=.+AC+.x..
+..x.+PC+.=..
+..=.+CA+.x..
 ..x.x++x.x..
 .xx+....+xx.
 .x|xxx=xx|x.
@@ -2703,12 +2703,12 @@ NAME:   regret_index_pan_draining_boxed
 TAGS:   pan_fixed_rune_boxes pan_fixed_lure_boxes transparent
 ORIENT: float
 MONS:   pandemonium lord, ghost moth
-MONS:   demonspawn soul scholar, sin beast, any demon
-KMONS:  6O = ghost moth
+MONS:   demonspawn soul scholar, sin beast, any demon, wyrmhole
+KMONS:  7O = ghost moth
 : if demonic_rune_vault_is_decoy() then
 KITEM:  O = superb_item / demonic rune of zot mimic
 : else
-KITEM:  O = potion of mutation ident:type, demonic rune of zot
+KITEM:  O = potion of mutation pre_id, demonic rune of zot
 epilogue{{
 if not you.have_rune("demonic") then
   pan_declare_demonic_rune()
@@ -2725,12 +2725,12 @@ MAP
   .............mmm...
 ....vvvvvvvvvvvm2mvv...
 ...vv.3.4......mmm*vv..
-..vv=mm6.5.........*v..
+..vv=mm7.5.........*v..
 ..v.mOm.5..........*v..
-..v3mmm5.0.........mmm.
-..v.6.510.5........m2m.
+..v3mmm5.6.........mmm.
+..v.7.510.5........m2m.
 ..v4.5.0{5.........mmm.
-..v.5.0.5...........v..
+..v.5.6.5...........v..
 ..v....5............v..
 ..v.........mmm.....v..
 ..v.........m2m....vv..
@@ -2803,7 +2803,7 @@ KMONS:   O = pandemonium lord
 : if demonic_rune_vault_is_decoy() then
 KITEM:   O = superb_item / demonic rune of zot mimic
 : else
-KITEM:   O = potion of mutation ident:type, demonic rune of zot
+KITEM:   O = potion of mutation pre_id, demonic rune of zot
 KFEAT:   { = {
 epilogue{{
 if not you.have_rune("demonic") then
@@ -2881,7 +2881,7 @@ MONS:    tormentor, smoke demon, any demon
 : if demonic_rune_vault_is_decoy() then
 KITEM:   O = superb_item / demonic rune of zot mimic
 : else
-KITEM:   O = potion of mutation ident:type, demonic rune of zot
+KITEM:   O = potion of mutation pre_id, demonic rune of zot
 epilogue{{
 if not you.have_rune("demonic") then
   pan_declare_demonic_rune()
@@ -2953,7 +2953,7 @@ KMONS:  P = pandemonium lord
 : if demonic_rune_vault_is_decoy() then
 KITEM:  O = superb_item / demonic rune of zot mimic
 : else
-KITEM:  O = potion of mutation ident:type, demonic rune of zot
+KITEM:  O = potion of mutation pre_id, demonic rune of zot
 epilogue{{
 if not you.have_rune("demonic") then
   pan_declare_demonic_rune()
@@ -3048,7 +3048,7 @@ ITEM:    any potion
 : if demonic_rune_vault_is_decoy() then
 KITEM:   O = superb_item / demonic rune of zot mimic
 : else
-KITEM:   O = potion of mutation ident:type, demonic rune of zot
+KITEM:   O = potion of mutation pre_id, demonic rune of zot
 epilogue{{
 if not you.have_rune("demonic") then
   pan_declare_demonic_rune()
@@ -3063,11 +3063,11 @@ KFEAT: { = {
 NSUBST:  - = 2:7 / 7:0 / 5 = 00. / *:.
 SHUFFLE: 123, 456
 COLOUR:  D = random
-COLOUR:  P.xp01234567dO = disco
+COLOUR:  P.xp012345678dO = disco
 # WALL_ZOT_BLUE and FLOOR_PEBBLE are the bases
 # for disco-coloured variants of the tiles thereof.
 RTILE:   x = wall_zot_blue
-FTILE:   D.xpP01234567dO = floor_pebble
+FTILE:   D.xpP012345678dO = floor_pebble
 FTILE:   _{+S = floor_hall
 TILE:    D = dngn_disco_ball
 : vault_metal_statue_setup(_G, "S", "dimensional conduit")

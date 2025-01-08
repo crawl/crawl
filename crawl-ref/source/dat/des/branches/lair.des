@@ -2244,9 +2244,9 @@ TAGS:   ruin transparent
 DEPTH:  Lair
 MONS:   rat, river rat, hell rat
 KMONS:  D = pile of debris
-KITEM:  d = gold
+ITEM:   beast talisman / beast talisman randart w:2
 KFEAT:  C = cache of fruit / cache of baked goods w:4
-NSUBST: d = 1:d / 1:C / 1:F / 1:* / 1:9 / 1:3 / * = d11223.......
+NSUBST: d = 1:d / 1:C / 1:F / 1:* / 1:d / 1:9 / 1:3 / * = $11223.......
 NSUBST: c = 5:Dc / *:c
 : decorative_floor(_G, 'F', "broken floral vase")
 MAP
@@ -2320,18 +2320,19 @@ DEPTH:  Lair
 MONS:   torpor snail
 KFEAT:  a = altar_cheibriados
 NSUBST: 1 = 1:1 / * = 1.
+TILE:   c = wall_stone_puffball
 MAP
  @
 x.x   xxxxxxxxx
 x.x  xx...1....@
 x.x xx.xxxxxxxx
-x.x x.xxbbbbbbxxxx
-x.xxx.xbbWWWWW...xx
-x.xx.xbbWbbbbbbxx.xxx
+x.xxx.xxbbbbbbxxxx
+x.xx..xbbWWWWW...xx
+x.cc.xbbWbbbbbbcc.xxx
 x...1.WWW1a1WWW..1...@
 xxx.xxbbbbbbWbbx.xxxx
-  xx...WWWWWbbx.xx
-   xxxxxbbbbbxx.x
+  xx...WWWWWbbx..x
+   xxxxxbbbbbxx.xx
    xxxxxxxxxxx.xx
   @.......1...xx
    xxxxxxxxxxxx
@@ -2424,7 +2425,8 @@ KFEAT:  F = cache of fruit
 :   d = d - 1
 : else
 TAGS:   no_pool_fixup
-MONS:   death yak zombie, lich / revenant, ancient lich / dread lich
+MONS:   death yak zombie, lich / revenant
+MONS:   ancient lich / dread lich / alderking
 KMONS:  P = withered plant
 KFEAT:  t = petrified_tree
 :   decorative_floor(_G, 'F', "mourning vase")
@@ -2529,7 +2531,7 @@ ORIENT:  southeast
 KMONS:   A = adder
 KMONS:   B = water moccasin
 KMONS:   C = black mamba
-ITEM:    snakebite no_pickup
+KITEM:   d = serpent talisman randart, snakebite no_pickup
 SUBST:   1 = A B:2 .:48, 2 = A B:5 .:60, 3 = A B C:2 .:88, 4 = A:2 B C:4 .:64
 SUBST:   5 = A:1 B C .:84, 6 = B:5 C .:60, 7 = B.
 MAP
@@ -2731,18 +2733,19 @@ NAME:   nicolae_lair_lil_pond
 TAGS:   transparent ruin decor extra
 DEPTH:  Lair
 NSUBST: D = 1:. / *:x
-SUBST:  - = .W
+SUBST:  - = .W, c : cx
+TILE:   c = wall_stone_puffball
 MAP
 ............
 ....xxxx....
-..DDDxxxxx..
+..DDDxxxxc..
 ..x------x..
 .xx-wwww-xx.
 .xx-wwww-xx.
 .xx-wwww-xx.
 .xx-wwww-xx.
 ..x------x..
-..xxxxxxxx..
+..cxxxxxxc..
 ....xxxx....
 ............
 ENDMAP
@@ -3435,8 +3438,7 @@ KITEM:  R = earthy gem
 MONS:   yak, death yak, manticore
 KMONS:  4C = patrolling catoblepas
 # These are still living plants for all intents and purposes...
-KMONS:  P = plant perm_ench:petrified dbname:petrified_plant \
-            col:lightgrey tile:mons_withered_plant
+KMONS:  P = withered plant perm_ench:petrified
 SUBST:  P = P.
 NSUBST: 0 = 3:1 / 1:2 / * = 1112
 NSUBST: 9 = 1:C / 2:2 / 3:3 / * = 11222
@@ -3541,10 +3543,10 @@ KITEM:   % = any
 KITEM:   * = star_item
 KITEM:   | = superb_item
 : kitem("d = " .. dgn.loot_potions)
-KITEM:   e = throwing net q:3 / rapier good_item / captain's cutlass w:2 \
-         / trident randart / trident of the octopus king w:2 \
-         / demon trident w:5 / phial of floods / ring of the octopus king w:2, \
-         earthy gem
+KITEM:   e = throwing net q:3 / rapier good_item / captain's cutlass w:2 / \
+             trident randart w:8 / trident of the octopus king w:2 / \
+             partisan good_item w:2 / demon trident w:5 / phial of floods / \
+             ring of the octopus king w:2, earthy gem
 KMONS:   p = plant
 KMONS:   1 = hornet / wyvern / blink frog / cane toad / steam dragon
 KMONS:   2 = elephant / komodo dragon / polar bear / rime drake

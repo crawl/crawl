@@ -982,9 +982,9 @@ static void _handle_boulder_movement(monster& boulder)
     {
         if (you.can_see(boulder))
         {
-            mprf("%s slams into a %s and falls apart!",
+            mprf("%s slams into %s and falls apart!",
                  boulder.name(DESC_THE).c_str(),
-                 feat_type_name(env.grid(targ)));
+                 article_a(feat_type_name(env.grid(targ))).c_str());
         }
         monster_die(boulder, KILL_NONE, true);
         return;
@@ -1148,27 +1148,35 @@ static void _handle_hellfire_mortar(monster& mortar)
             if (i + 1 == path.size())
             {
                 simple_monster_message(mortar, " sinks back into the magma.");
-                monster_die(mortar, KILL_NON_ACTOR, true);
+                monster_die(mortar, KILL_NON_ACTOR, NON_MONSTER, true);
                 return;
             }
 
             coord_def new_pos = path[i+1].get_coord();
 
-            // We're blocked!
+            // We're blocked by someone! Try to push them backwards first, if we can.
+            if (actor_at(new_pos))
+                actor_at(new_pos)->stumble_away_from(mortar.pos());
+
+            // If there's *still* someone in the way (or we've run out of lava),
+            // die.
             if (env.grid(new_pos) != DNGN_LAVA || actor_at(new_pos))
             {
-                const string reason = actor_at(new_pos)
-                                        ? actor_at(new_pos)->name(DESC_THE).c_str()
-                                        : article_a(feat_type_name(env.grid(new_pos)));
-
                 if (you.can_see(mortar))
                 {
-                    mprf("%s collides with %s and sinks back into the magma.",
-                         mortar.name(DESC_THE).c_str(),
-                         reason.c_str());
+                    string barrier, collides = " collides with ", _and = " and";
+                    if (actor_at(new_pos))
+                        barrier = actor_at(new_pos)->name(DESC_THE);
+                    else if (cell_is_solid(new_pos))
+                        barrier = article_a(feat_type_name(env.grid(new_pos)));
+                    else
+                        collides = _and = "";
+
+                    mpr(mortar.name(DESC_THE) + collides + barrier + _and +
+                        " sinks back into the magma.");
                 }
 
-                monster_die(mortar, KILL_NON_ACTOR, true);
+                monster_die(mortar, KILL_NON_ACTOR, NON_MONSTER, true);
                 return;
             }
 
@@ -1994,7 +2002,8 @@ void handle_monster_move(monster* mons)
         // XXX: If its foe gets set to something that is no longer in sight, it
         //      will refuse to shred entirely.
         mons->foe = MHITNOT;
-        try_mons_cast(*mons, SPELL_SHRED);
+        if (!is_sanctuary(mons->pos()))
+            try_mons_cast(*mons, SPELL_SHRED);
         mons->lose_energy(EUT_SPELL);
         return;
     }

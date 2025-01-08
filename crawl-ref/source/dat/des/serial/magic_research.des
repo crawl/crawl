@@ -143,8 +143,8 @@ ENDMAP
 NAME:    hangedman_research_toxicology
 MONS:    sea snake, mana viper, tarantella, death drake
 KMONS:   5D = radroach
-KITEM:   E = potion of degeneration ident:type / \
-             potion of mutation ident:type
+KITEM:   E = potion of degeneration pre_id / \
+             potion of mutation pre_id
 COLOUR:  .012345DE = lightgreen
 FTILE:   .+n012345DE = floor_moss
 SHUFFLE: 12, 34
@@ -186,9 +186,13 @@ ENDMAP
 
 NAME:   hangedman_research_quantum
 MONS:   blink frog / jumping spider w:7, spatial vortex
+: if you.in_branch("Depths") then
+KMONS:  D = wyrmhole
+: else
 KMONS:  D = eldritch tentacle
 MARKER: D = lua:fog_machine { cloud_type = "translocational energy", \
             pow_min = 3, pow_max = 10, delay = 50, size = 1, walk_dist = 1 }
+: end
 COLOUR: .012D = magenta
 FTILE:  .n+012D = floor_demonic_red
 : init_research(_G, 'translocation')

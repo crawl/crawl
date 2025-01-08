@@ -650,7 +650,7 @@ void win_apostle_challenge(monster& apostle)
     // Remind the player how to do this, if they don't already have an apostle
     if (get_num_apostles() == 0)
     {
-        msg += make_stringf("\n(press <w>%c</w> on the <w>%s</w>bility menu to recruit an apostle)",
+        msg += make_stringf(" (press <w>%c</w> on the <w>%s</w>bility menu to recruit an apostle)",
                             get_talent(ABIL_BEOGH_RECRUIT_APOSTLE, false).hotkey,
                             command_to_string(CMD_USE_ABILITY).c_str());
     }

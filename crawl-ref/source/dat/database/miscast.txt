@@ -440,7 +440,29 @@ forgecraft miscast player
 You lose structural integrity
 
 You feel yourself deconstruct slightly
-%%%%%
+
+A [buzzing|clanking|creaking|whirring] sound echoes in your mind
+
+Metal odds and ends fall onto you out of nowhere
+
+You are covered in metallic shards
+
+You are caught in an explosion of metallic debris
+%%%%
 forgecraft miscast monster
 
 @The_monster@ loses structural integrity
+
+Metal odds and ends fall onto @the_monster@ out of nowhere
+
+@The_monster@ is covered in metallic shards
+
+@The_monster@ is caught in an explosion of metallic debris
+%%%%
+forgecraft miscast unseen
+
+Metal odds and ends rain from above
+
+An unseen figure is covered in metallic shards
+
+Metallic debris explodes from thin air

@@ -13,6 +13,7 @@
 
 #include "art-enum.h"
 #include "cloud.h"
+#include "english.h"
 #include "god-conduct.h"
 #include "god-passive.h"
 #include "god-wrath.h" // reduce_xp_penance
@@ -21,6 +22,7 @@
 #include "item-prop.h"
 #include "item-status-flag-type.h"
 #include "item-use.h"
+#include "items.h"
 #include "message.h"
 #include "mutation.h"
 #include "nearby-danger.h"
@@ -917,9 +919,8 @@ bool quaff_potion(item_def &potion)
 
     if (!was_known)
     {
-        set_ident_flags(potion, ISFLAG_IDENT_MASK);
-        set_ident_type(potion, true);
-        mprf("It was a %s.", potion.name(DESC_QUALNAME).c_str());
+        identify_item(potion);
+        mprf("It was %s.", article_a(potion.name(DESC_QUALNAME)).c_str());
     }
 
     const potion_type ptyp = static_cast<potion_type>(potion.sub_type);

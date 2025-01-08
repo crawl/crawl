@@ -395,15 +395,12 @@ static const char *targeting_help_1 =
     "<w>v</w> : describe monster under cursor\n"
     "<w>+</w> : cycle monsters forward (also <w>=</w>)\n"
     "<w>-</w> : cycle monsters backward\n"
-    "<w>'</w> : cycle objects forward (also <w>*</w>)\n"
-    "<w>;</w> : cycle objects backward (also <w>/</w>)\n"
     "<w>^</w> : cycle through traps\n"
     "<w>_</w> : cycle through altars\n"
     "<w><<</w>/<w>></w> : cycle through up/down stairs\n"
     "<w>Tab</w> : cycle through shops and portals\n"
     "<w>r</w> : move cursor to you\n"
     "<w>e</w> : create/remove travel exclusion\n"
-    "<w>Ctrl-P</w> : repeat prompt\n"
 ;
 #ifdef WIZARD
 static const char *targeting_help_wiz =
@@ -434,7 +431,7 @@ static const char *targeting_help_2 =
     "Some keys fire at the target. <w>Ctrl-X</w> only\n"
     "lists eligible targets. By default,\n"
     "range is respected and beams don't stop.\n"
-    "<w>Enter</w> : fire (<w>Space</w>, <w>Del</w>)\n"
+    "<w>Enter</w> : fire (<w>Space</w>, <w>Del</w>, <w>f</w>)\n"
     "<w>.</w> : fire, stop at target\n"
     "<w>@</w> : fire, stop at target, ignore range\n"
     "<w>!</w> : fire, don't stop, ignore range\n"

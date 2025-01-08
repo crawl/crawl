@@ -54,6 +54,7 @@
 #include "spl-transloc.h"  // For Autumn Katana's Manifold Assault
 #include "tag-version.h"
 #include "terrain.h"       // For storm bow
+#include "rltiles/tiledef-main.h"
 #include "unwind.h"        // For autumn katana
 #include "view.h"          // For arc blade's discharge effect
 
@@ -681,7 +682,7 @@ static void _WYRMBANE_melee_effects(item_def* weapon, actor* attacker,
         return;
 
     // The cap can be reached by:
-    // * iron dragon, golden dragon, pearl dragon (18)
+    // * iron dragon, golden dragon, pearl dragon, wyrmhole (18)
     // * Xtahua (19)
     // * bone dragon, Serpent of Hell (20)
     // * Tiamat (22)
@@ -904,6 +905,7 @@ static void _DAMNATION_launch(bolt* beam)
     expl->is_explosion = true;
     expl->damage = dice_def(2, 14);
     expl->name   = "damnation";
+    expl->tile_explode = TILE_BOLT_DAMNATION;
 
     beam->special_explosion = expl;
 }

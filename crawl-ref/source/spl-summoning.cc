@@ -259,7 +259,7 @@ spret cast_awaken_armour(int pow, bool fail)
     item_def &fake_armour = env.item[mitm_slot];
     fake_armour.clear();
     fake_armour = *armour;
-    fake_armour.flags |= ISFLAG_SUMMONED | ISFLAG_KNOW_PLUSES;
+    fake_armour.flags |= ISFLAG_SUMMONED | ISFLAG_IDENTIFIED;
 
     spirit->pickup_item(fake_armour, false, true);
 
@@ -688,7 +688,6 @@ bool tukima_affects(const actor &target)
            && !target.is_player()
            && !is_special_unrandom_artefact(*wpn)
            && !mons_class_is_animated_weapon(target.type)
-           // XX use god_protects here. But, need to know the caster too...
            && !mons_is_hepliaklqana_ancestor(target.type)
            && !(target.is_monster() && target.as_monster()->type == MONS_ORC_APOSTLE);
 }
@@ -1791,7 +1790,11 @@ static void _fire_battlesphere(monster* battlesphere, bolt& beam)
     battlesphere->foe = actor_at(beam.target)->mindex();
     battlesphere->target = beam.target;
 
-    simple_monster_message(*battlesphere, " fires at %s!");
+    if (you.can_see(*battlesphere))
+    {
+        mprf("%s fires at %s!", battlesphere->name(DESC_THE).c_str(),
+                                actor_at(beam.target)->name(DESC_THE).c_str());
+    }
     beam.fire();
 
     // Decrement # of volleys left and possibly expire the battlesphere.
@@ -1901,6 +1904,7 @@ bool trigger_battlesphere(actor* agent)
         battlesphere->check_redraw(old_pos);
         battlesphere->speed_increment -= 30;
 
+        beam.source = fallback_pos;
         _fire_battlesphere(battlesphere, beam);
         battlesphere->apply_location_effects(old_pos);
         return true;
@@ -2361,7 +2365,7 @@ static void _overgrow_wall(const coord_def &pos)
                                                     4, MONS_WANDERING_MUSHROOM,
                                                     1, MONS_BALLISTOMYCETE,
                                                     1, MONS_OKLOB_PLANT);
-    mgen_data mgen(mon, BEH_FRIENDLY, pos, MHITYOU, MG_FORCE_PLACE);
+    mgen_data mgen(mon, BEH_FRIENDLY, pos, MHITYOU, MG_FORCE_PLACE, GOD_FEDHAS);
     mgen.hd = mons_class_hit_dice(mon) + you.skill_rdiv(SK_INVOCATIONS);
     mgen.set_summoned(&you, SPELL_NO_SPELL,
                         summ_dur(min(3 + you.skill_rdiv(SK_INVOCATIONS, 1, 5), 6)));
@@ -2432,7 +2436,7 @@ spret fedhas_grow_ballistomycete(const coord_def& target, bool fail)
     fail_check();
 
     mgen_data mgen(MONS_BALLISTOMYCETE, BEH_FRIENDLY, target, MHITYOU,
-            MG_FORCE_BEH | MG_FORCE_PLACE | MG_AUTOFOE);
+            MG_FORCE_BEH | MG_FORCE_PLACE | MG_AUTOFOE, GOD_FEDHAS);
     mgen.hd = mons_class_hit_dice(MONS_BALLISTOMYCETE) +
         you.skill_rdiv(SK_INVOCATIONS);
     mgen.set_summoned(&you, SPELL_NO_SPELL,
@@ -2479,7 +2483,7 @@ spret fedhas_grow_oklob(const coord_def& target, bool fail)
     fail_check();
 
     mgen_data mgen(MONS_OKLOB_PLANT, BEH_FRIENDLY, target, MHITYOU,
-            MG_FORCE_BEH | MG_FORCE_PLACE | MG_AUTOFOE);
+            MG_FORCE_BEH | MG_FORCE_PLACE | MG_AUTOFOE, GOD_FEDHAS);
     mgen.hd = mons_class_hit_dice(MONS_OKLOB_PLANT) +
         you.skill_rdiv(SK_INVOCATIONS);
     mgen.set_summoned(&you, SPELL_NO_SPELL,
@@ -3136,8 +3140,17 @@ bool make_soul_wisp(const actor& agent, actor& victim)
     return false;
 }
 
-static monster* _get_clockwork_bee_target()
+static monster* _get_clockwork_bee_target(const monster* bee = nullptr)
 {
+    // Try to resume targeting the last thing we were targeting before going
+    // dormant (if it's still around and valid).
+    if (bee && bee->props.exists(CLOCKWORK_BEE_TARGET))
+    {
+        monster* targ = monster_by_mid(bee->props[CLOCKWORK_BEE_TARGET].get_int());
+        if (targ && targ->alive() && !targ->wont_attack() && you.can_see(*targ))
+            return targ;
+    }
+
     monster* targ = nullptr;
     int num_seen = 0;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
@@ -3178,9 +3191,16 @@ void handle_clockwork_bee_spell(int turn)
                                         random_range(80, 120),
                                      SPELL_CLOCKWORK_BEE, false).set_range(1, 2);
             mg.hd = 5 + div_rand_round(calc_spell_power(SPELL_CLOCKWORK_BEE), 20);
-            if (create_monster(mg))
+            if (monster* bee = create_monster(mg))
             {
                 mprf("Without a target, your clockwork bee falls to the ground.");
+
+                // Still remember our original target, just in case it merely
+                // ducked out of sight for a moment and the player wants to
+                // reactivate us.
+                if (targ)
+                    bee->props[CLOCKWORK_BEE_TARGET].get_int() = targ->mid;
+
                 return;
             }
         }
@@ -3200,6 +3220,7 @@ void handle_clockwork_bee_spell(int turn)
              targ->name(DESC_THE).c_str());
 
         bee->speed_increment = 80;
+        bee->props[CLOCKWORK_BEE_TARGET].get_int() = targ->mid;
     }
     else
         mpr("Your bee fails to deploy!");
@@ -3268,14 +3289,30 @@ void clockwork_bee_go_dormant(monster& bee)
 // Returns false if we lacked the MP to do so or there was no valid target for it.
 bool clockwork_bee_recharge(monster& bee)
 {
-    monster* targ = _get_clockwork_bee_target();
+    if (you.berserk())
+    {
+        mpr("If you tried to rewind gears in your present state, you'd only break them.");
+        return false;
+    }
+
+    monster* targ = _get_clockwork_bee_target(&bee);
 
     // Nothing around for it to attack.
     if (!targ)
     {
-        mpr("You see no target in range to command your bee to attack.");
+        mpr("You need a visible target to rewind your bee! "
+            "(Use ctrl+direction or * direction to deconstruct it instead.)");
         return false;
     }
+
+    if (!enough_mp(1, true))
+    {
+        mpr("You lack sufficient magical power to recharge your bee.");
+        return false;
+    }
+
+    pay_mp(1);
+    finalize_mp_cost();
 
     mprf("You wind your clockwork bee back up and it locks its sights upon %s!",
          targ->name(DESC_THE).c_str());
@@ -3286,7 +3323,7 @@ bool clockwork_bee_recharge(monster& bee)
     bee.set_hit_dice(old_hd);
     bee.max_hit_points = old_max_hp;
     bee.hit_points = old_hp;
-    bee.heal(roll_dice(2, 10));
+    bee.heal(roll_dice(3, 5));
     bee.add_ench(mon_enchant(ENCH_SUMMON_TIMER, 0, &you, random_range(400, 500)));
     bee.add_ench(mon_enchant(ENCH_HAUNTING, 0, targ, INFINITE_DURATION));
     bee.number = 3 + div_rand_round(calc_spell_power(SPELL_CLOCKWORK_BEE), 15);
@@ -3306,6 +3343,7 @@ void clockwork_bee_pick_new_target(monster& bee)
     {
         mprf("Your clockwork bee locks its sights upon %s.", targ->name(DESC_THE).c_str());
         bee.add_ench(mon_enchant(ENCH_HAUNTING, 0, targ, INFINITE_DURATION));
+        bee.props[CLOCKWORK_BEE_TARGET].get_int() = targ->mid;
     }
 }
 
@@ -3545,6 +3583,8 @@ spret cast_surprising_crocodile(actor& agent, const coord_def& targ, int pow, bo
                                 TERRAIN_CHANGE_FLOOD);
         }
     }
+
+    agent.apply_location_effects(start_pos);
 
     return spret::success;
 }
@@ -3824,7 +3864,8 @@ static void _do_player_potion()
     if (weights.empty())
         return;
 
-    flash_tile(you.pos(), random_choose(LIGHTBLUE, LIGHTGREEN, LIGHTMAGENTA));
+    flash_tile(you.pos(), random_choose(LIGHTBLUE, LIGHTGREEN, LIGHTMAGENTA),
+               120, TILE_BOLT_ALEMBIC_POTION);
 
     potion_type potion = *random_choose_weighted(weights);
 
@@ -3856,7 +3897,8 @@ static bool _do_monster_potion(monster& mons, monster& alembic)
 
     potion_type potion = *random_choose_weighted(weights);
 
-    flash_tile(mons.pos(), random_choose(LIGHTBLUE, LIGHTGREEN, LIGHTMAGENTA));
+    flash_tile(mons.pos(), random_choose(LIGHTBLUE, LIGHTGREEN, LIGHTMAGENTA),
+               60, TILE_BOLT_ALEMBIC_POTION);
 
     switch (potion)
     {
@@ -3953,7 +3995,7 @@ bool monarch_deploy_bomblet(monster& original, const coord_def& target,
                                                 : BEH_HOSTILE,
                              target, MG_AUTOFOE);
     mg.set_summoned(actor_by_mid(original.summoner),
-                    SPELL_MONARCH_BOMB, summ_dur(3), false);
+                    SPELL_MONARCH_BOMB, random_range(90, 160), false);
     mg.set_range(0, 2);
     if (create_monster(mg))
     {
@@ -4205,7 +4247,7 @@ spret cast_summon_seismosaurus_egg(const actor& agent, int pow, bool fail)
 
     mgen_data egg = _summon_data(agent, MONS_SEISMOSAURUS_EGG, summ_dur(3),
                                  SPELL_SUMMON_SEISMOSAURUS_EGG);
-    egg.hd = (7 + div_rand_round(pow, 22));
+    egg.hd = (7 + div_rand_round(pow, 20));
     egg.set_range(3, 3, 1);
 
     if (monster* mons = create_monster(egg))

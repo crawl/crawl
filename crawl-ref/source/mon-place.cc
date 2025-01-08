@@ -2064,6 +2064,33 @@ static band_type _choose_band(monster_type mon_type, int *band_size_p,
             band_size = (one_chance_in(4) ? 3 : 2);
         break;
 
+    case MONS_LINDWURM:
+        if (player_in_branch(BRANCH_VAULTS)
+            && x_chance_in_y(min(you.depth, 3), 3))
+        {
+            band = BAND_WURMS_AND_MASTER;
+            band_size += 1;
+        }
+        break;
+
+    case MONS_SLIME_CREATURE:
+        if (player_in_branch(BRANCH_VAULTS)
+            && x_chance_in_y(min(you.depth - 1, 5), 5))
+        {
+            band = BAND_SLIMES_AND_MASTER;
+            if (x_chance_in_y(you.depth, 4))
+                band_size += 1;
+        }
+        break;
+
+    case MONS_DIRE_ELEPHANT:
+        if (player_in_branch(BRANCH_VAULTS)
+            && x_chance_in_y(3 + min(you.depth, 7), 10))
+        {
+            band = BAND_ELEPHANTS_AND_MASTER;
+        }
+        break;
+
     case MONS_LAUGHING_SKULL:
         if (player_in_branch(BRANCH_DUNGEON))
             band_size = 1;
@@ -2347,6 +2374,18 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_FAUN_PARTY,          {{{MONS_MERFOLK_SIREN, 1}},
 
                                  {{MONS_FAUN, 1}}}},
+
+    { BAND_WURMS_AND_MASTER,    {{{MONS_IRONBOUND_BEASTMASTER, 1}},
+
+                                 {{MONS_LINDWURM, 1}}}},
+
+    { BAND_SLIMES_AND_MASTER,   {{{MONS_IRONBOUND_BEASTMASTER, 1}},
+
+                                 {{MONS_SLIME_CREATURE, 1}}}},
+
+    { BAND_ELEPHANTS_AND_MASTER,{{{MONS_IRONBOUND_BEASTMASTER, 1}},
+
+                                 {{MONS_DIRE_ELEPHANT, 1}}}},
 
     { BAND_TENGU,               {{{MONS_TENGU_WARRIOR, 1},
                                   {MONS_TENGU_CONJURER, 1}}}},

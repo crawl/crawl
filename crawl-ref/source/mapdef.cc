@@ -5049,6 +5049,7 @@ int str_to_ego(object_class_type item_type, string ego_str)
 #endif
         "datura",
         "atropa",
+        "disjunction",
         nullptr
     };
     COMPILE_CHECK(ARRAYSZ(missile_brands) == NUM_REAL_SPECIAL_MISSILES);
@@ -5251,29 +5252,8 @@ bool item_list::parse_single_spec(item_spec& result, string s)
 
     string ego_str  = strip_tag_prefix(s, "ego:");
 
-    string id_str = strip_tag_prefix(s, "ident:");
-    if (id_str == "all")
-        result.props[IDENT_KEY].get_int() = ISFLAG_IDENT_MASK;
-    else if (!id_str.empty())
-    {
-        vector<string> ids = split_string("|", id_str);
-        int id = 0;
-        for (const auto &is : ids)
-        {
-            if (is == "type")
-                id |= ISFLAG_KNOW_TYPE;
-            else if (is == "pluses")
-                id |= ISFLAG_KNOW_PLUSES;
-            else if (is == "properties")
-                id |= ISFLAG_KNOW_PROPERTIES;
-            else
-            {
-                error = make_stringf("Bad identify status: %s", id_str.c_str());
-                return false;
-            }
-        }
-        result.props[IDENT_KEY].get_int() = id;
-    }
+    if (strip_tag(s, "pre_id"))
+        result.props[IDENT_KEY] = true;
 
     if (strip_tag(s, "good_item"))
         result.level = ISPEC_GOOD_ITEM;

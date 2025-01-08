@@ -186,7 +186,7 @@ static void _decrement_petrification(int delay)
 
         mprf(MSGCH_DURATION, "You turn to %s%s.",
              flesh_equiv.c_str(),
-             you.paralysed() ? "" : " and can move again");
+             you.paralysed() ? "" : " and can act again");
 
         if (you.props.exists(PETRIFIED_BY_KEY))
             you.props.erase(PETRIFIED_BY_KEY);
@@ -240,7 +240,7 @@ static void _decrement_paralysis(int delay)
         return;
     }
 
-    mprf(MSGCH_DURATION, "You can move again.");
+    mprf(MSGCH_DURATION, "You can act again.");
     you.redraw_armour_class = true;
     you.redraw_evasion = true;
 }
@@ -524,6 +524,12 @@ void player_reacts_to_monsters()
 
     if (player_in_branch(BRANCH_ARENA) && !okawaru_duel_active())
         okawaru_end_duel();
+
+    if (you.duration[DUR_BLINKITIS])
+    {
+        uncontrolled_blink(false, 3);
+        ouch(roll_dice(2, 2), KILLED_BY_BLINKING);
+    }
 }
 
 static bool _check_recite()

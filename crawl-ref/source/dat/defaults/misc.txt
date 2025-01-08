@@ -23,7 +23,7 @@ action_panel_filter += acquirement,amnesia,brand,enchant,identify,noise,torment
 # These items cause monsters to display with unusual threat highlighting:
 unusual_monster_items  = wand
 unusual_monster_items += disto,chaos
-unusual_monster_items += curare,atropa,datura,dispersal
+unusual_monster_items += curare,atropa,datura,dispersal,disjunction
 unusual_monster_items += throwing net
 # For regular items and artefacts
 unusual_monster_items += reflect,Reflect

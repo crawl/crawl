@@ -65,9 +65,9 @@ KMASK:  - = no_monster_gen
 KPROP:  - = no_tele_into
 SUBST:  - = tt.
 : if crawl.one_chance_in(4) then
-: set_feature_name("tree", "dead tree")
 TILE:   t = dngn_tree_dead
-COLOUR: t = w:5 lightgrey / brown
+COLOUR: t = brown
+:   set_feature_name("tree", "dead tree")
 : elseif crawl.one_chance_in(4) then
 COLOUR: t = lightred / red w:4 / yellow w:4
 TILE:   t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4
@@ -613,7 +613,7 @@ ENDMAP
 
 NAME:  hellmonk_ecumenical_altar_blasted
 TAGS:  transparent
-KITEM: _ = scroll of immolation ident:type
+KITEM: _ = scroll of immolation pre_id
 SUBST: x = ..x
 SUBST: x : xc
 : ecumenical_altar_setup(_G)
@@ -947,28 +947,32 @@ xG-G-G-
 ENDMAP
 
 # goal of this is to feel hidden in something, so no b seen from outside
-NAME: shapermc_ecumenical_altar_petra
-TAGS: transparent
+NAME:    shapermc_ecumenical_altar_petra
+TAGS:    transparent
 : if crawl.coinflip() then
-SUBST:  ' = pf......
-KMONS:  p = plant
-KMONS:  f = fungus
+KMONS:   p = plant
+KMONS:   f = fungus
+KFEAT:   C = c
+SHUFFLE: bB / cC / cC
+SUBST:   ' = f...
+TILE:    C = wall_stone_puffball
 : else
-NSUBST: ' = 3=^^. / .
-KFEAT:  ^ = web trap
+NSUBST:  ' = 3 = ^^. / .
+KFEAT:   ^ = web trap
 : end
+SUBST:   B = b
 : ecumenical_altar_setup(_G)
 MAP
  xxxxxx
 xxbbbbxx
 xbb_G'bx
-xbG''bbx
+xbG''bBx
 xb'b''bx
-xbbb''bx
+xbBb''bx
 xbb'''bx
-xb''bbbx
+xb''bBbx
 xbb''bxx
-xxbb''bx
+xxBb''bx
  xxG'Gxx
 ENDMAP
 

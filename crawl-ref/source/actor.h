@@ -198,7 +198,7 @@ public:
     virtual bool heal(int amount) = 0;
     virtual void banish(const actor *agent, const string &who = "",
                         const int power = 0, bool force = false) = 0;
-    virtual void blink() = 0;
+    virtual void blink(bool ignore_stasis = false) = 0;
     virtual void teleport(bool right_now = false,
                           bool wizard_tele = false) = 0;
     virtual bool poison(actor *attacker, int amount = 1, bool force = false) = 0;
@@ -248,7 +248,7 @@ public:
     virtual bool can_be_blinded() const = 0;
 
     virtual int armour_class() const = 0;
-    virtual int gdr_perc() const = 0;
+    virtual int gdr_perc(bool random = true) const = 0;
     int apply_ac(int damage, int max_damage = 0,
                  ac_type ac_rule = ac_type::normal,
                  bool for_real = true) const;

@@ -221,7 +221,7 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
 
             simple_monster_message(*mon, " is freed.");
             // The monster disappears.
-            monster_die(*mon, KILL_RESET, NON_MONSTER);
+            monster_die(*mon, KILL_RESET_KEEP_ITEMS, NON_MONSTER);
             break;
 
         case DACT_SLIME_NEW_ATTEMPT:

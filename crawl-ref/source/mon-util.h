@@ -576,3 +576,8 @@ bool apply_visible_monsters(monster_func mf,
 int derived_undead_avg_hp(monster_type mtype, int hd, int scale = 10);
 
 int touch_of_beogh_hp_mult(const monster& mon);
+
+bool shoot_through_monster(const actor* agent, const monster& mon,bool do_message = false);
+bool shoot_through_monster(const actor* agent, const monster* mon, bool do_message = false);
+bool never_harm_monster(const actor* agent, const monster& mon, bool do_message = false);
+bool never_harm_monster(const actor* agent, const monster* mon, bool do_message = false);

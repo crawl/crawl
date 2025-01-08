@@ -27,6 +27,7 @@
 #include "stringutil.h"
 #include "target.h"
 #include "terrain.h"
+#include "rltiles/tiledef-main.h"
 #include "torment-source-type.h"
 #include "view.h"
 #include "viewchar.h"
@@ -50,10 +51,7 @@ static void _setup_base_explosion(bolt & beam, const monster& origin)
         if (!origin.is_abjurable() && origin.was_created_by(you))
             beam.thrower = KILL_YOU;
         else
-        {
             beam.thrower = KILL_MON;
-            beam.source_id = MID_ANON_FRIEND;
-        }
     }
     else
         beam.thrower = KILL_MON;
@@ -100,11 +98,7 @@ static void _setup_blazeheart_core_explosion(bolt & beam, const monster& origin)
     beam.colour       = RED;
     beam.ex_size      = 1;
     beam.source_name  = origin.name(DESC_PLAIN, true);
-
-    // Don't place the player under penance for their golem exploding,
-    // but DO give them xp for its kills.
     beam.thrower      = KILL_MON;
-    beam.source_id    = MID_ANON_FRIEND;
 
     // This is so it places flame clouds under the explosion
     beam.origin_spell = SPELL_FORGE_BLAZEHEART_GOLEM;
@@ -170,6 +164,7 @@ static void _setup_shadow_prism_explosion(bolt& beam, const monster& origin)
     beam.damage  = prism_damage(origin.get_hit_dice(), origin.prism_charge == 2);
     beam.name    = "blast of shadow";
     beam.colour  = MAGENTA;
+    beam.tile_explode = TILE_BOLT_SHADOW_BLAST;
     beam.ex_size = origin.prism_charge;
     beam.origin_spell = SPELL_SHADOW_PRISM;
 }
@@ -218,6 +213,7 @@ static void _setup_haemoclasm_explosion(bolt& beam, const monster& origin)
     beam.name        = "rain of gore";
     beam.hit_verb    = "batters";
     beam.colour      = RED;
+    beam.tile_explode= TILE_BOLT_HAEMOCLASM;
     beam.ex_size     = 1;
     beam.source_name = origin.name(DESC_PLAIN, true);
     beam.thrower     = KILL_YOU_MISSILE;

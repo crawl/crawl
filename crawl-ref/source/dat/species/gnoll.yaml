@@ -53,6 +53,7 @@ recommended_jobs:
   - hexslinger
   - shapeshifter
   - wanderer
+  - forgewright
 
 child_name: Pup
 orc_name: Hyenorc

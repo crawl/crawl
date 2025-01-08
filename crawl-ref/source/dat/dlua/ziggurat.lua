@@ -300,8 +300,8 @@ mset(spec_fn(function ()
   local e = 10 + you.zigs_completed() * you.zigs_completed() * 2
   return "place:Abyss:$ w:1910 / demonspawn corrupter w:" .. d .. " / " ..
          "starcursed mass w:" .. d .. " / wretched star w:" .. d .. " / " ..
-         "bone dragon w:" .. d / 2 .. " / daeva w:" .. d .. " / " ..
-         "silent spectre w:" .. e
+         "bone dragon w:" .. d / 2 .. " / wyrmhole w:" .. d / 2 .. " / " ..
+         "daeva w:" .. d .. " / " .. "silent spectre w:" .. e
 end))
 
 mset(with_props(spec_fn(function ()
@@ -309,7 +309,7 @@ mset(with_props(spec_fn(function ()
   local e = 5 + you.zigs_completed() * 6
   local f = 10 + you.zigs_completed() * 15
   return "place:Geh:$ w:" .. d .. " / hellion w:" .. e .. " / " ..
-         "hellephant w:" .. e .. " / brimstone fiend w:" .. f
+         "oni incarcerator w:" .. e .. " / brimstone fiend w:" .. f
 end), { weight = 5 }))
 
 mset(with_props(spec_fn(function ()
@@ -433,8 +433,9 @@ mset(with_props(spec_fn(function ()
          "wyvern / hydra / steam dragon w:20 / acid dragon w:20 / " ..
          "swamp dragon w:" .. d .. " / fire dragon w:" .. d .. " / " ..
          "ice dragon w:" .. d .. " / storm dragon w:" .. d .. " / " ..
-         "shadow dragon w:" .. d .. " / iron dragon w:" .. e .. " / " ..
-         "quicksilver dragon w:" .. e .. " / golden dragon w:" .. e
+         "shadow dragon w:" .. d .. " / iron dragon w:" .. d .. " / " ..
+         "quicksilver dragon w:" .. e .. " / golden dragon w:" .. e .. " / " ..
+         "wyrmhole w:" .. e
 end), { weight = 2 }))
 
 mset(spec_fn(function ()

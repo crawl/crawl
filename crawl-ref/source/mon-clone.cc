@@ -98,7 +98,10 @@ static void _mons_summon_monster_illusion(monster* caster,
                        "woven by " + caster->name(DESC_THE));
         if (!clone->has_ench(ENCH_SUMMON_TIMER))
             clone->mark_summoned(MON_SUMM_CLONE, summ_dur(6), true, true);
-        clone->add_ench(ENCH_PHANTOM_MIRROR);
+        // If isn't very ambiguous if a monster makes a hostile clone out of a
+        // friendly monster, so don't try to hide it.
+        if (!foe->friendly())
+            clone->add_ench(ENCH_PHANTOM_MIRROR);
         clone->summoner = caster->mid;
 
         // Discard unsuitable enchantments.
@@ -229,7 +232,6 @@ int mons_summon_illusion_from(monster* mons, actor *foe,
             _init_player_illusion_properties(
                 get_monster_data(MONS_PLAYER_ILLUSION));
             _mons_load_player_enchantments(mons, clone);
-            clone->add_ench(ENCH_PHANTOM_MIRROR);
 
             return 1;
         }

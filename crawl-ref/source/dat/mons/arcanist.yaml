@@ -1,5 +1,5 @@
 name: "arcanist"
-glyph: {char: "p", colour: brown}
+glyph: {char: "p", colour: lightred}
 flags: [speaks, warm_blood]
 species: human
 will: 60

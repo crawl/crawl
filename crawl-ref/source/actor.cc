@@ -21,6 +21,7 @@
 #include "message.h"
 #include "mon-behv.h"
 #include "mon-death.h"
+#include "mon-util.h"
 #include "religion.h"
 #include "spl-damage.h"
 #include "stepdown.h"
@@ -971,8 +972,9 @@ void actor::collide(coord_def newpos, const actor *agent, int damage)
 {
     actor *other = actor_at(newpos);
     // TODO: should the first of these check agent?
-    const bool god_prot = god_protects(agent, as_monster());
-    const bool god_prot_other = other && god_protects(agent, other->as_monster());
+    const bool immune = never_harm_monster(agent, as_monster());
+    const bool immune_other = other ? never_harm_monster(agent, other->as_monster())
+                                    : false;
 
     ASSERT(this != other);
     ASSERT(alive());
@@ -983,7 +985,7 @@ void actor::collide(coord_def newpos, const actor *agent, int damage)
         return;
     }
 
-    if (is_monster() && !god_prot)
+    if (is_monster() && !immune)
         behaviour_event(as_monster(), ME_WHACK, agent);
 
     const int dam = apply_ac(damage);
@@ -998,26 +1000,26 @@ void actor::collide(coord_def newpos, const actor *agent, int damage)
                  conj_verb("collide").c_str(),
                  other->name(DESC_THE).c_str(),
                  attack_strength_punctuation((dam + damother) / 2).c_str());
-            // OK, now do the messaging for god protection.
-            if (god_prot)
-                god_protects(agent, *as_monster(), false);
-            if (god_prot_other)
-                god_protects(agent, *other->as_monster(), false);
+            // OK, now do the messaging for protected monsters.
+            if (immune)
+                never_harm_monster(agent, *as_monster(), true);
+            if (immune_other)
+                never_harm_monster(agent, *other->as_monster(), true);
         }
 
-        if (other->is_monster() && !god_prot_other)
+        if (other->is_monster() && !immune_other)
             behaviour_event(other->as_monster(), ME_WHACK, agent);
 
         const string thisname = name(DESC_A, true);
         const string othername = other->name(DESC_A, true);
-        if (other->alive() && !god_prot_other)
+        if (other->alive() && !immune_other)
         {
             other->hurt(agent, damother, BEAM_MISSILE, KILLED_BY_COLLISION,
                         othername, thisname);
             if (damother && other->is_monster())
                 print_wounds(*other->as_monster());
         }
-        if (alive() && !god_prot)
+        if (alive() && !immune)
         {
             hurt(agent, dam, BEAM_MISSILE, KILLED_BY_COLLISION,
                  thisname, othername);
@@ -1046,11 +1048,11 @@ void actor::collide(coord_def newpos, const actor *agent, int damage)
                  attack_strength_punctuation(dam).c_str());
         }
 
-        if (god_prot)
-            god_protects(agent, *as_monster(), false); // messaging
+        if (immune)
+            never_harm_monster(agent, *as_monster(), true); // messaging
     }
 
-    if (!god_prot)
+    if (!immune)
     {
         hurt(agent, dam, BEAM_MISSILE, KILLED_BY_COLLISION,
              "", feature_description_at(newpos));
@@ -1181,7 +1183,7 @@ void actor::stumble_away_from(coord_def targ, string src)
         return;
     }
 
-    if (is_player())
+    if (is_player() && !src.empty())
         mprf("%s sends you backwards.", uppercase_first(src).c_str());
     else if (you.can_see(*this) && !src.empty())
         mprf("%s is knocked back by %s.", name(DESC_THE).c_str(), src.c_str());

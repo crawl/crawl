@@ -3409,7 +3409,10 @@ bool gozag_potion_petition()
     you.attribute[ATTR_GOZAG_GOLD_USED] += prices[keyin];
 
     for (auto pot : *pots[keyin])
+    {
         potionlike_effect(static_cast<potion_type>(pot.get_int()), 40);
+        flash_tile(you.pos(), YELLOW, 120, TILE_BOLT_POTION_PETITION);
+    }
 
     for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
     {
@@ -3959,9 +3962,6 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
     beam.hit         = AUTOMATIC_HIT;
     beam.glyph       = dchar_glyph(DCHAR_EXPLOSION);
     beam.loudness    = 10;
-#ifdef USE_TILE
-    beam.tile_beam = -1;
-#endif
 
     if (target.origin())
     {
@@ -3969,7 +3969,7 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
         if (!player_target)
             player_target = &target_local;
 
-        targeter_smite tgt(&you, LOS_RADIUS, max_radius-1, max_radius);
+        targeter_smite tgt(&you, LOS_RADIUS, max_radius-1, max_radius, true);
         direction_chooser_args args;
         args.restricts = DIR_TARGET;
         args.mode = TARG_HOSTILE;
@@ -4010,17 +4010,19 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
     switch (random2(4))
     {
         case 0:
-            beam.name     = "blast of magma";
-            beam.flavour  = BEAM_LAVA;
-            beam.colour   = RED;
-            beam.hit_verb = "engulfs";
-            message       = "Magma suddenly erupts from the ground!";
+            beam.name      = "blast of magma";
+            beam.flavour   = BEAM_LAVA;
+            beam.colour    = RED;
+            beam.hit_verb  = "engulfs";
+            beam.tile_beam = TILE_BOLT_MAGMA;
+            message        = "Magma suddenly erupts from the ground!";
             break;
         case 1:
-            beam.name    = "blast of ice";
-            beam.flavour = BEAM_ICE;
-            beam.colour  = WHITE;
-            message      = "A blizzard blasts the area with ice!";
+            beam.name      = "blast of ice";
+            beam.flavour   = BEAM_ICE;
+            beam.colour    = WHITE;
+            beam.tile_beam = TILE_BOLT_ICEBLAST;
+            message        = "A blizzard blasts the area with ice!";
             break;
         case 2:
             beam.name    = "cutting wind";
@@ -5538,7 +5540,7 @@ bool ru_power_leap()
     {
         direction_chooser_args args;
         args.restricts = DIR_ENFORCE_RANGE;
-        args.mode = TARG_ANY;
+        args.mode = TARG_HOSTILE;
         args.range = 3;
         args.needs_path = false;
         args.top_prompt = "Aiming: <white>Power Leap</white>";
@@ -5767,8 +5769,7 @@ bool ru_apocalypse()
 
 static bool _mons_stompable(const monster &mons)
 {
-    // Don't hurt your own demonic guardians
-    return !testbits(mons.flags, MF_DEMONIC_GUARDIAN) || !mons.friendly();
+    return !never_harm_monster(&you, &mons) || !mons.friendly();
 }
 
 dice_def uskayaw_stomp_extra_damage(bool allow_random)
@@ -5850,6 +5851,7 @@ bool uskayaw_line_pass()
     line_pass.range = range;
     line_pass.ench_power = pow;
     line_pass.pierce = true;
+    line_pass.aimed_at_spot = true;
 
     while (1)
     {
@@ -6205,7 +6207,7 @@ static void _transfer_drain_nearby(coord_def destination)
     for (adjacent_iterator it(destination); it; ++it)
     {
         monster* mon = monster_at(*it);
-        if (!mon || mon->is_firewood() || god_protects(*mon))
+        if (!mon || mon->is_firewood() || never_harm_monster(&you, *mon))
             continue;
 
         const int dur = random_range(60, 150);
@@ -6583,7 +6585,7 @@ spret wu_jian_wall_jump_ability()
     {
         direction_chooser_args args;
         args.restricts = DIR_TARGET;
-        args.mode = TARG_ANY;
+        args.mode = TARG_NON_ACTOR;
         args.range = 1;
         args.needs_path = false; // TODO: overridden by hitfunc?
         args.top_prompt = "Aiming: <white>Wall Jump</white>";

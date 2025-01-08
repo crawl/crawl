@@ -386,7 +386,7 @@ Alistair's Walking Alembic spell
 
 Despite its unwieldy appearance, it is widely considered Alistair's most popular
 work; countless variations of this spell can be found in surface libraries,
-customized to prepare everything from floor polish to vegetable soup. In the
+customised to prepare everything from floor polish to vegetable soup. In the
 depths of the dungeon, however, most mages favor the combat utility of the
 classic iteration.
 %%%%
@@ -596,6 +596,12 @@ Mass Confusion spell
  upon the face of all the earth: and they left off to build the city.”
     -KJV Bible, Genesis 11:7-8.
 %%%%
+Maxwell's Portable Piledriver spell
+
+While originally designed for use in industrial construction, enterprising
+copycats were quick to discover a multitude of other problems that could be
+solved by moving one object into another, very, very quickly.
+%%%%
 Mephitic Cloud spell
 
 “Seit mehreren Jahren schon hatte die indische Cholera eine verstärkte
@@ -609,10 +615,21 @@ Mephitic Cloud spell
  folgend, ihre Schrecken bis Astrachan, ja selbst bis Moskau getragen.”
     -Thomas Mann, _Der Tod in Venedig_, 1911.
 %%%%
+Mercury Arrow spell
+
+“During the course of the treatise, each element is allowed time to tout its
+ own virtues and usefulness to mankind, but when it comes time for Mercury,
+ he announces that he presides over all of the beings that have come before
+ him. Mercury is mother and father. He gives other metals their splendor and
+ makes them useful to humanity. Without Mercury, the other metals would have no
+ (use) value. Perhaps a seat on the throne would restrict him to a fixed
+ position of sovereignty. He reigns, but he must be mobile.”
+    -Karen Pinkus, _Alchemical Mercury: A Theory of Ambivalance_, 2009
+%%%%
 Nazja's Percussive Tempering spell
 
 Scholars long considered the hammer mere theatrics to mask the complex
-structual enhancement magics which must underpin this spell, and yet every
+structural enhancement magics which must underpin this spell, and yet every
 attempt to remove it from the incantation has caused the spell to lose its
 effectiveness. The implications of this remain hotly debated.
 %%%%
@@ -1555,7 +1572,11 @@ ring of slaying
 %%%%
 ring of stealth
 
-<ring>
+“Then as part of the game
+ She completely forgot where she'd hidden herself
+ And she spent the rest of her time
+ Trying to find the parts”
+    -Howard Jones, “Hide and Seek”. 1984.
 %%%%
 ring of strength
 
@@ -2276,6 +2297,14 @@ the Lernaean hydra
  the flow of the blood.”
     -Diodorus Siculus, _Bibliotheca Historica_. [4. 11. 5.]. c. 100.
 %%%%
+Lodul
+
+“Cat:  But who can say what a thing is worth.
+ Girl: The free market, supposedly.
+ Cat:  What _price_ do we put on a _soul_?
+ Girl: $7.25 an hour.”
+    -Dorothy Gambrell, _Cat and Girl_, 2010.
+%%%%
 Mara
 
 “This night the Lord of Illusion passed among you, Mara, mighty among dreamers,
@@ -2588,22 +2617,6 @@ __cap-K_suffix
     -Thomas Heywood, _The Hierarchy of the Blessed Angels_, Book IX, l. 568.
 1635.
 %%%%
-__cap-O_suffix
-
-“The little princess, asleep in her cradle, floated on the water, and at last
- she was cast up on the shore of a beautiful country, where, however, very few
- people dwelt since the ogre Ravagio and his wife Tourmentine had gone to live
- there-for they ate up everybody. Ogres are terrible people. When once they
- have tasted raw human flesh they will hardly eat anything else, and
- Tourmentine always knew how to make some body come their way, for she was half
- a fairy.”
-    -Marie-Catherine Le Jumel de Barneville, Baronne d'Aulnoy, “'Orangier et
-l'Abeille”. 1697.
-
-“NO. Layers. Onions have layers. Ogres have layers. Onions have layers. You get
- it? We both have layers.”
-    -Shrek. 2001.
-%%%%
 __cap-S_suffix
 
 “The latter lived in the country, and before his house there was an oak, in
@@ -2646,6 +2659,18 @@ adder
 ADDER, n. A species of snake. So called from its habit of adding funeral outlays
 to the other expenses of living.
     -Ambrose Bierce, _The Devil's Dictionary_, 1906.
+%%%%
+alderking
+
+““My father, my father, he seizes me fast,
+ Full sorely the Erl-King has hurt me at last.”
+
+ The father now gallops, with terror half wild,
+ He grasps in his arms the poor shuddering child;
+ He reaches his courtyard with toil and with dread,
+ The child in his arms finds he motionless, dead.”
+    -Johann Wolfgang von Goethe, _Erlkönig_, 1782.
+    trans. Edgar Alfred Bowring, 1853.
 %%%%
 alligator
 
@@ -2936,6 +2961,12 @@ emperor scorpion
  on his feet.’”
     -Cassius Dio, _Roman History_, LXVI, xvii, 2. 222 A.D.
      trans. Earnest Cary, 1925.
+%%%%
+endoplasm
+
+“Sea horses floundering in the slimy mud,
+ Tossed up their heads, and dashed the ooze about them.”
+    -John Dryden. _All For Love_, I, i, 15-17. 1678.
 %%%%
 entropy weaver
 
@@ -3493,6 +3524,26 @@ octopode
  presently gone.”
     -Thomas Pynchon, _Gravity's Rainbow_. 1973.
 %%%%
+ogre
+
+“The little princess, asleep in her cradle, floated on the water, and at last
+ she was cast up on the shore of a beautiful country, where, however, very few
+ people dwelt since the ogre Ravagio and his wife Tourmentine had gone to live
+ there-for they ate up everybody. Ogres are terrible people. When once they
+ have tasted raw human flesh they will hardly eat anything else, and
+ Tourmentine always knew how to make some body come their way, for she was half
+ a fairy.”
+    -Marie-Catherine Le Jumel de Barneville, Baronne d'Aulnoy, “'Orangier et
+l'Abeille”. 1697.
+
+“NO. Layers. Onions have layers. Ogres have layers. Onions have layers. You get
+ it? We both have layers.”
+    -Shrek. 2001.
+%%%%
+ogre mage
+
+<ogre>
+%%%%
 oklob plant
 
 “Carbonic acid is one of the three materials which together form the starting
@@ -3511,11 +3562,18 @@ oklob sapling
 
 <oklob plant>
 %%%%
-endoplasm
+oni incarcerator
 
-“Sea horses floundering in the slimy mud,
- Tossed up their heads, and dashed the ooze about them.”
-    -John Dryden. _All For Love_, I, i, 15-17. 1678.
+“The popularity and longevity of the oni myth is no doubt partially based on
+ the beings’ conventional demonic accoutrements, which have remained
+ relatively constant through the ages: they are dreadful super-natural
+ beings emerging from the abyss of Buddhist hell to terrify wicked mortals;
+ their grotesque and savage demeanor and form instill instant fear; and the
+ oni’s omnipresence in the socio-historical and cultural archive of Japan is
+ directly attributable to the moral, social, and religious edification that
+ stories about oni engender.”
+    -Noriko T. Reider, _Japanese Demon Lore: Oni from Ancient Times to the
+     Present_, ch. 1, 2010.
 %%%%
 ophan
 
@@ -3673,6 +3731,14 @@ reaper
  Come on baby, don't fear the reaper.”
 
     -Buck Dharma, Blue Öyster Cult, “(Don't Fear) The Reaper”. 1976.
+%%%%
+ribbon worm
+
+“While the angels, all pallid and wan,
+   Uprising, unveiling, affirm
+ That the play is the tragedy, ‘Man’,
+   And its hero, the Conqueror Worm.”
+    -Edgar Allan Poe
 %%%%
 royal mummy
 
@@ -4063,6 +4129,10 @@ training dummy
      Impression”. 15 January 1928.
      trans. Scott J. Thompson, 1997.
 %%%%
+two-headed ogre
+
+<ogre>
+%%%%
 tyrant leech
  Scully: “Where the hell did it come from?”
  Mulder: “I don’t know, but it looks like I’m going to have to tell Skinner
@@ -4194,11 +4264,7 @@ wight
 %%%%
 worm
 
-“While the angels, all pallid and wan,
-   Uprising, unveiling, affirm
- That the play is the tragedy, ‘Man’,
-   And its hero, the Conqueror Worm.”
-    -Edgar Allan Poe
+<ribbon worm>
 %%%%
 wraith
 
@@ -4219,6 +4285,20 @@ wretched star
  Whatever doesn’t kill you
  Only makes you stranger”
     -The Sunbeams, “The Tug”. 2020
+%%%%
+wyrmhole
+
+“My complete answer to the late 19th century question 'what is electrodynamics
+ trying to tell us' would simply be this:
+
+ Fields in empty space have physical reality; the medium that supports them does
+ not.
+
+ Having thus removed the mystery from electrodynamics, let me immediately do the
+ same for quantum mechanics:
+
+ Correlations have physical reality; that which they correlate does not.”
+    -N. David Mermin, _What is quantum mechanics trying to tell us?_, 1998.
 %%%%
 ynoxinul
 

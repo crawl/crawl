@@ -116,7 +116,7 @@ local function have_quiver_action(no_move)
 end
 
 local function is_safe_square(dx, dy)
-    if view.feature_at(dx, dy) == "trap_web" then
+    if view.feature_at(dx, dy) == "trap_web" and not you.is_web_immune() then
         return false
     end
     return view.is_safe_square(dx, dy)

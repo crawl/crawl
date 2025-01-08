@@ -185,9 +185,12 @@ orange_rat MONS_HELL_RAT
 crystal_echidna MONS_CRYSTAL_ECHIDNA
 %rim 1
 quokka MONS_QUOKKA
+%rim 0
+quokka_lord_of_skulls MONS_QUOKKA_LORD_OF_SKULLS
 %sdir mon/animals
 
 ## Spiders and insects ('s')
+%rim 1
 scorpion MONS_SCORPION
 emperor_scorpion MONS_EMPEROR_SCORPION
 tarantella MONS_TARANTELLA
@@ -743,6 +746,7 @@ occultist MONS_OCCULTIST
 vault_guard MONS_VAULT_GUARD
 vault_warden MONS_VAULT_WARDEN
 vault_sentinel MONS_VAULT_SENTINEL
+ironbound_beastmaster MONS_IRONBOUND_BEASTMASTER
 ironbound_convoker MONS_IRONBOUND_CONVOKER
 ironbound_preserver MONS_IRONBOUND_PRESERVER
 ironbound_frostheart MONS_IRONBOUND_FROSTHEART
@@ -808,20 +812,22 @@ cactus_giant MONS_CACTUS_GIANT
 tainted_leviathan MONS_TAINTED_LEVIATHAN
 %rim 1
 
-## Drakes (also 'l')
+## Drakes ('k')
 %sdir mon/dragons
+wyvern MONS_WYVERN
 swamp_drake MONS_SWAMP_DRAKE
 rime_drake MONS_RIME_DRAKE
 lindwurm MONS_LINDWURM
 death_drake MONS_DEATH_DRAKE
 wind_drake MONS_WIND_DRAKE
-
+wyrmhole0 MONS_WYRMHOLE
+wyrmhole1
+wyrmhole2
 
 ## Dragons ('D')
 %sdir mon/unique
 xtahua MONS_XTAHUA
 %sdir mon/dragons
-wyvern MONS_WYVERN
 fire_dragon MONS_FIRE_DRAGON
 hydra1 MONS_HYDRA
 hydra2
@@ -1016,6 +1022,7 @@ erolcha MONS_EROLCHA
 lodul MONS_LODUL
 %sdir mon/humanoids
 oni MONS_ONI
+oni_incarcerator MONS_ONI_INCARCERATOR
 %rim 1
 ogre MONS_OGRE
 two_headed_ogre MONS_TWO_HEADED_OGRE
@@ -1037,7 +1044,13 @@ plant_07
 plant_08
 plant_09
 plant_10
-plant_crypt MONS_WITHERED_PLANT
+%weight 10
+withered_plant0 MONS_WITHERED_PLANT
+withered_plant1
+withered_plant2
+withered_plant3
+%weight 8
+withered_plant4
 plant_demonic MONS_DEMONIC_PLANT
 %rim 0
 bush MONS_BUSH
@@ -1056,6 +1069,8 @@ starflower_2
 %rim 0
 thorn_hunter MONS_THORN_HUNTER
 treant MONS_TREANT
+alderking0 MONS_ALDERKING
+alderking1
 briar_patch MONS_BRIAR_PATCH
 %rim 1
 vine_stalker MONS_VINE_STALKER
@@ -1411,7 +1426,7 @@ unseen_monster MCACHE_START
 todo TODO
 error ERROR
 
-# Old monster tiles for use with the tile_player_tile option.
+# Old and weird monster tiles for use with the tile_player_tile option.
 %sdir mon/player
 giaggostuono MONS_GIAGGOSTUONO
 jormungandr MONS_JORMUNGANDR
@@ -1422,7 +1437,7 @@ old-serpent-dis MONS_OLD_SERPENT_DIS
 old-serpent-geh MONS_OLD_SERPENT_GEH
 old-serpent-tar MONS_OLD_SERPENT_TAR
 orb_guardian_fetus MONS_ORB_GUARDIAN_FETUS
-polymoth MONS_POLYMOTH
+prune MONS_PRUNE
 %rim 0
 jack_o_lantern MONS_JACK_O_LANTERN
 gastronaut MONS_GASTRONAUT

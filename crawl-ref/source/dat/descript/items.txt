@@ -984,6 +984,10 @@ pair of gloves
 A pair of gloves. They are worn on the hands, and cover all but the largest
 claws.
 %%%%
+partisan
+
+A long polearm with sharp protrusions on either side of the spearhead.
+%%%%
 pearl dragon scales
 
 The nacreous scales of a pearl dragon. It grants its wearer resistance to

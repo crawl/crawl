@@ -475,7 +475,7 @@ public:
 
     int base_armour_class() const;
     int armour_class() const override;
-    int gdr_perc() const override { return 0; }
+    int gdr_perc(bool) const override { return 0; }
     int base_evasion() const;
     int evasion(bool ignore_temporary = false,
                 const actor* /*attacker*/ = nullptr) const override;
@@ -501,7 +501,7 @@ public:
              bool attacker_effects = true) override;
     bool heal(int amount) override;
     void blame_damage(const actor *attacker, int amount);
-    void blink() override;
+    void blink(bool ignore_stasis = false) override;
     void teleport(bool right_now = false,
                   bool wizard_tele = false) override;
     bool shift(coord_def p = coord_def(0, 0));
@@ -605,9 +605,6 @@ private:
     void init_with(const monster& mons);
 
     int armour_bonus(const item_def &item) const;
-
-    void id_if_worn(mon_inv_type mslot, object_class_type base_type,
-                    int sub_type) const;
 
     bool decay_enchantment(enchant_type en, bool decay_degree = true);
 

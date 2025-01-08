@@ -18,13 +18,13 @@
 function st_zot_vaults_setup(e)
     e.tags("no_item_gen")
     e.depth("Zot, !Zot:$")
-    e.kmons("D = acid dragon / fire dragon w:25 / ice dragon w:25 /\
-               storm dragon w:20 / shadow dragon w:20 / golden dragon /\
-               iron dragon w:5 / quicksilver dragon w:5 / bone dragon w:5 /\
-               lindwurm w:2 / rime drake w:2 / death drake w:2 /\
-               swamp dragon w:5")
+    e.kmons("D = acid dragon / swamp dragon / fire dragon w:25 /\
+                 ice dragon w:25 / storm dragon w:20 / shadow dragon w:20 /\
+                 golden dragon / iron dragon w:5 / quicksilver dragon w:5 /\
+                 bone dragon w:5 / lindwurm w:2 / rime drake w:2 /\
+                 death drake w:2 / wyrmhole")
     e.kmons("d = base draconian / nonbase draconian")
-    e.kmons("Y = patrolling golden dragon")
+    e.kmons("Y = patrolling golden dragon / patrolling wyrmhole w:1")
     e.kitem("Y = |")
 end
 }}
@@ -130,7 +130,7 @@ FTILE:   "OADx = floor_marble
 FTILE:   .+cm^012349$ = floor_hall
 TILE:    x = wall_zot_magenta
 : zot_entry_setup(_G)
-MONS:   base draconian ; glaive | halberd
+MONS:   base draconian ; partisan | glaive
 MAP
 '''''''''''''''''''''''''''''''''''''''''
 'wwwwwwwww'''''''''''''''''''''wwwwwwwww'
@@ -164,15 +164,10 @@ TAGS:   no_monster_gen
 PLACE:  Depths:$
 ORIENT: float
 WEIGHT: 8
-SUBST:  b: v.., v: c.
-TILE:   X = wall_zot_magenta
-FTILE:  -ROD = floor_hall
-COLOUR: -RD = magenta
-COLOUR: X = lightmagenta
-SUBST:  X = x
-SUBST:  - = ., D = +
 KITEM:  R = midnight gem
 KFEAT:  O = enter_zot
+KFEAT:  D = +
+SUBST:  b : a.., a : c., v : xv
 # entry: 1, 2
 MONS:   place:Depths:1, place:Depths:$
 # easy: 3, 4
@@ -197,30 +192,35 @@ KMONS:  8 = quicksilver dragon
 : end
 # boss: 9, 0
 KMONS:  9 = nonbase draconian
-KMONS:  0 = golden dragon
+KMONS:  0 = golden dragon / wyrmhole w:2
+TILE:   x = wall_zot_magenta
+TILE:   v = dngn_metal_zot
+FTILE:  -ROD = floor_hall
+COLOUR: -R = magenta
+COLOUR: x = lightmagenta
 MAP
 ccc+ccccccccccccccccccc
-cvb.bvcccvb.bvccccccccc
+cab.bacccab.baccccccccc
 cb...bcccb.9.bccccccccc
 c.1.1.ccc.0...+.ccccccc
 cb222bcccb.9.bc..cccccc
-cvb.bvcccvb.bvcc..ccccc
+cab.bacccab.bacc..ccccc
 ccc+ccccccc+ccccc..cccc
 ccc.ccccccc.cccccc..ccc
-ccc+ccccccXDXcccccc+ccc
-cvb.bvcccXX-XXcccvb.bvc
-cb...bccXX---XXccb.8.bc
-c.3.3.ccX--O--Xcc.7.7.c
-cb444bccXX---XXccb...bc
-cvb.bvcccXXRXXcccvb.bvc
-ccc+ccccccXXXcccccc+ccc
+ccc+ccccccxDxcccccc+ccc
+cab.bacccxx-xxcccab.bac
+cb...bccxx---xxccb.8.bc
+c.3.3.ccv--O--vcc.7.7.c
+cb444bccxx---xxccb...bc
+cab.bacccxxRxxcccab.bac
+ccc+ccccccxvxcccccc+ccc
 ccc..ccccccccccccc..ccc
 cccc..ccccccccccc..cccc
-ccccc..ccvb.bvcc..ccccc
+ccccc..ccab.bacc..ccccc
 cccccc..cb.56bc..cccccc
 ccccccc.+.....+.ccccccc
 cccccccccb.56bccccccccc
-cccccccccvb.bvccccccccc
+cccccccccab.baccccccccc
 ccccccccccccccccccccccc
 ENDMAP
 
@@ -228,20 +228,22 @@ NAME:   evilmike_zot_entry_argh
 TAGS:   no_monster_gen zot_entry patrolling transparent
 SUBST:  G: GXm., m: mmlw
 KMONS:  O = nonbase draconian
-KMASK:  4 = opaque
 KFEAT:  m = iron_grate
-SUBST:  x: Xccv
+KFEAT:  V = v
+KFEAT:  X = x
+SUBST:  V : Vx, x : Xccv
 NSUBST: 2 = 2:2 / 1:R / *:-
-TILE:   X = wall_zot_magenta
+: zot_entry_setup(_G)
+MONS:   draconian stormcaller
+KMASK:  4 = opaque
 COLOUR: X = lightmagenta
-SUBST:  X = x
 COLOUR: . = white
 FTILE:  -12RO = floor_hall
-: zot_entry_setup(_G)
-MONS:    draconian stormcaller
+TILE:   X = wall_zot_magenta
+TILE:   V = dngn_metal_zot
 MAP
 xxxxxxxxxxxx@xxxxxxxxxxxx
-xxx........---........xxx
+xVx........---........xVx
 xxmmm.....G.-.G.....mmmxx
 x.m4m.......-.......m4m.x
 x.mmm...G...-...G...mmm.x
@@ -263,7 +265,7 @@ x..........---..........x
 x.mmm...G...-...G...mmm.x
 x.m4m.......-.......m4m.x
 xxmmm.....G.-.G.....mmmxx
-xxx........---........xxx
+xVx........---........xVx
 xxxxxxxxxxxx@xxxxxxxxxxxx
 ENDMAP
 
@@ -271,7 +273,7 @@ NAME:   evilmike_zot_entry_hall
 TAGS:   no_monster_gen patrolling
 KFEAT:  X = x
 COLOUR: X+- = magenta
-SUBST:  v: ....cnblw, z:..cnblw
+SUBST:  v : ....cnblw, z :..cnblw
 NSUBST: d = 1:0 / 4:1 / 2:2 / *:.
 SUBST:  D = +
 FTILE:  -OR+ = floor_hall
@@ -1618,7 +1620,7 @@ ENDMAP
 NAME:    regret_index_zotdec_decaying_basic
 TAGS:    extra no_pool_fixup no_trap_gen zotdec luniq_zotdec_rune
 DEPTH:   Zot, !Zot:$
-ITEM:    swamp dragon scales, spear, wand of flame ident:type charges:1
+ITEM:    swamp dragon scales, spear, wand of flame pre_id charges:1
 KFEAT:   ^ = shaft trap
 KFEAT:   t = petrified_tree
 KFEAT:   C = altar_fedhas
@@ -1877,7 +1879,7 @@ ENDMAP
 NAME:    regret_index_zotdec_abyssal_star_handed
 TAGS:    extra no_rotate no_pool_fixup luniq_zotdec_rune
 DEPTH:   Zot, !Zot:$
-ITEM:    dagger ego:distortion ident:type no_pickup
+ITEM:    dagger ego:distortion pre_id no_pickup
 KFEAT:   C = altar_lugonu
 KFEAT:   mn = m
 SUBST:   C = {([})]>>>CCC<d$
@@ -1912,7 +1914,7 @@ NAME:    regret_index_zotdec_abyssal_contain_seething_sorcery
 TAGS:    extra transparent zotdec luniq_zotdec_rune
 DEPTH:   Zot, !Zot:$
 WEIGHT:  5
-ITEM:    dagger ego:distortion ident:type no_pickup
+ITEM:    dagger ego:distortion pre_id no_pickup
 KFEAT:   C = altar_lugonu
 KFEAT:   mn = m
 KFEAT:   - = +
@@ -1949,31 +1951,33 @@ DEPTH:   Zot, !Zot:$
 ITEM:    mundane arbalest
 KFEAT:   ^ = alarm trap
 KFEAT:   C = altar_gozag
+KFEAT:   V = v
 SHUFFLE: opqrstu
 SUBST:   op = ., q : v.., r : v.., stu = v
 SUBST:   { = {([<d$
 NSUBST:  > = 1:})]>>>> / * : d$>C^
 TILE:    m = dngn_transparent_wall_white
+TILE:    V = dngn_metal_wall_darkgray
 MAP
 ............
 .vvvvvvvvv..
 .v..................
-.v.q.r.s.v..vv..v.t.
-.v..>v...v.....p.o..
-.v.rvvvq.v..v.v.>.v.
-.v...vm..v..v..o.p..
-.v.s.q...v......v...
+.v.q.r.s.v..vv..V.t.
+.v..>V...v.....p.o..
+.v.rVVVq.v..v.V.>.V.
+.v...Vm..v..v..o.p..
+.v.s.q...v......V...
 .v.......v..us....v.
 .v.vvvvvvt..vu.v.vv.
 ...........<..........
 ..........{...........
   .vv.v.uv..tvvvvvv.v.
   .v....su..v.......v.
-  ...v......v...q.s.v.
-  ..p.o..v..v..mv...v.
-  .v.>.v....v.qvvvr.v.
-  ..o.p..v..v...v>..v.
-  .t.v..vv..v.s.r.q.v.
+  ...V......v...q.s.v.
+  ..p.o..v..v..mV...v.
+  .V.>.V....v.qVVVr.v.
+  ..o.p..v..v...V>..v.
+  .t.V..vv..v.s.r.q.v.
   ..................v.
           ..vvvvvvvvv.
           ............
@@ -1986,33 +1990,35 @@ DEPTH:   Zot, !Zot:$
 ITEM:    mundane arbalest
 KFEAT:   ^ = alarm trap
 KFEAT:   C = altar_gozag
+KFEAT:   V = v
 SHUFFLE: opqrst
-SUBST:   op = ., q : vx.., r : vx.., st = v
+SUBST:   op = ., q : Vx.., r : Vx.., st = V
 NSUBST:  { = 1:{([<<<d$ / * : d$, } = 1:})]>>>>C / * : d$>^
 TILE:    m = dngn_transparent_wall_white
+TILE:    V = dngn_metal_wall_darkgray
 MAP
               .p.vvvvvvvvvvvv
               p...........m}v
               .............mv
-              v....vvvvv....v
-              v..vvv....vv..v
-              v..v..vvv..v..v
-              q..v.vv}vv.v..v
-              v..v...vv..v..v
-              v..vvv...vvv..v
-              v....vvvvv....v
+              v....VVVVV....v
+              v..VVV....VV..v
+              v..V..vvv..V..v
+              q..V.vv}vv.V..v
+              v..V...vv..V..v
+              v..VVV...VVV..v
+              v....VVVVV....v
             .................
 ............................o
 ..vvvvvvvvv.{.{..vvvvrvvvv.o.
-.v.v.v.v.r.v....
-v.o.v.v.v.v.v.
-vv.v.v.v.v.qv.
-v.v.v.v.v.v.v.
-vv.v.v.v.v.vv.
-v}v.v.v.v.v.v.
-vv.v.v.v.v.vv.
-v.v.v.v.v.p.v.
-vm.v}v.v.v.v..
+.v.V.V.V.r.v....
+v.o.V.V.V.V.v.
+vV.V.v.v.v.qv.
+v.V.v.v.v.V.v.
+vV.v.v.v.v.Vv.
+v}V.v.v.v.V.v.
+vV.V.v.v.V.Vv.
+v.V.V.V.V.p.v.
+vm.V}V.V.V.v..
 vvvvvvvvvvv...
 ENDMAP
 
@@ -2088,7 +2094,7 @@ NAME:    regret_index_zotdec_magical_s
 TAGS:    extra transparent zotdec no_pool_fixup
 TAGS:    luniq_zotdec_rune luniq_zotdec_large luniq_zotdec_liquid
 DEPTH:   Zot, !Zot:$
-ITEM:    mundane ring of magical power ident:type
+ITEM:    mundane ring of magical power pre_id
 KFEAT:   CD = altar_sif_muna
 SHUFFLE: MNmn, <CD>{$d, pqrs
 SUBST:   MNn : ., V = m, { = {([})]
@@ -2128,7 +2134,7 @@ NAME:    regret_index_zotdec_fiery_em
 TAGS:    extra transparent zotdec
 TAGS:    luniq_zotdec_rune luniq_zotdec_large luniq_zotdec_liquid
 DEPTH:   Zot, !Zot:$
-ITEM:    mundane great sword ego:flaming plus:0 ident:type
+ITEM:    mundane great sword ego:flaming plus:0 pre_id
 KFEAT:   C = altar_okawaru
 SHUFFLE: DEF, pqrs, lx', lxV
 SUBST:   D : ++., EF = v, p : v., q : v., rs : v
@@ -2602,6 +2608,7 @@ MONS:   efreet
 SUBST:  1=122, 3=322
 SUBST:  4 = 2:20 4:5 3:15 .:20
 SUBST:  G : G.
+TILE:   c = wall_stone_scorched
 : vault_metal_statue_setup(_G, "G", "fiery conduit")
 MAP
           lllll
@@ -2614,14 +2621,14 @@ MAP
   llll..xx2...2xx..llll
  llll..xx...5...xx..llll
  llll..x...2.2...x..llll
-llll...x.2xx+xx2.x...llll
-llll..Gx.xx444xx.xG..llll
-llll...x.x44444x.x...llll
- llll..x.x44F44x.x..llll
- llll..x.x44444x.x..llll
-  llll.x.xx444xx.x.llll
-  llll.x.1x...x1.x.llll
-   llllxxxx+++xxxxllll
+llll...x.2cc+cc2.x...llll
+llll..Gx.cc444cc.xG..llll
+llll...x.c44444c.x...llll
+ llll..x.c44F44c.x..llll
+ llll..x.c44444c.x..llll
+  llll.x.cc444cc.x.llll
+  llll.x.1c...c1.x.llll
+   llllxxxc+++cxxxllll
     llll333...333llll
      lllll.....lllll
        lllll.lllll
@@ -2737,8 +2744,8 @@ MARKER:  F = lua:fog_machine { cloud_type = "flame", pow_min = 5, \
 ITEM:    book of the dragon, staff of fire, book of fire, book of annihilations
 :   vault_metal_statue_setup(_G, "G", "fiery conduit")
 : end
-ITEM:    potion of enlightenment ident:type q:1
-ITEM:    ring of flight randart ident:type no_pickup
+ITEM:    potion of enlightenment pre_id q:1
+ITEM:    ring of flight randart pre_id no_pickup
 SHUFFLE: defg, hi
 SUBST:   HIJ = c
 SUBST:   1 = 112., 2 = 221.
@@ -3369,6 +3376,8 @@ COLOUR:    r = red, y = yellow, b = blue, g = green, \
 TILE:      r = dngn_transparent_stone_red, y = dngn_transparent_stone_yellow, \
            b = dngn_transparent_stone_blue, m = dngn_transparent_stone_magenta, \
            g = dngn_transparent_stone_green, q = dngn_transparent_stone
+TILE:      G = dngn_statue_zot_serpent / dngn_statue_depths_zot_dragon / \
+               dngn_statue_zot_tornado w:15 / dngn_statue_zot_orb
 TILE:      T = dngn_fountain_novelty_octopode
 : vault_metal_statue_setup(_G, "S", "storm conduit")
 MAP
@@ -3479,6 +3488,7 @@ MONS:    titan / lich / deep elf annihilator w:3 / deep elf high priest w:4 / \
 MONS:    nonbase draconian w:20 / protean progenitor / killer klown / \
          death cob / curse toe w:5 / ancient lich / dread lich / \
          electric golem / orb of fire w:5
+KFEAT:   V = v
 SHUFFLE: EF
 SUBST:   E : .
 SHUFFLE: ABCDF, GH / GH / GH / HG
@@ -3486,40 +3496,41 @@ NSUBST:  1 = 3:1 / 2:2 / 2:112 / 1:122, 0 = 3:1 / 2:2 / 2:112 / 1:122
 NSUBST:  3 = 3:3 / 2:4 / 2:334 / 1:344, 6 = 3:5 / 2:6 / 2:556 / 1:566
 SUBST:   % = $%, * = %:3 *:1, | = %:60 *:25 |:15, 1 = 1:3 ':2
 SUBST:   2 = 2:2 ':1, 3 = 3:4 ':1, 4 = 4:6 ':1, 5 = 5:6 ':1, 6 = 6:5 ':1
-SUBST:   A : v:4 .:1, B : v:7 .:3, C : v:1 .:4, DFH = .
-SUBST:   G : v:7 G:2 .:1, - : +., + : +:5 .:1, { : {:2 }:3 .:2
+SUBST:   A : V:4 .:1, B : V:7 .:3, C : V:1 .:4, DFH = .
+SUBST:   G : V:7 G:2 .:1, - : +., + : +:5 .:1, { : {:2 }:3 .:2
 NSUBST:  { = 1:{ / 1:( / 1:[ / 1:<, } = 1:} / 1:) / 1:] / 1:>
 SUBST:   ( = (:14 >:1 <:1 ):2, [ = [:14 >:1 <:1 ]:2, ) = ):70 >(, ] = ]:70 >[
 FTILE:   '$%*|123456+ = floor_vault
+TILE:    V = dngn_metal_wall_magenta
 : vault_metal_statue_setup(_G, "G", "silver statue")
 MAP
-       xx@@vvvvv@@xx
-      xx..vvvvvvv..xx
-      x..vvv6v6vvv..x
-     xx.vvv'*v*'vvv.xx
-    xx..vv3*|-|*3vv..xx
-   xx..Gvvvv+v+vvvvG..xx
- xxx..H.vv0$%-%$0vv.H..xxx
-xx...G...vv4$v$4vv...G...xx
-x..vvvv...vv'v'vv...vvvv..x
-@.vvvvvv.'1v...v1'.vvvvvv.@
-@vvv3v0vv1'..A..'1vv0v3vvv@
-vvv'*v$4vv.BC{DB.vv4$v*'vvv
-vv6*|+%$'..DEFEC..'$%+|*6vv
-vvvv-v-vv.A{F<F{A.vv-v-vvvv
-vv6*|+%$'..CEFED..'$%+|*6vv
-vvv'*v$4vv.BD{CB.vv4$v*'vvv
-@vvv3v0vv1'..A..'1vv0v3vvv@
-@.vvvvvv.'1v...v1'.vvvvvv.@
-x..vvvv...vv'v'vv...vvvv..x
-xx...G...vv4$v$4vv...G...xx
- xxx..H.vv0$%-%$0vv.H..xxx
-   xx..Gvvvv+v+vvvvG..xx
-    xx..vv3*|-|*3vv..xx
-     xx.vvv'*v*'vvv.xx
-      x..vvv6v6vvv..x
-      xx..vvvvvvv..xx
-       xx@@vvvvv@@xx
+       xx@@VVVVV@@xx
+      xx..VvvvvvV..xx
+      x..Vvv6v6vvV..x
+     xx.Vvv'*v*'vvV.xx
+    xx..Vv3*|-|*3vV..xx
+   xx..GVvvv+v+vvvVG..xx
+ xxx..H.Vv0$%-%$0vV.H..xxx
+xx...G...Vv4$v$4vV...G...xx
+x..VVVV...Vv'v'vV...VVVV..x
+@.VvvvvV.'1V...V1'.VvvvvV.@
+@Vvv3v0vV1'..A..'1Vv0v3vvV@
+Vvv'*v$4vV.BC{DB.Vv4$v*'vvV
+Vv6*|+%$'..DEFEC..'$%+|*6vV
+Vvvv-v-vv.A{F<F{A.vv-v-vvvV
+Vv6*|+%$'..CEFED..'$%+|*6vV
+Vvv'*v$4vV.BD{CB.Vv4$v*'vvV
+@Vvv3v0vV1'..A..'1Vv0v3vvV@
+@.VvvvvV.'1V...V1'.VvvvvV.@
+x..VVVV...Vv'v'vV...VVVV..x
+xx...G...Vv4$v$4vV...G...xx
+ xxx..H.Vv0$%-%$0vV.H..xxx
+   xx..GVvvv+v+vvvVG..xx
+    xx..Vv3*|-|*3vV..xx
+     xx.Vvv'*v*'vvV.xx
+      x..Vvv6v6vvV..x
+      xx..VvvvvvV..xx
+       xx@@VVVVV@@xx
 ENDMAP
 
 ####
@@ -3578,8 +3589,8 @@ TAGS:   no_monster_gen
 DEPTH:  Zot, !Zot:$
 ORIENT: east
 MONS:   nonbase draconian, base draconian, moth of wrath
-MONS:   fire dragon w:30 / ice dragon w:30 / shadow dragon w:20 / \
-        storm dragon w:50 / bone dragon w:30 / golden dragon w:35
+MONS:   fire dragon w:35 / ice dragon w:35 / shadow dragon w:25 / \
+        storm dragon w:50 / wyrmhole w:15 / golden dragon w:35
 MONS:   Killer Klown / electric golem w:5 / \
         curse toe w:5 / protean progenitor w:5
 MONS:   orb of fire
@@ -3735,7 +3746,7 @@ MONS:    hell knight w:6 / very ugly thing / caustic shrike zombie / \
          tentacled starspawn / spark wasp / glowing shapeshifter
 MONS:    guardian serpent / deep elf annihilator / balrug / \
          deep elf high priest / will-o-the-wisp / acid blob
-MONS:    halazid warlock / revenant / apocalypse crab
+MONS:    halazid warlock / revenant / apocalypse crab / wyrmhole w:2
 MONS:    butterfly
 ITEM:    stone q:1 no_pickup, large rock q:1 no_pickup
 KITEM:   O = charlatans_orb no_pickup
@@ -3829,12 +3840,12 @@ MONS:   patrolling black draconian annihilator ; cloak good_item . \
 KMONS:  O = diamond obelisk
 KMONS:  S = lightning spire
 ITEM:   storm talisman, randbook disc:air spells:chain_lightning
-: local e = "ego:electrocution good_item ident:type"
+: local e = "ego:electrocution good_item pre_id no_pickup"
 : item("quickblade " .. e .. " w:5 / double sword " .. e .. " w:5 / " ..
 :      "executioner's axe " .. e .. " w:5 / eveningstar " .. e .. " w:5 / " ..
-:      "bardiche " .. e .. "w:5 / lajatang " .. e .. " w:5 / " ..
+:      "bardiche " .. e .. " w:5 / lajatang " .. e .. " w:5 / " ..
 :      "rapier " .. e .. " / scimitar " .. e .. " / dire flail " .. " / " ..
-:      "broad axe " .. e .. " / trident " .. e .. " / quarterstaff " .. e)
+:      "broad axe " .. e .. " / partisan w:5 " .. e .. " / quarterstaff " .. e)
 ITEM:   scroll of blinking q:1 / scroll of blinking q:2 / \
         scroll of teleportation q:3 w:30 / any scroll good_item / \
         staff of air randart
@@ -3842,13 +3853,12 @@ KFEAT:  yz = w
 KFEAT:  YZ" = W
 KFEAT:  # = iron_grate
 NSUBST: . = 4:1 / 4:2 / 3:3 / 3 = 123. / *:., ' = 2:3 / 6:4 / 4 = 34455 / *:.
-NSUBST: d = 1:d / 1:|ee / *:f, f = 2:f / *:g, G = 2:GG. / *:.
+NSUBST: d = 1:d / 1:|ee / *:f, f = 4:f / *:g, G = 2:GG. / *:.
 SUBST:  ` = ., ) = )>>
 KPROP:  -_ly"O> = no_tele_into
 MARKER: - = lua:fog_machine { cloud_type = "steam", walk_dist = 3, \
                               pow_max = 100, pow_min = 10, delay = 20, \
                               size = 1, start_clouds = 5, excl_rad = 0 }
-TILE:   v = dngn_metal_iron
 FTILE:  -_ = floor_pebble_darkgray
 : if crawl.coinflip() then
 :   vault_metal_statue_setup(_G, "G", "storm conduit")
@@ -3859,7 +3869,7 @@ MAP
                  vvvvvvvvv
                  vd`d`d`dv
                  v```7```v         vvvvv
-                 vf``'``fv         vyyyv
+                 vf`f'f`fv         vyyyv
                  v``6`6``v         vyyyv
                  vf`````fv         vyyyv
    vvvvvvvvvvvvvvv###S###v         vyyyv
@@ -4008,7 +4018,7 @@ NSUBST:  E = 3 = r. / 6 = ss. / *:.
 KMONS:   r = moth of wrath / ghost moth
 KMONS:   s = quicksilver dragon / storm dragon / \
              shadow dragon / iron dragon / \
-             bone dragon / golden dragon w:5
+             wyrmhole / golden dragon w:5
 # The Freakshow: death cobs and maybe a curse toe or protean
 NSUBST:  F = 8 = z. / 1 = y .:50 / *:.
 KMONS:   y = curse toe
@@ -4363,7 +4373,7 @@ KMONS:   A = green draconian / green death w:2
 KMONS:   B = green draconian monk
 KMONS:   C = protean progenitor band
 KMONS:   d = purple draconian / ghost moth w:4
-KMONS:   e = purple draconian shifter
+KMONS:   e = purple draconian shifter / wyrmhole w:2
 KMONS:   f = quicksilver dragon
 KMONS:   g = death cob / storm dragon zombie w:4
 KMONS:   h = shadow dragon

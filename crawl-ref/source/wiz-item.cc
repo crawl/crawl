@@ -68,9 +68,6 @@ static void _make_all_books()
 
         item_def book(env.item[thing]);
 
-        set_ident_flags(book, ISFLAG_KNOW_TYPE);
-        set_ident_flags(book, ISFLAG_IDENT_MASK);
-
         mpr(book.name(DESC_PLAIN));
     }
 }
@@ -404,8 +401,7 @@ void wizard_tweak_object()
         int64_t new_val = strtoll(specs, &end, hex ? 16 : 0);
 
         if (keyin == 'e' && new_val & ISFLAG_ARTEFACT_MASK
-            && (!you.inv[item].props.exists(KNOWN_PROPS_KEY)
-             || !you.inv[item].props.exists(ARTEFACT_PROPS_KEY)))
+            && !you.inv[item].props.exists(ARTEFACT_PROPS_KEY))
         {
             mpr("You can't set this flag on a non-artefact.");
             continue;
@@ -432,7 +428,7 @@ void wizard_tweak_object()
 
         // cursedness might have changed
         ash_check_bondage();
-        auto_id_inventory();
+        ash_id_inventory();
     }
 }
 
@@ -522,7 +518,7 @@ void wizard_create_all_artefacts(bool override_unique)
             }
         }
         item_def &item = env.item[islot];
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
+        identify_item(item);
 
         if (!is_artefact(item))
         {
@@ -555,7 +551,7 @@ void wizard_create_all_artefacts(bool override_unique)
         item.quantity  = 1;
         item_colour(item);
 
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
+        identify_item(item);
         move_item_to_grid(&islot, you.pos());
 
         msg::streams(MSGCH_DIAGNOSTICS) << "Made " << item.name(DESC_A)
@@ -651,18 +647,11 @@ void wizard_identify_pack()
 
 static void _forget_item(item_def &item)
 {
-    set_ident_type(item, false);
-    unset_ident_flags(item, ISFLAG_IDENT_MASK);
-    item.flags &= ~(ISFLAG_SEEN | ISFLAG_HANDLED | ISFLAG_THROWN
+    if (item_type_has_ids(item.base_type))
+        you.type_ids[item.base_type][item.sub_type] = false;
+
+    item.flags &= ~(ISFLAG_SEEN | ISFLAG_HANDLED | ISFLAG_THROWN | ISFLAG_IDENTIFIED
                     | ISFLAG_DROPPED | ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
-    if (is_artefact(item) && item.props.exists(KNOWN_PROPS_KEY))
-    {
-        ASSERT(item.props.exists(KNOWN_PROPS_KEY));
-        CrawlVector &known = item.props[KNOWN_PROPS_KEY].get_vector();
-        ASSERT(known.size() == ART_PROPERTIES);
-        for (vec_size i = 0; i < ART_PROPERTIES; i++)
-            known[i] = static_cast<bool>(false);
-    }
 }
 
 void wizard_unidentify_pack()
@@ -1411,17 +1400,17 @@ void wizard_identify_all_items()
     wizard_identify_pack();
     for (auto &item : env.item)
         if (item.defined())
-            set_ident_flags(item, ISFLAG_IDENT_MASK);
+            identify_item(item);
     for (auto& entry : env.shop)
         for (auto &item : entry.second.stock)
-            set_ident_flags(item, ISFLAG_IDENT_MASK);
+            identify_item(item);
     for (int ii = 0; ii < NUM_OBJECT_CLASSES; ii++)
     {
         object_class_type i = (object_class_type)ii;
         if (!item_type_has_ids(i))
             continue;
         for (const auto j : all_item_subtypes(i))
-            set_ident_type(i, j, true);
+            identify_item_type(i, j);
     }
 }
 
@@ -1440,7 +1429,7 @@ void wizard_unidentify_all_items()
         if (!item_type_has_ids(i))
             continue;
         for (const auto j : all_item_subtypes(i))
-            set_ident_type(i, j, false);
+            you.type_ids[i][j] = false;
     }
 }
 

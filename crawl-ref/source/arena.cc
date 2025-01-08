@@ -1207,7 +1207,7 @@ void arena_placed_monster(monster* mons)
 
     for (mon_inv_iterator ii(*mons); ii; ++ii)
     {
-        ii->flags |= ISFLAG_IDENT_MASK;
+        ii->flags |= ISFLAG_IDENTIFIED;
 
         // Set the "drop" time here in case the monster drops the
         // item without dying, like being polymorphed.

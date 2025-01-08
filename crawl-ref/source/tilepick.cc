@@ -2001,6 +2001,11 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
             return TILEP_MONS_SIGMUND_SCYTHELESS;
         }
 
+        case MONS_QUOKKA:
+            if (today_is_serious())
+                return TILEP_MONS_QUOKKA_LORD_OF_SKULLS;
+            return base;
+
         case MONS_OGRE:
             if (today_is_serious())
                 return TILEP_MONS_SWAMP_OGRE;
@@ -2355,6 +2360,7 @@ static const map<monster_info_flags, tileidx_t> monster_status_icons = {
     { MB_KINETIC_GRAPNEL, TILEI_KINETIC_GRAPNEL },
     { MB_TEMPERED, TILEI_TEMPERED },
     { MB_HATCHING, TILEI_HEART },
+    { MB_BLINKITIS, TILEI_UNSTABLE },
 };
 
 set<tileidx_t> status_icons_for(const monster_info &mons)
@@ -2448,6 +2454,9 @@ tileidx_t tileidx_player_mons()
 
     if (you.duration[DUR_EXECUTION])
         return TILEP_MONS_EXECUTIONER;
+
+    if (you.may_pruneify() && you.cannot_act())
+        return TILEP_MONS_PRUNE;
 
     monster_type mons;
     if (Options.tile_player_tile)
@@ -2565,6 +2574,7 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
     case WPN_TRIDENT:               return TILE_WPN_TRIDENT;
     case WPN_HALBERD:               return TILE_WPN_HALBERD;
     case WPN_GLAIVE:                return TILE_WPN_GLAIVE;
+    case WPN_PARTISAN:              return TILE_WPN_PARTISAN;
 #if TAG_MAJOR_VERSION == 34
     case WPN_STAFF:                 return TILE_WPN_STAFF;
 #endif
@@ -3089,13 +3099,13 @@ tileidx_t tileidx_item(const item_def &item)
             return _tileidx_armour(item);
 
     case OBJ_WANDS:
-        if (item.flags & ISFLAG_KNOW_TYPE)
+        if (item.is_identified())
             return TILE_WAND_ID_FIRST + type;
         else
             return TILE_WAND_OFFSET + subtype_rnd % NDSC_WAND_PRI;
 
     case OBJ_SCROLLS:
-        if (item.flags & ISFLAG_KNOW_TYPE)
+        if (item.is_identified())
             return TILE_SCR_ID_FIRST + type;
         return TILE_SCROLL;
 
@@ -3116,7 +3126,7 @@ tileidx_t tileidx_item(const item_def &item)
                 return TILE_RING_RANDART_OFFSET + offset;
             }
 
-            if (item.flags & ISFLAG_KNOW_TYPE)
+            if (item.is_identified())
             {
                 return TILE_RING_ID_FIRST + type - RING_FIRST_RING
 #if TAG_MAJOR_VERSION == 34
@@ -3136,12 +3146,12 @@ tileidx_t tileidx_item(const item_def &item)
             return TILE_AMU_RANDART_OFFSET + offset;
         }
 
-        if (item.flags & ISFLAG_KNOW_TYPE)
+        if (item.is_identified())
             return TILE_AMU_ID_FIRST + type - AMU_FIRST_AMULET;
         return TILE_AMU_NORMAL_OFFSET + subtype_rnd % NDSC_JEWEL_PRI;
 
     case OBJ_POTIONS:
-        if (item.flags & ISFLAG_KNOW_TYPE)
+        if (item.is_identified())
             return TILE_POT_ID_FIRST + type;
         else
             return TILE_POTION_OFFSET + item.subtype_rnd % NDSC_POT_PRI;
@@ -3166,7 +3176,7 @@ tileidx_t tileidx_item(const item_def &item)
             return TILE_STAFF_RANDART_OFFSET + off;
         }
 
-        if (item.flags & ISFLAG_KNOW_TYPE)
+        if (item.is_identified())
             return TILE_STAFF_ID_FIRST + type;
 
         return TILE_STAFF_OFFSET
@@ -3323,7 +3333,7 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
         int type = label - TILE_POT_ID_FIRST;
         int desc = you.item_description[IDESC_POTIONS][type] % NDSC_POT_PRI;
 
-        if (!get_ident_type(OBJ_POTIONS, type))
+        if (!type_is_identified(OBJ_POTIONS, type))
             return TILE_UNSEEN_POTION;
         else
             return TILE_POTION_OFFSET + desc;
@@ -3338,7 +3348,7 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
             ;
         int desc = you.item_description[IDESC_RINGS][type] % NDSC_JEWEL_PRI;
 
-        if (!get_ident_type(OBJ_JEWELLERY, type))
+        if (!type_is_identified(OBJ_JEWELLERY, type))
             return TILE_UNSEEN_RING;
         else
             return TILE_RING_NORMAL_OFFSET + desc;
@@ -3349,7 +3359,7 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
         int type = label - TILE_AMU_ID_FIRST + AMU_FIRST_AMULET;
         int desc = you.item_description[IDESC_RINGS][type] % NDSC_JEWEL_PRI;
 
-        if (!get_ident_type(OBJ_JEWELLERY, type))
+        if (!type_is_identified(OBJ_JEWELLERY, type))
             return TILE_UNSEEN_AMULET;
         else
             return TILE_AMU_NORMAL_OFFSET + desc;
@@ -3363,7 +3373,7 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
         int type = label - TILE_WAND_ID_FIRST;
         int desc = you.item_description[IDESC_WANDS][type] % NDSC_WAND_PRI;
 
-        if (!get_ident_type(OBJ_WANDS, type))
+        if (!type_is_identified(OBJ_WANDS, type))
             return TILE_UNSEEN_WAND;
         else
             return TILE_WAND_OFFSET + desc;
@@ -3375,7 +3385,7 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
         int desc = you.item_description[IDESC_STAVES][type];
         desc = (desc / NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
 
-        if (!get_ident_type(OBJ_STAVES, type))
+        if (!type_is_identified(OBJ_STAVES, type))
             return TILE_UNSEEN_STAFF;
         else
             return TILE_STAFF_OFFSET + desc;
@@ -3441,169 +3451,53 @@ tileidx_t tileidx_cloud(const cloud_info &cl)
 }
 
 #ifdef USE_TILE
-tileidx_t tileidx_bolt(const bolt &bolt)
+tileidx_t vary_bolt_tile(tileidx_t tile, const coord_def& origin,
+                         const coord_def& target, const coord_def& pos)
 {
-    const int col = bolt.colour;
-    const coord_def diff = bolt.target - bolt.source;
+    const coord_def diff = target - origin;
     const int dir = _tile_bolt_dir(diff.x, diff.y);
+    const int dist = (pos - origin).rdist();
 
-    switch (col)
-    {
-    case WHITE:
-        if (bolt.origin_spell == SPELL_ICEBLAST ||
-            bolt.origin_spell == SPELL_SERACFALL ||
-            bolt.origin_spell == SPELL_GLACIATE)
-        {
-            return TILE_BOLT_ICEBLAST;
-        }
-        else if (bolt.name == "crystal spear")
-            return TILE_BOLT_CRYSTAL_SPEAR + dir;
-        else if (bolt.name == "puff of frost")
-            return TILE_BOLT_FROST;
-        else if (bolt.name == "shard of ice"
-                 || bolt.name == "shard of alchemical ice"
-                 || bolt.name == "salvo of alchemical ice"
-                    && !bolt.in_explosion_phase)
-        {
-            return TILE_BOLT_ICICLE + dir;
-        }
-        else if (bolt.name == "salvo of icicles")
-            return TILE_BOLT_ICICLE_SALVO + dir;
-        else if (bolt.name == "searing ray")
-            return TILE_BOLT_SEARING_RAY;
-        else if (bolt.name == "bolt of light"
-                 || bolt.name == "blinding ray")
-        {
-            return TILE_BOLT_LIGHT + dir;
-        }
-        else if (bolt.name == "fortress blast")
-            return TILE_BOLT_FORTRESS_BLAST;
-        break;
-
-    case LIGHTCYAN:
-        if (bolt.name == "iron shot")
-            return TILE_BOLT_IRON_SHOT + dir;
-        else if (bolt.name == "crystallizing shot")
-            return TILE_BOLT_CRYSTAL_SPEAR + dir;
-        else if (bolt.name == "zap")
-            return TILE_BOLT_ZAP + dir % tile_main_count(TILE_BOLT_ZAP);
-        break;
-
-    case RED:
-        if (bolt.name == "puff of flame")
-            return TILE_BOLT_FLAME;
-        else if (bolt.origin_spell == SPELL_SPIT_LAVA ||
-                 bolt.origin_spell == SPELL_BOLT_OF_MAGMA)
-        {
-            return TILE_BOLT_MAGMA;
-        }
-        else if (bolt.origin_spell == SPELL_FIRE_STORM)
-            return TILE_BOLT_FIRE_STORM;
-        else if (bolt.name == "rain of gore")
-            return TILE_BOLT_HAEMOCLASM;
-        break;
-
-    case LIGHTRED:
-        if (bolt.name.find("damnation") != string::npos)
-            return TILE_BOLT_DAMNATION;
-        if (bolt.name == "blood arrow")
-            return TILE_BOLT_BLOOD_ARROW + dir;
-        break;
-
-    case LIGHTMAGENTA:
-        if (bolt.name == "magic dart")
-            return TILE_BOLT_MAGIC_DART;
-        else if (bolt.origin_spell == SPELL_WARP_SPACE)
-            return TILE_BOLT_WARP_SPACE;
-        break;
-
-    case BROWN:
-        if (bolt.name == "blast of sand")
-            return TILE_BOLT_SANDBLAST;
-        else if (bolt.name == "volley of thorns" ||
-                 bolt.name == "spray of wooden splinters")
-            return TILE_BOLT_SPLINTERSPRAY + dir;
-        else if (bolt.name == "klown pie")
-            return TILE_BOLT_PIE + dir;
-        break;
-
-    case GREEN:
-        if (bolt.name == "sting")
-            return TILE_BOLT_STING;
-        break;
-
-    case LIGHTGREEN:
-        if (bolt.name == "poison arrow")
-            return TILE_BOLT_POISON_ARROW + dir;
-        break;
-
-    case LIGHTGREY:
-        if (bolt.name == "stone arrow" || bolt.name == "stone bullet")
-            return TILE_BOLT_STONE_ARROW + dir;
-        break;
-
-    case DARKGREY:
-        if (bolt.name == "bolt of negative energy")
-            return TILE_BOLT_DRAIN;
-        break;
-
-    case MAGENTA:
-        if (bolt.origin_spell == SPELL_SHADOW_BEAM)
-            return TILE_BOLT_SHADOW_BEAM + dir % tile_main_count(TILE_BOLT_SHADOW_BEAM);
-        if (bolt.origin_spell == SPELL_SHADOW_BALL
-            || bolt.origin_spell == SPELL_CREEPING_SHADOW
-            || bolt.origin_spell == SPELL_SHADOW_TEMPEST
-            || bolt.origin_spell == SPELL_SHADOW_PRISM)
-        {
-            return TILE_BOLT_SHADOW_BLAST;
-        }
-        if (bolt.origin_spell == SPELL_SHADOW_SHARD)
-            return TILE_BOLT_SHADOW_SHARD;
-        if (bolt.origin_spell == SPELL_SHADOW_SHOT)
-            return TILE_BOLT_SHADOW_SHOT + dir;
-        break;
-
-    case CYAN:
-        if (bolt.name == "slug dart")
-            return TILE_BOLT_STONE_ARROW + dir;
-        else if (bolt.name == "lance of force")
-            return TILE_BOLT_FORCE_LANCE + dir;
-        else if (bolt.name == "harpoon shot")
-            return TILE_BOLT_HARPOON_SHOT + dir;
-        else if (bolt.name == "spray of metal splinters")
-            return TILE_BOLT_METAL_SPLINTERS + dir;
-        else if (bolt.name == "ghostly fireball")
-            return TILE_BOLT_GHOSTLY_FIREBALL;
-        else if (bolt.name == "umbral torchlight")
-            return TILE_BOLT_UMBRAL_TORCHLIGHT;
-        else if (bolt.name == "phantom echo")
-            return TILE_BOLT_PHANTOM_BLITZ;
-        break;
-
-    case ETC_MUTAGENIC:
-        if (bolt.name == "irradiate" || bolt.name == "unravelling"
-            || bolt.name == "burst of quintessence")
-        {
-            return TILE_BOLT_IRRADIATE;
-        }
-        break;
-    }
-
-    return tileidx_zap(col);
+    return vary_bolt_tile(tile, dir, dist);
 }
 
-tileidx_t vary_bolt_tile(tileidx_t tile, int dist)
+tileidx_t vary_bolt_tile(tileidx_t tile, int dir, int dist)
 {
     switch (tile)
     {
+    case TILE_BOLT_STONE_ARROW:
+    case TILE_BOLT_CRYSTAL_SPEAR:
+    case TILE_BOLT_ICICLE:
+    case TILE_BOLT_ICICLE_SALVO:
+    case TILE_BOLT_LIGHT:
+    case TILE_BOLT_IRON_SHOT:
+    case TILE_BOLT_BLOOD_ARROW:
+    case TILE_BOLT_SPLINTERSPRAY:
+    case TILE_BOLT_PIE:
+    case TILE_BOLT_POISON_ARROW:
+    case TILE_BOLT_SHADOW_SHOT:
+    case TILE_BOLT_FORCE_LANCE:
+    case TILE_BOLT_HARPOON_SHOT:
+    case TILE_BOLT_METAL_SPLINTERS:
+        return tile + dir;
+
+    case TILE_BOLT_ZAP:
+    case TILE_BOLT_SHADOW_BEAM:
+        return tile + dir % tile_main_count(tile);
+
     case TILE_BOLT_FROST:
     case TILE_BOLT_MAGIC_DART:
     case TILE_BOLT_SANDBLAST:
     case TILE_BOLT_STING:
+    case TILE_BOLT_MEPHITIC_FLASK:
         return tile + (dist - 1) % tile_main_count(tile);
+
     case TILE_BOLT_FLAME:
     case TILE_BOLT_MAGMA:
+    case TILE_BOLT_ICEBLAST:
+    case TILE_BOLT_ALEMBIC_POTION:
     case TILE_BOLT_IRRADIATE:
+    case TILE_BOLT_POTION_PETITION:
     case TILE_BOLT_SHADOW_BLAST:
     case TILE_BOLT_HAEMOCLASM:
     case TILE_BOLT_GHOSTLY_FIREBALL:
@@ -3611,8 +3505,10 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dist)
     case TILE_BOLT_MANIFOLD_ASSAULT:
     case TILE_BOLT_PARAGON_TEMPEST:
         return tile + ui_random(tile_main_count(tile));
+
     case TILE_MI_BOOMERANG0:
         return tile + ui_random(4);
+
     default:
         return tile;
     }
@@ -4531,7 +4427,7 @@ tileidx_t tileidx_player_job(const job_type job, bool recommended)
 
 tileidx_t tileidx_known_brand(const item_def &item)
 {
-    if (!item_type_known(item))
+    if (!item.is_identified())
         return 0;
 
     switch (item.base_type)
@@ -4582,6 +4478,7 @@ tileidx_t tileidx_known_brand(const item_def &item)
             return TILE_BRAND_PENETRATION;
 #endif
         case SPMSL_DISPERSAL:
+        case SPMSL_DISJUNCTION:
             return TILE_BRAND_DISPERSAL;
         case SPMSL_EXPLODING:
             return TILE_BRAND_EXPLOSION;

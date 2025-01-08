@@ -63,10 +63,11 @@ end
 function crypt_entry(e)
     e.tags("crypt_entry vaults_entry_crypt")
     e.kmons("0 = necromancer w:5 / death knight w:5 / \
-                 skeletal warrior / ancient champion / ghoul / \
+                 skeletal warrior / ghoul / \
                  phantasmal warrior / flayed ghost / eidolon")
     e.kmons("9 = laughing skull band")
-    e.nsubst("0 = 2 = 9 0:130 / *:0")
+    e.kmons("8 = ancient champion")
+    e.nsubst("0 = 2 = 9 8 0:120 / *:0")
     e.kfeat("O = enter_crypt")
     e.tile("c = wall_crypt")
     e.tile("G = dngn_statue_wraith / dngn_statue_sigmund / dngn_statue_angel")
@@ -77,17 +78,17 @@ function crypt_loot_plus(e)
   -- provide some unreliable but high quality incentives.
   -- TODO: shove this into an extra-greedy shop so people actually notice the
   -- existence of this and thus are more incentivized for optional branch #3.
-  local drain = "ego:draining good_item ident:type"
-  local pain = "ego:pain ident:type"
-  local vamp = "ego:vampirism ident:type"
+  local drain = "ego:draining good_item pre_id"
+  local pain = "ego:pain pre_id"
+  local vamp = "ego:vampirism pre_id"
   local book = "randbook disc:necromancy numspells:6 spells:"
   local ring = "any ring randart artprops:rN:2"
   local amulet = "any amulet randart artprops:Regen:1"
   -- One drop-off of these,
   e.kitem("d = double sword w:5 " .. drain .." / triple sword w:5 " .. drain ..
           " / quick blade " .. drain .. " / executioner's axe " .. drain ..
-          " / eveningstar " .. drain .. " / bardiche " .. drain ..
-          " / lajatang " .. drain)
+          " / eveningstar " .. drain .. " / partisan w:5 " .. drain ..
+          " / bardiche w:5 " .. drain .. " / lajatang " .. drain)
   e.kitem("e = great sword " .. pain .." / battleaxe " .. pain ..
           " / great mace " .. pain .. " / glaive " .. pain ..
           " / quarterstaff " .. pain)
@@ -1737,8 +1738,8 @@ KMONS:   B = ancient champion
 KMONS:   C = mummy priest
 KMONS:   0 = zombie
 ITEM:    any weapon good_item ego:draining, any weapon ego:pain
-ITEM:    scroll of torment ident:type, randbook disc:necromancy numspells:3
-ITEM:    staff of death ident:type
+ITEM:    scroll of torment pre_id, randbook disc:necromancy numspells:3
+ITEM:    staff of death pre_id
 ITEM:    amulet of regeneration randart good_item
 KITEM:   $ = $ no_pickup
 KFEAT:   D = altar_yredelemnul
@@ -1908,8 +1909,8 @@ DEPTH:  Crypt
 ORIENT: east
 MONS:   freezing wraith, shadow wraith
 KMONS:  | = ancient lich / dread lich
-: local rc = "good_item ego:cold_resistance ident:type"
-: local f = "good_item ego:freezing ident:type"
+: local rc = "good_item ego:cold_resistance pre_id"
+: local f = "good_item ego:freezing pre_id"
 : local lt = "plate armour " .. rc .. " / " ..
 :            "ice dragon scales good_item / " ..
 :            "crystal plate armour " .. rc .. " w:5 / " ..
@@ -2056,7 +2057,7 @@ TAGS:    no_monster_gen no_item_gen no_trap_gen no_pool_fixup no_descent
 DEPTH:   Crypt
 ORIENT:  float
 WEIGHT:  5
-ITEM:    scroll of enchant weapon ident:type, blade talisman
+ITEM:    scroll of enchant weapon pre_id, blade talisman
 ITEM:    mundane dagger, dagger good_item
 : local q = "quick blade randart ego:"
 : item(q .. "draining / " .. q .. "vampirism / " .. q ..
@@ -2285,8 +2286,8 @@ ENDMAP
 NAME:   nicolae_crypt_lichyard
 TAGS:   transparent
 DEPTH:  Crypt
-MONS:   lich, ancient lich / dread lich
-NSUBST: 1 = 3 = 111112 / *:1
+MONS:   lich, alderking, ancient lich / dread lich
+NSUBST: 1 = 3 = 111123 / *:1
 SUBST:  t = ttt., G = GGG., ` = ._, L = LL...
 CLEAR:  _
 TILE:   t = dngn_tree_dead
@@ -2556,7 +2557,7 @@ MONS:   w:20 skeletal warrior / skeleton w:50  / nothing
 KMONS:  1 = vampire knight / Jory w:5, vampire knight
 KMONS:  2 = undying armoury
 KMONS:  3 = vampire knight w:15 / \
-            dancing weapon ; long sword ego:vampirism ident:type
+            dancing weapon ; long sword ego:vampirism pre_id
 KMONS:  4 = vampire mage
 KMONS:  5 = phantasmal warrior / \
             skeletal warrior ; halberd ego:vampirism | war axe ego:vampirism | \
@@ -2957,12 +2958,14 @@ ORIENT: encompass
 PLACE:  Crypt:$
 MONS:   w:3 patrolling lich / w:1 patrolling revenant
 MONS:   patrolling zombie / nothing
-MONS:   jumping spider / wolf spider / redback / w:19 nothing
+MONS:   alderking
 MONS:   w:5 wraith / phantasmal warrior / eidolon / w:5 freezing wraith / w:5 nothing
 MONS:   wyvern skeleton / w:30 nothing
 MONS:   w:2 ushabti / w:3 guardian mummy / w:2 mummy
 MONS:   w:5 patrolling mummy priest / w:1 patrolling royal mummy
 KMONS:  z = patrolling curse skull
+KMONS:  s = meliai zombie / spriggan berserker zombie / \
+            spectral broodmother / spectral spriggan defender
 KMONS:  p = withered plant
 : if crawl.coinflip() then
 # Temple of yred
@@ -3033,8 +3036,8 @@ ttttttT.t.".v-4-v4-v...c------ccccc------c....T.vvvT...t..t......Ttttt.ttcnnnctt
 ttttT.t.....vvvvvvvv..cccc+cccc$$$cccc+cccc.....v4--.T..t....t..tTttttt..c***ctt
 tttT.t........v-%-4v..ccc--Bcc0---0ccB--ccc.T...v4%4-v.T...t.....Ttttt...c%%%ctt
 ttT....T...T..v4--.....n--cccccc+cccccc--n......vvvvvv...T..T..t..Tttcc+cc---ctt
-tttT.t........vvvvvv...n--ccccc---ccccc--n.........T...............Ttc3333333ctt
-ttttT.t.T.............ccc-cccc-C'C-cccc-ccc..T...............T...t..tc3333333ctt
+tttT.t........vvvvvv...n--ccccc---ccccc--n.........T...............Ttc.s...s.ctt
+ttttT.t.T.............ccc-cccc-C'C-cccc-ccc..T...............T...t..tc3.s.s.3ctt
 tttttT.....cccccccccccccc-cVcC-'''-CcVc-cccccccccccccc.........T...tpcccnnnccctt
 ttttT..t..cc----+---------c-+-''Z''-+-c---------+--E-cc....vvvv.T.t.Tttttttttttt
 ttttTt.....n-B--cccmmcccccc-c--'''--c-ccccccmmcccEEE-n..T..v44vT....Tttttttttttt
@@ -3332,7 +3335,7 @@ ORIENT:  north
 MONS:    ancient champion, lich / revenant, jiangshi / ghoul w:2
 MONS:    profane servitor / bone dragon / curse toe / \
          royal mummy w:2 / ancient lich w:1 / dread lich w:1
-MONS:    skeletal warrior ; halberd | glaive | bardiche w:5
+MONS:    skeletal warrior ; partisan | halberd | glaive | bardiche w:5
 MONS:    freezing wraith w:20 / shadow wraith w:20 / flayed ghost
 MONS:    zombie w:20 / skeleton w:20 / simulacrum / nothing w:25
 KMONS:   8 = vampire knight

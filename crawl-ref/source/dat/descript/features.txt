@@ -811,9 +811,9 @@ invoke its effects against you, but your allies will avoid stepping on it.
 %%%%
 A spike launcher
 
-A magical contraption which skewers nearby monsters with sharp rocky spikes. It
-will disintegrate after a short length of time or if the caster strays too far
-away from it.
+A magical contraption which skewers nearby monsters with sharp spikes. It will
+disintegrate after a short length of time or if the caster strays too far away
+from it.
 %%%%
 ########################################################################
 ### Portal vault entrances

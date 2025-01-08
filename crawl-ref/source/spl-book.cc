@@ -1111,7 +1111,7 @@ bool learn_spell(spell_type specspell, bool wizard, bool interactive)
     return true;
 }
 
-bool book_has_title(const item_def &book, bool ident)
+bool book_has_title(const item_def &book)
 {
     ASSERT(book.base_type == OBJ_BOOKS);
 
@@ -1119,7 +1119,8 @@ bool book_has_title(const item_def &book, bool ident)
     if (book.sub_type == BOOK_BIOGRAPHIES_II
         || book.sub_type == BOOK_BIOGRAPHIES_VII
         || book.sub_type == BOOK_MAXWELL
-        || book.sub_type == BOOK_UNRESTRAINED)
+        || book.sub_type == BOOK_UNRESTRAINED
+        || book.sub_type == BOOK_SWAMP_SOJOURN)
     {
         return true;
     }
@@ -1128,8 +1129,7 @@ bool book_has_title(const item_def &book, bool ident)
         return false;
 
     return book.props.exists(BOOK_TITLED_KEY)
-           && book.props[BOOK_TITLED_KEY].get_bool() == true
-           && (ident || item_ident(book, ISFLAG_KNOW_PROPERTIES));
+           && book.props[BOOK_TITLED_KEY].get_bool() == true;
 }
 
 spret divine_exegesis(bool fail)

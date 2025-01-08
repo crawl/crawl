@@ -43,7 +43,8 @@ static const mutation_def mut_data[] =
   {"Your magical power and effects resist disruption.", "", ""},
   {"Your magical power grows resistant to disruption.", "", ""},
   {"Your magical power loses its resistance to disruption.", "", ""},
-  0, {"Your magical power will grow resistant to disruption."}
+  TILEG_MUT_INVIOLATE_MAGIC,
+  {"Your magical power will grow resistant to disruption."}
 },
 
 { MUT_TOUGH_SKIN, 0, 3, mutflag::good, true,
@@ -533,7 +534,7 @@ static const mutation_def mut_data[] =
   {"Your urge to shout disappears.",
    "Your urge to scream lessens.",
    ""},
-  TILEG_MUT_GENERIC_BAD_MUTATION,
+  TILEG_MUT_SCREAM,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -1018,6 +1019,7 @@ static const mutation_def mut_data[] =
   {"Your large and strong wings let you fly.", "", ""},
   {"Your wings grow larger and stronger.", "", ""},
   {"Your wings shrivel and weaken.", "", ""},
+  TILEG_MUT_BIG_WINGS,
 },
 #if TAG_MAJOR_VERSION == 34
 
@@ -1063,6 +1065,8 @@ static const mutation_def mut_data[] =
   {"", "Your legs feel stronger.", ""},
 
   {"", "", ""},
+
+  TILEG_MUT_HOP,
 },
 #if TAG_MAJOR_VERSION == 34
 
@@ -1190,7 +1194,7 @@ static const mutation_def mut_data[] =
   {"You regain control of your magic.",
    "You feel more in control of your magic.",
    "You feel more in control of your magic."},
-  TILEG_MUT_GENERIC_GOOD_MUTATION,
+  TILEG_MUT_WILD_MAGIC,
 },
 
 { MUT_SUBDUED_MAGIC, 6, 3, mutflag::bad, false,
@@ -1207,7 +1211,7 @@ static const mutation_def mut_data[] =
   {"Your magic regains its normal vibrancy.",
    "Your connection to magic feels less subdued.",
    "Your connection to magic feels less subdued."},
-  TILEG_MUT_GENERIC_BAD_MUTATION,
+  TILEG_MUT_SUBDUED_MAGIC,
 },
 
 { MUT_EFFICIENT_MAGIC, 4, 2, mutflag::good, false,
@@ -2132,6 +2136,7 @@ static const mutation_def mut_data[] =
   {"You are missing a hand.", "", ""},
   {"One of your hands has vanished, leaving only a stump!", "", ""},
   {"Your stump has regrown into a hand!", "", ""},
+  TILEG_MUT_MISSING_HAND,
 },
 
 { MUT_NO_STEALTH, 0, 1, mutflag::bad, false,
@@ -2365,7 +2370,7 @@ static const mutation_def mut_data[] =
   {"You expend magic power (3 MP) to strengthen your wands.", "", ""},
   {"You feel your magical essence link to the dungeon's wands.", "", ""},
   {"Your magical essence no longer links to wands of the dungeon.", "", ""},
-  TILEG_MUT_GENERIC_GOOD_MUTATION,
+  TILEG_MUT_MP_WANDS,
 },
 
 { MUT_UNSKILLED, 0, 3, mutflag::bad, false,
@@ -2613,6 +2618,8 @@ static const mutation_def mut_data[] =
     {"You feel less vital.",
      "You feel less vital.",
      "You feel less vital."},
+
+  TILEG_MUT_FLAT_HP,
 },
 
 { MUT_ENGULF, 0, 1, mutflag::good | mutflag::jiyva, true,

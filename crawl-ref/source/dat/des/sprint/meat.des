@@ -410,80 +410,83 @@ SUBST:     1 = 1.
 KPROP:     - = no_tele_into
 KFEAT:     _ = altar_makhleb
 KFEAT:     x = rock_wall
-COLOUR:    xX = red
-TILE:      xX = wall_hell
-FTILE:     1234+'*&J = floor_demonic_red
+COLOUR:    x = red
+COLOUR:    X = magenta
+TILE:      x = wall_hell
+TILE:      X = wall_crucible
+FTILE:     1234x+'*&J = floor_demonic_red
+: set_feature_name("permarock_wall", "unnaturally hard bloodstone wall")
 : blood_monster_definitions(_G)
 : weapon_creation(_G)
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxx3111111+1111113xxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxx111111111111111111111xxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx1111111111xx1xx1xxxxx111111xxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxx21111111..................1111111xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxx11111....xxxx.....xx.xx............1121xxxxxxxxxxxxxxxx
-xxxxxxxxxxxx2211111....x...........................111122xxxxxxxxxxxxx
-xxxxxxxxxxxx221111......x.........1x.x.......x......11122xxxxxxxxxxxxx
-xxxxxxxxxxxx1111........x..................xxxx.....11111xxxxxxxxxxxxx
-xxxxxxxxxxxx111....xxx...x..........................11111xxxxxxxxxxxxx
-xxxxxxxxxxxx11...xxx......x.......................x....11xxxxxxxxxxxxx
-xxxxxxxxxxxx11..x...............'''''..................11xxxxxxxxxxxxx
-xxxxxxxxxxxx11......x..........'''''''............x....11xxxxxxxxxxxxx
-xxxxxxxxxxxx11.......x......11x'''''''x11..............11xxxxxxxxxxxxx
-xxxxxxxxxxxx41..........x...11x'''''''x11.........xx...14xxxxxxxxxxxxx
-xxxxxxxxxxxx11.......x......xxx'''''''xxx..............11xxxxxxxxxxxxx
-xxxxxxxxxxxx11..x..........'''''.xxx.'''''.......xxx2..11xxxxxxxxxxxxx
-xxxxxxxxxxxx111.xx.......x'''''..._...'''''............11xxxxxxxxxxxxx
-xxxxxxxxxxxx11.1.x.....x..'''''x.....x'''''..x.x.......11xxxxxxxxxxxxx
-xxxxxxxxxxxx*1.1.2xxx.....'''''x_.{._x'''''...........11*xxxxxxxxxxxxx
-xxxxxxxxxxxx11.1.xx....x..'''''x.....x'''''.x.x.x....1111xxxxxxxxxxxxx
-xxxxxxxxxxxx11.1x........x'''''..._...'''''............11xxxxxxxxxxxxx
-xxxxxxxxxxxx11..x..........'''''.xxx.'''''...x.x.x..x..11xxxxxxxxxxxxx
-xxxxxxxxxxxx11..............xxx'''''''xxx..........x...11xxxxxxxxxxxxx
-xxxxxxxxxxxx41..............11x'''''''x11...........x..14xxxxxxxxxxxxx
-xxxxxxxxxxxx11..............11x'''''''x11..........x...11xxxxxxxxxxxxx
-xxxxxxxxxxxx11.......x.........'''''''.................11xxxxxxxxxxxxx
-xxxxxxxxxxxx11......x.x.x.......'''''.....x...x......xx11xxxxxxxxxxxxx
-xxxxxxxxxxxx11.......x.x.................x....x.....xx.11xxxxxxxxxxxxx
-xxxxxxxxxxxx11xxx...x.x.x..............xx.....x.....x2221xxxxxxxxxxxxx
-xxxxxxxxxxxx1122xx...x.x.....x........x......x....xx22211xxxxxxxxxxxxx
-xxxxxxxxxxxx11122x....................x...xxx....x1111111xxxxxxxxxxxxx
-xxxxxxxxxxxx3111111xx.......xx.x...............x111111113xxxxxxxxxxxxx
-xxxxxxxxxxxxxxx11111xx.......................111111111xxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxx211111xxxx....x.....xxxx111111112xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx1111111............x1111111xxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxx111111.........111111xxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxx3111111+1111113xxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxXXXXXXXXXXXXXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxX-------------Xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxX-------------Xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxXXXXXXXXXXXXXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxJxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXXXX
+XXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXXXX
+XXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXXXX
+XXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXXXX
+XXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXXXX
+XXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXXXX
+XXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXXXX
+XXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXXXX
+XXXXxxxxxxxxxxxxxxxxxxxxxxx3111111+1111113xxxxxxxxxxxxxxxxxxxxxxxXXXXX
+XXXXxxxxxxxxxxxxxxxxxxxx111111111111111111111xxxxxxxxxxxxxxxxxxxxXXXXX
+XXXXxxxxxxxxxxxxxxxxx1111111111xx1xx1xxxxx111111xxxxxxxxxxxxxxxxxXXXXX
+XXXXxxxxxxxxxxxxxx21111111..................1111111xxxxxxxxxxxxxxXXXXX
+XXXXxxxxxxxxxxx11111....xxxx.....xx.xx............1121xxxxxxxxxxxXXXXX
+XXXXxxxxxxxx2211111....x...........................111122xxxxxxxxXXXXX
+XXXXxxxxxxxx221111......x.........1x.x.......x......11122xxxxxxxxXXXXX
+XXXXxxxxxxxx1111........x..................xxxx.....11111xxxxxxxxXXXXX
+XXXXxxxxxxxx111....xxx...x..........................11111xxxxxxxxXXXXX
+XXXXxxxxxxxx11...xxx......x.......................x....11xxxxxxxxXXXXX
+XXXXxxxxxxxx11..x...............'''''..................11xxxxxxxxXXXXX
+XXXXxxxxxxxx11......x..........'''''''............x....11xxxxxxxxXXXXX
+XXXXxxxxxxxx11.......x......11x'''''''x11..............11xxxxxxxxXXXXX
+XXXXxxxxxxxx41..........x...11x'''''''x11.........xx...14xxxxxxxxXXXXX
+XXXXxxxxxxxx11.......x......xxx'''''''xxx..............11xxxxxxxxXXXXX
+XXXXxxxxxxxx11..x..........'''''.xxx.'''''.......xxx2..11xxxxxxxxXXXXX
+XXXXxxxxxxxx111.xx.......x'''''..._...'''''............11xxxxxxxxXXXXX
+XXXXxxxxxxxx11.1.x.....x..'''''x.....x'''''..x.x.......11xxxxxxxxXXXXX
+XXXXxxxxxxxx*1.1.2xxx.....'''''x_.{._x'''''...........11*xxxxxxxxXXXXX
+XXXXxxxxxxxx11.1.xx....x..'''''x.....x'''''.x.x.x....1111xxxxxxxxXXXXX
+XXXXxxxxxxxx11.1x........x'''''..._...'''''............11xxxxxxxxXXXXX
+XXXXxxxxxxxx11..x..........'''''.xxx.'''''...x.x.x..x..11xxxxxxxxXXXXX
+XXXXxxxxxxxx11..............xxx'''''''xxx..........x...11xxxxxxxxXXXXX
+XXXXxxxxxxxx41..............11x'''''''x11...........x..14xxxxxxxxXXXXX
+XXXXxxxxxxxx11..............11x'''''''x11..........x...11xxxxxxxxXXXXX
+XXXXxxxxxxxx11.......x.........'''''''.................11xxxxxxxxXXXXX
+XXXXxxxxxxxx11......x.x.x.......'''''.....x...x......xx11xxxxxxxxXXXXX
+XXXXxxxxxxxx11.......x.x.................x....x.....xx.11xxxxxxxxXXXXX
+XXXXxxxxxxxx11xxx...x.x.x..............xx.....x.....x2221xxxxxxxxXXXXX
+XXXXxxxxxxxx1122xx...x.x.....x........x......x....xx22211xxxxxxxxXXXXX
+XXXXxxxxxxxx11122x....................x...xxx....x1111111xxxxxxxxXXXXX
+XXXXxxxxxxxx3111111xx.......xx.x...............x111111113xxxxxxxxXXXXX
+XXXXxxxxxxxxxxx11111xx.......................111111111xxxxxxxxxxxXXXXX
+XXXXxxxxxxxxxxxxxx211111xxxx....x.....xxxx111111112xxxxxxxxxxxxxxXXXXX
+XXXXxxxxxxxxxxxxxxxxx1111111............x1111111xxxxxxxxxxxxxxxxxXXXXX
+XXXXxxxxxxxxxxxxxxxxxxxx111111.........111111xxxxxxxxxxxxxxxxxxxxXXXXX
+XXXXxxxxxxxxxxxxxxxxxxxxxxx3111111+1111113xxxxxxxxxxxxxxxxxxxxxxxXXXXX
+XXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXXXX
+XXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXXXX
+XXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXXXX
+XXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXXXX
+XXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXXXX
+XXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXXXX
+XXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXXXX
+XXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXX-------------XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXX-------------XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXJXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ENDMAP

@@ -411,8 +411,8 @@ ORIENT:   encompass
 # some fresh water for the kobolds
 MONS:     jackal, kobold, kobold brigand
 MONS:     rat w:15 / river rat w:7
-ITEM:     potion of curing ident:type / potion of heal wounds ident:type
-ITEM:     potion of enlightenment ident:type
+ITEM:     potion of curing pre_id / potion of heal wounds pre_id
+ITEM:     potion of enlightenment pre_id
 KMONS:    Z = sacred lotus
 KFEAT:    YZ = deep_water
 KFEAT:    y = shallow_water
@@ -575,7 +575,7 @@ ORIENT:   encompass
 SUBST:    - = WWW.
 SHUFFLE:  |de
 : item(dgn.loot_scrolls)
-ITEM:     scroll of blinking ident:all
+ITEM:     scroll of blinking pre_id
 MONS:     frilled lizard w:20 / ball python / giant cockroach w:20 / \
           dart slug / adder w:8
 KMONS:    ? = dart slug
@@ -630,7 +630,7 @@ KMONS:    1 = frilled lizard / ball python / giant cockroach / \
 KMONS:    2 = jelly
 KMONS:    ! = bullfrog
 : item(dgn.loot_scrolls)
-ITEM:     scroll of blinking ident:all
+ITEM:     scroll of blinking pre_id
 KFEAT:    12W = W
 KFEAT:    ! = w
 NSUBST:   W = 175 = 1WWW / 1:2 / *:W
@@ -734,7 +734,7 @@ ORIENT:   encompass
 : sewer_setup(_G)
 MONS:     bat, brain worm
 KMONS:    3 = Pargi / crocodile, crocodile
-ITEM:     potion of berserk rage ident:type / potion of haste ident:type w:5
+ITEM:     potion of berserk rage pre_id / potion of haste pre_id w:5
 SUBST:    - = 1....
 MAP
  ccccccc
@@ -969,7 +969,7 @@ KMONS:   ? = bat / frilled lizard / ball python / giant cockroach / \
              quokka / endoplasm w:4 / ribbon worm w:4 / adder w:2
 MONS:    ribbon worm w:2 / ball python / jackal / adder w:5 / river rat w:5
 MONS:    adder, river rat, brain worm, dart slug
-ITEM:    any scroll, potion of enlightenment ident:type
+ITEM:    any scroll, potion of enlightenment pre_id
 : item(dgn.aux_armour)
 : item(dgn.loot_potions)
 : item(dgn.loot_scrolls)
@@ -983,9 +983,9 @@ NSUBST:  w = 10 = "w / *:w, W = 42 = ?WWW / *:W, ! = 32 = 1... / *:.
 COLOUR:  " = green
 COLOUR:  ? = lightgreen
 : sewer_setup(_G)
-KITEM:   ' = scroll of noise ident:type w:50 / \
-             potion of degeneration ident:type w:100 / \
-             potion of mutation ident:type w:30
+KITEM:   ' = scroll of noise pre_id w:50 / \
+             potion of degeneration pre_id w:100 / \
+             potion of mutation pre_id w:30
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xwwwwwwwwwwwWWW-WW-W--WWWWW-WWW--W--WW-WW-WW-W-WWwwwwwwwwwwwx
@@ -1037,8 +1037,8 @@ COLOUR:  gh = lightgreen
 COLOUR:  HJ = blue
 COLOUR:  G = green
 COLOUR:  s = cyan
-KITEM:   M = potion of enlightenment q:3 ident:type
-KITEM:   N = scroll of teleportation q:2 ident:type
+KITEM:   M = potion of enlightenment q:3 pre_id
+KITEM:   N = scroll of teleportation q:2 pre_id
 : sewer_setup(_G)
 MAP
 OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
@@ -1110,7 +1110,7 @@ SHUFFLE: yZzSsUuTgY
 SUBST:   y = w
 SUBST:   hVZzSsUuTgY = W
 #      loot
-ITEM:    potion of enlightenment ident:type
+ITEM:    potion of enlightenment pre_id
 KITEM:   - = any potion / any scroll
 NSUBST:  d = 1:d / *:-
 SUBST:   - = !!???-----

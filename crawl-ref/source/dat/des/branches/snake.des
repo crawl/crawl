@@ -1712,7 +1712,7 @@ WEIGHT: 5
 KMONS:  123 = black mamba / nothing
 KMONS:  4 = guardian serpent
 KMONS:  5 = naga mage / nothing
-KITEM:  1235 = potion of degeneration w:20 ident:type / scroll of poison /\
+KITEM:  1235 = potion of degeneration w:20 pre_id / scroll of poison /\
                nothing w:20
 KITEM:  4 = any weapon good_item ego:venom q:1 / \
             any weapon good_item ego:venom q:2
@@ -2074,7 +2074,7 @@ KMONS:  E = salamander mystic
 KMONS:  F = salamander tyrant
 SUBST:  E = El, H = EEEF, D = Dl
 NSUBST: ' = '''l
-
+TILE:   c = wall_stone_scorched
 MAP
     ccccccccccccccc
    ccccccccccccccccc
@@ -2321,6 +2321,7 @@ MONS:   naga / salamander / nothing w:5, naga warrior band
 NSUBST: D = . / x, E = . / x, F = . / x, H = . / x, J = . / x, K = . / x, \
         L = . / x, M = . / x, N = . / x, O = . / x, P = . / x, Q = . / x
 SUBST:  x = x:30 .
+TILE:   c : wall_stone_scorched / stone_wall_snake
 MAP
 cc...........cc
 ccDDDcJJJcEEEcc
@@ -2510,6 +2511,7 @@ KMONS:  L = salamander
 KFEAT:  L = l
 NSUBST: D = + / +c / +cc
 SUBST:  l = Ll, E : cGl
+TILE:   c = wall_stone_scorched
 MAP
 xx           xx
 xxx         xxx
@@ -2904,7 +2906,7 @@ TAGS:    no_rotate
 PLACE:   Snake:$
 ORIENT:  southwest
 MONS:    naga, naga warrior / naga sharpshooter w:5
-MONS:    naga mage w:30 / naga ritualist / naga sharpshooter / \
+MONS:    naga mage w:25 / naga ritualist / naga sharpshooter / \
          salamander mystic
 MONS:    nagaraja / salamander tyrant w:5
 KITEM:   O = serpentine rune of Zot

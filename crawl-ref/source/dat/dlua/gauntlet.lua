@@ -411,7 +411,7 @@ tier1_gauntlet_arenas = {
   {
     first  = {mons = "shining eye", min = 1, max = 1},
     second = {mons = "glass eye / golden eye", min = 1, max = 2},
-    loot   = "potion of mutation ident:type",
+    loot   = "potion of mutation pre_id",
     plant  = "demonic",
     weight = 5,
   },
@@ -536,7 +536,7 @@ tier2_gauntlet_arenas = {
   {
     first  = {mons = "cacodemon", min = 1, max = 1},
     second = {mons = "neqoxec", min = 0, max = 3},
-    loot   = "potion of mutation ident:type",
+    loot   = "potion of mutation pre_id",
     plant  = "demonic",
     weight = 5
   },
@@ -614,7 +614,7 @@ tier2_gauntlet_arenas = {
   {
     first  = {mons = "wretched star", min = 1, max = 1},
     second = {mons = "neqoxec / small abomination", min = 1, max = 2},
-    loot   = "potion of mutation ident:type",
+    loot   = "potion of mutation pre_id",
     plant  = "demonic",
   },
   {

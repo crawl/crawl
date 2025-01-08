@@ -318,17 +318,6 @@ ENDMAP
 
 ### Cheibriados overflow altars ###############################################
 
-NAME:  cheibriados_altar_1
-TAGS:  uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
-TAGS:  transparent decor
-KFEAT: _ = altar_cheibriados
-: interest_check(_G)
-MAP
-...
-._.
-...
-ENDMAP
-
 NAME:   cheibriados_altar_2
 TAGS:   uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
 TAGS:   transparent decor
@@ -355,24 +344,28 @@ ENDMAP
 NAME:  slow_altar_1
 TAGS:  patrolling no_monster_gen no_item_gen transparent
 TAGS:  uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
+DEPTH: D:3-, Snake, Depths
 : if you.in_branch("Depths") then
 KMONS: _ = iron dragon
-:else
+: elseif you.in_branch("Snake") then
+KMONS: _ = naga sharpshooter
+: else
 KMONS: _ = ribbon worm / bombardier beetle
-:end
+SUBST: v : vx
+: end
 KFEAT: _ = altar_cheibriados
 SUBST: x : xxxcccmnvb
 : interest_check(_G)
 MAP
 xxx..@..xxx
 xxx.....xxx
-xxx.....xxx
+xxv.....vxx
 ...........
 ...........
 @...._....@
 ...........
 ...........
-xxx.....xxx
+xxv.....vxx
 xxx.....xxx
 xxx..@..xxx
 ENDMAP
@@ -380,11 +373,15 @@ ENDMAP
 NAME:    slow_altar_2
 TAGS:    patrolling no_monster_gen no_item_gen transparent
 TAGS:    uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
+DEPTH: D:3-, Snake, Depths
 : if you.in_branch("Depths") then
 KMONS: _ = iron dragon
-:else
+: elseif you.in_branch("Snake") then
+KMONS: _ = naga sharpshooter
+: else
 KMONS: _ = ribbon worm / bombardier beetle
-:end
+SUBST: v : vx
+: end
 KFEAT:   _ = altar_cheibriados
 SUBST:   x : xxxcccvb
 : interest_check(_G)
@@ -843,6 +840,7 @@ MONS:    plant, fungus, oklob plant, bush, toadstool
 KMONS:   S = sacred lotus
 KFEAT:   d = floor
 KFEAT:   S = w
+KFEAT:   C = c
 SUBST:   x = TTPPPPP.
 # Only make "oklob behind bushes" situation possible a bit deeper.
 : if you.absdepth() > 5 then
@@ -855,9 +853,11 @@ SUBST:   T = xt, U = xx
 SUBST:   " = .....5
 COLOUR:  . = green / none
 COLOUR:  ' = green
+TILE:    c = dngn_stone_wall_green
+TILE:    C = wall_stone_puffball
 : interest_check(_G)
 MAP
-ccccccccccccccccccccccc
+cccccccccCcCcCccccccccc
 cxxxxxxxxxxxxxxxxxxxxxc
 cxxxxxxxxxxxxxxPxxd3xxc
 cxxxxxxxxxxxxxxPddddxxc
@@ -866,18 +866,18 @@ cxxxxxxx.......xxPPxxxc
 cxxxxxx..ww.ww..xxPPxxc
 cxxxxx..www.www..xxxPxc
 cxxxx..wwww.wwww..xxxxc
-cxxxx.wwwww.wwwww.xxxxc
+Cxxxx.wwwww.wwwww.xxxxC
 cxxxx.wwww'''wwww.xxxxc
-cxxxx.wSww'_'wwSw.xxxxc
+Cxxxx.wSww'_'wwSw.xxxxC
 cxxxx.wwww'''wwww.xxxxc
-cxxxx.wwwwwwwwwww.xxxxc
+Cxxxx.wwwwwwwwwww.xxxxC
 cxxxx..wwwwwwwww..xxxxc
 cxxxxx..wwwwwww..xxxxxc
 cxxxxxx..wwwww..xxxxxxc
 cxxxxxxx.......xxxxxxxc
+cxxxxxxxxxC.Cxxxxxxxxxc
 cxxxxxxxxxc.cxxxxxxxxxc
-cxxxxxxxxxc.cxxxxxxxxxc
-ccccccccccc@ccccccccccc
+ccccccccCcC@CcCcccccccc
 ENDMAP
 
 NAME:   fedhas_ov_isle_minmay
@@ -1986,7 +1986,7 @@ ENDMAP
 NAME:    okawaru_metal_pillars_1_2
 TAGS:    temple_overflow_1 temple_overflow_okawaru uniq_altar_okawaru
 TAGS:    transparent decor
-DEPTH:   D, Orc
+DEPTH:   D:3-, Orc
 WEIGHT:  7
 KFEAT:   _ = altar_okawaru
 SHUFFLE: v'
@@ -2003,7 +2003,7 @@ ENDMAP
 NAME:   okawaru_metal_pillars_3
 TAGS:   temple_overflow_1 temple_overflow_okawaru uniq_altar_okawaru
 TAGS:   transparent decor vaults_empty
-DEPTH:  D, Vaults, Orc
+DEPTH:  D:3-, Vaults, Orc
 WEIGHT: 3
 KFEAT:  _ = altar_okawaru
 : interest_check(_G)
@@ -2059,7 +2059,7 @@ ENDMAP
 NAME:   okawaru_ov_weapons_minmay
 TAGS:   temple_overflow_1 temple_overflow_okawaru uniq_altar_okawaru
 TAGS:   transparent decor vaults_empty
-DEPTH:  D:3-, Vaults, !Vaults:$
+DEPTH:  D:3-, Snake, Vaults, !Vaults:$
 WEIGHT: 3 (Vaults), 10
 ITEM:   hand axe, falchion, mace, spear
 KFEAT: _ = altar_okawaru
@@ -2106,8 +2106,8 @@ ENDMAP
 NAME:   okawaru_gym_becter
 TAGS:   uniq_altar_okawaru temple_overflow_1 temple_overflow_okawaru
 TAGS:   transparent decor vaults_empty
-DEPTH:  D:3-, Vaults, !Vaults:$
-WEIGHT: 3 (Vaults), 10
+DEPTH:  D:3-, Snake, Vaults, !Vaults:$
+WEIGHT: 3 (Snake, Vaults), 10
 KFEAT:  _ = altar_okawaru
 : interest_check(_G)
 MAP
@@ -2171,7 +2171,7 @@ TAGS:   transparent decor vaults_empty vaults_orient_s
 DEPTH:  D:3-, Vaults
 WEIGHT: 1 (Vaults), 5
 KFEAT:  _ = altar_okawaru
-KITEM:  ' = any weapon plus:0 ego:spectral ident:all no_pickup
+KITEM:  ' = any weapon plus:0 ego:spectral pre_id no_pickup
 : if you.in_branch("Vaults") then
 SUBST:  @ = .
 : end
@@ -2317,7 +2317,7 @@ ENDMAP
 NAME:    nicolae_qazlal_style_of_elements
 TAGS:    temple_overflow_qazlal temple_overflow_1 uniq_altar_qazlal
 TAGS:    no_trap_gen no_item_gen no_monster_gen transparent decor
-SHUFFLE: faew
+SHUFFLE: Cf / Da / Ee / Fw
 KPROP:   faew = no_tele_into
 KMASK:   faew = opaque
 KMONS:   f = fire elemental
@@ -2327,6 +2327,7 @@ KMONS:   w = water elemental
 KFEAT:   _ = altar_qazlal
 KFEAT:   f = lava
 KFEAT:   w = deep_water
+KFEAT:   CDEF = c
 MARKER:  a = lua:fog_machine { cloud_type = "thin mist", \
                                pow_min = 100, pow_max = 100, delay = 1, \
                                size = 1, walk_dist = 0, start_clouds = 1 }
@@ -2334,16 +2335,18 @@ MARKER:  e = lua:fog_machine { cloud_type = "sparse dust", \
                                pow_min = 100, pow_max = 100, delay = 1, \
                                size = 1, walk_dist = 0, start_clouds = 1 }
 : interest_check(_G)
+TILE:   C = wall_stone_scorched
+TILE:   DEF = wall_stone_gray
 MAP
-ccc.@.ccc
-cfn...nac
-cnn...nnc
+CCC.@.DDD
+Cfn...naD
+Cnn...nnD
 .........
 ...._....
 .........
-cnn...nnc
-cwn...nec
-ccc...ccc
+Fnn...nnE
+Fwn...neE
+FFF...EEE
 ENDMAP
 
 # general_overflow_altar cannot contain the power of Qazlal
@@ -2684,7 +2687,7 @@ TAGS:   temple_overflow_sif_muna temple_overflow_1 no_trap_gen
 TAGS:   uniq_altar_sif_muna vaults_orient_n vaults_orient_e vaults_orient_s
 DEPTH:  D:3-, Vaults, Depths
 WEIGHT: 3 (Vaults), 10
-KITEM:  a = any randbook ident:all owner:Sif_Muna slevels:1
+KITEM:  a = any randbook pre_id owner:Sif_Muna slevels:1
 KFEAT:  _ = altar_sif_muna
 COLOUR: a.mc+ = blue
 FTILE:  a._mc+ = floor_marble
@@ -2847,21 +2850,21 @@ TAGS:   transparent
 DEPTH:  D:3-12
 WEIGHT: 4
 : if you.absdepth() > 5 then
-KMONS:  1 = ogre god:trog ; giant club ego:antimagic ident:type | w:3 giant club / \
-        ogre god:trog ; giant spiked club ego:antimagic ident:type | w:5 giant spiked club / \
-        orc warrior god:trog ; halberd ego:antimagic ident:type | war axe ego:antimagic ident:type | \
-        flail ego:antimagic ident:type | great mace ego:antimagic ident:type | any weapon / \
-        kobold brigand god:trog ; short sword ego:antimagic ident:type | dagger ego:antimagic ident:type | \
-        rapier ego:antimagic ident:type | rapier
+KMONS:  1 = ogre god:trog ; giant club ego:antimagic pre_id | w:3 giant club / \
+        ogre god:trog ; giant spiked club ego:antimagic pre_id | w:5 giant spiked club / \
+        orc warrior god:trog ; halberd ego:antimagic pre_id | war axe ego:antimagic pre_id | \
+        flail ego:antimagic pre_id | great mace ego:antimagic pre_id | any weapon / \
+        kobold brigand god:trog ; short sword ego:antimagic pre_id | dagger ego:antimagic pre_id | \
+        rapier ego:antimagic pre_id | rapier
 SUBST:  2 = 1
 : else
-KMONS:  1 = orc god:trog ; spear ego:antimagic ident:type | hand axe ego:antimagic ident:type | \
-        war axe ego:antimagic ident:type | any weapon / \
-        kobold god:trog ; short sword ego:antimagic ident:type | hand axe ego:antimagic ident:type | \
-        club ego:antimagic ident:type | whip ego:antimagic ident:type | any weapon / \
-        goblin god:trog ; dagger ego:antimagic ident:type | short sword ego:antimagic ident:type / \
-        gnoll god:trog ; spear ego:antimagic ident:type | trident ego:antimagic ident:type | \
-        halberd ego:antimagic ident:type | whip ego:antimagic ident:type | halberd | any weapon
+KMONS:  1 = orc god:trog ; spear ego:antimagic pre_id | hand axe ego:antimagic pre_id | \
+        war axe ego:antimagic pre_id | any weapon / \
+        kobold god:trog ; short sword ego:antimagic pre_id | hand axe ego:antimagic pre_id | \
+        club ego:antimagic pre_id | whip ego:antimagic pre_id | any weapon / \
+        goblin god:trog ; dagger ego:antimagic pre_id | short sword ego:antimagic pre_id / \
+        gnoll god:trog ; spear ego:antimagic pre_id | trident ego:antimagic pre_id | \
+        halberd ego:antimagic pre_id | whip ego:antimagic pre_id | halberd | any weapon
 KMONS:  2 = brain worm
 SUBST:  2 = 112
 : end
@@ -3228,6 +3231,7 @@ TAGS:    decor uniq_altar_vehumet
 SHUFFLE: DEFHJKLM / FHDELMJK, DE, JK
 SUBST:   DJ = N, EKFHLM = ., N : cb
 KFEAT:   _ = altar_vehumet
+TILE:    c = wall_stone_scorched
 : interest_check(_G)
 MAP
      xxxxx
@@ -3426,8 +3430,8 @@ MONS:   orc ; club ego:chaos | dagger ego:chaos | spear ego:chaos
 MONS:   gnoll ; club ego:chaos | dagger ego:chaos | spear ego:chaos
 MONS:   boggart ; flail ego:chaos | rapier ego:chaos | trident ego:chaos
 MONS:   tengu warrior ; flail ego:chaos | rapier ego:chaos | trident ego:chaos
-MONS:   occultist ; dire flail ego:chaos | scimitar ego:chaos | glaive ego:chaos
-MONS:   rakshasa ; dire flail ego:chaos | scimitar ego:chaos | glaive ego:chaos
+MONS:   occultist ; dire flail ego:chaos | scimitar ego:chaos | partisan ego:chaos
+MONS:   rakshasa ; dire flail ego:chaos | scimitar ego:chaos | partisan ego:chaos
 ITEM:   gold q:1 no_pickup
 KFEAT:  _ = altar_xom
 :  if you.depth() == dgn.br_depth(you.branch()) then
@@ -3663,8 +3667,8 @@ TAGS:    transparent temple_overflow_1 temple_overflow_xom
 TAGS:    uniq_altar_xom extra decor
 ITEM:    stone q:1 no_pickup
 KMONS:   ! = pile of debris
-KITEM:   ! = plate armour randart plus:-12 ident:all / \
-             kite shield randart plus:-12 ident:all / mundane club w:9980
+KITEM:   ! = plate armour randart plus:-12 pre_id / \
+             kite shield randart plus:-12 pre_id / mundane club w:9980
 KITEM:   ? = mundane club / gold q:1 w:9970, large rock q:1
 KFEAT:   _ = altar_xom
 SHUFFLE: ?" / ?" / !!
@@ -3809,16 +3813,19 @@ ENDMAP
 NAME: nicolae_yredelemnul_corpse_copse
 TAGS: temple_overflow_yredelemnul temple_overflow_1 no_monster_gen
 TAGS: transparent patrolling uniq_altar_yredelemnul
+MONS:   zombie, alderking
+KFEAT:  _ = altar_yredelemnul
+KFEAT:  T = petrified_tree
 # Statistically, the probability that none of the edge glyphs will end up as .
 # and the level builder won't be able to connect the vault is extremely small.
 # ...but not zero. Thus:
-MONS:   zombie
-NSUBST: D = . / E
-NSUBST: t = . / ttE
-SUBST:  E = tt.
-: nsubst( ". = " .. you.absdepth() .. "=1 / 1=1. / ." )
-KFEAT:  _ = altar_yredelemnul
-COLOUR: t = lightgrey w:5 / brown
+NSUBST: D = 1:. / *:E, t = 1:. / * = TTE
+SUBST:  E = t:4 T:2 .:3
+: nsubst( ". = " .. you.absdepth() .. " = 1 / 1 = 1. / ." )
+: if you.in_branch("Depths") then
+NSUBST: 1 = 1:2 / *:1
+: end
+COLOUR: t = brown
 TILE:   t = dngn_tree_dead
 : set_feature_name("tree", "dead tree")
 MAP
@@ -4303,7 +4310,7 @@ ENDMAP
 NAME:   grunt_temple_overflow_champion_of_chaos
 TAGS:   temple_overflow_2 temple_overflow_makhleb temple_overflow_xom
 TAGS:   no_monster_gen transparent
-MONS:   crimson imp ; dagger ego:chaos ident:type
+MONS:   crimson imp ; dagger ego:chaos pre_id
 KFEAT:  A = altar_makhleb
 KFEAT:  B = altar_xom
 : vault_granite_statue_setup(_G, "G", "scintillating statue")
@@ -4858,7 +4865,7 @@ KITEM:   2 = randbook owner:Sif_Muna numspells:2 slevels:2
 KMONS:   1 = troll
 KMONS:   2 = ynoxinul
 {{
-local weapons = {["trident"] = 1, ["war axe"] = 1, ["morningstar"] = 1,
+local weapons = {["partisan"] = 1, ["war axe"] = 1, ["morningstar"] = 1,
                  ["scimitar"] = 1}
 kitem("1 = " .. dgn.random_item_def(weapons, egos, "plus:0"))
 }}
@@ -4932,7 +4939,7 @@ NSUBST:  . = 1:i / *:.
 KPROP:   1 = no_tele_into
 MONS:    generate_awake chaos spawn
 KMONS:   g = pile of debris
-KITEM:   i = any damaged weapon ego:chaos ident:all
+KITEM:   i = any damaged weapon ego:chaos pre_id
 COLOUR:  b = lightred
 TILE:    b = dngn_crystal_lightred
 KMASK:   1 = opaque

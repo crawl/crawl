@@ -639,7 +639,7 @@ static spret _phantom_mirror(dist *target)
     if (!target)
         target = &target_local;
 
-    targeter_smite tgt(&you, LOS_RADIUS, 0, 0);
+    targeter_smite tgt(&you, LOS_RADIUS);
 
     direction_chooser_args args;
     args.restricts = DIR_TARGET;
@@ -706,8 +706,7 @@ static spret _phantom_mirror(dist *target)
 static bool _valid_tremorstone_target(const monster &m)
 {
     return !m.is_firewood()
-        && !god_protects(m)
-        && !always_shoot_through_monster(&you, m);
+        && !never_harm_monster(&you, m);
 }
 
 /**

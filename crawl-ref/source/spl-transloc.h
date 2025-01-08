@@ -13,7 +13,7 @@ spret cast_disjunction(int pow, bool fail);
 void disjunction_spell();
 
 spret cast_blink(int pow, bool fail = false);
-void uncontrolled_blink(bool override_stasis = false);
+void uncontrolled_blink(bool override_stasis = false, int max_dist = LOS_RADIUS);
 spret controlled_blink(bool safe_cancel = true, dist *target = nullptr);
 void wizard_blink();
 
@@ -66,11 +66,12 @@ spret word_of_chaos(int pow, bool fail);
 spret blinkbolt(int power, bolt &beam, bool fail);
 
 dice_def piledriver_collision_damage(int pow, int dist, bool random);
-vector<coord_def> piledriver_beam_paths(const vector<coord_def> &targets,
-                                        bool actual);
-vector<coord_def> possible_piledriver_targets(bool actual);
-spret cast_piledriver(int pow, bool fail);
+bool piledriver_target_exists();
+int piledriver_path_distance(const coord_def& target, bool actual);
+spret cast_piledriver(const coord_def& target, int pow, bool fail);
 
 dice_def gavotte_impact_damage(int pow, int dist, bool random);
 spret cast_gavotte(int pow, const coord_def dir, bool fail);
 vector<monster*> gavotte_affected_monsters(const coord_def dir);
+
+spret cast_teleport_other(const coord_def& target, int power, bool fail);

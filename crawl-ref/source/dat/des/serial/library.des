@@ -50,7 +50,7 @@ function init_serial_library_setup(e)
 
   if you.in_branch('Crypt') then
      e.subst('T = V:75 c:25 t:5 G:5 Y:5 B:1')
-     e.colour('t = darkgrey / brown')
+     e.colour('t = brown')
      e.tile('t = dngn_tree_dead')
      e.set_feature_name('tree', 'dead tree')
   elseif you.in_branch('Vaults') then

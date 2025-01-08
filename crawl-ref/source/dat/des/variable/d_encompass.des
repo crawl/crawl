@@ -366,12 +366,12 @@ KMONS:    5 = deep elf blademaster ; mundane crystal plate armour . \
                                      rapier ego:flaming . rapier ego:freezing
 KMONS:    6 = deep elf master archer ; ice dragon scales . longbow ego:flaming / \
               deep elf master archer ; fire dragon scales . longbow ego:freezing
-KMONS:    7 = Vv w:2 / ancient lich / dread lich w:6, \
-              ancient lich / dread lich w:6
+KMONS:    7 = Vv w:2 / ancient lich / alderking w:6, \
+              ancient lich / alderking w:6
 KMONS:    8 = Frederick / titan / draconian annihilator w:5, \
               titan / draconian annihilator w:5
 KMONS:    A = golden dragon w:19 / golden dragon perm_ench:shapeshifter w:1 / \
-              quicksilver dragon w:14 / \
+              wyrmhole w:5 / quicksilver dragon w:14 / \
               quicksilver dragon perm_ench:shapeshifter w:1
 KMONS:    B = glowing shapeshifter hd:16 / glowing shapeshifter hd:15
 KMONS:    C = Josephina band w:5 / walking frostbound tome, \

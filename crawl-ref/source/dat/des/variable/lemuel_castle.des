@@ -85,7 +85,7 @@ function castle_lemuel_setup(e)
            e.kmons("3 = draconian scorcher / draconian knight"
                    .. " / draconian shifter / draconian stormcaller")
            e.kmons("4 = tentacled monstrosity / quicksilver dragon"
-                   .. " / golden dragon")
+                   .. " / golden dragon / wyrmhole w:5")
            e.kmons("5 = red draconian / green draconian / white draconian"
                    .. " / black draconian / purple draconian")
            e.kmons("6 = fire dragon / ice dragon / death drake / storm dragon"
@@ -170,7 +170,7 @@ NAME:   lemuel_castle_interior_carwin_2
 TAGS:   lemuel_castle_interior unrand
 : castle_lemuel_setup(_G)
 SUBST:  $ = $:5 .
-ITEM:   nothing w:20 / potion of ambrosia ident:type
+ITEM:   nothing w:20 / potion of ambrosia pre_id
 MAP
 +c....+.......1.............*|c+
 ...1..cccccccccccccccccccccccDc.

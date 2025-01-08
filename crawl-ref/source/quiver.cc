@@ -23,6 +23,7 @@
 #include "items.h"
 #include "macro.h"
 #include "message.h"
+#include "mon-death.h"
 #include "movement.h"
 #include "options.h"
 #include "player.h"
@@ -31,6 +32,7 @@
 #include "religion.h"
 #include "sound.h"
 #include "spl-damage.h"
+#include "spl-monench.h"
 #include "spl-transloc.h"
 #include "stringutil.h"
 #include "tags.h"
@@ -249,7 +251,7 @@ namespace quiver
         const bool no_other_items = *get() == *next();
         string key_hint = no_other_items
                             ? ", <w>%</w> - select action"
-                            : ", <w>%</w> - select action, <w>%</w>/<w>%</w> - cycle";
+                            : ", <w>%</w> - select action, <w>%</w> or <w>%</w> - cycle";
         insert_commands(key_hint,
                         { CMD_TARGET_SELECT_ACTION,
                           CMD_TARGET_CYCLE_QUIVER_BACKWARD,
@@ -682,7 +684,7 @@ namespace quiver
                 bool success = true;
                 monster *midmons;
                 if ((midmons = monster_at(middle))
-                    && !god_protects(&you, *midmons, true)
+                    && !never_harm_monster(&you, *midmons)
                     && (midmons->type != MONS_SPECTRAL_WEAPON
                         || !midmons->wont_attack())
                     && coinflip())
@@ -729,6 +731,14 @@ namespace quiver
             }
             else
             {
+                if (is_valid_tempering_target(*mons, you) && !you.confused())
+                {
+                    mprf("You deconstruct %s.", mons->name(DESC_THE).c_str());
+                    monster_die(*mons, KILL_RESET, NON_MONSTER);
+                    you.turn_is_over = true;
+                    return;
+                }
+
                 // something to attack, let's do it:
                 you.turn_is_over = true;
                 if (!fight_melee(&you, mons) && targ_mid)
@@ -1040,44 +1050,6 @@ namespace quiver
         }
     }
 
-    // for spells that are targeted, but should skip the lua target selection
-    // pass for one reason or another
-    static bool _spell_no_autofight_targeting(spell_type s)
-    {
-        // XX perhaps all spells should just use direction chooser target
-        // selection? This is how automagic.lua handled it.
-        auto h = find_spell_targeter(s, 100, LOS_RADIUS); // dummy values
-        // use smarter direction chooser target selection for spells that have
-        // explosition or cloud patterning, like fireball. This allows them
-        // to autoselect targets at the edge of their range, which autofire
-        // wouldn't handle.
-        if (!Options.simple_targeting && h && h->can_affect_outside_range())
-            return true;
-
-        switch (s)
-        {
-        case SPELL_SEARING_RAY:          // for autofight to work
-        case SPELL_FLAME_WAVE:           // these need to
-        case SPELL_MAXWELLS_COUPLING:    // skip autofight targeting
-        case SPELL_LRD: // skip initial autotarget for LRD so that it doesn't
-                        // fix on a close monster that can't be targeted. I'm
-                        // not quite sure what the right thing to do is?
-                        // An alternative would be to just error if the closest
-                        // monster can't be autotargeted, or pop out to manual
-                        // targeting for that case; the behavior involved in
-                        // listing it here just finds the closest targetable
-                        // monster.
-        case SPELL_BORGNJORS_VILE_CLUTCH: // BVC shouldn't retarget monsters
-                                          // that are clutched, and spell
-                                          // targeting handles this case.
-        case SPELL_APPORTATION: // Apport doesn't target monsters at all
-        case SPELL_MAGNAVOLT:
-            return true;
-        default:
-            return _spell_needs_manual_targeting(s);
-        }
-    }
-
     bool is_autofight_combat_spell(spell_type spell)
     {
         return spell_is_direct_attack(spell)
@@ -1145,8 +1117,7 @@ namespace quiver
 
         bool use_autofight_targeting() const override
         {
-            return is_dynamic_targeted()
-                                && !_spell_no_autofight_targeting(spell);
+            return is_dynamic_targeted();
         }
 
         bool allow_autofight() const override
@@ -1196,13 +1167,6 @@ namespace quiver
                 target.find_target = false; // default, but here for clarity's sake
                 target.interactive = true;
             }
-            else if (_spell_no_autofight_targeting(spell))
-            {
-                // use direction chooser find_target behavior unless interactive
-                // is set before the call:
-                target.target = coord_def(-1,-1);
-                target.find_target = true;
-            }
             else if (!is_dynamic_targeted())
             {
                 // this is a somewhat hacky way to allow non-interactive mode;
@@ -1211,6 +1175,9 @@ namespace quiver
                 // before the call, will still pop up an interactive targeter.
                 target.target = you.pos();
             }
+            // Use direction_chooser smart targeting by default.
+            else
+                target.find_target = true;
 
             if (autofight_check())
                 return;
@@ -1766,8 +1733,6 @@ namespace quiver
                 return;
             }
 
-            // to apply smart targeting behavior for iceblast; should have no
-            // impact on other wands
             target.find_target = true;
             if (autofight_check())
                 return;

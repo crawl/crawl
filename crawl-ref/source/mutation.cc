@@ -359,6 +359,8 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
                 return mutation_activity_type::FULL;
             if (mut == MUT_STEAM_RESISTANCE && drag == MONS_STEAM_DRAGON)
                 return mutation_activity_type::FULL;
+            if (mut == MUT_IRON_FUSED_SCALES && drag == MONS_IRON_DRAGON)
+                return mutation_activity_type::FULL;
         }
         // Vampire bats keep their fangs.
         if (you.form == transformation::bat
@@ -2577,6 +2579,9 @@ static bool _delete_single_mutation_level(mutation_type mutat,
 
     case MUT_BIG_WINGS:
         land_player();
+#ifdef USE_TILE
+        init_player_doll();
+#endif
         break;
 
     case MUT_HORNS:

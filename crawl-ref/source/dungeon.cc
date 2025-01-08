@@ -34,6 +34,7 @@
 #include "dgn-overview.h"
 #include "dgn-shoals.h"
 #include "end.h"
+#include "english.h"
 #include "fight.h"
 #include "files.h"
 #include "flood-find.h"
@@ -3594,7 +3595,7 @@ static void _place_traps()
         env.grid(ts.pos) = ts.feature();
         ts.prepare_ammo();
         env.trap[ts.pos] = ts;
-        dprf("placed a %s trap", trap_name(type).c_str());
+        dprf("placed %s trap", article_a(trap_name(type)).c_str());
     }
 
     if (player_in_branch(BRANCH_SPIDER))
@@ -4844,7 +4845,7 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
         item_set_appearance(item);
     }
     if (props.exists(IDENT_KEY))
-        item.flags |= props[IDENT_KEY].get_int();
+        item.flags |= ISFLAG_IDENTIFIED;
     if (props.exists(UNOBTAINABLE_KEY))
     {
         item.flags |= ISFLAG_UNOBTAINABLE;
@@ -6199,7 +6200,7 @@ static void _stock_shop_item(int j, shop_type shop_type_,
 
     // Identify the item, unless we don't do that.
     if (shoptype_identifies_stock(shop_type_))
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
+        item.flags |= ISFLAG_IDENTIFIED;
 
     // Now move it into the shop!
     dec_mitm_item_quantity(item_index, item.quantity, false);
@@ -6431,7 +6432,7 @@ static void _place_specific_trap(const coord_def& where, trap_spec* spec,
     env.grid(where) = trap_feature(spec_type);
     t.prepare_ammo(charges);
     env.trap[where] = t;
-    dprf("placed a %s trap", trap_name(spec_type).c_str());
+    dprf("placed %s trap", article_a(trap_name(spec_type)).c_str());
 }
 
 /**

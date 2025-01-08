@@ -69,29 +69,6 @@
 #include "wiz-dgn.h"
 #include "wiz-mon.h"
 
-enum LOSSelect
-{
-    LS_ANY      = 0x00,
-
-    // Check only visible squares
-    LS_VISIBLE  = 0x01,
-
-    // Check only hidden squares
-    LS_HIDDEN   = 0x02,
-
-    LS_VISMASK  = 0x03,
-
-    // Flip from visible to hidden when going forward,
-    // or hidden to visible when going backwards.
-    LS_FLIPVH   = 0x20,
-
-    // Flip from hidden to visible when going forward,
-    // or visible to hidden when going backwards.
-    LS_FLIPHV   = 0x40,
-
-    LS_NONE     = 0xFFFF,
-};
-
 #ifdef WIZARD
 static void _wizard_make_friendly(monster* m);
 #endif
@@ -104,21 +81,8 @@ static bool _print_item_desc(const coord_def where);
 static bool _blocked_ray(const coord_def &where);
 static bool _want_target_monster(const monster *mon, targ_mode_type mode,
                                  targeter* hitfunc);
-static bool _find_monster(const coord_def& where, targ_mode_type mode,
-                          bool need_path, int range, targeter *hitfunc,
-                          bool find_preferred = false);
-static bool _find_monster_expl(const coord_def& where, targ_mode_type mode,
-                               bool need_path, int range, targeter *hitfunc,
-                               aff_type mon_aff, aff_type allowed_self_aff);
-static bool _find_object(const coord_def& where, bool need_path, int range,
-                         targeter *hitfunc);
-static bool _find_autopickup_object(const coord_def& where, bool need_path,
-                                    int range, targeter *hitfunc);
 
 typedef function<bool (const coord_def& where)> target_checker;
-static bool _find_square_wrapper(coord_def &mfp, int direction,
-                                 target_checker find_targ, targeter *hitfunc,
-                                 LOSSelect los = LS_ANY);
 
 static int  _targeting_cmd_to_compass(command_type command);
 static void _describe_oos_square(const coord_def& where);
@@ -265,39 +229,11 @@ monster* direction_chooser::targeted_monster() const
 // Return your target, if it still exists and is visible to you.
 static monster* _get_current_target()
 {
-    if (invalid_monster_index(you.prev_targ))
-        return nullptr;
-
-    monster* mon = &env.mons[you.prev_targ];
-    ASSERT(mon);
-    if (mon->alive() && you.can_see(*mon))
+    monster* mon = monster_by_mid(you.prev_targ);
+    if (mon && mon->alive() && you.can_see(*mon))
         return mon;
     else
         return nullptr;
-}
-
-string direction_chooser::build_targeting_hint_string() const
-{
-    string hint_string;
-
-    // Hint for 'p' - previous target, and for 'f' - current cell, if
-    // applicable.
-    // TODO: currently 'f' works for non-actor targets (features, apport) but
-    // shows nothing here
-    const actor*   f_target = targeted_actor();
-    const monster* p_target = _get_current_target();
-
-    if (f_target && f_target == p_target)
-        hint_string = ", f/p - " + f_target->name(DESC_PLAIN);
-    else
-    {
-        if (f_target)
-            hint_string += ", f - " + f_target->name(DESC_PLAIN);
-        if (p_target)
-            hint_string += ", p - " + p_target->name(DESC_PLAIN);
-    }
-
-    return hint_string;
 }
 
 void direction_chooser::print_top_prompt() const
@@ -356,8 +292,6 @@ void direction_chooser::print_key_hints() const
                 prompt += ", ";
             prompt += direction_hint;
         }
-        if (behaviour->targeted())
-            prompt += build_targeting_hint_string();
     }
 
     // Display the prompt.
@@ -446,14 +380,10 @@ static bool _mon_exposed(const monster* mon)
     return _mon_exposed_in_water(mon) || _mon_exposed_in_cloud(mon);
 }
 
-static bool _is_target_in_range(const coord_def& where, int range,
-                                targeter *hitfunc, bool find_preferred = false)
+static bool _is_target_in_range(const coord_def& where, int range, targeter *hitfunc)
 {
     if (hitfunc)
-    {
-        return find_preferred ? hitfunc->preferred_aim(where)
-                              : hitfunc->valid_aim(where);
-    }
+        return hitfunc->valid_aim(where);
     // range == -1 means that range doesn't matter.
     return range == -1 || grid_distance(you.pos(), where) <= range;
 }
@@ -480,6 +410,7 @@ direction_chooser::direction_chooser(dist& moves_,
     range(args.range),
     just_looking(args.just_looking),
     prefer_farthest(args.prefer_farthest),
+    try_multizap(args.try_multizap),
     allow_shift_dir(args.allow_shift_dir),
     self(args.self),
     target_prefix(args.target_prefix),
@@ -1064,7 +995,12 @@ bool direction_chooser::move_is_ok() const
                               == confirm_prompt_type::cancel)
                 {
                     if (moves.interactive)
-                        mprf(MSGCH_EXAMINE_FILTER, "That would be overly suicidal.");
+                    {
+                        if (harmful_to_player)
+                            mprf(MSGCH_EXAMINE_FILTER, "That would be overly suicidal.");
+                        else
+                            mprf(MSGCH_EXAMINE_FILTER, "That would be pointless.");
+                    }
                     return false;
                 }
                 else if (self != confirm_prompt_type::none
@@ -1104,172 +1040,269 @@ static bool _blocked_ray(const coord_def &where)
     return !exists_ray(you.pos(), where, opc_solid_see);
 }
 
-// Try to find an enemy monster to target
-bool direction_chooser::find_default_monster_target(coord_def& result) const
+// Attempts to find a spot to aim our current action so that it affects the
+// target monster, while remaining in range and minimizing collatoral damage to
+// the player (and any friendly monsters, as a secondary consideration).
+//
+// Returns the closest position to the monster's own that meets all desired
+// criteria (ie: in range, affects the monster, doesn't harm the player or any
+// allies). If that is not possible, returns the 'best' position found,
+// priotizing (in order): can affect the monster, doesn't harm the player, and
+// finally doesn't harm allies.
+coord_def direction_chooser::find_acceptable_aim(const monster* focus)
 {
-    // First try to pick our previous monster target.
-    const monster* mons_target = _get_current_target();
-    if (mons_target != nullptr
-        && _want_target_monster(mons_target, mode, hitfunc)
-        && in_range(mons_target->pos())
-        && (!hitfunc || hitfunc->preferred_aim(mons_target->pos()))
-        && !prefer_farthest)
-    {
-        result = mons_target->pos();
-        return true;
-    }
-    // If the previous targeted position is at all useful, use it.
-    if (!Options.simple_targeting && hitfunc && !prefer_farthest
-        && _find_monster_expl(you.prev_grd_targ, mode, needs_path,
-                              range, hitfunc, AFF_YES, AFF_MULTIPLE))
-    {
-        result = you.prev_grd_targ;
-        return true;
-    }
-    // The previous target is no good. Try to find one from scratch.
-    bool success = false;
+    if (!hitfunc)
+        return coord_def();
 
-    // Start our search from the player's position most of the time, unless we're
-    // looking for the farthest target, in which case start from max LoS away
-    // from the player, since we will be spiraling inward.
-    // (_find_square already defaulted to starting at the player's left)
-    result = prefer_farthest ? clamp_in_bounds(you.pos() - coord_def(LOS_RADIUS, 0))
-                             : you.pos();
+    const aff_type desired_aff = try_multizap ? AFF_MULTIPLE : AFF_YES;
 
-    if (Options.simple_targeting)
+    coord_def best_pos;
+    aff_type best_player_aff = harmful_to_player ? AFF_NO : AFF_YES;
+    aff_type best_target_aff = AFF_NO;
+    aff_type best_friend_aff = valid_friends.empty() ? AFF_NO : AFF_YES;
+    for (radius_iterator ri(focus->pos(), LOS_DEFAULT); ri; ++ri)
     {
-        success = _find_square_wrapper(result, prefer_farthest ? -1 : 1,
-                                       bind(_find_monster, placeholders::_1,
-                                            mode, needs_path, range, hitfunc,
-                                            false),
-                                       hitfunc);
+        if (!you.see_cell_no_trans(*ri)
+            && grid_distance(you.pos(), *ri) > range)
+        {
+            continue;
+        }
+
+        if (!hitfunc->valid_aim(*ri))
+            continue;
+
+        hitfunc->set_aim(*ri);
+        // Has to at least hit the target in question to consider.
+        aff_type target_aff = hitfunc->is_affected(focus->pos());
+        if (target_aff == AFF_NO)
+            continue;
+
+        // If this affects the player worse than a previously found position,
+        // ignore it.
+        aff_type player_aff = AFF_NO;
+        if (harmful_to_player)
+        {
+            player_aff = hitfunc->is_affected(you.pos());
+            if (player_aff > best_player_aff)
+                continue;
+        }
+
+        // For all friends that could be affected by this spell, determine if
+        // any will be hit from this position.
+        aff_type friend_aff = AFF_NO;
+        for (monster* mon : valid_friends)
+        {
+            aff_type ret = hitfunc->is_affected(mon->pos());
+            if (ret > friend_aff)
+                friend_aff = ret;
+        }
+
+        // If this position is ideal (ie: hits foe and hits no friendlies),
+        // accept it immediately. Otherwise, save it if it's the best we've
+        // found and keep looking.
+        if (target_aff >= desired_aff && player_aff == AFF_NO && friend_aff == AFF_NO)
+            return *ri;
+
+        // Consider this position improved by *first* considering the player's
+        // safety, then the target's certainty to hit, and finally how little
+        // collatoral damage is done.
+        if (player_aff < best_player_aff
+            || target_aff > best_target_aff && player_aff == best_player_aff
+            || target_aff == best_target_aff && player_aff == best_player_aff
+               && friend_aff < best_friend_aff)
+        {
+            best_pos = *ri;
+            best_player_aff = player_aff;
+            best_target_aff = target_aff;
+            best_friend_aff = friend_aff;
+        }
     }
+
+    // Return the best positon we found, assuming any of them were any good.
+    // (Fall back on the target's own position, if we haven't, and it is at
+    // least possible to aim at it.)
+    if (!best_pos.origin())
+        return best_pos;
+    else if (!hitfunc || hitfunc->valid_aim(focus->pos()))
+        return focus->pos();
     else
-    {
-        // Search for a new default target, first looking for a 'preferred' target,
-        // if applicable, and then falling back to any valid target if none are preferred.
-        success = hitfunc && _find_square_wrapper(result, prefer_farthest ? -1 : 1,
-                                                  bind(_find_monster_expl,
-                                                       placeholders::_1, mode,
-                                                       needs_path, range,
-                                                       hitfunc,
-                                                       // First try to bizap
-                                                       AFF_MULTIPLE, AFF_YES),
-                                                  hitfunc)
-                  || _find_square_wrapper(result, prefer_farthest ? -1 : 1,
-                                          bind(_find_monster,
-                                               placeholders::_1, mode,
-                                               needs_path, range, hitfunc,
-                                               true),
-                                          hitfunc)
-                  || _find_square_wrapper(result, prefer_farthest ? -1 : 1,
-                                          bind(_find_monster,
-                                               placeholders::_1, mode,
-                                               needs_path, range, hitfunc,
-                                               false),
-                                          hitfunc);
-    }
-
-    // This is used for three things:
-    // * For all LRD targeting
-    // * To aim explosions so they try to miss you
-    // * To hit monsters in LOS that are outside of normal range, but
-    //   inside explosion/cloud range
-    if (!Options.simple_targeting && hitfunc
-        && hitfunc->can_affect_outside_range()
-        && (!hitfunc->set_aim(result)
-            || hitfunc->is_affected(result) < AFF_YES
-            || hitfunc->is_affected(you.pos()) > AFF_NO))
-    {
-        coord_def old_result;
-        if (success)
-            old_result = result;
-        for (aff_type mon_aff : { AFF_YES, AFF_MAYBE })
-        {
-            for (aff_type allowed_self_aff : { AFF_NO, AFF_MAYBE, AFF_YES })
-            {
-                success = _find_square_wrapper(result, 1,
-                                       bind(_find_monster_expl,
-                                            placeholders::_1, mode,
-                                            needs_path, range, hitfunc,
-                                            mon_aff, allowed_self_aff),
-                                       hitfunc);
-                if (success)
-                {
-                    // If we're hitting ourselves anyway, just target the
-                    // monster's position (this looks less strange).
-                    if (allowed_self_aff == AFF_YES && !old_result.origin())
-                        result = old_result;
-                    break;
-                }
-            }
-            if (success)
-                break;
-        }
-    }
-    if (success)
-        return true;
-
-    // If we couldn't, maybe it was because of line-of-fire issues.
-    // Check if that's happening, and inform the user (because it's
-    // pretty confusing.)
-    if (needs_path
-        && _find_square_wrapper(result, 1,
-                                bind(_find_monster,
-                                     placeholders::_1, mode, false,
-                                     range, hitfunc, false),
-                               hitfunc))
-    {
-        // Special colouring in tutorial or hints mode.
-        const bool need_hint = Hints.hints_events[HINT_TARGET_NO_FOE];
-        // TODO: this seems to trigger when there are no monsters in range
-        // of the hitfunc, regardless of what's in the way, and it shouldn't.
-        mprf(need_hint ? MSGCH_TUTORIAL : MSGCH_PROMPT,
-            "All monsters which could be auto-targeted are covered by "
-            "a wall or statue which interrupts your line of fire, even "
-            "though it doesn't interrupt your line of sight.");
-
-        if (need_hint)
-        {
-            mprf(MSGCH_TUTORIAL, "To return to the main mode, press <w>Escape</w>.");
-            Hints.hints_events[HINT_TARGET_NO_FOE] = false;
-        }
-    }
-    return false;
+        return coord_def();
 }
 
-// Find a good square to start targeting from.
-coord_def direction_chooser::find_default_target() const
+// Find all items on the ground nearby that the player should be able to
+// cycle through with +/- (for Apportation).
+void direction_chooser::fill_object_cycle_points()
 {
-    coord_def result = you.pos();
-    bool success = false;
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        if (grid_distance(*ri, you.pos()) > range)
+            continue;
 
-    if (targets_objects())
-    {
-        // First, try to find a particularly relevant item (autopickup).
-        // Barring that, just try anything.
-        success = _find_square_wrapper(result, 1,
-                                       bind(_find_autopickup_object,
-                                            placeholders::_1,
-                                            needs_path, range, hitfunc),
-                                       hitfunc,
-                                       LS_FLIPVH)
-               || _find_square_wrapper(result, 1,
-                                       bind(_find_object, placeholders::_1,
-                                            needs_path, range, hitfunc),
-                                       hitfunc,
-                                       LS_FLIPVH);
-    }
-    else if ((mode != TARG_ANY && mode != TARG_FRIEND)
-             || self == confirm_prompt_type::cancel)
-    {
-        success = find_default_monster_target(result);
+        if (needs_path && _blocked_ray(*ri))
+            continue;
+
+        const item_def * const item = top_item_at(*ri);
+        if (item && !item_is_stationary(*item))
+            cycle_pos.push_back(*ri);
     }
 
-    if (!success)
-        result = you.pos();
+    sort(cycle_pos.begin(), cycle_pos.end(), [](const coord_def& a, const coord_def& b)
+    {
+        return grid_distance(a, you.pos())
+               < grid_distance(b, you.pos());
+    });
+}
 
-    return result;
+// When we initialize target, first gather information on all visible targets
+// (and nearby friends), optionally refine these with find_acceptable_aim(), and
+// use them to determine what points +/- should cycle through (as well as the
+// information used to determine default target).
+void direction_chooser::calculate_target_info()
+{
+    // No cycle points make sense for Dig/Passage.
+    if (mode == TARG_NON_ACTOR)
+        return;
+
+    // Apportation uses a different model.
+    if (mode == TARG_MOVABLE_OBJECT)
+    {
+        fill_object_cycle_points();
+        return;
+    }
+
+    harmful_to_player = hitfunc ? hitfunc->harmful_to_player() : true;
+
+    for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
+    {
+        if (!you.can_see(**mi))
+            continue;
+
+        if (_want_target_monster(*mi, mode, hitfunc))
+        {
+            valid_targs.push_back(*mi);
+            if (hitfunc && hitfunc->valid_aim(mi->pos())
+                        && hitfunc->preferred_aim(mi->pos()))
+            {
+                preferred_targs.push_back(mi->pos());
+            }
+        }
+        if (mi->friendly() && (!hitfunc || hitfunc->affects_monster(monster_info(*mi))))
+            valid_friends.push_back(*mi);
+    }
+
+    const bool check_past_range = hitfunc && hitfunc->can_affect_outside_range();
+
+    // Find all foes that could be affected by what we're aiming. For those we
+    // can aim at directly, put their coordinates into the list. For those we
+    // can't, try to find a nearby square that can hit them, if one exists.
+    for (monster* foe : valid_targs)
+    {
+        const bool in_range = range > -1 ? grid_distance(foe->pos(), you.pos()) <= range : true;
+        const bool can_aim = (!hitfunc || hitfunc->valid_aim(foe->pos()))
+                              && (!needs_path || !_blocked_ray(foe->pos()));
+        if (in_range && can_aim)
+            cycle_pos.push_back(foe->pos());
+        else if (!Options.simple_targeting && hitfunc
+                 && ((in_range && !can_aim) || check_past_range))
+        {
+            coord_def pos = find_acceptable_aim(foe);
+            if (!pos.origin())
+                cycle_pos.push_back(pos);
+        }
+    }
+
+    // Sort found targets from near to far (from the player).
+    sort(cycle_pos.begin(), cycle_pos.end(), [](const coord_def& a, const coord_def& b)
+    {
+        return grid_distance(a, you.pos())
+               < grid_distance(b, you.pos());
+    });
+    sort(preferred_targs.begin(), preferred_targs.end(), [](const coord_def& a, const coord_def& b)
+    {
+        return grid_distance(a, you.pos())
+               < grid_distance(b, you.pos());
+    });
+
+    cycle_index = -1;
+}
+
+coord_def direction_chooser::find_default_target()
+{
+    if (cycle_pos.empty() || mode == TARG_NON_ACTOR || just_looking)
+        return you.pos();
+
+    if (mode == TARG_MOVABLE_OBJECT)
+        return find_default_object_target();
+
+    return find_default_monster_target();
+}
+
+coord_def direction_chooser::find_default_monster_target()
+{
+    // If there are preferred targets, pick one of those.
+    if (!preferred_targs.empty())
+    {
+        if (prefer_farthest)
+            return preferred_targs[preferred_targs.size() - 1];
+        else
+            return preferred_targs[0];
+    }
+
+    // If there was a previous target that is still in range, try to use that.
+    if (monster* targ = _get_current_target())
+    {
+        // Our previous target may not be valid for whatever we're aiming now,
+        // so verify it first.
+        if (_want_target_monster(targ, mode, hitfunc))
+        {
+            // If we shouldn't (or can't) refine our target, just return it.
+            if (Options.simple_targeting || !hitfunc)
+                return targ->pos();
+
+            // Possibly adjust our aim at this monster to avoid hitting
+            // ourselves (or to try to double-zap it).
+            coord_def pos = find_acceptable_aim(targ);
+            if (!pos.origin())
+                return pos;
+
+            // If we get here, this means that there was no 'good' shot and also
+            // it wasn't even possible to aim at the monster directly, so let's
+            // try a different target.
+        }
+    }
+
+    // Otherwise, try aiming at the nearest target position found for this action.
+    coord_def pos = cycle_pos[0];
+
+    // If we shouldn't refine our target (or can't, because we don't have a
+    // hitfunc), just return it as-is.
+    if (Options.simple_targeting || !hitfunc)
+        return pos;
+
+    // If we're targeting some monster directly, see if we need to adjust our
+    // aim to avoid hitting the player or nearby allies.
+    if (monster* mon = monster_at(pos))
+        pos = find_acceptable_aim(mon);
+
+    // If we can find literally nowhere else useful to aim, fall back to the player.
+    if (!pos.origin())
+        return pos;
+    else
+        return you.pos();
+}
+
+coord_def direction_chooser::find_default_object_target()
+{
+    // Prefer an item that is marked for autopicked over other objects, but
+    // fall back on the nearest object if there aren't any.
+    for (coord_def pos : cycle_pos)
+    {
+        const item_def * const item = top_item_at(pos);
+        if (item_needs_autopickup(*item))
+            return pos;
+    }
+
+    return cycle_pos[0];
 }
 
 const coord_def& direction_chooser::target() const
@@ -1413,65 +1446,159 @@ bool direction_chooser::in_range(const coord_def& p) const
     return range < 0 || grid_distance(p, you.pos()) <= range;
 }
 
-// Cycle to either the next (dir == 1) or previous (dir == -1) object
-// and update output accordingly if successful.
-void direction_chooser::object_cycle(int dir)
+// Cycle backwards or forwards through primary targets for our current actions.
+// (When just looking around, this is typically any monster. For specific
+// spells, it will be restricted to those in range which can be affected by the
+// spell in question.)
+void direction_chooser::cycle_target(int dir)
 {
-    if (_find_square_wrapper(objfind_pos, dir,
-                             bind(_find_object, placeholders::_1, needs_path,
-                                  range, hitfunc),
-                             hitfunc,
-                             dir > 0 ? LS_FLIPVH : LS_FLIPHV))
+    if (cycle_pos.empty())
+        return;
+
+    // Check to see if our current position matches a location on the cycle
+    // point list and set our index to that first, if so. (This avoids making
+    // no apparent movement after pressing a cycle button, if the player has
+    // manually moved the cursor over the next point on the cycle list before
+    // pressing it.)
+    for (size_t i = 0; i < cycle_pos.size(); ++i)
     {
-        set_target(objfind_pos);
+        if (target() == cycle_pos[i])
+        {
+            cycle_index = i;
+            break;
+        }
     }
-    else
-        flush_input_buffer(FLUSH_ON_FAILURE);
+
+    cycle_index += dir;
+    if (cycle_index >= (int)cycle_pos.size())
+        cycle_index = 0;
+    else if (cycle_index < 0)
+        cycle_index = cycle_pos.size() - 1;
+
+    set_target(cycle_pos[cycle_index]);
 }
 
-void direction_chooser::monster_cycle(int dir)
+
+void direction_chooser::cycle_feature(char feature_class)
 {
-    if (_find_square_wrapper(monsfind_pos, dir,
-                             bind(_find_monster, placeholders::_1, mode,
-                                  needs_path, range, hitfunc, false),
-                             hitfunc))
+    // If we haven't calculated eligable features of the corresponding type,
+    // do so now.
+    if (feature_cache_type != feature_class)
     {
-        set_target(monsfind_pos);
+        fill_feature_cycle_points(feature_class);
+        if (!feature_cycle_pos.empty())
+        {
+            cycle_index = 0;
+            set_target(feature_cycle_pos[0]);
+        }
+        return;
     }
-    else
-        flush_input_buffer(FLUSH_ON_FAILURE);
+
+    if (feature_cycle_pos.empty())
+        return;
+
+    // Otherwise, go to the next one on the list.
+    ++cycle_index;
+    if (cycle_index >= (int)feature_cycle_pos.size())
+        cycle_index = 0;
+
+    set_target(feature_cycle_pos[cycle_index]);
 }
 
-void direction_chooser::feature_cycle_forward(int feature)
+void direction_chooser::fill_feature_cycle_points(char feature_class)
 {
-    if (_find_square_wrapper(objfind_pos, 1,
-                             [feature](const coord_def& where)
-                             {
-                                 return map_bounds(where)
-                                        && (you.see_cell(where)
-                                            || env.map_knowledge(where).seen())
-                                        && is_feature(feature, where);
-                             },
-                             hitfunc,
-                             LS_FLIPVH))
+    // Find all seen features of a given class in the visible window.
+    // XXX: Unlike target cycling, this cares about the viewport and *not* the
+    //      player's line of sight. This behavior is preserved partially for
+    //      legacy reasons, but also because it works more smoothly for choosing
+    //      nearby stairs in console than X> does.
+    feature_cycle_pos.clear();
+    for (int iy = 0; iy < crawl_view.viewsz.y; ++iy)
     {
-        set_target(objfind_pos);
+        for (int ix = 0; ix < crawl_view.viewsz.x; ++ix)
+        {
+            const coord_def p = view2grid(coord_def(ix, iy));
+
+            if (map_bounds(p)
+                &&  (you.see_cell(p) || env.map_knowledge(p).seen())
+                && is_feature(feature_class, p))
+            {
+                feature_cycle_pos.push_back(p);
+            }
+        }
     }
-    else
-        flush_input_buffer(FLUSH_ON_FAILURE);
+
+    // Sort from near to far.
+    sort(feature_cycle_pos.begin(), feature_cycle_pos.end(), [](const coord_def& a, const coord_def& b)
+    {
+        return grid_distance(a, you.pos())
+               < grid_distance(b, you.pos());
+    });
+
+    feature_cache_type = feature_class;
 }
 
+// Determine what monster or position to remember for the next time the player
+// brings up the targeting interface.
 void direction_chooser::update_previous_target() const
 {
-    you.prev_targ = MHITNOT;
+    // If we're aiming something that doesn't take a monster target (ie: Dig),
+    // don't bother to save one.
+    if (mode == TARG_NON_ACTOR)
+        return;
+
+    // Reset memory.
+    you.prev_targ = MID_NOBODY;
     you.prev_grd_targ.reset();
 
-    // Maybe we should except just_looking here?
+    const monster* old_m = _get_current_target();
+
+    // If directly targeting a monster, remember that monster.
     const monster* m = monster_at(target());
     if (m && you.can_see(*m))
-        you.prev_targ = m->mindex();
+        you.prev_targ = m->mid;
     else if (looking_at_you())
-        you.prev_targ = MHITYOU;
+        you.prev_targ = MID_PLAYER;
+    // Otherwise, find a monster near to our target and remember *that*.
+    else if (!Options.simple_targeting)
+    {
+        if (hitfunc)
+            hitfunc->set_aim(target());
+
+        // If our previous monster target is among affected targets, prefer that
+        // one for consistency's sake.
+        if (old_m && _want_target_monster(old_m, mode, hitfunc))
+        {
+            if (hitfunc && hitfunc->is_affected(old_m->pos()))
+            {
+                you.prev_targ = old_m->mid;
+                return;
+            }
+        }
+
+        // Otherwise, pick the closest one to the center of our aim.
+        for (radius_iterator ri(target(), LOS_DEFAULT); ri; ++ri)
+        {
+            if (!you.see_cell(*ri))
+                continue;
+
+            if (monster* mon = monster_at(*ri))
+            {
+                if (you.can_see(*mon)
+                    && _want_target_monster(mon, mode, hitfunc)
+                    && (!hitfunc || hitfunc->is_affected(mon->pos())))
+                {
+                    you.prev_targ = mon->mid;
+                    return;
+                }
+            }
+        }
+
+        // Didn't find any valid monsters in affected area, so remember the spot
+        // itself instead.
+        you.prev_grd_targ = target();
+    }
+    // Simple targeting just remembers whatever space you aimed at.
     else
         you.prev_grd_targ = target();
 }
@@ -1809,27 +1936,6 @@ void direction_chooser::toggle_beam()
     }
 }
 
-bool direction_chooser::select_previous_target()
-{
-    if (const monster* mon_target = _get_current_target())
-    {
-        // We have all the information we need.
-        moves.isValid  = true;
-        moves.isTarget = true;
-        set_target(mon_target->pos());
-        if (!just_looking)
-            have_beam = false;
-
-        return !just_looking;
-    }
-    else
-    {
-        mprf(MSGCH_EXAMINE_FILTER, "Your target is gone.");
-        flush_prev_message();
-        return false;
-    }
-}
-
 bool direction_chooser::looking_at_you() const
 {
     return target() == you.pos();
@@ -2027,9 +2133,8 @@ coord_def direction_chooser::find_summoner()
     if (mon && mon->is_summoned() && you.can_see(*mon))
     {
         monster_info mi(mon);
-        const monster *summ = monster_by_mid(mi.summoner_id);
-        // Don't leak information about invisible summoners.
-        if (summ && you.can_see(*summ))
+        const monster *summ = mi.get_known_summoner();
+        if (summ)
             return summ->pos();
     }
     return INVALID_COORD;
@@ -2133,8 +2238,6 @@ bool direction_chooser::process_command(command_type command)
 
     switch (command)
     {
-    case CMD_TARGET_SHOW_PROMPT: describe_cell(); break;
-
     case CMD_TARGET_TOGGLE_BEAM:
         if (!just_looking)
             toggle_beam();
@@ -2164,18 +2267,11 @@ bool direction_chooser::process_command(command_type command)
         break;
 
     case CMD_TARGET_FIND_YOU:       move_to_you(); break;
-    case CMD_TARGET_FIND_TRAP:      feature_cycle_forward('^');  break;
-    case CMD_TARGET_FIND_PORTAL:    feature_cycle_forward('\\'); break;
-    case CMD_TARGET_FIND_ALTAR:     feature_cycle_forward('_');  break;
-    case CMD_TARGET_FIND_UPSTAIR:   feature_cycle_forward('<');  break;
-    case CMD_TARGET_FIND_DOWNSTAIR: feature_cycle_forward('>');  break;
-
-    case CMD_TARGET_MAYBE_PREV_TARGET:
-        loop_done = looking_at_you() ? select_previous_target()
-                                     : select(false, false);
-        break;
-
-    case CMD_TARGET_PREV_TARGET: loop_done = select_previous_target(); break;
+    case CMD_TARGET_FIND_TRAP:      cycle_feature('^');  break;
+    case CMD_TARGET_FIND_PORTAL:    cycle_feature('\\'); break;
+    case CMD_TARGET_FIND_ALTAR:     cycle_feature('_');  break;
+    case CMD_TARGET_FIND_UPSTAIR:   cycle_feature('<');  break;
+    case CMD_TARGET_FIND_DOWNSTAIR: cycle_feature('>');  break;
 
     // some modifiers to the basic selection command
     case CMD_TARGET_SELECT:          loop_done = select(false, false); break;
@@ -2195,25 +2291,11 @@ bool direction_chooser::process_command(command_type command)
     case CMD_TARGET_GET:             loop_done = pickup_item(); break;
 
     case CMD_TARGET_CYCLE_BACK:
-        if (!targets_objects())
-            monster_cycle(-1);
-        else
-            object_cycle(-1);
-        break;
-
-    case CMD_TARGET_OBJ_CYCLE_BACK:
-        object_cycle(-1);
+        cycle_target(-1);
         break;
 
     case CMD_TARGET_CYCLE_FORWARD:
-        if (!targets_objects())
-            monster_cycle(1);
-        else
-            object_cycle(1);
-        break;
-
-    case CMD_TARGET_OBJ_CYCLE_FORWARD:
-        object_cycle(1);
+        cycle_target(1);
         break;
 
     case CMD_TARGET_CANCEL:
@@ -2482,6 +2564,7 @@ bool direction_chooser::noninteractive()
     // if target is unset, this will find previous or closest target; if
     // target is set this will adjust targeting depending on custom
     // behavior
+    calculate_target_info();
     if (moves.find_target)
         set_target(find_default_target());
 
@@ -2506,18 +2589,18 @@ bool direction_chooser::choose_direction()
 
     mouse_control mc(needs_path && !just_looking ? MOUSE_MODE_TARGET_PATH
                                                  : MOUSE_MODE_TARGET);
-    targeter_smite legacy_range(&you, range, 0, 0, true);
+    targeter_smite legacy_range(&you, range, 0, 0, false, true);
     range_view_annotator rva(hitfunc ? hitfunc :
                              (range >= 0) ? &legacy_range : nullptr);
 
     // init
     moves.delta.reset();
 
+    calculate_target_info();
+
     // Find a default target.
     set_target(!default_place.origin() ? default_place
                                        : find_default_target());
-
-    objfind_pos = monsfind_pos = target();
 
     // If requested, show the beam on startup.
     if (show_beam)
@@ -2770,29 +2853,12 @@ static void _describe_oos_square(const coord_def& where)
 #endif
 }
 
-static bool _mons_is_valid_target(const monster* mon, targ_mode_type mode,
-                                  int range)
-{
-    // Monsters that are no threat to you don't count as monsters.
-    if (!mons_is_threatening(*mon) && !mons_class_is_test(mon->type))
-        return false;
-
-    // Don't usually target unseen monsters...
-    if (!mon->visible_to(&you))
-    {
-        // ...unless it creates a "disturbance in the water".
-        // Since you can't see the monster, assume it's not a friend.
-        return mode != TARG_FRIEND
-               && _mon_exposed(mon)
-               && i_feel_safe(false, false, true, true, range);
-    }
-
-    return true;
-}
-
 static bool _want_target_monster(const monster *mon, targ_mode_type mode,
                                  targeter* hitfunc)
 {
+    if (!mons_is_threatening(*mon))
+        return false;
+
     if (hitfunc && !hitfunc->affects_monster(monster_info(mon)))
         return false;
     switch (mode)
@@ -2814,394 +2880,13 @@ static bool _want_target_monster(const monster *mon, targ_mode_type mode,
     case TARG_MOBILE_MONSTER:
         return !(mons_is_tentacle_or_tentacle_segment(mon->type)
                  || mon->is_stationary());
+    case TARG_NON_ACTOR:
+        return false;
     case TARG_NUM_MODES:
         break;
     // intentionally no default
     }
     die("Unknown targeting mode!");
-}
-
-static bool _find_monster(const coord_def& where, targ_mode_type mode,
-                          bool need_path, int range, targeter *hitfunc,
-                          bool find_preferred)
-{
-    {
-        coord_def dp = grid2player(where);
-        // We could pass more info here.
-        maybe_bool x = clua.callmbooleanfn("ch_target_monster", "dd",
-                                           dp.x, dp.y);
-        if (x.is_bool())
-            return bool(x);
-    }
-
-    // Don't target out of range
-    if (!_is_target_in_range(where, range, hitfunc, find_preferred))
-        return false;
-
-    const monster* mon = monster_at(where);
-
-    // No monster or outside LOS.
-    if (!mon || !cell_see_cell(you.pos(), where, LOS_DEFAULT))
-        return false;
-
-    // Monster in LOS but only via glass walls, so no direct path.
-    if (!you.see_cell_no_trans(where))
-        return false;
-
-    if (!_mons_is_valid_target(mon, mode, range))
-        return false;
-
-    if (need_path && _blocked_ray(mon->pos()))
-        return false;
-
-    return _want_target_monster(mon, mode, hitfunc);
-}
-
-static bool _find_monster_expl(const coord_def& where, targ_mode_type mode,
-                               bool need_path, int range, targeter *hitfunc,
-                               aff_type mon_aff, aff_type allowed_self_aff)
-{
-    ASSERT(hitfunc);
-
-    {
-        coord_def dp = grid2player(where);
-        // We could pass more info here.
-        maybe_bool x = clua.callmbooleanfn("ch_target_monster_expl", "dd",
-                                           dp.x, dp.y);
-        if (x.is_bool())
-            return bool(x);
-    }
-
-    if (!hitfunc->valid_aim(where))
-        return false;
-
-    // Target is blocked by something
-    if (need_path && _blocked_ray(where))
-        return false;
-
-    if (hitfunc->set_aim(where))
-    {
-        if (hitfunc->is_affected(you.pos()) > allowed_self_aff)
-            return false;
-        for (monster_near_iterator mi(&you); mi; ++mi)
-        {
-            if (hitfunc->is_affected(mi->pos()) == mon_aff
-                && _mons_is_valid_target(*mi, mode, range)
-                && _want_target_monster(*mi, mode, hitfunc))
-            {
-                    return true;
-            }
-        }
-    }
-    return false;
-}
-
-static const item_def* _item_at(const coord_def &where)
-{
-    // XXX: are we ever interacting with unseen items, anyway?
-    return you.see_cell(where)
-            ? top_item_at(where)
-            : env.map_knowledge(where).item();
-}
-
-static bool _find_autopickup_object(const coord_def& where, bool need_path,
-                                    int range, targeter *hitfunc)
-{
-    if (!_find_object(where, need_path, range, hitfunc))
-        return false;
-
-    const item_def * const item = _item_at(where);
-    ASSERT(item);
-    return item_needs_autopickup(*item);
-}
-
-static bool _find_object(const coord_def& where, bool need_path, int range,
-                         targeter *hitfunc)
-{
-    // Don't target out of range.
-    if (!_is_target_in_range(where, range, hitfunc))
-        return false;
-
-    if (need_path && (!you.see_cell(where) || _blocked_ray(where)))
-        return false;
-
-    const item_def * const item = _item_at(where);
-    return item && !item_is_stationary(*item);
-}
-
-static int _next_los(int dir, int los, bool wrap)
-{
-    if (los == LS_ANY)
-        return wrap? los : LS_NONE;
-
-    bool vis    = los & LS_VISIBLE;
-    bool hidden = los & LS_HIDDEN;
-    bool flipvh = los & LS_FLIPVH;
-    bool fliphv = los & LS_FLIPHV;
-
-    if (!vis && !hidden)
-        vis = true;
-
-    if (wrap)
-    {
-        if (!flipvh && !fliphv)
-            return los;
-
-        // We have to invert flipvh and fliphv if we're wrapping. Here's
-        // why:
-        //
-        //  * Say the cursor is on the last item in LOS, there are no
-        //    items outside LOS, and wrap == true. flipvh is true.
-        //  * We set wrap false and flip from visible to hidden, but there
-        //    are no hidden items. So now we need to flip back to visible
-        //    so we can go back to the first item in LOS. Unless we set
-        //    fliphv, we can't flip from hidden to visible.
-        //
-        los = flipvh ? LS_FLIPHV : LS_FLIPVH;
-    }
-    else
-    {
-        if (!flipvh && !fliphv)
-            return LS_NONE;
-
-        if (flipvh && vis != (dir == 1))
-            return LS_NONE;
-
-        if (fliphv && vis == (dir == 1))
-            return LS_NONE;
-    }
-
-    return (los & ~LS_VISMASK) | (vis ? LS_HIDDEN : LS_VISIBLE);
-}
-
-//---------------------------------------------------------------
-//
-// find_square
-//
-// Finds the next monster/object/whatever (moving in a spiral
-// outwards from the player, so closer targets are chosen first;
-// starts to player's left) and puts its coordinates in mfp.
-// Returns 1 if it found something, zero otherwise. If direction
-// is -1, goes backwards.
-//
-//---------------------------------------------------------------
-static bool _find_square(coord_def &mfp, int direction,
-                         target_checker find_targ, targeter *hitfunc,
-                         bool wrap, int los)
-{
-    int temp_xps = mfp.x;
-    int temp_yps = mfp.y;
-    int x_change = 0;
-    int y_change = 0;
-
-    bool onlyVis = false, onlyHidden = false;
-
-    int i, j;
-
-    if (los == LS_NONE)
-        return false;
-
-    if (los == LS_FLIPVH || los == LS_FLIPHV)
-    {
-        if (in_los_bounds_v(mfp))
-        {
-            // We've been told to flip between visible/hidden, so we
-            // need to find what we're currently on.
-            const bool vis = you.see_cell(view2grid(mfp));
-
-            if (wrap && (vis != (los == LS_FLIPVH)) == (direction == 1))
-            {
-                // We've already flipped over into the other direction,
-                // so correct the flip direction if we're wrapping.
-                los = (los == LS_FLIPHV ? LS_FLIPVH : LS_FLIPHV);
-            }
-
-            los = (los & ~LS_VISMASK) | (vis ? LS_VISIBLE : LS_HIDDEN);
-        }
-        else
-        {
-            if (wrap)
-                los = LS_HIDDEN | (direction > 0 ? LS_FLIPHV : LS_FLIPVH);
-            else
-                los |= LS_HIDDEN;
-        }
-    }
-
-    onlyVis     = (los & LS_VISIBLE);
-    onlyHidden  = (los & LS_HIDDEN);
-
-    int radius = 0;
-    if (crawl_view.viewsz.x > crawl_view.viewsz.y)
-        radius = crawl_view.viewsz.x - LOS_RADIUS - 1;
-    else
-        radius = crawl_view.viewsz.y - LOS_RADIUS - 1;
-
-    const coord_def vyou = grid2view(you.pos());
-
-    const int minx = vyou.x - radius, maxx = vyou.x + radius,
-              miny = vyou.y - radius, maxy = vyou.y + radius,
-              ctrx = vyou.x, ctry = vyou.y;
-
-    while (temp_xps >= minx - 1 && temp_xps <= maxx
-           && temp_yps <= maxy && temp_yps >= miny - 1)
-    {
-        if (direction == 1 && temp_xps == minx && temp_yps == maxy)
-        {
-            mfp = vyou;
-            if (find_targ(you.pos()))
-                return true;
-            return _find_square(mfp, direction,
-                                find_targ, hitfunc,
-                                false, _next_los(direction, los, wrap));
-        }
-        if (direction == -1 && temp_xps == ctrx && temp_yps == ctry)
-        {
-            mfp = coord_def(minx, maxy);
-            return _find_square(mfp, direction,
-                                find_targ, hitfunc,
-                                false, _next_los(direction, los, wrap));
-        }
-
-        if (direction == 1)
-        {
-            if (temp_xps == minx - 1)
-            {
-                x_change = 0;
-                y_change = -1;
-            }
-            else if (temp_xps == ctrx && temp_yps == ctry)
-            {
-                x_change = -1;
-                y_change = 0;
-            }
-            else if (abs(temp_xps - ctrx) <= abs(temp_yps - ctry))
-            {
-                if (temp_xps - ctrx >= 0 && temp_yps - ctry <= 0)
-                {
-                    if (abs(temp_xps - ctrx) > abs(temp_yps - ctry + 1))
-                    {
-                        x_change = 0;
-                        y_change = -1;
-                        if (temp_xps - ctrx > 0)
-                            y_change = 1;
-                        goto finished_spiralling;
-                    }
-                }
-                x_change = -1;
-                if (temp_yps - ctry < 0)
-                    x_change = 1;
-                y_change = 0;
-            }
-            else
-            {
-                x_change = 0;
-                y_change = -1;
-                if (temp_xps - ctrx > 0)
-                    y_change = 1;
-            }
-        }                       // end if (direction == 1)
-        else
-        {
-            // This part checks all eight surrounding squares to find the
-            // one that leads on to the present square.
-            for (i = -1; i < 2; ++i)
-                for (j = -1; j < 2; ++j)
-                {
-                    if (i == 0 && j == 0)
-                        continue;
-
-                    if (temp_xps + i == minx - 1)
-                    {
-                        x_change = 0;
-                        y_change = -1;
-                    }
-                    else if (temp_xps + i - ctrx == 0
-                             && temp_yps + j - ctry == 0)
-                    {
-                        x_change = -1;
-                        y_change = 0;
-                    }
-                    else if (abs(temp_xps + i - ctrx) <= abs(temp_yps + j - ctry))
-                    {
-                        const int xi = temp_xps + i - ctrx;
-                        const int yj = temp_yps + j - ctry;
-
-                        if (xi >= 0 && yj <= 0
-                            && abs(xi) > abs(yj + 1))
-                        {
-                            x_change = 0;
-                            y_change = -1;
-                            if (xi > 0)
-                                y_change = 1;
-                            goto finished_spiralling;
-                        }
-
-                        x_change = -1;
-                        if (yj < 0)
-                            x_change = 1;
-                        y_change = 0;
-                    }
-                    else
-                    {
-                        x_change = 0;
-                        y_change = -1;
-                        if (temp_xps + i - ctrx > 0)
-                            y_change = 1;
-                    }
-
-                    if (temp_xps + i + x_change == temp_xps
-                        && temp_yps + j + y_change == temp_yps)
-                    {
-                        goto finished_spiralling;
-                    }
-                }
-        }                       // end else
-
-      finished_spiralling:
-        x_change *= direction;
-        y_change *= direction;
-
-        temp_xps += x_change;
-        if (temp_yps + y_change <= maxy)  // it can wrap, unfortunately
-            temp_yps += y_change;
-
-        const int targ_x = you.pos().x + temp_xps - ctrx;
-        const int targ_y = you.pos().y + temp_yps - ctry;
-        const coord_def targ(targ_x, targ_y);
-
-        if (!crawl_view.in_viewport_g(targ))
-            continue;
-
-        if (!map_bounds(targ))
-            continue;
-
-        if ((onlyVis || onlyHidden) && onlyVis != you.see_cell(targ))
-            continue;
-
-        if (find_targ(targ))
-        {
-            mfp.set(temp_xps, temp_yps);
-            return true;
-        }
-    }
-
-    mfp = (direction > 0 ? coord_def(ctrx, ctry) : coord_def(minx, maxy));
-    return _find_square(mfp, direction,
-                        find_targ, hitfunc,
-                        false, _next_los(direction, los, wrap));
-}
-
-// XXX Unbelievably hacky. And to think that my goal was to clean up the code.
-// Identical to _find_square, except that mfp is in grid coordinates
-// rather than view coordinates.
-static bool _find_square_wrapper(coord_def &mfp, int direction,
-                                 target_checker find_targ, targeter *hitfunc,
-                                 LOSSelect los)
-{
-    mfp = grid2view(mfp);
-    const bool r =  _find_square(mfp, direction, find_targ, hitfunc, true, los);
-    mfp = view2grid(mfp);
-    return r;
 }
 
 static void _describe_oos_feature(const coord_def& where)
@@ -3554,9 +3239,9 @@ static string _describe_monster_weapon(const monster_info& mi, bool ident)
     const item_def *weap = mi.inv[MSLOT_WEAPON].get();
     const item_def *alt  = mi.inv[MSLOT_ALT_WEAPON].get();
 
-    if (weap && (!ident || item_type_known(*weap)))
+    if (weap && (!ident || weap->is_identified()))
         name1 = weap->name(DESC_A, false, false, true, false);
-    if (alt && (!ident || item_type_known(*alt)) && mi.wields_two_weapons())
+    if (alt && (!ident || alt->is_identified()) && mi.wields_two_weapons())
         name2 = alt->name(DESC_A, false, false, true, false);
 
     if (name1.empty() && !name2.empty())
@@ -4226,7 +3911,7 @@ targeting_behaviour::~targeting_behaviour()
 command_type targeting_behaviour::get_command(int key)
 {
     command_type cmd = key_to_command(key, KMC_TARGETING);
-    if (cmd >= CMD_MIN_TARGET && cmd < CMD_TARGET_PREV_TARGET)
+    if (cmd >= CMD_MIN_TARGET && cmd < CMD_TARGET_SELECT)
         return cmd;
 
     // XXX: hack

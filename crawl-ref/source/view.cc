@@ -38,7 +38,6 @@
 #include "god-wrath.h"
 #include "hints.h"
 #include "items.h"
-#include "item-name.h" // item_type_known
 #include "item-prop.h" // get_weapon_brand
 #include "libutil.h"
 #include "macro.h"
@@ -922,7 +921,16 @@ string screenshot()
 
 int viewmap_flash_colour()
 {
-    return _layers & LAYERS_ALL && you.berserk() ? RED : BLACK;
+    COLOURS status = BLACK;
+
+    if (you.berserk())
+        status = RED;
+    else if (you.paralysed())
+        status = LIGHTBLUE;
+    else if (you.petrified())
+        status = LIGHTGRAY;
+
+    return _layers & LAYERS_ALL && status;
 }
 
 // Updates one square of the view area. Should only be called for square
@@ -1532,9 +1540,11 @@ void flash_tile(coord_def p, colour_t colour, int delay, tileidx_t tile)
         // Use a bolt tile if one is specified. Otherwise, just use the default
         // for the colour provied.
         if (tile > 0)
-            view_add_tile_overlay(p, vary_bolt_tile(tile, 0));
+            view_add_tile_overlay(p, vary_bolt_tile(tile));
         else
             view_add_tile_overlay(p, tileidx_zap(colour));
+#else
+        UNUSED(tile);
 #endif
         view_add_glyph_overlay(p, {dchar_glyph(DCHAR_FIRED_ZAP),
                                    static_cast<unsigned short>(colour)});

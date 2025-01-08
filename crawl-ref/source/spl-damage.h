@@ -50,6 +50,7 @@ spret cast_airstrike(int pow, coord_def target, bool fail);
 int airstrike_space_around(coord_def target, bool count_invis);
 dice_def base_airstrike_damage(int pow, bool random = false);
 string describe_airstrike_dam(dice_def dice);
+string airstrike_intensity_line(int empty_space);
 string describe_resonance_strike_dam(dice_def dice);
 spret cast_momentum_strike(int pow, coord_def target, bool fail);
 spret cast_shatter(int pow, bool fail);
@@ -64,7 +65,8 @@ spret cast_unravelling(coord_def target, int pow, bool fail);
 string mons_inner_flame_immune_reason(const monster *mons);
 spret cast_inner_flame(coord_def target, int pow, bool fail);
 int get_mercury_weaken_chance(int victim_hd, int pow);
-spret cast_mercury_vapours(int pow, const coord_def target, bool fail);
+dice_def poisonous_vapours_damage(int pow, bool random);
+spret cast_poisonous_vapours(const actor& agent, int pow, const coord_def target, bool fail);
 bool safe_discharge(coord_def where, vector<const actor *> &exclude, bool check_only = false);
 spret cast_discharge(int pow, const actor &agent, bool fail = false,
                           bool prompt = true);

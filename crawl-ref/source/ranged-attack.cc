@@ -392,7 +392,7 @@ int ranged_attack::calc_base_unarmed_damage() const
 {
     if (clumsy_throwing())
         return 0;
-    return throwing_base_damage_bonus(*projectile);
+    return throwing_base_damage_bonus(*projectile, true);
 }
 
 int ranged_attack::calc_mon_to_hit_base()
@@ -715,6 +715,40 @@ bool ranged_attack::apply_missile_brand()
         }
         else
             blink_away(defender->as_monster(), attacker);
+        break;
+    }
+    case SPMSL_DISJUNCTION:
+    {
+        if (defender->no_tele())
+        {
+            if (defender->is_player())
+                canned_msg(MSG_STRANGE_STASIS);
+            else
+                simple_monster_message(*defender->as_monster(), " is unaffected.");
+            break;
+        }
+
+        if (defender->is_player())
+        {
+            mprf(MSGCH_WARN, "You become untethered in space!");
+            you.duration[DUR_BLINKITIS] = random_range(30, 40);
+            you.props[BLINKITIS_SOURCE_KEY] = attacker->name(DESC_A, true);
+            you.props[BLINKITIS_AUX_KEY] = projectile->name(DESC_PLAIN);
+        }
+        else
+        {
+            monster* dmon = defender->as_monster();
+            if (!dmon->has_ench(ENCH_BLINKITIS))
+            {
+                simple_monster_message(*dmon, " becomes untethered in space!");
+                dmon->add_ench(mon_enchant(ENCH_BLINKITIS, 0, attacker,
+                                           random_range(3, 4) * BASELINE_DELAY));
+                // Trigger immediately once so that monster can't make an attack
+                // before it activates.
+                blink_away(dmon, attacker, false, false, 3);
+                dmon->hurt(attacker, roll_dice(2, 2));
+            }
+        }
         break;
     }
     case SPMSL_SILVER:

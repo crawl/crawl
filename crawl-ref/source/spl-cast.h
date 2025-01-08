@@ -31,7 +31,8 @@ enum class spflag
     targeting_mask     = spflag::dir_or_target | spflag::target,
     obj                = 0x00000010,      // TARG_MOVABLE_OBJECT used
     helpful            = 0x00000020,      // TARG_FRIEND used
-    neutral            = 0x00000040,      // TARG_ANY used
+    aim_at_space       = 0x00000040,      // Spell aims at a location, not a
+                                          // monster. Defaults to aiming at self
     not_self           = 0x00000080,      // aborts on isMe
     unholy             = 0x00000100,      // counts as "unholy"
     unclean            = 0x00000200,      // counts as "unclean"

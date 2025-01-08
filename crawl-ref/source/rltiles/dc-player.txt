@@ -699,6 +699,9 @@ trident_elec TRIDENT_ELEC
 trident_two TRIDENT2
 trident_two2
 trident_three TRIDENT3
+partisan_1 PARTISAN
+partisan_2
+partisan_3
 lance LANCE
 lance_two LANCE2
 scythe SCYTHE

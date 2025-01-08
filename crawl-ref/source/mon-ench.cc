@@ -974,6 +974,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             mprf("The grapnel comes loose from %s.", name(DESC_THE).c_str());
         break;
 
+    case ENCH_BLINKITIS:
+        if (!quiet)
+            simple_monster_message(*this, " looks more stable.");
+
     default:
         break;
     }
@@ -1864,6 +1868,20 @@ void monster::apply_enchantment(const mon_enchant &me)
         decay_enchantment(en);
         break;
 
+    case ENCH_BLINKITIS:
+    {
+        actor* agent = me.agent();
+        if (agent)
+            blink_away(this, agent, false, false, 3);
+        else
+            blink();
+
+        hurt(agent, roll_dice(2, 2));
+        if (alive())
+            decay_enchantment(en);
+        break;
+    }
+
     default:
         break;
     }
@@ -1875,7 +1893,12 @@ void monster::mark_summoned(int summon_type, int longevity, bool mark_items,
     if (longevity > 0)
         add_ench(mon_enchant(ENCH_SUMMON_TIMER, 1, 0, longevity));
 
-    add_ench(mon_enchant(ENCH_SUMMON, summon_type, 0, INT_MAX));
+    // Fully replace any existing summon source, if we're giving a new one.
+    if (has_ench(ENCH_SUMMON) && summon_type != 0)
+        del_ench(ENCH_SUMMON);
+
+    if (!has_ench(ENCH_SUMMON))
+        add_ench(mon_enchant(ENCH_SUMMON, summon_type, 0, INT_MAX));
 
     if (mark_items)
         for (mon_inv_iterator ii(*this); ii; ++ii)
@@ -2120,7 +2143,7 @@ static const char *enchant_names[] =
     "magnetised",
     "armed",
     "misdirected", "changed appearance", "shadowless", "doubled_vigour",
-    "grapnel", "tempered", "hatching",
+    "grapnel", "tempered", "hatching", "blinkitis",
     "buggy", // NUM_ENCHANTMENTS
 };
 

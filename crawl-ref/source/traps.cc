@@ -495,14 +495,16 @@ void trap_def::trigger(actor& triggerer)
         break;
     }
     case TRAP_DISPERSAL:
+    {
         dprf("Triggered dispersal.");
         if (you_trigger)
             mprf("You enter %s!", name(DESC_A).c_str());
         else
             mprf("%s enters %s!", triggerer.name(DESC_THE).c_str(),
                     name(DESC_A).c_str());
-        apply_visible_monsters([] (monster& mons) {
-                return !mons.no_tele() && monster_blink(&mons);
+        mid_t triggerer_mid = triggerer.mid;
+        apply_visible_monsters([triggerer_mid] (monster& mons) {
+                return (mons.mid != triggerer_mid) && !mons.no_tele() && monster_blink(&mons);
             }, pos);
         if (!you_trigger && you.see_cell_no_trans(pos))
         {
@@ -513,6 +515,7 @@ void trap_def::trigger(actor& triggerer)
         // Don't chain disperse
         triggerer.blink();
         break;
+    }
     case TRAP_TELEPORT:
     case TRAP_TELEPORT_PERMANENT:
         if (you_trigger)

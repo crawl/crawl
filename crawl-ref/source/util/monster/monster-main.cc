@@ -12,7 +12,7 @@
 #include "fight.h" // spines_damage
 #include "item-name.h"
 #include "item-prop.h"
-#include "item-status-flag-type.h" // ISFLAG_IDENT_MASK
+#include "items.h"
 #include "los.h"
 #include "mapdef.h" // item_list
 #include "message.h"
@@ -735,7 +735,7 @@ static bool _try_print_item(string target)
 
     it.quantity = 1;
     it.rnd = 1;
-    set_ident_flags(it, ISFLAG_IDENT_MASK);
+    identify_item(it);
 
     string desc = get_item_description(it, IDM_MONSTER).c_str();
     desc = trim_string(desc);
@@ -1026,11 +1026,25 @@ int main(int argc, char* argv[])
                     monsterattacks +=
                         colour(YELLOW, damage_flavour("acid", "4d3"));
                     break;
+                case AF_AIRSTRIKE:
+                {
+                    short int min = pow(hd, 1.33) / 2;
+                    short int max = pow(hd + 1, 1.33) * 11 / 6;
+                    monsterattacks +=
+                        colour(LIGHTBLUE, damage_flavour("airstrike", min, max));
+                    break;
+                }
+                case AF_ALEMBIC:
+                    monsterattacks += colour(LIGHTGREEN, "(alembic)");
+                    break;
                 case AF_BLINK:
                     monsterattacks += colour(MAGENTA, "(blink self)");
                     break;
                 case AF_BLINK_WITH:
                     monsterattacks += colour(MAGENTA, "(blink together)");
+                    break;
+                case AF_BOMBLET:
+                    monsterattacks += colour(LIGHTRED, "(bomblet)");
                     break;
                 case AF_COLD:
                     monsterattacks += colour(

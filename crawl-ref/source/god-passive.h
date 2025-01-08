@@ -265,13 +265,14 @@ bool god_gives_passive(god_type god, passive_t passive);
 bool have_passive(passive_t passive);
 bool will_have_passive(passive_t passive);
 int rank_for_passive(passive_t passive);
-bool god_id_item(item_def& item, bool silent = true);
 
 int chei_stat_boost(int piety = you.piety);
 
 void jiyva_eat_offlevel_items();
 
 void ash_check_bondage();
+void ash_id_inventory();
+void ash_id_item(item_def& item, bool silent = true);
 int ash_detect_portals(bool all);
 monster_type ash_monster_tier(const monster *mon);
 unsigned int ash_skill_point_boost(skill_type sk, int scaled_skill);

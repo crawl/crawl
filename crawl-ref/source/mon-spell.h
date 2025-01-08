@@ -202,6 +202,14 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_ALDERKING,
+      {
+       { SPELL_GRASPING_ROOTS, 30, MON_SPELL_NATURAL },
+       { SPELL_SIPHON_ESSENCE, 25, MON_SPELL_MAGICAL },
+       { SPELL_DISPEL_UNDEAD, 15, MON_SPELL_MAGICAL },
+      }
+    },
+
     // ('g') Small humanoids.
     {  MST_BOUDA,
       {
@@ -313,6 +321,13 @@ static const mon_spellbook mspell_list[] =
     {  MST_DEATH_DRAKE,
       {
        { SPELL_MIASMA_BREATH, 59, MON_SPELL_NATURAL | MON_SPELL_BREATH },
+      }
+    },
+
+    {  MST_WYRMHOLE,
+      {
+       { SPELL_SOJOURNING_BOLT, 55, MON_SPELL_NATURAL | MON_SPELL_BREATH
+                                        | MON_SPELL_NOISY },
       }
     },
 
@@ -470,6 +485,12 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_INJURY_BOND, 21, MON_SPELL_WIZARD },
        { SPELL_MINOR_HEALING, 41, MON_SPELL_WIZARD },
+      }
+    },
+
+    {  MST_IRONBOUND_BEASTMASTER,
+      {
+       { SPELL_THROW_BOLAS, 40, MON_SPELL_WIZARD },
       }
     },
 
@@ -1230,7 +1251,7 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    // ('O') Ogres.
+    // ('O') Ogres and oni.
     {  MST_OGRE_MAGE,
       {
        { SPELL_BOLT_OF_MAGMA, 15, MON_SPELL_WIZARD },
@@ -1244,6 +1265,13 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_CALL_DOWN_LIGHTNING, 50, MON_SPELL_MAGICAL },
        { SPELL_BLINK_RANGE, 20, MON_SPELL_MAGICAL },
+      }
+    },
+
+    {  MST_ONI_INCARCERATOR,
+      {
+       { SPELL_MANIFOLD_ASSAULT, 50, MON_SPELL_WIZARD },
+       { SPELL_THROW_BOLAS, 12, MON_SPELL_WIZARD },
       }
     },
 

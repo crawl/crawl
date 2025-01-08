@@ -19,6 +19,10 @@
 #include "spl-cast.h"
 #include "zap-type.h"
 
+using std::string;
+
+#define SJ_TELEPORTITIS_SOURCE "SJ_TELEPORTITIS_SOURCE"
+
 using std::vector;
 
 #define BEAM_STOP       1000        // all beams stopped by subtracting this
@@ -171,7 +175,9 @@ struct bolt
 
     ray_def     ray;             // shoot on this specific ray
 
-    int         tile_beam; // only used if USE_TILE is defined
+    // only used if USE_TILE is defined
+    tileidx_t tile_beam = 0;
+    tileidx_t tile_explode = 0;
 
 private:
     bool can_see_invis = false;
@@ -299,7 +305,7 @@ public:
 private:
     void apply_bolt_paralysis(monster* mons);
     void apply_bolt_petrify(monster* mons);
-    void handle_petrify_chaining(coord_def centre);
+    void handle_enchant_chaining(coord_def centre);
     void monster_post_hit(monster* mon, int dmg);
     // for players
     void affect_player();
@@ -379,15 +385,12 @@ void bolt_parent_init(const bolt &parent, bolt &child);
 
 int explosion_noise(int rad);
 
-bool always_shoot_through_monster(const actor *agent, const monster &mon);
-bool shoot_through_monster(const bolt& beam, const monster* victim);
-
 int omnireflect_chance_denom(int SH);
 
 void glaciate_freeze(monster* mon, killer_type englaciator,
                              int kindex);
 
-void fill_petrify_chain_targets(const bolt& beam, coord_def centre,
-                                vector<coord_def> &targs, bool random);
+void fill_chain_targets(const bolt& beam, coord_def centre,
+                        vector<coord_def> &targs, bool random);
 
 bolt setup_targeting_beam(const monster &mons);

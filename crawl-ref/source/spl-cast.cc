@@ -403,6 +403,9 @@ static int _skill_power(spell_type spell)
  */
 int raw_spell_fail(spell_type spell)
 {
+    if (spell == SPELL_NO_SPELL)
+        return 10000;
+
     int chance = 60;
 
     // Don't cap power for failure rate purposes.
@@ -905,7 +908,7 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
 
         if ((Options.use_animations & UA_RANGE) && Options.darken_beyond_range)
         {
-            targeter_smite range(&you, calc_spell_range(spell), 0, 0, true);
+            targeter_smite range(&you, calc_spell_range(spell), 0, 0, false, true);
             range_view_annotator show_range(&range);
             delay(50);
         }
@@ -1228,7 +1231,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_VIOLENT_UNRAVELLING:
         return make_unique<targeter_unravelling>();
     case SPELL_INFESTATION:
-        return make_unique<targeter_smite>(&you, range, 2, 2, false, true,
+        return make_unique<targeter_smite>(&you, range, 2, 2, true, false, true,
                                            [](const coord_def& p) -> bool {
                                               return you.pos() != p; });
     case SPELL_PASSWALL:
@@ -1261,12 +1264,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_multiposition>(&you, plasma_paths, a);
     }
     case SPELL_PILEDRIVER:
-    {
-        auto piledriver_targets = possible_piledriver_targets(false);
-        auto piledriver_paths = piledriver_beam_paths(piledriver_targets, false);
-        const aff_type a = piledriver_targets.size() == 1 ? AFF_YES : AFF_MAYBE;
-        return make_unique<targeter_multiposition>(&you, piledriver_paths, a);
-    }
+        return make_unique<targeter_piledriver>();
     case SPELL_CHAIN_LIGHTNING:
         return make_unique<targeter_chain_lightning>();
     case SPELL_MAXWELLS_COUPLING:
@@ -1280,6 +1278,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
                                                   0, 1);
     case SPELL_INNER_FLAME:
         return make_unique<targeter_inner_flame>(&you, range);
+    case SPELL_TELEPORT_OTHER:
+        return make_unique<targeter_teleport_other>(&you, range);
     case SPELL_SOUL_SPLINTER:
         return make_unique<targeter_soul_splinter>(&you, range);
     case SPELL_SIMULACRUM:
@@ -1293,8 +1293,18 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
                                             silence_max_range(pow),
                                             0, 0,
                                             silence_min_range(pow));
-    case SPELL_MERCURY_VAPOURS:
-        return make_unique<targeter_smite>(&you, range, 0, 1);
+    case SPELL_POISONOUS_VAPOURS:
+        return make_unique<targeter_smite>(&you, range, 0, 0, false, false,
+                                           true, [](const coord_def& p) -> bool {
+                                              if (monster* mon = monster_at(p))
+                                              {
+                                                if (you.can_see(*mon) && mon->res_poison())
+                                                    return false;
+                                              }
+                                              return true; });
+    case SPELL_MERCURY_ARROW:
+        return make_unique<targeter_explosive_beam>(&you, ZAP_MERCURY_ARROW, pow,
+                                                    range, true, false);
     case SPELL_GRAVE_CLAW:
         return make_unique<targeter_smite>(&you, range);
 
@@ -1367,11 +1377,11 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     {
         const monster* paragon = find_player_paragon();
         if (!paragon)
-            return make_unique<targeter_smite>(&you, range, 1, 1, false, false);
+            return make_unique<targeter_smite>(&you, range, 1, 1, true, false, false);
         else if (paragon_charge_level(*paragon) == 2)
-            return make_unique<targeter_smite>(paragon, 3, 3, 3, false, false);
+            return make_unique<targeter_smite>(paragon, 3, 3, 3, true, false, false);
         else
-            return make_unique<targeter_smite>(paragon, 3, 2, 2, false, false);
+            return make_unique<targeter_smite>(paragon, 3, 2, 2, true, false, false);
     }
     case SPELL_MONARCH_BOMB:
     {
@@ -1414,12 +1424,15 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_PERMAFROST_ERUPTION:
         return make_unique<targeter_permafrost>(you, pow);
     case SPELL_PETRIFY:
-        return make_unique<targeter_petrify>(&you, range);
+        return make_unique<targeter_chain>(&you, range, ZAP_PETRIFY);
+    case SPELL_RIMEBLIGHT:
+        return make_unique<targeter_chain>(&you, range, ZAP_RIMEBLIGHT);
     case SPELL_COMBUSTION_BREATH:
-        return make_unique<targeter_explosive_beam>(&you, pow, range);
+        return make_unique<targeter_explosive_beam>(&you, ZAP_COMBUSTION_BREATH, pow, range);
     case SPELL_NOXIOUS_BREATH:
         // Note the threshold where it becomes possible to make clouds off the main beam
-        return make_unique<targeter_explosive_beam>(&you, pow, range, false, pow > 10);
+        return make_unique<targeter_explosive_beam>(&you, ZAP_NOXIOUS_BREATH,
+                                                    pow, range, false, pow > 10);
     case SPELL_GALVANIC_BREATH:
         return make_unique<targeter_galvanic>(&you, pow, range);
     case SPELL_NULLIFYING_BREATH:
@@ -1449,6 +1462,14 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
 
     case SPELL_FORTRESS_BLAST:
         return make_unique<targeter_radius>(&you, LOS_NO_TRANS, range);
+
+    case SPELL_SPIKE_LAUNCHER:
+    {
+        vector<coord_def> walls = find_spike_launcher_walls();
+        return make_unique<targeter_multiposition>(&you, walls, walls.size() > 1
+                                                                    ? AFF_MAYBE
+                                                                    : AFF_YES);
+    }
 
     default:
         break;
@@ -1657,8 +1678,11 @@ static vector<string> _desc_airstrike_bonus(const monster_info& mi)
     return vector<string>{make_stringf("empty space bonus: %d/8", empty_spaces)};
 }
 
-static vector<string> _desc_vapor_weak_chance(const monster_info& mi, int pow)
+static vector<string> _desc_mercury_weak_chance(const monster_info& mi, int pow)
 {
+    if (mi.is(MB_NO_ATTACKS))
+        return vector<string>{};
+
     return vector<string>{make_stringf("chance to weaken: %d%%",
                             get_mercury_weaken_chance(mi.hd, pow))};
 }
@@ -1930,8 +1954,8 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
             return bind(_desc_insubstantial, placeholders::_1, "unstickable");
         case SPELL_PLASMA_BEAM:
             return bind(_desc_plasma_hit_chance, placeholders::_1, powc);
-        case SPELL_MERCURY_VAPOURS:
-            return bind(_desc_vapor_weak_chance, placeholders::_1, powc);
+        case SPELL_MERCURY_ARROW:
+            return bind(_desc_mercury_weak_chance, placeholders::_1, powc);
         case SPELL_WARP_SPACE:
             return bind(_desc_warp_space_chance, powc);
         default:
@@ -2043,10 +2067,10 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
     if (use_targeter)
     {
         const targ_mode_type targ =
-              testbits(flags, spflag::neutral)    ? TARG_ANY :
-              testbits(flags, spflag::helpful)    ? TARG_FRIEND :
-              testbits(flags, spflag::obj)        ? TARG_MOVABLE_OBJECT :
-                                                   TARG_HOSTILE;
+              testbits(flags, spflag::aim_at_space)     ? TARG_NON_ACTOR :
+              testbits(flags, spflag::helpful)          ? TARG_FRIEND :
+              testbits(flags, spflag::obj)              ? TARG_MOVABLE_OBJECT :
+                                                          TARG_HOSTILE;
 
         // TODO: if any other spells ever need this, add an spflag
         // (right now otherwise used only on god abilities)
@@ -2103,6 +2127,9 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
 
         if (testbits(flags, spflag::prefer_farthest))
             args.prefer_farthest = true;
+
+        if (spell == SPELL_SHOCK)
+            args.try_multizap = true;
 
         // if the spell is useless and we have somehow gotten this far, it's
         // a forced cast. Setting this prevents the direction chooser from
@@ -2370,6 +2397,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_SCORCH:
         return cast_scorch(you, powc, fail);
 
+    case SPELL_POISONOUS_VAPOURS:
+        return cast_poisonous_vapours(you, powc, target, fail);
+
     case SPELL_IRRADIATE:
         return cast_irradiate(powc, you, fail);
 
@@ -2606,14 +2636,14 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_INNER_FLAME:
         return cast_inner_flame(spd.target, powc, fail);
 
+    case SPELL_TELEPORT_OTHER:
+        return cast_teleport_other(spd.target, powc, fail);
+
     case SPELL_SIMULACRUM:
         return cast_simulacrum(spd.target, powc, fail);
 
     case SPELL_GLACIATE:
         return cast_glaciate(&you, powc, target, fail);
-
-    case SPELL_MERCURY_VAPOURS:
-        return cast_mercury_vapours(powc, spd.target, fail);
 
     case SPELL_GRAVE_CLAW:
         return cast_grave_claw(you, spd.target, powc, fail);
@@ -2649,7 +2679,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
         return cast_permafrost_eruption(you, powc, fail);
 
     case SPELL_PILEDRIVER:
-        return cast_piledriver(powc, fail);
+        return cast_piledriver(beam.target, powc, fail);
 
     // Just to do extra messaging; spell is handled by default zapping
     case SPELL_COMBUSTION_BREATH:
@@ -2982,6 +3012,8 @@ static dice_def _spell_damage(spell_type spell, int power)
             return diamond_sawblade_damage(power);
         case SPELL_FORTRESS_BLAST:
             return fortress_blast_damage(you.armour_class_scaled(1), false);
+        case SPELL_POISONOUS_VAPOURS:
+            return poisonous_vapours_damage(power, false);
         default:
             break;
     }

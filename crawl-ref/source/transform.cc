@@ -1562,14 +1562,13 @@ static bool _flying_in_new_form(transformation which_trans)
         item_def *item = you.slot_item(eq, true);
         if (item == nullptr)
             continue;
-        item_def inf = get_item_known_info(*item);
 
         //similar code to safe_to_remove from item-use.cc
-        if (inf.is_type(OBJ_JEWELLERY, RING_FLIGHT))
+        if (item->is_type(OBJ_JEWELLERY, RING_FLIGHT))
             sources_removed++;
-        if (inf.base_type == OBJ_ARMOUR && inf.brand == SPARM_FLYING)
+        if (item->base_type == OBJ_ARMOUR && item->brand == SPARM_FLYING)
             sources_removed++;
-        if (is_artefact(inf) && artefact_known_property(inf, ARTP_FLY))
+        if (is_artefact(*item) && artefact_property(*item, ARTP_FLY))
             sources_removed++;
     }
 
@@ -2082,21 +2081,6 @@ void untransform(bool skip_move)
     if (you.has_innate_mutation(MUT_MERTAIL))
         init_player_doll();
 #endif
-
-    // If nagas wear boots while transformed, they fall off again afterwards:
-    // I don't believe this is currently possible, and if it is we
-    // probably need something better to cover all possibilities.  -bwr
-
-    // Removed barding check, no transformed creatures can wear barding
-    // anyway.
-    // *coughs* Ahem, blade hands... -- jpeg
-    if (you.can_wear_barding())
-    {
-        const int arm = you.equip[EQ_BOOTS];
-
-        if (arm != -1 && you.inv[arm].sub_type == ARM_BOOTS)
-            remove_one_equip(EQ_BOOTS);
-    }
 
     if (you.hp <= 0)
     {

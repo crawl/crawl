@@ -592,7 +592,7 @@ void monster::timeout_enchantments(int levels)
             // That triggered a behaviour_event, which could have made a
             // pacified monster leave the level.
             if (alive() && !is_stationary())
-                monster_blink(this, true);
+                monster_blink(this, true, true);
             break;
 
         case ENCH_TIDE:

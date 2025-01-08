@@ -718,6 +718,7 @@ bool mons_class_is_draconic(monster_type mc)
         case MONS_DRAGON:
         case MONS_DRAKE:
         case MONS_DRACONIAN:
+        case MONS_WYRMHOLE:
             return true;
         default:
             return false;
@@ -2266,6 +2267,7 @@ bool flavour_triggers_damageless(attack_flavour flavour)
     return flavour == AF_CRUSH
         || flavour == AF_ENGULF
         || flavour == AF_PURE_FIRE
+        || flavour == AF_AIRSTRIKE
         || flavour == AF_SHADOWSTAB
         || flavour == AF_DROWN
         || flavour == AF_CORRODE;
@@ -2316,6 +2318,9 @@ int flavour_damage(attack_flavour flavour, int HD, bool random)
             if (random)
                 return roll_dice(4, 3);
             return 12;
+        // Just show max damage: this number's only used for display.
+        case AF_AIRSTRIKE:
+            return pow(HD + 1, 1.33) * 11 / 6;
         default:
             return 0;
     }
@@ -5399,9 +5404,7 @@ bool mons_is_beast(monster_type mc)
     {
         return false;
     }
-    else if ((mons_genus(mc) == MONS_DRAGON
-              && mc != MONS_SWAMP_DRAGON)
-             || mons_genus(mc) == MONS_UGLY_THING
+    else if (mons_genus(mc) == MONS_UGLY_THING
              || mc == MONS_ICE_BEAST
              || mc == MONS_SKY_BEAST
              || mc == MONS_BUTTERFLY)
@@ -5868,4 +5871,106 @@ int touch_of_beogh_hp_mult(const monster& mon)
                     ? mon.props[APOSTLE_POWER_KEY].get_int() : 0;
 
     return 100 + (min(50, pow * 2 / 3));
+}
+
+/**
+ * Should all actions beams originating from a particular ignore a given
+ * monster completely?
+ *
+ *  @param agent       The source of the beam. If nullptr, the beam has no source.
+ *  @param mon         A monster that is the target of the beam.
+ *  @param do_message  If true, prints a message stating how the monster
+ *                        avoided the beam.
+ *  @return            Whether the given agent can shoot through this monster.
+ */
+bool shoot_through_monster(const actor* agent, const monster& mon, bool do_message)
+{
+    // Projectiles can be shot through by anyone.
+    if (mons_is_projectile(mon))
+        return true;
+
+    // But all the other checks require an aligned agent.
+    if (!agent || !mons_aligned(agent, &mon))
+        return false;
+
+    if (mons_is_avatar(mon.type))
+        return true;
+
+    if ((agent->is_player() && have_passive(passive_t::shoot_through_plants)
+         || agent->is_monster() && agent->deity() == GOD_FEDHAS)
+         && mons_class_is_plant(mon.type))
+    {
+        if (do_message && you.can_see(mon))
+        {
+            simple_god_message(
+                        make_stringf(" protects %s plant from harm.",
+                            agent->is_player() ? "your" : "a").c_str(),
+                        false, GOD_FEDHAS);
+        }
+        return true;
+    }
+
+    if (agent->is_player() && mons_is_hepliaklqana_ancestor(mon.type))
+    {
+        // TODO: this message does not work very well for all sorts of attacks
+        // should this be a god message?
+        if (do_message && you.can_see(mon))
+            mprf("%s avoids your attack.", mon.name(DESC_THE).c_str());
+        return true;
+    }
+
+    if (agent->is_player()
+        && will_have_passive(passive_t::shadow_attacks)
+        && mons_is_player_shadow(mon))
+    {
+        return true;
+    }
+
+    if (agent->is_player() && testbits(mon.flags, MF_DEMONIC_GUARDIAN))
+    {
+        if (do_message && you.can_see(mon))
+            mpr("Your demonic guardian avoids your attack.");
+        return true;
+    }
+
+    return false;
+}
+
+bool shoot_through_monster(const actor* agent, const monster* mon, bool do_message)
+{
+    return mon && shoot_through_monster(agent, *mon, do_message);
+}
+
+/**
+ * Should all actions (beams, explosions, and otherwise) caused by a particular
+ * agent ignore a given monster?
+ *
+ * This is *mostly* the same as shoot_through_monster(), but Jiyva jellies
+ * are specifically impossible to harm, but cannot be shot through.
+ *
+ *  @param agent       The source of the action. If nullptr, the action has no source.
+ *  @param mon         A monster that is the target of the action.
+ *  @param do_message  If true, prints a message stating how the monster avoided harm.
+ *  @return            Whether the monster cannot be harmed by this agent.
+ */
+bool never_harm_monster(const actor* agent, const monster& mon, bool do_message)
+{
+    if (shoot_through_monster(agent, mon, do_message))
+        return true;
+
+    if (agent && agent->is_player()
+        && have_passive(passive_t::neutral_slimes)
+        && mons_is_slime(mon))
+    {
+        if (do_message && you.can_see(mon))
+            simple_god_message(" protects your slime from harm.", false, GOD_JIYVA);
+        return true;
+    }
+
+    return false;
+}
+
+bool never_harm_monster(const actor* agent, const monster* mon, bool do_message)
+{
+    return mon && never_harm_monster(agent, *mon, do_message);
 }

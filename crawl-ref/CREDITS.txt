@@ -180,6 +180,7 @@
     Robert Faulk
     Floodkiller
     floraline
+    Flugkiller
     Brett Foster
     Kyle Fox
     Perry Fraser
@@ -342,6 +343,7 @@
     Edward Randtke
     Derek Ray
     RealzHS
+    Robert J. Redelmeier
     Terence Reeves
     Tobias Rehbein
     Remsleep

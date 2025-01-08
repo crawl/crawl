@@ -510,8 +510,7 @@ static void _setup_missile_beam(const actor *agent, bolt &beam,
             expl->name   += " fragments";
 
             const string short_name =
-                item.name(DESC_BASENAME, true, false, false, false,
-                          ISFLAG_IDENT_MASK | ISFLAG_COSMETIC_MASK);
+                item.name(DESC_BASENAME, true, false, false, false);
 
             expl->name = replace_all(expl->name, item.name(DESC_PLAIN),
                                      short_name);
@@ -622,9 +621,12 @@ void throw_it(quiver::action &a)
 
     if (you.confused())
     {
-        a.target.target = you.pos();
-        a.target.target.x += random2(13) - 6;
-        a.target.target.y += random2(13) - 6;
+        do
+        {
+            a.target.target.x = you.pos().x + random2(13) - 6;
+            a.target.target.y = you.pos().y + random2(13) - 6;
+        } while (a.target.target == you.pos());
+
         a.target.isValid = true;
         a.target.cmd_result = CMD_FIRE;
     }

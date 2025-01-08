@@ -619,7 +619,7 @@ static void _describe_book(const spellbook_contents &book,
     if (source_item)
     {
         description.cprintf(
-            "\n Spells                            Type                      Level");
+            "\n Spells                              Type                    Level");
         if (crawl_state.need_save)
             description.cprintf("       Known");
     }
@@ -661,7 +661,7 @@ static void _describe_book(const spellbook_contents &book,
         const int effect_len = effect_str.length();
         const int range_len = range_str.empty() ? 0 : 3;
         const int effect_range_space = effect_len && range_len ? 1 : 0;
-        const int chop_len = 30 - effect_len - range_len - effect_range_space
+        const int chop_len = 32 - effect_len - range_len - effect_range_space
                                 - (dith_marker.length() > 0 ? 1 : 0);
 
         if (effect_len && !testbits(get_spell_flags(spell), spflag::WL_check))
@@ -706,7 +706,7 @@ static void _describe_book(const spellbook_contents &book,
             known = you.spell_library[spell] ? "         yes" : "          no";
 
         description.cprintf("%s%d%s\n",
-                            chop_string(schools, 30).c_str(),
+                            chop_string(schools, 28).c_str(),
                             spell_difficulty(spell),
                             known.c_str());
     }

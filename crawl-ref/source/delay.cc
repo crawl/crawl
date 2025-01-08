@@ -768,8 +768,7 @@ void JewelleryOnDelay::finish()
     // action on the next turn.
     // XXX: duplicates a check in invent.cc:check_warning_inscriptions()
     if (!crawl_state.disables[DIS_CONFIRMATIONS]
-        && needs_notele_warning(jewellery, OPER_PUTON)
-        && item_ident(jewellery, ISFLAG_KNOW_TYPE))
+        && needs_notele_warning(jewellery, OPER_PUTON))
     {
         string prompt = "Really put on ";
         prompt += jewellery.name(DESC_INVENTORY);

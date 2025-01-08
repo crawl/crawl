@@ -484,7 +484,7 @@ static int _acquirement_jewellery_subtype(int & /*quantity*/,
                                              : get_random_ring_type();
 
         // If we haven't seen this yet, we're done.
-        if (!get_ident_type(OBJ_JEWELLERY, result))
+        if (!type_is_identified(OBJ_JEWELLERY, result))
             break;
     }
 
@@ -515,7 +515,7 @@ static bool _remove_ided_staff_weights(vector<pair<stave_type, int>> &weights)
         if (weight.first == NUM_STAVES)
             continue;
 
-        if (get_ident_type(OBJ_STAVES, weight.first))
+        if (type_is_identified(OBJ_STAVES, weight.first))
             weight.second = 0;
         else
             found = true;
@@ -632,7 +632,7 @@ static int _acquirement_wand_subtype(int & /*quantity*/,
 
     // Unknown wands get a huge weight bonus.
     for (auto &weight : weights)
-        if (!get_ident_type(OBJ_WANDS, weight.first))
+        if (!type_is_identified(OBJ_WANDS, weight.first))
             weight.second *= 2;
 
     const wand_type* wand = random_choose_weighted(weights);
@@ -799,7 +799,7 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
         dummy.base_type = class_wanted;
         dummy.sub_type = type_wanted;
         dummy.plus = 1; // empty wands would be useless
-        dummy.flags |= ISFLAG_IDENT_MASK;
+        dummy.flags |= ISFLAG_IDENTIFIED;
 
         if (!is_useless_item(dummy, false) && !god_hates_item(dummy)
             && (agent >= NUM_GODS || god_likes_item_type(dummy,
@@ -968,7 +968,7 @@ static bool _acquire_manual(item_def &book)
     // Set number of bonus skill points.
     book.skill_points = random_range(2000, 3000);
     // Preidentify.
-    set_ident_flags(book, ISFLAG_IDENT_MASK);
+    book.flags |= ISFLAG_IDENTIFIED;
 
     return true;
 }
@@ -1039,7 +1039,7 @@ static bool _do_book_acquirement(item_def &book, int agent)
         bool useless = false;
         {
             unwind_var<iflags_t> oldflags{book.flags};
-            book.flags |= ISFLAG_KNOW_TYPE;
+            book.flags |= ISFLAG_IDENTIFIED;
             useless = is_useless_item(book);
         }
         if (useless)
@@ -1323,12 +1323,12 @@ int acquirement_create_item(object_class_type class_wanted,
         }
 
         // Last check: don't acquire items your god hates.
-        // Temporarily mark the type as ID'd for the purpose of checking if
+        // Temporarily mark as ID'd for the purpose of checking if
         // it is a hated brand (this addresses, e.g., Elyvilon followers
         // immediately identifying evil weapons).
         // Note that Xom will happily give useless items!
         int oldflags = acq_item.flags;
-        acq_item.flags |= ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PROPERTIES;
+        acq_item.flags |= ISFLAG_IDENTIFIED;
         if ((is_useless_item(acq_item, false) && agent != GOD_XOM)
             || god_hates_item(acq_item))
         {
@@ -1470,8 +1470,7 @@ static void _create_acquirement_item(item_def &item, string items_key,
     take_note(Note(NOTE_ACQUIRE_ITEM, 0, 0, item.name(DESC_A),
               origin_desc(item)));
     item.flags |= (ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
-
-    set_ident_type(item, true);
+    identify_item(item);
 
     if (is_gizmo)
     {
@@ -1591,8 +1590,7 @@ bool AcquireMenu::examine_index(int i)
     // hygiene
     item_def &item = *static_cast<item_def*>(items[i]->data);
 
-    item.flags |= (ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID
-                   | ISFLAG_NOTED_GET);
+    item.flags |= (ISFLAG_IDENTIFIED | ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
     describe_item_popup(item);
     deselect_all();
 
@@ -1617,9 +1615,7 @@ static item_def _acquirement_item_def(object_class_type item_type, int agent)
 
         // We make a copy of the item def, but we don't keep the real item.
         item = env.item[item_index];
-        set_ident_flags(item,
-                // Act as if we've received this item already to prevent notes.
-                ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
+        item.flags |= ISFLAG_IDENTIFIED;
         destroy_item(item_index);
     }
 

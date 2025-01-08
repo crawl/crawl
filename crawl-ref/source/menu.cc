@@ -222,6 +222,7 @@ void UIMenu::update_items()
     _invalidate_sizereq();
 
     item_info.resize(m_menu->items.size());
+    do_layout(m_region.width, m_num_columns, true);
     for (unsigned int i = 0; i < m_menu->items.size(); ++i)
         update_item(i);
 

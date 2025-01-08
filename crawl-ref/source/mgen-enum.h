@@ -133,14 +133,10 @@ enum band_type
     BAND_THERMIC_DYNAMOS,
     BAND_ORB_SPIDERS,
     BAND_SIN_BEASTS,
+    BAND_WURMS_AND_MASTER,
+    BAND_SLIMES_AND_MASTER,
+    BAND_ELEPHANTS_AND_MASTER,
     NUM_BANDS                   // always last
-};
-
-enum dragon_class_type
-{
-    DRAGON_LIZARD,
-    DRAGON_DRACONIAN,
-    DRAGON_DRAGON,
 };
 
 enum proximity_type   // proximity to player to create monster

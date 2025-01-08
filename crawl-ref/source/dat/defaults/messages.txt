@@ -39,9 +39,10 @@ msc += $warning:floor suddenly vibrates
 msc += $warning:a sudden draft
 msc += $warning:coins.*counted
 msc += $warning:tolling.*bell
+msc += $warning:notes of the bell
 msc += $warning:roar of battle
 msc += $warning:creaking.*portcullis
-msc += $warning:portcullis is probably
+msc += $warning:portcullis has been lowered
 msc += $warning:wave of frost
 msc += $warning:crackling.*melting
 msc += $warning:hiss.*sand
@@ -98,6 +99,7 @@ force_more_message += You cannot cast spells when silenced
 force_more_message += This is a scroll of acquirement
 force_more_message += create your gizmo
 force_more_message += malevolent force fills
+force_more_message += malevolence running through your instability
 
 ## Zot is coming!
 force_more_message += You have lingered too long
