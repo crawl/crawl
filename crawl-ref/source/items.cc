@@ -2055,23 +2055,27 @@ static bool _merge_evokers(const item_def &it, int &inv_slot, bool quiet)
             continue;
         }
 
-        bool improved = evoker_plus(it.sub_type) < MAX_EVOKER_ENCHANT;
+        bool can_improve = evoker_plus(it.sub_type) < MAX_EVOKER_ENCHANT;
+        if (!can_improve)
+        {
+            if (!quiet)
+            {
+                mprf("%s cannot be improved any further.",
+                     you.inv[inv_slot].name(DESC_YOUR).c_str());
+            }
+            return true;
+        }
 
-        if (improved)
-            evoker_plus(it.sub_type)++;
+        evoker_plus(it.sub_type)++;
+        if (evoker_plus(it.sub_type) == MAX_EVOKER_ENCHANT)
+            set_item_autopickup(it, AP_FORCE_OFF);
 
-        if (!quiet && improved)
+        if (!quiet)
         {
 #ifdef USE_SOUND
             parse_sound(PICKUP_SOUND);
 #endif
             mprf_nocap("%s (improved by +1).",
-                        menu_colour_item_name(you.inv[inv_slot],
-                                                    DESC_INVENTORY).c_str());
-        }
-        else if (!quiet)
-        {
-            mprf_nocap("%s can't be improved any further.",
                         menu_colour_item_name(you.inv[inv_slot],
                                                     DESC_INVENTORY).c_str());
         }
