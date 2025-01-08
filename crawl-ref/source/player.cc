@@ -2517,7 +2517,7 @@ static void _recharge_xp_evokers(int exp)
         if (debt == 0)
             continue;
 
-        int plus_factor = div_rand_round(5 * xp_factor, 5 + evoker->plus);
+        int plus_factor = div_rand_round(5 * xp_factor, 5 + evoker_plus(evoker->sub_type));
         const int old_charges = evoker_charges(i);
         debt = max(0, debt - div_rand_round(exp, plus_factor));
         const int gained = evoker_charges(i) - old_charges;
