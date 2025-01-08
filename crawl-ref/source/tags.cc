@@ -521,11 +521,6 @@ static void _marshall_as_int(writer& th, const T& t)
     marshallInt(th, static_cast<int>(t));
 }
 
-static misc_item_type _unmarshall_misc_item_type(reader &th)
-{
-    return (misc_item_type)unmarshallInt(th);
-}
-
 template <typename data>
 void marshallSet(writer &th, const set<data> &s,
                  void (*marshall)(writer &, const data &))
@@ -4144,8 +4139,11 @@ static void _tag_read_you(reader &th)
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() >= TAG_MINOR_GENERATED_MISC
         && th.getMinorVersion() < TAG_MINOR_STACKABLE_EVOKERS_TWO)
+    {
+        set<int> dummy;
+        unmarshallSet(th, dummy, unmarshallInt);
+    }
 #endif
-        unmarshallSet(th, you.generated_misc, _unmarshall_misc_item_type);
 
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() >= TAG_MINOR_UNCANCELLABLES

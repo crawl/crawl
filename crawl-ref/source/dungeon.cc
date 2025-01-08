@@ -770,7 +770,6 @@ void dgn_reset_player_data()
     you.runes.reset();
     you.obtainable_runes = 15;
     initialise_item_sets(true);
-    you.generated_misc.clear();
     you.unique_items.init(UNIQ_NOT_EXISTS);
     you.octopus_king_rings = 0x00;
     you.item_description.init(255); // random names need reset after this, e.g.
@@ -4795,7 +4794,6 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
         item.base_type = OBJ_MISCELLANY;
         const auto typ = get_misc_item_type(spec.sub_type, false);
         item.sub_type = typ;
-        you.generated_misc.insert(typ);
         item_colour(item);
         item_set_appearance(item);
         ASSERT(item.is_valid());

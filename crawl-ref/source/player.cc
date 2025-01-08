@@ -5580,7 +5580,6 @@ player::player()
     seen_misc.reset();
     seen_talisman.reset();
 
-    generated_misc.clear();
     octopus_king_rings = 0x00;
 
     normal_vision    = LOS_DEFAULT_RANGE;
