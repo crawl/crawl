@@ -3458,8 +3458,24 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         return reasons.size();
     }
 
-    case OBJ_TALISMANS:
     case OBJ_MISCELLANY:
+        // Try to discourage players from wasting money on a useless evoker in a
+        // shop (which will vanish immediately when they buy it).
+        if (is_shop_item(item) && is_xp_evoker(item)
+            && evoker_plus(item.sub_type) >= MAX_EVOKER_ENCHANT)
+        {
+            for (const item_def &inv_item : you.inv)
+            {
+                if (inv_item.base_type == OBJ_MISCELLANY
+                    && inv_item.sub_type == item.sub_type)
+                {
+                    return true;
+                }
+            }
+        }
+
+        // Deliberate fallthrough.
+    case OBJ_TALISMANS:
     case OBJ_WANDS:
         return cannot_evoke_item_reason(&item, temp, ident || item_type_known(item)).size();
 
