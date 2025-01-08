@@ -921,7 +921,16 @@ string screenshot()
 
 int viewmap_flash_colour()
 {
-    return _layers & LAYERS_ALL && you.berserk() ? RED : BLACK;
+    COLOURS status = BLACK;
+
+    if (you.berserk())
+        status = RED;
+    else if (you.paralysed())
+        status = LIGHTBLUE;
+    else if (you.petrified())
+        status = LIGHTGRAY;
+
+    return _layers & LAYERS_ALL && status;
 }
 
 // Updates one square of the view area. Should only be called for square
