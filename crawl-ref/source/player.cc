@@ -2498,7 +2498,7 @@ static void _recharge_xp_evokers(int exp)
 
     const int xp_by_xl = exp_needed(you.experience_level+1, 0)
                        - exp_needed(you.experience_level, 0);
-    const int skill_denom = 3 + you.skill_rdiv(SK_EVOCATIONS, 2, 13);
+    const int skill_denom = 3 + you.skill_rdiv(SK_EVOCATIONS, 1, 9);
     const int xp_factor = max(xp_by_xl / 5, 100) / skill_denom;
 
     if (you.wearing_ego(EQ_GIZMO, SPGIZMO_GADGETEER)
@@ -2517,8 +2517,9 @@ static void _recharge_xp_evokers(int exp)
         if (debt == 0)
             continue;
 
+        int plus_factor = div_rand_round(5 * xp_factor, 5 + evoker_plus(evoker->sub_type));
         const int old_charges = evoker_charges(i);
-        debt = max(0, debt - div_rand_round(exp, xp_factor));
+        debt = max(0, debt - div_rand_round(exp, plus_factor));
         const int gained = evoker_charges(i) - old_charges;
         if (gained)
             print_xp_evoker_recharge(*evoker, gained, silenced(you.pos()));
@@ -5579,7 +5580,6 @@ player::player()
     seen_misc.reset();
     seen_talisman.reset();
 
-    generated_misc.clear();
     octopus_king_rings = 0x00;
 
     normal_vision    = LOS_DEFAULT_RANGE;

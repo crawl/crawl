@@ -1845,8 +1845,8 @@ bool ShoppingList::cull_identical_items(const item_def& item, int cost)
         // Only these are really interchangeable.
         break;
     case OBJ_MISCELLANY:
-        // ... and a few of these.
-        if (!is_xp_evoker(item))
+        // Evokers are useless to purchase at max charge, but useful otherwise.
+        if (!is_xp_evoker(item) || evoker_plus(item.sub_type) != MAX_EVOKER_ENCHANT)
             return 0;
         break;
     default:

@@ -208,6 +208,7 @@ bool item_is_spellbook(const item_def &item) PURE;
 
 bool is_xp_evoker(const item_def &item);
 int &evoker_debt(int evoker_type);
+int &evoker_plus(int evoker_type);
 void expend_xp_evoker(int evoker_type);
 int evoker_charge_xp_debt(int evoker_type);
 int evoker_charges(int evoker_type);

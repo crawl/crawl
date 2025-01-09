@@ -647,8 +647,6 @@ void destroy_item(item_def &item, bool never_created)
     {
         if (is_unrandom_artefact(item))
             set_unique_item_status(item, UNIQ_NOT_EXISTS);
-        if (item.base_type == OBJ_MISCELLANY)
-            you.generated_misc.erase((misc_item_type)item.sub_type);
     }
 
     item.clear();
@@ -2066,6 +2064,49 @@ static bool _merge_stackable_item_into_inv(const item_def &it, int quant_got,
     return false;
 }
 
+static bool _merge_evokers(const item_def &it, int &inv_slot, bool quiet)
+{
+    for (inv_slot = 0; inv_slot < ENDOFPACK; inv_slot++)
+    {
+        if (you.inv[inv_slot].base_type != OBJ_MISCELLANY
+            || you.inv[inv_slot].sub_type != it.sub_type)
+        {
+            continue;
+        }
+
+        bool can_improve = evoker_plus(it.sub_type) < MAX_EVOKER_ENCHANT;
+        if (!can_improve)
+        {
+            if (!quiet)
+            {
+                mprf("%s cannot be improved any further.",
+                     you.inv[inv_slot].name(DESC_YOUR).c_str());
+            }
+            return true;
+        }
+
+        evoker_plus(it.sub_type)++;
+        if (evoker_plus(it.sub_type) == MAX_EVOKER_ENCHANT)
+            set_item_autopickup(it, AP_FORCE_OFF);
+
+        if (!quiet)
+        {
+#ifdef USE_SOUND
+            parse_sound(PICKUP_SOUND);
+#endif
+            mprf_nocap("%s (improved by +1).",
+                        menu_colour_item_name(you.inv[inv_slot],
+                                                    DESC_INVENTORY).c_str());
+        }
+
+        return true;
+    }
+
+    inv_slot = -1;
+    return false;
+}
+
+
 /**
  * Attempt to merge a wands charges into an existing wand of the same type in
  * inventory.
@@ -2282,6 +2323,14 @@ static bool _merge_items_into_inv(item_def &it, int quant_got,
     // attempt to merge into an existing stack, if possible
     if (it.base_type == OBJ_WANDS
         && _merge_wand_charges(it, inv_slot, quiet))
+    {
+        quant_got = 1;
+        return true;
+    }
+
+    // attempt to merge into an existing stack, if possible
+    if (is_xp_evoker(it)
+        && _merge_evokers(it, inv_slot, quiet))
     {
         quant_got = 1;
         return true;

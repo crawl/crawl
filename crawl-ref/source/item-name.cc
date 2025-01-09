@@ -1772,6 +1772,8 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     {
         if (!dbname && item_typ == MISC_ZIGGURAT && you.zigs_completed > 0)
             buff << "+" << you.zigs_completed << " ";
+        else if (!dbname && is_xp_evoker(*this))
+            buff << "+" << evoker_plus(item_typ) << " ";
 
         buff << misc_type_name(item_typ);
 
@@ -3323,8 +3325,24 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         return reasons.size();
     }
 
-    case OBJ_TALISMANS:
     case OBJ_MISCELLANY:
+        // Try to discourage players from wasting money on a useless evoker in a
+        // shop (which will vanish immediately when they buy it).
+        if (is_shop_item(item) && is_xp_evoker(item)
+            && evoker_plus(item.sub_type) >= MAX_EVOKER_ENCHANT)
+        {
+            for (const item_def &inv_item : you.inv)
+            {
+                if (inv_item.base_type == OBJ_MISCELLANY
+                    && inv_item.sub_type == item.sub_type)
+                {
+                    return true;
+                }
+            }
+        }
+
+        // Deliberate fallthrough.
+    case OBJ_TALISMANS:
     case OBJ_WANDS:
         return cannot_evoke_item_reason(&item, temp, ident || item_type_known(item)).size();
 

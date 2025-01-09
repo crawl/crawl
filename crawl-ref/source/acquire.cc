@@ -1465,7 +1465,6 @@ static void _create_acquirement_item(item_def &item, string items_key,
         {
             destroy_item(aitem, true);
         }
-        // TODO: if we allow misc acquirement, also destroy unchosen miscs
     }
 
     take_note(Note(NOTE_ACQUIRE_ITEM, 0, 0, item.name(DESC_A),

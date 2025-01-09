@@ -3170,6 +3170,23 @@ int &evoker_debt(int evoker_type)
 }
 
 /**
+ * Return the 'plus' corresponding to the given type of evoker.
+ * This is different than the item's plus because we want to store this globally
+ * and because that plus value is used to pass info to the webtiles client
+ * Asserts that the given evoker type actually corresponds to an xp evoker.
+ *
+ * @param evoker_type       The misc_item_type of the evoker in question.
+ * @return                  The evoker's enchantment level.
+ */
+int &evoker_plus(int evoker_type)
+{
+    const evoker_data* edata = map_find(xp_evoker_data,
+                                   static_cast<misc_item_type>(evoker_type));
+    ASSERT(edata);
+    return you.props[edata->plus].get_int();
+}
+
+/**
  * How many max charges can the given XP evoker have?
  *
  * @param evoker_type The type of evoker.

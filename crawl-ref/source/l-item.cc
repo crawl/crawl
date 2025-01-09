@@ -1660,11 +1660,6 @@ LUAFN(l_item_for_set)
 
 static bool _item_pickable(object_class_type base, int sub)
 {
-    if (base == OBJ_MISCELLANY
-        && you.generated_misc.count((misc_item_type)sub))
-    {
-        return false;
-    }
     return !item_excluded_from_set(base, sub);
 }
 
