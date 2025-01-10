@@ -4591,9 +4591,9 @@ bool slow_player(int turns)
     else
     {
         if (you.duration[DUR_SLOW] == 0)
-            mpr("You feel yourself slow down.");
+            mprf(MSGCH_WARN, "You feel yourself slow down.");
         else
-            mpr("You feel as though you will be slow longer.");
+            mprf(MSGCH_WARN, "You feel as though you will be slow longer.");
 
         you.increase_duration(DUR_SLOW, turns, threshold);
         learned_something_new(HINT_YOU_ENCHANTED);
