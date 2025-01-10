@@ -779,9 +779,9 @@ endif # pkg-config
 ifndef GLES
 ifneq ($(uname_S),Darwin)
 ifeq ($(msys),Yes)
-LIBS += -lopengl32 -lglu32
+LIBS += -lopengl32
 else
-LIBS += -lGL -lGLU
+LIBS += -lGL
 endif
 endif
 endif
