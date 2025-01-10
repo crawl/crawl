@@ -61,7 +61,7 @@ bandage-wrapped arm
 bras bandé
 %%%%
 bony arm
-bras couvert d'os
+bras osseux
 %%%%
 
 # these ones only used in singular
@@ -139,5 +139,5 @@ bandage-wrapped arms
 bras bandés
 %%%%
 bony arms
-bras couverts d'os
+bras osseux
 %%%%
