@@ -3026,7 +3026,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         mummy_death_curse_fineff::schedule(
                 invalid_monster_index(killer_index)
                                             ? nullptr : &env.mons[killer_index],
-                mons.name(DESC_A),
+                &mons,
                 killer,
                 mummy_curse_power(mons.type));
     }

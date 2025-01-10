@@ -9,7 +9,6 @@
  *
  * Curses are currently used by:
  * - Dying mummies
- * - Kiku wrath
  * - Scythe of curses
  */
 #include "AppHdr.h"
@@ -79,10 +78,7 @@ static void _ouch(actor& target, const actor * source, int dam,
     if (target.is_monster())
     {
         monster* mon_target = target.as_monster();
-
-        // curse damage is unresistable (torment flavoured, rtorm is
-        // checked earlier for messaging reasons)
-        mon_target->hurt(source, dam, BEAM_TORMENT_DAMAGE, KILLED_BY_BEAM,
+        mon_target->hurt(source, dam, BEAM_MISSILE, KILLED_BY_BEAM,
                          "", "", false);
 
         if (!mon_target->alive())
@@ -91,7 +87,7 @@ static void _ouch(actor& target, const actor * source, int dam,
     else
     {
         bool see_source = source && you.can_see(*source);
-        ouch(dam, KILLED_BY_SOMETHING, source ? source->mid : MID_NOBODY,
+        ouch(dam, KILLED_BY_DEATH_CURSE, source ? source->mid : MID_NOBODY,
              cause.c_str(), see_source,
              source ? source->name(DESC_A, true).c_str() : nullptr);
     }
@@ -155,12 +151,12 @@ static void _curse_message(actor& target, actor* /*source*/,
  * following two sets of weights, with the weight of "message" kept at 0 for
  * severities higher than 15.
  *
- * | severity | message | pain | slow | drain | torment |
- * | -------- | ------- | ---- | ---- | ----- | ------- |
- * | 0        | 80      | 20   | 0    | 0     | 0       |
- * | 15       | 0       | 40   | 20   | 20    | 20      |
+ * | severity | message | smite | slow | drain | torment |
+ * | -------- | ------- | ----- | ---- | ----- | ------- |
+ * | 0        | 80      | 20    | 0    | 0     | 0       |
+ * | 15       | 0       | 40    | 20   | 20    | 20      |
  *
- * Pain damage, slow duration, and drain effect all scale with severity.
+ * Smite damage, slow duration, and drain effect all scale with severity.
  *
  * Kiku curse protection halves the severity when partially averting the curse,
  * making Khufu's curse a bit weaker than a mummy priest's.
@@ -172,24 +168,14 @@ static const vector<curse_effect> curse_effects = {
         80, 0,
     },
     {
-        "pain",
+        "smiting",
         [](actor& target, actor* source, string cause, int severity) {
-            if (target.res_torment())
-            {
-                _do_msg(target, "You feel weird for a moment.",
-                        "@The_monster@ has a weird expression for a moment.",
-                        "Something is bathed in an unholy light.");
-                return;
-            }
-            else
-            {
-                int dmg = 5 + random2avg(2*severity,2);
-                string punct = attack_strength_punctuation(dmg);
-                _do_msg(target, "Pain shoots through your body" + punct,
-                        "@The_monster@ convulses with pain" + punct,
-                        "Something is bathed in an unholy light" + punct);
-                _ouch(target, source, dmg, cause);
-            }
+            int dmg = 5 + random2avg(2*severity,2);
+            string punct = attack_strength_punctuation(dmg);
+            _do_msg(target, "A forgotten god smites you" + punct,
+                    "A forgotten god smites @The_monster@" + punct,
+                    "A forgotten god smites something" + punct);
+            _ouch(target, source, dmg, cause);
         },
         20, 40,
     },
@@ -211,10 +197,7 @@ static const vector<curse_effect> curse_effects = {
                     "You are engulfed in negative energy!",
                     "@The_monster@ is engulfed in negative energy!",
                     "Something is engulfed in negative energy!");
-            if (target.is_player() && x_chance_in_y(severity, 27))
-                lose_stat(STAT_RANDOM, 1 + random2avg(severity / 3, 2));
-            else
-                target.drain(source, false, ( severity * 100 ) / 27);
+            target.drain(source, false, ( severity * 100 ) / 27);
         },
         0, 40,
     },
