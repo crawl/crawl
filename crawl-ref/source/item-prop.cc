@@ -2374,7 +2374,7 @@ static map<potion_type, item_rarity_type> _potion_rarity = {
     { POT_HASTE,        RARITY_UNCOMMON },
     { POT_LIGNIFY,      RARITY_UNCOMMON },
     { POT_ATTRACTION,   RARITY_UNCOMMON },
-    { POT_DEGENERATION, RARITY_UNCOMMON },
+    { POT_MOONSHINE,    RARITY_UNCOMMON },
     { POT_MIGHT,        RARITY_UNCOMMON },
     { POT_BRILLIANCE,   RARITY_UNCOMMON },
     { POT_MUTATION,     RARITY_UNCOMMON },

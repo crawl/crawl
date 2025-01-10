@@ -1442,7 +1442,7 @@ ITEM:   acquire jewellery / any useful good_item
 ITEM:   acquire weapon / acquire armour / any useful good_item
 ITEM:   gold q:1
 KITEM:  D = stone mimic
-KITEM:  E = wand of flame mimic / potion of degeneration mimic / scroll of noise mimic
+KITEM:  E = wand of flame mimic / potion of moonshine mimic / scroll of noise mimic
 KITEM:  F = any weapon damaged pre_id mimic / any armour damaged pre_id mimic
 KFEAT:  X = rock_wall mimic
 : trove.setup_features(_G)

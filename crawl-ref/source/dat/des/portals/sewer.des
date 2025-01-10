@@ -984,7 +984,7 @@ COLOUR:  " = green
 COLOUR:  ? = lightgreen
 : sewer_setup(_G)
 KITEM:   ' = scroll of noise pre_id w:50 / \
-             potion of degeneration pre_id w:100 / \
+             potion of moonshine pre_id w:100 / \
              potion of mutation pre_id w:30
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

@@ -841,27 +841,22 @@ public:
     }
 };
 
-class PotionDegeneration : public PotionEffect
+class PotionMoonshine : public PotionEffect
 {
 private:
-    PotionDegeneration() : PotionEffect(POT_DEGENERATION) { }
-    DISALLOW_COPY_AND_ASSIGN(PotionDegeneration);
+    PotionMoonshine() : PotionEffect(POT_MOONSHINE) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionMoonshine);
 public:
-    static const PotionDegeneration &instance()
+    static const PotionMoonshine &instance()
     {
-        static PotionDegeneration inst; return inst;
+        static PotionMoonshine inst; return inst;
     }
 
     bool effect(bool=true, int=40, bool=true) const override
     {
-        mpr("There was something very wrong with that liquid.");
-        bool success = false;
-        for (int i = 0; i < NUM_STATS; ++i)
-        {
-            if (lose_stat(static_cast<stat_type>(i), 1 + random2(3)))
-                success = true;
-        }
-        return success;
+        mpr("You feel tipsy.");
+        you.increase_duration(DUR_VERTIGO, random_range(10, 25), 50);
+        return true;
     }
 
     bool quaff(bool was_known) const override
@@ -883,7 +878,7 @@ static const unordered_map<potion_type, const PotionEffect*, std::hash<int>> pot
     { POT_CANCELLATION, &PotionCancellation::instance(), },
     { POT_AMBROSIA, &PotionAmbrosia::instance(), },
     { POT_INVISIBILITY, &PotionInvisibility::instance(), },
-    { POT_DEGENERATION, &PotionDegeneration::instance(), },
+    { POT_MOONSHINE, &PotionMoonshine::instance(), },
     { POT_EXPERIENCE, &PotionExperience::instance(), },
     { POT_MAGIC, &PotionMagic::instance(), },
     { POT_BERSERK_RAGE, &PotionBerserk::instance(), },

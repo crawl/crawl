@@ -966,7 +966,7 @@ i-invisibility POT_INVISIBILITY
 # start TAG_MAJOR_VERSION == 34
 i-porridge POT_PORRIDGE
 # end TAG_MAJOR_VERSION
-i-degeneration POT_DEGENERATION
+i-confusion POT_MOONSHINE
 # start TAG_MAJOR_VERSION == 34
 i-decay POT_REMOVEME5
 i-confusion POT_REMOVE_ME

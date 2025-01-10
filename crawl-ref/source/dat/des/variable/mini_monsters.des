@@ -2716,7 +2716,7 @@ TAGS:     extra
 DEPTH:    D:5-11
 MONS:     kobold brigand ; wand of flame pre_id . short sword . \
                            dart ego:poisoned | dart ego:curare w:5
-ITEM:     potion of degeneration w:50 pre_id / potion of ambrosia pre_id
+ITEM:     potion of moonshine w:50 pre_id / potion of ambrosia pre_id
 KFEAT:    e = cache of fruit
 SUBST:    e : e.
 : decorative_floor(_G, 'V', "floral vase")
@@ -9741,7 +9741,7 @@ NSUBST: w = 3:3 / 3:6 / 3:7 / 4 = 67w / *:w
 SUBST:  ~ = xw, ? = 2
 KITEM:  Z = any skeleton
 : end
-ITEM:   potion of degeneration pre_id, potion of ambrosia pre_id
+ITEM:   potion of moonshine pre_id, potion of ambrosia pre_id
 ITEM:   scroll of immolation pre_id / % w:20
 KFEAT:  67 = w
 NSUBST: . = 10:d / 2:e / 8:Z / 3:` / 3:4 / 3 = 45.. / *:.

@@ -2022,7 +2022,7 @@ ORIENT:  encompass
 KMONS:   p = pile of debris
 KMONS:   E = demonic plant
 KMONS:   f = butterfly perm_ench:paralysis
-KITEM:   d = potion of degeneration pre_id
+KITEM:   d = potion of moonshine pre_id
 KITEM:   r = large rock
 KITEM:   s = human skeleton / kobold skeleton / orc skeleton / \
              naga skeleton / merfolk skeleton / spriggan skeleton

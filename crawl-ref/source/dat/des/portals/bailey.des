@@ -272,7 +272,7 @@ MONS:   gnoll ; spear / goblin ; spear
 : end
 SUBST:  . = ...;!
 COLOUR: ; = red
-KITEM:  ! = potion of degeneration q:2 pre_id
+KITEM:  ! = potion of moonshine q:2 pre_id
 KFEAT:  ! = floor
 SUBST:  ; = .
 MAP

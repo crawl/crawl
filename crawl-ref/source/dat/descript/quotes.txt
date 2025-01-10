@@ -1360,15 +1360,6 @@ potion of curing
  then certainly I am for it.”
     -Noah S. Sweat, Jr. “If By Whiskey”. 1952
 %%%%
-potion of degeneration
-
-“If when you say ‘whiskey’ you mean the devil's brew, the poison
- scourge, the bloody monster, that defiles innocence, dethrones
- reason, destroys the home, creates misery and poverty, yea,
- literally takes the bread from the mouths of little children...
- then certainly I am against it.”
-    -Noah S. Sweat, Jr. “If By Whiskey”. 1952
-%%%%
 potion of enlightenment
 
 “Let go your earthly tether. Enter the void. Empty, and become wind.”
@@ -1396,6 +1387,15 @@ potion of lignification
  as clinging roots were fastened to the ground—
  her face was hidden with encircling leaves.”
     -Ovid, _Metamorphoses_, Book I:253-259, trans. Brookes More. 1922
+%%%%
+potion of moonshine
+
+“If when you say ‘whiskey’ you mean the devil's brew, the poison
+ scourge, the bloody monster, that defiles innocence, dethrones
+ reason, destroys the home, creates misery and poverty, yea,
+ literally takes the bread from the mouths of little children...
+ then certainly I am against it.”
+    -Noah S. Sweat, Jr. “If By Whiskey”. 1952
 %%%%
 potion of resistance
 

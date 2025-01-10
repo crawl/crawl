@@ -2198,7 +2198,7 @@ KMONS:   K = patrolling hell knight
 KMONS:   M = patrolling Margery w:1 / patrolling hell knight, \
              patrolling hell knight
 # and snacks
-KITEM:   ? = potion of degeneration pre_id q:3, \
+KITEM:   ? = potion of moonshine pre_id q:3, \
              any potion w:30 / potion of mutation pre_id q:1
 : kitem("$ = gold q:" .. crawl.random_range(33, 133) .. " no_pickup")
 KITEM:   MK` = human skeleton

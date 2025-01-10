@@ -5474,7 +5474,7 @@ void unmarshallItem(reader &th, item_def &item)
             case POT_STRONG_POISON:
             case POT_BLOOD:
             case POT_BLOOD_COAGULATED:
-                item.sub_type = POT_DEGENERATION;
+                item.sub_type = POT_MOONSHINE;
                 break;
             case POT_CURE_MUTATION:
             case POT_BENEFICIAL_MUTATION:

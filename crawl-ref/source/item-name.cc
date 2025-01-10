@@ -678,7 +678,7 @@ const char* potion_type_name(int potiontype)
     case POT_CANCELLATION:      return "cancellation";
     case POT_AMBROSIA:          return "ambrosia";
     case POT_INVISIBILITY:      return "invisibility";
-    case POT_DEGENERATION:      return "degeneration";
+    case POT_MOONSHINE:         return "moonshine";
     case POT_EXPERIENCE:        return "experience";
     case POT_MAGIC:             return "magic";
     case POT_BERSERK_RAGE:      return "berserk rage";
@@ -2885,7 +2885,7 @@ bool is_bad_item(const item_def &item)
 
         switch (item.sub_type)
         {
-        case POT_DEGENERATION:
+        case POT_MOONSHINE:
             return true;
         default:
             return false;

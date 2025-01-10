@@ -2548,14 +2548,14 @@ KMONS:  F = spriggan druid / deep elf pyromancer / arcanist w:5 / occultist w:5
 KMONS:  E = water nymph / merfolk aquamancer / merfolk javelineer /\
             merfolk aquamancer / arcanist ; nothing / occultist ; nothing
 KMONS:  D = stone giant / ettin
-ITEM:       potion of degeneration pre_id
+ITEM:       potion of moonshine pre_id
 : item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
 ITEM:   scroll of acquirement pre_id q:1
 ITEM:   any book w:30 / randbook disc:alchemy / condenser vane w:1
 KITEM:  " = gold q:1 no_pickup
 KITEM:  H = any magical staff no_pickup
 KITEM:  Q = star_item
-KITEM:  JKL = potion of degeneration pre_id
+KITEM:  JKL = potion of moonshine pre_id
 KFEAT:  C = cache of meat / cache of fruit / cache of baked goods
 KFEAT:  E = shallow_water
 KFEAT:  N = granite_statue

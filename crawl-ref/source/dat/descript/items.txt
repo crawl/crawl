@@ -1043,10 +1043,6 @@ potion of curing
 A potion which restores a small amount of health, and cures poison and
 confusion.
 %%%%
-potion of degeneration
-
-A noxious concoction which reduces strength, intelligence and dexterity.
-%%%%
 potion of enlightenment
 
 A potion which uplifts both the body and mind of its drinkers, lifting them
@@ -1084,6 +1080,11 @@ A valuable potion which grants an infusion of magical energy.
 potion of might
 
 A potion which greatly increases the power of the drinker's melee attacks.
+%%%%
+potion of moonshine
+
+A potent alcohol, distilled in some dubious corner of the dungeon. Drinking it
+reduces the imbiber's accuracy, evasion, and spellcasting success for a while.
 %%%%
 potion of mutation
 

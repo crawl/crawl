@@ -865,10 +865,6 @@ potion of curing
 
 这瓶药水能回复少量健康值，并治疗中毒和混乱。
 %%%%
-potion of degeneration
-
-一个有毒的混合物，这会降低力量、智力和敏捷。
-%%%%
 potion of enlightenment
 
 这瓶药水能够提升饮用者的身心，

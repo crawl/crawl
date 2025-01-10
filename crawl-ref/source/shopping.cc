@@ -473,7 +473,7 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 30;
                 break;
 
-            case POT_DEGENERATION:
+            case POT_MOONSHINE:
                 valued += 10;
                 break;
 
@@ -759,8 +759,7 @@ bool is_worthless_consumable(const item_def &item)
     case OBJ_POTIONS:
         switch (item.sub_type)
         {
-        // Blood potions are worthless because they are easy to make.
-        case POT_DEGENERATION:
+        case POT_MOONSHINE:
             return true;
         default:
             return false;
