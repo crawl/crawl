@@ -108,10 +108,10 @@ DECIMAL_POINT
 ####################
 %%%%
 Escape
-Échappement
+Echap
 %%%%
 Enter
-Éntrée
+Entrée
 %%%%
 Ctrl-A
 Ctrl-A
