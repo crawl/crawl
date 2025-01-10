@@ -2331,6 +2331,24 @@ void reduce_xp_penance(god_type god, int amount)
         dec_penance(god, you.penance[god] - new_pen);
 }
 
+void gozag_abandon_shops_on_level()
+{
+    vector<map_marker *> markers = env.markers.get_all(MAT_FEATURE);
+    for (const auto marker : markers)
+    {
+        map_feature_marker *feat =
+            dynamic_cast<map_feature_marker *>(marker);
+        ASSERT(feat);
+        if (feat->feat == DNGN_ABANDONED_SHOP)
+        {
+            // TODO: clear shop data out?
+            env.grid(feat->pos) = DNGN_ABANDONED_SHOP;
+            view_update_at(feat->pos);
+            env.markers.remove(feat);
+        }
+    }
+}
+
 void gozag_incite(monster *mon)
 {
     ASSERT(!mon->wont_attack());

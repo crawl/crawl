@@ -20,6 +20,7 @@
 #include "english.h"
 #include "env.h"
 #include "files.h"
+#include "god-wrath.h"
 #include "invent.h"
 #include "item-name.h"
 #include "item-prop.h"
@@ -2084,12 +2085,22 @@ void ShoppingList::remove_dead_shops()
     // Only restore the excursion at the very end.
     level_excursion le;
 
+    // This is potentially a lot of excursions, it might be cleaner to do this
+    // by annotating the shopping list directly
     set<level_pos> shops_to_remove;
+    set<level_id> levels_seen;
 
     for (CrawlHashTable &thing : *list)
     {
         const level_pos place = thing_pos(thing);
-        le.go_to(place.id); // thereby running DACT_REMOVE_GOZAG_SHOPS
+        le.go_to(place.id);
+        if (!levels_seen.count(place.id))
+        {
+            // Alternatively, this could call catchup_dactions. But that might
+            // have other side effects.
+            gozag_abandon_shops_on_level();
+            levels_seen.insert(place.id);
+        }
         const shop_struct *shop = shop_at(place.pos);
 
         if (!shop)
