@@ -3284,6 +3284,20 @@ static void _tag_read_you(reader &th)
         if (you.duration[DUR_DIVINE_SHIELD] < 0)
             you.duration[DUR_DIVINE_SHIELD] = 0;
     }
+
+    if (th.getMinorVersion() < TAG_MINOR_SIMPLIFY_STAT_ZERO)
+    {
+        // Remove old stat-zero statuses.
+        you.duration[DUR_COLLAPSE] = 0;
+        you.duration[DUR_BRAINLESS] = 0;
+        you.duration[DUR_CLUMSY] = 0;
+
+        // Set new stat zero tracking, if any stats are currently below zero.
+        you.attribute[ATTR_STAT_ZERO] = 0;
+        for (int i = STAT_STR; i <= STAT_DEX; ++i)
+            if (you.stat(static_cast<stat_type>(i), false) <= 0)
+                you.attribute[ATTR_STAT_ZERO] |= 1 << i;
+    }
 #endif
 
 #if TAG_MAJOR_VERSION == 34

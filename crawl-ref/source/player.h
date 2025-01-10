@@ -809,7 +809,7 @@ public:
     bool liquefied_ground() const override;
     bool incapacitated() const override
     {
-        return actor::incapacitated() || duration[DUR_CLUMSY];
+        return actor::incapacitated();
     }
     bool immune_to_hex(const spell_type hex) const;
 

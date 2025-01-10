@@ -190,10 +190,10 @@ enum duration_type
 #endif
     DUR_CLEAVE,
     DUR_GOZAG_GOLD_AURA,
+#if TAG_MAJOR_VERSION == 34
     DUR_COLLAPSE,
     DUR_BRAINLESS,
     DUR_CLUMSY,
-#if TAG_MAJOR_VERSION == 34
     DUR_DEVICE_SURGE,
 #endif
     DUR_DOOM_HOWL,

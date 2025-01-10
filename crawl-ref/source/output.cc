@@ -1006,7 +1006,7 @@ static void _print_stats_hp(int x, int y)
 
 static short _get_stat_colour(stat_type stat)
 {
-    if (you.duration[stat_zero_duration(stat)])
+    if (you.stat(stat) <= 0)
         return LIGHTRED;
 
     // Check the stat_colour option for warning thresholds.
@@ -1232,7 +1232,7 @@ static void _get_status_lights(vector<status_light>& out)
     {
         STATUS_ORB,
         STATUS_ZOT,
-        STATUS_STR_ZERO, STATUS_INT_ZERO, STATUS_DEX_ZERO,
+        STATUS_STAT_ZERO,
         STATUS_ALIVE_STATE,
         DUR_PARALYSIS,
         DUR_CONF,

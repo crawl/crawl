@@ -1065,7 +1065,6 @@ bool regeneration_is_inhibited(const monster *m)
 {
     // used mainly for resting: don't add anything here that can be waited off
     if (you.get_mutation_level(MUT_INHIBITED_REGENERATION) == 1
-        || you.duration[DUR_COLLAPSE]
         || (you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive))
     {
         if (m)
@@ -2019,10 +2018,8 @@ static int _player_evasion(int final_scale, bool ignore_temporary)
        _player_apply_evasion_multipliers(natural_evasion, scale)
        + (_player_temporary_evasion_modifiers() * scale);
 
-    // Cap EV at a very low level if the player cannot act, has 0 dex,
-    // or is a tree.
-    if ((you.cannot_act() || you.duration[DUR_CLUMSY]
-        || you.form == transformation::tree))
+    // Cap EV at a very low level if the player cannot act or is a tree.
+    if ((you.cannot_act() || you.form == transformation::tree))
     {
         final_evasion = min((2 + _player_evasion_size_factor() / 2) * scale,
                             final_evasion);
@@ -2986,13 +2983,9 @@ int player_stealth()
     if (crawl_state.disables[DIS_MON_SIGHT])
         return 1000;
 
-    // berserking, "clumsy" (0-dex), sacrifice stealth.
-    if (you.berserk()
-        || you.duration[DUR_CLUMSY]
-        || you.get_mutation_level(MUT_NO_STEALTH))
-    {
+    // berserking, sacrifice stealth.
+    if (you.berserk() || you.get_mutation_level(MUT_NO_STEALTH))
         return 0;
-    }
 
     int stealth = you.dex() * 3;
 

@@ -414,60 +414,27 @@ static void _handle_stat_change(stat_type stat)
 {
     ASSERT_RANGE(stat, 0, NUM_STATS);
 
-    if (you.stat(stat) <= 0 && !you.duration[stat_zero_duration(stat)])
+    const bool was_zero = you.attribute[ATTR_STAT_ZERO] & (1 << (int)stat);
+    const int val = you.stat(stat);
+
+    if (val <= 0 && !was_zero)
     {
-        // Time required for recovery once the stat is restored, randomised slightly.
-        you.duration[stat_zero_duration(stat)] =
-            (20 + random2(20)) * BASELINE_DELAY;
-        mprf(MSGCH_WARN, "You have lost your %s.", stat_desc(stat, SD_NAME));
-        take_note(Note(NOTE_MESSAGE, 0, 0, make_stringf("Lost %s.",
-            stat_desc(stat, SD_NAME)).c_str()), true);
-        // 2 to 5 turns of paralysis (XXX: decremented right away?)
-        you.increase_duration(DUR_PARALYSIS, 2 + random2(3));
+        // Notify the player and make the penalty explicit.
+        mprf(MSGCH_WARN, "You have lost all your %s. It will be difficult to act "
+                         "quickly in this state!", stat_desc(stat, SD_NAME));
+
+        you.attribute[ATTR_STAT_ZERO] |= 1 << (int)stat;
+    }
+    else if (was_zero && val > 0)
+    {
+        mprf(MSGCH_RECOVERY, "You have recovered your %s.", stat_desc(stat, SD_NAME));
+        you.attribute[ATTR_STAT_ZERO] &= ~(1 << (int)stat);
     }
 
     you.redraw_stats[stat] = true;
-
-    switch (stat)
-    {
-    case STAT_STR:
-        you.redraw_armour_class = true; // includes shields
-        you.redraw_evasion = true; // Might reduce EV penalty
-        break;
-
-    case STAT_INT:
-        break;
-
-    case STAT_DEX:
-        you.redraw_evasion = true;
-        you.redraw_armour_class = true; // includes shields
-        break;
-
-    default:
-        break;
-    }
-}
-
-duration_type stat_zero_duration(stat_type stat)
-{
-    switch (stat)
-    {
-    case STAT_STR:
-        return DUR_COLLAPSE;
-    case STAT_INT:
-        return DUR_BRAINLESS;
-    case STAT_DEX:
-        return DUR_CLUMSY;
-    default:
-        die("invalid stat");
-    }
 }
 
 bool have_stat_zero()
 {
-    for (int i = 0; i < NUM_STATS; ++i)
-        if (you.duration[stat_zero_duration(static_cast<stat_type> (i))])
-            return true;
-
-    return false;
+    return you.attribute[ATTR_STAT_ZERO] > 0;
 }

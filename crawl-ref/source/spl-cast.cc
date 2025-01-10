@@ -647,13 +647,6 @@ bool can_cast_spells(bool quiet)
         return false;
     }
 
-    if (you.duration[DUR_BRAINLESS])
-    {
-        if (!quiet)
-            mpr("You lack the mental capacity to cast spells.");
-        return false;
-    }
-
     if (you.duration[DUR_NO_CAST])
     {
         if (!quiet)

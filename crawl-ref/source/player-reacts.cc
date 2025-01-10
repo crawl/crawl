@@ -730,19 +730,6 @@ static void _decrement_durations()
     dec_berserk_recovery_player(delay);
     dec_haste_player(delay);
 
-    for (int i = 0; i < NUM_STATS; ++i)
-    {
-        stat_type s = static_cast<stat_type>(i);
-        if (you.stat(s) > 0
-            && _decrement_a_duration(stat_zero_duration(s), delay))
-        {
-            mprf(MSGCH_RECOVERY, "Your %s has recovered.", stat_desc(s, SD_NAME));
-            you.redraw_stats[s] = true;
-            if (you.duration[DUR_SLOW] == 0)
-                mprf(MSGCH_DURATION, "You feel yourself speed up.");
-        }
-    }
-
     // Leak piety from the piety pool into actual piety.
     // Note that changes of religious status without corresponding actions
     // (killing monsters, offering items, ...) might be confusing for characters

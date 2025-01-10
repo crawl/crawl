@@ -22,7 +22,6 @@ void modify_stat(stat_type which_stat, int amount, bool suppress_msg);
 void notify_stat_change(stat_type which_stat, int amount, bool suppress_msg);
 void notify_stat_change();
 
-duration_type stat_zero_duration(stat_type stat);
 bool have_stat_zero();
 void update_stat_zero(int time);
 bool mutation_causes_stat_zero(mutation_type mut);

@@ -252,23 +252,10 @@ magic, briefly preventing you from casting any further spells.
 
 You are unable to cast spells.
 %%%%
-Brainless status
+Crippled status
 
-Your intelligence has fallen to 0. You are slowed, cannot cast or memorise
-spells, and cannot read scrolls. The status will persist for a short while even
-after recovering your intelligence.
-%%%%
-Clumsy status
-
-Your dexterity has fallen to 0. You are slowed, cannot sneak or use shields,
-and are almost entirely unable to dodge. The status will persist for a short
-while even after recovering your dexterity.
-%%%%
-Collapse status
-
-Your strength has fallen to 0. You are slowed, and you do not regenerate health
-while monsters are visible. The status will persist for a short while even after
-recovering your strength.
+At least one of your strength, intelligence, or dexterity has fallen to 0 or
+below. You will act slowly until this situation is remedied.
 %%%%
 DChan status
 

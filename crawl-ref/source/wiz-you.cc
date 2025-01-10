@@ -264,9 +264,6 @@ void wizard_heal(bool super_heal)
     you.redraw_hit_points = true;
     you.redraw_armour_class = true;
     you.redraw_evasion = true;
-
-    for (int stat = 0; stat < NUM_STATS; stat++)
-        you.duration[stat_zero_duration(static_cast<stat_type> (stat))] = 0;
 }
 
 void wizard_set_piety_to(int newpiety, bool force)
