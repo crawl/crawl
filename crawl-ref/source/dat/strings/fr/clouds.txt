@@ -10,116 +10,116 @@
 #Flamme
 %%%%
 blazing flames
-
+flammes ardentes
 %%%%
 noxious fumes
-
+fumées toxiques
 %%%%
 freezing vapour
-
+vapeur glaciale
 %%%%
 freezing vapours
-
+vapeurs glaciales
 %%%%
 poison gas
-
+gaz empoisonné
 %%%%
 black smoke
-
+fumée noire
 %%%%
 grey smoke
-
+fumée grise
 %%%%
 blue smoke
-
+fumée bleue
 %%%%
 purple smoke
-
+fumée violette
 %%%%
 translocational energy
-
+énergie de translocation
 %%%%
 spreading flames
-
+incendie
 %%%%
 a forest fire
-
+un feu de forêt
 %%%%
 steam
-
+vapeur
 %%%%
 a cloud of scalding steam
-
+un nuage de vapeur bouillante
 %%%%
 ink
-
+encre
 %%%%
 calcifying dust
-
+poussière calcifiante
 %%%%
 blessed fire
-
+feu sacré
 %%%%
 foul pestilence
-
+peste immonde
 %%%%
 dark miasma
-
+miasme sombre
 %%%%
 thin mist
-
+brûme
 %%%%
 seething chaos
-
+chaos bouillonnant
 %%%%
 rain
-
+pluie
 %%%%
 the rain
-
+la pluie
 %%%%
 mutagenic fog
-
+brouillard mutagène
 %%%%
 magical condensation
-
+gouttelletes magique
 %%%%
 whirling frost
-
+givre tourbillonant
 %%%%
 sparse dust
-
+poussière éparse
 %%%%
 spectral mist
-
+brûme spectrale
 %%%%
 acidic fog
-
+brouillard acide
 %%%%
 thunder
-
+orage
 %%%%
 a thunderstorm
-
+un nuage d'orage
 %%%%
 negative energy
-
+énergie négative
 %%%%
 white fluffiness
-
+duvet blance
 %%%%
 salt
-
+sel
 %%%%
 golden dust
-
+poussière d'or
 %%%%
 smouldering embers
-
+braises fumantes
 %%%%
 embers
-
+braises
 %%%%
 wisps of flame
-
+volutes de flammes
 %%%%

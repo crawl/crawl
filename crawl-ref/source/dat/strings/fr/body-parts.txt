@@ -10,76 +10,76 @@
 
 %%%%
 fist
-
+poing
 %%%%
 pincer
-
+pince
 %%%%
 wing
-
+aile
 %%%%
 antenna
-
+antenne
 %%%%
 eye-stalk
-
+oeil-tige
 %%%%
 leaf
-
+feuille
 %%%%
 rhizome
-
+rhizome
 %%%%
 pupil
-
+pupille
 %%%%
 leg
-
+jambe
 %%%%
 hoof
-
+sabot
 %%%%
 talon
-
+talon
 %%%%
 pseudopod
-
+pseudopode
 %%%%
 foot
-
+pied
 %%%%
 arm
-
+bras
 %%%%
 scaled arm
-
+bras couvert d'écailles
 %%%%
 feathered arm
-
+bras couvert de plumes
 %%%%
 bandage-wrapped arm
-
+bras bandé
 %%%%
 bony arm
-
+bras couvert d'os
 %%%%
 
 # these ones only used in singular
 %%%%
 body
-
+corps
 %%%%
 tail
-
+queue
 %%%%
 underside
-
+dessous
 %%%%
 underbelly
-
+ventre
 %%%%
 stem
-
+tige
 %%%%
 
 ################################
@@ -88,56 +88,56 @@ stem
 
 %%%%
 fists
-
+poings
 %%%%
 pincers
-
+pinces
 %%%%
 wings
-
+ailes
 %%%%
 antennae
-
+antennes
 %%%%
 eye-stalks
-
+yeux-tiges
 %%%%
 leaves
-
+feuilles
 %%%%
 rhizomes
-
+rhizomes
 %%%%
 pupils
-
+pupilles
 %%%%
 legs
-
+jambes
 %%%%
 hooves
-
+sabots
 %%%%
 talons
-
+talons
 %%%%
 pseudopods
-
+pseudopodes
 %%%%
 feet
-
+pieds
 %%%%
 arms
-
+bras
 %%%%
 scaled arms
-
+bras couverts d'écailles
 %%%%
 feathered arms
-
+bras couverts de plumes
 %%%%
 bandage-wrapped arms
-
+bras bandés
 %%%%
 bony arms
-
+bras couverts d'os
 %%%%

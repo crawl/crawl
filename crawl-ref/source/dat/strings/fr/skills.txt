@@ -10,96 +10,96 @@
 
 %%%%
 Fighting
-
+Combat
 %%%%
 Short Blades
-
+Lames Courtes
 %%%%
 Long Blades
-
+Lames Longues
 %%%%
 Axes
-
+Haches
 %%%%
 Maces & Flails
-
+Maces & Fouets
 %%%%
 Polearms
-
+Armes d'Hast
 %%%%
 Staves
-
+Bâtons
 %%%%
 Slings
-
+Frondes
 %%%%
 Bows
-
+Arcs
 %%%%
 Crossbows
-
+Arbalètes
 %%%%
 Throwing
-
+Lancer
 %%%%
 Dodging
-
+Esquive
 %%%%
 Stealth
-
+Furtivité
 %%%%
 Shields
-
+Boucliers
 %%%%
 Unarmed Combat
-
+Combat à Mains Nues
 %%%%
 # triggering the special property of an item
 Evocations
-
+Evocations
 %%%%
 # calling on a god for help
 Invocations
-
+Prières
 %%%%
 Spellcasting
-
+Magie
 %%%%
 Conjurations
-
+Conjurations
 %%%%
 Hexes
-
+Sortilèges
 %%%%
 Charms
-
+Enchantements
 %%%%
 Summonings
-
+Invocations
 %%%%
 Necromancy
-
+Nécromancie
 %%%%
 Translocations
-
+Translocations
 %%%%
 Transmutations
-
+Transmutations
 %%%%
 Fire Magic
-
+Magie du Feu
 %%%%
 Ice Magic
-
+Magie de Glace
 %%%%
 Air Magic
-
+Magie de l'Air
 %%%%
 Earth Magic
-
+Magie de la Terre
 %%%%
 Poison Magic
-
+Magie du Poison
 %%%%
 
 ##################
@@ -108,31 +108,31 @@ Poison Magic
 
 %%%%
 Conjuration
-
+Conjuration
 %%%%
 Transmutation
-
+Transmutation
 %%%%
 Summoning
-
+Invocation
 %%%%
 Translocation
-
+Translocation
 %%%%
 Poison
-
+Poison
 %%%%
 Earth
-
+Terre
 %%%%
 Air
-
+Air
 %%%%
 Fire
-
+Feu
 %%%%
 Ice
-
+Glace
 %%%%
 
 ##################
@@ -142,80 +142,80 @@ Ice
 
 %%%%
 Fgt
-
+Cbt
 %%%%
 SBl
-
+LaC
 %%%%
 LBl
-
+LaL
 %%%%
 Axs
-
+Hac
 %%%%
 M&F
-
+M&F
 %%%%
 Pla
-
+AHt
 %%%%
 Stv
-
+Bat
 %%%%
 Slg
-
+Frd
 %%%%
 Bws
-
+Arc
 %%%%
 Crb
-
+Abt
 %%%%
 Thr
-
+Lar
 %%%%
 Arm
-
+Arm
 %%%%
 Ddg
-
+Esq
 %%%%
 Sth
-
+Fur
 %%%%
 Shd
-
+Bou
 %%%%
 UC
-
+CMN
 %%%%
 Spc
-
+Mag
 %%%%
 Conj
-
+Conj
 %%%%
 Tmut
-
+Tmut
 %%%%
 Necr
-
+Necr
 %%%%
 Summ
-
+Inv
 %%%%
 Tloc
-
+Tloc
 %%%%
 Pois
-
+Pois
 %%%%
 Erth
-
+Terr
 %%%%
 Invo
-
+Prier
 %%%%
 Evo
-
+Prov
 %%%%
