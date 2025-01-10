@@ -496,7 +496,7 @@ void wind_blast(actor* agent, int pow, coord_def target)
     wind_beam.affects_nothing = true;
     wind_beam.source          = agent->pos();
     wind_beam.range           = LOS_RADIUS;
-    wind_beam.is_tracer       = true;
+    wind_beam.set_is_tracer(true);
 
     if (agent->is_player())
     {

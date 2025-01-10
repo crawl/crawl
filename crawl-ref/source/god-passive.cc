@@ -1272,10 +1272,10 @@ static bool _simple_shot_tracer(coord_def source, coord_def target,
     tracer.target = target;
     tracer.source_id = source_mid;
     tracer.damage = dice_def(100, 1);
-    tracer.is_tracer = true;
-    tracer.fire();
+    targeting_tracer target_tracer;
+    tracer.fire(target_tracer);
 
-    return mons_should_fire(tracer);
+    return mons_should_fire(tracer, target_tracer);
 }
 
 // Gets all spots within a certain radius of the player where your shadow could
@@ -1516,13 +1516,13 @@ static int _shadow_zap_tracer(zap_type ztype, coord_def source, coord_def target
     tracer.source = source;
     tracer.target = target;
     tracer.source_id = MID_PLAYER_SHADOW_DUMMY;
-    tracer.is_tracer = true;
-    tracer.fire();
+    targeting_tracer target_tracer;
+    tracer.fire(target_tracer);
 
-    if (tracer.friend_info.power > 0)
+    if (target_tracer.friend_info.power > 0)
         return 0;
     else
-        return tracer.foe_info.power;
+        return target_tracer.foe_info.power;
 }
 
 // Tries to find a vaguely 'best' spot to cast a given zap at some random

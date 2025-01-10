@@ -1823,14 +1823,13 @@ static bool _battlesphere_should_fire(actor* target,
 {
     beam.source = firing_pos;
     beam.target = target->pos();
-    beam.foe_info.reset();
-    beam.friend_info.reset();
+    targeting_tracer tracer;
 
     // Fire tracer.
-    beam.fire();
+    beam.fire(tracer);
 
     // If we hit at least *something*, mark this as a possible fallback
-    if (beam.friend_info.count == 0 && beam.foe_info.count > 0)
+    if (tracer.friend_info.count == 0 && tracer.foe_info.count > 0)
     {
         // And if we hit our primary target, actually fire
         if (beam.hit_count.count(target->mid))
@@ -1845,7 +1844,7 @@ static bool _battlesphere_should_fire(actor* target,
 static void _fire_battlesphere(monster* battlesphere, bolt& beam)
 {
     beam.thrower = battlesphere->summoner == MID_PLAYER ? KILL_YOU : KILL_MON;
-    beam.is_tracer = false;
+    beam.set_is_tracer(false);
 
     battlesphere->foe = actor_at(beam.target)->mindex();
     battlesphere->target = beam.target;
@@ -1912,7 +1911,6 @@ bool trigger_battlesphere(actor* agent)
     beam.target      = target->pos();
     beam.source_id   = battlesphere->mid;
     beam.attitude    = mons_attitude(*battlesphere);
-    beam.is_tracer   = true;
 
     coord_def fallback_pos;
     // First, just try to fire from our present position
@@ -3150,7 +3148,7 @@ spret cast_hellfire_mortar(const actor& agent, bolt& beam, int pow, bool fail)
     beam.source = agent.pos();
     beam.source_id = agent.mid;
     beam.origin_spell = SPELL_HELLFIRE_MORTAR;
-    beam.is_tracer = true;
+    beam.set_is_tracer(true);
     beam.fire();
 
     // Check whether the path ends because it reached max range, or because it
@@ -4416,7 +4414,6 @@ bool splinterfrost_block_fragment(monster& block, const coord_def& aim)
     beam.source = block.pos();
     beam.attitude = block.attitude;
     beam.set_agent(agent);
-    beam.dont_stop_player = true;
     beam.target = aim_spot;
     beam.range = steps_taken;
     beam.aimed_at_spot = true;

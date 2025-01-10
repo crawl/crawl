@@ -110,7 +110,7 @@ void setup_fire_storm(const actor *source, int pow, bolt &beam)
     beam.thrower      =
         source->is_player() ? KILL_YOU_MISSILE : KILL_MON;
     beam.aux_source.clear();
-    beam.is_tracer    = false;
+    beam.set_is_tracer(false);
     beam.origin_spell = SPELL_FIRE_STORM;
 }
 
@@ -133,10 +133,9 @@ spret cast_fire_storm(int pow, bolt &beam, bool fail)
 
     bolt tempbeam = beam;
     tempbeam.ex_size = (pow > 0) ? 3 : 2;
-    tempbeam.is_tracer = true;
-
-    tempbeam.explode(false);
-    if (tempbeam.beam_cancelled)
+    player_beam_tracer tracer;
+    tempbeam.explode(tracer, false);
+    if (cancel_beam_prompt(tempbeam, tracer))
         return spret::abort;
 
     fail_check();
@@ -170,20 +169,14 @@ bool cast_smitey_damnation(int pow, bolt &beam)
     beam.hit               = 20 + pow / 10;
     beam.damage            = calc_dice(6, 30 + pow);
     beam.attitude          = ATT_FRIENDLY;
-    beam.friend_info.count = 0;
-    beam.is_tracer         = true;
 
-    beam.explode(false);
-
-    if (beam.beam_cancelled)
-    {
-        canned_msg(MSG_OK);
+    player_beam_tracer tracer;
+    beam.explode(tracer, false);
+    if (cancel_beam_prompt(beam, tracer))
         return false;
-    }
 
     mpr("You call forth a pillar of damnation!");
 
-    beam.is_tracer = false;
     beam.in_explosion_phase = false;
     beam.explode(true);
 
@@ -349,7 +342,6 @@ spret cast_chain_spell(spell_type spell_cast, int pow,
     beam.obvious_effect = true;
     beam.pierce         = false;       // since we want to stop at our target
     beam.is_explosion   = false;
-    beam.is_tracer      = false;
     beam.origin_spell   = spell_cast;
 
     if (const monster* mons = caster->as_monster())
@@ -682,6 +674,7 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
     bolt beam;
     zappy(zap, pow, mons, beam);
     beam.source_id = agent ? agent->mid : MID_NOBODY;
+    targeting_tracer tracer;
     beam.foe_ratio = 80;
 
     const char *player_msg = nullptr, *global_msg = nullptr,
@@ -813,14 +806,14 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
 
         if (!agent || !mons_aligned(a, agent))
         {
-            beam.foe_info.count++;
-            beam.foe_info.power +=
+            tracer.foe_info.count++;
+            tracer.foe_info.power +=
                 (a->get_hit_dice() * this_damage / avg_damage);
         }
         else
         {
-            beam.friend_info.count++;
-            beam.friend_info.power +=
+            tracer.friend_info.count++;
+            tracer.friend_info.power +=
                 (a->get_hit_dice() * this_damage / avg_damage);
         }
     }
@@ -832,8 +825,8 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
         return spret::success;
 
     if (player_caster)
-        return beam.foe_info.count ? spret::success : spret::abort;
-    return mons_should_fire(beam) ? spret::success : spret::abort;
+        return tracer.foe_info.count ? spret::success : spret::abort;
+    return mons_should_fire(beam, tracer) ? spret::success : spret::abort;
 }
 
 spret trace_los_attack_spell(spell_type spell, int pow, const actor* agent)
@@ -1048,7 +1041,7 @@ spret cast_momentum_strike(int pow, coord_def target, bool fail)
     beam.source       = beam.target = target;
     beam.fire();
 
-    if (!beam.foe_info.hurt && !beam.friend_info.hurt) // miss!
+    if (!beam.foes_hurt && !beam.friends_hurt) // miss!
     {
         if (!mons || !you.can_see(*mons))
             mpr("The momentum dissipates harmlessly.");
@@ -1066,33 +1059,34 @@ spret cast_momentum_strike(int pow, coord_def target, bool fail)
 }
 
 static ai_action::goodness _fire_permafrost_at(const actor &agent, int pow,
-                                               coord_def target, bool tracer)
+                                               coord_def target, bool is_tracer)
 {
     const bool mon = agent.is_monster();
 
     bolt beam;
-    beam.is_tracer    = tracer;
+    targeting_tracer tracer;
+    beam.set_is_tracer(is_tracer);
     beam.set_agent(&agent);
     beam.attitude     = mon ? mons_attitude(*agent.as_monster()) : ATT_FRIENDLY;
     beam.foe_ratio    = 80; // default
     beam.origin_spell = SPELL_PERMAFROST_ERUPTION;
     beam.source = beam.target = target;
     zappy(ZAP_PERMAFROST_ERUPTION_EARTH, pow, mon, beam);
-    beam.fire();
-    const ai_action::goodness earth_good = beam.good_to_fire();
+    if (is_tracer)
+        beam.fire(tracer);
+    else
+        beam.fire();
 
     zappy(ZAP_PERMAFROST_ERUPTION_COLD, pow, mon, beam);
     beam.ex_size       = 1;
     beam.apply_beam_conducts();
     beam.refine_for_explosion();
-    beam.explode();
-    const ai_action::goodness ice_good = beam.good_to_fire();
+    if (is_tracer)
+        beam.explode(tracer);
+    else
+        beam.explode();
 
-    if (earth_good == ai_action::bad() || ice_good == ai_action::bad())
-        return ai_action::bad();
-    if (earth_good == ai_action::good() || ice_good == ai_action::good())
-        return ai_action::good();
-    return ai_action::neutral();
+    return tracer.good_to_fire(beam.foe_ratio);
 }
 
 bool mons_should_fire_permafrost(int pow, const actor &agent)
@@ -1505,9 +1499,9 @@ spret cast_fragmentation(int pow, const actor *caster,
         bool temp;
         setup_fragmentation_beam(tempbeam, pow, caster, target, true, nullptr,
                                  temp);
-        tempbeam.is_tracer = true;
-        tempbeam.explode(false);
-        if (tempbeam.beam_cancelled)
+        player_beam_tracer tracer;
+        tempbeam.explode(tracer, false);
+        if (cancel_beam_prompt(tempbeam, tracer))
             return spret::abort;
     }
 
@@ -3039,7 +3033,7 @@ vector<coord_def> plasma_beam_targets(const actor &agent, int pow, bool actual)
 }
 
 static ai_action::goodness _fire_plasma_beam_at(const actor &agent, int pow,
-                                                coord_def target, bool tracer)
+                                                coord_def target, bool is_tracer)
 {
     int range = grid_distance(agent.pos(), target);
     const bool mon = agent.is_monster();
@@ -3055,24 +3049,24 @@ static ai_action::goodness _fire_plasma_beam_at(const actor &agent, int pow,
     beam.origin_spell = SPELL_PLASMA_BEAM;
     beam.draw_delay   = 5;
     beam.foe_ratio    = 80; // default
-    beam.is_tracer    = tracer;
+    targeting_tracer tracer;
     zappy(ZAP_PLASMA_LIGHTNING, pow, mon, beam);
-    beam.fire();
-    const ai_action::goodness fire_good = beam.good_to_fire();
+    if (is_tracer)
+        beam.fire(tracer);
+    else
+        beam.fire();
 
     // fire beam
     beam.flavour = BEAM_FIRE;
     beam.name    = "fiery plasma";
     beam.glyph   = dchar_glyph(DCHAR_FIRED_ZAP);
     zappy(ZAP_PLASMA, pow, mon, beam);
-    beam.fire();
-    const ai_action::goodness light_good = beam.good_to_fire();
+    if (is_tracer)
+        beam.fire(tracer);
+    else
+        beam.fire();
 
-    if (fire_good == ai_action::bad() || light_good == ai_action::bad())
-        return ai_action::bad();
-    if (light_good == ai_action::good() || light_good == ai_action::good())
-        return ai_action::good();
-    return ai_action::neutral();
+    return tracer.good_to_fire(beam.foe_ratio);
 }
 
 bool mons_should_fire_plasma(int pow, const actor &agent)
@@ -3817,9 +3811,9 @@ static bool _prep_flame_wave(bolt &beam, int pow, int lvl, bool skip_tracer = fa
     if (!skip_tracer)
     {
         bolt tracer_beam = beam;
-        tracer_beam.is_tracer = true;
-        tracer_beam.explode(false, true);
-        return !tracer_beam.beam_cancelled;
+        player_beam_tracer tracer;
+        tracer_beam.explode(tracer, false, true);
+        return !cancel_beam_prompt(tracer_beam, tracer);
     }
 
     return true;
@@ -3945,8 +3939,9 @@ bool handle_searing_ray(actor& agent, int turn)
     // it do something else.
     if (agent.is_monster())
     {
-        fire_tracer(agent.as_monster(), beam);
-        if (!mons_should_fire(beam))
+        targeting_tracer tracer;
+        fire_tracer(agent.as_monster(), tracer, beam);
+        if (!mons_should_fire(beam, tracer))
         {
             simple_monster_message(*agent.as_monster(), " stops channelling.");
             agent.as_monster()->del_ench(ENCH_CHANNEL_SEARING_RAY);
@@ -4098,7 +4093,7 @@ spret cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
     return spret::success;
 }
 
-spret cast_starburst(int pow, bool fail, bool tracer)
+spret cast_starburst(int pow, bool fail, bool is_tracer)
 {
     int range = spell_range(SPELL_STARBURST, pow);
 
@@ -4115,38 +4110,34 @@ spret cast_starburst(int pow, bool fail, bool tracer)
     beam.range        = range;
     beam.source       = you.pos();
     beam.source_id    = MID_PLAYER;
-    beam.is_tracer    = tracer;
-    beam.is_targeting = tracer;
-    beam.dont_stop_player = true;
-    beam.friend_info.dont_stop = true;
-    beam.foe_info.dont_stop = true;
     beam.attitude = ATT_FRIENDLY;
-    beam.thrower      = KILL_YOU;
+    beam.thrower      = KILL_YOU_MISSILE;
     beam.origin_spell = SPELL_STARBURST;
     beam.draw_delay   = 5;
     zappy(ZAP_BOLT_OF_FIRE, pow, false, beam);
 
+    if (is_tracer)
+    {
+        targeting_tracer tracer;
+        for (const coord_def & offset : offsets)
+        {
+            beam.target = you.pos() + offset;
+            beam.fire(tracer);
+            // something to hit
+            if (tracer.foe_info.count > 0)
+                return spret::success;
+        }
+        return spret::abort;
+    }
+
+    player_beam_tracer tracer;
     for (const coord_def & offset : offsets)
     {
         beam.target = you.pos() + offset;
-        if (!tracer && !player_tracer(ZAP_BOLT_OF_FIRE, pow, beam))
-            return spret::abort;
-        // If the player has already answered yes to shooting at at least one
-        // friendly, don't make them answer the question again for friendlies
-        // in every other direction.
-        else if (!tracer && beam.friend_info.dont_stop)
-            break;
-
-        if (tracer)
-        {
-            beam.fire();
-            // something to hit
-            if (beam.foe_info.count > 0)
-                return spret::success;
-        }
+        fire_partial_player_tracer(ZAP_BOLT_OF_FIRE, pow, tracer, beam);
     }
 
-    if (tracer)
+    if (cancel_beam_prompt(beam, tracer))
         return spret::abort;
 
     fail_check();

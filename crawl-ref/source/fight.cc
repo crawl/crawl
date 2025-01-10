@@ -1454,10 +1454,8 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
     if (you.confused() && !check_only)
         return false;
 
-    string adj, suffix;
-    bool penance = false;
+    attacked_monster_list victims;
     bool defender_ok = true;
-    counted_monster_list victims;
     for (distance_iterator di(hitfunc.origin, false, true, LOS_RADIUS); di; ++di)
     {
         if (hitfunc.is_affected(*di) <= AFF_NO)
@@ -1470,16 +1468,11 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
         if (affects && !affects(mon))
             continue;
 
-        string adjn, suffixn;
-        bool penancen = false;
-        if (bad_attack(mon, adjn, suffixn, penancen))
+        string adj, suffix;
+        bool penance = false;
+        if (bad_attack(mon, adj, suffix, penance))
         {
-            // record the adjectives for the first listed, or
-            // first that would cause penance
-            if (victims.empty() || penancen && !penance)
-                adj = adjn, suffix = suffixn, penance = penancen;
-
-            victims.add(mon);
+            victims.add(*mon, std::move(adj), std::move(suffix), penance);
 
             if (defender && defender == mon)
                 defender_ok = false;
@@ -1494,16 +1487,12 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
         return true;
 
     // Listed in the form: "your rat", "Blorkula the orcula".
-    string mon_name = victims.describe(DESC_PLAIN);
-    if (starts_with(mon_name, "the ")) // no "your the Royal Jelly" nor "the the RJ"
-        mon_name = mon_name.substr(4); // strlen("the ")
-    if (!starts_with(adj, "your"))
-        adj = "the " + adj;
-    mon_name = adj + mon_name;
+    string mon_name = victims.describe();
+    const bool penance = victims.penance();
 
     const string prompt = make_stringf("Really %s%s %s%s?%s",
              verb, defender_ok ? " near" : "", mon_name.c_str(),
-             suffix.c_str(),
+             victims.suffix(),
              penance ? " This attack would place you under penance!" : "");
 
     if (prompted)
