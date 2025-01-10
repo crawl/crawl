@@ -483,13 +483,22 @@ jobs:
         working-directory: crawl-ref/source
       - name: Generate LCOV data
         working-directory: crawl-ref/source
+        # --exclude=/usr/include/c++/*: excludes STL from code coverage data;
+        # Coverage data of the standard library is uninteresting anyway.
+        # TODO: geninfo_unexecuted_blocks=1 suppresses some errors.
+        # Unclear why we need to do so
+        # TODO: --ignore-errors source,mismatch
+        # used to be --ignore-errors source.
+        # Why do we have mismatch? what's going on with exception branches?
         run: >
           lcov
           --capture
           --directory .
           --output-file ../../coverage.info
-          --ignore-errors source
-          --rc lcov_branch_coverage=1
+          --ignore-errors source,mismatch
+          --rc branch_coverage=1
+          --exclude=/usr/include/c++/*
+          --rc geninfo_unexecuted_blocks=1
       - name: Send coverage data to Codecov
         uses: codecov/codecov-action@v3
         with:
