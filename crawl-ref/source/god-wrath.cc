@@ -338,7 +338,7 @@ static bool _cheibriados_retribution()
     int tension = get_tension(GOD_CHEIBRIADOS);
 
     // Almost any tension: sleep if >66% HP, otherwise remove haste and give
-    // slow. Next to / no tension: noise + stat drain.
+    // slow. Next to / no tension: noise.
     if (tension > random_range(5, 8))
     {
         if (you.hp >= (you.hp_max * 3 / 4))
@@ -358,7 +358,6 @@ static bool _cheibriados_retribution()
     {
         simple_god_message(" strikes the hour, and time shudders.", false, god);
         noisy(40, you.pos());
-        lose_stat(STAT_RANDOM, 2 + random2avg(5, 2));
     }
 
     return true;
@@ -647,7 +646,7 @@ static bool _kikubaaqudgha_retribution()
 
     const bool sil = silenced(you.pos());
     const bool rtorm = you.res_torment();
-    if (one_chance_in(3) && (!sil || !rtorm))
+    if (coinflip() && (!sil || !rtorm))
     {
         if (!rtorm)
             torment(nullptr, TORMENT_KIKUBAAQUDGHA, you.pos());
@@ -659,12 +658,7 @@ static bool _kikubaaqudgha_retribution()
         return true;
     }
 
-    if (coinflip())
-    {
-        lose_stat(STAT_RANDOM, 2 + random2avg(you.experience_level / 3, 2));
-        return true;
-    }
-    you.drain(nullptr, false, random_range(225, 375));
+    you.drain(nullptr, false, random_range(175, 300));
     return true;
 }
 
@@ -750,7 +744,7 @@ static bool _trog_retribution()
         case 0:
         case 1:
         case 2:
-            lose_stat(STAT_STR, 1 + random2(you.strength() / 5));
+            you.weaken(nullptr, 50);
             break;
 
         case 3:
@@ -923,15 +917,12 @@ static bool _sif_muna_retribution()
     case 0:
     case 1:
     case 2:
-        lose_stat(STAT_INT, 1 + random2(you.intel() / 5));
-        break;
-
     case 3:
     case 4:
-    case 5:
         confuse_player(5 + random2(3));
         break;
 
+    case 5:
     case 6:
     case 7:
     case 8:

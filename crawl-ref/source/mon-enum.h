@@ -67,11 +67,11 @@ enum attack_flavour
     AF_CONFUSE,
 #if TAG_MAJOR_VERSION == 34
     AF_DISEASE,
-#endif
     AF_DRAIN_STR,
     AF_DRAIN_INT,
     AF_DRAIN_DEX,
     AF_DRAIN_STAT,
+#endif
     AF_DRAIN,
     AF_ELEC,
     AF_FIRE,

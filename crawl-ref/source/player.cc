@@ -2218,37 +2218,6 @@ void forget_map(bool rot)
 #endif
 }
 
-static void _recover_stat()
-{
-    FixedVector<int, NUM_STATS> recovered_stats(0);
-
-    while (you.attribute[ATTR_STAT_LOSS_XP] <= 0)
-    {
-        stat_type stat = random_lost_stat();
-        ASSERT(stat != NUM_STATS);
-
-        recovered_stats[stat]++;
-
-        // Very heavily drained stats recover faster.
-        if (you.stat(stat, false) < 0)
-            recovered_stats[stat] += random2(-you.stat(stat, false) / 2);
-
-        bool still_drained = false;
-        for (int i = 0; i < NUM_STATS; ++i)
-            if (you.stat_loss[i] - recovered_stats[i] > 0)
-                still_drained = true;
-
-        if (still_drained)
-            you.attribute[ATTR_STAT_LOSS_XP] += stat_loss_roll();
-        else
-            break;
-    }
-
-    for (int i = 0; i < NUM_STATS; ++i)
-        if (recovered_stats[i] > 0)
-            restore_stat((stat_type) i, recovered_stats[i], false, true);
-}
-
 int get_exp_progress()
 {
     if (you.experience_level >= you.get_max_xl())
@@ -2344,20 +2313,6 @@ static void _handle_temp_mutation(int exp)
     you.attribute[ATTR_TEMP_MUT_XP] -= exp;
     if (you.attribute[ATTR_TEMP_MUT_XP] <= 0)
         temp_mutation_wanes();
-}
-
-/// update stat loss
-static void _handle_stat_loss(int exp)
-{
-    if (!(you.attribute[ATTR_STAT_LOSS_XP] > 0))
-        return;
-
-    int loss = div_rand_round(exp * 3 / 2,
-                              max(1, calc_skill_cost(you.skill_cost_level) - 3));
-    you.attribute[ATTR_STAT_LOSS_XP] -= loss;
-    dprf("Stat loss points: %d", you.attribute[ATTR_STAT_LOSS_XP]);
-    if (you.attribute[ATTR_STAT_LOSS_XP] <= 0)
-        _recover_stat();
 }
 
 /// update hp drain
@@ -2464,7 +2419,6 @@ void apply_exp()
         skill_xp = sprint_modify_exp(skill_xp);
 
     // xp-gated effects that use sprint inflation
-    _handle_stat_loss(skill_xp);
     _handle_temp_mutation(skill_xp);
     _recharge_xp_evokers(skill_xp);
     _reduce_abyss_xp_timer(skill_xp);
@@ -5212,7 +5166,6 @@ player::player()
     max_magic_points = 0;
     mp_max_adj       = 0;
 
-    stat_loss.init(0);
     base_stats.init(0);
 
     max_level       = 1;
@@ -6977,11 +6930,6 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
     return amount;
 }
 
-void player::drain_stat(stat_type s, int amount)
-{
-    lose_stat(s, amount);
-}
-
 /**
  * Checks to see whether the player can be dislodged by physical effects.
  * This only accounts for the "mountain boots" unrand, not being stationary, etc.
@@ -7467,11 +7415,11 @@ bool player::can_mutate() const
 }
 
 /**
- * Can the player be mutated without stat drain instead?
+ * Can the player be mutated without max HP drain instead?
  *
  * @param temp      Whether to consider temporary modifiers (lichform)
  * @return Whether the player will mutate when mutated, instead of draining
- *         stats.
+ *         max HP.
  */
 bool player::can_safely_mutate(bool temp) const
 {

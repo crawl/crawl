@@ -153,7 +153,6 @@ public:
     int max_magic_points;
     int mp_max_adj;             // max MP loss (ability costs, tutorial bonus)
 
-    FixedVector<int8_t, NUM_STATS> stat_loss;
     FixedVector<int8_t, NUM_STATS> base_stats;
 
     uint8_t max_level;
@@ -502,14 +501,10 @@ public:
     void set_level_visited(const level_id &level);
     bool level_visited(const level_id &level);
 
-    int stat(stat_type stat, bool nonneg = true) const;
+    int stat(stat_type stat, bool nonneg = true, bool innate_only = false) const;
     int strength(bool nonneg = true) const;
     int intel(bool nonneg = true) const;
     int dex(bool nonneg = true) const;
-    int max_stat(stat_type stat, bool base = false) const;
-    int max_strength() const;
-    int max_intel() const;
-    int max_dex() const;
 
     bool in_water() const;
     bool in_liquid() const;
@@ -719,7 +714,6 @@ public:
     void blink(bool ignore_stasis = false) override;
     void teleport(bool right_now = false,
                   bool wizard_tele = false) override;
-    void drain_stat(stat_type stat, int amount) override;
 
     void expose_to_element(beam_type element, int strength = 0,
                            bool slow_cold_blood = true) override;

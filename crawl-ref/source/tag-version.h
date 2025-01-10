@@ -315,6 +315,7 @@ enum tag_minor_version
     TAG_MINOR_SIMPLIFY_ID,         // Crunch all item identification flags into just one
     TAG_MINOR_STACKABLE_EVOKERS_TWO, // XP evokers stack for a recharge speed boost
     TAG_MINOR_EQUIP_SLOT_REWRITE,  // Convert all player equipment handling over to a new system
+    TAG_MINOR_REMOVE_STAT_DRAIN,   // Remove all stat draining
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

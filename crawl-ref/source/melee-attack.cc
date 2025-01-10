@@ -3264,18 +3264,6 @@ void melee_attack::mons_apply_attack_flavour()
         }
         break;
 
-    case AF_DRAIN_STR:
-    case AF_DRAIN_INT:
-    case AF_DRAIN_DEX:
-        if (one_chance_in(20) || one_chance_in(3))
-        {
-            stat_type drained_stat = (flavour == AF_DRAIN_STR ? STAT_STR :
-                                      flavour == AF_DRAIN_INT ? STAT_INT
-                                                              : STAT_DEX);
-            defender->drain_stat(drained_stat, 1);
-        }
-        break;
-
     case AF_BLINK:
         // blinking can kill, delay the call
         if (one_chance_in(3))

@@ -1351,7 +1351,6 @@ void elyvilon_purification()
     you.duration[DUR_SLOW] = 0;
     you.duration[DUR_PETRIFYING] = 0;
     you.duration[DUR_WEAK] = 0;
-    restore_stat(STAT_ALL, 0, false);
     undrain_hp(9999);
     you.redraw_evasion = true;
 }

@@ -25,65 +25,43 @@
 #include "tag-version.h"
 #include "transform.h"
 
-int player::stat(stat_type s, bool nonneg) const
+static int _stat_modifier(stat_type stat, bool innate_only);
+
+/**
+ * What's the player's value for a given stat?
+ *
+ * @param s      The stat in question (e.g. STAT_STR).
+ * @param nonneg Whether to cap the stat at 0.
+ * @param innate_only Whether to disregard stat modifiers other than those from
+ *                    innate mutations.
+ * @return       The player's value for a given stat; capped at MAX_STAT_VALUE.
+ */
+int player::stat(stat_type s, bool nonneg, bool innate_only) const
 {
-    const int val = max_stat(s) - stat_loss[s];
+    const int val = min(base_stats[s] + _stat_modifier(s, innate_only), MAX_STAT_VALUE);
     return nonneg ? max(val, 0) : val;
 }
 
 int player::strength(bool nonneg) const
 {
-    return stat(STAT_STR, nonneg);
+    return stat(STAT_STR, nonneg, false);
 }
 
 int player::intel(bool nonneg) const
 {
-    return stat(STAT_INT, nonneg);
+    return stat(STAT_INT, nonneg, false);
 }
 
 int player::dex(bool nonneg) const
 {
-    return stat(STAT_DEX, nonneg);
+    return stat(STAT_DEX, nonneg, false);
 }
 
-static int _stat_modifier(stat_type stat, bool innate_only);
-
-/**
- * What's the player's current maximum for a stat, before ability damage is
- * applied?
- *
- * @param s      The stat in question (e.g. STAT_STR).
- * @param innate Whether to disregard stat modifiers other than those from
- *               innate mutations.
- * @return      The player's maximum for the given stat; capped at
- *              MAX_STAT_VALUE.
- */
-int player::max_stat(stat_type s, bool innate) const
-{
-    return min(base_stats[s] + _stat_modifier(s, innate), MAX_STAT_VALUE);
-}
-
-int player::max_strength() const
-{
-    return max_stat(STAT_STR);
-}
-
-int player::max_intel() const
-{
-    return max_stat(STAT_INT);
-}
-
-int player::max_dex() const
-{
-    return max_stat(STAT_DEX);
-}
-
-// Base stat including innate mutations (which base_stats does not)
+// Base stat including innate mutations, but no temporary effects.
 int innate_stat(stat_type s)
 {
-    return you.max_stat(s, true);
+    return you.stat(s, false, true);
 }
-
 
 static void _handle_stat_change(stat_type stat);
 
@@ -432,122 +410,6 @@ static int _stat_modifier(stat_type stat, bool innate_only)
     }
 }
 
-static string _stat_name(stat_type stat)
-{
-    switch (stat)
-    {
-    case STAT_STR:
-        return "strength";
-    case STAT_INT:
-        return "intelligence";
-    case STAT_DEX:
-        return "dexterity";
-    default:
-        die("invalid stat");
-    }
-}
-
-int stat_loss_roll()
-{
-    const int loss = 30 + random2(30);
-    dprf("Stat loss points: %d", loss);
-
-    return loss;
-}
-
-bool lose_stat(stat_type which_stat, int stat_loss, bool force)
-{
-    if (stat_loss <= 0)
-        return false;
-
-    if (which_stat == STAT_RANDOM)
-        which_stat = static_cast<stat_type>(random2(NUM_STATS));
-
-    if (!force)
-    {
-        if (you.duration[DUR_DIVINE_STAMINA] > 0)
-        {
-            mprf("Your divine stamina protects you from %s loss.",
-                 _stat_name(which_stat).c_str());
-            return false;
-        }
-    }
-
-    mprf(MSGCH_WARN, "You feel %s.", stat_desc(which_stat, SD_LOSS));
-
-    you.stat_loss[which_stat] = min<int>(100,
-                                         you.stat_loss[which_stat] + stat_loss);
-    if (!you.attribute[ATTR_STAT_LOSS_XP])
-        you.attribute[ATTR_STAT_LOSS_XP] = stat_loss_roll();
-    _handle_stat_change(which_stat);
-    return true;
-}
-
-stat_type random_lost_stat()
-{
-    stat_type choice = NUM_STATS;
-    int found = 0;
-    for (int i = 0; i < NUM_STATS; ++i)
-        if (you.stat_loss[i] > 0)
-        {
-            found++;
-            if (one_chance_in(found))
-                choice = static_cast<stat_type>(i);
-        }
-    return choice;
-}
-
-// Restore the stat in which_stat by the amount in stat_gain, displaying
-// a message if suppress_msg is false, and doing so in the recovery
-// channel if recovery is true. If stat_gain is 0, restore the stat
-// completely.
-bool restore_stat(stat_type which_stat, int stat_gain,
-                  bool suppress_msg, bool recovery)
-{
-    // A bit hackish, but cut me some slack, man! --
-    // Besides, a little recursion never hurt anyone {dlb}:
-    if (which_stat == STAT_ALL)
-    {
-        bool stat_restored = false;
-        for (int i = 0; i < NUM_STATS; ++i)
-            if (restore_stat((stat_type) i, stat_gain, suppress_msg))
-                stat_restored = true;
-
-        return stat_restored;
-    }
-
-    if (which_stat == STAT_RANDOM)
-        which_stat = random_lost_stat();
-
-    if (which_stat >= NUM_STATS || you.stat_loss[which_stat] == 0)
-        return false;
-
-    if (!suppress_msg)
-    {
-        mprf(recovery ? MSGCH_RECOVERY : MSGCH_PLAIN,
-             "You feel your %s returning.",
-             _stat_name(which_stat).c_str());
-    }
-
-    if (stat_gain == 0 || stat_gain > you.stat_loss[which_stat])
-        stat_gain = you.stat_loss[which_stat];
-
-    you.stat_loss[which_stat] -= stat_gain;
-
-    // If we're fully recovered, clear out stat loss recovery timer.
-    if (random_lost_stat() == NUM_STATS)
-        you.attribute[ATTR_STAT_LOSS_XP] = 0;
-
-    _handle_stat_change(which_stat);
-    return true;
-}
-
-static void _normalize_stat(stat_type stat)
-{
-    ASSERT(you.stat_loss[stat] >= 0);
-    you.base_stats[stat] = min<int8_t>(you.base_stats[stat], MAX_STAT_VALUE);
-}
-
 static void _handle_stat_change(stat_type stat)
 {
     ASSERT_RANGE(stat, 0, NUM_STATS);
@@ -565,7 +427,6 @@ static void _handle_stat_change(stat_type stat)
     }
 
     you.redraw_stats[stat] = true;
-    _normalize_stat(stat);
 
     switch (stat)
     {

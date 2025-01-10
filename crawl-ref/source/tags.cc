@@ -1550,8 +1550,6 @@ static void _tag_construct_you(writer &th)
     COMPILE_CHECK(NUM_STATS == 3);
     for (int i = 0; i < NUM_STATS; ++i)
         marshallByte(th, you.base_stats[i]);
-    for (int i = 0; i < NUM_STATS; ++i)
-        marshallByte(th, you.stat_loss[i]);
 
     CANARY;
 
@@ -2888,11 +2886,12 @@ static void _tag_read_you(reader &th)
             modify_stat(*random_iterator(sd.level_stats), 1, false);
     }
 #endif
-
-    for (int i = 0; i < NUM_STATS; ++i)
-        you.stat_loss[i] = unmarshallByte(th);
-
 #if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_REMOVE_STAT_DRAIN)
+    {
+        for (int i = 0; i < NUM_STATS; ++i)
+            unmarshallByte(th);
+    }
     if (th.getMinorVersion() < TAG_MINOR_STAT_ZERO_DURATION)
     {
         for (int i = 0; i < NUM_STATS; ++i)
@@ -3270,18 +3269,6 @@ static void _tag_read_you(reader &th)
 
     if (you.attribute[ATTR_DELAYED_FIREBALL])
         you.attribute[ATTR_DELAYED_FIREBALL] = 0;
-
-    if (th.getMinorVersion() < TAG_MINOR_STAT_LOSS_XP)
-    {
-        for (int i = 0; i < NUM_STATS; ++i)
-        {
-            if (you.stat_loss[i] > 0)
-            {
-                you.attribute[ATTR_STAT_LOSS_XP] = stat_loss_roll();
-                break;
-            }
-        }
-    }
 
     if (th.getMinorVersion() < TAG_MINOR_ENDLESS_DIVINE_SHIELD)
     {

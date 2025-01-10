@@ -180,7 +180,7 @@ Vitalisation ability
 Temporarily provides protection from poison, confusion, petrification, and
 sickness, as well as the effects of clouds of foul pestilence. Your strength,
 intelligence and dexterity are also temporarily increased by a degree dependent
-on Invocations skill, and cannot be drained while the effect is active.
+on Invocations skill.
 %%%%
 Imprison ability
 
@@ -477,8 +477,7 @@ Summons huge angry allies to wreak havoc.
 Purification ability
 
 Purges your body of poison, confusion, slowness, petrification, weakness, and
-sickness. Any drained strength, dexterity or intelligence will also be fully
-restored, along with any drained maximum health.
+sickness. Any drained maximum health will also be fully restored.
 %%%%
 Heal Other ability
 

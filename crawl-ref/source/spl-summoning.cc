@@ -54,6 +54,7 @@
 #include "mon-pathfind.h"
 #include "mon-place.h"
 #include "mon-speak.h"
+#include "mutation.h"
 #include "place.h" // absdungeon_depth
 #include "player-equip.h"
 #include "player-stats.h"
@@ -1176,11 +1177,13 @@ spret cast_summon_horrible_things(int pow, bool fail)
         return spret::abort;
 
     fail_check();
-    if (one_chance_in(5))
+    if (one_chance_in(4))
     {
         // if someone deletes the db, no message is ok
         mpr(getMiscString("SHT_int_loss"));
-        lose_stat(STAT_INT, 1);
+
+        // XXX: Temporary effect until something else is implemented.
+        temp_mutate(MUT_WEAK_WILLED, "glimpsing the beyond");
     }
 
     int num_abominations = random_range(2, 4) + x_chance_in_y(pow, 200);

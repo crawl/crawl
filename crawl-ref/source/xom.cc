@@ -3816,30 +3816,6 @@ static void _xom_cloud_trail(int /*sever*/)
         simple_god_message(" purifies the foul vapours!");
 }
 
-static void _xom_statloss(int /*sever*/)
-{
-    const string speech = _get_xom_speech("draining or torment");
-
-    const stat_type stat = static_cast<stat_type>(random2(NUM_STATS));
-    int loss = 1;
-
-    // Don't set the player to statzero unless Xom is being nasty.
-    if (_xom_feels_nasty())
-        loss = 1 + random2(3);
-    else if (you.stat(stat) <= loss)
-        return;
-
-    god_speaks(GOD_XOM, speech.c_str());
-    lose_stat(stat, loss);
-
-    const char* sstr[3] = { "Str", "Int", "Dex" };
-    const string note = make_stringf("stat loss: -%d %s (%d/%d)",
-                                     loss, sstr[stat], you.stat(stat),
-                                     you.max_stat(stat));
-
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
-}
-
 static void _xom_draining(int /*sever*/)
 {
     int power = 100;
@@ -4944,10 +4920,6 @@ static const vector<xom_event_data> _list_xom_bad_actions = {
         {return tn <= 8 && you.can_safely_mutate();}
     },
     {
-        XOM_BAD_STATLOSS, 12, 320, [](int /*sv*/, int /*tn*/)
-        {return you.strength() > 0 && you.intel() > 0 && you.dex() > 0;}
-    },
-    {
         XOM_BAD_DRAINING, 6, 160, [](int /*sv*/, int /*tn*/)
         {return player_prot_life() < 3;}
     },
@@ -5508,7 +5480,7 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_GOOD_CLOUD_TRAIL, { "cloud trail", _xom_cloud_trail }},
     { XOM_GOOD_CLEAVING, { "cleaving", _xom_cleaving }},
 
-    { XOM_BAD_MISCAST_PSEUDO, { "pseudo-miscast", _xom_pseudo_miscast, 10}},
+    { XOM_BAD_MISCAST_PSEUDO, { "pseudo-miscast", _xom_pseudo_miscast, 20}},
     { XOM_BAD_NOISE, { "noise", _xom_noise, 10 }},
     { XOM_BAD_ENCHANT_MONSTER, { "bad enchant monster",
                                  _xom_bad_enchant_monster, 10}},
@@ -5533,7 +5505,6 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_BAD_GRANT_WORD_OF_RECALL, {"speaker of recall",
                                     _xom_grants_word_of_recall, 40}},
     { XOM_BAD_BRAIN_DRAIN, {"mp brain drain", _xom_brain_drain, 30}},
-    { XOM_BAD_STATLOSS, { "statloss", _xom_statloss, 23}},
     { XOM_BAD_DRAINING, { "draining", _xom_draining, 23}},
     { XOM_BAD_TORMENT, { "torment", _xom_torment, 23}},
     { XOM_BAD_CHAOS_CLOUD, { "chaos cloud", _xom_chaos_cloud, 20}},

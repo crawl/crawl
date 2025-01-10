@@ -4176,17 +4176,6 @@ static const vector<pie_effect> pie_effects = {
         10
     },
     {
-        "raspberry",
-        [](const actor &defender) {
-            return defender.is_player();
-        },
-        [](actor &/*defender*/, const bolt &/*beam*/) {
-            for (int i = 0; i < NUM_STATS; ++i)
-                lose_stat(static_cast<stat_type>(i), 1 + random2(3));
-        },
-        10
-    },
-    {
         "cherry",
         [](const actor &defender) {
             return defender.is_player() || defender.res_fire() < 3;

@@ -1135,11 +1135,8 @@ void TilesFramework::_send_player(bool force_full)
                 "sh");
 
     _update_int(force_full, c.strength, (int8_t) you.strength(false), "str");
-    _update_int(force_full, c.strength_max, (int8_t) you.max_strength(), "str_max");
     _update_int(force_full, c.intel, (int8_t) you.intel(false), "int");
-    _update_int(force_full, c.intel_max, (int8_t) you.max_intel(), "int_max");
     _update_int(force_full, c.dex, (int8_t) you.dex(false), "dex");
-    _update_int(force_full, c.dex_max, (int8_t) you.max_dex(), "dex_max");
 
     if (you.has_mutation(MUT_MULTILIVED))
     {

@@ -63,7 +63,6 @@ enum xom_event_type
 
     // bad acts
     XOM_BAD_MISCAST_PSEUDO,
-    XOM_BAD_STATLOSS,
     XOM_BAD_TELEPORT,
     XOM_BAD_CHAOS_UPGRADE,
     XOM_BAD_MUTATION,

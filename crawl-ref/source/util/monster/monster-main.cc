@@ -1010,13 +1010,9 @@ int main(int argc, char* argv[])
                 if (attk.type == AT_CLAW && mon.has_claws() >= 3)
                     monsterattacks += colour(LIGHTGREEN, "(claw)");
 
-                const attack_flavour flavour(orig_attk.flavour == AF_DRAIN_STAT ?
-                                                 orig_attk.flavour :
-                                                 attk.flavour);
-
-                if (flavour_has_reach(flavour))
+                if (flavour_has_reach(attk.flavour))
                     monsterattacks += "(reach)";
-                switch (flavour)
+                switch (attk.flavour)
                 {
                 case AF_SWOOP:
                     monsterattacks += "(swoop)";
@@ -1052,12 +1048,6 @@ int main(int argc, char* argv[])
                     break;
                 case AF_CONFUSE:
                     monsterattacks += colour(LIGHTMAGENTA, "(confuse)");
-                    break;
-                case AF_DRAIN_DEX:
-                    monsterattacks += colour(RED, "(drain dexterity)");
-                    break;
-                case AF_DRAIN_STR:
-                    monsterattacks += colour(RED, "(drain strength)");
                     break;
                 case AF_DRAIN:
                     monsterattacks += colour(LIGHTMAGENTA, "(drain)");
@@ -1121,12 +1111,6 @@ int main(int argc, char* argv[])
                     break;
                 case AF_ANTIMAGIC:
                     monsterattacks += colour(LIGHTBLUE, "(antimagic)");
-                    break;
-                case AF_DRAIN_INT:
-                    monsterattacks += colour(BLUE, "(drain int)");
-                    break;
-                case AF_DRAIN_STAT:
-                    monsterattacks += colour(BLUE, "(drain stat)");
                     break;
                 case AF_STEAL:
                     monsterattacks += colour(CYAN, "(steal)");

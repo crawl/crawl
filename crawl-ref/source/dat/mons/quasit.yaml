@@ -5,9 +5,9 @@ xp_mult: 13
 holiness: [demonic]
 will: 10
 attacks:
- - {type: bite, flavour: drain_dex, damage: 3}
- - {type: claw, flavour: drain_dex, damage: 2}
- - {type: claw, flavour: drain_dex, damage: 2}
+ - {type: bite, damage: 3}
+ - {type: claw, damage: 2}
+ - {type: claw, damage: 2}
 hd: 3
 hp_10x: 150
 ac: 5

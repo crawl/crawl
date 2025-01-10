@@ -176,10 +176,10 @@ wisps of flame cloud
 
 A trail of sparks and wisps of flame. Atmospheric, but harmless.
 %%%%
-degeneration cloud
+alcoholic mist cloud
 
-A cloud formed from concentrated potions of degeneration. Creatures that venture
-into one will rapidly lose strength, dexterity, and intelligence.
+A haze of aerosolised moonshine so thick that creatures can become drunk just
+walking through it.
 %%%%
 blastmotes cloud
 

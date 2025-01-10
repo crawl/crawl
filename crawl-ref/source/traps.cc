@@ -35,7 +35,6 @@
 #include "mon-place.h"
 #include "nearby-danger.h"
 #include "orb.h"
-#include "player-stats.h" // lose_stat for zot traps
 #include "random.h"
 #include "religion.h"
 #include "shout.h"
@@ -380,7 +379,7 @@ static passage_type _find_other_passage_side(coord_def& to)
 // Table of possible Zot trap effects as pairs with weights.
 // 2/3 are "evil magic", 1/3 are "summons"
 static const vector<pair<function<void ()>, int>> zot_effects = {
-    { [] { lose_stat(STAT_RANDOM, 1 + random2avg(5, 2)); }, 4 },
+    { [] { blind_player(random_range(15, 20)); }, 4 },
     { [] { contaminate_player(7000 + random2avg(13000, 2), false); }, 4 },
     { [] { you.paralyse(nullptr, 2 + random2(4), "a Zot trap"); }, 1 },
     { [] { drain_mp(you.magic_points); canned_msg(MSG_MAGIC_DRAIN); }, 2 },

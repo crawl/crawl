@@ -508,16 +508,13 @@ static void _hell_effects()
     if (loud)
         noisy(15, you.pos());
 
-    switch (random2(4))
+    switch (random2(3))
     {
         case 0:
             temp_mutate(RANDOM_BAD_MUTATION, "hell effect");
             break;
         case 1:
-            drain_player(100, true, true);
-            break;
-        case 2:
-            lose_stat(STAT_RANDOM, roll_dice(1, 5));
+            drain_player(85, true, true);
             break;
         default:
             break;

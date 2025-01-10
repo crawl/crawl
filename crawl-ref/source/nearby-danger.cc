@@ -476,7 +476,6 @@ void revive()
     you.attribute[ATTR_LIFE_GAINED] = 0;
 
     you.magic_contamination = 0;
-    restore_stat(STAT_ALL, 0, true);
 
     clear_trapping_net();
     you.attribute[ATTR_DIVINE_VIGOUR] = 0;

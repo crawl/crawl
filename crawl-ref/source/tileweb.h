@@ -62,9 +62,9 @@ struct player_info
     int evasion;
     int shield_class;
 
-    int8_t strength, strength_max;
-    int8_t intel, intel_max;
-    int8_t dex, dex_max;
+    int8_t strength;
+    int8_t intel;
+    int8_t dex;
 
     int experience_level;
     int8_t exp_progress;

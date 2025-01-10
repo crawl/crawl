@@ -2103,12 +2103,6 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
 
         if (attk.type == AT_CHERUB)
             attk.type = random_choose(AT_HEADBUTT, AT_BITE, AT_PECK, AT_GORE);
-
-        if (attk.flavour == AF_DRAIN_STAT)
-        {
-            attk.flavour = random_choose(AF_DRAIN_STR, AF_DRAIN_INT,
-                                         AF_DRAIN_DEX);
-        }
     }
 
     // Slime creature attacks are multiplied by the number merged.
@@ -3765,7 +3759,7 @@ bool mons_should_fire(bolt &beam, bool ignore_good_idea)
  *
  * @param monspell      The spell in question.
  * @param attack_only   Whether to only count spells which directly harm
- *                      enemies (damage or stat drain). Overrides ench_too.
+ *                      enemies (ie: do damage). Overrides ench_too.
  * @param ench_too      Whether to count temporary debilitating effects (Slow,
  *                      etc).
  * @return              Whether the given spell should be considered 'ranged'.

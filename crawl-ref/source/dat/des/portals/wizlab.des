@@ -2526,7 +2526,7 @@ ENDMAP
 
 ###############################################################################
 # Alistair's Party Mansion
-# Designed by Hellmonk. Features degeneration clouds that statrot the player.
+# Designed by Hellmonk. Features clouds of alcohol that make the player drunk.
 # Monster set pulls from associated weird wizard creatures and branch invitation
 # monsters for forceful invitation/planerend. Bosses are demonspawn corrupters
 NAME:   wizlab_alistair
@@ -2566,12 +2566,12 @@ SUBST:  N = N'', ' = 1:15 2:25 K:15 ':825, . = d:1 .:15, - = L:1 -:70, C = C..
 MARKER:     ? = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 50, \
                 size = 2, size_buildup_amnt = 3, \
-                size_buildup_time = 25, cloud_type = "degeneration" \
+                size_buildup_time = 25, cloud_type = "alcoholic mist" \
             }
 MARKER:     H = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 50, \
                 size = 3, size_buildup_amnt = 3, \
-                size_buildup_time = 25, cloud_type = "degeneration" \
+                size_buildup_time = 25, cloud_type = "alcoholic mist" \
             }
 TILE:   c = wall_stone_gray
 FTILE:  H" = floor_mosaic

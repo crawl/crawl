@@ -2134,8 +2134,7 @@ static bool _resist_mutation(mutation_permanence_class mutclass,
  *
  * If the mutation conflicts with an existing one it may fail. See `_handle_conflicting_mutations`.
  *
- * If the player is undead, this may stat drain instead. Stat draincounts as
- * success.
+ * If the player is undead, this may drain max HP instead. Draining count as success.
  *
  * @param which_mutation    the mutation to use.
  * @param reason            the explanation for how the player got mutated.
@@ -2195,7 +2194,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             // fallthrough to normal mut
         case MUTCLASS_NORMAL:
             mprf(MSGCH_MUTATION, "Your body decomposes!");
-            lose_stat(STAT_RANDOM, 1);
+            drain_player(30, false, true, true);
             return true;
         case MUTCLASS_INNATE:
             // You can't miss out on innate mutations just because you're

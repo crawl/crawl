@@ -305,8 +305,8 @@ static const cloud_data clouds[] = {
       ETC_FIRE,                                   // colour
       { TILE_CLOUD_FLAME, CTVARY_RANDOM },        // tile
     },
-    // CLOUD_DEGENERATION,
-    { "degeneration",  nullptr,                   // terse, verbose name
+    // CLOUD_ALCOHOL,
+    { "alcoholic mist",  nullptr,                 // terse, verbose name
       ETC_DARK,                                   // colour
       { TILE_CLOUD_DEGENERATION, CTVARY_NONE },   // tile
       BEAM_NONE, {},                              // beam & damage
@@ -859,7 +859,7 @@ static bool _cloud_has_negative_side_effects(cloud_type cloud)
     case CLOUD_MEPHITIC:
     case CLOUD_MIASMA:
     case CLOUD_MUTAGENIC:
-    case CLOUD_DEGENERATION:
+    case CLOUD_ALCOHOL:
     case CLOUD_CHAOS:
     case CLOUD_PETRIFY:
     case CLOUD_ACID:
@@ -1150,11 +1150,11 @@ static bool _actor_apply_cloud_side_effects(actor *act,
         }
         return false;
 
-    case CLOUD_DEGENERATION:
-        if (player && one_chance_in(4))
+    case CLOUD_ALCOHOL:
+        if (player && (coinflip()))
         {
-            mpr("You feel yourself deteriorate.");
-            lose_stat(STAT_RANDOM, 1 + random2avg(4,2));
+            mpr("You feel dizzy.");
+            you.increase_duration(DUR_VERTIGO, random_range(7, 11), 50);
             return true;
         }
         return false;

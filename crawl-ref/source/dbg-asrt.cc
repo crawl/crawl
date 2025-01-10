@@ -154,10 +154,10 @@ static void _dump_player(FILE *file)
     fprintf(file, "MP: %d/%d; mod: %d\n",
             you.magic_points, you.max_magic_points,
             you.mp_max_adj);
-    fprintf(file, "Stats: %d (%d) %d (%d) %d (%d)\n",
-            you.strength(false), you.max_strength(),
-            you.intel(false), you.max_intel(),
-            you.dex(false), you.max_dex());
+    fprintf(file, "Stats: %d %d %d\n",
+            you.strength(false),
+            you.intel(false),
+            you.dex(false));
     fprintf(file, "Position: %s, god: %s (%d), turn_is_over: %d, "
                   "banished: %d\n",
             debug_coord_str(you.pos()).c_str(),

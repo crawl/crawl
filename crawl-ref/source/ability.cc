@@ -929,8 +929,6 @@ string nemelex_card_text(ability_type ability)
         return make_stringf("(%d in deck)", cards);
 }
 
-static const int VAMPIRE_BAT_FORM_STAT_DRAIN = 2;
-
 static string _ashenzari_curse_text()
 {
     const CrawlVector& curses = you.props[CURSE_KNOWLEDGE_KEY].get_vector();
@@ -954,12 +952,6 @@ const string make_cost_description(ability_type ability)
     if (ability == ABIL_HEAL_WOUNDS)
         ret += make_stringf(", Permanent MP (%d left)", get_real_mp(false));
 #endif
-
-    if (ability == ABIL_TRAN_BAT)
-    {
-        ret += make_stringf(", Stat Drain (%d each)",
-                            VAMPIRE_BAT_FORM_STAT_DRAIN);
-    }
 
     if (ability == ABIL_REVIVIFY)
         ret += ", Frailty";
@@ -2005,9 +1997,6 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
             && !you.duration[DUR_POISONING]
             && !you.duration[DUR_CONF] && !you.duration[DUR_SLOW]
             && !you.petrifying()
-            && you.strength(false) == you.max_strength()
-            && you.intel(false) == you.max_intel()
-            && you.dex(false) == you.max_dex()
             && !player_drained()
             && !you.duration[DUR_WEAK])
         {
@@ -2890,87 +2879,6 @@ static bool _cleansing_flame_affects(const actor *act)
            && !never_harm_monster(&you, act->as_monster());
 }
 
-static string _vampire_str_int_info_blurb(string stats_affected)
-{
-    return make_stringf("This will reduce your %s to zero. ",
-                        stats_affected.c_str());
-}
-
-/*
- * Create a string which informs the player of the consequences of bat form.
- *
- * @param str_affected Whether the player will cause strength stat zero by
- * Bat Form's stat drain ability cost.
- * @param dex_affected Whether the player will cause dexterity stat zero by
- * Bat Form's stat drain ability cost, disregarding Bat Form's dexterity boost.
- * @param int_affected Whether the player will cause intelligence stat zero by
- * Bat Form's stat drain ability cost.
- * @returns The string prompt to give the player.
- */
-static string _vampire_bat_transform_prompt(bool str_affected, bool dex_affected,
-                                            bool intel_affected)
-{
-    string prompt = "";
-
-    if (str_affected && intel_affected)
-        prompt += _vampire_str_int_info_blurb("strength and intelligence");
-    else if (str_affected)
-        prompt += _vampire_str_int_info_blurb("strength");
-    else if (intel_affected)
-        prompt += _vampire_str_int_info_blurb("intelligence");
-
-    // Bat form's dexterity boost will keep a vampire's dexterity above zero until
-    // they untransform.
-    if (dex_affected)
-        prompt += "This will reduce your dexterity to zero once you untransform. ";
-
-    prompt += "Continue?";
-
-    return prompt;
-}
-
-static bool _stat_affected_by_bat_form_stat_drain(int stat_value)
-{
-    // We check whether the stat is greater than zero to avoid prompting if a
-    // stat is already zero.
-    return 0 < stat_value && stat_value <= VAMPIRE_BAT_FORM_STAT_DRAIN;
-}
-
-/*
- * Give the player a chance to cancel a bat form transformation which could
- * cause their stats to be drained to zero.
- *
- * @returns Whether the player canceled the transformation.
- */
-static bool _player_cancels_vampire_bat_transformation()
-{
-
-    bool str_affected = _stat_affected_by_bat_form_stat_drain(you.strength());
-    bool dex_affected = _stat_affected_by_bat_form_stat_drain(you.dex());
-    bool intel_affected = _stat_affected_by_bat_form_stat_drain(you.intel());
-
-    // Don't prompt if there's no risk of stat-zero
-    if (!str_affected && !dex_affected && !intel_affected)
-        return false;
-
-    string prompt = _vampire_bat_transform_prompt(str_affected, dex_affected,
-                                                  intel_affected);
-
-    bool proceed_with_transformation = yesno(prompt.c_str(), false, 'n');
-
-    if (!proceed_with_transformation)
-        canned_msg(MSG_OK);
-
-    return !proceed_with_transformation;
-}
-
-static void _cause_vampire_bat_form_stat_drain()
-{
-    lose_stat(STAT_STR, VAMPIRE_BAT_FORM_STAT_DRAIN);
-    lose_stat(STAT_INT, VAMPIRE_BAT_FORM_STAT_DRAIN);
-    lose_stat(STAT_DEX, VAMPIRE_BAT_FORM_STAT_DRAIN);
-}
-
 static int _orb_of_dispater_power()
 {
     return you.skill(SK_EVOCATIONS, 8);
@@ -3739,11 +3647,8 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         return fedhas_grow_oklob(beam.target, fail);
 
     case ABIL_TRAN_BAT:
-        if (_player_cancels_vampire_bat_transformation())
-            return spret::abort;
         fail_check();
         transform(100, transformation::bat);
-        _cause_vampire_bat_form_stat_drain();
         break;
 
     case ABIL_EXSANGUINATE:

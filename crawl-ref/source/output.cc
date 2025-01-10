@@ -1018,10 +1018,6 @@ static short _get_stat_colour(stat_type stat)
     if (you.duration[DUR_DIVINE_STAMINA])
         return LIGHTBLUE;  // no end of effect warning
 
-    // Stat is degenerated.
-    if (you.stat_loss[stat] > 0)
-        return YELLOW;
-
     return HUD_VALUE_COLOUR;
 }
 
@@ -1031,14 +1027,8 @@ static void _print_stat(stat_type stat, int x, int y)
 
     textcolour(_get_stat_colour(stat));
     CPRINTF("%d", you.stat(stat, false));
-
     if (!_is_using_small_layout())
-    {
-        if (you.stat_loss[stat] > 0)
-            CPRINTF(" (%d)  ", you.max_stat(stat));
-        else
-            CPRINTF("       ");
-    }
+        CPRINTF("       ");
 }
 
 static void _print_stats_ac(int x, int y)
@@ -2224,13 +2214,6 @@ static int _god_status_colour(int default_colour)
     return default_colour;
 }
 
-static bool _player_statrotted()
-{
-    return you.strength(false) != you.max_strength()
-        || you.intel(false) != you.max_intel()
-        || you.dex(false) != you.max_dex();
-}
-
 static vector<formatted_string> _get_overview_stats()
 {
     formatted_string entry;
@@ -2242,9 +2225,6 @@ static vector<formatted_string> _get_overview_stats()
 
     if (player_drained())
         col1 += 1;
-
-    if (_player_statrotted())
-        col3 += 2;
 
     column_composer cols(4, col1, col1 + col2, col1 + col2 + col3);
 
@@ -2350,8 +2330,6 @@ static vector<formatted_string> _get_overview_stats()
     entry.textcolour(_get_stat_colour(STAT_STR));
 
     entry.cprintf("%2d", you.strength(false));
-    if (you.strength(false) != you.max_strength())
-        entry.cprintf(" (%d)", you.max_strength());
 
     cols.add_formatted(2, entry.to_colour_string(), false);
     entry.clear();
@@ -2362,8 +2340,6 @@ static vector<formatted_string> _get_overview_stats()
     entry.textcolour(_get_stat_colour(STAT_INT));
 
     entry.cprintf("%2d", you.intel(false));
-    if (you.intel(false) != you.max_intel())
-        entry.cprintf(" (%d)", you.max_intel());
 
     cols.add_formatted(2, entry.to_colour_string(), false);
     entry.clear();
@@ -2374,8 +2350,6 @@ static vector<formatted_string> _get_overview_stats()
     entry.textcolour(_get_stat_colour(STAT_DEX));
 
     entry.cprintf("%2d", you.dex(false));
-    if (you.dex(false) != you.max_dex())
-        entry.cprintf(" (%d)", you.max_dex());
 
     cols.add_formatted(2, entry.to_colour_string(), false);
     entry.clear();
