@@ -153,7 +153,7 @@ time_warped_blood_2
 # Generic bad mutations
 berserk_1 BERSERK
 berserk_2
-deterioration_1 DETERIORATION
+deterioration_1 POOR_CONSTITUTION
 deterioration_2
 persistent_drain PERSISTENT_DRAIN
 scream_1 SCREAM

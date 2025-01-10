@@ -423,10 +423,11 @@ first come into sight. All of your shouts are also louder than usual. The
 second level of this mutation makes this urge harder to resist and makes your
 shouts even louder.
 %%%%
-deterioration mutation
+poor constitution mutation
 
-When injured, your body sometimes deteriorates, temporarily reducing your
-attributes. The second level of this mutation makes this happen more often.
+Your body reacts poorly to injury; when you suffer damage, you have a chance for
+your attacks to become weakened for a short while. The second level of this
+mutation sometimes additionally causes this to slow you as well.
 %%%%
 berserk mutation
 

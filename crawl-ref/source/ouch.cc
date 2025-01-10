@@ -792,13 +792,19 @@ static void _maybe_fog(int dam)
     }
 }
 
-static void _deteriorate(int dam)
+static void _handle_poor_constitution(int dam)
 {
-    if (x_chance_in_y(you.get_mutation_level(MUT_DETERIORATION), 4)
-        && dam > you.hp_max / 10)
+    const int level = you.get_mutation_level(MUT_POOR_CONSTITUTION);
+
+    if (level == 0)
+        return;
+
+    if (dam > you.hp_max / 15 && one_chance_in(level == 1 ? 9 : 6))
     {
-        mprf(MSGCH_WARN, "Your body deteriorates!");
-        lose_stat(STAT_RANDOM, 1);
+        you.weaken(nullptr, 20);
+
+        if (level == 2 && one_chance_in(2))
+            you.slow_down(nullptr, random_range(8, 15));
     }
 }
 
@@ -1207,7 +1213,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             take_note(Note(NOTE_HP_CHANGE, you.hp, you.hp_max,
                            damage_desc.c_str()));
 
-            _deteriorate(dam);
+            _handle_poor_constitution(dam);
             _maybe_ru_retribution(dam, source);
             _maybe_inflict_anguish(dam, source);
             _maybe_spawn_monsters(dam, death_type, source);

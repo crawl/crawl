@@ -575,21 +575,21 @@ static const mutation_def mut_data[] =
   TILEG_MUT_BERSERK,
 },
 
-{ MUT_DETERIORATION, 10, 2, mutflag::bad, false,
-  "deterioration",
+{ MUT_POOR_CONSTITUTION, 10, 2, mutflag::bad, false,
+  "poor constitution",
 
-  {"Your body sometimes deteriorates upon taking damage.",
-   "Your body often deteriorates upon taking damage.",
+  {"Your body sometimes grows weak upon taking damage.",
+   "Your body sometimes grows weak and slow upon taking damage.",
    ""},
 
-  {"You feel yourself wasting away.",
-   "You feel your body start to fall apart.",
+  {"You feel your constitution weaken.",
+   "You feel your constitution grow even weaker.",
    ""},
 
-  {"You feel healthier.",
-   "You feel a little healthier.",
+  {"You feel your constitution return to normal.",
+   "You feel your constitution improve a little.",
    ""},
-  TILEG_MUT_DETERIORATION,
+  TILEG_MUT_POOR_CONSTITUTION,
 },
 
 #if TAG_MAJOR_VERSION == 34

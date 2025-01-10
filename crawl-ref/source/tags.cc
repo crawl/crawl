@@ -3622,8 +3622,8 @@ static void _tag_read_you(reader &th)
 
     if (th.getMinorVersion() < TAG_MINOR_DETERIORATION)
     {
-        if (you.mutation[MUT_DETERIORATION] > 2)
-            you.mutation[MUT_DETERIORATION] = 2;
+        if (you.mutation[MUT_POOR_CONSTITUTION] > 2)
+            you.mutation[MUT_POOR_CONSTITUTION] = 2;
     }
 
     if (th.getMinorVersion() < TAG_MINOR_BLINK_MUT)
