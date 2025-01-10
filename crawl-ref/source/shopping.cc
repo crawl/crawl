@@ -450,13 +450,13 @@ unsigned int item_value(item_def item, bool ident)
             case POT_MAGIC:
             case POT_INVISIBILITY:
             case POT_CANCELLATION:
+            case POT_HEAL_WOUNDS:
             case POT_AMBROSIA:
             case POT_MUTATION:
                 valued += 80;
                 break;
 
             case POT_BERSERK_RAGE:
-            case POT_HEAL_WOUNDS:
             case POT_ENLIGHTENMENT:
                 valued += 50;
                 break;
@@ -496,10 +496,11 @@ unsigned int item_value(item_def item, bool ident)
             case SCR_TORMENT:
             case SCR_SILENCE:
             case SCR_BRAND_WEAPON:
+            case SCR_BUTTERFLIES:
+            case SCR_BLINKING:
                 valued += 95;
                 break;
 
-            case SCR_BLINKING:
             case SCR_ENCHANT_ARMOUR:
             case SCR_ENCHANT_WEAPON:
             case SCR_REVELATION:
@@ -512,7 +513,6 @@ unsigned int item_value(item_def item, bool ident)
             case SCR_POISON:
             case SCR_VULNERABILITY:
             case SCR_FOG:
-            case SCR_BUTTERFLIES:
                 valued += 40;
                 break;
 
@@ -651,7 +651,7 @@ unsigned int item_value(item_def item, bool ident)
         case MISC_PHANTOM_MIRROR:
         case MISC_LIGHTNING_ROD:
         case MISC_GRAVITAMBOURINE:
-            valued += 400;
+            valued += 500;
             break;
 
         default:

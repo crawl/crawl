@@ -5995,10 +5995,10 @@ int greed_for_shop_type(shop_type shop, int level_number)
     if (!shoptype_identifies_stock(shop))
     {
         const int rand = random2avg(19, 2);
-        return 15 + rand + random2(level_number);
+        return 15 + rand;
     }
     const int rand = random2(5);
-    return 10 + rand + random2(level_number / 2);
+    return 10 + rand + random2(div_rand_round(level_number*2, 3));
 }
 
 /**
