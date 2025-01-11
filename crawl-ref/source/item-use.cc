@@ -230,7 +230,7 @@ static int _default_osel(operation_types oper)
     case OPER_UNEQUIP:
         return OSEL_WORN_EQUIPABLE;
     default:
-        return OSEL_ANY; // buggy?
+        return OSEL_PORTABLE; // buggy?
     }
 }
 
@@ -360,7 +360,7 @@ void UseItemMenu::reset(operation_types _oper, const char* prompt_override)
     else
         set_title(_default_use_title(oper));
     // see `item_is_selected` for more on what can be used for item_type.
-    if (item_type_filter == OSEL_ANY)
+    if (item_type_filter == OSEL_PORTABLE)
         item_type_filter = _default_osel(oper);
 
     populate_list();
@@ -373,7 +373,7 @@ void UseItemMenu::reset(operation_types _oper, const char* prompt_override)
     update_more();
 }
 
-UseItemMenu::UseItemMenu(operation_types _oper, int item_type=OSEL_ANY,
+UseItemMenu::UseItemMenu(operation_types _oper, int item_type=OSEL_PORTABLE,
                                     const char* prompt=nullptr)
     : InvMenu(MF_SINGLESELECT | MF_ARROWS_SELECT
                 | MF_INIT_HOVER | MF_ALLOW_FORMATTING),
@@ -412,9 +412,13 @@ bool UseItemMenu::populate_list(bool check_only)
 
     for (const auto *it : floor)
     {
+        if (!it->defined())
+            continue;
+
         // ...only stuff that can go into your inventory though
-        if (!it->defined() || item_is_stationary(*it) || item_is_spellbook(*it)
-            || item_is_collectible(*it) || it->base_type == OBJ_GOLD)
+        if ((item_is_stationary(*it) || item_is_spellbook(*it)
+             || item_is_collectible(*it) || it->base_type == OBJ_GOLD)
+            && item_type_filter != OSEL_ANYTHING)
         {
             continue;
         }
@@ -867,7 +871,7 @@ bool UseItemMenu::process_key(int key)
     }
     else if (key == CK_TAB && _equip_oper(oper))
     {
-        item_type_filter = OSEL_ANY;
+        item_type_filter = OSEL_PORTABLE;
         save_hover();
         switch (oper)
         {
@@ -3187,7 +3191,7 @@ void prompt_inscribe_item()
     }
 
     int item_slot = prompt_invent_item("Inscribe which item?",
-                                       menu_type::invlist, OSEL_ANY);
+                                       menu_type::invlist, OSEL_PORTABLE);
 
     if (prompt_failed(item_slot))
         return;

@@ -156,7 +156,8 @@ public:
     // Loads items from the player's inventory into the menu, and sets the
     // title to the stock title. If "procfn" is provided, it'll be called for
     // each MenuEntry added, *excluding the title*.
-    void load_inv_items(int item_selector = OSEL_ANY, int excluded_slot = -1,
+    void load_inv_items(int item_selector = OSEL_PORTABLE,
+                        int excluded_slot = -1,
                         function<MenuEntry* (MenuEntry*)> procfn = nullptr);
 
     vector<SelItem> get_selitems() const;

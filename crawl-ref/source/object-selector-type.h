@@ -2,7 +2,7 @@
 
 enum object_selector
 {
-    OSEL_ANY                     =  -1,
+    OSEL_PORTABLE                =  -1,
     OSEL_WIELD                   =  -2,
     OSEL_UNIDENT                 =  -3,
     OSEL_ENCHANTABLE_ARMOUR      =  -4,
@@ -23,4 +23,5 @@ enum object_selector
     OSEL_WEARABLE                = -19,
     OSEL_AMULET                  = -20,
     OSEL_ARTEFACT_WEAPON         = -21,
+    OSEL_ANYTHING                = -22,
 };
