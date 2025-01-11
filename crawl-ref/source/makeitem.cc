@@ -322,7 +322,7 @@ bool is_weapon_brand_ok(int type, int brand, bool /*strict*/)
     case SPWPN_PAIN:
     case SPWPN_DISTORTION:
     case SPWPN_SPECTRAL:
-    case SPWPN_REAPING: // only exists on Sword of Zonguldrok
+    case SPWPN_REAPING:
     case SPWPN_FOUL_FLAME: // only exists on Brilliance
         if (is_range_weapon(item))
             return false;
@@ -1737,7 +1737,6 @@ static bool _ego_unrand_only(int base_type, int ego)
     {
         switch (static_cast<brand_type>(ego))
         {
-        case SPWPN_REAPING:
         case SPWPN_FOUL_FLAME:
         case SPWPN_ACID:
             return true;

@@ -1104,7 +1104,7 @@ bool yred_reap_chance()
             continue;
 
         if ((mi->type == MONS_ZOMBIE || mi->type == MONS_SPECTRAL_THING)
-             && mi->was_created_by(you, MON_SUMM_REAPING))
+             && mi->was_created_by(you, MON_SUMM_YRED_REAP))
         {
             hd += mi->get_experience_level();
         }

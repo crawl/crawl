@@ -707,7 +707,7 @@ int attack::inflict_damage(int dam, beam_type flavour, bool clean)
     {
         defender->props[REAPING_DAMAGE_KEY].get_int() += dam;
         // With two reapers of different friendliness, the most recent one
-        // gets the zombie. Too rare a case to care any more.
+        // gets the spectral.
         defender->props[REAPER_KEY].get_int() = attacker->mid;
     }
     return defender->hurt(responsible, dam, flavour, kill_type,
