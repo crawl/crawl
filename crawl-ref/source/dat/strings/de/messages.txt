@@ -2557,10 +2557,10 @@ Ahnen TP wiederhergestellt.
 ##################
 %%%%
 Godly wrath is upon you!
-Der göttliche Zorn ist über dich gekommen!
+Göttlicher Zorn liegt auf dir!
 %%%%
 You've transgressed heavily! Be penitent!
-Du hast schwer gesündigt! Seid reuig!
+Du hast schwer gesündigt! Bereue es!
 %%%%
 You are under penance.
 Du stehst unter Buße.
@@ -2593,20 +2593,20 @@ Ein aufsteigender Stern in den Augen von {dat}%s.
 %s ist sich deiner Hingabe bewusst.
 %%%%
 %s is noncommittal.
-%s ist unverbindlich.
+%s ist unschlüssig.
 %%%%
 Bound item
 Gebundener Gegenstand
 %%%%
 Curse bonuses
-Fluch-Bonus
+Fluchbonus
 %%%%
 # Hep ancestor equipment/spells
 Flail
 Flegel
 %%%%
 Chain mail (+AC)
-Kettenhemd (+AC)
+Kettenhemd (+RK)
 %%%%
 Broad axe (flame)
 Breitaxt (Flamme)
@@ -2660,13 +2660,13 @@ nicht bestochen
 " (%s sind böse, und %s sind chaotisch.)"
 %%%%
 %s does not appreciate abandonment, and will call down fearful punishments on disloyal followers!
-%s schätzt es nicht, wenn man ihn verlässt, und wird abtrünnige Anhänger furchtbar bestrafen!
+%s schätzt es nicht, wenn man ihn verlässt und wird abtrünnige Anhänger furchtbar bestrafen!
 %%%%
 %s's wrath lasts for a relatively long duration.
 Der Zorn {gen}%s hält relativ lange an.
 %%%%
 %s's wrath lasts for a relatively short duration.
-Der Zorn {gen}%s hält relativ kurz an.
+Der Zorn {gen}%s hält nicht allzu lange an.
 %%%%
 Named Followers:
 Benannte Anhänger:
@@ -2696,27 +2696,27 @@ Die Kräfte {gen}%s basieren auf {dat}%s statt auf der Anrufungsfertigkeit.
 %s ist dir gegenüber ambivalent.
 %%%%
 %s is almost ready to forgive your sins.
-%s ist fast bereit, dich deine Sünden zu vergeben.
+%s ist fast bereit, dir deine Sünden zu vergeben.
 %%%%
 %s's wrath is upon you!
-Der Zorn {gen}%s ist über dich gekommen!
+Der Zorn {gen}%s bricht über dich herein!
 %%%%
 %s well remembers your sins.
 %s erinnert sich gut an deine Sünden.
 %%%%
 %s's wrath is beginning to fade.
-Der Zorn {gen}%s beginnt zu schwinden.
+Der Zorn {gen}%s beginnt nachzulassen.
 %%%%
 %s is neutral towards you.
 %s ist dir gegenüber neutral.
 %%%%
 # Elyvilon lifesaving
 , especially when called upon
-, besonders wenn er angerufen wird
+, besonders nach Anruf um Hilfe
 %%%%
 # Elyvilon lifesaving
 , and always does so when called upon
-, und tut dies immer, wenn er angerufen wird.
+, und tut dies immer bei Anruf um Hilfe.
 %%%%
 Granted powers:
 Erteilte Kräfte:
@@ -2741,43 +2741,43 @@ Erteilte Kräfte:
 %s bewacht dein Leben%s.
 %%%%
 Zin always shields you from chaos.
-Zin schirmt dich immer vor Chaos ab.
+Zin schirmt dich immer von Chaos ab.
 %%%%
 Zin often shields you from chaos.
-Zin schirmt dich oft vor Chaos ab.
+Zin schirmt dich oft von Chaos ab.
 %%%%
 Zin sometimes shields you from chaos.
-Zin schirmt dich manchmal vor Chaos ab.
+Zin schirmt dich manchmal von Chaos ab.
 %%%%
 Zin occasionally shields you from chaos.
-Zin schirmt dich gelegentlich vor dem Chaos ab.
+Zin schirmt dich gelegentlich von Chaos ab.
 %%%%
 The Shining One prevents you from stabbing unaware foes.
-Der Strahlende hindert dich daran, unbewusste Feinde zu erstechen.
+Der Strahlende hindert dich daran, unaufmerksame Feinde zu erstechen.
 %%%%
 The Shining One completely shields you from negative energy.
-Der Strahlende schirmt dich vollständig vor negativer Energie ab.
+Der Strahlende schirmt dich vollständig von negativer Energie ab.
 %%%%
 The Shining One mostly shields you from negative energy.
-Der Strahlende schirmt dich meistens vor negativer Energie ab.
+Der Strahlende schirmt dich meistens von negativer Energie ab.
 %%%%
 The Shining One partially shields you from negative energy.
-Das Strahlende schirmt dich teilweise vor negativer Energie ab.
+Das Strahlende schirmt dich teilweise von negativer Energie ab.
 %%%%
 You radiate a large righteous aura, and others within it are easier to hit.
-Du strahlst eine große, rechtschaffene Aura aus, und andere, die sich darin befinden, sind leichter zu treffen.
+Du strahlst eine große, rechtschaffene Aura aus und andere, die sich darin befinden, sind leichter zu treffen.
 %%%%
 You radiate a righteous aura, and others within it are easier to hit.
-Du strahlst eine rechtschaffene Aura aus, und andere, die sich darin befinden, sind leichter zu treffen.
+Du strahlst eine rechtschaffene Aura aus und andere, die sich darin befinden, sind leichter zu treffen.
 %%%%
 You radiate a small righteous aura, and others within it are easier to hit.
-Du strahlst eine kleine, rechtschaffene Aura aus, und andere, die sich darin befinden, sind leichter zu treffen.
+Du strahlst eine kleine, rechtschaffene Aura aus und andere, die sich darin befinden, sind leichter zu treffen.
 %%%%
 You gain magic and health when your fellow slimes consume items.
-Du erhältst Magie und Gesundheit, wenn deine Mitschleimlinge Gegenstände verbrauchen.
+Du erhältst Magie und Gesundheit, wenn deine Mitschleimlinge Gegenstände verspeisen.
 %%%%
 You gain magic when your fellow slimes consume items.
-Du erhältst Magie, wenn deine Mitschleimlinge Gegenstände konsumieren.
+Du erhältst Magie, wenn deine Mitschleimlinge Gegenstände verspeisen.
 %%%%
 You can walk through plants and fire through allied plants.
 Du kannst durch Pflanzen gehen und durch verbündete Pflanzen feuern.
@@ -2795,13 +2795,13 @@ Cheibriados supports your attributes. (+%d)
 Cheibriados unterstützt deine Attribute. (+%d)
 %%%%
 You can memorise %s.
-Du kannst %s memorisieren.
+Du kannst %s auswendig lernen.
 %%%%
 You can memorise some of Vehumet's most lethal spells.
-Du kannst einige von Vehumets tödlichsten Zaubern memorieren.
+Du kannst einige von Vehumets tödlichsten Zaubern auswendig lernen.
 %%%%
 You can memorise some of Vehumet's spells.
-Du kannst einige von Vehumets Zaubersprüchen memorieren.
+Du kannst einige von Vehumets Zaubersprüchen auswendig lernen.
 %%%%
 You radiate a large aura of darkness, enhancing your stealth and reducing the accuracy of your foes.
 Du strahlst eine große Aura der Dunkelheit aus, die deine Heimlichkeit verbessert und die Treffsicherheit deiner Feinde verringert.
@@ -2828,7 +2828,7 @@ Your ancestor manifests to aid you.
 Dein Ahne manifestiert sich, um dir zu helfen.
 %%%%
 You are protected from the effects of unwielding distortion weapons.
-Du bist vor den Auswirkungen des Loslassens von Verzerrungswaffen geschützt.
+Du bist vor den Auswirkungen des Ablegens von Verzerrungswaffen geschützt.
 %%%%
 You can %s.
 Du kannst %s.
@@ -2966,7 +2966,7 @@ Beschreibung|<w>Zitat</w>
 %%%%
 # Descriptions for randomly-generated Pandemonium Lords
 "One of the many lords of Pandemonium, @name@ has "
-"Einer der vielen Lords von Pandämonium, @name@ hat "
+"Einer der vielen Lords des Pandämoniums, @name@ hat "
 %%%%
 # Random pan lord body types
 an armoured body
@@ -3006,7 +3006,7 @@ a skeletal body
 einen skelettartigen Körper
 %%%%
 a mantis body
-einen Gottesanbeterin-Körper
+einen Gottesanbeterinnenkörper
 %%%%
 a slithering body
 einen schlängelnden Körper
@@ -3046,10 +3046,10 @@ einen schlängelnden Körper
 " mit sperlingsartigen Flügeln"
 %%%%
 " with hooked wings"
-" mit hakenförmigen Flügeln"
+" mit hakenbesetzten Flügeln"
 %%%%
 " with strange knobs attached"
-" mit merkwürdigen Knöpfen daran"
+" mit merkwürdigen Knubbeln daran"
 %%%%
 " which hovers in mid-air"
 , der mitten in der Luft schwebt
@@ -3116,7 +3116,7 @@ einen schlängelnden Körper
 , und einen dünnen, wurmartigen Kopf
 %%%%
 " and huge, compound eyes"
-, und riesige, zusammengesetzte Augen
+, und riesige Facettenaugen
 %%%%
 " and the head of a frog"
 , und den Kopf eines Frosches
@@ -3159,7 +3159,7 @@ einen schlängelnden Körper
 " Er ist von einem seltsamen Dunst umgeben."
 %%%%
 " It glows with a malevolent light."
-" Er ghlüht mit einem bösartigen Licht."
+" Er glüht mit einem bösartigen Licht."
 %%%%
 " It looks incredibly angry."
 " Er sieht unglaublich wütend aus."
@@ -3192,7 +3192,7 @@ einen schlängelnden Körper
 " Er bewegt sich mit einer unheimlichen Anmut."
 %%%%
 " It leaves a glistening oily trail."
-" Er hinterlässt eine glitzernde, ölige Spur."
+" Er hinterlässt eine glänzende ölige Spur."
 %%%%
 " It shimmers before your eyes."
 " Er schimmert vor deinen Augen."
@@ -3204,7 +3204,7 @@ einen schlängelnden Körper
 " Er strahlt eine Aura extremer Kraft aus."
 %%%%
 " It seems utterly heartbroken."
-" Er scheint untröstlich zu sein."
+" Er scheint untröstlich traurig zu sein."
 %%%%
 " It seems filled with irrepressible glee."
 " Er scheint von unbändiger Freude erfüllt zu sein."
@@ -3234,10 +3234,10 @@ einen schlängelnden Körper
 " Seine Haut ist mit einem Netz von Rissen überzogen."
 %%%%
 " Its skin has a disgusting oily sheen."
-" Seine Haut hat einen ekelhaften, öligen Schimmer."
+" Seine Haut hat einen ekelhaften öligen Schimmer."
 %%%%
 " It seems somehow familiar."
-" Er kommt dich irgendwie bekannt vor."
+" Er kommt dir irgendwie bekannt vor."
 %%%%
 " It is somehow always in shadow."
 " Er ist irgendwie immer im Schatten."
@@ -3246,19 +3246,19 @@ einen schlängelnden Körper
 " Es ist schwierig, den Blick abzuwenden."
 %%%%
 " It is constantly speaking in tongues."
-" Er spricht ständig in fremden Zungen."
+" Er spricht ununterbrochen in fremden Zungen."
 %%%%
 " It babbles unendingly."
 " Er plappert unaufhörlich."
 %%%%
 " Its body is scourged by damnation."
-" Sein Körper wird von der Verdammnis gegeißelt."
+" Sein Körper wird von Verdammnis gegeißelt."
 %%%%
 " Its body is extensively scarred."
-" Sein Körper ist von Narben übersät."
+" Sein Körper ist mit Narben übersät."
 %%%%
 " You find it difficult to look away."
-" Es fällt dich schwer, den Blick abzuwenden."
+" Es fällt dir schwer, den Blick abzuwenden."
 %%%%
 " Oddly mechanical noises accompany its jarring movements."
 " Seltsame mechanische Geräusche begleiten seine ruckartigen Bewegungen."
@@ -3293,17 +3293,17 @@ It is a juvenile, no longer larval but below its mature strength.
 Es ist ein Jungtier, nicht mehr larval, aber noch nicht ausgewachsen.
 %%%%
 It is mature, stronger than a juvenile but weaker than its elders.
-Es ist reif, stärker als ein Jungtier, aber schwächer als die Älteren.
+Es ist erwachsen, stärker als ein Jungtier, aber schwächer als die Älteren.
 %%%%
 It is an elder, stronger than mature beasts.
-Es ist ein Ältester, stärker als reife Tiere.
+Es ist ein Ältester, stärker als erwachsene Tiere.
 %%%%
 It is a primal beast, the most powerful of its kind.
 Es ist ein Urbiest, das mächtigste seiner Art.
 %%%%
 # Mutant beast facets - multiple possible, code handles capitalisation
 it sports a set of venomous tails
-es trägt einen Satz giftiger Schwänze
+es hat einen ganzen Satz giftiger Schwänze
 %%%%
 it flies swiftly and unpredictably
 es fliegt schnell und unberechenbar
@@ -3318,7 +3318,7 @@ it flickers and crackles with electricity
 es flackert und knistert vor Elektrizität
 %%%%
 it is covered in dense fur and muscle
-es ist mit dirtem Fell und Muskeln bedeckt
+es ist mit dichtem Fell und Muskeln bedeckt
 %%%%
 A cloud of %s.
 Eine Wolke aus {dat}%s.
@@ -3343,7 +3343,7 @@ Translokationsenergie.
 %%%%
 # unexplored staircase/escape hatch
 You have not yet explored it and cannot tell where it leads.
-Du hast sie noch nicht erforscht und können nicht sagen, wohin sie führt.
+Du hast sie noch nicht erforscht und kannst nicht sagen, wohin sie führt.
 %%%%
 # explored staircase/escape hatch
 You can view the location it leads to by examining it with <w>%s</w> and pressing <w>%s</w>.
@@ -3354,17 +3354,17 @@ Du kannst den Ort sehen, zu dem sie führt, indem du sie mit <w>%s</w> untersuch
 %%%%
 # diggable wall
 It can be dug through.
-Sie kann durchgraben werden.
+Sie kann durchtunnelt werden.
 %%%%
 #actions
 (w)ield
-(w)führen
+(w)ziehen
 %%%%
 (u)nwield
-(u)loslassen
+(u)ablegen
 %%%%
 (q)uiver
-(q)in Kocher stecken
+(q)in Köcher stecken
 %%%%
 (w)ear
 (w)tragen
@@ -3384,7 +3384,7 @@ e(v)ozieren
 %%%%
 # remove jewellery
 (r)emove
-(r)abnahmen
+(r)abnehmen
 %%%%
 (q)uaff
 (q)trinken
@@ -3402,7 +3402,7 @@ e(v)ozieren
 (s)Fertigkeit
 %%%%
 "Select a spell, or "
-"Einen Zauber asuwählen, oder "
+"Einen Zauber auswählen oder "
 %%%%
 "Replace inscription with what? "
 "Die Inschrift durch was ersetzen? "
@@ -3427,7 +3427,7 @@ Versagen: %d%%
 "Kraft: "
 %%%%
 "Accuracy: "
-"Genauigkeit: "
+"Treffsicherheit: "
 %%%%
 "Range: "
 "Reichweite: "
@@ -3437,10 +3437,10 @@ How on earth did you manage to pick this up?
 Wie um alles in der Welt hast du das trainiert?
 %%%%
 Note that Trog doesn't use Invocations, due to its close connection to magic.
-Beachtet, dass Trog kein Invozieren verwendet, denn es hat eine enge Verbindung zur Magie.
+Beachte, dass Trog keine Anrufungen verwendet, denn diese haben eine enge Verbindung zur Magie.
 %%%%
 Keep in mind, though, that Trog would greatly disapprove of this.
-Bedenkt jedoch, dass Trog dies sehr missbilligen würde.
+Bedenke, dass Trog dies sehr stark missbilligen würde.
 %%%%
 # spell miscast effects
 irresistible damage
@@ -3485,7 +3485,7 @@ Ein Fehlzauber verursacht magische Verunreinigung.
 %%%%
 # %s is a placeholder for the miscast effects above
 Miscasting this spell causes magic contamination and also %s.
-Ein Fehlzauber verursacht magische Verunreinigung, und auch %s.
+Ein Fehlzauber verursacht magische Verunreinigung und auch %s.
 %%%%
 Your servitor would be unable to mimic any of your spells.
 Dein Diener könnte keinen deiner Zaubersprüche nachahmen.
@@ -3494,16 +3494,16 @@ Your servitor casts %s.
 Dein Diener wirkt {acc}%s.
 %%%%
 You can sustain at most 1 creature summoned by this spell.
-Du kannst maximal 1 durch diesen Zauber beschwörene Kreatur erhalten.
+Du kannst maximal 1 durch diesen Zauber beschworene Kreatur erhalten.
 %%%%
 You can sustain at most %d creatures summoned by this spell.
-Du kannst maximal %d durch diesen Zauber beschwörene Kreaturen erhalten.
+Du kannst maximal %d durch diesen Zauber beschworene Kreaturen erhalten.
 %%%%
 %s frowns upon the use of this spell.
 %s missbilligt die Verwendung dieses Zaubers.
 %%%%
 You'd be excommunicated if you dared to cast it!
-Du würdest exkommuniziert werden, wenn du es wagen würdest, ihn zu wirken!
+Du würdest exkommuniziert, solltest du es wagen, diesen Zauber zu wirken!
 %%%%
 %s supports the use of this spell.
 %s unterstützt die Verwendung dieses Zaubers.
@@ -3512,7 +3512,7 @@ You cannot cast this spell because %s
 Du kannst diesen Zauberspruch nicht wirken, denn %s
 %%%%
 You cannot memorise this spell because %s
-Du kannst diesen Zauberspruch nicht memorisieren, denn %s
+Du kannst diesen Zauberspruch nicht auswendig lernen, denn %s
 %%%%
 This spell would have no effect right now because %s
 Dieser Zauber würde im Moment keine Wirkung haben, denn %s
@@ -3527,7 +3527,7 @@ Dieser Zauberspruch hat keine Beschreibung. Es könnte daher unklug sein, ihn zu
 " (Kraft %d)"
 %%%%
 You cannot be affected by this spell right now. %s
-Du kannst im Moment nicht von diesem Zauber betroffen sein. %s
+Du kannst im Moment nicht von diesem Zauber beeinflusst werden. %s
 %%%%
 Chance to defeat your Will: %d%%%s
 Chance, deinen Willen zu besiegen: %d%%%s
@@ -3607,7 +3607,7 @@ Dieses Monster sieht extrem gefährlich aus.
 "von benachbarten Gegnern zurückweichen und "
 %%%%
 "swoop behind its foe and "
-"hinter seinen Feind herabstoßen und "
+"hinter seinen Feind stürzen und "
 %%%%
 deal extra acid damage
 zusätzlichen Säureschaden verursachen
@@ -3631,10 +3631,10 @@ drain intelligence
 Intelligenz entziehen
 %%%%
 drain dexterity
-Geschicklichket entziehen
+Geschicklichkeit entziehen
 %%%%
 drain strength, intelligence or dexterity
-Stärke, Intelligenz, oder Geschicklichket entziehen
+Stärke, Intelligenz, oder Geschicklichkeit entziehen
 %%%%
 deal up to %d extra electric damage
 bis zu %d zusätzlichen elektrischen Schaden verursachen
@@ -3655,13 +3655,13 @@ cause strong poisoning
 starke Vergiftungen verursachen
 %%%%
 drain health from the living
-den Lebenden die Gesundheit entziehen
+die Gesundheit der Lebenden auszehren
 %%%%
 cause wild translocation effects
 wilde Translokationseffekte verursachen
 %%%%
 cause berserking
-Berserken verursachen
+in Berserkerwut versetzen
 %%%%
 apply sticky flame
 klebrige Flamme auftragen
@@ -3682,7 +3682,7 @@ cause pain to the living
 den Lebenden Schmerz zufügen
 %%%%
 ensnare with webbing
-mit Gewebe einschnüren
+mit Gespinst umwickeln
 %%%%
 drain speed
 Geschwindigkeit entziehen
@@ -3691,7 +3691,7 @@ reduce willpower
 Willenskraft entziehen
 %%%%
 deal increased damage when unseen
-wenn ungesehen mehr Schaden verursachen
+mehr Schaden verursachen falls ungesehen
 %%%%
 deal drowning damage
 Ertrinkungsschaden verursachen
@@ -3700,10 +3700,10 @@ cause corrosion
 Korrosion verursachen
 %%%%
 drain speed and drain health
-Geschwindigkeit und Gesundheit entziehen
+Geschwindigkeit entziehen und Gesundheit auszehren
 %%%%
 knock back the defender
-den Verteidiger zurückschlagen
+den Verteidiger zurückstoßen
 %%%%
 cause weakness
 Schwäche verursachen
@@ -3713,28 +3713,28 @@ Schwäche verursachen
 %%%%
 # %s here is a verb like "hit"
 %s for up to %d fire damage
-%s für bis zu %d Feuer-Schaden
+%s für bis zu %d Feuerschaden
 %%%%
 %s %d times for up to %d damage each
-%2$d Mal %1$s für bis zu %3$d Schaden pro Mal
+%2$d mal %1$s für jeweils bis zu %3$d Schaden
 %%%%
 %s for up to %d damage
 %s für bis zu %d Schaden
 %%%%
 %s %d times for up to %d damage each plus %s
-%2$d Mal %1$s für bis zu %3$d Schaden pro Mal plus {acc}%4$s
+%2$d mal %1$s für jeweils bis zu %3$d Schaden plus {acc}%4$s
 %%%%
 %s for up to %d damage plus %s
 %s für bis zu %d Schaden plus {acc}%s
 %%%%
 %s from a distance %d times for up to %d damage each
-%2$d Mal aus der Ferne %1$s für bis zu %3$d Schaden pro Mal
+%2$d mal aus der Ferne %1$s für jeweils bis zu %3$d Schaden
 %%%%
 %s from a distance for up to %d damage
 aus der Ferne %s für bis zu %d Schaden
 %%%%
 %s from a distance %d times for up to %d damage each plus %s
-%2$d Mal aus der Ferne %1$s für bis zu %3$d Schaden pro Mal plus {acc}%$4s
+%2$d mal aus der Ferne %1$s für jeweils bis zu %3$d Schaden plus {acc}%$4s
 %%%%
 %s from a distance for up to %d damage plus %s
 aus der Ferne %s für bis zu %d Schaden plus {acc}%s
@@ -3783,7 +3783,7 @@ about %d%% to evade %s
 etwa %d%%, um %s auszuweichen
 %%%%
 " (about %d%% to hit you)"
-" (gegen %d%% Chance dich zu treffen)"
+" (etwa %d%% Chance dich zu treffen)"
 %%%%
 none (normally %s)
 keine (normalerweise %s)
@@ -3837,7 +3837,7 @@ It is cold-blooded and may be slowed by cold attacks.
 Es ist kaltblütig und kann durch Kälteattacken verlangsamt werden.
 %%%%
 It can see invisible.
-Es kann unsichtbar sehen.
+Es kann Unsichtbares sehen.
 %%%%
 It is immune to blinding.
 Es ist immun gegen Blendung.
@@ -3881,7 +3881,7 @@ It uses items %s.
 Es verwendet Gegenstände %s.
 %%%%
 It covers ground more quickly when invisible.
-Es bewegt sich schneller, wenn es unsichtbar.
+Es bewegt sich schneller, wenn es unsichtbar ist.
 %%%%
 It can fly.
 Es kann fliegen.
@@ -3902,7 +3902,7 @@ It can can be affected by reciting Zin's laws.
 Es kann durch die Rezitation der Gesetze Zins beeinflusst werden.
 %%%%
 " (Recite power: %d, Hit Dice: %d)"
-" (Rezitierenskraft: %d, Trefferwürfel: %d)"
+" (Rezitationskraft: %d, Trefferwürfel: %d)"
 %%%%
 The apparition of %s.
 Die Erscheinung von {dat}%s.
@@ -3941,34 +3941,34 @@ It is incapable of using stairs.
 Es ist nicht in der Lage, Treppen zu benutzen.
 %%%%
 This monster has been summoned, and is thus only temporary.
-Dieses Monster wurde beschwören und ist daher nur vorübergehend.
+Dieses Monster wurde beschworen und ist daher nur vorübergehend.
 %%%%
 This monster has been summoned in a durable way.
-Dieses Monster wurde auf eine dauerhafte Weise beschwören.
+Dieses Monster wurde auf eine dauerhafte Weise beschworen.
 %%%%
 If angered it will immediately vanish, yielding no experience or items
-Wird es verärgert, verschwindet es sofort und gibt keine Erfahrung oder Gegenstände ab.
+Wird es verärgert, verschwindet es sofort und hinterlässt keine Erfahrung oder Gegenstände.
 %%%%
 Killing it yields no experience or items
-Es zu töten, bringt keine Erfahrung oder Gegenstände ein.
+Es zu töten, bringt keine Erfahrung oder Gegenstände.
 %%%%
 ; it is incapable of using stairs
 ; es ist nicht in der Lage, Treppen zu benutzen
 %%%%
 " and it cannot be abjured"
-" und es kann nicht annulliert werden"
+" und es kann nicht abjuriert werden"
 %%%%
 Killing this monster yields no experience or items.
-Dieses Monster zu töten, bringt keine Erfahrung oder Gegenstände ein.
+Dieses Monster zu töten, bringt keine Erfahrung oder Gegenstände.
 %%%%
 If it is slain, it may be possible to recover its hide, which can be used as armour.
-Wenn es getötet wird, kann man seine Haut bergen, die als Rüstung verwendet werden kann.
+Wird es getötet, kann seine Haut eventuell abgezogen und als Rüstung verwendet werden.
 %%%%
 You have summoned too many monsters of this kind to sustain them all, and thus this one will shortly expire.
-Du hast zu viele Monster dieser Art beschwören, um sie alle aufrechtzuerhalten, und deshalb wird dieses hier bald vergehen.
+Du hast zu viele Monster dieser Art beschworen, um sie alle zu erhalten und deshalb wird dieses hier bald verschwinden.
 %%%%
 This cloud is opaque; one tile will not block vision, but multiple will.
-Diese Wolke ist undurchsichtig; ein Feld versperrt nicht die Sicht, aber mehrere schon.
+Diese Wolke ist undurchsichtig; ein Feld versperrt die Sicht nicht, mehrere aber schon.
 %%%%
 Clouds of this kind an adventurer makes will vanish quickly once outside their sight.
 Wolken dieser Art, die ein Abenteurer erzeugt, verschwinden schnell, sobald sie außer Sichtweite sind.
@@ -4012,13 +4012,13 @@ Annotations:
 Anmerkungen:
 %%%%
 " (press <white>!</white> to add a new annotation)"
-" (<white>!</white> drücken um eine neue Anmerkung zu hinzufügen)"
+" (<white>!</white> drücken um eine neue Anmerkung hinzuzufügen)"
 %%%%
 Sorry, you haven't seen any altar yet.
-Sorry, du hast noch keinen Altar gesehen.
+Entschuldige, du hast noch keinen Altar gesehen.
 %%%%
 Sorry, you haven't seen any shop yet.
-Sorry, du hast noch keinen Laden gesehen.
+Entschuldige, du hast noch keinen Laden gesehen.
 %%%%
 corrupted
 verdorben
@@ -4027,7 +4027,7 @@ Annotate which branch? (. - %s, ? - help, ! - show branch list)
 Welchen Zweig anmerken? (. - %s, ? - Hilfe, ! - Zweigsliste zeigen)
 %%%%
 There is no level above you.
-Es gibt keine Ebene über dich.
+Es gibt keine Ebene über dir.
 %%%%
 There is no level below you in this branch.
 In diesem Zweig gibt es keine Ebene unter dir.
@@ -4039,7 +4039,7 @@ That's not a valid depth.
 Das ist keine gültige Tiefe.
 %%%%
 "Current level annotation: "
-"Aktuelle Ebene-Anmerkung: "
+"Aktuelle Ebenenanmerkung: "
 %%%%
 "New annotation for %s (include '!' for warning): "
 "Neue Anmerkung für {acc}%s ('!' einschließen für Warnung): "
@@ -4056,10 +4056,10 @@ The tide is released from %s call.
 Die Flut wird vom Anruf {gen}%s befreit.
 %%%%
 Not in Shoals or no heightmap; tide not available.
-Nicht in Shoals oder keine Höhenkarte; Gezeiten nicht verfügbar.
+Nicht in den Untiefen oder keine Höhenkarte; Gezeiten nicht verfügbar.
 %%%%
 "Tide inertia: %d. New value (smaller = faster tide) or use +/- to change tide: "
-"Gezeitenträgheit: %d. Neuer Wert (kleiner = schnellere Gezeiten) oder +/- benutzen um Gezeit zu ändern: "
+"Gezeitenträgheit: %d. Neuer Wert (kleiner = schnellere Gezeiten) oder +/- benutzen um Gezeiten zu ändern: "
 %%%%
 
 ##################
@@ -4076,7 +4076,7 @@ Nicht in Shoals oder keine Höhenkarte; Gezeiten nicht verfügbar.
 , p - %s
 %%%%
 Press: ? - help
-Drücken: ? - Hilfe
+Drücke: ? - Hilfe
 %%%%
 v - describe
 v - beschreiben
@@ -4106,25 +4106,25 @@ Visible Items
 Sichtbare Gegenstände
 %%%%
 /Features
-/Einrichtungen
+/Merkmale
 %%%%
 Visible Features
-Sichtbare Einrichtungen
+Sichtbare Merkmale
 %%%%
 " (select to examine)"
-" (auswählen um zu examinieren)"
+" (auswählen zum untersuchen)"
 %%%%
 " (select to examine, '!' to %s):"
-" (auswählen um zu examinieren, '!' um zu %s)"
+" (auswählen zum untersuchen, '!' um zu %s)"
 %%%%
 " (select to %s, '!' to examine):"
-" (%s um zu examinieren, '!' um zu examinieren)"
+" (auswählen um zu %s, '!' zum untersuchen)"
 %%%%
 Items
 Gegenstände
 %%%%
 Features
-Einrichtungen
+Merkmale
 %%%%
 " (not visited)"
 " (nicht besucht)"
@@ -4133,7 +4133,7 @@ stair
 Treppe
 %%%%
 trap
-Fall
+Falle
 %%%%
 No monsters, items or features are visible.
 Es sind keine Monster, Gegenstände oder Merkmale sichtbar.
@@ -4145,25 +4145,25 @@ Here
 Hier
 %%%%
 There's something in the way.
-Es gibt etwas im Weg.
+Es ist etwas im Weg.
 %%%%
 You can't see that place.
 Du kannst diesen Ort nicht sehen.
 %%%%
 That would be overly suicidal.
-Das wäre übermäßig selbstmörderisch.
+Das wäre übertrieben selbstmörderisch.
 %%%%
 Really target yourself?
 Wirklich auf dich selbst zielen?
 %%%%
 Sorry, you can't target yourself.
-Sorry, du kannst dich selbst nicht zielen.
+Entschuldige, du kannst nicht auf dich selbst zielen.
 %%%%
 Are you sure you want to fizzle?
-Bist du sicher, dass du missglücken willstet?
+Bist du sicher, dass du scheitern willst?
 %%%%
 All monsters which could be auto-targeted are covered by a wall or statue which interrupts your line of fire, even though it doesn't interrupt your line of sight.
-Alle Monster, die automatisch anvisiert werden können, sind durch eine Wand oder Statue verdeckt, die die Schusslinie unterbricht, auch wenn sie die Sichtlinie nicht unterbricht.
+Alle Monster, die automatisch anvisiert werden könnten, sind durch Wände oder Statuen verdeckt, die die Schusslinie unterbrechen, selbst wenn die Sichtlinie nicht unterbrochen ist.
 %%%%
 To return to the main mode, press <w>Escape</w>.
 <w>Escape</w> drücken, um zum Hauptmodus zurückzukehren.
@@ -4185,7 +4185,7 @@ Disturbance
 Störung
 %%%%
 Look
-Scauen
+Ansehen
 %%%%
 Aim
 Zielen
@@ -4197,7 +4197,7 @@ Zielen
 <cyan>Gegenstände hier: </cyan> %s.
 %%%%
 This spell doesn't need a beam path.
-Dieser Zauber braucht keinen Strahlengang.
+Dieser Zauber braucht keinen Strahl.
 %%%%
 Your target is gone.
 Dein Ziel ist weg.
@@ -4206,7 +4206,7 @@ Brought monster down to 1 HP.
 Monster auf 1 TP gesenkt.
 %%%%
 There are no valid targets to list.
-s sind keine gültigen Ziele aufzulisten.
+Es gibt keine gültigen Ziele zum auflisten.
 %%%%
 # verb
 target
@@ -4222,16 +4222,16 @@ Removed exclusion.
 Ausschluss gelöscht.
 %%%%
 Reduced exclusion size to a single square.
-Ausschlussgröße auf ein einzelnes Feld reduziert.
+Ausschlussgröße auf ein einziges Feld reduziert.
 %%%%
 [unseen terrain]
 [unsichtbares Terrain]
 %%%%
 What do you want to examine?
-Was willst du examinieren?
+Was willst du untersuchen?
 %%%%
 What do you want to remember?
-An was willst du erinnern?
+An was willst du dich erinnern?
 %%%%
 There is %s here.
 Hier gibt es {acc}%s.
@@ -4249,7 +4249,7 @@ Vorsicht, der Minotaur wartet!
 , mit Eis bedeckt
 %%%%
 , summoned
-, beschwören
+, beschworen
 %%%%
 , spattered with blood
 , mit Blut bespritzt
@@ -4267,13 +4267,13 @@ chance to confuse on hit: %d%%
 Chance, bei einem Treffer zu verwirren: %d%%
 %%%%
 fire blocked by %s
-Feuern durch {acc}%s blockiert
+Schusslinie durch {acc}%s blockiert
 %%%%
 You are mesmerised by this monster's song.
 Das Lied dieses Monsters zieht dich in seinen Bann.
 %%%%
 This monster appears to be sleepwalking.
-Dieses Monster scheint schlafwandelnd zu sein.
+Dieses Monster scheint zu schlafwandeln.
 %%%%
 This monster appears to be resting.
 Dieses Monster scheint sich auszuruhen.
@@ -4291,16 +4291,16 @@ This monster seems to be peaceful towards you.
 Dieses Monster scheint dir gegenüber friedlich zu sein.
 %%%%
 This monster is indifferent to you.
-Dieses Monster ist dich gleichgültig.
+Dieses Monster ist dir gegenüber gleichgültig.
 %%%%
 This monster has been summoned and is expiring.
-Dieses Monster wurde beschwören und läuft ab.
+Dieses Monster wurde beschworen und verschwindet bald.
 %%%%
 This monster has been summoned but will not time out.
-Dieses Monster wurde beschwören und wird nicht ablaufen.
+Dieses Monster wurde beschworen und wird nicht verschwinden.
 %%%%
 This monster has been summoned.
-Dieses Monster wurde beschwören.
+Dieses Monster wurde beschworen.
 %%%%
 This monster is illuminated by a divine halo.
 Dieses Monster wird von einem göttlichen Heiligenschein erleuchtet.
@@ -4336,19 +4336,19 @@ quivering %s
 mit {dat}%s im Köcher
 %%%%
 carrying %s and %s
-mit {dat}%s und {dat}%s dabei
+mit {dat}%s und {dat}%s im Gepäck
 %%%%
 carrying %s
-mit {dat}%s dabei
+mit {dat}%s im Gepäck
 %%%%
 This square lies inside a sanctuary.
 Dieses Feld liegt innerhalb eines Heiligtums.
 %%%%
 This square is shrouded in silence.
-Dieses Feld ist in Schweigen gehüllt.
+Dieses Feld ist in Stille gehüllt.
 %%%%
 This square is lit by a halo.
-Dieses Platz wird von einem Heiligenschein beleuchtet.
+Dieses Feld wird von einem Heiligenschein beleuchtet.
 %%%%
 This square is wreathed by an umbra.
 Dieses Feld ist von einer Umbra umhüllt.
@@ -4369,37 +4369,37 @@ You see %s here.
 Du siehst {acc}%s hier.
 %%%%
 There is something else lying underneath.
-Da liegt noch etwas darunter.
+Etwas anderes liegt noch darunter.
 %%%%
 You.
 Du.
 %%%%
 There is a strange disturbance in the water here.
-Es gibt hier eine seltsame Störung im Wasser.
+Es gibt hier eine seltsame Turbulenz im Wasser.
 %%%%
 There is a strange disturbance in the cloud here.
-Hier gibt es eine seltsame Störung in der Wolke.
+Hier gibt es eine seltsame Turbulenz in der Wolke.
 %%%%
 This monster is out of range.
 Dieses Monster ist außer Reichweite.
 %%%%
 (<w>Right-click</w> for more information.)
-(<w>Rechtsklicken</w> für mehre Informationen.)
+(<w>Rechtsklicken</w> für mehr Informationen.)
 %%%%
 (Press <w>v</w> for more information.)
-(<w>v</w> drücken für mehre Informationen.)
+(<w>v</w> drücken für mehr Informationen.)
 %%%%
 " (<w>Right-click</w> for more information.)"
-" (<w>Rechtsklicken</w> für mehre Informationen.)"
+" (<w>Rechtsklicken</w> für mehr Informationen.)"
 %%%%
 " (Press <w>v</w> for more information.)"
-" (<w>v</w> drücken für mehre Informationen.)"
+" (<w>v</w> drücken für mehr Informationen.)"
 %%%%
 " (Right-click for more information.)"
-" (Rechtsklicken für mehre Informationen.)"
+" (Rechtsklicken für mehr Informationen.)"
 %%%%
 " (Press 'v' for more information.)"
-" ('v' drücken für mehre Informationen.)"
+" ('v' drücken für mehr Informationen.)"
 %%%%
 
 ##################
@@ -4407,24 +4407,24 @@ Dieses Monster ist außer Reichweite.
 ##################
 %%%%
 Hit any key to exit, ctrl-p for the full log.
-Eine beliebige Taste drücken zum Beenden, Strg-p fürs vollständige Protokoll.
+Eine beliebige Taste drücken zum Beenden, Strg-p für das vollständige Protokoll.
 %%%%
 %s appreciates your contribution to the ecosystem.
 %s schätzt deinen Beitrag zum Ökosystem.
 %%%%
 # death message from Kiku
 %s rasps: "You have failed me! Welcome... oblivion!"
-%s krächzt: "Du hast mich enttäuscht! Grüßt... Vergessenheit!"
+%s krächzt: "Du hast mich enttäuscht! Nun heiße willkommen... die Vergessenheit!"
 %%%%
 # death message from Kiku
 %s rasps: "You have failed me! Welcome... death!"
-%s krächzt: "Du hast mich enttäuscht! Grüßt... den Tod!"
+%s krächzt: "Du hast mich enttäuscht! Nun heiße willkommen... den Tod!"
 %%%%
 %s claims you as an undead slave.
 %s beansprucht dich als untoten Sklaven.
 %%%%
 Your body rises from the dead as a mindless zombie.
-Dein Körper erhebt sich aus dem Tod als hirnloser Zombie.
+Dein toter Körper erhebt sich als hirnloser Zombie.
 %%%%
 %s appreciates the killing of a heretic priest.
 %s begrüßt die Tötung eines ketzerischen Priesters.
@@ -4433,13 +4433,13 @@ Your body crumbles into a pile of gold.
 Dein Körper zerfällt zu einem Haufen Gold.
 %%%%
 Char dump unsuccessful! Sorry about that.
-Char Dump erfolglos! Tut mir leid.
+Char Dump erfolglos! Das tut mir leid.
 %%%%
 Goodbye, %s.
 Auf Wiedersehen, %s.
 %%%%
 Best Crawlers - %s
-Beste Crawlers - %s
+Beste Spieler - %s
 %%%%
 You can find your morgue file in the '%s' directory.
 Du findest deine Morgue-Datei im Verzeichnis '%s'.
