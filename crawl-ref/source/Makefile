@@ -2099,7 +2099,7 @@ mac-app-console: all
 # Building the Android package
 #
 
-NPROC := $(shell nproc)
+NPROC := $(shell nproc 2>/dev/null || echo 1)
 
 android-project/app/build.gradle: android-project/app/build.gradle.in
 	sed -e "s/@ANDROID_VERSION@/${ANDROID}/" -e "s/@CRAWL_VERSION@/${SRC_VERSION}/" -e "s/@NPROC@/${NPROC}/" <android-project/app/build.gradle.in >android-project/app/build.gradle
