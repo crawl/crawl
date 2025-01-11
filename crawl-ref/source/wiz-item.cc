@@ -24,6 +24,7 @@
 #include "invent.h"
 #include "item-prop.h"
 #include "item-status-flag-type.h"
+#include "item-use.h"
 #include "items.h"
 #include "jobs.h"
 #include "libutil.h"
@@ -1457,5 +1458,26 @@ void wizard_unobtain_runes_and_orb()
     invalidate_agrid(true);
 
     mpr("Unobtained all runes and the Orb of Zot.");
+}
+
+void wizard_give_shop_item(const coord_def& where)
+{
+    auto shop = shop_at(where);
+    if (!shop)
+        return;
+
+    item_def *item = nullptr;
+    auto ask = "Give which item to " + shop_name(*shop) + "?";
+    auto oper = use_an_item_menu(item, OPER_ANY, OSEL_ANY, ask.c_str());
+    if (oper == OPER_NONE)
+        return;
+
+    mprf("Gave %s", item->name(DESC_A).c_str());
+    item->pos = shop->pos;
+    item->link = ITEM_IN_SHOP;
+    shop->stock.push_back(*item);
+    if (item >= env.item.begin() && item < env.item.end())
+        unlink_item(item->index());
+    item->clear();
 }
 #endif

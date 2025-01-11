@@ -407,7 +407,7 @@ static const char *targeting_help_wiz =
     "<h>Wizard targeting commands:</h>\n"
     "<w>Ctrl-C</w> : cycle through beam paths\n"
     "<w>D</w>: get debugging information about the monster\n"
-    "<w>o</w>: give item to monster\n"
+    "<w>o</w>: give item to monster or shop\n"
     "<w>F</w>: cycle monster friendly/good neutral/neutral/hostile\n"
     "<w>Ctrl-H</w>: heal the monster fully\n"
     "<w>P</w>: apply divine blessing to monster\n"
