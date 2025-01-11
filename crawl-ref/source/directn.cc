@@ -67,6 +67,7 @@
 #include "view.h"
 #include "viewmap.h"
 #include "wiz-dgn.h"
+#include "wiz-item.h"
 #include "wiz-mon.h"
 
 #ifdef WIZARD
@@ -2019,6 +2020,11 @@ void direction_chooser::handle_wizard_command(command_type key_command,
             need_viewport_redraw = true;
         }
         return;
+
+    case CMD_TARGET_WIZARD_GIVE_ITEM:
+        if (!m)
+            wizard_give_shop_item(target());
+        break;
 
     default:
         break;

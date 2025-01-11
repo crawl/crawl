@@ -299,7 +299,7 @@ static shared_ptr<quiver::action> _fire_prompt_for_item()
         (can_throw ? " ([<w>*</w>] to toss any item)" : ""));
     const string alt_title =
         "<lightgray>Toss away which item?</lightgray>";
-    int selector = fireables ? OSEL_QUIVER_ACTION : OSEL_ANY;
+    int selector = fireables ? OSEL_QUIVER_ACTION : OSEL_PORTABLE;
     // TODO: the output api here is awkward
     // TODO: it would be nice if items with disabled actions got grayed out
     slot = prompt_invent_item(
@@ -314,7 +314,7 @@ static shared_ptr<quiver::action> _fire_prompt_for_item()
     if (slot == -1)
         return nullptr;
 
-    return selector == OSEL_ANY && can_throw
+    return selector == OSEL_PORTABLE && can_throw
         ? quiver::ammo_to_action(slot, true) // throw/toss only
         : quiver::slot_to_action(slot, false); // use
 }

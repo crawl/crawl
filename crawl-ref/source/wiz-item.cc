@@ -24,6 +24,7 @@
 #include "invent.h"
 #include "item-prop.h"
 #include "item-status-flag-type.h"
+#include "item-use.h"
 #include "items.h"
 #include "jobs.h"
 #include "libutil.h"
@@ -341,7 +342,8 @@ void wizard_tweak_object()
     char specs[50];
     int keyin;
 
-    int item = prompt_invent_item("Tweak which item? ", menu_type::invlist, OSEL_ANY);
+    int item = prompt_invent_item("Tweak which item? ", menu_type::invlist,
+                                  OSEL_PORTABLE);
 
     if (prompt_failed(item))
         return;
@@ -453,7 +455,7 @@ static bool _make_book_randart(item_def &book)
 void wizard_value_item()
 {
     const int i = prompt_invent_item("Value of which item?",
-                                     menu_type::invlist, OSEL_ANY);
+                                     menu_type::invlist, OSEL_PORTABLE);
 
     if (prompt_failed(i))
         return;
@@ -562,7 +564,7 @@ void wizard_create_all_artefacts(bool override_unique)
 void wizard_make_object_randart()
 {
     int i = prompt_invent_item("Make an artefact out of which item?",
-                                menu_type::invlist, OSEL_ANY);
+                                menu_type::invlist, OSEL_PORTABLE);
 
     if (prompt_failed(i))
         return;
@@ -1457,5 +1459,26 @@ void wizard_unobtain_runes_and_orb()
     invalidate_agrid(true);
 
     mpr("Unobtained all runes and the Orb of Zot.");
+}
+
+void wizard_give_shop_item(const coord_def& where)
+{
+    auto shop = shop_at(where);
+    if (!shop)
+        return;
+
+    item_def *item = nullptr;
+    auto ask = "Give which item to " + shop_name(*shop) + "?";
+    auto oper = use_an_item_menu(item, OPER_ANY, OSEL_ANYTHING, ask.c_str());
+    if (oper == OPER_NONE)
+        return;
+
+    mprf("Gave %s", item->name(DESC_A).c_str());
+    item->pos = shop->pos;
+    item->link = ITEM_IN_SHOP;
+    shop->stock.push_back(*item);
+    if (item >= env.item.begin() && item < env.item.end())
+        unlink_item(item->index());
+    item->clear();
 }
 #endif

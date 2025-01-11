@@ -16,7 +16,7 @@
 const int ARMOUR_EQUIP_DELAY = 5;
 
 operation_types use_an_item_menu(item_def *&target, operation_types oper,
-                int item_type=OSEL_ANY,
+                int item_type=OSEL_PORTABLE,
                 const char* prompt=nullptr,
                 function<bool ()> allowcancel = [](){ return true; });
 // Change the lambda to always_true<> when g++ 4.7 support is dropped.

@@ -629,7 +629,7 @@ void wizard_give_monster_item(monster* mon)
     }
 
     int player_slot = prompt_invent_item("Give which item to monster?",
-                                          menu_type::drop, OSEL_ANY);
+                                          menu_type::drop, OSEL_PORTABLE);
 
     if (prompt_failed(player_slot))
         return;

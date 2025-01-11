@@ -492,7 +492,8 @@ string no_selectables_message(int item_selector)
 {
     switch (item_selector)
     {
-    case OSEL_ANY:
+    case OSEL_ANYTHING:
+    case OSEL_PORTABLE:
         return "You aren't carrying anything.";
     case OSEL_WIELD:
     case OBJ_WEAPONS:
@@ -1135,14 +1136,14 @@ vector<SelItem> select_items(const vector<const item_def*> &items,
 bool item_is_selected(const item_def &i, int selector)
 {
     const object_class_type itype = i.base_type;
-    if (selector == OSEL_ANY || selector == itype
-                                && itype != OBJ_ARMOUR)
-    {
+    if (selector == itype && itype != OBJ_ARMOUR)
         return true;
-    }
 
     switch (selector)
     {
+    case OSEL_ANYTHING:
+    case OSEL_PORTABLE:
+        return true;
     case OBJ_ARMOUR:
         return itype == OBJ_ARMOUR && can_wear_armour(i, false, false);
 
@@ -1282,7 +1283,7 @@ bool any_items_of_type(int selector, int excluded_slot, bool inspect_floor)
 // type = menu_type::drop allows the multidrop toggle
 static int _invent_select(const char *title = nullptr,
                                     menu_type type = menu_type::invlist,
-                                    int item_selector = OSEL_ANY,
+                                    int item_selector = OSEL_PORTABLE,
                                     int excluded_slot = -1,
                                     int flags = MF_NOSELECT,
                                     invtitle_annotator titlefn = nullptr,
@@ -1316,7 +1317,7 @@ static int _invent_select(const char *title = nullptr,
 void display_inventory()
 {
     InvMenu menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING | MF_SECONDARY_SCROLL);
-    menu.load_inv_items(OSEL_ANY, -1);
+    menu.load_inv_items(OSEL_PORTABLE, -1);
     menu.set_type(menu_type::describe);
 
     menu.show(true);
@@ -1384,7 +1385,7 @@ vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items)
     // multi-select some items to drop
     _invent_select("",
                       menu_type::drop,
-                      OSEL_ANY,
+                      OSEL_PORTABLE,
                       -1,
                       MF_MULTISELECT | MF_ALLOW_FILTER | MF_SELECT_QTY,
                       _drop_menu_titlefn,
@@ -1807,8 +1808,8 @@ bool check_warning_inscriptions(const item_def& item,
  * @param flags            See comments on invent_prompt_flags.
  * @param other_valid_char A character that, if not '\0', will cause
  *                         PROMPT_GOT_SPECIAL to be returned when pressed.
- * @param type_out         Output: OSEL_ANY if the user was in `*`, type_expect
- *                         otherwise. Ignored if nullptr.
+ * @param type_out         Output: OSEL_PORTABLE if the user was in `*`,
+ *                         type_expect otherwise. Ignored if nullptr.
  *
  * @return  the inventory slot of an item or one of the following special values
  *          - PROMPT_ABORT:       if the player hits escape.
@@ -1857,7 +1858,7 @@ int prompt_invent_item(const char *prompt,
     }
 
     if (keyin == '*')
-        current_type_expected = OSEL_ANY;
+        current_type_expected = OSEL_PORTABLE;
 
     // ugh, why is this done manually
     while (true)
@@ -1871,7 +1872,7 @@ int prompt_invent_item(const char *prompt,
         if (need_prompt)
         {
             mprf(MSGCH_PROMPT, "%s (<w>?</w> for menu, <w>Esc</w> to quit)",
-                 current_type_expected == OSEL_ANY && view_all_prompt
+                 current_type_expected == OSEL_PORTABLE && view_all_prompt
                  ? view_all_prompt : prompt);
         }
         else
@@ -1899,7 +1900,7 @@ int prompt_invent_item(const char *prompt,
             // The "view inventory listing" mode.
             vector< SelItem > items;
             const auto last_keyin = keyin;
-            current_type_expected = keyin == '*' ? OSEL_ANY : type_expect;
+            current_type_expected = keyin == '*' ? OSEL_PORTABLE : type_expect;
             int mflags = MF_SINGLESELECT | MF_ANYPRINTABLE | MF_SECONDARY_SCROLL;
             if (other_valid_char == '-')
                 mflags |= MF_SPECIAL_MINUS;
@@ -1907,7 +1908,7 @@ int prompt_invent_item(const char *prompt,
             while (true)
             {
                 keyin = _invent_select(
-                    current_type_expected == OSEL_ANY && view_all_prompt
+                    current_type_expected == OSEL_PORTABLE && view_all_prompt
                         ? view_all_prompt : prompt,
                     mtype, current_type_expected, -1, mflags, nullptr, &items);
 

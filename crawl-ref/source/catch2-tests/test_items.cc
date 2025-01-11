@@ -31,7 +31,7 @@ TEST_CASE_METHOD( MockPlayerYouTestsFixture,
     for (int i=0; i < ENDOFPACK; i++)
         REQUIRE(you.inv[i].base_type == OBJ_UNASSIGNED);
 
-    REQUIRE(!any_items_of_type(OSEL_ANY));
+    REQUIRE(!any_items_of_type(OSEL_PORTABLE));
 
 }
 
@@ -78,7 +78,7 @@ TEST_CASE_METHOD( MockPlayerYouTestsFixture,
 
     move_item_to_inv(scroll_of_fear);
 
-    REQUIRE(any_items_of_type(OSEL_ANY));
+    REQUIRE(any_items_of_type(OSEL_PORTABLE));
 
     int num_fear_stacks_in_invent = 0;
 
@@ -110,7 +110,7 @@ TEST_CASE_METHOD( MockPlayerYouTestsFixture,
 
     REQUIRE(you.base_ac_from(armour, 100) == 600);
 
-    REQUIRE(any_items_of_type(OSEL_ANY));
+    REQUIRE(any_items_of_type(OSEL_PORTABLE));
 
     int num_armours = 0;
 
