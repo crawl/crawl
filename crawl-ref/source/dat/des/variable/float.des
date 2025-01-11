@@ -4378,7 +4378,7 @@ NAME:   cheibrodos_quashed
 TAGS:   no_item_gen no_monster_gen
 DEPTH:  D:4-8
 ORIENT: float
-MONS:   quasit
+MONS:   ufetubus
 KPROP:  -A = no_tele_into
 NSUBST: - = 2:1 / 2=1. / 1:* / 5=%$.
 MAP

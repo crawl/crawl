@@ -1566,14 +1566,14 @@ c.......c
 ENDMAP
 
 NAME:   gammafunk_ghost_stat_death
-DEPTH:  D:3-, Orc
+DEPTH:  D:5-, Orc
 ORIENT: float
 KMONS:  O = player ghost
-MONS:   quasit, neqoxec
+MONS:   crimson imp ; wand of polymorph, neqoxec
 NSUBST: R = R / -
 : ghost_good_loot(_G)
 : if you.in_branch("D") then
-:     if you.depth() < 6 then
+:     if you.depth() < 7 then
 KITEM:  O = ring of dexterity pre_id
 SUBST:  d = *%, e = %$, fgh = -
 NSUBST: - = 2=1 / 2=1- / -

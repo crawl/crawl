@@ -395,8 +395,7 @@ KMONS:   3 = orc warrior
 : elseif rnd == 1 then
 KFEAT:   C = altar_lugonu
 KFEAT:   D = enter_abyss
-KMONS:   1 = iron imp / ufetubus / shadow imp / crimson imp / quasit w:5 \
-         / white imp w:5
+KMONS:   1 = iron imp / ufetubus / shadow imp / crimson imp / white imp w:5
 SUBST:   t : U'''', 23 = 0
 : elseif rnd == 2 then
 KFEAT:   C = altar_jiyva

@@ -1686,7 +1686,7 @@ util/monster/monster: $(MONSTER_OBJS) $(CONTRIB_LIBS) dat/dlua/tags.lua
 monster: util/monster/monster
 
 test-monster: monster
-	util/monster/monster quasit
+	util/monster/monster azure jelly
 
 clean-monster:
 	$(RM) util/monster/monster util/monster/vault_monster_data.h tile_info.txt

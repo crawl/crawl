@@ -814,7 +814,6 @@ POP_DEPTHS,
 
   {  1,  4,   25, FALL, MONS_CRIMSON_IMP },
   {  1,  4,  180, FALL, MONS_WHITE_IMP },
-  {  1,  4,  180, FALL, MONS_QUASIT },
   {  1,  4,  180, FALL, MONS_UFETUBUS },
   {  1,  4,  180, FALL, MONS_IRON_IMP },
   {  1,  4,   25, FALL, MONS_SHADOW_IMP },

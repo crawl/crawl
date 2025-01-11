@@ -3070,7 +3070,6 @@ monster_type random_demon_by_tier(int tier)
     {
     case 5:
         return random_choose(MONS_CRIMSON_IMP,
-                             MONS_QUASIT,
                              MONS_WHITE_IMP,
                              MONS_UFETUBUS,
                              MONS_IRON_IMP,
@@ -3399,7 +3398,6 @@ static const vector<pop_entry> band_weights[] =
 // APOSTLE_BAND_DEMONS,
 {
     {0, 25, 100, FALL, MONS_CRIMSON_IMP},
-    {0, 25, 100, FALL, MONS_QUASIT},
     {0, 25, 100, FALL, MONS_WHITE_IMP},
     {0, 25, 100, FALL, MONS_UFETUBUS},
     {0, 25, 100, FALL, MONS_IRON_IMP},

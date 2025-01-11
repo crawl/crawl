@@ -1376,9 +1376,9 @@ MONS:    kobold w:50 / kobold zombie / endoplasm / giant cockroach / \
          bat / bat zombie w:3
 # Bosses and features for the temple, either Makhleb or Kiku
 : if crawl.random2(2) == 0 then
-KMONS:   3 = kobold brigand / quasit
+KMONS:   3 = kobold brigand / crimon imp ; club . dart ego:atropa q:2
 KMONS:   4 = kobold brigand
-KMONS:   5 = quasit
+KMONS:   5 = crimon imp ; club . dart ego:atropa q:2
 KFEAT:   B = altar_makhleb
 MARKER:  F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
                                pow_max = 100, delay = 10, size = 1, \

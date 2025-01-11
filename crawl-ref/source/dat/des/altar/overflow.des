@@ -4194,7 +4194,7 @@ KMONS: z = orc zombie / kobold zombie / goblin zombie / hobgoblin zombie
 : if you.absdepth() <= 4 then
 KMONS: _ = crimson imp / white imp w:5
 : else
-KMONS: _ = crimson imp / white imp / shadow imp / quasit
+KMONS: _ = crimson imp / white imp / shadow imp
 : end
 KFEAT: _ = altar_the_shining_one
 MAP

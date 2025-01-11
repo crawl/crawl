@@ -667,7 +667,9 @@ enum monster_type                      // env.mons[].type
 
     // Demons:
     MONS_CRIMSON_IMP,
+#if TAG_MAJOR_VERSION == 34
     MONS_QUASIT,
+#endif
     MONS_WHITE_IMP,
     MONS_LEMURE,
     MONS_UFETUBUS,

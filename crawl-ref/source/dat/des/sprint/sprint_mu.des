@@ -1388,7 +1388,7 @@ NAME: sprint_mu_tartarus_statrot
 TAGS: sprint_mu_tartarus no_rotate no_hmirror no_vmirror
 KMONS: 1 = patrolling Khufu / patrolling Murray / patrolling Ereshkigal
 KMONS: 2 = patrolling guardian mummy
-KMONS: 3 = patrolling quasit
+KMONS: 3 = patrolling shadow imp
 KMONS: 4 = patrolling shadowghast
 KMONS: 5 = patrolling royal mummy
 KMONS: 6 = orange crystal statue

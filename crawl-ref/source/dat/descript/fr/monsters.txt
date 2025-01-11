@@ -1526,11 +1526,6 @@ program bug
 Un monstre vorace et incroyablement buggé. Veuillez rapporter son existence aux
 développeurs de Devteam.
 %%%%
-quasit
-
-Un petit démon lâche avec une longue queue pointue. Ses griffes acérées sont
-couvertes d'un venin qui raidit les muscles.
-%%%%
 queen bee
 
 La dirigeante de l'essaim d'abeilles, bien plus large et dangereuse que ses

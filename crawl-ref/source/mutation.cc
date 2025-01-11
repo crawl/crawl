@@ -3464,7 +3464,7 @@ void check_demonic_guardian()
         switch (guardian_str)
         {
         case 1:
-            mt = random_choose(MONS_QUASIT, MONS_WHITE_IMP, MONS_UFETUBUS,
+            mt = random_choose(MONS_WHITE_IMP, MONS_UFETUBUS,
                                MONS_IRON_IMP, MONS_SHADOW_IMP);
             break;
         case 2:
