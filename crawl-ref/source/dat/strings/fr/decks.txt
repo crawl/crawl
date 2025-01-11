@@ -6,50 +6,50 @@
 
 %%%%
 escape
-
+évasion
 %%%%
 destruction
-
+destruction
 %%%%
 summoning
-
+invocation
 %%%%
 punishment
-
+punition
 %%%%
 
 %%%%
 the deck of escape
-
+le paquet de cartes d'évasion
 %%%%
 the deck of destruction
-
+le paquet de cartes de destruction
 %%%%
 the deck of summoning
-
+le paquet de cartes d'invocation
 %%%%
 the deck of punishment
-
+le paquet de cartes de punition
 %%%%
 the stacked deck
-
+le paquet de cartes empilées
 %%%%
 
 %%%%
 decks of escape
-
+les paquets de cartes d'évasion
 %%%%
 decks of destruction
-
+les paquets de cartes de destruction
 %%%%
 decks of summoning
-
+les paquets de cartes d'invocation
 %%%%
 decks of punishment
-
+les paquets de cartes de punition
 %%%%
 stacked decks
-
+les paquets de cartes empilées
 %%%%
 
 
@@ -59,76 +59,76 @@ stacked decks
 
 %%%%
 an escape card
-
+une carte d'évasion
 %%%%
 a destruction card
-
+une carte de destruction
 %%%%
 a summoning card
-
+une carte d'invocation
 %%%%
 a punishment card
-
+une carte de punition
 %%%%
 
 %%%%
 Velocity
-
+Vélocité
 %%%%
 Exile
-
+Exile
 %%%%
 the Elixir
-
+l'Elixir
 %%%%
 the Stairs
-
+les Escaliers
 %%%%
 the Tomb
-
+la Tombe
 %%%%
 Wild Magic
-
+Magie Sauvage
 %%%%
 the Elements
-
+les Eléments
 %%%%
 the Pentagram
-
+le Pentagramme
 %%%%
 the Dance
-
+la Danse
 %%%%
 the Swarm
-
+l'Essaim
 %%%%
 the Rangers
-
+les Rangers
 %%%%
 Vitriol
-
+Vitriol
 %%%%
 the Cloud
-
+le Nuage
 %%%%
 the Storm
-
+la Tempête
 %%%%
 Wrath
-
+Colère
 %%%%
 the Wraith
-
+le Spectre
 %%%%
 the Swine
-
+le Porc
 %%%%
 the Orb
-
+l'Orbe
 %%%%
 the Illusion
-
+l'Illusion
 %%%%
 Degeneration
-
+Dégénération
 %%%%
