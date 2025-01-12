@@ -487,13 +487,13 @@ protected:
     {
         // Cache the dying mummy so morgues can look up the monster source if it kills us.
         env.final_effect_monster_cache.push_back(*source);
-        dead_mummy = &env.final_effect_monster_cache.back();
+        dead_mummy = source->mid;
     }
     const actor *fixup_attacker(const actor *a);
 
     killer_type killer;
     int pow;
-    monster* dead_mummy;
+    mid_t dead_mummy;
 };
 
 class summon_dismissal_fineff : public final_effect

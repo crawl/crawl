@@ -810,7 +810,7 @@ void mummy_death_curse_fineff::fire()
     }
     // The real mummy is dead, but we pass along a cached copy save at the time
     // they died (for morgue purposes)
-    death_curse(*victim, dead_mummy, "", pow);
+    death_curse(*victim, cached_monster_copy_by_mid(dead_mummy), "", pow);
 }
 
 void summon_dismissal_fineff::fire()
