@@ -161,7 +161,12 @@ bool MacroDelay::try_interrupt(bool /*force*/)
 const char* EquipOnDelay::get_verb()
 {
     if (is_weapon(equip))
-        return "attuning to"; // coglin
+    {
+        if (you.has_mutation(MUT_SLOW_WIELD))
+            return "attuning to";
+        else
+            return "wielding";
+    }
     return "putting on";
 }
 
@@ -193,7 +198,12 @@ bool EquipOnDelay::try_interrupt(bool force)
 const char* EquipOffDelay::get_verb()
 {
     if (is_weapon(equip))
-        return "parting from";
+    {
+        if (you.has_mutation(MUT_SLOW_WIELD))
+            return "parting from";
+        else
+            return "unwielding";
+    }
     return "removing";
 }
 
