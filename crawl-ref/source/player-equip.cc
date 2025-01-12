@@ -721,8 +721,6 @@ int player_equip_set::needs_chain_removal(const item_def& item,
         int new_num_slots = get_player_equip_slot_count(static_cast<equipment_slot>(i));
         if (new_num_slots < num_slots[i])
         {
-            fprintf(stderr, "Testing chain removal for %s slot. (Max %d)\n", equip_slot_name(static_cast<equipment_slot>(i)), new_num_slots);
-
             int count = 0;
             for (const player_equip_entry& entry : items)
             {
