@@ -437,7 +437,7 @@ static const duration_def duration_data[] =
     { DUR_VAINGLORY,
       RED, "Vainglory",
       "no stairs", "",
-      "You refuse to leave the level so soon after announcing yourself.", D_DISPELLABLE,
+      "You refuse to leave the level so soon after announcing yourself.", D_EXPIRES,
       {{ "You feel willing to depart the floor again." }}},
     { DUR_ENLIGHTENED,
       BLUE, "Will+",
