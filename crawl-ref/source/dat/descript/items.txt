@@ -639,8 +639,7 @@ you ever see this message.
 eudemon blade
 
 A sacred blade from the forges of Heaven, inhabited by a good spirit. It is a
-favoured weapon of the Shining One's servants, and cannot be wielded by the
-forces of evil.
+favoured weapon of the Shining One's servants.
 %%%%
 eveningstar
 
