@@ -1346,7 +1346,7 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
     }
     else if (you.duration[DUR_VAINGLORY])
     {
-        mprf("It simply wouldn't do to leave so soon after announcing yourself.");
+        mpr("It simply wouldn't do to leave so soon after announcing yourself.");
         return false;
     }
 
