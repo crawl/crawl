@@ -6,6 +6,7 @@
 #include <set>
 #include <string>
 #include <vector>
+#include <cstdint>
 #ifdef USE_ZLIB
 #include <zlib.h>
 #endif
