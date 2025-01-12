@@ -17,12 +17,18 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # all history - Checkconventioncommit needs to know which commits are being merged
       - name: Checkwhite
         run: util/checkwhite -n
         working-directory: crawl-ref/source
       - name: Unbrace
         run: util/unbrace -n
         working-directory: crawl-ref/source
+      - name: Checkconventionalcommit
+        run: util/checkconventionalcommit.py
+        working-directory: crawl-ref/source
+        continue-on-error: true
 
   build_source:
     permissions:
