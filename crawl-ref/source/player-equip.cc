@@ -1371,8 +1371,6 @@ void equip_item(equipment_slot slot, int item_slot, bool msg, bool skip_effects)
     }
 #endif
 
-    //mprf_nocap("%s", you.inv[item_slot].name(DESC_INVENTORY_EQUIP).c_str());
-
     check_item_hint(item, old_talents);
 }
 
@@ -1429,7 +1427,7 @@ bool unequip_item(item_def& item, bool msg, bool skip_effects)
     return true;
 }
 
-static void _equip_weapon_effect(item_def& item, bool showMsgs);
+static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld);
 static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld);
 static void _equip_armour_effect(item_def& arm, bool unmeld);
 static void _unequip_armour_effect(item_def& item, bool meld);
@@ -1453,7 +1451,7 @@ void equip_effect(int item_slot, bool unmeld, bool msg)
         equip_artefact_effect(item, &msg, unmeld);
 
     if (is_weapon(item))
-        _equip_weapon_effect(item, msg);
+        _equip_weapon_effect(item, msg, unmeld);
     else if (item.base_type == OBJ_ARMOUR)
         _equip_armour_effect(item, unmeld);
     else if (item.base_type == OBJ_JEWELLERY)
@@ -1642,7 +1640,7 @@ static void _equip_use_warning(const item_def& item)
 }
 
 // Provide a function for handling initial wielding of 'special' weapons
-static void _equip_weapon_effect(item_def& item, bool showMsgs)
+static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
 {
     you.wield_change = true;
     quiver::on_weapon_changed();
@@ -1652,8 +1650,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
         return;
 
     int special = get_weapon_brand(item);
-    if (special == SPWPN_NORMAL)
-        return;
 
     // message first
     if (showMsgs)
@@ -1806,6 +1802,9 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
 
     if (special == SPWPN_ANTIMAGIC)
         calc_mp();
+
+    if (!unmeld)
+        mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
 }
 
 static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
