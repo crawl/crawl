@@ -1863,7 +1863,7 @@ TILE_EQ: skull_of_zonguldrok
 VALUE:   600
 DESCRIP: Reaping:   When you kill an enemy with your weapon, its spirit may be
  forced to fight for you.
-+Hat+:   You can equip an additional hat (on the skull)
++Hat+:   You can equip an additional hat (on the skull).
 
 ENUM:    FISTICLOAK
 NAME:    fungal fisticloak
