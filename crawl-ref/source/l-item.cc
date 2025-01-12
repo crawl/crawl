@@ -292,6 +292,27 @@ static int l_item_do_subtype(lua_State *ls)
  */
 IDEFN(subtype, do_subtype)
 
+static int l_item_do_is_shield(lua_State *ls)
+{
+    UDATA_ITEM(item);
+
+    if (!item)
+    {
+        lua_pushnil(ls);
+        return 1;
+    }
+
+    lua_pushboolean(ls, is_shield(item));
+
+    return 1;
+}
+
+/*** Is this item a shield?
+ * @treturn bool true, if this item is a shield
+ */
+IDEFN(is_shield, do_is_shield)
+
+
 static int l_item_do_ego(lua_State *ls)
 {
     UDATA_ITEM(item);
@@ -1633,6 +1654,7 @@ static ItemAccessor item_attrs[] =
     { "is_xp_evoker",      l_item_is_xp_evoker },
     { "dropped",           l_item_dropped },
     { "is_weapon",         l_item_is_weapon },
+    { "is_shield",         l_item_is_shield },
     { "is_melded",         l_item_is_melded },
     { "is_corpse",         l_item_is_corpse },
     { "is_useless",        l_item_is_useless },
