@@ -33,6 +33,7 @@
 #include "losglobal.h"
 #include "mapmark.h"
 #include "message.h"
+#include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-transit.h" // untag_followers
 #include "movement.h"
@@ -518,6 +519,25 @@ static void _hell_effects()
             break;
         default:
             break;
+    }
+}
+
+static void _vainglory_arrival()
+{
+    vector<monster*> mons;
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+    {
+        if (!mi->is_firewood() && !mi->wont_attack())
+            mons.push_back(*mi);
+    }
+
+    if (!mons.empty())
+    {
+        mprf(MSGCH_WARN, "You announce your regal presence to all who would look upon you.");
+        for (monster* mon : mons)
+            behaviour_event(mon, ME_ANNOY, &you);
+
+        you.duration[DUR_VAINGLORY] = random_range(120, 220);
     }
 }
 
@@ -1076,6 +1096,9 @@ void floor_transition(dungeon_feature_type how,
     moveto_location_effects(whence);
     if (is_hell_subbranch(you.where_are_you))
         _hell_effects();
+
+    if (you.unrand_equipped(UNRAND_VAINGLORY))
+        _vainglory_arrival();
 
     trackers_init_new_level();
 

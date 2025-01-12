@@ -199,6 +199,9 @@ int count = 0;
         if (you.unrand_equipped(UNRAND_FINGER_AMULET))
             ring_count += 1;
 
+        if (you.unrand_equipped(UNRAND_VAINGLORY))
+            ring_count += 2;
+
         return ring_count;
     }
 

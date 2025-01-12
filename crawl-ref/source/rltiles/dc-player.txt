@@ -1128,6 +1128,7 @@ bear BEAR
 dyrovepreva DYROVEPREVA
 eternal_torment ETERNAL_TORMENT
 fungal_fisticloak_front FUNGAL_FISTICLOAK_FRONT
+vainglory VAINGLORY
 wizard_lightgreen WIZARD_LIGHTGREEN
 
 ## All helmets below (HELM_OFS and greater) hide hair.

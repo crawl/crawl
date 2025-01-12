@@ -1919,3 +1919,10 @@ static void _FISTICLOAK_world_reacts(item_def */*item*/)
     melee_attack shred(&you, targ);
     shred.player_do_aux_attack(UNAT_FUNGAL_FISTICLOAK);
 }
+
+///////////////////////////////////////////////////
+static void _VAINGLORY_equip(item_def */*item*/, bool *show_msgs, bool unmeld)
+{
+    if (!unmeld)
+        _equip_mpr(show_msgs, "You feel supremely confident.");
+}

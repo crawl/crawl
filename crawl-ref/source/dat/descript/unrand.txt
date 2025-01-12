@@ -853,3 +853,9 @@ It's like wearing a thousand tiny friends at once! And the humming they fill
 your mind with in the dark is actually quite lulling....
 
 (This item also occupies your helmet slot.)
+%%%%
+crown of vainglory
+
+An extravagant crown of gold filigree and glittering jewels that even a king
+could feel immodest wearing. It grants its wearer a regal aura the match of any
+in heaven and also a great deal of unearned confidence.

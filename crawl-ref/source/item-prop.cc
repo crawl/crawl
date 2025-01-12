@@ -3603,6 +3603,7 @@ bool item_gives_equip_slots(const item_def& item)
         case UNRAND_JUSTICARS_REGALIA:
         case UNRAND_FISTICLOAK:
         case UNRAND_SKULL_OF_ZONGULDROK:
+        case UNRAND_VAINGLORY:
             return true;
 
         default:

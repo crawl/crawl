@@ -1881,6 +1881,22 @@ DESCRIP: Shroompunch:   The cloak sometimes lashes out at its wearer's enemies,
  inflicting confusion with its spores.
 +Gloves+:   Your cloak can equip an additional pair of gloves.
 
+ENUM:    VAINGLORY
+NAME:    crown of vainglory
+INSCRIP: Majesty Ring++
+OBJ:     OBJ_ARMOUR/ARM_HAT
+PLUS:    +3
+WILL:    1
+BOOL:    fragile
+COLOUR:  YELLOW
+TILE:    urand_crown_of_vainglory
+TILE_EQ: vainglory
+VALUE:   550
+DESCRIP: Majesty:   You are bathed in light that prevents you from turning
+ invisible. Whenever you enter a new floor, you announce yourself to nearby
+ enemies and refuse to leave the floor again for some time.
++Ring++:   You can equip two additional rings.
+
 # Fedhas sprint, to allow coglins access to evocable invisibility.
 ENUM:     SCARF_INVISIBILITY
 NAME:     scarf of invisibility

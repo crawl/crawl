@@ -1344,6 +1344,11 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
         canned_msg(MSG_CANNOT_MOVE);
         return false;
     }
+    else if (you.duration[DUR_VAINGLORY])
+    {
+        mprf("It simply wouldn't do to leave so soon after announcing yourself.");
+        return false;
+    }
 
     // ATTR_HELD is intentionally not tested here, it's handled in _take_stairs()
 
