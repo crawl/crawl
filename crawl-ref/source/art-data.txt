@@ -1296,9 +1296,10 @@ TILE:     urand_finger
 COLOUR:   ETC_BONE
 BOOL:     evil
 LIFE:     1
+HP:       +7
 VALUE:    400
-INSCRIP:  Finger+
-DESCRIP:  Finger+:   It enables you to equip an extra ring.
+INSCRIP:  Ring+
+DESCRIP:  Ring+:   It enables you to equip an extra ring.
 
 # start TAG_MAJOR_VERSION == 34
 ENUM:     SPIDER
