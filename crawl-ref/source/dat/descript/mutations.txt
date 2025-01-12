@@ -667,10 +667,9 @@ damage in the same way as a human with a short blade might.
 four strong arms mutation
 
 You have two pairs of two arms, allowing you to wield two-handed weapons with
-one pair and a shield with the other. You can even wield extremely large
-weapons like giant clubs, though this takes both arm-pairs. The secondary arms
-in each pair are oddly shaped, preventing you from wearing an extra set of
-gloves or magical rings.
+one pair and a shield with the other, as well as wear a second pair of gloves.
+You can even wield extremely large weapons like giant clubs, though this takes
+both arm-pairs.
 %%%%
 retaliatory headbutt mutation
 

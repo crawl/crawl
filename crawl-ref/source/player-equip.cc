@@ -137,6 +137,9 @@ int count = 0;
         if (you.unrand_equipped(UNRAND_FISTICLOAK))
             ++count;
 
+        if (you.has_mutation(MUT_QUADRUMANOUS))
+            ++count;
+
         if (player_size == SIZE_TINY)
             NO_SLOT(make_stringf("Those are too big for your %s.", you.hand_name(true).c_str()))
         else if (player_size >= SIZE_LARGE)
