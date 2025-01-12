@@ -520,19 +520,8 @@ void player_equip_set::update()
             artprop_cache[j] += artprops[j];
     }
 
-    bool slots_changed = false;
     for (int i = SLOT_UNUSED; i < NUM_EQUIP_SLOTS; ++i)
-    {
-        const int new_slots = get_player_equip_slot_count(static_cast<equipment_slot>(i));
-        if (num_slots[i] != new_slots)
-        {
-            slots_changed = true;
-            num_slots[i] = new_slots;
-        }
-    }
-
-    if (slots_changed)
-        ash_check_bondage();
+        num_slots[i] = get_player_equip_slot_count(static_cast<equipment_slot>(i));
 }
 
 /**
@@ -1459,6 +1448,9 @@ void equip_effect(int item_slot, bool unmeld, bool msg)
 
     if (!unmeld)
         _handle_regen_item_equip(item);
+
+    if (!unmeld && item_gives_equip_slots(item))
+        ash_check_bondage();
 }
 
 void unequip_effect(int item_slot, bool meld, bool msg)
