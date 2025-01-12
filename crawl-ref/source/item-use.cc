@@ -1750,13 +1750,16 @@ bool auto_wield()
     item_def *to_wield = &you.inv[0]; // default is 'a'
     item_def *cur_wpn = you.weapon();
 
-    if (to_wield == cur_wpn || to_wield && !item_is_wieldable(*to_wield))
+    if (to_wield == cur_wpn || !cur_wpn && !item_is_wieldable(*to_wield))
         to_wield = &you.inv[1];      // backup is 'b'
 
     // Don't try to equip a robe or something else that might be in this slot.
     if (!item_is_wieldable(*to_wield))
     {
-        canned_msg(MSG_EMPTY_HANDED_ALREADY);
+        if (cur_wpn)
+            try_unequip_item(*cur_wpn);
+        else
+            canned_msg(MSG_EMPTY_HANDED_ALREADY);
         return false;
     }
 
