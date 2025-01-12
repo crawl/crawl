@@ -1921,3 +1921,40 @@ What an insult, to strut around in such shoddy millinery.
 Bah, this is suited for peasants, not a master of souls.
 
 How lamentable, to be reduced to wearing... this.
+###############################################################################
+###############################################################################
+#
+# Fungal Fisticloak
+#
+###############################################################################
+###############################################################################
+%%%%
+fungus thoughts
+
+You feel a sudden urge to sporulate.
+
+You feel strange longing to hide under a damp log.
+
+You feel sentimental about mildew.
+
+You feel a distant kinship with mold.
+
+Your thoughts feel multiform.
+
+You hear a chorus of tiny whispers in the back of your mind.
+
+You contemplate finding a nice dark corner to settle down.
+
+You consider sprouting fruit.
+
+Your mycelia itch. ...wait, 'your'?
+
+You pine for rotting vegetation.
+
+The drone of happy mushrooms echoes in your thoughts.
+
+You long to contribute to the soil cycle.
+
+You ponder forming a long-term relationship with algae.
+
+You feel a longing for dead leaves.

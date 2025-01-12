@@ -217,6 +217,7 @@ white WHITE LAST_NORM
 #unrand
 ratskin RATSKIN_CLOAK
 dragonskin DRAGONSKIN_CLOAK
+fungal_fisticloak_back FUNGAL_FISTICLOAK_BACK
 
 ###Scarf
 scarf_cyan SCARF_CYAN SCARF_FIRST_NORM
@@ -1126,6 +1127,7 @@ taiso_white
 bear BEAR
 dyrovepreva DYROVEPREVA
 eternal_torment ETERNAL_TORMENT
+fungal_fisticloak_front FUNGAL_FISTICLOAK_FRONT
 wizard_lightgreen WIZARD_LIGHTGREEN
 
 ## All helmets below (HELM_OFS and greater) hide hair.

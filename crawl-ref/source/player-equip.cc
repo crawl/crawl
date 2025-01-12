@@ -133,6 +133,10 @@ int count = 0;
         return count;
 
     case SLOT_GLOVES:
+
+        if (you.unrand_equipped(UNRAND_FISTICLOAK))
+            ++count;
+
         if (player_size == SIZE_TINY)
             NO_SLOT(make_stringf("Those are too big for your %s.", you.hand_name(true).c_str()))
         else if (player_size >= SIZE_LARGE)
@@ -143,8 +147,10 @@ int count = 0;
             NO_SLOT(make_stringf("Those can't fit over your huge %s.", you.hand_name(true).c_str()))
         else if (you.get_mutation_level(MUT_DEMONIC_TOUCH, mutation_activity_type::INACTIVE) >= 3)
             NO_SLOT("Your demonic touch would destroy those.")
+        else
+            ++count;
 
-        return 1;
+        return count;
 
     case SLOT_BOOTS:
         if (species::wears_barding(you.species))

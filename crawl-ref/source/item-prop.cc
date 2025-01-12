@@ -2995,7 +2995,10 @@ vector<equipment_slot> get_all_item_slots(const item_def& item)
                 return {SLOT_BARDING};
 
             case SLOT_CLOAK:
-                return {SLOT_CLOAK};
+                if (is_unrandom_artefact(item, UNRAND_FISTICLOAK))
+                    return {SLOT_CLOAK, SLOT_HELMET};
+                else
+                    return {SLOT_CLOAK};
 
             case SLOT_HELMET:
                 return {SLOT_HELMET};
@@ -3598,6 +3601,7 @@ bool item_gives_equip_slots(const item_def& item)
     {
         case UNRAND_FINGER_AMULET:
         case UNRAND_JUSTICARS_REGALIA:
+        case UNRAND_FISTICLOAK:
         case UNRAND_SKULL_OF_ZONGULDROK:
             return true;
 

@@ -1811,6 +1811,20 @@ public:
     }
 };
 
+class AuxFisticloak: public AuxAttackType
+{
+public:
+    AuxFisticloak()
+    : AuxAttackType(9, 100, "shroompunch") { };
+
+    bool xl_based_chance() const override { return false; }
+
+    bool is_usable() const override
+    {
+        return false;   // Only usable by the fisticloak world_reacts function
+    }
+};
+
 static const AuxConstrict   AUX_CONSTRICT = AuxConstrict();
 static const AuxKick        AUX_KICK = AuxKick();
 static const AuxPeck        AUX_PECK = AuxPeck();
@@ -1823,6 +1837,7 @@ static const AuxPseudopods  AUX_PSEUDOPODS = AuxPseudopods();
 static const AuxTentacles   AUX_TENTACLES = AuxTentacles();
 static const AuxMaw         AUX_MAW = AuxMaw();
 static const AuxBlades      AUX_EXECUTIONER_BLADE = AuxBlades();
+static const AuxFisticloak  AUX_FUNGAL_FISTICLOAK = AuxFisticloak();
 
 static const AuxAttackType* const aux_attack_types[] =
 {
@@ -1838,6 +1853,7 @@ static const AuxAttackType* const aux_attack_types[] =
     &AUX_TENTACLES,
     &AUX_MAW,
     &AUX_EXECUTIONER_BLADE,
+    &AUX_FUNGAL_FISTICLOAK,
 };
 
 
@@ -2084,6 +2100,11 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
     {
         handle_phase_killed();
         return true;
+    }
+    else if (atk == UNAT_FUNGAL_FISTICLOAK && !defender->is_unbreathing()
+            && one_chance_in(3))
+    {
+        defender->confuse(attacker, 5);
     }
 
     return false;

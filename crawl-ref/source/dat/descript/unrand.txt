@@ -838,3 +838,18 @@ The skull of a legendary necromancer, seemingly parted from the rest of his
 body. It seems disinclined to explain the precise circumstances of its ending up
 in this state, but offers no objection to others siphoning what considerable
 necromantic power still remains in his ancient bones.
+%%%%
+fungal fisticloak
+
+The handiwork of a mad mycologist who once attempted to overcome the genetic
+anxiety of wandering mushrooms by cultivating a species that could be easily
+transported without disturbing them. The result is as much a living organism as
+it is a piece of clothing, every linen fibre twined together with fungal mycelia
+that draw both nutrients and confidence from whoever wears it. And in exchange
+for such trifles as blood or peptides, the colony will instinctively lash out to
+defend its wearer from whatever they perceive as a threat.
+
+It's like wearing a thousand tiny friends at once! And the humming they fill
+your mind with in the dark is actually quite lulling....
+
+(This item also occupies your helmet slot.)

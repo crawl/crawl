@@ -6,6 +6,7 @@
 
 #include <sys/stat.h>
 
+#include "artefact.h"
 #include "files.h"
 #include "jobs.h"
 #include "makeitem.h"
@@ -453,14 +454,6 @@ void fill_doll_equipment(dolls_data &result)
         else
             result.parts[TILEP_PART_BODY] = 0;
     }
-    // Cloak.
-    if (result.parts[TILEP_PART_CLOAK] == TILEP_SHOW_EQUIP)
-    {
-        if (item_def* cloak = you.equipment.get_first_slot_item(SLOT_CLOAK))
-            result.parts[TILEP_PART_CLOAK] = tilep_equ_cloak(*cloak);
-        else
-            result.parts[TILEP_PART_CLOAK] = 0;
-    }
     // Helmet.
     if (result.parts[TILEP_PART_HELM] == TILEP_SHOW_EQUIP)
     {
@@ -507,6 +500,20 @@ void fill_doll_equipment(dolls_data &result)
         }
         else
             result.parts[TILEP_PART_HELM] = 0;
+    }
+    // Cloak.
+    if (result.parts[TILEP_PART_CLOAK] == TILEP_SHOW_EQUIP)
+    {
+        if (item_def* cloak = you.equipment.get_first_slot_item(SLOT_CLOAK))
+        {
+            result.parts[TILEP_PART_CLOAK] = tilep_equ_cloak(*cloak);
+
+            // Gets an additional tile on the head
+            if (is_unrandom_artefact(*cloak, UNRAND_FISTICLOAK))
+                result.parts[TILEP_PART_HELM] = TILEP_HELM_FUNGAL_FISTICLOAK_FRONT;
+        }
+        else
+            result.parts[TILEP_PART_CLOAK] = 0;
     }
     // Leg.
     if (result.parts[TILEP_PART_LEG] == TILEP_SHOW_EQUIP)

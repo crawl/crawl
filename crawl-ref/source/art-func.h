@@ -35,6 +35,7 @@
 #include "fineff.h"        // For the Storm Queen's Shield
 #include "god-conduct.h"   // did_god_conduct
 #include "mgen-data.h"     // For Sceptre of Asmodeus
+#include "melee-attack.h"  // For Fungal Fisticloak
 #include "message.h"
 #include "monster.h"
 #include "mon-death.h"     // For demon axe's SAME_ATTITUDE
@@ -1873,4 +1874,48 @@ static void _SKULL_OF_ZONGULDROK_unequip(item_def */*item*/, bool *show_msgs)
                             getSpeakString("zonguldrok farewell") + "\"";
         mprf(MSGCH_TALK, "%s", msg.c_str());
     }
+}
+
+///////////////////////////////////////////////////
+static void _FISTICLOAK_equip(item_def */*item*/, bool *show_msgs, bool unmeld)
+{
+    if (!unmeld)
+    {
+        _equip_mpr(show_msgs, getSpeakString("fungus thoughts").c_str());
+
+        if (you_worship(GOD_FEDHAS))
+            god_speaks(GOD_FEDHAS, "Fedhas smiles on your commitment to the cycle of life.");
+    }
+}
+
+static void _FISTICLOAK_unequip(item_def */*item*/, bool *show_msgs)
+{
+    const bool should_msg = !show_msgs || *show_msgs;
+    if (should_msg)
+        mpr("Your thoughts feel a little more lonely.");
+}
+
+static void _FISTICLOAK_world_reacts(item_def */*item*/)
+{
+    // First, a chance of flavor message.
+    if (one_chance_in(1500))
+        mprf(MSGCH_TALK, "%s", getSpeakString("fungus thoughts").c_str());
+
+    // Now, the chance for our shroompunch
+    if (!one_chance_in(4))
+        return;
+
+    vector<monster*> targs;
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+        if (monster* mon = monster_at(*ai))
+            if (you.can_see(*mon) && !mon->wont_attack() && !mon->is_firewood())
+                targs.push_back(mon);
+
+    if (targs.empty())
+        return;
+
+    monster* targ = targs[random2(targs.size())];
+
+    melee_attack shred(&you, targ);
+    shred.player_do_aux_attack(UNAT_FUNGAL_FISTICLOAK);
 }
