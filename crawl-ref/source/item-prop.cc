@@ -3597,6 +3597,7 @@ bool item_gives_equip_slots(const item_def& item)
     switch (item.unrand_idx)
     {
         case UNRAND_FINGER_AMULET:
+        case UNRAND_JUSTICARS_REGALIA:
             return true;
 
         default:

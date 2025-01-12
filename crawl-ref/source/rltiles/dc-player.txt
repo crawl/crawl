@@ -479,6 +479,7 @@ orange_crystal ORANGE_CRYSTAL
 vines VINES
 kryias KRYIAS
 talos TALOS
+justicar JUSTICAR
 
 %sdir player/transform
 maw_form0 MAW_FORM

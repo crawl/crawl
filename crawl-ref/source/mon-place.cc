@@ -1465,6 +1465,12 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         gozag_set_bribe(mon);
     }
 
+    if (mg.summoner && mg.summoner->is_player()
+        && you.unrand_equipped(UNRAND_JUSTICARS_REGALIA))
+    {
+        mon->add_ench(mon_enchant(ENCH_REGENERATION, 0, &you, random_range(300, 500)));
+    }
+
     return mon;
 }
 

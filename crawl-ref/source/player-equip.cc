@@ -192,6 +192,9 @@ size_type player_size = you.body_size(PSIZE_TORSO);
         if (you.has_mutation(MUT_NO_JEWELLERY))
             NO_SLOT("You can't wear amulets.")
 
+        if (you.unrand_equipped(UNRAND_JUSTICARS_REGALIA))
+            return 2;
+
         return 1;
 
     case SLOT_GIZMO:

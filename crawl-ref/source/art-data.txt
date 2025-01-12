@@ -1836,6 +1836,19 @@ DBRAND:  It massively reduces your stealth.
 +It interferes with translocations, delaying teleports.
 +Charlatan: It boosts your other skills by 20% of your base Evocations skill.
 
+ENUM:    JUSTICARS_REGALIA
+NAME:    justicar's regalia
+INSCRIP: Rally Amulet+
+OBJ:     OBJ_ARMOUR/ARM_SCALE_MAIL
+PLUS:    +5
+STR:     4
+COLOUR:  WHITE
+TILE:    urand_justicars_regalia
+TILE_EQ: justicar
+VALUE:   900
+DESCRIP: Inspire:   When you summon or create an ally, it gains Regeneration.
++Amulet+:   You can equip an additional amulet.
+
 # Fedhas sprint, to allow coglins access to evocable invisibility.
 ENUM:     SCARF_INVISIBILITY
 NAME:     scarf of invisibility

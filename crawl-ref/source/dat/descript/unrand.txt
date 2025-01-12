@@ -830,3 +830,9 @@ This orb is the work of a master artificer, contracted to retrieve the orb, who
 valued their life more than their professional integrity. While this fake
 faithfully recreates the eerie glow and space-warping properties of the true
 orb, the power it grants is artificial and only accessible to skilled evokers.
+%%%%
+justicar's regalia
+
+A gleaming breastplate with a slot in its centre for a holy symbol or bejewelled
+coat of arms. Those who hear commands given by its wearer feel filled with the
+power to carry them out, no matter the adversity.
