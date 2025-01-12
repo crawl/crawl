@@ -939,8 +939,6 @@ public:
     int armour_class_scaled(int scale) const;
 
     int ac_changes_from_mutations() const;
-    int base_ac_with_specific_items(int scale, vector<item_def*> armour_items) const;
-    int armour_class_with_specific_items(int scale, vector<item_def*> items) const;
 
 protected:
     void _removed_beholder(bool quiet = false);

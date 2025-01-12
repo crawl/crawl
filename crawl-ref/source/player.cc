@@ -6103,46 +6103,6 @@ int player::ac_changes_from_mutations() const
 }
 
 /**
- * Get the players "base" ac, assuming they are wearing a particular set of
- * armour items (which isn't necessarily the set of armour items they are
- * currently wearing.)
- *
- * @param   A scale by which the player's base AC is multiplied.
- * @param   A list of items to assume the player is wearing.
- * @return  The player's AC, multiplied by the given scale.
- */
-int player::base_ac_with_specific_items(int scale, vector<item_def*> armour_items) const
-{
-    int AC = 0;
-
-    for (auto item : armour_items)
-    {
-        // Shields give SH instead of AC
-        if (get_armour_slot(*item) != SLOT_OFFHAND)
-        {
-            AC += base_ac_from(*item, 100);
-            AC += item->plus * 100;
-        }
-
-        if (get_armour_ego_type(*item) == SPARM_PROTECTION)
-            AC += 300;
-    }
-
-    AC += wearing_jewellery(RING_PROTECTION) * 100;
-
-    //XXX: This doesn't take into account armour_items, so an unrand shield
-    //     with +AC would have a buggy display.
-    AC += scan_artefacts(ARTP_AC) * 100;
-
-    AC += get_form()->get_ac_bonus();
-
-    AC += racial_ac(true);
-
-    AC += ac_changes_from_mutations();
-
-    return AC * scale / 100;
-}
-/**
  * The player's "base" armour class, before transitory buffs are applied.
  *
  * (This is somewhat arbitrarily defined - forms, for example, are considered
@@ -6153,17 +6113,39 @@ int player::base_ac_with_specific_items(int scale, vector<item_def*> armour_item
  */
 int player::base_ac(int scale) const
 {
-    return base_ac_with_specific_items(scale, equipment.get_slot_items(SLOT_ALL_ARMOUR));
-}
+    int AC = 0;
 
-int player::armour_class() const
-{
-    return div_rand_round(armour_class_scaled(100), 100);
-}
+    for (const player_equip_entry& entry : equipment.items)
+    {
+        if (entry.melded || entry.is_overflow)
+            continue;
 
-int player::armour_class_scaled(int scale) const
-{
-    return armour_class_with_specific_items(scale, equipment.get_slot_items(SLOT_ALL_ARMOUR));
+        const item_def& item = entry.get_item();
+        if (item.base_type != OBJ_ARMOUR)
+            continue;
+
+        // Shield plusses are for SH, not AC.
+        if (get_armour_slot(item) != SLOT_OFFHAND)
+        {
+            AC += base_ac_from(item, 100);
+            AC += item.plus * 100;
+        }
+
+        if (item.brand == SPARM_PROTECTION)
+            AC += 300;
+    }
+
+    AC += wearing_jewellery(RING_PROTECTION) * 100;
+
+    AC += scan_artefacts(ARTP_AC) * 100;
+
+    AC += get_form()->get_ac_bonus();
+
+    AC += racial_ac(true);
+
+    AC += ac_changes_from_mutations();
+
+    return AC * scale / 100;
 }
 
 int player::corrosion_amount() const
@@ -6191,9 +6173,14 @@ static int _meek_bonus()
     return min(max(0, (scale_top - you.hp) / hp_per_ac), max_ac);
 }
 
-int player::armour_class_with_specific_items(int scale, vector<item_def*> items) const
+int player::armour_class() const
 {
-    int AC = base_ac_with_specific_items(100, items);
+    return div_rand_round(armour_class_scaled(100), 100);
+}
+
+int player::armour_class_scaled(int scale) const
+{
+    int AC = base_ac(100);
 
     if (duration[DUR_ICY_ARMOUR])
     {

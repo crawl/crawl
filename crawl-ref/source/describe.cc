@@ -2478,19 +2478,20 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
 static string _describe_lignify_ac()
 {
     const Form* tree_form = get_form(transformation::tree);
-    vector<item_def*> treeform_items;
 
-    for (auto item : you.equipment.get_slot_items(SLOT_ALL_ARMOUR, true))
-        if (!tree_form->slot_is_blocked(get_item_slot(*item)))
-            treeform_items.push_back(item);
+    // Turn into a tree, check our resulting AC, and then turn back without
+    // anyone being the wiser.
+    unwind_var<player_equip_set> unwind_eq(you.equipment);
+    unwind_var<item_def> unwind_talisman(you.active_talisman);
+    unwind_var<transformation> unwind_form(you.form);
+    you.active_talisman.clear();
+    you.form = transformation::tree;
 
-    const int treeform_ac =
-        (you.base_ac_with_specific_items(100, treeform_items)
-         - you.racial_ac(true) - you.ac_changes_from_mutations()
-         - get_form()->get_ac_bonus() + tree_form->get_ac_bonus()) / 100;
+    you.equipment.unmeld_all_equipment(true);
+    you.equipment.meld_equipment(tree_form->blocked_slots, true);
 
     return make_stringf("If you quaff this potion your AC would be %d.",
-                        treeform_ac);
+                        you.armour_class_scaled(1));
 }
 
 string describe_item_rarity(const item_def &item)
