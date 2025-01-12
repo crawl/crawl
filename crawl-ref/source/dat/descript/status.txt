@@ -1102,3 +1102,8 @@ Vainglory status
 
 You have recently announced your regal presence and it simply would not do to
 leave the floor again so soon afterward.
+%%%%
+Protected status
+
+Your platinum paragon is close enough to you to sometimes parry attacks directed
+at you.
