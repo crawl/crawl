@@ -1236,15 +1236,18 @@ void TilesFramework::_send_player(bool force_full)
     }
     json_close_object(true);
 
-    _update_int(force_full, c.offhand_weapon, (bool) you.offhand_weapon(),
-                "offhand_weapon");
-
     _update_int(force_full, c.quiver_item,
                 (int8_t) you.quiver_action.get()->get_item(), "quiver_item");
 
     _update_string(force_full, c.quiver_desc,
                 you.quiver_action.get()->quiver_description().to_colour_string(LIGHTGRAY),
                 "quiver_desc");
+
+    item_def* weapon = you.weapon();
+    item_def* offhand = you.offhand_weapon();
+    _update_int(force_full, c.weapon_index, (int8_t) (weapon ? weapon->link : -1), "weapon_index");
+    _update_int(force_full, c.offhand_index, (int8_t) (offhand ? offhand->link : -1), "offhand_index");
+    _update_int(force_full, c.offhand_weapon, (bool) offhand, "offhand_weapon");
 
     _update_string(force_full, c.unarmed_attack,
                    you.unarmed_attack_name(), "unarmed_attack");

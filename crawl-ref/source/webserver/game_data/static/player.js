@@ -180,8 +180,7 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
     function wielded_weapon(offhand=false)
     {
         var elem;
-        var wielded = player.equip[offhand ? enums.equip.OFFHAND
-                                           : enums.equip.WEAPON];
+        var wielded = offhand ? player.offhand_index : player.weapon_index;
         if (wielded == -1)
         {
             elem = $("<span>");
@@ -239,7 +238,7 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
         elem.text(player[type]);
         elem.removeClass();
         if (type == "sh" && player.incapacitated()
-            && player.equip[enums.equip.OFFHAND] != -1)
+            && player.offhand_index != -1)
             // XXX This really doesn't work properly
             // Orbs, and coglins with offhand weapons, also trigger this...
             // Amulets of reflection on the other hand, do not...
@@ -452,7 +451,7 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
         }
 
         $("#stats_weapon_letter").text(
-            index_to_letter(player.equip[enums.equip.WEAPON]) + ")");
+            index_to_letter(player.weapon_index) + ")");
         $("#stats_weapon").html(wielded_weapon());
 
         if (player.offhand_weapon) // Coglin dual wielding
@@ -461,7 +460,7 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
             $("#stats_offhand_weapon_line").hide();
 
         $("#stats_offhand_weapon_letter").text(
-            index_to_letter(player.equip[enums.equip.OFFHAND]) + ")");
+            index_to_letter(player.offhand_index) + ")");
         $("#stats_offhand_weapon").html(wielded_weapon(true));
 
         $("#stats_quiver").html(quiver());
@@ -475,12 +474,10 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
             $.extend(player.inv[i], data.inv[i]);
             player.inv[i].slot = Number(i); // XX why is i a string?
         }
-        $.extend(player.equip, data.equip);
 
         if (data.inv)
             $("#action-panel").triggerHandler("update");
 
-        delete data.equip;
         delete data.inv;
         delete data.msg;
 
@@ -560,7 +557,9 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
                 str_max: 0, int_max: 0, dex_max: 0,
                 piety_rank: 0, penance: false,
                 status: [],
-                inv: {}, equip: {},
+                inv: {},
+                weapon_index: -1,
+                offhand_index: -1,
                 quiver_item: -1,
                 unarmed_attack: "",
                 pos: {x: 0, y: 0},
@@ -572,8 +571,6 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
             });
             delete player["old_hp"];
             delete player["old_mp"];
-            for (var i = 0; i < enums.equip.NUM_EQUIP; ++i)
-                player.equip[i] = -1;
             last_time = null;
         });
 
