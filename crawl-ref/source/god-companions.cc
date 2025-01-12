@@ -717,9 +717,9 @@ void beogh_recruit_apostle()
     }
 
     if (msg.length() > 0)
-        msg += "you anoint them with ash and charcoal and welcome them as a companion.";
+        msg += "you anoint " + real->pronoun(PRONOUN_OBJECTIVE) + " with ash and charcoal and welcome " + real->pronoun(PRONOUN_OBJECTIVE) + " as a companion.";
     else
-        msg += "You anoint " + real->name(DESC_THE, true) + " with ash and charcoal and welcome them as a companion.";
+        msg += "You anoint " + real->name(DESC_THE, true) + " with ash and charcoal and welcome " + real->pronoun(PRONOUN_OBJECTIVE) + " as a companion.";
 
     mpr(msg.c_str());
 
