@@ -1592,6 +1592,13 @@ bool try_unequip_item(item_def& item)
         return false;
     }
 
+    if (you.duration[DUR_VAINGLORY] && is_unrandom_artefact(item, UNRAND_VAINGLORY))
+    {
+        mprf(MSGCH_PROMPT, "It would be unfitting for someone so glorious to "
+                           "remove their crown in front of an audience.");
+        return false;
+    }
+
     vector<item_def*> to_remove = {&item};
 
     // Handle trying to remove items that may themselves require other
