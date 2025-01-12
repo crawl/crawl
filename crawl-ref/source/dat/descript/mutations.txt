@@ -471,7 +471,8 @@ grants you immunity to miasma (from any source).
 spiny mutation
 
 Foes who strike you in melee have a 50% chance of being impaled on your spines,
-taking damage. Each level of this mutation increases the damage.
+taking damage. Each level of this mutation increases the damage. This mutation
+also grants you immunity to constriction.
 %%%%
 augmentation mutation
 
