@@ -37,7 +37,8 @@ MockPlayerYouTestsFixture::MockPlayerYouTestsFixture() {
 
     setup_game(game_choices, false);
 
-    unequip_item(EQ_BODY_ARMOUR);
+    if (item_def* armour = you.body_armour())
+        unequip_item(*armour);
 
     destroy_items_in_player_inventory();
 

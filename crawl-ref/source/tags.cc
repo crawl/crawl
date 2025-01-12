@@ -2698,18 +2698,18 @@ static void _read_old_player_equipment(reader &th)
     // First, read old data.
     const int count = unmarshallByte(th);
     for (int i = 0; i < count; ++i)
-        old_eq.emplace_back(unmarshallByte(th));
+        old_eq.push_back(unmarshallByte(th));
     for (int i = 0; i < count; ++i)
-        old_melded.emplace_back(unmarshallBoolean(th));
+        old_melded.push_back(unmarshallBoolean(th));
     if (th.getMinorVersion() >= TAG_MINOR_TRACK_REGEN_ITEMS)
     {
         for (int i = 0; i < count; ++i)
-            old_attuned.emplace_back(unmarshallBoolean(th));
+            old_attuned.push_back(unmarshallBoolean(th));
     }
     else
     {
         for (int i = 0; i < count; ++i)
-            old_attuned.emplace_back(false);
+            old_attuned.push_back(false);
     }
 }
 #endif
