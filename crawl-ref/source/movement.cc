@@ -590,10 +590,7 @@ monster* get_rampage_target(coord_def move)
     beam.thrower         = KILL_YOU;
     beam.pierce          = true;
     beam.affects_nothing = true;
-    beam.is_tracer       = true;
-    // is_targeting prevents bolt::do_fire() from interrupting with a message
-    // if our tracer crosses something that blocks line of fire.
-    beam.is_targeting    = true;
+    beam.set_is_tracer(true);
     beam.fire();
 
     // Iterate the tracer to see if the first visible target is a hostile mons.
