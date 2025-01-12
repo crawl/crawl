@@ -1316,25 +1316,9 @@ bool try_equip_item(item_def& item)
     }
 
     // If we're attempting to equip an item on the floor, test if we have room
-    // to pick it up. If we do, make a temporary copy of it in our 'hidden'
-    // inventory slot so that we can do a full warning check without actually
-    // picking it up (so that we don't waste time doing so if the user is going
-    // to abort).
-    item_def* to_equip = &item;
-    bool was_on_floor = false;
-    if (item.pos != ITEM_IN_INVENTORY)
-    {
-        if (_can_move_item_from_floor_to_inv(item))  // does messaging
-        {
-            you.inv[ENDOFPACK] = item;
-            you.inv[ENDOFPACK].pos = ITEM_IN_INVENTORY;
-            you.inv[ENDOFPACK].link = ENDOFPACK;
-            to_equip = &you.inv[ENDOFPACK];
-            was_on_floor = true;
-        }
-        else
-            return false;
-    }
+    // to even pick it up, first
+    if (item.pos != ITEM_IN_INVENTORY && !_can_move_item_from_floor_to_inv(item))
+        return false;
     else if (item_is_equipped(item))
     {
         if (Options.equip_unequip)
@@ -1404,16 +1388,13 @@ bool try_equip_item(item_def& item)
     // Note: What we pass to this method may be a link to a temporary item copy
     //       in our inventory, if the item we are testing is currently on the
     //       foor.
-    if (!warn_about_changing_gear(to_remove, to_equip))
+    if (!warn_about_changing_gear(to_remove, &item))
         return false;
 
     // Now do the actual removal and equipping.
 
     // Pick up item, if we need to.
     item_def& real_item = you.inv[_get_item_slot_maybe_with_move(item)];
-    if (was_on_floor)
-        you.inv[ENDOFPACK].clear();
-
     do_equipment_change(&real_item, slot, to_remove);
 
     return true;
