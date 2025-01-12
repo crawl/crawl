@@ -866,6 +866,7 @@ orb_of_dispater ORB_OF_DISPATER
 orb_of_wucad_mu ORB_OF_WUCAD_MU
 orb_of_battle ORB_OF_BATTLE
 charlatans_orb CHARLATANS_ORB
+skull_of_zonguldrok SKULL_OF_ZONGULDROK
 
 buckler_spriggan BUCKLER_SPRIGGAN
 buckler_warlock BUCKLER_WARLOCK

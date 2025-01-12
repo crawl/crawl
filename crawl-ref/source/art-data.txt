@@ -319,6 +319,7 @@ VALUE:   1200
 DBRAND:  Torment:   It occasionally torments all nearby living foes when it
  strikes in combat.
 
+# start TAG_MAJOR_VERSION == 34
 NAME:    sword of Zonguldrok
 OBJ:     OBJ_WEAPONS/WPN_DOUBLE_SWORD
 PLUS:    +9
@@ -328,6 +329,7 @@ TILE_EQ: zonguldrok
 BRAND:   SPWPN_REAPING
 FB_BRAND: SPWPN_PAIN
 VALUE:   800
+# end TAG_MAJOR_VERSION
 
 NAME:    sword of Cerebov
 APPEAR:  great serpentine sword
@@ -1848,6 +1850,20 @@ TILE_EQ: justicar
 VALUE:   900
 DESCRIP: Inspire:   When you summon or create an ally, it gains Regeneration.
 +Amulet+:   You can equip an additional amulet.
+
+ENUM:    SKULL_OF_ZONGULDROK
+NAME:    skull of Zonguldrok
+INSCRIP: Reaping Hat+
+OBJ:     OBJ_ARMOUR/ARM_ORB
+INT:     4
+LIFE:    1
+COLOUR:  BLUE
+TILE:    urand_skull_of_zonguldrok
+TILE_EQ: skull_of_zonguldrok
+VALUE:   600
+DESCRIP: Reaping:   When you kill an enemy with your weapon, its spirit may be
+ forced to fight for you.
++Hat+:   You can equip an additional hat (on the skull)
 
 # Fedhas sprint, to allow coglins access to evocable invisibility.
 ENUM:     SCARF_INVISIBILITY

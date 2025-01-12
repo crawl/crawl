@@ -977,7 +977,7 @@ SUBST:  G : YlG
 :   randbook disc:necromancy w:5 | necronomicon w:1 | grand grimoire w:1 | \
 :   sceptre_of_torment w:1 | scythe_of_curses w:1 | majin-bo w:1 | \
 :   black_knights_barding w:1 | obsidian_axe w:1 | damnation w:1 | \
-:   sword_of_zonguldrok w:1")
+:   skull_of_zonguldrok w:1")
 : if not you.in_branch("D") then
 KFEAT: a = altar_kikubaaqudgha / altar_yredelemnul / altar_makhleb / \
            altar_beogh w:1 / altar_lugonu w:1

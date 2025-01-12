@@ -62,6 +62,8 @@
 #define SS_WELCOME_KEY "ss_welcome"
 // similarly, for the majin-bo
 #define MB_WELCOME_KEY "mb_welcome"
+// similarly, for the Skull of Zonguldrok
+#define ZONGULDROK_WELCOME_KEY "zonguldrok_welcome"
 
 /*******************
  * Helper functions.
@@ -1844,4 +1846,31 @@ static void _CHARLATANS_ORB_unequip(item_def */*item*/, bool */*show_msgs*/)
     invalidate_agrid(true);
     calc_hp(true);
     calc_mp(true);
+}
+
+/////////////////////////////////////////////////////
+static void _SKULL_OF_ZONGULDROK_equip(item_def *item, bool *show_msgs, bool /*unmeld*/)
+{
+    const bool should_msg = !show_msgs || *show_msgs;
+    if (should_msg)
+    {
+        const string key = !item->props.exists(ZONGULDROK_WELCOME_KEY)
+                                ? "zonguldrok greeting"
+                                : "zonguldrok reprise";
+
+        const string msg = "A voice whispers, \"" + getSpeakString(key) + "\"";
+        mprf(MSGCH_TALK, "%s", msg.c_str());
+        item->props[ZONGULDROK_WELCOME_KEY].get_bool() = true;
+    }
+}
+
+static void _SKULL_OF_ZONGULDROK_unequip(item_def */*item*/, bool *show_msgs)
+{
+    const bool should_msg = !show_msgs || *show_msgs;
+    if (should_msg)
+    {
+        const string msg = "A voice whispers, \"" +
+                            getSpeakString("zonguldrok farewell") + "\"";
+        mprf(MSGCH_TALK, "%s", msg.c_str());
+    }
 }

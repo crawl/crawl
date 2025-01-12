@@ -316,14 +316,12 @@ function wizlab_zonguldrok_awaken_wizard(data, triggerable,
     end
 
     -- Place two antique champions
+    local ant_spec = "generate_awake antique champion ; double sword ego:draining . " ..
+                     "shadow dragon scales good_item . kite shield good_item"
     local ant_pos1 = dgn.find_marker_positions_by_prop("antique_grave_a", 1)[1]
-    local ant1 = dgn.create_monster(ant_pos1.x, ant_pos1.y,
-                                    "generate_awake antique champion ; " ..
-                                    "sword_of_zonguldrok . shadow dragon scales . kite shield good_item")
+    local ant1 = dgn.create_monster(ant_pos1.x, ant_pos1.y, ant_spec)
     local ant_pos2 = dgn.find_marker_positions_by_prop("antique_grave_b", 1)[1]
-    local ant2 = dgn.create_monster(ant_pos2.x, ant_pos2.y,
-                                    "generate_awake antique champion ; " ..
-                                    "double sword ego:draining . shadow dragon scales good_item . kite shield")
+    local ant2 = dgn.create_monster(ant_pos2.x, ant_pos2.y, ant_spec)
     dgn.place_cloud(ant_pos1.x, ant_pos1.y, "black smoke", 5, "", "", 5)
     dgn.place_cloud(ant_pos2.x, ant_pos2.y, "black smoke", 5, "", "", 5)
 
@@ -1480,9 +1478,10 @@ ITEM:       shadow dragon scales good_item / shadow dragon scales randart / \
             chain mail good_item / chain mail randart / \
             kite shield randart / tower shield randart / \
             talisman of death randart artprops:str:2&dex:2&slay:2 w:15
+KITEM:      g = skull of zonguldrok
 KFEAT:      GW = G
 KFEAT:      T = petrified_tree
-NSUBST:     Z = Z / ', d = 5:e / 3:f / * = d:20 e:2, G = 22:G / 5 = G. / *:.
+NSUBST:     Z = Z / ', d = 5:e / 3:f / 1:g / * = d:20 e:2, G = 22:G / 5 = G. / *:.
 {{
 lua_marker("G", portal_desc { grave = 1 })
 lua_marker("R", portal_desc { antique_grave_a = 1 })

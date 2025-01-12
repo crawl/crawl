@@ -67,11 +67,6 @@ An accursed bone sceptre, created by some unknown hellish power. When used in
 combat, it causes agonising pain in all those unfortunate enough to gaze upon
 it, save for the wielder.
 %%%%
-sword of Zonguldrok
-
-A blade imbued with the essence of a legendary necromancer. Those slain in its
-presence are reanimated by its power and forced to fight on.
-%%%%
 sword of Cerebov
 
 A twisted blade, covered in eerie flames. Its demonic power burns away at the
@@ -836,3 +831,10 @@ justicar's regalia
 A gleaming breastplate with a slot in its centre for a holy symbol or bejewelled
 coat of arms. Those who hear commands given by its wearer feel filled with the
 power to carry them out, no matter the adversity.
+%%%%
+skull of Zonguldrok
+
+The skull of a legendary necromancer, seemingly parted from the rest of his
+body. It seems disinclined to explain the precise circumstances of its ending up
+in this state, but offers no objection to others siphoning what considerable
+necromantic power still remains in his ancient bones.

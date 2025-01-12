@@ -3198,7 +3198,7 @@ KMONS:   R = spectral anaconda
 # A necromancy-themed loot item behind the obsidian statue.
 ITEM:    rapier ego:pain w:5 / rapier ego:draining w:5 \
          / quickblade ego:pain w:5 / quickblade ego:draining w:5 \
-         / demon blade ego:draining / sword of zonguldruk w:1 \
+         / demon blade ego:draining / skull of zonguldruk w:1 \
          / great sword ego:draining / triple sword ego:draining \
          / demon whip ego:pain w:5 / demon whip ego:draining w:5 \
          / eveningstar ego:draining / sceptre of torment w:1 \

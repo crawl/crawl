@@ -2152,10 +2152,11 @@ if crawl.x_chance_in_y(3, 4) then
                        "maxwell's_patent_armour", "orange_crystal_plate_armour",
                        "shield_of_the_gong", "tower_shield_of_ignorance",
                        "hat_of_the_bear_spirit", "mad_mage's_maulers",
-                       "ratskin_cloak", "slick_slippers", "seven-league_boots"}
+                       "ratskin_cloak", "slick_slippers", "seven-league_boots",
+                       "skull_of_zonguldrok"}
 
   local chaoticlist = { "spriggan's_knife", "captain's_cutlass", "gyre",
-                        "sword_of_zonguldrok", "maxwell's_thermic_engine",
+                        "maxwell's_thermic_engine",
                         "autumn_katana", "elemental_staff", "wrath_of_trog",
                         "frostbite", "consecrated_labrys", "wyrmbane",
                         "rift", "glaive_of_the_guard", "lochaber_axe",

@@ -9,6 +9,7 @@
 #include "areas.h"
 #include "artefact.h"
 #include "art-enum.h"
+#include "database.h"
 #include "delay.h"
 #include "english.h" // conjugate_verb
 #include "god-abil.h"
@@ -62,9 +63,10 @@ static void _mark_unseen_monsters();
  */
 int get_player_equip_slot_count(equipment_slot slot, string* zero_reason)
 {
-#define NO_SLOT(x) {if (zero_reason) { *zero_reason = x; }; return 0;}
+#define NO_SLOT(x) {if (count == 0) {if (zero_reason) { *zero_reason = x; }; return 0;}}
 
 size_type player_size = you.body_size(PSIZE_TORSO);
+int count = 0;
 
     switch (slot)
     {
@@ -115,14 +117,20 @@ size_type player_size = you.body_size(PSIZE_TORSO);
     // Hats versus helmets is handled elsewhere. If you can wear at least a hat,
     // this should be non-zero.
     case SLOT_HELMET:
+
+        if (you.unrand_equipped(UNRAND_SKULL_OF_ZONGULDROK))
+            ++count;
+
         if (you.has_mutation(MUT_NO_ARMOUR))
             NO_SLOT("That is much too large for your head.")
         else if (you.get_mutation_level(MUT_HORNS, mutation_activity_type::INACTIVE) >= 3)
             NO_SLOT("You can't wear any headgear with your large horns!")
         else if (you.get_mutation_level(MUT_ANTENNAE, mutation_activity_type::INACTIVE) >= 3)
             NO_SLOT("You can't wear any headgear with your large antennae!")
+        else
+            ++count;
 
-        return 1;
+        return count;
 
     case SLOT_GLOVES:
         if (player_size == SIZE_TINY)
@@ -1907,6 +1915,30 @@ static void _spirit_shield_message(bool unmeld)
         mpr("You feel spirits watching over you.");
 }
 
+static void _zonguldrok_comment_on_hat(const item_def& hat)
+{
+    // Make sure this is the hat actually *on* Zonguldrok (which for now we
+    // consider to be 'your last one'. It's possible in the future, this may
+    // become untrue.)
+    vector<item_def*> hats = you.equipment.get_slot_items(SLOT_HELMET);
+    if ((int)hats.size() != you.equipment.num_slots[SLOT_HELMET]
+        || &hat != hats.back())
+    {
+        return;
+    }
+
+    string key;
+    if (is_artefact(hat))
+        key = "zonguldrok hat good";
+    else if (hat.brand)
+        key = "zonguldrok hat okay";
+    else
+        key = "zonguldrok hat bad";
+
+    const string msg = "A voice whispers, \"" + getSpeakString(key) + "\"";
+        mprf(MSGCH_TALK, "%s", msg.c_str());
+}
+
 static void _equip_armour_effect(item_def& arm, bool unmeld)
 {
     int ego = get_armour_ego_type(arm);
@@ -2032,6 +2064,12 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
 
     you.redraw_armour_class = true;
     you.redraw_evasion = true;
+
+    if ((arm.sub_type == ARM_HAT || arm.sub_type == ARM_HELMET)
+        && !unmeld && you.unrand_equipped(UNRAND_SKULL_OF_ZONGULDROK))
+    {
+        _zonguldrok_comment_on_hat(arm);
+    }
 }
 
 static void _unequip_armour_effect(item_def& item, bool meld)
