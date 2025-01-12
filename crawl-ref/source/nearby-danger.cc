@@ -169,7 +169,7 @@ bool mons_is_safe(const monster* mon, const bool want_move,
         bool result = is_safe;
 
         if (clua.callfn("ch_mon_is_safe", "sbbd>b",
-                        mon->name(DESC_PLAIN), is_safe, moving, dist,
+                        mon->name(DESC_PLAIN).c_str(), is_safe, moving, dist,
                         &result))
         {
             is_safe = result;

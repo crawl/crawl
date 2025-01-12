@@ -36,6 +36,7 @@
 #include "religion.h"
 #include "shopping.h"
 #include "skills.h"
+#include "sound.h"
 #include "spl-clouds.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
