@@ -1,4 +1,5 @@
 #pragma once
+#include <cstdint>
 
 #include "art-enum.h"
 #include "artefact-prop-type.h"
@@ -7,6 +8,7 @@
 #include "equipment-slot.h"
 #include "fixedvector.h"
 #include "transformation.h"
+#include "object-class-type.h"
 
 // Represents a single instance of an item being equipped in a slot by a player.
 struct player_equip_entry
