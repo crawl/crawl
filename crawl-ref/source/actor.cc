@@ -743,7 +743,7 @@ bool actor::can_engulf(const actor &defender) const
     return can_see(defender)
         && !confused()
         && body_size(PSIZE_BODY) >= defender.body_size(PSIZE_BODY)
-        && !defender.res_constrict()
+        && !defender.is_insubstantial()
         && adjacent(pos(), defender.pos());
 }
 
