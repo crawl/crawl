@@ -2411,7 +2411,16 @@ bool ashenzari_uncurse_item()
 
     mprf("You shatter the curse binding %s!", item.name(DESC_THE).c_str());
     item_skills(item, you.skills_to_hide);
-    unequip_item(item);
+
+    vector<item_def*> to_remove = {&item};
+    handle_chain_removal(to_remove, false);
+    for (item_def* _item : to_remove)
+    {
+        if (_item-> link != item_slot)
+            mprf("%s falls away from you.", _item->name(DESC_YOUR).c_str());
+        unequip_item(*_item);
+    }
+
     ash_check_bondage();
 
     you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 0;
