@@ -134,7 +134,7 @@
        "morningstar", "mace", "potion of magic", "wand of mindburst",
        "ring of magical power", "amulet of magic regeneration", "potion of might",
        "potion of mutation", "book of the moon", "book of movement",
-       "book of maladies", "book of metalwork",
+       "book of maladies", "book of metalworking",
        "maxwell's memoranda", "my sojourn through swampland" }
 
       elseif s == "N" then i = { "book of necromancy",
