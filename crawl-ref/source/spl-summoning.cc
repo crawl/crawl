@@ -3559,11 +3559,15 @@ spret cast_surprising_crocodile(actor& agent, const coord_def& targ, int pow, bo
     atk.needs_message = false;
     atk.do_drag();
 
-    // Then perform the actual attack, with bonus power
-    atk.needs_message = true;
-    atk.dmg_mult = 20 + pow;
-    atk.to_hit = AUTOMATIC_HIT;
-    atk.attack();
+    // Then perform the actual attack, with bonus power.
+    // (But check that we didn't pull them into a shaft first.)
+    if (victim->alive())
+    {
+        atk.needs_message = true;
+        atk.dmg_mult = 20 + pow;
+        atk.to_hit = AUTOMATIC_HIT;
+        atk.attack();
+    }
 
     croc->flags & ~MF_JUST_SUMMONED;
 
