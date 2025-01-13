@@ -768,6 +768,13 @@ noise it creates, it will apply an enchantment making monsters all over the
 level aware of your location. Hostile monsters may trigger this trap themselves
 to invoke its effects against you, but your allies will avoid stepping on it.
 %%%%
+An archmage's trap
+
+A magical trap crafted by some avaricious master wizard. When you or a hostile
+monster steps on it, you will lose a percentage of your mp, while up to three of
+the strongest hostile spellcasters in sight will have their spells empowered.
+Your allies will avoid stepping on it.
+%%%%
 A dispersal trap
 
 Anyone stepping on this trap will translocate themself and anyone else in view

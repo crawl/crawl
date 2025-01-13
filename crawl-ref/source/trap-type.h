@@ -7,7 +7,7 @@ enum trap_type
 #if TAG_MAJOR_VERSION == 34
     TRAP_DART,
     TRAP_FIRST_TRAP = TRAP_DART,
-    TRAP_ARROW,
+    TRAP_ARCHMAGE,
     TRAP_SPEAR,
 #endif
 #if TAG_MAJOR_VERSION > 34
@@ -18,6 +18,7 @@ enum trap_type
     TRAP_TELEPORT_PERMANENT,
 #if TAG_MAJOR_VERSION > 34
     TRAP_TYRANT,
+    TRAP_ARCHMAGE,
 #endif
     TRAP_ALARM,
 #if TAG_MAJOR_VERSION == 34

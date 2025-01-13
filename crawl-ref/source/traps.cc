@@ -134,7 +134,8 @@ bool trap_def::is_bad_for_player() const
            || type == TRAP_ZOT
            || type == TRAP_NET
            || type == TRAP_PLATE
-           || type == TRAP_TYRANT;
+           || type == TRAP_TYRANT
+           || type == TRAP_ARCHMAGE;
 }
 
 bool trap_def::is_safe(actor* act) const
@@ -175,24 +176,10 @@ bool trap_def::is_safe(actor* act) const
     return false;
 }
 
-<<<<<<< HEAD
-// Used for tyrant's traps and other potential future traps:
-// get a buff, look for the three highest-HD monsters without the buff, then
-// give it to each of them. Returns the affected monsters for use in messaging.
-=======
-// When giving AF_CHAOTIC to monsters, skip holy monsters due to potential vamp
-// or draining attacks. They also need attacks that aren't already chaos brand.
-bool chaos_lace_criteria (monster* mon) {
-    return mons_has_attacks(*mon) && !(mon->is_peripheral())
-            && !(mon->is_holy()) && !(is_good_god(mon->god))
-            && (mons_attack_spec(*mon, 0, true).flavour != AF_CHAOTIC);
-}
-
 // Used for tyrant's traps and archmage's traps:
 // get a buff, look for the two or three highest-HD valid monsters without the
 // buff, then give it to each of them. Returns the affected monsters the
 // player can see for messaging purposes per-trap afterwards.
->>>>>>> 61ea775a02 (nerf tyrant traps)
 static vector<monster*> _find_and_buff_trap_targets(enchant_type enchant,
                                                     coord_def pos, int time)
 {
@@ -201,9 +188,12 @@ static vector<monster*> _find_and_buff_trap_targets(enchant_type enchant,
 
     for (monster_near_iterator mi(pos, LOS_NO_TRANS); mi; ++mi)
     {
-        if (!(mi->has_ench(enchant)) && !(mi->wont_attack()))
+        if (!(mi->has_ench(enchant)) && !(mi->wont_attack())
+             && !(mi->is_peripheral()))
         {
             if (enchant == ENCH_MIGHT && mons_has_attacks(**mi))
+                options.push_back(*mi);
+            else if (enchant == ENCH_EMPOWERED_SPELLS && mi->antimagic_susceptible())
                 options.push_back(*mi);
         }
     }
@@ -223,7 +213,12 @@ static vector<monster*> _find_and_buff_trap_targets(enchant_type enchant,
             if (affected < cap)
             {
                 mons->add_ench(mon_enchant(enchant, 0, nullptr, time));
-                buffed.push_back(mons);
+
+                // Traps effects are established as trap-los centric,
+                // so don't inform players of monsters out of sight.
+                if (you.see_cell(mons->pos()))
+                    buffed.push_back(mons);
+
                 affected++;
             }
         }
@@ -623,6 +618,42 @@ void trap_def::trigger(actor& triggerer)
                 visible_mons > 1 ? "" : "s");
         }
 
+        break;
+    }
+
+    case TRAP_ARCHMAGE:
+    {
+        if (you_trigger)
+            mpr("You enter an archmage's trap.");
+        else
+        {
+            mprf("%s %s!", triggerer.name(DESC_THE).c_str(),
+                 mons_intel(*m) >= I_HUMAN ? "invokes an archmage's trap upon you" :
+                                             "sets off an archmage's trap");
+        }
+
+        int buff_time = 200 + random2(80);
+        int drain = min(you.magic_points, max(1, you.magic_points / 3));
+        if (drain > 0)
+            drain_mp(drain);
+
+        vector<monster*> buffed_mons = _find_and_buff_trap_targets(ENCH_EMPOWERED_SPELLS,
+                                                                   pos, buff_time);
+
+        if (buffed_mons.size() == 0)
+           mprf(MSGCH_WARN, "Your power is siphoned away!");
+        else
+        {
+            string m_list = describe_monsters_condensed(buffed_mons);
+
+            if (drain == 0)
+                mprf("The spells of %s are empowered!", m_list.c_str());
+            else
+            {
+                mprf(MSGCH_WARN, "Your power is siphoned away as the spells of %s are empowered!",
+                     m_list.c_str());
+            }
+        }
         break;
     }
 
@@ -1065,6 +1096,8 @@ dungeon_feature_type trap_feature(trap_type type)
         return DNGN_TRAP_TELEPORT_PERMANENT;
     case TRAP_TYRANT:
         return DNGN_TRAP_TYRANT;
+    case TRAP_ARCHMAGE:
+        return DNGN_TRAP_ARCHMAGE;
     case TRAP_ALARM:
         return DNGN_TRAP_ALARM;
     case TRAP_ZOT:
@@ -1076,8 +1109,6 @@ dungeon_feature_type trap_feature(trap_type type)
         return DNGN_TRAP_SHADOW;
     case TRAP_SHADOW_DORMANT:
         return DNGN_TRAP_SHADOW_DORMANT;
-    case TRAP_ARROW:
-        return DNGN_TRAP_ARROW;
     case TRAP_SPEAR:
         return DNGN_TRAP_SPEAR;
     case TRAP_DART:
@@ -1117,6 +1148,8 @@ trap_type trap_type_from_feature(dungeon_feature_type type)
         return TRAP_TELEPORT_PERMANENT;
     case DNGN_TRAP_TYRANT:
         return TRAP_TYRANT;
+    case DNGN_TRAP_ARCHMAGE:
+        return TRAP_ARCHMAGE;
     case DNGN_TRAP_ALARM:
         return TRAP_ALARM;
     case DNGN_TRAP_ZOT:
@@ -1383,14 +1416,18 @@ trap_type random_trap_for_place(bool dispersal_ok)
     const bool tyrant_ok = player_in_branch(BRANCH_ORC)
                            || player_in_branch(BRANCH_SNAKE)
                            || player_in_branch(BRANCH_VAULTS);
+    const bool archmage_ok = player_in_branch(BRANCH_SNAKE)
+                             || player_in_branch(BRANCH_ELF)
+                             || player_in_branch(BRANCH_DEPTHS);
 
     const pair<trap_type, int> trap_weights[] =
     {
         { TRAP_DISPERSAL, dispersal_ok && tele_ok  ? 4 : 0},
-        { TRAP_TELEPORT,  tele_ok   ? 5 : 0},
-        { TRAP_SHAFT,     shaft_ok  ? 4 : 0},
-        { TRAP_ALARM,     alarm_ok  ? 5 : 0},
-        { TRAP_TYRANT,    tyrant_ok ? 3 : 0},
+        { TRAP_TELEPORT,  tele_ok     ? 5 : 0},
+        { TRAP_SHAFT,     shaft_ok    ? 4 : 0},
+        { TRAP_ALARM,     alarm_ok    ? 5 : 0},
+        { TRAP_TYRANT,    tyrant_ok   ? 3 : 0},
+        { TRAP_ARCHMAGE,  archmage_ok ? 3 : 0},
     };
 
     const trap_type *trap = random_choose_weighted(trap_weights);
@@ -1502,7 +1539,6 @@ bool is_removed_trap(trap_type trap)
 {
     switch (trap)
     {
-    case TRAP_ARROW:
     case TRAP_DART:
     case TRAP_SPEAR:
     case TRAP_BOLT:
