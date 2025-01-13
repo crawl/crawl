@@ -392,8 +392,6 @@ static dice_def _spell_damage(spell_type spell, int hd)
 
     switch (spell)
     {
-        case SPELL_FREEZE:
-            return freeze_damage(pow, false);
         case SPELL_SCORCH:
             return scorch_damage(pow, false);
         case SPELL_WATERSTRIKE:

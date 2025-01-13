@@ -5394,7 +5394,7 @@ static bool _mons_cast_freeze(monster* mons)
 
     // We use non-random damage for monster Freeze so that the damage display
     // is simple to display to players without being misleading.
-    const int base_damage = freeze_damage(pow, false).roll();
+    const int base_damage = zap_damage(ZAP_FREEZE, pow, true, false).roll();
     const int damage = resist_adjust_damage(target, BEAM_COLD, base_damage);
 
     if (you.can_see(*target))

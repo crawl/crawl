@@ -317,12 +317,6 @@ static string mi_calc_major_healing(monster* mons)
     return make_stringf("%d-%d", min, max);
 }
 
-static string mi_calc_freeze_damage(monster* mons)
-{
-    const int pow = mons_power_for_hd(SPELL_FREEZE, mons->get_hit_dice());
-    return dice_def_string(freeze_damage(pow, false));
-}
-
 static string mi_calc_scorch_damage(monster* mons)
 {
     const int pow = mons_power_for_hd(SPELL_SCORCH, mons->get_hit_dice());
@@ -355,8 +349,6 @@ static string mons_human_readable_spell_damage_string(monster* monster,
         case SPELL_PORTAL_PROJECTILE:
         case SPELL_LRD:
             return ""; // Fake damage beam
-        case SPELL_FREEZE:
-            return mi_calc_freeze_damage(monster);
         case SPELL_SCORCH:
             return mi_calc_scorch_damage(monster);
         case SPELL_SMITING:
