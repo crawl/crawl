@@ -412,7 +412,8 @@ bool can_equip_item(const item_def& item, bool include_form, string* veto_reason
 {
 #define NO_EQUIP(x) {if (veto_reason) { *veto_reason = x; }; return 0;}
 
-    ASSERT(item_type_is_equipment(item.base_type));
+    if (!item_type_is_equipment(item.base_type))
+        NO_EQUIP("That isn't an equippable item.")
 
     vector<equipment_slot> slots = get_all_item_slots(item);
 
