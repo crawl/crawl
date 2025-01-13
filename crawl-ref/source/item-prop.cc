@@ -243,21 +243,21 @@ static const armour_def Armour_prop[] =
         ARMF_RES_STEAM),
     DRAGON_ARMOUR(ACID,        "acid",                    6,  -50,  400,
         ARMF_RES_CORR),
-    DRAGON_ARMOUR(QUICKSILVER, "quicksilver",             9,  -70,  600,
+    DRAGON_ARMOUR(QUICKSILVER, "quicksilver",             9,  -70,  500,
         ARMF_WILLPOWER),
-    DRAGON_ARMOUR(SWAMP,       "swamp",                   7,  -70,  500,
+    DRAGON_ARMOUR(SWAMP,       "swamp",                   7,  -70,  450,
         ARMF_RES_POISON),
-    DRAGON_ARMOUR(FIRE,        "fire",                    8, -110,  550,
+    DRAGON_ARMOUR(FIRE,        "fire",                    8, -110,  500,
         ard(ARMF_RES_FIRE, 2) | ARMF_VUL_COLD),
-    DRAGON_ARMOUR(ICE,         "ice",                     9, -110,  550,
+    DRAGON_ARMOUR(ICE,         "ice",                     9, -110,  500,
         ard(ARMF_RES_COLD, 2) | ARMF_VUL_FIRE),
     DRAGON_ARMOUR(PEARL,       "pearl",                  10, -110, 1000,
         ARMF_RES_NEG),
-    DRAGON_ARMOUR(STORM,       "storm",                  10, -150,  800,
+    DRAGON_ARMOUR(STORM,       "storm",                  10, -150,  650,
         ARMF_RES_ELEC),
-    DRAGON_ARMOUR(SHADOW,      "shadow",                 11, -150,  800,
+    DRAGON_ARMOUR(SHADOW,      "shadow",                 11, -150,  650,
         ard(ARMF_STEALTH, 4)),
-    DRAGON_ARMOUR(GOLDEN,      "golden",                 12, -230,  900,
+    DRAGON_ARMOUR(GOLDEN,      "golden",                 12, -230,  800,
         ARMF_RES_FIRE | ARMF_RES_COLD | ARMF_RES_POISON),
 
 #undef DRAGON_ARMOUR
@@ -509,7 +509,7 @@ static const weapon_def Weapon_prop[] =
         DAMV_SLASHING, 0, 13, 300, DEMON_BRANDS },
     { WPN_SACRED_SCOURGE,    "sacred scourge",     12,  0, 11,
         SK_MACES_FLAILS, SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
-        DAMV_SLASHING, 0, 0, 400, HOLY_BRANDS },
+        DAMV_SLASHING, 0, 0, 350, HOLY_BRANDS },
     { WPN_DIRE_FLAIL,        "dire flail",         13, -3, 13,
         SK_MACES_FLAILS, SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_CRUSHING | DAM_PIERCE, 2, 20, 50, M_AND_F_BRANDS },
@@ -600,7 +600,7 @@ static const weapon_def Weapon_prop[] =
         DAMV_SLICING, 0, 13, 300, DEMON_BRANDS },
     { WPN_EUDEMON_BLADE,         "eudemon blade",         14, -2, 12,
         SK_LONG_BLADES,  SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
-        DAMV_SLICING, 0, 0, 400, HOLY_BRANDS },
+        DAMV_SLICING, 0, 0, 350, HOLY_BRANDS },
     { WPN_DOUBLE_SWORD,          "double sword",          15, -1, 15,
         SK_LONG_BLADES,  SIZE_LITTLE, SIZE_MEDIUM, MI_NONE,
         DAMV_SLICING, 0, 13, 300, LBL_BRANDS },
@@ -646,7 +646,7 @@ static const weapon_def Weapon_prop[] =
         DAMV_CHOPPING, 6, 25, 100, AXE_BRANDS },
     { WPN_EXECUTIONERS_AXE,  "executioner's axe",  18, -6, 19,
         SK_AXES,       SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
-        DAMV_CHOPPING, 0, 25, 150, AXE_BRANDS },
+        DAMV_CHOPPING, 0, 25, 200, AXE_BRANDS },
 
     // Polearms
     { WPN_SPEAR,             "spear",               6,  4, 11,
@@ -681,13 +681,13 @@ static const weapon_def Weapon_prop[] =
         DAMV_PIERCING, 0, 25, 300, DEMON_BRANDS },
     { WPN_TRISHULA,          "trishula",           13,  0, 13,
         SK_POLEARMS,     SIZE_LITTLE, SIZE_MEDIUM, MI_NONE,
-        DAMV_PIERCING, 0, 0, 400, HOLY_BRANDS },
+        DAMV_PIERCING, 0, 0, 350, HOLY_BRANDS },
     { WPN_GLAIVE,            "glaive",             15, -3, 17,
         SK_POLEARMS,     SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_CHOPPING, 5, 15, 100, POLEARM_BRANDS },
     { WPN_BARDICHE,          "bardiche",           18, -6, 19,
         SK_POLEARMS,     SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
-        DAMV_CHOPPING, 1, 25, 150, POLEARM_BRANDS },
+        DAMV_CHOPPING, 1, 25, 200, POLEARM_BRANDS },
 
     // Staves
     // WPN_STAFF is for weapon stats for magical staves only.
@@ -709,7 +709,7 @@ static const weapon_def Weapon_prop[] =
         }},
     { WPN_LAJATANG,          "lajatang",            16,-3, 14,
         SK_STAVES,       SIZE_LITTLE, NUM_SIZE_LEVELS, MI_NONE,
-        DAMV_SLICING, 2, 50, 150, {
+        DAMV_SLICING, 2, 50, 200, {
             { SPWPN_NORMAL,         34 },
             { SPWPN_SPEED,          12 },
             { SPWPN_ELECTROCUTION,  12 },
@@ -758,13 +758,13 @@ static const weapon_def Weapon_prop[] =
         DAMV_NON_MELEE, 8, 20, 40, RANGED_BRANDS },
     { WPN_ARBALEST,          "arbalest",           16, -2, 19,
         SK_RANGED_WEAPONS,   SIZE_LITTLE, NUM_SIZE_LEVELS, MI_BOLT,
-        DAMV_NON_MELEE, 5, 20, 65, RANGED_BRANDS },
+        DAMV_NON_MELEE, 5, 20, 75, RANGED_BRANDS },
     { WPN_LONGBOW,           "longbow",            14,  0, 17,
         SK_RANGED_WEAPONS,   SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_ARROW,
-        DAMV_NON_MELEE, 2, 13, 90, RANGED_BRANDS },
+        DAMV_NON_MELEE, 2, 13, 110, RANGED_BRANDS },
     { WPN_TRIPLE_CROSSBOW,   "triple crossbow",    23, -2, 23,
         SK_RANGED_WEAPONS,   SIZE_SMALL, NUM_SIZE_LEVELS, MI_BOLT,
-        DAMV_NON_MELEE, 0, 13, 150, RANGED_BRANDS },
+        DAMV_NON_MELEE, 0, 13, 200, RANGED_BRANDS },
 
 };
 

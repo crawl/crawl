@@ -48,9 +48,29 @@
 
 ShoppingList shopping_list;
 
+// Hack to make the cost of certain items (consumables) scale more severely with
+// depth. Currently applies to all potions, scrolls, and wands. I have set this
+// up for more complicated handling if we want to restrict to certain subtypes
+// later on. - hellmonk
+static bool _item_has_extra_greed(const item_def& item)
+{
+    switch (item.base_type)
+    {
+        case OBJ_POTIONS:
+        case OBJ_SCROLLS:
+        case OBJ_WANDS:
+            return true;
+        default:
+            return false;
+    }
+}
+
 static int _shop_get_item_value(const item_def& item, int greed, bool id)
 {
     int result = (greed * item_value(item, id) / 10);
+
+    if (_item_has_extra_greed(item) && id)
+        result = max(result, result * (10 + greed) / 25);
 
     return max(result, 1);
 }
@@ -651,7 +671,7 @@ unsigned int item_value(item_def item, bool ident)
         case MISC_PHANTOM_MIRROR:
         case MISC_LIGHTNING_ROD:
         case MISC_GRAVITAMBOURINE:
-            valued += 500;
+            valued += 400;
             break;
 
         default:

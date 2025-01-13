@@ -5992,13 +5992,15 @@ void place_spec_shop(const coord_def& where, shop_type force_type)
 
 int greed_for_shop_type(shop_type shop, int level_number)
 {
+    const int level_greed = random_range(level_number / 6, level_number * 5/6);
+
     if (!shoptype_identifies_stock(shop))
     {
         const int rand = random2avg(19, 2);
-        return 15 + rand;
+        return 15 + rand + level_greed;
     }
     const int rand = random2(5);
-    return 10 + rand + random2(div_rand_round(level_number*2, 3));
+    return 10 + rand + level_greed;
 }
 
 /**
