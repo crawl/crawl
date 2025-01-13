@@ -329,6 +329,7 @@ TILE_EQ: zonguldrok
 BRAND:   SPWPN_REAPING
 FB_BRAND: SPWPN_PAIN
 VALUE:   800
+BOOL:    nogen
 # end TAG_MAJOR_VERSION
 
 NAME:    sword of Cerebov
