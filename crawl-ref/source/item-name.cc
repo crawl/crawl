@@ -3232,7 +3232,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         return !is_throwable(&you, item);
 
     case OBJ_ARMOUR:
-        if (!can_equip_item(item))
+        if (!can_equip_item(item, temp))
             return true;
 
         if (is_unrandom_artefact(item, UNRAND_WUCAD_MU))
@@ -3331,7 +3331,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         return cannot_drink_item_reason(&item, temp, false, ident).size();
     }
     case OBJ_JEWELLERY:
-        if (temp && bool(!you_can_wear(get_item_slot(item))))
+        if (!can_equip_item(item, temp))
             return true;
 
         if (!ident && !item.is_identified())
