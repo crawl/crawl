@@ -3327,13 +3327,6 @@ void set_god_ability_slots()
 {
     ASSERT(!you_worship(GOD_NO_GOD));
 
-    if (find(begin(you.ability_letter_table), end(you.ability_letter_table),
-             ABIL_RENOUNCE_RELIGION) == end(you.ability_letter_table)
-        && you.ability_letter_table[letter_to_index('X')] == ABIL_NON_ABILITY)
-    {
-        you.ability_letter_table[letter_to_index('X')] = ABIL_RENOUNCE_RELIGION;
-    }
-
     // Clear out other god invocations.
     for (ability_type& slot : you.ability_letter_table)
     {
@@ -3341,8 +3334,6 @@ void set_god_ability_slots()
         {
             if (slot == ABIL_NON_ABILITY)
                 break;
-            if (*it == you.religion)
-                continue;
             for (const god_power& power : get_all_god_powers()[*it])
                 if (slot == power.abil)
                     slot = ABIL_NON_ABILITY;

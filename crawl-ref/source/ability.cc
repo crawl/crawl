@@ -4481,6 +4481,10 @@ int find_ability_slot(const ability_type abil, char firstletter)
         first_slot = letter_to_index('w');
         break;
 
+    case ABIL_RENOUNCE_RELIGION:
+        first_slot = letter_to_index('X');
+        break;
+
 #ifdef WIZARD
     case ABIL_WIZ_BUILD_TERRAIN:
     case ABIL_WIZ_SET_TERRAIN:
