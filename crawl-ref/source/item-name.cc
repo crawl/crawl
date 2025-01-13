@@ -1938,6 +1938,9 @@ bool item_type_known(const item_def& item)
     case OBJ_MISCELLANY:
     case OBJ_MISSILES:
     case OBJ_BOOKS:
+    case OBJ_RUNES:
+    case OBJ_GEMS:
+    case OBJ_CORPSES:
         return true;
     default:
         break;
