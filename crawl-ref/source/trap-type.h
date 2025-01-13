@@ -16,9 +16,12 @@ enum trap_type
     TRAP_TELEPORT,
 #endif
     TRAP_TELEPORT_PERMANENT,
+#if TAG_MAJOR_VERSION > 34
+    TRAP_TYRANT,
+#endif
     TRAP_ALARM,
 #if TAG_MAJOR_VERSION == 34
-    TRAP_BLADE,
+    TRAP_TYRANT,
     TRAP_BOLT,
 #endif
     TRAP_NET,

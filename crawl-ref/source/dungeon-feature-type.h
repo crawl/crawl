@@ -91,6 +91,7 @@ enum dungeon_feature_type
     DNGN_TRAP_SHAFT,
     DNGN_TRAP_WEB,
 #if TAG_MAJOR_VERSION > 34
+    DNGN_TRAP_TYRANT,
     DNGN_TRAP_ALARM,
     DNGN_TRAP_ZOT,
     DNGN_TRAP_DISPERSAL,
@@ -343,7 +344,7 @@ enum dungeon_feature_type
 
     DNGN_TRAP_ARROW,
     DNGN_TRAP_SPEAR,
-    DNGN_TRAP_BLADE,
+    DNGN_TRAP_TYRANT,
     DNGN_TRAP_DART,
     DNGN_TRAP_BOLT,
     DNGN_TRAP_NET,

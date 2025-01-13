@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <cmath>
 
+#include "act-iter.h"
 #include "areas.h"
 #include "art-enum.h"
 #include "bloodspatter.h"
@@ -48,6 +49,7 @@
 #include "teleport.h"
 #include "terrain.h"
 #include "travel.h"
+#include "view.h"
 #include "xom.h"
 
 static string _net_immune_reason()
@@ -131,7 +133,8 @@ bool trap_def::is_bad_for_player() const
            || type == TRAP_DISPERSAL
            || type == TRAP_ZOT
            || type == TRAP_NET
-           || type == TRAP_PLATE;
+           || type == TRAP_PLATE
+           || type == TRAP_TYRANT;
 }
 
 bool trap_def::is_safe(actor* act) const
@@ -170,6 +173,63 @@ bool trap_def::is_safe(actor* act) const
         return true;
 
     return false;
+}
+
+<<<<<<< HEAD
+// Used for tyrant's traps and other potential future traps:
+// get a buff, look for the three highest-HD monsters without the buff, then
+// give it to each of them. Returns the affected monsters for use in messaging.
+=======
+// When giving AF_CHAOTIC to monsters, skip holy monsters due to potential vamp
+// or draining attacks. They also need attacks that aren't already chaos brand.
+bool chaos_lace_criteria (monster* mon) {
+    return mons_has_attacks(*mon) && !(mon->is_peripheral())
+            && !(mon->is_holy()) && !(is_good_god(mon->god))
+            && (mons_attack_spec(*mon, 0, true).flavour != AF_CHAOTIC);
+}
+
+// Used for tyrant's traps and archmage's traps:
+// get a buff, look for the two or three highest-HD valid monsters without the
+// buff, then give it to each of them. Returns the affected monsters the
+// player can see for messaging purposes per-trap afterwards.
+>>>>>>> 61ea775a02 (nerf tyrant traps)
+static vector<monster*> _find_and_buff_trap_targets(enchant_type enchant,
+                                                    coord_def pos, int time)
+{
+    vector<monster*> options;
+    vector<monster*> buffed;
+
+    for (monster_near_iterator mi(pos, LOS_NO_TRANS); mi; ++mi)
+    {
+        if (!(mi->has_ench(enchant)) && !(mi->wont_attack()))
+        {
+            if (enchant == ENCH_MIGHT && mons_has_attacks(**mi))
+                options.push_back(*mi);
+        }
+    }
+
+    shuffle_array(options);
+    sort(options.begin( ), options.end( ), [](actor* a, actor* b)
+    { return a->get_hit_dice() > b->get_hit_dice(); });
+
+    if (!(options.empty()))
+    {
+        int fuzz = random_range(2, 3);
+        int cap = (int(options.size()) > fuzz) ? fuzz : options.size();
+        int affected = 0;
+
+        for (monster *mons : options)
+        {
+            if (affected < cap)
+            {
+                mons->add_ench(mon_enchant(enchant, 0, nullptr, time));
+                buffed.push_back(mons);
+                affected++;
+            }
+        }
+    }
+
+    return buffed;
 }
 
 /**
@@ -530,6 +590,41 @@ void trap_def::trigger(actor& triggerer)
         if (!triggerer.no_tele())
             triggerer.teleport(true);
         break;
+
+    case TRAP_TYRANT:
+    {
+        if (you_trigger)
+            mpr("You enter a tyrant's trap.");
+        else
+        {
+            mprf("%s %s!", triggerer.name(DESC_THE).c_str(),
+                 mons_intel(*m) >= I_HUMAN ? "invokes a tyrant's trap upon you" :
+                                             "sets off a tyrant's trap");
+        }
+
+        int debuff_time = 10 + random2(5);
+        you.increase_duration(DUR_WEAK, debuff_time, 50);
+
+        vector<monster*> buffed_mons = _find_and_buff_trap_targets(ENCH_MIGHT, pos,
+                                                                   debuff_time * 20);
+
+        // Subject-verb agreement versus plurality is a pain.
+        int visible_mons = 0;
+        for (monster* mon : buffed_mons)
+             if (you.can_see(*mon))
+                 visible_mons++;
+
+        if (buffed_mons.size() == 0)
+           mpr("Your strength is siphoned away, and you feel your attacks grow feeble!");
+        else
+        {
+            mprf("Your strength is siphoned away as %s grow%s stronger!",
+                describe_monsters_condensed(buffed_mons).c_str(),
+                visible_mons > 1 ? "" : "s");
+        }
+
+        break;
+    }
 
     case TRAP_ALARM:
         // Alarms always mark the player, but not through glass
@@ -968,6 +1063,8 @@ dungeon_feature_type trap_feature(trap_type type)
         return DNGN_TRAP_TELEPORT;
     case TRAP_TELEPORT_PERMANENT:
         return DNGN_TRAP_TELEPORT_PERMANENT;
+    case TRAP_TYRANT:
+        return DNGN_TRAP_TYRANT;
     case TRAP_ALARM:
         return DNGN_TRAP_ALARM;
     case TRAP_ZOT:
@@ -983,8 +1080,6 @@ dungeon_feature_type trap_feature(trap_type type)
         return DNGN_TRAP_ARROW;
     case TRAP_SPEAR:
         return DNGN_TRAP_SPEAR;
-    case TRAP_BLADE:
-        return DNGN_TRAP_BLADE;
     case TRAP_DART:
         return DNGN_TRAP_DART;
     case TRAP_BOLT:
@@ -1020,6 +1115,8 @@ trap_type trap_type_from_feature(dungeon_feature_type type)
         return TRAP_TELEPORT;
     case DNGN_TRAP_TELEPORT_PERMANENT:
         return TRAP_TELEPORT_PERMANENT;
+    case DNGN_TRAP_TYRANT:
+        return TRAP_TYRANT;
     case DNGN_TRAP_ALARM:
         return TRAP_ALARM;
     case DNGN_TRAP_ZOT:
@@ -1281,12 +1378,19 @@ trap_type random_trap_for_place(bool dispersal_ok)
     const bool tele_ok = !crawl_state.game_is_sprint();
     const bool alarm_ok = env.absdepth0 > 3;
 
+    // Split lesser theme traps across branches to vary up those branches.
+    // (Most Zot and Tomb trap placement is done by vaults.)
+    const bool tyrant_ok = player_in_branch(BRANCH_ORC)
+                           || player_in_branch(BRANCH_SNAKE)
+                           || player_in_branch(BRANCH_VAULTS);
+
     const pair<trap_type, int> trap_weights[] =
     {
-        { TRAP_DISPERSAL, dispersal_ok && tele_ok  ? 1 : 0},
-        { TRAP_TELEPORT,  tele_ok  ? 1 : 0},
-        { TRAP_SHAFT,    shaft_ok  ? 1 : 0},
-        { TRAP_ALARM,    alarm_ok  ? 1 : 0},
+        { TRAP_DISPERSAL, dispersal_ok && tele_ok  ? 4 : 0},
+        { TRAP_TELEPORT,  tele_ok   ? 5 : 0},
+        { TRAP_SHAFT,     shaft_ok  ? 4 : 0},
+        { TRAP_ALARM,     alarm_ok  ? 5 : 0},
+        { TRAP_TYRANT,    tyrant_ok ? 3 : 0},
     };
 
     const trap_type *trap = random_choose_weighted(trap_weights);
@@ -1401,7 +1505,6 @@ bool is_removed_trap(trap_type trap)
     case TRAP_ARROW:
     case TRAP_DART:
     case TRAP_SPEAR:
-    case TRAP_BLADE:
     case TRAP_BOLT:
     case TRAP_NEEDLE:
     case TRAP_GAS:

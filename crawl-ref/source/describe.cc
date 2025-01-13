@@ -881,7 +881,7 @@ static const char *trap_names[] =
     "permanent teleport",
     "alarm",
 #if TAG_MAJOR_VERSION == 34
-    "blade", "bolt",
+    "tyrant's", "bolt",
 #endif
     "net",
     "Zot",
