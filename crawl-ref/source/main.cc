@@ -1534,8 +1534,11 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
         }
     }
 
-    if (ygrd != DNGN_TRANSPORTER && beogh_cancel_leaving_floor())
+    if (ygrd != DNGN_TRANSPORTER && ygrd != DNGN_PASSAGE_OF_GOLUBRIA
+        && beogh_cancel_leaving_floor())
+    {
         return false;
+    }
 
     if (Options.warn_hatches)
     {
