@@ -1646,14 +1646,9 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
     you.wield_change = true;
     quiver::on_weapon_changed();
 
-    // Only weapons get special wield messages here.
-    if (item.base_type == OBJ_STAVES)
-        return;
-
-    int special = get_weapon_brand(item);
-
     // message first
-    if (showMsgs)
+    int special = get_weapon_brand(item);
+    if (showMsgs && item.base_type != OBJ_STAVES)
     {
         const string item_name = item.name(DESC_YOUR);
         switch (special)
