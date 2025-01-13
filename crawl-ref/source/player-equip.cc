@@ -66,7 +66,7 @@ int get_player_equip_slot_count(equipment_slot slot, string* zero_reason)
 {
 #define NO_SLOT(x) {if (count == 0) {if (zero_reason) { *zero_reason = x; }; return 0;}}
 
-size_type player_size = you.body_size(PSIZE_TORSO);
+size_type player_size = you.body_size(PSIZE_TORSO, true);
 int count = 0;
 
     switch (slot)
@@ -450,7 +450,7 @@ bool can_equip_item(const item_def& item, bool include_form, string* veto_reason
     // type, is there some *other* reason they cannot wear this item?
     if (item.base_type == OBJ_ARMOUR)
     {
-        size_type player_size = you.body_size(PSIZE_TORSO);
+        size_type player_size = you.body_size(PSIZE_TORSO, !include_form);
         int bad_size = fit_armour_size(item, player_size);
         if (bad_size != 0)
         {
