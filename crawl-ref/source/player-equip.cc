@@ -1198,7 +1198,7 @@ vector<item_def*> player_equip_set::get_slot_items(equipment_slot slot,
                 // While these slots are flexible in what they can contain (for
                 // Coglins), if we asked for weapons, we should only get weapons
                 // back. Same for shields/orbs.
-                if (slot == SLOT_WEAPON && item->base_type != OBJ_WEAPONS
+                if (slot == SLOT_WEAPON && !is_weapon(*item)
                     || slot == SLOT_OFFHAND && item->base_type != OBJ_ARMOUR)
                 {
                     continue;
