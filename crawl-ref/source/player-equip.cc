@@ -300,8 +300,16 @@ int player_equip_set::wearing_ego(object_class_type obj_type, int ego) const
             continue;
 
         item_def& item = you.inv[entry.item];
-        if (item.base_type == obj_type && item.brand == ego)
-            ++total;
+        if (item.base_type == obj_type)
+        {
+            if (obj_type == OBJ_WEAPONS)
+            {
+                if (get_weapon_brand(item) == ego)
+                    ++total;
+            }
+            else if (item.brand == ego)
+                ++total;
+        }
     }
 
     return total;
