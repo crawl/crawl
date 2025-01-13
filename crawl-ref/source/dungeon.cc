@@ -6018,12 +6018,12 @@ static int _shop_greed(shop_type type, int level_number, int spec_greed)
     const int base_greed = greed_for_shop_type(type, level_number);
     int adj_greed = base_greed;
 
-    // Allow bargains in bazaars, prices randomly between 60% and 95%.
+    // Allow bargains in bazaars, prices randomly between 50% and 85%.
     if (player_in_branch(BRANCH_BAZAAR))
     {
         // divided by 20, so each is 5% of original price
-        // 12-19 = 60-95%, per above
-        const int factor = random2(8) + 12;
+        // 10-17 = 50-85%, per above
+        const int factor = random2(8) + 10;
 
         dprf(DIAG_DNGN, "Shop type %d: original greed = %d, factor = %d,"
              " discount = %d%%.",
