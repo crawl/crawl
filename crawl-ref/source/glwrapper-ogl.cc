@@ -460,8 +460,11 @@ void OGLStateManager::load_texture(unsigned char *pixels, unsigned int width,
     if (mip_opt == MIPMAP_CREATE)
     {
         // TODO: should min react to Options.tile_filter_scaling?
+        // TODO: fixme better when less tired
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                        GL_LINEAR_MIPMAP_NEAREST);
+                        m_mipmapFn != nullptr ? GL_LINEAR_MIPMAP_NEAREST :
+                        Options.tile_filter_scaling ? GL_LINEAR :
+                        GL_NEAREST);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
                         Options.tile_filter_scaling ? GL_LINEAR : GL_NEAREST);
         glTexImage2D(GL_TEXTURE_2D, 0, bpp, width, height, 0,
