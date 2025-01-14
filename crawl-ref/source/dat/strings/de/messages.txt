@@ -90,7 +90,7 @@ You cannot do that while held in a net.
 Das kannst du nicht, solange du in einem Netz gefangen bist.
 %%%%
 You cannot do that while caught in a web.
-Das kannst du nicht, solange du in einem Spinnennetz gefangen bist.
+Das kannst du nicht, solange du in einem Gespinst gefangen bist.
 %%%%
 Your legs are too worn out to hop.
 Deine Beine sind zu erschöpft zu hüpfen.
@@ -836,7 +836,7 @@ Du wirst von einer Welle disruptiver Energie getroffen
 %s wird von einer Welle disruptiver Energie getroffen
 %%%%
 Time to lay down the shillelagh law.
-Es ist Zeit, das Gesetz des Knüppels durchzusetzen.
+Es ist Zeit, das Gesetz des Shillelagh durchzusetzen.
 %%%%
 You feel oddly protected from the elements.
 Du fühlst dich auf seltsame Weise vor den Elementen geschützt.
@@ -1156,7 +1156,7 @@ Du zehrst {acc}%s aus
 %s zehrt sich selbst aus
 %%%%
 You drain %s vigour!
-Du entziehst {dat}%s die Vitalität!
+Du entziehst die Vitalität %s!
 %%%%
 %s drains your vigour!
 %s entzieht deine Vitalität!
@@ -1189,7 +1189,7 @@ Du stürzt dich unbemerkt auf {acc}%s!
 %s schafft es nicht, deinen Angriff abzuwehren.
 %%%%
 You block %s attack.
-Du blockst den Angriff {gen}%s.
+Du blockst den Angriff %s.
 %%%%
 %s blocks your attack.
 %s blockiert deinen Angriff.
@@ -1433,7 +1433,7 @@ The silver sears %s!
 Das Silber versengt {acc}%s!
 %%%%
 %s life force is offered up.
-{gen}%s Lebenskraft wird als Opfer dargeboten.
+%s Lebenskraft wird als Opfer dargeboten.
 %%%%
 You draw life force from %s%s
 Du ziehst Lebenskraft aus %s%s
@@ -1652,10 +1652,10 @@ Dein dämonischer Wächter vermeidet deinen Angriff.
 %s wird gebannt
 %%%%
 %s mind is blasted
-{gen}%s Verstand wird gesprengt
+%s Verstand wird gesprengt
 %%%%
 %s minds are blasted
-{gen}%s Verstand wird gesprengt
+%s Verstand wird gesprengt
 %%%%
 %s looks drowsy...
 %s sieht schläfrig aus...
@@ -1830,7 +1830,7 @@ You feel the power of the Orb interfering with translocations here.
 Du spürst, wie die Macht der Kugel die Translokation hier behindert.
 %%%%
 You enter the halls of Pandemonium!
-Du betrittst die Hallen des Pandemoniums!
+Du betrittst die Hallen des Pandämoniums!
 %%%%
 To return, you must find a gate leading back.
 Um zurückzukehren, musst du ein Tor finden, das zurückführt.
