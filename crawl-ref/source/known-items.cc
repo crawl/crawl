@@ -468,7 +468,7 @@ void check_item_knowledge(bool unknown_items)
             { OBJ_GOLD, 1 },
             { OBJ_BOOKS, 0 },
             { OBJ_RUNES, NUM_RUNE_TYPES },
-            { OBJ_GEMS, NUM_GEM_TYPES },
+            { OBJ_GEMS, GEM_DUNGEON },
         };
         for (auto e : misc_list)
             _add_fake_item(e.first, e.second, selected_items, items_other);
