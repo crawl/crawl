@@ -4,7 +4,6 @@
 #ifdef USE_GL
 
 #include "glwrapper-ogl.h"
-#include <iostream>
 
 // How do we get access to the GL calls?
 // If other UI types use the -ogl wrapper they should
@@ -155,7 +154,7 @@ OGLStateManager::OGLStateManager()
     const GLubyte* versionString = glGetString(GL_VERSION);
     if (versionString == nullptr)
     {
-        cout << "Mipmap Setup: Failed to load OpenGL version." << endl;
+        mprf("Mipmap Setup: Failed to load OpenGL version.");
         return;
     }
     // We will never see 2 digit OpenGL major versions - 4.6 came out in 2016,
@@ -170,11 +169,8 @@ OGLStateManager::OGLStateManager()
     bool second_character_is_dot = versionString[1] == '.';
     if (!supported_first_digit || !second_character_is_dot)
     {
-        cout
-            << "Mipmap Setup: Disabled because OpenGL version: "
-            << versionString
-            << "does not provide glGenerateMipmap."
-            << endl;
+        mprf("Mipmap Setup: Disabled because OpenGL version: %s does not "
+             "provide glGenerateMipmap.", versionString);
         return;
     }
 
@@ -188,9 +184,7 @@ OGLStateManager::OGLStateManager()
         // success == 0 for this API.
         // If we can't load it, we probably wouldn't get this far at all.
         // But just in case, we'll handle it.
-        cout
-            << "Mipmap Setup: Disabled because SDL_GL_LoadLibrary failed."
-            << endl;
+        mprf("Mipmap Setup: Disabled because SDL_GL_LoadLibrary failed.");
         return;
     }
 
@@ -200,22 +194,16 @@ OGLStateManager::OGLStateManager()
     m_mipmapFn = SDL_GL_GetProcAddress("glGenerateMipmap");
     if (m_mipmapFn == nullptr)
     {
-        cout
-            << "Mipmap Setup: Failed to load glGenerateMipmap function."
-            << endl;
+        mprf("Mipmap Setup: Failed to load glGenerateMipmap function.");
         return;
     }
     else
     {
-        cout
-            << "Mipmap Setup: success, loaded with OpenGL version: "
-            << versionString
-            << endl;
+        mprf("Mipmap Setup: success, loaded with OpenGL version: %s",
+             versionString);
     }
 #else
-    cout
-        << "Mipmap Setup: skipped, not supported in this build configuration."
-        << endl;
+    mprf("Mipmap Setup: skipped, not supported in this build configuration.");
 #endif
 }
 
@@ -461,7 +449,9 @@ void OGLStateManager::load_texture(unsigned char *pixels, unsigned int width,
     {
         // TODO: should min react to Options.tile_filter_scaling?
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                        GL_LINEAR_MIPMAP_NEAREST);
+                        m_mipmapFn != nullptr ? GL_LINEAR_MIPMAP_NEAREST :
+                        Options.tile_filter_scaling ? GL_LINEAR :
+                        GL_NEAREST);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
                         Options.tile_filter_scaling ? GL_LINEAR : GL_NEAREST);
         glTexImage2D(GL_TEXTURE_2D, 0, bpp, width, height, 0,
