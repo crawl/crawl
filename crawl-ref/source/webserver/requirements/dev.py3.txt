@@ -125,7 +125,7 @@ tox==4.14.1
     # via -r requirements.in/dev.txt
 typing-extensions==4.10.0
     # via mypy
-virtualenv==20.25.1
+virtualenv==20.26.6
     # via tox
 wheel==0.43.0
     # via pip-tools
