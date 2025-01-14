@@ -1935,12 +1935,14 @@ bool item_type_known(const item_def& item)
 {
     switch (item.base_type)
     {
-    case OBJ_MISCELLANY:
     case OBJ_MISSILES:
     case OBJ_BOOKS:
+    case OBJ_ORBS:
+    case OBJ_MISCELLANY:
+    case OBJ_CORPSES:
+    case OBJ_GOLD:
     case OBJ_RUNES:
     case OBJ_GEMS:
-    case OBJ_CORPSES:
         return true;
     default:
         break;
