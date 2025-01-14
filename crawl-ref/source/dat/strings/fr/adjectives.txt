@@ -50,16 +50,16 @@
 %%%%
 # affected by Animate Armour spell
 "animated "
-
+"animée "
 %%%%
 "cursed "
-
+"maudite "
 %%%%
 "enchanted "
-
+"enchantée "
 %%%%
 "melded "
-
+"fusionné "
 %%%%
 
 ################################
@@ -68,384 +68,384 @@
 ################################
 %%%%
 "ancient "
-
+"ancien "
 %%%%
 "blackened "
-
+"noirci "
 %%%%
 "bloodstained "
-
+"ensanglanté "
 %%%%
 "bound "
-
+"lié "
 %%%%
 "buzzing "
-
+"bourdonnant "
 %%%%
 "clouded "
-
+"nuageux "
 %%%%
 "coiled "
-
+"enroulé "
 %%%%
 "colourful "
-
+"coloré "
 %%%%
 # only used in "creamy pearl robe"
 "creamy "
-
+"légère "
 %%%%
 "crooked "
-
+"courbé "
 %%%%
 "crude "
-
+"brut "
 %%%%
 "curved "
-
+"incurvé "
 %%%%
 "dazzling "
-
+"éblouissant "
 %%%%
 "dented "
-
+"bosselé "
 %%%%
 "dull "
-
+"terne "
 %%%%
 "dyed "
-
+"teint "
 %%%%
 "embroidered "
-
+"brodé "
 %%%%
 "encrusted "
-
+"incrusté "
 %%%%
 "fading "
-
+"décoloré "
 %%%%
 "fine "
-
+"raffiné "
 %%%%
 "flickering "
-
+"vacillant "
 %%%%
 "forked "
-
+"fourchu "
 %%%%
 "glimmering "
-
+"scintillant "
 %%%%
 "glittering "
-
+"étincelant "
 %%%%
 # also a rune
 "glowing "
-
+"brillant "
 %%%%
 "gnarled "
-
+"noueux "
 %%%%
 "graven "
-
+"gravé "
 %%%%
 "heavy "
-
+"lourd "
 %%%%
 "humming "
-
+"fredonnant "
 %%%%
 "ichor-stained "
-
+"taché d'ichor "
 %%%%
 "iridescent "
-
+"iridescent "
 %%%%
 "jewelled "
-
+"orné de bijoux "
 %%%%
 "knobbly "
-
+"épineux "
 %%%%
 "long "
-
+"long "
 %%%%
 # used for amulets and potions
 "lumpy "
-
+"grumeleuse "
 %%%%
 "masterwork "
-
+"chef d'oeuvre "
 %%%%
 "non-descript "
-
+"indescriptible"
 %%%%
 "notched "
-
+"entaillé "
 %%%%
 "opalescent "
-
+"opalescent "
 %%%%
 "ornate "
-
+"orné "
 %%%%
 "pitted "
-
+"grêlé "
 %%%%
 "polished "
-
+"poli "
 %%%%
 "ripped "
-
+"déchiré é
 %%%%
 "scintillating "
-
+"scintillant "
 %%%%
 "scorched "
-
+"roussi "
 %%%%
 "scratched "
-
+"rayé "
 %%%%
 # also a rune
 "serpentine "
-
+"serpentin "
 %%%%
 "shadowed "
-
+"ombreux "
 %%%%
 "sharpened "
-
+"aiguisé "
 %%%%
 "sheer "
-
+"pur "
 %%%%
 "shimmering "
-
+"chatoyant "
 %%%%
 "shiny "
-
+"rayonnant "
 %%%%
 "short "
-
+"court "
 %%%%
 "smelly "
-
+"puant "
 %%%%
 "smoking "
-
+"fumant "
 %%%%
 "smouldering "
-
+"fumant "
 %%%%
 "sparkling "
-
+"pétillant "
 %%%%
 "spiked "
-
+"à pointes "
 %%%%
 "square "
-
+"carré "
 %%%%
 "steaming "
-
+"fumant "
 %%%%
 "tapered "
-
+"conique "
 %%%%
 "tattered "
-
+"en lambeaux "
 %%%%
 "thick "
-
+"épais "
 %%%%
 "thin "
-
+"fin "
 %%%%
 "transparent "
-
+"transparent "
 %%%%
 "triangular "
-
+"triangulaire "
 %%%%
 "tubular "
-
+"tubulaire "
 %%%%
 "twisted "
-
+"tordu "
 %%%%
 "twitching "
-
+"tremblant "
 %%%%
 "vibrating "
-
+"vibrant "
 %%%%
 "warped "
-
+"voilé "
 %%%%
 "wavering "
-
+"vacillant "
 %%%%
 "weird "
-
+"étrange "
 %%%%
 "wizard "
-
+"ensorcelant "
 %%%%
 "worn "
-
+"né "
 %%%%
 
 #adverbs (e.g. brightly glowing)
 %%%%
 "brightly "
-
+"brillamment "
 %%%%
 "distressingly "
-
+"de façon affligeante"
 %%%%
 "fabulously "
-
+"fabuleusement "
 %%%%
 "faintly "
-
+"faiblement "
 %%%%
 "heavily "
-
+"lourdement "
 %%%%
 "ominously "
-
+"de façon inquiétante "
 %%%%
 
 %%%%
 "agate-encrusted "
-
+"incrusté d'agate "
 %%%%
 "amber-encrusted "
-
+"incrusté d'ambre "
 %%%%
 "amethyst-encrusted "
-
+"incrusté d'améthyste "
 %%%%
 "aquamarine-encrusted "
-
+"incrusté d'aigue-marine "
 %%%%
 "black opal-encrusted "
-
+"incrusté d'opale noire "
 %%%%
 "citrine-encrusted "
-
+"incrusté de citrine "
 %%%%
 "diamond-encrusted "
-
+"incrusté de diamant "
 %%%%
 "emerald-encrusted "
-
+"incrusté d'émeraude "
 %%%%
 "garnet-encrusted "
-
+"incrusté de grenat "
 %%%%
 "jacinth-encrusted "
-
+"incrusté de zircon "
 %%%%
 "jade-encrusted "
-
+"incrusté de jade "
 %%%%
 "jasper-encrusted "
-
+"incrusté de jaspe "
 %%%%
 "jet-encrusted "
-
+"incrusté de jais "
 %%%%
 "obsidian-encrusted "
-
+"incrusté d'obsidienne "
 %%%%
 "opal-encrusted "
-
+"incrusté d'opale "
 %%%%
 "pearl-encrusted "
-
+"incrusté de perle "
 %%%%
 "ruby-encrusted "
-
+"incrusté de rubis "
 %%%%
 "sapphire-encrusted "
-
+"incrusté de saphir "
 %%%%
 "tiger eye-encrusted "
-
+"incrusté d'oeil de tigre "
 %%%%
 "topaz-encrusted "
-
+"incrusté de topaze "
 %%%%
 "turquoise-encrusted "
-
+"incrusté de turquoise "
 %%%%
 
 %%%%
 "agate-studded "
-
+"piqueté d'agate "
 %%%%
 "amber-studded "
-
+"piqueté d'ambre "
 %%%%
 "amethyst-studded "
-
+"piqueté d'améthyste "
 %%%%
 "aquamarine-studded "
-
+"piqueté d'aigue-marine "
 %%%%
 "black opal-studded "
-
+"piqueté d'opale noire "
 %%%%
 "citrine-studded "
-
+"piqueté de citrine "
 %%%%
 "diamond-studded "
-
+"piqueté de diamant "
 %%%%
 "emerald-studded "
-
+"piqueté d'émeraude "
 %%%%
 "garnet-studded "
-
+"piqueté de grenat "
 %%%%
 "jacinth-studded "
-
+"piqueté de zircon "
 %%%%
 "jade-studded "
-
+"piqueté de jade "
 %%%%
 "jasper-studded "
-
+"piqueté de jaspe "
 %%%%
 "jet-studded "
-
+"piqueté de jais "
 %%%%
 "obsidian-studded "
-
+"piqueté d'obsidienne "
 %%%%
 "opal-studded "
-
+"piqueté d'opale "
 %%%%
 "pearl-studded "
-
+"piqueté de perle "
 %%%%
 "ruby-studded "
-
+"piqueté de rubis "
 %%%%
 "sapphire-studded "
-
+"piqueté de saphir "
 %%%%
 "tiger eye-studded "
-
+"piqueté d'oeil du tigre "
 %%%%
 "topaz-studded "
-
+"piqueté de topaze "
 %%%%
 "turquoise-studded "
-
+"piqueté de turquoise "
 %%%%
 
 ################################
@@ -456,19 +456,19 @@
 # (also used for jewellery, and in some cases, potion or rune, but we've given specific translations for those)
 %%%%
 "crystal "
-
+"cristal "
 %%%%
 "ivory "
-
+"ivoire "
 %%%%
 "bone "
-
+"os "
 %%%%
 "sapphire "
-
+"saphir "
 %%%%
 "ebony "
-
+"ébène "
 %%%%
 
 ################################
@@ -481,34 +481,34 @@
 
 %%%%
 "antique "
-
+"antique "
 %%%%
 "conspicuous "
-
+"ostentatoire "
 %%%%
 "droning "
-
+"bourdonnant "
 %%%%
 "engraved "
-
+"gravé "
 %%%%
 "glistering "
-
+"scintillant "
 %%%%
 "inconspicuous "
-
+"discret "
 %%%%
 "levitating "
-
+"lévitant "
 %%%%
 "rare "
-
+"rare "
 %%%%
 "torn "
-
+"déchiré "
 %%%%
 "yellowed "
-
+"jauni "
 %%%%
 
 ################################
@@ -516,13 +516,13 @@
 ################################
 %%%%
 "vorpal "
-
+"vorpaline "
 %%%%
 "antimagic "
-
+"anitmagique "
 %%%%
 "vampiric "
-
+"vampirique "
 %%%%
 
 ################################
@@ -534,59 +534,59 @@
 
 %%%%
 "blue "
-
+"bleu "
 %%%%
 "black "
-
+"noir "
 %%%%
 "silvery "
-
+"argenté "
 %%%%
 "cyan "
-
+"cyan "
 %%%%
 "purple "
-
+"violet "
 %%%%
 "orange "
-
+"orange "
 %%%%
 "inky "
-
+"encre "
 %%%%
 "red "
-
+"rouge "
 %%%%
 "yellow "
-
+"jaune "
 %%%%
 "green "
-
+"vert "
 %%%%
 "brown "
-
+"marron "
 %%%%
 "white "
-
+"blanc "
 %%%%
 "grey "
-
+"gris "
 %%%%
 "pink "
-
+"rose "
 %%%%
 "coppery "
-
+"cuivré "
 %%%%
 "puce "
-
+"puce "
 %%%%
 "pale "
-
+"pale "
 %%%%
 # used for potion and rune
 "dark "
-
+"sombre "
 %%%%
 
 # These ones are a material for jewellery, etc., and also a potion colour.

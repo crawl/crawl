@@ -9,121 +9,121 @@
 ##############################################
 %%%%
 Dungeon
-
+Dongeon
 %%%%
 Temple
-
+Temple
 %%%%
 Orcish Mines
-
+Mines des Orcs
 %%%%
 Elven Halls
-
+Hall des Elfes
 %%%%
 Lair
-
+Repère
 %%%%
 Swamp
-
+Marais
 %%%%
 Shoals
-
+Récifs
 %%%%
 Snake Pit
-
+Fosse aux Serpents
 %%%%
 Spider Nest
-
+Nid d'Araignées
 %%%%
 Slime Pits
-
+Fosses Visqueuses
 %%%%
 Vaults
-
+Chambres Fortes
 %%%%
 Crypt
-
+Crypte
 %%%%
 Tomb
-
+Tombe
 %%%%
 Depths
-
+Profondeurs
 %%%%
 Hells
-
+Enfers
 %%%%
 Hell
-
+Enfer
 %%%%
 Dis
-
+Dis
 %%%%
 Gehenna
-
+Géhenne
 %%%%
 Cocytus
-
+Cocytus
 %%%%
 Tartarus
-
+Tartare
 %%%%
 Pandemonium
-
+Pandémonium
 %%%%
 Zot
-
+Zot
 %%%%
 Abyss
-
+Abîme
 %%%%
 Ziggurat
-
+Ziggurat
 %%%%
 Bazaar
-
+Bazar
 %%%%
 Trove
-
+Trésor
 %%%%
 Sewer
-
+Egout
 %%%%
 Ossuary
-
+Ossuaire
 %%%%
 Bailey
-
+Fort (Bailey)
 %%%%
 Gauntlet
-
+Labyrinthe
 %%%%
 Ice Cave
-
+Caverne de Glace
 %%%%
 Volcano
-
+Volcan
 %%%%
 Wizlab
-
+Labo de Sorcier
 %%%%
 Desolation
-
+Désolation
 %%%%
 
 # obsolete branches
 %%%%
 Dwarven Hall
-
+Hall des Nains
 %%%%
 Hall of Blades
-
+Gallerie des Lames
 %%%%
 Forest
-
+Forêt
 %%%%
 Labyrinth
-
+Labyrinthe
 %%%%
 
 ##############################################
@@ -132,34 +132,34 @@ Labyrinth
 # HUD shows some branches as short name with indefinite article
 %%%%
 an Abyss
-
+un abîme
 %%%%
 a Ziggurat
-
+un Ziggurat
 %%%%
 a Bazaar
-
+un Bazar
 %%%%
 a Trove
-
+un Trésor
 %%%%
 a Sewer
-
+un Egout
 %%%%
 an Ossuary
-
+un Ossuaire
 %%%%
 a Bailey
-
+un Fort (Bailey)
 %%%%
 an Ice Cave
-
+Une Caverne de Glace
 %%%%
 a Volcano
-
+un Volcan
 %%%%
 a Wizlab
-
+un Labo de Sorcier
 %%%%
 # same as long name
 #a Gauntlet
@@ -172,94 +172,94 @@ a Wizlab
 ##############################################
 %%%%
 the Dungeon
-
+le Donjon
 %%%%
 the Ecumenical Temple
-
+le Temple Oecuménique
 %%%%
 the Orcish Mines
-
+les Mines des Orcs
 %%%%
 the Elven Halls
-
+le Hall des Elfes
 %%%%
 the Lair of Beasts
-
+le Repère des Bêtes
 %%%%
 the Swamp
-
+le Marais
 %%%%
 the Shoals
-
+les Récifs
 %%%%
 the Snake Pit
-
+la Fosse aux Serpents
 %%%%
 the Spider Nest
-
+le Nid d'Araignées
 %%%%
 the Pits of Slime
-
+les Fosses Visqueuses
 %%%%
 the Vaults
-
+les Chambres Fortes
 %%%%
 the Crypt
-
+la Crypte
 %%%%
 the Tomb of the Ancients
-
+la Tombe des Anciens
 %%%%
 the Depths
-
+les Profondeurs
 %%%%
 the Hells
-
+les Enfers
 %%%%
 the Vestibule of Hell
-
+le Vestibule de l'Enfer
 %%%%
 the Iron City of Dis
-
+la Ville de Fer de Dis
 %%%%
 the Realm of Zot
-
+le Royaume de Zot
 %%%%
 the Abyss
-
+l'Abîme
 %%%%
 a ziggurat
-
+un ziggurat
 %%%%
 a bazaar
-
+un bazar
 %%%%
 a treasure trove
-
+un trésor
 %%%%
 a sewer
-
+un égout
 %%%%
 an ossuary
-
+un ossuaire
 %%%%
 a bailey
-
+un fort (bailey)
 %%%%
 a Gauntlet
-
+un labyrinthe
 %%%%
 an ice cave
-
+une caverne de glace
 %%%%
 a volcano
-
+un volcan
 %%%%
 a wizard's laboratory
-
+un laboratoire du sorcier
 %%%%
 the Desolation of Salt
-
+la Désolation de Sel
 %%%%
 
 ##############################################
@@ -272,107 +272,107 @@ the Desolation of Salt
 %%%%
 # This is different to the short name, but do not want to define a global translation for the letter D
 {branch_abbrev}D
-
+{branch_abbrev}D
 %%%%
 # D is the real English abbreviation, but Dungeon is used in overview screen
 {branch_abbrev}Dungeon
-
+{branch_abbrev}Donjon
 %%%%
 {branch_abbrev}Temple
-
+{branch_abbrev}Temple
 %%%%
 # also a player genus
 {branch_abbrev}Orc
-
+{branch_abbrev}Orc
 %%%%
 # also a player genus
 {branch_abbrev}Elf
-
+{branch_abbrev}Elf
 %%%%
 {branch_abbrev}Lair
-
+{branch_abbrev}Repère
 %%%%
 {branch_abbrev}Swamp
-
+{branch_abbrev}Marais
 %%%%
 {branch_abbrev}Shoals
-
+{branch_abbrev}Récifs
 %%%%
 Snake
-
+Serpents
 %%%%
 Spider
-
+Araignée
 %%%%
 Slime
-
+Slime
 %%%%
 {branch_abbrev}Vaults
-
+{branch_abbrev}ChmbresF
 %%%%
 {branch_abbrev}Crypt
-
+{branch_abbrev}Crypte
 %%%%
 {branch_abbrev}Tomb
-
+{branch_abbrev}Tombe
 %%%%
 {branch_abbrev}Depths
-
+{branch_abbrev}Profdrs
 %%%%
 {branch_abbrev}Hell
-
+{branch_abbrev}Enfer
 %%%%
 {branch_abbrev}Dis
-
+{branch_abbrev}Dis
 %%%%
 Geh
-
+Geh
 %%%%
 Coc
-
+Coc
 %%%%
 Tar
-
+Tar
 %%%%
 Pan
-
+Pan
 %%%%
 Zig
-
+Zig
 %%%%
 {branch_abbrev}Abyss
-
+{branch_abbrev}Abîme
 %%%%
 {branch_abbrev}Bazaar
-
+{branch_abbrev}Bazar
 %%%%
 {branch_abbrev}Trove
-
+{branch_abbrev}Trésor
 %%%%
 {branch_abbrev}Sewer
-
+{branch_abbrev}Egout
 %%%%
 {branch_abbrev}Ossuary
-
+{branch_abbrev}Ossuaire
 %%%%
 {branch_abbrev}Bailey
-
+{branch_abbrev}Fort
 %%%%
 {branch_abbrev}Gauntlet
-
+{branch_abbrev}Labyr
 %%%%
 IceCv
-
+CavGla
 %%%%
 {branch_abbrev}Volcano
-
+{branch_abbrev}Volcan
 %%%%
 # Note: English short name has small L, but abbreviation has capital L.
 WizLab
-
+LabSorc
 %%%%
 {branch_abbrev}Desolation
-
+{branch_abbrev}Désolation
 %%%%
 
 ##############################################
@@ -380,74 +380,74 @@ WizLab
 ##############################################
 %%%%
 on level %d of the Dungeon
-
+au niveau %d du Donjon
 %%%%
 on level %d of the Orcish Mines
-
+au niveau %d des Mines des Orcs
 %%%%
 on level %d of the Elven Halls
-
+au niveau %d du Hall des Elfes
 %%%%
 on level %d of the Lair of Beasts
-
+au niveau %d du Repère des Bêtes
 %%%%
 on level %d of the Swamp
-
+au niveau %d du Marais
 %%%%
 on level %d of the Shoals
-
+au niveau %d des Récifs
 %%%%
 on level %d of the Snake Pit
-
+au niveau %d de la Fosse aux Serpents
 %%%%
 on level %d of the Spider Nest
-
+au niveau %d du Nid d'Araignées
 %%%%
 on level %d of the Pits of Slime
-
+au niveau %d des Fosses Visqueuses
 %%%%
 on level %d of the Vaults
-
+au niveau %d des Chambres Fortes
 %%%%
 on level %d of the Crypt
-
+au niveau %d de la Crypte
 %%%%
 on level %d of the Tomb of the Ancients
-
+au niveau %d de la Tombe des Anciens
 %%%%
 on level %d of the Depths
-
+au niveau %d des Profondeurs
 %%%%
 on level %d of the Vestibule of Hell
-
+au niveau %d du Vestibule de l'Enfer
 %%%%
 on level %d of Tartarus
-
+au niveau %d du Tartare
 %%%%
 on level %d of Gehenna
-
+au niveau %d de Géhenne
 %%%%
 on level %d of Cocytus
-
+au niveau %d de Cocytus
 %%%%
 on level %d of the Iron City of Dis
-
+au niveau %d de la Ville de Fer de Dis
 %%%%
 on level %d of Pandemonium
-
+au niveau %d du Pandémonium
 %%%%
 on level %d of the Realm of Zot
-
+au niveau %d du Royaume de Zot
 %%%%
 on level %d of the Abyss
-
+au niveau %d de l'Abîme
 %%%%
 on level %d of a ziggurat
-
+au niveau %d d'un zigurrat
 %%%%
 # should be "in a sewer", but for some reason, we get this in hiscores
 on level %d of a sewer
-
+au niveau %d d'un égout
 %%%%
 
 ##############################################
@@ -455,58 +455,58 @@ on level %d of a sewer
 ##############################################
 %%%%
 between levels %d and %d of the Dungeon
-
+entre les niveaux %d et %d du Donjon
 %%%%
 between levels %d and %d of the Orcish Mines
-
+entre les niveaux %d et %d des Mines des Orcs
 %%%%
 between levels %d and %d of the Elven Halls
-
+entre les niveaux %d et %d du Hall des Elfes
 %%%%
 between levels %d and %d of the Lair of Beasts
-
+entre les niveaux %d et %d du Repère des Bêtes
 %%%%
 between levels %d and %d of the Swamp
-
+entre les niveaux %d et %d du Marais
 %%%%
 between levels %d and %d of the Shoals
-
+entre les niveaux %d et %d des Récifs
 %%%%
 between levels %d and %d of the Snake Pit
-
+entre les niveaux %d et %d de la Fosse aux Serpents
 %%%%
 between levels %d and %d of the Spider Nest
-
+entre les niveaux %d et %d du Nid des Araignées
 %%%%
 between levels %d and %d of the Pits of Slime
-
+entre les niveaux %d et %d des Fosses Visqueuses
 %%%%
 between levels %d and %d of the Vaults
-
+entre les niveaux %d et %d des Chambres Fortes
 %%%%
 between levels %d and %d of the Crypt
-
+entre les niveaux %d et %d de la Crypte
 %%%%
 between levels %d and %d of the Tomb of the Ancients
-
+entre les niveaux %d et %d de la TOmbe des Anciens
 %%%%
 between levels %d and %d of the Depths
-
+entre les niveaux %d et %d des Profondeurs
 %%%%
 between levels %d and %d of the Vestibule of Hell
-
+entre les niveaux %d et %d du Vestibule de l'Enfer
 %%%%
 between levels %d and %d of the Iron City of Dis
-
+entre les niveaux %d et %d de la Ville de Fer de Dis
 %%%%
 between levels %d and %d of the Realm of Zot
-
+entre les niveaux %d et %d du Royaume de Zot
 %%%%
 between levels %d and %d of the Abyss
-
+entre les niveaux %d et %d de l'Abîme
 %%%%
 between levels %d and %d of a ziggurat
-
+entre les niveaux %d et %d d'un ziggurat
 %%%%
 
 ##############################################
@@ -514,35 +514,35 @@ between levels %d and %d of a ziggurat
 ##############################################
 %%%%
 in the Ecumenical Temple
-
+dans le Temple Oecuménique
 %%%%
 in a bazaar
-
+dans un bazar
 %%%%
 in a treasure trove
-
+dans un trésor
 %%%%
 in a sewer
-
+dans un égout
 %%%%
 in an ossuary
-
+dans un ossuaire
 %%%%
 in a bailey
-
+dans un fort (bailey)
 %%%%
 in a Gauntlet
-
+dans un Labyrinthe
 %%%%
 in an ice cave
-
+dans une caverne de glace
 %%%%
 in a volcano
-
+dans un volcan
 %%%%
 in a wizard's laboratory
-
+dans un laboratoire de sorcier
 %%%%
 in the Desolation of Salt
-
+dans la Désolation de Sel
 %%%%
