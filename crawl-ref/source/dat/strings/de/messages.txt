@@ -4453,17 +4453,17 @@ You can't produce a sound!
 Du kannst keinen Ton erzeugen!
 %%%%
 You produce a hideous howling noise!
-Du machst ein schreckliches Heulgeräusch!
+Du machst ein schreckliches heulendes Geräusch!
 %%%%
 Nothing answers your call.
-Nichts beantwortet deinen Anruf.
+Nichts antwortet deinem Ruf.
 %%%%
 # zap = evoke
 Zap which item?
-Welchen Gegenstand zappen?
+Welchen Gegenstand evozieren?
 %%%%
 You can't zap that!
-Das kannst du nicht zappen!
+Das kannst du nicht evozieren!
 %%%%
 The now-empty wand crumbles to dust.
 Der jetzt leere Zauberstab zerfällt zu Staub.
@@ -4490,13 +4490,13 @@ Finish your current ziggurat first!
 Beendet zuerst deine aktuelle Zikkurat!
 %%%%
 You set the figurine down, and a mystic portal to a ziggurat forms.
-Du stellst die Figur ab und ein mystisches Portal zu einer Zikkurat bildet sich.
+Du stellst die Figur ab und ein mystisches Portal zu einer Zikkurat erscheint.
 %%%%
 A mighty gale blasts forth from the card!
-Ein mächtiger Starkwind weht von der Karte herab!
+Ein mächtiger Sturmwind weht von der Karte herab!
 %%%%
 A mighty gale blasts forth from the fan!
-Ein mächtiger Starkwind weht vom Fächer herab!
+Ein mächtiger Sturmwind weht vom Fächer herab!
 %%%%
 A fierce wind blows from the card.
 Ein heftiger Wind weht aus der Karte.
@@ -4514,7 +4514,7 @@ Du bist rückwärts geblasen!
 %s wird vom Wind weggeblasen.
 %%%%
 The monsters around you are blown away!
-Die Monster um dich herum sind weggeblasen!
+Die Monster um dich herum werden weggeblasen!
 %%%%
 Aim the phial where?
 Die Phiole wohin zielen?
@@ -4523,7 +4523,7 @@ Aiming: <white>Phantom Mirror</white>
 Zielen: <white>Phantomspiegel</white>
 %%%%
 You can't use the mirror on yourself.
-Du kannst den Spiegel nicht an dich selbst verwenden.
+Du kannst den Spiegel nicht mit dir selbst verwenden.
 %%%%
 You can't see anything there to clone.
 Du kannst dort nichts zum Klonen sehen.
@@ -4535,7 +4535,7 @@ You reflect %s with the mirror!
 Du spiegelst {acc}%s mit dem Spiegel!
 %%%%
 You can't see anything, release a tremorstone anyway?
-Du kannst nichts sehen. Einen Zitterstein trotzdem auslösen?
+Du kannst nichts sehen. Trotzdem einen Zitterstein auslösen?
 %%%%
 The tremorstone explodes into fragments!
 Der Zitterstein explodiert in Fragmente!
@@ -4556,7 +4556,7 @@ You make a move on Xom's chessboard...
 Du machst einen Zug auf Xoms Schachbrett...
 %%%%
 Sorry, this item was removed!
-Sorry, dieser Gegenstand wurde entfernt vom Spiel!
+Entschuldige, dieser Gegenstand wurde aus dem Spiel entfernt!
 %%%%
 You do not have any ammo quivered for %s.
 Du hast keine Munition für {acc}%s im Köcher.
@@ -4578,20 +4578,20 @@ The box is emptied!
 Die Kiste wird geleert!
 %%%%
 The lightning rod overheats!
-Der Blitzableiter ist überhitzt!
+Die Blitzstange ist überhitzt!
 %%%%
 QUAD DAMAGE!
 VIERFACHER SCHADEN!
 %%%%
 # Last charge of phantom mirror used
 The mirror clouds!
-Der Spiegel wird getrübt!
+Der Spiegel trübt sich!
 %%%%
 The tin is emptied!
 Die Dose wird geleert!
 %%%%
 The condenser dries out!
-Der Kondensator wird trocken!
+Der Kondensator trocknet aus!
 %%%%
 The chess piece greys!
 Die Schachfigur wird grau!
@@ -4621,13 +4621,13 @@ Treppe nach unten
 1 Sperrgebiet
 %%%%
 1 more exclusion
-1 wieteres Sperrgebiet
+1 weiteres Sperrgebiet
 %%%%
 %d exclusions
 %s Sperrgebiete
 %%%%
 %d more exclusions
-%d wietere Sperrgebiete
+%d weitere Sperrgebiete
 %%%%
 "exclusions: "
 "Sperrgebiete: "
@@ -4658,13 +4658,13 @@ Du hast keine Angst mehr.
 ##################
 %%%%
 %s hops backward while attacking.
-%s springt rückwarts während des Angriffs.
+%s springt während des Angriffs rückwärts.
 %%%%
 Really %s while wielding %s?
-Wirklich %s, während du {acc}%s schwingst?
+Wirklich %s, während du {acc}%s führst?
 %%%%
 Really %s while wielding nothing?
-Wirklich %s, während du nichts schwingst?
+Wirklich %s, während du nichts führst?
 %%%%
 This could place you under penance!
 Dies könnte dich unter Buße stellen!
@@ -4739,7 +4739,7 @@ Cannot find data file '%s' anywhere, aborting
 Kann Datendatei '%' nirgendwo finden, abgebrochen.
 %%%%
 %s "%s" does not exist and I can't create it.
-%s "%s" existiert nicht, und ich kann es nicht erstellen.
+%s "%s" existiert nicht und ich kann es nicht erstellen.
 %%%%
 Save directory
 Speicherverzeichnis
@@ -4754,13 +4754,13 @@ Your summoned ally is left behind.
 Dein beschworener Verbündeter bleibt zurück.
 %%%%
 Your summoned allies are left behind.
-Deine beschworene Verbündeter bleiben zurück.
+Deine beschworene Verbündeten bleiben zurück.
 %%%%
 Your mindless thrall stays behind.
 Dein hirnloser Sklave bleibt zurück.
 %%%%
 Your mindless thralls stay behind.
-Deine hirnlose Sklaven bleiben zurück.
+Deine hirnlosen Sklaven bleiben zurück.
 %%%%
 Generating dungeon...
 Kerker wird generiert...
@@ -4778,7 +4778,7 @@ Level annotation: %s
 Ebenenanmerkung: %s
 %%%%
 The staircase slides away right after you climb it!
-Die Treppe rutscht weg, sobald du sie hinaufgestiegen bist!
+Die Treppe rutscht weg, direkt nachdem du sie hinaufgestiegen bist!
 %%%%
 The hatch slides away right after you use it!
 Die Klappe rutscht sofort nach der Benutzung weg!
@@ -4856,7 +4856,7 @@ Please use version %s to load %s then.
 Dann bitte Version %s benutzen um das Spiel zu laden.
 %%%%
 There exists a save by that name but it appears to be invalid.
-Es gibt schon ein Spiel mit diesen Namen, aber es scheint ungültig zu sein.
+Es gibt schon ein Spiel mit diesem Namen, aber es scheint ungültig zu sein.
 %%%%
 Do you want to delete it?
 Soll ich es löschen?
@@ -4909,7 +4909,7 @@ Sperrdatei "%s" kann nicht geöffnet werden
 %s reflektiert deinen Schaden auf dich zurück!
 %%%%
 Your damage is reflected back at you!
-Dein Schaden wird zurück auf dich reflektiert!
+Dein Schaden wird auf dich zurückreflektiert!
 %%%%
 %s mirrors your injury!
 %s spiegelt deine Verletzung wider!
@@ -4950,19 +4950,19 @@ Das sterbende Gelée Royale spuckt %d mehr Gelees aus.
 %s zittert und zieht sich zu ihrem Nachbarn zurück.
 %%%%
 %s electric aura discharges, shocking %s!
-Die elektrische Aura %s entlädt sich und schockiert {acc}%s!
+Die elektrische Aura %s entlädt sich und schockt {acc}%s!
 %%%%
 %s electric aura discharges violently, shocking %s!
-Die elektrische Aura %s entlädt sich heftig und schockiert {acc}%s!
+Die elektrische Aura %s entlädt sich heftig und schockt {acc}%s!
 %%%%
 The air sparks with electricity, shocking %s!
-Die Luft funkelt vor Elektrizität und schockiert {acc}%s!
+Die Luft funkelt vor Elektrizität und schockt {acc}%s!
 %%%%
 The injured rakshasa weaves a defensive illusion!
 Der verletzte Rakshasa webt eine defensive Illusion!
 %%%%
 %s bursts from %s!
-%s platzt aus {dat}%s!
+%s platzt aus {dat}%s heraus!
 %%%%
 You feel extremely nervous for a moment...
 Du fühlst dich für einen Moment extrem nervös...
@@ -4979,10 +4979,10 @@ Brand which weapon?
 Welche Waffe prägen?
 %%%%
 Do you wish to have %s bloodied with pain?
-{acc}%s mit Schmerz bluten lassen?
+{acc}%s mit Schmerz besudeln lassen?
 %%%%
 Do you wish to have %s corrupted with distortion?
-{acc}%s mit Verzerrung verderben lassen?
+{acc}%s mit Verzerrung korrumpieren lassen?
 %%%%
 Do you wish to have %s blessed with holy wrath?
 %s mit heiligen Zorn segnen lassen?
@@ -4991,7 +4991,7 @@ Do you wish to have %s blessed with holy wrath?
 %s leuchtet hell!
 %%%%
 %s booms: Use this gift wisely!
-%s boomt: Nutzt dieses Geschenk mit Bedacht!
+%s dröhnt: Nutze dieses Geschenk mit Bedacht!
 %%%%
 You don't have anything to sacrifice.
 Du hast nichts zu opfern.
@@ -5006,16 +5006,16 @@ You feel that you will soon be absolved of all your sins.
 Du hast das Gefühl, dass du bald von all deinen Sünden befreit sein wirst.
 %%%%
 You feel that your burden of sins will soon be lighter.
-Du fühlst, dass deine Last der Sünden bald leichter sein wird.
+Du fühlst, dass die Last deiner Sünden bald leichter sein wird.
 %%%%
 You feel that Zin will soon be exalted by your worship.
-Du hast das Gefühl, dass Zin bald durch deine Verehrung erhöht werden wird.
+Du hast das Gefühl, dass Zin bald durch deine Verehrung verherrlicht werden wird.
 %%%%
 You feel that Zin will soon be extremely pleased with you.
 Du hast das Gefühl, dass Zin bald extrem zufrieden mit dir sein wird.
 %%%%
 You feel that Zin will soon be greatly pleased with you.
-Du hast das Gefühl, dass Zin bald erheblich zufrieden mit dir sein wird.
+Du hast das Gefühl, dass Zin bald höchst zufrieden mit dir sein wird.
 %%%%
 You feel that Zin will soon be most pleased with you.
 Du hast das Gefühl, dass Zin bald sehr zufrieden mit dir sein wird.
@@ -5024,7 +5024,7 @@ You feel that Zin will soon be pleased with you.
 Du hast das Gefühl, dass Zin bald zufrieden mit dir sein wird.
 %%%%
 You feel that Zin will soon be aware of your devotion.
-Du hast das Gefühl, dass Zin bald von deiner Hingabe erfarhren wird.
+Du hast das Gefühl, dass Zin sich bald deiner Hingabe bewusst sein wird.
 %%%%
 You feel that Zin will soon be noncommittal.
 Du hast das Gefühl, dass Zin bald gleichgültig sein wird.
@@ -5033,7 +5033,7 @@ Finish your current sermon first, please.
 Beendet bitte zuerst deine aktuelle Predigt.
 %%%%
 You're not ready to recite again yet.
-Du bist noch nicht bereit, noch einmal zu rezitieren.
+Du bist noch nicht bereit, wieder zu rezitieren.
 %%%%
 %s guffaws at your puny god.
 %s lacht schallend über deinen mickrigen Gott.
@@ -5051,7 +5051,7 @@ Du bist noch nicht bereit, noch einmal zu rezitieren.
 %s stolpert verwirrt umher.
 %%%%
 %s is awed by your recitation.
-%s ist ehrfürchtig über deine Rezitation.
+%s ist beeindruckt von deiner Rezitation.
 %%%%
 %s is aghast at the heresy of your recitation.
 %s ist entsetzt über die Ketzerei deiner Rezitation.
@@ -5063,7 +5063,7 @@ Du bist noch nicht bereit, noch einmal zu rezitieren.
 %s wird vom Zorn Zins zerschmettert!
 %%%%
 %s is struck blind by the wrath of Zin!
-%s wird vom Zorn Zins blind gemacht!
+%s wird vom Zorn Zins geblendet!
 %%%%
 %s is limned with silver light.
 %s wird von silbernem Licht erhellt.
@@ -5072,16 +5072,16 @@ Du bist noch nicht bereit, noch einmal zu rezitieren.
 %s zittert bei deiner Rezitation.
 %%%%
 %s looks feeble and powerless before your recitation.
-%s sieht schwach und kraftlos aus vor deiner Rezitation.
+%s sieht vor deiner Rezitation schwach und kraftlos aus.
 %%%%
 %s is struck mute by the wrath of Zin!
-%s ist stumm geworden durch den Zorn von Zin!
+%s verstummt durch den Zorn von Zin!
 %%%%
 %s is driven mad by the wrath of Zin!
 %s wird durch den Zorn von Zin in den Wahnsinn getrieben!
 %%%%
 %s is left stupefied by the wrath of Zin!
-%s ist betäubt vom Zorn des Zin!
+%s wird vom Zorn Zins betäubt!
 %%%%
 %s's chaotic flesh sizzles and spatters!
 Das chaotische Fleisch {gen}%s brutzelt und spritzt!
@@ -5105,7 +5105,7 @@ Your divine stamina fades away.
 Deine göttliche Ausdauer schwindet.
 %%%%
 Do you wish to cure all of your mutations?
-Möchtest du alle deine Mutationen heilen?
+Möchtest du all deine Mutationen heilen?
 %%%%
 %s draws all chaos from your body!
 %s zieht alles Chaos aus deinem Körper!
@@ -5114,13 +5114,13 @@ You hear a choir sing!
 Du hörst einen Chor singen!
 %%%%
 You are suddenly bathed in radiance!
-Du bist plötzlich in Strahlen getaucht!
+Du bist plötzlich von strahlendem Licht umgeben!
 %%%%
 Your shield is strengthened by the Shining One's divine power.
 Dein Schild wird durch die göttliche Macht des Strahlenden gestärkt.
 %%%%
 A divine shield forms around you!
-Ein göttlicher Schild bildet sich um dich!
+Ein göttlicher Schild bildet sich um dich herum!
 %%%%
 Your divine shield is renewed.
 Dein göttlicher Schild wird erneuert.
@@ -5171,7 +5171,7 @@ You can't give that to %s.
 Das kannst du {dat}%s nicht geben.
 %%%%
 %s can't equip that with a two-handed weapon.
-%s Kann das nicht zusammen mit einer Zweihandwaffe ausstatten.
+%s Kann das nicht zusammen mit einer Zweihandwaffe verwenden.
 %%%%
 Resurrect %s?
 {acc}%s wieder zum Leben erwecken?
@@ -5183,10 +5183,10 @@ There's nobody here you can resurrect.
 Hier gibt es niemanden, den du wiederbeleben kannst.
 %%%%
 There's no room!
-Es ist kein Platz!
+Da ist kein Platz!
 %%%%
 You have no bad mutations to be cured!
-Du hast keine schlechten Mutationen, die geheilt werden müssen!
+Du hast keine schlechten Mutationen, die geheilt werden könnten!
 %%%%
 You feel cleansed.
 Du fühlst dich gereinigt.
@@ -5195,20 +5195,20 @@ Du fühlst dich gereinigt.
 Die Seele {gen}%s bekämpft dich.
 %%%%
 %s's soul is now yours.
-Die Seele {gen}%s gehört jetzt dich.
+Die Seele {gen}%s gehört jetzt dir.
 %%%%
 # unseen monster
 Its soul fights you.
 Seine Seele bekämpft dich.
 %%%%
 Its soul is now yours.
-Seine Seele gehört jetzt dich.
+Seine Seele gehört jetzt dir.
 %%%%
 %s delivers you corpses!
-%s liefert dich Leichen!
+%s liefert dir Leichen!
 %%%%
 %s delivers you a corpse!
-%s liefert dich eine Leiche!
+%s liefert dir eine Leiche!
 %%%%
 %s can find no cadavers for you!
 %s kann keine Kadaver für dich finden!
@@ -5233,7 +5233,7 @@ Cheibriados rebukes %s.
 Cheibriados tadelt {acc}%s.
 %%%%
 There's no one hasty visible. Invoke Slouch anyway?
-Es ist niemand übereilt zu sehen. Latschen trotzdem invozieren?
+Es ist niemand in Eile zu sehen. Durchhängen trotzdem invozieren?
 %%%%
 You can feel time thicken for a moment.
 Du fühlst, wie sich die Zeit für einen Moment verdickt.
@@ -5312,10 +5312,10 @@ Ashenzari lädt dich ein, an einer Vision und einem Fluch von {dat}%s teilzuhabe
 %s leuchtet für einen Moment schwarz.
 %%%%
 Curse which item?
-Welechen Gegenstand verfluchen?
+Welchen Gegenstand verfluchen?
 %%%%
 " (Esc to abort)"
-" (Esc zu beenden)"
+" (Esc zum Abbrechen)"
 %%%%
 You can't curse that!
 Das kannst du nicht verfluchen!
@@ -5324,7 +5324,7 @@ Uncurse and destroy which item?
 Welchen Gegenstand entfluchen und zerstören?
 %%%%
 You must shatter the curse binding the ring to the amulet's finger first!
-Du musst zuerst den Fluch zerbrechen, der den Ring an den Finger des Amuletts bindet!
+Du musst zuerst den Fluch brechen, der den Ring an den Finger des Amuletts bindet!
 %%%%
 You cannot shatter the curse on %s while it is melded with your body!
 Du kannst den Fluch auf diesem Gegenstand nicht brechen, solange er mit deinem Körper verschmolzen ist!
@@ -5336,7 +5336,7 @@ Really remove and destroy %s?
 " Aschenzari wird die angebotene Vision und den Fluch zurückziehen!"
 %%%%
 You shatter the curse binding %s!
-Du zerbrechst den Fluch, der {acc}%s bindet!
+Du brichst den Fluch, der {acc}%s bindet!
 %%%%
 %s withdraws the vision and curse.
 %s zieht die Vision und den Fluch zurück.
@@ -5345,7 +5345,7 @@ The priest welcomes you and lets you live.
 Der Priester heißt dich willkommen und lässt dich leben.
 %%%%
 With a roar of approval, the orcs welcome you as one of their own, and spare your life.
-Mit lautem Gebrüll heißen die Orks dich als einen der ihren willkommen und verschonen dein Leben.
+Mit Jubel und Gebrüll heißen die Orks dich als einen der ihren willkommen und verschonen dein Leben.
 %%%%
 Aiming: <white>Shadow Step</white>
 Zielen: <white>Schattenschritt</white>
@@ -5375,7 +5375,7 @@ No merchants are willing to come to this location.
 Kein Händler ist bereit, an diesen Ort zu kommen.
 %%%%
 You need to be standing on open floor to call a merchant.
-Du musst auf offenem Boden stehen, um einen Händler anzurufen.
+Du musst auf offenem Boden stehen, um einen Händler zu rufen.
 %%%%
 "  [%c] %5d gold - %s"
 "  [%c] %5d Gold - %s"
@@ -5392,7 +5392,7 @@ Du hast nicht genug Gold, um diesen Händler zu finanzieren!
 %%%%
 # Your bribe of <branch>...
 Your bribe of %s has been exhausted.
-Dein Bestechung von {dat}%s ist erschöpft.
+Deine Bestechung von {dat}%s ist erschöpft.
 %%%%
 You need at least %d gold to offer a bribe.
 Du brauchst mindestens %d Gold, um eine Bestechung anzubieten.
@@ -5404,7 +5404,7 @@ You can't bribe the denizens of %s.
 Du kannst die Bewohner von {dat}%s nicht bestechen.
 %%%%
 Do you want to bribe the denizens of %s?
-Willst du die Bewohner von {dat}%s betstechen?
+Willst du die Bewohner von {dat}%s bestechen?
 %%%%
 # Gozag spreads your bribe to <branch>!
 Gozag spreads your bribe to %s!
@@ -5423,7 +5423,7 @@ A blizzard blasts the area with ice!
 Ein Schneesturm überzieht das Gebiet mit Eis!
 %%%%
 A storm cloud blasts the area with cutting wind!
-Eine Sturmwolke bläst den Bereich mit schneidendem Wind!
+Eine Sturmwolke fegt mit schneidendem Wind über den Bereich!
 %%%%
 The ground shakes violently, spewing rubble!
 Der Boden bebt heftig und spuckt Trümmer!
@@ -5481,7 +5481,7 @@ You put %s back on your other hand!
 Du steckst {acc}%s auf die andere Hand!
 %%%%
 You put %s back on your other claw!
-Du steckst {acc}%s auf die andere Kralle!
+Du steckst {acc}%s auf die andere Klaue!
 %%%%
 You put %s back on your other paw!
 Du steckst {acc}%s auf die andere Pfote!
@@ -5493,46 +5493,46 @@ Piety after sacrifice: %s
 Frömmigkeit nach dem Opfer: %s
 %%%%
 %s indicates that your awakening is complete.
-%s zeigt an, dass dein Erwachen abgeschlossen ist.
+%s zeigt an, dass dein Erwachen vollständig ist.
 %%%%
 Do you really want to reject the sacrifices Ru is offering?
-Willst du die Opfer, die Ru bringt, wirklich ablehnen?
+Willst du die Opfer, die Ru anbietet, wirklich ablehnen?
 %%%%
 %s will take longer to evaluate your readiness.
-%s wird länger brauchen, um deine Bereitschaft zu beurteilen.
+%s wird sich mehr Zeit dabei lassen, deine Bereitschaft zu beurteilen.
 %%%%
 You focus your inner power and drain %s's magic in retribution!
-Du konzentrierst eure innere Kraft und entzieht {dat}%s zur Vergeltung die Magie!
+Du konzentrierst deine innere Kraft und entziehst {dat}%s zur Vergeltung die Magie!
 %%%%
 You focus your inner power and paralyse %s in retribution!
-Du konzentrierst deine innere Kraft und lähmt {acc}%s als Vergeltung!
+Du konzentrierst deine innere Kraft und lähmst {acc}%s als Vergeltung!
 %%%%
 You focus your inner power and slow %s in retribution!
-Du konzentrierst deine innere Kraft und verlangsamt {acc}%s als Vergeltung!
+Du konzentrierst deine innere Kraft und verlangsamst {acc}%s als Vergeltung!
 %%%%
 You focus your inner power and blind %s in retribution!
-Du konzentrierst deine innere Kraft und blendet {acc}%s als Vergeltung!
+Du konzentrierst deine innere Kraft und blendest {acc}%s als Vergeltung!
 %%%%
 You focus your inner power and illuminate %s in retribution!
-Du konzentrierst deine innere Kraft und erleuchtet {acc}%s als Vergeltung!
+Du konzentrierst deine innere Kraft und erleuchtest {acc}%s als Vergeltung!
 %%%%
 You are restored by drawing out deep reserves of power within.
-Du wirst wiederhergestellt, indem du tiefe Kraftreserven aus deinem Inneren schöpfst.
+Du wirst wiederhergestellt, indem du Kraftreserven aus deinem tiefsten Inneren schöpfst.
 %%%%
 You burst free from the webs!
-Du brichst aus dem Gewebe aus!
+Du brichst aus dem Gespinst aus!
 %%%%
 You burst free from the net!
 Du brichst aus dem Netz aus!
 %%%%
 You can't repeat Power Leap.
-Du kannst den Macht-Sprung nicht wiederholen.
+Du kannst den mächtigen Sprung nicht wiederholen.
 %%%%
 You are too terrified to leap around!
 Du bist zu verängstigt, um herumzuspringen!
 %%%%
 Aiming: <white>Power Leap</white>
-Zielen: <white>Macht-Sprung</white>
+Zielen: <white>Mächtiger Sprung</white>
 %%%%
 Cancelling leap due to HUP.
 Sprung wegen HUP abgebrochen.
@@ -5557,16 +5557,16 @@ Etwas hat dich unerwartet blockiert und dich daran gehindert zu springen!
 %%%%
 # beam name
 power leap
-Macht-Sprung
+Mächtiger Sprung
 %%%%
 %s doubts the power of magic when faced with ultimate truth!
-Angesichts der ultimativen Wahrheit zweifelt %s an der Macht der Magie!
+Mit der ultimativen Wahrheit konfrontiert zweifelt %s an der Macht der Magie!
 %%%%
 %s is paralysed by terrible understanding!
-%s ist gelähmt durch schreckliches Verständnis!
+%s wird von schrecklichem Verständnis gelähmt!
 %%%%
 %s slows down under the weight of truth!
-%s verlangsamt sich unter dem Gewicht der Wahrheit!
+%s wird unter dem Gewicht der Wahrheit langsamer!
 %%%%
 There are no visible enemies. Unleash your apocalypse anyway?
 Es gibt keine Feinde im Sicht. Apokalypse totzdem entfesseln?
@@ -5578,7 +5578,7 @@ There are friendlies around, are you sure you want to hurt them?
 Es sind Freunde in der Nähe, willst du sie wirklich verletzen?
 %%%%
 You stomp with the beat, sending a shockwave through the revellers around you!
-Du stampfst mit dem Beat und schickt eine Schockwelle durch die Feiernden um dich herum!
+Du stampfst im Takt und schickst eine Schockwelle durch die Feiernden um dich herum!
 %%%%
 You can't repeat Line Pass.
 Du kannst Linienpass nich wiederholen.
@@ -5617,16 +5617,16 @@ Aiming: <white>Grand Finale</white>
 Zielen: <white>Großes Finale</white>
 %%%%
 Cancelling grand finale due to HUP.
-Das große Finale wegen HUP abgebrochen.
+Großes Finale wegen HUP abgebrochen.
 %%%%
 You can't perceive a target there!
 Du kannst dort kein Ziel wahrnehmen!
 %%%%
 %s explodes violently into a cloud of jellies!
-%s explodiert gewaltsam in eine Wolke aus Gelees!
+%s explodiert mit großer Wucht in eine Wolke aus Gelees!
 %%%%
 %s explodes violently!
-%s explodiert gewaltsam!
+%s explodiert mit großer Wucht!
 %%%%
 You spring back to your original position.
 Du springst zurück zu deiner ursprünglichen Position.
@@ -5657,7 +5657,7 @@ Select a target.
 Ziel auswählen.
 %%%%
 %s is drained by nostalgia.
-%s ist durch die Nostalgie ausgezehrt.
+%s wird durch Nostalgie ausgezehrt.
 %%%%
 You can't see anything there. Try transferring anyway?
 Du kannst dort nichts sehen. Übertragen trotzdem versuchen?
@@ -5697,7 +5697,7 @@ Was %s a) male, b) female, or c) neither? (Currently %s.)
 War %s a) männlich, b) weiblich, oder c) anderes (Zurzeit %s.)
 %%%%
 %s was always %s, you're pretty sure.
-%s war immer %s, da bist du dich ziemlich sicher.
+%s war immer %s, da bist du ziemlich sicher.
 %%%%
 Please select an adjacent position to wall jump against.
 Bitte wähle eine benachbarte Position, um gegen die Wand zu springen.
@@ -5712,13 +5712,13 @@ You cannot wall jump closer to %s!
 Du kannst nicht näher an {acc}%s springen!
 %%%%
 You have no room to wall jump there; %s is in the way.
-Es gibt keinen Platz, um dorthin zu springen; %s ist im Weg.
+Es gibt keinen Platz, dort hinzuspringen; %s ist im Weg.
 %%%%
 You have no room to wall jump there; something you can't see is in the way.
-Es gibt keinen Platz, um dorthin zu springen; etwas Unsichtbares ist im Weg.
+Es gibt keinen Platz, dort hinzuspringen; etwas Unsichtbares ist im Weg.
 %%%%
 You have no room to wall jump there.
-Es gibt keinen Platz, um dorthin zu springen.
+Es gibt keinen Platz, dort hinzuspringen.
 %%%%
 You can't repeat a wall jump.
 Du kannst einen Wandsprung nich wiederholen.
@@ -5730,13 +5730,13 @@ Cancelling wall jump due to HUP.
 Wandsprung wegen HUP abgebrochen.
 %%%%
 The air is filled with shimmering golden clouds!
-Die Luft ist gefüllt mit schimmernden goldenen Wolken!
+Die Luft wird von schimmernden goldenen Wolken erfüllt!
 %%%%
 Sifu %s says: The storm will not cease as long as you keep fighting, disciple!
 Sifu %s sagt: Der Sturm wird nicht aufhören, solange du weiter kämpfst, Schüler!
 %%%%
 You feel like a meek peon again.
-Du fühlst dich wieder wie ein sanftmütiger Leibeigener.
+Du fühlst dich wieder wie ein zahmer Tagelöhner.
 %%%%
 %s slows down.
 %s wird langsamer.
@@ -5767,22 +5767,22 @@ Du hast keine Gefährten.
 %s ist nicht begeistert von dem zusätzlichen mutagenen Glühen, das dich umgibt!
 %%%%
 %s forgives your inadvertent evil act, just this once.
-%s verzeiht dich deine versehentliche böse Tat, nur dieses eine Mal.
+%s verzeiht dir deine versehentliche böse Tat, aber nur dieses eine Mal.
 %%%%
 %s forgives your inadvertent attack on a neutral, just this once.
-%s verzeiht dich deinen versehentlichen Angriff auf einen Neutralen, nur dieses eine Mal.
+%s verzeiht dir deinen versehentlichen Angriff auf einen Neutralen, aber nur dieses eine Mal.
 %%%%
 %s forgives your inadvertent attack on an ally, just this once.
-%s verzeiht dich deinen versehentlichen Angriff auf einen Verbündeten, nur dieses eine Mal.
+%s verzeiht dir deinen versehentlichen Angriff auf einen Verbündeten, aber nur dieses eine Mal.
 %%%%
 %s forgives your inadvertent unclean act, just this once.
-%s verzeiht dich deine versehentliche unsaubere Handlung, nur dieses eine Mal.
+%s verzeiht dir deine versehentliche unsaubere Handlung, aber nur dieses eine Mal.
 %%%%
 %s forgives your inadvertent chaotic act, just this once.
-%s verzeiht dich deine versehentliche chaotische Tat, nur dieses eine Mal.
+%s verzeiht dir deine versehentliche chaotische Tat, aber nur dieses eine Mal.
 %%%%
 %s forgives your inadvertent holy act, just this once.
-%s verzeiht dich deine versehentliche heilige Tat, nur dieses eine Mal.
+%s verzeiht dir deine versehentliche heilige Tat, aber nur dieses eine Mal.
 %%%%
 %s does not appreciate your training of magic skills!
 %s schätzt dein Training von magischen Fähigkeiten nicht!
@@ -5794,7 +5794,7 @@ Du hast keine Gefährten.
 %s schätzt es nicht, dass du Blut vergießt, wenn du um Erlösung bittest!
 %%%%
 %s forgives your accidental hurry, just this once.
-%s verzeiht dich deine versehentliche Eile, nur dieses eine Mal.
+%s verzeiht dir deine versehentliche Eile, aber nur dieses eine Mal.
 %%%%
 %s thinks you should slow down.
 %s findet, du solltest langsamer gehen.
@@ -5875,7 +5875,7 @@ Your supernatural speed expires.
 Deine übernatürliche Geschwindigkeit läuft ab.
 %%%%
 The heavenly storm settles.
-Das himmlische Gewitter lässt nach.
+Der himmlische Sturm legt sich.
 %%%%
 You lunge at %s, but your attack speed is too slow for a blow to land.
 Du stürzt dich auf {acc}%s, aber deine Angriffsgeschwindigkeit ist zu langsam, um einen Schlag zu landen.
@@ -5887,25 +5887,25 @@ You lunge with incredible momentum at %s.
 Du stürzt dich mit unglaublichem Schwung auf {acc}%s.
 %%%%
 You lunge at %s, in a flurry of attacks.
-Du stürzt dich auf {acc}%s, in einem Wirbel von Angriffen.
+Du stürzt dich auf {acc}%s und führst einen Wirbel von Angriffen aus.
 %%%%
 You lunge with incredible momentum at %s, in a flurry of attacks.
-Du stürzt dich mit unglaublichem Schwung auf {acc}%s, in einem Wirbel aus Angriffen.
+Du stürzt dich mit unglaublichem Schwung auf {acc}%s und führst einen Wirbel von Angriffen aus.
 %%%%
 You spin to attack %s, but your attack speed is too slow for a blow to land.
 Du wirbelst herum, um {acc}%s anzugreifen, aber deine Angriffsgeschwindigkeit ist zu langsam, um einen Schlag zu landen.
 %%%%
 You spin and attack %s.
-Du wirbelst herum und greift {acc}%s an.
+Du wirbelst herum und greifst {acc}%s an.
 %%%%
 You spin and attack %s, with incredible momentum.
-Du wirbelst herum und greift {acc}%s an, mit unglaublichem Schwung.
+Du wirbelst mit unglaublichem Schwung herum und greifst {acc}%s an.
 %%%%
 You spin and attack %s repeatedly.
-Du wirbelst herum und greift {acc}%s wiederholt an.
+Du wirbelst herum und greifst {acc}%s wiederholt an.
 %%%%
 You spin and attack %s repeatedly, with incredible momentum.
-Du wirbelst herum und greift {acc}%s wiederholt an, mit unglaublichem Schwung.
+Du wirbelst mit unglaublichem Schwung herum und greifst {acc}%s wiederholt an.
 %%%%
 You attack %s from above, but your attack speed is too slow for a blow to land.
 Du greifst {acc}%s von oben an, aber deine Angriffsgeschwindigkeit ist zu langsam, um einen Schlag zu landen.
@@ -5914,19 +5914,19 @@ You attack %s from above.
 Du greifst {acc}%s von oben an.
 %%%%
 You attack %s from above, with incredible momentum.
-Du greifst {acc}%s von oben an, mit unglaublichem Schwung.
+Du greifst {acc}%s mit unglaublichem Schwung von oben an.
 %%%%
 You repeatedly attack %s from above.
 Du greifst {acc}%s wiederholt von oben an.
 %%%%
 You repeatedly attack %s from above, with incredible momentum.
-Du greifst {acc}%s wiederholt von oben an, mit unglaublichem Schwung.
+Du greifst {acc}%s mit unglaublichem Schwung wiederholt von oben an.
 %%%%
 %s prepares the audience for your solo!
 %s bereitet das Publikum auf dein Solo vor!
 %%%%
 %s links your audience in an emotional bond!
-%s fesselt das Publikum mit einem emotionalen Band!
+%s vereint das Publikum mit einem emotionalen Band!
 %%%%
 
 ##################
@@ -5946,13 +5946,13 @@ A being of your status worships no god.
 Ein Wesen deines Standes verehrt keinen Gott.
 %%%%
 You offer a silent prayer to %s.
-Du sprechst ein stilles Gebet zu {dat}%s.
+Du sprichst ein stilles Gebet zu {dat}%s.
 %%%%
 You offer a prayer to %s.
-Du sprechst ein Gebet zu {dat}%s.
+Du sprichst ein Gebet zu {dat}%s.
 %%%%
 You pay a tithe of %d gold.
-Du zahlst einen Zehnten von %d Gold.
+Du zahlst ein Zehnt von %d Gold.
 %%%%
 %s ignores your late donation.
 %s ignoriert deine verspätete Spende.
@@ -5975,10 +5975,10 @@ die Verbitterung des Wu-Jian-Rates
 Die göttliche Heerschar {gen}%s erscheint nicht.
 %%%%
 %s booms out: "Take the path of righteousness! REPENT!"
-%s dröhnt: "Nimm den Weg der Rechtschaffenheit! TUE BUSSE!"
+%s dröhnt: "Nimm den Weg der Rechtschaffenheit! BEREUE!"
 %%%%
 You feel the Shining One's silent rage upon you!
-Du spürst den stillen Zorn des Strahlenden auf dich!
+Du spürst den stillen Zorn des Strahlenden auf dir!
 %%%%
 %s draws some chaos from your body!
 %s zieht etwas Chaos aus deinem Körper!
@@ -5987,10 +5987,10 @@ Du spürst den stillen Zorn des Strahlenden auf dich!
 %s befreit deinen Körper vom Chaos!
 %%%%
 %s recites the Axioms of Law to you!
-%s trägt dich die Axiome des Rechts vor!
+%s trägt dir die Axiome des Rechts vor!
 %%%%
 %s booms out: "Turn to the light! REPENT!"
-%s dröhnt: "Wende dich den Licht zu! TUE BUSSE!"
+%s dröhnt: "Wende dich den Licht zu! BEREUE!"
 %%%%
 %s strikes the hour.
 %s schlägt die Stunde.
