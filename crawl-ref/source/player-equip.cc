@@ -302,13 +302,22 @@ int player_equip_set::wearing_ego(object_class_type obj_type, int ego) const
         item_def& item = you.inv[entry.item];
         if (item.base_type == obj_type)
         {
-            if (obj_type == OBJ_WEAPONS)
+            switch (obj_type)
             {
-                if (get_weapon_brand(item) == ego)
-                    ++total;
+                case OBJ_WEAPONS:
+                    if (get_weapon_brand(item) == ego)
+                        ++total;
+                    break;
+
+                case OBJ_ARMOUR:
+                    if (get_armour_ego_type(item) == ego)
+                        ++total;
+                    break;
+
+                default:
+                    if (item.brand == ego)
+                        ++total;
             }
-            else if (get_armour_ego_type(item) == ego)
-                ++total;
         }
     }
 
