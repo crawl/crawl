@@ -1574,14 +1574,6 @@ bool items_similar(const item_def &item1, const item_def &item2)
     if ((item1.flags & NO_MERGE_FLAGS) != (item2.flags & NO_MERGE_FLAGS))
         return false;
 
-    // The inscriptions can differ if one of them is blank, but if they
-    // are differing non-blank inscriptions then don't stack.
-    if (item1.inscription != item2.inscription
-        && !item1.inscription.empty() && !item2.inscription.empty())
-    {
-        return false;
-    }
-
     return true;
 }
 
