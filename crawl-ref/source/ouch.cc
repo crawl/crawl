@@ -1057,9 +1057,10 @@ static void _print_endgame_messages(scorefile_entry &se)
  *  @param aux what did they do it with?
  *  @param see_source whether the attacker was visible to you
  *  @param death_source_name the attacker's name if it is already dead.
+ *  @param skip_multipliers Whether to ignore harm/vitrify/etc.
  */
 void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
-          bool see_source, const char *death_source_name)
+          bool see_source, const char *death_source_name, bool skip_multipliers)
 {
     ASSERT(!crawl_state.game_is_arena());
     if (you.duration[DUR_TIME_STEP])
@@ -1079,7 +1080,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     }
 
     // Multiply damage if Harm or Vitrify is in play. (Poison is multiplied earlier.)
-    if (dam != INSTANT_DEATH && death_type != KILLED_BY_POISON)
+    if (dam != INSTANT_DEATH && death_type != KILLED_BY_POISON && !skip_multipliers)
     {
         dam = _apply_extra_harm(dam, source);
 
