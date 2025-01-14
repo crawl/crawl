@@ -307,7 +307,7 @@ int player_equip_set::wearing_ego(object_class_type obj_type, int ego) const
                 if (get_weapon_brand(item) == ego)
                     ++total;
             }
-            else if (item.brand == ego)
+            else if (get_armour_ego_type(item) == ego)
                 ++total;
         }
     }
