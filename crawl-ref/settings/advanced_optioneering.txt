@@ -27,8 +27,8 @@ add_autopickup_func(function(it, name)
     return
   end
   if it.class(true) == "armour" then
-    local good_slots = {cloak="Cloak", helmet="Helmet", gloves="Gloves",
-                        boots="Boots"}
+    local good_slots = {Cloak="Cloak", Helmet="Helmet", Gloves="Gloves",
+                        Boots="Boots"}
     st, _ = it.subtype()
     if good_slots[st] ~= nil and items.equipped_at(good_slots[st]) == nil then
       return true
