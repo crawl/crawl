@@ -99,6 +99,7 @@ kinetic_grapnel KINETIC_GRAPNEL
 tempered TEMPERED
 heart HEART
 unstable UNSTABLE
+laced_with_chaos LACED_WITH_CHAOS
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR

@@ -225,6 +225,9 @@ pie5
 pie6
 pie7
 
+chaos_buff0 BOLT_CHAOS_BUFF
+chaos_buff1
+
 sap_magic BOLT_SAP_MAGIC
 
 doom_howl BOLT_DOOM_HOWL

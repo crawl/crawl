@@ -2800,6 +2800,8 @@ static bool _mons_call_of_chaos(const monster& mon, bool check_only = false)
                                                     15, BEAM_INNER_FLAME);
 
         enchant_actor_with_flavour(*mi, &mon, flavour);
+        flash_tile(mi->pos(), random_choose(RED, BLUE, GREEN, YELLOW, MAGENTA),
+                   80, TILE_BOLT_CHAOS_BUFF);
 
         affected++;
         if (you.can_see(**mi))

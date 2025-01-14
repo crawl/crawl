@@ -978,6 +978,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         if (!quiet)
             simple_monster_message(*this, " looks more stable.");
 
+    case ENCH_CHAOS_LACE:
+        if (!quiet)
+            simple_monster_message(*this, " is no longer laced with chaos.");
+
     default:
         break;
     }
@@ -1386,6 +1390,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_CHANGED_APPEARANCE:
     case ENCH_KINETIC_GRAPNEL:
     case ENCH_TEMPERED:
+    case ENCH_CHAOS_LACE:
         decay_enchantment(en);
         break;
 
@@ -2143,7 +2148,7 @@ static const char *enchant_names[] =
     "magnetised",
     "armed",
     "misdirected", "changed appearance", "shadowless", "doubled_vigour",
-    "grapnel", "tempered", "hatching", "blinkitis",
+    "grapnel", "tempered", "hatching", "blinkitis", "chaos_laced",
     "buggy", // NUM_ENCHANTMENTS
 };
 

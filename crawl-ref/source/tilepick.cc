@@ -102,8 +102,6 @@ tileidx_t tileidx_trap(trap_type type)
         return TILE_DNGN_TRAP_SPEAR;
     case TRAP_BOLT:
         return TILE_DNGN_TRAP_BOLT;
-    case TRAP_DART:
-        return TILE_DNGN_TRAP_DART;
 #endif
     case TRAP_DISPERSAL:
         return TILE_DNGN_TRAP_DISPERSAL;
@@ -115,6 +113,8 @@ tileidx_t tileidx_trap(trap_type type)
         return TILE_DNGN_TRAP_TYRANT;
     case TRAP_ARCHMAGE:
         return TILE_DNGN_TRAP_ARCHMAGE;
+    case TRAP_HARLEQUIN:
+        return TILE_DNGN_TRAP_HARLEQUIN;
     case TRAP_ALARM:
         return TILE_DNGN_TRAP_ALARM;
     case TRAP_NET:
@@ -259,8 +259,6 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_TRAP_BOLT;
     case DNGN_TRAP_SPEAR:
         return TILE_DNGN_TRAP_SPEAR;
-    case DNGN_TRAP_DART:
-        return TILE_DNGN_TRAP_DART;
     case DNGN_TRAP_BOLT:
         return TILE_DNGN_TRAP_BOLT;
 #endif
@@ -278,6 +276,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_TRAP_TYRANT;
     case DNGN_TRAP_ARCHMAGE:
         return TILE_DNGN_TRAP_ARCHMAGE;
+    case DNGN_TRAP_HARLEQUIN:
+        return TILE_DNGN_TRAP_HARLEQUIN;
     case DNGN_TRAP_ALARM:
         return TILE_DNGN_TRAP_ALARM;
     case DNGN_TRAP_ZOT:
@@ -2361,6 +2361,7 @@ static const map<monster_info_flags, tileidx_t> monster_status_icons = {
     { MB_TEMPERED, TILEI_TEMPERED },
     { MB_HATCHING, TILEI_HEART },
     { MB_BLINKITIS, TILEI_UNSTABLE },
+    { MB_CHAOS_LACE, TILEI_LACED_WITH_CHAOS },
 };
 
 set<tileidx_t> status_icons_for(const monster_info &mons)
@@ -3504,6 +3505,7 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dir, int dist)
     case TILE_BOLT_BOMBLET_BLAST:
     case TILE_BOLT_MANIFOLD_ASSAULT:
     case TILE_BOLT_PARAGON_TEMPEST:
+    case TILE_BOLT_CHAOS_BUFF:
         return tile + ui_random(tile_main_count(tile));
 
     case TILE_MI_BOOMERANG0:

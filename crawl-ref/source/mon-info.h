@@ -249,6 +249,7 @@ enum monster_info_flags
     MB_HATCHING,
     MB_BLINKITIS,
     MB_NO_TELE,
+    MB_CHAOS_LACE,
     NUM_MB_FLAGS
 };
 

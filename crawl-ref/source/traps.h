@@ -20,6 +20,8 @@ struct bolt;
 class monster;
 struct trap_def;
 
+bool chaos_lace_criteria(monster* mon);
+
 void free_self_from_net();
 void mons_clear_trapping_net(monster* mon);
 void free_stationary_net(int item_index);

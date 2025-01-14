@@ -234,6 +234,7 @@ enum enchant_type
     ENCH_TEMPERED,
     ENCH_HATCHING,
     ENCH_BLINKITIS,
+    ENCH_CHAOS_LACE,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

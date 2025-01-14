@@ -142,6 +142,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_KINETIC_GRAPNEL, MB_KINETIC_GRAPNEL },
     { ENCH_TEMPERED,        MB_TEMPERED },
     { ENCH_BLINKITIS,       MB_BLINKITIS },
+    { ENCH_CHAOS_LACE,      MB_CHAOS_LACE },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)

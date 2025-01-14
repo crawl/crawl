@@ -781,6 +781,13 @@ Anyone stepping on this trap will translocate themself and anyone else in view
 to a new location nearby. Hostile monsters may trigger this trap, but your
 allies will avoid stepping on it.
 %%%%
+A harlequin's trap
+
+A magical trap left behind by the ineffable, spectacular revues of chaos. When
+you or a hostile monster steps on it, up to three of the strongest monsters in
+sight will have their attacks temporarily interwoven with a touch of chaos. Your
+allies will avoid stepping on it.
+%%%%
 A net trap
 
 A large concealed net launcher hanging from the dungeon's ceiling. Enchanted by

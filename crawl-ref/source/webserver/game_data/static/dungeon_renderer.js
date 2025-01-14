@@ -21,7 +21,7 @@ function ($, comm, cr, map_knowledge, options, dngn, util, view_data, enums,
         else if ((base_bg >= dngn.DNGN_ENTER_ZOT_CLOSED && base_bg < dngn.DNGN_CACHE_OF_FRUIT)
                  || (base_bg >= dngn.DNGN_SILVER_STATUE && base_bg < dngn.ARCANE_CONDUIT)
                  || (base_bg >= dngn.ARCANE_CONDUIT && base_bg < dngn.STORM_CONDUIT)
-                 || is_torch(base_bg))
+                 || is_torch(base_bg) || base_bg == dngn.DNGN_TRAP_HARLEQUIN)
         {
             return options.get("tile_misc_anim");
         }
@@ -34,6 +34,7 @@ function ($, comm, cr, map_knowledge, options, dngn, util, view_data, enums,
         var base_bg = dngn.basetile(cell.bg.value);
         if (base_bg == dngn.DNGN_PORTAL_WIZARD_LAB
             || base_bg == dngn.DNGN_ALTAR_JIYVA
+            || base_bg == dngn.DNGN_TRAP_HARLEQUIN
             || base_bg >= dngn.ARCANE_CONDUIT && base_bg < dngn.STORM_CONDUIT
             || is_torch(base_bg))
         {

@@ -11,13 +11,14 @@
 #include <algorithm>
 #include <cmath>
 
-#include "act-iter.h"
+#include "act-iter.h" // buff trap monster finding
 #include "areas.h"
 #include "art-enum.h"
 #include "bloodspatter.h"
 #include "branch.h"
 #include "cloud.h"
 #include "coordit.h"
+#include "database.h" // harlequin trap lines
 #include "delay.h"
 #include "describe.h"
 #include "dungeon.h"
@@ -46,6 +47,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "tag-version.h"
+#include "rltiles/tiledef-gui.h"
 #include "teleport.h"
 #include "terrain.h"
 #include "travel.h"
@@ -135,7 +137,8 @@ bool trap_def::is_bad_for_player() const
            || type == TRAP_NET
            || type == TRAP_PLATE
            || type == TRAP_TYRANT
-           || type == TRAP_ARCHMAGE;
+           || type == TRAP_ARCHMAGE
+           || type == TRAP_HARLEQUIN;
 }
 
 bool trap_def::is_safe(actor* act) const
@@ -176,7 +179,15 @@ bool trap_def::is_safe(actor* act) const
     return false;
 }
 
-// Used for tyrant's traps and archmage's traps:
+// When giving AF_CHAOTIC to monsters, skip holy monsters due to potential vamp
+// or draining attacks. They also need attacks that aren't already chaos brand.
+bool chaos_lace_criteria (monster* mon) {
+    return mons_has_attacks(*mon) && !(mon->is_peripheral())
+            && !(mon->is_holy()) && !(is_good_god(mon->god))
+            && (mons_attack_spec(*mon, 0, true).flavour != AF_CHAOTIC);
+}
+
+// Used for tyrant's traps, archmage's traps, and harlequin's traps:
 // get a buff, look for the two or three highest-HD valid monsters without the
 // buff, then give it to each of them. Returns the affected monsters the
 // player can see for messaging purposes per-trap afterwards.
@@ -195,6 +206,8 @@ static vector<monster*> _find_and_buff_trap_targets(enchant_type enchant,
                 options.push_back(*mi);
             else if (enchant == ENCH_EMPOWERED_SPELLS && mi->antimagic_susceptible())
                 options.push_back(*mi);
+            else if (enchant == ENCH_CHAOS_LACE && chaos_lace_criteria(*mi))
+                options.push_back(*mi);
         }
     }
 
@@ -212,6 +225,12 @@ static vector<monster*> _find_and_buff_trap_targets(enchant_type enchant,
         {
             if (affected < cap)
             {
+                if (enchant == ENCH_CHAOS_LACE && you.see_cell(mons->pos()))
+                {
+                    flash_tile(mons->pos(), random_choose(RED, BLUE, GREEN,
+                               YELLOW, MAGENTA), 120, TILE_BOLT_CHAOS_BUFF);
+                }
+
                 mons->add_ench(mon_enchant(enchant, 0, nullptr, time));
 
                 // Traps effects are established as trap-los centric,
@@ -657,6 +676,42 @@ void trap_def::trigger(actor& triggerer)
         break;
     }
 
+    case TRAP_HARLEQUIN:
+    {
+        if (you_trigger)
+            mpr("You enter a harlequin's trap.");
+
+        int buff_time = 200 + random2(80);
+
+        vector<monster*> buffed_mons = _find_and_buff_trap_targets(ENCH_CHAOS_LACE,
+                                                                   pos, buff_time);
+
+        if (buffed_mons.size() > 0)
+        {
+            // With no player-centric effect, don't keep spamming messages about
+            // monsters walking on the trap unless it actually does something.
+            if (!you_trigger)
+            {
+                mprf("%s %s!", triggerer.name(DESC_THE).c_str(),
+                 mons_intel(*m) >= I_HUMAN ? "invokes a harlequin's trap" :
+                                             "sets off a harlequin's trap");
+            }
+
+            string m_list = describe_monsters_condensed(buffed_mons);
+            mprf(MSGCH_MONSTER_ENCHANT, "%s the attacks of %s are laced with chaos!",
+                 getMiscString("harlequin_trap_lines").c_str(),  m_list.c_str());
+
+            // Almost certainly not worth setting up any penance;
+            // player-triggered Zot traps summoning demons don't either.
+            if (you_trigger && is_good_god(you.religion))
+                mprf(MSGCH_GOD, "You feel a twinge of divine disapproval.");
+        }
+        else if (!you_trigger)
+            mprf("%s enters a harlequin's trap.", triggerer.name(DESC_THE).c_str());
+
+        break;
+    }
+
     case TRAP_ALARM:
         // Alarms always mark the player, but not through glass
         // The trap gets destroyed to prevent the player from abusing an alarm
@@ -1098,6 +1153,8 @@ dungeon_feature_type trap_feature(trap_type type)
         return DNGN_TRAP_TYRANT;
     case TRAP_ARCHMAGE:
         return DNGN_TRAP_ARCHMAGE;
+    case TRAP_HARLEQUIN:
+        return DNGN_TRAP_HARLEQUIN;
     case TRAP_ALARM:
         return DNGN_TRAP_ALARM;
     case TRAP_ZOT:
@@ -1111,8 +1168,6 @@ dungeon_feature_type trap_feature(trap_type type)
         return DNGN_TRAP_SHADOW_DORMANT;
     case TRAP_SPEAR:
         return DNGN_TRAP_SPEAR;
-    case TRAP_DART:
-        return DNGN_TRAP_DART;
     case TRAP_BOLT:
         return DNGN_TRAP_BOLT;
 #endif
@@ -1150,6 +1205,8 @@ trap_type trap_type_from_feature(dungeon_feature_type type)
         return TRAP_TYRANT;
     case DNGN_TRAP_ARCHMAGE:
         return TRAP_ARCHMAGE;
+    case DNGN_TRAP_HARLEQUIN:
+        return TRAP_HARLEQUIN;
     case DNGN_TRAP_ALARM:
         return TRAP_ALARM;
     case DNGN_TRAP_ZOT:
@@ -1419,15 +1476,19 @@ trap_type random_trap_for_place(bool dispersal_ok)
     const bool archmage_ok = player_in_branch(BRANCH_SNAKE)
                              || player_in_branch(BRANCH_ELF)
                              || player_in_branch(BRANCH_DEPTHS);
+    const bool harlequin_ok = player_in_branch(BRANCH_DEPTHS)
+                              || player_in_branch(BRANCH_ZOT)
+                              || player_in_branch(BRANCH_PANDEMONIUM);
 
     const pair<trap_type, int> trap_weights[] =
     {
         { TRAP_DISPERSAL, dispersal_ok && tele_ok  ? 4 : 0},
-        { TRAP_TELEPORT,  tele_ok     ? 5 : 0},
-        { TRAP_SHAFT,     shaft_ok    ? 4 : 0},
-        { TRAP_ALARM,     alarm_ok    ? 5 : 0},
-        { TRAP_TYRANT,    tyrant_ok   ? 3 : 0},
-        { TRAP_ARCHMAGE,  archmage_ok ? 3 : 0},
+        { TRAP_TELEPORT,  tele_ok      ? 5 : 0},
+        { TRAP_SHAFT,     shaft_ok     ? 4 : 0},
+        { TRAP_ALARM,     alarm_ok     ? 5 : 0},
+        { TRAP_TYRANT,    tyrant_ok    ? 3 : 0},
+        { TRAP_ARCHMAGE,  archmage_ok  ? 3 : 0},
+        { TRAP_HARLEQUIN, harlequin_ok ? 2 : 0},
     };
 
     const trap_type *trap = random_choose_weighted(trap_weights);
@@ -1539,7 +1600,6 @@ bool is_removed_trap(trap_type trap)
 {
     switch (trap)
     {
-    case TRAP_DART:
     case TRAP_SPEAR:
     case TRAP_BOLT:
     case TRAP_NEEDLE:

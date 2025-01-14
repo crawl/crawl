@@ -155,4 +155,5 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_KINETIC_GRAPNEL, "grapneled", "grapneled", "grapneled"},
     { MB_TEMPERED, "tempered", "tempered", "tempered"},
     { MB_BLINKITIS, "untethered", "untethered in space", "untethered"},
+    { MB_CHAOS_LACE, "chaos-laced", "interlaced with chaos", "chaos-laced"},
 };
