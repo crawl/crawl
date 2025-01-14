@@ -969,8 +969,7 @@ static void _maybe_attune_items(bool attune_regen, bool attune_mana_regen)
 
             eq_list.push_back(is_artefact(arm) ? get_artefact_name(arm) :
                 entry.slot == SLOT_AMULET ? "amulet" :
-                entry.slot == SLOT_BODY_ARMOUR ? "armour" :
-                    equip_slot_name(entry.slot));
+                    lowercase_string(equip_slot_name(entry.slot, true)));
 
             if (entry.slot == SLOT_BOOTS || entry.slot == SLOT_GLOVES)
                 plural = true;

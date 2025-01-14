@@ -2254,9 +2254,7 @@ static void _handle_regen_item_equip(const item_def& item)
     string item_name = is_artefact(item) ? get_artefact_name(item)
                                          : eq_slot == SLOT_AMULET
                                          ? "amulet"
-                                         : eq_slot == SLOT_BODY_ARMOUR
-                                         ? "armour"
-                                         : equip_slot_name(eq_slot);
+                                         : lowercase_string(equip_slot_name(eq_slot, true));
 
 #if TAG_MAJOR_VERSION == 34
     if (regen_hp && !regen_mp && you.get_mutation_level(MUT_NO_REGENERATION))

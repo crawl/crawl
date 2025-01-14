@@ -270,7 +270,11 @@ static int l_item_do_subtype(lua_State *ls)
     // Special-case OBJ_ARMOUR behavior to maintain compatibility with
     // existing scripts.
     if (item->base_type == OBJ_ARMOUR)
-        s = equip_slot_name(get_armour_slot(*item));
+    {
+        equipment_slot slot = get_armour_slot(*item);
+        s = (slot == SLOT_BODY_ARMOUR ? "body"
+                                      : lowercase_string(equip_slot_name(slot)).c_str());
+    }
     else if (item->is_identified() || item->base_type == OBJ_WEAPONS)
     {
         // must keep around the string until we call lua_pushstring
