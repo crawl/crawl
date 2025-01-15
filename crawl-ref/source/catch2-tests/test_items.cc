@@ -26,7 +26,7 @@ TEST_CASE( "Create a specific item def", "[single-file]" ) {
     REQUIRE(scroll_of_fear.sub_type == SCR_FEAR);
 }
 
-TEST_CASE_METHOD( MockPlayerYouTestsFixture,
+TEST_CASE_METHOD( MockPlayerYouHumanMonkFixture,
                   "Check mock player has no items", "[single-file]" ) {
     for (int i=0; i < ENDOFPACK; i++)
         REQUIRE(you.inv[i].base_type == OBJ_UNASSIGNED);
@@ -70,7 +70,7 @@ static int find_inv_index_with_exact_item(object_class_type base_type, int sub_t
     return -1;
 }
 
-TEST_CASE_METHOD( MockPlayerYouTestsFixture,
+TEST_CASE_METHOD( MockPlayerYouHumanMonkFixture,
                   "Give mock player item", "[single-file]" ) {
     item_def scroll_of_fear;
 
@@ -95,13 +95,13 @@ TEST_CASE_METHOD( MockPlayerYouTestsFixture,
     REQUIRE(num_fear_stacks_in_invent == 1);
 }
 
-TEST_CASE_METHOD( MockPlayerYouTestsFixture,
+TEST_CASE_METHOD( MockPlayerYouHumanMonkFixture,
                   "Mock player armour skill", "[single-file]" ) {
     REQUIRE(you.skill(SK_ARMOUR,20) == 0);
     REQUIRE(you.strength() == 11);
 }
 
-TEST_CASE_METHOD( MockPlayerYouTestsFixture,
+TEST_CASE_METHOD( MockPlayerYouHumanMonkFixture,
                   "Give mock armour", "[single-file]" ) {
 
     item_def armour = simple_create_item(OBJ_ARMOUR, ARM_SCALE_MAIL);
@@ -153,7 +153,7 @@ static void make_and_equip_item(object_class_type base_type, int sub_type,
 
 }
 
-TEST_CASE_METHOD( MockPlayerYouTestsFixture,
+TEST_CASE_METHOD( MockPlayerYouHumanMonkFixture,
                   "Give mock armour and check after after putting it on",
                   "[single-file]" ) {
 
@@ -162,7 +162,7 @@ TEST_CASE_METHOD( MockPlayerYouTestsFixture,
     REQUIRE(you.base_ac(100) == 600);
 }
 
-TEST_CASE_METHOD( MockPlayerYouTestsFixture,
+TEST_CASE_METHOD( MockPlayerYouHumanMonkFixture,
                   "Give mock robe and check after after putting it on",
                   "[single-file]" ) {
 
@@ -171,7 +171,7 @@ TEST_CASE_METHOD( MockPlayerYouTestsFixture,
     REQUIRE(you.base_ac(100) == 200);
 }
 
-TEST_CASE_METHOD( MockPlayerYouTestsFixture,
+TEST_CASE_METHOD( MockPlayerYouHumanMonkFixture,
                   "Give multiple mock items and check after putting it on",
                   "[single-file]" ) {
 
@@ -215,4 +215,50 @@ TEST_CASE("Test all_item_subtypes() does include items for each category",
     REQUIRE(all_item_subtypes(OBJ_RUNES).size() > 0);
     REQUIRE(all_item_subtypes(OBJ_TALISMANS).size() > 0);
     REQUIRE(all_item_subtypes(OBJ_GEMS).size() > 0);
+}
+
+
+void require_always_useless(const item_def& item);
+void require_always_useless(const item_def& item)
+{
+
+    REQUIRE(is_useless_item(item, false /* temp */, false /* ident */));
+    REQUIRE(is_useless_item(item, false /* temp */,  true /* ident */));
+    REQUIRE(is_useless_item(item,  true /* temp */, false /* ident */));
+    REQUIRE(is_useless_item(item,  true /* temp */,  true /* ident */));
+
+}
+
+void require_always_useful(const item_def& item);
+void require_always_useful(const item_def& item)
+{
+
+    REQUIRE(!is_useless_item(item, false /* temp */, false /* ident */));
+    REQUIRE(!is_useless_item(item, false /* temp */,  true /* ident */));
+    REQUIRE(!is_useless_item(item,  true /* temp */, false /* ident */));
+    REQUIRE(!is_useless_item(item,  true /* temp */,  true /* ident */));
+
+}
+
+TEST_CASE_METHOD( MockPlayerYouCoglinMonkFixture,
+                  "Check what items are useless and wearable for Coglins",
+                  "[single-file]" ) {
+    const item_def ring = simple_create_item(OBJ_JEWELLERY, RING_MAGICAL_POWER);
+    require_always_useless(ring);
+
+    const item_def amu_acrobat = simple_create_item(OBJ_JEWELLERY, AMU_ACROBAT);
+    require_always_useless(amu_acrobat);
+    // TODO: artifacts too?
+}
+
+TEST_CASE_METHOD( MockPlayerYouOctopodeMonkFixture,
+                  "Check what items are useless and wearable for Octopode",
+                  "[single-file]" ) {
+
+    const item_def ring = simple_create_item(OBJ_JEWELLERY, RING_MAGICAL_POWER);
+    require_always_useful(ring);
+
+    const item_def amu_acrobat = simple_create_item(OBJ_JEWELLERY, AMU_ACROBAT);
+    require_always_useful(amu_acrobat);
+    // TODO: artifacts too?
 }
