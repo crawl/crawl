@@ -2940,9 +2940,11 @@ static int _autopickup_subtype(const item_def &item)
     // know the subtype.
     switch (item.base_type)
     {
+    case OBJ_JEWELLERY:
+        return item_type_known(item) ? item.sub_type
+                    : jewellery_is_amulet(item) ? max_type : NUM_RINGS;
     case OBJ_WANDS:
     case OBJ_SCROLLS:
-    case OBJ_JEWELLERY:
     case OBJ_POTIONS:
     case OBJ_STAVES:
         return item_type_known(item) ? item.sub_type : max_type;
