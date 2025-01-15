@@ -828,15 +828,21 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
     {
         if (explore_stopped_pos == you.pos())
         {
-            stack_iterator stk(you.pos());
-            string wishlist = comma_separated_fn(stk, stack_iterator::end(),
-                    [] (const item_def & item) { return item.name(DESC_A); },
-                    " and ", ", ", bind(item_needs_autopickup, placeholders::_1,
-                                        false));
+            vector<item_def*> to_pickup;
+            for (stack_iterator si(you.pos()); si; ++si)
+            {
+                if (item_needs_autopickup(*si))
+                    to_pickup.push_back(&*si);
+            }
+
+            string wishlist = comma_separated_fn(to_pickup.begin(), to_pickup.end(),
+                    [] (const item_def* item) { return item->name(DESC_A); },
+                    " and ", ", ");
+
             // XX [A] doesn't make sense for items being picked up only because
             // of an =g inscription
             const string prompt =
-                make_stringf("Could not pick up %s here; ([A]lways) ignore %s?",
+                make_stringf("Could not pick up %s here; Ignore %s?",
                              wishlist.c_str(),
                              tried_pickup == 1 ? "it" : "them");
 
@@ -846,11 +852,13 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
             map[CONTROL('G')] = 'n';
             map[' '] = 'y';
 
+            const bool allow_always = to_pickup.size() == 1 && !is_artefact(*to_pickup[0]);
+
             // If response is Yes (1) or Always (2), mark items for no pickup
             // If the response is Always, remove the item from autopickup
             // Otherwise, stop autoexplore.
             int response = yesno(prompt.c_str(), true, 'n', true, false,
-                                 false, &map, true, true);
+                                 false, &map, true, allow_always);
             switch (response)
             {
                 case 2:
