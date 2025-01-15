@@ -4681,6 +4681,17 @@ void delayed_monster_done(string success, delayed_callback callback)
     _delayed_done_callbacks.push_back(callback);
 }
 
+static bool _needs_to_spawn_hepliaklqana_ancestor()
+{
+    return you_worship(GOD_HEPLIAKLQANA)
+            // You don't get an ancestor under penence
+           && !player_under_penance()
+           // You must have enough piety for an ancestor
+           && have_passive(passive_t::frail)
+           // An ancestor must not already exist
+           && hepliaklqana_ancestor() == MID_NOBODY;
+}
+
 static void _place_delayed_monsters()
 {
     // Last monster that was successfully placed (so far).
@@ -4700,7 +4711,23 @@ static void _place_delayed_monsters()
             prev_god = mg.god;
         }
 
-        monster *mon = create_monster(mg);
+        monster *mon = nullptr;
+        if (mons_is_hepliaklqana_ancestor(mg.cls))
+        {
+            // If the player gained enough piety to gain an ancestor on an
+            // enemy's turn or at the start of their turn (e.g. from an enemy
+            // digging or the player's passwal ending), they will get a turn
+            // to act before their ancestor is summoned. During this turn they
+            // can rename their ancestor or lose the piety needed to have one
+            // or lose their god etc.
+            if (_needs_to_spawn_hepliaklqana_ancestor())
+            {
+                mg = hepliaklqana_ancestor_gen_data();
+                mon = create_monster(mg);
+            }
+        }
+        else
+            mon = create_monster(mg);
 
         if (cback)
             (*cback)(mg, mon, placed);
