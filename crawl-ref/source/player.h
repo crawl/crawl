@@ -46,8 +46,7 @@
 #define FORCE_MAPPABLE_KEY "force_mappable"
 #define TEMP_WATERWALK_KEY "temp_waterwalk"
 #define EMERGENCY_FLIGHT_KEY "emergency_flight"
-#define PARALYSED_BY_KEY "paralysed_by"
-#define PETRIFIED_BY_KEY "petrified_by"
+#define DISABLED_BY_KEY "disabled_by"
 #define FROZEN_RAMPARTS_KEY "frozen_ramparts_position"
 #define DREAMSHARD_KEY "dreamshard"
 #define DESCENT_DEBT_KEY "descent_debt"
@@ -724,6 +723,7 @@ public:
     void paralyse(const actor *, int str, string source = "") override;
     void petrify(const actor *, bool force = false) override;
     bool fully_petrify(bool quiet = false) override;
+    void give_stun_immunity(int duration);
     void slow_down(actor *, int str) override;
     void confuse(actor *, int strength) override;
     void weaken(const actor *attacker, int pow) override;
@@ -814,7 +814,7 @@ public:
     bool immune_to_hex(const spell_type hex) const;
 
     bool asleep() const override;
-    void put_to_sleep(actor *, int power = 0, bool hibernate = false) override;
+    void put_to_sleep(actor* source, int power = 0, bool hibernate = false) override;
     void awaken();
     void check_awaken(int disturbance) override;
     int beam_resists(bolt &beam, int hurted, bool doEffects, string source)

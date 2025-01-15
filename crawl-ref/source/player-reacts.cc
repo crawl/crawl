@@ -187,9 +187,6 @@ static void _decrement_petrification(int delay)
         mprf(MSGCH_DURATION, "You turn to %s%s.",
              flesh_equiv.c_str(),
              you.paralysed() ? "" : " and can act again");
-
-        if (you.props.exists(PETRIFIED_BY_KEY))
-            you.props.erase(PETRIFIED_BY_KEY);
     }
 
     if (you.duration[DUR_PETRIFYING])
@@ -218,8 +215,6 @@ static void _decrement_attraction(int delay)
 
 static void _decrement_paralysis(int delay)
 {
-    _decrement_a_duration(DUR_PARALYSIS_IMMUNITY, delay);
-
     if (!you.duration[DUR_PARALYSIS])
         return;
 
@@ -228,17 +223,7 @@ static void _decrement_paralysis(int delay)
     if (you.duration[DUR_PARALYSIS])
         return;
 
-    if (you.props.exists(PARALYSED_BY_KEY))
-        you.props.erase(PARALYSED_BY_KEY);
-
-    const int immunity = roll_dice(1, 3) * BASELINE_DELAY;
-    you.duration[DUR_PARALYSIS_IMMUNITY] = immunity;
-    if (you.petrified())
-    {
-        // no chain paralysis + petrification combos!
-        you.duration[DUR_PARALYSIS_IMMUNITY] += you.duration[DUR_PETRIFIED];
-        return;
-    }
+    you.give_stun_immunity(random_range(1, 3));
 
     mprf(MSGCH_DURATION, "You can act again.");
     you.redraw_armour_class = true;
@@ -460,6 +445,7 @@ void player_reacts_to_monsters()
         detect_items(-1);
     }
 
+    _decrement_a_duration(DUR_STUN_IMMUNITY, you.time_taken);
     _decrement_attraction(you.time_taken);
     _decrement_paralysis(you.time_taken);
     _decrement_petrification(you.time_taken);

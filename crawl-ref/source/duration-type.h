@@ -106,7 +106,7 @@ enum duration_type
 #if TAG_MAJOR_VERSION == 34
     DUR_LIFESAVING,
 #endif
-    DUR_PARALYSIS_IMMUNITY,
+    DUR_STUN_IMMUNITY,
 #if TAG_MAJOR_VERSION == 34
     DUR_DARKNESS,
 #endif
@@ -151,7 +151,9 @@ enum duration_type
     DUR_TOXIC_RADIANCE,
     DUR_RECITE,
     DUR_GRASPING_ROOTS,
+#if TAG_MAJOR_VERSION == 34
     DUR_SLEEP_IMMUNITY,
+#endif
     DUR_FIRE_VULN,
     DUR_ELIXIR,
 #if TAG_MAJOR_VERSION == 34
