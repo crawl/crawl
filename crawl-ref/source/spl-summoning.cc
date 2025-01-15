@@ -255,7 +255,7 @@ spret cast_awaken_armour(int pow, bool fail)
         return spret::success;
     }
 
-    mprf("You draw out an echo of %s", armour->name(DESC_YOUR).c_str());
+    mprf("You draw out an echo of %s.", armour->name(DESC_YOUR).c_str());
 
     item_def &fake_armour = env.item[mitm_slot];
     fake_armour.clear();
