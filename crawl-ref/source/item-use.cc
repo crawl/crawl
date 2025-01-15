@@ -1344,6 +1344,26 @@ bool try_equip_item(item_def& item)
         {
             vector<item_def*>& candidates = removal_candidates[i];
 
+            // Check if some number of items are inscribed with {=R} (but less
+            // than all of them), and remove them from the candidates.
+            int num_inscribed = 0;
+            for (int j = candidates.size() - 1; j >= 0; --j)
+            {
+                if (strstr(candidates[j]->inscription.c_str(), "=R"))
+                    ++num_inscribed;
+            }
+            if (num_inscribed > 0 && num_inscribed < (int)candidates.size())
+            {
+                for (int j = candidates.size() - 1; j >= 0; --j)
+                {
+                    if (strstr(candidates[j]->inscription.c_str(), "=R"))
+                    {
+                        candidates[j] = candidates.back();
+                        candidates.pop_back();
+                    }
+                }
+            }
+
             if (candidates.size() == 1)
             {
                 if (item.base_type == OBJ_JEWELLERY && Options.jewellery_prompt)
