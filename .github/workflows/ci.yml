@@ -10,7 +10,7 @@ on:
 jobs:
   linting:
     name: Code Linting
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2
       - name: Checkwhite
@@ -21,7 +21,7 @@ jobs:
         working-directory: crawl-ref/source
   build_linux:
     name: Linux ${{ matrix.compiler }} ${{ matrix.build_opts }} ${{ matrix.debug }} ${{ matrix.build_all }} tag_upgrade=${{ matrix.tag_upgrade }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         compiler:
@@ -210,7 +210,7 @@ jobs:
 
   build_mingw64_crosscompile:
     name: mingw64 ${{ matrix.build_type }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         build_type:
@@ -286,7 +286,7 @@ jobs:
 
   codecov_catch2:
     name: Catch2 (GCC/Linux) + Codecov
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2
         with:
@@ -341,7 +341,7 @@ jobs:
           fail_ci_if_error: false
 
   webserver:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         python-version: [3.8]
@@ -365,7 +365,7 @@ jobs:
 
   build_headers:
     name: Build headers ${{ matrix.compiler }} ${{ matrix.build_opts }} ${{ matrix.debug }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         compiler:
@@ -428,7 +428,7 @@ jobs:
       - codecov_catch2
       - webserver
     if: failure() && github.event_name == 'push'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Build message
         id: message
