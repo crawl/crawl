@@ -815,8 +815,8 @@ static const duration_def duration_data[] =
     { DUR_LOCKED_DOWN, 0, "", "", "old stuck", "", D_NO_FLAGS },
     { DUR_BINDING_SIGIL_WARNING, 0, "", "", "old binding sigil", "", D_NO_FLAGS },
     { DUR_DUEL_COMPLETE, 0, "", "", "old duel complete", "", D_NO_FLAGS },
-    { DUR_COLLAPSE, 0, "", "", "collapse", "", D_NO_FLAGS },
-    { DUR_BRAINLESS, 0, "", "", "brainless", "", D_NO_FLAGS },
-    { DUR_CLUMSY, 0, "", "", "clumsy", "", D_NO_FLAGS },
+    { DUR_COLLAPSE, 0, "", "", "old collapse", "", D_NO_FLAGS },
+    { DUR_BRAINLESS, 0, "", "", "old brainless", "", D_NO_FLAGS },
+    { DUR_CLUMSY, 0, "", "", "old clumsy", "", D_NO_FLAGS },
 #endif
 };
