@@ -4372,6 +4372,18 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_VEX, "Vex",
+    spschool::hexes,
+    spflag::dir_or_target | spflag::needs_tracer
+        | spflag::WL_check | spflag::monster,
+    4,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_VEX,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

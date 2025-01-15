@@ -73,7 +73,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     attack_number(attack_num), effective_attack_number(effective_attack_num),
     cleaving(false), is_multihit(false), is_riposte(false),
     is_projected(false), charge_pow(0), never_cleave(false), dmg_mult(0),
-    flat_dmg_bonus(0),
+    flat_dmg_bonus(0), never_prompt(false),
     wu_jian_attack(WU_JIAN_ATTACK_NONE),
     wu_jian_number_of_targets(1),
     is_shadow_stab(false)
@@ -156,7 +156,7 @@ bool melee_attack::handle_phase_attempted()
         return false;
     }
 
-    if (bad_attempt())
+    if (!never_prompt && bad_attempt())
     {
         cancel_attack = true;
         return false;
@@ -1307,7 +1307,7 @@ bool melee_attack::attack()
     if (attacker->is_player() && attacker != defender)
     {
         set_attack_conducts(conducts, *defender->as_monster(),
-                            you.can_see(*defender));
+                            you.can_see(*defender) && !you.duration[DUR_VEXED]);
 
         if (player_under_penance(GOD_ELYVILON)
             && god_hates_your_god(GOD_ELYVILON)

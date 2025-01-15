@@ -4403,6 +4403,17 @@ bool monster::fully_petrify(bool quiet)
     return msg;
 }
 
+bool monster::vex(const actor *source, int duration)
+{
+    if (clarity() || has_ench(ENCH_VEXED))
+        return false;
+
+    simple_monster_message(*this, " is overwhelmed by frustration!");
+    add_ench(mon_enchant(ENCH_VEXED, 0, source, duration * BASELINE_DELAY));
+
+    return true;
+}
+
 void monster::slow_down(actor *atk, int strength)
 {
     enchant_actor_with_flavour(this, atk, BEAM_SLOW, strength);

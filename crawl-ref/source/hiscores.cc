@@ -2937,6 +2937,12 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
                     if (you.props.exists(DISABLED_BY_KEY))
                         desc += " by " + you.props[DISABLED_BY_KEY].get_string();
                 }
+                else if (you.duration[DUR_VEXED])
+                {
+                    desc += "... while vexed";
+                    if (you.props.exists(DISABLED_BY_KEY))
+                        desc += " by " + you.props[DISABLED_BY_KEY].get_string();
+                }
             }
         }
     }

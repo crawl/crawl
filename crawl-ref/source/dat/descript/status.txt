@@ -1107,3 +1107,9 @@ Protected status
 
 Your platinum paragon is close enough to you to sometimes parry attacks directed
 at you.
+%%%%
+Vexed status
+
+Your mind is clouded by frustration. For the next several turns, you will
+uncontrollably attack random adjacent creatures (whether friendly or enemy) or
+even empty space.

@@ -3780,6 +3780,11 @@ void bolt::affect_player_enchantment(bool resistible)
         obvious_effect = true;
         break;
 
+    case BEAM_VEX:
+        you.vex(agent(), random_range(3, 6));
+        obvious_effect = true;
+        break;
+
     case BEAM_CONFUSION:
         confuse_player(5 + random2(3));
         obvious_effect = true;
@@ -6013,6 +6018,7 @@ bool ench_flavour_affects_monster(actor *agent, beam_type flavour,
 
     case BEAM_CONFUSION:
     case BEAM_IRRESISTIBLE_CONFUSION:
+    case BEAM_VEX:
         rc = !mon->clarity();
         break;
 
@@ -6467,6 +6473,12 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
         apply_bolt_petrify(mon);
         return MON_AFFECTED;
+
+    case BEAM_VEX:
+        if (mon->vex(agent(), random_range(3, 6)))
+            return MON_AFFECTED;
+        else
+            return MON_UNAFFECTED;
 
     case BEAM_SPORE:
     case BEAM_CONFUSION:
@@ -7696,6 +7708,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_HAEMOCLASM:            return "gore";
     case BEAM_BLOODRITE:             return "blood";
     case BEAM_DOUBLE_VIGOUR:         return "vigour-doubling";
+    case BEAM_VEX:                   return "vexing";
     case BEAM_SEISMIC:               return "seismic shockwave";
     case BEAM_BOLAS:                 return "entwining bolas";
     case BEAM_MERCURY:               return "mercury";

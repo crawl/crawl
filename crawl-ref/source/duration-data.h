@@ -276,6 +276,14 @@ static const duration_def duration_data[] =
       RED, "Stone",
       "petrified", "",
       "You are petrified.", D_DISPELLABLE},
+    { DUR_VEXED,
+      RED, "Vexed",
+      "vexed", "vex",
+      "You are vexed.", D_DISPELLABLE,
+      {{ "", []() {
+            mprf(MSGCH_DURATION, "You feel more in control of yourself again.");
+            you.give_stun_immunity(random_range(1, 3));
+      }}}},
     { DUR_PETRIFYING,
       LIGHTRED, "Petr",
       "petrifying", "",

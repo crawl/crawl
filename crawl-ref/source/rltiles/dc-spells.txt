@@ -328,6 +328,7 @@ throw_barbs THROW_BARBS
 throw_bolas THROW_BOLAS
 throw_klown_pie THROW_KLOWN_PIE
 thorn_volley THORN_VOLLEY
+vex VEX
 virulence VIRULENCE
 vitrify VITRIFY
 vitrifying_gaze VITRIFYING_GAZE

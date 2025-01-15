@@ -8,12 +8,15 @@
 
 #include "spl-monench.h"
 
+#include "actor.h"
 #include "beam.h"
 #include "coordit.h"
+#include "directn.h"
 #include "english.h" // apostrophise
 #include "env.h"
 #include "fight.h"
 #include "losglobal.h"
+#include "melee-attack.h"
 #include "message.h"
 #include "mon-tentacle.h"
 #include "spl-util.h"
@@ -407,4 +410,51 @@ bool is_valid_tempering_target(const monster& mon, const actor& caster)
     }
 
     return false;
+}
+
+// Perform an forcible attack at a weighted random space around this actor.
+// Spaces without an actor are 1/7th as likely to be chosen as one with an
+// actor (so if you are adjacent to a single monster, you have a 50% chance to
+// attack them and a 50% chance to whiff).
+//
+// Actor friendliness doesn't matter - you are just as likely to attack allies
+// as enemies, though gods won't penance you for this action since it's not your
+// fault. The allies themselves may not be so generous!
+void do_vexed_attack(actor& attacker)
+{
+    vector<coord_def> empty_space;
+    vector<actor*> targs;
+    for (adjacent_iterator ai(attacker.pos()); ai; ++ai)
+    {
+        if (actor* targ = actor_at(*ai))
+            targs.push_back(targ);
+        else
+            empty_space.push_back(*ai);
+    }
+
+    // Decide whether to attack empty space or an actor
+    const int total_weight = empty_space.size() + targs.size() * 7;
+    if (x_chance_in_y(empty_space.size(), total_weight))
+    {
+        coord_def pos = empty_space[random2(empty_space.size())];
+        if (you.can_see(attacker))
+        {
+            mprf("%s attack%s %s!",
+                    attacker.name(DESC_THE).c_str(),
+                    attacker.is_monster() ? "s" : "",
+                    feature_description_at(pos, false, DESC_THE).c_str());
+        }
+
+        if (attacker.is_monster())
+            attacker.as_monster()->lose_energy(EUT_ATTACK);
+    }
+    else
+    {
+        ASSERT(!targs.empty());
+        actor* victim = targs[random2(targs.size())];
+        melee_attack atk(&attacker, victim);
+        // The player is deliberately allowed to attack their allies.
+        atk.never_prompt = true;
+        atk.launch_attack_set();
+    }
 }

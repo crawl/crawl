@@ -250,6 +250,7 @@ enum monster_info_flags
     MB_BLINKITIS,
     MB_NO_TELE,
     MB_CHAOS_LACE,
+    MB_VEXED,
     NUM_MB_FLAGS
 };
 

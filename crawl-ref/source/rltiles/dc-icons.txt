@@ -100,6 +100,7 @@ tempered TEMPERED
 heart HEART
 unstable UNSTABLE
 laced_with_chaos LACED_WITH_CHAOS
+vexed VEXED
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR

@@ -2366,6 +2366,7 @@ static const map<monster_info_flags, tileidx_t> monster_status_icons = {
     { MB_HATCHING, TILEI_HEART },
     { MB_BLINKITIS, TILEI_UNSTABLE },
     { MB_CHAOS_LACE, TILEI_LACED_WITH_CHAOS },
+    { MB_VEXED, TILEI_VEXED },
 };
 
 set<tileidx_t> status_icons_for(const monster_info &mons)

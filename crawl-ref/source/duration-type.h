@@ -279,5 +279,6 @@ enum duration_type
     DUR_PHALANX_BARRIER,
     DUR_BLINKITIS,
     DUR_VAINGLORY,
+    DUR_VEXED,
     NUM_DURATIONS
 };

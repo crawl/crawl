@@ -120,6 +120,7 @@
 #include "spl-cast.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
+#include "spl-monench.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
@@ -1115,11 +1116,14 @@ static void _input()
 
     hints_new_turn();
 
-    if (you.cannot_act())
+    if (you.duration[DUR_VEXED])
+        do_vexed_attack(you);
+
+    if (you.cannot_act() || you.duration[DUR_VEXED])
     {
         if (crawl_state.repeat_cmd != CMD_WIZARD)
         {
-            crawl_state.cancel_cmd_repeat("Cannot move, cancelling command "
+            crawl_state.cancel_cmd_repeat("Cannot control self, cancelling command "
                                           "repetition.");
         }
         world_reacts();

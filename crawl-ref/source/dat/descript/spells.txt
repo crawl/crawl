@@ -2173,6 +2173,12 @@ Venom Bolt spell
 
 Fires a penetrating bolt of poison.
 %%%%
+Vex spell
+
+Attempts to cloud the target's mind with thoughtless frustration, forcing them
+to spend several turns doing nothing but attacking nearby spaces (whether those
+spaces are empty or even contain their allies).
+%%%%
 Virulence spell
 
 Makes a targeted creature more vulnerable to poison.

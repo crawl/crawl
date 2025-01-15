@@ -429,7 +429,8 @@ static bool _follows_orders(monster* mon)
     return mon->friendly()
            && !mon->berserk_or_frenzied()
            && !mon->is_peripheral()
-           && !mon->has_ench(ENCH_HAUNTING);
+           && !mon->has_ench(ENCH_HAUNTING)
+           && !mon->has_ench(ENCH_VEXED);
 }
 
 // Sets foe target of friendly monsters.

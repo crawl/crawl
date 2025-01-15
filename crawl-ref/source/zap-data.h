@@ -576,6 +576,7 @@ static const zap_info zap_data[] =
 },
 
 _mon_hex_zap(ZAP_PARALYSE, BEAM_PARALYSIS),
+_mon_hex_zap(ZAP_VEX, BEAM_VEX),
 
 {
     ZAP_BOLT_OF_FIRE,

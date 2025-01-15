@@ -7113,6 +7113,35 @@ bool player::fully_petrify(bool /*quiet*/)
     return true;
 }
 
+bool player::vex(const actor* source, int dur)
+{
+    if (you.clarity())
+    {
+        mprf("Your clarity prevents you from becoming vexed.");
+        return false;
+    }
+    else if (duration[DUR_STUN_IMMUNITY])
+    {
+        mpr("You shrug off the repeated attempt to disable you.");
+        return false;
+    }
+    else if (you.duration[DUR_VEXED])
+        return false;
+
+    mprf(MSGCH_WARN, "You feel overwhelmed by frustration!");
+    you.duration[DUR_VEXED] = dur * BASELINE_DELAY;
+
+    if (source)
+        props[DISABLED_BY_KEY] = source->name(DESC_A, true);
+    else
+        props.erase(DISABLED_BY_KEY);
+
+    stop_delay(true, true);
+    stop_directly_constricting_all(false);
+    stop_channelling_spells();
+
+    return true;
+}
 
 void player::give_stun_immunity(int dur)
 {

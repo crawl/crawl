@@ -49,6 +49,8 @@ public:
                                   // followups, but still do 100% damage
     int          dmg_mult;        // percentage multiplier to max damage roll
     int          flat_dmg_bonus;  // flat slaying to add to this attack
+    bool         never_prompt;    // whether to skip prompting the player about
+                                  // harming allies
     wu_jian_attack_type wu_jian_attack;
     int wu_jian_number_of_targets;
     coord_def attack_position;

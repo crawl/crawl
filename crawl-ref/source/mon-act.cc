@@ -55,6 +55,7 @@
 #include "spl-book.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
+#include "spl-monench.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
@@ -2084,6 +2085,13 @@ void handle_monster_move(monster* mons)
             _passively_summon_butterfly(*mons);
 
     _monster_regenerate(mons);
+
+    if (mons->has_ench(ENCH_VEXED))
+    {
+        do_vexed_attack(*mons);
+        mons->lose_energy(EUT_ATTACK);
+        return;
+    }
 
     // Please change _slouch_damage to match!
     if (mons->cannot_act()
