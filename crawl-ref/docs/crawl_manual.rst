@@ -2962,6 +2962,12 @@ commands:
 !d
   Prompt before dropping this item.
 
+!e
+  Prompt before equipping this item.
+
+!u
+  Prompt before unequipping this item.
+
 !q
   Prompt before quaffing this item.
 

@@ -1456,13 +1456,26 @@ static bool _has_warning_inscription(const item_def& item,
             {
                 return true;
             }
+            else if (oper == OPER_UNEQUIP)
+            {
+                if (item.base_type == OBJ_JEWELLERY && r[i+1] == 'R')
+                    return true;
+                else if (item.base_type == OBJ_ARMOUR && r[i+1] == 'T')
+                    return true;
+                else if (is_weapon(item) && r[i+i] == 'w')
+                    return true;
+            }
+            else if (oper == OPER_EQUIP)
+            {
+                if (item.base_type == OBJ_JEWELLERY && r[i+1] == 'P')
+                    return true;
+                else if (item.base_type == OBJ_ARMOUR && r[i+1] == 'W')
+                    return true;
+                else if (is_weapon(item) && r[i+i] == 'w')
+                    return true;
+            }
         }
     }
-
-    // if the inscription is wear/takeoff (etc), check equip/unequip
-    const auto gen = generalize_oper(oper);
-    if (gen != OPER_NONE && gen != oper)
-        return _has_warning_inscription(item, gen);
 
     return false;
 }
