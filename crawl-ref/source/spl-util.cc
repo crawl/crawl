@@ -1451,7 +1451,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_AWAKEN_ARMOUR:
         if (!you_can_wear(SLOT_BODY_ARMOUR, temp))
             return "you cannot wear body armour.";
-        if (temp && !you.equipment.get_slot_items(SLOT_BODY_ARMOUR).empty())
+        if (temp && !you.body_armour())
             return "you have no body armour to summon the spirit of.";
         break;
 
