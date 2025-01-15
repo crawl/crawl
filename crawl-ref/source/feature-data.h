@@ -348,6 +348,7 @@ TRAP(DNGN_TRAP_SHADOW_DORMANT, "dormant shadow trap", "trap_shadow_dormant", BLU
 TRAP(DNGN_TRAP_TYRANT, "tyrant's trap", "trap_tyrant", WHITE),
 TRAP(DNGN_TRAP_ARCHMAGE, "archmage's trap", "trap_archmage", BLUE),
 TRAP(DNGN_TRAP_HARLEQUIN, "harlequin's trap", "trap_harlequin", YELLOW),
+TRAP(DNGN_TRAP_DEVOURER, "devourer's trap", "trap_devourer", LIGHTGREEN),
 TRAP(DNGN_TRAP_ALARM, "alarm trap", "trap_alarm", LIGHTRED),
 TRAP(DNGN_TRAP_ZOT, "Zot trap", "trap_zot", LIGHTMAGENTA),
 TRAP(DNGN_PASSAGE_OF_GOLUBRIA, "passage of Golubria", "passage of golubria", GREEN),

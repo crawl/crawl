@@ -138,7 +138,8 @@ bool trap_def::is_bad_for_player() const
            || type == TRAP_PLATE
            || type == TRAP_TYRANT
            || type == TRAP_ARCHMAGE
-           || type == TRAP_HARLEQUIN;
+           || type == TRAP_HARLEQUIN
+           || type == TRAP_DEVOURER;
 }
 
 bool trap_def::is_safe(actor* act) const
@@ -712,6 +713,28 @@ void trap_def::trigger(actor& triggerer)
         break;
     }
 
+    case TRAP_DEVOURER:
+    {
+        if (you_trigger)
+            mpr("You enter a devourer's trap.");
+
+        if (x_chance_in_y(2, 3))
+        {
+            if (!you_trigger)
+            {
+                mprf("%s %s!", triggerer.name(DESC_THE).c_str(),
+                mons_intel(*m) >= I_HUMAN ? "invokes an devourer's trap upon you" :
+                                            "sets off an devourer's trap");
+            }
+            flash_tile(you.pos(), YELLOW, 60, TILE_BOLT_DEFAULT_YELLOW);
+            you.corrode_equipment("The trap's stomach acid", 1);
+        }
+        else if (!you_trigger)
+            mprf("%s enters a devourer's trap.", triggerer.name(DESC_THE).c_str());
+
+        break;
+    }
+
     case TRAP_ALARM:
         // Alarms always mark the player, but not through glass
         // The trap gets destroyed to prevent the player from abusing an alarm
@@ -1155,6 +1178,8 @@ dungeon_feature_type trap_feature(trap_type type)
         return DNGN_TRAP_ARCHMAGE;
     case TRAP_HARLEQUIN:
         return DNGN_TRAP_HARLEQUIN;
+    case TRAP_DEVOURER:
+        return DNGN_TRAP_DEVOURER;
     case TRAP_ALARM:
         return DNGN_TRAP_ALARM;
     case TRAP_ZOT:
@@ -1177,7 +1202,6 @@ dungeon_feature_type trap_feature(trap_type type)
         return DNGN_TRAP_PLATE;
 
 #if TAG_MAJOR_VERSION == 34
-    case TRAP_NEEDLE:
     case TRAP_GAS:
         return DNGN_TRAP_MECHANICAL;
 #endif
@@ -1479,6 +1503,8 @@ trap_type random_trap_for_place(bool dispersal_ok)
     const bool harlequin_ok = player_in_branch(BRANCH_DEPTHS)
                               || player_in_branch(BRANCH_ZOT)
                               || player_in_branch(BRANCH_PANDEMONIUM);
+    const bool devourer_ok = player_in_branch(BRANCH_SLIME)
+                             || player_in_branch(BRANCH_PANDEMONIUM);
 
     const pair<trap_type, int> trap_weights[] =
     {
@@ -1489,6 +1515,7 @@ trap_type random_trap_for_place(bool dispersal_ok)
         { TRAP_TYRANT,    tyrant_ok    ? 3 : 0},
         { TRAP_ARCHMAGE,  archmage_ok  ? 3 : 0},
         { TRAP_HARLEQUIN, harlequin_ok ? 2 : 0},
+        { TRAP_DEVOURER,  devourer_ok  ? 2 : 0},
     };
 
     const trap_type *trap = random_choose_weighted(trap_weights);
@@ -1602,7 +1629,6 @@ bool is_removed_trap(trap_type trap)
     {
     case TRAP_SPEAR:
     case TRAP_BOLT:
-    case TRAP_NEEDLE:
     case TRAP_GAS:
     case TRAP_SHADOW:
     case TRAP_SHADOW_DORMANT:

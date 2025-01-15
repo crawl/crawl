@@ -497,7 +497,6 @@ misc/error PLACEHOLDER3
 %sdir dngn/traps
 ## traps
 # start TAG_MAJOR_VERSION == 34
-needle DNGN_TRAP_NEEDLE
 bolt DNGN_TRAP_BOLT
 spear DNGN_TRAP_SPEAR
 # end TAG_MAJOR_VERSION
@@ -511,6 +510,7 @@ harlequin1
 harlequin2
 harlequin3
 harlequin4
+devourer DNGN_TRAP_DEVOURER
 dispersal DNGN_TRAP_DISPERSAL
 teleport DNGN_TRAP_TELEPORT
 teleport_permanent DNGN_TRAP_TELEPORT_PERMANENT

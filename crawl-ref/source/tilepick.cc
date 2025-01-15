@@ -115,6 +115,8 @@ tileidx_t tileidx_trap(trap_type type)
         return TILE_DNGN_TRAP_ARCHMAGE;
     case TRAP_HARLEQUIN:
         return TILE_DNGN_TRAP_HARLEQUIN;
+    case TRAP_DEVOURER:
+        return TILE_DNGN_TRAP_DEVOURER;
     case TRAP_ALARM:
         return TILE_DNGN_TRAP_ALARM;
     case TRAP_NET:
@@ -278,6 +280,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_TRAP_ARCHMAGE;
     case DNGN_TRAP_HARLEQUIN:
         return TILE_DNGN_TRAP_HARLEQUIN;
+    case DNGN_TRAP_DEVOURER:
+        return TILE_DNGN_TRAP_DEVOURER;
     case DNGN_TRAP_ALARM:
         return TILE_DNGN_TRAP_ALARM;
     case DNGN_TRAP_ZOT:

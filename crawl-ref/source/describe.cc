@@ -878,6 +878,7 @@ static const char *trap_names[] =
     "tyrant's",
     "archmage's",
     "harlequin's",
+    "devourer's",
     "dispersal",
     "teleport",
 #endif
@@ -889,7 +890,7 @@ static const char *trap_names[] =
     "net",
     "Zot",
 #if TAG_MAJOR_VERSION == 34
-    "needle",
+    "devourer's",
 #endif
     "shaft",
     "passage",

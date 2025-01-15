@@ -20,6 +20,7 @@ enum trap_type
     TRAP_TYRANT,
     TRAP_ARCHMAGE,
     TRAP_HARLEQUIN,
+    TRAP_DEVOURER,
 #endif
     TRAP_ALARM,
 #if TAG_MAJOR_VERSION == 34
@@ -29,7 +30,7 @@ enum trap_type
     TRAP_NET,
     TRAP_ZOT,
 #if TAG_MAJOR_VERSION == 34
-    TRAP_NEEDLE,
+    TRAP_DEVOURER,
 #endif
     TRAP_SHAFT,
     TRAP_GOLUBRIA,

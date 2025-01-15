@@ -775,6 +775,13 @@ monster steps on it, you will lose a percentage of your mp, while up to three of
 the strongest hostile spellcasters in sight will have their spells empowered.
 Your allies will avoid stepping on it.
 %%%%
+A devourer's trap
+
+A magical trap linked by divine cruelty to the stomachs of some unfathomable
+interdimensional predators. When you or a hostile monster steps on it, it has a
+high chance it will expel digestive acid onto you, corroding you. Your allies
+will avoid stepping on it.
+%%%%
 A dispersal trap
 
 Anyone stepping on this trap will translocate themself and anyone else in view
