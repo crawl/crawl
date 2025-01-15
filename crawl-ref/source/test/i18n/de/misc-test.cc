@@ -232,7 +232,7 @@ int main()
     show_result(msg, expected);
 
     msg = localise("%s %d times for up to %d damage each", "bite", 7, 10);
-    expected = "7 Mal beißen für bis zu 10 Schaden pro Mal";
+    expected = "7 mal beißen für jeweils bis zu 10 Schaden";
     show_result(msg, expected);
 
     msg = localise("You detect %s.", "the hexed spriggan");
@@ -302,7 +302,7 @@ int main()
     show_result(msg, "Das kannst du nicht, solange du in einem Netz gefangen bist.");
 
     msg = localise("You cannot do that while caught in a web.");
-    show_result(msg, "Das kannst du nicht, solange du in einem Gewebe gefangen bist.");
+    show_result(msg, "Das kannst du nicht, solange du in einem Gespinst gefangen bist.");
 
     msg = localise("\"You will pay for your transgression, mortal!\"");
     show_result(msg, "\"Du wirst für deine Übertretung bezahlen, Sterblicher!\"");
