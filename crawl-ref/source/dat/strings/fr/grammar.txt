@@ -180,30 +180,32 @@ KEY:/^(.*)'s$/{poss}$1/
 # Generate feminine singular adjective from masculine singular
 %%%%
 GENERATE:f
-# temporary marker to tell us where to stop
-/ de /# de /
-/^[^#]*/([^e ])(?=( |$))/$1e/
+# temporary marker to tell us to stop at de/du/d'/des
+/\bd(?=('|[eu]\b|es\b))/#d/
+/^[^#]*/eux(?=( |$))/euse/
+/^[^#]*/([b-df-hj-np-tv-zé])(?=( |$))/$1e/
 # remove temporary marker
-/# de / de /
+/#//
 %%%%
 
 # Generate masculine plural adjective from masculine singular
 %%%%
 GENERATE:mpl
-# temporary marker to tell us where to stop
-/ de /# de /
-/^[^#]*/([^ ])(?=( |$))/$1s/
+# temporary marker to tell us to stop at de/du/d'/des
+/\bd(?=('|[eu]\b|es\b))/#d/
+/^[^#]*/([a-rt-wyzé])(?=( |$))/$1s/
 # remove temporary marker
-/# de / de /
+/#//
 %%%%
 
 # Generate feminine plural adjective from masculine singular
 %%%%
 GENERATE:fpl
-# temporary marker to tell us where to stop
-/ de /# de /
-/^[^#]*/([^e ])(?=( |$))/$1es/
-/^[^#]*/e(?=( |$))/es/
+# temporary marker to tell us to stop at de/du/d'/des
+/\bd(?=('|[eu]\b|es\b))/#d/
+/^[^#]*/eux(?=( |$))/euses/
+/^[^#]*/([aeiou])(?=( |$))/$1s/
+/^[^#]*/([a-rt-zé])(?=( |$))/$1es/
 # remove temporary marker
-/# de / de /
+/#//
 %%%%
