@@ -3740,7 +3740,7 @@ VISUAL:@The_monster@ scheint von Trauer überwältigt zu sein, richtet sich aber
 
 @The_monster@ schreit, "Nein! Oh nein!"
 
-Die Augen {gen}@the_monster@ verfinstern sich. "Du hast einen schwarzen Fehler gemacht."
+Die Augen {gen}@the_monster@ verfinstern sich. "Du hast einen schweren Fehler gemacht."
 %%%%
 Dowan_Duvessa_dies_invisible
 
@@ -5168,7 +5168,7 @@ VISUAL:@The_monster@ grinst.
 %%%%
 _Menkaure_rare_
 
-Der Knöchel {gen}@the_monster@ wirbelt Staub auf, als er sagt, "Ich bin eigentlich keine Mumie, weißt du?
+Aus dem Knöchel {gen}@the_monster@ tritt Staub aus, als er sagt, "Ich bin eigentlich keine Mumie, weißt du?"
 
 VISUAL:@The_monster@ vergisst zu sprechen, verstummt im Laufe der Zeit.
 
