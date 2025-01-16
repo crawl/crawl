@@ -141,7 +141,7 @@ int count = 0;
         if (you.has_mutation(MUT_QUADRUMANOUS))
             ++count;
 
-        if (player_size == SIZE_TINY)
+        if (player_size <= SIZE_LITTLE)
             NO_SLOT(make_stringf("Those are too big for your %s.", you.hand_name(true).c_str()))
         else if (player_size >= SIZE_LARGE)
             NO_SLOT(make_stringf("Those are too small for your %s.", you.hand_name(true).c_str()))
@@ -159,7 +159,7 @@ int count = 0;
     case SLOT_BOOTS:
         if (species::wears_barding(you.species))
             NO_SLOT("You don't have any feet!")
-        else if (player_size == SIZE_TINY)
+        else if (player_size <= SIZE_LITTLE)
             NO_SLOT(make_stringf("Those are too big for your %s.", you.hand_name(true).c_str()))
         else if (player_size >= SIZE_LARGE)
             NO_SLOT(make_stringf("Those are too small for your %s.", you.hand_name(true).c_str()))
