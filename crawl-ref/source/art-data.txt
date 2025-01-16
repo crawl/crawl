@@ -1842,7 +1842,7 @@ DBRAND:  It massively reduces your stealth.
 
 ENUM:    JUSTICARS_REGALIA
 NAME:    justicar's regalia
-INSCRIP: Rally Amulet+
+INSCRIP: Inspire Amulet+
 OBJ:     OBJ_ARMOUR/ARM_SCALE_MAIL
 PLUS:    +5
 STR:     4
