@@ -114,12 +114,12 @@ string pluralise(const string &name, const char * const qualifiers[],
         // mage -> magi
         return name.substr(0, name.length() - 1) + "i";
     }
-    else if (lowname == "gold"                 || ends_with(lowname, "fish")
-             || ends_with(lowname, "folk")     || ends_with(lowname, "spawn")
-             || ends_with(lowname, "tengu")    || ends_with(lowname, "sheep")
-             || ends_with(lowname, "swine")    || ends_with(lowname, "efreet")
-             || ends_with(lowname, "jiangshi") || ends_with(lowname, "raiju")
-             || ends_with(lowname, "meliai"))
+    else if (lowname == "gold"                 || lowname == "oni"
+             || ends_with(lowname, "fish")     || ends_with(lowname, "folk")
+             || ends_with(lowname, "spawn")    || ends_with(lowname, "tengu")
+             || ends_with(lowname, "sheep")    || ends_with(lowname, "swine")
+             || ends_with(lowname, "efreet")   || ends_with(lowname, "jiangshi")
+             || ends_with(lowname, "raiju")    || ends_with(lowname, "meliai"))
     {
         return name;
     }
