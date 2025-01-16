@@ -282,7 +282,7 @@ Your soul already belongs to Yredelemnul.
 Deine Seele gehört schon Yredelemnul.
 %%%%
 %s's clone doesn't have a soul to enslave!
-Der Klon von {dat}%s hat keine Seele zum Versklaven!
+Der Klon {gen}%s hat keine Seele zum Versklaven!
 %%%%
 You see nothing there you can enslave the soul of!
 Du siehst dort nichts, von dem du die Seele versklaven kannst!
@@ -1155,14 +1155,16 @@ Du zehrst {acc}%s aus
 %s drains itself
 %s zehrt sich selbst aus
 %%%%
+# note: %s will be possessive (e.g. "the orc's", "Sigmund's")
 You drain %s vigour!
 Du entziehst die Vitalität %s!
 %%%%
 %s drains your vigour!
 %s entzieht deine Vitalität!
 %%%%
+# note: second %s will be possessive (e.g. "the orc's", "Sigmund's")
 %s drains %s vigour!
-%s entzieht {dat}%s die Vitalität!
+%s entzieht die Vitalität %s!
 %%%%
 You pounce on %s from a blind spot!
 Du stürzt dich aus dem toten Winkel auf {acc}%s!
@@ -1432,8 +1434,9 @@ Du hast Schwierigkeiten beim Atmen.
 The silver sears %s!
 Das Silber versengt {acc}%s!
 %%%%
+# note: %s will be possessive (e.g. "the orc's", "Sigmund's")
 %s life force is offered up.
-%s Lebenskraft wird als Opfer dargeboten.
+Die Lebenskraft %s wird als Opfer dargeboten.
 %%%%
 You draw life force from %s%s
 Du ziehst Lebenskraft aus %s%s
@@ -1651,11 +1654,13 @@ Dein dämonischer Wächter vermeidet deinen Angriff.
 %s is dispelled
 %s wird gebannt
 %%%%
+# note: %s will be possessive (e.g. "the orc's", "Sigmund's")
 %s mind is blasted
-%s Verstand wird gesprengt
+Der Verstand %s wird gesprengt
 %%%%
+# note: this is for monsters with multiple heads, and %s will be possessive (i.e. "the hydra's")
 %s minds are blasted
-%s Verstand wird gesprengt
+Der Verstand %s wird gesprengt
 %%%%
 %s looks drowsy...
 %s sieht schläfrig aus...
@@ -1690,8 +1695,9 @@ Die Wunden {gen}%s heilen von selbst!
 %s is firmly anchored in space.
 %s ist fest im Raum verankert.
 %%%%
+# note: %s will be possessive (e.g. "the orc's", "Sigmund's")
 %s willpower is stripped away.
-%s Willenskraft wird aufgezehrt!
+Die Willenskraft %s wird aufgezehrt!
 %%%%
 %s grows more vulnerable to poison.
 %s wird anfälliger für Gift.
@@ -1702,8 +1708,9 @@ Die Wunden {gen}%s heilen von selbst!
 %s seems less confident about using magic.
 %s scheint weniger Vertrauen in die Magie zu haben.
 %%%%
+# note: %s will be possessive (e.g. "the orc's", "Sigmund's")
 %s magic leaks into the air.
-%s Magie entströmt in die Luft.
+Die Magie %s entströmt in die Luft.
 %%%%
 %s suddenly seems more resistant.
 %s wirkt plötzlich widerstandsfähiger.
@@ -4641,7 +4648,7 @@ Treppe nach unten
 ##################
 %%%%
 %s's aura of fear is muted, and has no effect on you.
-%s Aura der Angst ist gedämpft und hat keine Auswirkung auf dich.
+Die Aura der Angst {gen}%s ist gedämpft und hat keine Auswirkung auf dich.
 %%%%
 The fearful aura is strangely muted, and has no effect on you.
 Die ängstliche Aura ist seltsamerweise gedämpft und hat keine Auswirkung auf dich.
@@ -5171,7 +5178,7 @@ You can't give that to %s.
 Das kannst du {dat}%s nicht geben.
 %%%%
 %s can't equip that with a two-handed weapon.
-%s Kann das nicht zusammen mit einer Zweihandwaffe verwenden.
+%s kann das nicht zusammen mit einer Zweihandwaffe verwenden.
 %%%%
 Resurrect %s?
 {acc}%s wieder zum Leben erwecken?
@@ -9200,7 +9207,7 @@ Du spürst eine böse Präsenz.
 %s legt einen Geschwindigkeitsschub hin!
 %%%%
 %s's surroundings become eerily quiet.
-Die Umgebung von {dat}%s wird unheimlich still.
+Die Umgebung {gen}%s wird unheimlich still.
 %%%%
 %s sings a water chant to call the tide!
 %s singt einen Wassergesang, um die Flut zu rufen!
@@ -9737,8 +9744,9 @@ Die innere Flamme {gen}%s verblasst.
 %s loses the glow of perfection.
 %s verliert den Glanz der Perfektion.
 %%%%
+# note: %s will be possessive (e.g. "the orc's", "Sigmund's")
 %s soul is no longer bound.
-%s Seele ist nicht mehr gebunden.
+Die Seele %s ist nicht mehr gebunden.
 %%%%
 %s is no longer infested.
 %s ist nicht mehr befallen.
@@ -9807,8 +9815,9 @@ Die Winde um {acc}%s beginnen sich zu beruhigen.
 %s is seared!
 %s wird versengt!
 %%%%
+# note: %s will be possessive (e.g. "the orc's", "Sigmund's")
 %s chant is interrupted.
-%s Gesang ist unterbrochen.
+Der Gesang %s wird unterbrochen.
 %%%%
 %s is asphyxiated!
 %s wird erstickt!
@@ -9816,8 +9825,9 @@ Die Winde um {acc}%s beginnen sich zu beruhigen.
 The winds around %s calm down.
 Die Winde um {acc}%s beruhigen sich.
 %%%%
+# note: %s will be possessive (e.g. "the orc's", "Sigmund's")
 %s song is interrupted.
-%s Lied ist unterbrochen.
+Das Lied %s wird unterbrochen.
 %%%%
 %s is no longer sharing pain.
 %s teilt keinen Schmerz mehr.

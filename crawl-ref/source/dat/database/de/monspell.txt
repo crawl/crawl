@@ -131,7 +131,7 @@ Goad Beasts cast
 %%%%
 ironbound thunderhulk cast
 
-Elektrizität knistert in {gen}@the_monster@ Apparat.
+Elektrizität knistert im Apparat {gen}@the_monster@.
 %%%%
 Mara Summon cast
 
@@ -463,7 +463,7 @@ Ensnare Arachne cast
 
 @The_monster@ richtet ihren Stab @at_or_near_target@ und schießt einen Strom Spinnennetz.
 
-{gen}@The_monster@ Stab schießt einen Strom Spinnennetz.
+Der Stab {gen}@the_monster@ schießt einen Strom Spinnennetz.
 %%%%
 unseen Ensnare Arachne cast
 

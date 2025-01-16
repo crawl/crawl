@@ -232,7 +232,7 @@ VISUAL:@The_monster@ schimmert heftig.
 
 VISUAL:@The_monster@ leuchtet für einen Moment hell auf.
 
-VISUAL:{gen}@The_monster@ {nom}@hands@ beginnen zu glühen
+VISUAL:Die @hands@ {gen}@the_monster@ beginnen zu glühen
 
 VISUAL:Du fühlst dich desorientiert. @player_only@
 
@@ -1829,7 +1829,7 @@ _Azrael_common_
 
 VISUAL:@The_monster@ bläst Rauchringe.
 
-VISUAL:{gen}@The_monster@ Augen sehen feurig aus.
+VISUAL:Die Augen {gen}@the_monster@ sehen feurig aus.
 
 VISUAL:@The_monster@ wird kurzzeitig von einer Flammenwolke verdeckt.
 %%%%
@@ -1905,7 +1905,7 @@ w:5
 @The_monster@ flüstert zu sich selbst, "Alle, die ich gerettet habe... Jeden, den ich verdammte..."
 
 w:5
-VISUAL:{gen}@The_monster@ Gestalt schimmert im Regen.
+VISUAL:Die Gestalt {gen}@the_monster@ schimmert im Regen.
 ## END Bai Suzhen ##
 %%%%
 
@@ -3716,9 +3716,9 @@ _Dowan_rare_
 
 VISUAL:@The_monster@ wirft und fängt eine Handvoll magischer Flammen und grinst dann.
 
-VISUAL:{gen}@The_monster@ Gewand wird von einer magischen Brise herumgepeitscht.
+VISUAL:Das Gewand {gen}@the_monster@ wird von einer magischen Brise herumgepeitscht.
 
-VISUAL:{gen}@The_monster@ Füße verschmelzen kurz mit dem Boden.
+VISUAL:Die Füße {gen}@the_monster@ verschmelzen kurz mit dem Boden.
 
 VISUAL:@The_monster@ erzeugt eine Fontäne aus klarem Wasser und lacht grausam.
 
@@ -3740,7 +3740,7 @@ VISUAL:@The_monster@ scheint von Trauer überwältigt zu sein, richtet sich aber
 
 @The_monster@ schreit, "Nein! Oh nein!"
 
-{gen}@The_monster@ Augen verfinstern sich. "Du hast einen schwarzen Fehler gemacht."
+Die Augen {gen}@the_monster@ verfinstern sich. "Du hast einen schwarzen Fehler gemacht."
 %%%%
 Dowan_Duvessa_dies_invisible
 
@@ -4199,7 +4199,7 @@ _gastronok_self_buff_
 
 @The_monster@ wackelt wie verrückt.
 
-{gen}@The_monster@ Augenstiele dehnen sich aus und kehren dann zur normalen Größe zurück.
+Die Augenstiele {gen}@the_monster@ dehnen sich aus und kehren dann zur normalen Größe zurück.
 %%%%
 # When targeting other monsters.
 _gastronok_other_buff_
@@ -4251,7 +4251,7 @@ VISUAL:@The_monster@s Maul öffnet sich, die Radula fuchtelt wild.
 
 VISUAL:@The_monster@ wird von einer plötzlichen Brise umgeworfen.
 
-VISUAL:{gen}@The_monster@ Augenstiele wackeln, so dass es fast seinen Zaubererhut abwirft.
+VISUAL:Die Augenstiele {gen}@the_monster@ wackeln, so dass es fast seinen Zaubererhut abwirft.
 
 @The_monster@ gluckst, "Du bist, wie ich mein Essen mag. Schnell!"
 
@@ -4976,7 +4976,7 @@ w:5
 %%%%
 _Mara_common_
 
-VISUAL: {gen}@The_monster@ Gesicht verändert sich zweimal.
+VISUAL:Das Gesicht {gen}@the_monster@ verändert sich zweimal.
 
 @The_monster@ sagt, "Ich führe die Herzen der Menschen in die Irre!"
 
@@ -5029,14 +5029,14 @@ VISUAL:@The_monster@ ist von einer Aura der Macht umgeben.
 
 VISUAL:@The_monster@ wird für einen Moment durchsichtig.
 
-VISUAL:{gen}@The_monster@ Hände beginnen zu leuchten.
+VISUAL:Die Hände {gen}@the_monster@ beginnen zu leuchten.
 %%%%
 _Margery_common_
 
 VISUAL:@The_monster@ gestikuliert.
 @_Margery_spell_results_@
 
-VISUAL:{gen}@The_monster@ Augen beginnen, mit einem [roten|grünen|blauen] Licht zu leuchten.
+VISUAL:Die Augen {gen}@the_monster@ beginnen, mit einem [roten|grünen|blauen] Licht zu leuchten.
 
 VISUAL:@The_monster@ gestikuliert.
 VISUAL: Du fühlst dich [verflucht|verloren].
@@ -5144,7 +5144,7 @@ w:2
 %%%%
 _Menkaure_common_
 
-VISUAL:{gen}@The_monster@ Bandagen flattern.
+VISUAL:Die Bandagen {gen}@the_monster@ flattern.
 
 @The_monster@ @_Menkaure_verb_@ in einer unverständlichen Sprache.
 
@@ -5168,7 +5168,7 @@ VISUAL:@The_monster@ grinst.
 %%%%
 _Menkaure_rare_
 
-{gen}@The_monster@ Knöchel wirbelt Staub auf, als er sagt, "Ich bin eigentlich keine Mumie, weißt du?
+Der Knöchel {gen}@the_monster@ wirbelt Staub auf, als er sagt, "Ich bin eigentlich keine Mumie, weißt du?
 
 VISUAL:@The_monster@ vergisst zu sprechen, verstummt im Laufe der Zeit.
 
@@ -5234,7 +5234,7 @@ VISUAL:@The_monster@ grinst böse
 
 @The_monster@ lacht böse.
 
-{gen}@The_monster@ Zähne klappern laut.
+Die Zähne {gen}@the_monster@ klappern laut.
 
 @The_monster@ gackert {acc}@foe@ an, "Ich werde die Welt beherrschen!"
 %%%%
@@ -5315,7 +5315,7 @@ _Natasha_death_common_
 @The_monster@ knurrt vor Schmerz!
 %%%%
 _Natasha_death_rare_
-Plötzlich erhebt sich {gen}@the_monster@ Geist aus dem leblosen Körper.
+Plötzlich erhebt sich der Geist {gen}@the_monster@ aus dem leblosen Körper.
 
 Der Geist {gen}@the_monster@ stöhnt erbärmlich und stürzt in den Boden.
 
@@ -5353,9 +5353,9 @@ _Robin_common_
 
 @The_monster@ lacht auf eine ausgesprochen süffisante Art.
 
-VISUAL: {gen}@The_monster@ Armreifen klirren laut.
+VISUAL:Die Armreifen {gen}@the_monster@ klirren laut.
 
-VISUAL: Der gehörnte Helm {gen}@the_monster@ klappert.
+VISUAL:Der gehörnte Helm {gen}@the_monster@ klappert.
 
 VISUAL:@The_monster@ spannt bedrohlich einen Bizeps an.
 
@@ -5944,7 +5944,7 @@ VISUAL:@The_monster@ sieht dich mit Zorn an.
 
 @The_monster@ kichert. "Zeit zu ernten, was man sät."
 
-VISUAL:{gen}@The_monster@ Augen beginnen mit einem roten Licht zu leuchten.
+VISUAL:Die Augen {gen}@the_monster@ beginnen mit einem roten Licht zu leuchten.
 
 @The_monster@ haucht ein paar Worte.
 VISUAL:@The_monster@s Hände beginnen wild zu flackern.
