@@ -417,9 +417,14 @@ void ash_check_bondage()
     you.skill_boost.clear();
 
     int num_cursed = 0, num_slots = 0;
-    // Gizmos are not a curseable slot and should not be counted.
-    for (int j = SLOT_FIRST_STANDARD; j < SLOT_GIZMO; ++j)
+    for (int j = SLOT_FIRST_STANDARD; j < NUM_EQUIP_SLOTS; ++j)
+    {
+        // Gizmos are not a curseable slot and should not be counted.
+        if (j == SLOT_GIZMO)
+            continue;
+
         num_slots += you.equipment.num_slots[j];
+    }
 
     // Find what percentage of available slots have a cursed item in them.
     // Overflow slots are counted when determining piety (ie: a two-handed

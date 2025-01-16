@@ -717,7 +717,7 @@ static void _print_stats_equip(int x, int y)
     textcolour(HUD_CAPTION_COLOUR);
 
     int total_slots = 0;
-    for (int i = SLOT_FIRST_STANDARD; i <= SLOT_LAST_STANDARD; ++i)
+    for (int i = SLOT_FIRST_STANDARD; i < NUM_EQUIP_SLOTS; ++i)
         total_slots += you.equipment.num_slots[i];
 
     cprintf(total_slots > 8 ? "Eq: " : "Equip: ");
