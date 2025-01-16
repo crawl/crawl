@@ -792,7 +792,7 @@ MONS:    spriggan defender w:30 / titan w:30 / ancient lich w:30 / \
          draconian annihilator / draconian knight
 KMONS:   Z = draconian knight / draconian annihilator
 KITEM:   Z = midnight gem
-KFEAT:   z^ = zot trap / dispersal trap
+KFEAT:   z^ = harlequin's trap
 KFEAT:   Z = enter_zot
 SHUFFLE: Y], {([>, HI / HI / IH, JK / JK / KJ
 SHUFFLE: NO / NO / ON, PQ / PQ / QP, RS / RS / SR, lm / lm / ml

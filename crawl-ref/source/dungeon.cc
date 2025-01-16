@@ -3550,7 +3550,16 @@ static bool _builder_normal()
 
 static void _place_traps()
 {
-    const int num_traps = random2avg(2 * trap_rate_for_place(), 2);
+
+    int num_traps = random2avg(2 * trap_rate_for_place(), 2);
+
+    // Snake and Vaults don't have a lot of unique terrain types or open
+    // themes compared to their adjacent branches, and have themed weaker
+    // trap options to fall back on, so they get extra traps.
+    if (player_in_branch(BRANCH_SNAKE))
+        num_traps += 2;
+    else if (player_in_branch(BRANCH_VAULTS))
+        num_traps += 1;
 
     ASSERT(num_traps >= 0);
     dprf("attempting to place %d traps", num_traps);

@@ -2280,13 +2280,14 @@ kmons("5 = patrolling Head Instructor dbname:Head_Instructor name:"
 ITEM:   any book w:15 / randbook disc:hexes owner:Yara w:4 / spellbinder w:1
 ITEM:   scroll of enchant armour pre_id / scroll of enchant weapon pre_id
 KFEAT:  C = cache of fruit / cache of meat / cache of baked goods
+KFEAT:  ^ = archmage's trap
 NSUBST: * = 4:d / 4:e / *=*., 5 = 1:5 / *:1, D = 1:2 / * = 1G
 NSUBST: E = 1:2 / *:1, 3 = 1:4 / * = 3", A = 1:< / *:A, C = 3 = C.. / *:.
 SUBST:  P : Pt", F = 211111, 1 = 1...., x = xxxx., - = x
-FTILE:  125.C*de$GS+ = floor_limestone
+FTILE:  125.^C*de$GS+ = floor_limestone
 FTILE:  Tt"PA<34 = floor_dirt / floor_grass:15
-TILE:   x = wall_brick
 TILE:   c = wall_church
+LROCKTILE: wall_brick
 :           vault_metal_statue_setup(_G, "S", "misfortune conduit")
 :           set_random_mon_list(
 :               "mana viper / tengu conjurer / ogre mage / " ..
@@ -2313,19 +2314,19 @@ t".1xx.11.xx.............1xx"""ttt
 t".xx..1.xx...1.xxt""txx..1xxttt
 t".xx..1xx...1.xx"3""3"xx...xxcccccccccccc
 t"1x...xx.....xx"3""""3"xx.....11......11c
-t".x...x.....xx"""c""c"""xx..............c
+t".x...x.....xx"""c""c"""xx...^..^.....^.c
 t".x11.x..t..x""c""33""c""xx...cc"cc"cc..c
 t".t...t..t..t""""PWWP""""txx..cD"D""Dc..c
-t".........."""c"PWWWWP"c"".x..""""""""..c
+t".........."""c"PWWWWP"c"".x.^""""""""^.c
 t"1....11.t."""c"WWWWWW"c""....c""cc"Dc.1c
 cccc++cccct."""""WWWWWW""""t...cD"cc""c.1c
-c*Cc..cC*ctt"""c"PWWWWP"c""x...""""""""..c
+c*Cc..cC*ctt"""c"PWWWWP"c""x..^""""""""^.c
 cE.+..+.Ec-t""""c"PWWP"c"""x...cD""D"Dc..c
 ccccE.cccc-t""""""""""""""txt..cc"cc"cc..c
-cE.+..+CEc-t""""""c33c""""---............c
-c*Cc..cE*c---"""""t""t""""---..11......11c
-ccccE.cccc  --"""tt""tt"""--cccccccccccccc
-c*Cc..cE*c   --"""t""t"""--
+cE.+..+CEc-t""""""c33c""""---.^.....^..^.c
+c*Cc^.cE*c---"""""t""t""""---..11......11c
+ccccE^cccc  --"""tt""tt"""--cccccccccccccc
+c*Cc^.cE*c   --"""t""t"""--
 cEE+..+CEc    --""""""""--
 cccc.Ecccc     --""""""--
 cE.+..+CEc      --""""--
@@ -2557,6 +2558,7 @@ KITEM:  Q = star_item
 KITEM:  JKL = potion of moonshine pre_id
 KFEAT:  C = cache of meat / cache of fruit / cache of baked goods
 KFEAT:  E = shallow_water
+KFEAT:  ^ = harlequin's trap
 KFEAT:  N = granite_statue
 NSUBST: A = 1:< / *:A, D = 1:D/*:-, W = 1:E / * = E:1 W:16, F = 1:F / * = F----
 NSUBST: H = 1:H / *:", e = 4:e / 1:g / *=eedg, 5 = 3:5 / *=5..
@@ -2599,10 +2601,10 @@ ce5.c3.Cc..33..33..c
 ccccccccc+cccccccc+c
     cee3c'''NNNN'''cccccccccc
     c444c''''''''''+....4..4c
-    ccc+c''N''''N''+..WWWW?.c
+    ccc+c''N''''N''+.^WWWW?.c
     c44.c''''''''''n.WWWWWW4c
     c3..+''''NN''''n.WWWWWW.c
-    c..CcN''""""'''n.?WWWW..c
+    c..CcN''""""'''n.?WWWW^.c
     c+ccc'''"HH"'''n4......4c
     c..3c'N'"HH"'N'cccccnn+nctttttt
     c4..+'''""""'''c4eecF----ttt-?tttttttttt
@@ -2612,14 +2614,14 @@ ccccccccc+cccccccc+c
     c...+''''''''''c..4ct---tt------WWW---tt
     c..CcNN'''''NN'+..CcttFtttt-----F----ttt
     c+ccccccc++ccccccccctt--tttt-?tt--tttt
-    c..4.4.G.?..G.4.4.Cct--Fttttttttttttt
+    c..4^4.G.?..G.4^4.Cct--Fttttttttttttt
     c.3..............3.ct--tttttttttttttt
     c..4G..........G4..ctt-tttt
   ttc+ccccccc++ccccccc+ctF-tttt
  tttc.....4cG..Gc4.....ct-J-ttt
 ttttc..3...c....c...3..ct--ttt
-ttttc......+.??.+......ct-tttt
-ttttc4...3.c....c.3...4ct--ttt
+ttttc.^....+.??.+....^.ct-tttt
+ttttc4...3.c^..^c.3...4ct--ttt
 ttttccccccccc++ccccccccc---tt
 ttttt--------DD----------Fttt
 tttttF--J------------------tt

@@ -1923,7 +1923,7 @@ ENDMAP
 
 NAME:   nemelex_lonely_heart_becter
 TAGS:   uniq_altar_nemelex_xobeh transparent decor
-TAGS:   temple_overflow_1 temple_overflow_nemelex
+TAGS:   temple_overflow_1 temple_overflow_nemelex no_wall_fixup
 TAGS:   no_rotate no_vmirror no_monster_gen no_item_gen vaults_room_empty
 DEPTH:  D:3-, Vaults, Depths
 # Boris misses Natasha, Bai Suzhen misses Xu Xian,
@@ -2006,14 +2006,18 @@ TAGS:   transparent decor vaults_empty
 DEPTH:  D:3-, Vaults, Orc
 WEIGHT: 3
 KFEAT:  _ = altar_okawaru
+KFEAT:  ^ = tyrant's trap
+: if not you.in_branch("Vaults") then
+SUBST:  ^ = .
+: end
 : interest_check(_G)
 MAP
 .......
-...v...
+.^.v...
 ..v.v..
 .v._.v.
 ..v.v..
-...v...
+...v.^.
 .......
 ENDMAP
 
@@ -3435,9 +3439,9 @@ MONS:   rakshasa ; dire flail ego:chaos | scimitar ego:chaos | partisan ego:chao
 ITEM:   gold q:1 no_pickup
 KFEAT:  _ = altar_xom
 :  if you.depth() == dgn.br_depth(you.branch()) then
-KFEAT:  ~ = teleport trap w:20 / alarm trap w:3 / dispersal trap
+KFEAT:  ~ = teleport trap w:20 / harlequin's trap w:3 / dispersal trap
 :  else
-KFEAT:  ~ = shaft trap / teleport trap / alarm trap w:3 / dispersal trap
+KFEAT:  ~ = shaft trap / teleport trap / harlequin's trap w:3 / dispersal trap
 :  end
 NSUBST: " = 1:_ / 1:*% / 8:M / *:?, G = 1:G / 1:bvGGTU~ / 2 = vGl~???? / * = '?
 NSUBST: ' = 10 = W:60 w:50 x:20 n:80 v / 8:d / * = xxxxnv

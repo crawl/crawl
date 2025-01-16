@@ -6587,6 +6587,8 @@ NSUBST:  % = 2:| / 4:% / *:$
 CLEAR:   z
 : end
 KFEAT:   ^ = teleport trap
+KFEAT:   ~ = archmage's trap
+KFEAT:   _ = altar_sif_muna / altar_vehumet
 KITEM:   | = any book w:5 / any magical staff / any ring / any amulet / \
              any misc / any wand w:5
 SUBST:   ! = 56
@@ -6598,7 +6600,7 @@ zccccc$$+e...3..%|ccccccc|%..2....c$$cccccz
 zcc..c$.c....7..%%ccccccc%%..7....c.$c..ccz
 zc..%+.+cccc.7.ccccccccccccc.7.c+ccc.c.*.cz
 zc.*.cc+.c.ccwcc.%.ccccc.%.cclcc.c.cc+%..cz
-zcc..cc..c..ccc..c.?ccc?.c..ccc..c..cc..ccz
+zcc..cc..c..ccc..c.?c_c?.c..ccc..c..cc..ccz
 zcc.ccc......c...c..!U!..c...c......ccc.ccz
  cc.cc$..c......4c...?...c4......c..$cc.cc
   c.cc$$$c%%.c...%...c...%...c.%%c$$$cc.c
@@ -6612,7 +6614,7 @@ zcc+ccc..c.c..cc...ccccc...cc..c.c..+cc.ccz
 zcc..ccccc+cccccb...bbb...bccccc+cccc+..ccz
 zc..%ccc.....ccclb...?...bwccc.....ccc%..cz
 zc.%.cc.......ccccccccccccccc.......cc.%.cz
-zcc..cc...!...cccc...^...cccc...!...cc..ccz
+zcc..cc...!...cccc~..^..~cccc...!...cc..ccz
 zcccclc.......ccc..cc.cc..ccc.......cwccccz
 zzzzzccc.1..5..$..ccc.ccc..$..6..1.ccczzzzz
     zzccc...ccccccccc.ccccccccc...ccczz

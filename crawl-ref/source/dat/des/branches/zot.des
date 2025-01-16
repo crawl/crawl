@@ -2456,9 +2456,10 @@ DEPTH:  Zot, !Zot:$
 MONS:   laughing skull, lich, ancient lich / dread lich, necromancer
 MONS:   vampire mage
 ITEM:   any book mimic:10 w:20 / any scroll mimic:10
+KFEAT:  ^ = archmage's trap
 SUBST:  x : xv, w : w?, G : Gg
 NSUBST: ? = 12 = 11. / *:.
-SUBST:  4 = 4 5:2 .:4
+SUBST:  4 = 4 5:2 .:4, ^ : ^..
 TILE:   G = dngn_statue_depths_zot_lich / dngn_statue_zot_old_guardian
 TILE:   c = wall_studio
 : vault_metal_statue_setup(_G, "g", "soul conduit")
@@ -2467,7 +2468,7 @@ wwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwww
 wwxxxxxxxxx+xxxxxxxxxww
 wwx....x.......x....xww
-wwx....+...G...+....xww
+wwx....+..^G^..+....xww
 wwx.4..x.......x..4.xww
 wwx4.4.xxxx+xxxx.4.4xww
 wwx.4.4xxx...xxc4.4.xww
@@ -2481,7 +2482,7 @@ wwx...xxxxx.xxxxxxxxxww
 wwxx+xxxxxx.xxcdddddxww
 wwxx.xxxxxx.xxcd232dxww
 wwxx.xxxxxx.xxxd...dxww
-wwxx......+...+....dxww
+wwxx......+^..+....dxww
 wwxxxxxxxxxmxxxd...dxww
 wwxxxxxxxxxGxxcdddddxww
 wwxxxxxxxxxxxxxxxxxxxww
@@ -2571,6 +2572,7 @@ DEPTH:  Zot, !Zot:$
 ORIENT: centre
 MONS:   oklob plant, acid blob, jelly, yellow draconian
 MONS:   any nonbase yellow draconian
+KFEAT:  ^ = devourer's trap
 SUBST:  1 = 1:2 .
 SUBST:  . = .:20 3:3 2:1
 SUBST:  } = }:80 >, ) = ):80 >, ] = ]:80 >
@@ -2581,7 +2583,7 @@ MAP
   xx....4554....xx
  xx.....cccc.....xx
  x....ccc..ccc....x
-xx...cc......cc...xx
+xx...cc^....^cc...xx
 x...cc..1111..cc...x
 x...c...1}11...c...x
 x.5.c...11]1...c.5.x
@@ -2805,7 +2807,8 @@ MONS:   oklob plant w:4 / lightning spire w:3
 MONS:   orange crystal statue / curse skull
 # Not quite the orb, but but close enough
 ITEM:   orb randart no_pickup, randbook disc:forgecraft spells:diamond_sawblades
-NSUBST: 1 = 1:1 / 6 = 11. / *:., 3 = 1:1 / 4 = 11....... / *:.
+KFEAT:  ^ = archmage's trap / harlequin's trap / devourer's trap
+NSUBST: 1 = 1:1 / 6 = 11^ / *:., 3 = 1:1 / 4 = 11....... / *:.
 SUBST:  } = }:80 >, ) = ):80 >, ] = ]:80 >
 : vault_metal_statue_setup(_G, "G", "enigmatic dynamo")
 MAP
@@ -2851,7 +2854,7 @@ KMONS:   8&! = protean progenitor
 KMONS:   _ = ghost moth
 KMONS:   90 = moth of wrath / butterfly w:30
 KFEAT:   B = cache of baked goods
-KFEAT:   0 = zot trap
+KFEAT:   0 = harlequin's trap
 KFEAT:   ^~ = teleport trap / dispersal trap
 KFEAT:   _ = altar_xom
 KFEAT:   > = } mimic
@@ -3431,20 +3434,21 @@ KMONS:   Z = killer klown ; club randart plus:12 ego:chaos / \
 KITEM:   BEHKN = $ w:15 / % w:25 / *
 KITEM:   z = any good_item
 KITEM:   Z = superb_item
+KFEAT:   ^ = harlequin's trap
 # Rotates out loot, upstairs, downstairs,
 # both (in an enclosed bubble), or nothing, at either end.
 SHUFFLE: defg{>Z' / defg{<'' / fgde>{'Z / fgde<{'' / defg'|Z' / fgde|''Z / \
          fgfgZ'() / fgfg'Z)( / dede'''' / dede'''' / dede''''
 SHUFFLE: ABC / DEF / GHI / JKL / MNO
-SUBST:   d = @, e = ., f = x, g = c, c : ccb, Z = z Z:6, {' = ., ? : ?.
+SUBST:   d = @, e = ., f = x, g = c, c : ccb, Z = z Z:6, {' = ., ? : ?., ^ : ^..
 NSUBST:  < = 1:{ / 1:[, > = 1:} / 1:]
 : vault_granite_statue_setup(_G, "?", "scintillating statue")
 MAP
               xxxxxxxfffff
               xcccccgggggff
           xxxxxcKKcc..>.ggf
-          xcccccJ.J+...Z.gf
-          xcccccc..+..Z.>gf
+          xcccccJ.J+..^Z.gf
+          xcccccc..+..Z^>gf
           xcHHccc..ccc...gf
       xxxxxcG.Gcc..Lcc...gx
       xcccccc..++..?Lc++ccx
@@ -3462,8 +3466,8 @@ xcccc..Ccc++cccccDEcx
 xcc.+..?Cc++ccccccccx
 xe..+.........Acccccx
 de{.cc..........Bcxxx
-de..'c++ccccccA.Bcx
-de.'....cxxxxcccccx
+de.^'c++ccccccA.Bcx
+de.'^...cxxxxcccccx
 dee..{.ccxxxxxxxxxx
 ddeeeeeccx
  dddddxxxx
@@ -3755,6 +3759,7 @@ KFEAT:   T = fountain_eyes
 KFEAT:   C = altar_ecumenical
 KFEAT:   D = altar_lugonu / altar_jiyva / altar_beogh w:5 / altar_ignis w:5
 KFEAT:   ~ = zot trap
+KFEAT:   ^ = archmage's trap / harlequin's trap / zot trap w:2
 KFEAT:   y = x
 SHUFFLE: Xy / Xy / Xy / Aa
 NSUBST:  A = 1:. / 19 = X:9 .:1 / *:X
@@ -3787,8 +3792,8 @@ SHUFFLE: ])deOG, OGUCD~, GM
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xx1.............+''''''''''''''''''''''''''''''
-xx1.............+'''''''''''''''''''''''''''''''
+xx1...........^.+''''''''''''''''''''''''''''''
+xx1..........^..+'''''''''''''''''''''''''''''''
 xXX......XXXXXXXXXXXXXXX......XXXXXXXXXXXXXX'''''
 xzXX......XyyyyyyyyyyyX......XXyyyyyyyyyyyyXX''''
 xyyXX.....XXyxxxxxxxyXX.....XXyyxxxxxxxxxxyyXX'''
@@ -3798,8 +3803,8 @@ xxxxyX.....zyyyyyyyyyyz1....XyxxxxxxxxxxxxxxxxyX'
 xxxxyX....Xzy..`2`..yzX....XyxxxxxxxxxxxxxxxxyX'
 xxxyyX....Xzy1y`]`y1yzX....XyyxxxxxxxxxxxxxxxyX''
 xxyyXX...Xzzzzzz+zzzzzzX...XXyyxxxyyyyyyyyyyzzX''
-xxyXX...zzz1....2....1zzz...XXyxxyyd``....2zzX'''
-xxyX...zzX1...........1Xzz...Xyyyyyyyy1..1zzX''''
+xxyXX...zzz1....2....1zzz.^.XXyxxyyd``....2zzX'''
+xxyX...zzX1...........1Xzz.^.Xyyyyyyyy1..1zzX''''
 xxXX+++z.................z+++XXXXXXXzzzz+zzX''''
 xx1....................................112z1'''
 xxXX.........................XXXXXXXzzzz+zzX''''
@@ -4442,14 +4447,14 @@ ENDMAP
 ##############################################################################
 
 NAME:    hall_of_Zot
+TAGS:    no_dump no_trap_gen
 PLACE:   Zot:$
 ORIENT:  north
-TAGS:    no_dump no_trap_gen
+MONS:    patrolling orb guardian, orange crystal statue / w:20 obsidian statue
+MONS:    electric golem, killer klown, ancient lich / dread lich, orb of fire
 KITEM:   R = prismatic gem
 KITEM:   Z = Orb of Zot
 KFEAT:   Z = orb dais
-MONS:    patrolling orb guardian, orange crystal statue / w:20 obsidian statue
-MONS:    electric golem, killer klown, ancient lich / dread lich, orb of fire
 # Traps to spread throughout the vault. Fewer alarm traps as those have a big
 # effect on the vault as a whole.
 KFEAT:   ~ = zot trap / dispersal trap / permanent teleport trap / net trap \
@@ -4457,7 +4462,30 @@ KFEAT:   ~ = zot trap / dispersal trap / permanent teleport trap / net trap \
 # Flat distribution of traps for specific sections.
 KFEAT:   ^ = zot trap / dispersal trap / permanent teleport trap / alarm trap \
              / net trap
+# Weaker trap lua for replacing the old rare double-trapped entrances option.
+{{
+local weaker_t = { { t = "tyrant's trap", weight = 12 },
+                   { t = "harlequin's trap w:7", weight = 10 },
+                   { t = "archmage's trap", weight = 7 },
+                   { t = "devourer's trap w:5", weight = 5}, }
+local t_choice_a = util.random_weighted_from("weight", weaker_t)
+local t_choice_b = t_choice_a
+while t_choice_a == t_choice_b do
+  t_choice_b = util.random_weighted_from("weight", weaker_t)
+end
+}}
 KMASK:   ^~ = no_item_gen
+SHUFFLE: DdOo / HhPp
+# As a replacement to the small chance of both wing entrances being covered in
+# traps, cover up one and use weaker traps along the full path of the other.
+: if crawl.one_chance_in(4) then
+NSUBST:  H = 1:^ / * = ^.
+SUBST:   D = .
+:   kfeat("oO = " .. t_choice_a.t .. " / " .. t_choice_b.t)
+: else
+SUBST:   D = ^.., O = d, o = .
+: end
+SUBST:   P = h, Hp = .
 # Place a minimum number of traps and some extra liches in each lower wing.
 NSUBST:  d = 2=5. / 4=~ / ., h = 2=5. / 4=~ / .
 # In a each upper wing, place a few monsters along with locations for the main
@@ -4466,14 +4494,11 @@ NSUBST:  f = 3 / 4 / 6 / 9 = ? .:8 / e, k = 3 / 4 / 6 / 9 = ? .:8 / j
 # Minimum number of traps in each upper wing.
 NSUBST:  e = 4=~ / ., j = 4=~ / .
 # Each upper wing has equal chance to get one of three sets that most heavily
-# weight a specific monster: killer klown, ancient lich, or orb of fire.
+# weight specific monsters: killer klown, ancient / dread lich, or orb of fire.
 SUBST:   ? : KLM
 SUBST:   K = 0 4:40 5 6 ., L = 0 4 5:40 6 ., M = 0 4 5 6:40 .
 # Make a final sprinkling of traps throughout the vault.
 SUBST:   . = ~ .:600
-# Put traps in wing entrances with decreased odds on one side to make double
-# trapped entrances rarer.
-SUBST:   D = ^..., H = ^.
 # For upper-wing entrances, sometimes put statue monsters, traps, or statues.
 SUBST:   E = 2 ^:20 G .:80, J = 2 ^:20 G .:80
 # For the orb chamber, some guaranteed and random traps. About 4 on-average.
@@ -4509,7 +4534,7 @@ XXXXXXXXXXXeeeeeeeeeeeeeeeeeeeeeecccccccccccccccjjjjjjjjjjjjjjjjjjjjjjXXXXXXXXXX
 XXXXXXXXXXXXeeeeeeeeeeeeeeeeeeeXcccccccccccccccccXjjjjjjjjjjjjjjjjjjjXXXXXXXXXXX
 XXXXXXXXXXXXXeeeeeeeeeeeeeeeXXXXcccccccccccccccccXXXXjjjjjjjjjjjjjjjXXXXXXXXXXXX
 XXXXXXXXXXXXXXE111EccXXXXXXXXXXXcccccccccccccccccXXXXXXXXXXXccJ111JXXXXXXXXXXXXX
-XXXXXXXXXXXccdddddddddddddddDD1.ccccccccccccccccc.1HHhhhhhhhhhhhhhhhccXXXXXXXXXX
+XXXXXXXXXXXccddddddddddddddODDo1ccccccccccccccccc1pHHPhhhhhhhhhhhhhhccXXXXXXXXXX
 XXXXXXXXXXccddddddddddddddddcc1...ccccccccccccc...1cchhhhhhhhhhhhhhhhccXXXXXXXXX
 XXXXXXXXXccddddddddddddddddddccc...ccccccccccc...ccchhhhhhhhhhhhhhhhhhccXXXXXXXX
 XXXXXXXXXcddddddddddddddddddddccc...............ccchhhhhhhhhhhhhhhhhhhhcXXXXXXXX
@@ -4520,7 +4545,7 @@ XXXXXXXXXcddddddddddddddddddddcXXXc...........cXXXchhhhhhhhhhhhhhhhhhhhcXXXXXXXX
 XXXXXXXXXcddddddddddddddddddddcXXcc...........ccXXchhhhhhhhhhhhhhhhhhhhcXXXXXXXX
 XXXXXXXXXccddddddddddddddddddccXXc.............cXXcchhhhhhhhhhhhhhhhhhccXXXXXXXX
 XXXXXXXXXXccddddddddddddddddccXXcc.............ccXXcchhhhhhhhhhhhhhhhccXXXXXXXXX
-XXXXXXXXXXXccddddddddddddddccXXXc...............cXXXcchhhhhhhhhhhhhhccXXXXXXXXXX
+XXXXXXXXXXXccddddddddddddddccXXXcp.............ocXXXcchhhhhhhhhhhhhhccXXXXXXXXXX
 XXXXXXXXXXXXccccccccccccccccXXXXcccccccc@ccccccccXXXXccccccccccccccccXXXXXXXXXXX
 ENDMAP
 

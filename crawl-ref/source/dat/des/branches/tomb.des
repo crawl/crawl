@@ -9,6 +9,8 @@
 ##############################################################################
 
 {{
+crawl_require('dlua/vault.lua')
+
 function tomb_1_mummy_set(e)
   e.mons("mummy / skeletal warrior w:1 / nothing")
 end
@@ -79,6 +81,24 @@ function tomb_guardian_set(e, include_nothing)
   end
 end
 
+-- If we get a lot more traps suited for large numbers in Tomb, setting them up
+-- to vary per floor would help Tomb's variety a bunch. As is, just keep the
+-- trap definition consistent between each of the uses.
+function tomb_trap_set(e)
+--[[
+  if e.is_validating() then return end
+
+  if dgn.persist.tomb_trap_sets == nil then
+    local opt = { "tyrant's trap", "lobbyist's trap", "doom trap" }
+    dgn.persist.tomb_trap_sets = { util.random_from(opt), util.random_from(opt),
+                                   util.random_from(opt) }
+  end
+]]
+  e.kfeat("^ = alarm trap / net trap / zot trap / dispersal trap / tyrant's trap")
+  -- e.kfeat("~ = " .. dgn.persist.tomb_trap_sets[you.depth()])
+  -- e.subst("^ = ^:36 ~:14")
+end
+
 --[[
 Setup Tomb:1 central vault. For monsters, define plain mummies on '1', the
 guardian set on '2', priest-level monsters on '3', greater-mummy-level monsters
@@ -119,7 +139,7 @@ function tomb_1_stairs_setup(e)
   tomb_1_mummy_priest_set(e)
 
   e.subst(". = 3:12 ^ .:230")
-  e.kfeat("^ = alarm trap / dispersal trap / net trap / zot trap")
+  tomb_trap_set(e)
 end
 
 --[[
@@ -142,7 +162,7 @@ function tomb_2_ambush_setup(e)
   e.nsubst("S = 1:< / *:.")
 
   e.subst(". =  ^ .:740")
-  e.kfeat("^ = alarm trap / dispersal trap / net trap / zot trap")
+  tomb_trap_set(e)
 end
 
 function tomb_3_khufu(e, glyph)
@@ -167,8 +187,8 @@ function tomb_3_rune_setup(e)
 
   tomb_3_khufu(e, "K")
 
-  e.kfeat("^ = alarm trap / dispersal trap / net trap / zot trap")
   e.subst(". = ^ .:490")
+  tomb_trap_set(e)
 end
 
 }}
@@ -485,8 +505,8 @@ SUBST:    FIJKLMNOPQ = G
 : end
 # Add greater mummies and traps to the long hall. About 16 greater mummies and
 # 6 traps on-average.
-SUBST:    ' = 2:24 ^ .:210
-KFEAT:    ^ = alarm trap / net trap / zot trap / dispersal trap
+SUBST:    ' = 2:24 ^:8 .:212
+: tomb_trap_set(_G)
 : set_feature_name("escape_hatch_down", "one-way staircase leading down")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -670,6 +690,7 @@ SHUFFLE: AaBbQqDd/EeFfGgHh/IiJjKkLl/MmNnOoPp/RrSsUuVv
 SHUFFLE: Aa/Bb/Qq/Dd, Ee/Ff/Gg/Hh, Ii/Jj/Kk/Ll, Mm/Nn/Oo/Pp, Rr/Ss/Uu/Vv
 SUBST:   AEIMR = +, a = >, ei = *|, mr = %, bq = 4, dhlpv = 3
 SUBST:   BQDFGHJKLNOPSUV = c, fgjknosu = ', ' = ^--112
+: tomb_trap_set(_G)
 : tomb_1_centre_setup(_G)
 SUBST:   - = .
 MAP
@@ -850,9 +871,9 @@ MARKER:   I = lua:hatch_dest_name("tomb3_exit_2")
 SUBST:    HI = .
 # Add traps near doors and both traps and monsters throughout both groups of
 # rooms.
-SUBST:    T = ^..., ' = ^ ':210, ' = 1:5 2:5 3:1 .:89
-SUBST:    " = ^ ":130, " = 2:3 3:1 .:96
-KFEAT:    ^ = alarm trap / net trap / zot trap / dispersal trap
+SUBST:    T = ^..., ' = ^ ':220, ' = 1:5 2:5 3:1 .:89
+SUBST:    " = ^ ":140, " = 2:3 3:1 .:96
+: tomb_trap_set(_G)
 #
 # Number of ' symbols is 211+3=214, hence statistically in the lower
 # circumference we'll have 10.7 mummies, another 10.7 guardian mummies
@@ -1048,7 +1069,7 @@ KITEM:    | = | no_pickup
 : tomb_guardian_set(_G)
 # Randomize some loot placement in the treasure rooms, and add the zig fig in
 # the loot pile. Add traps to treasure rooms and the arrival area.
-SUBST:    ' = $., $ = |:1 *:2 $:17, . = ^ .:240
+SUBST:    ' = $., $ = |:1 *:2 $:17, . = ^ .:260
 NSUBST:   | = d / |
 MARKER:   D = lua:hatch_dest_name("tomb3_entry_1")
 MARKER:   E = lua:hatch_dest_name("tomb3_entry_2")
@@ -1056,7 +1077,7 @@ SUBST:    DE = .
 MARKER:   F = lua:hatch_name("tomb3_exit_1")
 MARKER:   H = lua:hatch_name("tomb3_exit_2")
 SUBST:    FH = <
-KFEAT:    ^ = alarm trap / net trap / zot trap / dispersal trap
+: tomb_trap_set(_G)
 : set_border_fill_type("permarock_wall")
 : set_feature_name("escape_hatch_down", "one-way staircase leading down")
 : set_feature_name("escape_hatch_up", "one-way staircase leading up")
@@ -1357,9 +1378,9 @@ KITEM:    * = * no_pickup
 : tomb_guardian_set(_G)
 # Randomize some loot placement in the treasure rooms, and add the zig fig in
 # the loot pile. Add traps to treasure rooms and the arrival area.
-SUBST:    ' = $., $ = |:1 *:2 $:17, . = ^ .:240
+SUBST:    ' = $., $ = |:1 *:2 $:17, . = ^ .:240, " = .
 NSUBST:   | = 1:d / *:|
-KFEAT:    ^ = alarm trap / net trap / zot trap / dispersal trap
+: tomb_trap_set(_G)
 : set_border_fill_type("permarock_wall")
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
@@ -1394,10 +1415,10 @@ ccc|||||$$'.......c......c.....'$$$$$$$$ccc
 cccc|||||$'.......c......c....'$$$$$$$$cccc
 ccccc||||$$'......c......c....'$$$$$$$ccccc
 cccccc||||$'......c......c....'$$$$$$cccccc
-ccccccc|||$$'.....c......c...'$$$$$$ccccccc
-cccccccc|||$'....cc..{...cc..'$$$$$cccccccc
-ccccccccc||$'....cc...(..cc.'$$$$$ccccccccc
-cccccccccc|$'..cccc..[...cccc$$$$cccccccccc
+ccccccc|||$$'.....c."""".c...'$$$$$$ccccccc
+cccccccc|||$'....cc."{"".cc..'$$$$$cccccccc
+ccccccccc||$'....cc.""(".cc.'$$$$$ccccccccc
+cccccccccc|$'..cccc."["".cccc$$$$cccccccccc
 ccccccccccccccccccccccccccccccccccccccccccc
 ccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
