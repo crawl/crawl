@@ -1683,6 +1683,11 @@ static void _enter_form(int pow, transformation which_trans)
     if (you.has_innate_mutation(MUT_MERTAIL))
         merfolk_check_swimming(env.grid(you.pos()), false);
 
+    // In the case where we didn't actually meld any gear (but possibly used
+    // a new artefact talisman or were forcibly polymorphed away from one),
+    // refresh equipment properties.
+    you.equipment.update();
+
     // Update skill boosts for the current state of equipment melds
     // Must happen before the HP check!
     ash_check_bondage();
@@ -1798,6 +1803,10 @@ void untransform(bool skip_move)
     // If you're a mer in water, boots stay melded even after the form ends.
     if (you.fishtail)
         you.equipment.meld_equipment(1 << SLOT_BOOTS);
+
+    // Update regarding talisman properties, just in case we didn't actually
+    // meld or unmeld anything.
+    you.equipment.update();
 
     if (old_form == transformation::death)
     {
