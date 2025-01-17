@@ -3511,8 +3511,8 @@ int player::infusion_amount() const
     int cost = 0;
     if (you.unrand_equipped(UNRAND_POWER_GLOVES))
         cost = you.has_mutation(MUT_HP_CASTING) ? 0 : 999;
-    else if (wearing_ego(OBJ_ARMOUR, SPARM_INFUSION))
-        cost = 1;
+    else
+        cost = wearing_ego(OBJ_ARMOUR, SPARM_INFUSION);
 
     if (you.has_mutation(MUT_HP_CASTING))
         return min(you.hp - 1, cost);
