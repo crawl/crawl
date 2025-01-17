@@ -275,6 +275,7 @@ static void _list_equipment(equipment_slot first_slot, equipment_slot last_slot)
     ostringstream estr;
 
     vector<string> entries;
+    int max_len = 0;
     for (int j = first_slot; j <= last_slot; j++)
     {
         const equipment_slot i = static_cast<equipment_slot>(j);
@@ -326,13 +327,15 @@ static void _list_equipment(equipment_slot first_slot, equipment_slot last_slot)
             }
 
             entries.emplace_back(estr.str());
+            if (max_len < (int)entries.back().length())
+                max_len = entries.back().length();
         }
     }
 
     // Now print the entries to screen (using split columns if there are a lot)
     int cols = get_number_of_cols() - 1;
     const int width = (cols - 1) / 2;
-    const bool split = entries.size() > 6 && cols > 84;
+    const bool split = entries.size() > 6 && cols > 84 && max_len < width - 8;
 
     if (!split)
     {
