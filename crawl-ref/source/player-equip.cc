@@ -1297,7 +1297,7 @@ bool player_equip_set::slot_is_fully_covered(equipment_slot slot) const
     if (num_slots[slot] == 0 || slot_is_melded(slot))
         return false;
 
-    return (int)get_slot_entries(slot).size() < num_slots[slot];
+    return (int)get_slot_entries(slot).size() == num_slots[slot];
 }
 
 /**
