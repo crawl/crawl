@@ -277,7 +277,7 @@ const static vector<equipment_slot> _flex_slots[] =
 
 static const vector<equipment_slot>& _get_alternate_slots(equipment_slot slot)
 {
-    ASSERT(slot < END_OF_SLOTS && slot > SLOT_UNUSED);
+    ASSERT(slot < END_OF_SLOTS && slot >= SLOT_UNUSED);
     return _flex_slots[slot];
 }
 
