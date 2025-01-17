@@ -205,7 +205,10 @@ static const vector<curse_effect> curse_effects = {
         "torment",
         [](actor& target, actor* source,
            string /*cause*/, int /*severity*/) {
-            torment_cell(target.pos(), source, TORMENT_MISCAST);
+            // XXX: Passing a cached copy of a dead mummy will crash here if
+            //      another monster is the victim, via behavior_event() since
+            //      monster::mindex() is unsafe for copies.
+            torment_cell(target.pos(), source->alive() ? source : nullptr, TORMENT_MISCAST);
         },
         0, 40,
     },
