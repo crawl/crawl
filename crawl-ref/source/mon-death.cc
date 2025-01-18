@@ -1323,14 +1323,14 @@ static string _killer_type_name(killer_type killer)
 }
 
 static string _derived_undead_message(const monster &mons, monster_type which_z,
-                                      const char* mist)
+                                      string msg)
 {
     switch (which_z)
     {
     case MONS_SPECTRAL_THING:
     case MONS_SIMULACRUM:
         // XXX: print immediately instead?
-        return make_stringf("A %s mist starts to gather...", mist);
+        return msg;
     case MONS_SKELETON:
     case MONS_ZOMBIE:
         break;
@@ -1370,12 +1370,14 @@ static string _derived_undead_message(const monster &mons, monster_type which_z,
  */
 static void _make_derived_undead(monster* mons, bool quiet,
                                  monster_type which_z, beh_type beh,
-                                 int spell, god_type god)
+                                 int spell, god_type god,
+                                 string msg = "", string fail_msg = "")
 {
     bool requires_corpse = which_z == MONS_ZOMBIE || which_z == MONS_SKELETON;
     // This function is used by several different sorts of things, each with
     // their own validity conditions that are enforced here
-    // - Bind Souls, Death Channel and Yred reaping of unzombifiable things:
+    // - Bind Souls, Death Channel, Yred reaping of unzombifiable things, and
+    //   kills with reaping-branded items:
     if (!requires_corpse
         && !mons_can_be_spectralised(*mons, god == GOD_YREDELEMNUL))
     {
@@ -1423,9 +1425,15 @@ static void _make_derived_undead(monster* mons, bool quiet,
     if (god == GOD_KIKUBAAQUDGHA || spell == SPELL_BIND_SOULS)
         mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
-    const char* mist = which_z == MONS_SIMULACRUM ? "freezing" :
-                       god == GOD_YREDELEMNUL ? "black" :
-                       "glowing";
+    const string mist = which_z == MONS_SIMULACRUM ? "freezing" :
+                            god == GOD_YREDELEMNUL ? "black"
+                                                   : "glowing";
+
+    if (msg.empty())
+        msg = "A " + mist + " mist starts to gather...";
+
+    if (fail_msg.empty())
+        fail_msg = "A " + mist + " mist gathers momentarily, then fades.";
 
     if (mons->mons_species() == MONS_HYDRA)
     {
@@ -1433,7 +1441,7 @@ static void _make_derived_undead(monster* mons, bool quiet,
         if (mons->heads() == 0)
         {
             if (!quiet && which_z != MONS_SKELETON)
-                mprf("A %s mist gathers momentarily, then fades.", mist);
+                mpr(fail_msg);
             return;
         }
         else
@@ -1450,7 +1458,7 @@ static void _make_derived_undead(monster* mons, bool quiet,
 
     const string message = quiet ? "" :
                            god == GOD_KIKUBAAQUDGHA ? "Kikubaaqudgha cackles." :
-                           _derived_undead_message(*mons, which_z, mist);
+                           _derived_undead_message(*mons, which_z, msg);
     make_derived_undead_fineff::schedule(mons->pos(), mg,
             mons->get_experience_level(), agent_name, message);
 }
@@ -1703,15 +1711,12 @@ static bool _mons_reaped(actor &killer, monster& victim)
         beh = SAME_ATTITUDE(mon);
     }
 
-    if (you.can_see(victim))
-    {
-        mprf("%s spirit is torn from %s body!",
-            victim.name(DESC_ITS).c_str(),
-            victim.pronoun(PRONOUN_POSSESSIVE).c_str());
-    }
-
-    _make_derived_undead(&victim, true, MONS_SPECTRAL_THING, beh,
-                         MON_SUMM_WPN_REAP, GOD_NO_GOD);
+    string msg = victim.name(DESC_ITS) + " spirit is torn from " +
+                     victim.pronoun(PRONOUN_POSSESSIVE) + " body!";
+    string fail_msg = victim.name(DESC_ITS) + " spirit is momentarily torn from " +
+                          victim.pronoun(PRONOUN_POSSESSIVE) + " body, then fades!";
+    _make_derived_undead(&victim, !you.can_see(victim), MONS_SPECTRAL_THING, beh,
+                         MON_SUMM_WPN_REAP, GOD_NO_GOD, msg, fail_msg);
 
     return true;
 }
