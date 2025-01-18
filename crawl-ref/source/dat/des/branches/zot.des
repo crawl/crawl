@@ -4474,7 +4474,6 @@ while t_choice_a == t_choice_b do
   t_choice_b = util.random_weighted_from("weight", weaker_t)
 end
 }}
-KITEM:   . = any weapon randart
 KMASK:   ^~ = no_item_gen
 SHUFFLE: DdOo / HhPp
 # As a replacement to the small chance of both wing entrances being covered in
