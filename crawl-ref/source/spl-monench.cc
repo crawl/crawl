@@ -412,7 +412,7 @@ bool is_valid_tempering_target(const monster& mon, const actor& caster)
     return false;
 }
 
-// Perform an forcible attack at a weighted random space around this actor.
+// Perform a forcible attack at a weighted random space around this actor.
 // Spaces without an actor are 1/7th as likely to be chosen as one with an
 // actor (so if you are adjacent to a single monster, you have a 50% chance to
 // attack them and a 50% chance to whiff).
