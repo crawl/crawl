@@ -50,16 +50,16 @@
 %%%%
 # affected by Animate Armour spell
 "animated "
-"animée "
+" animé"
 %%%%
 "cursed "
-"maudite "
+" maudit"
 %%%%
 "enchanted "
-"enchantée "
+" enchanté"
 %%%%
 "melded "
-"fusionné "
+" fusionné"
 %%%%
 
 ################################
@@ -68,233 +68,233 @@
 ################################
 %%%%
 "ancient "
-"ancien "
+" ancien"
 %%%%
 "blackened "
-"noirci "
+" noirci"
 %%%%
 "bloodstained "
-"ensanglanté "
+" ensanglanté"
 %%%%
 "bound "
-"lié "
+" lié"
 %%%%
 "buzzing "
-"bourdonnant "
+" bourdonnant"
 %%%%
 "clouded "
-"nuageux "
+" nuageux"
 %%%%
 "coiled "
-"enroulé "
+" enroulé"
 %%%%
 "colourful "
-"coloré "
+" coloré"
 %%%%
 # only used in "creamy pearl robe"
 "creamy "
-"légère "
+" léger"
 %%%%
 "crooked "
-"courbé "
+" courbé"
 %%%%
 "crude "
-"brut "
+" brut"
 %%%%
 "curved "
-"incurvé "
+" incurvé"
 %%%%
 "dazzling "
-"éblouissant "
+" éblouissant"
 %%%%
 "dented "
-"bosselé "
+" bosselé"
 %%%%
 "dull "
-"terne "
+" terne"
 %%%%
 "dyed "
-"teint "
+" teint"
 %%%%
 "embroidered "
-"brodé "
+" brodé"
 %%%%
 "encrusted "
-"incrusté "
+" incrusté"
 %%%%
 "fading "
-"décoloré "
+" décoloré"
 %%%%
 "fine "
-"raffiné "
+" raffiné"
 %%%%
 "flickering "
-"vacillant "
+" vacillant"
 %%%%
 "forked "
-"fourchu "
+" fourchu"
 %%%%
 "glimmering "
-"scintillant "
+" scintillant"
 %%%%
 "glittering "
-"étincelant "
+" étincelant"
 %%%%
 # also a rune
 "glowing "
-"brillant "
+" brillant"
 %%%%
 "gnarled "
-"noueux "
+" noueux"
 %%%%
 "graven "
-"gravé "
+" gravé"
 %%%%
 "heavy "
-"lourd "
+" lourd"
 %%%%
 "humming "
-"fredonnant "
+" fredonnant"
 %%%%
 "ichor-stained "
-"taché d'ichor "
+" taché d'ichor"
 %%%%
 "iridescent "
-"iridescent "
+" iridescent"
 %%%%
 "jewelled "
-"orné de bijoux "
+" orné de bijoux"
 %%%%
 "knobbly "
-"épineux "
+" épineux"
 %%%%
 "long "
-"long "
+" long"
 %%%%
 # used for amulets and potions
 "lumpy "
-"grumeleuse "
+" grumeleux"
 %%%%
 "masterwork "
-"chef d'oeuvre "
+" chef d'oeuvre"
 %%%%
 "non-descript "
-"indescriptible"
+" indescriptible"
 %%%%
 "notched "
-"entaillé "
+" entaillé"
 %%%%
 "opalescent "
-"opalescent "
+" opalescent"
 %%%%
 "ornate "
-"orné "
+" orné"
 %%%%
 "pitted "
-"grêlé "
+" grêlé"
 %%%%
 "polished "
-"poli "
+" poli"
 %%%%
 "ripped "
-"déchiré é
+" déchiré"
 %%%%
 "scintillating "
-"scintillant "
+" scintillant"
 %%%%
 "scorched "
-"roussi "
+" roussi"
 %%%%
 "scratched "
-"rayé "
+" rayé"
 %%%%
 # also a rune
 "serpentine "
-"serpentin "
+" serpentin"
 %%%%
 "shadowed "
-"ombreux "
+" ombreux"
 %%%%
 "sharpened "
-"aiguisé "
+" aiguisé"
 %%%%
 "sheer "
-"pur "
+" pur"
 %%%%
 "shimmering "
-"chatoyant "
+" chatoyant"
 %%%%
 "shiny "
-"rayonnant "
+" rayonnant"
 %%%%
 "short "
-"court "
+" court"
 %%%%
 "smelly "
-"puant "
+" puant"
 %%%%
 "smoking "
-"fumant "
+" fumant"
 %%%%
 "smouldering "
-"fumant "
+" fumant"
 %%%%
 "sparkling "
-"pétillant "
+" pétillant"
 %%%%
 "spiked "
-"à pointes "
+" à pointes"
 %%%%
 "square "
-"carré "
+" carré"
 %%%%
 "steaming "
-"fumant "
+" fumant"
 %%%%
 "tapered "
-"conique "
+" conique"
 %%%%
 "tattered "
-"en lambeaux "
+" en lambeaux"
 %%%%
 "thick "
-"épais "
+" épais"
 %%%%
 "thin "
-"fin "
+" fin"
 %%%%
 "transparent "
-"transparent "
+" transparent"
 %%%%
 "triangular "
-"triangulaire "
+" triangulaire"
 %%%%
 "tubular "
-"tubulaire "
+" tubulaire"
 %%%%
 "twisted "
-"tordu "
+" tordu"
 %%%%
 "twitching "
-"tremblant "
+" tremblant"
 %%%%
 "vibrating "
-"vibrant "
+" vibrant"
 %%%%
 "warped "
-"voilé "
+" voilé"
 %%%%
 "wavering "
-"vacillant "
+" vacillant"
 %%%%
 "weird "
-"étrange "
+" étrange"
 %%%%
 "wizard "
-"ensorcelant "
+" ensorcelant"
 %%%%
 "worn "
-"né "
+" né"
 %%%%
 
 #adverbs (e.g. brightly glowing)
@@ -303,7 +303,7 @@
 "brillamment "
 %%%%
 "distressingly "
-"de façon affligeante"
+" de façon affligeante"
 %%%%
 "fabulously "
 "fabuleusement "
@@ -315,137 +315,137 @@
 "lourdement "
 %%%%
 "ominously "
-"de façon inquiétante "
+" de façon inquiétante"
 %%%%
 
 %%%%
 "agate-encrusted "
-"incrusté d'agate "
+" incrusté d'agate"
 %%%%
 "amber-encrusted "
-"incrusté d'ambre "
+" incrusté d'ambre"
 %%%%
 "amethyst-encrusted "
-"incrusté d'améthyste "
+" incrusté d'améthyste"
 %%%%
 "aquamarine-encrusted "
-"incrusté d'aigue-marine "
+" incrusté d'aigue-marine"
 %%%%
 "black opal-encrusted "
-"incrusté d'opale noire "
+" incrusté d'opale noire"
 %%%%
 "citrine-encrusted "
-"incrusté de citrine "
+" incrusté de citrine"
 %%%%
 "diamond-encrusted "
-"incrusté de diamant "
+" incrusté de diamant"
 %%%%
 "emerald-encrusted "
-"incrusté d'émeraude "
+" incrusté d'émeraude"
 %%%%
 "garnet-encrusted "
-"incrusté de grenat "
+" incrusté de grenat"
 %%%%
 "jacinth-encrusted "
-"incrusté de zircon "
+" incrusté de zircon"
 %%%%
 "jade-encrusted "
-"incrusté de jade "
+" incrusté de jade"
 %%%%
 "jasper-encrusted "
-"incrusté de jaspe "
+" incrusté de jaspe"
 %%%%
 "jet-encrusted "
-"incrusté de jais "
+" incrusté de jais"
 %%%%
 "obsidian-encrusted "
-"incrusté d'obsidienne "
+" incrusté d'obsidienne"
 %%%%
 "opal-encrusted "
-"incrusté d'opale "
+" incrusté d'opale"
 %%%%
 "pearl-encrusted "
-"incrusté de perle "
+" incrusté de perle"
 %%%%
 "ruby-encrusted "
-"incrusté de rubis "
+" incrusté de rubis"
 %%%%
 "sapphire-encrusted "
-"incrusté de saphir "
+" incrusté de saphir"
 %%%%
 "tiger eye-encrusted "
-"incrusté d'oeil de tigre "
+" incrusté d'oeil de tigre"
 %%%%
 "topaz-encrusted "
-"incrusté de topaze "
+" incrusté de topaze"
 %%%%
 "turquoise-encrusted "
-"incrusté de turquoise "
+" incrusté de turquoise"
 %%%%
 
 %%%%
 "agate-studded "
-"piqueté d'agate "
+" piqueté d'agate"
 %%%%
 "amber-studded "
-"piqueté d'ambre "
+" piqueté d'ambre"
 %%%%
 "amethyst-studded "
-"piqueté d'améthyste "
+" piqueté d'améthyste"
 %%%%
 "aquamarine-studded "
-"piqueté d'aigue-marine "
+" piqueté d'aigue-marine"
 %%%%
 "black opal-studded "
-"piqueté d'opale noire "
+" piqueté d'opale noire"
 %%%%
 "citrine-studded "
-"piqueté de citrine "
+" piqueté de citrine"
 %%%%
 "diamond-studded "
-"piqueté de diamant "
+" piqueté de diamant"
 %%%%
 "emerald-studded "
-"piqueté d'émeraude "
+" piqueté d'émeraude"
 %%%%
 "garnet-studded "
-"piqueté de grenat "
+" piqueté de grenat"
 %%%%
 "jacinth-studded "
-"piqueté de zircon "
+" piqueté de zircon"
 %%%%
 "jade-studded "
-"piqueté de jade "
+" piqueté de jade"
 %%%%
 "jasper-studded "
-"piqueté de jaspe "
+" piqueté de jaspe"
 %%%%
 "jet-studded "
-"piqueté de jais "
+" piqueté de jais"
 %%%%
 "obsidian-studded "
-"piqueté d'obsidienne "
+" piqueté d'obsidienne"
 %%%%
 "opal-studded "
-"piqueté d'opale "
+" piqueté d'opale"
 %%%%
 "pearl-studded "
-"piqueté de perle "
+" piqueté de perle"
 %%%%
 "ruby-studded "
-"piqueté de rubis "
+" piqueté de rubis"
 %%%%
 "sapphire-studded "
-"piqueté de saphir "
+" piqueté de saphir"
 %%%%
 "tiger eye-studded "
-"piqueté d'oeil du tigre "
+" piqueté d'oeil du tigre"
 %%%%
 "topaz-studded "
-"piqueté de topaze "
+" piqueté de topaze"
 %%%%
 "turquoise-studded "
-"piqueté de turquoise "
+" piqueté de turquoise"
 %%%%
 
 ################################
@@ -456,19 +456,19 @@
 # (also used for jewellery, and in some cases, potion or rune, but we've given specific translations for those)
 %%%%
 "crystal "
-"cristal "
+" cristal"
 %%%%
 "ivory "
-"ivoire "
+" ivoire"
 %%%%
 "bone "
-"os "
+" os"
 %%%%
 "sapphire "
-"saphir "
+" saphir"
 %%%%
 "ebony "
-"ébène "
+" ébène"
 %%%%
 
 ################################
@@ -481,34 +481,34 @@
 
 %%%%
 "antique "
-"antique "
+" antique"
 %%%%
 "conspicuous "
-"ostentatoire "
+" ostentatoire"
 %%%%
 "droning "
-"bourdonnant "
+" bourdonnant"
 %%%%
 "engraved "
-"gravé "
+" gravé"
 %%%%
 "glistering "
-"scintillant "
+" scintillant"
 %%%%
 "inconspicuous "
-"discret "
+" discret"
 %%%%
 "levitating "
-"lévitant "
+" lévitant"
 %%%%
 "rare "
-"rare "
+" rare"
 %%%%
 "torn "
-"déchiré "
+" déchiré"
 %%%%
 "yellowed "
-"jauni "
+" jauni"
 %%%%
 
 ################################
@@ -516,13 +516,13 @@
 ################################
 %%%%
 "vorpal "
-"vorpaline "
+" tranchant"
 %%%%
 "antimagic "
-"anitmagique "
+" antimagique"
 %%%%
 "vampiric "
-"vampirique "
+" vampirique"
 %%%%
 
 ################################
@@ -534,59 +534,59 @@
 
 %%%%
 "blue "
-"bleu "
+" bleu"
 %%%%
 "black "
-"noir "
+" noir"
 %%%%
 "silvery "
-"argenté "
+" argenté"
 %%%%
 "cyan "
-"cyan "
+" cyan"
 %%%%
 "purple "
-"violet "
+" violet"
 %%%%
 "orange "
-"orange "
+" orange"
 %%%%
 "inky "
-"encre "
+" encre"
 %%%%
 "red "
-"rouge "
+" rouge"
 %%%%
 "yellow "
-"jaune "
+" jaune"
 %%%%
 "green "
-"vert "
+" vert"
 %%%%
 "brown "
-"marron "
+" marron"
 %%%%
-"white "
-"blanc "
+"white"
+" blanc"
 %%%%
 "grey "
-"gris "
+" gris"
 %%%%
 "pink "
-"rose "
+" rose"
 %%%%
 "coppery "
-"cuivré "
+" cuivré"
 %%%%
 "puce "
-"puce "
+" puce"
 %%%%
 "pale "
-"pale "
+" pale"
 %%%%
 # used for potion and rune
 "dark "
-"sombre "
+" sombre"
 %%%%
 
 # These ones are a material for jewellery, etc., and also a potion colour.
@@ -609,10 +609,10 @@
 # used to mean both metal and colour
 %%%%
 "silver "
-
+"argent "
 %%%%
-"golden "
-
+" golden "
+" or"
 %%%%
 
 ################################
@@ -622,41 +622,40 @@
 # potion qualifiers (optionally added in front of colour - cosmetic)
 %%%%
 "bubbling "
-
+" bouillonnant"
 %%%%
 "fuming "
-
+" fumant"
 %%%%
 "fizzy "
-
+" pétillant"
 %%%%
 "viscous "
-
+" visqueux"
 %%%%
 "smoky "
-
+" fumeux"
 %%%%
 "sedimented "
-
+" avec des sédiments"
 %%%%
 "metallic "
-
+" métallique"
 %%%%
 "murky "
-
+" trouble"
 %%%%
 "gluggy "
-
+" gluant"
 %%%%
 "oily "
-
+" huileux"
 %%%%
 "emulsified "
-
+" émulsionné"
 %%%%
-# also a rune
 "slimy "
-
+" visqueux"
 %%%%
 
 ################################
@@ -674,7 +673,7 @@
 " décoré de runes"
 %%%%
 "sealed "
-" scellée"
+" scellé"
 %%%%
 "translucent "
 " translucide"
@@ -685,29 +684,28 @@
 ################################
 %%%%
 "bony "
-
+" osseux"
 %%%%
 "shadowy "
-
+" ombreux"
 %%%%
 "scaled "
-
+" écailleux"
 %%%%
 "feathered "
-
+" couvert de plumes"
 %%%%
 "furry "
-
+" couvert de fourrure"
 %%%%
 "bandage-wrapped "
-
+" enveloppé de bandages"
 %%%%
 "fleshy "
-
+" charnu"
 %%%%
-# blade hands/paws/etc.
 "blade "
-
+" lame"
 %%%%
 
 ################################
@@ -715,31 +713,31 @@
 ################################
 %%%%
 fiery red
-
+rouge ardent
 %%%%
 icy white
-
+blanc glacé
 %%%%
 lurid green
-
+vert vif
 %%%%
 golden yellow
-
+jaune doré
 %%%%
 dull iron-grey
-
+gris terne
 %%%%
 glossy black
-
+noir brillant
 %%%%
 rich purple
-
+violacé
 %%%%
 pale cyan-grey
-
+gris-cyan pâle
 %%%%
 plain brown
-
+brun simple
 %%%%
 
 ################################
@@ -747,270 +745,268 @@ plain brown
 ################################
 %%%%
 "nearby "
-
+" proche"
 %%%%
 "helpless "
-
+" impuissant"
 %%%%
 "submerged "
-
+" submergé"
 %%%%
 "spectral "
-
+" spectral"
 %%%%
 "ghostly "
-
+" fantomatique"
 %%%%
 "active "
-
+" actif"
 %%%%
 "sensed "
-
+" perçu"
 %%%%
 "hexed "
-
+" ensorcelé"
 %%%%
 "charmed "
-
+" charmé"
 %%%%
 "bribed "
-
+" acheté"
 %%%%
 "neutral "
-
+" neutre"
 %%%%
 "non-hostile "
-
+" non-hostile"
 %%%%
 "charred "
-
+" carbonisé"
 %%%%
 "frost-covered "
-
+" couvert de givre"
 %%%%
 "deformed "
-
+" déformé"
 %%%%
 "grotesque "
-
+" grotesque"
 %%%%
 "hideous "
-
+" hideux"
 %%%%
 "febrile "
-
+" fébrile"
 %%%%
 "sickly "
-
+" maladif"
 %%%%
 "malarious "
-
+" paludéen"
 %%%%
 "drunken "
-
+" ivre"
 %%%%
 "greater "
-
+" trés grand"
 %%%%
 "giant "
-
+" géant"
 %%%%
 "pristine "
-
+" immaculé"
 %%%%
 "skinned "
-
+" écorché"
 %%%%
 "rotten "
-
+" pourri"
 %%%%
-# used for obsolete monsters
 "removed "
-
+" retiré"
 %%%%
 
 # mutant beasts from a box of beasts
 %%%%
 "larval "
-
+" larvaire"
 %%%%
 "juvenile "
-
+" juvénile"
 %%%%
 "mature "
-
+" mature"
 %%%%
 "elder "
-
+" ancien"
 %%%%
 "primal "
-
+" primordial"
 %%%%
 
 # player ghost ranks
 %%%%
 "weakling "
-
+" faible"
 %%%%
 "amateur "
-
+" amateur"
 %%%%
 "novice "
-
+" novice"
 %%%%
 "journeyman "
-
+" compagnon"
 %%%%
 "adept "
-
+" expert"
 %%%%
 "veteran "
-
+" vétéran"
 %%%%
 "master "
-
+" maître"
 %%%%
 "legendary "
-
+" légendaire"
 %%%%
 
 # demonspawn
 %%%%
 "monstrous "
-
+" monstrueux"
 %%%%
 "gelid "
-
+" glacial"
 %%%%
 "infernal "
-
+" infernal"
 %%%%
 "torturous "
-
+" torturé"
 %%%%
 
 # hydras
 %%%%
 "Lernaean "
-
+" de Lerne"
 %%%%
 "one-headed "
-
+" à une tête"
 %%%%
 "two-headed "
-
+" à deux têtes"
 %%%%
 "three-headed "
-
+" à trois têtes"
 %%%%
 "four-headed "
-
+" à quatre têtes"
 %%%%
 "five-headed "
-
+" à cinq têtes"
 %%%%
 "six-headed "
-
+" à six têtes"
 %%%%
 "seven-headed "
-
+" à sept têtes"
 %%%%
 "eight-headed "
-
+" à huit têtes"
 %%%%
 "nine-headed "
-
+" à neuf têtes"
 %%%%
 "ten-headed "
-
+" à dix têtes"
 %%%%
 "11-headed "
-
+" à onze têtes"
 %%%%
 "12-headed "
-
+" à douze têtes"
 %%%%
 "13-headed "
-
+" à treize têtes"
 %%%%
 "14-headed "
-
+" à quatorze têtes"
 %%%%
 "15-headed "
-
+" à quinze têtes"
 %%%%
 "16-headed "
-
+" à seize têtes"
 %%%%
 "17-headed "
-
+" à dix-sept têtes"
 %%%%
 "18-headed "
-
+" à dix-huit têtes"
 %%%%
 "19-headed "
-
+" à dix-neuf têtes"
 %%%%
 "20-headed "
-
+" à vingt têtes"
 %%%%
 "21-headed "
-
+" à vingt-et-une têtes"
 %%%%
 "22-headed "
-
+" à vingt-deux têtes"
 %%%%
 "23-headed "
-
+" à vingt-trois têtes"
 %%%%
 "24-headed "
-
+" à vingt-quatre têtes"
 %%%%
 "25-headed "
-
+" à vingt-cinq têtes"
 %%%%
 "26-headed "
-
+" à vingt-six têtes"
 %%%%
 "27-headed "
-
+" à vingt-sept têtes"
 %%%%
 
 # polymorphed monsters or pillars of salt, etc.
 %%%%
 "@monster@ shaped "
-
+" en forme de @monster@"
 %%%%
 
 # shaped can also appear without a monster name in front of it
 %%%%
 "shaped "
-
+"en forme "
 %%%%
 
 # not actually adjectives, but put in front of "statue" like an adjective
 %%%%
 "zot "
-
+" de zot"
 %%%%
 "archer "
-
+" d'archer"
 %%%%
 "conjurer "
-
+" de conjurateur"
 %%%%
 "fire elementalist "
-
+" d'élémentaliste de feu"
 %%%%
-# no, this is not a mistake - water not ice
 "water elementalist "
-
+"d' élémentaliste d'eau"
 %%%%
 "earth elementalist "
-
+" d'élémentaliste de terre"
 %%%%
 "air elementalist "
-
+" d'élémentaliste d'air"
 %%%%
 
 ################################
@@ -1019,44 +1015,44 @@ plain brown
 
 %%%%
 "slow "
-
+"lent "
 %%%%
 "stately "
-
+"majestueux "
 %%%%
 "steady "
-
+"régulier "
 %%%%
 "brisk "
-
+"vif "
 %%%%
 "quick "
-
+"rapide "
 %%%%
 "rapid "
-
+"rapide "
 %%%%
 "urgent "
-
+"urgent "
 %%%%
 "frantic "
-
+"frénétique "
 %%%%
 "faint "
-
+"faible "
 %%%%
 "quiet "
-
+"silencieux "
 %%%%
 "loud "
-
+"fort "
 %%%%
 "ear-piercing "
-
+"strident "
 %%%%
 "thunderous "
-
+"tonitruant "
 %%%%
 "deafening "
-
+"assourdissant "
 %%%%
