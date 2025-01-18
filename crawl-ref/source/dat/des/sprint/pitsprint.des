@@ -59,7 +59,7 @@ function base_monster_setup(e)
                naga sharpshooter / anaconda / spriggan druid / spriggan rider /\
                shambling mangrove w:5 / alligator band / harpy band w:5 /\
                alligator snapping turtle / formless jellyfish / water nymph /\
-               satyr band w:5 / merfolk impaler band w:5 /\
+               satyr band w:5 / merfolk impaler band w:5 / sphinx marauder /\
                merfolk aquamancer w:5 / boulder beetle / pharaoh ant /\
                radroach w:5 / jorogumo w:5 / broodmother w:5 / sun moth w:5 /\
                entropy weaver / eye of devastation / place:Crypt:1 zombie /\
@@ -73,8 +73,8 @@ function base_monster_setup(e)
                ironbound thunderhulk / ironbound frostheart /\
                crystal guardian / fire giant w:25 / frost giant w:25 /\
                stone giant / deep troll shaman band w:7 / hell knight band /\
-               sphinx / war gargoyle / thermic dynamo / dancing weapon /\
-               deep elf annihilator / deep elf death mage /\
+               guardian sphinx / war gargoyle / thermic dynamo /\
+               dancing weapon / deep elf annihilator / deep elf death mage /\
                deep elf high priest / deep elf demonologist /\
                deep elf sorcerer / deep elf elementalist / shadow dragon /\
                deep elf blademaster w:5 / deep elf master archer w:5 /\
@@ -497,8 +497,8 @@ function coven_setup(e)
   e.kmons("0 = deep elf annihilator / deep elf death mage / deep elf sorcerer /\
                deep elf demonologist / deep elf high priest /\
                deep elf elementalist / nonbase draconian w:20 /\
-               sphinx / lich / ancient lich w:3 / dread lich w:3 /\
-               arcanist w:5 / occultist w:5 / rakshasa w:5 /\
+               sphinx marauder w:5 / guardian sphinx / lich / ancient lich w:3 /\
+               dread lich w:3 / arcanist w:5 / occultist w:5 / rakshasa w:5 /\
                tengu conjurer w:5 / ogre mage w:5 / naga mage / nagaraja /\
                merfolk aquamancer w:5 / jorogumo w:5 / vampire mage /\
                base draconian w:20 / demonspawn blood saint w:3")

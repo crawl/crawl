@@ -30,7 +30,7 @@
   {  0, 11,   40, FLAT, MONS_FLAYED_GHOST },\
   {  0, 13,   80, SEMI, MONS_GLOWING_SHAPESHIFTER },\
   {  0, 13,   80, SEMI, MONS_TENGU_REAVER },\
-  {  0, 13,   60, SEMI, MONS_SPHINX },\
+  {  0, 13,   60, SEMI, MONS_GUARDIAN_SPHINX },\
   {  1,  7,  135, SEMI, MONS_SPRIGGAN_AIR_MAGE },\
   {  1,  7,  185, SEMI, MONS_SPRIGGAN_BERSERKER },\
   {  1,  9,   45, FLAT, MONS_GLASS_EYE },\
@@ -175,7 +175,7 @@ static const vector<pop_entry> population[] =
   { 18, 28,  180, PEAK, MONS_FLAYED_GHOST },
   { 19, 25,   35, PEAK, MONS_ORC_HIGH_PRIEST },
   { 19, 26,  136, SEMI, MONS_DEEP_TROLL },
-  { 19, 27,   89, RISE, MONS_SPHINX },
+  { 19, 27,  100, RISE, MONS_SPHINX_MARAUDER },
   { 20, 30,  310, FALL, MONS_YAKTAUR_CAPTAIN },
   { 20, 30,  136, SEMI, MONS_FIRE_GIANT },
   { 20, 30,  136, SEMI, MONS_FROST_GIANT },
@@ -371,10 +371,11 @@ static const vector<pop_entry> population[] =
   {  1,  4,  300, FLAT, MONS_MERFOLK_SIREN },
   {  1,  4,  195, FLAT, MONS_WATER_ELEMENTAL },
   {  1,  4,  275, FLAT, MONS_WIND_DRAKE },
-  {  1,  4,  200, FLAT, MONS_HARPY },
+  {  1,  4,  190, FLAT, MONS_HARPY },
   {  1,  7,  135, PEAK, MONS_MERFOLK_JAVELINEER },
   {  1,  7,  110, PEAK, MONS_ALLIGATOR_SNAPPING_TURTLE },
   {  2,  4,  190, SEMI, MONS_SATYR },
+  {  2,  7,   80, SEMI, MONS_SPHINX_MARAUDER },
   {  3,  7,   30, PEAK, MONS_FORMLESS_JELLYFISH },
 },
 
@@ -510,7 +511,8 @@ static const vector<pop_entry> population[] =
   {  1,  4,   50, RISE, MONS_ORC_WARLORD },
   // Top-tier threats:
   {  1,  4,  350, RISE, MONS_PEACEKEEPER },
-  {  1,  4,  300, RISE, MONS_SPHINX },
+  {  1,  4,  225, RISE, MONS_SPHINX_MARAUDER },
+  {  2,  4,  115, RISE, MONS_GUARDIAN_SPHINX },
 
   // Vaults:5 enemies. These weights are very roughly based on
   // the monster frequency as of 0.26.
@@ -547,7 +549,7 @@ static const vector<pop_entry> population[] =
   {  5, 12,  750, FALL, MONS_GLOWING_SHAPESHIFTER },
   {  5, 12,  600, FALL, MONS_TENGU_REAVER },
   {  5, 12,  330, FALL, MONS_VERY_UGLY_THING },
-  {  5, 12,  260, FALL, MONS_SPHINX },
+  {  5, 12,  260, FALL, MONS_GUARDIAN_SPHINX },
   {  5, 12,  260, FALL, MONS_WAR_GARGOYLE },
   {  5, 12,  300, FALL, MONS_POLTERGUARDIAN },
   // V:5 chaff from earlier floors

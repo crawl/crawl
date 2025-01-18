@@ -272,11 +272,11 @@ function sroom_mythical_zoo(e)
     end
     if Z >= 19 then
         mons[9] = "fire dragon w:" .. (Z * 2 - 37)
-        mons[10] = "sphinx w:" .. (Z - 16)
+        mons[10] = "sphinx marauder w:" .. (Z - 16)
     end
 
     if Z >= 21 then
-       lord_mon = "catoblepas / sphinx w:60 / sin beast w:20"
+       lord_mon = "catoblepas / guardian sphinx w:60 / sin beast w:20"
     elseif Z >= 16 then
        lord_mon = "catoblepas / hydra w:40 / sin beast w:40"
     else

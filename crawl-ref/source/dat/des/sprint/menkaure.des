@@ -886,7 +886,7 @@ ENDMAP
 NAME:   sprint2_behind_water_1
 TAGS:   sprint2_behind_water no_item_gen no_trap_gen no_pool_fixup no_rotate no_hmirror no_vmirror
 MARKER: + = lua:restrict_door()
-MONS:   deep troll, sphinx
+MONS:   deep troll, sphinx marauder
 KITEM:  . = gold q:27
 MAP
  ..c..

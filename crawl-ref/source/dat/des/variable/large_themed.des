@@ -3072,7 +3072,7 @@ MONS:    spark wasp zombie, vampire knight, vampire mage
 MONS:    flayed ghost, alderking
 MONS:    spriggan berserker
 KMONS:   8 = spriggan defender
-KMONS:   9 = sphinx
+KMONS:   9 = guardian sphinx
 KMONS:   0 = spark wasp band
 NSUBST:  7 = 4:7 / 2:8 / 1:9 / 1:0 / 3 = 123489 / *:.
 NSUBST:  A = 1:15 / 2 = 234, B = 2:2 / 1:3479, C = 2:3 / 1:124
@@ -3330,7 +3330,7 @@ SUBST:   })] = %
 NSUBST:  | = 1:e / 1:f / 3:g / * = ffg, % = 2:d / 2:e / 2:fg / * = k.
 NSUBST:  1 = 1:2 / *:1, 23 = 2:.
 :   elseif you.where() ~= dgn.level_name(dgn.br_entrance("Depths")) then
-MONS:    deep elf knight / orc sorcerer / ogre mage / sphinx w:2
+MONS:    deep elf knight / orc sorcerer / ogre mage / sphinx marauder w:2
 MONS:    tengu conjurer w:5 / deep elf archer w:15 / arcanist / boggart band
 MONS:    laughing skull band w:5 / great orb of eyes / meliai band w:1
 MONS:    centaur warrior / boulder beetle / unseen horror / wolf spider
@@ -3341,7 +3341,7 @@ NSUBST:  | = 1:f / 3:g / 1:h / 1:i / * = ffg, % = 1:d / 2:e / 1:fg / * = def.
 MONS:    rakshasa / occultist, tengu conjurer / necromancer
 MONS:    ice dragon w:1 / glowing orange brain w:20 / \
          very ugly thing / storm dragon zombie
-MONS:    flayed ghost / glowing shapeshifter w:20 / sphinx skeleton
+MONS:    flayed ghost / glowing shapeshifter w:20 / guardian sphinx skeleton
 MONS:    ugly thing / shapeshifter w:15 / spriggan air mage simulacrum w:5
 KFEAT:   ) = enter_depths
 KITEM:   S = smoky gem
@@ -3353,7 +3353,7 @@ TILE:    x = wall_pebble_lightblue
 TILE:    c = wall_marble w:200 / dngn_stone_wall_lightblue
 : elseif you.in_branch("Shoals") then
 MONS:    merfolk aquamancer / frost giant w:2, merfolk avatar / satyr
-MONS:    formless jellyfish / harpy band, skyshark
+MONS:    formless jellyfish / sphinx marauder, skyshark
 MONS:    merfolk siren w:2 / faun w:2 / water elemental
 SHUFFLE: })]
 SUBST:   )] = %
@@ -3365,7 +3365,8 @@ MONS:    tengu reaver / titan / lich / alderking w:5
 MONS:    frost giant / vampire mage / vampire knight w:5
 MONS:    walking crystal tome / walking frostbound tome / \
          walking divine tome / walking earthen tome
-MONS:    sphinx / spark wasp / caustic shrike / glass eye / wyrmhole w:2
+MONS:    guardian sphinx / spark wasp / caustic shrike / \
+         glass eye / wyrmhole w:2
 MONS:    spriggan air mage / very ugly thing / glowing orange brain / \
          glowing shapeshifter w:20 / rakshasa
 SHUFFLE: }])

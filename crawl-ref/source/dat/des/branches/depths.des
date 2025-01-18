@@ -139,7 +139,7 @@ TAGS:   patrolling transparent
 KMONS:  t = withered plant
 # Was place:Depths:1 undead. Specified list is both speed >= 10
 # and also avoids undead juggernauts / caustic shrikes.
-MONS:   sphinx skeleton / sphinx zombie / \
+MONS:   guardian sphinx skeleton / guardian sphinx zombie / \
         spriggan berserker skeleton / spriggan berserker zombie / \
         storm dragon skeleton / storm dragon zombie / \
         quicksilver dragon zombie / spark wasp zombie

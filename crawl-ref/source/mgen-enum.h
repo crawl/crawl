@@ -136,6 +136,7 @@ enum band_type
     BAND_WURMS_AND_MASTER,
     BAND_SLIMES_AND_MASTER,
     BAND_ELEPHANTS_AND_MASTER,
+    BAND_SPHINXES,
     NUM_BANDS                   // always last
 };
 

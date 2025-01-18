@@ -1016,8 +1016,8 @@ int main(int argc, char* argv[])
                     break;
                 case AF_AIRSTRIKE:
                 {
-                    short int min = pow(hd, 1.33) / 2;
-                    short int max = pow(hd + 1, 1.33) * 11 / 6;
+                    short int min = pow(hd, 1.2) / 2;
+                    short int max = pow(hd + 1, 1.2) * 12 / 6;
                     monsterattacks +=
                         colour(LIGHTBLUE, damage_flavour("airstrike", min, max));
                     break;

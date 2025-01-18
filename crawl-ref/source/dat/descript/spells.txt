@@ -1256,8 +1256,8 @@ Heals a small amount of damage to the caster's body.
 Monstrous Menagerie spell
 
 Summons a powerful exotic creature to the caster's aid: a manticore, a lindwurm,
-or, at high power, even a sphinx. Casting the spell at higher power also
-increases the strength of the beasts themselves.
+or, at high power, even a guardian sphinx. Casting the spell at higher power
+also increases the strength of the beasts themselves.
 %%%%
 Mercury Arrow spell
 

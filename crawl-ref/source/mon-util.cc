@@ -2288,7 +2288,7 @@ int flavour_damage(attack_flavour flavour, int HD, bool random)
             return 12;
         // Just show max damage: this number's only used for display.
         case AF_AIRSTRIKE:
-            return pow(HD + 1, 1.33) * 11 / 6;
+            return pow(HD + 1, 1.2) * 12 / 6;
         default:
             return 0;
     }

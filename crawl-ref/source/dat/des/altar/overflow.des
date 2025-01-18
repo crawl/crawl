@@ -139,7 +139,7 @@ function species_mock(e)
   elseif you.race() == "Human" then
     return "killer klown"
   elseif you.race() == "Felid" then
-    return "sphinx zombie"
+    return "sphinx marauder zombie"
   elseif you.race() == "Formicid" then
     return "giant cockroach"
   elseif you.race() == "Gargoyle" then

@@ -5869,7 +5869,7 @@ static branch_summon_pair _planerend_summons[] =
   { BRANCH_TOMB,
     { // Tomb enemies
       {  1,   1,   60, FLAT, MONS_ANCIENT_CHAMPION },
-      {  1,   1,  100, FLAT, MONS_SPHINX },
+      {  1,   1,  100, FLAT, MONS_GUARDIAN_SPHINX },
       {  1,   1,  100, FLAT, MONS_MUMMY_PRIEST },
     }},
   { BRANCH_ABYSS,

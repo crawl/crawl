@@ -5,7 +5,7 @@ resists: {elec: 3}
 xp_mult: 13
 will: 20
 attacks:
- - {type: hit, flavour: airstrike, damage: 4}
+ - {type: hit, flavour: airstrike, damage: 6}
 hd: 5
 hp_10x: 275
 ac: 3

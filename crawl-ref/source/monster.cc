@@ -1616,6 +1616,7 @@ bool monster::pickup_armour(item_def &item, bool msg, bool force)
         if (base_type == MONS_MAURICE
             || base_type == MONS_NIKOLA
             || base_type == MONS_CRAZY_YIUF
+            || genus == MONS_SPHINX
             || genus == MONS_DRACONIAN)
         {
             slot = SLOT_BODY_ARMOUR;
@@ -2377,7 +2378,7 @@ string monster::foot_name(bool plural, bool *can_plural) const
             str = "hoof";
         else if (ch == 'H')
         {
-            if (type == MONS_MANTICORE || type == MONS_SPHINX)
+            if (type == MONS_MANTICORE || mons_genus(type) == MONS_SPHINX)
                 str = "paw";
             else
                 str = "talon";

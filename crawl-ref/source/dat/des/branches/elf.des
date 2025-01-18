@@ -1223,7 +1223,7 @@ MONS:    orc warlord / iron troll / w:1 fire giant / w:1 frost giant / \
 MONS:    orc sorcerer / orc high priest / w:5 ogre mage
 MONS:    orc knight / deep troll / w:1 orc sorcerer / w:1 orc high priest
 # the arbiter(s):
-MONS:    great orb of eyes / sphinx
+MONS:    great orb of eyes / guardian sphinx
 # The orcs might have a unique with them. He or she will likely be outclassed
 # by the others in attendance, but perhaps has some special testimony to
 # present. None of the uniques really fits in with the deep elves...

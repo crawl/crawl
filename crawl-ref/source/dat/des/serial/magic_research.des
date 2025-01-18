@@ -231,7 +231,7 @@ dcbadabcd
 ENDMAP
 
 NAME:   hangedman_research_probablistics
-MONS:   eidolon, glass eye, great orb of eyes, sphinx
+MONS:   eidolon, glass eye, great orb of eyes, guardian sphinx
 MARKER: V = lua:fog_machine { cloud_type = "seething chaos", pow_min = 3, \
                 pow_max = 10, delay = 50, size = 1, walk_dist = 1 }
 COLOUR: .01234D = blue

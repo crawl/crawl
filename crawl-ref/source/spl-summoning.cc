@@ -296,7 +296,7 @@ spret cast_monstrous_menagerie(actor* caster, int pow, bool fail)
     monster_type type = MONS_PROGRAM_BUG;
 
     if (random2(pow) > 60 && coinflip())
-        type = MONS_SPHINX;
+        type = MONS_GUARDIAN_SPHINX;
     else
         type = coinflip() ? MONS_MANTICORE : MONS_LINDWURM;
 

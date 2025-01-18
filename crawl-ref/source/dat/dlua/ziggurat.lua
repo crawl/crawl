@@ -274,7 +274,7 @@ mset(spec_fn(function ()
   local d = math.max(5, 30 - you.zigs_completed() * 3)
   local e = math.max(1, you.zigs_completed() * 6 + you.depth() / 2 - 11)
   return "place:Vaults:$ w:" .. d * 2 .. " / place:Vaults:$ 9 w:" .. d .. " / " ..
-         "sphinx w:5 / titan w:" .. e .. " / golden dragon w:" .. e .. " / " ..
+         "guardian sphinx w:5 / titan w:" .. e .. " / golden dragon w:" .. e .. " / " ..
          "ancient lich w:" .. e / 3 .. " / dread lich w:" .. e / 3
 end))
 

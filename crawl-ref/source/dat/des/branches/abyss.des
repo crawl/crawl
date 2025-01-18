@@ -565,7 +565,7 @@ MONS:    guardian serpent, great orb of eyes, glowing orange brain
 MONS:    boggart, rakshasa, cacodemon, shadow demon
 KMONS:   0 = occultist
 KMONS:   8 = orc sorcerer
-KMONS:   9 = sphinx
+KMONS:   9 = guardian sphinx
 KMONS:   & = lich
 KMONS:   @ = deep elf sorcerer
 KMONS:   Z = nonbase draconian

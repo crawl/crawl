@@ -1093,7 +1093,7 @@ ENDMAP
 NAME: sprint_mu_tomb_spiral
 TAGS: sprint_mu_tomb no_rotate no_hmirror no_vmirror
 MONS: patrolling royal mummy, patrolling mummy priest
-MONS: patrolling guardian mummy, patrolling sphinx
+MONS: patrolling guardian mummy, patrolling guardian sphinx
 KFEAT: - = net trap / zot trap / floor w:40
 SUBST: . = -----.................332
 KITEM: $ = golden rune of zot

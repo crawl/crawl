@@ -1959,6 +1959,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_BRAIN_WORM, { {}, {{ BAND_BRAIN_WORMS, {0, 1} }}}},
     { MONS_LAUGHING_SKULL, { {}, {{ BAND_LAUGHING_SKULLS, {0, 1} }}}},
     { MONS_WEEPING_SKULL, { {}, {{ BAND_WEEPING_SKULLS, {0, 1} }}}},
+    { MONS_SPHINX_MARAUDER, { {}, {{ BAND_HARPIES, {0, 1} }}}},
     { MONS_PROTEAN_PROGENITOR, { {}, {{ BAND_PROTEAN_PROGENITORS, {0, 1} }}}},
     { MONS_THERMIC_DYNAMO, { {}, {{ BAND_THERMIC_DYNAMOS, {0, 1} }}}},
 };
@@ -2122,6 +2123,19 @@ static band_type _choose_band(monster_type mon_type, int *band_size_p,
             band_size = random2(min(brdepth[BRANCH_ABYSS], you.depth));
         break;
 
+    case MONS_SPHINX_MARAUDER:
+         if (player_in_branch(BRANCH_VAULTS))
+         {
+             band = BAND_SPHINXES;
+             band_size = x_chance_in_y(min(you.depth + 2, 6), 6) ? 1 : 0;
+         }
+         else if (!(player_in_branch(BRANCH_DUNGEON)))
+         {
+             // Gets harpies.
+             band_size = x_chance_in_y(2, 5) ? 2 : 0;
+         }
+         break;
+
     case MONS_PROTEAN_PROGENITOR:
     case MONS_THERMIC_DYNAMO:
         if (x_chance_in_y(2, 3))
@@ -2182,6 +2196,7 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_MERFOLK_IMPALER,     {{{MONS_MERFOLK, 1}}}},
     { BAND_MERFOLK_JAVELINEER,  {{{MONS_MERFOLK, 1}}}},
     { BAND_ELEPHANT,            {{{MONS_ELEPHANT, 1}}}},
+    { BAND_SPHINXES,            {{{MONS_GUARDIAN_SPHINX, 1}}}},
     { BAND_FIRE_BATS,           {{{MONS_FIRE_BAT, 1}}}},
     { BAND_HELL_HOGS,           {{{MONS_HELL_HOG, 1}}}},
     { BAND_HELL_RATS,           {{{MONS_HELL_RAT, 1}}}},

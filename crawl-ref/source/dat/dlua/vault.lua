@@ -314,9 +314,10 @@ function index_vaults_room_themes (e, set, hard)
            'freezing wraith w:4 / crystal guardian w:' .. d)
     e.mons('great orb of eyes w:' .. 7 - d .. ' / ' ..
            'boggart band w:5 / glowing orange brain w:' .. d + 1)
-    e.mons('arcanist w:' .. 14 - d * 2 .. ' / sphinx w:10 / ' ..
+    e.mons('arcanist w:' .. 14 - d * 2 .. ' / sphinx marauder w:10 / ' ..
            'ironbound convoker w:5 / deep elf annihilator w:1')
-    e.mons('deep elf annihilator / deep elf sorcerer / lich / tengu reaver')
+    e.mons('deep elf annihilator / deep elf sorcerer / lich / ' ..
+           'guardian sphinx w:5 / tengu reaver')
     e.item('robe / mundane hat')
     e.item('randbook numspells:1 slevels:' .. sl  .. ' / ' ..
            'mundane ring of magical power w:2')
@@ -327,7 +328,7 @@ function index_vaults_room_themes (e, set, hard)
     local c = 'ego:cold_resistance pre_id'
     e.mons('white ugly thing w:' .. 8 - d * 2 .. ' / ' ..
            'redback simulacrum w:' .. 8 - d * 2 .. ' / ' ..
-           'freezing wraith w:2 / sphinx simulacrum w:' .. d - 1)
+           'freezing wraith w:2 / guardian sphinx simulacrum w:' .. d - 1)
     e.mons('necromancer w:2 / arcanist / white very ugly thing')
     e.mons('ironbound frostheart / frost giant w:1')
     e.mons('golden dragon / tengu reaver w:25 ; halberd ' .. f .. ' | war axe ' .. f ..
@@ -350,7 +351,7 @@ function index_vaults_room_themes (e, set, hard)
            'dire elephant w:' .. d * 3 )
     e.mons('dire elephant w:' .. 18 - d * 3 .. ' / ' ..
            'formless jellyfish w:' .. 2 + d * 4 .. ' / ' ..
-           'sphinx w:' .. 2 + d * 2)
+           'guardian sphinx w:' .. 2 + d * 2)
     e.mons('ironbound preserver w:' .. 10 - d * 2 .. ' / ' ..
            'entropy weaver w:' .. 2 + d * 3 .. ' / ' ..
            'ironbound beastmaster w:' .. -2 + d * 4)

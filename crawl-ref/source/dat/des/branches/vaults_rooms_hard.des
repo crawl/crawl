@@ -61,7 +61,7 @@ function st_box_setup(e)
                vampire knight / vampire mage / deep elf sorcerer /\
                deep elf death mage / deep elf demonologist /\
                deep elf annihilator / deep elf high priest / orc warlord /\
-               base draconian w:15 / sphinx / shapeshifter /\
+               base draconian w:15 / guardian sphinx / shapeshifter /\
                glowing shapeshifter")
   e.subst("0 = 0:9 Z:1")
   e.subst("9 = 9:3 Z:1")

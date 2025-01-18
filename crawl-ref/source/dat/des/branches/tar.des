@@ -711,7 +711,7 @@ KFEAT:   } = }
 KMONS:   } = royal mummy
 KMONS:   1 = mummy priest
 KMONS:   2 = guardian mummy / ushabti / death scarab band / ancient champion / \
-             emperor scorpion / sphinx
+             emperor scorpion / guardian sphinx
 SHUFFLE: DE/FH/JK
 SUBST:   M = 12, DH = +, EFJK = x
 MAP

@@ -2688,7 +2688,7 @@ NAME:      shoals_rune_alternative
 TAGS:      shoal_rune_hangedman shoal_mimic_hangedman water_ok allow_dup \
            transparent no_dump
 KMONS:     12 = merfolk impaler / merfolk javelineer / merfolk aquamancer
-KMONS:     3 = kraken / harpy band w:15
+KMONS:     3 = kraken / sphinx marauder band w:15
 KMONS:     d = merfolk avatar / water nymph w:5
 : if shoals_vault_is_mimic() then
 KITEM:     d = barnacled rune of zot mimic
@@ -2930,8 +2930,8 @@ NAME:   shoals_end_hellmonk_lost_city
 ORIENT:  encompass
 PLACE:   Shoals:$
 WEIGHT:  3
-MONS:    faun w:15 / manticore / harpy, satyr, minotaur, sphinx
-KMONS:   O = sphinx
+MONS:    faun w:15 / manticore / harpy, satyr, minotaur, sphinx marauder
+KMONS:   O = sphinx marauder
 KMONS:   P = plant
 KITEM:   f = azure gem
 KITEM:   O = barnacled rune of Zot

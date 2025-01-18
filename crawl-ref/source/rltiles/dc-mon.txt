@@ -879,7 +879,10 @@ manticore MONS_MANTICORE
 %rim 1
 %sdir mon/demihumanoids
 harpy MONS_HARPY
-sphinx MONS_SPHINX
+%rim 0
+sphinx_marauder MONS_SPHINX_MARAUDER
+guardian_sphinx MONS_GUARDIAN_SPHINX
+%rim 1
 minotaur MONS_MINOTAUR
 %rim 0
 jorogumo MONS_JOROGUMO

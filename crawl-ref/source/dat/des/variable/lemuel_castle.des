@@ -106,7 +106,7 @@ function castle_lemuel_setup(e)
                   .. " / caustic shrike")
            e.mons("deep troll / iron troll / deep troll shaman / ettin")
            e.mons("fire dragon / ice dragon / death drake / spark wasp"
-                  .. " / sphinx")
+                  .. " / guardian sphinx")
        end
    end
    e.kmons("p = plant / fungus w:1")

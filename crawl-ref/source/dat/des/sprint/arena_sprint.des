@@ -341,7 +341,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "killer bee / queen bee / w:1 oklob plant",
                 "place:Crypt / w:2 josephine",
                 "common demon w:30 / kobold demonologist w:5 / frances w:3",
-                "mummy / w:5 guardian mummy / w:2 mummy priest / w:1 sphinx",
+                "mummy / w:5 guardian mummy / w:2 mummy priest / w:1 guardian sphinx",
                 -- Fire, Air, Earth, Water, Death
                 "w:5 fire bat / fire elemental /\
                     sun demon / efreet / hell hound /\
@@ -392,7 +392,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "place:Forest",
                 "place:Crypt:$",
                 "common demon w:30 / greater demon w:5",
-                "mummy / w:5 guardian mummy / w:2 mummy priest / w:5 sphinx",
+                "mummy / w:5 guardian mummy / w:2 mummy priest / w:5 guardian sphinx",
                 "place:Hell w:30 / geryon w:1",
                 -- Fire, Air, Earth, Water, Death
                 "fire elemental / fire dragon / sun demon / efreet / hell hound /\
@@ -463,7 +463,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "place:Crypt:$ w:25 / w:3 lich / w:5 vampire knight /\
                     w:2 boris / w:2 curse skull",
                 "any demon w:30 / pandemonium lord",
-                "place:Tomb:$ w:70 / sphinx w:20 / royal mummy",
+                "place:Tomb:$ w:70 / guardian sphinx w:20 / royal mummy",
                 "place:Hell w:25 / geryon w:2 / nellie w:2",
                 -- Elements/hells, Holy
                 "place:Dis:$ w:20 / hell sentinel / iron dragon / quicksilver dragon /\
@@ -537,7 +537,7 @@ function arena_sprint_get_monster_set(round, boss)
                     spriggan berserker / alderking",
                 "lich / w:5 ancient lich / w:1 curse skull / w:5 curse toe",
                 "any demon w:20 / pandemonium lord",
-                "place:Tomb:$ w:30 / sphinx w:20 / royal mummy",
+                "place:Tomb:$ w:30 / guardian sphinx w:20 / royal mummy",
                 "hellephant w:15 / w:1 nellie",
                 -- Elements/hells, Holy
                 "hell sentinel / iron dragon / quicksilver dragon /\
@@ -584,7 +584,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "iron golem hd:20 col:magenta name:orb_golem n_rpl n_des n_spe spells:orb_of_destruction.70.natural",
                 "brimstone fiend / ice fiend / tzitzimitl / executioner / hell sentinel",
                 "titan / spriggan air mage / blizzard demon / w:20 air elemental",
-                "sphinx / place:Tomb:$",
+                "guardian sphinx / place:Tomb:$",
                 "orb of fire / orb of fire name:orb_of_ice n_rpl n_des spells:glaciate.80.magical col:lightblue tile:mons_orb_of_ice /\
                   orb of fire name:orb_of_electricity n_rpl n_des spells:chain_lightning.80.magical col:yellow tile:mons_orb_of_electricity",
                 "hellion / w:5 efreet"
@@ -613,7 +613,7 @@ function arena_sprint_get_monster_set(round, boss)
                     demonspawn corrupter / demonspawn blood saint /\
                     brimstone fiend / ice fiend / tzitzimitl / hell sentinel /\
                     pandemonium lord w:80",
-                "sphinx w:20 / royal mummy",
+                "guardian sphinx w:20 / royal mummy",
                 "hellephant w:15 / w:1 nellie",
                 -- Elements/hells, Holy
                 "hell sentinel / quicksilver dragon /\
@@ -646,7 +646,7 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Gimmicks
                 "cacodemon", "sun moth", "catoblepas / iron golem w:5",
                 "moth of wrath / w:20 juggernaut", "orb spider", "apocalypse crab",
-                "sphinx / walking divine tome", "tormentor",
+                "guardian sphinx / walking divine tome", "tormentor",
                 "unseen horror / shadow wraith / ghost moth w:15",
                 "reaper / sin beast / geryon w:1",
                 "ghost moth / void ooze / demonspawn warmonger",

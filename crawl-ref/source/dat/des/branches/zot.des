@@ -3483,7 +3483,7 @@ ORIENT:  centre
 MONS:    ettin / stone giant w:5 / fire giant / \
          frost giant / crystal guardian w:5
 MONS:    base draconian
-MONS:    glowing shapeshifter w:20 / sphinx w:15 / war gargoyle w:20 / \
+MONS:    glowing shapeshifter w:20 / guardian sphinx w:15 / war gargoyle w:20 / \
          iron dragon w:20 / shadow dragon / golden dragon
 MONS:    fire dragon / ice dragon / storm dragon w:8 / moth of wrath w:12 / \
          ghost moth w:5 / tentacled monstrosity w:5 / quicksilver dragon w:5
@@ -4474,6 +4474,7 @@ while t_choice_a == t_choice_b do
   t_choice_b = util.random_weighted_from("weight", weaker_t)
 end
 }}
+KITEM:   . = any weapon randart
 KMASK:   ^~ = no_item_gen
 SHUFFLE: DdOo / HhPp
 # As a replacement to the small chance of both wing entrances being covered in

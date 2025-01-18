@@ -1567,6 +1567,12 @@ A rare and distinct member of scaly society, light and swift like a snake, yet
 also intelligent like a naga. It is said that a guardian serpent would rather
 die in battle than leave anything to an intruder.
 %%%%
+guardian sphinx
+
+A fearsome aged hybrid with a woman's head, a lion's body, and the wings of
+an eagle. It solemnly guards the temples and treasures of the Dungeon with a
+multitude of mind-clouding maledictions.
+%%%%
 halazid warlock
 
 An ancient undead sorcerer, exhumed by the living divines Sheza and Sargol and
@@ -2744,10 +2750,11 @@ spellspark servitor
 A magical construct forged around a spark of its creator's own arcane power,
 allowing it to wield some of their destructive magics directly.
 %%%%
-sphinx
+sphinx marauder
 
-A fearsome hybrid with a woman's head, a lion's body and the wings of an eagle,
-able to cloud the minds of its foes and wield fell magics.
+A wicked youthful hybrid with a woman's head, a lion's body, and the wings of
+an eagle. It gleefully wreaks havoc with both the violent turbulence of
+high winds and the frustration of bewildering magics.
 %%%%
 splinterfrost barricade
 

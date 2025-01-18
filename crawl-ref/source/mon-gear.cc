@@ -2183,6 +2183,8 @@ int make_mons_armour(monster_type type, int level)
         item.sub_type  = ARM_ROBE;
         break;
 
+    case MONS_SPHINX_MARAUDER:
+    case MONS_GUARDIAN_SPHINX:
     case MONS_DRACONIAN_SHIFTER:
     case MONS_DRACONIAN_SCORCHER:
     case MONS_DRACONIAN_ANNIHILATOR:

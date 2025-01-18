@@ -199,10 +199,9 @@ end
 
 # simple entrance
 NAME:   tomb_entry_simple_bobbens
-ORIENT: float
 TAGS:   tomb_entry no_monster_gen no_item_gen transparent
-MONS:   guardian mummy
-MONS:   sphinx
+ORIENT: float
+MONS:   guardian mummy, guardian sphinx
 # crawl will rotate for the rest of possibilities
 SHUFFLE: AB
 SUBST:  A = +, B = c
@@ -222,10 +221,10 @@ ENDMAP
 ##############################################################################
 # small pyramid leading to the bigger one
 NAME:   tomb_entry_pyramid_bobbens
-ORIENT: float
 TAGS:   tomb_entry no_monster_gen transparent
-MONS:   sphinx
-MONS:   w:1 mummy / w:9 guardian mummy
+ORIENT: float
+MONS:   guardian sphinx
+MONS:   w:1 skeletal warrior / w:9 guardian mummy
 MONS:   mummy priest
 KFEAT:  O = enter_tomb
 MAP
@@ -261,11 +260,10 @@ ENDMAP
 ##############################################################################
 # sphere entry
 NAME:   tomb_entry_sphere_bobbens
-ORIENT: float
 TAGS:   tomb_entry no_monster_gen no_rotate transparent
-MONS:   w:1 mummy / w:9 guardian mummy
-MONS:   sphinx
-MONS:   mummy priest
+ORIENT: float
+MONS:   guardian mummy w:90 / skeletal warrior
+MONS:   guardian sphinx, mummy priest
 KFEAT:  O = enter_tomb
 MAP
           ccccc
@@ -312,8 +310,7 @@ ENDMAP
 # she sells tomb entry shells by the sea shore
 NAME:   tomb_entry_shell_bobbens
 TAGS:   tomb_entry no_monster_gen no_item_gen no_rotate transparent
-MONS:   guardian mummy
-MONS:   mummy priest
+MONS:   guardian mummy, mummy priest
 KFEAT:  O = enter_tomb
 MAP
           c
@@ -489,15 +486,15 @@ SUBVAULT: A : tomb_1_centre
 SUBVAULT: B : tomb_1_hall_stairs
 : tomb_guardian_set(_G, true)
 MONS:     royal mummy / nothing
-MONS:     sphinx / nothing
+MONS:     guardian sphinx, guardian sphinx skeleton
 MONS:     obsidian statue / orange crystal statue
-NSUBST:   ( = 1:( / *:.
+NSUBST:   ( = 1:( / *:., 3 = 3:3 / 5 = 34 / *:.
 # Set up decorative statues.
 : if crawl.x_chance_in_y(3, 4) then
-SUBST:    I = I:900 5, N = N:900 5
-SUBST:    J = J:750 5, O = O:750 5
-SUBST:    K = K:550 5, P = P:550 5
-SUBST:    L = L:300 5, Q = Q:300 5
+SUBST:    I = I:900 6, N = N:900 6
+SUBST:    J = J:750 6, O = O:750 6
+SUBST:    K = K:550 6, P = P:550 6
+SUBST:    L = L:300 6, Q = Q:300 6
 :   vault_granite_statue_setup(_G, "FIJKLMNOPQ", "sarcophagus")
 TILE:     FIJKL = dngn_sarcophagus_pedestal_left
 : else

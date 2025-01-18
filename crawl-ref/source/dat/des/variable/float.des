@@ -2987,8 +2987,8 @@ MONS:    tengu warrior / deep troll / rakshasa / necromancer
 MONS:    tengu conjurer / ancient champion / stone giant / occultist / \
          phantasmal warrior / salamander mystic / caustic shrike w:5
 MONS:    fire giant / frost giant / stone giant / ettin / hell knight / \
-         vampire knight / vampire mage / spriggan berserker / sphinx / \
-         spriggan air mage / deep troll earth mage
+         vampire knight / vampire mage / spriggan berserker / \
+         guardian sphinx / spriggan air mage / deep troll earth mage
 MONS:    titan / lich / alderking / \
          salamander tyrant / ancient lich w:5 / dread lich w:5
 SHUFFLE: AB, CD, EF, GH, IJ, KL / MN, OP / QR, ST, ST / UV
@@ -3043,7 +3043,7 @@ MONS:    spark wasp w:5 / catoblepas / bunyip / emperor scorpion
 MONS:    12-headed hydra / anaconda / torpor snail w:5 / \
          demonic crawler w:5 / skyshark / bunyip w:5 / sin beast w:5
 MONS:    spriggan druid, spriggan berserker / spriggan defender
-MONS:    sphinx / alderking w:5 / caustic shrike
+MONS:    guardian sphinx / alderking w:5 / caustic shrike
 KFEAT:   d = cache of fruit
 NSUBST:  ' : 1:2 / 1:3 / 1:4 / 2 = 233444. / *:.
 NSUBST:  " : 2:2 / 2:3 / 2:4 / 4 = 233444. / *:.
@@ -3102,7 +3102,7 @@ KMONS:   F = fire dragon / fire giant / salamander tyrant / smoke demon / \
              balrug / hellephant w:5
 KMONS:   H = stone giant w:20 / iron dragon / walking earthen tome / \
              juggernaut w:5 / walking crystal tome w:5
-KMONS:   J = death scarab w:20 / guardian mummy / sphinx / reaper / \
+KMONS:   J = death scarab w:20 / guardian mummy / guardian sphinx / reaper / \
              mummy priest w:5 / royal mummy w:5
 KMONS:   K = deep elf demonologist / deep elf sorcerer / deep elf death mage / \
              deep elf annihilator / deep elf high priest / \
@@ -3302,7 +3302,7 @@ KITEM:   })] = demon whip / demon trident / demon blade / \
 TILE:    b = bedevilled_crystal_gehenna
 :   else
 MONS:    hell knight, deep troll, spriggan berserker zombie
-MONS:    sphinx zombie, red ugly thing
+MONS:    guardian sphinx zombie, red ugly thing
 KMONS:   )] = occultist / rakshasa w:5
 KITEM:   b = smoky gem
 KFEAT:   } = enter_depths
@@ -3484,7 +3484,7 @@ KMONS:  1 = mummy
 KMONS:  25 = guardian mummy
 KMONS:  36 = mummy priest
 KMONS:  47 = royal mummy
-KMONS:  H = sphinx
+KMONS:  H = guardian sphinx
 : if you.in_branch("Crypt") then
 KMONS: M = Khufu, royal mummy
 : elseif you.absdepth() <= 17 then
@@ -3552,7 +3552,7 @@ KMONS:    1 = tengu warrior / tengu conjurer / ettin / stone giant \
 KMONS:    2 = occultist / deep troll earth mage / spriggan air mage \
               / deep elf annihilator / deep elf high priest
 KMONS:    3 = fire dragon / ice dragon / iron dragon / storm dragon
-KMONS:    4 = tengu reaver / spriggan air mage / sphinx
+KMONS:    4 = tengu reaver / spriggan air mage / guardian sphinx
 KMONS:    5 = golden dragon / quicksilver dragon / storm dragon
 KMONS:    6 = juggernaut / spark wasp band / caustic shrike
 KMONS:    F = orange crystal statue
@@ -4959,14 +4959,15 @@ MONS:    glass eye
 MONS:    boggart / kobold demonologist / deep elf pyromancer w:5 / \
          deep elf zephyrmancer w:5 / tengu conjurer
 MONS:    arcanist w:5 / occultist w:5 / necromancer / orc sorcerer / ogre mage
-MONS:    deep elf annihilator / deep troll earth mage / sphinx / tengu reaver
+MONS:    deep elf annihilator / deep troll earth mage / \
+         sphinx marauder / tengu reaver
 SUBST:   4 = 23, 5 = 4
 : elseif you.in_branch("Vaults") then
 MONS:    glowing orange brain / great orb of eyes / phantasmal warrior
 MONS:    boggart / rakshasa / ogre mage / arcanist / necromancer
 MONS:    deep elf sorcerer / deep elf annihilator / deep elf demonologist \
          / deep elf high priest / deep elf death mage / deep troll earth mage
-MONS:    sphinx / tengu reaver / lich / fire giant / frost giant
+MONS:    sphinx marauder / tengu reaver / lich / fire giant / frost giant
 MONS:    titan / ancient lich w:5 / dread lich w:5 / glowing shapeshifter
 : elseif you.in_branch("Depths") then
 MONS:    glass eye / great orb of eyes / glowing orange brain \
@@ -4975,7 +4976,7 @@ MONS:    boggart / rakshasa / ogre mage / occultist / necromancer
 MONS:    deep elf sorcerer / deep elf annihilator / deep elf demonologist \
          / deep elf high priest / deep elf death mage / deep troll earth mage \
          / spriggan air mage / vampire mage
-MONS:    sphinx / tengu reaver / lich / fire giant / frost giant
+MONS:    guardian sphinx / tengu reaver / lich / fire giant / frost giant
 MONS:    titan / ancient lich w:5 / dread lich w:5 / glowing shapeshifter
 : elseif you.in_branch("Elf") then
 MONS:    water elemental / shapeshifter
@@ -5996,7 +5997,7 @@ DEPTH:  Crypt, Depths
 ORIENT: float
 # Offerings of gold, valuable items, or good potions to the Cat God.
 : kitem("d = star_item w:100 / " .. dgn.loot_potions)
-MONS:   sphinx
+MONS:   guardian sphinx
 KFEAT:  ap = granite_statue
 NSUBST: 1 = 2=1 / 1--
 TILE:   c = wall_tomb
@@ -6070,7 +6071,7 @@ TAGS:   transparent no_monster_gen
 DEPTH:  D:10-, Orc, Depths, Zot
 ORIENT: float
 MONS:   hornet, orc sorcerer / ogre mage, jorogumo / fenstrider witch
-MONS:   sphinx / vampire knight, dread lich
+MONS:   guardian sphinx / vampire knight, dread lich
 # scroll of vulnerability as fallback if paralysis isn't generated this game
 ITEM:   wand of paralysis w:9999 / scroll of vulnerability w:1
 NSUBST: 1 = 1:1 / *:1.
@@ -6669,7 +6670,7 @@ MONS:    deep elf annihilator / deep elf sorcerer / deep elf demonologist
 KMONS:   D = harpy band
 KMONS:   F = entropy weaver band
 KMONS:   0 = arcanist / necromancer / very ugly thing
-KMONS:   9 = stone giant / tengu reaver / sphinx
+KMONS:   9 = stone giant / tengu reaver / sphinx marauder
 KMONS:   P = bush
 NSUBST:  1 = 4:1 / 1:12. / 1:% / *:., 2 = 2:2 / 1:% / *:.
 NSUBST:  d = 1:D. / *:., f = 1:F. / *:., P = 2:G / *:P
@@ -6819,7 +6820,7 @@ KMONS:   0 = flayed ghost / shadow dragon w:1
 KFEAT:   0 = stone_arch
 :   else
 MONS:    spriggan berserker zombie / fire dragon skeleton / \
-         sphinx simulacrum
+         guardian sphinx simulacrum
 MONS:    occultist, hell knight, white ugly thing, frost giant
 MONS:    necromancer, flayed ghost
 KMONS:   8 = tengu warrior

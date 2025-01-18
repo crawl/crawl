@@ -2577,7 +2577,7 @@ MONS:   wraith w:5 / freezing wraith w:5 / shadow wraith / \
         spectral spriggan defender / shadowghast w:5 / nothing
 : else -- mummy layout
 MONS:   royal mummy
-MONS:   sphinx
+MONS:   guardian sphinx
 MONS:   mummy priest
 MONS:   mummy priest
 MONS:   guardian mummy w:7 / ushabti w:3
@@ -2830,7 +2830,7 @@ KMONS:  I = vampire mage
 KMONS:  J = jiangshi
 KMONS:  P = vampire / zombie / skeleton
 : else
-KMONS:  H = sphinx
+KMONS:  H = guardian sphinx
 KMONS:  I = guardian mummy w:7 / ushabti w:3
 KMONS:  J = guardian mummy / mummy
 KMONS:  P = skeleton / mummy
@@ -3151,7 +3151,7 @@ MONS:   mummy priest / ushabti w:6
 MONS:   guardian mummy ; long sword | great sword | \
         battleaxe | war axe | broad axe . chain mail w:15 | plate armour w:1
 MONS:   bog body / mummy w:5 / soul eater w:5 / guardian mummy
-MONS:   generate_awake sphinx
+MONS:   generate_awake guardian sphinx
 : end
 SUBST:  '" = .
 NSUBST:  %*| = 1:d / 1:h

@@ -304,7 +304,9 @@ enum monster_type                      // env.mons[].type
     MONS_VERY_UGLY_THING,
     MONS_ICE_BEAST,
     MONS_SKY_BEAST,
-    MONS_SPHINX,
+#if TAG_MAJOR_VERSION == 34
+    MONS_GUARDIAN_SPHINX,
+#endif
     MONS_ORB_GUARDIAN,
 
     MONS_GOLEM,                 // genus
@@ -472,6 +474,9 @@ enum monster_type                      // env.mons[].type
     MONS_TENGU_CONJURER,
     MONS_TENGU_REAVER,
     MONS_FENSTRIDER_WITCH,
+    MONS_SPHINX,              // genus
+    MONS_SPHINX_MARAUDER,
+    MONS_GUARDIAN_SPHINX,
 #endif
     MONS_MINOTAUR,
     MONS_NAGA,
@@ -1313,6 +1318,8 @@ enum monster_type                      // env.mons[].type
     MONS_ALDERKING,
     MONS_ONI_INCARCERATOR,
     MONS_WYRMHOLE,
+    MONS_SPHINX,                  // genus
+    MONS_SPHINX_MARAUDER,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
