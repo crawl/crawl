@@ -3160,6 +3160,8 @@ static void _xom_pseudo_miscast(int /*sever*/)
             str = _get_xom_speech("feature deep water");
         else if (in_view[iv] == DNGN_FOUNTAIN_BLOOD)
             str = _get_xom_speech("feature blood");
+        else if (in_view[iv] == DNGN_FOUNTAIN_EYES)
+            str = _get_xom_speech("feature eyes");
         else if (in_view[iv] == DNGN_DRY_FOUNTAIN)
             str = _get_xom_speech("feature dry");
         else if (feat_is_statuelike(in_view[iv]))

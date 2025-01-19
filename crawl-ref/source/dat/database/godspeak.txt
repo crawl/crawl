@@ -240,6 +240,12 @@ Xom feature blood
 
 @The_feature@ briefly coagulates.
 %%%%
+Xom feature eyes
+
+@The_feature@ looks at you curiously.
+
+@The_feature@ looks right through you.
+%%%%
 Xom feature dry
 
 Water briefly sprays from @the_feature@.
