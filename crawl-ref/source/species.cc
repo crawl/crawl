@@ -359,6 +359,9 @@ namespace species
     {
         if (sp == SP_ARMATAUR)
             return "Roll";
+        // XXX: To form 'hopping' and 'hopper' properly
+        else if (sp == SP_BARACHI)
+            return "Hopp";
         return walking_verb(sp);
     }
 
