@@ -229,7 +229,7 @@
 # generic
 %%%%
 %d potions
-
+{fpl}%d potions
 %%%%
 
 # Some potion colours are the names of gemstones, etc., and are used elsewhere

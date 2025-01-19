@@ -11,7 +11,7 @@
 %%%%
 # for player ghosts
 the weapon
-
+{f}l'arme
 %%%%
 the club
 
@@ -56,19 +56,19 @@ the quick blade
 
 %%%%
 the short sword
-
+{f}l'épée courte
 %%%%
 the rapier
-
+la rapière
 %%%%
 the falchion
-
+le fauchon
 %%%%
 the long sword
-
+{f}l'épée longe
 %%%%
 the scimitar
-
+le cimeterre
 %%%%
 the demon blade
 
@@ -104,7 +104,7 @@ the spear
 
 %%%%
 the trident
-
+le trident
 %%%%
 the halberd
 
@@ -241,7 +241,7 @@ the scale mail
 
 %%%%
 the chain mail
-
+la cotte de mailles
 %%%%
 the plate armour
 
@@ -262,7 +262,7 @@ the pair of gloves
 
 %%%%
 the helmet
-
+le casque
 %%%%
 the hat
 
@@ -327,7 +327,7 @@ the creamy pearl robe
 # general catch-all
 %%%%
 the ring
-
+l'anneau
 %%%%
 
 # unidentified rings have two adjectives
@@ -454,7 +454,7 @@ the wooden ring
 # general catch-all
 %%%%
 the amulet
-
+{f}l'amulette
 %%%%
 
 # unidentified amulets have two adjectives
@@ -781,7 +781,7 @@ the potion of resistance
 # or "<qualifier> <colour> potion"
 %%%%
 the potion
-
+la potion
 %%%%
 
 # Some potion colours are the names of gemstones, etc., and are used elsewhere
