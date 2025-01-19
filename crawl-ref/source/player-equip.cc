@@ -1951,6 +1951,15 @@ static void _zonguldrok_comment_on_hat(const item_def& hat)
     else
         key = "zonguldrok hat bad";
 
+    if (is_unrandom_artefact(hat))
+    {
+        const unrandart_entry *entry = get_unrand_entry(hat.unrand_idx);
+        string unrand_key = "zonguldrok hat " + string(entry->name);
+
+        if (!getSpeakString(unrand_key).empty())
+            key = unrand_key;
+    }
+
     const string msg = "A voice whispers, \"" + getSpeakString(key) + "\"";
         mprf(MSGCH_TALK, "%s", msg.c_str());
 }
