@@ -6508,6 +6508,22 @@ static bool _cast_dirge(monster& caster, bool check_only = false)
     return true;
 }
 
+// Some monsters wear armour but shouldn't wield weapons, so we can't just
+// check equipment status: check their attack types too.
+static bool _bestow_arms_attack_types_valid(monster* mon)
+{
+    bool valid = false;
+
+    for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
+    {
+        const mon_attack_def attk = mons_attack_spec(*mon, 0);
+        if (attk.type == AT_HIT || attk.type == AT_WEAP_ONLY)
+            valid = true;
+    }
+
+    return valid;
+}
+
 static void _cast_bestow_arms(monster& caster)
 {
     vector<monster*> targs;
@@ -6519,7 +6535,8 @@ static void _cast_bestow_arms(monster& caster)
     for (monster_near_iterator mi(caster.pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (mons_aligned(&caster, *mi) && !mi->has_ench(ENCH_ARMED)
-            && (mons_itemuse(**mi) >= MONUSE_STARTING_EQUIPMENT))
+            && (mons_itemuse(**mi) >= MONUSE_STARTING_EQUIPMENT)
+            && _bestow_arms_attack_types_valid(*mi))
         {
             // Skip enemies with unrandarts, which are special enough to not
             // replace.
@@ -9146,7 +9163,8 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
         for (monster_near_iterator mi(mon->pos(), LOS_NO_TRANS); mi; ++mi)
         {
             if (mons_aligned(mon, *mi) && !mi->has_ench(ENCH_ARMED)
-                && (mons_itemuse(**mi) >= MONUSE_STARTING_EQUIPMENT))
+                && (mons_itemuse(**mi) >= MONUSE_STARTING_EQUIPMENT)
+                && _bestow_arms_attack_types_valid(*mi))
             {
                 return ai_action::good();
             }

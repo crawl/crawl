@@ -5,7 +5,7 @@ xp_mult: 16
 genus: sphinx
 will: 60
 attacks:
- - {type: hit, flavour: airstrike, damage: 13}
+ - {type: pounce, flavour: airstrike, damage: 13}
 hd: 13
 hp_10x: 840
 ac: 4

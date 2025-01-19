@@ -5,9 +5,9 @@ xp_mult: 9
 genus: sphinx
 will: 80
 attacks:
- - {type: hit, damage: 30}
- - {type: hit, damage: 15}
- - {type: hit, damage: 15}
+ - {type: bite, damage: 30}
+ - {type: claw, damage: 15}
+ - {type: claw, damage: 15}
 hd: 18
 hp_10x: 1080
 ac: 10
