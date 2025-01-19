@@ -8549,7 +8549,7 @@ VISUAL:@The_monster@ pulls a severed tentacle out of their boot and sighs heavil
 @The_monster@ yells, "Just try that again; I dare you!"
 
 w:1
-@The_monster@ gibbers softly, "It was just one butterfly..."
+@The_monster@ gibbers softly, "It was just one butterfly...."
 
 VISUAL:@The_monster@ wobbles unsteadily, but gives you a thumbs up.
 %%%%
