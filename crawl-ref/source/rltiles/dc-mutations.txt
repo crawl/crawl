@@ -162,6 +162,9 @@ teleport_1 TELEPORT
 teleport_2
 
 # Demonspawn mutations
+demonic_touch1 DEMONIC_TOUCH
+demonic_touch2
+demonic_touch3
 icemail_1 ICEMAIL
 icemail_2
 condensation_shield CONDENSATION_SHIELD
@@ -253,6 +256,7 @@ gelatinous_body_1 GELATINOUS_BODY
 gelatinous_body_2
 gelatinous_body_3
 jelly_growth JELLY_GROWTH
+tendrils TENDRILS
 
 # Ru sacrifices
 missing_hand MISSING_HAND

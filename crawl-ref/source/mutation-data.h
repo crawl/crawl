@@ -1908,7 +1908,7 @@ static const mutation_def mut_data[] =
   {"You are covered in slimy tendrils that may disarm your opponents.", "", ""},
   {"Thin, slimy tendrils emerge from your body.", "", ""},
   {"Your tendrils retract into your body.", "", ""},
-  TILEG_MUT_GENERIC_JIYVA_MUTATION,
+  TILEG_MUT_TENDRILS,
 },
 
 { MUT_JELLY_GROWTH, 0, 1, mutflag::good | mutflag::jiyva, true,
@@ -2062,7 +2062,7 @@ static const mutation_def mut_data[] =
    "Your hands twist and begin to emit a powerful aura of unholy energy."},
 
   {"", "", ""},
-  TILEG_MUT_GENERIC_DEMONSPAWN_MUTATION,
+  TILEG_MUT_DEMONIC_TOUCH,
 },
 
 { MUT_COLD_BLOODED, 0, 1, mutflag::bad, true,
