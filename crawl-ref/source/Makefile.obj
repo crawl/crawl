@@ -594,6 +594,7 @@ test/i18n/make-stringf-test.o \
 test/i18n/de/mon-test.o \
 test/i18n/de/item-test.o \
 test/i18n/de/misc-test.o \
+test/i18n/fr/item-test.o \
 test/i18n/fr/misc-test.o \
 test/i18n/ru/misc-test.o
 
