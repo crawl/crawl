@@ -7,6 +7,9 @@
 
 #define DEATH_NAME_LENGTH 10
 
+// Inventory index of the item we're making a spiteful retalation with
+#define SPITEFUL_ATTACK_ITEM_KEY "spiteful_attack_item"
+
 #include "beam.h"
 #include "enum.h"
 #include "kill-method-type.h"

@@ -1838,7 +1838,6 @@ static const AuxTentacles   AUX_TENTACLES = AuxTentacles();
 static const AuxMaw         AUX_MAW = AuxMaw();
 static const AuxBlades      AUX_EXECUTIONER_BLADE = AuxBlades();
 static const AuxFisticloak  AUX_FUNGAL_FISTICLOAK = AuxFisticloak();
-
 static const AuxAttackType* const aux_attack_types[] =
 {
     &AUX_CONSTRICT,
@@ -2891,6 +2890,29 @@ string melee_attack::mons_attack_verb()
     if (is_shadow_stab)
         return "eviscerate";
 
+    if (attacker->type == MONS_HAUNTED_ARMOUR)
+    {
+        if (item_def* armour = attacker->as_monster()->body_armour())
+        {
+            switch (armour->sub_type)
+            {
+                case ARM_HAT:
+                case ARM_HELMET:
+                    return random_choose("headbutt", "bonk", "clobber");
+                case ARM_BOOTS:
+                    return random_choose("kick", "punt", "thump");
+                case ARM_CLOAK:
+                case ARM_SCARF:
+                    return random_choose("buffet", "strangle");
+                case ARM_GLOVES:
+                    return random_choose("punch", "slap", "smack");
+
+                default:
+                    break;
+            }
+        }
+    }
+
     return mon_attack_name(attk_type);
 }
 
@@ -3754,6 +3776,7 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_AIRSTRIKE:
+    {
         const int spaces = airstrike_space_around(defender->pos(), true);
         const int min = pow(attacker->get_hit_dice(), 1.2) * (spaces + 3) / 6;
         const int max = pow(attacker->get_hit_dice() + 1, 1.2) * (spaces + 4) / 6;
@@ -3771,9 +3794,45 @@ void melee_attack::mons_apply_attack_flavour()
                  attack_strength_punctuation(special_damage).c_str());
         }
         break;
-
     }
 
+    case AF_TRICKSTER:
+    {
+        if (!one_chance_in(3) || defender->is_player())
+            break;
+
+        monster* mdefender = defender->as_monster();
+        vector<enchant_type> effects;
+
+        if (!mdefender->has_ench(ENCH_DRAINED) && defender->res_negative_energy() < 3)
+            effects.push_back(ENCH_DRAINED);
+        if (!mdefender->has_ench(ENCH_CONFUSION) && !defender->clarity())
+            effects.push_back(ENCH_CONFUSION);
+        if (!mdefender->has_ench(ENCH_DAZED))
+            effects.push_back(ENCH_DAZED);
+
+        if (effects.empty())
+            break;
+
+        switch (effects[random2(effects.size())])
+        {
+            default:
+            case ENCH_DAZED:
+                mdefender->add_ench(mon_enchant(ENCH_DAZED, 0, attacker,
+                                    random_range(70, 110)));
+                break;
+            case ENCH_DRAINED:
+                defender->drain(attacker, false, 2);
+                break;
+            case ENCH_CONFUSION:
+                defender->confuse(attacker, 10);
+                break;
+        }
+
+        break;
+    }
+
+    }
 }
 
 void melee_attack::do_fiery_armour_burn()

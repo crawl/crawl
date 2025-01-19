@@ -2056,6 +2056,14 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
             return tileidx_item(item);
         }
 
+        case MONS_HAUNTED_ARMOUR:
+        {
+            // Use item tile.
+            ASSERT(mon.inv[MSLOT_ARMOUR]);
+            const item_def& item = *mon.inv[MSLOT_ARMOUR];
+            return tileidx_item(item);
+        }
+
         case MONS_SPECTRAL_WEAPON:
         {
             // TODO: it would be good to show the TILE_FLAG_ANIM_OBJ icon with
@@ -3856,6 +3864,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_IMBUE_SERVITOR;
     case ABIL_IMPRINT_WEAPON:
         return TILEG_ABILITY_IMPRINT_WEAPON;
+    case ABIL_CACOPHONY:
+        return TILEG_ABILITY_CACOPHONY;
 
     // Others
     case ABIL_END_TRANSFORMATION:
@@ -4423,6 +4433,8 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
 #endif
         case SP_COGLIN:
             return TILEG_SP_COGLIN;
+        case SP_POLTERGEIST:
+            return TILEG_SP_POLTERGEIST;
         default:
             return TILEP_ERROR;
     }

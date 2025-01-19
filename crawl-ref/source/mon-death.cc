@@ -2555,6 +2555,14 @@ item_def* monster_die(monster& mons, killer_type killer,
         }
     }
 
+    if (mons.type == MONS_HAUNTED_ARMOUR && real_death)
+    {
+        // Making the current sensible assumption that these are only ever
+        // created by Cacophony.
+        simple_monster_message(mons, " is driven back to you.", false,
+                                MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+        did_death_message = true;
+    }
     if (mons.type == MONS_DANCING_WEAPON)
     {
         int w_idx = mons.inv[MSLOT_WEAPON];

@@ -113,6 +113,11 @@ Oni
 Large, robust, and extremely fond of drinking, Oni make capable brawlers and
 spellcasters and gain extra benefits from healing potions.
 %%%%
+Poltergeist
+
+Formless ghosts who delight in hexing their enemies. They can equip many
+different hats, gloves, boots, or cloaks at once, but cannot wear body armour.
+%%%%
 Spriggan
 
 Very small, very frail and very fast, Spriggans are highly competent stabbers

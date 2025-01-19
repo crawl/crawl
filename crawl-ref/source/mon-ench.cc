@@ -39,6 +39,7 @@
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mon-tentacle.h"
+#include "player.h"
 #include "religion.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
@@ -222,6 +223,9 @@ bool monster::add_ench(const mon_enchant &ench)
 
 void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
 {
+    if ((ench.who == KC_YOU || ench.who == KC_FRIENDLY) && you.has_mutation(MUT_TRICKSTER))
+        trickster_trigger(*this, ench.ench);
+
     // Check for slow/haste.
     switch (ench.ench)
     {

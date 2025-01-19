@@ -869,6 +869,18 @@ bool fill_status_info(int status, status_info& inf)
         }
         break;
 
+    case STATUS_TRICKSTER:
+        if (you.has_mutation(MUT_TRICKSTER))
+        {
+            const int bonus = trickster_bonus();
+            if (bonus > 0)
+            {
+                inf.short_text = make_stringf("trickster (+%d AC)", bonus);
+                inf.long_text = make_stringf("You are bolsted by spread misfortune (+%d AC)", bonus);
+            }
+        }
+        break;
+
     default:
         if (!found)
         {

@@ -554,8 +554,11 @@ monster_info::monster_info(const monster* m, int milev)
                     env.item[m->inv[MSLOT_MISSILE]]));
             }
         }
-        else if (type == MONS_ARMOUR_ECHO && m->get_defining_object())
+        else if ((type == MONS_ARMOUR_ECHO || type == MONS_HAUNTED_ARMOUR)
+                 && m->get_defining_object())
+        {
             inv[MSLOT_ARMOUR].reset(new item_def(*m->get_defining_object()));
+        }
         return;
     }
 
@@ -1056,6 +1059,14 @@ string monster_info::_core_name() const
             }
             break;
 
+        case MONS_HAUNTED_ARMOUR:
+            if (inv[MSLOT_ARMOUR])
+            {
+                const item_def& item = *inv[MSLOT_ARMOUR];
+                s = "haunted " + item.name(DESC_QUALNAME);
+            }
+            break;
+
         case MONS_PLAYER_GHOST:
             s = apostrophise(mname) + " ghost";
             break;
@@ -1397,6 +1408,7 @@ string monster_info::pluralised_name(bool fullname) const
     else if ((type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
                 || type == MONS_DANCING_WEAPON || type == MONS_SPECTRAL_WEAPON
                 || type == MONS_ARMOUR_ECHO || type == MONS_MUTANT_BEAST
+                || type == MONS_HAUNTED_ARMOUR
                 || !fullname)
             && !is(MB_NAME_REPLACE))
 

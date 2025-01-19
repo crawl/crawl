@@ -890,6 +890,36 @@ static void _decrement_durations()
     if (you.duration[DUR_BLOOD_FOR_BLOOD])
         beogh_blood_for_blood_tick(delay);
 
+    if (you.duration[DUR_CACOPHONY])
+    {
+        // Check if every haunted armour is already dead. If so, end the
+        // effect early.
+        bool found = false;
+        for (monster_iterator mi; mi; ++mi)
+        {
+            if (mi->was_created_by(MON_SUMM_CACOPHONY))
+            {
+                found = true;
+                break;
+            }
+        }
+        if (!found)
+        {
+            mprf(MSGCH_DURATION, "As the last of your armour is driven back to "
+                  "you, your cacophony ends.");
+            you.duration[DUR_CACOPHONY] = 0;
+        }
+        else if (_decrement_a_duration(DUR_CACOPHONY, delay,
+                "Your cacophony subsides and your armour settles down once more."))
+        {
+            for (monster_iterator mi; mi; ++mi)
+                if (mi->was_created_by(MON_SUMM_CACOPHONY))
+                    monster_die(**mi, KILL_RESET, NON_MONSTER, true);
+        }
+        else
+            noisy(20, you.pos());
+    }
+
     if (you.duration[DUR_FUSILLADE] && you.time_taken > 0)
         fire_fusillade();
 
@@ -1046,6 +1076,27 @@ static void _handle_fugue(int delay)
     }
 }
 
+static void _handle_trickster_decay(int delay)
+{
+    if (you.duration[DUR_TRICKSTER_GRACE] || delay == 0)
+        return;
+
+    if (!you.props.exists(TRICKSTER_POW_KEY))
+        return;
+
+    int& stacks = you.props[TRICKSTER_POW_KEY].get_int();
+
+    // Decay at a rate of ~1 AC per 30 aut.
+    stacks -= div_rand_round(3, delay);
+    if (stacks <= 0)
+    {
+        you.props.erase(TRICKSTER_POW_KEY);
+        mprf(MSGCH_DURATION, "You feel your existence waver again.");
+    }
+
+    you.redraw_armour_class = true;
+}
+
 void player_reacts()
 {
     // don't allow reactions while stair peeking in descent mode
@@ -1132,6 +1183,9 @@ void player_reacts()
 
     if (you.duration[DUR_POISONING])
         handle_player_poison(you.time_taken);
+
+    if (you.has_mutation(MUT_TRICKSTER))
+        _handle_trickster_decay(you.time_taken);
 
     // safety first: make absolutely sure that there's no mimic underfoot.
     // (this can happen with e.g. apport.)

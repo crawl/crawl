@@ -2348,6 +2348,21 @@ static void _handle_breath_recharge(int exp)
     }
 }
 
+static void _handle_cacophony_recharge(int exp)
+{
+    if (!you.props.exists(CACOPHONY_XP_KEY))
+        return;
+
+    int loss = div_rand_round(exp, calc_skill_cost(you.skill_cost_level));
+    you.props[CACOPHONY_XP_KEY].get_int() -= loss;
+
+    if (you.props[CACOPHONY_XP_KEY].get_int() <= 0)
+    {
+        you.props.erase(CACOPHONY_XP_KEY);
+        mprf(MSGCH_DURATION, "You feel ready to make another cacophony.");
+    }
+}
+
 static void _handle_god_wrath(int exp)
 {
     for (god_iterator it; it; ++it)
@@ -2408,6 +2423,7 @@ void apply_exp()
     _reduce_abyss_xp_timer(skill_xp);
     _handle_hp_drain(skill_xp);
     _handle_breath_recharge(skill_xp);
+    _handle_cacophony_recharge(skill_xp);
 
     if (player_under_penance(GOD_HEPLIAKLQANA))
         return; // no xp for you!
@@ -6146,6 +6162,9 @@ int player::armour_class_scaled(int scale) const
     if (has_mutation(MUT_ICEMAIL))
         AC += 100 * player_icemail_armour_class();
 
+    if (has_mutation(MUT_TRICKSTER))
+        AC += 100 * trickster_bonus();
+
     if (duration[DUR_FIERY_ARMOUR])
         AC += 700;
 
@@ -6456,7 +6475,8 @@ bool player::is_unbreathing() const
 bool player::is_insubstantial() const
 {
     return form == transformation::wisp
-        || form == transformation::storm;
+        || form == transformation::storm
+        || has_mutation(MUT_FORMLESS);
 }
 
 bool player::is_amorphous() const
@@ -8727,6 +8747,103 @@ void refresh_meek_bonus()
 
     you.props[MEEK_KEY] = bonus_ac;
     you.redraw_armour_class = true;
+}
+
+static bool _ench_triggers_trickster(enchant_type ench)
+{
+    switch (ench)
+    {
+        case ENCH_SLOW:
+        case ENCH_FEAR:
+        case ENCH_CONFUSION:
+        case ENCH_CORONA:
+        case ENCH_STICKY_FLAME:
+        case ENCH_CHARM:
+        case ENCH_PARALYSIS:
+        case ENCH_SICK:
+        case ENCH_PETRIFYING:
+        case ENCH_PETRIFIED:
+        case ENCH_LOWERED_WL:
+        case ENCH_TP:
+        case ENCH_INNER_FLAME:
+        case ENCH_FLAYED:
+        case ENCH_WEAK:
+        case ENCH_DIMENSION_ANCHOR:
+        case ENCH_FIRE_VULN:
+        case ENCH_POISON_VULN:
+        case ENCH_FROZEN:
+        case ENCH_SIGN_OF_RUIN:
+        case ENCH_SAP_MAGIC:
+        case ENCH_CORROSION:
+        case ENCH_HEXED:
+        case ENCH_BOUND_SOUL:
+        case ENCH_INFESTATION:
+        case ENCH_BLIND:
+        case ENCH_FRENZIED:
+        case ENCH_DAZED:
+        case ENCH_ANTIMAGIC:
+        case ENCH_ANGUISH:
+        case ENCH_CONTAM:
+        case ENCH_BOUND:
+        case ENCH_BULLSEYE_TARGET:
+        case ENCH_KINETIC_GRAPNEL:
+        case ENCH_VITRIFIED:
+        case ENCH_CURSE_OF_AGONY:
+        case ENCH_RIMEBLIGHT:
+        case ENCH_MAGNETISED:
+        case ENCH_BLINKITIS:
+        case ENCH_PAIN_BOND:
+        case ENCH_VILE_CLUTCH:
+        case ENCH_DRAINED:
+        case ENCH_GRASPING_ROOTS:
+        case ENCH_WRETCHED:
+            return true;
+
+        default:
+            return false;
+    }
+}
+
+// Increment AC boost when applying a negative status effect to a monster.
+void trickster_trigger(const monster& victim, enchant_type ench)
+{
+    if (!_ench_triggers_trickster(ench))
+        return;
+
+    if (!you.can_see(victim) || !you.see_cell_no_trans(victim.pos()))
+        return;
+
+    const int min_bonus = 3 + you.experience_level / 6;
+
+    // Start the bonus off at a more meaningful level, but give less for each
+    // effect after that.
+    if (!you.props.exists(TRICKSTER_POW_KEY))
+    {
+        you.props[TRICKSTER_POW_KEY].get_int() = 0;
+        mprf(MSGCH_DURATION, "You feel bolstered by spreading misfortune.");
+    }
+
+    int& bonus = you.props[TRICKSTER_POW_KEY].get_int();
+    if (bonus < min_bonus)
+        bonus = min_bonus;
+    else
+        bonus += 1;
+
+    // Give a few turns before the effect starts to decay.
+    if (you.duration[DUR_TRICKSTER_GRACE] < 60)
+        you.duration[DUR_TRICKSTER_GRACE] = random_range(60, 90);
+
+    you.redraw_armour_class = true;
+}
+
+// Returns the current AC bonus from Trickster
+int trickster_bonus()
+{
+    if (!you.props.exists(TRICKSTER_POW_KEY))
+        return 0;
+
+    const int max_boost = 6 + you.experience_level * 4 / 5;
+    return min(max_boost, you.props[TRICKSTER_POW_KEY].get_int());
 }
 
 // Is the player immune to a particular hex because of their

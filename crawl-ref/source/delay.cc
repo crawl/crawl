@@ -167,7 +167,10 @@ const char* EquipOnDelay::get_verb()
         else
             return "wielding";
     }
-    return "putting on";
+    else if (you.has_mutation(MUT_FORMLESS))
+        return "haunting";
+    else
+        return "putting on";
 }
 
 bool EquipOnDelay::try_interrupt(bool force)
@@ -204,7 +207,10 @@ const char* EquipOffDelay::get_verb()
         else
             return "unwielding";
     }
-    return "removing";
+    else if (you.has_mutation(MUT_FORMLESS))
+        return "removing yourself from";
+    else
+        return "removing";
 }
 
 bool EquipOffDelay::try_interrupt(bool force)

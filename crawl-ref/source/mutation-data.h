@@ -2590,6 +2590,7 @@ static const mutation_def mut_data[] =
   {"You float through the air rather than walking.", "", ""},
   {"You feel both weightless and legless.", "", ""},
   {"You feel dragged down by the weight of the world."},
+  TILEG_MUT_FLOAT,
 },
 
 { MUT_INNATE_CASTER, 0, 1, mutflag::good, false,
@@ -2716,6 +2717,27 @@ static const mutation_def mut_data[] =
   {"Your spellcasting is much less encumbered by armour.", "", ""},
   {"Your spellcasting becomes less encumbered by armour.", "", ""},
   {"Your spellcasting no longer less encumbered by armour.", "", ""},
+},
+
+{ MUT_FORMLESS, 0, 2, mutflag::good, true,
+  "formless",
+
+  {"You can equip up to 6 pieces of aux armour in any combination.",
+   "You can equip up to 6 pieces of aux armour in any combination and unleash them.",
+   ""},
+  {"", "You feel ready to unleash a true cacophony.", ""},
+  {"", "", ""},
+  TILEG_MUT_FORMLESS,
+  {"", "You will be able to unleash your equipped armour.", ""},
+},
+
+{ MUT_TRICKSTER, 0, 1, mutflag::good, false,
+  "trickster",
+
+  {"You gain AC when you inflict magical misfortune on nearby enemies.", "", ""},
+  {"", "", ""},
+  {"", "", ""},
+  TILEG_MUT_TRICKSTER,
 },
 
 // Makhleb-specific mutations

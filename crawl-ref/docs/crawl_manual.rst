@@ -1827,6 +1827,27 @@ Vine Stalkers (VS)
   reserves start to run low, thus replenishing their shroud of magic and their
   spells' fuel with each voracious bite.
 
+Poltergeists (Po)
+  Poltergeists are undead spirits who delight in causing trouble for the living.
+  Completely incorporeal, they interact with the physical world by possessing
+  small objects and making them fly through the air. They can use this to
+  fight with weapons as well as the living do, as well as gain the protective
+  benefits of many different hats, boots, gloves, and cloaks at once, though
+  body armour is too large for them to manipulate in this fashion. At higher
+  levels of experience, they can even control these possessed objects
+  at a distance from time to time, harassing their foes with a barrage of
+  unruly armour.
+
+  Their superlative aptitude for both stealth and hexes make them powerful
+  enchanters, and they are adequate at most other forms of magic, though they
+  struggle with conjurations. They are adept with short blades, if a little
+  below average with heavier weapons, and their lack of a physical body makes
+  them terrible at unarmed combat. The same power they used to possess objects
+  makes them natural experts at throwing.
+
+  Finally, their nature as spirits of bad luck also grants them temporary AC
+  whenever they inflict maladies upon their enemies.
+
 Demigods (Dg)
   Demigods are mortals with some divine or angelic ancestry, however distant.
   Demigods look more or less like members of their mortal part's species, but

@@ -104,6 +104,8 @@ int count = 0;
         return 0;
 
     case SLOT_BODY_ARMOUR:
+        if (you.has_mutation(MUT_FORMLESS))
+            NO_SLOT("You can't haunt something so large.")
         if (species::is_draconian(you.species))
         {
             NO_SLOT(make_stringf("Your wings%s won't fit in that.",
@@ -118,6 +120,8 @@ int count = 0;
     // Hats versus helmets is handled elsewhere. If you can wear at least a hat,
     // this should be non-zero.
     case SLOT_HELMET:
+        if (you.has_mutation(MUT_FORMLESS))
+            return 0;
 
         if (you.unrand_equipped(UNRAND_SKULL_OF_ZONGULDROK))
             ++count;
@@ -134,6 +138,8 @@ int count = 0;
         return count;
 
     case SLOT_GLOVES:
+        if (you.has_mutation(MUT_FORMLESS))
+            return 0;
 
         if (you.unrand_equipped(UNRAND_FISTICLOAK))
             ++count;
@@ -157,7 +163,9 @@ int count = 0;
         return count;
 
     case SLOT_BOOTS:
-        if (species::wears_barding(you.species))
+        if (you.has_mutation(MUT_FORMLESS))
+            return 0;
+        else if (species::wears_barding(you.species))
             NO_SLOT("You don't have any feet!")
         else if (player_size <= SIZE_LITTLE)
             NO_SLOT(make_stringf("Those are too big for your %s.", you.foot_name(true).c_str()))
@@ -181,7 +189,9 @@ int count = 0;
         NO_SLOT("You can't fit into that!")
 
     case SLOT_CLOAK:
-        if (you.species == SP_OCTOPODE || you.has_mutation(MUT_NO_ARMOUR))
+        if (you.has_mutation(MUT_FORMLESS))
+            return 0;
+        else if (you.species == SP_OCTOPODE || you.has_mutation(MUT_NO_ARMOUR))
             NO_SLOT("You can't wear that.")
         else if (you.get_mutation_level(MUT_WEAKNESS_STINGER, mutation_activity_type::INACTIVE) >= 3)
             NO_SLOT("You can't wear that with your sharp stinger!")
@@ -224,6 +234,12 @@ int count = 0;
 
         return 1;
 
+    case SLOT_ANY_AUX:
+        if (you.has_mutation(MUT_FORMLESS))
+            return 6;
+        else
+            return 0;
+
     default:
         return 0;
 
@@ -237,16 +253,17 @@ const static vector<equipment_slot> _flex_slots[] =
     {SLOT_WEAPON, SLOT_WEAPON_OR_OFFHAND},
     {SLOT_OFFHAND, SLOT_WEAPON_OR_OFFHAND},
     {SLOT_BODY_ARMOUR},
-    {SLOT_HELMET},
-    {SLOT_GLOVES},
-    {SLOT_BOOTS},
+    {SLOT_HELMET, SLOT_ANY_AUX},
+    {SLOT_GLOVES, SLOT_ANY_AUX},
+    {SLOT_BOOTS, SLOT_ANY_AUX},
     {SLOT_BARDING},
-    {SLOT_CLOAK},
+    {SLOT_CLOAK, SLOT_ANY_AUX},
     {SLOT_RING},
     {SLOT_AMULET},
     {SLOT_GIZMO},
 
     {SLOT_WEAPON_OR_OFFHAND, SLOT_WEAPON, SLOT_OFFHAND},
+    {SLOT_ANY_AUX, SLOT_HELMET, SLOT_GLOVES, SLOT_BOOTS, SLOT_CLOAK},
 
     // NUM_EQUIP_SLOTS
     {},

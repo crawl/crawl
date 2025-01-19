@@ -1670,7 +1670,8 @@ bool mons_class_is_remnant(monster_type mc)
 bool mons_class_is_animated_object(monster_type type)
 {
     return mons_class_is_animated_weapon(type)
-        || type == MONS_ARMOUR_ECHO;
+        || type == MONS_ARMOUR_ECHO
+        || type == MONS_HAUNTED_ARMOUR;
 }
 
 bool mons_is_zombified(const monster& mon)
@@ -2034,6 +2035,9 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
 
         if (mon.type == MONS_SOUL_WISP)
             attk.damage = 2 + mon.get_hit_dice();
+
+        if (mon.type == MONS_HAUNTED_ARMOUR)
+            attk.damage = 5 + (mon.get_hit_dice() * 3 / 4);
 
         // Boulder beetles get double attack damage and a normal 'hit' attack.
         if (mon.has_ench(ENCH_ROLLING))
@@ -5893,6 +5897,9 @@ bool shoot_through_monster(const actor* agent, const monster& mon, bool do_messa
         return true;
     }
 
+    if (agent->is_player() && mon.type == MONS_HAUNTED_ARMOUR)
+        return true;
+
     return false;
 }
 
@@ -5933,4 +5940,20 @@ bool never_harm_monster(const actor* agent, const monster& mon, bool do_message)
 bool never_harm_monster(const actor* agent, const monster* mon, bool do_message)
 {
     return mon && never_harm_monster(agent, *mon, do_message);
+}
+
+/**
+ * Returns the maximum distance this type of monster is allowed to be from its
+ * creator. It will refuse to move further away than this under its own power,
+ * and if circumstances cause it to exceed this, it will abandon other plans to
+ * return to this range instead.
+ */
+int mons_leash_range(monster_type mc)
+{
+    switch (mc)
+    {
+        case MONS_PHALANX_BEETLE:   return 1;
+        case MONS_HAUNTED_ARMOUR:   return 2;
+        default:                    return 0; // No leashing
+    }
 }

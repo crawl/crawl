@@ -236,6 +236,7 @@ Fw JOB_FORGEWRIGHT
 %sdir player
 %texture none
 felids/cat3 SP_RECOMMENDED_FELID
+base/poltergeist SP_RECOMMENDED_POLTERGEIST
 %start
 %compose base/armataur
 %compose body/animal_skin
@@ -355,6 +356,7 @@ base/octopode1 SP_RECOMMENDED_OCTOPODE
 %sdir gui/backgrounds
 %texture disabled-fg
 enum:SP_RECOMMENDED_FELID SP_FELID
+enum:SP_RECOMMENDED_POLTERGEIST SP_POLTERGEIST
 enum:SP_RECOMMENDED_ARMATAUR SP_ARMATAUR
 enum:SP_RECOMMENDED_DEEP_ELF SP_DEEP_ELF
 enum:SP_RECOMMENDED_DEMIGOD SP_DEMIGOD

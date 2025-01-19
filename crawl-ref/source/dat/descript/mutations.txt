@@ -878,6 +878,29 @@ Your magic is resistant to distruption by outside forces. Hostile effects which
 drain your MP drain only 1/3 as much and you are immune to having your magical
 effects be removed by anyone but yourself.
 %%%%
+formless mutation
+
+You have no physical body and instead interact with the world through haunting
+objects. This allows you to 'equip' up to 6 boots, gloves, cloaks, or helmets in
+any combination, but body armour is too large for you to usefully manipulate in
+this fashion.
+
+At higher levels, you can even send the armour you are haunting out to attack
+enemies independently for short periods of time.
+%%%%
+trickster mutation
+
+Your connection to the realm of the living grows stronger as you spread
+misfortune.
+
+Whenever you or your allies inflict new negative status effects upon nearby
+enemies (other than poison), your AC temporarily increases. This bonus improves
+with the number of different enemies affected, but will decay over time if you
+do not continue to inflict new misfortune.
+
+At your current XL, you can gain a maximum bonus of
+{{return 6 + math.floor(you.xl() * 4 / 5);}} AC this way.
+%%%%
 # ------ Makhleb destruction flavours ------
 Gehenna destruction mutation
 
@@ -1142,4 +1165,3 @@ Your Translocations skill is 0 and you cannot train the skill.
 no forgecraft magic mutation
 
 Your Forgecraft skill is 0 and you cannot train the skill.
-%%%%

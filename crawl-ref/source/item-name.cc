@@ -277,6 +277,9 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
                 case SLOT_GIZMO:
                     buff << " (installed)";
                     break;
+                case SLOT_ANY_AUX:
+                    buff << " (haunted)";
+                    break;
                 default:
                     die("Item in an invalid slot (%d)", eq);
                 }

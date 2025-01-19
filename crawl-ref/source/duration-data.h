@@ -693,6 +693,10 @@ static const duration_def duration_data[] =
     { DUR_BLINKITIS, RED, "Unstable",
       "blinking rapidly", "blinkitis",
       "You are untethered in space.", D_DISPELLABLE, {{"You feel more stable."}} },
+    { DUR_CACOPHONY,
+      WHITE, "Cacophony",
+      "making a cacophony", "cacophony",
+      "You are making an unholy racket with your haunted armour.", D_EXPIRES},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
@@ -770,6 +774,7 @@ static const duration_def duration_data[] =
     { DUR_PARAGON_ACTIVE, 0, "", "", "paragon active", "", D_NO_FLAGS, {{""}}},
     { DUR_FORTRESS_BLAST_TIMER, 0, "", "", "fortress blast charging", "", D_DISPELLABLE},
     { DUR_PHALANX_BARRIER, 0, "", "phalanx barrier", "phalanx barrier", "", D_NO_FLAGS},
+    { DUR_TRICKSTER_GRACE, 0, "", "", "trickster", "", D_NO_FLAGS, {{""}}},
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

@@ -61,6 +61,8 @@ enum ability_type
     ABIL_MUD_BREATH,
     // Coglins
     ABIL_INVENT_GIZMO,
+    // Poltergeist
+    ABIL_CACOPHONY,
 
     // Note: this is getting dangerously close to ABIL_EVOKE_BERSERK! be careful
 

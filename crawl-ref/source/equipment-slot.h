@@ -19,6 +19,7 @@ enum equipment_slot
 
     // Flexible slots.
     SLOT_WEAPON_OR_OFFHAND,     // Coglins
+    SLOT_ANY_AUX,               // Poltergeist
 
     // End of the 'real' equip slots.
     NUM_EQUIP_SLOTS,

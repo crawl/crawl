@@ -233,6 +233,10 @@ acrobatic ACROBATIC
 antimagic_bite ANTIMAGIC_BITE
 no_potion_heal_1 NO_POTION_HEAL
 no_potion_heal_2
+float FLOAT
+formless_1 FORMLESS
+formless_2
+trickster TRICKSTER
 
 # Makhleb mutations
 major_destruction_of_cocytus MAJOR_DESTRUCTION_OF_COCYTUS

@@ -395,6 +395,7 @@ ball_lightning MONS_BALL_LIGHTNING /*'*'*/
 creeping_inferno1 MONS_CREEPING_INFERNO
 creeping_inferno2
 %sdir mon/undead
+poltergeist MONS_POLTERGEIST
 polterguardian MONS_POLTERGUARDIAN
 undying_armoury MONS_UNDYING_ARMOURY
 

@@ -280,5 +280,7 @@ enum duration_type
     DUR_BLINKITIS,
     DUR_VAINGLORY,
     DUR_VEXED,
+    DUR_TRICKSTER_GRACE,
+    DUR_CACOPHONY,
     NUM_DURATIONS
 };

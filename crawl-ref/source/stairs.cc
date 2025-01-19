@@ -820,6 +820,15 @@ void floor_transition(dungeon_feature_type how,
         end_beogh_recruit_window();
     }
 
+    if (you.duration[DUR_CACOPHONY])
+    {
+        you.duration[DUR_CACOPHONY] = 0;
+        mprf(MSGCH_DURATION, "Your cacophony subsides as you depart the area.");
+        for (monster_iterator mi; mi; ++mi)
+            if (mi->was_created_by(MON_SUMM_CACOPHONY))
+                monster_die(**mi, KILL_RESET, NON_MONSTER, true);
+    }
+
     // Fire level-leaving trigger.
     leaving_level_now(how);
 

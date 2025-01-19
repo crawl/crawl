@@ -188,6 +188,7 @@ enum monster_type                      // env.mons[].type
     MONS_SPECTRAL_WEAPON,
     MONS_RENDING_BLADE,
     MONS_ARMOUR_ECHO,
+    MONS_HAUNTED_ARMOUR,
     MONS_LIVING_SPELL,
     MONS_WALKING_TOME,
     MONS_EARTHEN_TOME,
@@ -577,6 +578,7 @@ enum monster_type                      // env.mons[].type
     MONS_HALAZID_WARLOCK,
     MONS_SPECTATOR,
     MONS_METEORAN,
+    MONS_POLTERGEIST,
     MONS_POLTERGUARDIAN,
     MONS_UNDYING_ARMOURY,
 #endif
@@ -1320,6 +1322,8 @@ enum monster_type                      // env.mons[].type
     MONS_WYRMHOLE,
     MONS_SPHINX,                  // genus
     MONS_SPHINX_MARAUDER,
+    MONS_HAUNTED_ARMOUR,
+    MONS_POLTERGEIST,            // player species dummy
 #endif
 
     NUM_MONSTERS,               // used for polymorph

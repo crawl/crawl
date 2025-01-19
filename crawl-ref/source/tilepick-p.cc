@@ -678,6 +678,8 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_DJINNI;
     case SP_COGLIN:
         return TILEP_BASE_COGLIN;
+    case SP_POLTERGEIST:
+        return TILEP_BASE_POLTERGEIST;
     default:
         return TILEP_BASE_HUMAN;
     }
@@ -1100,6 +1102,20 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
         flag[TILEP_PART_BEARD] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_SHADOW]= TILEP_FLAG_HIDE;
         flag[TILEP_PART_DRCWING]=TILEP_FLAG_HIDE;
+    }
+    else if (is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_POLTERGEIST))
+    {
+        flag[TILEP_PART_CLOAK]   = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_BOOTS]   = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_LEG]     = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_BODY]    = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_ARM]     = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_HELM]    = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_HAIR]    = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_BEARD]   = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_SHADOW]  = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_DRCWING] = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_BODY]    = TILEP_FLAG_CUT_BOTTOM;
     }
 
     if (doll.parts[TILEP_PART_ARM] == TILEP_ARM_OCTOPODE_SPIKE

@@ -314,11 +314,12 @@ void handle_behaviour(monster* mon)
     if (proxPlayer && !you.visible_to(mon))
         proxPlayer = _monster_guesses_invis_player(*mon);
 
-    // Handle phalanx beetle behavior: return to its creator if non-adjacent,
+    // Handle leashing monster behavior: return to creator if non-adjacent,
     // otherwise try to pick a monster in reach to attack.
-    if (mon->type == MONS_PHALANX_BEETLE && owner)
+    const int leash_range = mons_leash_range(mon->type);
+    if (owner && leash_range > 0)
     {
-        if (!adjacent(owner->pos(), mon->pos()))
+        if (grid_distance(owner->pos(), mon->pos()) > leash_range)
         {
             mon->foe = MHITYOU;
             mon->behaviour = BEH_SEEK;
@@ -329,7 +330,7 @@ void handle_behaviour(monster* mon)
             // If foe is clearly unreachable while next to creator, pick another
             // one if possible. (This doesn't perfectly account for reachability
             // but should be adequate in practice.)
-            if (!foe || grid_distance(foe->pos(), owner->pos()) > 2)
+            if (!foe || grid_distance(foe->pos(), owner->pos()) > leash_range + 1)
                 set_nearest_monster_foe(mon, true);
         }
     }

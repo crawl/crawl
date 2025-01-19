@@ -1579,6 +1579,11 @@ harpy
 A bird-like creature with a human face that roams the coasts endlessly, feared
 for its sharp claws and harrying strikes.
 %%%%
+haunted armour
+
+An ordinary piece of armour, held in your haunting grip. It can attack nearby
+enemies, but must return to your side if you ever stray too far from it.
+%%%%
 sin beast
 
 A ravenous brute of a demon - as much animal as person. Born from the residue
@@ -2319,6 +2324,11 @@ polar bear
 
 A bear covered in glistening white fur, habituated to cold conditions. Like all
 ursines, it will become enraged if badly hurt.
+%%%%
+poltergeist
+
+A ghostly trickster that is fond of possessing small objects and making them
+fly noisily through the air.
 %%%%
 polterguardian
 

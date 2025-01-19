@@ -1083,6 +1083,7 @@ const char* equip_slot_name(equipment_slot type, bool terse)
     case SLOT_RING:        return "Ring";
     case SLOT_AMULET:      return "Amulet";
     case SLOT_GIZMO:       return "Gizmo";
+    case SLOT_ANY_AUX:     return "Armour"; // SALMON
     default:               return "";
     }
 }

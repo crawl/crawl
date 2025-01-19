@@ -525,8 +525,11 @@ item_def *monster::get_defining_object() const
     // really guarantee these items
     if (mons_class_is_animated_weapon(type) && inv[MSLOT_WEAPON] != NON_ITEM)
         return &env.item[inv[MSLOT_WEAPON]];
-    else if (type == MONS_ARMOUR_ECHO && inv[MSLOT_ARMOUR] != NON_ITEM)
+    else if ((type == MONS_ARMOUR_ECHO || type == MONS_HAUNTED_ARMOUR)
+             && inv[MSLOT_ARMOUR] != NON_ITEM)
+    {
         return &env.item[inv[MSLOT_ARMOUR]];
+    }
 
     return nullptr;
 }
@@ -1645,6 +1648,10 @@ bool monster::pickup_armour(item_def &item, bool msg, bool force)
             return false;
         }
     }
+
+    // Haunted armour can equip any aux in their main armour slot.
+    if (type == MONS_HAUNTED_ARMOUR)
+        slot = SLOT_BODY_ARMOUR;
 
     // Bardings are only wearable by the appropriate monster.
     if (slot == SLOT_UNUSED)

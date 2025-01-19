@@ -55,6 +55,8 @@
 #define RAMPAGE_HEAL_KEY "rampage_heal_strength"
 #define RAMPAGE_HEAL_MAX 7
 #define BLIND_COLOUR_KEY "blind_colour"
+#define TRICKSTER_POW_KEY "trickster_power"
+#define CACOPHONY_XP_KEY "cacophony_xp"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
@@ -1182,6 +1184,8 @@ void dec_channel_player(int delay);
 void dec_frozen_ramparts(int delay);
 void reset_rampage_heal_duration();
 void apply_rampage_heal();
+void trickster_trigger(const monster& victim, enchant_type ench);
+int trickster_bonus();
 bool invis_allowed(bool quiet = false, string *fail_reason = nullptr,
                                                         bool temp = true);
 bool flight_allowed(bool quiet = false, string *fail_reason = nullptr);

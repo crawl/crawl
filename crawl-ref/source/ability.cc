@@ -50,6 +50,7 @@
 #include "maps.h"
 #include "menu.h"
 #include "message.h"
+#include "mgen-data.h"
 #include "mon-behv.h"
 #include "mon-book.h"
 #include "mon-place.h"
@@ -398,6 +399,9 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 0, -1, {}, abflag::none },
         { ABIL_INVENT_GIZMO, "Invent Gizmo",
             0, 0, 0, -1, {}, abflag::none },
+
+        { ABIL_CACOPHONY, "Cacophony",
+            4, 0, 0, -1, {}, abflag::none },
 
         // EVOKE abilities use Evocations and come from items.
         { ABIL_EVOKE_BLINK, "Evoke Blink",
@@ -949,6 +953,9 @@ const string make_cost_description(ability_type ability)
 
     if (ability == ABIL_REVIVIFY)
         ret += ", Frailty";
+
+    if (ability == ABIL_CACOPHONY)
+        ret += ", Noise";
 
     if (ability == ABIL_ASHENZARI_CURSE
         && !you.props[CURSE_KNOWLEDGE_KEY].get_vector().empty())
@@ -2170,6 +2177,30 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return true;
     }
 
+    case ABIL_CACOPHONY:
+        // In the very unlikely case that the player has regained enough XP to
+        // use this ability again before it ends. Maybe in Sprint?
+        if (you.duration[DUR_CACOPHONY])
+        {
+            if (!quiet)
+                mpr("You are already making a cacophony!");
+            return false;
+        }
+        else if (you.props.exists(CACOPHONY_XP_KEY))
+        {
+            if (!quiet)
+                mpr("You must recover your energy before unleashing another cacophony.");
+            return false;
+        }
+        else if (!you.equipment.get_first_slot_item(SLOT_ANY_AUX))
+        {
+            if (!quiet)
+                mpr("You aren't haunting any armour at the moment!");
+            return false;
+        }
+
+        return true;
+
     case ABIL_WORD_OF_CHAOS:
         if (you.duration[DUR_WORD_OF_CHAOS_COOLDOWN])
         {
@@ -2957,6 +2988,59 @@ static spret _do_draconian_breath(const ability_def& abil, dist *target, bool fa
     return result;
 }
 
+static spret _do_cacophony()
+{
+    vector<item_def*> eq = you.equipment.get_slot_items(SLOT_ANY_AUX);
+
+    bool did_something = false;
+    for (item_def* item : eq)
+    {
+        int mitm_slot = get_mitm_slot(10);
+
+        // This should be practically impossible, but if we can't make any
+        // item for our animated armour, abort in the case we've done nothing
+        // at all. If somehow we made at least one, just keep going.
+        if (mitm_slot == NON_ITEM)
+        {
+            if (!did_something)
+            {
+                canned_msg(MSG_NOTHING_HAPPENS);
+                return spret::abort;
+            }
+        }
+
+        mgen_data mg(MONS_HAUNTED_ARMOUR, BEH_FRIENDLY, you.pos(), MHITYOU,
+                      MG_FORCE_BEH | MG_AUTOFOE);
+        mg.set_summoned(&you, MON_SUMM_CACOPHONY, 0, false);
+        mg.set_range(1, 3);
+        mg.hd = you.experience_level * 2 / 3 + (item->plus * 2);
+        monster* armour = create_monster(mg);
+        if (!armour)
+            continue;
+
+        did_something = true;
+
+        item_def &fake_armour = env.item[mitm_slot];
+        fake_armour.clear();
+        fake_armour = *item;
+        fake_armour.flags |= ISFLAG_SUMMONED | ISFLAG_IDENTIFIED;
+        armour->pickup_item(fake_armour, false, true);
+        armour->speed_increment = 80;
+    }
+
+    if (!did_something)
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return spret::abort;
+    }
+
+    you.duration[DUR_CACOPHONY] = random_range(300, 400);
+    you.props[CACOPHONY_XP_KEY] = 150;
+    mpr("You send your armour flying and begin to make an unholy cacophony!");
+
+    return spret::success;
+}
+
 /*
  * Use an ability.
  *
@@ -3190,6 +3274,9 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         if (!coglin_invent_gizmo())
             return spret::abort;
         break;
+
+    case ABIL_CACOPHONY:
+        return _do_cacophony();
 
     // INVOCATIONS:
     case ABIL_ZIN_RECITE:
@@ -4106,6 +4193,8 @@ bool player_has_ability(ability_type abil, bool include_unusable)
     case ABIL_INVENT_GIZMO:
         return you.species == SP_COGLIN
         && !you.props.exists(INVENT_GIZMO_USED_KEY);
+    case ABIL_CACOPHONY:
+        return you.get_mutation_level(MUT_FORMLESS) == 2;
     case ABIL_IMBUE_SERVITOR:
         return you.has_spell(SPELL_SPELLSPARK_SERVITOR);
     case ABIL_IMPRINT_WEAPON:
@@ -4183,6 +4272,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_DAMNATION,
             ABIL_WORD_OF_CHAOS,
             ABIL_INVENT_GIZMO,
+            ABIL_CACOPHONY,
             ABIL_BLINKBOLT,
             ABIL_SIPHON_ESSENCE,
             ABIL_IMBUE_SERVITOR,
