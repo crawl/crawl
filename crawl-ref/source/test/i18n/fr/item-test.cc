@@ -86,8 +86,9 @@ int main()
     cout << endl;
 
     // with multiple adjectives
-    test("la potion bouillonnante bleue", "the bubbling blue potion");
-    test("une potion grumeleuse verte", "a lumpy green potion");
+    test("la potion bleue bouillonnante", "the bubbling blue potion");
+    test("une potion verte grumeleuse", "a lumpy green potion");
+    test("potion rouge avec des sédiments", "sedimented red potion");
     cout << endl;
 
     // show results summary

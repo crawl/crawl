@@ -999,7 +999,7 @@ static string _localise_adjectives(const string& s, const vector<string>& adjs)
             adj = cxlate(_context, adjs[i] + " ", true);
 
         if (adj[0] == ' ')
-            postfix_adjs += adj;
+            postfix_adjs = adj + postfix_adjs;
         else
             prefix_adjs += adj;
     }
