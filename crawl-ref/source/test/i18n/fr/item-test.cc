@@ -89,6 +89,7 @@ int main()
     test("la potion bleue bouillonnante", "the bubbling blue potion");
     test("une potion verte grumeleuse", "a lumpy green potion");
     test("potion rouge avec des sédiments", "sedimented red potion");
+    test("2 potions oranges avec des sédiments", "2 sedimented orange potions");
     cout << endl;
 
     // show results summary
