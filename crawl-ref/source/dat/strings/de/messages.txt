@@ -9880,9 +9880,6 @@ gegen %d
 " (fellow slime)"
 " (Mitschleim)"
 %%%%
-with wands
-mit Zauberstäben
-%%%%
 
 ##################
 # mon-place.cc

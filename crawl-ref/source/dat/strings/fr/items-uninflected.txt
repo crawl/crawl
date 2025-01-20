@@ -26,9 +26,8 @@ ranged weapon
 throwable
 
 %%%%
-# duplicate
-#missile
-#Geschoss
+missile
+missile
 %%%%
 wand
 
@@ -99,23 +98,6 @@ body armor
 
 %%%%
 auxiliary armor
-
-%%%%
-
-# these are used in monster pane in console version
-
-%%%%
-# duplicate
-#weapon
-#Waffe
-%%%%
-polearm
-
-%%%%
-launcher
-
-%%%%
-missile
 
 %%%%
 
@@ -236,4 +218,78 @@ manuals
 %%%%
 runes
 
+%%%%
+
+#################################
+# Monster pane annotations (console)
+#################################
+
+# Monsters in the monster pane are annotated if they they have certain items
+# If not all have the item then a count is shown
+# For example:
+#   orc (launcher)
+#   3 orcs (1 launcher)
+#   3 orcs (2 launchers)
+#   3 orcs (launchers)
+
+# TODO: this should probably be moved somewhere else because a bunch of other stuff is annotated similarly
+# (see mons_conditions_string in mon-info.cc)
+
+%%%%
+# duplicate of item type
+#wand
+#baguette
+%%%%
+polearm
+arme d'hast
+%%%%
+launcher
+lanceur
+%%%%
+# duplicate of item type
+#missile
+#missile
+%%%%
+
+%%%%
+1 wand
+1 baguette
+%%%%
+1 polearm
+1 arme d'hast
+%%%%
+1 launcher
+1 lanceur
+%%%%
+1 missile
+1 missile
+%%%%
+
+%%%%
+with wands
+avec baguettes
+%%%%
+polearms
+armes d'hast
+%%%%
+launchers
+lanceurs
+%%%%
+missiles
+missiles
+%%%%
+
+%%%%
+%d with wands
+%d avec baguettes
+%%%%
+%%%%
+%d polearms
+{fpl}%d armes d'hast
+%%%%
+%d launchers
+{mpl}%d lanceur
+%%%%
+%d missiles
+{mpl}%d missiles
 %%%%

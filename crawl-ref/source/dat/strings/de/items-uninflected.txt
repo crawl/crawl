@@ -26,9 +26,8 @@ Fernkampfwaffe
 throwable
 Werfbares
 %%%%
-# duplicate
-#missile
-#Geschoss
+missile
+Geschoss
 %%%%
 wand
 Zauberstab
@@ -100,23 +99,6 @@ Körperpanzerung
 %%%%
 auxiliary armor
 Zusatzpanzerung
-%%%%
-
-# these are used in monster pane in console version
-
-%%%%
-# duplicate
-#weapon
-#Waffe
-%%%%
-polearm
-Stangenwaffe
-%%%%
-launcher
-Werfer
-%%%%
-missile
-Geschoss
 %%%%
 
 #################################
@@ -236,4 +218,77 @@ Anleitungen
 %%%%
 runes
 Runen
+%%%%
+
+#################################
+# Monster pane annotations (console)
+#################################
+
+# Monsters in the monster pane are annotated if they they have certain items
+# If not all have the item then a count is shown
+# For example:
+#   orc (launcher)
+#   3 orcs (1 launcher)
+#   3 orcs (2 launchers)
+#   3 orcs (launchers)
+
+# TODO: this should probably be moved somewhere else because a bunch of other stuff is annotated similarly
+# (see mons_conditions_string in mon-info.cc)
+
+%%%%
+# duplicate of item type
+#wand
+#Zauberstab
+%%%%
+polearm
+Stangenwaffe
+%%%%
+launcher
+Werfer
+%%%%
+# duplicate of item type
+#missile
+#Geschoss
+%%%%
+
+%%%%
+1 wand
+1 Zauberstab
+%%%%
+1 polearm
+1 Stangenwaffe
+%%%%
+1 launcher
+1 Werfer
+%%%%
+1 missile
+1 Geschoss
+%%%%
+
+%%%%
+with wands
+mit Zauberstäben
+%%%%
+polearms
+Stangenwaffen
+%%%%
+launchers
+Werfer
+%%%%
+missiles
+Geschosse
+%%%%
+
+%%%%
+%d with wands
+%d mit Zauberstäben
+%%%%
+%d polearms
+%d Stangenwaffen
+%%%%
+%d launchers
+%d Werfer
+%%%%
+%d missiles
+%d Geschosse
 %%%%

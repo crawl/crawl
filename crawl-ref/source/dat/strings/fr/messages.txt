@@ -9870,9 +9870,6 @@ about %d
 " (fellow slime)"
 
 %%%%
-with wands
-
-%%%%
 
 ##################
 # mon-place.cc
