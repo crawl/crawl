@@ -30,13 +30,7 @@ throwable
 #missile
 #Geschoss
 %%%%
-robe
-
-%%%%
 wand
-
-%%%%
-food
 
 %%%%
 scroll

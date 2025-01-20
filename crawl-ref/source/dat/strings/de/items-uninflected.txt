@@ -30,14 +30,8 @@ Werfbares
 #missile
 #Geschoss
 %%%%
-robe
-Robe
-%%%%
 wand
 Zauberstab
-%%%%
-food
-Lebensmittel
 %%%%
 scroll
 Schriftrolle
