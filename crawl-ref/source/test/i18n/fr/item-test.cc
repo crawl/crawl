@@ -55,34 +55,34 @@ int main()
 
     // simple
     test("le fauchon", "the falchion");
-    test("la rapière", "the rapier");
+    test("la masse", "the mace");
     test("un fauchon", "a falchion");
-    test("une rapière", "a rapier");
+    test("une masse", "a mace");
     test("ton fauchon", "your falchion");
-    test("ta rapière", "your rapier");
+    test("ta masse", "your mace");
     test("fauchon", "falchion");
-    test("rapière", "rapier");
+    test("masse", "mace");
     cout << endl;
 
     // with inflected adjective
     test("le fauchon raffiné", "the fine falchion");
-    test("la rapière raffinée", "the fine rapier");
+    test("la masse raffinée", "the fine mace");
     test("un fauchon opalescent", "an opalescent falchion");
-    test("une rapière opalescente", "an opalescent rapier");
+    test("une masse opalescente", "an opalescent mace");
     cout << endl;
 
     // with uninflected adjective
     test("le fauchon chef d'oeuvre", "the masterwork falchion");
-    test("la rapière chef d'oeuvre", "the masterwork rapier");
+    test("la masse chef d'oeuvre", "the masterwork mace");
     test("un fauchon chef d'oeuvre", "a masterwork falchion");
-    test("une rapière chef d'oeuvre", "a masterwork rapier");
+    test("une masse chef d'oeuvre", "a masterwork mace");
     cout << endl;
 
     // with partially inflected adjective
     test("le fauchon incrusté d'agate", "the agate-encrusted falchion");
-    test("la rapière incrustée d'agate", "the agate-encrusted rapier");
+    test("la masse incrustée d'agate", "the agate-encrusted mace");
     test("un fauchon incrusté de diamant", "a diamond-encrusted falchion");
-    test("une rapière incrustée de diamant", "a diamond-encrusted rapier");
+    test("une masse incrustée de diamant", "a diamond-encrusted mace");
     cout << endl;
 
     // with multiple adjectives

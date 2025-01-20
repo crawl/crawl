@@ -14,128 +14,128 @@ the weapon
 {f}l'arme
 %%%%
 the club
-
+la massue
 %%%%
 the whip
-
+le fouet
 %%%%
 the mace
-
+la masse
 %%%%
 the flail
-
+le fléau
 %%%%
 the morningstar
-
+{f}l'étoile du matin
 %%%%
 the demon whip
-
+le fouet démoniaque
 %%%%
 the sacred scourge
-
+le fléau sacré
 %%%%
 the dire flail
-
+le grand fléau
 %%%%
 the eveningstar
-
+{f}l'étoile du soir
 %%%%
 the great mace
-
+la grande masse
 %%%%
 the giant club
-
+la massue géante
 %%%%
 the giant spiked club
-
+la massue géante à pointes
 %%%%
 the dagger
-
+le poignard
 %%%%
 the quick blade
-
+la lame rapide
 %%%%
 the short sword
-{f}l'épée courte
+le glaive
 %%%%
 the rapier
-la rapière
+le fleuret
 %%%%
 the falchion
 le fauchon
 %%%%
 the long sword
-{f}l'épée longe
+{f}l'épée longue
 %%%%
 the scimitar
 le cimeterre
 %%%%
 the demon blade
-
+la lame démoniaque
 %%%%
 the eudemon blade
-
+la lame d'eudémon
 %%%%
 the double sword
-
+{f}l'épée double
 %%%%
 the great sword
-
+la grande épée
 %%%%
 the triple sword
-
+{f}l'épée triple
 %%%%
 the hand axe
-
+la hachette
 %%%%
 the war axe
-
+la hache de guerre
 %%%%
 the broad axe
-
+la hache large
 %%%%
 the battleaxe
-
+la hache de bataille
 %%%%
 the executioner's axe
-
+la hache du bourreau
 %%%%
 the spear
-
+la lance
 %%%%
 the trident
 le trident
 %%%%
 the halberd
-
+{f}l'hallebarde
 %%%%
 the scythe
-
+la faux
 %%%%
 the demon trident
-
+le trident démoniaque
 %%%%
 the trishula
-
+le trishula
 %%%%
 the glaive
-
+le glaive
 %%%%
 the bardiche
-
+la bardiche
 %%%%
 the quarterstaff
-
+le bâton long
 %%%%
 the lajatang
-
+le lajatang
 %%%%
 the lance
-
+la lance
 %%%%
 # "Gyre" and "Gimble" - base name
 the pair of quick blades
-
+la paire de lames rapides
 %%%%
 
 #################################
@@ -144,25 +144,25 @@ the pair of quick blades
 
 %%%%
 the hunting sling
-
+la fronde de chasse
 %%%%
 the fustibalus
-
+le fustibale
 %%%%
 the hand crossbow
-
+{f}l'arbalète à main
 %%%%
 the arbalest
-
+{f}l'arbalète
 %%%%
 the triple crossbow
-
+{f}l'arbalète triple
 %%%%
 the shortbow
-
+l'arc court
 %%%%
 the longbow
-
+l'arc long
 %%%%
 
 #################################
@@ -171,53 +171,52 @@ the longbow
 
 %%%%
 the arrow
-
+la flèche
 %%%%
 the bolt
-
+le carreau
 %%%%
-# the artefact arbalest "Damnation" shoots these
 the damnation bolt
-
+le carreau de damnation
 %%%%
 the dart
-
+la fléchette
 %%%%
 the poisoned dart
-
+la fléchette empoisonnée
 %%%%
 the atropa-tipped dart
-
+la fléchette à l'atropa
 %%%%
 the curare-tipped dart
-
+la fléchette au curare
 %%%%
 the datura-tipped dart
-
+la fléchette au datura
 %%%%
 the stone
-
+la pierre
 %%%%
 the large rock
-
+le gros rocher
 %%%%
 the sling bullet
-
+la bille de fronde
 %%%%
 the javelin
-
+le javelot
 %%%%
 the silver javelin
-
+le javelot d'argent
 %%%%
 the throwing net
-
+le filet
 %%%%
 the boomerang
-
+le boomerang
 %%%%
 the silver boomerang
-
+le boomerang d'argent
 %%%%
 
 #################################
@@ -226,98 +225,98 @@ the silver boomerang
 
 %%%%
 the animal skin
-
+la peau d'animal
 %%%%
 the robe
-
+la robe
 %%%%
 the leather armour
-
+{f}l'armure en cuir
 %%%%
 the ring mail
-
+la cotte de mailles
 %%%%
 the scale mail
-
+{f}l'armure d'écailles
 %%%%
 the chain mail
 la cotte de mailles
 %%%%
 the plate armour
-
+{f}l'armure de plaques
 %%%%
 the crystal plate armour
-
+{f}l'armure de plaques de cristal
 %%%%
 the troll leather armour
-
+{f}l'armure de cuir de troll
 %%%%
 the cloak
-
+la cape
 %%%%
 the scarf
-
+{f}l'écharpe
 %%%%
 the pair of gloves
-
+la paire de gants
 %%%%
 the helmet
 le casque
 %%%%
 the hat
-
+le chapeau
 %%%%
 the pair of boots
-
+la paire de bottes
 %%%%
 the barding
-
+le caparaçon
 %%%%
 the buckler
-
+le bouclier
 %%%%
 the kite shield
-
+le pavois
 %%%%
 the tower shield
-
+le bouclier tour
 %%%%
 the steam dragon scales
-
+{f}l'armure d'écailles de dragon de vapeur
 %%%%
 the acid dragon scales
-
+{f}l'armure d'écailles de dragon acide
 %%%%
 the quicksilver dragon scales
-
+{f}l'armure d'écailles de dragon vif-argent
 %%%%
 the swamp dragon scales
-
+{f}l'armure d'écailles de dragon des marais
 %%%%
 the fire dragon scales
-
+{f}l'armure d'écailles de dragon de feu
 %%%%
 the ice dragon scales
-
+{f}l'armure d'écailles de dragon de glace
 %%%%
 the pearl dragon scales
-
+{f}l'armure d'écailles de dragon perlé
 %%%%
 the storm dragon scales
-
+{f}l'armure d'écailles de dragon de tempête
 %%%%
 the shadow dragon scales
-
+{f}l'armure d'écailles de dragon de l'ombre
 %%%%
 the gold dragon scales
-
+{f}l'armure d'écailles de dragon d'or
 %%%%
 
 # Usually, we handle any adjectives as separate words, but
 # this unidentified armour needs special handling
 %%%%
 the creamy pearl robe
-
+la robe crème perle
 %%%%
 
 #################################
@@ -336,115 +335,115 @@ l'anneau
 # this is combined list from item-name.cc and descript/randname.txt
 %%%%
 the agate ring
-
+l'anneau d'agate
 %%%%
 the amber ring
-
+l'anneau d'ambre
 %%%%
 the bone ring
-
+l'anneau d'os
 %%%%
 the brass ring
-
+l'anneau de laiton
 %%%%
 the bronze ring
-
+l'anneau de bronze
 %%%%
 the cabochon ring
-
+l'anneau cabochon
 %%%%
 the copper ring
-
+l'anneau de cuivre
 %%%%
 the coral ring
-
+l'anneau de corail
 %%%%
 the diamond ring
-
+l'anneau de diamant
 %%%%
 the emerald ring
-
+l'anneau d'émeraude
 %%%%
 the garnet ring
-
+l'anneau de grenat
 %%%%
 the gilded ring
-
+l'anneau doré
 %%%%
 the glass ring
-
+l'anneau de verre
 %%%%
 the gossamer ring
-
+l'anneau d'étoffe légère
 %%%%
 the golden ring
-
+l'anneau d'or
 %%%%
 the granite ring
-
+l'anneau de granit
 %%%%
 the iron ring
-
+l'anneau de fer
 %%%%
 the ivory ring
-
+l'anneau d'ivoire
 %%%%
 the jade ring
-
+l'anneau de jade
 %%%%
 the lapis lazuli ring
-
+l'anneau de lapis-lazuli
 %%%%
 the lead ring
-
+l'anneau de plomb
 %%%%
 the marble ring
-
+l'anneau de marbre
 %%%%
 the moonstone ring
-
+l'anneau de pierre de lune
 %%%%
 the onyx ring
-
+l'anneau d'onyx
 %%%%
 the opal ring
-
+l'anneau d'opale
 %%%%
 the pearl ring
-
+l'anneau de perle
 %%%%
 the peridot ring
-
+l'anneau de péridot
 %%%%
 the pewter ring
-
+l'anneau d'étain
 %%%%
 the platinum ring
-
+l'anneau de platine
 %%%%
 the ruby ring
-
+l'anneau de rubis
 %%%%
 the sapphire ring
-
+l'anneau de saphir
 %%%%
 the silver ring
-
+l'anneau d'argent
 %%%%
 the steel ring
-
+l'anneau d'acier
 %%%%
 the tin ring
-
+l'anneau d'étain
 %%%%
 the tourmaline ring
-
+l'anneau de tourmaline
 %%%%
 the turquoise ring
-
+l'anneau de turquoise
 %%%%
 the wooden ring
-
+l'anneau de bois
 %%%%
 
 #################################
@@ -463,115 +462,115 @@ the amulet
 # from item-name.txt
 %%%%
 the sapphire amulet
-
+{f}l'amulette de saphir
 %%%%
 the zirconium amulet
-
+{f}l'amulette de zirconium
 %%%%
 the golden amulet
-
+{f}l'amulette dorée
 %%%%
 the emerald amulet
-
+{f}l'amulette d'émeraude
 %%%%
 the garnet amulet
-
+{f}l'amulette de grenat
 %%%%
 the bronze amulet
-
+{f}l'amulette de bronze
 %%%%
 the brass amulet
-
+{f}l'amulette de laiton
 %%%%
 the copper amulet
-
+{f}l'amulette de cuivre
 %%%%
 the ruby amulet
-
+{f}l'amulette de rubis
 %%%%
 the citrine amulet
-
+{f}l'amulette de citrine
 %%%%
 the bone amulet
-
+{f}l'amulette d'os
 %%%%
 the platinum amulet
-
+{f}l'amulette de platine
 %%%%
 the jade amulet
-
+{f}l'amulette de jade
 %%%%
 the fluorescent amulet
-
+{f}l'amulette fluorescente
 %%%%
 the amethyst amulet
-
+{f}l'amulette d'améthyste
 %%%%
 the cameo amulet
-
+{f}l'amulette camée
 %%%%
 the pearl amulet
-
+{f}l'amulette de perle
 %%%%
 the blue amulet
-
+{f}l'amulette bleue
 %%%%
 the peridot amulet
-
+{f}l'amulette de péridot
 %%%%
 the jasper amulet
-
+{f}l'amulette de jaspe
 %%%%
 the diamond amulet
-
+{f}l'amulette de diamant
 %%%%
 the malachite amulet
-
+{f}l'amulette de malachite
 %%%%
 the steel amulet
-
+{f}l'amulette d'acier
 %%%%
 the cabochon amulet
-
+{f}l'amulette cabochon
 %%%%
 the silver amulet
-
+{f}l'amulette d'argent
 %%%%
 the soapstone amulet
-
+{f}l'amulette de stéatite
 %%%%
 the lapis lazuli amulet
-
+{f}l'amulette de lapis-lazuli
 %%%%
 the filigree amulet
-
+{f}l'amulette filigranée
 %%%%
 the beryl amulet
-
+{f}l'amulette de béryl
 %%%%
 
 # extras from database/randname.txt
 %%%%
 the crystal amulet
-
+{f}l'amulette de cristal
 %%%%
 the graven amulet
-
+{f}l'amulette gravée
 %%%%
 the iron amulet
-
+{f}l'amulette de fer
 %%%%
 the ivory amulet
-
+{f}l'amulette d'ivoire
 %%%%
 the lead amulet
-
+{f}l'amulette de plomb
 %%%%
 the pewter amulet
-
+{f}l'amulette d'étain
 %%%%
 the tin amulet
-
+{f}l'amulette d'étain
 %%%%
 
 #################################
@@ -580,73 +579,73 @@ the tin amulet
 
 %%%%
 the wand of flame
-
+la baguette de flammes
 %%%%
 the wand of paralysis
-
+la baguette de paralysie
 %%%%
 the wand of digging
-
+la baguette d'excavation
 %%%%
 the wand of iceblast
-
+la baguette de souffle de glace
 %%%%
 the wand of polymorph
-
+la baguette de polymorphie
 %%%%
 the wand of charming
-
+la baguette d'envoûtement
 %%%%
 the wand of acid
-
+la baguette d'acide
 %%%%
 the wand of mindburst
-
+la baguette d'explosion mentale
 %%%%
 the wand of removedness
-
+la baguette de disparition
 %%%%
 
 # unidentified
 %%%%
 the wand
-
+la baguette
 %%%%
 the iron wand
-
+la baguette de fer
 %%%%
 the brass wand
-
+la baguette de laiton
 %%%%
 the bone wand
-
+la baguette d'os
 %%%%
 the wooden wand
-
+la baguette de bois
 %%%%
 the copper wand
-
+la baguette de cuivre
 %%%%
 the gold wand
-
+la baguette d'or
 %%%%
 the silver wand
-
+la baguette d'argent
 %%%%
 the bronze wand
-
+la baguette de bronze
 %%%%
 the ivory wand
-
+la baguette d'ivoire
 %%%%
 the glass wand
-
+la baguette de verre
 %%%%
 the lead wand
-
+la baguette de plomb
 %%%%
 the fluorescent wand
-
+la baguette fluorescente
 %%%%
 
 #################################
@@ -655,69 +654,67 @@ the fluorescent wand
 
 %%%%
 the scroll labelled %s
-
+le parchemin étiqueté %s
 %%%%
 the scroll of acquirement
-
+le parchemin d'acquisition
 %%%%
 the scroll of amnesia
-
+le parchemin d'amnésie
 %%%%
 the scroll of blinking
-
+le parchemin de clignotement
 %%%%
 the scroll of brand weapon
-
+le parchemin de marquage d'arme
 %%%%
 the scroll of enchant armour
-
+le parchemin d'enchantement d'armure
 %%%%
 the scroll of enchant weapon
-
+le parchemin d'enchantement d'arme
 %%%%
 the scroll of fear
-
+le parchemin de peur
 %%%%
 the scroll of fog
-
+le parchemin de brouillard
 %%%%
 the scroll of holy word
-
+le parchemin de mot sacré
 %%%%
 the scroll of identify
-
+le parchemin d'identification
 %%%%
 the scroll of immolation
-
+le parchemin d'immolation
 %%%%
 the scroll of magic mapping
-
+le parchemin de cartographie magique
 %%%%
 the scroll of noise
-
+le parchemin de bruit
 %%%%
 the scroll of remove curse
-
+le parchemin de suppression de malédiction
 %%%%
 the scroll of silence
-
-%%%%
-# Note: In DCSS, there is a distinction between summoning and conjuration
+le parchemin de silence
 %%%%
 the scroll of summoning
-
+le parchemin d'invocation
 %%%%
 the scroll of teleportation
-
+le parchemin de téléportation
 %%%%
 the scroll of torment
-
+le parchemin de tourment
 %%%%
 the scroll of vulnerability
-
+le parchemin de vulnérabilité
 %%%%
 the scroll of removedness
-
+le parchemin de disparition
 %%%%
 
 #################################
@@ -726,55 +723,55 @@ the scroll of removedness
 
 %%%%
 the potion of ambrosia
-
+la potion d'ambroisie
 %%%%
 the potion of attraction
-
+la potion d'attraction
 %%%%
 the potion of berserk rage
-
+la potion de rage berserk
 %%%%
 the potion of brilliance
-
+la potion de brillance
 %%%%
 the potion of cancellation
-
+la potion d'annulation
 %%%%
 the potion of curing
-
+la potion de guérison
 %%%%
 the potion of degeneration
-
+la potion de dégénérescence
 %%%%
 the potion of experience
-
+la potion d'expérience
 %%%%
 the potion of flight
-
+la potion de vol
 %%%%
 the potion of haste
-
+la potion de vitesse
 %%%%
 the potion of heal wounds
-
+la potion de guérison
 %%%%
 the potion of invisibility
-
+la potion d'invisibilité
 %%%%
 the potion of lignification
-
+la potion de lignification
 %%%%
 the potion of magic
-
+la potion de magie
 %%%%
 the potion of might
-
+la potion de puissance
 %%%%
 the potion of mutation
-
+la potion de mutation
 %%%%
 the potion of resistance
-
+la potion de résistance
 %%%%
 
 # unidentified potions are named "<colour> <potion>"
@@ -790,19 +787,19 @@ la potion
 # meanings, but that's not necessarily the case in other languages.
 %%%%
 the amethyst potion
-
+la potion améthyste
 %%%%
 the emerald potion
-
+la potion émeraude
 %%%%
 the ruby potion
-
+la potion rubis
 %%%%
 the sapphire potion
-
+la potion saphir
 %%%%
 the golden potion
-
+la potion dorée
 %%%%
 
 #################################
@@ -811,31 +808,31 @@ the golden potion
 
 %%%%
 the staff of fire
-
+le bâton de feu
 %%%%
 the staff of cold
-
+le bâton de froid
 %%%%
 the staff of poison
-
+le bâton de poison
 %%%%
 the staff of death
-
+le bâton de mort
 %%%%
 the staff of conjuration
-
+le bâton de conjuration
 %%%%
 the staff of air
-
+le bâton d'air
 %%%%
 the staff of earth
-
+le bâton de terre
 %%%%
 the staff of removedness
-
+le bâton de disparition
 %%%%
 the staff
-
+le bâton
 %%%%
 
 #################################
@@ -844,7 +841,7 @@ the staff
 
 %%%%
 the @monster@ corpse
-
+le cadavre de @monster@
 %%%%
 
 #################################
@@ -853,31 +850,31 @@ the @monster@ corpse
 
 %%%%
 the box of beasts
-
+la boîte des bêtes
 %%%%
 the lightning rod
-
+la baguette d'éclairs
 %%%%
 the phial of floods
-
+la fiole des flots
 %%%%
 the phantom mirror
-
+le miroir fantôme
 %%%%
 the figurine of a ziggurat
-
+la figurine de ziggurat
 %%%%
 the condenser vane
-
+le condensateur de nuages
 %%%%
 the piece from Xom's chessboard
-
+la pièce de l'échiquier de Xom
 %%%%
 the tin of tremorstones
-
+la boîte de pierres sismiques
 %%%%
 the quad damage
-
+le quadruple dégâts
 %%%%
 
 #################################
@@ -885,66 +882,65 @@ the quad damage
 #################################
 
 # These are unique, but there is at least one place where gramatically they're
-# treated as non-unique: "You found a <whatever> rune of Zot.", so we need to
-# decline as per non-unique items.
+# treated as non-unique items.
 
 %%%%
 the decaying rune
-
+la rune de décomposition
 %%%%
 the barnacled rune
-
+la rune incrustée
 %%%%
 the gossamer rune
-
+la rune soyeuse
 %%%%
 the serpentine rune
-
+la rune serpentine
 %%%%
 the slimy rune
-
+la rune visqueuse
 %%%%
 the abyssal rune
-
+la rune abyssale
 %%%%
 the silver rune
-
+la rune d'argent
 %%%%
 the golden rune
-
+la rune d'or
 %%%%
 
 # hell runes
 %%%%
 the obsidian rune
-
+la rune d'obsidienne
 %%%%
 the icy rune
-
+la rune glacée
 %%%%
 the bone rune
-
+la rune d'os
 %%%%
 the iron rune
-
+la rune de fer
 %%%%
 
 # pandemonium runes
 %%%%
 the demonic rune
-
+la rune démoniaque
 %%%%
 the glowing rune
-
+la rune lumineuse
 %%%%
 the magical rune
-
+la rune magique
 %%%%
 the fiery rune
-
+la rune ardente
 %%%%
 the dark rune
-
+la rune sombre
 %%%%
 
 #################################
@@ -954,7 +950,7 @@ the dark rune
 # Most are unique, but this one isn't
 %%%%
 the ring of the Octopus King
-
+l'anneau du Roi des Pieuvres
 %%%%
 
 #################################
@@ -962,5 +958,5 @@ the ring of the Octopus King
 #################################
 %%%%
 the gold piece
-
+la pièce d'or
 %%%%
