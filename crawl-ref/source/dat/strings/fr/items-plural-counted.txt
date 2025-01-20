@@ -12,13 +12,13 @@
 
 %%%%
 %d polearms
-
+{fpl}%d armes d'hast
 %%%%
 %d launchers
-
+{mpl}%d lanceur
 %%%%
 %d missiles
-
+{mpl}%d missiles
 %%%%
 
 #################################
@@ -35,53 +35,53 @@
 
 %%%%
 %d arrows
-
+{fpl}%d flèches
 %%%%
 %d bolts
-
+{mpl}%d carreaux
 %%%%
 # fired by artefact crossbow "Damnation"
 %d damnation bolts
-
+{mpl}%d carreaux de damnation
 %%%%
 %d darts
-
+{fpl}%d fléchettes
 %%%%
 %d poisoned darts
-
+{fpl}%d fléchettes empoisonnées
 %%%%
 %d curare-tipped darts
-
+{fpl}%d fléchettes au curare
 %%%%
 %d atropa-tipped darts
-
+{fpl}%d fléchettes à l'atropa
 %%%%
 %d datura-tipped darts
-
+{fpl}%d fléchettes au datura
 %%%%
 %d stones
-
+{mpl}%d pierres
 %%%%
 %d large rocks
-
+{mpl}%d gros rochers
 %%%%
 %d sling bullets
-
+{fpl}%d billes de fronde
 %%%%
 %d javelins
-
+{mpl}%d javelots
 %%%%
 %d silver javelins
-
+{mpl}%d javelots d'argent
 %%%%
 %d throwing nets
-
+{mpl}%d filets
 %%%%
 %d boomerangs
-
+{mpl}%d boomerangs
 %%%%
 %d silver boomerangs
-
+{mpl}%d boomerangs d'argent
 %%%%
 
 #################################
@@ -106,67 +106,67 @@
 
 %%%%
 %d scrolls labelled %s
-
+{mpl}%d parchemins étiquetés %s
 %%%%
 %d scrolls of acquirement
-
+{mpl}%d parchemins d'acquisition
 %%%%
 %d scrolls of amnesia
-
+{mpl}%d parchemins d'amnésie
 %%%%
 %d scrolls of blinking
-
+{mpl}%d parchemins de clignotement
 %%%%
 %d scrolls of brand weapon
-
+{mpl}%d parchemins de marquage d'arme
 %%%%
 %d scrolls of enchant armour
-
+{mpl}%d parchemins d'enchantement d'armure
 %%%%
 %d scrolls of enchant weapon
-
+{mpl}%d parchemins d'enchantement d'arme
 %%%%
 %d scrolls of fear
-
+{mpl}%d parchemins de peur
 %%%%
 %d scrolls of fog
-
+{mpl}%d parchemins de brouillard
 %%%%
 %d scrolls of holy word
-
+{mpl}%d parchemins de mot sacré
 %%%%
 %d scrolls of identify
-
+{mpl}%d parchemins d'identification
 %%%%
 %d scrolls of immolation
-
+{mpl}%d parchemins d'immolation
 %%%%
 %d scrolls of magic mapping
-
+{mpl}%d parchemins de cartographie magique
 %%%%
 %d scrolls of noise
-
+{mpl}%d parchemins de bruit
 %%%%
 %d scrolls of remove curse
-
+{mpl}%d parchemins de suppression de malédiction
 %%%%
 %d scrolls of silence
-
+{mpl}%d parchemins de silence
 %%%%
 %d scrolls of summoning
-
+{mpl}%d parchemins d'invocation
 %%%%
 %d scrolls of teleportation
-
+{mpl}%d parchemins de téléportation
 %%%%
 %d scrolls of torment
-
+{mpl}%d parchemins de tourment
 %%%%
 %d scrolls of vulnerability
-
+{mpl}%d parchemins de vulnérabilité
 %%%%
 %d scrolls of removedness
-
+{mpl}%d parchemins de disparition
 %%%%
 
 #################################
@@ -175,55 +175,55 @@
 
 %%%%
 %d potions of ambrosia
-
+{fpl}%d potions d'ambroisie
 %%%%
 %d potions of attraction
-
+{fpl}%d potions d'attraction
 %%%%
 %d potions of berserk rage
-
+{fpl}%d potions de rage berserk
 %%%%
 %d potions of brilliance
-
+{fpl}%d potions de brillance
 %%%%
 %d potions of cancellation
-
+{fpl}%d potions d'annulation
 %%%%
 %d potions of curing
-
+{fpl}%d potions de guérison
 %%%%
 %d potions of degeneration
-
+{fpl}%d potions de dégénérescence
 %%%%
 %d potions of experience
-
+{fpl}%d potions d'expérience
 %%%%
 %d potions of flight
-
+{fpl}%d potions de vol
 %%%%
 %d potions of haste
-
+{fpl}%d potions de vitesse
 %%%%
 %d potions of heal wounds
-
+{fpl}%d potions de guérison
 %%%%
 %d potions of invisibility
-
+{fpl}%d potions d'invisibilité
 %%%%
 %d potions of lignification
-
+{fpl}%d potions de lignification
 %%%%
 %d potions of magic
-
+{fpl}%d potions de magie
 %%%%
 %d potions of might
-
+{fpl}%d potions de puissance
 %%%%
 %d potions of mutation
-
+{fpl}%d potions de mutation
 %%%%
 %d potions of resistance
-
+{fpl}%d potions de résistance
 %%%%
 
 # generic
@@ -238,16 +238,19 @@
 # meanings, but that's not necessarily the case in other languages.
 %%%%
 %d amethyst potions
-
+{fpl}%d potions améthystes
 %%%%
 %d emerald potions
-
+{fpl}%d potions émeraudes
 %%%%
 %d ruby potions
-
+{fpl}%d potions rubis
 %%%%
 %d sapphire potions
-
+{fpl}%d potions saphir
+%%%%
+%d golden potions
+{fpl}%d potions dorées
 %%%%
 
 #################################
@@ -267,5 +270,5 @@
 #################################
 %%%%
 %d gold pieces
-
+{fpl}%d pièces d'or
 %%%%
