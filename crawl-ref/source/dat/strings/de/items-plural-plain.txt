@@ -93,62 +93,8 @@ silver boomerangs
 #################################
 
 %%%%
-rings of protection
-Ringe des Schutzes
-%%%%
-rings of protection from fire
-Ringe der Feuerresistenz
-%%%%
-rings of poison resistance
-Ringe der Giftresistenz
-%%%%
-rings of protection from cold
-Ringe der Kälteresistenz
-%%%%
-rings of strength
-Ringe der Stärke
-%%%%
-rings of slaying
-Ringe des Tötens
-%%%%
-rings of see invisible
-Ringe von Unsichtbares sehen
-%%%%
-rings of resist corrosion
-Ringe der Korrosionresistenz
-%%%%
-rings of evasion
-Ringe des Ausweichens
-%%%%
-rings of stealth
-Ringe der Heimlichkeit
-%%%%
-rings of dexterity
-Ringe der Geschicklichkeit
-%%%%
-rings of intelligence
-Ringe der Intelligenz
-%%%%
-rings of wizardry
-Ringe der Zauberei
-%%%%
-rings of magical power
-Ringe magischer Kraft
-%%%%
-rings of flight
-Ringe des Fliegens
-%%%%
-rings of positive energy
-Ringe positiver Energie
-%%%%
-rings of willpower
-Ringe der Willenskraft
-%%%%
-rings of fire
-Ringe des Feuers
-%%%%
-rings of ice
-Ringe des Eises
+rings
+Ringe
 %%%%
 
 #################################
@@ -156,23 +102,8 @@ Ringe des Eises
 #################################
 
 %%%%
-amulets of magic regeneration
-Amulette der Magie-Regeneration
-%%%%
-amulets of the acrobat
-Amulette des Akrobaten
-%%%%
-amulets of guardian spirit
-Amulette des Geistschildes
-%%%%
-amulets of faith
-Amulette des Glaubens
-%%%%
-amulets of reflection
-Amulette der Reflexion
-%%%%
-amulets of regeneration
-Amulette der Regeneration
+amulets
+Amulette
 %%%%
 
 #################################

@@ -44,62 +44,8 @@ missiles
 #################################
 
 %%%%
-rings of protection
-
-%%%%
-rings of protection from fire
-
-%%%%
-rings of poison resistance
-
-%%%%
-rings of protection from cold
-
-%%%%
-rings of strength
-
-%%%%
-rings of slaying
-
-%%%%
-rings of see invisible
-
-%%%%
-rings of resist corrosion
-
-%%%%
-rings of evasion
-
-%%%%
-rings of stealth
-
-%%%%
-rings of dexterity
-
-%%%%
-rings of intelligence
-
-%%%%
-rings of wizardry
-
-%%%%
-rings of magical power
-
-%%%%
-rings of flight
-
-%%%%
-rings of positive energy
-
-%%%%
-rings of willpower
-
-%%%%
-rings of fire
-
-%%%%
-rings of ice
-
+rings
+anneaux
 %%%%
 
 #################################
@@ -107,23 +53,8 @@ rings of ice
 #################################
 
 %%%%
-amulets of magic regeneration
-
-%%%%
-amulets of the acrobat
-
-%%%%
-amulets of guardian spirit
-
-%%%%
-amulets of faith
-
-%%%%
-amulets of reflection
-
-%%%%
-amulets of regeneration
-
+amulets
+amulettes
 %%%%
 
 #################################
