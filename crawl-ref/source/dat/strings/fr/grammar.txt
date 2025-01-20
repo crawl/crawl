@@ -143,6 +143,7 @@ KEY:/^(a|an) //
 
 #############
 # generate counted plural with adjective placeholder from counted plural without
+%%%%
 PREGENERATE:6
 
 SELECT:/^%d (?!%s)/
@@ -154,11 +155,24 @@ KEY:/^%d /%d %s/
 %%%%
 
 #############
+# generate uncounted plural from counted plural
+%%%%
+PREGENERATE:7
+
+SELECT:/^%d /
+
+KEY:/^%d //
+
+/^(\{[mf]pl\})%d (.*)$/$1$2/
+/^%d (.*)$/{mpl}$1/
+%%%%
+
+#############
 # We already have translations from English possessive to French possessive
 # Re-use these entries for the situation when English nominative has to be translated
 # to French possessive.
 %%%%
-PREGENERATE:7
+PREGENERATE:8
 
 SELECT:/'s$/
 
@@ -204,7 +218,7 @@ GENERATE:fpl
 # temporary marker to tell us to stop at de/du/d'/des
 /\b(d'|de|du|des|en|à|avec)\b/#$1/
 /^[^#]*/eux(?=( |$))/euses/
-/^[^#]*/([aeiou])(?=( |$))/$1s/
+/^[^#]*/([aeio])(?=( |$))/$1s/
 /^[^#]*/([a-rt-zé])(?=( |$))/$1es/
 # remove temporary marker
 /#//

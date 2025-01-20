@@ -69,6 +69,7 @@ int main()
     test("la masse raffinée", "the fine mace");
     test("un fauchon opalescent", "an opalescent falchion");
     test("une masse opalescente", "an opalescent mace");
+    test("potions inconnues", "unknown potions");
     cout << endl;
 
     // with uninflected adjective

@@ -176,6 +176,7 @@ la flèche
 the bolt
 le carreau
 %%%%
+# fired by artefact crossbow "Damnation"
 the damnation bolt
 le carreau de damnation
 %%%%

@@ -105,6 +105,11 @@
 #################################
 
 %%%%
+# generic
+%d scrolls
+{mpl}%d parchemins
+%%%%
+# unidentified
 %d scrolls labelled %s
 {mpl}%d parchemins étiquetés %s
 %%%%
