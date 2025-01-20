@@ -63,28 +63,28 @@ amulettes
 
 %%%%
 wands of flame
-
+baguettes de flammes
 %%%%
 wands of paralysis
-
+baguettes de paralysie
 %%%%
 wands of digging
-
+baguettes d'excavation
 %%%%
 wands of iceblast
-
+baguettes de souffle de glace
 %%%%
 wands of polymorph
-
+baguettes de polymorphie
 %%%%
 wands of charming
-
+baguettes d'envoûtement
 %%%%
 wands of acid
-
+baguettes d'acide
 %%%%
 wands of mindburst
-
+baguettes d'explosion mentale
 %%%%
 
 #################################
@@ -105,25 +105,25 @@ wands of mindburst
 
 %%%%
 staves of earth
-
+bâtons de terre
 %%%%
 staves of air
-
+bâtons d'air
 %%%%
 staves of fire
-
+bâtons de feu
 %%%%
 staves of cold
-
+bâtons de froid
 %%%%
 staves of conjuration
-
+bâtons de conjuration
 %%%%
 staves of death
-
+bâtons de mort
 %%%%
 staves of poison
-
+bâtons de poison
 %%%%
 
 #################################
