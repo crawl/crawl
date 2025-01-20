@@ -43,13 +43,118 @@ missiles
 # Rings
 #################################
 
+%%%%
+rings of protection
+
+%%%%
+rings of protection from fire
+
+%%%%
+rings of poison resistance
+
+%%%%
+rings of protection from cold
+
+%%%%
+rings of strength
+
+%%%%
+rings of slaying
+
+%%%%
+rings of see invisible
+
+%%%%
+rings of resist corrosion
+
+%%%%
+rings of evasion
+
+%%%%
+rings of stealth
+
+%%%%
+rings of dexterity
+
+%%%%
+rings of intelligence
+
+%%%%
+rings of wizardry
+
+%%%%
+rings of magical power
+
+%%%%
+rings of flight
+
+%%%%
+rings of positive energy
+
+%%%%
+rings of willpower
+
+%%%%
+rings of fire
+
+%%%%
+rings of ice
+
+%%%%
+
 #################################
 # Amulets
 #################################
 
+%%%%
+amulets of magic regeneration
+
+%%%%
+amulets of the acrobat
+
+%%%%
+amulets of guardian spirit
+
+%%%%
+amulets of faith
+
+%%%%
+amulets of reflection
+
+%%%%
+amulets of regeneration
+
+%%%%
+
 #################################
 # Wands
 #################################
+
+%%%%
+wands of flame
+
+%%%%
+wands of paralysis
+
+%%%%
+wands of digging
+
+%%%%
+wands of iceblast
+
+%%%%
+wands of polymorph
+
+%%%%
+wands of charming
+
+%%%%
+wands of acid
+
+%%%%
+wands of mindburst
+
+%%%%
 
 #################################
 # Scrolls
@@ -66,6 +171,29 @@ missiles
 #################################
 # Magical Staves
 #################################
+
+%%%%
+staves of earth
+
+%%%%
+staves of air
+
+%%%%
+staves of fire
+
+%%%%
+staves of cold
+
+%%%%
+staves of conjuration
+
+%%%%
+staves of death
+
+%%%%
+staves of poison
+
+%%%%
 
 #################################
 # Corpses
