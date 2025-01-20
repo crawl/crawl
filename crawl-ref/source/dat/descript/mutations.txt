@@ -695,12 +695,6 @@ You can blend into the waves while swimming through water or flying above it,
 gaining Stealth+. The second level of this mutation also grants you improved
 evasion and increases your movement speed when in or above water.
 %%%%
-vampiric mutation
-
-You are cursed with vampirism, torn between false life and a bloodless,
-dessicated undeath. You can use <input>$cmd[CMD_USE_ABILITY]</input> to
-exsanguinate yourself or to fill once more with blood.
-%%%%
 divine attributes mutation
 
 Your divine heritage dramatically boosts your attribute gain (Strength,

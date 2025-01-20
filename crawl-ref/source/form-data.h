@@ -186,12 +186,12 @@ static const form_entry formdata[] =
 },
 
 {
-    transformation::bat, MONS_PROGRAM_BUG, "Bat", "bat-form", "bat",
+    transformation::bat, MONS_BAT, "Bat", "bat-form", "bat",
     "",
     0, 0, NUM_TALISMANS,
     EQF_PHYSICAL | EQF_RINGS, MR_NO_FLAGS,
     DEFAULT_DURATION, 0, 5, SIZE_TINY, 10,
-    {}, false, FormScaling().Base(-2),
+    {}, false, FormScaling().Base(0).XLBased(),
     SPWPN_NORMAL, LIGHTGREY, "Teeth", ANIMAL_VERBS,
     FC_ENABLE, FC_FORBID, false, true,
     FC_DEFAULT, FC_ENABLE, FC_ENABLE, FC_ENABLE, FC_ENABLE,

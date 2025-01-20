@@ -365,13 +365,7 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
             if (mut == MUT_IRON_FUSED_SCALES && drag == MONS_IRON_DRAGON)
                 return mutation_activity_type::FULL;
         }
-        // Vampire bats keep their fangs.
-        if (you.form == transformation::bat
-            && you.has_innate_mutation(MUT_VAMPIRISM)
-            && mut == MUT_FANGS)
-        {
-            return mutation_activity_type::FULL;
-        }
+
         // XXX EVIL HACK: we want to meld coglins' exoskeletons in 'full meld'
         // forms like serpent and dragon, but treeform keeps using weapons and
         // should really keep allowing dual wielding. I'm so sorry about this.
@@ -1090,29 +1084,7 @@ static vector<string> _get_fakemuts(bool terse)
     if (!armour_mut.empty() && !you.has_mutation(MUT_NO_ARMOUR))
         result.push_back(_innatemut(armour_mut, terse));
 
-    if (you.has_mutation(MUT_VAMPIRISM))
-    {
-        if (you.vampire_alive)
-        {
-            result.push_back(terse ? "alive" :
-                _formmut("Your natural rate of healing is slightly increased."));
-        }
-        else if (terse)
-            result.push_back("bloodless");
-        else
-        {
-            result.push_back(
-                _formmut("You do not regenerate when monsters are visible."));
-            result.push_back(
-                _formmut("You are frail without blood (-20% HP)."));
-            result.push_back(
-                _formmut("You can heal yourself when you bite living creatures."));
-            // XX automatically color this green somehow? Handled below more
-            // generally for non-vampires
-            result.push_back(_formmut("You are immune to poison."));
-        }
-    }
-    else if (!terse && player_res_poison(false, false, false, false) == 3)
+    if (!terse && player_res_poison(false, false, false, false) == 3)
         result.push_back(_innatemut("You are immune to poison."));
 
     return result;
@@ -1240,14 +1212,12 @@ static bool _has_transient_muts()
 
 enum mut_menu_mode {
     MENU_MUTS,
-    MENU_VAMP,
     MENU_FORM,
     NUM_MENU_MODES
 };
 
 const char *menu_mode_labels[] = {
     "Mutations",
-    "Blood properties",
     "Form properties"
 };
 COMPILE_CHECK(ARRAYSZ(menu_mode_labels) == NUM_MENU_MODES);
@@ -1283,9 +1253,6 @@ private:
         {
         case MENU_MUTS:
             update_muts();
-            break;
-        case MENU_VAMP:
-            update_blood();
             break;
         case MENU_FORM:
             update_form();
@@ -1349,62 +1316,6 @@ private:
         }
     }
 
-    void update_blood()
-    {
-        ASSERT(you.has_mutation(MUT_VAMPIRISM));
-
-        string result;
-
-        const int lines = 17;
-        string columns[lines][3] =
-        {
-            {"                     ", "<green>Alive</green>      ", "<lightred>Bloodless</lightred>"},
-                                     //Full       Bloodless
-            {"Regeneration         ", "fast       ", "none with monsters in sight"},
-
-            {"HP modifier          ", "none       ", "-20%"},
-
-            {"Stealth boost        ", "none       ", "major "},
-
-            {"Heal on bite         ", "no         ", "yes "},
-
-            {"", "", ""},
-            {"<w>Resistances</w>", "", ""},
-            {"Poison resistance    ", "           ", "immune"},
-
-            {"Cold resistance      ", "           ", "++    "},
-
-            {"Negative resistance  ", "           ", "+++   "},
-
-            {"Miasma resistance    ", "           ", "immune"},
-
-            {"Torment resistance   ", "           ", "immune"},
-
-            {"", "", ""},
-            {"<w>Transformations</w>", "", ""},
-            {"Bat form (XL 3+)     ", "no         ", "yes   "},
-
-            {"Other forms          ", "yes        ", "no    "},
-
-            {"Berserk              ", "yes        ", "no    "}
-        };
-
-        const int highlight_col = you.vampire_alive ? 1 : 2;
-
-        for (int y = 0; y < lines; y++)  // lines   (properties)
-        {
-            string label = "";
-            for (int x = 0; x < 3; x++)  // columns (states)
-            {
-                string col = columns[y][x];
-                if (x == highlight_col)
-                    col = make_stringf("<w>%s</w>", col.c_str());
-                label += col;
-            }
-            add_entry(new MenuEntry(label, MEL_ITEM, 1, 0));
-        }
-    }
-
     void update_muts()
     {
         for (const auto &fakemut : fakemuts)
@@ -1422,19 +1333,10 @@ private:
             MenuEntry* me = new MenuEntry(desc, MEL_ITEM, 1, hotkey);
             ++hotkey;
             me->data = &mut;
-#ifdef USE_TILE_WEB
-            // This is a horrible hack. There's a bug where webtiles will
-            // carry over mutation icons from the main mutation menu to the
-            // vampirism menu. Rather than fix it, I've turned it off here.
-            // I'm very sorry.
-            if (!you.has_mutation(MUT_VAMPIRISM))
-#endif
 #ifdef USE_TILE
-            {
-                const tileidx_t tile = get_mutation_tile(mut);
-                if (tile != 0)
-                    me->add_tile(tile_def(tile + you.get_mutation_level(mut, false) - 1));
-            }
+            const tileidx_t tile = get_mutation_tile(mut);
+            if (tile != 0)
+                me->add_tile(tile_def(tile + you.get_mutation_level(mut, false) - 1));
 #endif
             add_entry(me);
         }
@@ -1529,8 +1431,6 @@ private:
     vector<mut_menu_mode> valid_modes()
     {
         vector<mut_menu_mode> modes = {MENU_MUTS};
-        if (you.has_mutation(MUT_VAMPIRISM))
-            modes.push_back(MENU_VAMP);
         if (you.default_form != transformation::none)
             modes.push_back(MENU_FORM);
         return modes;
@@ -2009,13 +1909,6 @@ bool physiology_mutation_conflict(mutation_type mutat)
     // Only Draconians (and gargoyles) can get wings.
     if (!species::is_draconian(you.species) && you.species != SP_GARGOYLE
         && mutat == MUT_BIG_WINGS)
-    {
-        return true;
-    }
-
-    // Vampires' healing rates depend on their blood level.
-    if (you.has_mutation(MUT_VAMPIRISM)
-        && (mutat == MUT_REGENERATION || mutat == MUT_INHIBITED_REGENERATION))
     {
         return true;
     }

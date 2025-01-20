@@ -2531,7 +2531,6 @@ tileidx_t tileidx_player_shadow()
         case SP_SPRIGGAN:       return TILEP_MONS_PLAYER_SHADOW_SPRIGGAN;
         case SP_TENGU:          return TILEP_MONS_PLAYER_SHADOW_TENGU;
         case SP_TROLL:          return TILEP_MONS_PLAYER_SHADOW_TROLL;
-        case SP_VAMPIRE:        return TILEP_MONS_PLAYER_SHADOW_VAMPIRE;
         case SP_VINE_STALKER:   return TILEP_MONS_PLAYER_SHADOW_VINE_STALKER;
 
         default:
@@ -3869,13 +3868,6 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_HURL_DAMNATION;
     case ABIL_WORD_OF_CHAOS:
         return TILEG_ABILITY_WORD_OF_CHAOS;
-    // Vampires
-    case ABIL_TRAN_BAT:
-        return TILEG_ABILITY_BAT_FORM;
-    case ABIL_EXSANGUINATE:
-        return TILEG_ABILITY_EXSANGUINATE;
-    case ABIL_REVIVIFY:
-        return TILEG_ABILITY_REVIVIFY;
 #if TAG_MAJOR_VERSION == 34
     // Deep Dwarves
     case ABIL_HEAL_WOUNDS:
@@ -4409,8 +4401,6 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
             return TILEG_SP_TENGU;
         case SP_MERFOLK:
             return TILEG_SP_MERFOLK;
-        case SP_VAMPIRE:
-            return TILEG_SP_VAMPIRE;
         case SP_FELID:
             return TILEG_SP_FELID;
         case SP_OCTOPODE:

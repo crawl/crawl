@@ -1526,7 +1526,6 @@ static void _tag_construct_you(writer &th)
     marshallShort(th, you.pending_revival ? 0 : you.hp);
 
     marshallBoolean(th, you.fishtail);
-    marshallBoolean(th, you.vampire_alive);
     _marshall_as_int(th, you.form);
     _marshall_as_int(th, you.default_form);
     CANARY;
@@ -2790,12 +2789,11 @@ static void _tag_read_you(reader &th)
 #endif
     you.fishtail        = unmarshallBoolean(th);
 #if TAG_MAJOR_VERSION == 34
-    if (th.getMinorVersion() >= TAG_MINOR_VAMPIRE_NO_EAT)
-        you.vampire_alive = unmarshallBoolean(th);
-    else
-        you.vampire_alive = true;
-#else
-    you.vampire_alive   = unmarshallBoolean(th);
+    if (th.getMinorVersion() >= TAG_MINOR_VAMPIRE_NO_EAT
+        && th.getMinorVersion() < TAG_MINOR_REMOVE_VAMPIRES)
+    {
+        unmarshallBoolean(th);
+    }
 #endif
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_NOME_NO_MORE)
@@ -3549,7 +3547,6 @@ static void _tag_read_you(reader &th)
     SP_MUT_FIX(MUT_DISTRIBUTED_TRAINING, SP_GNOLL);
     SP_MUT_FIX(MUT_MERTAIL, SP_MERFOLK);
     SP_MUT_FIX(MUT_TENTACLE_ARMS, SP_OCTOPODE);
-    SP_MUT_FIX(MUT_VAMPIRISM, SP_VAMPIRE);
     SP_MUT_FIX(MUT_FLOAT, SP_DJINNI);
     SP_MUT_FIX(MUT_INNATE_CASTER, SP_DJINNI);
     SP_MUT_FIX(MUT_HP_CASTING, SP_DJINNI);
@@ -3581,8 +3578,7 @@ static void _tag_read_you(reader &th)
     }
     // not sure this is safe for SP_MUT_FIX, leaving it out for now
     if (you.species == SP_GREY_DRACONIAN || you.species == SP_GARGOYLE
-        || you.species == SP_GHOUL || you.species == SP_MUMMY
-        || you.species == SP_VAMPIRE)
+        || you.species == SP_GHOUL || you.species == SP_MUMMY)
     {
         _fixup_species_mutations(MUT_UNBREATHING);
     }

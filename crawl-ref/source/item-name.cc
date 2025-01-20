@@ -2909,9 +2909,9 @@ bool is_bad_item(const item_def &item)
  * Is an item dangerous but potentially worthwhile?
  *
  * @param item The item being queried.
- * @param temp Should temporary conditions such as transformations and
- *             vampire state be taken into account?  Religion (but
- *             not its absence) is considered to be permanent here.
+ * @param temp Should temporary conditions such as transformations be taken into
+ *             account?  Religion (but not its absence) is considered to be
+ *             permanent here.
  * @return True if using the item is known to be risky but occasionally
  *         worthwhile.
  */
@@ -3192,9 +3192,9 @@ string cannot_drink_item_reason(const item_def *item, bool temp,
  *     benefit.
  *
  * @param item The item being queried.
- * @param temp Should temporary conditions such as transformations and
- *             vampire state be taken into account? Religion (but
- *             not its absence) is considered to be permanent here.
+ * @param temp Should temporary conditions such as transformations be taken into
+ *             account? Religion (but not its absence) is considered to be
+ *             permanent here.
  * @param ident Should uselessness be checked as if the item were already
  *              identified?
  * @return True if the item is known to be useless.
@@ -3377,10 +3377,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
 #if TAG_MAJOR_VERSION == 34
                    you.get_mutation_level(MUT_NO_REGENERATION) > 0 ||
 #endif
-                     (temp
-                       && (you.get_mutation_level(MUT_INHIBITED_REGENERATION) > 0
-                           || you.has_mutation(MUT_VAMPIRISM))
-                       && regeneration_is_inhibited());
+                    (temp && regeneration_is_inhibited());
 
         case AMU_MANA_REGENERATION:
             return !you.max_magic_points;

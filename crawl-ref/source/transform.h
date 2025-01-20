@@ -303,15 +303,7 @@ private:
 const Form* get_form(transformation form = you.form);
 const Form* cur_form(bool temp);
 
-enum undead_form_reason
-{
-    UFR_TOO_DEAD  = -1,
-    UFR_GOOD      = 0, // Must be 0, so we convert to bool sanely.
-    UFR_TOO_ALIVE = 1,
-};
-undead_form_reason lifeless_prevents_form(transformation form = you.form,
-                                          bool involuntary = false,
-                                          bool temp = true);
+bool lifeless_prevents_form(transformation form = you.form);
 
 bool form_can_wield(transformation form = you.form);
 bool form_can_wear(transformation form = you.form);
@@ -354,7 +346,6 @@ void merfolk_check_swimming(dungeon_feature_type old_grid,
                             bool stepped = false);
 void merfolk_start_swimming(bool step = false);
 void merfolk_stop_swimming();
-void vampire_update_transformations();
 int form_base_movespeed(transformation tran);
 bool draconian_dragon_exception();
 

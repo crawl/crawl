@@ -599,23 +599,17 @@ static void _decrement_transform_duration(int delay)
     {
         you.duration[DUR_TRANSFORMATION] = 1;
     }
-    // Vampire bat transformations are permanent (until ended), unless they
-    // are uncancellable (polymorph wand on a full vampire).
-    if (you.get_mutation_level(MUT_VAMPIRISM) < 2
-        || you.form != transformation::bat
-        || you.transform_uncancellable)
+
+    if (form_can_fly()
+        || form_can_swim() && feat_is_water(env.grid(you.pos())))
     {
-        if (form_can_fly()
-            || form_can_swim() && feat_is_water(env.grid(you.pos())))
-        {
-            // Disable emergency flight if it was active
-            you.props.erase(EMERGENCY_FLIGHT_KEY);
-        }
-        if (_decrement_a_duration(DUR_TRANSFORMATION, delay, nullptr, random2(3),
-                                  "Your transformation is almost over."))
-        {
-            return_to_default_form();
-        }
+        // Disable emergency flight if it was active
+        you.props.erase(EMERGENCY_FLIGHT_KEY);
+    }
+    if (_decrement_a_duration(DUR_TRANSFORMATION, delay, nullptr, random2(3),
+                                "Your transformation is almost over."))
+    {
+        return_to_default_form();
     }
 }
 

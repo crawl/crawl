@@ -2562,6 +2562,7 @@ static const mutation_def mut_data[] =
   {"Your arms no longer feel tentacular.", "", ""},
 },
 
+#if TAG_MAJOR_VERSION == 34
 { MUT_VAMPIRISM, 0, 2, mutflag::good, false,
   "vampiric",
 
@@ -2571,6 +2572,7 @@ static const mutation_def mut_data[] =
   0,
   {"", "You will be able to turn into a vampire bat when bloodless.", ""}
 },
+#endif
 
 { MUT_MERTAIL, 0, 1, mutflag::good, true,
   "mertail",

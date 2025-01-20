@@ -54,8 +54,8 @@ enum species_type
     SP_GHOUL,
     SP_TENGU,
     SP_MERFOLK,
-    SP_VAMPIRE,
 #if TAG_MAJOR_VERSION == 34
+    SP_VAMPIRE,
     SP_DEEP_DWARF,
 #endif
     SP_FELID,

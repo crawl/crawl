@@ -2541,8 +2541,6 @@ static ai_action::goodness _negative_energy_spell_goodness(const actor* foe)
             // partial resistance.
             return ai_action::good();
         case US_SEMI_UNDEAD:
-            // Non-bloodless vampires do not appear immune.
-            return ai_action::good_or_bad(you.vampire_alive);
         default:
             return ai_action::bad();
         }
@@ -8761,9 +8759,6 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
 
     case SPELL_DISPEL_UNDEAD:
     case SPELL_DISPEL_UNDEAD_RANGE:
-        // [ds] How is dispel undead intended to interact with vampires?
-        // Currently if the vampire's undead state returns MH_UNDEAD it
-        // affects the player.
         ASSERT(foe);
         return ai_action::good_or_bad(!!(foe->holiness() & MH_UNDEAD));
 

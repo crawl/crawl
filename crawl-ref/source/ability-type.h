@@ -35,12 +35,10 @@ enum ability_type
     ABIL_WISP_BLINK,
     ABIL_STOP_FLYING,
     ABIL_MUMMY_RESTORATION,
-#endif
     // Vampires
     ABIL_TRAN_BAT,
     ABIL_EXSANGUINATE,
     ABIL_REVIVIFY,
-#if TAG_MAJOR_VERSION == 34
     ABIL_BOTTLE_BLOOD,
     // Deep Dwarves
     ABIL_HEAL_WOUNDS,

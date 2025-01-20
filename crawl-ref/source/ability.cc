@@ -370,12 +370,6 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_MUD_BREATH, "Mud Breath",
             0, 0, 0, 3, {fail_basis::xl, 30, 1},
             abflag::drac_charges },
-        { ABIL_TRAN_BAT, "Bat Form",
-            2, 0, 0, -1, {fail_basis::xl, 45, 2}, abflag::none },
-        { ABIL_EXSANGUINATE, "Exsanguinate",
-            0, 0, 0, -1, {}, abflag::delay},
-        { ABIL_REVIVIFY, "Revivify",
-            0, 0, 0, -1, {}, abflag::delay},
         { ABIL_DAMNATION, "Hurl Damnation",
             0, 150, 0, 6, {fail_basis::xl, 50, 1}, abflag::none },
         { ABIL_WORD_OF_CHAOS, "Word of Chaos",
@@ -1634,21 +1628,7 @@ static void _print_talent_description(const talent& tal)
 
 void no_ability_msg()
 {
-    // Give messages if the character cannot use innate talents right now.
-    // * Vampires can't turn into bats when full of blood.
-    // * Tengu can't start to fly if already flying.
-    if (you.get_mutation_level(MUT_VAMPIRISM) >= 2)
-    {
-        if (you.transform_uncancellable)
-            mpr("You can't untransform!");
-        else
-        {
-            ASSERT(you.vampire_alive);
-            mpr("Sorry, you cannot become a bat while alive.");
-        }
-    }
-    else
-        mpr("Sorry, you're not good enough to have a special ability.");
+    mpr("Sorry, you're not good enough to have a special ability.");
 }
 
 // Prompts the user for an ability to use, first checking the lua hook
@@ -2146,18 +2126,6 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
         return true;
 
-    case ABIL_TRAN_BAT:
-    {
-        const string reason = cant_transform_reason(transformation::bat);
-        if (!reason.empty())
-        {
-            if (!quiet)
-                mpr(reason);
-            return false;
-        }
-        return true;
-    }
-
 #if TAG_MAJOR_VERSION == 34
     case ABIL_HEAL_WOUNDS:
         if (you.hp == you.hp_max)
@@ -2619,9 +2587,6 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
             return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 2, 0, 1);
 
     // Self-targeted:
-    case ABIL_TRAN_BAT:
-    case ABIL_EXSANGUINATE:
-    case ABIL_REVIVIFY:
     case ABIL_SHAFT_SELF:
 #if TAG_MAJOR_VERSION == 34
     case ABIL_HEAL_WOUNDS:
@@ -3646,30 +3611,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     case ABIL_FEDHAS_GROW_OKLOB:
         return fedhas_grow_oklob(beam.target, fail);
 
-    case ABIL_TRAN_BAT:
-        fail_check();
-        transform(100, transformation::bat);
-        break;
-
-    case ABIL_EXSANGUINATE:
-        if (feat_dangerous_for_form(transformation::none, env.grid(you.pos())))
-        {
-            mprf("Becoming bloodless right now would cause you to %s!",
-                    env.grid(you.pos()) == DNGN_LAVA ? "burn" : "drown");
-            return spret::abort;
-        }
-        start_delay<ExsanguinateDelay>(5);
-        break;
-
-    case ABIL_REVIVIFY:
-        if (feat_dangerous_for_form(transformation::none, env.grid(you.pos())))
-        {
-            mprf("Becoming alive right now would cause you to %s!",
-                    env.grid(you.pos()) == DNGN_LAVA ? "burn" : "drown");
-        }
-        start_delay<RevivifyDelay>(5);
-        break;
-
     case ABIL_JIYVA_SLIMIFY:
     {
         fail_check();
@@ -4155,14 +4096,6 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         return you.get_mutation_level(MUT_SPIT_POISON) >= 2;
     case ABIL_SPIT_POISON:
         return you.get_mutation_level(MUT_SPIT_POISON) == 1;
-    case ABIL_REVIVIFY:
-        return you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive;
-    case ABIL_EXSANGUINATE:
-        return you.has_mutation(MUT_VAMPIRISM) && you.vampire_alive;
-    case ABIL_TRAN_BAT:
-        return you.get_mutation_level(MUT_VAMPIRISM) >= 2
-               && !you.vampire_alive
-               && you.form != transformation::bat;
     case ABIL_BREATHE_FIRE:
         return you.form == transformation::dragon
                && !species::is_draconian(you.species);
@@ -4247,9 +4180,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_NOXIOUS_BREATH,
             ABIL_CAUSTIC_BREATH,
             ABIL_MUD_BREATH,
-            ABIL_TRAN_BAT,
-            ABIL_REVIVIFY,
-            ABIL_EXSANGUINATE,
             ABIL_DAMNATION,
             ABIL_WORD_OF_CHAOS,
             ABIL_INVENT_GIZMO,

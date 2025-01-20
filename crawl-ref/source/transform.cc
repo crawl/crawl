@@ -771,10 +771,7 @@ public:
      */
     string get_untransform_message() const override
     {
-        if (you.undead_state(false) == US_ALIVE)
-            return "You feel yourself come back to life.";
-        return "You feel your undeath return to normal.";
-        // ^^^ vampires only, probably
+        return "You feel yourself come back to life.";
     }
 };
 
@@ -785,33 +782,6 @@ private:
     DISALLOW_COPY_AND_ASSIGN(FormBat);
 public:
     static const FormBat &instance() { static FormBat inst; return inst; }
-
-    /**
-     * Get an monster type corresponding to the transformation.
-     *
-     * (Used for console player glyphs.)
-     *
-     * @return  A monster type corresponding to the player in this form.
-     */
-    monster_type get_equivalent_mons() const override
-    {
-        return you.has_mutation(MUT_VAMPIRISM) ? MONS_VAMPIRE_BAT : MONS_BAT;
-    }
-
-    /// Does this form care about skill for UC damage and accuracy, or only XL?
-    bool get_unarmed_uses_skill() const override {
-        return you.get_mutation_level(MUT_VAMPIRISM) >= 2;
-    }
-
-    /**
-     * Get a string describing the form you're turning into. (If not the same
-     * as the one used to describe this form in @.
-     */
-    string get_transform_description() const override
-    {
-        return make_stringf("a %sbat.",
-                            you.has_mutation(MUT_VAMPIRISM) ? "vampire " : "");
-    }
 
     string get_untransform_message() const override { return "You feel less batty."; }
 };
@@ -1389,46 +1359,26 @@ static int _transform_duration(transformation which_trans, int pow)
 /**
  * Is the player alive enough to become the given form?
  *
- * All undead can enter shadow form; vampires also can enter batform, and, when
- * full, other forms (excepting lichform).
+ * All undead can use Vessel of Slaughter; vampires also can also use their
+ * batform ability.
  *
  * @param which_trans   The transformation which the player is undergoing
  *                      (default you.form).
- * @param involuntary   Whether the transformation is involuntary or not.
- * @param temp                   Whether to factor in temporary limits, e.g. wrong blood level.
- * @return              UFR_GOOD if the player is not blocked from entering the
- *                      given form by their undead race; UFR_TOO_ALIVE if the
- *                      player is too satiated as a vampire; UFR_TOO_DEAD if
- *                      the player is too dead (or too thirsty as a vampire).
+ * @return              True if the player is not blocked from entering the
+ *                      given form by their undead race; false otherwise.
  */
-undead_form_reason lifeless_prevents_form(transformation which_trans,
-                                          bool involuntary, bool temp)
+bool lifeless_prevents_form(transformation which_trans)
 {
     if (!you.undead_state(false)) // intentionally don't pass temp in here
-        return UFR_GOOD; // not undead!
+        return false; // not undead!
 
     if (which_trans == transformation::none)
-        return UFR_GOOD; // everything can become itself
+        return false; // everything can become itself
 
     if (which_trans == transformation::slaughter)
-        return UFR_GOOD; // Godly power can transcend such things as unlife
+        return false; // Godly power can transcend such things as unlife
 
-    if (!you.has_mutation(MUT_VAMPIRISM))
-        return UFR_TOO_DEAD; // ghouls & mummies can't become anything else
-
-    if (which_trans == transformation::death)
-        return UFR_TOO_DEAD; // vampires can never lichform
-
-    if (which_trans == transformation::bat) // can batform bloodless
-    {
-        if (involuntary)
-            return UFR_TOO_DEAD; // but not as a forced polymorph effect
-
-        return !you.vampire_alive || !temp ? UFR_GOOD : UFR_TOO_ALIVE;
-    }
-
-    // other forms can only be entered when alive
-    return you.vampire_alive || !temp ? UFR_GOOD : UFR_TOO_DEAD;
+    return true;
 }
 
 /**
@@ -1441,7 +1391,7 @@ string cant_transform_reason(transformation which_trans,
         return "You have sacrificed the ability to change form!";
 
     // the undead cannot enter most forms.
-    if (lifeless_prevents_form(which_trans, involuntary, temp) == UFR_TOO_DEAD)
+    if (lifeless_prevents_form(which_trans))
         return "Your unliving flesh cannot be transformed in this way.";
 
     if (SP_GARGOYLE == you.species && which_trans == transformation::statue)
@@ -1995,21 +1945,6 @@ void set_default_form(transformation t, const item_def *source)
     // so be sure to update for any artprop changes.
     if (you.form == t)
         you.equipment.update();
-}
-
-void vampire_update_transformations()
-{
-    const undead_form_reason form_reason = lifeless_prevents_form();
-    if (form_reason != UFR_GOOD && you.duration[DUR_TRANSFORMATION])
-    {
-        print_stats();
-        update_screen();
-        mprf(MSGCH_WARN,
-             "Your blood-%s body can't sustain your transformation.",
-             form_reason == UFR_TOO_DEAD ? "deprived" : "filled");
-        unset_default_form();
-        untransform();
-    }
 }
 
 // TODO: dataify? move to member functions?

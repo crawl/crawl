@@ -3,7 +3,7 @@ monster: MONS_VAMPIRE
 name: Vampire
 short_name: Vp
 adjective: Vampiric
-difficulty: Advanced
+difficulty: False
 difficulty_priority: 80
 aptitudes:
   xp: -1
@@ -48,17 +48,5 @@ mutations:
     MUT_VAMPIRISM: 1
   3:
     MUT_VAMPIRISM: 1 # batform
-recommended_jobs:
-  - gladiator
-  - brigand
-  - enchanter
-  - necromancer
-  - earth elementalist
-  - ice elementalist
-  - alchemist
-recommended_weapons:
-  - short blades
-  - axes
-  - long blades
 
 orc_name: Orcula

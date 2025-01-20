@@ -720,7 +720,6 @@ shadow_oni MONS_PLAYER_SHADOW_ONI
 shadow_spriggan MONS_PLAYER_SHADOW_SPRIGGAN
 shadow_tengu MONS_PLAYER_SHADOW_TENGU
 shadow_troll MONS_PLAYER_SHADOW_TROLL
-shadow_vampire MONS_PLAYER_SHADOW_VAMPIRE
 shadow_vine_stalker MONS_PLAYER_SHADOW_VINE_STALKER
 
 %sdir mon/amorphous

@@ -3523,6 +3523,23 @@ static bool _convert_obsolete_species()
         fly_player(100);
         return true;
     }
+    else if (you.species == SP_VAMPIRE)
+    {
+        if (!yesno(
+            "This Vampire save game cannot be loaded as-is. If you load it now,\n"
+            "your character will be converted to a Human. Continue?",
+                       false, 'N'))
+        {
+            you.save->abort(); // don't even rewrite the header
+            delete you.save;
+            you.save = 0;
+            game_ended(game_exit::abort,
+                "Please load the save in an earlier version "
+                "if you want to remain a Vampire.");
+        }
+        change_species_to(SP_HUMAN);
+        return true;
+    }
 #endif
     return false;
 }

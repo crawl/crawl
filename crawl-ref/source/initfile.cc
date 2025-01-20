@@ -1397,8 +1397,6 @@ void game_options::set_default_activity_interrupts()
         "interrupt_transform = interrupt_armour_on",
         "interrupt_memorise = hp_loss, monster_attack, stat",
         "interrupt_butcher = interrupt_armour_on, teleport, stat",
-        "interrupt_exsanguinate = interrupt_butcher",
-        "interrupt_revivify = interrupt_butcher",
         "interrupt_imbue_servitor = interrupt_butcher",
         "interrupt_multidrop = hp_loss, monster_attack, teleport, stat",
         "interrupt_macro = interrupt_multidrop",
@@ -1633,7 +1631,6 @@ void game_options::reset_options()
     set_fire_order_ability("all", false, false);
 
     fire_order_ability.erase(ABIL_TROG_BERSERK);
-    fire_order_ability.erase(ABIL_REVIVIFY);
     fire_order_ability.erase(ABIL_IGNIS_FIERY_ARMOUR);
     fire_order_ability.erase(ABIL_IGNIS_FOXFIRE);
     fire_order_ability.erase(ABIL_IGNIS_RISING_FLAME);

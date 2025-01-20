@@ -333,11 +333,6 @@ base/octopode1 SP_RECOMMENDED_OCTOPODE
 %compose gloves/claws
 %finish SP_RECOMMENDED_TROLL
 %start
-%compose base/vampire_f
-%compose body/animal_skin
-%compose hair/arwen
-%finish SP_RECOMMENDED_VAMPIRE
-%start
 %compose base/vine_stalker_green_f
 %compose body/animal_skin
 %finish SP_RECOMMENDED_VINE_STALKER
@@ -382,7 +377,6 @@ enum:SP_RECOMMENDED_ONI SP_ONI
 enum:SP_RECOMMENDED_SPRIGGAN SP_SPRIGGAN
 enum:SP_RECOMMENDED_TENGU SP_TENGU
 enum:SP_RECOMMENDED_TROLL SP_TROLL
-enum:SP_RECOMMENDED_VAMPIRE SP_VAMPIRE
 enum:SP_RECOMMENDED_VINE_STALKER SP_VINE_STALKER
 enum:SP_RECOMMENDED_DJINNI SP_DJINNI
 enum:SP_RECOMMENDED_METEORAN SP_METEORAN

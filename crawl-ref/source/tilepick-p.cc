@@ -660,8 +660,6 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_TENGU;
     case SP_MERFOLK:
         return TILEP_BASE_MERFOLK;
-    case SP_VAMPIRE:
-        return TILEP_BASE_VAMPIRE;
     case SP_GARGOYLE:
         return TILEP_BASE_GARGOYLE;
     case SP_FELID:
@@ -765,9 +763,6 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
         case SP_NAGA:
         case SP_DJINNI:
             hair = TILEP_HAIR_PART2_RED;
-            break;
-        case SP_VAMPIRE:
-            hair = TILEP_HAIR_ARWEN;
             break;
         case SP_SPRIGGAN:
             hair = 0;

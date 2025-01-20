@@ -470,23 +470,6 @@ static void _TROG_unequip(item_def */*item*/, bool *show_msgs)
 
 ///////////////////////////////////////////////////
 
-// XXX: Always getting maximal vampiric drain is hardcoded in
-// attack::apply_damage_brand()
-
-static void _VAMPIRES_TOOTH_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
-{
-    if (!you.has_mutation(MUT_VAMPIRISM))
-        _equip_mpr(show_msgs, "You feel strangely empty.");
-    else if (you.vampire_alive)
-    {
-        _equip_mpr(show_msgs,
-                   "You feel a strange hunger, and smell blood in the air...");
-    }
-    // else let player-equip.cc handle message
-}
-
-///////////////////////////////////////////////////
-
 static void _VARIABILITY_melee_effects(item_def* /*weapon*/, actor* attacker,
                                        actor* /*defender*/, bool mondied,
                                        int /*dam*/)
@@ -1347,15 +1330,6 @@ static void _FROSTBITE_melee_effects(item_def* /*weapon*/, actor* attacker,
 ///////////////////////////////////////////////////
 
 // Vampiric effect triggers on every hit, see attack::apply_damage_brand()
-
-static void _LEECH_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
-{
-    if (!you.has_mutation(MUT_VAMPIRISM))
-        _equip_mpr(show_msgs, "You feel very empty.");
-    else if (you.vampire_alive)
-        _equip_mpr(show_msgs, "You feel a powerful hunger.");
-    // else let player-equip.cc handle message
-}
 
 // Big killing blows give a bloodsplosion effect sometimes
 static void _LEECH_melee_effects(item_def* /*item*/, actor* attacker,

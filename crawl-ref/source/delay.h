@@ -637,54 +637,6 @@ public:
     }
 };
 
-class ExsanguinateDelay : public Delay
-{
-    bool was_prompted = false;
-
-    void start() override;
-
-    void tick() override
-    {
-        mprf(MSGCH_MULTITURN_ACTION, "You continue bloodletting.");
-    }
-
-    void finish() override;
-public:
-    ExsanguinateDelay(int dur) : Delay(dur)
-    { }
-
-    bool try_interrupt(bool force = false) override;
-
-    const char* name() const override
-    {
-        return "exsanguinate";
-    }
-};
-
-class RevivifyDelay : public Delay
-{
-    bool was_prompted = false;
-
-    void start() override;
-
-    void tick() override
-    {
-        mprf(MSGCH_MULTITURN_ACTION, "You continue your ritual.");
-    }
-
-    void finish() override;
-public:
-    RevivifyDelay(int dur) : Delay(dur)
-    { }
-
-    bool try_interrupt(bool force = false) override;
-
-    const char* name() const override
-    {
-        return "revivify";
-    }
-};
-
 class TransformDelay : public Delay
 {
     transformation form;

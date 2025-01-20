@@ -1064,8 +1064,7 @@ static bool _mons_inhibits_regen(const monster &m)
 bool regeneration_is_inhibited(const monster *m)
 {
     // used mainly for resting: don't add anything here that can be waited off
-    if (you.get_mutation_level(MUT_INHIBITED_REGENERATION) == 1
-        || (you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive))
+    if (you.get_mutation_level(MUT_INHIBITED_REGENERATION) == 1)
     {
         if (m)
             return _mons_inhibits_regen(*m);
@@ -1091,10 +1090,6 @@ int player_regen()
     // Before applying other effects, make sure that there's something
     // to heal.
     rr = max(1, rr);
-
-    // Bonus regeneration for alive vampires.
-    if (you.has_mutation(MUT_VAMPIRISM) && you.vampire_alive)
-        rr += 20;
 
     if (you.duration[DUR_SICKNESS]
         || !player_regenerates_hp())
@@ -1282,10 +1277,6 @@ int player_res_cold(bool allow_random, bool temp, bool items)
 
         if (you.duration[DUR_QAZLAL_COLD_RES])
             rc++;
-
-        // XX temp?
-        if (you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive)
-            rc += 2;
     }
 
     rc += cur_form(temp)->res_cold();
@@ -1641,10 +1632,6 @@ int player_spec_tloc()
 int player_prot_life(bool allow_random, bool temp, bool items)
 {
     int pl = 0;
-
-    // XX temp?
-    if (you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive)
-        pl = 3;
 
     // piety-based rN doesn't count as temporary (XX why)
     if (you_worship(GOD_SHINING_ONE))
@@ -3030,10 +3017,6 @@ int player_stealth()
     if (you.duration[DUR_SILENCE])
         stealth -= STEALTH_PIP;
 
-    // Bloodless vampires are stealthier.
-    if (you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive)
-        stealth += STEALTH_PIP * 2;
-
     if (feat_is_water(env.grid(you.pos())))
     {
         if (you.has_mutation(MUT_NIMBLE_SWIMMER))
@@ -3097,29 +3080,6 @@ static void _display_char_status(int value, const char *fmt, ...)
         mprf("%s.", msg.c_str());
 
     va_end(argp);
-}
-
-static void _display_vampire_status()
-{
-    string msg = "At your current blood state you ";
-    vector<const char *> attrib;
-
-    if (!you.vampire_alive)
-    {
-        attrib.push_back("are immune to poison");
-        attrib.push_back("significantly resist cold");
-        attrib.push_back("are immune to negative energy");
-        attrib.push_back("resist torment");
-        attrib.push_back("do not heal with monsters in sight.");
-    }
-    else
-        attrib.push_back("heal quickly.");
-
-    if (!attrib.empty())
-    {
-        msg += comma_separated_line(attrib.begin(), attrib.end());
-        mpr(msg);
-    }
 }
 
 static void _display_movement_speed()
@@ -3260,9 +3220,6 @@ void display_char_status()
     }
     else if (you.haloed())
         mpr("An external divine halo illuminates you.");
-
-    if (you.has_mutation(MUT_VAMPIRISM))
-        _display_vampire_status();
 
     status_info inf;
     for (unsigned i = 0; i <= STATUS_LAST_STATUS; ++i)
@@ -3857,8 +3814,7 @@ int get_real_hp(bool trans, bool drained)
                 + (you.get_mutation_level(MUT_RUGGED_BROWN_SCALES) ?
                    you.get_mutation_level(MUT_RUGGED_BROWN_SCALES) * 2 + 1 : 0)
                 - (you.get_mutation_level(MUT_FRAIL) * 10)
-                - (hep_frail ? 10 : 0)
-                - (!you.vampire_alive ? 20 : 0);
+                - (hep_frail ? 10 : 0);
 
     hitp /= 100;
 
@@ -5201,7 +5157,6 @@ player::player()
     royal_jelly_dead = false;
     transform_uncancellable = false;
     fishtail = false;
-    vampire_alive = true;
 
     pet_target      = MHITNOT;
 
@@ -6464,7 +6419,6 @@ bool player::evil() const
 {
     return is_evil_god(religion)
         || species == SP_DEMONSPAWN
-        || you.has_mutation(MUT_VAMPIRISM)
         || actor::evil();
 }
 
@@ -6602,7 +6556,6 @@ bool player::res_torment() const
         return true;
 
     return get_form()->res_neg() == 3
-           || you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive
            || you.petrified()
     // This should probably be (you.holiness & MH_PLANT), but
     // transforming doesn't currently make you a plant, and I suspect
@@ -7473,7 +7426,7 @@ bool player::can_safely_mutate(bool temp) const
 bool player::is_lifeless_undead(bool temp) const
 {
     if (temp && undead_state() == US_SEMI_UNDEAD)
-        return !you.vampire_alive;
+        return false;
     else
         return undead_state(temp) == US_UNDEAD;
 }

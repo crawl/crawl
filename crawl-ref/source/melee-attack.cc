@@ -1879,12 +1879,6 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
 
     if (wu_jian_attack != WU_JIAN_ATTACK_NONE)
         wu_jian_attack = WU_JIAN_ATTACK_TRIGGERED_AUX;
-
-    if (atk == UNAT_BITE
-        && _vamp_wants_blood_from_monster(defender->as_monster()))
-    {
-        damage_brand = SPWPN_VAMPIRISM;
-    }
 }
 
 bool melee_attack::player_aux_test_hit()
@@ -2047,14 +2041,6 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
                     mprf("You sap %s willpower!",
                          defender->as_monster()->pronoun(PRONOUN_POSSESSIVE).c_str());
                 }
-            }
-
-            // Normal vampiric biting attack, not if already got stabbing special.
-            if (damage_brand == SPWPN_VAMPIRISM
-                && you.has_mutation(MUT_VAMPIRISM)
-                && (!stab_attempt || stab_bonus <= 0))
-            {
-                _player_vampire_draws_blood(defender->as_monster(), damage_done);
             }
 
             if (damage_brand == SPWPN_ANTIMAGIC && you.has_mutation(MUT_ANTIMAGIC_BITE)
@@ -2461,7 +2447,7 @@ void melee_attack::player_weapon_upsets_god()
     }
 }
 
-/* Apply player-specific effects as well as brand damage.
+/* Apply some player-specific hit effects.
  *
  * Called after damage is calculated, but before unrand effects and before
  * damage is dealt.
@@ -2472,20 +2458,11 @@ bool melee_attack::player_monattk_hit_effects()
 {
     player_weapon_upsets_god();
 
-    // Don't even check vampire bloodletting if the monster has already
-    // been reset (for example, a spectral weapon who noticed in
-    // player_stab_check that it shouldn't exist anymore).
+    // Don't even check effects if the monster has already been reset (for
+    // example, a spectral weapon who noticed in player_stab_check that it
+    // shouldn't exist anymore).
     if (defender->type == MONS_NO_MONSTER)
         return false;
-
-    // Thirsty vampires will try to use a stabbing situation to draw blood.
-    if (you.has_mutation(MUT_VAMPIRISM)
-        && damage_done > 0
-        && stab_attempt
-        && stab_bonus > 0)
-    {
-        _player_vampire_draws_blood(defender->as_monster(), damage_done, true);
-    }
 
     if (!defender->alive())
         return false;
@@ -4428,70 +4405,10 @@ int melee_attack::calc_damage()
     return attack::calc_damage();
 }
 
-/* TODO: This code is only used from melee_attack methods, but perhaps it
- * should be ambigufied and moved to the actor class
- * Should life protection protect from this?
- *
- * Should eventually remove in favour of player/monster symmetry
- *
- * Called when stabbing and for bite attacks.
- *
- * Returns true if blood was drawn.
- */
-bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int damage,
-                                               bool needs_bite_msg)
-{
-    ASSERT(you.has_mutation(MUT_VAMPIRISM));
-
-    if (!_vamp_wants_blood_from_monster(mon) ||
-        (!adjacent(defender->pos(), attack_position) && needs_bite_msg))
-    {
-        return false;
-    }
-
-    // Now print message, need biting unless already done (never for bat form!)
-    if (needs_bite_msg && you.form != transformation::bat)
-    {
-        mprf("You bite %s, and draw %s blood!",
-             mon->name(DESC_THE, true).c_str(),
-             mon->pronoun(PRONOUN_POSSESSIVE).c_str());
-    }
-    else
-    {
-        mprf("You draw %s blood!",
-             apostrophise(mon->name(DESC_THE, true)).c_str());
-    }
-
-    // Regain hp.
-    if (you.hp < you.hp_max)
-    {
-        int heal = 2 + random2(damage);
-        heal += random2(damage);
-        if (heal > you.experience_level)
-            heal = you.experience_level;
-
-        if (heal > 0 && !you.duration[DUR_DEATHS_DOOR])
-        {
-            inc_hp(heal);
-            canned_msg(MSG_GAIN_HEALTH);
-        }
-    }
-
-    return true;
-}
-
 bool melee_attack::apply_damage_brand(const char *what)
 {
     // Staff damage overrides any brands
     return apply_staff_damage() || attack::apply_damage_brand(what);
-}
-
-bool melee_attack::_vamp_wants_blood_from_monster(const monster* mon)
-{
-    return you.has_mutation(MUT_VAMPIRISM)
-           && !you.vampire_alive
-           && actor_is_susceptible_to_vampirism(*mon)
-           && mons_has_blood(mon->type);
 }
 
 string mut_aux_attack_desc(mutation_type mut)

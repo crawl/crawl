@@ -123,11 +123,6 @@ Troll
 Trolls are monstrous creatures with powerful claws. They regenerate health
 rapidly.
 %%%%
-Vampire
-
-Shifting between the states of life and undeath at will, Vampires are
-accomplished stabbers and casters.
-%%%%
 Vine Stalker
 
 Frail symbionts, Vine Stalkers cannot regain health from potions. Their magical
