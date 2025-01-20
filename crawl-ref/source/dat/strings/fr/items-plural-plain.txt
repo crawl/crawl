@@ -77,34 +77,35 @@ missiles
 
 %%%%
 boxes of beasts
-
+boîtes des bêtes
 %%%%
 lightning rods
-
+baguettes d'éclairs
 %%%%
 phials of floods
-
+fioles des flots
 %%%%
 phantom mirrors
-
+miroirs fantômes
 %%%%
 figurines of a ziggurat
-
+figurines de ziggurat
 %%%%
 condenser vanes
-
+condensateurs de nuages
 %%%%
 pieces from Xom's chessboard
-
+pièces de l'échiquier de Xom
 %%%%
 tins of tremorstones
-
+boîtes de pierres sismiques
+%%%%
 %%%%
 # due to a bug (#4063), the English plural is "damagi" (coz mage -> magi)
 quad damagi
-
+quadruple dégâts
 %%%%
 # for when the bug is fixed
 quad damages
-
+quadruple dégâts
 %%%%

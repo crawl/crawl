@@ -205,7 +205,7 @@
 # generic
 %%%%
 " of "%s""
-
+" de "%s""
 %%%%
 # generic
 %%%%

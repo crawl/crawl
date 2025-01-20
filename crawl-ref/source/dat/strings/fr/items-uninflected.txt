@@ -215,19 +215,19 @@ dark
 
 %%%%
 unknown magical staves
-
+bâtons magiques inconnus
 %%%%
 unknown jewellery
-
+bijoux inconnus
 %%%%
 unknown wands
-
+bagettes inconnues
 %%%%
 unknown scrolls
-
+parchemin inconnus
 %%%%
 unknown potions
-
+potions inconnues
 %%%%
 
 %%%%
