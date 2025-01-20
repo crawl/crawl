@@ -214,7 +214,6 @@
     Anders Heggestøyl
     Alex Henry
     R. Dan Henry
-    Max 'Ploomutoo' Hon-Anderson
     Chris Honey
     Sylvia 'Onia' Hörnke
     Benoit Hudson
@@ -333,6 +332,7 @@
     pianoman523
     pikaro
     Lemuel Pitkin
+    valerie "ploomutoo"
     Paul Pollack
     Poroing
     Iago Porto
