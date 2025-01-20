@@ -176,7 +176,7 @@
 " grumeleux"
 %%%%
 "masterwork "
-" chef d'oeuvre"
+" de maître"
 %%%%
 "non-descript "
 " indescriptible"

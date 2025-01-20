@@ -72,10 +72,10 @@ int main()
     cout << endl;
 
     // with uninflected adjective
-    test("le fauchon chef d'oeuvre", "the masterwork falchion");
-    test("la masse chef d'oeuvre", "the masterwork mace");
-    test("un fauchon chef d'oeuvre", "a masterwork falchion");
-    test("une masse chef d'oeuvre", "a masterwork mace");
+    test("le fauchon de maître", "the masterwork falchion");
+    test("la masse de maître", "the masterwork mace");
+    test("un fauchon de maître", "a masterwork falchion");
+    test("une masse de maître", "a masterwork mace");
     cout << endl;
 
     // with partially inflected adjective
