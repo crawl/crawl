@@ -16,56 +16,7 @@
 # Missiles
 #################################
 
-%%%%
-arrows
-{pl}Pfeile
-%%%%
-bolts
-{pl}Bolzen
-%%%%
-# fired by artefact crossbow "Damnation"
-damnation bolts
-{pl}Verdammnisbolzen
-%%%%
-darts
-{pl}Wurfpfeile
-%%%%
-poisoned darts
-{pl}vergiftete Wurfpfeile
-%%%%
-curare-tipped darts
-{pl}Curare-Wurfpfeile
-%%%%
-atropa-tipped darts
-{pl}Atropa-Wurfpfeile
-%%%%
-datura-tipped darts
-{pl}Datura-Wurfpfeile
-%%%%
-stones
-{pl}Steine
-%%%%
-large rocks
-{pl}große Felsbrocken
-%%%%
-sling bullets
-{pl}Schleuderkugeln
-%%%%
-javelins
-{pl}Wurfspeere
-%%%%
-silver javelins
-{pl}Silberwurfspeere
-%%%%
-throwing nets
-{pl}Wurfnetze
-%%%%
-boomerangs
-{pl}Bumerangs
-%%%%
-silver boomerangs
-{pl}Silberbumerangs
-%%%%
+# generated from counted plural by grammar.txt
 
 #################################
 # Armour
@@ -132,144 +83,13 @@ Zauberstäbe des Kopfzerplatzens
 # Scrolls
 #################################
 
-# generic
-%%%%
-scrolls
-Schriftrollen
-%%%%
-
-# unidentified
-%%%%
-scrolls labelled %s
-Schriftrollen beschriftet mit %s
-%%%%
-
-# identified
-%%%%
-scrolls of acquirement
-Schriftrollen der Erwerbung
-%%%%
-scrolls of amnesia
-Schriftrollen der Amnesie
-%%%%
-scrolls of blinking
-Schriftrollen des Blinzelns
-%%%%
-scrolls of brand weapon
-Schriftrollen der Waffenprägung
-%%%%
-scrolls of enchant armour
-Schriftrollen der Rüstungsverzauberung
-%%%%
-scrolls of enchant weapon
-Schriftrollen der Waffenverzauberung
-%%%%
-scrolls of fear
-Schriftrollen der Angst
-%%%%
-scrolls of fog
-Schriftrollen des Nebels
-%%%%
-scrolls of holy word
-Schriftrollen des heiligen Wortes
-%%%%
-scrolls of identify
-Schriftrollen der Identifizierung
-%%%%
-scrolls of immolation
-Schriftrollen der Verbrennung
-%%%%
-scrolls of magic mapping
-Schriftrollen des magischen Kartierens
-%%%%
-scrolls of noise
-Schriftrollen des Lärms
-%%%%
-scrolls of remove curse
-Schriftrollen des Fluchaufhebens
-%%%%
-scrolls of silence
-Schriftrollen der Stille
-%%%%
-scrolls of summoning
-Schriftrollen der Beschwörung
-%%%%
-scrolls of teleportation
-Schriftrollen der Teleportation
-%%%%
-scrolls of torment
-Schriftrollen der Peinigung
-%%%%
-scrolls of vulnerability
-Schriftrollen der Vulnerabilität
-%%%%
-scrolls of removedness
-Schriftrollen der Obsoleszenz
-%%%%
+# generated from counted plural by grammar.txt
 
 #################################
 # Potions
 #################################
 
-# generic
-%%%%
-potions
-{pl}Zaubertränke
-%%%%
-
-# identified
-%%%%
-potions of ambrosia
-{pl}Tränke der Ambrosia
-%%%%
-potions of attraction
-{pl}Tränke der Anziehung
-%%%%
-potions of berserk rage
-{pl}Tränke der Berserkerwut
-%%%%
-potions of brilliance
-{pl}Tränke der Brillanz
-%%%%
-potions of cancellation
-{pl}Tränke der Aufhebung
-%%%%
-potions of curing
-{pl}Tränke des Gegenmittels
-%%%%
-potions of degeneration
-{pl}Tränke der Degeneration
-%%%%
-potions of experience
-{pl}Tränke der Erfahrung
-%%%%
-potions of flight
-{pl}Tränke des Fliegens
-%%%%
-potions of haste
-{pl}Tränke der Eile
-%%%%
-potions of heal wounds
-{pl}Tränke der Wundheilung
-%%%%
-potions of invisibility
-{pl}Tränke der Unsichtbarkeit
-%%%%
-potions of lignification
-{pl}Tränke der Lignifizierung
-%%%%
-potions of magic
-{pl}Tränke der Magie
-%%%%
-potions of might
-{pl}Tränke der Macht
-%%%%
-potions of mutation
-{pl}Tränke der Mutation
-%%%%
-potions of resistance
-{pl}Tränke der Resistenz
-%%%%
+# generated from counted plural by grammar.txt
 
 #################################
 # Magical Staves

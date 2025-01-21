@@ -166,11 +166,22 @@ KEY:/^%d /%d %s/
 %%%%
 
 #############
+# generate uncounted plural from counted plural without
+PREGENERATE:7
+
+SELECT:/^%d /
+
+KEY:/^%d //
+
+/^%d //
+%%%%
+
+#############
 # English possessive translates to German genitive (or von + dative for named monsters).
 # Re-use these entries for the situation when English nominative has to be translated
 # to German genitive.
 %%%%
-PREGENERATE:7
+PREGENERATE:8
 
 SELECT:/'s$/
 
