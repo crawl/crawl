@@ -1992,6 +1992,12 @@ void set_default_form(transformation t, const item_def *source)
     // talisman might count as a useless item (the you.form != you.default_form
     // check in cannot_evoke_item_reason)
     you.default_form = t;
+
+    // If we're swapping to a different talisman of the same type, while in that
+    // form aready, we will have skipped most of the equipment handling code,
+    // so be sure to update for any artprop changes.
+    if (you.form == t)
+        you.equipment.update();
 }
 
 void vampire_update_transformations()
