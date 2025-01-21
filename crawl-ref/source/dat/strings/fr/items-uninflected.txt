@@ -2,9 +2,8 @@
 #
 # Translations for item names (uninflected)
 #
-# There's no need to provide inflected
-# forms (e.g. accusative, dative, genitive) for these strings as they are only
-# used in very specific contexts
+# There's no need to provide inflected forms for these strings as they
+# are only used in very specific contexts
 #
 ###############################################################################
 
@@ -15,90 +14,90 @@
 #################################
 %%%%
 weapon
-
+arme
 %%%%
 melee weapon
-
+arme de mêlée
 %%%%
 ranged weapon
-
+arme à distance
 %%%%
 throwable
-
+jetable
 %%%%
 missile
 missile
 %%%%
 wand
-
+baguette
 %%%%
 scroll
-
+parchemin
 %%%%
 jewellery
-
+bijoux
 %%%%
 potion
-
+potion
 %%%%
 book
-
+livre
 %%%%
 manual
-
+manuel
 %%%%
 staff
-
+bâton
 %%%%
 magical staff
-
+bâton magique
 %%%%
 orb
-
+orbe
 %%%%
 miscellaneous
-
+divers
 %%%%
 misc
-
+divers
 %%%%
 corpse
-
+cadavre
 %%%%
 gold
-
+or
 %%%%
 rune
-
+rune
 %%%%
 artefact
-
-%%%%
-artifact
-
+artefact
 %%%%
 
 %%%%
 armour
-
+armure
 %%%%
 body armour
-
+armure corporelle
 %%%%
 auxiliary armour
-
+armure auxiliaire
 %%%%
 
-# stash.lua adds "armor" as well as "armour", which allows us to give alternative search terms
+# Crawl also adds search prefixes with American spelling, allowing us to give alternative translations
+%%%%
+artifact
+artefact
 %%%%
 armor
-
+armure
 %%%%
 body armor
-
+armure corporelle
 %%%%
 auxiliary armor
-
+armure auxiliaire
 %%%%
 
 #################################
@@ -109,15 +108,15 @@ auxiliary armor
 %%%%
 # executioner's axe
 exec axe
-
+hache bour
 %%%%
 # giant spiked club
 g.spiked club
-
+massue g. à p.
 %%%%
 # triple crossbow
 triple xbow
-
+arb. triple
 %%%%
 
 #################################
@@ -126,62 +125,62 @@ triple xbow
 
 %%%%
 decaying
-
+décomposition
 %%%%
 barnacled
-
+incrustée
 %%%%
 gossamer
-
+soyeuse
 %%%%
 serpentine
-
+serpentine
 %%%%
 slimy
-
+visqueuse
 %%%%
 abyssal
-
+abyssale
 %%%%
 # duplicate of missile brand
 #silver
-#Silber
+#argent
 %%%%
 golden
-
+or
 %%%%
 
 # hell runes
 %%%%
 obsidian
-
+obsidienne
 %%%%
 icy
-
+glacée
 %%%%
 bone
-
+os
 %%%%
 iron
-
+fer
 %%%%
 
 # pan runes
 %%%%
 demonic
-
+démoniaque
 %%%%
 glowing
-
+lumineuse
 %%%%
 magical
-
+magique
 %%%%
 fiery
-
+ardente
 %%%%
 dark
-
+sombre
 %%%%
 
 #################################
@@ -208,13 +207,13 @@ potions inconnues
 
 %%%%
 spellbooks
-
+livres de sorts
 %%%%
 manuals
-
+manuels
 %%%%
 runes
-
+runes
 %%%%
 
 #################################

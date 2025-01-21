@@ -74,9 +74,6 @@ Rune
 artefact
 Artefakt
 %%%%
-artifact
-Artefakt
-%%%%
 
 %%%%
 armour
@@ -89,7 +86,10 @@ auxiliary armour
 Zusatzrüstung
 %%%%
 
-# stash.lua adds "armor" as well as "armour", which allows us to give alternative search terms
+# Crawl also adds search prefixes with American spelling, allowing us to give alternative translations
+%%%%
+artifact
+Artefakt
 %%%%
 armor
 Panzerung
