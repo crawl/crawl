@@ -656,7 +656,7 @@ the lead wand
 der Bleizauberstab
 %%%%
 the fluorescent wand
-der fluoreszierender Zauberstab
+der fluoreszierende Zauberstab
 %%%%
 
 #################################
