@@ -724,6 +724,45 @@ xxxxxcccc2-2ccccxxxxxxxxxxxxxxxcccc2-2ccccxxxxx
 xxxxxxxxcccccxxxxxxxxxxxxxxxxxxxxxcccccxxxxxxxx
 ENDMAP
 
+NAME:   sewer_hellmonk_circle_the_drain
+TAGS:   no_item_gen no_monster_gen no_pool_fixup
+ORIENT: encompass
+MONS:   bullfrog
+MONS:   ribbon worm w:5 / ball python / endoplasm / giant cockroach
+KMONS:  3 = brain worm / adder / river rat
+KFEAT:  3 = shallow_water
+ITEM:   any scroll
+: item(dgn.loot_potions)
+NSUBST: d = 1:1 / * = de, f = 1:1 / * = de
+NSUBST: W = 4:2 / *:W, 2 = 2:2 / * = 2W
+SUBST:  - = WWWW.
+NSUBST: . = 6:2 / 12 = 2. / *:.
+SUBST:  " = W., ~ = WW.
+COLOUR: 3 = lightgreen
+: sewer_setup(_G)
+MAP
+           ccccccccccc
+       cccccdddWWWWWWccccc
+     ccc---cdddWWWWWWWW-3ccc
+   ccc--...ccccccccccWW----ccc
+  cc--.....3--------cccww..--cc
+ cc-...-----------..--cccw...wcc
+ c-...-cccccccccccc...--ccw...wc
+cc-..-cc--~~~""""~ccc...-ccw..wcc
+c-..-cc-..~c~""""""~cc...-cc-..wc
+c-..-c-...cc""""""""~cc...-c-..wc
+c2..-c-...c~"""<"A"""~c...-c-..2c
+cw..-c-...cc~""""""""cc...-c-..-c
+cw..-cc-...cc~""""""~c~..-cc-..-c
+ccw..wcc-...ccc~""""~~~--cc-..-cc
+ cw...wcc--...cccccccccccc-...-c
+ ccw...wccc--..-----------...-cc
+  cc--..wwccc--------3.....--cc
+   ccc----WWcccccccccc...--ccc
+     ccc3-WWWWWWWWfffc---ccc
+       cccccWWWWWWfffccccc
+           ccccccccccc
+ENDMAP
 
 ## BIG BADDIE (Pargi) ######################################################
 # Threat is mostly a single larger creature, often Pargi. Combined weight 40.
