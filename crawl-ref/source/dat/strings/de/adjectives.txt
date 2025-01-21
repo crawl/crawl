@@ -454,6 +454,12 @@
 # used for randart weapons
 # (also used for jewellery, and in some cases, potion or rune, but we've given specific translations for those)
 %%%%
+"silver "
+"silberne "
+%%%%
+"golden "
+"goldene "
+%%%%
 "crystal "
 "Kristall-"
 %%%%
@@ -583,36 +589,19 @@
 "pale "
 "blasse "
 %%%%
-# used for potion and rune
 "dark "
 "dunkle "
 %%%%
 
-# These ones are a material for jewellery, etc., and also a potion colour.
-# Since potions are the only items that use them as colours, we define
-# specific strings with this usage in items*.txt.
-%%%%
-#"amethyst "
-#"amethystfarbene "
-%%%%
-#"emerald "
-#"smaragdgrüne "
-%%%%
-#"ruby "
-#"rubinrote "
-%%%%
-#"sapphire "
-#"saphirblaue "
-%%%%
+# These are potion colours, but used with other items to mean made of/with that material.
+# Since potions are the only items that use them as colours, we define specific
+# strings with that usage in items-singular.txt and items-plural-counted.txt
 
-# used to mean both metal and colour
-%%%%
-"silver "
-"silberne "
-%%%%
-"golden "
-"goldene "
-%%%%
+#"amethyst "
+#"emerald "
+#"ruby "
+#"sapphire "
+#"golden "
 
 ################################
 # potions
