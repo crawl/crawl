@@ -6567,7 +6567,7 @@ You'd need three arms to do that!
 Dazu bräuchtest du drei Arme!
 %%%%
 The hauberk won't fit over your tail.
-Die Halsberge passt wird nicht über deinen Schwanz.
+Die Halsberge passt nicht über deinen Schwanz.
 %%%%
 You have no feet.
 Du hast keine Füße.
@@ -6968,7 +6968,7 @@ In deiner gegenwärtigen Form kannst du nichts anziehen oder ausziehen.
 ##################
 %%%%
 Too many items on level, removing some.
-Zu viele Gegenstände im Level, einige werden gelöscht.
+Zu viele Gegenstände auf der Ebene, einige werden gelöscht.
 %%%%
 You see here %s.
 Du siehst hier {acc}%s.
@@ -6986,10 +6986,10 @@ Pick up what?
 Was aufheben?
 %%%%
 (<Enter> or tap header to pick up)
-(<Eingabe> oder auf die Kopfzeile tippen, um aufzuheben)
+(<Enter> oder auf die Kopfzeile tippen, um aufzuheben)
 %%%%
 Select pick up quantity by entering a number, then select the item
-Anzahl eingeben, dann den Gegenstand wählen
+Anzahl der Gegenstände eingeben, die aufgehoben werden sollen, dann den Gegenstand wählen
 %%%%
 Original Equipment
 Originalausstattung
@@ -7022,7 +7022,7 @@ Are you sure you want to pick up this pile of gold now?
 Bist du sicher, dass du diesen Haufen Gold jetzt aufheben willst?
 %%%%
 Pick up how many of %s (; or enter for all)?
-Wieviele von {dat}%s aufheben (; oder Enter für alle)?
+Der Stapel hat %s. Wie viele aufheben (; oder Enter für alle)?
 %%%%
 There are no items here.
 Hier sind keine Gegenstände.
