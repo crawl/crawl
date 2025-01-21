@@ -6027,7 +6027,7 @@ Die Zeit zittert.
 Die Diener {gen}%s kommen nicht an.
 %%%%
 You hear Kikubaaqudgha cackling.
-Du hörst Kikubaaqudgha gackern.
+Du hörst Kikubaaqudgha hämisch lachen.
 %%%%
 Kikubaaqudgha's malice focuses upon you.
 Kikubaaqudghas Bosheit konzentriert sich auf dich.
@@ -6051,7 +6051,7 @@ Der Zorn {gen}%s richtet sich für einen Moment gegen dich.
 %s schickt ein Monster, um dich zu bestrafen.
 %%%%
 %s has no time to punish you... now.
-%s hat keine Zeit, dich zu bestrafen... jetzt.
+%s hat keine Zeit, dich zu bestrafen... im Moment.
 %%%%
 %s's voice booms out, "Feel my wrath!"
 Die Stimme {gen}%s dröhnt: "Fühle meinen Zorn!"
@@ -6067,10 +6067,10 @@ Du fühlst dich plötzlich träge!
 %%%%
 # Beogh sends electric weapon(s)
 %s throws an implement of electrocution at you.
-%s wirft ein Stromschlagsgerät auf dich.
+%s wirft ein Werkzeug des Stromschlags auf dich.
 %%%%
 %s throws implements of electrocution at you.
-%s wirft Stromschlagsgeräte auf dich.
+%s wirft Werkzeuge des Stromschlags auf dich.
 %%%%
 %s sends forth an army of orcs.
 %s schickt eine Armee von Orks aus.
@@ -6120,7 +6120,7 @@ Der Boden zittert leicht.
 %s beschwört die Natur gegen dich.
 %%%%
 Plants grow around you in an ominous manner.
-Pflanzen wachsen um dich herum in einer unheilvollen Weise.
+Pflanzen wachsen auf unheilvolle Weise um dich herum.
 %%%%
 %s produces spores.
 %s produziert Sporen.
@@ -6150,7 +6150,7 @@ Du fühlst dich von den Schatten um dich herum überwältigt.
 %s schafft es nicht, die Elemente gegen dich aufzuhetzen.
 %%%%
 %s strips away your elemental protection.
-%s entzieht dich deinen Elementarschutz.
+%s entzieht dir deinen Elementarschutz.
 %%%%
 %s fails to strip away your elemental protection.
 %s schafft es nicht, deinen Elementarschutz zu entziehen.
@@ -6186,13 +6186,13 @@ The divine experience confuses you!
 Die göttliche Erfahrung verwirrt dich!
 %%%%
 The divine experience drains your vigour!
-Die göttliche Erfahrung entzieht deine Vitalität!
+Die göttliche Erfahrung entzieht dir deine Vitalität!
 %%%%
 %s blasts you with cleansing flame!
-%s stößt dich mit reinigenden Flammen an!
+%s versengt dich mit reinigenden Flammen!
 %%%%
 %s smites you!
-%s zerschlägt dich!
+%s zerschmettert dich!
 %%%%
 
 ##################
@@ -6200,7 +6200,7 @@ Die göttliche Erfahrung entzieht deine Vitalität!
 ##################
 %%%%
 (Melee oriented character with divine support)
-(Nahkampf-orientierter Charakter mit göttlicher Unterstützung)
+(Nahkampforientierter Charakter mit göttlicher Unterstützung)
 %%%%
 (Magic oriented character)
 (Magieorientierter Charakter)
@@ -6212,10 +6212,10 @@ Die göttliche Erfahrung entzieht deine Vitalität!
 (fehlerhafter Charakter)
 %%%%
 <white>You must be new here indeed!</white>
-<white>Du musst wirklich neu hier sein!</white>
+<white>Du musst hier wirklich neu sein!</white>
 %%%%
 <cyan>You can be:</cyan>
-<cyan>Du kannst einer der Folgende sein:</cyan>
+<cyan>Du kannst einer der Folgenden sein:</cyan>
 %%%%
 "  * - Random hints mode character"
 "  * - Zufälliger Hinweis-Modus Charakter"
@@ -6258,7 +6258,7 @@ your <w>%</w>bilities
 deine Fähigkeiten (<w>%</w>)
 %%%%
 your set of mutations (<w>%</w>)
-dein Mutationssatz (<w>%</w>)
+deine Mutationen (<w>%</w>)
 %%%%
 your religious standing (<w>%</w>)
 dein religiöses Ansehen (<w>%</w>)
@@ -6270,10 +6270,10 @@ the character overview screen (<w>%</w>)
 die Charakterübersichtsseite (<w>%</w>)
 %%%%
 the dungeon overview screen (<w>%</w>)
-die Kerker-Übersichtsseite (<w>%</w>)
+die Kerkerübersichtsseite (<w>%</w>)
 %%%%
 %s are good things to check.
-%s sind gut zu überprüfen.
+%s sind einen Blick wert.
 %%%%
 
 ##################
@@ -6281,7 +6281,7 @@ die Kerker-Übersichtsseite (<w>%</w>)
 ##################
 %%%%
 failed to open score file for writing
-Konnte Highscoresdatei fürs Schreiben nicht offen
+Konnte Highscoresdatei fürs Schreiben nicht öffnen
 %%%%
 unable to truncate scorefile
 Konnte Highscoresdatei nicht trunkieren
@@ -6322,10 +6322,10 @@ You aren't carrying any wearable armour.
 Du hast keine Rüsting bei dir, die du anziehen kannst.
 %%%%
 You don't have any unidentified items.
-Du hast keine unidentifizierte Gegenstände.
+Du hast keine unidentifizierten Gegenstände.
 %%%%
 You aren't carrying any armour which can be enchanted further.
-Du hast keine Rüsting bei dir, die weiter bezaubert werden kann.
+Du hast keine Rüsting bei dir, die weiter verzaubert werden kann.
 %%%%
 You don't have any corpses.
 Du hast keine Leichen.
@@ -6337,7 +6337,7 @@ You aren't carrying any scrolls.
 Du hast keine Schriftrollen.
 %%%%
 You don't have any books.
-Du hast keine Bücher bei dir.
+Du hast keine Bücher.
 %%%%
 You aren't carrying any wands.
 Du hast keine Zauberstäbe bei dir.
@@ -6349,31 +6349,31 @@ You aren't carrying any items that might be thrown or fired.
 Du hast keine Gegenstände bei dir, die geschossen oder geworfen werden können.
 %%%%
 You aren't carrying any items that you can evoke without wielding.
-Du hast keine Gegenstände bei dir, mit dem du evozieren kannst ohne.
+Du hast keine Gegenstände bei dir, die du evozieren kannst ohne sie zu führen.
 %%%%
 You aren't carrying any items that you can evoke.
-Du hast keine Gegenstände bei dir, mit dem du evozieren kannst, ohne sie zu führen.
+Du hast keine Gegenstände bei dir, die du evozieren kannst.
 %%%%
 None of your equipped items are cursed.
 Keiner deiner ausgerüsteten Gegenstände ist verflucht.
 %%%%
 You aren't carrying any weapons that can be branded.
-Du hast keine Waffen bei dir, die durchtränken werden können.
+Du hast keine Waffen bei dir, die geprägt werden können.
 %%%%
 You aren't carrying any weapons that can be enchanted.
 Du hast keine Waffen bei dir, die verzaubert werden können.
 %%%%
 You aren't carrying anything you can give to a follower.
-Du hast nichts bei dir, das du einem Anhänger geben kannst.
+Du hast nichts bei dir, was du einem Anhänger geben kannst.
 %%%%
 You aren't wearing any cursable items.
-Du hast nichts an, das verflucht werden kann.
+Du hast nichts an, was verflucht werden kann.
 %%%%
 You aren't wearing any uncursed rings.
-Du hast keinen nichtverfluchten Ring an.
+Du hast keinen nicht verfluchten Ring an.
 %%%%
 You don't have any quiverable items.
-Du hast nichts bei dir, das in den Köcher kommen kann.
+Du hast nichts bei dir, was in den Köcher passt.
 %%%%
 You aren't carrying any such object.
 Du hast keinen solchen Gegenstand bei dir.
@@ -6394,25 +6394,25 @@ Du hast keinen solchen Gegenstand bei dir.
 " (%d+ Runden)"
 %%%%
 Drop (and turn off autopickup for) what?
-Was fallen lassen (und die automatische Abholung dafür ausschalten)?
+Was fallen lassen (und das automatische Aufheben dafür ausschalten)?
 %%%%
 Drop what?
 Was fallen lassen?
 %%%%
 (<Enter> or tap header to drop)
-(<Enter> oder Kopfzeile tippen fallen zu lassen)
+(<Enter> oder Kopfzeile tippen zum Fallenlassen)
 %%%%
 (_ for help)
 (_ für Hilfe)
 %%%%
 " (<w>?</w> for menu, <w>Esc</w> to quit)"
-" (<w>?</w> für Menü, <w>Esc</w> zu beenden)"
+" (<w>?</w> für Menü, <w>Esc</w> zum Beenden)"
 %%%%
 You don't have any such object.
 Du hast kein solches Objekt.
 %%%%
 Really unwield %s?
-Wirklich {acc}%s verstauen?
+Wirklich {acc}%s loslassen?
 %%%%
 Really take off %s?
 Wirklich {acc}%s ablegen?
@@ -6424,7 +6424,7 @@ Wirklich {acc}%s ablegen?
 " Gegenstand wird zerstört werden."
 %%%%
 " This could place you under penance!"
-" Das könnte Buße erzeugen!"
+" Das könnte dich unter Buße stellen!"
 %%%%
 Really wield %s?
 Wirklich {acc}%s führen?
@@ -6445,7 +6445,7 @@ Really read %s?
 Wirklich {acc}%s lesen?
 %%%%
 Really memorise from %s?
-Wirklich von {dat}%s memorieren?
+Wirklich von {dat}%s auswendig lernen?
 %%%%
 Really zap %s?
 Wirklich {acc}%s zaubern?
@@ -6475,10 +6475,10 @@ That's the wrong kind of item! (Use * to select it.)
 Das ist die falsche Art Gegenstand! (* verwenden, um ihn auszuwählen.)
 %%%%
 That item is melded into your body.
-Dieser Gegenstand ist mit deinem Körper fusioniert.
+Dieser Gegenstand ist mit deinem Körper verschmolzen.
 %%%%
 That item can only be evoked when wielded.
-Dieser Gegenstand kann nur evoziert werden, wenn er handgehabt würde!
+Dieser Gegenstand kann nur evoziert werden, wenn er geführt wird.
 %%%%
 That item cannot be used by those hated by all!
 Dieser Gegenstand kann nicht von denen benutzt werden, die von allen gehasst werden!
@@ -6501,10 +6501,10 @@ Floor Items
 Gegnstände am Boden
 %%%%
 Your weapon is melded into your body!
-Deine Waffe ist in deinen Körper fusioniert!
+Deine Waffe ist mit deinem Körper verschmolzen!
 %%%%
 You can't wield anything in your present form.
-Du kannst nichts in deiner gegenwärtigen Form führen.
+Du kannst in deiner gegenwärtigen Form nichts führen.
 %%%%
 You cannot break your focus on the pain!
 Du kannst dich nicht vom Schmerz ablenken!
@@ -6513,16 +6513,16 @@ Your thirst for blood prevents you from unwielding your weapon!
 Dein Blutdurst hindert dich daran, deine Waffe loszulassen!
 %%%%
 You can't unwield your weapon!
-Du kannst deine Waffe nicht loslassen.
+Du kannst deine Waffe nicht loslassen!
 %%%%
 You can't unwield your weapon to draw a new one!
-Du kannst deine Waffe nicht loslassen, um eine Neue zu zücken.
+Du kannst deine Waffe nicht loslassen, um eine Neue zu zücken!
 %%%%
 You can't wield that without your missing tentacle.
-Ohne das fehlende Tentakel kannst du das nicht führen.
+Ohne dein fehlendes Tentakel kannst du das nicht führen.
 %%%%
 You can't wield that without your missing arm.
-Ohne den fehlenden Arm kannst du das nicht führen.
+Ohne deinen fehlenden Arm kannst du das nicht führen.
 %%%%
 You are wearing that object!
 Du trägst dieses Objekt!
@@ -6531,13 +6531,13 @@ You can't wield that with a shield.
 Mit einem Schild kannst du das nicht führen.
 %%%%
 This weapon is holy and will not allow you to wield it.
-Diese Waffe ist heilig und wird dich nicht erlauben, sie zu führen.
+Diese Waffe ist heilig und wird dir nicht erlauben, sie zu führen.
 %%%%
 You can't carry that many items.
 So viele Gegenstände kannst du nicht tragen.
 %%%%
 Wield which item (- for none, * to show all)?
-Welchen Gegenstand führen (- für keinen, * alle zu zeigen)?
+Welchen Gegenstand führen (- für keinen, * um alle zu zeigen)?
 %%%%
 You are already wielding that!
 Das führst du schon!
@@ -6561,34 +6561,34 @@ You need the rest of your tentacles for walking.
 Du brauchst den Rest deiner Tentakel zum Gehen.
 %%%%
 You'd need another arm to do that!
-Dazu bräuchte man einen weiteren Arm!
+Dazu bräuchtest du einen weiteren Arm!
 %%%%
 You'd need three arms to do that!
-Dazu bräuchte man drei Arme!
+Dazu bräuchtest du drei Arme!
 %%%%
 The hauberk won't fit over your tail.
-Der Haubert wird nicht über den Schwanz passen.
+Die Halsberge passt nicht über deinen Schwanz.
 %%%%
 You have no feet.
 Du hast keine Füße.
 %%%%
 The hauberk won't fit your claws.
-Der Haubert wird nicht über die Krallen passen.
+Die Halsberge passt nicht über deine Klauen.
 %%%%
 The hauberk won't fit your head.
-Der Haubert passt nicht zu deinem Kopf.
+Die Haubert passt nicht auf deinen Kopf.
 %%%%
 You'd need to take off your headwear first.
 Du musst zuerst deine Kopfbedeckung abnehmen.
 %%%%
 You'd need to take off your gloves first.
-Du musst zuerst deine Handschuhe abnehmen.
+Du musst zuerst deine Handschuhe ausziehen.
 %%%%
 You'd need to take off your boots first.
-Du musst zuerst deine Stiefeln abnehmen.
+Du musst zuerst deine Stiefel ausziehen.
 %%%%
 You can't wear the hauberk in your current form.
-In deinem aktuellen Form kannst du den Haubert nicht tragen.
+In deinem aktuellen Form kannst du die Halsberge nicht tragen.
 %%%%
 You can't wear this over your hauberk.
 Du kannst das nicht über deiner Halsberge tragen.
@@ -6600,22 +6600,22 @@ This armour is too small for you!
 Diese Rüstung ist zu klein für dich!
 %%%%
 You can't wear a glove with your huge claw!
-Du kannst mit deiner riesigen Kralle keinen Handschuh tragen!
+Du kannst mit deiner riesigen Klaue keinen Handschuh tragen!
 %%%%
 You can't wear gloves with your huge claws!
-Du kannst mit deinen riesigen Krallen keine Handschuhe tragen!
+Du kannst mit deinen riesigen Klauen keine Handschuhe tragen!
 %%%%
 You can't wear boots with hooves!
-Du kannst keine Stiefel mit Hufen tragen!
+Du kannst mit Hufen keine Stiefel tragen!
 %%%%
 Boots don't fit your talons!
-Stiefel passen nicht zu deinen Krallen!
+Stiefel passen nicht auf deine Klauenfüße!
 %%%%
 You have no legs!
 Du hast keine Beine!
 %%%%
 Boots don't fit your feet!
-Stiefel passen nicht zu deinen Füßen!
+Stiefel passen nicht auf deine Füße!
 %%%%
 You don't currently have feet!
 Du hast momentan keine Füße!
@@ -6624,25 +6624,25 @@ You have no feet!
 Du hast keine Füße!
 %%%%
 You can't wear any headgear with your large horns!
-Du kannst keine Kopfbedeckung mit deinen großen Hörnern tragen!
+Du kannst mit deinen großen Hörnern keine Kopfbedeckung tragen!
 %%%%
 You can't wear any headgear with your large antennae!
-Mit deinen großen Antennen kannst du keine Kopfbedeckung tragen!
+Du kannst mit deinen großen Antennen keine Kopfbedeckung tragen!
 %%%%
 You can't wear that with your horns!
-Das kannst du nicht mit deinen Hörnern tragen!
+Das kannst du mit deinen Hörnern nicht tragen!
 %%%%
 You can't wear that with your beak!
-Das kannst du nicht mit deinem Schnabel tragen!
+Das kannst du mit deinem Schnabel nicht tragen!
 %%%%
 You can't wear that with your antennae!
-Das kannst du nicht mit deinen Antennen tragen!
+Das kannst du mit deinen Antennen nicht tragen!
 %%%%
 You can't wear that with your reptilian head.
-Das kannst du nicht mit deinem Reptilienkopf tragen.
+Das kannst du mit deinem Reptilienkopf nicht tragen.
 %%%%
 You can't wear that in your present form.
-Das kannst du nicht in deiner jetzigen Form tragen.
+Das kannst du in deiner jetzigen Form nicht tragen.
 %%%%
 You can't wear that.
 Das kannst du nicht tragen.
@@ -6651,10 +6651,10 @@ You can't wear anything.
 Du kannst nichts tragen.
 %%%%
 You can't wear anything in your present form.
-Du kannst nichts in deiner gegenwärtigen Form tragen.
+Du kannst in deiner gegenwärtigen Form nichts tragen.
 %%%%
 Wear which item (* to show all)?
-Welchen Gegenstand anziehen (* alle zu zeigen)?
+Welchen Gegenstand anziehen (* um alle zu zeigen)?
 %%%%
 You are wielding that object!
 Du führst dieses Objekt!
@@ -6666,7 +6666,7 @@ You aren't wearing that!
 Das trägst du nicht!
 %%%%
 %s is melded into your body!
-%s ist in deinen Körper fusioniert!
+%s ist mit deinem Körper verschmolzen!
 %%%%
 You aren't wearing that object!
 Du trägst das Objekt nicht!
@@ -6699,7 +6699,7 @@ Das Tragen dieses Gegenstandes würde {acc}%s auf Null oder weniger reduzieren.
 " Weitermachen?"
 %%%%
 Losing flight right now would be extremely painful!
-Den Flug jetzt zu verlieren, wäre äußerst schmerzhaft!
+Jetzt aufhören zu fliegen wäre äußerst schmerzhaft!
 %%%%
 You're already wearing one cursed ring!
 Du trägst bereits einen verfluchten Ring!
@@ -6711,7 +6711,7 @@ You're already wearing %d cursed rings! Isn't that enough for you?
 Du trägst bereits %d verfluchte Ringe! Reicht das nicht?
 %%%%
 Put ring where? (<w>Esc</w> to cancel)
-Ring woran anlegen? (<w>Esc</w> abzubrechen)
+Ring wo anstecken? (<w>Esc</w> zum Abbrechen)
 %%%%
 <w>%s</w> - no ring
 <w>%s</w> - keinen ring
@@ -6732,7 +6732,7 @@ You can only put on jewellery.
 Du kannst nur Schmuck anlegen.
 %%%%
 %s is stuck to you!
-%s ist an dich gehaftet!
+%s klebt an dir!
 %%%%
 You're already wearing that amulet!
 Du trägst dieses Amulett schon!
@@ -6741,16 +6741,16 @@ You're already wearing that ring!
 Du trägst diesen Ring schon!
 %%%%
 Put on which piece of jewellery (* to show all)?
-Welchen Schmuck anlegen (* alle zu zeigen)?
+Welchen Schmuck anlegen (* um alle zu zeigen)?
 %%%%
 You aren't wearing any unmelded rings or amulets.
-Du trägst keine ungeschmolzenen Ringe oder Amulette.
+Du trägst keine unverschmolzenen Ringe oder Amulette.
 %%%%
 You aren't wearing any rings or amulets.
 Du trägst keine Ringe oder Amulette.
 %%%%
 Remove which piece of jewellery?
-Welchen Schmuck abnehmen?
+Welches Schmuckstück abnehmen?
 %%%%
 You aren't wearing that.
 Das trägst du nicht.
@@ -6762,19 +6762,19 @@ I don't think you really meant that.
 Ich glaube nicht, dass du das wirklich gemeint hast.
 %%%%
 You can't take that off while it's melded.
-Du kannst das nicht ausziehen, solange es in dir fusioniert ist.
+Du kannst das nicht ausziehen, solange es mit dir verschmolzen ist.
 %%%%
 The amulet cannot be taken off without first removing the ring!
 Das Amulett kann nicht abgenommen werden, ohne vorher den Ring zu abnehmen!
 %%%%
 It's stuck to you!
-Das ist an dich gehaftet!
+Es klebt an dir!
 %%%%
 You remove %s.
 Du nimmst %s ab.
 %%%%
 You don't have anything to inscribe.
-Du hast nichts zu schreiben.
+Du hast nichts zum Beschriften.
 %%%%
 Inscribe which item?
 Welchen Gegenstand beschriften?
@@ -6786,13 +6786,13 @@ You cannot drink potions in your current state!
 Du kannst in deinem gegenwärtigen Zustand keine Tränke trinken!
 %%%%
 Drink which item (* to show all)?
-Welchen Gegenstand trinken (* all zu zeigen)?
+Welchen Gegenstand trinken (* um alle zu zeigen)?
 %%%%
 You can't drink that!
 Das kannst du nicht trinken!
 %%%%
 " This action would place you under penance!"
-" Diese Handlung würde dich unter Strafe bringen!
+" Diese Handlung würde dich unter Strafe stellen!
 %%%%
 %s petitions for your drink to fail.
 %s bittet darum, dass dein Trank nicht wirkt.
@@ -6822,13 +6822,13 @@ Das kannst du nicht trinken!
 %s knistert vor Elektrizität.
 %%%%
 %s erupts in a glittering mayhem of colour.
-%s bricht in einem glitzernden Farbgewirr aus.
+%s bricht in ein glitzerndes Farbgewirr aus.
 %%%%
 %s oozes corrosive slime.
-%s sickert ätzenden Schleim aus.
+%s gibt ätzenden Schleim ab.
 %%%%
 %s acquires a faint afterimage.
-%s erhaltet ein schwaches Nachbild.
+%s erhält ein schwaches Nachbild.
 %%%%
 Really abort (and waste the scroll)?
 Wirklich abbrechen (und die Schriftrolle verschwenden)?
@@ -6840,7 +6840,7 @@ Welche Waffe verzaubern?
 %s leuchtet für einen Moment rot.
 %%%%
 Identify which item? (\ to view known items)
-Welchen Gegenstand identifizieren? (\ bekannte Gegenstände zu sehen)
+Welchen Gegenstand identifizieren? (\ um bekannte Gegenstände anzusehen)
 %%%%
 %s glow green for a moment.
 %s leuchten kurz grün.
@@ -6864,16 +6864,16 @@ You cannot read scrolls in your current state!
 In deinem jetzigen Zustand kannst du keine Schriftrollen lesen!
 %%%%
 Magic scrolls do not work when you're silenced!
-Unter Stille funktionieren Magische Schriftrollen nicht!
+In Stille funktionieren magische Schriftrollen nicht!
 %%%%
 You cannot read scrolls while unable to breathe!
-Du kannst keine Schriftrollen lesen, wenn du nicht atmen kannst!
+Du kannst keine Schriftrollen lesen, während du nicht atmen kannst!
 %%%%
 You can't read that!
 Das kannst du nicht lesen.
 %%%%
 You have no spells to forget!
-Du hast keine Zaubersprüche zu vergessen!
+Du hast keine Zaubersprüche zum Vergessen!
 %%%%
 infinite will
 grenzenloser Wille
@@ -6885,40 +6885,40 @@ not susceptible
 nicht anfällig
 %%%%
 Read which item (* to show all)?
-Welchen Gegenstand lesen (* alle zu zeigen)?
+Welchen Gegenstand lesen (* um alle zu zeigen)?
 %%%%
 read %s
 %s lesen
 %%%%
 " And you can't even see any enemies this would affect!"
-" Und du kannst nicht einmal Feinde sehen, die betroffen würden!"
+" Und du kannst nichtmal Feinde sehen, die davon betroffen würden!"
 %%%%
 " You can't even see any enemies this would affect."
-" Du kannst nicht einmal Feinde sehen, die betroffen würden!"
+" Du kannst nichtmal Feinde sehen, die davon betroffen würden!"
 %%%%
 You can't see any enemies this would affect, really read %s?
-Du kannst keine Feinde sehen, die betroffen würden. Wirklich %s lesen?
+Du kannst keine Feinde sehen, die davon betroffen würden. Wirklich %s lesen?
 %%%%
 You almost manage to decipher the scroll, but fail in this attempt.
-Es gelingt dich fast, die Schriftrolle zu entziffern, aber du scheiterst bei diesem Versuch.
+Es gelingt dir fast, die Schriftrolle zu entziffern, aber du scheiterst bei diesem Versuch.
 %%%%
 As you read %s, it crumbles to dust.
 Als du {acc}%s liest, zerfällt sie zu Staub.
 %%%%
 This is a scroll of acquirement!
-Dies ist eine Schriftrolle des Erwerbs!
+Dies ist eine Schriftrolle der Erwerbung!
 %%%%
 Anything you acquired here would fall and be lost!
-Alles, was du hier erwerben würdest, würde fallen und verloren gehen!
+Alles, was du hier erwirbst, würde fallen und verloren gehen!
 %%%%
 You assume a fearsome visage.
-Du nimmst ein furchterregendes Gesicht an.
+Du ziehst ein furchterregendes Gesicht.
 %%%%
 You hear a loud clanging noise!
 Du hörst ein lautes klapperndes Geräusch!
 %%%%
 The air is too still for clouds to form.
-Die Luft ist zu still, Wolken zu schaffen.
+Die Luft ist zu still, um Wolken zu bilden.
 %%%%
 The scroll dissolves into smoke.
 Die Schriftrolle löst sich in Rauch auf.
@@ -6927,16 +6927,16 @@ It would have no effect in this place.
 Das würde an diesem Ort keine Wirkung haben.
 %%%%
 The creatures around you are filled with an inner flame!
-Die Kreaturen um dich herum sind mit einer inneren Flamme gefüllt!
+Die Kreaturen um dich herum werden von einer inneren Flamme erfüllt!
 %%%%
 The air around you briefly surges with heat, but it dissipates.
-Die Luft um dich herum schwankt kurz vor Hitze, aber sie löst sich auf.
+Die Luft um dich herum flimmert kurz vor Hitze, aber die Hitze verfliegt wieder.
 %%%%
 It is a scroll of enchant weapon.
 Das ist eine Schriftrolle der Waffenverzauberung.
 %%%%
 It is a scroll of brand weapon.
-Das ist eine Schriftrolle der Waffenmark.
+Das ist eine Schriftrolle der Waffenprägung.
 %%%%
 It is a scroll of identify.
 Das ist eine Schriftrolle der Identifizierung.
@@ -6968,7 +6968,7 @@ In deiner gegenwärtigen Form kannst du nichts anziehen oder ausziehen.
 ##################
 %%%%
 Too many items on level, removing some.
-Zu viele Gegenstände auf Level, einige werden gelöscht.
+Zu viele Gegenstände auf der Ebene, einige werden gelöscht.
 %%%%
 You see here %s.
 Du siehst hier {acc}%s.
@@ -6980,16 +6980,16 @@ Things that are here:
 Dinge die hier sind:
 %%%%
 There are many items here.
-Es ist viele Gegenstände hier.
+Hier sind viele Gegenstände.
 %%%%
 Pick up what?
 Was aufheben?
 %%%%
 (<Enter> or tap header to pick up)
-(<Eingabe> oder tippen auf die Kopfzeile, um aufzuheben)
+(<Enter> oder auf die Kopfzeile tippen, um aufzuheben)
 %%%%
 Select pick up quantity by entering a number, then select the item
-Anzahl eingaben, und dann den Gegenstand wählen
+Anzahl der Gegenstände eingeben, die aufgehoben werden sollen, dann den Gegenstand wählen
 %%%%
 Original Equipment
 Originalausstattung
@@ -7019,20 +7019,20 @@ You found it @in_location@
 Du hast diesen Gegenstand @in_location@ gefunden
 %%%%
 Are you sure you want to pick up this pile of gold now?
-Bist du sicher, dass du diesen Haufen Gold jetzt abholen willst?
+Bist du sicher, dass du diesen Haufen Gold jetzt aufheben willst?
 %%%%
 # note: %s here will be a counted plural (e.g. "27 boomerangs")
 Pick up how many of the %s (; or enter for all)?
 Der Stapel hat {acc}%s. Wie viele aufheben (; oder Enter für alle)?
 %%%%
 There are no items here.
-Hier gibt es keine Gegenstände.
+Hier sind keine Gegenstände.
 %%%%
 You can't reach the bottom while floating on water.
 Du kannst den Boden nicht erreichen, während du auf dem Wasser schwimmst.
 %%%%
 There are no objects that can be picked up here.
-Es gibt keine Gegenstände, die hier abgeholt werden können.
+Hier sind keine Gegenstände, die aufgehoben werden können.
 %%%%
 There are several objects here.
 Hier gibt es mehrere Objekte.
@@ -7053,7 +7053,7 @@ Du hast jetzt %d Goldmünzen (%d bekommen).
 %s verbrennt in deinem Griff zu schimmernder Asche.
 %%%%
 You pick up %s and begin reading...
-Du hebst {acc}%s auf und fangt an zu lesen...
+Du hebst {acc}%s auf und fängst an zu lesen...
 %%%%
 Unfortunately, you learned nothing new.
 Leider hast du nichts Neues gelernt.
@@ -7062,7 +7062,7 @@ You pick up %s. Unfortunately, it's quite useless to you.
 Du hebst {acc}%s auf. Leider ist das völlig nutzlos für dich.
 %%%%
 You pick up %s, but it has nothing more to teach you.
-Du hebst {acc}%s auf, aber es hat dich nichts mehr zu lehren.
+Du hebst {acc}%s auf, aber es kann dir nichts mehr beibringen.
 %%%%
 # note: pick up manual
 You pick up another %s and continue studying.
@@ -7073,10 +7073,10 @@ Du hebst {acc}%s auf und fängst an zu lernen.
 %%%%
 # note: pick up rune
 You pick up %s and feel its power.
-Du hebst {acc}%s auf und fühlt ihre Kraft.
+Du hebst {acc}%s auf und fühlst ihre Kraft.
 %%%%
 You have collected all the runes! Now go and win!
-Du hast alle Runen gesammelt! Jetzt geht und gewinnt!
+Du hast alle Runen gesammelt! Jetzt geh und gewinne!
 %%%%
 %d runes! That's enough to enter the realm of Zot.
 %d Runen! Das reicht aus, um das Reich von Zot zu betreten.
@@ -7094,7 +7094,7 @@ You pick up the Orb of Zot!
 Du hebst die Kugel von Zot auf!
 %%%%
 Zot can harm you no longer.
-Zot kann dich nicht mehr schaden.
+Zot kann dir nicht mehr schaden.
 %%%%
 Now all you have to do is get back out of the dungeon!
 Jetzt musst du nur noch wieder aus dem Kerker herauskommen!
