@@ -147,7 +147,7 @@ abyssale
 #argent
 %%%%
 golden
-or
+dorée
 %%%%
 
 # hell runes
