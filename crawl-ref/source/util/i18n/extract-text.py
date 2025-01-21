@@ -1256,7 +1256,7 @@ def special_handling_for_item_prop_cc(strings):
             string = 'silver ' + string
 
         # stackable items need a plural with count
-        if is_missile(string) or "potion" in string or "scroll" in string:
+        if is_missile(string):
             plurals.append('%d ' + pluralise(string))
 
         output.append("the " + string)
@@ -1315,7 +1315,6 @@ def special_handling_for_item_name_cc(strings):
                 continue
         elif section == 'missile_brand_name':
             if string.endswith(' dart'):
-                extras1.append(pluralise(string))
                 extras2.append('%d ' + pluralise(string))
                 string = 'the ' + string
         elif section == 'weapon_brands_terse':
@@ -1355,15 +1354,11 @@ def special_handling_for_item_name_cc(strings):
             string = 'the ' + string
         elif section == 'potion_type_name':
             string = 'potion of ' + string
-            # uncounted plural for known items menu
-            extras1.append(pluralise(string))
             # counted plural for stacks
             extras2.append('%d ' + pluralise(string))
             string = 'the ' + string
         elif section == 'scroll_type_name':
             string = 'scroll of ' + string
-            # uncounted plural for known items menu
-            extras1.append(pluralise(string))
             # counted plural for stacks
             extras2.append('%d ' + pluralise(string))
             string = 'the ' + string
