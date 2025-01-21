@@ -131,27 +131,12 @@ function hall_of_blades_weapon(e)
   local egos = {"flaming", "freezing", "electrocution", "heavy",
                 "holy_wrath", "pain", "vampirism",
                 "antimagic", "distortion", "spectral"}
-  local weapon1 = util.random_from(types)
-  local weapon2 = weapon1
-  local weapon3 = weapon1
-  while weapon2 == weapon1 do
-    weapon2 = util.random_from(types)
-  end
-  while weapon3 == weapon1 or weapon3 == weapon2 do
-    weapon3 = util.random_from(types)
-  end
-  local ego1 = util.random_from(egos)
-  local ego2 = ego1
-  local ego3 = ego1
-  while ego2 == ego1 do
-    ego2 = util.random_from(egos)
-  end
-  while ego3 == ego1 or ego3 == ego2 do
-    ego3 = util.random_from(egos)
-  end
-  e.mons("dancing weapon; good_item " .. weapon1 .. " ego:" .. ego1)
-  e.mons("dancing weapon; good_item " .. weapon2 .. " ego:" .. ego2)
-  e.mons("dancing weapon; good_item " .. weapon3 .. " ego:" .. ego3 .. " / nothing")
+  local weapon_t = util.random_subset(types, 3)
+  local weapon_e = util.random_subset(egos, 3)
+  e.mons("dancing weapon; good_item " .. weapon_t[1] .. " ego:" .. weapon_e[1])
+  e.mons("dancing weapon; good_item " .. weapon_t[2] .. " ego:" .. weapon_e[2])
+  e.mons("dancing weapon; good_item " .. weapon_t[3] .. " ego:" ..
+          weapon_e[3] .. " / nothing")
 end
 
 -- Setup for door vaults to define a common loot set and create the door

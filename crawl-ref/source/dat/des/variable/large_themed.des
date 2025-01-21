@@ -378,19 +378,19 @@ NAME:   minmay_skeleton_keep
 TAGS:   no_monster_gen
 ORIENT: northwest
 DEPTH:  Depths, Crypt
-MONS:   laughing skull / nothing w:20, skeleton w:20 / nothing
+MONS:   laughing skull / nothing w:15, skeleton w:20 / nothing
 MONS:   skeletal warrior band / bone dragon w:1 / lich w:1 / curse skull w:1
 SUBST:  G : GGccV.
 : vault_metal_statue_setup(_G, "S", "soul conduit")
 MAP
 cccccccccccccccccccccccccccccccc
 c....2.....||c...+....111c|....c
-c+c.2.3...cccc...c......1cc..3.c
+c+c.2.3...cccc...c.....21cc..3.c
 c.cc...2.2.ccc...c......1ccc...c
 c..cc...2...cc...c...S...+2cc..c
 c...cc.2...2.c...c......cc2ccc.c
 c....cc...2..c...c1....cc2...+.c
-c..3..cc.2...+...c1...cc2.2.2c.c
+c..3..cc.2...+...c12..cc2.2.2c.c
 c1.....cc....c...c111cc2.2.22c|c
 c11.....cccccc.3.ccccccccccc+ccc
 c1111....c...........c22.+.111.c
@@ -406,7 +406,7 @@ TAGS:   no_rotate
 ORIENT: northwest
 DEPTH:  Depths
 MONS:   plant, bush
-MONS:   spriggan w:70 / spriggan druid / spriggan berserker / spriggan rider
+MONS:   spriggan w:50 / spriggan druid / spriggan berserker / spriggan rider
 MONS:   spriggan defender, alderking
 KFEAT:  % = cache of fruit
 SUBST:  1 : 12t p:1, p = 12t, c : xc, 3 = 3, 4 = 444., 5 = 55., % : %$

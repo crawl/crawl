@@ -2046,7 +2046,7 @@ ORIENT:  float
 KMONS:   1 = tyrant leech / swamp worm w:50 / \
              vampire mosquito band / goliath frog / swamp drake w:15
 KMONS:   23 = alligator / swamp dragon / hydra
-KMONS:   45 = tentacled monstrosity / thorn hunter
+KMONS:   45 = bunyip / thorn hunter
 KITEM:   3 = any good_item / any potion / gold
 KITEM:   5 = superb_item / gold good_item / any potion q:4 w:20
 KMONS:   P = plant
@@ -2336,9 +2336,9 @@ MAP
 .c...c...c...cccmmmccc...c...c...n.
 .c...c...c...c3.....3c...c.......n.
 .c...c...c...c..%.%..c...n.......n.
-.c...c...c.....%|*|%.m...n.......n.
-.c.1.c.1.c.1.8..*|*..m.1.n.1.0.1.n.
-.c...c...c.....%|*|%.m...n.......n.
+.c...c...c.9...%|*|%.m...n...0...n.
+.c.1.c.1.c...1..*|*..m.1.n.1...1.n.
+.c...c...c.8...%|*|%.m...n...0...n.
 .c...c...c...c..%.%..c...n.......n.
 .c...c...c...c3.....3c...c.......n.
 .c...c...c...cccmmmccc...c...c...n.
@@ -3911,7 +3911,7 @@ SUBST:  ) = ))>, ] = ]]>, 1 = 9, 4 = 0
 NSUBST: ! = 1:6 / 1:0 / 1:! / 1:&
 : else
 SUBST:  )] = .
-NSUBST: ! = 2:6 / 1:7 / 1:8
+NSUBST: ! = 2:6 / 1:77& / 1:8, 45 = 1:78&
 : end
 SHUFFLE: '"-`
 COLOUR:  ' = red
@@ -4471,14 +4471,15 @@ TAGS:    no_item_gen no_monster_gen no_pool_fixup no_descent
 DEPTH:   D:12-, Depths
 ORIENT:  float
 : if you.in_branch("Depths") then
-MONS:    smoke demon / sun demon, balrug / nothing w:2
-MONS:    ynoxinul, blizzard demon / nothing w:2
+MONS:    smoke demon / salamander tyrant w:5, balrug
+MONS:    caustic shrike simulacrum / thermic dynamo
+MONS:    blizzard demon / nothing w:2
 : else
-MONS:    red devil ; trident, sun demon / smoke demon w:5 / nothing w:2
+MONS:    red devil ; trident, sun demon / smoke demon w:5
 MONS:    ice devil, thermic dynamo / ynoxinul w:5 / nothing w:2
 : end
 KFEAT:   yz = b
-SUBST:   y : yccc
+SUBST:   y : yccc, 2 = 2 .:2
 SHUFFLE: l2'y / w4Bz
 NSUBST:  ' = 3:1 / 3=1. / *:., B = 3:3 / 3=3. / *:., - = 2=|* / 4:* / 6=$%
 TILE:    y = bedevilled_crystal_gehenna
@@ -6382,10 +6383,14 @@ ENDMAP
 # All those mummy chaos knights have to rest somewhere.
 NAME:    skrybe_chaotic_catacombs
 TAGS:    no_monster_gen
-DEPTH:   D:12-, Depths
+DEPTH:   D:12-, !D:$, Depths
+WEIGHT:  2 (D:$), 10
 ORIENT:  float
 : if you.in_branch("D") then
 MONS:    vampire ; rapier ego:chaos | long sword ego:chaos . ring mail
+KMONS:   H = rakshasa ; demon whip ego:chaos | demon trident ego:chaos | \
+                        demon blade ego:chaos
+:   if you.where() ~= dgn.level_name(dgn.br_entrance("Depths")) then
 MONS:    skeletal warrior, flayed ghost
 MONS:    guardian mummy ; orcbow ego:chaos | longbow ego:chaos . \
                           quarterstaff ego:chaos
@@ -6398,11 +6403,29 @@ KMONS:   C = shapeshifter simulacrum
 KMONS:   D = spectral shapeshifter
 KMONS:   E = laughing skull band
 KMONS:   F = vampire mage
-KMONS:   G = golden eye band
-KMONS:   H = rakshasa ; demon whip ego:chaos | demon trident ego:chaos | \
-                        demon blade ego:chaos
-SUBST:   3 = .
-NSUBST:  7 = 1:B / 1:C / *:., I = 1:I / *:2, 8 = 1:. / 1:8. / *:8
+KMONS:   G = golden eye
+SUBST:   3 = ., ; = ., X = c
+:   else
+KMONS:   2 = ugly thing zombie
+KMONS:   3 = vampire mage ; quarterstaff ego:chaos . robe
+KMONS:   47 = very ugly thing / glowing shapeshifter w:5
+KMONS:   56 = ugly thing
+KMONS:   0 = culicivora perm_ench:shapeshifter / \
+             black mamba perm_ench:shapeshifter / \
+             unseen horror perm_ench:shapeshifter
+KMONS:   BCD = shapeshifter simulacrum
+KMONS:   E = very ugly thing
+KMONS:   F = flayed ghost
+KMONS:   G = glowing orange brain
+KITEM:   ; = smoky gem
+KFEAT:   ~ = enter_depths
+KFEAT:   X = c
+SUBST:   ' = "
+FTILE:   ;~" = floor_depthstone
+TILE:    X = stone_wall_depths
+:   end
+SUBST:   ^ = .
+NSUBST:  7 = 1:B / 1:C / *:., I = 1:I / *:2, 8 = 1:8. / *:8
 : else
 MONS:    guardian mummy ; orcbow ego:chaos | longbow ego:chaos . \
                           quarterstaff ego:chaos
@@ -6421,6 +6444,8 @@ KMONS:   F = mummy priest god:Xom
 KMONS:   G = tentacled monstrosity
 KMONS:   H = reaper ; halberd itemname:scythe \
                       tile:wpn_scythe wtile:scythe ego:chaos
+KFEAT:   ^ = harlequin's trap
+SUBST:   ^ = ^..., ; = ., ~ = ', X = c
 : end
 ITEM:    potion of mutation q:4 pre_id
 ITEM:    potion of ambrosia q:4 pre_id / \
@@ -6432,8 +6457,8 @@ KFEAT:   ! = altar_yredelemnul mimic
 NSUBST:  9 = 3:0 / 1:1 / 2:2 / 1:E / 5 = 1E 0:30 / *:., I = 1:4 / 1:6 / *:.
 NSUBST:  A = 2:8 / 2 = 8. / *:., 8 = 1:3 / 1:4 / 1:6 / 1:7 / 2:H / * = 36E 0:30
 SHUFFLE: BCD
-NSUBST:  ' = 6:$ / 6:* / 4:; / *:., $ = 6:* / * = $% .:20
-NSUBST:  ; = 1:d / 3:| / * = $% .:20, | = 1:e / *:|
+NSUBST:  ' = 6:$ / 6:* / 4:f / *:., $ = 6:* / * = $% .:20
+NSUBST:  f = 1:d / 3:| / * = $% .:20, | = 1:e / *:|
 SUBST:   v : xv
 # Mashing up Crypt, Yred, and Kiku colours in both tiles and console.
 COLOUR:  ` = magenta
@@ -6441,45 +6466,45 @@ COLOUR:  g = mountain
 TILE:    x = wall_undead_magenta / wall_undead_darkgray
 TILE:    v = dngn_metal_wall_red / dngn_metal_wall_cyan
 FTILE:   `+ = floor_pebble_magenta / floor_pebble_red
-FTILE:   .f_$%*|?!12345670BCDEF = floor_tomb
+FTILE:   .^f_$%*|?!12345670BCDEF = floor_tomb
 : vault_granite_statue_setup(_G, "g", "scintillating statue")
 : decorative_floor(_G, 'f', "broken floral vase")
 MAP
   ccccccccccccccccccccccccccccccccc
-  ccccccccccccccccccccccccccccccccc
+  ccccccccccccXXXXXXXXXcccccccccccc
 ccccc........`.'''3'''.`........ccccc
-cccc..........`.'''''.`..........cccc
+cccc..........`.''~''.`..........cccc
 ccc.....vv.....`.'''.`.....vv.....ccc
 ccc.....vv7.....`F.F`.....7vv.....ccc
-ccc..vv....vv..I.`.`.I..vv....vv..ccc
+ccc..vv....vv..I.`^`.I..vv....vv..ccc
 ccc..vv....vv....._.....vv....vv..ccc
-ccc.....vv.......`.`.......vv.....ccc
+ccc.....vv.......`^`.......vv.....ccc
 ccc.....vv......`...`......vv.....ccc
-ccc..........cc`.....`cc..........ccc
-cccc........ccccc...ccccc........cccc
+ccc..........cc`..;..`cc..........ccc
+cccc....^...ccccc...ccccc...^....cccc
 ccgccc``cccccf.........fccccc``cccgcc
-ccc........c;....vvv....;c........ccc
-ccc.......cc;...vvvvv...;cc.......ccc
+ccc..^.....cf....vvv....fc.....^..ccc
+ccc.......ccf...vvvvv...fcc.......ccc
 ccc....9cccc*...9vvv9...*cccc9....ccc
-ccc...8cccccc8.........8cccccc8...ccc
+ccc...8cccccc8....8....8cccccc8...ccc
 ccc..ccccccccc..||G||..ccccccccc..ccc
 ccc.....ccccccccccccccccccccc.....ccc
 ccc........cc...ccccc...cc........ccc
 ccc........`......c......`........ccc
 cccccc.09..`....$$c$$....`..90.cccccc
-ccccccccc..c...$$1c1$$...c..ccccccccc
+ccccccccc.^c...$$1c1$$...c^.ccccccccc
 cccgcc.....c...5$$c$$5...c.....ccgccc
 cccc.......cc....ccc....cc.......cccc
 ccccc....9ccccccccccccccccc9....ccccc
 ccccc....ccccccccccccccccccc....ccccc
   cccc..ccccA.....9.....Acccc..ccccc
   ccc..1..c...............c..1..ccc
-  ccc.B...c...vvv9.9vvv...c...C.ccc
+  ccc.B...c...vvv9^9vvv...c...C.ccc
   cccB....+..Avvv...vvvA..+....Cccc
   ccc.B...+..vvv.._..vvv..+...C.ccc
   ccc..4..c..vvv.....vvv..c..4..ccc
   cccc...cc......?.!......cc...cccc
-  cccccccccc.............cccccccccc
+  cccccccccc..^.......^..cccccccccc
     ccccccccccccc+++ccccccccccccc
 ENDMAP
 

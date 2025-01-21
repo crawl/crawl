@@ -232,17 +232,24 @@ function trove.setup_features(e)
     e.kfeat("< = exit_trove")
 end
 
--- "any scroll good_item" still gets you 'scroll of noise' etc so let's
--- limit it to the enchant scrolls, tloc scrolls, identify scrolls, mapping
--- scrolls with a low chance of silence, vulnerability or acquirement (lowest)
+-- "any scroll good_item" still gets you 'scroll of noise' etc so let's limit
+-- it better scrolls: more varied than dgn.loot_scrolls with such handed
+-- out in higher numbers, but still weighted towards more value than before.
 function trove.good_scroll (e)
-    e.item([[scroll of enchant weapon / scroll of brand weapon w:3 /
-             scroll of enchant armour / scroll of immolation w:8 /
-             scroll of revelation w:8 / scroll of blinking /
-             scroll of silence w:2 / scroll of acquirement w:1 /
-             scroll of teleportation w:20 / scroll of vulnerability w:2 /
-             scroll of fog w:8 / scroll of torment w:8 /
-             any ally scroll w:1 ]])
+    local scrolls = {"acquirement w:1", "teleportation w:15", "blinking w:8",
+                     "revelation w:8", "fear w:8", "poison w:3", "silence w:3",
+                     "vulnerability w:3", "torment w:1"}
+    local eq_scrolls = {"enchant weapon", "brand weapon w:3", "enchant armour"}
+
+    local item_def = "scroll of " .. table.concat(scrolls, " / scroll of ") ..
+                     " / any ally scroll w:8"
+
+    if you.race() ~= "Felid" then
+        item_def = item_def .. " / scroll of " ..
+                   table.concat(eq_scrolls, " / scroll of ")
+    end
+
+    e.item(item_def)
 end
 
 function trove.good_talisman (e)
@@ -1273,7 +1280,7 @@ item(genweap(egos2[2]))
 KFEAT:   + = closed_clear_door
 SHUFFLE: defg
 : vault_granite_statue_setup(_G, "G", "scintillating statue")
-: vault_metal_statue_setup(_G, "G", "golden statue")
+: vault_metal_statue_setup(_G, "S", "golden statue")
 : trove.setup_features(_G)
 MAP
 xxxxxxxxxxxxxxxxxx

@@ -2454,12 +2454,12 @@ NAME:   lemuel_lich_library
 TAGS:   no_monster_gen no_descent
 DEPTH:  Zot, !Zot:$
 MONS:   laughing skull, lich, ancient lich / dread lich, necromancer
-MONS:   vampire mage
+MONS:   vampire mage, black draconian skeleton
 ITEM:   any book mimic:10 w:20 / any scroll mimic:10
 KFEAT:  ^ = archmage's trap
-SUBST:  x : xv, w : w?, G : Gg
-NSUBST: ? = 12 = 11. / *:.
-SUBST:  4 = 4 5:2 .:4, ^ : ^..
+SUBST:  x : xvv, w : w?, G : Gg
+NSUBST: ? = 14 = 111. / *:.
+SUBST:  4 = 4 5:3 .:3, ^ : ^..
 TILE:   G = dngn_statue_depths_zot_lich / dngn_statue_zot_old_guardian
 TILE:   c = wall_studio
 : vault_metal_statue_setup(_G, "g", "soul conduit")
@@ -2468,20 +2468,20 @@ wwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwww
 wwxxxxxxxxx+xxxxxxxxxww
 wwx....x.......x....xww
-wwx....+..^G^..+....xww
-wwx.4..x.......x..4.xww
+wwx6...+..^G^..+...6xww
+wwx.4.6x.......x6.4.xww
 wwx4.4.xxxx+xxxx.4.4xww
 wwx.4.4xxx...xxc4.4.xww
 wwx4.4.xxx.2.xxx.4.4xww
 wwxxcxxxxxx+xxxxxxx+xww
-wwxcxcxxxxx.xxxxxx$$xww
+wwxcxcxxxc..xxxxxx$$xww
 wwxdddxxxxx.x...xx$$xww
-wwx.2.xxxxx.+.G.xxxxxww
+wwx.3.xxxc..+.G.xxxxxww
 wwx...xxxxx.x...xxxxxww
-wwx...xxxxx.xxxxxxxxxww
+wwx...xxxc..xxxxxxxxxww
 wwxx+xxxxxx.xxcdddddxww
-wwxx.xxxxxx.xxcd232dxww
-wwxx.xxxxxx.xxxd...dxww
+wwxx.xcxxc..xxcd232dxww
+wwxx.x.xxxx.x.xd...dxww
 wwxx......+^..+....dxww
 wwxxxxxxxxxmxxxd...dxww
 wwxxxxxxxxxGxxcdddddxww
@@ -3387,21 +3387,21 @@ MAP
            @.......................@
 ccccccccccccqqcrrcyycbbcggcmmcqqcrrccccccccccc
 cS............G..G..G..G..G..G..G..ccc.ccc.ccc
-c...ccccc..T.......................cc...c...ccl
+c..2ccccc..T.......................cc...c...ccl
 c]2.cccDccccc..1..1..1..1..1..1..1.c..1...1..cl
 c...cc...cc........................cc.......ccll
 cS..+..2....c.cc.cc.cc.cc.cc.cc.cc.cT........clll
 cccccc...cccc.cc.cc.cc.cc.cc.cc.cc.ccc.......clllll
 ccccTc...cccc......................ccc..1..1.c....l
 @qc......1.........................+.........+..3.@
-@mF.4.._......1..1..1..1..1..1..1..+.........+.T..@
+@mF.4.._.1....1..1..1..1..1..1..1..+......1..+.T..@
 @qc......1.........................+.........+..3.@
 ccccTc...cccc......................ccc..1..1.c....l
 cccccc...cccc.cc.cc.cc.cc.cc.cc.cc.ccc.......clllll
 cS..+..2....c.cc.cc.cc.cc.cc.cc.cc.cT........clll
 c...cc...cc........................cc.......ccll
 c}2.cccZccccc..1..1..1..1..1..1..1.c..1...1..cl
-c...ccccc..T.......................cc...c...ccl
+c..2ccccc..T.......................cc...c...ccl
 cS............G..G..G..G..G..G..G..ccc.ccc.ccc
 ccccccccccccqqcrrcyycbbcggcmmcqqcrrccccccccccc
            @.......................@
@@ -3958,7 +3958,7 @@ KFEAT:   ^ = dispersal trap
 NSUBST:  - = 2 / 3 = 3.. / *:.
 : if (crawl.coinflip()) then
 NSUBST:  > = 1 = }:80 > / 1 = ):80 > / 1 = ]:80 >, G = 4:G / *:U
-SUBST:   1 = 1 0:30 .
+SUBST:   1 = 100..
 : else
 NSUBST:  G = 3 = {[( / 3:G / *:U
 NSUBST:  1 = 6 = 1. / *=0...
@@ -4001,7 +4001,8 @@ DEPTH:   Zot, !Zot:$
 ORIENT:  float
 SUBST:   x : x b:1
 SUBST:   < = {[(
-KFEAT:   ^ = alarm trap / zot trap
+KFEAT:   ^ = alarm trap w:5 / zot trap / harlequin's trap w:5
+KFEAT:   X = x
 # The possible acts:
 MONS:    red draconian scorcher, red draconian, juggernaut
 MONS:    tentacled monstrosity, ancient lich, electric golem
@@ -4034,19 +4035,21 @@ KMONS:   a = draconian shifter
 # Those laffy daffy Klowns
 NSUBST:  I = 8 = k. / *:.
 KMONS:   k = killer klown
+TILE:    x = wall_zot_red
+TILE:    X = wall_zot_white
 : vault_granite_statue_setup(_G, "G", "scintillating statue")
 MAP
                xxx
              xxxlxxx
-  xxxxx    xxxl...lxxx    xxxxx
- xxAAAxxxxxxl..BBB..lxxxxxxCCCxx
+  XxxxX    XXxl...lxXX    XxxxX
+ XXAAAXXxxxXl..BBB..lXxxxXXCCCXX
 xxAAAAAxxxxl..BBBBB..lxxxxCCCCCxx
 +AA...AA.....BB...BB.....CC...CC+
 +AA.<.AAG.l..BB.<.BB..l.GCC.<.CC+
 +AA...AA.....BB...BB.....CC...CC+
 xxAAAAAxxxxl..BBBBB..lxxxxCCCCCxx
- xxAAAxxxxxxl..BBB..lxxxxxxCCCxx
-  xxxxx    xxxl...lxxx    xxxxx
+ XXAAAXXxxxXl..BBB..lXxxxXXCCCXX
+  XxxxX    XXxl...lxXX    XxxxX
              xx+++xx
              Gx...xG
              .......

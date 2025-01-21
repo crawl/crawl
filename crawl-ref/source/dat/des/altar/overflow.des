@@ -833,7 +833,7 @@ ENDMAP
 NAME:    tgw_fedhas
 TAGS:    no_item_gen no_monster_gen
 TAGS:    temple_overflow_1 temple_overflow_fedhas uniq_altar_fedhas
-DEPTH:   D, Lair
+DEPTH:   D:3-, Lair
 KFEAT:   _ = altar_fedhas
 KPROP:   xzd3P = no_tele_into
 MONS:    plant, fungus, oklob plant, bush, toadstool
@@ -883,7 +883,7 @@ ENDMAP
 NAME:   fedhas_ov_isle_minmay
 TAGS:   temple_overflow_1 temple_overflow_fedhas uniq_altar_fedhas
 TAGS:   no_monster_gen transparent no_descent
-DEPTH:  D, !D:$
+DEPTH:  D:3-, !D:$
 MONS:   plant / bush w:5
 KMONS:  S = sacred lotus
 KFEAT:  S = w
@@ -1521,7 +1521,7 @@ NAME:   kennysheep_vampire_church
 TAGS:   no_monster_gen temple_overflow_1 temple_overflow_kikubaaqudgha
 TAGS:   uniq_altar_kikubaaqudgha transparent
 : if you.in_branch("Depths") then
-MONS:   vampire knight / nothing, vampire mage
+MONS:   vampire knight / jiangshi, vampire mage
 :else
 MONS:   vampire bat / nothing w:7, bat skeleton / bat zombie
 :end
@@ -1613,7 +1613,7 @@ ENDMAP
 ### Makhleb overflow altars ###################################################
 
 NAME:    demons_altar
-DEPTH:   D, Orc, !Orc:$
+DEPTH:   D:4-, Orc, !Orc:$
 TAGS:    no_monster_gen patrolling temple_overflow_1 temple_overflow_makhleb
 TAGS:    transparent layout_rooms layout_city layout_open uniq_altar_makhleb
 KFEAT:   _ = altar_makhleb
@@ -1640,7 +1640,7 @@ ENDMAP
 NAME:  bloody_makhleb
 TAGS:  uniq_altar_makhleb temple_overflow_1 temple_overflow_makhleb
 TAGS:  transparent decor
-DEPTH: D, Orc
+DEPTH: D:3-, Orc
 KPROP: . = bloody / nothing
 KFEAT: _ = altar_makhleb
 KITEM: _ = robe, whip
@@ -2625,7 +2625,7 @@ MAP
 ENDMAP
 
 NAME:   led_sif_book
-DEPTH:  D, Orc
+DEPTH:  D:3-, Orc
 TAGS:   no_item_gen no_pool_fixup no_monster_gen
 TAGS:   temple_overflow_1 temple_overflow_sif_muna uniq_altar_sif_muna
 KPROP:  1d = no_tele_into
@@ -2754,7 +2754,7 @@ ENDMAP
 NAME:   hellmonk_sif_muna_bookshelves
 TAGS:   temple_overflow_sif_muna temple_overflow_1 uniq_altar_sif_muna
 TAGS:   transparent decor vaults_empty vaults_orient_s
-DEPTH:  D, Elf, Vaults, Depths
+DEPTH:  D:3-, Elf, Vaults, Depths
 WEIGHT: 3 (Vaults), 10
 KFEAT:  _ = altar_sif_muna
 TILE:   c = wall_studio
@@ -2887,7 +2887,7 @@ ENDMAP
 NAME:   trog_butcher_becter
 TAGS:   temple_overflow_1 temple_overflow_trog uniq_altar_trog
 TAGS:   no_monster_gen no_item_gen transparent
-DEPTH:  D, Orc, !Orc:$
+DEPTH:  D:3-, Orc, !Orc:$
 : if you.absdepth() < 6 then
 MONS:   orc ; hand axe . animal skin
 MONS:   rat / frilled lizard / quokka w:20
@@ -2895,7 +2895,8 @@ MONS:   rat / frilled lizard / quokka w:20
 MONS:   orc warrior ; war axe . animal skin
 MONS:   iguana / scorpion
 : end
-NSUBST: ' = 3=2 / .
+KFEAT:  d = cache of meat
+NSUBST: ' = 3:2 / *:.
 SUBST:  y = x, " = .
 KPROP:  1y" = bloody
 KFEAT:  _ = altar_trog
@@ -2905,8 +2906,8 @@ KFEAT:  ^ = shaft trap
 KFEAT:  m = iron_grate
 MAP
   xxxxxxx
- xx'''''xx
-xx.xxxxxxxx
+ xx''''dxx
+xx'xxxxxxxx
 xx+xmmmx^yx
 xx.."1"""yx
 xx..._"..xx

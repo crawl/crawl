@@ -2332,10 +2332,11 @@ NAME:     grunt_tower_of_power
 TAGS:     vaults_hard vaults_orient_s no_monster_gen patrolling
 DEPTH:    Depths, Vaults, !Vaults:$
 : if you.in_branch("Vaults") then
-MONS:     lich, arcanist / naga mage / tengu conjurer, tengu reaver
+MONS:     lich, arcanist / ogre mage / deep elf annihilator, tengu reaver
 SUBST:    c : vvb, @ = .
 : else
-MONS:     lich, occultist / naga mage / tengu conjurer, tengu reaver
+MONS:     lich, occultist / tengu conjurer / nagaraja, tengu reaver
+NSUBST:   ' = 1:2 / 1:2. / *:.
 : end
 ITEM:     book of power, robe good_item, hat good_item, robe, hat
 KFEAT:    _ = altar_vehumet
@@ -2348,10 +2349,10 @@ MAP
      ccedfcc
      ceh_gfc
      c..1..c
-cccccc.....cccccc
+cccccc..'..cccccc
 c.fhccc...cccge.c
 ce2.cccc+cccc.2fc
-cg..cc.....cc..hc
+cg.'cc.....cc'.hc
 cccc+.......+cccc
  ccc..2.U.2..ccc
  cc...........cc
@@ -3851,16 +3852,16 @@ NAME:  ice2_lemuel
 TAGS:  no_pool_fixup no_monster_gen no_descent patrolling
 DEPTH: D:12-, Depths, !Depths:$, Lair:2-
 KMONS: 1 = ice statue
-KMONS: 2 = white imp / ice beast w:30 / polar bear / nothing w:50
-KMONS: 3 = ice devil / ice dragon / freezing wraith
-KMONS: 4 = ice fiend / blizzard demon
-KMONS: 5 = shard shrike
+KMONS: 2 = white imp / ice beast w:30 / polar bear
+KMONS: 3 = ice devil w:8 / ice dragon / freezing wraith
+KMONS: 4 = storm dragon simulacrum w:8 / blizzard demon
+KMONS: 5 = ice fiend / walking frostbound tome
 KFEAT: 1 = >
 : if you.absdepth() > 20 then
-SUBST:  3 = 4, 2 = ..3,  b = bwww
+SUBST:  3 = 5, 2 = ..334, b = bwww
 NSUBST: | = 1:1 / *:|
 : else
-SUBST:  b = w
+SUBST:  2 = 2., b = w
 : end
 SUBST: | = ||****%%%%
 SUBST: T = TU, W = w:20 W .:5
@@ -3875,8 +3876,8 @@ WWW2WwwwwwwwwwwW2WWW
 WW222wwwwwwwwww222WW
 ..W2WwwwwwwwwwwW2W..
 .WWWWwwwwwwwwwwwWWW.
-..WWwwww||||wwwWWW..
-...WWwwb|13|wwwwW...
+..WWwwww||||wwwwWW..
+...Wwwwb|13|bwwwW...
 ..WWwwww||||wwwwWW..
 .WWWWwwwwwwwwwwWWWW.
 ..W2WwwwwwwwwwwW2W..
@@ -4186,12 +4187,12 @@ NAME:   hangedman_eye_storm
 TAGS:   no_monster_gen no_item_gen patrolling
 DEPTH:  Depths, !Depths:$, Abyss
 MONS:   golden eye, ophan, glass eye, eye of devastation
-MONS:   great orb of eyes / shining eye w:5
+MONS:   great orb of eyes / shining eye w:2
 ITEM:   scroll of vulnerability q:1 pre_id / orb ego:guile randart w:4 / \
         book of the spheres w:4 / potion of enlightenment q:2 pre_id
 KFEAT:  m = iron_grate
 KFEAT:  T = fountain_eyes
-NSUBST: 5 = 2:5 / *:4 5:15
+NSUBST: 5 = 2:5 / 1:3 / *:4 5:15
 : if you.in_branch("Abyss") then
 SUBST:  c = c:4 v:1 b:1, '| = d
 : end
@@ -4201,17 +4202,17 @@ MAP
   cc'c..c+m..cc
  cc'mm..c.mmm.cc
  c.mm...c...mm.c
-cc.m....c..5.m.cc
-c.mm...mc+...mm.c
+cc.m....c.5..m.cc
+c.mm...mc+.5.mm.c
 c1m...mm5mm...m.c
 c+m.4.m|m2m.5.m+c
-c.m...mm|mm...m1c
-c.mm...mmm...mm.c
-cc.m.5..T..5.m.cc
+c1m...mm|mm...m1c
+c.mm.4.mmm...mm.c
+cc.m..5.T..5.m.cc
  c.mm...5...mm.c
  cc.mmm...mmm.cc
   cc..mmmmm..cc
-   ccc.1+..ccc
+   ccc.1+1.ccc
      ccccccc
 ENDMAP
 
