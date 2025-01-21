@@ -16,7 +16,7 @@
 # Missiles
 #################################
 
-# generated from counted plural by grammar.txt
+# auto-generated from counted plural by grammar.txt
 
 #################################
 # Armour
@@ -83,13 +83,13 @@ Zauberstäbe des Kopfzerplatzens
 # Scrolls
 #################################
 
-# generated from counted plural by grammar.txt
+# auto-generated from counted plural by grammar.txt
 
 #################################
 # Potions
 #################################
 
-# generated from counted plural by grammar.txt
+# auto-generated from counted plural by grammar.txt
 
 #################################
 # Magical Staves
