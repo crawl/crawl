@@ -75,6 +75,7 @@ silver boomerangs
 # Rings
 #################################
 
+# generic
 %%%%
 rings
 Ringe
@@ -84,6 +85,7 @@ Ringe
 # Amulets
 #################################
 
+# generic
 %%%%
 amulets
 Amulette
@@ -93,6 +95,13 @@ Amulette
 # Wands
 #################################
 
+# generic
+%%%%
+wands
+Zauberstäbe
+%%%%
+
+# identified
 %%%%
 wands of flame
 Zauberstäbe der Flammen
@@ -123,9 +132,19 @@ Zauberstäbe des Kopfzerplatzens
 # Scrolls
 #################################
 
+# generic
+%%%%
+scrolls
+Schriftrollen
+%%%%
+
+# unidentified
 %%%%
 scrolls labelled %s
 Schriftrollen beschriftet mit %s
+%%%%
+
+# identified
 %%%%
 scrolls of acquirement
 Schriftrollen der Erwerbung
@@ -192,6 +211,13 @@ Schriftrollen der Obsoleszenz
 # Potions
 #################################
 
+# generic
+%%%%
+potions
+{pl}Zaubertränke
+%%%%
+
+# identified
 %%%%
 potions of ambrosia
 {pl}Tränke der Ambrosia
@@ -245,16 +271,17 @@ potions of resistance
 {pl}Tränke der Resistenz
 %%%%
 
-# generic
-%%%%
-potions
-{pl}Zaubertränke
-%%%%
-
 #################################
 # Magical Staves
 #################################
 
+# generic
+%%%%
+staves
+Stäbe
+%%%%
+
+# identified
 %%%%
 staves of earth
 Stäbe der Erde

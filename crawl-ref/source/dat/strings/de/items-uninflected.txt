@@ -207,9 +207,6 @@ unerkannte Zaubertränke
 %%%%
 
 %%%%
-scrolls
-Schriftrollen
-%%%%
 spellbooks
 Zauberbücher
 %%%%

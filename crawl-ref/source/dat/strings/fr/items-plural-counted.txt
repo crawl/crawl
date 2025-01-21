@@ -87,14 +87,19 @@
 # Scrolls
 #################################
 
-%%%%
 # generic
+%%%%
 %d scrolls
 {mpl}%d parchemins
 %%%%
+
 # unidentified
+%%%%
 %d scrolls labelled %s
 {mpl}%d parchemins étiquetés %s
+%%%%
+
+# identified
 %%%%
 %d scrolls of acquirement
 {mpl}%d parchemins d'acquisition
@@ -161,6 +166,13 @@
 # Potions
 #################################
 
+# generic
+%%%%
+%d potions
+{fpl}%d potions
+%%%%
+
+# identified
 %%%%
 %d potions of ambrosia
 {fpl}%d potions d'ambroisie
@@ -214,13 +226,7 @@
 {fpl}%d potions de résistance
 %%%%
 
-# generic
-%%%%
-%d potions
-{fpl}%d potions
-%%%%
-
-# Some potion colours are the names of gemstones, etc., and are used elsewhere
+# Some potion colours are the names of materials, and are used elsewhere
 # in Crawl to mean actually made of/with that thing, rather than merely having
 # its colour. In English, we can get away with using the same word for both
 # meanings, but that's not necessarily the case in other languages.
@@ -240,6 +246,8 @@
 %d golden potions
 {fpl}%d potions dorées
 %%%%
+
+# other colours are defined in adjectives.txt
 
 #################################
 # Magical Staves

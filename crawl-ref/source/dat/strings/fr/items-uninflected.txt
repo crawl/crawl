@@ -207,9 +207,6 @@ potions inconnues
 %%%%
 
 %%%%
-scrolls
-
-%%%%
 spellbooks
 
 %%%%

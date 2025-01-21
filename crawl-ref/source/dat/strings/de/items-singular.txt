@@ -325,15 +325,16 @@ die cremefarbene Perlenrobe
 # Rings
 #################################
 
-# general catch-all
+# generic
 %%%%
 the ring
 der Ring
 %%%%
 
+# identified ring names are constructed with the generic and a suffix from item-suffixes.txt
+
 # unidentified rings have two adjectives
 # the one closest to the noun is a material, which in German is usually combined with the noun
-
 # this is combined list from item-name.cc and descript/randname.txt
 %%%%
 the agate ring
@@ -452,11 +453,13 @@ der Holzring
 # Amulets
 #################################
 
-# general catch-all
+# generic
 %%%%
 the amulet
 das Amulett
 %%%%
+
+# identified amulet names are constructed with the generic and a suffix from item-suffixes.txt
 
 # unidentified amulets have two adjectives
 # the one closest to the noun is (usually) a material, which in German is usually combined with the noun
@@ -579,6 +582,13 @@ das Zinnamulett
 # Wands
 #################################
 
+# generic
+%%%%
+the wand
+der Zauberstab
+%%%%
+
+# identified
 %%%%
 the wand of flame
 der Zauberstab der Flammen
@@ -604,14 +614,13 @@ der Zauberstab der Säure
 the wand of mindburst
 der Zauberstab des Kopfzerplatzens
 %%%%
+# obsolete (can happen if player loads a saved game from an older version)
 the wand of removedness
 der Zauberstab der Obsoleszenz
 %%%%
 
-# unidentified
-%%%%
-the wand
-der Zauberstab
+# unidentified amulets can have two adjectives
+# the one closest to the noun is (usually) a material, which in German is usually combined with the noun
 %%%%
 the iron wand
 der Eisenzauberstab
@@ -654,9 +663,19 @@ der fluoreszierender Zauberstab
 # Scrolls
 #################################
 
+# generic
+%%%%
+the scroll
+der Schriftrolle
+%%%%
+
+# unidentified
 %%%%
 the scroll labelled %s
 die Schriftrolle beschriftet mit %s
+%%%%
+
+# identified
 %%%%
 the scroll of acquirement
 die Schriftrolle der Erwerbung
@@ -703,9 +722,6 @@ die Schriftrolle des Fluchaufhebens
 the scroll of silence
 die Schriftrolle der Stille
 %%%%
-# Note: In DCSS, there is a distinction between summoning and conjuration
-# The usual German word for summoning is Beschwörung, but that also means conjuration
-%%%%
 the scroll of summoning
 die Schriftrolle der Beschwörung
 %%%%
@@ -718,6 +734,7 @@ die Schriftrolle der Peinigung
 the scroll of vulnerability
 die Schriftrolle der Vulnerabilität
 %%%%
+# obsolete (can happen if player loads a saved game from an older version)
 the scroll of removedness
 die Schriftrolle der Obsoleszenz
 %%%%
@@ -726,6 +743,13 @@ die Schriftrolle der Obsoleszenz
 # Potions
 #################################
 
+# generic
+%%%%
+the potion
+der Zaubertrank
+%%%%
+
+# identified
 %%%%
 the potion of ambrosia
 der Trank der Ambrosia
@@ -779,14 +803,10 @@ the potion of resistance
 der Trank der Resistenz
 %%%%
 
-# unidentified potions are named "<colour> <potion>"
-# or "<qualifier> <colour> potion"
-%%%%
-the potion
-der Zaubertrank
-%%%%
+# unidentified potions can have 1 or 2 adjectives
+# the adjective closest to the noun is a colour
 
-# Some potion colours are the names of gemstones, etc., and are used elsewhere
+# Some potion colours are the names of materials, and are used elsewhere
 # in Crawl to mean actually made of/with that thing, rather than merely having
 # its colour. In English, we can get away with using the same word for both
 # meanings, but that's not necessarily the case in other languages.
@@ -807,10 +827,19 @@ the golden potion
 der goldene Zaubertrank
 %%%%
 
+# other colours are defined in adjectives.txt
+
 #################################
 # Magical Staves
 #################################
 
+# generic
+%%%%
+the staff
+der Stab
+%%%%
+
+# identified
 %%%%
 the staff of fire
 der Stab des Feuers
@@ -833,11 +862,9 @@ der Stab der Luft
 the staff of earth
 der Stab der Erde
 %%%%
+# obsolete (can happen if player loads a saved game from an older version)
 the staff of removedness
 der Stab der Obsoleszenz
-%%%%
-the staff
-der Stab
 %%%%
 
 #################################

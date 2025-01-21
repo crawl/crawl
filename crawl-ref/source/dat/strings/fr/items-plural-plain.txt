@@ -26,6 +26,7 @@
 # Rings
 #################################
 
+# generic
 %%%%
 rings
 anneaux
@@ -35,6 +36,7 @@ anneaux
 # Amulets
 #################################
 
+# generic
 %%%%
 amulets
 amulettes
@@ -44,6 +46,13 @@ amulettes
 # Wands
 #################################
 
+# generic
+%%%%
+wands
+baguettes
+%%%%
+
+# identified
 %%%%
 wands of flame
 baguettes de flammes
@@ -85,6 +94,12 @@ baguettes d'explosion mentale
 #################################
 # Magical Staves
 #################################
+
+# generic
+%%%%
+staves
+bâtons
+%%%%
 
 %%%%
 staves of earth

@@ -329,15 +329,16 @@ la robe crème perle
 # Rings
 #################################
 
-# general catch-all
+# generic
 %%%%
 the ring
 l'anneau
 %%%%
 
-# unidentified rings have two adjectives
-# the one closest to the noun is a material, which in French is not treated like an adjective
+# identified ring names are constructed with the generic and a suffix from item-suffixes.txt
 
+# unidentified rings have two adjectives
+# the one closest to the noun is a material, which in some languages is not treated like an adjective
 # this is combined list from item-name.cc and descript/randname.txt
 %%%%
 the agate ring
@@ -456,14 +457,16 @@ l'anneau de bois
 # Amulets
 #################################
 
-# general catch-all
+# generic
 %%%%
 the amulet
 {f}l'amulette
 %%%%
 
+# identified amulet names are constructed with the generic and a suffix from item-suffixes.txt
+
 # unidentified amulets have two adjectives
-# the one closest to the noun is (usually) a material, which is not treated like an adjective in French
+# the one closest to the noun is (usually) a material, which is not treated like an adjective in some languages
 
 # from item-name.txt
 %%%%
@@ -583,6 +586,13 @@ the tin amulet
 # Wands
 #################################
 
+# generic
+%%%%
+the wand
+la baguette
+%%%%
+
+# identified
 %%%%
 the wand of flame
 la baguette de flammes
@@ -608,14 +618,13 @@ la baguette d'acide
 the wand of mindburst
 la baguette d'explosion mentale
 %%%%
+# obsolete (can happen if player loads a saved game from an older version)
 the wand of removedness
 la baguette de disparition
 %%%%
 
-# unidentified
-%%%%
-the wand
-la baguette
+# unidentified amulets can have two adjectives
+# the one closest to the noun is (usually) a material, which in some languages is not treated like an adjective
 %%%%
 the iron wand
 la baguette de fer
@@ -658,9 +667,19 @@ la baguette fluorescente
 # Scrolls
 #################################
 
+# generic
+%%%%
+the scroll
+le parchemin
+%%%%
+
+# unidentified
 %%%%
 the scroll labelled %s
 le parchemin étiqueté %s
+%%%%
+
+# identified
 %%%%
 the scroll of acquirement
 le parchemin d'acquisition
@@ -719,6 +738,7 @@ le parchemin de tourment
 the scroll of vulnerability
 le parchemin de vulnérabilité
 %%%%
+# obsolete (can happen if player loads a saved game from an older version)
 the scroll of removedness
 le parchemin de disparition
 %%%%
@@ -727,6 +747,13 @@ le parchemin de disparition
 # Potions
 #################################
 
+# generic
+%%%%
+the potion
+la potion
+%%%%
+
+# identified
 %%%%
 the potion of ambrosia
 la potion d'ambroisie
@@ -780,14 +807,10 @@ the potion of resistance
 la potion de résistance
 %%%%
 
-# unidentified potions are named "<colour> <potion>"
-# or "<qualifier> <colour> potion"
-%%%%
-the potion
-la potion
-%%%%
+# unidentified potions can have 1 or 2 adjectives
+# the adjective closest to the noun is a colour
 
-# Some potion colours are the names of gemstones, etc., and are used elsewhere
+# Some potion colours are the names of materials, and are used elsewhere
 # in Crawl to mean actually made of/with that thing, rather than merely having
 # its colour. In English, we can get away with using the same word for both
 # meanings, but that's not necessarily the case in other languages.
@@ -808,10 +831,19 @@ the golden potion
 la potion dorée
 %%%%
 
+# other colours are defined in adjectives.txt
+
 #################################
 # Magical Staves
 #################################
 
+# generic
+%%%%
+the staff
+le bâton
+%%%%
+
+# identified
 %%%%
 the staff of fire
 le bâton de feu
@@ -834,11 +866,9 @@ le bâton d'air
 the staff of earth
 le bâton de terre
 %%%%
+# obsolete (can happen if player loads a saved game from an older version)
 the staff of removedness
 le bâton de disparition
-%%%%
-the staff
-le bâton
 %%%%
 
 #################################
