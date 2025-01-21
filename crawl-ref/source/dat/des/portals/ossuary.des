@@ -1339,3 +1339,105 @@ cc~~~~~~~~~~c.!!!!!!!!!!!cc
        c....Ac
        ccccccc
 ENDMAP
+
+# an ossuary with no clear pathway and monsters and loot scattered about
+NAME:   ossuary_hellmonk_twisting_tombs
+TAGS:   no_item_gen no_monster_gen
+WEIGHT: 10
+ORIENT: encompass
+MONS:   weeping skull / burial acolyte
+MONS:   mummy / wight w:2
+MONS:   kobold zombie / gnoll zombie / orc zombie / hound zombie / \
+        human zombie / centaur zombie
+ITEM:   any potion w:15 / any scroll w:15 / gold w:6
+SHUFFLE: -+
+SHUFFLE: <A
+SUBST:  +:++., -:c, V:VVVVG
+NSUBST: 1 = 1:1 / 1:12 / *=3., 2 = 1:2 / 1:23 / *=3.
+NSUBST: " = 4:^ / 3=^" / *:"
+NSUBST: . = 3:3 / 12=3. / *:.
+NSUBST: d = 1:* / 1:*d / *:d
+KFEAT:  ^ = net trap / alarm trap w:30 / dispersal trap
+: ossuary_setup_features(_G)
+MAP
+ccccccccccccccccccccccc
+ccccccccccccccccccccccc
+ccccccccccccccccccccccc
+cccd1.+.dcd.+...-.1dccc
+ccc..3c..-..c.'.c..3ccc
+ccc-ccc..c..-...c...ccc
+ccc..dc..c..c..dc+c-ccc
+ccc...c+ccc-cc+cc...ccc
+ccc...-...c.....c...ccc
+ccc...c...c..2..+...ccc
+ccc...c.2.c.....c..dccc
+cccc+cc...-.....cc-cccc
+cccd..c...c.....c..dccc
+ccc...cc+cccc+-cc...ccc
+ccc...c....-....c...ccc
+ccc...c....c....c...ccc
+ccc...-....c....c...ccc
+ccc...c....c....c...ccc
+cccc+ccccc+c+cc-cc+cccc
+ccc2....-"""""c.....ccc
+ccc.....c""A""c...2.ccc
+ccc+cc+cc""V""+.....ccc
+ccc..c..-""<""c.....ccc
+ccc..c..+"""""ccc-c+ccc
+ccc..c..ccc-ccc.....ccc
+ccc3.c..+.....+.....ccc
+ccc1.c..c.....-....3ccc
+cccd.-..cd.2..c...1dccc
+ccccccccccccccccccccccc
+ccccccccccccccccccccccc
+ccccccccccccccccccccccc
+ENDMAP
+
+NAME: ossuary_hellmonk_split_paths
+TAGS:   no_item_gen no_monster_gen
+WEIGHT: 10
+ORIENT: encompass
+MONS:   burial acolyte / weeping skull / wraith w:3 / marrowcuda w:3
+MONS:   mummy / scorpion w:4
+MONS:   centaur zombie / water moccasin zombie / scorpion zombie /\
+        bullfrog zombie
+MONS:   goblin zombie / hobgoblin zombie / adder zombie / orc zombie /\
+        gnoll zombie
+ITEM:   any potion w:15 / any scroll w:15 / gold w:6
+NSUBST: 3 = 2:3 / *=3...
+NSUBST: - = 3:4 / 1:3 / 8=4. / *:.
+NSUBST: ~ = 3:4 / 1:3 / 8=4. / *:.
+NSUBST: ! = 2:4 / 1:3 / 1:3.. / 6=4. / *:.
+NSUBST: ' = 2:4 / 1:3 / 1:3.. / 6=4. / *:.
+NSUBST: " = 2:^ / 1:2 / *:.
+NSUBST: 2 = 1:2 / 4=2... / *:.
+NSUBST: d = 1:* / 1:*d / *:d
+KFEAT:  ^ = net trap / alarm trap w:30 / dispersal trap
+: ossuary_setup_features(_G)
+MAP
+cccccccccccccccccccccccc
+cccc-----------------ccc
+ccc-------------------cc
+cc------ccccccccccc----c
+c----cccc!!!!!!!!!ccc..c
+c---cc!!!!!!!!!!!!.....c
+c..cc!!!!!cc!!!cc......cc
+c..!!!!!ccccccccccc.....cc
+c..!!!cccc2.....2cccc....c
+c..!!cc"3cc..3..ccddcc...cc
+c..ccc""""cc...ccd.3dc....c
+c..""""""".c...c....dcc...c
+c3.""""2"3^+.G^+...1ddcA.<c
+c..""""""".c...c....dcc...c
+c..ccc""""cc...ccd.3dc....c
+c..''cc"3cc..3..ccddcc...cc
+c..'''cccc2.....2cccc....c
+c..'''''ccccccccccc.....cc
+c..cc'''''cc'''cc......cc
+c~~~cc''''''''''''.....c
+c~~~~cccc'''''''''ccc..c
+cc~~~~~~ccccccccccc~~~~c
+ccc~~~~~~~~~~~~~~~~~~~cc
+cccc~~~~~~~~~~~~~~~~~ccc
+cccccccccccccccccccccccc
+ENDMAP
