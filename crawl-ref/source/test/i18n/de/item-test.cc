@@ -710,6 +710,11 @@ int main()
     test("Golubria's Handbook of Fire and Ice", "Golubrias Handbuch des Feuers und des Eises");
     test("Borgnjor's Compendium of Fiery Attacks", "Borgnjors Kompendium der feurigen Angriffe");
 
+
+    string msg;
+    msg = localise("Pick up how many of the %s (; or enter for all)?", "21 poisoned darts");
+    test(msg, "Der Stapel hat 21 vergiftete Wurfpfeile. Wie viele aufheben (; oder Enter für alle)?");
+
     cout << endl << num_passes << " TESTS PASSED" << endl;
     if (num_fails > 0)
         cout << "**** " << num_fails << " TESTS FAILED ****" << endl;

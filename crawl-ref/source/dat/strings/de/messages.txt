@@ -7021,8 +7021,9 @@ Du hast diesen Gegenstand @in_location@ gefunden
 Are you sure you want to pick up this pile of gold now?
 Bist du sicher, dass du diesen Haufen Gold jetzt abholen willst?
 %%%%
-Pick up how many of %s (; or enter for all)?
-Wieviele von {dat}%s aufheben (; oder Enter für Alle)?
+# note: %s here will be a counted plural (e.g. "27 boomerangs")
+Pick up how many of the %s (; or enter for all)?
+Der Stapel hat {acc}%s. Wie viele aufheben (; oder Enter für alle)?
 %%%%
 There are no items here.
 Hier gibt es keine Gegenstände.
