@@ -618,7 +618,7 @@ la baguette d'acide
 the wand of mindburst
 la baguette d'explosion mentale
 %%%%
-# obsolete (can happen if player loads a saved game from an older version)
+# obsolete item (can occur if player loads a saved game from an older version)
 the wand of removedness
 la baguette de disparition
 %%%%
@@ -738,7 +738,7 @@ le parchemin de tourment
 the scroll of vulnerability
 le parchemin de vulnérabilité
 %%%%
-# obsolete (can happen if player loads a saved game from an older version)
+# obsolete item (can occur if player loads a saved game from an older version)
 the scroll of removedness
 le parchemin de disparition
 %%%%
@@ -866,7 +866,7 @@ le bâton d'air
 the staff of earth
 le bâton de terre
 %%%%
-# obsolete (can happen if player loads a saved game from an older version)
+# obsolete item (can occur if player loads a saved game from an older version)
 the staff of removedness
 le bâton de disparition
 %%%%

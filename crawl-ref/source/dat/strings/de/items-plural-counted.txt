@@ -161,7 +161,7 @@
 %d scrolls of vulnerability
 %d Schriftrollen der Vulnerabilität
 %%%%
-# obsolete (can happen if player loads a saved game from an older version)
+# obsolete items (can occur if player loads a saved game from an older version)
 %d scrolls of removedness
 %d Schriftrollen der Obsoleszenz
 %%%%

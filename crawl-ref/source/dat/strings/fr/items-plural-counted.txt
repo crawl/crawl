@@ -161,6 +161,7 @@
 %d scrolls of vulnerability
 {mpl}%d parchemins de vulnérabilité
 %%%%
+# obsolete items (can occur if player loads a saved game from an older version)
 %d scrolls of removedness
 {mpl}%d parchemins de disparition
 %%%%
@@ -228,6 +229,9 @@
 %d potions of resistance
 {fpl}%d potions de résistance
 %%%%
+
+# unidentified potions can have 1 or 2 adjectives
+# the adjective closest to the noun is a colour
 
 # Some potion colours are the names of materials, and are used elsewhere
 # in Crawl to mean actually made of/with that thing, rather than merely having

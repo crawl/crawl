@@ -614,7 +614,7 @@ der Zauberstab der Säure
 the wand of mindburst
 der Zauberstab des Kopfzerplatzens
 %%%%
-# obsolete (can happen if player loads a saved game from an older version)
+# obsolete item (can occur if player loads a saved game from an older version)
 the wand of removedness
 der Zauberstab der Obsoleszenz
 %%%%
@@ -734,7 +734,7 @@ die Schriftrolle der Peinigung
 the scroll of vulnerability
 die Schriftrolle der Vulnerabilität
 %%%%
-# obsolete (can happen if player loads a saved game from an older version)
+# obsolete item (can occur if player loads a saved game from an older version)
 the scroll of removedness
 die Schriftrolle der Obsoleszenz
 %%%%
@@ -862,7 +862,7 @@ der Stab der Luft
 the staff of earth
 der Stab der Erde
 %%%%
-# obsolete (can happen if player loads a saved game from an older version)
+# obsolete item (can occur if player loads a saved game from an older version)
 the staff of removedness
 der Stab der Obsoleszenz
 %%%%
