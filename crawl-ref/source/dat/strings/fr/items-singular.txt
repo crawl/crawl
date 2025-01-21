@@ -8,6 +8,11 @@
 # Melee Weapons
 #################################
 
+# Notes:
+#   - English has borrowed some French words and given them a different meaning
+#   - glaive is a short sword in French, but in English it's a type of polearm (essentially a sword on a stick)
+#   - lance is the French word for spear, but in English it's a specific type of spear used on horseback
+
 %%%%
 # for player ghosts
 the weapon
@@ -119,7 +124,7 @@ the trishula
 le trishula
 %%%%
 the glaive
-le glaive
+la vouge
 %%%%
 the bardiche
 la bardiche
@@ -131,7 +136,7 @@ the lajatang
 le lajatang
 %%%%
 the lance
-la lance
+la lance de cavalerie
 %%%%
 # "Gyre" and "Gimble" - base name
 the pair of quick blades
@@ -235,7 +240,7 @@ the leather armour
 {f}l'armure en cuir
 %%%%
 the ring mail
-la cotte de mailles
+la cuirasse à anneaux
 %%%%
 the scale mail
 {f}l'armure d'écailles
