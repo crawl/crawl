@@ -4404,13 +4404,13 @@ bool monster::fully_petrify(bool quiet)
     return msg;
 }
 
-bool monster::vex(const actor *source, int duration)
+bool monster::vex(const actor *who, int duration, string /* source */)
 {
     if (clarity() || has_ench(ENCH_VEXED))
         return false;
 
     simple_monster_message(*this, " is overwhelmed by frustration!");
-    add_ench(mon_enchant(ENCH_VEXED, 0, source, duration * BASELINE_DELAY));
+    add_ench(mon_enchant(ENCH_VEXED, 0, who, duration * BASELINE_DELAY));
 
     return true;
 }

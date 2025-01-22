@@ -7113,7 +7113,7 @@ bool player::fully_petrify(bool /*quiet*/)
     return true;
 }
 
-bool player::vex(const actor* source, int dur)
+bool player::vex(const actor* who, int dur, string source)
 {
     if (you.clarity())
     {
@@ -7131,8 +7131,18 @@ bool player::vex(const actor* source, int dur)
     mprf(MSGCH_WARN, "You feel overwhelmed by frustration!");
     you.duration[DUR_VEXED] = dur * BASELINE_DELAY;
 
-    if (source)
-        props[DISABLED_BY_KEY] = source->name(DESC_A, true);
+    int &vex(duration[DUR_VEXED]);
+
+    const bool use_actor_name = source.empty() && who != nullptr;
+    if (use_actor_name)
+        source = who->name(DESC_A);
+
+    if (!vex && !source.empty())
+    {
+        take_note(Note(NOTE_VEXED, dur, 0, source));
+        props[DISABLED_BY_KEY] = use_actor_name ? who->name(DESC_A, true)
+                                               : source;
+    }
     else
         props.erase(DISABLED_BY_KEY);
 

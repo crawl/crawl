@@ -694,13 +694,17 @@ static bool _yredelemnul_retribution()
 
 static bool _trog_retribution()
 {
-    // physical/berserk theme
+    // berserk theme
     const god_type god = GOD_TROG;
+    int tension = get_tension(GOD_TROG);
 
-    if (coinflip())
+    if (you.hp < you.hp_max * 2 / 3 || tension < 4 || tension > 27)
     {
+        // If the other effect could kill you, tension is low enough we can
+        // safely interrupt you, or tension's so high they're not making things
+        // much worse, summon berserkers from the Brothers In Arms monster set.
         int count = 0;
-        int points = 3 + you.experience_level * 3;
+        int points = 2 + you.experience_level * 3;
 
         {
             msg::suppress msg;
@@ -708,7 +712,7 @@ static bool _trog_retribution()
             while (points > 0)
             {
                 int cost =
-                    min(min(random2avg((1 + you.experience_level / 3), 2) + 3,
+                    min(min(random2avg((1 + you.experience_level / 4), 2) + 3,
                             10),
                         points);
 
@@ -731,57 +735,14 @@ static bool _trog_retribution()
                                      : " has no time to punish you... now.",
                            false, god);
     }
-    else if (!one_chance_in(3))
-    {
-        simple_god_message(" voice booms out: Feel my wrath!", true, god);
-
-        // A collection of physical effects that might be better
-        // suited to Trog than wild fire magic... messages could
-        // be better here... something more along the lines of apathy
-        // or loss of rage to go with the anti-berserk effect-- bwr
-        switch (random2(6))
-        {
-        case 0:
-        case 1:
-        case 2:
-            you.weaken(nullptr, 50);
-            break;
-
-        case 3:
-            if (!you.duration[DUR_PARALYSIS])
-            {
-                mprf(MSGCH_WARN, "You suddenly pass out!");
-                const int turns = 2 + random2(6);
-                take_note(Note(NOTE_PARALYSIS, min(turns, 13), 0, "Trog"));
-                you.increase_duration(DUR_PARALYSIS, turns, 13);
-            }
-            return false;
-
-        case 4:
-        case 5:
-            mprf(MSGCH_WARN, "You suddenly feel lethargic!");
-            slow_player(91 + random2(10));
-            break;
-        }
-    }
     else
     {
-        // A fireball is magic when used by a mortal but just a manifestation
-        // of pure rage when used by a god. --ebering
-
-        monster* avatar = _get_wrath_avatar(god);
-        // can't be const because mons_cast() doesn't accept const monster*
-
-        if (avatar == nullptr)
-        {
-            simple_god_message(" has no time to deal with you just now.", false,
-                               god);
-            return false; // not a very dazzling divine experience...
-        }
-
-        _spell_retribution(avatar, SPELL_FIREBALL,
-                           god, " hurls fiery rage upon you!");
-        _reset_avatar(*avatar);
+        // Otherwise, make the player do a cruel mockery of berserk:
+        // weakly thrashing in place, regularly hitting walls and floors.
+        simple_god_message(" tears away your strength and self-control!", false, god);
+        int vex_max = max(4, you.experience_level / 4);
+        you.weaken(nullptr, 25);
+        you.vex(nullptr, random_range(3, vex_max), "Trog's wrath");
     }
 
     return true;
