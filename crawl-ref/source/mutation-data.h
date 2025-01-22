@@ -2416,6 +2416,7 @@ static const mutation_def mut_data[] =
   {"You are missing an eye, making it more difficult to aim.", "", ""},
   {"Your right eye vanishes! The world loses its depth.", "", ""},
   {"Your right eye suddenly reappears! The world regains its depth.", "", ""},
+  TILEG_MUT_MISSING_EYE,
 },
 
 { MUT_TEMPERATURE_SENSITIVITY, 0, 1, mutflag::bad, false,

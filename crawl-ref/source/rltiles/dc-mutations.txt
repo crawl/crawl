@@ -259,6 +259,7 @@ jelly_growth JELLY_GROWTH
 tendrils TENDRILS
 
 # Ru sacrifices
+missing_eye MISSING_EYE
 missing_hand MISSING_HAND
 no_armour_skill NO_ARMOUR_SKILL
 no_dodging NO_DODGING

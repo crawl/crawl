@@ -1979,6 +1979,16 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
                 return TILEP_MONS_EDMUND_WEAPONLESS;
         }
 
+        case MONS_PIKEL:
+        {
+            // For if Pikel loses his whip
+            const item_def * const weapon = mon.inv[MSLOT_WEAPON].get();
+            if (weapon && weapon->is_type(OBJ_WEAPONS, WPN_WHIP))
+                return TILEP_MONS_PIKEL;
+            else
+                return TILEP_MONS_PIKEL_WHIPLESS;
+        }
+
         case MONS_ERICA:
         {
             // For if Erica loses her flaming scimitar

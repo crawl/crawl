@@ -926,14 +926,23 @@ int airstrike_space_around(coord_def target, bool count_unseen)
     return empty_space;
 }
 
-string airstrike_intensity_line(int empty_space)
+string airstrike_intensity_display(int empty_space, tileidx_t& tile)
 {
     if (empty_space < 3)
+    {
+        tile = TILE_BOLT_WEAK_AIR;
         return "The confined air twists around weakly";
+    }
     else if (empty_space < 6)
+    {
+        tile = TILE_BOLT_MEDIUM_AIR;
         return "The air twists around";
+    }
     else
+    {
+        tile = TILE_BOLT_STRONG_AIR;
         return "The open air twists around violently";
+    }
 }
 
 spret cast_airstrike(int pow, coord_def target, bool fail)
@@ -964,6 +973,7 @@ spret cast_airstrike(int pow, coord_def target, bool fail)
 
     bolt pbeam;
     pbeam.flavour = BEAM_AIR;
+    tileidx_t tile = TILE_BOLT_DEFAULT_WHITE;
 
     const int empty_space = airstrike_space_around(target, true);
 
@@ -976,10 +986,12 @@ spret cast_airstrike(int pow, coord_def target, bool fail)
     hurted = mons->apply_ac(mons->beam_resists(pbeam, hurted, false));
     dprf("preac: %d, postac: %d", preac, hurted);
     mprf("%s and strikes %s%s%s",
-         airstrike_intensity_line(empty_space).c_str(),
+         airstrike_intensity_display(empty_space, tile).c_str(),
          mons->name(DESC_THE).c_str(),
          hurted ? "" : " but does no damage",
          attack_strength_punctuation(hurted).c_str());
+
+    flash_tile(mons->pos(), WHITE, 60, tile);
     _player_hurt_monster(*mons, hurted, pbeam.flavour);
 
     if (mons->alive())

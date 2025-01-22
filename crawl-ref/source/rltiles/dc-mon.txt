@@ -971,6 +971,7 @@ acid_blob MONS_ACID_BLOB
 sonja MONS_SONJA
 %rim 0
 pikel MONS_PIKEL
+pikel_whipless MONS_PIKEL_WHIPLESS
 %sdir mon/humanoids
 kobold MONS_KOBOLD
 kobold_brigand MONS_KOBOLD_BRIGAND

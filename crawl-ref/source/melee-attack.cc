@@ -3784,8 +3784,12 @@ void melee_attack::mons_apply_attack_flavour()
 
         if (needs_message && special_damage)
         {
+            // XXX: VFX during regular melee is distracting, but players not
+            // respecting the mechanic will get quite bodied. Hrm.
+            tileidx_t generic = TILE_BOLT_DEFAULT_WHITE;
+
             mprf("%s and strikes %s%s",
-                 airstrike_intensity_line(spaces).c_str(),
+                 airstrike_intensity_display(spaces, generic).c_str(),
                  defender->name(DESC_THE).c_str(),
                  attack_strength_punctuation(special_damage).c_str());
         }

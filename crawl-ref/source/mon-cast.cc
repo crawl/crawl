@@ -6333,10 +6333,11 @@ static void _mons_upheaval(monster& mons, actor& /*foe*/, bool randomize)
             message        = "A blizzard blasts the area with ice!";
             break;
         case 2:
-            beam.name    = "cutting wind";
-            beam.flavour = BEAM_AIR;
-            beam.colour  = LIGHTGRAY;
-            message      = "A storm cloud blasts the area with cutting wind!";
+            beam.name      = "cutting wind";
+            beam.flavour   = BEAM_AIR;
+            beam.colour    = LIGHTGRAY;
+            beam.tile_beam = TILE_BOLT_STRONG_AIR;
+            message        = "A storm cloud blasts the area with cutting wind!";
             break;
         case 3:
             beam.name    = "blast of rubble";
@@ -6924,10 +6925,14 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
         if (you.can_see(*foe))
         {
+            tileidx_t tile = TILE_BOLT_DEFAULT_WHITE;
+
             mprf("%s and strikes %s%s",
-                 airstrike_intensity_line(empty_space).c_str(),
+                 airstrike_intensity_display(empty_space, tile).c_str(),
                  foe->name(DESC_THE).c_str(),
                  attack_strength_punctuation(damage_taken).c_str());
+
+            flash_tile(foe->pos(), WHITE, 60, tile);
         }
 
         foe->hurt(mons, damage_taken, BEAM_MISSILE, KILLED_BY_BEAM,

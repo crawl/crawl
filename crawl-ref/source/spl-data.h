@@ -2795,7 +2795,7 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_HUNTING_CALL,
 },
 
 {

@@ -53,6 +53,12 @@ zap1
 zap2
 zap3
 
+weak_air0 BOLT_WEAK_AIR
+medium_air0 BOLT_MEDIUM_AIR
+medium_air1
+strong_air0 BOLT_STRONG_AIR
+strong_air1
+
 # Earth bolts
 sandblast0 BOLT_SANDBLAST
 sandblast1

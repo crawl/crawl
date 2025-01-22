@@ -4025,10 +4025,11 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
             message        = "A blizzard blasts the area with ice!";
             break;
         case 2:
-            beam.name    = "cutting wind";
-            beam.flavour = BEAM_AIR;
-            beam.colour  = LIGHTGRAY;
-            message      = "A storm cloud blasts the area with cutting wind!";
+            beam.name      = "cutting wind";
+            beam.flavour   = BEAM_AIR;
+            beam.colour    = LIGHTGRAY;
+            beam.tile_beam = TILE_BOLT_STRONG_AIR;
+            message        = "A storm cloud blasts the area with cutting wind!";
             break;
         case 3:
             beam.name    = "blast of rubble";
