@@ -1495,3 +1495,54 @@ cc--ccccc--cccc..c
             cwwwwwwc
             cccccccc
 ENDMAP
+
+NAME:   sewer_hellmonk_circle_the_drain
+TAGS:   no_item_gen no_monster_gen no_pool_fixup
+ORIENT: encompass
+MONS:   bullfrog
+MONS:   ribbon worm w:5 / ball python / endoplasm / giant cockroach
+KMONS:  2 = brain worm / adder / river rat
+KFEAT:  2 = shallow_water
+ITEM: any scroll
+: item(dgn.loot_potions)
+NSUBST: d = 1:1 / *:d, f = 1:1 / *:d
+NSUBST: W = 4:2 / *:W, 2 = 2:2 / *=2W
+SUBST:  - = WWWW.
+NSUBST: . = 6:3 / 12 = 3. / *:.
+SUBST:  " = W., ~ = WW., d = de
+: sewer_setup(_G)
+MAP
+       ccccccc
+     ccc..2--ccc
+    cc.......--cc
+   cc..........-cc
+   c....-----...-c
+  cc...-ccccc-..-cc
+  c...-cc---cc-..-c
+ cc..-cc-...-cc-.-cc
+ c2--cc-.....-c-..-c
+ c---c-......-c-..-c
+ cWWcc-..ccc~~c-..-c
+ccWWc-..cc~cc~c-2cccc
+cWWcc-.cc~""~~c--cffc
+cWWc-..c~"""""c--cffc
+cWWc-.cc""""""c--cffc
+cWWc--c~""A"""c--cWWc
+cWWc--c"""""""c--cWWc
+cWWc--c"""<""~c--cWWc
+cddc--c""""""cc.-cWWc
+cddc--c"""""~c..-cWWc
+cddc--c~~""~cc.-ccWWc
+cccc2-c~cc~cc..-cWWcc
+ c-..-c~~ccc..-ccWWc
+ c-..-c-......-c---c
+ c-..-c-.....-cc--2c
+ cc-.-cc-...-cc-..cc
+  c-..-cc---cc-...c
+  cc-..-ccccc-...cc
+   c-...-----....c
+   cc-..........cc
+    cc--.......cc
+     ccc--2..ccc
+       ccccccc
+ENDMAP

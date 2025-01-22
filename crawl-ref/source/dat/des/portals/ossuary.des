@@ -1393,7 +1393,7 @@ ccccccccccccccccccccccc
 ccccccccccccccccccccccc
 ENDMAP
 
-NAME: ossuary_hellmonk_split_paths
+NAME:   ossuary_hellmonk_split_paths
 TAGS:   no_item_gen no_monster_gen
 WEIGHT: 10
 ORIENT: encompass
@@ -1440,4 +1440,47 @@ cc~~~~~~ccccccccccc~~~~c
 ccc~~~~~~~~~~~~~~~~~~~cc
 cccc~~~~~~~~~~~~~~~~~ccc
 cccccccccccccccccccccccc
+ENDMAP
+
+NAME:   ossuary_hellmonk_orc_graveyard
+TAGS:   no_item_gen no_monster_gen
+WEIGHT: 10
+ORIENT: encompass
+MONS:   orc warrior zombie w:20 / weeping skull / troll zombie w:1
+MONS:   ogre zombie / mummy w:1
+MONS:   orc zombie w:30 / gnoll zombie / ogre zombie w:2 /\
+        hobgoblin zombie w:7 / elf zombie w:1
+KMONS:  B = burial acolyte
+ITEM:   any potion w:15 / any scroll w:15 / gold w:6
+SUBST:  3 = 3..
+NSUBST: - = 10:t / 3:G / 5:3 / 20 = t.. / 5 = G. / 6 = 3. / *:.
+NSUBST: 1 = 1:1 / *:2, d = 6:d / 1:* / *=ddd*
+KFEAT:  ^ = alarm trap
+KFEAT:  B = altar_kikubaaqudgha / altar_yredelemnul / altar_beogh w:2
+KFEAT:  t = petrified_tree
+: vault_granite_statue_setup(_G, "G", "gravestone")
+: ossuary_setup_features(_G)
+MAP
+         ccccc
+        cc.B.cc
+        c.....c
+ccccccccccc+ccccccccccc
+c.....^..3.2.3..^.....c
+c.....^.........^.....c
+c3...cc.........cc...3c
+cd13dcccc.^^^.ccccd31dc
+cddddc3.cc+++cc.3cddddc
+cccccc...........cccccc
+  cc.....-----.....ccc
+  c3...--.---.--...3c
+  c...-.--.-.--.-...c
+  cc..-----------..cc
+   c3.----.-.----.3c
+   c...--.---.--...c
+   cc..-.-----.-..cc
+    c...-.-.-.-...c
+    cc...-.-.-...cc
+     cc.........cc
+      ccc.A.<.ccc
+        ccccccc
 ENDMAP
