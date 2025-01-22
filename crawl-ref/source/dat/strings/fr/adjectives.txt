@@ -464,25 +464,25 @@
 # (also used for jewellery, and in some cases, potion or rune, but we've given specific translations for those)
 %%%%
 "silver "
-" argent"
+" d'argent"
 %%%%
 "golden "
-" or"
+" d'or"
 %%%%
 "crystal "
-" cristal"
+" de cristal"
 %%%%
 "ivory "
-" ivoire"
+" d'ivoire"
 %%%%
 "bone "
-" os"
+" d'os"
 %%%%
 "sapphire "
-" saphir"
+" de saphir"
 %%%%
 "ebony "
-" ébène"
+" d'ébène"
 %%%%
 
 ################################
