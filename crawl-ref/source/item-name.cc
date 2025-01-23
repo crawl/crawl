@@ -294,8 +294,11 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
             buff << " (quivered)";
     }
 
-    if (descrip != DESC_BASENAME && descrip != DESC_DBNAME && with_inscription)
+    if (descrip != DESC_BASENAME && descrip != DESC_DBNAME
+        && descrip != DESC_QUALNAME && with_inscription)
+    {
         buff << _item_inscription(*this);
+    }
 
     // These didn't have "cursed " prepended; add them here so that
     // it comes after the inscription.
@@ -1536,7 +1539,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             buff << "cursed ";
 
         // Don't list unenchantable armor as +0.
-        if (identified && !dbname && armour_is_enchantable(*this))
+        if (identified && !dbname && !qualname && armour_is_enchantable(*this))
             buff << make_stringf("%+d ", plus);
 
         if ((item_typ == ARM_GLOVES || item_typ == ARM_BOOTS)
