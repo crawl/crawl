@@ -1176,12 +1176,9 @@ static item_def* _item_swap_menu(const vector<item_def*>& candidates)
 
 static item_def* _item_swap_prompt(const vector<item_def*>& candidates)
 {
-    if (candidates.size() + 2 > msgwin_lines() || ui::has_layout()
-        || candidates.size() > 8)
-    {
-        // force a menu rather than a more().
+    // Default to a menu for larger choices
+    if (candidates.size() > 3 || ui::has_layout())
         return _item_swap_menu(candidates);
-    }
 
     vector<char> slot_chars;
     for (auto item : candidates)
