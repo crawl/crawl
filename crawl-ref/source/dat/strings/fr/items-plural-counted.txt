@@ -194,7 +194,7 @@
 {fpl}%d potions d'annulation
 %%%%
 %d potions of curing
-{fpl}%d potions de guérison
+{mpl}%d antidotes
 %%%%
 %d potions of degeneration
 {fpl}%d potions de dégénérescence

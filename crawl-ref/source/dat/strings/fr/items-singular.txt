@@ -771,7 +771,7 @@ the potion of cancellation
 la potion d'annulation
 %%%%
 the potion of curing
-la potion de guérison
+l'antidote
 %%%%
 the potion of degeneration
 la potion de dégénérescence
