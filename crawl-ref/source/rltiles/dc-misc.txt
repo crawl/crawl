@@ -54,6 +54,7 @@ zap2
 zap3
 
 weak_air0 BOLT_WEAK_AIR
+weak_air1
 medium_air0 BOLT_MEDIUM_AIR
 medium_air1
 strong_air0 BOLT_STRONG_AIR

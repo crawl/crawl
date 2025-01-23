@@ -2543,6 +2543,7 @@ int exper_value(const monster& mon, bool real, bool legacy)
             case SPELL_PHANTOM_BLITZ:
             case SPELL_BLINK_RANGE:
             case SPELL_PETRIFY:
+            case SPELL_VEX:
                 diff += 20;
                 break;
 
