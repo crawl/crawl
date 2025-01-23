@@ -763,7 +763,7 @@ static void _animate_weapon(int pow, actor* target)
                  target->pos(),
                  hostile ? MHITYOU : target->mindex(),
                  hostile ? MG_NONE : MG_FORCE_BEH);
-    mg.set_summoned(&you, SPELL_TUKIMAS_DANCE, summ_dur(dur));
+    mg.set_summoned(&you, SPELL_TUKIMAS_DANCE, summ_dur(dur), false);
     mg.set_range(1, 2);
     mg.props[TUKIMA_WEAPON] = *wpn;
     mg.props[TUKIMA_POWER] = pow;
