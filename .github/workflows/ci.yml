@@ -669,6 +669,46 @@ jobs:
       - run: make -j$(nproc) monster
         working-directory: crawl-ref/source
 
+  build_docs:
+    name: Build docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      # Produce FAQ.html et cetera
+      - name: Generate non-Lua docs
+        run: make -j$(nproc) docs
+        working-directory: crawl-ref/source
+      # Installing everything to be able to do make api would be annoying.
+      # The action uses a docker container, which should make it less fragile.
+      - name: Lua LDoc
+        uses: lunarmodules/ldoc@v1.5.0
+        with:
+          args: --config crawl-ref/source/util/config.ld --dir $GITHUB_WORKSPACE/crawl-ref/docs/lua/ .
+      - name: Upload static files as artifact
+        id: deployment
+        uses: actions/upload-pages-artifact@v3 # or specific "vX.X.X" version tag for this action
+        with:
+          path: crawl-ref/docs/
+  deploy_docs:
+    name: Deploy docs
+    needs: build_docs
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
   notify_irc:
     name: "Notify #crawl-dev of build failure"
     needs:
@@ -679,6 +719,8 @@ jobs:
       - codecov_catch2
       - webserver
       - build_monster
+      - build_docs
+      - deploy_docs
     if: failure() && github.event_name == 'push'
     runs-on: ubuntu-22.04
     steps:
