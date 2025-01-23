@@ -46,7 +46,7 @@
 {fpl}%d fléchettes au datura
 %%%%
 %d stones
-{mpl}%d pierres
+{fpl}%d pierres
 %%%%
 %d large rocks
 {mpl}%d gros rochers
@@ -239,10 +239,10 @@
 # meanings, but that's not necessarily the case in other languages.
 %%%%
 %d amethyst potions
-{fpl}%d potions améthystes
+{fpl}%d potions améthyste
 %%%%
 %d emerald potions
-{fpl}%d potions émeraudes
+{fpl}%d potions émeraude
 %%%%
 %d ruby potions
 {fpl}%d potions rubis
