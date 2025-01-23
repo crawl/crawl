@@ -1376,7 +1376,8 @@ scroll of torment
 
 A scroll that calls on the powers of darkness to inflict great pain on any
 nearby creature — including the reader! This halves the resilience of all
-living creatures, although it is never directly fatal.
+living creatures and cuts down all holy creature resilence by about a third,
+although it is never directly fatal.
 %%%%
 scroll of vulnerability
 

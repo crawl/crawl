@@ -2073,9 +2073,9 @@ effect ends, the caster's movements will be sluggish for a time.
 %%%%
 Symbol of Torment spell
 
-Calls on the powers of darkness to cause agonising injury to any living thing
-in the caster's vicinity, cutting their health in half. This damage is
-never directly lethal.
+Calls on the powers of darkness to cause agonising injury to any living or
+holy thing in the caster's vicinity, cutting their health in half (partially
+resisted by negative energy resistance). This damage is never directly lethal.
 %%%%
 Teleport Other spell
 
