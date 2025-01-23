@@ -669,6 +669,23 @@ jobs:
       - run: make -j$(nproc) monster
         working-directory: crawl-ref/source
 
+  build_docs:
+    name: Build docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Lua LDoc
+        uses: lunarmodules/ldoc@v1.5.0
+        with:
+          args: --config util/config.ld --dir docs/lua/ .
+      # TODO: deploy somewhere
+#      - name: Deploy
+#        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+#        uses: peaceiris/actions-gh-pages@v3
+#        with:
+#          github_token: ${{ secrets.GITHUB_TOKEN }}
+
   notify_irc:
     name: "Notify #crawl-dev of build failure"
     needs:
