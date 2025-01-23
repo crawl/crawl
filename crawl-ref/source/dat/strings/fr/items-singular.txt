@@ -889,7 +889,7 @@ the box of beasts
 la boîte des bêtes
 %%%%
 the lightning rod
-le sceptre foudroyant
+le paratonnerre
 %%%%
 the phial of floods
 la fiole des flots

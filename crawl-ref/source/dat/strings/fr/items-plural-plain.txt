@@ -138,7 +138,7 @@ boxes of beasts
 boîtes des bêtes
 %%%%
 lightning rods
-sceptres foudroyants
+paratonnerres
 %%%%
 phials of floods
 fioles des flots
