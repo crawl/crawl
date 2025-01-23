@@ -1830,6 +1830,10 @@ void untransform(bool skip_move)
     // Must happen before the HP check!
     ash_check_bondage();
 
+    // Not necessary for proper functioning, but printing a message feels appropriate.
+    if (get_form(old_form)->forbids_flight() && you.airborne())
+        float_player();
+
     if (!skip_move)
     {
         // Activate emergency flight, if we have to.

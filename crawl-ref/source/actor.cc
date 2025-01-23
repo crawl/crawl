@@ -329,9 +329,6 @@ bool actor::evokable_invis() const
 // Return an int so we know whether an item is the sole source.
 int actor::equip_flight() const
 {
-    if (is_player() && get_form()->forbids_flight())
-        return 0;
-
     // For the player, this is cached on ATTR_PERM_FLIGHT
     return wearing_jewellery(RING_FLIGHT)
            + wearing_ego(OBJ_ARMOUR, SPARM_FLYING)
