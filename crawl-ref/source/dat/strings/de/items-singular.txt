@@ -910,77 +910,10 @@ der Vierfachschaden
 %%%%
 
 #################################
-# Runes
-#################################
-
-# These are unique, but there is at least one place where gramatically they're
-# treated as non-unique: "You found a <whatever> rune of Zot.", so we need to
-# decline as per non-unique items.
-
-%%%%
-the decaying rune
-die verwesende Rune
-%%%%
-the barnacled rune
-die seepockenbefallene Rune
-%%%%
-the gossamer rune
-die Spinnfadenrune
-%%%%
-the serpentine rune
-die Schlangenrune
-%%%%
-the slimy rune
-die schleimige Rune
-%%%%
-the abyssal rune
-die Abgrundsrune
-%%%%
-the silver rune
-die silberne Rune
-%%%%
-the golden rune
-die goldene Rune
-%%%%
-
-# hell runes
-%%%%
-the obsidian rune
-die Obsidianrune
-%%%%
-the icy rune
-die eisige Rune
-%%%%
-the bone rune
-die Knochenrune
-%%%%
-the iron rune
-die eiserne Rune
-%%%%
-
-# pandemonium runes
-%%%%
-the demonic rune
-die dämonische Rune
-%%%%
-the glowing rune
-die leuchtende Rune
-%%%%
-the magical rune
-die magische Rune
-%%%%
-the fiery rune
-die feurige Rune
-%%%%
-the dark rune
-die dunkle Rune
-%%%%
-
-#################################
 # Artefacts
 #################################
 
-# Most are unique, but this one isn't
+# Most are unique, but there are eight of these
 %%%%
 the ring of the Octopus King
 der Ring des Krakenkönigs

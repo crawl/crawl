@@ -18,6 +18,72 @@ L'Orbe de Zot
 %%%%
 
 #################################
+# Runes
+#################################
+
+# Note: These are unique, but there's at least one place where they're used
+# with the indefinite article ("Found a <whatever> rune of Zot").
+
+%%%%
+the decaying rune
+la rune de décomposition
+%%%%
+the barnacled rune
+la rune incrustée
+%%%%
+the gossamer rune
+la rune soyeuse
+%%%%
+the serpentine rune
+la rune serpentine
+%%%%
+the slimy rune
+la rune visqueuse
+%%%%
+the abyssal rune
+la rune abyssale
+%%%%
+the silver rune
+la rune d'argent
+%%%%
+the golden rune
+la rune d'or
+%%%%
+
+# hell runes
+%%%%
+the obsidian rune
+la rune d'obsidienne
+%%%%
+the icy rune
+la rune glacée
+%%%%
+the bone rune
+la rune d'os
+%%%%
+the iron rune
+la rune de fer
+%%%%
+
+# pandemonium runes
+%%%%
+the demonic rune
+la rune démoniaque
+%%%%
+the glowing rune
+la rune lumineuse
+%%%%
+the magical rune
+la rune magique
+%%%%
+the fiery rune
+la rune ardente
+%%%%
+the dark rune
+la rune sombre
+%%%%
+
+#################################
 # Unrand Artefacts
 #################################
 %%%%

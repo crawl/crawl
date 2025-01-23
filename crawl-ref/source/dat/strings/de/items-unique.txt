@@ -18,6 +18,72 @@ Die Kugel von Zot
 %%%%
 
 #################################
+# Runes
+#################################
+
+# Note: These are unique, but there's at least one place where they're used
+# with the indefinite article ("Found a <whatever> rune of Zot").
+
+%%%%
+the decaying rune
+die verwesende Rune
+%%%%
+the barnacled rune
+die seepockenbefallene Rune
+%%%%
+the gossamer rune
+die Spinnfadenrune
+%%%%
+the serpentine rune
+die Schlangenrune
+%%%%
+the slimy rune
+die schleimige Rune
+%%%%
+the abyssal rune
+die Abgrundsrune
+%%%%
+the silver rune
+die silberne Rune
+%%%%
+the golden rune
+die goldene Rune
+%%%%
+
+# hell runes
+%%%%
+the obsidian rune
+die Obsidianrune
+%%%%
+the icy rune
+die eisige Rune
+%%%%
+the bone rune
+die Knochenrune
+%%%%
+the iron rune
+die eiserne Rune
+%%%%
+
+# pandemonium runes
+%%%%
+the demonic rune
+die dämonische Rune
+%%%%
+the glowing rune
+die leuchtende Rune
+%%%%
+the magical rune
+die magische Rune
+%%%%
+the fiery rune
+die feurige Rune
+%%%%
+the dark rune
+die dunkle Rune
+%%%%
+
+#################################
 # Unrand Artefacts
 #################################
 %%%%
