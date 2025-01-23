@@ -446,6 +446,10 @@ la paire de bottes des sept lieues
 the horn of Geryon
 la corne de Géryon
 %%%%
+# note: technically not unique - there are 8 of them
+the ring of the Octopus King
+l'anneau du Roi des Pieuvres
+%%%%
 
 #################################
 # Appearance when unidentified

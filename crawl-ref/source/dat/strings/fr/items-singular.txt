@@ -914,16 +914,6 @@ le quadruple dégâts
 %%%%
 
 #################################
-# Artefacts
-#################################
-
-# Most are unique, but there are eight of these
-%%%%
-the ring of the Octopus King
-l'anneau du Roi des Pieuvres
-%%%%
-
-#################################
 # Gold
 #################################
 %%%%

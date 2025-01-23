@@ -910,16 +910,6 @@ der Vierfachschaden
 %%%%
 
 #################################
-# Artefacts
-#################################
-
-# Most are unique, but there are eight of these
-%%%%
-the ring of the Octopus King
-der Ring des Krakenkönigs
-%%%%
-
-#################################
 # Gold
 #################################
 %%%%

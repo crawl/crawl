@@ -446,6 +446,10 @@ das Paar Siebenmeilenstiefel
 the horn of Geryon
 das Horn von Geryon
 %%%%
+# note: technically not unique - there are 8 of them
+the ring of the Octopus King
+der Ring des Krakenkönigs
+%%%%
 
 #################################
 # Appearance when unidentified
