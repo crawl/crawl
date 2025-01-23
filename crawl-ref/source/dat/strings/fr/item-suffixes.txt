@@ -12,191 +12,191 @@
 # the former name is used on rings and the latter on armour
 %%%%
 " of protection from fire"
-
+" de protection contre le feu"
 %%%%
 " of fire resistance"
-
+" de résistance au feu"
 %%%%
 
 # protection from cold and cold resistance are equivalent
 # the former name is used on rings and the latter on armour
 %%%%
 " of protection from cold"
-
+" de protection contre le froid"
 %%%%
 " of cold resistance"
-
+" de résistance au froid"
 %%%%
 
 # resist corrosion and preservation are equivalent
 # the former name is used on rings and the latter on armour
 %%%%
 " of resist corrosion"
-
+" de résistance à la corrosion"
 %%%%
 " of preservation"
-
+" de préservation"
 %%%%
 
 %%%%
 # grants more AC
 " of protection"
-
+" de protection"
 %%%%
 # grants both fire and cold resistance
 " of resistance"
-
+" de résistance"
 %%%%
 " of poison resistance"
-
+" de résistance au poison"
 %%%%
 # negative energy resistance
 " of positive energy"
-
+" d'énergie positive"
 %%%%
 " of strength"
-
+" de force"
 %%%%
 " of dexterity"
-
+" de dextérité"
 %%%%
 " of intelligence"
-
+" d'intelligence"
 %%%%
 " of slaying"
-
+" de massacre"
 %%%%
 " of see invisible"
-
+" de vision de l'invisible"
 %%%%
 " of evasion"
-
+" d'esquive"
 %%%%
 " of wizardry"
-
+" de sorcellerie"
 %%%%
 " of magical power"
-
+" de puissance magique"
 %%%%
 " of flight"
-
+" de vol"
 %%%%
 " of willpower"
-
+" de volonté"
 %%%%
 " of fire"
-
+" de feu"
 %%%%
 " of ice"
-
+" de glace"
 %%%%
 " of regeneration"
-
+" de régénération"
 %%%%
 " of magic regeneration"
-
+" de régénération magique"
 %%%%
 " of the acrobat"
-
+" de l'acrobate"
 %%%%
 # base type of some artefact amulets
 " of nothing"
-
+" de rien"
 %%%%
 " of guardian spirit"
-
+" d'esprit gardien"
 %%%%
 " of faith"
-
+" de foi"
 %%%%
 " of reflection"
-
+" de réflexion"
 %%%%
 " of acid"
-
+" d'acide"
 %%%%
 " of chaos"
-
+" de chaos"
 %%%%
 " of distortion"
-
+" de distorsion"
 %%%%
 " of draining"
-
+" de drainage"
 %%%%
 " of electrocution"
-
+" d'électrocution"
 %%%%
 " of flaming"
-
+" enflammé"
 %%%%
 " of flame"
-
+" de flammes"
 %%%%
 " of freezing"
-
+" de gel"
 %%%%
 " of holy wrath"
-
+" de courroux sacré"
 %%%%
 " of pain"
-
+" de douleur"
 %%%%
 " of penetration"
-
+" de pénétration"
 %%%%
 " of speed"
-
+" de vitesse"
 %%%%
 " of venom"
-
+" de venin"
 %%%%
 " of dispersal"
-
+" de dispersion"
 %%%%
 " of speedy slithering"
-
+" de glissement rapide"
 %%%%
 " of running"
-
+" de course"
 %%%%
 " of invisibility"
-
+" d'invisibilité"
 %%%%
 " of ponderousness"
-
+" de lourdeur"
 %%%%
 " of flying"
-
+" de vol"
 %%%%
 " of the Archmagi"
-
+" de l'Archimage"
 %%%%
 " of spirit shield"
-
+" de bouclier spirituel"
 %%%%
 " of archery"
-
+" d'archerie"
 %%%%
 " of repulsion"
-
+" de répulsion"
 %%%%
 " of harm"
-
+" de dommage"
 %%%%
 " of shadows"
-
+" des ombres"
 %%%%
 " of rampaging"
-
+" de charge"
 %%%%
 # only on artefact "Sword of Zonguldrok"
 " of reaping"
-
+" de fauchage"
 %%%%
 # only on artefact lance "Wyrmbane"
 " of dragon slaying"
-
+" de tueur de dragons"
 %%%%
 
 #################################
@@ -207,22 +207,20 @@
 " of "%s""
 " de "%s""
 %%%%
-# generic
-%%%%
 " "%s""
-
+" "%s""
 %%%%
 " of Zot"
-
+" de Zot"
 %%%%
 # specific artefacts don't necessarily need to be translated
 # if there's no specific translation, the English text will put in quotes.
 %%%%
 " of the Moon"
-
+" de la Lune"
 %%%%
 " of Dice, Bag, and Bottle"
-
+" des Dés, du Sac et de la Bouteille"
 %%%%
 
 #################################
@@ -231,98 +229,98 @@
 # note: these names should match the skill names
 %%%%
 " of fighting"
-
+" de combat"
 %%%%
 " of short blades"
-
+" de lames courtes"
 %%%%
 " of long blades"
-
+" de lames longues"
 %%%%
 " of axes"
-
+" de haches"
 %%%%
 " of maces & flails"
-
+" de masses et fouets"
 %%%%
 " of polearms"
-
+" d'armes d'hast"
 %%%%
 " of staves"
-
+" de bâtons"
 %%%%
 " of slings"
-
+" de frondes"
 %%%%
 " of bows"
-
+" d'arcs"
 %%%%
 " of crossbows"
-
+" d'arbalètes"
 %%%%
 " of throwing"
-
+" de lancer"
 %%%%
 " of armour"
-
+" d'armure"
 %%%%
 " of dodging"
-
+" d'esquive"
 %%%%
 # also used on items that increase stealth
 " of stealth"
-
+" de discrétion"
 %%%%
 " of shields"
-
+" de boucliers"
 %%%%
 " of unarmed combat"
-
+" de combat à mains nues"
 %%%%
 " of evocations"
-
+" d'évocations"
 %%%%
 " of invocations"
-
+" de prières"
 %%%%
 " of spellcasting"
-
+" de magie"
 %%%%
 " of necromancy"
-
+" de nécromancie"
 %%%%
 " of conjurations"
-
+" de conjurations"
 %%%%
 " of hexes"
-
+" de maléfices"
 %%%%
 " of charms"
-
+" d'enchantements"
 %%%%
 " of summonings"
-
+" d'invocations"
 %%%%
 " of translocations"
-
+" de translocations"
 %%%%
 " of transmutations"
-
+" de transmutations"
 %%%%
 " of fire magic"
-
+" de magie du feu"
 %%%%
 " of ice magic"
-
+" de magie de glace"
 %%%%
 " of air magic"
-
+" de magie de l'air"
 %%%%
 " of earth magic"
-
+" de magie de la terre"
 %%%%
 " of poison magic"
-
+" de magie du poison"
 %%%%
 
 #################################
@@ -331,8 +329,8 @@
 # these can occur if player loads a savegame from an earlier version of the game
 %%%%
 " of obsoleteness"
-
+" d'obsolescence"
 %%%%
 " of removedness"
-
+" de suppression"
 %%%%

@@ -10,11 +10,11 @@
 #################################
 %%%%
 the Orb of Zot
-
+l'Orbe de Zot
 %%%%
 # in some places, it appears with an uppercase T
 The Orb of Zot
-
+L'Orbe de Zot
 %%%%
 
 #################################
@@ -22,363 +22,363 @@ The Orb of Zot
 #################################
 %%%%
 the Singing Sword
-
+l'Épée Chantante
 %%%%
 # alternative name for the Singing Sword
 the Screaming Sword
-
+l'Épée Hurlante
 %%%%
 # alternative name for the Singing Sword
 the Sulking Sword
-
+l'Épée Silencieuse
 %%%%
 the pair of quick blades "Gyre" and "Gimble"
-
+la paire de lames rapides "Gyre" et "Gimble"
 %%%%
 the Wrath of Trog
-
+la Colère de Trog
 %%%%
 the mace of Variability
-
+la masse de Variabilité
 %%%%
 the glaive of Prune
-
+le glaive de Prune
 %%%%
 the sword of Power
-
+l'épée du Pouvoir
 %%%%
 the staff of Olgreb
-
+le bâton d'Olgreb
 %%%%
 the staff of Wucad Mu
-
+le bâton de Wucad Mu
 %%%%
 the Vampire's Tooth
-
+la Dent du Vampire
 %%%%
 the scythe of Curses
-
+la faux des Malédictions
 %%%%
 the sceptre of Torment
-
+le sceptre du Tourment
 %%%%
 the sword of Zonguldrok
-
+l'épée de Zonguldrok
 %%%%
 the sword of Cerebov
-
+l'épée de Cerebov
 %%%%
 the staff of Dispater
-
+le bâton de Dispater
 %%%%
 the sceptre of Asmodeus
-
+le sceptre d'Asmodée
 %%%%
 the faerie dragon scales
-
+l'armure d'écailles de dragon féerique
 %%%%
 the demon blade "Bloodbane"
-
+la lame démoniaque "Bloodbane"
 %%%%
 the scimitar of Flaming Death
-
+le cimeterre de la Mort Enflammée
 %%%%
 the eveningstar "Brilliance"
-
+l'étoile du soir "Brillance"
 %%%%
 the demon blade "Leech"
-
+la lame démoniaque "Leech"
 %%%%
 the dagger of Chilly Death
-
+le poignard de la Mort Glaciale
 %%%%
 the dagger "Morg"
-
+le poignard "Morg"
 %%%%
 the scythe "Finisher"
-
+la faux "Finisher"
 %%%%
 the sling "Punk"
-
+la fronde "Punk"
 %%%%
 the longbow "Zephyr"
-
+l'arc long "Zephyr"
 %%%%
 the giant club "Skullcrusher"
-
+la massue géante "Broyeur de Crânes"
 %%%%
 the glaive of the Guard
-
+la vouge du Garde
 %%%%
 the zealot's sword
-
+l'épée du Zélote
 %%%%
 the arbalest "Damnation"
-
+l'arbalète "Damnation"
 %%%%
 the sword of the Doom Knight
-
+l'épée du Chevalier du Destin
 %%%%
 the morningstar "Eos"
-
+l'étoile du matin "Eos"
 %%%%
 the spear of the Botono
-
+la lance du Botono
 %%%%
 the trident of the Octopus King
-
+le trident du Roi des Pieuvres
 %%%%
 the mithril axe "Arga"
-
+la hache de mithril "Arga"
 %%%%
 the Elemental Staff
-
+le Bâton Élémentaire
 %%%%
 the heavy crossbow "Sniper"
-
+l'arbalète lourde "Sniper"
 %%%%
 the longbow "Piercer"
-
+l'arc long "Perceur"
 %%%%
 the blowgun of the Assassin
-
+la sarbacane de l'Assassin
 %%%%
 the lance "Wyrmbane"
-
+la lance de cavalerie "Wyrmbane"
 %%%%
 the Spriggan's Knife
-
+le Couteau de Spriggan
 %%%%
 the plutonium sword
-
+l'épée de plutonium
 %%%%
 the great mace "Undeadhunter"
-
+la grande masse "Chasseur de Morts-Vivants"
 %%%%
 the whip "Snakebite"
-
+le fouet "Morsure de Serpent"
 %%%%
 the knife of Accuracy
-
+le couteau de Précision
 %%%%
 the Lehudib's crystal spear
-
+la lance de cristal de Lehudib
 %%%%
 the captain's cutlass
-
+le sabre du Capitaine
 %%%%
 the storm bow
-
+l'arc des tempêtes
 %%%%
 the tower shield of Ignorance
-
+le bouclier tour de l'Ignorance
 %%%%
 the robe of Augmentation
-
+la robe d'Augmentation
 %%%%
 the cloak of the Thief
-
+la cape du Voleur
 %%%%
 the tower shield "Bullseye"
-
+le bouclier tour "Bullseye"
 %%%%
 the crown of Dyrovepreva
-
+la couronne de Dyrovepreva
 %%%%
 the hat of the Bear Spirit
-
+le chapeau de l'Esprit de l'Ours
 %%%%
 the robe of Misfortune
-
+la robe du Malheur
 %%%%
 the cloak of Flash
-
+la cape de Flash
 %%%%
 the hood of the Assassin
-
+la capuche de l'Assassin
 %%%%
 the Lear's hauberk
-
+le haubert de Lear
 %%%%
 the skin of Zhor
-
+la peau de Zhor
 %%%%
 the salamander hide armour
-
+l'armure en peau de salamandre
 %%%%
 the pair of gauntlets of War
-
+la paire de gantelets de Guerre
 %%%%
 the shield of Resistance
-
+le bouclier de Résistance
 %%%%
 the robe of Folly
-
+la robe de la Folie
 %%%%
 the Maxwell's patent armour
-
+l'armure brevetée de Maxwell
 %%%%
 the mask of the Dragon
-
+le masque du Dragon
 %%%%
 the robe of Night
-
+la robe de la Nuit
 %%%%
 the scales of the Dragon King
-
+l'armure d'écailles du Roi Dragon
 %%%%
 the hat of the Alchemist
-
+le chapeau de l'Alchimiste
 %%%%
 the pair of fencer's gloves
-
+la paire de gants d'escrimeur
 %%%%
 the cloak of Starlight
-
+la cape de Lumière Stellaire
 %%%%
 the ratskin cloak
-
+la cape en peau de rat
 %%%%
 the shield of the Gong
-
+le bouclier du Gong
 %%%%
 the amulet of the Air
-
+l'amulette de l'Air
 %%%%
 the ring of Shadows
-
+l'anneau des Ombres
 %%%%
 the amulet of Cekugob
-
+l'amulette de Cekugob
 %%%%
 the amulet of the Four Winds
-
+l'amulette des Quatre Vents
 %%%%
 the necklace of Bloodlust
-
+le collier de Fureur Sanguinaire
 %%%%
 the ring of Phasing
-
+l'anneau de Phasage
 %%%%
 the ring of Robustness
-
+l'anneau de Robustesse
 %%%%
 the ring of the Mage
-
+l'anneau du Mage
 %%%%
 the ring of the Hare
-
+l'anneau du Lièvre
 %%%%
 the ring of the Tortoise
-
+l'anneau de la Tortue
 %%%%
 the brooch of Shielding
-
+la broche de Protection
 %%%%
 the robe of Clouds
-
+la robe des Nuages
 %%%%
 the hat of Pondering
-
+le chapeau de Méditation
 %%%%
 the obsidian axe
-
+la hache d'obsidienne
 %%%%
 the lightning scales
-
+les écailles de foudre
 %%%%
 the Black Knight's barding
-
+le caparaçon du Chevalier Noir
 %%%%
 the amulet of Vitality
-
+l'amulette de Vitalité
 %%%%
 the autumn katana
-
+la katana d'automne
 %%%%
 the shillelagh "Devastator"
-
+le shillelagh "Dévastateur"
 %%%%
 the dragonskin cloak
-
+la cape en peau de dragon
 %%%%
 the Axe of Woe
-
+la Hache du Malheur
 %%%%
 the moon troll leather armour
-
+l'armure en cuir de troll lunaire
 %%%%
 the macabre finger necklace
-
+le collier macabre
 %%%%
 the pair of boots of the spider
-
+la paire de bottes de l'araignée
 %%%%
 the dark maul
-
+le maillet sombre
 %%%%
 the hat of the High Council
-
+le chapeau du Haut Conseil
 %%%%
 the arc blade
-
+la lame d'éclairs
 %%%%
 the demon whip "Spellbinder"
-
+le fouet démoniaque "Enchanteur"
 %%%%
 the lajatang of Order
-
+le lajatang de l'Ordre
 %%%%
 the great mace "Firestarter"
-
+la grande masse "Allume-Feu"
 %%%%
 the orange crystal plate armour
-
+l'armure de plaques de cristal orange
 %%%%
 the Majin-Bo
-
+le Majin-Bo
 %%%%
 the Maxwell's etheric cage
-
+la cage d'éther de Maxwell
 %%%%
 the crown of Eternal Torment
-
+la couronne du Tourment Éternel
 %%%%
 the robe of Vines
-
+la robe de Vignes
 %%%%
 the Kryia's mail coat
-
+l'armure d'écailles de Kryia
 %%%%
 the frozen axe "Frostbite"
-
+la hache glacée "Engelure"
 %%%%
 the armour of Talos
-
+l'armure de Talos
 %%%%
 the warlock's mirror
-
+le miroir du sorcier
 %%%%
 the amulet of invisibility
-
+l'amulette d'invisibilité
 %%%%
 the Maxwell's thermic engine
-
+le moteur thermique de Maxwell
 %%%%
 the demon trident "Rift"
-
+le trident démoniaque "Fissure"
 %%%%
 the staff of Battle
-
+le bâton de Bataille
 %%%%
 the Cigotuvi's embrace
-
+l'étreinte de Cigotuvi
 %%%%
 the pair of seven-league boots
-
+la paire de bottes des sept lieues
 %%%%
 the horn of Geryon
-
+la corne de Géryon
 %%%%
 
 #################################
@@ -390,19 +390,19 @@ the horn of Geryon
 # sword of Cerebov
 # the English description says serpentine, but in the tile, the blade is shaped like flames
 a great serpentine sword
-
+une grande épée serpentine
 %%%%
 # staff of Dispater
 a golden staff
-
+un bâton doré
 %%%%
 # sceptre of Asmodeus
 a ruby sceptre
-
+un sceptre de rubis
 %%%%
 # dragonskin cloak
 an opalescent scaly cloak
-
+une cape d'écailles opalescentes
 %%%%
 
 # the rest just look like what they are, but get the indefinite article
@@ -415,37 +415,37 @@ an opalescent scaly cloak
 %%%%
 # sword of Cerebov
 a flamberge
-
+un flamberge
 %%%%
 # heavy crossbow "Sniper"
 a heavy crossbow
-
+une arbalète lourde
 %%%%
 # lance "Wyrmbane"
 a lance
-
+une lance de cavalerie
 %%%%
 # Spriggan's Knife
 a knife
-
+un couteau
 %%%%
 # captain's cutlass
 a cutlass
-
+un sabre
 %%%%
 # autumn katana
 a katana
-
+un katana
 %%%%
 # shillelagh "Devastator"
 a shillelagh
-
+un shillelagh
 %%%%
 # dark maul
 a maul
-
+un maillet
 %%%%
 # "Gyre" and "Gimble"
 a pair of quick blades
-
+une paire de lames rapides
 %%%%
