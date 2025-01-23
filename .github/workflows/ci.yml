@@ -678,8 +678,9 @@ jobs:
       - name: Lua LDoc
         uses: lunarmodules/ldoc@v1.5.0
         with:
-          args: --config util/config.ld --dir docs/lua/ .
+          args: --config crawl-ref/source/util/config.ld --dir crawl-ref/docs/lua/ .
       # TODO: deploy somewhere
+      # Probably the first party action would be best? https://github.com/actions/deploy-pages
 #      - name: Deploy
 #        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
 #        uses: peaceiris/actions-gh-pages@v3
