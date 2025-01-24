@@ -921,7 +921,7 @@ function dgn.monster_weapon(class, egos, args)
         error("Unknown weapon class: " .. class)
     end
 
-    return dgn.random_item_def(dgn.monster_weapons[class], egos, quality, '|')
+    return dgn.random_item_def(dgn.monster_weapons[class], egos, args, '|')
 end
 
 -- Returns true if point1 is inside radius(X, point2).
