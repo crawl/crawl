@@ -595,8 +595,6 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_HALOED);
     if (!m->haloed() && m->umbraed())
         mb.set(MB_UMBRAED);
-    if (mons_looks_distracted(*m))
-        mb.set(MB_DISTRACTED);
     if (m->liquefied_ground())
         mb.set(MB_SLOW_MOVEMENT);
     if (!actor_is_susceptible_to_vampirism(*m, true))
@@ -643,6 +641,8 @@ monster_info::monster_info(const monster* m, int milev)
         {
             mb.set(MB_UNAWARE);
         }
+        else if (mons_looks_distracted(*m))
+            mb.set(MB_DISTRACTED);
     }
 
     for (auto &entry : m->enchantments)
