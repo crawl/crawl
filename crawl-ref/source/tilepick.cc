@@ -2243,9 +2243,12 @@ tileidx_t tileidx_monster(const monster_info& mons)
         // "sleeping"?
         ch |= TILE_FLAG_STAB;
     }
-    // Should petrify show the '?' symbol?
-    else if (mons.is(MB_DISTRACTED) && !mons.is(MB_PETRIFYING)
-            || mons.attitude == ATT_FRIENDLY && mons.is(MB_CONFUSED))
+    // Deliberately not checking MB_MAYBE_STABBABLE, since we want to hide the
+    // question mark for many other scenarions that have their own unambiguous
+    // status icon.
+    else if ((mons.is(MB_DISTRACTED) || mons.is(MB_UNAWARE) || mons.is(MB_WANDERING)
+             || mons.is(MB_CANT_SEE_YOU))
+              && !mons.is(MB_CONFUSED) && !mons.is(MB_BLIND))
     {
         ch |= TILE_FLAG_MAY_STAB;
     }
@@ -2309,6 +2312,7 @@ tileidx_t tileidx_monster(const monster_info& mons)
 #endif
 
 static const map<monster_info_flags, tileidx_t> monster_status_icons = {
+    { MB_CONFUSED, TILEI_CONFUSED },
     { MB_BURNING, TILEI_STICKY_FLAME },
     { MB_INNER_FLAME, TILEI_INNER_FLAME },
     { MB_BERSERK, TILEI_BERSERK },

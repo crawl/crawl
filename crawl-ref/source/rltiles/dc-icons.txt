@@ -46,7 +46,8 @@ petrifying PETRIFYING
 petrified PETRIFIED
 blind BLIND
 fleeing FLEEING
-may_stab_brand MAY_STAB_BRAND
+unaware UNAWARE
+confused CONFUSED
 sleeping STAB_BRAND
 pain_mirror PAIN_MIRROR
 recall RECALL

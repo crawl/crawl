@@ -3581,18 +3581,9 @@ bool mons_is_removed(monster_type mc)
     return mc != MONS_PROGRAM_BUG && mons_species(mc) == MONS_PROGRAM_BUG;
 }
 
-bool mons_looks_stabbable(const monster& m)
-{
-    const stab_type st = find_stab_type(&you, m, false);
-    return stab_bonus_denom(st) == 1; // top-tier stab
-}
-
 bool mons_looks_distracted(const monster& m)
 {
-    const stab_type st = find_stab_type(&you, m, false);
-    return !m.friendly()
-           && st != STAB_NO_STAB
-           && !mons_looks_stabbable(m);
+    return m.foe != MHITYOU && m.behaviour != BEH_BATTY && !m.friendly();
 }
 
 void mons_start_fleeing_from_sanctuary(monster& mons)

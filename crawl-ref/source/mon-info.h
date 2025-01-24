@@ -19,7 +19,7 @@ using std::vector;
 enum monster_info_flags
 {
     MB_STABBABLE,
-    MB_DISTRACTED,
+    MB_MAYBE_STABBABLE,
     MB_BERSERK,
     MB_DORMANT,
     MB_SLEEPING,
@@ -213,7 +213,7 @@ enum monster_info_flags
     MB_RES_DROWN,
     MB_ANGUISH,
     MB_CLARITY,
-    MB_DISTRACTED_ONLY,
+    MB_DISTRACTED,
     MB_CANT_SEE_YOU,
     MB_UNBLINDABLE,
     MB_SIMULACRUM,

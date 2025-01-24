@@ -595,8 +595,6 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_HALOED);
     if (!m->haloed() && m->umbraed())
         mb.set(MB_UMBRAED);
-    if (mons_looks_stabbable(*m))
-        mb.set(MB_STABBABLE);
     if (mons_looks_distracted(*m))
         mb.set(MB_DISTRACTED);
     if (m->liquefied_ground())
@@ -609,6 +607,12 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_CLARITY);
     if (!mons_can_be_blinded(m->type))
         mb.set(MB_UNBLINDABLE);
+
+    const int stab_bonus = stab_bonus_denom(find_player_stab_type(*m));
+    if (stab_bonus == 1)
+        mb.set(MB_STABBABLE);
+    else if (stab_bonus == 4)
+        mb.set(MB_MAYBE_STABBABLE);
 
     dam = mons_get_damage_level(*m);
 
@@ -648,14 +652,8 @@ monster_info::monster_info(const monster* m, int milev)
             mb.set(flag);
     }
 
-    if (!m->friendly())
-    {
-        const stab_type st = find_stab_type(&you, *m, false);
-        if (!you.visible_to(m))
-            mb.set(MB_CANT_SEE_YOU);
-        if (st == STAB_DISTRACTED && !mb[MB_UNAWARE] && !mb[MB_WANDERING])
-            mb.set(MB_DISTRACTED_ONLY);
-    }
+    if (!you.visible_to(m))
+        mb.set(MB_CANT_SEE_YOU);
 
     if (type == MONS_SILENT_SPECTRE)
         mb.set(MB_SILENCING);
@@ -1484,7 +1482,7 @@ void monster_info::to_string(int count, string& desc, int& desc_colour,
 static bool _hide_moninfo_flag(monster_info_flags f)
 {
     if (crawl_state.game_is_arena() &&
-        (f == MB_DISTRACTED_ONLY || f == MB_CANT_SEE_YOU))
+        (f == MB_DISTRACTED || f == MB_CANT_SEE_YOU))
     {
         // the wording on these doesn't make sense in the arena, so hide.
         return true;

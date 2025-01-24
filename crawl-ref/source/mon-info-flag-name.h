@@ -87,7 +87,7 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_SLEEPING, "asleep", "asleep", "asleep"},
     { MB_UNAWARE, "unaware", "unaware", "unaware"},
     { MB_BLIND, "blind", "blind", "blind"},
-    { MB_DISTRACTED_ONLY, "distracted", "not watching you", "distracted"},
+    { MB_DISTRACTED, "distracted", "not watching you", "distracted"},
     { MB_CANT_SEE_YOU, "unable to see you", "unable to see you", "unable to see you"},
     { MB_INFESTATION, "infested", "infested", "infested"},
     // Debuffs

@@ -1506,15 +1506,16 @@ int attack::player_stab(int damage)
  */
 void attack::player_stab_check()
 {
-    // XXX: move into find_stab_type?
-    if (you.confused())
+    // Stabbing monsters is unchivalric, and disabled under TSO!
+    // (And also requires more finesse than just stumbling into a monster.)
+    if (you.confused() || have_passive(passive_t::no_stabbing))
     {
         stab_attempt = false;
         stab_bonus = 0;
         return;
     }
 
-    const stab_type orig_st = find_stab_type(&you, *defender);
+    const stab_type orig_st = find_player_stab_type(*defender->as_monster());
     stab_type st = orig_st;
     // Find stab type is also used for displaying information about monsters,
     // so upgrade the stab type for !stab and the Spriggan's Knife here

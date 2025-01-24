@@ -25,6 +25,7 @@ enum stab_type
     STAB_PARALYSED,
     STAB_SLEEPING,
     STAB_ALLY,
+    STAB_BLIND,
     NUM_STABS
 };
 
@@ -40,9 +41,7 @@ int melee_confuse_chance(int HD);
 
 bool wielded_weapon_check(const item_def *weapon, string attack_verb="");
 
-stab_type find_stab_type(const actor *attacker,
-                         const actor &defender,
-                         bool actual = true);
+stab_type find_player_stab_type(const monster &victim);
 
 int stab_bonus_denom(stab_type stab);
 

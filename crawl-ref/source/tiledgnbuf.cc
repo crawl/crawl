@@ -595,7 +595,7 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         }
         else if (beh_flag == TILE_FLAG_MAY_STAB)
         {
-            m_buf_icons.add(TILEI_MAY_STAB_BRAND, x, y);
+            m_buf_icons.add(TILEI_UNAWARE, x, y);
             status_shift += 7;
         }
         else if (beh_flag == TILE_FLAG_FLEEING)
