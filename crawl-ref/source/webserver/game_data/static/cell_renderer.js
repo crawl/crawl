@@ -965,7 +965,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
             }
             else if (fg.MAY_STAB)
             {
-                this.draw_icon(icons.MAY_STAB_BRAND, x, y, undefined, undefined, img_scale);
+                this.draw_icon(icons.UNAWARE, x, y, undefined, undefined, img_scale);
                 status_shift += 7;
             }
             else if (fg.FLEEING)
@@ -1108,6 +1108,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 case icons.PARTIALLY_CHARGED:
                 case icons.FULLY_CHARGED:
                 case icons.VITRIFIED:
+                case icons.CONFUSED:
                     this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
                     return 6;
                 case icons.CONC_VENOM:
