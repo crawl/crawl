@@ -579,15 +579,6 @@ LUAFN(moninf_get_spells)
     return 1;
 }
 
-static bool cant_see_you(const monster_info *mi)
-{
-    if (mons_class_flag(mi->type, M_SEE_INVIS))
-        return false;
-    if (you.in_water())
-        return false;
-    return you.invisible() || mi->is(MB_BLIND);
-}
-
 /*** What quality of stab can you get on this monster?
  * The return value is a number representing the percentage of a top-tier stab
  * you can currently get by attacking the monster. Possible values are:
@@ -603,17 +594,10 @@ static bool cant_see_you(const monster_info *mi)
 LUAFN(moninf_get_stabbability)
 {
     MONINF(ls, 1, mi);
-    if (mi->is(MB_DORMANT) || mi->is(MB_SLEEPING) || mi->is(MB_PETRIFIED)
-            || mi->is(MB_PARALYSED))
-    {
+    if (mi->is(MB_STABBABLE))
         lua_pushnumber(ls, 1.0);
-    }
-    else if (mi->is(MB_CAUGHT) || mi->is(MB_WEBBED) || mi->is(MB_PETRIFYING)
-             || mi->is(MB_CONFUSED) || mi->is(MB_FLEEING) || cant_see_you(mi)
-             || mi->is(MB_DISTRACTED))
-    {
+    else if (mi->is(MB_MAYBE_STABBABLE))
         lua_pushnumber(ls, 0.25);
-    }
     else
         lua_pushnumber(ls, 0);
 
