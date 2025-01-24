@@ -1341,30 +1341,32 @@ cc~~~~~~~~~~c.!!!!!!!!!!!cc
 ENDMAP
 
 # an ossuary with no clear pathway and monsters and loot scattered about
-NAME:   ossuary_hellmonk_twisting_tombs
-TAGS:   no_item_gen no_monster_gen
-WEIGHT: 10
-ORIENT: encompass
-MONS:   weeping skull / burial acolyte
-MONS:   mummy / wight w:2
-MONS:   kobold zombie / gnoll zombie / orc zombie / hound zombie / \
-        human zombie / centaur zombie
-ITEM:   any potion w:15 / any scroll w:15 / gold w:6
+NAME:    ossuary_hellmonk_twisting_tombs
+TAGS:    no_item_gen no_monster_gen
+WEIGHT:  10
+ORIENT:  encompass
+MONS:    weeping skull / burial acolyte
+MONS:    mummy / wight w:2
+MONS:    kobold zombie / gnoll zombie / orc zombie / hound zombie / \
+         human zombie w:4 / centaur zombie w:6
+ITEM:    any potion w:15 / any scroll w:15 / gold w:6
 SHUFFLE: -+
 SHUFFLE: <A
-SUBST:  +:++., -:c, V:VVVVG
-NSUBST: 1 = 1:1 / 1:12 / *=3., 2 = 1:2 / 1:23 / *=3.
-NSUBST: " = 4:^ / 3=^" / *:"
-NSUBST: . = 3:3 / 12=3. / *:.
-NSUBST: d = 1:* / 1:*d / *:d
-KFEAT:  ^ = net trap / alarm trap w:30 / dispersal trap
+SUBST:   -:c, V:VVVVG
+NSUBST:  + = 10:++~ / *:+
+NSUBST:  1 = 1:1 / 1:12 / *=3., 2 = 1:2 / 1:23 / *=3.
+NSUBST:  " = 4:^ / 3=^" / *:"
+NSUBST:  . = 3:3 / 12=3. / *:.
+NSUBST:  d = 1:* / 1:*d / *:d
+KFEAT:   ^ = net trap / alarm trap w:30 / dispersal trap
+KFEAT:   ~ = broken_door
 : ossuary_setup_features(_G)
 MAP
 ccccccccccccccccccccccc
 ccccccccccccccccccccccc
 ccccccccccccccccccccccc
-cccd1.+.dcd.+...-.1dccc
-ccc..3c..-..c.'.c..3ccc
+cccd13+.dcd.+...-.1dccc
+ccc.33c..-..c.'.c333ccc
 ccc-ccc..c..-...c...ccc
 ccc..dc..c..c..dc+c-ccc
 ccc...c+ccc-cc+cc...ccc
@@ -1385,9 +1387,9 @@ ccc+cc+cc""V""+.....ccc
 ccc..c..-""<""c.....ccc
 ccc..c..+"""""ccc-c+ccc
 ccc..c..ccc-ccc.....ccc
-ccc3.c..+.....+.....ccc
-ccc1.c..c.....-....3ccc
-cccd.-..cd.2..c...1dccc
+ccc33c..+.....+.....ccc
+ccc13c..c.....-...33ccc
+cccd.-..cd.2..c..31dccc
 ccccccccccccccccccccccc
 ccccccccccccccccccccccc
 ccccccccccccccccccccccc
@@ -1397,7 +1399,7 @@ NAME:   ossuary_hellmonk_split_paths
 TAGS:   no_item_gen no_monster_gen
 WEIGHT: 10
 ORIENT: encompass
-MONS:   burial acolyte / weeping skull / wraith w:3 / marrowcuda w:3
+MONS:   burial acolyte / weeping skull
 MONS:   mummy / scorpion w:4
 MONS:   centaur zombie / water moccasin zombie / scorpion zombie /\
         bullfrog zombie
@@ -1421,19 +1423,19 @@ ccc-------------------cc
 cc------ccccccccccc----c
 c----cccc!!!!!!!!!ccc..c
 c---cc!!!!!!!!!!!!.....c
-c..cc!!!!!cc!!!cc......cc
+c..cc!!!!!cc!!!cc....cccc
 c..!!!!!ccccccccccc.....cc
 c..!!!cccc2.....2cccc....c
-c..!!cc"3cc..3..ccddcc...cc
-c..ccc""""cc...ccd.3dc....c
-c..""""""".c...c....dcc...c
+c..!!cc"3cc..3..ccddccc..cc
+c..ccc""""cc...ccd43dc....c
+c..""""""".c...c.3.4dcc...c
 c3.""""2"3^+.G^+...1ddcA.<c
-c..""""""".c...c....dcc...c
-c..ccc""""cc...ccd.3dc....c
-c..''cc"3cc..3..ccddcc...cc
+c..""""""".c...c.3.4dcc...c
+c..ccc""""cc...ccd43dc....c
+c..''cc"3cc..3..ccddccc..cc
 c..'''cccc2.....2cccc....c
 c..'''''ccccccccccc.....cc
-c..cc'''''cc'''cc......cc
+c..cc'''''cc'''cc....cccc
 c~~~cc''''''''''''.....c
 c~~~~cccc'''''''''ccc..c
 cc~~~~~~ccccccccccc~~~~c
@@ -1481,6 +1483,11 @@ cccccc...........cccccc
     c...-.-.-.-...c
     cc...-.-.-...cc
      cc.........cc
-      ccc.A.<.ccc
+      ccc.....ccc
+        c..G..c
+       cc.....cc
+       c..A.<..c
+       c.......c
+       cc..t..cc
         ccccccc
 ENDMAP
