@@ -508,7 +508,7 @@ static void _fill_item_info(InventoryTile &desc, const item_def &item)
         // -1 specifies don't display anything
         desc.quantity = (item.quantity == 1) ? -1 : item.quantity;
     }
-    else if (type == OBJ_WANDS && item.flags & ISFLAG_IDENTIFIED)
+    else if (type == OBJ_WANDS && item.is_identified())
         desc.quantity = item.charges;
     else
         desc.quantity = -1;
