@@ -7892,7 +7892,7 @@ your squeeze
 dein Quetschen
 %%%%
 You squeeze %s
-Du quetschst %s
+Du quetschst {acc}%s
 %%%%
 You drain %s magic.
 Du entziehst die Magie {gen}%s.
@@ -8204,7 +8204,7 @@ Du zerschmetterst {acc}%s
 %s versetzt dir einen Tiefschlag
 %%%%
 %s sucker-punches %s
-%s versetzt {acc}%s einen Tiefschlag
+%s versetzt {dat}%s einen Tiefschlag
 %%%%
 %s elbows you
 %s schlägt dich mit dem Ellbogen
@@ -8246,7 +8246,7 @@ Du zerschmetterst {acc}%s
 %s verpasst dir einen Karatetritt
 %%%%
 %s karate-kicks %s
-%s verpasst {acc}%s einen Karatetritt
+%s verpasst {dat}%s einen Karatetritt
 %%%%
 %s headlocks you
 %s nimmt dich in den Schwitzkasten
@@ -8823,7 +8823,7 @@ By Zin's power the foxfire is contained!
 Durch Zins Kraft wird das Fuchsfeuer eingedämmt!
 %%%%
 %s swoops through the air toward %s!
-%s stürzt durch die Luft in Richtung %s!
+%s stürzt durch die Luft in Richtung {gen}%s!
 %%%%
 %s reads a scroll.
 %s liest eine Schriftrolle.
@@ -8889,13 +8889,13 @@ In der Nähe {acc}%s, fühlst du dich träge.
 %s bewegt sich aus dem Blickfeld.
 %%%%
 %s splits in two!
-%s teilt sich in zwei!
+%s teilt sich in zwei Teile!
 %%%%
 You hear a squelching noise.
-Du hörst ein Quietschgeräusch.
+Du hörst ein schmatzendes Geräusch.
 %%%%
 You hear a slurping noise.
-Du hörst ein Schlürfgeräusch.
+Du hörst ein schlürfendes Geräusch.
 %%%%
 Something unseen opens %s.
 Etwas Ungesehenes öffnet %s.
@@ -8907,10 +8907,10 @@ Etwas Ungesehenes öffnet %s.
 %s entkommt!
 %%%%
 %s struggles to escape constriction.
-%s kämpft, um der Umschlingung zu entkommen.
+%s hat Mühe, der Umschlingung zu entkommen.
 %%%%
 The door bursts into shrapnel!
-Die Tür platzt in Splitter!
+Die Tür zerspringt in Splitter!
 %%%%
 %s bursts through the door, destroying it!
 %s bricht durch die Tür und zerstört sie!
@@ -8925,13 +8925,13 @@ Die Tür verschwindet auf mysteriöse Weise.
 %s tobt.
 %%%%
 %s flops around on dry land!
-%s plumpst auf dem Trockenen herum!
+%s floppt auf dem trockenen Boden herum!
 %%%%
 %s falters for a moment.
 %s zögert einen Moment.
 %%%%
 %s knocks down a tree!
-%s schlägt einen Baum um!
+%s wirft einen Baum um!
 %%%%
 You hear a crashing sound.
 Du hörst ein krachendes Geräusch.
@@ -8951,10 +8951,10 @@ Der Angriff reißt {acc}%s aus der Angst.
 @The_monster@ kehrt an deine Seite zurück!
 %%%%
 Cornered, @The_monster@ turns to fight!
-In die Enge getrieben, wendet sich @the_monster@ dem Kampf zu!
+In die Enge getrieben stellt sich @the_monster@ dem Kampf!
 %%%%
 (press <w>%c</w> on the <w>%s</w>bility menu to convert to Beogh)
-(<w>%c</w> im F<w>%s</w>eigkeitsmenü drücken, um nach Beogh zu konvertieren.)
+(<w>%c</w> im F<w>%s</w>eigkeitsmenü drücken, um zu Beogh zu konvertieren.)
 %%%%
 %s passes through the gate.
 %s geht durch das Tor.
@@ -8984,7 +8984,7 @@ In die Enge getrieben, wendet sich @the_monster@ dem Kampf zu!
 %%%%
 # 2nd param is <god>'s
 %s invokes %s protection!
-%s ruft den Schutz %s auf!
+%s ruft den Schutz %s an!
 %%%%
 # params: 1. monster name 2. reflexive pronoun
 %s liquefies the ground around %s!
@@ -9009,13 +9009,13 @@ In die Enge getrieben, wendet sich @the_monster@ dem Kampf zu!
 %s sieht einen Moment lang zufrieden aus.
 %%%%
 %s prays to %s, and fills with unholy energy.
-%s betet zu {dat}%s und füllt sich mit unheiliger Energie.
+%s betet zu {dat}%s und wird von unheiliger Energie erfüllt.
 %%%%
 %s is smitten.
-%s wird geschlagen.
+%s wird zerschmettert.
 %%%%
 Roots burst forth from the earth!
-Wurzeln brachen aus der Erde hervor!
+Wurzeln brechen aus der Erde hervor!
 %%%%
 The grasping roots grab you!
 Die greifenden Wurzeln packen dich!
@@ -9051,10 +9051,10 @@ Sorry, this spell isn't supported for dummies!
 Sorry, dieser Zauber wird für Dummköpfe nicht unterstützt!
 %%%%
 Vines fly forth from the trees!
-Weinreben fliegen von den Bäumen hervor!
+Weinreben fliegen aus den Bäumen hervor!
 %%%%
 Thorny briars emerge from the ground!
-Dornensträucher tauchen aus dem Boden auf!
+Dornensträucher schießen aus dem Boden!
 %%%%
 %s begins absorbing vital energies!
 %s beginnt, vitale Energien zu absorbieren!
@@ -9066,13 +9066,13 @@ Dornensträucher tauchen aus dem Boden auf!
 %s animierende Energie bricht in gespenstisches Feuer aus!
 %%%%
 %s begins to cast a spell, but is stunned by your conviction!
-%s beginnt zu zaubern, wird aber von deiner Überzeugung betäubt!
+%s beginnt zu zaubern, wird aber von deiner Überzeugung verblüfft!
 %%%%
 %s begins to pray, but is stunned by your conviction!
-%s beginnt zu beten, wird aber von deiner Überzeugung betäubt!
+%s beginnt zu beten, wird aber von deiner Überzeugung verblüfft!
 %%%%
 %s begins to attack, but is stunned by your conviction!
-%s beginnt anzugreifen, wird aber von deiner Überzeugung betäubt!
+%s beginnt anzugreifen, wird aber von deiner Überzeugung verblüfft!
 %%%%
 %s protects your fellow warrior from evil magic!
 %s schützt deinen Mitstreiter vor böser Magie!
@@ -9097,7 +9097,7 @@ Du wirst eingefroren
 %%%%
 # params: 1. monster name 2. his/her/its/their
 %s draws you further into %s thrall.
-%s zieht dich weiter in die Verzauberung.
+%s zieht dich tiefer in den Bann.
 %%%%
 %s radiates an aura of fear!
 %s strahlt eine Aura der Angst aus!
@@ -9121,7 +9121,7 @@ A blast of power from the earth and the adjacent constructs strikes %s!
 Ein Energiestoß aus der Erde und den angrenzenden Konstrukten trifft {acc}%s!
 %%%%
 A blast of power from the earth and %s strikes %s!
-Ein Energiestoß aus der Erde und {dat}%s {acc}%s!
+Ein Energiestoß aus der Erde und {dat}%s trifft {acc}%s!
 %%%%
 You are overwhelmed by glittering dream dust!
 Du wirst von glitzerndem Traumstaub überwältigt!
@@ -9136,10 +9136,10 @@ The dream sheep shake their wool and sparkle.
 Die Traumschafe schütteln ihre Wolle und funkeln.
 %%%%
 The dream sheep ruffles its wool and motes of dream dust sparkle, to no effect.
-Das Traumschaf kräuselt seine Wolle, und Traumstaubpartikel glitzern, ohne dass es etwas bewirkt.
+Das Traumschaf kräuselt seine Wolle, und Traumstaubpartikel glitzern, ohne etwas zu bewirken.
 %%%%
 The dream sheep ruffle their wool and motes of dream dust sparkle, to no effect.
-Die Traumschafe kräuseln ihre Wolle, und Traumstaubpartikel glitzern, ohne dass es etwas bewirkt.
+Die Traumschafe kräuseln ihre Wolle, und Traumstaubpartikel glitzern, ohne etwas zu bewirken.
 %%%%
 As the sheep sparkles and sways, %s falls asleep.
 Während das Schaf funkelt und sich wiegt, schläft %s ein.
@@ -9157,13 +9157,13 @@ Die Traumschafe versuchen, {acc}%s in den Schlaf zu wiegen.
 " Du fühlst dich schläfrig..."
 %%%%
 A freezing vortex appears around %s!
-Ein Gefrierwirbel erscheint um {acc}%s herum!
+Ein eisiger Wirbel erscheint um {acc}%s herum!
 %%%%
 A freezing vortex appears and lifts %s up!
-Ein Gefrierwirbel erscheint und hebt {acc}%s hoch!
+Ein eisiger Wirbel erscheint und hebt {acc}%s hoch!
 %%%%
 A freezing vortex appears out of thin air!
-Ein Gefrierwirbel erscheint aus dem Nichts!
+Ein eisiger Wirbel erscheint aus dem Nichts!
 %%%%
 The water rises up and strikes you
 Das Wasser steigt auf und schlägt dich
@@ -9184,7 +9184,7 @@ The air twists around and strikes you
 Die Luft wirbelt herum und schlägt heftig auf dich ein
 %%%%
 The air twists around and strikes %s%s
-Die Luft wirbelt herum und trifft auf {acc}%s%s
+Die Luft wirbelt herum und schlägt {acc}%s%s
 %%%%
 Something feeds on your intellect!
 Etwas ernährt sich von deinem Intellekt!
@@ -9199,13 +9199,13 @@ Orkische Erscheinungen nehmen um dich herum Gestalt an.
 %s ist von orkischen Erscheinungen umgeben.
 %%%%
 You feel haunted.
-Du fühlst dich verfolgt.
+Du fühlst dich heimgesucht.
 %%%%
 You sense an evil presence.
 Du spürst eine böse Präsenz.
 %%%%
 %s puts on a burst of speed!
-%s legt einen Geschwindigkeitsschub hin!
+%s legt an Geschwindigkeit zu!
 %%%%
 %s's surroundings become eerily quiet.
 Die Umgebung {gen}%s wird unheimlich still.
@@ -9223,7 +9223,7 @@ Die Umgebung {gen}%s wird unheimlich still.
 %s schimmert und scheint drei zu werden!
 %%%%
 Walls emerge from the floor!
-Wände tauchen aus dem Boden auf!
+Wände schießen aus dem Boden!
 %%%%
 %s commands the forest to attack, but nothing happens.
 %s befiehlt dem Wald anzugreifen, aber es passiert nichts.
@@ -9247,7 +9247,7 @@ Eine Kältewelle zieht über dich.
 %s beginnt, Geschosse abzuwehren!
 %%%%
 %s channels a blast of cleansing flame!
-%s kanalisiert einen reinigenden Flammenstrahl!
+%s kanalisiert eine Wolke aus reinigenden Flammen!
 %%%%
 %s begins emitting a brilliant aura!
 %s beginnt eine leuchtende Aura auszustrahlen!
@@ -9259,7 +9259,7 @@ Eine Kältewelle zieht über dich.
 %s rollt sich zu einem Ball zusammen und beginnt zu rollen!
 %%%%
 thin air
-{f}dünne Luft
+{f}leere Luft
 %%%%
 %s throws %s at %s!
 %s wirft {acc}%s auf {acc}%s!
@@ -9271,7 +9271,7 @@ thin air
 %s stößt ein schreckliches Heulen aus, das in deinem Kopf widerhallt!
 %%%%
 %s unleashes a silent howl, and it begins to echo in your mind!
-%s stößt ein stilles Heulen aus, das in EUrem Kopf widerhallt!
+%s stößt ein stilles Heulen aus, das in deinem Kopf widerhallt!
 %%%%
 Some walls begin to move on their own!
 Manche Wände beginnen sich von selbst zu bewegen!
@@ -9309,10 +9309,10 @@ Du hörst eine unheimliche Melodie.
 %s scheint {acc}%s aus sich selbst heraus zu ziehen!
 %%%%
 Suddenly you stand beside yourself.
-Plötzlich stehst du neben dich.
+Plötzlich stehst du neben dir.
 %%%%
 There is a horrible, sudden wrenching feeling in your soul!
-Es gibt ein schreckliches, plötzlich reißendes Gefühl in deiner Seele!
+Da ist plötzlich ein schreckliches, reißendes Gefühl in deiner Seele!
 %%%%
 %s is duplicated!
 %s wird dupliziert!
@@ -9341,19 +9341,19 @@ Du fühlst dich ein bisschen erfahrener.
 %s heilt {acc}%s
 %%%%
 With an infernal shudder, the power ruling this place vanishes!
-Mit einem infernalischen Schauder verschwindet die Macht, die diesen Ort beherrscht!
+Mit einem infernalischen Beben verschwindet die Macht, die diesen Ort beherrschte!
 %%%%
 With an infernal noise, the power ruling this place vanishes!
-Mit einem infernalischen Geräusch verschwindet die Macht, die diesen Ort beherrscht!
+Mit einem infernalischen Lärm verschwindet die Macht, die diesen Ort beherrschte!
 %%%%
 %s's corpse
 die Leiche {gen}%s
 %%%%
 A freezing mist gathers momentarily, then fades.
-Ein eisiger Nebel sammelt sich kurz, dann vergeht.
+Ein eisiger Nebel sammelt sich kurz und vergeht wieder.
 %%%%
 A glowing mist gathers momentarily, then fades.
-Ein glühender Nebel sammelt sich kurz, dann vergeht.
+Ein glühender Nebel sammelt sich kurz und vergeht wieder.
 %%%%
 A freezing mist starts to gather...
 Ein eisiger Nebel beginnt sich zu sammeln...
@@ -9362,7 +9362,7 @@ A glowing mist starts to gather...
 Ein glühender Nebel beginnt sich zu sammeln...
 %%%%
 With its final breath, the spriggan druid offers up its power to the beasts of the wild!
-Mit seinem letzten Atemzug opfert der Spriggan-Druide seine Kraft den Bestien der Wildnis!
+Mit seinem letzten Atemzug opfert der Spriggandruide seine Kraft den Bestien der Wildnis!
 %%%%
 %s seems to grow more fierce.
 %s scheint immer grimmiger zu werden.
@@ -9374,25 +9374,25 @@ Mit seinem letzten Atemzug opfert der Spriggan-Druide seine Kraft den Bestien de
 %s verwandelt sich in ein Skelett!
 %%%%
 %s appears out of thin air!
-%s erscheint aus der Luft!
+%s erscheint aus der leeren Luft!
 %%%%
 %s's shape twists and changes in death.
 Die Gestalt {gen}%s verdreht und verändert sich im Tod.
 %%%%
 %s's body returns to its original shape.
-Die Leiche {gen}%s verwandlt sich in ihre ursprüngliche Form.
+Die Leiche {gen}%s verwandlt sich zurück in ihre ursprüngliche Form.
 %%%%
 Lua death function for monster '%s' didn't load: %s
 Die Lua-Todesfunktion für das Monster '%s' wurde nicht geladen: %s
 %%%%
 You feel the power of %s in you as your rage grows.
-Du spürst {gen}%s Macht in dir, als deine Wut wächst.
+Du spürst {gen}%s Macht in dir, während deine Wut wächst.
 %%%%
 The necklace of Bloodlust glows a violent red.
-Die Kette von Bloodlust leuchtet heftig rot.
+Die Kette des Blutrausches leuchtet heftig rot.
 %%%%
 You feel the ancient rage of your axe.
-Du spürst die alte Wut deiner Axt.
+Du spürst die uralte Wut deiner Axt.
 %%%%
 %s detonates feebly.
 %s detoniert kraftlos.
@@ -9440,7 +9440,7 @@ You kill %s!
 Du tötest {acc}%s!
 %%%%
 That felt strangely unrewarding.
-Das fühlte sich seltsam unergiebig an.
+Das fühlte sich seltsam unrentabel an.
 %%%%
 %s dies!
 %s stirbt!
@@ -9506,10 +9506,10 @@ Der Wald hört abrupt auf, sich zu bewegen.
 %s löst sich in Schatten auf!
 %%%%
 %s degenerate into a cloud of primal chaos!
-%s entarten in eine Wolke aus Urchaos!
+%s entarten in eine Wolke aus urtümlichem Chaos!
 %%%%
 %s degenerates into a cloud of primal chaos!
-%s entartet in eine Wolke aus Ur-Chaos!
+%s entartet in eine Wolke aus urtümlichem Chaos!
 %%%%
 %s dissolve into sparkling lights!
 %s lösen sich in funkelnde Lichter auf!
@@ -9524,10 +9524,10 @@ Der Wald hört abrupt auf, sich zu bewegen.
 %s verblasst!
 %%%%
 %s dissolve into a puddle of slime!
-%s lösen sich in eine Pfütze aus Schleim auf!
+%s zerlaufen zu einer Pfütze aus Schleim!
 %%%%
 %s dissolves into a puddle of slime!
-%s löst sich in eine Pfütze aus Schleim auf!
+%s zerläuft zu einer Pfütze aus Schleim!
 %%%%
 %s return to the deep!
 %s kehren in die Tiefe zurück!
@@ -9542,34 +9542,34 @@ Der Wald hört abrupt auf, sich zu bewegen.
 %s schimmert und verschwindet!
 %%%%
 Pikel's spell is broken, but his former minion can only feel hate for you!
-Pikels Bann ist gebrochen, aber sein ehemaliger Sklave kann nur noch Hass für dich empfinden!
+Pikels Bann ist gebrochen, aber sein ehemaliger Sklave kann nur Hass für dich empfinden!
 %%%%
 Pikel's spell is broken, but his former minions can only feel hate for you!
-Pikels Bann ist gebrochen, aber seine ehemaligen Sklaven können nur noch Hass für dich empfinden!
+Pikels Bann ist gebrochen, aber seine ehemaligen Sklaven können nur Hass für dich empfinden!
 %%%%
 With Pikel's spell broken, his former minion thanks you for its freedom.
-Da Pikels Bann gebrochen ist, dankt dich sein ehemaliger Sklave für seine Freiheit.
+Als Pikels Bann bricht, dankt dir sein ehemaliger Sklave für seine Freiheit.
 %%%%
 With Pikel's spell broken, his former minions thank you for their freedom.
-Da Pikels Bann gebrochen ist, danken dich seine ehemaligen Sklaven für ihre Freiheit.
+Als Pikels Bann bricht, danken dir seine ehemaligen Sklaven für ihre Freiheit.
 %%%%
 No longer under Kirke's spell, the hog returns to its human form!
-Nicht länger unter Kirkes Bann, das Schwein nimmt wieder seine menschliche Gestalt an!
+Nicht länger unter Kirkes Bann, nimmt das Schwein wieder seine menschliche Gestalt an!
 %%%%
 No longer under Kirke's spell, the hogs return to their human form!
-Nicht länger unter Kirkes Bann, die Schweine nehmen wieder ihre menschliche Gestalt an!
+Nicht länger unter Kirkes Bann, nehmen die Schweine wieder ihre menschliche Gestalt an!
 %%%%
 No longer under Kirke's spell, the hog returns to its original form!
-Nicht länger unter Kirkes Bann, das Schwein nimmt seine ursprüngliche Form wieder an!
+Nicht länger unter Kirkes Bann, nimmt das Schwein wieder seine ursprüngliche Gestalt an!
 %%%%
 No longer under Kirke's spell, the hogs return to their original form!
-Nicht mehr unter Kirkes Bann, die Schweine nehmen wieder ihre ursprüngliche Form an!
+Nicht länger unter Kirkes Bann, nehmen die Schweine wieder ihre ursprüngliche Gestalt an!
 %%%%
 %s seems to find hidden reserves of power!
 %s scheint versteckte Kraftreserven zu finden!
 %%%%
 %s likewise turns neutral.
-%s wird ebenfalls neutral!
+%s wird ebenfalls neutral.
 %%%%
 %s gets angry again!
 %s wird wieder wütend!
@@ -9598,10 +9598,10 @@ Wurzeln greifen {acc}%s.
 %s wird wieder hörbar.
 %%%%
 As %s is destroyed, the sound returns.
-Als %s zerstört wird, kehrt das Geräusch zurück.
+Als %s zerstört wird, kehrt die Geräusche zurück.
 %%%%
 As %s dies, the sound returns.
-Als %s stirbt, kehrt das Geräusch zurück.
+Als %s stirbt, kehrt die Geräusche zurück.
 %%%%
 %s no longer looks unusually strong.
 %s sieht nicht mehr ungewöhnlich stark aus.
@@ -9619,7 +9619,7 @@ Als %s stirbt, kehrt das Geräusch zurück.
 %s hört auf, sich zurückzuziehen.
 %%%%
 %s seems to regain courage.
-%s scheint den Mut wieder zu finden.
+%s scheint wieder Mut zu finden.
 %%%%
 %s seems less confused.
 %s scheint weniger verwirrt zu sein.
@@ -9652,10 +9652,10 @@ Du kannst {acc}%s wieder spüren.
 %s bricht frei.
 %%%%
 %s is no longer berserk.
-%s ist nicht mehr berserkert.
+%s ist nicht mehr in Berserkerwut.
 %%%%
 Something invisible bursts forth from the water.
-Etwas Unsichtbares platzt aus dem Wasser.
+Etwas Unsichtbares schießt aus dem Wasser.
 %%%%
 %s's soul is no longer ripe for the taking.
 Die Seele {gen}%s ist nicht mehr reif für die Übernahme.
@@ -9664,7 +9664,7 @@ The forest calms down.
 Der Wald beruhigt sich.
 %%%%
 %s is no longer liquefying the ground.
-%s verflüssigt den Boden nicht mehr.
+%s verflüssigt nicht mehr den Boden.
 %%%%
 %s is no longer dazed.
 %s ist nicht mehr benommen.
@@ -9698,7 +9698,7 @@ Die innere Flamme {gen}%s verblasst.
 %s ist nicht mehr geschwächt.
 %%%%
 %s toxic aura wanes.
-%s giftige Aura schwindet.
+%s toxische Aura schwindet.
 %%%%
 %s is no longer more vulnerable to fire.
 %s ist nicht mehr anfälliger für Feuer.
@@ -9753,32 +9753,32 @@ Die Seele %s ist nicht mehr gebunden.
 %s ist nicht mehr befallen.
 %%%%
 The zombie hands release their grip on %s.
-Die Zombiehände lösen ihren Griff um {acc}%s.
+Die Zombiehände lösen ihren Griff von {acc}%s.
 %%%%
 The roots release their grip on %s.
-Die Wurzeln lösen ihren Griff um {acc}%s.
+Die Wurzeln lösen ihren Griff von {acc}%s.
 %%%%
 %s is no longer waterlogged.
 %s ist nicht mehr wasserdurchtränkt.
 %%%%
 %s stops rolling and uncurls.
-%s hört auf zu rollen und rollt sich auf.
+%s hört auf zu rollen und streckt sich aus.
 %%%%
 %s no longer looks unusually toxic.
-%s sieht nicht mehr ungewöhnlich giftig aus.
+%s sieht nicht mehr ungewöhnlich toxisch aus.
 %%%%
 # it = merfolk avatar
 The pull of its song draws you forwards.
-Der Zug seines Liedes zieht dich nach vorne.
+Der Bann seines Liedes zieht dich nach vorne.
 %%%%
 Something prevents you from swapping places with %s.
 Irgendetwas hindert dich daran, den Platz mit {dat}%s zu tauschen.
 %%%%
 The shadowy forms in the deep grow still as others approach.
-Die Schattenformen in der Tiefe wachsen immer noch, wenn sich andere nähern.
+Die Schattenformen in der Tiefe wachsen immer noch, während sich andere nähern.
 %%%%
 Shadowy forms rise from the deep at %s song!
-Schattenhafte Formen erheben sich aus der Tiefe bei %s Lied!
+Zu %s Lied erheben sich schattenhafte Formen aus der Tiefe!
 %%%%
 %s is no longer in an insane frenzy.
 %s ist nicht mehr in einem wahnsinnigen Rausch.
@@ -9799,13 +9799,13 @@ Die Flammen, die {acc}%s bedecken, erlöschen.
 %s verdorrt und stirbt.
 %%%%
 The portal closes; %s is severed.
-Das Portal wird geschlossen; %s wird getrennt.
+Das Portal wird geschlossen; %s wird abgetrennt.
 %%%%
 %s suddenly becomes enraged!
 %s wird plötzlich wütend!
 %%%%
 You hear a distant and violent thrashing sound.
-Du hörst ein fernes und heftiges Schlaggeräusch.
+Du hörst ein fernes und heftig polterndes Geräusch.
 %%%%
 %s writhes!
 %s windet sich!
@@ -9851,10 +9851,10 @@ By Zin's power, %s fires are quelled.
 Durch Zins Kraft werden %s Brände gelöscht.
 %%%%
 By Zin's power, %s explosion is contained.
-Durch Zins Kraft ist %s Explosion eingedämmt.
+Durch Zins Kraft wird %s Explosion eingedämmt.
 %%%%
 %s blazes out!
-%s lodert aus!
+%s erlischt!
 %%%%
 By Zin's power, the fiery explosion is contained.
 Durch die Kraft von Zin wird die feurige Explosion eingedämmt.
@@ -9879,7 +9879,7 @@ about %d
 gegen %d
 %%%%
 " (fellow slime)"
-" (Mitschleim)"
+" (Schleimfreund)"
 %%%%
 
 ##################
@@ -9895,7 +9895,7 @@ gegen %d
 ##################
 %%%%
 %s's form twists and warps, and jellies spill out!
-Die Form {gen}%s verdreht und verformt sich, und Gelees quellen heraus!
+Die Gestalt {gen}%s verdreht und verformt sich und Gelees quellen heraus!
 %%%%
 %s's appearance momentarily alters.
 Das Aussehen {gen}%s ändert sich kurzzeitig.
@@ -9919,7 +9919,7 @@ Das Aussehen {gen}%s ändert sich kurzzeitig.
 %s zittert einen Augenblick.
 %%%%
 Wyrmbane glows as a worthy foe approaches.
-Wyrmbane leuchtet, als sich ein würdiger Feind nähert.
+Drachenfluch leuchtet, als sich ein würdiger Feind nähert.
 %%%%
 
 ##################
@@ -9961,13 +9961,13 @@ A tentacle rises from the water!
 Ein Tentakel erhebt sich aus dem Wasser!
 %%%%
 Tentacles burst out of the water!
-Tentakel platzen aus dem Wasser!
+Tentakel schießen aus dem Wasser!
 %%%%
 A tentacle flies out from the starspawn's body!
 Ein Tentakel fliegt aus dem Körper der Sternbrut!
 %%%%
 Tentacles burst from the starspawn's body!
-Tentakel platzen aus dem Körper der Sternbrut!
+Tentakel schießen aus dem Körper der Sternbrut!
 %%%%
 
 ##################
@@ -9975,22 +9975,22 @@ Tentakel platzen aus dem Körper der Sternbrut!
 ##################
 %%%%
 The %s mimic %s and vanishes in a puff of smoke!
-Der %s-Mimiker %s und verschwindet in einer Rauchwolke!
+Die %s-Mimik %s und verschwindet in einer Rauchwolke!
 %%%%
 The %s mimic %s and vanishes!
-Der %s-Mimiker %s und verschwindet!
+Die %s-Mimik %s und verschwindet!
 %%%%
 The %s mimic vanishes in a puff of smoke!
-Der %s-Mimiker verschwindet in einer Rauchwolke!
+Die %s-Mimik verschwindet in einer Rauchwolke!
 %%%%
 The %s mimic vanishes!
-Der %s-Mimiker verschwindet!
+Die %s-Mimik verschwindet!
 %%%%
 %s are a mimic!
-%s ist ein Mimiker!
+%s sind eine Mimik!
 %%%%
 %s is a mimic!
-%s ist ein Mimiker!
+%s ist eine Mimik!
 %%%%
 Geryon discards his horn.
 Geryon wirft sein Horn ab.
