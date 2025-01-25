@@ -461,19 +461,19 @@
 "goldene "
 %%%%
 "crystal "
-"Kristall-"
+"kristallene "
 %%%%
 "ivory "
-"Elfenbein-"
+"elfenbeinerne "
 %%%%
 "bone "
-"knöcherne "
+"beinerne "
 %%%%
 "sapphire "
-"Saphir-"
+"saphirbesetzte "
 %%%%
 "ebony "
-"Ebenholz-"
+"ebenholzerne "
 %%%%
 
 ################################

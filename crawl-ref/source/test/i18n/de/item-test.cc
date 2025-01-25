@@ -218,6 +218,18 @@ vector<map<string, string>> weapons =
         {"acc", "Sense \"Beender\""},
         {"dat", "Sense \"Beender\""},
     },
+    {
+        {"en", "an ivory great mace"},
+        {"nom", "ein elfenbeinerner großer Streitkolben"},
+        {"acc", "einen elfenbeinernen großen Streitkolben"},
+        {"dat", "einem elfenbeinernen großen Streitkolben"},
+    },
+    {
+        {"en", "a sapphire giant spiked club"},
+        {"nom", "eine saphirbesetzte riesige Stachelkeule"},
+        {"acc", "eine saphirbesetzte riesige Stachelkeule"},
+        {"dat", "einer saphirbesetzten riesigen Stachelkeule"},
+    },
 };
 
 vector<map<string, string>> armour =
