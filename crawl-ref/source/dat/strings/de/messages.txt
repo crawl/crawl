@@ -7157,10 +7157,10 @@ Items not yet recognised: (toggle with -)
 Unerkannte Gegenstände: (umschalten mit -)
 %%%%
 Recognised items. (- for unrecognised, select to toggle autopickup)
-Erkannte Gegenstände. (- für unerkannte, wählen um Auto-Raffen umzuschalten)
+Erkannte Gegenstände. (- für unerkannte, wählen um automatisches Aufheben umzuschalten)
 %%%%
 You recognise all items. (Select to toggle autopickup)
-Alle Gegenstände erkannt. (Wählen um Auto-Raffen umzuschalten)
+Alle Gegenstände erkannt. (Auswählen um automatisches Aufheben umzuschalten)
 %%%%
 
 ##################
@@ -7186,16 +7186,16 @@ This branch can only be entered while carrying at least %d runes of Zot.
 Dieser Bereich kann nur betreten werden, wenn man mindestens %d Runen von Zot bei sich hat.
 %%%%
 This branch is %d levels deep.
-Dieser Bereich is %d Levels tief.
+Dieser Bereich is %d Ebenen tief.
 %%%%
 The entrance to this branch can be found %s.
 Der Eingang dieses Bereichs kann %s gefunden werden.
 %%%%
 This branch contains the entrance to %s.
-Dieser Bereich enthaltet die Eingang für {acc}%s.
+Dieser Bereich enthält den Eingang für {acc}%s.
 %%%%
 This branch contains the entrances to %s.
-Dieser Bereich enthaltet die Eingänge für {acc}%s.
+Dieser Bereich enthält die Eingänge für {acc}%s.
 %%%%
 (M)onster
 (M)onster
@@ -7258,19 +7258,19 @@ status
 Status
 %%%%
 Describe %s; partial names and regexps are fine.
-%s beschreiben; Namenteile und Regexps gilten auch.
+%s beschreiben; Namenteile und Regexps gehen auch.
 %%%%
 " Enter a single letter to list all displayed by that symbol."
-" Einen einzigen Buchstaben eingeben, um alle was mit diesem Symbol angezeigt wird aufzulisten."
+" Einen einzelnen Buchstaben eingeben, um alles, was mit diesem Symbol angezeigt wird, aufzulisten."
 %%%%
 Describe what?
 Was beschreiben?
 %%%%
 Okay, then.
-Okay, dann.
+Okay dann.
 %%%%
 No %s with symbol '%s'.
-Nichts in der Kategorie '%s' wird durch '%s' representiert.
+Nichts in der Kategorie '%s' wird durch '%s' repräsentiert.
 %%%%
 No matching %s.
 Kein Treffer in der Kategorie '%s'.
@@ -7307,7 +7307,7 @@ menu
 Menü
 %%%%
 targeting
-Abzielen
+Zielen
 %%%%
 confirmation
 Bestätigung
@@ -7322,13 +7322,13 @@ Current %s
 Aktuelles %s
 %%%%
 "cycle mode: "
-"Moden durchwechseln: "
+"Modi durchwechseln: "
 %%%%
 edit keymaps
-Keymaps bearbeiten
+Tastenpläne bearbeiten
 %%%%
 Arrows/[<w>enter</w>] to select, [<w>bksp</w>] to clear selected, [<w>?</w>] for help
-Pfeile/[<w>Enter</w>] auswählen, [<w>Rücktaste</w>] Wahl leeren, [<w>?</w>] Hilfe
+Pfeile/[<w>Enter</w>] auswählen, [<w>Rücktaste</w>] Auswahl löschen, [<w>?</w>] Hilfe
 %%%%
 "[<w>!</w>/<w>Right-click</w>] "
 "[<w>!</w>/<w>Rechtsklick</w>] "
@@ -7340,16 +7340,16 @@ macro
 Macro
 %%%%
 regular keymap
-Standardtastenplan
+Standard-Tastenplan
 %%%%
 menu keymap
 Menü-Tastenplan
 %%%%
 targeting keymap
-Abzielung-Tastenplan
+Zielen-Tastenplan
 %%%%
 level map keymap
-Ebeneplan-Tastenplan
+Ebenenplan-Tastenplan
 %%%%
 confirmation keymap
 Bestätigungstastenplan
@@ -7358,16 +7358,16 @@ macros
 Macros
 %%%%
 regular keymaps
-Standardtastenpläne
+Standard-Tastenpläne
 %%%%
 menu keymaps
 Menü-Tastenpläne
 %%%%
 targeting keymaps
-Abzielung-Tastenpläne
+Zielen-Tastenpläne
 %%%%
 level map keymaps
-Ebeneplan-Tastenpläne
+Ebenenplan-Tastenpläne
 %%%%
 confirmation keymaps
 Bestätigungstastenpläne
@@ -7397,7 +7397,7 @@ redefine
 redefinieren
 %%%%
 redefine with raw key entry
-mit rohe Taste redefinieren
+mit Roh-Code der Taste redefinieren
 %%%%
 clear
 löschen
@@ -7409,13 +7409,13 @@ beenden
 "Neues %s (roh) für %s eingeben: "
 %%%%
 Raw input: [<w>esc</w>] to abort, [<w>enter</w>] to accept.
-Rohes Eingeben: [<w>Esc</w>] beenden, [<w>Enter</w>] akzeptieren.
+Eingabe Roh-Code: [<w>Esc</w>] beenden, [<w>Enter</w>] akzeptieren.
 %%%%
 "Input new %s for %s: "
 "Neues %s für %s eingeben: "
 %%%%
 Input a key sequence. Use <w>\{n}</w> to enter keycode <w>n</w>. [<w>esc</w>] for menu
-Tastenfolge eingeben. <w>\{n}</w> verwenden um ein Keycode einzugeben<w>n</w>. [<w>Esc</w>] für Menu
+Tastenfolge eingeben. <w>\{n}</w> verwenden, um einen Tastencode einzugeben<w>n</w>. [<w>Esc</w>] für Menu
 %%%%
 Parsing error in key sequence '%s'
 Parsing-Fehler in Tastenfolge '%s'
@@ -7424,7 +7424,7 @@ Quick reference: 8: [<w>bksp</w>], 9: [<w>tab</w>], 13: [<w>enter</w>], 27: [<w>
 Schnellreferenz: 8: [<w>Rücktaste</w>], 9: [<w>Tab</w>], 13: [<w>Enter</w>], 27: [<w>Esc</w>]
 %%%%
 Enter keycode by number:
-Keycode als Nummer eingeben:
+Tastencode als Nummer eingeben:
 %%%%
 Redefined %s '%s' => '%s'.
 %s redefiniert: '%s' => '%s'.
@@ -7450,40 +7450,40 @@ Press <w>?</w> for a list of commands and other information.
 <w>?</w> drücken, um eine Liste der Befehle und anderer Informationen anzuzeigen.
 %%%%
 You begin with the following spells memorised: %s
-Du beginnst mit den folgenden Zaubersprüchen memoriert: {dat}%s
+Zu Beginn kennst du folgende Zaubersprüche auswendig: {acc}%s
 %%%%
 You begin with the following equipment: %s
-Du beginnst mit der folgenden Ausrüstung: {dat}%s
+Du beginnst mit folgender Ausrüstung: {dat}%s
 %%%%
 ; and the following spells memorised: %s
-; und den folgenden Zaubersprüche memoriert: {dat}%s
+; und den folgenden Zaubersprüchen auswendig gelernt: {dat}%s
 %%%%
 ; and the following spell memorised: %s
-; und den folgenden Zauberspruch memoriert: {dat}%s
+; und dem folgenden Zauberspruch auswendig gelernt: {dat}%s
 %%%%
 ; and the following spells available to memorise: %s
-; und den folgenden Zaubersprüche zum Memorieren verfügbar: {dat}%s
+; und den folgenden Zaubersprüchen zum Auswendiglernen verfügbar: {dat}%s
 %%%%
 You're about to run into a slime covered wall!
 Du bist dabei, gegen eine mit Schleim bedeckte Wand zu rennen!
 %%%%
 You can't repeat informational commands.
-Informationsbefehle kann nicht wiederholen werden.
+Informationsbefehle können nicht wiederholt werden.
 %%%%
 You can't repeat multi-turn commands.
-Du kannst Multi-Turn-Befehle nicht wiederholen.
+Multi-Runden-Befehle können nicht wiederholt werden.
 %%%%
 You can't repeat that command.
-Du kannst diesen Befehl nicht wiederholen.
+Dieser Befehl kann nicht wiederholt werden.
 %%%%
 You can't repeat map commands.
-Du kannst keine Kartenbefehle wiederholen.
+Kartenbefehle können nicht wiederholt werden.
 %%%%
 You can't repeat mouse clicks or movements.
-Du kannst Mausklicks oder Bewegungen nicht wiederholen.
+Mausklicks oder Bewegungen können nicht wiederholt werden.
 %%%%
 You can't repeat the repeat command!
-Du kannst den Wiederholungsbefehl nicht wiederholen!
+Der Wiederholungsbefehl kann nicht wiederholt werden!
 %%%%
 Why would you want to repeat a run command?
 Warum solltest du einen Laufbefehl wiederholen wollen?
@@ -7492,7 +7492,7 @@ No previous command to repeat.
 Kein vorheriger Befehl zum Wiederholen.
 %%%%
 Really repeat movement command while danger is nearby?
-Wirklich den Bewegungsbefehl wiederholen, wenn Gefahr in der Nähe ist?
+Wirklich den Bewegungsbefehl wiederholen, obwohl Gefahr in der Nähe ist?
 %%%%
 Unknown command, not repeating.
 Unbekannter Befehl, nicht wiederholbar.
@@ -7501,7 +7501,7 @@ Game saved, see you later!
 Spiel gespeichert, bis später!
 %%%%
 Key pressed, interrupting command repetition.
-Taste gedrückt und damit die Befehlswiederholung unterbrochen.
+Taste gedrückt, die Befehlswiederholung wurde unterbrochen.
 %%%%
 You can't repeat shop actions.
 Laden-Aktionen können nicht wiederholt werden.
@@ -7516,7 +7516,7 @@ This shop appears to be closed.
 Dieser Laden scheint geschlossen zu sein.
 %%%%
 A magical barricade bars your way!
-Eine magische Barrikade versperrt dich den Weg!
+Eine magische Barrikade versperrt dir den Weg!
 %%%%
 You can't go down here!
 Du kannst hier nicht runter gehen!
@@ -7531,7 +7531,7 @@ You need at least %d runes to enter this place.
 Du brauchst mindestens %d Runen, um diesen Ort zu betreten.
 %%%%
 A rune of Zot still resides in this realm, and once you leave you can never return. Are you sure you want to leave?
-Eine Rune von Zot befindet sich immer noch in diesem Reich, und Zurückkehren nach dem Verlassen ist nicht möglich. Bist du sicher, dass du gehen willst?
+Eine Rune von Zot befindet sich noch in diesem Reich und wenn du es einmal verlässt, kannst du nie wieder zurückkehren. Bist du sicher, dass du gehen willst?
 %%%%
 This transporter is marked as excluded!
 Dieser Transporter ist als ausgeschlossen gekennzeichnet!
@@ -7546,7 +7546,7 @@ Really leave the ziggurat figurine behind?
 Die Figur einer Ziggurat wirklich zurücklassen?
 %%%%
 Really leave the Orb behind?
-Den Orb wirklich zurücklassen?
+Die Kugel wirklich zurücklassen?
 %%%%
 Are you sure you want to leave %s?
 Bist du alle sicher, dass du {acc}%s verlassen willst?
@@ -7555,13 +7555,13 @@ Bist du alle sicher, dass du {acc}%s verlassen willst?
 " Damit wirst du das Spiel verlieren!"
 %%%%
 Alright, then stay!
-Okay, bleibt dann!
+Also gut, dann bleib!
 %%%%
 Really go through this one-way escape hatch?
-Wirklich durch diese Einweg-Fluchtluke gehen?
+Wirklich diese Einweg-Fluchtluke benutzen?
 %%%%
 Really dive through this shaft in the floor?
-Wirklich durch diesen Schacht im Boden tauchen?
+Wirklich in diesen Schacht im Boden springen?
 %%%%
 The transporter is blocked on the other side!
 Der Transporter ist auf der anderen Seite blockiert!
@@ -7573,28 +7573,28 @@ You enter the transporter and appear at another place.
 Du betrittst den Transporter und tauchst an einem anderen Ort auf.
 %%%%
 You are a level %d %s %s.
-Du bist ein Level %d %s %s.
+Du bist ein Stufe %d %s %s.
 %%%%
 You are %d%% of the way to level %d.
-Du bist %d%% auf dem Weg zum Level %d.
+Du bist %d%% auf dem Weg zu Stufe %d.
 %%%%
 I'm sorry, level %d is as high as you can go.
-Es tut mir leid, Level %d ist so hoch wie du kannst.
+Es tut mir leid, Stufe %d ist die höchste, die du erreichen kannst.
 %%%%
 With the way you've been playing, I'm surprised you got this far.
-Mit der Art, wie du gespielt hast, bin ich überrascht, dass du so weit gekommen bist.
+So wie du gespielt hast, bin ich überrascht, dass du so weit gekommen bist.
 %%%%
 You'll get an extra life in %d.%02d levels' worth of XP.
-Du wirst noch ein Leben mit zusätzlichen XP im Wert von %d,%02d Levels bekommen.
+Du erhältst das nächste Extraleben nach Erfahrung, die %d,%02d Stufen entspricht.
 %%%%
 If you died right now, you'd get an extra life in %d.%02d levels' worth of XP.
-Wenn du jetzt stirbst, wirst du noch ein Leben mit zusätzlichen XP im Wert von %d,%02d Levels bekommen.
+Würdest du genau jetzt sterben, dann würdest du ein Extraleben nach Erfahrung, die %d,%02d Stufen entspricht, erhalten.
 %%%%
 Play time: %s (%d turns).
 Spielzeit: %s (%d Runden).
 %%%%
 You are forever immune to Zot's power.
-Du bist für immer immun gegen die Macht von Zot.
+Du bist für immer gegen die Macht von Zot immun.
 %%%%
 You have unlimited time to explore this branch.
 Du hast unbegrenzt Zeit, diesen Bereich zu erkunden.
@@ -7609,7 +7609,7 @@ Take off which item?
 Welchen Gegenstand ausziehen?
 %%%%
 You pace your travel speed to your slowest ally.
-Du passst deine Reisegeschwindigkeit an deinen langsamsten Verbündeten an.
+Du passt deine Reisegeschwindigkeit an deinen langsamsten Verbündeten an.
 %%%%
 You travel at normal speed.
 Du gehst mit normaler Geschwindigkeit.
@@ -7621,7 +7621,7 @@ You start resting.
 Du fängst an dich auszuruhen.
 %%%%
 Move the cursor to view the level map, or type <w>?</w> for a list of commands.
-Den Cursor bewegen, um die Ebenekarte anzuzeigen, oder <w>?</w> eingeben für eine Liste der Befehle.
+Den Cursor bewegen, um die Ebenekarte anzuzeigen oder <w>?</w> eingeben für eine Liste der Befehle.
 %%%%
 Returning to the game...
 Zurück zum Spiel...
@@ -7633,7 +7633,7 @@ No quiver actions available for cycling.
 Keine Köcheraktionen zum Durchwechseln verfügbar.
 %%%%
 " Use <white>Q</white> to select from all actions."
-" <white>Q</white> verwenden, um aus allen Aktionen auszuwählen."
+" <white>Q</white> verwenden, um aus allen Aktionen zu wählen."
 %%%%
 You have 1 gold piece.
 Du hast 1 Goldmünze.
@@ -7642,7 +7642,7 @@ You have %d gold pieces.
 Du hast %d Goldmünzen.
 %%%%
 You should not fight recklessly!
-Du sollst nicht rücksichtslos kämpfen!
+Du solltest nicht rücksichtslos kämpfen!
 %%%%
 Nothing quivered!
 Nichts im Köcher!
@@ -7657,7 +7657,7 @@ Generate and view character dump
 Charakter-Dump generieren und ansehen
 %%%%
 Edit player tile
-Spieler-Figur bearbeiten
+Spielfigur bearbeiten
 %%%%
 Edit macros
 Macros bearbeiten
@@ -7666,19 +7666,19 @@ Help and manual
 Hilfe und Spielanleitung
 %%%%
 Quit and <lightred>abandon character</lightred>
-Das Spiel beenden und <lightred>Charakter aufgeben</lightred>
+Das Spiel beenden und den <lightred>Charakter aufgeben</lightred>
 %%%%
 Autopickup is now on.
-Autoabholung ist nun eingeschaltet.
+Automatisches Aufheben ist nun eingeschaltet.
 %%%%
 Autopickup is now off.
-Autoabholung ist nun ausgeschaltet.
+Automatisches Aufheben ist nun ausgeschaltet.
 %%%%
 Sound effects are now on.
-Die Soundeffekte sind jetzt eingeschaltet.
+Soundeffekte sind jetzt eingeschaltet.
 %%%%
 Sound effects are now off.
-Die Soundeffekte sind jetzt ausgeschaltet.
+Soundeffekte sind jetzt ausgeschaltet.
 %%%%
 Save game and return to main menu?
 Spiel speichern und zum Hauptmenü zurückkehren?
@@ -7687,7 +7687,7 @@ Save game and exit?
 Spiel speichern und beenden?
 %%%%
 Saving game... please wait.
-Spiel wird gespeichert... bitte wartet.
+Spiel wird gespeichert... bitte warten.
 %%%%
 Are you sure you want to abandon this character?
 Bist du sicher, dass du diesen Charakter aufgeben willst?
@@ -7720,7 +7720,7 @@ You are cast deeper into the Abyss!
 Du wirst tiefer in den Abgrund geworfen!
 %%%%
 The Abyss bends around you!
-Der Abgrund biegt sich um dich!
+Der Abgrund verbiegt sich um dich herum!
 %%%%
 Your passage of Golubria closes with a snap!
 Deine Passage von Golubria schließt sich mit einem Schnappen!
@@ -7735,16 +7735,16 @@ Sorry, but your quest for the Orb is now rather pointless. You quit...
 Tut mir leid, aber deine Suche nach der Kugel ist jetzt ziemlich sinnlos. Du gibst auf...
 %%%%
 You feel a strong urge to attack something.
-Du hast einen starken Drang, etwas anzugreifen.
+Du verspürst den starken Drang, etwas anzugreifen.
 %%%%
 You feel your anger nearly subside.
-Du fühlst, wie dein Zorn fast nachlässt.
+Du fühlst, wie dein Zorn fast ganz nachlässt.
 %%%%
 Your blood rage is quickly leaving you.
-Deine Blutwut verlässt dich schnell.
+Dein Blutrausch verlässt dich schnell.
 %%%%
 Can't repeat a command which takes no turns (unless it's a wizard command), cancelling repetitions.
-Ein Befehl (außerdem ein Zauberer-Befehl), der keine Runden benötigt, kann nicht wiederholt werden. Wiederholungen werden aufgehoben.
+Ein Befehl, der keine Runden benötigt, kann nicht wiederholt werden (mit Ausnahme von Befehlen im Zauberer-Modus). Wiederholungen werden aufgehoben.
 %%%%
 Can't repeat a command which takes no turns, cancelling repetitions.
 Ein Befehl, der keine Runden benötigt, kann nicht wiederholt werden. Wiederholungen werden aufgehoben.
@@ -7753,7 +7753,7 @@ Ein Befehl, der keine Runden benötigt, kann nicht wiederholt werden. Wiederholu
 "Anzahl der Wiederholungen, dann Befehlstaste: "
 %%%%
 You must enter the number of times for the command to repeat.
-Du musst eingeben, wieviele Male der Befehl wiederholt werden soll.
+Du musst eingeben, wie oft der Befehl wiederholt werden soll.
 %%%%
 "Enter command to be repeated: "
 Befehl eingeben, der wiederholt werden soll:
@@ -7773,7 +7773,7 @@ Clearing travel trail.
 Lösche Reiseweg.
 %%%%
 Clearing level map.
-Leere Ebene-Karte.
+Lösche Ebenenkarte.
 %%%%
 
 ##################
@@ -7784,10 +7784,10 @@ You attempt to attack %s, but flinch away in fear!
 Du versuchst {acc}%s anzugreifen, zuckt aber vor Angst zurück!
 %%%%
 %s strikes at you from the darkness!
-%s schlägt aus der Dunkelheit auf dich an!
+%s schlägt aus der Dunkelheit nach dir!
 %%%%
 %s strikes at %s from the darkness!
-%s schlägt aus der Dunkelheit auf {acc}%s an!
+%s schlägt aus der Dunkelheit nach {dat}%s!
 %%%%
 %s completely misses you.
 %s verfehlt dich völlig.
@@ -7799,25 +7799,25 @@ Du versuchst {acc}%s anzugreifen, zuckt aber vor Angst zurück!
 %s verfehlt {acc}%s.
 %%%%
 %s closely misses you.
-%s verfehlt dich.
+%s verfehlt dich knapp.
 %%%%
 %s closely misses %s.
-%s verfehlt {acc}%s nur knapp.
+%s verfehlt {acc}%s knapp.
 %%%%
 %s barely misses you.
-%s verfehlt dich nur knapp.
+%s verfehlt dich um Haaresbreite.
 %%%%
 %s barely misses %s.
-%s verfehlt {acc}%s sehr knapp.
+%s verfehlt {acc}%s um Haaresbreite.
 %%%%
 You engulf %s in ooze!
-Du verschlingst {acc}%s in Schlamm!
+Du hüllst {acc}%s in Schleim ein!
 %%%%
 " but do no damage."
 , fügst aber keinen Schaden zu.
 %%%%
 your grab
-dein Umschlingsversuch
+dein Umschlingungsversuch
 %%%%
 You grab %s
 Du umschlingst {acc}%s
@@ -7832,10 +7832,10 @@ You claw %s.
 Du zerkratzt {acc}%s.
 %%%%
 You pierce %s.
-Du stechst {acc}%s durch.
+Du durchstichst {acc}%s.
 %%%%
 your tentacle spike
-dein Tentakel-Stachel
+dein Tentakelstachel
 %%%%
 your headbutt
 dein Kopfstoß
@@ -7844,10 +7844,10 @@ You headbutt %s
 Du versetzt {dat}%s einen Kopfstoß
 %%%%
 your peck
-dein Picken
+dein Hacken
 %%%%
 You peck %s
-Du pickst {acc}%s
+Du hackst {acc}%s
 %%%%
 your tail-slap
 dein Schwanzschlag
@@ -7892,7 +7892,7 @@ your squeeze
 dein Quetschen
 %%%%
 You squeeze %s
-Du zerquetschst %s
+Du quetschst %s
 %%%%
 You drain %s magic.
 Du entziehst die Magie {gen}%s.
@@ -7913,7 +7913,7 @@ Your shield prevents you from hitting %s.
 Dein Schild hindert dich daran, {acc}%s zu treffen.
 %%%%
 Your shield and armour prevent you from hitting %s.
-Dein Schild und deine Rüstung hindert dich daran, {acc}%s zu treffen.
+Dein Schild und deine Rüstung hindern dich daran, {acc}%s zu treffen.
 %%%%
 You completely miss %s.
 Du verfehlst {acc}%s völlig.
@@ -7922,10 +7922,10 @@ You miss %s.
 Du verfehlst {acc}%s.
 %%%%
 You closely miss %s.
-Du verfehlst {acc}%s nur knapp.
+Du verfehlst {acc}%s knapp.
 %%%%
 You barely miss %s.
-Du verfehlst {acc}%s sehr knapp.
+Du verfehlst {acc}%s um Haaresbreite.
 %%%%
 You hit %s
 Du triffst {acc}%s
@@ -7934,13 +7934,13 @@ You clumsily bash %s
 Du schlägst {acc}%s ungeschickt
 %%%%
 You puncture %s
-Du stechst {acc}%s durch
+Du durchstichst {acc}%s
 %%%%
 You impale %s
 Du spießt {acc}%s auf
 %%%%
 You spit %s like the proverbial pig
-Du spießt {acc}%s auf wie das sprichwörtliche Schwein
+Du spießt {acc}%s auf wie ein sprichwörtliches Schwein
 %%%%
 You attack %s's weak point
 Du greifst {acc}%s an der Swachstelle an
@@ -7949,10 +7949,10 @@ You spit %s like a pig
 Du spießt {acc}%s auf wie ein Schwein
 %%%%
 You skewer %s like a kebab
-Du spießt {acc}%s wie einen Kebab
+Du spießt {acc}%s auf wie einen Kebab
 %%%%
 You stick %s like a pincushion
-Du steckst {acc}%s wie ein Nadelkissen
+Du stichst {acc}%s wie ein Nadelkissen
 %%%%
 You perforate %s like a sieve
 Du durchlöcherst {acc}%s wie ein Sieb
@@ -7964,7 +7964,7 @@ You dice %s like an onion
 Du würfelst {acc}%s wie eine Zwiebel
 %%%%
 You fracture %s into splinters
-Du zerbrechst {acc}%s in Splitter
+Du zerbrichst {acc}%s in Splitter
 %%%%
 You carve %s like the proverbial ham
 Du tranchierst {acc}%s wie den sprichwörtlichen Schinken
@@ -7973,7 +7973,7 @@ You carve %s like a turkey
 Du tranchierst {acc}%s wie einen Truthahn
 %%%%
 You shave %s
-Du schabst {acc}%s
+Du rasierst {acc}%s
 %%%%
 You open %s like a pillowcase
 Du öffnest {acc}%s wie einen Kissenbezug
@@ -7982,13 +7982,13 @@ You slice %s like a ripe choko
 Du schneidest {acc}%s wie eine reife Chayote
 %%%%
 You cut %s into ribbons
-Du schneidest {acc}%s in Bänder
+Du schneidest {acc}%s in Streifen
 %%%%
 You carve %s like a ham
 Du tranchierst {acc}%s wie einen Schinken
 %%%%
 You chop %s into pieces
-Du zerhackst {acc}%s in Stücke
+Du hackst {acc}%s in Stücke
 %%%%
 You thump %s
 Du prügelst {acc}%s
@@ -8015,16 +8015,16 @@ You pound %s like an anvil
 Du hämmerst {acc}%s wie einen Amboss
 %%%%
 You flatten %s like a pancake
-Du machst {acc}%s platt wie ein Brett
+Du machst {acc}%s platt wie einen Pfannkuchen
 %%%%
 You whack %s
 Du verhaust {acc}%s
 %%%%
 You thrash %s
-Du bläust {acc}%s durch
+Du verdrischst {acc}%s
 %%%%
 You punish %s, causing immense pain
-Du bestrafst {acc}%s und verursacht immensen Schmerz
+Du bestrafst {acc}%s und verursachst immensen Schmerz
 %%%%
 You devastate %s
 Du verwüstest {acc}%s
@@ -8042,7 +8042,7 @@ You pummel %s
 Du verprügelst {acc}%s
 %%%%
 You touch %s
-Du fassst {acc}%s an
+Du berührst {acc}%s
 %%%%
 You engulf %s
 Du hüllst {acc}%s ein
@@ -8063,7 +8063,7 @@ You buffet %s
 Du rüttelst {acc}%s
 %%%%
 You batter %s
-Iht verprügelt {acc}%s
+Du verprügelst {acc}%s
 %%%%
 You blast %s
 Du sprengst {acc}%s
@@ -8072,19 +8072,19 @@ You scratch %s
 Du kratzt {acc}%s
 %%%%
 You mangle %s
-Du zerfleischst {acc}%s
+Du verstümmelst {acc}%s
 %%%%
 You eviscerate %s
 Du weidest {acc}%s aus
 %%%%
 You squash %s like the proverbial ant
-Du zerquetschst {acc}%s wie die sprichwörtliche Ameise
+Du zerquetschst {acc}%s wie eine sprichwörtliche Ameise
 %%%%
 You pound %s into fine dust
 Du zerstampfst {acc}%s zu feinem Staub
 %%%%
 You pummel %s like a punching bag
-Du prügelst auf {dat}%s wie einem Boxsack ein
+Du prügelst auf {dat}%s wie auf einen Boxsack ein
 %%%%
 You pulverise %s
 Du pulverisierst {acc}%s
@@ -8099,7 +8099,7 @@ The flame cauterises the wound!
 Die Flamme kauterisiert die Wunde!
 %%%%
 %s grows two more!
-%s wächst noch zwei!
+%s lässt zwei neue wachsen!
 %%%%
 You rip %s last head off!
 Du reißt den letzten Kopf %s ab!
@@ -8132,7 +8132,7 @@ Du schneidest einen der Köpfe %s ab!
 %s brennen!
 %%%%
 %s is burned by acid!
-%s wird durch Säure gebrannt!
+%s wird durch Säure verätzt!
 %%%%
 %s is electrocuted
 %s bekommt einen Stromschlag
@@ -8156,7 +8156,7 @@ Du zerschmetterst {acc}%s
 %s sprengt {acc}%s
 %%%%
 %s blasts itself
-%s zerschlagt sich selbst
+%s sprengt sich selbst
 %%%%
 %s pokes you
 %s stößt dich an
@@ -8201,10 +8201,10 @@ Du zerschmetterst {acc}%s
 %s wirft {acc}%s aus dem Fenster
 %%%%
 %s sucker-punches you
-%s versetz dich einen Tiefschlag
+%s versetzt dir einen Tiefschlag
 %%%%
 %s sucker-punches %s
-%s versetz {acc}%s einen Tiefschlag
+%s versetzt {acc}%s einen Tiefschlag
 %%%%
 %s elbows you
 %s schlägt dich mit dem Ellbogen
@@ -8219,10 +8219,10 @@ Du zerschmetterst {acc}%s
 %s kneift {acc}%s
 %%%%
 %s strangle-hugs you
-%s presst dich aus
+%s umarmt dich zu fest
 %%%%
 %s strangle-hugs %s
-%s presst {acc}%s aus
+%s umarmt {acc}%s zu fest
 %%%%
 %s squeezes you
 %s presst dich aus
@@ -8237,16 +8237,16 @@ Du zerschmetterst {acc}%s
 %s stichelt {acc}%s
 %%%%
 %s eye-gouges you
-%s drückt dich den Finger ins Auge
+%s drückt dir einen Finger ins Auge
 %%%%
 %s eye-gouges %s
-%s drückt {dat}%s den Finger ins Auge
+%s drückt {dat}%s einen Finger ins Auge
 %%%%
 %s karate-kicks you
-%s tritt dich
+%s verpasst dir einen Karatetritt
 %%%%
 %s karate-kicks %s
-%s tritt {acc}%s
+%s verpasst {acc}%s einen Karatetritt
 %%%%
 %s headlocks you
 %s nimmt dich in den Schwitzkasten
@@ -8261,13 +8261,13 @@ Du zerschmetterst {acc}%s
 %s ringt {acc}%s nieder
 %%%%
 %s trip-wires you
-%s stellt dich ein Bein
+%s stellt dir ein Bein
 %%%%
 %s trip-wires %s
 %s stellt {dat}%s ein Bein
 %%%%
 %s kneecaps you
-%s zerschmettert dich die Kniescheibe
+%s zerschmettert deine Kniescheibe
 %%%%
 %s kneecaps %s
 %s zerschmettert {dat}%s die Kniescheibe
@@ -8291,10 +8291,10 @@ Du zerschmetterst {acc}%s
 %s setzt Sporen auf {dat}%s frei
 %%%%
 %s touches you
-%s fasst dich an
+%s berührt dich
 %%%%
 %s touches %s
-%s fasst {acc}%s an
+%s berührt {acc}%s
 %%%%
 %s claws you
 %s zerkratzt dich
@@ -8303,13 +8303,13 @@ Du zerschmetterst {acc}%s
 %s zerkratzt {acc}%s
 %%%%
 %s pecks you
-%s pickt dich
+%s hackt dich
 %%%%
 %s pecks %s
-%s pickt {acc}%s
+%s hackt {acc}%s
 %%%%
 %s headbutts you
-%s versetzt dich einen Kopfstoß
+%s versetzt dir einen Kopfstoß
 %%%%
 %s headbutts %s
 %s versetzt {dat}%s einen Kopfstoß
@@ -8345,10 +8345,10 @@ schlägt dich mit dem Tentakel
 %s spießt {acc}%s auf
 %%%%
 %s tramples you
-%s trampelt dich
+%s trampelt dich nieder
 %%%%
 %s tramples %s
-%s trampelt {acc}%s
+%s trampelt {acc}%s nieder
 %%%%
 %s trunk-slaps you
 %s schlägt dich mit dem Rüssel
@@ -8378,34 +8378,34 @@ schlägt dich mit dem Tentakel
 %s vergiftet %s!
 %%%%
 You are covered in liquid flames
-Du bist in flüssigen Flammen bedeckt
+Du bist mit flüssigen Flammen bedeckt
 %%%%
 %s is covered in liquid flames
-%s ist in flüssigen Flammen bedeckt
+%s ist mit flüssigen Flammen bedeckt
 %%%%
 You are engulfed in flames
-Du bist in Flammen versunken
+Du bist in Flammen gehüllt
 %%%%
 %s is engulfed in flames
-%s ist in Flammen versunken
+%s ist in Flammen gehüllt
 %%%%
 %s shocks you
-%s gibt dich einen elektrischen Schlag
+%s gibt dir einen elektrischen Schlag
 %%%%
 %s shocks %s
 %s gibt {dat}%s einen elektrischen Schlag
 %%%%
 %s draws strength from your injuries!
-%s nimmt Kraft von deinen Verletzungen!
+%s zieht Kraft aus deinen Verletzungen!
 %%%%
 %s draws strength from %s injuries!
-%s nimmt Kraft von den Verletzungen {gen}%s!
+%s zieht Kraft aus den Verletzungen {gen}%s!
 %%%%
 You are engulfed in a cloud of spores!
-Du bist in einer Sporenwolke eingehüllt!
+Du bist in eine Sporenwolke gehüllt!
 %%%%
 %s is engulfed in a cloud of spores!
-%s ist in einer Sporenwolke eingehüllt!
+%s ist in eine Sporenwolke gehüllt!
 %%%%
 Your divine stamina protects you from poison!
 Deine göttliche Ausdauer schützt dich vor Gift!
@@ -8450,7 +8450,7 @@ the water
 das Wasser
 %%%%
 the ooze
-der Schlamm
+der Schleim
 %%%%
 %s engulfs you in water!
 %s überflutet dich!
@@ -8501,31 +8501,31 @@ You emit a cloud of foul miasma!
 Du stößt eine Wolke stinkenden Miasmas aus!
 %%%%
 %s furiously retaliates!
-%s rächst sich wütend!
+%s schlägt wütend zurück!
 %%%%
 %s headbutts you but does no damage.
-%s versetzt dich einen Kopfstoß, fügt aber keinen Schaden zu.
+%s versetzt dir einen Kopfstoß, fügt aber keinen Schaden zu.
 %%%%
 %s headbutts %s but does no damage.
 %s versetzt {dat}%s einen Kopfstoß, fügt aber keinen Schaden zu.
 %%%%
 You furiously retaliate!
-Du rächst dich wütend!
+Du schlägst wütend zurück!
 %%%%
 You headbutt %s but do no damage.
-Du versetzt {dat}%s einen Kopfstoß, fügt aber keinen Schaden zu.
+Du versetzt {dat}%s einen Kopfstoß, fügst aber keinen Schaden zu.
 %%%%
 @The_monster@ is blinded by the light from your cloak!
 @The_monster@ wird durch das Licht deines Umhangs geblendet!
 %%%%
 @The_monster@ is temporarily struck blind!
-@The_monster@ wird vorübergehend erblindet!
+@The_monster@ erblindet vorübergehend!
 %%%%
 @The_monster@'s sight is seared by the starlight!
-Die Sicht {gen}@the_monster@ wird durchs Sternenlicht versengt!
+Die Sicht {gen}@the_monster@ wird durch das Sternenlicht versengt!
 %%%%
 @The_monster@'s vision is obscured by starry radiance!
-Die Sicht {gen}@the_monster@ wird durch Sternen-Glanz verbergt!
+Die Sicht {gen}@the_monster@ wird durch Sternenglanz verdeckt!
 %%%%
 You riposte.
 Du holst zum Gegenschlag aus.
@@ -8540,10 +8540,10 @@ Du wirst festgehalten!
 %s wird festgehalten!
 %%%%
 You hold your ground!
-Du bleibst fest!
+Du bleibst standhaft!
 %%%%
 %s stands fast!
-%s bleibt fest!
+%s bleibt standhaft!
 %%%%
 You stumble backwards!
 Du stolperst rückwärts!
@@ -8558,10 +8558,10 @@ Du wirst rückwärts geschoben!
 %s wird rückwärts geschoben!
 %%%%
 You bite %s, and draw blood!
-Du beißt {acc}%s und zieht Blut!
+Du beißt {acc}%s und saugst Blut!
 %%%%
 You draw %s blood!
-Du ziehst das Blut {gen}%s!
+Du saugst das Blut {gen}%s!
 %%%%
 
 ##################
@@ -8592,10 +8592,10 @@ Was auswählen (regex)?
 ##################
 %%%%
 --more-- Press Space or click to continue.
---mehr-- Die Leertaste drücken oder klicken, um fortzufahren.
+--mehr-- Die Leertaste drücken oder klicken um fortzufahren.
 %%%%
 --more-- Press Space to continue.
---mehr-- Die Leertaste drücken, um fortzufahren.
+--mehr-- Die Leertaste drücken um fortzufahren.
 %%%%
 You can later reread messages with Ctrl-P.
 Du kannst die Nachrichten später mit Strg-P erneut lesen.
@@ -8631,10 +8631,10 @@ There's nothing there!
 Da ist nichts!
 %%%%
 There's nothing close enough!
-Es gibt nichts nah genug!
+Nichts ist nah genug!
 %%%%
 The spell fizzles.
-Der Zauber scheitert.
+Der Zauber verpufft.
 %%%%
 Huh?
 Hä?
@@ -8643,7 +8643,7 @@ Your mouth is already empty.
 Dein Mund ist schon leer.
 %%%%
 You are already empty-clawed.
-Deine Krallen sind schon leer.
+Deine Klauen sind schon leer.
 %%%%
 You are already empty-tentacled.
 Deine Tentakel sind schon leer.
@@ -8655,7 +8655,7 @@ Your mouth is now empty.
 Dein Mund ist jetzt leer.
 %%%%
 You are now empty-clawed.
-Deine Krallen sind jetzt leer.
+Deine Klauen sind jetzt leer.
 %%%%
 You are now empty-tentacled.
 Deine Tentakel sind jetzt leer.
@@ -8667,16 +8667,16 @@ You blink.
 Du blinzelst.
 %%%%
 You feel a strange sense of stasis.
-Du fühlst ein seltsames Gefühl der Stase.
+Du fühlst ein seltsames Gefühl der Stasis.
 %%%%
 You don't know any spells.
 Du kennst keine Zauber.
 %%%%
 You feel your magic capacity increase.
-Du fühlst, dass deine magische Kapazität zunimmt.
+Du fühlst, wie deine magische Kapazität zunimmt.
 %%%%
 You feel your magic capacity decrease.
-Du fühlst, dass deine magische Kapazität abnimmt.
+Du fühlst, wie deine magische Kapazität abnimmt.
 %%%%
 You feel momentarily disoriented.
 Du fühlst dich momentan desorientiert.
@@ -8685,7 +8685,7 @@ You detect nothing.
 Du entdeckst nichts.
 %%%%
 You call on the dead to rise...
-Du rufst die Toten auf, aufzustehen...
+Du befiehlst den Toten, aufzustehen...
 %%%%
 You attempt to give life to the dead...
 Du versuchst, den Toten Leben zu geben...
@@ -8697,7 +8697,7 @@ You die...
 Du stirbst...
 %%%%
 You see a ghostly outline there, and the spell fizzles.
-Du siehst dort einen gespenstischen Umriss und der Zauber scheitert.
+Du siehst dort einen gespenstischen Umriss und der Zauber verpufft.
 %%%%
 Your health is already full.
 Deine Gesundheit ist bereits voll.
@@ -8709,13 +8709,13 @@ You feel better.
 Du fühlst dich besser.
 %%%%
 You feel your power returning.
-Du fühlst, dass deine Kraft zurückkehrt.
+Du fühlst, wie deine Kraft zurückkehrt.
 %%%%
 You feel momentarily drained.
 Du fühlst dich kurzzeitig ausgezehrt.
 %%%%
 You suddenly feel drained of magical energy!
-Du fühlst dich plötzlich von magischer Energie ausgezehrt!
+Du fühlst plötzlich, wie dir etwas magische Energie entzieht!
 %%%%
 Your god isn't willing to do this for you now.
 Dein Gott ist nicht bereit, das jetzt für dich zu tun.
@@ -8726,10 +8726,10 @@ Dein Gott ist nicht bereit, das jetzt für dich zu tun.
 ##################
 %%%%
 Your stasis prevents you from teleporting.
-Deine Stase hindert dich daran, dich zu teleportieren.
+Deine Stasis hindert dich daran, zu teleportieren.
 %%%%
 You spin around.
-Du drehst dich um.
+Du wirbelst herum.
 %%%%
 You swap places with %s.
 Du tauschst Plätze mit%s.
@@ -8738,10 +8738,10 @@ The net rips apart!
 Das Netz zerreißt!
 %%%%
 You become entangled in the net!
-Du wirst in das Netz verwickelt!
+Du verhedderst dich im Netz!
 %%%%
 You get stuck in the web!
-Du steckst im Gewebe fest!
+Du steckst im Gespinst fest!
 %%%%
 
 ##################
@@ -8749,16 +8749,16 @@ Du steckst im Gewebe fest!
 ##################
 %%%%
 %s is empowered by the presence of the orb!
-%s ist durch die Anwesenheit der Kugel ermächtigt!
+%s wird durch die Anwesenheit der Kugel ermächtigt!
 %%%%
 %s basks in your mutagenic energy and changes!
-%s sonnt sich in deiner mutagenen Energie und verändert sich!
+%s schwelgt in deiner mutagenen Energie und verändert sich!
 %%%%
 %s basks in the mutagenic energy from its kin and changes!
-%s sonnt sich in der mutagenen Energie seiner Verwandten und verändert sich!
+%s schwelgt in der mutagenen Energie seiner Artgenossen und verändert sich!
 %%%%
 %s basks in the mutagenic energy and changes!
-%s sonnt sich in der mutagenen Energie und verändert sich!
+%s schwelgt in der mutagenen Energie und verändert sich!
 %%%%
 %s splits.
 %s teilt sich.
@@ -8767,13 +8767,13 @@ Two slime creatures merge to form %s.
 Zwei Schleimkreaturen verschmelzen zu {acc}%s.
 %%%%
 Something merges into %s, and it vanishes!
-Etwas verschmilzt mit {dat}%s, und verschwindet!
+Etwas verschmilzt mit {dat}%s und verschwindet!
 %%%%
 %s merges with something you can't see.
 %s verschmilzt mit etwas, das du nicht sehen kannst.
 %%%%
 A cacophony of accursed wailing tears at your sanity!
-Eine Kakophonie verfluchtes Gejammer zerreißt deinen Verstand!
+Eine Kakophonie verfluchten Gejammers zerreißt deinen Verstand!
 %%%%
 A deafening chorus of shrieks assaults your mind!
 Ein ohrenbetäubender Chor von Schreien überfällt deinen Verstand!
@@ -8814,16 +8814,16 @@ Wütende Insekten schießen aus dem Laub {gen}%s hervor!
 ##################
 %%%%
 %s is no longer engulfed.
-%s ist nicht mehr verschlungen.
+%s ist nicht mehr eingehüllt.
 %%%%
 %s and %s swap places.
 %s und %s tauschen Plätze.
 %%%%
 By Zin's power the foxfire is contained!
-Durch Zins Kraft ist das Fuchsfeuer eingedämmt!
+Durch Zins Kraft wird das Fuchsfeuer eingedämmt!
 %%%%
 %s swoops through the air toward %s!
-%s fliegt durch die Luft in Richtung %s!
+%s stürzt durch die Luft in Richtung %s!
 %%%%
 %s reads a scroll.
 %s liest eine Schriftrolle.
@@ -8859,16 +8859,16 @@ Du hörst ein lautes Knistern.
 %s wird durch deine schillernde goldene Aura abgelenkt.
 %%%%
 Something you can't see is thrashing in a web.
-Etwas, das du nicht sehen kannst, schlägt in einem Gewebe um sich.
+Etwas, das du nicht sehen kannst, zappelt in einem Gespinst.
 %%%%
 %s struggles to get unstuck from the web.
-%s kämpft, um sich aus dem Gewebe zu befreien.
+%s hat Mühe, sich aus dem Gespinst zu befreien.
 %%%%
 Something wriggles in the net.
 Etwas zappelt im Netz.
 %%%%
 %s struggles against the net.
-%s kämpft, um sich aus dem Netz zu befreien.
+%s hat Mühe, sich aus dem Netz zu befreien.
 %%%%
 The net rips apart, and %s comes free!
 Das Netz zerreißt und %s kommt frei!
