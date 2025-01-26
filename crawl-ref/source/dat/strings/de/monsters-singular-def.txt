@@ -1409,7 +1409,7 @@ the rockslime
 der Felsenschleim
 %%%%
 the quicksilver ooze
-der Quecksilber-Schlamm
+der Quecksilberschleim
 %%%%
 the kobold brigand
 der Kobold-Brigant

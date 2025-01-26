@@ -382,7 +382,7 @@ the Squelcher
 der Quetscher
 %%%%
 the Ooze
-der Schlick
+der Schleim
 %%%%
 the Jelly
 die Gallerte

@@ -1408,7 +1408,7 @@ the rockslime's
 des Felsenschleims
 %%%%
 the quicksilver ooze's
-des Quecksilber-Schlamms
+des Quecksilberschleims
 %%%%
 the kobold brigand's
 des Kobold-Briganten

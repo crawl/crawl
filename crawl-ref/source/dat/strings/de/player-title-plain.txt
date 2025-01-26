@@ -379,7 +379,7 @@ Squelcher
 Quetscher
 %%%%
 Ooze
-Schlick
+Schleim
 %%%%
 Jelly
 Gallerte

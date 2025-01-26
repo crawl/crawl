@@ -1405,7 +1405,7 @@
 %d Felsenschleime
 %%%%
 %d quicksilver oozes
-%d Quecksilber-Schlamme
+%d Quecksilberschleime
 %%%%
 %d kobold brigands
 %d Kobold-Briganten

@@ -2970,13 +2970,13 @@ You feel more vital.
 Du fühlst dich vitaler.
 %%%%
 Your melee attacks may engulf your foes in ooze.
-Deine Nahkampfangriffe können deine Feinde in Schlamm verschlingen.
+Deine Nahkampfangriffe können deine Feinde in Schleim umhüllen.
 %%%%
 You begin exuding ooze.
-Du fängst an, Schlamm auszuscheiden.
+Du fängst an, Schleim abzusondern.
 %%%%
 You stop exuding ooze.
-Du hörst auf, Schleim auszustoßen.
+Du hörst auf, Schleim abzusondern.
 %%%%
 +LOS
 +LOS
