@@ -95,7 +95,7 @@ shadowless SHADOWLESS
 bind BIND
 weak_willed WEAK_WILLED
 sign_of_ruin SIGN_OF_RUIN
-doubled_vigour DOUBLED_VIGOUR
+doubled_health DOUBLED_HEALTH
 kinetic_grapnel KINETIC_GRAPNEL
 tempered TEMPERED
 heart HEART

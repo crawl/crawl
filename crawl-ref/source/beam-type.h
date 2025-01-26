@@ -102,7 +102,7 @@ enum beam_type                  // bolt::flavour
     BEAM_CURSE_OF_AGONY,
     BEAM_RIMEBLIGHT,
     BEAM_SHADOW_TORPOR,
-    BEAM_DOUBLE_VIGOUR,
+    BEAM_DOUBLE_HEALTH,
     BEAM_VEX,
     BEAM_LAST_ENCHANTMENT = BEAM_VEX,
 
