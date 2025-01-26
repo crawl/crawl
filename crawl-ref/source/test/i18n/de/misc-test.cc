@@ -142,7 +142,7 @@ int main()
 
     // test list with dat context
     msg = localise("You begin with the following equipment: %s", "a potion of lignification, a +0 short sword and a +2 arbalest");
-    expected = "Du beginnst mit der folgenden Ausrüstung: einem Trank der Lignifizierung, einem +0 Kurzschwert und einer +2 Armbrust";
+    expected = "Du beginnst mit folgender Ausrüstung: einem Trank der Lignifizierung, einem +0 Kurzschwert und einer +2 Armbrust";
     show_result(msg, expected);
 
     // test mutant beasts
@@ -242,7 +242,7 @@ int main()
                    " Rampaging like this could really hurt!"
                    " Continue?");
     expected = "Die Widerhaken in deiner Haut werden dich verletzen, wenn du dich bewegst."
-               " So eine Randale könnte wirklich wehtun!"
+               " Eine Randale in deinem Zustand könnte wirklich wehtun!"
                " Weitermachen?";
     show_result(msg, expected);
 
