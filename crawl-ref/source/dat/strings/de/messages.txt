@@ -651,7 +651,7 @@ Arena results:
 Arena-Ergebnisse:
 %%%%
 Hit any key to continue, ctrl-p for the full log.
-Beliebige Taste drücken, um fortzufahren, ctrl-p fürs Log.
+Beliebige Taste drücken, um fortzufahren, strg-p fürs Log.
 %%%%
 No arena maps named "%s"
 Kein Arena-Plan namens "%s"
@@ -10632,7 +10632,7 @@ Du trittst wieder in das Land der Lebenden...
 ##################
 %%%%
 Press [p] or [ctrl-v] to paste a seed from the clipboard
-[p] oder [ctrl-v] drücken, um eine Saat aus der Zwischenablage einzufügen
+[p] oder [strg-v] drücken, um eine Saat aus der Zwischenablage einzufügen
 %%%%
 (overwriting the current value).
 (überschreibt den aktuellen Wert).
@@ -18268,7 +18268,7 @@ Kann nicht nochmal in den Erkundungsmodus eintreten.
 <w>A</w>      alle Fertigkeiten auf Stufe setzen
 %%%%
 <w>Ctrl-D</w> change enchantments/durations
-<w>Ctrl-D</w> Verzauberungen/Dauer ändern
+<w>Strg-D</w> Verzauberungen/Dauer ändern
 %%%%
 <w>g</w>      exercise a skill
 <w>g</w>      eine Fertigkeit trainieren
@@ -18280,7 +18280,7 @@ Kann nicht nochmal in den Erkundungsmodus eintreten.
 <w>l</w>      Erfahrungsstufe ändern
 %%%%
 <w>Ctrl-P</w> list props
-<w>Ctrl-P</w> Eigenschaften auslisten
+<w>Strg-P</w> Eigenschaften auslisten
 %%%%
 <w>r</w>      change character's species
 <w>r</w>      Spezies ändern
@@ -18343,10 +18343,10 @@ Kann nicht nochmal in den Erkundungsmodus eintreten.
 <w>P</w>      Ebene basierend auf Vault schaffen
 %%%%
 <w>Ctrl-R</w> regenerate current level
-<w>Ctrl-R</w> aktuelle Ebene neu generieren
+<w>Strg-R</w> aktuelle Ebene neu generieren
 %%%%
 <w>Ctrl-A</w> generate new Abyss area
-<w>Ctrl-A</w> neuen Abrundbereich generieren
+<w>Strg-A</w> neuen Abrundbereich generieren
 %%%%
 <w>K</w>      mark all vaults as unused
 <w>K</w>      alle Vaults als unbenutzt markieren
@@ -18361,7 +18361,7 @@ Kann nicht nochmal in den Erkundungsmodus eintreten.
 <w>;</w>      bekannte Ebenen und Zähler listen
 %%%%
 <w>Ctrl-E</w> dump level builder information
-<w>Ctrl-E</w> Ebene-Bauer-Infos anzeigen
+<w>Strg-E</w> Ebene-Bauer-Infos anzeigen
 %%%%
 <yellow>Other level related commands</yellow>
 <yellow>Andere Ebenenbezogene Befehle</yellow>
@@ -18382,16 +18382,16 @@ Kann nicht nochmal in den Erkundungsmodus eintreten.
 <w>u</w>/<w>d</w>    Ebene nach oben/unten gehen
 %%%%
 <w>Ctrl-B</w> banish yourself to the Abyss
-<w>Ctrl-B</w> dich in den Abgrund verbannen
+<w>Strg-B</w> dich in den Abgrund verbannen
 %%%%
 <w>Ctrl-S</w> change Abyss speed
-<w>Ctrl-S</w> Tempo der Zeit im Angrund ändern
+<w>Strg-S</w> Tempo der Zeit im Angrund ändern
 %%%%
 <w>R</w>      change monster spawn rate
 <w>R</w>      Monster-Spawn-Frequenz ändern
 %%%%
 <w>Ctrl-W</w> change Shoals' tide speed
-<w>Ctrl-W</w> Tempo der Untiefen-Gezeit ändern
+<w>Strg-W</w> Tempo der Untiefen-Gezeit ändern
 %%%%
 <yellow>Other player related effects</yellow>
 <yellow>Andere spielerbezogene Effekte</yellow>
@@ -18463,7 +18463,7 @@ Kann nicht nochmal in den Erkundungsmodus eintreten.
 <w>v</w>      alle XP-Evoker wiederaufladen
 %%%%
 <w>Ctrl-V</w> show gold value of an item
-<w>Ctrl-V</w> Goldwert eines Gegenstands zeigen
+<w>Strg-V</w> Goldwert eines Gegenstands zeigen
 %%%%
 <w>-</w>      get a god gift
 <w>-</w>      ein Gottesgeschenk bekommen
@@ -18472,7 +18472,7 @@ Kann nicht nochmal in den Erkundungsmodus eintreten.
 <w>|</w>      alle vorgegebene Artefakte schaffen
 %%%%
 <w>Ctrl-\</w> create all unrands / fallbacks
-<w>Ctrl-\</w> alle vorgeg. Artefakte/Rückfälle schaffen
+<w>Strg-\</w> alle vorgeg. Artefakte/Rückfälle schaffen
 %%%%
 <w>+</w>      make randart from item
 <w>+</w>      Objekt in zufälliges Artefakt verwandeln
@@ -18493,28 +18493,28 @@ Kann nicht nochmal in den Erkundungsmodus eintreten.
 <w>F</w>      einzelstäbliche Kampfsimulation
 %%%%
 <w>Ctrl-F</w> double scale fsim
-<w>Ctrl-F</w> doppelstäbliche Kampfsimulation
+<w>Strg-F</w> doppelstäbliche Kampfsimulation
 %%%%
 <w>Ctrl-I</w> item generation stats
-<w>Ctrl-I</w> Gegenstand-Generation-Statisken
+<w>Strg-I</w> Gegenstand-Generation-Statisken
 %%%%
 <w>O</w>      measure exploration time
 <w>O</w>      Erkundungszeit messen
 %%%%
 <w>Ctrl-T</w> dungeon (D)Lua interpreter
-<w>Ctrl-T</w> Dungeon-Lua-Interpreter
+<w>Strg-T</w> Dungeon-Lua-Interpreter
 %%%%
 <w>Ctrl-U</w> client (C)Lua interpreter
-<w>Ctrl-U</w> Client-Lua-Interpreter
+<w>Strg-U</w> Client-Lua-Interpreter
 %%%%
 <w>Ctrl-X</w> Xom effect stats
-<w>Ctrl-X</w> Xom-Effekte-Statistiken
+<w>Strg-X</w> Xom-Effekte-Statistiken
 %%%%
 <w>Ctrl-Y</w> temporarily suppress wizmode
-<w>Ctrl-Y</w> Zauberer-Modus zeitweilig abstellen
+<w>Strg-Y</w> Zauberer-Modus zeitweilig abstellen
 %%%%
 <w>Ctrl-C</w> force a crash
-<w>Ctrl-C</w> einen Crash erzwingen
+<w>Strg-C</w> einen Crash erzwingen
 %%%%
 <w>`</w>      list unassigned command keys
 <w>`</w>      unbenutzte Befehlstasten auflisten

@@ -117,7 +117,7 @@ tab
 tab
 %%%%
 ctrl-p
-ctrl-p
+strg-p
 %%%%
 # "<player name> the <species> <background>"
 %%%%
