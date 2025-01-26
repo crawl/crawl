@@ -9697,6 +9697,7 @@ Die innere Flamme {gen}%s verblasst.
 %s is no longer weakened.
 %s ist nicht mehr geschwächt.
 %%%%
+# note: %s here is a possessive (e.g. "the naga ritualist's")
 %s toxic aura wanes.
 Die toxische Aura %s schwindet.
 %%%%
@@ -9777,6 +9778,7 @@ Irgendetwas hindert dich daran, den Platz mit {dat}%s zu tauschen.
 The shadowy forms in the deep grow still as others approach.
 Die Schattenformen in der Tiefe wachsen immer noch, während sich andere nähern.
 %%%%
+# note: %s here is a possessive (e.g. "the merfolk avatar's")
 Shadowy forms rise from the deep at %s song!
 Zum Lied %s erheben sich schattenhafte Formen aus der Tiefe!
 %%%%
@@ -10120,6 +10122,7 @@ flüstert {dat}@foe@ zu
 the ground
 der Boden
 %%%%
+# note: Used when a monster is blown up. Both parameters are monsters (e.g. "the orc", "Sigmund").
 %s is hit by a flying piece of %s!
 %s wird von einem fliegenden Stück {gen}%s getroffen!
 %%%%
@@ -10372,6 +10375,7 @@ Deine eisige Rüstung knackt und fällt weg, als du dich bewegst.
 The frozen ramparts melt away as you move.
 Die gefrorenen Wälle schmelzen, als du dich bewegst.
 %%%%
+# note: the parameter here will be "the water" or "the ooze"
 You slip free of %s engulfing you.
 Du befreist dich von {dat}%s, das dich umhüllt.
 %%%%

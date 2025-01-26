@@ -9690,6 +9690,7 @@ The forest calms down.
 %s is no longer weakened.
 
 %%%%
+# note: %s here is a possessive (e.g. "the naga ritualist's")
 %s toxic aura wanes.
 
 %%%%
@@ -9769,6 +9770,7 @@ Something prevents you from swapping places with %s.
 The shadowy forms in the deep grow still as others approach.
 
 %%%%
+# note: %s here is a possessive (e.g. "the merfolk avatar's")
 Shadowy forms rise from the deep at %s song!
 
 %%%%
@@ -10110,6 +10112,7 @@ whispers to @foe@
 the ground
 
 %%%%
+# note: Used when a monster is blown up. Both parameters are monsters (e.g. "the orc", "Sigmund").
 %s is hit by a flying piece of %s!
 
 %%%%
@@ -10362,6 +10365,7 @@ Your icy armour cracks and falls away as you move.
 The frozen ramparts melt away as you move.
 
 %%%%
+# note: the parameter here will be "the water" or "the ooze"
 You slip free of %s engulfing you.
 
 %%%%
