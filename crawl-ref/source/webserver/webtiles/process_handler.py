@@ -778,7 +778,8 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                 except ValueError:
                     # pidfile is empty or corrupted, can happen if the server
                     # crashed. Just clear it...
-                    self.logger.error("Invalid PID from lockfile %s, clearing", lockfile)
+                    self.logger.error("Invalid PID from lockfile `%s`, clearing", lockfile)
+                    self._stale_lockfile = lockfile
                     self._purge_stale_lock()
                     return
 
@@ -795,7 +796,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                         to = IOLoop.current().add_timeout(time.time() + hup_wait,
                                                           self._kill_stale_process)
                         self._process_hup_timeout = to
-                    # else: _purge_stale_locks recurses to this function, so no
+                    # else: _purge_stale_lock recurses to this function, so no
                     # need to do anything more here
                 else:
                     self._kill_stale_process()
