@@ -11168,7 +11168,7 @@ You feel ready to tumble and roll out of harm's way.
 Du fühlst dich bereit, der Gefahr aus dem Weg zu springen und zu rollen.
 %%%%
 %s absorbs the residual spatial distortion as you rebrand your weapon.
-s absorbiert die restliche räumliche Verzerrung, als du deine Waffe neu prägst.
+%s absorbiert die restliche räumliche Verzerrung, als du deine Waffe neu prägst.
 %%%%
 %s absorbs the residual spatial distortion as you unwield your weapon.
 %s absorbiert die restliche räumliche Verzerrung, als du deine Waffe wegsteckst.
@@ -11589,7 +11589,7 @@ You are heavily infused with residual magic.
 Du bist stark von Restmagie durchdrungen.
 %%%%
 You are practically glowing with residual magic!
-Du bist glühst praktisch vor Restmagie!
+Du glühst praktisch vor Restmagie!
 %%%%
 Your entire body has taken on an eerie glow!
 Dein ganzer Körper hat ein unheimliches Leuchten angenommen!
@@ -11613,7 +11613,7 @@ Your divine stamina protects you from confusion!
 Deine göttliche Ausdauer schützt dich vor Verwirrung!
 %%%%
 You are more confused.
-Du bist sträker verwirrt.
+Du bist stärker verwirrt.
 %%%%
 You are lethally poisoned!
 Du bist tödlich vergiftet!
@@ -11852,7 +11852,7 @@ Du entkommst dem Griff {gen}%s.
 %%%%
 # note: <The monster's> grasp...
 %s grasp on you weakens, but your attempt to escape fails.
-Der Griff {gen}%s wird schwächer, aber dein Versuch zu entkommen scheitert.
+Der Griff %s wird schwächer, aber dein Versuch zu entkommen scheitert.
 %%%%
 The mark upon you grows brighter.
 Das Mal auf dir wird heller.
