@@ -319,14 +319,14 @@ possessable
 besitzbar
 %%%%
 entangled in a net
-in einem Netz verstrickt
+in einem Netz verheddert
 %%%%
 # short form
 caught
 gefangen
 %%%%
 entangled in a web
-in einem Gewebe verstrickt
+in einem Gespinst verheddert
 %%%%
 # short form
 webbed

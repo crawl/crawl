@@ -11391,10 +11391,10 @@ It's unwise to walk into this.
 Es ist unklug, darauf einzugehen.
 %%%%
 %s is held in a net!
-%s ist in einem Netz festgehalten!
+%s wird von einem Netz festgehalten!
 %%%%
 %s is caught in a web!
-%s ist in einem Gewebe festgehalten!
+%s wird von einem Gespinst festgehalten!
 %%%%
 %s is being constricted!
 %s wird umschlungen!
@@ -11832,7 +11832,7 @@ You can't shaft yourself while held in a net.
 Du kannst dich nicht schächten, solange du in einem Netz gefangen bist.
 %%%%
 You can't shaft yourself while caught in a web.
-Du kannst dich nicht schächten, solange du in einem Gewebe gefangen bist.
+Du kannst keinen Schacht graben, solange du in einem Gespinst gefangen bist.
 %%%%
 You can't shaft yourself on this level.
 Du kannst dich auf dieser Ebene nicht bewegen.
@@ -12281,7 +12281,7 @@ You cannot attack while held in a net.
 Du kannst nicht angreifen, solange du in einem Netz gefangen bist.
 %%%%
 You cannot attack while caught in a web.
-Du kannst nicht angreifen, solange du in einem Gewebe gefangen bist.
+Du kannst nicht angreifen, solange du in einem Gespinst gefangen bist.
 %%%%
 Your weapon can't reach that far!
 Deine Waffe kann nicht so weit reichen!
@@ -16539,13 +16539,13 @@ You cannot throw anything while held in a net.
 Du kannst nichts werfen, solange du in einem Netz gefangen bist.
 %%%%
 You cannot throw anything while caught in a web.
-Du kannst nichts werfen, solange du in einem Gewebe gefangen bist.
+Du kannst nichts werfen, solange du in einem Gespinst gefangen bist.
 %%%%
 You cannot shoot with %s while held in a net.
 Du kannst mit {dat}%s nicht schießen, solange du in einem Netz gefangen bist.
 %%%%
 You cannot shoot with %s while caught in a web.
-Du kannst mit {dat}%s nicht schießen, solange du in einem Gewebe gefangen bist.
+Du kannst mit {dat}%s nicht schießen, solange du in einem Gespinst gefangen bist.
 %%%%
 You hear a whirring sound.
 Du hörst ein surrendes Geräusch.
@@ -16928,7 +16928,7 @@ Your roots penetrate the ground.
 Deine Wurzeln dringen in den Boden ein.
 %%%%
 You shred the web into pieces!
-Du zerreißt das Gewebe in Stücke!
+Du zerreißt das Gespinst in Stücke!
 %%%%
 Your lifeless body cannot sustain the wereblood!
 Dein lebloser Körper kann das Werwolfsblut nicht aushalten!
@@ -16966,7 +16966,7 @@ held in a net
 in einem Netz festgehalten
 %%%%
 caught in a web
-in einem Gewebe festgehalten
+in einem Gespinst festgehalten
 %%%%
 The net bounces off something gigantic!
 Das Netz prallt von etwas Gigantischem ab!
@@ -17071,22 +17071,22 @@ The net is torn apart by your bulk.
 Das Netz wird durch deine Masse zerrissen.
 %%%%
 %s passes through a web.
-%s geht durch ein Gewebe.
+%s geht durch ein Gespinst.
 %%%%
 %s oozes through a web.
-%s sickert durch ein Gewebe.
+%s sickert durch ein Gespinst.
 %%%%
 You pick your way through the web.
-Du suchst dich deinen Weg durch das Gewebe.
+Du suchst dir deinen Weg durch das Gespinst.
 %%%%
 You are caught in the web!
-Du bist im Gewebe gefangen!
+Du bist im Gespinst gefangen!
 %%%%
 %s evades a web.
-%s vermeidet ein Gewebe.
+%s vermeidet ein Gespinst.
 %%%%
 A web moves frantically as something is caught in it!
-Ein Gewebe bewegt sich rasend schnell, während sich etwas darin verfängt!
+Ein Gespinst bewegt sich rasend schnell, während sich etwas darin verfängt!
 %%%%
 You enter the Zot trap.
 Du betrittst die Zot-Falle.
@@ -17098,13 +17098,13 @@ A shaft crumbles and collapses.
 Ein Schacht bröckelt und stürzt ein.
 %%%%
 The web tears apart.
-Das Gewebe zerreißt.
+Das Gespinst zerreißt.
 %%%%
 You disentangle yourself.
 Du entwirrst dich.
 %%%%
 You struggle to detach yourself from the web.
-Du kämpfst darum, dich vom Gewebe zu lösen.
+Du kämpfst darum, dich vom Gespinst zu lösen.
 %%%%
 You shred the net and break free!
 Du zerfetzt das Netz und brecht aus!
@@ -17119,10 +17119,10 @@ You struggle against the net.
 Du kämpfst gegen das Netz.
 %%%%
 %s tears the web.
-%s zerreißt das Gewebe.
+%s zerreißt das Gespinst.
 %%%%
 %s pulls away from the web.
-%s zieht sich vom Gewebe zurück.
+%s zieht sich vom Gespinst zurück.
 %%%%
 The trap is out of ammunition!
 Die Falle hat keine Munition mehr!
@@ -17164,10 +17164,10 @@ You are even more entangled.
 Du bist noch mehr verwickelt.
 %%%%
 A web harmlessly splats on %s.
-Ein Gewebe platscht harmlos auf {acc}%s.
+Ein Gespinst platscht harmlos auf {acc}%s.
 %%%%
 You are caught in a web!
-Du bist in einem Gewebe gefangen!
+Du wirst von einem Gespinst festgehalten!
 %%%%
 
 ##################

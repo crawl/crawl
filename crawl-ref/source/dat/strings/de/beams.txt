@@ -254,7 +254,7 @@ the porkalator
 die Schweinifizierung
 %%%%
 the stream of webbing
-der Gewebestrahl
+der Gespinststrahl
 %%%%
 # duplicate of cloud
 #the spectral mist
@@ -611,7 +611,7 @@ a porkalator
 eine Schweinifizierung
 %%%%
 a stream of webbing
-ein Gewebestrahl
+ein Gespinststrahl
 %%%%
 # duplicate of cloud
 #the spectral mist
@@ -967,7 +967,7 @@ porkalator
 Schweinifizierung
 %%%%
 stream of webbing
-Gewebestrahl
+Gespinststrahl
 %%%%
 # duplicate of cloud
 #the spectral mist
@@ -1273,8 +1273,9 @@ innere Flamme
 #calcifying dust
 #verkalkender Staub
 %%%%
+# from Arachne's Ensnare spell
 magic web
-magisches Gewebe
+magisches Gespinst
 %%%%
 sentinel's mark
 Zeichen des Wächters
