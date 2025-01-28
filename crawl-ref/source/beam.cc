@@ -5184,8 +5184,11 @@ void bolt::kill_monster(monster &mon)
 
     item_def *corpse = monster_die(mon, ref_killer, kindex);
 
-    if (origin_spell != SPELL_GLACIATE && origin_spell != SPELL_GLACIAL_BREATH)
+    if (origin_spell != SPELL_GLACIATE && origin_spell != SPELL_GLACIAL_BREATH
+        || goldify)
+    {
         return;
+    }
 
     if (corpse)
         destroy_item(corpse->index());
