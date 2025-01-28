@@ -1341,6 +1341,23 @@ bool try_equip_item(item_def& item)
         {
             vector<item_def*>& candidates = removal_candidates[i];
 
+            // If one of the candidates has already been removed to free
+            // another slot, we don't need to remove anything to free this slot
+            bool slot_freed_when_freeing_other_slot = false;
+            for (const item_def* removed_item : to_remove)
+            {
+                for (const item_def* candidate : candidates)
+                {
+                    if (candidate == removed_item)
+                    {
+                        slot_freed_when_freeing_other_slot = true;
+                        break;
+                    }
+                }
+            }
+            if (slot_freed_when_freeing_other_slot)
+                continue;
+
             // Check if some number of items are inscribed with {=R} (but less
             // than all of them), and remove them from the candidates.
             int num_inscribed = 0;
