@@ -180,8 +180,8 @@ public:
     string player_prayer_action() const;
     string melding_description() const;
 
-    virtual vector<string> get_fakemuts(bool terse) const;
-    virtual vector<string> get_bad_fakemuts(bool terse) const;
+    virtual vector<pair<string, string>> get_fakemuts() const;
+    virtual vector<pair<string, string>> get_bad_fakemuts() const;
 
 public:
     /// Status light ("Foo"); "" for none

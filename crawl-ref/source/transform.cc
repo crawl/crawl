@@ -471,20 +471,14 @@ string Form::player_prayer_action() const
     return species::prayer_action(you.species);
 }
 
-vector<string> Form::get_fakemuts(bool terse) const
+vector<pair<string, string>> Form::get_fakemuts() const
 {
-    vector<string> result;
-    for (const auto &p : fakemuts)
-        result.push_back(terse ? p.first : p.second);
-    return result;
+    return fakemuts;
 }
 
-vector<string> Form::get_bad_fakemuts(bool terse) const
+vector<pair<string, string>> Form::get_bad_fakemuts() const
 {
-    vector<string> result;
-    for (const auto &p : badmuts)
-        result.push_back(terse ? p.first : p.second);
-    return result;
+    return badmuts;
 }
 
 
@@ -935,13 +929,12 @@ public:
         return divided_scaling(FormScaling().Scaling(4), random, max, 100);
     }
 
-    vector<string> get_fakemuts(bool terse) const override {
-        return {
-            make_stringf(terse ?
-                         "beast (slay +%d)" :
-                         "Your limbs bulge with bestial killing power. (Slay +%d)",
-                         slay_bonus(false, false))
-        };
+    vector<pair<string, string>> get_fakemuts() const override
+    {
+        return {{
+            make_stringf("beast (slay +%d)", slay_bonus(false, false)),
+            make_stringf("Your limbs bulge with bestial killing power. (Slay +%d)",
+                         slay_bonus(false, false))}};
     }
 };
 
