@@ -1928,6 +1928,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = claw_and_tooth_titles[skill_rank];
             else if (species == SP_OCTOPODE && skill_rank == 5)
                 result = "Crusher";
+            else if (species == SP_ONI && skill_rank == 5)
+                result = "Yokozuna";
             else if (!dex_better && species == SP_DJINNI && skill_rank == 5)
                 result = "Weightless Champion";
             else
@@ -1997,6 +1999,13 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Corpseflower";
             else if (god == GOD_KIKUBAAQUDGHA)
                 result = god_title(god, species, piety);
+            break;
+
+        case SK_FORGECRAFT:
+            if (species == SP_ONI && skill_rank == 4)
+                result = "Brimstone Smiter";
+            else if (species == SP_ONI && skill_rank == 5)
+                result = "Titancaster";
             break;
 
         case SK_SUMMONINGS:
