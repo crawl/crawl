@@ -1296,6 +1296,23 @@ greet:
 		                  "at INSTALL.md: the solution to your problem just might be in there!";\
 	fi
 
+# In case it breaks things on an exotic target
+ifndef SUPPRESS_BUILD_CHECKS
+     ifeq (,$(findstring ccache,$(shell which $(GCC))))
+         $(warning ccache not found in path for C compiler $(GCC). You can make your build much faster.)
+         $(warning See "https://github.com/crawl/crawl/blob/master/crawl-ref/INSTALL.md#ccache")
+         $(warning Suppress using SUPPRESS_BUILD_CHECKS=)
+     endif
+# Check separately, you could screw up and only symlink one.
+     ifeq (,$(findstring ccache,$(shell which $(GXX))))
+         $(warning ccache not found in path for C++ compiler $(GXX). You can make your build much faster.)
+         $(warning See "https://github.com/crawl/crawl/blob/master/crawl-ref/INSTALL.md#ccache")
+         $(warning Suppress using SUPPRESS_BUILD_CHECKS=)
+    endif
+    # TODO: check sysctl -n hw.ncpu or nproc if available, and warn if -j1.
+    # Not all Make implementations necessarily provide us with the value of j explicitly.
+endif
+
 docs: $(GENERATED_DOCS)
 
 
