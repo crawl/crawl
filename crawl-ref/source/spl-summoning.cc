@@ -2631,7 +2631,7 @@ spret foxfire_swarm()
     bool unknown_unseen = false;
     for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
     {
-        if (_create_foxfire(you, *ri, GOD_NO_GOD, 20))
+        if (_create_foxfire(you, *ri, 20))
         {
             created = true;
             continue;
