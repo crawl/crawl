@@ -1339,3 +1339,155 @@ cc~~~~~~~~~~c.!!!!!!!!!!!cc
        c....Ac
        ccccccc
 ENDMAP
+
+# an ossuary with no clear pathway and monsters and loot scattered about
+NAME:    ossuary_hellmonk_twisting_tombs
+TAGS:    no_item_gen no_monster_gen
+WEIGHT:  10
+ORIENT:  encompass
+MONS:    weeping skull / burial acolyte
+MONS:    mummy / wight w:2
+MONS:    kobold zombie / gnoll zombie / orc zombie / hound zombie / \
+         human zombie w:4 / centaur zombie w:6
+ITEM:    any potion w:15 / any scroll w:15 / gold w:6
+SHUFFLE: -+
+SHUFFLE: <A
+SUBST:   -:c, V:VVVVG
+NSUBST:  + = 10:++~ / *:+
+NSUBST:  1 = 1:1 / 1:12 / *=3., 2 = 1:2 / 1:23 / *=3.
+NSUBST:  " = 4:^ / 3=^" / *:"
+NSUBST:  . = 3:3 / 12=3. / *:.
+NSUBST:  d = 1:* / 1:*d / *:d
+KFEAT:   ^ = net trap / alarm trap w:30 / dispersal trap
+KFEAT:   ~ = broken_door
+: ossuary_setup_features(_G)
+MAP
+ccccccccccccccccccccccc
+ccccccccccccccccccccccc
+ccccccccccccccccccccccc
+cccd13+.dcd.+...-.1dccc
+ccc.33c..-..c.'.c333ccc
+ccc-ccc..c..-...c...ccc
+ccc..dc..c..c..dc+c-ccc
+ccc...c+ccc-cc+cc...ccc
+ccc...-...c.....c...ccc
+ccc...c...c..2..+...ccc
+ccc...c.2.c.....c..dccc
+cccc+cc...-.....cc-cccc
+cccd..c...c.....c..dccc
+ccc...cc+cccc+-cc...ccc
+ccc...c....-....c...ccc
+ccc...c....c....c...ccc
+ccc...-....c....c...ccc
+ccc...c....c....c...ccc
+cccc+ccccc+c+cc-cc+cccc
+ccc2....-"""""c.....ccc
+ccc.....c""A""c...2.ccc
+ccc+cc+cc""V""+.....ccc
+ccc..c..-""<""c.....ccc
+ccc..c..+"""""ccc-c+ccc
+ccc..c..ccc-ccc.....ccc
+ccc33c..+.....+.....ccc
+ccc13c..c.....-...33ccc
+cccd.-..cd.2..c..31dccc
+ccccccccccccccccccccccc
+ccccccccccccccccccccccc
+ccccccccccccccccccccccc
+ENDMAP
+
+NAME:   ossuary_hellmonk_split_paths
+TAGS:   no_item_gen no_monster_gen
+WEIGHT: 10
+ORIENT: encompass
+MONS:   burial acolyte / weeping skull
+MONS:   mummy / scorpion w:4
+MONS:   centaur zombie / water moccasin zombie / scorpion zombie /\
+        bullfrog zombie
+MONS:   goblin zombie / hobgoblin zombie / adder zombie / orc zombie /\
+        gnoll zombie
+ITEM:   any potion w:15 / any scroll w:15 / gold w:6
+NSUBST: 3 = 2:3 / *=3...
+NSUBST: - = 3:4 / 1:3 / 8=4. / *:.
+NSUBST: ~ = 3:4 / 1:3 / 8=4. / *:.
+NSUBST: ! = 2:4 / 1:3 / 1:3.. / 6=4. / *:.
+NSUBST: ' = 2:4 / 1:3 / 1:3.. / 6=4. / *:.
+NSUBST: " = 2:^ / 1:2 / *:.
+NSUBST: 2 = 1:2 / 4=2... / *:.
+NSUBST: d = 1:* / 1:*d / *:d
+KFEAT:  ^ = net trap / alarm trap w:30 / dispersal trap
+: ossuary_setup_features(_G)
+MAP
+cccccccccccccccccccccccc
+cccc-----------------ccc
+ccc-------------------cc
+cc------ccccccccccc----c
+c----cccc!!!!!!!!!ccc..c
+c---cc!!!!!!!!!!!!.....c
+c..cc!!!!!cc!!!cc....cccc
+c..!!!!!ccccccccccc.....cc
+c..!!!cccc2.....2cccc....c
+c..!!cc"3cc..3..ccddccc..cc
+c..ccc""""cc...ccd43dc....c
+c..""""""".c...c.3.4dcc...c
+c3.""""2"3^+.G^+...1ddcA.<c
+c..""""""".c...c.3.4dcc...c
+c..ccc""""cc...ccd43dc....c
+c..''cc"3cc..3..ccddccc..cc
+c..'''cccc2.....2cccc....c
+c..'''''ccccccccccc.....cc
+c..cc'''''cc'''cc....cccc
+c~~~cc''''''''''''.....c
+c~~~~cccc'''''''''ccc..c
+cc~~~~~~ccccccccccc~~~~c
+ccc~~~~~~~~~~~~~~~~~~~cc
+cccc~~~~~~~~~~~~~~~~~ccc
+cccccccccccccccccccccccc
+ENDMAP
+
+NAME:   ossuary_hellmonk_orc_graveyard
+TAGS:   no_item_gen no_monster_gen
+WEIGHT: 10
+ORIENT: encompass
+MONS:   orc warrior zombie w:20 / weeping skull / troll zombie w:1
+MONS:   ogre zombie / mummy w:1
+MONS:   orc zombie w:30 / gnoll zombie / ogre zombie w:2 /\
+        hobgoblin zombie w:7 / elf zombie w:1
+KMONS:  B = burial acolyte
+ITEM:   any potion w:15 / any scroll w:15 / gold w:6
+SUBST:  3 = 3..
+NSUBST: - = 10:t / 3:G / 5:3 / 20 = t.. / 5 = G. / 6 = 3. / *:.
+NSUBST: 1 = 1:1 / *:2, d = 6:d / 1:* / *=ddd*
+KFEAT:  ^ = alarm trap
+KFEAT:  B = altar_kikubaaqudgha / altar_yredelemnul / altar_beogh w:2
+KFEAT:  t = petrified_tree
+: vault_granite_statue_setup(_G, "G", "gravestone")
+: ossuary_setup_features(_G)
+MAP
+         ccccc
+        cc.B.cc
+        c.....c
+ccccccccccc+ccccccccccc
+c.....^..3.2.3..^.....c
+c.....^.........^.....c
+c3...cc.........cc...3c
+cd13dcccc.^^^.ccccd31dc
+cddddc3.cc+++cc.3cddddc
+cccccc...........cccccc
+  cc.....-----.....ccc
+  c3...--.---.--...3c
+  c...-.--.-.--.-...c
+  cc..-----------..cc
+   c3.----.-.----.3c
+   c...--.---.--...c
+   cc..-.-----.-..cc
+    c...-.-.-.-...c
+    cc...-.-.-...cc
+     cc.........cc
+      ccc.....ccc
+        c..G..c
+       cc.....cc
+       c..A.<..c
+       c.......c
+       cc..t..cc
+        ccccccc
+ENDMAP
