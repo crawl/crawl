@@ -1218,11 +1218,10 @@ static item_def* _item_swap_prompt(const vector<item_def*>& candidates)
                 || c == _item_swap_keys[i])
             {
                 chosen = i;
-                c = ' ';
                 break;
             }
         }
-    } while (!key_is_escape(c) && c != ' ' && c != '?');
+    } while (!key_is_escape(c) && c != ' ' && c != '?' && chosen < 0);
 
     clear_messages();
 
