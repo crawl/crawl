@@ -132,18 +132,18 @@
   </ImportGroup>
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)\bin\8.0\$(PlatformName)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)\obj\$(ProjectName)\$(Configuration)\</IntDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Multithreaded|Win32'">$(SolutionDir)\bin\8.0\$(PlatformName)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release Multithreaded|Win32'">$(SolutionDir)\obj\$(ProjectName)\$(Configuration)\</IntDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Singlethreaded|Win32'">$(SolutionDir)\bin\8.0\$(PlatformName)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release Singlethreaded|Win32'">$(SolutionDir)\obj\$(ProjectName)\$(Configuration)\</IntDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\bin\8.0\$(PlatformName)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\obj\$(ProjectName)\$(Configuration)\</IntDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug Singlethreaded|Win32'">$(SolutionDir)\bin\8.0\$(PlatformName)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug Singlethreaded|Win32'">$(SolutionDir)\obj\$(ProjectName)\$(Configuration)\</IntDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug Multithreaded|Win32'">$(SolutionDir)\bin\8.0\$(PlatformName)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug Multithreaded|Win32'">$(SolutionDir)\obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)..\bin\8.0\$(PlatformName)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Multithreaded|Win32'">$(ProjectDir)..\bin\8.0\$(PlatformName)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release Multithreaded|Win32'">$(ProjectDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Singlethreaded|Win32'">$(ProjectDir)..\bin\8.0\$(PlatformName)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release Singlethreaded|Win32'">$(ProjectDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)..\bin\8.0\$(PlatformName)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug Singlethreaded|Win32'">$(ProjectDir)..\bin\8.0\$(PlatformName)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug Singlethreaded|Win32'">$(ProjectDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug Multithreaded|Win32'">$(ProjectDir)..\bin\8.0\$(PlatformName)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug Multithreaded|Win32'">$(ProjectDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug Multithreaded|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug Multithreaded|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug Multithreaded|Win32'" />
@@ -194,28 +194,28 @@
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release Singlethreaded|x64'">freetype253ST</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)\bin\8.0\$(PlatformName)\</OutDir>
-    <IntDir>$(SolutionDir)\obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)..\bin\8.0\$(PlatformName)\</OutDir>
+    <IntDir>$(ProjectDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Multithreaded|x64'">
-    <OutDir>$(SolutionDir)\bin\8.0\$(PlatformName)\</OutDir>
-    <IntDir>$(SolutionDir)\obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)..\bin\8.0\$(PlatformName)\</OutDir>
+    <IntDir>$(ProjectDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Singlethreaded|x64'">
-    <OutDir>$(SolutionDir)\bin\8.0\$(PlatformName)\</OutDir>
-    <IntDir>$(SolutionDir)\obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)..\bin\8.0\$(PlatformName)\</OutDir>
+    <IntDir>$(ProjectDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)\bin\8.0\$(PlatformName)\</OutDir>
-    <IntDir>$(SolutionDir)\obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)..\bin\8.0\$(PlatformName)\</OutDir>
+    <IntDir>$(ProjectDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Multithreaded|x64'">
-    <OutDir>$(SolutionDir)\bin\8.0\$(PlatformName)\</OutDir>
-    <IntDir>$(SolutionDir)\obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)..\bin\8.0\$(PlatformName)\</OutDir>
+    <IntDir>$(ProjectDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Singlethreaded|x64'">
-    <OutDir>$(SolutionDir)\bin\8.0\$(PlatformName)\</OutDir>
-    <IntDir>$(SolutionDir)\obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)..\bin\8.0\$(PlatformName)\</OutDir>
+    <IntDir>$(ProjectDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>

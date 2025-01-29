@@ -181,9 +181,10 @@
       <Message>Generating build-specific headers...</Message>
       <Command>set PATH=c:\cygwin\bin%3bc:\msysgit\mingw\bin%3bc:\msysgit\bin%3bc:\mingw\bin%3b%25PATH%25
 cd $(SolutionDir)\..\
-perl.exe "util/gen_ver_msvc.pl" build.h
-perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
-</Command>
+perl.exe "util/gen_ver.pl" build.h "" "nul"
+perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;" "$(PreferredToolArchitecture)-Windows-msvc$(VCToolsVersion)" $(ProcessorArchitecture)-$(SDKIdentifier)-msvc$(VCToolsVersion)"
+python.exe "util/configure-msvc.py" "$(VCInstallDir)Tools\MSVC\$(VCToolsVersion)\bin\Host$(PreferredToolArchitecture)\$(PlatformTargetAsMSBuildArchitecture)\cl.exe" "$(VC_IncludePath);$(WindowsSDK_IncludePath)"
+python.exe util/gen-all.py</Command>
     </PreBuildEvent>
     <ClCompile>
       <Optimization>Disabled</Optimization>
@@ -198,6 +199,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>SDL2.lib;SDL2_image.lib;libpng.lib;lua.lib;pcre.lib;sqlite.lib;zlib.lib;ucrtd.lib;vcruntimed.lib;msvcrtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -211,9 +213,10 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
       <Message>Generating build-specific headers...</Message>
       <Command>set PATH=c:\cygwin\bin%3bc:\msysgit\mingw\bin%3bc:\msysgit\bin%3bc:\mingw\bin%3b%25PATH%25
 cd $(SolutionDir)\..\
-perl.exe "util/gen_ver_msvc.pl" build.h
-perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
-</Command>
+perl.exe "util/gen_ver.pl" build.h "" "nul"
+perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;" "$(PreferredToolArchitecture)-Windows-msvc$(VCToolsVersion)" $(ProcessorArchitecture)-$(SDKIdentifier)-msvc$(VCToolsVersion)"
+python.exe "util/configure-msvc.py" "$(VCInstallDir)Tools\MSVC\$(VCToolsVersion)\bin\Host$(PreferredToolArchitecture)\$(PlatformTargetAsMSBuildArchitecture)\cl.exe" "$(VC_IncludePath);$(WindowsSDK_IncludePath)"
+python.exe util/gen-all.py</Command>
     </PreBuildEvent>
     <ClCompile>
       <Optimization>Disabled</Optimization>
@@ -228,6 +231,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>SDL2.lib;SDL2_image.lib;libpng.lib;lua.lib;pcre.lib;sqlite.lib;zlib.lib;ucrtd.lib;vcruntimed.lib;msvcrtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -241,9 +245,10 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
       <Message>Generating build-specific headers...</Message>
       <Command>set PATH=c:\cygwin\bin%3bc:\msysgit\mingw\bin%3bc:\msysgit\bin%3bc:\mingw\bin%3b%25PATH%25
 cd $(SolutionDir)\..\
-perl.exe "util/gen_ver_msvc.pl" build.h
-perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
-</Command>
+perl.exe "util/gen_ver.pl" build.h "" "nul"
+perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;" "$(PreferredToolArchitecture)-Windows-msvc$(VCToolsVersion)" $(ProcessorArchitecture)-$(SDKIdentifier)-msvc$(VCToolsVersion)"
+python.exe "util/configure-msvc.py" "$(VCInstallDir)Tools\MSVC\$(VCToolsVersion)\bin\Host$(PreferredToolArchitecture)\$(PlatformTargetAsMSBuildArchitecture)\cl.exe" "$(VC_IncludePath);$(WindowsSDK_IncludePath)"
+python.exe util/gen-all.py</Command>
     </PreBuildEvent>
     <Midl>
       <TargetEnvironment>X64</TargetEnvironment>
@@ -252,7 +257,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>./include;.;..;../contrib/lua/src;../contrib/sqlite;../contrib/pcre;../rltiles;../contrib/sdl2/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;_ALLOW_KEYWORD_MACROS;WIZARD;USE_TILE;USE_TILE_LOCAL;PROPORTIONAL_FONT="..\\..\\contrib\\fonts\\DejaVuSans.ttf";MONOSPACED_FONT="..\\..\\contrib\\fonts\\DejaVuSansMono.ttf";USE_FT;FT_FREETYPE_H="freetype.h";USE_GL;USE_SDL;FULLDEBUG;CLUA_BINDINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MinimalRebuild>true</MinimalRebuild>
+      <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>AppHdr.h</PrecompiledHeaderFile>
@@ -260,6 +265,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
       <TreatWarningAsError>false</TreatWarningAsError>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>SDL2.lib;SDL2_image.lib;libpng.lib;lua.lib;pcre.lib;sqlite.lib;zlib.lib;ucrtd.lib;vcruntimed.lib;msvcrtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -273,9 +279,10 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
       <Message>Generating build-specific headers...</Message>
       <Command>set PATH=c:\cygwin\bin%3bc:\msysgit\mingw\bin%3bc:\msysgit\bin%3bc:\mingw\bin%3b%25PATH%25
 cd $(SolutionDir)\..\
-perl.exe "util/gen_ver_msvc.pl" build.h
-perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
-</Command>
+perl.exe "util/gen_ver.pl" build.h "" "nul"
+perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;" "$(PreferredToolArchitecture)-Windows-msvc$(VCToolsVersion)" $(ProcessorArchitecture)-$(SDKIdentifier)-msvc$(VCToolsVersion)"
+python.exe "util/configure-msvc.py" "$(VCInstallDir)Tools\MSVC\$(VCToolsVersion)\bin\Host$(PreferredToolArchitecture)\$(PlatformTargetAsMSBuildArchitecture)\cl.exe" "$(VC_IncludePath);$(WindowsSDK_IncludePath)"
+python.exe util/gen-all.py</Command>
     </PreBuildEvent>
     <Midl>
       <TargetEnvironment>X64</TargetEnvironment>
@@ -284,7 +291,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>./include;.;..;../contrib/lua/src;../contrib/sqlite;../contrib/pcre;../rltiles;../contrib/sdl2/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;_ALLOW_KEYWORD_MACROS;WIZARD;PROPORTIONAL_FONT="..\\..\\contrib\\fonts\\DejaVuSans.ttf";MONOSPACED_FONT="..\\..\\contrib\\fonts\\DejaVuSansMono.ttf";FT_FREETYPE_H="freetype.h";USE_GL;FULLDEBUG;CLUA_BINDINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MinimalRebuild>true</MinimalRebuild>
+      <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>AppHdr.h</PrecompiledHeaderFile>
@@ -292,6 +299,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
       <TreatWarningAsError>false</TreatWarningAsError>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>SDL2.lib;SDL2_image.lib;libpng.lib;lua.lib;pcre.lib;sqlite.lib;zlib.lib;ucrtd.lib;vcruntimed.lib;msvcrtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -305,9 +313,10 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
       <Message>Generating build-specific headers...</Message>
       <Command>set PATH=c:\cygwin\bin%3bc:\msysgit\mingw\bin%3bc:\msysgit\bin%3bc:\mingw\bin%3b%25PATH%25
 cd $(SolutionDir)\..\
-perl.exe "util/gen_ver_msvc.pl" build.h
-perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
-</Command>
+perl.exe "util/gen_ver.pl" build.h "" "nul"
+perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;" "$(PreferredToolArchitecture)-Windows-msvc$(VCToolsVersion)" $(ProcessorArchitecture)-$(SDKIdentifier)-msvc$(VCToolsVersion)"
+python.exe "util/configure-msvc.py" "$(VCInstallDir)Tools\MSVC\$(VCToolsVersion)\bin\Host$(PreferredToolArchitecture)\$(PlatformTargetAsMSBuildArchitecture)\cl.exe" "$(VC_IncludePath);$(WindowsSDK_IncludePath)"
+python.exe util/gen-all.py</Command>
     </PreBuildEvent>
     <ClCompile>
       <AdditionalIncludeDirectories>./include;../sdl2;.;..;../contrib/lua/src;../contrib/sqlite;../contrib/pcre;../rltiles;../contrib/sdl2/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -320,6 +329,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>SDL2.lib;SDL2_image.lib;libpng.lib;lua.lib;pcre.lib;sqlite.lib;zlib.lib;msvcrt.lib;vcruntime.lib;ucrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -335,9 +345,10 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
       <Message>Generating build-specific headers...</Message>
       <Command>set PATH=c:\cygwin\bin%3bc:\msysgit\mingw\bin%3bc:\msysgit\bin%3bc:\mingw\bin%3b%25PATH%25
 cd $(SolutionDir)\..\
-perl.exe "util/gen_ver_msvc.pl" build.h
-perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
-</Command>
+perl.exe "util/gen_ver.pl" build.h "" "nul"
+perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;" "$(PreferredToolArchitecture)-Windows-msvc$(VCToolsVersion)" $(ProcessorArchitecture)-$(SDKIdentifier)-msvc$(VCToolsVersion)"
+python.exe "util/configure-msvc.py" "$(VCInstallDir)Tools\MSVC\$(VCToolsVersion)\bin\Host$(PreferredToolArchitecture)\$(PlatformTargetAsMSBuildArchitecture)\cl.exe" "$(VC_IncludePath);$(WindowsSDK_IncludePath)"
+python.exe util/gen-all.py</Command>
     </PreBuildEvent>
     <ClCompile>
       <AdditionalIncludeDirectories>./include;../sdl2;.;..;../contrib/lua/src;../contrib/sqlite;../contrib/pcre;../rltiles;../contrib/sdl2/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -350,6 +361,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>SDL2.lib;SDL2_image.lib;libpng.lib;lua.lib;pcre.lib;sqlite.lib;zlib.lib;msvcrt.lib;vcruntime.lib;ucrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -365,9 +377,10 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
       <Message>Generating build-specific headers...</Message>
       <Command>set PATH=c:\cygwin\bin%3bc:\msysgit\mingw\bin%3bc:\msysgit\bin%3bc:\mingw\bin%3b%25PATH%25
 cd $(SolutionDir)\..\
-perl.exe "util/gen_ver_msvc.pl" build.h
-perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
-</Command>
+perl.exe "util/gen_ver.pl" build.h "" "nul"
+perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;" "$(PreferredToolArchitecture)-Windows-msvc$(VCToolsVersion)" $(ProcessorArchitecture)-$(SDKIdentifier)-msvc$(VCToolsVersion)"
+python.exe "util/configure-msvc.py" "$(VCInstallDir)Tools\MSVC\$(VCToolsVersion)\bin\Host$(PreferredToolArchitecture)\$(PlatformTargetAsMSBuildArchitecture)\cl.exe" "$(VC_IncludePath);$(WindowsSDK_IncludePath)"
+python.exe util/gen-all.py</Command>
     </PreBuildEvent>
     <Midl>
       <TargetEnvironment>X64</TargetEnvironment>
@@ -381,6 +394,8 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
       <TreatWarningAsError>false</TreatWarningAsError>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <AdditionalDependencies>SDL2.lib;SDL2_image.lib;libpng.lib;lua.lib;pcre.lib;sqlite.lib;zlib.lib;msvcrt.lib;vcruntime.lib;ucrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -396,9 +411,10 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
       <Message>Generating build-specific headers...</Message>
       <Command>set PATH=c:\cygwin\bin%3bc:\msysgit\mingw\bin%3bc:\msysgit\bin%3bc:\mingw\bin%3b%25PATH%25
 cd $(SolutionDir)\..\
-perl.exe "util/gen_ver_msvc.pl" build.h
-perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
-</Command>
+perl.exe "util/gen_ver.pl" build.h "" "nul"
+perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;" "$(PreferredToolArchitecture)-Windows-msvc$(VCToolsVersion)" $(ProcessorArchitecture)-$(SDKIdentifier)-msvc$(VCToolsVersion)"
+python.exe "util/configure-msvc.py" "$(VCInstallDir)Tools\MSVC\$(VCToolsVersion)\bin\Host$(PreferredToolArchitecture)\$(PlatformTargetAsMSBuildArchitecture)\cl.exe" "$(VC_IncludePath);$(WindowsSDK_IncludePath)"
+python.exe util/gen-all.py</Command>
     </PreBuildEvent>
     <Midl>
       <TargetEnvironment>X64</TargetEnvironment>
@@ -412,6 +428,8 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
       <TreatWarningAsError>false</TreatWarningAsError>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <AdditionalDependencies>SDL2.lib;SDL2_image.lib;libpng.lib;lua.lib;pcre.lib;sqlite.lib;zlib.lib;msvcrt.lib;vcruntime.lib;ucrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -449,8 +467,8 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\behold.cc" />
     <ClCompile Include="..\bitary.cc" />
     <ClCompile Include="..\bloodspatter.cc" />
+    <ClCompile Include="..\branch-data-json.cc" />
     <ClCompile Include="..\branch.cc" />
-    <ClCompile Include="..\butcher.cc" />
     <ClCompile Include="..\chardump.cc" />
     <ClCompile Include="..\cio.cc" />
     <ClCompile Include="..\cloud.cc" />
@@ -461,6 +479,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\coord-circle.cc" />
     <ClCompile Include="..\coord.cc" />
     <ClCompile Include="..\coordit.cc" />
+    <ClCompile Include="..\corpse.cc" />
     <ClCompile Include="..\crash.cc" />
     <ClCompile Include="..\ctest.cc" />
     <ClCompile Include="..\dactions.cc" />
@@ -487,6 +506,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\dbg-objstat.cc" />
     <ClCompile Include="..\dbg-scan.cc" />
     <ClCompile Include="..\dbg-util.cc" />
+    <ClCompile Include="..\death-curse.cc" />
     <ClCompile Include="..\decks.cc" />
     <ClCompile Include="..\delay.cc" />
     <ClCompile Include="..\describe.cc" />
@@ -546,6 +566,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\jobs.cc" />
     <ClCompile Include="..\json.cc" />
     <ClCompile Include="..\kills.cc" />
+    <ClCompile Include="..\known-items.cc" />
     <ClCompile Include="..\l-wiz.cc" />
     <ClCompile Include="..\lang-fake.cc" />
     <ClCompile Include="..\losglobal.cc" />
@@ -577,11 +598,14 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\l-you.cc" />
     <ClCompile Include="..\lev-pand.cc" />
     <ClCompile Include="..\lookup-help.cc" />
+    <ClCompile Include="..\maybe-bool.cc" />
     <ClCompile Include="..\melee-attack.cc" />
+    <ClCompile Include="..\mon-aura.cc" />
     <ClCompile Include="..\mon-death.cc" />
     <ClCompile Include="..\mon-ench.cc" />
     <ClCompile Include="..\mon-explode.cc" />
     <ClCompile Include="..\movement.cc" />
+    <ClCompile Include="..\ng-init-branches.cc" />
     <ClCompile Include="..\ng-setup.cc" />
     <ClCompile Include="..\ng-wanderer.cc" />
     <ClCompile Include="..\orb.cc" />
@@ -630,6 +654,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">
       </PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\precision-menu.cc" />
     <ClCompile Include="..\prompt.cc" />
     <ClCompile Include="..\libgui.cc" />
     <ClCompile Include="..\libutil.cc" />
@@ -706,7 +731,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\rltiles\tiledef-main.cc" />
     <ClCompile Include="..\rltiles\tiledef-player.cc" />
     <ClCompile Include="..\rltiles\tiledef-wall.cc" />
-    <ClCompile Include="..\rot.cc" />
     <ClCompile Include="..\scroller.cc" />
     <ClCompile Include="..\shopping.cc" />
     <ClCompile Include="..\shout.cc" />
@@ -726,9 +750,9 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\spl-other.cc" />
     <ClCompile Include="..\spl-selfench.cc" />
     <ClCompile Include="..\spl-summoning.cc" />
-    <ClCompile Include="..\spl-tornado.cc" />
     <ClCompile Include="..\spl-transloc.cc" />
     <ClCompile Include="..\spl-util.cc" />
+    <ClCompile Include="..\spl-vortex.cc" />
     <ClCompile Include="..\spl-zap.cc" />
     <ClCompile Include="..\sprint.cc" />
     <ClCompile Include="..\sqldbm.cc" />
@@ -742,6 +766,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\stringutil.cc" />
     <ClCompile Include="..\syscalls.cc" />
     <ClCompile Include="..\tags.cc" />
+    <ClCompile Include="..\target-compass.cc" />
     <ClCompile Include="..\target.cc" />
     <ClCompile Include="..\teleport.cc" />
     <ClCompile Include="..\terrain.cc" />
@@ -854,7 +879,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\branch-type.h" />
     <ClInclude Include="..\branch.h" />
     <ClInclude Include="..\build.h" />
-    <ClInclude Include="..\butcher.h" />
     <ClInclude Include="..\caction-type.h" />
     <ClInclude Include="..\canned-message-type.h" />
     <ClInclude Include="..\char-set-type.h" />
@@ -876,6 +900,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\coord-circle.h" />
     <ClInclude Include="..\coord.h" />
     <ClInclude Include="..\coordit.h" />
+    <ClInclude Include="..\corpse.h" />
     <ClInclude Include="..\crash.h" />
     <ClInclude Include="..\ctest.h" />
     <ClInclude Include="..\cursor-type.h" />
@@ -886,6 +911,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\dbg-objstat.h" />
     <ClInclude Include="..\dbg-scan.h" />
     <ClInclude Include="..\dbg-util.h" />
+    <ClInclude Include="..\death-curse.h" />
     <ClInclude Include="..\debug.h" />
     <ClInclude Include="..\deck-rarity-type.h" />
     <ClInclude Include="..\decks.h" />
@@ -989,6 +1015,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\kill-category.h" />
     <ClInclude Include="..\killer-type.h" />
     <ClInclude Include="..\kills.h" />
+    <ClInclude Include="..\known-items.h" />
     <ClInclude Include="..\l-defs.h" />
     <ClInclude Include="..\l-libs.h" />
     <ClInclude Include="..\lang-fake.h" />
@@ -1029,6 +1056,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\mon-abil.h" />
     <ClInclude Include="..\mon-act.h" />
     <ClInclude Include="..\mon-attitude-type.h" />
+    <ClInclude Include="..\mon-aura.h" />
     <ClInclude Include="..\mon-behv.h" />
     <ClInclude Include="..\mon-book.h" />
     <ClInclude Include="..\mon-cast.h" />
@@ -1069,6 +1097,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\nearby-danger.h" />
     <ClInclude Include="..\newgame-def.h" />
     <ClInclude Include="..\newgame.h" />
+    <ClInclude Include="..\ng-init-branches.h" />
     <ClInclude Include="..\ng-init.h" />
     <ClInclude Include="..\ng-input.h" />
     <ClInclude Include="..\ng-restr.h" />
@@ -1100,6 +1129,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\potion-type.h" />
     <ClInclude Include="..\potion.h" />
     <ClInclude Include="..\prebuilt\levcomp.tab.h" />
+    <ClInclude Include="..\precision-menu.h" />
     <ClInclude Include="..\process-desc.h" />
     <ClInclude Include="..\prompt.h" />
     <ClInclude Include="..\pronoun-type.h" />
@@ -1184,6 +1214,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\tag-version.h" />
     <ClInclude Include="..\tags.h" />
     <ClInclude Include="..\targ-mode-type.h" />
+    <ClInclude Include="..\target-compass.h" />
     <ClInclude Include="..\target.h" />
     <ClInclude Include="..\targeting-type.h" />
     <ClInclude Include="..\teleport.h" />
@@ -1268,12 +1299,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\zap-data.h" />
     <ClInclude Include="..\zap-type.h" />
     <ClInclude Include="..\zot.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="tilegen.vcxproj">
-      <Project>{dae92a45-087b-445b-8e94-ba864173a73f}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

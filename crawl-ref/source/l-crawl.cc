@@ -1658,7 +1658,7 @@ LUAFN(_crawl_millis)
 #endif
     return 1;
 }
-static string _crawl_make_name(lua_State */*ls*/)
+static string _crawl_make_name(lua_State * /*ls*/)
 {
     // A quick wrapper around itemname:make_name.
     return make_name();

@@ -2573,6 +2573,8 @@ base_game_options::base_game_options(base_game_options const& other)
 base_game_options::base_game_options(base_game_options &&other) noexcept
     : base_game_options()
 {
+    //XXXX: this is completely broken as this swap is std::swap which will
+    //      call the move contructor leading to infinite recursion
     swap(*this, other);
 }
 
