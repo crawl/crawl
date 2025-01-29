@@ -138,13 +138,9 @@ LUAFN(l_spells_path)
     beam.source = src;
     beam.attitude = ATT_FRIENDLY;
     zappy(zap, power, false, beam);
-    beam.is_tracer = true;
-    beam.is_targeting = true;
+    beam.set_is_tracer(true);
     beam.range = range;
     beam.target = aim;
-    beam.dont_stop_player = true;
-    beam.friend_info.dont_stop = true;
-    beam.foe_info.dont_stop = true;
     beam.ex_size = 0;
     beam.aimed_at_spot = true;
     if (lua_isboolean(ls, 6))
