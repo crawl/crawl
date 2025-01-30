@@ -1379,7 +1379,6 @@ string weapon_unprojectability_reason(const item_def* wpn)
     // targets. Maybe support them in future?
     static const vector<int> forbidden_unrands = {
         UNRAND_POWER,
-        UNRAND_ARC_BLADE,
     };
     for (int urand : forbidden_unrands)
     {

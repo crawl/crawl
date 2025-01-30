@@ -978,8 +978,10 @@ bool player_unrand_bad_attempt(const item_def &weapon,
     }
     if (is_unrandom_artefact(weapon, UNRAND_ARC_BLADE))
     {
-        vector<const actor *> exclude;
-        return !safe_discharge(defender->pos(), exclude, check_only);
+        if (you.pos().distance_from(defender->pos()) <= 1)
+            return !safe_discharge(you.pos(), check_only);
+
+        return !safe_discharge(defender->pos(), check_only, false);
     }
     if (is_unrandom_artefact(weapon, UNRAND_POWER))
     {
