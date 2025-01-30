@@ -749,7 +749,8 @@ public:
 
 #ifdef USE_TILE_LOCAL
         if (ev.type() == ui::Event::Type::MouseMove
-            || ev.type() == ui::Event::Type::MouseDown)
+            || ev.type() == ui::Event::Type::MouseDown
+            || ev.type() == ui::Event::Type::MouseUp)
         {
             auto wm_event = to_wm_event(static_cast<const ui::MouseEvent&>(ev));
             int k = tiles.handle_mouse(wm_event);
@@ -873,6 +874,31 @@ public:
         return ret;
     }
 
+#ifdef USE_TILE_LOCAL
+    // This function should not be called while a map command is processing
+    void start_far_viewing(coord_def viewed_location)
+    {
+        m_far_view = true;
+        update_far_viewing(viewed_location);
+    }
+
+    void stop_far_viewing()
+    {
+        m_far_view = false;
+    }
+
+    bool is_far_viewing()
+    {
+        return m_far_view;
+    }
+
+    // This function should not be called while a map command is processing
+    void update_far_viewing(coord_def viewed_location)
+    {
+        m_state.lpos.pos = viewed_location.clamped(known_map_bounds());
+    }
+#endif
+
 private:
     map_control_state m_state;
 
@@ -888,8 +914,12 @@ private:
 
 #ifdef USE_TILE_LOCAL
     bool first_run = true;
+
+    bool m_far_view = false;
 #endif
 };
+
+static shared_ptr<UIMapView> map_view = nullptr;
 
 // show_map() now centers the known map along x or y. This prevents
 // the player from getting "artificial" location clues by using the
@@ -897,8 +927,6 @@ private:
 // to get that. This function is still a mess, though. -- bwr
 bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
 {
-    static shared_ptr<UIMapView> map_view = nullptr;
-
     if (map_view)
     {
         ASSERT(map_view->is_alive());
@@ -975,11 +1003,34 @@ level_pos map_follow_stairs(bool up, const coord_def &pos)
 
 void process_map_command(command_type cmd)
 {
-    // XX cleaner API for this
-    shared_ptr<ui::Widget> l = ui::top_layout();
-    if (UIMapView *mv = dynamic_cast<UIMapView *>(l.get()))
-        mv->process_command(cmd);
+    if (map_view)
+        map_view->process_command(cmd);
 }
+
+#ifdef USE_TILE_LOCAL
+void start_far_viewing(coord_def viewed_location)
+{
+    if (map_view)
+        map_view->start_far_viewing(viewed_location);
+}
+
+void stop_far_viewing()
+{
+    if (map_view)
+        map_view->stop_far_viewing();
+}
+
+bool is_far_viewing()
+{
+    return map_view && map_view->is_far_viewing();
+}
+
+void update_far_viewing(coord_def viewed_location)
+{
+    if (map_view)
+        map_view->update_far_viewing(viewed_location);
+}
+#endif
 
 map_control_state process_map_command(command_type cmd, const map_control_state& prev_state)
 {
