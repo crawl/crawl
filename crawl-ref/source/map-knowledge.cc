@@ -126,7 +126,9 @@ void set_terrain_seen(const coord_def pos)
     {
         _automap_from(pos.x, pos.y, _map_quality());
 
-        if (!is_boring_terrain(feat))
+        if (!is_boring_terrain(feat)
+            && (!env.map_forgotten
+                || ~(*env.map_forgotten)(pos).flags & MAP_SEEN_FLAG))
         {
             string desc = feature_description_at(pos, false, DESC_A) + ".";
             take_note(Note(NOTE_SEEN_FEAT, 0, 0, desc));
