@@ -58,8 +58,6 @@ function ks_shop_vault(e, glyphs)
 end
 }}
 
-# XXX: Don't change the name of this vault!
-# Gozag code uses it to find out where shops can normally place.
 NAME: serial_shops
 TAGS: nolayout_encompass allow_dup extra luniq
 DEPTH: D, Depths, Orc, Elf, Shoals, Snake, Vaults
