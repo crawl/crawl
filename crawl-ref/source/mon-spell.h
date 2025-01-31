@@ -2101,7 +2101,7 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    // ('O') Ogres.
+    // ('O') Ogres and oni.
     {  MST_EROLCHA,
       {
        { SPELL_FIREBALL, 12, MON_SPELL_WIZARD },
