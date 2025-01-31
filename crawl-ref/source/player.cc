@@ -7137,7 +7137,7 @@ bool player::vex(const actor* who, int dur, string source)
     if (use_actor_name)
         source = who->name(DESC_A);
 
-    if (!vex && !source.empty())
+    if (vex && !source.empty())
     {
         take_note(Note(NOTE_VEXED, dur, 0, source));
         props[DISABLED_BY_KEY] = use_actor_name ? who->name(DESC_A, true)
