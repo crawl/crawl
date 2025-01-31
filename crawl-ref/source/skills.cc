@@ -250,7 +250,7 @@ void cleanup_innate_magic_skills()
 // Characters are actually granted skill points, not skill levels.
 // Here we take racial aptitudes into account in determining final
 // skill levels.
-void reassess_starting_skills()
+void reassess_starting_skills(bool balance_djinn)
 {
     // go backwards, need to do Dodging before Armour
     // "sk >= SK_FIRST_SKILL" might be optimised away, so do this differently.
@@ -309,7 +309,8 @@ void reassess_starting_skills()
         }
     }
 
-    if (you.has_mutation(MUT_INNATE_CASTER))
+    // For a new game, this is called after training is calculated.
+    if (balance_djinn && you.has_mutation(MUT_INNATE_CASTER))
         cleanup_innate_magic_skills();
 }
 
@@ -852,7 +853,7 @@ static void _balance_magic_training()
     ASSERT(n_skills > 0);
     // Total training for all magic skills should be the base average,
     // divided between each skill.
-    const int to_train = max(train_total / (n_skills * n_skills), 1);
+    const int to_train = max(train_total / n_skills, 1);
     for (skill_type sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
         if (!is_removed_skill(sk) && you.skills[sk] < MAX_SKILL_LEVEL)
             you.training[sk] = to_train;
