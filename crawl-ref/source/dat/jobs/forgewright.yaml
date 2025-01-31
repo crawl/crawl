@@ -13,9 +13,9 @@ spells:
   - SPELL_FORGE_BLAZEHEART_GOLEM
   - SPELL_FORGE_LIGHTNING_SPIRE
 equipment:
+  - "mace tile:wpn_hammer wtile:hammer itemname:hammer"
   - "robe"
   - "potion of magic"
-  - "mace tile:wpn_hammer wtile:hammer itemname:hammer"
 recommended_species:
   - mountain dwarf
   - coglin
