@@ -129,6 +129,9 @@ public:
     direction_chooser(dist& moves, const direction_chooser_args& args);
     bool noninteractive();
     bool choose_direction();
+    // Returns a description of the target location. This includes
+    // the monster respecting visibility, dungeon features and clouds.
+    // If there is no monster at the target location, return the empty string
     string target_description() const;
 
 private:
@@ -215,8 +218,13 @@ private:
     // Apport: A short sword.
     void print_target_description(bool &did_cloud) const;
 
-    // Helper functions for the above.
+    // Prints a targeting prompt, with a string describing the monster
+    // at the choosen target location respecting visibility, if any.
+    // If there is a monster, dungeon features and clouds are also described.
     void print_target_monster_description(bool &did_cloud) const;
+    // Prints an aiming prompt, for the top level item
+    // at the current target location.
+    // Used for spells targeting items, like aportation.
     void print_target_object_description() const;
 
     // You see 2 +3 dwarven bolts here.
@@ -236,6 +244,7 @@ private:
     vector<string> target_cell_description_suffixes() const;
     vector<string> monster_description_suffixes(const monster_info& mi) const;
 
+    // Top level description method used to describe what is located in a cell
     void describe_cell() const;
 
     // Move the target to where the mouse pointer is (on tiles.)
