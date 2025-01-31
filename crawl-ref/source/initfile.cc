@@ -4256,6 +4256,7 @@ static const vector<language_def> get_lang_data()
         { lang_t::DA, "da", { "danish", "dansk" } },
         { lang_t::DE, "de", { "german", "deutsch" } },
         { lang_t::EL, "el", { "greek", "ελληνικά", "ελληνικα" } },
+        { lang_t::EO, "eo", { "esperanto", "esperanto" } },
         { lang_t::ES, "es", { "spanish", "español", "espanol" } },
         { lang_t::FI, "fi", { "finnish", "suomi" } },
         { lang_t::FR, "fr", { "french", "français", "francais" } },
