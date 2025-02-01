@@ -6291,7 +6291,10 @@ static void _dream_sheep_sleep(monster& mons, actor& foe)
 
     // Put the player to sleep.
     if (sleep_pow)
-        foe.put_to_sleep(&mons, sleep_pow, false);
+    {
+        const int dur = sleep_pow / 20 + random_range(1, 3) + 3;
+        foe.put_to_sleep(&mons, dur, false);
+    }
 }
 
 // Draconian stormcaller upheaval. Simplified compared to the player version.

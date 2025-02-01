@@ -816,7 +816,7 @@ public:
     bool immune_to_hex(const spell_type hex) const;
 
     bool asleep() const override;
-    void put_to_sleep(actor* source, int power = 0, bool hibernate = false) override;
+    void put_to_sleep(actor* source, int duration = 0, bool hibernate = false) override;
     void awaken();
     void check_awaken(int disturbance) override;
     int beam_resists(bolt &beam, int hurted, bool doEffects, string source)

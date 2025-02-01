@@ -7613,12 +7613,12 @@ bool player::can_sleep(bool holi_only) const
  * Attempts to put the player to sleep.
  *
  * @param source    The actor that put the player to sleep (if any).
- * @param power     The power of the effect putting the player to sleep.
+ * @param dur       The duration of the effect putting the player to sleep.
  * @param hibernate Whether the player is being put to sleep by 'ensorcelled
  *                  hibernation' (doesn't affect characters with rC, ignores
  *                  power), or by a normal sleep effect.
  */
-void player::put_to_sleep(actor* source, int power, bool hibernate)
+void player::put_to_sleep(actor* source, int dur, bool hibernate)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -7657,9 +7657,7 @@ void player::put_to_sleep(actor* source, int power, bool hibernate)
     flash_view(UA_MONSTER, DARKGREY);
 
     // As above, do this after redraw.
-    const int dur = hibernate ? 3 + random2avg(5, 2) :
-                                5 + random2avg(power/10, 5);
-    set_duration(DUR_SLEEP, dur);
+    you.duration[DUR_SLEEP] = dur;
     redraw_armour_class = true;
     redraw_evasion = true;
 }
@@ -8797,6 +8795,7 @@ static bool _ench_triggers_trickster(enchant_type ench)
         case ENCH_DRAINED:
         case ENCH_GRASPING_ROOTS:
         case ENCH_WRETCHED:
+        case ENCH_DEEP_SLEEP:
             return true;
 
         default:

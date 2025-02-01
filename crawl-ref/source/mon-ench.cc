@@ -991,6 +991,15 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         if (!quiet)
             simple_monster_message(*this, " is no longer laced with chaos.");
 
+    case ENCH_DEEP_SLEEP:
+        if (behaviour == BEH_SLEEP)
+        {
+            if (!quiet)
+                simple_monster_message(*this, " wakes up again.");
+            behaviour_event(this, coinflip() ? ME_DISTURB : ME_ALERT, me.agent(), pos());
+        }
+        break;
+
     default:
         break;
     }
@@ -1401,6 +1410,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_TEMPERED:
     case ENCH_CHAOS_LACE:
     case ENCH_VEXED:
+    case ENCH_DEEP_SLEEP:
         decay_enchantment(en);
         break;
 
@@ -2159,6 +2169,7 @@ static const char *enchant_names[] =
     "armed",
     "misdirected", "changed appearance", "shadowless", "doubled_health",
     "grapnel", "tempered", "hatching", "blinkitis", "chaos_laced", "vexed",
+    "deep sleep",
     "buggy", // NUM_ENCHANTMENTS
 };
 

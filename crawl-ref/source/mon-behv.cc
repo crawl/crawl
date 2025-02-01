@@ -1016,7 +1016,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         dprf("Disturbing %s", mon->name(DESC_A, true).c_str());
 #endif
         // Assumes disturbed by noise...
-        if (mon->asleep() && !mons_just_slept(*mon))
+        if (mon->asleep() && !mons_is_deep_asleep(*mon))
             mon->behaviour = BEH_WANDER;
 
         // A bit of code to make Projected Noise actually do
@@ -1128,6 +1128,10 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         if (mons_is_elven_twin(mon))
             elven_twins_unpacify(mon);
 
+        // If this attack woke a monster up, remove their sleep effect.
+        if (mon->behaviour != BEH_SLEEP && mon->has_ench(ENCH_DEEP_SLEEP))
+            mon->del_ench(ENCH_DEEP_SLEEP, true, false);
+
         // Now set target so that monster can whack back (once) at an
         // invisible foe.
         if (event == ME_WHACK)
@@ -1157,7 +1161,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
 
         // Orders to withdraw take precedence over interruptions, and monsters
         // forced to sleep should not react at all.
-        if (mon->behaviour == BEH_WITHDRAW || mons_just_slept(*mon))
+        if (mon->behaviour == BEH_WITHDRAW || mons_is_deep_asleep(*mon))
             break;
 
         // Avoid making friendly explodey things cluster around the player

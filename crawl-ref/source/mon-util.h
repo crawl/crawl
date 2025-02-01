@@ -391,6 +391,7 @@ bool mons_is_batty(const monster& m);
 bool mons_is_influenced_by_sanctuary(const monster& m);
 bool mons_is_fleeing_sanctuary(const monster& m);
 bool mons_just_slept(const monster& m);
+bool mons_is_deep_asleep(const monster& m);
 bool mons_class_is_slime(monster_type mc);
 bool mons_is_slime(const monster& mon);
 bool mons_class_is_plant(monster_type mc);

@@ -3560,9 +3560,19 @@ bool mons_is_fleeing_sanctuary(const monster& m)
            && mons_is_influenced_by_sanctuary(m);
 }
 
+// Monster was just put to sleep and should not awaken for any reason until the
+// next player action.
 bool mons_just_slept(const monster& m)
 {
     return bool(m.flags & MF_JUST_SLEPT);
+}
+
+// Monster has an enchanted sleep effect and should not awaken from noise or
+// automatic stealth checks until it is over (but directly harming them will
+// still do it).
+bool mons_is_deep_asleep(const monster& m)
+{
+    return mons_just_slept(m) || m.has_ench(ENCH_DEEP_SLEEP);
 }
 
 // Moving body parts, turning oklob flowers and so on counts as motile here.

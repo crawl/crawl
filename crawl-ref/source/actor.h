@@ -196,7 +196,7 @@ public:
     virtual bool vex(const actor *who, int duration, string source = "") = 0;
     virtual void slow_down(actor *attacker, int strength) = 0;
     virtual void confuse(actor *attacker, int strength) = 0;
-    virtual void put_to_sleep(actor *attacker, int strength,
+    virtual void put_to_sleep(actor *attacker, int duration,
                               bool hibernate = false) = 0;
     virtual void weaken(const actor *attacker, int pow) = 0;
     virtual bool strip_willpower(actor *attacker, int dur,

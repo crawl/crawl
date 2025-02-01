@@ -5533,7 +5533,7 @@ bool monster::do_shaft()
     return reveal;
 }
 
-void monster::put_to_sleep(actor */*attacker*/, int /*strength*/, bool hibernate)
+void monster::put_to_sleep(actor* attacker, int duration, bool hibernate)
 {
     const bool valid_target = hibernate ? can_hibernate() : can_sleep();
     if (!valid_target)
@@ -5544,6 +5544,12 @@ void monster::put_to_sleep(actor */*attacker*/, int /*strength*/, bool hibernate
     flags |= MF_JUST_SLEPT;
     if (hibernate)
         add_ench(ENCH_SLEEP_WARY);
+
+    // Duration of 0 has no awakening protection, but also never wears off
+    // automatically, either - ie: mimicking natural monster sleep behaviour.
+    // (Used by Step From Time.)
+    if (duration > 0)
+        add_ench(mon_enchant(ENCH_DEEP_SLEEP, 0, attacker, duration));
 }
 
 void monster::weaken(const actor *attacker, int pow)

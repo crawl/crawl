@@ -3732,7 +3732,7 @@ void melee_attack::mons_apply_attack_flavour()
                      defender->conj_verb("are").c_str());
             }
         }
-        defender->put_to_sleep(attacker, attacker->get_experience_level() * 3);
+        defender->put_to_sleep(attacker, random_range(3, 5) * BASELINE_DELAY);
         break;
 
 

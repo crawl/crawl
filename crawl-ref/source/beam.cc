@@ -3715,7 +3715,8 @@ void bolt::affect_player_enchantment(bool resistible)
     {
     case BEAM_HIBERNATION:
     case BEAM_SLEEP:
-        you.put_to_sleep(nullptr, ench_power, flavour == BEAM_HIBERNATION);
+        you.put_to_sleep(nullptr, (4 + random2avg(8, 3)) * BASELINE_DELAY,
+                            flavour == BEAM_HIBERNATION);
         break;
 
     case BEAM_CORONA:
@@ -6371,7 +6372,11 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         {
             if (simple_monster_message(*mon, " looks drowsy..."))
                 obvious_effect = true;
-            mon->put_to_sleep(agent(), ench_power, true);
+            // Since 1 turn will pass for the player's own action here, EH will
+            // put a monster to sleep for between ~20-55 aut, slanted towards
+            // the low end.
+            const int dur = max(30, 10 + random2avg(55, 3));
+            mon->put_to_sleep(agent(), dur, true);
             return MON_AFFECTED;
         }
         return MON_UNAFFECTED;
@@ -6513,10 +6518,10 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     }
 
     case BEAM_SLEEP:
-        if (mons_just_slept(*mon))
+        if (mon->asleep())
             return MON_UNAFFECTED;
 
-        mon->put_to_sleep(agent(), ench_power);
+        mon->put_to_sleep(agent(), random_range(4, 7) * BASELINE_DELAY);
         if (simple_monster_message(*mon, " falls asleep!"))
             obvious_effect = true;
 
