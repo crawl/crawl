@@ -986,10 +986,12 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_BLINKITIS:
         if (!quiet)
             simple_monster_message(*this, " looks more stable.");
+        break;
 
     case ENCH_CHAOS_LACE:
         if (!quiet)
             simple_monster_message(*this, " is no longer laced with chaos.");
+        break;
 
     case ENCH_DEEP_SLEEP:
         if (behaviour == BEH_SLEEP)
