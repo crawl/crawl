@@ -115,10 +115,6 @@ Turns the user invisible. Turning invisible in this way causes magical
 contamination. Reaching high levels of contamination will cause you to glow
 brightly, nullifying the invisibility.
 %%%%
-Evoke Thunderclouds ability
-
-Creates a mighty thundercloud surrounding the user.
-%%%%
 End Transformation ability
 
 Reverts you to your normal form.
