@@ -7720,6 +7720,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_SEISMIC:               return "seismic shockwave";
     case BEAM_BOLAS:                 return "entwining bolas";
     case BEAM_MERCURY:               return "mercury";
+    case BEAM_BAT_CLOUD:             return "cloud of bats";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

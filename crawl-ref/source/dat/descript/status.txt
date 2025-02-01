@@ -1113,3 +1113,7 @@ Vexed status
 Your mind is clouded by frustration. For the next several turns, you will
 uncontrollably attack random adjacent creatures (whether friendly or enemy) or
 even empty space.
+%%%%
+Drowsy status
+
+You are rapidly growing sleepy and may soon fall asleep completely.

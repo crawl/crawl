@@ -282,5 +282,6 @@ enum duration_type
     DUR_VEXED,
     DUR_TRICKSTER_GRACE,
     DUR_CACOPHONY,
+    DUR_DROWSY,
     NUM_DURATIONS
 };

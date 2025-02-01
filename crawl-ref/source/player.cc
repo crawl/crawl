@@ -6869,12 +6869,14 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
         // to a player from a dead monster. We should probably not do that,
         // but it could be tricky to fix, so for now let's at least avoid
         // a crash even if it does mean funny death messages.
-        ouch(amount, kill_type, MID_NOBODY, aux.c_str(), false, source.c_str());
+        ouch(amount, kill_type, MID_NOBODY, aux.c_str(), false, source.c_str(),
+             false, flavour == BEAM_BAT_CLOUD);
     }
     else
     {
         ouch(amount, kill_type, agent->mid, aux.c_str(),
-             agent->visible_to(this), source.c_str());
+             agent->visible_to(this), source.c_str(), false,
+             flavour == BEAM_BAT_CLOUD);
     }
 
     if ((flavour == BEAM_DESTRUCTION || flavour == BEAM_MINDBURST)

@@ -237,6 +237,7 @@ enum enchant_type
     ENCH_CHAOS_LACE,
     ENCH_VEXED,
     ENCH_DEEP_SLEEP,
+    ENCH_DROWSY,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

@@ -1059,9 +1059,11 @@ static void _print_endgame_messages(scorefile_entry &se)
  *  @param see_source whether the attacker was visible to you
  *  @param death_source_name the attacker's name if it is already dead.
  *  @param skip_multipliers Whether to ignore harm/vitrify/etc.
+ *  @param skip_awaken Whether this damage will skip waking a sleeping player.
  */
 void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
-          bool see_source, const char *death_source_name, bool skip_multipliers)
+          bool see_source, const char *death_source_name, bool skip_multipliers,
+          bool skip_awaken)
 {
     ASSERT(!crawl_state.game_is_arena());
     if (you.duration[DUR_TIME_STEP])
@@ -1112,7 +1114,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     interrupt_activity(activity_interrupt::hp_loss, &hpl);
 
     // Don't wake the player with fatal or poison damage.
-    if (dam > 0 && dam < you.hp && death_type != KILLED_BY_POISON)
+    if (dam > 0 && dam < you.hp && death_type != KILLED_BY_POISON && !skip_awaken)
         you.check_awaken(500);
 
     const bool non_death = death_type == KILLED_BY_QUITTING

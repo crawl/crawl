@@ -1411,6 +1411,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_CHAOS_LACE:
     case ENCH_VEXED:
     case ENCH_DEEP_SLEEP:
+    case ENCH_DROWSY:
         decay_enchantment(en);
         break;
 
@@ -2169,7 +2170,7 @@ static const char *enchant_names[] =
     "armed",
     "misdirected", "changed appearance", "shadowless", "doubled_health",
     "grapnel", "tempered", "hatching", "blinkitis", "chaos_laced", "vexed",
-    "deep sleep",
+    "deep sleep", "drowsy",
     "buggy", // NUM_ENCHANTMENTS
 };
 

@@ -881,6 +881,15 @@ bool fill_status_info(int status, status_info& inf)
         }
         break;
 
+    case DUR_DROWSY:
+        if (you.duration[DUR_DROWSY] > 70)
+            inf.light_colour = LIGHTRED;
+        else if (you.duration[DUR_DROWSY] >= 35)
+            inf.light_colour = RED;
+        else
+            inf.light_colour = LIGHTGREY;
+        break;
+
     default:
         if (!found)
         {
