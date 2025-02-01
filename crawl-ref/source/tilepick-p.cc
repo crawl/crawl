@@ -476,6 +476,7 @@ tileidx_t tileidx_player()
     case transformation::statue:
     case transformation::death:
     case transformation::tree:
+    case transformation::vampire:
     // (so is storm form)
     case transformation::storm:
         break;
@@ -493,6 +494,7 @@ tileidx_t tileidx_player()
     case transformation::jelly:     ch = TILEP_MONS_JELLY;     break;
 #endif
     case transformation::fungus:    ch = TILEP_TRAN_MUSHROOM;  break;
+    case transformation::bat_swarm: ch = TILEP_TRAN_BAT_SWARM; break;
     case transformation::dragon:
     {
         switch (you.species)

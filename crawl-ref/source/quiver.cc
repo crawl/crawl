@@ -1299,8 +1299,6 @@ namespace quiver
         case ABIL_INVENT_GIZMO:
         // high price zone
         case ABIL_ZIN_DONATE_GOLD:
-        // not entirely pseudo, but doesn't make a lot of sense to quiver:
-        case ABIL_TRAN_BAT:
             return true;
         default:
             return false;

@@ -255,8 +255,8 @@ end
 function trove.good_talisman (e)
     e.item([[blade talisman randart / maw talisman randart /
              serpent talisman randart w:8 / granite talisman w:4 /
-             granite talisman randart w:6 / dragon-blood talisman w:4 /
-             dragon-blood talisman randart w:6 / storm talisman w:8 /
+             granite talisman randart w:6 / dragon-coil talisman w:4 /
+             dragon-coil talisman randart w:6 / storm talisman w:8 /
              storm talisman randart w:2 / talisman of death w:8 /
              talisman of death randart w:2]])
 end
@@ -828,7 +828,7 @@ ORIENT:  encompass
 # Loot:  15 items, this time.
 COLOUR:  x = blue
 MONS:    storm dragon zombie, golden dragon zombie, fire dragon skeleton
-ITEM:    dragon-blood talisman good_item / any armour good_item
+ITEM:    dragon-coil talisman good_item / any armour good_item
 ITEM:    golden dragon scales / storm dragon scales / fire dragon scales / \
          troll leather armour / any useful armour good_item
 ITEM:    javelin good_item / dart good_item
@@ -929,7 +929,7 @@ ORIENT:  encompass
 WEIGHT:  15
 ITEM:    manual of evocations, manual of shapeshifting, acquire magical staff
 ITEM:    any misc, maw talisman randart / blade talisman randart
-ITEM:    dragon-blood talisman randart / granite talisman randart
+ITEM:    dragon-coil talisman randart / granite talisman randart
 ITEM:    storm talisman / talisman of death
 ITEM:    wand of digging charges:8 / any hex wand charges:8 / \
          any beam wand charges:8 / any blast wand charges:8

@@ -179,6 +179,7 @@ enum mon_summon_type
     MON_SUMM_YRED_REAP, // Yred's reaping passive
     MON_SUMM_WPN_REAP,  // Reaping brand reaping
     MON_SUMM_CACOPHONY, // Poltergeist ability
+    MON_SUMM_THRALL,    // Vampiric thralls
 };
 
 #include "mon-flags.h"

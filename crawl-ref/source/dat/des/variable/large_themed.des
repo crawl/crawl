@@ -3251,7 +3251,7 @@ ITEM:     chain mail ego:fire_resistance good_item / \
           staff of fire / staff of earth w:5 / book of fire / \
           book of scorching / orb randart artprops:Fire&&rF / \
           randbook disc1:forgecraft spells:forge_monarch_bomb w:5 / \
-          dragon-blood talisman / granite talisman w:5
+          dragon-coil talisman / granite talisman w:5
 ITEM:     plate armour ego:fire_resistance good_item / \
           fire dragon scales randart / kite shield ego:fire_resistance w:5 / \
           double sword ego:flaming good_item w:5 pre_id / \
@@ -3261,7 +3261,7 @@ ITEM:     plate armour ego:fire_resistance good_item / \
           book of spontaneous combustion w:5 / \
           randbook disc1:forgecraft spells:hellfire_mortar / \
           orb ego:energy randart artprops:Fire&&rF / \
-          dragon-blood talisman randart / \
+          dragon-coil talisman randart / \
           granite talisman randart artprops:rF w:5
 KFEAT:    L = l
 KFEAT:    y = x

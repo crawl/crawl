@@ -301,7 +301,7 @@ private:
     vector<pair<string,string>> badmuts;
 };
 const Form* get_form(transformation form = you.form);
-const Form* cur_form(bool temp);
+const Form* cur_form(bool temp = true);
 
 bool lifeless_prevents_form(transformation form = you.form);
 

@@ -899,7 +899,25 @@ with the number of different enemies affected, but will decay over time if you
 do not continue to inflict new misfortune.
 
 At your current XL, you can gain a maximum bonus of
-{{return 6 + math.floor(you.xl() * 4 / 5);}} AC this way.
+{{return 6 + you.xl() * 4 / 5;}} AC this way.
+# ------ Fakemut descriptions ------
+%%%%
+vampire fangs mutation
+
+When you perform a stab attack against a living monster with blood, you heal for
+a portion of the total damage dealt. When you are at 50% of your max HP or less,
+this has a chance to happen on all melee attacks which increases with your
+Shapeshifting skill.
+%%%%
+bloodcurse mutation
+
+When you kill a living monster with a stab attack, they may rise again to serve
+you as a vampiric thrall. Thralls possess all the abilities they had in life,
+but are undead, and gain a vampiric bite attack. Spellcaster thralls will also
+gain knowledge of the Vampiric Draining spell.
+
+You can only create a thrall if you do not have one already, and they will
+inevitably turn to dust after a short time.
 %%%%
 # ------ Makhleb destruction flavours ------
 Gehenna destruction mutation

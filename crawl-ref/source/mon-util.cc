@@ -2095,6 +2095,16 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
             attk.damage = 2 + (m.get_hit_dice() * 3 / 2);
     }
 
+    // Vampires get a bite aux in addition to normal attacks.
+    if (mon.has_ench(ENCH_VAMPIRE_THRALL)
+            && attk.type == AT_NONE
+            && smc->attack[attk_number - 1].type != AT_NONE)
+    {
+        attk.type = AT_BITE;
+        attk.flavour = AF_VAMPIRIC;
+        attk.damage = 5 + mon.get_experience_level() * 5 / 4;
+    }
+
     if (!base_flavour)
     {
         // TODO: randomization here is not the greatest way of doing any of

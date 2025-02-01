@@ -23,6 +23,8 @@
 #define MAKHLEB_HAEMOCLASM_KEY "makhleb_haemoclasm"
 #define MAKHLEB_BLOODRITE_KILL_KEY "bloodrite_kill"
 
+#define VAMPIRIC_THRALL_KEY "vampiric_thrall"
+
 class actor;
 class monster;
 

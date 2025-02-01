@@ -403,6 +403,9 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_CACOPHONY, "Cacophony",
             4, 0, 0, -1, {}, abflag::none },
 
+        { ABIL_BAT_SWARM, "Bat Swarm",
+            6, 0, 0, -1, {}, abflag::none },
+
         // EVOKE abilities use Evocations and come from items.
         { ABIL_EVOKE_BLINK, "Evoke Blink",
             0, 0, 0, -1, {fail_basis::evo, 40, 2}, abflag::none },
@@ -2201,6 +2204,24 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
 
         return true;
 
+    case ABIL_BAT_SWARM:
+    {
+        if (you.props.exists(BATFORM_XP_KEY))
+        {
+            if (!quiet)
+                mpr("You must recover your energy before scattering into bats again.");
+            return false;
+        }
+        const string reason = cant_transform_reason(transformation::bat_swarm);
+        if (!reason.empty())
+        {
+            if (!quiet)
+                mpr(reason);
+            return false;
+        }
+        return true;
+    }
+
     case ABIL_WORD_OF_CHAOS:
         if (you.duration[DUR_WORD_OF_CHAOS_COOLDOWN])
         {
@@ -3278,6 +3299,17 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     case ABIL_CACOPHONY:
         return _do_cacophony();
 
+    case ABIL_BAT_SWARM:
+    {
+        mpr("You scatter into a swarm of vampire bats!");
+        transform(random2(12), transformation::bat_swarm);
+        you.transform_uncancellable = true;
+        const int pow = get_form()->get_level(10);
+        big_cloud(CLOUD_BATS, &you, you.pos(), 18 + pow / 20, 8 + pow / 15, 1);
+        you.props[BATFORM_XP_KEY] = 90;
+        break;
+    }
+
     // INVOCATIONS:
     case ABIL_ZIN_RECITE:
     {
@@ -4195,6 +4227,8 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         && !you.props.exists(INVENT_GIZMO_USED_KEY);
     case ABIL_CACOPHONY:
         return you.get_mutation_level(MUT_FORMLESS) == 2;
+    case ABIL_BAT_SWARM:
+        return you.form == transformation::vampire;
     case ABIL_IMBUE_SERVITOR:
         return you.has_spell(SPELL_SPELLSPARK_SERVITOR);
     case ABIL_IMPRINT_WEAPON:
@@ -4273,6 +4307,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_WORD_OF_CHAOS,
             ABIL_INVENT_GIZMO,
             ABIL_CACOPHONY,
+            ABIL_BAT_SWARM,
             ABIL_BLINKBOLT,
             ABIL_SIPHON_ESSENCE,
             ABIL_IMBUE_SERVITOR,

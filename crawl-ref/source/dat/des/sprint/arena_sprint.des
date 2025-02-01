@@ -1086,7 +1086,7 @@ KFEAT:  L = armour shop count:17 greed:12 type:Basic suffix:Armour use_all ; \
             mundane pair of gloves | mundane helmet
 KFEAT:  M = jewellery shop type:Timeless suffix:Talismans count:8 greed:7 use_all ; \
             beast talisman | maw talisman | serpent talisman | blade talisman |\
-            dragon-blood talisman | granite talisman | storm talisman | talisman of death
+            dragon-coil talisman | granite talisman | storm talisman | talisman of death
 KFEAT:  N = weapon shop type:Staff suffix:Store count:9 use_all greed:30 ; \
             staff of fire | staff of air | staff of earth | staff of cold |\
             staff of alchemy | staff of death | staff of conjuration

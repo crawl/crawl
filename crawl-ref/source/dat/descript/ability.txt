@@ -159,6 +159,16 @@ sometimes dazing, draining, or even confusing them.
 After using this ability, you must gain experience points before you can recover
 enough power to use it again.
 %%%%
+Bat Swarm ability
+
+Scatters your physical form into a swarm of vampire bats, melding your equipment
+but allowing you to move quickly and evasively. The number of bats that issue
+from your body is so immense that it even fills nearby spaces like a choking
+cloud, assailing enemies and gradually putting them to sleep.
+
+After using this ability, you must gain experience points before you can recover
+enough power to use it again.
+%%%%
 # Zin
 Recite ability
 

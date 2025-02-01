@@ -364,6 +364,31 @@ void fill_doll_equipment(dolls_data &result)
         result.parts[TILEP_PART_ARM]     = 0;
         result.parts[TILEP_PART_CLOAK]   = 0;
         break;
+    case transformation::vampire:
+        switch (you.species)
+        {
+#if TAG_MAJOR_VERSION == 34
+        case SP_CENTAUR:
+#endif
+        case SP_ARMATAUR:   ch = TILEP_TRAN_VAMPIRE_ARMATAUR;   break;
+        case SP_NAGA:       ch = TILEP_TRAN_VAMPIRE_NAGA;       break;
+        case SP_FELID:      ch = TILEP_TRAN_VAMPIRE_FELID;      break;
+        case SP_OCTOPODE:   ch = TILEP_TRAN_VAMPIRE_OCTOPODE;   break;
+        case SP_DJINNI:     ch = TILEP_TRAN_VAMPIRE_DJINN;      break;
+        case SP_TENGU:      ch = TILEP_TRAN_VAMPIRE_TENGU;      break;
+        default:            ch = TILEP_TRAN_VAMPIRE;            break;
+        }
+        result.parts[TILEP_PART_BASE]    = ch;
+        result.parts[TILEP_PART_HAIR]    = 0;
+        result.parts[TILEP_PART_BEARD]   = 0;
+        result.parts[TILEP_PART_LEG]     = 0;
+        // Not melded, but don't fit the base tile
+        result.parts[TILEP_PART_HELM]    = 0;
+        result.parts[TILEP_PART_BOOTS]   = 0;
+        result.parts[TILEP_PART_BODY]    = 0;
+        result.parts[TILEP_PART_ARM]     = 0;
+        result.parts[TILEP_PART_CLOAK]   = 0;
+        break;
     default:
         // A monster tile is being used for the player.
         if (player_uses_monster_tile())

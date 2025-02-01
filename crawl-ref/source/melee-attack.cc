@@ -544,6 +544,48 @@ void melee_attack::try_parry_disarm()
     }
 }
 
+void melee_attack::do_vampire_lifesteal()
+{
+    monster* mon = defender->as_monster();
+    if (attacker->is_player()
+        && (you.form == transformation::vampire
+            || you.form == transformation::bat_swarm)
+        && (stab_attempt || you.hp * 2 <= you.hp_max)
+        && mon->has_blood()
+        && actor_is_susceptible_to_vampirism(*mon)
+        && adjacent(you.pos(), mon->pos()))
+    {
+        // Stabs always heal, but thirsty attacks have a shapeshifting-based
+        // chance to heal.
+        if (!stab_attempt && !x_chance_in_y(10, cur_form()->get_level(1) + 10))
+            return;
+
+        if (mon->alive())
+        {
+            mprf("You sink your fangs into %s and drink %s blood.",
+                    mon->name(DESC_THE, true).c_str(),
+                    mon->pronoun(PRONOUN_POSSESSIVE).c_str());
+        }
+        else
+        {
+            mprf("You sink your fangs into %s and drain %s dry!",
+                    mon->name(DESC_THE, true).c_str(),
+                    mon->pronoun(PRONOUN_OBJECTIVE).c_str());
+
+            // Mark to possibly raise this monster as an ally.
+            if (stab_attempt)
+                mon->props[VAMPIRIC_THRALL_KEY] = true;
+        }
+
+        int heal = random2(damage_done);
+        if (heal > 0 && you.hp < you.hp_max && !you.duration[DUR_DEATHS_DOOR])
+        {
+            you.heal(heal);
+            canned_msg(MSG_GAIN_HEALTH);
+        }
+    }
+}
+
 
 static void _apply_flux_contam(monster &m)
 {
@@ -733,6 +775,7 @@ bool melee_attack::handle_phase_hit()
 
     if (damage_done > 0)
     {
+        do_vampire_lifesteal();
         apply_black_mark_effects();
         do_ooze_engulf();
         try_parry_disarm();

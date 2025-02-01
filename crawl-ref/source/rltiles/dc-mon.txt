@@ -1413,6 +1413,14 @@ lich_form_djinn TRAN_LICH_DJINN
 lich_form_felid TRAN_LICH_FELID
 tree_form TRAN_TREE
 %rim 0
+bat_swarm_form TRAN_BAT_SWARM
+vampire_form_humanoid TRAN_VAMPIRE
+vampire_form_armataur TRAN_VAMPIRE_ARMATAUR
+vampire_form_djinn TRAN_VAMPIRE_DJINN
+vampire_form_felid TRAN_VAMPIRE_FELID
+vampire_form_naga TRAN_VAMPIRE_NAGA
+vampire_form_octopode TRAN_VAMPIRE_OCTOPODE
+vampire_form_tengu TRAN_VAMPIRE_TENGU
 mushroom_form TRAN_MUSHROOM
 storm_form TRAN_STORM_HUMANOID
 storm_form_felid TRAN_STORM_FELID

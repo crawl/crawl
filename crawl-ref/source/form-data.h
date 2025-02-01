@@ -467,5 +467,49 @@ static const form_entry formdata[] =
     }
 },
 
+{
+    transformation::vampire, MONS_VAMPIRE, "Vampire", "vampire-form", "vampire",
+    "a living vampire.",
+    16, 25, TALISMAN_VAMPIRE,
+    EQF_NONE, mrd(MR_RES_COLD, 1) | mrd(MR_RES_NEG, 2),
+    DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 10,
+    {}, true, FormScaling().Base(0),
+    SPWPN_NORMAL, LIGHTMAGENTA, "", DEFAULT_VERBS,
+    FC_DEFAULT, FC_DEFAULT, true, true,
+    FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, FC_DEFAULT,
+    "", 0, "", "", "", "",
+    { { "vampire fangs", "Your fangs allow you to drain the lifeblood from your enemies." },
+      { "bloodcurse", "When you kill a living creature with a stab, you may create a vampiric thrall."},
+      { "torment resistance 1", "You are resistant to unholy torment." }, // same as MUT_TORMENT_RESISTANCE
+      { "bat form", "You can occasionally transform into a swarm of bats."},
+      { "very stealthy", "You are very stealthy."},
+    }, // rC+, rN++
+    { { "inhibited regeneration", "You do not regenerate when monsters are visible." } }
+},
+
+{
+    transformation::bat_swarm, MONS_PROGRAM_BUG, "Bat Swarm", "batswarm-form", "bat swarm",
+    "a swarm of vampire bats",
+    16, 25, NUM_TALISMANS,
+    EQF_PHYSICAL, mrd(MR_RES_COLD, 1) | mrd(MR_RES_NEG, 3),
+    FormDuration(15, PS_SINGLE, 25), 0, 5, SIZE_TINY, 10,
+    {}, false, FormScaling().XLBased(),
+    SPWPN_NORMAL, LIGHTGREY, "Teeth", ANIMAL_VERBS,
+    FC_ENABLE, FC_FORBID, false, true,
+    FC_DEFAULT, FC_ENABLE, FC_ENABLE, FC_ENABLE, FC_ENABLE,
+    "squeak", -8, "foreclaw", "", "perch on", "flesh",
+    { { "extremely fast", "You cover ground extremely quickly." },
+      { "", "You are tiny, dextrous, and very evasive." }, // short-form "tiny" is automatically added
+      { "vampire fangs", "Your fangs allow you to drain the lifeblood from your enemies." },
+      { "bloodcurse", "When you kill a living creature with a stab, you may create a vampiric thrall."},
+      { "torment resistance 1", "You are resistant to unholy torment." }, // same as MUT_TORMENT_RESISTANCE
+      { "very stealthy", "You are very stealthy."},
+    },
+    { { "weak attacks", "Your unarmed attacks are very weak." },
+      { "no casting", "You cannot cast spells." },
+      { "inhibited regeneration", "You do not regenerate when monsters are visible." },
+    }
+},
+
 };
 COMPILE_CHECK(ARRAYSZ(formdata) == NUM_TRANSFORMS);

@@ -990,6 +990,24 @@ public:
     }
 };
 
+class FormVampire : public Form
+{
+private:
+    FormVampire() : Form(transformation::vampire) { }
+    DISALLOW_COPY_AND_ASSIGN(FormVampire);
+public:
+    static const FormVampire &instance() { static FormVampire inst; return inst; }
+};
+
+class FormBatswarm : public Form
+{
+private:
+    FormBatswarm() : Form(transformation::bat_swarm) { }
+    DISALLOW_COPY_AND_ASSIGN(FormBatswarm);
+public:
+    static const FormBatswarm &instance() { static FormBatswarm inst; return inst; }
+};
+
 static const Form* forms[] =
 {
     &FormNone::instance(),
@@ -1027,6 +1045,8 @@ static const Form* forms[] =
     &FormMaw::instance(),
     &FormFlux::instance(),
     &FormSlaughter::instance(),
+    &FormVampire::instance(),
+    &FormBatswarm::instance(),
 };
 
 const Form* get_form(transformation xform)
@@ -1542,7 +1562,12 @@ static void _enter_form(int pow, transformation which_trans, bool scale_hp = tru
         merfolk_stop_swimming();
 
     // Give the transformation message.
-    mpr(get_form(which_trans)->transform_message());
+    // (Vampire bat swarm ability skips this part.)
+    if (!(you.form == transformation::vampire || you.form == transformation::bat_swarm)
+         && !(which_trans == transformation::vampire || which_trans == transformation::bat_swarm))
+    {
+        mpr(get_form(which_trans)->transform_message());
+    }
 
     // Update your status.
     // Order matters here, take stuff off (and handle attendant HP and stat
@@ -1693,8 +1718,12 @@ bool transform(int pow, transformation which_trans, bool involuntary,
         return true;
     }
 
-    if (you.form != transformation::none)
+    if (you.form != transformation::none
+        && (!(you.form == transformation::vampire || you.form == transformation::bat_swarm)
+            && !(which_trans == transformation::vampire || which_trans == transformation::bat_swarm)))
+    {
         untransform(true, !using_talisman);
+    }
 
     _enter_form(pow, which_trans, !using_talisman);
 
@@ -1944,7 +1973,7 @@ void set_default_form(transformation t, const item_def *source)
 int form_base_movespeed(transformation tran)
 {
     // statue form is handled as a multiplier in player_speed, not a movespeed.
-    if (tran == transformation::bat)
+    if (tran == transformation::bat || tran == transformation::bat_swarm)
         return 5; // but allowed minimum is six
     else if (tran == transformation::pig)
         return 7;

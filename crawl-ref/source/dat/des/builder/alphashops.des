@@ -85,7 +85,7 @@
        "book of cryoformation", "codex of conductivity" }
 
       elseif s == "D" then i = { "book of death", "book of debilitation",
-       "book of dreams", "book of the dragon", "dagger", "dragon-blood talisman",
+       "book of dreams", "book of the dragon", "dagger", "dragon-coil talisman",
        "demon blade", "demon trident", "demon whip", "dire flail",
        "double sword", "ring of dexterity", "manual of dodging",
        "staff of death", "wand of digging", "dart", "book of dangerous friends",

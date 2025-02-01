@@ -153,6 +153,7 @@ private:
     void apply_sign_of_ruin_effects();
     void do_ooze_engulf();
     void try_parry_disarm();
+    void do_vampire_lifesteal();
 private:
     // Player-attack specific stuff
     // Auxiliary unarmed attacks.

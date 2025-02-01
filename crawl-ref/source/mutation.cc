@@ -797,6 +797,11 @@ static vector<pair<string,string>> _get_form_fakemuts()
             result.push_back({"statue negative energy resistance",
                                 _formmut("Your stone body resists negative energy. (rN+)")});
         }
+        else if (form->res_neg() == 2 ) // vampire form
+        {
+            result.push_back({"negative energy resistance",
+                                _formmut("Your partially-undead body resists negative energy. (rN++)")});
+        }
     }
 
     if (form->res_elec()

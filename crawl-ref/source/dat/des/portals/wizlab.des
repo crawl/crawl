@@ -1286,7 +1286,7 @@ ITEM:       potion of mutation q:1 pre_id
 ITEM:       randbook disc:alchemy disc2:necromancy owner:Cigotuvi
 ITEM:       flux talisman randart / maw talisman randart / \
             serpent talisman randart / statue talisman w:8 / \
-            dragon-blood talisman / storm talisman w:8 / \
+            dragon-coil talisman / storm talisman w:8 / \
             talisman of death w:2
 ITEM:       staff of death pre_id, scroll of poison pre_id
 ITEM:       w:5 any jewellery randart / w:5 hat_of_the_alchemist / \

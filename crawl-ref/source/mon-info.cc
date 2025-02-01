@@ -540,6 +540,8 @@ monster_info::monster_info(const monster* m, int milev)
     // Ghostliness needed for name
     if (testbits(m->flags, MF_SPECTRALISED))
         mb.set(MB_SPECTRALISED);
+    if (m->has_ench(ENCH_VAMPIRE_THRALL))
+        mb.set(MB_VAMPIRE_THRALL);
 
     if (milev <= MILEV_NAME)
     {
@@ -1148,6 +1150,9 @@ string monster_info::common_name(description_level_type desc) const
 
     if (is(MB_SPECTRALISED))
         ss << "ghostly ";
+
+    if (is(MB_VAMPIRE_THRALL))
+        ss << "vampire ";
 
     if (type == MONS_SENSED && !mons_is_sensed(base_type))
         ss << "sensed ";

@@ -186,7 +186,7 @@ function setup_loot (e)
                                  "pair of gloves good_item w:6 / helmet good_item w:4 / " ..
                                  "hat good_item w:2 / pair of boots good_item w:6 / " ..
                                  "fire dragon scales w:8 / granite talisman w:2 / " ..
-                                 "dragon-blood talisman w:2")
+                                 "dragon-coil talisman w:2")
     e.item(dgn.loot_potions)
     e.item(make_fiery_weapon(e, {"rapier w:10", "quick blade w:5",
                                  "demon whip w:2", "eveningstar w:2",

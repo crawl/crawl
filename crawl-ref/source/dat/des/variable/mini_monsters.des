@@ -7744,7 +7744,7 @@ NSUBST: " = 1:" / 1:' / * = "'
 SUBST:  2 = .
 : elseif r == 3 then
 MONS:   fire dragon, lindwurm
-KITEM:  d = dragon-blood talisman / dragon-blood talisman randart w:1
+KITEM:  d = dragon-coil talisman / dragon-coil talisman randart w:1
 SUBST:  '" = l
 : elseif r == 4 then
 KMONS:  12 = boulder beetle

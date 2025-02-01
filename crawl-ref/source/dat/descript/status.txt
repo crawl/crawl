@@ -1117,3 +1117,15 @@ even empty space.
 Drowsy status
 
 You are rapidly growing sleepy and may soon fall asleep completely.
+%%%%
+Vampire status
+
+You are a vampire - a creature that straddles the border between life and
+undeath. You can drink the lifeblood of the living to heal, and even turn those
+you slay stealthily into vampiric thralls, but do not heal in the presence of
+monsters.
+%%%%
+Swarm status
+
+You have transformed into a swarm of vampire bats, allowing you to move quickly
+and evasively. You may trail clouds of bats in your wake.

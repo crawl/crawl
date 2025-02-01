@@ -434,6 +434,7 @@ static map<talisman_type, vector<artp_value>> talisman_artps = {
     { TALISMAN_STORM, { { ARTP_POISON, 1 }, { ARTP_ELECTRICITY, 1 } } },
     { TALISMAN_DEATH, { { ARTP_POISON, 1 }, { ARTP_NEGATIVE_ENERGY, 3 },
                         { ARTP_COLD, 1 } } },
+    { TALISMAN_VAMPIRE, { { ARTP_COLD, 1 }, { ARTP_NEGATIVE_ENERGY, 3 }}},
 };
 
 /**

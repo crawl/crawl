@@ -2171,6 +2171,7 @@ static const char *enchant_names[] =
     "misdirected", "changed appearance", "shadowless", "doubled_health",
     "grapnel", "tempered", "hatching", "blinkitis", "chaos_laced", "vexed",
     "deep sleep", "drowsy",
+    "vampire thrall",
     "buggy", // NUM_ENCHANTMENTS
 };
 

@@ -3091,7 +3091,7 @@ NAME:   st_large_dragon_hoard_4
 SUBST:  D = DDD$
 KITEM:  D = $
 KMONS:  1 = nonbase draconian band
-KITEM:  & = dragon-blood talisman / dragon-blood talisman randart / \
+KITEM:  & = dragon-coil talisman / dragon-coil talisman randart / \
             book of the dragon w:15 / $
 : st_zot_vaults_setup(_G)
 MAP
@@ -3119,7 +3119,7 @@ ENDMAP
 NAME:   st_grand_hoard_of_tiamat
 TAGS:   no_monster_gen
 KMONS:  1 = patrolling Tiamat, patrolling golden dragon
-KITEM:  1 = dragon-blood talisman / dragon-blood talisman randart / \
+KITEM:  1 = dragon-coil talisman / dragon-coil talisman randart / \
             book of the dragon w:15
 SUBST:  D = DDD$
 KITEM:  D = $

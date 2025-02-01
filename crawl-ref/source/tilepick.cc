@@ -2389,6 +2389,7 @@ static const map<monster_info_flags, tileidx_t> monster_status_icons = {
     { MB_BLINKITIS, TILEI_UNSTABLE },
     { MB_CHAOS_LACE, TILEI_LACED_WITH_CHAOS },
     { MB_VEXED, TILEI_VEXED },
+    { MB_VAMPIRE_THRALL, TILEI_VAMPIRE_THRALL },
 };
 
 set<tileidx_t> status_icons_for(const monster_info &mons)
@@ -2998,6 +2999,7 @@ static tileidx_t _tileidx_talisman(const item_def &item)
     case TALISMAN_BLADE:    return TILE_TALISMAN_BLADE;
     case TALISMAN_STATUE:   return TILE_TALISMAN_STATUE;
     case TALISMAN_DRAGON:   return TILE_TALISMAN_DRAGON;
+    case TALISMAN_VAMPIRE:  return TILE_TALISMAN_VAMPIRE;
     case TALISMAN_STORM:    return TILE_TALISMAN_STORM;
     case TALISMAN_DEATH:    return TILE_TALISMAN_DEATH;
     default: return TILE_ERROR;
@@ -3866,6 +3868,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_IMPRINT_WEAPON;
     case ABIL_CACOPHONY:
         return TILEG_ABILITY_CACOPHONY;
+    case ABIL_BAT_SWARM:
+        return TILEG_ABILITY_BAT_SWARM;
 
     // Others
     case ABIL_END_TRANSFORMATION:

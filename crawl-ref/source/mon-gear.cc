@@ -129,6 +129,9 @@ static talisman_type _talisman_for(monster_type mtyp)
         if (coinflip())
             return TALISMAN_DEATH;
         break;
+    case MONS_JORY:
+        if (coinflip())
+            return TALISMAN_VAMPIRE;
     default:
         break;
     }

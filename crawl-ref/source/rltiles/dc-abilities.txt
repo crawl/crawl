@@ -1,5 +1,5 @@
 %sdir gui/abilities
-bat_form ABILITY_BAT_FORM
+bat_swarm ABILITY_BAT_SWARM
 blink ABILITY_BLINK
 blinkbolt ABILITY_BLINKBOLT
 breathe_acid ABILITY_BREATHE_ACID

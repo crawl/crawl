@@ -1187,6 +1187,15 @@ void player_reacts()
     if (you.has_mutation(MUT_TRICKSTER))
         _handle_trickster_decay(you.time_taken);
 
+    if (you.form == transformation::bat_swarm)
+    {
+        if (x_chance_in_y(you.time_taken, 20))
+        {
+            const int num_clouds = 2 + (div_rand_round(get_form()->get_level(1) - 16, 4));
+            big_cloud(CLOUD_BATS, &you, you.pos(), 8, num_clouds);
+        }
+    }
+
     // safety first: make absolutely sure that there's no mimic underfoot.
     // (this can happen with e.g. apport.)
     discover_mimic(you.pos());

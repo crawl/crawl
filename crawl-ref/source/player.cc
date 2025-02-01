@@ -2363,6 +2363,24 @@ static void _handle_cacophony_recharge(int exp)
     }
 }
 
+static void _handle_batform_recharge(int exp)
+{
+    if (!you.props.exists(BATFORM_XP_KEY)
+        || you.default_form != transformation::vampire)
+    {
+        return;
+    }
+
+    int loss = div_rand_round(exp, calc_skill_cost(you.skill_cost_level));
+    you.props[BATFORM_XP_KEY].get_int() -= loss;
+
+    if (you.props[BATFORM_XP_KEY].get_int() <= 0)
+    {
+        you.props.erase(BATFORM_XP_KEY);
+        mprf(MSGCH_DURATION, "You feel ready to scatter into bats once more.");
+    }
+}
+
 static void _handle_god_wrath(int exp)
 {
     for (god_iterator it; it; ++it)
@@ -2424,6 +2442,7 @@ void apply_exp()
     _handle_hp_drain(skill_xp);
     _handle_breath_recharge(skill_xp);
     _handle_cacophony_recharge(skill_xp);
+    _handle_batform_recharge(skill_xp);
 
     if (player_under_penance(GOD_HEPLIAKLQANA))
         return; // no xp for you!
@@ -3023,6 +3042,12 @@ int player_stealth()
     stealth += STEALTH_PIP * you.get_mutation_level(MUT_CAMOUFLAGE);
     if (you.has_mutation(MUT_TRANSLUCENT_SKIN))
         stealth += STEALTH_PIP;
+
+    if (you.form == transformation::vampire
+        || you.form == transformation::bat_swarm)
+    {
+        stealth += (STEALTH_PIP * 2);
+    }
 
     // Radiating silence is the negative complement of shouting all the
     // time... a sudden change from background noise to no noise is going
@@ -6395,9 +6420,8 @@ mon_holy_type player::holiness(bool temp, bool incl_form) const
 {
     mon_holy_type holi;
 
-    // Lich form takes precedence over a species' base holiness
-    // Alive Vampires are MH_NATURAL
-    if (is_lifeless_undead(temp))
+    // Forms take precedence over a species' base holiness
+    if (species::undead_type(species) == US_UNDEAD)
         holi = MH_UNDEAD;
     else if (species::is_nonliving(you.species))
         holi = MH_NONLIVING;
@@ -6416,14 +6440,20 @@ mon_holy_type player::holiness(bool temp, bool incl_form) const
         }
         else if (f == transformation::slaughter)
             holi = MH_DEMONIC;
+        else if (f == transformation::death)
+            holi = MH_UNDEAD;
+        // Both living and undead weaknesses
+        else if (f == transformation::vampire
+                 || f == transformation::bat_swarm)
+        {
+            holi |= MH_UNDEAD;
+        }
     }
 
     // Petrification takes precedence over base holiness and lich form
     if (temp && petrified())
         holi = MH_NONLIVING;
 
-    // possible XXX: Monsters get evil/unholy bits set on spell selection
-    //  should players?
     return holi;
 }
 
@@ -6807,6 +6837,8 @@ undead_state_type player::undead_state(bool temp) const
 {
     if (temp && form == transformation::death)
         return US_UNDEAD;
+    else if (temp && (form == transformation::vampire || form == transformation::bat_swarm))
+        return US_SEMI_UNDEAD;
     return species::undead_type(species);
 }
 
@@ -7447,10 +7479,7 @@ bool player::can_safely_mutate(bool temp) const
 // Is the player too undead to bleed, rage, or polymorph?
 bool player::is_lifeless_undead(bool temp) const
 {
-    if (temp && undead_state() == US_SEMI_UNDEAD)
-        return false;
-    else
-        return undead_state(temp) == US_UNDEAD;
+    return undead_state(temp) == US_UNDEAD;
 }
 
 bool player::can_polymorph() const
