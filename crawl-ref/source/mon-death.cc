@@ -839,6 +839,9 @@ static bool _blorkula_bat_split(monster& blorkula, killer_type ktype)
     {
         // Suppress messages about status effects wearing off
         msg::suppress msg;
+        // monster::banish sets damage_friendly and not resetting that could
+        // crash. monster::heal resets it but not if it was at full health.
+        blorkula.damage_total = blorkula.damage_friendly = 0;
         blorkula.heal(blorkula.max_hit_points);
         blorkula.del_ench(ENCH_CONFUSION, true);    // Don't blink at random
         blorkula.stop_being_constricted(true);
