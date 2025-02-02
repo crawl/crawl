@@ -1773,9 +1773,11 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
     mon->stop_constricting_all();
     mon->stop_being_constricted();
 
-    if (orig.halo_radius()
-        || orig.umbra_radius()
-        || orig.silence_radius())
+    // Monsters haloes should be removed when their souls are bound.
+    if (mon->halo_radius() >= 0
+        || mon->umbra_radius() >= 0
+        || mon->silence_radius() >= 0
+        || mon->liquefying_radius() >= 0)
     {
         invalidate_agrid();
     }
