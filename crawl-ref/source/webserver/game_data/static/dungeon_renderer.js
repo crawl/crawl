@@ -351,6 +351,16 @@ function ($, comm, cr, map_knowledge, options, dngn, util, view_data, enums,
                     this.render_loc(cx + 1, cy, cell_right);
                 }
             }
+            // And the cell to the bottom-right if both overlapped
+            if (this.in_view(cx + 1, cy + 1))
+            {
+                let cell_diag = map_knowledge.get(cx + 1, cy + 1);
+                if (cell_diag.t && cell_diag.t.sy && (cell_diag.t.sy < 0)
+                    && cell_diag.t.left_overlap && (cell_diag.t.left_overlap < 0))
+                {
+                    this.render_loc(cx + 1, cy + 1, cell_diag);
+                }
+            }
         },
 
         animate: function ()
