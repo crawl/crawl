@@ -4585,7 +4585,7 @@ The box is emptied!
 Die Kiste wird geleert!
 %%%%
 The lightning rod overheats!
-Die Blitzstange ist überhitzt!
+Der Blitzfänger ist überhitzt!
 %%%%
 QUAD DAMAGE!
 VIERFACHER SCHADEN!

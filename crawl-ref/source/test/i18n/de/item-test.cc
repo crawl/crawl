@@ -84,7 +84,7 @@ const vector<string> expected = {
     "eine Goblin-Leiche (inzwischen skelettiert)",
 
     "ein Zauberstab des Grabens (18)",
-    "eine Blitzstange (3/4)",
+    "ein Blitzfänger (3/4)",
 
     "der Ring von \"Fedhas's Hope\" {MP+9 Int+4 Ges+2}",
 

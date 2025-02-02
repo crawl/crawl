@@ -885,7 +885,7 @@ the box of beasts
 die Kiste der Bestien
 %%%%
 the lightning rod
-die Blitzstange
+der Blitzfänger
 %%%%
 the phial of floods
 die Phiole der Fluten

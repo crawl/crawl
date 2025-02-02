@@ -539,7 +539,7 @@ Unverwöhnter
 {adj-es}@Adj@ Missgeschick
 %%%%
 Lightning Rod
-Blitzableiter
+Blitzfänger
 %%%%
 @Adj@ Disaster
 {adj-es}@Adj@ Desaster

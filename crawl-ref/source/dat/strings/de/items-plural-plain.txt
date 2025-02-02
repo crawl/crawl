@@ -138,7 +138,7 @@ boxes of beasts
 {pl}Kisten der Bestien
 %%%%
 lightning rods
-{pl}Blitzstangen
+{pl}Blitzfänger
 %%%%
 phials of floods
 {pl}Phiolen der Fluten

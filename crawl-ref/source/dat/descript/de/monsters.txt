@@ -1619,10 +1619,10 @@ ihrer Härte an leicht verrostetes Eisen erinnern.
 %%%%
 ironbound thunderhulk
 
-Eine brutale Gestalt, die sich hastig mit Leder- und Metallfetzen bewaffnet hat,
-um einen furchterregenden Eindringling zu bekämpfen. Auf ihrem Rücken befindet
-sich ein antiker, geheimnisvoller „Blitzableiter“, der Donner auf entfernte
-Feinde herabregnen lässt, obwohl er nahe Ziele nicht treffen kann.
+Eine brutale Gestalt, die hastig in eine Rüstung aus Leder- und Metallfetzen
+gezwängt wurde, um einen furchterregenden Eindringling zu bekämpfen. Auf
+ihrem Rücken befindet sich ein antiker, geheimnisvoller „Blitzfänger“, der Donner
+auf entfernte Feinde herabregnen lässt, aber nahe Ziele nicht treffen kann.
 %%%%
 ironbound convoker
 
