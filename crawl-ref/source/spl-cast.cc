@@ -1448,7 +1448,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
                                                    diamond_sawblade_spots(false));
 
     case SPELL_SPLINTERFROST_SHELL:
-        return make_unique<targeter_wall_arc>(&you, 5);
+        return make_unique<targeter_wall_arc>(&you, 4);
 
     case SPELL_PERCUSSIVE_TEMPERING:
         return make_unique<targeter_tempering>();

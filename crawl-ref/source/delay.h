@@ -269,7 +269,6 @@ private:
 class EquipOffDelay : public Delay
 {
     item_def& equip;
-    bool primary_weapon;
     bool was_prompted = false;
 
     void start() override;
@@ -284,8 +283,8 @@ class EquipOffDelay : public Delay
 
     void finish() override;
 public:
-    EquipOffDelay(int dur, item_def& item, bool primary = false) :
-                   Delay(dur), equip(item), primary_weapon(primary)
+    EquipOffDelay(int dur, item_def& item) :
+                   Delay(dur), equip(item)
     { }
 
     bool try_interrupt(bool force = false) override;
@@ -739,8 +738,6 @@ private:
 
 class ImprintDelay : public Delay
 {
-    bool was_prompted = false;
-
     void start() override;
 
     void tick() override
