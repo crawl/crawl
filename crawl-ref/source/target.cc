@@ -2572,8 +2572,8 @@ aff_type targeter_surprising_crocodile::is_affected(coord_def loc)
     return AFF_NO;
 }
 
-targeter_wall_arc::targeter_wall_arc(const actor* caster, int size)
-    : targeter_smite(caster, 1, 0, 0, true, true), wall_num(size)
+targeter_wall_arc::targeter_wall_arc(const actor* caster, int count)
+    : targeter_smite(caster, 1, 0, 0, true, true), num_walls(count)
 {
 }
 
@@ -2583,7 +2583,7 @@ bool targeter_wall_arc::set_aim(coord_def a)
     if (!targeter_smite::set_aim(a) || !valid_aim(a) || a == agent->pos())
         return false;
 
-    spots = get_splinterfrost_block_spots(*agent, a, 4);
+    spots = get_splinterfrost_block_spots(*agent, a, num_walls);
 
     return true;
 }

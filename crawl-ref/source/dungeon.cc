@@ -961,7 +961,9 @@ static bool _dgn_fill_zone(
     bool ret = false;
     list<coord_def> points[2];
     int cur = 0;
+#ifdef DEBUG_DIAGNOSTICS
     int found_points = 0;
+#endif
 
     // No bounds checks, assuming the level has at least one layer of
     // rock border.
@@ -971,7 +973,9 @@ static bool _dgn_fill_zone(
         for (const auto &c : points[cur])
         {
             travel_point_distance[c.x][c.y] = zone;
+#ifdef DEBUG_DIAGNOSTICS
             found_points++;
+#endif
 
             if (iswanted && iswanted(c))
                 ret = true;
