@@ -418,13 +418,13 @@ static vector<ability_def> &_get_ability_list()
 
         // INVOCATIONS:
         // Zin
-        { ABIL_ZIN_RECITE, "Recite",
-            0, 0, 0, -1, {fail_basis::invo, 30, 6, 20}, abflag::none },
+        { ABIL_ZIN_IMPRISON, "Imprison",
+            4, 0, 2, LOS_MAX_RANGE, {fail_basis::invo, 30, 6, 20},
+            abflag::target | abflag::not_self },
         { ABIL_ZIN_VITALISATION, "Vitalisation",
             2, 0, 1, -1, {fail_basis::invo, 40, 5, 20}, abflag::none },
-        { ABIL_ZIN_IMPRISON, "Imprison",
-            5, 0, 4, LOS_MAX_RANGE, {fail_basis::invo, 60, 5, 20},
-            abflag::target | abflag::not_self },
+        { ABIL_ZIN_RECITE, "Recite",
+            0, 0, 0, -1, {fail_basis::invo, 60, 5, 20}, abflag::none },
         { ABIL_ZIN_SANCTUARY, "Sanctuary",
             7, 0, 15, -1, {fail_basis::invo, 80, 4, 25}, abflag::none },
         { ABIL_ZIN_DONATE_GOLD, "Donate Gold",
