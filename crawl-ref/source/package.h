@@ -88,7 +88,7 @@ public:
 
     // statistics
     plen_t get_slack();
-    plen_t get_size() const { return file_len; };
+    plen_t get_size() const { return file_len; }
     plen_t get_chunk_fragmentation(const string &name);
     plen_t get_chunk_compressed_length(const string &name);
 private:
