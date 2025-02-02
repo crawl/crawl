@@ -3307,7 +3307,7 @@ void monster_cleanup(monster* mons)
         env.forest_awoken_until = 0;
     }
 
-    // Monsters haloes should be removed when they die.
+    // Monsters' haloes should be removed when they die.
     if (mons->halo_radius() >= 0
         || mons->umbra_radius() >= 0
         || mons->silence_radius() >= 0
