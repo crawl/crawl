@@ -52,6 +52,8 @@ the Tempest
 
 Temptation
 
+Velleity
+
 Wishful Thinking
 
 # FIXME: should appear on amulets only
