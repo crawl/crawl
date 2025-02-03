@@ -1,6 +1,10 @@
 Guide to translating Crawl's text
 =================================
 
+Firstly, be warned: this game contains quite a large amount of text. Around 173k
+words, which is equivalent to a 400-500 page novel. Translating it is a
+significant undertaking.
+
 There are three sets of text files. They are in the following directories, which
 are under crawl-ref/source in the github repo or under the top-level folder in
 the release package:
