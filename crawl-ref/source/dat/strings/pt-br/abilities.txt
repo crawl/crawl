@@ -1,0 +1,708 @@
+###############################################################################
+#
+# Translations for abilities
+#
+###############################################################################
+
+#################################
+# Ability names
+# Note: max chars in ability menu column is 31
+#################################
+
+%%%%
+No ability
+
+%%%%
+Blink
+
+%%%%
+End Transformation
+
+%%%%
+
+# Naga breath weapon
+%%%%
+Spit Poison
+
+%%%%
+
+# Draconian breath weapons
+%%%%
+Breathe Fire
+
+%%%%
+Breathe Frost
+
+%%%%
+Breathe Poison Gas
+
+%%%%
+Breathe Noxious Fumes
+
+%%%%
+Breathe Lightning
+
+%%%%
+Breathe Dispelling Energy
+
+%%%%
+Breathe Steam
+
+%%%%
+Breathe Acid
+
+%%%%
+
+# Vampire
+%%%%
+Bat Form
+
+%%%%
+Exsanguinate
+
+%%%%
+Revivify
+
+%%%%
+
+# Demonspawn
+%%%%
+Hurl Damnation
+
+%%%%
+Word of Chaos
+
+%%%%
+
+# Formicid
+%%%%
+Dig
+
+%%%%
+Shaft Self
+
+%%%%
+
+# Barachi
+%%%%
+Hop
+
+%%%%
+
+# Palentonga
+%%%%
+Rolling Charge
+
+%%%%
+
+# NOTE: "Evoke" abilities come from items and use the Evocations skill,
+# so we need to distinguish between these and similar god-given or intrinsic abilities
+# Example: "Evoke Berserk Rage" (item ability) vs "Berserk" (god-given ability)
+%%%%
+Evoke Blink
+
+%%%%
+Heal Wounds
+
+%%%%
+Evoke Berserk Rage
+
+%%%%
+Evoke Invisibility
+
+%%%%
+Turn Visible
+
+%%%%
+Evoke Flight
+
+%%%%
+Evoke Fog
+
+%%%%
+Evoke Ratskin
+
+%%%%
+Evoke Thunderclouds
+
+%%%%
+
+# Zin
+%%%%
+Recite
+
+%%%%
+Vitalisation
+
+%%%%
+Imprison
+
+%%%%
+Sanctuary
+
+%%%%
+Donate Gold
+
+%%%%
+
+# The Shining One
+%%%%
+Divine Shield
+
+%%%%
+Cleansing Flame
+
+%%%%
+Summon Divine Warrior
+
+%%%%
+Brand Weapon With Holy Wrath
+
+%%%%
+
+# Kiku
+%%%%
+Receive Corpses
+
+%%%%
+Torment
+
+%%%%
+Receive Forbidden Knowledge
+
+%%%%
+Brand Weapon With Pain
+
+%%%%
+
+# Yred
+%%%%
+Injury Mirror
+
+%%%%
+Animate Remains
+
+%%%%
+Recall Undead Slaves
+
+%%%%
+Animate Dead
+
+%%%%
+Drain Life
+
+%%%%
+Enslave Soul
+
+%%%%
+
+# Okawaru
+%%%%
+Heroism
+
+%%%%
+Finesse
+
+%%%%
+
+# Makhleb
+%%%%
+Minor Destruction
+
+%%%%
+Lesser Servant of Makhleb
+
+%%%%
+Major Destruction
+
+%%%%
+Greater Servant of Makhleb
+
+%%%%
+%d%% hostile
+
+%%%%
+
+# Sif Muna
+%%%%
+Channel Magic
+
+%%%%
+Forget Spell
+
+%%%%
+Divine Exegesis
+
+%%%%
+
+# Trog
+%%%%
+Berserk
+
+%%%%
+Trog's Hand
+
+%%%%
+Brothers in Arms
+
+%%%%
+
+# Elyvilon
+%%%%
+Divine Protection
+
+%%%%
+Lesser Healing
+
+%%%%
+Heal Other
+
+%%%%
+Purification
+
+%%%%
+Greater Healing
+
+%%%%
+Divine Vigour
+
+%%%%
+
+# Lugonu
+%%%%
+Depart the Abyss
+
+%%%%
+Bend Space
+
+%%%%
+Banish
+
+%%%%
+Corrupt
+
+%%%%
+Enter the Abyss
+
+%%%%
+Brand Weapon With Distortion
+
+%%%%
+
+# Nemelex card/deck abilities
+%%%%
+Draw Destruction
+
+%%%%
+Draw Escape
+
+%%%%
+Draw Summoning
+
+%%%%
+Draw Stack
+
+%%%%
+Triple Draw
+
+%%%%
+Deal Four
+
+%%%%
+Stack Five
+
+%%%%
+(next: %s)
+
+%%%%
+(%d in deck)
+
+%%%%
+
+# Beogh
+%%%%
+Convert to Beogh
+
+%%%%
+Smiting
+
+%%%%
+Recall Orcish Followers
+
+%%%%
+Give Item to Named Follower
+
+%%%%
+Resurrection
+
+%%%%
+
+# Jiyva
+%%%%
+Request Jelly
+
+%%%%
+# Turns next monster you hit into a slime
+Slimify
+
+%%%%
+Cure Bad Mutation
+
+%%%%
+
+# Fedhas
+%%%%
+Wall of Briars
+
+%%%%
+Grow Ballistomycete
+
+%%%%
+Overgrow
+
+%%%%
+Grow Oklob
+
+%%%%
+
+# Cheibriados
+%%%%
+Bend Time
+
+%%%%
+Temporal Distortion
+
+%%%%
+Slouch
+
+%%%%
+Step From Time
+
+%%%%
+
+# Ashenzari
+%%%%
+Curse Item
+
+%%%%
+Shatter the Chains
+
+%%%%
+(Boost: %s)
+
+%%%%
+
+# Dithmenos
+%%%%
+Shadow Step
+
+%%%%
+Shadow Form
+
+%%%%
+
+# Ru
+%%%%
+Draw Out Power
+
+%%%%
+Power Leap
+
+%%%%
+Apocalypse
+
+%%%%
+Sacrifice Purity
+
+%%%%
+Sacrifice Words
+
+%%%%
+Sacrifice Drink
+
+%%%%
+Sacrifice Essence
+
+%%%%
+Sacrifice Health
+
+%%%%
+Sacrifice Stealth
+
+%%%%
+# sacrifice the ability to use evocable items
+Sacrifice Artifice
+
+%%%%
+Sacrifice Love
+
+%%%%
+Sacrifice Courage
+
+%%%%
+Sacrifice Arcana
+
+%%%%
+Sacrifice Nimbleness
+
+%%%%
+Sacrifice Durability
+
+%%%%
+Sacrifice a Hand
+
+%%%%
+Sacrifice Experience
+
+%%%%
+Sacrifice Skill
+
+%%%%
+Sacrifice an Eye
+
+%%%%
+Sacrifice Resistance
+
+%%%%
+Reject Sacrifices
+
+%%%%
+
+# Gozag
+%%%%
+Potion Petition
+
+%%%%
+Call Merchant
+
+%%%%
+Bribe Branch
+
+%%%%
+
+# Qazlal
+%%%%
+Upheaval
+
+%%%%
+Elemental Force
+
+%%%%
+Disaster Area
+
+%%%%
+
+# Uskayaw
+%%%%
+Stomp
+
+%%%%
+Line Pass
+
+%%%%
+Grand Finale
+
+%%%%
+
+# Hepliaklqana
+%%%%
+Recall Ancestor
+
+%%%%
+Transference
+
+%%%%
+Idealise
+
+%%%%
+Ancestor Life: Knight
+
+%%%%
+Ancestor Life: Battlemage
+
+%%%%
+Ancestor Life: Hexer
+
+%%%%
+Ancestor Identity
+
+%%%%
+
+# Wu Jian
+%%%%
+Serpent's Lash
+
+%%%%
+Heavenly Storm
+
+%%%%
+Lunge
+
+%%%%
+Whirlwind
+
+%%%%
+Wall Jump
+
+%%%%
+
+%%%%
+Stop Recall
+
+%%%%
+Renounce Religion
+
+%%%%
+
+#################################
+# Ability costs
+#################################
+
+# these go in the "COST" column on the ability screen
+%%%%
+%d MP
+
+%%%%
+Permanent MP (%d left)
+
+%%%%
+Stat Drain (%d each)
+
+%%%%
+Frailty
+
+%%%%
+%d HP
+
+%%%%
+Piety
+
+%%%%
+Breath
+
+%%%%
+Delay
+
+%%%%
+# duplicate of spell name
+#Pain
+%%%%
+Exhaustion
+
+%%%%
+Instant
+
+%%%%
+Max HP drain
+
+%%%%
+Cursed item
+
+%%%%
+Gold
+
+%%%%
+A Card
+
+%%%%
+None
+
+%%%%
+Free
+
+%%%%
+Purity
+
+%%%%
+Words
+
+%%%%
+Drink
+
+%%%%
+Essence
+
+%%%%
+Health
+
+%%%%
+Artifice
+
+%%%%
+Love
+
+%%%%
+Courage
+
+%%%%
+Arcana
+
+%%%%
+Nimbleness
+
+%%%%
+Durability
+
+%%%%
+a Hand
+
+%%%%
+Experience
+
+%%%%
+an Eye
+
+%%%%
+Resistance
+
+%%%%
+
+# detailed description screen for individual ability
+# this uses the string above, with some substitutions and additions
+
+%%%%
+"This ability costs: "
+
+%%%%
+
+# substitutions
+%%%%
+nothing.
+
+%%%%
+One cursed item
+
+%%%%
+
+# additions...
+
+# piety amounts
+# Used like this "Piety: <amount>"
+%%%%
+# duplicate
+extremely large
+
+%%%%
+# duplicate
+#large
+#viel
+%%%%
+moderate
+
+%%%%
+#small
+#wenig
+%%%%
+
+# gold amount
+# Used like this: "Gold: <amount>
+%%%%
+free
+
+%%%%
+
+# used for both piety and gold
+%%%%
+variable
+
+%%%%
