@@ -725,7 +725,7 @@ public:
     void paralyse(const actor *, int str, string source = "") override;
     void petrify(const actor *, bool force = false) override;
     bool fully_petrify(bool quiet = false) override;
-    bool vex(const actor*, int dur, string source = "") override;
+    bool vex(const actor* who, int dur, string source = "", string special_msg = "") override;
     void give_stun_immunity(int duration);
     void slow_down(actor *, int str) override;
     void confuse(actor *, int strength) override;

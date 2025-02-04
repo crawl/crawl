@@ -1437,6 +1437,15 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_VAMPIRE_BLOODPRINCE,
+      {
+       { SPELL_GRAVE_CLAW, 30, MON_SPELL_WIZARD },
+       { SPELL_DRAIN_LIFE, 30, MON_SPELL_WIZARD },
+       { SPELL_RAVENOUS_SWARM, 40, MON_SPELL_WIZARD },
+       { SPELL_DOMINATE_UNDEAD, 22, MON_SPELL_WIZARD },
+      }
+    },
+
     // ('W') Incorporeal undead.
     {  MST_SHADOWGHAST,
       {

@@ -1105,6 +1105,7 @@ moon_troll MONS_MOON_TROLL
 vampire MONS_VAMPIRE
 vampire_knight MONS_VAMPIRE_KNIGHT
 vampire_mage MONS_VAMPIRE_MAGE
+vampire_bloodprince MONS_VAMPIRE_BLOODPRINCE
 jiangshi MONS_JIANGSHI
 %sdir mon/unique
 jory MONS_JORY

@@ -519,6 +519,17 @@ the caster's enemies under its own power.
 As it is a direct reflection of the caster's unique zeal, the weapon they
 receive from their god will be the same each time.
 %%%%
+Dominate Undead spell
+
+Attempts to forcibly change the allegiance of all nearby undead which are not
+already loyal to the caster.
+
+Adventurers, being famously headstrong, cannot be fully controlled by this
+spell. They will instead lash out randomly for the duration of its effect,
+attacking nearby friend and foe alike before regaining their wits.
+
+This spell can be broken prematurely by the death of its caster.
+%%%%
 Doom Howl spell
 
 Unleashes a piercing howl that catches and echoes in victims' minds. While
@@ -1493,6 +1504,14 @@ Quicksilver Bolt spell
 
 Fires a bolt of dispelling energy at a targeted creature, possibly removing
 some of its enchantments.
+%%%%
+Ravenous Swarm spell
+
+Unleashes a torrent of vampire bats, filling the air around
+
+These vampires will gnaw on anything which isn't undead with a voracious hunger,
+and their bites will eventually even lull their victims to sleep, leaving them
+easy prey.
 %%%%
 Rebounding Blaze spell
 

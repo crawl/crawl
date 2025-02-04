@@ -2148,6 +2148,7 @@ int make_mons_armour(monster_type type, int level)
         break;
 
     case MONS_JOSEPHINA:
+    case MONS_VAMPIRE_BLOODPRINCE:
         level = ISPEC_GOOD_ITEM;
     case MONS_ORC_SORCERER:
     case MONS_DEMONSPAWN_BLOOD_SAINT:

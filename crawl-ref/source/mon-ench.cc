@@ -306,7 +306,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
             {
                 mprf("You %sdetect the %s %s.",
                      friendly() ? "" : "can no longer ",
-                     ench.ench == ENCH_HEXED ? "hexed" :
+                     ench.ench == ENCH_HEXED ? "dominated" :
                      ench.ench == ENCH_CHARM ? "charmed"
                                              : "bribed",
                      name(DESC_PLAIN, true).c_str());
@@ -553,7 +553,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             {
                 mprf("%s is no longer %s.", name(DESC_THE, true).c_str(),
                         me.ench == ENCH_CHARM   ? "charmed"
-                        : me.ench == ENCH_HEXED ? "hexed"
+                        : me.ench == ENCH_HEXED ? "dominated"
                                                 : "bribed");
 
                 mprf("You can %s detect %s.",

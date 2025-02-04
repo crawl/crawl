@@ -4384,6 +4384,29 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_RAVENOUS_SWARM, "Ravenous Swarm",
+    spschool::necromancy,
+    spflag::target | spflag::area | spflag::monster | spflag::needs_tracer
+        | spflag::cloud,
+    6,
+    0,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_RAVENOUS_SWARM,
+},
+
+{
+    SPELL_DOMINATE_UNDEAD, "Dominate Undead",
+    spschool::hexes | spschool::necromancy,
+    spflag::area | spflag::WL_check | spflag::monster,
+    6,
+    200,
+    -1, -1,
+    0,
+    TILEG_DOMINATE_UNDEAD,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

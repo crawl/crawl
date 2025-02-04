@@ -792,6 +792,9 @@ enum monster_type                      // env.mons[].type
     MONS_VAMPIRE,
     MONS_VAMPIRE_KNIGHT,
     MONS_VAMPIRE_MAGE,
+#if TAG_MAJOR_VERSION > 34
+    MONS_VAMPIRE_BLOODPRINCE,
+#endif
     MONS_GHOST,                 // common genus for monster and player ghosts
     MONS_PHANTOM,
     MONS_SHADOWGHAST,
@@ -1324,6 +1327,7 @@ enum monster_type                      // env.mons[].type
     MONS_SPHINX_MARAUDER,
     MONS_HAUNTED_ARMOUR,
     MONS_POLTERGEIST,            // player species dummy
+    MONS_VAMPIRE_BLOODPRINCE,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

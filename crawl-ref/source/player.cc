@@ -7120,11 +7120,11 @@ bool player::fully_petrify(bool /*quiet*/)
     return true;
 }
 
-bool player::vex(const actor* who, int dur, string source)
+bool player::vex(const actor* who, int dur, string source, string special_msg)
 {
     if (you.clarity())
     {
-        mprf("Your clarity prevents you from becoming vexed.");
+        mprf("Your clarity of mind shields you.");
         return false;
     }
     else if (duration[DUR_STUN_IMMUNITY])
@@ -7135,7 +7135,10 @@ bool player::vex(const actor* who, int dur, string source)
     else if (you.duration[DUR_VEXED])
         return false;
 
-    mprf(MSGCH_WARN, "You feel overwhelmed by frustration!");
+    if (!special_msg.empty())
+        mprf(MSGCH_WARN, "You %s", special_msg.c_str());
+    else
+        mprf(MSGCH_WARN, "You feel overwhelmed by frustration!");
     you.duration[DUR_VEXED] = dur * BASELINE_DELAY;
 
     int &vex(duration[DUR_VEXED]);

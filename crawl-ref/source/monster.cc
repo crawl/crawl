@@ -4411,12 +4411,16 @@ bool monster::fully_petrify(bool quiet)
     return msg;
 }
 
-bool monster::vex(const actor *who, int duration, string /* source */)
+bool monster::vex(const actor *who, int duration, string /* source */,
+                  string special_message)
 {
     if (clarity() || has_ench(ENCH_VEXED))
         return false;
 
-    simple_monster_message(*this, " is overwhelmed by frustration!");
+    if (!special_message.empty())
+        simple_monster_message(*this, special_message.c_str());
+    else
+        simple_monster_message(*this, " is overwhelmed by frustration!");
     add_ench(mon_enchant(ENCH_VEXED, 0, who, duration * BASELINE_DELAY));
 
     return true;

@@ -184,6 +184,7 @@ static ai_action::goodness _foe_siphon_essence_goodness(const monster &caster);
 static vector<actor*> _siphon_essence_victims (const actor& caster);
 static void _cast_siphon_essence(monster &caster, mon_spell_slot, bolt&);
 static ai_action::goodness _sojourning_bolt_goodness(const monster &caster);
+static bool _cast_dominate_undead(const monster& caster, int pow, bool check_only);
 
 enum spell_logic_flag
 {
@@ -897,6 +898,16 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_SIPHON_ESSENCE, { _foe_siphon_essence_goodness,
                               _cast_siphon_essence } },
     { SPELL_SOUL_SPLINTER, _hex_logic(SPELL_SOUL_SPLINTER, _foe_soul_splinter_goodness) },
+    { SPELL_DOMINATE_UNDEAD, {
+        [](const monster &caster) {
+            return ai_action::good_or_impossible(_cast_dominate_undead(caster, 100, true));
+        },
+        [](monster &caster, mon_spell_slot, bolt&) {
+            const int pow = mons_spellpower(caster, SPELL_DOMINATE_UNDEAD);
+            _cast_dominate_undead(caster, pow, false);
+        },
+        nullptr, MSPELL_LOGIC_NONE, 30
+    } }
 };
 
 // Logic for special-cased Aphotic Marionette hijacking of monster buffs to
@@ -2192,6 +2203,11 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         zappy(spell_to_zap(real_spell), power, true, beam);
         beam.aux_source   = "blast of fiery breath";
         beam.short_name   = "flames";
+        break;
+
+    case SPELL_RAVENOUS_SWARM:
+        zappy(spell_to_zap(real_spell), power, true, beam);
+        beam.hit_verb     = "envelopes";
         break;
 
     case SPELL_THROW_BARBS:
@@ -6774,6 +6790,65 @@ static bool _mons_cast_hellfire_mortar(monster& caster, actor& foe, int pow, boo
     return true;
 }
 
+static bool _cast_dominate_undead(const monster& caster, int pow, bool check_only)
+{
+    vector<actor*> targs;
+    for (actor_near_iterator ai(caster.pos()); ai; ++ai)
+    {
+        if (mons_aligned(&caster, *ai) || !(ai->holiness() & MH_UNDEAD)
+            || ai->willpower() == WILL_INVULN)
+        {
+            continue;
+        }
+
+        // Not friendly, but already 'charmed'
+        if (ai->is_player() && you.duration[DUR_VEXED])
+            continue;
+
+        // Found at least one valid target
+        if (check_only)
+            return true;
+
+        targs.push_back(*ai);
+    }
+
+    if (check_only && targs.empty())
+        return false;
+
+    for (actor* targ : targs)
+    {
+        if (targ->is_monster())
+        {
+            monster* mon = targ->as_monster();
+            const int res_margin = mon->check_willpower(&caster, pow / ENCH_POW_FACTOR);
+            if (res_margin > 0)
+            {
+                simple_monster_message(*mon,
+                    mon->resist_margin_phrase(res_margin).c_str());
+                continue;
+            }
+
+            simple_monster_message(*mon, " is compelled to serve!");
+            mon->add_ench(mon_enchant(ENCH_HEXED, 0, &caster));
+            flash_tile(mon->pos(), BLUE);
+        }
+        else if (targ->is_player())
+        {
+            const int res_margin = you.check_willpower(&caster, pow / ENCH_POW_FACTOR);
+            if (res_margin > 0)
+                canned_msg(MSG_YOU_RESIST);
+            else
+            {
+                const string msg = make_stringf("lash out against %s attempt to control you!",
+                                                caster.name(DESC_ITS).c_str());
+                you.vex(&caster, random_range(3, 5), caster.name(DESC_A).c_str(), msg);
+            }
+        }
+    }
+
+    return true;
+}
+
 /**
  *  Make this monster cast a spell
  *
@@ -9131,6 +9206,7 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
     case SPELL_CHAOS_BREATH:
     case SPELL_DEATH_RATTLE:
     case SPELL_MIASMA_BREATH:
+    case SPELL_RAVENOUS_SWARM:
         return ai_action::good_or_impossible(!no_clouds);
 
     case SPELL_MARCH_OF_SORROWS:

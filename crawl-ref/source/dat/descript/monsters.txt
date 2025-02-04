@@ -3040,6 +3040,11 @@ vampire bat
 A large black bat with vicious fangs that feeds on blood. It is the preferred
 form for vampires in disguise.
 %%%%
+vampire bloodprince
+
+A scornful scion to whom even other vampires bend the knee. Their command over
+blood magic allows them to feed upon the lifeforce of entire armies at once.
+%%%%
 vampire knight
 
 A powerful vampire noble who complements its combat prowess with dark magic.

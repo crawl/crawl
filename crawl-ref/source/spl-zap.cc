@@ -168,6 +168,7 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_SEISMIC_STOMP, ZAP_SEISMIC_STOMP },
     { SPELL_THROW_BOLAS, ZAP_BOLAS },
     { SPELL_SOJOURNING_BOLT, ZAP_SOJOURNING },
+    { SPELL_RAVENOUS_SWARM, ZAP_RAVENOUS_SWARM },
 
     // This is just to satisfy monster spell setup code
     { SPELL_HELLFIRE_MORTAR, ZAP_HELLFIRE_MORTAR_DIG },

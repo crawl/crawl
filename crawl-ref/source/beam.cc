@@ -2527,6 +2527,9 @@ cloud_type bolt::get_cloud_type() const
     if (origin_spell == SPELL_SPECTRAL_CLOUD)
         return CLOUD_SPECTRAL;
 
+    if (origin_spell == SPELL_RAVENOUS_SWARM)
+        return CLOUD_BATS;
+
     return CLOUD_NONE;
 }
 
@@ -2541,6 +2544,9 @@ int bolt::get_cloud_pow() const
     if (origin_spell == SPELL_SPECTRAL_CLOUD)
         return random_range(12, 20);
 
+    if (origin_spell == SPELL_RAVENOUS_SWARM)
+        return random_range(22, 40);
+
     return 0;
 }
 
@@ -2551,6 +2557,16 @@ int bolt::get_cloud_size(bool min, bool max) const
         || origin_spell == SPELL_FREEZING_CLOUD)
     {
         return 10;
+    }
+
+    if (origin_spell == SPELL_RAVENOUS_SWARM)
+    {
+        if (min)
+            return 10;
+        else if (max)
+            return 16;
+        else
+            return random_range(10, 16);
     }
 
     if (min)
@@ -3011,6 +3027,9 @@ void bolt::affect_place_clouds()
 
     if (origin_spell == SPELL_FLAMING_CLOUD)
         place_cloud(CLOUD_FIRE, p, random2(4) + 2, agent());
+
+    if (origin_spell == SPELL_RAVENOUS_SWARM)
+        place_cloud(CLOUD_BATS, p, random2(4) + 4, agent());
 
     // Fire/cold over water/lava
     if (feat == DNGN_LAVA && flavour == BEAM_COLD
@@ -4859,6 +4878,8 @@ bool bolt::has_relevant_side_effect(monster* mon)
     {
         return true;
     }
+    else if (origin_spell == SPELL_RAVENOUS_SWARM && !(mon->holiness() & MH_UNDEAD))
+        return true;
 
     return false;
 }
