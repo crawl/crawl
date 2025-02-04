@@ -167,6 +167,7 @@ static void _setup_ghostly_sacrifice_beam(bolt& beam, const monster& caster,
 static ai_action::goodness _seracfall_goodness(const monster &caster);
 static bool _prepare_seracfall(monster &caster, bolt &beam);
 static void _setup_seracfall_beam(bolt& beam, const monster& caster, int power);
+static ai_action::goodness _grave_claw_goodness(const monster &caster);
 static function<ai_action::goodness(const monster&)> _setup_hex_check(spell_type spell);
 static ai_action::goodness _hexing_goodness(const monster &caster, spell_type spell);
 static bool _torment_vulnerable(const actor* victim);
@@ -827,7 +828,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             }
         } } },
     { SPELL_GRAVE_CLAW, {
-       _always_worthwhile,
+       _grave_claw_goodness,
        [](monster &caster, mon_spell_slot, bolt& beam) {
             const int pow = mons_spellpower(caster, SPELL_GRAVE_CLAW);
             cast_grave_claw(caster, beam.target, pow, false);
@@ -4335,6 +4336,24 @@ static ai_action::goodness _seracfall_goodness(const monster &caster)
 {
     return ai_action::good_or_impossible(in_bounds(_mons_seracfall_source(caster)));
 }
+
+static ai_action::goodness _grave_claw_goodness(const monster &caster)
+{
+    const actor* foe = caster.get_foe();
+    if (!foe || !caster.can_see(*foe)
+        || grid_distance(caster.pos(), foe->pos()) > spell_range(SPELL_GRAVE_CLAW, 0))
+    {
+        return ai_action::impossible();
+    }
+
+    // Slightly reduce spamming against players, to avoid locking them in place
+    // on bad rolls.
+    if (foe->is_player() && you.duration[DUR_NO_MOMENTUM])
+        return ai_action::bad();
+
+    return ai_action::good();
+}
+
 
 /// Everything short of the actual explosion. Returns whether to fire.
 static bool _prepare_seracfall(monster &caster, bolt &beam)
