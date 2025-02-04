@@ -419,28 +419,26 @@ Troubleshooting tips:
 - Make sure Windows Universal C Runtime is installed in MSVC.
 - Make sure the Windows 8.1 SDK is installed in Visual Studio. This
      doesn't appear to be available in the latest version of Visual Studio.
-- Build Release before rebuilding both solutions with Debug
 - Use "Rebuild Solution" to make sure all files are rewritten
 - Make sure all projects use `/MD` (or `/MDd` for the debug version)
 - Make sure the appropriate (`/MD` or `/MDd`) CRT libraries are included for
   SDL, crawl, and
   [tilegen](https://msdn.microsoft.com/en-us/library/abx4dbyh.aspx).
 - Make sure `libpng.dll`, `SDL2.dll`, and `SDL2_image.dll` are in
-  `crawl-ref/source` after building the `Contribs` solution. These are copied
+  `crawl-ref/source` after building the `crawl-ref` solution. These are copied
   post-build from their original location in
   `source/contrib/bin/8.0/$(Platform)`.
 - Make sure `freetype.lib`, `libpng.lib`, `lua.lib`, `pcre.lib`, `SDL2.lib`,
   `SDL2_image.lib`, `SDL2main.lib`, `sqlite.lib`, and `zlib.lib` are in
-  `source/contrib/bin/8.0/$(Platform)` after building the `Contribs` solution.
+  `source/contrib/bin/8.0/$(Platform)` after building the `crawl-ref` solution.
 - Make sure `crawl.exe` and `tilegen.exe` are in `crawl-ref/source` after
   building the `crawl-ref` solution.
 - `tilegen.exe` runs early during the `crawl.exe` build process, using
   `libpng.dll` to build PNG files inside `source/rtiles`. Breaking tilegen
-  (e.g. by building a different `Contribs` configuration) after building these
-  png files correctly will result in `tilegen.exe` crashing during the crawl
-  build process, but will not stop the build from working.  `fresh.bat` inside
-  the MSVC folder will clear these files, making sure `tilegen.exe` stops the
-  build process if it fails.
+  after building these png files correctly will result in `tilegen.exe`
+  crashing during the crawl build process, but will not stop the build from
+  working. `fresh.bat` inside the MSVC folder will clear these files, making
+  sure `tilegen.exe` stops the build process if it fails.
 
 ## Android
 
