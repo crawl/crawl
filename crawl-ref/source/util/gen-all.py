@@ -41,6 +41,21 @@ def main():
     python = sys.executable
 
     ##########################################################################
+    # Based on lines 1854-1878 in Makefile
+    #
+    generated_files = ['species-data.h', 'aptitudes.h', 'species-groups.h', 'species-type.h']
+    input_files = (['util/species-gen.py'] + glob.glob('dat/species/*.yaml') +
+        glob.glob('util/species-gen/*.txt'))
+    command = [python, input_files[0], 'dat/species/', 'util/species-gen/'] + generated_files
+    run_if_needed(generated_files, input_files, command)
+
+    generated_files = ['job-data.h', 'job-groups.h', 'job-type.h']
+    input_files = (['util/job-gen.py'] + glob.glob('dat/jobs/*.yaml') +
+        glob.glob('util/job-gen/*.txt'))
+    command = [python, input_files[0], 'dat/jobs/', 'util/job-gen/'] + generated_files
+    run_if_needed(generated_files, input_files, command)
+
+    ##########################################################################
     # Based on lines 1464-1481 in Makefile
     #
     generated_files = ['../docs/aptitudes.txt']
@@ -77,7 +92,7 @@ def main():
                 sys.exit(result.returncode)
 
     ##########################################################################
-    # Based on lines 1842-1876 in Makefile
+    # Based on lines 1834-1853 in Makefile
     #
     generated_files = ['art-data.h', 'art-enum.h', 'rltiles/dc-unrand.txt',
         'rltiles/tiledef-unrand.cc']
@@ -109,18 +124,6 @@ def main():
     input_files = (['util/mon-gen.py'] + glob.glob('dat/mons/*.yaml') +
         glob.glob('util/mon-gen/*.txt'))
     command = [python, input_files[0], 'dat/mons/', 'util/mon-gen/'] + generated_files
-    run_if_needed(generated_files, input_files, command)
-
-    generated_files = ['species-data.h', 'aptitudes.h', 'species-groups.h', 'species-type.h']
-    input_files = (['util/species-gen.py'] + glob.glob('dat/species/*.yaml') +
-        glob.glob('util/species-gen/*.txt'))
-    command = [python, input_files[0], 'dat/species/', 'util/species-gen/'] + generated_files
-    run_if_needed(generated_files, input_files, command)
-
-    generated_files = ['job-data.h', 'job-groups.h', 'job-type.h']
-    input_files = (['util/job-gen.py'] + glob.glob('dat/jobs/*.yaml') +
-        glob.glob('util/job-gen/*.txt'))
-    command = [python, input_files[0], 'dat/jobs/', 'util/job-gen/'] + generated_files
     run_if_needed(generated_files, input_files, command)
 
 if __name__ == '__main__':
