@@ -380,7 +380,7 @@ These instructions have been successfully tested with Ubuntu only.
 This build process is currently unsupported, and unlikely to be straightforward
 in versions of MSVC besides those explicitly mentioned here.
 
-This build is tested on Visual Studio 2017 15.9.60 on Windows 11.
+This build is tested on Visual Studio 2017 15.9.60 on Windows 10 and 11.
 Tested configurations are `Debug/Release;Console/Tiles;Win32/x64`, Python and
 Lua support for editing are untested, and a webtiles build is not available.
 
