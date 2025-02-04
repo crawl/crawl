@@ -10,88 +10,88 @@
 #################################
 
 %%%%
-No ability
+Nenhuma habilidade 
 
 %%%%
-Blink
+Deslocamento
 
 %%%%
-End Transformation
+Reverter Transformação
 
 %%%%
 
 # Naga breath weapon
 %%%%
-Spit Poison
+Cuspir Veneno
 
 %%%%
 
 # Draconian breath weapons
 %%%%
-Breathe Fire
+Sopro de Fogo
 
 %%%%
-Breathe Frost
+Sopro de Gelo
 
 %%%%
-Breathe Poison Gas
+Sopro de Gás Venenoso
 
 %%%%
-Breathe Noxious Fumes
+Sopro de Fumaça Nociva
 
 %%%%
-Breathe Lightning
+Sopro de Relâmpago
 
 %%%%
-Breathe Dispelling Energy
+Sopro de Energia Dissipadora
 
 %%%%
-Breathe Steam
+Sopro de Vapor
 
 %%%%
-Breathe Acid
+Sopro de Ácido
 
 %%%%
 
 # Vampire
 %%%%
-Bat Form
+Forma de Morcego
 
 %%%%
-Exsanguinate
+Exsanguinar
 
 %%%%
-Revivify
+Revitalizar
 
 %%%%
 
 # Demonspawn
 %%%%
-Hurl Damnation
+Lançar Condenação
 
 %%%%
-Word of Chaos
+Palavra do Caos
 
 %%%%
 
 # Formicid
 %%%%
-Dig
+Cavar
 
 %%%%
-Shaft Self
+Perfurar o Solo
 
 %%%%
 
 # Barachi
 %%%%
-Hop
+Salto Rápido
 
 %%%%
 
 # Palentonga
 %%%%
-Rolling Charge
+Investida Rolante
 
 %%%%
 
@@ -99,139 +99,139 @@ Rolling Charge
 # so we need to distinguish between these and similar god-given or intrinsic abilities
 # Example: "Evoke Berserk Rage" (item ability) vs "Berserk" (god-given ability)
 %%%%
-Evoke Blink
+Evocar Deslocamento
 
 %%%%
-Heal Wounds
+Curar Feridas
 
 %%%%
-Evoke Berserk Rage
+Evocar Fúria Berserk
 
 %%%%
-Evoke Invisibility
+Evocar Invisbilidade
 
 %%%%
-Turn Visible
+Ficar Visível
 
 %%%%
-Evoke Flight
+Evocar Voo
 
 %%%%
-Evoke Fog
+Evocar Neblina
 
 %%%%
-Evoke Ratskin
+Evocar Pele de Rato
 
 %%%%
-Evoke Thunderclouds
+Evocar Nuvens de Trovão
 
 %%%%
 
 # Zin
 %%%%
-Recite
+Recitar
 
 %%%%
-Vitalisation
+Revitazalição
 
 %%%%
-Imprison
+Aprisionar
 
 %%%%
-Sanctuary
+Santuário
 
 %%%%
-Donate Gold
+Doar Ouro
 
 %%%%
 
 # The Shining One
 %%%%
-Divine Shield
+Escudo Divino
 
 %%%%
-Cleansing Flame
+Chama Purificadora
 
 %%%%
-Summon Divine Warrior
+Convocar Guerreiro Divino
 
 %%%%
-Brand Weapon With Holy Wrath
+Marcar Arma com Cólera Divina
 
 %%%%
 
 # Kiku
 %%%%
-Receive Corpses
+Desenterrar Condenados
 
 %%%%
-Torment
+Tormento
 
 %%%%
-Receive Forbidden Knowledge
+Receber Conhecimento Proibido
 
 %%%%
-Brand Weapon With Pain
+Marcar Arma com Dor
 
 %%%%
 
 # Yred
 %%%%
-Injury Mirror
+Espelho da Dor
 
 %%%%
-Animate Remains
+Animar Restos Mortais
 
 %%%%
-Recall Undead Slaves
+Reunir Servos Mortos-Vivos
 
 %%%%
-Animate Dead
+Reanimar Mortos
 
 %%%%
-Drain Life
+Drenar Vida
 
 %%%%
-Enslave Soul
+Escravizar Alma
 
 %%%%
 
 # Okawaru
 %%%%
-Heroism
+Heroísmo
 
 %%%%
-Finesse
+Maestria Marcial
 
 %%%%
 
 # Makhleb
 %%%%
-Minor Destruction
+Destruição Menor
 
 %%%%
-Lesser Servant of Makhleb
+Servo Menor de Makhleb
 
 %%%%
-Major Destruction
+Destruição Maior
 
 %%%%
-Greater Servant of Makhleb
+Servo Maior Makhleb
 
 %%%%
-%d%% hostile
+%d%% hostil
 
 %%%%
 
 # Sif Muna
 %%%%
-Channel Magic
+Canalizar Magia
 
 %%%%
-Forget Spell
+Esquecer Feitiço
 
 %%%%
-Divine Exegesis
+Exegese Divina
 
 %%%%
 
@@ -240,264 +240,262 @@ Divine Exegesis
 Berserk
 
 %%%%
-Trog's Hand
+Mão de Trog
 
 %%%%
-Brothers in Arms
+Irmãos em Arma
 
 %%%%
 
 # Elyvilon
 %%%%
-Divine Protection
+Proteção Divina
 
 %%%%
-Lesser Healing
+Cura Menor
 
 %%%%
-Heal Other
+Curar Outro
 
 %%%%
-Purification
+Purificação
 
 %%%%
-Greater Healing
+Cura Maior
 
 %%%%
-Divine Vigour
+Vigor Divino
 
 %%%%
 
-# Lugonu
 %%%%
-Depart the Abyss
+Deixar o Abismo
 
 %%%%
-Bend Space
+Distorcer Espaço
 
 %%%%
-Banish
+Banir
 
 %%%%
-Corrupt
+Corromper
 
 %%%%
-Enter the Abyss
+Entrar no Abismo
 
 %%%%
-Brand Weapon With Distortion
+Marcar Arma com Distorção
 
 %%%%
 
 # Nemelex card/deck abilities
 %%%%
-Draw Destruction
+Comprar Destruição
 
 %%%%
-Draw Escape
+Comprar Fuga
 
 %%%%
-Draw Summoning
+Comprar Invocação
 
 %%%%
-Draw Stack
+Comprar Pilha
 
 %%%%
-Triple Draw
+Compra Tripla
 
 %%%%
-Deal Four
+Distribuir Quatro
 
 %%%%
-Stack Five
+Empilhar Cinco
 
 %%%%
-(next: %s)
+(próximo: %s)
 
 %%%%
-(%d in deck)
+(%d no baralho)
 
 %%%%
 
 # Beogh
 %%%%
-Convert to Beogh
+Converter-se a Beogh
 
 %%%%
-Smiting
+Julgamento Divino
 
 %%%%
-Recall Orcish Followers
+Chamar Seguidores Orcs
 
 %%%%
-Give Item to Named Follower
+Dar Item ao Seguidor Nomeado
 
 %%%%
-Resurrection
+Ressurreição
 
 %%%%
-
 # Jiyva
 %%%%
-Request Jelly
+Solicitar Slime
 
 %%%%
 # Turns next monster you hit into a slime
-Slimify
+Gelatinizar 
 
 %%%%
-Cure Bad Mutation
+Curar Mutação Ruim
 
 %%%%
 
 # Fedhas
 %%%%
-Wall of Briars
+Parede de Espinhos
 
 %%%%
-Grow Ballistomycete
+Cultivar Balistomiceto
 
 %%%%
-Overgrow
+Crescimento Excessivo
 
 %%%%
-Grow Oklob
+Cultivar Oklob
 
 %%%%
 
 # Cheibriados
 %%%%
-Bend Time
+Dobrar o Tempo
 
 %%%%
-Temporal Distortion
+Distorção Temporal
 
 %%%%
-Slouch
+Desleixo
 
 %%%%
-Step From Time
+Deslocar do Tempo
 
 %%%%
 
 # Ashenzari
 %%%%
-Curse Item
+Amaldiçoar Item
 
 %%%%
-Shatter the Chains
+Quebrar as Correntes
 
 %%%%
-(Boost: %s)
+(Impulso: %s)
 
 %%%%
 
 # Dithmenos
 %%%%
-Shadow Step
+Passo da Sombra
 
 %%%%
-Shadow Form
+Forma da Sombra
 
 %%%%
 
 # Ru
 %%%%
-Draw Out Power
+Extrair Poder
 
 %%%%
-Power Leap
+Salto do Poder
 
 %%%%
-Apocalypse
+Apocalipse
 
 %%%%
-Sacrifice Purity
+Sacrificar Pureza
 
 %%%%
-Sacrifice Words
+Sacrificar Palavras
 
 %%%%
-Sacrifice Drink
+Sacrificar Poção
 
 %%%%
-Sacrifice Essence
+Sacrificar Essência
 
 %%%%
-Sacrifice Health
+Sacrificar Vida
 
 %%%%
-Sacrifice Stealth
+Sacrificar Furtividade
 
 %%%%
 # sacrifice the ability to use evocable items
-Sacrifice Artifice
+Sacrificar Artifício
 
 %%%%
-Sacrifice Love
+Sacrificar Amor
 
 %%%%
-Sacrifice Courage
+Sacrificar Coragem
 
 %%%%
-Sacrifice Arcana
+Sacrificar Arcano
 
 %%%%
-Sacrifice Nimbleness
+Sacrificar Agilidade
 
 %%%%
-Sacrifice Durability
+Sacrificar Durabilidade
 
 %%%%
-Sacrifice a Hand
+Sacrificar uma Mão
 
 %%%%
-Sacrifice Experience
+Sacrificar Experiência
 
 %%%%
-Sacrifice Skill
+Sacrificar Habilidade
 
 %%%%
-Sacrifice an Eye
+Sacrificar um Olho
 
 %%%%
-Sacrifice Resistance
+Sacrificar Resistência
 
 %%%%
-Reject Sacrifices
+Rejeitar Sacrifícios 
 
 %%%%
 
 # Gozag
 %%%%
-Potion Petition
+Petição de Poção
 
 %%%%
-Call Merchant
+Chamar Comerciante
 
 %%%%
-Bribe Branch
+Subornar Ramo
 
 %%%%
 
 # Qazlal
 %%%%
-Upheaval
+Revolta
 
 %%%%
-Elemental Force
+Força Elemental
 
 %%%%
-Disaster Area
+Zona de Desastre 
 
 %%%%
 
 # Uskayaw
 %%%%
-Stomp
+Pisar Forte
 
 %%%%
-Line Pass
+Passe de Linha
 
 %%%%
 Grand Finale
@@ -506,51 +504,51 @@ Grand Finale
 
 # Hepliaklqana
 %%%%
-Recall Ancestor
+Reunir Ancestral
 
 %%%%
-Transference
+Transferência
 
 %%%%
-Idealise
+Idealizar
 
 %%%%
-Ancestor Life: Knight
+Vida do Ancestral: Cavaleiro
 
 %%%%
-Ancestor Life: Battlemage
+Vida do Ancestral: Mago de Batalha
 
 %%%%
-Ancestor Life: Hexer
+Vida do Ancestral: Feiticeiro
 
 %%%%
-Ancestor Identity
+Identidade do Ancestral
 
 %%%%
 
 # Wu Jian
 %%%%
-Serpent's Lash
+Chicote de Serpente
 
 %%%%
-Heavenly Storm
+Tormenta dos Céus
 
 %%%%
-Lunge
+Investida
 
 %%%%
-Whirlwind
+Redemoinho
 
 %%%%
-Wall Jump
+Impulso na Parede
 
 %%%%
 
 %%%%
-Stop Recall
+Parar de Reunir
 
 %%%%
-Renounce Religion
+Abandonar a Fé
 
 %%%%
 
@@ -560,100 +558,100 @@ Renounce Religion
 
 # these go in the "COST" column on the ability screen
 %%%%
-%d MP
+%d PM
 
 %%%%
-Permanent MP (%d left)
+Mana Permanente (%d restante)
 
 %%%%
-Stat Drain (%d each)
+Dreno de Atributos (%d cada)
 
 %%%%
-Frailty
+Fragilidade
 
 %%%%
-%d HP
+%d PV
 
 %%%%
-Piety
+Piedade
 
 %%%%
-Breath
+Sopro
 
 %%%%
-Delay
+Atraso
 
 %%%%
 # duplicate of spell name
 #Pain
 %%%%
-Exhaustion
+Exaustão
 
 %%%%
-Instant
+Instantâneo 
 
 %%%%
-Max HP drain
+Drenar Máximo de PV
 
 %%%%
-Cursed item
+Item Amaldiçoado 
 
 %%%%
-Gold
+Ouro
 
 %%%%
-A Card
+Uma Carta
 
 %%%%
-None
+Nenhum
 
 %%%%
-Free
+Livre
 
 %%%%
-Purity
+Pureza
 
 %%%%
-Words
+Palavras
 
 %%%%
-Drink
+Poção
 
 %%%%
-Essence
+Essência
 
 %%%%
-Health
+Vida
 
 %%%%
-Artifice
+Artifício
 
 %%%%
-Love
+Amor
 
 %%%%
-Courage
+Couragem
 
 %%%%
-Arcana
+Arcano
 
 %%%%
-Nimbleness
+Agilidade
 
 %%%%
-Durability
+Durabilidade
 
 %%%%
-a Hand
+uma Mão
 
 %%%%
-Experience
+Experiência
 
 %%%%
-an Eye
+um Olho
 
 %%%%
-Resistance
+Resistância
 
 %%%%
 
@@ -661,16 +659,16 @@ Resistance
 # this uses the string above, with some substitutions and additions
 
 %%%%
-"This ability costs: "
+"Essa abilidade custa: "
 
 %%%%
 
 # substitutions
 %%%%
-nothing.
+nada.
 
 %%%%
-One cursed item
+Um item amaldiçoado
 
 %%%%
 
@@ -680,14 +678,14 @@ One cursed item
 # Used like this "Piety: <amount>"
 %%%%
 # duplicate
-extremely large
+extremamente grande
 
 %%%%
 # duplicate
 #large
 #viel
 %%%%
-moderate
+moderado
 
 %%%%
 #small
@@ -697,12 +695,12 @@ moderate
 # gold amount
 # Used like this: "Gold: <amount>
 %%%%
-free
+livre
 
 %%%%
 
 # used for both piety and gold
 %%%%
-variable
+variável
 
 %%%%
