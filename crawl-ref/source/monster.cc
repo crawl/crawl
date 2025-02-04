@@ -5584,11 +5584,6 @@ bool monster::strip_willpower(actor *attacker, int dur, bool quiet)
     return add_ench(lowered_wl);
 }
 
-void monster::check_awaken(int)
-{
-    // XXX
-}
-
 int monster::beam_resists(bolt &beam, int hurted, bool doEffects, string /*source*/)
 {
     return mons_adjust_flavoured(this, beam, hurted, doEffects);

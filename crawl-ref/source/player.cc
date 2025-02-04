@@ -4112,7 +4112,7 @@ bool confuse_player(int amount, bool quiet, bool force)
 
     if (you.duration[DUR_CONF] > old_value)
     {
-        you.check_awaken(500);
+        you.wake_up();
 
         if (!quiet)
         {
@@ -7049,8 +7049,7 @@ void player::paralyse(const actor *who, int str, string source)
     else
         props.erase(DISABLED_BY_KEY);
 
-    if (asleep())
-        you.awaken();
+    you.wake_up();
 
     mpr("You suddenly lose the ability to move!");
     _pruneify();
@@ -7081,8 +7080,7 @@ void player::petrify(const actor *who, bool force)
     }
 
     // Petrification always wakes you up
-    if (asleep())
-        you.awaken();
+    you.wake_up();
 
     if (petrifying())
     {
@@ -7696,24 +7694,16 @@ void player::put_to_sleep(actor* source, int dur, bool hibernate)
     redraw_evasion = true;
 }
 
-void player::awaken()
+void player::wake_up(bool force)
 {
-    ASSERT(!crawl_state.game_is_arena());
-
-    duration[DUR_SLEEP] = 0;
-    give_stun_immunity(random_range(3, 5));
-    mpr("You wake up.");
-    flash_view(UA_MONSTER, BLACK);
-    redraw_armour_class = true;
-    redraw_evasion = true;
-}
-
-void player::check_awaken(int disturbance)
-{
-    if (asleep() && x_chance_in_y(disturbance + 1, 50))
+    if (asleep() || force)
     {
-        awaken();
-        dprf("Disturbance of intensity %d awoke player", disturbance);
+        duration[DUR_SLEEP] = 0;
+        give_stun_immunity(random_range(3, 5));
+        mpr("You wake up.");
+        flash_view(UA_MONSTER, BLACK);
+        redraw_armour_class = true;
+        redraw_evasion = true;
     }
 }
 

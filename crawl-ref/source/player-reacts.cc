@@ -450,7 +450,7 @@ void player_reacts_to_monsters()
     _decrement_paralysis(you.time_taken);
     _decrement_petrification(you.time_taken);
     if (_decrement_a_duration(DUR_SLEEP, you.time_taken))
-        you.awaken();
+        you.wake_up(true);
 
     if (_decrement_a_duration(DUR_GRASPING_ROOTS, you.time_taken)
         && you.is_constricted())

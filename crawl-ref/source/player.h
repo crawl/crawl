@@ -818,8 +818,7 @@ public:
 
     bool asleep() const override;
     void put_to_sleep(actor* source, int duration = 0, bool hibernate = false) override;
-    void awaken();
-    void check_awaken(int disturbance) override;
+    void wake_up(bool force = false);
     int beam_resists(bolt &beam, int hurted, bool doEffects, string source)
         override;
     bool can_feel_fear(bool include_unknown) const override;
