@@ -33,11 +33,7 @@ def run_if_needed(generated_files, input_files, command):
     if(result != 0):
         sys.exit(result)
 
-def main():
-    perl = shutil.which('perl')
-    if not perl:
-        print('Error: no perl installed', file=sys.stderr)
-        sys.exit(1)
+def gen_all(perl):
     python = sys.executable
 
     ##########################################################################
@@ -125,6 +121,20 @@ def main():
         glob.glob('util/mon-gen/*.txt'))
     command = [python, input_files[0], 'dat/mons/', 'util/mon-gen/'] + generated_files
     run_if_needed(generated_files, input_files, command)
+
+def main():
+    perl = shutil.which('perl')
+    if not perl:
+        print('Error: no perl installed', file=sys.stderr)
+        sys.exit(1)
+    try:
+        gen_all(perl);
+    except FileNotFoundError as e:
+        print('Error: missing file "', e.filename, '"', sep='', file=sys.stderr)
+        sys.exit(1)
+    except OSError as e:
+        print('Error: ', e.strerror, sep='', file=sys.stderr)
+        sys.exit(1)
 
 if __name__ == '__main__':
     main()
