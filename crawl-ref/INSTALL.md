@@ -384,8 +384,10 @@ This build is tested on Visual Studio 2017 15.9.60 on Windows 10 and 11.
 Tested configurations are `Debug/Release;Console/Tiles;Win32/x64`, Python and
 Lua support for editing are untested, and a webtiles build is not available.
 
-1. To get the DCSS source, follow the steps in the [Getting The
-   Source](#getting-the-source) section above.
+1. You will need to download Crawl's source code, as well as its submodules.
+    You can do this by opening a terminal such as command prompt and navigating
+    to the directory you would like to download the code into and then running
+    the following commands.
 
     ```sh
     git clone https://github.com/crawl/crawl.git
