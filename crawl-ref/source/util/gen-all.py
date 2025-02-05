@@ -33,6 +33,12 @@ def run_if_needed(generated_files, input_files, command):
     if(result != 0):
         sys.exit(result)
 
+def copy_if_needed(source, destination):
+    generated_files = [destination]
+    input_files = [source]
+    if needs_running(generated_files, input_files):
+        shutil.copyfile(source, destination)
+
 def gen_all(perl):
     python = sys.executable
 
@@ -73,10 +79,7 @@ def gen_all(perl):
 
     # Generate a .txt version because some servers need it
     # TODO: actually render this
-    generated_files = ['../docs/quickstart.txt']
-    input_files = ['../docs/quickstart.md']
-    if needs_running(generated_files, input_files):
-        shutil.copyfile(input_files[0], generated_files[0])
+    copy_if_needed('../docs/quickstart.md', '../docs/quickstart.txt')
 
     generated_files = ['../docs/crawl_manual.txt']
     input_files = ['util/unrest.pl', '../docs/crawl_manual.rst']
@@ -85,7 +88,7 @@ def gen_all(perl):
             command = [perl] + input_files
             result = subprocess.call(command, stdout=file)
             if(result != 0):
-                sys.exit(result.returncode)
+                sys.exit(result)
 
     ##########################################################################
     # Based on lines 1834-1853 in Makefile
@@ -121,6 +124,57 @@ def gen_all(perl):
         glob.glob('util/mon-gen/*.txt'))
     command = [python, input_files[0], 'dat/mons/', 'util/mon-gen/'] + generated_files
     run_if_needed(generated_files, input_files, command)
+
+    build_rtiles()
+
+def build_rtiles():
+    os.chdir('rltiles')
+
+    tile_gen = "../tilegen.exe"
+    if not os.path.isfile(tile_gen):
+        print('Error: could not find tilegen.exe', file=sys.stderr)
+        sys.exit(1)
+
+    inputs = ['main', 'dngn', 'floor', 'wall', 'feat', 'player',
+        'gui', 'icons']
+    extra_dependencies = {
+        'main': ['dc-item.txt', 'dc-unrand.txt', 'dc-corpse.txt',
+            'dc-misc.txt'],
+
+        'player': ['dc-mon.txt', 'dc-tentacles.txt', 'dc-zombie.txt',
+            'dc-demon.txt'],
+
+        'gui': ['dc-spells.txt', 'dc-skills.txt', 'dc-commands.txt',
+            'dc-abilities.txt', 'dc-invocations.txt', 'dc-mutations.txt']
+    }
+
+    for tile_type in inputs:
+        generated_files = [tile_type + '.png',
+            'tiledef-' + tile_type + '.h',
+            'tiledef-' + tile_type + '.cc',
+            'tileinfo-' + tile_type + '.js']
+        input_files = ([tile_gen, 'dc-' + tile_type + '.txt']
+            + extra_dependencies.get(tile_type, []))
+        command = input_files[:2]
+        should_run = False
+        try:
+            should_run = needs_running(generated_files, input_files)
+        except FileNotFoundError as e:
+            print('Error: missing file rltiles/', e.filename, '"', sep='',
+                file=sys.stderr)
+            sys.exit(1)
+        if should_run:
+            print('Generating', generated_files[0])
+            sys.stdout.flush()
+            result = subprocess.call(command)
+            if(result != 0):
+                sys.exit(result)
+
+    os.chdir('..')
+
+    for tile_type in inputs:
+        copy_if_needed('rltiles/' + tile_type + '.png',
+            'dat/tiles/' + tile_type + '.png')
 
 def main():
     perl = shutil.which('perl')
