@@ -236,6 +236,8 @@ int mutant_beast_tier(int xl);
 int mons_avg_hp(monster_type mc, int scale = 1);
 int mons_max_hp(monster_type mc);
 int exper_value(const monster& mon, bool real = true, bool legacy = false);
+bool mon_needs_special_xp_handling(const monster_type mc);
+int special_xp_handle(const monster& mon, int base_xp);
 
 int hit_points(int avg_hp, int scale = 10);
 
