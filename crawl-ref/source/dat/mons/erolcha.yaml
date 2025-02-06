@@ -2,7 +2,7 @@ name: "Erolcha"
 glyph: {char: "O", colour: lightblue}
 flags: [see_invis, speaks, warm_blood, unique, female]
 xp_mult: 50
-species: ogre
+species: oni
 will: 60
 attacks:
  - {type: hit, damage: 30}

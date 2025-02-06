@@ -4211,7 +4211,7 @@ Erica triumphant
 @The_monster@ begins burbling mirthfully and uncontrollably.
 ## END Erica ##
 %%%%
-############ EROLCHA ### A vicious ogre capable of casting
+############ EROLCHA ### A drunken oni torturer
 Erolcha
 
 @_Erolcha_common_@
@@ -4221,38 +4221,38 @@ w:5
 %%%%
 _Erolcha_common_
 
-@The_monster@ roars.
+@The_monster@ babbles incomprehensibly.
 
-@The_monster@ growls.
+@The_monster@ snorts.
 
-VISUAL:@The_monster@ tries to grin evilly.
+@The_monster@ hiccups.
 
-@The_monster@ screams @at_foe@, "DIE!"
+VISUAL:@The_monster@ almost stumbles over @possessive@ feet.
 
-@The_monster@ screams @at_foe@, "Lunch!"
+@The_monster@ slurs @at_foe@, "I'm gonna... gon... Eh?"
 
-@The_monster@ screams @at_foe@, "Erolcha kill you!"
+@The_monster@ mutters @at_foe@, "Ohh, I need a drink..."
+
+@The_monster@ slurs @at_foe@, "Ohh, yer done for, y-you are..."
+
 %%%%
 _Erolcha_rare_
 
-@The_monster@ screams @at_foe@, "Eat!"
+@The_monster@ mutters @at_foe@, "I'm gonna get... Both of you! *hic*"
 
-@The_monster@ screams @at_foe@, "Stand! Erolcha hit you!"
+@The_monster@ screams @at_foe@, "Go away, I have a headache!"
 
-@The_monster@ screams @at_foe@, "Blood!"
+@The_monster@ slurs @at_foe@, "I'm sending you to...! Uhh..."
 
-@The_monster@ screams @at_foe@, "Erolcha crush your head!"
+@The_monster@ mumbles @at_foe@, "Souls for... uhh..."
 
-@The_monster@ screams @at_foe@, "Erolcha happy to kill you!"
-
-@The_monster@ screams @at_foe@, "Erolcha angry!"
 %%%%
 Erolcha banished
 
 __NONE
 
 w:1
-@The_monster@ screams, "Wait! Erolcha supposed to do that!"
+@The_monster@ stammers, "Huh?! I'm supposed to..."
 
 ## END Erolcha ##
 %%%%
