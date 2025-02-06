@@ -3018,6 +3018,7 @@ language = <two-letter language code>
         da: Danish
         de: German
         el: Greek
+        eo: Esperanto
         es: Spanish
         fi: Finnish
         fr: French
