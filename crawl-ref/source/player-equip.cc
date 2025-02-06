@@ -1050,11 +1050,11 @@ void player_equip_set::meld_equipment(int slots, bool skip_effects)
             comma_separated_line(meld_msg.begin(), meld_msg.end()).c_str(),
             meld_msg.size() > 1 ? "" : "s");
 
+    update();
+
     // Now, simultaneously do unequip effects for all melded items.
     for (item_def* meld_item : was_melded)
         unequip_effect(meld_item->link, true, true);
-
-    update();
 }
 
 /**
@@ -1156,13 +1156,14 @@ void player_equip_set::handle_unmelding(vector<item_def*>& to_unmeld, bool skip_
                 unmeld_msg.size() > 1 ? "" : "s");
     }
 
+    update();
+
     // Now, simultaneously do unequip effects for all melded items.
     if (!skip_effects)
     {
         for (item_def* meld_item : to_unmeld)
             equip_effect(meld_item->link, true, true);
     }
-    update();
 }
 
 /**
