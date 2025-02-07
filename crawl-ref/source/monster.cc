@@ -4298,14 +4298,9 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         if (agent && agent->is_player()
             && mons_class_gives_xp(type)
             && (temp_attitude() == ATT_HOSTILE || has_ench(ENCH_FRENZIED))
-            && type != MONS_NAMELESS // hack - no usk piety for miscasts
-            && flavour != BEAM_SHARED_PAIN
-            && flavour != BEAM_STICKY_FLAME
-            && kill_type != KILLED_BY_POISON
-            && kill_type != KILLED_BY_CLOUD
-            && kill_type != KILLED_BY_BEOGH_SMITING)
+            && type != MONS_NAMELESS) // hack - no usk piety for miscasts
         {
-           did_hurt_conduct(DID_HURT_FOE, *this, amount);
+           did_hurt_monster(*this, amount, flavour, kill_type);
         }
 
         if (amount && !is_firewood()
