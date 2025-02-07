@@ -2543,11 +2543,15 @@ sow
 
 horse
 
+donkey
+
 stair
 
 wrapper
 
 King
+
+Queen
 
 infinity
 
