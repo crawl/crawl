@@ -2,7 +2,7 @@ enum: SP_GHOUL
 monster: MONS_GHOUL
 name: Ghoul
 adjective: Ghoulish
-difficulty: Intermediate
+difficulty: False
 difficulty_priority: 50
 species_flags:
   - no_hair
@@ -55,14 +55,5 @@ mutations:
     MUT_COLD_RESISTANCE: 1
     MUT_CLAWS: 1
     MUT_DEVOUR_ON_KILL: 1
-recommended_jobs:
-  - warper
-  - gladiator
-  - monk
-  - necromancer
-  - ice elementalist
-  - earth elementalist
-recommended_weapons:
-  - unarmed combat
 
 orc_name: Rotting Orc

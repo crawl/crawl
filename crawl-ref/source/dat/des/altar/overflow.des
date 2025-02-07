@@ -144,8 +144,6 @@ function species_mock(e)
     return "giant cockroach"
   elseif you.race() == "Gargoyle" then
     return "earth elemental"
-  elseif you.race() == "Ghoul" then
-    return "bloated husk"
   elseif you.race() == "Kobold" then
     return "boggart"
   elseif you.race() == "Merfolk" then

@@ -48,11 +48,6 @@ Felid
 
 Felids are many-lived sentient cats. They cannot use armour or weapons.
 %%%%
-Ghoul
-
-Ghouls are undead creatures, damned to rot eternally. They have sharp claws,
-and they heal from the death of the living.
-%%%%
 Gargoyle
 
 Made of living stone, Gargoyles have a preternatural affinity for the earth.

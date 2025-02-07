@@ -51,7 +51,9 @@ enum species_type
     SP_SPRIGGAN,
     SP_MINOTAUR,
     SP_DEMONSPAWN,
+#if TAG_MAJOR_VERSION == 34
     SP_GHOUL,
+#endif
     SP_TENGU,
     SP_MERFOLK,
 #if TAG_MAJOR_VERSION == 34

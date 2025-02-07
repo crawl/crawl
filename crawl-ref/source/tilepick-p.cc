@@ -653,12 +653,12 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_MINOTAUR;
     case SP_DEMONSPAWN:
         return TILEP_BASE_DEMONSPAWN;
+#if TAG_MAJOR_VERSION == 34
     case SP_GHOUL:
         return TILEP_BASE_GHOUL;
-    case SP_TENGU:
-#if TAG_MAJOR_VERSION == 34
     case SP_MAYFLYTAUR:
 #endif
+    case SP_TENGU:
         return TILEP_BASE_TENGU;
     case SP_MERFOLK:
         return TILEP_BASE_MERFOLK;
@@ -774,10 +774,10 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
             break;
 #if TAG_MAJOR_VERSION == 34
         case SP_HILL_ORC:
+        case SP_GHOUL:
 #endif
         case SP_MINOTAUR:
         case SP_DEMONSPAWN:
-        case SP_GHOUL:
         case SP_KOBOLD:
         case SP_MUMMY:
         case SP_FORMICID:

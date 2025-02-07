@@ -2042,8 +2042,6 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Fire Dragon";
             else if (species == SP_MUMMY && skill_rank == 5)
                 result = "Highly Combustible";
-            else if (species == SP_GHOUL && skill_rank == 5)
-                result = "Searing Wretch";
             else if (species == SP_GARGOYLE && skill_rank == 5)
                 result = "Molten";
             else if (species == SP_DJINNI && skill_rank == 5)
