@@ -1176,7 +1176,7 @@ static ProceduralSample _abyss_grid(const coord_def &p)
         levelLayout = new LevelLayout(lid, 5, rivers);
         complex_vec[0] = levelLayout;
         complex_vec[1] = &rivers; // const
-        abyssLayout = new WorleyLayout(23571113, complex_vec, 6.1);
+        abyssLayout = new WorleyLayout(23571113, complex_vec, 6.1f);
         if (is_existing_level(lid))
         {
             auto &vault_list =  you.vault_list[level_id::current()];
