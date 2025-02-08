@@ -1990,7 +1990,7 @@ SizeReq TextEntry::_get_preferred_size(Direction dim, int /*prosp_width*/)
 int TextEntry::padding_size()
 {
     const int line_height = m_font->char_height(false);
-    const float pad_amount = 0.2;
+    const float pad_amount = 0.2f;
     return (static_cast<int>(line_height*pad_amount) + 1)/2;
 }
 #endif
