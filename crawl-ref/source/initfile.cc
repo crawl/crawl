@@ -3992,12 +3992,7 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
         merge_lists(force_autopickup, new_entries, state.caret_equal());
         return true;
     }
-#ifndef _MSC_VER
-    // break if-else chain on broken Microsoft compilers with stupid nesting limits
-    else
-#endif
-
-    if (key == "autoinscribe")
+    else if (key == "autoinscribe")
     {
         if (state.plain())
             autoinscriptions.clear();

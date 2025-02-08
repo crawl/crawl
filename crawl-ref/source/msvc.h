@@ -12,20 +12,22 @@
 #include <math.h>
 
 #define fileno _fileno
-#define snprintf _snprintf
 #define strdup _strdup
 #define strcasecmp _stricmp
-#define strncasecmp _strnicmp
 #define strnicmp _strnicmp
 #define ftruncate _chsize
 #define putenv _putenv
-#define strtoll _strtoi64
 
 // These are not defined in MSVC version of stat.h
 #define        S_IWUSR        S_IWRITE
 #define        S_IRUSR        S_IREAD
 
+/* Disable warning about:
+   4290: the way VC handles the throw() specifier
+   4267: "possible loss of data" when switching data types without a cast
+ */
 #pragma warning(disable : 4290)
+#pragma warning (disable: 4267)
 #pragma warning(disable : 4351)
 // bool -> int
 #pragma warning(disable : 4800)
@@ -39,50 +41,11 @@
 // POSIX deprecation warnings
 #pragma warning(disable : 4996)
 
-static inline double round(double x)
-{
-    if (x >= 0.0)
-        return floor(x + 0.5);
-    else
-        return ceil(x - 0.5);
-}
-
-static inline double sqrt(int x)
-{
-    return sqrt((double)x);
-}
-
-static inline double atan2(int x, int y)
-{
-    return atan2((double)x, (double)y);
-}
-
-static inline double pow(int x, double y)
-{
-    return pow((double)x, y);
-}
-
-static inline double pow(int x, int y)
-{
-    return pow((double)x, y);
-}
-
-static inline double log(int x)
-{
-    return log((double)x);
-}
-
-static inline double log2(double n)
-{
-    return log(n) / log(2.0);
-}
-
 //this is targeting for struct member name in store.h, nothing else gets affected as of 0.9.0
 #define _int64 var_int64
 
 //missing in sys/types.h
 #define mode_t unsigned short
-
 typedef ptrdiff_t ssize_t;
 
 #endif /* defined(TARGET_COMPILER_VC) */
