@@ -854,7 +854,7 @@ static int _get_apostle_revival_cost()
     return amount;
 }
 
-static apostle_data& _get_saved_apostle(const monster apostle)
+static apostle_data& _get_saved_apostle(const monster& apostle)
 {
     for (unsigned int i = 1; i < apostles.size(); ++i)
     {
@@ -863,7 +863,7 @@ static apostle_data& _get_saved_apostle(const monster apostle)
     }
 
     // Should be impossible to reach here unless we did something wrong
-    ASSERT(false);
+    die("apostle %s not found", apostle.name(DESC_THE).c_str());
 }
 
 int get_num_apostles()

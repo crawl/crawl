@@ -92,7 +92,7 @@ static mon_aura_data _get_aura_for(const monster& mon)
             return aura;
     }
 
-    ASSERT(false);
+    die("no aura found for %s", mon.name(DESC_THE).c_str());
 }
 
 static mon_aura_data _get_aura_from_key(string player_key)
@@ -103,7 +103,7 @@ static mon_aura_data _get_aura_from_key(string player_key)
             return aura;
     }
 
-    ASSERT(false);
+    die("aura %s not found", player_key.c_str());
 }
 
 bool mons_has_aura(const monster& mon)
