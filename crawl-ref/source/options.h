@@ -320,7 +320,7 @@ struct base_game_options
     virtual void reset_options();
 
     base_game_options(base_game_options const& other);
-    base_game_options(base_game_options &&other) noexcept;
+    base_game_options(base_game_options &&other) noexcept = delete;
     base_game_options& operator=(base_game_options const& other);
 
     void read_options(LineInput &, bool runscripts,
