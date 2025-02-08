@@ -2727,10 +2727,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     // Finally, try zaps.
     zap_type zap = spell_to_zap(spell);
     if (zap != NUM_ZAPS)
-    {
-        return zapping(zap, spell_zap_power(spell, powc),
-                       beam, true, nullptr, fail);
-    }
+        return zapping(zap, powc,  beam, true, nullptr, fail);
 
     return spret::none;
 }

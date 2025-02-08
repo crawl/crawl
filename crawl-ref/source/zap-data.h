@@ -1307,7 +1307,7 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
     false,
 },
 
-// player spellpower is capped to 50 in spl-zap.cc:spell_zap_power.
+// player spellpower is capped to 50 in spl-zap.cc:spell_zap_power_cap.
 _mon_hex_zap(ZAP_HIBERNATION, BEAM_HIBERNATION),
 
 {

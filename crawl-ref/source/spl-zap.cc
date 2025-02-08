@@ -225,15 +225,6 @@ spell_type zap_to_spell(zap_type zap)
     return SPELL_NO_SPELL;
 }
 
-int spell_zap_power(spell_type spell, int pow)
-{
-    switch (spell)
-    {
-    default:
-        return pow;
-    }
-}
-
 int spell_zap_power_cap(spell_type spell)
 {
     const zap_type zap = spell_to_zap(spell);
