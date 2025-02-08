@@ -1568,9 +1568,8 @@ static void _on_enter_form(transformation which_trans)
     }
 }
 
-void set_form(transformation which_trans, int dur)
+void set_form(transformation which_trans, int dur, bool scale_hp)
 {
-    const transformation old_form = you.form;
     you.form = which_trans;
     you.duration[DUR_TRANSFORMATION] = dur * BASELINE_DELAY;
     update_player_symbol();
@@ -1584,17 +1583,6 @@ void set_form(transformation which_trans, int dur)
     if (dex_mod)
         notify_stat_change(STAT_DEX, dex_mod, true);
 
-    // Don't scale HP when going from nudity to a talisman form
-    // or vice versa. This is to discourage regenerating in a -90%
-    // underskilled talisman form and scaling back up to full, or
-    // leaving a +HP form to regen.
-    // Do scale HP when entering or leaving eg tree form, regardless
-    // of whether you're going from a talisman form or not.
-    const bool leaving_default = you.default_form == old_form
-                                 && which_trans == transformation::none;
-    const bool entering_default = you.default_form == which_trans
-                                 && old_form == transformation::none;
-    const bool scale_hp = !entering_default && !leaving_default;
     calc_hp(scale_hp);
 
     you.redraw_evasion      = true;
@@ -1603,7 +1591,7 @@ void set_form(transformation which_trans, int dur)
     quiver::set_needs_redraw();
 }
 
-static void _enter_form(int pow, transformation which_trans)
+static void _enter_form(int pow, transformation which_trans, bool scale_hp = true)
 {
     const bool was_flying = you.airborne();
 
@@ -1618,7 +1606,7 @@ static void _enter_form(int pow, transformation which_trans)
     // changes) before adjusting the player to be transformed.
     you.equipment.meld_equipment(get_form(which_trans)->blocked_slots);
 
-    set_form(which_trans, _transform_duration(which_trans, pow));
+    set_form(which_trans, _transform_duration(which_trans, pow), scale_hp);
 
     if (you.digging && !form_keeps_mutations(which_trans))
     {
@@ -1763,9 +1751,9 @@ bool transform(int pow, transformation which_trans, bool involuntary,
     }
 
     if (you.form != transformation::none)
-        untransform(true);
+        untransform(true, !using_talisman);
 
-    _enter_form(pow, which_trans);
+    _enter_form(pow, which_trans, !using_talisman);
 
     return true;
 }
@@ -1775,8 +1763,13 @@ bool transform(int pow, transformation which_trans, bool involuntary,
  * form.
  * @param skip_move      If true, skip any move that was in progress before
  *                       the transformation ended.
+ * @param scale_hp       Whether keep the player's HP percentage the same if
+ *                       their max HP changes. (Should be false for
+ *                       talisman-related shapeshifting, to prevent exploits
+ *                       such as instantly healing via entering a -90% HP form
+ *                       and then leaving it again immediately.)
  */
-void untransform(bool skip_move)
+void untransform(bool skip_move, bool scale_hp)
 {
     const transformation old_form = you.form;
 
@@ -1787,7 +1780,7 @@ void untransform(bool skip_move)
     if (!message.empty())
         mprf(MSGCH_DURATION, "%s", message.c_str());
 
-    set_form(transformation::none, 0);
+    set_form(transformation::none, 0, scale_hp);
 
     const int str_mod = get_form(old_form)->str_mod;
     const int dex_mod = get_form(old_form)->dex_mod;
@@ -1876,14 +1869,14 @@ void untransform(bool skip_move)
 void return_to_default_form()
 {
     if (you.default_form == transformation::none)
-        untransform();
+        untransform(false, false);
     else
     {
         // Forcibly break out of forced forms at this point (since this should
         // only be called in situations where those should end and transform()
         // will refuse to do that on its own)
         if (you.transform_uncancellable)
-            untransform(true);
+            untransform(true, false);
         transform(0, you.default_form, true, true);
     }
     ASSERT(you.form == you.default_form);

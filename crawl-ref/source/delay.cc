@@ -947,7 +947,7 @@ void TransformDelay::finish()
     if (form == transformation::none)
     {
         unset_default_form();
-        untransform();
+        untransform(false, false);
         return;
     }
 
