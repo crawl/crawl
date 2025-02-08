@@ -6753,7 +6753,7 @@ string player::no_tele_reason(bool blinking, bool temp) const
                 worn_notele.push_back(item->name(DESC_A));
         }
 
-        if (worn_notele.size() > (problems.empty() ? 3 : 1))
+        if (worn_notele.size() > static_cast<size_t>(problems.empty() ? 3 : 1))
         {
             problems.push_back(
                 make_stringf("wearing %s %s preventing teleportation",
