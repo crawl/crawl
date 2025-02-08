@@ -1296,7 +1296,7 @@ static bool verify_file_version(const string &file, time_t mtime)
                && word == WORD_LEN
                && t == mtime;
     }
-    catch (short_read_exception &E)
+    catch (const short_read_exception&)
     {
         fclose(fp);
         return false;

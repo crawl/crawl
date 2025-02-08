@@ -213,6 +213,9 @@ static bool _abyss_place_map(const map_def *mdef)
     }
     catch (dgn_veto_exception &e)
     {
+#ifndef DEBUG_DIAGNOSTICS
+        UNUSED(e);
+#endif
         dprf(DIAG_ABYSS, "Abyss map placement vetoed: %s", e.what());
     }
     return false;

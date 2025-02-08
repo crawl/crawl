@@ -2518,7 +2518,7 @@ void UIRoot::layout()
         {
             m_root.allocate_region({0, 0, width, height});
         }
-        catch (const RestartAllocation &ex)
+        catch (const RestartAllocation&)
         {
         }
 

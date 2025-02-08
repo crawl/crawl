@@ -391,7 +391,7 @@ static void _launch_game_loop()
             game_ended = false;
             _launch_game();
         }
-        catch (game_ended_condition &ge)
+        catch (const game_ended_condition &ge)
         {
             game_ended = true;
             crawl_state.last_game_exit = ge;
@@ -402,11 +402,11 @@ static void _launch_game_loop()
             if (ge.exit_reason == game_exit::save)
                 crawl_state.last_type = GAME_TYPE_UNSPECIFIED;
         }
-        catch (ext_fail_exception &fe)
+        catch (const ext_fail_exception &fe)
         {
             end(1, false, "%s", fe.what());
         }
-        catch (short_read_exception &E)
+        catch (const short_read_exception&)
         {
             end(1, false, "Error: truncation inside the save file.\n");
         }
