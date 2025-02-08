@@ -2815,7 +2815,7 @@ bool activate_talent(const talent& tal, dist *target)
             // even if that's just a cooldown or small amounts of HP.
             // No rapidly wall-jumping or renaming your ancestor, alas.
             if (is_religious_ability(abil.ability)
-                && (abil.piety_cost > 0 || (abil.flags & abflag::exhaustion)
+                && (abil.piety_cost || (abil.flags & abflag::exhaustion)
                     || (abil.flags & abflag::max_hp_drain)
                     || (abil.ability == ABIL_ZIN_RECITE)
                     || (abil.flags & abflag::card) || (abil.flags & abflag::gold)

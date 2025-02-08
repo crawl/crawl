@@ -443,7 +443,7 @@ class DominoSet
                 else
                     tiling[pt] = rng(adjacencies_.size());
 
-                has_conflicts |= Conflicts(pt, tiling);
+                has_conflicts = has_conflicts || Conflicts(pt, tiling);
             }
 
             // If we were unable to constructively tile the plane
