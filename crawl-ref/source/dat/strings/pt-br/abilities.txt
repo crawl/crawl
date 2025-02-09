@@ -328,7 +328,7 @@ Smiting
 Julgamento Divino
 %%%%
 Recall Orcish Followers
-Chamar Seguidores Orcs
+Reunir Seguidores Orcs
 %%%%
 Give Item to Named Follower
 Dar Item ao Seguidor Nomeado
@@ -609,7 +609,7 @@ None
 Nenhum
 %%%%
 Free
-Livre
+Grátis
 %%%%
 Purity
 Pureza
@@ -698,7 +698,7 @@ moderado
 # Used like this: "Gold: <amount>
 %%%%
 free
-livre
+Grátis
 %%%%
 
 # used for both piety and gold
