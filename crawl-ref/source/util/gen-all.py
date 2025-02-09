@@ -26,11 +26,11 @@ def needs_running(generated_files, input_files):
 
 def run_if_needed(generated_files, input_files, command):
     needs_to_run = needs_running(generated_files, input_files)
-    if(not needs_to_run):
+    if not needs_to_run:
         return
 
     result = subprocess.call(command)
-    if(result != 0):
+    if result != 0:
         sys.exit(result)
 
 def copy_if_needed(source, destination):
@@ -47,13 +47,13 @@ def gen_all(perl):
     #
     generated_files = ['species-data.h', 'aptitudes.h', 'species-groups.h', 'species-type.h']
     input_files = (['util/species-gen.py'] + glob.glob('dat/species/*.yaml') +
-        glob.glob('util/species-gen/*.txt'))
+                   glob.glob('util/species-gen/*.txt'))
     command = [python, input_files[0], 'dat/species/', 'util/species-gen/'] + generated_files
     run_if_needed(generated_files, input_files, command)
 
     generated_files = ['job-data.h', 'job-groups.h', 'job-type.h']
     input_files = (['util/job-gen.py'] + glob.glob('dat/jobs/*.yaml') +
-        glob.glob('util/job-gen/*.txt'))
+                   glob.glob('util/job-gen/*.txt'))
     command = [python, input_files[0], 'dat/jobs/', 'util/job-gen/'] + generated_files
     run_if_needed(generated_files, input_files, command)
 
@@ -62,13 +62,13 @@ def gen_all(perl):
     #
     generated_files = ['../docs/aptitudes.txt']
     input_files = ['util/gen-apt.pl', '../docs/template/apt-tmpl.txt',
-        'species-data.h', 'aptitudes.h']
+                   'species-data.h', 'aptitudes.h']
     command = [perl, input_files[0]] + generated_files + input_files[1:]
     run_if_needed(generated_files, input_files, command)
 
     generated_files = ['../docs/aptitudes-wide.txt']
     input_files = ['util/gen-apt.pl', '../docs/template/apt-tmpl-wide.txt',
-        'species-data.h', 'aptitudes.h']
+                   'species-data.h', 'aptitudes.h']
     command = [perl, input_files[0]] + generated_files + input_files[1:]
     run_if_needed(generated_files, input_files, command)
 
@@ -99,6 +99,12 @@ def gen_all(perl):
     command = [perl, input_files[0]]
     run_if_needed(generated_files, input_files, command)
 
+    generated_files = ['mon-data.h']
+    input_files = (['util/mon-gen.py'] + glob.glob('dat/mons/*.yaml') +
+                   glob.glob('util/mon-gen/*.txt'))
+    command = [python, input_files[0], 'dat/mons/', 'util/mon-gen/'] + generated_files
+    run_if_needed(generated_files, input_files, command)
+
     generated_files = ['mon-mst.h']
     input_files = ['util/gen-mst.pl', 'mon-spell.h', 'mon-data.h']
     command = [perl, input_files[0]]
@@ -119,12 +125,6 @@ def gen_all(perl):
     command = [perl, input_files[0]]
     run_if_needed(generated_files, input_files, command)
 
-    generated_files = ['mon-data.h']
-    input_files = (['util/mon-gen.py'] + glob.glob('dat/mons/*.yaml') +
-        glob.glob('util/mon-gen/*.txt'))
-    command = [python, input_files[0], 'dat/mons/', 'util/mon-gen/'] + generated_files
-    run_if_needed(generated_files, input_files, command)
-
     build_rtiles()
 
 def build_rtiles():
@@ -136,32 +136,32 @@ def build_rtiles():
         sys.exit(1)
 
     inputs = ['main', 'dngn', 'floor', 'wall', 'feat', 'player',
-        'gui', 'icons']
+              'gui', 'icons']
     extra_dependencies = {
         'main': ['dc-item.txt', 'dc-unrand.txt', 'dc-corpse.txt',
-            'dc-misc.txt'],
+                 'dc-misc.txt'],
 
         'player': ['dc-mon.txt', 'dc-tentacles.txt', 'dc-zombie.txt',
-            'dc-demon.txt'],
+                   'dc-demon.txt'],
 
         'gui': ['dc-spells.txt', 'dc-skills.txt', 'dc-commands.txt',
-            'dc-abilities.txt', 'dc-invocations.txt', 'dc-mutations.txt']
+                'dc-abilities.txt', 'dc-invocations.txt', 'dc-mutations.txt']
     }
 
     for tile_type in inputs:
         generated_files = [tile_type + '.png',
-            'tiledef-' + tile_type + '.h',
-            'tiledef-' + tile_type + '.cc',
-            'tileinfo-' + tile_type + '.js']
+                           'tiledef-' + tile_type + '.h',
+                           'tiledef-' + tile_type + '.cc',
+                           'tileinfo-' + tile_type + '.js']
         input_files = ([tile_gen, 'dc-' + tile_type + '.txt']
-            + extra_dependencies.get(tile_type, []))
+                       + extra_dependencies.get(tile_type, []))
         command = input_files[:2]
         should_run = False
         try:
             should_run = needs_running(generated_files, input_files)
         except FileNotFoundError as e:
             print('Error: missing file rltiles/', e.filename, '"', sep='',
-                file=sys.stderr)
+                  file=sys.stderr)
             sys.exit(1)
         if should_run:
             print('Generating', generated_files[0])
@@ -174,7 +174,7 @@ def build_rtiles():
 
     for tile_type in inputs:
         copy_if_needed('rltiles/' + tile_type + '.png',
-            'dat/tiles/' + tile_type + '.png')
+                       'dat/tiles/' + tile_type + '.png')
 
 def main():
     perl = shutil.which('perl')
