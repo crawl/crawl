@@ -2468,6 +2468,10 @@ int exper_value(const monster& mon, bool real, bool legacy)
     else
         x_val = _mons_exp_mod(mc);
 
+    // More complex calculation for special (highly variable) monsters
+    if (mon_needs_special_xp_handling(mc))
+        return = special_xp_handle(mon, x_val);
+
     // Scale weakly by the monster's actual max hp as a percentage of
     // average max hp. This randomizes xp values slightly.
     // Derived undead skip this
@@ -2481,10 +2485,6 @@ int exper_value(const monster& mon, bool real, bool legacy)
     // Scale starcursed mass exp by what percentage of the whole it represents
     if (mon.type == MONS_STARCURSED_MASS)
         x_val = (x_val * mon.blob_size) / 12;
-
-    // More complex calculation for special (highly variable) monsters
-    if (mon_needs_special_xp_handling(mc))
-        x_val = special_xp_handle(mon, x_val);
 
     // Slime creature exp hack part 2: Scale exp back up by the number
     // of blobs merged. -cao
@@ -2507,6 +2507,7 @@ bool mon_needs_special_xp_handling(const monster_type mc)
         case MONS_PANDEMONIUM_LORD:
         case MONS_DANCING_WEAPON:
         case MONS_ORC_APOSTLE:
+        case MONS_MUTANT_BEAST:
             return true;
         default:
             return false;
@@ -2521,18 +2522,22 @@ int special_xp_handle(const monster& mon, int base_xp)
     const int hd = mon.get_experience_level();
     const bool spellcaster = mon.has_spells();
 
+    // scale with HD nonlinearly (gross)
+    int hd_factor = hd * (25 + hd) / 25;
+
     int diff = 100;
 
-    // weighting of spells by spell level and casting frequency
+    // Bonus difficulty for casting "strong" spells
     if (spellcaster)
     {
         int spell_danger = 0;
         for (const mon_spell_slot &slot : mon.spells)
         {
-            spell_danger += spell_difficulty(slot.spell) * slot.freq;
+            if (spell_difficulty(slot.spell) > 4)
+                spell_danger += slot.freq;
         }
 
-        diff += spell_danger / 10;
+        diff += spell_danger / 2;
     }
 
     // speed and melee damage
@@ -2553,13 +2558,10 @@ int special_xp_handle(const monster& mon, int base_xp)
         diff /= 10;
     }
 
-    // monster HD.
-    diff = diff * (15 + hd) / 30;
-
-    // clamp to somewhat sane values (currently 50-250%)
+    // clamp difficulty mod to somewhat sane values (currently 50-250%)
     diff = max(min(diff, 250), 50);
 
-    return base_xp * diff / 100;
+    return base_xp * hd_factor * diff / 100;
 }
 
 static monster_type _random_mons_between(monster_type min, monster_type max)
