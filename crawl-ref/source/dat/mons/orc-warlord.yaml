@@ -1,7 +1,7 @@
 name: "orc warlord"
 glyph: {char: "o", colour: lightcyan}
 flags: [fighter, speaks, warm_blood]
-xp_mult: 11
+xp_mult: 1144
 species: orc
 will: 60
 attacks:

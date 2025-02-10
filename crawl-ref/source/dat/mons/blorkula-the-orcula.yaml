@@ -3,7 +3,7 @@ glyph: {char: "o", colour: brown}
 flags: [speaks, see_invis, warm_blood, unique, male, no_zombie]
 resists: {cold: 1}
 holiness: [undead]
-xp_mult: 15
+xp_mult: 224
 species: orc
 will: 20
 attacks:

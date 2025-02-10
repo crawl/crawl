@@ -1,7 +1,7 @@
 name: "pearl dragon"
 glyph: {char: "D", colour: etc_holy}
 flags: [flies, see_invis, warm_blood]
-xp_mult: 16
+xp_mult: 2256
 genus: dragon
 holiness: [holy]
 will: 160

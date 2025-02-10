@@ -1,6 +1,7 @@
 name: "draconian knight"
 glyph: {char: "q", colour: lightblue}
 flags: [fighter, speaks, cold_blood]
+xp_mult: 1280
 species: draconian
 will: 40
 attacks:

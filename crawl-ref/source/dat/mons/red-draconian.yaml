@@ -2,6 +2,7 @@ name: "red draconian"
 glyph: {char: "d", colour: lightred}
 flags: [speaks, cold_blood]
 resists: {fire: 1}
+xp_mult: 997
 genus: draconian
 will: 40
 attacks:

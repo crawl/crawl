@@ -1,6 +1,7 @@
 name: "flayed ghost"
 glyph: {char: "W", colour: red}
 flags: [flies, speaks, insubstantial]
+xp_mult: 715
 genus: phantom
 holiness: [undead]
 will: 60

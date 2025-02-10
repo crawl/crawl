@@ -2,7 +2,7 @@ name: "ice beast"
 glyph: {char: "Y", colour: lightblue}
 flags: [no_skeleton]
 resists: {poison: 1, fire: -1, cold: 3}
-xp_mult: 13
+xp_mult: 130
 will: 20
 attacks:
  - {type: hit, flavour: cold, damage: 5}

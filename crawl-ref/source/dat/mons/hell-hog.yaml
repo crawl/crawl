@@ -1,6 +1,7 @@
 name: "hell hog"
 glyph: {char: "h", colour: lightred}
 resists: {fire: 3}
+xp_mult: 804
 genus: hog
 holiness: [demonic]
 will: 40

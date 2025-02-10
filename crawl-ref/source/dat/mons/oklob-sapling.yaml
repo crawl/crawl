@@ -2,6 +2,7 @@ name: "oklob sapling"
 glyph: {char: "P", colour: lightcyan}
 flags: [stationary]
 resists: {poison: 1, corr: 3}
+xp_mult: 60
 species: oklob_plant
 genus: plant
 holiness: [plant]

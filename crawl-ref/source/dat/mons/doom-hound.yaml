@@ -1,6 +1,7 @@
 name: "doom hound"
 glyph: {char: "h", colour: green}
 flags: [see_invis, unblindable]
+xp_mult: 2059
 genus: hound
 holiness: [demonic]
 will: 20

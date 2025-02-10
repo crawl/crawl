@@ -1,6 +1,7 @@
 name: "frilled lizard"
 glyph: {char: "l", colour: green}
 flags: [cold_blood]
+xp_mult: 1
 genus: giant_lizard
 will: 0
 attacks:

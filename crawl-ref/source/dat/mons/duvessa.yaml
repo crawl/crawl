@@ -1,7 +1,7 @@
 name: "Duvessa"
 glyph: {char: "e", colour: blue}
 flags: [fighter, speaks, warm_blood, unique, female]
-xp_mult: 15
+xp_mult: 146
 species: elf
 will: 40
 attacks:

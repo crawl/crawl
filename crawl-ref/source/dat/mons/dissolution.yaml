@@ -2,7 +2,7 @@ name: "Dissolution"
 glyph: {char: "J", colour: lightmagenta}
 flags: [eat_doors, see_invis, unblindable, amorphous, speaks, burrows, unique, acid_splash, fast_regen, no_skeleton, gender_neutral]
 resists: {poison: 1, corr: 3}
-xp_mult: 60
+xp_mult: 7370
 species: jelly
 will: 120
 attacks:

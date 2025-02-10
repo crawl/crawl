@@ -2,7 +2,7 @@ name: "weeping skull"
 glyph: {char: "z", colour: lightblue}
 flags: [flies]
 resists: {cold: 1}
-xp_mult: 9
+xp_mult: 98
 holiness: [undead]
 will: 20
 attacks:

@@ -1,6 +1,7 @@
 name: "Robin"
 glyph: {char: "g", colour: lightcyan}
 flags: [speaks, warm_blood, unique, gender_neutral]
+xp_mult: 15
 species: hobgoblin
 genus: goblin
 will: 10

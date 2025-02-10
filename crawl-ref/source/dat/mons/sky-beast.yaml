@@ -2,7 +2,7 @@ name: "sky beast"
 glyph: {char: "F", colour: cyan}
 flags: [flies, no_skeleton]
 resists: {elec: 3}
-xp_mult: 13
+xp_mult: 130
 will: 20
 attacks:
  - {type: hit, flavour: airstrike, damage: 6}

@@ -1,6 +1,7 @@
 name: "orc priest"
 glyph: {char: "o", colour: green}
 flags: [speaks, warm_blood]
+xp_mult: 42
 species: orc
 will: 20
 attacks:

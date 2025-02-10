@@ -2,7 +2,7 @@ name: "Asmodeus"
 glyph: {char: "&", colour: lightred}
 flags: [flies, fighter, see_invis, speaks, unique, male, tall_tile, fire_ring]
 resists: {elec: 1, poison: 1, fire: 3, damnation: 1}
-xp_mult: 25
+xp_mult: 8018
 genus: hell_lord
 holiness: [demonic]
 will: invuln

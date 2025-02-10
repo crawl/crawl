@@ -2,7 +2,7 @@ name: "acid blob"
 glyph: {char: "J", colour: lightcyan}
 flags: [eat_doors, see_invis, unblindable, amorphous, acid_splash, no_skeleton]
 resists: {poison: 1, corr: 3}
-xp_mult: 12
+xp_mult: 1585
 genus: jelly
 will: 160
 attacks:

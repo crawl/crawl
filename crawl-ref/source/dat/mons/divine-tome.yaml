@@ -1,7 +1,7 @@
 name: "walking divine tome"
 enum: divine_tome
 glyph: {char: ";", colour: lightgreen}
-xp_mult: 14
+xp_mult: 1643
 species: earthen_tome
 genus: walking_tome
 holiness: [nonliving]

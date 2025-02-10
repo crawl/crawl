@@ -1,6 +1,7 @@
 name: "kobold"
 glyph: {char: "K", colour: brown}
 flags: [speaks, warm_blood]
+xp_mult: 1
 will: 0
 attacks:
  - {type: hit, damage: 1}

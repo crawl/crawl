@@ -3,7 +3,7 @@ enum: lernaean_hydra
 glyph: {char: "D", colour: yellow}
 flags: [cold_blood, unique, fast_regen, tall_tile]
 resists: {poison: 1}
-xp_mult: 11
+xp_mult: 3031
 species: hydra
 will: 120
 attacks:

@@ -1,7 +1,7 @@
 name: "Amaemon"
 glyph: {char: "6", colour: green}
 flags: [speaks, warm_blood, unique, male]
-xp_mult: 15
+xp_mult: 767
 species: demonspawn
 holiness: [natural, demonic]
 will: 60

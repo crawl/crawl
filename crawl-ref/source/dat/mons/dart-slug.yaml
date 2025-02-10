@@ -2,7 +2,7 @@ name: "dart slug"
 glyph: {char: "w", colour: cyan}
 flags: [no_skeleton]
 resists: {poison: -1}
-xp_mult: 40
+xp_mult: 4
 genus: elephant_slug
 will: 0
 attacks:

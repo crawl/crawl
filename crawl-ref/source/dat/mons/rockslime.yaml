@@ -2,6 +2,7 @@ name: "rockslime"
 glyph: {char: "J", colour: brown}
 flags: [eat_doors, see_invis, unblindable, amorphous, no_skeleton]
 resists: {elec: 1, poison: 1, fire: 2}
+xp_mult: 1312
 genus: jelly
 will: 60
 attacks:

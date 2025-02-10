@@ -1,7 +1,7 @@
 name: "Fannar"
 glyph: {char: "e", colour: lightblue}
 flags: [speaks, warm_blood, unique, gender_neutral]
-xp_mult: 16
+xp_mult: 882
 species: elf
 will: 80
 attacks:

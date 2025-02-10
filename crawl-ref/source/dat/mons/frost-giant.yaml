@@ -2,7 +2,7 @@ name: "frost giant"
 glyph: {char: "C", colour: lightblue}
 flags: [fighter, see_invis, speaks, warm_blood]
 resists: {cold: 2}
-xp_mult: 11
+xp_mult: 1249
 genus: giant
 will: 80
 attacks:

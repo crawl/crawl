@@ -1,6 +1,7 @@
 name: "large abomination"
 enum: abomination_large
 glyph: {char: "X", colour: lightred}
+xp_mult: 710
 genus: abomination_small
 holiness: [undead]
 will: 100

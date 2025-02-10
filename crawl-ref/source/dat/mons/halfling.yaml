@@ -1,6 +1,7 @@
 name: "halfling"
 glyph: {char: "p", colour: lightgray}
 flags: [speaks, warm_blood, no_poly_to, no_gen_derived]
+xp_mult: 30
 will: 10
 attacks:
  - {type: hit, damage: 6}

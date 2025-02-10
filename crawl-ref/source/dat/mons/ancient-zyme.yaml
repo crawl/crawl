@@ -1,7 +1,7 @@
 name: "ancient zyme"
 glyph: {char: "x", colour: green}
 flags: [flies]
-xp_mult: 8
+xp_mult: 324
 holiness: [nonliving]
 will: 60
 attacks:
