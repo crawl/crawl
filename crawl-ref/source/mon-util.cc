@@ -2418,11 +2418,9 @@ int mons_max_hp(monster_type mc)
  * @param mon        The monster in question.
  * @param real      If false, calculate XP for the given monster's type instead of
  *               this monster's specific stats.
- * @param legacy  If set, use higher XP values for high-XP monsters to emulate
- *               historical (pre-2eadbcd) behaviour.
  * @return How much XP this monster is worth.
  */
-int exper_value(const monster& mon, bool real, bool legacy)
+int exper_value(const monster& mon, bool real)
 {
     int x_val = 0;
 
