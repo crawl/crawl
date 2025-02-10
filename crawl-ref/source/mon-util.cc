@@ -2449,9 +2449,11 @@ int mons_max_hp(monster_type mc)
  * @param mon        The monster in question.
  * @param real      If false, calculate XP for the given monster's type instead of
  *               this monster's specific stats.
+ * @param legacy  If set, use higher XP values for high-XP monsters to emulate
+ *               historical (pre-2eadbcd) behaviour.
  * @return How much XP this monster is worth.
  */
-int exper_value(const monster& mon, bool real)
+int exper_value(const monster& mon, bool real, bool legacy)
 {
     int x_val = 0;
 
@@ -2497,16 +2499,16 @@ int exper_value(const monster& mon, bool real)
     else
         x_val = _mons_exp_mod(mc);
 
+    int avg_hp = mons_avg_hp(mc);
+
     // More complex calculation for special (highly variable) monsters
     if (mon_needs_special_xp_handling(mc))
-        return = special_xp_handle(mon, x_val);
-
-    // Scale weakly by the monster's actual max hp as a percentage of
-    // average max hp. This randomizes xp values slightly.
-    // Derived undead skip this
-    int avg_hp = mons_avg_hp(mc);
-    if (avg_hp > 0 && !zombified)
+        x_val = special_xp_handle(mon, x_val);
+    else if (avg_hp > 0 && !zombified)
     {
+        // Scale weakly by the monster's actual max hp as a percentage of
+        // average max hp. This randomizes xp values slightly.
+        // Derived undead and special monsters skip this.
         x_val = x_val * 4 + x_val * maxhp / avg_hp;
         x_val /= 5;
     }
@@ -2519,6 +2521,11 @@ int exper_value(const monster& mon, bool real)
     // of blobs merged. -cao
     if (mon.type == MONS_SLIME_CREATURE && mon.blob_size > 1)
         x_val *= mon.blob_size;
+
+    // Legacy code used for Gozag bribe and tension calculations.
+    // XXX: remove this.
+    if (x_val > 750 && legacy)
+        x_val = 750 + (x_val - 750) * 2;
 
     // Guarantee the value is within limits.
     if (x_val <= 0)
