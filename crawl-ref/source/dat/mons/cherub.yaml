@@ -2,6 +2,7 @@ name: "cherub"
 glyph: {char: "A", colour: lightblue}
 flags: [flies, fighter, speaks, archer]
 resists: {elec: 1, poison: 1, fire: 1}
+xp_mult: 742
 genus: angel
 holiness: [holy]
 will: 100

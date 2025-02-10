@@ -1,6 +1,7 @@
 name: "gnoll"
 glyph: {char: "g", colour: yellow}
 flags: [speaks, warm_blood]
+xp_mult: 14
 will: 10
 attacks:
  - {type: hit, damage: 6}

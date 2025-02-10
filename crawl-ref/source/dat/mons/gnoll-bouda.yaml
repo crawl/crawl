@@ -1,6 +1,7 @@
 name: "gnoll bouda"
 glyph: {char: "g", colour: white}
 flags: [speaks, warm_blood]
+xp_mult: 40
 species: gnoll
 will: 20
 attacks:

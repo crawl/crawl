@@ -2,7 +2,7 @@ name: "neqoxec"
 glyph: {char: "3", colour: lightmagenta}
 flags: [flies]
 resists: {poison: 1}
-xp_mult: 12
+xp_mult: 182
 holiness: [demonic]
 will: 40
 attacks:

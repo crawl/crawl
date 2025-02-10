@@ -2,7 +2,7 @@ name: "phantasmal warrior"
 glyph: {char: "W", colour: lightgreen}
 flags: [flies, fighter, see_invis, insubstantial]
 resists: {cold: 1}
-xp_mult: 13
+xp_mult: 638
 genus: wraith
 holiness: [undead]
 will: 80

@@ -2492,12 +2492,15 @@ int exper_value(const monster& mon, bool real, bool legacy)
 
     // Start with the monster's base exp
     x_val = _mons_exp_mod(mc);
-    
-    // Scale by the monster's actual max hp as a percentage of average max hp
-    // This randomizes xp values slightly
+
+    // Scale weakly by the monster's actual max hp as a percentage of
+    // average max hp. This randomizes xp values slightly.
     int avg_hp = mons_avg_hp(mc);
     if (avg_hp > 0)
-        x_val = x_val * maxhp / avg_hp;
+    {
+        x_val = x_val * 4 + x_val * maxhp / avg_hp;
+        x_val /= 5;
+    }
 
     // Scale starcursed mass exp by what percentage of the whole it represents
     if (mon.type == MONS_STARCURSED_MASS)
@@ -2506,7 +2509,7 @@ int exper_value(const monster& mon, bool real, bool legacy)
     // Reduce xp from zombies
     if (mons_is_zombified(mon))
         x_val /= 4;
-    
+
     // More complex calculation for special (highly variable) monsters
     if (mon_needs_special_xp_handling(mc))
         x_val = special_xp_handle(mon, x_val);
@@ -2525,12 +2528,13 @@ int exper_value(const monster& mon, bool real, bool legacy)
 
 bool mon_needs_special_xp_handling(const monster_type mc)
 {
-    switch(mc)
+    switch (mc)
     {
         case MONS_PLAYER_GHOST:
         case MONS_PLAYER_ILLUSION:
         case MONS_PANDEMONIUM_LORD:
         case MONS_DANCING_WEAPON:
+        case MONS_ORC_APOSTLE:
             return true;
         default:
             return false;
@@ -2544,21 +2548,21 @@ int special_xp_handle(const monster& mon, int base_xp)
     const int speed = mons_base_speed(mon);
     const int hd = mon.get_experience_level();
     const bool spellcaster = mon.has_spells();
-    
+
     int diff = 100;
-    
+
     // weighting of spells by spell level and casting frequency
-    if(spellcaster)
+    if (spellcaster)
     {
         int spell_danger = 0;
         for (const mon_spell_slot &slot : mon.spells)
         {
             spell_danger += spell_difficulty(slot.spell) * slot.freq;
         }
-        
+
         diff += spell_danger / 10;
     }
-    
+
     // speed and melee damage
     if (speed > 0)
     {
@@ -2572,17 +2576,17 @@ int special_xp_handle(const monster& mon, int base_xp)
             if (max_melee > 30)
                 diff += (max_melee / ((speed == 10) ? 4 : 2));
         }
-        
+
         diff *= speed;
         diff /= 10;
     }
-    
+
     // monster HD.
     diff = diff * (15 + hd) / 30;
-    
+
     // clamp to somewhat sane values (currently 50-250%)
     diff = max(min(diff, 250), 50);
-    
+
     return base_xp * diff / 100;
 }
 

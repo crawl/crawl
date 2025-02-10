@@ -2,7 +2,7 @@ name: "Mara"
 glyph: {char: "R", colour: lightmagenta}
 flags: [see_invis, speaks, unique, male]
 resists: {poison: 1, fire: 2}
-xp_mult: 35
+xp_mult: 4430
 species: rakshasa
 holiness: [demonic]
 will: 140

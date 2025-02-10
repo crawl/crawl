@@ -1,6 +1,6 @@
 name: "chaos spawn"
 glyph: {char: "4", colour: etc_random}
-xp_mult: 12
+xp_mult: 172
 holiness: [demonic]
 will: 60
 attacks:

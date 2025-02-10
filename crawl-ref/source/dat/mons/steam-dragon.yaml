@@ -2,7 +2,7 @@ name: "steam dragon"
 glyph: {char: "D", colour: blue}
 flags: [flies, warm_blood]
 resists: {steam: 1}
-xp_mult: 29
+xp_mult: 184
 genus: dragon
 will: 20
 attacks:

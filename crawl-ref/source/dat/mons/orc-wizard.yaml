@@ -1,6 +1,7 @@
 name: "orc wizard"
 glyph: {char: "o", colour: magenta}
 flags: [speaks, warm_blood]
+xp_mult: 35
 species: orc
 will: 20
 attacks:

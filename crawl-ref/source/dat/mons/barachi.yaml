@@ -1,6 +1,7 @@
 name: "barachi"
 glyph: {char: "F", colour: lightcyan}
 flags: [speaks, no_poly_to, no_gen_derived]
+xp_mult: 39
 genus: frog
 will: 10
 attacks:

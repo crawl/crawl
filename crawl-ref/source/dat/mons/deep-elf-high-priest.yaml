@@ -1,7 +1,7 @@
 name: "deep elf high priest"
 glyph: {char: "e", colour: lightgreen}
 flags: [speaks, warm_blood]
-xp_mult: 15
+xp_mult: 896
 species: elf
 will: 80
 attacks:

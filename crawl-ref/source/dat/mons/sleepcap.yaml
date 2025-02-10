@@ -1,6 +1,7 @@
 name: "sleepcap"
 glyph: {char: "f", colour: blue}
 resists: {poison: 1}
+xp_mult: 38
 genus: fungus
 holiness: [plant]
 will: 10

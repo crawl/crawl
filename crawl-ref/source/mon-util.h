@@ -131,7 +131,7 @@ struct monsterentry
     resists_t resists;
 
     // Multiplier for calculated monster XP value; see exper_value() for use.
-    int8_t exp_mod;
+    int exp_mod;
 
     monster_type genus,         // "team" the monster plays for
                  species;       // corpse type of the monster

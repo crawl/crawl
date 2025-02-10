@@ -1,7 +1,7 @@
 name: "Urug"
 glyph: {char: "o", colour: red}
 flags: [fighter, speaks, warm_blood, unique, female]
-xp_mult: 15
+xp_mult: 795
 species: orc
 will: 40
 attacks:

@@ -2,7 +2,7 @@ name: "daeva"
 glyph: {char: "A", colour: yellow}
 flags: [flies, fighter, speaks]
 resists: {poison: 1}
-xp_mult: 12
+xp_mult: 1321
 genus: angel
 holiness: [holy]
 will: 140

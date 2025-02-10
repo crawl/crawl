@@ -1,7 +1,7 @@
 name: "ice devil"
 glyph: {char: "4", colour: white}
 resists: {poison: 1, fire: -1, cold: 3}
-xp_mult: 11
+xp_mult: 341
 holiness: [demonic]
 will: 80
 attacks:

@@ -2,7 +2,7 @@ name: "necrophage"
 glyph: {char: "n", colour: lightgray}
 flags: [no_zombie]
 resists: {cold: 1}
-xp_mult: 8
+xp_mult: 76
 genus: ghoul
 holiness: [undead]
 will: 40

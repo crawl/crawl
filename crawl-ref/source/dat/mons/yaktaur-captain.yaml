@@ -1,7 +1,7 @@
 name: "yaktaur captain"
 glyph: {char: "c", colour: lightred}
 flags: [fighter, speaks, warm_blood, archer]
-xp_mult: 9
+xp_mult: 895
 species: yaktaur
 will: 60
 attacks:
