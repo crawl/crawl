@@ -2490,13 +2490,20 @@ int exper_value(const monster& mon, bool real, bool legacy)
     if (!mons_class_gives_xp(mc))
         return 0;
 
+    // Derived undead will reference the base monster, with a divisor
+    const bool zombified = mons_is_zombified(mon);
+
     // Start with the monster's base exp
-    x_val = _mons_exp_mod(mc);
+    if (zombified)
+        x_val = _mons_exp_mod(mon.base_monster) / 4;
+    else
+        x_val = _mons_exp_mod(mc);
 
     // Scale weakly by the monster's actual max hp as a percentage of
     // average max hp. This randomizes xp values slightly.
+    // Derived undead skip this
     int avg_hp = mons_avg_hp(mc);
-    if (avg_hp > 0)
+    if (avg_hp > 0 && !zombified)
     {
         x_val = x_val * 4 + x_val * maxhp / avg_hp;
         x_val /= 5;
@@ -2505,10 +2512,6 @@ int exper_value(const monster& mon, bool real, bool legacy)
     // Scale starcursed mass exp by what percentage of the whole it represents
     if (mon.type == MONS_STARCURSED_MASS)
         x_val = (x_val * mon.blob_size) / 12;
-
-    // Reduce xp from zombies
-    if (mons_is_zombified(mon))
-        x_val /= 4;
 
     // More complex calculation for special (highly variable) monsters
     if (mon_needs_special_xp_handling(mc))
