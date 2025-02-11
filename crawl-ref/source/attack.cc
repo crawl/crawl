@@ -33,6 +33,7 @@
 #include "mon-behv.h"
 #include "mon-clone.h"
 #include "mon-death.h"
+#include "mutation.h"
 #include "nearby-danger.h"
 #include "pronoun-type.h"
 #include "religion.h"

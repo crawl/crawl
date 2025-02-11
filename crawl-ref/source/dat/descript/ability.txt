@@ -165,6 +165,20 @@ cloud, assailing enemies and gradually putting them to sleep.
 After using this ability, you must gain experience points before you can recover
 enough power to use it again.
 %%%%
+Enkindle ability
+
+Stokes your ghostly flames to a fever pitch, greatly enhancing your spellcasting
+at the cost of burning away all accumulated memories.
+
+While in this state, your spells cost no MP, are unaffected by encumbrance, and
+you receive a bonus to spell success and power (the latter of which increases
+with your experience level). Any spellclaw attack made while Enkindled inflicts
+bonus damage proportional to the level of spell cast, and heals you for a
+percentage of the damage dealt.
+
+Each spell you cast while Enkindled consumes a memory, and the state will end
+once you have no more left (or after a short period of time, regardless).
+%%%%
 # Zin
 Recite ability
 

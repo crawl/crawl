@@ -1090,6 +1090,8 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 case icons.UNREWARDING:
                 case icons.ANIMATED_WEAPON:
                 case icons.VENGEANCE_TARGET:
+                case icons.ENKINDLED_1:
+                case icons.ENKINDLED_2:
                     this.draw_icon(idx, x, y, undefined, undefined, img_scale);
                     return 0;
                 case icons.DRAIN:

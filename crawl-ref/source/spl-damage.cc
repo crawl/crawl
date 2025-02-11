@@ -1219,6 +1219,12 @@ static bool _init_frag_player(frag_effect &effect)
             effect.damage = frag_damage_type::player_gargoyle;
         return true;
     }
+    else if (you.species == SP_REVENANT)
+    {
+        effect.name   = "blast of bone shards";
+        effect.colour = LIGHTGREY;
+        return true;
+    }
     if (you.petrified() || you.petrifying())
     {
         effect.name       = "blast of petrified fragments";

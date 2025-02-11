@@ -65,6 +65,8 @@ enum ability_type
     ABIL_INVENT_GIZMO,
     // Poltergeist
     ABIL_CACOPHONY,
+    // Revenants
+    ABIL_ENKINDLE,
 
     // Note: this is getting dangerously close to ABIL_EVOKE_BERSERK! be careful
 

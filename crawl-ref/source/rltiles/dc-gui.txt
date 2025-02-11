@@ -314,6 +314,10 @@ base/octopode1 SP_RECOMMENDED_OCTOPODE
 %compose hair/short_black
 %finish SP_RECOMMENDED_ONI
 %start
+%compose base/revenant
+%compose body/animal_skin
+%finish SP_RECOMMENDED_REVENANT
+%start
 %compose base/spriggan_m
 %compose body/animal_skin
 %compose beard/medium_green
@@ -371,6 +375,7 @@ enum:SP_RECOMMENDED_MUMMY SP_MUMMY
 enum:SP_RECOMMENDED_NAGA SP_NAGA
 enum:SP_RECOMMENDED_OCTOPODE SP_OCTOPODE
 enum:SP_RECOMMENDED_ONI SP_ONI
+enum:SP_RECOMMENDED_REVENANT SP_REVENANT
 enum:SP_RECOMMENDED_SPRIGGAN SP_SPRIGGAN
 enum:SP_RECOMMENDED_TENGU SP_TENGU
 enum:SP_RECOMMENDED_TROLL SP_TROLL

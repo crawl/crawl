@@ -933,6 +933,13 @@ void end_toxic_bog()
     }
 }
 
+void end_enkindled_status()
+{
+    mprf(MSGCH_DURATION, "Your flames quiet as the last of your memories are burnt away.");
+    you.duration[DUR_ENKINDLED] = 0;
+    you.props.erase(ENKINDLE_CHARGES_KEY);
+}
+
 void timeout_terrain_changes(int duration, bool force)
 {
     if (!duration && !force)

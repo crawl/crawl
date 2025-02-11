@@ -1571,9 +1571,13 @@ void view_clear_overlays()
 }
 
 void draw_ring_animation(const coord_def& center, int radius, colour_t colour,
-                         colour_t colour_alt, int delay)
+                         colour_t colour_alt, bool outward, int delay)
 {
-    for (int i = radius; i >= 0; --i)
+    const int start = outward ? 0 : radius;
+    const int end = outward ? radius : 0;
+    const int step = outward ? 1 : -1;
+
+    for (int i = start; i != end; i += step)
     {
         for (distance_iterator di(center, false, false, i); di; ++di)
         {

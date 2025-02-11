@@ -237,6 +237,8 @@ float FLOAT
 formless_1 FORMLESS
 formless_2
 trickster TRICKSTER
+spellclaws SPELLCLAWS
+mnemophage MNEMOPHAGE
 
 # Makhleb mutations
 major_destruction_of_cocytus MAJOR_DESTRUCTION_OF_COCYTUS

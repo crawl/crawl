@@ -1240,6 +1240,8 @@ static void _get_status_lights(vector<status_light>& out)
         DUR_PETRIFIED,
         DUR_BERSERK,
         DUR_TELEPORT,
+        DUR_ENKINDLED,
+        STATUS_MNEMOPHAGE,
         DUR_HASTE,
         DUR_SLOW,
         STATUS_SPEED,

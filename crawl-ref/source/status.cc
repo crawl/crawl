@@ -890,6 +890,18 @@ bool fill_status_info(int status, status_info& inf)
             inf.light_colour = LIGHTGREY;
         break;
 
+    case STATUS_MNEMOPHAGE:
+        if (!you.duration[DUR_ENKINDLED] && you.has_mutation(MUT_MNEMOPHAGE))
+        {
+            inf.light_colour = CYAN;
+            inf.light_text = make_stringf("Memories (%d)", you.props[ENKINDLE_CHARGES_KEY].get_int());
+        }
+        break;
+
+    case DUR_ENKINDLED:
+        inf.light_text = make_stringf("Enkindled (%d)", you.props[ENKINDLE_CHARGES_KEY].get_int());
+        break;
+
     default:
         if (!found)
         {

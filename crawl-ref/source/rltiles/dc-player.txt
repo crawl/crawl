@@ -102,6 +102,8 @@ octopode4 OCTOPODE_SILLY
 octopode5
 %rim 0
 poltergeist POLTERGEIST
+revenant REVENANT
+revenant2
 djinni_red_f DJINNI
 djinni_red_m
 djinni_blue_f

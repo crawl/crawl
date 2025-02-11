@@ -212,3 +212,4 @@ string mut_aux_attack_desc(mutation_type mut);
 vector<string> get_player_aux_names();
 
 bool coglin_spellmotor_attack();
+bool spellclaws_attack(int spell_level);

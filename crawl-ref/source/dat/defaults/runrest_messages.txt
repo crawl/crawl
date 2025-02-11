@@ -12,6 +12,7 @@ ignore += toadstools? grows
 ignore += You walk carefully through the
 ignore += The winds around you calm down.
 ignore += wailing of tortured souls fills the air!
+ignore += your flames die down
 
 stop += You feel you are being watched
 stop += [Ss]omething.* misses you.

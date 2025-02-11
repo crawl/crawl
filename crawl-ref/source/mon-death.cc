@@ -2124,12 +2124,14 @@ static void _player_on_kill_effects(monster& mons, killer_type killer,
         if (can_divine_heal && have_passive(passive_t::mp_on_kill))
             mp_heal += 1 + random2(mons.get_experience_level() / 2);
 
+#if TAG_MAJOR_VERSION == 34
         if (you.has_mutation(MUT_DEVOUR_ON_KILL)
             && mons.holiness() & (MH_NATURAL | MH_PLANT)
             && coinflip())
         {
             hp_heal += 1 + random2avg(1 + you.experience_level, 3);
         }
+#endif
 
         if (hp_heal && you.hp < you.hp_max
             && !you.duration[DUR_DEATHS_DOOR])
@@ -2232,6 +2234,13 @@ static void _player_on_kill_effects(monster& mons, killer_type killer,
             dprf("Powered by Death strength +%d=%d", pbd_inc,
                  pbd_str + pbd_inc);
         }
+    }
+
+    // Revenant kill bonus
+    if (gives_player_xp && you.has_mutation(MUT_MNEMOPHAGE)
+        && you.see_cell_no_trans(mons.pos()))
+    {
+        maybe_harvest_memory(mons);
     }
 
     // Various kill progress tracking

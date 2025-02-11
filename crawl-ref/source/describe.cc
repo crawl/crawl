@@ -4428,6 +4428,13 @@ static string _player_spell_stats(const spell_type spell)
     string failure;
     if (you.divine_exegesis)
         failure = "0%";
+    else if (spell_can_be_enkindled(spell) && you.has_mutation(MUT_MNEMOPHAGE)
+             && !you.duration[DUR_ENKINDLED])
+    {
+        failure = make_stringf("%d%% <darkgrey>(%d%%)</darkgrey>",
+                                    failure_rate_to_int(raw_spell_fail(spell)),
+                                    failure_rate_to_int(raw_spell_fail(spell, true)));
+    }
     else
         failure = failure_rate_to_string(raw_spell_fail(spell));
     description += make_stringf("        Fail: %s", failure.c_str());
@@ -4678,6 +4685,9 @@ static string _player_spell_desc(spell_type spell)
         description << uppercase_first(god_name(you.religion))
                     << " supports the use of this spell.\n";
     }
+
+    if (you.has_mutation(MUT_MNEMOPHAGE) && spell_can_be_enkindled(spell))
+        description << "This spell is empowered while you are enkindled.";
 
     if (!you_can_memorise(spell))
     {

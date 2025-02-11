@@ -103,6 +103,8 @@ unstable UNSTABLE
 laced_with_chaos LACED_WITH_CHAOS
 vexed VEXED
 vampire_thrall VAMPIRE_THRALL
+enkindled_1 ENKINDLED_1
+enkindled_2 ENKINDLED_2
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR

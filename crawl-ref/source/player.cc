@@ -2642,6 +2642,52 @@ static void _gain_innate_spells()
     }
 }
 
+// When first gaining the ability to enkindle, make sure the player has at least
+// one spell to use with it. (We gift one to everyone, both for flavor reasons
+// and to avoid weird gaming by amnesia-ing or delaying memorising a spell until
+// being gifted this one.)
+static void _revenant_spell_gift()
+{
+    const static vector<pair<spell_type, string>> enkindle_gifts =
+    {
+        {SPELL_FOXFIRE, "wisps of flame dancing upon you"},
+        {SPELL_FREEZE, "the chill of winter seizing you"},
+        {SPELL_SHOCK, "electricity coursing through you"},
+        {SPELL_MAGIC_DART, "the impact of arcane energy battering you"},
+        {SPELL_KINETIC_GRAPNEL, "the bite of steel piercing you"},
+        {SPELL_SANDBLAST, "the sting of sand against your skin"},
+        {SPELL_POISONOUS_VAPOURS, "the taste of poison filling your lungs"},
+    };
+
+    vector<spell_type> gift_possibilities;
+    for (const auto& spell : enkindle_gifts)
+        if (!you.has_spell(spell.first))
+            gift_possibilities.push_back(spell.first);
+
+    // In the very unlikely case an XL 3 revenant already knows all 7 of these
+    // spells. Hey, it's probably not literally impossible.
+    if (gift_possibilities.empty())
+    {
+        mpr("You remember only oblivion.");
+        return;
+    }
+
+    const spell_type spell = gift_possibilities[random2(gift_possibilities.size())];
+    string msg;
+    for (const auto& gift : enkindle_gifts)
+    {
+        if (gift.first == spell)
+        {
+            msg = gift.second;
+            break;
+        }
+    }
+
+    mprf("You remember %s.", msg.c_str());
+    mprf("(You can now cast %s.)", spell_title(spell));
+    add_spell_to_memory(spell);
+}
+
 /**
  * Handle the effects from a player's change in XL.
  * @param aux                     A string describing the cause of the level
@@ -2891,6 +2937,11 @@ void level_change(bool skip_attribute_increase)
                 }
                 break;
             }
+
+            case SP_REVENANT:
+                if (new_exp == 3)
+                    _revenant_spell_gift();
+                break;
 
             default:
                 break;
@@ -6828,7 +6879,8 @@ bool player::spellcasting_unholy() const
 
 /**
  * What is the player's (current) place on the Undead Spectrum?
- * (alive, semi-undead (vampire), or very dead (ghoul, mummy, lich)
+ * (alive, semi-undead (vampire), or very dead (revenant, poltergeist, mummy,
+ * lich)
  *
  * @param temp  Whether to consider temporary effects (lichform)
  * @return      The player's undead state.
@@ -8867,6 +8919,37 @@ int trickster_bonus()
 
     const int max_boost = 6 + you.experience_level * 4 / 5;
     return min(max_boost, you.props[TRICKSTER_POW_KEY].get_int());
+}
+
+int enkindle_max_charges()
+{
+    return (3 + you.experience_level * 3 / 20);
+}
+
+void maybe_harvest_memory(const monster& victim)
+{
+    // No progress while status is active (or charges are full)
+    if (you.duration[DUR_ENKINDLED]
+        || you.props[ENKINDLE_CHARGES_KEY].get_int() == enkindle_max_charges())
+    {
+        return;
+    }
+
+    int& progress = you.props[ENKINDLE_PROGRESS_KEY].get_int();
+    int xp = exper_value(victim);
+    if (crawl_state.game_is_sprint())
+        xp = sprint_modify_exp(xp);
+
+    progress += div_rand_round(xp, calc_skill_cost(you.skill_cost_level));
+
+    if (progress < ENKINDLE_CHARGE_COST)
+        return;
+
+    mprf("You devour the vestiges of %s's existence in your flames.",
+            victim.name(DESC_THE).c_str());
+
+    you.props[ENKINDLE_CHARGES_KEY].get_int() += 1;
+    progress = 0;
 }
 
 // Is the player immune to a particular hex because of their

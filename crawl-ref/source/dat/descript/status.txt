@@ -1129,3 +1129,16 @@ Swarm status
 
 You have transformed into a swarm of vampire bats, allowing you to move quickly
 and evasively. You may trail clouds of bats in your wake.
+%%%%
+Memories status
+
+This indicates how many spells you could cast from accumulated memories if you
+Enkindled now.
+%%%%
+Enkindled status
+
+You are buring accumulated memories for power. Each damage-dealing spell you
+cast will consume a memory. In exchange, their power and spell success are
+increased, encumbrance penalties are ignored, and your spellclaw attacks do
+bonus damage proportional to the spell level and heal you based on the damage
+dealt.

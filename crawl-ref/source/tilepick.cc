@@ -26,6 +26,7 @@
 #include "mon-death.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
+#include "mutation.h"
 #include "options.h"
 #include "player.h"
 #include "shopping.h"
@@ -2438,6 +2439,14 @@ set<tileidx_t> status_icons_for_player()
 #ifdef USE_TILE
     if (you.is_constricted() && _should_show_player_status_icon("constr"))
         icons.insert(TILEI_CONSTRICTED);
+    if (you.has_mutation(MUT_MNEMOPHAGE)
+        && you.props[ENKINDLE_CHARGES_KEY].get_int() == enkindle_max_charges()
+        || you.duration[DUR_ENKINDLED])
+    {
+        icons.insert(TILEI_ENKINDLED_1);
+    }
+    if (you.duration[DUR_ENKINDLED])
+        icons.insert(TILEI_ENKINDLED_2);
     for (auto status : player_status_icons)
     {
         if (you.duration[status.first]
@@ -3869,6 +3878,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_CACOPHONY;
     case ABIL_BAT_SWARM:
         return TILEG_ABILITY_BAT_SWARM;
+    case ABIL_ENKINDLE:
+        return TILEG_ABILITY_ENKINDLE;
 
     // Others
     case ABIL_END_TRANSFORMATION:
@@ -4437,6 +4448,8 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
             return TILEG_SP_COGLIN;
         case SP_POLTERGEIST:
             return TILEG_SP_POLTERGEIST;
+        case SP_REVENANT:
+            return TILEG_SP_REVENANT;
         default:
             return TILEP_ERROR;
     }

@@ -2094,6 +2094,10 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Holy Roller";
             else if (species == SP_COGLIN && skill_rank == 5 && god == GOD_FEDHAS)
                 result = "Cobgoblin"; // hm.
+            else if (species == SP_REVENANT && skill_rank == 5 && god == GOD_XOM)
+                result = "Laughing Skull";
+            else if (species == SP_REVENANT && skill_rank == 5 && god == GOD_USKAYAW)
+                result = "Danse Macabre";
             else if (god != GOD_NO_GOD)
                 result = god_title(god, species, piety);
             else if (species == SP_BARACHI)

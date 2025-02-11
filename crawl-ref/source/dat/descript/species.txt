@@ -113,6 +113,11 @@ Poltergeist
 Formless ghosts who delight in hexing their enemies. They can equip many
 different hats, gloves, boots, or cloaks at once, but cannot wear body armour.
 %%%%
+Revenant
+
+Revenants are skeletal undead who are strong at melee combat and can empower
+damage-dealing spells by consuming memories they harvest from their victims.
+%%%%
 Spriggan
 
 Very small, very frail and very fast, Spriggans are highly competent stabbers

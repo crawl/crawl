@@ -76,6 +76,7 @@
 #include "teleport.h"
 #include "terrain.h"
 #include "tilepick.h"
+#include "timed-effects.h"
 #include "transform.h"
 #include "unicode.h"
 #include "unwind.h"
@@ -120,6 +121,11 @@ static string _spell_base_description(spell_type spell, bool viewing)
     ostringstream desc;
 
     int highlight =  spell_highlight_by_utility(spell, COL_UNKNOWN, !viewing);
+    if (you.duration[DUR_ENKINDLED] && highlight == COL_UNKNOWN
+        && spell_can_be_enkindled(spell))
+    {
+        highlight = LIGHTCYAN;
+    }
 
     desc << "<" << colour_to_str(highlight) << ">" << left;
 
@@ -132,17 +138,21 @@ static string _spell_base_description(spell_type spell, bool viewing)
     const int so_far = strwidth(desc.str()) - (strwidth(colour_to_str(highlight))+2);
     if (so_far < 58)
         desc << string(58 - so_far, ' ');
-    desc << "</" << colour_to_str(highlight) <<">";
 
     // spell fail rate, level
-    const string failure_rate = spell_failure_rate_string(spell);
+    const string failure_rate = spell_failure_rate_string(spell, false);
     const int width = strwidth(formatted_string::parse_string(failure_rate).tostring());
-    desc << failure_rate << string(9-width, ' ');
+    const bool show_enkindle = you.has_mutation(MUT_MNEMOPHAGE);
+
+    // Revenants have spell level right-justified instead of left-justified to make
+    // room to show enkindled spell success rates.
+    desc << failure_rate << string((show_enkindle ? 13 : 9)-width, ' ');
     desc << spell_difficulty(spell);
     // XXX: This exact padding is needed to make the webtiles spell menu not re-align
     //      itself whenever we toggle display modes. For some reason, this doesn't
     //      seem to matter for local tiles. Who know why?
-    desc << "      ";
+    desc << string(show_enkindle ? 2 : 6, ' ');
+    desc << "</" << colour_to_str(highlight) <<">";
 
     return desc.str();
 }
@@ -152,6 +162,8 @@ static string _spell_extra_description(spell_type spell, bool viewing)
     ostringstream desc;
 
     int highlight =  spell_highlight_by_utility(spell, COL_UNKNOWN, !viewing);
+    if (you.duration[DUR_ENKINDLED] && spell_can_be_enkindled(spell) && highlight == COL_UNKNOWN)
+        highlight = LIGHTCYAN;
 
     desc << "<" << colour_to_str(highlight) << ">" << left;
 
@@ -398,13 +410,18 @@ static int _skill_power(spell_type spell)
  * modifiers. (Armour, mutations, statuses effects, etc.)
  *
  * @param spell     The spell in question.
+ * @param enkindled Whether to calculate the failure rate as if the player were
+ *                  currently enkindled (even if they aren't). Defaults to
+ *                  false.
  * @return          A failure rate. This is *not* a percentage - for a human-
  *                  readable version, call _get_true_fail_rate().
  */
-int raw_spell_fail(spell_type spell)
+int raw_spell_fail(spell_type spell, bool enkindled)
 {
     if (spell == SPELL_NO_SPELL)
         return 10000;
+
+    enkindled = enkindled || you.duration[DUR_ENKINDLED];
 
     int chance = 60;
 
@@ -415,10 +432,12 @@ int raw_spell_fail(spell_type spell)
     chance -= (you.intel() * 2); // realistic range: -2 to -70
 
     const int armour_shield_penalty = player_armour_shield_spell_penalty();
-    chance += armour_shield_penalty; // range: 0 to 500 in extreme cases.
-                                     // A midlevel melee character in plate
-                                     // might have 40 or 50, and a caster in a
-                                     // robe would usually have 0.
+
+    if (!enkindled)
+        chance += armour_shield_penalty; // range: 0 to 500 in extreme cases.
+                                         // A midlevel melee character in plate
+                                         // might have 40 or 50, and a caster in a
+                                         // robe would usually have 0.
 
     static const int difficulty_by_level[] =
     {
@@ -475,6 +494,9 @@ int raw_spell_fail(spell_type spell)
     // Apply the effects of Vehumet and items of wizardry.
     chance2 = _apply_spellcasting_success_boosts(spell, chance2);
 
+    if (enkindled)
+        chance2 = chance2 * 3 / 4 - 5;
+
     return min(max(chance2, 0), 100);
 }
 
@@ -513,6 +535,9 @@ int calc_spell_power(spell_type spell)
         power *= 10;
         power /= 10 + (you.props[HORROR_PENALTY_KEY].get_int() * 3) / 2;
     }
+
+    if (you.duration[DUR_ENKINDLED] && spell_can_be_enkindled(spell))
+        power = (power + (you.experience_level * 300)) * 3 / 2;
 
     // at this point, `power` is assumed to be basically in centis.
     // apply a stepdown, and scale.
@@ -1130,7 +1155,7 @@ static bool _spellcasting_aborted(spell_type spell, bool fake_spell)
     }
 
     const int severity = fail_severity(spell);
-    const string failure_rate = spell_failure_rate_string(spell);
+    const string failure_rate = spell_failure_rate_string(spell, true);
     if (Options.fail_severity_to_confirm > 0
         && Options.fail_severity_to_confirm <= severity
         && !crawl_state.disables[DIS_CONFIRMATIONS]
@@ -2017,6 +2042,8 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
     ASSERT(!force_failure || !actual_spell && !evoked_wand);
 
     const bool wiz_cast = (crawl_state.prev_cmd == CMD_WIZARD && !actual_spell);
+    const bool can_enkindle = actual_spell && spell_can_be_enkindled(spell);
+    const bool enkindled = can_enkindle && you.duration[DUR_ENKINDLED];
 
     dist target_local;
     if (!target)
@@ -2221,7 +2248,7 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
 
         const int spfail_chance = raw_spell_fail(spell);
 
-        if (spfl < spfail_chance)
+        if (spfl < spfail_chance && !enkindled)
             fail = spfail_chance - spfl;
     }
 
@@ -2266,6 +2293,13 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
 
         if (you.wearing_ego(OBJ_GIZMOS, SPGIZMO_SPELLMOTOR) && actual_spell)
             coglin_spellmotor_attack();
+
+        // Handle revenant passives
+        if (can_enkindle && you.has_mutation(MUT_SPELLCLAWS))
+            spellclaws_attack(spell_difficulty(spell));
+
+        if (enkindled && --you.props[ENKINDLE_CHARGES_KEY].get_int() == 0)
+            end_enkindled_status();
 
         return spret::success;
     }
@@ -2877,12 +2911,31 @@ string failure_rate_to_string(int fail)
     return make_stringf("%d%%", failure_rate_to_int(fail));
 }
 
-string spell_failure_rate_string(spell_type spell)
+string spell_failure_rate_string(spell_type spell, bool terse)
 {
-    const string failure = failure_rate_to_string(raw_spell_fail(spell));
+    const bool enkindled = you.duration[DUR_ENKINDLED] && spell_can_be_enkindled(spell);
     const string colour = colour_to_str(failure_rate_colour(spell));
-    return make_stringf("<%s>%s</%s>",
-            colour.c_str(), failure.c_str(), colour.c_str());
+
+    if (terse || !you.has_mutation(MUT_MNEMOPHAGE) || !spell_can_be_enkindled(spell))
+    {
+        const string failure = failure_rate_to_string(raw_spell_fail(spell));
+        return make_stringf("<%s>%s</%s>",
+                colour.c_str(), failure.c_str(), colour.c_str());
+    }
+
+    const int normal_fail = failure_rate_to_int(raw_spell_fail(spell));
+    const int enkindled_fail = failure_rate_to_int(raw_spell_fail(spell, true));
+
+    if (enkindled)
+    {
+        return make_stringf("<lightcyan>*</lightcyan><%s>%d%%</%s><lightcyan>*</lightcyan>",
+                                colour.c_str(), enkindled_fail, colour.c_str());
+    }
+    else
+    {
+        return make_stringf("<%s>%d%%</%s><darkgrey> (%d%%)</darkgrey>",
+            colour.c_str(), normal_fail, colour.c_str(), enkindled_fail);
+    }
 }
 
 static string _spell_failure_rate_description(spell_type spell)

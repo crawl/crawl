@@ -2740,6 +2740,23 @@ static const mutation_def mut_data[] =
   TILEG_MUT_TRICKSTER,
 },
 
+{ MUT_MNEMOPHAGE, 0, 1, mutflag::good, false,
+   "mnemnophage",
+   {"You can enhance your damage-dealing spells by burning harvested memories.", ""},
+   {"Your flames flicker hungrily.", "", ""},
+   {"Your flames grow less ravenous.", "", ""},
+   TILEG_MUT_MNEMOPHAGE,
+   {"You will be able to burn memories to enhance your damage-dealing spells."}
+ },
+
+{ MUT_SPELLCLAWS, 0, 1, mutflag::good, false,
+   "spellclaws",
+   {"You perform a melee attack whenever you cast damage-dealing spells.", "", ""},
+   {"You feel destructive magic coursing through your claws.", "", ""},
+   {"You no longer feel destructive magic coursing through your claws.", "", ""},
+   TILEG_MUT_SPELLCLAWS,
+},
+
 // Makhleb-specific mutations
 
 { MUT_MAKHLEB_DESTRUCTION_GEH, 0, 1, mutflag::good, false,

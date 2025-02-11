@@ -900,6 +900,26 @@ do not continue to inflict new misfortune.
 
 At your current XL, you can gain a maximum bonus of
 {{return 6 + you.xl() * 4 / 5;}} AC this way.
+%%%%
+mnemnophage mutation
+
+You devour the memories and even the very existence of those you kill, subsuming
+them in the unholy fire that wreathes your body.
+
+Once you have accumulated enough memories, you may choose to burn them all away
+as fuel to greatly enhance your spellcasting for a short period of time.
+
+At your current experience level, you can hold enough memories to cast a maximum
+of {{return 3 + math.floor(you.xl() * 3 / 20);}} spells in a row this way.
+%%%%
+spellclaws mutation
+
+You instinctually channel destructive magic through your claws. When casting a
+damage-dealing spell, you also perform a melee attack against the most healthy
+enemy in your attack range.
+
+This attack does reduced damage if your attack speed is slower than your casting
+speed.
 # ------ Fakemut descriptions ------
 %%%%
 vampire fangs mutation

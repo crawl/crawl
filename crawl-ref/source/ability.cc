@@ -406,6 +406,9 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_BAT_SWARM, "Bat Swarm",
             6, 0, 0, -1, {}, abflag::none },
 
+        { ABIL_ENKINDLE, "Enkindle",
+                0, 0, 0, -1, {}, abflag::instant },
+
         // EVOKE abilities use Evocations and come from items.
         { ABIL_EVOKE_BLINK, "Evoke Blink",
             0, 0, 0, -1, {fail_basis::evo, 40, 2}, abflag::none },
@@ -2222,6 +2225,26 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return true;
     }
 
+    case ABIL_ENKINDLE:
+    {
+        if (you.duration[DUR_ENKINDLED])
+        {
+            if (!quiet)
+                mpr("You are already burning your memories away!");
+
+            return false;
+        }
+        else if (you.props[ENKINDLE_CHARGES_KEY].get_int() == 0)
+        {
+            if (!quiet)
+                mpr("You don't have any memories left to burn.");
+
+            return false;
+        }
+
+        return true;
+    }
+
     case ABIL_WORD_OF_CHAOS:
         if (you.duration[DUR_WORD_OF_CHAOS_COOLDOWN])
         {
@@ -3310,6 +3333,17 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         break;
     }
 
+    case ABIL_ENKINDLE:
+    {
+        draw_ring_animation(you.pos(), 3, LIGHTCYAN, CYAN, true);
+        mprf(MSGCH_DURATION, "Your flames flare with remembrance!");
+        you.duration[DUR_ENKINDLED] = (random_range(12, 20)
+                                       + (you.props[ENKINDLE_CHARGES_KEY].get_int() * 3))
+                                            * BASELINE_DELAY;
+        you.props.erase(ENKINDLE_PROGRESS_KEY);
+        break;
+    }
+
     // INVOCATIONS:
     case ABIL_ZIN_RECITE:
     {
@@ -4229,6 +4263,8 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         return you.get_mutation_level(MUT_FORMLESS) == 2;
     case ABIL_BAT_SWARM:
         return you.form == transformation::vampire;
+    case ABIL_ENKINDLE:
+        return you.has_mutation(MUT_MNEMOPHAGE);
     case ABIL_IMBUE_SERVITOR:
         return you.has_spell(SPELL_SPELLSPARK_SERVITOR);
     case ABIL_IMPRINT_WEAPON:
@@ -4308,6 +4344,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_INVENT_GIZMO,
             ABIL_CACOPHONY,
             ABIL_BAT_SWARM,
+            ABIL_ENKINDLE,
             ABIL_BLINKBOLT,
             ABIL_SIPHON_ESSENCE,
             ABIL_IMBUE_SERVITOR,

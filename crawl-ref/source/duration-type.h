@@ -283,5 +283,6 @@ enum duration_type
     DUR_TRICKSTER_GRACE,
     DUR_CACOPHONY,
     DUR_DROWSY,
+    DUR_ENKINDLED,
     NUM_DURATIONS
 };

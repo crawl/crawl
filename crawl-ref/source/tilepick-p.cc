@@ -682,6 +682,8 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_COGLIN;
     case SP_POLTERGEIST:
         return TILEP_BASE_POLTERGEIST;
+    case SP_REVENANT:
+        return TILEP_BASE_REVENANT;
     default:
         return TILEP_BASE_HUMAN;
     }

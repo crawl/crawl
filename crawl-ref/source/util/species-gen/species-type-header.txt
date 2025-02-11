@@ -79,5 +79,6 @@ enum species_type
     SP_MOUNTAIN_DWARF,
     SP_COGLIN,
     SP_POLTERGEIST,
+    SP_REVENANT,
 
     // Auto-generated enums start here

@@ -4628,3 +4628,67 @@ bool coglin_spellmotor_attack()
 
     return true;
 }
+
+const static int spellclaws_level_mult[] = {5, 15, 25, 40, 55, 70, 90, 110, 150};
+bool spellclaws_attack(int spell_level)
+{
+    // Only operates for melee attacks.
+    if (you.weapon() && is_range_weapon(*you.weapon()))
+        return false;
+
+    // Gather all possible targets in attack range
+    list<actor*> targets;
+    get_cleave_targets(you, coord_def(), targets, -1, true);
+
+    // Then choose the one with the *most* current health (that wouldn't cause
+    // a warning prompt for some reason).
+    int most_hp = 0;
+    actor* best_victim = nullptr;
+    for (actor* victim : targets)
+    {
+        if (victim->is_firewood())
+            continue;
+
+        if (victim->stat_hp() <= most_hp)
+            continue;
+
+        melee_attack attk(&you, victim);
+        if (attk.would_prompt_player())
+            continue;
+
+        most_hp = victim->stat_hp();
+        best_victim = victim;
+    }
+
+    if (!best_victim)
+        return false;
+
+    melee_attack attk(&you, best_victim);
+
+    // If an attack would take more time than casting a spell, reduce its damage
+    // proportionally.
+    int mult = 100;
+    int delay = you.attack_delay().roll();
+    if (delay > 10)
+        mult = 1000 / delay;
+
+    if (you.duration[DUR_ENKINDLED])
+    {
+        attk.to_hit = AUTOMATIC_HIT;
+        mult += mult * spellclaws_level_mult[spell_level - 1] / 100;
+    }
+
+    attk.dmg_mult = mult - 100;
+
+    // Save name first, in case the monster dies from the attack.
+    string targ_name = best_victim->name(DESC_THE);
+    attk.launch_attack_set();
+
+    if (you.duration[DUR_ENKINDLED] && you.hp < you.hp_max)
+    {
+        mprf("You rip the existence from %s to re-knit yourself!", targ_name.c_str());
+        you.heal(attk.total_damage_done * 3 / 4);
+    }
+
+    return true;
+}

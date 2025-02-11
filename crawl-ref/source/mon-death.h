@@ -70,7 +70,6 @@ void fire_monster_death_event(monster* mons, killer_type killer, bool polymorph)
 void heal_flayed_effect(actor* act, bool quiet = false, bool blood_only = false);
 void end_flayed_effect(monster* ghost);
 
-
 bool damage_contributes_xp(const actor& agent);
 
 void mons_check_pool(monster* mons, const coord_def &oldpos,

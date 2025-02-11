@@ -541,8 +541,11 @@ void fill_doll_equipment(dolls_data &result)
             result.parts[TILEP_PART_CLOAK] = 0;
     }
     // Leg.
-    if (result.parts[TILEP_PART_LEG] == TILEP_SHOW_EQUIP)
+    if (result.parts[TILEP_PART_LEG] == TILEP_SHOW_EQUIP
+        && you.species != SP_REVENANT)
+    {
         result.parts[TILEP_PART_LEG] = _random_trousers();
+    }
 
     // Boots.
     if (result.parts[TILEP_PART_BOOTS] == TILEP_SHOW_EQUIP)

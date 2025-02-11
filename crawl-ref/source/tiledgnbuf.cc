@@ -518,6 +518,8 @@ static map<tileidx_t, int> status_icon_sizes = {
     { TILEI_VAMPIRE_THRALL, FIXED_LOC_ICON },
     { TILEI_IDEALISED,      FIXED_LOC_ICON },
     { TILEI_TOUCH_OF_BEOGH, FIXED_LOC_ICON },
+    { TILEI_ENKINDLED_1,    FIXED_LOC_ICON },
+    { TILEI_ENKINDLED_2,    FIXED_LOC_ICON },
 
     // These are always in the top left. They may overlap.
     // (E.g. for summoned dancing weapons.)
