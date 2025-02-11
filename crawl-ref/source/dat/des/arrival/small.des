@@ -3346,8 +3346,8 @@ COLOUR:  .c = white
 : -- do the roll unconditionally, for seed stability
 : local humanoid_ally = util.random_from({"dwarf", "human"})
 : -- The corpseless. Before the game starts, you.monster() is "program bug".
-: if (not crawl.game_started()) or race == "Vampire"
-:     or race == "Mummy" or race == "Ghoul" or race == "Octopode"
+: if (not crawl.game_started()) or race == "Poltergeist"
+:     or race == "Mummy" or race == "Revenant" or race == "Octopode"
 :     or race == "Gargoyle" or race == "Vine Stalker"
 :     or race == "Djinni" or race == "Yak" or race == "Formicid" then
 :   ally = humanoid_ally
@@ -3628,7 +3628,7 @@ TILE:    G = dngn_statue_sigmund
 # Bunch of player species
 KITEM:   ? = armataur skeleton / deep elf skeleton / demigod skeleton / \
              demonspawn skeleton / draconian skeleton / felid skeleton / \
-             formicid skeleton / ghoul skeleton / gnoll skeleton / \
+             formicid skeleton / gnoll skeleton / \
              orc skeleton / human skeleton / kobold skeleton / \
              merfolk skeleton / minotaur skeleton / naga skeleton / \
              octopode skeleton / oni skeleton / spriggan skeleton / \

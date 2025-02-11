@@ -164,8 +164,6 @@ function species_mock(e)
     return "caustic shrike"
   elseif you.race() == "Troll" then
     return "ugly thing"
-  elseif you.race() == "Vampire" then
-    return "tyrant leech"
   elseif you.race() == "Vine Stalker" then
     return "thorn hunter"
   else
