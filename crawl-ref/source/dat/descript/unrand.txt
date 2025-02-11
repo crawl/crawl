@@ -834,10 +834,10 @@ power to carry them out, no matter the adversity.
 %%%%
 skull of Zonguldrok
 
-The skull of a legendary necromancer, seemingly parted from the rest of his
-body. When held, it seems disinclined to explain the precise circumstances of 
-its ending up in this state, but offers no objection to others siphoning what 
-considerable necromantic power still remains in his ancient bones.
+The skull of a legendary necromancer, seemingly parted from the rest of its
+body. When held, it seems disinclined to explain the precise circumstances of
+its ending up in this state, but offers no objection to others siphoning what
+considerable necromantic power still remains in its ancient bones.
 %%%%
 fungal fisticloak
 
