@@ -400,8 +400,10 @@ NAME:    dpeg_arrival_circle_labyrinth_c
 TAGS:    arrival no_monster_gen no_rotate transparent
 WEIGHT:  6
 ORIENT:  float
-NSUBST:  X = 1:adgj / *:x
 SHUFFLE: ab, cd, ef, gh, ij, kl, mn
+# It's important this subst comes after the shuffle, otherwise it's possible
+# none of these passages will be opened, which can create a closet.
+NSUBST:  X = 1:acgi / *:x
 SUBST:   a=., c=., e=., g=., i=., k=., m=.
 SUBST:   b=x, d=x, f=x, h=x, j=x, l=x, n=x
 NSUBST:  . = 1:d / *:.

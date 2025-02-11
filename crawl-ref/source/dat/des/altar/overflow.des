@@ -1848,7 +1848,7 @@ MARKER: S = lua:fog_machine { cloud_type="foul pestilence", walk_dist=1, \
 MAP
 cccccccc+++cccccccc
 cnnnnnnn...nnnnnnnc
-cnde'ean...nfg'gfnc
+cnde'edn...nfg'gfnc
 cne'''en.G.ng'''gnc
 cn''S''n...n''R''nc
 cne'''en...ng'''gnc
@@ -2270,16 +2270,15 @@ ENDMAP
 
 NAME:   grunt_qazlal_sundering
 TAGS:   no_monster_gen no_item_gen no_trap_gen temple_overflow_1
-TAGS:   temple_overflow_qazlal uniq_altar_qazlal transparent
+TAGS:   temple_overflow_qazlal uniq_altar_qazlal
 KFEAT:  _ = altar_qazlal
-KPROP:  c = no_tele_into
+KPROP:  -c = no_tele_into
 SUBST:  c = cccl^.
 SUBST:  - = ..l^
 :  if you.depth() ~= dgn.br_depth(you.branch()) then
 KFEAT:  ^ = shaft trap
 :  end
 KITEM:  . = nothing w:189 / stone / large rock q:1 w:1
-KFEAT:  . = .
 : interest_check(_G)
 MAP
  ----@----
