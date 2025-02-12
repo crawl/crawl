@@ -2358,8 +2358,9 @@ MONS:    spriggan berserker zombie / titan zombie / spark wasp zombie /\
 MONS:    ancient champion / revenant soulmonger, laughing skull
 MONS:    deep elf death mage / vampire mage / necromancer, halazid warlock
 ITEM:    randbook disc:necromancy numspells:6 owner:Borgnjor w:5 / any book /\
-         necronomicon / randbook disc:necromancy / staff of death /\
-         macabre finger necklace w:1 / sceptre of torment w:1
+         necronomicon / randbook disc:necromancy / staff of death w:5 /\
+         sanguine talisman / macabre finger necklace w:1 /\
+         sceptre of torment w:1
 : local p = "good_item ego:pain w:3"
 : local v = "good_item ego:vampirism w:3"
 : item("any book w:12 / scroll of torment pre_id q:3 w:12 / " ..

@@ -125,7 +125,7 @@
             e.mons("zombie / simulacrum / spectral thing / freezing wraith")
             e.mons("vampire mage / jiangshi / ghoul / ancient champion / " ..
                    "flayed ghost / vampire knight / mummy priest w:2")
-            e.mons("lich / ancient lich / dread lich / royal mummy w:2")
+            e.mons("lich / ancient lich / dread lich / vampire bloodprince w:2")
             e.kfeat("A = granite_statue")
             e.subst("B = V")
             e.tile("A = depths_column / depths_crumbled_column")

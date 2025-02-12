@@ -253,12 +253,23 @@ function trove.good_scroll (e)
 end
 
 function trove.good_talisman (e)
-    e.item([[blade talisman randart / maw talisman randart /
-             serpent talisman randart w:8 / granite talisman w:4 /
-             granite talisman randart w:6 / dragon-coil talisman w:4 /
-             dragon-coil talisman randart w:6 / storm talisman w:8 /
-             storm talisman randart w:2 / talisman of death w:8 /
-             talisman of death randart w:2]])
+    local t = "blade talisman randart / maw talisman randart / " ..
+              "serpent talisman randart w:8 / granite talisman w:4 / " ..
+              "granite talisman randart w:6 / dragon-coil talisman w:4 / " ..
+              "dragon-coil talisman randart w:6 / storm talisman w:8 / " ..
+              "storm talisman randart w:2"
+
+    if you.god() ~= "Elyvilon" and you.god() ~= "the Shining One" then
+        t = t .. " / sanguine talisman w:4 / sanguine talisman randart w:6 / " ..
+                 " talisman of death w:8 / talisman of death randart w:2"
+    end
+
+    -- If you're with Zin, there's only one form of shapeshifting allowed:
+    if you.god() == "Zin" then
+       e.item([[potion of mutation pre_id q:1]])
+    else
+       e.item(t)
+    end
 end
 
 function trove.place_fog(e, type, strength)
@@ -929,8 +940,16 @@ ORIENT:  encompass
 WEIGHT:  15
 ITEM:    manual of evocations, manual of shapeshifting, acquire magical staff
 ITEM:    any misc, maw talisman randart / blade talisman randart
-ITEM:    dragon-coil talisman randart / granite talisman randart
-ITEM:    storm talisman / talisman of death
+{{
+  local t3 = "dragon-coil talisman randart / granite talisman randart"
+  local t4 = "storm talisman"
+  if you.god() ~= "Elyvilon" and you.god() ~= "the Shining One" then
+    t3 = t3 .. " / sanguine talisman randart"
+    t4 = t4 .. " / talisman of death"
+  end
+  item(t3)
+  item(t4)
+}}
 ITEM:    wand of digging charges:8 / any hex wand charges:8 / \
          any beam wand charges:8 / any blast wand charges:8
 SHUFFLE: hij
@@ -940,8 +959,9 @@ FTILE:   ' = floor_limestone
 : trove.setup_features(_G)
 veto {{ return crawl.game_started()
         and (you.mutation("inability to use devices") == 1
-             or (you.mutation("no forms") == 1
-             and crawl.x_chance_in_y(2, 3))) }}
+             or (you.god == "Zin")
+             or ((you.mutation("no forms") == 1
+             and crawl.x_chance_in_y(2, 3)))) }}
 MAP
   xxxxx
   xdxex

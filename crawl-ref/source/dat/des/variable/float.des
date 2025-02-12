@@ -1991,21 +1991,20 @@ MONS:    freezing wraith / phantasmal warrior / flayed ghost / shadow wraith
 MONS:    spectre place:Crypt:$
 MONS:    vampire mage / deep elf death mage w:5
 MONS:    revenant soulmonger / eidolon / lich w:5
-# Either Jory or a vampire knight with fancy equipment.
-: kmons("7 = jory / " .. vamp_def .. ", " .. vamp_def)
+: kmons("7 = jory / vampire bloodprince, vampire bloodprince w:20 / " .. vamp_def)
 # Depths
 : else
 MONS:    skeleton / zombie / laughing skull / spectral thing / simulacrum
 MONS:    jiangshi / sin beast / caustic shrike simulacrum w:2
 MONS:    freezing wraith / phantasmal warrior / flayed ghost / shadow wraith
-MONS:    spectral golden dragon / golden dragon simulacrum \
-         / spectral caustic shrike / caustic shrike simulacrum \
-         / spectral juggernaut / juggernaut simulacrum
+MONS:    spectral golden dragon / golden dragon simulacrum / \
+         spectral caustic shrike / caustic shrike simulacrum / \
+         spectral juggernaut / juggernaut simulacrum
 MONS:    vampire mage / deep elf death mage w:5
 MONS:    revenant soulmonger / eidolon / lich w:5
-: kmons("7 = jory / " .. vamp_def .. ", " .. vamp_def)
+: kmons("7 = jory / " .. vamp_def .. ", vampire bloodprince / " .. vamp_def)
 : end
-KITEM:   _ = superb_item
+KITEM:   _ = sanguine talisman / $, superb_item
 KFEAT:   _ = altar_yredelemnul / altar_kikubaaqudgha
 SHUFFLE: apqr
 SUBST:   a = +, pqr = x, D = 56, G : Ggg
@@ -2766,13 +2765,21 @@ DEPTH:   D:11-, Depths, Crypt
 ORIENT:  float
 MONS:    patrolling laughing skull
 MONS:    zombie / skeleton
-: if you.absdepth() > 19 then
-MONS:    vampire knight / jiangshi / flayed ghost
+: if you.in_branch("Crypt") then
+MONS:    vampire knight / bone dragon w:5 / flayed ghost
 MONS:    lich / revenant soulmonger
-KMONS:   5 = Boris / lich / revenant soulmonger, lich / revenant soulmonger
+KMONS:   5 = Jory / vampire bloodprince / revenant, \
+             vampire bloodprince / revenant soulmonger
+SUBST:   x = v
+: elseif you.in_branch("Depths") then
+MONS:    vampire knight / jiangshi / flayed ghost
+MONS:    lich / vampire mage
+KMONS:   5 = Boris / vampire bloodprince w:5 / ancient lich, \
+             vampire bloodprince w:5 / ancient lich
 : elseif you.absdepth() > 13 then
 MONS:    phantasmal warrior / skeletal warrior / eidolon
 MONS:    vampire mage / death knight
+# Really, nobody else even slightly undead? >_>
 KMONS:   5 = Frances / vampire mage / death knight, vampire mage / death knight
 : else
 MONS:    wight / wraith / shadowghast
@@ -2782,9 +2789,6 @@ KMONS:   5 = Josephine / skeletal warrior / necromancer, \
 : end
 SHUFFLE: Aa / Bb / Cc / Dd / Ee / Ff
 SUBST:   5 = 5 3:2, 2 = 2 3:2, ABCD = ., abcd = @, EeFf = x
-: if you.in_branch("Crypt") then
-SUBST:   x = c
-: end
 MAP
    xxxxxxxxxxx
    xx2233322xx
@@ -3154,7 +3158,8 @@ DEPTH:   Elf, !Elf:$, Crypt, !Crypt:$
 TAGS:    patrolling
 MONS:    skeletal warrior / eidolon, laughing skull band
 MONS:    necromancer band / vampire mage band w:6
-MONS:    vampire knight w:25 / bone dragon / revenant soulmonger / lich
+MONS:    vampire knight w:25 / vampire bloodprince w:5 / \
+         bone dragon / revenant soulmonger / lich
 SUBST:   x = e
 : else
 KMONS:   12 = deep elf pyromancer / deep elf zephyrmancer / deep elf knight / \
@@ -6430,7 +6435,7 @@ MONS:    guardian mummy ; orcbow ego:chaos | longbow ego:chaos . \
                           quarterstaff ego:chaos
 MONS:    vampire knight ; great sword ego:chaos | war axe ego:chaos . \
                           chain mail | plate armour
-MONS:    ancient champion, lich
+MONS:    ancient champion / vampire bloodprince w:2, lich
 MONS:    very ugly thing, cacodemon
 MONS:    dancing weapon ; great mace ego:draining | \
                           battleaxe ego:draining | glaive ego:draining
@@ -6447,8 +6452,8 @@ KFEAT:   ^ = harlequin's trap
 SUBST:   ^ = ^..., ; = ., ~ = ', X = c
 : end
 ITEM:    potion of mutation q:4 pre_id
-ITEM:    potion of ambrosia q:4 pre_id / \
-         flux talisman randart / talisman of death randart w:5 / \
+ITEM:    potion of ambrosia q:4 pre_id / flux talisman randart w:5 / \
+         sanguine talisman randart w:5 / talisman of death randart w:5 / \
          randbook owner:Xom disc:alchemy disc2:necromancy numspells:6
 KFEAT:   _ = altar_xom
 KFEAT:   ? = altar_kikubaaqudgha mimic

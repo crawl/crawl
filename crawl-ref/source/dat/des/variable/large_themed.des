@@ -777,12 +777,13 @@ xwwwww..................................wwwww...
 ENDMAP
 
 NAME:   due_jory_tower
-ORIENT: southwest
 TAGS:   no_rotate no_monster_gen no_item_gen
+ORIENT: southwest
 DEPTH:  Depths, !Depths:$
 MONS:   flayed ghost w:5 / phantasmal warrior w:5 / shadow wraith / eidolon
-MONS:   ghost moth, Jory, vampire knight
-MONS:   vampire mosquito
+MONS:   ghost moth, vampire knight, vampire mosquito
+KMONS:  J = Jory, vampire bloodprince
+ITEM:   sanguine talisman randart
 NSUBST: A = 3:v / *:+, B = 3:v / *:+
 NSUBST: C = 2:v / *:+, D = 2:v / *:+
 TILE:   G = dngn_statue_depths_fangs
@@ -798,7 +799,6 @@ TILE:   M = dngn_dark_flower_pot_broken
 TILE:   v = dngn_metal_wall_red
 :       vault_metal_statue_setup(_G, "g", "mystic cage")
 :       dgn.delayed_decay(_G, '%', 'human corpse / human skeleton')
-veto {{ return you.uniques("Jory") }}
 MAP
   @@@@@@ @@@@@@@@@@@@@@@@@@@ @@@@@@
 xx......v...................v.......xxxxxxxxxxxxxxxxx
@@ -816,17 +816,17 @@ xxv.B1+.+1vvv.vv.1.1.vv.vvv1+.+1A.vxxxxxxxxxxxxxxxxxx
 xxv.vvv.vvvvvv.vv+++vv.vvvvvv.vvv.vxxxxxxxxxxxxxxxxxx
 xxv.B1+.+1Cvvvv+v...v+vvvvD1+.+1A.vxxxxxxxxxxxxxxxxxx
 xxv.vvv.vvv..Vvv.....vvV..vvv.vvv.vxxxxxxxxxxxxxxxxxx
-xxv.B1+.+1C.4.vvvvvvvvv.4.D1+.+1A.vxxxxxxxxxxxxxxxxxx
-xxv.vvv.vvv..|vv*|||*vv|..vvv.vvv.vxxxxxxxxxxxxxxxxxx
-xxv.B1+.+1Cvvvvvv.*.vvvvvvD1+.+1A.vxxxxxxxxxxxxxxxxxx
+xxv.B1+.+1C.3.vvvvvvvvv.3.D1+.+1A.vxxxxxxxxxxxxxxxxxx
+xxv.vvv.vvv..|vv*|d|*vv|..vvv.vvv.vxxxxxxxxxxxxxxxxxx
+xxv.B1+.+1Cvvvvvv.|.vvvvvvD1+.+1A.vxxxxxxxxxxxxxxxxxx
 xxv.vvvvvvvvv.V.vv+vv.V.vvvvvvvvv.vxxxxxxxxxxxxxxxxxx
-xxv.........+.1.v4.4v.1.+.........vxxxxxxxxxxxxxxxxxx
-xxvvvvvvvvvvv...v.3.v...vvvvvvvvvvvxxxxxxxxxxxxxxxxxx
+xxv.........+.1.v3.3v.1.+.........vxxxxxxxxxxxxxxxxxx
+xxvvvvvvvvvvv...v.J.v...vvvvvvvvvvvxxxxxxxxxxxxxxxxxx
 xxxvvvvvvvvvvv+vv...vv+vvvvgvvvvvvvxxxxxxxxxxxxxxxxxx
 xxvvMMMMMMMvvv.vv.Y.vv.v...v...vvvvxxxxxxxxxxxxxxxxxx
-xxv555%%%MMMvv.vv...vv.+.2.".2.+..vxxxxxxxxxxxxxxxxxx
-xxv555%g%MMM+..vv+++vvvv...v...vv.vxxxxxxxxxxxxxxxxxx
-xxv555%%%MMMvvvv.....vvvvvvvvvvvv.vxxxxxxxxxxxxxxxxxx
+xxv444%%%MMMvv.vv...vv.+.2.".2.+..vxxxxxxxxxxxxxxxxxx
+xxv444%g%MMM+..vv+++vvvv...v...vv.vxxxxxxxxxxxxxxxxxx
+xxv444%%%MMMvvvv.....vvvvvvvvvvvv.vxxxxxxxxxxxxxxxxxx
 xxvvMMMMMMMv+.+..111..+.........+.vxxxxxxxxxxxxxxxxxx
 xxvvvvvvvvvvvvvv..V..vvvvvvvvvvvvvvxxxxxxxxxxxxxxxxxx
 xxxvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvxxxxxxxxxxxxxxxxxxx
@@ -2776,7 +2776,8 @@ TILE:    v = dngn_metal_wall_red
 : end
 KITEM:   & = demon whip / demon blade / demon trident / \
              plate armor ego:fire_resistance pre_id / \
-             fire dragon scales good_item / fire dragon scales randart
+             fire dragon scales good_item / fire dragon scales randart / \
+             sanguine talisman w:2 / dragon-coil talisman w:3
 KITEM:   d = large rock q:1 / stone q:10
 KITEM:   e = any weapon
 KFEAT:   L = l
@@ -2900,8 +2901,8 @@ ITEM:    any potion, any scroll
 : end
 ITEM:    any armour, any weapon, any ring, any amulet
 ITEM:    any wand charges:1, wand of digging charges:1 pre_id
-: kitem("| = randbook disc:necromancy disc2:alchemy numspells:5 " ..
-:       "slevels:" .. you.absdepth())
+: kitem("| = sanguine talisman, randbook disc:necromancy disc2:alchemy " ..
+:       "numspells:5 slevels:" .. you.absdepth())
 KFEAT:   F = G
 KFEAT:   E = cache of meat
 SUBST:   C = c, X = xx.
@@ -3098,7 +3099,7 @@ SUBST:   * = <, ( = (:60 <, [ = [:60 <, ) = ):60 >, ] = ]:60 >, ~ = P
 KITEM:   & = quick blade good_item / rapier randart / \
              swamp dragon scales randart / shadow dragon scales randart / \
              randbook disc:necromancy / randbook spells:summon_forest / \
-             potion of lignification q:4 pre_id
+             potion of lignification q:4 pre_id / sanguine talisman randart
 KMONS:   P = withered plant
 KMONS:   p = fungus
 SUBST:   p = p.., !- = +, ?X = c, " = .
@@ -3353,7 +3354,7 @@ TILE:    x = wall_pebble_lightblue
 TILE:    c = wall_marble w:200 / dngn_stone_wall_lightblue
 : elseif you.in_branch("Shoals") then
 MONS:    merfolk aquamancer / frost giant w:2, merfolk avatar / satyr
-MONS:    formless jellyfish / sphinx marauder, skyshark
+MONS:    formless jellyfish w:15 / sphinx marauder, skyshark
 MONS:    merfolk siren w:2 / faun w:2 / water elemental
 SHUFFLE: })]
 SUBST:   )] = %

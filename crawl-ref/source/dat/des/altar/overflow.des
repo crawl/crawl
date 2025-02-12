@@ -121,7 +121,7 @@ function species_mock(e)
   elseif you.race() == "Barachi" then
     return "cane toad"
   elseif you.race() == "Coglin" then
-    return "hobgoblin"
+    return "hobgoblin skeleton"
   elseif you.race() == "Demigod" then
     return "titan simulacrum"
   elseif you.race() == "Demonspawn" then
@@ -158,6 +158,10 @@ function species_mock(e)
     return "tentacled monstrosity"
   elseif you.race() == "Oni" then
     return "ogre"
+  elseif you.race() == "Poltergeist" then
+    return "dancing weapon ; mundane dagger plus:-9"
+  elseif you.race() == "Revenant" then
+    return "ugly thing skeleton"
   elseif you.race() == "Spriggan" then
     return "unseen horror"
   elseif you.race() == "Tengu" then
@@ -174,10 +178,18 @@ end
 function callback.do_species_mock(data, triggerable, triggerer, marker, ev)
   if data.seen then return else data.seen = true end
   local positions = dgn.find_marker_positions_by_prop("mock_location", 1)
+  local sp = species_mock()
+  if you.race() == "Poltergeist" then
+    sp = "dancing weapon"
+  elseif you.race() == "Mountain Dwarf" then
+    sp = "goblin"
+  end
+  crawl.god_speaks("Xom", '"I found one of your ancestors!"')
   for i, pos in ipairs(positions) do
     local x, y = pos:xy()
     dgn.create_monster(x, y, "generate_awake " .. species_mock())
   end
+  crawl.mpr("A " .. sp .. " emerges from the mists of... memory?....")
 end
 }}
 
@@ -1516,13 +1528,25 @@ ENDMAP
 NAME:   kennysheep_vampire_church
 TAGS:   no_monster_gen temple_overflow_1 temple_overflow_kikubaaqudgha
 TAGS:   uniq_altar_kikubaaqudgha transparent
+# This used to be a decorative vault, but nobody noticed the blood fountain
+# lua by default on a relatively uncommon vault, so now it gets some actual
+# depth-scaling monsters and a reward it in later on.
 : if you.in_branch("Depths") then
 MONS:   vampire knight / jiangshi, vampire mage
-:else
+: elseif you.depth() > 11 then
+MONS:   vampire, vampire bat
+: else
 MONS:   vampire bat / nothing w:7, bat skeleton / bat zombie
-:end
+: end
+: if you.in_branch("Depths")
+:  or (you.absdepth() > 11 and crawl.x_chance_in_y(2, 3)) then
+ITEM:   sanguine talisman
+: end
+KITEM:  A = gold q:1 no_pickup
 KFEAT:  A = altar_kikubaaqudgha
+KFEAT:  X = x
 NSUBST: . = 4:2 / 3 = 2. / *:.
+TILE:   X = wall_catacombs
 {{
 local trig_marker = TriggerableFunction:new {
   func="callback.vampire_church_blood",
@@ -1532,23 +1556,22 @@ trig_marker:add_triggerer(DgnTriggerer:new { type = "player_move" })
 lua_marker("A", trig_marker)
 lua_marker("V", portal_desc { replica_name = "vampire_church_blood" })
 }}
-: interest_check(_G)
 MAP
   xxxxxxxxx
-  xx.V1V.xx
+  xx.VdV.xx
 xxx..1A1..xxx
-xx.x.VdV.x.xx
-x.V.x...x.V.x
-xx.x.x.x.x.xx
-x.x.V.x.V.x.x
-xx.x.x.x.x.xx
-x.V.x.V.x.V.x
-xx.x.x.x.x.xx
-xxx.V.x.V.xxx
-xx.x.x.x.x.xx
-xx..x.V.x..xx
-xx.x.x.x.x.xx
-xxx.V.x.V.xxx
+xx.X.V1V.X.xx
+x.V.X...X.V.x
+xx.X.X.X.X.xx
+x.X.V.X.V.X.x
+xx.X.X.X.X.xx
+x.V.X.V.X.V.x
+xx.X.X.X.X.xx
+xxx.V.X.V.xxx
+xx.X.X.X.X.xx
+xx..X.V.X..xx
+xx.X.X.X.X.xx
+xxx.V.X.V.xxx
 xxxx.....xxxx
 xxxxx+++xxxxx
 ENDMAP
@@ -1617,6 +1640,7 @@ MONS:    rust devil, smoke demon, iron imp ; damaged sling
 : if you.absdepth() > 9 then
 SUBST:   3 = 12
 : end
+TILE:    G = dngn_statue_imp / dngn_statue_demonic_bust
 MAP
 xxxxxxxxxxxxxxx
 x.............x
@@ -1755,6 +1779,8 @@ MAP
 ..@..
 ENDMAP
 
+# Ignis doesn't get normal overflow altars, so this just
+# counts as a Makhleb overflow altar vault itself.
 NAME:    dolorous_makhleb_big_flames_little_flames
 TAGS:    no_monster_gen no_item_gen no_trap_gen transparent
 TAGS:    temple_overflow_1 temple_overflow_makhleb
@@ -2154,6 +2180,7 @@ KMONS:  1 = goblin ; spear
 :end
 KPROP:  1 = no_tele_into
 KMASK:  1 = opaque
+TILE:   G = dngn_statue_polearm / dngn_statue_axe
 : interest_check(_G)
 MAP
       vvvvvvv
@@ -2399,7 +2426,7 @@ MAP
 ENDMAP
 
 # Sky beasts normally generate on D:6-8, so they're within the D:3 out-of-depth
-# range (which goes down to D:6). You'll be fine.
+# range (which goes down to D:6). You'll be fine. Maybe.
 NAME:    nicolae_qazlal_beasts_of_the_sky
 TAGS:    temple_overflow_qazlal temple_overflow_1 transparent
 DEPTH:   D:3-8
@@ -2458,8 +2485,8 @@ ENDMAP
 NAME: nicolae_ru_awakened_eye
 TAGS: temple_overflow_ru temple_overflow_1 uniq_altar_ru transparent decor
 TAGS: no_pool_fixup
-: interest_check(_G)
 KFEAT: _ = altar_ru
+: interest_check(_G)
 MAP
     .......
    .ccccccc.
@@ -2579,24 +2606,23 @@ xxxxxxxxxxxxxx
 xxxxxxxxxxxxxx
 ENDMAP
 
-NAME:       tgw_sif
-TAGS:       no_item_gen no_monster_gen no_pool_fixup
-TAGS:       temple_overflow_1 temple_overflow_sif_muna uniq_altar_sif_muna
-KFEAT:      _ = altar_sif_muna
+NAME:   tgw_sif
+TAGS:   no_item_gen no_monster_gen no_pool_fixup
+TAGS:   temple_overflow_1 temple_overflow_sif_muna uniq_altar_sif_muna
+KFEAT:  _ = altar_sif_muna
 : if you.absdepth() <= 4 then
-MONS:       Jessica
+MONS:   Jessica
 : elseif you.absdepth() <= 6 then
-MONS:       orc wizard w:15 / Blorkula the orcula
+MONS:   orc wizard w:15 / Blorkula the orcula
 : elseif you.in_branch("Depths") then
-MONS:       deep elf annihilator
-:else
-MONS:       orc wizard
+MONS:   lich
+: else
+MONS:   orc wizard
 : end
 : interest_check(_G)
-NSUBST:     M = 1:1 / *:"
-SUBST:      ' : "'., ' = ''.
-COLOUR:     . = blue
-SUBST:      ' = ., " = .
+NSUBST: M = 1:1 / *:"
+SUBST:  ' : "'., ' = ''.
+COLOUR: . = blue
 MAP
         xx@xx
         x...x
@@ -2791,18 +2817,18 @@ MAP
 ENDMAP
 
 NAME:   trog_ov_bears_minmay
-TAGS:   temple_overflow_1 temple_overflow_trog uniq_altar_trog
-TAGS:   transparent
+TAGS:   temple_overflow_1 temple_overflow_trog uniq_altar_trog transparent
 # begin at bear range
 DEPTH:  D:4-
 : if you.absdepth() < 10 then
 MONS:   black bear
 : else
 MONS:   polar bear
+FTILE:  '_12 = floor_frozen
 : end
 MONS:   bush
-NSUBST: ' = 2:2 / 2=2. / *=.
 KFEAT:  _ = altar_trog
+NSUBST: ' = 2:2 / 2 = 2' / *:'
 MAP
 .....
 .'''.
@@ -4710,16 +4736,15 @@ KPROP:   1D' = no_tele_into
 KMASK:   1D' = no_item_gen
 KMASK:   1D' = no_trap_gen
 KMASK:   ' = no_monster_gen
-# TODO: this fog machine doesn't do much, is it supposed to spread?
 MARKER:  1 = lua:fog_machine { cloud_type = "thin mist", \
-             pow_min = 100, pow_max = 100, delay = 1, \
-             size = 1, walk_dist = 0, start_clouds = 1 }
+             pow_min = 20, pow_max = 50, delay = 1, size = 1, \
+             walk_dist = 1, start_clouds = 1, spread_rate = 10}
 MAP
 cccccc
 ccb'bccccc
-cb1nDbc.+.
+cbDn1bc.+.
 c'nnnnc.c.
-cbDnA...cc
+cb1nA...cc
 ccbn.G.bc
 cccc..Bcc
  c...bcc

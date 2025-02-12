@@ -604,7 +604,8 @@ MONS:    vampire knight ; demon whip | demon trident | demon blade . \
                           plate armour | chain mail
 MONS:    putrid mouth, tormentor w:3, silent spectre
 KMONS:   9 = reaper
-KMONS:   J = Jory w:9 / tzitzimitl w:1, tzitzimitl
+KMONS:   J = Jory w:5 / vampire bloodprince w:4 / tzitzimitl w:1, \
+             vampire bloodprince w:4 / tzitzimitl w:1
 NSUBST:  J = 1:J / *:9, 8 = 1:6 / * = 5:19 6:1
 SUBST:   A : x.., B : x.., } = }>
 : vault_metal_statue_setup(_G, "G", "mystic cage")
