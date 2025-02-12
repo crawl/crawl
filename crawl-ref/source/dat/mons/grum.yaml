@@ -1,7 +1,7 @@
 name: "Grum"
 glyph: {char: "g", colour: lightred}
 flags: [speaks, warm_blood, unique, male]
-xp_mult: 19
+xp_mult: 191
 species: gnoll
 will: 10
 attacks:

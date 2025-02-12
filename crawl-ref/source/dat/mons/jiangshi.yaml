@@ -2,6 +2,7 @@ name: "jiangshi"
 glyph: {char: "V", colour: yellow}
 flags: [fighter]
 resists: {cold: 1}
+xp_mult: 909
 species: vampire
 genus: jiangshi
 holiness: [undead]

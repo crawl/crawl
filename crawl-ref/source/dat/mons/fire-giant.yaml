@@ -2,7 +2,7 @@ name: "fire giant"
 glyph: {char: "C", colour: red}
 flags: [fighter, see_invis, speaks, warm_blood]
 resists: {fire: 2}
-xp_mult: 13
+xp_mult: 1281
 genus: giant
 will: 80
 attacks:

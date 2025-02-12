@@ -2,7 +2,7 @@ name: "player illusion"
 glyph: {char: "@", colour: white}
 flags: [flies, fighter, speaks, ghost_demon, insubstantial, no_poly_to]
 resists: {poison: 1}
-xp_mult: 15
+xp_mult: 40
 will_per_hd: 5
 attacks:
  - {type: hit, damage: 5}

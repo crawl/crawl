@@ -1,7 +1,7 @@
 name: "Prince Ribbit"
 glyph: {char: "F", colour: lightcyan}
 flags: [speaks, cold_blood, unique, male]
-xp_mult: 12
+xp_mult: 276
 species: human
 genus: frog
 will: 40

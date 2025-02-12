@@ -2,7 +2,7 @@ name: "cacodemon"
 glyph: {char: "2", colour: yellow}
 flags: [flies, see_invis]
 resists: {elec: 1, poison: 1}
-xp_mult: 15
+xp_mult: 1139
 holiness: [demonic]
 will: 160
 attacks:

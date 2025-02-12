@@ -2,7 +2,7 @@ name: "lava snake"
 glyph: {char: "S", colour: yellow}
 flags: [warm_blood]
 resists: {fire: 3, cold: -1}
-xp_mult: 17
+xp_mult: 48
 genus: snake
 will: 10
 attacks:

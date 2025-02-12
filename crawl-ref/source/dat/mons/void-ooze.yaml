@@ -2,7 +2,7 @@ name: "void ooze"
 glyph: {char: "J", colour: cyan}
 flags: [eat_doors, see_invis, unblindable, amorphous, no_skeleton]
 resists: {poison: 1, acid: 3}
-xp_mult: 15
+xp_mult: 1110
 genus: jelly
 will: invuln
 attacks:

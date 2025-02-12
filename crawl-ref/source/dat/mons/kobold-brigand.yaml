@@ -1,7 +1,7 @@
 name: "kobold brigand"
 glyph: {char: "K", colour: yellow}
 flags: [speaks, warm_blood]
-xp_mult: 7
+xp_mult: 98
 species: kobold
 will: 20
 attacks:

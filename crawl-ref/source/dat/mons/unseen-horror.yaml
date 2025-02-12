@@ -1,7 +1,7 @@
 name: "unseen horror"
 glyph: {char: "x", colour: magenta}
 flags: [invis, see_invis, batty]
-xp_mult: 6
+xp_mult: 384
 will: 20
 attacks:
  - {type: hit, damage: 12}

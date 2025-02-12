@@ -2,6 +2,7 @@ name: "demonspawn corrupter"
 glyph: {char: "6", colour: lightgreen}
 flags: [speaks, warm_blood]
 resists: {neg: 3}
+xp_mult: 1120
 species: demonspawn
 holiness: [natural, demonic]
 will: 60

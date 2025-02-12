@@ -1,6 +1,7 @@
 name: "spriggan rider"
 glyph: {char: "i", colour: lightblue}
 flags: [flies, fighter, see_invis, speaks, warm_blood]
+xp_mult: 734
 resists: {poison: -1}
 xp_mult: 8
 species: spriggan

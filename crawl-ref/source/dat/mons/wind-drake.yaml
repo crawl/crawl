@@ -1,7 +1,7 @@
 name: "wind drake"
 glyph: {char: "k", colour: white}
 flags: [flies, warm_blood]
-xp_mult: 6
+xp_mult: 285
 genus: drake
 will: 40
 attacks:

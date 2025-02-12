@@ -2,7 +2,7 @@ name: "spark wasp"
 glyph: {char: "y", colour: lightcyan}
 flags: [flies, web_immune, no_skeleton]
 resists: {elec: 3, poison: -1}
-xp_mult: 12
+xp_mult: 981
 will: 40
 attacks:
  - {type: sting, flavour: elec, damage: 33}

@@ -2,7 +2,7 @@ name: "boulder beetle"
 glyph: {char: "B", colour: lightgray}
 flags: [web_immune, no_skeleton]
 resists: {poison: -1}
-xp_mult: 12
+xp_mult: 828
 will: 40
 attacks:
  - {type: bite, damage: 27}

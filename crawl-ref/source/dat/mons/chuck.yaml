@@ -1,6 +1,7 @@
 name: "Chuck"
 glyph: {char: "C", colour: white}
 flags: [speaks, warm_blood, unique, male]
+xp_mult: 1460
 species: stone_giant
 genus: giant
 will: 100

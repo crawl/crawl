@@ -2,7 +2,7 @@ name: "thorn hunter"
 glyph: {char: "f", colour: white}
 flags: [see_invis]
 resists: {poison: 1, fire: -1}
-xp_mult: 14
+xp_mult: 1431
 genus: plant
 holiness: [plant]
 will: 100

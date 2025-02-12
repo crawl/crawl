@@ -1,7 +1,7 @@
 name: "deep elf master archer"
 glyph: {char: "e", colour: lightgray}
 flags: [speaks, warm_blood, archer, prefer_ranged]
-xp_mult: 30
+xp_mult: 1640
 species: elf
 will: 100
 attacks:

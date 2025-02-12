@@ -1,6 +1,7 @@
 name: "purple draconian"
 glyph: {char: "d", colour: magenta}
 flags: [speaks, cold_blood]
+xp_mult: 997
 genus: draconian
 will: 140
 attacks:

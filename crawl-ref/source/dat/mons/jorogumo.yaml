@@ -1,6 +1,7 @@
 name: "jorogumo"
 glyph: {char: "H", colour: blue}
 flags: [see_invis, speaks, web_immune, warm_blood]
+xp_mult: 847
 will: 60
 attacks:
  - {type: hit, flavour: poison_paralyse, damage: 28}

@@ -2,6 +2,7 @@ name: "angel"
 glyph: {char: "A", colour: white}
 flags: [flies, fighter, speaks]
 resists: {elec: 1, poison: 1}
+xp_mult: 1155
 holiness: [holy]
 will: 120
 attacks:

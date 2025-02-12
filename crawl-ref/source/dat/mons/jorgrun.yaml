@@ -1,7 +1,7 @@
 name: "Jorgrun"
 glyph: {char: "g", colour: lightmagenta}
 flags: [speaks, warm_blood, unique, male]
-xp_mult: 18
+xp_mult: 1873
 species: dwarf
 will: 120
 attacks:

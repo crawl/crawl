@@ -2,7 +2,7 @@ name: "Josephina"
 glyph: {char: "L", colour: lightblue}
 flags: [see_invis, speaks, unique, female]
 resists: {cold: 3}
-xp_mult: 20
+xp_mult: 3438
 species: lich
 holiness: [undead]
 will: invuln

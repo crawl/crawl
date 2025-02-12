@@ -1,6 +1,7 @@
 name: "seismosaurus"
 glyph: {char: "l", colour: lightcyan}
 flags: [cold_blood, no_poly_to, no_zombie]
+xp_mult: 799
 genus: giant_lizard
 will: 80
 attacks:

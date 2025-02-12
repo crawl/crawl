@@ -2,7 +2,7 @@ name: "bennu"
 glyph: {char: "b", colour: yellow}
 flags: [flies, see_invis, speaks, warm_blood, no_poly_to]
 resists: {poison: 1, fire: 3, neg: 3, miasma: 1}
-xp_mult: 6
+xp_mult: 1011
 will: 140
 attacks:
  - {type: peck, flavour: holy, damage: 46}

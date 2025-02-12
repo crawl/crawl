@@ -1,6 +1,7 @@
 name: "Natasha"
 glyph: {char: "h", colour: magenta}
 flags: [see_invis, speaks, warm_blood, unique, female]
+xp_mult: 35
 species: felid
 will: 20
 attacks:

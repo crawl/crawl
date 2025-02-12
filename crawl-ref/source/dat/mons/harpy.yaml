@@ -2,7 +2,7 @@ name: "harpy"
 glyph: {char: "H", colour: green}
 flags: [flies, batty, warm_blood]
 resists: {poison: 1}
-xp_mult: 9
+xp_mult: 622
 will: 20
 attacks:
  - {type: claw, damage: 19}

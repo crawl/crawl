@@ -2,7 +2,7 @@ name: "catoblepas"
 glyph: {char: "Y", colour: magenta}
 flags: [warm_blood]
 resists: {petrify: 1}
-xp_mult: 8
+xp_mult: 843
 genus: yak
 will: 100
 attacks:

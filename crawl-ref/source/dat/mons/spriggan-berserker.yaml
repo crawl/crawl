@@ -1,6 +1,7 @@
 name: "spriggan berserker"
 glyph: {char: "i", colour: lightred}
 flags: [fighter, see_invis, speaks, warm_blood]
+xp_mult: 792
 species: spriggan
 will: 120
 attacks:

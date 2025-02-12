@@ -2,6 +2,7 @@ name: "Hell Sentinel"
 glyph: {char: "1", colour: brown}
 flags: [see_invis]
 resists: {elec: 3, poison: 3, fire: 3, cold: 3, damnation: 1}
+xp_mult: 1822
 holiness: [demonic]
 will: invuln
 attacks:

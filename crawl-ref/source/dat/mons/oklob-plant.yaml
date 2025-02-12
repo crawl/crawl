@@ -2,6 +2,7 @@ name: "oklob plant"
 glyph: {char: "P", colour: lightgreen}
 flags: [stationary]
 resists: {poison: 1, acid: 3}
+xp_mult: 564
 genus: plant
 holiness: [plant]
 will: 40

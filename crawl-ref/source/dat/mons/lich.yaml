@@ -2,7 +2,7 @@ name: "lich"
 glyph: {char: "L", colour: lightgray}
 flags: [see_invis, speaks]
 resists: {cold: 2}
-xp_mult: 18
+xp_mult: 1745
 holiness: [undead]
 will: invuln
 attacks:

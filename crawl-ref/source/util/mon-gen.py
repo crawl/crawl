@@ -339,7 +339,7 @@ keyfns = {
 
     'resists': Field(parse_resists),
 
-    'xp_mult': Field(lambda s: parse_num(s, 0, 999)),
+    'xp_mult': Field(lambda s: parse_num(s, 0, 9999)),
     'species': Field(lambda s: "MONS_" + s.upper()),
     'genus': Field(lambda s: "MONS_" + s.upper()),
     'holiness': Field(parse_holiness),

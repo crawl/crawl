@@ -2,7 +2,7 @@ name: "jelly"
 glyph: {char: "J", colour: lightred}
 flags: [eat_doors, see_invis, unblindable, splits, amorphous, acid_splash, no_skeleton]
 resists: {poison: 1, acid: 3}
-xp_mult: 15
+xp_mult: 42
 will: 10
 attacks:
  - {type: hit, flavour: acid, damage: 3}

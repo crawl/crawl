@@ -1,6 +1,7 @@
 name: "vampire mosquito"
 glyph: {char: "y", colour: lightgray}
 flags: [flies, no_skeleton, no_zombie]
+xp_mult: 179
 holiness: [undead]
 will: 20
 attacks:

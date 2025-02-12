@@ -1,6 +1,7 @@
 name: "deep elf blademaster"
 glyph: {char: "e", colour: lightcyan}
 flags: [fighter, speaks, warm_blood, two_weapons]
+xp_mult: 1664
 species: elf
 will: 120
 attacks:
