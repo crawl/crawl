@@ -1423,7 +1423,14 @@ static void _give_weapon(monster *mon, int level, bool second_weapon = false)
         return;
     }
 
-    const int thing_created = make_mons_weapon(mon->type, level, second_weapon);
+    monster_type for_type = mon->type;
+    if (mons_is_zombified(*mon))
+    {
+        for_type = mons_zombie_base(*mon);
+        level = ISPEC_DAMAGED;
+    }
+
+    const int thing_created = make_mons_weapon(for_type, level, second_weapon);
     if (thing_created == NON_ITEM)
         return;
 

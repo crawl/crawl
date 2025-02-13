@@ -1555,6 +1555,13 @@ mon_itemuse_type mons_itemuse(const monster& mon)
     if (mon.type == MONS_BOUND_SOUL)
         return mons_class_itemuse(mons_zombie_base(mon));
 
+    if (mon.type == MONS_SKELETON || mon.type == MONS_ZOMBIE)
+    {
+        // For skeleton and zombie types that were given equipment, at least
+        // let them use it (if the base type could use items at all)
+        return min(mons_class_itemuse(mons_zombie_base(mon)), MONUSE_STARTING_EQUIPMENT);
+    }
+
     return mons_class_itemuse(mon.type);
 }
 
