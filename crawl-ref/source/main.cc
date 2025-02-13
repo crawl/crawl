@@ -1350,6 +1350,9 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
     }
     else if (you.duration[DUR_VAINGLORY])
     {
+        if (ftype == DNGN_PASSAGE_OF_GOLUBRIA || ftype == DNGN_TRANSPORTER) {
+            return true;
+        }
         mpr("It simply wouldn't do to leave so soon after announcing yourself.");
         return false;
     }
