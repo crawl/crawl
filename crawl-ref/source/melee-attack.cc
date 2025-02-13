@@ -71,6 +71,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     ::attack(attk, defn),
 
     attack_number(attack_num), effective_attack_number(effective_attack_num),
+    total_damage_done(0),
     cleaving(false), is_multihit(false), is_riposte(false),
     is_projected(false), charge_pow(0), never_cleave(false), dmg_mult(0),
     flat_dmg_bonus(0), never_prompt(false),
@@ -1040,7 +1041,8 @@ bool melee_attack::handle_phase_end()
             extra_hits.push_back(defender);
         // effective_attack_number will be wrong for a monster that
         // does a cleaving multi-hit attack. God help us.
-        attack_multiple_targets(*attacker, extra_hits, attack_number,
+        total_damage_done += attack_multiple_targets(
+                                *attacker, extra_hits, attack_number,
                                 effective_attack_number, wu_jian_attack,
                                 is_projected, false, mutable_wpn);
         if (attacker->is_player())
@@ -1053,9 +1055,9 @@ bool melee_attack::handle_phase_end()
         && wu_jian_attack != WU_JIAN_ATTACK_WALL_JUMP
         && wu_jian_attack != WU_JIAN_ATTACK_TRIGGERED_AUX)
     {
-        attack_multiple_targets(*attacker, cleave_targets, attack_number,
-                              effective_attack_number, wu_jian_attack,
-                              is_projected, true, mutable_wpn);
+        total_damage_done += attack_multiple_targets(*attacker, cleave_targets,
+                              attack_number, effective_attack_number,
+                              wu_jian_attack, is_projected, true, mutable_wpn);
     }
 
     // Check for passive mutation effects.
@@ -1171,7 +1173,7 @@ void melee_attack::force_cleave(item_def &wpn, coord_def target_pos)
     if (targets.empty())
         return;
 
-    attack_multiple_targets(*attacker, targets, attack_number,
+    total_damage_done += attack_multiple_targets(*attacker, targets, attack_number,
                             effective_attack_number, wu_jian_attack,
                             is_projected /*false*/,  true, &wpn);
 }
@@ -1438,6 +1440,8 @@ bool melee_attack::attack()
 
     if (!defender->alive())
         handle_phase_killed();
+
+    total_damage_done += damage_done + special_damage;
 
     handle_phase_aux();
 
@@ -2123,6 +2127,8 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
     }
     else // defender was just alive, so this call should be ok?
         player_announce_aux_hit();
+
+    total_damage_done += damage_done;
 
     if (defender->as_monster()->hit_points < 1)
     {

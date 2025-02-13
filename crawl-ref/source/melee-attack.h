@@ -39,6 +39,11 @@ public:
     int       attack_number;
     int       effective_attack_number;
 
+    // A tally of all direct weapon + brand damage inflicted by this attack
+    // (including damage against cleave targets, both hits of quick blades,
+    // and aux attacks).
+    int       total_damage_done;
+
     list<actor*> cleave_targets;
     bool         cleaving;        // additional attack from cleaving
     bool         is_multihit;     // quick blade follow-up attack

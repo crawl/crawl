@@ -1138,17 +1138,28 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
  *
  * @param attacker                  The attacking creature.
  * @param targets                   The targets to cleave.
- * @param attack_number             ?
- * @param effective_attack_number   ?
+ * @param attack_number             For monsters, which of their 4 possible attacks this
+ *                                  corresponds to. For players, usually 0, but can be 1
+ *                                  for the second of a Coglin's two weapons per round
+ * @param effective_attack_number   Like attack_number, if invalid attacks were skipped
+ *                                  (ie: fake attacks or ones outside of their max range.)
+ * @param wu_jian_attack            The type of martial attack being performed (if any).
+ * @param is_projected              Whether the attack is projected (ie: Manifold Assault)
+ * @param is_cleaving               Whether this is a cleaving attack.
+ * @param weapon                    The weapon this attack is being performed with (if any).
+ *
+ * @return  The total amount of damage inflicted directly by all attacks caused by this function.
  */
-void attack_multiple_targets(actor &attacker, list<actor*> &targets,
+int attack_multiple_targets(actor &attacker, list<actor*> &targets,
                              int attack_number, int effective_attack_number,
                              wu_jian_attack_type wu_jian_attack,
                              bool is_projected, bool is_cleaving,
                              item_def *weapon)
 {
     if (!attacker.alive())
-        return;
+        return 0;
+
+    int total_damage = 0;
     const item_def* weap = weapon ? weapon : attacker.weapon(attack_number);
     const bool reaching = weap && weapon_reach(*weap) > REACH_NONE;
     while (attacker.alive() && !targets.empty())
@@ -1170,9 +1181,13 @@ void attack_multiple_targets(actor &attacker, list<actor*> &targets,
             attck.cleaving = is_cleaving;
             attck.is_multihit = !is_cleaving; // heh heh heh
             attck.attack();
+
+            total_damage += attck.total_damage_done;
         }
         targets.pop_front();
     }
+
+    return total_damage;
 }
 
 /**
