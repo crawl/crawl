@@ -2628,7 +2628,8 @@ int exper_value(const monster& mon, bool real, bool legacy)
     // Monsters who can use equipment (even if only the equipment
     // they are given) can be considerably enhanced because of
     // the way weapons work for monsters. - bwr
-    if (item_usage >= MONUSE_STARTING_EQUIPMENT)
+    bool is_zombie = mons_is_zombified(mon);
+    if (item_usage >= MONUSE_STARTING_EQUIPMENT && !is_zombie)
         diff += 30;
 
     // Set a reasonable range on the difficulty modifier...
@@ -2652,7 +2653,7 @@ int exper_value(const monster& mon, bool real, bool legacy)
     // Slow monsters without spells and items often have big HD which
     // cause the experience value to be overly large... this tries
     // to reduce the inappropriate amount of XP that results. - bwr
-    if (speed < 10 && !spellcaster && item_usage < MONUSE_STARTING_EQUIPMENT)
+    if (speed < 10 && !spellcaster && (item_usage < MONUSE_STARTING_EQUIPMENT || is_zombie))
         x_val /= 2;
 
     // Apply the modifier in the monster's definition.
@@ -4104,7 +4105,7 @@ bool mons_class_can_pass(monster_type mc, const dungeon_feature_type grid)
 
 static bool _mons_can_open_doors(const monster* mon)
 {
-    return mons_itemuse(*mon) >= MONUSE_OPEN_DOORS;
+    return mons_itemuse(*mon) >= MONUSE_OPEN_DOORS && !mons_is_zombified(*mon);
 }
 
 // Some functions that check whether a monster can open/eat/pass a
@@ -4143,13 +4144,18 @@ bool mons_can_eat_door(const monster& mon, const coord_def& pos)
 
 bool mons_can_destroy_door(const monster& mon, const coord_def& pos)
 {
-    if (!mons_class_flag(mons_base_type(mon), M_CRASH_DOORS))
-        return false;
-
     if (env.markers.property_at(pos, MAT_ANY, "door_restrict") == "veto")
         return false;
 
-    return true;
+    if (mons_class_flag(mons_base_type(mon), M_CRASH_DOORS))
+        return true;
+
+    // Average size and above zombies can bash doors down, if they were
+    // smart enough to open them when living. (But not player allies, for
+    // the same reason as opening doors).
+    return (mon.type == MONS_SKELETON || mon.type == MONS_ZOMBIE)
+        && !mon.friendly() && mon.body_size() >= SIZE_MEDIUM
+        && mons_class_itemuse(mons_zombie_base(mon)) >= MONUSE_OPEN_DOORS;
 }
 
 static bool _mons_can_pass_door(const monster* mon, const coord_def& pos)

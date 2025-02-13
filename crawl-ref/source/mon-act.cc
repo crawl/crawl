@@ -3648,6 +3648,30 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
     {
         if (mons_can_destroy_door(mons, f))
         {
+            if (mons_is_zombified(mons))
+            {
+                // Derived undead may fail to bash the door down.
+                // Chances by size: Giant 6/10; Large 7/10; Medium 8/10
+                if (x_chance_in_y(12 - (int)mons.body_size(), 10))
+                {
+                    bool quiet = silenced(you.pos()) || silenced(f);
+                    if (quiet && !you.see_cell(f))
+                    {
+                    }
+                    else if (!you.see_cell(f))
+                        mpr("You hear a door banging.");
+                    else if (!you.can_see(mons) && !quiet)
+                    {
+                        mpr("Something bangs on the other side of a door, but it holds firm.");
+                        env.map_knowledge(mons.pos()).set_detected_monster(MONS_SENSED);
+                        interrupt_activity(activity_interrupt::sense_monster);
+                    }
+                    else if (!quiet)
+                        simple_monster_message(mons, " bashes against the door, but it doesn't budge.");
+                    mons.lose_energy(EUT_MOVE);
+                    return true;
+                }
+            }
             env.grid(f) = DNGN_FLOOR;
             set_terrain_changed(f);
 
@@ -3656,7 +3680,8 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
                 viewwindow();
                 update_screen();
 
-                if (!you.can_see(mons))
+                // We know we'll see their eventual position, but can we see them at all?
+                if (!mons.visible_to(&you))
                 {
                     mpr("The door bursts into shrapnel!");
                     interrupt_activity(activity_interrupt::sense_monster);
