@@ -2604,6 +2604,7 @@ static const mutation_def mut_data[] =
   {"Your magical power is your life essence.", "", ""},
   {"Your magical power and health merge together.", "", ""},
   {"Your life and magic unlink."},
+  TILEG_MUT_HP_CASTING,
 },
 
 // XX why does this have 3 levels, only 1 is used
@@ -2647,6 +2648,7 @@ static const mutation_def mut_data[] =
   {"Your divine heritage dramatically boosts your attributes as you level up.", "", ""},
   {"You feel more divine.", "", ""},
   {"You feel more mortal.", "", ""},
+  TILEG_MUT_DIVINE_ATTRIBUTES,
 },
 
 { MUT_DEVOUR_ON_KILL, 0, 1, mutflag::good, true,
@@ -2683,6 +2685,7 @@ static const mutation_def mut_data[] =
   {"You regain HP and MP as you explore.", "", ""},
   {"You feel a fierce wanderlust.", "", ""},
   {"You feel like a homebody.", "", ""},
+  TILEG_MUT_EXPLORE_REGEN,
 },
 
 { MUT_DOUBLE_POTION_HEAL, 0, 1, mutflag::good, false,

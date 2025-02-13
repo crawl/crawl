@@ -110,6 +110,9 @@ percussive_tempering BOLT_PERCUSSIVE_TEMPERING
 
 fortress_blast BOLT_FORTRESS_BLAST
 
+bomblet_launch0 BOLT_BOMBLET_LAUNCH
+bomblet_launch1
+
 bomblet_blast0 BOLT_BOMBLET_BLAST
 bomblet_blast1
 

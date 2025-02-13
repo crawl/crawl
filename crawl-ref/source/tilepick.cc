@@ -3524,6 +3524,7 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dir, int dist)
     case TILE_BOLT_SHADOW_BLAST:
     case TILE_BOLT_HAEMOCLASM:
     case TILE_BOLT_GHOSTLY_FIREBALL:
+    case TILE_BOLT_BOMBLET_LAUNCH:
     case TILE_BOLT_BOMBLET_BLAST:
     case TILE_BOLT_MANIFOLD_ASSAULT:
     case TILE_BOLT_PARAGON_TEMPEST:

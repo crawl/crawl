@@ -879,6 +879,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             beam.target = targ;
             beam.draw_delay = 80;
             beam.fire();
+            flash_tile(targ, WHITE, 110, TILE_BOLT_BOMBLET_LAUNCH);
             monarch_deploy_bomblet(caster, targ, true);
         },
         _zap_setup(SPELL_DEPLOY_BOMBLET) } },
