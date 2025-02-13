@@ -5355,8 +5355,7 @@ SUBST: = = +, E = D
 : end
 SUBST: D = 1., E = 2.
 NSUBST: 3 = 2:3 / 3.
-KITEM: - = troll skeleton / minotaur skeleton / deep dwarf skeleton /\
-           ogre skeleton
+KITEM: - = troll skeleton / minotaur skeleton / dwarf skeleton / ogre skeleton
 MAP
 ccccccccccc
 =.-...1.-.c
@@ -6124,10 +6123,10 @@ KPROP:   -! = bloody
 : set_feature_name("granite_statue", "a statue of a dwarf")
 TILE:    C = stone_wall_pyre
 TILE:    G = dngn_statue_dwarf
-: dgn.delayed_decay_extra(_G, "?", "deep dwarf corpse", "helmet / \
+: dgn.delayed_decay_extra(_G, "?", "dwarf corpse", "helmet / \
 : cloak, plate armour, war axe good_item / broad axe / \
 : battleaxe / executioner's axe / arga w:1")
-: dgn.delayed_decay(_G, "!", "deep dwarf corpse")
+: dgn.delayed_decay(_G, "!", "dwarf corpse")
 MAP
      wwwww
 wwwwwwcccwwwwww

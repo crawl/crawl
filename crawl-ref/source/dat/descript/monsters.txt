@@ -1121,11 +1121,6 @@ deep elf zephyrmancer
 An elf with a singular focus on the magic of the air, leaving little time to
 study anything else.
 %%%%
-deep dwarf
-
-A pale and unnaturally tough-skinned dwarf that dwells far below ground and
-almost never emerges into the sunlit upper world.
-%%%%
 deep troll
 
 A stooped troll with dark skin. It often travels in packs.

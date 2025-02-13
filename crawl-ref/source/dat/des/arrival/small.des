@@ -3548,7 +3548,7 @@ NAME:     amcnicky_arrival_wind_blow
 TAGS:     arrival no_monster_gen no_trap_gen
 ORIENT:   float
 NSUBST:   _ = 4:p / 4=p:2 . / *=.
-KITEM:    p = deep dwarf skeleton
+KITEM:    p = dwarf skeleton
 MAP
       xxxxx
       x__{xxx
@@ -3570,7 +3570,7 @@ NAME:     amcnicky_arrival_abandoned_market
 TAGS:     arrival no_monster_gen no_trap_gen
 ORIENT:   float
 NSUBST:   _ = 4:q / 4=q:2 . / *=.
-KITEM:    q = deep dwarf skeleton
+KITEM:    q = dwarf skeleton
 NSUBST:   - = 6=p / 6=p. / 6=px / *=.x
 SUBST:    r = x.
 KFEAT:    p = abandoned_shop
