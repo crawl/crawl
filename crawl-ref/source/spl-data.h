@@ -4001,7 +4001,7 @@ static const struct spell_desc spelldata[] =
     spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
     7,
     200,
-    7, 7,
+    5, 5,
     0,
     TILEG_PHANTOM_BLITZ,
 },
