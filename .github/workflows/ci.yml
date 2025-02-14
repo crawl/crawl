@@ -693,7 +693,7 @@ jobs:
   deploy_docs:
     name: Deploy docs
     needs: build_docs
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+    if: ${{ github.event_name == 'push' && github.repository == 'crawl/crawl' && github.ref == 'refs/heads/master' }}
     # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
     permissions:
       pages: write      # to deploy to Pages
@@ -721,7 +721,7 @@ jobs:
       - build_monster
       - build_docs
       - deploy_docs
-    if: failure() && github.event_name == 'push'
+    if: failure() && github.event_name == 'push' && github.repository == 'crawl/crawl'
     runs-on: ubuntu-22.04
     steps:
       - name: Build message
