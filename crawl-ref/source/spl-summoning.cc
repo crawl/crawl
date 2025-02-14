@@ -3343,9 +3343,10 @@ void clockwork_bee_pick_new_target(monster& bee)
     }
 }
 
+// For spell menu display only
 dice_def diamond_sawblade_damage(int power)
 {
-    return zap_damage(ZAP_SHRED, (1 + div_rand_round(power, 10)) * 12, true, false);
+    return zap_damage(ZAP_SHRED, (1 + power/ 10) * 12, true, false);
 }
 
 vector<coord_def> diamond_sawblade_spots(bool actual)
