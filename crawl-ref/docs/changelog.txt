@@ -172,7 +172,9 @@ Spells
     into a mighty dinosaur if the caster stays next to it with visible enemies.
 * Spell changes:
   * Awakened Armours now equip a replica of the body armour they're echoing.
-  * Battlespheres now target the most proportionally damaged foe, if possible.
+  * Battlespheres last longer at lower spell power, are better at pathing
+    towards their target, and will target the most proportionally damaged foe if
+    possible.
   * Hellfire Mortar now scales heavily with spellpower, deals more damage,
     has longer mortar range, and pushes back singular flying foes.
   * Lightning Spires now target the furtherest-away foe, if possible.
