@@ -4504,33 +4504,30 @@ int get_monster_tension(const monster& mons, god_type god)
             exper *= 2;
     }
 
-    if (mons.is_silenced() && (mons.is_actual_spellcaster() || mons.is_priest()))
-        exper = exper * 2 / 3;
+    const vector<pair<bool, pair<int, int>>> tension_monster_status_checks {
+        { mons.has_ench(ENCH_HASTE),                        {3, 2} },
+        { mons.berserk_or_frenzied(),                       {3, 2} },
+        { mons.has_ench(ENCH_ARMED),                        {5, 4} },
+        { mons.has_ench(ENCH_CHAOS_LACE),                   {5, 4} },
+        { mons.has_ench(ENCH_MIGHT),                        {5, 4} },
+        { mons.has_ench(ENCH_EMPOWERED_SPELLS),             {5, 4} },
+        { mons.has_ench(ENCH_WORD_OF_RECALL),               {5, 4} },
+        { mons.has_ench(ENCH_SLOW),                         {2, 3} },
+        { mons.has_ench(ENCH_VEXED),                        {2, 3} },
+        { mons.is_silenced() && (mons.is_actual_spellcaster()
+            || mons.is_priest()),                           {2, 3} },
+        { mons.confused() || mons.caught(),                 {1, 2} },
+        { mons_is_fleeing(mons),                           {10, 1} },
+        { mons.asleep() || mons.has_ench(ENCH_PARALYSIS),  {20, 1} }
+    };
 
-    if (mons.confused() || mons.caught())
-        exper /= 2;
-
-    if (mons.has_ench(ENCH_SLOW))
-        exper = exper * 2 / 3;
-
-    if (mons.has_ench(ENCH_HASTE))
-        exper = exper * 3 / 2;
-
-    if (mons.has_ench(ENCH_MIGHT))
-        exper = exper * 5 / 4;
-
-    if (mons.has_ench(ENCH_EMPOWERED_SPELLS))
-        exper = exper * 5 / 4;
-
-    if (mons.has_ench(ENCH_WORD_OF_RECALL))
-        exper = exper * 5 / 4;
-
-    if (mons.has_ench(ENCH_ARMED))
-        exper = exper * 5 / 4;
-
-    // Health boost stacks further on top of haste and might bonuses
-    if (mons.berserk_or_frenzied())
-        exper = exper * 3 / 2;
+    for (auto &checks : tension_monster_status_checks) {
+        if (checks.first)
+        {
+            exper *= checks.second.first;
+            exper /= checks.second.second;
+        }
+    }
 
     return exper;
 }
@@ -4555,16 +4552,17 @@ int get_tension(god_type god)
         }
     }
 
-    // At least one monster has to be nearby, for tension to count.
-    if (!nearby_monster)
+    // At least one monster has to be (possibly) nearby, for tension to count.
+    if (!nearby_monster && !player_in_branch(BRANCH_ABYSS))
         return 0;
 
-    // XXX: Maybe too low?
+    // XXX: Probably too low, but needs tension use review first.
     const int scale = 1;
 
     int tension = total;
 
     // Tension goes up inversely proportional to the percentage of your max HP.
+    // Note: wizmoding up too much HP will break calculations here.
     tension *= (scale + 1) * you.hp_max;
     tension /= max(you.hp_max + scale * you.hp, 1);
 
@@ -4576,54 +4574,65 @@ int get_tension(god_type god)
 
     tension /= div;
 
-    // Indefinite spawns and unreliable / delayed escape.
-    if (player_in_branch(BRANCH_ABYSS))
-    {
-        if (tension < 2)
-            tension = 2;
-        else
-            tension = tension * 3 / 2;
-    }
-    else if (player_in_branch(BRANCH_PANDEMONIUM))
-        tension = tension * 9 / 8;
+    int tension_min = 0;
 
     if (player_on_orb_run())
-    {
-        if (tension < 3)
-            tension = 3;
-        else
-            tension = tension * 2;
+        tension_min = 3;
+    else if (player_in_branch(BRANCH_ABYSS) || you.cannot_act())
+        tension_min = 2;
+
+    tension = max(tension, tension_min);
+
+    // Condition, multiplier, and divisor trios for quite a few
+    // straightforward debuff or location-based tension checks.
+    const vector<pair<bool, pair<int, int>>> tension_player_status_checks {
+        { you.cannot_act(),                              {10, 1} },
+        { you.duration[DUR_VEXED] > 0,                   {2, 1} },
+        { player_on_orb_run(),                           {2, 1} },
+        { you.caught(),                                  {2, 1} },
+        { you.duration[DUR_VAINGLORY] > 0,               {5, 3} },
+        { silenced(you.pos()),                           {5, 3} },
+        { you.form == transformation::fungus
+            || you.form == transformation::pig
+            || you.form == transformation::tree,         {5, 3} },
+        { player_in_branch(BRANCH_ABYSS),                {3, 2} },
+        { you.duration[DUR_ATTRACTIVE] > 0,              {3, 2} },
+        { you.duration[DUR_NO_CAST] > 0,                 {3, 2} },
+        { you.duration[DUR_NO_MOMENTUM] > 0,             {3, 2} },
+        { you.duration[DUR_SENTINEL_MARK] > 0,           {3, 2} },
+        { you.duration[DUR_SIGN_OF_RUIN] > 0,            {3, 2} },
+        { you.duration[DUR_SLOW] > 0,                    {3, 2} },
+        { you.form == transformation::bat
+            || you.form == transformation::wisp,         {3, 2} },
+        { you.duration[DUR_NO_POTIONS] > 0,              {4, 3} },
+        { you.duration[DUR_NO_SCROLLS] > 0,              {4, 3} },
+        { you.duration[DUR_VITRIFIED] > 0,               {4, 3} },
+        { you.is_constricted(),                          {4, 3} },
+        { you.petrifying(),                              {4, 3} },
+        { you.duration[DUR_AFRAID] > 0,                  {6, 5} },
+        { you.duration[DUR_BLIND] > 0,                   {6, 5} },
+        { you.duration[DUR_MESMERISED] > 0,              {6, 5} },
+        { you.duration[DUR_WATER_HOLD] > 0,              {6, 5} },
+        { env.grid(you.pos()) == DNGN_SHALLOW_WATER && !you.airborne()
+            && !you.can_swim(),                          {6, 5} },
+        { player_in_branch(BRANCH_PANDEMONIUM),          {9, 8} },
+        { you.magic_points <= you.max_magic_points / 10, {9, 8} },
+        { you.duration[DUR_HASTE] > 0,                   {2, 3} },
+    };
+
+    for (auto &checks : tension_player_status_checks) {
+        if (checks.first)
+        {
+            tension *= checks.second.first;
+            tension /= checks.second.second;
+        }
     }
 
-    // Effects that'll still affect sleep / para / petrify go before those.
-    if (you.duration[DUR_VITRIFIED])
-        tension = tension * 4 / 3;
-
-    if (you.form == transformation::bat ||
-        you.form == transformation::wisp)
-    {
-        tension = tension * 3 / 2;
-    }
-    else if (you.form == transformation::fungus ||
-             you.form == transformation::pig ||
-             you.form == transformation::tree)
-    {
-        tension = tension * 5 / 3;
-    }
-
+    // A few more rather granular effects.
+    // TODO: Track sticky flame and poison here.
     if (you.duration[DUR_CORROSION])
         tension = tension * (10 + you.props[CORROSION_KEY].get_int() / 4) / 10;
 
-    if (you.cannot_act())
-    {
-        tension *= 10;
-        tension = max(1, tension);
-
-        return tension;
-    }
-
-    // Other effects are listed from highest influence to lowest to help with
-    // rounding on more minor effects.
     if (you.confused())
     {
         // Later on, one only stays confused if the fight doesn't matter
@@ -4635,43 +4644,7 @@ int get_tension(god_type god)
             tension = tension * (9 - (you.experience_level / 10)) / 4;
     }
 
-    if (you.caught())
-        tension *= 2;
-
-    if (silenced(you.pos()))
-        tension = tension * 5 / 3;
-
-    if (you.duration[DUR_SLOW])
-        tension = tension * 3 / 2;
-
-    if (you.duration[DUR_ATTRACTIVE])
-        tension = tension * 3 / 2;
-
-    if (you.duration[DUR_NO_CAST])
-        tension = tension * 3 / 2;
-
-    if (you.duration[DUR_SENTINEL_MARK])
-        tension = tension * 3 / 2;
-
-    if (you.duration[DUR_NO_POTIONS])
-        tension = tension * 4 / 3;
-
-    if (you.duration[DUR_NO_SCROLLS])
-        tension = tension * 4 / 3;
-
-    if (you.duration[DUR_MESMERISED])
-        tension = tension * 6 / 5;
-
-    if (you.duration[DUR_AFRAID])
-        tension = tension * 6 / 5;
-
-    if (you.magic_points <= you.max_magic_points / 10)
-        tension = tension * 9 / 8;
-
-    if (you.duration[DUR_HASTE])
-        tension = tension * 2 / 3;
-
-    return max(0, tension);
+    return max(tension_min, tension);
 }
 
 int get_fuzzied_monster_difficulty(const monster& mons)

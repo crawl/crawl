@@ -234,6 +234,7 @@ void wizard_heal(bool super_heal)
         you.duration[DUR_SLOW] = 0;
         you.duration[DUR_BLIND] = 0;
         you.duration[DUR_SIGN_OF_RUIN] = 0;
+        you.duration[DUR_SENTINEL_MARK] = 0;
         you.duration[DUR_CANINE_FAMILIAR_DEAD] = 0;
         you.duration[DUR_VORTEX_COOLDOWN] = 0;
         you.duration[DUR_DRAGON_CALL_COOLDOWN] = 0;
@@ -954,6 +955,15 @@ void wizard_join_religion()
             you.gold = max(you.gold, gozag_service_fee());
         join_religion(god);
     }
+}
+
+void wizard_get_god_tension()
+{
+    mpr("(Tension uses a given god's perspective to check on their summons; use 'No God' to ignore this.)");
+    god_type god = choose_god(you.religion);
+    int tension = get_tension(god);
+    mprf("%s tension value: %d", !(god == GOD_NO_GOD) ? god_name(god).c_str()
+                                                      : "General", tension);
 }
 
 void wizard_xom_acts()
