@@ -887,7 +887,7 @@ static void _place_monster_maybe_override_god(monster *mon, monster_type cls,
         if (!one_chance_in(7))
             mon->god = GOD_BEOGH;
     }
-    // 1 out of 7 angels or darvas who normally worship TSO are adopted
+    // 1 out of 7 angels or daevas who normally worship TSO are adopted
     // by Xom if they're in the Abyss.
     else if ((cls == MONS_ANGEL || cls == MONS_DAEVA)
               && mon->god == GOD_SHINING_ONE)
