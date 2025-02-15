@@ -1,3 +1,4 @@
+TAG_MAJOR_VERSION: 34
 enum: SP_GHOUL
 monster: MONS_GHOUL
 name: Ghoul

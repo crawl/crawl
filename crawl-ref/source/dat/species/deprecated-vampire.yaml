@@ -1,3 +1,4 @@
+TAG_MAJOR_VERSION: 34
 enum: SP_VAMPIRE
 monster: MONS_VAMPIRE
 name: Vampire
