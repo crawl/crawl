@@ -1137,7 +1137,7 @@ Enkindled now.
 %%%%
 Enkindled status
 
-You are buring accumulated memories for power. Each damage-dealing spell you
+You are burning accumulated memories for power. Each damage-dealing spell you
 cast will consume a memory. In exchange, their power and spell success are
 increased, encumbrance penalties are ignored, and your spellclaw attacks do
 bonus damage proportional to the spell level and heal you based on the damage
