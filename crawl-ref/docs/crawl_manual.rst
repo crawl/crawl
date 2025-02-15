@@ -1751,19 +1751,6 @@ Revenants (Re)
   combat, and possess the same immunity to poison, negative energy, and torment
   that all undead share, as well as a resistance to cold.
 
-Ghouls (Gh)
-  Ghouls are horrible undead creatures that sleep in their graves for years on
-  end, only to rise and stalk the living. Slain foes heal these monstrous
-  beings as they feast on the macabre energies released.
-
-  They learn most skills slowly, although they make decent unarmed fighters
-  with their claws. Due to their contact with the grave they can also learn to
-  use ice, earth, and necromantic magic without too many difficulties.
-
-  Like other undead, ghouls are naturally immune to poisons, negative energy
-  and torment; have little warmth left to be affected by cold; and are not
-  susceptible to mutations.
-
 Tengu (Te)
   The Tengu are an ancient and feared species of bird-people with a legendary
   propensity for violence. Basically humanoid with bird-like heads and clawed
