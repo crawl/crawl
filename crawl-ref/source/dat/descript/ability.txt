@@ -149,8 +149,8 @@ din fills the air.
 
 These items are still tethered to you and cannot be directed more than a short
 distance away, but you do not share any damage they suffer and can freely fire
-through them. Their attacks may inflict a variety minor maladies on your foes -
-sometimes dazing, draining, or even confusing them.
+through them. Their attacks may inflict a variety of minor maladies on your
+foes - sometimes dazing, draining, or even confusing them.
 
 After using this ability, you must gain experience points before you can recover
 enough power to use it again.
