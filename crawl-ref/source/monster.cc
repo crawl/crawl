@@ -2490,7 +2490,7 @@ string monster::arm_name(bool plural, bool *can_plural) const
     case MONS_LICH:
     case MONS_SKELETAL_WARRIOR:
     case MONS_ANCIENT_CHAMPION:
-    case MONS_REVENANT:
+    case MONS_REVENANT_SOULMONGER:
         adj = "bony";
         break;
 
@@ -5228,7 +5228,7 @@ static bool _mons_is_skeletal(int mc)
            || mc == MONS_BONE_DRAGON
            || mc == MONS_SKELETAL_WARRIOR
            || mc == MONS_ANCIENT_CHAMPION
-           || mc == MONS_REVENANT
+           || mc == MONS_REVENANT_SOULMONGER
            || mc == MONS_WEEPING_SKULL
            || mc == MONS_LAUGHING_SKULL
            || mc == MONS_CURSE_SKULL

@@ -1,4 +1,4 @@
-name: "revenant"
+name: "revenant soulmonger"
 glyph: {char: "z", colour: magenta}
 flags: [see_invis, speaks]
 resists: {cold: 2}
@@ -11,6 +11,7 @@ hd: 18
 hp_10x: 810
 ac: 8
 ev: 12
+spells: revenant
 shout: shout
 intelligence: human
 uses: open_doors

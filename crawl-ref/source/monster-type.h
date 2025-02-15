@@ -827,6 +827,7 @@ enum monster_type                      // env.mons[].type
     MONS_ANCIENT_CHAMPION,
     MONS_ANTIQUE_CHAMPION,
     MONS_REVENANT,
+    MONS_REVENANT_SOULMONGER,
     MONS_LOST_SOUL,
     MONS_SOUL_WISP,
     MONS_MARTYRED_SHADE,
@@ -1079,7 +1080,7 @@ enum monster_type                      // env.mons[].type
     MONS_SIMULACRUM,
 
     MONS_ANCIENT_CHAMPION,
-    MONS_REVENANT,
+    MONS_REVENANT_SOULMONGER,
     MONS_LOST_SOUL,
     MONS_JIANGSHI,
 
@@ -1328,6 +1329,7 @@ enum monster_type                      // env.mons[].type
     MONS_HAUNTED_ARMOUR,
     MONS_POLTERGEIST,            // player species dummy
     MONS_VAMPIRE_BLOODPRINCE,
+    MONS_REVENANT,               // player species dummy
 #endif
 
     NUM_MONSTERS,               // used for polymorph

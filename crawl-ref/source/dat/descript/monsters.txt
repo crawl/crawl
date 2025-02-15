@@ -2443,8 +2443,15 @@ rows of adversaries whenever its creator lands a melee attack.
 %%%%
 revenant
 
-An animated skeleton wreathed in cold blue fire, standing astride this life and
-the next. Echoes of the lingering dead flicker within its ghostly flames.
+The skeletal remains of someone who died unmourned and forgotten. It burns with
+an unquenable hunger to be remembered.
+%%%%
+revenant soulmonger
+
+A timeworn revenant whose flames dance with the silhouettes of long-forgotten
+atrocities. Cursed with a hunger they can never satisfy, they unleash these
+long-dead echoes to reenact violence upon any soul they deem worthy of adding to
+their eternal collection.
 %%%%
 ribbon worm
 

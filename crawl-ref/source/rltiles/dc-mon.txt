@@ -1328,6 +1328,7 @@ mon/vault/antique_champion MONS_ANTIQUE_CHAMPION
 %sdir mon/undead
 death_cob MONS_DEATH_COB /* rip % */
 revenant MONS_REVENANT
+revenant_soulmonger MONS_REVENANT_SOULMONGER
 curse_skull MONS_CURSE_SKULL
 %rim 0
 curse_toe MONS_CURSE_TOE

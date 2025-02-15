@@ -1990,7 +1990,7 @@ MONS:    jiangshi / sin beast / spectral caustic shrike w:2
 MONS:    freezing wraith / phantasmal warrior / flayed ghost / shadow wraith
 MONS:    spectre place:Crypt:$
 MONS:    vampire mage / deep elf death mage w:5
-MONS:    revenant / eidolon / lich w:5
+MONS:    revenant soulmonger / eidolon / lich w:5
 # Either Jory or a vampire knight with fancy equipment.
 : kmons("7 = jory / " .. vamp_def .. ", " .. vamp_def)
 # Depths
@@ -2002,7 +2002,7 @@ MONS:    spectral golden dragon / golden dragon simulacrum \
          / spectral caustic shrike / caustic shrike simulacrum \
          / spectral juggernaut / juggernaut simulacrum
 MONS:    vampire mage / deep elf death mage w:5
-MONS:    revenant / eidolon / lich w:5
+MONS:    revenant soulmonger / eidolon / lich w:5
 : kmons("7 = jory / " .. vamp_def .. ", " .. vamp_def)
 : end
 KITEM:   _ = superb_item
@@ -2768,8 +2768,8 @@ MONS:    patrolling laughing skull
 MONS:    zombie / skeleton
 : if you.absdepth() > 19 then
 MONS:    vampire knight / jiangshi / flayed ghost
-MONS:    lich / revenant
-KMONS:   5 = Boris / lich / revenant, lich / revenant
+MONS:    lich / revenant soulmonger
+KMONS:   5 = Boris / lich / revenant soulmonger, lich / revenant soulmonger
 : elseif you.absdepth() > 13 then
 MONS:    phantasmal warrior / skeletal warrior / eidolon
 MONS:    vampire mage / death knight
@@ -3110,7 +3110,7 @@ KMONS:   K = deep elf demonologist / deep elf sorcerer / deep elf death mage / \
 KMONS:   L = great orb of eyes / rockslime / void ooze / azure jelly / \
              acid blob w:5
 KMONS:   M = ancient champion / vampire mage / vampire knight / \
-             eidolon / revenant / bone dragon / lich w:5
+             eidolon / revenant soulmonger / bone dragon / lich w:5
 KMONS:   N = tengu warrior / tengu conjurer / tengu reaver
 KMONS:   O = spriggan berserker / spriggan air mage / spriggan defender
 KMONS:   P = balrug w:12 / blizzard demon w:12 / shadow demon w:12 / \
@@ -3154,7 +3154,7 @@ DEPTH:   Elf, !Elf:$, Crypt, !Crypt:$
 TAGS:    patrolling
 MONS:    skeletal warrior / eidolon, laughing skull band
 MONS:    necromancer band / vampire mage band w:6
-MONS:    vampire knight w:25 / bone dragon / revenant / lich
+MONS:    vampire knight w:25 / bone dragon / revenant soulmonger / lich
 SUBST:   x = e
 : else
 KMONS:   12 = deep elf pyromancer / deep elf zephyrmancer / deep elf knight / \
@@ -4953,7 +4953,7 @@ NSUBST:  ' = d2 / 2, 2 = 2=211- / 6=2 / 4=2--- / -
 MONS:    phantasmal warrior
 MONS:    necromancer / vampire mage / vampire knight / deep elf death mage \
          / eidolon
-MONS:    revenant / ancient champion / lich, ancient lich / dread lich
+MONS:    revenant soulmonger / ancient champion / lich, ancient lich / dread lich
 SUBST:   4 = 23, 5 = 4
 : elseif you.in_branch("D") then
 MONS:    glass eye

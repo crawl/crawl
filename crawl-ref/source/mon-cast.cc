@@ -5898,7 +5898,7 @@ static branch_summon_pair _planerend_summons[] =
     { // Crypt enemies
       {  1,   1,  100, FLAT, MONS_VAMPIRE_KNIGHT },
       {  1,   1,  100, FLAT, MONS_FLAYED_GHOST },
-      {  1,   1,   80, FLAT, MONS_REVENANT },
+      {  1,   1,   80, FLAT, MONS_REVENANT_SOULMONGER },
     }},
   { BRANCH_TOMB,
     { // Tomb enemies

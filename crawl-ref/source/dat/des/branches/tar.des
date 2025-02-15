@@ -967,7 +967,7 @@ NAME:   nicolae_tar_just_some_guys
 TAGS:   transparent
 DEPTH:  Tar, !Tar:$
 KMONS:  1 = halazid warlock
-KMONS:  2 = revenant
+KMONS:  2 = revenant soulmonger
 KMONS:  3 = spectral thing / nothing w:5
 SUBST:  S = 12
 : vault_granite_statue_setup(_G, "G", "broken pillar")

@@ -1684,7 +1684,7 @@ MONS:    flayed ghost / phantasmal warrior
 MONS:    vampire mage / vampire knight
 MONS:    jiangshi / eidolon / shadow wraith / freezing wraith
 MONS:    ancient champion / w:20 ghoul
-MONS:    w:20 death knight / w:20 bone dragon / revenant
+MONS:    w:20 death knight / w:20 bone dragon / revenant soulmonger
 MONS:    profane servitor
 KFEAT:   7 = altar_yredelemnul
 KFEAT:   O = granite_statue
@@ -1731,7 +1731,7 @@ MONS:    necromancer / vampire mage w:6 / burial acolyte w:2
 MONS:    vampire mage / deep elf death mage, lich / reaper w:2
 MONS:    shadow wraith / phantasmal warrior / ghost crab w:4
 KMONS:   8 = eidolon / flayed ghost
-KMONS:   9 = revenant
+KMONS:   9 = revenant soulmonger
 KMONS:   A = guardian mummy w:7 / ushabti w:3 / \
              skeleton w:8 / laughing skull band w:6
 KMONS:   B = ancient champion
@@ -2015,7 +2015,7 @@ KMONS:  1 = anaconda skeleton / caustic shrike skeleton / harpy skeleton / \
         golden dragon skeleton w:5 / hellephant skeleton w:5
 KMONS:  2V = skeletal warrior w:20 / laughing skull / curse skull w:5 / \
         ancient champion band / nothing w:20
-KMONS:  3 = bone dragon / revenant
+KMONS:  3 = bone dragon / revenant soulmonger
 KFEAT:  V = V / .
 KFEAT:  3 = V
 SUBST:  G = GG., H = G, 1 = 11112 .:30, 2 = 2:23 3:2
@@ -2567,7 +2567,7 @@ KMONS:  7 = vampire knight w:5 / vampire w:5 / skeletal warrior / \
             w:15 zombie / wraith / w:5 nothing
 : elseif brnd > 0 then -- ghost layout
 MONS:   curse skull
-MONS:   revenant
+MONS:   revenant soulmonger
 MONS:   lich
 MONS:   eidolon / flayed ghost
 MONS:   phantasmal warrior / shadow wraith w:6
@@ -2850,7 +2850,7 @@ KMONS:  S = shadowghast / wraith / freezing wraith / shadow wraith / wight
 ####### SW monsters (crematory). Either fiery undead or hellish.
 : if crawl.coinflip() then
 KMONS:  t = ghost crab / fire dragon skeleton / laughing skull w:20
-KMONS:  X = w:1 curse skull / w:19 revenant
+KMONS:  X = w:1 curse skull / w:19 revenant soulmonger
 SUBST:  ~ = m
 : else
 KMONS:  t = w:20 hell knight / smoke demon / laughing skull
@@ -2956,7 +2956,7 @@ NAME:   evilmike_haunted_forest
 TAGS:   no_monster_gen no_item_gen no_pool_fixup no_rotate
 ORIENT: encompass
 PLACE:  Crypt:$
-MONS:   w:3 patrolling lich / w:1 patrolling revenant
+MONS:   w:3 patrolling lich / w:1 patrolling revenant soulmonger
 MONS:   patrolling zombie / nothing
 MONS:   alderking
 MONS:   w:5 wraith / phantasmal warrior / eidolon / w:5 freezing wraith / w:5 nothing
@@ -2971,7 +2971,7 @@ KMONS:  p = withered plant
 # Temple of yred
 KMONS:  9 = patrolling profane servitor
 KMONS:  H = patrolling death knight w:20 / patrolling profane servitor
-KMONS:  0 = patrolling ghoul / patrolling revenant w:5
+KMONS:  0 = patrolling ghoul / patrolling revenant soulmonger w:5
 KMONS:  A = patrolling death knight
 KMONS:  B = skeletal warrior
 KMONS:  C = wight
@@ -3101,7 +3101,7 @@ ENDMAP
 # Monster layouts:
 #  skeletal ([ancient] liches, bone dragons, ancient champions)
 #  vampire (Jory, vampire [knight / mage], dancing weapons)
-#  ghostly (revenant, eidola, shadow dragon)
+#  ghostly (revenant soulmonger, eidola, shadow dragon)
 #  mummy (royal mummy, mummy priests, sphinx)
 #
 # Loot:
@@ -3137,7 +3137,7 @@ KMONS:  6 = generate_awake vampire mage
 SUBST:  2 = ., ' = 2, " = 4
 : elseif brnd > 2 then
 MONS:   patrolling freezing wraith / patrolling spectral thing w:8
-MONS:   revenant
+MONS:   revenant soulmonger
 MONS:   eidolon
 MONS:   flayed ghost / phantasmal warrior
 MONS:   spectral thing / simulacrum / shadowghast w:3 / wraith w:2 / shadow wraith / \
@@ -3227,7 +3227,7 @@ KMONS:   0 = skeletal warrior
 
 # Room guardian waves; these should be tougher, but not boss tier.
 KMONS:   A = lich
-KMONS:   C = revenant
+KMONS:   C = revenant soulmonger
 KMONS:   BD = freezing wraith / shadow wraith / wraith
 KMONS:   E = deep elf death mage
 KMONS:   F = small abomination / large abomination w:5
@@ -3332,7 +3332,7 @@ NAME:    lightli_unholy_cathedral
 TAGS:    no_monster_gen layout_city
 PLACE:   Crypt:$
 ORIENT:  north
-MONS:    ancient champion, lich / revenant, jiangshi / ghoul w:2
+MONS:    ancient champion, lich / revenant soulmonger, jiangshi / ghoul w:2
 MONS:    profane servitor / bone dragon / curse toe / \
          royal mummy w:2 / ancient lich w:1 / dread lich w:1
 MONS:    skeletal warrior ; partisan | halberd | glaive | bardiche w:5

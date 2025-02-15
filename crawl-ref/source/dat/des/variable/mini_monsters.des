@@ -10359,7 +10359,7 @@ KMONS:  1 = dancing weapon / deep elf annihilator / deep elf blademaster / \
             deep elf high priest / place:Elf:$ w:27
 : elseif you.in_branch("Crypt") then
 KMONS:  1 = reaper / ancient champion / vampire knight / flayed ghost / \
-            eidolon / revenant / ancient lich / dread lich / \
+            eidolon / revenant soulmonger / ancient lich / dread lich / \
             curse skull w:15 / \ place:Crypt:$ w:30
 : elseif you.in_branch("Dis") then
 KMONS:  1 = tormentor / hellion / shadow demon / tzitzimitl / \

@@ -157,7 +157,7 @@ function base_monster_setup(e)
                guardian mummy / mummy priest w:5")
   e.kmons("R = royal mummy w:3 / mummy priest / lich / ancient lich /\
                ghoul band / searing wretch w:3 / vampire knight band /\
-               vampire mage band / revenant / ancient champion")
+               vampire mage band / revenant soulmonger / ancient champion")
   e.kmons("S = obsidian bat / orange demon / hellwing / smoke demon /\
                ynoxinul / red devil / sixfirhy / chaos spawn / ice devil /\
                sun demon / rust devil / neqoxec band / green death w:5 /\
@@ -2116,7 +2116,7 @@ KMONS:  A = iron giant
 # Honestly, the non-giant ones are awful. Suffer.
 KMONS:  b = ushabti w:5 / place:Crypt:$ zombie w:20 /\
             place:Crypt:$ skeleton w:20 / place:Crypt:$ simulacrum w:20 /\
-            lich / ancient lich w:5 / revenant w:5 / vampire knight /\
+            lich / ancient lich w:5 / revenant soulmonger w:5 / vampire knight /\
             bone dragon / ghoul / ancient champion w:5 /\
             guardian mummy / mummy priest / royal mummy
 KMONS:  B = dread lich

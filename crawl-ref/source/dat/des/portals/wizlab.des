@@ -1131,11 +1131,11 @@ KMONS:      | = undying armoury / walking crystal tome w:5
 :           else
 KMONS:      0% = place:Depths:1 zombie w:15 / guardian mummy w:15 / \
                  ushabti w:5 / ynoxinul / soul eater / smoke demon
-KMONS:      * = revenant / mummy priest w:5 / reaper / shadow demon
+KMONS:      * = revenant soulmonger / mummy priest w:5 / reaper / shadow demon
 KMONS:      | = ancient lich / royal mummy / executioner / tzitzimitl
 :             set_random_mon_list(
 :                 "guardian mummy w:20 / ynoxinul / soul eater / " ..
-:                 "smoke demon / mummy priest / revenant / reaper")
+:                 "smoke demon / mummy priest / revenant soulmonger / reaper")
 :           end
 
 #           Hints.
@@ -2355,7 +2355,7 @@ MONS:    flayed ghost / shadow wraith / eidolon
 MONS:    spriggan berserker zombie / titan zombie / spark wasp zombie /\
          harpy zombie / quicksilver dragon zombie / wolf spider zombie /\
          caustic shrike zombie / skeletal warrior w:30 / jiangshi w:30
-MONS:    ancient champion / revenant, laughing skull
+MONS:    ancient champion / revenant soulmonger, laughing skull
 MONS:    deep elf death mage / vampire mage / necromancer, halazid warlock
 ITEM:    randbook disc:necromancy numspells:6 owner:Borgnjor w:5 / any book /\
          necronomicon / randbook disc:necromancy / staff of death /\
@@ -2396,7 +2396,7 @@ lua_marker('A', summon_marker)
 :           set_random_mon_list(
 :               "skeletal warrior / flayed ghost / phantasmal warrior / " ..
 :               "necromancer / vampire mage / shadow wraith / " ..
-:               "revenant w:2 / ancient champion w:2")
+:               "revenant soulmonger w:2 / ancient champion w:2")
 :           wizlab_setup(_G)
 epilogue {{
             wizlab_milestone(_G, "Borgnjor's Mausoleum")

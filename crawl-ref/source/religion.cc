@@ -1060,7 +1060,7 @@ static const vector<random_pick_entry<monster_type>> _yred_servants =
   { 18,  25,  120, SEMI, MONS_EIDOLON },
   { 20,  25,  120, SEMI, MONS_VAMPIRE_KNIGHT },
   { 20,  25,  150, SEMI, MONS_GHOUL },
-  { 20,  27,   80, SEMI, MONS_REVENANT },
+  { 20,  27,   80, SEMI, MONS_REVENANT_SOULMONGER },
   { 22,  27,   60, FLAT, MONS_DEATH_COB },
   { 23,  27,  180, SEMI, MONS_ANCIENT_CHAMPION },
   { 24,  30,  110, SEMI, MONS_SEARING_WRETCH },

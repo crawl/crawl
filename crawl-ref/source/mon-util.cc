@@ -4016,7 +4016,7 @@ bool monster_senior(const monster& m1, const monster& m2, bool fleeing)
     // (revenants, ghost crabs).
     // XXX: unify this logic with Fannar's & Geryon's? (summon-buddies?)
     if (m1.type == MONS_SPECTRAL_THING
-        && (m2.type == MONS_REVENANT || m2.type == MONS_GHOST_CRAB))
+        && (m2.type == MONS_REVENANT_SOULMONGER || m2.type == MONS_GHOST_CRAB))
     {
         return true;
     }

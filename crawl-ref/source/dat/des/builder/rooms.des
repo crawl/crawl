@@ -175,7 +175,7 @@ function sroom_morgue(e)
         bodies_chance = 40
     elseif you.in_branch("Tar") or you.in_branch("Crypt") then
         mons[5] = "eidolon w:6 / jiangshi w:6"
-        mons[6] = "mummy priest w:2 / revenant w:6"
+        mons[6] = "mummy priest w:2 / revenant soulmonger w:6"
         bodies = "shadow dragon corpse / base draconian corpse / "
                  .. "dire elephant corpse"
         bodies_chance = 33
