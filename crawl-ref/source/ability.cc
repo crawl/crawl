@@ -957,9 +957,6 @@ const string make_cost_description(ability_type ability)
         ret += make_stringf(", Permanent MP (%d left)", get_real_mp(false));
 #endif
 
-    if (ability == ABIL_REVIVIFY)
-        ret += ", Frailty";
-
     if (ability == ABIL_CACOPHONY)
         ret += ", Noise";
 
