@@ -2654,12 +2654,14 @@ static const mutation_def mut_data[] =
   TILEG_MUT_DIVINE_ATTRIBUTES,
 },
 
+#if TAG_MAJOR_VERSION == 34
 { MUT_DEVOUR_ON_KILL, 0, 1, mutflag::good, true,
   "devour on kill",
   {"You thrive by killing the living.", "", ""},
   {"You feel hungry for flesh.", "", ""},
   {"You feel less hungry for flesh.", "", ""},
 },
+#endif
 
 { MUT_SHORT_LIFESPAN, 0, 1, mutflag::bad, false,
   "otherworldly",
