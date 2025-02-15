@@ -8923,7 +8923,7 @@ int trickster_bonus()
 
 int enkindle_max_charges()
 {
-    return (3 + you.experience_level * 3 / 20);
+    return 3 + you.experience_level * 3 / 20;
 }
 
 void maybe_harvest_memory(const monster& victim)

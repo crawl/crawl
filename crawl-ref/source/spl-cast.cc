@@ -434,10 +434,12 @@ int raw_spell_fail(spell_type spell, bool enkindled)
     const int armour_shield_penalty = player_armour_shield_spell_penalty();
 
     if (!enkindled)
+    {
         chance += armour_shield_penalty; // range: 0 to 500 in extreme cases.
                                          // A midlevel melee character in plate
                                          // might have 40 or 50, and a caster in a
                                          // robe would usually have 0.
+    }
 
     static const int difficulty_by_level[] =
     {
