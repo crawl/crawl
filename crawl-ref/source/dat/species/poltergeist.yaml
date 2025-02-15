@@ -1,6 +1,8 @@
 enum: SP_POLTERGEIST
-monster: MONS_POLTERGUARDIAN
+monster: MONS_POLTERGEIST
 name: Poltergeist
+genus: Geist
+adjective: Ghostly
 short_name: Po
 difficulty: Advanced
 difficulty_priority: 80
