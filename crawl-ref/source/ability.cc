@@ -2195,7 +2195,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
                 mpr("You must recover your energy before unleashing another cacophony.");
             return false;
         }
-        else if (!you.equipment.get_first_slot_item(SLOT_ANY_AUX))
+        else if (!you.equipment.get_first_slot_item(SLOT_HAUNTED_AUX))
         {
             if (!quiet)
                 mpr("You aren't haunting any armour at the moment!");
@@ -3031,7 +3031,7 @@ static spret _do_draconian_breath(const ability_def& abil, dist *target, bool fa
 
 static spret _do_cacophony()
 {
-    vector<item_def*> eq = you.equipment.get_slot_items(SLOT_ANY_AUX);
+    vector<item_def*> eq = you.equipment.get_slot_items(SLOT_HAUNTED_AUX);
 
     bool did_something = false;
     for (item_def* item : eq)

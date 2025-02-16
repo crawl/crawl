@@ -277,7 +277,7 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
                 case SLOT_GIZMO:
                     buff << " (installed)";
                     break;
-                case SLOT_ANY_AUX:
+                case SLOT_HAUNTED_AUX:
                     buff << " (haunted)";
                     break;
                 default:
