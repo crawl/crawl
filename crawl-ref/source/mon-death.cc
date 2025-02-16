@@ -745,7 +745,7 @@ static bool _vampire_make_thrall(monster* mons)
     record_monster_defeat(mons, KILL_YOU);
 
     mons->hit_points = mons->max_hit_points;
-    mons->flags |= (MF_NO_REWARD | MF_FAKE_UNDEAD);
+    mons->flags |= MF_FAKE_UNDEAD;
 
     if (mons->is_actual_spellcaster())
     {
