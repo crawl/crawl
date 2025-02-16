@@ -190,7 +190,7 @@ Species
     helmets, cloaks, scarves, gloves, or boots), but cannot wear body armour.
   - Whenever enemies are debuffed, they gain AC scaling to their XL.
   - At XL 13, they gain the ability to expand into a whirling cacophony,
-    nosily animating each piece of armour worn into allies that try to stay
+    noisily animating each piece of armour worn into allies that try to stay
     close to the player and which can inflict random debuffs.
 * New species: Revenants, memory-burning mystic skeletons. Features:
   - Whenever they casting damage-dealing spells, they automatically attacks a
@@ -293,7 +293,7 @@ Tiles and Other Art
   * Plants, both regular and withered.
   * Player dolls: Coglins.
   * The prune curse from the glaive of Prune.
-  * Ru sacrifices: sacrified eye, sacrified hand.
+  * Ru sacrifices: sacrificed eye, sacrificed hand.
   * Species passives: barachi hops, demigod divine attributes, djinn flat hp,
     human explore regen, mertails.
   * Spell components: Hoarfrost Cannonade, Hellfire Mortar.
