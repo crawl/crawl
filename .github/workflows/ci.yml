@@ -473,8 +473,7 @@ jobs:
           - "Release Tiles"
         build_arch:
           - x64
-          # TODO: do we really want the Win32 configurations to exist
-          # in the project files even? If so, should we build them here?
+          - Win32
           # TODO: consider ARM64?
     steps:
       - uses: actions/checkout@v3
