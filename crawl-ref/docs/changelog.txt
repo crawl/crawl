@@ -14,7 +14,7 @@ Artefacts
     makes entering floors wake up nearby enemies and temporarily prohibits
     stair use.
   * The fungal fisticloak, a +3 cloak that also takes up the hat slot, provides
-    another gloves slot, and grants a confusion-branded auxillery fungus attack.
+    another gloves slot, and grants a confusion-branded auxiliary fungus attack.
   * The Justicar's Regalia, a +5 scale mail that grants an extra amulet slot and
     gives allies summoned or created by the player the regeneration status.
   * The Skull of Zonguldrok, a talkative off-hand item that grants Reaping brand
@@ -38,7 +38,7 @@ Branches, Environment
 * Walking over fountains now has a chance to produce flavour messages, varying
   based on the fountain, one's god, and the absence of hostile enemies in sight.
 * Zot traps now can inflict blindness.
-* The last floor Crypt now has a 30% chance to contain a sanguine talisman.
+* The last floor of Crypt now has a 30% chance to contain a sanguine talisman.
 * The clouds of degeneration in Alistair's Party Mansion are now alcoholic mist,
   inflicting Vertigo.
 * The orb chamber on Zot:5 no longer has a chance to be completely blocked off
@@ -70,7 +70,7 @@ Character
   * ephemeral shield, granting +7 SH briefly after spells and invocations.
   * poor constitution, inflicting Weak and then Slow on taking damage.
   * time-warped blood, hasting some of your allies when you fall below 50%
-    health, and can only activates again after returning to full health.
+    health, and can only activate again after returning to full health.
 * Berserk players are now immune to fear.
 * Constructs the player makes with their own Forgecraft spells can be
   nonviolently deconstructed by pressing ctrl+[direction] while adjacent.
@@ -126,7 +126,7 @@ Items
 * New talisman: sanguine talismans, turning the player into a living-undead
   vampire. They don't regenerate with enemies visible, get vampiric attacks at
   50% health, can raise a vampiric thrall when killing monsters with stabs, can
-  transform into a swarm of bats that leave sleep-enducing clouds of bats, and
+  transform into a swarm of bats that leave sleep-inducing clouds of bats, and
   have partial torment resistance.
 * Potions of degeneration are now of moonshine and solely inflict Vertigo.
 * Darts of dispersal are now darts of disjunction, which now repeatedly blink
@@ -186,14 +186,14 @@ Species
 -------
 * New species: Poltergeists, ghostly trickster whirlwinds. Features:
   - They have the resists and immunities of being both undead and insubstantial.
-  - They have six slots that can interchangeably wield auxillery armour (hats,
+  - They have six slots that can interchangeably wield auxiliary armour (hats,
     helmets, cloaks, scarves, gloves, or boots), but cannot wear body armour.
   - Whenever enemies are debuffed, they gain AC scaling to their XL.
   - At XL 13, they gain the ability to expand into a whirling cacophony,
     noisily animating each piece of armour worn into allies that try to stay
     close to the player and which can inflict random debuffs.
 * New species: Revenants, memory-burning mystic skeletons. Features:
-  - Whenever they casting damage-dealing spells, they automatically attacks a
+  - Whenever they cast damage-dealing spells, they automatically attack a
     nearby monster with the highest health.
   - At XL 3, they start gathering memories from slain foes, charges they may
     burn away all at once to make that many damage-dealing spells cost 0 mp,
@@ -257,7 +257,7 @@ Spells
   * Battlespheres last longer at lower spell power, are better at pathing
     towards their target, and will target the most proportionally damaged foe if
     possible.
-  * Ensorcelled Hibernation's sleep no longer can be interrupted by sleep or
+  * Ensorcelled Hibernation's sleep no longer can be interrupted by noise or
     failing stealth checks, and has a slightly higher minimum duration.
   * Hellfire Mortar now scales heavily with spellpower, deals more damage,
     has longer mortar range, and pushes back singular flying foes.
