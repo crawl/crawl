@@ -6680,7 +6680,8 @@ bool player::res_polar_vortex() const
 bool player::res_petrify(bool temp) const
 {
     return get_mutation_level(MUT_PETRIFICATION_RESISTANCE)
-           || cur_form(temp)->res_petrify();
+           || cur_form(temp)->res_petrify()
+           || is_insubstantial();
 }
 
 bool player::res_constrict() const
