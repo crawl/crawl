@@ -8959,25 +8959,29 @@ bool player::immune_to_hex(const spell_type hex) const
 {
     switch (hex)
     {
-    case SPELL_PARALYSIS_GAZE:
-    case SPELL_PARALYSE:
-    case SPELL_SLOW:
-        return stasis();
+    case SPELL_VEX:
+        return clarity();
     case SPELL_CHARMING:
     case SPELL_CONFUSE:
     case SPELL_CONFUSION_GAZE:
     case SPELL_MASS_CONFUSION:
         return clarity() || you.duration[DUR_DIVINE_STAMINA] > 0;
-    case SPELL_TELEPORT_OTHER:
-    case SPELL_BLINK_OTHER:
-    case SPELL_BLINK_OTHER_CLOSE:
-        return no_tele();
+    case SPELL_DOMINATE_UNDEAD:
+        return clarity() || !you.undead_state(true);
     case SPELL_MESMERISE:
     case SPELL_AVATAR_SONG:
     case SPELL_SIREN_SONG:
         return clarity() || berserk();
     case SPELL_CAUSE_FEAR:
         return clarity() || !(holiness() & MH_NATURAL) || berserk();
+    case SPELL_PARALYSIS_GAZE:
+    case SPELL_PARALYSE:
+    case SPELL_SLOW:
+        return stasis();
+    case SPELL_TELEPORT_OTHER:
+    case SPELL_BLINK_OTHER:
+    case SPELL_BLINK_OTHER_CLOSE:
+        return no_tele();
     case SPELL_PETRIFY:
         return res_petrify();
     case SPELL_POLYMORPH:
