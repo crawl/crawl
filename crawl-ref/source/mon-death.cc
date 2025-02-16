@@ -777,6 +777,9 @@ static bool _vampire_make_thrall(monster* mons)
 
     behaviour_event(mons, ME_EVAL);
 
+    // Schedule our actual revival for the end of this combat round.
+    avoided_death_fineff::schedule(mons);
+
     return true;
 }
 
