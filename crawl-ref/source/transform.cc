@@ -1584,10 +1584,6 @@ static void _enter_form(int pow, transformation which_trans, bool scale_hp = tru
 
     _on_enter_form(which_trans);
 
-    // Update flight status now (won't actually land the player if we're still flying).
-    if (was_flying)
-        land_player();
-
     // Stop constricting, if appropriate. In principle, we could be switching
     // from one form that allows constricting to another, but that seems too
     // rare to justify the complexity. The confusion of changing forms makes
@@ -1643,6 +1639,10 @@ static void _enter_form(int pow, transformation which_trans, bool scale_hp = tru
     // a new artefact talisman or were forcibly polymorphed away from one),
     // refresh equipment properties.
     you.equipment.update();
+
+    // Update flight status now (won't actually land the player if we're still flying).
+    if (was_flying)
+        land_player();
 
     // Update skill boosts for the current state of equipment melds
     // Must happen before the HP check!
@@ -1829,6 +1829,10 @@ void untransform(bool skip_move, bool scale_hp)
         if (you.body_size(PSIZE_BODY) > constrictor->body_size(PSIZE_BODY))
             you.stop_being_constricted();
     }
+
+    // Called so that artprop flight on talismans specifically ends properly.
+    // (Won't land the player if anything else is keeping them afloat.)
+    land_player();
 
     you.turn_is_over = true;
     if (you.transform_uncancellable)
