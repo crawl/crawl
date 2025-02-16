@@ -7012,7 +7012,7 @@ MONS:    ice dragon, lich, golden dragon
 MONS:    white draconian stormcaller, black draconian knight
 KFEAT:   ) = enter_zot
 KFEAT:   ^ = alarm trap / zot trap
-KITEM:   R = smoky gem
+KITEM:   R = midnight gem
 NSUBST:  ^ = 2:^. / *:., 1 = 2 = 26 / *:1
 NSUBST:  D = 1:12 / *:D, E = 1:12 / *:E, F = 1:12 / *:F
 SHUFFLE: )]
