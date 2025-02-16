@@ -939,6 +939,12 @@ gain knowledge of the Vampiric Draining spell.
 You can only create a thrall if you do not have one already, and they will
 inevitably turn to dust after a short time.
 %%%%
+insubstantial mutation
+
+You are insubstantial and immune to many effects that require a solid body. You
+cannot be constricted, petrified, engulfed, skewered by barbs, covered in sticky
+flame, or caught by webs, nets, or bolas.
+%%%%
 # ------ Makhleb destruction flavours ------
 Gehenna destruction mutation
 
