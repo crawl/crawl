@@ -463,6 +463,8 @@ namespace species
             return adj ? "stony" : "stone";
         else if (species == SP_POLTERGEIST)
             return adj ? "ectoplasmic" : "ectoplasm";
+        else if (species == SP_REVENANT)
+            return adj ? "bony" : "bones";
         else
             return adj ? "fleshy" : "skin";
     }
