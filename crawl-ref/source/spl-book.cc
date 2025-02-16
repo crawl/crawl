@@ -803,7 +803,7 @@ private:
 
                 const string fail_string = make_stringf("<%s>%d%%</%s><darkgrey> (%d%%)</darkgrey>",
                                                             colour_to_str(spell.fail_rate_colour).c_str(),
-                                                            spell.raw_fail,
+                                                            failure_rate_to_int(spell.raw_fail),
                                                             colour_to_str(spell.fail_rate_colour).c_str(),
                                                             enkindled_fail);
 
