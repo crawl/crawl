@@ -13,6 +13,7 @@
 #include "dungeon-feature-type.h"
 #include "level-id.h"
 #include "mgen-enum.h"
+#include "mon-pick.h"
 #include "monster-type.h"
 #include "tag-version.h"
 #include "trap-type.h"
@@ -44,7 +45,6 @@ bool needs_resolution(monster_type mon_type);
 monster_type resolve_monster_type(monster_type mon_type,
                                   monster_type &base_type,
                                   proximity_type proximity = PROX_ANYWHERE,
-                                  coord_def *pos = nullptr,
                                   unsigned mmask = 0,
                                   level_id *place = nullptr,
                                   bool *want_band = nullptr,
@@ -67,16 +67,14 @@ monster* place_monster(mgen_data mg, bool force_pos = false, bool dont_place = f
  * cs:         Restrict to monster types that fit this zombie type
  *             (e.g. monsters with skeletons for MONS_SKELETON_SMALL)
  * pos:        Check habitat at position.
- * for_corpse: Whether this monster is intended only for use as a potentially
- *             zombifiable corpse. (I.e., whether we care about its speed when
- *             placing in D...)
+ * veto:       An optional function for additional logic of whether to reject
+ *             specific monster types. If not provided, the default vetoer will
+ *             be used, only in D,
  * *********************************************************************** */
 monster_type pick_local_zombifiable_monster(level_id place,
                                             monster_type cs = MONS_NO_MONSTER,
                                             const coord_def& pos = coord_def(),
-                                            bool for_corpse = false);
-
-monster_type pick_local_corpsey_monster(level_id place);
+                                            mon_pick_vetoer veto = nullptr);
 
 void roll_zombie_hp(monster* mon);
 

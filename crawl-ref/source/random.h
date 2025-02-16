@@ -4,6 +4,7 @@
 #include <iterator>   // advance
 #include <map>
 #include <vector>
+#include <functional>
 
 #include "debug.h"
 #include "fixedvector.h"
@@ -194,6 +195,37 @@ int random_choose_weighted(const FixedVector<T, SIZE>& choices)
             return i;
     }
     return -1;
+}
+
+/**
+ * Get a random choice weighted with a custom algorithm via a lambda function.
+ *
+ * @tparam  V  The element to be chosen; can typically be a pair<X,int> of
+ *             results to weights, where you will set weights to zero on some
+ *             filter, but it can be anything.
+ *
+ * @param   choices  A vector of V objects to be chosen from
+ *
+ * @param   calc_weight  The funciton to return the integer weight of the choice.
+ *
+ * @return  A pointer to the chosen item, or nullptr if all
+ *          weights are zero.
+ */
+template <typename V>
+auto random_choose_func(const vector<V> &choices, function<int(const V&)> calc_weight) -> const V*
+{
+    int total = 0;
+    for (const auto &entry : choices)
+        total += calc_weight(entry);
+    int r = random2(total);
+    int sum = 0;
+    for (auto &entry : choices)
+    {
+        sum += calc_weight(entry);
+        if (sum > r)
+            return &entry;
+    }
+    return nullptr;
 }
 
 template <typename T>

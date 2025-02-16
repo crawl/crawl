@@ -137,6 +137,9 @@ enum band_type
     BAND_SLIMES_AND_MASTER,
     BAND_ELEPHANTS_AND_MASTER,
     BAND_SPHINXES,
+    BAND_ARCHERS,
+    BAND_SKELETON_ARCHERS,
+    BAND_ZOMBIE_ARCHERS,
     NUM_BANDS                   // always last
 };
 
@@ -167,5 +170,8 @@ enum mgen_flag
                              ///  instead.
     MG_SEE_SUMMONER = 0x800, ///< will always be generated in sight of its
                              ///  summoner
+    MG_ARCHER      = 0x1000, ///< will only generate monsters that can *possibly*
+                             ///  have a ranged weapon, and then force them to generate
+                             ///  with one even if they normally have melee options
 };
 DEF_BITFIELD(mgen_flags, mgen_flag);

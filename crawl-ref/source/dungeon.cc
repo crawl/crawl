@@ -5217,10 +5217,13 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
             dungeon_terrain_changed(where, habitat2grid(habitat));
     }
 
-    if (type == RANDOM_MONSTER)
+    if (type == RANDOM_MONSTER || type == RANDOM_ARCHER)
     {
         if (mons_class_is_zombified(mspec.monbase))
-            type = pick_local_zombifiable_monster(mspec.place, mspec.monbase, coord_def());
+        {
+            type = pick_local_zombifiable_monster(mspec.place, mspec.monbase,
+                coord_def(), type == RANDOM_ARCHER ? is_melee_only : nullptr);
+        }
         else
         {
             level_id place = mspec.place;

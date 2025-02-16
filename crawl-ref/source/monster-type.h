@@ -1346,6 +1346,10 @@ enum monster_type                      // env.mons[].type
     RANDOM_BANDLESS_MONSTER,
     RANDOM_POLYMORPH_MONSTER, // choose from a per-monster set
 
+    RANDOM_ARCHER,
+    RANDOM_ZOMBIE_ARCHER,
+    RANDOM_SKELETON_ARCHER,
+
     // A random draconian, either base coloured drac or specialised.
     RANDOM_DRACONIAN,
     // Any random base draconian colour.

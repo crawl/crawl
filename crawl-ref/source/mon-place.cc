@@ -322,6 +322,7 @@ static bool _is_random_monster(monster_type mt)
     return mt == RANDOM_MONSTER || mt == RANDOM_MOBILE_MONSTER
            || mt == RANDOM_COMPATIBLE_MONSTER
            || mt == RANDOM_BANDLESS_MONSTER
+           || mt == RANDOM_ARCHER
            || mt == WANDERING_MONSTER;
 }
 
@@ -374,6 +375,13 @@ monster_type pick_random_monster(level_id place,
         return pick_monster(place, _is_incompatible_monster);
     else if (kind == RANDOM_BANDLESS_MONSTER)
         return pick_monster(place, _is_banded_monster);
+    else if (kind == RANDOM_ARCHER)
+    {
+        auto picked = pick_monster(place, is_melee_only);
+        if (picked == MONS_PROGRAM_BUG)
+            picked = pick_monster_all_branches(place.absdepth(), is_melee_only);
+        return picked;
+    }
     else if (crawl_state.game_is_sprint())
         return pick_monster(place, _has_big_aura);
     else
@@ -391,7 +399,6 @@ bool needs_resolution(monster_type mon_type)
 monster_type resolve_monster_type(monster_type mon_type,
                                   monster_type &base_type,
                                   proximity_type proximity,
-                                  coord_def *pos,
                                   unsigned mmask,
                                   level_id *place,
                                   bool *want_band,
@@ -435,16 +442,21 @@ monster_type resolve_monster_type(monster_type mon_type,
             int i = 0;
             int tries = 0;
             int type;
+            bool veto = false;
             do
             {
+                // Give up after enough attempts: for example, a Yred
+                // worshipper casting Shadow Creatures in holy Pan.
+                if (tries++ >= 300)
+                {
+                    type = MONS_NO_MONSTER;
+                    break;
+                }
+
                 i = choose_random_weighted(vault_mon_weights.begin(),
                                            vault_mon_weights.end());
                 type = vault_mon_types[i];
 
-                // Give up after enough attempts: for example, a Yred
-                // worshipper casting Shadow Creatures in holy Pan.
-                if (tries++ >= 300)
-                    type = MONS_NO_MONSTER;
                 // If the monster list says not to place, or to place
                 // by level, or to place a random monster, accept that.
                 // If it's random, we'll be recursively calling ourselves
@@ -454,13 +466,27 @@ monster_type resolve_monster_type(monster_type mon_type,
                 {
                     break;
                 }
+                veto = false;
+                auto mtype = (monster_type)type;
+                switch (mon_type)
+                {
+                    case RANDOM_MOBILE_MONSTER:
+                        veto = mons_class_is_stationary(mtype);
+                        break;
+                    case RANDOM_COMPATIBLE_MONSTER:
+                        veto = _is_incompatible_monster(mtype);
+                        break;
+                    case RANDOM_BANDLESS_MONSTER:
+                        veto = _is_banded_monster(mtype);
+                        break;
+                    case RANDOM_ARCHER:
+                        veto = is_melee_only(mtype);
+                        break;
+                    default:
+                        break;
+                }
             }
-            while (mon_type == RANDOM_MOBILE_MONSTER
-                      && mons_class_is_stationary((monster_type)type)
-                   || mon_type == RANDOM_COMPATIBLE_MONSTER
-                      && _is_incompatible_monster((monster_type)type)
-                   || mon_type == RANDOM_BANDLESS_MONSTER
-                      && _is_banded_monster((monster_type)type));
+            while (veto);
 
             int base = vault_mon_bases[i];
             bool banded = vault_mon_bands[i];
@@ -476,9 +502,8 @@ monster_type resolve_monster_type(monster_type mon_type,
                 if (needs_resolution(mon_type))
                 {
                     mon_type =
-                        resolve_monster_type(mon_type, base_type,
-                                             proximity, pos, mmask,
-                                             place, want_band, allow_ood);
+                        resolve_monster_type(mon_type, base_type, proximity,
+                                             mmask, place, want_band, allow_ood);
                 }
                 return mon_type;
             }
@@ -630,8 +655,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     bool want_band = false;
     level_id place = mg.place;
     mg.cls = resolve_monster_type(mg.cls, mg.base_type, mg.proximity,
-                                  &mg.pos, mg.map_mask,
-                                  &place, &want_band, allow_ood);
+                                  mg.map_mask, &place, &want_band, allow_ood);
     // Place may have been updated inside resolve_monster_type
     // and then inside pick_random_monster for OOD.
     bool chose_ood_monster = place.absdepth() > mg.place.absdepth() + 5;
@@ -778,6 +802,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     }
 
     unwind_var<band_type> current_band(active_monster_band, band);
+    auto orig_flags = band_template.flags;
     // (5) For each band monster, loop call to place_monster_aux().
     for (int i = 1; i < band_size; i++)
     {
@@ -785,6 +810,32 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
             break;
 
         band_template.cls = band_monsters[i];
+        band_template.flags = orig_flags;
+
+        if (band_template.cls >= RANDOM_ARCHER
+            && band_template.cls <= RANDOM_SKELETON_ARCHER)
+        {
+            band_template.flags |= MG_ARCHER;
+            if (band_template.cls == RANDOM_ARCHER)
+            {
+                monster_type dummy_mons = MONS_PROGRAM_BUG;
+                want_band = false;
+                band_template.cls = resolve_monster_type(band_template.cls,
+                    dummy_mons, PROX_ANYWHERE, 0, &place, &want_band, allow_ood);
+                dprf("RANDOM_ARCHER: %i", band_template.cls);
+            }
+        }
+
+        if (band_template.cls == RANDOM_SKELETON_ARCHER
+            || band_template.cls == RANDOM_ZOMBIE_ARCHER)
+        {
+            // Derived undead get resolved later, just set the type
+            band_template.base_type = RANDOM_ARCHER;
+            if (band_template.cls == RANDOM_SKELETON_ARCHER)
+                band_template.cls = MONS_SKELETON;
+            if (band_template.cls == RANDOM_ZOMBIE_ARCHER)
+                band_template.cls = MONS_ZOMBIE;
+        }
 
         // We don't want to place a unique that has already been
         // generated.
@@ -1007,8 +1058,12 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     {
         monster_type ztype = mg.base_type;
 
-        if (ztype == MONS_NO_MONSTER || ztype == RANDOM_MONSTER)
-            ztype = pick_local_zombifiable_monster(place, mg.cls, fpos);
+        if (ztype == MONS_NO_MONSTER || ztype == RANDOM_MONSTER
+            || ztype == RANDOM_ARCHER)
+        {
+            ztype = pick_local_zombifiable_monster(place, mg.cls, fpos,
+                ztype == RANDOM_ARCHER ? is_melee_only : nullptr);
+        }
 
         define_zombie(mon, ztype, mg.cls);
     }
@@ -1191,6 +1246,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
     mon->flags |= MF_JUST_SUMMONED;
 
+    const bool force_archer = bool(mg.flags & MG_ARCHER);
     if (mons_class_is_animated_weapon(mg.cls))
     {
         if (mg.props.exists(TUKIMA_WEAPON))
@@ -1226,16 +1282,18 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
         mon->colour = wpn->get_colour();
     }
-    else if (mons_class_itemuse(mg.cls) >= MONUSE_STARTING_EQUIPMENT
-             && !mg.props.exists(KIKU_WRETCH_KEY))
+    else if ((mons_class_itemuse(mg.cls) >= MONUSE_STARTING_EQUIPMENT
+              || force_archer) && !mg.props.exists(KIKU_WRETCH_KEY))
     {
-        give_item(mon, place.absdepth(), mg.is_summoned());
+        give_item(mon, place.absdepth(), mg.is_summoned(), force_archer);
         // Give these monsters a second weapon. - bwr
         if (mons_class_wields_two_weapons(mg.cls))
             give_weapon(mon, place.absdepth());
 
         unwind_var<int> save_speedinc(mon->speed_increment);
         mon->wield_melee_weapon(false);
+        if (force_archer)
+            mon->swap_weapons(false);
     }
 
     if (mon->type == MONS_SLIME_CREATURE && mon->blob_size > 1)
@@ -1548,32 +1606,13 @@ static bool _mc_too_slow_for_zombies(monster_type mon)
     return mons_class_zombie_base_speed(mons_species(mon)) < BASELINE_DELAY;
 }
 
-static bool _mc_bad_wretch(monster_type mon)
-{
-    // goofy on-death effect - probably other things could go here too
-    return mon == MONS_SPRIGGAN_DRUID;
-}
-
-/**
- * Pick a local monster type that's suitable for turning into a corpse.
- *
- * @param place     The branch/level that the monster type should come from,
- *                  if possible. (Not guaranteed for e.g. branches with no
- *                  corpses.)
- * @return          A monster type that can be used to fill out a corpse.
- */
-monster_type pick_local_corpsey_monster(level_id place)
-{
-    return pick_local_zombifiable_monster(place, MONS_NO_MONSTER, coord_def(),
-                                          true);
-}
-
 monster_type pick_local_zombifiable_monster(level_id place,
                                             monster_type cs,
                                             const coord_def& pos,
-                                            bool for_wretch)
+                                            mon_pick_vetoer veto)
 {
-    const bool really_in_d = place.branch == BRANCH_DUNGEON;
+    if (!veto && place.branch == BRANCH_DUNGEON)
+        veto = _mc_too_slow_for_zombies;
 
     if (place.branch == BRANCH_ZIGGURAT)
     {
@@ -1592,10 +1631,6 @@ monster_type pick_local_zombifiable_monster(level_id place,
 
     place.depth = min(place.depth, branch_zombie_cap(place.branch));
     place.depth = max(1, place.depth);
-
-    mon_pick_vetoer veto = for_wretch ? _mc_bad_wretch :
-                           really_in_d ? _mc_too_slow_for_zombies
-                                        : nullptr;
 
     // try to grab a proper zombifiable monster
     monster_type mt = picker.pick_with_veto(zombie_population(place.branch),
@@ -2267,6 +2302,9 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
                                    {MONS_DEEP_ELF_ANNIHILATOR, 1},
                                    {MONS_DEEP_ELF_SORCERER, 1},
                                    {MONS_DEEP_ELF_DEATH_MAGE, 1}}}},
+    { BAND_ARCHERS,             {{{RANDOM_ARCHER, 1}}}},
+    { BAND_SKELETON_ARCHERS,    {{{RANDOM_SKELETON_ARCHER, 1}}}},
+    { BAND_ZOMBIE_ARCHERS,      {{{RANDOM_ZOMBIE_ARCHER, 1}}}},
     { BAND_BALRUG,              {{{MONS_SUN_DEMON, 1}}}},
     { BAND_HELLWING,            {{{MONS_HELLWING, 1},
                                   {MONS_SMOKE_DEMON, 1}}}},
@@ -2642,9 +2680,8 @@ static monster_type _band_member(band_type band, int which,
     case BAND_RANDOM_SINGLE:
     {
         monster_type tmptype = MONS_PROGRAM_BUG;
-        coord_def tmppos;
         return resolve_monster_type(RANDOM_BANDLESS_MONSTER, tmptype,
-                                    PROX_ANYWHERE, &tmppos, 0,
+                                    PROX_ANYWHERE, 0,
                                     &parent_place, nullptr, allow_ood);
     }
 

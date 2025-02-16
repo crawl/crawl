@@ -2679,14 +2679,23 @@ void kiku_unearth_wretches()
         const int adjusted_power = min(typ_pow / 4, random2(random2(typ_pow)));
         const level_id lev(you.where_are_you, adjusted_power
                            - absdungeon_depth(you.where_are_you, 0));
-        const monster_type mon_type = pick_local_corpsey_monster(lev);
+        const auto mon_type = pick_local_zombifiable_monster(lev,
+                                MONS_NO_MONSTER, coord_def(),
+                                // Override veto to get a bigger range of potential
+                                // and evict anything we don't like
+                                [](monster_type mon) {
+                                    // goofy on-death effect - probably other things could go here too
+                                    return mon == MONS_SPRIGGAN_DRUID;
+                                });
+
         ASSERT(mons_class_can_be_zombified(mons_species(mon_type)));
+
         // place a monster
         mgen_data mg(mon_type,
                      BEH_HOSTILE, // so players don't have attack prompts
                      you.pos(),
                      MHITNOT);
-        mg.extra_flags = MF_NO_REWARD // ?
+        mg.extra_flags = MF_NO_REWARD
                        | MF_NO_REGEN;
         mg.set_range(2, 4);
         mg.props[KIKU_WRETCH_KEY] = true;

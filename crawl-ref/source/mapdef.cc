@@ -4341,10 +4341,8 @@ static monster_type _fixup_mon_type(monster_type orig)
         orig = MONS_PROGRAM_BUG;
 
     monster_type dummy_mons = MONS_PROGRAM_BUG;
-    coord_def dummy_pos;
     level_id place = level_id::current();
-    return resolve_monster_type(orig, dummy_mons, PROX_ANYWHERE, &dummy_pos, 0,
-                                &place);
+    return resolve_monster_type(orig, dummy_mons, PROX_ANYWHERE, 0, &place);
 }
 
 void mons_list::get_zombie_type(string s, mons_spec &spec) const
