@@ -1036,7 +1036,7 @@ fae also reduces the caster's own willpower for a time.
 %%%%
 Kinetic Grapnel spell
 
-Weaves a thin kinetic filiment around the caster's melee weapon and launches the
+Weaves a thin kinetic filament around the caster's melee weapon and launches the
 other end of it at a nearby enemy. If this grapnel successfully hits and does
 damage, it will become lodged in them, allowing the next melee attack the caster
 performs against them to strike with perfect accuracy and a small slaying bonus.
