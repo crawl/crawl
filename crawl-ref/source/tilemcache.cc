@@ -742,6 +742,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         break;
     case TILEP_MONS_STARCURSED_MASS:
     case TILEP_MONS_EXECUTIONER:
+    case TILEP_MONS_PLAYER_SHADOW_REVENANT:
         *ofs_x = -4;
         *ofs_y = 4;
         break;
@@ -762,6 +763,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = 0;
         break;
     case TILEP_MONS_HELL_SENTINEL:
+    case TILEP_MONS_PLAYER_SHADOW_POLTERGEIST:
         *ofs_x = -1;
         *ofs_y = 4;
         break;

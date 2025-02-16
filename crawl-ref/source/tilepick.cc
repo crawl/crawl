@@ -2545,6 +2545,8 @@ tileidx_t tileidx_player_shadow()
         case SP_NAGA:           return TILEP_MONS_PLAYER_SHADOW_NAGA;
         case SP_OCTOPODE:       return TILEP_MONS_PLAYER_SHADOW_OCTOPODE;
         case SP_ONI:            return TILEP_MONS_PLAYER_SHADOW_ONI;
+        case SP_POLTERGEIST:    return TILEP_MONS_PLAYER_SHADOW_POLTERGEIST;
+        case SP_REVENANT:       return TILEP_MONS_PLAYER_SHADOW_REVENANT;
         case SP_SPRIGGAN:       return TILEP_MONS_PLAYER_SHADOW_SPRIGGAN;
         case SP_TENGU:          return TILEP_MONS_PLAYER_SHADOW_TENGU;
         case SP_TROLL:          return TILEP_MONS_PLAYER_SHADOW_TROLL;
