@@ -3,7 +3,6 @@ name: Build
 on:
   push: {}
   pull_request: {}
-  create: {}
   release:
     types:
       - created
