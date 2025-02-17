@@ -2060,9 +2060,14 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
         case MONS_HAUNTED_ARMOUR:
         {
             // Use item tile.
-            ASSERT(mon.inv[MSLOT_ARMOUR]);
-            const item_def& item = *mon.inv[MSLOT_ARMOUR];
-            return tileidx_item(item);
+            if (mon.inv[MSLOT_ARMOUR])
+            {
+                const item_def& item = *mon.inv[MSLOT_ARMOUR];
+                return tileidx_item(item);
+            }
+            // Fallback for monster lookup menu
+            else
+                return TILE_ARM_SCARF;
         }
 
         case MONS_SPECTRAL_WEAPON:
