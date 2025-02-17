@@ -1430,7 +1430,7 @@ ENDMAP
 NAME:   nicolae_shop_firing_range
 TAGS:   transparent no_monster_gen no_item_gen no_tide
 DEPTH:  D:4-, Depths, Orc, Elf, Shoals, Snake, Vaults
-KMONS:  DE = training dummy
+KMONS:  DE = generate_awake training dummy
 KITEM:  D = stone q:1 / nothing, stone q:1 / nothing, stone q:1 / nothing
 KITEM:  H = stone q:1 w:30 / boomerang q:1 / javelin q:1 / dart q:1
 KITEM:  E = throwing net q:1

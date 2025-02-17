@@ -225,18 +225,20 @@ TAGS:   shoals_entry patrolling transparent
 WEIGHT: 5
 KMONS:  M = merfolk
 KMONS:  O = water nymph
+KITEM:  $ = $ q:1 no_pickup
 KFEAT:  O = enter_shoals
+KFEAT:  $ = W
 NSUBST: M = 1:M`` / *:`
 SUBST:  x = xx`, ` = W.
 MAP
  .........
 ...xx`xx...
 ..xxx`xxx..
-.xxxWWWxxx.
+.xxxWW$xxx.
 .xxWMMMWxx.
 .``WMOMW``.
 .xxWMMMWxx.
-.xxxWWWxxx.
+.xxx$WWxxx.
 ..xxx`xxx..
 ...xx`xx...
  .........

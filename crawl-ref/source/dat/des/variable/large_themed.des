@@ -2423,7 +2423,7 @@ ORIENT: south
 DEPTH:  D:12-, Orc:1, Depths, !Depths:1
 WEIGHT: 5
 TILE:   c = wall_stone_smooth
-FTILE:  +'{([>-O = floor_cobble_blood
+FTILE:  +'"{([>-O = floor_cobble_blood
 # Monster Placement
 NSUBST: ' = 6=1' / 6=1'' / '
 NSUBST: . = 1=2 / 3=2. / 10=3. / 10=3.. / .
@@ -2472,9 +2472,9 @@ MAP
 .............................
 ...wwwww.............wwwww...
 ..wwcncww..wG...Gw..wwcncww..
-..wcc'ccwwwwc+++cwwwwcc'ccw..
-..wn'('cccncc'''ccnccc'['nw..
-..wcc''c'''''''''''''c''ccw..
+..wcc"ccwwwwc+++cwwwwcc"ccw..
+..wn"("cccncc'''ccnccc"["nw..
+..wcc""c'''''''''''''c""ccw..
 ..wwccc+'''''''''''''+cccww..
 ...wwc'''''''''''''''''cww...
 ...wwc'''''''---'''''''cww...

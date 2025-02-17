@@ -6336,7 +6336,7 @@ NAME:   dreamdust_elfheim
 TAGS:   no_monster_gen transparent
 ORIENT: float
 DEPTH:  D:4-7
-KMONS:  1 = training dummy
+KMONS:  1 = generate_awake training dummy
 KMONS:  ? = duvessa band
 SUBST:  ? = ?-
 TILE:   G = dngn_statue_twins

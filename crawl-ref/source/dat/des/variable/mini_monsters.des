@@ -9913,7 +9913,7 @@ KMONS:  P = patrolling merfolk
 KFEAT:  E~ = w
 KMASK:  E~ = no_pool_fixup
 SUBST:  M = w.
-NSUBST: E = 3=E / 2=Ew / w
+NSUBST: E = 2=E / 2=Ew / w
 veto {{
   return not items.pickable("phial of floods")
 }}

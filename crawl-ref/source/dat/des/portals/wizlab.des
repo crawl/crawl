@@ -1280,7 +1280,7 @@ KMONS:      9 = generate_awake glass eye
 KMONS:      0 = col:red iron golem hd:5 spells:corrupting_pulse.36.magical \
                 name:flesh_golem name_replace \
                 tile:mons_flesh_golem name_descriptor
-KMONS:      & = col:mutagenic primal ox-ox-weird mutant beast \
+KMONS:      & = col:mutagenic primal ox-ox-weird mutant beast perm_ench:regen \
                 name:Cigotuvi's_Monster name_replace tile:mons_cigotuvis_monster
 ITEM:       potion of mutation q:1 pre_id
 ITEM:       randbook disc:alchemy disc2:necromancy owner:Cigotuvi

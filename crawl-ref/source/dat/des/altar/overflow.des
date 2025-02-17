@@ -96,7 +96,11 @@ function callback.xom_greatest_gift(data, triggerable, triggerer, marker, ev)
     dgn.persist.xom_gg_heard = true
   elseif not dgn.persist.xom_gg_granted and you.god() == "Xom" then
     local pos = dgn.find_marker_positions_by_prop("gift", "altar")
-    dgn.create_monster(pos[1].x, pos[1].y, "generate_awake att:good_neutral goblin")
+    local gob = "generate_awake att:good_neutral goblin perm_ench:might " ..
+                "perm_ench:haste perm_ench:invis perm_ench:repel_missiles " ..
+                "perm_ench:resistant perm_ench:regen perm_ench:magic_res " ..
+                "perm_ench:doubled_health perm_ench:mirror_dam perm_ench:swift"
+    dgn.create_monster(pos[1].x, pos[1].y, gob)
     crawl.god_speaks("Xom", 'A goblin pops into existence! It looks at you'
                      .. ' with admiration.')
     crawl.god_speaks("Xom", '"Friendship. The greatest gift is friendship!"')
