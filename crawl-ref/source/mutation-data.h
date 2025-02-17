@@ -1926,7 +1926,7 @@ static const mutation_def mut_data[] =
   {"You have a small jelly attached to you that may absorb projectiles.", "", ""},
   {"Your body partially splits into a small jelly.", "", ""},
   {"The jelly growth is reabsorbed into your body.", "", ""},
-  TILEG_MUT_GENERIC_JIYVA_MUTATION,
+  TILEG_MUT_JELLY_ABSORBING_MISSILES,
 },
 
 { MUT_PETRIFICATION_RESISTANCE, 0, 1, mutflag::good, false,

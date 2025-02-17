@@ -264,6 +264,7 @@ eyeballs_3
 gelatinous_body_1 GELATINOUS_BODY
 gelatinous_body_2
 gelatinous_body_3
+jelly_absorbing_missiles JELLY_ABSORBING_MISSILES
 jelly_growth JELLY_GROWTH
 tendrils TENDRILS
 
