@@ -80,22 +80,18 @@ struct cloud_info
  */
 struct map_cell
 {
-    map_cell() : flags(0), _feat(DNGN_UNSEEN), _feat_colour(0),
-                 _trap(TRAP_UNASSIGNED),
-                 _cloud(nullptr), _item(nullptr), _mons(nullptr)
+    // TODO: in C++20 we can give these a default member initializer
+    map_cell() : _feat(DNGN_UNSEEN),
+                 _trap(TRAP_UNASSIGNED)
     {
     }
 
     ~map_cell() = default;
 
     // copy constructor
-    map_cell(const map_cell& o): flags(o.flags), _feat(o._feat),
-                                    _feat_colour(o._feat_colour),
-                                    _trap(o._trap)
+    map_cell(const map_cell& o)
     {
-        _cloud = o._cloud ? make_unique<cloud_info>(*o._cloud) : nullptr;
-        _item = o._item ? make_unique<item_def>(*o._item) : nullptr;
-        _mons = o._mons ? make_unique<monster_info>(*o._mons) : nullptr;
+        *this = o;
     }
 
     // copy assignment
@@ -116,30 +112,9 @@ struct map_cell
     }
 
     // move constructor
-    map_cell(map_cell&& o) noexcept:
-        flags(o.flags),
-        _feat(o._feat),
-        _feat_colour(o._feat_colour),
-        _trap(o._trap),
-        _cloud(std::move(o._cloud)),
-        _item(std::move(o._item)),
-        _mons(std::move(o._mons))
-
-    {
-    }
-
+    map_cell(map_cell&& o) noexcept = default;
     // move assignment
-    map_cell& operator=(map_cell&& o) noexcept
-    {
-        flags = o.flags;
-        _feat = o._feat;
-        _feat_colour = o._feat_colour;
-        _trap = o._trap;
-        _cloud = std::move(o._cloud);
-        _item = std::move(o._item);
-        _mons = std::move(o._mons);
-        return *this;
-    }
+    map_cell& operator=(map_cell&& o) = default;
 
     friend bool operator==(const map_cell &lhs, const map_cell &rhs) {
         // TODO: consider providing a proper equality operator
@@ -329,11 +304,11 @@ struct map_cell
     }
 
 public:
-    uint32_t flags;   // Flags describing the mappedness of this square.
+    uint32_t flags = 0;   // Flags describing the mappedness of this square.
 private:
     // TODO: shrink enums, shrink/re-order cloud_info and inline it
     dungeon_feature_type _feat:8;
-    colour_t _feat_colour;
+    colour_t _feat_colour = 0;
     trap_type _trap:8;
     unique_ptr<cloud_info> _cloud;
     unique_ptr<item_def> _item;
