@@ -5860,7 +5860,7 @@ void bolt::affect_monster(monster* mon)
         mon->hurt(agent(), final, flavour, KILLED_BY_BEAM, "", "", false);
 
         // Haemoclasm explosions will always chain-explode if they kill something
-        if (!mon->alive() && flavour == BEAM_HAEMOCLASM
+        if (!mon->alive() && flavour == BEAM_HAEMOCLASM && !mon->is_firewood()
             && you.has_mutation(MUT_MAKHLEB_MARK_HAEMOCLASM))
         {
             mon->props[MAKHLEB_HAEMOCLASM_KEY] = true;
