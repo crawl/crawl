@@ -643,11 +643,12 @@ int tile_click_cell(const coord_def &gc, unsigned char mod)
             return CK_MOUSE_CMD;
     }
 
-    if ((mod & TILES_MOD_CTRL) && adjacent(you.pos(), gc))
+    if ((mod & (TILES_MOD_CTRL | TILES_MOD_SHIFT)) && adjacent(you.pos(), gc))
     {
-        const int cmd = click_travel(gc, mod & TILES_MOD_CTRL);
-        if (cmd != CK_MOUSE_CMD)
-            process_command((command_type) cmd);
+        const command_type cmd = click_travel(gc, mod & TILES_MOD_CTRL,
+                                              mod & TILES_MOD_SHIFT);
+        if (cmd != CMD_NO_CMD)
+            process_command(cmd);
 
         return CK_MOUSE_CMD;
     }
@@ -658,9 +659,9 @@ int tile_click_cell(const coord_def &gc, unsigned char mod)
         return CK_MOUSE_CMD;
 
     dprf("click_travel");
-    const int cmd = click_travel(gc, mod & TILES_MOD_CTRL);
-    if (cmd != CK_MOUSE_CMD)
-        process_command((command_type) cmd);
+    const command_type cmd = click_travel(gc, false, false);
+    if (cmd != CMD_NO_CMD)
+        process_command(cmd);
 
     return CK_MOUSE_CMD;
 }
@@ -909,7 +910,14 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
         else if (!cell_is_solid(gc)) // no monster or player
         {
             if (adjacent(gc, you.pos()))
+            {
                 _add_tip(tip, "[L-Click] Move");
+                if (feat_is_open_door(env.grid(gc)))
+                {
+                    _add_tip(tip, "[Shift + L-Click] Close (%)");
+                    cmd.push_back(CMD_CLOSE_DOOR);
+                }
+            }
             else if (env.map_knowledge(gc).feat() != DNGN_UNSEEN)
             {
                 if (click_travel_safe(gc))
