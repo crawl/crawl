@@ -4682,7 +4682,7 @@ void barb_player(int turns, int pow)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (turns <= 0 || pow <= 0)
+    if (turns <= 0 || pow <= 0 || you.is_insubstantial())
         return;
 
     const int max_turns = 12;
