@@ -1507,7 +1507,7 @@ some of its enchantments.
 %%%%
 Ravenous Swarm spell
 
-Unleashes a torrent of vampire bats, filling the air around
+Unleashes a torrent of vampire bats, filling the air around a target.
 
 These vampires will gnaw on anything which isn't undead with a voracious hunger,
 and their bites will eventually even lull their victims to sleep, leaving them
