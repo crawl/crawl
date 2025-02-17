@@ -4636,6 +4636,13 @@ bool spellclaws_attack(int spell_level)
     if (you.weapon() && is_range_weapon(*you.weapon()))
         return false;
 
+    // Struggle against nets rather than ignore them.
+    if (you.caught())
+    {
+        free_self_from_net();
+        return false;
+    }
+
     // Gather all possible targets in attack range
     list<actor*> targets;
     get_cleave_targets(you, coord_def(), targets, -1, true);
