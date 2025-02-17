@@ -390,6 +390,18 @@ spret cast_percussive_tempering(const actor& caster, monster& target, int power,
     target.heal(roll_dice(3, 10));
     target.add_ench(mon_enchant(ENCH_TEMPERED, 0, &caster, random_range(70, 100)));
 
+    // Give a small bit of extra duration if we're about to time out, just to
+    // avoid the sad feeling of buffing a monster who immediately vanishes.
+    if (target.has_ench(ENCH_SUMMON_TIMER))
+    {
+        mon_enchant dur = target.get_ench(ENCH_SUMMON_TIMER);
+        if (dur.duration < 50)
+        {
+            dur.duration += random_range(30, 50);
+            target.update_ench(dur);
+        }
+    }
+
     return spret::success;
 }
 
