@@ -2664,8 +2664,22 @@ dump_order += notes,screenshots,vaults,skill_gains,action_counts
             dump_order += -
         to place a separator between sections.
 
-        You can also add arbitrary section names; ones not mentioned here will
-        be interpreted as custom user-defined Lua functions with no arguments.
+        You can also add your own sections by writing a Lua function and
+        adding its name to the list. The function's return value will then
+        be dumped. You can reference global variables just like regular Lua
+        functions, but its name must be in lowercase, and no call arguments
+        will be provided.
+
+        Example:
+          {
+            myRace = you.race()
+            function mydumpfn()
+              return
+                "This will be printed to dump. Your species is " .. myRace
+            end
+          }
+          dump_order += mydumpfn
+
 
 4-c     Notes.
 --------------
