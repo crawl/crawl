@@ -949,7 +949,7 @@ static void _handle_emergency_flight()
 // Regeneration and Magic Regeneration items only work if the player has reached
 // max hp/mp while they are being worn. This scans and updates such items when
 // the player refills their hp/mp.
-static void _maybe_attune_items(bool attune_regen, bool attune_mana_regen)
+void maybe_attune_regen_items(bool attune_regen, bool attune_mana_regen)
 {
     if (!attune_regen && !attune_mana_regen)
         return;
@@ -1057,9 +1057,9 @@ static void _regenerate_hp_and_mp(int delay)
     }
 
     // Update attunement of regeneration items if our hp/mp has refilled.
-    _maybe_attune_items(you.hp != old_hp && you.hp == you.hp_max,
-                        you.magic_points != old_mp
-                        && you.magic_points == you.max_magic_points);
+    maybe_attune_regen_items(you.hp != old_hp && you.hp == you.hp_max,
+                             you.magic_points != old_mp
+                             && you.magic_points == you.max_magic_points);
 }
 
 static void _handle_fugue(int delay)

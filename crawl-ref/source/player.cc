@@ -61,6 +61,7 @@
 #include "notes.h"
 #include "output.h"
 #include "player-equip.h"
+#include "player-reacts.h"
 #include "player-save-info.h"
 #include "player-stats.h"
 #include "prompt.h"
@@ -2557,6 +2558,9 @@ void calc_hp(bool scale)
             interrupt_activity(activity_interrupt::full_hp);
         dprf("HP changed: %d/%d -> %d/%d", oldhp, old_max, you.hp, you.hp_max);
         you.redraw_hit_points = true;
+
+        if (you.hp == you.hp_max)
+            maybe_attune_regen_items(true, false);
     }
 }
 
