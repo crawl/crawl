@@ -6545,6 +6545,12 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
     if (mon_explodes_on_death(mi.type))
         _desc_mon_death_explosion(result, mi);
 
+    if (mi.type == MONS_BATTLESPHERE)
+    {
+        const dice_def dam = battlesphere_damage_from_hd(mi.hd);
+        result << "Projectile damage: " << dam.num << "d" << dam.size << "\n";
+    }
+
     // Flying monsters can't be forced to fall into liquids these days.
     if (!(mi.airborne()))
         result << _monster_habitat_description(mi);

@@ -1603,9 +1603,14 @@ static dice_def _battlesphere_damage(int hd)
     return dice_def(2, 6 + hd);
 }
 
-dice_def battlesphere_damage(int pow)
+dice_def battlesphere_damage_from_power(int pow)
 {
     return _battlesphere_damage(_battlesphere_hd(pow, false));
+}
+
+dice_def battlesphere_damage_from_hd(int hd)
+{
+    return _battlesphere_damage(hd);
 }
 
 spret cast_battlesphere(actor* agent, int pow, bool fail)

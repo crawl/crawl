@@ -3032,7 +3032,7 @@ static dice_def _spell_damage(spell_type spell, int power)
         case SPELL_SCORCH:
             return scorch_damage(power, false);
         case SPELL_BATTLESPHERE:
-            return battlesphere_damage(power);
+            return battlesphere_damage_from_power(power);
         case SPELL_FROZEN_RAMPARTS:
             return ramparts_damage(power, false);
         case SPELL_LRD:
