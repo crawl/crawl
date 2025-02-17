@@ -2410,12 +2410,13 @@ bool ashenzari_uncurse_item()
         canned_msg(MSG_OK);
         return false;
     }
-
     mprf("You shatter the curse binding %s!", item.name(DESC_THE).c_str());
     item_skills(item, you.skills_to_hide);
-
     vector<item_def*> to_remove = {&item};
+    // TODO: this probably works, but it's definitely weird that we're ignoring
+    // the return value. It might be better to make this interactive?
     handle_chain_removal(to_remove, false);
+
     for (item_def* _item : to_remove)
     {
         if (_item-> link != item_slot)

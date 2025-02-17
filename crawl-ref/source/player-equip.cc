@@ -1422,13 +1422,7 @@ bool unequip_item(item_def& item, bool msg, bool skip_effects)
     you.equipment.update();
 
     if (!skip_effects)
-    {
-        // Cursed items should always be destroyed on unequip.
-        if (item.cursed())
-            destroy_item(item);
-
         unequip_effect(item_slot, false, msg);
-    }
 
     ash_check_bondage();
     you.last_unequip = item_slot;
@@ -1506,6 +1500,7 @@ void unequip_effect(int item_slot, bool meld, bool msg)
     else if (item.base_type == OBJ_JEWELLERY)
         _unequip_jewellery_effect(item, meld);
 
+    // Cursed items should always be destroyed on unequip.
     if (item.cursed() && !meld)
         destroy_item(item);
 }
