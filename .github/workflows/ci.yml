@@ -588,7 +588,7 @@ jobs:
     permissions:
       contents: read #  to fetch code (actions/checkout)
 
-    runs-on: ubuntu-20.04 # TODO: go back to ubuntu-latest
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         # oldest non-eol security release + current bugfix version
