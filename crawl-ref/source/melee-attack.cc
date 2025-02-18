@@ -2198,6 +2198,9 @@ int melee_attack::player_apply_final_multipliers(int damage, bool aux)
 
     apply_rev_penalty(damage);
 
+    if (dmg_mult)
+        damage = damage * (100 + dmg_mult) / 100;
+
     if (you.duration[DUR_CONFUSING_TOUCH] && !aux)
         return 0;
 
