@@ -2949,7 +2949,9 @@ bool mons_can_hate(monster_type type)
 {
     return you.allies_forbidden()
         // don't turn foxfire, blocks of ice, etc hostile
-        && !mons_class_is_peripheral(type);
+        && !mons_class_is_peripheral(type)
+        // Thematically just the player potergeist taking up more tiles
+        && type != MONS_HAUNTED_ARMOUR;
 }
 
 void check_lovelessness(monster &mons)

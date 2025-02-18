@@ -2623,7 +2623,7 @@ void clear_monster_flags()
 **/
 static void _update_monster_attitude(monster *mon)
 {
-    if (you.allies_forbidden() && !mon->is_peripheral())
+    if (mons_can_hate(mon->type))
         mon->attitude = ATT_HOSTILE;
 }
 
