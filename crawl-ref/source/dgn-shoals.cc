@@ -1123,7 +1123,7 @@ void wizard_mod_tide()
         const int res =
             cancellable_get_line(buf, sizeof buf, nullptr, _tidemod_keyfilter);
         clear_messages(true);
-        if (key_is_escape(res))
+        if (key_is_escape(res) || crawl_state.seen_hups)
             break;
         if (!res)
         {
