@@ -58,6 +58,8 @@ static string _net_immune_reason()
 {
     if (you.unrand_equipped(UNRAND_SLICK_SLIPPERS))
         return "You slip through the net.";
+    else if (you.is_insubstantial())
+        return "The net passes straight through you.";
     return "";
 }
 
