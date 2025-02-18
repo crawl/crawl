@@ -3051,6 +3051,8 @@ w:50
 @The_monster@ says, "The Crypt, the Tomb, what's next? The Coffin?"
 
 @The_monster@ says, "All these vampires have me hopping mad!"
+
+@The_monster@ says, "I hate revenants, but I forget why! And I hate that, too!"
 %%%%
 Abyss Donald
 
