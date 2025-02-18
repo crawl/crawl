@@ -216,11 +216,15 @@ bool Stash::needs_stop() const
     return false;
 }
 
-bool Stash::is_boring_feature(dungeon_feature_type feature)
+bool Stash::is_boring_feature(dungeon_feature_type feat)
 {
+    // Treat stairs and hatches as interesting. (Could oneline but probably no point)
+    if (feat_is_staircase(feat) || feat_is_escape_hatch(feat))
+        return false;
+
     // Count shops as boring features, because they are handled separately.
-    return !is_notable_terrain(feature) && !feat_is_trap(feature)
-        || feature == DNGN_ENTER_SHOP;
+    return (!is_notable_terrain(feat) && !feat_is_trap(feat))
+           || feat == DNGN_ENTER_SHOP;
 }
 
 static bool _grid_has_perceived_item(const coord_def& pos)
@@ -740,6 +744,20 @@ ShopInfo &LevelStashes::get_shop(const coord_def& c)
 // otherwise.
 bool LevelStashes::update_stash(const coord_def& c)
 {
+    if (feat_is_staircase(env.grid(c)) || feat_is_escape_hatch(env.grid(c)))
+    {
+        auto it = m_stashes.find(c);
+        if (it != m_stashes.end())
+            it->second.update();
+        else
+        {
+            Stash new_stash(c);
+            new_stash.update();
+            m_stashes.insert({ c, new_stash });
+        }
+        return true;
+    }
+
     Stash *s = find_stash(c);
     if (!s)
         return false;
