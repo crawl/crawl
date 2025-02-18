@@ -2444,7 +2444,7 @@ rows of adversaries whenever its creator lands a melee attack.
 revenant
 
 The skeletal remains of someone who died unmourned and forgotten. It burns with
-an unquenable hunger to be remembered.
+an unquenchable hunger to be remembered.
 %%%%
 revenant soulmonger
 
