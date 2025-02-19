@@ -1674,8 +1674,12 @@ static int _shatter_player_dice()
         return 1;
     if (you.petrified() || you.petrifying())
         return 6; // reduced later by petrification's damage reduction
-    else if (you.form == transformation::statue || you.species == SP_GARGOYLE)
+    else if (you.form == transformation::statue
+             || you.species == SP_GARGOYLE
+             || you.species == SP_REVENANT)
+    {
         return 6;
+    }
     else if (you.airborne() || you.is_amorphous())
         return 1;
     else
