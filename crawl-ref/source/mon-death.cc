@@ -864,7 +864,7 @@ static bool _beogh_maybe_convert_orc(monster &mons, killer_type killer,
 static bool _blorkula_bat_split(monster& blorkula, killer_type ktype)
 {
     // Can't recover from these
-    if (RESET_KILL(ktype))
+    if (RESET_KILL(ktype) || ktype == KILL_BANISHED)
         return false;
 
     // XXX: Summoned Blorkulas (ie: from phantom mirror) will cease to be when
