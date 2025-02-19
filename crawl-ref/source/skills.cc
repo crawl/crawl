@@ -2002,7 +2002,9 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             break;
 
         case SK_NECROMANCY:
-            if (species == SP_SPRIGGAN && skill_rank == 5)
+            if (species == SP_COGLIN && skill_rank == 5)
+                result = "Necromech";
+            else if (species == SP_SPRIGGAN && skill_rank == 5)
                 result = "Petite Mort";
             else if (species == SP_VINE_STALKER && skill_rank == 5)
                 result = "Corpseflower";
