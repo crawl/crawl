@@ -1801,7 +1801,8 @@ bool player_is_shapechanged()
 {
     // TODO: move into data
     return form_changes_physiology(you.form)
-        && you.form != transformation::death;
+        && you.form != transformation::death
+        && you.form != transformation::vampire;
 }
 
 bool player_acrobatic()
