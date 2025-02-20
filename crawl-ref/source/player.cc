@@ -1065,7 +1065,9 @@ static bool _mons_inhibits_regen(const monster &m)
 bool regeneration_is_inhibited(const monster *m)
 {
     // used mainly for resting: don't add anything here that can be waited off
-    if (you.get_mutation_level(MUT_INHIBITED_REGENERATION) == 1)
+    if (you.get_mutation_level(MUT_INHIBITED_REGENERATION) == 1
+        || you.form == transformation::vampire
+        || you.form == transformation::bat_swarm)
     {
         if (m)
             return _mons_inhibits_regen(*m);
