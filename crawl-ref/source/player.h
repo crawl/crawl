@@ -722,6 +722,7 @@ public:
                   bool wizard_tele = false) override;
 
     void expose_to_element(beam_type element, int strength = 0,
+                           const actor* source = nullptr,
                            bool slow_cold_blood = true) override;
     void god_conduct(conduct_type thing_done, int level) override;
 

@@ -973,7 +973,7 @@ static void _ELEMENTAL_STAFF_melee_effects(item_def*, actor* attacker,
     defender->hurt(attacker, bonus_dam, flavour);
 
     if (defender->alive() && flavour != BEAM_NONE)
-        defender->expose_to_element(flavour, 2);
+        defender->expose_to_element(flavour, 2, attacker);
 }
 
 ///////////////////////////////////////////////////
@@ -1388,7 +1388,7 @@ static void _THERMIC_ENGINE_melee_effects(item_def* weapon, actor* attacker,
 
         defender->hurt(attacker, bonus_dam, BEAM_COLD);
         if (defender->alive())
-            defender->expose_to_element(BEAM_COLD, 2);
+            defender->expose_to_element(BEAM_COLD, 2, attacker);
     }
 }
 

@@ -1345,7 +1345,7 @@ static void _actor_apply_cloud(actor *act, cloud_struct &cloud)
 
     const beam_type cloud_flavour = _cloud2beam(cloud.type);
     if (cloud_flavour != BEAM_NONE)
-        act->expose_to_element(cloud_flavour, 7);
+        act->expose_to_element(cloud_flavour, 7, cloud.agent());
 
     const bool side_effects =
         _actor_apply_cloud_side_effects(act, cloud, final_damage);

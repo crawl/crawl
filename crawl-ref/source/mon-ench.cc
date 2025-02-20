@@ -1325,8 +1325,8 @@ void monster::apply_enchantment(const mon_enchant &me)
         {
             simple_monster_message(*this, " is no longer in a wild frenzy.");
             const int duration = random_range(70, 130);
-            add_ench(mon_enchant(ENCH_FATIGUE, 0, 0, duration));
-            add_ench(mon_enchant(ENCH_SLOW, 0, 0, duration));
+            add_ench(mon_enchant(ENCH_FATIGUE, 0, me.agent(), duration));
+            add_ench(mon_enchant(ENCH_SLOW, 0, me.agent(), duration));
         }
         break;
 
@@ -1335,8 +1335,8 @@ void monster::apply_enchantment(const mon_enchant &me)
         {
             simple_monster_message(*this, " is no longer berserk.");
             const int duration = random_range(70, 130);
-            add_ench(mon_enchant(ENCH_FATIGUE, 0, 0, duration));
-            add_ench(mon_enchant(ENCH_SLOW, 0, 0, duration));
+            add_ench(mon_enchant(ENCH_FATIGUE, 0, me.agent(), duration));
+            add_ench(mon_enchant(ENCH_SLOW, 0, me.agent(), duration));
         }
         break;
 

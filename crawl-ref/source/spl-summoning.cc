@@ -2537,7 +2537,7 @@ void kiku_unearth_wretches()
         // Die in 2-3 turns.
         mon->add_ench(mon_enchant(ENCH_SLOWLY_DYING, 1, nullptr,
                                    20 + random2(10)));
-        mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0, &you, 9999));
+        mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0, nullptr, 9999));
     }
     if (!created)
         simple_god_message(" has no space to call forth the wretched!");

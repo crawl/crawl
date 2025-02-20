@@ -1860,7 +1860,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         const int burn_power = (pbolt.is_explosion) ? 5 :
                                (pbolt.pierce)       ? 3
                                                     : 2;
-        mons->expose_to_element(pbolt.flavour, burn_power, false);
+        mons->expose_to_element(pbolt.flavour, burn_power, pbolt.agent(), false);
     }
 
     return hurted;
@@ -4479,7 +4479,7 @@ void bolt::affect_player()
     // what to do for hybrid damage?  E.g. bolt of magma, icicle, poison arrow?
     // Right now just ignore the physical component.
     // what about acid?
-    you.expose_to_element(flavour, 2, false);
+    you.expose_to_element(flavour, 2, agent(), false);
 
     // Manticore spikes
     if (origin_spell == SPELL_THROW_BARBS && final_dam > 0)
@@ -5295,7 +5295,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     if (origin_spell == SPELL_SOJOURNING_BOLT
         && x_chance_in_y(2, 3) && !(mon->no_tele()))
     {
-        monster_teleport(mon, false);
+        monster_teleport(mon, false, false, false, agent());
     }
 
     if (flavour == BEAM_CRYSTALLIZING)
@@ -5321,7 +5321,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         if (!mon->has_ench(ENCH_FROZEN))
         {
             simple_monster_message(*mon, " is flash-frozen.");
-            mon->add_ench(ENCH_FROZEN);
+            mon->add_ench(mon_enchant(ENCH_FROZEN, 0, agent()));
         }
     }
 
@@ -5391,7 +5391,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     if (origin_spell == SPELL_GRAVE_CLAW && !mon->has_ench(ENCH_BOUND))
     {
         simple_monster_message(*mon, " is pinned in place!");
-        mon->add_ench(mon_enchant(ENCH_BOUND, 0, nullptr, random_range(2, 4) * BASELINE_DELAY));
+        mon->add_ench(mon_enchant(ENCH_BOUND, 0, agent(), random_range(2, 4) * BASELINE_DELAY));
     }
 
     if (origin_spell == SPELL_KINETIC_GRAPNEL && dmg > 0)
@@ -6244,7 +6244,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             return MON_UNAFFECTED;
         if (mon->observable())
             obvious_effect = true;
-        monster_teleport(mon, false);
+        monster_teleport(mon, false, false, false, agent());
         return MON_AFFECTED;
 
     case BEAM_BLINK:
@@ -6403,7 +6403,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_UNAFFECTED;
 
     case BEAM_CORONA:
-        if (backlight_monster(mon))
+        if (backlight_monster(mon, agent()))
         {
             obvious_effect = true;
             return MON_AFFECTED;
@@ -6589,7 +6589,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
         if (simple_monster_message(*mon, " is charmed."))
             obvious_effect = true;
-        mon->add_ench(ENCH_CHARM);
+        mon->add_ench(mon_enchant(ENCH_CHARM, 0, agent()));
         if (you.can_see(*mon))
             obvious_effect = true;
         return MON_AFFECTED;

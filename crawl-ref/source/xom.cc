@@ -2556,7 +2556,7 @@ static void _xom_destruction(int sever, bool real)
             if (!rc)
                 god_speaks(GOD_XOM, _get_xom_speech("fake destruction").c_str());
             rc = true;
-            backlight_monster(*mi);
+            backlight_monster(*mi, &you);
             continue;
         }
 
@@ -2716,7 +2716,7 @@ static void _xom_enchant_monster(int sever, bool helpful)
               (ench == ENCH_PETRIFYING || ench == ENCH_REGENERATION) ? "starts" : "looks",
               ench_name.c_str());
 
-        application->add_ench(mon_enchant(ench, 0, nullptr, time));
+        application->add_ench(mon_enchant(ench, 0, &you, time));
         affected++;
     }
 
@@ -2921,7 +2921,7 @@ static void _xom_mass_charm(int sever)
             && application->get_hit_dice() + random_range(-1, 1) <= hd_target))
         {
             simple_monster_message(*application, " is charmed.");
-            application->add_ench(mon_enchant(ENCH_CHARM, 0, nullptr, time));
+            application->add_ench(mon_enchant(ENCH_CHARM, 0, &you, time));
             affected++;
         }
 
@@ -3091,7 +3091,7 @@ static void _xom_time_control(int sever)
         if ((!mons_has_attacks(**mi) && ench != ENCH_PARALYSIS) || mi->stasis())
             continue;
 
-        mi->add_ench(mon_enchant(ench, 0, nullptr, time));
+        mi->add_ench(mon_enchant(ench, 0, &you, time));
     }
 
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);

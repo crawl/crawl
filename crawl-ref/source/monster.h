@@ -362,6 +362,7 @@ public:
     void banish(const actor *agent, const string &who = "", const int power = 0,
                 bool force = false) override;
     void expose_to_element(beam_type element, int strength = 0,
+                           const actor* source = nullptr,
                            bool slow_cold_blood = true) override;
 
     monster_type mons_species(bool zombie_base = false) const override;

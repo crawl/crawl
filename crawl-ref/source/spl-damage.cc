@@ -617,7 +617,7 @@ static int _los_spell_damage_actor(const actor* agent, actor &target,
         if (beam.origin_spell == SPELL_OZOCUBUS_REFRIGERATION
             && target.alive())
         {
-            target.expose_to_element(beam.flavour, 5);
+            target.expose_to_element(beam.flavour, 5, agent);
         }
     }
 
@@ -892,7 +892,7 @@ spret cast_freeze(int pow, monster* mons, bool fail)
 
     if (mons->alive())
     {
-        mons->expose_to_element(BEAM_COLD, orig_hurted);
+        mons->expose_to_element(BEAM_COLD, orig_hurted, &you);
         you.pet_target = mons->mindex();
     }
 

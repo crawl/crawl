@@ -202,6 +202,7 @@ public:
     virtual bool strip_willpower(actor *attacker, int dur,
                                  bool quiet = false) = 0;
     virtual void expose_to_element(beam_type element, int strength = 0,
+                                   const actor* source = nullptr,
                                    bool slow_cold_blood = true) = 0;
     virtual void splash_with_acid(actor *evildoer) = 0;
     virtual bool corrode(const actor* source = nullptr,

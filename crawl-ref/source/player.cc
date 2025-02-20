@@ -6922,7 +6922,7 @@ bool player::poison(actor *agent, int amount, bool force)
 }
 
 void player::expose_to_element(beam_type element, int _strength,
-                               bool slow_cold_blood)
+                               const actor* /*source*/, bool slow_cold_blood)
 {
     ::expose_player_to_element(element, _strength, slow_cold_blood);
 }
