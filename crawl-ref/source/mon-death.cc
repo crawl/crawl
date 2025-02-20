@@ -746,6 +746,7 @@ static bool _vampire_make_thrall(monster* mons)
 
     mons->hit_points = mons->max_hit_points;
     mons->flags |= MF_FAKE_UNDEAD;
+    mons->props.erase(VAMPIRIC_THRALL_KEY);
 
     if (mons->is_actual_spellcaster())
     {
