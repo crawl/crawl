@@ -819,7 +819,7 @@ static void _PLUTONIUM_SWORD_melee_effects(item_def* weapon,
         }
 
         if (defender->is_monster())
-            defender->malmutate("the plutonium sword");
+            defender->malmutate(attacker, "the plutonium sword");
         else
         {
             mpr(random_choose("Your body deforms painfully.",

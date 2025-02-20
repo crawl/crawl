@@ -7577,7 +7577,7 @@ bool player::is_motile() const
                             && !you.duration[DUR_FORTRESS_BLAST_TIMER];
 }
 
-bool player::malmutate(const string &reason)
+bool player::malmutate(const actor* /*source*/, const string &reason)
 {
     ASSERT(!crawl_state.game_is_arena());
 

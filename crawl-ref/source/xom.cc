@@ -1274,7 +1274,7 @@ static void _xom_polymorph_monster(monster &mons, bool helpful)
             mons.polymorph(PPT_SAME);
 
         if (you.experience_level < 10 && !helpful)
-            mons.malmutate("");
+            mons.malmutate(nullptr);
     }
 
     else

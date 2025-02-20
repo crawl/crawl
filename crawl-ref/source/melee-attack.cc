@@ -607,7 +607,7 @@ static void _apply_flux_contam(monster &m)
             if (!m.alive())
                 return;
         }
-        m.malmutate("");
+        m.malmutate(&you);
         m.del_ench(ENCH_CONTAM, true);
         return;
     }

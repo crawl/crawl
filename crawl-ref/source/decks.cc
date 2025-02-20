@@ -1563,7 +1563,7 @@ static void _degeneration_card(int power)
                if (mons.can_polymorph())
                {
                    mons.polymorph(PPT_LESS);
-                   mons.malmutate("");
+                   mons.malmutate(&you);
                }
                else
                {

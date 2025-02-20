@@ -3750,7 +3750,7 @@ void bolt::affect_player_enchantment(bool resistible)
     case BEAM_MALMUTATE:
     case BEAM_UNRAVELLED_MAGIC:
         mpr("Strange energies course through your body.");
-        you.malmutate(aux_source.empty() ? get_source_name() :
+        you.malmutate(agent(), aux_source.empty() ? get_source_name() :
                       (get_source_name() + "/" + aux_source));
         obvious_effect = true;
         break;
@@ -5042,7 +5042,7 @@ void bolt::enchantment_affect_monster(monster* mon)
                 // Hack: assume that BEAM_BANISH comes from Lugonu's Banishment
                 // and hence causes malmutation on resist.
                 if (real_flavour == BEAM_BANISH && agent() && agent()->is_player())
-                    mon->malmutate("");
+                    mon->malmutate(agent());
             }
             break;
         case MON_UNAFFECTED:
@@ -6279,7 +6279,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
     case BEAM_MALMUTATE:
     case BEAM_UNRAVELLED_MAGIC:
-        if (mon->malmutate("")) // exact source doesn't matter
+        if (mon->malmutate(agent())) // exact source doesn't matter
             obvious_effect = true;
         if (YOU_KILL(thrower))
         {

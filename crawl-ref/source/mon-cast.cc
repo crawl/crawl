@@ -3983,7 +3983,7 @@ static void _corrupting_pulse(monster *mons)
         if (m && cell_see_cell(mons->pos(), *ri, LOS_SOLID_SEE)
             && !mons_aligned(mons, m))
         {
-            m->corrupt();
+            m->malmutate(mons);
         }
     }
 }

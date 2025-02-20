@@ -4334,7 +4334,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             if (you.get_mutation_level(MUT_CORRUPTING_PRESENCE) > 1
                         && one_chance_in(12))
             {
-                this->malmutate("Your corrupting presence");
+                this->malmutate(&you, "Your corrupting presence");
             }
         }
 
@@ -5097,7 +5097,7 @@ bool monster::can_burrow_through(dungeon_feature_type feat) const
  *
  * @return Whether the monster was mutated in any way.
  */
-bool monster::malmutate(const string &/*reason*/)
+bool monster::malmutate(const actor* source, const string& /*reason*/)
 {
     if (!can_mutate())
         return false;
@@ -5120,23 +5120,8 @@ bool monster::malmutate(const string &/*reason*/)
     }
 
     simple_monster_message(*this, " twists and deforms.");
-    add_ench(mon_enchant(ENCH_WRETCHED, 1));
+    add_ench(mon_enchant(ENCH_WRETCHED, 1, source));
     return true;
-}
-
-/**
- * Corrupt the monster's body.
- *
- * Analogous to effects that give the player temp mutations, like wretched star
- * pulses & demonspawn corruptors. Currently identical to malmutate. (Writing
- * this function anyway, since they probably shouldn't be identical.)
- *
- * XXX: adjust duration to differentiate? (make malmut's duration longer, or
- * corrupt's shorter?)
- */
-void monster::corrupt()
-{
-    malmutate("");
 }
 
 bool monster::polymorph(int /* pow */, bool /*allow_immobile*/)

@@ -712,7 +712,7 @@ public:
     bool can_drink(bool temp = true) const;
     bool is_stationary() const override;
     bool is_motile() const;
-    bool malmutate(const string &reason) override;
+    bool malmutate(const actor* source, const string &reason = "") override;
     bool polymorph(int pow, bool allow_immobile = true) override;
     void backlight();
     void banish(const actor* /*agent*/, const string &who = "", const int power = 0,
