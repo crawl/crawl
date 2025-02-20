@@ -1947,7 +1947,7 @@ static bool _wu_jian_retribution()
             break;
         case 3:
             wu_jian_sifu_message(" says: Suffer, mortal!");
-            you.corrode_equipment(_god_wrath_name(god).c_str(), 2);
+            you.corrode(nullptr, _god_wrath_name(god).c_str(), 8);
             break;
         }
     }

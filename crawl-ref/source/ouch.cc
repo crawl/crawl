@@ -821,7 +821,7 @@ static void _maybe_corrode()
 {
     int corrosion_sources = you.scan_artefacts(ARTP_CORRODE);
     if (x_chance_in_y(corrosion_chance(corrosion_sources), 100))
-        you.corrode_equipment("Your corrosive artefact");
+        you.corrode(nullptr, "Your corrosive artefact");
 }
 
 /**

@@ -3362,7 +3362,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         switch (item.sub_type)
         {
         case RING_RESIST_CORROSION:
-            return you.res_corr(false, false);
+            return player_res_corrosion(false, false, false);
 
         case AMU_ACROBAT:
             return you.has_mutation(MUT_ACROBATIC);

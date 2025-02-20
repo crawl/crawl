@@ -221,7 +221,7 @@ MIRES1(res_shock, MR_RES_ELEC)
  * @treturn int resistance level
  * @function res_corr
  */
-MIRES1(res_corr, MR_RES_ACID)
+MIRES1(res_corr, MR_RES_CORR)
 /*** Can the monster currently be frenzied?
  * Is it possible to affect the monster with the discord spell or a datura
  * dart?

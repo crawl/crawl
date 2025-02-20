@@ -391,14 +391,13 @@ public:
     int res_foul_flame() const override;
     int res_negative_energy(bool intrinsic_only = false) const override;
     bool res_torment() const override;
-    int res_acid() const override;
+    int res_corr() const override;
     bool res_polar_vortex() const override;
     bool res_petrify(bool /*temp*/ = true) const override;
     bool res_constrict() const override;
     resists_t all_resists() const;
     int willpower() const override;
     bool no_tele(bool blink = false, bool /*temp*/ = true) const override;
-    bool res_corr(bool /*allow_random*/ = true, bool temp = true) const override;
     bool antimagic_susceptible() const override;
 
     bool stasis() const override;
@@ -483,9 +482,9 @@ public:
     void confuse(actor *, int strength) override;
     bool drain(const actor *, bool quiet = false, int pow = 3) override;
     void splash_with_acid(actor *evildoer) override;
-    void acid_corrode(int /*acid_strength*/) override;
-    bool corrode_equipment(const char* corrosion_source = "the acid",
-                           int degree = 1) override;
+    bool corrode(const actor* source = nullptr,
+                 const char* corrision_msg = "the acid",
+                 int amount = 4) override;
     int hurt(const actor *attacker, int amount,
              beam_type flavour = BEAM_MISSILE,
              kill_method_type kill_type = KILLED_BY_MONSTER,

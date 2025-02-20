@@ -375,7 +375,7 @@ LUARET1(you_spirit_shield, number, you.spirit_shield() ? 1 : 0)
  * @treturn int resistance level
  * @function res_corr
  */
-LUARET1(you_res_corr, boolean, you.res_corr(false))
+LUARET1(you_res_corr, boolean, player_res_corrosion(false))
 
 /*** Are you flying?
  * @treturn boolean

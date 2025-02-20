@@ -800,7 +800,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_CORROSION:
         if (!quiet)
-           simple_monster_message(*this, " is no longer covered in acid.");
+           simple_monster_message(*this, " is no longer corroded.");
         break;
 
     case ENCH_GOLD_LUST:

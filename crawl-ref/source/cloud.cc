@@ -967,7 +967,7 @@ bool actor_cloud_immune(const actor &act, cloud_type type)
                    || act.is_player()
                       && have_passive(passive_t::r_spectral_mist);
         case CLOUD_ACID:
-            return act.res_acid() > 0;
+            return act.res_corr() > 0;
         case CLOUD_STORM:
             return act.res_elec() >= 3;
         case CLOUD_MISERY:
@@ -1034,7 +1034,7 @@ static int _actor_cloud_resist(const actor *act, const cloud_struct &cloud)
     case CLOUD_PETRIFY:
         return act->res_petrify();
     case CLOUD_ACID:
-        return act->res_acid();
+        return act->res_corr();
     case CLOUD_STORM:
         return act->res_elec();
     case CLOUD_MISERY:
@@ -1178,7 +1178,8 @@ static bool _actor_apply_cloud_side_effects(actor *act,
         break;
 
     case CLOUD_ACID:
-        act->acid_corrode(5);
+        if (!one_chance_in(3))
+            act->corrode(cloud.agent());
         return true;
 
     case CLOUD_MISERY:
@@ -2031,7 +2032,7 @@ static const vector<chaos_effect> chaos_effects = {
     { "resistance", 10, [](const actor &victim) {
         return victim.res_fire() < 3 && victim.res_cold() < 3 &&
                victim.res_elec() < 3 && victim.res_poison() < 3 &&
-               victim.res_acid() < 3; }, BEAM_RESISTANCE, },
+               victim.res_corr() < 3; }, BEAM_RESISTANCE, },
     { "slowing", 10, _is_chaos_slowable, BEAM_SLOW },
     { "confusing", 12, [](const actor &victim) {
         return !victim.clarity() && !victim.is_peripheral(); },
@@ -2046,9 +2047,9 @@ static const vector<chaos_effect> chaos_effects = {
     }, BEAM_VULNERABILITY, },
     { "blinking", 3, nullptr, BEAM_BLINK },
     { "corroding", 5, [](const actor &victim) {
-        return victim.res_acid() < 3; },
-        BEAM_NONE, [](actor* victim, actor* /*source*/) {
-           victim->corrode_equipment();
+        return victim.res_corr() < 3; },
+        BEAM_NONE, [](actor* victim, actor* source) {
+           victim->corrode(source);
            return you.can_see(*victim);
        },
     },

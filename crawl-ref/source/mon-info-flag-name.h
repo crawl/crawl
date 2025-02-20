@@ -117,7 +117,7 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_FIRE_VULN, "combustible", "more vulnerable to fire", "combustible"},
     { MB_POISON_VULN, "easily poisoned", "more vulnerable to poison", "easily poisoned"},
     { MB_WRETCHED, "misshapen", "misshapen and mutated", "misshapen"},
-    { MB_CORROSION, "corroded", "covered in acid", "corroded"},
+    { MB_CORROSION, "corroded", "corroded", "corroded"},
     { MB_FLAYED, "flayed", "covered in terrible wounds", "flayed"},
     { MB_GRASPING_ROOTS, "rooted", "constricted by roots", "rooted"},
     { MB_VILE_CLUTCH, "clutched", "constricted by zombie hands", "clutched"},

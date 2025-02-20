@@ -1736,7 +1736,7 @@ static int _get_monster_jewellery_value(const monster *mon,
         value += get_jewellery_see_invisible(item, true);
 
     // If we're not naturally corrosion-resistant.
-    if (item.sub_type == RING_RESIST_CORROSION && !mon->res_corr(false, false))
+    if (item.sub_type == RING_RESIST_CORROSION && get_mons_resist(*mon, MR_RES_CORR) <= 0)
         value++;
 
     return value;
@@ -3854,20 +3854,23 @@ bool monster::res_constrict() const
     return is_insubstantial() || is_spiny() || is_amorphous();
 }
 
-bool monster::res_corr(bool /*allow_random*/, bool temp) const
+int monster::res_corr() const
 {
-    if (get_mons_resist(*this, MR_RES_ACID) > 0)
-        return true;
+    int u = get_mons_resist(*this, MR_RES_CORR);
 
-    return actor::res_corr(temp);
-}
-
-int monster::res_acid() const
-{
-    int u = max(get_mons_resist(*this, MR_RES_ACID), (int)actor::res_corr());
+    if (mons_itemuse(*this) >= MONUSE_STARTING_EQUIPMENT)
+    {
+        u += wearing(OBJ_ARMOUR, ARM_ACID_DRAGON_ARMOUR);
+        u += wearing_jewellery(RING_RESIST_CORROSION);
+        u += wearing_ego(OBJ_ARMOUR, SPARM_PRESERVATION);
+        u += scan_artefacts(ARTP_RCORR);
+    }
 
     if (has_ench(ENCH_RESISTANCE))
         u++;
+
+    if (u > 3)
+        u = 3;
 
     return u;
 }
@@ -4131,35 +4134,27 @@ bool monster::drain(const actor *agent, bool quiet, int /*pow*/)
     return true;
 }
 
-bool monster::corrode_equipment(const char* corrosion_source, int degree)
+bool monster::corrode(const actor* source, const char* corrosion_msg, int /*amount*/)
 {
-    // Don't corrode spectral weapons or temporary items.
-    if (mons_is_avatar(type) || type == MONS_PLAYER_SHADOW)
+    const int res = res_corr();
+
+    // Don't corrode spectral weapons, temporary items, or immune enemies.
+    if (mons_is_avatar(type) || type == MONS_PLAYER_SHADOW || res >= 3)
         return false;
 
-    // rCorr protects against 50% of corrosion.
-    // As long as degree is at least 1, we'll apply the status once, because
-    // it doesn't look to me like applying it more times does anything.
-    // If I'm wrong, we should fix that.
-    if (res_corr())
-    {
-        degree = binomial(degree, 50);
-        if (!degree)
-        {
-            dprf("rCorr protects.");
-            return false;
-        }
-    }
+    // rCorr protects against 50% of corrosion attempts.
+    if (res > 0 && coinflip())
+        return false;
 
     if (you.see_cell(pos()))
     {
         if (!has_ench(ENCH_CORROSION))
-            mprf("%s corrodes %s!", corrosion_source, name(DESC_THE).c_str());
+            mprf("%s corrodes %s!", corrosion_msg, name(DESC_THE).c_str());
         else
             mprf("%s seems to be corroded for longer.", name(DESC_THE).c_str());
     }
 
-    add_ench(mon_enchant(ENCH_CORROSION, 0));
+    add_ench(mon_enchant(ENCH_CORROSION, 0, source));
     return true;
 }
 
@@ -4169,7 +4164,7 @@ bool monster::corrode_equipment(const char* corrosion_source, int degree)
 void monster::splash_with_acid(actor* evildoer)
 {
     // Splashing with acid shouldn't do anything to immune targets
-    if (res_acid() == 3)
+    if (res_corr() == 3)
         return;
 
     const int dam = roll_dice(2, 4);
@@ -4181,16 +4176,11 @@ void monster::splash_with_acid(actor* evildoer)
              attack_strength_punctuation(post_res_dam).c_str());
     }
 
-    acid_corrode(3);
+    if (!one_chance_in(3))
+        corrode(evildoer);
 
     if (post_res_dam > 0)
         hurt(evildoer, post_res_dam, BEAM_ACID, KILLED_BY_ACID);
-}
-
-void monster::acid_corrode(int /*acid_strength*/)
-{
-    if (res_acid() < 3 && !one_chance_in(3))
-        corrode_equipment();
 }
 
 int monster::hurt(const actor *agent, int amount, beam_type flavour,
@@ -4340,7 +4330,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             && you.get_mutation_level(MUT_CORRUPTING_PRESENCE))
         {
             if (one_chance_in(12))
-                this->corrode_equipment("Your corrupting presence");
+                this->corrode(&you, "Your corrupting presence");
             if (you.get_mutation_level(MUT_CORRUPTING_PRESENCE) > 1
                         && one_chance_in(12))
             {
@@ -5781,11 +5771,10 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         check_place_cloud(CLOUD_FIRE, pos(), 3, actor_by_mid(i_f.source));
     }
 
-    const int corrode = corrosion_chance(scan_artefacts(ARTP_CORRODE));
-    if (res_acid() < 3 && x_chance_in_y(corrode, 100))
+    if (res_corr() < 3 && x_chance_in_y(corrosion_chance(scan_artefacts(ARTP_CORRODE)), 100))
     {
-        corrode_equipment(make_stringf("%s corrosive artefact",
-                                       name(DESC_ITS).c_str()).c_str());
+        corrode(oppressor, make_stringf("%s corrosive artefact",
+                                        name(DESC_ITS).c_str()).c_str());
     }
 
     const int slow = scan_artefacts(ARTP_SLOW);

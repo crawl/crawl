@@ -378,9 +378,9 @@ bool Form::res_miasma() const
 /**
  * Does this form provide resistance against acid?
  */
-bool Form::res_acid() const
+bool Form::res_corr() const
 {
-    return get_resist(resists, MR_RES_ACID);
+    return get_resist(resists, MR_RES_CORR);
 }
 
 /**

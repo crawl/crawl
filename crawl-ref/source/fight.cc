@@ -739,7 +739,7 @@ static int _beam_to_resist(const actor* defender, beam_type flavour)
         case BEAM_VAMPIRIC_DRAINING:
             return defender->res_negative_energy();
         case BEAM_ACID:
-            return defender->res_acid();
+            return defender->res_corr();
         case BEAM_POISON:
         case BEAM_POISON_ARROW:
         case BEAM_MERCURY:

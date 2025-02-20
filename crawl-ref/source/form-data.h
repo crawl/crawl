@@ -282,7 +282,7 @@ static const form_entry formdata[] =
     "an insubstantial wisp.",
     0, 0, NUM_TALISMANS,
     EQF_ALL, mrd(MR_RES_FIRE, 2) | mrd(MR_RES_COLD, 2) | MR_RES_ELEC
-             | mrd(MR_RES_NEG, 3) | MR_RES_ACID,
+             | mrd(MR_RES_NEG, 3) | MR_RES_CORR,
     BAD_DURATION, 0, 0, SIZE_TINY, 10,
     FormScaling().Base(5).Scaling(14).XLBased(), false, FormScaling().Base(2).XLBased(),
     SPWPN_NORMAL, LIGHTGREY, "Misty tendrils", { "touch", "touch",

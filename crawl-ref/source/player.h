@@ -739,9 +739,9 @@ public:
     bool heal(int amount) override;
     bool drain(const actor *, bool quiet = false, int pow = 3) override;
     void splash_with_acid(actor *evildoer) override;
-    void acid_corrode(int acid_strength) override;
-    bool corrode_equipment(const char* corrosion_source = "the acid",
-                           int degree = 1) override;
+    bool corrode(const actor* source = nullptr,
+                 const char* corrosion_msg = "the acid",
+                 int amount = 4) override;
     void sentinel_mark(bool trap = false);
     int hurt(const actor *attacker, int amount,
              beam_type flavour = BEAM_MISSILE,
@@ -766,7 +766,7 @@ public:
     bool is_unbreathing() const override;
     bool is_insubstantial() const override;
     bool is_amorphous() const override;
-    int res_acid() const override;
+    int res_corr() const override;
     bool res_damnation() const override { return false; };
     int res_fire() const override;
     int res_steam() const override;
@@ -788,7 +788,6 @@ public:
     string no_tele_reason(bool blink = false, bool temp = true) const;
     bool antimagic_susceptible() const override;
 
-    bool res_corr(bool allow_random = true, bool temp = true) const override;
     bool clarity(bool items = true) const override;
     bool faith(bool items = true) const override;
     bool reflection(bool items = true) const override;
@@ -1035,7 +1034,6 @@ bool player_likes_water(bool permanently = false);
 
 int player_res_cold(bool allow_random = true, bool temp = true,
                     bool items = true);
-int player_res_acid(bool items = true);
 int player_res_electricity(bool allow_random = true, bool temp = true,
                            bool items = true);
 int player_res_fire(bool allow_random = true, bool temp = true,
@@ -1045,6 +1043,8 @@ int player_res_steam(bool allow_random = true, bool temp = true,
                      bool items = true);
 int player_res_poison(bool allow_random = true, bool temp = true,
                       bool items = true, bool forms = true);
+int player_res_corrosion(bool allow_random = true, bool temp = true,
+                         bool items = true);
 int player_willpower(bool temp = true);
 
 int player_shield_class(int scale = 1, bool random = true,

@@ -729,7 +729,7 @@ void trap_def::trigger(actor& triggerer)
                                             "sets off an devourer's trap");
             }
             flash_tile(you.pos(), YELLOW, 60, TILE_BOLT_DEFAULT_YELLOW);
-            you.corrode_equipment("The trap's stomach acid", 1);
+            you.corrode(nullptr, "The trap's stomach acid");
         }
         else if (!you_trigger)
             mprf("%s enters a devourer's trap.", triggerer.name(DESC_THE).c_str());

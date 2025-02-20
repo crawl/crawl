@@ -230,7 +230,7 @@ enum mon_resist_flags
     MR_RES_COLD          = 1 << 9,
     MR_RES_NEG           = 1 << 12,
     MR_RES_MIASMA        = 1 << 15,
-    MR_RES_ACID          = 1 << 18,
+    MR_RES_CORR          = 1 << 18,
 
     MR_LAST_MULTI, // must be >= any multi, < any boolean, exact value doesn't matter
 
@@ -258,7 +258,7 @@ const mon_resist_flags ALL_MON_RESISTS[] = {
     MR_RES_FIRE,
     MR_RES_COLD,
     MR_RES_NEG,
-    MR_RES_ACID,
+    MR_RES_CORR,
     MR_RES_MIASMA,
     MR_RES_TORMENT,
     MR_RES_PETRIFY,

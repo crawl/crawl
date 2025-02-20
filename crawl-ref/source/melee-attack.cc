@@ -2068,8 +2068,8 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
         {
             player_announce_aux_hit();
 
-            if (damage_brand == SPWPN_ACID)
-                defender->acid_corrode(3);
+            if (damage_brand == SPWPN_ACID && !one_chance_in(3))
+                defender->corrode(&you);
 
             if (damage_brand == SPWPN_VENOM && coinflip())
                 poison_monster(defender->as_monster(), &you);
@@ -2710,23 +2710,13 @@ void melee_attack::attacker_sustain_passive_damage()
     if (!mons_class_flag(defender->type, M_ACID_SPLASH))
         return;
 
-    if (attacker->res_acid() >= 3)
+    if (attacker->res_corr() >= 3)
         return;
 
     if (!adjacent(attacker->pos(), defender->pos()) || is_riposte)
         return;
 
-    const int acid_strength = resist_adjust_damage(attacker, BEAM_ACID, 5);
-
-    // Spectral weapons can't be corroded (but can take acid damage).
-    const bool avatar = attacker->is_monster()
-                        && mons_is_avatar(attacker->as_monster()->type);
-
-    if (!avatar)
-    {
-        if (x_chance_in_y(acid_strength + 1, 30))
-            attacker->corrode_equipment();
-    }
+    const int dmg = resist_adjust_damage(attacker, BEAM_ACID, roll_dice(1, 5));
 
     if (attacker->is_player())
         mpr(you.hands_act("burn", "!"));
@@ -2735,8 +2725,11 @@ void melee_attack::attacker_sustain_passive_damage()
         simple_monster_message(*attacker->as_monster(),
                                " is burned by acid!");
     }
-    attacker->hurt(defender, roll_dice(1, acid_strength), BEAM_ACID,
+    attacker->hurt(defender, dmg, BEAM_ACID,
                    KILLED_BY_ACID);
+
+    if (attacker->alive() && one_chance_in(5))
+        attacker->corrode(defender);
 }
 
 int melee_attack::staff_damage(stave_type staff) const
@@ -3458,7 +3451,7 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_CORRODE:
-        defender->corrode_equipment(atk_name(DESC_THE).c_str());
+        defender->corrode(attacker, atk_name(DESC_THE).c_str());
         break;
 
     case AF_RIFT:

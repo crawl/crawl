@@ -2470,7 +2470,7 @@ static vector<formatted_string> _get_overview_resistances(
     const int relec = player_res_electricity(false);
     out += _resist_composer("rElec", cwidth, relec) + "\n";
 
-    const int rcorr = you.res_corr(false);
+    const int rcorr = player_res_corrosion(false);
     out += _resist_composer("rCorr", cwidth, rcorr) + "\n";
 
     const int sinv = you.can_see_invisible();

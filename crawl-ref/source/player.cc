@@ -1329,43 +1329,39 @@ int player_res_cold(bool allow_random, bool temp, bool items)
     return rc;
 }
 
-bool player::res_corr(bool allow_random, bool temp) const
+int player_res_corrosion(bool allow_random, bool temp, bool items)
 {
-    if (temp)
-    {
-        // dragonskin cloak: 0.5 to draconic resistances
-        if (allow_random && you.unrand_equipped(UNRAND_DRAGONSKIN)
-            && coinflip())
-        {
-            return true;
-        }
+    if (temp && you.duration[DUR_RESISTANCE])
+        return 1;
 
-        if (you.duration[DUR_RESISTANCE])
-            return true;
-    }
-
-    if (cur_form(temp)->res_acid())
-        return true;
+    if (cur_form(temp)->res_corr())
+        return 1;
 
     if (have_passive(passive_t::resist_corrosion))
-        return true;
+        return 1;
 
-    if (get_mutation_level(MUT_ACID_RESISTANCE))
-        return true;
-
-    // TODO: why doesn't this use the usual form suppression mechanism?
-    if (form_keeps_mutations()
-        && get_mutation_level(MUT_YELLOW_SCALES) >= 3)
+    if (you.get_mutation_level(MUT_ACID_RESISTANCE)
+        || you.get_mutation_level(MUT_YELLOW_SCALES) >= 3)
     {
-        return true;
+        return 1;
     }
 
-    return actor::res_corr(allow_random, temp);
-}
+    if (items)
+    {
+        if (you.scan_artefacts(ARTP_RCORR)
+            || you.wearing(OBJ_ARMOUR, ARM_ACID_DRAGON_ARMOUR)
+            || you.wearing_jewellery(RING_RESIST_CORROSION)
+            || you.wearing_ego(OBJ_ARMOUR, SPARM_PRESERVATION))
+        {
+            return 1;
+        }
 
-int player_res_acid(bool items)
-{
-    return you.res_corr(items) ? 1 : 0;
+        // dragonskin cloak: 0.5 to draconic resistances
+        if (allow_random && you.unrand_equipped(UNRAND_DRAGONSKIN) && coinflip())
+            return 1;
+    }
+
+    return 0;
 }
 
 int player_res_electricity(bool allow_random, bool temp, bool items)
@@ -6568,9 +6564,9 @@ bool player::is_amorphous() const
     return false;
 }
 
-int player::res_acid() const
+int player::res_corr() const
 {
-    return player_res_acid();
+    return player_res_corrosion();
 }
 
 int player::res_fire() const
@@ -6992,32 +6988,29 @@ bool player::resists_dislodge(string event) const
     return true;
 }
 
-bool player::corrode_equipment(const char* corrosion_source, int degree)
+bool player::corrode(const actor* /*source*/, const char* corrosion_msg, int amount)
 {
     // always increase duration, but...
     increase_duration(DUR_CORROSION, 10 + roll_dice(2, 4), 50,
                       make_stringf("%s corrodes you!",
-                                   corrosion_source).c_str());
+                                   corrosion_msg).c_str());
 
-    // the more corrosion you already have, the lower the odds of more
-    // Static environmental corrosion doesn't factor in
-    // Reduce corrosion amount by 50% if you have resistance
-    int prev_corr = props[CORROSION_KEY].get_int();
-    bool did_corrode = false;
-    for (int i = 0; i < degree; i++)
-        if (!x_chance_in_y(prev_corr, prev_corr + 28))
-        {
-            prev_corr += res_corr() ? 2 : 4;
-            props[CORROSION_KEY] = prev_corr;
-            did_corrode = true;
-        }
+    // Reduce corrosion amount by 50% if you have resistance.
+    if (res_corr())
+        amount /= 2;
 
-    if (did_corrode)
+    // The more corrosion you already have, the lower the odds of stacking more
+    // (though Dis's passive corrosion is not included).
+    int& corr = props[CORROSION_KEY].get_int();
+    if (!x_chance_in_y(corr, corr + 28))
     {
+        corr += amount;
         redraw_armour_class = true;
         wield_change = true;
+        return true;
     }
-    return true;
+
+    return false;
 }
 
 /**
@@ -7027,8 +7020,6 @@ bool player::corrode_equipment(const char* corrosion_source, int degree)
  */
 void player::splash_with_acid(actor* evildoer)
 {
-    acid_corrode(3);
-
     const int dam = roll_dice(4, 3);
     const int post_res_dam = resist_adjust_damage(&you, BEAM_ACID, dam);
 
@@ -7043,12 +7034,9 @@ void player::splash_with_acid(actor* evildoer)
         ouch(post_res_dam, KILLED_BY_ACID,
              evildoer ? evildoer->mid : MID_NOBODY);
     }
-}
 
-void player::acid_corrode(int acid_strength)
-{
-    if (binomial(3, acid_strength + 1, 30))
-        corrode_equipment();
+    if (x_chance_in_y(35, 100))
+        corrode(evildoer);
 }
 
 bool player::drain(const actor */*who*/, bool quiet, int pow)

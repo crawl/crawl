@@ -7844,7 +7844,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_ENTROPIC_WEAVE:
         ASSERT(foe);
         flash_tile(foe->pos(), YELLOW, 120, TILE_BOLT_ENTROPIC_WEAVE);
-        foe->corrode_equipment("the entropic weave");
+        foe->corrode(mons, "the entropic weave");
         return;
 
     case SPELL_SUMMON_EXECUTIONERS:

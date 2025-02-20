@@ -1581,8 +1581,8 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             if (original > 0 && doFlavouredEffects)
                 simple_monster_message(*mons, " completely resists.");
         }
-        else if (mons->res_acid() <= 0 && doFlavouredEffects)
-            mons->acid_corrode(5);
+        else if (doFlavouredEffects && !one_chance_in(3))
+            mons->corrode(pbolt.agent());
         break;
     }
 
@@ -3312,7 +3312,7 @@ bool bolt::is_harmless(const monster* mon) const
         return mon->res_poison() >= 3;
 
     case BEAM_ACID:
-        return mon->res_acid() >= 3;
+        return mon->res_corr() >= 3;
 
     case BEAM_MEPHITIC:
         return mon->res_poison() > 0 || mon->clarity();
@@ -4534,8 +4534,8 @@ void bolt::affect_player()
     internal_ouch(final_dam);
 
     // Acid. (Apply this afterward, to avoid bad message ordering.)
-    if (flavour == BEAM_ACID)
-        you.acid_corrode(5);
+    if (flavour == BEAM_ACID && coinflip())
+        you.corrode(agent());
 
     if (flavour == BEAM_CRYSTALLIZING)
         crystallize_player();

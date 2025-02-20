@@ -5087,8 +5087,8 @@ static const char* _get_resist_name(mon_resist_flags res_type)
         return "steam";
     case MR_RES_COLD:
         return "cold";
-    case MR_RES_ACID:
-        return "acid";
+    case MR_RES_CORR:
+        return "acid and corrosion";
     case MR_RES_MIASMA:
         return "miasma";
     case MR_RES_NEG:
@@ -6343,7 +6343,7 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
 
     const mon_resist_flags special_resists[] =
     {
-        MR_RES_STEAM,     MR_RES_ACID,
+        MR_RES_STEAM,     MR_RES_CORR,
         MR_RES_DAMNATION, MR_RES_MIASMA,  MR_RES_TORMENT,
     };
 

@@ -6441,7 +6441,7 @@ void _unmarshallMonsterInfo(reader &th, monster_info& mi)
     mi.mresists = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 34
     if (mi.mresists & MR_OLD_RES_ACID)
-        set_resist(mi.mresists, MR_RES_ACID, 3);
+        set_resist(mi.mresists, MR_RES_CORR, 3);
 #endif
     unmarshallUnsigned(th, mi.mitemuse);
     mi.mbase_speed = unmarshallByte(th);
@@ -8091,7 +8091,7 @@ static ghost_demon _unmarshallGhost(reader &th)
     ghost.resists          = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 34
     if (ghost.resists & MR_OLD_RES_ACID)
-        set_resist(ghost.resists, MR_RES_ACID, 3);
+        set_resist(ghost.resists, MR_RES_CORR, 3);
     if (th.getMinorVersion() < TAG_MINOR_NO_GHOST_SPELLCASTER)
         unmarshallByte(th);
     if (th.getMinorVersion() < TAG_MINOR_MON_COLOUR_LOOKUP)

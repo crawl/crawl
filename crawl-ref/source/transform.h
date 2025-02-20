@@ -139,7 +139,7 @@ public:
     bool res_elec() const;
     int res_pois() const;
     bool res_rot() const;
-    bool res_acid() const;
+    bool res_corr() const;
     bool res_miasma() const;
     bool res_petrify() const;
 
