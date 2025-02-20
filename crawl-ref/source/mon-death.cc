@@ -748,7 +748,8 @@ static bool _vampire_make_thrall(monster* mons)
     mons->flags |= MF_FAKE_UNDEAD;
     mons->props.erase(VAMPIRIC_THRALL_KEY);
 
-    if (mons->is_actual_spellcaster())
+    // Includes actual spellcasters and those with magical abilities.
+    if (mons->antimagic_susceptible())
     {
         mons->spells.push_back({SPELL_VAMPIRIC_DRAINING, 50, MON_SPELL_WIZARD});
         mons->props[CUSTOM_SPELLS_KEY] = true;

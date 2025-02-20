@@ -336,6 +336,7 @@ public:
     string hand_name(bool plural, bool *can_plural = nullptr) const override;
     string foot_name(bool plural, bool *can_plural = nullptr) const override;
     string arm_name(bool plural, bool *can_plural = nullptr) const override;
+    string blood_name() const;
 
     bool fumbles_attack() override;
 

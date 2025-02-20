@@ -2507,6 +2507,47 @@ string monster::arm_name(bool plural, bool *can_plural) const
     return str;
 }
 
+// Returns a description of the blood-like vital fluid found inside this monster.
+// Definitely incomplete and lacking in some ways, but serves adequately enough
+// in the one place it's used.
+string monster::blood_name() const
+{
+    if (has_blood())
+        return "blood";
+
+    mon_holy_type holi = holiness();
+    if (holi & (MH_DEMONIC | MH_HOLY))
+        return "ichor";
+    else if (holi & MH_PLANT && mons_genus(type) != MONS_FUNGUS)
+        return "sap";
+    // XXX: Not bothering to fill this out, since it's currently never called.
+    else if (holi & (MH_NONLIVING | MH_UNDEAD))
+        return "???";
+
+    // The rest are all for MH_NATURAL
+    switch (get_mon_shape(*this))
+    {
+        case MON_SHAPE_CENTIPEDE:
+        case MON_SHAPE_INSECT:
+        case MON_SHAPE_INSECT_WINGED:
+        case MON_SHAPE_ARACHNID:
+        case MON_SHAPE_SNAIL:
+        case MON_SHAPE_SNAKE:   // Worms; real snakes have actual blood.
+            return "haemolymph";
+
+        case MON_SHAPE_ORB:
+            if (mons_genus(type) == MONS_FLOATING_EYE)
+                return "vitreous fluid";
+            break;
+
+        default:
+            break;
+    }
+
+    // Generic fallback
+    return "vital fluids";
+}
+
 int monster::mindex() const
 {
     return this - env.mons.buffer();

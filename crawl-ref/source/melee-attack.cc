@@ -552,22 +552,27 @@ void melee_attack::do_vampire_lifesteal()
         && (you.form == transformation::vampire
             || you.form == transformation::bat_swarm)
         && (stab_attempt || you.hp * 2 <= you.hp_max)
-        && mon->has_blood()
-        && actor_is_susceptible_to_vampirism(*mon)
-        && adjacent(you.pos(), mon->pos()))
+        && adjacent(you.pos(), mon->pos())
+        && !mons_class_flag(defender->type, M_ACID_SPLASH))
     {
         // Stabs always heal, but thirsty attacks have a shapeshifting-based
         // chance to heal.
         if (!stab_attempt && !x_chance_in_y(10, cur_form()->get_level(1) + 10))
             return;
 
-        if (mon->alive())
+        const bool can_heal = actor_is_susceptible_to_vampirism(*mon);
+        const bool can_enthrall = stab_attempt && !mon->is_summoned()
+                                  && !mon->alive()
+                                  && mon->holiness() & (MH_NATURAL | MH_PLANT | MH_DEMONIC);
+
+        if (can_heal && !can_enthrall)
         {
-            mprf("You sink your fangs into %s and drink %s blood.",
+            mprf("You sink your fangs into %s and drink %s %s.",
                     mon->name(DESC_THE, true).c_str(),
-                    mon->pronoun(PRONOUN_POSSESSIVE).c_str());
+                    mon->pronoun(PRONOUN_POSSESSIVE).c_str(),
+                    mon->blood_name().c_str());
         }
-        else
+        else if (can_enthrall)
         {
             mprf("You sink your fangs into %s and drain %s dry!",
                     mon->name(DESC_THE, true).c_str(),
@@ -578,11 +583,14 @@ void melee_attack::do_vampire_lifesteal()
                 mon->props[VAMPIRIC_THRALL_KEY] = true;
         }
 
-        int heal = random2(damage_done);
-        if (heal > 0 && you.hp < you.hp_max && !you.duration[DUR_DEATHS_DOOR])
+        if (can_heal)
         {
-            you.heal(heal);
-            canned_msg(MSG_GAIN_HEALTH);
+            int heal = random2(damage_done);
+            if (heal > 0 && you.hp < you.hp_max && !you.duration[DUR_DEATHS_DOOR])
+            {
+                you.heal(heal);
+                canned_msg(MSG_GAIN_HEALTH);
+            }
         }
     }
 }
