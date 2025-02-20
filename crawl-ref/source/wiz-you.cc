@@ -219,6 +219,8 @@ void wizard_heal(bool super_heal)
         you.duration[DUR_BARBS] = 0;
         you.attribute[ATTR_BARBS_POW] = 0;
         you.props.erase(BARBS_MOVE_KEY);
+        you.props.erase(CACOPHONY_XP_KEY);
+        you.props.erase(BATFORM_XP_KEY);
         you.duration[DUR_SICKNESS]  = 0;
         you.duration[DUR_EXHAUSTED] = 0;
         you.duration[DUR_BREATH_WEAPON] = 0;
@@ -246,11 +248,13 @@ void wizard_heal(bool super_heal)
         you.duration[DUR_GAVOTTE_COOLDOWN] = 0;
         you.duration[DUR_WORD_OF_CHAOS_COOLDOWN] = 0;
         you.duration[DUR_FIRE_VULN] = 0;
+        you.duration[DUR_POISON_VULN] = 0;
         delete_all_temp_mutations("Super heal");
         decr_zot_clock();
         you.redraw_stats = true;
         gain_draconian_breath_uses(MAX_DRACONIAN_BREATH);
         gain_grave_claw_soul(true, true);
+        you.props[ENKINDLE_CHARGES_KEY].get_int() = enkindle_max_charges();
 
         you.props.erase(COGLIN_GIZMO_KEY);
     }
