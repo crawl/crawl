@@ -8872,6 +8872,11 @@ static bool _ench_triggers_trickster(enchant_type ench)
     }
 }
 
+static int _trickster_max_boost()
+{
+    return 6 + you.experience_level * 4 / 5;
+}
+
 // Increment AC boost when applying a negative status effect to a monster.
 void trickster_trigger(const monster& victim, enchant_type ench)
 {
@@ -8883,19 +8888,25 @@ void trickster_trigger(const monster& victim, enchant_type ench)
 
     const int min_bonus = 3 + you.experience_level / 6;
 
-    // Start the bonus off at a more meaningful level, but give less for each
-    // effect after that.
     if (!you.props.exists(TRICKSTER_POW_KEY))
     {
         you.props[TRICKSTER_POW_KEY].get_int() = 0;
         mprf(MSGCH_DURATION, "You feel bolstered by spreading misfortune.");
     }
 
+    // Start the bonus off at meaningful level, but give less for each effect
+    // beyond that (and make it extra-hard to stack up the maximum bonus)
     int& bonus = you.props[TRICKSTER_POW_KEY].get_int();
     if (bonus < min_bonus)
         bonus = min_bonus;
+    else if (bonus >= 15)
+        bonus += random2(2);
     else
         bonus += 1;
+
+    const int max = _trickster_max_boost() + 10;
+    if (bonus > max)
+        bonus = max;
 
     // Give a few turns before the effect starts to decay.
     if (you.duration[DUR_TRICKSTER_GRACE] < 60)
@@ -8910,8 +8921,7 @@ int trickster_bonus()
     if (!you.props.exists(TRICKSTER_POW_KEY))
         return 0;
 
-    const int max_boost = 6 + you.experience_level * 4 / 5;
-    return min(max_boost, you.props[TRICKSTER_POW_KEY].get_int());
+    return min(_trickster_max_boost(), you.props[TRICKSTER_POW_KEY].get_int());
 }
 
 int enkindle_max_charges()

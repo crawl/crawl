@@ -1087,14 +1087,16 @@ static void _handle_trickster_decay(int delay)
     int& stacks = you.props[TRICKSTER_POW_KEY].get_int();
 
     // Decay at a rate of ~1 AC per 30 aut.
-    stacks -= div_rand_round(3, delay);
+    const int reduction = div_rand_round(3, delay);
+    stacks -= reduction;
     if (stacks <= 0)
     {
         you.props.erase(TRICKSTER_POW_KEY);
         mprf(MSGCH_DURATION, "You feel your existence waver again.");
     }
 
-    you.redraw_armour_class = true;
+    if (reduction > 0)
+        you.redraw_armour_class = true;
 }
 
 void player_reacts()
