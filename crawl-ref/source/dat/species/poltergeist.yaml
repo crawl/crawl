@@ -66,9 +66,9 @@ fake_mutations:
   - long: You are insubstantial and cannot be petrified, ensnared, or set on fire.
     short: insubstantial
 recommended_jobs:
-  - gladiator
-  - brigand
+  - chaos knight
   - enchanter
+  - hexslinger
   - necromancer
   - earth elementalist
   - ice elementalist
