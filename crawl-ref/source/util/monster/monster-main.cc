@@ -1330,7 +1330,7 @@ int main(int argc, char* argv[])
         res(BLUE, COLD);
         res(CYAN, ELEC);
         res(GREEN, POISON);
-        res(BROWN, ACID);
+        res(BROWN, CORR);
         res(0, STEAM);
 
         if (me->bitfields & M_UNBLINDABLE)
