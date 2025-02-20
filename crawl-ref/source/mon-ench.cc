@@ -2079,9 +2079,9 @@ static const char *enchant_names[] =
 #endif
     "temporarily pacified",
 #if TAG_MAJOR_VERSION == 34
-    "withdrawn", "attached",
+    "withdrawn", "attached", "guardian_timer",
 #endif
-    "guardian_timer", "flight", "liquefying", "polar_vortex",
+    "flight", "liquefying", "polar_vortex",
 #if TAG_MAJOR_VERSION == 34
     "fake_abjuration",
 #endif
