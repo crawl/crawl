@@ -315,10 +315,9 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
 
                 // If we've a waypoint on the current square,
                 // show the waypoint number.
-                if (uint8_t waypoint_char = is_waypoint(c))
-                {
+                const uint8_t waypoint_char = is_waypoint(c);
+                if (waypoint_char)
                     cell->glyph = waypoint_char;
-                }
 
                 if (c == you.pos() && !crawl_state.arena_suspended && on_level)
                 {
