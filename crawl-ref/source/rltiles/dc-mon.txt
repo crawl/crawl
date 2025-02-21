@@ -1390,7 +1390,7 @@ pig_form TRAN_PIG
 serpent_form TRAN_SERPENT
 statue_form_humanoid TRAN_STATUE_HUMANOID
 %syn TRAN_STATUE_EQUIP_FIRST
-statue_form_palentonga TRAN_STATUE_ARMATAUR
+statue_form_armataur TRAN_STATUE_ARMATAUR
 statue_form_naga TRAN_STATUE_NAGA
 statue_form_octopode TRAN_STATUE_OCTOPODE
 statue_form_djinni TRAN_STATUE_DJINN
@@ -1408,7 +1408,7 @@ dragon_form_octopode TRAN_DRAGON_OCTOPODE
 dragon_form_felid TRAN_DRAGON_FELID
 lich_form_humanoid TRAN_LICH_HUMANOID
 %syn TRAN_LICH_EQUIP_FIRST
-lich_form_palentonga TRAN_LICH_ARMATAUR
+lich_form_armataur TRAN_LICH_ARMATAUR
 lich_form_naga TRAN_LICH_NAGA
 lich_form_octopode TRAN_LICH_OCTOPODE
 lich_form_djinn TRAN_LICH_DJINN
