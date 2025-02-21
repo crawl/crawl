@@ -33,7 +33,8 @@ def main():
     print(f"Checking commits being merged from {branch_to_check} to {base_branch}")
 
     git_args = [ "git", "log", "--no-merges", pretty, branch_to_check, f"^{base_branch}" ]
-    print(f"Running: {" ".join(git_args)}")
+    command_to_print= " ".join(git_args)
+    print(f"Running: {command_to_print}")
     ret = subprocess.run(git_args, capture_output = True, timeout=15)
 
     if ret.returncode != 0:
