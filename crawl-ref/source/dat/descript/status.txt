@@ -1142,3 +1142,10 @@ cast will consume a memory. In exchange, their power and spell success are
 increased, encumbrance penalties are ignored, and your spellclaw attacks do
 bonus damage proportional to the spell level and heal you based on the damage
 dealt.
+%%%%
+Cacophony status
+
+You are noisily attacking with all of your armour. Every piece of armour you
+haunt currently moves of its own volition; any damage it takes will not affect
+you, you can freely fire through it, and its attacks may daze, drain, or confuse
+your enemies.
