@@ -1900,3 +1900,8 @@ static void _VAINGLORY_equip(item_def */*item*/, bool *show_msgs, bool unmeld)
     if (!unmeld)
         _equip_mpr(show_msgs, "You feel supremely confident.");
 }
+
+static void _VAINGLORY_unequip(item_def */*item*/, bool */*show_msgs*/)
+{
+    invalidate_agrid(true);
+}
