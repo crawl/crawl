@@ -1000,12 +1000,9 @@ bool mon_special_ability(monster* mons)
                 continue;
             }
 
-            if (!cell_is_solid(targ->pos()))
-            {
-                mons->suicide();
-                used = true;
-                break;
-            }
+            mons->suicide();
+            used = true;
+            break;
         }
         break;
 
@@ -1033,14 +1030,11 @@ bool mon_special_ability(monster* mons)
                 continue;
             }
 
-            if (!cell_is_solid(targ->pos()))
-            {
-                foxfire_attack(mons, *targ);
-                if (mons->alive())
-                    monster_die(*mons, KILL_RESET, NON_MONSTER, true);
-                used = true;
-                break;
-            }
+            foxfire_attack(mons, *targ);
+            if (mons->alive())
+                monster_die(*mons, KILL_RESET, NON_MONSTER, true);
+            used = true;
+            break;
         }
         break;
 

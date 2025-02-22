@@ -262,8 +262,35 @@ mon_attitude_type monster::temp_attitude() const
 
 bool monster::swimming() const
 {
-    const dungeon_feature_type grid = env.grid(pos());
-    return feat_is_water(grid) && mons_primary_habitat(*this) == HT_WATER;
+    return swimming(false);
+}
+
+/**
+ * Is this monster considered swimming right now?
+ *
+ * energy_cost boolean If this is an energy cost check, we
+ *                     still consider them swimming, even if
+ *                     they're not doing it well
+ *                     default = false
+*/
+bool monster::swimming(bool energy_cost) const
+{
+    if (!ground_level()) {
+        return false;
+    }
+
+    const dungeon_feature_type feat = env.grid(pos());
+    auto primary = mons_primary_habitat(*this);
+    auto secondary = mons_secondary_habitat(*this);
+
+    bool water = feat_is_water(feat) && (energy_cost || primary == HT_WATER);
+    if (water)
+        return true;
+    const bool lava = feat_is_lava(feat) && (energy_cost
+                      || primary == HT_LAVA || secondary == HT_LAVA);
+    if (lava)
+        return true;
+    return feat_is_wall(feat) && (energy_cost || primary == HT_WALLS);
 }
 
 bool monster::extra_balanced_at(const coord_def p) const
@@ -317,6 +344,11 @@ bool monster::can_pass_through_feat(dungeon_feature_type grid) const
 bool monster::is_habitable_feat(dungeon_feature_type feat) const
 {
     return monster_habitable_feat(this, feat);
+}
+
+bool monster::is_habitable(const coord_def &_pos) const
+{
+    return monster_habitable_grid(this, _pos);
 }
 
 bool monster::can_drown() const
@@ -5026,7 +5058,13 @@ bool monster::can_see_invisible() const
 bool monster::invisible() const
 {
     return has_ench(ENCH_INVIS) && !backlit() && !has_ench(ENCH_FIRE_CHAMPION)
-            && !has_ench(ENCH_MAGNETISED);
+            // For now, monsters on walls can never be invisible... or to avoid
+            // an info leak we'd have to allow targetting walls at all times
+            // which seems not worth such a big rework of targetters. A
+            // compromise might be to show an unseen enemy so we know something
+            // is there but not what it is ... but given the uncertain future
+            // of invisibility in general let's leave this alone for now.
+            && !cell_is_solid(pos()) && !has_ench(ENCH_MAGNETISED);
 }
 
 bool monster::visible_to(const actor *looker) const

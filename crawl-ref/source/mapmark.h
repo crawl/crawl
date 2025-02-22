@@ -225,6 +225,7 @@ public:
     string debug_describe() const override;
 
     static map_marker *read(reader &, map_marker_type);
+    static bool any_at(coord_def pos, function<bool(map_terrain_change_marker&)> predicate);
 
 public:
     int duration;

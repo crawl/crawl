@@ -391,6 +391,7 @@ enum monster_type                      // env.mons[].type
     MONS_WITHERED_PLANT,
     MONS_SACRED_LOTUS,
     MONS_STARFLOWER,
+    MONS_WOLF_LICHEN,
 #endif
     MONS_BALLISTOMYCETE_SPORE,
     MONS_BALLISTOMYCETE,
@@ -632,6 +633,10 @@ enum monster_type                      // env.mons[].type
 #if TAG_MAJOR_VERSION > 34
     MONS_SALAMANDER_MYSTIC,
     MONS_SALAMANDER_TYRANT,
+
+    // Rock fish:
+    MONS_ROCK_FISH,
+
 #endif
 
     // Water monsters:
@@ -670,6 +675,7 @@ enum monster_type                      // env.mons[].type
     MONS_HELLFIRE_MORTAR,
     MONS_SPLINTERFROST_BARRICADE,
     MONS_SHADOW_TURRET,
+    MONS_STROLLING_STONE,
 #endif
 
     // Demons:
@@ -1330,6 +1336,9 @@ enum monster_type                      // env.mons[].type
     MONS_POLTERGEIST,            // player species dummy
     MONS_VAMPIRE_BLOODPRINCE,
     MONS_REVENANT,               // player species dummy
+    MONS_ROCK_FISH,
+    MONS_WOLF_LICHEN,
+    MONS_STROLLING_STONE,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

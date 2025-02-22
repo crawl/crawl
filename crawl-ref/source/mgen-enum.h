@@ -137,6 +137,8 @@ enum band_type
     BAND_SLIMES_AND_MASTER,
     BAND_ELEPHANTS_AND_MASTER,
     BAND_SPHINXES,
+    BAND_ROCK_FISH,
+    BAND_WOLF_LICHENS,
     NUM_BANDS                   // always last
 };
 
