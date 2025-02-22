@@ -4652,6 +4652,10 @@ static monster_spells _find_usable_spells(monster &mons)
         || t.spell == SPELL_DIG;
     });
 
+    // Erase zero-frequency spells
+    erase_if(hspell_pass, [](const mon_spell_slot &t) {
+        return t.freq == 0;});
+
     return hspell_pass;
 }
 
