@@ -6196,7 +6196,7 @@ Nobody
 
 @The_monster@ mutters, "Why... can't we remember...?"
 
-@The_monster@ rasps, "We were once... so many....."
+@The_monster@ rasps, "We were once... so many...."
 
 @The_monster@ rasps, "The flames... keep going out...."
 
