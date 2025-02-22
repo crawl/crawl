@@ -4960,12 +4960,12 @@ static void _show_fusillade_explosion(map<coord_def, beam_type>& hit_map,
             colour_t colour = concoction_colour[hit_map[pos]];
             flash_tile(pos, concoction_colour[hit_map[pos]], 0,
                        colour == YELLOW ? int{TILE_BOLT_IRRADIATE} : 0);
+
+            // Flash a visible flask at the center spot after the explosion.
+            if (pos == center)
+                flash_tile(pos, colour, 0, concoction_tile[hit_map[pos]]);
         }
     }
-
-    // Flash a visible flask at the center spot after the explosions.
-    flash_tile(center, concoction_colour[hit_map[center]], 0,
-                       concoction_tile[hit_map[center]]);
 
     animation_delay(quick_anim ? 0 : 50, true);
 }
