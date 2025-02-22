@@ -95,6 +95,9 @@ enum monster_type                      // env.mons[].type
 #endif
     MONS_YAK,
     MONS_DEATH_YAK,
+#if TAG_MAJOR_VERSION > 34
+    MONS_BALLOON_YAK,
+#endif
     MONS_CATOBLEPAS,
     MONS_ELEPHANT,
     MONS_DIRE_ELEPHANT,
@@ -1330,6 +1333,7 @@ enum monster_type                      // env.mons[].type
     MONS_POLTERGEIST,            // player species dummy
     MONS_VAMPIRE_BLOODPRINCE,
     MONS_REVENANT,               // player species dummy
+    MONS_BALLOON_YAK,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

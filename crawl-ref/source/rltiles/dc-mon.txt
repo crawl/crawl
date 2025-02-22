@@ -306,6 +306,10 @@ polar_bear MONS_POLAR_BEAR
 dream_sheep MONS_DREAM_SHEEP
 yak MONS_YAK
 death_yak MONS_DEATH_YAK
+balloon_yak1 MONS_BALLOON_YAK
+balloon_yak2
+balloon_yak3
+balloon_yak4
 catoblepas MONS_CATOBLEPAS
 elephant MONS_ELEPHANT
 elephant_dire MONS_DIRE_ELEPHANT
