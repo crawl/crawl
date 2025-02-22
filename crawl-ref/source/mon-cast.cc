@@ -1789,6 +1789,7 @@ static int _mons_power_hd_factor(spell_type spell)
         case SPELL_FREEZE:
         case SPELL_FULMINANT_PRISM:
         case SPELL_IGNITE_POISON:
+        case SPELL_ARCJOLT:
             return 8;
 
         case SPELL_MONSTROUS_MENAGERIE:
