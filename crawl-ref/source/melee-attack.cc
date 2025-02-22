@@ -776,6 +776,11 @@ bool melee_attack::handle_phase_hit()
             defender->as_monster()->update_ench(agony);
     }
 
+    // Must happen before unrand effects, since we need to call this even (or
+    // especially!) if the monster died.
+    if (damage_done > 0)
+        do_vampire_lifesteal();
+
     if (check_unrand_effects())
         return false;
 
@@ -784,7 +789,6 @@ bool melee_attack::handle_phase_hit()
 
     if (damage_done > 0)
     {
-        do_vampire_lifesteal();
         apply_black_mark_effects();
         do_ooze_engulf();
         try_parry_disarm();
