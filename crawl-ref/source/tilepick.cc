@@ -2405,7 +2405,8 @@ set<tileidx_t> status_icons_for(const monster_info &mons)
     set<tileidx_t> icons;
     if (mons.type == MONS_DANCING_WEAPON)
         icons.insert(TILEI_ANIMATED_WEAPON);
-    if (mons.type == MONS_NAMELESS_REVENANT)
+    if (mons.type == MONS_NAMELESS_REVENANT
+        && mons.props.exists(NOBODY_MEMORIES_KEY))
     {
         const int memories = mons.props[NOBODY_MEMORIES_KEY].get_vector().size();
         if (memories > 0)
