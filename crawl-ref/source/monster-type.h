@@ -978,6 +978,7 @@ enum monster_type                      // env.mons[].type
     MONS_GRUNN,
     MONS_JEREMIAH,
     MONS_XAKKRIXIS,
+    MONS_NAMELESS_REVENANT,  // 'Nobody' (except with a less misleading enum name)
 #endif
     // Sprint uniques:
     MONS_CHUCK,
@@ -1330,6 +1331,7 @@ enum monster_type                      // env.mons[].type
     MONS_POLTERGEIST,            // player species dummy
     MONS_VAMPIRE_BLOODPRINCE,
     MONS_REVENANT,               // player species dummy
+    MONS_NAMELESS_REVENANT,      // 'Nobody' (except with a less misleading enum name)
 #endif
 
     NUM_MONSTERS,               // used for polymorph

@@ -21,11 +21,13 @@
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
+#include "database.h"
 #include "delay.h"
 #include "dgn-overview.h"
 #include "directn.h"
 #include "english.h"
 #include "env.h"
+#include "fineff.h"
 #include "fprop.h"
 #include "god-abil.h"
 #include "item-prop.h"
@@ -40,6 +42,7 @@
 #include "mon-pathfind.h"
 #include "mon-place.h"
 #include "mon-poly.h"
+#include "mon-speak.h"
 #include "mon-util.h"
 #include "ouch.h"
 #include "random.h"
@@ -1183,6 +1186,25 @@ bool mon_special_ability(monster* mons)
         }
         break;
 
+    case MONS_NAMELESS_REVENANT:
+        // If we are injured and have full memories, burn one fairly immediately.
+        if (mons->hit_points < mons->max_hit_points
+            && mons->props[NOBODY_MEMORIES_KEY].get_vector().size() == 3
+            && coinflip())
+        {
+            pyrrhic_recollection(*mons);
+            used = true;
+        }
+
+        // If Nobody is left alone long enough, allow their memories to return.
+        if (you.elapsed_time > mons->props[NOBODY_RECOVERY_KEY].get_int())
+        {
+            mons->props.erase(NOBODY_RECOVERY_KEY);
+            initialize_nobody_memories(*mons);
+        }
+
+        break;
+
     default:
         break;
     }
@@ -1218,4 +1240,115 @@ bool egg_is_incubating(const monster& egg)
     }
 
     return false;
+}
+
+struct nobody_recollection
+{
+    int weight;
+    string key;
+    vector<pair<spell_type, uint8_t>> spells;
+};
+
+const static vector<nobody_recollection> _recollections =
+{
+    {50, "fire", {{SPELL_MARSHLIGHT, 40}, {SPELL_SCORCH, 50}}},
+    {50, "fire", {{SPELL_PYRE_ARROW, 80}}},
+    {50, "cold", {{SPELL_OZOCUBUS_REFRIGERATION, 80}}},
+    {50, "cold", {{SPELL_PERMAFROST_ERUPTION, 80}}},
+    {50, "poison", {{SPELL_CORROSIVE_BOLT, 80}}},
+    {50, "poison", {{SPELL_HURL_SLUDGE, 100}}},
+    {50, "poison", {{SPELL_IRRADIATE, 75}}},
+    {65, "undead", {{SPELL_BORGNJORS_VILE_CLUTCH, 120}}},
+    {80, "fear", {{SPELL_CAUSE_FEAR, 120}, {SPELL_GHOSTLY_FIREBALL, 50}}},
+    {80, "soldiers", {{SPELL_BATTLESPHERE, 120}, {SPELL_BOMBARD, 60}}},
+    {50, "rockslide", {{SPELL_LRD, 100}}},
+    {50, "electricity", {{SPELL_ARCJOLT, 80}}},
+
+    {75, "xxx", {{SPELL_SUMMON_HORRIBLE_THINGS, 70}}},
+    {85, "demons", {{SPELL_SUMMON_GREATER_DEMON, 70}}},
+    {85, "undead", {{SPELL_HAUNT, 70}}},
+    {110, "vermin", {{SPELL_SUMMON_VERMIN, 70}}},
+
+    {180, "soldiers", {{SPELL_HASTE, 75}, {SPELL_MIGHT, 75}}},
+};
+
+// Initialize a set of 3 random spellsets for Nobody, guaranteed to all be
+// different from each other. (Called upon Nobody spawning or so much time
+// passing that they regenerate their memories.)
+void initialize_nobody_memories(monster& nobody)
+{
+    CrawlVector& memories = nobody.props[NOBODY_MEMORIES_KEY].get_vector();
+    memories.clear();
+
+    vector<pair<int, int>> weights;
+    for (size_t i = 0; i < _recollections.size(); ++i)
+        weights.push_back({i, _recollections[i].weight});
+
+    for (int i = 0; i < 3; ++i)
+    {
+        const int index = *random_choose_weighted(weights);
+        memories.push_back(index);
+        weights[index] = weights.back();
+        weights.pop_back();
+    }
+}
+
+bool pyrrhic_recollection(monster& nobody)
+{
+    CrawlVector& memories = nobody.props[NOBODY_MEMORIES_KEY].get_vector();
+    if (memories.size() <= 0)
+        return false;
+
+    const bool can_see = you.see_cell(nobody.pos());
+
+    if (can_see)
+        draw_ring_animation(nobody.pos(), 3, LIGHTCYAN, CYAN, true);
+
+    // Change spells
+    nobody.spells.clear();
+    const auto& recollection = _recollections[memories[memories.size() - 1].get_int()];
+
+    vector<string> spell_names;
+    for (pair<spell_type, uint8_t> spell : recollection.spells)
+    {
+        nobody.spells.push_back({spell.first, spell.second, MON_SPELL_WIZARD});
+        spell_names.push_back(spell_title(spell.first));
+    }
+    nobody.spells.push_back({SPELL_PYRRHIC_RECOLLECTION, 0, MON_SPELL_NATURAL});
+    nobody.props[CUSTOM_SPELLS_KEY] = true;
+    memories.pop_back();
+
+    if (can_see)
+    {
+        mprf(MSGCH_MONSTER_SPELL, "%s ignites a memory of %s to re-knit themselves.",
+                nobody.name(DESC_THE).c_str(),
+                comma_separated_line(spell_names.begin(), spell_names.end()).c_str());
+        string speech = make_stringf("\"We remember... %s...\"",
+                            getSpeakString("nobody_recollection " + recollection.key).c_str());
+        mons_speaks_msg(&nobody, speech, MSGCH_TALK);
+    }
+
+    // Heal and move.
+    nobody.heal(nobody.max_hit_points);
+    nobody.timeout_enchantments(1000);
+    monster_blink(&nobody, true, true);
+    nobody.add_ench(mon_enchant(ENCH_PYRRHIC_RECOLLECTION, 0, &nobody, random_range(300, 500)));
+
+    // Don't immediately expire summons (we want them to stick around into the next phase),
+    // but at least make them time out a bit faster.
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->was_created_by(nobody))
+        {
+            mon_enchant timer = mi->get_ench(ENCH_SUMMON_TIMER);
+            timer.duration = timer.duration / 3;
+            mi->update_ench(timer);
+        }
+    }
+
+    nobody.props[NOBODY_RECOVERY_KEY] = you.elapsed_time + (random_range(300, 500));
+
+    avoided_death_fineff::schedule(&nobody);
+
+    return true;
 }

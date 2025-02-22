@@ -1136,6 +1136,13 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_NAMELESS_REVENANT,
+      {
+       { SPELL_PYRRHIC_RECOLLECTION, 0, MON_SPELL_NATURAL },
+       { SPELL_BLINK_CLOSE, 15, MON_SPELL_WIZARD},
+      }
+    },
+
     {  MST_LICH,
       {
        { SPELL_BOLT_OF_COLD, 12, MON_SPELL_WIZARD },

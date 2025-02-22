@@ -144,6 +144,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_BLINKITIS,       MB_BLINKITIS },
     { ENCH_CHAOS_LACE,      MB_CHAOS_LACE },
     { ENCH_VEXED,           MB_VEXED },
+    { ENCH_PYRRHIC_RECOLLECTION, MB_PYRRHIC_RECOLLECTION },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -242,7 +243,8 @@ static bool _is_public_key(string key)
      || key == SEEN_SPELLS_KEY
      || key == KNOWN_MAX_HP_KEY
      || key == VAULT_HD_KEY
-     || key == POLY_SET_KEY)
+     || key == POLY_SET_KEY
+     || key == NOBODY_MEMORIES_KEY)
     {
         return true;
     }

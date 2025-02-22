@@ -1002,6 +1002,14 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         }
         break;
 
+    case ENCH_PYRRHIC_RECOLLECTION:
+        if (!quiet)
+            simple_monster_message(*this, " memory burns away to nothing.", true);
+        spells.clear();
+        spells.push_back({SPELL_PYRRHIC_RECOLLECTION, 0, MON_SPELL_NATURAL});
+        spells.push_back({SPELL_BLINK_CLOSE, 15, MON_SPELL_WIZARD});
+        break;
+
     default:
         break;
     }
@@ -1419,6 +1427,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_VEXED:
     case ENCH_DEEP_SLEEP:
     case ENCH_DROWSY:
+    case ENCH_PYRRHIC_RECOLLECTION:
         decay_enchantment(en);
         break;
 
@@ -2178,7 +2187,7 @@ static const char *enchant_names[] =
     "misdirected", "changed appearance", "shadowless", "doubled_health",
     "grapnel", "tempered", "hatching", "blinkitis", "chaos_laced", "vexed",
     "deep sleep", "drowsy",
-    "vampire thrall",
+    "vampire thrall", "pyrrhic recollection",
     "buggy", // NUM_ENCHANTMENTS
 };
 

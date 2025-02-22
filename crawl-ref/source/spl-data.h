@@ -4407,6 +4407,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_PYRRHIC_RECOLLECTION, "Pyrrhic Recollection",
+    spschool::none,
+    spflag::monster,
+    6,
+    200,
+    -1, -1,
+    0,
+    TILEG_ABILITY_ENKINDLE,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

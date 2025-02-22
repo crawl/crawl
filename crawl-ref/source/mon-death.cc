@@ -1046,6 +1046,9 @@ static bool _monster_avoided_death(monster* mons, killer_type killer,
     if (lost_soul_revive(*mons, killer))
         return true;
 
+    if (mons->type == MONS_NAMELESS_REVENANT && pyrrhic_recollection(*mons))
+        return true;
+
     // Yredelemnul special.
     if (_yred_bind_soul(mons, killer))
         return true;

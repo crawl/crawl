@@ -1339,6 +1339,10 @@ laughing_skull MONS_LAUGHING_SKULL
 %rim 1
 %sdir mon/unique
 murray MONS_MURRAY
+%rim 0
+nobody0 MONS_NAMELESS_REVENANT
+nobody1
+nobody2
 
 ## Sprint specials
 %sdir mon/sprint

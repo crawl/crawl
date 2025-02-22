@@ -23,6 +23,7 @@
 #include "level-state-type.h"
 #include "libutil.h"
 #include "misc.h" // december_holidays
+#include "mon-abil.h"
 #include "mon-death.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
@@ -2396,6 +2397,7 @@ static const map<monster_info_flags, tileidx_t> monster_status_icons = {
     { MB_CHAOS_LACE, TILEI_LACED_WITH_CHAOS },
     { MB_VEXED, TILEI_VEXED },
     { MB_VAMPIRE_THRALL, TILEI_VAMPIRE_THRALL },
+    { MB_PYRRHIC_RECOLLECTION, TILEI_PYRRHIC },
 };
 
 set<tileidx_t> status_icons_for(const monster_info &mons)
@@ -2403,6 +2405,12 @@ set<tileidx_t> status_icons_for(const monster_info &mons)
     set<tileidx_t> icons;
     if (mons.type == MONS_DANCING_WEAPON)
         icons.insert(TILEI_ANIMATED_WEAPON);
+    if (mons.type == MONS_NAMELESS_REVENANT)
+    {
+        const int memories = mons.props[NOBODY_MEMORIES_KEY].get_vector().size();
+        if (memories > 0)
+            icons.insert(TILEI_NOBODY_MEMORY_1 + (memories - 1));
+    }
     if (!mons.constrictor_name.empty())
         icons.insert(TILEI_CONSTRICTED);
     for (auto status : monster_status_icons)

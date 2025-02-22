@@ -531,6 +531,11 @@ static map<tileidx_t, int> status_icon_sizes = {
 
     // Along the bottom of the monster.
     { TILEI_SHADOWLESS,      FIXED_LOC_ICON },
+
+    { TILEI_NOBODY_MEMORY_1, FIXED_LOC_ICON },
+    { TILEI_NOBODY_MEMORY_2, FIXED_LOC_ICON },
+    { TILEI_NOBODY_MEMORY_3, FIXED_LOC_ICON },
+    { TILEI_PYRRHIC, FIXED_LOC_ICON },
 };
 
 void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)

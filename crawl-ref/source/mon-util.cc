@@ -3084,6 +3084,10 @@ void define_monster(monster& mons, bool friendly)
         break;
     }
 
+    case MONS_NAMELESS_REVENANT:
+        initialize_nobody_memories(mons);
+        break;
+
     default:
         break;
     }

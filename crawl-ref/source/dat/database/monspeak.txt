@@ -6185,6 +6185,122 @@ Nikola
 
 @The_monster@ mumbles, "Hm, I wonder if you're conductive."
 %%%%
+############ NOBODY ### A revenant made from countless different people
+Nobody
+
+@The_monster@ rasps, "Tell us... who... we are...."
+
+@The_monster@ growls, "Give us... back... our names!"
+
+@The_monster@ rasps, "We... will be... remembered!"
+
+@The_monster@ mutters, "Why... can't we remember...?"
+
+@The_monster@ rasps, "We were once... so many....."
+
+@The_monster@ rasps, "The flames... keep going out...."
+
+w:50
+__NONE
+%%%%
+Nobody triumph
+
+@The_monster@ rasps, "Now... you are also... Nobody."
+%%%%
+Nobody killed
+
+As they crumble to ash, @The_monster@ whispers, "You will also be forgotten...."
+%%%%
+nobody_recollection fire
+
+a terrible drought
+
+dying of thirst
+
+fields ablaze
+
+smoke... everywhere
+%%%%
+nobody_recollection cold
+
+a winter without end
+
+shivering with cold
+
+our fingers... freezing
+
+ice in our veins
+%%%%
+nobody_recollection xxx
+
+our flesh being taken
+
+a horrific experiment
+
+a terrible sin
+%%%%
+nobody_recollection undead
+
+the grave
+
+hands dragging us downward
+
+the wailing of the dead
+%%%%
+nobody_recollection soldiers
+
+steel... clashing
+
+an army like a tide
+
+iron and smoke
+%%%%
+nobody_recollection rockslide
+
+the weight of a mountain atop us
+
+a rockslide like thunder
+
+bones breaking beneath stone
+%%%%
+nobody_recollection electricity
+
+a terrible numbness
+
+our heart stopping
+
+the sky cracking open
+%%%%
+nobody_recollection poison
+
+our flesh... melting
+
+rivers of blight
+
+a well... tainted with poison
+%%%%
+nobody_recollection fear
+
+running... falling
+
+cowering in terror
+%%%%
+nobody_recollection vermin
+
+plague and pestilence
+
+being eaten by rats
+
+famine
+%%%%
+nobody_recollection demons
+
+dark magic
+
+demonic laughter
+
+torment and damnation
+%%%%
 ############ NORRIS ### An enlightened but crazy man
 Norris
 

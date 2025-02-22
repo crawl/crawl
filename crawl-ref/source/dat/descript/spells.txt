@@ -1500,6 +1500,15 @@ Pyroclastic Surge spell
 Draws searing flames from lava. Any enemies of the caster standing
 next to or above lava will be burned.
 %%%%
+Pyrrhic Recollection spell
+
+Ignites a memory from the nimbus which surrounds Nobody, temporarily granting
+them the knowledge of a powerful spell and healing their injuries.
+
+This power is fleeting and will be extinguished after taking any significant
+amount of damage, but so long as any other memories remain, they cannot be
+put to rest for good.
+%%%%
 Quicksilver Bolt spell
 
 Fires a bolt of dispelling energy at a targeted creature, possibly removing
