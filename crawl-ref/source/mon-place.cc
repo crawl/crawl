@@ -190,8 +190,9 @@ static bool _habitable_grid(const coord_def& pos)
         return true;
 
     // Veto protective walls created by deities
-    auto no_tombs = [](map_terrain_change_marker terrain) {
-        return terrain.change_type == TERRAIN_CHANGE_IMPRISON || terrain.change_type == TERRAIN_CHANGE_TOMB;
+    auto no_tombs = [](map_terrain_change_marker& terrain) {
+        return terrain.change_type == TERRAIN_CHANGE_IMPRISON
+            || terrain.change_type == TERRAIN_CHANGE_TOMB;
     };
     if (map_terrain_change_marker::any_at(pos, no_tombs))
         return false;

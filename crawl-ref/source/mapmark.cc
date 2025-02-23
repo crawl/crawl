@@ -863,6 +863,7 @@ bool map_terrain_change_marker::any_at(coord_def pos, function<bool(map_terrain_
             if (predicate(*terrain_marker))
                 return true;
         }
+    return false;
 };
 
 ////////////////////////////////////////////////////////////////////////////
