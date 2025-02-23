@@ -1354,6 +1354,9 @@ bool pyrrhic_recollection(monster& nobody)
 
     nobody.props[NOBODY_RECOVERY_KEY] = you.elapsed_time + (random_range(300, 500));
 
+    // Allow Nobody to wake up if you kill them in their sleep
+    behaviour_event(&nobody, ME_ALERT);
+
     avoided_death_fineff::schedule(&nobody);
 
     return true;
