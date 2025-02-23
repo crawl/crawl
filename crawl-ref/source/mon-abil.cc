@@ -1330,7 +1330,13 @@ bool pyrrhic_recollection(monster& nobody)
 
     // Heal and move.
     nobody.heal(nobody.max_hit_points);
+
+    // If this was a phantom mirror copy, allow it to revive, but don't wipe out
+    // its summoner timer at the same time, to keep it from having unlimited duration.
+    mon_enchant summon_timer = nobody.get_ench(ENCH_SUMMON_TIMER);
     nobody.timeout_enchantments(1000);
+    nobody.update_ench(summon_timer);
+
     monster_blink(&nobody, true, true);
     nobody.add_ench(mon_enchant(ENCH_PYRRHIC_RECOLLECTION, 0, &nobody, random_range(300, 500)));
 
