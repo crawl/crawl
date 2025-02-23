@@ -1694,6 +1694,7 @@ bool transform(int pow, transformation which_trans, bool involuntary,
         return false;
     }
 
+    // Vampire should shift in and out of bat swarm without reverting to fully untransformed in the middle
     // This must occur before the untransform().
     if (you.form == which_trans)
     {
@@ -1719,8 +1720,8 @@ bool transform(int pow, transformation which_trans, bool involuntary,
     }
 
     if (you.form != transformation::none
-        && (!(you.form == transformation::vampire || you.form == transformation::bat_swarm)
-            && !(which_trans == transformation::vampire || which_trans == transformation::bat_swarm)))
+        && !((you.form == transformation::vampire || you.form == transformation::bat_swarm)
+               && (which_trans == transformation::vampire || which_trans == transformation::bat_swarm)))
     {
         untransform(true, !using_talisman);
     }
