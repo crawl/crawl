@@ -3729,7 +3729,7 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_POLYMORPH:
-        obvious_effect = you.polymorph(ench_power);
+        obvious_effect = you.polymorph(20 + roll_dice(3, 10));
         break;
 
     case BEAM_MALMUTATE:
@@ -3898,7 +3898,7 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_PORKALATOR:
-        if (!transform(ench_power, transformation::pig, true))
+        if (!transform(20 + roll_dice(3, 10), transformation::pig, true))
         {
             mpr("You feel a momentary urge to oink.");
             break;
@@ -6215,7 +6215,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return obvious_effect ? MON_AFFECTED : MON_OTHER; // ?
 
     case BEAM_POLYMORPH:
-        if (mon->polymorph(ench_power))
+        if (mon->polymorph(0))
             obvious_effect = true;
         if (YOU_KILL(thrower))
         {

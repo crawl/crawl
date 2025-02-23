@@ -40,31 +40,6 @@ public:
     const char * const devastating;
 };
 
-enum duration_power_scaling
-{
-    PS_NONE,                ///< no bonus
-    PS_SINGLE,              ///< bonus based on rand2(power)
-    PS_ONE_AND_A_HALF,      ///< bonus based on r(power) + r(power/2)
-    PS_DOUBLE               ///< bonus based on r(power) + r(power)
-};
-
-class FormDuration
-{
-public:
-    FormDuration(int _base, duration_power_scaling _scaling_type, int _max) :
-    base(_base), scaling_type(_scaling_type), max(_max) { };
-
-    int power_bonus(int pow) const;
-
-public:
-    /// base duration (in 10*aut, probably)
-    const int base;
-    /// the extent to which spellpower affects duration scaling
-    const duration_power_scaling scaling_type;
-    /// max duration (in 10*aut, probably)
-    const int max;
-};
-
 class FormScaling {
 public:
     FormScaling() : base(0), scaling(0), xl_based(false) {}
@@ -89,8 +64,6 @@ protected:
 public:
     bool slot_is_blocked(equipment_slot slot) const;
     bool can_wield() const { return !slot_is_blocked(SLOT_WEAPON); }
-
-    int get_duration(int pow) const;
 
     int get_level(int scale) const;
 
@@ -188,9 +161,6 @@ public:
     const string short_name;
     /// "foo"; used for wizmode transformation dialogue
     const string wiz_name;
-
-    /// A struct representing the duration of the form, based on power etc
-    const FormDuration duration;
 
     /// The skill level below which the player gets HP penalties for using the form.
     const int min_skill;
@@ -326,7 +296,7 @@ string cant_transform_reason(transformation which_trans, bool involuntary = fals
                              bool temp = true);
 bool check_transform_into(transformation which_trans, bool involuntary = false,
                           const item_def* talisman = nullptr);
-bool transform(int pow, transformation which_trans, bool involuntary = false,
+bool transform(int dur, transformation which_trans, bool involuntary = false,
                bool using_talisman = false);
 
 // skip_move: don't make player re-enter current cell

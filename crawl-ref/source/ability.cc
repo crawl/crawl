@@ -3307,7 +3307,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     case ABIL_BAT_SWARM:
     {
         mpr("You scatter into a swarm of vampire bats!");
-        transform(random2(12), transformation::bat_swarm);
+        transform(random_range(15, 24), transformation::bat_swarm);
         you.transform_uncancellable = true;
         const int pow = get_form()->get_level(10);
         big_cloud(CLOUD_BATS, &you, you.pos(), 18 + pow / 20, 8 + pow / 15, 1);

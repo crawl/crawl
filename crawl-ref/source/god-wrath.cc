@@ -1149,7 +1149,7 @@ static void _jiyva_transform()
                                               transformation::tree,
                                               transformation::wisp);
 
-    if (transform(random2(you.penance[god]) * 2, form, true))
+    if (transform(random_range(40, 70), form, true))
         you.transform_uncancellable = true;
 }
 /**

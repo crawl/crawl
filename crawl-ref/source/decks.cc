@@ -1707,7 +1707,7 @@ void card_effect(card_type which_card,
         break;
 
     case CARD_SWINE:
-        if (transform(5 + power/10 + random2(power/10), transformation::pig, true))
+        if (transform(roll_dice(10, 10), transformation::pig, true))
             you.transform_uncancellable = true;
         else
             mpr("You feel a momentary urge to oink.");

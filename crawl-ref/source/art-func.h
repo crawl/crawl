@@ -804,7 +804,7 @@ static void _PLUTONIUM_SWORD_melee_effects(item_def* weapon,
 
         if (one_chance_in(10))
         {
-            defender->polymorph(0); // Low duration if applied to the player.
+            defender->polymorph(random_range(7, 14)); // Low duration if applied to the player.
             return;
         }
 

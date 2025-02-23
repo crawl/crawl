@@ -97,10 +97,6 @@ static const FormAttackVerbs DEFAULT_VERBS = FormAttackVerbs(nullptr, nullptr,
 static const FormAttackVerbs ANIMAL_VERBS = FormAttackVerbs("hit", "bite",
                                                             "maul", "maul");
 
-static const FormDuration DEFAULT_DURATION = FormDuration(20, PS_DOUBLE, 100);
-static const FormDuration BAD_DURATION = FormDuration(15, PS_ONE_AND_A_HALF,
-                                                      100);
-
 // Class form_entry and the formdata array
 #include "form-data.h"
 
@@ -114,7 +110,6 @@ static const form_entry &_find_form_entry(transformation form)
 
 Form::Form(const form_entry &fe)
     : short_name(fe.short_name), wiz_name(fe.wiz_name),
-      duration(fe.duration),
       min_skill(fe.min_skill), max_skill(fe.max_skill),
       str_mod(fe.str_mod), dex_mod(fe.dex_mod),
       blocked_slots(fe.blocked_slots), size(fe.size),
@@ -151,41 +146,6 @@ bool Form::slot_is_blocked(equipment_slot slot) const
 {
     ASSERT_RANGE(slot, 0, NUM_EQUIP_SLOTS);
     return (1 << slot) & blocked_slots;
-}
-
-/**
- * Get the bonus to form duration granted for a given (spell)power.
- *
- * @param pow               The spellpower/equivalent of the form.
- * @return                  A bonus to form duration.
- */
-int FormDuration::power_bonus(int pow) const
-{
-    switch (scaling_type)
-    {
-        case PS_NONE:
-            return 0;
-        case PS_SINGLE:
-            return random2(pow);
-        case PS_ONE_AND_A_HALF:
-            return random2(pow) + random2(pow/2);
-        case PS_DOUBLE:
-            return random2(pow) + random2(pow);
-        default:
-            die("Unknown scaling type!");
-            return -1;
-    }
-}
-
-/**
- * Get the duration for this form, when newly entered.
- *
- * @param pow   The power of the effect creating this form. (Spellpower, etc.)
- * @return      The duration of the form. (XXX: in turns...?)
- */
-int Form::get_duration(int pow) const
-{
-    return min(duration.base + duration.power_bonus(pow), duration.max);
 }
 
 /**
@@ -1364,11 +1324,6 @@ bool feat_dangerous_for_form(transformation which_trans,
     return !form_can_fly(which_trans) && !_flying_in_new_form(which_trans, talisman);
 }
 
-static int _transform_duration(transformation which_trans, int pow)
-{
-    return get_form(which_trans)->get_duration(pow);
-}
-
 /**
  * Is the player alive enough to become the given form?
  *
@@ -1534,7 +1489,7 @@ static void _on_enter_form(transformation which_trans)
 void set_form(transformation which_trans, int dur, bool scale_hp)
 {
     you.form = which_trans;
-    you.duration[DUR_TRANSFORMATION] = dur * BASELINE_DELAY;
+    you.duration[DUR_TRANSFORMATION] = max(1, dur * BASELINE_DELAY);
     update_player_symbol();
 
     const int str_mod = get_form(which_trans)->str_mod;
@@ -1554,7 +1509,7 @@ void set_form(transformation which_trans, int dur, bool scale_hp)
     quiver::set_needs_redraw();
 }
 
-static void _enter_form(int pow, transformation which_trans, bool scale_hp = true)
+static void _enter_form(int dur, transformation which_trans, bool scale_hp = true)
 {
     const bool was_flying = you.airborne();
 
@@ -1574,7 +1529,7 @@ static void _enter_form(int pow, transformation which_trans, bool scale_hp = tru
     // changes) before adjusting the player to be transformed.
     you.equipment.meld_equipment(get_form(which_trans)->blocked_slots);
 
-    set_form(which_trans, _transform_duration(which_trans, pow), scale_hp);
+    set_form(which_trans, dur, scale_hp);
 
     if (you.digging && !form_keeps_mutations(which_trans))
     {
@@ -1665,8 +1620,8 @@ static void _enter_form(int pow, transformation which_trans, bool scale_hp = tru
  * If the player is already in that form, attempt to refresh its duration and
  * power.
  *
- * @param pow               The power of the transformation (equivalent to
- *                          spellpower of form spells)
+ * @param dur               The duration of the transformation (0 if the
+ *                          transformation should be permanent.)
  * @param which_trans       The form which the player should become.
  * @param involuntary       Checks for inscription warnings are skipped, and
  *                          failure is silent.
@@ -1676,7 +1631,7 @@ static void _enter_form(int pow, transformation which_trans, bool scale_hp = tru
  *                          already in the given form, returns true.
  *                          Otherwise, false.
  */
-bool transform(int pow, transformation which_trans, bool involuntary,
+bool transform(int dur, transformation which_trans, bool involuntary,
                bool using_talisman)
 {
     // Zin's protection.
@@ -1698,30 +1653,6 @@ bool transform(int pow, transformation which_trans, bool involuntary,
     }
 
     // Vampire should shift in and out of bat swarm without reverting to fully untransformed in the middle
-    // This must occur before the untransform().
-    if (you.form == which_trans)
-    {
-        // update power
-        if (which_trans != transformation::none)
-        {
-            you.redraw_armour_class = true;
-            // ^ could check more carefully for the exact cases, but I'm
-            // worried about making the code too fragile
-        }
-
-        int dur = _transform_duration(which_trans, pow);
-        if (you.duration[DUR_TRANSFORMATION] < dur * BASELINE_DELAY)
-        {
-            mpr("You extend your transformation's duration.");
-            you.duration[DUR_TRANSFORMATION] = dur * BASELINE_DELAY;
-
-        }
-        else if (!involuntary && which_trans != transformation::none)
-            mpr("You fail to extend your transformation any further.");
-
-        return true;
-    }
-
     if (you.form != transformation::none
         && !((you.form == transformation::vampire || you.form == transformation::bat_swarm)
                && (which_trans == transformation::vampire || which_trans == transformation::bat_swarm)))
@@ -1729,7 +1660,7 @@ bool transform(int pow, transformation which_trans, bool involuntary,
         untransform(true, !using_talisman);
     }
 
-    _enter_form(pow, which_trans, !using_talisman);
+    _enter_form(dur, which_trans, !using_talisman);
 
     return true;
 }

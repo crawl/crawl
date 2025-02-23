@@ -7241,7 +7241,7 @@ void makhleb_vessel_of_slaughter()
     mpr("You offer yourself as an instrument of Makhleb's will and feel "
         "overwhelming power flowing through you!");
 
-    transform(100, transformation::slaughter);
+    transform(random_range(70, 110), transformation::slaughter);
     you.transform_uncancellable = true;
 
     bolt damnation;
