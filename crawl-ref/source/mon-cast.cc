@@ -4634,7 +4634,9 @@ static string _ru_spell_stop_desc(monster &mons)
 /// What spells can the given monster currently use?
 static monster_spells _find_usable_spells(monster &mons)
 {
-    // TODO: make mons param const (requires waste_of_time param to be const)
+    // TODO: Ideally mons would be a const here but, digging into
+    // monster_spell_goodness, this would require a large refactor of spells
+    // to extract "tracer" casting to separate functions with const actors...
 
     monster_spells hspell_pass(mons.spells);
 
