@@ -2906,6 +2906,15 @@ bool is_bad_item(const item_def &item)
             return false;
         CASE_REMOVED_POTIONS(item.sub_type);
         }
+
+    case OBJ_ARMOUR:
+        if (is_unrandom_artefact(item, UNRAND_CHARLATANS_ORB)
+            && you.has_mutation(MUT_NO_ARTIFICE))
+        {
+            return true;
+        }
+        return false;
+
     default:
         return false;
     }
