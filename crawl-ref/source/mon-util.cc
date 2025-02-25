@@ -528,6 +528,13 @@ int monster::wearing_ego(object_class_type obj_type, int special) const
         break;
 
     case OBJ_ARMOUR:
+        item = mslot_item(MSLOT_SHIELD);
+        if (item && item->base_type == OBJ_ARMOUR
+            && get_armour_ego_type(*item) == special)
+        {
+            ret++;
+        }
+
         item = mslot_item(MSLOT_ARMOUR);
         if (item && item->base_type == OBJ_ARMOUR
             && get_armour_ego_type(*item) == special)
