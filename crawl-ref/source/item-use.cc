@@ -1521,7 +1521,7 @@ bool handle_chain_removal(vector<item_def*>& to_remove, bool interactive)
             else
             {
                 for (int i = 0; i < chain_remove_num;  ++i)
-                    to_remove.push_back(chain_remove.back() - i);
+                    to_remove.push_back(chain_remove[chain_remove.size() - i - 1]);
             }
         }
         else
