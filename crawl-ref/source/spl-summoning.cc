@@ -788,8 +788,7 @@ static void _animate_weapon(int pow, actor* target)
     ASSERT(montarget->inv[wp_slot] != NON_ITEM);
     ASSERT(&env.item[montarget->inv[wp_slot]] == wpn);
 
-    montarget->unequip(*(montarget->mslot_item(wp_slot)), false, true);
-    montarget->inv[wp_slot] = NON_ITEM;
+    montarget->unequip(wp_slot, false, true);
 
     // Find out what our god thinks before killing the item.
     conduct_type why = god_hates_item_handling(*wpn);

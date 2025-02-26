@@ -310,7 +310,8 @@ public:
     void      swap_weapons(maybe_bool msg = maybe_bool::maybe);
     bool      pickup_item(item_def &item, bool msg, bool force);
     bool      drop_item(mon_inv_type eslot, bool msg);
-    bool      unequip(item_def &item, bool msg, bool force = false);
+    bool      do_unequip_effects(item_def &item, bool msg, bool force = false);
+    bool      unequip(mon_inv_type slot, bool msg, bool force = false);
     void      steal_item_from_player();
     item_def* take_item(int steal_what, mon_inv_type mslot,
                         bool is_stolen = false);
