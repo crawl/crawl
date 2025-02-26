@@ -1129,6 +1129,8 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
             continue;
         if (di.radius() == 2 && !can_reach_attack_between(atk, *di, REACH_TWO))
             continue;
+        else if (di.radius() == 3 && !can_reach_attack_between(atk, *di, REACH_THREE))
+            continue;
         targets.push_back(target);
     }
 }
