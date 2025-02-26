@@ -5063,8 +5063,9 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec, monster *mon)
     // Get rid of existing equipment.
     for (mon_inv_iterator ii(*mon); ii; ++ii)
     {
-        mon->unequip(*ii, false, true);
-        destroy_item(ii->index(), true);
+        item_def &item = *ii;
+        mon->unequip(ii.slot(), false, true);
+        destroy_item(item, true);
     }
 
     item_list &list = mspec.items;

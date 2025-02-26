@@ -891,19 +891,18 @@ void monster::unequip_jewellery(item_def &item, bool msg)
  * Applies appropriate effects when unequipping an item.
  *
  * Note: this method does NOT modify this->inv to point to NON_ITEM!
+ * This also means that it doesn't update the area grids either as this must
+ * be done after removing the item from the monsters inventory.
+ *
  * @param item  the item to be removed.
  * @param msg   whether to give a message
  * @param force whether to remove the item even if cursed.
  * @return whether the item was unequipped successfully.
  */
-bool monster::unequip(item_def &item, bool msg, bool force)
+bool monster::do_unequip_effects(item_def &item, bool msg, bool force)
 {
     if (!force && item.cursed())
         return false;
-
-    // Get monster halo/umbra before we unequip this item.
-    int old_halo = halo_radius();
-    int old_umbra = umbra_radius();
 
     switch (item.base_type)
     {
@@ -933,6 +932,24 @@ bool monster::unequip(item_def &item, bool msg, bool force)
     default:
         break;
     }
+
+    return true;
+}
+
+bool monster::unequip(mon_inv_type slot, bool msg, bool force)
+{
+    item_def* item = mslot_item(slot);
+    if (!item)
+        return false;
+    bool unequipped = do_unequip_effects(*item, msg, force);
+    if (!unequipped)
+        return false;
+
+    // Get monster halo/umbra before we unequip this item.
+    int old_halo = halo_radius();
+    int old_umbra = umbra_radius();
+
+    inv[slot] = NON_ITEM;
 
     // Get monster halo/umbra after we unequip this item.
     int new_halo = halo_radius();
@@ -1105,10 +1122,13 @@ bool monster::drop_item(mon_inv_type eslot, bool msg)
         || eslot == MSLOT_JEWELLERY
         || eslot == MSLOT_ALT_WEAPON && mons_wields_two_weapons(*this))
     {
-        if (!unequip(pitem, msg))
+        if (!do_unequip_effects(pitem, msg))
             return false;
         was_unequipped = true;
     }
+
+    int old_halo = halo_radius();
+    int old_umbra = umbra_radius();
 
     if (pitem.flags & ISFLAG_SUMMONED)
     {
@@ -1120,23 +1140,31 @@ bool monster::drop_item(mon_inv_type eslot, bool msg)
         item_was_destroyed(pitem);
         destroy_item(item_index);
     }
-
-    if (msg)
+    else
     {
-        mprf("%s drops %s.", name(DESC_THE).c_str(),
+        if (msg)
+        {
+            mprf("%s drops %s.", name(DESC_THE).c_str(),
                 pitem.name(DESC_A).c_str());
+        }
+
+        if (!move_item_to_grid(&item_index, pos(), swimming()))
+        {
+            // Re-equip item if we somehow failed to drop it.
+            if (was_unequipped && msg)
+                equip_message(pitem);
+
+            return false;
+        }
+
+        inv[eslot] = NON_ITEM;
     }
 
-    if (!move_item_to_grid(&item_index, pos(), swimming()))
-    {
-        // Re-equip item if we somehow failed to drop it.
-        if (was_unequipped && msg)
-            equip_message(pitem);
+    int new_halo = halo_radius();
+    int new_umbra = umbra_radius();
+    if (old_halo != new_halo || old_umbra != new_umbra)
+        invalidate_agrid(true);
 
-        return false;
-    }
-
-    inv[eslot] = NON_ITEM;
     return true;
 }
 
@@ -1952,7 +1980,10 @@ void monster::swap_weapons(maybe_bool maybe_msg)
     item_def *weap = mslot_item(MSLOT_WEAPON);
     item_def *alt  = mslot_item(MSLOT_ALT_WEAPON);
 
-    if (weap && !unequip(*weap, msg))
+    int old_halo = halo_radius();
+    int old_umbra = umbra_radius();
+
+    if (weap && !do_unequip_effects(*weap, msg))
     {
         // Item was cursed.
         return;
@@ -1962,6 +1993,11 @@ void monster::swap_weapons(maybe_bool maybe_msg)
 
     if (alt && msg)
         equip_message(*alt);
+
+    int new_halo = halo_radius();
+    int new_umbra = umbra_radius();
+    if (old_halo != new_halo || old_umbra != new_umbra)
+        invalidate_agrid(true);
 
     // Monsters can swap weapons really fast. :-)
     if ((weap || alt) && speed_increment >= 2)
