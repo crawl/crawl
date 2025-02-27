@@ -125,6 +125,7 @@ function trove.get_trove_item(e, value, base_item)
 
   local is_armour_user = you.race() ~= "Felid"
       and you.race() ~= "Octopode"
+      and you.race() ~= "Poltergeist"
       and you.genus() ~= "draconian"
 
   if is_armour_user then
