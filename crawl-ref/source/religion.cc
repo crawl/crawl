@@ -618,7 +618,10 @@ god_iterator god_iterator::operator++(int)
 
 void maybe_clear_traitor(god_type god)
 {
-    if (static_cast<god_type>(you.attribute[ATTR_TRAITOR]) == god)
+    const god_type betrayed_god = static_cast<god_type>(
+                                    you.attribute[ATTR_TRAITOR]);
+    if (betrayed_god == god ||
+        is_good_god(betrayed_god) && is_good_god(god))
     {
         you.attribute[ATTR_TRAITOR] = 0;
         you.redraw_title = true;
