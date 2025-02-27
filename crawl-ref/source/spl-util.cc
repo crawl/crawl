@@ -1973,6 +1973,7 @@ bool spell_can_be_enkindled(spell_type spell)
         case SPELL_VAMPIRIC_DRAINING:
         case SPELL_BORGNJORS_VILE_CLUTCH:
         case SPELL_PUTREFACTION:
+        case SPELL_DISPEL_UNDEAD:
             return true;
 
         // Everything else uses the standard destructive list.
