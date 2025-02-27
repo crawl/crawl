@@ -1,0 +1,8 @@
+TAG_MAJOR_VERSION: 34
+enum: appendage
+equivalent_mons: player
+short_name: App
+long_name: appendages
+wiz_name: appendages
+melds: [boots, helmet]
+unarmed_colour: lightgrey

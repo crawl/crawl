@@ -1,0 +1,11 @@
+enum: blade_hands
+equivalent_mons: player
+short_name: Blade
+long_name: ''
+wiz_name: blade
+talisman: blade
+skill: {min: 10, max: 19}
+melds: [held, gloves]
+unarmed: {base: 12, scaling: 8}
+unarmed_colour: red
+unarmed_verbs: [hit, slash, slice, shred]

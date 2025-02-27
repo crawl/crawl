@@ -105,6 +105,12 @@ def gen_all(perl):
     command = [python, input_files[0], 'dat/mons/', 'util/mon-gen/'] + generated_files
     run_if_needed(generated_files, input_files, command)
 
+    generated_files = ['form-data.h']
+    input_files = (['util/form-gen.py'] + glob.glob('dat/forms/*.yaml') +
+                   glob.glob('util/form-gen/*.txt'))
+    command = [python, input_files[0], 'dat/forms/', 'util/form-gen/', 'transformation.h'] + generated_files
+    run_if_needed(generated_files, input_files, command)
+
     generated_files = ['mon-mst.h']
     input_files = ['util/gen-mst.pl', 'mon-spell.h', 'mon-data.h']
     command = [perl, input_files[0]]

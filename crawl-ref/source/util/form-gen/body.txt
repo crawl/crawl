@@ -1,0 +1,16 @@
+{tag_major_version_opener}
+{{
+    {full_enum}, {equivalent_mons}, "{short_name}", "{long_name}", "{wiz_name}",
+    "{description}",
+    {skill.min}, {skill.max}, {talisman},
+    {melds}, {joined_resists},
+    {str}, {dex}, {size}, {hp_mod},
+    {ac_scaling}, {can_cast}, {unarmed_scaling},
+    {unarmed_brand}, {unarmed_colour}, "{unarmed_name}", {unarmed_verbs},
+    {can_fly}, {can_swim}, {keeps_mutations}, {changes_physiology},
+    {has_blood}, {has_hair}, {has_bones}, {has_feet}, {has_ears},
+    "{shout_verb}", {shout_volume}, "{hand_name}", "{foot_name}", "{prayer_action}", "{flesh_name}",
+    {{{fakemuts}}},
+    {{{badmuts}}}
+}},
+{tag_major_version_closer}

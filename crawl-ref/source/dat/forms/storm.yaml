@@ -1,0 +1,31 @@
+enum: storm
+equivalent_mons: twister
+description: a lightning-filled tempest!
+skill: {min: 23, max: 27}
+talisman: storm
+melds: [physical]
+resists: {elec: 1}
+ac: {base: 12, scaling: 3}
+unarmed: {base: 24, scaling: 6}
+unarmed_brand: electrocution
+unarmed_colour: lightcyan
+unarmed_verbs: [hit, buffet, batter, blast]
+can_fly: yes
+keeps_mutations: no
+changes_physiology: yes
+has_blood: no
+has_hair: no
+has_bones: no
+has_feet: no
+has_ears: no
+shout_verb: bellow
+prayer_action: place yourself before
+flesh_name: air
+# rElec added separately
+fakemuts:
+  - ["electrical cleaving", "Your electrical attacks strike out in all directions at once."]
+  - ["evasive", "You are incredibly evasive."]
+  - ["blinkbolt", "You can turn into living lightning."]
+  - ["insubstantial", "You are insubstantial and cannot be petrified, ensnared, or set on fire."]
+badmuts:
+  - ["poison vulnerability", "You are susceptible to poisons. (rPois-)"]

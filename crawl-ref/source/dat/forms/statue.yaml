@@ -1,0 +1,23 @@
+enum: statue
+equivalent_mons: statue
+talisman: statue
+skill: {min: 16, max: 25}
+description: a stone statue.
+melds: [gloves, boots, barding, body]
+hp_mod: 13
+resists: {elec: 1, neg: 1, petrify: 1}
+ac: {base: 27, scaling: 11}
+unarmed: {base: 9}
+unarmed_colour: lightgrey
+keeps_mutations: yes
+changes_physiology: yes
+has_blood: no
+has_hair: no
+has_bones: no
+prayer_action: place yourself before
+flesh_name: stone
+fakemuts:
+  - ["powerful", "Your melee attacks are powerful."]
+  - ["torment resistance 1", "You are resistant to unholy torment."]
+badmuts:
+  - ["slow", "All of your actions are slow."]

@@ -1,0 +1,31 @@
+TAG_MAJOR_VERSION: 34
+enum: spider
+equivalent_mons: spider
+description: a venomous arachnid creature.
+skill: {min: 0, max: 27}
+melds: [physical]
+dex: 5
+size: tiny
+resists: {poison: -1}
+can_swim: no
+keeps_mutations: no
+changes_physiology: yes
+unarmed_brand: venom
+unarmed_colour: lightgreen
+unarmed_name: Fangs
+unarmed_verbs: animal
+has_blood: no
+has_hair: no
+has_bones: no
+has_feet: no
+has_ears: no
+shout_verb: hiss
+shout_volume: -4
+hand_name: front pincers
+prayer_action: crawl onto
+flesh_name: flesh
+fakemuts:
+  - ["venomous fangs", "You have venomous fangs."]
+  - ["", "You are tiny and dextrous."] #short-form "tiny" is automatically added
+badmuts:
+  - ["poison vulnerability", "You are susceptible to poisons. (rPois-)"]

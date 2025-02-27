@@ -1,0 +1,17 @@
+enum: vampire
+equivalent_mons: vampire
+description: a living vampire.
+skill: {min: 16, max: 25}
+talisman: vampire
+resists: {cold: 1, neg: 2}
+unarmed_colour: lightmagenta
+keeps_mutations: yes
+changes_physiology: yes
+fakemuts:
+  - ["vampire fangs", "Your fangs allow you to drain the lifeblood from your enemies."]
+  - ["bloodcurse", "When you kill a living creature with a stab, you may create a vampiric thrall."]
+  - ["torment resistance 1", "You are resistant to unholy torment."]
+  - ["bat form", "You can occasionally transform into a swarm of bats."]
+  - ["very stealthy", "You are very stealthy."]
+badmuts:
+  - ["inhibited regeneration", "You do not regenerate when monsters are visible."]

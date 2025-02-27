@@ -1,0 +1,25 @@
+TAG_MAJOR_VERSION: 34
+enum: hydra
+equivalent_mons: hydra
+melds: [physical]
+resists: {poison: 1}
+size: giant
+hp_mod: 13
+unarmed_colour: green
+unarmed_verbs: [nip at, bite, gouge, chomp]
+can_swim: yes
+keeps_mutations: no
+changes_physiology: yes
+has_blood: yes
+has_hair: no
+has_bones: yes
+has_feet: yes
+has_ears: no
+shout_verb: roar
+shout_volume: 4
+hand_name: foreclaw
+prayer_action: bow your heads before
+flesh_name: flesh
+fakemuts:
+  - ["fast swimmer", "You swim very quickly."]
+  - ["devour", "You can devour living enemies to heal."]

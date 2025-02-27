@@ -1,0 +1,32 @@
+enum: serpent
+equivalent_mons: anaconda
+long_name: snake-form
+wiz_name: snake
+description: an enormous serpent.
+skill: {min: 10, max: 19}
+talisman: serpent
+melds: [physical]
+resists: {poison: 1}
+str: 5
+size: large
+hp_mod: 12
+ac: {base: 9, scaling: 6}
+unarmed: {base: 7}
+unarmed_colour: lightgrey
+unarmed_verbs: [hit, lash, body-slam, crush]
+can_swim: yes
+keeps_mutations: no
+changes_physiology: yes
+has_blood: yes
+has_hair: no
+has_bones: yes
+has_feet: no
+has_ears: no
+shout_verb: hiss
+shout_volume: -2
+hand_name: coils
+prayer_action: "coil in front of"
+flesh_name: flesh
+# cold-blooded and amphibious are added separately
+fakemuts:
+  - ["constrict", "You have a powerful constriction melee attack."]

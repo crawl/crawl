@@ -1,0 +1,25 @@
+TAG_MAJOR_VERSION: 34
+enum: shadow
+equivalent_mons: player_shadow
+description: a swirling mass of dark shadows.
+resists: {poison: 3, neg: 3, miasma: 1, petrify: 1}
+unarmed_colour: magenta
+can_swim: no
+keeps_mutations: yes
+changes_physiology: yes
+has_blood: no
+has_hair: no
+has_bones: no
+has_feet: no
+has_ears: no
+flesh_name: shadow
+fakemuts:
+  - ["half damage", "Damage taken is halved, but you are drained when taking damage."]
+  - ["bleed smoke", "You bleed smoke when taking damage."]
+  - ["invisible", "You are invisible."]
+  - ["unshakeable will", "Your willpower is unshakeable."]
+  - ["torment immunity", "You are immune to unholy pain and torment."]
+badmuts:
+  - ["weak attacks", "Your attacks do half damage."]
+  # two de-enhancers
+  - ["weak spells", "Your spells are much less powerful."]

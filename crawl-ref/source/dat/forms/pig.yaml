@@ -1,0 +1,28 @@
+enum: pig
+equivalent_mons: hog
+description: a filthy swine.
+melds: [physical, ring]
+size: small
+can_cast: no
+unarmed: {xl_based: yes}
+unarmed_colour: lightgrey
+unarmed_name: Teeth
+unarmed_verbs: animal
+can_swim: no
+keeps_mutations: no
+changes_physiology: yes
+has_blood: yes
+has_hair: yes
+has_bones: yes
+has_feet: yes
+has_ears: yes
+shout_verb: squeal
+hand_name: front trotter
+foot_name: trotter
+prayer_action: bow your head before
+flesh_name: flesh
+fakemuts:
+  - ["very fast", "You cover ground very quickly."]
+  - ["weak attacks", "Your unarmed attacks are very weak."]
+badmuts:
+  - ["no casting", "You cannot cast spells."]

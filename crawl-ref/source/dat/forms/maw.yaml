@@ -1,0 +1,12 @@
+enum: maw
+equivalent_mons: putrid_mouth
+description: a creature with a mouth for a stomach.
+skill: {min: 10, max: 19}
+talisman: maw
+melds: [body]
+unarmed: {base: 2}
+unarmed_colour: green
+shout_verb: shout twice
+fakemuts:
+  - ["devouring maw", "Your midsection houses a second, enormous mouth."]
+  - ["", "You can devour living enemies to heal."]

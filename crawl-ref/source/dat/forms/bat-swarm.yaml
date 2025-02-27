@@ -1,0 +1,40 @@
+enum: bat_swarm
+equivalent_mons: vampire_bat
+short_name: Bat Swarm
+long_name: batswarm-form
+wiz_name: bat swarm
+description: a swarm of vampire bats.
+skill: {min: 16, max: 25}
+melds: [physical]
+resists: {cold: 1, neg: 3}
+dex: 5
+size: tiny
+can_cast: no
+unarmed: {xl_based: yes}
+unarmed_name: Teeth
+unarmed_verbs: animal
+can_fly: yes
+can_swim: no
+keeps_mutations: no
+changes_physiology: yes
+has_blood: yes
+has_hair: yes
+has_bones: yes
+has_feet: yes
+has_ears: yes
+shout_verb: squeak
+shout_volume: -8
+hand_name: foreclaw
+prayer_action: perch on
+flesh_name: flesh
+fakemuts:
+  - ["extremely fast", "You cover ground extremely quickly."]
+  - ["", "You are tiny, dextrous, and very evasive."] #short-form "tiny" is automatically added
+  - ["vampire fangs", "Your fangs allow you to drain the lifeblood from your enemies."]
+  - ["bloodcurse", "When you kill a living creature with a stab, you may create a vampiric thrall."]
+  - ["torment resistance 1", "You are resistant to unholy torment."]
+  - ["very stealthy", "You are very stealthy."]
+badmuts:
+  - ["weak attacks", "Your unarmed attacks are very weak."]
+  - ["no casting", "You cannot cast spells."]
+  - ["inhibited regeneration", "You do not regenerate when monsters are visible."]

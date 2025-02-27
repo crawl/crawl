@@ -1,0 +1,18 @@
+TAG_MAJOR_VERSION: 34
+enum: jelly
+equivalent_mons: jelly
+description: a lump of jelly.
+melds: [physical, ring]
+can_cast: no
+unarmed: {xl_based: yes}
+unarmed_colour: lightgrey
+can_swim: no
+keeps_mutations: no
+changes_physiology: yes
+has_blood: no
+has_hair: no
+has_bones: no
+has_feet: no
+has_ears: no
+badmuts:
+  - ["no casting", "You cannot cast spells."]

@@ -1,0 +1,27 @@
+TAG_MAJOR_VERSION: 34
+enum: porcupine
+equivalent_mons: porcupine
+short_name: Porc
+description: a spiny porcupine.
+melds: [all]
+size: tiny
+can_cast: no
+unarmed: {xl_based: yes}
+unarmed_colour: lightgrey
+unarmed_name: Teeth
+unarmed_verbs: animal
+can_swim: no
+keeps_mutations: no
+changes_physiology: yes
+has_blood: yes
+has_hair: yes
+has_bones: yes
+has_feet: yes
+has_ears: yes
+shout_verb: squeak
+shout_volume: -8
+hand_name: front leg
+prayer_action: curl into a sanctuary of spikes before
+flesh_name: flesh
+badmuts:
+  - ["no casting", "You cannot cast spells."]

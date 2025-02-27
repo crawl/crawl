@@ -1,0 +1,33 @@
+enum: fungus
+equivalent_mons: wandering_mushroom
+description: a sentient fungus.
+melds: [physical]
+size: tiny
+ac: {base: 12}
+can_cast: no
+unarmed: {base: 9, xl_based: yes}
+unarmed_brand: confuse
+unarmed_colour: brown
+unarmed_name: Spores
+unarmed_verbs: [release spores at, release spores at, release spores at, release spores at]
+can_swim: no
+keeps_mutations: no
+changes_physiology: yes
+has_blood: no
+has_hair: no
+has_bones: no
+has_feet: no
+has_ears: no
+shout_verb: sporulate
+shout_volume: -8
+hand_name: hypha
+prayer_action: release spores on
+flesh_name: flesh
+fakemuts:
+  - ["", "You are tiny and evasive."]
+  - ["spores", "Your melee attacks release spores that confuse breathing creatures."]
+  - ["torment immunity", "You are immune to unholy pain and torment."]
+# rPois, no grasping added separately
+badmuts:
+  - ["terrified", "You become terrified and freeze when enemies are visible."]
+  - ["no casting", "You cannot cast spells."]

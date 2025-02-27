@@ -1,0 +1,10 @@
+enum: flux
+equivalent_mons: shapeshifter
+description: something dangerously unstable.
+skill: {min: 7, max: 14}
+talisman: flux
+melds: [held, body]
+unarmed_colour: cyan
+fakemuts:
+  - ["contaminating", "Foes you strike become dangerously contaminated with magical radiation."]
+  - ["glow", "You glow with magical radiation, making you easy to see."]
