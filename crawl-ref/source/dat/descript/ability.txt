@@ -178,6 +178,9 @@ percentage of the damage dealt.
 
 Each spell you cast while Enkindled consumes a memory, and the state will end
 once you have no more left (or after a short period of time, regardless).
+
+At your current experience level, you can hold enough memories to cast a maximum
+of {{return 3 + math.floor(you.xl() * 3 / 20);}} spells in a row this way.
 %%%%
 # Zin
 Recite ability
