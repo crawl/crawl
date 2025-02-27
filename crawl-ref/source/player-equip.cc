@@ -292,7 +292,7 @@ const static vector<equipment_slot> _flex_slots[] =
     {SLOT_WEAPON},
 };
 
-static const vector<equipment_slot>& _get_alternate_slots(equipment_slot slot)
+const vector<equipment_slot>& get_alternate_slots(equipment_slot slot)
 {
     ASSERT(slot < END_OF_SLOTS && slot >= SLOT_UNUSED);
     return _flex_slots[slot];
@@ -447,7 +447,7 @@ bool can_equip_item(const item_def& item, bool include_form, string* veto_reason
     // has at least one of the equivalent slots.
     for (equipment_slot slot : slots)
     {
-        const vector<equipment_slot>& flex = _get_alternate_slots(slot);
+        const vector<equipment_slot>& flex = get_alternate_slots(slot);
         bool found_slot = false;
         for (equipment_slot alt_slot : flex)
         {
@@ -637,7 +637,7 @@ equipment_slot player_equip_set::find_slot_to_equip_item(equipment_slot base_slo
                                                          vector<item_def*>& to_replace,
                                                          bool ignore_curses) const
 {
-    const vector<equipment_slot>& slots = _get_alternate_slots(base_slot);
+    const vector<equipment_slot>& slots = get_alternate_slots(base_slot);
     for (equipment_slot slot : slots)
     {
         // Skip slots the player doesn't have at all.
@@ -885,7 +885,7 @@ void player_equip_set::add(item_def& item, equipment_slot slot)
             // into a slot the player actually has. (Mostly this is for Coglins
             // wielding two-handers, to make sure it goes in their unique
             // offhand slot.)
-            const vector<equipment_slot>& alt_slots = _get_alternate_slots(slots[i]);
+            const vector<equipment_slot>& alt_slots = get_alternate_slots(slots[i]);
             for (equipment_slot _slot : alt_slots)
             {
                 if (num_slots[_slot] == 0)
@@ -954,7 +954,7 @@ equipment_slot player_equip_set::find_equipped_slot(const item_def& item) const
 equipment_slot player_equip_set::find_compatible_occupied_slot(const item_def& old_item,
                                                                const item_def& new_item) const
 {
-    const vector<equipment_slot>& good_slots = _get_alternate_slots(get_all_item_slots(new_item)[0]);
+    const vector<equipment_slot>& good_slots = get_alternate_slots(get_all_item_slots(new_item)[0]);
     for (const player_equip_entry& entry : items)
         if (entry.item == old_item.link)
             for (equipment_slot slot : good_slots)
@@ -971,7 +971,7 @@ bool player_equip_set::has_compatible_slot(equipment_slot slot, bool include_for
         return true;
 
     // Now look for compatible alternative slots.
-    const vector<equipment_slot>& alt_slots = _get_alternate_slots(slot);
+    const vector<equipment_slot>& alt_slots = get_alternate_slots(slot);
     for (const auto& alt_slot : alt_slots)
         if (num_slots[alt_slot] > 0 && (!include_form || !slot_is_melded(alt_slot)))
             return true;
@@ -1202,7 +1202,7 @@ vector<item_def*> player_equip_set::get_slot_items(equipment_slot slot,
                                                    bool attuned_only) const
 {
     vector<item_def*> found;
-    const vector<equipment_slot>& slots = _get_alternate_slots(slot);
+    const vector<equipment_slot>& slots = get_alternate_slots(slot);
 
     // Calculate how many of a given item we could possibly find, so we can
     // abort early.
@@ -1263,7 +1263,7 @@ vector<player_equip_entry> player_equip_set::get_slot_entries(equipment_slot slo
 // of more than one item is unsupported anyway.)
 item_def* player_equip_set::get_first_slot_item(equipment_slot slot, bool include_melded) const
 {
-    const vector<equipment_slot>& slots = _get_alternate_slots(slot);
+    const vector<equipment_slot>& slots = get_alternate_slots(slot);
     for (const player_equip_entry& entry : items)
     {
         for (equipment_slot _slot : slots)

@@ -30,7 +30,7 @@ add_autopickup_func(function(it, name)
     local good_slots = {cloak="cloak", helmet="helmet", gloves="gloves",
                         boots="boots", barding="barding"}
     st, _ = it.subtype()
-    if good_slots[st] ~= nil and items.equipped_at(good_slots[st]) == nil then
+    if good_slots[st] ~= nil and items.slot_is_available(good_slots[st]) == true then
       return true
     end
   end
