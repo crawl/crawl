@@ -9,6 +9,7 @@ melds: [physical]
 resists: {cold: 1, neg: 3}
 dex: 5
 size: tiny
+move_speed: 5
 can_cast: no
 unarmed: {xl_based: yes}
 unarmed_name: Teeth

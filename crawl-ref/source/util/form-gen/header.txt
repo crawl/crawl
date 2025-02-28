@@ -32,6 +32,7 @@ struct form_entry
     int dex_mod;
     size_type size;
     int hp_mod;
+    int move_speed;
 
     // Row 6:
     FormScaling ac;

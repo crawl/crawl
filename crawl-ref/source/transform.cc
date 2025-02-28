@@ -111,7 +111,7 @@ static const form_entry &_find_form_entry(transformation form)
 Form::Form(const form_entry &fe)
     : short_name(fe.short_name), wiz_name(fe.wiz_name),
       min_skill(fe.min_skill), max_skill(fe.max_skill),
-      str_mod(fe.str_mod), dex_mod(fe.dex_mod),
+      str_mod(fe.str_mod), dex_mod(fe.dex_mod), base_move_speed(fe.move_speed),
       blocked_slots(fe.blocked_slots), size(fe.size),
       can_cast(fe.can_cast),
       uc_colour(fe.uc_colour), uc_attack_verbs(fe.uc_attack_verbs),
@@ -1897,22 +1897,6 @@ void set_default_form(transformation t, const item_def *source)
     // talisman might count as a useless item (the you.form != you.default_form
     // check in cannot_evoke_item_reason)
     you.default_form = t;
-}
-
-int form_base_movespeed(transformation tran)
-{
-    // statue form is handled as a multiplier in player_speed, not a movespeed.
-    switch (tran)
-    {
-        case transformation::bat:
-        case transformation::bat_swarm:
-            return 5; // but allowed minimum is six
-        case transformation::pig:
-            return 7;
-        case transformation::none:
-        default:
-            return 10;
-    }
 }
 
 bool draconian_dragon_exception()

@@ -1681,7 +1681,7 @@ int player_prot_life(bool allow_random, bool temp, bool items)
 // want to go past 6 (see below). -- bwr
 int player_movement_speed(bool check_terrain, bool temp)
 {
-    int mv = form_base_movespeed(you.form);
+    int mv = get_form()->base_move_speed;
 
     if (check_terrain && feat_is_water(env.grid(you.pos())))
     {

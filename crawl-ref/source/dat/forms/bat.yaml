@@ -3,6 +3,7 @@ equivalent_mons: bat
 melds: [physical, ring]
 dex: 5
 size: tiny
+move_speed: 5
 can_cast: false
 can_cast: no
 unarmed: {base: 0, xl_based: yes}

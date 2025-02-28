@@ -172,6 +172,9 @@ public:
     /// flat dex bonus
     const int dex_mod;
 
+    /// base move speed
+    const int base_move_speed;
+
     /// Equipment types unusable in this form.
     /** A bitfield representing a union of (1 << equipment_slot) values for
      * equipment slots that are melded in this form.
@@ -316,7 +319,6 @@ void merfolk_check_swimming(dungeon_feature_type old_grid,
                             bool stepped = false);
 void merfolk_start_swimming(bool step = false);
 void merfolk_stop_swimming();
-int form_base_movespeed(transformation tran);
 bool draconian_dragon_exception();
 
 transformation form_for_talisman(const item_def &talisman);

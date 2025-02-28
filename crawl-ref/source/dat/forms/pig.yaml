@@ -3,6 +3,7 @@ equivalent_mons: hog
 description: a filthy swine.
 melds: [physical, ring]
 size: small
+move_speed: 7
 can_cast: no
 unarmed: {xl_based: yes}
 unarmed_colour: lightgrey

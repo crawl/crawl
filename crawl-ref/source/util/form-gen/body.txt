@@ -4,7 +4,7 @@
     "{description}",
     {skill.min}, {skill.max}, {talisman},
     {melds}, {joined_resists},
-    {str}, {dex}, {size}, {hp_mod},
+    {str}, {dex}, {size}, {hp_mod}, {move_speed},
     {ac_scaling}, {can_cast}, {unarmed_scaling},
     {unarmed_brand}, {unarmed_colour}, "{unarmed_name}", {unarmed_verbs},
     {can_fly}, {can_swim}, {keeps_mutations}, {changes_physiology},
