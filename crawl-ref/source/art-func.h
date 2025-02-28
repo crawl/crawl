@@ -1571,9 +1571,9 @@ static void _SALAMANDER_world_reacts(item_def * /* item */)
 
 ////////////////////////////////////////////////////
 
-static void _GUARD_unequip(item_def * /* item */, bool * show_msgs)
+static void _GUARD_unequip(item_def *item, bool * show_msgs)
 {
-    monster *spectral_weapon = find_spectral_weapon(&you);
+    monster *spectral_weapon = find_spectral_weapon(*item);
     if (spectral_weapon)
     {
         _equip_mpr(show_msgs, "Your spectral weapon disappears.");

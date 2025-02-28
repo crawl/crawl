@@ -2014,9 +2014,12 @@ bool god_hates_brand(const int brand)
 static void _rebrand_weapon(item_def& wpn)
 {
     const brand_type old_brand = get_weapon_brand(wpn);
-    monster * spect = find_spectral_weapon(&you);
-    if (&wpn == you.weapon() && old_brand == SPWPN_SPECTRAL && spect)
-        end_spectral_weapon(spect, false);
+    if (old_brand == SPWPN_SPECTRAL)
+    {
+        monster* spect = find_spectral_weapon(wpn);
+        if (spect)
+            end_spectral_weapon(spect, false);
+    }
     brand_type new_brand = old_brand;
 
     // now try and find an appropriate brand
