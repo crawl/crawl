@@ -860,7 +860,7 @@ void monster::unequip_weapon(item_def &item, bool msg)
         }
     }
 
-    monster *spectral_weapon = find_spectral_weapon(this);
+    monster *spectral_weapon = find_spectral_weapon(item);
     if (spectral_weapon)
         end_spectral_weapon(spectral_weapon, false);
 }

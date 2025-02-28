@@ -2012,12 +2012,52 @@ spret cast_fulminating_prism(actor* caster, int pow, const coord_def& where,
     return spret::success;
 }
 
-monster* find_spectral_weapon(const actor* agent)
+monster* find_spectral_weapon(const item_def& weapon)
 {
-    if (agent->props.exists(SPECTRAL_WEAPON_KEY))
-        return monster_by_mid(agent->props[SPECTRAL_WEAPON_KEY].get_int());
+    if (weapon.props.exists(SPECTRAL_WEAPON_KEY))
+        return monster_by_mid(weapon.props[SPECTRAL_WEAPON_KEY].get_int());
     else
         return nullptr;
+}
+
+static bool _is_item_for_spectral_weapon(item_def* weapon, mid_t mid)
+{
+    return weapon
+           && weapon->props.exists(SPECTRAL_WEAPON_KEY)
+           && (mid_t)weapon->props[SPECTRAL_WEAPON_KEY].get_int() == mid;
+}
+
+static item_def* _find_spectral_weapon_item(const monster& mons)
+{
+    actor *owner = actor_by_mid(mons.summoner);
+    if (!owner)
+        return nullptr;
+
+    if (owner->is_player())
+    {
+        vector<item_def*> weapons = you.equipment.get_slot_items(SLOT_WEAPON);
+        for (item_def* weapon : weapons)
+        {
+            if (_is_item_for_spectral_weapon(weapon, mons.mid))
+                return weapon;
+        }
+    }
+    else
+    {
+        monster* owning_mons = owner->as_monster();
+
+        item_def* primary_weapon = owning_mons->mslot_item(MSLOT_WEAPON);
+        if (_is_item_for_spectral_weapon(primary_weapon, mons.mid))
+            return primary_weapon;
+
+        item_def* secondary_weapon = owning_mons->mslot_item(MSLOT_ALT_WEAPON);
+        if (mons_wields_two_weapons(*owning_mons)
+            && _is_item_for_spectral_weapon(secondary_weapon, mons.mid))
+        {
+            return secondary_weapon;
+        }
+    }
+    return nullptr;
 }
 
 void end_spectral_weapon(monster* mons, bool killed, bool quiet)
@@ -2026,10 +2066,9 @@ void end_spectral_weapon(monster* mons, bool killed, bool quiet)
     if (!mons)
         return;
 
-    actor *owner = actor_by_mid(mons->summoner);
-
-    if (owner)
-        owner->props.erase(SPECTRAL_WEAPON_KEY);
+    item_def* item = _find_spectral_weapon_item(*mons);
+    if (item)
+        item->props.erase(SPECTRAL_WEAPON_KEY);
 
     if (!quiet && you.can_see(*mons))
         simple_monster_message(*mons, " disappears.");
@@ -2040,10 +2079,79 @@ void end_spectral_weapon(monster* mons, bool killed, bool quiet)
 
 void check_spectral_weapon(actor &agent)
 {
-    if (!agent.triggered_spectral)
-        if (monster* sw = find_spectral_weapon(&agent))
-            end_spectral_weapon(sw, false, false);
-    agent.triggered_spectral = false;
+    if (agent.triggered_spectral)
+    {
+        agent.triggered_spectral = false;
+        return;
+    }
+
+    if (agent.is_player())
+    {
+        vector<item_def*> weapons = you.equipment.get_slot_items(SLOT_WEAPON);
+        for (item_def* weapon : weapons)
+        {
+            monster* sw = find_spectral_weapon(*weapon);
+            if (sw)
+                end_spectral_weapon(sw, false, false);
+        }
+    }
+    else
+    {
+        monster* owning_mons = agent.as_monster();
+
+        item_def* primary_weapon = owning_mons->mslot_item(MSLOT_WEAPON);
+        if (primary_weapon)
+        {
+            monster* sw = find_spectral_weapon(*primary_weapon);
+            if (sw)
+                end_spectral_weapon(sw, false, false);
+        }
+
+        item_def* secondary_weapon = owning_mons->mslot_item(MSLOT_ALT_WEAPON);
+        if (secondary_weapon && mons_wields_two_weapons(*owning_mons))
+        {
+            monster* sw = find_spectral_weapon(*secondary_weapon);
+            if (sw)
+                end_spectral_weapon(sw, false, false);
+        }
+    }
+}
+
+monster* create_spectral_weapon(const actor &agent, coord_def pos,
+                                item_def& weapon)
+{
+    mgen_data mg(MONS_SPECTRAL_WEAPON,
+                 agent.is_player() ? BEH_FRIENDLY
+                                  : SAME_ATTITUDE(agent.as_monster()),
+                 pos,
+                 agent.mindex(),
+                 MG_FORCE_BEH | MG_FORCE_PLACE);
+    mg.set_summoned(&agent, 0);
+    mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+    mg.props[TUKIMA_WEAPON] = weapon;
+    mg.props[TUKIMA_POWER] = 50;
+
+    dprf("spawning at %d,%d", pos.x, pos.y);
+
+    monster *mons = create_monster(mg);
+    if (!mons)
+        return nullptr;
+
+    // We successfully made a new one! Kill off the old one,
+    // and don't spam the player with a spawn message.
+    monster* old_weapon = find_spectral_weapon(weapon);
+    if (old_weapon)
+    {
+        mons->flags |= MF_WAS_IN_VIEW | MF_SEEN;
+        end_spectral_weapon(old_weapon, false, true);
+    }
+
+    dprf("spawned at %d,%d", mons->pos().x, mons->pos().y);
+
+    mons->summoner = agent.mid;
+    mons->behaviour = BEH_SEEK; // for display
+    weapon.props[SPECTRAL_WEAPON_KEY].get_int() = mons->mid;
+    return mons;
 }
 
 static void _setup_infestation(bolt &beam, int pow)
