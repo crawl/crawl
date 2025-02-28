@@ -3128,6 +3128,7 @@ w:25
 @The_monster@ says, "You have the Orb. Was it worth it?"
 
 ######################################################################## GODS #
+%%%%
 Zin Donald
 
 w:50
