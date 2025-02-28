@@ -5,6 +5,7 @@
 #include "options.h"
 #include "tilereg-tab.h"
 
+#include "command.h"
 #include "command-type.h"
 #include "cio.h"
 #include "english.h"
@@ -408,7 +409,7 @@ int TabbedRegion::handle_mouse(wm_mouse_event &event)
                 return CK_NO_KEY; // prevent clicking on tab from 'bubbling up' to other regions
             }
             else
-                return command_to_key(m_tabs[m_mouse_tab].cmd);
+                return encode_command_as_key(m_tabs[m_mouse_tab].cmd);
         }
     }
 
