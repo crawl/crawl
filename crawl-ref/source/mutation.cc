@@ -855,6 +855,9 @@ static vector<pair<string,string>> _get_form_fakemuts()
                                 : ""))});
     }
 
+    if (!form->can_cast)
+        result.push_back({"no casting", _badmut("You cannot cast spells.")});
+
     vector<pair<string,string>> form_badmuts = form->get_bad_fakemuts();
     for (const auto &p : form_badmuts)
             result.push_back({p.first, _badmut(p.second)});

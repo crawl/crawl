@@ -30,5 +30,3 @@ fakemuts:
   - ["insubstantial", "You are insubstantial and cannot be petrified, ensnared, or set on fire."]
   - ["torment immunity", "You are immune to unholy pain and torment."]
   - ["highly resistant", "You are highly resistant to most damage types. (rF++, rC++, rN+++, rElec, rCorr)"]
-badmuts:
-  - ["no casting", "You cannot cast spells."]

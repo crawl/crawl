@@ -25,5 +25,3 @@ flesh_name: flesh
 fakemuts:
   - ["very fast", "You cover ground very quickly."]
   - ["weak attacks", "Your unarmed attacks are very weak."]
-badmuts:
-  - ["no casting", "You cannot cast spells."]

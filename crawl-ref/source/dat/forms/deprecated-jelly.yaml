@@ -14,5 +14,3 @@ has_hair: no
 has_bones: no
 has_feet: no
 has_ears: no
-badmuts:
-  - ["no casting", "You cannot cast spells."]

@@ -30,4 +30,3 @@ fakemuts:
 # rPois, no grasping added separately
 badmuts:
   - ["terrified", "You become terrified and freeze when enemies are visible."]
-  - ["no casting", "You cannot cast spells."]

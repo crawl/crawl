@@ -37,5 +37,4 @@ fakemuts:
   - ["very stealthy", "You are very stealthy."]
 badmuts:
   - ["weak attacks", "Your unarmed attacks are very weak."]
-  - ["no casting", "You cannot cast spells."]
   - ["inhibited regeneration", "You do not regenerate when monsters are visible."]

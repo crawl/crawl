@@ -29,4 +29,3 @@ fakemuts:
   - ["", "You are tiny, dextrous, and very evasive."] #short-form "tiny" is automatically added
 badmuts:
   - ["weak attacks", "Your unarmed attacks are very weak."]
-  - ["no casting", "You cannot cast spells."]

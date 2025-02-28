@@ -23,5 +23,3 @@ shout_volume: -8
 hand_name: front leg
 prayer_action: curl into a sanctuary of spikes before
 flesh_name: flesh
-badmuts:
-  - ["no casting", "You cannot cast spells."]
