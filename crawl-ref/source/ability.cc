@@ -3199,7 +3199,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
             static const vector<int> forbidden_unrands =
             {
                 UNRAND_POWER,
-                UNRAND_ARC_BLADE,
             };
 
             // Currently excluding the same weapons that Manifold Assault does
