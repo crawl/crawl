@@ -8069,6 +8069,8 @@ static ghost_demon _unmarshallGhost(reader &th)
     ghost.xl               = unmarshallShort(th);
     ghost.max_hp           = unmarshallShort(th);
     ghost.ev               = unmarshallShort(th);
+    if (ghost.ev > MAX_GHOST_EVASION)
+        ghost.ev = MAX_GHOST_EVASION;
     ghost.ac               = unmarshallShort(th);
     ghost.damage           = unmarshallShort(th);
     ghost.speed            = unmarshallShort(th);
