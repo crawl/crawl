@@ -3182,10 +3182,10 @@ void handle_clockwork_bee_spell(int turn)
     if (!targ || !targ->alive() || !targ->visible_to(&you)
         || !you.see_cell(targ->pos()))
     {
-        targ = _get_clockwork_bee_target();
+        auto new_targ = _get_clockwork_bee_target();
 
         // Couldn't find anything, so just deposit an inert bee near us
-        if (!targ)
+        if (!new_targ)
         {
             mgen_data mg = _pal_data(MONS_CLOCKWORK_BEE_INACTIVE,
                                         random_range(80, 120),
@@ -3200,10 +3200,20 @@ void handle_clockwork_bee_spell(int turn)
                 // reactivate us.
                 if (targ)
                     bee->props[CLOCKWORK_BEE_TARGET].get_int() = targ->mid;
-
-                return;
             }
+            else
+            {
+                // Unable to create inert bee, probably the player was flying
+                // over deep water / lava. Rather than try to work out what
+                // happened, just self destruct.
+                mprf("Without a target and with nowhere to land, your clockwork "
+                     "bee falls apart in a shower of cogs and coils.");
+                check_place_cloud(CLOUD_DUST, mg.pos, random_range(1,2), &you, 0, -1);
+            }
+            return;
         }
+
+        targ = new_targ;
     }
 
     mgen_data mg = _pal_data(MONS_CLOCKWORK_BEE, random_range(400, 500),
