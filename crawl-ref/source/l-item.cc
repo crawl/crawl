@@ -1368,7 +1368,7 @@ static int l_slot_is_available(lua_State *ls)
         if (you.equipment.num_slots[alt_slot] <= 0)
             continue;
 
-        if (you.equipment.get_slot_entries(alt_slot).size() < you.equipment.num_slots[alt_slot])
+        if ((int)you.equipment.get_slot_entries(alt_slot).size() < you.equipment.num_slots[alt_slot])
         {
             lua_pushboolean(ls, true);
             return 1;
