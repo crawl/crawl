@@ -9,6 +9,7 @@ unarmed_colour: lightgrey
 can_swim: no
 keeps_mutations: no
 changes_physiology: yes
+holiness: natural
 has_blood: no
 has_hair: no
 has_bones: no

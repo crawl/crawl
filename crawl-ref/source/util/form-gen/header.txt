@@ -50,6 +50,7 @@ struct form_entry
     form_capability can_swim;
     bool keeps_mutations;
     bool changes_physiology;
+    mon_holy_type holiness;
 
     // Row 9:
     form_capability has_blood;

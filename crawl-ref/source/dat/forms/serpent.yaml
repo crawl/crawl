@@ -17,7 +17,6 @@ unarmed_verbs: [hit, lash, body-slam, crush]
 can_swim: yes
 keeps_mutations: no
 changes_physiology: yes
-has_blood: yes
 has_hair: no
 has_bones: yes
 has_feet: no

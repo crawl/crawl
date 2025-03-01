@@ -13,6 +13,7 @@ can_fly: no
 can_swim: no
 keeps_mutations: no
 changes_physiology: yes
+holiness: plant
 has_blood: no
 has_hair: no
 has_bones: no

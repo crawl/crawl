@@ -6488,7 +6488,6 @@ mon_holy_type player::holiness(bool temp, bool incl_form) const
 {
     mon_holy_type holi;
 
-    // Forms take precedence over a species' base holiness
     if (species::undead_type(species) == US_UNDEAD)
         holi = MH_UNDEAD;
     else if (species::is_nonliving(you.species))
@@ -6496,26 +6495,19 @@ mon_holy_type player::holiness(bool temp, bool incl_form) const
     else
         holi = MH_NATURAL;
 
+    // Forms take precedence over a species' base holiness
     if (incl_form)
     {
-        // TODO: move this into data
         const transformation f = temp ? form : default_form;
-        if (f == transformation::statue
-             || f == transformation::wisp
-             || f == transformation::storm)
-        {
-            holi = MH_NONLIVING;
-        }
-        else if (f == transformation::slaughter)
-            holi = MH_DEMONIC;
-        else if (f == transformation::death)
-            holi = MH_UNDEAD;
-        // Both living and undead weaknesses
-        else if (f == transformation::vampire
+        // Special-cased to add undead holiness onto the player's basse type,
+        // rather than replace it
+        if (f == transformation::vampire
                  || f == transformation::bat_swarm)
         {
             holi |= MH_UNDEAD;
         }
+        else if (get_form(f)->holiness != MH_NONE)
+            holi = get_form(f)->holiness;
     }
 
     // Petrification takes precedence over base holiness and lich form
@@ -6567,7 +6559,7 @@ int player::how_chaotic(bool /*check_spells_god*/) const
 bool player::is_unbreathing() const
 {
     return is_nonliving() || is_lifeless_undead()
-           || form == transformation::tree;
+           || bool(holiness() & MH_PLANT);
 }
 
 bool player::is_insubstantial() const
@@ -6675,13 +6667,7 @@ bool player::res_torment() const
 
     return get_form()->res_neg() == 3
            || you.petrified()
-    // This should probably be (you.holiness & MH_PLANT), but
-    // transforming doesn't currently make you a plant, and I suspect
-    // changing that would cause other bugs. (For example, being able
-    // to wield holy weapons as a demonspawn in treeform & keep them
-    // while untransformed?)
-           || you.form == transformation::tree
-           || you.form == transformation::fungus
+           || bool(you.holiness() & MH_PLANT)
 #if TAG_MAJOR_VERSION == 34
            || you.unrand_equipped(UNRAND_ETERNAL_TORMENT)
 #endif
@@ -7698,9 +7684,7 @@ bool player::can_smell() const
 bool player::can_sleep(bool holi_only) const
 {
     return !you.duration[DUR_STUN_IMMUNITY]
-           && actor::can_sleep(holi_only)
-           && !(you.form == transformation::fungus)
-           && !(you.form == transformation::tree);
+           && actor::can_sleep(holi_only);
 }
 
 /**

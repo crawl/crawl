@@ -315,6 +315,7 @@ keyfns = {
     'can_swim': Field(parse_capability),
     'keeps_mutations': Field(parse_bool),
     'changes_physiology': Field(parse_bool),
+    'holiness': Field(lambda s: "MH_" + s.upper()),
 
     'has_blood': Field(parse_capability),
     'has_hair': Field(parse_capability),
@@ -368,6 +369,7 @@ defaults = {
     'can_swim': "FC_DEFAULT",
     'keeps_mutations': "true",
     'changes_physiology': "false",
+    'holiness': "MH_NONE",
 
     'has_blood': "FC_DEFAULT",
     'has_hair': "FC_DEFAULT",

@@ -195,6 +195,9 @@ public:
     const bool keeps_mutations;
     //
     const bool changes_physiology;
+    /// What does this form change the player's holiness to? (MH_NONE if it leaves it unchanged)
+    /// Note that vampire is special-cased in player::holiness().
+    const mon_holy_type holiness;
 
     /// Does this form have blood (used for sublimation and bloodsplatters)?
     const form_capability has_blood;

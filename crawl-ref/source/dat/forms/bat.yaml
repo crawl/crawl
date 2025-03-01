@@ -14,7 +14,6 @@ can_fly: yes
 can_swim: false
 keeps_mutations: no
 changes_physiology: yes
-has_blood: yes
 has_hair: yes
 has_bones: yes
 has_feet: yes

@@ -117,6 +117,7 @@ Form::Form(const form_entry &fe)
       uc_colour(fe.uc_colour), uc_attack_verbs(fe.uc_attack_verbs),
       keeps_mutations(fe.keeps_mutations),
       changes_physiology(fe.changes_physiology),
+      holiness(fe.holiness),
       has_blood(fe.has_blood), has_hair(fe.has_hair),
       has_bones(fe.has_bones), has_feet(fe.has_feet),
       has_ears(fe.has_ears),

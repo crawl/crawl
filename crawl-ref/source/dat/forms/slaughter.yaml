@@ -5,6 +5,7 @@ resists: {poison: 1, neg: 3}
 unarmed_colour: lightred
 can_fly: yes
 can_swim: no
+holiness: demonic
 fakemuts:
   - ["damage resistance", "Damage taken is decreased by 1/3."]
   - ["doubled heal-on-kills", "Healing from kills is doubled."]
