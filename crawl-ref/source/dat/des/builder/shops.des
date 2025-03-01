@@ -861,6 +861,173 @@ MAP
   ---.
 ENDMAP
 
+NAME:    nicolae_shop_bimaterial_pillars
+TAGS:    allow_dup extra shop transparent
+KFEAT:   O = any shop
+SHUFFLE: cvbn
+MAP
+ ... ...
+..c...c..
+.cvc.cvc.
+..c...c..
+ ...O...
+..c...c..
+.cvc.cvc.
+..c...c..
+ ... ...
+ENDMAP
+
+NAME:    nicolae_shopburst
+TAGS:    allow_dup extra shop transparent
+KFEAT:   S = any shop
+SHUFFLE: DE, FH, JK, LM
+SUBST:   DFJL = c, EHKM = .
+MAP
+  FHF
+ cFHFc
+DD...JJ
+EE.S.KK
+DD...JJ
+ cLMLc
+  LML
+ENDMAP
+
+NAME:   nicolae_shop_closed_for_inventory
+TAGS:   extra shop transparent
+DEPTH:  D:8-, Depths, Snake, Shoals
+WEIGHT: 1
+KFEAT:  - = iron_grate
+KFEAT:  O = any shop
+KPROP:  O = no_tele_into
+KMASK:  O = opaque
+MAP
+.---
+.-O-
+.---
+ENDMAP
+
+NAME:    nicolae_shop_cornered_store
+TAGS:    allow_dup extra shop transparent
+KFEAT:   S = any shop
+SHUFFLE: DEF
+SUBST:   D = ., E : am, F : am.
+SHUFFLE: ma
+SUBST:   a = x
+MAP
+xxxxx
+x...D.
+x.S.E.
+x...F.
+xDEFa.
+ ....@
+ENDMAP
+
+NAME:  nicolae_shop_flopsided
+TAGS:  allow_dup extra shop transparent
+KFEAT: O = any shop
+SUBST: c : cvbnt
+MAP
+c.c.c
+......
+ c.O.c
+ ......
+  c.c.c
+ENDMAP
+
+NAME:    nicolae_shop_glassy
+TAGS:    allow_dup extra shop transparent
+KFEAT:   + = closed_clear_door
+KFEAT:   S = any shop
+SHUFFLE: +m`p/m+p`
+SUBST:   ` = ., p = m
+MAP
+ .....
+..`p`..
+.`m+m`.
+.p+S+p.
+.`m+m`.
+..`p`..
+ .....
+ENDMAP
+
+# Unwind by reading under a tree by a pond. :)
+NAME:   nicolae_shop_relaxation
+TAGS:   no_pool_fixup allow_dup extra shop transparent
+KFEAT:  S = scroll shop / book shop
+: if crawl.coinflip() then
+SUBST:  pq = t
+NSUBST: r = W / w
+: else
+SUBST:  r = t, p = w
+NSUBST: q = W / w
+: end
+MAP
+  ...
+ ..p..
+..qrq..
+.prSrp.
+..qrq..
+ ..p..
+  ...
+ENDMAP
+
+NAME:  nicolae_shop's_first_dollar
+TAGS:  extra shop transparent
+KITEM: $ = gold q:1
+KFEAT: O = any shop
+KPROP: $ = no_tele_into
+KMASK: $ = no_monster_gen
+KMASK: $ = no_item_gen
+KMASK: $ = no_trap_gen
+KMASK: $ = opaque
+MAP
+xxxxx
+xxm...
+x$m.O.
+xxm...
+xxxxx
+ENDMAP
+
+NAME:  nicolae_shop_swords_in_saltire
+TAGS:  extra shop transparent
+KFEAT: S = weapon shop / antique weapon shop
+MAP
+v.....v
+.v.T.v.
+..v.v..
+.T.v.T.
+v.v.v.v
+.v.S.v.
+v.v.v.v
+ENDMAP
+
+NAME:    nicolae_shop_targeted
+TAGS:    allow_dup extra shop transparent
+KFEAT:   S = any shop
+SHUFFLE: -G
+TILE:    G : dngn_statue_orb
+MAP
+xx.G.
+xx.-@
+xS.G.
+xx.-@
+xx.G.
+ENDMAP
+
+NAME:   nicolae_shop_well_armoured
+TAGS:   allow_dup extra shop transparent
+KFEAT:  S = armour shop / antique armour shop
+NSUBST: - = 2:@ / v
+MAP
+ v v v
+vv-v-vv
+ -...-
+vv.S.vv
+ -...-
+vv-v-vv
+ v v v
+ENDMAP
+
 ###############################################################################
 # <<2>> Themed.
 #       Not tagged shop, but still contains one. Can have threats, and can have
@@ -2062,6 +2229,69 @@ G.S.G
  . .
 ENDMAP
 
+# Only in early D, since by later on you'd probably know what most things are,
+# and then there's not much point to it being antique.
+NAME:   nicolae_shop_antique_consumables
+TAGS:   allow_dup transparent extra luniq
+DEPTH:  D:2-8
+KMONS:  P = pile of debris
+KFEAT:  S = antiques shop type:Antique suffix:Scrolls ; any scroll / \
+            antiques shop type:Antique suffix:Potions ; any potion
+NSUBST: P = 1=. / 2=P / ...PP
+MAP
+cPcPc
+P...P
+c.S.c
+P...P
+cPcPc
+ENDMAP
+
+# In case you have some spare change and some open slots.
+NAME:   nicolae_shop_hand_me_the_aux
+TAGS:   transparent extra
+DEPTH:  D:4-7
+WEIGHT: 5
+# Having duplicates of mundane aux armors is a little boring, so do some lua
+# to get only one of each.
+: local auxes = {"hat mundane", "helmet mundane", "pair of gloves mundane",
+:   "cloak mundane", "pair of boots mundane", "barding mundane",
+:   "buckler mundane"}
+: local inventory = util.random_subset(auxes, 5)
+: kfeat("S = armour shop type:Wardrobe suffix:Accessories count:5 use_all ; " ..
+:   util.join(" | ", inventory))
+KFEAT:  - = iron_grate
+SUBST:  a : vv., p : v-., q : v-, r : v-., s : vv.
+NSUBST: ` = 2:@ / .
+MAP
+   .`.
+ vvs.avv
+ vqr.pqv
+.ap...rs.
+`...S...`
+.sr...pa.
+ vqp.rqv
+ vva.svv
+   .`.
+ENDMAP
+
+NAME:  nicolae_shop_information_kiosk
+TAGS:  transparent extra no_rotate no_vmirror no_pool_fixup
+DEPTH: D:1-7
+KFEAT: S = general shop type:Information suffix:Kiosk count:4 use_all ; \
+           scroll of identify q:1 | scroll of identify q:2 | \
+           scroll of revelation q:1 | scroll of revelation q:2
+MAP
+   ...
+  .WWW.
+ .WwSwW.
+.WwwwwwW.
+.WwwcwwW.
+.WwwcwwW.
+ .WwcwW.
+  .WWW.
+   ...
+ENDMAP
+
 ###############################################################################
 # <<3>> Multi
 #       Not tagged shop, and has no threats. Contain possibly multiple shops in
@@ -2283,4 +2513,43 @@ xxtSt...tStxx
 xxtSt...tStxx
 xxxxxtStxxxxx
 xxxxxxxxxxxxx
+ENDMAP
+
+# Just 2 shops
+NAME:  nicolae_shops_duplex
+TAGS:  extra luniq_floating_shops transparent
+DEPTH: D:4-, Depths, Elf
+KFEAT: S = any shop
+MAP
+xxx.@.xxx
+xcccncccx
+xcT...Tcx
+.c.cSc.c.
+@..ccc..@
+.c.cSc.c.
+xcT...Tcx
+xcccncccx
+xxx.@.xxx
+ENDMAP
+
+# 2-4 shops
+NAME:    nicolae_shops_little_town_plaza
+TAGS:    extra luniq_floating_shops transparent
+DEPTH:   D:4-, Depths, Elf
+KFEAT:   p = general shop / antiques shop
+KFEAT:   q = book shop
+KFEAT:   r = distillery shop
+KFEAT:   s = scroll shop
+SHUFFLE: GT-/TG`
+SUBST:   - = ., ` : x., G : GGt
+SHUFFLE: xc
+NSUBST:  S = p / q / rt / st
+MAP
+xx-G-xx
+xS...Sx
+-..T..-
+G.TxT.G
+-..T..-
+xS...Sx
+xx-G-xx
 ENDMAP
