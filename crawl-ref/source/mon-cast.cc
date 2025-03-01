@@ -6332,7 +6332,7 @@ static void _dream_sheep_sleep(monster& mons, actor& foe)
     // Put the player to sleep.
     if (sleep_pow)
     {
-        const int dur = sleep_pow / 20 + random_range(1, 3) + 3;
+        const int dur = (sleep_pow / 20 + random_range(1, 3) + 3) * BASELINE_DELAY;
         foe.put_to_sleep(&mons, dur, false);
     }
 }
