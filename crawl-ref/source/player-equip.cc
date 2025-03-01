@@ -1897,7 +1897,7 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
 
             case SPWPN_SPECTRAL:
                 {
-                    monster *spectral_weapon = find_spectral_weapon(&you);
+                    monster *spectral_weapon = find_spectral_weapon(item);
                     if (spectral_weapon)
                         end_spectral_weapon(spectral_weapon, false, false);
                 }

@@ -105,9 +105,11 @@ spret cast_fulminating_prism(actor* caster, int pow,
                                   bool is_shadow = false);
 int prism_hd(int pow, bool random = true);
 
-monster* find_spectral_weapon(const actor* agent);
+monster* find_spectral_weapon(const item_def& weapon);
 void end_spectral_weapon(monster* mons, bool killed, bool quiet = false);
 void check_spectral_weapon(actor &agent);
+monster* create_spectral_weapon(const actor &agent, coord_def pos,
+                                item_def& weapon);
 
 spret cast_infestation(int pow, bolt &beam, bool fail);
 

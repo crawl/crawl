@@ -826,10 +826,13 @@ void spectral_weapon_fineff::fire()
     if (!defend || !atkr || !defend->alive() || !atkr->alive())
         return;
 
+    if (!weapon || !weapon->defined())
+        return;
+
     const coord_def target = defend->pos();
 
     // Do we already have a spectral weapon?
-    monster* sw = find_spectral_weapon(atkr);
+    monster* sw = find_spectral_weapon(*weapon);
     if (sw)
     {
         if (sw == defend)
@@ -871,42 +874,15 @@ void spectral_weapon_fineff::fire()
         if (one_chance_in(seen_valid))
             chosen_pos = *ai;
     }
-    if (!seen_valid || !weapon || !weapon->defined())
+    if (!seen_valid)
         return;
 
-    mgen_data mg(MONS_SPECTRAL_WEAPON,
-                 atkr->is_player() ? BEH_FRIENDLY
-                                  : SAME_ATTITUDE(atkr->as_monster()),
-                 chosen_pos,
-                 atkr->mindex(),
-                 MG_FORCE_BEH | MG_FORCE_PLACE);
-    mg.set_summoned(atkr, 0);
-    mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-    mg.props[TUKIMA_WEAPON] = *weapon;
-    mg.props[TUKIMA_POWER] = 50;
-
-    dprf("spawning at %d,%d", chosen_pos.x, chosen_pos.y);
-
-    monster *mons = create_monster(mg);
+    monster *mons = create_spectral_weapon(*atkr, chosen_pos, *weapon);
     if (!mons)
         return;
 
-    // We successfully made a new one! Kill off the old one,
-    // and don't spam the player with a spawn message.
-    if (sw)
-    {
-        mons->flags |= MF_WAS_IN_VIEW | MF_SEEN;
-        end_spectral_weapon(sw, false, true);
-    }
-
-    dprf("spawned at %d,%d", mons->pos().x, mons->pos().y);
-
     melee_attack melee_attk(mons, defend);
     melee_attk.attack();
-
-    mons->summoner = atkr->mid;
-    mons->behaviour = BEH_SEEK; // for display
-    atkr->props[SPECTRAL_WEAPON_KEY].get_int() = mons->mid;
 }
 
 void lugonu_meddle_fineff::fire() {
