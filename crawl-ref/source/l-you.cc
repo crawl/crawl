@@ -644,6 +644,12 @@ LUARET1(you_turns, number, you.num_turns)
  */
 LUARET1(you_time, number, you.elapsed_time)
 
+/*** Total elapsed real time in seconds.
+ * @treturn int
+ * @function real_time
+ */
+LUARET1(you_real_time, number, you.real_time())
+
 /*** How many spell levels are currently available.
  * @treturn int
  * @function spell_levels
@@ -1381,6 +1387,7 @@ static const struct luaL_reg you_clib[] =
     { "turn_is_over", you_turn_is_over },
     { "turns"       , you_turns },
     { "time"        , you_time },
+    { "real_time"   , you_real_time },
     { "spells"      , l_you_spells },
     { "spell_letters", l_you_spell_letters },
     { "spell_table" , l_you_spell_table },
