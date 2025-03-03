@@ -321,31 +321,6 @@ bool ranged_attack::handle_phase_hit()
         maybe_trigger_jinxbite();
     }
 
-    if ((using_weapon() || throwing())
-        && (!defender->is_player() || !you.pending_revival))
-    {
-        if (using_weapon()
-            && apply_damage_brand(projectile->name(DESC_THE).c_str()))
-        {
-            return false;
-        }
-
-        if (using_weapon() && testbits(weapon->flags, ISFLAG_CHAOTIC)
-            && defender->alive())
-        {
-            unwind_var<brand_type> save_brand(damage_brand);
-            damage_brand = SPWPN_CHAOS;
-            if (apply_damage_brand(projectile->name(DESC_THE).c_str()))
-                return false;
-        }
-
-        if ((!defender->is_player() || !you.pending_revival)
-            && apply_missile_brand())
-        {
-            return false;
-        }
-    }
-
     // XXX: unify this with melee_attack's code
     if (attacker->is_player() && defender->is_monster())
     {
@@ -399,6 +374,33 @@ int ranged_attack::calc_mon_to_hit_base()
 {
     ASSERT(attacker->is_monster());
     return mon_to_hit_base(attacker->get_hit_dice(), attacker->as_monster()->is_archer());
+}
+
+bool ranged_attack::apply_damage_brand(const char *what)
+{
+    (void) what;
+
+    if ((!using_weapon() && !throwing())
+        || (defender->is_player() && you.pending_revival))
+    {
+        return false;
+    }
+
+    if (using_weapon()
+        && attack::apply_damage_brand(projectile->name(DESC_THE).c_str()))
+    {
+        return true;
+    }
+    if (using_weapon() && testbits(weapon->flags, ISFLAG_CHAOTIC)
+        && defender->alive())
+    {
+        unwind_var<brand_type> save_brand(damage_brand);
+        damage_brand = SPWPN_CHAOS;
+        if (attack::apply_damage_brand(projectile->name(DESC_THE).c_str()))
+            return true;
+    }
+
+    return apply_missile_brand();
 }
 
 int ranged_attack::apply_damage_modifiers(int damage)
