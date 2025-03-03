@@ -3705,7 +3705,7 @@ spret cast_platinum_paragon(const coord_def& target, int pow, bool fail)
     }
 
     mpr("You craft a gleaming metal champion and it leaps into the fray!");
-    you.duration[DUR_PARAGON_ACTIVE] = dur;
+    you.duration[DUR_PARAGON_ACTIVE] = 1;
 
     // Grab our imprinted weapon
     if (you.props.exists(PARAGON_WEAPON_KEY))
