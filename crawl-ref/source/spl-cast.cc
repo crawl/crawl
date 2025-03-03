@@ -421,7 +421,8 @@ int raw_spell_fail(spell_type spell, bool enkindled)
     if (spell == SPELL_NO_SPELL)
         return 10000;
 
-    enkindled = enkindled || you.duration[DUR_ENKINDLED];
+    enkindled = (enkindled || (you.duration[DUR_ENKINDLED])
+                    && spell_can_be_enkindled(spell));
 
     int chance = 60;
 
