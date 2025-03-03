@@ -506,16 +506,16 @@ static const weapon_def Weapon_prop[] =
         }},
     { WPN_DEMON_WHIP,        "demon whip",         11,  1, 11,
         SK_MACES_FLAILS, SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
-        DAMV_SLASHING, 0, 13, 300, DEMON_BRANDS },
+        DAMV_SLASHING, 0, 13, 250, DEMON_BRANDS },
     { WPN_SACRED_SCOURGE,    "sacred scourge",     12,  0, 11,
         SK_MACES_FLAILS, SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
-        DAMV_SLASHING, 0, 0, 350, HOLY_BRANDS },
+        DAMV_SLASHING, 0, 0, 300, HOLY_BRANDS },
     { WPN_DIRE_FLAIL,        "dire flail",         13, -3, 13,
         SK_MACES_FLAILS, SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_CRUSHING | DAM_PIERCE, 2, 20, 50, M_AND_F_BRANDS },
     { WPN_EVENINGSTAR,       "eveningstar",        15, -1, 15,
         SK_MACES_FLAILS, SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
-        DAMV_CRUSHING | DAM_PIERCE, 0, 13, 300, {
+        DAMV_CRUSHING | DAM_PIERCE, 0, 13, 270, {
             { SPWPN_PROTECTION,     30 },
             { SPWPN_DRAINING,       19 },
             { SPWPN_HOLY_WRATH,     15 },
@@ -597,13 +597,13 @@ static const weapon_def Weapon_prop[] =
         DAMV_SLICING, 6, 20, 60, LBL_BRANDS },
     { WPN_DEMON_BLADE,           "demon blade",           13, -1, 13,
         SK_LONG_BLADES,  SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
-        DAMV_SLICING, 0, 13, 300, DEMON_BRANDS },
+        DAMV_SLICING, 0, 13, 250, DEMON_BRANDS },
     { WPN_EUDEMON_BLADE,         "eudemon blade",         14, -2, 12,
         SK_LONG_BLADES,  SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
-        DAMV_SLICING, 0, 0, 350, HOLY_BRANDS },
+        DAMV_SLICING, 0, 0, 300, HOLY_BRANDS },
     { WPN_DOUBLE_SWORD,          "double sword",          15, -1, 15,
         SK_LONG_BLADES,  SIZE_LITTLE, SIZE_MEDIUM, MI_NONE,
-        DAMV_SLICING, 0, 13, 300, LBL_BRANDS },
+        DAMV_SLICING, 0, 13, 270, LBL_BRANDS },
     { WPN_GREAT_SWORD,           "great sword",           17, -3, 17,
         SK_LONG_BLADES,  SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_SLICING, 6, 20, 100, LBL_BRANDS },
@@ -646,7 +646,7 @@ static const weapon_def Weapon_prop[] =
         DAMV_CHOPPING, 6, 25, 100, AXE_BRANDS },
     { WPN_EXECUTIONERS_AXE,  "executioner's axe",  18, -6, 19,
         SK_AXES,       SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
-        DAMV_CHOPPING, 0, 25, 200, AXE_BRANDS },
+        DAMV_CHOPPING, 0, 25, 150, AXE_BRANDS },
 
     // Polearms
     { WPN_SPEAR,             "spear",               6,  4, 11,
@@ -678,16 +678,16 @@ static const weapon_def Weapon_prop[] =
         DAMV_PIERCING, 3, 25, 60, POLEARM_BRANDS },
     { WPN_DEMON_TRIDENT,     "demon trident",      12,  1, 13,
         SK_POLEARMS,     SIZE_LITTLE, SIZE_MEDIUM, MI_NONE,
-        DAMV_PIERCING, 0, 25, 300, DEMON_BRANDS },
+        DAMV_PIERCING, 0, 25, 250, DEMON_BRANDS },
     { WPN_TRISHULA,          "trishula",           13,  0, 13,
         SK_POLEARMS,     SIZE_LITTLE, SIZE_MEDIUM, MI_NONE,
-        DAMV_PIERCING, 0, 0, 350, HOLY_BRANDS },
+        DAMV_PIERCING, 0, 0, 300, HOLY_BRANDS },
     { WPN_GLAIVE,            "glaive",             15, -3, 17,
         SK_POLEARMS,     SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_CHOPPING, 5, 15, 100, POLEARM_BRANDS },
     { WPN_BARDICHE,          "bardiche",           18, -6, 19,
         SK_POLEARMS,     SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
-        DAMV_CHOPPING, 1, 25, 200, POLEARM_BRANDS },
+        DAMV_CHOPPING, 1, 25, 150, POLEARM_BRANDS },
 
     // Staves
     // WPN_STAFF is for weapon stats for magical staves only.
@@ -709,7 +709,7 @@ static const weapon_def Weapon_prop[] =
         }},
     { WPN_LAJATANG,          "lajatang",            16,-3, 14,
         SK_STAVES,       SIZE_LITTLE, NUM_SIZE_LEVELS, MI_NONE,
-        DAMV_SLICING, 2, 50, 200, {
+        DAMV_SLICING, 2, 50, 150, {
             { SPWPN_NORMAL,         34 },
             { SPWPN_SPEED,          12 },
             { SPWPN_ELECTROCUTION,  12 },
@@ -733,7 +733,7 @@ static const weapon_def Weapon_prop[] =
         DAMV_NON_MELEE, 8, 10, 15, RANGED_BRANDS },
     { WPN_HAND_CANNON,       "hand cannon",      16,  3, 19,
         SK_RANGED_WEAPONS,   SIZE_LITTLE, SIZE_LITTLE, MI_SLUG,
-        DAMV_NON_MELEE, 0, 24, 300, {
+        DAMV_NON_MELEE, 0, 24, 270, {
             // Hand cannons appear late, so encourage use by reducing
             // SPWPN_NORMAL weight relative to other ranged weapons.
             { SPWPN_NORMAL,        15 },

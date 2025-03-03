@@ -5992,7 +5992,7 @@ void place_spec_shop(const coord_def& where, shop_type force_type)
 
 int greed_for_shop_type(shop_type shop, int level_number)
 {
-    const int level_greed = random_range(level_number / 6, level_number * 5/6);
+    const int level_greed = level_number / 6 + random2(level_number * 2 / 3);
 
     if (!shoptype_identifies_stock(shop))
     {

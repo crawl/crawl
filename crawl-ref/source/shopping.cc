@@ -70,7 +70,7 @@ static int _shop_get_item_value(const item_def& item, int greed, bool id)
     int result = (greed * item_value(item, id) / 10);
 
     if (_item_has_extra_greed(item) && id)
-        result = max(result, result * (10 + greed) / 25);
+        result = max(result, result * (15 + greed) / 30);
 
     return max(result, 1);
 }
