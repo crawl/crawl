@@ -2522,3 +2522,276 @@ x`sS`n3......
  2||1x...
  xxxxx...
 ENDMAP
+
+NAME:   nicolae_vaults_agitated_armoury
+TAGS:   vaults_orient_n vaults_hard
+KMONS:  1 = dancing weapon ; any weapon good_item
+KMONS:  2 = dancing weapon ; any weapon randart
+KMONS:  3 = undying armoury
+NSUBST: D = 3 / 3111 / 2 / 2111 / 3=1 / 3=` / 1```
+KPROP:  123` = no_tele_into
+MAP
+xx.......xx
+`nn.....nn`
+D.==...==`D
+```nnnnn```
+`D```D```D`
+```D```D```
+ D```D```D
+  `D```D`
+   ``D``
+ENDMAP
+
+NAME:   nicolae_vaults_concentrated_fire
+TAGS:   vaults_orient_n vaults_orient_s
+NSUBST: * = 3=d / 3=* / *dd...
+NSUBST: 1 = 3=1 / 2=12 / 1.., 3 = 4 / 2=3 / 34 / 3..
+: index_vaults_room_themes(_G, "rangers", true)
+MAP
+          xx...xx
+          x.....x
+ xxxx    xx.....xx    xxxx
+ x**xx   x...1...x   xx**x
+xx...xxx x.......x xxx...xx
+xU.3...xxx.1...1.xxx...3.Ux
+x....2...............2....x
+x3.......U...1...U.......3x
+x....2...............2....x
+xU.3...xxx.1...1.xxx...3.Ux
+xx...xxx x.......x xxx...xx
+ x**xx   x...1...x   xx**x
+ xxxx    xx.....xx    xxxx
+          x.....x
+          xx...xx
+ENDMAP
+
+NAME:    nicolae_vaults_crypt_galaxy
+SHUFFLE: DEFHJ, KLMN
+SUBST:   DE : u, F : ., H : u., J : u., K : u, L : ., M : u., N : u.
+NSUBST:  p = 2=1 / 1=2 / 3=112..d / .d, q = 2=1 / 1=2 / 3=112..d / .d
+NSUBST:  * = 3=* / d / d**|
+: index_vaults_room_themes(_G, "warriorcrypt", true)
+MAP
+vvvvvvvvvvvvvvvv.....
+vD...+.E.......F.....
+v.p..+.p..p.p..p..G..
+v..p.+.....H.........
+vJ...vvucccccccu.....
+vv...KcccL***Mcvvvvv
+ v.p..+.......+...Nv
+ v..p.+.3.4.3.+.q..v
+ vN...+.......+..q.v
+ vvvvvcM***LcccK...vv
+.....ucccccccuvv...Jv
+.........H.....+.q..v
+..G..q..q.q..q.+..q.v
+.....F.......E.+...Dv
+.....vvvvvvvvvvvvvvvv
+ENDMAP
+
+NAME:    nicolae_vaults_elemental_giants
+TAGS:    vaults_hard
+KMONS:   1 = stone giant
+KMONS:   2 = fire giant / frost giant
+KMONS:   3 = titan
+KITEM:   d = giant club ego:flaming / giant spiked club ego:flaming / \
+           giant club ego:freezing / giant spiked club ego:freezing / \
+           giant club ego:electrocution / giant spiked club ego:electrocution /\
+           giant club ego:heavy / giant spiked club ego:heavy / \
+           large rock / animal skin
+SHUFFLE: apqrsuyz
+SUBST:   ap : x, qr : M, s : xM, u : xM, y : xM, z : xM
+NSUBST:  M = 1=3 / 2=2 / 2=1 / 3=11d / 2=2d / ., d = 3=d / 3=* / 3=d*. / .
+MAP
+        ...
+       .....
+      .......
+     xxy.r.yxx
+    xxd.....dxx
+   xxz.u.q.u.zxx
+  .xd.........dx.
+ ..y.u.s.p.s.u.y..
+...................
+...r.q.p.a.p.q.r...
+...................
+ ..y.u.s.p.s.u.y..
+  .xd.........dx.
+   xxz.u.q.u.zxx
+    xxd.....dxx
+     xxy.r.yxx
+      .......
+       .....
+        ...
+ENDMAP
+
+NAME:    nicolae_vaults_lava_storage_facility
+TAGS:    vaults_hard
+KMONS:   1 = yaktaur captain ; arbalest ego:flaming pre_id w:15 | \
+             hand cannon ego:flaming pre_id w:3
+: local f = "great sword ego:flaming pre_id | long sword ego:flaming pre_id |"..
+: " battle axe ego:flaming pre_id | war axe ego:flaming pre_id | great mace " ..
+: "ego:flaming pre_id | dire flail ego:flaming pre_id | bardiche ego:flaming "..
+: "pre_id | glaive ego:flaming pre_id . ring mail ego:fire_resistance pre_id|"..
+: "chain mail ego:fire_resistance pre_id | " ..
+: "plate armour ego:fire_resistance pre_id"
+: kmons("2 = hell knight / orc warlord ; " .. f .. " / tengu reaver ; " .. f ..
+:       " / vault guard ; " .. f .. " / vault warden ; " .. f )
+KMONS:   3 = fire giant / red very ugly thing / deep elf annihilator
+KMONS:   4 = golden dragon
+KMONS:   R = red ugly thing / lindwurm
+KFEAT:   G = metal_statue
+SHUFFLE: DEFHJ
+SUBST:   D = G, E : GR, F : GR, H : GR, R = R.., J = R, * = |**%
+SUBST:   p = a3, a = 12.., 3 = 333.., 4 = 4.
+TILE:    G = fiery_conduit
+COLOUR:  G = fire
+KPROP:   l = no_tele_into
+KMASK:   l = no_monster_gen
+: set_feature_name("metal_statue", "fiery conduit")
+MAP
+....xxxxxxxxxxxxx....
+....xlllx***xlllx....
+....xlllx.4.xlllx....
+x.D.xlllx.H.xlllx.D.x
+x...xnnnx...xnnnx...x
+x.a...p...3...p...a.x
+x...................x
+x.E.a.F.3.J.3.F.a.E.x
+x...................x
+x.a...p...3...p...a.x
+x...xnnnx...xnnnx...x
+x.D.xlllx.H.xlllx.D.x
+....xlllx.4.xlllx....
+....xlllx***xlllx....
+....xxxxxxxxxxxxx....
+ENDMAP
+
+NAME:    nicolae_vaults_magic_librarian_arc
+KFEAT:   G = metal_statue
+SHUFFLE: PQRSZ/ZSRQP, Pp, Qq, Rr, Ss, Zz
+SUBST:   PQRSZ = c, pqrsz = ., D = 112
+NSUBST:  d = 2=d / 2=e / 3=de.. / ., * = 4=* / 2=**|...
+NSUBST:  1 = 4=1 / 3=211... / ., 2 = 2=2 / 2=322... / ., 3 = 2=3 / 2=433... / .
+TILE:    G = arcane_conduit
+COLOUR:  G = vehumet
+: set_feature_name("metal_statue", "arcane conduit")
+: index_vaults_room_themes(_G, "magic", true)
+MAP
+     xxxxxxxxx..
+   xxxcGcccccG....
+  xxcd.p.*d*dc.1..1
+ xxd...q....*c......
+ xc...2r..3.dc......
+xxd....s....*c.1..1..
+xc..2..z.....c.......
+xGPQRSZG3.4.3GZSRQPGx
+.......c.....z..2..cx
+..1..1.c*....s....dxx
+ ......cd.3..r2...cx
+ ......c*....q...dxx
+  1..1.cd*d*.p2dcxx
+   ....GcccccGcxxx
+     ..xxxxxxxxx
+ENDMAP
+
+NAME:    nicolae_vaults_office_building
+TAGS:    vaults_hard
+KMONS:   1 = vault guard
+KMONS:   2 = vault sentinel / ironbound convoker / ironbound preserver
+KMONS:   3 = ironbound frostheart / ironbound thunderhulk
+KMONS:   4 = vault warden
+SHUFFLE: Pp/Qq/Rr, HJ
+SUBST:   P = x, H : xxxn, p = +, qrz = x:70 nn+
+NSUBST:  QR = 4=1. / 2=2 / 2=2. / 3.. / ., J = 3 / 2=3. / 2. / *
+NSUBST:  * = | / 3=* / 2=*. / .
+:lua_marker('+', props_marker { connected_exclude="true" })
+MAP
+      P.Q.PxR.P.R
+      .R.R.p.Q.Q.
+      Q.1.QrP.1.P
+      .R.R.p.Q.Q.
+      P.Q.PxR.P.R
+      qpxrqxpqxrq
+   Q.R.Qx.....pQ.R.Q
+   .P.P.r.HJH.x.P.P.
+   R.1.Rx.*4*.pR.1.R
+   .P.P.r.JHJ.x.P.P.
+   Q.R.Qx.....pQ.R.Q
+   rqxxpxzzxzzxrxxqp
+R.P.Rq.....z.....rP.Q.P
+.Q.Q.p.*JH.z.HJ*.q.R.R.
+P.1.Pq.H4J.z.J4H.rQ.1.Q
+.Q.Q.p.JH*.z.*HJ.q.R.R.
+R.P.Rq.....z.....rP.Q.P
+   rpxrqxrxxxpxpqxrp
+   P.Q.PxQ.R.QxR.P.R
+   .R.R.q.P.P.r.Q.Q.
+   Q.1.QpR.1.RqP.1.P
+   .R.R.q.P.P.r.Q.Q.
+   P.Q.PxQ.R.QxR.P.R
+ENDMAP
+
+NAME:    nicolae_vaults_shooty_hallways
+SHUFFLE: DEF, HJK, LMN
+SUBST:   DHL : x, EJM : ., FKN = U.
+NSUBST:  p = 2 / 3=1 / 1. / ., q = 3 / 2=2 / 1 / 1.. / .
+NSUBST:  r = 4 / 2=3 / 2 / 1 / 21.... / .
+: index_vaults_room_themes(_G, "rangers", true)
+MAP
+  x.....xxxxxxx
+  x.....x.....xxxxxxx
+  xDEFEDx..q..+.....x
+  x.....xHJKJHx..r..x
+ xx..p..x..q..xLMNMLx
+ x.....xx.....x.....x
+ x..p..xq...qxx..r..x
+ xFEDEFx.....x.....xx
+ x.....xKJHJKx..r..x
+xxp...px..q..xNMLMNx
+x.....xx.....x.....x
+x..p..x..q..xxr...rx
+xDEFEDx.....x.....xx
+x.....xHJKJHx..r..x
+x..p..+..q..xLMNMLx
+xxxxxxx.....x*d*d*x
+      xxxxxxxd*d*dx
+            xxxxxxx
+ENDMAP
+
+NAME:   nicolae_vaults_under_constructs-ion
+TAGS:   vaults_hard
+KMONS:  1 = crystal guardian
+KMONS:  2 = peacekeeper / war gargoyle
+KMONS:  3 = dancing weapon
+: local glifz = "DEFHJKLMN"
+: for i = 1, string.len(glifz), 1 do
+:    subvault(string.sub(glifz, i, i) .. " : nico_constructs_doodad")
+: end
+NSUBST: J = 1 / *
+NSUBST: E = 2 / %%. / ., H = 2 / %%. / ., K = 2 / %%. / ., M = 2 / %%. / .
+NSUBST: DFLN = 1 / 1... / 2 / 2... / 3=3 / 3=3. / .
+MAP
+.............
+.DDD.EEE.FFF.
+.DDD.EEE.FFF.
+.DDD.EEE.FFF.
+.............
+.HHH.JJJ.KKK.
+.HHH.JJJ.KKK.
+.HHH.JJJ.KKK.
+.............
+.LLL.MMM.NNN.
+.LLL.MMM.NNN.
+.LLL.MMM.NNN.
+.............
+ENDMAP
+
+NAME:   nicolae_vaults_underconstruct_subvault
+TAGS:   unrand allow_dup no_dump nico_constructs_doodad
+NSUBST: D = x / _, F = x / _
+CLEAR:  _
+MAP
+DDD
+xxx
+FFF
+ENDMAP
