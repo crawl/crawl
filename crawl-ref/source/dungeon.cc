@@ -4905,7 +4905,7 @@ static object_class_type _superb_object_class()
             10, OBJ_JEWELLERY,
             10, OBJ_BOOKS,
             10, OBJ_STAVES,
-            10, OBJ_MISCELLANY,
+            4, OBJ_MISCELLANY,
             1, OBJ_TALISMANS);
 }
 
@@ -6294,6 +6294,8 @@ object_class_type item_in_shop(shop_type shop_type)
 
     case SHOP_GENERAL:
     case SHOP_GENERAL_ANTIQUE:
+        if (one_chance_in(10))
+            return OBJ_MISCELLANY;
         return OBJ_RANDOM;
 
     case SHOP_JEWELLERY:
