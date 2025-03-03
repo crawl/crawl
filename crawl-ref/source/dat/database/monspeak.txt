@@ -2990,6 +2990,8 @@ w:50
 @The_monster@ says, "I saw some yaktaurs earlier, but I bolted."
 
 @The_monster@ says, "I saw a dragon earlier, but I didn't get too close - it seemed pretty mercurial."
+
+@The_monster@ says, "Why are there poltergeists guarding this place, but not the Crypt?"
 %%%%
 Crypt Donald
 
