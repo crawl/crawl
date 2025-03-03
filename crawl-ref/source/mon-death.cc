@@ -3689,35 +3689,7 @@ bool mons_is_mons_class(const monster* mons, monster_type type)
  **/
 void pikel_band_neutralise()
 {
-    int visible_minions = 0;
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (mi->type == MONS_LEMURE
-            && mi->props.exists(PIKEL_BAND_KEY)
-            && mi->observable())
-        {
-            visible_minions++;
-        }
-    }
-    string final_msg;
-    if (visible_minions > 0 && you.num_turns > 0)
-    {
-        if (you.get_mutation_level(MUT_NO_LOVE))
-        {
-            const char *substr = visible_minions > 1 ? "minions" : "minion";
-            final_msg = make_stringf("Pikel's spell is broken, but his former "
-                                     "%s can only feel hate for you!", substr);
-        }
-        else
-        {
-            const char *substr = visible_minions > 1
-                ? "minions thank you for their"
-                : "minion thanks you for its";
-            final_msg = make_stringf("With Pikel's spell broken, his former %s "
-                                     "freedom.", substr);
-        }
-    }
-    delayed_action_fineff::schedule(DACT_PIKEL_MINIONS, final_msg);
+    delayed_action_fineff::schedule(DACT_PIKEL_MINIONS, "");
 }
 
 /**
