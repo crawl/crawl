@@ -1288,8 +1288,7 @@ void initialize_nobody_memories(monster& nobody)
     {
         const int index = *random_choose_weighted(weights);
         memories.push_back(index);
-        weights[index] = weights.back();
-        weights.pop_back();
+        weights[index].second = 0;
     }
 }
 
