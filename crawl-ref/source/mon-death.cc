@@ -748,6 +748,12 @@ static bool _vampire_make_thrall(monster* mons)
     mons->flags |= MF_FAKE_UNDEAD;
     mons->props.erase(VAMPIRIC_THRALL_KEY);
 
+    // End constriction and all status effects.
+    mons->stop_constricting_all();
+    mons->stop_being_constricted();
+    mons->del_ench(ENCH_CONFUSION, true, false);
+    mons->timeout_enchantments(10000);
+
     // Includes actual spellcasters and those with magical abilities.
     if (mons->antimagic_susceptible())
     {
@@ -765,10 +771,6 @@ static bool _vampire_make_thrall(monster* mons)
     mons->add_ench(mon_enchant(ENCH_SUMMON_TIMER, 0, &you, dur));
     mons_att_changed(mons);
     gain_exp(exper_value(*mons));
-
-    // End constriction.
-    mons->stop_constricting_all();
-    mons->stop_being_constricted();
 
     // Cancel fleeing and such.
     mons->behaviour = BEH_SEEK;
