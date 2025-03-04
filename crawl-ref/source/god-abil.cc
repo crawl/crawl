@@ -1351,7 +1351,6 @@ void elyvilon_purification()
     you.duration[DUR_SLOW] = 0;
     you.duration[DUR_PETRIFYING] = 0;
     you.duration[DUR_WEAK] = 0;
-    restore_stat(STAT_ALL, 0, false);
     undrain_hp(9999);
     you.redraw_evasion = true;
 }
@@ -1774,9 +1773,11 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
     mon->stop_constricting_all();
     mon->stop_being_constricted();
 
-    if (orig.halo_radius()
-        || orig.umbra_radius()
-        || orig.silence_radius())
+    // Monsters' haloes should be removed when their souls are bound.
+    if (mon->halo_radius() >= 0
+        || mon->umbra_radius() >= 0
+        || mon->silence_radius() >= 0
+        || mon->liquefying_radius() >= 0)
     {
         invalidate_agrid();
     }
@@ -2315,7 +2316,7 @@ static void _do_curse_item(item_def &item)
     mprf("Your %s glows black for a moment.", item.name(DESC_PLAIN).c_str());
     item.flags |= ISFLAG_CURSED;
 
-    if (you.equip[EQ_WEAPON] == item.link)
+    if (item.base_type == OBJ_WEAPONS)
     {
         // Redraw the weapon.
         you.wield_change = true;
@@ -2390,14 +2391,6 @@ bool ashenzari_uncurse_item()
         return false;
     }
 
-    if (is_unrandom_artefact(item, UNRAND_FINGER_AMULET)
-        && you.equip[EQ_RING_AMULET] != -1)
-    {
-        mprf(MSGCH_PROMPT, "You must shatter the curse binding the ring to "
-                           "the amulet's finger first!");
-        return false;
-    }
-
     if (item_is_melded(item))
     {
         mprf(MSGCH_PROMPT, "You cannot shatter the curse on %s while it is "
@@ -2418,9 +2411,20 @@ bool ashenzari_uncurse_item()
         return false;
     }
 
+    vector<item_def*> to_remove = {&item};
+    if (!handle_chain_removal(to_remove, true))
+        return false;
+
     mprf("You shatter the curse binding %s!", item.name(DESC_THE).c_str());
     item_skills(item, you.skills_to_hide);
-    unequip_item(item_equip_slot(you.inv[item_slot]));
+
+    for (item_def* _item : to_remove)
+    {
+        if (_item-> link != item_slot)
+            mprf("%s falls away from you.", _item->name(DESC_YOUR).c_str());
+        unequip_item(*_item);
+    }
+
     ash_check_bondage();
 
     you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 0;
@@ -3000,6 +3004,7 @@ bool valid_marionette_spell(spell_type spell)
         case SPELL_WALL_OF_BRAMBLES:
         case SPELL_CALL_TIDE:
         case SPELL_DRUIDS_CALL:
+        case SPELL_PYRRHIC_RECOLLECTION:
 
         // Doesn't do anything to monsters
         case SPELL_MESMERISE:
@@ -4028,10 +4033,11 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
             message        = "A blizzard blasts the area with ice!";
             break;
         case 2:
-            beam.name    = "cutting wind";
-            beam.flavour = BEAM_AIR;
-            beam.colour  = LIGHTGRAY;
-            message      = "A storm cloud blasts the area with cutting wind!";
+            beam.name      = "cutting wind";
+            beam.flavour   = BEAM_AIR;
+            beam.colour    = LIGHTGRAY;
+            beam.tile_beam = TILE_BOLT_STRONG_AIR;
+            message        = "A storm cloud blasts the area with cutting wind!";
             break;
         case 3:
             beam.name    = "blast of rubble";
@@ -4385,11 +4391,6 @@ static bool _sac_mut_maybe_valid(mutation_type mut)
     {
         return false;
     }
-
-    // Vampires can't get inhibited regeneration for some reason related
-    // to their existing regen silliness.
-    if (mut == MUT_INHIBITED_REGENERATION && you.has_mutation(MUT_VAMPIRISM))
-        return false;
 
     // demonspawn can't get frail if they have a robust facet
     if (you.species == SP_DEMONSPAWN && mut == MUT_FRAIL
@@ -5044,63 +5045,6 @@ static void _extra_sacrifice_code(ability_type sac)
 {
     switch (_get_sacrifice_def(sac).sacrifice)
     {
-    case ABIL_RU_SACRIFICE_HAND:
-    {
-        auto ring_slots = species::ring_slots(you.species, true);
-        equipment_type sac_ring_slot = species::sacrificial_arm(you.species);
-
-        item_def* const shield = you.slot_item(EQ_OFFHAND, true);
-        item_def* const weapon = you.slot_item(EQ_WEAPON, true);
-        item_def* const ring = you.slot_item(sac_ring_slot, true);
-        int ring_inv_slot = you.equip[sac_ring_slot];
-        equipment_type open_ring_slot = EQ_NONE;
-
-        // Drop your shield if there is one
-        if (shield != nullptr)
-        {
-            mprf("You can no longer hold %s!",
-                 shield->name(DESC_YOUR).c_str());
-            unequip_item(EQ_OFFHAND);
-        }
-
-        // And your two-handed weapon
-        if (weapon != nullptr)
-        {
-            if (you.hands_reqd(*weapon) == HANDS_TWO)
-            {
-                mprf("You can no longer hold %s!",
-                     weapon->name(DESC_YOUR).c_str());
-                unequip_item(EQ_WEAPON);
-            }
-        }
-
-        // And one ring
-        if (ring != nullptr)
-        {
-            // XX does not handle an open slot on the finger amulet
-            for (const auto &eq : ring_slots)
-                if (!you.slot_item(eq, true))
-                {
-                    open_ring_slot = eq;
-                    break;
-                }
-
-            const bool can_keep = open_ring_slot != EQ_NONE;
-
-            mprf("You can no longer wear %s!",
-                 ring->name(DESC_YOUR).c_str());
-            unequip_item(sac_ring_slot, true, can_keep);
-            if (can_keep)
-            {
-                mprf("You put %s back on %s %s!",
-                     ring->name(DESC_YOUR).c_str(),
-                     (ring_slots.size() > 1 ? "another" : "your other"),
-                     you.hand_name(true).c_str());
-                equip_item(open_ring_slot, ring_inv_slot, false, true);
-            }
-        }
-        break;
-    }
     case ABIL_RU_SACRIFICE_EXPERIENCE:
         level_change();
         break;
@@ -7222,7 +7166,7 @@ void makhleb_inscribe_mark(mutation_type mark)
 
     const int hploss = min(you.hp - 1, you.hp * 2 / 3);
     blood_spray(you.pos(), MONS_PLAYER, 50);
-    ouch(hploss, KILLED_BY_SELF_AIMED, MID_PLAYER);
+    ouch(hploss, KILLED_BY_SELF_AIMED, MID_PLAYER, nullptr, true, nullptr, true);
 
     perma_mutate(mark, 1, "inscribed by the player");
 

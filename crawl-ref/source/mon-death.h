@@ -23,6 +23,8 @@
 #define MAKHLEB_HAEMOCLASM_KEY "makhleb_haemoclasm"
 #define MAKHLEB_BLOODRITE_KILL_KEY "bloodrite_kill"
 
+#define VAMPIRIC_THRALL_KEY "vampiric_thrall"
+
 class actor;
 class monster;
 
@@ -67,7 +69,6 @@ int mummy_curse_power(monster_type type);
 void fire_monster_death_event(monster* mons, killer_type killer, bool polymorph);
 void heal_flayed_effect(actor* act, bool quiet = false, bool blood_only = false);
 void end_flayed_effect(monster* ghost);
-
 
 bool damage_contributes_xp(const actor& agent);
 

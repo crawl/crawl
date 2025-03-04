@@ -83,7 +83,7 @@ void orb_pickup_noise(const coord_def& where, int loudness, const char* msg, con
 bool orb_limits_translocation()
 {
     return player_in_branch(BRANCH_ZOT) || player_has_orb()
-           || player_equip_unrand(UNRAND_CHARLATANS_ORB);
+           || you.unrand_equipped(UNRAND_CHARLATANS_ORB);
 }
 
 void start_orb_run(game_chapter chapter, const char* message)

@@ -19,7 +19,7 @@ using std::vector;
 enum monster_info_flags
 {
     MB_STABBABLE,
-    MB_DISTRACTED,
+    MB_MAYBE_STABBABLE,
     MB_BERSERK,
     MB_DORMANT,
     MB_SLEEPING,
@@ -213,7 +213,7 @@ enum monster_info_flags
     MB_RES_DROWN,
     MB_ANGUISH,
     MB_CLARITY,
-    MB_DISTRACTED_ONLY,
+    MB_DISTRACTED,
     MB_CANT_SEE_YOU,
     MB_UNBLINDABLE,
     MB_SIMULACRUM,
@@ -240,7 +240,7 @@ enum monster_info_flags
     MB_FROZEN_IN_TERROR,
     MB_SOUL_SPLINTERED,
     MB_ENGULFING_PLAYER,
-    MB_DOUBLED_VIGOUR,
+    MB_DOUBLED_HEALTH,
     MB_ABJURABLE,
     MB_UNREWARDING,
     MB_MINION,
@@ -249,6 +249,10 @@ enum monster_info_flags
     MB_HATCHING,
     MB_BLINKITIS,
     MB_NO_TELE,
+    MB_CHAOS_LACE,
+    MB_VEXED,
+    MB_VAMPIRE_THRALL,
+    MB_PYRRHIC_RECOLLECTION,
     NUM_MB_FLAGS
 };
 

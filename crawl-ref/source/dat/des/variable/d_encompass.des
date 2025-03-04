@@ -353,7 +353,7 @@ MONS:     fire giant ; battleaxe ego:freezing / \
           frost giant ; great sword ego:flaming / \
           deep troll earth mage / salamander tyrant / tengu reaver / \
           ettin ; great mace ego:flaming . great mace ego:freezing / \
-          spriggan air mage / lich / sphinx w:5 / \
+          spriggan air mage / lich / guardian sphinx w:5 / \
           deep elf annihilator ; ice dragon scales | fire dragon scales . \
                                  scimitar ego:flaming | scimitar ego:freezing
 MONS:     iron dragon w:5 / iron dragon perm_ench:shapeshifter w:5 / \

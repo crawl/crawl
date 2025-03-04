@@ -514,9 +514,9 @@ Cheibriados wrath
 
 Offenders against Cheibriados will find their movements remain slow while
 the attention of Cheibriados remains upon them, and may have any magical hasting
-stripped away. They may also become further slowed, be put to sleep, or have
-their bodies decay as the unparalleled volume of the inevitable passage of
-time rings throughout the Dungeon.
+stripped away. They may also become further slowed, be put to sleep, or be
+beset by the unparalleled volume of the inevitable passage of time ringing
+throughout the Dungeon.
 %%%%
 Dithmenos wrath
 
@@ -647,9 +647,9 @@ silenced, and the Shining One will also shout to alert the victim's foes.
 Trog wrath
 
 Trog's wrath is incandescent. Offenders find themselves swarmed by berserkers –
-from packs of bears to, for the most powerful, mobs of giants and trolls. The
-bodies of those who anger Trog begin to decay, slow, and collapse, and Trog may
-simply smite them directly with fiery rage.
+from packs of bears to, for the most powerful, mobs of giants and trolls.
+Otherwise, those who anger Trog will regularly lose both their strength and
+self-control as they thoughtlessly thrash in place.
 %%%%
 Uskayaw wrath
 

@@ -1,0 +1,21 @@
+name: "Nobody"
+enum: NAMELESS_REVENANT
+glyph: {char: "z", colour: white}
+flags: [see_invis, speaks, unique, gender_neutral]
+resists: {cold: 2}
+xp_mult: 40
+holiness: [undead]
+will: invuln
+attacks:
+ - {type: claw, damage: 34}
+hd: 17
+hp_10x: 930
+ac: 18
+ev: 10
+spells: nameless_revenant
+shout: shout
+intelligence: human
+uses: open_doors
+size: medium
+shape: humanoid
+tile_variance: cycle

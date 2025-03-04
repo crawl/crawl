@@ -85,7 +85,7 @@
        "book of cryoformation", "codex of conductivity" }
 
       elseif s == "D" then i = { "book of death", "book of debilitation",
-       "book of dreams", "book of the dragon", "dagger", "dragon-blood talisman",
+       "book of dreams", "book of the dragon", "dagger", "dragon-coil talisman",
        "demon blade", "demon trident", "demon whip", "dire flail",
        "double sword", "ring of dexterity", "manual of dodging",
        "staff of death", "wand of digging", "dart", "book of dangerous friends",
@@ -134,7 +134,7 @@
        "morningstar", "mace", "potion of magic", "wand of mindburst",
        "ring of magical power", "amulet of magic regeneration", "potion of might",
        "potion of mutation", "book of the moon", "book of movement",
-       "book of maladies", "book of metalwork",
+       "book of maladies", "book of metalworking",
        "maxwell's memoranda", "my sojourn through swampland" }
 
       elseif s == "N" then i = { "book of necromancy",
@@ -159,8 +159,8 @@
        "potion of resistance", "robe", "ring mail" }
 
       elseif s == "S" then i = { "scarf", "scimitar", "short sword",
-       "scale mail", "spear", "serpent talisman", "storm talisman",
-       "ring of see invisible", "ring of slaying",
+       "scale mail", "spear", "serpent talisman", "sanguine talisman",
+       "storm talisman", "ring of see invisible", "ring of slaying",
        "ring of strength", "manual of stealth", "scroll of summoning",
        "book of spatial translocations", "scroll of silence", "shortbow",
        "manual of staves", "steam dragon scales", "manual of shapeshifting",

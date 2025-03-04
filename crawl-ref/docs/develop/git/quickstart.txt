@@ -180,6 +180,16 @@ Using git for Stone Soup development
 
    $ git commit -a -m "Fitted player.cc with mountain dwarves"
 
+   A number of tools for working with git, and a few parts of git itself,
+   expect commit messages to follow certain conventions. The most important
+   ones are:
+
+   1. Keep the first line 50 characters or less
+   2. Leave the second line blank
+
+   https://www.freecodecamp.org/news/writing-good-commit-messages-a-practical-guide/
+   has some more common conventions.
+
    When you're done, your change has been committed to your local
    repository. Let's try git status again:
 

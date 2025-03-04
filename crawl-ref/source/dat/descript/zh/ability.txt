@@ -50,21 +50,6 @@ Breathe Noxious Fumes ability
 
 向一个目标生物喷吐一股毒烟。
 %%%%
-Bat Form ability
-
-使用者变形成一只行动迅捷的吸血蝠，
-这会提升闪避能力，但会大大削弱近战攻击力。变形会减少使用者的属性值。
-
-变形后，装备的武器和防具会被融合，使用者无法施展法术。
-%%%%
-Exsanguinate ability
-
-排空体内的血液，转化为无血状态。
-%%%%
-Revivify ability
-
-重获生命，从“无血”状态变为“活”状态。使用者在此期间较为脆弱。
-%%%%
 Hurl Damnation ability
 
 用天谴轰击一个目标敌人。

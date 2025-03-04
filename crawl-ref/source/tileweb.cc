@@ -1049,8 +1049,6 @@ static bool _update_statuses(player_info& c)
 player_info::player_info()
 {
     _state_ever_synced = false;
-    for (auto &eq : equip)
-        eq = -1;
     position = coord_def(-1, -1);
 }
 
@@ -1137,11 +1135,8 @@ void TilesFramework::_send_player(bool force_full)
                 "sh");
 
     _update_int(force_full, c.strength, (int8_t) you.strength(false), "str");
-    _update_int(force_full, c.strength_max, (int8_t) you.max_strength(), "str_max");
     _update_int(force_full, c.intel, (int8_t) you.intel(false), "int");
-    _update_int(force_full, c.intel_max, (int8_t) you.max_intel(), "int_max");
     _update_int(force_full, c.dex, (int8_t) you.dex(false), "dex");
-    _update_int(force_full, c.dex_max, (int8_t) you.max_dex(), "dex_max");
 
     if (you.has_mutation(MUT_MULTILIVED))
     {
@@ -1231,9 +1226,8 @@ void TilesFramework::_send_player(bool force_full)
     {
         json_open_object(to_string(i));
         item_def item = you.inv[i];
-        if (((char)i == you.equip[EQ_WEAPON] && is_weapon(item)
-             || (char)i == you.equip[EQ_OFFHAND] && you.offhand_weapon())
-            && you.corrosion_amount())
+        if (you.corrosion_amount() && is_weapon(item)
+            && you.equipment.find_equipped_slot(item) != SLOT_UNUSED)
         {
             item.plus -= 1 * you.corrosion_amount();
         }
@@ -1242,23 +1236,18 @@ void TilesFramework::_send_player(bool force_full)
     }
     json_close_object(true);
 
-    json_open_object("equip");
-    for (unsigned int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
-    {
-        const int8_t equip = !you.melded[i] ? you.equip[i] : -1;
-        _update_int(force_full, c.equip[i], equip, to_string(i));
-    }
-    json_close_object(true);
-
-    _update_int(force_full, c.offhand_weapon, (bool) you.offhand_weapon(),
-                "offhand_weapon");
-
     _update_int(force_full, c.quiver_item,
                 (int8_t) you.quiver_action.get()->get_item(), "quiver_item");
 
     _update_string(force_full, c.quiver_desc,
                 you.quiver_action.get()->quiver_description().to_colour_string(LIGHTGRAY),
                 "quiver_desc");
+
+    item_def* weapon = you.weapon();
+    item_def* offhand = you.offhand_weapon();
+    _update_int(force_full, c.weapon_index, (int8_t) (weapon ? weapon->link : -1), "weapon_index");
+    _update_int(force_full, c.offhand_index, (int8_t) (offhand ? offhand->link : -1), "offhand_index");
+    _update_int(force_full, c.offhand_weapon, (bool) offhand, "offhand_weapon");
 
     _update_string(force_full, c.unarmed_attack,
                    you.unarmed_attack_name(), "unarmed_attack");
@@ -1705,14 +1694,14 @@ void TilesFramework::_send_cell(const coord_def &gc,
                     minfo.props[MONSTER_TILE_KEY] =
                         int(last_player_doll.parts[TILEP_PART_BASE]);
                     item_def *item;
-                    if (item = you.slot_item(EQ_WEAPON))
+                    if (item = you.equipment.get_first_slot_item(SLOT_WEAPON))
                     {
-                        item = new item_def(*you.slot_item(EQ_WEAPON));
+                        item = new item_def(*item);
                         minfo.inv[MSLOT_WEAPON].reset(item);
                     }
-                    if (item = you.slot_item(EQ_OFFHAND))
+                    if (item = you.equipment.get_first_slot_item(SLOT_OFFHAND))
                     {
-                        item = new item_def(*you.slot_item(EQ_OFFHAND));
+                        item = new item_def(*item);
                         minfo.inv[MSLOT_SHIELD].reset(item);
                     }
                     tileidx_t mcache_idx = mcache.register_monster(minfo);

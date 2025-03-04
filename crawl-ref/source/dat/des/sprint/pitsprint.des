@@ -19,7 +19,7 @@ function base_monster_setup(e)
                kobold brigand band / gnoll band / gnoll bouda band w:6 /\
                gnoll sergeant band w:6 / orc band / orc priest band /\
                orc wizard band / ogre / centaur / phantom / zombie / skeleton /\
-               crimson imp / quasit / iron imp / white imp / ufetubus band /\
+               crimson imp / iron imp / white imp / ufetubus band /\
                fire bat / crocodile / brain worm / weeping skull / mummy w:5")
   e.kmons("B = steam dragon / acid dragon / blink frog band / killer bee band /\
                hornet / sleepcap / wyvern / basilisk / manticore / elephant /\
@@ -59,7 +59,7 @@ function base_monster_setup(e)
                naga sharpshooter / anaconda / spriggan druid / spriggan rider /\
                shambling mangrove w:5 / alligator band / harpy band w:5 /\
                alligator snapping turtle / formless jellyfish / water nymph /\
-               satyr band w:5 / merfolk impaler band w:5 /\
+               satyr band w:5 / merfolk impaler band w:5 / sphinx marauder /\
                merfolk aquamancer w:5 / boulder beetle / pharaoh ant /\
                radroach w:5 / jorogumo w:5 / broodmother w:5 / sun moth w:5 /\
                entropy weaver / eye of devastation / place:Crypt:1 zombie /\
@@ -73,8 +73,8 @@ function base_monster_setup(e)
                ironbound thunderhulk / ironbound frostheart /\
                crystal guardian / fire giant w:25 / frost giant w:25 /\
                stone giant / deep troll shaman band w:7 / hell knight band /\
-               sphinx / war gargoyle / thermic dynamo / dancing weapon /\
-               deep elf annihilator / deep elf death mage /\
+               guardian sphinx / war gargoyle / thermic dynamo /\
+               dancing weapon / deep elf annihilator / deep elf death mage /\
                deep elf high priest / deep elf demonologist /\
                deep elf sorcerer / deep elf elementalist / shadow dragon /\
                deep elf blademaster w:5 / deep elf master archer w:5 /\
@@ -99,10 +99,11 @@ function base_monster_setup(e)
                rockslime / moth of wrath w:15 / ghost moth /\
                killer klown / draconian monk w:4 / draconian stormcaller w:7 /\
                draconian scorcher w:7 / draconian annihilator w:7 /\
-               draconian knight w:7 / alderking / ancient champion /\
-               curse skull / royal mummy w:3 / hellephant / balrug band w:5 /\
-               cacodemon / hellion / tormentor / executioner / nekomata /\
-               nargun w:5 / demonspawn warmonger band w:5 /\
+               draconian knight w:7 / alderking / vampire bloodprince /\
+               ancient champion / curse toe w:3 / royal mummy w:3 /\
+               hellephant / balrug band w:5 / cacodemon / hellion /\
+               tormentor / executioner / nekomata / nargun w:5 /\
+               demonspawn warmonger band w:5 /\
                demonspawn blood saint band w:5 /\
                demonspawn corrupter band w:5 /\
                demonspawn soul scholar band w:5 /\
@@ -112,8 +113,9 @@ function base_monster_setup(e)
   e.kmons("G = caustic shrike w:5 / caustic shrike band w:5 /\
                shard shrike w:3 / shard shrike band w:3 /\
                orb of fire w:12 / electric golem / protean progenitor band w:6 /\
-               ancient lich w:6 / dread lich w:6 / royal mummy / curse toe w:2 /\
-               antique champion w:5 ; shadow dragon scales . kite shield . double sword /\
+               ancient lich w:6 / dread lich w:6 / royal mummy /\
+               vampire bloodprince w:2 / curse skull w:2 /\
+               antique champion w:6 ; shadow dragon scales . kite shield . double sword /\
                oni incarcerator w:6 / iron giant / hell sentinel w:12 /\
                brimstone fiend / ice fiend / tzitzimitl /\
                demonspawn corrupter w:2 / purple draconian shifter w:6 /\
@@ -157,7 +159,7 @@ function base_monster_setup(e)
                guardian mummy / mummy priest w:5")
   e.kmons("R = royal mummy w:3 / mummy priest / lich / ancient lich /\
                ghoul band / searing wretch w:3 / vampire knight band /\
-               vampire mage band / revenant / ancient champion")
+               vampire mage band / revenant soulmonger / ancient champion")
   e.kmons("S = obsidian bat / orange demon / hellwing / smoke demon /\
                ynoxinul / red devil / sixfirhy / chaos spawn / ice devil /\
                sun demon / rust devil / neqoxec band / green death w:5 /\
@@ -421,7 +423,7 @@ end
 function iron_vault_setup(e)
   e.tags("the_vault_of_iron")
   e.colour("v = red")
-  e.tile("v = dngn_metal_iron")
+  e.tile("v = dngn_metal_steel_blood")
   e.kitem("c = any jewellery randart level:27 pre_id")
   e.kitem("d = scroll of acquirement q:1, iron rune of zot")
   e.subst("' = ))]]cc")
@@ -497,8 +499,8 @@ function coven_setup(e)
   e.kmons("0 = deep elf annihilator / deep elf death mage / deep elf sorcerer /\
                deep elf demonologist / deep elf high priest /\
                deep elf elementalist / nonbase draconian w:20 /\
-               sphinx / lich / ancient lich w:3 / dread lich w:3 /\
-               arcanist w:5 / occultist w:5 / rakshasa w:5 /\
+               sphinx marauder w:5 / guardian sphinx / lich / ancient lich w:3 /\
+               dread lich w:3 / arcanist w:5 / occultist w:5 / rakshasa w:5 /\
                tengu conjurer w:5 / ogre mage w:5 / naga mage / nagaraja /\
                merfolk aquamancer w:5 / jorogumo w:5 / vampire mage /\
                base draconian w:20 / demonspawn blood saint w:3")
@@ -2116,9 +2118,9 @@ KMONS:  A = iron giant
 # Honestly, the non-giant ones are awful. Suffer.
 KMONS:  b = ushabti w:5 / place:Crypt:$ zombie w:20 /\
             place:Crypt:$ skeleton w:20 / place:Crypt:$ simulacrum w:20 /\
-            lich / ancient lich w:5 / revenant w:5 / vampire knight /\
-            bone dragon / ghoul / ancient champion w:5 /\
-            guardian mummy / mummy priest / royal mummy
+            lich / ancient lich w:5 / revenant soulmonger w:5 / vampire knight /\
+            vampire bloodprince w:5 / bone dragon / ghoul /\
+            ancient champion w:5 / guardian mummy / mummy priest / royal mummy
 KMONS:  B = dread lich
 KMONS:  c = saltling w:25 / peacekeeper w:20 / crystal guardian w:15 /\
             molten gargoyle w:5 / dancing weapon w:1 /\
@@ -2165,7 +2167,7 @@ KITEM:   8 = orb of zot
 KFEAT:   8 = orb dais
 SUBST:   0 = 7776.., Z = 6.
 COLOUR:  v = lightmagenta
-TILE:    v = dngn_metal_wall_magenta
+TILE:    v = dngn_metal_zot
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)

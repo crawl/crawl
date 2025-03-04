@@ -1011,7 +1011,7 @@ TAGS:     tomb_end
 KMONS:    1 = guardian mummy
 KMONS:    2 = mummy priest
 KMONS:    3 = royal mummy
-KMONS:    4 = sphinx
+KMONS:    4 = guardian sphinx
 KMONS:    5 = royal mummy
 KITEM:    5 = golden rune of zot
 COLOUR:   # = lightgrey

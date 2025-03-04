@@ -794,16 +794,6 @@ void hints_gained_new_skill(skill_type skill)
     }
 }
 
-static bool _mons_is_highlighted(const monster* mons)
-{
-    return mons->friendly()
-               && Options.friend_highlight != CHATTR_NORMAL
-           || mons_looks_stabbable(*mons)
-               && Options.stab_highlight != CHATTR_NORMAL
-           || mons_looks_distracted(*mons)
-               && Options.may_stab_highlight != CHATTR_NORMAL;
-}
-
 static bool _advise_use_wand()
 {
     for (auto &obj : you.inv)
@@ -835,8 +825,6 @@ void hints_monster_seen(const monster& mon)
         if (Hints.hints_just_triggered)
             return;
 
-        if (_mons_is_highlighted(&mon))
-            learned_something_new(HINT_MONSTER_HIGHLIGHT, mon.pos());
         if (mon.friendly())
             learned_something_new(HINT_MONSTER_FRIENDLY, mon.pos());
 
@@ -854,6 +842,13 @@ void hints_monster_seen(const monster& mon)
     Hints.hints_just_triggered = true;
 
     monster_info mi(&mon);
+
+    if (mi.has_unusual_items())
+    {
+        learned_something_new(HINT_MONSTER_UNUSUAL, mon.pos());
+        return;
+    }
+
 #ifdef USE_TILE
     // need to highlight monster
     const coord_def gc = mon.pos();
@@ -1595,13 +1590,13 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         print_hint("HINT_WIELD_WEAPON");
         break;
 
-    case HINT_MONSTER_HIGHLIGHT:
+    case HINT_MONSTER_UNUSUAL:
 #ifdef USE_TILE
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         if (const monster* m = monster_at(gc))
             tiles.add_text_tag(TAG_TUTORIAL, m->name(DESC_A), gc);
 #endif
-        print_hint("HINT_MONSTER_BRAND");
+        print_hint("HINT_MONSTER_UNUSUAL");
         break;
 
     case HINT_MONSTER_FRIENDLY:
@@ -2100,10 +2095,7 @@ string hints_describe_item(const item_def &item)
                     return "";
             }
 
-            item_def *weap = you.slot_item(EQ_WEAPON, false);
-            bool wielded = (weap && weap->slot == item.slot);
-
-            if (!wielded)
+            if (!item_is_equipped(item))
             {
                 ostr << "You can wield this weapon with <w>%</w>, or use "
                         "<w>%</w> to switch between the weapons in slot "
@@ -2201,7 +2193,7 @@ string hints_describe_item(const item_def &item)
             }
 
             if (Hints.hints_type == HINT_MAGIC_CHAR
-                && get_armour_slot(item) == EQ_BODY_ARMOUR
+                && get_armour_slot(item) == SLOT_BODY_ARMOUR
                 && !is_effectively_light_armour(&item))
             {
                 ostr << "\nNote that body armour with a high encumbrance "
@@ -2459,14 +2451,15 @@ static void _hints_describe_feature(int x, int y, ostringstream& ostr)
     {
     case DNGN_TRAP_TELEPORT:
     case DNGN_TRAP_TELEPORT_PERMANENT:
+    case DNGN_TRAP_TYRANT:
+    case DNGN_TRAP_ARCHMAGE:
+    case DNGN_TRAP_HARLEQUIN:
+    case DNGN_TRAP_DEVOURER:
     case DNGN_TRAP_ALARM:
     case DNGN_TRAP_ZOT:
 #if TAG_MAJOR_VERSION == 34
     case DNGN_TRAP_MECHANICAL:
-    case DNGN_TRAP_ARROW:
     case DNGN_TRAP_SPEAR:
-    case DNGN_TRAP_BLADE:
-    case DNGN_TRAP_DART:
     case DNGN_TRAP_BOLT:
 #endif
     case DNGN_TRAP_NET:
@@ -2704,12 +2697,8 @@ bool hints_monster_interesting(const monster* mons)
     if (mons_is_unique(mons->type) || mons->type == MONS_PLAYER_GHOST)
         return true;
 
-    // Highlighted in some way.
-    if (_mons_is_highlighted(mons))
-        return true;
-
     // Dangerous.
-    return mons_threat_level(*mons) == MTHRT_NASTY;
+    return mons_threat_level(*mons) >= MTHRT_TOUGH;
 }
 
 string hints_describe_monster(const monster_info& mi, bool has_stat_desc)
@@ -2788,8 +2777,7 @@ string hints_describe_monster(const monster_info& mi, bool has_stat_desc)
             ostr << ".";
         }
     }
-    else if (Options.stab_highlight != CHATTR_NORMAL
-             && mi.is(MB_STABBABLE))
+    else if (mi.asleep() || mi.is(MB_UNAWARE) || mi.is(MB_WANDERING))
     {
         ostr << "Apparently it has not noticed you - yet. Note that you do "
                 "not have to engage every monster you meet. Sometimes, "

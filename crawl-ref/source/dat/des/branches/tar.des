@@ -604,7 +604,8 @@ MONS:    vampire knight ; demon whip | demon trident | demon blade . \
                           plate armour | chain mail
 MONS:    putrid mouth, tormentor w:3, silent spectre
 KMONS:   9 = reaper
-KMONS:   J = Jory w:9 / tzitzimitl w:1, tzitzimitl
+KMONS:   J = Jory w:5 / vampire bloodprince w:4 / tzitzimitl w:1, \
+             vampire bloodprince w:4 / tzitzimitl w:1
 NSUBST:  J = 1:J / *:9, 8 = 1:6 / * = 5:19 6:1
 SUBST:   A : x.., B : x.., } = }>
 : vault_metal_statue_setup(_G, "G", "mystic cage")
@@ -711,7 +712,7 @@ KFEAT:   } = }
 KMONS:   } = royal mummy
 KMONS:   1 = mummy priest
 KMONS:   2 = guardian mummy / ushabti / death scarab band / ancient champion / \
-             emperor scorpion / sphinx
+             emperor scorpion / guardian sphinx
 SHUFFLE: DE/FH/JK
 SUBST:   M = 12, DH = +, EFJK = x
 MAP
@@ -967,7 +968,7 @@ NAME:   nicolae_tar_just_some_guys
 TAGS:   transparent
 DEPTH:  Tar, !Tar:$
 KMONS:  1 = halazid warlock
-KMONS:  2 = revenant
+KMONS:  2 = revenant soulmonger
 KMONS:  3 = spectral thing / nothing w:5
 SUBST:  S = 12
 : vault_granite_statue_setup(_G, "G", "broken pillar")

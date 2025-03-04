@@ -466,7 +466,7 @@ double sword
 
 一把刀刃分叉、极其锐利的可怕的武器。
 %%%%
-dragon-blood talisman
+dragon-coil talisman
 
 一小瓶纯净的龙血，历经多年结晶而成。 {{
     local desc = "将使用者变为一条强大的"
@@ -864,10 +864,6 @@ potion of cancellation
 potion of curing
 
 这瓶药水能回复少量健康值，并治疗中毒和混乱。
-%%%%
-potion of degeneration
-
-一个有毒的混合物，这会降低力量、智力和敏捷。
 %%%%
 potion of enlightenment
 

@@ -83,7 +83,7 @@ DEPTH:  D:9-
 WEIGHT: 3
 ORIENT: float
 TAGS:   no_item_gen no_monster_gen generate_awake no_rotate no_hmirror
-KPROP:  cX-EfGKkL = no_tele_into
+KPROP:  cX-EfGKkLl = no_tele_into
 SUBST:  c = t-
 KITEM:  Ll = any armour good_item no_pickup / any weapon good_item no_pickup
 KFEAT:  GR = iron_grate

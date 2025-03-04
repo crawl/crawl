@@ -554,7 +554,7 @@ bool prompt_descent_shortcut(dungeon_feature_type ftype)
 
 static coord_def _rampage_destination(coord_def move, monster* target)
 {
-    if (!player_equip_unrand(UNRAND_SEVEN_LEAGUE_BOOTS))
+    if (!you.unrand_equipped(UNRAND_SEVEN_LEAGUE_BOOTS))
         return you.pos() + move;
     const int dist = grid_distance(you.pos(), target->pos()) - 1;
     return you.pos() + move * dist;
@@ -649,7 +649,7 @@ static spret _rampage_forward(coord_def move)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    const bool enhanced = player_equip_unrand(UNRAND_SEVEN_LEAGUE_BOOTS);
+    const bool enhanced = you.unrand_equipped(UNRAND_SEVEN_LEAGUE_BOOTS);
     const bool rolling = you.has_mutation(MUT_ROLLPAGE);
     const string noun = enhanced ? "stride" :
                          rolling ? "roll" : "rampage";
@@ -1234,7 +1234,7 @@ void move_player_action(coord_def move)
     you.apply_berserk_penalty = !attacking;
 
     if (rampaged && !you.has_mutation(MUT_ROLLPAGE)
-        || player_equip_unrand(UNRAND_LIGHTNING_SCALES))
+        || you.unrand_equipped(UNRAND_LIGHTNING_SCALES))
     {
         did_god_conduct(DID_HASTY, 1, true);
     }

@@ -28,6 +28,7 @@
 #include "macro.h"
 #include "message.h"
 #include "mon-place.h"
+#include "mutation.h"
 #include "notes.h"
 #include "options.h"
 #include "orb.h"
@@ -545,14 +546,17 @@ int spell_mana(spell_type which_spell, bool real_spell)
 
     if (real_spell)
     {
+        if (you.duration[DUR_ENKINDLED] && spell_can_be_enkindled(which_spell))
+            return 0;
+
         int cost = level;
-        if (you.wearing_ego(EQ_GIZMO, SPGIZMO_SPELLMOTOR))
+        if (you.wearing_ego(OBJ_GIZMOS, SPGIZMO_SPELLMOTOR))
             cost = max(1, cost - you.rev_tier());
 
         if (you.has_mutation(MUT_EFFICIENT_MAGIC))
             cost = max(1, cost - you.get_mutation_level(MUT_EFFICIENT_MAGIC));
 
-        if (you.duration[DUR_BRILLIANCE] || player_equip_unrand(UNRAND_FOLLY))
+        if (you.duration[DUR_BRILLIANCE] || you.unrand_equipped(UNRAND_FOLLY))
             cost = cost/2 + cost%2; // round up
 
         return cost;
@@ -1349,7 +1353,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_OZOCUBUS_ARMOUR:
-        if (temp && player_equip_unrand(UNRAND_SALAMANDER))
+        if (temp && you.unrand_equipped(UNRAND_SALAMANDER))
             return "your ring of flames would instantly melt the ice.";
         break;
 
@@ -1449,9 +1453,9 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_AWAKEN_ARMOUR:
-        if (!you_can_wear(EQ_BODY_ARMOUR, temp))
+        if (!you_can_wear(SLOT_BODY_ARMOUR, temp))
             return "you cannot wear body armour.";
-        if (temp && !you.slot_item(EQ_BODY_ARMOUR))
+        if (temp && !you.body_armour())
             return "you have no body armour to summon the spirit of.";
         break;
 
@@ -1648,7 +1652,6 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_FIRE_STORM:
         return false;
 
-    case SPELL_OLGREBS_TOXIC_RADIANCE:
     case SPELL_IGNITION:
     case SPELL_FROZEN_RAMPARTS:
     case SPELL_FULSOME_FUSILLADE:
@@ -1681,6 +1684,9 @@ bool spell_no_hostile_in_range(spell_type spell)
 
         return true;
     }
+
+    case SPELL_OLGREBS_TOXIC_RADIANCE:
+        return cast_toxic_radiance(&you, pow, false, true) == spret::abort;
 
     case SPELL_IGNITE_POISON:
         return cast_ignite_poison(&you, -1, false, true) == spret::abort;
@@ -1949,6 +1955,31 @@ bool spell_has_variable_range(spell_type spell)
 {
     return spell_range(spell, 0, false)
             != spell_range(spell, spell_power_cap(spell), false);
+}
+
+bool spell_can_be_enkindled(spell_type spell)
+{
+    switch (spell)
+    {
+        // Veh-supported spells that aren't actually blasty.
+        case SPELL_BATTLESPHERE:
+        case SPELL_SPELLSPARK_SERVITOR:
+        case SPELL_MEPHITIC_CLOUD:
+            return false;
+
+        // Non-Veh-supported spells (for reasons of Kiku overlap) that are still
+        // sufficiently destructive for revenants.
+        case SPELL_GRAVE_CLAW:
+        case SPELL_VAMPIRIC_DRAINING:
+        case SPELL_BORGNJORS_VILE_CLUTCH:
+        case SPELL_PUTREFACTION:
+        case SPELL_DISPEL_UNDEAD:
+            return true;
+
+        // Everything else uses the standard destructive list.
+        default:
+            return vehumet_supports_spell(spell);
+    }
 }
 
 /* How to regenerate this:

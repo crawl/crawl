@@ -33,7 +33,7 @@ using namespace std;
 
 #if defined(__GNUC__)
 # define NORETURN __attribute__ ((noreturn))
-#elif defined(_MSC_VER)
+#elif defined(TARGET_COMPILER_VC)
 # define NORETURN __declspec(noreturn)
 #else
 # define NORETURN
@@ -94,14 +94,6 @@ static inline void UNUSED(const volatile T &...)
 
 
 #ifdef TARGET_COMPILER_VC
-/* Disable warning about:
-   4290: the way VC handles the throw() specifier
-   4267: "possible loss of data" when switching data types without a cast
- */
-#pragma warning (disable: 4290 4267)
-/* Don't define min and max as macros, define them via STL */
+/* Tell Windows.h not to define min and max as macros, define them via STL */
 #define NOMINMAX
-#define ENUM_INT64 : unsigned long long
-#else
-#define ENUM_INT64
 #endif

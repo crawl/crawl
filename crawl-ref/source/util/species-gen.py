@@ -398,7 +398,29 @@ def main():
                                                 'species-data-species.txt')
     aptitude_template = load_template(args.templatedir, 'aptitude-species.txt')
     species_groups = SPECIES_GROUPS_TEMPLATE
-    for species in all_species:
+
+    # Determine hard-coded enum order from species-type-header.txt
+    enum_order = []
+    header_lines = species_type_out_text.splitlines()
+    for ln in header_lines:
+        #print(ln)
+        trimmed = ln.lstrip()
+        if trimmed.startswith("SP_"):
+            enum_name = re.split(',|/s+', trimmed)[0]
+            if enum_name == "SP_FIRST_NONBASE_DRACONIAN" or enum_name == "SP_LAST_NONBASE_DRACONIAN":
+                continue
+            enum_order.append(enum_name)
+            #print(enum_name)
+
+    sorted_species = []
+    for enum_name in enum_order:
+        for species in all_species:
+            if species['enum'] == enum_name:
+                sorted_species.append(species)
+                #print("Appended " + enum_name)
+                break
+
+    for species in sorted_species:
         # species-data.h
         species_data_out_text += species_data_template.format(**species)
         # aptitudes.h
@@ -410,14 +432,10 @@ def main():
         species_groups = update_species_group(species_groups, species)
 
     species_data_out_text += load_template(args.templatedir,
-                                        'species-data-deprecated-species.txt')
-    species_data_out_text += load_template(args.templatedir,
                                         'species-data-footer.txt')
     with open(args.species_data, 'w') as f:
         f.write(species_data_out_text)
 
-    aptitudes_out_text += load_template(args.templatedir,
-                                        'aptitudes-deprecated-species.txt')
     aptitudes_out_text += load_template(args.templatedir,
                                         'aptitudes-footer.txt')
     with open(args.aptitudes, 'w') as f:

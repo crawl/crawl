@@ -962,7 +962,7 @@ tt.t1tt1WW1tt.tt
 ttt11tttWWttt1t1
 tt.ttt1WWWtt*ttt
 t.ttttWWWttttt1t
- tttt.WwWttt.tt
+ tttt.WwWtttttt
    tttWwW1tttt
    tttWwW..ttt
     ttWwWt..t
@@ -2425,7 +2425,7 @@ KFEAT:  F = cache of fruit
 :   d = d - 1
 : else
 TAGS:   no_pool_fixup
-MONS:   death yak zombie, lich / revenant
+MONS:   death yak zombie, lich / revenant soulmonger
 MONS:   ancient lich / dread lich / alderking
 KMONS:  P = withered plant
 KFEAT:  t = petrified_tree
@@ -3198,7 +3198,7 @@ KMONS:   R = spectral anaconda
 # A necromancy-themed loot item behind the obsidian statue.
 ITEM:    rapier ego:pain w:5 / rapier ego:draining w:5 \
          / quickblade ego:pain w:5 / quickblade ego:draining w:5 \
-         / demon blade ego:draining / sword of zonguldruk w:1 \
+         / demon blade ego:draining / skull of zonguldruk w:1 \
          / great sword ego:draining / triple sword ego:draining \
          / demon whip ego:pain w:5 / demon whip ego:draining w:5 \
          / eveningstar ego:draining / sceptre of torment w:1 \

@@ -107,7 +107,7 @@
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(SolutionDir)\..\contrib\sdl2\include;$(SolutionDir)\..\contrib\sdl2-image;$(SolutionDir)\..\contrib\libpng;$(SolutionDir)\..\contrib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MinimalRebuild>true</MinimalRebuild>
+      <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <PrecompiledHeader />
       <WarningLevel>Level3</WarningLevel>
@@ -121,25 +121,8 @@
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>cd "$(SolutionDir)\..\rltiles"
-echo Generating main.png...
-"$(TargetPath)" dc-main.txt
-echo Generating dngn.png...
-"$(TargetPath)" dc-dngn.txt
-echo Generating floor
-"$(TargetPath)" dc-floor.txt
-echo Generating wall
-"$(TargetPath)" dc-wall.txt
-echo Generating feat
-"$(TargetPath)" dc-feat.txt
-echo Generating player.png...
-"$(TargetPath)" dc-player.txt
-echo Generating gui.png...
-"$(TargetPath)" dc-gui.txt
-echo Generating icons..
-"$(TargetPath)" dc-icons.txt
-copy *.png ..\dat\tiles\
-</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -150,7 +133,7 @@ copy *.png ..\dat\tiles\
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(SolutionDir)\..\contrib\sdl2\include;$(SolutionDir)\..\contrib\sdl2-image;$(SolutionDir)\..\contrib\libpng;$(SolutionDir)\..\contrib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MinimalRebuild>true</MinimalRebuild>
+      <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <PrecompiledHeader />
       <WarningLevel>Level3</WarningLevel>
@@ -164,25 +147,8 @@ copy *.png ..\dat\tiles\
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>cd "$(SolutionDir)\..\rltiles"
-echo Generating main.png...
-"$(TargetPath)" dc-main.txt
-echo Generating dngn.png...
-"$(TargetPath)" dc-dngn.txt
-echo Generating floor
-"$(TargetPath)" dc-floor.txt
-echo Generating wall
-"$(TargetPath)" dc-wall.txt
-echo Generating feat
-"$(TargetPath)" dc-feat.txt
-echo Generating player.png...
-"$(TargetPath)" dc-player.txt
-echo Generating gui.png...
-"$(TargetPath)" dc-gui.txt
-echo Generating icons..
-"$(TargetPath)" dc-icons.txt
-copy *.png ..\dat\tiles\
-</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -193,6 +159,7 @@ copy *.png ..\dat\tiles\
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <AdditionalDependencies>SDL2.lib;SDL2_image.lib;libpng.lib;ucrt.lib;vcruntime.lib;msvcrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -203,25 +170,8 @@ copy *.png ..\dat\tiles\
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>cd "$(SolutionDir)\..\rltiles"
-echo Generating main.png...
-"$(TargetPath)" dc-main.txt
-echo Generating dngn.png...
-"$(TargetPath)" dc-dngn.txt
-echo Generating floor
-"$(TargetPath)" dc-floor.txt
-echo Generating wall
-"$(TargetPath)" dc-wall.txt
-echo Generating feat
-"$(TargetPath)" dc-feat.txt
-echo Generating player.png...
-"$(TargetPath)" dc-player.txt
-echo Generating gui.png...
-"$(TargetPath)" dc-gui.txt
-echo Generating icons..
-"$(TargetPath)" dc-icons.txt
-copy *.png ..\dat\tiles\
-</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -235,6 +185,7 @@ copy *.png ..\dat\tiles\
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <AdditionalDependencies>SDL2.lib;SDL2_image.lib;libpng.lib;ucrt.lib;vcruntime.lib;msvcrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -245,25 +196,8 @@ copy *.png ..\dat\tiles\
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>cd "$(SolutionDir)\..\rltiles"
-echo Generating main.png...
-"$(TargetPath)" dc-main.txt
-echo Generating dngn.png...
-"$(TargetPath)" dc-dngn.txt
-echo Generating floor
-"$(TargetPath)" dc-floor.txt
-echo Generating wall
-"$(TargetPath)" dc-wall.txt
-echo Generating feat
-"$(TargetPath)" dc-feat.txt
-echo Generating player.png...
-"$(TargetPath)" dc-player.txt
-echo Generating gui.png...
-"$(TargetPath)" dc-gui.txt
-echo Generating icons..
-"$(TargetPath)" dc-icons.txt
-copy *.png ..\dat\tiles\
-</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

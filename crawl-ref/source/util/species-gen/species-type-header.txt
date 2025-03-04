@@ -51,11 +51,13 @@ enum species_type
     SP_SPRIGGAN,
     SP_MINOTAUR,
     SP_DEMONSPAWN,
+#if TAG_MAJOR_VERSION == 34
     SP_GHOUL,
+#endif
     SP_TENGU,
     SP_MERFOLK,
-    SP_VAMPIRE,
 #if TAG_MAJOR_VERSION == 34
+    SP_VAMPIRE,
     SP_DEEP_DWARF,
 #endif
     SP_FELID,
@@ -76,5 +78,7 @@ enum species_type
 #endif
     SP_MOUNTAIN_DWARF,
     SP_COGLIN,
+    SP_POLTERGEIST,
+    SP_REVENANT,
 
     // Auto-generated enums start here

@@ -10,6 +10,7 @@
 #include "activity-interrupt-type.h"
 #include "command-type.h"
 #include "enum.h"
+#include "equipment-slot.h"
 #include "item-prop-enum.h"
 #include "mpr.h"
 #include "operation-types.h"
@@ -231,7 +232,7 @@ public:
 class EquipOnDelay : public Delay
 {
     item_def& equip;
-    bool primary_weapon;
+    equipment_slot slot;
     bool was_prompted = false;
 
     void start() override;
@@ -246,8 +247,8 @@ class EquipOnDelay : public Delay
 
     void finish() override;
 public:
-    EquipOnDelay(int dur, item_def& item, bool primary = false) :
-                 Delay(dur), equip(item), primary_weapon(primary)
+    EquipOnDelay(int dur, item_def& item, equipment_slot _slot) :
+                 Delay(dur), equip(item), slot(_slot)
     { }
 
     bool try_interrupt(bool force = false) override;
@@ -267,8 +268,7 @@ private:
 
 class EquipOffDelay : public Delay
 {
-    const item_def& equip;
-    bool primary_weapon;
+    item_def& equip;
     bool was_prompted = false;
 
     void start() override;
@@ -283,8 +283,8 @@ class EquipOffDelay : public Delay
 
     void finish() override;
 public:
-    EquipOffDelay(int dur, const item_def& item, bool primary = false) :
-                   Delay(dur), equip(item), primary_weapon(primary)
+    EquipOffDelay(int dur, item_def& item) :
+                   Delay(dur), equip(item)
     { }
 
     bool try_interrupt(bool force = false) override;
@@ -300,29 +300,6 @@ public:
     }
 private:
     const char* get_verb();
-};
-
-class JewelleryOnDelay : public Delay
-{
-    item_def& jewellery;
-
-    void tick() override;
-
-    void finish() override;
-public:
-    JewelleryOnDelay(int dur, item_def& item) :
-                     Delay(dur), jewellery(item)
-    { }
-
-    const char* name() const override
-    {
-        return "jewellery_on";
-    }
-
-    bool is_being_used(const item_def& item) const override
-    {
-        return &item == &jewellery;
-    }
 };
 
 class MemoriseDelay : public Delay
@@ -660,54 +637,6 @@ public:
     }
 };
 
-class ExsanguinateDelay : public Delay
-{
-    bool was_prompted = false;
-
-    void start() override;
-
-    void tick() override
-    {
-        mprf(MSGCH_MULTITURN_ACTION, "You continue bloodletting.");
-    }
-
-    void finish() override;
-public:
-    ExsanguinateDelay(int dur) : Delay(dur)
-    { }
-
-    bool try_interrupt(bool force = false) override;
-
-    const char* name() const override
-    {
-        return "exsanguinate";
-    }
-};
-
-class RevivifyDelay : public Delay
-{
-    bool was_prompted = false;
-
-    void start() override;
-
-    void tick() override
-    {
-        mprf(MSGCH_MULTITURN_ACTION, "You continue your ritual.");
-    }
-
-    void finish() override;
-public:
-    RevivifyDelay(int dur) : Delay(dur)
-    { }
-
-    bool try_interrupt(bool force = false) override;
-
-    const char* name() const override
-    {
-        return "revivify";
-    }
-};
-
 class TransformDelay : public Delay
 {
     transformation form;
@@ -761,8 +690,6 @@ private:
 
 class ImprintDelay : public Delay
 {
-    bool was_prompted = false;
-
     void start() override;
 
     void tick() override

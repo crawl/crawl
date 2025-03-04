@@ -143,7 +143,7 @@ ENDMAP
 NAME:    hangedman_research_toxicology
 MONS:    sea snake, mana viper, tarantella, death drake
 KMONS:   5D = radroach
-KITEM:   E = potion of degeneration pre_id / \
+KITEM:   E = potion of moonshine pre_id / \
              potion of mutation pre_id
 COLOUR:  .012345DE = lightgreen
 FTILE:   .+n012345DE = floor_moss
@@ -231,7 +231,7 @@ dcbadabcd
 ENDMAP
 
 NAME:   hangedman_research_probablistics
-MONS:   eidolon, glass eye, great orb of eyes, sphinx
+MONS:   eidolon, glass eye, great orb of eyes, guardian sphinx
 MARKER: V = lua:fog_machine { cloud_type = "seething chaos", pow_min = 3, \
                 pow_max = 10, delay = 50, size = 1, walk_dist = 1 }
 COLOUR: .01234D = blue

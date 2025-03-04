@@ -152,7 +152,7 @@ void player::set_position(const coord_def &c)
         if (duration[DUR_QUAD_DAMAGE])
             invalidate_agrid(true);
 
-        if (player_has_orb() || player_equip_unrand(UNRAND_CHARLATANS_ORB))
+        if (player_has_orb() || you.unrand_equipped(UNRAND_CHARLATANS_ORB))
         {
             if (player_has_orb())
                 env.orb_pos = c;
@@ -248,16 +248,14 @@ brand_type player::damage_brand(int)
     if (duration[DUR_CONFUSING_TOUCH])
         return SPWPN_CONFUSE;
 
-    const int wpn = equip[EQ_WEAPON];
-    if (wpn != -1 && !melded[EQ_WEAPON])
+    if (item_def* wpn = you.weapon())
     {
-        if (is_range_weapon(inv[wpn]))
-            return SPWPN_NORMAL; // XXX: check !is_melee_weapon instead?
-        return get_weapon_brand(inv[wpn]);
+        if (is_range_weapon(*wpn))
+            return SPWPN_NORMAL;
+        return get_weapon_brand(*wpn);
     }
 
     // unarmed
-
     return get_form()->get_uc_brand();
 }
 
@@ -379,145 +377,48 @@ random_var player::attack_delay_with(const item_def *projectile, bool rescale,
                    random_var(1));
 }
 
-// Returns the item in the given equipment slot, nullptr if the slot is empty.
-// eq must be in [EQ_WEAPON, EQ_RING_AMULET], or bad things will happen.
-item_def *player::slot_item(equipment_type eq, bool include_melded) const
-{
-    ASSERT_RANGE(eq, EQ_FIRST_EQUIP, NUM_EQUIP);
-
-    const int item = equip[eq];
-    if (item == -1 || !include_melded && melded[eq])
-        return nullptr;
-    return const_cast<item_def *>(&inv[item]);
-}
-
-// Returns the item in the player's weapon slot.
+// Returns the first item in the player's weapon slot.
 item_def *player::weapon(int /* which_attack */) const
 {
-    if (melded[EQ_WEAPON])
-        return nullptr;
-
-    return slot_item(EQ_WEAPON, false);
+    return equipment.get_first_slot_item(SLOT_WEAPON);
 }
 
 // Give hands required to wield weapon.
 hands_reqd_type player::hands_reqd(const item_def &item, bool base) const
 {
     if (you.has_mutation(MUT_QUADRUMANOUS)
-        && (!is_weapon(item) || is_weapon_wieldable(item, SIZE_MEDIUM)))
+        && !is_weapon_too_large(item, SIZE_MEDIUM))
     {
         return HANDS_ONE;
     }
     return actor::hands_reqd(item, base);
 }
 
-bool player::can_wield(const item_def& item, bool ignore_curse,
-                       bool ignore_brand, bool ignore_shield,
-                       bool ignore_transform) const
-{
-    if (equip[EQ_WEAPON] != -1 && !ignore_curse)
-    {
-        if (inv[equip[EQ_WEAPON]].cursed())
-            return false;
-    }
-
-    // Unassigned means unarmed combat.
-    const bool two_handed = item.base_type == OBJ_UNASSIGNED
-                            || hands_reqd(item) == HANDS_TWO;
-
-    if (two_handed && (
-        (!ignore_shield && shield())
-        || get_mutation_level(MUT_MISSING_HAND)))
-    {
-        return false;
-    }
-
-    return could_wield(item, ignore_brand, ignore_transform);
-}
-
-/**
- * Checks whether the player could ever wield the given weapon, regardless of
- * what they're currently wielding, transformed into, or any other state.
- *
- * @param item              The item to wield.
- * @return                  Whether the player could potentially wield the
- *                          item.
- */
-bool player::could_wield(const item_def &item, bool /*ignore_brand*/,
-                         bool ignore_transform, bool quiet) const
-{
-    // Some lingering flavor from the days where sandblast ammo was wielded.
-    // harmless.
-    if (!can_throw_large_rocks()
-        && item.is_type(OBJ_MISSILES, MI_LARGE_ROCK))
-    {
-        if (!quiet)
-            mpr("That's too large and heavy for you to wield.");
-        return false;
-    }
-
-    // Most non-weapon objects can be wielded, though there's rarely a point
-    if (!is_weapon(item))
-    {
-        if (item.base_type == OBJ_ARMOUR || item.base_type == OBJ_JEWELLERY)
-        {
-            if (!quiet)
-                mprf("You can't wield %s.", base_type_string(item));
-            return false;
-        }
-
-        return true;
-    }
-    else if (you.has_mutation(MUT_NO_GRASPING))
-    {
-        if (!quiet)
-            mpr("You can't use weapons.");
-        return false;
-    }
-    else if (!ignore_transform && !form_can_wield())
-    {
-        if (!quiet)
-            mpr("You can't use weapons in this form.");
-        return false;
-    }
-
-    const size_type bsize = body_size(PSIZE_TORSO, ignore_transform);
-    // Small species wielding large weapons...
-    if (!is_weapon_wieldable(item, bsize)
-        && !you.has_mutation(MUT_QUADRUMANOUS))
-    {
-        if (!quiet)
-            mpr("That's too large for you to wield.");
-        return false;
-    }
-
-    if (get_mutation_level(MUT_MISSING_HAND)
-        && you.hands_reqd(item) == HANDS_TWO)
-    {
-        return false;
-    }
-
-    return true;
-}
-
 // Returns the shield the player is wearing, or nullptr if none.
 item_def *player::shield() const
 {
-    item_def *offhand_item = slot_item(EQ_OFFHAND, false);
+    item_def *offhand_item = you.equipment.get_first_slot_item(SLOT_OFFHAND, false);
     if (!offhand_item || offhand_item->base_type != OBJ_ARMOUR)
         return nullptr;
     return offhand_item;
 }
 
+item_def* player::body_armour() const
+{
+    return you.equipment.get_first_slot_item(SLOT_BODY_ARMOUR);
+}
+
+// Returns the second weapon in the player's weapon slot (if one exists).
 item_def *player::offhand_weapon() const
 {
     if (!you.has_mutation(MUT_WIELD_OFFHAND))
         return nullptr;
-    item_def *offhand_item = slot_item(EQ_OFFHAND, false);
-    if (!offhand_item || !is_weapon(*offhand_item))
+
+    vector<item_def*> wpn = you.equipment.get_slot_items(SLOT_WEAPON);
+    if (wpn.size() < 2)
         return nullptr;
-    // XXX: sanity check for 2hs..?
-    return offhand_item;
+    else
+        return wpn[1];
 }
 
 string player::name(description_level_type dt, bool, bool) const
@@ -842,7 +743,7 @@ bool player::go_berserk(bool intentional, bool potion)
 
     quiver::set_needs_redraw();
 
-    if (player_equip_unrand(UNRAND_ZEALOT_SWORD))
+    if (you.unrand_equipped(UNRAND_ZEALOT_SWORD))
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
             if (mi->friendly())
                 mi->go_berserk(false);
@@ -868,7 +769,7 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet,
         msg = "You're still recovering from your berserk rage.";
     else if (duration[DUR_DEATHS_DOOR] && temp)
         msg = "You can't enter a blood rage from death's door.";
-    else if (beheld() && !player_equip_unrand(UNRAND_DEMON_AXE) && temp)
+    else if (beheld() && !you.unrand_equipped(UNRAND_DEMON_AXE) && temp)
         msg = "You are too mesmerised to rage.";
     else if (!intentional && !potion && clarity() && temp)
         msg = "You're too calm and focused to rage.";
@@ -904,12 +805,12 @@ bool player::is_web_immune() const
 {
     return is_insubstantial()
         || is_amorphous()
-        || player_equip_unrand(UNRAND_SLICK_SLIPPERS);
+        || you.unrand_equipped(UNRAND_SLICK_SLIPPERS);
 }
 
 bool player::is_binding_sigil_immune() const
 {
-    return player_equip_unrand(UNRAND_SLICK_SLIPPERS);
+    return you.unrand_equipped(UNRAND_SLICK_SLIPPERS);
 }
 
 bool player::shove(const char* feat_name)

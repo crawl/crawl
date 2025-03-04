@@ -304,7 +304,7 @@ static bool _zin_retribution()
             confuse_player(5 + random2(3));
             break;
         case 1:
-            you.put_to_sleep(nullptr, 30 + random2(20));
+            you.put_to_sleep(nullptr, random_range(5, 10) * BASELINE_DELAY);
             break;
         case 2:
             paralyse_player(_god_wrath_name(god));
@@ -338,13 +338,13 @@ static bool _cheibriados_retribution()
     int tension = get_tension(GOD_CHEIBRIADOS);
 
     // Almost any tension: sleep if >66% HP, otherwise remove haste and give
-    // slow. Next to / no tension: noise + stat drain.
+    // slow. Next to / no tension: noise.
     if (tension > random_range(5, 8))
     {
         if (you.hp >= (you.hp_max * 3 / 4))
         {
             mprf(MSGCH_DANGER, "You lose track of time!");
-            you.put_to_sleep(nullptr, 30 + random2(20));
+            you.put_to_sleep(nullptr, random_range(5, 10) * BASELINE_DELAY);
             dec_penance(god, 1);
         }
         else
@@ -358,7 +358,6 @@ static bool _cheibriados_retribution()
     {
         simple_god_message(" strikes the hour, and time shudders.", false, god);
         noisy(40, you.pos());
-        lose_stat(STAT_RANDOM, 2 + random2avg(5, 2));
     }
 
     return true;
@@ -647,7 +646,7 @@ static bool _kikubaaqudgha_retribution()
 
     const bool sil = silenced(you.pos());
     const bool rtorm = you.res_torment();
-    if (one_chance_in(3) && (!sil || !rtorm))
+    if (coinflip() && (!sil || !rtorm))
     {
         if (!rtorm)
             torment(nullptr, TORMENT_KIKUBAAQUDGHA, you.pos());
@@ -659,12 +658,7 @@ static bool _kikubaaqudgha_retribution()
         return true;
     }
 
-    if (coinflip())
-    {
-        lose_stat(STAT_RANDOM, 2 + random2avg(you.experience_level / 3, 2));
-        return true;
-    }
-    you.drain(nullptr, false, random_range(225, 375));
+    you.drain(nullptr, false, random_range(175, 300));
     return true;
 }
 
@@ -700,13 +694,17 @@ static bool _yredelemnul_retribution()
 
 static bool _trog_retribution()
 {
-    // physical/berserk theme
+    // berserk theme
     const god_type god = GOD_TROG;
+    int tension = get_tension(GOD_TROG);
 
-    if (coinflip())
+    if (you.hp < you.hp_max * 2 / 3 || tension < 4 || tension > 27)
     {
+        // If the other effect could kill you, tension is low enough we can
+        // safely interrupt you, or tension's so high they're not making things
+        // much worse, summon berserkers from the Brothers In Arms monster set.
         int count = 0;
-        int points = 3 + you.experience_level * 3;
+        int points = 2 + you.experience_level * 3;
 
         {
             msg::suppress msg;
@@ -714,7 +712,7 @@ static bool _trog_retribution()
             while (points > 0)
             {
                 int cost =
-                    min(min(random2avg((1 + you.experience_level / 3), 2) + 3,
+                    min(min(random2avg((1 + you.experience_level / 4), 2) + 3,
                             10),
                         points);
 
@@ -737,57 +735,14 @@ static bool _trog_retribution()
                                      : " has no time to punish you... now.",
                            false, god);
     }
-    else if (!one_chance_in(3))
-    {
-        simple_god_message(" voice booms out: Feel my wrath!", true, god);
-
-        // A collection of physical effects that might be better
-        // suited to Trog than wild fire magic... messages could
-        // be better here... something more along the lines of apathy
-        // or loss of rage to go with the anti-berserk effect-- bwr
-        switch (random2(6))
-        {
-        case 0:
-        case 1:
-        case 2:
-            lose_stat(STAT_STR, 1 + random2(you.strength() / 5));
-            break;
-
-        case 3:
-            if (!you.duration[DUR_PARALYSIS])
-            {
-                mprf(MSGCH_WARN, "You suddenly pass out!");
-                const int turns = 2 + random2(6);
-                take_note(Note(NOTE_PARALYSIS, min(turns, 13), 0, "Trog"));
-                you.increase_duration(DUR_PARALYSIS, turns, 13);
-            }
-            return false;
-
-        case 4:
-        case 5:
-            mprf(MSGCH_WARN, "You suddenly feel lethargic!");
-            slow_player(91 + random2(10));
-            break;
-        }
-    }
     else
     {
-        // A fireball is magic when used by a mortal but just a manifestation
-        // of pure rage when used by a god. --ebering
-
-        monster* avatar = _get_wrath_avatar(god);
-        // can't be const because mons_cast() doesn't accept const monster*
-
-        if (avatar == nullptr)
-        {
-            simple_god_message(" has no time to deal with you just now.", false,
-                               god);
-            return false; // not a very dazzling divine experience...
-        }
-
-        _spell_retribution(avatar, SPELL_FIREBALL,
-                           god, " hurls fiery rage upon you!");
-        _reset_avatar(*avatar);
+        // Otherwise, make the player do a cruel mockery of berserk:
+        // weakly thrashing in place, regularly hitting walls and floors.
+        simple_god_message(" tears away your strength and self-control!", false, god);
+        int vex_max = max(4, you.experience_level / 4);
+        you.weaken(nullptr, 25);
+        you.vex(nullptr, random_range(3, vex_max), "Trog's wrath");
     }
 
     return true;
@@ -923,15 +878,12 @@ static bool _sif_muna_retribution()
     case 0:
     case 1:
     case 2:
-        lose_stat(STAT_INT, 1 + random2(you.intel() / 5));
-        break;
-
     case 3:
     case 4:
-    case 5:
         confuse_player(5 + random2(3));
         break;
 
+    case 5:
     case 6:
     case 7:
     case 8:
@@ -1815,7 +1767,7 @@ static bool _dithmenos_retribution()
     {
         // This is possibly kind of underwhelming?
         god_speaks(god, "You feel overwhelmed by the shadows around you.");
-        you.put_to_sleep(nullptr, 30 + random2(20));
+        you.put_to_sleep(nullptr, random_range(5, 10) * BASELINE_DELAY);
         break;
     }
     case 3:
@@ -1995,7 +1947,7 @@ static bool _wu_jian_retribution()
             break;
         case 3:
             wu_jian_sifu_message(" says: Suffer, mortal!");
-            you.corrode_equipment(_god_wrath_name(god).c_str(), 2);
+            you.corrode(nullptr, _god_wrath_name(god).c_str(), 8);
             break;
         }
     }
@@ -2329,6 +2281,24 @@ void reduce_xp_penance(god_type god, int amount)
                 / you.exp_docked_total[god];
     if (new_pen < you.penance[god])
         dec_penance(god, you.penance[god] - new_pen);
+}
+
+void gozag_abandon_shops_on_level()
+{
+    vector<map_marker *> markers = env.markers.get_all(MAT_FEATURE);
+    for (const auto marker : markers)
+    {
+        map_feature_marker *feat =
+            dynamic_cast<map_feature_marker *>(marker);
+        ASSERT(feat);
+        if (feat->feat == DNGN_ABANDONED_SHOP)
+        {
+            // TODO: clear shop data out?
+            env.grid(feat->pos) = DNGN_ABANDONED_SHOP;
+            view_update_at(feat->pos);
+            env.markers.remove(feat);
+        }
+    }
 }
 
 void gozag_incite(monster *mon)

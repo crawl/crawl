@@ -141,7 +141,7 @@ static void find_and_equip_exact_item(item_def item){
 
     REQUIRE(index != -1);
 
-    equip_item(get_armour_slot(item), index);
+    equip_item(get_all_item_slots(item)[0], index);
 }
 
 static void make_and_equip_item(object_class_type base_type, int sub_type,

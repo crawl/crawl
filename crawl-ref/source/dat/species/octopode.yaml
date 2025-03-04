@@ -6,6 +6,11 @@ adjective: Octopoid
 genus: Octopus
 difficulty: Advanced
 difficulty_priority: 50
+species_flags:
+  - no_hair
+  - no_bones
+  - no_feet
+  - no_ears
 aptitudes:
   xp: 0
   hp: -1
@@ -23,11 +28,6 @@ str: 7
 int: 10
 dex: 7
 levelup_stat_frequency: 5
-species_flags:
-  - no_hair
-  - no_bones
-  - no_feet
-  - no_ears
 mutations:
   1:
     MUT_CAMOUFLAGE: 1

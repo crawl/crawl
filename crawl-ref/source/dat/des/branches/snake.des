@@ -1712,7 +1712,7 @@ WEIGHT: 5
 KMONS:  123 = black mamba / nothing
 KMONS:  4 = guardian serpent
 KMONS:  5 = naga mage / nothing
-KITEM:  1235 = potion of degeneration w:20 pre_id / scroll of poison /\
+KITEM:  1235 = potion of moonshine w:20 pre_id / scroll of poison /\
                nothing w:20
 KITEM:  4 = any weapon good_item ego:venom q:1 / \
             any weapon good_item ego:venom q:2
@@ -2795,18 +2795,17 @@ MONS:    naga mage w:30 / naga ritualist / naga sharpshooter \
 MONS:    nagaraja / guardian serpent / salamander tyrant w:5
 KITEM:   R = jade gem
 KITEM:   O = serpentine rune of Zot
+KFEAT:   ^ = tyrant's trap / archmage's trap
 SHUFFLE: 'D / "E, 'D / 'D / FH, "E / JK
-NSUBST:  DLE = 1:+
-SUBST:   FHJK = x, ' = ., " = .
-SUBST:   E = D, L=xc..++, D=xc++, T : T U V .:30 b, _ : ....!x, ! = x .:2
+SUBST:   FHJK = x, '" = .
+NSUBST:  DLE = 1:+, ^ = 1:^... / *:.
+SUBST:   L = xc..++, DE = xc++
+SUBST:   T : T U V .:30 b, _ : ....!x, ! = x .:2
 SUBST:   1 = 1..., 2 = 2..., 3 = 3..., 4 = 44..., 5 = 55...
-NSUBST:  . = 30 =12345..... / *:., 6 = 4:6 / *=6.
+NSUBST:  . = 28 = 12345...... / *:., 6 = 4:6 / 2:. / * = 6.
 SUBST:   - = .
 SHUFFLE: 123, 45
-NSUBST:  { = { / .
-#
-validate {{ return glyphs_connected('@', 'O') }}
-#
+NSUBST:  { = 1:{ / *:.
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -2824,9 +2823,9 @@ xxxxxx''x''''''''''''xx.3.xx""""""""""""x""x
 xxxxxxx'D'''''''''''''45354"""""""""""""E"xx
 xxxxxxxxxx''''''''''xx.....xx""""""""""xxxxx
 xxxxxxxxxxx''''''''xxxxx.xxxxx""""""""xxxxxx
-xxxxxxxxxxxxx''''xxxxxx...xxxxxx""""xxxxxxxx
+xxxxxxxxxxxxx''''xxxxxx.^.xxxxxx""""xxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxx+xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxx!.!xxxxxx.....xxxxxx!.!xxxxxxxx
+xxxxxxxxxxxxx!.!xxxxxx..^..xxxxxx!.!xxxxxxxx
 xxxxxxxxxx!..---_xx...43335...xx_---!!!xxxxx
 xxxxxxxx!...---_x.11-4--3--5-22.x_---...!xxx
 xxxxxxx!...2---x--11---------22--x---1...!xx
@@ -2911,9 +2910,10 @@ MONS:    naga mage w:25 / naga ritualist / naga sharpshooter / \
 MONS:    nagaraja / salamander tyrant w:5
 KITEM:   O = serpentine rune of Zot
 KITEM:   R = jade gem
+KFEAT:   ^ = tyrant's trap / archmage's trap
 SHUFFLE: ABC, {([
 SUBST:   A = x, B : xx., C = ., c : c:20 v:5, 1 = 1., 2 = 23..., ( = (., [ = [..
-NSUBST:  4 = 4=4 / *=432.., X = 4=x / 4=. / x..
+NSUBST:  4 = 6:4 / * = 432.., X = 4=x / 4=. / x.., ^ = 2:^ / 2 = ^. / *:.
 MAP
 xxxxxxxxxxxxxxxxxxc.@..cxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxc....cxxxxxxxxxxxxxxxxxx
@@ -2921,40 +2921,40 @@ xxxxxxxxxxxxxxxxxcc.{..ccxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxc......cxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxc..1.1.cxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxc...2..cxxxccccccccxxxxxx
-xxxxxxxxxxxxcccccc......ccccc......cccxxxx
+xxxxxxxxxxxxcccccc..^...ccccc......cccxxxx
 xxxxxxxxccccc...2.......2.......1....ccccc
 xxxxxcccc.......A...4............1........
-xxxccc..........A2..X..2.........2....(..@
+xxxccc..........A2..X..2.^.......2....(..@
 xxcc...............2.2..........1.........
 xxc....4.....ccccc......cccccc......cccccc
 xcc...1...ccccxxxc......cxxxxccccccccxxxxx
-xc...X.B.ccxxxxxxc..1.1.cxxxxxxxxxxxxxxxxx
+xc...XB..ccxxxxxxc..1.1.cxxxxxxxxxxxxxxxxx
 xc....4B.ccxxxxxxc...X..cxxxxxxxxxxxxxxxxx
 xcc....1..ccccxxxc...2..cxxxxxxxxxxxxxxxxx
-xxc..........ccccc......ccccccxxxxxxxxxxxx
+xxc..........ccccc...^..ccccccxxxxxxxxxxxx
 xxcc.........................cccccxxxxxxxx
-xxxccc.....4....C........A.......ccccxxxxx
-xxxxxcccc...1...C..4X....A..........cccxxx
+xxxccc.....4....C^.......A.......ccccxxxxx
+xxxxxcccc...1...C..4X...^A..........cccxxx
 xxxxxxxxccccc........X4........1......ccxx
-xxxxxxxxxxxxcccccc......ccccc..........cxx
+xxxxxxxxxxxxcccccc..^...ccccc..........cxx
 xxxxxxxxxxxxxxxxxc......cxxxcccc..1....ccx
-xxxxxxxxxxxxxxxxxc..1...cxxxxxxcc.B.X...cx
+xxxxxxxxxxxxxxxxxc..1...cxxxxxxcc..BX...cx
 xxxxxxxxxxxxxxxxxc..X21.cxxxxxxcc.B.4...cx
 xxxxxxxxxxxxxxxxxc..1...cxxxcccc..1....ccx
-xxxxxxxxxxxxcccccc......ccccc..........cxx
+xxxxxxxxxxxxcccccc...^..ccccc..........cxx
 xxxxxxxxccccc........4.........4......ccxx
-xxxxxcccc.......A...1X...C...2......cccxxx
-xxxccc..........A....4...C.......ccccxxxxx
+xxxxxcccc.......A...1X..^C...2......cccxxx
+xxxccc..........A^...4...C.......ccccxxxxx
 xxcc.........................cccccxxxxxxxx
-xxc....1.2...ccccc...1..ccccccxxxxxxxxxxxx
+xxc....1.2...ccccc..^1..ccccccxxxxxxxxxxxx
 xcc..4....ccccxxxc..1...cxxxxxxxxxxxxxxxxx
-xc..1X.B.ccxxxxxxc...2..cxxxxxxxxxxxxxxxxx
+xc..1XB..ccxxxxxxc...2..cxxxxxxxxxxxxxxxxx
 xc...4.B.ccxxxxxxc..1X..cxxxxxxxxxxxxxxxxx
 xcc.......ccccxxxc...1..cxxxxxxxxxxxxxxxxx
-xxc....1.2...ccccc..2...ccccccxxxxxxxxxxxx
+xxc....1.2...ccccc..2^..ccccccxxxxxxxxxxxx
 xxcc.................1.....4.cccccxxxxxxxx
-xxxccc........1.C...4........1...ccccxxxxx
-xxxxxcccc..4.2X4C....1......12X4....cccxxx
+xxxccc........1^C...4........14..ccccxxxxx
+xxxxxcccc..4.2X4.C...1..^...12X.4...cccxxx
 xxxxxxxxccccc.1.....2........1....4.ROcxxx
 xxxxxxxxxxxxcccccccccccccccccccccccccccxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -3040,9 +3040,10 @@ KITEM:   e = jade gem mimic
 : else
 KITEM:   eE = any good_item
 : end
+KFEAT:   ^ = tyrant's trap / archmage's trap
 SHUFFLE: Dd / Ee
 SUBST:   1 = 1.., 2 = 2..., 3 = 3.
-NSUBST:  4 = 4:4 / * = 4., 5 = 6:5 / * = 54.
+NSUBST:  4 = 4:4 / * = 4., 5 = 6:5 / * = 54., ^ = 1:^ / 2 = ^. / *:.
 MAP
         cccccccc     c.@..c       cccccccc
      cccc..1...ccc   c....c    cccc..2...ccc
@@ -3050,16 +3051,16 @@ MAP
   cc.......1.......ccc....c  cc......2......cc
   c1....ccccccc....1cc....c  c1....cccccc..51c
  cc.51ccc..2..cc..5..c....cxcc.2.ccc....cc12.cc
- c...cc...23...cc1........cxc.5.1c.......cc...c
+ c...cc...23^..cc1........cxc.5.1c.......cc...c
 cc...c2....2....cc........cxc...cc.......4c...cc
 c...cc52..ccc..22cc....32.cxc232c..e...4..cc...c
 c...c...2ccccc25..cc......cxc...c.4.E.4c.2.c...c
-c232c...cc.5.cc...ccc..5..ccc...cc.....c323c...c
-c...c323c.....cc...ccc..5..ccc...cc.5.cc...c232c
-c...c.2.c4.D.4.c...cxc......cc..52ccccc2...c...c
+c232c.^.cc.5.cc...ccc..5..ccc...cc.....c323c...c
+c...c323c.....cc...ccc..5..ccc...cc.5.cc.^.c232c
+c...c.2.c4.D.4.c.^.cxc......cc..52ccccc2...c.^.c
 c...cc..4...d..c232cxc.23....cc22..ccc..25cc...c
 cc...c4.......cc...cxc........cc....2....2c...cc
- c...cc.......c1.5.cxc........1cc...32...cc...c
+ c...cc.......c1.5.cxc........1cc..^32...cc...c
  cc.21cc....ccc.2.ccxc....c..5..cc..2..ccc15.cc
   c15..cccccc....1c  c....cc1....ccccccc....1c
   cc......2......cc  c....ccc.......1.......cc

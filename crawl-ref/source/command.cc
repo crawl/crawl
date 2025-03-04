@@ -268,121 +268,106 @@ static void _print_version()
     ui::run_layout(std::move(popup), done);
 }
 
-void list_armour()
+// Output a short list of currently equipped items to the message log.
+static void _list_equipment(equipment_slot first_slot, equipment_slot last_slot)
 {
+    string jstr;
     ostringstream estr;
-    for (int j = EQ_MIN_ARMOUR; j <= EQ_MAX_ARMOUR; j++)
+
+    vector<string> entries;
+    int max_len = 0;
+    for (int j = first_slot; j <= last_slot; j++)
     {
-        const equipment_type i = static_cast<equipment_type>(j);
-        const int armour_id = you.equip[i];
-        int       colour    = MSGCOL_BLACK;
+        const equipment_slot i = static_cast<equipment_slot>(j);
+        const int num_slots = you.equipment.num_slots[i];
+        if (num_slots == 0)
+            continue;
 
-        estr.str("");
-        estr.clear();
-
-        estr << ((i == EQ_CLOAK)           ? "Cloak  " :
-                 (i == EQ_HELMET)          ? "Helmet " :
-                 (i == EQ_GLOVES)          ? "Gloves " :
-                 (i == EQ_OFFHAND)         ? "Shield " :
-                 (i == EQ_BODY_ARMOUR)     ? "Armour " :
-                 (i == EQ_BOOTS)           ?
-                   (you.can_wear_barding() ? "Barding"
-                                           : "Boots  ")
-                                           : "unknown")
-             << " : ";
-
-        if (!you_can_wear(i))
-            estr << "    (unavailable)";
-        else if (!you_can_wear(i, true))
-            estr << "    (currently unavailable)";
-        else if (armour_id != -1)
+        if (slot_is_melded(i))
         {
-            // XXX: consider if this is needed
-            if (you.has_mutation(MUT_WIELD_OFFHAND)
-                && is_weapon(you.inv[armour_id]))
+            entries.emplace_back(make_stringf("<darkgrey>[%s melded]</darkgrey>", equip_slot_name(i, true)));
+            continue;
+        }
+
+        vector<player_equip_entry> items = you.equipment.get_slot_entries(i);
+
+        for (int num = 0; num < num_slots; ++num)
+        {
+            int       colour    = MSGCOL_BLACK;
+
+            estr.str("");
+            estr.clear();
+
+            estr << equip_slot_name(i, true);
+            if (num_slots > 1)
+                estr << " #" << (num + 1);
+            estr << string(10 - estr.tellp(), ' ') << ": ";
+
+            if (num >= (int)items.size())
             {
-                estr << "    (currently unavailable)";
+                estr << "<lightgrey>(nothing)</lightgrey>";
+                entries.emplace_back(estr.str());
+                continue;
             }
+
+            if (items[num].is_overflow)
+                estr << "<darkgrey>(occupied)</darkgrey>";
+            else if (items[num].melded)
+                estr << "<darkgrey>(unavailable)</darkgrey>";
             else
             {
-                estr << you.inv[armour_id].name(DESC_INVENTORY);
-                colour = menu_colour(estr.str(),
-                                     item_prefix(you.inv[armour_id]),
-                                     "equip", false);
+                const item_def& item = items[num].get_item();
+                const string item_name = item.name(DESC_INVENTORY);
+                colour = menu_colour(item_name, item_prefix(item), "equip", false);
+                if (colour == MSGCOL_BLACK)
+                    colour = menu_colour(estr.str(), "", "equip", false);
+                estr << "<" << colour_to_str(colour) << ">"
+                     << item_name
+                     << "</" << colour_to_str(colour) << ">";
             }
+
+            entries.emplace_back(estr.str());
+            if (max_len < (int)entries.back().length())
+                max_len = entries.back().length();
         }
-        else if (you_can_wear(i) == maybe_bool::maybe)
-            estr << "    (restricted)";
-        else
-            estr << "    none";
-
-        if (colour == MSGCOL_BLACK)
-            colour = menu_colour(estr.str(), "", "equip", false);
-
-        mprf(MSGCH_EQUIPMENT, colour, "%s", estr.str().c_str());
     }
+
+    // Now print the entries to screen (using split columns if there are a lot)
+    int cols = get_number_of_cols() - 1;
+    const int width = (cols - 1) / 2;
+    const bool split = entries.size() > 6 && cols > 84 && max_len < width - 8;
+
+    if (!split)
+    {
+        for (size_t i = 0; i < entries.size(); ++i)
+            mprf(MSGCH_EQUIPMENT, "%s", entries[i].c_str());
+    }
+    else
+    {
+        for (size_t i = 0; i < entries.size(); i += 2)
+        {
+            if (i + 1 < entries.size())
+            {
+                // XXX: Must strip color tags out to get the proper actual string
+                //      length to pad.
+                int pad = max(0, (int)(width - formatted_string::parse_string(entries[i]).tostring().length()));
+                mprf(MSGCH_EQUIPMENT, "%s%s", (entries[i].c_str() + string(pad, ' ')).c_str(),
+                                              entries[i+1].c_str());
+            }
+            else
+                mprf(MSGCH_EQUIPMENT, "%s", entries[i].c_str());
+        }
+    }
+}
+
+void list_armour()
+{
+    _list_equipment(SLOT_MIN_ARMOUR, SLOT_MAX_ARMOUR);
 }
 
 void list_jewellery()
 {
-    string jstr;
-    int cols = get_number_of_cols() - 1;
-    bool split = species::arm_count(you.species) > 2 && cols > 84;
-
-    for (int j = EQ_LEFT_RING; j < NUM_EQUIP; j++)
-    {
-        const equipment_type i = static_cast<equipment_type>(j);
-        if (!you_can_wear(i))
-            continue;
-
-        const int jewellery_id = you.equip[i];
-        int       colour       = MSGCOL_BLACK;
-
-        const char *slot =
-                 (i == EQ_LEFT_RING)   ? "Left ring" :
-                 (i == EQ_RIGHT_RING)  ? "Right ring" :
-                 (i == EQ_AMULET)      ? "Amulet" :
-                 (i == EQ_RING_ONE)    ? "1st ring" :
-                 (i == EQ_RING_TWO)    ? "2nd ring" :
-                 (i == EQ_RING_THREE)  ? "3rd ring" :
-                 (i == EQ_RING_FOUR)   ? "4th ring" :
-                 (i == EQ_RING_FIVE)   ? "5th ring" :
-                 (i == EQ_RING_SIX)    ? "6th ring" :
-                 (i == EQ_RING_SEVEN)  ? "7th ring" :
-                 (i == EQ_RING_EIGHT)  ? "8th ring" :
-                 (i == EQ_RING_AMULET) ? "Amulet ring" :
-                 (i == EQ_GIZMO)       ? "Gizmo"
-                                       : "unknown";
-
-        string item;
-        if (!you_can_wear(i, true))
-            item = "    (currently unavailable)";
-        else if (jewellery_id != -1)
-        {
-            item = you.inv[jewellery_id].name(DESC_INVENTORY);
-            string prefix = item_prefix(you.inv[jewellery_id]);
-            colour = menu_colour(item, prefix, "equip", false);
-        }
-        else
-            item = "    none";
-
-        if (colour == MSGCOL_BLACK)
-            colour = menu_colour(item, "", "equip", false);
-
-        item = chop_string(make_stringf("%-*s: %s",
-                                        split ? cols > 96 ? 9 : 8 : 11,
-                                        slot, item.c_str()),
-                           split && i > EQ_AMULET ? (cols - 1) / 2 : cols);
-        item = colour_string(item, colour);
-
-        // doesn't handle arbitrary arm counts
-        if (i == EQ_RING_SEVEN && you.arm_count() == 7)
-            mprf(MSGCH_EQUIPMENT, "%s", item.c_str());
-        else if (split && i > EQ_AMULET && (i - EQ_AMULET) % 2)
-            jstr = item + " ";
-        else
-            mprf(MSGCH_EQUIPMENT, "%s%s", jstr.c_str(), item.c_str());
-    }
+    _list_equipment(SLOT_RING, SLOT_GIZMO);
 }
 
 static const char *targeting_help_1 =

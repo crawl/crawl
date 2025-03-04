@@ -475,7 +475,7 @@ static tileidx_t _pick_dngn_tile_multi(vector<tileidx_t> candidates, int value)
     }
 
     // Should never reach this place
-    ASSERT(false);
+    die("couldn't find tile");
 }
 
 static bool _same_door_at(dungeon_feature_type feat, const coord_def &gc)
@@ -1135,10 +1135,10 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
 #ifndef USE_TILE_WEB
     tileidx_t bg_idx = bg & TILE_FLAG_MASK;
 
-    // Wizlab entries and conduits both have spinning sequential cycle
-    // tile animations. The Jiyva altar, meanwhile, drips.
+    // Wizlab entries, conduits, and harlequin traps both have spinning
+    // sequential cycle tile animations. The Jiyva altar, meanwhile, drips.
     if (bg_idx == TILE_DNGN_PORTAL_WIZARD_LAB
-       || bg_idx == TILE_DNGN_ALTAR_JIYVA
+       || bg_idx == TILE_DNGN_ALTAR_JIYVA || bg_idx == TILE_DNGN_TRAP_HARLEQUIN
        || (bg_idx >= TILE_ARCANE_CONDUIT && bg_idx < TILE_DNGN_SARCOPHAGUS_SEALED)
         && Options.tile_misc_anim)
     {
@@ -1437,8 +1437,11 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
         else
             *bg = orig + min((int)flv.special, 6);
     }
-    else if (orig == TILE_DNGN_PORTAL_WIZARD_LAB)
+    else if (orig == TILE_DNGN_PORTAL_WIZARD_LAB
+             || orig == TILE_DNGN_TRAP_HARLEQUIN)
+    {
         *bg = orig + flv.special % tile_dngn_count(orig);
+    }
     else if ((orig == TILE_SHOALS_SHALLOW_WATER
               || orig == TILE_SHOALS_DEEP_WATER)
              && element_colour(ETC_WAVES, 0, gc) == LIGHTCYAN)

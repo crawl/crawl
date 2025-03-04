@@ -84,6 +84,7 @@
     Aj Adamson
     Nikhil Addleman
     adelrune
+    Ahyangyi
     Alcon
     Brandon Allbery
     Warwick Allison
@@ -190,6 +191,7 @@
     Ge0ff
     Joshua Gelbard
     Peter Gerlagh
+    Charlie Gettys
     Benoît Giannangeli
     Gittourarmy
     Ben Goetter
@@ -212,7 +214,6 @@
     Anders Heggestøyl
     Alex Henry
     R. Dan Henry
-    Max 'Ploomutoo' Hon-Anderson
     Chris Honey
     Sylvia 'Onia' Hörnke
     Benoit Hudson
@@ -331,6 +332,7 @@
     pianoman523
     pikaro
     Lemuel Pitkin
+    valerie "ploomutoo"
     Paul Pollack
     Poroing
     Iago Porto
@@ -395,6 +397,7 @@
     John Stilley
     Johan Strandell
     Ben Striegel
+    Bernardo Sulzbach
     Cebolla Sunbeam
     Derrick Sund
     Pavel 'Curio' Svinarchuk

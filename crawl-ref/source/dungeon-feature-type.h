@@ -91,6 +91,10 @@ enum dungeon_feature_type
     DNGN_TRAP_SHAFT,
     DNGN_TRAP_WEB,
 #if TAG_MAJOR_VERSION > 34
+    DNGN_TRAP_TYRANT,
+    DNGN_TRAP_ARCHMAGE,
+    DNGN_TRAP_HARLEQUIN,
+    DNGN_TRAP_DEVOURER,
     DNGN_TRAP_ALARM,
     DNGN_TRAP_ZOT,
     DNGN_TRAP_DISPERSAL,
@@ -341,10 +345,10 @@ enum dungeon_feature_type
     DNGN_SEALED_CLEAR_DOOR,
     DNGN_TOXIC_BOG,
 
-    DNGN_TRAP_ARROW,
+    DNGN_TRAP_ARCHMAGE,
     DNGN_TRAP_SPEAR,
-    DNGN_TRAP_BLADE,
-    DNGN_TRAP_DART,
+    DNGN_TRAP_TYRANT,
+    DNGN_TRAP_HARLEQUIN,
     DNGN_TRAP_BOLT,
     DNGN_TRAP_NET,
     DNGN_TRAP_PLATE,
@@ -376,6 +380,7 @@ enum dungeon_feature_type
     DNGN_CACHE_OF_BAKED_GOODS,
     DNGN_DECORATIVE_FLOOR,  // XXX: dummy for redefinition until we rewrite code
     DNGN_SPIKE_LAUNCHER,
+    DNGN_TRAP_DEVOURER,
 
 #endif
 

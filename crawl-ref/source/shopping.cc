@@ -20,6 +20,7 @@
 #include "english.h"
 #include "env.h"
 #include "files.h"
+#include "god-wrath.h"
 #include "invent.h"
 #include "item-name.h"
 #include "item-prop.h"
@@ -492,7 +493,7 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 30;
                 break;
 
-            case POT_DEGENERATION:
+            case POT_MOONSHINE:
                 valued += 10;
                 break;
 
@@ -690,6 +691,7 @@ unsigned int item_value(item_def item, bool ident)
 
         case TALISMAN_DRAGON:
         case TALISMAN_STATUE:
+        case TALISMAN_VAMPIRE:
             valued += 600;
             break;
 
@@ -778,8 +780,7 @@ bool is_worthless_consumable(const item_def &item)
     case OBJ_POTIONS:
         switch (item.sub_type)
         {
-        // Blood potions are worthless because they are easy to make.
-        case POT_DEGENERATION:
+        case POT_MOONSHINE:
             return true;
         default:
             return false;
@@ -809,12 +810,14 @@ static int _count_identical(const vector<item_def>& stock, const item_def& item)
  *  @param shop  the shop to purchase from.
  *  @param pos   where the shop is located
  *  @param index the index of the item to buy in shop.stock
+ *  @param cost  the price to deduct for this item
+ *  @param voucher use a voucher instead of paying the item cost
  *  @returns true if it went in your inventory, false otherwise.
  */
-static bool _purchase(shop_struct& shop, const level_pos& pos, int index, bool voucher)
+static bool _purchase(shop_struct& shop, const level_pos& pos, int index,
+                      int cost, bool voucher)
 {
     item_def item = shop.stock[index]; // intentional copy
-    const int cost = item_price(item, shop);
     shop.stock.erase(shop.stock.begin() + index);
 
     // Remove from shopping list if it's unique
@@ -938,7 +941,6 @@ class ShopEntry : public InvEntry
 
     string get_text() const override
     {
-        const int cost = item_price(*item, menu.shop);
         const int total_cost = menu.selected_cost();
         const bool on_list = shopping_list.is_on_list(*item, &menu.pos);
         // Colour stock as follows:
@@ -981,10 +983,11 @@ class ShopEntry : public InvEntry
 public:
     ShopEntry(const item_def& i, ShopMenu& m)
         : InvEntry(i),
-          menu(m)
+          menu(m), cost(item_price(i, m.shop))
     {
         show_background = false;
     }
+    const int cost;
 };
 
 // XX why is this MF_QUIET_SELECT?
@@ -1027,14 +1030,14 @@ int ShopMenu::selected_cost(bool use_shopping_list) const
 {
     int cost = 0;
     for (auto item : selected_entries())
-        cost += item_price(*dynamic_cast<ShopEntry*>(item)->item, shop);
+        cost += dynamic_cast<ShopEntry*>(item)->cost;
     if (use_shopping_list && cost == 0)
     {
         for (auto item : items)
         {
-            const item_def& it = *dynamic_cast<ShopEntry*>(item)->item;
-            if (shopping_list.is_on_list(it, &pos))
-                cost += item_price(it, shop);
+            auto e = dynamic_cast<ShopEntry*>(item);
+            if (shopping_list.is_on_list(*e->item, &pos))
+                cost += e->cost;
         }
     }
     return cost;
@@ -1044,7 +1047,7 @@ int ShopMenu::max_cost() const
 {
     int cost = 0;
     for (auto item : selected_entries())
-        cost = max(cost, item_price(*dynamic_cast<ShopEntry*>(item)->item, shop));
+        cost = max(cost, dynamic_cast<ShopEntry*>(item)->cost);
 
     return cost;
 }
@@ -1178,11 +1181,11 @@ void ShopMenu::purchase_selected()
         buying_from_list = true;
         for (auto item : items)
         {
-            const item_def& it = *dynamic_cast<ShopEntry*>(item)->item;
-            if (shopping_list.is_on_list(it, &pos))
+            auto e = dynamic_cast<ShopEntry*>(item);
+            if (shopping_list.is_on_list(*e->item, &pos))
             {
                 selected.push_back(item);
-                cost += item_price(it, shop);
+                cost += e->cost;
             }
         }
     }
@@ -1244,7 +1247,7 @@ void ShopMenu::purchase_selected()
     {
         const int i = static_cast<item_def*>(entry->data) - shop.stock.data();
         item_def& item(shop.stock[i]);
-        const int price = item_price(item, shop);
+        const int price = dynamic_cast<ShopEntry*>(entry)->cost;
         // Can happen if the price changes due to id status
         if (price > you.gold && price != voucher_value)
             continue;
@@ -1255,7 +1258,7 @@ void ShopMenu::purchase_selected()
 
         const int quant = item.quantity;
 
-        if (!_purchase(shop, pos, i, use_voucher))
+        if (!_purchase(shop, pos, i, price, use_voucher))
         {
             // The purchased item didn't fit into your
             // knapsack.
@@ -1309,8 +1312,8 @@ void ShopMenu::resort()
         sort(begin(items), end(items),
              [this](MenuEntry* a, MenuEntry* b)
              {
-                 return item_price(*dynamic_cast<ShopEntry*>(a)->item, shop)
-                        < item_price(*dynamic_cast<ShopEntry*>(b)->item, shop);
+                 return dynamic_cast<ShopEntry*>(a)->cost
+                        < dynamic_cast<ShopEntry*>(b)->cost;
              });
         break;
     case ORDER_ALPHABETICAL:
@@ -1404,9 +1407,10 @@ bool ShopMenu::process_key(int keyin)
             for (auto entry : selected)
             {
                 const item_def& item = *dynamic_cast<ShopEntry*>(entry)->item;
+                auto cost = dynamic_cast<ShopEntry*>(entry)->cost;
                 entry->selected_qty = 0;
                 if (!shopping_list.is_on_list(item, &pos))
-                    shopping_list.add_thing(item, item_price(item, shop), &pos);
+                    shopping_list.add_thing(item, cost, &pos);
             }
         }
         else if (can_purchase)
@@ -1440,7 +1444,7 @@ bool ShopMenu::process_key(int keyin)
         if (shopping_list.is_on_list(item, &pos))
             shopping_list.del_thing(item, &pos);
         else
-            shopping_list.add_thing(item, item_price(item, shop), &pos);
+            shopping_list.add_thing(item, entry->cost, &pos);
         update_help();
         update_menu(true);
         return true;
@@ -1865,8 +1869,8 @@ bool ShoppingList::cull_identical_items(const item_def& item, int cost)
         // Only these are really interchangeable.
         break;
     case OBJ_MISCELLANY:
-        // ... and a few of these.
-        if (!is_xp_evoker(item))
+        // Evokers are useless to purchase at max charge, but useful otherwise.
+        if (!is_xp_evoker(item) || evoker_plus(item.sub_type) != MAX_EVOKER_ENCHANT)
             return 0;
         break;
     default:
@@ -2104,12 +2108,22 @@ void ShoppingList::remove_dead_shops()
     // Only restore the excursion at the very end.
     level_excursion le;
 
+    // This is potentially a lot of excursions, it might be cleaner to do this
+    // by annotating the shopping list directly
     set<level_pos> shops_to_remove;
+    set<level_id> levels_seen;
 
     for (CrawlHashTable &thing : *list)
     {
         const level_pos place = thing_pos(thing);
-        le.go_to(place.id); // thereby running DACT_REMOVE_GOZAG_SHOPS
+        le.go_to(place.id);
+        if (!levels_seen.count(place.id))
+        {
+            // Alternatively, this could call catchup_dactions. But that might
+            // have other side effects.
+            gozag_abandon_shops_on_level();
+            levels_seen.insert(place.id);
+        }
         const shop_struct *shop = shop_at(place.pos);
 
         if (!shop)

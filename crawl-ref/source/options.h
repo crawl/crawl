@@ -11,6 +11,7 @@
 #include "confirm-prompt-type.h"
 #include "easy-confirm-type.h"
 #include "explore-greedy-options.h"
+#include "explore-stop-options.h"
 #include "feature.h"
 #include "fixedp.h"
 #include "flang-t.h"
@@ -320,7 +321,7 @@ struct base_game_options
     virtual void reset_options();
 
     base_game_options(base_game_options const& other);
-    base_game_options(base_game_options &&other) noexcept;
+    base_game_options(base_game_options &&other) noexcept = delete;
     base_game_options& operator=(base_game_options const& other);
 
     void read_options(LineInput &, bool runscripts,

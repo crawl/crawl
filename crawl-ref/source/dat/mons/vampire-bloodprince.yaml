@@ -1,0 +1,21 @@
+name: "vampire bloodprince"
+glyph: {char: "V", colour: lightred}
+flags: [fighter, see_invis, speaks, warm_blood, gender_neutral]
+resists: {cold: 1}
+xp_mult: 19
+species: vampire
+holiness: [undead]
+will: 120
+attacks:
+ - {type: claw, damage: 45}
+ - {type: bite, flavour: vampiric, damage: 25}
+hd: 17
+hp_10x: 1250
+ac: 15
+ev: 10
+spells: vampire_bloodprince
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

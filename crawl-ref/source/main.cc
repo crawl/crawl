@@ -120,6 +120,7 @@
 #include "spl-cast.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
+#include "spl-monench.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
@@ -390,7 +391,7 @@ static void _launch_game_loop()
             game_ended = false;
             _launch_game();
         }
-        catch (game_ended_condition &ge)
+        catch (const game_ended_condition &ge)
         {
             game_ended = true;
             crawl_state.last_game_exit = ge;
@@ -401,11 +402,11 @@ static void _launch_game_loop()
             if (ge.exit_reason == game_exit::save)
                 crawl_state.last_type = GAME_TYPE_UNSPECIFIED;
         }
-        catch (ext_fail_exception &fe)
+        catch (const ext_fail_exception &fe)
         {
             end(1, false, "%s", fe.what());
         }
-        catch (short_read_exception &E)
+        catch (const short_read_exception&)
         {
             end(1, false, "Error: truncation inside the save file.\n");
         }
@@ -1115,11 +1116,14 @@ static void _input()
 
     hints_new_turn();
 
-    if (you.cannot_act())
+    if (you.duration[DUR_VEXED])
+        do_vexed_attack(you);
+
+    if (you.cannot_act() || you.duration[DUR_VEXED])
     {
         if (crawl_state.repeat_cmd != CMD_WIZARD)
         {
-            crawl_state.cancel_cmd_repeat("Cannot move, cancelling command "
+            crawl_state.cancel_cmd_repeat("Cannot control self, cancelling command "
                                           "repetition.");
         }
         world_reacts();
@@ -1351,6 +1355,11 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
     // not when otherwise unable to move.
     if (ftype == DNGN_PASSAGE_OF_GOLUBRIA || ftype == DNGN_TRANSPORTER)
         return true;
+    else if (you.duration[DUR_VAINGLORY])
+    {
+        mpr("It simply wouldn't do to leave so soon after announcing yourself.");
+        return false;
+    }
 
     // Mesmerised
     if (you.beheld() && !you.confused())
@@ -1529,8 +1538,11 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
         }
     }
 
-    if (ygrd != DNGN_TRANSPORTER && beogh_cancel_leaving_floor())
+    if (ygrd != DNGN_TRANSPORTER && ygrd != DNGN_PASSAGE_OF_GOLUBRIA
+        && beogh_cancel_leaving_floor())
+    {
         return false;
+    }
 
     if (Options.warn_hatches)
     {

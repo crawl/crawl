@@ -779,9 +779,9 @@ endif # pkg-config
 ifndef GLES
 ifneq ($(uname_S),Darwin)
 ifeq ($(msys),Yes)
-LIBS += -lopengl32 -lglu32
+LIBS += -lopengl32
 else
-LIBS += -lGL -lGLU
+LIBS += -lGL
 endif
 endif
 endif
@@ -1686,7 +1686,7 @@ util/monster/monster: $(MONSTER_OBJS) $(CONTRIB_LIBS) dat/dlua/tags.lua
 monster: util/monster/monster
 
 test-monster: monster
-	util/monster/monster quasit
+	util/monster/monster azure jelly
 
 clean-monster:
 	$(RM) util/monster/monster util/monster/vault_monster_data.h tile_info.txt
@@ -1804,8 +1804,8 @@ endif
 icon.o: util/crawl.rc dat/tiles/stone_soup_icon.ico .cflags
 	$(QUIET_WINDRES)$(WINDRES) util/crawl.rc icon.o
 
-config.h: util/configure .cflags
-	${QUIET_GEN}util/configure "$(CXX)" $(STDFLAG) $(ALL_CFLAGS)
+config.h: util/configure.py .cflags
+	$(QUIET_PYTHON)$(PYTHON) util/configure.py "$(CXX)" $(STDFLAG) $(ALL_CFLAGS)
 
 #
 # Header build tests.
@@ -2099,7 +2099,7 @@ mac-app-console: all
 # Building the Android package
 #
 
-NPROC := $(shell nproc)
+NPROC := $(shell nproc 2>/dev/null || echo 1)
 
 android-project/app/build.gradle: android-project/app/build.gradle.in
 	sed -e "s/@ANDROID_VERSION@/${ANDROID}/" -e "s/@CRAWL_VERSION@/${SRC_VERSION}/" -e "s/@NPROC@/${NPROC}/" <android-project/app/build.gradle.in >android-project/app/build.gradle

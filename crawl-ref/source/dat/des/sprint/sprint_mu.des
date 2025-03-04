@@ -1030,10 +1030,10 @@ TAGS: sprint_mu_crypt no_rotate no_hmirror no_vmirror
 KMONS: 1 = patrolling vampire knight
 KMONS: 2 = patrolling skeletal warrior
 KMONS: 3 = patrolling bone dragon
-KMONS: 4 = patrolling necromancer
+KMONS: 4 = patrolling vampire bloodprince
 KMONS: 5 = patrolling guardian mummy
-KMONS: 6 = patrolling zombie
-KMONS: 7 = patrolling simulacrum
+KMONS: 6 = patrolling place:Depths:$ zombie
+KMONS: 7 = patrolling place:Depths:$ simulacrum
 SUBST: 1 = 1122334455667
 KITEM: 1234567 = star_item / nothing
 KFEAT: ^ = zot trap
@@ -1072,10 +1072,10 @@ ENDMAP
 
 ##############################################################################
 # Crypt 3, Revenge of the Return of the Lich Under Glass 2: Revenge Harder
-NAME: sprint_mu_crypt_lich
-TAGS: sprint_mu_crypt no_rotate no_hmirror no_vmirror
-MONS: ancient lich, skeletal warrior
-
+NAME:  sprint_mu_crypt_lich
+TAGS:  sprint_mu_crypt no_rotate no_hmirror no_vmirror
+MONS:  dread lich, skeletal warrior
+KFEAT: m = iron_grate
 MAP
 ccccccccccccccccc.c
 c||.m1m........c..c
@@ -1093,7 +1093,7 @@ ENDMAP
 NAME: sprint_mu_tomb_spiral
 TAGS: sprint_mu_tomb no_rotate no_hmirror no_vmirror
 MONS: patrolling royal mummy, patrolling mummy priest
-MONS: patrolling guardian mummy, patrolling sphinx
+MONS: patrolling guardian mummy, patrolling guardian sphinx
 KFEAT: - = net trap / zot trap / floor w:40
 SUBST: . = -----.................332
 KITEM: $ = golden rune of zot
@@ -1388,7 +1388,7 @@ NAME: sprint_mu_tartarus_statrot
 TAGS: sprint_mu_tartarus no_rotate no_hmirror no_vmirror
 KMONS: 1 = patrolling Khufu / patrolling Murray / patrolling Ereshkigal
 KMONS: 2 = patrolling guardian mummy
-KMONS: 3 = patrolling quasit
+KMONS: 3 = patrolling shadow imp
 KMONS: 4 = patrolling shadowghast
 KMONS: 5 = patrolling royal mummy
 KMONS: 6 = orange crystal statue

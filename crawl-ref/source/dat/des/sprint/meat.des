@@ -139,7 +139,7 @@
   end
 
   function weapon_creation(e)
-    if you.race() == "Felid" then
+    if you.get_base_mutation_level("no weapons or thrown items") == 1 then
       e.kitem("{ = ring of slaying plus:27000")
     else
       e.kitem("{ = axe_of_woe")

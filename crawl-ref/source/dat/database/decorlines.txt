@@ -588,14 +588,6 @@ gargoyle baked goods cache
 
 @stone baked goods cache@
 %%%%
-ghoul fruit cache
-
-@carnivore fruit cache@
-%%%%
-ghoul baked goods cache
-
-@carnivore baked goods cache@
-%%%%
 kobold fruit cache
 
 @carnivore fruit cache@

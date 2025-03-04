@@ -583,12 +583,7 @@ ITEM:     (list of items, separated by comma)
             towards the limit of adding at most 2 random bad properties.
           * "mundane" acts as a shortcut for "ego:none" and forces the plusses
              to be +0.
-          * "ident:" will make the item pre-identified. You need to specify
-            a "|"-separated list of what is to be known:
-            * "type"
-            * "pluses"
-            * "properties"
-            * "all"
+          * "pre_id" will make all of the item's properties pre-identified.
           * "unobtainable" hints that the item is supposed to never fall into
             the player's hands. It doesn't actually keep it from doing so,
             just tells that to acquirement and (TODO) troves.

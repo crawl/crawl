@@ -925,6 +925,22 @@ Throw Icicle shard shrike cast
 @The_monster@ spits a shard of ice @at@ @target@.
 %%%%
 # Sphinxes can't gesture or point.
+Confuse sphinx marauder cast
+
+@The_monster@ roars a[n obscure| perplexing] riddle with a strange tongue.
+%%%%
+Vex sphinx marauder cast
+
+@The_monster@ screeches a[n impossible| nonsensical| cliché] riddle in a mystic tongue.
+%%%%
+Smiting guardian sphinx cast
+
+@The_monster@ mutters an ancient curse @at@ @target@.
+%%%%
+Paralysis guardian sphinx cast
+
+@The_monster@ whispers a [stupefying|staggering] mystic riddle.
+%%%%
 sphinx cast
 
 @The_monster@ mumbles some strange words.
@@ -1020,6 +1036,26 @@ Corrupting Pulse wretched star cast
 wretched star cast
 
 @The_monster@ glows turbulently.
+%%%%
+Grave Claw vampire bloodprince cast
+
+@The_monster@ reaches out @possessive@ hand.
+
+@The_monster@ snaps @possessive@ fingers.
+%%%%
+Ravenous Swarm vampire bloodprince cast
+
+@The_monster@ unfurls @possessive@ wings.
+
+@The_monster@ spreads @possessive@ arms wide.
+%%%%
+Dominate Undead vampire bloodprince cast
+
+@The_monster@ exerts the full weight of @possessive@ authority.
+
+@The_monster@ compels the dead to obey.
+
+@The_monster@ whispers, "Kneel."
 %%%%
 ########################################################################
 # Monster species and genus messages.

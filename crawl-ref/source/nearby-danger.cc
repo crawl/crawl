@@ -23,6 +23,7 @@
 #include "god-abil.h"
 #include "god-passive.h"
 #include "monster.h"
+#include "mon-movetarget.h"
 #include "mon-pathfind.h"
 #include "mon-tentacle.h"
 #include "player.h"
@@ -70,6 +71,11 @@ static bool _mons_has_path_to_player(const monster* mon)
     {
         return false;
     }
+
+    // First do a *quick* check to see whether a straight path exists to the
+    // player before bothering with full pathfinding.
+    if (can_go_straight(mon, mon->pos(), you.pos()))
+        return true;
 
     // Try to find a path from monster to player, using the map as it's
     // known to the player and assuming unknown terrain to be traversable.
@@ -149,7 +155,10 @@ bool mons_is_safe(const monster* mon, const bool want_move,
                            // monsters capable of throwing or zapping wands.
                            || !mons_can_hurt_player(mon)));
 
-    if (consider_user_options)
+    // If is_safe is true, ch_mon_is_safe will always immediately return true
+    // anyway, so let's skip constructing another monster_info and handling lua
+    // dispatch entirely in that case.
+    if (consider_user_options && !is_safe)
     {
         bool moving = you_are_delayed()
                        && current_delay()->is_run()
@@ -159,9 +168,8 @@ bool mons_is_safe(const monster* mon, const bool want_move,
 
         bool result = is_safe;
 
-        monster_info mi(mon, MILEV_SKIP_SAFE);
-        if (clua.callfn("ch_mon_is_safe", "Ibbd>b",
-                        &mi, is_safe, moving, dist,
+        if (clua.callfn("ch_mon_is_safe", "sbbd>b",
+                        mon->name(DESC_PLAIN).c_str(), is_safe, moving, dist,
                         &result))
         {
             is_safe = result;
@@ -468,7 +476,6 @@ void revive()
     you.attribute[ATTR_LIFE_GAINED] = 0;
 
     you.magic_contamination = 0;
-    restore_stat(STAT_ALL, 0, true);
 
     clear_trapping_net();
     you.attribute[ATTR_DIVINE_VIGOUR] = 0;
@@ -500,16 +507,6 @@ void revive()
     // TODO: this doesn't seem to call any duration end effects?
     for (int dur = 0; dur < NUM_DURATIONS; dur++)
     {
-        // Heal these statuses if our restored stats take us over the threshold,
-        // but don't remove them if we're still stuck at 0 due to mutations or
-        // equipment.
-        if (dur == DUR_COLLAPSE && you.strength() <= 0
-            || dur == DUR_BRAINLESS && you.intel() <= 0
-            || dur == DUR_CLUMSY && you.dex() <= 0)
-        {
-            continue;
-        }
-
         if (dur != DUR_PIETY_POOL
             && dur != DUR_TRANSFORMATION
             && dur != DUR_BEOGH_SEEKING_VENGEANCE

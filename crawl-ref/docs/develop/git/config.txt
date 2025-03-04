@@ -40,10 +40,11 @@ Some useful config options:
       git config --global pack.threads 2
 
 -------------------------
-Install a pre-commit sanity check
+Install pre- and post-commit sanity checks
 
 From the root of the git tree type:
 cp crawl-ref/docs/develop/git/pre-commit .git/hooks
+cp crawl-ref/docs/develop/git/commit-msg .git/hooks
 
 -------------------------
 

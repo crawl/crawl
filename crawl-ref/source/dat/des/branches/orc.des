@@ -187,11 +187,11 @@ MONS:    orc, orc priest / orc wizard
 MONS:    w:50 orc warrior / ogre, swamp drake
 # The drake's name is Bobby. Since you did ask.
 KITEM:   1 = gold w:5 / nothing / animal skin / \
-             potion of degeneration pre_id w:20 / \
+             potion of moonshine pre_id w:20 / \
              potion of haste pre_id w:2 / \
              potion of might pre_id w:2
-ITEM:    club, potion of degeneration pre_id, gold w:5
-ITEM:    gold w:2 / nothing, potion of degeneration pre_id
+ITEM:    club, potion of moonshine pre_id, gold w:5
+ITEM:    gold w:2 / nothing, potion of moonshine pre_id
 KFEAT:   C = cache of meat
 KFEAT:   O = enter_orcish_mines
 SHUFFLE: defO

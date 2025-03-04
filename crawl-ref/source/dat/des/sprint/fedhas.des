@@ -1,6 +1,6 @@
 {{
   function invisibility_setup(e)
-    if you.race() == "Coglin" then
+    if you.get_base_mutation_level("no jewellery") == 1 then
       e.kitem("n = scarf of invisibility")
     else
       e.kitem("n = amulet of invisibility")

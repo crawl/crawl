@@ -651,7 +651,7 @@ MONS:   lich
 SUBST:  fg = |*, h = *%, i = %$--, j = -
 NSUBST: 1 = 12 / 1, - = 3=1 / 4=1- / .
 :     elseif you.in_branch("Crypt") then
-MONS: revenant / curse skull
+MONS: revenant soulmonger / curse skull
 SUBST:  fg = |*, h = *, i = %$, j = -
 NSUBST: 1 = 12 / 1, - = 4=1 / 4=1- / -
 :     elseif you.in_branch("Depths") then
@@ -711,13 +711,13 @@ NSUBST: D = 2223--, - = 1:1 -:9
 :    end
 : elseif you.in_branch("Vaults") then
 MONS:   freezing wraith / shadow wraith / phantasmal warrior / flayed ghost w:5
-MONS:   eidolon, revenant
+MONS:   eidolon, revenant soulmonger
 SUBST:  fg = |*, h = *%, i = %$--
 NSUBST: D = 2223--, - = -----1
 # Crypt
 : else
 MONS:   freezing wraith / shadow wraith / phantasmal warrior / flayed ghost
-MONS:   eidolon, revenant
+MONS:   eidolon, revenant soulmonger
 SUBST:  fg = |*, h = *, i = %$
 NSUBST: D = 2233--,  - = ---1
 : end
@@ -1563,74 +1563,6 @@ c;;;;;;;c
 cnn===nnc
 c.......c
 ....@....
-ENDMAP
-
-NAME:   gammafunk_ghost_stat_death
-DEPTH:  D:3-, Orc
-ORIENT: float
-KMONS:  O = player ghost
-MONS:   quasit, neqoxec
-NSUBST: R = R / -
-: ghost_good_loot(_G)
-: if you.in_branch("D") then
-:     if you.depth() < 6 then
-KITEM:  O = ring of dexterity pre_id
-SUBST:  d = *%, e = %$, fgh = -
-NSUBST: - = 2=1 / 2=1- / -
-:     elseif you.depth() < 9 then
-KITEM:  O = ring of dexterity pre_id / \
-            ring of dexterity good_item pre_id w:5
-SUBST:  d = *, e = *%, f = %$--, gh = -
-NSUBST: - = 2=1 / 4=1- / -
-:     elseif you.depth() < 12 then
-KITEM:  O = ring of dexterity pre_id / \
-            ring of dexterity good_item pre_id w:5 / \
-            ring of intelligence pre_id / \
-            ring of intelligence good_item pre_id w:5
-SUBST:  e = *, f = %$, gh = -
-NSUBST: - = 2=1 / 2=1- / 2 / 2=2- / -
-:     elseif you.depth() < 14 then
-KITEM:  O = ring of dexterity good_item pre_id / \
-            ring of dexterity randart pre_id w:5 / \
-            ring of intelligence good_item pre_id / \
-            ring of intelligence randart pre_id w:5
-SUBST:  f = *, g = %$, h = -
-NSUBST: - = 2=1 / 2=1- / 2=2 / 4=2- / -
-:     else
-KITEM:  O = ring of dexterity good_item pre_id / \
-            ring of dexterity randart pre_id / \
-            ring of intelligence good_item pre_id / \
-            ring of intelligence randart pre_id
-SUBST:  f = |*, g = *%, h = %$--
-NSUBST: - = 2=1 / 2=1- / 3=2 / 4=2- / -
-:     end
-: elseif you.in_branch("Orc") then
-KITEM:  O = ring of dexterity good_item pre_id / \
-            ring of dexterity randart pre_id w:5 / \
-            ring of intelligence good_item pre_id / \
-            ring of intelligence randart pre_id w:5
-SUBST:  f = *, g = %$, h = -
-NSUBST: - = 2=1 / 2=1- / 2=2 / 4=2- / -
-: end
-MARKER: P = lua:transp_loc("stat_death_entry")
-MARKER: Q = lua:transp_dest_loc("stat_death_entry")
-MARKER: R = lua:transp_loc("stat_death_exit")
-MARKER: S = lua:transp_dest_loc("stat_death_exit")
-: ghost_setup(_G)
-MAP
-    ....@.....
-   ..cncScccc.....
-  ..ccRccc--cccnc.
-  .cc------x---Rc..
-  .c----x---x---cc.
-  .c--xx--x------c.
- ..nR--x--Q--xx-Rn.
- .cc-x-----x-----c.
- .c----xxxO--xx-cc.
- .cc--x-gedfh---c..
- ..ccc--cnnnc--cc.
-  ...cccc.P.cccc..
-    ......@......
 ENDMAP
 
 NAME:    gammafunk_ghost_smash

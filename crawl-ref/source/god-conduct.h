@@ -5,8 +5,10 @@
 
 #pragma once
 
+#include "beam-type.h"
 #include "conduct-type.h"
 #include "god-type.h"
+#include "kill-method-type.h"
 
 // Calls did_god_conduct() when the object goes out of scope.
 struct god_conduct_trigger
@@ -35,7 +37,8 @@ void did_god_conduct(conduct_type thing_done, int level, bool known = true,
                      const monster* victim = nullptr);
 void set_attack_conducts(god_conduct_trigger conduct[3], const monster &mon,
                          bool known = true);
-void did_hurt_conduct(conduct_type thing_done, const monster &victim, int damage_done);
+void did_hurt_monster(const monster &victim, int damage_done,
+                      beam_type flavour, kill_method_type kill_type);
 
 void god_conduct_turn_start();
 

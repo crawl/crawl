@@ -84,8 +84,8 @@ enum enchant_type
 #if TAG_MAJOR_VERSION == 34
     ENCH_WITHDRAWN,
     ENCH_ATTACHED,
-#endif
     ENCH_LIFE_TIMER,     // Minimum time demonic guardian must exist.
+#endif
     ENCH_FLIGHT,
     ENCH_LIQUEFYING,
     ENCH_POLAR_VORTEX,
@@ -229,11 +229,17 @@ enum enchant_type
     ENCH_MISDIRECTED,
     ENCH_CHANGED_APPEARANCE,  // Visual change for player shadow during Shadowslip
     ENCH_SHADOWLESS,
-    ENCH_DOUBLED_VIGOUR,
+    ENCH_DOUBLED_HEALTH,
     ENCH_KINETIC_GRAPNEL,
     ENCH_TEMPERED,
     ENCH_HATCHING,
     ENCH_BLINKITIS,
+    ENCH_CHAOS_LACE,
+    ENCH_VEXED,
+    ENCH_DEEP_SLEEP,
+    ENCH_DROWSY,
+    ENCH_VAMPIRE_THRALL,
+    ENCH_PYRRHIC_RECOLLECTION,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

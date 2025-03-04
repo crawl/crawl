@@ -272,7 +272,7 @@ MONS:   gnoll ; spear / goblin ; spear
 : end
 SUBST:  . = ...;!
 COLOUR: ; = red
-KITEM:  ! = potion of degeneration q:2 pre_id
+KITEM:  ! = potion of moonshine q:2 pre_id
 KFEAT:  ! = floor
 SUBST:  ; = .
 MAP
@@ -387,6 +387,7 @@ TAGS:   bailey_polearm no_rotate
 MONS:   gnoll ; halberd ego:draining | halberd ego:electrocution pre_id
 MONS:   orc warrior ; halberd ego:electrocution pre_id . plate armour /\
         orc knight ; halberd
+KFEAT:  ^ = tyrant's trap
 NSUBST: d = 1:ddde / *:d, 1 = 5:1 / *=1., 2 = 5:2 / *=2.
 : item(dgn.loot_potions)
 ITEM:   potion of experience pre_id q:1 /\
@@ -397,9 +398,9 @@ ccc ccc ccccc ccc ccc
 cAccc1ccc2+2ccc1ccc1c
 cc+cc+cc+ccc+cc+cc+cc
  cc.....cc cc.....cc
-ccc.....ccccc.....ccc
+ccc.^...ccccc.^...ccc
 c1+..<..+1c1+..T..+1c
-ccc.....ccccc.....ccc
+ccc.....ccccc...^.ccc
  cc....dcc ccd....cc
 cc+cc+cc+ccc+cc+cc+cc
 c1ccc1ccc2c2ccc1ccc2c
@@ -409,7 +410,7 @@ cc+cc+cc+ccc+cc+cc+cc
  ccd.d.dcc ccd....cc
 ccc.d2d.ccccc.....ccc
 c1+d2U3d+1c1+..Y..+1c
-ccc.d2d.ccccc.....ccc
+ccc.d2d.ccccc...^.ccc
  ccd.d.dcc cc.....cc
 cc+cc+cc+ccc+cc+cc+cc
 c<ccc1ccc2+2ccc1ccc1c
@@ -497,6 +498,7 @@ NSUBST:  C = 1:+ / *:c
 SUBST:   D = c
 #
 KFEAT:   ^ = alarm trap
+KFEAT:   - = tyrant's trap
 SUBST:   W = w:2 .:1 W:1
 SUBST:   ? = c.
 SUBST:   N = nc
@@ -529,7 +531,7 @@ cccccccccc1.1...cEc...^.....^...ccc1Wwwwwwwxxxxxxxx
 xxxxxwwwwwwwW1.1..c1.cccc+cccc.1c1Hwwwwwwwxxxxxxxxx
 xxxxxxxwwwwwww~wW1cncc2.2.2.2ccncwwwwwwxxxxxxxxxxxx
 xxxxxxxxx....~wwwwww(c.2.g.2.c(wwwwwxxxxxxxxxxxxxxx
-xxxxxxxxxx......Wwwwwccncncnccwwwwxxxxxxxxxxxxxxxxx
+xxxxxxxxxx....-.Wwwwwccncncnccwwwwxxxxxxxxxxxxxxxxx
 xxxxxxxxxxx.......Wwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxx........WwwwwwwwWxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxx.............xxxxxxxxxxxxxxxxxxxxxx

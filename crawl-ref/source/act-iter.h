@@ -24,6 +24,7 @@ protected:
     los_type _los;
     const actor* viewer;
     int i;
+    const int max;
 
     bool valid(const actor* a) const;
     void advance();
@@ -50,6 +51,7 @@ protected:
     los_type _los;
     const actor* viewer;
     int i;
+    const int max;
     int begin_point;
 
     bool valid(const monster* a) const;
@@ -69,6 +71,7 @@ public:
 
 protected:
     int i;
+    const int max;
     void advance();
 };
 

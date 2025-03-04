@@ -61,7 +61,7 @@ function st_box_setup(e)
                vampire knight / vampire mage / deep elf sorcerer /\
                deep elf death mage / deep elf demonologist /\
                deep elf annihilator / deep elf high priest / orc warlord /\
-               base draconian w:15 / sphinx / shapeshifter /\
+               base draconian w:15 / guardian sphinx / shapeshifter /\
                glowing shapeshifter")
   e.subst("0 = 0:9 Z:1")
   e.subst("9 = 9:3 Z:1")
@@ -2198,7 +2198,7 @@ KMONS:   K = patrolling hell knight
 KMONS:   M = patrolling Margery w:1 / patrolling hell knight, \
              patrolling hell knight
 # and snacks
-KITEM:   ? = potion of degeneration pre_id q:3, \
+KITEM:   ? = potion of moonshine pre_id q:3, \
              any potion w:30 / potion of mutation pre_id q:1
 : kitem("$ = gold q:" .. crawl.random_range(33, 133) .. " no_pickup")
 KITEM:   MK` = human skeleton

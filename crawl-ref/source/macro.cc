@@ -1320,7 +1320,8 @@ public:
                 add_entry(new MenuEntry("clear", 'c',
                     [this](const MenuEntry &)
                     {
-                        action.clear();
+                        //weirdly MSVC requires the use of `this->` here
+                        this->action.clear();
                         return false;
                     }));
             }

@@ -1160,7 +1160,7 @@ SHUFFLE: fghi, defgh
 SUBST:   d = d*, e = e*, f = f*, g = g*, h = h*
 # A little extra decor opportunity...
 SUBST:   S : SSG
-: vault_metal_statue_setup(_G, "S", "fiery conduit")
+: vault_metal_statue_setup(_G, "S", "icy conduit")
 : ice_cave_appearance(_G)
 MAP
       xxxxx

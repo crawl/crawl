@@ -114,8 +114,8 @@ fighters (especially when unarmed) at the cost of armour.
 %%%%
 Alchemist
 
-Alchemists start with the Sting spell, and their magic is very effective against
-foes susceptible to poison.
+Alchemists start with the Poisonous Vapours spell, and their magic is very
+effective against foes susceptible to poison.
 %%%%
 Wanderer
 

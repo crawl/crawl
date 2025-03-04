@@ -708,7 +708,7 @@ adventures, how they are displayed, and what commands there are to use them:
 /        wands          (use 'V' to evoke, 'Q' to quiver)
 =        rings          (use 'P'ut on and 'R'emove)
 "        amulets        (use 'P'ut on and 'R'emove)
-\|       staves         (use 'w'ield)
+\|        staves         (use 'w'ield)
 :        spellbooks     (use 'M'emorise and 'z'ap, 'Q' to quiver)
 %        talismans      (use 'V' to evoke)
 }        miscellaneous  (use 'V' to evoke, 'Q' to quiver)
@@ -1728,18 +1728,28 @@ Spriggans (Sp)
   armour. They cannot wield large weapons, and even most smaller weapons require
   both hands to be wielded by a Spriggan.
 
-Ghouls (Gh)
-  Ghouls are horrible undead creatures that sleep in their graves for years on
-  end, only to rise and stalk the living. Slain foes heal these monstrous
-  beings as they feast on the macabre energies released.
+Revenants (Re)
+  Revenants are skeletal undead, created when an individual dies to violent
+  magic without being mourned or remembered. They rise with fragmentary
+  recollections of their former life and an all-consuming hunger to claw back
+  that existence which the world forgot.
 
-  They learn most skills slowly, although they make decent unarmed fighters
-  with their claws. Due to their contact with the grave they can also learn to
-  use ice, earth, and necromantic magic without too many difficulties.
+  So powerful is this drive which animates them that they can they can actually
+  rip the very existence from others, tearing fragments of souls and memories
+  and even the fundamental essence of inanimate objects and turning them into
+  fuel for the unholy fire that forever flickers upon their form.
 
-  Like other undead, ghouls are naturally immune to poisons, negative energy
-  and torment; have little warmth left to be affected by cold; and are not
-  susceptible to mutations.
+  Their nature makes them uniquely skilled at wielding destructive magic;
+  while their reserves of magical energy are poor and their aptitudes
+  unremarkable (aside from an affinity for ice, earth, and necromantic magic),
+  they can channel damage-dealing spells through their claws, allowing them to
+  perform melee attacks at the same time as they cast spells. They can even burn
+  away the memories they have collected to briefly empower their magic and allow
+  them to cast unhindered by armour.
+
+  Beyond this, they are sturdy and skilled at using their claws in unarmed
+  combat, and possess the same immunity to poison, negative energy, and torment
+  that all undead share, as well as a resistance to cold.
 
 Tengu (Te)
   The Tengu are an ancient and feared species of bird-people with a legendary
@@ -1827,16 +1837,26 @@ Vine Stalkers (VS)
   reserves start to run low, thus replenishing their shroud of magic and their
   spells' fuel with each voracious bite.
 
-Vampires (Vp)
-  Vampires are an undead species, with the ability to shift between bloodless
-  and alive forms at will. Bloodless Vampires can heal themselves by drinking
-  the blood of the living in combat, and have the traits of the undead (immunity
-  to poisons, negative energy and torment, and resistance to damage from cold),
-  but are much less resilient and cannot regenerate health when monsters are in
-  sight. On the other hand, a Vampire full with blood will regenerate very
-  quickly, but will lose all undead powers. Upon growing, they learn to
-  transform from their bloodless form into a fast-moving bat. Unlike other
-  undead species, they may be mutated normally at all times.
+Poltergeists (Po)
+  Poltergeists are undead spirits who delight in causing trouble for the living.
+  Completely incorporeal, they interact with the physical world by possessing
+  small objects and making them fly through the air. They can use this to
+  fight with weapons as well as the living do, as well as gain the protective
+  benefits of many different hats, boots, gloves, and cloaks at once, though
+  body armour is too large for them to manipulate in this fashion. At higher
+  levels of experience, they can even control these possessed objects
+  at a distance from time to time, harassing their foes with a barrage of
+  unruly armour.
+
+  Their superlative aptitude for both stealth and hexes make them powerful
+  enchanters, and they are adequate at most other forms of magic, though they
+  struggle with conjurations. They are adept with short blades, if a little
+  below average with heavier weapons, and their lack of a physical body makes
+  them terrible at unarmed combat. The same power they used to possess objects
+  makes them natural experts at throwing.
+
+  Finally, their nature as spirits of bad luck also grants them temporary AC
+  whenever they inflict maladies upon their enemies.
 
 Demigods (Dg)
   Demigods are mortals with some divine or angelic ancestry, however distant.
@@ -2962,6 +2982,12 @@ commands:
 !d
   Prompt before dropping this item.
 
+!e
+  Prompt before equipping this item.
+
+!u
+  Prompt before unequipping this item.
+
 !q
   Prompt before quaffing this item.
 
@@ -3005,7 +3031,8 @@ commands:
   Prompt before explicitly quivering this item. Entails =F,=f.
 
 =R
-  Do not offer to swap out this ring if another one can be removed instead.
+  Do not offer to swap out this piece of equipment if another one could be
+  removed instead.
 
 !D
   Prompt before performing an action that might destroy this item. It won't

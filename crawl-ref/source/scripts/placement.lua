@@ -157,6 +157,21 @@ local force_skip = util.set{
     -- this one has a validation check that always fails in test cases(??)
     "gauntlet_exit_mini_maze",
     "pf_just_have_faith", -- uses mimics that this code fails to detect
+    -- the following use transporters which are not yet handled by this script
+    "elyvilon_altar_4",
+    "gammafunk_temple_of_torment",
+    -- This is broken by the testing method in this script whereby a is placed
+    -- at (1,1) because - because the vault has orient NW, this frequently
+    -- creates a closet. Not obvious how to properly resolve this.
+    "evilmike_arrival_grusome_pit",
+    -- It's Abyss, they're *supposed* to be closets
+    "evilmike_abyss_exit_glass",
+    "evilmike_abyss_exit_10",
+    "evilmike_abyss_exit_12",
+    "evilmike_abyss_exit_15",
+    "evilmike_abyss_exit_kraken",
+    "guppyfry_abyss_exit_imp_island",
+    "spicy_abyss_rude_harpoons",
 
 }
 
@@ -265,7 +280,7 @@ local function generate_map(map)
 
         if not opacity then
             if z ~= 1 then
-                local connectivity_err = "Isolated area in vault " .. map_to_test .. " (" .. z .. " zones) from file " .. dgn.filename(map)
+                local connectivity_err = "Isolated area in vault " .. map_to_test .. " (" .. z .. " zones) from file " .. dgn.filename(map) .. " on attempt #" .. iter_i
                 if dump then
                     crawl.stderr("    Failing vault output to: " .. output_to)
                 end
@@ -288,7 +303,7 @@ local function generate_map(map)
                     debug.dump_map(output_to, builder_log)
                 end
                 if z >= 1 then
-                    local connectivity_err = "Teleport closet in vault " .. map_to_test .. " (" .. z .. " zones) from file " .. dgn.filename(map)
+                    local connectivity_err = "Teleport closet in vault " .. map_to_test .. " (" .. z .. " zones) from file " .. dgn.filename(map) .. " on attempt #" .. iter_i
                     if dump then
                         crawl.stderr("    Failing vault output to: " .. output_to)
                     end
@@ -354,7 +369,7 @@ local function generate_maps()
                 assert(false, "invalid map at index " .. i)
             end
             last_map = dgn.name(map)
-            --crawl.stderr(i)
+            -- crawl.stderr(i)
             generate_map(map)
         end
         -- to make resuming easier

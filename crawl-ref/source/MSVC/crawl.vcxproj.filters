@@ -55,9 +55,6 @@
     <ClCompile Include="..\branch.cc">
       <Filter>cc</Filter>
     </ClCompile>
-    <ClCompile Include="..\butcher.cc">
-      <Filter>cc</Filter>
-    </ClCompile>
     <ClCompile Include="..\chardump.cc">
       <Filter>cc</Filter>
     </ClCompile>
@@ -364,9 +361,6 @@
     <ClCompile Include="..\spl-transloc.cc">
       <Filter>cc</Filter>
     </ClCompile>
-    <ClCompile Include="..\spl-tornado.cc">
-      <Filter>cc</Filter>
-    </ClCompile>
     <ClCompile Include="..\spl-summoning.cc">
       <Filter>cc</Filter>
     </ClCompile>
@@ -422,9 +416,6 @@
       <Filter>cc</Filter>
     </ClCompile>
     <ClCompile Include="..\scroller.cc">
-      <Filter>cc</Filter>
-    </ClCompile>
-    <ClCompile Include="..\rot.cc">
       <Filter>cc</Filter>
     </ClCompile>
     <ClCompile Include="..\religion.cc">
@@ -925,6 +916,40 @@
     <ClCompile Include="..\rltiles\tiledef-wall.cc">
       <Filter>rtiles_generated</Filter>
     </ClCompile>
+    <ClCompile Include="..\outer-menu.cc" />
+    <ClCompile Include="..\maybe-bool.cc">
+      <Filter>cc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\death-curse.cc">
+      <Filter>cc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\spl-vortex.cc">
+      <Filter>cc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\zot.cc">
+      <Filter>cc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\corpse.cc">
+      <Filter>cc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\known-items.cc">
+      <Filter>cc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\target-compass.cc">
+      <Filter>cc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\precision-menu.cc">
+      <Filter>cc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ng-init-branches.cc">
+      <Filter>cc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\branch-data-json.cc">
+      <Filter>cc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mon-aura.cc">
+      <Filter>cc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ability.h">
@@ -1021,9 +1046,6 @@
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="..\build.h">
-      <Filter>h</Filter>
-    </ClInclude>
-    <ClInclude Include="..\butcher.h">
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="..\caction-type.h">
@@ -1198,9 +1220,6 @@
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="..\duration-type.h">
-      <Filter>h</Filter>
-    </ClInclude>
-    <ClInclude Include="..\confirm-level-type.h">
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="..\enchant-type.h">
@@ -2252,6 +2271,35 @@
     </ClInclude>
     <ClInclude Include="..\rltiles\tiledef-wall.h">
       <Filter>rtiles_generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\branch-data-json.h" />
+    <ClInclude Include="..\easy-confirm-type.h" />
+    <ClInclude Include="..\filter-enum.h" />
+    <ClInclude Include="..\mon-explode.h" />
+    <ClInclude Include="..\outer-menu.h" />
+    <ClInclude Include="..\death-curse.h">
+      <Filter>h</Filter>
+    </ClInclude>
+    <ClInclude Include="..\zot.h">
+      <Filter>h</Filter>
+    </ClInclude>
+    <ClInclude Include="..\corpse.h">
+      <Filter>h</Filter>
+    </ClInclude>
+    <ClInclude Include="..\known-items.h">
+      <Filter>h</Filter>
+    </ClInclude>
+    <ClInclude Include="..\target-compass.h">
+      <Filter>h</Filter>
+    </ClInclude>
+    <ClInclude Include="..\precision-menu.h">
+      <Filter>h</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ng-init-branches.h">
+      <Filter>h</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mon-aura.h">
+      <Filter>h</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

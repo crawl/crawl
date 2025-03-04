@@ -333,10 +333,7 @@ static feature_def feat_defs[] =
 
 #if TAG_MAJOR_VERSION == 34
 TRAP(DNGN_TRAP_MECHANICAL, "mechanical trap", "trap_mechanical", LIGHTCYAN),
-TRAP(DNGN_TRAP_ARROW, "arrow trap", "trap_mechanical", LIGHTCYAN),
 TRAP(DNGN_TRAP_SPEAR, "spear trap", "trap_mechanical", LIGHTCYAN),
-TRAP(DNGN_TRAP_BLADE, "blade trap", "trap_mechanical", LIGHTCYAN),
-TRAP(DNGN_TRAP_DART, "dart trap", "trap_mechanical", LIGHTCYAN),
 TRAP(DNGN_TRAP_BOLT, "bolt trap", "trap_mechanical", LIGHTCYAN),
 #endif
 TRAP(DNGN_TRAP_NET, "net trap", "trap_mechanical", LIGHTCYAN),
@@ -348,6 +345,10 @@ TRAP(DNGN_TRAP_TELEPORT_PERMANENT, "permanent teleport trap", "trap_teleport_per
 TRAP(DNGN_TRAP_SHADOW, "shadow trap", "trap_shadow", BLUE),
 TRAP(DNGN_TRAP_SHADOW_DORMANT, "dormant shadow trap", "trap_shadow_dormant", BLUE),
 #endif
+TRAP(DNGN_TRAP_TYRANT, "tyrant's trap", "trap_tyrant", WHITE),
+TRAP(DNGN_TRAP_ARCHMAGE, "archmage's trap", "trap_archmage", BLUE),
+TRAP(DNGN_TRAP_HARLEQUIN, "harlequin's trap", "trap_harlequin", YELLOW),
+TRAP(DNGN_TRAP_DEVOURER, "devourer's trap", "trap_devourer", LIGHTGREEN),
 TRAP(DNGN_TRAP_ALARM, "alarm trap", "trap_alarm", LIGHTRED),
 TRAP(DNGN_TRAP_ZOT, "Zot trap", "trap_zot", LIGHTMAGENTA),
 TRAP(DNGN_PASSAGE_OF_GOLUBRIA, "passage of Golubria", "passage of golubria", GREEN),

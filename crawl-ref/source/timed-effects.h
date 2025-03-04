@@ -17,6 +17,8 @@ void timeout_malign_gateways(int duration);
 void timeout_binding_sigils();
 void end_toxic_bog();
 
+void end_enkindled_status();
+
 void timeout_terrain_changes(int duration, bool force = false);
 
 void setup_environment_effects();

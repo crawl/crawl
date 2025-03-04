@@ -50,7 +50,9 @@ public:
 // Smart compilers can recognize some of these assertions as tautological,
 // but we do want to keep them in case something changes.
 // A discussion: http://kerneltrap.org/node/7434
+#ifdef TARGET_COMPILER_GCC
 #pragma GCC diagnostic ignored "-Wstrict-overflow"
+#endif
     void _assert_validity() const
     {
 #ifndef USE_TILE_LOCAL

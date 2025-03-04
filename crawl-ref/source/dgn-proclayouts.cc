@@ -53,7 +53,7 @@ DiamondLayout::operator()(const coord_def &p, const uint32_t offset) const
     uint8_t cellSize = halfCell * 2;
     uint8_t x = abs(abs(p.x) % cellSize - halfCell);
     uint8_t y = abs(abs(p.y) % cellSize - halfCell);
-    if (x+y < w)
+    if (static_cast<uint32_t>(x+y) < w)
     {
         dungeon_feature_type feat = _pick_pseudorandom_wall(hash3(p.x/w, p.y/w, 2));
         return ProceduralSample(p, feat, offset + 4096);

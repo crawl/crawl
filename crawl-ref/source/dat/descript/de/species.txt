@@ -35,11 +35,6 @@ Diese viellebigen Katzen besitzen Wissen, doch zu erweiterter
 Gegenstandsveränderung oder der Benutzung von Rüstungen und Waffen sind sie
 nicht in der Lage.
 %%%%
-Ghoul
-
-Ein Untoter, dazu verdammt auf ewig zu verrotten. Sie sind immer auf der Suche
-nach Faulem, um es zu essen...
-%%%%
 Gargoyle
 
 Hergestellt aus lebendem Stein, haben Gargoyles eine übernatürliche Affinität

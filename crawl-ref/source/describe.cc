@@ -872,21 +872,25 @@ static string _artefact_descrip(const item_def &item)
 static const char *trap_names[] =
 {
 #if TAG_MAJOR_VERSION == 34
-    "dart", "arrow", "spear",
+    "harlequin's", "archmage's", "spear",
 #endif
 #if TAG_MAJOR_VERSION > 34
+    "tyrant's",
+    "archmage's",
+    "harlequin's",
+    "devourer's",
     "dispersal",
     "teleport",
 #endif
     "permanent teleport",
     "alarm",
 #if TAG_MAJOR_VERSION == 34
-    "blade", "bolt",
+    "tyrant's", "bolt",
 #endif
     "net",
     "Zot",
 #if TAG_MAJOR_VERSION == 34
-    "needle",
+    "devourer's",
 #endif
     "shaft",
     "passage",
@@ -1535,7 +1539,7 @@ static void _append_weapon_stats(string &description, const item_def &item)
         description += "\n";
         if (armour_penalty)
         {
-            const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, false);
+            const item_def *body_armour = you.body_armour();
             description += (body_armour ? uppercase_first(
                                               body_armour->name(DESC_YOUR))
                                         : "Your heavy armour");
@@ -1760,9 +1764,9 @@ static string _describe_weapon_brand(const item_def &item)
                "targets, potentially hitting everything in its path until it "
                "leaves sight.";
     case SPWPN_REAPING:
-        return "Any living foe damaged by it may be reanimated upon death as a "
-               "zombie friendly to the wielder, with an increasing chance as "
-               "more damage is dealt.";
+        return "Any living, holy, or demonic foe damaged by it may be "
+               "temporarily reanimated upon death as a friendly spectral, with "
+               "an increasing chance as more damage is dealt.";
     case SPWPN_ANTIMAGIC:
         return "It reduces the magical energy of the wielder, and disrupts "
                "the spells and magical abilities of those it strikes. Natural "
@@ -1796,6 +1800,11 @@ static string _describe_point_diff(int original,
 
     if (original == changed)
         return "remain unchanged";
+
+    // Truncate to 1 decimal place, rather than round (so that it matches what
+    // will be displayed as the player's AC/EV if they actually put this on.)
+    original = original / (scale / 10) * 10;
+    changed = changed / (scale / 10) * 10;
 
     float difference = ((float)(changed - original)) / scale;
 
@@ -1906,7 +1915,7 @@ static string _equipment_property_change_description(const item_def &item,
     }
 
     // Always display AC line on proper armour, even if there is no change
-    if (item.base_type == OBJ_ARMOUR && get_armour_slot(item) != EQ_OFFHAND
+    if (item.base_type == OBJ_ARMOUR && get_armour_slot(item) != SLOT_OFFHAND
         || cur_ac != new_ac)
     {
         description += "\nYour AC would "
@@ -2047,16 +2056,11 @@ static string _spell_fail_change_description(const item_def &item,
     return desc;
 }
 
-static bool _you_are_wearing_item(const item_def &item)
-{
-    return get_equip_slot(&item) != EQ_NONE;
-}
-
 static string _equipment_property_change(const item_def &item)
 {
     string description;
 
-    if (!_you_are_wearing_item(item))
+    if (!item_is_equipped(item))
         description = _equipment_property_change_description(item);
     else
         description = _equipment_property_change_description(item, true);
@@ -2083,7 +2087,7 @@ static string _describe_weapon(const item_def &item, bool verbose, bool monster)
     if (!art_desc.empty())
         description += "\n\n" + art_desc;
 
-    if (verbose && crawl_state.need_save && you.could_wield(item, true, true)
+    if (verbose && crawl_state.need_save && can_equip_item(item)
         && item.is_identified())
     {
         description += _equipment_property_change(item);
@@ -2098,8 +2102,12 @@ static string _describe_weapon(const item_def &item, bool verbose, bool monster)
         // XX this is shown for felids, does that actually make sense?
         description += _handedness_string(item);
 
-        if (!you.could_wield(item, true, true) && crawl_state.need_save)
+        if (crawl_state.need_save
+            && is_weapon_too_large(item, you.body_size(PSIZE_TORSO))
+            && !you.has_mutation(MUT_QUADRUMANOUS))
+        {
             description += "\nIt is too large for you to wield.";
+        }
     }
 
     if (!is_artefact(item) && !monster)
@@ -2367,7 +2375,7 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
             const int evp = property(item, PARM_EVASION);
             description += "Base armour rating: "
                         + to_string(property(item, PARM_AC));
-            if (get_armour_slot(item) == EQ_BODY_ARMOUR)
+            if (get_armour_slot(item) == SLOT_BODY_ARMOUR)
             {
                 description += "       Encumbrance rating: "
                             + to_string(-evp / 10);
@@ -2442,7 +2450,7 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
     // or for morgues).
     if (verbose
         && crawl_state.need_save
-        && can_wear_armour(item, false, true)
+        && can_equip_item(item)
         && item.is_identified())
     {
         description += _equipment_property_change(item);
@@ -2454,7 +2462,7 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
         && verbose
         && aevp
         && !is_shield(item)
-        && _you_are_wearing_item(item)
+        && item_is_equipped(item)
         && is_slowed_by_armour(you.weapon()))
     {
         // TODO: why doesn't this show shield effect? Reconcile with
@@ -2474,19 +2482,20 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
 static string _describe_lignify_ac()
 {
     const Form* tree_form = get_form(transformation::tree);
-    vector<const item_def *> treeform_items;
 
-    for (auto item : you.get_armour_items())
-        if (tree_form->slot_available(get_equip_slot(item)))
-            treeform_items.push_back(item);
+    // Turn into a tree, check our resulting AC, and then turn back without
+    // anyone being the wiser.
+    unwind_var<player_equip_set> unwind_eq(you.equipment);
+    unwind_var<item_def> unwind_talisman(you.active_talisman);
+    unwind_var<transformation> unwind_form(you.form);
+    you.active_talisman.clear();
+    you.form = transformation::tree;
 
-    const int treeform_ac =
-        (you.base_ac_with_specific_items(100, treeform_items)
-         - you.racial_ac(true) - you.ac_changes_from_mutations()
-         - get_form()->get_ac_bonus() + tree_form->get_ac_bonus()) / 100;
+    you.equipment.unmeld_all_equipment(true);
+    you.equipment.meld_equipment(tree_form->blocked_slots, true);
 
     return make_stringf("If you quaff this potion your AC would be %d.",
-                        treeform_ac);
+                        you.armour_class_scaled(1));
 }
 
 string describe_item_rarity(const item_def &item)
@@ -2557,7 +2566,7 @@ static string _describe_talisman_form(const item_def &item, bool monster)
     const int ac = form->get_ac_bonus();
     const int ev = form->ev_bonus();
     const int body_ac_loss_percent = form->get_base_ac_penalty(100);
-    const bool loses_body_ac = body_ac_loss_percent && you_can_wear(EQ_BODY_ARMOUR) != false;
+    const bool loses_body_ac = body_ac_loss_percent && you_can_wear(SLOT_BODY_ARMOUR) != false;
     if (below_target || hp != 100 || ac || ev || loses_body_ac)
     {
         if (!monster)
@@ -2574,7 +2583,7 @@ static string _describe_talisman_form(const item_def &item, bool monster)
 
         if (body_ac_loss_percent)
         {
-            const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, false);
+            const item_def *body_armour = you.body_armour();
             const int base_ac = body_armour ? property(*body_armour, PARM_AC) : 0;
             const int ac_penalty = form->get_base_ac_penalty(base_ac);
             description += make_stringf("\nAC:           -%d (-%d%% of your body armour's %d base AC)",
@@ -3049,7 +3058,7 @@ string get_item_description(const item_def &item,
             if (!art_desc.empty())
                 description << "\n\n" + art_desc;
 
-            if (verbose && crawl_state.need_save && you.could_wield(item, true, true))
+            if (verbose && crawl_state.need_save && can_equip_item(item))
                 description << _equipment_property_change(item);
         }
         if (verbose)
@@ -3086,6 +3095,19 @@ string get_item_description(const item_def &item,
                     description << "Once activated";
                 description << ", this device is rendered temporarily inert. "
                             << "However, it recharges as you gain experience.";
+
+                if (evoker_plus(item.sub_type) < MAX_EVOKER_ENCHANT)
+                {
+                    description << "\n\nAdditional devices of the same type "
+                            << "can be combined with it to improve the rate at "
+                            << "which it recharges.";
+                }
+                if (!is_useless_skill(SK_EVOCATIONS)
+                       && you.skill(SK_EVOCATIONS) < MAX_SKILL_LEVEL)
+                {
+                    description << "\n\nIncreasing your evocations skill will "
+                                << "improve the rate at which it recharges.";
+                }
 
                 const string damage_str = evoke_damage_string(item);
                 if (damage_str != "")
@@ -3899,7 +3921,7 @@ static vector<command_type> _allowed_actions(const item_def& item)
             if (item_is_wieldable(item))
                 actions.push_back(CMD_WIELD_WEAPON);
         }
-        else if (item_equip_slot(item) == EQ_WEAPON)
+        else if (item_equip_slot(item) == SLOT_WEAPON)
             actions.push_back(CMD_UNWIELD_WEAPON);
         break;
     case OBJ_ARMOUR:
@@ -4025,7 +4047,7 @@ static level_id _item_level_id(const item_def &item)
     {
         loc = level_id::parse_level_id(item.props["level_id"].get_string());
     }
-    catch (const bad_level_id &err)
+    catch (const bad_level_id&)
     {
         // die?
     }
@@ -4078,15 +4100,22 @@ static bool _do_action(item_def &item, const command_type action)
 
     switch (action)
     {
-    case CMD_WIELD_WEAPON:     wield_weapon(slot);            break;
-    case CMD_UNWIELD_WEAPON:   wield_weapon(SLOT_BARE_HANDS); break;
+    case CMD_WIELD_WEAPON:
+    case CMD_WEAR_JEWELLERY:
+    case CMD_WEAR_ARMOUR:
+        try_equip_item(item);
+        break;
+
+    case CMD_REMOVE_ARMOUR:
+    case CMD_UNWIELD_WEAPON:
+    case CMD_REMOVE_JEWELLERY:
+        try_unequip_item(item);
+        break;
+
     case CMD_QUIVER_ITEM:
         quiver::set_to_quiver(quiver::slot_to_action(slot), you.quiver_action); // ugh
         break;
-    case CMD_WEAR_ARMOUR:      wear_armour(slot);             break;
-    case CMD_REMOVE_ARMOUR:    takeoff_armour(slot);          break;
-    case CMD_WEAR_JEWELLERY:   puton_ring(you.inv[slot]);     break;
-    case CMD_REMOVE_JEWELLERY: remove_ring(slot, true);       break;
+
     case CMD_DROP:
         // TODO: it would be better if the inscription was checked before the
         // popup closes, but that is hard
@@ -4399,6 +4428,13 @@ static string _player_spell_stats(const spell_type spell)
     string failure;
     if (you.divine_exegesis)
         failure = "0%";
+    else if (spell_can_be_enkindled(spell) && you.has_mutation(MUT_MNEMOPHAGE)
+             && !you.duration[DUR_ENKINDLED])
+    {
+        failure = make_stringf("%d%% <darkgrey>(%d%%)</darkgrey>",
+                                    failure_rate_to_int(raw_spell_fail(spell)),
+                                    failure_rate_to_int(raw_spell_fail(spell, true)));
+    }
     else
         failure = failure_rate_to_string(raw_spell_fail(spell));
     description += make_stringf("        Fail: %s", failure.c_str());
@@ -4649,6 +4685,9 @@ static string _player_spell_desc(spell_type spell)
         description << uppercase_first(god_name(you.religion))
                     << " supports the use of this spell.\n";
     }
+
+    if (you.has_mutation(MUT_MNEMOPHAGE) && spell_can_be_enkindled(spell))
+        description << "This spell is empowered while you are enkindled.";
 
     if (!you_can_memorise(spell))
     {
@@ -5048,8 +5087,8 @@ static const char* _get_resist_name(mon_resist_flags res_type)
         return "steam";
     case MR_RES_COLD:
         return "cold";
-    case MR_RES_ACID:
-        return "acid";
+    case MR_RES_CORR:
+        return "acid and corrosion";
     case MR_RES_MIASMA:
         return "miasma";
     case MR_RES_NEG:
@@ -5085,10 +5124,6 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_BLINK_WITH,        "blink together with the defender" },
         { AF_COLD,              "cold damage" },
         { AF_CONFUSE,           "cause confusion" },
-        { AF_DRAIN_STR,         "drain strength" },
-        { AF_DRAIN_INT,         "drain intelligence" },
-        { AF_DRAIN_DEX,         "drain dexterity" },
-        { AF_DRAIN_STAT,        "drain strength, intelligence or dexterity" },
         { AF_DRAIN,             "drain life" },
         { AF_VAMPIRIC,          "drain health from the living" },
         { AF_DRAIN_SPEED,       "drain speed" },
@@ -5133,6 +5168,7 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_ALEMBIC,           "vent poison clouds" },
         { AF_BOMBLET,           "deploy bomblets" },
         { AF_AIRSTRIKE,         "open air damage" },
+        { AF_TRICKSTER,         "drain, daze, or confuse" },
         { AF_PLAIN,             "" },
     };
 
@@ -6307,7 +6343,7 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
 
     const mon_resist_flags special_resists[] =
     {
-        MR_RES_STEAM,     MR_RES_ACID,
+        MR_RES_STEAM,     MR_RES_CORR,
         MR_RES_DAMNATION, MR_RES_MIASMA,  MR_RES_TORMENT,
     };
 
@@ -6508,6 +6544,12 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
 
     if (mon_explodes_on_death(mi.type))
         _desc_mon_death_explosion(result, mi);
+
+    if (mi.type == MONS_BATTLESPHERE)
+    {
+        const dice_def dam = battlesphere_damage_from_hd(mi.hd);
+        result << "Projectile damage: " << dam.num << "d" << dam.size << "\n";
+    }
 
     // Flying monsters can't be forced to fall into liquids these days.
     if (!(mi.airborne()))

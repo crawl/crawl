@@ -4,9 +4,16 @@
 **/
 
 #pragma once
+#include <cstdint>
+#include <string>
 
 #include "artefact-prop-type.h"
+#include "defines.h"
 #include "unique-item-status-type.h"
+#include "object-class-type.h"
+#include "killer-type.h"
+#include "fixedvector.h"
+
 
 #define ART_PROPERTIES ARTP_NUM_PROPERTIES
 
@@ -21,6 +28,10 @@
 #define VICTORY_CONDUCT_KEY "victory_conduct"
 
 struct bolt;
+struct item_def;
+class actor;
+class CrawlVector;
+class monster;
 
 enum unrand_flag_type
 {
@@ -36,6 +47,7 @@ enum unrand_flag_type
                               // =0x100,  // was UNRAND_FLAG_RANDAPP
     UNRAND_FLAG_UNIDED           =0x200,
     UNRAND_FLAG_SKIP_EGO         =0x400,
+    UNRAND_FLAG_DELETED          =0x800,
     // Please make sure it fits in unrandart_entry.flags (currently 16 bits).
 };
 

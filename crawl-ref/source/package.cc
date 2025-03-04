@@ -123,7 +123,7 @@ package::package(const char* file, bool writeable, bool empty)
 
             load();
         }
-        catch (exception &e)
+        catch (const exception&)
         {
             close(fd);
             throw;

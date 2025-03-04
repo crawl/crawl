@@ -33,11 +33,6 @@ Disse katte besidder ikke bare flere liv, men også en bevidsthed. Til gengæld
 er de ude af stand til at håndtere komplicerede genstande eller at bruge
 rustning eller våben.
 %%%%
-Ghoul
-
-En udød, som er fordømt til evigt at rådne. De leder altid efter rådden mad, de
-kan spise, og ofre, de kan hakke i med deres kløer.
-%%%%
 Gargoyle
 
 Gargoiler er skabt af levende sten, og har et overnaturligt talent for jorden.

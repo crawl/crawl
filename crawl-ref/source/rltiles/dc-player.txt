@@ -101,6 +101,9 @@ octopode3
 octopode4 OCTOPODE_SILLY
 octopode5
 %rim 0
+poltergeist POLTERGEIST
+revenant REVENANT
+revenant2
 djinni_red_f DJINNI
 djinni_red_m
 djinni_blue_f
@@ -157,8 +160,6 @@ merfolk_f MERFOLK
 merfolk_m
 merfolk_water_f MERFOLK_WATER
 merfolk_water_m
-vampire_f VAMPIRE
-vampire_m
 gargoyle_m GARGOYLE
 gargoyle_f
 gargoyle_red_m
@@ -217,6 +218,7 @@ white WHITE LAST_NORM
 #unrand
 ratskin RATSKIN_CLOAK
 dragonskin DRAGONSKIN_CLOAK
+fungal_fisticloak_back FUNGAL_FISTICLOAK_BACK
 
 ###Scarf
 scarf_cyan SCARF_CYAN SCARF_FIRST_NORM
@@ -479,6 +481,7 @@ orange_crystal ORANGE_CRYSTAL
 vines VINES
 kryias KRYIAS
 talos TALOS
+justicar JUSTICAR
 
 %sdir player/transform
 maw_form0 MAW_FORM
@@ -865,6 +868,7 @@ orb_of_dispater ORB_OF_DISPATER
 orb_of_wucad_mu ORB_OF_WUCAD_MU
 orb_of_battle ORB_OF_BATTLE
 charlatans_orb CHARLATANS_ORB
+skull_of_zonguldrok SKULL_OF_ZONGULDROK
 
 buckler_spriggan BUCKLER_SPRIGGAN
 buckler_warlock BUCKLER_WARLOCK
@@ -1124,6 +1128,8 @@ taiso_white
 bear BEAR
 dyrovepreva DYROVEPREVA
 eternal_torment ETERNAL_TORMENT
+fungal_fisticloak_front FUNGAL_FISTICLOAK_FRONT
+vainglory VAINGLORY
 wizard_lightgreen WIZARD_LIGHTGREEN
 
 ## All helmets below (HELM_OFS and greater) hide hair.

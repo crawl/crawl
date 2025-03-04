@@ -38,6 +38,11 @@ public:
 protected:
     GLState m_current_state;
     int m_window_height;
+    // optional, possibly nullptr function pointer to OpenGL 3+ function
+    // The function pointer type is often ifdef'd in annoying headers
+    // So we save the cast for the point where we use it, rather than
+    // cluttering this header.
+    void* m_mipmapFn = nullptr;
 
 private:
     bool glDebug(const char* msg) const;

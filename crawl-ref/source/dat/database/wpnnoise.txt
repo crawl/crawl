@@ -1856,3 +1856,114 @@ Why bother with such petty cantrips?
 A demon of Hell at your fingers, and you cast that...
 
 Now, try casting something FUN.
+###############################################################################
+###############################################################################
+#
+# Skull of Zonguldrok
+#
+###############################################################################
+###############################################################################
+%%%%
+zonguldrok greeting
+
+Another aspirant of the Dark Ways? We shall bring them all to heel together!
+
+At last, a scion truly worthy of my power.
+
+Finally, someone more useful than... these people.
+%%%%
+zonguldrok reprise
+
+I knew you could not resist the dark call for long.
+
+I shall forgive your past transgressions, as long as you remember your place this time.
+
+I shall graciously assume that you are merely clumsy, not stupid.
+
+Don't test my patience; I have made greater than you beg for death over less!
+
+Finally...
+%%%%
+zonguldrok farewell
+
+You'll be back again, mark my words....
+
+Dare you to relinquish me? You shall regret this insult!
+
+How arrogant, to think that any shield could be mightier than the power of Zonguldrok!
+
+I wasn't done with you!
+%%%%
+zonguldrok hat good
+
+At last; a crown worthy of my station.
+
+A good hat truly is one of the finest things in life or death.
+
+I applaud your taste in fashion, my scion.
+
+Our enemies shall surely prostrate themselves before my majesty now.
+%%%%
+zonguldrok hat okay
+
+A suitable chapeau.
+
+An acceptable crown. For now.
+
+The magic in this cap shall complement my own adequately.
+%%%%
+zonguldrok hat bad
+
+How dare you fob such a shabby cap upon my head!
+
+What an insult, to strut around in such shoddy millinery.
+
+Bah, this is suited for peasants, not a master of souls.
+
+How lamentable, to be reduced to wearing... this.
+%%%%
+zonguldrok hat hat of Pondering
+
+# Pinky and the Brain
+Scion, are you pondering what I'm pondering?
+
+I can tolerate a stained cap for power such as this!
+
+I must contemplate what to do next....
+###############################################################################
+###############################################################################
+#
+# Fungal Fisticloak
+#
+###############################################################################
+###############################################################################
+%%%%
+fungus thoughts
+
+You feel a sudden urge to sporulate.
+
+You feel a strange longing to hide under a damp log.
+
+You feel sentimental about mildew.
+
+You feel a distant kinship with mold.
+
+Your thoughts feel multiform.
+
+You hear a chorus of tiny whispers in the back of your mind.
+
+You contemplate finding a nice dark corner to settle down.
+
+You consider sprouting fruit.
+
+Your mycelia itch. ...wait, 'your'?
+
+You pine for rotting vegetation.
+
+The drone of happy mushrooms echoes in your thoughts.
+
+You long to contribute to the soil cycle.
+
+You ponder forming a long-term relationship with algae.
+
+You feel a longing for dead leaves.

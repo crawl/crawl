@@ -2022,7 +2022,7 @@ ORIENT:  encompass
 KMONS:   p = pile of debris
 KMONS:   E = demonic plant
 KMONS:   f = butterfly perm_ench:paralysis
-KITEM:   d = potion of degeneration pre_id
+KITEM:   d = potion of moonshine pre_id
 KITEM:   r = large rock
 KITEM:   s = human skeleton / kobold skeleton / orc skeleton / \
              naga skeleton / merfolk skeleton / spriggan skeleton
@@ -2152,10 +2152,11 @@ if crawl.x_chance_in_y(3, 4) then
                        "maxwell's_patent_armour", "orange_crystal_plate_armour",
                        "shield_of_the_gong", "tower_shield_of_ignorance",
                        "hat_of_the_bear_spirit", "mad_mage's_maulers",
-                       "ratskin_cloak", "slick_slippers", "seven-league_boots"}
+                       "ratskin_cloak", "slick_slippers", "seven-league_boots",
+                       "skull_of_zonguldrok", "fungal_fisticloak", "crown_of_vainglory"}
 
   local chaoticlist = { "spriggan's_knife", "captain's_cutlass", "gyre",
-                        "sword_of_zonguldrok", "maxwell's_thermic_engine",
+                        "maxwell's_thermic_engine",
                         "autumn_katana", "elemental_staff", "wrath_of_trog",
                         "frostbite", "consecrated_labrys", "wyrmbane",
                         "rift", "glaive_of_the_guard", "lochaber_axe",
@@ -2217,8 +2218,8 @@ end
 table.insert(cons, interest .. " q:" .. crawl.random_range(2, 3))
 
 -- Only Xom gets to get away with this particular lack of niceness.
-if you.race() ~= "Mummy" and you.race() ~= "Ghoul"
-     and you.race() ~= "Vampire" then
+if you.race() ~= "Mummy" and you.race() ~= "Revenant"
+     and you.race() ~= "Poltergeist" then
     table.insert(cons, "scroll of torment w:5 q:" .. crawl.random_range(1, 4))
 end
 

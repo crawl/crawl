@@ -89,15 +89,14 @@ string fight_data::summary(const string prefix, bool tsv)
 
 static skill_type _equipped_skill()
 {
-    const int weapon = you.equip[EQ_WEAPON];
-    const item_def * iweap = weapon != -1 ? &you.inv[weapon] : nullptr;
+    const item_def* weapon = you.weapon();
     const int missile = quiver::get_secondary_action()->get_item();
 
-    if (iweap && is_weapon(*iweap))
-        return item_attack_skill(*iweap);
+    if (weapon)
+        return item_attack_skill(*weapon);
 
     // TODO: could generalize this to handle non-ammo actions in fsim?
-    if (!iweap && missile >= 0 && you.inv[missile].base_type == OBJ_MISSILES)
+    if (!weapon && missile >= 0 && you.inv[missile].base_type == OBJ_MISSILES)
         return SK_THROWING;
 
     return SK_UNARMED_COMBAT;
@@ -105,8 +104,7 @@ static skill_type _equipped_skill()
 
 static string _equipped_weapon_name(bool show_prefix)
 {
-    const int weapon = you.equip[EQ_WEAPON];
-    const item_def * iweap = weapon != -1 ? &you.inv[weapon] : nullptr;
+    const item_def * iweap = you.weapon();
     const int missile = quiver::get_secondary_action()->get_item();
 
     if (iweap)
@@ -198,11 +196,11 @@ static bool _equip_weapon(const string &weapon, bool &abort)
 
         if (you.inv[i].name(DESC_PLAIN).find(weapon) != string::npos)
         {
-            if (i != you.equip[EQ_WEAPON])
+            if (you.weapon() != &you.inv[i])
             {
                 unwind_var<int> reset_speed(you.time_taken, you.time_taken);
-                wield_weapon(i);
-                if (i != you.equip[EQ_WEAPON])
+                equip_item(SLOT_WEAPON, i, false);
+                if (you.weapon() != &you.inv[i])
                 {
                     abort = true;
                     return true;
@@ -247,8 +245,8 @@ static bool _fsim_kit_equip(const string &kit, string &error)
             return false;
         }
     }
-    else if (const item_def *wpn = you.weapon())
-        unwield_item(*wpn, false);
+    else if (item_def *wpn = you.weapon())
+        unequip_item(*wpn, false);
 
     you.wield_change = true;
 
@@ -379,8 +377,7 @@ static void _do_one_fsim_round(monster &mon, fight_data &fd, bool defend)
     unwind_var<int> hp_override(you.hp, you.hp_max);
     bool did_hit = false;
 
-    const int weapon = you.equip[EQ_WEAPON];
-    const item_def *iweap = weapon != -1 ? &you.inv[weapon] : nullptr;
+    const item_def *iweap = you.weapon();
     const int missile = quiver::get_secondary_action()->get_item();
 
     mon.shield_blocks = 0;

@@ -649,3 +649,30 @@ Xtttttt.Att....tX
 Xttttttt...tttt.X
 XXXXXXXXXXXXXXXXX
 ENDMAP
+
+NAME: arena_small_gridded
+TAGS: arena_small_gridded
+MARKER: A = feat: stone_stairs_up_i
+MARKER: B = feat: stone_stairs_down_i
+MARKER: O = feat: escape_hatch_up
+SUBST: A = ., B = ., O = .
+ORIENT: encompass
+MAP
+XXXXXXXXXXXXXXXXX
+XvvvvvvvvvvvvvvvX
+XvvvvvvvvvvvvvvvX
+XvvvvvvvvvvvvvvvX
+Xvvvvvv.B.vvvvvvX
+Xvvvv...v...vvvvX
+Xvvvv.v.v.v.vvvvX
+Xvvv.........vvvX
+Xvvv.v.vOv.v.vvvX
+Xvvv.........vvvX
+Xvvvv.v.v.v.vvvvX
+Xvvvv...v...vvvvX
+Xvvvvvv.A.vvvvvvX
+XvvvvvvvvvvvvvvvX
+XvvvvvvvvvvvvvvvX
+XvvvvvvvvvvvvvvvX
+XXXXXXXXXXXXXXXXX
+ENDMAP

@@ -1055,16 +1055,22 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_SPHINX,
+    {  MST_SPHINX_MARAUDER,
       {
-       { SPELL_CONFUSE, 10, MON_SPELL_WIZARD },
-       { SPELL_SLOW, 10, MON_SPELL_WIZARD },
-       { SPELL_PARALYSE, 10, MON_SPELL_WIZARD },
-       { SPELL_SMITING, 10, MON_SPELL_WIZARD },
+       { SPELL_CONFUSE, 14, MON_SPELL_WIZARD },
+       { SPELL_VEX, 22, MON_SPELL_WIZARD },
       }
     },
 
-    // ('H') Hybrids.
+    {  MST_GUARDIAN_SPHINX,
+      {
+       { SPELL_CONFUSE, 10, MON_SPELL_WIZARD },
+       { SPELL_SLOW, 14, MON_SPELL_WIZARD },
+       { SPELL_PARALYSE, 14, MON_SPELL_WIZARD },
+       { SPELL_SMITING, 14, MON_SPELL_WIZARD },
+      }
+    },
+
     {  MST_JOROGUMO,
       {
        { SPELL_BOLT_OF_DRAINING, 20, MON_SPELL_WIZARD },
@@ -1127,6 +1133,13 @@ static const mon_spellbook mspell_list[] =
        { SPELL_GHOSTLY_FIREBALL, 17, MON_SPELL_WIZARD },
        { SPELL_DISPEL_UNDEAD_RANGE, 17, MON_SPELL_WIZARD },
        { SPELL_BLINK_AWAY, 17, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
+      }
+    },
+
+    {  MST_NAMELESS_REVENANT,
+      {
+       { SPELL_PYRRHIC_RECOLLECTION, 0, MON_SPELL_NATURAL },
+       { SPELL_BLINK_CLOSE, 15, MON_SPELL_WIZARD},
       }
     },
 
@@ -1305,7 +1318,8 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_BATTLESPHERE, 30, MON_SPELL_WIZARD },
        { SPELL_LIGHTNING_BOLT, 20, MON_SPELL_WIZARD },
-       { SPELL_FORCE_LANCE, 10, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
+       { SPELL_FORCE_LANCE, 10, MON_SPELL_WIZARD },
+       { SPELL_FORCE_LANCE, 20, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
       }
     },
 
@@ -1427,6 +1441,15 @@ static const mon_spellbook mspell_list[] =
        { SPELL_HASTE, 12, MON_SPELL_WIZARD },
        { SPELL_INVISIBILITY, 12, MON_SPELL_WIZARD },
        { SPELL_VAMPIRIC_DRAINING, 50, MON_SPELL_WIZARD },
+      }
+    },
+
+    {  MST_VAMPIRE_BLOODPRINCE,
+      {
+       { SPELL_GRAVE_CLAW, 30, MON_SPELL_WIZARD },
+       { SPELL_DRAIN_LIFE, 30, MON_SPELL_WIZARD },
+       { SPELL_RAVENOUS_SWARM, 40, MON_SPELL_WIZARD },
+       { SPELL_DOMINATE_UNDEAD, 22, MON_SPELL_WIZARD },
       }
     },
 

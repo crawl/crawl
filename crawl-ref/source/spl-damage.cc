@@ -617,7 +617,7 @@ static int _los_spell_damage_actor(const actor* agent, actor &target,
         if (beam.origin_spell == SPELL_OZOCUBUS_REFRIGERATION
             && target.alive())
         {
-            target.expose_to_element(beam.flavour, 5);
+            target.expose_to_element(beam.flavour, 5, agent);
         }
     }
 
@@ -847,12 +847,6 @@ spret fire_los_attack_spell(spell_type spell, int pow, const actor* agent,
     return _cast_los_attack_spell(spell, pow, agent, true, fail, damage_done);
 }
 
-dice_def freeze_damage(int pow, bool random)
-{
-    return dice_def(1, random ? 3 + div_rand_round(pow * 3, 10)
-                              : 3 + pow * 3 / 10);
-}
-
 spret cast_freeze(int pow, monster* mons, bool fail)
 {
     pow = min(25, pow);
@@ -880,10 +874,10 @@ spret cast_freeze(int pow, monster* mons, bool fail)
     set_attack_conducts(conducts, *mons);
 
     bolt beam;
-    beam.flavour = BEAM_COLD;
     beam.thrower = KILL_YOU;
+    zappy(ZAP_FREEZE, pow, false, beam);
 
-    const int orig_hurted = freeze_damage(pow, true).roll();
+    const int orig_hurted = beam.damage.roll();
     // calculate the resist adjustment to punctuate
     int hurted = mons_adjust_flavoured(mons, beam, orig_hurted, false);
     mprf("You freeze %s%s%s",
@@ -898,7 +892,7 @@ spret cast_freeze(int pow, monster* mons, bool fail)
 
     if (mons->alive())
     {
-        mons->expose_to_element(BEAM_COLD, orig_hurted);
+        mons->expose_to_element(BEAM_COLD, orig_hurted, &you);
         you.pet_target = mons->mindex();
     }
 
@@ -932,14 +926,23 @@ int airstrike_space_around(coord_def target, bool count_unseen)
     return empty_space;
 }
 
-string airstrike_intensity_line(int empty_space)
+string airstrike_intensity_display(int empty_space, tileidx_t& tile)
 {
     if (empty_space < 3)
+    {
+        tile = TILE_BOLT_WEAK_AIR;
         return "The confined air twists around weakly";
+    }
     else if (empty_space < 6)
+    {
+        tile = TILE_BOLT_MEDIUM_AIR;
         return "The air twists around";
+    }
     else
+    {
+        tile = TILE_BOLT_STRONG_AIR;
         return "The open air twists around violently";
+    }
 }
 
 spret cast_airstrike(int pow, coord_def target, bool fail)
@@ -970,6 +973,7 @@ spret cast_airstrike(int pow, coord_def target, bool fail)
 
     bolt pbeam;
     pbeam.flavour = BEAM_AIR;
+    tileidx_t tile = TILE_BOLT_DEFAULT_WHITE;
 
     const int empty_space = airstrike_space_around(target, true);
 
@@ -982,10 +986,12 @@ spret cast_airstrike(int pow, coord_def target, bool fail)
     hurted = mons->apply_ac(mons->beam_resists(pbeam, hurted, false));
     dprf("preac: %d, postac: %d", preac, hurted);
     mprf("%s and strikes %s%s%s",
-         airstrike_intensity_line(empty_space).c_str(),
+         airstrike_intensity_display(empty_space, tile).c_str(),
          mons->name(DESC_THE).c_str(),
          hurted ? "" : " but does no damage",
          attack_strength_punctuation(hurted).c_str());
+
+    flash_tile(mons->pos(), WHITE, 60, tile);
     _player_hurt_monster(*mons, hurted, pbeam.flavour);
 
     if (mons->alive())
@@ -1211,6 +1217,12 @@ static bool _init_frag_player(frag_effect &effect)
         effect.colour     = BROWN;
         if (you.form != transformation::statue)
             effect.damage = frag_damage_type::player_gargoyle;
+        return true;
+    }
+    else if (you.species == SP_REVENANT)
+    {
+        effect.name   = "blast of bone shards";
+        effect.colour = LIGHTGREY;
         return true;
     }
     if (you.petrified() || you.petrifying())
@@ -1662,8 +1674,12 @@ static int _shatter_player_dice()
         return 1;
     if (you.petrified() || you.petrifying())
         return 6; // reduced later by petrification's damage reduction
-    else if (you.form == transformation::statue || you.species == SP_GARGOYLE)
+    else if (you.form == transformation::statue
+             || you.species == SP_GARGOYLE
+             || you.species == SP_REVENANT)
+    {
         return 6;
+    }
     else if (you.airborne() || you.is_amorphous())
         return 1;
     else
@@ -2017,7 +2033,7 @@ static int _irradiate_cell(coord_def where, int pow, const actor &agent)
         if (hitting_player)
             contaminate_player(2000 + random2(1000));
         else if (coinflip())
-            act->malmutate("");
+            act->malmutate(&agent);
     }
 
     return dam;
@@ -2662,9 +2678,10 @@ static int _discharge_monsters(const coord_def &where, int pow,
     return damage;
 }
 
-bool safe_discharge(coord_def where, vector<const actor *> &exclude, bool check_only)
+static bool _safe_discharge(coord_def where, vector<const actor *> &exclude,
+                     bool check_only, bool exclude_center)
 {
-    for (adjacent_iterator ai(where); ai; ++ai)
+    for (adjacent_iterator ai(where, exclude_center); ai; ++ai)
     {
         const actor *act = actor_at(*ai);
         if (!act)
@@ -2687,7 +2704,7 @@ bool safe_discharge(coord_def where, vector<const actor *> &exclude, bool check_
             // Don't prompt for the player, but always continue arcing.
 
             exclude.push_back(act);
-            if (!safe_discharge(act->pos(), exclude, check_only))
+            if (!_safe_discharge(act->pos(), exclude, check_only, true))
                 return false;
         }
     }
@@ -2695,23 +2712,15 @@ bool safe_discharge(coord_def where, vector<const actor *> &exclude, bool check_
     return true;
 }
 
-spret cast_discharge(int pow, const actor &agent, bool fail, bool prompt)
+bool safe_discharge(coord_def where, bool check_only,
+                    bool exclude_center)
 {
     vector<const actor *> exclude;
-    if (agent.is_player() && prompt && !safe_discharge(you.pos(), exclude))
-        return spret::abort;
+    return _safe_discharge(where, exclude, check_only, exclude_center);
+}
 
-    fail_check();
-
-    const int num_targs = 1 + random2(2 + div_rand_round(pow, 25));
-    const int dam =
-        apply_random_around_square([pow, &agent] (coord_def target) {
-            return _discharge_monsters(target, pow, agent,
-                        1 + random2(2 + div_rand_round(pow, 25)));
-        }, agent.pos(), true, num_targs);
-
-    dprf("Arcs: %d Damage: %d", num_targs, dam);
-
+static void _discharge_message(int dam)
+{
     if (dam > 0)
     {
         if (Options.use_animations & UA_BEAM)
@@ -2725,11 +2734,37 @@ spret cast_discharge(int pow, const actor &agent, bool fail, bool prompt)
         {
             const bool plural = coinflip();
             mprf("%s blue arc%s ground%s harmlessly.",
-                 plural ? "Some" : "A",
-                 plural ? "s" : "",
-                 plural ? " themselves" : "s itself");
+                plural ? "Some" : "A",
+                plural ? "s" : "",
+                plural ? " themselves" : "s itself");
         }
     }
+}
+
+void discharge_at_location(int pow, const actor &agent, coord_def location)
+{
+    const int arc_length = 1 + random2(2 + div_rand_round(pow, 25));
+    const int dam = _discharge_monsters(location, pow, agent, arc_length);
+    _discharge_message(dam);
+}
+
+spret cast_discharge(int pow, const actor &agent, bool fail, bool prompt)
+{
+    if (agent.is_player() && prompt && !safe_discharge(you.pos()))
+        return spret::abort;
+
+    fail_check();
+
+    const int num_targs = 1 + random2(2 + div_rand_round(pow, 25));
+    const int dam =
+        apply_random_around_square([pow, &agent](coord_def target) {
+        return _discharge_monsters(target, pow, agent,
+            1 + random2(2 + div_rand_round(pow, 25)));
+    }, agent.pos(), true, num_targs);
+
+    dprf("Arcs: %d Damage: %d", num_targs, dam);
+
+    _discharge_message(dam);
     return spret::success;
 }
 
@@ -3450,23 +3485,25 @@ static bool _toxic_can_affect(const actor *act)
     return act->res_poison() < (act->is_player() ? 3 : 1);
 }
 
-spret cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer)
+spret cast_toxic_radiance(actor *agent, int pow, bool fail, bool tracer)
 {
-    // XXX: This must come before the player check, due to Marionette.
-    if (mon_tracer)
+    if (tracer)
     {
-        for (actor_near_iterator ai(agent->pos(), LOS_NO_TRANS); ai; ++ai)
+        for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
         {
             if (!_toxic_can_affect(*ai) || mons_aligned(agent, *ai))
                 continue;
-            else
-                return spret::success;
+            const monster* mons = ai->as_monster();
+            if (mons && !mons_is_threatening(*mons))
+                continue;
+            return spret::success;
         }
 
         // Didn't find any susceptible targets
         return spret::abort;
     }
-    else if (agent->is_player())
+
+    if (agent->is_player())
     {
         targeter_radius hitfunc(&you, LOS_NO_TRANS);
         if (stop_attack_prompt(hitfunc, "poison", _toxic_can_affect))
@@ -4942,12 +4979,12 @@ static void _show_fusillade_explosion(map<coord_def, beam_type>& hit_map,
             colour_t colour = concoction_colour[hit_map[pos]];
             flash_tile(pos, concoction_colour[hit_map[pos]], 0,
                        colour == YELLOW ? int{TILE_BOLT_IRRADIATE} : 0);
+
+            // Flash a visible flask at the center spot after the explosion.
+            if (pos == center)
+                flash_tile(pos, colour, 0, concoction_tile[hit_map[pos]]);
         }
     }
-
-    // Flash a visible flask at the center spot after the explosions.
-    flash_tile(center, concoction_colour[hit_map[center]], 0,
-                       concoction_tile[hit_map[center]]);
 
     animation_delay(quick_anim ? 0 : 50, true);
 }

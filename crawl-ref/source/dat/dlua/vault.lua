@@ -131,27 +131,12 @@ function hall_of_blades_weapon(e)
   local egos = {"flaming", "freezing", "electrocution", "heavy",
                 "holy_wrath", "pain", "vampirism",
                 "antimagic", "distortion", "spectral"}
-  local weapon1 = util.random_from(types)
-  local weapon2 = weapon1
-  local weapon3 = weapon1
-  while weapon2 == weapon1 do
-    weapon2 = util.random_from(types)
-  end
-  while weapon3 == weapon1 or weapon3 == weapon2 do
-    weapon3 = util.random_from(types)
-  end
-  local ego1 = util.random_from(egos)
-  local ego2 = ego1
-  local ego3 = ego1
-  while ego2 == ego1 do
-    ego2 = util.random_from(egos)
-  end
-  while ego3 == ego1 or ego3 == ego2 do
-    ego3 = util.random_from(egos)
-  end
-  e.mons("dancing weapon; good_item " .. weapon1 .. " ego:" .. ego1)
-  e.mons("dancing weapon; good_item " .. weapon2 .. " ego:" .. ego2)
-  e.mons("dancing weapon; good_item " .. weapon3 .. " ego:" .. ego3 .. " / nothing")
+  local weapon_t = util.random_subset(types, 3)
+  local weapon_e = util.random_subset(egos, 3)
+  e.mons("dancing weapon; good_item " .. weapon_t[1] .. " ego:" .. weapon_e[1])
+  e.mons("dancing weapon; good_item " .. weapon_t[2] .. " ego:" .. weapon_e[2])
+  e.mons("dancing weapon; good_item " .. weapon_t[3] .. " ego:" ..
+          weapon_e[3] .. " / nothing")
 end
 
 -- Setup for door vaults to define a common loot set and create the door
@@ -314,9 +299,10 @@ function index_vaults_room_themes (e, set, hard)
            'freezing wraith w:4 / crystal guardian w:' .. d)
     e.mons('great orb of eyes w:' .. 7 - d .. ' / ' ..
            'boggart band w:5 / glowing orange brain w:' .. d + 1)
-    e.mons('arcanist w:' .. 14 - d * 2 .. ' / sphinx w:10 / ' ..
+    e.mons('arcanist w:' .. 14 - d * 2 .. ' / sphinx marauder w:10 / ' ..
            'ironbound convoker w:5 / deep elf annihilator w:1')
-    e.mons('deep elf annihilator / deep elf sorcerer / lich / tengu reaver')
+    e.mons('deep elf annihilator / deep elf sorcerer / lich / ' ..
+           'guardian sphinx w:5 / tengu reaver')
     e.item('robe / mundane hat')
     e.item('randbook numspells:1 slevels:' .. sl  .. ' / ' ..
            'mundane ring of magical power w:2')
@@ -327,7 +313,7 @@ function index_vaults_room_themes (e, set, hard)
     local c = 'ego:cold_resistance pre_id'
     e.mons('white ugly thing w:' .. 8 - d * 2 .. ' / ' ..
            'redback simulacrum w:' .. 8 - d * 2 .. ' / ' ..
-           'freezing wraith w:2 / sphinx simulacrum w:' .. d - 1)
+           'freezing wraith w:2 / guardian sphinx simulacrum w:' .. d - 1)
     e.mons('necromancer w:2 / arcanist / white very ugly thing')
     e.mons('ironbound frostheart / frost giant w:1')
     e.mons('golden dragon / tengu reaver w:25 ; halberd ' .. f .. ' | war axe ' .. f ..
@@ -350,7 +336,7 @@ function index_vaults_room_themes (e, set, hard)
            'dire elephant w:' .. d * 3 )
     e.mons('dire elephant w:' .. 18 - d * 3 .. ' / ' ..
            'formless jellyfish w:' .. 2 + d * 4 .. ' / ' ..
-           'sphinx w:' .. 2 + d * 2)
+           'guardian sphinx w:' .. 2 + d * 2)
     e.mons('ironbound preserver w:' .. 10 - d * 2 .. ' / ' ..
            'entropy weaver w:' .. 2 + d * 3 .. ' / ' ..
            'ironbound beastmaster w:' .. -2 + d * 4)

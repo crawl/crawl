@@ -1,5 +1,5 @@
 {tag_major_version_opener}
-{{ {enum}, {{
+{{  {enum},
     "{short_name}",
     "{name}", {adjective}, {genus},
     {species_flags},
@@ -17,5 +17,5 @@
     {altar_action},
     {child_name},
     {orc_name},
-}} }},
+}},
 {tag_major_version_closer}

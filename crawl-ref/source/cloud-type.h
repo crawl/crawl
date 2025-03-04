@@ -42,11 +42,12 @@ enum cloud_type
     CLOUD_EMBERS,
 #endif
     CLOUD_FLAME,
-    CLOUD_DEGENERATION,
+    CLOUD_ALCOHOL,
     CLOUD_BLASTMOTES,
     CLOUD_ELECTRICITY,
     CLOUD_FAINT_MIASMA,
     CLOUD_MAGNETISED_DUST,
+    CLOUD_BATS,
     NUM_CLOUD_TYPES,
 
     // Random per-square.

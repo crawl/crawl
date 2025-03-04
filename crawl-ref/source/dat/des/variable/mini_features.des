@@ -3503,6 +3503,69 @@ MAP
                ....@
 ENDMAP
 
+# If there's ever a "cache of rotting food" decor feature, it should go here.
+NAME:   nicolae_abandoned_food_shop
+TAGS:   transparent decor extra
+DEPTH:  D:6-, Depths
+KFEAT:  a = abandoned_shop
+KFEAT:  ` = cache of meat / cache of fruit / cache of baked goods
+NSUBST: ` = 3=` / 2=`. / .
+MAP
+.....
+.```.
+.`a`.
+.```.
+.....
+ENDMAP
+
+NAME:    nicolae_escalator
+TAGS:    extra decor transparent
+DEPTH:   D:8-, !D:$, Depths:2-, !Depths:$
+SHUFFLE: {}/[]/()
+SUBST:   + : +++@
+MAP
+xx+xxx
+x...vxx
++.}.vvxx
+x....vvxx
+xvv...vvxx
+xxvv...vvxx
+ xxvv...vvx
+  xxvv...vxx
+   xxvv....x
+    xxvv.{.+
+     xxv...x
+      xxx+xx
+ENDMAP
+
+NAME:   nicolae_shoulda_brought_a_snack
+TAGS:   transparent decor extra
+DEPTH:  D:6-, Depths
+: if crawl.coinflip() then
+KITEM:  S = spriggan skeleton
+KFEAT:  ` = cache of meat
+: else
+KITEM:  S = kobold skeleton
+KFEAT:  ` = cache of fruit
+: end
+NSUBST: ` = 4=` / - / `-
+KPROP:  S`- = no_tele_into
+KMASK:  S`- = opaque
+KMASK:  S`- = no_monster_gen
+KMASK:  S`- = no_item_gen
+KMASK:  S`- = no_trap_gen
+MAP
+.........
+.........
+..mmmmm..
+..m```m..
+..m`S`m..
+..m```m..
+..mmmmm..
+.........
+.........
+ENDMAP
+
 #####################################################################
 #
 # <<2>> Inaccessible items

@@ -288,8 +288,8 @@ ENDMAP
 NAME:    minmay_arrival_jagged
 TAGS:    arrival no_monster_gen
 ORIENT:  float
-SUBST:   A = xx., B = x..
 KPROP:   A = no_tele_into
+SUBST:   A = xx., B = x..
 MAP
 xxxxxxxxxxxx
 x{AAAAAAAAAA
@@ -1626,24 +1626,28 @@ NAME:    dpeg_arrival_subterranean_lakeside_camping
 TAGS:    arrival no_monster_gen
 ORIENT:  float
 MONS:    goblin, rat, bat
+SHUFFLE: ab, cd
 SUBST:   ? : . w ?:40, ' : . x ':40
 SUBST:   ? = .w, ' = .x
+SUBST:   ac = w, bd = .
+SUBST:   e = f.
+SUBST:   f : .wx
 MAP
       xxxxxxxxxxxxxxxxxxxx
    xxxx?xx1.'xxxxxxxx'.33x
- xxx'.??.xxx.xxx.x.x..xxxx
+ xxx'.c?.xxx.xxx.x.x..xxxx
 xx'..?w.....?.....x..xxx'x
 x'.?www?.?.?www?.xx...2x.'
-x'?www?.??w.wwww?...?.xx.@
-xx.???.?wwww.www.?ww..x..'
+x.?www?.??w.wwww?...?.xx.@
+xx.d??.?wwww.www.?ww..x..'
 xxx'..?wwww??.wwwww?.xx.xx
 ''xxx.?www?.{.?www?.xx.xxx
 @..x.?wwwww???wwwww?..xx'x
 ..xx..?wwwww.wwwww?..x..xx
 x'.xxx.??wwww.ww.??...xxxx
-xx..x....??www.??...xxxx'x
- xx...??....??.xx?.x.....x
-  xx'...'xxxxxxx''...'x.2x
+xx..x....??www.bb...xxxx'x
+ xx...??....aa.xxe.x.....x
+  xx'...'xxxxxxxf'...'x.2x
   x'.xxxxx'''xxxxxx''xx1xx
   xxxxxxxx.@.xxxxxxxxxxxxx
 ENDMAP
@@ -3342,8 +3346,8 @@ COLOUR:  .c = white
 : -- do the roll unconditionally, for seed stability
 : local humanoid_ally = util.random_from({"dwarf", "human"})
 : -- The corpseless. Before the game starts, you.monster() is "program bug".
-: if (not crawl.game_started()) or race == "Vampire"
-:     or race == "Mummy" or race == "Ghoul" or race == "Octopode"
+: if (not crawl.game_started()) or race == "Poltergeist"
+:     or race == "Mummy" or race == "Revenant" or race == "Octopode"
 :     or race == "Gargoyle" or race == "Vine Stalker"
 :     or race == "Djinni" or race == "Yak" or race == "Formicid" then
 :   ally = humanoid_ally
@@ -3544,7 +3548,7 @@ NAME:     amcnicky_arrival_wind_blow
 TAGS:     arrival no_monster_gen no_trap_gen
 ORIENT:   float
 NSUBST:   _ = 4:p / 4=p:2 . / *=.
-KITEM:    p = deep dwarf skeleton
+KITEM:    p = dwarf skeleton
 MAP
       xxxxx
       x__{xxx
@@ -3566,7 +3570,7 @@ NAME:     amcnicky_arrival_abandoned_market
 TAGS:     arrival no_monster_gen no_trap_gen
 ORIENT:   float
 NSUBST:   _ = 4:q / 4=q:2 . / *=.
-KITEM:    q = deep dwarf skeleton
+KITEM:    q = dwarf skeleton
 NSUBST:   - = 6=p / 6=p. / 6=px / *=.x
 SUBST:    r = x.
 KFEAT:    p = abandoned_shop
@@ -3624,7 +3628,7 @@ TILE:    G = dngn_statue_sigmund
 # Bunch of player species
 KITEM:   ? = armataur skeleton / deep elf skeleton / demigod skeleton / \
              demonspawn skeleton / draconian skeleton / felid skeleton / \
-             formicid skeleton / ghoul skeleton / gnoll skeleton / \
+             formicid skeleton / gnoll skeleton / \
              orc skeleton / human skeleton / kobold skeleton / \
              merfolk skeleton / minotaur skeleton / naga skeleton / \
              octopode skeleton / oni skeleton / spriggan skeleton / \

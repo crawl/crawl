@@ -199,24 +199,21 @@ LUARET1(you_corrosion, number, you.corrosion_amount())
 
 /*** Strength.
  * @treturn int current strength
- * @treturn int max strength
  * @function strength
  */
-LUARET2(you_strength, number, you.strength(false), you.max_strength())
+LUARET1(you_strength, number, you.strength(false))
 
 /*** Intelligence.
  * @treturn int current intelligence
- * @treturn int max intelligence
  * @function intelligence
  */
-LUARET2(you_intelligence, number, you.intel(false), you.max_intel())
+LUARET1(you_intelligence, number, you.intel(false))
 
 /*** Dexterity.
  * @treturn int current dexterity
- * @treturn int max dexterity
  * @function dexterity
  */
-LUARET2(you_dexterity, number, you.dex(false), you.max_dex())
+LUARET1(you_dexterity, number, you.dex(false))
 
 /*** XL.
  * @treturn int xl
@@ -378,7 +375,7 @@ LUARET1(you_spirit_shield, number, you.spirit_shield() ? 1 : 0)
  * @treturn int resistance level
  * @function res_corr
  */
-LUARET1(you_res_corr, boolean, you.res_corr(false))
+LUARET1(you_res_corr, boolean, player_res_corrosion(false))
 
 /*** Are you flying?
  * @treturn boolean

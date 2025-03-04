@@ -18,7 +18,7 @@
                         'spriggan air mage w:5 / ' ..
                         'nothing w:68')
             e.kmons('2 = spriggan berserker / deep elf demonologist / ' ..
-                        'sphinx w:5')
+                        'guardian sphinx w:5')
             e.kmons('3 = deep elf high priest / walking divine tome w:5')
         end
         e.subst('% = * %:20 .')
@@ -125,7 +125,7 @@
             e.mons("zombie / simulacrum / spectral thing / freezing wraith")
             e.mons("vampire mage / jiangshi / ghoul / ancient champion / " ..
                    "flayed ghost / vampire knight / mummy priest w:2")
-            e.mons("lich / ancient lich / dread lich / royal mummy w:2")
+            e.mons("lich / ancient lich / dread lich / vampire bloodprince w:2")
             e.kfeat("A = granite_statue")
             e.subst("B = V")
             e.tile("A = depths_column / depths_crumbled_column")
@@ -197,8 +197,9 @@
             e.ftile("xT+.123 = floor_ice")
         elseif set_weight == 12 then
             e.mons("rakshasa / occultist / necromancer")
-            e.mons("fenstrider witch / deep troll earth mage / sphinx w:5 / " ..
-                   "spriggan air mage / tengu reaver w:5 / vampire mage band")
+            e.mons("fenstrider witch / deep troll earth mage / " ..
+                   "guardian sphinx w:5 /  spriggan air mage / " ..
+                   "tengu reaver w:5 / vampire mage band")
             e.mons("walking frostbound tome / walking earthen tome / lich / " ..
                    "walking crystal tome / walking divine tome / " ..
                    "ancient lich / dread lich / deep elf annihilator")
@@ -334,13 +335,13 @@ ORIENT:  encompass
 KITEM:   zZ = any potion / nothing w:90
 # Two themes: birds with elves, and spriggans with giants.
 : if crawl.coinflip() then
-MONS:   tengu conjurer / tengu warrior / deep elf elementalist \
-        / sphinx / nothing
-MONS:   tengu reaver / deep elf annihilator / deep elf high priest \
-        / caustic shrike
+MONS:   tengu conjurer / tengu warrior / caustic shrike zombie / \
+        guardian sphinx / nothing
+MONS:   tengu reaver / walking crystal tome / walking divine tome / \
+        caustic shrike
 : else
-MONS:   spriggan berserker / spriggan air mage / ettin / stone giant \
-        / frost giant / fire giant / nothing
+MONS:   spriggan berserker / spriggan air mage / ettin / stone giant / \
+        frost giant / fire giant / nothing
 MONS:   spriggan defender / alderking / titan / juggernaut
 : end
 KMONS:   L = fire dragon
@@ -782,7 +783,7 @@ MONS:    very ugly thing w:10 / ugly thing w:30 / \
 MONS:    glowing orange brain / very ugly thing / glowing shapeshifter / \
          jiangshi w:4 / phantasmal warrior w:4 / \
          caustic shrike skeleton w:2 / spark wasp zombie w:2
-MONS:    sphinx / spark wasp / flayed ghost / \
+MONS:    guardian sphinx / spark wasp / flayed ghost / \
          storm dragon w:4 / shadow dragon w:4 / quicksilver dragon w:4 / \
          iron dragon w:4 / golden dragon w:4 / caustic shrike / \
          tentacled monstrosity / juggernaut zombie w:2
@@ -792,7 +793,7 @@ MONS:    spriggan defender w:30 / titan w:30 / ancient lich w:30 / \
          draconian annihilator / draconian knight
 KMONS:   Z = draconian knight / draconian annihilator
 KITEM:   Z = midnight gem
-KFEAT:   z^ = zot trap / dispersal trap
+KFEAT:   z^ = harlequin's trap
 KFEAT:   Z = enter_zot
 SHUFFLE: Y], {([>, HI / HI / IH, JK / JK / KJ
 SHUFFLE: NO / NO / ON, PQ / PQ / QP, RS / RS / SR, lm / lm / ml

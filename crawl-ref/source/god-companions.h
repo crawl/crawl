@@ -100,7 +100,7 @@ bool beogh_apostle_is_alive(int slot);
 int get_num_apostles();
 bool apostle_has_unique_name(const monster& apostle);
 
-void beogh_swear_vegeance(monster& apostle);
+void beogh_swear_vengeance(const monster& apostle);
 void beogh_follower_banished(monster& apostle);
 void beogh_progress_vengeance();
 void beogh_progress_resurrection(int amount);
@@ -112,6 +112,6 @@ string apostle_short_description(int slot);
 
 #if TAG_MAJOR_VERSION == 34
 void fixup_bad_companions();
-bool maybe_bad_priest_monster(monster &mons);
+bool maybe_bad_priest_monster(const monster &mons);
 void fixup_bad_priest_monster(monster &mons);
 #endif

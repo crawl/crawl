@@ -396,7 +396,7 @@ DEPTH:   Coc, !Coc:$
 ORIENT:  centre
 KMONS:   1 = elemental wellspring w:70 / nothing
 KFEAT:   1 = w
-SHUFFLE: DEFH, Pq/Qq/Rr/Ss, JKLMNOZa
+SHUFFLE: DEFH, Pp/Qq/Rr/Ss, JKLMNOZa
 SUBST:   D = w, EFH = ., PQR = w, pqr = Ww, S = ., s = W., JKL = ., M : w., \
          N : w., Za = w
 MAP

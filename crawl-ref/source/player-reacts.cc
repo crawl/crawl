@@ -187,9 +187,6 @@ static void _decrement_petrification(int delay)
         mprf(MSGCH_DURATION, "You turn to %s%s.",
              flesh_equiv.c_str(),
              you.paralysed() ? "" : " and can act again");
-
-        if (you.props.exists(PETRIFIED_BY_KEY))
-            you.props.erase(PETRIFIED_BY_KEY);
     }
 
     if (you.duration[DUR_PETRIFYING])
@@ -218,8 +215,6 @@ static void _decrement_attraction(int delay)
 
 static void _decrement_paralysis(int delay)
 {
-    _decrement_a_duration(DUR_PARALYSIS_IMMUNITY, delay);
-
     if (!you.duration[DUR_PARALYSIS])
         return;
 
@@ -228,17 +223,7 @@ static void _decrement_paralysis(int delay)
     if (you.duration[DUR_PARALYSIS])
         return;
 
-    if (you.props.exists(PARALYSED_BY_KEY))
-        you.props.erase(PARALYSED_BY_KEY);
-
-    const int immunity = roll_dice(1, 3) * BASELINE_DELAY;
-    you.duration[DUR_PARALYSIS_IMMUNITY] = immunity;
-    if (you.petrified())
-    {
-        // no chain paralysis + petrification combos!
-        you.duration[DUR_PARALYSIS_IMMUNITY] += you.duration[DUR_PETRIFIED];
-        return;
-    }
+    you.give_stun_immunity(random_range(1, 3));
 
     mprf(MSGCH_DURATION, "You can act again.");
     you.redraw_armour_class = true;
@@ -460,11 +445,12 @@ void player_reacts_to_monsters()
         detect_items(-1);
     }
 
+    _decrement_a_duration(DUR_STUN_IMMUNITY, you.time_taken);
     _decrement_attraction(you.time_taken);
     _decrement_paralysis(you.time_taken);
     _decrement_petrification(you.time_taken);
     if (_decrement_a_duration(DUR_SLEEP, you.time_taken))
-        you.awaken();
+        you.wake_up(true);
 
     if (_decrement_a_duration(DUR_GRASPING_ROOTS, you.time_taken)
         && you.is_constricted())
@@ -613,23 +599,17 @@ static void _decrement_transform_duration(int delay)
     {
         you.duration[DUR_TRANSFORMATION] = 1;
     }
-    // Vampire bat transformations are permanent (until ended), unless they
-    // are uncancellable (polymorph wand on a full vampire).
-    if (you.get_mutation_level(MUT_VAMPIRISM) < 2
-        || you.form != transformation::bat
-        || you.transform_uncancellable)
+
+    if (form_can_fly()
+        || form_can_swim() && feat_is_water(env.grid(you.pos())))
     {
-        if (form_can_fly()
-            || form_can_swim() && feat_is_water(env.grid(you.pos())))
-        {
-            // Disable emergency flight if it was active
-            you.props.erase(EMERGENCY_FLIGHT_KEY);
-        }
-        if (_decrement_a_duration(DUR_TRANSFORMATION, delay, nullptr, random2(3),
-                                  "Your transformation is almost over."))
-        {
-            return_to_default_form();
-        }
+        // Disable emergency flight if it was active
+        you.props.erase(EMERGENCY_FLIGHT_KEY);
+    }
+    if (_decrement_a_duration(DUR_TRANSFORMATION, delay, nullptr, random2(3),
+                                "Your transformation is almost over."))
+    {
+        return_to_default_form();
     }
 }
 
@@ -729,19 +709,6 @@ static void _decrement_durations()
     dec_slow_player(delay);
     dec_berserk_recovery_player(delay);
     dec_haste_player(delay);
-
-    for (int i = 0; i < NUM_STATS; ++i)
-    {
-        stat_type s = static_cast<stat_type>(i);
-        if (you.stat(s) > 0
-            && _decrement_a_duration(stat_zero_duration(s), delay))
-        {
-            mprf(MSGCH_RECOVERY, "Your %s has recovered.", stat_desc(s, SD_NAME));
-            you.redraw_stats[s] = true;
-            if (you.duration[DUR_SLOW] == 0)
-                mprf(MSGCH_DURATION, "You feel yourself speed up.");
-        }
-    }
 
     // Leak piety from the piety pool into actual piety.
     // Note that changes of religious status without corresponding actions
@@ -923,6 +890,36 @@ static void _decrement_durations()
     if (you.duration[DUR_BLOOD_FOR_BLOOD])
         beogh_blood_for_blood_tick(delay);
 
+    if (you.duration[DUR_CACOPHONY])
+    {
+        // Check if every haunted armour is already dead. If so, end the
+        // effect early.
+        bool found = false;
+        for (monster_iterator mi; mi; ++mi)
+        {
+            if (mi->was_created_by(MON_SUMM_CACOPHONY))
+            {
+                found = true;
+                break;
+            }
+        }
+        if (!found)
+        {
+            mprf(MSGCH_DURATION, "As the last of your armour is driven back to "
+                  "you, your cacophony ends.");
+            you.duration[DUR_CACOPHONY] = 0;
+        }
+        else if (_decrement_a_duration(DUR_CACOPHONY, delay,
+                "Your cacophony subsides and your armour settles down once more."))
+        {
+            for (monster_iterator mi; mi; ++mi)
+                if (mi->was_created_by(MON_SUMM_CACOPHONY))
+                    monster_die(**mi, KILL_RESET, NON_MONSTER, true);
+        }
+        else
+            noisy(20, you.pos());
+    }
+
     if (you.duration[DUR_FUSILLADE] && you.time_taken > 0)
         fire_fusillade();
 
@@ -952,7 +949,7 @@ static void _handle_emergency_flight()
 // Regeneration and Magic Regeneration items only work if the player has reached
 // max hp/mp while they are being worn. This scans and updates such items when
 // the player refills their hp/mp.
-static void _maybe_attune_items(bool attune_regen, bool attune_mana_regen)
+void maybe_attune_regen_items(bool attune_regen, bool attune_mana_regen)
 {
     if (!attune_regen && !attune_mana_regen)
         return;
@@ -963,11 +960,11 @@ static void _maybe_attune_items(bool attune_regen, bool attune_mana_regen)
     bool gained_regen = false;
     bool gained_mana_regen = false;
 
-    for (int slot = EQ_MIN_ARMOUR; slot <= EQ_MAX_WORN; ++slot)
+    for (player_equip_entry& entry : you.equipment.items)
     {
-        if (you.melded[slot] || you.equip[slot] == -1 || you.activated[slot])
+        if (entry.melded || entry.attuned || entry.is_overflow)
             continue;
-        const item_def &arm = you.inv[you.equip[slot]];
+        const item_def &arm = entry.get_item();
 
         if ((attune_regen && is_regen_item(arm)
              && (you.magic_points == you.max_magic_points || !is_mana_regen_item(arm)))
@@ -981,17 +978,12 @@ static void _maybe_attune_items(bool attune_regen, bool attune_mana_regen)
                 gained_mana_regen = true;
 
             eq_list.push_back(is_artefact(arm) ? get_artefact_name(arm) :
-                slot == EQ_AMULET ? "amulet" :
-                slot != EQ_BODY_ARMOUR ?
-                    item_slot_name(static_cast<equipment_type>(slot)) :
-                    "armour");
+                entry.slot == SLOT_AMULET ? "amulet" :
+                    lowercase_string(equip_slot_name(entry.slot, true)));
 
-            if (slot == EQ_BOOTS && arm.sub_type != ARM_BARDING
-                || slot == EQ_GLOVES)
-            {
+            if (entry.slot == SLOT_BOOTS || entry.slot == SLOT_GLOVES)
                 plural = true;
-            }
-            you.activated.set(slot);
+            entry.attuned = true;
         }
     }
 
@@ -1065,9 +1057,9 @@ static void _regenerate_hp_and_mp(int delay)
     }
 
     // Update attunement of regeneration items if our hp/mp has refilled.
-    _maybe_attune_items(you.hp != old_hp && you.hp == you.hp_max,
-                        you.magic_points != old_mp
-                        && you.magic_points == you.max_magic_points);
+    maybe_attune_regen_items(you.hp != old_hp && you.hp == you.hp_max,
+                             you.magic_points != old_mp
+                             && you.magic_points == you.max_magic_points);
 }
 
 static void _handle_fugue(int delay)
@@ -1082,6 +1074,29 @@ static void _handle_fugue(int delay)
             mpr("The wailing of tortured souls fills the air!");
         noisy(spell_effect_noise(SPELL_FUGUE_OF_THE_FALLEN), you.pos());
     }
+}
+
+static void _handle_trickster_decay(int delay)
+{
+    if (you.duration[DUR_TRICKSTER_GRACE] || delay == 0)
+        return;
+
+    if (!you.props.exists(TRICKSTER_POW_KEY))
+        return;
+
+    int& stacks = you.props[TRICKSTER_POW_KEY].get_int();
+
+    // Decay at a rate of ~1 AC per 30 aut.
+    const int reduction = div_rand_round(3, delay);
+    stacks -= reduction;
+    if (stacks <= 0)
+    {
+        you.props.erase(TRICKSTER_POW_KEY);
+        mprf(MSGCH_DURATION, "You feel your existence waver again.");
+    }
+
+    if (reduction > 0)
+        you.redraw_armour_class = true;
 }
 
 void player_reacts()
@@ -1102,8 +1117,7 @@ void player_reacts()
     mprf(MSGCH_DIAGNOSTICS, "stealth: %d", stealth);
 #endif
 
-    if (you.unrand_reacts.any())
-        unrand_reacts();
+    unrand_reacts();
 
     _handle_fugue(you.time_taken);
     if (you.has_mutation(MUT_WARMUP_STRIKES))
@@ -1171,6 +1185,18 @@ void player_reacts()
 
     if (you.duration[DUR_POISONING])
         handle_player_poison(you.time_taken);
+
+    if (you.has_mutation(MUT_TRICKSTER))
+        _handle_trickster_decay(you.time_taken);
+
+    if (you.form == transformation::bat_swarm)
+    {
+        if (x_chance_in_y(you.time_taken, 20))
+        {
+            const int num_clouds = 2 + (div_rand_round(get_form()->get_level(1) - 16, 4));
+            big_cloud(CLOUD_BATS, &you, you.pos(), 8, num_clouds);
+        }
+    }
 
     // safety first: make absolutely sure that there's no mimic underfoot.
     // (this can happen with e.g. apport.)

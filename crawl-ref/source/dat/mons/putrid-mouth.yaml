@@ -7,7 +7,7 @@ holiness: [undead]
 will: 100
 attacks:
  - {type: bite, flavour: poison_strong, damage: 30}
- - {type: claw, flavour: drain_stat, damage: 20}
+ - {type: claw, damage: 20}
 hd: 14
 hp_10x: 700
 ac: 5

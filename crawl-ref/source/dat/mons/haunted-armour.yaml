@@ -1,0 +1,18 @@
+name: "haunted armour"
+glyph: {char: "[", colour: lightgreen}
+resists: {cold: 1}
+flags: [flies, unblindable, fighter]
+holiness: [undead]
+will: invuln
+attacks:
+ - {type: hit, flavour: trickster, damage: 1}
+energy: {move: 5}
+hd: 10
+hp_10x: 320
+ac: 13
+ev: 10
+uses: starting_equipment
+intelligence: brainless
+size: tiny
+shape: misc
+tile: tile_unseen_armour

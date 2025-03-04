@@ -32,11 +32,6 @@ Felid
 Ezek a macskák értelmesek, de nem tudnak használni se fegyvereket, se
 páncélokat és sok más tárgyat sem.
 %%%%
-Ghoul
-
-Egy örök rothadásra ítélt élőhalott. Folyton rohadt húsra vágynak, hogy éles
-karmaikkal feldarabolják és felfalják.
-%%%%
 Halfling
 
 Kicsi de kemény, a félszerzet kiválóan bánik a parittyával. Enyhén ellenállóak

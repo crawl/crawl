@@ -1387,6 +1387,7 @@ MONS:    plant, toadstool, bush
 MAP
 xxxxxx@xxxxxx
 xWWWWTRTWWWWx
+xW...T.T...Wx
 xW.1.....2.Wx
 xW111...222Wx
 xT.1.....2.Tx
@@ -2447,6 +2448,7 @@ ENDMAP
 NAME:   amcnicky_arrival_flooded_fountain
 TAGS:   arrival no_monster_gen no_pool_fixup no_trap_gen
 ORIENT: float
+KPROP:  V = no_tele_into
 MAP
 xxxxxxxx
 xVww{..x

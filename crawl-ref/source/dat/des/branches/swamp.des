@@ -1572,10 +1572,10 @@ KMONS:   1 = green draconian
 KMONS:   a = death drake
 KMONS:   A = protean progenitor / green death / wyrmhole w:2
 KMONS:   B = green draconian stormcaller
-KMONS:   % = ghoul / bog body w:2
-KMONS:   *d = golden dragon w:8 / seven-headed hydra w:5 / \
+KMONS:   % = ghoul / bog body w:1
+KMONS:   *d = golden dragon w:15 / seven-headed hydra w:5 / \
               eight-headed hydra w:5
-KMONS:   | = large abomination / tentacled monstrosity w:5
+KMONS:   | = large abomination / tentacled monstrosity
 KFEAT:   t = demonic_tree
 KFEAT:   T = mangrove
 SHUFFLE: A%|t / ad*T
@@ -1799,7 +1799,7 @@ ENDMAP
 NAME:   grunt_witch_cave
 MONS:   fenstrider witch
 MONS:   hydra
-KITEM:  K = potion of degeneration pre_id w:20 / \
+KITEM:  K = potion of moonshine pre_id w:20 / \
             potion of mutation pre_id
 KITEM:  * = *
 KFEAT:  K = shallow_water
@@ -2055,7 +2055,7 @@ DEPTH:   Swamp:2-, !Swamp:$
 MONS:    fire dragon, will-o-the-wisp
 MONS:    ice dragon, bog body / hydra simulacrum w:8
 MONS:    swamp dragon, alligator / hydra w:8
-ITEM:    any good_item
+ITEM:    any good_item / dragon-coil talisman w:2
 SUBST:   $ = $%%*, * = **d, T = tww
 SHUFFLE: 12 / 12 / 34 / 34 / 56 / 56 / 56
 NSUBST:  2 = 1 : 2:9 .:1 / *:2, 4 = 1 : 4:9 .:1 / *:4, 6 = 1 : 6:9 .:1 / *:6
@@ -2155,7 +2155,8 @@ KPROP:  .21 = bloody / w:30 nothing
 KPROP:  e = bloody
 SUBST:  G : Gxx
 : vault_metal_statue_setup(_G, "G", "mystic cage")
-: dgn.delayed_decay(_G, 'e', 'human corpse')
+: dgn.delayed_decay_extra(_G, "e", "human corpse",
+:                         "sanguine talisman / nothing")
 MAP
  ttttt
 tt%$ett

@@ -23,8 +23,9 @@ enum unarmed_attack_type
     UNAT_TENTACLES,
     UNAT_MAW,
     UNAT_EXECUTIONER_BLADE,
+    UNAT_FUNGAL_FISTICLOAK,
     UNAT_FIRST_ATTACK = UNAT_CONSTRICT,
-    UNAT_LAST_ATTACK = UNAT_EXECUTIONER_BLADE,
+    UNAT_LAST_ATTACK = UNAT_FUNGAL_FISTICLOAK,
     NUM_UNARMED_ATTACKS,
 };
 
@@ -38,6 +39,11 @@ public:
     int       attack_number;
     int       effective_attack_number;
 
+    // A tally of all direct weapon + brand damage inflicted by this attack
+    // (including damage against cleave targets, both hits of quick blades,
+    // and aux attacks).
+    int       total_damage_done;
+
     list<actor*> cleave_targets;
     bool         cleaving;        // additional attack from cleaving
     bool         is_multihit;     // quick blade follow-up attack
@@ -48,6 +54,8 @@ public:
                                   // followups, but still do 100% damage
     int          dmg_mult;        // percentage multiplier to max damage roll
     int          flat_dmg_bonus;  // flat slaying to add to this attack
+    bool         never_prompt;    // whether to skip prompting the player about
+                                  // harming allies
     wu_jian_attack_type wu_jian_attack;
     int wu_jian_number_of_targets;
     coord_def attack_position;
@@ -150,6 +158,7 @@ private:
     void apply_sign_of_ruin_effects();
     void do_ooze_engulf();
     void try_parry_disarm();
+    void do_vampire_lifesteal();
 private:
     // Player-attack specific stuff
     // Auxiliary unarmed attacks.
@@ -183,9 +192,6 @@ private:
 
     // Added in, were previously static methods of fight.cc
     bool _extra_aux_attack(unarmed_attack_type atk);
-    bool _player_vampire_draws_blood(const monster* mon, const int damage,
-                                     bool needs_bite_msg = false);
-    bool _vamp_wants_blood_from_monster(const monster* mon);
 
     bool can_reach(int dist);
 
@@ -206,3 +212,4 @@ string mut_aux_attack_desc(mutation_type mut);
 vector<string> get_player_aux_names();
 
 bool coglin_spellmotor_attack();
+bool spellclaws_attack(int spell_level);

@@ -53,8 +53,8 @@ function pan_lord_setup(_G, name)
                  "golden eye band / eye of devastation / "..
                  "shining eye / demonspawn corrupter",
         ['Lom Lobon'] = "hellwing w:100 / sixfirhy w:100 / " ..
-                 "smoke demon w:200 / nekomata w:100 / green death w:200 / " ..
-                 "blizzard demon w:200 / glowing orange brain / rakshasa / " ..
+                 "smoke demon w:200 / nekomata w:50 / green death w:200 / " ..
+                 "blizzard demon w:250 / glowing orange brain / rakshasa / " ..
                  "nagaraja / merfolk aquamancer / jorogumo / " ..
                  "fenstrider witch / draconian annihilator / " ..
                  "deep elf annihilator / titan w:5 / lich w:5 / " ..
@@ -213,11 +213,11 @@ function pan_lord_vault_contents(e, anyglyph, commonglyph, greaterglyph)
                             demonspawn corrupter w:1 / \
                             demonspawn warmonger w:1")
     e.kmons(commonglyph .. " = common demon")
-    e.kmons(greaterglyph .. " = greater demon w:71 / nekomata w:1 / \
-                                demonspawn soul scholar w:2 / \
-                                demonspawn blood saint w:2 / \
-                                demonspawn corrupter w:2 / \
-                                demonspawn warmonger w:2")
+    e.kmons(greaterglyph .. " = greater demon w:107 / nekomata w:1 / \
+                                demonspawn soul scholar w:3 / \
+                                demonspawn blood saint w:3 / \
+                                demonspawn corrupter w:3 / \
+                                demonspawn warmonger w:3")
     e.kfeat('< = {')
 
     -- Have a small chance to fancify the floor afterwards.
@@ -2431,7 +2431,7 @@ WEIGHT: 1
 KMONS:  p = human / elf / dwarf ; nothing / kobold ; nothing / mummy / \
             naga ; nothing / troll / draconian / demigod ; nothing / \
             spriggan ; nothing / minotaur ; nothing / demonspawn ; nothing / \
-            ghoul / tengu ; nothing / merfolk ; nothing / vampire ; nothing / \
+            revenant / tengu ; nothing / merfolk ; nothing / poltergeist / \
             felid / octopode ; nothing / djinni ; nothing / \
             gargoyle ; nothing / formicid ; nothing / vine stalker ; nothing / \
             barachi ; nothing / gnoll ; nothing / armataur ; nothing / \
@@ -3237,6 +3237,7 @@ ENDMAP
 ##################################
 NAME:   reaverb_pan_chaos_star
 TAGS:   extra transparent pandec
+KFEAT:  ^ = devourer's trap
 MAP
         ...
  ....  ..x..  ....
@@ -3245,11 +3246,11 @@ MAP
  ...x.. .x. ..x...
    ..x...x...x..
     ..x.....x..
- ... ....x.... ...
+ ... ..^.x.... ...
 ..x.....xxx.....x..
 .x.xxx.xxxxx.xxx.x.
 ..x.....xxx.....x..
- ... ....x.... ...
+ ... ....x.^.. ...
     ..x.....x..
    ..x...x...x..
  ...x.. .x....x...

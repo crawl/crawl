@@ -1,0 +1,81 @@
+enum: SP_POLTERGEIST
+monster: MONS_POLTERGEIST
+name: Poltergeist
+genus: Geist
+adjective: Ghostly
+short_name: Po
+difficulty: Advanced
+difficulty_priority: 80
+species_flags:
+  - no_blood
+  - no_bones
+  - no_feet
+  - no_hair
+  - no_ears
+aptitudes:
+  xp: -1
+  hp: -1
+  mp_mod: 0
+  wl: 4
+  fighting: -1
+  short_blades: +1
+  axes: -1
+  maces_and_flails: -2
+  polearms: -1
+  staves: -2
+  ranged weapons: -2
+  throwing: +2
+  armour: False
+  dodging: 1
+  stealth: 5
+  shields: -1
+  unarmed_combat: -3
+  spellcasting: -1
+  conjurations: -3
+  hexes: 4
+  necromancy: 1
+  forgecraft: -1
+  shapeshifting: False
+  fire_magic: -1
+  earth_magic: -1
+  ice_magic: 1
+  air_magic: 1
+  alchemy: 1
+  invocations: -1
+  evocations: -1
+undead_type: undead
+str: 4
+int: 10
+dex: 9
+levelup_stat_frequency: 5
+levelup_stats:
+  - int
+  - dex
+mutations:
+  1:
+    MUT_FLOAT: 1
+    MUT_NEGATIVE_ENERGY_RESISTANCE: 3
+    MUT_COLD_RESISTANCE: 1
+    MUT_TORMENT_RESISTANCE: 2
+    MUT_FORMLESS: 1
+    MUT_TRICKSTER: 1
+  13:
+    MUT_FORMLESS: 1
+fake_mutations:
+  - long: You are insubstantial and cannot be petrified, ensnared, or set on fire.
+    short: insubstantial
+recommended_jobs:
+  - chaos knight
+  - enchanter
+  - hexslinger
+  - necromancer
+  - earth elementalist
+  - ice elementalist
+  - alchemist
+recommended_weapons:
+  - short blades
+  - axes
+  - long blades
+
+orc_name: Phantasmorc
+walking_verb: Float

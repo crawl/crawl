@@ -3168,12 +3168,12 @@ cc......x.....x.......xxx............x.....x......x...x......cc
                           ccccccccccc
 ENDMAP
 
-NAME:    mainiacjoe_temple_hex_bubbles
-TAGS:    temple_altars_22
-PLACE:   Temple
-ORIENT:  encompass
-NSUBST:  B = 1:{ / *:B
-SUBST:   c : cvb
+NAME:   mainiacjoe_temple_hex_bubbles
+TAGS:   temple_altars_21
+PLACE:  Temple
+ORIENT: encompass
+NSUBST: B = 1:{ / *:B
+SUBST:  c : cvb
 MAP
                       ccccc
                      cc...cc

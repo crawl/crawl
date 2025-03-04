@@ -53,6 +53,7 @@
 #include "god-abil.h" // just for the Ru sac penalty key
 #include "god-passive.h"
 #include "god-companions.h"
+#include "invent.h"
 #include "item-name.h"
 #include "item-prop.h"
 #include "item-status-flag-type.h"
@@ -71,6 +72,7 @@
 #endif
 #include "mutation.h"
 #include "place.h"
+#include "player-equip.h"
 #include "player-stats.h"
 #include "player-save-info.h"
 #include "prompt.h" // index_to_letter
@@ -519,11 +521,6 @@ template<typename T>
 static void _marshall_as_int(writer& th, const T& t)
 {
     marshallInt(th, static_cast<int>(t));
-}
-
-static misc_item_type _unmarshall_misc_item_type(reader &th)
-{
-    return (misc_item_type)unmarshallInt(th);
 }
 
 template <typename data>
@@ -1449,17 +1446,10 @@ void tag_read(reader &inf, tag_type tag_id)
         // These you-related changes have to be after terrain is loaded,
         // because they might cause you to lose flight. That will check
         // the terrain below you and crash if the map hasn't loaded yet.
-        if (you.species == SP_FORMICID)
-            remove_one_equip(EQ_HELMET, false, true);
-
-        if (th.getMinorVersion() < TAG_MINOR_COGLIN_NO_JEWELLERY)
         {
-            if (you.has_mutation(MUT_NO_JEWELLERY))
-            {
-                remove_one_equip(EQ_AMULET, false, true);
-                remove_one_equip(EQ_RIGHT_RING, false, true);
-                remove_one_equip(EQ_LEFT_RING, false, true);
-            }
+            vector<item_def*> to_remove = you.equipment.get_forced_removal_list(true);
+            for (item_def* item : to_remove)
+                unequip_item(*item);
         }
 #endif
         break;
@@ -1536,19 +1526,21 @@ static void _tag_construct_you(writer &th)
     marshallShort(th, you.pending_revival ? 0 : you.hp);
 
     marshallBoolean(th, you.fishtail);
-    marshallBoolean(th, you.vampire_alive);
     _marshall_as_int(th, you.form);
     _marshall_as_int(th, you.default_form);
     CANARY;
 
-    // how many you.equip?
-    marshallByte(th, NUM_EQUIP - EQ_FIRST_EQUIP);
-    for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
-        marshallByte(th, you.equip[i]);
-    for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
-        marshallBoolean(th, you.melded[i]);
-    for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
-        marshallBoolean(th, you.activated[i]);
+    // We *only* need to marshal player_equip_set::items. Everything else in
+    // player_equip_set can be recreated live.
+    marshallByte(th, you.equipment.items.size());
+    for (player_equip_entry& entry : you.equipment.items)
+    {
+        marshallByte(th, entry.item);
+        marshallByte(th, entry.slot);
+        marshallBoolean(th, entry.melded);
+        marshallBoolean(th, entry.attuned);
+        marshallBoolean(th, entry.is_overflow);
+    }
 
     ASSERT_RANGE(you.magic_points, 0, you.max_magic_points + 1);
     marshallUByte(th, you.magic_points);
@@ -1557,8 +1549,6 @@ static void _tag_construct_you(writer &th)
     COMPILE_CHECK(NUM_STATS == 3);
     for (int i = 0; i < NUM_STATS; ++i)
         marshallByte(th, you.base_stats[i]);
-    for (int i = 0; i < NUM_STATS; ++i)
-        marshallByte(th, you.stat_loss[i]);
 
     CANARY;
 
@@ -1787,8 +1777,6 @@ static void _tag_construct_you(writer &th)
 
     marshallUByte(th, you.octopus_king_rings);
 
-    marshallSet(th, you.generated_misc, _marshall_as_int);
-
     marshallUnsigned(th, you.uncancel.size());
     for (const pair<uncancellable_type, int>& unc : you.uncancel)
     {
@@ -1880,6 +1868,8 @@ static void _tag_construct_you_items(writer &th)
     for (int i = 0; i < NUM_OBJECT_CLASSES; i++)
         for (int j = 0; j < MAX_SUBTYPES; j++)
             marshallInt(th, you.force_autopickup[i][j]);
+
+    you.equipment.update();
 }
 
 static void marshallPlaceInfo(writer &th, PlaceInfo place_info)
@@ -2690,6 +2680,37 @@ static void _move_action_count(caction_type old_action, caction_type new_action,
         you.action_count[newkey][i] += you.action_count[oldkey][i];
     you.action_count.erase(oldkey);
 }
+
+
+// Vectors of information from old-style equipment slots.
+// Since player equip info is unmarshalled long before items in our inventory
+// are, we need to store this information as an interim step, since the new
+// mappings cannot be created without seeing what items are in them.
+vector<int8_t> old_eq;
+vector<bool> old_melded;
+vector<bool> old_attuned;
+
+// Read old style equip arrays and equip items in the new system. (Will later
+// be used by _convert_old_player_equipment())
+static void _read_old_player_equipment(reader &th)
+{
+    // First, read old data.
+    const int count = unmarshallByte(th);
+    for (int i = 0; i < count; ++i)
+        old_eq.push_back(unmarshallByte(th));
+    for (int i = 0; i < count; ++i)
+        old_melded.push_back(unmarshallBoolean(th));
+    if (th.getMinorVersion() >= TAG_MINOR_TRACK_REGEN_ITEMS)
+    {
+        for (int i = 0; i < count; ++i)
+            old_attuned.push_back(unmarshallBoolean(th));
+    }
+    else
+    {
+        for (int i = 0; i < count; ++i)
+            old_attuned.push_back(false);
+    }
+}
 #endif
 
 static void _tag_read_you(reader &th)
@@ -2768,12 +2789,11 @@ static void _tag_read_you(reader &th)
 #endif
     you.fishtail        = unmarshallBoolean(th);
 #if TAG_MAJOR_VERSION == 34
-    if (th.getMinorVersion() >= TAG_MINOR_VAMPIRE_NO_EAT)
-        you.vampire_alive = unmarshallBoolean(th);
-    else
-        you.vampire_alive = true;
-#else
-    you.vampire_alive   = unmarshallBoolean(th);
+    if (th.getMinorVersion() >= TAG_MINOR_VAMPIRE_NO_EAT
+        && th.getMinorVersion() < TAG_MINOR_REMOVE_VAMPIRES)
+    {
+        unmarshallBoolean(th);
+    }
 #endif
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_NOME_NO_MORE)
@@ -2812,29 +2832,26 @@ static void _tag_read_you(reader &th)
     }
 #endif
 
-    // How many you.equip?
-    count = unmarshallByte(th);
-    ASSERT(count <= NUM_EQUIP);
-    for (int i = EQ_FIRST_EQUIP; i < count; ++i)
-    {
-        you.equip[i] = unmarshallByte(th);
-        ASSERT_RANGE(you.equip[i], -1, ENDOFPACK);
-    }
-    for (int i = count; i < NUM_EQUIP; ++i)
-        you.equip[i] = -1;
-    for (int i = 0; i < count; ++i)
-        you.melded.set(i, unmarshallBoolean(th));
-    for (int i = count; i < NUM_EQUIP; ++i)
-        you.melded.set(i, false);
 #if TAG_MAJOR_VERSION == 34
-    if (th.getMinorVersion() >= TAG_MINOR_TRACK_REGEN_ITEMS)
+    if (th.getMinorVersion() < TAG_MINOR_EQUIP_SLOT_REWRITE)
+        _read_old_player_equipment(th);
+
+    if (th.getMinorVersion() >= TAG_MINOR_EQUIP_SLOT_REWRITE)
     {
 #endif
-        for (int i = 0; i < count; ++i)
-            you.activated.set(i, unmarshallBoolean(th));
 
-        for (int i = count; i < NUM_EQUIP; ++i)
-            you.activated.set(i, false);
+    // Unmarshall equipment slot data
+    count = unmarshallByte(th);
+    for (int i = 0; i < count; ++i)
+    {
+        const int8_t item = unmarshallByte(th);
+        const equipment_slot slot = static_cast<equipment_slot>(unmarshallByte(th));
+        const bool melded = unmarshallBoolean(th);
+        const bool attuned = unmarshallBoolean(th);
+        const bool is_overflow = unmarshallBoolean(th);
+        you.equipment.items.emplace_back(item, slot, melded, attuned, is_overflow);
+    }
+
 #if TAG_MAJOR_VERSION == 34
     }
 #endif
@@ -2867,11 +2884,12 @@ static void _tag_read_you(reader &th)
             modify_stat(*random_iterator(sd.level_stats), 1, false);
     }
 #endif
-
-    for (int i = 0; i < NUM_STATS; ++i)
-        you.stat_loss[i] = unmarshallByte(th);
-
 #if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_REMOVE_STAT_DRAIN)
+    {
+        for (int i = 0; i < NUM_STATS; ++i)
+            unmarshallByte(th);
+    }
     if (th.getMinorVersion() < TAG_MINOR_STAT_ZERO_DURATION)
     {
         for (int i = 0; i < NUM_STATS; ++i)
@@ -3250,18 +3268,6 @@ static void _tag_read_you(reader &th)
     if (you.attribute[ATTR_DELAYED_FIREBALL])
         you.attribute[ATTR_DELAYED_FIREBALL] = 0;
 
-    if (th.getMinorVersion() < TAG_MINOR_STAT_LOSS_XP)
-    {
-        for (int i = 0; i < NUM_STATS; ++i)
-        {
-            if (you.stat_loss[i] > 0)
-            {
-                you.attribute[ATTR_STAT_LOSS_XP] = stat_loss_roll();
-                break;
-            }
-        }
-    }
-
     if (th.getMinorVersion() < TAG_MINOR_ENDLESS_DIVINE_SHIELD)
     {
         // Prevent players who upgraded with Divine Shield active from starting
@@ -3275,6 +3281,20 @@ static void _tag_read_you(reader &th)
         // Fix bugged negative charges.
         if (you.duration[DUR_DIVINE_SHIELD] < 0)
             you.duration[DUR_DIVINE_SHIELD] = 0;
+    }
+
+    if (th.getMinorVersion() < TAG_MINOR_SIMPLIFY_STAT_ZERO)
+    {
+        // Remove old stat-zero statuses.
+        you.duration[DUR_COLLAPSE] = 0;
+        you.duration[DUR_BRAINLESS] = 0;
+        you.duration[DUR_CLUMSY] = 0;
+
+        // Set new stat zero tracking, if any stats are currently below zero.
+        you.attribute[ATTR_STAT_ZERO] = 0;
+        for (int i = STAT_STR; i <= STAT_DEX; ++i)
+            if (you.stat(static_cast<stat_type>(i), false) <= 0)
+                you.attribute[ATTR_STAT_ZERO] |= 1 << i;
     }
 #endif
 
@@ -3527,7 +3547,6 @@ static void _tag_read_you(reader &th)
     SP_MUT_FIX(MUT_DISTRIBUTED_TRAINING, SP_GNOLL);
     SP_MUT_FIX(MUT_MERTAIL, SP_MERFOLK);
     SP_MUT_FIX(MUT_TENTACLE_ARMS, SP_OCTOPODE);
-    SP_MUT_FIX(MUT_VAMPIRISM, SP_VAMPIRE);
     SP_MUT_FIX(MUT_FLOAT, SP_DJINNI);
     SP_MUT_FIX(MUT_INNATE_CASTER, SP_DJINNI);
     SP_MUT_FIX(MUT_HP_CASTING, SP_DJINNI);
@@ -3559,8 +3578,7 @@ static void _tag_read_you(reader &th)
     }
     // not sure this is safe for SP_MUT_FIX, leaving it out for now
     if (you.species == SP_GREY_DRACONIAN || you.species == SP_GARGOYLE
-        || you.species == SP_GHOUL || you.species == SP_MUMMY
-        || you.species == SP_VAMPIRE)
+        || you.species == SP_GHOUL || you.species == SP_MUMMY)
     {
         _fixup_species_mutations(MUT_UNBREATHING);
     }
@@ -3601,8 +3619,8 @@ static void _tag_read_you(reader &th)
 
     if (th.getMinorVersion() < TAG_MINOR_DETERIORATION)
     {
-        if (you.mutation[MUT_DETERIORATION] > 2)
-            you.mutation[MUT_DETERIORATION] = 2;
+        if (you.mutation[MUT_POOR_CONSTITUTION] > 2)
+            you.mutation[MUT_POOR_CONSTITUTION] = 2;
     }
 
     if (th.getMinorVersion() < TAG_MINOR_BLINK_MUT)
@@ -4147,9 +4165,13 @@ static void _tag_read_you(reader &th)
     you.octopus_king_rings = unmarshallUByte(th);
 
 #if TAG_MAJOR_VERSION == 34
-    if (th.getMinorVersion() >= TAG_MINOR_GENERATED_MISC)
+    if (th.getMinorVersion() >= TAG_MINOR_GENERATED_MISC
+        && th.getMinorVersion() < TAG_MINOR_STACKABLE_EVOKERS_TWO)
+    {
+        set<int> dummy;
+        unmarshallSet(th, dummy, unmarshallInt);
+    }
 #endif
-        unmarshallSet(th, you.generated_misc, _unmarshall_misc_item_type);
 
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() >= TAG_MINOR_UNCANCELLABLES
@@ -4436,6 +4458,67 @@ static void _cleanup_book_ids(reader &th, int n_subtypes)
             unmarshallBoolean(th);
     }
 }
+
+// Attempt to convert data loaded from the old equip slot system into valid data
+// in the new one. Since there isn't an exact 1-to-1 mapping of slots, we
+// simply tell the game to equip each item into the 'most appropriate' slot it
+// finds for it (handling overflow slots gracefully in the process). This should
+// hopefully 'just work' in basically all normal cases.
+static void _convert_old_player_equipment()
+{
+    vector<vector<item_def*>> dummy;
+    // Calculate current player slots first.
+    you.equipment.update();
+    for (int i = 0; i < (int)old_eq.size(); ++i)
+    {
+        // Skip empty slots.
+        if (old_eq[i] == -1)
+            continue;
+
+        item_def& item = you.inv[old_eq[i]];
+        equipment_slot slot = you.equipment.find_slot_to_equip_item(item, dummy);
+
+        // This mostly handles cases of not having enough room for all rings due
+        // to wearing the Macabre Finger. (The previous line should already have
+        // ensured that coglins have weapons in the right places).
+        if (slot == SLOT_UNUSED)
+            slot = get_item_slot(item);
+
+        // If we still don't have a proper slot for this item (probably because
+        // we're upgrading the save of someone wielding a non-weapon), skip this
+        // item entirely.
+        if (slot == SLOT_UNUSED)
+            continue;
+
+        you.equipment.add(item, slot);
+
+        // If the old item was melded or attuned, we need to find its entries
+        // (there may be more than one of them, if it's an overflow item!) and
+        // mark them appropriately.
+        if (old_melded[i] || old_attuned[i])
+        {
+            for (player_equip_entry& entry : you.equipment.items)
+            {
+                if (entry.item == old_eq[i])
+                {
+                    if (old_melded[i])
+                        entry.melded = true;
+                    if (old_attuned[i])
+                        entry.attuned = true;
+                }
+            }
+        }
+    }
+
+    you.equipment.update();
+
+    // Clear interim storage data, in case the user returns to the main menu and
+    // tries to upgrade another save before quitting
+    old_eq.clear();
+    old_melded.clear();
+    old_attuned.clear();
+}
+
 #endif
 
 static void _tag_read_you_items(reader &th)
@@ -4483,47 +4566,26 @@ static void _tag_read_you_items(reader &th)
 #endif
          unmarshallItem(th, you.active_talisman);
 
-
-    // Initialize cache of equipped unrand functions
-    for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
-    {
-        const item_def *item = you.slot_item(static_cast<equipment_type>(i));
-
-        if (item && is_unrandom_artefact(*item))
-        {
 #if TAG_MAJOR_VERSION == 34
-            // save-compat: if the player was wearing the Ring of Vitality before
-            // it turned into an amulet, take it off safely
-            if (is_unrandom_artefact(*item, UNRAND_VITALITY) && i != EQ_AMULET)
-            {
-                you.equip[i] = -1;
-                you.melded.set(i, false);
-                continue;
-            }
-            // likewise the boots of the Assassin before it became a hat
-            if (is_unrandom_artefact(*item, UNRAND_HOOD_ASSASSIN)
-                && i != EQ_HELMET)
-            {
-                you.equip[i] = -1;
-                you.melded.set(i, false);
-                continue;
-            }
-            // and the staves of Dispater/Wucad Mu/Battle before orbification
-            if ((is_unrandom_artefact(*item, UNRAND_DISPATER)
-                 || is_unrandom_artefact(*item, UNRAND_WUCAD_MU)
-                 || is_unrandom_artefact(*item, UNRAND_BATTLE))
-                && i != EQ_OFFHAND)
-            {
-                you.equip[i] = -1;
-                you.melded.set(i, false);
-                continue;
-            }
+    if (th.getMinorVersion() < TAG_MINOR_EQUIP_SLOT_REWRITE)
+        _convert_old_player_equipment();
 #endif
 
-            const unrandart_entry *entry = get_unrand_entry(item->unrand_idx);
+    // Recalculate cached properties of equipment
+    you.equipment.update();
+    for (player_equip_entry& entry : you.equipment.items)
+    {
+        if (entry.is_overflow)
+            continue;
 
-            if (entry->world_reacts_func)
-                you.unrand_reacts.set(i);
+        const item_def& item = entry.get_item();
+        if (is_unrandom_artefact(item))
+        {
+            const unrandart_entry *u_entry = get_unrand_entry(item.unrand_idx);
+            if (u_entry->world_reacts_func)
+                ++you.equipment.do_unrand_reacts;
+            if (u_entry->death_effects)
+                ++you.equipment.do_unrand_death_effects;
         }
     }
 
@@ -5409,7 +5471,7 @@ void unmarshallItem(reader &th, item_def &item)
             case POT_STRONG_POISON:
             case POT_BLOOD:
             case POT_BLOOD_COAGULATED:
-                item.sub_type = POT_DEGENERATION;
+                item.sub_type = POT_MOONSHINE;
                 break;
             case POT_CURE_MUTATION:
             case POT_BENEFICIAL_MUTATION:
@@ -6379,7 +6441,7 @@ void _unmarshallMonsterInfo(reader &th, monster_info& mi)
     mi.mresists = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 34
     if (mi.mresists & MR_OLD_RES_ACID)
-        set_resist(mi.mresists, MR_RES_ACID, 3);
+        set_resist(mi.mresists, MR_RES_CORR, 3);
 #endif
     unmarshallUnsigned(th, mi.mitemuse);
     mi.mbase_speed = unmarshallByte(th);
@@ -7565,6 +7627,7 @@ static void _tag_read_level_monsters(reader &th)
     count = unmarshallShort(th);
     ASSERT_RANGE(count, 0, MAX_MONSTERS + 1);
 
+    env.max_mon_index = count;
     for (int i = 0; i < count; i++)
     {
         monster& m = env.mons[i];
@@ -8006,6 +8069,8 @@ static ghost_demon _unmarshallGhost(reader &th)
     ghost.xl               = unmarshallShort(th);
     ghost.max_hp           = unmarshallShort(th);
     ghost.ev               = unmarshallShort(th);
+    if (ghost.ev > MAX_GHOST_EVASION)
+        ghost.ev = MAX_GHOST_EVASION;
     ghost.ac               = unmarshallShort(th);
     ghost.damage           = unmarshallShort(th);
     ghost.speed            = unmarshallShort(th);
@@ -8028,7 +8093,7 @@ static ghost_demon _unmarshallGhost(reader &th)
     ghost.resists          = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 34
     if (ghost.resists & MR_OLD_RES_ACID)
-        set_resist(ghost.resists, MR_RES_ACID, 3);
+        set_resist(ghost.resists, MR_RES_CORR, 3);
     if (th.getMinorVersion() < TAG_MINOR_NO_GHOST_SPELLCASTER)
         unmarshallByte(th);
     if (th.getMinorVersion() < TAG_MINOR_MON_COLOUR_LOOKUP)

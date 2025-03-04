@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include "species-type.h"
 #include "stat-type.h"
 #include "mon-enum.h"
 #include "mutation-type.h"
@@ -32,6 +33,7 @@ struct level_up_mutation
 
 struct species_def
 {
+    species_type species;  ///< Enum of species type
     const char* abbrev; ///< Two-letter abbreviation
     const char* name; ///< Main name
     const char* adj_name; ///< Adjectival form of name; if null, use name

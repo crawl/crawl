@@ -21,7 +21,7 @@ function ($, comm, cr, map_knowledge, options, dngn, util, view_data, enums,
         else if ((base_bg >= dngn.DNGN_ENTER_ZOT_CLOSED && base_bg < dngn.DNGN_CACHE_OF_FRUIT)
                  || (base_bg >= dngn.DNGN_SILVER_STATUE && base_bg < dngn.ARCANE_CONDUIT)
                  || (base_bg >= dngn.ARCANE_CONDUIT && base_bg < dngn.STORM_CONDUIT)
-                 || is_torch(base_bg))
+                 || is_torch(base_bg) || base_bg == dngn.DNGN_TRAP_HARLEQUIN)
         {
             return options.get("tile_misc_anim");
         }
@@ -34,6 +34,7 @@ function ($, comm, cr, map_knowledge, options, dngn, util, view_data, enums,
         var base_bg = dngn.basetile(cell.bg.value);
         if (base_bg == dngn.DNGN_PORTAL_WIZARD_LAB
             || base_bg == dngn.DNGN_ALTAR_JIYVA
+            || base_bg == dngn.DNGN_TRAP_HARLEQUIN
             || base_bg >= dngn.ARCANE_CONDUIT && base_bg < dngn.STORM_CONDUIT
             || is_torch(base_bg))
         {
@@ -348,6 +349,16 @@ function ($, comm, cr, map_knowledge, options, dngn, util, view_data, enums,
                     && (cell_right.t.left_overlap < 0))
                 {
                     this.render_loc(cx + 1, cy, cell_right);
+                }
+            }
+            // And the cell to the bottom-right if both overlapped
+            if (this.in_view(cx + 1, cy + 1))
+            {
+                let cell_diag = map_knowledge.get(cx + 1, cy + 1);
+                if (cell_diag.t && cell_diag.t.sy && (cell_diag.t.sy < 0)
+                    && cell_diag.t.left_overlap && (cell_diag.t.left_overlap < 0))
+                {
+                    this.render_loc(cx + 1, cy + 1, cell_diag);
                 }
             }
         },

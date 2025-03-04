@@ -2576,7 +2576,7 @@ ENDMAP
 
 NAME:    nicolae_vaults_wine_cellar
 TAGS:    vaults_room vaults_orient_e
-KITEM:   ' = any potion w:15 / potion of degeneration / nothing
+KITEM:   ' = any potion w:15 / potion of moonshine / nothing
 SHUFFLE: Pp/Qq/Rr
 : if crawl.coinflip() then
 NSUBST:  J = 2=x.. / ., DEFH = x.. / .

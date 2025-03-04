@@ -18,9 +18,9 @@ function init_demonic(e)
   e.subst('S = .')
 
   if you.absdepth() <= 8 then
-    e.kmons('._ = ufetubus / white imp / shadow imp / w:5 quasit / w:300 nothing')
+    e.kmons('._ = ufetubus / white imp / shadow imp / w:300 nothing')
   elseif you.absdepth() <= 10 then
-    e.kmons('._ = quasit w:5 / rust devil / orange demon / ice devil / ' ..
+    e.kmons('._ = rust devil / orange demon / ice devil / ' ..
                  'red devil / chaos spawn w:5 / hellwing w:1 / ' ..
                  'ynoxinul w:5 / w:460 nothing')
   elseif you.absdepth() <= 12 then

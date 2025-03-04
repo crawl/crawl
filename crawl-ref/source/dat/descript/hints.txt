@@ -763,7 +763,7 @@ to attack a fleeing creature by throwing something after it. If you have any
 stones in your <w>$cmd[CMD_DISPLAY_INVENTORY]</w>nventory, you can look at one
 of them to read an explanation of how to do this.
 %%%%
-HINT_MONSTER_BRAND
+HINT_MONSTER_UNUSUAL
 
 That monster looks a bit unusual. You might wish to examine it a bit more
 closely by <localtiles>hovering your mouse over its tile.</localtiles>

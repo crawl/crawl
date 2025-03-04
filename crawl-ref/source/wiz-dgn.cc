@@ -111,6 +111,12 @@ void wizard_level_travel(bool down)
 
     if (down)
         down_stairs(stairs, false, false);
+    else if (stairs == DNGN_EXIT_VAULTS && vaults_is_locked())
+    {
+        unlock_vaults();
+        up_stairs(stairs, false);
+        lock_vaults();
+    }
     else
         up_stairs(stairs, false);
 
@@ -429,7 +435,7 @@ void wizard_map_level()
     for (rectangle_iterator ri(BOUNDARY_BORDER - 1); ri; ++ri)
     {
         update_item_at(*ri, true);
-        show_update_at(*ri, LAYER_ITEMS);
+        show_update_at(*ri, Layer::ITEMS);
 
 #ifdef USE_TILE
         tiles.update_minimap(*ri);

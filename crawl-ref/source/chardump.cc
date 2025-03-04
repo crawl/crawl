@@ -1249,6 +1249,7 @@ static const char* _stab_names[] =
     "Paralysed",
     "Sleeping",
     "Betrayed ally",
+    "Blind",
 };
 
 static const char* _aux_attack_names[] =
@@ -1266,6 +1267,7 @@ static const char* _aux_attack_names[] =
     "Tentacles",
     "Maw",
     "Executioner Blades",
+    "Fungal Fists",
 };
 COMPILE_CHECK(ARRAYSZ(_aux_attack_names) == NUM_UNARMED_ATTACKS);
 

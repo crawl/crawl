@@ -1,0 +1,26 @@
+#!/usr/bin/env python3
+import sys
+
+allowed_subject_len = 72
+allowed_body_len = 72
+
+# Handy function borrowed from coverage.py
+def die(msg: str):
+    print(f"Aborting commit: {msg}", file=sys.stderr)
+    sys.exit(1)
+
+f = open(sys.argv[1])
+lines = [l.strip() for l in f if not l.startswith("#")]
+subject = lines.pop(0)
+if len(subject) > allowed_subject_len:
+    die(f"Subject {len(subject)} characters long, maximum allowed is "
+        f"{allowed_subject_len}")
+if not lines:
+    sys.exit(0)
+space = lines.pop(0)
+if len(space) > 0:
+    die(f"Second line of commit message should be blank")
+for line in lines:
+    if len(line) > allowed_body_len:
+        die(f"Body has a line {len(line)} characters long, maximum allowed is "
+            f"{allowed_body_len}")

@@ -667,6 +667,7 @@ static const char *kill_method_names[] =
     "falling_through_gate", "disintegration", "headbutt", "rolling",
     "mirror_damage", "spines", "frailty", "barbs", "being_thrown",
     "collision", "zot", "constriction", "exploremode", "blinking",
+    "death curse",
 };
 
 static const char *_kill_method_name(kill_method_type kmt)
@@ -2626,6 +2627,29 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         desc += terse? "petrified" : "Turned to stone";
         break;
 
+    case KILLED_BY_DEATH_CURSE:
+    {
+        if (!auxkilldata.empty())
+        {
+            desc += (terse ? "" : "Slain by ") + auxkilldata;
+            if (!terse && !death_source_name.empty())
+                desc += "\n             ... wielded by " + death_source_name;
+        }
+        else if (terse)
+        {
+
+            desc += death_source_name.empty() ? "a death curse"
+                    : death_source_name + " death curse";
+        }
+        else
+        {
+            desc += "Slain by " + apostrophise(death_source_desc())
+                                + "'s death curse";
+        }
+        needs_damage = true;
+        break;
+    }
+
     case KILLED_BY_SOMETHING:
         if (!auxkilldata.empty())
             desc += (terse ? "" : "Killed by ") + auxkilldata;
@@ -2894,24 +2918,31 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
                 if (you.duration[DUR_PARALYSIS])
                 {
                     desc += "... while paralysed";
-                    if (you.props.exists(PARALYSED_BY_KEY))
-                    {
-                        desc += " by "
-                                + you.props[PARALYSED_BY_KEY].get_string();
-                    }
+                    if (you.props.exists(DISABLED_BY_KEY))
+                        desc += " by " + you.props[DISABLED_BY_KEY].get_string();
+
                     desc += _hiscore_newline_string();
                 }
                 else if (you.duration[DUR_PETRIFIED])
                 {
                     desc += "... while petrified";
-                    if (you.props.exists(PETRIFIED_BY_KEY))
-                    {
-                        desc += " by "
-                                + you.props[PETRIFIED_BY_KEY].get_string();
-                    }
+                    if (you.props.exists(DISABLED_BY_KEY))
+                        desc += " by " + you.props[DISABLED_BY_KEY].get_string();
+
                     desc += _hiscore_newline_string();
                 }
-
+                else if (you.duration[DUR_SLEEP])
+                {
+                    desc += "... while put to sleep";
+                    if (you.props.exists(DISABLED_BY_KEY))
+                        desc += " by " + you.props[DISABLED_BY_KEY].get_string();
+                }
+                else if (you.duration[DUR_VEXED])
+                {
+                    desc += "... while vexed";
+                    if (you.props.exists(DISABLED_BY_KEY))
+                        desc += " by " + you.props[DISABLED_BY_KEY].get_string();
+                }
             }
         }
     }

@@ -252,23 +252,10 @@ magic, briefly preventing you from casting any further spells.
 
 You are unable to cast spells.
 %%%%
-Brainless status
+Crippled status
 
-Your intelligence has fallen to 0. You are slowed, cannot cast or memorise
-spells, and cannot read scrolls. The status will persist for a short while even
-after recovering your intelligence.
-%%%%
-Clumsy status
-
-Your dexterity has fallen to 0. You are slowed, cannot sneak or use shields,
-and are almost entirely unable to dodge. The status will persist for a short
-while even after recovering your dexterity.
-%%%%
-Collapse status
-
-Your strength has fallen to 0. You are slowed, and you do not regenerate health
-while monsters are visible. The status will persist for a short while even after
-recovering your strength.
+At least one of your strength, intelligence, or dexterity has fallen to 0 or
+below. You will act slowly until this situation is remedied.
 %%%%
 DChan status
 
@@ -1110,3 +1097,55 @@ Unstable status
 
 You have become untethered in space, blinking randomly each turn and suffering a
 small amount of damage each time you do so.
+%%%%
+Vainglory status
+
+You have recently announced your regal presence and it simply would not do to
+leave the floor again so soon afterward.
+%%%%
+Protected status
+
+Your platinum paragon is close enough to you to sometimes parry attacks directed
+at you.
+%%%%
+Vexed status
+
+Your mind is clouded by frustration. For the next several turns, you will
+uncontrollably attack random adjacent creatures (whether friendly or enemy) or
+even empty space.
+%%%%
+Drowsy status
+
+You are rapidly growing sleepy and may soon fall asleep completely.
+%%%%
+Vampire status
+
+You are a vampire - a creature that straddles the border between life and
+undeath. You can drink the lifeblood of the living to heal, and even turn those
+you slay stealthily into vampiric thralls, but do not heal in the presence of
+monsters.
+%%%%
+Swarm status
+
+You have transformed into a swarm of vampire bats, allowing you to move quickly
+and evasively. You may trail clouds of bats in your wake.
+%%%%
+Memories status
+
+This indicates how many spells you could cast from accumulated memories if you
+Enkindled now.
+%%%%
+Enkindled status
+
+You are burning accumulated memories for power. Each damage-dealing spell you
+cast will consume a memory. In exchange, their power and spell success are
+increased, encumbrance penalties are ignored, and your spellclaw attacks do
+bonus damage proportional to the spell level and heal you based on the damage
+dealt.
+%%%%
+Cacophony status
+
+You are noisily attacking with all of your armour. Every piece of armour you
+haunt currently moves of its own volition; any damage it takes will not affect
+you, you can freely fire through it, and its attacks may daze, drain, or confuse
+your enemies.

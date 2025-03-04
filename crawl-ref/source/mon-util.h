@@ -313,6 +313,7 @@ bool mons_class_can_regenerate(monster_type mc);
 bool mons_can_regenerate(const monster& mon);
 bool mons_class_fast_regen(monster_type mc);
 int mons_class_regen_amount(monster_type mc);
+int mons_leash_range(monster_type mc);
 int mons_zombie_size(monster_type mc);
 monster_type mons_zombie_base(const monster& mon);
 bool mons_class_is_zombified(monster_type mc);
@@ -390,6 +391,7 @@ bool mons_is_batty(const monster& m);
 bool mons_is_influenced_by_sanctuary(const monster& m);
 bool mons_is_fleeing_sanctuary(const monster& m);
 bool mons_just_slept(const monster& m);
+bool mons_is_deep_asleep(const monster& m);
 bool mons_class_is_slime(monster_type mc);
 bool mons_is_slime(const monster& mon);
 bool mons_class_is_plant(monster_type mc);
@@ -407,7 +409,6 @@ bool mons_is_siren_beholder(const monster& mons);
 
 bool mons_is_removed(monster_type mc);
 
-bool mons_looks_stabbable(const monster& m);
 bool mons_looks_distracted(const monster& m);
 
 void mons_start_fleeing_from_sanctuary(monster& mons);
@@ -498,7 +499,7 @@ bool mons_can_traverse(const monster& mon, const coord_def& pos,
                        bool only_in_sight = false,
                        bool checktraps = true);
 
-mon_inv_type equip_slot_to_mslot(equipment_type eq);
+mon_inv_type equip_slot_to_mslot(equipment_slot eq);
 mon_inv_type item_to_mslot(const item_def &item);
 
 bool player_or_mon_in_sanct(const monster& mons);

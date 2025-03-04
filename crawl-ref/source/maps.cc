@@ -1296,7 +1296,7 @@ static bool verify_file_version(const string &file, time_t mtime)
                && word == WORD_LEN
                && t == mtime;
     }
-    catch (short_read_exception &E)
+    catch (const short_read_exception&)
     {
         fclose(fp);
         return false;
@@ -1489,7 +1489,7 @@ static void _parse_maps(const string &s)
     if (!dat)
         end(1, true, "Failed to open %s for reading", s.c_str());
 
-#ifdef DEBUG_DIAGNOSTICS
+#if defined(DEBUG_DIAGNOSTICS) && !(defined(TARGET_COMPILER_VC) && defined(USE_TILE))
     printf("Regenerating des: %s\n", s.c_str());
 #endif
     // won't be seen by the user unless they look for it

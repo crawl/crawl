@@ -198,7 +198,7 @@ xxwx.1.1.xxwx
 xwxx1.C.1xwwx
 xwwxWwwWwWwxx
 xwwWwwwwwwxxx
-xxwWwWWwwWxxx
+xxwWwWWwwwxxx
 xxxwWwwWwxxxx
 xxxwwwWwWxxxx
 xxx...@..xxxx
@@ -280,14 +280,14 @@ MAP
 ....LLLLL.....
 ..LlllllllL...
 .LlllllllllLL..
-.Llll323lllLLL.
+.Llll323llllLL.
 LLll32123lllLL.
 LLll33_33llLL..
 .Llll323lllL...
 .Lllll3llllL...
 ..LlllllllL...
 ...LlllllL...
- ...LLLLLL..
+ ...LLlllL..
    ..LLLLLL.
 ENDMAP
 
@@ -381,17 +381,15 @@ DEPTH:    D:3-, Depths, Crypt, Zot, Pan, Geh, Coc, Dis, Tar
 WEIGHT:   2
 KMONS:    q = lurking_horror
 KFEAT:    p = altar_lugonu
+: if you.in_branch("Pandemonium") then
+KFEAT:    r = exit_through_abyss
+: else
 KFEAT:    r = enter_abyss
+: end
 : if crawl.coinflip() then
 SUBST:    ' = xxx'.
 : else
 SUBST:    ' = x'.
-: end
-: if you.in_branch("Swamp") then
-SUBST:    x = t
-KFEAT:    t = demonic_tree
-TILE:     t = dngn_demonic_tree_11 w:6 / dngn_demonic_tree_12 w:6 / \
-              dngn_demonic_tree_13 / dngn_demonic_tree_14
 : end
 SUBST:    z = zz.
 # Ordered chaos, like the abyss builder

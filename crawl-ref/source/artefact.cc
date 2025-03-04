@@ -434,6 +434,7 @@ static map<talisman_type, vector<artp_value>> talisman_artps = {
     { TALISMAN_STORM, { { ARTP_POISON, 1 }, { ARTP_ELECTRICITY, 1 } } },
     { TALISMAN_DEATH, { { ARTP_POISON, 1 }, { ARTP_NEGATIVE_ENERGY, 3 },
                         { ARTP_COLD, 1 } } },
+    { TALISMAN_VAMPIRE, { { ARTP_COLD, 1 }, { ARTP_NEGATIVE_ENERGY, 3 }}},
 };
 
 /**
@@ -559,6 +560,7 @@ static void _add_randart_weapon_brand(const item_def &item,
             13, SPWPN_ANTIMAGIC,
             13, SPWPN_PROTECTION,
             13, SPWPN_SPECTRAL,
+             6, SPWPN_REAPING,
              3, SPWPN_DISTORTION,
              3, SPWPN_CHAOS);
     }
@@ -1676,7 +1678,7 @@ int find_okay_unrandart(uint8_t aclass, uint8_t atype, int item_level, bool in_a
         // If an item does not generate randomly, we can only produce its index
         // here if it was lost in the abyss
         if ((!in_abyss || status != UNIQ_LOST_IN_ABYSS)
-            && entry->flags & UNRAND_FLAG_NOGEN)
+            && entry->flags & (UNRAND_FLAG_NOGEN | UNRAND_FLAG_DELETED))
         {
             continue;
         }
@@ -1734,14 +1736,8 @@ int extant_unrandart_by_exact_name(string name)
         for (unsigned int i = 0; i < ARRAYSZ(unranddata); ++i)
         {
             const int id = UNRAND_START + i;
-            if (unranddata[i].flags & UNRAND_FLAG_NOGEN
-                && id != UNRAND_DRAGONSKIN
-                && id != UNRAND_CEREBOV
-                && id != UNRAND_DISPATER
-                && id != UNRAND_ASMODEUS /* ew */)
-            {
+            if (unranddata[i].flags & UNRAND_FLAG_DELETED)
                 continue;
-            }
             cache[lowercase_string(unranddata[i].name)] = id;
         }
     }
@@ -2197,7 +2193,7 @@ bool make_item_unrandart(item_def &item, int unrand_index)
     else if (unrand_index == UNRAND_OCTOPUS_KING_RING)
         _make_octoring(item);
     else if (unrand_index == UNRAND_WOE && !you.has_mutation(MUT_NO_GRASPING)
-             && !you.could_wield(item, true, true))
+             && !can_equip_item(item))
     {
         // always wieldable, always 2-handed
         item.sub_type = WPN_BROAD_AXE;
@@ -2211,31 +2207,52 @@ bool make_item_unrandart(item_def &item, int unrand_index)
 
 void unrand_reacts()
 {
-    for (int i = 0; i < NUM_EQUIP; i++)
+    if (you.equipment.do_unrand_reacts == 0)
+        return;
+
+    int count = 0;
+    for (player_equip_entry& entry : you.equipment.items)
     {
-        if (!you.unrand_reacts[i])
+        if (entry.melded || entry.is_overflow)
             continue;
 
-        item_def&        item  = you.inv[you.equip[i]];
-        const unrandart_entry* entry = get_unrand_entry(item.unrand_idx);
-        ASSERT(entry);
+        item_def& item = entry.get_item();
+        if (is_unrandom_artefact(item))
+        {
+            const unrandart_entry* uentry = get_unrand_entry(item.unrand_idx);
 
-        entry->world_reacts_func(&item);
+            if (uentry->world_reacts_func)
+            {
+                uentry->world_reacts_func(&item);
+                if (++count == you.equipment.do_unrand_reacts)
+                    return;
+            }
+        }
     }
 }
 
 void unrand_death_effects(monster* mons, killer_type killer)
 {
-    for (int i = 0; i < NUM_EQUIP; i++)
+    if (you.equipment.do_unrand_death_effects == 0)
+        return;
+
+    int count = 0;
+    for (player_equip_entry& entry : you.equipment.items)
     {
-        item_def* item = you.slot_item(static_cast<equipment_type>(i));
+        if (entry.melded || entry.is_overflow)
+            continue;
 
-        if (item && is_unrandom_artefact(*item))
+        item_def& item = entry.get_item();
+        if (is_unrandom_artefact(item))
         {
-            const unrandart_entry* entry = get_unrand_entry(item->unrand_idx);
+            const unrandart_entry* uentry = get_unrand_entry(item.unrand_idx);
 
-            if (entry->death_effects)
-                entry->death_effects(item, mons, killer);
+            if (uentry->death_effects)
+            {
+                uentry->death_effects(&item, mons, killer);
+                if (++count == you.equipment.do_unrand_death_effects)
+                    return;
+            }
         }
     }
 }

@@ -110,6 +110,7 @@ static bool _is_noteworthy(const Note& note)
         || note.type == NOTE_XOM_REVIVAL
         || note.type == NOTE_SEEN_FEAT
         || note.type == NOTE_PARALYSIS
+        || note.type == NOTE_VEXED
         || note.type == NOTE_RECRUITED_APOSTLE
         || note.type == NOTE_ALLY_DEATH
         || note.type == NOTE_FEAT_MIMIC
@@ -362,6 +363,9 @@ string Note::describe(bool when, bool where, bool what) const
             break;
         case NOTE_PARALYSIS:
             result << "Paralysed by " << name << " for " << first << " turns";
+            break;
+        case NOTE_VEXED:
+            result << "Vexed by " << name << " for " << first << " turns";
             break;
         case NOTE_RECRUITED_APOSTLE:
             result << "Anointed " << name << " the " << desc << " as your apostle";

@@ -6,7 +6,7 @@
 //     webserver/game_data/static/enums.js
 //     webserver/game_data/static/cell_renderer.js
 // to ensure that your tile will also be drawn in webtiles builds!
-enum tile_flags ENUM_INT64
+enum tile_flags : unsigned long long
 {
     //// Foreground flags
 

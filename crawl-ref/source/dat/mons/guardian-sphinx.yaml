@@ -1,0 +1,22 @@
+name: "guardian sphinx"
+glyph: {char: "H", colour: lightgray}
+flags: [flies, see_invis, speaks, warm_blood]
+xp_mult: 9
+genus: sphinx
+will: 80
+attacks:
+ - {type: bite, damage: 30}
+ - {type: claw, damage: 15}
+ - {type: claw, damage: 15}
+hd: 18
+hp_10x: 1080
+ac: 10
+ev: 6
+spells: guardian_sphinx
+has_corpse: true
+shout: shout
+intelligence: human
+speed: 12
+uses: starting_equipment
+size: giant
+shape: quadruped_winged

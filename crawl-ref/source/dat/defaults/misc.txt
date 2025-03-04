@@ -17,7 +17,7 @@ note_monsters += orb of fire, ancient lich, dread lich, Sigmund
 monster_item_view_features += stair, trap, runelight
 
 # Dangerous and non-tactical items
-action_panel_filter  = attraction,degeneration,experience,mutation
+action_panel_filter  = attraction,moonshine,experience,mutation
 action_panel_filter += acquirement,amnesia,brand,enchant,identify,noise,torment
 
 # These items cause monsters to display with unusual threat highlighting:

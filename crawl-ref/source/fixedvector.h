@@ -10,6 +10,8 @@
 #include <cstring>
 #include <vector>
 
+#include "debug.h"
+
 using std::vector;
 
 // TODO: this class precedes std::array and is quite redundant with it, except

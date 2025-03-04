@@ -243,70 +243,45 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
 
     if (descrip == DESC_INVENTORY_EQUIP)
     {
-        equipment_type eq = item_equip_slot(*this);
-        if (eq != EQ_NONE)
+        equipment_slot eq = item_equip_slot(*this);
+        if (eq != SLOT_UNUSED)
         {
-            if (you.melded[eq])
+            if (item_is_melded(*this))
                 buff << " (melded)";
             else
             {
                 switch (eq)
                 {
-                case EQ_WEAPON:
+                case SLOT_WEAPON:
                     if (is_weapon(*this))
                         buff << " (weapon)";
-                    else if (you.has_mutation(MUT_NO_GRASPING))
-                        buff << " (in mouth)";
-                    else
-                        buff << " (in " << you.hand_name(false) << ")";
                     break;
-                case EQ_OFFHAND:
+                case SLOT_WEAPON_OR_OFFHAND:
                     if (is_weapon(*this))
                     {
                         buff << " (offhand)";
                         break;
                     }
-                    // fallthrough to EQ_CLOAK...EQ_BODY_ARMOUR
-                case EQ_CLOAK:
-                case EQ_HELMET:
-                case EQ_GLOVES:
-                case EQ_BOOTS:
-                case EQ_BODY_ARMOUR:
+                    // fallthrough for non-weapons in that slot
+                case SLOT_OFFHAND:
+                case SLOT_CLOAK:
+                case SLOT_HELMET:
+                case SLOT_GLOVES:
+                case SLOT_BOOTS:
+                case SLOT_BARDING:
+                case SLOT_BODY_ARMOUR:
+                case SLOT_RING:
+                case SLOT_AMULET:
                     buff << " (worn)";
                     break;
-                case EQ_LEFT_RING:
-                case EQ_RIGHT_RING:
-                case EQ_RING_ONE:
-                case EQ_RING_TWO:
-                    buff << " (";
-                    buff << ((eq == EQ_LEFT_RING || eq == EQ_RING_ONE)
-                             ? "left" : "right");
-                    buff << " ";
-                    buff << you.hand_name(false);
-                    buff << ")";
-                    break;
-                case EQ_AMULET:
-                    if (you.species == SP_OCTOPODE && form_keeps_mutations())
-                        buff << " (around mantle)";
-                    else
-                        buff << " (around neck)";
-                    break;
-                case EQ_RING_THREE:
-                case EQ_RING_FOUR:
-                case EQ_RING_FIVE:
-                case EQ_RING_SIX:
-                case EQ_RING_SEVEN:
-                case EQ_RING_EIGHT:
-                    buff << " (on tentacle)";
-                    break;
-                case EQ_RING_AMULET:
-                    buff << " (on amulet)";
-                    break;
-                case EQ_GIZMO:
+                case SLOT_GIZMO:
                     buff << " (installed)";
                     break;
+                case SLOT_HAUNTED_AUX:
+                    buff << " (haunted)";
+                    break;
                 default:
-                    die("Item in an invalid slot");
+                    die("Item in an invalid slot (%d)", eq);
                 }
             }
         }
@@ -319,8 +294,11 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
             buff << " (quivered)";
     }
 
-    if (descrip != DESC_BASENAME && descrip != DESC_DBNAME && with_inscription)
+    if (descrip != DESC_BASENAME && descrip != DESC_DBNAME
+        && descrip != DESC_QUALNAME && with_inscription)
+    {
         buff << _item_inscription(*this);
+    }
 
     // These didn't have "cursed " prepended; add them here so that
     // it comes after the inscription.
@@ -706,7 +684,7 @@ const char* potion_type_name(int potiontype)
     case POT_CANCELLATION:      return "cancellation";
     case POT_AMBROSIA:          return "ambrosia";
     case POT_INVISIBILITY:      return "invisibility";
-    case POT_DEGENERATION:      return "degeneration";
+    case POT_MOONSHINE:         return "moonshine";
     case POT_EXPERIENCE:        return "experience";
     case POT_MAGIC:             return "magic";
     case POT_BERSERK_RAGE:      return "berserk rage";
@@ -1561,7 +1539,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             buff << "cursed ";
 
         // Don't list unenchantable armor as +0.
-        if (identified && !dbname && armour_is_enchantable(*this))
+        if (identified && !dbname && !qualname && armour_is_enchantable(*this))
             buff << make_stringf("%+d ", plus);
 
         if ((item_typ == ARM_GLOVES || item_typ == ARM_BOOTS)
@@ -1584,9 +1562,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             case ISFLAG_EMBROIDERED_SHINY:
                 if (item_typ == ARM_ROBE || item_typ == ARM_CLOAK
                     || item_typ == ARM_GLOVES || item_typ == ARM_BOOTS
-                    || item_typ == ARM_SCARF
-                    || get_armour_slot(*this) == EQ_HELMET
-                       && !is_hard_helmet(*this))
+                    || item_typ == ARM_SCARF || item_typ == ARM_HAT)
                 {
                     buff << "embroidered ";
                 }
@@ -1772,6 +1748,8 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     {
         if (!dbname && item_typ == MISC_ZIGGURAT && you.zigs_completed > 0)
             buff << "+" << you.zigs_completed << " ";
+        else if (!dbname && is_xp_evoker(*this))
+            buff << "+" << evoker_plus(item_typ) << " ";
 
         buff << misc_type_name(item_typ);
 
@@ -1963,9 +1941,18 @@ bool item_type_known(const item_def& item)
 {
     switch (item.base_type)
     {
-    case OBJ_MISCELLANY:
     case OBJ_MISSILES:
     case OBJ_BOOKS:
+    case OBJ_ORBS:
+    case OBJ_MISCELLANY:
+    case OBJ_CORPSES:
+    case OBJ_GOLD:
+    case OBJ_RUNES:
+    case OBJ_GEMS:
+#if TAG_MAJOR_VERSION == 34
+    case OBJ_FOOD:
+    case OBJ_RODS:
+#endif
         return true;
     default:
         break;
@@ -2913,12 +2900,21 @@ bool is_bad_item(const item_def &item)
 
         switch (item.sub_type)
         {
-        case POT_DEGENERATION:
+        case POT_MOONSHINE:
             return true;
         default:
             return false;
         CASE_REMOVED_POTIONS(item.sub_type);
         }
+
+    case OBJ_ARMOUR:
+        if (is_unrandom_artefact(item, UNRAND_CHARLATANS_ORB)
+            && you.has_mutation(MUT_NO_ARTIFICE))
+        {
+            return true;
+        }
+        return false;
+
     default:
         return false;
     }
@@ -2928,9 +2924,9 @@ bool is_bad_item(const item_def &item)
  * Is an item dangerous but potentially worthwhile?
  *
  * @param item The item being queried.
- * @param temp Should temporary conditions such as transformations and
- *             vampire state be taken into account?  Religion (but
- *             not its absence) is considered to be permanent here.
+ * @param temp Should temporary conditions such as transformations be taken into
+ *             account?  Religion (but not its absence) is considered to be
+ *             permanent here.
  * @return True if using the item is known to be risky but occasionally
  *         worthwhile.
  */
@@ -3017,7 +3013,7 @@ static string _general_cannot_read_reason()
         return "You are too confused!";
 
     // no reading while threatened (Ru/random mutation)
-    if (you.duration[DUR_NO_SCROLLS] || you.duration[DUR_BRAINLESS])
+    if (you.duration[DUR_NO_SCROLLS])
         return "You cannot read scrolls in your current state!";
 
     if (silenced(you.pos()))
@@ -3211,9 +3207,9 @@ string cannot_drink_item_reason(const item_def *item, bool temp,
  *     benefit.
  *
  * @param item The item being queried.
- * @param temp Should temporary conditions such as transformations and
- *             vampire state be taken into account? Religion (but
- *             not its absence) is considered to be permanent here.
+ * @param temp Should temporary conditions such as transformations be taken into
+ *             account? Religion (but not its absence) is considered to be
+ *             permanent here.
  * @param ident Should uselessness be checked as if the item were already
  *              identified?
  * @return True if the item is known to be useless.
@@ -3249,8 +3245,8 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        return you.has_mutation(MUT_NO_GRASPING)
-            || !you.could_wield(item, true, !temp);
+    case OBJ_STAVES:
+        return !can_equip_item(item);
 
     case OBJ_MISSILES:
         // All missiles are useless for felids.
@@ -3260,10 +3256,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         return !is_throwable(&you, item);
 
     case OBJ_ARMOUR:
-        if (!can_wear_armour(item, false, true))
-            return true;
-
-        if (is_shield(item) && you.get_mutation_level(MUT_MISSING_HAND))
+        if (!can_equip_item(item, temp))
             return true;
 
         if (is_unrandom_artefact(item, UNRAND_WUCAD_MU))
@@ -3289,7 +3282,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
                 return false;
             }
         }
-        if (item.sub_type == ARM_ORB && (ident || item_type_known(item)))
+        if (item.sub_type == ARM_ORB && (ident || item.is_identified()))
         {
             special_armour_type ego = get_armour_ego_type(item);
             switch (ego)
@@ -3323,8 +3316,24 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         return reasons.size();
     }
 
-    case OBJ_TALISMANS:
     case OBJ_MISCELLANY:
+        // Try to discourage players from wasting money on a useless evoker in a
+        // shop (which will vanish immediately when they buy it).
+        if (is_shop_item(item) && is_xp_evoker(item)
+            && evoker_plus(item.sub_type) >= MAX_EVOKER_ENCHANT)
+        {
+            for (const item_def &inv_item : you.inv)
+            {
+                if (inv_item.base_type == OBJ_MISCELLANY
+                    && inv_item.sub_type == item.sub_type)
+                {
+                    return true;
+                }
+            }
+        }
+
+        // Deliberate fallthrough.
+    case OBJ_TALISMANS:
     case OBJ_WANDS:
         return cannot_evoke_item_reason(&item, temp, ident || item_type_known(item)).size();
 
@@ -3346,10 +3355,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         return cannot_drink_item_reason(&item, temp, false, ident).size();
     }
     case OBJ_JEWELLERY:
-        if (temp && bool(!you_can_wear(get_item_slot(item))))
-            return true;
-
-        if (you.has_mutation(MUT_NO_JEWELLERY))
+        if (!can_equip_item(item, temp))
             return true;
 
         if (!ident && !item.is_identified())
@@ -3365,7 +3371,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         switch (item.sub_type)
         {
         case RING_RESIST_CORROSION:
-            return you.res_corr(false, false);
+            return player_res_corrosion(false, false, false);
 
         case AMU_ACROBAT:
             return you.has_mutation(MUT_ACROBATIC);
@@ -3386,10 +3392,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
 #if TAG_MAJOR_VERSION == 34
                    you.get_mutation_level(MUT_NO_REGENERATION) > 0 ||
 #endif
-                     (temp
-                       && (you.get_mutation_level(MUT_INHIBITED_REGENERATION) > 0
-                           || you.has_mutation(MUT_VAMPIRISM))
-                       && regeneration_is_inhibited());
+                    (temp && regeneration_is_inhibited());
 
         case AMU_MANA_REGENERATION:
             return !you.max_magic_points;
@@ -3420,20 +3423,6 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
     case OBJ_RODS:
             return true;
 #endif
-
-    case OBJ_STAVES:
-        if (you.has_mutation(MUT_NO_GRASPING))
-            return true;
-        if (!you.could_wield(item, true, !temp))
-        {
-            // Weapon is too large (or small) to be wielded and cannot
-            // be thrown either.
-            return true;
-        }
-        if (!item.is_identified())
-            return false;
-
-        return false;
 
     case OBJ_CORPSES:
         return true;

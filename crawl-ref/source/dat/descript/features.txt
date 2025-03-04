@@ -768,10 +768,31 @@ noise it creates, it will apply an enchantment making monsters all over the
 level aware of your location. Hostile monsters may trigger this trap themselves
 to invoke its effects against you, but your allies will avoid stepping on it.
 %%%%
+An archmage's trap
+
+A magical trap crafted by some avaricious master wizard. When you or a hostile
+monster steps on it, you will lose a percentage of your mp, while up to three of
+the strongest hostile spellcasters in sight will have their spells empowered.
+Your allies will avoid stepping on it.
+%%%%
+A devourer's trap
+
+A magical trap linked by divine cruelty to the stomachs of some unfathomable
+interdimensional predators. When you or a hostile monster steps on it, it has a
+high chance it will expel digestive acid onto you, corroding you. Your allies
+will avoid stepping on it.
+%%%%
 A dispersal trap
 
 Anyone stepping on this trap will translocate themself and anyone else in view
 to a new location nearby. Hostile monsters may trigger this trap, but your
+allies will avoid stepping on it.
+%%%%
+A harlequin's trap
+
+A magical trap left behind by the ineffable, spectacular revues of chaos. When
+you or a hostile monster steps on it, up to three of the strongest monsters in
+sight will have their attacks temporarily interwoven with a touch of chaos. Your
 allies will avoid stepping on it.
 %%%%
 A net trap
@@ -780,21 +801,34 @@ A large concealed net launcher hanging from the dungeon's ceiling. Enchanted by
 the power of Zot, whenever an intelligent creature steps here - whether friend
 or foe - the net will land only on you.
 %%%%
+A permanent teleport trap
+
+A magical trap which will displace anyone passing over it to a random place on
+the same dungeon level.
+%%%%
 A pressure plate
 
 A trigger of some sort. You cannot tell what kind of trap it is attached to.
 Its complicated detection system will trigger the trap even when someone flies
 over it.
 %%%%
+A spike launcher
+
+A magical contraption which skewers nearby monsters with sharp spikes. It will
+disintegrate after a short length of time or if the caster strays too far away
+from it.
+%%%%
 A teleport trap
 
 A magical trap which will displace anyone passing over it to a random place on
 the same dungeon level. It is worn with age, and will dissipate on use.
 %%%%
-A permanent teleport trap
+A tyrant's trap
 
-A magical trap which will displace anyone passing over it to a random place on
-the same dungeon level.
+A magical trap built to bolster the armies of some conquering despot. When you
+or a hostile monster steps on it, your melee attacks will be weakened to make
+up to three of the most dangerous monsters in sight become stronger. Your
+allies will avoid stepping on it.
 %%%%
 A web
 
@@ -808,12 +842,6 @@ unlucky enough to step on it. You may find yourself thrown into the Abyss,
 contaminated with enormous amounts of wild magic, have mighty fiends summoned
 against you, or the like. Hostile monsters may trigger this trap themselves to
 invoke its effects against you, but your allies will avoid stepping on it.
-%%%%
-A spike launcher
-
-A magical contraption which skewers nearby monsters with sharp spikes. It will
-disintegrate after a short length of time or if the caster strays too far away
-from it.
 %%%%
 ########################################################################
 ### Portal vault entrances

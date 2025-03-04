@@ -52,7 +52,7 @@ mutations:
     MUT_FLAT_HP: 1
 fake_mutations:
   - long: You are immune to sickness and miasma.
-  - short: sickness immunity
+    short: sickness immunity
 recommended_jobs:
   - conjurer
   - warper
@@ -65,3 +65,4 @@ recommended_weapons:
   - long blades
 
 orc_name: Orcfreeti
+walking_verb: Float

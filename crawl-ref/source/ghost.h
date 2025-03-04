@@ -25,6 +25,8 @@ using std::vector;
 #define APOSTLE_POWER_KEY "apostle_power"
 #define APOSTLE_BAND_POWER_KEY "apostle_band_power"
 
+#define MAX_GHOST_EVASION    50
+
 enum apostle_type
 {
     // Basic generation types

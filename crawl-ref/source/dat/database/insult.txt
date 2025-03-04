@@ -536,61 +536,6 @@ musky
 
 slinking
 %%%%
-##########################################################
-# adjective1, Ghoul special
-##########################################################
-insult ghoul adj1
-
-# being old and mouldy
-mildewed
-
-mouldy
-
-musty
-
-stale
-
-long-expired
-
-# falling apart
-worm-eaten
-
-moth-eaten
-
-corroded
-
-leprous
-
-cankerous
-
-decaying
-
-decrepit
-
-decomposing
-
-deteriorating
-
-infectious
-
-diseased
-
-wasted
-
-rotting
-
-stinking
-
-putrescent
-
-foul-smelling
-
-foetid
-
-gangrenous
-
-foul-breathed
-%%%%
 ###############################################################
 # adjective2, usually longer and consisting of two words
 ###############################################################
@@ -1313,29 +1258,3 @@ wrapping tissue
 pyre
 
 tinder
-%%%%
-##########################################################
-# noun, Ghoul special
-##########################################################
-insult ghoul noun
-
-flesh wound
-
-running sore
-
-wreck
-
-dirt collector
-
-dust catcher
-
-trash-dump
-
-refuse
-
-rubbish heap
-
-garbage dump
-
-walking corpse
-%%%%

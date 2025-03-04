@@ -322,7 +322,7 @@ bool is_weapon_brand_ok(int type, int brand, bool /*strict*/)
     case SPWPN_PAIN:
     case SPWPN_DISTORTION:
     case SPWPN_SPECTRAL:
-    case SPWPN_REAPING: // only exists on Sword of Zonguldrok
+    case SPWPN_REAPING:
     case SPWPN_FOUL_FLAME: // only exists on Brilliance
         if (is_range_weapon(item))
             return false;
@@ -722,7 +722,7 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
         // On body armour, an enchantment of less than 0 is never viable.
         // On aux armour & shields, going below -2 is likewise unviable.
         // (You think you're better than the hat of the Alchemist?)
-        if (get_armour_slot(item) == EQ_BODY_ARMOUR)
+        if (get_armour_slot(item) == SLOT_BODY_ARMOUR)
             item.plus = max(static_cast<int>(item.plus), random2(2));
         else
             item.plus = max(static_cast<int>(item.plus), random_range(-2, 1));
@@ -755,7 +755,7 @@ static special_armour_type _generate_armour_ego(const item_def& item)
 
 bool is_armour_brand_ok(int type, int brand, bool strict)
 {
-    equipment_type slot = get_armour_slot((armour_type)type);
+    equipment_slot slot = get_armour_slot((armour_type)type);
 
     // Currently being too restrictive results in asserts, being too
     // permissive will generate such items on "any armour ego:XXX".
@@ -767,7 +767,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
         return true;
 
     case SPARM_FLYING:
-        if (slot == EQ_BODY_ARMOUR)
+        if (slot == SLOT_BODY_ARMOUR)
             return true;
         // deliberate fall-through
 #if TAG_MAJOR_VERSION == 34
@@ -775,10 +775,10 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
     case SPARM_JUMPING:
 #endif
     case SPARM_RAMPAGING:
-        return slot == EQ_BOOTS;
+        return slot == SLOT_BOOTS || slot == SLOT_BARDING;
     case SPARM_STEALTH:
-        return slot == EQ_BOOTS || slot == EQ_CLOAK
-            || slot == EQ_HELMET || slot == EQ_GLOVES;
+        return slot == SLOT_BOOTS || slot == SLOT_BARDING || slot == SLOT_CLOAK
+            || slot == SLOT_HELMET || slot == SLOT_GLOVES;
 
     case SPARM_ARCHMAGI:
         return !strict || type == ARM_ROBE;
@@ -787,19 +787,19 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
         return true;
     case SPARM_PRESERVATION:
 #if TAG_MAJOR_VERSION > 34
-        return slot == EQ_CLOAK;
+        return slot == SLOT_CLOAK;
 #endif
 #if TAG_MAJOR_VERSION == 34
         if (type == ARM_PLATE_ARMOUR && !strict)
             return true;
-        return slot == EQ_CLOAK;
+        return slot == SLOT_CLOAK;
     case SPARM_INVISIBILITY:
-        return (slot == EQ_CLOAK && !strict) || type == ARM_SCARF;
+        return (slot == SLOT_CLOAK && !strict) || type == ARM_SCARF;
 #endif
 
     case SPARM_REFLECTION:
     case SPARM_PROTECTION:
-        return slot == EQ_OFFHAND;
+        return slot == SLOT_OFFHAND;
 
     case SPARM_STRENGTH:
     case SPARM_DEXTERITY:
@@ -808,11 +808,11 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
             return true;
         // deliberate fall-through
     case SPARM_HURLING:
-        return slot == EQ_GLOVES;
+        return slot == SLOT_GLOVES;
 
     case SPARM_SEE_INVISIBLE:
     case SPARM_INTELLIGENCE:
-        return slot == EQ_HELMET;
+        return slot == SLOT_HELMET;
 
     case SPARM_FIRE_RESISTANCE:
     case SPARM_COLD_RESISTANCE:
@@ -834,7 +834,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
         if (type == ARM_PEARL_DRAGON_ARMOUR && brand == SPARM_POSITIVE_ENERGY)
             return false; // contradictory or redundant
 
-        return slot == EQ_BODY_ARMOUR || slot == EQ_OFFHAND || slot == EQ_CLOAK
+        return slot == SLOT_BODY_ARMOUR || slot == SLOT_OFFHAND || slot == SLOT_CLOAK
                        || !strict;
 
     case SPARM_SPIRIT_SHIELD:
@@ -844,7 +844,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
                type == ARM_CAP ||
                type == ARM_SCARF ||
 #endif
-               slot == EQ_OFFHAND || !strict;
+               slot == SLOT_OFFHAND || !strict;
 
     case SPARM_REPULSION:
     case SPARM_HARM:
@@ -880,15 +880,15 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
  * @param armour_type   The type of armour being considered.
  * @return              The armour plus value required to be interesting.
  */
-static int _armour_plus_threshold(equipment_type armour_type)
+static int _armour_plus_threshold(equipment_slot armour_type)
 {
     switch (armour_type)
     {
         // body armour is very common; squelch most of it
-        case EQ_BODY_ARMOUR:
+        case SLOT_BODY_ARMOUR:
             return 3;
         // shields are fairly common
-        case EQ_OFFHAND:
+        case SLOT_OFFHAND:
             return 2;
         // aux armour is relatively uncommon
         default:
@@ -1617,6 +1617,9 @@ static const vector<random_pick_entry<talisman_type>> talisman_weights =
     {  8, 20,  25, RISE, TALISMAN_DRAGON },
     { 21, 35,  25, FLAT, TALISMAN_DRAGON },
     {  0, 35,   5, FLAT, TALISMAN_DRAGON },
+    {  8, 20,  25, RISE, TALISMAN_VAMPIRE },
+    { 21, 35,  25, FLAT, TALISMAN_VAMPIRE },
+    {  0, 35,   5, FLAT, TALISMAN_VAMPIRE },
     // tier 3
     { 20, 27,  25, RISE, TALISMAN_DEATH },
     { 28, 35,  25, FLAT, TALISMAN_DEATH },
@@ -1673,12 +1676,10 @@ static void _generate_talisman_item(item_def& item, int force_type, int item_lev
 misc_item_type get_misc_item_type(int force_type, bool exclude)
 {
     if (force_type != OBJ_RANDOM)
-    {
-        if (exclude && you.generated_misc.count((misc_item_type)force_type))
-            return NUM_MISCELLANY;
         return (misc_item_type)force_type;
-    }
+
     set<misc_item_type> choices;
+
     if (exclude)
     {
         choices = {
@@ -1688,8 +1689,6 @@ misc_item_type get_misc_item_type(int force_type, bool exclude)
             MISC_PHANTOM_MIRROR,
             (misc_item_type)item_for_set(ITEM_SET_AREA_MISCELLANY)
         };
-        for (auto it : you.generated_misc)
-            choices.erase(it);
     }
     else
     {
@@ -1708,26 +1707,6 @@ misc_item_type get_misc_item_type(int force_type, bool exclude)
     return NUM_MISCELLANY;
 }
 
-// May also be called when a wanderer gets assigned a misc evoker at start
-void handle_generated_misc(misc_item_type typ)
-{
-    switch (typ)
-    {
-    case MISC_SACK_OF_SPIDERS:
-    case MISC_BOX_OF_BEASTS:
-    case MISC_LIGHTNING_ROD:
-    case MISC_PHIAL_OF_FLOODS:
-    case MISC_PHANTOM_MIRROR:
-    case MISC_TIN_OF_TREMORSTONES:
-    case MISC_CONDENSER_VANE:
-    case MISC_GRAVITAMBOURINE:
-        you.generated_misc.insert(typ);
-        break;
-    default:
-        break;
-    }
-}
-
 static void _generate_misc_item(item_def& item, int force_type, int item_level)
 {
     const auto typ = get_misc_item_type(force_type);
@@ -1738,7 +1717,6 @@ static void _generate_misc_item(item_def& item, int force_type, int item_level)
         return;
     }
     item.sub_type = typ;
-    handle_generated_misc(typ);
 }
 
 /**
@@ -1762,7 +1740,6 @@ static bool _ego_unrand_only(int base_type, int ego)
     {
         switch (static_cast<brand_type>(ego))
         {
-        case SPWPN_REAPING:
         case SPWPN_FOUL_FLAME:
         case SPWPN_ACID:
             return true;

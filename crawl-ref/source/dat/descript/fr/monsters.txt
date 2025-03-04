@@ -686,11 +686,6 @@ deep elf summoner
 Cet elfe profond est entrainé dans l'art de la convocation de petits démons et
 créatures.
 %%%%
-deep dwarf death knight
-
-Un guerrier-prêtre nain des profondeurs de Yredelemnul, qui chante des hommages
-impies à la gloire du dieu sombre et évoque la mort.
-%%%%
 deep troll
 
 Un troll voûté à la peau sombre, les trolls vivants dans les grottes voyagent
@@ -1525,11 +1520,6 @@ program bug
 
 Un monstre vorace et incroyablement buggé. Veuillez rapporter son existence aux
 développeurs de Devteam.
-%%%%
-quasit
-
-Un petit démon lâche avec une longue queue pointue. Ses griffes acérées sont
-couvertes d'un venin qui raidit les muscles.
 %%%%
 queen bee
 

@@ -1,21 +1,16 @@
 name: "sphinx"
-glyph: {char: "H", colour: lightgray}
-flags: [flies, see_invis, speaks, warm_blood]
-xp_mult: 12
-will: 60
+glyph: {char: "H", colour: lightgrey}
+flags: [cant_spawn]
+holiness: [nonliving]
+will: 10
 attacks:
- - {type: hit, damage: 25}
- - {type: hit, damage: 12}
- - {type: hit, damage: 12}
-hd: 16
-hp_10x: 880
-ac: 5
-ev: 5
-spells: sphinx
+hd: 0
+hp_10x: 0
+ac: 0
+ev: 0
 has_corpse: true
-shout: shout
-intelligence: human
-speed: 12
-uses: open_doors
+intelligence: brainless
+speed: 0
 size: giant
 shape: quadruped_winged
+tile: guardian_sphinx

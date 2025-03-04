@@ -808,11 +808,9 @@ void mummy_death_curse_fineff::fire()
         mprf(MSGCH_MONSTER_SPELL, "A malignant aura surrounds %s.",
              victim->name(DESC_THE).c_str());
     }
-    const string cause = make_stringf("%s death curse",
-                            apostrophise(name).c_str());
-    // source is used as a melee source and must be alive
-    // since the mummy is dead now we pass nullptr
-    death_curse(*victim, nullptr, cause, pow);
+    // The real mummy is dead, but we pass along a cached copy save at the time
+    // they died (for morgue purposes)
+    death_curse(*victim, cached_monster_copy_by_mid(dead_mummy), "", pow);
 }
 
 void summon_dismissal_fineff::fire()

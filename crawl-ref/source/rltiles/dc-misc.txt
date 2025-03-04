@@ -53,6 +53,13 @@ zap1
 zap2
 zap3
 
+weak_air0 BOLT_WEAK_AIR
+weak_air1
+medium_air0 BOLT_MEDIUM_AIR
+medium_air1
+strong_air0 BOLT_STRONG_AIR
+strong_air1
+
 # Earth bolts
 sandblast0 BOLT_SANDBLAST
 sandblast1
@@ -102,6 +109,9 @@ searing_ray5
 percussive_tempering BOLT_PERCUSSIVE_TEMPERING
 
 fortress_blast BOLT_FORTRESS_BLAST
+
+bomblet_launch0 BOLT_BOMBLET_LAUNCH
+bomblet_launch1
 
 bomblet_blast0 BOLT_BOMBLET_BLAST
 bomblet_blast1
@@ -224,6 +234,9 @@ pie4
 pie5
 pie6
 pie7
+
+chaos_buff0 BOLT_CHAOS_BUFF
+chaos_buff1
 
 sap_magic BOLT_SAP_MAGIC
 
@@ -400,6 +413,11 @@ cloud_blastmotes2
 cloud_magnetic0 CLOUD_MAGNETISED_DUST
 cloud_magnetic2
 cloud_magnetic2
+
+cloud_bat_mist0 CLOUD_BATS
+cloud_bat_mist1
+cloud_bat_mist2
+cloud_bat_mist3
 
 %sdir mon
 fungi_plants/ballistomycete_spore SPORE_OVERLAY

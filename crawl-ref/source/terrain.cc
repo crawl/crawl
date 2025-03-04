@@ -2552,7 +2552,7 @@ void ice_wall_damage(monster &mons, int delay)
         if (mons.alive())
         {
             behaviour_event(&mons, ME_WHACK, &you);
-            mons.expose_to_element(BEAM_COLD, orig_dam);
+            mons.expose_to_element(BEAM_COLD, orig_dam, &you);
         }
     }
 }

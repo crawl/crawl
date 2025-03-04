@@ -8,6 +8,7 @@
 
 #include "actor.h"
 #include "beh-type.h"
+#include "env.h"
 #include "mgen-data.h"
 #include "mon-util.h"
 #include "monster.h"
@@ -475,21 +476,24 @@ public:
     bool mergeable(const final_effect &) const override { return false; }
     void fire() override;
 
-    static void schedule(const actor * attack, string name, killer_type killer, int pow)
+    static void schedule(const actor* attack, const monster* dead_mummy, killer_type killer, int pow)
     {
-        final_effect::schedule(new mummy_death_curse_fineff(attack, name, killer, pow));
+        final_effect::schedule(new mummy_death_curse_fineff(attack, dead_mummy, killer, pow));
     }
 protected:
-    mummy_death_curse_fineff(const actor * attack, string _name, killer_type _killer, int _pow)
-        : final_effect(fixup_attacker(attack), 0, coord_def()), name(_name),
+    mummy_death_curse_fineff(const actor* attack, const monster* source, killer_type _killer, int _pow)
+        : final_effect(fixup_attacker(attack), 0, coord_def()),
           killer(_killer), pow(_pow)
     {
+        // Cache the dying mummy so morgues can look up the monster source if it kills us.
+        env.final_effect_monster_cache.push_back(*source);
+        dead_mummy = source->mid;
     }
     const actor *fixup_attacker(const actor *a);
 
-    string name;
     killer_type killer;
     int pow;
+    mid_t dead_mummy;
 };
 
 class summon_dismissal_fineff : public final_effect

@@ -6,8 +6,8 @@ xp_mult: 27
 holiness: [demonic]
 will: 120
 attacks:
- - {type: hit, damage: 38}
- - {type: claw, damage: 18}
+ - {type: hit, damage: 32}
+ - {type: claw, damage: 16}
 hd: 15
 hp_10x: 880
 ac: 7

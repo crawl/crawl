@@ -67,6 +67,16 @@ Seething terrors besiege your sanity!
 
 Lucidity slithers from your feeble grasp.
 %%%%
+harlequin_trap_lines
+
+Strange impish giggling echoes through your mind as
+
+The roar of a mocking crowd runs through your mind as
+
+A round of applause drowns out your thoughts as
+
+A cruel sense of mischief rushes through your surroundings as
+%%%%
 # How great is the Orb of Zot?
 _great_adj_
 

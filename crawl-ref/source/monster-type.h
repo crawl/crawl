@@ -188,6 +188,7 @@ enum monster_type                      // env.mons[].type
     MONS_SPECTRAL_WEAPON,
     MONS_RENDING_BLADE,
     MONS_ARMOUR_ECHO,
+    MONS_HAUNTED_ARMOUR,
     MONS_LIVING_SPELL,
     MONS_WALKING_TOME,
     MONS_EARTHEN_TOME,
@@ -304,7 +305,9 @@ enum monster_type                      // env.mons[].type
     MONS_VERY_UGLY_THING,
     MONS_ICE_BEAST,
     MONS_SKY_BEAST,
-    MONS_SPHINX,
+#if TAG_MAJOR_VERSION == 34
+    MONS_GUARDIAN_SPHINX,
+#endif
     MONS_ORB_GUARDIAN,
 
     MONS_GOLEM,                 // genus
@@ -472,6 +475,9 @@ enum monster_type                      // env.mons[].type
     MONS_TENGU_CONJURER,
     MONS_TENGU_REAVER,
     MONS_FENSTRIDER_WITCH,
+    MONS_SPHINX,              // genus
+    MONS_SPHINX_MARAUDER,
+    MONS_GUARDIAN_SPHINX,
 #endif
     MONS_MINOTAUR,
     MONS_NAGA,
@@ -572,6 +578,7 @@ enum monster_type                      // env.mons[].type
     MONS_HALAZID_WARLOCK,
     MONS_SPECTATOR,
     MONS_METEORAN,
+    MONS_POLTERGEIST,
     MONS_POLTERGUARDIAN,
     MONS_UNDYING_ARMOURY,
 #endif
@@ -667,7 +674,9 @@ enum monster_type                      // env.mons[].type
 
     // Demons:
     MONS_CRIMSON_IMP,
+#if TAG_MAJOR_VERSION == 34
     MONS_QUASIT,
+#endif
     MONS_WHITE_IMP,
     MONS_LEMURE,
     MONS_UFETUBUS,
@@ -783,6 +792,9 @@ enum monster_type                      // env.mons[].type
     MONS_VAMPIRE,
     MONS_VAMPIRE_KNIGHT,
     MONS_VAMPIRE_MAGE,
+#if TAG_MAJOR_VERSION > 34
+    MONS_VAMPIRE_BLOODPRINCE,
+#endif
     MONS_GHOST,                 // common genus for monster and player ghosts
     MONS_PHANTOM,
     MONS_SHADOWGHAST,
@@ -815,6 +827,7 @@ enum monster_type                      // env.mons[].type
     MONS_ANCIENT_CHAMPION,
     MONS_ANTIQUE_CHAMPION,
     MONS_REVENANT,
+    MONS_REVENANT_SOULMONGER,
     MONS_LOST_SOUL,
     MONS_SOUL_WISP,
     MONS_MARTYRED_SHADE,
@@ -965,6 +978,7 @@ enum monster_type                      // env.mons[].type
     MONS_GRUNN,
     MONS_JEREMIAH,
     MONS_XAKKRIXIS,
+    MONS_NAMELESS_REVENANT,  // 'Nobody' (except with a less misleading enum name)
 #endif
     // Sprint uniques:
     MONS_CHUCK,
@@ -1067,7 +1081,7 @@ enum monster_type                      // env.mons[].type
     MONS_SIMULACRUM,
 
     MONS_ANCIENT_CHAMPION,
-    MONS_REVENANT,
+    MONS_REVENANT_SOULMONGER,
     MONS_LOST_SOUL,
     MONS_JIANGSHI,
 
@@ -1311,6 +1325,13 @@ enum monster_type                      // env.mons[].type
     MONS_ALDERKING,
     MONS_ONI_INCARCERATOR,
     MONS_WYRMHOLE,
+    MONS_SPHINX,                  // genus
+    MONS_SPHINX_MARAUDER,
+    MONS_HAUNTED_ARMOUR,
+    MONS_POLTERGEIST,            // player species dummy
+    MONS_VAMPIRE_BLOODPRINCE,
+    MONS_REVENANT,               // player species dummy
+    MONS_NAMELESS_REVENANT,      // 'Nobody' (except with a less misleading enum name)
 #endif
 
     NUM_MONSTERS,               // used for polymorph

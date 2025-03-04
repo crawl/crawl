@@ -274,16 +274,17 @@ mset(spec_fn(function ()
   local d = math.max(5, 30 - you.zigs_completed() * 3)
   local e = math.max(1, you.zigs_completed() * 6 + you.depth() / 2 - 11)
   return "place:Vaults:$ w:" .. d * 2 .. " / place:Vaults:$ 9 w:" .. d .. " / " ..
-         "sphinx w:5 / titan w:" .. e .. " / golden dragon w:" .. e .. " / " ..
+         "guardian sphinx w:5 / titan w:" .. e .. " / golden dragon w:" .. e .. " / " ..
          "ancient lich w:" .. e / 3 .. " / dread lich w:" .. e / 3
 end))
 
 mset(spec_fn(function ()
-  local d = 10 + you.zigs_completed() * 6
-  local e = 10 + you.zigs_completed() * 9
-  return "place:Crypt:$ 9 w:260 / " ..
-         "curse skull w:" .. d .. " / revenant w:" .. e .. " / " ..
-         "ancient lich w:" .. d .. " / dread lich w:" .. e
+  local d = 10 + you.zigs_completed() * 3
+  local e = 10 + you.zigs_completed() * 6
+  local f = 10 + you.zigs_completed() * 9
+  return "place:Crypt:$ 9 w:250 / vampire bloodprince w:" .. d .. " / " ..
+         "curse skull w:" .. e .. " / revenant w:" .. f .. " / " ..
+         "ancient lich w:" .. e .. " / dread lich w:" .. f
 end))
 
 mset(spec_fn(function ()

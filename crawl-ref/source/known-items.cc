@@ -204,6 +204,10 @@ public:
             name = "manuals";
         else if (item->is_type(OBJ_BOOKS, 0))
             name = "spellbooks";
+        else if (item->is_type(OBJ_JEWELLERY, NUM_RINGS))
+            name = "unknown rings";
+        else if (item->is_type(OBJ_JEWELLERY, NUM_JEWELLERY))
+            name = "unknown amulets";
         else if (item->base_type == OBJ_GOLD)
         {
             name = lowercase_string(item_class_name(item->base_type));
@@ -410,7 +414,14 @@ void check_item_knowledge(bool unknown_items)
             object_class_type i = (object_class_type)ii;
             if (i == OBJ_BOOKS || !item_type_has_ids(i))
                 continue;
-            _add_fake_item(i, get_max_subtype(i), selected_items, items);
+
+            if (i == OBJ_JEWELLERY)
+            {
+                _add_fake_item(i, NUM_RINGS, selected_items, items);
+                _add_fake_item(i, NUM_JEWELLERY, selected_items, items);
+            }
+            else
+                _add_fake_item(i, get_max_subtype(i), selected_items, items);
         }
         // Missiles
         for (int i = 0; i < NUM_MISSILES; i++)
@@ -468,7 +479,7 @@ void check_item_knowledge(bool unknown_items)
             { OBJ_GOLD, 1 },
             { OBJ_BOOKS, 0 },
             { OBJ_RUNES, NUM_RUNE_TYPES },
-            { OBJ_GEMS, NUM_GEM_TYPES },
+            { OBJ_GEMS, GEM_DUNGEON },
         };
         for (auto e : misc_list)
             _add_fake_item(e.first, e.second, selected_items, items_other);

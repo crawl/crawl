@@ -26,7 +26,7 @@ KMONS:   7 = the Enchantress
 KMONS:   0 = spark wasp / caustic shrike w:1 / stone giant w:5 / \
              tengu warrior band / tengu conjurer band / \
              rakshasa / occultist w:5 / deep troll w:5 / \
-             glowing orange brain / green very ugly thing band / sphinx
+             glowing orange brain / green very ugly thing band / guardian sphinx
 KMONS:   9 = ettin ; giant club randart . giant club randart / \
              glowing shapeshifter hd:13 w:5 / quicksilver dragon w:15 / \
              tengu reaver w:5 / juggernaut w:5
@@ -211,7 +211,7 @@ MONS:   tengu conjurer ; quarterstaff . robe . longbow | arbalest / \
 KMONS:  L = water nymph
 KMONS:  P = plant
 ITEM:   gold q:1 / stone q:1 no_pickup w:20
-ITEM:   any potion, potion of degeneration pre_id
+ITEM:   any potion, potion of moonshine pre_id
 KFEAT:  L = deep_water
 KFEAT:  F = cache of fruit
 NSUBST: w = 2:L / *:w
@@ -262,7 +262,7 @@ NAME:   grunt_forest_end_shrine
 ORIENT: float
 MONS:   the Enchantress patrolling
 MONS:   spriggan defender w:14 / thorn hunter
-MONS:   sphinx w:20 / tengu reaver w:15 / alderking w:15 / \
+MONS:   guardian sphinx w:20 / tengu reaver w:15 / alderking w:15 / \
         ettin w:5 ; giant club randart . giant club randart / caustic shrike
 MONS:   spriggan air mage w:15 / spriggan druid / spriggan berserker / \
         dire elephant w:5 / shambling mangrove w:3 / anaconda w:2

@@ -8,7 +8,7 @@ holiness: [undead]
 will: 140
 attacks:
  - {type: hit, flavour: drain_speed, damage: 27}
- - {type: hit, flavour: drain_stat, damage: 17}
+ - {type: hit, damage: 17}
 hd: 13
 hp_10x: 715
 ac: 12

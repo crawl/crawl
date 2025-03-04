@@ -25,7 +25,6 @@ void item_colour(item_def &item);
 jewellery_type get_random_ring_type();
 jewellery_type get_random_amulet_type();
 misc_item_type get_misc_item_type(int force_type, bool exclude = true);
-void handle_generated_misc(misc_item_type typ);
 void item_set_appearance(item_def &item);
 
 bool is_weapon_brand_ok(int type, int brand, bool strict);

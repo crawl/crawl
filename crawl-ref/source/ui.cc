@@ -29,6 +29,8 @@
 # if defined(UNIX) || defined(TARGET_COMPILER_MINGW)
 #  include <unistd.h>
 # endif
+// needed for usleep replacement on platforms that don't support it
+# include "syscalls.h"
 # include "output.h"
 # include "stringutil.h"
 # include "view.h"
@@ -1988,7 +1990,7 @@ SizeReq TextEntry::_get_preferred_size(Direction dim, int /*prosp_width*/)
 int TextEntry::padding_size()
 {
     const int line_height = m_font->char_height(false);
-    const float pad_amount = 0.2;
+    const float pad_amount = 0.2f;
     return (static_cast<int>(line_height*pad_amount) + 1)/2;
 }
 #endif
@@ -2516,7 +2518,7 @@ void UIRoot::layout()
         {
             m_root.allocate_region({0, 0, width, height});
         }
-        catch (const RestartAllocation &ex)
+        catch (const RestartAllocation&)
         {
         }
 

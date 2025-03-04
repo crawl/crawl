@@ -50,29 +50,6 @@ define(function () {
     exports.HALO_RANGE = 1;
     exports.HALO_UMBRA = 2;
 
-    // equipment_type
-    exports.equip = {};
-    val = 0;
-    exports.equip.WEAPON = val++;
-    exports.equip.CLOAK = val++;
-    exports.equip.HELMET = val++;
-    exports.equip.GLOVES = val++;
-    exports.equip.BOOTS = val++;
-    exports.equip.OFFHAND = val++;
-    exports.equip.BODY_ARMOUR = val++;
-    exports.equip.LEFT_RING = val++;
-    exports.equip.RIGHT_RING = val++;
-    exports.equip.AMULET = val++;
-    exports.equip.RING_ONE = val++;
-    exports.equip.RING_TWO = val++;
-    exports.equip.RING_THREE = val++;
-    exports.equip.RING_FOUR = val++;
-    exports.equip.RING_FIVE = val++;
-    exports.equip.RING_SIX = val++;
-    exports.equip.RING_SEVEN = val++;
-    exports.equip.RING_EIGHT = val++;
-    exports.equip.NUM_EQUIP = val++;
-
     // Tile flags.
     // Mostly this complicated because they need more than 32 bits.
 

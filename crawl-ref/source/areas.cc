@@ -191,7 +191,7 @@ static void _update_agrid()
     for (monster_iterator mi; mi; ++mi)
         _actor_areas(*mi);
 
-    if ((player_has_orb() || player_equip_unrand(UNRAND_CHARLATANS_ORB))
+    if ((player_has_orb() || you.unrand_equipped(UNRAND_CHARLATANS_ORB))
          && !you.pos().origin())
     {
         const int r = 2;
@@ -587,12 +587,14 @@ int player::halo_radius() const
                                                     / piety_breakpoint(5);
     }
 
-    if (player_equip_unrand(UNRAND_EOS))
+    if (you.unrand_equipped(UNRAND_EOS))
         size = max(size, 3);
-    else if (wearing_ego(EQ_ALL_ARMOUR, SPARM_LIGHT))
+    else if (wearing_ego(OBJ_ARMOUR, SPARM_LIGHT))
         size = max(size, 3);
     else if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
         size = max(size, 2);
+    if (you.unrand_equipped(UNRAND_VAINGLORY))
+        size = max(size, 0);
 
     return size;
 }
@@ -637,7 +639,7 @@ int monster::halo_radius() const
     if (alt_wpn && is_unrandom_artefact(*alt_wpn, UNRAND_EOS))
         size = max(size, 3);
 
-    if (wearing_ego(EQ_ALL_ARMOUR, SPARM_LIGHT))
+    if (wearing_ego(OBJ_ARMOUR, SPARM_LIGHT))
         size = max(size, 3);
 
     if (!(holiness() & MH_HOLY))
@@ -762,8 +764,8 @@ int player::umbra_radius() const
     if (you.has_mutation(MUT_FOUL_SHADOW))
         size = max(size, you.get_mutation_level(MUT_FOUL_SHADOW));
 
-    if ((player_equip_unrand(UNRAND_BRILLIANCE))
-         || player_equip_unrand(UNRAND_SHADOWS))
+    if ((you.unrand_equipped(UNRAND_BRILLIANCE))
+         || you.unrand_equipped(UNRAND_SHADOWS))
     {
         size = max(size, 3);
     }

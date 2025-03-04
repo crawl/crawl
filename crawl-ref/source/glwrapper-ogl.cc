@@ -19,11 +19,7 @@
 #  include <GLES/gl.h>
 # else
 #  include <SDL_opengl.h>
-#  if defined(__MACOSX__)
-#   include <OpenGL/glu.h>
-#  else
-#   include <GL/glu.h>
-#  endif
+#  include <SDL_video.h>
 # endif
 #endif
 
@@ -147,6 +143,68 @@ OGLStateManager::OGLStateManager()
     glDepthFunc(GL_LEQUAL);
 
     m_window_height = 0;
+#ifndef USE_GLES
+    // TODO: we probably can do this for GLES TOO, but maybe requires tweaks?
+
+    // OpenGL doesn't specify what the GetProcAddress function returns
+    // if the implementation does not support a function
+    // (e.g. because it doesn't support the OpenGL version in question)
+    // So we need to check the version before we try to get the
+    // glGenerateMipmap function.
+    const GLubyte* versionString = glGetString(GL_VERSION);
+    if (versionString == nullptr)
+    {
+        mprf("Mipmap Setup: Failed to load OpenGL version.");
+        return;
+    }
+    // We will never see 2 digit OpenGL major versions - 4.6 came out in 2016,
+    // and Vulkan is carrying the torch now
+    //
+    // It's doubtful we'll even see an OpenGL 5.
+    // But we'll be paranoid. We'll consider OpenGL 3.X - 9.X as all fine
+    bool supported_first_digit = ('3' <= versionString[0]) &&
+                                 (versionString[0] <= '9');
+    // Anything other than X.Y would be very weird.
+    // It's incredibly unlikely OpenGL 10 will ever exist.
+    bool second_character_is_dot = versionString[1] == '.';
+    if (!supported_first_digit || !second_character_is_dot)
+    {
+        mprf("Mipmap Setup: Disabled because OpenGL version: %s does not "
+             "provide glGenerateMipmap.", versionString);
+        return;
+    }
+
+    // We have to load the library dynamically before we can load the function
+    // from the library via GetProcAddress.
+    // That's how dynamic loading works.
+    // It's possible the library is already loaded anyway,
+    // but we're being careful here.
+    if (SDL_GL_LoadLibrary(NULL) != 0)
+    {
+        // success == 0 for this API.
+        // If we can't load it, we probably wouldn't get this far at all.
+        // But just in case, we'll handle it.
+        mprf("Mipmap Setup: Disabled because SDL_GL_LoadLibrary failed.");
+        return;
+    }
+
+    // Because we already checked the version is higher enough,
+    // SDL_GL_GetProcAddress should always get a non-null pointer back.
+    // But we'll log in case this does somehow happen.
+    m_mipmapFn = SDL_GL_GetProcAddress("glGenerateMipmap");
+    if (m_mipmapFn == nullptr)
+    {
+        mprf("Mipmap Setup: Failed to load glGenerateMipmap function.");
+        return;
+    }
+    else
+    {
+        mprf("Mipmap Setup: success, loaded with OpenGL version: %s",
+             versionString);
+    }
+#else
+    mprf("Mipmap Setup: skipped, not supported in this build configuration.");
+#endif
 }
 
 void OGLStateManager::set(const GLState& state)
@@ -391,11 +449,21 @@ void OGLStateManager::load_texture(unsigned char *pixels, unsigned int width,
     {
         // TODO: should min react to Options.tile_filter_scaling?
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                        GL_LINEAR_MIPMAP_NEAREST);
+                        m_mipmapFn != nullptr ? GL_LINEAR_MIPMAP_NEAREST :
+                        Options.tile_filter_scaling ? GL_LINEAR :
+                        GL_NEAREST);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
                         Options.tile_filter_scaling ? GL_LINEAR : GL_NEAREST);
-        gluBuild2DMipmaps(GL_TEXTURE_2D, bpp, width, height,
-                          texture_format, format, pixels);
+        glTexImage2D(GL_TEXTURE_2D, 0, bpp, width, height, 0,
+                     texture_format, format, pixels);
+        // TODO: possibly restructure this into the main block below
+        // so that we support mipmapping when glTexSubImage2D should be called.
+        if (m_mipmapFn != nullptr)
+        {
+            PFNGLGENERATEMIPMAPPROC mipmapFn =
+                    reinterpret_cast<PFNGLGENERATEMIPMAPPROC>(m_mipmapFn);
+            mipmapFn(GL_TEXTURE_2D);
+        }
     }
     else
 #endif

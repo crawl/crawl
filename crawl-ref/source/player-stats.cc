@@ -6,7 +6,6 @@
 #include "clua.h"
 #include "delay.h"
 #include "duration-type.h"
-#include "equipment-type.h"
 #include "files.h"
 #include "god-passive.h"
 #include "hints.h"
@@ -26,65 +25,43 @@
 #include "tag-version.h"
 #include "transform.h"
 
-int player::stat(stat_type s, bool nonneg) const
+static int _stat_modifier(stat_type stat, bool innate_only);
+
+/**
+ * What's the player's value for a given stat?
+ *
+ * @param s      The stat in question (e.g. STAT_STR).
+ * @param nonneg Whether to cap the stat at 0.
+ * @param innate_only Whether to disregard stat modifiers other than those from
+ *                    innate mutations.
+ * @return       The player's value for a given stat; capped at MAX_STAT_VALUE.
+ */
+int player::stat(stat_type s, bool nonneg, bool innate_only) const
 {
-    const int val = max_stat(s) - stat_loss[s];
+    const int val = min(base_stats[s] + _stat_modifier(s, innate_only), MAX_STAT_VALUE);
     return nonneg ? max(val, 0) : val;
 }
 
 int player::strength(bool nonneg) const
 {
-    return stat(STAT_STR, nonneg);
+    return stat(STAT_STR, nonneg, false);
 }
 
 int player::intel(bool nonneg) const
 {
-    return stat(STAT_INT, nonneg);
+    return stat(STAT_INT, nonneg, false);
 }
 
 int player::dex(bool nonneg) const
 {
-    return stat(STAT_DEX, nonneg);
+    return stat(STAT_DEX, nonneg, false);
 }
 
-static int _stat_modifier(stat_type stat, bool innate_only);
-
-/**
- * What's the player's current maximum for a stat, before ability damage is
- * applied?
- *
- * @param s      The stat in question (e.g. STAT_STR).
- * @param innate Whether to disregard stat modifiers other than those from
- *               innate mutations.
- * @return      The player's maximum for the given stat; capped at
- *              MAX_STAT_VALUE.
- */
-int player::max_stat(stat_type s, bool innate) const
-{
-    return min(base_stats[s] + _stat_modifier(s, innate), MAX_STAT_VALUE);
-}
-
-int player::max_strength() const
-{
-    return max_stat(STAT_STR);
-}
-
-int player::max_intel() const
-{
-    return max_stat(STAT_INT);
-}
-
-int player::max_dex() const
-{
-    return max_stat(STAT_DEX);
-}
-
-// Base stat including innate mutations (which base_stats does not)
+// Base stat including innate mutations, but no temporary effects.
 int innate_stat(stat_type s)
 {
-    return you.max_stat(s, true);
+    return you.stat(s, false, true);
 }
-
 
 static void _handle_stat_change(stat_type stat);
 
@@ -321,10 +298,10 @@ static int _strength_modifier(bool innate_only)
         result += chei_stat_boost();
 
         // ego items of strength
-        result += 3 * count_worn_ego(SPARM_STRENGTH);
+        result += 3 * you.wearing_ego(OBJ_ARMOUR, SPARM_STRENGTH);
 
         // rings of strength
-        result += you.wearing(EQ_RINGS_PLUS, RING_STRENGTH);
+        result += you.wearing_jewellery(RING_STRENGTH);
 
         // randarts of strength
         result += you.scan_artefacts(ARTP_STRENGTH);
@@ -351,10 +328,10 @@ static int _int_modifier(bool innate_only)
         result += chei_stat_boost();
 
         // ego items of intelligence
-        result += 3 * count_worn_ego(SPARM_INTELLIGENCE);
+        result += 3 * you.wearing_ego(OBJ_ARMOUR, SPARM_INTELLIGENCE);
 
         // rings of intelligence
-        result += you.wearing(EQ_RINGS_PLUS, RING_INTELLIGENCE);
+        result += you.wearing_jewellery(RING_INTELLIGENCE);
 
         // randarts of intelligence
         result += you.scan_artefacts(ARTP_INTELLIGENCE);
@@ -378,10 +355,10 @@ static int _dex_modifier(bool innate_only)
         result += chei_stat_boost();
 
         // ego items of dexterity
-        result += 3 * count_worn_ego(SPARM_DEXTERITY);
+        result += 3 * you.wearing_ego(OBJ_ARMOUR, SPARM_DEXTERITY);
 
         // rings of dexterity
-        result += you.wearing(EQ_RINGS_PLUS, RING_DEXTERITY);
+        result += you.wearing_jewellery(RING_DEXTERITY);
 
         // randarts of dexterity
         result += you.scan_artefacts(ARTP_DEXTERITY);
@@ -433,181 +410,31 @@ static int _stat_modifier(stat_type stat, bool innate_only)
     }
 }
 
-static string _stat_name(stat_type stat)
-{
-    switch (stat)
-    {
-    case STAT_STR:
-        return "strength";
-    case STAT_INT:
-        return "intelligence";
-    case STAT_DEX:
-        return "dexterity";
-    default:
-        die("invalid stat");
-    }
-}
-
-int stat_loss_roll()
-{
-    const int loss = 30 + random2(30);
-    dprf("Stat loss points: %d", loss);
-
-    return loss;
-}
-
-bool lose_stat(stat_type which_stat, int stat_loss, bool force)
-{
-    if (stat_loss <= 0)
-        return false;
-
-    if (which_stat == STAT_RANDOM)
-        which_stat = static_cast<stat_type>(random2(NUM_STATS));
-
-    if (!force)
-    {
-        if (you.duration[DUR_DIVINE_STAMINA] > 0)
-        {
-            mprf("Your divine stamina protects you from %s loss.",
-                 _stat_name(which_stat).c_str());
-            return false;
-        }
-    }
-
-    mprf(MSGCH_WARN, "You feel %s.", stat_desc(which_stat, SD_LOSS));
-
-    you.stat_loss[which_stat] = min<int>(100,
-                                         you.stat_loss[which_stat] + stat_loss);
-    if (!you.attribute[ATTR_STAT_LOSS_XP])
-        you.attribute[ATTR_STAT_LOSS_XP] = stat_loss_roll();
-    _handle_stat_change(which_stat);
-    return true;
-}
-
-stat_type random_lost_stat()
-{
-    stat_type choice = NUM_STATS;
-    int found = 0;
-    for (int i = 0; i < NUM_STATS; ++i)
-        if (you.stat_loss[i] > 0)
-        {
-            found++;
-            if (one_chance_in(found))
-                choice = static_cast<stat_type>(i);
-        }
-    return choice;
-}
-
-// Restore the stat in which_stat by the amount in stat_gain, displaying
-// a message if suppress_msg is false, and doing so in the recovery
-// channel if recovery is true. If stat_gain is 0, restore the stat
-// completely.
-bool restore_stat(stat_type which_stat, int stat_gain,
-                  bool suppress_msg, bool recovery)
-{
-    // A bit hackish, but cut me some slack, man! --
-    // Besides, a little recursion never hurt anyone {dlb}:
-    if (which_stat == STAT_ALL)
-    {
-        bool stat_restored = false;
-        for (int i = 0; i < NUM_STATS; ++i)
-            if (restore_stat((stat_type) i, stat_gain, suppress_msg))
-                stat_restored = true;
-
-        return stat_restored;
-    }
-
-    if (which_stat == STAT_RANDOM)
-        which_stat = random_lost_stat();
-
-    if (which_stat >= NUM_STATS || you.stat_loss[which_stat] == 0)
-        return false;
-
-    if (!suppress_msg)
-    {
-        mprf(recovery ? MSGCH_RECOVERY : MSGCH_PLAIN,
-             "You feel your %s returning.",
-             _stat_name(which_stat).c_str());
-    }
-
-    if (stat_gain == 0 || stat_gain > you.stat_loss[which_stat])
-        stat_gain = you.stat_loss[which_stat];
-
-    you.stat_loss[which_stat] -= stat_gain;
-
-    // If we're fully recovered, clear out stat loss recovery timer.
-    if (random_lost_stat() == NUM_STATS)
-        you.attribute[ATTR_STAT_LOSS_XP] = 0;
-
-    _handle_stat_change(which_stat);
-    return true;
-}
-
-static void _normalize_stat(stat_type stat)
-{
-    ASSERT(you.stat_loss[stat] >= 0);
-    you.base_stats[stat] = min<int8_t>(you.base_stats[stat], MAX_STAT_VALUE);
-}
-
 static void _handle_stat_change(stat_type stat)
 {
     ASSERT_RANGE(stat, 0, NUM_STATS);
 
-    if (you.stat(stat) <= 0 && !you.duration[stat_zero_duration(stat)])
+    const bool was_zero = you.attribute[ATTR_STAT_ZERO] & (1 << (int)stat);
+    const int val = you.stat(stat);
+
+    if (val <= 0 && !was_zero)
     {
-        // Time required for recovery once the stat is restored, randomised slightly.
-        you.duration[stat_zero_duration(stat)] =
-            (20 + random2(20)) * BASELINE_DELAY;
-        mprf(MSGCH_WARN, "You have lost your %s.", stat_desc(stat, SD_NAME));
-        take_note(Note(NOTE_MESSAGE, 0, 0, make_stringf("Lost %s.",
-            stat_desc(stat, SD_NAME)).c_str()), true);
-        // 2 to 5 turns of paralysis (XXX: decremented right away?)
-        you.increase_duration(DUR_PARALYSIS, 2 + random2(3));
+        // Notify the player and make the penalty explicit.
+        mprf(MSGCH_WARN, "You have lost all your %s. It will be difficult to act "
+                         "quickly in this state!", stat_desc(stat, SD_NAME));
+
+        you.attribute[ATTR_STAT_ZERO] |= 1 << (int)stat;
+    }
+    else if (was_zero && val > 0)
+    {
+        mprf(MSGCH_RECOVERY, "You have recovered your %s.", stat_desc(stat, SD_NAME));
+        you.attribute[ATTR_STAT_ZERO] &= ~(1 << (int)stat);
     }
 
     you.redraw_stats[stat] = true;
-    _normalize_stat(stat);
-
-    switch (stat)
-    {
-    case STAT_STR:
-        you.redraw_armour_class = true; // includes shields
-        you.redraw_evasion = true; // Might reduce EV penalty
-        break;
-
-    case STAT_INT:
-        break;
-
-    case STAT_DEX:
-        you.redraw_evasion = true;
-        you.redraw_armour_class = true; // includes shields
-        break;
-
-    default:
-        break;
-    }
-}
-
-duration_type stat_zero_duration(stat_type stat)
-{
-    switch (stat)
-    {
-    case STAT_STR:
-        return DUR_COLLAPSE;
-    case STAT_INT:
-        return DUR_BRAINLESS;
-    case STAT_DEX:
-        return DUR_CLUMSY;
-    default:
-        die("invalid stat");
-    }
 }
 
 bool have_stat_zero()
 {
-    for (int i = 0; i < NUM_STATS; ++i)
-        if (you.duration[stat_zero_duration(static_cast<stat_type> (i))])
-            return true;
-
-    return false;
+    return you.attribute[ATTR_STAT_ZERO] > 0;
 }

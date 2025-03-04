@@ -386,16 +386,6 @@ void jiyva_eat_offlevel_items()
     }
 }
 
-static bool _two_handed()
-{
-    const item_def* wpn = you.slot_item(EQ_WEAPON, true);
-    if (!wpn)
-        return false;
-
-    hands_reqd_type wep_type = you.hands_reqd(*wpn, true);
-    return wep_type == HANDS_TWO;
-}
-
 static void _curse_boost_skills(const item_def &item)
 {
     if (!item.props.exists(CURSE_KNOWLEDGE_KEY))
@@ -424,43 +414,30 @@ void ash_check_bondage()
     initialize_ashenzari_props();
 #endif
 
-    int num_cursed = 0, num_slots = 0;
-
     you.skill_boost.clear();
-    for (int j = EQ_FIRST_EQUIP; j < NUM_EQUIP; j++)
+
+    int num_cursed = 0, num_slots = 0;
+    for (int j = SLOT_FIRST_STANDARD; j < NUM_EQUIP_SLOTS; ++j)
     {
-        const equipment_type i = static_cast<equipment_type>(j);
-
-        // handles missing hand, octopode ring slots, finger necklace, species
-        // armour restrictions, etc. Finger necklace slot counts.
-        if (!you_can_wear(i))
+        // Gizmos are not a curseable slot and should not be counted.
+        if (j == SLOT_GIZMO)
             continue;
 
-        // Coglin gizmo isn't a normal slot, not cursable.
-        if (j == EQ_GIZMO)
-            continue;
+        num_slots += you.equipment.num_slots[j];
+    }
 
-        // transformed away slots are still considered to be possibly bound
-        num_slots++;
-        if (you.equip[i] != -1)
+    // Find what percentage of available slots have a cursed item in them.
+    // Overflow slots are counted when determining piety (ie: a two-handed
+    // weapon is worth the same piety as a one-hander + shield), but only count
+    // a single time for the skill boost.
+    for (player_equip_entry& entry : you.equipment.items)
+    {
+        const item_def& item = entry.get_item();
+        if (item.cursed())
         {
-            const item_def& item = you.inv[you.equip[i]];
-            if (item.cursed() && (i != EQ_WEAPON || is_weapon(item)))
-            {
-                if (i == EQ_WEAPON && _two_handed())
-                    num_cursed += 2;
-                else
-                {
-                    num_cursed++;
-                    if (i == EQ_BODY_ARMOUR
-                        && is_unrandom_artefact(item, UNRAND_LEAR))
-                    {
-                        num_cursed += 3;
-                    }
-                }
-                if (!item_is_melded(item))
-                    _curse_boost_skills(item);
-            }
+            ++num_cursed;
+            if (!entry.melded && !entry.is_overflow)
+                _curse_boost_skills(item);
         }
     }
 

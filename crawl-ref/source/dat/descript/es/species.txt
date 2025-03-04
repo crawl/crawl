@@ -32,11 +32,6 @@ Felid
 Estos gatos son sentientes, pero son incapaces de manipular objetos de una
 forma avanzada o de usar armaduras o armas.
 %%%%
-Ghoul
-
-Un no-muerto, condenado a pudrirse eternamente. Están continuamente buscando
-comida podrida de la que alimentarse, despedazándola con sus garras.
-%%%%
 Halfling
 
 Pequeños pero duros, son excelentes con la honda. Tienen una cierta resistencia

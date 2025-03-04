@@ -75,6 +75,7 @@
 #endif
 #include "tilepick.h"
 #include "timed-effects.h"
+#include "transform.h"
 #include "traps.h"
 #include "unwind.h"
 #include "viewchar.h"
@@ -109,7 +110,7 @@ static bool _fill_out_corpse(const monster& mons, item_def& corpse)
     if (mons.props.exists(ORIGINAL_TYPE_KEY))
     {
         // Shapeshifters too.
-        mtype = (monster_type) mons.props[ORIGINAL_TYPE_KEY].get_int();
+        mtype = static_cast<monster_type>(mons.props[ORIGINAL_TYPE_KEY].get_int());
         corpse_class = mons_species(mtype);
     }
 
@@ -729,6 +730,63 @@ static bool _yred_bind_soul(monster* mons, killer_type killer)
     return false;
 }
 
+static bool _vampire_make_thrall(monster* mons)
+{
+    if (!mons->props.exists(VAMPIRIC_THRALL_KEY) || you.allies_forbidden())
+        return false;
+
+    // Check if another thrall is already alive
+    for (monster_iterator mi; mi; ++mi)
+        if (mi->was_created_by(MON_SUMM_THRALL))
+            return false;
+
+    // Okay, let's try to make them for real!
+    mprf("%s rises to serve you!", mons->name(DESC_THE).c_str());
+    record_monster_defeat(mons, KILL_YOU);
+
+    mons->hit_points = mons->max_hit_points;
+    mons->flags |= MF_FAKE_UNDEAD;
+    mons->props.erase(VAMPIRIC_THRALL_KEY);
+
+    // End constriction and all status effects.
+    mons->stop_constricting_all();
+    mons->stop_being_constricted();
+    mons->del_ench(ENCH_CONFUSION, true, false);
+    mons->timeout_enchantments(10000);
+
+    // Includes actual spellcasters and those with magical abilities.
+    if (mons->antimagic_susceptible())
+    {
+        mons->spells.push_back({SPELL_VAMPIRIC_DRAINING, 50, MON_SPELL_WIZARD});
+        mons->props[CUSTOM_SPELLS_KEY] = true;
+    }
+
+    mons->attitude = ATT_FRIENDLY;
+    mons->add_ench(mon_enchant(ENCH_VAMPIRE_THRALL, 0, &you, INFINITE_DURATION));
+
+    const int pow = get_form(transformation::vampire)->get_level(10);
+    const int dur = random_range(pow, pow * 2) + 30;
+
+    mons->mark_summoned(MON_SUMM_THRALL, 0, false);
+    mons->add_ench(mon_enchant(ENCH_SUMMON_TIMER, 0, &you, dur));
+    mons_att_changed(mons);
+    gain_exp(exper_value(*mons));
+
+    // Cancel fleeing and such.
+    mons->behaviour = BEH_SEEK;
+
+    // Remove level annotation.
+    mons->props[NO_ANNOTATE_KEY] = true;
+    remove_unique_annotation(mons);
+
+    behaviour_event(mons, ME_EVAL);
+
+    // Schedule our actual revival for the end of this combat round.
+    avoided_death_fineff::schedule(mons);
+
+    return true;
+}
+
 
 /**
  * Attempt to get a deathbed conversion for the given orc.
@@ -810,7 +868,7 @@ static bool _beogh_maybe_convert_orc(monster &mons, killer_type killer,
 static bool _blorkula_bat_split(monster& blorkula, killer_type ktype)
 {
     // Can't recover from these
-    if (RESET_KILL(ktype))
+    if (RESET_KILL(ktype) || ktype == KILL_BANISHED)
         return false;
 
     // XXX: Summoned Blorkulas (ie: from phantom mirror) will cease to be when
@@ -990,6 +1048,15 @@ static bool _monster_avoided_death(monster* mons, killer_type killer,
     if (lost_soul_revive(*mons, killer))
         return true;
 
+    if (mons->type == MONS_NAMELESS_REVENANT
+        && !RESET_KILL(killer)
+        && killer != KILL_BANISHED
+        && killer != KILL_TIMEOUT
+        && pyrrhic_recollection(*mons))
+    {
+        return true;
+    }
+
     // Yredelemnul special.
     if (_yred_bind_soul(mons, killer))
         return true;
@@ -1027,6 +1094,9 @@ static bool _monster_avoided_death(monster* mons, killer_type killer,
     if (_ely_protect_ally(mons, killer))
         return true;
     if (_ely_heal_monster(mons, killer, killer_index))
+        return true;
+
+    if (_vampire_make_thrall(mons))
         return true;
 
     return false;
@@ -1323,14 +1393,14 @@ static string _killer_type_name(killer_type killer)
 }
 
 static string _derived_undead_message(const monster &mons, monster_type which_z,
-                                      const char* mist)
+                                      string msg)
 {
     switch (which_z)
     {
     case MONS_SPECTRAL_THING:
     case MONS_SIMULACRUM:
         // XXX: print immediately instead?
-        return make_stringf("A %s mist starts to gather...", mist);
+        return msg;
     case MONS_SKELETON:
     case MONS_ZOMBIE:
         break;
@@ -1370,12 +1440,14 @@ static string _derived_undead_message(const monster &mons, monster_type which_z,
  */
 static void _make_derived_undead(monster* mons, bool quiet,
                                  monster_type which_z, beh_type beh,
-                                 int spell, god_type god)
+                                 int spell, god_type god,
+                                 string msg = "", string fail_msg = "")
 {
     bool requires_corpse = which_z == MONS_ZOMBIE || which_z == MONS_SKELETON;
     // This function is used by several different sorts of things, each with
     // their own validity conditions that are enforced here
-    // - Bind Souls, Death Channel and Yred reaping of unzombifiable things:
+    // - Bind Souls, Death Channel, Yred reaping of unzombifiable things, and
+    //   kills with reaping-branded items:
     if (!requires_corpse
         && !mons_can_be_spectralised(*mons, god == GOD_YREDELEMNUL))
     {
@@ -1387,7 +1459,7 @@ static void _make_derived_undead(monster* mons, bool quiet,
     {
         return;
     }
-    // - all other reaping (brand, chaos, and Yred)
+    // - Yred reaping of living monsters
     if (requires_corpse && !mons_can_be_zombified(*mons))
         return;
 
@@ -1408,6 +1480,9 @@ static void _make_derived_undead(monster* mons, bool quiet,
     // to 2 spaces away, if needbe.
     mg.set_range(0, 2);
 
+    if (spell == MON_SUMM_WPN_REAP)
+        mg.summon_duration = random_range(200, 400);
+
     if (!mons->mname.empty() && !(mons->flags & MF_NAME_NOCORPSE))
         mg.mname = mons->mname;
     else if (mons_is_unique(mons->type))
@@ -1420,9 +1495,15 @@ static void _make_derived_undead(monster* mons, bool quiet,
     if (god == GOD_KIKUBAAQUDGHA || spell == SPELL_BIND_SOULS)
         mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
-    const char* mist = which_z == MONS_SIMULACRUM ? "freezing" :
-                       god == GOD_YREDELEMNUL ? "black" :
-                       "glowing";
+    const string mist = which_z == MONS_SIMULACRUM ? "freezing" :
+                            god == GOD_YREDELEMNUL ? "black"
+                                                   : "glowing";
+
+    if (msg.empty())
+        msg = "A " + mist + " mist starts to gather...";
+
+    if (fail_msg.empty())
+        fail_msg = "A " + mist + " mist gathers momentarily, then fades.";
 
     if (mons->mons_species() == MONS_HYDRA)
     {
@@ -1430,7 +1511,7 @@ static void _make_derived_undead(monster* mons, bool quiet,
         if (mons->heads() == 0)
         {
             if (!quiet && which_z != MONS_SKELETON)
-                mprf("A %s mist gathers momentarily, then fades.", mist);
+                mpr(fail_msg);
             return;
         }
         else
@@ -1447,7 +1528,7 @@ static void _make_derived_undead(monster* mons, bool quiet,
 
     const string message = quiet ? "" :
                            god == GOD_KIKUBAAQUDGHA ? "Kikubaaqudgha cackles." :
-                           _derived_undead_message(*mons, which_z, mist);
+                           _derived_undead_message(*mons, which_z, msg);
     make_derived_undead_fineff::schedule(mons->pos(), mg,
             mons->get_experience_level(), agent_name, message);
 }
@@ -1700,8 +1781,12 @@ static bool _mons_reaped(actor &killer, monster& victim)
         beh = SAME_ATTITUDE(mon);
     }
 
-    _make_derived_undead(&victim, false, MONS_ZOMBIE, beh,
-                         SPELL_NO_SPELL, GOD_NO_GOD);
+    string msg = victim.name(DESC_ITS) + " spirit is torn from " +
+                     victim.pronoun(PRONOUN_POSSESSIVE) + " body!";
+    string fail_msg = victim.name(DESC_ITS) + " spirit is momentarily torn from " +
+                          victim.pronoun(PRONOUN_POSSESSIVE) + " body, then fades!";
+    _make_derived_undead(&victim, !you.can_see(victim), MONS_SPECTRAL_THING, beh,
+                         MON_SUMM_WPN_REAP, GOD_NO_GOD, msg, fail_msg);
 
     return true;
 }
@@ -1712,7 +1797,7 @@ static void _yred_reap(monster &mons, bool uncorpsed)
                            MONS_SPECTRAL_THING;
 
     _make_derived_undead(&mons, false, which_z, BEH_FRIENDLY,
-                         MON_SUMM_REAPING, you.religion);
+                         MON_SUMM_YRED_REAP, you.religion);
 }
 
 static bool _animate_dead_reap(monster &mons)
@@ -1734,7 +1819,7 @@ static bool _reaping(monster &mons)
         return false;
 
     int rd = mons.props[REAPING_DAMAGE_KEY].get_int();
-    const int denom = mons.damage_total * 2;
+    const int denom = mons.damage_total * 3 / 2;
     dprf("Reaping chance: %d/%d", rd, denom);
     if (!x_chance_in_y(rd, denom))
         return false;
@@ -2055,12 +2140,14 @@ static void _player_on_kill_effects(monster& mons, killer_type killer,
         if (can_divine_heal && have_passive(passive_t::mp_on_kill))
             mp_heal += 1 + random2(mons.get_experience_level() / 2);
 
+#if TAG_MAJOR_VERSION == 34
         if (you.has_mutation(MUT_DEVOUR_ON_KILL)
             && mons.holiness() & (MH_NATURAL | MH_PLANT)
             && coinflip())
         {
             hp_heal += 1 + random2avg(1 + you.experience_level, 3);
         }
+#endif
 
         if (hp_heal && you.hp < you.hp_max
             && !you.duration[DUR_DEATHS_DOOR])
@@ -2082,7 +2169,7 @@ static void _player_on_kill_effects(monster& mons, killer_type killer,
         if (_god_will_bless_follower(&mons))
             bless_follower();
 
-        if (you.wearing_ego(EQ_ALL_ARMOUR, SPARM_MAYHEM))
+        if (you.wearing_ego(OBJ_ARMOUR, SPARM_MAYHEM))
             _orb_of_mayhem(you, mons);
     }
 
@@ -2100,13 +2187,13 @@ static void _player_on_kill_effects(monster& mons, killer_type killer,
                  "You feel the power of %s in you as your rage grows.",
                  uppercase_first(god_name(you.religion)).c_str());
         }
-        else if (player_equip_unrand(UNRAND_BLOODLUST) && coinflip())
+        else if (you.unrand_equipped(UNRAND_BLOODLUST) && coinflip())
         {
             const int bonus = (2 + random2(4)) / 2;
             you.increase_duration(DUR_BERSERK, bonus);
             mpr("The necklace of Bloodlust glows a violent red.");
         }
-        else if (player_equip_unrand(UNRAND_TROG) && coinflip())
+        else if (you.unrand_equipped(UNRAND_TROG) && coinflip())
         {
             const int bonus = (2 + random2(4)) / 2;
             you.increase_duration(DUR_BERSERK, bonus);
@@ -2163,6 +2250,13 @@ static void _player_on_kill_effects(monster& mons, killer_type killer,
             dprf("Powered by Death strength +%d=%d", pbd_inc,
                  pbd_str + pbd_inc);
         }
+    }
+
+    // Revenant kill bonus
+    if (gives_player_xp && you.has_mutation(MUT_MNEMOPHAGE)
+        && you.see_cell_no_trans(mons.pos()))
+    {
+        maybe_harvest_memory(mons);
     }
 
     // Various kill progress tracking
@@ -2305,7 +2399,7 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     // Chance to cause monsters you kill yourself to explode with Mark of Haemoclasm
     if (YOU_KILL(killer) && you.has_mutation(MUT_MAKHLEB_MARK_HAEMOCLASM)
-        && makhleb_haemoclasm_trigger_check(mons))
+        && !mons.is_firewood() && makhleb_haemoclasm_trigger_check(mons))
     {
         mons.props[MAKHLEB_HAEMOCLASM_KEY] = true;
     }
@@ -2540,6 +2634,14 @@ item_def* monster_die(monster& mons, killer_type killer,
         }
     }
 
+    if (mons.type == MONS_HAUNTED_ARMOUR && real_death)
+    {
+        // Making the current sensible assumption that these are only ever
+        // created by Cacophony.
+        simple_monster_message(mons, " is driven back to you.", false,
+                                MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+        did_death_message = true;
+    }
     if (mons.type == MONS_DANCING_WEAPON)
     {
         int w_idx = mons.inv[MSLOT_WEAPON];
@@ -2736,7 +2838,7 @@ item_def* monster_die(monster& mons, killer_type killer,
 
             monster* killer_mon = &env.mons[killer_index];
 
-            if (killer_mon->wearing_ego(EQ_ALL_ARMOUR, SPARM_MAYHEM))
+            if (killer_mon->wearing_ego(OBJ_ARMOUR, SPARM_MAYHEM))
                 _orb_of_mayhem(*killer_mon, mons);
 
             if (pet_kill && _god_will_bless_follower(&mons))
@@ -2800,8 +2902,10 @@ item_def* monster_die(monster& mons, killer_type killer,
             // _print_summon_poof_message
 
             string msg;
+            if (mons.has_ench(ENCH_VAMPIRE_THRALL))
+                msg = " turns to dust.";
             // ratskin cloak
-            if (mons_genus(mons.type) == MONS_RAT)
+            else if (mons_genus(mons.type) == MONS_RAT)
                 msg = " returns to the shadows of the Dungeon.";
             // Death Channel / Soul Splinter
             else if (mons.type == MONS_SPECTRAL_THING
@@ -3026,7 +3130,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         mummy_death_curse_fineff::schedule(
                 invalid_monster_index(killer_index)
                                             ? nullptr : &env.mons[killer_index],
-                mons.name(DESC_A),
+                &mons,
                 killer,
                 mummy_curse_power(mons.type));
     }
@@ -3203,7 +3307,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                 you.duration[DUR_ANCESTOR_DELAY] = random_range(300, 600);
         }
         else if (mons.type == MONS_ORC_APOSTLE)
-            beogh_swear_vegeance(mons);
+            beogh_swear_vengeance(mons);
     }
     else if (mons.is_divine_companion()
              && killer == KILL_BANISHED
@@ -3292,10 +3396,11 @@ void monster_cleanup(monster* mons)
         env.forest_awoken_until = 0;
     }
 
-    // Monsters haloes should be removed when they die.
-    if (mons->halo_radius()
-        || mons->umbra_radius()
-        || mons->silence_radius())
+    // Monsters' haloes should be removed when they die.
+    if (mons->halo_radius() >= 0
+        || mons->umbra_radius() >= 0
+        || mons->silence_radius() >= 0
+        || mons->liquefying_radius() >= 0)
     {
         invalidate_agrid();
     }

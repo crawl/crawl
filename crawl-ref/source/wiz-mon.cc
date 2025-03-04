@@ -428,7 +428,7 @@ void debug_stethoscope(int mon)
          mons.res_elec(),
          mons.res_poison(),
          mons.res_negative_energy(),
-         mons.res_acid(),
+         mons.res_corr(),
          mons.res_sticky_flame() ? "yes" : "no",
          mons.res_miasma() ? "yes" : "no");
 

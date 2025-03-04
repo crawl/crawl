@@ -1360,15 +1360,6 @@ potion of curing
  then certainly I am for it.”
     -Noah S. Sweat, Jr. “If By Whiskey”. 1952
 %%%%
-potion of degeneration
-
-“If when you say ‘whiskey’ you mean the devil's brew, the poison
- scourge, the bloody monster, that defiles innocence, dethrones
- reason, destroys the home, creates misery and poverty, yea,
- literally takes the bread from the mouths of little children...
- then certainly I am against it.”
-    -Noah S. Sweat, Jr. “If By Whiskey”. 1952
-%%%%
 potion of enlightenment
 
 “Let go your earthly tether. Enter the void. Empty, and become wind.”
@@ -1396,6 +1387,15 @@ potion of lignification
  as clinging roots were fastened to the ground—
  her face was hidden with encircling leaves.”
     -Ovid, _Metamorphoses_, Book I:253-259, trans. Brookes More. 1922
+%%%%
+potion of moonshine
+
+“If when you say ‘whiskey’ you mean the devil's brew, the poison
+ scourge, the bloody monster, that defiles innocence, dethrones
+ reason, destroys the home, creates misery and poverty, yea,
+ literally takes the bread from the mouths of little children...
+ then certainly I am against it.”
+    -Noah S. Sweat, Jr. “If By Whiskey”. 1952
 %%%%
 potion of resistance
 
@@ -3141,6 +3141,17 @@ guardian golem
   it. And cut the lawn. Then come back. Go.’”
     -Avram Davidson, “The Golem”, 1955.
 %%%%
+guardian sphinx
+
+“The Second Coming! Hardly are those words out
+ When a vast image out of Spiritus Mundi
+ Troubles my sight: somewhere in sands of the desert
+ A shape with lion body and the head of a man,
+ A gaze blank and pitiless as the sun,
+ Is moving its slow thighs, while all about it
+ Reel shadows of the indignant desert birds.”
+    -W. B. Yeats, "The Second Coming". 1920.
+%%%%
 harpy
 
 “Bird-bodied, girl-faced things they are; abominable their droppings, their
@@ -3702,13 +3713,6 @@ protean progenitor
     -_The Orphic Hymns_, XXV.
      trans. Apostolos N. Athanassakis and Benjamin M. Wolkow, 2013.
 %%%%
-quasit
-
-“You'll have to pay double reckoning; 'tis only fair you should pay for your
- dexterity.”
-    -Johann Wolfgang von Goethe, _Egmont_, I, 1. 1788.
-     trans. Anna Swanwick, 1914.
-%%%%
 rakshasa
 
 “Vaisampayana said, 'Not far from the place where the Pandavas were asleep, a
@@ -3982,16 +3986,19 @@ spellspark servitor
  You cannot shirk”
     -Siouxsie and the Banshees, “Spellbound”
 %%%%
-sphinx
+sphinx marauder
 
-“The Second Coming! Hardly are those words out
- When a vast image out of Spiritus Mundi
- Troubles my sight: somewhere in sands of the desert
- A shape with lion body and the head of a man,
- A gaze blank and pitiless as the sun,
- Is moving its slow thighs, while all about it
- Reel shadows of the indignant desert birds.”
-    -W. B. Yeats, "The Second Coming". 1920.
+“Oedipus speaks: 'Far from me is the crime and shame of cowardice, and my
+ valour knows not dastard fears[...] The Sphinx, weaving her words in darkling
+ measures, I fled not; I faced the bloody jaws of the fell prophetess and the
+ ground white with scattered bones. And when from a lofty cliff, already
+ hovering over her prey, she prepared her pinions and, lashing her tail like
+ a savage lion, stirred up her threatening wrath, I asked her riddle.
+ Thereupon came a sound of dread; her jaws crashed, and her talons, brooking
+ no delay, eager for my vitals, tore at the rocks. The lot's intricate,
+ guile-entangled words, the grim riddle of the winged beast, I solved.'”
+    -Seneca, _Oedipus_, 1st cent. A.D.
+     trans. Frank Justus Miller, 1917.
 %%%%
 starcursed mass
 

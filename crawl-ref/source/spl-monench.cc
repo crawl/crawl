@@ -8,12 +8,15 @@
 
 #include "spl-monench.h"
 
+#include "actor.h"
 #include "beam.h"
 #include "coordit.h"
+#include "directn.h"
 #include "english.h" // apostrophise
 #include "env.h"
 #include "fight.h"
 #include "losglobal.h"
+#include "melee-attack.h"
 #include "message.h"
 #include "mon-tentacle.h"
 #include "spl-util.h"
@@ -87,15 +90,16 @@ spret cast_englaciation(int pow, bool fail)
 /** Corona a monster.
  *
  *  @param mons the monster to get a backlight.
+ *  @param source The actor responsible for this.
  *  @returns true if it got backlit (even if it was already).
  */
-bool backlight_monster(monster* mons)
+bool backlight_monster(monster* mons, const actor* source)
 {
     const mon_enchant bklt = mons->get_ench(ENCH_CORONA);
     const mon_enchant zin_bklt = mons->get_ench(ENCH_SILVER_CORONA);
     const int lvl = bklt.degree + zin_bklt.degree;
 
-    mons->add_ench(mon_enchant(ENCH_CORONA, 1));
+    mons->add_ench(mon_enchant(ENCH_CORONA, 1, source));
 
     if (lvl == 0)
         simple_monster_message(*mons, " is outlined in light.");
@@ -387,6 +391,18 @@ spret cast_percussive_tempering(const actor& caster, monster& target, int power,
     target.heal(roll_dice(3, 10));
     target.add_ench(mon_enchant(ENCH_TEMPERED, 0, &caster, random_range(70, 100)));
 
+    // Give a small bit of extra duration if we're about to time out, just to
+    // avoid the sad feeling of buffing a monster who immediately vanishes.
+    if (target.has_ench(ENCH_SUMMON_TIMER))
+    {
+        mon_enchant dur = target.get_ench(ENCH_SUMMON_TIMER);
+        if (dur.duration < 50)
+        {
+            dur.duration += random_range(30, 50);
+            target.update_ench(dur);
+        }
+    }
+
     return spret::success;
 }
 
@@ -407,4 +423,51 @@ bool is_valid_tempering_target(const monster& mon, const actor& caster)
     }
 
     return false;
+}
+
+// Perform a forcible attack at a weighted random space around this actor.
+// Spaces without an actor are 1/7th as likely to be chosen as one with an
+// actor (so if you are adjacent to a single monster, you have a 50% chance to
+// attack them and a 50% chance to whiff).
+//
+// Actor friendliness doesn't matter - you are just as likely to attack allies
+// as enemies, though gods won't penance you for this action since it's not your
+// fault. The allies themselves may not be so generous!
+void do_vexed_attack(actor& attacker)
+{
+    vector<coord_def> empty_space;
+    vector<actor*> targs;
+    for (adjacent_iterator ai(attacker.pos()); ai; ++ai)
+    {
+        if (actor* targ = actor_at(*ai))
+            targs.push_back(targ);
+        else
+            empty_space.push_back(*ai);
+    }
+
+    // Decide whether to attack empty space or an actor
+    const int total_weight = empty_space.size() + targs.size() * 7;
+    if (x_chance_in_y(empty_space.size(), total_weight))
+    {
+        coord_def pos = empty_space[random2(empty_space.size())];
+        if (you.can_see(attacker))
+        {
+            mprf("%s attack%s %s!",
+                    attacker.name(DESC_THE).c_str(),
+                    attacker.is_monster() ? "s" : "",
+                    feature_description_at(pos, false, DESC_THE).c_str());
+        }
+
+        if (attacker.is_monster())
+            attacker.as_monster()->lose_energy(EUT_ATTACK);
+    }
+    else
+    {
+        ASSERT(!targs.empty());
+        actor* victim = targs[random2(targs.size())];
+        melee_attack atk(&attacker, victim);
+        // The player is deliberately allowed to attack their allies.
+        atk.never_prompt = true;
+        atk.launch_attack_set();
+    }
 }

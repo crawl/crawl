@@ -9,12 +9,14 @@
 ##############################################################################
 
 {{
+crawl_require('dlua/vault.lua')
+
 function tomb_1_mummy_set(e)
   e.mons("mummy / skeletal warrior w:1 / nothing")
 end
 
 function tomb_1_mummy_priest_set(e, chamber)
-  e.mons("mummy priest w:30 / revenant w:5 / lich w:5 / nothing w:30")
+  e.mons("mummy priest w:30 / revenant soulmonger w:5 / lich w:5 / nothing w:30")
   if chamber then
     e.mons("royal mummy / nothing w:11")
     e.mons("obsidian statue / orange crystal statue")
@@ -28,7 +30,7 @@ function tomb_mummy_set(e)
 end
 
 function tomb_mummy_priest_set(e)
-  e.mons("mummy priest w:20 / lich w:2 / revenant w:2")
+  e.mons("mummy priest w:20 / lich w:2 / revenant soulmonger w:2")
   e.mons("royal mummy")
 end
 
@@ -79,6 +81,24 @@ function tomb_guardian_set(e, include_nothing)
   end
 end
 
+-- If we get a lot more traps suited for large numbers in Tomb, setting them up
+-- to vary per floor would help Tomb's variety a bunch. As is, just keep the
+-- trap definition consistent between each of the uses.
+function tomb_trap_set(e)
+--[[
+  if e.is_validating() then return end
+
+  if dgn.persist.tomb_trap_sets == nil then
+    local opt = { "tyrant's trap", "lobbyist's trap", "doom trap" }
+    dgn.persist.tomb_trap_sets = { util.random_from(opt), util.random_from(opt),
+                                   util.random_from(opt) }
+  end
+]]
+  e.kfeat("^ = alarm trap / net trap / zot trap / dispersal trap / tyrant's trap")
+  -- e.kfeat("~ = " .. dgn.persist.tomb_trap_sets[you.depth()])
+  -- e.subst("^ = ^:36 ~:14")
+end
+
 --[[
 Setup Tomb:1 central vault. For monsters, define plain mummies on '1', the
 guardian set on '2', priest-level monsters on '3', greater-mummy-level monsters
@@ -119,7 +139,7 @@ function tomb_1_stairs_setup(e)
   tomb_1_mummy_priest_set(e)
 
   e.subst(". = 3:12 ^ .:230")
-  e.kfeat("^ = alarm trap / dispersal trap / net trap / zot trap")
+  tomb_trap_set(e)
 end
 
 --[[
@@ -142,7 +162,7 @@ function tomb_2_ambush_setup(e)
   e.nsubst("S = 1:< / *:.")
 
   e.subst(". =  ^ .:740")
-  e.kfeat("^ = alarm trap / dispersal trap / net trap / zot trap")
+  tomb_trap_set(e)
 end
 
 function tomb_3_khufu(e, glyph)
@@ -167,8 +187,8 @@ function tomb_3_rune_setup(e)
 
   tomb_3_khufu(e, "K")
 
-  e.kfeat("^ = alarm trap / dispersal trap / net trap / zot trap")
   e.subst(". = ^ .:490")
+  tomb_trap_set(e)
 end
 
 }}
@@ -179,10 +199,9 @@ end
 
 # simple entrance
 NAME:   tomb_entry_simple_bobbens
-ORIENT: float
 TAGS:   tomb_entry no_monster_gen no_item_gen transparent
-MONS:   guardian mummy
-MONS:   sphinx
+ORIENT: float
+MONS:   guardian mummy, guardian sphinx
 # crawl will rotate for the rest of possibilities
 SHUFFLE: AB
 SUBST:  A = +, B = c
@@ -202,10 +221,10 @@ ENDMAP
 ##############################################################################
 # small pyramid leading to the bigger one
 NAME:   tomb_entry_pyramid_bobbens
-ORIENT: float
 TAGS:   tomb_entry no_monster_gen transparent
-MONS:   sphinx
-MONS:   w:1 mummy / w:9 guardian mummy
+ORIENT: float
+MONS:   guardian sphinx
+MONS:   w:1 skeletal warrior / w:9 guardian mummy
 MONS:   mummy priest
 KFEAT:  O = enter_tomb
 MAP
@@ -241,11 +260,10 @@ ENDMAP
 ##############################################################################
 # sphere entry
 NAME:   tomb_entry_sphere_bobbens
-ORIENT: float
 TAGS:   tomb_entry no_monster_gen no_rotate transparent
-MONS:   w:1 mummy / w:9 guardian mummy
-MONS:   sphinx
-MONS:   mummy priest
+ORIENT: float
+MONS:   guardian mummy w:90 / skeletal warrior
+MONS:   guardian sphinx, mummy priest
 KFEAT:  O = enter_tomb
 MAP
           ccccc
@@ -292,8 +310,7 @@ ENDMAP
 # she sells tomb entry shells by the sea shore
 NAME:   tomb_entry_shell_bobbens
 TAGS:   tomb_entry no_monster_gen no_item_gen no_rotate transparent
-MONS:   guardian mummy
-MONS:   mummy priest
+MONS:   guardian mummy, mummy priest
 KFEAT:  O = enter_tomb
 MAP
           c
@@ -469,15 +486,15 @@ SUBVAULT: A : tomb_1_centre
 SUBVAULT: B : tomb_1_hall_stairs
 : tomb_guardian_set(_G, true)
 MONS:     royal mummy / nothing
-MONS:     sphinx / nothing
+MONS:     guardian sphinx, guardian sphinx skeleton
 MONS:     obsidian statue / orange crystal statue
-NSUBST:   ( = 1:( / *:.
+NSUBST:   ( = 1:( / *:., 3 = 3:3 / 5 = 34 / *:.
 # Set up decorative statues.
 : if crawl.x_chance_in_y(3, 4) then
-SUBST:    I = I:900 5, N = N:900 5
-SUBST:    J = J:750 5, O = O:750 5
-SUBST:    K = K:550 5, P = P:550 5
-SUBST:    L = L:300 5, Q = Q:300 5
+SUBST:    I = I:900 6, N = N:900 6
+SUBST:    J = J:750 6, O = O:750 6
+SUBST:    K = K:550 6, P = P:550 6
+SUBST:    L = L:300 6, Q = Q:300 6
 :   vault_granite_statue_setup(_G, "FIJKLMNOPQ", "sarcophagus")
 TILE:     FIJKL = dngn_sarcophagus_pedestal_left
 : else
@@ -485,8 +502,8 @@ SUBST:    FIJKLMNOPQ = G
 : end
 # Add greater mummies and traps to the long hall. About 16 greater mummies and
 # 6 traps on-average.
-SUBST:    ' = 2:24 ^ .:210
-KFEAT:    ^ = alarm trap / net trap / zot trap / dispersal trap
+SUBST:    ' = 2:24 ^:8 .:212
+: tomb_trap_set(_G)
 : set_feature_name("escape_hatch_down", "one-way staircase leading down")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -670,6 +687,7 @@ SHUFFLE: AaBbQqDd/EeFfGgHh/IiJjKkLl/MmNnOoPp/RrSsUuVv
 SHUFFLE: Aa/Bb/Qq/Dd, Ee/Ff/Gg/Hh, Ii/Jj/Kk/Ll, Mm/Nn/Oo/Pp, Rr/Ss/Uu/Vv
 SUBST:   AEIMR = +, a = >, ei = *|, mr = %, bq = 4, dhlpv = 3
 SUBST:   BQDFGHJKLNOPSUV = c, fgjknosu = ', ' = ^--112
+: tomb_trap_set(_G)
 : tomb_1_centre_setup(_G)
 SUBST:   - = .
 MAP
@@ -850,9 +868,9 @@ MARKER:   I = lua:hatch_dest_name("tomb3_exit_2")
 SUBST:    HI = .
 # Add traps near doors and both traps and monsters throughout both groups of
 # rooms.
-SUBST:    T = ^..., ' = ^ ':210, ' = 1:5 2:5 3:1 .:89
-SUBST:    " = ^ ":130, " = 2:3 3:1 .:96
-KFEAT:    ^ = alarm trap / net trap / zot trap / dispersal trap
+SUBST:    T = ^..., ' = ^ ':220, ' = 1:5 2:5 3:1 .:89
+SUBST:    " = ^ ":140, " = 2:3 3:1 .:96
+: tomb_trap_set(_G)
 #
 # Number of ' symbols is 211+3=214, hence statistically in the lower
 # circumference we'll have 10.7 mummies, another 10.7 guardian mummies
@@ -1048,7 +1066,7 @@ KITEM:    | = | no_pickup
 : tomb_guardian_set(_G)
 # Randomize some loot placement in the treasure rooms, and add the zig fig in
 # the loot pile. Add traps to treasure rooms and the arrival area.
-SUBST:    ' = $., $ = |:1 *:2 $:17, . = ^ .:240
+SUBST:    ' = $., $ = |:1 *:2 $:17, . = ^ .:260
 NSUBST:   | = d / |
 MARKER:   D = lua:hatch_dest_name("tomb3_entry_1")
 MARKER:   E = lua:hatch_dest_name("tomb3_entry_2")
@@ -1056,7 +1074,7 @@ SUBST:    DE = .
 MARKER:   F = lua:hatch_name("tomb3_exit_1")
 MARKER:   H = lua:hatch_name("tomb3_exit_2")
 SUBST:    FH = <
-KFEAT:    ^ = alarm trap / net trap / zot trap / dispersal trap
+: tomb_trap_set(_G)
 : set_border_fill_type("permarock_wall")
 : set_feature_name("escape_hatch_down", "one-way staircase leading down")
 : set_feature_name("escape_hatch_up", "one-way staircase leading up")
@@ -1357,9 +1375,9 @@ KITEM:    * = * no_pickup
 : tomb_guardian_set(_G)
 # Randomize some loot placement in the treasure rooms, and add the zig fig in
 # the loot pile. Add traps to treasure rooms and the arrival area.
-SUBST:    ' = $., $ = |:1 *:2 $:17, . = ^ .:240
+SUBST:    ' = $., $ = |:1 *:2 $:17, . = ^ .:240, " = .
 NSUBST:   | = 1:d / *:|
-KFEAT:    ^ = alarm trap / net trap / zot trap / dispersal trap
+: tomb_trap_set(_G)
 : set_border_fill_type("permarock_wall")
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
@@ -1394,10 +1412,10 @@ ccc|||||$$'.......c......c.....'$$$$$$$$ccc
 cccc|||||$'.......c......c....'$$$$$$$$cccc
 ccccc||||$$'......c......c....'$$$$$$$ccccc
 cccccc||||$'......c......c....'$$$$$$cccccc
-ccccccc|||$$'.....c......c...'$$$$$$ccccccc
-cccccccc|||$'....cc..{...cc..'$$$$$cccccccc
-ccccccccc||$'....cc...(..cc.'$$$$$ccccccccc
-cccccccccc|$'..cccc..[...cccc$$$$cccccccccc
+ccccccc|||$$'.....c."""".c...'$$$$$$ccccccc
+cccccccc|||$'....cc."{"".cc..'$$$$$cccccccc
+ccccccccc||$'....cc.""(".cc.'$$$$$ccccccccc
+cccccccccc|$'..cccc."["".cccc$$$$cccccccccc
 ccccccccccccccccccccccccccccccccccccccccccc
 ccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP

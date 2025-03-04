@@ -33,11 +33,6 @@ Felid
 Te koty o wielu żywotach posiadają ludzki umysł, lecz brak im chwytnych
 kończyn, nie pozwalając na użycie większości przedmiotów.
 %%%%
-Ghoul
-
-Nieumarli których ciała wiecznie gniją. Ciągle poszukują zepsutego mięsa które
-może wpaść im w szpony.
-%%%%
 Halfling
 
 Małe lecz odważne, niziołki są zabójcze z procą w ręku.

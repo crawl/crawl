@@ -210,6 +210,7 @@ public:
 
     bool can_affect_actor(const actor *act) const;
     bool can_affect_wall(const coord_def& p, bool map_knowledge = false) const;
+    bool harmless_to_player() const;
     bool ignores_monster(const monster* mon) const;
     bool ignores_player() const;
     bool can_knockback(int dam = -1) const;
@@ -251,7 +252,6 @@ private:
     bool can_burn_trees() const;
     bool is_bouncy(dungeon_feature_type feat) const;
     bool stop_at_target() const;
-    bool harmless_to_player() const;
     bool is_reflectable(const actor &whom) const;
     bool found_player() const;
     bool need_regress() const;

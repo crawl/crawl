@@ -1,5 +1,5 @@
 // Ideally this wouldn't be necessary...
-{ SP_UNKNOWN, { // Line 1: enum
+{ SP_UNKNOWN, // Line 1: enum
     "??", // Line 2: abbrev
     "Yak", nullptr, nullptr, // Line 3: name, genus name, adjectival name
     SPF_NONE, // Line 4: flags
@@ -15,5 +15,5 @@
     {}, // Line 14: Recommended weapons
     nullptr, // Line 15: walk verb
     nullptr, // Line 16: pray verb
-} }
+}
 };

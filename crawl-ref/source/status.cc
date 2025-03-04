@@ -150,7 +150,6 @@ static void _describe_regen(status_info& inf);
 static void _describe_speed(status_info& inf);
 static void _describe_poison(status_info& inf);
 static void _describe_transform(status_info& inf);
-static void _describe_stat_zero(status_info& inf, stat_type st);
 static void _describe_terrain(status_info& inf);
 static void _describe_invisible(status_info& inf);
 static void _describe_zot(status_info& inf);
@@ -180,6 +179,28 @@ bool fill_status_info(int status, status_info& inf)
     // completing or overriding the defaults set above.
     switch (status)
     {
+    case STATUS_STAT_ZERO:
+    {
+        if (!you.attribute[ATTR_STAT_ZERO])
+            break;
+
+        vector<string> stat_str;
+        for (int i = STAT_STR; i <= STAT_DEX; ++i)
+        {
+            stat_type stat = static_cast<stat_type>(i);
+            if (you.stat(stat, false) <= 0)
+                stat_str.emplace_back(stat_desc(stat, SD_NAME));
+        }
+
+        string msg = comma_separated_line(stat_str.begin(), stat_str.end());
+
+        inf.light_text   = "Crippled";
+        inf.light_colour = LIGHTRED;
+        inf.short_text   = make_stringf("lost %s", msg.c_str());
+        inf.long_text    = make_stringf("You have no %s!", msg.c_str());
+    }
+    break;
+
     case STATUS_DRACONIAN_BREATH:
     {
         if (!species::is_draconian(you.species) || you.experience_level < 7)
@@ -253,7 +274,7 @@ bool fill_status_info(int status, status_info& inf)
         break;
 
     case DUR_BERSERK:
-        if (player_equip_unrand(UNRAND_BEAR_SPIRIT))
+        if (you.unrand_equipped(UNRAND_BEAR_SPIRIT))
             inf.light_text = "Bearserk";
         break;
 
@@ -344,25 +365,8 @@ bool fill_status_info(int status, status_info& inf)
         }
         break;
 
-    case STATUS_ALIVE_STATE:
-        if (you.has_mutation(MUT_VAMPIRISM))
-        {
-            if (!you.vampire_alive)
-            {
-                inf.light_colour = LIGHTRED;
-                inf.light_text = "Bloodless";
-                inf.short_text = "bloodless";
-            }
-            else
-            {
-                inf.light_colour = GREEN;
-                inf.light_text = "Alive";
-            }
-        }
-        break;
-
     case STATUS_REGENERATION:
-        // DUR_TROGS_HAND + some vampire and non-healing stuff
+        // DUR_TROGS_HAND and inhibited regeneration
         _describe_regen(inf);
         break;
 
@@ -454,16 +458,6 @@ bool fill_status_info(int status, status_info& inf)
 
     case DUR_TRANSFORMATION:
         _describe_transform(inf);
-        break;
-
-    case STATUS_STR_ZERO:
-        _describe_stat_zero(inf, STAT_STR);
-        break;
-    case STATUS_INT_ZERO:
-        _describe_stat_zero(inf, STAT_INT);
-        break;
-    case STATUS_DEX_ZERO:
-        _describe_stat_zero(inf, STAT_DEX);
         break;
 
     case STATUS_CONSTRICTED:
@@ -725,7 +719,7 @@ bool fill_status_info(int status, status_info& inf)
             inf.light_colour = LIGHTMAGENTA;
             inf.light_text = "Orb";
         }
-        else if (player_equip_unrand(UNRAND_CHARLATANS_ORB))
+        else if (you.unrand_equipped(UNRAND_CHARLATANS_ORB))
         {
             inf.light_colour = LIGHTMAGENTA;
             inf.light_text = "Orb?";
@@ -768,8 +762,7 @@ bool fill_status_info(int status, status_info& inf)
         break;
 
     case STATUS_NO_SCROLL:
-        if (you.duration[DUR_NO_SCROLLS] || you.duration[DUR_BRAINLESS]
-            || player_in_branch(BRANCH_GEHENNA))
+        if (you.duration[DUR_NO_SCROLLS] || player_in_branch(BRANCH_GEHENNA))
         {
             inf.light_colour = RED;
             inf.light_text   = "-Scroll";
@@ -874,6 +867,39 @@ bool fill_status_info(int status, status_info& inf)
             inf.short_text   = "teleporting to hostiles";
             inf.long_text    = "You are about to teleport to other enemies.";
         }
+        break;
+
+    case STATUS_TRICKSTER:
+        if (you.has_mutation(MUT_TRICKSTER))
+        {
+            const int bonus = trickster_bonus();
+            if (bonus > 0)
+            {
+                inf.short_text = make_stringf("trickster (+%d AC)", bonus);
+                inf.long_text = make_stringf("You are bolsted by spread misfortune (+%d AC)", bonus);
+            }
+        }
+        break;
+
+    case DUR_DROWSY:
+        if (you.duration[DUR_DROWSY] > 70)
+            inf.light_colour = LIGHTRED;
+        else if (you.duration[DUR_DROWSY] >= 35)
+            inf.light_colour = RED;
+        else
+            inf.light_colour = LIGHTGREY;
+        break;
+
+    case STATUS_MNEMOPHAGE:
+        if (!you.duration[DUR_ENKINDLED] && you.has_mutation(MUT_MNEMOPHAGE))
+        {
+            inf.light_colour = CYAN;
+            inf.light_text = make_stringf("Memories (%d)", you.props[ENKINDLE_CHARGES_KEY].get_int());
+        }
+        break;
+
+    case DUR_ENKINDLED:
+        inf.light_text = make_stringf("Enkindled (%d)", you.props[ENKINDLE_CHARGES_KEY].get_int());
         break;
 
     default:
@@ -1036,12 +1062,6 @@ static void _describe_regen(status_info& inf)
         inf.long_text  = "You are regenerating.";
         _mark_expiring(inf, dur_expiring(DUR_TROGS_HAND));
     }
-    else if (you.has_mutation(MUT_VAMPIRISM)
-             && you.vampire_alive
-             && !you.duration[DUR_SICKNESS])
-    {
-        inf.short_text = "healing quickly";
-    }
     else if (regeneration_is_inhibited())
     {
         inf.light_colour = RED;
@@ -1130,27 +1150,9 @@ static void _describe_transform(status_info& inf)
     inf.short_text = form->get_long_name();
     inf.long_text = form->get_description();
 
-    const bool vampbat = (you.get_mutation_level(MUT_VAMPIRISM) >= 2
-                          && you.form == transformation::bat);
-    const bool expire  = dur_expiring(DUR_TRANSFORMATION) && !vampbat;
-
+    const bool expire  = dur_expiring(DUR_TRANSFORMATION);
     inf.light_colour = _dur_colour(GREEN, expire);
     _mark_expiring(inf, expire);
-}
-
-static const char* s0_names[NUM_STATS] = { "Collapse", "Brainless", "Clumsy", };
-
-static void _describe_stat_zero(status_info& inf, stat_type st)
-{
-    if (you.duration[stat_zero_duration(st)])
-    {
-        inf.light_colour = you.stat(st) ? LIGHTRED : RED;
-        inf.light_text   = s0_names[st];
-        inf.short_text   = make_stringf("lost %s", stat_desc(st, SD_NAME));
-        inf.long_text    = make_stringf(you.stat(st) ?
-                "You are recovering from loss of %s." : "You have no %s!",
-                stat_desc(st, SD_NAME));
-    }
 }
 
 static void _describe_terrain(status_info& inf)

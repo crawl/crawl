@@ -26,7 +26,7 @@ function init_serial_library_setup(e)
     e.mons('naga mage / salamander mystic / nagaraja / salamander tyrant')
   elseif you.in_branch('Vaults') then
     e.mons('arcanist / necromancer / great orb of eyes / ' ..
-           'ironbound frostheart / sphinx')
+           'ironbound frostheart / sphinx marauder')
     e.kmons('8 = tengu reaver / deep elf annihilator / deep elf sorcerer / ' ..
             'deep elf death mage / lich / ancient lich / dread lich')
   elseif you.in_branch('Crypt') then

@@ -59,15 +59,13 @@ KFEAT:  j = fountain_sparkling
 KFEAT:  ~ = closed_door
 KFEAT:  7 = tree
 KFEAT:  A = general shop
-# TODO: removed food shop on B, is there a good replacement?
+KFEAT:  B = scroll shop type:Wondrous suffix:Manuscripts count:10 \
+            greed:50 ; scroll of torment | scroll of vulnerability | \
+            scroll of noise
 KFEAT:  C = distillery shop type:Miraculous suffix:Elixirs count:10 \
             greed:50 ; potion of mutation
-: local smithy = string.gsub(crawl.make_name(), " ", "_")
-: kfeat("D = armour shop name:The_Legendary_" .. smithy .. " \
-:        type:Legendary suffix:Smithy count:10 greed:40 ;\
-:        damaged plate armour ego:none | damaged chain mail ego:none |\
-:        damaged long sword ego:none | damaged kite shield ego:none |\
-:        damaged tower shield ego:none | damaged battleaxe ego:none")
+# Shop on D moved into a subvault due to complicated lua scripts.
+SUBVAULT: D : grated_community_smithy_shop
 SHUFFLE:  QRSTUVX
 SUBVAULT: Q : grated_community_mu_home1
 SUBVAULT: R : grated_community_mu_home2
@@ -366,4 +364,31 @@ MAP
 .......
 .......
       =
+ENDMAP
+
+# Moving this into a subvault to keep the lua from making the main vault too
+# cluttered. The Legendary Smithy sells randarts, but with a guaranteed
+# downside, thanks to artprops technology. Nonetheless, it's still possible
+# to find something usable, if you don't care about the downside or can make up
+# for it with other things.
+NAME: grated_community_nicolae_legendary_smithy
+TAGS: grated_community_smithy_shop unrand
+: local badprops = {"EV:-5", "Str:-6", "Int:-6", "Dex:-6", "Slay:-4",
+:   "rF:-1", "rC:-1", "Will:-1", "-Cast", "-Tele", "*Corrode", "*Slow",
+:   "HP:-9", "MP:-9"}
+: local armours = {"plate armour", "chain mail", "kite shield", "tower shield",
+:                  "helmet"}
+: local inventory = {}
+: for i = 1,7 do
+:   local newthing = util.random_from(armours) .. " randart artprops:" ..
+:                    util.random_from(badprops)
+:   table.insert(inventory, newthing)
+: end
+: local inventorytext = table.concat(inventory, " | ")
+: local smithy = string.gsub(crawl.make_name(), " ", "_")
+: kfeat("D = armour shop name:The_Legendary_" .. smithy ..
+:       " type:Legendary suffix:Smithy count:7 greed:35 use_all ; " ..
+:       inventorytext)
+MAP
+D
 ENDMAP

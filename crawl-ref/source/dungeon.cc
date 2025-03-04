@@ -194,7 +194,6 @@ static void _mark_solid_squares();
 vector<vault_placement> Temp_Vaults;
 static unique_creature_list temp_unique_creatures;
 static FixedVector<unique_item_status_type, MAX_UNRANDARTS> temp_unique_items;
-static set<misc_item_type> temp_generated_misc;
 
 const map_bitmask *Vault_Placement_Mask = nullptr;
 
@@ -302,9 +301,8 @@ bool builder(bool enable_random_maps)
     // TODO: why are these globals?
     // Save a copy of unique creatures for vetoes.
     temp_unique_creatures = you.unique_creatures;
-    // And unrands & misc items
+    // And unrands
     temp_unique_items = you.unique_items;
-    temp_generated_misc = you.generated_misc;
 
     unwind_bool levelgen(crawl_state.generating_level, true);
     rng::generator levelgen_rng(you.where_are_you);
@@ -346,7 +344,6 @@ bool builder(bool enable_random_maps)
                 get_uniq_map_names() = uniq_names;
                 you.unique_creatures = temp_unique_creatures;
                 you.unique_items = temp_unique_items;
-                you.generated_misc = temp_generated_misc;
 
                 // Because vault generation can be interrupted, this potentially
                 // leaves unlinked items kicking around, which triggers a lot
@@ -774,7 +771,6 @@ void dgn_reset_player_data()
     you.runes.reset();
     you.obtainable_runes = 15;
     initialise_item_sets(true);
-    you.generated_misc.clear();
     you.unique_items.init(UNIQ_NOT_EXISTS);
     you.octopus_king_rings = 0x00;
     you.item_description.init(255); // random names need reset after this, e.g.
@@ -965,7 +961,9 @@ static bool _dgn_fill_zone(
     bool ret = false;
     list<coord_def> points[2];
     int cur = 0;
+#ifdef DEBUG_DIAGNOSTICS
     int found_points = 0;
+#endif
 
     // No bounds checks, assuming the level has at least one layer of
     // rock border.
@@ -975,7 +973,9 @@ static bool _dgn_fill_zone(
         for (const auto &c : points[cur])
         {
             travel_point_distance[c.x][c.y] = zone;
+#ifdef DEBUG_DIAGNOSTICS
             found_points++;
+#endif
 
             if (iswanted && iswanted(c))
                 ret = true;
@@ -1529,7 +1529,6 @@ void dgn_reset_level(bool enable_random_maps)
 
     you.unique_creatures = temp_unique_creatures;
     you.unique_items = temp_unique_items;
-    you.generated_misc = temp_generated_misc;
 
 #ifdef DEBUG_STATISTICS
     _you_all_vault_list.clear();
@@ -3555,7 +3554,16 @@ static bool _builder_normal()
 
 static void _place_traps()
 {
-    const int num_traps = random2avg(2 * trap_rate_for_place(), 2);
+
+    int num_traps = random2avg(2 * trap_rate_for_place(), 2);
+
+    // Snake and Vaults don't have a lot of unique terrain types or open
+    // themes compared to their adjacent branches, and have themed weaker
+    // trap options to fall back on, so they get extra traps.
+    if (player_in_branch(BRANCH_SNAKE))
+        num_traps += 2;
+    else if (player_in_branch(BRANCH_VAULTS))
+        num_traps += 1;
 
     ASSERT(num_traps >= 0);
     dprf("attempting to place %d traps", num_traps);
@@ -4800,7 +4808,6 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
         item.base_type = OBJ_MISCELLANY;
         const auto typ = get_misc_item_type(spec.sub_type, false);
         item.sub_type = typ;
-        you.generated_misc.insert(typ);
         item_colour(item);
         item_set_appearance(item);
         ASSERT(item.is_valid());
@@ -4898,7 +4905,7 @@ static object_class_type _superb_object_class()
             10, OBJ_JEWELLERY,
             10, OBJ_BOOKS,
             10, OBJ_STAVES,
-            10, OBJ_MISCELLANY,
+            4, OBJ_MISCELLANY,
             1, OBJ_TALISMANS);
 }
 
@@ -5056,8 +5063,9 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec, monster *mon)
     // Get rid of existing equipment.
     for (mon_inv_iterator ii(*mon); ii; ++ii)
     {
-        mon->unequip(*ii, false, true);
-        destroy_item(ii->index(), true);
+        item_def &item = *ii;
+        mon->unequip(ii.slot(), false, true);
+        destroy_item(item, true);
     }
 
     item_list &list = mspec.items;
@@ -6288,6 +6296,8 @@ object_class_type item_in_shop(shop_type shop_type)
 
     case SHOP_GENERAL:
     case SHOP_GENERAL_ANTIQUE:
+        if (one_chance_in(10))
+            return OBJ_MISCELLANY;
         return OBJ_RANDOM;
 
     case SHOP_JEWELLERY:

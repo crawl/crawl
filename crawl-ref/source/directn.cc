@@ -1352,8 +1352,7 @@ static void _draw_ray_cell(screen_cell_t& cell, coord_def p, bool on_target,
 {
 #ifdef USE_TILE
     UNUSED(on_target, p);
-    cell.tile.dngn_overlay[cell.tile.num_dngn_overlay++] =
-        _tileidx_aff_type(aff);
+    cell.tile.add_overlay(_tileidx_aff_type(aff));
 #endif
     const auto bcol = _colour_aff_type(aff, on_target);
     const auto mbcol = on_target ? bcol : bcol | COLFLAG_REVERSE;
@@ -1419,8 +1418,7 @@ void direction_chooser::draw_beam(crawl_view_buffer &vbuf)
         const bool inrange = in_range(p);
         auto& cell = vbuf(grid2view(p) - 1);
 #ifdef USE_TILE
-        cell.tile.dngn_overlay[cell.tile.num_dngn_overlay++] =
-            inrange ? TILE_RAY : TILE_RAY_OUT_OF_RANGE;
+        cell.tile.add_overlay(inrange ? TILE_RAY : TILE_RAY_OUT_OF_RANGE);
 #endif
         const auto bcol = inrange ? MAGENTA : DARKGREY;
         const auto cglyph = _get_ray_glyph(p, bcol, '*', bcol| COLFLAG_REVERSE);
@@ -1432,8 +1430,8 @@ void direction_chooser::draw_beam(crawl_view_buffer &vbuf)
     // Only draw the ray over the target on tiles.
 #ifdef USE_TILE
     auto& cell = vbuf(grid2view(target()) - 1);
-    cell.tile.dngn_overlay[cell.tile.num_dngn_overlay++] =
-        in_range(ray.pos()) ? TILE_RAY : TILE_RAY_OUT_OF_RANGE;
+    cell.tile.add_overlay(in_range(ray.pos()) ? TILE_RAY :
+                                                TILE_RAY_OUT_OF_RANGE);
 #endif
 }
 
@@ -3344,7 +3342,7 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
     if (you.duration[DUR_CONFUSING_TOUCH])
     {
         const int pow = you.props[CONFUSING_TOUCH_KEY].get_int();
-        const int wl  = you.wearing_ego(EQ_ALL_ARMOUR, SPARM_GUILE) ?
+        const int wl  = you.wearing_ego(OBJ_ARMOUR, SPARM_GUILE) ?
             guile_adjust_willpower(mi.willpower()) : mi.willpower();
         descs.emplace_back(make_stringf("chance to confuse on hit: %d%%",
                                         hex_success_chance(wl, pow, 100)));
@@ -3359,7 +3357,7 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
     if (you.duration[DUR_JINXBITE])
     {
         const int pow = calc_spell_power(SPELL_JINXBITE);
-        const int wl = you.wearing_ego(EQ_ALL_ARMOUR, SPARM_GUILE) ?
+        const int wl = you.wearing_ego(OBJ_ARMOUR, SPARM_GUILE) ?
             guile_adjust_willpower(mi.willpower()) : mi.willpower();
         descs.emplace_back(make_stringf("chance to call a sprite on attack: %d%%",
             hex_success_chance(wl, pow, 100)));
@@ -3630,7 +3628,7 @@ string get_monster_equipment_desc(const monster_info& mi,
         item_descriptions.push_back(weap.substr(1)); // strip leading space
 
     // as with dancing weapons, don't claim armour echoes 'wear' their armour
-    if (mon_arm && mi.type != MONS_ARMOUR_ECHO)
+    if (mon_arm && mi.type != MONS_ARMOUR_ECHO && mi.type != MONS_HAUNTED_ARMOUR)
     {
         const string armour_desc = make_stringf("wearing %s",
                                                 mon_arm->name(DESC_A).c_str());

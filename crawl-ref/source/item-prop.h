@@ -10,7 +10,7 @@
 #include "ac-type.h"
 #include "beam-type.h"
 #include "branch-type.h"
-#include "equipment-type.h"
+#include "equipment-slot.h"
 #include "item-prop-enum.h"
 #include "potion-type.h"
 #include "reach-type.h"
@@ -111,8 +111,8 @@ bool armour_is_hide(const item_def &item) PURE;
 bool armour_is_special(const item_def &item) PURE;
 int armour_acq_weight(const armour_type armour) PURE;
 
-equipment_type get_armour_slot(const item_def &item) PURE;
-equipment_type get_armour_slot(armour_type arm) IMMUTABLE;
+equipment_slot get_armour_slot(const item_def &item) PURE;
+equipment_slot get_armour_slot(armour_type arm) IMMUTABLE;
 
 bool jewellery_is_amulet(const item_def &item) PURE;
 bool jewellery_is_amulet(int sub_type) IMMUTABLE;
@@ -149,7 +149,7 @@ bool is_mana_regen_item(const item_def& item);
 // weapon functions:
 int weapon_rarity(int w_type) IMMUTABLE;
 
-bool  is_weapon_wieldable(const item_def &item, size_type size) PURE;
+bool is_weapon_too_large(const item_def &item, size_type size) PURE;
 
 hands_reqd_type basic_hands_reqd(const item_def &item, size_type size) PURE;
 hands_reqd_type hands_reqd(const actor* ac, object_class_type base_type, int sub_type);
@@ -208,6 +208,7 @@ bool item_is_spellbook(const item_def &item) PURE;
 
 bool is_xp_evoker(const item_def &item);
 int &evoker_debt(int evoker_type);
+int &evoker_plus(int evoker_type);
 void expend_xp_evoker(int evoker_type);
 int evoker_charge_xp_debt(int evoker_type);
 int evoker_charges(int evoker_type);
@@ -250,8 +251,10 @@ int armour_prop(int armour, int prop_type) PURE;
 bool gives_ability(const item_def &item) PURE;
 bool gives_resistance(const item_def &item) PURE;
 bool item_is_jelly_edible(const item_def &item);
-equipment_type get_item_slot(object_class_type type, int sub_type) IMMUTABLE;
-equipment_type get_item_slot(const item_def &item) PURE;
+equipment_slot get_item_slot(object_class_type type, int sub_type) IMMUTABLE;
+equipment_slot get_item_slot(const item_def &item) PURE;
+
+vector<equipment_slot> get_all_item_slots(const item_def& item) PURE;
 
 int weapon_base_price(weapon_type type) PURE;
 int missile_base_price(missile_type type) PURE;
@@ -284,10 +287,17 @@ static inline bool is_weapon(const item_def &item)
 inline constexpr bool item_type_is_equipment(object_class_type base_type)
 {
         return base_type == OBJ_WEAPONS || base_type == OBJ_ARMOUR
-               || base_type == OBJ_JEWELLERY || base_type == OBJ_STAVES;
+               || base_type == OBJ_JEWELLERY || base_type == OBJ_STAVES
+               || base_type == OBJ_GIZMOS;
 }
 
+bool item_gives_equip_slots(const item_def& item);
+
+bool item_grants_flight(const item_def& item);
+
 bool is_equippable_item(const item_def& item);
+
+bool ring_plusses_matter(int ring_subtype);
 
 void remove_whitespace(string &str);
 

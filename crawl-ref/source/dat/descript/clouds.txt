@@ -176,10 +176,10 @@ wisps of flame cloud
 
 A trail of sparks and wisps of flame. Atmospheric, but harmless.
 %%%%
-degeneration cloud
+alcoholic mist cloud
 
-A cloud formed from concentrated potions of degeneration. Creatures that venture
-into one will rapidly lose strength, dexterity, and intelligence.
+A haze of aerosolised moonshine so thick that creatures can become drunk just
+walking through it.
 %%%%
 blastmotes cloud
 
@@ -200,3 +200,10 @@ magnetised fragments cloud
 A cloud of countless tiny fragments of magnetised metal, still vibrating
 slightly from a recent electrical discharge. They will function as an attractor
 for the Magnavolt spell until they dissipate.
+%%%%
+bats cloud
+
+A swarm of tiny vampire bats, so dense that it is impossible to count them all.
+They will relentlessly assail anything but the undead who stands in their midst,
+gradually lulling them to sleep with their soporific bites - and continuing to
+feed off their helpless body, once they fall.

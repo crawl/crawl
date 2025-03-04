@@ -42,6 +42,7 @@
 #include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
+#include "melee-attack.h"
 #include "message.h"
 #include "mgen-data.h"
 #include "mon-death.h"
@@ -577,7 +578,7 @@ static void _maybe_spawn_rats(int dam, kill_method_type death_type)
 {
     if (dam <= 0
         || death_type == KILLED_BY_POISON
-        || !player_equip_unrand(UNRAND_RATSKIN_CLOAK))
+        || !you.unrand_equipped(UNRAND_RATSKIN_CLOAK))
     {
         return;
     }
@@ -792,13 +793,19 @@ static void _maybe_fog(int dam)
     }
 }
 
-static void _deteriorate(int dam)
+static void _handle_poor_constitution(int dam)
 {
-    if (x_chance_in_y(you.get_mutation_level(MUT_DETERIORATION), 4)
-        && dam > you.hp_max / 10)
+    const int level = you.get_mutation_level(MUT_POOR_CONSTITUTION);
+
+    if (level == 0)
+        return;
+
+    if (dam > you.hp_max / 15 && one_chance_in(level == 1 ? 9 : 6))
     {
-        mprf(MSGCH_WARN, "Your body deteriorates!");
-        lose_stat(STAT_RANDOM, 1);
+        you.weaken(nullptr, 20);
+
+        if (level == 2 && one_chance_in(2))
+            you.slow_down(nullptr, random_range(8, 15));
     }
 }
 
@@ -814,7 +821,7 @@ static void _maybe_corrode()
 {
     int corrosion_sources = you.scan_artefacts(ARTP_CORRODE);
     if (x_chance_in_y(corrosion_chance(corrosion_sources), 100))
-        you.corrode_equipment("Your corrosive artefact");
+        you.corrode(nullptr, "Your corrosive artefact");
 }
 
 /**
@@ -1051,9 +1058,12 @@ static void _print_endgame_messages(scorefile_entry &se)
  *  @param aux what did they do it with?
  *  @param see_source whether the attacker was visible to you
  *  @param death_source_name the attacker's name if it is already dead.
+ *  @param skip_multipliers Whether to ignore harm/vitrify/etc.
+ *  @param skip_awaken Whether this damage will skip waking a sleeping player.
  */
 void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
-          bool see_source, const char *death_source_name)
+          bool see_source, const char *death_source_name, bool skip_multipliers,
+          bool skip_awaken)
 {
     ASSERT(!crawl_state.game_is_arena());
     if (you.duration[DUR_TIME_STEP])
@@ -1073,7 +1083,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     }
 
     // Multiply damage if Harm or Vitrify is in play. (Poison is multiplied earlier.)
-    if (dam != INSTANT_DEATH && death_type != KILLED_BY_POISON)
+    if (dam != INSTANT_DEATH && death_type != KILLED_BY_POISON && !skip_multipliers)
     {
         dam = _apply_extra_harm(dam, source);
 
@@ -1104,8 +1114,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     interrupt_activity(activity_interrupt::hp_loss, &hpl);
 
     // Don't wake the player with fatal or poison damage.
-    if (dam > 0 && dam < you.hp && death_type != KILLED_BY_POISON)
-        you.check_awaken(500);
+    if (dam > 0 && dam < you.hp && death_type != KILLED_BY_POISON && !skip_awaken)
+        you.wake_up();
 
     const bool non_death = death_type == KILLED_BY_QUITTING
                         || death_type == KILLED_BY_WINNING
@@ -1128,7 +1138,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             return;
         // the dreamshard necklace protects from any fatal blow or death source
         // that death's door would protect from.
-        else if (player_equip_unrand(UNRAND_DREAMSHARD_NECKLACE)
+        else if (you.unrand_equipped(UNRAND_DREAMSHARD_NECKLACE)
                  && dam >= you.hp)
         {
             dreamshard_shatter();
@@ -1154,7 +1164,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             // Wake players who took fatal damage exactly equal to current HP,
             // but had it reduced below fatal threshold by spirit shield.
             if (dam < you.hp)
-                you.check_awaken(500);
+                you.wake_up();
 
             if (dam <= 0 && you.hp > 0)
                 return;
@@ -1165,7 +1175,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             simple_god_message(" protects you from harm!");
             // Ensure divine intervention wakes sleeping players. Necessary
             // because we otherwise don't wake players who take fatal damage.
-            you.check_awaken(500);
+            you.wake_up();
             return;
         }
 
@@ -1207,7 +1217,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             take_note(Note(NOTE_HP_CHANGE, you.hp, you.hp_max,
                            damage_desc.c_str()));
 
-            _deteriorate(dam);
+            _handle_poor_constitution(dam);
             _maybe_ru_retribution(dam, source);
             _maybe_inflict_anguish(dam, source);
             _maybe_spawn_monsters(dam, death_type, source);

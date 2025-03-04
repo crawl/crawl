@@ -33,6 +33,15 @@ struct crawl_environment
     FixedVector< item_def, MAX_ITEMS >       item;  // item list
     FixedVector< monster, MAX_MONSTERS+2 >   mons;  // monster list, plus anon
 
+    // Highest index into mons that might currently contain a real monster.
+    // This is incremented by 1 whenever get_free_monster() is called and
+    // reduced to the current highest index whenever clear_monster_flags() is
+    // called each turn.
+    //
+    // This is used only as a small optimisation for monster_iterator and is
+    // completely safe if it's an overestimate - just not an underestimate.
+    int                             max_mon_index;
+
     feature_grid                             grid;  // terrain grid
     FixedArray<terrain_property_t, GXM, GYM> pgrid; // terrain properties
     FixedArray< unsigned short, GXM, GYM >   mgrid; // monster grid

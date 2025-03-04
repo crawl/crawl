@@ -32,6 +32,7 @@ end
 NAME:    dk_vehumet_trees
 TAGS:    temple_overflow_vehumet temple_overflow_1
 WEIGHT:  0
+KPROP:   :_ = no_tele_into
 KFEAT:   _ = altar_vehumet
 SUBST:   x : G:1 t:1 x:8
 {{

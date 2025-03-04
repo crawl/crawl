@@ -55,6 +55,7 @@
 #include "spl-book.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
+#include "spl-monench.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
@@ -1875,14 +1876,15 @@ static bool _mons_take_special_action(monster &mons, int old_energy)
     return false;
 }
 
-static bool _beetle_must_return(const monster* mons)
+static bool _leash_range_exceeded(const monster* mons)
 {
-    if (mons->type != MONS_PHALANX_BEETLE)
+    const int max_dist = mons_leash_range(mons->type);
+    if (max_dist <= 0)
         return false;
 
     actor* creator = actor_by_mid(mons->summoner);
     return creator && creator->alive()
-           && !adjacent(mons->pos(), creator->pos());
+           && grid_distance(creator->pos(), mons->pos()) > max_dist;
 }
 
 void handle_monster_move(monster* mons)
@@ -2047,6 +2049,27 @@ void handle_monster_move(monster* mons)
         }
     }
 
+    // Return to the player's side if they've gotten too separated
+    if (mons->type == MONS_HAUNTED_ARMOUR)
+    {
+        if (grid_distance(you.pos(), mons->pos()) > 5)
+        {
+            coord_def spot;
+            if (find_habitable_spot_near(you.pos(), MONS_HAUNTED_ARMOUR, 3, spot,
+                                         -1, &you))
+            {
+                mons->move_to_pos(spot, true, true);
+                simple_monster_message(*mons, " returns to your side.");
+            }
+            // If returning is impossible, kill it immediately.
+            else
+            {
+                monster_die(*mons, KILL_RESET, NON_MONSTER);
+                return;
+            }
+        }
+    }
+
     // Friendly player shadows don't act independently (though hostile ones from
     // wrath effects may do so)
     if (mons_is_player_shadow(*mons))
@@ -2084,6 +2107,13 @@ void handle_monster_move(monster* mons)
             _passively_summon_butterfly(*mons);
 
     _monster_regenerate(mons);
+
+    if (mons->has_ench(ENCH_VEXED))
+    {
+        do_vexed_attack(*mons);
+        mons->lose_energy(EUT_ATTACK);
+        return;
+    }
 
     // Please change _slouch_damage to match!
     if (mons->cannot_act()
@@ -2270,7 +2300,7 @@ void handle_monster_move(monster* mons)
         if (targ
             && targ != mons
             && mons->behaviour != BEH_WITHDRAW
-            && !_beetle_must_return(mons)
+            && !_leash_range_exceeded(mons)
             && (!(mons_aligned(mons, targ) || targ->type == MONS_FOXFIRE)
                 || mons->has_ench(ENCH_FRENZIED))
             && monster_los_is_valid(mons, targ))
@@ -2568,11 +2598,19 @@ void queue_monster_for_action(monster* mons)
 
 void clear_monster_flags()
 {
-    // Clear any summoning flags so that lower indiced
-    // monsters get their actions in the next round.
-    // Also clear one-turn deep sleep flag.
-    for (auto &mons : menv_real)
-        mons.flags &= ~MF_JUST_SUMMONED & ~MF_JUST_SLEPT;
+    // Clear any summoning flags so that lower indiced monsters get their
+    // actions in the next round. Also clear one-turn deep sleep flag.
+    // Finally, track the highest index of monster still alive, for
+    // monster_iterator optimisation purposes.
+    env.max_mon_index = 0;
+    for (int i = 0; i < MAX_MONSTERS; ++i)
+    {
+        if (env.mons[i].defined())
+        {
+            env.max_mon_index = i;
+            env.mons[i].flags &= ~MF_JUST_SUMMONED & ~MF_JUST_SLEPT;
+        }
+    }
 }
 
 /**
@@ -2585,7 +2623,7 @@ void clear_monster_flags()
 **/
 static void _update_monster_attitude(monster *mon)
 {
-    if (you.allies_forbidden() && !mon->is_peripheral())
+    if (mons_can_hate(mon->type))
         mon->attitude = ATT_HOSTILE;
 }
 
@@ -3190,19 +3228,20 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
 
     // Never voluntarily leave your creator's side if you're already next to
     // them (but can freely move to catch up with them, if not.)
-    if (mons->type == MONS_PHALANX_BEETLE)
+    const int leash_range = mons_leash_range(mons->type);
+    if (leash_range > 0)
     {
         actor* creator = actor_by_mid(mons->summoner);
         if (creator && creator->alive())
         {
-            if (adjacent(creator->pos(), mons->pos())
-                && !adjacent(creator->pos(), targ))
+            if (grid_distance(creator->pos(), mons->pos()) <= leash_range
+                && grid_distance(creator->pos(), targ) > leash_range)
             {
                 return false;
             }
             // Don't consider moving into enemies good enough if we're trying
             // to return to our creator.
-            else if (!adjacent(creator->pos(), mons->pos())
+            else if (grid_distance(creator->pos(), mons->pos()) > leash_range
                      && actor_at(targ))
             {
                 return false;

@@ -101,12 +101,13 @@ NAME:    abyss_entry_glasseish
 TAGS:    nolayout_encompass
 WEIGHT:  5
 : abyss_entry(_G, 'O')
-KPROP:   T = no_tele_into
-KMASK:   .O = !opaque
-SUBST:   T : T l 1 2 A X
+SUBST:   T : T12^S
 MONS:    tentacled starspawn / starcursed mass / wretched star
 MONS:    demonic plant
-KFEAT:   X : stone_arch
+KFEAT:   S = stone_arch
+KFEAT:   ^ = devourer's trap
+KPROP:   Tl12^S = no_tele_into
+KMASK:   .O = !opaque
 MAP
 nnn nnn
 nTn.nTn
@@ -564,7 +565,7 @@ MONS:    guardian serpent, great orb of eyes, glowing orange brain
 MONS:    boggart, rakshasa, cacodemon, shadow demon
 KMONS:   0 = occultist
 KMONS:   8 = orc sorcerer
-KMONS:   9 = sphinx
+KMONS:   9 = guardian sphinx
 KMONS:   & = lich
 KMONS:   @ = deep elf sorcerer
 KMONS:   Z = nonbase draconian
@@ -810,7 +811,7 @@ MONS:    rakshasa ; whip good_item | trident good_item | long sword good_item . 
                     ring mail good_item | kite shield good_item . \
                     mundane javelin | boomerang | throwing net
 MONS:    guardian serpent / great orb of eyes
-ITEM:    d = potion of curing pre_id / potion of degeneration pre_id
+ITEM:    d = potion of curing pre_id / potion of moonshine pre_id
 SUBST:   x = ccccvbb
 MAP
      .x.x
@@ -859,25 +860,26 @@ DEPTH:  D:4-, Depths, Abyss
 WEIGHT: 5 (D), 10
 ITEM:   ring of poison resistance / any beam wand charges:1 / \
         demon whip ego:venom pre_id / throwing net q:1
+KFEAT:  ^ = harlequin's trap / devourer's trap w:13
 : if you.in_branch("Abyss") then
 SUBST:  x : XXCB, c : CB, X = xxxxcb, C = xccccb, B = xcbbbb
 SUBST:  HIJ = cbw,  ' = 000., " = dd.
 : else
-SUBST:  '" = ., c : xxc, H : xc.., I : xc.., J : xc..
+SUBST:  '"^ = ., c : xxc, H : xc.., I : xc.., J : xc..
 : end
 MAP
        .c
       .xc
      .xcc
-    @x..c......
+    @x^.c......
    @x..'ccxx...
   .x..H"c".xxx.
- .x..H'"c'.....
+ .x^.H'"c'.....
 .xc.'"""c.I...
 ccccccccc...J.
-   .c"'..x....
+   .c"'..x.^..
    .x..I..x...
-   .xx.....xx.
+   .xx...^.xx.
    ..x..J..xx.
    ..x........
    ....
@@ -919,13 +921,14 @@ TAGS:    transparent no_pool_fixup decor
 DEPTH:   D:8-, Depths, Abyss
 KFEAT:   @ = +
 KFEAT:   > = abyssal_stair
+KFEAT:   ^ = harlequin's trap / devourer's trap w:13
 SHUFFLE: ABCDEFGH
 : if you.in_branch("Abyss") then
 SUBST:   b = wlb., AB = wl., CD = xcb., EFGH = .
-SUBST:   x = xxxxcccb, ' = 00., " = >>.
+SUBST:   x = xxxxcccb, ' = 00., " = >>., + = ^
 : else
 TAGS:    extra
-SUBST:   b : bbwww., A : @, B : @xx, C : @xxxx, DEFGH = x, '" = .
+SUBST:   b : bbwww., A : @, B : @xx, C : @xxxx, DEFGH = x, '"^ = .
 : end
 MAP
     xxAxx
@@ -951,12 +954,13 @@ NAME:    hangedman_abyss_or_decor_passed
 TAGS:    transparent no_pool_fixup decor
 DEPTH:   D:4-, Depths, Abyss
 ITEM:    any weapon ego:pain / any weapon ego:electrocution
+KFEAT:   ^ = harlequin's trap w:7 / devourer's trap w:13
 : if you.in_branch("Abyss") then
 SUBST:   ' = 00., " = dd.
 SUBST:   x = xxxxcb, XY = ww...
 : else
 TAGS:    extra
-SUBST:   x : xxxc, Y = x, X : x..
+SUBST:   x : xxxc, Y = x, X : x.., ^ = .
 NSUBST:  ; = 1:@ / *:., : = 1:@ / *:., ` = 1:@ / *:.
 : end
 MAP
@@ -964,9 +968,9 @@ MAP
  ;;;;x::::
  ;YX.x.XY:
  ;X..x..X:
- ;.......:
+ ;....^..:
 xxxx.x.xxxx
- `.......'x
+ `..^....'x
  `X..x.X'"x
  `YX.x.'Y"x
  ````x'""xx
@@ -977,20 +981,21 @@ NAME:    hangedman_abyss_or_decor_stagger
 TAGS:    transparent no_pool_fixup decor
 DEPTH:   D:4-, Depths, Abyss
 ITEM:    great mace ego:distortion randart / wand of mindburst pre_id / \
-         dart ego:atropa q:4 w:4 / potion of degeneration pre_id w:4 / \
+         dart ego:atropa q:4 w:4 / potion of moonshine pre_id w:4 / \
          randbook numspells:1 spells:alistair's_intoxication
+KFEAT:   ^ = harlequin's trap w:7 / devourer's trap w:13
 : if you.in_branch("Abyss") then
 SUBST:   ' = 00., " = ddd.., X = xxcccb, x = xxxxxcccb
 SUBST:   yY = ...xxxcbw, zZ = ...xxxcbl
 : else
 TAGS:    extra
 SHUFFLE: yY, zZ
-SUBST:   x : xxxxc, X : xxc, y : x.., z : x.., YZ'" = .
+SUBST:   x : xxxxc, X : xxc, y : x.., z : x.., YZ'"^ = .
 : end
 MAP
 ..........
 .xxxXxxx..
-...'X"..z...
+.^.'X"..z...
 ..."X'..Z...
 .xxxXXXxxx..
 ..Y.."X'..z...
@@ -1000,7 +1005,7 @@ MAP
  ...y.."X'..Z..
    ..xxxXXXxxx.
    ...Y.."X'...
-   ...y..'X"...
+   ...y..'X".^.
      ..xxxXxxx.
      ..........
 ENDMAP
@@ -1216,6 +1221,7 @@ ITEM:    potion of enlightenment q:1 pre_id
 KMONS:   O = patrolling war gargoyle
 KITEM:   O = abyssal rune of Zot
 KFEAT:   A = stone_arch
+KFEAT:   ^ = devourer's trap
 KFEAT:   "@6 = runelight
 SHUFFLE: 23 / 57
 SUBST:   ! = 2, 0 = 222234555
@@ -1233,7 +1239,7 @@ MAP
 "cc.c0"l"0cccc"
  .c.ccclccccc.
   c.c0"l"0ccc
-"cc.ccclcccdcc"
+"cc^ccclcccdcc"
  .c+c2c!c5c+c.
   c 3 c1c 7 c
 6cc2 2+ +5 5cc6
@@ -1411,7 +1417,7 @@ COLOUR: n = lightmagenta
 NSUBST: - = 4:d / 2=d. / ., . = 3:1 / 1:2 / 1:4 / 1:5 / 2=112 / 2=45..
 SUBST:  l : lw
 {{
-dgn.delayed_decay(_G, 'd', 'ghoul corpse / minotaur corpse / ' ..
+dgn.delayed_decay(_G, 'd', 'minotaur corpse / ' ..
                            'troll corpse / ogre corpse')
 }}
 MAP
@@ -1582,6 +1588,7 @@ MONS:   fire bat, chaos spawn, fire dragon / ice dragon, ogre mage
 KMONS:  OL = lich / ancient lich w:1 / dread lich w:1
 KITEM:  O = abyssal rune of Zot
 KFEAT:  A = stone_arch
+KFEAT:  ^ = harlequin's trap / devourer's trap w:4
 KFEAT:  ' = runelight
 NSUBST: L = 1:O / *:L
 MARKER: ! = lua:fog_machine { cloud_type = "seething chaos", \
@@ -1595,9 +1602,9 @@ MAP
  ccLccLcc
 cccc+c+cccX
 cLccc1.ccc X
-cc+c2.1+LcX X
-ccc1.2.ccc X X
-cL+.1.++Cxx X X
+cc+c^21+LcX X
+ccc12.^ccc X X
+cL+.1^++Cxx X X
 cccc+c++.4xx X X
  cccLcC.c.3xx X X
 X ccccx4.1.2xx X
@@ -1624,6 +1631,7 @@ MONS:   tentacled monstrosity / tentacled starspawn / thrashing horror w:6
 KMONS:  O = starcursed mass
 KITEM:  O = abyssal rune of Zot
 KFEAT:  _ = altar_lugonu
+KFEAT:  ^ = harlequin's trap / devourer's trap w:13
 KFEAT:  A = stone_arch
 KFEAT:  "@ = runelight
 SUBST:  X = c', c = ccv, N : nb.
@@ -1634,11 +1642,11 @@ MAP
  XbbbXXXXXXXXXX@
 XXb1bbbbbcccccc+
 XXbblblblccwc..c"
-XXbb+......3...c
-Xbb4n.N...llb.cc"
-XbOnn.1_.3l2l3wcA
-Xbb4n.N...llb.cc
-XXbb+......3...c"
+XXbb+^.....3...c
+Xbb4n.N...llb3cc"
+XbOnn^1_.3l2l^wcA
+Xbb4n.N...llb3cc
+XXbb+^.....3...c"
 XXbblblblccwc..c
 XXb1bbbbbcccccc+
  XbbbXXXXXXXXXX@
@@ -1695,6 +1703,7 @@ MONS:   tormentor / hellion / shadow demon / \
 KMONS:  3O = spatial maelstrom
 KITEM:  O = abyssal rune of Zot
 KFEAT:  A = stone_arch
+KFEAT:  ^ = harlequin's trap / devourer's trap w:13
 KFEAT:  " = runelight
 SUBST:  X : b", x = xv, n = nnnnnc, m = n
 FTILE:  A123$Onc = floor_crystal_squares
@@ -1702,13 +1711,13 @@ COLOUR: 123$O = lightmagenta
 MAP
 ""xxxxxxxxxxxxxxxx
 .....1xxnnnnnnnnnxxx
-........1nnnnnnnnxxxxx
-....X......xxnnnnnxxxx
+..^.....1nnnnnnnnxxxxx
+....X.....^xxnnnnnxxxx
 .........2..nnnn33xxxx
 A.....X...x.2$mm3Oxxxx
 .........2..nnnn33xxxx
-....X......xxnnnnnxxxx
-........1nnnnnnnnxxxxx
+....X.....^xxnnnnnxxxx
+..^.....1nnnnnnnnxxxxx
 .....1xxnnnnnnnnnxxx
 ""xxxxxxxxxxxxxxxx
 ENDMAP

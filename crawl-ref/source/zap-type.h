@@ -178,5 +178,8 @@ enum zap_type
     ZAP_BOLAS,
     ZAP_MERCURY_ARROW,
     ZAP_SOJOURNING,
+    ZAP_FREEZE,
+    ZAP_VEX,
+    ZAP_RAVENOUS_SWARM,
     NUM_ZAPS
 };
