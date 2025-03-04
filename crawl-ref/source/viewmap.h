@@ -84,6 +84,12 @@ bool is_feature(char32_t feature, const coord_def& where);
 bool show_map(level_pos &spec_place,
               bool travel_mode, bool allow_offlevel);
 void process_map_command(command_type cmd);
+#ifdef USE_TILE_LOCAL
+void start_far_viewing(coord_def viewed_location);
+void stop_far_viewing();
+bool is_far_viewing();
+void update_far_viewing(coord_def viewed_location);
+#endif
 level_pos map_follow_stairs(bool up, const coord_def &pos);
 
 bool emphasise(const coord_def& where);
