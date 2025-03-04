@@ -2678,7 +2678,7 @@ static int _discharge_monsters(const coord_def &where, int pow,
     return damage;
 }
 
-bool _safe_discharge(coord_def where, vector<const actor *> &exclude,
+static bool _safe_discharge(coord_def where, vector<const actor *> &exclude,
                      bool check_only, bool exclude_center)
 {
     for (adjacent_iterator ai(where, exclude_center); ai; ++ai)
