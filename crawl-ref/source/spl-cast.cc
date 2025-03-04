@@ -2248,6 +2248,12 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
                            you.experience_level,
                            "the malice of Vehumet");
         }
+        else if (you.unrand_equipped(UNRAND_MISFORTUNE) && one_chance_in(20))
+        {
+
+            mprf("You feel unlucky.");
+            miscast_effect(spell, 1 + random2(20) + random2(21));
+        }
 
         const int spfail_chance = raw_spell_fail(spell);
 
