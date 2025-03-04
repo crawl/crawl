@@ -1002,10 +1002,10 @@ bool player_unrand_bad_target(const item_def &weapon,
     }
     if (is_unrandom_artefact(weapon, UNRAND_ARC_BLADE))
     {
-        if (you.pos().distance_from(defender->pos()) <= 1)
+        if (you.pos().distance_from(defender.pos()) <= 1)
             return !safe_discharge(you.pos(), check_only);
 
-        return !safe_discharge(defender->pos(), check_only, false);
+        return !safe_discharge(defender.pos(), check_only, false);
     }
     if (is_unrandom_artefact(weapon, UNRAND_POWER))
     {
