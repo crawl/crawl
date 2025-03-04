@@ -859,11 +859,15 @@ OBJ:      OBJ_ARMOUR/ARM_ROBE
 # try to make it bad, this is the only bad SPARM:
 FB_BRAND: SPARM_PONDEROUSNESS
 PLUS:     5
+INSCRIP:  Wiz+++ *Miscast
 COLOUR:   LIGHTMAGENTA
 TILE:     urand_misfortune
 TILE_EQ:  robe_misfortune
-EV:       5
-BOOL:     harm, slow, corrode
+EV:       3
+MP:       15
+DESCRIP:  Wiz+++:    It greatly improves the wearer's spellcasting success.
+ *Miscast:    The wearer will sometimes suffer miscast effects even
+ when they successfully cast a spell.
 
 # start TAG_MAJOR_VERSION == 34
 NAME:     cloak of Flash
