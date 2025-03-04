@@ -610,13 +610,15 @@ static void _setup_generic(const newgame_def& ng,
         set_form(transformation::beast, 1); // hacky...
     }
 
-    reassess_starting_skills();
+    reassess_starting_skills(false);
     init_skill_order();
     init_can_currently_train();
     init_train();
     if (you.religion == GOD_TROG)
         join_trog_skills();
     init_training();
+    if (you.has_mutation(MUT_INNATE_CASTER))
+        cleanup_innate_magic_skills();
 
     // Apply autoinscribe rules to inventory.
     request_autoinscribe();
