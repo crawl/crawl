@@ -1315,6 +1315,110 @@ static void _shunt_monsters_out_of_walls()
     }
 }
 
+static bool _is_spectral_weapon(const item_def& weapon)
+{
+    return get_weapon_brand(weapon) == SPWPN_SPECTRAL
+           || is_unrandom_artefact(weapon, UNRAND_GUARD);
+}
+
+static void _fix_player_spectral_weapon()
+{
+    if (!you.props.exists(SPECTRAL_WEAPON_KEY))
+        return;
+
+    mid_t weapon_mid = you.props[SPECTRAL_WEAPON_KEY].get_int();
+    you.props.erase(SPECTRAL_WEAPON_KEY);
+
+    monster* spectral_weapon = monster_by_mid(weapon_mid);
+    if (!spectral_weapon)
+        return;
+
+    vector<item_def*> weapons = you.equipment.get_slot_items(SLOT_WEAPON);
+    weapons.erase(remove_if(weapons.begin(), weapons.end(),
+        [](const item_def* w) { return !_is_spectral_weapon(*w); }),
+        weapons.end());
+
+    item_def* spectral_item = spectral_weapon->mslot_item(MSLOT_WEAPON);
+
+    if (weapons.empty() || !spectral_item)
+    {
+        monster_die(*spectral_weapon, KILL_RESET, NON_MONSTER, true);
+        return;
+    }
+
+    // Because the spectral weapon monster holds a copy of the weapon and
+    // the weapon can be changed afterwards (e.g. by being inscribed), we may
+    // not be able to find an exact match.
+    item_def* best_match = weapons[0];
+    for (size_t i = 1; i < weapons.size(); ++i)
+    {
+        item_def* weapon = weapons[i];
+
+        if (weapon->sub_type == spectral_item->sub_type
+            && best_match->sub_type != spectral_item->sub_type)
+        {
+            best_match = weapon;
+            break;
+        }
+
+        if (weapon->plus == spectral_item->plus
+            && best_match->plus != spectral_item->plus)
+        {
+            best_match = weapon;
+            break;
+        }
+
+        std::string spectral_item_name = "";
+        if (spectral_item->props.exists(WEAPON_NAME_KEY))
+            spectral_item_name = spectral_item->props[WEAPON_NAME_KEY].get_string();
+        std::string best_match_name = "";
+        if (best_match->props.exists(WEAPON_NAME_KEY))
+            best_match_name = best_match->props[WEAPON_NAME_KEY].get_string();
+        std::string weapon_name = "";
+        if (weapon->props.exists(WEAPON_NAME_KEY))
+            weapon_name = weapon->props[WEAPON_NAME_KEY].get_string();
+        if (weapon_name == spectral_item_name
+            && best_match_name != spectral_item_name)
+        {
+            best_match = weapon;
+            break;
+        }
+
+        if (weapon->inscription == spectral_item->inscription
+            && best_match->inscription != spectral_item->inscription)
+        {
+            best_match = weapon;
+            break;
+        }
+    }
+    best_match->props[SPECTRAL_WEAPON_KEY].get_int() = weapon_mid;
+}
+
+static void _fix_spectral_weapons()
+{
+    _fix_player_spectral_weapon();
+    for (monster_iterator mi; mi; ++mi)
+    {
+        monster* mons = *mi;
+        if (mons->props.exists(SPECTRAL_WEAPON_KEY))
+        {
+            mid_t weapon_mid = mons->props[SPECTRAL_WEAPON_KEY].get_int();
+            mons->props.erase(SPECTRAL_WEAPON_KEY);
+
+            item_def* weapon = mons->mslot_item(MSLOT_WEAPON);
+            if (!weapon || !_is_spectral_weapon(*weapon))
+            {
+                monster* spectral_weapon = monster_by_mid(weapon_mid);
+                if (spectral_weapon)
+                    monster_die(*spectral_weapon, KILL_RESET, NON_MONSTER, true);
+
+                continue;
+            }
+            weapon->props[SPECTRAL_WEAPON_KEY].get_int() = weapon_mid;
+        }
+    }
+}
+
 // Read a piece of data from inf into memory, then run the appropriate reader.
 //
 // minorVersion is available for any sub-readers that need it
@@ -1442,6 +1546,13 @@ void tag_read(reader &inf, tag_type tag_id)
                     dec_mitm_item_quantity(si.index(), si->quantity);
                 }
             }
+
+#if TAG_MAJOR_VERSION == 34
+        // We must do this after loading the player, monsters, and items, but
+        // before removing any items.
+        if (th.getMinorVersion() < TAG_MINOR_SPECTRAL_DUAL_WIELDING)
+            _fix_spectral_weapons();
+#endif
 
         // These you-related changes have to be after terrain is loaded,
         // because they might cause you to lose flight. That will check

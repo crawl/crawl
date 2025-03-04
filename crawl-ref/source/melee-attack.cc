@@ -1031,7 +1031,7 @@ void melee_attack::handle_spectral_brand()
     if (attacker->type == MONS_SPECTRAL_WEAPON || !defender->alive())
         return;
     attacker->triggered_spectral = true;
-    spectral_weapon_fineff::schedule(*attacker, *defender, weapon);
+    spectral_weapon_fineff::schedule(*attacker, *defender, mutable_wpn);
 }
 
 item_def *melee_attack::offhand_weapon() const
