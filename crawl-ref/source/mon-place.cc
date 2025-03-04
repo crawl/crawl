@@ -1191,17 +1191,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
     mon->flags |= MF_JUST_SUMMONED;
 
-    // Don't leave shifters in their starting shape.
-    if (mg.cls == MONS_SHAPESHIFTER || mg.cls == MONS_GLOWING_SHAPESHIFTER)
-    {
-        msg::suppress nm;
-        monster_polymorph(mon, RANDOM_MONSTER);
-
-        // It's not actually a known shapeshifter if it happened to be
-        // placed in LOS of the player.
-        mon->flags &= ~MF_KNOWN_SHIFTER;
-    }
-
     if (mons_class_is_animated_weapon(mg.cls))
     {
         if (mg.props.exists(TUKIMA_WEAPON))
@@ -1302,6 +1291,19 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         env.mid_cache.erase(mon->mid);
         mon->reset();
         return 0;
+    }
+
+    // Don't leave shifters in their starting shape.
+    // (This must be done after they are moved into a real position, or
+    // monster_polymorph will veto any possible thing they could turn into.)
+    if (mg.cls == MONS_SHAPESHIFTER || mg.cls == MONS_GLOWING_SHAPESHIFTER)
+    {
+        msg::suppress nm;
+        monster_polymorph(mon, RANDOM_MONSTER);
+
+        // It's not actually a known shapeshifter if it happened to be
+        // placed in LOS of the player.
+        mon->flags &= ~MF_KNOWN_SHIFTER;
     }
 
     if (mg.is_summoned())
