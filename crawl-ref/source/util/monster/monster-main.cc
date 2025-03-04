@@ -1164,6 +1164,9 @@ int main(int argc, char* argv[])
                 case AF_SWARM:
                     monsterattacks += colour(BROWN, "(swarm)");
                     break;
+                case AF_TRICKSTER:
+                    monsterattacks += colour(LIGHTGREEN, "(trickster)");
+                    break;
                 case AF_CRUSH:
                 case AF_PLAIN:
                 case AF_REACH:
@@ -1187,6 +1190,10 @@ int main(int argc, char* argv[])
                 case AF_KITE:
                 case AF_STICKY_FLAME:
                 case AF_MUTATE:
+                case AF_DRAIN_STR:
+                case AF_DRAIN_INT:
+                case AF_DRAIN_DEX:
+                case AF_DRAIN_STAT:
                     monsterattacks += colour(LIGHTRED, "(?\?\?)");
                     break;
 #endif
@@ -1327,7 +1334,7 @@ int main(int argc, char* argv[])
         res(BLUE, COLD);
         res(CYAN, ELEC);
         res(GREEN, POISON);
-        res(BROWN, ACID);
+        res(BROWN, CORR);
         res(0, STEAM);
 
         if (me->bitfields & M_UNBLINDABLE)

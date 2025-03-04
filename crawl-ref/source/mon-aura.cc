@@ -92,7 +92,7 @@ static mon_aura_data _get_aura_for(const monster& mon)
             return aura;
     }
 
-    ASSERT(false);
+    die("no aura found for %s", mon.name(DESC_THE).c_str());
 }
 
 static mon_aura_data _get_aura_from_key(string player_key)
@@ -103,7 +103,7 @@ static mon_aura_data _get_aura_from_key(string player_key)
             return aura;
     }
 
-    ASSERT(false);
+    die("aura %s not found", player_key.c_str());
 }
 
 bool mons_has_aura(const monster& mon)
@@ -211,12 +211,15 @@ void mons_update_aura(const monster& mon)
                         continue;
                 }
 
-                // Remove any enchantment that may currently exist, since we
-                // don't want them to stack. (Treat doubled health differently,
-                // since otherwise it'll keep stacking HP scaling.)
-                mi->del_ench(aura.ench_type, true, aura.ench_type == ENCH_DOUBLED_HEALTH);
-                mi->add_ench(mon_enchant(aura.ench_type, 1, &mon, aura.base_duration,
-                                        aura.is_hostile ? AURA_HOSTILE : AURA_FRIENDLY));
+                mon_enchant new_ench(aura.ench_type, 1, &mon, aura.base_duration,
+                                     aura.is_hostile ? AURA_HOSTILE : AURA_FRIENDLY);
+
+                // Override an existing enchant rather than just add to it
+                // (which would stack durations).
+                if (mi->has_ench(aura.ench_type))
+                    mi->update_ench(new_ench);
+                else
+                    mi->add_ench(new_ench);
             }
         }
     }

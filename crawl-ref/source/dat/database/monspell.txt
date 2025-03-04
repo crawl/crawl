@@ -1037,6 +1037,26 @@ wretched star cast
 
 @The_monster@ glows turbulently.
 %%%%
+Grave Claw vampire bloodprince cast
+
+@The_monster@ reaches out @possessive@ hand.
+
+@The_monster@ snaps @possessive@ fingers.
+%%%%
+Ravenous Swarm vampire bloodprince cast
+
+@The_monster@ unfurls @possessive@ wings.
+
+@The_monster@ spreads @possessive@ arms wide.
+%%%%
+Dominate Undead vampire bloodprince cast
+
+@The_monster@ exerts the full weight of @possessive@ authority.
+
+@The_monster@ compels the dead to obey.
+
+@The_monster@ whispers, "Kneel."
+%%%%
 ########################################################################
 # Monster species and genus messages.
 ########################################################################

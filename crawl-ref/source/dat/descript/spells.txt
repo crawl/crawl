@@ -519,6 +519,17 @@ the caster's enemies under its own power.
 As it is a direct reflection of the caster's unique zeal, the weapon they
 receive from their god will be the same each time.
 %%%%
+Dominate Undead spell
+
+Attempts to forcibly change the allegiance of all nearby undead which are not
+already loyal to the caster.
+
+Adventurers, being famously headstrong, cannot be fully controlled by this
+spell. They will instead lash out randomly for the duration of its effect,
+attacking nearby friend and foe alike before regaining their wits.
+
+This spell can be broken prematurely by the death of its caster.
+%%%%
 Doom Howl spell
 
 Unleashes a piercing howl that catches and echoes in victims' minds. While
@@ -1025,7 +1036,7 @@ fae also reduces the caster's own willpower for a time.
 %%%%
 Kinetic Grapnel spell
 
-Weaves a thin kinetic filiment around the caster's melee weapon and launches the
+Weaves a thin kinetic filament around the caster's melee weapon and launches the
 other end of it at a nearby enemy. If this grapnel successfully hits and does
 damage, it will become lodged in them, allowing the next melee attack the caster
 performs against them to strike with perfect accuracy and a small slaying bonus.
@@ -1489,10 +1500,27 @@ Pyroclastic Surge spell
 Draws searing flames from lava. Any enemies of the caster standing
 next to or above lava will be burned.
 %%%%
+Pyrrhic Recollection spell
+
+Ignites a memory from the nimbus which surrounds Nobody, temporarily granting
+them the knowledge of a powerful spell and healing their injuries.
+
+This power is fleeting and will be extinguished after taking any significant
+amount of damage, but so long as any other memories remain, they cannot be
+put to rest for good.
+%%%%
 Quicksilver Bolt spell
 
 Fires a bolt of dispelling energy at a targeted creature, possibly removing
 some of its enchantments.
+%%%%
+Ravenous Swarm spell
+
+Unleashes a torrent of vampire bats, filling the air around a target.
+
+These vampires will gnaw on anything which isn't undead with a voracious hunger,
+and their bites will eventually even lull their victims to sleep, leaving them
+easy prey.
 %%%%
 Rebounding Blaze spell
 

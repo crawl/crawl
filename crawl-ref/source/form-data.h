@@ -186,12 +186,12 @@ static const form_entry formdata[] =
 },
 
 {
-    transformation::bat, MONS_PROGRAM_BUG, "Bat", "bat-form", "bat",
+    transformation::bat, MONS_BAT, "Bat", "bat-form", "bat",
     "",
     0, 0, NUM_TALISMANS,
     EQF_PHYSICAL | EQF_RINGS, MR_NO_FLAGS,
     DEFAULT_DURATION, 0, 5, SIZE_TINY, 10,
-    {}, false, FormScaling().Base(-2),
+    {}, false, FormScaling().Base(0).XLBased(),
     SPWPN_NORMAL, LIGHTGREY, "Teeth", ANIMAL_VERBS,
     FC_ENABLE, FC_FORBID, false, true,
     FC_DEFAULT, FC_ENABLE, FC_ENABLE, FC_ENABLE, FC_ENABLE,
@@ -282,8 +282,7 @@ static const form_entry formdata[] =
     "an insubstantial wisp.",
     0, 0, NUM_TALISMANS,
     EQF_ALL, mrd(MR_RES_FIRE, 2) | mrd(MR_RES_COLD, 2) | MR_RES_ELEC
-             | mrd(MR_RES_NEG, 3) | MR_RES_ACID
-             | MR_RES_PETRIFY,
+             | mrd(MR_RES_NEG, 3) | MR_RES_CORR,
     BAD_DURATION, 0, 0, SIZE_TINY, 10,
     FormScaling().Base(5).Scaling(14).XLBased(), false, FormScaling().Base(2).XLBased(),
     SPWPN_NORMAL, LIGHTGREY, "Misty tendrils", { "touch", "touch",
@@ -385,7 +384,7 @@ static const form_entry formdata[] =
     transformation::storm, MONS_TWISTER, "Storm", "storm-form", "storm",
     "a lightning-filled tempest!",
     23, 27, TALISMAN_STORM,
-    EQF_PHYSICAL, MR_RES_ELEC | MR_RES_PETRIFY,
+    EQF_PHYSICAL, MR_RES_ELEC,
     DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 10,
     FormScaling().Base(12).Scaling(3), true, FormScaling().Base(24).Scaling(6),
     SPWPN_ELECTROCUTION, LIGHTCYAN, "", { "hit", "buffet", "batter", "blast" },
@@ -464,6 +463,50 @@ static const form_entry formdata[] =
       { "torment immunity", "You are immune to unholy pain and torment."},
     },
     { { "demonic bargain", "You will endure the Crucible once your slaughter is complete." },
+    }
+},
+
+{
+    transformation::vampire, MONS_VAMPIRE, "Vampire", "vampire-form", "vampire",
+    "a living vampire.",
+    16, 25, TALISMAN_VAMPIRE,
+    EQF_NONE, mrd(MR_RES_COLD, 1) | mrd(MR_RES_NEG, 2),
+    DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 10,
+    {}, true, FormScaling().Base(0),
+    SPWPN_NORMAL, LIGHTMAGENTA, "", DEFAULT_VERBS,
+    FC_DEFAULT, FC_DEFAULT, true, true,
+    FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, FC_DEFAULT,
+    "", 0, "", "", "", "",
+    { { "vampire fangs", "Your fangs allow you to drain the lifeblood from your enemies." },
+      { "bloodcurse", "When you kill a living creature with a stab, you may create a vampiric thrall."},
+      { "torment resistance 1", "You are resistant to unholy torment." }, // same as MUT_TORMENT_RESISTANCE
+      { "bat form", "You can occasionally transform into a swarm of bats."},
+      { "very stealthy", "You are very stealthy."},
+    }, // rC+, rN++
+    { { "inhibited regeneration", "You do not regenerate when monsters are visible." } }
+},
+
+{
+    transformation::bat_swarm, MONS_PROGRAM_BUG, "Bat Swarm", "batswarm-form", "bat swarm",
+    "a swarm of vampire bats",
+    16, 25, NUM_TALISMANS,
+    EQF_PHYSICAL, mrd(MR_RES_COLD, 1) | mrd(MR_RES_NEG, 3),
+    FormDuration(15, PS_SINGLE, 25), 0, 5, SIZE_TINY, 10,
+    {}, false, FormScaling().XLBased(),
+    SPWPN_NORMAL, LIGHTGREY, "Teeth", ANIMAL_VERBS,
+    FC_ENABLE, FC_FORBID, false, true,
+    FC_DEFAULT, FC_ENABLE, FC_ENABLE, FC_ENABLE, FC_ENABLE,
+    "squeak", -8, "foreclaw", "", "perch on", "flesh",
+    { { "extremely fast", "You cover ground extremely quickly." },
+      { "", "You are tiny, dextrous, and very evasive." }, // short-form "tiny" is automatically added
+      { "vampire fangs", "Your fangs allow you to drain the lifeblood from your enemies." },
+      { "bloodcurse", "When you kill a living creature with a stab, you may create a vampiric thrall."},
+      { "torment resistance 1", "You are resistant to unholy torment." }, // same as MUT_TORMENT_RESISTANCE
+      { "very stealthy", "You are very stealthy."},
+    },
+    { { "weak attacks", "Your unarmed attacks are very weak." },
+      { "no casting", "You cannot cast spells." },
+      { "inhibited regeneration", "You do not regenerate when monsters are visible." },
     }
 },
 

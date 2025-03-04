@@ -1526,7 +1526,6 @@ static void _tag_construct_you(writer &th)
     marshallShort(th, you.pending_revival ? 0 : you.hp);
 
     marshallBoolean(th, you.fishtail);
-    marshallBoolean(th, you.vampire_alive);
     _marshall_as_int(th, you.form);
     _marshall_as_int(th, you.default_form);
     CANARY;
@@ -2790,12 +2789,11 @@ static void _tag_read_you(reader &th)
 #endif
     you.fishtail        = unmarshallBoolean(th);
 #if TAG_MAJOR_VERSION == 34
-    if (th.getMinorVersion() >= TAG_MINOR_VAMPIRE_NO_EAT)
-        you.vampire_alive = unmarshallBoolean(th);
-    else
-        you.vampire_alive = true;
-#else
-    you.vampire_alive   = unmarshallBoolean(th);
+    if (th.getMinorVersion() >= TAG_MINOR_VAMPIRE_NO_EAT
+        && th.getMinorVersion() < TAG_MINOR_REMOVE_VAMPIRES)
+    {
+        unmarshallBoolean(th);
+    }
 #endif
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_NOME_NO_MORE)
@@ -3549,7 +3547,6 @@ static void _tag_read_you(reader &th)
     SP_MUT_FIX(MUT_DISTRIBUTED_TRAINING, SP_GNOLL);
     SP_MUT_FIX(MUT_MERTAIL, SP_MERFOLK);
     SP_MUT_FIX(MUT_TENTACLE_ARMS, SP_OCTOPODE);
-    SP_MUT_FIX(MUT_VAMPIRISM, SP_VAMPIRE);
     SP_MUT_FIX(MUT_FLOAT, SP_DJINNI);
     SP_MUT_FIX(MUT_INNATE_CASTER, SP_DJINNI);
     SP_MUT_FIX(MUT_HP_CASTING, SP_DJINNI);
@@ -3581,8 +3578,7 @@ static void _tag_read_you(reader &th)
     }
     // not sure this is safe for SP_MUT_FIX, leaving it out for now
     if (you.species == SP_GREY_DRACONIAN || you.species == SP_GARGOYLE
-        || you.species == SP_GHOUL || you.species == SP_MUMMY
-        || you.species == SP_VAMPIRE)
+        || you.species == SP_GHOUL || you.species == SP_MUMMY)
     {
         _fixup_species_mutations(MUT_UNBREATHING);
     }
@@ -6445,7 +6441,7 @@ void _unmarshallMonsterInfo(reader &th, monster_info& mi)
     mi.mresists = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 34
     if (mi.mresists & MR_OLD_RES_ACID)
-        set_resist(mi.mresists, MR_RES_ACID, 3);
+        set_resist(mi.mresists, MR_RES_CORR, 3);
 #endif
     unmarshallUnsigned(th, mi.mitemuse);
     mi.mbase_speed = unmarshallByte(th);
@@ -8073,6 +8069,8 @@ static ghost_demon _unmarshallGhost(reader &th)
     ghost.xl               = unmarshallShort(th);
     ghost.max_hp           = unmarshallShort(th);
     ghost.ev               = unmarshallShort(th);
+    if (ghost.ev > MAX_GHOST_EVASION)
+        ghost.ev = MAX_GHOST_EVASION;
     ghost.ac               = unmarshallShort(th);
     ghost.damage           = unmarshallShort(th);
     ghost.speed            = unmarshallShort(th);
@@ -8095,7 +8093,7 @@ static ghost_demon _unmarshallGhost(reader &th)
     ghost.resists          = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 34
     if (ghost.resists & MR_OLD_RES_ACID)
-        set_resist(ghost.resists, MR_RES_ACID, 3);
+        set_resist(ghost.resists, MR_RES_CORR, 3);
     if (th.getMinorVersion() < TAG_MINOR_NO_GHOST_SPELLCASTER)
         unmarshallByte(th);
     if (th.getMinorVersion() < TAG_MINOR_MON_COLOUR_LOOKUP)

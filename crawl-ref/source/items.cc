@@ -3923,6 +3923,8 @@ colour_t item_def::talisman_colour() const
         return ETC_EARTH;
     case TALISMAN_DRAGON:
         return ETC_FIRE;
+    case TALISMAN_VAMPIRE:
+        return LIGHTMAGENTA;
     case TALISMAN_DEATH:
         return MAGENTA;
     case TALISMAN_STORM:

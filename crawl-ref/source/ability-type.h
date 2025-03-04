@@ -37,10 +37,10 @@ enum ability_type
     ABIL_MUMMY_RESTORATION,
 #endif
     // Vampires
-    ABIL_TRAN_BAT,
+    ABIL_BAT_SWARM,
+#if TAG_MAJOR_VERSION == 34
     ABIL_EXSANGUINATE,
     ABIL_REVIVIFY,
-#if TAG_MAJOR_VERSION == 34
     ABIL_BOTTLE_BLOOD,
     // Deep Dwarves
     ABIL_HEAL_WOUNDS,
@@ -63,6 +63,10 @@ enum ability_type
     ABIL_MUD_BREATH,
     // Coglins
     ABIL_INVENT_GIZMO,
+    // Poltergeist
+    ABIL_CACOPHONY,
+    // Revenants
+    ABIL_ENKINDLE,
 
     // Note: this is getting dangerously close to ABIL_EVOKE_BERSERK! be careful
 

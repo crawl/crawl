@@ -225,18 +225,20 @@ TAGS:   shoals_entry patrolling transparent
 WEIGHT: 5
 KMONS:  M = merfolk
 KMONS:  O = water nymph
+KITEM:  $ = $ q:1 no_pickup
 KFEAT:  O = enter_shoals
+KFEAT:  $ = W
 NSUBST: M = 1:M`` / *:`
 SUBST:  x = xx`, ` = W.
 MAP
  .........
 ...xx`xx...
 ..xxx`xxx..
-.xxxWWWxxx.
+.xxxWW$xxx.
 .xxWMMMWxx.
 .``WMOMW``.
 .xxWMMMWxx.
-.xxxWWWxxx.
+.xxx$WWxxx.
 ..xxx`xxx..
 ...xx`xx...
  .........
@@ -2575,6 +2577,44 @@ MAP
 .+.+.+.
 .......
  .....
+ENDMAP
+
+# Original by Lemuel - Stranded yaks(?)
+NAME:    lemuel_tekkud_yak_island
+TAGS:    transparent no_pool_fixup no_monster_gen patrolling
+DEPTH:   Shoals
+WEIGHT:  5
+MONS:    yak band w:15 / dream sheep band, cyclops / yaktaur w:15
+MONS:    satyr / stone giant w:5 / yaktaur captain
+KMONS:   B = bush
+KMONS:   P = oklob plant
+KITEM:   d = large rock q:1, $, any potion q:1
+SHUFFLE: -> / ~"
+SUBST:   - = w, ~ = W, " = .
+: if you.depth() ~= dgn.br_depth(you.branch()) then
+SUBST:   > = <
+NSUBST:  . = 1:1 / 2:2 / 2:d / *:.
+: else
+NSUBST:  . = 1:1 / 3:2 / 1:3 / 3:d / *:.
+: end
+FTILE:   .d<>123BP = floor_grass
+KMASK:   .d<>123BP = opaque
+KPROP:   .d<>123BP = no_tide
+: decorative_floor(_G, 'P', "flower patch")
+MAP
+   WWWWWWWWW
+  WWWWWwWWWWW
+ WWWWwwwwwWWWW
+WWWwwwwwwwwwWWW
+WWwwwwB..wwwwWW
+WWwwwP....wwwWW
+Wwwww..>..wwwwW
+WWwww....PwwwWW
+WWww--..BwwwwWW
+WWW---wwwwwwWWW
+ WWWWwwwwwWWWW
+  WWWWWwWWWWW
+   WWWWWWWWW
 ENDMAP
 
 ###############################################################################

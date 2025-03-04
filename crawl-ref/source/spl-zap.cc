@@ -168,6 +168,7 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_SEISMIC_STOMP, ZAP_SEISMIC_STOMP },
     { SPELL_THROW_BOLAS, ZAP_BOLAS },
     { SPELL_SOJOURNING_BOLT, ZAP_SOJOURNING },
+    { SPELL_RAVENOUS_SWARM, ZAP_RAVENOUS_SWARM },
 
     // This is just to satisfy monster spell setup code
     { SPELL_HELLFIRE_MORTAR, ZAP_HELLFIRE_MORTAR_DIG },
@@ -223,15 +224,6 @@ spell_type zap_to_spell(zap_type zap)
             return spzap.first;
 
     return SPELL_NO_SPELL;
-}
-
-int spell_zap_power(spell_type spell, int pow)
-{
-    switch (spell)
-    {
-    default:
-        return pow;
-    }
 }
 
 int spell_zap_power_cap(spell_type spell)

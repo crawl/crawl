@@ -31,7 +31,7 @@ bool jni_keyboard_control(bool toggle);
 int fdatasync(int fd);
 #endif
 
-#ifdef NEED_USLEEP
+#ifndef CRAWL_HAVE_USLEEP
 void usleep(unsigned long time);
 #endif
 

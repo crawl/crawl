@@ -146,6 +146,11 @@ item_def* newgame_make_item(object_class_type base,
             item.sub_type = ARM_KITE_SHIELD;
         else if (is_shield(item))
             item.sub_type = ARM_BUCKLER;
+        else if (get_armour_slot(item) == SLOT_BODY_ARMOUR
+                 && you.has_mutation(MUT_FORMLESS))
+        {
+            item.sub_type = ARM_CLOAK;
+        }
         else
             item.sub_type = ARM_ROBE;
     }

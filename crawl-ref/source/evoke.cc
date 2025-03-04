@@ -693,6 +693,10 @@ static spret _phantom_mirror(dist *target)
     mon->behaviour = BEH_SEEK;
     set_nearest_monster_foe(mon);
 
+    // If the original monster was unrewarding, and these flags are copied, the
+    // mirrored copy will not properly count as summoned for some purposes.
+    mon->flags &= ~(MF_HARD_RESET | MF_NO_REWARD);
+
     mprf("You reflect %s with the mirror!",
          victim->name(DESC_THE).c_str());
 

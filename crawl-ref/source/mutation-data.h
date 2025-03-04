@@ -126,9 +126,9 @@ static const mutation_def mut_data[] =
 { MUT_HEAT_RESISTANCE, 4, 3, mutflag::good, true,
   "fire resistance",
 
-  {"Your flesh is heat resistant. (rF+)",
-   "Your flesh is very heat resistant. (rF++)",
-   "Your flesh is almost immune to the effects of heat. (rF+++)"},
+  {"You are heat resistant. (rF+)",
+   "You are very heat resistant. (rF++)",
+   "You are almost immune to the effects of heat. (rF+++)"},
 
   {"You feel resistant to heat.",
    "You feel more resistant to heat.",
@@ -143,9 +143,9 @@ static const mutation_def mut_data[] =
 { MUT_COLD_RESISTANCE, 4, 3, mutflag::good, true,
   "cold resistance",
 
-  {"Your flesh is cold resistant. (rC+)",
-   "Your flesh is very cold resistant. (rC++)",
-   "Your flesh is almost immune to the effects of cold. (rC+++)"},
+  {"You are cold resistant. (rC+)",
+   "You are very cold resistant. (rC++)",
+   "You are almost immune to the effects of cold. (rC+++)"},
 
   {"You feel resistant to cold.",
    "You feel more resistant to cold.",
@@ -1926,7 +1926,7 @@ static const mutation_def mut_data[] =
   {"You have a small jelly attached to you that may absorb projectiles.", "", ""},
   {"Your body partially splits into a small jelly.", "", ""},
   {"The jelly growth is reabsorbed into your body.", "", ""},
-  TILEG_MUT_GENERIC_JIYVA_MUTATION,
+  TILEG_MUT_JELLY_ABSORBING_MISSILES,
 },
 
 { MUT_PETRIFICATION_RESISTANCE, 0, 1, mutflag::good, false,
@@ -2562,6 +2562,7 @@ static const mutation_def mut_data[] =
   {"Your arms no longer feel tentacular.", "", ""},
 },
 
+#if TAG_MAJOR_VERSION == 34
 { MUT_VAMPIRISM, 0, 2, mutflag::good, false,
   "vampiric",
 
@@ -2571,6 +2572,7 @@ static const mutation_def mut_data[] =
   0,
   {"", "You will be able to turn into a vampire bat when bloodless.", ""}
 },
+#endif
 
 { MUT_MERTAIL, 0, 1, mutflag::good, true,
   "mertail",
@@ -2588,6 +2590,7 @@ static const mutation_def mut_data[] =
   {"You float through the air rather than walking.", "", ""},
   {"You feel both weightless and legless.", "", ""},
   {"You feel dragged down by the weight of the world."},
+  TILEG_MUT_FLOAT,
 },
 
 { MUT_INNATE_CASTER, 0, 1, mutflag::good, false,
@@ -2604,6 +2607,7 @@ static const mutation_def mut_data[] =
   {"Your magical power is your life essence.", "", ""},
   {"Your magical power and health merge together.", "", ""},
   {"Your life and magic unlink."},
+  TILEG_MUT_HP_CASTING,
 },
 
 // XX why does this have 3 levels, only 1 is used
@@ -2647,14 +2651,17 @@ static const mutation_def mut_data[] =
   {"Your divine heritage dramatically boosts your attributes as you level up.", "", ""},
   {"You feel more divine.", "", ""},
   {"You feel more mortal.", "", ""},
+  TILEG_MUT_DIVINE_ATTRIBUTES,
 },
 
+#if TAG_MAJOR_VERSION == 34
 { MUT_DEVOUR_ON_KILL, 0, 1, mutflag::good, true,
   "devour on kill",
   {"You thrive by killing the living.", "", ""},
   {"You feel hungry for flesh.", "", ""},
   {"You feel less hungry for flesh.", "", ""},
 },
+#endif
 
 { MUT_SHORT_LIFESPAN, 0, 1, mutflag::bad, false,
   "otherworldly",
@@ -2683,6 +2690,7 @@ static const mutation_def mut_data[] =
   {"You regain HP and MP as you explore.", "", ""},
   {"You feel a fierce wanderlust.", "", ""},
   {"You feel like a homebody.", "", ""},
+  TILEG_MUT_EXPLORE_REGEN,
 },
 
 { MUT_DOUBLE_POTION_HEAL, 0, 1, mutflag::good, false,
@@ -2711,6 +2719,44 @@ static const mutation_def mut_data[] =
   {"Your spellcasting is much less encumbered by armour.", "", ""},
   {"Your spellcasting becomes less encumbered by armour.", "", ""},
   {"Your spellcasting no longer less encumbered by armour.", "", ""},
+},
+
+{ MUT_FORMLESS, 0, 2, mutflag::good, true,
+  "formless",
+
+  {"You can equip up to 6 pieces of aux armour in any combination.",
+   "You can equip up to 6 pieces of aux armour in any combination and unleash them.",
+   ""},
+  {"", "You feel ready to unleash a true cacophony.", ""},
+  {"", "", ""},
+  TILEG_MUT_FORMLESS,
+  {"", "You will be able to unleash your equipped armour.", ""},
+},
+
+{ MUT_TRICKSTER, 0, 1, mutflag::good, false,
+  "trickster",
+
+  {"You gain AC when you inflict magical misfortune on nearby enemies.", "", ""},
+  {"", "", ""},
+  {"", "", ""},
+  TILEG_MUT_TRICKSTER,
+},
+
+{ MUT_MNEMOPHAGE, 0, 1, mutflag::good, false,
+   "mnemnophage",
+   {"You can enhance your damage-dealing spells by burning harvested memories.", ""},
+   {"Your flames flicker hungrily.", "", ""},
+   {"Your flames grow less ravenous.", "", ""},
+   TILEG_MUT_MNEMOPHAGE,
+   {"You will be able to burn memories to enhance your damage-dealing spells."}
+ },
+
+{ MUT_SPELLCLAWS, 0, 1, mutflag::good, false,
+   "spellclaws",
+   {"You perform a melee attack whenever you cast damage-dealing spells.", "", ""},
+   {"You feel destructive magic coursing through your claws.", "", ""},
+   {"You no longer feel destructive magic coursing through your claws.", "", ""},
+   TILEG_MUT_SPELLCLAWS,
 },
 
 // Makhleb-specific mutations

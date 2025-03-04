@@ -102,6 +102,13 @@ heart HEART
 unstable UNSTABLE
 laced_with_chaos LACED_WITH_CHAOS
 vexed VEXED
+vampire_thrall VAMPIRE_THRALL
+enkindled_1 ENKINDLED_1
+enkindled_2 ENKINDLED_2
+nobody_memory_1 NOBODY_MEMORY_1
+nobody_memory_2 NOBODY_MEMORY_2
+nobody_memory_3 NOBODY_MEMORY_3
+pyrrhic PYRRHIC
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR

@@ -90,15 +90,16 @@ spret cast_englaciation(int pow, bool fail)
 /** Corona a monster.
  *
  *  @param mons the monster to get a backlight.
+ *  @param source The actor responsible for this.
  *  @returns true if it got backlit (even if it was already).
  */
-bool backlight_monster(monster* mons)
+bool backlight_monster(monster* mons, const actor* source)
 {
     const mon_enchant bklt = mons->get_ench(ENCH_CORONA);
     const mon_enchant zin_bklt = mons->get_ench(ENCH_SILVER_CORONA);
     const int lvl = bklt.degree + zin_bklt.degree;
 
-    mons->add_ench(mon_enchant(ENCH_CORONA, 1));
+    mons->add_ench(mon_enchant(ENCH_CORONA, 1, source));
 
     if (lvl == 0)
         simple_monster_message(*mons, " is outlined in light.");
@@ -389,6 +390,18 @@ spret cast_percussive_tempering(const actor& caster, monster& target, int power,
 
     target.heal(roll_dice(3, 10));
     target.add_ench(mon_enchant(ENCH_TEMPERED, 0, &caster, random_range(70, 100)));
+
+    // Give a small bit of extra duration if we're about to time out, just to
+    // avoid the sad feeling of buffing a monster who immediately vanishes.
+    if (target.has_ench(ENCH_SUMMON_TIMER))
+    {
+        mon_enchant dur = target.get_ench(ENCH_SUMMON_TIMER);
+        if (dur.duration < 50)
+        {
+            dur.duration += random_range(30, 50);
+            target.update_ench(dur);
+        }
+    }
 
     return spret::success;
 }

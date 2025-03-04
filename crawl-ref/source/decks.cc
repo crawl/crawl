@@ -1129,7 +1129,7 @@ static void _damaging_card(card_type card, int power,
                 return !mons.wont_attack()
                        && mons_is_threatening(mons)
                        && coinflip()
-                       && mons.corrode_equipment();
+                       && mons.corrode(&you);
             });
         }
         ztype = acidzaps[power_level];
@@ -1563,7 +1563,7 @@ static void _degeneration_card(int power)
                if (mons.can_polymorph())
                {
                    mons.polymorph(PPT_LESS);
-                   mons.malmutate("");
+                   mons.malmutate(&you);
                }
                else
                {

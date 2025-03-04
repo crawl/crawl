@@ -104,6 +104,8 @@ int count = 0;
         return 0;
 
     case SLOT_BODY_ARMOUR:
+        if (you.has_mutation(MUT_FORMLESS))
+            NO_SLOT("You can't haunt something so large.")
         if (species::is_draconian(you.species))
         {
             NO_SLOT(make_stringf("Your wings%s won't fit in that.",
@@ -118,6 +120,8 @@ int count = 0;
     // Hats versus helmets is handled elsewhere. If you can wear at least a hat,
     // this should be non-zero.
     case SLOT_HELMET:
+        if (you.has_mutation(MUT_FORMLESS))
+            return 0;
 
         if (you.unrand_equipped(UNRAND_SKULL_OF_ZONGULDROK))
             ++count;
@@ -134,6 +138,8 @@ int count = 0;
         return count;
 
     case SLOT_GLOVES:
+        if (you.has_mutation(MUT_FORMLESS))
+            return 0;
 
         if (you.unrand_equipped(UNRAND_FISTICLOAK))
             ++count;
@@ -157,7 +163,9 @@ int count = 0;
         return count;
 
     case SLOT_BOOTS:
-        if (species::wears_barding(you.species))
+        if (you.has_mutation(MUT_FORMLESS))
+            return 0;
+        else if (species::wears_barding(you.species))
             NO_SLOT("You don't have any feet!")
         else if (player_size <= SIZE_LITTLE)
             NO_SLOT(make_stringf("Those are too big for your %s.", you.foot_name(true).c_str()))
@@ -181,7 +189,9 @@ int count = 0;
         NO_SLOT("You can't fit into that!")
 
     case SLOT_CLOAK:
-        if (you.species == SP_OCTOPODE || you.has_mutation(MUT_NO_ARMOUR))
+        if (you.has_mutation(MUT_FORMLESS))
+            return 0;
+        else if (you.species == SP_OCTOPODE || you.has_mutation(MUT_NO_ARMOUR))
             NO_SLOT("You can't wear that.")
         else if (you.get_mutation_level(MUT_WEAKNESS_STINGER, mutation_activity_type::INACTIVE) >= 3)
             NO_SLOT("You can't wear that with your sharp stinger!")
@@ -224,6 +234,12 @@ int count = 0;
 
         return 1;
 
+    case SLOT_HAUNTED_AUX:
+        if (you.has_mutation(MUT_FORMLESS))
+            return 6;
+        else
+            return 0;
+
     default:
         return 0;
 
@@ -237,16 +253,17 @@ const static vector<equipment_slot> _flex_slots[] =
     {SLOT_WEAPON, SLOT_WEAPON_OR_OFFHAND},
     {SLOT_OFFHAND, SLOT_WEAPON_OR_OFFHAND},
     {SLOT_BODY_ARMOUR},
-    {SLOT_HELMET},
-    {SLOT_GLOVES},
-    {SLOT_BOOTS},
+    {SLOT_HELMET, SLOT_HAUNTED_AUX},
+    {SLOT_GLOVES, SLOT_HAUNTED_AUX},
+    {SLOT_BOOTS, SLOT_HAUNTED_AUX},
     {SLOT_BARDING},
-    {SLOT_CLOAK},
+    {SLOT_CLOAK, SLOT_HAUNTED_AUX},
     {SLOT_RING},
     {SLOT_AMULET},
     {SLOT_GIZMO},
 
     {SLOT_WEAPON_OR_OFFHAND, SLOT_WEAPON, SLOT_OFFHAND},
+    {SLOT_HAUNTED_AUX, SLOT_HELMET, SLOT_GLOVES, SLOT_BOOTS, SLOT_CLOAK},
 
     // NUM_EQUIP_SLOTS
     {},
@@ -258,10 +275,10 @@ const static vector<equipment_slot> _flex_slots[] =
 
     // SLOT_ALL_ARMOUR
     {SLOT_BODY_ARMOUR, SLOT_HELMET, SLOT_GLOVES, SLOT_BOOTS, SLOT_BARDING,
-     SLOT_CLOAK},
+     SLOT_CLOAK, SLOT_HAUNTED_AUX},
 
     // SLOT_ALL_AUX_ARMOUR
-    {SLOT_HELMET, SLOT_GLOVES, SLOT_BOOTS, SLOT_BARDING, SLOT_CLOAK},
+    {SLOT_HELMET, SLOT_GLOVES, SLOT_BOOTS, SLOT_BARDING, SLOT_CLOAK, SLOT_HAUNTED_AUX},
 
     // SLOT_ALL_JEWELLERY
     {SLOT_RING, SLOT_AMULET},
@@ -269,13 +286,13 @@ const static vector<equipment_slot> _flex_slots[] =
     // SLOT_ALL_EQUIPMENT
     {SLOT_WEAPON, SLOT_OFFHAND, SLOT_BODY_ARMOUR, SLOT_HELMET, SLOT_GLOVES,
      SLOT_BOOTS, SLOT_BARDING, SLOT_CLOAK, SLOT_RING, SLOT_AMULET, SLOT_GIZMO,
-     SLOT_WEAPON_OR_OFFHAND},
+     SLOT_WEAPON_OR_OFFHAND, SLOT_HAUNTED_AUX},
 
     // SLOT_WEAPON_STRICT
     {SLOT_WEAPON},
 };
 
-static const vector<equipment_slot>& _get_alternate_slots(equipment_slot slot)
+const vector<equipment_slot>& get_alternate_slots(equipment_slot slot)
 {
     ASSERT(slot < END_OF_SLOTS && slot >= SLOT_UNUSED);
     return _flex_slots[slot];
@@ -430,7 +447,7 @@ bool can_equip_item(const item_def& item, bool include_form, string* veto_reason
     // has at least one of the equivalent slots.
     for (equipment_slot slot : slots)
     {
-        const vector<equipment_slot>& flex = _get_alternate_slots(slot);
+        const vector<equipment_slot>& flex = get_alternate_slots(slot);
         bool found_slot = false;
         for (equipment_slot alt_slot : flex)
         {
@@ -620,7 +637,7 @@ equipment_slot player_equip_set::find_slot_to_equip_item(equipment_slot base_slo
                                                          vector<item_def*>& to_replace,
                                                          bool ignore_curses) const
 {
-    const vector<equipment_slot>& slots = _get_alternate_slots(base_slot);
+    const vector<equipment_slot>& slots = get_alternate_slots(base_slot);
     for (equipment_slot slot : slots)
     {
         // Skip slots the player doesn't have at all.
@@ -868,7 +885,7 @@ void player_equip_set::add(item_def& item, equipment_slot slot)
             // into a slot the player actually has. (Mostly this is for Coglins
             // wielding two-handers, to make sure it goes in their unique
             // offhand slot.)
-            const vector<equipment_slot>& alt_slots = _get_alternate_slots(slots[i]);
+            const vector<equipment_slot>& alt_slots = get_alternate_slots(slots[i]);
             for (equipment_slot _slot : alt_slots)
             {
                 if (num_slots[_slot] == 0)
@@ -937,7 +954,7 @@ equipment_slot player_equip_set::find_equipped_slot(const item_def& item) const
 equipment_slot player_equip_set::find_compatible_occupied_slot(const item_def& old_item,
                                                                const item_def& new_item) const
 {
-    const vector<equipment_slot>& good_slots = _get_alternate_slots(get_all_item_slots(new_item)[0]);
+    const vector<equipment_slot>& good_slots = get_alternate_slots(get_all_item_slots(new_item)[0]);
     for (const player_equip_entry& entry : items)
         if (entry.item == old_item.link)
             for (equipment_slot slot : good_slots)
@@ -954,7 +971,7 @@ bool player_equip_set::has_compatible_slot(equipment_slot slot, bool include_for
         return true;
 
     // Now look for compatible alternative slots.
-    const vector<equipment_slot>& alt_slots = _get_alternate_slots(slot);
+    const vector<equipment_slot>& alt_slots = get_alternate_slots(slot);
     for (const auto& alt_slot : alt_slots)
         if (num_slots[alt_slot] > 0 && (!include_form || !slot_is_melded(alt_slot)))
             return true;
@@ -1050,11 +1067,11 @@ void player_equip_set::meld_equipment(int slots, bool skip_effects)
             comma_separated_line(meld_msg.begin(), meld_msg.end()).c_str(),
             meld_msg.size() > 1 ? "" : "s");
 
+    update();
+
     // Now, simultaneously do unequip effects for all melded items.
     for (item_def* meld_item : was_melded)
         unequip_effect(meld_item->link, true, true);
-
-    update();
 }
 
 /**
@@ -1156,13 +1173,14 @@ void player_equip_set::handle_unmelding(vector<item_def*>& to_unmeld, bool skip_
                 unmeld_msg.size() > 1 ? "" : "s");
     }
 
+    update();
+
     // Now, simultaneously do unequip effects for all melded items.
     if (!skip_effects)
     {
         for (item_def* meld_item : to_unmeld)
             equip_effect(meld_item->link, true, true);
     }
-    update();
 }
 
 /**
@@ -1184,7 +1202,7 @@ vector<item_def*> player_equip_set::get_slot_items(equipment_slot slot,
                                                    bool attuned_only) const
 {
     vector<item_def*> found;
-    const vector<equipment_slot>& slots = _get_alternate_slots(slot);
+    const vector<equipment_slot>& slots = get_alternate_slots(slot);
 
     // Calculate how many of a given item we could possibly find, so we can
     // abort early.
@@ -1245,7 +1263,7 @@ vector<player_equip_entry> player_equip_set::get_slot_entries(equipment_slot slo
 // of more than one item is unsupported anyway.)
 item_def* player_equip_set::get_first_slot_item(equipment_slot slot, bool include_melded) const
 {
-    const vector<equipment_slot>& slots = _get_alternate_slots(slot);
+    const vector<equipment_slot>& slots = get_alternate_slots(slot);
     for (const player_equip_entry& entry : items)
     {
         for (equipment_slot _slot : slots)
@@ -1404,13 +1422,7 @@ bool unequip_item(item_def& item, bool msg, bool skip_effects)
     you.equipment.update();
 
     if (!skip_effects)
-    {
-        // Cursed items should always be destroyed on unequip.
-        if (item.cursed())
-            destroy_item(item);
-
         unequip_effect(item_slot, false, msg);
-    }
 
     ash_check_bondage();
     you.last_unequip = item_slot;
@@ -1488,6 +1500,7 @@ void unequip_effect(int item_slot, bool meld, bool msg)
     else if (item.base_type == OBJ_JEWELLERY)
         _unequip_jewellery_effect(item, meld);
 
+    // Cursed items should always be destroyed on unequip.
     if (item.cursed() && !meld)
         destroy_item(item);
 }
@@ -1727,10 +1740,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
             break;
 
         case SPWPN_VAMPIRISM:
-            if (you.has_mutation(MUT_VAMPIRISM))
-                mpr("You feel a bloodthirsty glee!");
-            else
-                mpr("You feel a sense of dread.");
+            mpr("You feel a sense of dread.");
             break;
 
         case SPWPN_PAIN:
@@ -1870,12 +1880,7 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
 
             case SPWPN_VAMPIRISM:
                 if (showMsgs)
-                {
-                    if (you.has_mutation(MUT_VAMPIRISM))
-                        mpr("You feel your glee subside.");
-                    else
-                        mpr("You feel the dreadful sensation subside.");
-                }
+                    mpr("You feel the dreadful sensation subside.");
                 break;
 
             case SPWPN_DISTORTION:

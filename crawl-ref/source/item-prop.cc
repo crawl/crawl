@@ -3106,7 +3106,8 @@ string talisman_type_name(int type)
     case TALISMAN_SERPENT:  return "serpent talisman";
     case TALISMAN_BLADE:    return "blade talisman";
     case TALISMAN_STATUE:   return "granite talisman";
-    case TALISMAN_DRAGON:   return "dragon-blood talisman";
+    case TALISMAN_DRAGON:   return "dragon-coil talisman";
+    case TALISMAN_VAMPIRE:  return "sanguine talisman";
     case TALISMAN_DEATH:    return "talisman of death";
     case TALISMAN_STORM:    return "storm talisman";
     default:

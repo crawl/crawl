@@ -528,6 +528,13 @@ int monster::wearing_ego(object_class_type obj_type, int special) const
         break;
 
     case OBJ_ARMOUR:
+        item = mslot_item(MSLOT_SHIELD);
+        if (item && item->base_type == OBJ_ARMOUR
+            && get_armour_ego_type(*item) == special)
+        {
+            ret++;
+        }
+
         item = mslot_item(MSLOT_ARMOUR);
         if (item && item->base_type == OBJ_ARMOUR
             && get_armour_ego_type(*item) == special)
@@ -1670,7 +1677,8 @@ bool mons_class_is_remnant(monster_type mc)
 bool mons_class_is_animated_object(monster_type type)
 {
     return mons_class_is_animated_weapon(type)
-        || type == MONS_ARMOUR_ECHO;
+        || type == MONS_ARMOUR_ECHO
+        || type == MONS_HAUNTED_ARMOUR;
 }
 
 bool mons_is_zombified(const monster& mon)
@@ -2035,6 +2043,9 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
         if (mon.type == MONS_SOUL_WISP)
             attk.damage = 2 + mon.get_hit_dice();
 
+        if (mon.type == MONS_HAUNTED_ARMOUR)
+            attk.damage = 5 + (mon.get_hit_dice() * 3 / 4);
+
         // Boulder beetles get double attack damage and a normal 'hit' attack.
         if (mon.has_ench(ENCH_ROLLING))
         {
@@ -2089,6 +2100,16 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
             attk.damage = 2 + m.get_hit_dice() * 1 / 3;
         else
             attk.damage = 2 + (m.get_hit_dice() * 3 / 2);
+    }
+
+    // Vampires get a bite aux in addition to normal attacks.
+    if (mon.has_ench(ENCH_VAMPIRE_THRALL)
+            && attk.type == AT_NONE
+            && smc->attack[attk_number - 1].type != AT_NONE)
+    {
+        attk.type = AT_BITE;
+        attk.flavour = AF_VAMPIRIC;
+        attk.damage = 5 + mon.get_experience_level() * 5 / 4;
     }
 
     if (!base_flavour)
@@ -3070,6 +3091,10 @@ void define_monster(monster& mons, bool friendly)
         break;
     }
 
+    case MONS_NAMELESS_REVENANT:
+        initialize_nobody_memories(mons);
+        break;
+
     default:
         break;
     }
@@ -3556,9 +3581,19 @@ bool mons_is_fleeing_sanctuary(const monster& m)
            && mons_is_influenced_by_sanctuary(m);
 }
 
+// Monster was just put to sleep and should not awaken for any reason until the
+// next player action.
 bool mons_just_slept(const monster& m)
 {
     return bool(m.flags & MF_JUST_SLEPT);
+}
+
+// Monster has an enchanted sleep effect and should not awaken from noise or
+// automatic stealth checks until it is over (but directly harming them will
+// still do it).
+bool mons_is_deep_asleep(const monster& m)
+{
+    return mons_just_slept(m) || m.has_ench(ENCH_DEEP_SLEEP);
 }
 
 // Moving body parts, turning oklob flowers and so on counts as motile here.
@@ -3992,7 +4027,7 @@ bool monster_senior(const monster& m1, const monster& m2, bool fleeing)
     // (revenants, ghost crabs).
     // XXX: unify this logic with Fannar's & Geryon's? (summon-buddies?)
     if (m1.type == MONS_SPECTRAL_THING
-        && (m2.type == MONS_REVENANT || m2.type == MONS_GHOST_CRAB))
+        && (m2.type == MONS_REVENANT_SOULMONGER || m2.type == MONS_GHOST_CRAB))
     {
         return true;
     }
@@ -5728,7 +5763,7 @@ void throw_monster_bits(const monster& mon)
 
         // Because someone will get a kick out of this some day.
         if (mons_class_flag(mons_base_type(mon), M_ACID_SPLASH))
-            target->corrode_equipment("a flying bit", 1);
+            target->corrode(&you, "a flying bit");
 
         behaviour_event(target, ME_ANNOY, &you, you.pos());
         target->hurt(&you, damage);
@@ -5893,6 +5928,9 @@ bool shoot_through_monster(const actor* agent, const monster& mon, bool do_messa
         return true;
     }
 
+    if (agent->is_player() && mon.type == MONS_HAUNTED_ARMOUR)
+        return true;
+
     return false;
 }
 
@@ -5933,4 +5971,20 @@ bool never_harm_monster(const actor* agent, const monster& mon, bool do_message)
 bool never_harm_monster(const actor* agent, const monster* mon, bool do_message)
 {
     return mon && never_harm_monster(agent, *mon, do_message);
+}
+
+/**
+ * Returns the maximum distance this type of monster is allowed to be from its
+ * creator. It will refuse to move further away than this under its own power,
+ * and if circumstances cause it to exceed this, it will abandon other plans to
+ * return to this range instead.
+ */
+int mons_leash_range(monster_type mc)
+{
+    switch (mc)
+    {
+        case MONS_PHALANX_BEETLE:   return 1;
+        case MONS_HAUNTED_ARMOUR:   return 2;
+        default:                    return 0; // No leashing
+    }
 }

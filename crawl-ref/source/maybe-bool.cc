@@ -1,4 +1,6 @@
 
+#include "AppHdr.h"
+
 #include <string>
 
 #include "debug.h"

@@ -101,6 +101,9 @@ octopode3
 octopode4 OCTOPODE_SILLY
 octopode5
 %rim 0
+poltergeist POLTERGEIST
+revenant REVENANT
+revenant2
 djinni_red_f DJINNI
 djinni_red_m
 djinni_blue_f
@@ -157,8 +160,6 @@ merfolk_f MERFOLK
 merfolk_m
 merfolk_water_f MERFOLK_WATER
 merfolk_water_m
-vampire_f VAMPIRE
-vampire_m
 gargoyle_m GARGOYLE
 gargoyle_f
 gargoyle_red_m

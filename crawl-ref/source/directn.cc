@@ -3628,7 +3628,7 @@ string get_monster_equipment_desc(const monster_info& mi,
         item_descriptions.push_back(weap.substr(1)); // strip leading space
 
     // as with dancing weapons, don't claim armour echoes 'wear' their armour
-    if (mon_arm && mi.type != MONS_ARMOUR_ECHO)
+    if (mon_arm && mi.type != MONS_ARMOUR_ECHO && mi.type != MONS_HAUNTED_ARMOUR)
     {
         const string armour_desc = make_stringf("wearing %s",
                                                 mon_arm->name(DESC_A).c_str());

@@ -266,20 +266,33 @@ static void _set_string_input(bool value)
     FlushConsoleInputBuffer(inbuf);
 }
 
-// Fake the user pressing Esc to break out of wait-for-input loops.
-// Just one should be enough as we check the seen_hups flag, we just
-// need to interrupt the syscall.
-void w32_insert_escape()
+// break out of wait-for-input loops
+void w32_cancel_waiting_for_input()
 {
-    INPUT_RECORD esc;
-    esc.EventType = KEY_EVENT;
-    esc.Event.KeyEvent.bKeyDown = TRUE;
-    esc.Event.KeyEvent.wRepeatCount = 1;
-    esc.Event.KeyEvent.wVirtualKeyCode = VK_ESCAPE;
-    // .wVirtualScanCode ?
-    esc.Event.KeyEvent.uChar.UnicodeChar = ESCAPE;
-    esc.Event.KeyEvent.dwControlKeyState = 0;
-    WriteConsoleInputW(inbuf, &esc, 1, nullptr);
+#if defined(WINVER) && WINVER >= 0x0600
+    CancelIoEx(inbuf, nullptr);
+#else
+    typedef BOOL(WINAPI *cancel_func)(HANDLE, LPOVERLAPPED);
+    cancel_func cancel_io = (cancel_func)(void *)GetProcAddress(
+        GetModuleHandle(TEXT("kernel32.dll")), "CancelIoEx");
+
+    if (cancel_io)
+        cancel_io(inbuf, nullptr);
+    else
+    {
+        // This crashes with MSVC but seems fine with gcc, so only use it as
+        // a backup when CancelIoEx isn't available
+        INPUT_RECORD esc;
+        esc.EventType = KEY_EVENT;
+        esc.Event.KeyEvent.bKeyDown = TRUE;
+        esc.Event.KeyEvent.wRepeatCount = 1;
+        esc.Event.KeyEvent.wVirtualKeyCode = VK_ESCAPE;
+        // .wVirtualScanCode ?
+        esc.Event.KeyEvent.uChar.UnicodeChar = ESCAPE;
+        esc.Event.KeyEvent.dwControlKeyState = 0;
+        WriteConsoleInputW(inbuf, &esc, 1, nullptr);
+    }
+#endif
 }
 
 #ifdef TARGET_COMPILER_MINGW
@@ -912,7 +925,7 @@ int getch_ck()
 bool kbhit()
 {
     if (crawl_state.seen_hups)
-        return 1;
+        return false;
 
     INPUT_RECORD ir[10];
     DWORD read_count = 0;

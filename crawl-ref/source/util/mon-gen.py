@@ -197,7 +197,7 @@ ALL_RESISTS = {
     'elec': Resist(-1, 4),
     'poison': Resist( -1, 4),
     'neg': Resist(0, 4),
-    'acid': Resist(0, 4),
+    'corr': Resist(0, 4),
     'miasma': Resist(0, 4),
     'torment': Resist(),
     'petrify': Resist(),

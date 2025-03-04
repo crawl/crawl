@@ -695,12 +695,6 @@ You can blend into the waves while swimming through water or flying above it,
 gaining Stealth+. The second level of this mutation also grants you improved
 evasion and increases your movement speed when in or above water.
 %%%%
-vampiric mutation
-
-You are cursed with vampirism, torn between false life and a bloodless,
-dessicated undeath. You can use <input>$cmd[CMD_USE_ABILITY]</input> to
-exsanguinate yourself or to fill once more with blood.
-%%%%
 divine attributes mutation
 
 Your divine heritage dramatically boosts your attribute gain (Strength,
@@ -883,6 +877,73 @@ inviolate magic mutation
 Your magic is resistant to distruption by outside forces. Hostile effects which
 drain your MP drain only 1/3 as much and you are immune to having your magical
 effects be removed by anyone but yourself.
+%%%%
+formless mutation
+
+You have no physical body and instead interact with the world through haunting
+objects. This allows you to 'equip' up to 6 boots, gloves, cloaks, or helmets in
+any combination, but body armour is too large for you to usefully manipulate in
+this fashion.
+
+At higher levels, you can even send the armour you are haunting out to attack
+enemies independently for short periods of time.
+%%%%
+trickster mutation
+
+Your connection to the realm of the living grows stronger as you spread
+misfortune.
+
+Whenever you or your allies inflict new negative status effects upon nearby
+enemies (other than poison), your AC temporarily increases. This bonus improves
+with the number of different enemies affected, but will decay over time if you
+do not continue to inflict new misfortune.
+
+At your current XL, you can gain a maximum bonus of
+{{return 6 + you.xl() * 4 / 5;}} AC this way.
+%%%%
+mnemnophage mutation
+
+You devour the memories and even the very existence of those you kill, subsuming
+them in the unholy fire that wreathes your body.
+
+Once you have accumulated enough memories, you may choose to burn them all away
+as fuel to greatly enhance your spellcasting for a short period of time.
+
+At your current experience level, you can hold enough memories to cast a maximum
+of {{return 3 + math.floor(you.xl() * 3 / 20);}} spells in a row this way.
+%%%%
+spellclaws mutation
+
+You instinctually channel destructive magic through your claws. When casting a
+damage-dealing spell, you also perform a melee attack against the most healthy
+enemy in your attack range.
+
+This attack does reduced damage if your attack speed is slower than your casting
+speed.
+# ------ Fakemut descriptions ------
+%%%%
+vampire fangs mutation
+
+When you perform a stab attack against a living monster with blood, you heal for
+a portion of the total damage dealt. When you are at 50% of your max HP or less,
+this has a chance to happen on all melee attacks which increases with your
+Shapeshifting skill.
+%%%%
+bloodcurse mutation
+
+When you kill a living monster with a stab attack, they may rise again to serve
+you as a vampiric thrall. Thralls possess all the abilities they had in life,
+but are undead, and gain a vampiric bite attack. Spellcaster thralls will also
+gain knowledge of the Vampiric Draining spell.
+
+You can only create a thrall if you do not have one already, and they will
+inevitably turn to dust after a short time.
+%%%%
+insubstantial mutation
+
+You are insubstantial and immune to many effects that require a solid body. You
+cannot be constricted, petrified, engulfed, skewered by barbs, covered in sticky
+flame, or caught by webs, nets, or bolas.
 %%%%
 # ------ Makhleb destruction flavours ------
 Gehenna destruction mutation
@@ -1148,4 +1209,3 @@ Your Translocations skill is 0 and you cannot train the skill.
 no forgecraft magic mutation
 
 Your Forgecraft skill is 0 and you cannot train the skill.
-%%%%

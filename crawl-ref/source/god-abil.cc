@@ -1773,9 +1773,11 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
     mon->stop_constricting_all();
     mon->stop_being_constricted();
 
-    if (orig.halo_radius()
-        || orig.umbra_radius()
-        || orig.silence_radius())
+    // Monsters' haloes should be removed when their souls are bound.
+    if (mon->halo_radius() >= 0
+        || mon->umbra_radius() >= 0
+        || mon->silence_radius() >= 0
+        || mon->liquefying_radius() >= 0)
     {
         invalidate_agrid();
     }
@@ -2409,11 +2411,13 @@ bool ashenzari_uncurse_item()
         return false;
     }
 
+    vector<item_def*> to_remove = {&item};
+    if (!handle_chain_removal(to_remove, true))
+        return false;
+
     mprf("You shatter the curse binding %s!", item.name(DESC_THE).c_str());
     item_skills(item, you.skills_to_hide);
 
-    vector<item_def*> to_remove = {&item};
-    handle_chain_removal(to_remove, false);
     for (item_def* _item : to_remove)
     {
         if (_item-> link != item_slot)
@@ -3000,6 +3004,7 @@ bool valid_marionette_spell(spell_type spell)
         case SPELL_WALL_OF_BRAMBLES:
         case SPELL_CALL_TIDE:
         case SPELL_DRUIDS_CALL:
+        case SPELL_PYRRHIC_RECOLLECTION:
 
         // Doesn't do anything to monsters
         case SPELL_MESMERISE:
@@ -4383,11 +4388,6 @@ static bool _sac_mut_maybe_valid(mutation_type mut)
     {
         return false;
     }
-
-    // Vampires can't get inhibited regeneration for some reason related
-    // to their existing regen silliness.
-    if (mut == MUT_INHIBITED_REGENERATION && you.has_mutation(MUT_VAMPIRISM))
-        return false;
 
     // demonspawn can't get frail if they have a robust facet
     if (you.species == SP_DEMONSPAWN && mut == MUT_FRAIL

@@ -52,7 +52,7 @@ mutations:
     MUT_BIG_WINGS: 1
 fake_mutations:
   - long: You are immune to sickness and miasma.
-  - short: sickness immunity
+    short: sickness immunity
 recommended_jobs:
   - fighter
   - gladiator

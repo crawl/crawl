@@ -16,7 +16,7 @@ class monster;
 
 int englaciate(coord_def where, int pow, actor *agent);
 spret cast_englaciation(int pow, bool fail);
-bool backlight_monster(monster* mons);
+bool backlight_monster(monster* mons, const actor* source);
 
 //returns true if it slowed the monster
 bool do_slow_monster(monster& mon, const actor *agent, int dur = 0);

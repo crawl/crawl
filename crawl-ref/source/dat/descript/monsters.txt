@@ -438,6 +438,17 @@ A brilliant scientist obsessed with electricity. In his attempts to perfect his
 electric golem, he was involved in a terrible accident, and now phases in and
 out of reality.
 %%%%
+Nobody
+
+A time-lost revenant, risen not from the death of a single individual but of
+many - its bones fused together from the young and the elderly and different
+species altogether. Whether they were all the victims of a single massacre or
+a thousand souls discarded over a thousand years is impossible to say now;
+history does not remember them.
+
+But one thing is clear: they will fight to change that until every last memory
+they have left burns away.
+%%%%
 Norris
 
 A relaxed water cultist with a healthy tan and a soothing voice. He
@@ -1121,11 +1132,6 @@ deep elf zephyrmancer
 An elf with a singular focus on the magic of the air, leaving little time to
 study anything else.
 %%%%
-deep dwarf
-
-A pale and unnaturally tough-skinned dwarf that dwells far below ground and
-almost never emerges into the sunlit upper world.
-%%%%
 deep troll
 
 A stooped troll with dark skin. It often travels in packs.
@@ -1583,6 +1589,11 @@ harpy
 
 A bird-like creature with a human face that roams the coasts endlessly, feared
 for its sharp claws and harrying strikes.
+%%%%
+haunted armour
+
+An ordinary piece of armour, held in your haunting grip. It can attack nearby
+enemies, but must return to your side if you ever stray too far from it.
 %%%%
 sin beast
 
@@ -2325,6 +2336,11 @@ polar bear
 A bear covered in glistening white fur, habituated to cold conditions. Like all
 ursines, it will become enraged if badly hurt.
 %%%%
+poltergeist
+
+A ghostly trickster that is fond of possessing small objects and making them
+fly noisily through the air.
+%%%%
 polterguardian
 
 Many poltergeists are fiercely territorial over the domains they choose to
@@ -2438,8 +2454,15 @@ rows of adversaries whenever its creator lands a melee attack.
 %%%%
 revenant
 
-An animated skeleton wreathed in cold blue fire, standing astride this life and
-the next. Echoes of the lingering dead flicker within its ghostly flames.
+The skeletal remains of someone who died unmourned and forgotten. It burns with
+an unquenchable hunger to be remembered.
+%%%%
+revenant soulmonger
+
+A timeworn revenant whose flames dance with the silhouettes of long-forgotten
+atrocities. Cursed with a hunger they can never satisfy, they unleash these
+long-dead echoes to reenact violence upon any soul they deem worthy of adding to
+their eternal collection.
 %%%%
 ribbon worm
 
@@ -3034,6 +3057,11 @@ vampire bat
 
 A large black bat with vicious fangs that feeds on blood. It is the preferred
 form for vampires in disguise.
+%%%%
+vampire bloodprince
+
+A scornful scion to whom even other vampires bend the knee. Their command over
+blood magic allows them to feed upon the lifeforce of entire armies at once.
 %%%%
 vampire knight
 

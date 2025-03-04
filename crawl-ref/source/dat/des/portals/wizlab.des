@@ -1131,11 +1131,11 @@ KMONS:      | = undying armoury / walking crystal tome w:5
 :           else
 KMONS:      0% = place:Depths:1 zombie w:15 / guardian mummy w:15 / \
                  ushabti w:5 / ynoxinul / soul eater / smoke demon
-KMONS:      * = revenant / mummy priest w:5 / reaper / shadow demon
+KMONS:      * = revenant soulmonger / mummy priest w:5 / reaper / shadow demon
 KMONS:      | = ancient lich / royal mummy / executioner / tzitzimitl
 :             set_random_mon_list(
 :                 "guardian mummy w:20 / ynoxinul / soul eater / " ..
-:                 "smoke demon / mummy priest / revenant / reaper")
+:                 "smoke demon / mummy priest / revenant soulmonger / reaper")
 :           end
 
 #           Hints.
@@ -1280,13 +1280,13 @@ KMONS:      9 = generate_awake glass eye
 KMONS:      0 = col:red iron golem hd:5 spells:corrupting_pulse.36.magical \
                 name:flesh_golem name_replace \
                 tile:mons_flesh_golem name_descriptor
-KMONS:      & = col:mutagenic primal ox-ox-weird mutant beast \
+KMONS:      & = col:mutagenic primal ox-ox-weird mutant beast perm_ench:regen \
                 name:Cigotuvi's_Monster name_replace tile:mons_cigotuvis_monster
 ITEM:       potion of mutation q:1 pre_id
 ITEM:       randbook disc:alchemy disc2:necromancy owner:Cigotuvi
 ITEM:       flux talisman randart / maw talisman randart / \
             serpent talisman randart / statue talisman w:8 / \
-            dragon-blood talisman / storm talisman w:8 / \
+            dragon-coil talisman / storm talisman w:8 / \
             talisman of death w:2
 ITEM:       staff of death pre_id, scroll of poison pre_id
 ITEM:       w:5 any jewellery randart / w:5 hat_of_the_alchemist / \
@@ -2355,11 +2355,12 @@ MONS:    flayed ghost / shadow wraith / eidolon
 MONS:    spriggan berserker zombie / titan zombie / spark wasp zombie /\
          harpy zombie / quicksilver dragon zombie / wolf spider zombie /\
          caustic shrike zombie / skeletal warrior w:30 / jiangshi w:30
-MONS:    ancient champion / revenant, laughing skull
+MONS:    ancient champion / revenant soulmonger, laughing skull
 MONS:    deep elf death mage / vampire mage / necromancer, halazid warlock
 ITEM:    randbook disc:necromancy numspells:6 owner:Borgnjor w:5 / any book /\
-         necronomicon / randbook disc:necromancy / staff of death /\
-         macabre finger necklace w:1 / sceptre of torment w:1
+         necronomicon / randbook disc:necromancy / staff of death w:5 /\
+         sanguine talisman / macabre finger necklace w:1 /\
+         sceptre of torment w:1
 : local p = "good_item ego:pain w:3"
 : local v = "good_item ego:vampirism w:3"
 : item("any book w:12 / scroll of torment pre_id q:3 w:12 / " ..
@@ -2396,7 +2397,7 @@ lua_marker('A', summon_marker)
 :           set_random_mon_list(
 :               "skeletal warrior / flayed ghost / phantasmal warrior / " ..
 :               "necromancer / vampire mage / shadow wraith / " ..
-:               "revenant w:2 / ancient champion w:2")
+:               "revenant soulmonger w:2 / ancient champion w:2")
 :           wizlab_setup(_G)
 epilogue {{
             wizlab_milestone(_G, "Borgnjor's Mausoleum")

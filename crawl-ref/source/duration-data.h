@@ -693,6 +693,14 @@ static const duration_def duration_data[] =
     { DUR_BLINKITIS, RED, "Unstable",
       "blinking rapidly", "blinkitis",
       "You are untethered in space.", D_DISPELLABLE, {{"You feel more stable."}} },
+    { DUR_CACOPHONY,
+      WHITE, "Cacophony",
+      "making a cacophony", "cacophony",
+      "You are making an unholy racket with your haunted armour.", D_EXPIRES},
+    { DUR_ENKINDLED, LIGHTCYAN, "Enkindled",
+      "enkindled", "enkindled",
+      "Your flames burn bright with remembrance.", D_EXPIRES,
+      {{ "Your flames start to waver.", end_enkindled_status }}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
@@ -767,9 +775,11 @@ static const duration_def duration_data[] =
     { DUR_GRAVE_CLAW_RECHARGE, 0, "", "", "grave claw recharging", "", D_NO_FLAGS},
     { DUR_TIME_WARPED_BLOOD_COOLDOWN, 0, "", "", "time-warped blood cooldown", "", D_NO_FLAGS},
     { DUR_SPIKE_LAUNCHER_ACTIVE, 0, "", "", "spike launcher", "", D_NO_FLAGS, {{"", end_spike_launcher}}},
-    { DUR_PARAGON_ACTIVE, 0, "", "", "paragon active", "", D_NO_FLAGS, {{""}}},
+    { DUR_PARAGON_ACTIVE, 0, "", "", "paragon active", "", D_NO_FLAGS},
     { DUR_FORTRESS_BLAST_TIMER, 0, "", "", "fortress blast charging", "", D_DISPELLABLE},
     { DUR_PHALANX_BARRIER, 0, "", "phalanx barrier", "phalanx barrier", "", D_NO_FLAGS},
+    { DUR_TRICKSTER_GRACE, 0, "", "", "trickster", "", D_NO_FLAGS, {{""}}},
+    { DUR_DROWSY, 0, "Drowsy", "", "drowsy", "", D_NO_FLAGS, {{"You feel less drowsy."}}},
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

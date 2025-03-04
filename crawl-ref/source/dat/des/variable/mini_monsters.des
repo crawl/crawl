@@ -3472,16 +3472,19 @@ DEPTH:   D:11-, Crypt, !Crypt:$
 WEIGHT:  5
 MONS:    bat, phantom, vampire, unseen horror
 MONS:    phantasmal warrior, vampire knight, jiangshi
+KMONS:   8 = vampire bloodprince
+KFEAT:   8 = fountain_blood
+KITEM:   8d = sanguine talisman
+KITEM:   % = % no_pickup
+KITEM:   * = * no_pickup
 # Notably, sometimes fill in parts of the grid.
 SHUFFLE: ABC, DE, FGH, 34 / 34 / 34 / 43
 SUBST:   A = 1, F = 2, B : xx..., D : xx..., G : xx..., CEH = .
-SUBST:   I : c...., 5 = 3333445
+SUBST:   I : c...., 5 = 3333445, * = ***d
 : if you.in_branch("Crypt") then
-SUBST:   4 = 7, 3 = 6, 2 = 5, 1 = 1444
+SUBST:   4 = 7, 3 = 6668, 2 = 5, 1 = 1444
 SUBST:   c = v, x = c
 : end
-KITEM:   % = % no_pickup
-KITEM:   * = * no_pickup
 MAP
 xx@xxxxxxxxxxx
 x.x.xxxxxxxxxx
@@ -3506,21 +3509,22 @@ ENDMAP
 NAME:    nzn_life_drinkers
 TAGS:    no_monster_gen no_item_gen no_wall_fixup vaults_hard
 DEPTH:   D:8-, Crypt, Vaults, Depths
+ITEM:    sanguine talisman
 SHUFFLE: '-
 NSUBST:  ' = 1:D / 1:DE / *:.
 SUBST:   V = V:50 Y
 : if you.in_branch("Vaults") then
 MONS:    vampire knight, vault warden ; scimitar ego:vampirism . plate armour
-SUBST:   @ = ., - = ||*
+SUBST:   @ = ., - = |||*d
 NSUBST:  1 = 1:2 / 2:1 / *:.
 TILE:    x = wall_undead
 FTILE:   `?VY = floor_w_marble
 : elseif not you.in_branch("D") then
 MONS:    vampire mage
-SUBST:   x = c, - = *%, ` = $
+SUBST:   x = c, - = **%%d, ` = $
 : else
 MONS:    vampire, vampire mage
-SUBST:   - = %, x = c, ` = .
+SUBST:   - = %:9 d:1, x = c, ` = .
 :   if you.absdepth() > 11 then
 NSUBST:  1 = 1:2 / 2:1 / *:.
 :   end
@@ -3577,7 +3581,7 @@ NAME:  nicolae_nh_vlads_tower
 TAGS:  transparent patrolling
 DEPTH: D:11-, Crypt
 KITEM: | = |
-KITEM: _ = *
+KITEM: _ = * / sanguine talisman
 KITEM: 1 = %
 : if you.absdepth() < 13 then
 KMONS: _ = vampire mage
@@ -7726,9 +7730,9 @@ DEPTH: D:12-, Lair:2-, Orc:$
 : if you.branch() == "Lair" then
 :   r = crawl.random_range(1, 4)
 : elseif you.branch() == "Orc" then
-:   r = crawl.random_range(3, 6)
+:   r = crawl.random_range(3, 5)
 : else
-:   r = crawl.random_range(1, 8)
+:   r = crawl.random_range(1, 9)
 : end
 : if r == 1 then
 MONS:   eight-headed hydra / goliath frog
@@ -7744,7 +7748,7 @@ NSUBST: " = 1:" / 1:' / * = "'
 SUBST:  2 = .
 : elseif r == 3 then
 MONS:   fire dragon, lindwurm
-KITEM:  d = dragon-blood talisman / dragon-blood talisman randart w:1
+KITEM:  d = dragon-coil talisman / dragon-coil talisman randart w:1
 SUBST:  '" = l
 : elseif r == 4 then
 KMONS:  12 = boulder beetle
@@ -7761,7 +7765,7 @@ MONS:   reaper, soul eater
 KITEM:  d = talisman of death / talisman of death randart w:1
 SUBST:  " = G
 :   vault_granite_statue_setup(_G, "G", "gravestone")
-: elseif r >= 7 then
+: elseif r == 7 then
 MONS:   air elemental
 KMONS:  2" = raiju
 KITEM:  d = storm talisman / storm talisman randart w:1
@@ -7769,6 +7773,12 @@ SUBST:  " = "...
 MARKER: d = lua:fog_machine {cloud_type = "thin mist", \
              pow_min = 5, pow_max = 12, delay_min = 28, delay_max = 42, \
              size = 2, spread_rate = 2, start_clouds = 1 }
+: elseif r == 8 then
+MONS:   vampire mage
+KMONS:  2" = vampire
+KITEM:  d = sanguine talisman / sanguine talisman randart w:1
+KFEAT:  " = fountain_blood
+SUBST:  " = ""YY
 : else
 SUBST: 1d'" = .
 : end
@@ -8416,8 +8426,11 @@ MONS:    vampire mosquito / tyrant leech / vampire, vampire knight
 :   end
 : else
 MONS:    vampire knight, vampire mage
+:   if you.in_branch("Crypt") then
+KMONS:   d = vampire bloodprince
+:   end
 : end
-ITEM:    vampires_tooth no_pickup
+KITEM:   d = vampires_tooth no_pickup
 MAP
 .........
 .ccc.ccc.
@@ -9900,7 +9913,7 @@ KMONS:  P = patrolling merfolk
 KFEAT:  E~ = w
 KMASK:  E~ = no_pool_fixup
 SUBST:  M = w.
-NSUBST: E = 3=E / 2=Ew / w
+NSUBST: E = 2=E / 2=Ew / w
 veto {{
   return not items.pickable("phial of floods")
 }}
@@ -10359,8 +10372,8 @@ KMONS:  1 = dancing weapon / deep elf annihilator / deep elf blademaster / \
             deep elf high priest / place:Elf:$ w:27
 : elseif you.in_branch("Crypt") then
 KMONS:  1 = reaper / ancient champion / vampire knight / flayed ghost / \
-            eidolon / revenant / ancient lich / dread lich / \
-            curse skull w:15 / \ place:Crypt:$ w:30
+            eidolon / revenant soulmonger / ancient lich / dread lich / \
+            curse skull w:15 / vampire bloodprince w:15 / place:Crypt:$ w:30
 : elseif you.in_branch("Dis") then
 KMONS:  1 = tormentor / hellion / shadow demon / tzitzimitl / \
             ice fiend / brimstone fiend / hell sentinel w:15 / \

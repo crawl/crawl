@@ -1176,12 +1176,9 @@ static item_def* _item_swap_menu(const vector<item_def*>& candidates)
 
 static item_def* _item_swap_prompt(const vector<item_def*>& candidates)
 {
-    if (candidates.size() + 2 > msgwin_lines() || ui::has_layout()
-        || candidates.size() > 8)
-    {
-        // force a menu rather than a more().
+    // Default to a menu for larger choices
+    if (candidates.size() > 3 || ui::has_layout())
         return _item_swap_menu(candidates);
-    }
 
     vector<char> slot_chars;
     for (auto item : candidates)
@@ -1218,11 +1215,10 @@ static item_def* _item_swap_prompt(const vector<item_def*>& candidates)
                 || c == _item_swap_keys[i])
             {
                 chosen = i;
-                c = ' ';
                 break;
             }
         }
-    } while (!key_is_escape(c) && c != ' ' && c != '?');
+    } while (!key_is_escape(c) && c != ' ' && c != '?' && chosen < 0);
 
     clear_messages();
 
@@ -1343,6 +1339,23 @@ bool try_equip_item(item_def& item)
         for (size_t i = 0; i < removal_candidates.size(); ++i)
         {
             vector<item_def*>& candidates = removal_candidates[i];
+
+            // If one of the candidates has already been removed to free
+            // another slot, we don't need to remove anything to free this slot
+            bool slot_freed_when_freeing_other_slot = false;
+            for (const item_def* removed_item : to_remove)
+            {
+                for (const item_def* candidate : candidates)
+                {
+                    if (candidate == removed_item)
+                    {
+                        slot_freed_when_freeing_other_slot = true;
+                        break;
+                    }
+                }
+            }
+            if (slot_freed_when_freeing_other_slot)
+                continue;
 
             // Check if some number of items are inscribed with {=R} (but less
             // than all of them), and remove them from the candidates.
@@ -1508,7 +1521,7 @@ bool handle_chain_removal(vector<item_def*>& to_remove, bool interactive)
             else
             {
                 for (int i = 0; i < chain_remove_num;  ++i)
-                    to_remove.push_back(chain_remove.back() - i);
+                    to_remove.push_back(chain_remove[chain_remove.size() - i - 1]);
             }
         }
         else

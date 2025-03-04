@@ -391,7 +391,7 @@ static void _launch_game_loop()
             game_ended = false;
             _launch_game();
         }
-        catch (game_ended_condition &ge)
+        catch (const game_ended_condition &ge)
         {
             game_ended = true;
             crawl_state.last_game_exit = ge;
@@ -402,11 +402,11 @@ static void _launch_game_loop()
             if (ge.exit_reason == game_exit::save)
                 crawl_state.last_type = GAME_TYPE_UNSPECIFIED;
         }
-        catch (ext_fail_exception &fe)
+        catch (const ext_fail_exception &fe)
         {
             end(1, false, "%s", fe.what());
         }
-        catch (short_read_exception &E)
+        catch (const short_read_exception&)
         {
             end(1, false, "Error: truncation inside the save file.\n");
         }
@@ -1348,11 +1348,6 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
         canned_msg(MSG_CANNOT_MOVE);
         return false;
     }
-    else if (you.duration[DUR_VAINGLORY])
-    {
-        mpr("It simply wouldn't do to leave so soon after announcing yourself.");
-        return false;
-    }
 
     // ATTR_HELD is intentionally not tested here, it's handled in _take_stairs()
 
@@ -1360,6 +1355,11 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
     // not when otherwise unable to move.
     if (ftype == DNGN_PASSAGE_OF_GOLUBRIA || ftype == DNGN_TRANSPORTER)
         return true;
+    else if (you.duration[DUR_VAINGLORY])
+    {
+        mpr("It simply wouldn't do to leave so soon after announcing yourself.");
+        return false;
+    }
 
     // Mesmerised
     if (you.beheld() && !you.confused())

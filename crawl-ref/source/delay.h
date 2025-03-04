@@ -269,7 +269,6 @@ private:
 class EquipOffDelay : public Delay
 {
     item_def& equip;
-    bool primary_weapon;
     bool was_prompted = false;
 
     void start() override;
@@ -284,8 +283,8 @@ class EquipOffDelay : public Delay
 
     void finish() override;
 public:
-    EquipOffDelay(int dur, item_def& item, bool primary = false) :
-                   Delay(dur), equip(item), primary_weapon(primary)
+    EquipOffDelay(int dur, item_def& item) :
+                   Delay(dur), equip(item)
     { }
 
     bool try_interrupt(bool force = false) override;
@@ -638,54 +637,6 @@ public:
     }
 };
 
-class ExsanguinateDelay : public Delay
-{
-    bool was_prompted = false;
-
-    void start() override;
-
-    void tick() override
-    {
-        mprf(MSGCH_MULTITURN_ACTION, "You continue bloodletting.");
-    }
-
-    void finish() override;
-public:
-    ExsanguinateDelay(int dur) : Delay(dur)
-    { }
-
-    bool try_interrupt(bool force = false) override;
-
-    const char* name() const override
-    {
-        return "exsanguinate";
-    }
-};
-
-class RevivifyDelay : public Delay
-{
-    bool was_prompted = false;
-
-    void start() override;
-
-    void tick() override
-    {
-        mprf(MSGCH_MULTITURN_ACTION, "You continue your ritual.");
-    }
-
-    void finish() override;
-public:
-    RevivifyDelay(int dur) : Delay(dur)
-    { }
-
-    bool try_interrupt(bool force = false) override;
-
-    const char* name() const override
-    {
-        return "revivify";
-    }
-};
-
 class TransformDelay : public Delay
 {
     transformation form;
@@ -739,8 +690,6 @@ private:
 
 class ImprintDelay : public Delay
 {
-    bool was_prompted = false;
-
     void start() override;
 
     void tick() override

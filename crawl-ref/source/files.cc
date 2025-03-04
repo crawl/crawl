@@ -779,6 +779,9 @@ static vector<player_save_info> _find_saved_characters()
             }
             catch (ext_fail_exception &E)
             {
+#ifndef DEBUG_DIAGNOSTICS
+                UNUSED(E);
+#endif
                 dprf("%s: %s", filename.c_str(), E.what());
             }
             catch (game_ended_condition &E) // another process is using the save
@@ -2890,7 +2893,7 @@ save_version read_ghost_header(reader &inf)
         // Discard three more 32-bit words of padding.
         inf.read(nullptr, 3*4);
     }
-    catch (short_read_exception &E)
+    catch (const short_read_exception&)
     {
         mprf(MSGCH_ERROR,
              "Ghost file \"%s\" seems to be invalid (short read); deleting it.",
@@ -2932,7 +2935,7 @@ vector<ghost_demon> load_bones_file(string ghost_filename, bool backup)
         result = tag_read_ghosts(inf);
         inf.fail_if_not_eof(ghost_filename);
     }
-    catch (short_read_exception &short_read)
+    catch (const short_read_exception&)
     {
         string error = "Broken bones file: " + ghost_filename;
         throw corrupted_save(error, version);
@@ -3471,7 +3474,7 @@ save_version get_save_version(reader &file)
         if (minor == UINT8_MAX)
             minor = unmarshallInt(file);
     }
-    catch (short_read_exception& E)
+    catch (const short_read_exception&)
     {
         // Empty file?
         return save_version(-1, -1);
@@ -3518,6 +3521,23 @@ static bool _convert_obsolete_species()
         // addition, even if the player isn't over lava, they might still get
         // trapped.
         fly_player(100);
+        return true;
+    }
+    else if (you.species == SP_VAMPIRE)
+    {
+        if (!yesno(
+            "This Vampire save game cannot be loaded as-is. If you load it now,\n"
+            "your character will be converted to a Human. Continue?",
+                       false, 'N'))
+        {
+            you.save->abort(); // don't even rewrite the header
+            delete you.save;
+            you.save = 0;
+            game_ended(game_exit::abort,
+                "Please load the save in an earlier version "
+                "if you want to remain a Vampire.");
+        }
+        change_species_to(SP_HUMAN);
         return true;
     }
 #endif
@@ -3575,7 +3595,7 @@ static player_save_info _read_character_info(package *save)
         result.save_loadable = _loadable_save_ver(major, minor);
         return result;
     }
-    catch (short_read_exception &E)
+    catch (const short_read_exception &)
     {
         fail("Save file `%s` corrupted (short read)", save->get_filename().c_str());
     };
@@ -3651,7 +3671,7 @@ static bool _restore_tagged_chunk(package *save, const string &name,
     {
         tag_read(inf, tag);
     }
-    catch (short_read_exception &E)
+    catch (const short_read_exception&)
     {
         fail("truncated save chunk (%s)", name.c_str());
     };

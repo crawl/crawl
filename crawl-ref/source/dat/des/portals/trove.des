@@ -125,6 +125,7 @@ function trove.get_trove_item(e, value, base_item)
 
   local is_armour_user = you.race() ~= "Felid"
       and you.race() ~= "Octopode"
+      and you.race() ~= "Poltergeist"
       and you.genus() ~= "draconian"
 
   if is_armour_user then
@@ -253,12 +254,23 @@ function trove.good_scroll (e)
 end
 
 function trove.good_talisman (e)
-    e.item([[blade talisman randart / maw talisman randart /
-             serpent talisman randart w:8 / granite talisman w:4 /
-             granite talisman randart w:6 / dragon-blood talisman w:4 /
-             dragon-blood talisman randart w:6 / storm talisman w:8 /
-             storm talisman randart w:2 / talisman of death w:8 /
-             talisman of death randart w:2]])
+    local t = "blade talisman randart / maw talisman randart / " ..
+              "serpent talisman randart w:8 / granite talisman w:4 / " ..
+              "granite talisman randart w:6 / dragon-coil talisman w:4 / " ..
+              "dragon-coil talisman randart w:6 / storm talisman w:8 / " ..
+              "storm talisman randart w:2"
+
+    if you.god() ~= "Elyvilon" and you.god() ~= "the Shining One" then
+        t = t .. " / sanguine talisman w:4 / sanguine talisman randart w:6 / " ..
+                 " talisman of death w:8 / talisman of death randart w:2"
+    end
+
+    -- If you're with Zin, there's only one form of shapeshifting allowed:
+    if you.god() == "Zin" then
+       e.item([[potion of mutation pre_id q:1]])
+    else
+       e.item(t)
+    end
 end
 
 function trove.place_fog(e, type, strength)
@@ -828,7 +840,7 @@ ORIENT:  encompass
 # Loot:  15 items, this time.
 COLOUR:  x = blue
 MONS:    storm dragon zombie, golden dragon zombie, fire dragon skeleton
-ITEM:    dragon-blood talisman good_item / any armour good_item
+ITEM:    dragon-coil talisman good_item / any armour good_item
 ITEM:    golden dragon scales / storm dragon scales / fire dragon scales / \
          troll leather armour / any useful armour good_item
 ITEM:    javelin good_item / dart good_item
@@ -929,8 +941,16 @@ ORIENT:  encompass
 WEIGHT:  15
 ITEM:    manual of evocations, manual of shapeshifting, acquire magical staff
 ITEM:    any misc, maw talisman randart / blade talisman randart
-ITEM:    dragon-blood talisman randart / granite talisman randart
-ITEM:    storm talisman / talisman of death
+{{
+  local t3 = "dragon-coil talisman randart / granite talisman randart"
+  local t4 = "storm talisman"
+  if you.god() ~= "Elyvilon" and you.god() ~= "the Shining One" then
+    t3 = t3 .. " / sanguine talisman randart"
+    t4 = t4 .. " / talisman of death"
+  end
+  item(t3)
+  item(t4)
+}}
 ITEM:    wand of digging charges:8 / any hex wand charges:8 / \
          any beam wand charges:8 / any blast wand charges:8
 SHUFFLE: hij
@@ -940,8 +960,9 @@ FTILE:   ' = floor_limestone
 : trove.setup_features(_G)
 veto {{ return crawl.game_started()
         and (you.mutation("inability to use devices") == 1
-             or (you.mutation("no forms") == 1
-             and crawl.x_chance_in_y(2, 3))) }}
+             or (you.god == "Zin")
+             or ((you.mutation("no forms") == 1
+             and crawl.x_chance_in_y(2, 3)))) }}
 MAP
   xxxxx
   xdxex

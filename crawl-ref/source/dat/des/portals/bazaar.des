@@ -2218,8 +2218,8 @@ end
 table.insert(cons, interest .. " q:" .. crawl.random_range(2, 3))
 
 -- Only Xom gets to get away with this particular lack of niceness.
-if you.race() ~= "Mummy" and you.race() ~= "Ghoul"
-     and you.race() ~= "Vampire" then
+if you.race() ~= "Mummy" and you.race() ~= "Revenant"
+     and you.race() ~= "Poltergeist" then
     table.insert(cons, "scroll of torment w:5 q:" .. crawl.random_range(1, 4))
 end
 

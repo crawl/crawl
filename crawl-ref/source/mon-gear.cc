@@ -129,6 +129,9 @@ static talisman_type _talisman_for(monster_type mtyp)
         if (coinflip())
             return TALISMAN_DEATH;
         break;
+    case MONS_JORY:
+        if (coinflip())
+            return TALISMAN_VAMPIRE;
     default:
         break;
     }
@@ -2145,6 +2148,7 @@ int make_mons_armour(monster_type type, int level)
         break;
 
     case MONS_JOSEPHINA:
+    case MONS_VAMPIRE_BLOODPRINCE:
         level = ISPEC_GOOD_ITEM;
     case MONS_ORC_SORCERER:
     case MONS_DEMONSPAWN_BLOOD_SAINT:

@@ -897,7 +897,7 @@ ENDMAP
 NAME: vestibule_tar_old
 TAGS: vestibule_tar
 KFEAT: T = enter_tartarus
-KMONS: T = revenant / shadow dragon
+KMONS: T = revenant soulmonger / shadow dragon
 FTILE: +'T = floor_infernal_blank
 TILE: c = dngn_stone_dark
 MAP
@@ -953,8 +953,8 @@ TAGS:   vestibule_tar
 KFEAT:  T = enter_tartarus
 SUBST:  d = ccc., z = zzz..
 KMONS:  z = place:Depths:1 zombie
-KMONS:  b = revenant / lich / vampire mage / ancient lich / mummy priest / \
-           curse skull / dread lich
+KMONS:  b = revenant soulmonger / lich / vampire mage / ancient lich / \
+            mummy priest / curse skull / dread lich
 TILE:   c = dngn_stone_dark
 MAP
 .......dd...............dd.......
@@ -978,7 +978,7 @@ ENDMAP
 NAME: vestibule_tar_grunt_deathgaze
 TAGS: vestibule_tar
 KFEAT: T = enter_tartarus
-KMONS: T = revenant / lich / shadow dragon
+KMONS: T = revenant soulmonger / lich / shadow dragon
 MONS: ancient champion band, reaper / soul eater
 MONS: phantasmal warrior / vampire knight
 FTILE: +'T12 = floor_infernal_blank
@@ -1057,7 +1057,7 @@ ENDMAP
 
 NAME:    vestibule_tar_nicolae_seven_gates_of_the_underworld
 TAGS:    vestibule_tar
-KMONS:   H = lich / halazid warlock / shadow dragon / bone dragon / revenant
+KMONS:   H = lich / halazid warlock / shadow dragon / bone dragon / revenant soulmonger
 KMONS:   12 = ancient champion / skeletal warrior / phantasmal warrior / \
               reaper / soul eater / shadow demon / shadow wraith / \
               flayed ghost / putrid mouth

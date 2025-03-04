@@ -475,7 +475,7 @@ static tileidx_t _pick_dngn_tile_multi(vector<tileidx_t> candidates, int value)
     }
 
     // Should never reach this place
-    ASSERT(false);
+    die("couldn't find tile");
 }
 
 static bool _same_door_at(dungeon_feature_type feat, const coord_def &gc)

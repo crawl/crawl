@@ -1617,6 +1617,9 @@ static const vector<random_pick_entry<talisman_type>> talisman_weights =
     {  8, 20,  25, RISE, TALISMAN_DRAGON },
     { 21, 35,  25, FLAT, TALISMAN_DRAGON },
     {  0, 35,   5, FLAT, TALISMAN_DRAGON },
+    {  8, 20,  25, RISE, TALISMAN_VAMPIRE },
+    { 21, 35,  25, FLAT, TALISMAN_VAMPIRE },
+    {  0, 35,   5, FLAT, TALISMAN_VAMPIRE },
     // tier 3
     { 20, 27,  25, RISE, TALISMAN_DEATH },
     { 28, 35,  25, FLAT, TALISMAN_DEATH },

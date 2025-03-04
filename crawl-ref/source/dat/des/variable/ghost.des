@@ -651,7 +651,7 @@ MONS:   lich
 SUBST:  fg = |*, h = *%, i = %$--, j = -
 NSUBST: 1 = 12 / 1, - = 3=1 / 4=1- / .
 :     elseif you.in_branch("Crypt") then
-MONS: revenant / curse skull
+MONS: revenant soulmonger / curse skull
 SUBST:  fg = |*, h = *, i = %$, j = -
 NSUBST: 1 = 12 / 1, - = 4=1 / 4=1- / -
 :     elseif you.in_branch("Depths") then
@@ -711,13 +711,13 @@ NSUBST: D = 2223--, - = 1:1 -:9
 :    end
 : elseif you.in_branch("Vaults") then
 MONS:   freezing wraith / shadow wraith / phantasmal warrior / flayed ghost w:5
-MONS:   eidolon, revenant
+MONS:   eidolon, revenant soulmonger
 SUBST:  fg = |*, h = *%, i = %$--
 NSUBST: D = 2223--, - = -----1
 # Crypt
 : else
 MONS:   freezing wraith / shadow wraith / phantasmal warrior / flayed ghost
-MONS:   eidolon, revenant
+MONS:   eidolon, revenant soulmonger
 SUBST:  fg = |*, h = *, i = %$
 NSUBST: D = 2233--,  - = ---1
 : end

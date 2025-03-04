@@ -55,6 +55,14 @@
 #define RAMPAGE_HEAL_KEY "rampage_heal_strength"
 #define RAMPAGE_HEAL_MAX 7
 #define BLIND_COLOUR_KEY "blind_colour"
+#define TRICKSTER_POW_KEY "trickster_power"
+#define CACOPHONY_XP_KEY "cacophony_xp"
+#define BATFORM_XP_KEY "batform_xp"
+
+constexpr int ENKINDLE_CHARGE_COST = 40;
+#define ENKINDLE_CHARGES_KEY "enkindle_charges"
+#define ENKINDLE_PROGRESS_KEY "enkindle_progress"
+#define ENKINDLE_GIFT_GIVEN_KEY "enkindle_gifted"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
@@ -199,7 +207,6 @@ public:
     bool royal_jelly_dead;
     bool transform_uncancellable;
     bool fishtail; // Merfolk fishtail transformation
-    bool vampire_alive;
 
     unsigned short pet_target;
 
@@ -705,7 +712,7 @@ public:
     bool can_drink(bool temp = true) const;
     bool is_stationary() const override;
     bool is_motile() const;
-    bool malmutate(const string &reason) override;
+    bool malmutate(const actor* source, const string &reason = "") override;
     bool polymorph(int pow, bool allow_immobile = true) override;
     void backlight();
     void banish(const actor* /*agent*/, const string &who = "", const int power = 0,
@@ -715,6 +722,7 @@ public:
                   bool wizard_tele = false) override;
 
     void expose_to_element(beam_type element, int strength = 0,
+                           const actor* source = nullptr,
                            bool slow_cold_blood = true) override;
     void god_conduct(conduct_type thing_done, int level) override;
 
@@ -723,7 +731,7 @@ public:
     void paralyse(const actor *, int str, string source = "") override;
     void petrify(const actor *, bool force = false) override;
     bool fully_petrify(bool quiet = false) override;
-    bool vex(const actor*, int dur, string source = "") override;
+    bool vex(const actor* who, int dur, string source = "", string special_msg = "") override;
     void give_stun_immunity(int duration);
     void slow_down(actor *, int str) override;
     void confuse(actor *, int strength) override;
@@ -732,9 +740,9 @@ public:
     bool heal(int amount) override;
     bool drain(const actor *, bool quiet = false, int pow = 3) override;
     void splash_with_acid(actor *evildoer) override;
-    void acid_corrode(int acid_strength) override;
-    bool corrode_equipment(const char* corrosion_source = "the acid",
-                           int degree = 1) override;
+    bool corrode(const actor* source = nullptr,
+                 const char* corrosion_msg = "the acid",
+                 int amount = 4) override;
     void sentinel_mark(bool trap = false);
     int hurt(const actor *attacker, int amount,
              beam_type flavour = BEAM_MISSILE,
@@ -759,7 +767,7 @@ public:
     bool is_unbreathing() const override;
     bool is_insubstantial() const override;
     bool is_amorphous() const override;
-    int res_acid() const override;
+    int res_corr() const override;
     bool res_damnation() const override { return false; };
     int res_fire() const override;
     int res_steam() const override;
@@ -781,7 +789,6 @@ public:
     string no_tele_reason(bool blink = false, bool temp = true) const;
     bool antimagic_susceptible() const override;
 
-    bool res_corr(bool allow_random = true, bool temp = true) const override;
     bool clarity(bool items = true) const override;
     bool faith(bool items = true) const override;
     bool reflection(bool items = true) const override;
@@ -815,9 +822,8 @@ public:
     bool immune_to_hex(const spell_type hex) const;
 
     bool asleep() const override;
-    void put_to_sleep(actor* source, int power = 0, bool hibernate = false) override;
-    void awaken();
-    void check_awaken(int disturbance) override;
+    void put_to_sleep(actor* source, int duration = 0, bool hibernate = false) override;
+    void wake_up(bool force = false);
     int beam_resists(bolt &beam, int hurted, bool doEffects, string source)
         override;
     bool can_feel_fear(bool include_unknown) const override;
@@ -1029,7 +1035,6 @@ bool player_likes_water(bool permanently = false);
 
 int player_res_cold(bool allow_random = true, bool temp = true,
                     bool items = true);
-int player_res_acid(bool items = true);
 int player_res_electricity(bool allow_random = true, bool temp = true,
                            bool items = true);
 int player_res_fire(bool allow_random = true, bool temp = true,
@@ -1039,6 +1044,8 @@ int player_res_steam(bool allow_random = true, bool temp = true,
                      bool items = true);
 int player_res_poison(bool allow_random = true, bool temp = true,
                       bool items = true, bool forms = true);
+int player_res_corrosion(bool allow_random = true, bool temp = true,
+                         bool items = true);
 int player_willpower(bool temp = true);
 
 int player_shield_class(int scale = 1, bool random = true,
@@ -1183,6 +1190,10 @@ void dec_channel_player(int delay);
 void dec_frozen_ramparts(int delay);
 void reset_rampage_heal_duration();
 void apply_rampage_heal();
+void trickster_trigger(const monster& victim, enchant_type ench);
+int trickster_bonus();
+int enkindle_max_charges();
+void maybe_harvest_memory(const monster& victim);
 bool invis_allowed(bool quiet = false, string *fail_reason = nullptr,
                                                         bool temp = true);
 bool flight_allowed(bool quiet = false, string *fail_reason = nullptr);

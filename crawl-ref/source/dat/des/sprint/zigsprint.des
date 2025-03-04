@@ -447,14 +447,14 @@ local rnd = crawl.random2(142)
     e.kmons("1 = place:Lair:$ w:300 / hydra / catoblepas / dire elephant")
 -- Spider
   elseif rnd < 26 then
-    e.kmons("1 = place:Spider:$ w:70 / ghost moth w:5 / hornet /\
+    e.kmons("1 = place:Spider:$ w:70 / ghost moth w:5 / broodmother /\
                  moth of wrath w:5")
 -- Crypt
   elseif rnd < 34 then
     e.kmons("1 = zombie / skeleton / skeletal warrior / ghoul w:7 /\
                  laughing skull / vampire mage w:5 /\
                  vampire knight / lich w:5 / ancient lich w:2 / shadowghast /\
-                 wight / necromancer")
+                 necromancer / vampire bloodprince")
 -- Abyss
   elseif rnd < 42 then
     e.kmons("1 = pandemonium lord / place:Abyss w:500")
@@ -464,8 +464,8 @@ local rnd = crawl.random2(142)
                spriggan air mage / spriggan druid w:3 / spriggan berserker")
 -- Shoals
   elseif rnd < 52 then
-    e.kmons("1 = place:Shoals:$ w:55 / merfolk javelineer / merfolk impaler /\
-                 merfolk aquamancer")
+    e.kmons("1 = place:Shoals:$ w:45 / merfolk javelineer / merfolk impaler /\
+                 merfolk aquamancer / sphinx marauder")
     e.kmons("2 = kraken")
     e.subst("1 = 1:15 2:1")
     e.subst(". = W.")
@@ -490,8 +490,8 @@ local rnd = crawl.random2(142)
                frost giant / ettin / titan")
 -- Fire
   elseif rnd < 78 then
-    e.kmons("1 = fire vortex / hell hound / hell hog / fire elemental /\
-               efreet / fire dragon / fire giant / orb of fire w:5 / balrug")
+    e.kmons("1 = hell hound / hell hog / fire elemental / efreet / fire dragon /\
+                 will-o-the-wisp / fire giant / orb of fire w:5 / balrug")
 -- Ice
   elseif rnd < 81 then
     e.kmons("1 = ice beast / polar bear / white imp / simulacrum / rime drake/\

@@ -33,6 +33,7 @@
 #include "mon-behv.h"
 #include "mon-clone.h"
 #include "mon-death.h"
+#include "mutation.h"
 #include "nearby-danger.h"
 #include "pronoun-type.h"
 #include "religion.h"
@@ -1176,7 +1177,7 @@ bool attack::apply_damage_brand(const char *what)
 
     case SPWPN_FREEZING:
         calc_elemental_brand_damage(BEAM_COLD, "freeze", what);
-        defender->expose_to_element(BEAM_COLD, 2);
+        defender->expose_to_element(BEAM_COLD, 2, attacker);
         break;
 
     case SPWPN_HOLY_WRATH:
@@ -1376,7 +1377,6 @@ bool attack::apply_damage_brand(const char *what)
     case SPWPN_ACID:
         defender->splash_with_acid(attacker);
         break;
-
 
     default:
         if (using_weapon() && is_unrandom_artefact(*weapon, UNRAND_DAMNATION))

@@ -50,6 +50,7 @@
 #include "maps.h"
 #include "menu.h"
 #include "message.h"
+#include "mgen-data.h"
 #include "mon-behv.h"
 #include "mon-book.h"
 #include "mon-place.h"
@@ -370,12 +371,6 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_MUD_BREATH, "Mud Breath",
             0, 0, 0, 3, {fail_basis::xl, 30, 1},
             abflag::drac_charges },
-        { ABIL_TRAN_BAT, "Bat Form",
-            2, 0, 0, -1, {fail_basis::xl, 45, 2}, abflag::none },
-        { ABIL_EXSANGUINATE, "Exsanguinate",
-            0, 0, 0, -1, {}, abflag::delay},
-        { ABIL_REVIVIFY, "Revivify",
-            0, 0, 0, -1, {}, abflag::delay},
         { ABIL_DAMNATION, "Hurl Damnation",
             0, 150, 0, 6, {fail_basis::xl, 50, 1}, abflag::none },
         { ABIL_WORD_OF_CHAOS, "Word of Chaos",
@@ -404,6 +399,15 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 0, -1, {}, abflag::none },
         { ABIL_INVENT_GIZMO, "Invent Gizmo",
             0, 0, 0, -1, {}, abflag::none },
+
+        { ABIL_CACOPHONY, "Cacophony",
+            4, 0, 0, -1, {}, abflag::none },
+
+        { ABIL_BAT_SWARM, "Bat Swarm",
+            6, 0, 0, -1, {}, abflag::none },
+
+        { ABIL_ENKINDLE, "Enkindle",
+                0, 0, 0, -1, {}, abflag::instant },
 
         // EVOKE abilities use Evocations and come from items.
         { ABIL_EVOKE_BLINK, "Evoke Blink",
@@ -953,8 +957,8 @@ const string make_cost_description(ability_type ability)
         ret += make_stringf(", Permanent MP (%d left)", get_real_mp(false));
 #endif
 
-    if (ability == ABIL_REVIVIFY)
-        ret += ", Frailty";
+    if (ability == ABIL_CACOPHONY)
+        ret += ", Noise";
 
     if (ability == ABIL_ASHENZARI_CURSE
         && !you.props[CURSE_KNOWLEDGE_KEY].get_vector().empty())
@@ -1634,21 +1638,7 @@ static void _print_talent_description(const talent& tal)
 
 void no_ability_msg()
 {
-    // Give messages if the character cannot use innate talents right now.
-    // * Vampires can't turn into bats when full of blood.
-    // * Tengu can't start to fly if already flying.
-    if (you.get_mutation_level(MUT_VAMPIRISM) >= 2)
-    {
-        if (you.transform_uncancellable)
-            mpr("You can't untransform!");
-        else
-        {
-            ASSERT(you.vampire_alive);
-            mpr("Sorry, you cannot become a bat while alive.");
-        }
-    }
-    else
-        mpr("Sorry, you're not good enough to have a special ability.");
+    mpr("Sorry, you're not good enough to have a special ability.");
 }
 
 // Prompts the user for an ability to use, first checking the lua hook
@@ -2146,18 +2136,6 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
         return true;
 
-    case ABIL_TRAN_BAT:
-    {
-        const string reason = cant_transform_reason(transformation::bat);
-        if (!reason.empty())
-        {
-            if (!quiet)
-                mpr(reason);
-            return false;
-        }
-        return true;
-    }
-
 #if TAG_MAJOR_VERSION == 34
     case ABIL_HEAL_WOUNDS:
         if (you.hp == you.hp_max)
@@ -2196,6 +2174,68 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
                 mprf("In %d experience levels, you will have learned enough to "
                      "assemble a masterpiece.", (COGLIN_GIZMO_XL - you.experience_level));
             }
+            return false;
+        }
+
+        return true;
+    }
+
+    case ABIL_CACOPHONY:
+        // In the very unlikely case that the player has regained enough XP to
+        // use this ability again before it ends. Maybe in Sprint?
+        if (you.duration[DUR_CACOPHONY])
+        {
+            if (!quiet)
+                mpr("You are already making a cacophony!");
+            return false;
+        }
+        else if (you.props.exists(CACOPHONY_XP_KEY))
+        {
+            if (!quiet)
+                mpr("You must recover your energy before unleashing another cacophony.");
+            return false;
+        }
+        else if (!you.equipment.get_first_slot_item(SLOT_HAUNTED_AUX))
+        {
+            if (!quiet)
+                mpr("You aren't haunting any armour at the moment!");
+            return false;
+        }
+
+        return true;
+
+    case ABIL_BAT_SWARM:
+    {
+        if (you.props.exists(BATFORM_XP_KEY))
+        {
+            if (!quiet)
+                mpr("You must recover your energy before scattering into bats again.");
+            return false;
+        }
+        const string reason = cant_transform_reason(transformation::bat_swarm);
+        if (!reason.empty())
+        {
+            if (!quiet)
+                mpr(reason);
+            return false;
+        }
+        return true;
+    }
+
+    case ABIL_ENKINDLE:
+    {
+        if (you.duration[DUR_ENKINDLED])
+        {
+            if (!quiet)
+                mpr("You are already burning your memories away!");
+
+            return false;
+        }
+        else if (you.props[ENKINDLE_CHARGES_KEY].get_int() == 0)
+        {
+            if (!quiet)
+                mpr("You don't have any memories left to burn.");
+
             return false;
         }
 
@@ -2619,9 +2659,6 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
             return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 2, 0, 1);
 
     // Self-targeted:
-    case ABIL_TRAN_BAT:
-    case ABIL_EXSANGUINATE:
-    case ABIL_REVIVIFY:
     case ABIL_SHAFT_SELF:
 #if TAG_MAJOR_VERSION == 34
     case ABIL_HEAL_WOUNDS:
@@ -2815,7 +2852,7 @@ bool activate_talent(const talent& tal, dist *target)
             // even if that's just a cooldown or small amounts of HP.
             // No rapidly wall-jumping or renaming your ancestor, alas.
             if (is_religious_ability(abil.ability)
-                && (abil.piety_cost > 0 || (abil.flags & abflag::exhaustion)
+                && (abil.piety_cost || (abil.flags & abflag::exhaustion)
                     || (abil.flags & abflag::max_hp_drain)
                     || (abil.ability == ABIL_ZIN_RECITE)
                     || (abil.flags & abflag::card) || (abil.flags & abflag::gold)
@@ -2990,6 +3027,59 @@ static spret _do_draconian_breath(const ability_def& abil, dist *target, bool fa
         you.props[DRACONIAN_BREATH_USES_KEY].get_int() -= 1;
 
     return result;
+}
+
+static spret _do_cacophony()
+{
+    vector<item_def*> eq = you.equipment.get_slot_items(SLOT_HAUNTED_AUX);
+
+    bool did_something = false;
+    for (item_def* item : eq)
+    {
+        int mitm_slot = get_mitm_slot(10);
+
+        // This should be practically impossible, but if we can't make any
+        // item for our animated armour, abort in the case we've done nothing
+        // at all. If somehow we made at least one, just keep going.
+        if (mitm_slot == NON_ITEM)
+        {
+            if (!did_something)
+            {
+                canned_msg(MSG_NOTHING_HAPPENS);
+                return spret::abort;
+            }
+        }
+
+        mgen_data mg(MONS_HAUNTED_ARMOUR, BEH_FRIENDLY, you.pos(), MHITYOU,
+                      MG_FORCE_BEH | MG_AUTOFOE);
+        mg.set_summoned(&you, MON_SUMM_CACOPHONY, 0, false);
+        mg.set_range(1, 3);
+        mg.hd = you.experience_level * 2 / 3 + (item->plus * 2);
+        monster* armour = create_monster(mg);
+        if (!armour)
+            continue;
+
+        did_something = true;
+
+        item_def &fake_armour = env.item[mitm_slot];
+        fake_armour.clear();
+        fake_armour = *item;
+        fake_armour.flags |= ISFLAG_SUMMONED | ISFLAG_IDENTIFIED;
+        armour->pickup_item(fake_armour, false, true);
+        armour->speed_increment = 80;
+    }
+
+    if (!did_something)
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return spret::abort;
+    }
+
+    you.duration[DUR_CACOPHONY] = random_range(300, 400);
+    you.props[CACOPHONY_XP_KEY] = 150;
+    mpr("You send your armour flying and begin to make an unholy cacophony!");
+
+    return spret::success;
 }
 
 /*
@@ -3224,6 +3314,31 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         if (!coglin_invent_gizmo())
             return spret::abort;
         break;
+
+    case ABIL_CACOPHONY:
+        return _do_cacophony();
+
+    case ABIL_BAT_SWARM:
+    {
+        mpr("You scatter into a swarm of vampire bats!");
+        transform(random2(12), transformation::bat_swarm);
+        you.transform_uncancellable = true;
+        const int pow = get_form()->get_level(10);
+        big_cloud(CLOUD_BATS, &you, you.pos(), 18 + pow / 20, 8 + pow / 15, 1);
+        you.props[BATFORM_XP_KEY] = 90;
+        break;
+    }
+
+    case ABIL_ENKINDLE:
+    {
+        draw_ring_animation(you.pos(), 3, LIGHTCYAN, CYAN, true);
+        mprf(MSGCH_DURATION, "Your flames flare with remembrance!");
+        you.duration[DUR_ENKINDLED] = (random_range(12, 20)
+                                       + (you.props[ENKINDLE_CHARGES_KEY].get_int() * 3))
+                                            * BASELINE_DELAY;
+        you.props.erase(ENKINDLE_PROGRESS_KEY);
+        break;
+    }
 
     // INVOCATIONS:
     case ABIL_ZIN_RECITE:
@@ -3644,30 +3759,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
 
     case ABIL_FEDHAS_GROW_OKLOB:
         return fedhas_grow_oklob(beam.target, fail);
-
-    case ABIL_TRAN_BAT:
-        fail_check();
-        transform(100, transformation::bat);
-        break;
-
-    case ABIL_EXSANGUINATE:
-        if (feat_dangerous_for_form(transformation::none, env.grid(you.pos())))
-        {
-            mprf("Becoming bloodless right now would cause you to %s!",
-                    env.grid(you.pos()) == DNGN_LAVA ? "burn" : "drown");
-            return spret::abort;
-        }
-        start_delay<ExsanguinateDelay>(5);
-        break;
-
-    case ABIL_REVIVIFY:
-        if (feat_dangerous_for_form(transformation::none, env.grid(you.pos())))
-        {
-            mprf("Becoming alive right now would cause you to %s!",
-                    env.grid(you.pos()) == DNGN_LAVA ? "burn" : "drown");
-        }
-        start_delay<RevivifyDelay>(5);
-        break;
 
     case ABIL_JIYVA_SLIMIFY:
     {
@@ -4154,14 +4245,6 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         return you.get_mutation_level(MUT_SPIT_POISON) >= 2;
     case ABIL_SPIT_POISON:
         return you.get_mutation_level(MUT_SPIT_POISON) == 1;
-    case ABIL_REVIVIFY:
-        return you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive;
-    case ABIL_EXSANGUINATE:
-        return you.has_mutation(MUT_VAMPIRISM) && you.vampire_alive;
-    case ABIL_TRAN_BAT:
-        return you.get_mutation_level(MUT_VAMPIRISM) >= 2
-               && !you.vampire_alive
-               && you.form != transformation::bat;
     case ABIL_BREATHE_FIRE:
         return you.form == transformation::dragon
                && !species::is_draconian(you.species);
@@ -4172,6 +4255,12 @@ bool player_has_ability(ability_type abil, bool include_unusable)
     case ABIL_INVENT_GIZMO:
         return you.species == SP_COGLIN
         && !you.props.exists(INVENT_GIZMO_USED_KEY);
+    case ABIL_CACOPHONY:
+        return you.get_mutation_level(MUT_FORMLESS) == 2;
+    case ABIL_BAT_SWARM:
+        return you.form == transformation::vampire;
+    case ABIL_ENKINDLE:
+        return you.has_mutation(MUT_MNEMOPHAGE);
     case ABIL_IMBUE_SERVITOR:
         return you.has_spell(SPELL_SPELLSPARK_SERVITOR);
     case ABIL_IMPRINT_WEAPON:
@@ -4246,12 +4335,12 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_NOXIOUS_BREATH,
             ABIL_CAUSTIC_BREATH,
             ABIL_MUD_BREATH,
-            ABIL_TRAN_BAT,
-            ABIL_REVIVIFY,
-            ABIL_EXSANGUINATE,
             ABIL_DAMNATION,
             ABIL_WORD_OF_CHAOS,
             ABIL_INVENT_GIZMO,
+            ABIL_CACOPHONY,
+            ABIL_BAT_SWARM,
+            ABIL_ENKINDLE,
             ABIL_BLINKBOLT,
             ABIL_SIPHON_ESSENCE,
             ABIL_IMBUE_SERVITOR,

@@ -115,6 +115,7 @@ private:
 
 int get_player_equip_slot_count(equipment_slot slot, string* zero_reason = nullptr);
 FixedVector<int, NUM_EQUIP_SLOTS> get_total_player_equip_slots();
+const vector<equipment_slot>& get_alternate_slots(equipment_slot slot);
 
 bool can_equip_item(const item_def& item, bool include_form = false,
                     string* veto_reason = nullptr);

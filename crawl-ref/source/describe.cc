@@ -4047,7 +4047,7 @@ static level_id _item_level_id(const item_def &item)
     {
         loc = level_id::parse_level_id(item.props["level_id"].get_string());
     }
-    catch (const bad_level_id &err)
+    catch (const bad_level_id&)
     {
         // die?
     }
@@ -4428,6 +4428,13 @@ static string _player_spell_stats(const spell_type spell)
     string failure;
     if (you.divine_exegesis)
         failure = "0%";
+    else if (spell_can_be_enkindled(spell) && you.has_mutation(MUT_MNEMOPHAGE)
+             && !you.duration[DUR_ENKINDLED])
+    {
+        failure = make_stringf("%d%% <darkgrey>(%d%%)</darkgrey>",
+                                    failure_rate_to_int(raw_spell_fail(spell)),
+                                    failure_rate_to_int(raw_spell_fail(spell, true)));
+    }
     else
         failure = failure_rate_to_string(raw_spell_fail(spell));
     description += make_stringf("        Fail: %s", failure.c_str());
@@ -4678,6 +4685,9 @@ static string _player_spell_desc(spell_type spell)
         description << uppercase_first(god_name(you.religion))
                     << " supports the use of this spell.\n";
     }
+
+    if (you.has_mutation(MUT_MNEMOPHAGE) && spell_can_be_enkindled(spell))
+        description << "This spell is empowered while you are enkindled.";
 
     if (!you_can_memorise(spell))
     {
@@ -5077,8 +5087,8 @@ static const char* _get_resist_name(mon_resist_flags res_type)
         return "steam";
     case MR_RES_COLD:
         return "cold";
-    case MR_RES_ACID:
-        return "acid";
+    case MR_RES_CORR:
+        return "acid and corrosion";
     case MR_RES_MIASMA:
         return "miasma";
     case MR_RES_NEG:
@@ -5158,6 +5168,7 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_ALEMBIC,           "vent poison clouds" },
         { AF_BOMBLET,           "deploy bomblets" },
         { AF_AIRSTRIKE,         "open air damage" },
+        { AF_TRICKSTER,         "drain, daze, or confuse" },
         { AF_PLAIN,             "" },
     };
 
@@ -6332,7 +6343,7 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
 
     const mon_resist_flags special_resists[] =
     {
-        MR_RES_STEAM,     MR_RES_ACID,
+        MR_RES_STEAM,     MR_RES_CORR,
         MR_RES_DAMNATION, MR_RES_MIASMA,  MR_RES_TORMENT,
     };
 
@@ -6533,6 +6544,12 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
 
     if (mon_explodes_on_death(mi.type))
         _desc_mon_death_explosion(result, mi);
+
+    if (mi.type == MONS_BATTLESPHERE)
+    {
+        const dice_def dam = battlesphere_damage_from_hd(mi.hd);
+        result << "Projectile damage: " << dam.num << "d" << dam.size << "\n";
+    }
 
     // Flying monsters can't be forced to fall into liquids these days.
     if (!(mi.airborne()))

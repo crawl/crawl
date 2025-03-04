@@ -1274,7 +1274,7 @@ static void _xom_polymorph_monster(monster &mons, bool helpful)
             mons.polymorph(PPT_SAME);
 
         if (you.experience_level < 10 && !helpful)
-            mons.malmutate("");
+            mons.malmutate(nullptr);
     }
 
     else
@@ -1646,8 +1646,7 @@ static void _xom_animate_monster_weapon(int sever)
         return;
 
     // Make the monster unwield its weapon.
-    mon->unequip(*(mon->mslot_item(MSLOT_WEAPON)), false, true);
-    mon->inv[MSLOT_WEAPON] = NON_ITEM;
+    mon->unequip(MSLOT_WEAPON, false, true);
 
     mprf("%s %s dances into the air!",
          apostrophise(mon->name(DESC_THE)).c_str(),
@@ -2556,7 +2555,7 @@ static void _xom_destruction(int sever, bool real)
             if (!rc)
                 god_speaks(GOD_XOM, _get_xom_speech("fake destruction").c_str());
             rc = true;
-            backlight_monster(*mi);
+            backlight_monster(*mi, &you);
             continue;
         }
 
@@ -2716,7 +2715,7 @@ static void _xom_enchant_monster(int sever, bool helpful)
               (ench == ENCH_PETRIFYING || ench == ENCH_REGENERATION) ? "starts" : "looks",
               ench_name.c_str());
 
-        application->add_ench(mon_enchant(ench, 0, nullptr, time));
+        application->add_ench(mon_enchant(ench, 0, &you, time));
         affected++;
     }
 
@@ -2921,7 +2920,7 @@ static void _xom_mass_charm(int sever)
             && application->get_hit_dice() + random_range(-1, 1) <= hd_target))
         {
             simple_monster_message(*application, " is charmed.");
-            application->add_ench(mon_enchant(ENCH_CHARM, 0, nullptr, time));
+            application->add_ench(mon_enchant(ENCH_CHARM, 0, &you, time));
             affected++;
         }
 
@@ -3024,12 +3023,13 @@ static void _xom_time_control(int sever)
         xomline = "fast forward";
         if (you.stasis())
         {
-            message = "Your stasis prevents you from being hasted, but everything else in sight speeds up!";
+            message = "Your stasis prevents you from being hasted,"
+                      " but everything else in sight speeds up!";
             note = "hasted everything in sight";
         }
         else
         {
-            message = "You and everything else in sight speeds up!";
+            message = "You and everything else in sight speed up!";
             note = "hasted player and everything else in sight";
         }
         time = random_range(100, 200) + sever / 3;
@@ -3041,13 +3041,14 @@ static void _xom_time_control(int sever)
         xomline = "slow motion";
         if (you.stasis())
         {
-            message = "Your stasis prevents you from being slowed, but everything else in sight slows down!";
+            message = "Your stasis prevents you from being slowed,"
+                      " but everything else in sight slows down!";
             note = "slowed everything in sight";
             bad = false;
         }
         else
         {
-            message = "You and everything else in sight slows down!";
+            message = "You and everything else in sight slow down!";
             note = "slowed player and everything else";
         }
         time = random_range(100, 200) + sever / 3;
@@ -3059,18 +3060,20 @@ static void _xom_time_control(int sever)
         xomline = "pause";
         if (you.stasis())
         {
-            message = "Your stasis prevents you from being paralysed, but everything else in sight stops moving!";
+            message = "Your stasis prevents you from being paralysed,"
+                      " but everything else in sight stops moving!";
             note = "paralysed everything in sight";
             bad = false;
         }
         else
         {
-            message = "You and everything else in sight suddenly stops moving!";
+            message = "You and everything else in sight suddenly stop moving!";
             note = "paralysed player and everything else";
 
             // Less of a decent joke if it directly kills, so.
-            if (cloud_at(you.pos()) && !is_harmless_cloud(cloud_at(you.pos())->type))
-                delete_cloud(you.pos());
+            const auto pos = you.pos();
+            if (cloud_at(pos) && !is_harmless_cloud(cloud_at(pos)->type))
+                delete_cloud(pos);
         }
         time = random_range(30, 50);
     }
@@ -3087,7 +3090,7 @@ static void _xom_time_control(int sever)
         if ((!mons_has_attacks(**mi) && ench != ENCH_PARALYSIS) || mi->stasis())
             continue;
 
-        mi->add_ench(mon_enchant(ench, 0, nullptr, time));
+        mi->add_ench(mon_enchant(ench, 0, &you, time));
     }
 
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);

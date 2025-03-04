@@ -1581,8 +1581,8 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             if (original > 0 && doFlavouredEffects)
                 simple_monster_message(*mons, " completely resists.");
         }
-        else if (mons->res_acid() <= 0 && doFlavouredEffects)
-            mons->acid_corrode(5);
+        else if (doFlavouredEffects && !one_chance_in(3))
+            mons->corrode(pbolt.agent());
         break;
     }
 
@@ -1860,7 +1860,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         const int burn_power = (pbolt.is_explosion) ? 5 :
                                (pbolt.pierce)       ? 3
                                                     : 2;
-        mons->expose_to_element(pbolt.flavour, burn_power, false);
+        mons->expose_to_element(pbolt.flavour, burn_power, pbolt.agent(), false);
     }
 
     return hurted;
@@ -2527,6 +2527,9 @@ cloud_type bolt::get_cloud_type() const
     if (origin_spell == SPELL_SPECTRAL_CLOUD)
         return CLOUD_SPECTRAL;
 
+    if (origin_spell == SPELL_RAVENOUS_SWARM)
+        return CLOUD_BATS;
+
     return CLOUD_NONE;
 }
 
@@ -2541,6 +2544,9 @@ int bolt::get_cloud_pow() const
     if (origin_spell == SPELL_SPECTRAL_CLOUD)
         return random_range(12, 20);
 
+    if (origin_spell == SPELL_RAVENOUS_SWARM)
+        return random_range(22, 40);
+
     return 0;
 }
 
@@ -2551,6 +2557,16 @@ int bolt::get_cloud_size(bool min, bool max) const
         || origin_spell == SPELL_FREEZING_CLOUD)
     {
         return 10;
+    }
+
+    if (origin_spell == SPELL_RAVENOUS_SWARM)
+    {
+        if (min)
+            return 10;
+        else if (max)
+            return 16;
+        else
+            return random_range(10, 16);
     }
 
     if (min)
@@ -3012,6 +3028,9 @@ void bolt::affect_place_clouds()
     if (origin_spell == SPELL_FLAMING_CLOUD)
         place_cloud(CLOUD_FIRE, p, random2(4) + 2, agent());
 
+    if (origin_spell == SPELL_RAVENOUS_SWARM)
+        place_cloud(CLOUD_BATS, p, random2(4) + 4, agent());
+
     // Fire/cold over water/lava
     if (feat == DNGN_LAVA && flavour == BEAM_COLD
         || feat_is_water(feat) && is_fiery())
@@ -3293,7 +3312,7 @@ bool bolt::is_harmless(const monster* mon) const
         return mon->res_poison() >= 3;
 
     case BEAM_ACID:
-        return mon->res_acid() >= 3;
+        return mon->res_corr() >= 3;
 
     case BEAM_MEPHITIC:
         return mon->res_poison() > 0 || mon->clarity();
@@ -3715,7 +3734,8 @@ void bolt::affect_player_enchantment(bool resistible)
     {
     case BEAM_HIBERNATION:
     case BEAM_SLEEP:
-        you.put_to_sleep(nullptr, ench_power, flavour == BEAM_HIBERNATION);
+        you.put_to_sleep(nullptr, (4 + random2avg(8, 3)) * BASELINE_DELAY,
+                            flavour == BEAM_HIBERNATION);
         break;
 
     case BEAM_CORONA:
@@ -3730,7 +3750,7 @@ void bolt::affect_player_enchantment(bool resistible)
     case BEAM_MALMUTATE:
     case BEAM_UNRAVELLED_MAGIC:
         mpr("Strange energies course through your body.");
-        you.malmutate(aux_source.empty() ? get_source_name() :
+        you.malmutate(agent(), aux_source.empty() ? get_source_name() :
                       (get_source_name() + "/" + aux_source));
         obvious_effect = true;
         break;
@@ -4459,7 +4479,7 @@ void bolt::affect_player()
     // what to do for hybrid damage?  E.g. bolt of magma, icicle, poison arrow?
     // Right now just ignore the physical component.
     // what about acid?
-    you.expose_to_element(flavour, 2, false);
+    you.expose_to_element(flavour, 2, agent(), false);
 
     // Manticore spikes
     if (origin_spell == SPELL_THROW_BARBS && final_dam > 0)
@@ -4514,8 +4534,8 @@ void bolt::affect_player()
     internal_ouch(final_dam);
 
     // Acid. (Apply this afterward, to avoid bad message ordering.)
-    if (flavour == BEAM_ACID)
-        you.acid_corrode(5);
+    if (flavour == BEAM_ACID && coinflip())
+        you.corrode(agent());
 
     if (flavour == BEAM_CRYSTALLIZING)
         crystallize_player();
@@ -4858,6 +4878,8 @@ bool bolt::has_relevant_side_effect(monster* mon)
     {
         return true;
     }
+    else if (origin_spell == SPELL_RAVENOUS_SWARM && !(mon->holiness() & MH_UNDEAD))
+        return true;
 
     return false;
 }
@@ -5020,7 +5042,7 @@ void bolt::enchantment_affect_monster(monster* mon)
                 // Hack: assume that BEAM_BANISH comes from Lugonu's Banishment
                 // and hence causes malmutation on resist.
                 if (real_flavour == BEAM_BANISH && agent() && agent()->is_player())
-                    mon->malmutate("");
+                    mon->malmutate(agent());
             }
             break;
         case MON_UNAFFECTED:
@@ -5184,8 +5206,11 @@ void bolt::kill_monster(monster &mon)
 
     item_def *corpse = monster_die(mon, ref_killer, kindex);
 
-    if (origin_spell != SPELL_GLACIATE && origin_spell != SPELL_GLACIAL_BREATH)
+    if (origin_spell != SPELL_GLACIATE && origin_spell != SPELL_GLACIAL_BREATH
+        || goldify)
+    {
         return;
+    }
 
     if (corpse)
         destroy_item(corpse->index());
@@ -5270,7 +5295,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     if (origin_spell == SPELL_SOJOURNING_BOLT
         && x_chance_in_y(2, 3) && !(mon->no_tele()))
     {
-        monster_teleport(mon, false);
+        monster_teleport(mon, false, false, false, agent());
     }
 
     if (flavour == BEAM_CRYSTALLIZING)
@@ -5296,7 +5321,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         if (!mon->has_ench(ENCH_FROZEN))
         {
             simple_monster_message(*mon, " is flash-frozen.");
-            mon->add_ench(ENCH_FROZEN);
+            mon->add_ench(mon_enchant(ENCH_FROZEN, 0, agent()));
         }
     }
 
@@ -5366,7 +5391,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     if (origin_spell == SPELL_GRAVE_CLAW && !mon->has_ench(ENCH_BOUND))
     {
         simple_monster_message(*mon, " is pinned in place!");
-        mon->add_ench(mon_enchant(ENCH_BOUND, 0, nullptr, random_range(2, 4) * BASELINE_DELAY));
+        mon->add_ench(mon_enchant(ENCH_BOUND, 0, agent(), random_range(2, 4) * BASELINE_DELAY));
     }
 
     if (origin_spell == SPELL_KINETIC_GRAPNEL && dmg > 0)
@@ -5835,7 +5860,7 @@ void bolt::affect_monster(monster* mon)
         mon->hurt(agent(), final, flavour, KILLED_BY_BEAM, "", "", false);
 
         // Haemoclasm explosions will always chain-explode if they kill something
-        if (!mon->alive() && flavour == BEAM_HAEMOCLASM
+        if (!mon->alive() && flavour == BEAM_HAEMOCLASM && !mon->is_firewood()
             && you.has_mutation(MUT_MAKHLEB_MARK_HAEMOCLASM))
         {
             mon->props[MAKHLEB_HAEMOCLASM_KEY] = true;
@@ -6219,7 +6244,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             return MON_UNAFFECTED;
         if (mon->observable())
             obvious_effect = true;
-        monster_teleport(mon, false);
+        monster_teleport(mon, false, false, false, agent());
         return MON_AFFECTED;
 
     case BEAM_BLINK:
@@ -6254,7 +6279,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
     case BEAM_MALMUTATE:
     case BEAM_UNRAVELLED_MAGIC:
-        if (mon->malmutate("")) // exact source doesn't matter
+        if (mon->malmutate(agent())) // exact source doesn't matter
             obvious_effect = true;
         if (YOU_KILL(thrower))
         {
@@ -6368,13 +6393,17 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         {
             if (simple_monster_message(*mon, " looks drowsy..."))
                 obvious_effect = true;
-            mon->put_to_sleep(agent(), ench_power, true);
+            // Since 1 turn will pass for the player's own action here, EH will
+            // put a monster to sleep for between ~20-55 aut, slanted towards
+            // the low end.
+            const int dur = max(30, 10 + random2avg(55, 3));
+            mon->put_to_sleep(agent(), dur, true);
             return MON_AFFECTED;
         }
         return MON_UNAFFECTED;
 
     case BEAM_CORONA:
-        if (backlight_monster(mon))
+        if (backlight_monster(mon, agent()))
         {
             obvious_effect = true;
             return MON_AFFECTED;
@@ -6510,10 +6539,10 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     }
 
     case BEAM_SLEEP:
-        if (mons_just_slept(*mon))
+        if (mon->asleep())
             return MON_UNAFFECTED;
 
-        mon->put_to_sleep(agent(), ench_power);
+        mon->put_to_sleep(agent(), random_range(4, 7) * BASELINE_DELAY);
         if (simple_monster_message(*mon, " falls asleep!"))
             obvious_effect = true;
 
@@ -6560,7 +6589,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
         if (simple_monster_message(*mon, " is charmed."))
             obvious_effect = true;
-        mon->add_ench(ENCH_CHARM);
+        mon->add_ench(mon_enchant(ENCH_CHARM, 0, agent()));
         if (you.can_see(*mon))
             obvious_effect = true;
         return MON_AFFECTED;
@@ -7712,6 +7741,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_SEISMIC:               return "seismic shockwave";
     case BEAM_BOLAS:                 return "entwining bolas";
     case BEAM_MERCURY:               return "mercury";
+    case BEAM_BAT_CLOUD:             return "cloud of bats";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

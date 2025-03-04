@@ -167,6 +167,7 @@ static void _setup_ghostly_sacrifice_beam(bolt& beam, const monster& caster,
 static ai_action::goodness _seracfall_goodness(const monster &caster);
 static bool _prepare_seracfall(monster &caster, bolt &beam);
 static void _setup_seracfall_beam(bolt& beam, const monster& caster, int power);
+static ai_action::goodness _grave_claw_goodness(const monster &caster);
 static function<ai_action::goodness(const monster&)> _setup_hex_check(spell_type spell);
 static ai_action::goodness _hexing_goodness(const monster &caster, spell_type spell);
 static bool _torment_vulnerable(const actor* victim);
@@ -184,6 +185,7 @@ static ai_action::goodness _foe_siphon_essence_goodness(const monster &caster);
 static vector<actor*> _siphon_essence_victims (const actor& caster);
 static void _cast_siphon_essence(monster &caster, mon_spell_slot, bolt&);
 static ai_action::goodness _sojourning_bolt_goodness(const monster &caster);
+static bool _cast_dominate_undead(const monster& caster, int pow, bool check_only);
 
 enum spell_logic_flag
 {
@@ -826,7 +828,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             }
         } } },
     { SPELL_GRAVE_CLAW, {
-       _always_worthwhile,
+       _grave_claw_goodness,
        [](monster &caster, mon_spell_slot, bolt& beam) {
             const int pow = mons_spellpower(caster, SPELL_GRAVE_CLAW);
             cast_grave_claw(caster, beam.target, pow, false);
@@ -879,6 +881,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             beam.target = targ;
             beam.draw_delay = 80;
             beam.fire();
+            flash_tile(targ, WHITE, 110, TILE_BOLT_BOMBLET_LAUNCH);
             monarch_deploy_bomblet(caster, targ, true);
         },
         _zap_setup(SPELL_DEPLOY_BOMBLET) } },
@@ -896,6 +899,16 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_SIPHON_ESSENCE, { _foe_siphon_essence_goodness,
                               _cast_siphon_essence } },
     { SPELL_SOUL_SPLINTER, _hex_logic(SPELL_SOUL_SPLINTER, _foe_soul_splinter_goodness) },
+    { SPELL_DOMINATE_UNDEAD, {
+        [](const monster &caster) {
+            return ai_action::good_or_impossible(_cast_dominate_undead(caster, 100, true));
+        },
+        [](monster &caster, mon_spell_slot, bolt&) {
+            const int pow = mons_spellpower(caster, SPELL_DOMINATE_UNDEAD);
+            _cast_dominate_undead(caster, pow, false);
+        },
+        nullptr, MSPELL_LOGIC_NONE, 30
+    } }
 };
 
 // Logic for special-cased Aphotic Marionette hijacking of monster buffs to
@@ -1776,6 +1789,7 @@ static int _mons_power_hd_factor(spell_type spell)
         case SPELL_FREEZE:
         case SPELL_FULMINANT_PRISM:
         case SPELL_IGNITE_POISON:
+        case SPELL_ARCJOLT:
             return 8;
 
         case SPELL_MONSTROUS_MENAGERIE:
@@ -2193,6 +2207,11 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.short_name   = "flames";
         break;
 
+    case SPELL_RAVENOUS_SWARM:
+        zappy(spell_to_zap(real_spell), power, true, beam);
+        beam.hit_verb     = "envelopes";
+        break;
+
     case SPELL_THROW_BARBS:
         zappy(spell_to_zap(real_spell), power, true, beam);
         beam.hit_verb    = "skewers";
@@ -2540,8 +2559,6 @@ static ai_action::goodness _negative_energy_spell_goodness(const actor* foe)
             // partial resistance.
             return ai_action::good();
         case US_SEMI_UNDEAD:
-            // Non-bloodless vampires do not appear immune.
-            return ai_action::good_or_bad(you.vampire_alive);
         default:
             return ai_action::bad();
         }
@@ -3967,7 +3984,7 @@ static void _corrupting_pulse(monster *mons)
         if (m && cell_see_cell(mons->pos(), *ri, LOS_SOLID_SEE)
             && !mons_aligned(mons, m))
         {
-            m->corrupt();
+            m->malmutate(mons);
         }
     }
 }
@@ -4321,6 +4338,24 @@ static ai_action::goodness _seracfall_goodness(const monster &caster)
     return ai_action::good_or_impossible(in_bounds(_mons_seracfall_source(caster)));
 }
 
+static ai_action::goodness _grave_claw_goodness(const monster &caster)
+{
+    const actor* foe = caster.get_foe();
+    if (!foe || !caster.can_see(*foe)
+        || grid_distance(caster.pos(), foe->pos()) > spell_range(SPELL_GRAVE_CLAW, 0))
+    {
+        return ai_action::impossible();
+    }
+
+    // Slightly reduce spamming against players, to avoid locking them in place
+    // on bad rolls.
+    if (foe->is_player() && you.duration[DUR_NO_MOMENTUM])
+        return ai_action::bad();
+
+    return ai_action::good();
+}
+
+
 /// Everything short of the actual explosion. Returns whether to fire.
 static bool _prepare_seracfall(monster &caster, bolt &beam)
 {
@@ -4617,6 +4652,10 @@ static monster_spells _find_usable_spells(monster &mons)
         // it never will.
         || t.spell == SPELL_DIG;
     });
+
+    // Erase zero-frequency spells
+    erase_if(hspell_pass, [](const mon_spell_slot &t) {
+        return t.freq == 0;});
 
     return hspell_pass;
 }
@@ -5425,7 +5464,7 @@ static bool _mons_cast_freeze(monster* mons)
 
     if (target->alive())
     {
-        target->expose_to_element(BEAM_COLD, damage);
+        target->expose_to_element(BEAM_COLD, damage, mons);
         _whack(*mons, *target);
     }
 
@@ -5864,7 +5903,7 @@ static branch_summon_pair _planerend_summons[] =
     { // Crypt enemies
       {  1,   1,  100, FLAT, MONS_VAMPIRE_KNIGHT },
       {  1,   1,  100, FLAT, MONS_FLAYED_GHOST },
-      {  1,   1,   80, FLAT, MONS_REVENANT },
+      {  1,   1,   80, FLAT, MONS_REVENANT_SOULMONGER },
     }},
   { BRANCH_TOMB,
     { // Tomb enemies
@@ -6292,7 +6331,10 @@ static void _dream_sheep_sleep(monster& mons, actor& foe)
 
     // Put the player to sleep.
     if (sleep_pow)
-        foe.put_to_sleep(&mons, sleep_pow, false);
+    {
+        const int dur = (sleep_pow / 20 + random_range(1, 3) + 3) * BASELINE_DELAY;
+        foe.put_to_sleep(&mons, dur, false);
+    }
 }
 
 // Draconian stormcaller upheaval. Simplified compared to the player version.
@@ -6768,6 +6810,65 @@ static bool _mons_cast_hellfire_mortar(monster& caster, actor& foe, int pow, boo
     bolt beam = mons_spell_beam(&caster, SPELL_HELLFIRE_MORTAR, pow);
     beam.target = found_target;
     cast_hellfire_mortar(caster, beam, pow, false);
+
+    return true;
+}
+
+static bool _cast_dominate_undead(const monster& caster, int pow, bool check_only)
+{
+    vector<actor*> targs;
+    for (actor_near_iterator ai(caster.pos()); ai; ++ai)
+    {
+        if (mons_aligned(&caster, *ai) || !(ai->holiness() & MH_UNDEAD)
+            || ai->willpower() == WILL_INVULN)
+        {
+            continue;
+        }
+
+        // Not friendly, but already 'charmed'
+        if (ai->is_player() && you.duration[DUR_VEXED])
+            continue;
+
+        // Found at least one valid target
+        if (check_only)
+            return true;
+
+        targs.push_back(*ai);
+    }
+
+    if (check_only && targs.empty())
+        return false;
+
+    for (actor* targ : targs)
+    {
+        if (targ->is_monster())
+        {
+            monster* mon = targ->as_monster();
+            const int res_margin = mon->check_willpower(&caster, pow / ENCH_POW_FACTOR);
+            if (res_margin > 0)
+            {
+                simple_monster_message(*mon,
+                    mon->resist_margin_phrase(res_margin).c_str());
+                continue;
+            }
+
+            simple_monster_message(*mon, " is compelled to serve!");
+            mon->add_ench(mon_enchant(ENCH_HEXED, 0, &caster));
+            flash_tile(mon->pos(), BLUE);
+        }
+        else if (targ->is_player())
+        {
+            const int res_margin = you.check_willpower(&caster, pow / ENCH_POW_FACTOR);
+            if (res_margin > 0)
+                canned_msg(MSG_YOU_RESIST);
+            else
+            {
+                const string msg = make_stringf("lash out against %s attempt to control you!",
+                                                caster.name(DESC_ITS).c_str());
+                you.vex(&caster, random_range(3, 5), caster.name(DESC_A).c_str(), msg);
+            }
+        }
+    }
 
     return true;
 }
@@ -7748,7 +7849,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_ENTROPIC_WEAVE:
         ASSERT(foe);
         flash_tile(foe->pos(), YELLOW, 120, TILE_BOLT_ENTROPIC_WEAVE);
-        foe->corrode_equipment("the entropic weave");
+        foe->corrode(mons, "the entropic weave");
         return;
 
     case SPELL_SUMMON_EXECUTIONERS:
@@ -8760,9 +8861,6 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
 
     case SPELL_DISPEL_UNDEAD:
     case SPELL_DISPEL_UNDEAD_RANGE:
-        // [ds] How is dispel undead intended to interact with vampires?
-        // Currently if the vampire's undead state returns MH_UNDEAD it
-        // affects the player.
         ASSERT(foe);
         return ai_action::good_or_bad(!!(foe->holiness() & MH_UNDEAD));
 
@@ -9132,6 +9230,7 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
     case SPELL_CHAOS_BREATH:
     case SPELL_DEATH_RATTLE:
     case SPELL_MIASMA_BREATH:
+    case SPELL_RAVENOUS_SWARM:
         return ai_action::good_or_impossible(!no_clouds);
 
     case SPELL_MARCH_OF_SORROWS:

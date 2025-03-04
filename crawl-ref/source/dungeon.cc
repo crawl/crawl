@@ -961,7 +961,9 @@ static bool _dgn_fill_zone(
     bool ret = false;
     list<coord_def> points[2];
     int cur = 0;
+#ifdef DEBUG_DIAGNOSTICS
     int found_points = 0;
+#endif
 
     // No bounds checks, assuming the level has at least one layer of
     // rock border.
@@ -971,7 +973,9 @@ static bool _dgn_fill_zone(
         for (const auto &c : points[cur])
         {
             travel_point_distance[c.x][c.y] = zone;
+#ifdef DEBUG_DIAGNOSTICS
             found_points++;
+#endif
 
             if (iswanted && iswanted(c))
                 ret = true;
@@ -4901,7 +4905,7 @@ static object_class_type _superb_object_class()
             10, OBJ_JEWELLERY,
             10, OBJ_BOOKS,
             10, OBJ_STAVES,
-            10, OBJ_MISCELLANY,
+            4, OBJ_MISCELLANY,
             1, OBJ_TALISMANS);
 }
 
@@ -5059,8 +5063,9 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec, monster *mon)
     // Get rid of existing equipment.
     for (mon_inv_iterator ii(*mon); ii; ++ii)
     {
-        mon->unequip(*ii, false, true);
-        destroy_item(ii->index(), true);
+        item_def &item = *ii;
+        mon->unequip(ii.slot(), false, true);
+        destroy_item(item, true);
     }
 
     item_list &list = mspec.items;
@@ -6289,6 +6294,8 @@ object_class_type item_in_shop(shop_type shop_type)
 
     case SHOP_GENERAL:
     case SHOP_GENERAL_ANTIQUE:
+        if (one_chance_in(10))
+            return OBJ_MISCELLANY;
         return OBJ_RANDOM;
 
     case SHOP_JEWELLERY:

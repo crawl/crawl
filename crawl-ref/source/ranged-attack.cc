@@ -655,7 +655,7 @@ bool ranged_attack::apply_missile_brand()
     case SPMSL_FROST:
         calc_elemental_brand_damage(BEAM_COLD, "freeze",
                                     projectile->name(DESC_THE).c_str());
-        defender->expose_to_element(BEAM_COLD, 2);
+        defender->expose_to_element(BEAM_COLD, 2, attacker);
         break;
     case SPMSL_POISONED:
         if (projectile->is_type(OBJ_MISSILES, MI_DART)

@@ -466,7 +466,7 @@ double sword
 
 一把刀刃分叉、极其锐利的可怕的武器。
 %%%%
-dragon-blood talisman
+dragon-coil talisman
 
 一小瓶纯净的龙血，历经多年结晶而成。 {{
     local desc = "将使用者变为一条强大的"

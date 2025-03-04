@@ -1113,3 +1113,39 @@ Vexed status
 Your mind is clouded by frustration. For the next several turns, you will
 uncontrollably attack random adjacent creatures (whether friendly or enemy) or
 even empty space.
+%%%%
+Drowsy status
+
+You are rapidly growing sleepy and may soon fall asleep completely.
+%%%%
+Vampire status
+
+You are a vampire - a creature that straddles the border between life and
+undeath. You can drink the lifeblood of the living to heal, and even turn those
+you slay stealthily into vampiric thralls, but do not heal in the presence of
+monsters.
+%%%%
+Swarm status
+
+You have transformed into a swarm of vampire bats, allowing you to move quickly
+and evasively. You may trail clouds of bats in your wake.
+%%%%
+Memories status
+
+This indicates how many spells you could cast from accumulated memories if you
+Enkindled now.
+%%%%
+Enkindled status
+
+You are burning accumulated memories for power. Each damage-dealing spell you
+cast will consume a memory. In exchange, their power and spell success are
+increased, encumbrance penalties are ignored, and your spellclaw attacks do
+bonus damage proportional to the spell level and heal you based on the damage
+dealt.
+%%%%
+Cacophony status
+
+You are noisily attacking with all of your armour. Every piece of armour you
+haunt currently moves of its own volition; any damage it takes will not affect
+you, you can freely fire through it, and its attacks may daze, drain, or confuse
+your enemies.

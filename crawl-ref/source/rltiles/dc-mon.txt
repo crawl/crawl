@@ -395,6 +395,7 @@ ball_lightning MONS_BALL_LIGHTNING /*'*'*/
 creeping_inferno1 MONS_CREEPING_INFERNO
 creeping_inferno2
 %sdir mon/undead
+poltergeist MONS_POLTERGEIST
 polterguardian MONS_POLTERGUARDIAN
 undying_armoury MONS_UNDYING_ARMOURY
 
@@ -707,7 +708,6 @@ shadow_elf MONS_PLAYER_SHADOW_ELF
 shadow_felid MONS_PLAYER_SHADOW_FELID
 shadow_formicid MONS_PLAYER_SHADOW_FORMICID
 shadow_gargoyle MONS_PLAYER_SHADOW_GARGOYLE
-shadow_ghoul MONS_PLAYER_SHADOW_GHOUL
 shadow_gnoll MONS_PLAYER_SHADOW_GNOLL
 shadow_human MONS_PLAYER_SHADOW_HUMAN
 shadow_kobold MONS_PLAYER_SHADOW_KOBOLD
@@ -717,10 +717,11 @@ shadow_mummy MONS_PLAYER_SHADOW_MUMMY
 shadow_naga MONS_PLAYER_SHADOW_NAGA
 shadow_octopode MONS_PLAYER_SHADOW_OCTOPODE
 shadow_oni MONS_PLAYER_SHADOW_ONI
+shadow_poltergeist MONS_PLAYER_SHADOW_POLTERGEIST
+shadow_revenant MONS_PLAYER_SHADOW_REVENANT
 shadow_spriggan MONS_PLAYER_SHADOW_SPRIGGAN
 shadow_tengu MONS_PLAYER_SHADOW_TENGU
 shadow_troll MONS_PLAYER_SHADOW_TROLL
-shadow_vampire MONS_PLAYER_SHADOW_VAMPIRE
 shadow_vine_stalker MONS_PLAYER_SHADOW_VINE_STALKER
 
 %sdir mon/amorphous
@@ -1105,6 +1106,7 @@ moon_troll MONS_MOON_TROLL
 vampire MONS_VAMPIRE
 vampire_knight MONS_VAMPIRE_KNIGHT
 vampire_mage MONS_VAMPIRE_MAGE
+vampire_bloodprince MONS_VAMPIRE_BLOODPRINCE
 jiangshi MONS_JIANGSHI
 %sdir mon/unique
 jory MONS_JORY
@@ -1328,6 +1330,7 @@ mon/vault/antique_champion MONS_ANTIQUE_CHAMPION
 %sdir mon/undead
 death_cob MONS_DEATH_COB /* rip % */
 revenant MONS_REVENANT
+revenant_soulmonger MONS_REVENANT_SOULMONGER
 curse_skull MONS_CURSE_SKULL
 %rim 0
 curse_toe MONS_CURSE_TOE
@@ -1336,6 +1339,10 @@ laughing_skull MONS_LAUGHING_SKULL
 %rim 1
 %sdir mon/unique
 murray MONS_MURRAY
+%rim 0
+nobody0 MONS_NAMELESS_REVENANT
+nobody1
+nobody2
 
 ## Sprint specials
 %sdir mon/sprint
@@ -1387,7 +1394,7 @@ pig_form TRAN_PIG
 serpent_form TRAN_SERPENT
 statue_form_humanoid TRAN_STATUE_HUMANOID
 %syn TRAN_STATUE_EQUIP_FIRST
-statue_form_palentonga TRAN_STATUE_ARMATAUR
+statue_form_armataur TRAN_STATUE_ARMATAUR
 statue_form_naga TRAN_STATUE_NAGA
 statue_form_octopode TRAN_STATUE_OCTOPODE
 statue_form_djinni TRAN_STATUE_DJINN
@@ -1405,7 +1412,7 @@ dragon_form_octopode TRAN_DRAGON_OCTOPODE
 dragon_form_felid TRAN_DRAGON_FELID
 lich_form_humanoid TRAN_LICH_HUMANOID
 %syn TRAN_LICH_EQUIP_FIRST
-lich_form_palentonga TRAN_LICH_ARMATAUR
+lich_form_armataur TRAN_LICH_ARMATAUR
 lich_form_naga TRAN_LICH_NAGA
 lich_form_octopode TRAN_LICH_OCTOPODE
 lich_form_djinn TRAN_LICH_DJINN
@@ -1413,6 +1420,14 @@ lich_form_djinn TRAN_LICH_DJINN
 lich_form_felid TRAN_LICH_FELID
 tree_form TRAN_TREE
 %rim 0
+bat_swarm_form TRAN_BAT_SWARM
+vampire_form_humanoid TRAN_VAMPIRE
+vampire_form_armataur TRAN_VAMPIRE_ARMATAUR
+vampire_form_djinn TRAN_VAMPIRE_DJINN
+vampire_form_felid TRAN_VAMPIRE_FELID
+vampire_form_naga TRAN_VAMPIRE_NAGA
+vampire_form_octopode TRAN_VAMPIRE_OCTOPODE
+vampire_form_tengu TRAN_VAMPIRE_TENGU
 mushroom_form TRAN_MUSHROOM
 storm_form TRAN_STORM_HUMANOID
 storm_form_felid TRAN_STORM_FELID

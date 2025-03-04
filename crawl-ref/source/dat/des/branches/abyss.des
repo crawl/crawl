@@ -1417,7 +1417,7 @@ COLOUR: n = lightmagenta
 NSUBST: - = 4:d / 2=d. / ., . = 3:1 / 1:2 / 1:4 / 1:5 / 2=112 / 2=45..
 SUBST:  l : lw
 {{
-dgn.delayed_decay(_G, 'd', 'ghoul corpse / minotaur corpse / ' ..
+dgn.delayed_decay(_G, 'd', 'minotaur corpse / ' ..
                            'troll corpse / ogre corpse')
 }}
 MAP

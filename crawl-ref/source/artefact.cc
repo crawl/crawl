@@ -434,6 +434,7 @@ static map<talisman_type, vector<artp_value>> talisman_artps = {
     { TALISMAN_STORM, { { ARTP_POISON, 1 }, { ARTP_ELECTRICITY, 1 } } },
     { TALISMAN_DEATH, { { ARTP_POISON, 1 }, { ARTP_NEGATIVE_ENERGY, 3 },
                         { ARTP_COLD, 1 } } },
+    { TALISMAN_VAMPIRE, { { ARTP_COLD, 1 }, { ARTP_NEGATIVE_ENERGY, 3 }}},
 };
 
 /**
@@ -1677,7 +1678,7 @@ int find_okay_unrandart(uint8_t aclass, uint8_t atype, int item_level, bool in_a
         // If an item does not generate randomly, we can only produce its index
         // here if it was lost in the abyss
         if ((!in_abyss || status != UNIQ_LOST_IN_ABYSS)
-            && entry->flags & UNRAND_FLAG_NOGEN)
+            && entry->flags & (UNRAND_FLAG_NOGEN | UNRAND_FLAG_DELETED))
         {
             continue;
         }
@@ -1735,14 +1736,8 @@ int extant_unrandart_by_exact_name(string name)
         for (unsigned int i = 0; i < ARRAYSZ(unranddata); ++i)
         {
             const int id = UNRAND_START + i;
-            if (unranddata[i].flags & UNRAND_FLAG_NOGEN
-                && id != UNRAND_DRAGONSKIN
-                && id != UNRAND_CEREBOV
-                && id != UNRAND_DISPATER
-                && id != UNRAND_ASMODEUS /* ew */)
-            {
+            if (unranddata[i].flags & UNRAND_FLAG_DELETED)
                 continue;
-            }
             cache[lowercase_string(unranddata[i].name)] = id;
         }
     }

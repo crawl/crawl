@@ -229,6 +229,7 @@ creeping_frost CREEPING_FROST
 crystallizing_shot CRYSTALLIZING_SHOT
 death_rattle DEATH_RATTLE
 dimensional_anchor DIMENSIONAL_ANCHOR
+dominate_undead DOMINATE_UNDEAD
 doom_howl DOOM_HOWL
 draining_gaze DRAINING_GAZE
 drain_magic DRAIN_MAGIC
@@ -280,6 +281,7 @@ porkalator PORKALATOR
 primal_wave PRIMAL_WAVE
 pyroclastic_surge PYROCLASTIC_SURGE
 quicksilver_bolt QUICKSILVER_BOLT
+ravenous_swarm RAVENOUS_SWARM
 rebounding_blaze REBOUNDING_BLAZE
 rebounding_chill REBOUNDING_CHILL
 resonance_strike RESONANCE_STRIKE

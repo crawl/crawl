@@ -962,7 +962,7 @@ tt.t1tt1WW1tt.tt
 ttt11tttWWttt1t1
 tt.ttt1WWWtt*ttt
 t.ttttWWWttttt1t
- tttt.WwWttt.tt
+ tttt.WwWtttttt
    tttWwW1tttt
    tttWwW..ttt
     ttWwWt..t
@@ -2425,7 +2425,7 @@ KFEAT:  F = cache of fruit
 :   d = d - 1
 : else
 TAGS:   no_pool_fixup
-MONS:   death yak zombie, lich / revenant
+MONS:   death yak zombie, lich / revenant soulmonger
 MONS:   ancient lich / dread lich / alderking
 KMONS:  P = withered plant
 KFEAT:  t = petrified_tree

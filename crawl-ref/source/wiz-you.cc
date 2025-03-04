@@ -219,6 +219,8 @@ void wizard_heal(bool super_heal)
         you.duration[DUR_BARBS] = 0;
         you.attribute[ATTR_BARBS_POW] = 0;
         you.props.erase(BARBS_MOVE_KEY);
+        you.props.erase(CACOPHONY_XP_KEY);
+        you.props.erase(BATFORM_XP_KEY);
         you.duration[DUR_SICKNESS]  = 0;
         you.duration[DUR_EXHAUSTED] = 0;
         you.duration[DUR_BREATH_WEAPON] = 0;
@@ -234,6 +236,7 @@ void wizard_heal(bool super_heal)
         you.duration[DUR_SLOW] = 0;
         you.duration[DUR_BLIND] = 0;
         you.duration[DUR_SIGN_OF_RUIN] = 0;
+        you.duration[DUR_SENTINEL_MARK] = 0;
         you.duration[DUR_CANINE_FAMILIAR_DEAD] = 0;
         you.duration[DUR_VORTEX_COOLDOWN] = 0;
         you.duration[DUR_DRAGON_CALL_COOLDOWN] = 0;
@@ -245,11 +248,13 @@ void wizard_heal(bool super_heal)
         you.duration[DUR_GAVOTTE_COOLDOWN] = 0;
         you.duration[DUR_WORD_OF_CHAOS_COOLDOWN] = 0;
         you.duration[DUR_FIRE_VULN] = 0;
+        you.duration[DUR_POISON_VULN] = 0;
         delete_all_temp_mutations("Super heal");
         decr_zot_clock();
         you.redraw_stats = true;
         gain_draconian_breath_uses(MAX_DRACONIAN_BREATH);
         gain_grave_claw_soul(true, true);
+        you.props[ENKINDLE_CHARGES_KEY].get_int() = enkindle_max_charges();
 
         you.props.erase(COGLIN_GIZMO_KEY);
     }
@@ -954,6 +959,15 @@ void wizard_join_religion()
             you.gold = max(you.gold, gozag_service_fee());
         join_religion(god);
     }
+}
+
+void wizard_get_god_tension()
+{
+    mpr("(Tension uses a given god's perspective to check on their summons; use 'No God' to ignore this.)");
+    god_type god = choose_god(you.religion);
+    int tension = get_tension(god);
+    mprf("%s tension value: %d", !(god == GOD_NO_GOD) ? god_name(god).c_str()
+                                                      : "General", tension);
 }
 
 void wizard_xom_acts()

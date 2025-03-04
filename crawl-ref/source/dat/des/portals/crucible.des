@@ -40,8 +40,7 @@ function crucible_original_subvault_setup(e, branch)
   e.kitem("S : " .. n .. " armataur corpse / " .. n .. " barachi corpse / " ..
                     n .. " demonspawn corpse / " .. n .. " dwarf corpse / " ..
                     n .. " felid corpse / " .. n .. " formicid corpse / " ..
-                    n .. " ghoul corpse / " .. n .. " octopode corpse / " ..
-                    n .. " oni corpse")
+                    n .. " octopode corpse / " .. n .. " oni corpse")
   e.kprop("'sS = bloody")
   e.kprop("xcv+ = bloody / nothing w:70")
   e.nsubst(". = 2:s / 2 = sS' / *:.")

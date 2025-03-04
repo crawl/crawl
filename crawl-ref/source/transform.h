@@ -139,7 +139,7 @@ public:
     bool res_elec() const;
     int res_pois() const;
     bool res_rot() const;
-    bool res_acid() const;
+    bool res_corr() const;
     bool res_miasma() const;
     bool res_petrify() const;
 
@@ -180,8 +180,8 @@ public:
     string player_prayer_action() const;
     string melding_description() const;
 
-    virtual vector<string> get_fakemuts(bool terse) const;
-    virtual vector<string> get_bad_fakemuts(bool terse) const;
+    virtual vector<pair<string, string>> get_fakemuts() const;
+    virtual vector<pair<string, string>> get_bad_fakemuts() const;
 
 public:
     /// Status light ("Foo"); "" for none
@@ -301,17 +301,9 @@ private:
     vector<pair<string,string>> badmuts;
 };
 const Form* get_form(transformation form = you.form);
-const Form* cur_form(bool temp);
+const Form* cur_form(bool temp = true);
 
-enum undead_form_reason
-{
-    UFR_TOO_DEAD  = -1,
-    UFR_GOOD      = 0, // Must be 0, so we convert to bool sanely.
-    UFR_TOO_ALIVE = 1,
-};
-undead_form_reason lifeless_prevents_form(transformation form = you.form,
-                                          bool involuntary = false,
-                                          bool temp = true);
+bool lifeless_prevents_form(transformation form = you.form);
 
 bool form_can_wield(transformation form = you.form);
 bool form_can_wear(transformation form = you.form);
@@ -338,12 +330,12 @@ bool transform(int pow, transformation which_trans, bool involuntary = false,
                bool using_talisman = false);
 
 // skip_move: don't make player re-enter current cell
-void untransform(bool skip_move = false);
+void untransform(bool skip_move = false, bool scale_hp = true);
 
 void unset_default_form();
 void set_default_form(transformation t, const item_def *source);
 
-void set_form(transformation which_trans, int dur);
+void set_form(transformation which_trans, int dur, bool scale_hp = true);
 void return_to_default_form();
 
 monster_type transform_mons();
@@ -354,7 +346,6 @@ void merfolk_check_swimming(dungeon_feature_type old_grid,
                             bool stepped = false);
 void merfolk_start_swimming(bool step = false);
 void merfolk_stop_swimming();
-void vampire_update_transformations();
 int form_base_movespeed(transformation tran);
 bool draconian_dragon_exception();
 

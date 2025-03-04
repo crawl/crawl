@@ -219,7 +219,8 @@ void mons_relocated(monster* mons)
     }
 }
 
-void monster_teleport(monster* mons, bool instan, bool silent, bool away_from_player)
+void monster_teleport(monster* mons, bool instan, bool silent, bool away_from_player,
+                      const actor* agent)
 {
     ASSERT(mons); // XXX: change to monster &mons
     bool was_seen = !silent && you.can_see(*mons);
@@ -236,7 +237,7 @@ void monster_teleport(monster* mons, bool instan, bool silent, bool away_from_pl
             if (!silent)
                 simple_monster_message(*mons, " looks slightly unstable.");
 
-            mons->add_ench(mon_enchant(ENCH_TP, 0, 0,
+            mons->add_ench(mon_enchant(ENCH_TP, 0, agent,
                                        random_range(20, 30)));
         }
 

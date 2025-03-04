@@ -214,7 +214,7 @@ int actor::get_res(int res) const
     case MR_RES_COLD:      return res_cold();
     case MR_RES_NEG:       return res_negative_energy();
     case MR_RES_MIASMA:    return res_miasma();
-    case MR_RES_ACID:      return res_acid();
+    case MR_RES_CORR:      return res_corr();
     case MR_RES_TORMENT:   return res_torment();
     case MR_RES_PETRIFY:   return res_petrify();
     case MR_RES_DAMNATION: return res_damnation();
@@ -235,14 +235,6 @@ int actor::inaccuracy() const
 int actor::inaccuracy_penalty() const
 {
     return inaccuracy() * 5;
-}
-
-bool actor::res_corr(bool /*allow_random*/, bool temp) const
-{
-    return temp && (wearing_jewellery(RING_RESIST_CORROSION)
-                    || wearing(OBJ_ARMOUR, ARM_ACID_DRAGON_ARMOUR)
-                    || scan_artefacts(ARTP_RCORR)
-                    || wearing_ego(OBJ_ARMOUR, SPARM_PRESERVATION));
 }
 
 bool actor::cloud_immune(bool items) const
@@ -420,7 +412,7 @@ bool actor::shield_exhausted() const
 bool actor_slime_wall_immune(const actor *act)
 {
     return act->is_player() && have_passive(passive_t::slime_wall_immune)
-        || act->res_acid() == 3
+        || act->res_corr() >= 3
         || act->is_monster() && mons_is_slime(*act->as_monster());
 }
 

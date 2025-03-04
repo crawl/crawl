@@ -52,6 +52,8 @@ the Tempest
 
 Temptation
 
+Velleity
+
 Wishful Thinking
 
 # FIXME: should appear on amulets only
@@ -373,6 +375,8 @@ Immorality
 Impatience
 
 Lies
+
+Misconduct
 
 Moral Flaws
 

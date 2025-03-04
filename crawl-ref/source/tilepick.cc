@@ -23,9 +23,11 @@
 #include "level-state-type.h"
 #include "libutil.h"
 #include "misc.h" // december_holidays
+#include "mon-abil.h"
 #include "mon-death.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
+#include "mutation.h"
 #include "options.h"
 #include "player.h"
 #include "shopping.h"
@@ -2056,6 +2058,19 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
             return tileidx_item(item);
         }
 
+        case MONS_HAUNTED_ARMOUR:
+        {
+            // Use item tile.
+            if (mon.inv[MSLOT_ARMOUR])
+            {
+                const item_def& item = *mon.inv[MSLOT_ARMOUR];
+                return tileidx_item(item);
+            }
+            // Fallback for monster lookup menu
+            else
+                return TILE_ARM_SCARF;
+        }
+
         case MONS_SPECTRAL_WEAPON:
         {
             // TODO: it would be good to show the TILE_FLAG_ANIM_OBJ icon with
@@ -2381,6 +2396,8 @@ static const map<monster_info_flags, tileidx_t> monster_status_icons = {
     { MB_BLINKITIS, TILEI_UNSTABLE },
     { MB_CHAOS_LACE, TILEI_LACED_WITH_CHAOS },
     { MB_VEXED, TILEI_VEXED },
+    { MB_VAMPIRE_THRALL, TILEI_VAMPIRE_THRALL },
+    { MB_PYRRHIC_RECOLLECTION, TILEI_PYRRHIC },
 };
 
 set<tileidx_t> status_icons_for(const monster_info &mons)
@@ -2388,6 +2405,13 @@ set<tileidx_t> status_icons_for(const monster_info &mons)
     set<tileidx_t> icons;
     if (mons.type == MONS_DANCING_WEAPON)
         icons.insert(TILEI_ANIMATED_WEAPON);
+    if (mons.type == MONS_NAMELESS_REVENANT
+        && mons.props.exists(NOBODY_MEMORIES_KEY))
+    {
+        const int memories = mons.props[NOBODY_MEMORIES_KEY].get_vector().size();
+        if (memories > 0)
+            icons.insert(TILEI_NOBODY_MEMORY_1 + (memories - 1));
+    }
     if (!mons.constrictor_name.empty())
         icons.insert(TILEI_CONSTRICTED);
     for (auto status : monster_status_icons)
@@ -2429,6 +2453,14 @@ set<tileidx_t> status_icons_for_player()
 #ifdef USE_TILE
     if (you.is_constricted() && _should_show_player_status_icon("constr"))
         icons.insert(TILEI_CONSTRICTED);
+    if (you.has_mutation(MUT_MNEMOPHAGE)
+        && you.props[ENKINDLE_CHARGES_KEY].get_int() == enkindle_max_charges()
+        || you.duration[DUR_ENKINDLED])
+    {
+        icons.insert(TILEI_ENKINDLED_1);
+    }
+    if (you.duration[DUR_ENKINDLED])
+        icons.insert(TILEI_ENKINDLED_2);
     for (auto status : player_status_icons)
     {
         if (you.duration[status.first]
@@ -2518,7 +2550,6 @@ tileidx_t tileidx_player_shadow()
         case SP_FELID:          return TILEP_MONS_PLAYER_SHADOW_FELID;
         case SP_FORMICID:       return TILEP_MONS_PLAYER_SHADOW_FORMICID;
         case SP_GARGOYLE:       return TILEP_MONS_PLAYER_SHADOW_GARGOYLE;
-        case SP_GHOUL:          return TILEP_MONS_PLAYER_SHADOW_GHOUL;
         case SP_GNOLL:          return TILEP_MONS_PLAYER_SHADOW_GNOLL;
         case SP_HUMAN:          return TILEP_MONS_PLAYER_SHADOW_HUMAN;
         case SP_KOBOLD:         return TILEP_MONS_PLAYER_SHADOW_KOBOLD;
@@ -2528,10 +2559,11 @@ tileidx_t tileidx_player_shadow()
         case SP_NAGA:           return TILEP_MONS_PLAYER_SHADOW_NAGA;
         case SP_OCTOPODE:       return TILEP_MONS_PLAYER_SHADOW_OCTOPODE;
         case SP_ONI:            return TILEP_MONS_PLAYER_SHADOW_ONI;
+        case SP_POLTERGEIST:    return TILEP_MONS_PLAYER_SHADOW_POLTERGEIST;
+        case SP_REVENANT:       return TILEP_MONS_PLAYER_SHADOW_REVENANT;
         case SP_SPRIGGAN:       return TILEP_MONS_PLAYER_SHADOW_SPRIGGAN;
         case SP_TENGU:          return TILEP_MONS_PLAYER_SHADOW_TENGU;
         case SP_TROLL:          return TILEP_MONS_PLAYER_SHADOW_TROLL;
-        case SP_VAMPIRE:        return TILEP_MONS_PLAYER_SHADOW_VAMPIRE;
         case SP_VINE_STALKER:   return TILEP_MONS_PLAYER_SHADOW_VINE_STALKER;
 
         default:
@@ -2991,6 +3023,7 @@ static tileidx_t _tileidx_talisman(const item_def &item)
     case TALISMAN_BLADE:    return TILE_TALISMAN_BLADE;
     case TALISMAN_STATUE:   return TILE_TALISMAN_STATUE;
     case TALISMAN_DRAGON:   return TILE_TALISMAN_DRAGON;
+    case TALISMAN_VAMPIRE:  return TILE_TALISMAN_VAMPIRE;
     case TALISMAN_STORM:    return TILE_TALISMAN_STORM;
     case TALISMAN_DEATH:    return TILE_TALISMAN_DEATH;
     default: return TILE_ERROR;
@@ -3524,6 +3557,7 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dir, int dist)
     case TILE_BOLT_SHADOW_BLAST:
     case TILE_BOLT_HAEMOCLASM:
     case TILE_BOLT_GHOSTLY_FIREBALL:
+    case TILE_BOLT_BOMBLET_LAUNCH:
     case TILE_BOLT_BOMBLET_BLAST:
     case TILE_BOLT_MANIFOLD_ASSAULT:
     case TILE_BOLT_PARAGON_TEMPEST:
@@ -3856,6 +3890,12 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_IMBUE_SERVITOR;
     case ABIL_IMPRINT_WEAPON:
         return TILEG_ABILITY_IMPRINT_WEAPON;
+    case ABIL_CACOPHONY:
+        return TILEG_ABILITY_CACOPHONY;
+    case ABIL_BAT_SWARM:
+        return TILEG_ABILITY_BAT_SWARM;
+    case ABIL_ENKINDLE:
+        return TILEG_ABILITY_ENKINDLE;
 
     // Others
     case ABIL_END_TRANSFORMATION:
@@ -3868,13 +3908,6 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_HURL_DAMNATION;
     case ABIL_WORD_OF_CHAOS:
         return TILEG_ABILITY_WORD_OF_CHAOS;
-    // Vampires
-    case ABIL_TRAN_BAT:
-        return TILEG_ABILITY_BAT_FORM;
-    case ABIL_EXSANGUINATE:
-        return TILEG_ABILITY_EXSANGUINATE;
-    case ABIL_REVIVIFY:
-        return TILEG_ABILITY_REVIVIFY;
 #if TAG_MAJOR_VERSION == 34
     // Deep Dwarves
     case ABIL_HEAL_WOUNDS:
@@ -4371,6 +4404,7 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
 #if TAG_MAJOR_VERSION == 34
         case SP_DEEP_DWARF:
         case SP_HILL_ORC:
+        case SP_GHOUL:
 #endif
             return TILEG_SP_HUMAN;
         case SP_MOUNTAIN_DWARF:
@@ -4399,8 +4433,6 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
             return TILEG_SP_MINOTAUR;
         case SP_DEMONSPAWN:
             return TILEG_SP_DEMONSPAWN;
-        case SP_GHOUL:
-            return TILEG_SP_GHOUL;
         case SP_TENGU:
 #if TAG_MAJOR_VERSION == 34
         case SP_MAYFLYTAUR:
@@ -4408,8 +4440,6 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
             return TILEG_SP_TENGU;
         case SP_MERFOLK:
             return TILEG_SP_MERFOLK;
-        case SP_VAMPIRE:
-            return TILEG_SP_VAMPIRE;
         case SP_FELID:
             return TILEG_SP_FELID;
         case SP_OCTOPODE:
@@ -4432,6 +4462,10 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
 #endif
         case SP_COGLIN:
             return TILEG_SP_COGLIN;
+        case SP_POLTERGEIST:
+            return TILEG_SP_POLTERGEIST;
+        case SP_REVENANT:
+            return TILEG_SP_REVENANT;
         default:
             return TILEP_ERROR;
     }
@@ -4732,8 +4766,8 @@ string tile_debug_string(tileidx_t fg, tileidx_t bg, char prefix)
     }
 
     string tile_string = make_stringf(
-        "%cFG: %4" PRIu64" | 0x%8" PRIx64" (%s)\n"
-        "%cBG: %4" PRIu64" | 0x%8" PRIx64" (%s)\n",
+        "%cFG: %4" PRIu64" | 0x%8llu (%s)\n"
+        "%cBG: %4" PRIu64" | 0x%8llu (%s)\n",
         prefix,
         fg_idx,
         fg & ~TILE_FLAG_MASK,

@@ -397,6 +397,7 @@
     John Stilley
     Johan Strandell
     Ben Striegel
+    Bernardo Sulzbach
     Cebolla Sunbeam
     Derrick Sund
     Pavel 'Curio' Svinarchuk

@@ -617,7 +617,7 @@ static int _los_spell_damage_actor(const actor* agent, actor &target,
         if (beam.origin_spell == SPELL_OZOCUBUS_REFRIGERATION
             && target.alive())
         {
-            target.expose_to_element(beam.flavour, 5);
+            target.expose_to_element(beam.flavour, 5, agent);
         }
     }
 
@@ -892,7 +892,7 @@ spret cast_freeze(int pow, monster* mons, bool fail)
 
     if (mons->alive())
     {
-        mons->expose_to_element(BEAM_COLD, orig_hurted);
+        mons->expose_to_element(BEAM_COLD, orig_hurted, &you);
         you.pet_target = mons->mindex();
     }
 
@@ -1217,6 +1217,12 @@ static bool _init_frag_player(frag_effect &effect)
         effect.colour     = BROWN;
         if (you.form != transformation::statue)
             effect.damage = frag_damage_type::player_gargoyle;
+        return true;
+    }
+    else if (you.species == SP_REVENANT)
+    {
+        effect.name   = "blast of bone shards";
+        effect.colour = LIGHTGREY;
         return true;
     }
     if (you.petrified() || you.petrifying())
@@ -1668,8 +1674,12 @@ static int _shatter_player_dice()
         return 1;
     if (you.petrified() || you.petrifying())
         return 6; // reduced later by petrification's damage reduction
-    else if (you.form == transformation::statue || you.species == SP_GARGOYLE)
+    else if (you.form == transformation::statue
+             || you.species == SP_GARGOYLE
+             || you.species == SP_REVENANT)
+    {
         return 6;
+    }
     else if (you.airborne() || you.is_amorphous())
         return 1;
     else
@@ -2023,7 +2033,7 @@ static int _irradiate_cell(coord_def where, int pow, const actor &agent)
         if (hitting_player)
             contaminate_player(2000 + random2(1000));
         else if (coinflip())
-            act->malmutate("");
+            act->malmutate(&agent);
     }
 
     return dam;
@@ -4969,12 +4979,12 @@ static void _show_fusillade_explosion(map<coord_def, beam_type>& hit_map,
             colour_t colour = concoction_colour[hit_map[pos]];
             flash_tile(pos, concoction_colour[hit_map[pos]], 0,
                        colour == YELLOW ? int{TILE_BOLT_IRRADIATE} : 0);
+
+            // Flash a visible flask at the center spot after the explosion.
+            if (pos == center)
+                flash_tile(pos, colour, 0, concoction_tile[hit_map[pos]]);
         }
     }
-
-    // Flash a visible flask at the center spot after the explosions.
-    flash_tile(center, concoction_colour[hit_map[center]], 0,
-                       concoction_tile[hit_map[center]]);
 
     animation_delay(quick_anim ? 0 : 50, true);
 }

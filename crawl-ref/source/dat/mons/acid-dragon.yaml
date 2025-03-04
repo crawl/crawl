@@ -1,7 +1,7 @@
 name: "acid dragon"
 glyph: {char: "D", colour: green}
 flags: [flies, warm_blood]
-resists: {poison: 1, acid: 1}
+resists: {poison: 1, corr: 1}
 xp_mult: 16
 genus: dragon
 will: 20

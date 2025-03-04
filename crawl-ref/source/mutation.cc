@@ -365,13 +365,7 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
             if (mut == MUT_IRON_FUSED_SCALES && drag == MONS_IRON_DRAGON)
                 return mutation_activity_type::FULL;
         }
-        // Vampire bats keep their fangs.
-        if (you.form == transformation::bat
-            && you.has_innate_mutation(MUT_VAMPIRISM)
-            && mut == MUT_FANGS)
-        {
-            return mutation_activity_type::FULL;
-        }
+
         // XXX EVIL HACK: we want to meld coglins' exoskeletons in 'full meld'
         // forms like serpent and dragon, but treeform keeps using weapons and
         // should really keep allowing dual wielding. I'm so sorry about this.
@@ -482,18 +476,11 @@ static string _badmut(string desc, bool terse=false)
     return terse ? desc : "<lightred>" + desc + "</lightred>";
 }
 
-static string _annotate_form_based(string desc, bool suppressed, bool terse=false)
+static pair<string, string> _annotate_form_based(pair<string, string> desc, bool suppressed)
 {
     if (suppressed)
-        return _suppressedmut(desc, terse);
-    return _innatemut(desc, terse);
-}
-
-static string _dragon_abil(string desc, bool terse=false)
-{
-    const bool supp = form_changes_physiology()
-                            && you.form != transformation::dragon;
-    return _annotate_form_based(desc, supp, terse);
+        return {_suppressedmut(desc.first, true), _suppressedmut(desc.second, false)};
+    return {_innatemut(desc.first, true), _innatemut(desc.second, false)};
 }
 
 tileidx_t get_mutation_tile(mutation_type mut)
@@ -742,49 +729,43 @@ static string _terse_mut_name(mutation_type mut)
     return current;
 }
 
-static vector<string> _get_form_fakemuts(bool terse)
+static vector<pair<string,string>> _get_form_fakemuts()
 {
-    vector<string> result;
+    vector<pair<string,string>> result;
     const auto *form = get_form(you.form);
     ASSERT(form);
     // we could add form->get_long_name() here for `terse`, but the line in
     // % is shown right below a line which includes the form name.
-    if (!terse)
-        result.push_back(_formmut(form->get_description()));
+    result.push_back({"", _formmut(form->get_description())});
 
-    for (const auto &p : form->get_fakemuts(terse))
-        if (!p.empty())
-            result.push_back(_formmut(p, terse));
+    vector<pair<string,string>> form_fakemuts = form->get_fakemuts();
+    for (const auto &p : form_fakemuts)
+            result.push_back({p.first, _formmut(p.second)});
 
     if (you.form == transformation::dragon)
     {
         if (!species::is_draconian(you.species)
             || you.species == SP_BASE_DRACONIAN) // ugh
         {
-            result.push_back(terse
-                ? "breathe fire" : _formmut("You can breathe fire."));
+            result.push_back({ "breathe fire", _formmut("You can breathe fire.")});
         }
-        else if (!terse
-            && species::draconian_breath(you.species) != ABIL_NON_ABILITY)
-        {
-            result.push_back(
-                _formmut("Your breath weapon is enhanced in this form."));
-        }
+        else if (species::draconian_breath(you.species) != ABIL_NON_ABILITY)
+            result.push_back({ "", _formmut("Your breath weapon is enhanced in this form.")});
     }
 
     // form-based flying can't be stopped, so don't print amphibiousness
     if (form->player_can_fly())
-        result.push_back(terse ? "flying" : _formmut("You are flying."));
+        result.push_back({"flying", _formmut("You are flying.")});
     // n.b. this could cause issues for non-dragon giant forms if they exist
     else if (form->player_can_swim() && !species::can_swim(you.species))
-        result.push_back(terse ? "amphibious" : _formmut("You are amphibious."));
+        result.push_back({"amphibious", _formmut("You are amphibious.")});
 
     const int hp_mod = form->mult_hp(10);
     if (hp_mod > 10)
     {
-        result.push_back(terse ? "boosted hp"
-            : _formmut(make_stringf("Your maximum health is %sincreased.",
-                hp_mod < 13 ? "" : "greatly ")));
+        result.push_back({"boosted hp",
+                            _formmut(make_stringf("Your maximum health is %sincreased.",
+                                                    hp_mod < 13 ? "" : "greatly "))});
     } // see badmuts section below for max health reduction
 
     // Form resistances
@@ -796,14 +777,10 @@ static vector<string> _get_form_fakemuts(bool terse)
     if (player_res_poison(false, true, false, true) == 3
         && player_res_poison(false, false, false, false) != 3)
     {
-        result.push_back(terse ? "poison immunity"
-                               : _formmut("You are immune to poison."));
+        result.push_back({"poison immunity", _formmut("You are immune to poison.")});
     }
     else if (form->res_pois() > 0 && !you.has_mutation(MUT_POISON_RESISTANCE))
-    {
-        result.push_back(terse ? "poison resistance"
-                           : _formmut("You are resistant to poisons. (rPois)"));
-    }
+        result.push_back({"poison resistance", _formmut("You are resistant to poisons. (rPois)")});
 
     if (you.get_mutation_level(MUT_NEGATIVE_ENERGY_RESISTANCE) != 3
         && you.form != transformation::wisp)
@@ -812,13 +789,18 @@ static vector<string> _get_form_fakemuts(bool terse)
         {
             // Gargoyles have innate rN+ so let's not have
             // "negative energy resistance" appear twice in their terse lists.
-            result.push_back(terse ? "negative energy immunity"
-                      : _formmut("You are immune to negative energy. (rN+++)"));
+            result.push_back({"negative energy immunity",
+                                _formmut("You are immune to negative energy. (rN+++)")});
         }
         else if (form->res_neg() == 1) // statue form
         {
-            result.push_back(terse ? "statue negative energy resistance"
-                  : _formmut("Your stone body resists negative energy. (rN+)"));
+            result.push_back({"statue negative energy resistance",
+                                _formmut("Your stone body resists negative energy. (rN+)")});
+        }
+        else if (form->res_neg() == 2 ) // vampire form
+        {
+            result.push_back({"negative energy resistance",
+                                _formmut("Your partially-undead body resists negative energy. (rN++)")});
         }
     }
 
@@ -826,8 +808,8 @@ static vector<string> _get_form_fakemuts(bool terse)
         && !you.has_mutation(MUT_SHOCK_RESISTANCE)
         && you.form != transformation::wisp)
     {
-        result.push_back(terse ? "electricity resistance"
-                   : _formmut("You are resistant to electric shocks. (rElec)"));
+        result.push_back({"electricity resistance",
+                            _formmut("You are resistant to electric shocks. (rElec)")});
     }
 
     if (you.form == transformation::dragon)
@@ -837,16 +819,16 @@ static vector<string> _get_form_fakemuts(bool terse)
         switch (species::dragon_form(you.species))
         {
             case MONS_FIRE_DRAGON:
-                result.push_back(terse ? "fire resistance 2"
-                             : _formmut("You are very heat resistant. (rF++)"));
-                result.push_back(terse ? "cold vulnerability 1"
-                                : _badmut("You are vulnerable to cold. (rC-)"));
+                result.push_back({"fire resistance 2",
+                                    _formmut("You are very heat resistant. (rF++)")});
+                result.push_back({"cold vulnerability 1",
+                                    _badmut("You are vulnerable to cold. (rC-)")});
                 break;
             case MONS_ICE_DRAGON:
-                result.push_back(terse ? "cold resistance 2"
-                          : _formmut("You are very resistant to cold. (rC++)"));
-                result.push_back(terse ? "heat vulnerability 1"
-                                : _badmut("You are vulnerable to heat. (rF-)"));
+                result.push_back({"cold resistance 2",
+                                    _formmut("You are very resistant to cold. (rC++)")});
+                result.push_back({"heat vulnerability 1",
+                                    _badmut("You are vulnerable to heat. (rF-)")});
                 break;
             default:
                 // all other draconian colours keep their innate resistance
@@ -858,8 +840,8 @@ static vector<string> _get_form_fakemuts(bool terse)
              && form->res_cold() // death form only
              && you.get_mutation_level(MUT_COLD_RESISTANCE) != 3)
     {
-        result.push_back(terse ? "undead cold resistance"
-                    : _formmut("Your undead body is resistant to cold. (rC+)"));
+        result.push_back({"undead cold resistance",
+                            _formmut("Your undead body is resistant to cold. (rC+)")});
     }
 
     // Bad effects
@@ -867,15 +849,15 @@ static vector<string> _get_form_fakemuts(bool terse)
 
     if (hp_mod < 10)
     {
-        result.push_back(terse ? "reduced hp"
-            : _badmut(make_stringf("Your maximum health is decreased%s.",
-                form->underskilled() ? ", since you lack skill for your form"
-                    : "")));
+        result.push_back({"reduced hp",
+                            _badmut(make_stringf("Your maximum health is decreased%s.",
+                                form->underskilled() ? ", since you lack skill for your form"
+                                : ""))});
     }
 
-    for (const auto &p : form->get_bad_fakemuts(terse))
-        if (!p.empty())
-            result.push_back(_badmut(p, terse));
+    vector<pair<string,string>> form_badmuts = form->get_bad_fakemuts();
+    for (const auto &p : form_badmuts)
+            result.push_back({p.first, _badmut(p.second)});
 
     // Note: serpent form suppresses any innate cold-bloodedness
     if (you.form == transformation::serpent)
@@ -883,13 +865,13 @@ static vector<string> _get_form_fakemuts(bool terse)
         // XXX Hacky suppression with rC+
         if (you.res_cold())
         {
-            result.push_back(terse ? "(cold-blooded)"
-                : "<darkgray>((You are cold-blooded and may be slowed by cold attacks.))</darkgray>");
+            result.push_back({"(cold-blooded)",
+                "<darkgray>((You are cold-blooded and may be slowed by cold attacks.))</darkgray>"});
         }
         else
         {
-            result.push_back(terse ? "cold-blooded"
-                : _badmut("You are cold-blooded and may be slowed by cold attacks."));
+            result.push_back({"cold-blooded",
+                _badmut("You are cold-blooded and may be slowed by cold attacks.")});
         }
     }
 
@@ -899,21 +881,20 @@ static vector<string> _get_form_fakemuts(bool terse)
         const int penalty_percent = form->get_base_ac_penalty(100);
         if (penalty_percent)
         {
-            result.push_back(terse ? "blade armour"
-                : _badmut(make_stringf("Your body armour is %s at protecting you.",
+            result.push_back({"blade armour",
+                    _badmut(make_stringf("Your body armour is %s at protecting you.",
                           penalty_percent == 100 ? "completely ineffective"
                         : penalty_percent >=  70 ? "much less effective"
                         : penalty_percent >=  30 ? "less effective"
                                                  : "slightly less effective"
-            )));
+            ))});
         }
     }
 
-    if (!terse && !form->can_wield() && !you.has_mutation(MUT_NO_GRASPING))
+    if (!form->can_wield() && !you.has_mutation(MUT_NO_GRASPING))
     {
         // same as MUT_NO_GRASPING
-        result.push_back(_badmut(
-            "You are incapable of wielding weapons or throwing items."));
+        result.push_back({"", _badmut("You are incapable of wielding weapons or throwing items.")});
     }
 
     // XX say something about AC? Best would be to compare it to AC without
@@ -921,101 +902,88 @@ static vector<string> _get_form_fakemuts(bool terse)
     // AC is currently dealt with via the `A!` "form properties" screen.
 
     // XX better synchronizing with various base armour/eq possibilities
-    if (!terse && !you.has_mutation(MUT_NO_ARMOUR))
+    if (!you.has_mutation(MUT_NO_ARMOUR))
     {
         const string melding_desc = form->melding_description();
         if (!melding_desc.empty())
-            result.push_back(_badmut(melding_desc));
+            result.push_back({"", _badmut(melding_desc)});
     }
 
     return result;
 }
 
-static vector<string> _get_fakemuts(bool terse)
+static vector<pair<string, string>> _get_fakemuts()
 {
-    vector<string> result;
-
-    // XX sort good and bad non-permanent mutations better? Comes up mostly for
-    // vampires
+    vector<pair<string, string>> result;
 
     // non-permanent and form-based stuff
-
     if (you.form != transformation::none)
     {
-        vector<string> form_fakemuts = _get_form_fakemuts(terse);
+        vector<pair<string, string>> form_fakemuts = _get_form_fakemuts();
         result.insert(result.end(), form_fakemuts.begin(), form_fakemuts.end());
     }
 
     // divine effects
-
     if (you.can_water_walk())
     {
-        if (terse)
-            result.push_back("walk on water");
-        else
-        {
-            if (have_passive(passive_t::water_walk))
-                result.push_back(_formmut("You can walk on water."));
-            else
-                result.push_back(_formmut("You can walk on water until reaching land."));
-        }
+        result.push_back({"walk on water",
+                    have_passive(passive_t::water_walk)
+                        ? _formmut("You can walk on water.")
+                        : _formmut("You can walk on water until reaching land.")});
     }
 
     if (you.props.exists(ORCIFICATION_LEVEL_KEY))
     {
-        if (!terse)
-        {
-            if (you.props[ORCIFICATION_LEVEL_KEY].get_int() == 1)
-                result.push_back(_formmut("Your facial features look somewhat orcish."));
-            else
-                result.push_back(_formmut("Your facial features are unmistakably orcish."));
-        }
+        result.push_back({"",
+                    you.props[ORCIFICATION_LEVEL_KEY].get_int() == 1
+                        ? _formmut("Your facial features look somewhat orcish.")
+                        : _formmut("Your facial features are unmistakably orcish.")});
     }
 
     if (have_passive(passive_t::frail)
         || player_under_penance(GOD_HEPLIAKLQANA))
     {
-        if (terse)
-            result.push_back("reduced essence");
-        else
-        {
-            // XX message is probably wrong for penance?
-            result.push_back(_badmut(
-                "Your life essence is reduced to manifest your ancestor. (-10% HP)"));
-        }
+        // XX message is probably wrong for penance?
+        result.push_back({"reduced essence",
+                          _badmut("Your life essence is reduced to manifest your ancestor. (-10% HP)")});
     }
 
     // Innate abilities which haven't been implemented as mutations yet.
-    for (const string& str : species::fake_mutations(you.species, terse))
+    vector<string> short_fakemut = species::fake_mutations(you.species, true);
+    vector<string> long_fakemut = species::fake_mutations(you.species, false);
+    for (size_t i = 0; i < long_fakemut.size(); ++i)
     {
         if (species::is_draconian(you.species))
-            result.push_back(_dragon_abil(str, terse));
+        {
+            result.push_back(_annotate_form_based({short_fakemut[i], long_fakemut[i]},
+                                form_changes_physiology()
+                                    && you.form != transformation::dragon));
+        }
         else
-            result.push_back(_innatemut(str, terse));
+        {
+            result.push_back({_innatemut(short_fakemut[i], true),
+                              _innatemut(long_fakemut[i], false)});
+        }
     }
 
     if (you.racial_ac(false) > 0)
     {
         const int ac = you.racial_ac(false) / 100;
-        if (terse)
-            result.push_back("AC +" + to_string(ac));
-        else
-        {
-            // XX generalize this code somehow?
-            const string scale_clause = string(species::scale_type(you.species))
+
+        // XX generalize this code somehow?
+        const string scale_clause = string(species::scale_type(you.species))
                   + " scales are hard";
 
-            result.push_back(_annotate_form_based(
-                        make_stringf("Your %s. (AC +%d)", you.species == SP_NAGA
-                                            ? "serpentine skin is tough"
-                                            : you.species == SP_GARGOYLE
-                                            ? "stone body is resilient"
-                                            : scale_clause.c_str(),
-                           ac),
-                        player_is_shapechanged()
-                        && !(species::is_draconian(you.species)
-                             && you.form == transformation::dragon)));
-        }
+        string ac_str = make_stringf("Your %s. (AC +%d)", you.species == SP_NAGA
+                                        ? "serpentine skin is tough"
+                                        : you.species == SP_GARGOYLE
+                                        ? "stone body is resilient"
+                                        : scale_clause.c_str(),
+                                        ac);
+        result.push_back(_annotate_form_based({"AC +" + to_string(ac), ac_str},
+                            player_is_shapechanged()
+                                && !(species::is_draconian(you.species)
+                                && you.form == transformation::dragon)));
     }
 
     // player::can_swim includes other cases, e.g. extra-balanced species that
@@ -1023,57 +991,48 @@ static vector<string> _get_fakemuts(bool terse)
     // amphibiousness.
     if (species::can_swim(you.species) && !you.has_innate_mutation(MUT_MERTAIL))
     {
-        result.push_back(_annotate_form_based(
-                    terse ? "amphibious" : "You are amphibious.",
-                    !form_can_swim(), terse));
+        result.push_back(_annotate_form_based({"amphibious", "You are amphibious."},
+                                              !form_can_swim()));
     }
 
     if (species::arm_count(you.species) > 2)
     {
         const bool rings_melded = get_form()->slot_is_blocked(SLOT_RING);
         const int arms = you.arm_count();
-        if (terse)
-        {
-            result.push_back(_annotate_form_based(
-                make_stringf("%d rings", arms), rings_melded, true));
-        }
-        else
-        {
-            result.push_back(_annotate_form_based(
+        result.push_back(_annotate_form_based(
+            {
+                make_stringf("%d rings", arms),
                 make_stringf("You can wear up to %s rings at the same time.",
-                         number_in_words(arms).c_str()), rings_melded));
-        }
+                        number_in_words(arms).c_str())
+            }, rings_melded));
     }
 
     // in the terse list, this adj + a minimal size-derived desc covers the
     // same ground as the detailed size-derived desc; so no need for the size
     // itself in the long form.
-    if (terse)
-    {
-        const char* size_adjective = get_size_adj(you.body_size(PSIZE_BODY), true);
-        if (size_adjective)
-            result.emplace_back(size_adjective);
-    }
+    const char* size_adjective = get_size_adj(you.body_size(PSIZE_BODY), true);
+    if (size_adjective)
+        result.push_back({size_adjective, ""});
 
     // XX is there a cleaner approach?
-    string armour_mut;
-    string weapon_mut;
+    pair<string, string> armour_mut;
+    pair<string, string> weapon_mut;
 
     switch (you.body_size(PSIZE_TORSO, true))
     {
     case SIZE_LITTLE:
-        armour_mut = terse ? "unfitting armour"
-            : "You are too small for most types of armour.";
-        weapon_mut = terse ? "no large weapons"
-            : "You are very small and have problems with some larger weapons.";
+        armour_mut = {"unfitting armour",
+                      _innatemut("You are too small for most types of armour.")};
+        weapon_mut = {"no large weapons",
+                      _innatemut("You are very small and have problems with some larger weapons.")};
         break;
     case SIZE_SMALL:
-        weapon_mut = terse ? "no large weapons"
-            : "You are small and have problems with some larger weapons.";
+        weapon_mut = {"no large weapons",
+                      _innatemut("You are small and have problems with some larger weapons.")};
         break;
     case SIZE_LARGE:
-        armour_mut = terse ? "unfitting armour"
-            : "You are too large for most types of armour.";
+        armour_mut = {"unfitting armour",
+                      _innatemut("You are too large for most types of armour.")};
         break;
     default: // no giant species
         break;
@@ -1082,38 +1041,16 @@ static vector<string> _get_fakemuts(bool terse)
     // _dragon_abil should get called on all draconian fake muts would break.
     if (species::is_draconian(you.species))
     {
-        armour_mut = terse ? "unfitting armour"
-            : "You cannot fit into any form of body armour.";
+        armour_mut = {"unfitting armour",
+                      _innatemut("You cannot fit into any form of body armour.")};
     }
-    if (!weapon_mut.empty() && !you.has_mutation(MUT_NO_GRASPING))
-        result.push_back(_innatemut(weapon_mut, terse));
-    if (!armour_mut.empty() && !you.has_mutation(MUT_NO_ARMOUR))
-        result.push_back(_innatemut(armour_mut, terse));
+    if (!weapon_mut.first.empty() && !you.has_mutation(MUT_NO_GRASPING))
+        result.push_back(weapon_mut);
+    if (!armour_mut.first.empty() && !you.has_mutation(MUT_NO_ARMOUR))
+        result.push_back(armour_mut);
 
-    if (you.has_mutation(MUT_VAMPIRISM))
-    {
-        if (you.vampire_alive)
-        {
-            result.push_back(terse ? "alive" :
-                _formmut("Your natural rate of healing is slightly increased."));
-        }
-        else if (terse)
-            result.push_back("bloodless");
-        else
-        {
-            result.push_back(
-                _formmut("You do not regenerate when monsters are visible."));
-            result.push_back(
-                _formmut("You are frail without blood (-20% HP)."));
-            result.push_back(
-                _formmut("You can heal yourself when you bite living creatures."));
-            // XX automatically color this green somehow? Handled below more
-            // generally for non-vampires
-            result.push_back(_formmut("You are immune to poison."));
-        }
-    }
-    else if (!terse && player_res_poison(false, false, false, false) == 3)
-        result.push_back(_innatemut("You are immune to poison."));
+    if (player_res_poison(false, false, false, false) == 3)
+        result.push_back({"", _innatemut("You are immune to poison.")});
 
     return result;
 }
@@ -1156,7 +1093,15 @@ static vector<mutation_type> _get_ordered_mutations()
 
 static vector<string> _get_mutations_descs(bool terse)
 {
-    vector<string> result = _get_fakemuts(terse);
+    vector<pair<string, string>> fakemuts = _get_fakemuts();
+    vector<string> result;
+    for (const auto& p : fakemuts)
+    {
+        const string& mut = terse ? p.first : p.second;
+        if (!mut.empty())
+            result.push_back(mut);
+    }
+
     for (mutation_type mut : _get_ordered_mutations())
     {
         result.push_back(terse ? _terse_mut_name(mut)
@@ -1240,22 +1185,28 @@ static bool _has_transient_muts()
 
 enum mut_menu_mode {
     MENU_MUTS,
-    MENU_VAMP,
     MENU_FORM,
     NUM_MENU_MODES
 };
 
 const char *menu_mode_labels[] = {
     "Mutations",
-    "Blood properties",
     "Form properties"
 };
 COMPILE_CHECK(ARRAYSZ(menu_mode_labels) == NUM_MENU_MODES);
 
+static bool _fakemut_has_description(string fakemut_name)
+{
+    const string key = make_stringf("%s mutation", fakemut_name.c_str());
+    string lookup = getLongDescription(key);
+
+    return !lookup.empty();
+}
+
 class MutationMenu : public Menu
 {
 private:
-    vector<string> fakemuts;
+    vector<pair<string, string>> fakemuts;
     vector<mutation_type> muts;
     mut_menu_mode mode;
     bool has_future_muts;
@@ -1263,7 +1214,7 @@ public:
     MutationMenu()
         : Menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING
             | MF_ARROWS_SELECT),
-          fakemuts(_get_fakemuts(false)),
+          fakemuts(_get_fakemuts()),
           muts( _get_ordered_mutations()),
           mode(MENU_MUTS)
     {
@@ -1283,9 +1234,6 @@ private:
         {
         case MENU_MUTS:
             update_muts();
-            break;
-        case MENU_VAMP:
-            update_blood();
             break;
         case MENU_FORM:
             update_form();
@@ -1349,72 +1297,33 @@ private:
         }
     }
 
-    void update_blood()
-    {
-        ASSERT(you.has_mutation(MUT_VAMPIRISM));
-
-        string result;
-
-        const int lines = 17;
-        string columns[lines][3] =
-        {
-            {"                     ", "<green>Alive</green>      ", "<lightred>Bloodless</lightred>"},
-                                     //Full       Bloodless
-            {"Regeneration         ", "fast       ", "none with monsters in sight"},
-
-            {"HP modifier          ", "none       ", "-20%"},
-
-            {"Stealth boost        ", "none       ", "major "},
-
-            {"Heal on bite         ", "no         ", "yes "},
-
-            {"", "", ""},
-            {"<w>Resistances</w>", "", ""},
-            {"Poison resistance    ", "           ", "immune"},
-
-            {"Cold resistance      ", "           ", "++    "},
-
-            {"Negative resistance  ", "           ", "+++   "},
-
-            {"Miasma resistance    ", "           ", "immune"},
-
-            {"Torment resistance   ", "           ", "immune"},
-
-            {"", "", ""},
-            {"<w>Transformations</w>", "", ""},
-            {"Bat form (XL 3+)     ", "no         ", "yes   "},
-
-            {"Other forms          ", "yes        ", "no    "},
-
-            {"Berserk              ", "yes        ", "no    "}
-        };
-
-        const int highlight_col = you.vampire_alive ? 1 : 2;
-
-        for (int y = 0; y < lines; y++)  // lines   (properties)
-        {
-            string label = "";
-            for (int x = 0; x < 3; x++)  // columns (states)
-            {
-                string col = columns[y][x];
-                if (x == highlight_col)
-                    col = make_stringf("<w>%s</w>", col.c_str());
-                label += col;
-            }
-            add_entry(new MenuEntry(label, MEL_ITEM, 1, 0));
-        }
-    }
-
     void update_muts()
     {
-        for (const auto &fakemut : fakemuts)
+        menu_letter hotkey;
+        for (auto &fakemut : fakemuts)
         {
-            MenuEntry* me = new MenuEntry(fakemut, MEL_ITEM, 1, 0);
-            me->indent_no_hotkeys = !muts.empty();
+            // Skip fakemuts that are terse-only.
+            if (fakemut.second.empty())
+                continue;
+
+            MenuEntry* me;
+            // Add a full clickable entry if there's a long description for this
+            // fakemut, and a non-clickable one otherwise.
+            if (_fakemut_has_description(fakemut.first))
+            {
+                me = new MenuEntry(fakemut.second, MEL_ITEM, 2, hotkey);
+                me->data = &fakemut.first;
+                ++hotkey;
+            }
+            else
+            {
+                me = new MenuEntry(fakemut.second, MEL_ITEM, 2, 0);
+                me->indent_no_hotkeys = !muts.empty();
+            }
+
             add_entry(me);
         }
 
-        menu_letter hotkey;
         for (mutation_type &mut : muts)
         {
             const string desc = mutation_desc(mut, -1, true,
@@ -1422,19 +1331,10 @@ private:
             MenuEntry* me = new MenuEntry(desc, MEL_ITEM, 1, hotkey);
             ++hotkey;
             me->data = &mut;
-#ifdef USE_TILE_WEB
-            // This is a horrible hack. There's a bug where webtiles will
-            // carry over mutation icons from the main mutation menu to the
-            // vampirism menu. Rather than fix it, I've turned it off here.
-            // I'm very sorry.
-            if (!you.has_mutation(MUT_VAMPIRISM))
-#endif
 #ifdef USE_TILE
-            {
-                const tileidx_t tile = get_mutation_tile(mut);
-                if (tile != 0)
-                    me->add_tile(tile_def(tile + you.get_mutation_level(mut, false) - 1));
-            }
+            const tileidx_t tile = get_mutation_tile(mut);
+            if (tile != 0)
+                me->add_tile(tile_def(tile + you.get_mutation_level(mut, false) - 1));
 #endif
             add_entry(me);
         }
@@ -1529,8 +1429,6 @@ private:
     vector<mut_menu_mode> valid_modes()
     {
         vector<mut_menu_mode> modes = {MENU_MUTS};
-        if (you.has_mutation(MUT_VAMPIRISM))
-            modes.push_back(MENU_VAMP);
         if (you.default_form != transformation::none)
             modes.push_back(MENU_FORM);
         return modes;
@@ -1577,9 +1475,26 @@ private:
         ASSERT(i >= 0 && i < static_cast<int>(items.size()));
         if (items[i]->data)
         {
-            // XX don't use C casts
-            const mutation_type mut = *((mutation_type*)(items[i]->data));
-            describe_mutation(mut);
+            // XXX: Sinful hack: fakemuts must have a quantity of 2 so that we
+            //      can know how to interpret their data member properly.
+            if (items[i]->quantity == 1)
+            {
+                // XX don't use C casts
+                const mutation_type mut = *((mutation_type*)(items[i]->data));
+                describe_mutation(mut);
+            }
+            else
+            {
+                const string* mut = (string*)(items[i]->data);
+                describe_info inf;
+                inf.title = uppercase_first(*mut).c_str();
+
+                const string key = make_stringf("%s mutation", mut->c_str());
+                string lookup = getLongDescription(key);
+                hint_replace_cmds(lookup);
+                inf.body << lookup;
+                show_description(inf);
+            }
         }
         return true;
     }
@@ -2009,13 +1924,6 @@ bool physiology_mutation_conflict(mutation_type mutat)
     // Only Draconians (and gargoyles) can get wings.
     if (!species::is_draconian(you.species) && you.species != SP_GARGOYLE
         && mutat == MUT_BIG_WINGS)
-    {
-        return true;
-    }
-
-    // Vampires' healing rates depend on their blood level.
-    if (you.has_mutation(MUT_VAMPIRISM)
-        && (mutat == MUT_REGENERATION || mutat == MUT_INHIBITED_REGENERATION))
     {
         return true;
     }
@@ -3495,8 +3403,6 @@ void check_demonic_guardian()
 
         guardian->flags |= MF_NO_REWARD;
         guardian->flags |= MF_DEMONIC_GUARDIAN;
-
-        guardian->add_ench(ENCH_LIFE_TIMER);
 
         // no more guardians for mutlevel+1 to mutlevel+20 turns
         you.duration[DUR_DEMONIC_GUARDIAN] = 10*(mutlevel + random2(20));

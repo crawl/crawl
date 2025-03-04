@@ -739,7 +739,7 @@ static int _beam_to_resist(const actor* defender, beam_type flavour)
         case BEAM_VAMPIRIC_DRAINING:
             return defender->res_negative_energy();
         case BEAM_ACID:
-            return defender->res_acid();
+            return defender->res_corr();
         case BEAM_POISON:
         case BEAM_POISON_ARROW:
         case BEAM_MERCURY:
@@ -937,20 +937,10 @@ bool player_unrand_bad_attempt(const item_def &weapon,
                                const actor *defender,
                                bool check_only)
 {
-    if (is_unrandom_artefact(weapon, UNRAND_DEVASTATOR))
-    {
+    const monster* defending_monster = defender ? defender->as_monster() :
+        nullptr;
 
-        targeter_smite hitfunc(&you, 1, 1, 1);
-        hitfunc.set_aim(defender->pos());
-
-        return stop_attack_prompt(hitfunc, "attack",
-                                  [](const actor *act)
-                                  {
-                                      return !never_harm_monster(&you, act->as_monster());
-                                  }, nullptr, defender->as_monster(),
-                                  check_only);
-    }
-    else if (is_unrandom_artefact(weapon, UNRAND_VARIABILITY)
+    if (is_unrandom_artefact(weapon, UNRAND_VARIABILITY)
              || is_unrandom_artefact(weapon, UNRAND_SINGING_SWORD)
                 && !silenced(you.pos()))
     {
@@ -960,7 +950,7 @@ bool player_unrand_bad_attempt(const item_def &weapon,
                                [](const actor *act)
                                {
                                    return !never_harm_monster(&you, act->as_monster());
-                               }, nullptr, defender->as_monster(),
+                               }, nullptr, defending_monster,
                                check_only);
     }
     if (is_unrandom_artefact(weapon, UNRAND_TORMENT))
@@ -973,8 +963,42 @@ bool player_unrand_bad_attempt(const item_def &weapon,
                                    return !m->res_torment()
                                        && !never_harm_monster(&you, m->as_monster());
                                },
-                                  nullptr, defender->as_monster(),
+                                  nullptr, defending_monster,
                                 check_only);
+    }
+
+    if (!defender)
+        return false;
+
+    return player_unrand_bad_target(weapon, *defender, check_only);
+}
+
+bool player_unrand_bad_attempt(const item_def *weapon,
+    const item_def *offhand,
+    const actor *defender,
+    bool check_only)
+{
+    return weapon && ::player_unrand_bad_attempt(*weapon, defender, check_only)
+        || offhand && ::player_unrand_bad_attempt(*offhand, defender, check_only);
+}
+
+bool player_unrand_bad_target(const item_def &weapon,
+    const actor &defender,
+    bool check_only)
+{
+    const monster* defending_monster = defender.as_monster();
+
+    if (is_unrandom_artefact(weapon, UNRAND_DEVASTATOR))
+    {
+        targeter_smite hitfunc(&you, LOS_RADIUS, 1, 1);
+        hitfunc.set_aim(defender.pos());
+
+        return stop_attack_prompt(hitfunc, "attack",
+                               [](const actor *act)
+                               {
+                                   return !never_harm_monster(&you, act->as_monster());
+                               }, nullptr, defending_monster,
+                               check_only);
     }
     if (is_unrandom_artefact(weapon, UNRAND_ARC_BLADE))
     {
@@ -987,16 +1011,25 @@ bool player_unrand_bad_attempt(const item_def &weapon,
     {
         targeter_beam hitfunc(&you, 4, ZAP_SWORD_BEAM, 100, 0, 0);
         hitfunc.beam.aimed_at_spot = false;
-        hitfunc.set_aim(defender->pos());
+        hitfunc.set_aim(defender.pos());
 
         return stop_attack_prompt(hitfunc, "attack",
                                [](const actor *act)
                                {
                                    return !never_harm_monster(&you, act->as_monster());
-                               }, nullptr, defender->as_monster(),
+                               }, nullptr, defending_monster,
                                check_only);
     }
     return false;
+}
+
+bool player_unrand_bad_target(const item_def *weapon,
+    const item_def *offhand,
+    const actor &defender,
+    bool check_only)
+{
+    return weapon && ::player_unrand_bad_target(*weapon, defender, check_only)
+        || offhand && ::player_unrand_bad_target(*offhand, defender, check_only);
 }
 
 /**
@@ -1131,6 +1164,8 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
             continue;
         if (di.radius() == 2 && !can_reach_attack_between(atk, *di, REACH_TWO))
             continue;
+        else if (di.radius() == 3 && !can_reach_attack_between(atk, *di, REACH_THREE))
+            continue;
         targets.push_back(target);
     }
 }
@@ -1140,17 +1175,28 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
  *
  * @param attacker                  The attacking creature.
  * @param targets                   The targets to cleave.
- * @param attack_number             ?
- * @param effective_attack_number   ?
+ * @param attack_number             For monsters, which of their 4 possible attacks this
+ *                                  corresponds to. For players, usually 0, but can be 1
+ *                                  for the second of a Coglin's two weapons per round
+ * @param effective_attack_number   Like attack_number, if invalid attacks were skipped
+ *                                  (ie: fake attacks or ones outside of their max range.)
+ * @param wu_jian_attack            The type of martial attack being performed (if any).
+ * @param is_projected              Whether the attack is projected (ie: Manifold Assault)
+ * @param is_cleaving               Whether this is a cleaving attack.
+ * @param weapon                    The weapon this attack is being performed with (if any).
+ *
+ * @return  The total amount of damage inflicted directly by all attacks caused by this function.
  */
-void attack_multiple_targets(actor &attacker, list<actor*> &targets,
+int attack_multiple_targets(actor &attacker, list<actor*> &targets,
                              int attack_number, int effective_attack_number,
                              wu_jian_attack_type wu_jian_attack,
                              bool is_projected, bool is_cleaving,
                              item_def *weapon)
 {
     if (!attacker.alive())
-        return;
+        return 0;
+
+    int total_damage = 0;
     const item_def* weap = weapon ? weapon : attacker.weapon(attack_number);
     const bool reaching = weap && weapon_reach(*weap) > REACH_NONE;
     while (attacker.alive() && !targets.empty())
@@ -1172,9 +1218,13 @@ void attack_multiple_targets(actor &attacker, list<actor*> &targets,
             attck.cleaving = is_cleaving;
             attck.is_multihit = !is_cleaving; // heh heh heh
             attck.attack();
+
+            total_damage += attck.total_damage_done;
         }
         targets.pop_front();
     }
+
+    return total_damage;
 }
 
 /**

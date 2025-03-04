@@ -589,9 +589,9 @@ double sword
 
 A fearsome weapon with a forked, razor-sharp blade.
 %%%%
-dragon-blood talisman
+dragon-coil talisman
 
-A vial of pure dragon-blood, crystallized over many years. {{
+An intricate carving, inlaid with dragon tooth and scale. {{
     local desc = "Transforms the user into a mighty"
 
     if you.race():find("Draconian") then
@@ -1237,6 +1237,15 @@ sacred scourge
 
 A blessed weapon, woven by the saints in Heaven and hated by the unholy. It is
 a favoured weapon of the Shining One's servants.
+%%%%
+sanguine talisman
+
+A vial of roiling blood that pulses with the beat of an unseen heart. Transforms
+the user into a fearsome vampire - a creature that straddles the border between
+life and undeath. They can drink the lifeblood of the living to heal themselves,
+and even turn those they slay stealthily into vampiric thralls, but do not heal
+in the presence of monsters. At great effort, they may scatter into a swarm of
+bats - either to flee or to assail their enemies.
 %%%%
 sanguine gem
 

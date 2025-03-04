@@ -365,25 +365,8 @@ bool fill_status_info(int status, status_info& inf)
         }
         break;
 
-    case STATUS_ALIVE_STATE:
-        if (you.has_mutation(MUT_VAMPIRISM))
-        {
-            if (!you.vampire_alive)
-            {
-                inf.light_colour = LIGHTRED;
-                inf.light_text = "Bloodless";
-                inf.short_text = "bloodless";
-            }
-            else
-            {
-                inf.light_colour = GREEN;
-                inf.light_text = "Alive";
-            }
-        }
-        break;
-
     case STATUS_REGENERATION:
-        // DUR_TROGS_HAND + some vampire and non-healing stuff
+        // DUR_TROGS_HAND and inhibited regeneration
         _describe_regen(inf);
         break;
 
@@ -886,6 +869,39 @@ bool fill_status_info(int status, status_info& inf)
         }
         break;
 
+    case STATUS_TRICKSTER:
+        if (you.has_mutation(MUT_TRICKSTER))
+        {
+            const int bonus = trickster_bonus();
+            if (bonus > 0)
+            {
+                inf.short_text = make_stringf("trickster (+%d AC)", bonus);
+                inf.long_text = make_stringf("You are bolsted by spread misfortune (+%d AC)", bonus);
+            }
+        }
+        break;
+
+    case DUR_DROWSY:
+        if (you.duration[DUR_DROWSY] > 70)
+            inf.light_colour = LIGHTRED;
+        else if (you.duration[DUR_DROWSY] >= 35)
+            inf.light_colour = RED;
+        else
+            inf.light_colour = LIGHTGREY;
+        break;
+
+    case STATUS_MNEMOPHAGE:
+        if (!you.duration[DUR_ENKINDLED] && you.has_mutation(MUT_MNEMOPHAGE))
+        {
+            inf.light_colour = CYAN;
+            inf.light_text = make_stringf("Memories (%d)", you.props[ENKINDLE_CHARGES_KEY].get_int());
+        }
+        break;
+
+    case DUR_ENKINDLED:
+        inf.light_text = make_stringf("Enkindled (%d)", you.props[ENKINDLE_CHARGES_KEY].get_int());
+        break;
+
     default:
         if (!found)
         {
@@ -1046,12 +1062,6 @@ static void _describe_regen(status_info& inf)
         inf.long_text  = "You are regenerating.";
         _mark_expiring(inf, dur_expiring(DUR_TROGS_HAND));
     }
-    else if (you.has_mutation(MUT_VAMPIRISM)
-             && you.vampire_alive
-             && !you.duration[DUR_SICKNESS])
-    {
-        inf.short_text = "healing quickly";
-    }
     else if (regeneration_is_inhibited())
     {
         inf.light_colour = RED;
@@ -1140,10 +1150,7 @@ static void _describe_transform(status_info& inf)
     inf.short_text = form->get_long_name();
     inf.long_text = form->get_description();
 
-    const bool vampbat = (you.get_mutation_level(MUT_VAMPIRISM) >= 2
-                          && you.form == transformation::bat);
-    const bool expire  = dur_expiring(DUR_TRANSFORMATION) && !vampbat;
-
+    const bool expire  = dur_expiring(DUR_TRANSFORMATION);
     inf.light_colour = _dur_colour(GREEN, expire);
     _mark_expiring(inf, expire);
 }

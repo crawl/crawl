@@ -167,7 +167,10 @@ const char* EquipOnDelay::get_verb()
         else
             return "wielding";
     }
-    return "putting on";
+    else if (you.has_mutation(MUT_FORMLESS))
+        return "haunting";
+    else
+        return "putting on";
 }
 
 bool EquipOnDelay::try_interrupt(bool force)
@@ -204,7 +207,10 @@ const char* EquipOffDelay::get_verb()
         else
             return "unwielding";
     }
-    return "removing";
+    else if (you.has_mutation(MUT_FORMLESS))
+        return "removing yourself from";
+    else
+        return "removing";
 }
 
 bool EquipOffDelay::try_interrupt(bool force)
@@ -266,56 +272,6 @@ bool ShaftSelfDelay::try_interrupt(bool /*force*/)
 {
     mpr("You stop digging.");
     return true;
-}
-
-bool ExsanguinateDelay::try_interrupt(bool force)
-{
-    bool interrupt = false;
-
-    if (force)
-        interrupt = true;
-    else if (duration > 1 && !was_prompted)
-    {
-        if (!crawl_state.disables[DIS_CONFIRMATIONS]
-            && !yesno("Keep bloodletting?", false, 0, false))
-        {
-            interrupt = true;
-        }
-        else
-            was_prompted = true;
-    }
-
-    if (interrupt)
-    {
-        mpr("You stop emptying yourself of blood.");
-        return true;
-    }
-    return false;
-}
-
-bool RevivifyDelay::try_interrupt(bool force)
-{
-    bool interrupt = false;
-
-    if (force)
-        interrupt = true;
-    else if (duration > 1 && !was_prompted)
-    {
-        if (!crawl_state.disables[DIS_CONFIRMATIONS]
-            && !yesno("Continue your ritual?", false, 0, false))
-        {
-            interrupt = true;
-        }
-        else
-            was_prompted = true;
-    }
-
-    if (interrupt)
-    {
-        mpr("You stop revivifying.");
-        return true;
-    }
-    return false;
 }
 
 bool TransformDelay::try_interrupt(bool force)
@@ -515,16 +471,6 @@ void PasswallDelay::start()
 void ShaftSelfDelay::start()
 {
     mprf(MSGCH_MULTITURN_ACTION, "You begin to dig a shaft.");
-}
-
-void ExsanguinateDelay::start()
-{
-    mprf(MSGCH_MULTITURN_ACTION, "You begin bloodletting.");
-}
-
-void RevivifyDelay::start()
-{
-    mprf(MSGCH_MULTITURN_ACTION, "You begin the revivification ritual.");
 }
 
 void ImbueDelay::start()
@@ -904,25 +850,6 @@ void DescendingStairsDelay::finish()
     down_stairs();
 }
 
-void ExsanguinateDelay::finish()
-{
-    blood_spray(you.pos(), MONS_PLAYER, 10);
-    you.vampire_alive = false;
-    you.redraw_status_lights = true;
-    calc_hp(true);
-    mpr("You become bloodless.");
-    vampire_update_transformations();
-}
-
-void RevivifyDelay::finish()
-{
-    you.vampire_alive = true;
-    you.redraw_status_lights = true;
-    mpr("You return to life.");
-    temp_mutate(MUT_FRAIL, "vampire revification");
-    vampire_update_transformations();
-}
-
 void ImbueDelay::finish()
 {
     mpr("You finish imbuing your servitor.");
@@ -947,7 +874,7 @@ void TransformDelay::finish()
     if (form == transformation::none)
     {
         unset_default_form();
-        untransform();
+        untransform(false, false);
         return;
     }
 

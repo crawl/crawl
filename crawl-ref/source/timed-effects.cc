@@ -556,7 +556,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_ANGUISH: case ENCH_FIRE_VULN: case ENCH_SPELL_CHARGED:
         case ENCH_SLOW: case ENCH_WEAK: case ENCH_EMPOWERED_SPELLS:
         case ENCH_BOUND: case ENCH_CONCENTRATE_VENOM: case ENCH_TOXIC_RADIANCE:
-        case ENCH_PAIN_BOND:
+        case ENCH_PAIN_BOND: case ENCH_PYRRHIC_RECOLLECTION:
             lose_ench_levels(entry.second, levels);
             break;
 
@@ -931,6 +931,13 @@ void end_toxic_bog()
         if (marker->change_type == TERRAIN_CHANGE_BOG)
             revert_terrain_change(marker->pos, TERRAIN_CHANGE_BOG);
     }
+}
+
+void end_enkindled_status()
+{
+    mprf(MSGCH_DURATION, "Your flames quiet as the last of your memories are burnt away.");
+    you.duration[DUR_ENKINDLED] = 0;
+    you.props.erase(ENKINDLE_CHARGES_KEY);
 }
 
 void timeout_terrain_changes(int duration, bool force)

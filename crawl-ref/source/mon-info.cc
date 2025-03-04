@@ -144,6 +144,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_BLINKITIS,       MB_BLINKITIS },
     { ENCH_CHAOS_LACE,      MB_CHAOS_LACE },
     { ENCH_VEXED,           MB_VEXED },
+    { ENCH_PYRRHIC_RECOLLECTION, MB_PYRRHIC_RECOLLECTION },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -242,7 +243,8 @@ static bool _is_public_key(string key)
      || key == SEEN_SPELLS_KEY
      || key == KNOWN_MAX_HP_KEY
      || key == VAULT_HD_KEY
-     || key == POLY_SET_KEY)
+     || key == POLY_SET_KEY
+     || key == NOBODY_MEMORIES_KEY)
     {
         return true;
     }
@@ -540,6 +542,8 @@ monster_info::monster_info(const monster* m, int milev)
     // Ghostliness needed for name
     if (testbits(m->flags, MF_SPECTRALISED))
         mb.set(MB_SPECTRALISED);
+    if (m->has_ench(ENCH_VAMPIRE_THRALL))
+        mb.set(MB_VAMPIRE_THRALL);
 
     if (milev <= MILEV_NAME)
     {
@@ -554,8 +558,11 @@ monster_info::monster_info(const monster* m, int milev)
                     env.item[m->inv[MSLOT_MISSILE]]));
             }
         }
-        else if (type == MONS_ARMOUR_ECHO && m->get_defining_object())
+        else if ((type == MONS_ARMOUR_ECHO || type == MONS_HAUNTED_ARMOUR)
+                 && m->get_defining_object())
+        {
             inv[MSLOT_ARMOUR].reset(new item_def(*m->get_defining_object()));
+        }
         return;
     }
 
@@ -1056,6 +1063,14 @@ string monster_info::_core_name() const
             }
             break;
 
+        case MONS_HAUNTED_ARMOUR:
+            if (inv[MSLOT_ARMOUR])
+            {
+                const item_def& item = *inv[MSLOT_ARMOUR];
+                s = "haunted " + item.name(DESC_QUALNAME);
+            }
+            break;
+
         case MONS_PLAYER_GHOST:
             s = apostrophise(mname) + " ghost";
             break;
@@ -1137,6 +1152,9 @@ string monster_info::common_name(description_level_type desc) const
 
     if (is(MB_SPECTRALISED))
         ss << "ghostly ";
+
+    if (is(MB_VAMPIRE_THRALL))
+        ss << "vampire ";
 
     if (type == MONS_SENSED && !mons_is_sensed(base_type))
         ss << "sensed ";
@@ -1397,6 +1415,7 @@ string monster_info::pluralised_name(bool fullname) const
     else if ((type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
                 || type == MONS_DANCING_WEAPON || type == MONS_SPECTRAL_WEAPON
                 || type == MONS_ARMOUR_ECHO || type == MONS_MUTANT_BEAST
+                || type == MONS_HAUNTED_ARMOUR
                 || !fullname)
             && !is(MB_NAME_REPLACE))
 
@@ -1506,6 +1525,13 @@ vector<string> monster_info::attributes() const
                                     "@possessive@",
                                     pronoun(PRONOUN_POSSESSIVE)));
         }
+    }
+
+    if (type == MONS_NAMELESS_REVENANT)
+    {
+        const int num_memories = props[NOBODY_MEMORIES_KEY].get_vector().size();
+        v.push_back(make_stringf("%d %s left", num_memories,
+                                               num_memories > 1 ? "memories" : "memory"));
     }
 
     return v;

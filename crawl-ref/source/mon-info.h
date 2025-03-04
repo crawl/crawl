@@ -251,6 +251,8 @@ enum monster_info_flags
     MB_NO_TELE,
     MB_CHAOS_LACE,
     MB_VEXED,
+    MB_VAMPIRE_THRALL,
+    MB_PYRRHIC_RECOLLECTION,
     NUM_MB_FLAGS
 };
 

@@ -110,6 +110,9 @@ percussive_tempering BOLT_PERCUSSIVE_TEMPERING
 
 fortress_blast BOLT_FORTRESS_BLAST
 
+bomblet_launch0 BOLT_BOMBLET_LAUNCH
+bomblet_launch1
+
 bomblet_blast0 BOLT_BOMBLET_BLAST
 bomblet_blast1
 
@@ -410,6 +413,11 @@ cloud_blastmotes2
 cloud_magnetic0 CLOUD_MAGNETISED_DUST
 cloud_magnetic2
 cloud_magnetic2
+
+cloud_bat_mist0 CLOUD_BATS
+cloud_bat_mist1
+cloud_bat_mist2
+cloud_bat_mist3
 
 %sdir mon
 fungi_plants/ballistomycete_spore SPORE_OVERLAY

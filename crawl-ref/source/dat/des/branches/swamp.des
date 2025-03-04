@@ -2055,7 +2055,7 @@ DEPTH:   Swamp:2-, !Swamp:$
 MONS:    fire dragon, will-o-the-wisp
 MONS:    ice dragon, bog body / hydra simulacrum w:8
 MONS:    swamp dragon, alligator / hydra w:8
-ITEM:    any good_item
+ITEM:    any good_item / dragon-coil talisman w:2
 SUBST:   $ = $%%*, * = **d, T = tww
 SHUFFLE: 12 / 12 / 34 / 34 / 56 / 56 / 56
 NSUBST:  2 = 1 : 2:9 .:1 / *:2, 4 = 1 : 4:9 .:1 / *:4, 6 = 1 : 6:9 .:1 / *:6
@@ -2155,7 +2155,8 @@ KPROP:  .21 = bloody / w:30 nothing
 KPROP:  e = bloody
 SUBST:  G : Gxx
 : vault_metal_statue_setup(_G, "G", "mystic cage")
-: dgn.delayed_decay(_G, 'e', 'human corpse')
+: dgn.delayed_decay_extra(_G, "e", "human corpse",
+:                         "sanguine talisman / nothing")
 MAP
  ttttt
 tt%$ett

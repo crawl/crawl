@@ -42,6 +42,7 @@
 #include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
+#include "melee-attack.h"
 #include "message.h"
 #include "mgen-data.h"
 #include "mon-death.h"
@@ -820,7 +821,7 @@ static void _maybe_corrode()
 {
     int corrosion_sources = you.scan_artefacts(ARTP_CORRODE);
     if (x_chance_in_y(corrosion_chance(corrosion_sources), 100))
-        you.corrode_equipment("Your corrosive artefact");
+        you.corrode(nullptr, "Your corrosive artefact");
 }
 
 /**
@@ -1058,9 +1059,11 @@ static void _print_endgame_messages(scorefile_entry &se)
  *  @param see_source whether the attacker was visible to you
  *  @param death_source_name the attacker's name if it is already dead.
  *  @param skip_multipliers Whether to ignore harm/vitrify/etc.
+ *  @param skip_awaken Whether this damage will skip waking a sleeping player.
  */
 void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
-          bool see_source, const char *death_source_name, bool skip_multipliers)
+          bool see_source, const char *death_source_name, bool skip_multipliers,
+          bool skip_awaken)
 {
     ASSERT(!crawl_state.game_is_arena());
     if (you.duration[DUR_TIME_STEP])
@@ -1111,8 +1114,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     interrupt_activity(activity_interrupt::hp_loss, &hpl);
 
     // Don't wake the player with fatal or poison damage.
-    if (dam > 0 && dam < you.hp && death_type != KILLED_BY_POISON)
-        you.check_awaken(500);
+    if (dam > 0 && dam < you.hp && death_type != KILLED_BY_POISON && !skip_awaken)
+        you.wake_up();
 
     const bool non_death = death_type == KILLED_BY_QUITTING
                         || death_type == KILLED_BY_WINNING
@@ -1161,7 +1164,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             // Wake players who took fatal damage exactly equal to current HP,
             // but had it reduced below fatal threshold by spirit shield.
             if (dam < you.hp)
-                you.check_awaken(500);
+                you.wake_up();
 
             if (dam <= 0 && you.hp > 0)
                 return;
@@ -1172,7 +1175,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             simple_god_message(" protects you from harm!");
             // Ensure divine intervention wakes sleeping players. Necessary
             // because we otherwise don't wake players who take fatal damage.
-            you.check_awaken(500);
+            you.wake_up();
             return;
         }
 

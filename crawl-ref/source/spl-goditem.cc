@@ -1410,5 +1410,5 @@ void dreamshard_shatter()
     // when dreams spill out into reality it wakes you up
     // put it here after the dream message so that a sleeping player who
     // gets dreamsharded gets a nice message order
-    you.check_awaken(500);
+    you.wake_up();
 }
