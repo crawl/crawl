@@ -2678,9 +2678,10 @@ static int _discharge_monsters(const coord_def &where, int pow,
     return damage;
 }
 
-bool safe_discharge(coord_def where, vector<const actor *> &exclude, bool check_only)
+static bool _safe_discharge(coord_def where, vector<const actor *> &exclude,
+                     bool check_only, bool exclude_center)
 {
-    for (adjacent_iterator ai(where); ai; ++ai)
+    for (adjacent_iterator ai(where, exclude_center); ai; ++ai)
     {
         const actor *act = actor_at(*ai);
         if (!act)
@@ -2703,7 +2704,7 @@ bool safe_discharge(coord_def where, vector<const actor *> &exclude, bool check_
             // Don't prompt for the player, but always continue arcing.
 
             exclude.push_back(act);
-            if (!safe_discharge(act->pos(), exclude, check_only))
+            if (!_safe_discharge(act->pos(), exclude, check_only, true))
                 return false;
         }
     }
@@ -2711,23 +2712,15 @@ bool safe_discharge(coord_def where, vector<const actor *> &exclude, bool check_
     return true;
 }
 
-spret cast_discharge(int pow, const actor &agent, bool fail, bool prompt)
+bool safe_discharge(coord_def where, bool check_only,
+                    bool exclude_center)
 {
     vector<const actor *> exclude;
-    if (agent.is_player() && prompt && !safe_discharge(you.pos(), exclude))
-        return spret::abort;
+    return _safe_discharge(where, exclude, check_only, exclude_center);
+}
 
-    fail_check();
-
-    const int num_targs = 1 + random2(2 + div_rand_round(pow, 25));
-    const int dam =
-        apply_random_around_square([pow, &agent] (coord_def target) {
-            return _discharge_monsters(target, pow, agent,
-                        1 + random2(2 + div_rand_round(pow, 25)));
-        }, agent.pos(), true, num_targs);
-
-    dprf("Arcs: %d Damage: %d", num_targs, dam);
-
+static void _discharge_message(int dam)
+{
     if (dam > 0)
     {
         if (Options.use_animations & UA_BEAM)
@@ -2741,11 +2734,37 @@ spret cast_discharge(int pow, const actor &agent, bool fail, bool prompt)
         {
             const bool plural = coinflip();
             mprf("%s blue arc%s ground%s harmlessly.",
-                 plural ? "Some" : "A",
-                 plural ? "s" : "",
-                 plural ? " themselves" : "s itself");
+                plural ? "Some" : "A",
+                plural ? "s" : "",
+                plural ? " themselves" : "s itself");
         }
     }
+}
+
+void discharge_at_location(int pow, const actor &agent, coord_def location)
+{
+    const int arc_length = 1 + random2(2 + div_rand_round(pow, 25));
+    const int dam = _discharge_monsters(location, pow, agent, arc_length);
+    _discharge_message(dam);
+}
+
+spret cast_discharge(int pow, const actor &agent, bool fail, bool prompt)
+{
+    if (agent.is_player() && prompt && !safe_discharge(you.pos()))
+        return spret::abort;
+
+    fail_check();
+
+    const int num_targs = 1 + random2(2 + div_rand_round(pow, 25));
+    const int dam =
+        apply_random_around_square([pow, &agent](coord_def target) {
+        return _discharge_monsters(target, pow, agent,
+            1 + random2(2 + div_rand_round(pow, 25)));
+    }, agent.pos(), true, num_targs);
+
+    dprf("Arcs: %d Damage: %d", num_targs, dam);
+
+    _discharge_message(dam);
     return spret::success;
 }
 
