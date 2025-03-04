@@ -1639,17 +1639,32 @@ public:
     }
 };
 
-class AuxTailslap: public AuxAttackType
+class AuxTail: public AuxAttackType
 {
 public:
-    AuxTailslap()
+    AuxTail()
     : AuxAttackType(6, 50, "tail-slap") { };
 
     int get_damage(bool /*random*/) const override
     {
-        return damage + max(0, you.get_mutation_level(MUT_STINGER) * 2 - 1)
-                      + you.get_mutation_level(MUT_ARMOURED_TAIL) * 4
-                      + you.get_mutation_level(MUT_WEAKNESS_STINGER);
+        const int base = you.fishtail
+                            || you.has_mutation(MUT_ARMOURED_TAIL)
+                            || you.has_mutation(MUT_WEAKNESS_STINGER)
+                            || you.has_mutation(MUT_WEAKNESS_STINGER)
+                            || you.form == transformation::dragon
+                            ? 6 : 0;
+
+        return base + max(0, you.get_mutation_level(MUT_ARMOURED_TAIL) - 1) * 4
+                    + you.get_mutation_level(MUT_STINGER) * 3
+                    + you.get_mutation_level(MUT_WEAKNESS_STINGER);
+    }
+
+    string get_name() const override
+    {
+        if (you.has_mutation(MUT_STINGER) || you.has_mutation(MUT_WEAKNESS_STINGER))
+            return "sting";
+        else
+            return "tail-slap";
     }
 
     int get_brand() const override
@@ -1662,13 +1677,11 @@ public:
 
     bool is_usable() const override
     {
-        // includes MUT_STINGER, MUT_ARMOURED_TAIL, MUT_WEAKNESS_STINGER, fishtail
-        return you.has_tail()
-               // felid tails don't slap
-               && you.species != SP_FELID
-               // constricting/serpent tails are too slow to slap
-               && !you.has_mutation(MUT_CONSTRICTING_TAIL)
-               && you.form != transformation::serpent;
+        return you.has_mutation(MUT_ARMOURED_TAIL)
+                || you.has_mutation(MUT_STINGER)
+                || you.has_mutation(MUT_WEAKNESS_STINGER)
+                || you.fishtail
+                || you.form == transformation::dragon;
     }
 };
 
@@ -1912,7 +1925,7 @@ static const AuxConstrict   AUX_CONSTRICT = AuxConstrict();
 static const AuxKick        AUX_KICK = AuxKick();
 static const AuxPeck        AUX_PECK = AuxPeck();
 static const AuxHeadbutt    AUX_HEADBUTT = AuxHeadbutt();
-static const AuxTailslap    AUX_TAILSLAP = AuxTailslap();
+static const AuxTail        AUX_TAIL = AuxTail();
 static const AuxTouch       AUX_TOUCH = AuxTouch();
 static const AuxPunch       AUX_PUNCH = AuxPunch();
 static const AuxBite        AUX_BITE = AuxBite();
@@ -1927,7 +1940,7 @@ static const AuxAttackType* const aux_attack_types[] =
     &AUX_KICK,
     &AUX_HEADBUTT,
     &AUX_PECK,
-    &AUX_TAILSLAP,
+    &AUX_TAIL,
     &AUX_TOUCH,
     &AUX_PUNCH,
     &AUX_BITE,
@@ -2104,14 +2117,23 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
             attacker->start_constricting(*defender);
 
         if (damage_done > 0 || atk == UNAT_CONSTRICT)
-        {
             player_announce_aux_hit();
+        else
+        {
+            mprf("You %s %s%s.",
+                    aux_verb.c_str(),
+                    defender->name(DESC_THE).c_str(),
+                    you.can_see(*defender) ? ", but do no damage" : "");
+        }
 
+        // Allow to trigger regardless of damage, just like venom weapons.
+        if (damage_brand == SPWPN_VENOM && !one_chance_in(3))
+            poison_monster(defender->as_monster(), &you);
+
+        if (damage_done > 0)
+        {
             if (damage_brand == SPWPN_ACID && !one_chance_in(3))
                 defender->corrode(&you);
-
-            if (damage_brand == SPWPN_VENOM && coinflip())
-                poison_monster(defender->as_monster(), &you);
 
             if (damage_brand == SPWPN_WEAKNESS
                 && !(defender->holiness() & (MH_UNDEAD | MH_NONLIVING)))
@@ -2155,13 +2177,6 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
                     }
                 }
             }
-        }
-        else // no damage was done
-        {
-            mprf("You %s %s%s.",
-                 aux_verb.c_str(),
-                 defender->name(DESC_THE).c_str(),
-                 you.can_see(*defender) ? ", but do no damage" : "");
         }
     }
     else // defender was just alive, so this call should be ok?
@@ -4571,7 +4586,7 @@ string mut_aux_attack_desc(mutation_type mut)
     case MUT_ARMOURED_TAIL:
     case MUT_WEAKNESS_STINGER:
     case MUT_MERTAIL:
-        return AUX_TAILSLAP.describe();
+        return AUX_TAIL.describe();
     case MUT_ACIDIC_BITE:
     case MUT_ANTIMAGIC_BITE:
     case MUT_FANGS:

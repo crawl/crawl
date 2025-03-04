@@ -50,7 +50,7 @@ mutations:
   1:
     MUT_TOUGH_SKIN: 3
     MUT_ROLLPAGE: 1
-    MUT_ARMOURED_TAIL: 1
+    MUT_ARMOURED_TAIL: 2
     MUT_DEFORMED: 1
   7:
     MUT_ROLLPAGE: 1

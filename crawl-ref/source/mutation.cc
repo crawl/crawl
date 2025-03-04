@@ -192,6 +192,8 @@ static const int conflict[][3] =
     { MUT_BEAK,                MUT_ANTENNAE,               -1},
     { MUT_HOOVES,              MUT_TALONS,                 -1},
     { MUT_CLAWS,               MUT_DEMONIC_TOUCH,          -1},
+    { MUT_STINGER,             MUT_WEAKNESS_STINGER,       -1},
+    { MUT_STINGER,             MUT_MERTAIL,                -1},
     { MUT_TRANSLUCENT_SKIN,    MUT_CAMOUFLAGE,             -1},
     { MUT_ANTIMAGIC_BITE,      MUT_ACIDIC_BITE,            -1},
     { MUT_HEAT_RESISTANCE,     MUT_HEAT_VULNERABILITY,     -1},
@@ -1886,18 +1888,10 @@ bool physiology_mutation_conflict(mutation_type mutat)
             return true;
     }
 
-    // Only species that already have tails can get this one. A felid
-    // tail does nothing in combat, so ignore it. For merfolk it would
-    // only work in the water, so skip it. Demonspawn tails come with a
-    // stinger already.
-    if ((!you.has_tail(false)
-         || you.species == SP_FELID
-         || you.has_innate_mutation(MUT_MERTAIL)
-         || you.has_mutation(MUT_WEAKNESS_STINGER))
-        && mutat == MUT_STINGER)
-    {
+    // Only species that already have tails can get this one. For merfolk it
+    // would only work in the water, so skip it.
+    if (mutat == MUT_STINGER && !you.has_tail(false))
         return true;
-    }
 
     // Need tentacles to grow something on them.
     if (!you.has_innate_mutation(MUT_TENTACLE_ARMS)

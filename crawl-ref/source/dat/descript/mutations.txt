@@ -235,14 +235,14 @@ sharper, longer, and stronger.
 %%%%
 weakness stinger mutation
 
-You have a thin, red tail, allowing you to tail-slap foes when launching melee
+You have a thin, orange tail, allowing you to attack foes when launching melee
 attacks. Each level of this mutation increases your tail's strength as it turns
 into a sharp stinger. The third level of this mutation prevents wearing cloaks
 or scarves, and causes the stinger to inflict brief weakness on those struck.
 %%%%
 armoured tail mutation
 
-You have a large armoured tail, allowing you to tail-slap foes when launching
+You have a large scaly tail, allowing you to tail-slap foes when launching
 melee attacks.
 %%%%
 pseudopods mutation

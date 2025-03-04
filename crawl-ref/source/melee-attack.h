@@ -15,7 +15,7 @@ enum unarmed_attack_type
     UNAT_KICK,
     UNAT_HEADBUTT,
     UNAT_PECK,
-    UNAT_TAILSLAP,
+    UNAT_TAIL,
     UNAT_TOUCH,
     UNAT_PUNCH,
     UNAT_BITE,

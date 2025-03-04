@@ -1103,10 +1103,10 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_ARMOURED_TAIL, 0, 1, mutflag::good, true,
+{ MUT_ARMOURED_TAIL, 0, 2, mutflag::good, true,
   "armoured tail",
 
-  {"You have a long armoured tail.", "", ""},
+  {"You have an armoured tail.", "You have a heavy armoured tail.", ""},
   {"", "", ""},
   {"", "", ""},
 },

@@ -3680,6 +3680,7 @@ static void _tag_read_you(reader &th)
     SP_MUT_FIX(MUT_ACROBATIC, SP_TENGU);
     SP_MUT_FIX(MUT_DOUBLE_POTION_HEAL, SP_ONI);
     SP_MUT_FIX(MUT_DRUNKEN_BRAWLING, SP_ONI);
+    SP_MUT_FIX(MUT_ARMOURED_TAIL, SP_ARMATAUR);
 
     if (you.has_innate_mutation(MUT_NIMBLE_SWIMMER)
         || you.species == SP_MERFOLK || you.species == SP_OCTOPODE)
@@ -3707,6 +3708,9 @@ static void _tag_read_you(reader &th)
 
     if (you.species == SP_FELID && you.has_innate_mutation(MUT_FAST))
         _fixup_species_mutations(MUT_FAST);
+
+    if (species::is_draconian(you.species))
+        _fixup_species_mutations(MUT_ARMOURED_TAIL);
 
     #undef SP_MUT_FIX
 

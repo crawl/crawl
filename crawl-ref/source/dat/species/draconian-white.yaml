@@ -32,6 +32,7 @@ levelup_stat_frequency: 4
 mutations:
   1:
     MUT_COLD_BLOODED: 1
+    MUT_ARMOURED_TAIL: 1
   7:
     MUT_COLD_RESISTANCE: 1
 fake_mutations:
