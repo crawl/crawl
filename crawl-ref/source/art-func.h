@@ -1001,7 +1001,6 @@ static void _ARC_BLADE_melee_effects(item_def* /*weapon*/, actor* attacker,
         else
             mpr("You hear the crackle of electricity.");
 
-        coord_def defencer_pos = defender->pos();
         if (attacker->pos().distance_from(defender->pos()) <= 1)
             cast_discharge(pow, *attacker, false, false);
         else
