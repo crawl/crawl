@@ -567,14 +567,15 @@ int DungeonRegion::handle_mouse(wm_mouse_event &event)
                 {
                     // if on stairs, travel them
                     const dungeon_feature_type feat = env.grid(gc);
-                    switch (feat_stair_direction(feat))
+                    const command_type cmd = feat_stair_direction(feat);
+                    switch (cmd)
                     {
                     case CMD_GO_DOWNSTAIRS:
                     case CMD_GO_UPSTAIRS:
-                        return command_to_key(feat_stair_direction(feat));
+                        return encode_command_as_key(cmd);
                     default:
                         // otherwise wait
-                        return command_to_key(CMD_WAIT);
+                        return encode_command_as_key(CMD_WAIT);
                     }
                 }
                 else
@@ -590,26 +591,32 @@ int DungeonRegion::handle_mouse(wm_mouse_event &event)
                         update_screen();
                         return CK_MOUSE_CMD;
                     }
-                    return command_to_key(CMD_PICKUP);
+                    return encode_command_as_key(CMD_PICKUP);
                 }
             }
 
             const dungeon_feature_type feat = env.grid(gc);
-            switch (feat_stair_direction(feat))
+            const command_type cmd = feat_stair_direction(feat);
+            switch (cmd)
             {
             case CMD_GO_DOWNSTAIRS:
             case CMD_GO_UPSTAIRS:
-                return command_to_key(feat_stair_direction(feat));
+                return encode_command_as_key(cmd);
             default:
                 return 0;
             }
         }
         case wm_mouse_event::RIGHT:
             if (!(event.mod & TILES_MOD_SHIFT))
-                return command_to_key(CMD_RESISTS_SCREEN); // Character overview.
+            {
+                // Character overview.
+                return encode_command_as_key(CMD_RESISTS_SCREEN);
+            }
             if (!you_worship(GOD_NO_GOD))
-                return command_to_key(CMD_DISPLAY_RELIGION); // Religion screen.
-
+            {
+                // Religion screen.
+                return encode_command_as_key(CMD_DISPLAY_RELIGION);
+            }
             // fall through...
         default:
             return 0;
