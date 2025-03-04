@@ -3554,6 +3554,10 @@ static void _maybe_launch_opportunity_attack(monster &mon, coord_def orig_pos)
     if (!mon.alive() || !crawl_state.potential_pursuers.count(&mon))
         return;
 
+    // Don't launch opportunity attacks on dead felids awaiting revival
+    if (you.hp <= 0)
+        return;
+
     const int new_dist = grid_distance(you.pos(), mon.pos());
     // Some of these duplicate checks when marking potential
     // pursuers. This is to avoid state changes after your turn
