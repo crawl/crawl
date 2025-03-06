@@ -8,8 +8,7 @@ hp_mod: 13
 unarmed_colour: green
 unarmed_verbs: [nip at, bite, gouge, chomp]
 can_swim: yes
-keeps_mutations: no
-changes_physiology: yes
+changes_anatomy: yes
 has_hair: no
 has_bones: yes
 has_feet: yes

@@ -9,8 +9,7 @@ resists: {elec: 1, neg: 1, petrify: 1}
 ac: {base: 27, scaling: 11}
 unarmed: {base: 9}
 unarmed_colour: lightgrey
-keeps_mutations: yes
-changes_physiology: yes
+changes_substance: yes
 holiness: nonliving
 has_blood: no
 has_hair: no

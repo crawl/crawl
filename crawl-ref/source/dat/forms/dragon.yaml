@@ -15,8 +15,7 @@ unarmed_name: Teeth and claws
 unarmed_verbs: [hit, claw, bite, maul]
 can_fly: yes
 can_swim: no
-keeps_mutations: no
-changes_physiology: yes
+changes_anatomy: yes
 has_hair: no
 has_bones: yes
 has_feet: yes

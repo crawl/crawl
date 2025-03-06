@@ -48,8 +48,8 @@ struct form_entry
     // Row 8:
     form_capability can_fly;
     form_capability can_swim;
-    bool keeps_mutations;
-    bool changes_physiology;
+    bool changes_anatomy;
+    bool changes_substance;
     mon_holy_type holiness;
 
     // Row 9:

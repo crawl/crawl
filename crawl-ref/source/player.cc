@@ -1715,7 +1715,9 @@ int player_movement_speed(bool check_terrain, bool temp)
     if (int fast = you.get_mutation_level(MUT_FAST))
         mv -= fast + 1;
 
-    if (int slow = you.get_mutation_level(MUT_SLOW))
+    if (int slow = you.get_mutation_level(MUT_SLOW)
+                   + you.has_mutation(MUT_FROG_LEGS)
+                   + you.has_mutation(MUT_CONSTRICTING_TAIL) * 2)
     {
         mv *= 10 + slow * 2;
         mv /= 10;
@@ -1784,19 +1786,6 @@ bool player_effectively_in_light_armour()
 {
     const item_def *armour = you.body_armour();
     return is_effectively_light_armour(armour);
-}
-
-// This function returns true if the player has a radically different
-// shape... minor changes like blade hands don't count, also note
-// that lich transformation doesn't change the character's shape
-// (so we end up with Naga-liches, Spriggan-liches, Minotaur-liches)
-// it just makes the character undead (with the benefits that implies). - bwr
-bool player_is_shapechanged()
-{
-    // TODO: move into data
-    return form_changes_physiology(you.form)
-        && you.form != transformation::death
-        && you.form != transformation::vampire;
 }
 
 bool player_acrobatic()
@@ -6011,6 +6000,13 @@ int sanguine_armour_bonus()
     return 300 + mut_lev * 300;
 }
 
+int stone_body_armour_bonus()
+{
+    // max 20
+    return 200 + 100 * you.experience_level * 2 / 5
+               + 100 * max(0, you.experience_level - 7) * 2 / 5;
+}
+
 /**
  * How much AC does the player get from an unenchanted version of the given
  * armour?
@@ -6049,25 +6045,14 @@ int player::base_ac_from(const item_def &armour, int scale) const
  */
 int player::racial_ac(bool temp) const
 {
-    // drac scales suppressed in all serious forms, except dragon
-    if (species::is_draconian(species)
-        && (!player_is_shapechanged() || form == transformation::dragon
-            || !temp))
-    {
-        int AC = 400 + 100 * experience_level / 3;  // max 13
-        return AC;
-    }
+    const bool suppress = temp && (form_changes_anatomy() || form_changes_substance());
 
-    if (!(player_is_shapechanged() && temp))
-    {
-        if (species == SP_NAGA)
-            return 100 * experience_level / 3;              // max 9
-        else if (species == SP_GARGOYLE)
-        {
-            return 200 + 100 * experience_level * 2 / 5     // max 20
-                       + 100 * max(0, experience_level - 7) * 2 / 5;
-        }
-    }
+    // drac scales suppressed in all serious forms, except dragon
+    if (species::is_draconian(species) && (!suppress || form == transformation::dragon))
+        return 400 + 100 * experience_level / 3;  // max 13
+
+    if (species == SP_NAGA && !suppress)
+        return 100 * experience_level / 3; // max 9
 
     return 0;
 }
@@ -6086,8 +6071,7 @@ class mutation_ac_changes{
          */
         int get_ac_change_for_mutation(){
             int ac_change = 0;
-
-            int mutation_level = you.get_mutation_level(mut, mutation_activation_threshold);
+            const int mutation_level = you.get_mutation_level(mut);
 
             switch (mutation_level){
                 case 0:
@@ -6104,18 +6088,13 @@ class mutation_ac_changes{
             return ac_change * 100;
         }
 
-        mutation_ac_changes(mutation_type mut_aug,
-                            mutation_activity_type mutation_activation_threshold_aug,
-                            vector<int> ac_changes_aug)
-        : mut (mut_aug),
-          mutation_activation_threshold (mutation_activation_threshold_aug),
-          ac_changes (ac_changes_aug)
+        mutation_ac_changes(mutation_type mut_aug, vector<int> ac_changes_aug)
+        : mut (mut_aug), ac_changes (ac_changes_aug)
         {
         }
 
     private:
         mutation_type mut;
-        mutation_activity_type mutation_activation_threshold;
         vector<int> ac_changes;
 };
 
@@ -6125,21 +6104,19 @@ const vector<int> ONE_TWO_THREE  = {1,2,3};
 const vector<int> TWO_THREE_FOUR = {2,3,4};
 
 vector<mutation_ac_changes> all_mutation_ac_changes = {
-     mutation_ac_changes(MUT_GELATINOUS_BODY,        mutation_activity_type::PARTIAL, ONE_TWO_THREE)
-    ,mutation_ac_changes(MUT_TOUGH_SKIN,             mutation_activity_type::PARTIAL, ONE_TWO_THREE)
-    ,mutation_ac_changes(MUT_SHAGGY_FUR,             mutation_activity_type::PARTIAL, ONE_TWO_THREE)
-    ,mutation_ac_changes(MUT_PHYSICAL_VULNERABILITY, mutation_activity_type::PARTIAL, {-5,-10,-15})
-    // Scale mutations are more easily disabled (forms etc.). This appears to be for flavour reasons.
-    // Preserved behaviour from before mutation ac was turned to data.
-    ,mutation_ac_changes(MUT_IRIDESCENT_SCALES,      mutation_activity_type::FULL,    {2, 4, 6})
-    ,mutation_ac_changes(MUT_RUGGED_BROWN_SCALES,    mutation_activity_type::FULL,    ONE_TWO_THREE)
-    ,mutation_ac_changes(MUT_ICY_BLUE_SCALES,        mutation_activity_type::FULL,    TWO_THREE_FOUR)
-    ,mutation_ac_changes(MUT_MOLTEN_SCALES,          mutation_activity_type::FULL,    TWO_THREE_FOUR)
-    ,mutation_ac_changes(MUT_SLIMY_GREEN_SCALES,     mutation_activity_type::FULL,    TWO_THREE_FOUR)
-    ,mutation_ac_changes(MUT_THIN_METALLIC_SCALES,   mutation_activity_type::FULL,    TWO_THREE_FOUR)
-    ,mutation_ac_changes(MUT_YELLOW_SCALES,          mutation_activity_type::FULL,    TWO_THREE_FOUR)
-    ,mutation_ac_changes(MUT_SHARP_SCALES,           mutation_activity_type::FULL,    ONE_TWO_THREE)
-    ,mutation_ac_changes(MUT_IRON_FUSED_SCALES,      mutation_activity_type::FULL,    {5, 5, 5})
+     mutation_ac_changes(MUT_GELATINOUS_BODY,           ONE_TWO_THREE)
+    ,mutation_ac_changes(MUT_TOUGH_SKIN,                ONE_TWO_THREE)
+    ,mutation_ac_changes(MUT_SHAGGY_FUR,                ONE_TWO_THREE)
+    ,mutation_ac_changes(MUT_PHYSICAL_VULNERABILITY,    {-5,-10,-15})
+    ,mutation_ac_changes(MUT_IRIDESCENT_SCALES,         {2, 4, 6})
+    ,mutation_ac_changes(MUT_RUGGED_BROWN_SCALES,       ONE_TWO_THREE)
+    ,mutation_ac_changes(MUT_ICY_BLUE_SCALES,           TWO_THREE_FOUR)
+    ,mutation_ac_changes(MUT_MOLTEN_SCALES,             TWO_THREE_FOUR)
+    ,mutation_ac_changes(MUT_SLIMY_GREEN_SCALES,        TWO_THREE_FOUR)
+    ,mutation_ac_changes(MUT_THIN_METALLIC_SCALES,      TWO_THREE_FOUR)
+    ,mutation_ac_changes(MUT_YELLOW_SCALES,             TWO_THREE_FOUR)
+    ,mutation_ac_changes(MUT_SHARP_SCALES,              ONE_TWO_THREE)
+    ,mutation_ac_changes(MUT_IRON_FUSED_SCALES,         {5, 5, 5})
 };
 
 /**
@@ -6162,6 +6139,9 @@ int player::ac_changes_from_mutations() const
     {
         AC += it->get_ac_change_for_mutation();
     }
+
+    if (you.has_mutation(MUT_STONE_BODY))
+        AC += stone_body_armour_bonus();
 
     return AC;
 }
@@ -6604,7 +6584,8 @@ bool player::res_water_drowning() const
 {
     return is_unbreathing()
            || cur_form(true)->player_can_swim()
-           || you.species == SP_GREY_DRACONIAN && draconian_dragon_exception();
+           || you.species == SP_GREY_DRACONIAN
+              && (!form_changes_anatomy() || you.form == transformation::dragon);
 }
 
 int player::res_poison(bool temp) const
@@ -6682,7 +6663,7 @@ bool player::res_polar_vortex() const
 
 bool player::res_petrify(bool temp) const
 {
-    return get_mutation_level(MUT_PETRIFICATION_RESISTANCE)
+    return get_mutation_level(MUT_STONE_BODY)
            || cur_form(temp)->res_petrify()
            || is_insubstantial();
 }
@@ -7300,7 +7281,7 @@ bool player::has_tail(bool allow_tran) const
         }
 
         // Most transformations suppress a tail.
-        if (!form_keeps_mutations())
+        if (form_changes_anatomy())
             return false;
     }
 
@@ -7807,7 +7788,7 @@ bool player::do_shaft()
 
 bool player::can_do_shaft_ability(bool quiet) const
 {
-    if (!form_keeps_mutations())
+    if (form_changes_anatomy())
     {
         if (!quiet)
             mpr("You can't shaft yourself in your current form.");
@@ -8763,9 +8744,7 @@ void player_end_berserk()
  */
 bool sanguine_armour_valid()
 {
-    // why does this need to specify the activity type explicitly?
-    return you.hp <= you.hp_max * 2 / 3
-           && you.get_mutation_level(MUT_SANGUINE_ARMOUR, mutation_activity_type::FULL);
+    return you.hp <= you.hp_max * 2 / 3 && you.has_mutation(MUT_SANGUINE_ARMOUR);
 }
 
 /// Trigger sanguine armour, updating the duration & messaging as appropriate.

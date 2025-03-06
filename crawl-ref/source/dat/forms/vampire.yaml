@@ -5,8 +5,6 @@ skill: {min: 16, max: 25}
 talisman: vampire
 resists: {cold: 1, neg: 2}
 unarmed_colour: lightmagenta
-keeps_mutations: yes
-changes_physiology: yes
 fakemuts:
   - ["vampire fangs", "Your fangs allow you to drain the lifeblood from your enemies."]
   - ["bloodcurse", "When you kill a living creature with a stab, you may create a vampiric thrall."]

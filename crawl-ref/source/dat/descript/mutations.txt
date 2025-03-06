@@ -220,12 +220,14 @@ stronger.
 %%%%
 naga tail mutation
 
-You have a long, snake-like tail in place of feet. The second level of this
-mutation allows you to constrict foes with your tail when attacking in melee.
-Your tail can constrict only one enemy at a time, and every attack at this
-mutation level will begin or renew a constriction attempt. The chances of
-succeeding are determined primarily by Dexterity, Fighting skill, and any
-slaying bonuses.
+You have a long, snake-like tail in place of feet. This gives you stability in
+water, but causes you to move much more slowly than most species.
+
+The second level of this mutation allows you to constrict foes with your tail
+when attacking in melee. Your tail can constrict only one enemy at a time, and
+every attack at this mutation level will begin or renew a constriction attempt.
+The chances of succeeding are determined primarily by Dexterity, Fighting skill,
+and any slaying bonuses.
 %%%%
 stinger mutation
 
@@ -630,12 +632,13 @@ extra vitality mutation
 You are built differently from most species, making you slightly harder to kill.
 Each level of this mutation increases your maximum health by 4 points.
 %%%%
-strong legs mutation
+frog-like legs mutation
 
-You have big, strong legs, allowing you to hop about with
-<input>$cmd[CMD_USE_ABILITY]</input>, though you can't perfectly aim where you
-land. The second level of this mutation allows you to hop farther. Each time
-you hop, you need to rest for a bit before you can hop again.
+Your uniquely muscular legs allow you to hop short distances in the blink of an
+eye with <input>$cmd[CMD_USE_ABILITY]</input>, though your walking speed is
+below average.
+
+The second level of this mutation allows you to hop farther.
 %%%%
 forlorn mutation
 
@@ -651,9 +654,11 @@ seen from.
 You are born to the light, increasing the distance that you can see and be seen
 from.
 %%%%
-petrification resistance mutation
+stone body mutation
 
-You are immune to petrification.
+You are made of living stone which is very resistant to damage. You gain a
+large bonus to your AC, which increases with your experience level, and are
+immune to petrification, poison, disease, sleep, and certain other effects.
 %%%%
 cold-blooded mutation
 

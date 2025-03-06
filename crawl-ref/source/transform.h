@@ -192,9 +192,9 @@ public:
     const FormAttackVerbs uc_attack_verbs;
 
     /// "Used to mark forms which keep most form-based mutations."
-    const bool keeps_mutations;
+    const bool changes_anatomy;
     //
-    const bool changes_physiology;
+    const bool changes_substance;
     /// What does this form change the player's holiness to? (MH_NONE if it leaves it unchanged)
     /// Note that vampire is special-cased in player::holiness().
     const mon_holy_type holiness;
@@ -285,9 +285,8 @@ bool form_can_wield(transformation form = you.form);
 bool form_can_wear(transformation form = you.form);
 bool form_can_fly(transformation form = you.form);
 bool form_can_swim(transformation form = you.form);
-bool form_changes_physiology(transformation form = you.form);
-// Does the form keep the benefits of resistance, scale, and aux mutations?
-bool form_keeps_mutations(transformation form = you.form);
+bool form_changes_substance(transformation form = you.form);
+bool form_changes_anatomy(transformation form = you.form);
 bool form_has_blood(transformation form = you.form);
 bool form_has_hair(transformation form = you.form);
 bool form_has_bones(transformation form = you.form);
@@ -322,7 +321,6 @@ void merfolk_check_swimming(dungeon_feature_type old_grid,
                             bool stepped = false);
 void merfolk_start_swimming(bool step = false);
 void merfolk_stop_swimming();
-bool draconian_dragon_exception();
 
 transformation form_for_talisman(const item_def &talisman);
 

@@ -2218,7 +2218,7 @@ int silver_damages_victim(actor* victim, int damage, string &dmg_msg)
 {
     int ret = 0;
     if (victim->how_chaotic()
-        || victim->is_player() && player_is_shapechanged())
+        || victim->is_player() && you.form != transformation::none)
     {
         ret = damage * 3 / 4;
     }

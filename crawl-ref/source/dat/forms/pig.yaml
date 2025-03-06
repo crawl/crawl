@@ -10,8 +10,7 @@ unarmed_colour: lightgrey
 unarmed_name: Teeth
 unarmed_verbs: animal
 can_swim: no
-keeps_mutations: no
-changes_physiology: yes
+changes_anatomy: yes
 has_hair: yes
 has_bones: yes
 has_feet: yes

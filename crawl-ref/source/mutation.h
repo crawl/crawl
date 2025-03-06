@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "mutation-type.h"
+#include "transformation.h"
 #include "externs.h"
 
 using std::vector;
@@ -16,13 +17,6 @@ using std::vector;
 class formatted_string;
 
 #define EVOLUTION_MUTS_KEY "evolution_muts"
-
-enum class mutation_activity_type
-{
-    INACTIVE, // form-based mutations in most forms
-    PARTIAL,  // scales on statues
-    FULL,     // other mutations
-};
 
 enum mutation_permanence_class
 {
@@ -51,12 +45,13 @@ bool mutate(mutation_type which_mutation, const string &reason,
             mutation_permanence_class mutclass = MUTCLASS_NORMAL);
 
 int mut_check_conflict(mutation_type mut, bool innate_only = false);
-mutation_activity_type mutation_activity_level(mutation_type mut);
+bool mut_is_compatible(mutation_type mut, bool base_only = false);
 
 void display_mutations();
 string describe_mutations(bool center_title);
 string terse_mutation_list();
 string get_mutation_desc(mutation_type mut);
+string get_mutation_tags(mutation_type mut);
 
 int get_mutation_cap(mutation_type mut);
 void validate_mutations(bool debug_msg=false);
@@ -86,7 +81,6 @@ bool temp_mutation_wanes();
 
 void check_demonic_guardian();
 void check_monster_detect();
-bool physiology_mutation_conflict(mutation_type mutat);
 int augmentation_amount();
 void reset_powered_by_death_duration();
 

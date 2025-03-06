@@ -15,8 +15,7 @@ unarmed: {base: 7}
 unarmed_colour: lightgrey
 unarmed_verbs: [hit, lash, body-slam, crush]
 can_swim: yes
-keeps_mutations: no
-changes_physiology: yes
+changes_anatomy: yes
 has_hair: no
 has_bones: yes
 has_feet: no

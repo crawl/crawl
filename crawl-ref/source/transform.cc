@@ -115,8 +115,8 @@ Form::Form(const form_entry &fe)
       blocked_slots(fe.blocked_slots), size(fe.size),
       can_cast(fe.can_cast),
       uc_colour(fe.uc_colour), uc_attack_verbs(fe.uc_attack_verbs),
-      keeps_mutations(fe.keeps_mutations),
-      changes_physiology(fe.changes_physiology),
+      changes_anatomy(fe.changes_anatomy),
+      changes_substance(fe.changes_substance),
       holiness(fe.holiness),
       has_blood(fe.has_blood), has_hair(fe.has_hair),
       has_bones(fe.has_bones), has_feet(fe.has_feet),
@@ -583,8 +583,6 @@ public:
         if (you.species == SP_DEEP_DWARF && one_chance_in(10))
             return "You inwardly fear your resemblance to a lawn ornament.";
 #endif
-        if (you.species == SP_GARGOYLE)
-            return "Your body stiffens and grows slower.";
         return Form::transform_message();
     }
 
@@ -602,9 +600,6 @@ public:
      */
     string get_untransform_message() const override
     {
-        // This only handles lava orcs going statue -> stoneskin.
-        if (you.species == SP_GARGOYLE)
-            return "You revert to a slightly less stony form.";
         return "You revert to your normal fleshy form.";
     }
 
@@ -1087,16 +1082,18 @@ bool form_can_swim(transformation form)
     return get_form(form)->player_can_swim();
 }
 
-// Used to mark transformations which override species intrinsics.
-bool form_changes_physiology(transformation form)
+// Used to mark transformations which change the basic matter the player is
+// made up of (ie: statue/storm form)
+bool form_changes_substance(transformation form)
 {
-    return get_form(form)->changes_physiology;
+    return get_form(form)->changes_substance;
 }
 
-// Used to mark forms which keep most form-based mutations.
-bool form_keeps_mutations(transformation form)
+// Used to mark forms which have a significantly different body plan and
+// thus suppress most anatomy-based mutations.
+bool form_changes_anatomy(transformation form)
 {
-    return get_form(form)->keeps_mutations;
+    return get_form(form)->changes_anatomy;
 }
 
 /**
@@ -1514,9 +1511,6 @@ static void _enter_form(int dur, transformation which_trans, bool scale_hp = tru
 {
     const bool was_flying = you.airborne();
 
-    if (form_changes_physiology(which_trans))
-        merfolk_stop_swimming();
-
     // Give the transformation message.
     // (Vampire bat swarm ability skips this part.)
     if (!(you.form == transformation::vampire || you.form == transformation::bat_swarm)
@@ -1532,7 +1526,7 @@ static void _enter_form(int dur, transformation which_trans, bool scale_hp = tru
 
     set_form(which_trans, dur, scale_hp);
 
-    if (you.digging && !form_keeps_mutations(which_trans))
+    if (you.digging && form_changes_anatomy(which_trans))
     {
         mpr("Your mandibles meld away.");
         you.digging = false;
@@ -1898,13 +1892,6 @@ void set_default_form(transformation t, const item_def *source)
     // talisman might count as a useless item (the you.form != you.default_form
     // check in cannot_evoke_item_reason)
     you.default_form = t;
-}
-
-bool draconian_dragon_exception()
-{
-    return species::is_draconian(you.species)
-           && (you.form == transformation::dragon
-               || !form_changes_physiology());
 }
 
 transformation form_for_talisman(const item_def &talisman)

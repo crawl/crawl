@@ -2380,7 +2380,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return _can_rising_flame(quiet);
 
     case ABIL_DIG:
-        return form_keeps_mutations();
+        return !form_changes_anatomy();
 
     case ABIL_SIPHON_ESSENCE:
         if (you.duration[DUR_SIPHON_COOLDOWN])
@@ -4212,7 +4212,7 @@ bool player_has_ability(ability_type abil, bool include_unusable)
     }
 
     if (species::draconian_breath(you.species) == abil)
-        return draconian_dragon_exception();
+        return !form_changes_anatomy() || you.form == transformation::dragon;
 
     switch (abil)
     {
@@ -4226,9 +4226,9 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         // fallthrough
     case ABIL_DIG:
         return you.can_burrow()
-               && (form_keeps_mutations() || include_unusable);
+               && (!form_changes_anatomy() || include_unusable);
     case ABIL_HOP:
-        return you.get_mutation_level(MUT_HOP);
+        return you.get_mutation_level(MUT_FROG_LEGS);
     case ABIL_BREATHE_POISON:
         return you.get_mutation_level(MUT_SPIT_POISON) >= 2;
     case ABIL_SPIT_POISON:

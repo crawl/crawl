@@ -8,8 +8,7 @@ dex: 5
 size: tiny
 resists: {poison: -1}
 can_swim: no
-keeps_mutations: no
-changes_physiology: yes
+changes_anatomy: yes
 unarmed_brand: venom
 unarmed_colour: lightgreen
 unarmed_name: Fangs

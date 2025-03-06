@@ -97,8 +97,6 @@ struct player_save_info;
 
 int player_stealth();
 
-enum class mutation_activity_type; // in mutation.h
-
 /// used for you.train[] & for rendering skill tiles (tileidx_skill)
 enum training_status
 {
@@ -646,8 +644,7 @@ public:
 
     // Information about player mutations. Implemented in mutation.cc
     int       get_base_mutation_level(mutation_type mut, bool innate=true, bool temp=true, bool normal=true) const;
-    int       get_mutation_level(mutation_type mut, bool check_form=true) const;
-    int       get_mutation_level(mutation_type mut, mutation_activity_type minact) const;
+    int       get_mutation_level(mutation_type mut, bool active_only=true) const;
     int       get_innate_mutation_level(mutation_type mut) const;
     int       get_temp_mutation_level(mutation_type mut) const;
 
@@ -658,7 +655,7 @@ public:
 
     bool      has_temporary_mutation(mutation_type mut) const;
     bool      has_innate_mutation(mutation_type mut) const;
-    bool      has_mutation(mutation_type mut, bool check_form=true) const;
+    bool      has_mutation(mutation_type mut, bool active_only=true) const;
 
     int       how_mutated(bool innate=false, bool levels=false, bool temp=true) const;
 
@@ -1002,8 +999,6 @@ static inline bool player_in_branch(int branch)
 bool berserk_check_wielded_weapon();
 bool player_can_hear(const coord_def& p, int hear_distance = 999);
 
-bool player_is_shapechanged();
-
 void update_acrobat_status();
 bool player_acrobatic();
 
@@ -1018,6 +1013,7 @@ int player_movement_speed(bool check_terrain = true, bool temp = true);
 int player_icemail_armour_class();
 int player_condensation_shield_class();
 int sanguine_armour_bonus();
+int stone_body_armour_bonus();
 
 int player_wizardry();
 int player_channelling();

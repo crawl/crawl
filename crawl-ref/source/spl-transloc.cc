@@ -384,7 +384,7 @@ static coord_def _fuzz_hop_destination(coord_def target)
 
 int frog_hop_range()
 {
-    return 2 + you.get_mutation_level(MUT_HOP) * 2; // 4-6
+    return 2 + you.get_mutation_level(MUT_FROG_LEGS) * 2; // 4-6
 }
 
 /**

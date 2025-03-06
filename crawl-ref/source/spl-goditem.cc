@@ -629,7 +629,7 @@ int detect_items(int pow)
     if (pow >= 0)
         map_radius = 7 + random2(7) + pow;
 
-    else if (you.has_mutation(MUT_STRONG_NOSE))
+    else if (you.has_mutation(MUT_TREASURE_SENSE))
         map_radius = get_los_radius();
     else
     {

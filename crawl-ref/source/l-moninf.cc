@@ -675,7 +675,7 @@ LUAFN(moninf_get_can_be_constricted)
 {
     MONINF(ls, 1, mi);
     if (!mi->constrictor_name.empty()
-        || !form_keeps_mutations()
+        || form_changes_anatomy()
         || (you.get_mutation_level(MUT_CONSTRICTING_TAIL) < 2
                 || you.is_constricting())
             && (you.has_mutation(MUT_TENTACLE_ARMS)

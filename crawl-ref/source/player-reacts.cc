@@ -440,7 +440,7 @@ void player_reacts_to_monsters()
     check_monster_detect();
 
     if (have_passive(passive_t::detect_items) || you.has_mutation(MUT_JELLY_GROWTH)
-        || you.get_mutation_level(MUT_STRONG_NOSE) > 0)
+        || you.get_mutation_level(MUT_TREASURE_SENSE) > 0)
     {
         detect_items(-1);
     }

@@ -131,17 +131,6 @@ static void _mons_summon_monster_illusion(monster* caster,
     }
 }
 
-static void _init_player_illusion_properties(monsterentry *me)
-{
-    me->holiness = you.holiness();
-    // [ds] If we're cloning the player, use their base holiness, not
-    // the effects of their Necromutation form. This was 'important'
-    // since Necromutation spell-users presumably also had Dispel
-    // Undead available to them, but now...?!
-    if (form_changes_physiology() && me->holiness & MH_UNDEAD)
-        me->holiness = MH_NATURAL;
-}
-
 // [ds] Not *all* appropriate enchantments are mapped -- only things
 // that are (presumably) internal to the body, like haste and
 // poisoning, and specifically not external effects like corona and
@@ -229,8 +218,7 @@ int mons_summon_illusion_from(monster* mons, actor *foe,
             else
                 mprf(MSGCH_WARN, "There is a horrible, sudden wrenching feeling in your soul!");
 
-            _init_player_illusion_properties(
-                get_monster_data(MONS_PLAYER_ILLUSION));
+            get_monster_data(MONS_PLAYER_ILLUSION)->holiness = you.holiness();
             _mons_load_player_enchantments(mons, clone);
 
             return 1;

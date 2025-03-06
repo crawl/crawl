@@ -1205,7 +1205,7 @@ struct frag_effect
 // player can be deconstructed.
 static bool _init_frag_player(frag_effect &effect)
 {
-    if (you.form == transformation::statue || you.species == SP_GARGOYLE)
+    if (you.form == transformation::statue || you.has_mutation(MUT_STONE_BODY))
     {
         effect.name       = "blast of rock fragments";
         effect.colour     = BROWN;
@@ -1670,7 +1670,7 @@ static int _shatter_player_dice()
     if (you.petrified() || you.petrifying())
         return 6; // reduced later by petrification's damage reduction
     else if (you.form == transformation::statue
-             || you.species == SP_GARGOYLE
+             || you.has_mutation(MUT_STONE_BODY)
              || you.species == SP_REVENANT)
     {
         return 6;

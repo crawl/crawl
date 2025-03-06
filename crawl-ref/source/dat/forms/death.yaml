@@ -7,8 +7,6 @@ resists: {cold: 1, neg: 3}
 unarmed: {base: 6}
 unarmed_brand: draining
 unarmed_colour: magenta
-keeps_mutations: yes
-changes_physiology: yes
 holiness: undead
 has_blood: no
 flesh_name: fossilised flesh

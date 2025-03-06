@@ -5,8 +5,7 @@ description: a swirling mass of dark shadows.
 resists: {poison: 3, neg: 3, miasma: 1, petrify: 1}
 unarmed_colour: magenta
 can_swim: no
-keeps_mutations: yes
-changes_physiology: yes
+changes_substance: yes
 holiness: nonliving
 has_blood: no
 has_hair: no

@@ -2644,6 +2644,24 @@ static string _describe_talisman_form(const item_def &item, bool monster)
     // misc (not covered):
     // uc brand, slots merged
 
+    vector<string> changes;
+    if (form->changes_anatomy)
+        changes.emplace_back("anatomy");
+    if (form->changes_substance)
+        changes.emplace_back("substance");
+    if (form->has_blood == FC_FORBID)
+        changes.emplace_back("blood");
+    if (form->has_bones == FC_FORBID)
+        changes.emplace_back("bones");
+    if (form_type == transformation::blade_hands)
+        changes.emplace_back("hands");
+
+    if (!changes.empty())
+    {
+        description += "\n\nThis form suppresses mutations based on your "
+                        + comma_separated_line(changes.begin(), changes.end()) + ".";
+    }
+
     return description;
 }
 

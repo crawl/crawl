@@ -4207,7 +4207,7 @@ void melee_attack::do_minotaur_retaliation()
         return;
     }
 
-    if (!form_keeps_mutations())
+    if (form_changes_anatomy())
     {
         // You are in a non-minotaur form.
         return;
