@@ -2505,6 +2505,10 @@ Walk
 Earwax
 
 Millenium
+
+Holy
+
+Unholy
 %%%%
 # Lowercase words
 _crazy_yiuf_wordlist2_
@@ -2528,6 +2532,10 @@ bush
 tired
 
 snail
+
+chicken
+
+hippo
 
 shrimp
 
@@ -2568,6 +2576,10 @@ tea
 light
 
 dark
+
+lumber
+
+ingot
 
 water
 
@@ -2618,6 +2630,10 @@ mobile
 senile
 
 canine
+
+feline
+
+bovine
 
 disdain
 
