@@ -1768,11 +1768,8 @@ void untransform(bool skip_move, bool scale_hp)
     if (dex_mod)
         notify_stat_change(STAT_DEX, -dex_mod, true);
 
+    // This will keep merfolk boots melded, if mertail is currently active.
     you.equipment.unmeld_all_equipment();
-
-    // If you're a mer in water, boots stay melded even after the form ends.
-    if (you.fishtail)
-        you.equipment.meld_equipment(1 << SLOT_BOOTS);
 
     // Update regarding talisman properties, just in case we didn't actually
     // meld or unmeld anything.

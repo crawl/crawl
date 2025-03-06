@@ -1148,6 +1148,19 @@ void player_equip_set::unmeld_all_equipment(bool skip_effects)
     {
         if (entry.melded)
         {
+            // If the player is untransforming from a form where fishtail is
+            // active, don't unmeld their boots.
+            if (you.fishtail)
+            {
+                if (entry.slot == SLOT_BOOTS)
+                    continue;
+
+                // Also skip items filling the boots slot and some other slot.
+                vector<equipment_slot> slots = get_all_item_slots(entry.get_item());
+                if (find(slots.begin(), slots.end(), SLOT_BOOTS) != slots.end())
+                    continue;
+            }
+
             entry.melded = false;
             if (!entry.is_overflow)
                 was_unmelded.push_back(&entry.get_item());
