@@ -859,3 +859,12 @@ crown of vainglory
 An extravagant crown of gold filigree and glittering jewels that even a king
 could feel immodest wearing. It grants its wearer a regal aura the match of any
 in heaven and also a great deal of unearned confidence.
+%%%%
+ghost crab claws
+
+A large pair of ghostly claws fashioned into gloves by a fenstrider coven for
+use in necromantic rites. The magically inclined and pugilistically favored
+alike may grasp their connection with the spirits of the dead, but these pincers
+make grasping anything else an exercise in frustration.
+
+(This item prohibits the use of a weapon or shield while equipped.)
