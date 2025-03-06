@@ -476,7 +476,7 @@ namespace species
         else if (species == SP_FELID)
             return "leg";
         else if (species == SP_POLTERGEIST)
-            return "tendril"; // SALMON
+            return "tendril";
         else
             return "arm";
     }
