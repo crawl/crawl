@@ -323,6 +323,7 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
                 && monster_habitable_grid(orig, *ai))
             {
                 pos = *ai;
+                break;
             }
         }
 
