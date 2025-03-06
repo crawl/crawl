@@ -1006,15 +1006,16 @@ void player_equip_set::meld_equipment(int slots, bool skip_effects)
     {
         if ((1 << entry.slot) & slots)
         {
-            // Don't claim we melded overflow items multiple times.
-            if (!entry.melded && !entry.is_overflow)
-                was_melded.push_back(&entry.get_item());
+            item_def* item = &entry.get_item();
+
+            if (!entry.melded)
+                was_melded.push_back(item);
 
             entry.melded = true;
 
-            // If this is an overflow entry, find the real one (and any other
-            // overflow slots) and meld them as well.
-            if (entry.is_overflow)
+            // If this is an item occupying multiple slots, find all the other
+            // entries and meld them as well.
+            if (get_all_item_slots(*item).size() > 1)
             {
                 for (player_equip_entry& overflow : items)
                 {
