@@ -3269,7 +3269,6 @@ void handle_clockwork_bee_spell(int turn)
                 mprf("Without a target and with nowhere to land, your clockwork "
                      "bee falls apart in a shower of cogs and coils.");
 
-                coord_def spot;
                 for (fair_adjacent_iterator ai(you.pos()); ai; ++ai)
                 {
                     if (!in_bounds(*ai) || cell_is_solid(*ai) || cloud_at(*ai))
