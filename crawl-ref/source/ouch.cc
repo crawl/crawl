@@ -160,7 +160,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
             canned_msg(MSG_YOU_RESIST);
         else if (hurted > original && doEffects)
         {
-            mpr("The cold freezes you terribly!");
+            mpr("The cold chills you terribly!");
             xom_is_stimulated(200);
         }
         break;
