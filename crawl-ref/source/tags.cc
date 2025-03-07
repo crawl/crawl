@@ -1315,6 +1315,7 @@ static void _shunt_monsters_out_of_walls()
     }
 }
 
+#if TAG_MAJOR_VERSION == 34
 static bool _is_spectral_weapon(const item_def& weapon)
 {
     return get_weapon_brand(weapon) == SPWPN_SPECTRAL
@@ -1368,13 +1369,13 @@ static void _fix_player_spectral_weapon()
             break;
         }
 
-        std::string spectral_item_name = "";
+        string spectral_item_name = "";
         if (spectral_item->props.exists(WEAPON_NAME_KEY))
             spectral_item_name = spectral_item->props[WEAPON_NAME_KEY].get_string();
-        std::string best_match_name = "";
+        string best_match_name = "";
         if (best_match->props.exists(WEAPON_NAME_KEY))
             best_match_name = best_match->props[WEAPON_NAME_KEY].get_string();
-        std::string weapon_name = "";
+        string weapon_name = "";
         if (weapon->props.exists(WEAPON_NAME_KEY))
             weapon_name = weapon->props[WEAPON_NAME_KEY].get_string();
         if (weapon_name == spectral_item_name
@@ -1400,24 +1401,34 @@ static void _fix_spectral_weapons()
     for (monster_iterator mi; mi; ++mi)
     {
         monster* mons = *mi;
+        // Monsters as of TAG_MINOR_SPECTRAL_DUAL_WIELDING can only have one
+        // spectral weapon that we'd have to fix.
         if (mons->props.exists(SPECTRAL_WEAPON_KEY))
         {
             mid_t weapon_mid = mons->props[SPECTRAL_WEAPON_KEY].get_int();
             mons->props.erase(SPECTRAL_WEAPON_KEY);
 
             item_def* weapon = mons->mslot_item(MSLOT_WEAPON);
-            if (!weapon || !_is_spectral_weapon(*weapon))
+            if (weapon && _is_spectral_weapon(*weapon))
             {
-                monster* spectral_weapon = monster_by_mid(weapon_mid);
-                if (spectral_weapon)
-                    monster_die(*spectral_weapon, KILL_RESET, NON_MONSTER, true);
-
+                weapon->props[SPECTRAL_WEAPON_KEY].get_int() = weapon_mid;
                 continue;
             }
-            weapon->props[SPECTRAL_WEAPON_KEY].get_int() = weapon_mid;
+
+            weapon = mons->mslot_item(MSLOT_ALT_WEAPON);
+            if (weapon && _is_spectral_weapon(*weapon))
+            {
+                weapon->props[SPECTRAL_WEAPON_KEY].get_int() = weapon_mid;
+                continue;
+            }
+
+            monster* spectral_weapon = monster_by_mid(weapon_mid);
+            if (spectral_weapon)
+                monster_die(*spectral_weapon, KILL_RESET, NON_MONSTER, true);
         }
     }
 }
+#endif
 
 // Read a piece of data from inf into memory, then run the appropriate reader.
 //
