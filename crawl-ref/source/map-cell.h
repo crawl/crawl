@@ -114,7 +114,19 @@ struct map_cell
     // move constructor
     map_cell(map_cell&& o) noexcept = default;
     // move assignment
-    map_cell& operator=(map_cell&& o) = default;
+    // XXX: Using the default implementation causes a compiler error on gcc
+    // 4.7, so we specify the implementation for now.
+    map_cell& operator=(map_cell&& o) noexcept
+    {
+        flags = o.flags;
+        _feat = o._feat;
+        _feat_colour = o._feat_colour;
+        _trap = o._trap;
+        _cloud = std::move(o._cloud);
+        _item = std::move(o._item);
+        _mons = std::move(o._mons);
+        return *this;
+    }
 
     friend bool operator==(const map_cell &lhs, const map_cell &rhs) {
         // TODO: consider providing a proper equality operator
