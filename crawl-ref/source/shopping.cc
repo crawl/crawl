@@ -1290,7 +1290,7 @@ void ShopMenu::resort()
     }
     case ORDER_PRICE:
         sort(begin(items), end(items),
-             [this](MenuEntry* a, MenuEntry* b)
+             [](MenuEntry* a, MenuEntry* b)
              {
                  return dynamic_cast<ShopEntry*>(a)->cost
                         < dynamic_cast<ShopEntry*>(b)->cost;
