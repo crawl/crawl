@@ -858,7 +858,7 @@ static bool _handle_swoop_or_flank(monster& mons)
     bolt tracer;
     tracer.source = mons.pos();
     tracer.target = target;
-    tracer.is_tracer = true;
+    tracer.set_is_tracer(true);
     tracer.pierce = true;
     tracer.range = LOS_RADIUS;
     tracer.fire();
@@ -1104,12 +1104,13 @@ static void _handle_hellfire_mortar(monster& mortar)
     {
         if (!mons_aligned(&mortar, *ai) && monster_los_is_valid(&mortar, *ai))
         {
-            bolt tracer = mons_spell_beam(&mortar, SPELL_MAGMA_BARRAGE, 100);
-            tracer.source = mortar.pos();
-            tracer.target = ai->pos();
+            bolt beam = mons_spell_beam(&mortar, SPELL_MAGMA_BARRAGE, 100);
+            beam.source = mortar.pos();
+            beam.target = ai->pos();
 
-            fire_tracer(&mortar, tracer);
-            if (mons_should_fire(tracer))
+            targeting_tracer tracer;
+            fire_tracer(&mortar, tracer, beam);
+            if (mons_should_fire(beam, tracer))
                 targs.push_back(ai->pos());
         }
     }
@@ -1433,8 +1434,9 @@ static bool _handle_wand(monster& mons)
     beem.source     = mons.pos();
     beem.aux_source =
         wand->name(DESC_QUALNAME, false, true, false, false);
-    fire_tracer(&mons, beem);
-    if (!mons_should_fire(beem))
+    targeting_tracer tracer;
+    fire_tracer(&mons, tracer, beem);
+    if (!mons_should_fire(beem, tracer))
         return false;
 
     _mons_fire_wand(mons, mzap, beem);
@@ -1594,15 +1596,16 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
         }
     }
 
+    targeting_tracer tracer;
     // Fire tracer.
     if (!teleport)
-        fire_tracer(mons, beem);
+        fire_tracer(mons, tracer, beem);
 
     // Clear fake damage (will be set correctly in mons_throw).
     beem.damage = dice_def();
 
     // Good idea?
-    if (teleport || mons_should_fire(beem) || interference != DO_NOTHING)
+    if (teleport || mons_should_fire(beem, tracer) || interference != DO_NOTHING)
     {
         if (check_only)
             return true;

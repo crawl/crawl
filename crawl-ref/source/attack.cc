@@ -1610,22 +1610,15 @@ void attack::maybe_trigger_autodazzler()
         proj.source_id = MID_PLAYER;
         proj.draw_delay = 5;
         proj.attitude = ATT_FRIENDLY;
-        proj.is_tracer = true;
-        proj.is_targeting = true;
-
-        // To suppress prompts for aiming at allies. We'll never fire in that
-        // situation anyway.
-        proj.thrower = KILL_MON_MISSILE;
+        proj.thrower = KILL_YOU_MISSILE;
+        targeting_tracer tracer;
 
         // Make sure the beam path is clear
-        proj.fire();
-        if (proj.friend_info.count == 0)
+        proj.fire(tracer);
+        if (tracer.friend_info.count == 0)
         {
             mpr("Your autodazzler retaliates!");
 
-            proj.thrower = KILL_YOU_MISSILE;
-            proj.is_tracer = false;
-            proj.is_targeting = false;
             proj.fire();
         }
     }

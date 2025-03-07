@@ -34,7 +34,23 @@ struct counted_monster_list
     typedef vector<counted_monster> counted_list;
     counted_list list;
     void add(const monster* mons);
-    int count();
-    bool empty() { return list.empty(); }
-    string describe(description_level_type desc = DESC_THE);
+    int count() const;
+    bool empty() const { return list.empty(); }
+    string describe(description_level_type desc = DESC_THE) const;
+};
+
+struct attacked_monster_list
+{
+    void add(const monster& mons, string adj, string suffix, bool penance);
+    int count() const { return m_victims.count(); };
+    bool empty() const { return m_victims.empty(); }
+    string describe() const;
+    bool penance() const { return m_penance; };
+    const char* suffix() const { return m_suffix.c_str(); }
+
+private:
+    counted_monster_list m_victims;
+    string m_adj;
+    string m_suffix;
+    bool m_penance = false;
 };
