@@ -593,9 +593,12 @@ static vector<pair<string,string>> _get_form_fakemuts()
     vector<pair<string,string>> result;
     const auto *form = get_form(you.form);
     ASSERT(form);
-    // we could add form->get_long_name() here for `terse`, but the line in
-    // % is shown right below a line which includes the form name.
-    result.push_back({"", _formmut(form->get_description())});
+    // The terse name for your transformation while using a talisman is not included
+    // in the normal mutation list, but is used as an identifier for the mutation menu
+    if (you.active_talisman.defined() && you.form == you.default_form)
+        result.push_back({"--talisman--", "<lightgreen>" + form->get_description() + "</lightgreen>"});
+    else
+        result.push_back({"", _formmut(form->get_description())});
 
     vector<pair<string,string>> form_fakemuts = form->get_fakemuts();
     for (const auto &p : form_fakemuts)
@@ -957,7 +960,7 @@ static vector<string> _get_mutations_descs(bool terse)
     for (const auto& p : fakemuts)
     {
         const string& mut = terse ? p.first : p.second;
-        if (!mut.empty())
+        if (!mut.empty() && mut != "--talisman--")
             result.push_back(mut);
     }
 
@@ -1029,18 +1032,6 @@ static bool _has_transient_muts()
     return false;
 }
 
-enum mut_menu_mode {
-    MENU_MUTS,
-    MENU_FORM,
-    NUM_MENU_MODES
-};
-
-const char *menu_mode_labels[] = {
-    "Mutations",
-    "Form properties"
-};
-COMPILE_CHECK(ARRAYSZ(menu_mode_labels) == NUM_MENU_MODES);
-
 static bool _fakemut_has_description(string fakemut_name)
 {
     const string key = make_stringf("%s mutation", fakemut_name.c_str());
@@ -1054,95 +1045,23 @@ class MutationMenu : public Menu
 private:
     vector<pair<string, string>> fakemuts;
     vector<mutation_type> muts;
-    mut_menu_mode mode;
     bool has_future_muts;
 public:
     MutationMenu()
         : Menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING
             | MF_ARROWS_SELECT),
           fakemuts(_get_fakemuts()),
-          muts( _get_ordered_mutations()),
-          mode(MENU_MUTS)
+          muts( _get_ordered_mutations())
     {
         set_highlighter(nullptr);
         set_title(new MenuEntry("Innate Abilities, Weirdness & Mutations",
                                 MEL_TITLE));
         menu_action = ACT_EXAMINE;
-        update_entries();
+        update_muts();
         update_more();
     }
 
 private:
-    void update_entries()
-    {
-        clear();
-        switch (mode)
-        {
-        case MENU_MUTS:
-            update_muts();
-            break;
-        case MENU_FORM:
-            update_form();
-            break;
-        default:
-            break;
-        }
-    }
-
-    void update_form()
-    {
-        if (you.active_talisman.defined())
-        {
-            const string tal_name = you.active_talisman.name(DESC_PLAIN, false, false, false);
-            const string head = make_stringf("<w>%s</w>:",
-                                             uppercase_first(tal_name).c_str());
-            add_entry(new MenuEntry(head, MEL_ITEM, 1, 0));
-
-            if (is_artefact(you.active_talisman))
-            {
-                vector<string> artps;
-                desc_randart_props(you.active_talisman, artps);
-                for (string desc : artps)
-                    add_entry(new MenuEntry(desc, MEL_ITEM, 1, 0));
-            }
-        }
-
-
-        talisman_form_desc tfd;
-        describe_talisman_form(you.default_form, tfd, true);
-        add_entry(new MenuEntry("", MEL_ITEM, 1, 0)); // XXX spacing kludge?
-        if (you.active_talisman.defined() && is_artefact(you.active_talisman))
-        {
-            add_entry(new MenuEntry("<w>Skill:</w>", MEL_ITEM, 1, 0));
-            add_entry(new MenuEntry("", MEL_ITEM, 1, 0)); // XXX spacing kludge?
-        }
-        for (auto skinfo : tfd.skills)
-        {
-            const string label = make_stringf("%s: %s\n", skinfo.first.c_str(), skinfo.second.c_str());
-            add_entry(new MenuEntry(label, MEL_ITEM, 1, 0));
-        }
-        if (!tfd.defenses.empty())
-        {
-            add_entry(new MenuEntry("<w>Defence:</w>", MEL_ITEM, 1, 0));
-            add_entry(new MenuEntry("", MEL_ITEM, 1, 0)); // XXX  spacing kludge?
-        }
-        for (auto skinfo : tfd.defenses)
-        {
-            const string label = make_stringf("%s: %s\n", skinfo.first.c_str(), skinfo.second.c_str());
-            add_entry(new MenuEntry(label, MEL_ITEM, 1, 0));
-        }
-        if (!tfd.offenses.empty())
-        {
-            add_entry(new MenuEntry("<w>Offence:</w>", MEL_ITEM, 1, 0));
-            add_entry(new MenuEntry("", MEL_ITEM, 1, 0)); // XXX  spacing kludge?
-        }
-        for (auto skinfo : tfd.offenses)
-        {
-            const string label = make_stringf("%s: %s\n", skinfo.first.c_str(), skinfo.second.c_str());
-            add_entry(new MenuEntry(label, MEL_ITEM, 1, 0));
-        }
-    }
-
     void update_muts()
     {
         menu_letter hotkey;
@@ -1153,9 +1072,16 @@ private:
                 continue;
 
             MenuEntry* me;
+            // Special-case the transformation fakemut to put an item popup
+            // behind it, so the player can examine form details and artprops
+            if (fakemut.first == "--talisman--")
+            {
+                me = new MenuEntry(fakemut.second, MEL_ITEM, 3, hotkey);
+                ++hotkey;
+            }
             // Add a full clickable entry if there's a long description for this
             // fakemut, and a non-clickable one otherwise.
-            if (_fakemut_has_description(fakemut.first))
+            else if (_fakemut_has_description(fakemut.first))
             {
                 me = new MenuEntry(fakemut.second, MEL_ITEM, 2, hotkey);
                 me->data = &fakemut.first;
@@ -1233,85 +1159,14 @@ private:
     void update_more()
     {
         string extra = "";
-        if (mode == MENU_MUTS)
-        {
-            // TODO: also handle suppressed fakemuts
-            if (_has_suppressed_muts())
-                extra += "<darkgrey>(())</darkgrey>: Completely suppressed.\n";
-            if (_has_transient_muts())
-                extra += "<magenta>[]</magenta>   : Transient mutations.\n";
-            if (has_future_muts)
-                extra += "<darkgrey>[]</darkgrey>: Gained at a future XL.\n";
-        }
-        extra += picker_footer();
+        // TODO: also handle suppressed fakemuts
+        if (_has_suppressed_muts())
+            extra += "<darkgrey>(())</darkgrey>: Completely suppressed.\n";
+        if (_has_transient_muts())
+            extra += "<magenta>[]</magenta>   : Transient mutations.\n";
+        if (has_future_muts)
+            extra += "<darkgrey>[]</darkgrey>: Gained at a future XL.\n";
         set_more(extra);
-    }
-
-    string picker_footer()
-    {
-        auto modes = valid_modes();
-        if (modes.size() <= 1)
-            return "";
-        string t = "";
-        for (auto m : modes)
-        {
-            if (t.size() > 0)
-                t += "|";
-            const char* label = menu_mode_labels[m];
-            if (m == mode)
-                t += make_stringf("<w>%s</w>", label);
-            else
-                t += string(label);
-        }
-        return make_stringf("[<w>!</w>/<w>^</w>"
-#ifdef USE_TILE_LOCAL
-                "|<w>Right-click</w>"
-#endif
-                "]: %s", t.c_str());
-    }
-
-    vector<mut_menu_mode> valid_modes()
-    {
-        vector<mut_menu_mode> modes = {MENU_MUTS};
-        if (you.default_form != transformation::none)
-            modes.push_back(MENU_FORM);
-        return modes;
-    }
-
-    virtual bool process_key(int keyin) override
-    {
-        switch (keyin)
-        {
-        case '!':
-        case '^':
-        case CK_MOUSE_CMD:
-        {
-            auto modes = valid_modes();
-            if (modes.size() > 1)
-            {
-                cycle_mut_mode(modes);
-                update_entries();
-                update_more();
-                update_menu(true);
-            }
-        }
-            return true;
-        default:
-            return Menu::process_key(keyin);
-        }
-    }
-
-    void cycle_mut_mode(const vector<mut_menu_mode> &modes)
-    {
-        for (int i = 0; i < (int)modes.size(); i++)
-        {
-            if (modes[i] == mode)
-            {
-                mode = modes[(i + 1) % modes.size()];
-                return;
-            }
-        }
-        ASSERT(false);
     }
 
     bool examine_index(int i) override
@@ -1340,6 +1195,10 @@ private:
                 show_description(inf);
             }
         }
+        // XXX: And the talisman is marked with quantity 3
+        else if (items[i]->quantity == 3)
+            describe_item_popup(you.active_talisman);
+
         return true;
     }
 };

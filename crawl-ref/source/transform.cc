@@ -1885,6 +1885,10 @@ void set_default_form(transformation t, const item_def *source)
     if (source)
     {
         you.active_talisman = *source; // iffy
+        // XXX: Make the copied talisman not appear to be in the player's
+        // inventory, so that examining it via the mutation menu won't display
+        // unusable button prompts to set skill target.
+        you.active_talisman.pos = coord_def();
         item_skills(you.active_talisman, you.skills_to_show);
     }
 
@@ -1900,130 +1904,4 @@ transformation form_for_talisman(const item_def &talisman)
         if (formdata[i].talisman == talisman.sub_type)
             return static_cast<transformation>(i);
     return transformation::none;
-}
-
-static void _pad_talisman_descs(vector<pair<string,string>> &descs)
-{
-    size_t max_len = 0;
-    for (const pair<string,string> &d : descs)
-        if (d.first.size() > max_len)
-            max_len = d.first.size();
-    for (pair<string,string> &d : descs)
-        d.second = string(max_len - d.first.size(), ' ') + d.second;
-}
-
-static string _int_with_plus(int i)
-{
-    if (i < 0)
-        return make_stringf("%d", i);
-    return make_stringf("+%d", i);
-}
-
-static string _maybe_desc_prop(int val, int max = -1)
-{
-    if (val == 0 && max <= 0)
-        return "";
-    const string base = _int_with_plus(val);
-    if (max == val || max == -1)
-        return base;
-    return base + make_stringf(" (%s at max skill)",
-                               _int_with_plus(max).c_str());
-}
-
-static void _maybe_add_prop(vector<pair<string, string>> &props, string name,
-                            int val, int max = -1)
-{
-    const string desc = _maybe_desc_prop(val, max);
-    if (!desc.empty())
-        props.push_back(pair<string, string>(name, desc));
-}
-
-void describe_talisman_form(transformation form_type, talisman_form_desc &d,
-                            bool incl_special /* hack - TODO REMOVEME */)
-{
-    const Form* form = get_form(form_type);
-    string minskill_desc = to_string(form->min_skill);
-    const int sk = you.skill(SK_SHAPESHIFTING, 10);
-    const bool below_min = sk/10 < form->min_skill;
-    if (below_min)
-        minskill_desc += " (insufficient skill lowers this form's max HP)";
-    d.skills.push_back(pair<string, string>("Minimum skill", minskill_desc));
-    d.skills.push_back(pair<string, string>("Maximum skill", to_string(form->max_skill)));
-    if (incl_special)
-    {
-        const string sk_desc = make_stringf("%d.%d", sk / 10, sk % 10);
-        d.skills.push_back(pair<string, string>("Your skill", sk_desc));
-    }
-
-    const int hp = form->mult_hp(100, true);
-    if (below_min || hp != 100)
-    {
-        string hp_desc = make_stringf("%d%%", hp);
-        if (below_min)
-            hp_desc += " (reduced by your low skill)";
-        d.defenses.push_back(pair<string,string>("HP", hp_desc));
-    }
-    _maybe_add_prop(d.defenses, "Bonus AC", form->get_ac_bonus() / 100,
-                                            form->get_ac_bonus(true) / 100);
-    _maybe_add_prop(d.defenses, "Bonus EV", form->ev_bonus(),
-                                            form->ev_bonus(true));
-
-    const int body_ac_loss_percent = form->get_base_ac_penalty(100);
-    const bool loses_body_ac = body_ac_loss_percent && you_can_wear(SLOT_BODY_ARMOUR) != false;
-    if (loses_body_ac)
-    {
-        const item_def *body_armour = you.body_armour();
-        const int base_ac = body_armour ? property(*body_armour, PARM_AC) : 0;
-        const int ac_penalty = form->get_base_ac_penalty(base_ac);
-        const string body_loss = make_stringf("-%d (-%d%% of your body armour's %d base AC)",
-                                              ac_penalty, body_ac_loss_percent, base_ac);
-        d.defenses.push_back(pair<string,string>("AC", body_loss));
-    }
-    if (form->size != SIZE_CHARACTER)
-        d.defenses.push_back(pair<string,string>("Size", uppercase_first(get_size_adj(form->size))));
-
-    const int normal_uc = 3; // TODO: dedup this
-    const int uc = form->get_base_unarmed_damage(false) - normal_uc;
-    const int max_uc = form->get_base_unarmed_damage(false, true) - normal_uc;
-    _maybe_add_prop(d.offenses, "UC base dam+", uc, max_uc);
-    _maybe_add_prop(d.offenses, "Slay", form->slay_bonus(false),
-                                         form->slay_bonus(false, true));
-    switch (form_type) {
-    case transformation::statue:
-        d.offenses.push_back(pair<string, string>("Melee damage", "+50%"));
-        break;
-    case transformation::flux:
-    {
-        d.offenses.push_back(pair<string, string>("Melee damage", "-33%"));
-        const int contam_dam = form->contam_dam(false);
-        const int max_contam_dam = form->contam_dam(false, true);
-        _maybe_add_prop(d.offenses, "Contam damage", contam_dam, max_contam_dam);
-        break;
-    }
-    case transformation::maw:
-    {
-        if (!incl_special)
-            break;
-        const int aux_dam = form->get_aux_damage(false);
-        const int max_aux_dam = form->get_aux_damage(false, true);
-        _maybe_add_prop(d.offenses, "Maw damage", aux_dam, max_aux_dam);
-        break;
-    }
-    case transformation::dragon:
-    {
-        if (!incl_special)
-            break;
-        _maybe_add_prop(d.offenses, "Bite dam", 1 + DRAGON_FANGS * 2);
-        _maybe_add_prop(d.offenses, "Tail slap dam", 6); // big time hack alert
-        break;
-    }
-    default:
-        break;
-    }
-    _maybe_add_prop(d.offenses, "Str", form->str_mod);
-    _maybe_add_prop(d.offenses, "Dex", form->dex_mod);
-
-   _pad_talisman_descs(d.skills);
-   _pad_talisman_descs(d.defenses);
-   _pad_talisman_descs(d.offenses);
 }
