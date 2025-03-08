@@ -2042,7 +2042,8 @@ int player_wizardry()
 {
     return you.wearing_jewellery(RING_WIZARDRY)
            + (you.get_mutation_level(MUT_BIG_BRAIN) == 3 ? 1 : 0)
-           + you.scan_artefacts(ARTP_WIZARDRY);
+           + you.scan_artefacts(ARTP_WIZARDRY)
+           + you.unrand_equipped(UNRAND_MISFORTUNE) ? 3 : 0;
 }
 
 int player_channelling()
