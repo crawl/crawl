@@ -216,11 +216,14 @@ bool Stash::needs_stop() const
     return false;
 }
 
-bool Stash::is_boring_feature(dungeon_feature_type feature)
+bool Stash::is_boring_feature(dungeon_feature_type feat)
 {
-    // Count shops as boring features, because they are handled separately.
-    return !is_notable_terrain(feature) && !feat_is_trap(feature)
-        || feature == DNGN_ENTER_SHOP;
+    return !feat_is_staircase(feat)
+        && !feat_is_escape_hatch(feat)
+        && (!is_notable_terrain(feat)
+            // Count shops as boring features, because they are handled
+            // separately.
+            || feat == DNGN_ENTER_SHOP);
 }
 
 static bool _grid_has_perceived_item(const coord_def& pos)
