@@ -2920,3 +2920,44 @@ c.E.D.vvvvvvv
 vu.2.uv
 vvcccvv
 ENDMAP
+
+NAME:   nicolae_vaults_cooling_towers
+TAGS:   vaults_orient_e vaults_orient_w
+NSUBST: - = d / e / de / m / 2=dem. / ., 3 = 3 / 2 / ..1, 1 = 4=1 / 2=1. / m....
+: index_vaults_room_themes(_G, "icebox", false)
+MAP
+      1..1
+   1........1
+ ..............
+..II-3-II-3-II..
+.IvvI.IvvI.IvvI.
+.IvvI.IvvI.IvvI.
+..II-3-II-3-II..
+ ..............
+   1........1
+      1..1
+ENDMAP
+
+NAME:   nicolae_vaults_variations_on_themes
+TAGS:   vaults_orient_w vaults_orient_e
+SUBST:  D : _E, E : _.., F : _H, H : _.., J : _K, K : _.., L : _M, M : _..
+SUBST:  N : _O, O : _.., P : _Q, Q : _.., R : _S, S : _.., Z : _a, a : _..
+SUBST:  p : _q, q : _.., r : _s, s : _..
+NSUBST: 2 = 3 / 2 / ..2, 1 = 3=1 / 112 / .
+NSUBST: * = 2=d / 2=e / 2=de.. / 3=* / .....*1
+CLEAR:  _
+: local ritheme = util.random_from({"magic", "icebox", "garden", "rangers",
+:   "warriorcrypt"})
+: index_vaults_room_themes(_G, ritheme, false)
+MAP
+        **NN**
+    **JJ..OO..RR**
+..DD..KK..2...SS..pp..
+..EE..1.......1...qq..
+..1.......2.......1...
+...1.......2.......1..
+..HH...1.......1..ss..
+..FF..MM...2..aa..rr..
+    **LL..QQ..ZZ**
+        **PP**
+ENDMAP
