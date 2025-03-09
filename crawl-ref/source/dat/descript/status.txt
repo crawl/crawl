@@ -589,13 +589,8 @@ You have been transformed into a swift-moving bat, increasing your evasion but
 substantially weakening your melee attacks.
 
 Any equipped weapons, armour and rings are melded, and you are unable to cast
-spells. {{
-    if you.race() ~= "Vampire" then
-        return "The effectiveness of your melee attacks while " ..
-               "in this form is based on experience level instead of on " ..
-               "Unarmed Combat skill."
-    end
-}}
+spells. The effectiveness of your melee attacks while in this form is based on
+experience level instead of on Unarmed Combat skill.
 %%%%
 Pig status
 
