@@ -206,6 +206,8 @@ public:
     void clear_tile() { m_tiles.clear(); };
 
 protected:
+    // TODO: this class is only used by SkillTextTileItem?
+    // And SkillTextTileItem only uses 1 or 0 tiles
     vector<tile_def> m_tiles;
     FixedVector<TileBuffer, TEX_MAX> m_tile_buf;
 };
