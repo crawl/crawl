@@ -38,9 +38,6 @@ public:
     virtual const coord_def& get_min_coord() const { return m_min_coord; }
     virtual const coord_def& get_max_coord() const { return m_max_coord; }
 
-    virtual void set_description_text(const string& text) { m_description = text; }
-    virtual const string& get_description_text() const { return m_description; }
-
 #ifdef USE_TILE_LOCAL
     virtual bool handle_mouse(const wm_mouse_event&) {return false; }
 #endif
@@ -80,7 +77,6 @@ protected:
     coord_def m_min_coord;
     coord_def m_max_coord;
     vector<int> m_hotkeys;
-    string m_description;
 
     MenuItem* m_link_left;
     MenuItem* m_link_right;
