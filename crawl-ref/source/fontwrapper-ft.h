@@ -151,7 +151,7 @@ protected:
 
     FT_Byte *ttf;
     FT_Face face;
-    unsigned char *pixels;
+    std::vector<unsigned char> pixels;
     unsigned int fsize;
 };
 
