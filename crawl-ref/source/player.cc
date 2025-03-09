@@ -1505,6 +1505,9 @@ int player_spec_death()
 
     sd += you.scan_artefacts(ARTP_ENHANCE_NECRO);
 
+    if (you.unrand_equipped(UNRAND_CRAB_CLAWS))
+        sd++;
+
     return sd;
 }
 
