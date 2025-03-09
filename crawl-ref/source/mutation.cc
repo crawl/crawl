@@ -769,7 +769,7 @@ static vector<pair<string,string>> _get_form_fakemuts()
     // XX better synchronizing with various base armour/eq possibilities
     if (!you.has_mutation(MUT_NO_ARMOUR))
     {
-        const string melding_desc = form->melding_description();
+        const string melding_desc = form->melding_description(false);
         if (!melding_desc.empty())
             result.push_back({"", _badmut(melding_desc)});
     }

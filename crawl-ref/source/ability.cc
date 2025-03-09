@@ -1455,11 +1455,6 @@ static int _hurl_damnation_power()
     return 40 + you.experience_level * 6;
 }
 
-static int _blinkbolt_power()
-{
-    return get_form()->get_level(200) / 27;
-}
-
 static int _orb_of_dispater_power();
 
 // XXX This is a mess, caused by abilities doing damage via various
@@ -1538,8 +1533,8 @@ static string _ability_damage_string(ability_type ability)
                              false, false);
             break;
         case ABIL_BLINKBOLT:
-            return spell_damage_string(SPELL_BLINKBOLT, false,
-                                       _blinkbolt_power());
+            dam = get_form(transformation::storm)->get_ability_damage(false);
+            break;
         case ABIL_COMBUSTION_BREATH:
             dam = combustion_breath_damage(you.form == transformation::dragon
                                             ? you.experience_level * 2

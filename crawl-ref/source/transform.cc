@@ -70,26 +70,45 @@ static const int EQF_JEWELLERY = SLOTF(SLOT_RING) | SLOTF(SLOT_AMULET);
 // everything
 static const int EQF_ALL = EQF_PHYSICAL | EQF_JEWELLERY;
 
-string Form::melding_description() const
+string Form::melding_description(bool itemized) const
 {
-    // this is a bit rough and ready...
-    // XX simplify slot melding rather than complicate this function?
-    if (blocked_slots == EQF_ALL)
-        return "Your equipment is entirely melded.";
-    else if (blocked_slots == EQF_PHYSICAL)
-        return "Your armour is entirely melded.";
-    else if ((blocked_slots & EQF_PHYSICAL) == EQF_PHYSICAL)
-        return "Your equipment is almost entirely melded.";
-    else if ((blocked_slots & EQF_STATUE) == EQF_STATUE
-             && (you_can_wear(SLOT_GLOVES, false) != false
-                 || you_can_wear(SLOT_BOOTS, false) != false
-                 || you_can_wear(SLOT_BARDING, false) != false
-                 || you_can_wear(SLOT_BODY_ARMOUR, false) != false))
+    if (!itemized)
     {
-        return "Your equipment is partially melded.";
+        // this is a bit rough and ready...
+        if (blocked_slots == EQF_ALL)
+            return "Your equipment is entirely melded.";
+        else if (blocked_slots == EQF_PHYSICAL)
+            return "Your armour is entirely melded.";
+        else if ((blocked_slots & EQF_PHYSICAL) == EQF_PHYSICAL)
+            return "Your equipment is almost entirely melded.";
+        else if ((blocked_slots & EQF_STATUE) == EQF_STATUE
+                && (you_can_wear(SLOT_GLOVES, false) != false
+                    || you_can_wear(SLOT_BOOTS, false) != false
+                    || you_can_wear(SLOT_BARDING, false) != false
+                    || you_can_wear(SLOT_BODY_ARMOUR, false) != false))
+        {
+            return "Your equipment is partially melded.";
+        }
+        // otherwise, rely on the form description to convey what is melded.
+        return "";
     }
-    // otherwise, rely on the form description to convey what is melded.
-    return "";
+
+    vector<string> tags;
+    if (blocked_slots == EQF_ALL)
+        tags.emplace_back("All Equipment");
+    else if (blocked_slots == EQF_PHYSICAL)
+        tags.emplace_back("All Weapons and Armour");
+    else
+    {
+        for (int i = SLOT_WEAPON; i < SLOT_GIZMO; ++i)
+        {
+            equipment_slot slot = static_cast<equipment_slot>(i);
+            if (testbits(blocked_slots, SLOTF(i)))
+                tags.emplace_back(equip_slot_name(slot));
+        }
+    }
+
+    return comma_separated_line(tags.begin(), tags.end(), ", ");
 }
 
 static const FormAttackVerbs DEFAULT_VERBS = FormAttackVerbs(nullptr, nullptr,
@@ -196,7 +215,7 @@ string Form::get_untransform_message() const
 }
 
 int Form::scaling_value(const FormScaling &sc, bool random,
-                        bool get_max, int scale) const
+                        int level, int scale) const
 {
     if (sc.xl_based)
     {
@@ -208,7 +227,7 @@ int Form::scaling_value(const FormScaling &sc, bool random,
     if (max_skill == min_skill)
         return sc.base * scale;
 
-    const int lvl = get_max ? max_skill * scale : get_level(scale);
+    const int lvl = level == -1 ? get_level(scale) : level * scale;
     const int over_min = lvl - min_skill * scale; // may be negative
     const int denom = max_skill - min_skill;
     if (random)
@@ -217,9 +236,9 @@ int Form::scaling_value(const FormScaling &sc, bool random,
 }
 
 int Form::divided_scaling(const FormScaling &sc, bool random,
-                          bool get_max, int scale) const
+                          int level, int scale) const
 {
-    const int scaled_val = scaling_value(sc, random, get_max, scale);
+    const int scaled_val = scaling_value(sc, random, level, scale);
     if (random)
         return div_rand_round(scaled_val, scale);
     return scaled_val / scale;
@@ -228,30 +247,30 @@ int Form::divided_scaling(const FormScaling &sc, bool random,
 /**
  * What AC bonus does the player get while in this form?
  *
- * Many forms are power-dependent, so the answer given may be strange if the
- * player isn't currently in the form in question.
+ * @param level The shapeshifting skill level to calculate this bonus for.
+ *              (Default is -1, meaning 'Use the player's current skill')
  *
  * @return  The AC bonus currently granted by the form, multiplied by 100 to
  *          allow for pseudo-decimal flexibility (& to match
  *          player::armour_class())
  */
-int Form::get_ac_bonus(bool get_max) const
+int Form::get_ac_bonus(int skill) const
 {
-    return max(0, scaling_value(ac, false, get_max, 100));
+    return max(0, scaling_value(ac, false, skill, 100));
 }
 
-int Form::get_base_unarmed_damage(bool random, bool get_max) const
+int Form::get_base_unarmed_damage(bool random, int skill) const
 {
     // All forms start with base 3 UC damage.
-    return 3 + max(0, divided_scaling(unarmed_bonus_dam, random, get_max, 100));
+    return 3 + max(0, divided_scaling(unarmed_bonus_dam, random, skill, 100));
 }
 
 /// `force_talisman` means to calculate HP as if we were in a talisman form (i.e. with penalties with insufficient Shapeshifting skill),
 /// without checking whether we actually are.
-int Form::mult_hp(int base_hp, bool force_talisman) const
+int Form::mult_hp(int base_hp, bool force_talisman, int skill) const
 {
     const int scale = 100;
-    const int lvl = get_level(scale);
+    const int lvl = skill == -1 ? get_level(scale) : skill * scale;
     // Only penalize if you're in a talisman form with insufficient skill.
     const int shortfall = min_skill * scale - lvl;
     if (shortfall <= 0 || you.default_form != you.form && !force_talisman)
@@ -351,7 +370,6 @@ bool Form::res_petrify() const
 {
     return get_resist(resists, MR_RES_PETRIFY);
 }
-
 
 /**
  * Does this form enable flight?
@@ -477,12 +495,12 @@ private:
 public:
     static const FormFlux &instance() { static FormFlux inst; return inst; }
 
-    int contam_dam(bool random = true, bool max = false) const override
+    int contam_dam(bool random = true, int skill = -1) const override
     {
-        return divided_scaling(FormScaling().Base(30).Scaling(20), random, max, 100);
+        return divided_scaling(FormScaling().Base(30).Scaling(20), random, skill, 100);
     }
 
-    int ev_bonus(bool /*get_max*/) const override
+    int ev_bonus(int /*skill*/) const override
     {
         return 4;
     }
@@ -545,10 +563,10 @@ public:
      * How much AC do you lose from body armour from being in this form?
      * 100% at `min_skill` or below, 0% at `max_skill` or above.
      */
-    int get_base_ac_penalty(int base) const override
+    int get_base_ac_penalty(int base, int skill = -1) const override
     {
         const int scale = 100;
-        const int lvl = max(get_level(scale), min_skill * scale);
+        const int lvl = max(skill == -1 ? get_level(scale) : skill * scale, min_skill * scale);
         const int shortfall = max(0, max_skill * scale - lvl);
         const int div = (max_skill - min_skill) * scale;
         // Round up.
@@ -658,9 +676,9 @@ public:
      * The AC bonus of the form, multiplied by 100 to match
      * player::armour_class().
      */
-    int get_ac_bonus(bool max) const override
+    int get_ac_bonus(int skill = -1) const override
     {
-        const int normal = Form::get_ac_bonus(max);
+        const int normal = Form::get_ac_bonus(skill);
         if (!species::is_draconian(you.species))
             return normal;
         return normal - 600;
@@ -854,10 +872,19 @@ private:
 public:
     static const FormStorm &instance() { static FormStorm inst; return inst; }
 
-    int ev_bonus(bool get_max) const override
+    int ev_bonus(int skill) const override
     {
         return max(0, divided_scaling(FormScaling().Base(20).Scaling(7),
-                                    false, get_max, 100));
+                                    false, skill, 100));
+    }
+
+    // XXX: Currently only used for the damage *descriptions*, alas.
+    dice_def get_ability_damage(bool random, int skill = -1) const override
+    {
+        const int pow = skill == -1 ? get_level(200) / 27
+                                    : skill * 200 / 27;
+
+        return zap_damage(ZAP_BLINKBOLT, pow, false, random);
     }
 
     bool can_offhand_punch() const override { return true; }
@@ -880,17 +907,17 @@ private:
     DISALLOW_COPY_AND_ASSIGN(FormBeast);
 public:
     static const FormBeast &instance() { static FormBeast inst; return inst; }
-    int slay_bonus(bool random, bool max) const override
+    int slay_bonus(bool random, int skill = -1) const override
     {
-        return divided_scaling(FormScaling().Scaling(4), random, max, 100);
+        return divided_scaling(FormScaling().Scaling(4), random, skill, 100);
     }
 
     vector<pair<string, string>> get_fakemuts() const override
     {
         return {{
-            make_stringf("beast (slay +%d)", slay_bonus(false, false)),
+            make_stringf("beast (slay +%d)", slay_bonus(false)),
             make_stringf("Your limbs bulge with bestial killing power. (Slay +%d)",
-                         slay_bonus(false, false))}};
+                         slay_bonus(false))}};
     }
 };
 
@@ -902,9 +929,9 @@ private:
 public:
     static const FormMaw &instance() { static FormMaw inst; return inst; }
 
-    int get_aux_damage(bool random, bool max) const override
+    int get_aux_damage(bool random, int skill) const override
     {
-        return divided_scaling(FormScaling().Base(12).Scaling(8), random, max, 100);
+        return divided_scaling(FormScaling().Base(12).Scaling(8), random, skill, 100);
     }
 };
 
@@ -953,6 +980,14 @@ private:
     DISALLOW_COPY_AND_ASSIGN(FormVampire);
 public:
     static const FormVampire &instance() { static FormVampire inst; return inst; }
+
+    int get_vamp_chance(int skill = -1) const override
+    {
+        if (skill == -1)
+            skill = get_level(1);
+
+        return 100 - (1000 / (skill + 10));
+    }
 };
 
 class FormBatswarm : public Form

@@ -493,8 +493,6 @@ Beast status
 
 You have been transformed into a monstrous, furry were-beast. The ferocious
 energy pulsing through your limbs keeps you ready to kill.
-
-Any gloves, cloaks, headgear and boots are melded.
 %%%%
 Flux status
 
@@ -513,15 +511,11 @@ Blade status
     return "Long, needle-thin blades have grown from your " .. hands
 }}, and smaller fragments of metal have grown inside your body, deforming you
 and reducing the effectiveness of body armour.
-
-Any equipped weapons, shields, and gloves are melded.
 %%%%
 Serpent status
 
 You have been transformed into a giant, cold-blooded, poison-resistant serpent,
 ready to wind your coils around foes and crush them to death.
-
-Any equipped weapons and armour are melded.
 %%%%
 Maw status
 
@@ -529,8 +523,6 @@ Your midsection has transformed into a giant mouth, gnashing and ready to devour
 foes. The mouth may devour slain creatures, healing you to an extent increased
 by your Shapeshifting skill and the power of the creature eaten. Skill also
 increases the damage done by the maw.
-
-While transformed, any body armour is melded.
 %%%%
 Statue status
 
@@ -538,8 +530,6 @@ You have been transformed into a slow but extremely robust stone statue.
 Your melee damage, both unarmed and with weapons, is substantially increased.
 Your stone body is immune to poison and miasma, and gains resistance to
 electricity, negative energy and torment.
-
-Any equipped body armour, gloves and boots are melded.
 %%%%
 Dragon status
 
@@ -574,8 +564,6 @@ Dragon status
     return desc
 }} Your melee attacks deal incredible damage, and you are much more robust but
 less evasive.
-
-Any equipped weapons and armour are melded.
 %%%%
 Storm status
 
@@ -584,8 +572,6 @@ are strengthened and electrified, and strike all adjacent foes. You gain flight,
 increased evasion, immunity to poison, miasma, petrification, and constriction,
 and resistance to electricity. You gain the ability to launch yourself at foes
 as a lightning bolt.
-
-Any equipped weapons and armour are melded.
 %%%%
 Death status
 

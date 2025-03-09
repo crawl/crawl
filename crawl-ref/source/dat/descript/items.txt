@@ -80,8 +80,7 @@ beast talisman
 
 A large patch of fur around a shining, gold-glowing eye. Transforms the user
 into a monstrous, furry were-beast, limbs pulsing with murderous energy.
-Shapeshifting skill increases the killing power provided. While transformed,
-any gloves, cloaks, headgear and boots are melded.
+Shapeshifting skill increases the killing power provided.
 %%%%
 blade talisman
 
@@ -94,8 +93,6 @@ A jagged cluster of blades, almost impossible to grasp without injury.
 and reducing the effectiveness of body armour. Shapeshifting skill mitigates
 and eventually eliminates the latter effect, as well as increasing damage
 dealt.
-
-While transformed, equipped weapons, shields, and gloves are melded.
 %%%%
 book of air
 
@@ -621,8 +618,6 @@ An intricate carving, inlaid with dragon tooth and scale. {{
 
     return desc
 }} Shapeshifting skill increases damage from claws and armour from scales.
-
-While transformed, any equipped weapons and armour are melded.
 %%%%
 earthy gem
 
@@ -743,8 +738,6 @@ A heavy stone icon, bearing the countenance of some long-forgotten king or god.
 Transforms the user into a slow, stone statue. The user's stone body is
 immune to poison and miasma, and gains resistance to electricity, negative
 energy, and torment. Shapeshifting skill increases armour granted.
-
-While transformed, any equipped body armour, gloves and boots are melded.
 %%%%
 grand grimoire
 
@@ -911,8 +904,6 @@ Transforms the user's midsection into a giant mouth, gnashing and ready to devou
 foes. The mouth may devour slain creatures, healing the user to an extent increased
 by the user's Shapeshifting skill and the power of the creature eaten. Skill also
 increases the damage done by the maw.
-
-While transformed, any body armour is melded.
 %%%%
 midnight gem
 
@@ -1404,8 +1395,7 @@ serpent talisman
 A jade snake coiled around a nagaraja's name-day egg. Transforms the user into
 a giant, cold-blooded, poison-resistant serpent, ready to wind their coils
 around foes and crush them to death. Shapeshifting skill increases the armour
-provided by the snake's scales. While transformed, any equipped weapons and
-armour are melded.
+provided by the snake's scales.
 %%%%
 shining gem
 
@@ -1535,8 +1525,6 @@ and strike all adjacent foes. The user also flies, gains immunity to poison,
 miasma, petrification, constriction, and sticky flame, and also resists
 electricity. They can launch themselves as a lightning bolt, blasting through
 everything in their way.
-
-While transformed, any equipped weapons and armour are melded.
 %%%%
 swamp dragon scales
 

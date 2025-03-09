@@ -67,7 +67,7 @@ public:
 
     int get_level(int scale) const;
 
-    int mult_hp(int base_hp, bool force_talisman = false) const;
+    int mult_hp(int base_hp, bool force_talisman = false, int skill = -1) const;
 
     /// Is the player below the minimum skill for this form?
     bool underskilled() const { return get_level(1) < min_skill; }
@@ -119,11 +119,11 @@ public:
     /**
      * Base unarmed damage provided by the form.
      */
-    int get_base_unarmed_damage(bool random = true, bool max = false) const;
+    int get_base_unarmed_damage(bool random = true, int skill = -1) const;
 
     /// Damage done by a custom aux attack of this form.
     virtual int get_aux_damage(bool /*random*/ = true,
-                               bool /*max*/ = false) const {
+                               int /*skill*/ = -1) const {
         return 0;
     }
 
@@ -137,11 +137,13 @@ public:
 
     virtual bool can_offhand_punch() const { return can_wield(); }
     virtual string get_uc_attack_name(string default_name) const;
-    virtual int slay_bonus(bool /*random*/ = true, bool /*max*/ = false) const { return 0; }
-    virtual int contam_dam(bool /*random*/ = true, bool /*max*/ = false) const { return 0; }
-    virtual int get_ac_bonus(bool max = false) const;
-    virtual int ev_bonus(bool /*max*/ = false) const { return 0; }
-    virtual int get_base_ac_penalty(int /*base*/) const { return 0; }
+    virtual int slay_bonus(bool /*random*/ = true, int /*skill*/ = -1) const { return 0; }
+    virtual int contam_dam(bool /*random*/ = true, int /*skill*/ = -1) const { return 0; }
+    virtual int get_ac_bonus(int skill = -1) const;
+    virtual int ev_bonus(int /*skill*/ = -1) const { return 0; }
+    virtual int get_base_ac_penalty(int /*base*/, int /*skill*/ = -1) const { return 0; }
+    virtual int get_vamp_chance(int /*skill*/ = -1) const { return 0; }
+    virtual dice_def get_ability_damage(bool /*random*/, int /*skill*/ = -1) const { return dice_def(); }
 
     bool enables_flight() const;
     bool forbids_flight() const;
@@ -151,7 +153,7 @@ public:
     bool player_likes_water() const;
 
     string player_prayer_action() const;
-    string melding_description() const;
+    string melding_description(bool itemized) const;
 
     virtual vector<pair<string, string>> get_fakemuts() const;
     virtual vector<pair<string, string>> get_bad_fakemuts() const;
@@ -242,10 +244,10 @@ protected:
 
     /// Calculate the given FormScaling for this form, multiplied by scale.
     int scaling_value(const FormScaling &sc, bool random,
-                      bool max = false, int scale = 1) const;
+                      int level = -1, int scale = 1) const;
     /// Calculate the given FormScaling for this form, with math internally multiplied by scale.
     int divided_scaling(const FormScaling &sc, bool random,
-                        bool max = false, int scale = 1) const;
+                        int level = -1, int scale = 1) const;
 
 private:
     /// Can this form fly?
@@ -323,11 +325,3 @@ void merfolk_start_swimming(bool step = false);
 void merfolk_stop_swimming();
 
 transformation form_for_talisman(const item_def &talisman);
-
-struct talisman_form_desc {
-    vector<pair<string, string>> skills;
-    vector<pair<string, string>> defenses;
-    vector<pair<string, string>> offenses; // heh
-};
-void describe_talisman_form(transformation form_type, talisman_form_desc &d,
-                            bool incl_special);
