@@ -76,20 +76,20 @@ public:
 protected:
     coord_def m_min_coord;
     coord_def m_max_coord;
-    vector<int> m_hotkeys;
 
     MenuItem* m_link_left;
     MenuItem* m_link_right;
     MenuItem* m_link_up;
     MenuItem* m_link_down;
 
+    vector<int> m_hotkeys;
     COLOURS m_fg_colour;
     COLOURS m_highlight_colour;
     int m_bg_colour;
-    bool m_selected:1;
-    bool m_allow_highlight:1;
-    bool m_dirty:1;
-    bool m_visible:1;
+    bool m_selected;
+    bool m_allow_highlight;
+    bool m_dirty;
+    bool m_visible;
 
 #ifdef USE_TILE_LOCAL
     // Holds the conversion values to translate unit values to pixel values
