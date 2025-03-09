@@ -182,15 +182,18 @@ int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_
 
     if (use_popup)
     {
+        // TODO: ALL OF THESE ARE LEAKING LIKE A SIEVE
         MenuEntry * const y_me = new MenuEntry("Yes", MEL_ITEM, 1, 'Y');
         y_me->add_hotkey('y');
+        // TODO: ALL OF THESE ARE LEAKING LIKE A SIEVE
         MenuEntry * const n_me = new MenuEntry("No", MEL_ITEM, 1, 'N');
         n_me->add_hotkey('n');
+        // TODO: ALL OF THESE ARE LEAKING LIKE A SIEVE
         MenuEntry * const a_me = new MenuEntry("Always", MEL_ITEM, 1, 'A');
         a_me->add_hotkey('a');
         y_me->add_tile(tile_def(TILEG_PROMPT_YES));
         n_me->add_tile(tile_def(TILEG_PROMPT_NO));
-
+        // TODO: ALL OF THESE ARE LEAKING LIKE A SIEVE
         MenuEntry *question = new MenuEntry(prompt, MEL_TITLE);
         question->wrap_text();
         pop.set_title(question);

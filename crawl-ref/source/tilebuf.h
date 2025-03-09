@@ -39,6 +39,7 @@ public:
 
 protected:
     const GenericTexture *m_tex;
+    // TODO: ALL OF THESE ARE LEAKING LIKE A SIEVE
     GLShapeBuffer *m_vert_buf;
     GLState m_state;
     drawing_modes m_prim;
