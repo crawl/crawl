@@ -272,8 +272,15 @@ static int l_item_do_subtype(lua_State *ls)
     if (item->base_type == OBJ_ARMOUR)
     {
         equipment_slot slot = get_armour_slot(*item);
-        s = (slot == SLOT_BODY_ARMOUR ? "body"
-                                      : lowercase_string(equip_slot_name(slot)).c_str());
+        if (slot == SLOT_BODY_ARMOUR)
+        {
+            s = "body";
+        }
+        else
+        {
+            saved = lowercase_string(equip_slot_name(slot));
+            s = saved.c_str();
+        }
     }
     else if (item->is_identified() || item->base_type == OBJ_WEAPONS)
     {
