@@ -40,6 +40,10 @@
 # include <unordered_map>
 #endif
 
+#ifdef __EMSCRIPTEN__
+# include <emscripten.h>
+#endif
+
 namespace ui {
 
 #ifndef USE_TILE_LOCAL
@@ -3320,8 +3324,17 @@ void run_layout(shared_ptr<Widget> root, const bool& done,
 {
     push_layout(root);
     set_focused_widget(initial_focus.get());
+
     while (!done && !crawl_state.seen_hups)
+    {
+        #ifdef __EMSCRIPTEN__
+            // Infinite loop hangs the main thread in wasm.
+            // A 16ms sleep gives UI threads chance to catch up (operates asynchronously
+            // thanks to ASYNCIFY flag in the build) (16ms ~= 60FPS)
+            emscripten_sleep(16);
+        #endif
         pump_events();
+    }
     pop_layout();
 }
 

@@ -12,6 +12,9 @@
 # ifdef USE_GLES
 #  ifdef __ANDROID__
 #   include <SDL.h>
+#  elif defined(__EMSCRIPTEN__)
+#   include <SDL2/SDL.h>
+#   include <SDL_opengles2.h>
 #  else
 #   include <SDL2/SDL.h>
 #   include <SDL_gles.h>
@@ -62,7 +65,7 @@ namespace opengl
             return "GL_INVALID_VALUE";
         case GL_INVALID_OPERATION:
             return "GL_INVALID_OPERATION";
-#ifndef __ANDROID__
+#if !defined(__ANDROID__) && !defined(__EMSCRIPTEN__)
         case GL_INVALID_FRAMEBUFFER_OPERATION:
             return "GL_INVALID_FRAMEBUFFER_OPERATION";
 #endif
@@ -423,7 +426,7 @@ void OGLStateManager::load_texture(unsigned char *pixels, unsigned int width,
                                    int xoffset, int yoffset)
 {
     // Assumptions...
-#ifdef __ANDROID__
+#if defined(__ANDROID__) || defined(__EMSCRIPTEN__)
     const GLenum bpp = GL_RGBA;
 #else
     const unsigned int bpp = 4;
@@ -431,11 +434,15 @@ void OGLStateManager::load_texture(unsigned char *pixels, unsigned int width,
     const GLenum texture_format = GL_RGBA;
     const GLenum format = GL_UNSIGNED_BYTE;
     // Also assume that the texture is already bound using bind_texture
-
+printf("Loading texture %i %i %i", GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+#ifdef __EMSCRIPTEN__
+    glTexEnvf(GL_TEXTURE_ENV, GL_ALPHA_SCALE, GL_MODULATE);
+#else
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+#endif
     glDebug("glTexEnvf");
 
-#ifdef GL_CLAMP
+#if defined(GL_CLAMP) && !defined(__EMSCRIPTEN__)
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 #else
@@ -455,7 +462,7 @@ void OGLStateManager::load_texture(unsigned char *pixels, unsigned int width,
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
                         Options.tile_filter_scaling ? GL_LINEAR : GL_NEAREST);
         glTexImage2D(GL_TEXTURE_2D, 0, bpp, width, height, 0,
-                     texture_format, format, pixels);
+            texture_format, format, pixels);
         // TODO: possibly restructure this into the main block below
         // so that we support mipmapping when glTexSubImage2D should be called.
         if (m_mipmapFn != nullptr)
@@ -481,7 +488,7 @@ void OGLStateManager::load_texture(unsigned char *pixels, unsigned int width,
         else
         {
             glTexImage2D(GL_TEXTURE_2D, 0, bpp, width, height, 0,
-                         texture_format, format, pixels);
+                texture_format, format, pixels);
             glDebug("glTexImage2D");
         }
     }

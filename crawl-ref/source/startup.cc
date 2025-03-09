@@ -67,6 +67,9 @@
 #ifdef __ANDROID__
  #include "syscalls.h"
 #endif
+#ifdef __EMSCRIPTEN__
+ #include <emscripten.h>
+#endif
 #include "version.h"
 
 using namespace ui;

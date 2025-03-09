@@ -278,11 +278,17 @@ static map<string, game_type> _game_modes()
 // fully in lua code.
 const vector<GameOption*> game_options::build_options_list()
 {
-    const bool USING_DGL =
-#if defined(DGAMELAUNCH)
+    const bool USING_WASM = 
+#if defined(__EMSCRIPTEN__)
         true;
 #else
         false;
+#endif
+    const bool USING_DGL =
+#if defined(DGAMELAUNCH) || defined(__EMSCRIPTEN__)
+        true;
+#else
+        USING_WASM;
 #endif
     const bool USING_UNIX =
 #if defined(UNIX)
@@ -900,9 +906,9 @@ const vector<GameOption*> game_options::build_options_list()
         new DisabledGameOption({"game_scale"}),
 # endif
         new IntGameOption(SIMPLE_NAME(tile_key_repeat_delay), 200, 0, INT_MAX),
-        new IntGameOption(SIMPLE_NAME(tile_window_width), -90, INT_MIN, INT_MAX),
-        new IntGameOption(SIMPLE_NAME(tile_window_height), -90, INT_MIN, INT_MAX),
-        new IntGameOption(SIMPLE_NAME(tile_window_ratio), 1618, INT_MIN, INT_MAX),
+        new IntGameOption(SIMPLE_NAME(tile_window_width), USING_WASM ? 0 : -90, INT_MIN, INT_MAX),
+        new IntGameOption(SIMPLE_NAME(tile_window_height), USING_WASM ? 0 : -90, INT_MIN, INT_MAX),
+        new IntGameOption(SIMPLE_NAME(tile_window_ratio), USING_WASM ? 0 : 1618, INT_MIN, INT_MAX),
         new BoolGameOption(SIMPLE_NAME(tile_window_limit_size), true),
         new StringGameOption(SIMPLE_NAME(tile_font_crt_file), MONOSPACED_FONT, true),
         new StringGameOption(SIMPLE_NAME(tile_font_msg_file), MONOSPACED_FONT, true),

@@ -32,6 +32,10 @@
 #include "unwind.h"
 #include "view.h"
 
+#ifdef __EMSCRIPTEN__
+ #include <emscripten.h>
+#endif
+
 static void _mpr(string text, msg_channel_type channel=MSGCH_PLAIN, int param=0,
                  bool nojoin=false, bool cap=true);
 
@@ -1508,6 +1512,7 @@ static int _last_msg_turn = -1; // Turn of last message.
 static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
                  bool cap)
 {
+    emscripten_log(EM_LOG_CONSOLE, text.c_str());
     static bool _doing_c_message_hook = false;
 
     rng::generator rng(rng::UI);

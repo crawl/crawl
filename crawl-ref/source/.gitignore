@@ -5,3 +5,5 @@ coverage-html-report/
 default.profraw
 coverage.profdata
 coverage.info
+crawl.*
+*.o.tmp

@@ -26,13 +26,18 @@
 # include <sys/wait.h>
 #endif
 
+#ifdef __EMSCRIPTEN__
+# include <emscripten.h>
+#endif
+
 #ifdef BACKTRACE_SUPPORTED
 #if defined(TARGET_CPU_MIPS) || \
     defined(TARGET_OS_FREEBSD) || \
     defined(TARGET_OS_NETBSD) || \
     defined(TARGET_OS_OPENBSD) || \
     defined(TARGET_COMPILER_CYGWIN) || \
-    defined(__ANDROID__)
+    defined(__ANDROID__) || \
+    defined(__EMSCRIPTEN__)
         #undef BACKTRACE_SUPPORTED
 #endif
 #endif
@@ -43,7 +48,8 @@
 
 #if !defined(TARGET_OS_MACOSX) && \
     !defined(TARGET_OS_WINDOWS) && \
-    !defined(TARGET_COMPILER_CYGWIN)
+    !defined(TARGET_COMPILER_CYGWIN) && \
+    !defined(__EMSCRIPTEN__)
 #include <execinfo.h>
 #endif
 
@@ -383,7 +389,16 @@ void write_stack_trace(FILE* file)
 
     free(symbols);
 }
-#else // BACKTRACE_SUPPORTED
+#elif defined(__EMSCRIPTEN__)
+void write_stack_trace(FILE* file)
+{
+    const int callstack_size = emscripten_get_callstack(EM_LOG_C_STACK, 0, 0);
+    const int callstack_max = callstack_size + 320; // Allowing some buffer
+    char* callstack = new char[callstack_max];
+    emscripten_get_callstack(EM_LOG_C_STACK, callstack, callstack_max);
+    fprintf(file, "%s", callstack);
+}
+#else // !BACKTRACE_SUPPORTED
 void write_stack_trace(FILE* file)
 {
     const char* msg = "Unable to get stack trace on this platform.\n";

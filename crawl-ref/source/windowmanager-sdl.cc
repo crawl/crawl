@@ -34,6 +34,10 @@
 #include "version.h"
 #include "windowmanager.h"
 
+#ifdef __EMSCRIPTEN__
+ #include <emscripten.h>
+#endif
+
 WindowManager *wm = nullptr;
 
 #define MIN_SDL_WINDOW_SIZE_X 800
@@ -449,6 +453,16 @@ SDLWrapper::~SDLWrapper()
     SDL_Quit();
 }
 
+#ifdef __EMSCRIPTEN__
+EM_JS(int, _browser_viewport_width, (), {
+    return window.innerWidth;
+});
+
+EM_JS(int, _browser_viewport_height, (), {
+    return window.innerHeight;
+});
+#endif
+
 int SDLWrapper::init(coord_def *m_windowsz)
 {
     // Do SDL initialization
@@ -485,8 +499,13 @@ int SDLWrapper::init(coord_def *m_windowsz)
     SDL_DisplayMode display_mode;
     SDL_GetDesktopDisplayMode(cur_display, &display_mode);
 
+#ifdef __EMSCRIPTEN__
+    _desktop_width = _browser_viewport_width();
+    _desktop_height = _browser_viewport_height();
+#else
     _desktop_width = display_mode.w;
     _desktop_height = display_mode.h;
+#endif
 
 #ifdef __ANDROID__
     SDL_StartTextInput();
@@ -1066,7 +1085,11 @@ void SDLWrapper::swap_buffers()
 
 void SDLWrapper::delay(unsigned int ms)
 {
+#ifdef __EMSCRIPTEN__
+    emscripten_sleep(ms);
+#else
     SDL_Delay(ms);
+#endif
 }
 
 bool SDLWrapper::next_event_is(wm_event_type type)

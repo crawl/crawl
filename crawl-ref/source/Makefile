@@ -157,14 +157,24 @@ CFWARN_L += -Wextra \
 DEFINES := $(EXTERNAL_DEFINES)
 
 ifndef ANDROID
-LDFLAGS :=
+# debug:
+# LDFLAGS := -sASYNCIFY -sASSERTIONS=2 -sSTACK_SIZE=1000000 -sALLOW_MEMORY_GROWTH=1 -sMAXIMUM_MEMORY=1gb -sLEGACY_GL_EMULATION -sGL_UNSAFE_OPTS=0 -sMAX_WEBGL_VERSION=2
+# normal:
+LDFLAGS := -gsource-map -lidbfs.js -sASYNCIFY -sASSERTIONS=2 -sSTACK_SIZE=1000000 -sPTHREAD_POOL_SIZE='4' -sALLOW_MEMORY_GROWTH=1 -sMAXIMUM_MEMORY=1gb -sLEGACY_GL_EMULATION -sGL_UNSAFE_OPTS=0 -sMAX_WEBGL_VERSION=2
+
+
+# LDFLAGS := -sLEGACY_GL_EMULATION -sALLOW_MEMORY_GROWTH=1 -sMAXIMUM_MEMORY=1gb -sGL_UNSAFE_OPTS=0 -sMAX_WEBGL_VERSION=2
+
+# -sALLOW_MEMORY_GROWTH=1 -sMAXIMUM_MEMORY=1gb -sMAX_WEBGL_VERSION=2
+# -sGL_UNSAFE_OPTS=0
+# LDFLAGS := -sLEGACY_GL_EMULATION -sALLOW_MEMORY_GROWTH=1 -sMAXIMUM_MEMORY=1gb -lworkerfs.js -sMAX_WEBGL_VERSION=2 -sGL_UNSAFE_OPTS=0
 endif
 
 #
 # The GCC and GXX variables are set later.
 #
-AR = ar
-RANLIB = ranlib
+AR = emar
+RANLIB = emranlib
 CC = $(GCC)
 CXX = $(GXX)
 RM = rm -f
@@ -333,18 +343,25 @@ all: greet check-fonts $(GAME) docs webserver
 
 # XX these are set wrong on mac cross-compiling
 LIBPCRE := contrib/install/$(ARCH)/lib/libpcre.a
+LIBSDL2 :=
+# LIBSDL2 := contrib/sdl/build/libSDL2.a
 LIBSDL2 := contrib/install/$(ARCH)/lib/libSDL2.a
-LIBPNG := contrib/install/$(ARCH)/lib/libpng.a
-LIBSDL2IMAGE := contrib/install/$(ARCH)/lib/libSDL2_image.a
+LIBPNG :=
+# LIBPNG := contrib/install/$(ARCH)/lib/libpng.a
+# LIBSDL2IMAGE :=
+LIBSDL2IMAGE := contrib/sdl-image/build/libSDL2_image.a
+# LIBSDL2IMAGE := contrib/install/$(ARCH)/lib/libSDL2_image.a
 LIBSDL2MIXER := contrib/install/$(ARCH)/lib/libSDL2_mixer.a
-LIBFREETYPE := contrib/install/$(ARCH)/lib/libfreetype.a
+LIBFREETYPE :=
+# LIBFREETYPE := contrib/install/$(ARCH)/lib/libfreetype.a
 LIBSQLITE := contrib/install/$(ARCH)/lib/libsqlite3.a
 ifdef USE_LUAJIT
 LIBLUA := contrib/install/$(ARCH)/lib/libluajit.a
 else
 LIBLUA := contrib/install/$(ARCH)/lib/liblua.a
 endif
-LIBZ := contrib/install/$(ARCH)/lib/libz.a
+LIBZ :=
+# LIBZ := contrib/install/$(ARCH)/lib/libz.a
 
 #
 # Set up the TILES variant
@@ -379,7 +396,6 @@ APPLE_PLATFORM = YesPlease
 endif
 endif
 endif
-
 
 ifdef WIN32
 EXTRA_OBJECTS += icon.o
@@ -524,7 +540,10 @@ GCC := $(FORCE_CC)
 HOSTCC := $(FORCE_CC)
 export HOSTCC
 else
-GCC := $(LMACH)$(GCC_VER_PREFIX)gcc$(GCC_VER_SUFFIX)
+# GCC := emcc -pthread -sSHARED_MEMORY -sWASM_WORKERS=1 -sUSE_ZLIB=1 -sUSE_FREETYPE=1 -sUSE_SDL_IMAGE=2
+# GCC := emcc -pthread -sSHARED_MEMORY=1 -sWASM_WORKERS=1 -sUSE_ZLIB=1 -sUSE_SDL=2 -sUSE_SDL_IMAGE=2 -sUSE_FREETYPE=1
+GCC := emcc -O2 -g2 -pthread -fexceptions -sSHARED_MEMORY=1 -sUSE_SDL=2 -sUSE_SDL_IMAGE=2 -sUSE_ZLIB=1 -sUSE_FREETYPE=1 -sUSE_LIBPNG=1
+# GCC := $(LMACH)$(GCC_VER_PREFIX)emcc$(GCC_VER_SUFFIX)
 endif
 
 ifneq ($(FORCE_CXX),)
@@ -532,7 +551,10 @@ GXX := $(FORCE_CXX)
 HOSTCXX := $(FORCE_CXX)
 export HOSTCXX
 else
-GXX := $(LMACH)$(GCC_VER_PREFIX)g++$(GCC_VER_SUFFIX)
+# GXX := em++ -pthread -sSHARED_MEMORY -sWASM_WORKERS=1 -sUSE_ZLIB=1 -sUSE_FREETYPE=1 -sUSE_SDL_IMAGE=2
+# GXX := em++ -pthread -sSHARED_MEMORY=1 -sWASM_WORKERS=1 -sUSE_ZLIB=1 -sUSE_SDL=2 -sUSE_SDL_IMAGE=2 -sUSE_FREETYPE=1
+GXX := em++ -O2 -g2 -pthread -fexceptions -sSHARED_MEMORY=1 -sUSE_SDL=2 -sUSE_SDL_IMAGE=2 -sUSE_ZLIB=1 -sUSE_FREETYPE=1 -sUSE_LIBPNG=1
+# GXX := $(LMACH)$(GCC_VER_PREFIX)em++$(GCC_VER_SUFFIX)
 endif
 
 else
@@ -738,6 +760,8 @@ DEFINES_L += -DUSE_TILE_LOCAL
 
 ifdef BUILD_SDL2
 INCLUDES_L += -isystem contrib/install/$(ARCH)/include/SDL2
+else
+# EXTRA_LIBS += contrib/sdl2/build/libSDL2.a
 endif
 ifdef BUILD_FREETYPE
 INCLUDES_L += -isystem contrib/install/$(ARCH)/include/freetype2
@@ -772,7 +796,7 @@ ifndef WIN32
 LIBS += -lSDL2_mixer
 endif
 endif
-LIBS += -lSDL2_image $(SDL2_LDFLAGS) $(FREETYPE_LDFLAGS)
+# LIBS += -lSDL2_image $(SDL2_LDFLAGS) $(FREETYPE_LDFLAGS)
 
 endif # pkg-config
 
@@ -1673,7 +1697,7 @@ distclean: clean clean-contrib clean-rltiles
 	$(RM) -r $(DOXYGEN_HTML_GEN)
 
 $(GAME): $(GAME_OBJS) $(CONTRIB_LIBS) dat/dlua/tags.lua
-	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(GAME_OBJS) -o $(GAME) $(LIBS)
+	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(GAME_OBJS) -o $(GAME).html $(LIBS) --preload-file ../settings@/settings --preload-file dat --preload-file contrib/fonts@/usr/share/fonts/truetype/dejavu --preload-file ../docs@/docs --use-preload-plugins
 
 util/monster/vault_monster_data.h: dat/des util/gather_mons
 	util/gather_mons -v > $@

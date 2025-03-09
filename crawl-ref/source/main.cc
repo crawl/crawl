@@ -29,6 +29,10 @@
 #include <csignal>
 #endif
 
+#ifdef __EMSCRIPTEN__
+# include <emscripten.h>
+#endif
+
 #include "ability.h"
 #include "abyss.h"
 #include "act-iter.h"
@@ -237,6 +241,18 @@ __attribute__((externally_visible))
 #endif
 int main(int argc, char *argv[])
 {
+#ifdef __EMSCRIPTEN__
+    EM_ASM({
+        FS.mkdir('/saves');
+        FS.mount(IDBFS, { autoPersist: true }, '/saves');
+        FS.mkdir('/morgue');
+        FS.mount(IDBFS, { autoPersist: true }, '/morgue');
+        FS.syncfs(true, function (err) {
+            // Error
+        });
+    });
+#endif
+
 #ifdef DGAMELAUNCH
     // avoid commas instead of dots, etc, on CDO
     setlocale(LC_CTYPE, "");
@@ -2775,6 +2791,7 @@ static keycode_type _get_next_keycode()
         }
         else
             break;
+        emscripten_sleep(16);
     }
 
     // This is the main clear_messages() with Option.clear_messages.
