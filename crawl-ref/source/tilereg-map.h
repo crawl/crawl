@@ -36,7 +36,6 @@ protected:
     ShapeBuffer m_buf_map;
     LineBuffer m_buf_lines;
     bool m_dirty;
-    bool m_far_view;
 };
 
 #endif
