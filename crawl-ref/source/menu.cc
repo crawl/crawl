@@ -1236,7 +1236,6 @@ void Menu::check_add_formatted_line(int firstcol, int nextcol,
 
 Menu::~Menu()
 {
-    deleteAll(items);
     delete title;
     if (title2)
         delete title2;
@@ -1245,7 +1244,6 @@ Menu::~Menu()
 
 void Menu::clear()
 {
-    deleteAll(items);
     m_ui.menu->_queue_allocation();
 }
 

@@ -560,13 +560,14 @@ static deck_type _choose_deck(const string title = "Draw")
 
     for (int i = FIRST_PLAYER_DECK; i <= LAST_PLAYER_DECK; i++)
     {
-        unique_ptr<MenuEntry>me =
-            make_unique<MenuEntry>(deck_status(static_cast<deck_type>(i)),
-                    deck_status(static_cast<deck_type>(i)),
-                    MEL_ITEM, 1, _deck_hotkey(static_cast<deck_type>(i)));
+        deck_type deck = static_cast<deck_type>(i);
+        string status = deck_status(deck);
+        unique_ptr<ToggleableMenuEntry> me =
+            make_unique<ToggleableMenuEntry>(status,status,
+                    MEL_ITEM, 1, _deck_hotkey(deck));
         numbers[i] = i;
         me->data = &numbers[i];
-        if (!deck_cards((deck_type)i))
+        if (!deck_cards(deck))
             me->colour = COL_USELESS;
 
         me->add_tile(tile_def(TILEG_NEMELEX_DECK + i - FIRST_PLAYER_DECK + 1));

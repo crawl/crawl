@@ -500,10 +500,10 @@ void UseItemMenu::populate_menu()
             add_entry(std::move(temp));
         }
         load_items(item_inv,
-                    [&](MenuEntry* entry) -> MenuEntry*
+                    [&](unique_ptr<MenuEntry> entry) -> unique_ptr<MenuEntry>
                     {
                         if (item_type_filter == OBJ_SCROLLS)
-                            _note_tele_cancel(entry);
+                            _note_tele_cancel(entry.get());
                         return entry;
                     }, 'a', true, use_category_selection);
     }
@@ -526,10 +526,10 @@ void UseItemMenu::populate_menu()
         add_entry(std::move(temp_floor_header));
 
         load_items(item_floor,
-                    [&](MenuEntry* entry) -> MenuEntry*
+                    [&](unique_ptr<MenuEntry> entry) -> unique_ptr<MenuEntry>
                     {
                         if (item_type_filter == OBJ_SCROLLS)
-                            _note_tele_cancel(entry);
+                            _note_tele_cancel(entry.get());
                         return entry;
                     }, 'a', true, false);
     }

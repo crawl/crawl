@@ -627,19 +627,19 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
     // Build menu entries for items.
     if (!list_items.empty())
     {
-        vector<InvEntry*> all_items;
+        vector<unique_ptr<InvEntry>> all_items;
         for (const item_def *item : list_items)
         {
             all_items.push_back(full_view
-                                ? new FullViewInvEntry(*item)
-                                : new InvEntry(*item));
+                                ? make_unique<FullViewInvEntry>(*item)
+                                : make_unique<InvEntry>(*item));
         }
 
         const menu_sort_condition *cond = desc_menu.find_menu_sort_condition();
         desc_menu.sort_menu(all_items, cond);
 
         desc_menu.add_entry(make_unique<MenuEntry>("Items", MEL_SUBTITLE));
-        for (InvEntry *me : all_items)
+        for (unique_ptr<InvEntry>& me : all_items)
         {
 #ifndef USE_TILE_LOCAL
             // Show glyphs only for ASCII.
@@ -650,7 +650,7 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
             me->hotkeys[0] = hotkey;
             me->quantity = 2; // Hack to make items selectable.
 
-            desc_menu.add_entry(me);
+            desc_menu.add_entry(std::move(me));
             ++hotkey;
         }
     }

@@ -545,7 +545,7 @@ string no_selectables_message(int item_selector)
 }
 
 void InvMenu::load_inv_items(int item_selector, int excluded_slot,
-                             function<MenuEntry* (MenuEntry*)> procfn)
+                             function<unique_ptr<MenuEntry> (unique_ptr<MenuEntry>)> procfn)
 {
     vector<const item_def *> tobeshown;
     _get_inv_items_to_show(tobeshown, item_selector, excluded_slot);
@@ -749,10 +749,10 @@ struct menu_entry_comparator
     {
     }
 
-    bool operator () (const MenuEntry* a, const MenuEntry* b) const
+    bool operator () (const unique_ptr<MenuEntry>& a, const unique_ptr<MenuEntry>& b) const
     {
-        const InvEntry *ia = dynamic_cast<const InvEntry *>(a);
-        const InvEntry *ib = dynamic_cast<const InvEntry *>(b);
+        const InvEntry *ia = dynamic_cast<const InvEntry *>(a.get());
+        const InvEntry *ib = dynamic_cast<const InvEntry *>(b.get());
         return _compare_invmenu_items(ia, ib, &cond->cmp);
     }
 };
@@ -811,7 +811,7 @@ const menu_sort_condition *InvMenu::find_menu_sort_condition() const
     return nullptr;
 }
 
-void InvMenu::sort_menu(vector<InvEntry*> &invitems,
+void InvMenu::sort_menu(vector<unique_ptr<InvEntry>> &invitems,
                         const menu_sort_condition *cond)
 {
     if (!cond || cond->sort == -1 || (int) invitems.size() < cond->sort)
@@ -847,7 +847,7 @@ FixedVector<int, NUM_OBJECT_CLASSES> inv_order(
     OBJ_GOLD);
 
 menu_letter InvMenu::load_items(const vector<item_def>& mitems,
-                                function<MenuEntry* (MenuEntry*)> procfn,
+                                function<unique_ptr<MenuEntry> (unique_ptr<MenuEntry>)> procfn,
                                 menu_letter ckey, bool sort, bool subkeys)
 {
     vector<const item_def*> xlatitems;
@@ -857,7 +857,7 @@ menu_letter InvMenu::load_items(const vector<item_def>& mitems,
 }
 
 menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
-                                function<MenuEntry* (MenuEntry*)> procfn,
+                                function<unique_ptr<MenuEntry> (unique_ptr<MenuEntry>)> procfn,
                                 menu_letter ckey, bool sort, bool subkeys)
 {
     subkeys |= is_set(MF_MULTISELECT); // XXX Can the caller do this?
@@ -866,7 +866,7 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
     for (const item_def * const mitem : mitems)
         inv_class[mitem->base_type]++;
 
-    vector<InvEntry*> items_in_class;
+    vector<unique_ptr<InvEntry>> items_in_class;
     const menu_sort_condition *cond = nullptr;
     if (sort)
         cond = find_menu_sort_condition();
@@ -912,26 +912,26 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
 
         items_in_class.clear();
 
-        InvEntry *forced_first = nullptr;
+        unique_ptr<InvEntry> forced_first = nullptr;
         for (const item_def * const mitem : mitems)
         {
             if (mitem->base_type != i)
                 continue;
 
-            InvEntry * const ie = new InvEntry(*mitem);
+            unique_ptr<InvEntry> ie = make_unique<InvEntry>(*mitem);
             if (!subkeys)
                 ie->hotkeys.resize(1);
             if (mitem->sub_type == get_max_subtype(mitem->base_type))
-                forced_first = ie;
+                forced_first = std::move(ie);
             else
-                items_in_class.push_back(ie);
+                items_in_class.push_back(std::move(ie));
         }
 
         sort_menu(items_in_class, cond);
         if (forced_first)
             items_in_class.insert(items_in_class.begin(),forced_first);
 
-        for (InvEntry *ie : items_in_class)
+        for (unique_ptr<InvEntry>& ie : items_in_class)
         {
             if (tag == "pickup")
             {
@@ -950,9 +950,9 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
                 else
                     ie->hotkeys[0] = ckey++;
             }
-            do_preselect(ie);
+            do_preselect(ie.get());
 
-            add_entry(procfn ? procfn(ie) : ie);
+            add_entry(procfn ? procfn(std::move(ie)) : std::move(ie));
         }
     }
 
