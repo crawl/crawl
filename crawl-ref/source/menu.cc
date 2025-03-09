@@ -1473,7 +1473,7 @@ void Menu::set_title(const string &t, bool first, bool indent)
     set_title(new MenuEntry(t, MEL_TITLE), first, indent);
 }
 
-void Menu::add_entry(MenuEntry *entry)
+void Menu::add_entry(unique_ptr<MenuEntry> entry)
 {
     entry->tag = tag;
     items.push_back(entry);

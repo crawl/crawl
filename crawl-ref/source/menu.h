@@ -327,13 +327,9 @@ public:
     void set_min_col_width(int w);
 
     void set_highlighter(MenuHighlighter *h);
-    void set_title(MenuEntry *e, bool first = true, bool indent = false);
+    void set_title(unique_ptr<MenuEntry> e, bool first = true, bool indent = false);
     void set_title(const string &t, bool first = true, bool indent = false);
-    void add_entry(MenuEntry *entry);
-    void add_entry(unique_ptr<MenuEntry> entry)
-    {
-        add_entry(entry.release());
-    }
+    void add_entry(unique_ptr<MenuEntry> entry);
     void get_selected(vector<MenuEntry*> *sel) const;
 
     void set_select_filter(vector<text_pattern> filter)
@@ -411,7 +407,7 @@ protected:
     formatted_string more;
     bool m_keyhelp_more;
 
-    vector<MenuEntry*>  items;
+    vector<unique_ptr<MenuEntry>>  items;
     vector<MenuEntry*>  sel;
     vector<text_pattern> select_filter;
 

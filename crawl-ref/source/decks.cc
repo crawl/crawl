@@ -401,7 +401,7 @@ static void _describe_cards(CrawlVector& cards)
     bool first = true;
     for (auto& val : cards)
     {
-        card_type card = (card_type) val.get_int();
+        card_type card = static_cast<card_type>(val.get_int());
 
         if (seen[card])
             continue;
@@ -536,13 +536,13 @@ static deck_type _choose_deck(const string title = "Draw")
             | MF_NO_WRAP_ROWS | MF_TOGGLE_ACTION
             | MF_ARROWS_SELECT | MF_INIT_HOVER);
     {
-        ToggleableMenuEntry* me =
-            new ToggleableMenuEntry(make_stringf("%s which deck?        "
+        unique_ptr<ToggleableMenuEntry> me = make_unique<ToggleableMenuEntry>(
+            make_stringf("%s which deck?        "
                                     "Cards available", title.c_str()),
                                     "Describe which deck?    "
                                     "Cards available",
                                     MEL_TITLE);
-        deck_menu.set_title(me, true, true);
+        deck_menu.set_title(std::move(me), true, true);
     }
     deck_menu.set_tag("deck");
     deck_menu.add_toggle_from_command(CMD_MENU_CYCLE_MODE);
@@ -560,8 +560,8 @@ static deck_type _choose_deck(const string title = "Draw")
 
     for (int i = FIRST_PLAYER_DECK; i <= LAST_PLAYER_DECK; i++)
     {
-        ToggleableMenuEntry* me =
-            new ToggleableMenuEntry(deck_status(static_cast<deck_type>(i)),
+        unique_ptr<MenuEntry>me =
+            make_unique<MenuEntry>(deck_status(static_cast<deck_type>(i)),
                     deck_status(static_cast<deck_type>(i)),
                     MEL_ITEM, 1, _deck_hotkey(static_cast<deck_type>(i)));
         numbers[i] = i;
@@ -570,7 +570,7 @@ static deck_type _choose_deck(const string title = "Draw")
             me->colour = COL_USELESS;
 
         me->add_tile(tile_def(TILEG_NEMELEX_DECK + i - FIRST_PLAYER_DECK + 1));
-        deck_menu.add_entry(me);
+        deck_menu.add_entry(std::move(me));
     }
 
     int ret = NUM_DECKS;
@@ -739,13 +739,13 @@ static void _draw_stack(int to_stack)
             | MF_NO_WRAP_ROWS | MF_TOGGLE_ACTION
             | MF_ARROWS_SELECT | MF_INIT_HOVER);
     {
-        ToggleableMenuEntry* me =
-            new ToggleableMenuEntry("Draw which deck?        "
+        unique_ptr<ToggleableMenuEntry> me =
+            make_unique<ToggleableMenuEntry>("Draw which deck?        "
                                     "Cards available",
                                     "Describe which deck?    "
                                     "Cards available",
                                     MEL_TITLE);
-        deck_menu.set_title(me, true, true);
+        deck_menu.set_title(std::move(me), true, true);
     }
     deck_menu.set_tag("deck");
     deck_menu.add_toggle_from_command(CMD_MENU_CYCLE_MODE);
@@ -773,24 +773,25 @@ static void _draw_stack(int to_stack)
 
     for (int i = FIRST_PLAYER_DECK; i <= LAST_PLAYER_DECK; i++)
     {
-        ToggleableMenuEntry* me =
-            new ToggleableMenuEntry(deck_status((deck_type)i),
-                    deck_status((deck_type)i),
-                    MEL_ITEM, 1, _deck_hotkey((deck_type)i));
+        const deck_type deck = static_cast<deck_type>(i);
+        const string status = deck_status(deck);
+        unique_ptr<ToggleableMenuEntry> me =
+            make_unique<ToggleableMenuEntry>(status, status,
+                    MEL_ITEM, 1, _deck_hotkey(deck));
         numbers[i] = i;
         me->data = &numbers[i];
         // TODO: update this if a deck is emptied while in this menu
-        if (!deck_cards((deck_type)i))
+        if (!deck_cards(deck))
             me->colour = COL_USELESS;
 
         me->add_tile(tile_def(TILEG_NEMELEX_DECK + i - FIRST_PLAYER_DECK + 1));
-        deck_menu.add_entry(me);
+        deck_menu.add_entry(std::move(me));
     }
 
     deck_menu.on_examine = [](const MenuEntry& sel)
     {
         // what's up with these casts
-        deck_type selected = (deck_type) *(static_cast<int*>(sel.data));
+        deck_type selected = static_cast<deck_type>(*(static_cast<int *>(sel.data)));
         describe_deck(selected);
         return true;
     };
@@ -798,7 +799,7 @@ static void _draw_stack(int to_stack)
     deck_menu.on_single_selection = [&deck_menu, &stack, to_stack](const MenuEntry& sel)
     {
         ASSERT(sel.hotkeys.size() == 1);
-        deck_type selected = (deck_type) *(static_cast<int*>(sel.data));
+        deck_type selected = static_cast<deck_type>(*(static_cast<int *>(sel.data)));
         // Need non-const access to the selection.
         ToggleableMenuEntry* me =
             static_cast<ToggleableMenuEntry*>(deck_menu.selected_entries()[0]);
@@ -842,15 +843,14 @@ bool stack_five(int to_stack)
     }
 
     StackFiveMenu menu(stack);
-    MenuEntry *const title = new MenuEntry("Select two cards to swap them:", MEL_TITLE);
-    menu.set_title(title);
+    menu.set_title(make_unique<MenuEntry>("Select two cards to swap them:", MEL_TITLE));
     for (unsigned int i = 0; i < stack.size(); i++)
     {
-        MenuEntry * const entry =
-            new MenuEntry(card_name((card_type)stack[i].get_int()),
+        unique_ptr<MenuEntry> entry =
+            make_unique<MenuEntry>(card_name((card_type)stack[i].get_int()),
                           MEL_ITEM, 1, '1'+i);
         entry->add_tile(tile_def(TILEG_NEMELEX_CARD));
-        menu.add_entry(entry);
+        menu.add_entry(std::move(entry));
     }
     menu.set_more(formatted_string::parse_string(
                 "<lightgrey>Press <w>?</w> for the card descriptions"

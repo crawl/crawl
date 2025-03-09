@@ -135,7 +135,7 @@ public:
     void set_title_annotator(invtitle_annotator fn);
 
     // Not an override, but an overload. Not virtual!
-    void set_title(MenuEntry *title, bool first = true);
+    void set_title(unique_ptr<MenuEntry> t, bool first = true);
     void set_title(const string &s);
 
     // Loads items into the menu. If "procfn" is provided, it'll be called

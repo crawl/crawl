@@ -333,9 +333,9 @@ void InvMenu::set_title_annotator(invtitle_annotator afn)
     title_annotate = afn;
 }
 
-void InvMenu::set_title(MenuEntry *t, bool first)
+void InvMenu::set_title(unique_ptr<MenuEntry> t, bool first)
 {
-    Menu::set_title(t, first);
+    Menu::set_title(std::move(t), first);
 }
 
 void InvMenu::set_preselect(const vector<SelItem> *pre)
@@ -350,9 +350,8 @@ string slot_description()
 
 void InvMenu::set_title(const string &s)
 {
-    set_title(new InvTitle(this, s.empty() ? "Inventory: " + slot_description()
-                                           : s,
-                           title_annotate));
+    string title = s.empty() ? "Inventory: " + slot_description() : s;
+    set_title(make_unique<InvTitle>(this, title,title_annotate));
 }
 
 bool InvMenu::skip_process_command(int keyin)
@@ -402,7 +401,7 @@ void InvMenu::select_item_index(int idx, int qty)
     if (type != menu_type::drop)
         return Menu::select_item_index(idx, qty);
 
-    InvEntry *ie = static_cast<InvEntry*>(items[idx]);
+    InvEntry *ie = static_cast<InvEntry*>(items[idx].get());
 
     bool should_toggle_star = _item_is_permadrop_candidate(ie->item[0])
         && (ie->has_star() || _mode_special_drop);
@@ -422,7 +421,7 @@ bool InvMenu::examine_index(int i)
     const bool do_actions = type == menu_type::describe;
     // not entirely sure if the bounds check is necessary
     auto ie = (i >= 0 && i < static_cast<int>(items.size()))
-                    ? dynamic_cast<InvEntry *>(items[i])
+                    ? dynamic_cast<InvEntry *>(items[i].get())
                     : nullptr;
 
     // superclass behavior: do nothing unless on_examine is defined, in which
@@ -656,7 +655,7 @@ bool InvMenu::is_selectable(int index) const
 {
     if (type == menu_type::drop)
     {
-        InvEntry *item = dynamic_cast<InvEntry*>(items[index]);
+        InvEntry *item = dynamic_cast<InvEntry*>(items[index].get());
         if (item->is_cursed() && item->is_equipped())
             return false;
 
@@ -909,7 +908,7 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
                 subtitle += "</w><blue>)";
             }
         }
-        add_entry(new MenuEntry(subtitle, MEL_SUBTITLE));
+        add_entry(make_unique<MenuEntry>(subtitle, MEL_SUBTITLE));
 
         items_in_class.clear();
 
