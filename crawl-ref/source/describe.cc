@@ -6164,8 +6164,18 @@ class TablePrinter
 {
 private:
     vector<vector<TableCell>> rows;
+    int fixed_column_num;
+    int fixed_column_width;
 
 public:
+    TablePrinter()
+        : fixed_column_num(0), fixed_column_width(0)
+    {}
+
+    TablePrinter(int column_num, int total_width)
+        : fixed_column_num(column_num), fixed_column_width(total_width / column_num)
+    {}
+
     void AddRow()
     {
         rows.push_back({});
@@ -6173,7 +6183,18 @@ public:
 
     void AddCell(string label = "", string value = "", colour_t colour = LIGHTGREY)
     {
+        if (fixed_column_num > 0 && (int)rows[rows.size() - 1].size() >= fixed_column_num)
+            AddRow();
         rows[rows.size() - 1].push_back({label, value, colour});
+    }
+
+    int NumCells() const
+    {
+        int count = 0;
+        for (const auto& row : rows)
+            count += row.size();
+
+        return count;
     }
 
     void Print(ostringstream &result)
@@ -6190,7 +6211,8 @@ public:
                     labels_lengths_by_col[col] = max(labels_lengths_by_col[col], label_len);
             }
         }
-        const int cell_len = 80 / labels_lengths_by_col.size();
+        const int cell_len = fixed_column_width > 0 ? fixed_column_width
+                                : 80 / max(1, (int)labels_lengths_by_col.size());
 
         for (const auto &row : rows)
         {
