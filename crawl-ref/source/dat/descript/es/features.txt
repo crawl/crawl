@@ -3,6 +3,10 @@ A basalt altar of Yredelemnul
 
 Un altar a Yredelemnul el Oscuro, labrado a partir de columnatas basálticas
 %%%%
+A black marble wall
+
+El mármol reluce y brilla. ¡En verdad es precioso!
+%%%%
 A bloodstained altar of Trog
 
 Un altar a Trog el Colérico, burdamente hecho por lo que parecen ser manos de
@@ -29,6 +33,19 @@ corrompido irrevocablemente.
 A crawl-hole back to the Lair
 
 Puedes usarlo para volver a un sitio menos estresante y con menos telarañas.
+%%%%
+A crystal clear mirror
+
+Un espejo reluciente, que refleja todo a su alrededor.
+%%%%
+A damp floor
+
+Quizás sea la humedad o el constante flujo de nubes, pero el suelo de este
+lugar siempre está mojado.
+%%%%
+A dead tree
+
+Este árbol está tan muerto como todo lo demás aquí.
 %%%%
 A deep blue altar of Sif Muna
 
@@ -66,42 +83,19 @@ A glowing silver altar of Zin
 Un altar a Zin, quien dio las Leyes, hecho de una plata tan prístina como se
 espera que sean los seguidores de Zin, y brillando gentilmente.
 %%%%
+A golden statue
+
+Una estatua de oro macizo de un santo.
+%%%%
 A granite statue
 
 A pesar de la dureza de la piedra, los rasgos de esta estatua han desaparecido
 hace tiempo.
 %%%%
-A mechanical trap
+A granite stump
 
-Un dispositivo mecánico diseñado para causar daño a los invasores. No obstante,
-un aventurero habilidoso puede intentar desarmarlo.
-%%%%
-A crystal clear mirror
-
-Un espejo reluciente, que refleja todo a su alrededor.
-%%%%
-A black marble wall
-
-El mármol reluce y brilla. ¡En verdad es precioso!
-%%%%
-A damp floor
-
-Quizás sea la humedad o el constante flujo de nubes, pero el suelo de este
-lugar siempre está mojado.
-%%%%
-A dead tree
-
-Este árbol está tan muerto como todo lo demás aquí.
-%%%%
-A golden statue
-
-Una estatua de oro macizo de un santo.
-%%%%
-A heavily etched metal wall
-
-Esta pared de metal está grabada con murales que representan, con horripilante
-detalle, lo que le ocurrirá a cualquiera que sea descubierto intentando robar
-de las Cámaras. Verlo, te provoca nauseas.
+Este tocón de granito probablemente fué una estatua en algún momento del
+pasado.
 %%%%
 A heavily etched crystal wall
 
@@ -109,10 +103,16 @@ Esta pared de cristal verdoso está grabada con murales que representan, con
 horripilante detalle, lo que le ocurrirá a cualquiera que sea descubierto
 intentando robar de las Cámaras. Verlo, te provoca nauseas.
 %%%%
-A granite stump
+A heavily etched metal wall
 
-Este tocón de granito probablemente fué una estatua en algún momento del
-pasado.
+Esta pared de metal está grabada con murales que representan, con horripilante
+detalle, lo que le ocurrirá a cualquiera que sea descubierto intentando robar
+de las Cámaras. Verlo, te provoca nauseas.
+%%%%
+A mechanical trap
+
+Un dispositivo mecánico diseñado para causar daño a los invasores. No obstante,
+un aventurero habilidoso puede intentar desarmarlo.
 %%%%
 A large window
 
