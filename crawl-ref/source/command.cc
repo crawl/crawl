@@ -1481,3 +1481,16 @@ void show_help(int section, string highlight_string)
     // from the help main menu.
     _show_help_special(key);
 }
+
+int encode_command_as_key(command_type cmd) noexcept
+{
+    // Don't accept buggy commands
+    if (cmd < CMD_NO_CMD || cmd >= CMD_MAX_CMD)
+        cmd = CMD_NO_CMD;
+
+    // There should be room between the internal keys
+    // (CK_MIN_INTERNAL == -1021) and keys with alt set
+    // (about -3000 + 255) for command_type to fit
+    // (currently 2000 through 2287).
+    return -(int)cmd;
+}
