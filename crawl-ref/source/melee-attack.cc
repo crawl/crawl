@@ -1961,7 +1961,7 @@ bool melee_attack::player_aux_test_hit()
         if (x_chance_in_y(player_blind_miss_chance(1), 100))
             to_hit = -1;
     }
-  
+
     if (to_hit >= evasion || auto_hit
         || wu_jian_has_momentum(wu_jian_attack))
     {
