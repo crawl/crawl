@@ -2054,12 +2054,6 @@ void canned_msg(canned_message_type which_message)
         case MSG_DETECT_NOTHING:
             mpr("You detect nothing.");
             break;
-        case MSG_CALL_DEAD:
-            mpr("You call on the dead to rise...");
-            break;
-        case MSG_ANIMATE_REMAINS:
-            mpr("You attempt to give life to the dead...");
-            break;
         case MSG_CANNOT_MOVE:
             mpr("You cannot move.");
             break;
