@@ -106,6 +106,9 @@
 #include <android/log.h>
 #define VERSIONED_CACHE_DIR
 #endif
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
 
 #ifndef F_OK // MSVC for example
 #define F_OK 0
@@ -321,13 +324,27 @@ string change_file_extension(const string &filename, const string &ext)
     return (pos == string::npos? filename : filename.substr(0, pos)) + ext;
 }
 
-time_t file_modtime(const string &file)
+#ifdef __EMSCRIPTEN__
+EM_JS(int, _file_modtime, (const char* file_chars), {
+    const file = UTF8ToString(file_chars);
+    const filestat = FS.stat(file);
+    console.log("file_modtime", file, filestat);
+    return filestat ? (filestat.mtime.getTime() / 1000) : 0;
+});
+#endif
+
+time_t file_modtime(const string& file)
 {
+#ifdef __EMSCRIPTEN__
+    return (time_t)_file_modtime(file.c_str());
+#else
     struct stat filestat;
+
     if (stat(file.c_str(), &filestat))
         return 0;
 
     return filestat.st_mtime;
+#endif
 }
 
 time_t file_modtime(FILE *f)

@@ -160,9 +160,8 @@ ifndef ANDROID
 # debug:
 # LDFLAGS := -sASYNCIFY -sASSERTIONS=2 -sSTACK_SIZE=1000000 -sALLOW_MEMORY_GROWTH=1 -sMAXIMUM_MEMORY=1gb -sLEGACY_GL_EMULATION -sGL_UNSAFE_OPTS=0 -sMAX_WEBGL_VERSION=2
 # normal:
-LDFLAGS := -gsource-map -lidbfs.js -sASYNCIFY -sASSERTIONS=2 -sSTACK_SIZE=1000000 -sPTHREAD_POOL_SIZE='4' -sALLOW_MEMORY_GROWTH=1 -sMAXIMUM_MEMORY=1gb -sLEGACY_GL_EMULATION -sGL_UNSAFE_OPTS=0 -sMAX_WEBGL_VERSION=2
-
-
+LDFLAGS := -gsource-map -lidbfs.js -sASYNCIFY -sASSERTIONS=2 -sSTACK_SIZE=1000000 -sPTHREAD_POOL_SIZE='4' -sWASM_BIGINT -sALLOW_MEMORY_GROWTH=1 -sMAXIMUM_MEMORY=1gb -sLEGACY_GL_EMULATION -sGL_UNSAFE_OPTS=0 -sMAX_WEBGL_VERSION=2
+# -sASYNCIFY_IMPORTS=["emscripten_asm_const_int"] 
 # LDFLAGS := -sLEGACY_GL_EMULATION -sALLOW_MEMORY_GROWTH=1 -sMAXIMUM_MEMORY=1gb -sGL_UNSAFE_OPTS=0 -sMAX_WEBGL_VERSION=2
 
 # -sALLOW_MEMORY_GROWTH=1 -sMAXIMUM_MEMORY=1gb -sMAX_WEBGL_VERSION=2
@@ -1697,7 +1696,7 @@ distclean: clean clean-contrib clean-rltiles
 	$(RM) -r $(DOXYGEN_HTML_GEN)
 
 $(GAME): $(GAME_OBJS) $(CONTRIB_LIBS) dat/dlua/tags.lua
-	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(GAME_OBJS) -o $(GAME).html $(LIBS) --preload-file ../settings@/settings --preload-file dat --preload-file contrib/fonts@/usr/share/fonts/truetype/dejavu --preload-file ../docs@/docs --use-preload-plugins
+	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(GAME_OBJS) -o $(GAME).html $(LIBS) --preload-file ../settings@/settings --preload-file dat/des --preload-file dat/descript --preload-file dat/database --preload-file dat/defaults --preload-file dat/clua --preload-file dat/tiles --preload-file dat/dlua --preload-file contrib/fonts@/usr/share/fonts/truetype/dejavu --preload-file ../docs@/docs --use-preload-plugins
 
 util/monster/vault_monster_data.h: dat/des util/gather_mons
 	util/gather_mons -v > $@

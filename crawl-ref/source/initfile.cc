@@ -278,7 +278,7 @@ static map<string, game_type> _game_modes()
 // fully in lua code.
 const vector<GameOption*> game_options::build_options_list()
 {
-    const bool USING_WASM = 
+    const bool USING_WASM =
 #if defined(__EMSCRIPTEN__)
         true;
 #else

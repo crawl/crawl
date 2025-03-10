@@ -249,8 +249,10 @@ EM_ASYNC_JS(void, _init_indexeddb_file_system, (), {
         // This must complete before we proceed to load the game, otherwise
         // there's no chance to find the cached des and db files
         FS.syncfs(true, function (err) {
-            if (err)
+            if (err) {
+                console.error(err);
                 reject(err);
+            }
             else
                 resolve();
         });
@@ -260,6 +262,10 @@ EM_ASYNC_JS(void, _init_indexeddb_file_system, (), {
 
 int main(int argc, char *argv[])
 {
+#ifdef __EMSCRIPTEN__
+    _init_indexeddb_file_system();
+#endif
+
 #ifdef DGAMELAUNCH
     // avoid commas instead of dots, etc, on CDO
     setlocale(LC_CTYPE, "");
@@ -272,10 +278,6 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Webtiles require an UTF-8 locale.\n");
         exit(1);
     }
-#endif
-
-#ifdef __EMSCRIPTEN__
-    _init_indexeddb_file_system();
 #endif
 
 #ifdef DEBUG_GLOBALS
