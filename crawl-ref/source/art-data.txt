@@ -561,7 +561,7 @@ TILE:    urand_doom_knight
 TILE_EQ: doom_knight
 FB_BRAND: SPWPN_PAIN
 WILL:    1
-BOOL:    nospell, evil, drain
+BOOL:    silence, evil, drain
 DBRAND:  Doom: It inflicts additional damage proportional to its victim's
  maximum health.
 
@@ -970,7 +970,7 @@ COLOUR:  LIGHTGREEN
 TILE:    urand_maxwell
 TILE_EQ: maxwell
 WILL:    1
-BOOL:    nospell, notelep, elec, rCorr
+BOOL:    silence, notelep, elec, rCorr
 
 ENUM:    DRAGONMASK
 NAME:    mask of the Dragon

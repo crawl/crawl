@@ -655,7 +655,8 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, int prop_val,
         case ARTP_ANGRY:
         case ARTP_NOISE:
             return item_class == OBJ_WEAPONS && !is_range_weapon(item);
-        case ARTP_PREVENT_SPELLCASTING:
+        // could probably loosen artp conflict restrictions?
+        case ARTP_SILENCE:
             return non_swappable
                 && !item.is_type(OBJ_JEWELLERY, AMU_MANA_REGENERATION)
                 && !_any_artps_in_item_props({ ARTP_ENHANCE_CONJ,
@@ -814,7 +815,7 @@ static const artefact_prop_data artp_data[] =
 #endif
     { "*Noise", ARTP_VAL_POS, 30,    // ARTP_NOISE,
         nullptr, []() { return 2; }, 0, 0 },
-    { "-Cast", ARTP_VAL_BOOL, 25,   // ARTP_PREVENT_SPELLCASTING,
+    { "-Cast", ARTP_VAL_BOOL, 0,   // ARTP_PREVENT_SPELLCASTING,
         nullptr, []() { return 1; }, 0, 0 },
 #if TAG_MAJOR_VERSION == 34
     { "*Tele", ARTP_VAL_BOOL,  0,   // ARTP_CAUSE_TELEPORTATION,
@@ -913,6 +914,8 @@ static const artefact_prop_data artp_data[] =
         []() { return 1; }, nullptr, 0, 0 },
     { "Forge", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_FORGECRAFT,
         []() {return 1;}, nullptr, 0, 0},
+    { "*Silence", ARTP_VAL_BOOL, 25, // ARTP_SILENCE,
+        nullptr, []() { return 1; }, 0, 0 },
 };
 COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);
 // weights sum to 1000

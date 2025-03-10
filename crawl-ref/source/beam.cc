@@ -4180,9 +4180,7 @@ static const vector<pie_effect> pie_effects = {
             if (defender.is_monster())
             {
                 monster *mons = defender.as_monster();
-                simple_monster_message(*mons, " loses the ability to speak.");
-                mons->add_ench(mon_enchant(ENCH_MUTE, 0, beam.agent(),
-                            4 + random2(7) * BASELINE_DELAY));
+                silence_monster(*mons, beam.agent(), (4 + random2(7)) * BASELINE_DELAY);
             }
             else
             {
@@ -4191,11 +4189,8 @@ static const vector<pie_effect> pie_effects = {
                 else
                     mpr("An unnatural silence engulfs you.");
 
-                you.increase_duration(DUR_SILENCE, 4 + random2(7), 10);
-                invalidate_agrid(true);
+                silence_player(4 + random2(7));
 
-                if (you.beheld())
-                    you.update_beholders();
             }
         },
         10
