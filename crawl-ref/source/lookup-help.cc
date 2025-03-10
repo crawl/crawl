@@ -202,7 +202,7 @@ static monster_type _mon_by_name(string name)
     return _is_soh(name) ? _soh_type(name) : get_monster_by_name(name);
 }
 
-static bool _compare_mon_names(MenuEntry *entry_a, MenuEntry* entry_b)
+static bool _compare_mon_names(unique_ptr<MenuEntry>& entry_a, unique_ptr<MenuEntry>& entry_b)
 {
     monster_info* a = static_cast<monster_info* >(entry_a->data);
     monster_info* b = static_cast<monster_info* >(entry_b->data);
@@ -217,7 +217,7 @@ static bool _compare_mon_names(MenuEntry *entry_a, MenuEntry* entry_b)
 
 // Compare monsters by location-independent level, or by hitdice if
 // levels are equal, or by name if both level and hitdice are equal.
-static bool _compare_mon_toughness(MenuEntry *entry_a, MenuEntry* entry_b)
+static bool _compare_mon_toughness(unique_ptr<MenuEntry>& entry_a, unique_ptr<MenuEntry>& entry_b)
 {
     monster_info* a = static_cast<monster_info* >(entry_a->data);
     monster_info* b = static_cast<monster_info* >(entry_b->data);

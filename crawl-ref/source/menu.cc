@@ -1468,7 +1468,7 @@ void Menu::set_title(const string &t, bool first, bool indent)
 void Menu::add_entry(unique_ptr<MenuEntry> entry)
 {
     entry->tag = tag;
-    items.push_back(entry);
+    items.push_back(std::move(entry));
 }
 
 void Menu::reset()

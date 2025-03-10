@@ -755,6 +755,13 @@ struct menu_entry_comparator
         const InvEntry *ib = dynamic_cast<const InvEntry *>(b.get());
         return _compare_invmenu_items(ia, ib, &cond->cmp);
     }
+
+    bool operator () (const unique_ptr<InvEntry>& a, const unique_ptr<InvEntry>& b) const
+    {
+        const InvEntry *ia = a.get();
+        const InvEntry *ib = b.get();
+        return _compare_invmenu_items(ia, ib, &cond->cmp);
+    }
 };
 
 void init_item_sort_comparators(item_sort_comparators &list, const string &set)
