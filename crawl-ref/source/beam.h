@@ -19,6 +19,10 @@
 #include "spl-cast.h"
 #include "zap-type.h"
 
+using std::string;
+
+#define SJ_TELEPORTITIS_SOURCE "SJ_TELEPORTITIS_SOURCE"
+
 using std::vector;
 
 #define BEAM_STOP       1000        // all beams stopped by subtracting this
@@ -74,7 +78,7 @@ struct bolt
     coord_def   target = {0,0};           // intended target
     dice_def    damage = dice_def(0,0);
     int         ench_power = 0, hit = 0;
-    killer_type thrower = KILL_MISC;   // what kind of thing threw this?
+    killer_type thrower = KILL_NON_ACTOR;   // what kind of thing threw this?
     int         ex_size = 0;           // explosion radius (0==none)
 
     mid_t       source_id = MID_NOBODY;// The mid of the source (remains
@@ -99,7 +103,7 @@ struct bolt
     bool   is_explosion = false;
     bool   is_death_effect = false; // effect of e.g. ballistomycete spore
     bool   aimed_at_spot = false; // aimed at (x, y), should not cross
-    string aux_source = "";       // source of KILL_MISC beams
+    string aux_source = "";       // source of KILL_NON_ACTOR beams
 
     bool   affects_nothing = false; // should not hit monsters or features
 
@@ -157,7 +161,6 @@ struct bolt
     bool chose_ray = false;       // do we want a specific ray?
     bool beam_cancelled = false;  // stop_attack_prompt() returned true
     bool dont_stop_player = false; // player answered self target prompt with 'y'
-    bool dont_stop_trees = false; // player answered tree-burning prompt with 'y'
     bool overshoot_prompt = true; // warn when an ally is past the target
     bool friendly_past_target = false; // we fired and found something past the target
 
@@ -169,11 +172,12 @@ struct bolt
     mid_t reflector = MID_NOBODY; // latest thing to reflect beam
 
     bool use_target_as_pos = false; // pos() should return ::target()
-    bool auto_hit = false;
 
     ray_def     ray;             // shoot on this specific ray
 
-    int         tile_beam; // only used if USE_TILE is defined
+    // only used if USE_TILE is defined
+    tileidx_t tile_beam = 0;
+    tileidx_t tile_explode = 0;
 
 private:
     bool can_see_invis = false;
@@ -206,6 +210,7 @@ public:
 
     bool can_affect_actor(const actor *act) const;
     bool can_affect_wall(const coord_def& p, bool map_knowledge = false) const;
+    bool harmless_to_player() const;
     bool ignores_monster(const monster* mon) const;
     bool ignores_player() const;
     bool can_knockback(int dam = -1) const;
@@ -248,7 +253,6 @@ private:
     bool can_burn_trees() const;
     bool is_bouncy(dungeon_feature_type feat) const;
     bool stop_at_target() const;
-    bool harmless_to_player() const;
     bool is_reflectable(const actor &whom) const;
     bool found_player() const;
     bool need_regress() const;
@@ -302,7 +306,7 @@ public:
 private:
     void apply_bolt_paralysis(monster* mons);
     void apply_bolt_petrify(monster* mons);
-    void handle_petrify_chaining(coord_def centre);
+    void handle_enchant_chaining(coord_def centre);
     void monster_post_hit(monster* mon, int dmg);
     // for players
     void affect_player();
@@ -375,20 +379,19 @@ int zap_to_hit(zap_type z_type, int power, bool is_monster);
 dice_def zap_damage(zap_type z_type, int power, bool is_monster, bool random = true);
 colour_t zap_colour(zap_type z_type);
 
+dice_def combustion_breath_damage(int pow, bool allow_random = true);
+
 void zappy(zap_type z_type, int power, bool is_monster, bolt &pbolt);
 void bolt_parent_init(const bolt &parent, bolt &child);
 
 int explosion_noise(int rad);
-
-bool always_shoot_through_monster(const actor *agent, const monster &mon);
-bool shoot_through_monster(const bolt& beam, const monster* victim);
 
 int omnireflect_chance_denom(int SH);
 
 void glaciate_freeze(monster* mon, killer_type englaciator,
                              int kindex);
 
-void fill_petrify_chain_targets(const bolt& beam, coord_def centre,
-                                vector<coord_def> &targs, bool random);
+void fill_chain_targets(const bolt& beam, coord_def centre,
+                        vector<coord_def> &targs, bool random);
 
 bolt setup_targeting_beam(const monster &mons);

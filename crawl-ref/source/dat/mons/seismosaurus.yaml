@@ -1,0 +1,17 @@
+name: "seismosaurus"
+glyph: {char: "l", colour: lightcyan}
+flags: [cold_blood, no_poly_to, no_zombie]
+genus: giant_lizard
+will: 80
+attacks:
+ - {type: tail_slap, damage: 31}
+hd: 11
+hp_10x: 810
+ac: 13
+ev: 5
+has_corpse: true
+spells: seismosaurus
+shout: roar
+intelligence: animal
+size: large
+shape: quadruped

@@ -59,8 +59,8 @@ fake_mutations:
   - long: You can heal yourself by infusing magical energy.
     short: heal wounds
 recommended_weapons:
-  - SK_MACES_FLAILS
-  - SK_AXES
-  - SK_LONG_BLADES
+  - maces and flails
+  - axes
+  - long blades
 
 orc_name: Deep Dworc

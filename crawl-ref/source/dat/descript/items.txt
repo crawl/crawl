@@ -167,6 +167,19 @@ book of conjurations
 A book containing an introduction to the destructive magical arts of
 Conjurations.
 %%%%
+book of contraptions
+
+A book of schematics and spells to construct a variety of elaborate mechanisms.
+The obvious safety hazards involved with many of them are relegated to a single
+footnote on page 157, but to an enterprising adventurer, that might be
+considered an upside.
+%%%%
+book of cryoformation
+
+An illustrated guide to shaping ice into both practical and artistic forms. An
+entire chapter is devoted to tables of mineral impurities and their effect on
+colour and melting point.
+%%%%
 book of dangerous friends
 
 A book describing the creation and use of magical entities best kept at arm's
@@ -200,6 +213,14 @@ book of dreams
 The somniloquent utterings of a famed mystic, using uniquely bizarre imagery
 and cryptic digressions to describe spells drawn from the mystic's visions.
 %%%%
+book of duality
+
+An eclectic spellbook, mingled with rambling philosophical anecdotes about the
+twin nature of every action. Even by the end, it remains unclear whether the
+author considered there to be some spiritual purity to spells which incorporate
+offense and defense into a single motion, or if they just lived a life extremely
+pressed for time.
+%%%%
 book of fire
 
 A book containing advanced spells in the elemental school of Fire, stolen from
@@ -223,10 +244,22 @@ book of frost
 A book of magic spells, often used as an introduction to the elemental magics
 of Ice. Its pages feel unusually brittle, as if they'd crumble at a touch.
 %%%%
+book of the fortress
+
+A book of spells that purports to make their caster as resilient as a stone
+fortress. Its cover is fashioned from thick, magically-reinforced steel, making
+the book unreasonably heavy for no obvious benefit.
+%%%%
 book of geomancy
 
 A book containing basic spells involving the element of Earth. Readers are
 recommended to wear a pair of gardening gloves.
+%%%%
+book of the grave
+
+A heavy tome whose vellum smells faintly of dirt and decay. Those who touch it
+frequently report a palpable sense of unease, as if something unwholesome were
+buried between its very pages.
 %%%%
 book of hexes
 
@@ -246,6 +279,18 @@ rust stains, or..?
 book of lightning
 
 A book that fairly crackles with arcane power.
+%%%%
+book of maladies
+
+A concise catalogue of afflictions, both magical and mundane, often described
+with a disquieting degree of cheerfulness. Most of them operate on timescales
+too slow to be useful to an adventurer, but a few sound remarkably efficacious.
+%%%%
+book of metalworking
+
+A tome of advanced Forgecraft magic. Its pages are regularly inlaid with
+technical figures made from elaborate metal filigree, perhaps as an illustration
+of the author's own skill with the art described herein.
 %%%%
 book of minor magic
 
@@ -303,7 +348,7 @@ page, clearly reserving this book for only the tackiest of wizards.
 %%%%
 book of spontaneous combustion
 
-A heavy tome whose desiccated pages smell faintly of sulfer. The ink with which
+A heavy tome whose desiccated pages smell faintly of sulphur. The ink with which
 it was written is wildly flammable and care must be taken even opening it, but
 the power of the spells described therein is undeniable.
 %%%%
@@ -345,7 +390,7 @@ dwarves' civilisation into ruin.
 book of the hunter
 
 A mundane book on hunting. Someone has gone through and covered the book in
-corrections and scathing criticisms, crossing out entire sections in favor of
+corrections and scathing criticisms, crossing out entire sections in favour of
 spells that accomplish the same task.
 %%%%
 book of the moon
@@ -360,7 +405,6 @@ book of the senses
 A scholarly work, describing the senses used by living creatures to perceive the
 world around them. A handful of spells are included to demonstrate the principles
 being described.
-%%%%
 %%%%
 book of transmutation
 
@@ -462,6 +506,21 @@ A heavy piece of wood. While clubs are rather primitive weapons, bashing
 someone's skull in with one remains a very popular and effective means of
 dispute resolution.
 %%%%
+codex of conductivity
+
+An exhaustive collection of research notes on the effects of electricity upon
+everything from sawdust to snozzcumbers, interspersed with spell formulae and
+usable technical schematics. The author's handwriting deteriorates shockingly in
+the middle of the chapter on spriggan electrophysiology, leading to much
+speculation about both their identity and their sense of self-preservation.
+%%%%
+compendium of siegecraft
+
+An analytical treatise on siege warfare, written in a clear and readable manner.
+A majority of its chapters are concerned with logistics and the maintenance of
+supply lines, but several detail spells useful for breaching fortifications
+(and also other, softer, things).
+%%%%
 condenser vane
 
 A magical device that condenses ambient energy into various destructive clouds.
@@ -530,9 +589,9 @@ double sword
 
 A fearsome weapon with a forked, razor-sharp blade.
 %%%%
-dragon-blood talisman
+dragon-coil talisman
 
-A vial of pure dragon-blood, crystallized over many years. {{
+An intricate carving, inlaid with dragon tooth and scale. {{
     local desc = "Transforms the user into a mighty"
 
     if you.race():find("Draconian") then
@@ -580,8 +639,7 @@ you ever see this message.
 eudemon blade
 
 A sacred blade from the forges of Heaven, inhabited by a good spirit. It is a
-favoured weapon of the Shining One's servants, and cannot be wielded by the
-forces of evil.
+favoured weapon of the Shining One's servants.
 %%%%
 eveningstar
 
@@ -626,12 +684,23 @@ flux talisman
 
 A canister holding an ominously glowing substance. Its user becomes unstable at
 a fundamental level, inflicting dangerous levels of magical contamination on
-foes with each touch. Sufficient contamination causes a highly localized meltdown,
+foes with each touch. Sufficient contamination causes a highly localised meltdown,
 dealing enormous damage which increases with the user's Shapeshifting skill.
 
 However, this instability makes the user unable to use weapons, shields or body
 armour. They also glow, reducing stealth and preventing invisibility, and their
-melee damage is reduced, as their limbs sometimes destabilize mid-swing.
+melee damage is reduced, as their limbs sometimes destabilise mid-swing.
+%%%%
+gell's gravitambourine
+
+A copper and tungsten tambourine that vibrates excitedly in your hands, as if
+eager to be used.
+
+Just as music brings people together, shaking it with the proper rhythm will
+draw a large group of monsters into a narrow space and hold any hostile ones in
+place for a short time with inescapable waves of crushing gravity.
+
+The area of effect and duration increases with Evocations skill.
 %%%%
 gem
 
@@ -659,10 +728,10 @@ glaive
 
 A pole with a large, heavy blade on one end.
 %%%%
-gold dragon scales
+golden dragon scales
 
-The scales of a gold dragon. It is much heavier than most dragon scale armours,
-and grants its wearer resistance to poison, fire and cold.
+The scales of a golden dragon. It is much heavier than most dragon scale
+armours, and grants its wearer resistance to poison, fire and cold.
 %%%%
 gold piece
 
@@ -723,6 +792,11 @@ A machine that fires metal slugs via applied thaumaturgy. Some enchant their
 projectiles to fall forward instead of down, others bewitch the slugs with a
 fatal attraction to their targets. All are slow, loud, and blast out thick
 smoke with each shot.
+%%%%
+handbook of applied construction
+
+A practical introduction to Forgecraft, covering basic principles and their
+common applications.
 %%%%
 hat
 
@@ -869,6 +943,14 @@ this gem. The people of the Swamp, who first carried this stone, struggled
 against insurmountable odds. They failed, but there is much to admire even in
 the ruin of their efforts.
 %%%%
+my sojourn through swampland
+
+While purporting itself to be the personal account of a famous naturalist, it
+becomes clear upon reading that this book was compiled from multiple unrelated
+sources, including notes from a stagehand of a travelling magical circus. The
+travelogue may be fictitious, but but some of the spell diagrams carefully
+transcribed in the margins seem quite real.
+%%%%
 necronomicon
 
 An extremely rare book, powerful and sinister. Many foolhardy magicians have
@@ -877,7 +959,7 @@ forces they could not hope to control.
 %%%%
 orb
 
-A sphere of crystal, carried in place of a shield. Magic scintilliates within
+A sphere of crystal, carried in place of a shield. Magic scintillates within
 its interior.
 %%%%
 orb of zot
@@ -900,6 +982,10 @@ pair of gloves
 
 A pair of gloves. They are worn on the hands, and cover all but the largest
 claws.
+%%%%
+partisan
+
+A long polearm with sharp protrusions on either side of the spearhead.
 %%%%
 pearl dragon scales
 
@@ -956,10 +1042,6 @@ potion of curing
 A potion which restores a small amount of health, and cures poison and
 confusion.
 %%%%
-potion of degeneration
-
-A noxious concoction which reduces strength, intelligence and dexterity.
-%%%%
 potion of enlightenment
 
 A potion which uplifts both the body and mind of its drinkers, lifting them
@@ -997,6 +1079,11 @@ A valuable potion which grants an infusion of magical energy.
 potion of might
 
 A potion which greatly increases the power of the drinker's melee attacks.
+%%%%
+potion of moonshine
+
+A potent alcohol, distilled in some dubious corner of the dungeon. Drinking it
+reduces the imbiber's accuracy, evasion, and spellcasting success for a while.
 %%%%
 potion of mutation
 
@@ -1151,6 +1238,15 @@ sacred scourge
 A blessed weapon, woven by the saints in Heaven and hated by the unholy. It is
 a favoured weapon of the Shining One's servants.
 %%%%
+sanguine talisman
+
+A vial of roiling blood that pulses with the beat of an unseen heart. Transforms
+the user into a fearsome vampire - a creature that straddles the border between
+life and undeath. They can drink the lifeblood of the living to heal themselves,
+and even turn those they slay stealthily into vampiric thralls, but do not heal
+in the presence of monsters. At great effort, they may scatter into a swarm of
+bats - either to flee or to assail their enemies.
+%%%%
 sanguine gem
 
 [[gem]]
@@ -1289,7 +1385,8 @@ scroll of torment
 
 A scroll that calls on the powers of darkness to inflict great pain on any
 nearby creature — including the reader! This halves the resilience of all
-living creatures, although it is never directly fatal.
+living creatures and cuts down all holy creature resilence by about a third,
+although it is never directly fatal.
 %%%%
 scroll of vulnerability
 
@@ -1327,6 +1424,14 @@ archmage who first built the Elven Halls. Countless generations of elves
 flocked to learn from her, but her foremost pursuit was always the perfection
 of this piece of art.
 %%%%
+shop voucher
+
+A coupon good for one item of any price from any store in the dungeon, to be
+used automatically when you would make a purchase that exceeds your funds. How
+generous! No refunds. One coupon per purchase per customer. Offer limited by
+availability. Void if defaced or otherwise altered. Valid only within the
+dungeon of Zot and its subsidiary branches. Additional purchase not required.
+%%%%
 shortbow
 
 A curved piece of wood and string, for shooting arrows.
@@ -1352,28 +1457,26 @@ staff of air
 
 A staff that increases the power of air spells cast by its wielder, and
 insulates them from electricity. If the wielder is skilled in Evocations and
-Air Magic, they can shock those struck by it, dealing electricity damage which
-bypasses armour.
+Air Magic, they can shock those struck by it, dealing electrical damage which
+bypasses half of defenders' armour.
 %%%%
 staff of alchemy
 
 A staff that increases the power of alchemy spells cast by its wielder, and
 protects them from the effects of poison. If the wielder is skilled in
-Evocations and Alchemy, they can envenom those struck by it, dealing poison
-damage which bypasses armour.
+Evocations and Alchemy, they can envenom those struck by it.
 %%%%
 staff of cold
 
 A staff that increases the power of ice spells cast by its wielder, and
 protects them from the effects of cold. If the wielder is skilled in Evocations
-and Ice Magic, they can freeze those struck by it, dealing cold damage which
-bypasses armour.
+and Ice Magic, they can freeze those struck by it.
 %%%%
 staff of conjuration
 
 A staff that increases the power of conjurations cast by its wielder. If the
 wielder is skilled in Evocations and Conjurations, they can blast those they
-strike with pure energy, dealing irresistible damage.
+strike with pure energy.
 %%%%
 staff of death
 
@@ -1393,8 +1496,7 @@ staff of fire
 
 A staff that increases the power of fire spells cast by its wielder, and
 protects them from the effects of fire. If the wielder is skilled in Evocations
-and Fire Magic, they can burn those struck by it, dealing fire damage which
-bypasses armour.
+and Fire Magic, they can burn those struck by it.
 %%%%
 starry gem
 
@@ -1443,7 +1545,7 @@ The scales of a swamp dragon. It confers resistance to poison on its wearer.
 talisman of death
 
 A grey-black vessel, infused with dark power through a sickening ritual.
-Transforms the user into an undying offense against life itself.
+Transforms the user into an undying offence against life itself.
 
 Foes struck by user's melee weapons or hands are weakened, slowed, and drained.
 The user can also heal themself by tormenting living foes nearby; Shapeshifting
@@ -1480,6 +1582,12 @@ always at risk of being hit. However, armour is extremely effective at
 repelling the lightweight fragments of rock from a tremorstone's explosion, so
 a well-armoured wielder has little to fear. Evocations skill increases the
 number of explosions.
+%%%%
+treatise on traps
+
+An analytical volume discussing methods and materials with which to construct a
+dizzying array of traps - from those intended to safeguard a pantry from ants to
+ones which would please even the most sadistic dungeon architect.
 %%%%
 trident
 
@@ -1550,7 +1658,7 @@ of victims' resistance to cold.
 wand of light
 
 A magical device which fires a ray of searing light, injuring and blinding
-those struck. Only living, demonic and angelic monsters can be blinded. and
+those struck. Only living, demonic and angelic monsters can be blinded, and
 tougher monsters will recover their vision more quickly.
 %%%%
 wand of mindburst
@@ -1579,8 +1687,8 @@ wand of roots
 
 A magical device which fires a magical seed, entangling its target and adjacent
 foes in quick-growing tree roots. Those entangled will be immobilized and take
-increasing damage over time until they escape or the roots wither away. The roots
-will only sprout from solid ground.
+damage over time until they escape or the roots wither away. The roots will only
+sprout from solid ground.
 %%%%
 wand of warping
 

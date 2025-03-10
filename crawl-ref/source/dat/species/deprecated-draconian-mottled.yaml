@@ -7,7 +7,8 @@ adjective: Draconian
 genus: Draconian
 difficulty: False
 species_flags:
-  - SPF_DRACONIAN
+  - draconian
+  - no_hair
 aptitudes:
   xp: -1
   hp: 1

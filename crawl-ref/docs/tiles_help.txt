@@ -113,6 +113,18 @@ More detailed screens on specific aspects of your characters can be
 accessed by clicking on the corresponding tiles in the command panel.
 
 
+Character appearance
+--------------------
+
+You can change your character's appearance with the Doll Editor, accessed with
+the '-' command. Use 'm' to switch between modes: Equip, where your appearance
+dynamically updates based on the items you equip; Default, a sprite based on
+your character’s race and background; and Custom, which allows you to fully
+customize each part of your character's look. Use the number keys to switch
+between custom doll slots and the arrow keys to modify the different parts of
+each custom sprite. Save your changes and selection with 'Ctrl-S'.
+
+
 
 If you are experiencing significant slowdown and lags...
 --------------------------------------------------------

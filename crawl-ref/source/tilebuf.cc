@@ -239,7 +239,7 @@ void SubmergedTileBuffer::add(tileidx_t idx, int x, int y, int z, bool submerged
                               bool ghost, int ox, int oy, int ymax)
 {
     // Arbitrary alpha values for the top and bottom.
-    int alpha_top = ghost ? 100 : 255;
+    int alpha_top = ghost ? 140 : 255;
     int alpha_bottom = ghost ? 0 : 40;
 
     if (submerged)

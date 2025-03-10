@@ -134,6 +134,10 @@ glaive3
 bardiche1 WPN_BARDICHE
 bardiche2
 bardiche3
+partisan1 WPN_PARTISAN
+partisan2
+partisan3
+
 demon_trident WPN_DEMON_TRIDENT
 demon_trident2
 demon_trident3
@@ -237,6 +241,12 @@ i-frenzy BRAND_FRENZY
 i-sleep BRAND_SLEEP
 # end TAG_MAJOR_VERSION
 i-blinding BRAND_BLINDING
+i-acid BRAND_ACID
+i-foul_flame BRAND_FOUL_FLAME
+
+
+i-chaotic MODIFIER_CHAOTIC
+
 %rim 1
 %sdir item/weapon/ranged
 
@@ -353,6 +363,17 @@ rock MI_LARGE_ROCK
 # flying rock
 effect/rock0 MI_LARGE_ROCK0
 
+%rim 0
+# slugs
+effect/slug0 MI_SLUG0
+effect/slug1 MI_SLUG1
+effect/slug2 MI_SLUG2
+effect/slug3 MI_SLUG3
+effect/slug4 MI_SLUG4
+effect/slug5 MI_SLUG5
+effect/slug6 MI_SLUG6
+effect/slug7 MI_SLUG7
+
 ######OBJ_ARMOUR
 %sdir item/armour
 robe1 ARM_ROBE ARM_ROBE_FIRST
@@ -405,8 +426,8 @@ storm_dragon_armour ARM_STORM_DRAGON_ARMOUR
 storm_dragon_armour_art
 shadow_dragon_armour ARM_SHADOW_DRAGON_ARMOUR
 shadow_dragon_armour_art
-gold_dragon_armour ARM_GOLD_DRAGON_ARMOUR
-gold_dragon_armour_art
+golden_dragon_armour ARM_GOLDEN_DRAGON_ARMOUR
+golden_dragon_armour_art
 swamp_dragon_armour ARM_SWAMP_DRAGON_ARMOUR
 swamp_dragon_armour_art
 pearl_dragon_armour ARM_PEARL_DRAGON_ARMOUR
@@ -469,6 +490,7 @@ elven_leather_helm THELM_CAP
 cap_jester THELM_CAP_JESTER
 hat_explorer THELM_HAT_EXPLORER
 hat_explorer2 THELM_HAT_EXPLORER2
+hat_wiglaf THELM_HAT_WIGLAF
 santa_hat THELM_HAT_SANTA
 
 %rim 0
@@ -815,8 +837,8 @@ i-int RING_INTELLIGENCE
 i-wizardry RING_WIZARDRY
 i-magical-power RING_MAGICAL_POWER
 i-flight RING_FLIGHT
-i-life-protection RING_LIFE_PROTECTION
-i-r-magic RING_WILLPOWER
+i-positive-energy RING_POSITIVE_ENERGY
+i-willpower RING_WILLPOWER
 i-fire RING_FIRE
 # start TAG_MAJOR_VERSION == 34
 i-ice RING_ICE
@@ -841,7 +863,7 @@ citrine
 bone
 platinum
 jade
-flourescent
+fluorescent
 amethyst
 cameo
 pearl
@@ -944,7 +966,7 @@ i-invisibility POT_INVISIBILITY
 # start TAG_MAJOR_VERSION == 34
 i-porridge POT_PORRIDGE
 # end TAG_MAJOR_VERSION
-i-degeneration POT_DEGENERATION
+i-confusion POT_MOONSHINE
 # start TAG_MAJOR_VERSION == 34
 i-decay POT_REMOVEME5
 i-confusion POT_REMOVE_ME
@@ -1140,6 +1162,7 @@ misc_phial_inert MISC_PHIAL_OF_FLOODS_INERT
 misc_lightning_rod MISC_LIGHTNING_ROD
 misc_lightning_rod_inert MISC_LIGHTNING_ROD_INERT
 misc_tremorstones MISC_TIN_OF_TREMORSTONES
+misc_tremorstones_inert MISC_TIN_OF_TREMORSTONES_INERT
 misc_vane MISC_CONDENSER_VANE
 misc_vane_inert MISC_CONDENSER_VANE_INERT
 %rim 1
@@ -1147,12 +1170,16 @@ misc_vane_inert MISC_CONDENSER_VANE_INERT
 misc_lantern MISC_LANTERN_OF_SHADOWS
 # end TAG_MAJOR_VERSION
 misc_horn MISC_HORN_OF_GERYON
-misc_box MISC_BOX_OF_BEASTS
+misc_box_of_beasts MISC_BOX_OF_BEASTS
+misc_box_of_beasts_inert MISC_BOX_OF_BEASTS_INERT
 %rim 0
 misc_sack MISC_SACK_OF_SPIDERS
 misc_phantom_mirror MISC_PHANTOM_MIRROR
 misc_zigfig MISC_ZIGGURAT
 misc_quad MISC_QUAD_DAMAGE
+misc_tambourine MISC_TAMBOURINE
+misc_tambourine_inert MISC_TAMBOURINE_INERT
+misc_voucher MISC_SHOP_VOUCHER
 %sdir item/misc/runes
 generic MISC_RUNE_OF_ZOT
 rune_tartarus RUNE_TARTARUS
@@ -1225,6 +1252,7 @@ statue TALISMAN_STATUE
 dragon TALISMAN_DRAGON
 storm TALISMAN_STORM
 death TALISMAN_DEATH
+vampire TALISMAN_VAMPIRE
 
 %sdir item/misc/uncollected_runes
 generic MISC_UNCOLLECTED_RUNE_OF_ZOT

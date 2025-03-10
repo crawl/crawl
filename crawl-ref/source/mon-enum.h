@@ -67,11 +67,11 @@ enum attack_flavour
     AF_CONFUSE,
 #if TAG_MAJOR_VERSION == 34
     AF_DISEASE,
-#endif
     AF_DRAIN_STR,
     AF_DRAIN_INT,
     AF_DRAIN_DEX,
     AF_DRAIN_STAT,
+#endif
     AF_DRAIN,
     AF_ELEC,
     AF_FIRE,
@@ -149,10 +149,16 @@ enum attack_flavour
     AF_FLANK,
     AF_DRAG,
     AF_FOUL_FLAME,
+    AF_HELL_HUNT,
+    AF_SWARM,
+    AF_ALEMBIC,
+    AF_BOMBLET,
+    AF_AIRSTRIKE,
+    AF_TRICKSTER,
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or
-// as the fourth parameter of mgen_data's constructor.
+// as the second parameter of mgen_data::set_summoned().
 //
 // Negative values since spells are non-negative.
 enum mon_summon_type
@@ -170,6 +176,10 @@ enum mon_summon_type
     MON_SUMM_LANTERN, // Lantern of shadows
 #endif
     MON_SUMM_BUTTERFLIES, // Scroll of butterflies
+    MON_SUMM_YRED_REAP, // Yred's reaping passive
+    MON_SUMM_WPN_REAP,  // Reaping brand reaping
+    MON_SUMM_CACOPHONY, // Poltergeist ability
+    MON_SUMM_THRALL,    // Vampiric thralls
 };
 
 #include "mon-flags.h"
@@ -220,7 +230,7 @@ enum mon_resist_flags
     MR_RES_COLD          = 1 << 9,
     MR_RES_NEG           = 1 << 12,
     MR_RES_MIASMA        = 1 << 15,
-    MR_RES_ACID          = 1 << 18,
+    MR_RES_CORR          = 1 << 18,
 
     MR_LAST_MULTI, // must be >= any multi, < any boolean, exact value doesn't matter
 
@@ -248,7 +258,7 @@ const mon_resist_flags ALL_MON_RESISTS[] = {
     MR_RES_FIRE,
     MR_RES_COLD,
     MR_RES_NEG,
-    MR_RES_ACID,
+    MR_RES_CORR,
     MR_RES_MIASMA,
     MR_RES_TORMENT,
     MR_RES_PETRIFY,

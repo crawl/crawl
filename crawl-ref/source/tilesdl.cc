@@ -71,7 +71,7 @@ static int _screen_sizes[4][8] =
 #else
 // Extra values for viewport and map scale
 // width, height, map, crt, stat, msg, tip, lbl, view scale, map scale
-static int _screen_sizes[6][10] =
+static int _screen_sizes[5][10] =
 {
     {800, 800, 1, 15, 17, 17, 15, 15, 150, 100},
     {720, 720, 1, 13, 15, 15, 13, 13, 130, 80},

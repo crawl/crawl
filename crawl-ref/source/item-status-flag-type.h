@@ -4,15 +4,15 @@
 
 enum item_status_flag_type  // per item flags: ie. ident status, cursed status
 {
-                             //0x00000001,  // was: ISFLAG_KNOW_CURSE
-    ISFLAG_KNOW_TYPE         = 0x00000002,  // artefact name, sub/special types
-    ISFLAG_KNOW_PLUSES       = 0x00000004,  // to hit/to dam/to AC
-    ISFLAG_KNOW_PROPERTIES   = 0x00000008,  // know special artefact properties
-    ISFLAG_IDENT_MASK        = 0x0000000F,  // mask of all id related flags
+    ISFLAG_IDENTIFIED        = 0x00000001,  // Item is fully identified
+                             //0x00000002,  // was: ISFLAG_KNOW_TYPE
+                             //0x00000004,  // was: ISFLAG_KNOW_PLUSES
+                             //0x00000008,  // was: ISFLAG_KNOW_PROPERTIES
+                             //0x0000000F,  // was: ISFLAG_IDENT_MASK
 
     ISFLAG_CURSED            = 0x00000100,  // cursed
     ISFLAG_HANDLED           = 0x00000200,  // player has handled this item
-                             //0x00000400,  // was: ISFLAG_SEEN_CURSED
+    ISFLAG_MARKED_FOR_MENU   = 0x00000400,  // marked for UI swap menu
                              //0x00000800,  // was: ISFLAG_TRIED
 
     ISFLAG_RANDART           = 0x00001000,  // special value is seed
@@ -31,7 +31,8 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
     ISFLAG_UNOBTAINABLE      = 0x00080000,  // vault on display
 
     ISFLAG_MIMIC             = 0x00100000,  // mimic
-                             //0x00200000,  // was ISFLAG_NO_MIMIC
+
+    ISFLAG_CHAOTIC           = 0x00200000,  // is a chaotic artefact (Xom-only)
 
     ISFLAG_NO_PICKUP         = 0x00400000,  // Monsters won't pick this up
 
@@ -46,7 +47,7 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
 
     ISFLAG_SEEN              = 0x20000000,  // has it been seen
     ISFLAG_SUMMONED          = 0x40000000,  // Item generated on a summon
-#if TAG_MAJOR_VERSION == 34
-    ISFLAG_UNUSED4           = 0x80000000,  // was ISFLAG_DROPPED_BY_ALLY
-#endif
+
+    ISFLAG_REPLICA           = 0x80000000,  // Cosmetic descriptor for Paragon items
+
 };

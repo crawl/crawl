@@ -78,7 +78,7 @@ void fiery_armour()
         mpr("Your cloak of flame flares fiercely!");
     else if (you.duration[DUR_ICY_ARMOUR] || player_icemail_armour_class())
     {
-        mprf("A sizzling cloak of flame settles atop your icy armour.");
+        mpr("A sizzling cloak of flame settles atop your icy armour.");
         // TODO: add corresponding inverse message for casting ozo's etc
         // while DUR_FIERY_ARMOUR is active (maybe..?)
     }
@@ -187,11 +187,11 @@ void do_fugue_wail(const coord_def pos)
     vector <monster*> affected;
     for (adjacent_iterator ai(pos); ai; ++ai)
     {
-        if (monster_at(*ai) && !mons_is_firewood(*monster_at(*ai))
-            && !monster_at(*ai)->wont_attack()
-            && monster_at(*ai)->res_negative_energy() < 3)
+        monster* mon = monster_at(*ai);
+        if (mon && !mon->is_firewood() && !mon->wont_attack()
+            && mon->res_negative_energy() < 3)
         {
-            affected.push_back(monster_at(*ai));
+            affected.push_back(mon);
         }
     }
 

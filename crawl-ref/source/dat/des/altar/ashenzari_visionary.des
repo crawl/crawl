@@ -75,23 +75,19 @@ lua_marker('d', props_marker {revealing_wall=1})
 KFEAT: d = stone_wall
 KFEAT: _ = altar_ashenzari
 MAP
-ccccc.@.ccccc
-ceeed...dfffc
-ceeed...dfffc
-ceeed...dfffc
-ceeed...dfffc
-ceeed:::dfffc
-ceeed:::dfffc
-ceeed:::dfffc
-ceeed:_:dfffc
-ceeed:::dfffc
-ceeed:::dfffc
-ceeed:::dfffc
-ceeed...dfffc
-ceeed...dfffc
-ceeed...dfffc
-ceeed...dfffc
-ccccc.@.ccccc
+ccccccccccccccccc
+ceeeeeeeeeeeeeeec
+ceeeeeeeeeeeeeeec
+ceeeeeeeeeeeeeeec
+cdddddddddddddddc
+.....:::::::.....
+@....:::_:::....@
+.....:::::::.....
+cdddddddddddddddc
+cfffffffffffffffc
+cfffffffffffffffc
+cfffffffffffffffc
+ccccccccccccccccc
 ENDMAP
 
 NAME:   grunt_ashenzari_visionary_swamp
@@ -105,21 +101,9 @@ MONS:   place:Swamp:1
 SUBST:  t = ttw, w = wwW..., . = 1.
 FTILE:  1. = floor_swamp
 MAP
-twt
-ttw
-tHt
-wtt
-twt
-ttw
-twt
-wHt
-twt
-ttw
-twt
-wtt
-tHt
-ttw
-twt
+twtttwtttwtttwt
+wtHtwtwHwtwtHtw
+tttwtttwtttwttt
 ENDMAP
 
 NAME:   grunt_ashenzari_visionary_lava
@@ -130,48 +114,25 @@ MARKER: H = lua:fog_machine { cloud_type = "black smoke", pow_min = 3, \
                               pow_max = 10, delay = 10, start_clouds = 1, \
                               size_min = 1, size_max = 3, walk_dist = 2 }
 MAP
-lll
-lll
-lHl
-lll
-lll
-lll
-lll
-lHl
-lll
-lll
-lll
-lll
-lHl
-lll
-lll
+lllllllllllllll
+llHllllHllllHll
+lllllllllllllll
 ENDMAP
 
 NAME:   grunt_ashenzari_visionary_spider
 TAGS:   grunt_ashenzari_visionary_spider no_tele_into unrand
 TAGS:   no_monster_gen no_item_gen no_trap_gen
 MONS:   place:Spider:1
-SUBST:  x = xx., . = W....., . = 11.
+KFEAT:  ^ = web trap
+SUBST:  x = xx^, . = W....., . = 11.
 COLOUR: 1. = brown
 COLOUR: x = yellow
 FTILE:  1. = floor_spider
 RTILE:  x = wall_spider
 MAP
-x.x
-xx.
-x.x
-.xx
-x.x
-xx.
-x.x
-.xx
-x.x
-xx.
-x.x
-.xx
-x.x
-xx.
-x.x
+x.xxx^xxx^xxx.x
+.x.x.x.x.x.x.x.
+xxx.xxx^xxx.xxx
 ENDMAP
 
 NAME:   grunt_ashenzari_visionary_snake
@@ -184,21 +145,9 @@ COLOUR: x = yellow
 FTILE:  1. = floor_mosaic
 RTILE:  x = wall_snake
 MAP
-x.x
-xx.
-x.x
-.xx
-x.x
-xx.
-x.x
-.xx
-x.x
-xx.
-x.x
-.xx
-x.x
-xx.
-x.x
+x.xxx.xxx.xxx.x
+.x.x.x.l.x.x.x.
+xxx.xxx.xxx.xxx
 ENDMAP
 
 NAME:   grunt_ashenzari_visionary_shoals
@@ -210,19 +159,7 @@ SUBST:  w = ww., w = 1ww
 COLOUR: . = brown
 FTILE:  . = floor_sand
 MAP
-www
-www
-w.w
-www
-www
-www
-www
-w.w
-www
-www
-www
-www
-w.w
-www
-www
+wwwwwwwwwwwwwww
+ww.wwww.wwww.ww
+wwwwwwwwwwwwwww
 ENDMAP

@@ -71,7 +71,7 @@ defaults = {
     'lobby_update_rate': 2,
     'recording_term_size': (80, 24),
     'max_connections': 100,
-    'connection_timeout': 600,
+    'connection_timeout': 10 * 60,
     'max_idle_time': 5 * 60 * 60,
     'max_lobby_idle_time': 3 * 60 * 60,
     'use_gzip': True,
@@ -101,6 +101,7 @@ defaults = {
     'wizard_accounts': False,
     'allow_anon_spectate': True,
     'enable_ttyrecs': True,
+    'max_chat_length': 1000,
 }
 
 
@@ -188,10 +189,8 @@ def reload():
     global source_file, source_module
     try:
         logging.warning("Reloading config from %s", source_file)
-        try:
-            from importlib import reload
-        except:
-            from imp import reload
+        from importlib import reload
+
         # major caveat: this will not reset the namespace before doing the
         # reload. So to return something to the default value requires an
         # explicit setting. XX is there anything better to do about this?
@@ -559,6 +558,9 @@ def validate():
         check_keys_any(['bind_pairs', ['bind_address', 'bind_port']], True)
     if has_key('ssl_options') and get('ssl_options'):
         check_keys_any(['ssl_bind_pairs', ['ssl_address', 'ssl_port']], True)
+    if has_key('bind_nonsecure') and get('bind_nonsecure') == "redirect":
+        if not check_keys_any(['ssl_options']):
+            raise ValueError("bind_nonsecure='redirect' requires ssl ports to redirect to")
 
     required = ['static_path', 'template_path', 'server_id',
         'dgl_status_file', 'init_player_program',]

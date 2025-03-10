@@ -28,7 +28,7 @@ bool is_player_spell(spell_type which_spell);
 bool is_player_book_spell(spell_type which_spell);
 bool is_wand_spell(spell_type spell);
 
-bool book_has_title(const item_def &book, bool ident = false);
+bool book_has_title(const item_def &book);
 
 bool can_learn_spell(bool silent = false);
 bool player_has_available_spells();
@@ -48,5 +48,7 @@ bool has_spells_to_memorise(bool silent = true);
 vector<spell_type> get_sorted_spell_list(bool silent = false,
                                          bool memorise_only = true);
 spret divine_exegesis(bool fail);
+
+spret imbue_servitor();
 
 book_type choose_book_type(int item_level);

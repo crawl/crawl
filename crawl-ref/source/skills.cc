@@ -26,7 +26,6 @@
 #include "item-prop.h"
 #include "libutil.h"
 #include "message.h"
-#include "misc.h" // now_is_morning
 #include "notes.h"
 #include "output.h"
 #include "random.h"
@@ -105,9 +104,7 @@ static const char *skill_titles[NUM_SKILLS][7] =
     {"Summonings",     "Caller",        "Summoner",        "Convoker",        "Worldbinder",    "Planerender",  "Summ"},
     {"Necromancy",     "Grave Robber",  "Reanimator",      "Necromancer",     "Thanatomancer",  "@Genus_Short@ of Death", "Necr"},
     {"Translocations", "Grasshopper",   "Placeless @Genus@", "Blinker",       "Portalist",      "Plane @Walker@", "Tloc"},
-#if TAG_MAJOR_VERSION == 34
-    {"Transmutations", "Destabilizer",  "Alchemist",       "Transmogrifier",  "Entropist",      "Reality Shaper", "Tmut"},
-#endif
+    {"Forgecraft",     "Tinkerer",      "Fabricator",      "Mechanist",       "Siegecrafter",   "Architect of Ages", "Frge"},
 
     {"Fire Magic",     "Firebug",       "Arsonist",        "Scorcher",        "Pyromancer",     "Infernalist",  "Fire"},
     {"Ice Magic",      "Chiller",       "Frost Mage",      "Gelid",           "Cryomancer",     "Englaciator",  "Ice"},
@@ -253,7 +250,7 @@ void cleanup_innate_magic_skills()
 // Characters are actually granted skill points, not skill levels.
 // Here we take racial aptitudes into account in determining final
 // skill levels.
-void reassess_starting_skills()
+void reassess_starting_skills(bool balance_djinn)
 {
     // go backwards, need to do Dodging before Armour
     // "sk >= SK_FIRST_SKILL" might be optimised away, so do this differently.
@@ -266,12 +263,18 @@ void reassess_starting_skills()
         you.skill_points[sk] = you.skills[sk] ?
             skill_exp_needed(you.skills[sk], sk, SP_HUMAN) + 1 : 0;
 
+        item_def* current_armour = you.body_armour();
+
+        // No one who can't wear mundane heavy armour should start with
+        // the Armour skill -- D:1 dragon armour is too unlikely.
+        // However, specifically except the special case of Sp/Tr/On
+        // wanderers starting with acid dragon scales.
         if (sk == SK_DODGING && you.skills[SK_ARMOUR]
             && (is_useless_skill(SK_ARMOUR)
-                || you_can_wear(EQ_BODY_ARMOUR) != true))
+                || you_can_wear(SLOT_BODY_ARMOUR) != true)
+            && !(current_armour
+                 && current_armour->sub_type == ARM_ACID_DRAGON_ARMOUR))
         {
-            // No one who can't wear mundane heavy armour should start with
-            // the Armour skill -- D:1 dragon armour is too unlikely.
             you.skill_points[sk] += skill_exp_needed(you.skills[SK_ARMOUR],
                 SK_ARMOUR, SP_HUMAN) + 1;
             you.skills[SK_ARMOUR] = 0;
@@ -306,7 +309,8 @@ void reassess_starting_skills()
         }
     }
 
-    if (you.has_mutation(MUT_INNATE_CASTER))
+    // For a new game, this is called after training is calculated.
+    if (balance_djinn && you.has_mutation(MUT_INNATE_CASTER))
         cleanup_innate_magic_skills();
 }
 
@@ -514,6 +518,16 @@ static void _check_abil_skills()
     }
 }
 
+static void _check_active_talisman_skills()
+{
+    skill_set skills;
+    if (you.active_talisman.defined()
+        && item_skills(you.active_talisman, skills))
+    {
+        _erase_from_skills_to_hide(skills);
+    }
+}
+
 /// Check to see if the player is a djinn with at least one magic skill
 /// un-hidden. If so, unhide all of them.
 static void _check_innate_magic_skills()
@@ -560,6 +574,7 @@ static void _check_skills_to_hide()
     _check_inventory_skills();
     _check_spell_skills();
     _check_abil_skills();
+    _check_active_talisman_skills();
     _check_innate_magic_skills();
 
     if (you.skills_to_hide.empty())
@@ -838,7 +853,7 @@ static void _balance_magic_training()
     ASSERT(n_skills > 0);
     // Total training for all magic skills should be the base average,
     // divided between each skill.
-    const int to_train = max(train_total / (n_skills * n_skills), 1);
+    const int to_train = max(train_total / n_skills, 1);
     for (skill_type sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
         if (!is_removed_skill(sk) && you.skills[sk] < MAX_SKILL_LEVEL)
             you.training[sk] = to_train;
@@ -1770,11 +1785,16 @@ void player::clear_training_targets()
  */
 bool player::set_training_target(const skill_type sk, const int target, bool announce)
 {
+    if (target > 270) // if target is above 270, reject with an error
+    {
+        mpr("Your training target must be 27 or below!");
+        return false;
+    }
     const int ranged_target = min(max((int) target, 0), 270);
     if (announce && ranged_target != (int) training_targets[sk])
     {
         if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
-            mprf("You can't set training targets!");
+            mpr("You can't set training targets!");
         else if (ranged_target == 0)
             mprf("Clearing the skill training target for %s.", skill_name(sk));
         else
@@ -1892,15 +1912,9 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
     {
         switch (best_skill)
         {
-        case SK_SUMMONINGS:
-            if (is_evil_god(god))
-            {
-                // retro goody-bag for decidedly non-goodies
-                if (skill_rank == 4)
-                    result = "Demonologist";
-                else if (skill_rank == 5)
-                    result = "Hellbinder";
-            }
+        case SK_FIGHTING:
+            if (species == SP_HUMAN && skill_rank == 5 && god == GOD_MAKHLEB)
+                result = "Hell Knight";
             break;
 
         case SK_POLEARMS:
@@ -1909,12 +1923,19 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             break;
 
         case SK_UNARMED_COMBAT:
-            if (species == SP_FELID)
-                result = claw_and_tooth_titles[skill_rank];
-            else if (species == SP_MUMMY && skill_rank == 5)
+            if (species == SP_MUMMY && skill_rank == 5)
                 result = "Pharaoh";
-            else if (!dex_better && species == SP_DJINNI && skill_rank == 5)
+            else if (species == SP_FELID)
+                result = claw_and_tooth_titles[skill_rank];
+            else if (species == SP_OCTOPODE && skill_rank == 5)
+                result = "Crusher";
+            else if (species == SP_ONI && skill_rank == 5)
+                result = "Yokozuna";
+            else if (!dex_better && (species == SP_DJINNI || species == SP_POLTERGEIST)
+                        && skill_rank == 5)
+            {
                 result = "Weightless Champion";
+            }
             else
             {
                 result = dex_better ? martial_arts_titles[skill_rank]
@@ -1939,42 +1960,27 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             break;
 
         case SK_ARMOUR:
-            if (species == SP_COGLIN && skill_rank == 5)
+            if (species == SP_TROLL && skill_rank == 5)
+                result = "Iron Troll";
+            else if (species == SP_COGLIN && skill_rank == 5)
                 result = "Iron Golem";
             break;
 
-        case SK_INVOCATIONS:
-            if (species == SP_DEMONSPAWN && skill_rank == 5 && is_evil_god(god))
-                result = "Blood Saint";
-            else if (species == SP_ARMATAUR && skill_rank == 5 && god == GOD_QAZLAL)
-                result = "Rolling Thunder";
-            else if (species == SP_ARMATAUR && skill_rank == 5 && is_good_god(god))
-                result = "Holy Roller";
-            else if (species == SP_MUMMY && skill_rank == 5 && god == GOD_GOZAG)
-                result = "Royal Mummy";
-            else if (species == SP_MUMMY && skill_rank == 5 && god == GOD_NEMELEX_XOBEH)
-                result = "Forbidden One";
-            else if (species == SP_MUMMY && skill_rank == 5 && god == GOD_USKAYAW)
-                result = "Necrodancer";
-            else if (species == SP_VINE_STALKER && skill_rank == 5 && god == GOD_NEMELEX_XOBEH)
-                result = "Black Lotus";
-            else if (species == SP_GARGOYLE && skill_rank == 5 && god == GOD_JIYVA)
-                result = "Rockslime";
-            else if (species == SP_COGLIN && skill_rank == 5 && god == GOD_FEDHAS)
-                result = "Cobgoblin"; // hm.
-            else if (god != GOD_NO_GOD)
-                result = god_title(god, species, piety);
-            else if (species == SP_BARACHI)
-            {
-                // C.f. the barachi species lore, true believers!
-                result = "God-Hated";
-            }
+        case SK_SHIELDS:
+            if (species == SP_SPRIGGAN && skill_rank > 3)
+                result = "Defender";
+            else if (species == SP_POLTERGEIST && skill_rank == 5)
+                result = "Polterguardian";
             break;
 
         case SK_RANGED_WEAPONS:
             if (species::is_elven(species) && skill_rank == 5)
                 result = "Master Archer";
             break;
+
+        case SK_THROWING:
+            if (species == SP_POLTERGEIST && skill_rank == 5)
+                result = "Undying Armoury";
 
         case SK_SPELLCASTING:
             if (species == SP_DJINNI && skill_rank == 5)
@@ -1989,34 +1995,47 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Wallbreaker";
             break;
 
-        // For the below draconian titles, intentionally don't restrict
-        // by drac colour to avoid frustrating players trying for these
-        case SK_FIRE_MAGIC:
-            if (species == SP_DJINNI && skill_rank == 5)
-                result = "Smokeless Flame";
-            else if (species::is_draconian(species) && skill_rank == 5)
-                result = "Fire Dragon";
-            else if (species == SP_MUMMY && skill_rank == 5)
-                result = "Highly Combustible";
-            else if (species == SP_GHOUL && skill_rank == 5)
-                result = "Searing Wretch";
-            break;
-
-        case SK_ICE_MAGIC:
-            if (species == SP_DJINNI && skill_rank == 5)
-                result = "Marid";
-            else if (species::is_draconian(species) && skill_rank == 5)
-                result = "Ice Dragon";
-            break;
-
-        case SK_EARTH_MAGIC:
+        // For all draconian titles, intentionally don't restrict by drac
+        // colour to avoid frustrating players deliberately trying for these
+        case SK_HEXES:
             if (species::is_draconian(species) && skill_rank == 5)
-                result = "Iron Dragon";
+                result = "Faerie Dragon";
             break;
 
-        case SK_AIR_MAGIC:
-            if (species::is_draconian(species) && skill_rank == 5)
-                result = "Storm Dragon";
+        case SK_NECROMANCY:
+            if (species == SP_COGLIN && skill_rank == 5)
+                result = "Necromech";
+            else if (species == SP_SPRIGGAN && skill_rank == 5)
+                result = "Petite Mort";
+            else if (species == SP_VINE_STALKER && skill_rank == 5)
+                result = "Corpseflower";
+            else if (god == GOD_KIKUBAAQUDGHA)
+                result = god_title(god, species, piety);
+            break;
+
+        case SK_FORGECRAFT:
+            if (species == SP_ONI && skill_rank == 4)
+                result = "Brimstone Smiter";
+            else if (species == SP_ONI && skill_rank == 5)
+                result = "Titancaster";
+            break;
+
+        case SK_SUMMONINGS:
+            if (is_evil_god(god))
+            {
+                // retro goody-bag for decidedly non-goodies
+                if (skill_rank == 4)
+                    result = "Demonologist";
+                else if (skill_rank == 5)
+                    result = "Hellbinder";
+            }
+            break;
+
+        case SK_TRANSLOCATIONS:
+            if (species == SP_FORMICID && skill_rank == 5)
+                result = "Teletunneler";
+            else if (species == SP_POLTERGEIST && skill_rank == 5)
+                result = "Spatial Maelstrom";
             break;
 
         case SK_ALCHEMY:
@@ -2024,23 +2043,74 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Swamp Dragon";
             break;
 
-        case SK_HEXES:
+        case SK_FIRE_MAGIC:
             if (species::is_draconian(species) && skill_rank == 5)
-                result = "Faerie Dragon";
+                result = "Fire Dragon";
+            else if (species == SP_MUMMY && skill_rank == 5)
+                result = "Highly Combustible";
+            else if (species == SP_GARGOYLE && skill_rank == 5)
+                result = "Molten";
+            else if (species == SP_DJINNI && skill_rank == 5)
+                result = "Smokeless Flame";
+            else if (species == SP_POLTERGEIST && skill_rank == 5)
+                result = "Fire Storm";
             break;
 
-        case SK_TRANSLOCATIONS:
-            if (species == SP_FORMICID && skill_rank == 5)
-                result = "Teletunneler";
+        case SK_ICE_MAGIC:
+            if (species::is_draconian(species) && skill_rank == 5)
+                result = "Ice Dragon";
+            else if (species == SP_DJINNI && skill_rank == 5)
+                result = "Marid";
+            else if (species == SP_POLTERGEIST && skill_rank == 5)
+                result = "Polar Vortex";
             break;
 
-        case SK_NECROMANCY:
-            if (species == SP_SPRIGGAN && skill_rank == 5)
-                result = "Petite Mort";
-            else if (species == SP_VINE_STALKER && skill_rank == 5)
-                result = "Corpseflower";
-            else if (god == GOD_KIKUBAAQUDGHA)
+        case SK_AIR_MAGIC:
+            if (species::is_draconian(species) && skill_rank == 5)
+                result = "Storm Dragon";
+            else if (species == SP_POLTERGEIST && skill_rank == 5)
+                result = "Twister";
+            break;
+
+        case SK_EARTH_MAGIC:
+            if (species::is_draconian(species) && skill_rank == 5)
+                result = "Iron Dragon";
+            break;
+
+        case SK_INVOCATIONS:
+            if (species == SP_MUMMY && skill_rank == 5 && god == GOD_GOZAG)
+                result = "Royal Mummy";
+            else if (species == SP_MUMMY && skill_rank == 5 && god == GOD_NEMELEX_XOBEH)
+                result = "Forbidden One";
+            else if (species == SP_DEMONSPAWN && skill_rank == 5 && is_evil_god(god))
+                result = "Blood Saint";
+            else if (species == SP_MUMMY && skill_rank == 5 && god == GOD_USKAYAW)
+                result = "Necrodancer";
+            else if (species::is_draconian(species) && skill_rank == 5 && is_good_god(god))
+                result = "Pearl Dragon";
+            else if (species == SP_GARGOYLE && skill_rank == 5 && god == GOD_JIYVA)
+                result = "Rockslime";
+            else if (species == SP_VINE_STALKER && skill_rank == 5 && god == GOD_NEMELEX_XOBEH)
+                result = "Black Lotus";
+            else if (species == SP_VINE_STALKER && skill_rank == 5 && god == GOD_DITHMENOS)
+                result = "Nightshade";
+            else if (species == SP_ARMATAUR && skill_rank == 5 && god == GOD_QAZLAL)
+                result = "Rolling Thunder";
+            else if (species == SP_ARMATAUR && skill_rank == 5 && is_good_god(god))
+                result = "Holy Roller";
+            else if (species == SP_COGLIN && skill_rank == 5 && god == GOD_FEDHAS)
+                result = "Cobgoblin"; // hm.
+            else if (species == SP_REVENANT && skill_rank == 5 && god == GOD_XOM)
+                result = "Laughing Skull";
+            else if (species == SP_REVENANT && skill_rank == 5 && god == GOD_USKAYAW)
+                result = "Danse Macabre";
+            else if (god != GOD_NO_GOD)
                 result = god_title(god, species, piety);
+            else if (species == SP_BARACHI)
+            {
+                // C.f. the barachi species lore, true believers!
+                result = "God-Hated";
+            }
             break;
 
 #if TAG_MAJOR_VERSION == 34
@@ -2053,6 +2123,14 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         default:
             break;
         }
+        // Make sure the traitor induced title overrides under penance
+        if (you.attribute[ATTR_TRAITOR] > 0)
+        {
+            god_type betrayed_god = static_cast<god_type>(
+                you.attribute[ATTR_TRAITOR]);
+            result = god_title(betrayed_god, species, piety);
+        }
+
         if (result.empty())
             result = skill_titles[best_skill][skill_rank];
     }
@@ -2081,7 +2159,10 @@ string player_title(bool the)
     const skill_type best = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
     const string title =
             skill_title_by_rank(best, get_skill_rank(you.skills[best]));
-    const string article = !the ? "" : title == "Petite Mort" ? "La " : "the ";
+    const string article = !the ? ""
+                                : title == "Petite Mort" ? "La "
+                                : title == "Who Hides the Stars" ? ", "
+                                : "the ";
     return article + title;
 }
 
@@ -2168,7 +2249,6 @@ bool is_removed_skill(skill_type skill)
     case SK_CHARMS:
     case SK_SLINGS:
     case SK_CROSSBOWS:
-    case SK_TRANSMUTATIONS:
         return true;
     default:
         break;
@@ -2189,6 +2269,7 @@ static map<skill_type, mutation_type> skill_sac_muts = {
     { SK_TRANSLOCATIONS, MUT_NO_TRANSLOCATION_MAGIC },
     { SK_CONJURATIONS,   MUT_NO_CONJURATION_MAGIC },
     { SK_NECROMANCY,     MUT_NO_NECROMANCY_MAGIC },
+    { SK_FORGECRAFT,     MUT_NO_FORGECRAFT_MAGIC },
     { SK_SUMMONINGS,     MUT_NO_SUMMONING_MAGIC },
 
     { SK_DODGING,        MUT_NO_DODGING },
@@ -2253,9 +2334,11 @@ bool trainable_skills(bool check_all)
     return false;
 }
 
-int skill_bump(skill_type skill, int scale)
+// Currently only for ABIL_BEOGH_SMITING, see ability.cc::_beogh_smiting_power
+int skill_bump(skill_type skill, int scale, bool allow_random)
 {
-    const int sk = you.skill_rdiv(skill, scale);
+    const int sk = allow_random ? you.skill_rdiv(skill, scale)
+                                : you.skill(skill, scale);
     return sk + min(sk, 3 * scale);
 }
 
@@ -2551,5 +2634,6 @@ void set_training_status(skill_type sk, training_status st)
 void set_magic_training(training_status st)
 {
     for (skill_type sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
-        you.train[sk] = you.train_alt[sk] = st;
+        if (!is_removed_skill(sk))
+            you.train[sk] = you.train_alt[sk] = st;
 }

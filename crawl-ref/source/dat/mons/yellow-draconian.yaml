@@ -1,11 +1,12 @@
 name: "yellow draconian"
 glyph: {char: "d", colour: yellow}
 flags: [speaks, cold_blood]
-resists: {acid: 1}
+resists: {corr: 1}
 genus: draconian
 will: 40
 attacks:
  - {type: hit, damage: 20}
+ - {type: bite, flavour: acid, damage: 12}
 hd: 14
 hp_10x: 980
 ac: 9

@@ -66,6 +66,13 @@ static VColour _flash_colours[NUM_TERM_COLOURS] =
     VColour(255, 255, 255, 100), // WHITE
 };
 
+/* Copy a VColour but change the alpha */
+static VColour _alpha_flash_colour(int index, int alpha)
+{
+    const VColour source = _flash_colours[index];
+    return VColour(source.r, source.g, source.b, alpha);
+}
+
 DungeonRegion::DungeonRegion(const TileRegionInit &init) :
     TileRegion(init),
     m_cx_to_gx(0),
@@ -205,8 +212,13 @@ void DungeonRegion::pack_buffers()
                 pack_glyph_at(vbuf_cell, x, y);
 
             const int fcol = vbuf_cell->flash_colour;
+            const int falpha = vbuf_cell->flash_alpha;
             if (fcol)
-                m_buf_flash.add(x, y, x + 1, y + 1, _flash_colours[fcol]);
+            {
+                m_buf_flash.add(x, y, x + 1, y + 1,
+                                falpha ? _alpha_flash_colour(fcol, falpha)
+                                       : _flash_colours[fcol]);
+            }
 
             vbuf_cell++;
         }
@@ -741,6 +753,7 @@ bool DungeonRegion::update_tip_text(string &tip)
 
             tip += "\n";
             tip += tile_debug_string(tile_env.fg(ep), tile_env.bg(ep), ' ');
+            tip += "\n";
         }
         else
         {
@@ -760,6 +773,35 @@ bool DungeonRegion::update_tip_text(string &tip)
                                  vp.pos.x, vp.pos.y,
                                  br.x, br.y,
                                  vp.size.x, vp.size.y);
+        }
+
+        {
+            terrain_property_t props = env.pgrid(gc);
+            vector<string> str;
+
+            // Not a complete list at the moment, but focusing on those which
+            // are not otherwise visible in game (such as Sanctuary or bloody).
+            if (props & FPROP_NO_TELE_INTO)
+                str.push_back("no_tele_into");
+
+            if (props & FPROP_NO_CLOUD_GEN)
+                str.push_back("no_cloud_gen");
+
+            if (props & FPROP_NO_TIDE)
+                str.push_back("no_tide");
+
+            if (props & FPROP_NO_JIYVA)
+                str.push_back("no_jiyva");
+
+            if (props & FPROP_SEEN_OR_NOEXP)
+                str.push_back("seen_or_noexp");
+
+            if (!str.empty())
+            {
+                tip += "FProps: ";
+                tip += comma_separated_line(str.begin(), str.end(), " ");
+                tip += "\n\n";
+            }
         }
 
         tip += tile_debug_string(tile_env.bk_fg(gc), tile_env.bk_bg(gc), 'B');

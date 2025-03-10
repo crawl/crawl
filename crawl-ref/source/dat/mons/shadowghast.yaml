@@ -1,0 +1,19 @@
+name: "shadowghast"
+glyph: {char: "W", colour: magenta}
+flags: [flies, see_invis, insubstantial]
+resists: {cold: 3}
+xp_mult: 18
+genus: wraith
+holiness: [undead]
+will: 40
+attacks:
+ - {type: claw, flavour: shadowstab, damage: 14}
+hd: 6
+hp_10x: 240
+ac: 7
+ev: 10
+spells: shadowghast
+intelligence: animal
+uses: open_doors
+size: small
+shape: humanoid

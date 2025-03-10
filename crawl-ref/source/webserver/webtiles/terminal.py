@@ -1,3 +1,4 @@
+import asyncio
 import fcntl
 import os
 import pty
@@ -72,17 +73,20 @@ class TerminalRecorder(object):
 
         if self.pid == 0:
             # We're the child
-            # Warning! There are potential race conditions if a signal is
-            # received (or maybe other things happen) before the execvpe call
-            # replaces python state...
 
-            # prevent server's finally block from running in the event of an
-            # early signal:
+            # attempt to avoid some race conditions in global effects that can
+            # be triggered by early signals (before execvpe replaces process
+            # state)
             config.set("pidfile", None)
-            # replace server's signal handling:
-            def handle_signal(signal, f):
-                sys.exit(0)
-            signal.signal(1, handle_signal)
+
+            # remove server's signal handling for the interim.
+            # Note: I haven't found a reliable way to do this, because shared
+            # resources are copied on fork. See:
+            #   https://github.com/python/cpython/issues/66197
+            # so, sometimes, a race condition here leads to the main process
+            # reloading its config...currently some key cases are handled
+            # elsewhere by a brute force delay.
+            asyncio.get_event_loop().remove_signal_handler(signal.SIGHUP)
 
             # Set window size
             cols, lines = self.get_terminal_size()

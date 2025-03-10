@@ -49,7 +49,7 @@ For but a moment your mind is laid bare before the towering infinitude of the un
 
 Your skull pulses and throbs as words spoken in an unspeakable tongue drift across your psyche.
 
-A thin, monotonous whinny from outside of time grows ever louder in your ears.
+A thin, monotonous whinny from outside of time grows ever louder.
 
 Shapeless horrors persist on the edge of your vision, drawing ever closer.
 
@@ -66,6 +66,16 @@ Nightmarish fiends assault your waking thoughts!
 Seething terrors besiege your sanity!
 
 Lucidity slithers from your feeble grasp.
+%%%%
+harlequin_trap_lines
+
+Strange impish giggling echoes through your mind as
+
+The roar of a mocking crowd runs through your mind as
+
+A round of applause drowns out your thoughts as
+
+A cruel sense of mischief rushes through your surroundings as
 %%%%
 # How great is the Orb of Zot?
 _great_adj_
@@ -282,8 +292,7 @@ You shudder with dread.
 
 You suddenly feel all small and vulnerable.
 
-You taste blood in your mouth. It's definitely not yours.
-
+Blood fills your mouth. It's definitely not yours.
 %%%%
 hell_effect_noisy
 
@@ -331,4 +340,5 @@ You hear your own voice laughing maniacally!
 
 You hear your own voice screaming in agony!
 
+You hear your own voice wailing miserably!
 %%%%

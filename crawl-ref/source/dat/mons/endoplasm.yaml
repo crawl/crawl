@@ -1,7 +1,7 @@
 name: "endoplasm"
 glyph: {char: "J", colour: lightgray}
-flags: [see_invis, unblindable, web_immune, no_skeleton]
-resists: {poison: 1, acid: 3}
+flags: [see_invis, unblindable, amorphous, no_skeleton]
+resists: {corr: 3}
 genus: jelly
 will: 0
 attacks:

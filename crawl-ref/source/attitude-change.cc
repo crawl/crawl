@@ -119,14 +119,12 @@ void slime_convert(monster* mons)
     if (have_passive(passive_t::neutral_slimes) && mons_is_slime(*mons)
         && !mons->neutral()
         && !mons->friendly()
+        && !mons->is_shapeshifter()
         && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT))
     {
         mons->flags |= MF_ATT_CHANGE_ATTEMPT;
-        if (!player_under_penance())
-        {
-            _jiyva_convert_slime(mons);
-            stop_running();
-        }
+        _jiyva_convert_slime(mons);
+        stop_running();
     }
 }
 
@@ -149,11 +147,11 @@ void dismiss_god_summons(god_type god)
     for (monster_iterator mi; mi; ++mi)
     {
         if (is_follower(**mi)
-            && mi->has_ench(ENCH_ABJ)
+            && mi->is_summoned()
             && mons_is_god_gift(**mi, god))
         {
             // The monster disappears.
-            monster_die(**mi, KILL_DISMISSED, NON_MONSTER);
+            monster_die(**mi, KILL_RESET, NON_MONSTER);
         }
     }
 }

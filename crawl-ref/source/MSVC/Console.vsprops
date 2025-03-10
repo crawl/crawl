@@ -11,7 +11,7 @@
 	/>
 	<Tool
 		Name="VCLinkerTool"
-		AdditionalDependencies="zlib.lib opengl32.lib glu32.lib dxguid.lib"
+		AdditionalDependencies="zlib.lib opengl32.lib dxguid.lib"
 		AdditionalLibraryDirectories="&quot;$(SolutionDir)\..\contrib\bin\8.0\$(PlatformName)&quot;"
 	/>
 </VisualStudioPropertySheet>

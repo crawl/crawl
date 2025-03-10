@@ -22,7 +22,7 @@ enum enchant_type
     ENCH_ROT,
 #endif
     ENCH_SUMMON,
-    ENCH_ABJ,
+    ENCH_SUMMON_TIMER,
     ENCH_CORONA,
     ENCH_CHARM,
     ENCH_STICKY_FLAME,
@@ -32,8 +32,8 @@ enum enchant_type
     ENCH_SLEEP_WARY,
 #if TAG_MAJOR_VERSION == 34
     ENCH_SUBMERGED,
-#endif
     ENCH_SHORT_LIVED,
+#endif
     ENCH_PARALYSIS,
     ENCH_SICK,
 #if TAG_MAJOR_VERSION == 34
@@ -84,12 +84,14 @@ enum enchant_type
 #if TAG_MAJOR_VERSION == 34
     ENCH_WITHDRAWN,
     ENCH_ATTACHED,
-#endif
     ENCH_LIFE_TIMER,     // Minimum time demonic guardian must exist.
+#endif
     ENCH_FLIGHT,
     ENCH_LIQUEFYING,
     ENCH_POLAR_VORTEX,
+#if TAG_MAJOR_VERSION == 34
     ENCH_FAKE_ABJURATION,
+#endif
     ENCH_DAZED,          // Dazed - less chance of acting each turn.
     ENCH_MUTE,           // Silenced.
     ENCH_BLIND,          // Blind (everything is invisible).
@@ -121,12 +123,12 @@ enum enchant_type
 #endif
     ENCH_WEAK,
     ENCH_DIMENSION_ANCHOR,
-    ENCH_AWAKEN_VINES,   // Is presently animating snaplasher vines
 #if TAG_MAJOR_VERSION == 34
+    ENCH_AWAKEN_VINES,
     ENCH_CONTROL_WINDS,
     ENCH_WIND_AIDED,
-#endif
     ENCH_SUMMON_CAPPED,  // Abjuring quickly because a summon cap was hit
+#endif
     ENCH_TOXIC_RADIANCE,
 #if TAG_MAJOR_VERSION == 34
     ENCH_GRASPING_ROOTS_SOURCE, // Not actually entangled, but entangling others
@@ -149,7 +151,7 @@ enum enchant_type
 #if TAG_MAJOR_VERSION == 34
     ENCH_EPHEMERAL_INFUSION,
 #endif
-    ENCH_BLACK_MARK,
+    ENCH_SIGN_OF_RUIN,
 #if TAG_MAJOR_VERSION == 34
     ENCH_GRAND_AVATAR,
 #endif
@@ -175,8 +177,8 @@ enum enchant_type
     ENCH_BONE_ARMOUR,
     ENCH_CHANT_FIRE_STORM, // chanting the fire storm spell
     ENCH_CHANT_WORD_OF_ENTROPY, // chanting word of entropy
-#endif
     ENCH_BRILLIANCE_AURA, // emanating a brilliance aura
+#endif
     ENCH_EMPOWERED_SPELLS, // affected by above
     ENCH_GOZAG_INCITE,
     ENCH_PAIN_BOND, // affected by above
@@ -205,8 +207,8 @@ enum enchant_type
     ENCH_ANGUISH,
 #if TAG_MAJOR_VERSION == 34
     ENCH_SIMULACRUM,
-#endif
     ENCH_NECROTISE,
+#endif
     ENCH_CONTAM,
 #if TAG_MAJOR_VERSION == 34
     ENCH_PURSUING,
@@ -221,6 +223,23 @@ enum enchant_type
     ENCH_CHANNEL_SEARING_RAY,
     ENCH_TOUCH_OF_BEOGH,
     ENCH_VENGEANCE_TARGET,
+    ENCH_RIMEBLIGHT,
+    ENCH_MAGNETISED,
+    ENCH_ARMED,
+    ENCH_MISDIRECTED,
+    ENCH_CHANGED_APPEARANCE,  // Visual change for player shadow during Shadowslip
+    ENCH_SHADOWLESS,
+    ENCH_DOUBLED_HEALTH,
+    ENCH_KINETIC_GRAPNEL,
+    ENCH_TEMPERED,
+    ENCH_HATCHING,
+    ENCH_BLINKITIS,
+    ENCH_CHAOS_LACE,
+    ENCH_VEXED,
+    ENCH_DEEP_SLEEP,
+    ENCH_DROWSY,
+    ENCH_VAMPIRE_THRALL,
+    ENCH_PYRRHIC_RECOLLECTION,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

@@ -93,11 +93,6 @@ plant
 Poche piante posso crescere negli ambienti sgradevoli delle segrete, ma alcune
 sono riuscite ad adattarsi e addirittura prosperare in assenza del sole.
 %%%%
-quasit
-
-Un piccolo demone codardo, con una lunga coda appuntita. I suoi artigli
-affilati sono ricoperti da un veleno che irrigidisce i muscoli.
-%%%%
 reaper
 
 Una forma scheletrica che brandisce una grossa falce.

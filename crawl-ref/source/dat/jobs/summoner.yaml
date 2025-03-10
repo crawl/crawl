@@ -1,0 +1,28 @@
+enum: JOB_SUMMONER
+name: "Summoner"
+category: Mage
+category_priority: 80
+str: 0
+int: 7
+dex: 5
+spells:
+  - SPELL_SUMMON_SMALL_MAMMAL
+  - SPELL_CALL_IMP
+  - SPELL_CALL_CANINE_FAMILIAR
+  - SPELL_SURPRISING_CROCODILE
+  - SPELL_SUMMON_SEISMOSAURUS_EGG
+equipment:
+  - "robe"
+  - "potion of magic"
+recommended_species:
+  - deep elf
+  - oni
+  - vine stalker
+  - merfolk
+  - tengu
+skills:
+  dodging: 2
+  stealth: 2
+  spellcasting: 2
+  summonings: 4
+create_enum: false

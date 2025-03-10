@@ -6,8 +6,8 @@ xp_mult: 5
 holiness: [nonliving]
 will: invuln
 attacks:
- - {type: hit, flavour: distort, damage: 20}
- - {type: hit, flavour: distort, damage: 20}
+ - {type: touch, flavour: distort, damage: 20}
+ - {type: engulf, flavour: distort, damage: 20}
 hd: 10
 hp_10x: 750
 ac: 0

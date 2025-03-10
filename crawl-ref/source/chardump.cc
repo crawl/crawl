@@ -27,6 +27,7 @@
 #include "dungeon.h"
 #include "fight.h"
 #include "files.h"
+#include "god-companions.h"
 #include "god-prayer.h"
 #include "hiscores.h"
 #include "initfile.h"
@@ -88,6 +89,7 @@ static void _sdump_monster_list(dump_params &);
 static void _sdump_vault_list(dump_params &);
 static void _sdump_skill_gains(dump_params &);
 static void _sdump_action_counts(dump_params &);
+static void _sdump_apostles(dump_params &);
 static void _sdump_separator(dump_params &);
 static void _sdump_lua(dump_params &);
 static bool _write_dump(const string &fname, const dump_params &,
@@ -144,6 +146,7 @@ static dump_section_handler dump_handlers[] =
     { "spell_usage",    _sdump_action_counts }, // compat
     { "action_counts",  _sdump_action_counts },
     { "skill_gains",    _sdump_skill_gains   },
+    { "apostles",       _sdump_apostles      },
 
     // Conveniences for the .crawlrc artist.
     { "",               _sdump_newline       },
@@ -738,19 +741,19 @@ static bool _dump_item_origin(const item_def &item)
         return true;
 
     if (fs(IODS_ARTEFACTS)
-        && is_artefact(item) && item_ident(item, ISFLAG_KNOW_PROPERTIES))
+        && is_artefact(item) && item.is_identified())
     {
         return true;
     }
     if (fs(IODS_EGO_ARMOUR) && item.base_type == OBJ_ARMOUR
-        && item_type_known(item))
+        && item.is_identified())
     {
         const int spec_ench = get_armour_ego_type(item);
         return spec_ench != SPARM_NORMAL;
     }
 
     if (fs(IODS_EGO_WEAPON) && item.base_type == OBJ_WEAPONS
-        && item_type_known(item))
+        && item.is_identified())
     {
         return get_weapon_brand(item) != SPWPN_NORMAL;
     }
@@ -1246,6 +1249,7 @@ static const char* _stab_names[] =
     "Paralysed",
     "Sleeping",
     "Betrayed ally",
+    "Blind",
 };
 
 static const char* _aux_attack_names[] =
@@ -1262,6 +1266,8 @@ static const char* _aux_attack_names[] =
     "Pseudopods",
     "Tentacles",
     "Maw",
+    "Executioner Blades",
+    "Fungal Fists",
 };
 COMPILE_CHECK(ARRAYSZ(_aux_attack_names) == NUM_UNARMED_ATTACKS);
 
@@ -1518,6 +1524,19 @@ static void _sdump_mutations(dump_params &par)
         text += (formatted_string::parse_string(describe_mutations(false)));
         text += "\n\n";
     }
+}
+
+static void _sdump_apostles(dump_params &par)
+{
+    if (get_num_apostles() == 0)
+        return;
+
+    par.text += "Apostles: \n\n";
+
+    for (int i = 1; i <= get_num_apostles(); ++i)
+        par.text += formatted_string::parse_string(trimmed_string(apostle_short_description(i)) + "\n\n");
+
+    par.text += "\n";
 }
 
 string morgue_directory()

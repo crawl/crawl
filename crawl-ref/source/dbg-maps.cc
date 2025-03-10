@@ -14,11 +14,11 @@
 #include "dungeon.h"
 #include "env.h"
 #include "initfile.h"
-#include "item-prop.h" // initialise_item_sets
 #include "libutil.h"
 #include "maps.h"
 #include "message.h"
 #include "ng-init.h"
+#include "ng-setup.h"
 #include "player.h"
 #include "shopping.h"
 #include "state.h"
@@ -251,16 +251,10 @@ bool mapstat_build_levels()
              build_attempts ? level_vetoes * 100.0 / build_attempts : 0.0);
         printf("%d..", i + 1);
         fflush(stdout);
-        dlua.callfn("dgn_clear_data", "");
-        you.uniq_map_tags.clear();
-        you.uniq_map_names.clear();
-        you.uniq_map_tags_abyss.clear();
-        you.uniq_map_names_abyss.clear();
-        you.unique_creatures.reset();
-        you.generated_misc.clear();
-        initialise_item_sets(true);
-        initialise_branch_depths();
-        init_level_connectivity();
+
+        dgn_reset_player_data();
+        initial_dungeon_setup();
+
         if (!_build_dungeon())
             return false;
         if (crawl_state.obj_stat_gen)

@@ -1,0 +1,20 @@
+name: "sphinx marauder"
+glyph: {char: "H", colour: lightgreen}
+flags: [flies, fighter, see_invis, speaks, warm_blood]
+xp_mult: 22
+genus: sphinx
+will: 60
+attacks:
+ - {type: pounce, flavour: airstrike, damage: 13}
+hd: 13
+hp_10x: 840
+ac: 4
+ev: 12
+spells: sphinx_marauder
+has_corpse: true
+shout: shout
+intelligence: human
+speed: 12
+uses: starting_equipment
+size: giant
+shape: quadruped_winged

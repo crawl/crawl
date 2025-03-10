@@ -127,7 +127,7 @@ static void _update_feat_at(const coord_def &gp)
     if (silenced(gp))
         env.map_knowledge(gp).flags |= MAP_SILENCED;
 
-    if (liquefied(gp, false))
+    if (liquefied(gp, true))
         env.map_knowledge(gp).flags |= MAP_LIQUEFIED;
 
     if (orb_haloed(gp))
@@ -273,7 +273,7 @@ void update_item_at(const coord_def &gp, bool wizard)
         if (stash.size() > 1)
             more_items = true;
     }
-    env.map_knowledge(gp).set_item(get_item_known_info(eitem), more_items);
+    env.map_knowledge(gp).set_item(eitem, more_items);
 }
 
 static void _update_cloud(cloud_struct& cloud)
@@ -332,7 +332,7 @@ static bool _valid_invisible_spot(const coord_def &where, const monster* mons)
     if (mons_at && mons_at != mons)
         return false;
 
-    if (monster_habitable_grid(mons, env.grid(where)))
+    if (monster_habitable_grid(mons, where))
         return true;
 
     return false;
@@ -520,7 +520,7 @@ void force_show_update_at(const coord_def &gp, layers_type layers)
     if (!in_bounds(gp))
         return;
 
-    if (layers & LAYER_MONSTERS)
+    if (layers & Layer::MONSTERS)
     {
         monster* mons = monster_at(gp);
         if (mons && mons->alive())
@@ -529,11 +529,11 @@ void force_show_update_at(const coord_def &gp, layers_type layers)
             _mark_invisible_at(gp);
     }
 
-    if (layers & LAYER_CLOUDS)
+    if (layers & Layer::CLOUDS)
         if (cloud_struct* cloud = cloud_at(gp))
             _update_cloud(*cloud);
 
-    if (layers & LAYER_ITEMS)
+    if (layers & Layer::ITEMS)
         update_item_at(gp);
 }
 

@@ -109,10 +109,10 @@ KMONS:   X = djinni ; nothing
 KMONS:   Y = armataur ; nothing
 KMONS:   Z = oni ; nothing
 KMONS:   1 = goblin ; nothing
-SUBST:   - = ABCDEFGHJKLMNOPQRSTUVWXYZ1
-SHUFFLE: ABCDEFGHJKLMNOPQRSTUVWXYZ1
-KPROP:   ABCDEFGHJKLMNOPQRSTUVWXYZ1? = no_tele_into
-KMASK:   ABCDEFGHJKLMNOPQRSTUVWXYZ1? = no_item_gen
+SUBST:   - = ABCDEFGHIJKLMNOPQRSTUVWXYZ1
+SHUFFLE: ABCDEFGHIJKLMNOPQRSTUVWXYZ1
+KPROP:   ABCDEFGHIJKLMNOPQRSTUVWXYZ1? = no_tele_into
+KMASK:   ABCDEFGHIJKLMNOPQRSTUVWXYZ1? = no_item_gen
 MAP
    ccccccccccccccccccccccccccccc
 ccccAcCcEcGcIcKcMcOcQcScUcWcYc1c
@@ -139,7 +139,7 @@ KMASK:   EMNOQR = no_item_gen
 KMONS: M = human / elf / dwarf ; nothing / kobold ; nothing / mummy / \
            naga ; nothing / troll / draconian / demigod ; nothing / \
            spriggan ; nothing / minotaur ; nothing / demonspawn ; nothing / \
-           ghoul / tengu ; nothing / merfolk ; nothing / vampire ; nothing / \
+           revenant / tengu ; nothing / merfolk ; nothing / poltergeist / \
            felid / octopode ; nothing / djinni ; nothing / \
            gargoyle ; nothing / formicid ; nothing / vine stalker ; nothing / \
            barachi ; nothing / gnoll ; nothing / armataur ; nothing / \
@@ -395,8 +395,7 @@ KMONS:   3 = orc warrior
 : elseif rnd == 1 then
 KFEAT:   C = altar_lugonu
 KFEAT:   D = enter_abyss
-KMONS:   1 = iron imp / ufetubus / shadow imp / crimson imp / quasit w:5 \
-         / white imp w:5
+KMONS:   1 = iron imp / ufetubus / shadow imp / crimson imp / white imp w:5
 SUBST:   t : U'''', 23 = 0
 : elseif rnd == 2 then
 KFEAT:   C = altar_jiyva
@@ -703,7 +702,7 @@ NSUBST: ' = 12:! / *:'
 KMONS:  ! = human / elf / dwarf ; nothing / kobold ; nothing / mummy / \
             naga ; nothing / troll / draconian / demigod ; nothing / \
             spriggan ; nothing / minotaur ; nothing / demonspawn ; nothing / \
-            ghoul / tengu ; nothing / merfolk ; nothing / vampire ; nothing / \
+            revenant / tengu ; nothing / merfolk ; nothing / poltergeist / \
             felid / octopode ; nothing / djinni ; nothing / \
             gargoyle ; nothing / formicid ; nothing / vine stalker ; nothing / \
             barachi ; nothing / gnoll ; nothing / armataur ; nothing / \
@@ -737,7 +736,7 @@ NSUBST: ' = 15:! / *:'
 KMONS:  ! = human / elf / dwarf ; nothing / kobold ; nothing / mummy / \
             naga ; nothing / troll / draconian / demigod ; nothing / \
             spriggan ; nothing / minotaur ; nothing / demonspawn ; nothing / \
-            ghoul / tengu ; nothing / merfolk ; nothing / vampire ; nothing / \
+            revenant / tengu ; nothing / merfolk ; nothing / poltergeist / \
             felid / octopode ; nothing / djinni ; nothing / \
             gargoyle ; nothing / formicid ; nothing / vine stalker ; nothing / \
             barachi ; nothing / gnoll ; nothing / armataur ; nothing / \
@@ -899,9 +898,10 @@ KMASK: uU = no_item_gen
 : local skeltype = "skeleton"
 : local yourname = string.gsub(you.name(), " ", "_")
 : -- The corpseless. Before the game starts, you.monster() is "program bug".
-: if (not crawl.game_started()) or race == "Vampire"
-:     or race == "Mummy" or race == "Ghoul"
+: if (not crawl.game_started())
+:     or race == "Mummy"
 :     or race == "Gargoyle" or race == "Vine Stalker"
+:     or race == "Poltergeist" or race == "Revenant"
 :     or race == "Djinni" or race == "Yak" then
 :   mons = "human"
 : end

@@ -141,6 +141,39 @@ LUAFN(crawl_dpr)
     return 0;
 }
 
+/*** Returns a string representation of the stack of either the current clua
+ * state or that of a coroutine. This is useful for debugging clua code.
+ * @tparam[opt] coroutine A coroutine to analyze instead of the current clua state.
+ * @treturn string The stack trace
+ * @function stack
+ */
+LUAFN(crawl_stack)
+{
+    lua_State *ls1 = ls;
+    if (lua_isthread(ls, 1))
+        ls1 = lua_tothread(ls, 1);
+
+    string r;
+    struct lua_Debug dbg;
+    int i = 0;
+    while (lua_getstack(ls1, i++, &dbg) == 1)
+    {
+        lua_getinfo(ls1, "lnS", &dbg);
+        char* file = strrchr(dbg.short_src, '/');
+        if (file == nullptr)
+            file = dbg.short_src;
+        else
+            file++;
+        char buf[1000];
+        snprintf(buf, 1000, "%s, function %s, line %d\n", file, dbg.name,
+                dbg.currentline);
+        r += buf;
+    }
+
+    lua_pushstring(ls, r.c_str());
+    return 1;
+}
+
 /*** Delay the display.
  * @tparam int ms delay in milliseconds
  * @function delay
@@ -1448,6 +1481,7 @@ static const struct luaL_reg crawl_clib[] =
     { "mpr",                crawl_mpr },
     { "formatted_mpr",      crawl_formatted_mpr },
     { "dpr",                crawl_dpr },
+    { "stack",              crawl_stack },
     { "stderr",             crawl_stderr },
     { "more",               crawl_more },
     { "more_autoclear",     crawl_set_more_autoclear },

@@ -1,6 +1,6 @@
 name: "blizzard demon"
 glyph: {char: "2", colour: lightblue}
-flags: [flies, see_invis]
+flags: [flies, insubstantial, see_invis]
 resists: {elec: 3, poison: 1, fire: -1, cold: 2}
 xp_mult: 16
 holiness: [demonic]
@@ -17,4 +17,4 @@ shout: shout
 intelligence: human
 uses: open_doors
 size: large
-shape: humanoid
+shape: misc

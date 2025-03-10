@@ -1,0 +1,19 @@
+name: "fravashi"
+glyph: {char: "A", colour: green}
+flags: [flies, fighter, speaks]
+resists: {poison: 1}
+holiness: [holy]
+will: 120
+attacks:
+ - {type: hit, damage: 25}
+hd: 13
+hp_10x: 860
+ac: 11
+ev: 13
+spells: fravashi
+shout: shout
+intelligence: human
+uses: starting_equipment
+size: medium
+shape: humanoid_winged
+god: Shining One

@@ -1,6 +1,6 @@
 name: "snaplasher vine segment"
 glyph: {char: "*", colour: lightgreen}
-flags: [stationary, no_exp_gain, no_poly_to, no_threat]
+flags: [stationary, no_exp_gain, no_poly_to, no_threat, peripheral]
 resists: {poison: 1}
 species: snaplasher_vine
 genus: plant

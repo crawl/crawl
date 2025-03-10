@@ -1,0 +1,19 @@
+name: "Wiglaf"
+glyph: {char: "g", colour: lightgreen}
+flags: [fighter, speaks, warm_blood, unique, male]
+xp_mult: 20
+species: dwarf
+will: 100
+attacks:
+ - {type: hit, damage: 26}
+hd: 15
+hp_10x: 1570
+ac: 4
+ev: 7
+spells: wiglaf
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

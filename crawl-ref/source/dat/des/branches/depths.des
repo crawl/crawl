@@ -12,6 +12,8 @@
 # later in the dungeon to make it clear what to expect.
 ##########################################################################
 
+: crawl_require('dlua/vault.lua')
+
 {{
 function depths_entry(e)
    e.tags("depths_entry uniq_depths_entry chance_depths_entry no_monster_gen")
@@ -76,7 +78,7 @@ NAME:    grunt_enter_depths_hoard
 MONS:    fire dragon, ice dragon
 ITEM:    $ no_pickup
 SHUFFLE: 12 / 12 / 11 / 22
-TILE:    'd12oG = floor_depthstone
+FTILE:   'd12oG = floor_depthstone
 : depths_entry(_G)
 MAP
   ccccccc
@@ -93,7 +95,7 @@ MONS:   occultist / deep elf pyromancer w:5 / deep elf zephyrmancer w:5 / \
         orc sorcerer / tengu conjurer
 MONS:   rakshasa, necromancer band
 NSUBST: 1 = 1:112 / *:1
-TILE:   '3og = floor_depthstone
+FTILE:  '3og = floor_depthstone
 : depths_entry(_G)
 MAP
   bbbbbbb
@@ -114,20 +116,20 @@ MONS:   ugly thing w:16 / very ugly thing w:2 / rakshasa w:4
 MONS:   glowing orange brain / great orb of eyes, slime creature band
 MONS:   glowing shapeshifter
 NSUBST: . = 3:1 / 1:1. / *:., 3 = 1:2 / 1:3
-FTILE:  .34gOG = floor_depthstone
+FTILE:  '234gOG = floor_depthstone
 : depths_entry(_G)
 MAP
  xxxxxx
-xx.x..x bbbb
-x.3...xbb..bb
-xx.xx..b....bb
+xx'x..x bbbb
+x'3'..xbb''bb
+xx'xx..b....bb
 x..xxx...1...+
 x....xxb....bb
-xxbb.bbbb..bb
+xxbb.bbbb''bb
  bb...bbbbbb
 bb.....bb
-b4..g..3b
-bb.....bb
+b4''g''3b
+bb'''''bb
  bbbObbb
    bbb
 ENDMAP
@@ -137,7 +139,7 @@ TAGS:   patrolling transparent
 KMONS:  t = withered plant
 # Was place:Depths:1 undead. Specified list is both speed >= 10
 # and also avoids undead juggernauts / caustic shrikes.
-MONS:   sphinx skeleton / sphinx zombie / \
+MONS:   guardian sphinx skeleton / guardian sphinx zombie / \
         spriggan berserker skeleton / spriggan berserker zombie / \
         storm dragon skeleton / storm dragon zombie / \
         quicksilver dragon zombie / spark wasp zombie
@@ -149,8 +151,7 @@ FTILE:  - = floor_pebble_brown
 FTILE:  _ = floor_pebble_darkgray
 FTILE:  .123Og = floor_depthstone
 : depths_entry(_G)
-: set_feature_name("granite_statue", "a gravestone")
-TILE:   G = dngn_gravestone
+: vault_granite_statue_setup(_G, "G", "gravestone")
 MAP
   ....@....
  ...........

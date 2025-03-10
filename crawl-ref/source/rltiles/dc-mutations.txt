@@ -1,6 +1,23 @@
 %parts_ctg MUT
 %sdir gui/mutations
 
+generic_good_mutation_1 GENERIC_GOOD_MUTATION
+generic_good_mutation_2
+generic_good_mutation_3
+generic_bad_mutation_1 GENERIC_BAD_MUTATION
+generic_bad_mutation_2
+generic_bad_mutation_3
+generic_demonspawn_mutation_1 GENERIC_DEMONSPAWN_MUTATION
+generic_demonspawn_mutation_2
+generic_demonspawn_mutation_3
+generic_jiyva_mutation_1 GENERIC_JIYVA_MUTATION
+generic_jiyva_mutation_2
+generic_jiyva_mutation_3
+
+# Scales
+shaggy_fur_1 SHAGGY_FUR
+shaggy_fur_2
+shaggy_fur_3
 blue_scales_1 ICY_BLUE_SCALES
 blue_scales_2
 blue_scales_3
@@ -32,6 +49,7 @@ yellow_scales_1 YELLOW_SCALES
 yellow_scales_2
 yellow_scales_3
 
+# Generic stats and magic
 strong_1 STRONG
 strong_2
 weak_1 WEAK
@@ -50,7 +68,22 @@ dopey_2
 robust_1 ROBUST
 robust_2
 robust_3
+high_mp_1 HIGH_MP
+high_mp_2
+high_mp_3
+low_mp_1 LOW_MP
+low_mp_2
+low_mp_3
+wild_magic_1 WILD_MAGIC
+wild_magic_2
+wild_magic_3
+subdued_magic_1 SUBDUED_MAGIC
+subdued_magic_2
+subdued_magic_3
+efficient_magic_1 EFFICIENT_MAGIC
+efficient_magic_2
 
+# Generic resists and vulnerabilities
 cold_res_1 COLD_RESISTANCE
 cold_res_2
 cold_res_3
@@ -69,31 +102,69 @@ negative_res_3
 poison_res POISON_RESISTANCE
 elec_res SHOCK_RESISTANCE
 elec_vuln SHOCK_VULNERABILITY
+strong_willed_1 STRONG_WILLED
+strong_willed_2
+strong_willed_3
+mutres_1 MUTATION_RESISTANCE
+mutres_2
+mutres_3
 
+# Generic aux slots
 fangs_1 FANGS
 fangs_2
 fangs_3
+beak BEAK
 horns_1 HORNS
 horns_2
 horns_3
 antennae_1 ANTENNAE
 antennae_2
 antennae_3
+claws_1 CLAWS
+claws_2
+claws_3
+talons_1 TALONS
+talons_2
+talons_3
+hooves_1 HOOVES
+hooves_2
+hooves_3
 
+# Good mutations also used by regular species
+camouflage_1 CAMOUFLAGE
+camouflage_2
+camouflage_3
 passive_mapping_1 PASSIVE_MAPPING
 passive_mapping_2
 passive_mapping_3
 
-clarity CLARITY
+# Miscellaneous good mutations
 acute_vision ACUTE_VISION
-mutres_1 MUTATION_RESISTANCE
-mutres_2
-mutres_3
+clarity CLARITY
+ephemeral_shield EPHEMERAL_SHIELD
+mp_wands MP_WANDS
 passive_freeze PASSIVE_FREEZE
 regeneration_1 REGENERATION
 regeneration_2
 regeneration_3
+time_warped_blood_1 TIME_WARPED_BLOOD
+time_warped_blood_2
 
+# Generic bad mutations
+berserk_1 BERSERK
+berserk_2
+deterioration_1 POOR_CONSTITUTION
+deterioration_2
+persistent_drain PERSISTENT_DRAIN
+scream_1 SCREAM
+scream_2
+teleport_1 TELEPORT
+teleport_2
+
+# Demonspawn mutations
+demonic_touch1 DEMONIC_TOUCH
+demonic_touch2
+demonic_touch3
 icemail_1 ICEMAIL
 icemail_2
 condensation_shield CONDENSATION_SHIELD
@@ -121,6 +192,100 @@ powered_by_pain_3
 powered_by_death_1 POWERED_BY_DEATH
 powered_by_death_3
 powered_by_death_3
+demonic_will DEMONIC_WILL
+torment_res_1 TORMENT_RES
+torment_res_2
+hurl_damnation HURL_DAMNATION
+silence_aura SILENCE_AURA
+word_of_chaos WORD_OF_CHAOS
 
+# Per-species effects mutations
+hop_1 HOP
+hop_2
+divine_attributes DIVINE_ATTRIBUTES
+forlorn FORLORN
+flat_hp_1 FLAT_HP
+flat_hp_2
+flat_hp_3
+hp_casting HP_CASTING
+cold_blooded COLD_BLOODED
+acid_res ACID_RES
+acidic_bite ACIDIC_BITE
+big_wings BIG_WINGS
+inviolate_magic INVIOLATE_MAGIC
+steam_res STEAM_RES
+multilived MULTILIVED
+no_armour NO_ARMOUR
+no_grasping NO_GRASPING
+paws PAWS
+petrification_res PETRIFICATION_RES
+explore_regen EXPLORE_REGEN
+nightstalker_1 NIGHTSTALKER
+nightstalker_2
+nightstalker_3
 inhibited_regeneration INHIBITED_REGENERATION
+mertail MERTAIL
+no_drink NO_DRINK
+faith FAITH
+spit_poison_1 SPIT_POISON
+spit_poison_2
+acrobatic ACROBATIC
+antimagic_bite ANTIMAGIC_BITE
+no_potion_heal_1 NO_POTION_HEAL
+no_potion_heal_2
+float FLOAT
+formless_1 FORMLESS
+formless_2
+trickster TRICKSTER
+spellclaws SPELLCLAWS
+mnemophage MNEMOPHAGE
+
+# Makhleb mutations
+major_destruction_of_cocytus MAJOR_DESTRUCTION_OF_COCYTUS
+major_destruction_of_dis MAJOR_DESTRUCTION_OF_DIS
+major_destruction_of_gehenna MAJOR_DESTRUCTION_OF_GEHENNA
+major_destruction_of_tartarus MAJOR_DESTRUCTION_OF_TARTARUS
+
+mark_of_annihilation MARK_OF_ANNIHILATION
+mark_of_atrocity MARK_OF_ATROCITY
+mark_of_carnage MARK_OF_CARNAGE
+mark_of_execution MARK_OF_EXECUTION
+mark_of_haemoclasm MARK_OF_HAEMOCLASM
+mark_of_the_celebrant MARK_OF_THE_CELEBRANT
+mark_of_the_fanatic MARK_OF_THE_FANATIC
+mark_of_the_legion MARK_OF_THE_LEGION
+mark_of_the_tyrant MARK_OF_THE_TYRANT
+
+# Jiyva mutations
+engulf ENGULF
+eyeballs_1 EYEBALLS
+eyeballs_2
+eyeballs_3
+gelatinous_body_1 GELATINOUS_BODY
+gelatinous_body_2
+gelatinous_body_3
+jelly_absorbing_missiles JELLY_ABSORBING_MISSILES
+jelly_growth JELLY_GROWTH
+tendrils TENDRILS
+
+# Ru sacrifices
+missing_eye MISSING_EYE
+missing_hand MISSING_HAND
+no_armour_skill NO_ARMOUR_SKILL
+no_dodging NO_DODGING
+no_stealth NO_STEALTH
+no_hexes_magic NO_HEXES_MAGIC
+no_summoning_magic NO_SUMMONING_MAGIC
+no_necromancy_magic NO_NECROMANCY_MAGIC
+no_forgecraft_magic NO_FORGECRAFT_MAGIC
+no_translocation_magic NO_TRANSLOCATION_MAGIC
+no_alchemy_magic NO_ALCHEMY_MAGIC
+no_ice_magic NO_ICE_MAGIC
+no_air_magic NO_AIR_MAGIC
+no_earth_magic NO_EARTH_MAGIC
+no_forms NO_FORMS
+temperature_sensitivity TEMPERATURE_SENSITIVITY
+weak_willed_1 WEAK_WILLED
+weak_willed_2
+weak_willed_3
 %end_ctg

@@ -262,5 +262,5 @@ bool player::possible_beholder(const monster* mon) const
             && !mon->berserk_or_frenzied()
             && !mons_is_fleeing(*mon)
             && !is_sanctuary(pos())
-          || player_equip_unrand(UNRAND_DEMON_AXE));
+          || you.unrand_equipped(UNRAND_DEMON_AXE));
 }

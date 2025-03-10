@@ -27,6 +27,7 @@
 #include "mon-death.h"
 #include "mon-movetarget.h"
 #include "mon-speak.h"
+#include "mon-tentacle.h"
 #include "ouch.h"
 #include "religion.h"
 #include "shout.h"
@@ -121,18 +122,17 @@ static void _set_firing_pos(monster* mon, coord_def target)
     {
         const coord_def p(*di);
         const int range = p.distance_from(target);
+        const int distance = p.distance_from(mon->pos());
 
-        if (!mon->see_cell(*di))
+        if (!in_bounds(p) || range > max_range || distance > best_distance)
             continue;
 
-        if (!in_bounds(p) || range > max_range
+        if (!mon->see_cell(*di)
             || !cell_see_cell(p, target, LOS_NO_TRANS)
             || !mon_can_move_to_pos(mon, p - mon->pos()))
         {
             continue;
         }
-
-        const int distance = p.distance_from(mon->pos());
 
         if (distance < best_distance
             || distance == best_distance
@@ -196,7 +196,7 @@ static void _decide_monster_firing_position(monster* mon, actor* owner)
             _set_firing_pos(mon, mon->target);
         }
         // Hold position if we've reached our ideal range
-        else if (mon->type == MONS_SPELLFORGED_SERVITOR
+        else if (mon->type == MONS_SPELLSPARK_SERVITOR
                  && (mon->pos() - target->pos()).rdist()
                  <= mon->props[IDEAL_RANGE_KEY].get_int()
                  && !one_chance_in(8))
@@ -269,7 +269,6 @@ void handle_behaviour(monster* mon)
         proxPlayer = false;
 
     bool proxFoe;
-    bool isHealthy  = (mon->hit_points > mon->max_hit_points / 2);
     bool isSmart    = (mons_intel(*mon) >= I_HUMAN);
     bool isScared   = mon->has_ench(ENCH_FEAR);
     bool isPacified = mon->pacified();
@@ -315,14 +314,34 @@ void handle_behaviour(monster* mon)
     if (proxPlayer && !you.visible_to(mon))
         proxPlayer = _monster_guesses_invis_player(*mon);
 
+    // Handle leashing monster behavior: return to creator if non-adjacent,
+    // otherwise try to pick a monster in reach to attack.
+    const int leash_range = mons_leash_range(mon->type);
+    if (owner && leash_range > 0)
+    {
+        if (grid_distance(owner->pos(), mon->pos()) > leash_range)
+        {
+            mon->foe = MHITYOU;
+            mon->behaviour = BEH_SEEK;
+        }
+        else
+        {
+            actor* foe = mon->get_foe();
+            // If foe is clearly unreachable while next to creator, pick another
+            // one if possible. (This doesn't perfectly account for reachability
+            // but should be adequate in practice.)
+            if (!foe || grid_distance(foe->pos(), owner->pos()) > leash_range + 1)
+                set_nearest_monster_foe(mon, true);
+        }
+    }
     // Set friendly target, if they don't already have one.
     // Berserking allies ignore your commands!
-    if (isFriendly
-        && (mon->foe == MHITNOT || mon->foe == MHITYOU)
-        && !mon->berserk_or_frenzied()
-        && mon->behaviour != BEH_WITHDRAW
-        && !mons_self_destructs(*mon)
-        && !mons_is_avatar(mon->type))
+    else if (isFriendly
+             && (mon->foe == MHITNOT || mon->foe == MHITYOU)
+             && !mon->berserk_or_frenzied()
+             && mon->behaviour != BEH_WITHDRAW
+             && !mons_self_destructs(*mon)
+             && !mons_is_avatar(mon->type))
     {
         if (you.pet_target != MHITNOT)
             mon->foe = you.pet_target;
@@ -393,12 +412,11 @@ void handle_behaviour(monster* mon)
     }
 
     // Unfriendly monsters fighting other monsters will usually
-    // target the player, if they're healthy.
+    // target the player.
     if (!isFriendly && !isNeutral
         && !mons_is_avatar(mon->type)
         && mon->foe != MHITYOU && mon->foe != MHITNOT
         && proxPlayer && !mon->berserk_or_frenzied()
-        && isHealthy
         && !one_chance_in(3))
     {
         mon->foe = MHITYOU;
@@ -415,6 +433,23 @@ void handle_behaviour(monster* mon)
             mon->foe = targ->mindex();
             mon->target = targ->pos();
         }
+    }
+
+    // Misdirected monsters will only focus on your shadow, if it's still around.
+    // If it has stopped being around, snap back to the player instead.
+    if (mon->has_ench(ENCH_MISDIRECTED))
+    {
+        actor* agent = mon->get_ench(ENCH_MISDIRECTED).agent();
+        // agent() will return ANON_FRIENDLY_MONSTER if the source no longer
+        // exists, but was originally friendly
+        if (agent && agent->alive() && agent->mindex() != ANON_FRIENDLY_MONSTER
+            && !mons_aligned(mon, agent))
+        {
+            mon->foe = agent->mindex();
+            mon->target = agent->pos();
+        }
+        else
+            mon->del_ench(ENCH_MISDIRECTED);
     }
 
     while (changed)
@@ -834,7 +869,13 @@ void handle_behaviour(monster* mon)
             }
 
             if (stop_retreat)
+            {
                 mons_end_withdraw_order(*mon);
+                // XXX: The above function already sets this, but otherwise they
+                //      will be ignored just below. Ugh.
+                new_beh = BEH_SEEK;
+                new_foe = MHITYOU;
+            }
             else
                 mon->props[LAST_POS_KEY] = mon->pos();
 
@@ -872,7 +913,7 @@ static bool _mons_check_foe(monster* mon, const coord_def& p,
            && !mons_is_projectile(*foe)
            && monster_los_is_valid(mon, p)
            && (friendly || !is_sanctuary(p))
-           && !mons_is_firewood(*foe)
+           && !foe->is_firewood()
            && !foe->props.exists(KIKU_WRETCH_KEY)
            || p == you.pos() && mon->has_ench(ENCH_FRENZIED);
 }
@@ -975,7 +1016,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         dprf("Disturbing %s", mon->name(DESC_A, true).c_str());
 #endif
         // Assumes disturbed by noise...
-        if (mon->asleep())
+        if (mon->asleep() && !mons_is_deep_asleep(*mon))
             mon->behaviour = BEH_WANDER;
 
         // A bit of code to make Projected Noise actually do
@@ -1025,13 +1066,17 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             return;
         }
 
-        mon->foe = src_idx;
+        // ANON_FRENDLY_MONSTER is mostly used for blame attribution for
+        // friendly monsters that are *dead* by the time of doing damage, so
+        // monsters shouldn't check if they need to run away from it.
+        if (src_idx != ANON_FRIENDLY_MONSTER)
+            mon->foe = src_idx;
 
         // If the monster can't reach its target and can't attack it
         // either, retreat.
         try_pathfind(mon);
         if (mons_intel(*mon) > I_BRAINLESS && !mons_can_attack(*mon)
-            && target_is_unreachable(mon))
+            && target_is_unreachable(mon) && !mons_just_slept(*mon))
         {
             mon->behaviour = BEH_RETREAT;
         }
@@ -1050,12 +1095,13 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             }
             mon->del_ench(ENCH_FEAR, true);
         }
-        else if (!mons_is_fleeing(*mon))
+        else if (!mons_is_fleeing(*mon) && !mons_just_slept(*mon))
             mon->behaviour = BEH_SEEK;
 
         if (src == &you && mon->angered_by_attacks())
         {
-            if (mon->attitude == ATT_FRIENDLY && mon->is_summoned())
+            if (mon->attitude == ATT_FRIENDLY && mon->is_summoned()
+                && !mon->is_child_monster() && !mons_is_tentacle_segment(mon->type))
             {
                 summon_dismissal_fineff::schedule(mon);
                 return;
@@ -1065,6 +1111,14 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             // effects.
             else if (mon->temp_attitude()  != ATT_HOSTILE)
             {
+                // Pass aggro events along to the head, so that attitude changes
+                // can be propogated in a way that makes sense.
+                if (mon->is_child_monster())
+                {
+                    monster* head = &get_tentacle_head(get_tentacle_head(*mon));
+                    behaviour_event(head, event, src, src_pos, allow_shout);
+                }
+
                 mon->attitude = ATT_HOSTILE;
                 breakCharm    = true;
             }
@@ -1073,6 +1127,10 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         // XXX: Somewhat hacky, this being here.
         if (mons_is_elven_twin(mon))
             elven_twins_unpacify(mon);
+
+        // If this attack woke a monster up, remove their sleep effect.
+        if (mon->behaviour != BEH_SLEEP && mon->has_ench(ENCH_DEEP_SLEEP))
+            mon->del_ench(ENCH_DEEP_SLEEP, true, false);
 
         // Now set target so that monster can whack back (once) at an
         // invisible foe.
@@ -1101,12 +1159,14 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             break;
         }
 
-        // Orders to withdraw take precedence over interruptions
-        if (mon->behaviour == BEH_WITHDRAW)
+        // Orders to withdraw take precedence over interruptions, and monsters
+        // forced to sleep should not react at all.
+        if (mon->behaviour == BEH_WITHDRAW || mons_is_deep_asleep(*mon))
             break;
 
-        // Avoid moving friendly explodey things out of BEH_WANDER.
-        if (mon->friendly() && mons_self_destructs(*mon))
+        // Avoid making friendly explodey things cluster around the player
+        // when there are no enemies around.
+        if (mon->friendly() && mons_self_destructs(*mon) && !mon->get_foe())
             break;
 
         // [ds] Neutral monsters don't react to your presence.
@@ -1200,7 +1260,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             {
                 msg = getSpeakString(mon->name(DESC_PLAIN) + " cornered");
                 if (msg.empty())
-                    msg = "PLAIN:Cornered, @The_monster@ turns to fight!";
+                    msg = "PLAIN:Cornered, @the_monster@ turns to fight!";
             }
             mon->del_ench(ENCH_FEAR, true);
             mon->behaviour = BEH_SEEK;
@@ -1376,13 +1436,27 @@ void make_mons_leave_level(monster* mon)
 {
     if (mon->pacified())
     {
+        // Have pacified orcs drop their gear to avoid potentially tedious
+        // methods of trying to get something to kill them before they leave the
+        // level, or the deeply unflavorful approach of simply killing them for
+        // it and putting up with Beogh being upset with you.
+        if (mons_genus(mon->type) == MONS_ORC && you_worship(GOD_BEOGH))
+        {
+            if (you.can_see(*mon))
+            {
+                simple_monster_message(*mon,
+                    make_stringf(" donates %s equipment to the cause.",
+                        mon->pronoun(PRONOUN_POSSESSIVE).c_str()).c_str());
+            }
+            monster_drop_things(mon);
+        }
+
         if (you.can_see(*mon))
             _mons_indicate_level_exit(mon);
 
         // Pacified monsters leaving the level take their stuff with
         // them.
-        mon->flags |= MF_HARD_RESET;
-        monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
+        monster_die(*mon, KILL_RESET, NON_MONSTER);
     }
 }
 

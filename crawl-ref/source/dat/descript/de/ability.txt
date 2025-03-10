@@ -204,15 +204,6 @@ Trefferwahrscheinlichkeit. Dieser unnatürliche Effekt verursacht eine kleine
 Menge an magischer Kontamination, was bei längerer Nutzung schlecht für die
 Gesundheit ist.
 %%%%
-Minor Destruction ability
-
-Schieße eine zufällige verletzende Explosion auf ein anvisiertes Monster.
-%%%%
-Major Destruction ability
-
-Schießt eine zufälligen schadhaften und explosiven Strahl auf ein anvisiertes
-Monster.
-%%%%
 Channel Energy ability
 
 Frische deine magischen Reserven, abhängig von deiner Anrufungs-Fähigkeit, auf.

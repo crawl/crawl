@@ -16,6 +16,7 @@
 #include "artefact.h"
 #include "attitude-change.h"
 #include "cleansing-flame-source-type.h"
+#include "colour.h"
 #include "coordit.h"
 #include "corpse.h"
 #include "database.h"
@@ -122,9 +123,11 @@ static string _god_wrath_name(god_type god)
 static mgen_data _wrath_mon_data(monster_type mtyp, god_type god)
 {
     mgen_data mg = mgen_data::hostile_at(mtyp, true, you.pos())
-                    .set_summoned(nullptr, 0, 0, god)
-                    .set_non_actor_summoner(_god_wrath_name(god));
+                    .set_summoned(nullptr, MON_SUMM_WRATH)
+                    .set_non_actor_summoner(_god_wrath_name(god))
+                    .set_range(2, you.current_vision);
     mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+    mg.god = god;
     return mg;
 }
 
@@ -171,17 +174,6 @@ static bool _okawaru_random_servant()
     return create_monster(temp, false);
 }
 
-static bool _dithmenos_random_shadow(const int count, const int tier)
-{
-    monster_type mon_type = MONS_SHADOW;
-    if (tier >= 2 && count == 0 && coinflip())
-        mon_type = MONS_TZITZIMITL;
-    else if (tier >= 1 && count < 3 && coinflip())
-        mon_type = MONS_SHADOW_DEMON;
-
-    return create_monster(_wrath_mon_data(mon_type, GOD_DITHMENOS), false);
-}
-
 /**
  * Summon divine warriors of the Shining One to punish the player.
  */
@@ -196,10 +188,16 @@ static void _tso_summon_warriors()
             success = true;
     }
 
-    simple_god_message(success ? " sends the divine host to punish "
-                       "you for your evil ways!"
-                       : "'s divine host fails to appear.", GOD_SHINING_ONE);
-
+    if (success)
+    {
+        simple_god_message(" sends the divine host to punish you for your evil "
+                           "ways!", false, GOD_SHINING_ONE);
+    }
+    else
+    {
+        simple_god_message(" divine host fails to appear.",
+                           true, GOD_SHINING_ONE);
+    }
 }
 
 /**
@@ -207,9 +205,8 @@ static void _tso_summon_warriors()
  */
 static void _tso_shouts()
 {
-    simple_god_message(" booms out: "
-                       "Take the path of righteousness! REPENT!",
-                       GOD_SHINING_ONE);
+    simple_god_message(" booms out: Take the path of righteousness! REPENT!",
+                       false, GOD_SHINING_ONE);
     noisy(25, you.pos()); // same as scroll of noise
 }
 
@@ -261,7 +258,7 @@ static bool _zin_remove_good_mutations()
     const god_type god = GOD_ZIN;
     bool success = false;
 
-    simple_god_message(" draws some chaos from your body!", god);
+    simple_god_message(" draws some chaos from your body!", false, god);
 
     bool failMsg = true;
 
@@ -279,7 +276,7 @@ static bool _zin_remove_good_mutations()
     }
 
     if (success && !you.how_mutated())
-        simple_god_message(" rids your body of chaos!", god);
+        simple_god_message(" rids your body of chaos!", false, god);
     return success;
 }
 
@@ -300,22 +297,25 @@ static bool _zin_retribution()
     case 2:
     case 3:
     case 4: // recital
-        simple_god_message(" recites the Axioms of Law to you!", god);
-        switch (random2(3))
+        simple_god_message(" recites the Axioms of Law to you!", false, god);
+        switch (random2(4))
         {
         case 0:
             confuse_player(5 + random2(3));
             break;
         case 1:
-            you.put_to_sleep(nullptr, 30 + random2(20));
+            you.put_to_sleep(nullptr, random_range(5, 10) * BASELINE_DELAY);
             break;
         case 2:
             paralyse_player(_god_wrath_name(god));
             return false;
+        case 3:
+            blind_player(20 + random2(15), ETC_SILVER);
+            return false;
         }
         break;
     case 5: // noisiness
-        simple_god_message(" booms out: Turn to the light! REPENT!", god);
+        simple_god_message(" booms out: Turn to the light! REPENT!", false, god);
         noisy(25, you.pos()); // same as scroll of noise
         break;
     }
@@ -331,61 +331,33 @@ static bool _xom_retribution()
 
 static bool _cheibriados_retribution()
 {
-    // time god/slowness theme
+    // time god theme
     const god_type god = GOD_CHEIBRIADOS;
 
-    // Chei retribution might only make sense in combat.
-    // We can crib some Xom code for this. {bh}
+    // Several of the main effects should care only about present enemies.
     int tension = get_tension(GOD_CHEIBRIADOS);
-    int wrath_value = random2(tension);
 
-    // Determine the level of wrath
-    int wrath_type = 0;
-    if (wrath_value < 2)
-        wrath_type = 0;
-    else if (wrath_value < 4)
-        wrath_type = 1;
-    else if (wrath_value < 8)
-        wrath_type = 2;
-    else if (wrath_value < 16)
-        wrath_type = 3;
-    else
-        wrath_type = 4;
-
-    // Strip away extra speed
-    dec_haste_player(10000);
-
-    switch (wrath_type)
+    // Almost any tension: sleep if >66% HP, otherwise remove haste and give
+    // slow. Next to / no tension: noise.
+    if (tension > random_range(5, 8))
     {
-    // Very high tension wrath.
-    // Add noise then start sleeping and slow the player with 2/3 chance.
-    case 4:
-        simple_god_message(" strikes the hour.", god);
-        noisy(40, you.pos());
-        dec_penance(god, 1); // and fall-through.
-    // High tension wrath
-    // Sleep the player and slow the player with 50% chance.
-    case 3:
-        mpr("You lose track of time.");
-        you.put_to_sleep(nullptr, 30 + random2(20));
-        if (one_chance_in(wrath_type - 1))
-            break;
+        if (you.hp >= (you.hp_max * 3 / 4))
+        {
+            mprf(MSGCH_DANGER, "You lose track of time!");
+            you.put_to_sleep(nullptr, random_range(5, 10) * BASELINE_DELAY);
+            dec_penance(god, 1);
+        }
         else
-            dec_penance(god, 1); // and fall-through.
-    // Medium tension
-    case 2:
-        mprf(MSGCH_WARN, "You feel the world leave you behind!");
-        slow_player(91 + random2(10));
-        break;
-    // Low/no tension; lose stats.
-    case 1:
-    case 0:
-        mpr("Time shudders.");
-        lose_stat(STAT_RANDOM, 1 + random2avg(5, 2));
-        break;
-
-    default:
-        break;
+        {
+            mprf(MSGCH_DANGER, "The world leaves you behind!");
+            dec_haste_player(10000);
+            slow_player(81 + random2(10));
+        }
+    }
+    else
+    {
+        simple_god_message(" strikes the hour, and time shudders.", false, god);
+        noisy(40, you.pos());
     }
 
     return true;
@@ -400,13 +372,8 @@ void lucy_check_meddling()
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
         monster *mon = *mi;
-        if (!mon
-            || mon->attitude != ATT_HOSTILE
-            || mons_is_conjured(mon->type)
-            || mons_is_firewood(*mon))
-        {
+        if (!mon || mon->attitude != ATT_HOSTILE || mon->is_peripheral())
             continue;
-        }
         potential_banishees.push_back(mon);
     }
     if (potential_banishees.empty())
@@ -420,9 +387,8 @@ void lucy_check_meddling()
         if (invalid_monster(mon) || !mon->alive())
             continue;
         // 80% chance of banishing god wrath summons, 30% chance of banishing
-        // other creatures nearby. Lazily assume that any perma summoned mons
-        // is a god wrath summon.
-        if (x_chance_in_y(mon->is_perm_summoned() ? 8 : 3, 10))
+        // other creatures nearby.
+        if (x_chance_in_y(mon->was_created_by(MON_SUMM_WRATH) ? 8 : 3, 10))
         {
             if (!banished)
             {
@@ -438,7 +404,7 @@ static void _spell_retribution(monster* avatar, spell_type spell, god_type god,
                                const char* message = nullptr)
 {
     simple_god_message(message ? message : " rains destruction down upon you!",
-                       god);
+                       false, god);
     bolt beam;
     beam.source = you.pos();
     beam.target = you.pos();
@@ -494,22 +460,25 @@ static spell_type _makhleb_destruction_type()
  * @param god           The god doing the wrath-hurling.
  * @return              An avatar monster, or nullptr if none could be set up.
  */
-static monster* get_avatar(god_type god)
+static monster* _get_wrath_avatar(god_type god)
 {
-    // TODO: it would be better to abstract the fake monster code from both
-    // this and shadow monster and possibly use different monster types --
-    // doing it this way makes it easier for bugs where the two are conflated
-    // to creep in
-    monster* avatar = shadow_monster(false);
+    if (monster_at(you.pos()))
+        return nullptr;
+
+    monster* avatar = get_free_monster();
     if (!avatar)
         return nullptr;
 
-    // shadow_monster() has the player's mid, which is no good here.
+    avatar->type       = MONS_GOD_WRATH_AVATAR;
+    avatar->behaviour  = BEH_SEEK;
+    avatar->attitude   = ATT_HOSTILE;
+    avatar->flags      = MF_NO_REWARD | MF_JUST_SUMMONED | MF_SEEN
+                         | MF_WAS_IN_VIEW | MF_HARD_RESET | MF_NAME_REPLACE;
+    avatar->god        = god;
+    avatar->set_position(you.pos());
     avatar->set_new_monster_id();
-
+    env.mgrid(you.pos()) = avatar->mindex();
     avatar->mname = _god_wrath_name(god);
-    avatar->flags |= MF_NAME_REPLACE;
-    avatar->attitude = ATT_HOSTILE;
     avatar->set_hit_dice(you.experience_level);
 
     return avatar;
@@ -519,7 +488,7 @@ static monster* get_avatar(god_type god)
 static void _reset_avatar(monster &avatar)
 {
     env.mid_cache.erase(avatar.mid);
-    shadow_monster_reset(&avatar);
+    avatar.reset();
 }
 
 /**
@@ -531,12 +500,13 @@ static bool _makhleb_call_down_destruction()
 {
     const god_type god = GOD_MAKHLEB;
 
-    monster* avatar = get_avatar(god);
+    monster* avatar = _get_wrath_avatar(god);
     // can't be const because mons_cast() doesn't accept const monster*
 
     if (avatar == nullptr)
     {
-        simple_god_message(" has no time to deal with you just now.", god);
+        simple_god_message(" has no time to deal with you just now.", false,
+                           god);
         return false; // not a very dazzling divine experience...
     }
 
@@ -613,9 +583,14 @@ static bool _makhleb_summon_servants()
             summoned++;
     }
 
-    simple_god_message(summoned > 1 ? " sends minions to punish you." :
-                       summoned > 0 ? " sends a minion to punish you."
-                       : "'s minions fail to arrive.", GOD_MAKHLEB);
+    if (summoned > 0)
+    {
+        simple_god_message(summoned > 1 ? " sends minions to punish you." :
+                                          " sends a minion to punish you.",
+                           false, GOD_MAKHLEB);
+    }
+    else
+        simple_god_message(" minions fail to arrive.", true, GOD_MAKHLEB);
 
     return true;
 
@@ -671,7 +646,7 @@ static bool _kikubaaqudgha_retribution()
 
     const bool sil = silenced(you.pos());
     const bool rtorm = you.res_torment();
-    if (one_chance_in(3) && (!sil || !rtorm))
+    if (coinflip() && (!sil || !rtorm))
     {
         if (!rtorm)
             torment(nullptr, TORMENT_KIKUBAAQUDGHA, you.pos());
@@ -683,12 +658,7 @@ static bool _kikubaaqudgha_retribution()
         return true;
     }
 
-    if (coinflip())
-    {
-        lose_stat(STAT_RANDOM, 2 + random2avg(you.experience_level / 3, 2));
-        return true;
-    }
-    you.drain(nullptr, false, random_range(225, 375));
+    you.drain(nullptr, false, random_range(175, 300));
     return true;
 }
 
@@ -704,13 +674,18 @@ static bool _yredelemnul_retribution()
             ++count;
     }
 
-    simple_god_message(count > 1 ? " sends servants to punish you." :
-                        count > 0 ? " sends a servant to punish you."
-                                    : "'s servants fail to arrive.", god);
+    if (count > 0)
+    {
+        simple_god_message(count > 1 ? " sends servants to punish you." :
+                                       " sends a servant to punish you.",
+                           false, god);
+    }
+    else
+        simple_god_message(" servants fail to arrive.", true, god);
 
     if (coinflip())
     {
-        simple_god_message(" binds you in chains!", god);
+        simple_god_message(" binds you in chains!", false, god);
         you.increase_duration(DUR_NO_MOMENTUM, random_range(3, 8));
     }
 
@@ -719,13 +694,17 @@ static bool _yredelemnul_retribution()
 
 static bool _trog_retribution()
 {
-    // physical/berserk theme
+    // berserk theme
     const god_type god = GOD_TROG;
+    int tension = get_tension(GOD_TROG);
 
-    if (coinflip())
+    if (you.hp < you.hp_max * 2 / 3 || tension < 4 || tension > 27)
     {
+        // If the other effect could kill you, tension is low enough we can
+        // safely interrupt you, or tension's so high they're not making things
+        // much worse, summon berserkers from the Brothers In Arms monster set.
         int count = 0;
-        int points = 3 + you.experience_level * 3;
+        int points = 2 + you.experience_level * 3;
 
         {
             msg::suppress msg;
@@ -733,7 +712,7 @@ static bool _trog_retribution()
             while (points > 0)
             {
                 int cost =
-                    min(min(random2avg((1 + you.experience_level / 3), 2) + 3,
+                    min(min(random2avg((1 + you.experience_level / 4), 2) + 3,
                             10),
                         points);
 
@@ -754,58 +733,16 @@ static bool _trog_retribution()
         simple_god_message(count > 1 ? " sends monsters to punish you." :
                            count > 0 ? " sends a monster to punish you."
                                      : " has no time to punish you... now.",
-                           god);
-    }
-    else if (!one_chance_in(3))
-    {
-        simple_god_message("'s voice booms out: Feel my wrath!", god);
-
-        // A collection of physical effects that might be better
-        // suited to Trog than wild fire magic... messages could
-        // be better here... something more along the lines of apathy
-        // or loss of rage to go with the anti-berserk effect-- bwr
-        switch (random2(6))
-        {
-        case 0:
-        case 1:
-        case 2:
-            lose_stat(STAT_STR, 1 + random2(you.strength() / 5));
-            break;
-
-        case 3:
-            if (!you.duration[DUR_PARALYSIS])
-            {
-                mprf(MSGCH_WARN, "You suddenly pass out!");
-                const int turns = 2 + random2(6);
-                take_note(Note(NOTE_PARALYSIS, min(turns, 13), 0, "Trog"));
-                you.increase_duration(DUR_PARALYSIS, turns, 13);
-            }
-            return false;
-
-        case 4:
-        case 5:
-            mprf(MSGCH_WARN, "You suddenly feel lethargic!");
-            slow_player(91 + random2(10));
-            break;
-        }
+                           false, god);
     }
     else
     {
-        // A fireball is magic when used by a mortal but just a manifestation
-        // of pure rage when used by a god. --ebering
-
-        monster* avatar = get_avatar(god);
-        // can't be const because mons_cast() doesn't accept const monster*
-
-        if (avatar == nullptr)
-        {
-            simple_god_message(" has no time to deal with you just now.", god);
-            return false; // not a very dazzling divine experience...
-        }
-
-        _spell_retribution(avatar, SPELL_FIREBALL,
-                           god, " hurls fiery rage upon you!");
-        _reset_avatar(*avatar);
+        // Otherwise, make the player do a cruel mockery of berserk:
+        // weakly thrashing in place, regularly hitting walls and floors.
+        simple_god_message(" tears away your strength and self-control!", false, god);
+        int vex_max = max(4, you.experience_level / 4);
+        you.weaken(nullptr, 25);
+        you.vex(nullptr, random_range(3, vex_max), "Trog's wrath");
     }
 
     return true;
@@ -849,7 +786,7 @@ static bool _beogh_retribution()
                 wpn.plus  = random2(3);
                 wpn.sub_type = wpn_type;
 
-                set_ident_flags(wpn, ISFLAG_KNOW_TYPE);
+                identify_item(wpn);
 
                 item_colour(wpn);
 
@@ -870,7 +807,7 @@ static bool _beogh_retribution()
             msg << " throws "
                 << (num_created == 1 ? "an implement" : "implements")
                 << " of electrocution at you.";
-            simple_god_message(msg.str().c_str(), god);
+            simple_god_message(msg.str().c_str(), false, god);
             break;
         } // else fall through
     }
@@ -903,7 +840,7 @@ static bool _beogh_retribution()
 
         simple_god_message(
             mons ? " sends forth an army of orcs."
-                 : " is still gathering forces against you.", god);
+                 : " is still gathering forces against you.", false, god);
     }
     }
 
@@ -921,8 +858,10 @@ static bool _okawaru_retribution()
     for (; how_many > 0; --how_many)
         count += _okawaru_random_servant();
 
-    simple_god_message(count > 0 ? " sends forces against you!"
-                                 : "'s forces are busy with other wars.", god);
+    if (count > 0)
+        simple_god_message(" sends forces against you!", false, god);
+    else
+        simple_god_message(" forces are busy with other wars.", true, god);
 
     return true;
 }
@@ -932,22 +871,19 @@ static bool _sif_muna_retribution()
     // magic/intelligence theme
     const god_type god = GOD_SIF_MUNA;
 
-    simple_god_message("'s wrath finds you.", god);
+    simple_god_message(" wrath finds you.", true, god);
 
     switch (random2(10))
     {
     case 0:
     case 1:
     case 2:
-        lose_stat(STAT_INT, 1 + random2(you.intel() / 5));
-        break;
-
     case 3:
     case 4:
-    case 5:
         confuse_player(5 + random2(3));
         break;
 
+    case 5:
     case 6:
     case 7:
     case 8:
@@ -981,12 +917,12 @@ static void _lugonu_transloc_retribution()
     if (coinflip())
     {
         // Give extra opportunities for embarrassing teleports.
-        simple_god_message("'s wrath scatters you!", god);
+        simple_god_message(" wrath scatters you!", true, god);
         you_teleport_now(false, true, "Space warps around you!");
     }
     else if (coinflip())
     {
-        simple_god_message(" draws you home!", god);
+        simple_god_message(" draws you home!", false, god);
         you.banish(nullptr, "Lugonu's touch", you.get_experience_level(), true);
     }
 }
@@ -1045,8 +981,10 @@ static void _lugonu_minion_retribution()
             success = true;
     }
 
-    simple_god_message(success ? " sends minions to punish you."
-                               : "'s minions fail to arrive.", god);
+    if (success)
+        simple_god_message(" sends minions to punish you.", false, god);
+    else
+        simple_god_message(" minions fail to arrive.", true, god);
 }
 
 /**
@@ -1130,17 +1068,19 @@ static bool _vehumet_retribution()
 {
     const god_type god = GOD_VEHUMET;
 
-    monster* avatar = get_avatar(god);
+    monster* avatar = _get_wrath_avatar(god);
     if (!avatar)
     {
-        simple_god_message(" has no time to deal with you just now.", god);
+        simple_god_message(" has no time to deal with you just now.", false,
+                           god);
         return false;
     }
 
     const spell_type spell = _vehumet_wrath_type();
     if (spell == SPELL_NO_SPELL)
     {
-        simple_god_message(" has no time to deal with you just now.", god);
+        simple_god_message(" has no time to deal with you just now.", false,
+                           god);
         _reset_avatar(*avatar);
         return false;
     }
@@ -1155,7 +1095,8 @@ static bool _nemelex_retribution()
     // card theme
     const god_type god = GOD_NEMELEX_XOBEH;
 
-    simple_god_message(" makes you draw from the deck of Punishment.", god);
+    simple_god_message(" makes you draw from the deck of Punishment.", false,
+                       god);
     draw_from_deck_of_punishment();
     return true;
 }
@@ -1189,7 +1130,7 @@ static void _jiyva_remove_slime_mutation()
         return;
 
     const god_type god = GOD_JIYVA;
-    simple_god_message("'s gift of slime is revoked.", god);
+    simple_god_message(" gift of slime is revoked.", true, god);
     delete_mutation(RANDOM_SLIME_MUTATION, _god_wrath_name(god),
                     true, false, true);
 }
@@ -1233,7 +1174,7 @@ static void _jiyva_summon_slimes()
         MONS_SHINING_EYE,
         MONS_GLOWING_ORANGE_BRAIN,
         MONS_ROCKSLIME,
-        MONS_QUICKSILVER_OOZE,
+        MONS_VOID_OOZE,
         MONS_ACID_BLOB,
         MONS_AZURE_JELLY,
         MONS_SLIME_CREATURE,
@@ -1289,12 +1230,13 @@ static void _fedhas_nature_retribution()
 {
     const god_type god = GOD_FEDHAS;
 
-    monster* avatar = get_avatar(god);
+    monster* avatar = _get_wrath_avatar(god);
     // can't be const because mons_cast() doesn't accept const monster*
 
     if (avatar == nullptr)
     {
-        simple_god_message(" has no time to deal with you just now.", god);
+        simple_god_message(" has no time to deal with you just now.", false,
+                           god);
         return;
     }
 
@@ -1681,7 +1623,7 @@ static int _fedhas_corpse_spores(beh_type attitude)
                                                MHITNOT,
                                                MG_FORCE_PLACE,
                                                GOD_FEDHAS)
-                                            .set_summoned(&you, 0, 0)))
+                                            .set_summoned(&you, SPELL_NO_SPELL)))
         {
             plant->flags |= MF_NO_REWARD;
 
@@ -1733,7 +1675,7 @@ static bool _fedhas_retribution()
         // fall through to the elemental miscast effects.
         if (_fedhas_corpse_spores(BEH_HOSTILE))
         {
-            simple_god_message(" produces spores.", god);
+            simple_god_message(" produces spores.", false, god);
             return true;
         }
 
@@ -1747,6 +1689,36 @@ static bool _fedhas_retribution()
     }
 }
 
+static spell_type _get_hostile_shadow_spell()
+{
+    vector<spell_type> spells;
+
+    for (spell_type player_spell : you.spells)
+    {
+        const spschools_type schools = get_spell_disciplines(player_spell);
+
+        // Including only the spells that would work fine for an independent
+        // player shadow for now.
+        if (schools & spschool::fire)
+            spells.push_back(SPELL_SHADOW_BALL);
+        if (schools & spschool::ice)
+            spells.push_back(SPELL_CREEPING_SHADOW);
+        if (schools & spschool::earth)
+            spells.push_back(SPELL_SHADOW_SHARD);
+        if (schools & spschool::conjuration)
+            spells.push_back(SPELL_SHADOW_BEAM);
+        if (schools & spschool::hexes)
+            spells.push_back(SPELL_SHADOW_TORPOR);
+        if (schools & spschool::summoning)
+            spells.push_back(SPELL_SHADOW_PUPPET);
+    }
+
+    if (spells.empty())
+        return SPELL_NO_SPELL;
+    else
+        return spells[random2(spells.size())];
+}
+
 static bool _dithmenos_retribution()
 {
     // shadow theme
@@ -1757,53 +1729,49 @@ static bool _dithmenos_retribution()
     case 0:
     {
         int count = 0;
-        int how_many = 3 + random2avg(div_rand_round(you.experience_level, 3),
-                                      2);
-        const int tier = div_rand_round(you.experience_level, 9);
+        int how_many = random_range(3, 5);
+        mgen_data mg = _wrath_mon_data(MONS_SHADOW_PUPPET, GOD_DITHMENOS);
+        mg.hd = 3 + div_rand_round(you.experience_level * 2, 3);
         while (how_many-- > 0)
         {
-            if (_dithmenos_random_shadow(count, tier))
+            if (create_monster(mg, false))
                 count++;
         }
-        simple_god_message(count ? " calls forth shadows to punish you."
+        simple_god_message(count ? " weaves the shadows around you into monsters."
                                  : " fails to incite the shadows against you.",
-                           god);
+                           false, god);
+
+        if (coinflip())
+        {
+            mpr("You feel lethargic.");
+            you.increase_duration(DUR_SLOW, random_range(10, 20), 100);
+        }
+
         break;
     }
     case 1:
     {
-        int count = 0;
-        int how_many = 2 + random2avg(div_rand_round(you.experience_level, 4),
-                                      4);
-        for (int i = 0; i < how_many; ++i)
+        spell_type spell = _get_hostile_shadow_spell();
+        coord_def pos = find_newmons_square(MONS_PLAYER_SHADOW, you.pos());
+        if (!pos.origin())
         {
-            if (create_monster(
-                    mgen_data(
-                        RANDOM_MOBILE_MONSTER, BEH_HOSTILE, you.pos(), MHITYOU,
-                              MG_NONE, god)
-                            .set_place(level_id(BRANCH_DUNGEON,
-                                                min(27,
-                                                    you.experience_level + 5)))
-                            .set_summoned(nullptr, 4, MON_SUMM_WRATH)
-                            .set_non_actor_summoner(_god_wrath_name(god))))
-            {
-                count++;
-            }
+            monster* shadow = create_player_shadow(pos, false, spell);
+            simple_god_message(shadow ? " turns your shadow against you."
+                                      : " fails to turn your shadows against you.",
+                               false, god);
         }
-        simple_god_message(count ? " weaves monsters from the shadows."
-                                 : " fails to weave monsters from the shadows.",
-                           god);
+
         break;
     }
     case 2:
     {
         // This is possibly kind of underwhelming?
         god_speaks(god, "You feel overwhelmed by the shadows around you.");
-        you.put_to_sleep(nullptr, 30 + random2(20));
+        you.put_to_sleep(nullptr, random_range(5, 10) * BASELINE_DELAY);
         break;
     }
     case 3:
-        simple_god_message(" tears the shadows away from you.", god);
+        simple_god_message(" tears the darkness away from you.", false, god);
         you.sentinel_mark();
         break;
     }
@@ -1853,9 +1821,15 @@ static void _qazlal_summon_elementals()
     }
 
     if (success)
-        simple_god_message(" incites the elements against you!", god);
+    {
+        simple_god_message(" incites the elements against you!", false,
+                           god);
+    }
     else
-        simple_god_message(" fails to incite the elements against you.", god);
+    {
+        simple_god_message(" fails to incite the elements against you.", false,
+                           god);
+    }
 }
 
 /**
@@ -1869,12 +1843,12 @@ static void _qazlal_elemental_vulnerability()
                false, true, false, MUTCLASS_TEMPORARY))
     {
         simple_god_message(" strips away your elemental protection.",
-                           god);
+                           false, god);
     }
     else
     {
         simple_god_message(" fails to strip away your elemental protection.",
-                           god);
+                           false, god);
     }
 }
 
@@ -1889,7 +1863,7 @@ static bool _qazlal_retribution()
 {
     if (coinflip())
     {
-        simple_god_message(" causes a mighty clap of thunder!",
+        simple_god_message(" causes a mighty clap of thunder!", false,
                            GOD_QAZLAL);
         noisy(25, you.pos());
     }
@@ -1933,7 +1907,7 @@ static int _wu_jian_summon_weapons()
             wpn.plus = random2(5);
             wpn.sub_type = subtype;
 
-            set_ident_flags(wpn, ISFLAG_KNOW_TYPE);
+            identify_item(wpn);
 
             item_colour(wpn);
 
@@ -1973,12 +1947,12 @@ static bool _wu_jian_retribution()
             break;
         case 3:
             wu_jian_sifu_message(" says: Suffer, mortal!");
-            you.corrode_equipment(_god_wrath_name(god).c_str(), 2);
+            you.corrode(nullptr, _god_wrath_name(god).c_str(), 8);
             break;
         }
     }
     else
-        simple_god_message("'s divine weapons fail to arrive.", god);
+        simple_god_message(" divine weapons fail to arrive.", true, god);
 
     return true;
 }
@@ -1998,7 +1972,7 @@ static void _summon_ignis_elementals()
         god_speaks(god, msg.c_str());
     }
     else
-        simple_god_message("' divine wrath fails to arrive.", god);
+        simple_god_message(" divine wrath fails to arrive.", true, god);
 }
 
 static bool _ignis_shaft()
@@ -2008,7 +1982,8 @@ static bool _ignis_shaft()
     if (!you.shaftable())
         return false;
 
-    simple_god_message(" burns the ground from beneath your feet!", GOD_IGNIS);
+    simple_god_message(" burns the ground from beneath your feet!", false,
+                       GOD_IGNIS);
 
     // player::do_shaft() already checks resist_dislodge, but the message is a
     // bit worse.
@@ -2032,15 +2007,13 @@ static monster* _ignis_champion_target()
         monster* mon = monster_at(*ri);
         // Some of these cases are redundant. TODO: cleanup
         if (!mon
-            || mons_is_firewood(*mon)
+            || mon->is_peripheral()
             || !mons_can_use_stairs(*mon, DNGN_STONE_STAIRS_DOWN_I)
-            || mons_is_tentacle_or_tentacle_segment(mon->type)
             || mon->is_stationary()
-            || mons_is_conjured(mon->type)
-            || mon->is_perm_summoned()
             || mon->wont_attack()
             // no stealing another god's pals :P
-            || mon->is_priest())
+            || mon->is_priest()
+            || mon->god != GOD_NO_GOD)
         {
             continue;
         }
@@ -2080,8 +2053,9 @@ static bool _ignis_champion()
         return false;
     // Message ordering is a bit touchy here.
     // First, we say what we're doing. TODO: more fun messages
-    simple_god_message(make_stringf(" anoints %s as an instrument of vengeance!",
-                                    mon->name(DESC_THE).c_str()).c_str(), GOD_IGNIS);
+    simple_god_message(make_stringf(" anoints %s as an instrument of "
+                                    "vengeance!", mon->name(DESC_THE).c_str()).c_str(),
+                                    false, GOD_IGNIS);
     // Then, we add the ench. This makes it visible if it wasn't, since it's both
     // confusing and unfun for players otherwise.
     mon->add_ench(mon_enchant(ENCH_FIRE_CHAMPION, 1));
@@ -2124,7 +2098,8 @@ static bool _uskayaw_retribution()
         if (mon && mon->can_go_berserk())
         {
             simple_god_message(make_stringf(" drives %s into a dance frenzy!",
-                                     mon->name(DESC_THE).c_str()).c_str(), god);
+                                     mon->name(DESC_THE).c_str()).c_str(),
+                                     false, god);
             mon->go_berserk(true);
             return true;
         }
@@ -2134,8 +2109,8 @@ static bool _uskayaw_retribution()
     case 3:
         if (mon)
         {
-            simple_god_message(" booms out: Time for someone else to take a solo!",
-                                    god);
+            simple_god_message(" booms out: Time for someone else to take a "
+                               "solo!", false, god);
             paralyse_player(_god_wrath_name(god));
             dec_penance(god, 1);
             return false;
@@ -2143,7 +2118,8 @@ static bool _uskayaw_retribution()
         // else we intentionally fall through
 
     case 4:
-        simple_god_message(" booms out: Revellers, it's time to dance!", god);
+        simple_god_message(" booms out: Revellers, it's time to dance!",
+                           false, god);
         noisy(35, you.pos());
         break;
     }
@@ -2248,7 +2224,7 @@ static void _tso_blasts_cleansing_flame(const char *message)
     if (message)
         god_speaks(GOD_SHINING_ONE, message);
 
-    simple_god_message(" blasts you with cleansing flame!",
+    simple_god_message(" blasts you with cleansing flame!", false,
                        GOD_SHINING_ONE);
 
     // damage is 2d(pow), *3/2 for undead and demonspawn
@@ -2288,7 +2264,7 @@ static void _god_smites_you(god_type god, const char *message,
     for (int i = 0; i < 5; ++i)
         divine_hurt += random2(you.experience_level);
 
-    simple_god_message(" smites you!", god);
+    simple_god_message(" smites you!", false, god);
     ouch(divine_hurt, death_type, MID_NOBODY, aux.c_str());
 }
 
@@ -2305,6 +2281,24 @@ void reduce_xp_penance(god_type god, int amount)
                 / you.exp_docked_total[god];
     if (new_pen < you.penance[god])
         dec_penance(god, you.penance[god] - new_pen);
+}
+
+void gozag_abandon_shops_on_level()
+{
+    vector<map_marker *> markers = env.markers.get_all(MAT_FEATURE);
+    for (const auto marker : markers)
+    {
+        map_feature_marker *feat =
+            dynamic_cast<map_feature_marker *>(marker);
+        ASSERT(feat);
+        if (feat->feat == DNGN_ABANDONED_SHOP)
+        {
+            // TODO: clear shop data out?
+            env.grid(feat->pos) = DNGN_ABANDONED_SHOP;
+            view_update_at(feat->pos);
+            env.markers.remove(feat);
+        }
+    }
 }
 
 void gozag_incite(monster *mon)

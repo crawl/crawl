@@ -87,7 +87,6 @@ MAP
 ENDMAP
 
 NAME:   portal_sewer_entry_b
-ORIENT: float
 : sewer_portal(_G)
 SUBST:  ' = W. , W = WW1
 KMONS:  1 = rat w:20 / river rat / ball python / adder w:2 / \
@@ -132,6 +131,7 @@ ENDMAP
 
 NAME:   portal_sewer_entry_e
 : sewer_portal(_G)
+KFEAT:  z = rock_wall
 ORIENT: northwest
 NSUBST: X = 2:+ / *:x
 SUBST:  w = WW.
@@ -139,15 +139,21 @@ NSUBST: W = 8:111W / *:W
 KMONS:  1 = rat w:20 / river rat / ball python / adder w:2 / \
             giant cockroach / ribbon worm w:3
 MAP
-xxxxxxxxx
-xWWWXWww.
-xWOWXWww.
-xWWWXWww.
-xXXXXWw..
-xWWWWWw..
-xwwwww...
-xwww.....
-x........
+zzzzzzzzzzzzzzzzzzzzzzzzz
+zzzzzzzzzzzzzzzzzzzzzzzzz
+zzzzzzzzzzzzzzzzzzzzzzzzz
+zzzzzzzzzzzzzzzzzzzzzzzzz
+zzzzzzzzzzzzzzzzzzzzzzzzz
+zzzzzzzzzzzzzzzzzzzzzzzzz
+zzzzzzzzzzzzzzzzxxxxxxxxx
+zzzzzzzzzzzzzzzzxWWWXWww.
+zzzzzzzzzzzzzzzzxWOWXWww.
+zzzzzzzzzzzzzzzzxWWWXWww.
+zzzzzzzzzzzzzzzzxXXXXWw..
+zzzzzzzzzzzzzzzzxWWWWWw..
+zzzzzzzzzzzzzzzzxwwwww...
+zzzzzzzzzzzzzzzzxwww.....
+zzzzzzzzzzzzzzzzx........
 ENDMAP
 
 NAME:   portal_sewer_entry_f
@@ -276,26 +282,27 @@ ENDMAP
 
 NAME: cheibrodos_sewer_entry_bend
 TAGS: no_monster_gen
-ORIENT: northeast
 KMONS: 1 = ribbon worm
 NSUBST: - = 1:1 / 1=1.. / 1=1...
 KFEAT: A = iron_grate
 : sewer_portal(_G)
 MAP
-xxxxxxxxxxxxxx
-xxAAxxxxxxxxxx
-xxWWxxxxx---xx
-...WWWWWWW--xx
-....WWWWWWW-xx
- @..xxxxOWWxxx
-  .....mxWWxxx
-     @..xWWxxx
-      @.xWWxxx
-       .xWWxxx
-       ...WWAx
-       ....WAx
-        @..xxx
-         ..xxx
+xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx
+xxxAAxxxxxxxxxxxxxxxxx
+xxxWWxxxxx---xxxxxxxxx
+x...WWWWWWW--xxxxxxxxx
+.....WWWWWWW-xxxxxxxxx
+@xx..xxxxOWWxxxxxxxxxx
+  x.....mxWWxxxxxxxxxx
+  xxxx...xWWxxxxxxxxxx
+     xx..xWWxxxxxxxxxx
+      x..xWWxxxxxxxxxx
+        ...WWAxxxxxxxx
+        ....WAxxxxxxxx
+         @..xxxxxxxxxx
+          ..xxxxxxxxxx
 ENDMAP
 
 NAME: cheibrodos_sewer_entry_drain
@@ -404,8 +411,8 @@ ORIENT:   encompass
 # some fresh water for the kobolds
 MONS:     jackal, kobold, kobold brigand
 MONS:     rat w:15 / river rat w:7
-ITEM:     potion of curing ident:type / potion of heal wounds ident:type
-ITEM:     potion of enlightenment ident:type
+ITEM:     potion of curing pre_id / potion of heal wounds pre_id
+ITEM:     potion of enlightenment pre_id
 KMONS:    Z = sacred lotus
 KFEAT:    YZ = deep_water
 KFEAT:    y = shallow_water
@@ -568,7 +575,7 @@ ORIENT:   encompass
 SUBST:    - = WWW.
 SHUFFLE:  |de
 : item(dgn.loot_scrolls)
-ITEM:     scroll of blinking ident:all
+ITEM:     scroll of blinking pre_id
 MONS:     frilled lizard w:20 / ball python / giant cockroach w:20 / \
           dart slug / adder w:8
 KMONS:    ? = dart slug
@@ -577,6 +584,7 @@ KFEAT:    ? = W
 KFEAT:    ! = w
 NSUBST:   . = 80 = 1.. / *:.
 NSUBST:   ! = 1:! / 1:!!!!. / *:w
+COLOUR:   ? = lightgreen
 COLOUR:   ! = green
 SUBST:    ~ = .
 : sewer_setup(_G)
@@ -619,14 +627,15 @@ ORIENT:   encompass
 SUBST:    - = WWWW.
 KMONS:    1 = frilled lizard / ball python / giant cockroach / \
               dart slug / endoplasm / adder w:4
+KMONS:    2 = jelly
 KMONS:    ! = bullfrog
 : item(dgn.loot_scrolls)
-ITEM:     scroll of blinking ident:all
-KFEAT:    1W = W
+ITEM:     scroll of blinking pre_id
+KFEAT:    12W = W
 KFEAT:    ! = w
-NSUBST:   W = 175 = 1WWW / *:W
+NSUBST:   W = 175 = 1WWW / 1:2 / *:W
 NSUBST:   ! = 1:! / 1:!!!!. / *:w
-COLOUR:   1! = green
+COLOUR:   12! = green
 SHUFFLE:  ed|
 : sewer_setup(_G)
 MAP
@@ -715,6 +724,45 @@ xxxxxcccc2-2ccccxxxxxxxxxxxxxxxcccc2-2ccccxxxxx
 xxxxxxxxcccccxxxxxxxxxxxxxxxxxxxxxcccccxxxxxxxx
 ENDMAP
 
+NAME:   sewer_hellmonk_circle_the_drain
+TAGS:   no_item_gen no_monster_gen no_pool_fixup
+ORIENT: encompass
+MONS:   bullfrog
+MONS:   ribbon worm w:5 / ball python / endoplasm / giant cockroach
+KMONS:  3 = brain worm / adder / river rat
+KFEAT:  3 = shallow_water
+ITEM:   any scroll
+: item(dgn.loot_potions)
+NSUBST: d = 1:1 / * = de, f = 1:1 / * = de
+NSUBST: W = 4:2 / *:W, 2 = 2:2 / * = 2W
+SUBST:  - = WWWW.
+NSUBST: . = 6:2 / 12 = 2. / *:.
+SUBST:  " = W., ~ = WW.
+COLOUR: 3 = lightgreen
+: sewer_setup(_G)
+MAP
+           ccccccccccc
+       cccccdddWWWWWWccccc
+     ccc---cdddWWWWWWWW-3ccc
+   ccc--...ccccccccccWW----ccc
+  cc--.....3--------cccww..--cc
+ cc-...-----------..--cccw...wcc
+ c-...-cccccccccccc...--ccw...wc
+cc-..-cc--~~~""""~ccc...-ccw..wcc
+c-..-cc-..~c~""""""~cc...-cc-..wc
+c-..-c-...cc""""""""~cc...-c-..wc
+c2..-c-...c~"""<"A"""~c...-c-..2c
+cw..-c-...cc~""""""""cc...-c-..-c
+cw..-cc-...cc~""""""~c~..-cc-..-c
+ccw..wcc-...ccc~""""~~~--cc-..-cc
+ cw...wcc--...cccccccccccc-...-c
+ ccw...wccc--..-----------...-cc
+  cc--..wwccc--------3.....--cc
+   ccc----WWcccccccccc...--ccc
+     ccc3-WWWWWWWWfffc---ccc
+       cccccWWWWWWfffccccc
+           ccccccccccc
+ENDMAP
 
 ## BIG BADDIE (Pargi) ######################################################
 # Threat is mostly a single larger creature, often Pargi. Combined weight 40.
@@ -725,7 +773,7 @@ ORIENT:   encompass
 : sewer_setup(_G)
 MONS:     bat, brain worm
 KMONS:    3 = Pargi / crocodile, crocodile
-ITEM:     potion of berserk rage ident:type / potion of haste ident:type w:5
+ITEM:     potion of berserk rage pre_id / potion of haste pre_id w:5
 SUBST:    - = 1....
 MAP
  ccccccc
@@ -819,7 +867,7 @@ KMONS:   2 = frilled lizard w:8 / ball python w:8 / adder w:2
 KFEAT:   1 = W
 KFEAT:   2 = w
 SUBST:   QR = .
-NSUBST:  2 = 2:2 / 1:w / * = 2w, . = 1:1 / 1 = 1.. / * = .WW
+NSUBST:  2 = 2:2 / 1:w / * = 2w, . = 1:1 / 1 = 1. / * = .WW
 SUBST:   e = !!!!????%, X = xx., Y = xw
 COLOUR:  1 = lightgreen
 COLOUR:  2 = green
@@ -915,9 +963,11 @@ KMONS:  3 = hell rat
 ITEM:   any potion / any scroll
 : item(dgn.loot_potions)
 : item(dgn.loot_scrolls)
+ITEM:   ratskin_cloak
 KFEAT:  3 = shallow_water
 NSUBST: - = 20 = 1... / 8 = 2... / *:.
 SUBST:  . = WWW..
+NSUBST: d = 1 = d:49 g:1 / *:d
 SUBST:  d = ddddef*
 COLOUR: 3 = lightgreen
 : sewer_setup(_G)
@@ -958,7 +1008,7 @@ KMONS:   ? = bat / frilled lizard / ball python / giant cockroach / \
              quokka / endoplasm w:4 / ribbon worm w:4 / adder w:2
 MONS:    ribbon worm w:2 / ball python / jackal / adder w:5 / river rat w:5
 MONS:    adder, river rat, brain worm, dart slug
-ITEM:    any scroll, potion of enlightenment ident:type
+ITEM:    any scroll, potion of enlightenment pre_id
 : item(dgn.aux_armour)
 : item(dgn.loot_potions)
 : item(dgn.loot_scrolls)
@@ -972,9 +1022,9 @@ NSUBST:  w = 10 = "w / *:w, W = 42 = ?WWW / *:W, ! = 32 = 1... / *:.
 COLOUR:  " = green
 COLOUR:  ? = lightgreen
 : sewer_setup(_G)
-KITEM:   ' = scroll of noise ident:type w:50 / \
-             potion of degeneration ident:type w:100 / \
-             potion of mutation ident:type w:30
+KITEM:   ' = scroll of noise pre_id w:50 / \
+             potion of moonshine pre_id w:100 / \
+             potion of mutation pre_id w:30
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xwwwwwwwwwwwWWW-WW-W--WWWWW-WWW--W--WW-WW-WW-W-WWwwwwwwwwwwwx
@@ -1005,27 +1055,29 @@ ENDMAP
 ###############################################################################
 # A sewer opening to sea by st_.
 #
-NAME:   sewer_sea
-TAGS:   no_item_gen no_monster_gen no_rotate no_pool_fixup
-ORIENT: encompass
-WEIGHT: 5
-MONS:   rat, rat / river rat w:4
-KMONS:  G = sickly merfolk siren
-KMONS:  H = malarious merfolk avatar
-KMONS:  hJ = frilled lizard / ball python / adder
-KMONS:  g = frilled lizard / ball python / giant cockroach / quokka
-KMONS:  K = crocodile
-KFEAT:  gsh = W
-KFEAT:  GnHJ = w
-KFEAT:  O = open_sea
-NSUBST: 1 = 1:K / 2:. / * = 1.
-SUBST:  2 = 2., J = Jn, h = hW, g = gggW
-COLOUR: gh = lightgreen
-COLOUR: HJ = blue
-COLOUR: G = green
-COLOUR: s = cyan
-KITEM:  M = potion of enlightenment q:3 ident:type
-KITEM:  N = scroll of teleportation q:2 ident:type
+NAME:    sewer_sea
+TAGS:    no_item_gen no_monster_gen no_rotate no_pool_fixup
+ORIENT:  encompass
+WEIGHT:  5
+MONS:    rat, river rat w:4
+KMONS:   G = sickly merfolk siren
+KMONS:   H = malarious merfolk avatar
+KMONS:   hJ = frilled lizard / ball python / adder
+KMONS:   g = frilled lizard / ball python / giant cockroach / quokka
+KMONS:   K = crocodile
+KFEAT:   gsh = W
+KFEAT:   GnHJ = w
+KFEAT:   O = open_sea
+SHUFFLE: 12 / 34 / 34
+NSUBST:  1 = 2:1 / 1:. / * = 1.,2 = 2:2 / * = 1 2:5 .:15
+NSUBST:  3 = 2:. / * = 1., 4 = 1:K / 2:. / * = 1 2:4 .:14
+SUBST:   J = Jn, h = hW, g = gggW
+COLOUR:  gh = lightgreen
+COLOUR:  HJ = blue
+COLOUR:  G = green
+COLOUR:  s = cyan
+KITEM:   M = potion of enlightenment q:3 pre_id
+KITEM:   N = scroll of teleportation q:2 pre_id
 : sewer_setup(_G)
 MAP
 OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
@@ -1040,10 +1092,10 @@ OOOnnnnnnnnnnnnnnnnnnnOOOOOOOOOOOOOO                     cccWWW.ccccccccW..c..c
 OOOnnnnnnnnnJnnnJnnnnnOOOOOOOOOOOOOO                     c<AWWWW...12....1.cc.c
 OOOnnnnnnnnnnnnnnnnnnnOOOOOOOOOOOOOO                     cccccccccccccccccccc.c
 OOOnnnJnnnnnJnnnscccccccccccccccccccccccccccccccc ccccccccccwhwwwwwwwWwwwww2.1c
-OOOnnnnnnnnnnnnsK+.....+...%Wwcccc1....1cc$$$.1McccwwWWWgWWhWWWWW..W..WW.Www2.c
+OOOnnnnnnnnnnnns1+.....+...%Wwcccc1....1cc$$$.1McccwwWWWgWWhWWWWW..W..WW.Www2.c
 OOOnnnnnnnnHnnsW.ccccccc...%*Wcccc2ccccc.c.1.W.NcccwWWccccccccccccc11cccc.gwWwcc
 OOOnnnnnJnnnnnsW.ccc.1cc...%*Wcccc2cwwcc.ccccWcccwwwc.c           cccc  cc1.WWwc
-OOOnnnnnnnnnJnsW.ccc.1cc...*WWccccwWgcwc.cGwwWWWWWWcc1c                  ccccccc
+OOOnnnnnnnnnJnsW1ccc.1cc...*WWccccwWgcwc.cGwwWWWWWWcc1c                  ccccccc
 OOOnnnnnnnnnnssWWccc1.cc<..WwccccwgWccwc.chwgWW..1...1c
 OOOnnnnnnnnsssWWhWWc.1ccccccccwwwhW.1cwWWcWWW..2ccccccc
 OOOnnnnnnnsssWWWWWWWWsswwwwwwwcWh..1ccccWWgW1.2cc
@@ -1068,8 +1120,8 @@ ENDMAP
 
 ############################################################################
 # 15 rooms, by co
-# All rooms will always be accessible, except the room in the center, which
-# is surrounded by deep water.
+# All rooms will always be accessible, though the room in the center requires
+# finding the one guaranteed identified enlightenment potion elsewhere.
 #
 NAME:    sewer_co_15_rooms
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
@@ -1097,8 +1149,10 @@ SHUFFLE: yZzSsUuTgY
 SUBST:   y = w
 SUBST:   hVZzSsUuTgY = W
 #      loot
-SUBST:   e = !!???-----
-KITEM:  - = any potion / any scroll
+ITEM:    potion of enlightenment pre_id
+KITEM:   - = any potion / any scroll
+NSUBST:  d = 1:d / *:-
+SUBST:   - = !!???-----
 : kitem("? = " .. dgn.loot_potions)
 : kitem("! =  " .. dgn.loot_scrolls)
 : sewer_setup(_G)
@@ -1107,35 +1161,35 @@ xxxxxxxxxxxxcccxxxxxxxcccxxxxxxxxxxxx
 xxxxxxxxxxxcccccxxxxxcccccxxxxxxxxxxx
 xxxxxxxxxxcc.1.ccxxxcc...ccxxxxXXXxxx
 xxxxxxxxxxc.2...ccccc...2.cxxxx.11Xxx
-xxxxxxxxxxc..2..yyyyy..2..NPPP.e.1Xxx
-xxxxxxxxxxc...2.ccccc.2...cxxxX.e.Xxx
+xxxxxxxxxxc..2..yyyyy..2..NPPP.d.1Xxx
+xxxxxxxxxxc...2.ccccc.2...cxxxX.d.Xxx
 xxxxxxxxxxcc...ccxxxcc...ccxxxxX.xxxx
 xxxxxxxxxxxccZccxxxxxcczccxxxxxxQxxxx
 xxxxxxxxxxxxcZcxxxxxxxczcxxxxxxxQxxxx
 xxxxxxxxxxxxcZcxxxxxxxczcxxxxxxxQxxxx
 xxcccccxxxxccZccxxxxxcczccxxxxccRccxx
 xcc...ccxxcc...ccxxxcc...ccxxcc...ccx
-cc.2...cccc.A...ccccc.e...cccc...2.cc
+cc.2...cccc.A...ccccc.d...cccc...2.cc
 cc..2..SSSS..<.WwwwwwW....ssss..2..cc
-cc...2.cccc.....ccBcc...e.cccc.2...cc
+cc...2.cccc.....ccBcc...d.cccc.2...cc
 xcc...ccxxcc.W.ccxCxcc.W.ccxxcc...ccx
 xxccUccxxxxccwccxx.xxccwccxxxxccuccxx
-xxxcUcxxxxxxcwcxx.e1xxcwcxxxxxxcucxxx
-xxxcUcxxxxxxcwDE.e<e.FGwcxxxxxxcucxxx
-xxxcUcxxxxxxcwcxx1e3xxcwcxxxxxxcucxxx
+xxxcUcxxxxxxcwcxx.-1xxcwcxxxxxxcucxxx
+xxxcUcxxxxxxcwDE.-<-.FGwcxxxxxxcucxxx
+xxxcUcxxxxxxcwcxx1-3xxcwcxxxxxxcucxxx
 xxccUccxxxxccwccxx.xxccwccxxxxccuccxx
 xcc...ccxxcc.W.ccxHxcc.W.ccxxcc...ccx
-cc...2.cccc.e...ccIcc.....cccc.2...cc
+cc...2.cccc.d...ccIcc.....cccc.2...cc
 cc..2..TTTT....WwwwwwW.<..gggg..2..cc
-cc.2...cccc...e.ccccc.....cccc...2.cc
+cc.2...cccc...d.ccccc.....cccc...2.cc
 xcc...ccxxcc...ccxxxcc...ccxxcc...ccx
 xxccJccxxxxccVccxxxxxcchccxxxxcccccxx
 xxxxKxxxxxxxcVcxxxxxxxchcxxxxxxxxxxxx
 xxxxKxxxxxxxcVcxxxxxxxchcxxxxxxxxxxxx
 xxxxKxxxxxxccVccxxxxxcchccxxxxxxxxxxx
 xxxx.Xxxxxcc...ccxxxcc...ccxxxxxxxxxx
-xxX.e.Xxxxc...2.ccccc.2...cxxxxxxxxxx
-xxX1.e.MMML..2..YYYYY..2..cxxxxxxxxxx
+xxX.d.Xxxxc...2.ccccc.2...cxxxxxxxxxx
+xxX1.d.MMML..2..YYYYY..2..cxxxxxxxxxx
 xxX11.xxxxc.2...ccccc...2.cxxxxxxxxxx
 xxxXXXxxxxcc...ccxxxcc.1.ccxxxxxxxxxx
 xxxxxxxxxxxcccccxxxxxcccccxxxxxxxxxxx
@@ -1151,9 +1205,12 @@ ENDMAP
 NAME:   sewer_co_tree
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 ORIENT: encompass
-MONS:   kobold / kobold brigand
-MONS:   adder / ball python / ribbon worm / brain worm w:1
-MONS:   endoplasm / rat / river rat w:5
+KMONS:  1 = kobold / kobold brigand
+KMONS:  2 = adder / ball python / ribbon worm / brain worm w:1
+KMONS:  3 = endoplasm / rat / river rat w:5
+KITEM:  1 = $ no_pickup
+KITEM:  2 = $ q:1 no_pickup
+KITEM:  3 = stone
 : kitem("e = " .. dgn.loot_potions)
 : kitem("f =  " .. dgn.loot_scrolls)
 # less water in the middle, more at the endpoints.
@@ -1234,7 +1291,7 @@ SHUFFLE: BC' / DE? / FG", ''y, HI` / JK! / LM~, ``z
 NSUBST:  B = 1:. / *:c, C = 1:. / *:c, H = 1:. / *:c, I = 1:. / *:c
 # Fill the pipes and the other possible locations.
 NSUBST:  ' = 5:W / 4:2 / 3 = 2. / *:., ` = 5:W / 4:2 / 3 = 2. / *:.
-NSUBST:  y = 1:3 / *:W, z = 1:3 / *:W
+NSUBST:  y = 1:3 / *:W, z = 2:3 / *:W
 SUBST:   DEFGLMKJ = c, ?"!~ = x
 # Handle pipe enemies and items.
 SUBST:   1 = 11..., d = dddddeeeee%
@@ -1245,7 +1302,7 @@ MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xcccccccccccccccccccccccccccccccccccccccccccccccx
 xwwwwwwwwmwWd.....1.....1--------.......1...4.<cx
-xwwwwwwwwmwWd..1......1...---3---..1......1..1dcx
+xwwwwwwwwmwWd..1......1...---3---..1......4..1dcx
 xccccccccccccIIIIIIccccccccccKccccccMMMcccccMMMcx
 xxxxxxxxxxxxxx`xx`xxxxxxxxxxc!cxxxxxx~xxxxxxx~xxx
             xxx``xxxxxxxxxxxc!cxxxxxxx~x~xxx~xx
@@ -1358,9 +1415,9 @@ MONS:    kobold w:50 / kobold zombie / endoplasm / giant cockroach / \
          bat / bat zombie w:3
 # Bosses and features for the temple, either Makhleb or Kiku
 : if crawl.random2(2) == 0 then
-KMONS:   3 = kobold brigand / quasit
+KMONS:   3 = kobold brigand / crimson imp ; club . dart ego:atropa q:2
 KMONS:   4 = kobold brigand
-KMONS:   5 = quasit
+KMONS:   5 = crimson imp ; club . dart ego:atropa q:2
 KFEAT:   B = altar_makhleb
 MARKER:  F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
                                pow_max = 100, delay = 10, size = 1, \

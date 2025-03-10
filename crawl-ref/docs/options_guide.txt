@@ -27,7 +27,7 @@ The contents of this text are:
 3-a     Dropping and Picking up.
                 autopickup, autopickup_exceptions, default_autopickup,
                 pickup_thrown, assign_item_slot, pickup_menu_limit,
-                drop_filter
+                drop_filter, drop_disables_autopickup
 3-b     Passive Sightings (detected and remembered entities).
                 detected_monster_colour, detected_item_colour,
                 remembered_monster_colour
@@ -77,12 +77,12 @@ The contents of this text are:
                 show_travel_trail, skill_focus, default_show_all_skills,
                 monster_list_colour, view_delay, reduce_animations,
                 use_animations, unusual_monster_items, darken_beyond_range,
-                show_blood, force_more_message, flash_screen_message,
-                cloud_status, always_show_zot, always_show_gems,
-                more_gem_info, action_panel, action_panel_filter,
-                action_panel_show_unidentified, action_panel_scale,
-                action_panel_orientation, action_panel_font_family,
-                action_panel_font_size
+                show_blood, food_snacking_frequency, fountain_line_frequency,
+                force_more_message, flash_screen_message, cloud_status,
+                always_show_zot, always_show_gems, more_gem_info, action_panel,
+                action_panel_filter, action_panel_show_unidentified,
+                action_panel_scale, action_panel_orientation,
+                action_panel_font_family, action_panel_font_size
 3-i     Colours (messages and menus).
                 menu_colour, message_colour
 3-j     Quivers, firing, and ammo.
@@ -130,6 +130,7 @@ The contents of this text are:
                 glyph_mode_font_size, tile_show_minihealthbar,
                 tile_show_minimagicbar, tile_show_demon_tier, tile_water_anim,
                 tile_misc_anim, tile_realtime_anim, tile_show_player_species,
+                tile_player_status_icons,
                 tile_show_threat_levels, tile_layout_priority,
                 tile_display_mode, tile_level_map_hide_messages,
                 tile_level_map_hide_sidebar, tile_player_tile,
@@ -631,9 +632,8 @@ default_autopickup = true
         You can still toggle autopickup in-game with Ctrl-A.
 
 pickup_thrown = true
-        pickup_thrown = true causes autopickup to pick up thrown/fired
-        missiles, which can make life much easier for hunter types. Be
-        aware that autopickup uses a turn, though it won't trigger if
+        pickup_thrown = true causes autopickup to pick up thrown missiles,
+        Be aware that autopickup uses a turn, though it won't trigger if
         there are hostile monsters in sight.
 
 assign_item_slot = (forward | backward)
@@ -675,6 +675,10 @@ drop_filter += <regex>, <regex>, ...
         When a drop_filter is set, using the select/deselect keys will
         set/clear selection of items that match the filter
         expression(s).
+
+drop_disables_autopickup = false
+        drop_disables_autopickup = true automatically removes dropped
+        non-missile items from autopickup.
 
 3-b     Passive Sightings (detected or remembered entities).
 ------------------------------------------------------------
@@ -1565,11 +1569,11 @@ clear_messages = false
         between player actions (default is false which will delay the
         clearing of messages until the message space is full).
 
-show_more = true
-        Setting this option to false will cause the game not to prompt
-        if more than a window-full of messages are output at once. This
-        option has no effect if clear_messages is set. Additionally, it
-        has no effect on whether force_more_message triggers.
+show_more = false
+        Setting this option to true will cause the game to prompt if more
+        than a window-full of messages are output at once. This option
+        has no effect if clear_messages is set. Additionally, it has no
+        effect on whether force_more_message triggers.
 
 small_more = false
         With small_more = false (default), the --more-- prompt is on a
@@ -1609,9 +1613,9 @@ item_stack_summary_minimum = 4
         items in the stack (up to 50 items), in a format which looks
         like this:
           Items here: !! """ ( )))))) [[[
-        Known artefacts will be coloured in yellow; glowing or runed
-        items will be in white, unless you already know that they are
-        not ego items.
+        Non-random artefacts and evokers will be coloured in lightcyan; random
+        artefacts will be in yellow; glowing or runed items will be in white,
+        unless you already know that they are not ego items.
 
 mlist_min_height = 4
         If there is extra space available for the message area and
@@ -1780,6 +1784,21 @@ darken_beyond_range = true
 show_blood = true
         Setting this option to false will hide blood splatters in the floor
         and on the walls. In tiles, corpses will be displayed as skeletons.
+
+food_snacking_frequency = 40
+        Controls the frequency of producing flavour messages when walking on a
+        cache of fruit, meat, or baked goods, with the number corresponding to a
+        percent chance. As one would expect, 100% means always, 0% means never,
+        and the default 40% means two-fifths of the time. Unless the frequency
+        is set to 100%, the chance is lowered to a fourth if there are hostile
+        enemies in sight in most situations.
+
+fountain_line_frequency = 40
+        Controls the frequency of producing flavour messages when walking on
+        any type of fountain, with the number corresponding to a percent
+        chance. As with the previous option, 100% means always, 0% means
+        never, the default 40% means two-fifths of the time, and a non-100%
+        frequency has lowered chances if hostile enemies are in sight.
 
 force_more_message += <regex>, <regex>
         (List option)
@@ -2266,6 +2285,11 @@ level. Using RGB hex codes is also allowed, such as #00ff00 for green.
                                   tile_floor_col and tile_item_col, only)
    tile_window_col              - colour of the rectangular view window
 
+custom_text_colours = lightmagenta:#fd59fa, blue:#005afa
+        Remaps any of the 16 basic terminal colours used by Crawl's interface,
+        specified as pairs of colour names and RGB hex codes. Any colours not
+        included in the list will use their default values.
+
 tile_update_rate = 1000
         The number of milliseconds that tick by before the screen is redrawn
         without any input. If game response is slow, try increasing this
@@ -2474,6 +2498,12 @@ tile_show_threat_levels = nasty, unusual
         When 'unusual' is specified, the option unusual_monster_items will
         determine which items cause a monster to highlight as unusual.
 
+tile_player_status_icons = slow, constr
+        This option constrols which icons will be displayed on top of the
+        player's tile when they are afflicted by certain status effects.
+        Valid values include: slow, fragile, petr, mark, will/2, haste, weak,
+        corr, might, brill, -move.
+
 tile_layout_priority = minimap, inventory, command, spell, monster
         (Ordered list option)
         This option allows you to control the order in which elements are
@@ -2614,7 +2644,7 @@ dump_message_count = 20
         The number of last messages to be displayed in character dump
         files.
 
-dump_order  = header,hiscore,stats,misc,inventory,skills,spells,
+dump_order  = header,hiscore,stats,misc,apostles,inventory,skills,spells,
 dump_order += overview,mutations,messages,screenshot,monlist,kills,
 dump_order += notes,screenshots,vaults,skill_gains,action_counts
         (Ordered list option)
@@ -2634,8 +2664,22 @@ dump_order += notes,screenshots,vaults,skill_gains,action_counts
             dump_order += -
         to place a separator between sections.
 
-        You can also add arbitrary section names; ones not mentioned here will
-        be interpreted as custom user-defined Lua functions with no arguments.
+        You can also add your own sections by writing a Lua function and
+        adding its name to the list. The function's return value will then
+        be dumped. You can reference global variables just like regular Lua
+        functions, but its name must be in lowercase, and no call arguments
+        will be provided.
+
+        Example:
+          {
+            myRace = you.race()
+            function mydumpfn()
+              return
+                "This will be printed to dump. Your species is " .. myRace
+            end
+          }
+          dump_order += mydumpfn
+
 
 4-c     Notes.
 --------------
@@ -2807,7 +2851,7 @@ display_char = <dungeon_character_name : symbol>
            invis_exposed, item_detected, item_orb, item_rune, item_weapon,
            item_armour, item_wand, item_scroll, item_ring, item_potion,
            item_missile, item_book, item_staff, item_rod, item_miscellany,
-           item_corpse, item_skeleton, item_gold, item_amulet, cloud,
+           item_corpse, item_skeleton, item_gold, item_gem, item_amulet, cloud,
            cloud_weak, cloud_fading, cloud_terminal, tree, transporter,
            transporter_landing, space, fired_bolt, fired_zap, fired_burst,
            fired_debug, fired_missile, fired_missile, explosion, frame_horiz,

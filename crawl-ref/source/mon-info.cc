@@ -21,6 +21,7 @@
 #include "env.h"
 #include "fight.h"
 #include "ghost.h"
+#include "god-abil.h"
 #include "god-passive.h" // passive_t::neutral_slimes
 #include "item-prop.h"
 #include "item-status-flag-type.h"
@@ -28,6 +29,7 @@
 #include "libutil.h"
 #include "los.h"
 #include "message.h"
+#include "mon-abil.h"
 #include "mon-behv.h"
 #include "mon-book.h"
 #include "mon-death.h" // ELVEN_IS_ENERGIZED_KEY
@@ -38,6 +40,7 @@
 #include "religion.h"
 #include "skills.h"
 #include "spl-goditem.h" // dispellable_enchantments
+#include "spl-summoning.h"
 #include "state.h"
 #include "stringutil.h"
 #include "tag-version.h"
@@ -97,13 +100,12 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_POISON_VULN,     MB_POISON_VULN },
     { ENCH_AGILE,           MB_AGILE },
     { ENCH_FROZEN,          MB_FROZEN },
-    { ENCH_BLACK_MARK,      MB_BLACK_MARK },
+    { ENCH_SIGN_OF_RUIN,    MB_SIGN_OF_RUIN },
     { ENCH_SAP_MAGIC,       MB_SAP_MAGIC },
     { ENCH_CORROSION,       MB_CORROSION },
     { ENCH_REPEL_MISSILES,  MB_REPEL_MSL },
     { ENCH_RESISTANCE,      MB_RESISTANCE },
     { ENCH_HEXED,           MB_HEXED },
-    { ENCH_BRILLIANCE_AURA, MB_BRILLIANCE_AURA },
     { ENCH_EMPOWERED_SPELLS, MB_EMPOWERED_SPELLS },
     { ENCH_GOZAG_INCITE,    MB_GOZAG_INCITED },
     { ENCH_PAIN_BOND,       MB_PAIN_BOND },
@@ -132,6 +134,17 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_CURSE_OF_AGONY,  MB_CURSE_OF_AGONY },
     { ENCH_TOUCH_OF_BEOGH,  MB_TOUCH_OF_BEOGH },
     { ENCH_VENGEANCE_TARGET, MB_VENGEANCE_TARGET },
+    { ENCH_MAGNETISED,      MB_MAGNETISED },
+    { ENCH_RIMEBLIGHT,      MB_RIMEBLIGHT },
+    { ENCH_ARMED,           MB_ARMED },
+    { ENCH_SHADOWLESS,      MB_SHADOWLESS },
+    { ENCH_DOUBLED_HEALTH,  MB_DOUBLED_HEALTH },
+    { ENCH_KINETIC_GRAPNEL, MB_KINETIC_GRAPNEL },
+    { ENCH_TEMPERED,        MB_TEMPERED },
+    { ENCH_BLINKITIS,       MB_BLINKITIS },
+    { ENCH_CHAOS_LACE,      MB_CHAOS_LACE },
+    { ENCH_VEXED,           MB_VEXED },
+    { ENCH_PYRRHIC_RECOLLECTION, MB_PYRRHIC_RECOLLECTION },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -185,7 +198,6 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
             return MB_MAX_POISONED;
     case ENCH_CONTAM:
         return mons.get_ench(ench).degree == 1 ? MB_CONTAM_LIGHT : MB_CONTAM_HEAVY;
-    case ENCH_SHORT_LIVED:
     case ENCH_SLOWLY_DYING:
         if (mons.type == MONS_WITHERED_PLANT)
             return MB_CRUMBLING;
@@ -231,7 +243,8 @@ static bool _is_public_key(string key)
      || key == SEEN_SPELLS_KEY
      || key == KNOWN_MAX_HP_KEY
      || key == VAULT_HD_KEY
-     || key == POLY_SET_KEY)
+     || key == POLY_SET_KEY
+     || key == NOBODY_MEMORIES_KEY)
     {
         return true;
     }
@@ -359,7 +372,8 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     {
         if (type == MONS_LERNAEAN_HYDRA
             || type == MONS_ROYAL_JELLY
-            || mons_species(type) == MONS_SERPENT_OF_HELL)
+            || mons_species(type) == MONS_SERPENT_OF_HELL
+            || type == MONS_ENCHANTRESS)
         {
             mb.set(MB_NAME_THE);
         }
@@ -386,7 +400,8 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
             props[MUTANT_BEAST_FACETS].get_vector().push_back(i);
     }
 
-    client_id = 0;
+    client_id = MID_NOBODY;
+    summoner_id = MID_NOBODY;
 }
 
 static description_level_type _article_for(const actor* a)
@@ -434,6 +449,8 @@ monster_info::monster_info(const monster* m, int milev)
         is_active = !!m->ballisto_activity;
     else if (_has_hydra_multi_attack(*this))
         num_heads = m->num_heads;
+    else if (type == MONS_SEISMOSAURUS_EGG)
+        number = m->number;
     // others use number for internal information
     else
         number = 0;
@@ -443,27 +460,45 @@ monster_info::monster_info(const monster* m, int milev)
 
     _colour = m->colour;
 
+    summoner_id = MID_NOBODY;
     if (m->is_summoned()
+        && !(m->flags & MF_PERSISTS)
+        && !m->is_child_monster() && !mons_is_tentacle_segment(m->type)
         && (!m->has_ench(ENCH_PHANTOM_MIRROR) || m->friendly()))
     {
         mb.set(MB_SUMMONED);
-    }
-    else if (m->is_perm_summoned())
-        mb.set(MB_PERM_SUMMON);
-    else if (testbits(m->flags, MF_NO_REWARD)
-             && mons_class_gives_xp(m->type, true))
-    {
-        mb.set(MB_NO_REWARD);
-    }
 
-    if (m->has_ench(ENCH_SUMMON_CAPPED))
-        mb.set(MB_SUMMONED_CAPPED);
+        if (m->is_abjurable())
+            mb.set(MB_ABJURABLE);
+        else
+            mb.set(MB_MINION);
+
+        if (m->type == MONS_SPELLSPARK_SERVITOR && m->summoner == MID_PLAYER)
+            mb.set(MB_PLAYER_SERVITOR);
+
+        summoner_id = m->summoner;
+    }
+    else if ((m->is_unrewarding()
+                 || testbits(m->flags, MF_NO_REWARD)
+                 && mons_class_gives_xp(m->type, true)))
+    {
+        // This shows a note in the extended description that the monster is
+        // worth no experience.
+        mb.set(MB_NO_REWARD);
+
+        // This displays an icon over the monster, and a status line when
+        // examining them, which looks a little weird and unnecessary for
+        // friendly monsters, as it's *always* the case with them.
+        if (m->real_attitude() != ATT_FRIENDLY)
+            mb.set(MB_UNREWARDING);
+    }
 
     if (mons_is_unique(type))
     {
         if (type == MONS_LERNAEAN_HYDRA
             || type == MONS_ROYAL_JELLY
-            || mons_species(type) == MONS_SERPENT_OF_HELL)
+            || mons_species(type) == MONS_SERPENT_OF_HELL
+            || type == MONS_ENCHANTRESS)
         {
             mb.set(MB_NAME_THE);
         }
@@ -507,27 +542,26 @@ monster_info::monster_info(const monster* m, int milev)
     // Ghostliness needed for name
     if (testbits(m->flags, MF_SPECTRALISED))
         mb.set(MB_SPECTRALISED);
+    if (m->has_ench(ENCH_VAMPIRE_THRALL))
+        mb.set(MB_VAMPIRE_THRALL);
 
     if (milev <= MILEV_NAME)
     {
         if (mons_class_is_animated_weapon(type))
         {
             if (m->get_defining_object())
-            {
-                inv[MSLOT_WEAPON].reset(new item_def(
-                    get_item_known_info(*m->get_defining_object())));
-            }
+                inv[MSLOT_WEAPON].reset(new item_def(*m->get_defining_object()));
             // animated launchers may have a missile too
             if (m->inv[MSLOT_MISSILE] != NON_ITEM)
             {
                 inv[MSLOT_MISSILE].reset(new item_def(
-                    get_item_known_info(env.item[m->inv[MSLOT_MISSILE]])));
+                    env.item[m->inv[MSLOT_MISSILE]]));
             }
         }
-        else if (type == MONS_ANIMATED_ARMOUR && m->get_defining_object())
+        else if ((type == MONS_ARMOUR_ECHO || type == MONS_HAUNTED_ARMOUR)
+                 && m->get_defining_object())
         {
-            inv[MSLOT_ARMOUR].reset(new item_def(
-                get_item_known_info(*m->get_defining_object())));
+            inv[MSLOT_ARMOUR].reset(new item_def(*m->get_defining_object()));
         }
         return;
     }
@@ -568,10 +602,6 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_HALOED);
     if (!m->haloed() && m->umbraed())
         mb.set(MB_UMBRAED);
-    if (mons_looks_stabbable(*m))
-        mb.set(MB_STABBABLE);
-    if (mons_looks_distracted(*m))
-        mb.set(MB_DISTRACTED);
     if (m->liquefied_ground())
         mb.set(MB_SLOW_MOVEMENT);
     if (!actor_is_susceptible_to_vampirism(*m, true))
@@ -583,11 +613,17 @@ monster_info::monster_info(const monster* m, int milev)
     if (!mons_can_be_blinded(m->type))
         mb.set(MB_UNBLINDABLE);
 
+    const int stab_bonus = stab_bonus_denom(find_player_stab_type(*m));
+    if (stab_bonus == 1)
+        mb.set(MB_STABBABLE);
+    else if (stab_bonus == 4)
+        mb.set(MB_MAYBE_STABBABLE);
+
     dam = mons_get_damage_level(*m);
 
     // BEH_SLEEP is meaningless on firewood, don't show it. But it *is*
     // meaningful on non-firewood non-threatening monsters (i.e. butterflies).
-    if (!mons_is_firewood(*m) && m->asleep())
+    if (!m->is_firewood() && m->asleep())
     {
         if (!m->can_hibernate(true))
             mb.set(MB_DORMANT);
@@ -612,6 +648,8 @@ monster_info::monster_info(const monster* m, int milev)
         {
             mb.set(MB_UNAWARE);
         }
+        else if (mons_looks_distracted(*m))
+            mb.set(MB_DISTRACTED);
     }
 
     for (auto &entry : m->enchantments)
@@ -621,14 +659,8 @@ monster_info::monster_info(const monster* m, int milev)
             mb.set(flag);
     }
 
-    if (!m->friendly())
-    {
-        const stab_type st = find_stab_type(&you, *m, false);
-        if (!you.visible_to(m))
-            mb.set(MB_CANT_SEE_YOU);
-        if (st == STAB_DISTRACTED && !mb[MB_UNAWARE] && !mb[MB_WANDERING])
-            mb.set(MB_DISTRACTED_ONLY);
-    }
+    if (!you.visible_to(m))
+        mb.set(MB_CANT_SEE_YOU);
 
     if (type == MONS_SILENT_SPECTRE)
         mb.set(MB_SILENCING);
@@ -681,7 +713,8 @@ monster_info::monster_info(const monster* m, int milev)
     // familiar really is - which matters when you want to keep it alive.
     else if (m->type == MONS_PANDEMONIUM_LORD
              || m->type == MONS_INUGAMI
-             || m->type == MONS_ORC_APOSTLE)
+             || m->type == MONS_ORC_APOSTLE
+             || m->type == MONS_PLATINUM_PARAGON)
     {
         props[KNOWN_MAX_HP_KEY] = (int)(m->max_hit_points);
     }
@@ -706,6 +739,12 @@ monster_info::monster_info(const monster* m, int milev)
         props[PRIEST_KEY] = true;
     else if (m->is_actual_spellcaster())
         props[ACTUAL_SPELLCASTER_KEY] = true;
+
+    if (m->has_spell_of_type(spschool::necromancy))
+        props[NECROMANCER_KEY] = true;
+
+    if (m->no_tele())
+        mb.set(MB_NO_TELE);
 
     // assumes spell hd modifying effects are always public
     const int spellhd = m->spell_hd();
@@ -737,8 +776,7 @@ monster_info::monster_info(const monster* m, int milev)
             ok = true;
         if (ok)
         {
-            inv[i].reset(
-                new item_def(get_item_known_info(env.item[m->inv[i]])));
+            inv[i].reset(new item_def(env.item[m->inv[i]]));
             // Monsters have unlimited ammo for wands and for non-net throwing.
             if (i == MSLOT_WAND)
                 inv[i]->charges = 0;
@@ -786,6 +824,12 @@ monster_info::monster_info(const monster* m, int milev)
         }
     }
 
+    if (you.duration[DUR_WATER_HOLD]
+        && m->mid == (mid_t)you.props[WATER_HOLDER_KEY].get_int())
+    {
+        mb.set(MB_ENGULFING_PLAYER);
+    }
+
     if (!mons_has_attacks(*m))
         mb.set(MB_NO_ATTACKS);
 
@@ -798,6 +842,30 @@ monster_info::monster_info(const monster* m, int milev)
     if (m->behaviour == BEH_WITHDRAW)
         mb.set(MB_RETREATING);
 
+    if (m->props.exists(MAKHLEB_CRUCIBLE_VICTIM_KEY))
+        mb.set(MB_FROZEN_IN_TERROR);
+
+    if (m->props.exists(SOUL_SPLINTERED_KEY))
+        mb.set(MB_SOUL_SPLINTERED);
+
+    if (m->type == MONS_ASPIRING_FLESH)
+        props[PROTEAN_TARGET_KEY] = m->props[PROTEAN_TARGET_KEY];
+
+    if (m->type == MONS_PLATINUM_PARAGON)
+    {
+        const int level = paragon_charge_level(*m);
+        if (level == 2)
+            mb.set(MB_FULLY_CHARGED);
+        else if (level == 1)
+            mb.set(MB_PARTIALLY_CHARGED);
+    }
+
+    if (m->type == MONS_RENDING_BLADE && m->number > 0)
+        mb.set(MB_FULLY_CHARGED);
+
+    if (m->type == MONS_SEISMOSAURUS_EGG && egg_is_incubating(*m))
+        mb.set(MB_HATCHING);
+
     // this must be last because it provides this structure to Lua code
     if (milev > MILEV_SKIP_SAFE)
     {
@@ -805,7 +873,7 @@ monster_info::monster_info(const monster* m, int milev)
             mb.set(MB_SAFE);
         else
             mb.set(MB_UNSAFE);
-        if (mons_is_firewood(*m))
+        if (m->is_firewood())
             mb.set(MB_FIREWOOD);
     }
 
@@ -813,18 +881,10 @@ monster_info::monster_info(const monster* m, int milev)
 }
 
 /// Player-known max HP information for a monster: "about 55", "243".
-string monster_info::get_max_hp_desc() const
+int monster_info::get_known_max_hp() const
 {
     if (props.exists(KNOWN_MAX_HP_KEY))
-    {
-        const int hp = props[KNOWN_MAX_HP_KEY].get_int();
-
-        // Indicate that this apostle's HP has been increased by Beogh
-        if (type == MONS_ORC_APOSTLE && is(MB_TOUCH_OF_BEOGH))
-            return make_stringf("*%d*", hp);
-
-        return std::to_string(hp);
-    }
+        return props[KNOWN_MAX_HP_KEY].get_int();
 
     const int scale = 100;
     const int base_avg_hp = mons_class_is_zombified(type) ?
@@ -842,20 +902,49 @@ string monster_info::get_max_hp_desc() const
         mhp *= slime_size;
 
     mhp /= scale;
-    return make_stringf("~%d", mhp);
+
+    return mhp;
+}
+
+/// Player-known max HP information for a monster: "about 55", "243".
+string monster_info::get_max_hp_desc() const
+{
+    int hp = get_known_max_hp();
+    if (props.exists(KNOWN_MAX_HP_KEY))
+    {
+        // Indicate that this apostle's HP has been increased by Beogh
+        if (type == MONS_ORC_APOSTLE && is(MB_TOUCH_OF_BEOGH))
+            return make_stringf("*%d*", hp);
+
+        return std::to_string(hp);
+    }
+
+    return make_stringf("~%d", hp);
 }
 
 /// HP regenerated every (scale) turns.
 int monster_info::regen_rate(int scale) const
 {
+    int rate = 0;
     if (!can_regenerate() || is(MB_SICK) /* ? */)
         return 0;
-    if (mons_class_fast_regen(type) || is(MB_REGENERATION) /* ? */)
-        return mons_class_regen_amount(type) * scale;
 
-    // Duplicates monster::natural_regen_rate.
-    const int divider = max(((15 - hd) + 2 /*round up*/) / 4, 1);
-    return min(scale, max(1, hd * scale / (divider * 25)));
+    if (mons_class_fast_regen(type))
+        rate = mons_class_regen_amount(type) * scale;
+    else
+    {
+        // Duplicates monster::natural_regen_rate.
+        const int divider = max(((15 - hd) + 2 /*round up*/) / 4, 1);
+        rate = min(scale, max(1, hd * scale / (divider * 25)));
+    }
+
+    // XXX: This rounds slightly inaccurately, and also doesn't say that it's
+    //      an approximation when monster hp isn't known for sure. Still, it's
+    //      probably close enough?
+    if (is(MB_REGENERATION))
+        rate += 3 + get_known_max_hp() / 20;
+
+    return rate;
 }
 
 /**
@@ -863,13 +952,13 @@ int monster_info::regen_rate(int scale) const
  */
 int monster_info::lighting_modifiers() const
 {
+    int mod = 0;
     if (backlit)
-        return BACKLIGHT_TO_HIT_BONUS;
+        mod += BACKLIGHT_TO_HIT_BONUS;
     if (umbraed && !you.nightvision())
-        return UMBRA_TO_HIT_MALUS;
-    return 0;
+        mod += UMBRA_TO_HIT_MALUS;
+    return mod;
 }
-
 
 /**
  * Name the given mutant beast tier.
@@ -901,12 +990,7 @@ static string _mutant_beast_facet(int facet)
 string monster_info::db_name() const
 {
     if (type == MONS_DANCING_WEAPON && inv[MSLOT_WEAPON])
-    {
-        iflags_t ignore_flags = ISFLAG_KNOW_PLUSES;
-        bool     use_inscrip  = false;
-        return inv[MSLOT_WEAPON]->name(DESC_DBNAME, false, false, use_inscrip, false,
-                         ignore_flags);
-    }
+        return inv[MSLOT_WEAPON]->name(DESC_DBNAME, false, false, false, false);
 
     if (type == MONS_SENSED)
         return get_monster_data(base_type)->name;
@@ -938,6 +1022,8 @@ string monster_info::_core_name() const
         s = "Royal Jelly";
     else if (mons_species(nametype) == MONS_SERPENT_OF_HELL)
         s = "Serpent of Hell";
+    else if (nametype == MONS_ENCHANTRESS)
+        s = "Enchantress";
     else if (invalid_monster_type(nametype) && nametype != MONS_PROGRAM_BUG)
         s = "INVALID MONSTER";
     else
@@ -965,15 +1051,23 @@ string monster_info::_core_name() const
             if (inv[MSLOT_WEAPON])
             {
                 const item_def& item = *inv[MSLOT_WEAPON];
-                s = item.name(DESC_PLAIN, false, false, true, false);
+                s = item.name(DESC_PLAIN);
             }
             break;
 
-        case MONS_ANIMATED_ARMOUR:
+        case MONS_ARMOUR_ECHO:
             if (inv[MSLOT_ARMOUR])
             {
                 const item_def& item = *inv[MSLOT_ARMOUR];
-                s = "animated " + item.name(DESC_PLAIN, false, false, true, false, ISFLAG_KNOW_PLUSES);
+                s = "echoed " + item.name(DESC_PLAIN);
+            }
+            break;
+
+        case MONS_HAUNTED_ARMOUR:
+            if (inv[MSLOT_ARMOUR])
+            {
+                const item_def& item = *inv[MSLOT_ARMOUR];
+                s = "haunted " + item.name(DESC_QUALNAME);
             }
             break;
 
@@ -1058,6 +1152,9 @@ string monster_info::common_name(description_level_type desc) const
 
     if (is(MB_SPECTRALISED))
         ss << "ghostly ";
+
+    if (is(MB_VAMPIRE_THRALL))
+        ss << "vampire ";
 
     if (type == MONS_SENSED && !mons_is_sensed(base_type))
         ss << "sensed ";
@@ -1249,7 +1346,7 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
 
     // Never distinguish between dancing weapons.
     // The above checks guarantee that *both* monsters are of this type.
-    if (m1.type == MONS_DANCING_WEAPON || m1.type == MONS_ANIMATED_ARMOUR)
+    if (m1.type == MONS_DANCING_WEAPON || m1.type == MONS_ARMOUR_ECHO)
         return false;
 
     if (m1.type == MONS_SLIME_CREATURE)
@@ -1317,7 +1414,8 @@ string monster_info::pluralised_name(bool fullname) const
         return pluralise_monster(mons_type_name(MONS_DRACONIAN, DESC_PLAIN));
     else if ((type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
                 || type == MONS_DANCING_WEAPON || type == MONS_SPECTRAL_WEAPON
-                || type == MONS_ANIMATED_ARMOUR || type == MONS_MUTANT_BEAST
+                || type == MONS_ARMOUR_ECHO || type == MONS_MUTANT_BEAST
+                || type == MONS_HAUNTED_ARMOUR
                 || !fullname)
             && !is(MB_NAME_REPLACE))
 
@@ -1362,6 +1460,7 @@ void monster_info::to_string(int count, string& desc, int& desc_colour,
         colour_type = MLC_FRIENDLY;
         break;
     case ATT_GOOD_NEUTRAL:
+    case ATT_MARIONETTE:
 #if TAG_MAJOR_VERSION == 34
     case ATT_OLD_STRICT_NEUTRAL:
 #endif
@@ -1402,7 +1501,7 @@ void monster_info::to_string(int count, string& desc, int& desc_colour,
 static bool _hide_moninfo_flag(monster_info_flags f)
 {
     if (crawl_state.game_is_arena() &&
-        (f == MB_DISTRACTED_ONLY || f == MB_CANT_SEE_YOU))
+        (f == MB_DISTRACTED || f == MB_CANT_SEE_YOU))
     {
         // the wording on these doesn't make sense in the arena, so hide.
         return true;
@@ -1417,11 +1516,22 @@ vector<string> monster_info::attributes() const
     {
         if (is(name.flag) && !_hide_moninfo_flag(name.flag))
         {
+            // Hide this for better flavour messaging
+            if (name.flag == MB_PARALYSED && is(MB_FROZEN_IN_TERROR))
+                continue;
+
             // TODO: just use `do_mon_str_replacements`?
             v.push_back(replace_all(name.long_singular,
                                     "@possessive@",
                                     pronoun(PRONOUN_POSSESSIVE)));
         }
+    }
+
+    if (type == MONS_NAMELESS_REVENANT)
+    {
+        const int num_memories = props[NOBODY_MEMORIES_KEY].get_vector().size();
+        v.push_back(make_stringf("%d %s left", num_memories,
+                                               num_memories > 1 ? "memories" : "memory"));
     }
 
     return v;
@@ -1529,21 +1639,65 @@ int monster_info::willpower() const
     return mr;
 }
 
+static bool _add_energy_desc(int energy, string name, int speed, vector<string> &out)
+{
+    if (energy == 10)
+        return false;
+
+    ASSERT(energy);
+    const int perc = speed * 100 / energy;
+    out.push_back(make_stringf("%s: %d%%", name.c_str(), perc));
+    return true;
+}
+
 string monster_info::speed_description() const
 {
-    if (mbase_speed < 7)
-        return "very slow";
-    else if (mbase_speed < 10)
-        return "slow";
-    else if (mbase_speed > 20)
-        return "extremely fast";
-    else if (mbase_speed > 15)
-        return "very fast";
-    else if (mbase_speed > 10)
-        return "fast";
+    const int speed = base_speed();
+    if (!speed) // something weird - let's not touch it
+        return "";
 
-    // This only ever displays through Lua.
-    return "normal";
+    const bool unusual_speed = speed != 10;
+    const mon_energy_usage default_energy = DEFAULT_ENERGY;
+    const bool unusual_energy = !(menergy == default_energy);
+    const int travel_delay = menergy.move * 10 / speed;
+    const int player_travel_delay = player_movement_speed(false, false);
+    // Don't show a difference in travel speed between players and statues,
+    // tentacle segments, etc.
+    const int travel_delay_diff = mons_class_flag(type, M_STATIONARY) ? 0
+        : travel_delay - player_travel_delay;
+    if (!unusual_speed && !unusual_energy && !travel_delay_diff)
+        return "";
+
+    ostringstream result;
+    result << "Speed: " << speed * 10 << "%";
+
+    vector<string> unusuals;
+
+    _add_energy_desc(menergy.attack, "attack", speed, unusuals);
+    _add_energy_desc(menergy.missile, "shoot", speed, unusuals);
+    _add_energy_desc(menergy.move, "travel", speed, unusuals);
+    if (menergy.swim != menergy.move)
+        _add_energy_desc(menergy.swim, "swim", speed, unusuals);
+    // If we ever add a non-magical monster with fast/slow abilities,
+    // we'll need to update this.
+    _add_energy_desc(menergy.spell, is_priest() ? "pray" : "magic",
+                     speed, unusuals);
+
+    if (!unusuals.empty())
+        result << " (" << join_strings(unusuals.begin(), unusuals.end(), ", ") << ")";
+
+    if (type == MONS_SIXFIRHY || type == MONS_JIANGSHI)
+        result << " (but often pauses)";
+    else if (travel_delay_diff)
+    {
+        const bool slow = travel_delay_diff > 0;
+        const string diff_desc = slow ? "slower" : "faster";
+        result << " (normally travels " << diff_desc << " than you)";
+        // It would be interesting to qualify this with 'on land',
+        // if appropriate, but sort of annoying to get player swim speed.
+    }
+
+    return result.str();
 }
 
 bool monster_info::wields_two_weapons() const
@@ -1604,7 +1758,7 @@ bool monster_info::net_immune() const
 {
     // nets go right through (but weapons don't..?)
     return mons_class_flag(type, M_INSUBSTANTIAL)
-        || mons_genus(type) == MONS_JELLY
+        || mons_class_flag(type, M_AMORPHOUS)
     // tentacles are too weird. don't mess with em
         || mons_is_tentacle_or_tentacle_segment(type)
     // if you net something that doesn't move (positionally or attacking),
@@ -1616,6 +1770,21 @@ bool monster_info::net_immune() const
 bool monster_info::cannot_move() const
 {
     return is(MB_PARALYSED) || is(MB_PETRIFIED);
+}
+
+bool monster_info::asleep() const
+{
+    // BEH_SLEEP becomes either of these flags
+    return is(MB_DORMANT) || is(MB_SLEEPING);
+}
+
+bool monster_info::incapacitated() const
+{
+    // Duplicates actor::incapacitated
+    return cannot_move()
+            || asleep()
+            || is(MB_CONFUSED)
+            || is(MB_CAUGHT);
 }
 
 bool monster_info::airborne() const
@@ -1669,6 +1838,11 @@ bool monster_info::has_spells() const
     {
         return true;
     }
+
+    // Wand spells
+    const item_def* wand = inv[MSLOT_WAND].get();
+    if (itemuse() >= MONUSE_STARTING_EQUIPMENT && wand)
+        return true;
 
     const mon_spellbook_type book = get_spellbook(*this);
 
@@ -1735,7 +1909,7 @@ bool monster_info::has_trivial_ench(enchant_type ench) const
 // the player's knowledge?
 bool monster_info::unravellable() const
 {
-    if (is(MB_SUMMONED))
+    if (is(MB_ABJURABLE))
         return true;
 
     // NOTE: assumes that all debuffable enchantments are trivially mapped
@@ -1979,4 +2153,33 @@ bool monster_info::pronoun_plurality() const
         return props[MON_GENDER_KEY].get_int() == GENDER_NEUTRAL;
 
     return mons_class_gender(type) == GENDER_NEUTRAL;
+}
+
+string description_for_ench(enchant_type type)
+{
+    const monster_info_flags *flag = map_find(trivial_ench_mb_mappings, type);
+    if (!flag)
+        return "";
+
+    for (auto& name : monster_info_flag_names)
+        if (name.flag == *flag)
+            return name.long_singular;
+
+    return "";
+}
+
+monster* monster_info::get_known_summoner() const
+{
+    monster* summoner = monster_by_mid(summoner_id);
+
+    // Don't leak information about invisible summoners.
+    if (!summoner || !you.can_see(*summoner))
+        return nullptr;
+
+    // Don't leak the real Mara, if this happened to be made by them.
+    // (Note: the fake ones never make illusions)
+    if (summoner->type == MONS_MARA)
+        return nullptr;
+
+    return summoner;
 }

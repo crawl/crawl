@@ -21,6 +21,7 @@
 #endif
 
 #include "artefact.h"
+#include "act-iter.h"
 #include "art-enum.h"
 #include "beam.h"
 #include "chardump.h"
@@ -41,11 +42,13 @@
 #include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
+#include "melee-attack.h"
 #include "message.h"
 #include "mgen-data.h"
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-speak.h"
+#include "mon-tentacle.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "nearby-danger.h"
@@ -61,6 +64,7 @@
 #include "shopping.h"
 #include "shout.h"
 #include "spl-clouds.h"
+#include "spl-damage.h"
 #include "spl-goditem.h"
 #include "spl-selfench.h"
 #include "state.h"
@@ -156,7 +160,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
             canned_msg(MSG_YOU_RESIST);
         else if (hurted > original && doEffects)
         {
-            mpr("You feel a terrible chill!");
+            mpr("The cold chills you terribly!");
             xom_is_stimulated(200);
         }
         break;
@@ -241,7 +245,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
             canned_msg(MSG_YOU_PARTIALLY_RESIST);
         else if (hurted > original && doEffects)
         {
-            mpr("You feel a painful chill!");
+            mpr("The ice freezes you terribly!");
             xom_is_stimulated(200);
         }
         break;
@@ -292,19 +296,6 @@ int check_your_resists(int hurted, beam_type flavour, string source,
             you.strip_willpower(beam->agent(), random_range(8, 14));
         break;
 
-    case BEAM_CRYSTALLIZING:
-        if (doEffects)
-        {
-            if (x_chance_in_y(2, 3)) {
-                if (!you.duration[DUR_VITRIFIED])
-                    mpr("Your body becomes as fragile as glass!");
-                else
-                    mpr("You feel your fragility will last longer.");
-                you.increase_duration(DUR_VITRIFIED, random_range(8, 18), 50);
-            }
-        }
-        break;
-
     case BEAM_UMBRAL_TORCHLIGHT:
         if (you.holiness() & ~(MH_NATURAL | MH_DEMONIC | MH_HOLY)
             || beam->agent(true)->is_player())
@@ -315,9 +306,27 @@ int check_your_resists(int hurted, beam_type flavour, string source,
 
     case BEAM_WARPING:
         if (doEffects
-            && x_chance_in_y(min(90, 35 + (beam->ench_power)), 100))
+            && x_chance_in_y(get_warp_space_chance(beam->ench_power), 100))
         {
             you.blink();
+        }
+        break;
+
+    case BEAM_SEISMIC:
+        if (you.airborne())
+            hurted = hurted / 3;
+        break;
+
+    case BEAM_BOLAS:
+        if (doEffects)
+        {
+            if (you.is_insubstantial() || you.is_amorphous())
+                mpr("The bolas passes through you!");
+            else
+            {
+                you.set_duration(DUR_NO_MOMENTUM, random_range(4, 8), 0,
+                "The bolas wraps around you and binds you in place!");
+            }
         }
         break;
 
@@ -413,9 +422,11 @@ void lose_level()
  * @param announce_full     Whether to print messages even when fully resisting
  *                          the drain.
  * @param ignore_protection Whether to ignore the player's rN.
+ * @param quiet             Whether to hide all messages that would be printed
+ *                          by this.
  * @return                  Whether draining occurred.
  */
-bool drain_player(int power, bool announce_full, bool ignore_protection)
+bool drain_player(int power, bool announce_full, bool ignore_protection, bool quiet)
 {
     if (crawl_state.disables[DIS_AFFLICTIONS])
         return false;
@@ -424,7 +435,7 @@ bool drain_player(int power, bool announce_full, bool ignore_protection)
 
     if (protection == 3)
     {
-        if (announce_full)
+        if (announce_full && !quiet)
             canned_msg(MSG_YOU_RESIST);
 
         return false;
@@ -432,7 +443,8 @@ bool drain_player(int power, bool announce_full, bool ignore_protection)
 
     if (protection > 0)
     {
-        canned_msg(MSG_YOU_PARTIALLY_RESIST);
+        if (!quiet)
+            canned_msg(MSG_YOU_PARTIALLY_RESIST);
         power /= (protection * 2);
     }
 
@@ -447,7 +459,8 @@ bool drain_player(int power, bool announce_full, bool ignore_protection)
         dprf("Drained by %d max hp (%d total)", mhp, you.hp_max_adj_temp);
         calc_hp();
 
-        mpr("You feel drained.");
+        if (!quiet)
+            mpr("You feel drained.");
         xom_is_stimulated(15);
         return true;
     }
@@ -565,7 +578,7 @@ static void _maybe_spawn_rats(int dam, kill_method_type death_type)
 {
     if (dam <= 0
         || death_type == KILLED_BY_POISON
-        || !player_equip_unrand(UNRAND_RATSKIN_CLOAK))
+        || !you.unrand_equipped(UNRAND_RATSKIN_CLOAK))
     {
         return;
     }
@@ -588,10 +601,10 @@ static void _maybe_spawn_rats(int dam, kill_method_type death_type)
         return;
 
     mgen_data mg(mon, BEH_FRIENDLY, you.pos(), MHITYOU);
+    mg.set_summoned(&you, SPELL_NO_SPELL, summ_dur(3), false);
     mg.flags |= MG_FORCE_BEH; // don't mention how much it hates you before it appears
     if (monster *m = create_monster(mg))
     {
-        m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 3));
         mprf("%s scurries out from under your cloak.", m->name(DESC_A).c_str());
         // We should return early in the case of no_love or no_allies,
         // so this is more a sanity check.
@@ -612,6 +625,65 @@ static void _maybe_summon_demonic_guardian(int dam, kill_method_type death_type)
     {
         check_demonic_guardian();
     }
+}
+
+// The time-warped blood mutation grants haste to
+// your allies when you're brought below half health.
+void _maybe_blood_hastes_allies()
+{
+    if (you.hp * 2 > you.hp_max
+        || !you.has_mutation(MUT_TIME_WARPED_BLOOD)
+        || you.duration[DUR_TIME_WARPED_BLOOD_COOLDOWN])
+    {
+        return;
+    }
+
+    vector<monster*> targetable;
+    int target_count = you.get_mutation_level(MUT_TIME_WARPED_BLOOD) * 2;
+    int affected = 0;
+    int time = random_range(20, 30);
+
+    you.duration[DUR_TIME_WARPED_BLOOD_COOLDOWN] = 1;
+
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        // Try to look for valid allies that aren't already hasted,
+        // and which would properly function when given haste.
+        if (mi->alive() && mons_attitude(**mi) == ATT_FRIENDLY
+            && !mi->berserk_or_frenzied() && you.can_see(**mi)
+            && !mi->has_ench(ENCH_HASTE)
+            && !mi->is_peripheral())
+        {
+            targetable.emplace_back(*mi);
+        }
+    }
+
+    if (targetable.empty())
+    {
+       mpr("Your atemporal blood churns to no real effect.");
+       return;
+    }
+
+    // Affect the highest HD allies you have.
+    shuffle_array(targetable);
+    sort(targetable.begin(), targetable.end(),
+         [](const monster* a, const monster* b)
+         {return a->get_hit_dice() > b->get_hit_dice();});
+
+    for (monster *application: targetable)
+    {
+        if (affected < target_count)
+        {
+             flash_tile(application->pos(), BLUE, 0);
+             animation_delay(15, true);
+             application->add_ench(mon_enchant(ENCH_HASTE, 0, &you,
+                                   time * BASELINE_DELAY));
+             affected++;
+        }
+    }
+
+    if (affected > 0)
+        mpr("The spilling of your atemporal blood hastes your allies!");
 }
 
 static void _maybe_spawn_monsters(int dam, kill_method_type death_type,
@@ -650,8 +722,8 @@ static void _maybe_spawn_monsters(int dam, kill_method_type death_type,
         for (int i = 0; i < how_many; ++i)
         {
             const int mindex = damager->alive() ? damager->mindex() : MHITNOT;
-            mgen_data mg(mon, BEH_FRIENDLY, you.pos(), mindex);
-            mg.set_summoned(&you, 2, 0, you.religion);
+            mgen_data mg(mon, BEH_FRIENDLY, you.pos(), mindex, MG_NONE, you.religion);
+            mg.set_summoned(&you, 0, summ_dur(2));
 
             if (create_monster(mg))
                 count_created++;
@@ -712,25 +784,8 @@ static void _powered_by_pain(int dam)
 
 static void _maybe_fog(int dam)
 {
-    const int minpiety = have_passive(passive_t::hit_smoke)
-        ? piety_breakpoint(rank_for_passive(passive_t::hit_smoke) - 1)
-        : piety_breakpoint(2); // Xom
-
     const int upper_threshold = you.hp_max / 2;
-    const int lower_threshold = upper_threshold
-                                - upper_threshold
-                                  * (you.piety - minpiety)
-                                  / (MAX_PIETY - minpiety);
-    if (have_passive(passive_t::hit_smoke)
-        && (dam > 0 && you.form == transformation::shadow
-            || dam >= lower_threshold
-               && x_chance_in_y(dam - lower_threshold,
-                                upper_threshold - lower_threshold)))
-    {
-        mpr("You emit a cloud of dark smoke.");
-        big_cloud(CLOUD_BLACK_SMOKE, &you, you.pos(), 50, 4 + random2(5));
-    }
-    else if (you_worship(GOD_XOM) && x_chance_in_y(dam, 30 * upper_threshold))
+    if (you_worship(GOD_XOM) && x_chance_in_y(dam, 30 * upper_threshold))
     {
         mprf(MSGCH_GOD, "You emit a cloud of colourful smoke!");
         big_cloud(CLOUD_XOM_TRAIL, &you, you.pos(), 50, 4 + random2(5), -1);
@@ -738,13 +793,19 @@ static void _maybe_fog(int dam)
     }
 }
 
-static void _deteriorate(int dam)
+static void _handle_poor_constitution(int dam)
 {
-    if (x_chance_in_y(you.get_mutation_level(MUT_DETERIORATION), 4)
-        && dam > you.hp_max / 10)
+    const int level = you.get_mutation_level(MUT_POOR_CONSTITUTION);
+
+    if (level == 0)
+        return;
+
+    if (dam > you.hp_max / 15 && one_chance_in(level == 1 ? 9 : 6))
     {
-        mprf(MSGCH_WARN, "Your body deteriorates!");
-        lose_stat(STAT_RANDOM, 1);
+        you.weaken(nullptr, 20);
+
+        if (level == 2 && one_chance_in(2))
+            you.slow_down(nullptr, random_range(8, 15));
     }
 }
 
@@ -760,7 +821,7 @@ static void _maybe_corrode()
 {
     int corrosion_sources = you.scan_artefacts(ARTP_CORRODE);
     if (x_chance_in_y(corrosion_chance(corrosion_sources), 100))
-        you.corrode_equipment("Your corrosive artefact");
+        you.corrode(nullptr, "Your corrosive artefact");
 }
 
 /**
@@ -951,7 +1012,7 @@ static void _god_death_messages(kill_method_type death_type,
                 msg = " appreciates " + killer->name(DESC_ITS)
                         + " killing of an apostate.";
             }
-            simple_god_message(msg.c_str(), GOD_BEOGH);
+            simple_god_message(msg.c_str(), false, GOD_BEOGH);
         }
 
         // Doesn't depend on Okawaru worship - you can still lose the duel
@@ -960,7 +1021,7 @@ static void _god_death_messages(kill_method_type death_type,
         {
             const string msg = " crowns " + killer->name(DESC_THE, true)
                                 + " victorious!";
-            simple_god_message(msg.c_str(), GOD_OKAWARU);
+            simple_god_message(msg.c_str(), false, GOD_OKAWARU);
         }
     }
 }
@@ -997,9 +1058,12 @@ static void _print_endgame_messages(scorefile_entry &se)
  *  @param aux what did they do it with?
  *  @param see_source whether the attacker was visible to you
  *  @param death_source_name the attacker's name if it is already dead.
+ *  @param skip_multipliers Whether to ignore harm/vitrify/etc.
+ *  @param skip_awaken Whether this damage will skip waking a sleeping player.
  */
 void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
-          bool see_source, const char *death_source_name)
+          bool see_source, const char *death_source_name, bool skip_multipliers,
+          bool skip_awaken)
 {
     ASSERT(!crawl_state.game_is_arena());
     if (you.duration[DUR_TIME_STEP])
@@ -1010,8 +1074,16 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
     int drain_amount = 0;
 
+    // Marionettes will never hurt the player with their spells (even if they
+    // have somehow killed themselves in the process)
+    if (monster* mon_source = cached_monster_copy_by_mid(source))
+    {
+        if (mon_source->attitude == ATT_MARIONETTE)
+            dam = 0;
+    }
+
     // Multiply damage if Harm or Vitrify is in play. (Poison is multiplied earlier.)
-    if (dam != INSTANT_DEATH && death_type != KILLED_BY_POISON)
+    if (dam != INSTANT_DEATH && death_type != KILLED_BY_POISON && !skip_multipliers)
     {
         dam = _apply_extra_harm(dam, source);
 
@@ -1029,11 +1101,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
     if (dam != INSTANT_DEATH)
     {
-        if (you.form == transformation::shadow)
-        {
-            drain_amount = (dam - (dam / 2));
-            dam /= 2;
-        }
+        if (you.form == transformation::slaughter)
+            dam = dam * 10 / 15;
         if (you.may_pruneify() && you.cannot_act())
             dam /= 2;
         if (you.petrified())
@@ -1045,8 +1114,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     interrupt_activity(activity_interrupt::hp_loss, &hpl);
 
     // Don't wake the player with fatal or poison damage.
-    if (dam > 0 && dam < you.hp && death_type != KILLED_BY_POISON)
-        you.check_awaken(500);
+    if (dam > 0 && dam < you.hp && death_type != KILLED_BY_POISON && !skip_awaken)
+        you.wake_up();
 
     const bool non_death = death_type == KILLED_BY_QUITTING
                         || death_type == KILLED_BY_WINNING
@@ -1069,7 +1138,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             return;
         // the dreamshard necklace protects from any fatal blow or death source
         // that death's door would protect from.
-        else if (player_equip_unrand(UNRAND_DREAMSHARD_NECKLACE)
+        else if (you.unrand_equipped(UNRAND_DREAMSHARD_NECKLACE)
                  && dam >= you.hp)
         {
             dreamshard_shatter();
@@ -1090,12 +1159,12 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             mp = min(mp, you.magic_points);
 
             dam -= mp;
-            drain_mp(mp);
+            drain_mp(mp, true);
 
             // Wake players who took fatal damage exactly equal to current HP,
             // but had it reduced below fatal threshold by spirit shield.
             if (dam < you.hp)
-                you.check_awaken(500);
+                you.wake_up();
 
             if (dam <= 0 && you.hp > 0)
                 return;
@@ -1106,7 +1175,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             simple_god_message(" protects you from harm!");
             // Ensure divine intervention wakes sleeping players. Necessary
             // because we otherwise don't wake players who take fatal damage.
-            you.check_awaken(500);
+            you.wake_up();
             return;
         }
 
@@ -1148,14 +1217,16 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             take_note(Note(NOTE_HP_CHANGE, you.hp, you.hp_max,
                            damage_desc.c_str()));
 
-            _deteriorate(dam);
+            _handle_poor_constitution(dam);
             _maybe_ru_retribution(dam, source);
             _maybe_inflict_anguish(dam, source);
             _maybe_spawn_monsters(dam, death_type, source);
             _maybe_spawn_rats(dam, death_type);
             _maybe_summon_demonic_guardian(dam, death_type);
             _maybe_fog(dam);
+            _maybe_blood_hastes_allies();
             _powered_by_pain(dam);
+            makhleb_celebrant_bloodrite();
             if (sanguine_armour_valid())
                 activate_sanguine_armour();
             refresh_meek_bonus();
@@ -1243,6 +1314,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
                 take_note(Note(NOTE_DEATH, you.hp, you.hp_max,
                                 death_desc.c_str()), true);
                 _wizard_restore_life();
+                take_note(Note(NOTE_DEATH, you.hp, you.hp_max,
+                                "You cheat death using unusual wizardly powers."), true);
                 return;
             }
         }

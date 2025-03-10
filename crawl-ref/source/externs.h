@@ -124,6 +124,7 @@ typedef uint32_t mid_t;
 // and whatever else we want to have, while keeping all monster ids smaller.
 #define MID_ANON_FRIEND   ((mid_t)0xffff0000)
 #define MID_YOU_FAULTLESS ((mid_t)0xffff0001)
+#define MID_PLAYER_SHADOW_DUMMY ((mid_t)0xffff0002)
 /// Upper bound on the number of monsters that can ever exist in a game.
 #define MID_FIRST_NON_MONSTER MID_ANON_FRIEND
 

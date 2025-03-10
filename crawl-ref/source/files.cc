@@ -48,6 +48,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "end.h"
+#include "english.h"
 #include "tile-env.h"
 #include "errors.h"
 #include "player-save-info.h"
@@ -74,6 +75,7 @@
 #include "notes.h"
 #include "place.h"
 #include "prompt.h"
+#include "religion.h"
 #include "skills.h"
 #include "species.h"
 #include "spl-summoning.h"
@@ -777,6 +779,9 @@ static vector<player_save_info> _find_saved_characters()
             }
             catch (ext_fail_exception &E)
             {
+#ifndef DEBUG_DIAGNOSTICS
+                UNUSED(E);
+#endif
                 dprf("%s: %s", filename.c_str(), E.what());
             }
             catch (game_ended_condition &E) // another process is using the save
@@ -1187,34 +1192,8 @@ static void _clear_env_map()
     env.map_forgotten.reset();
 }
 
-static bool _grab_follower_at(const coord_def &pos)
+static void _grab_follower(monster* fol)
 {
-    if (pos == you.pos())
-        return false;
-
-    monster* fol = monster_at(pos);
-    if (!fol || !fol->alive() || fol->incapacitated())
-        return false;
-
-    // Only friendlies can follow the player through portals
-    if (!fol->friendly() && (!is_connected_branch(you.where_are_you)
-                            || you.where_are_you == BRANCH_PANDEMONIUM))
-    {
-        return false;
-    }
-
-    // The monster has to already be tagged in order to follow.
-    if (!testbits(fol->flags, MF_TAKING_STAIRS))
-        return false;
-
-    // If a monster that can't use stairs was marked as a follower,
-    // it's because it's an ally and there might be another ally
-    // behind it that might want to push through.
-    // This means we don't actually send it on transit, but we do
-    // return true, so adjacent real followers are handled correctly. (jpeg)
-    if (!mons_can_use_stairs(*fol))
-        return true;
-
     level_id dest = level_id::current();
 
     dprf("%s is following to %s.", fol->name(DESC_THE, true).c_str(),
@@ -1224,11 +1203,23 @@ static bool _grab_follower_at(const coord_def &pos)
     fol->destroy_inventory();
     monster_cleanup(fol);
     if (could_see)
-        view_update_at(pos);
-    return true;
+        view_update_at(fol->pos());
 }
 
-static void _grab_followers()
+// Expire all friendly summons / zombies / etc. when the player is leaving a floor.
+static void _expire_temporary_allies()
+{
+    for (auto &mons : menv_real)
+    {
+        if (!mons.alive())
+            continue;
+
+        if (mons.was_created_by(you))
+            monster_die(mons, KILL_TIMEOUT, NON_MONSTER, true);
+    }
+}
+
+static void _grab_followers_and_expire_summons()
 {
     int non_stair_using_allies = 0;
     int non_stair_using_undead = 0;
@@ -1237,12 +1228,23 @@ static void _grab_followers()
     monster* dowan = nullptr;
     monster* duvessa = nullptr;
 
-    // Handle some hacky cases
-    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+    // Do a first pass to account for Dowan/Duvessa refusing to leave a floor
+    // without the other, as well as printing a message if the player is leaving
+    // summoned allies behind.
+    for (radius_iterator ri(you.pos(), 3, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
     {
-        monster* fol = monster_at(*ai);
+        monster* fol = monster_at(*ri);
         if (fol == nullptr)
             continue;
+
+        // Hostile monsters can only follow while adjacent and incapacitated
+        // monsters cannot follow at all. (We already checked this when flagging
+        // them, but it may have changed in the meantime)
+        if (!fol->alive() || fol->incapacitated()
+            || (!fol->friendly() && grid_distance(*ri, you.pos()) > 1))
+        {
+            fol->flags &= ~MF_TAKING_STAIRS;
+        }
 
         if (mons_is_mons_class(fol, MONS_DUVESSA) && fol->alive())
             duvessa = fol;
@@ -1250,13 +1252,15 @@ static void _grab_followers()
         if (mons_is_mons_class(fol, MONS_DOWAN) && fol->alive())
             dowan = fol;
 
-        if (fol->wont_attack() && !mons_can_use_stairs(*fol))
+        // Note friendlies that are being left behind because they can't take stairs.
+        if (fol->friendly() && !mons_can_use_stairs(*fol))
         {
-            non_stair_using_allies++;
-            if (fol->is_summoned() || mons_is_conjured(fol->type))
-                non_stair_using_summons++;
+            if (!fol->is_peripheral())
+                non_stair_using_allies++;
             if (fol->holiness() & MH_UNDEAD)
                 non_stair_using_undead++;
+            else if (fol->is_abjurable())
+                non_stair_using_summons++;
         }
     }
 
@@ -1299,27 +1303,22 @@ static void _grab_followers()
         }
     }
 
-    bool visited[GXM][GYM];
-    memset(&visited, 0, sizeof(visited));
+    // Kill friendly summons before moving off-floor.
+    // (Helps with bookkeeping in some cases).
+    _expire_temporary_allies();
 
-    vector<coord_def> places[2] = { { you.pos() }, {} };
-    int place_set = 0;
-    while (!places[place_set].empty())
+    for (radius_iterator ri(you.pos(), 3, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
     {
-        for (const coord_def &p : places[place_set])
-        {
-            for (adjacent_iterator ai(p); ai; ++ai)
-            {
-                if (visited[ai->x][ai->y])
-                    continue;
+        monster* fol = monster_at(*ri);
+        if (!fol)
+            continue;
 
-                visited[ai->x][ai->y] = true;
-                if (_grab_follower_at(*ai))
-                    places[!place_set].push_back(*ai);
-            }
-        }
-        places[place_set].clear();
-        place_set = !place_set;
+        // Only grab monsters who were flagged when the player started their
+        // stair delay.
+        if (!testbits(fol->flags, MF_TAKING_STAIRS))
+            continue;
+
+        _grab_follower(fol);
     }
 
     // Clear flags of monsters that didn't follow.
@@ -1327,11 +1326,7 @@ static void _grab_followers()
     {
         if (!mons.alive())
             continue;
-        if (mons.type == MONS_BATTLESPHERE)
-            end_battlesphere(&mons, false);
-        if (mons.type == MONS_SPECTRAL_WEAPON)
-            end_spectral_weapon(&mons, false);
-        check_canid_farewell(mons, false);
+
         mons.flags &= ~MF_TAKING_STAIRS;
     }
 }
@@ -1462,15 +1457,23 @@ static void _place_player(dungeon_feature_type stair_taken,
         _place_player_on_stair(stair_taken, dest_pos, hatch_name);
 
     // Don't return the player into walls, deep water, or a trap.
-    for (distance_iterator di(you.pos(), true, false); di; ++di)
-        if (you.is_habitable_feat(env.grid(*di))
-            && !is_feat_dangerous(env.grid(*di), true)
-            && !feat_is_trap(env.grid(*di)))
-        {
-            if (you.pos() != *di)
-                you.moveto(*di);
-            break;
-        }
+    if (!you.is_habitable_feat(env.grid(you.pos()))
+        || is_feat_dangerous(env.grid(you.pos()), true)
+        || feat_is_trap(env.grid(you.pos())))
+    {
+        for (distance_iterator di(you.pos(), true, false); di; ++di)
+            if (you.is_habitable_feat(env.grid(*di))
+                && !is_feat_dangerous(env.grid(*di), true)
+                && !feat_is_trap(env.grid(*di))
+                && !(env.pgrid(*di) & FPROP_NO_TELE_INTO))
+            {
+                if (you.pos() != *di)
+                    you.moveto(*di);
+                break;
+            }
+    }
+
+
 
     // This should fix the "monster occurring under the player" bug.
     monster *mon = monster_at(you.pos());
@@ -1487,8 +1490,27 @@ static void _place_player(dungeon_feature_type stair_taken,
 
         dprf("%s under player and can't be moved anywhere; killing",
              mon->name(DESC_PLAIN).c_str());
-        monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
+        monster_die(*mon, KILL_RESET_KEEP_ITEMS, NON_MONSTER);
         // XXX: do we need special handling for uniques...?
+    }
+
+    // Dump all arena contents on the player's feet when exiting the arena
+    if (stair_taken == DNGN_EXIT_ARENA && you.props.exists(OKAWARU_DUEL_ITEMS_KEY))
+    {
+        // If the player has emerged over deep water / lava, put something solid
+        // under us so that items from the duel are not lost
+        if ((env.grid(you.pos()) == DNGN_DEEP_WATER && !player_likes_water(true)
+             || env.grid(you.pos()) == DNGN_LAVA))
+        {
+            env.grid(you.pos()) = DNGN_ALTAR_OKAWARU;
+            set_terrain_changed(you.pos());
+        }
+
+        CrawlVector& vec = you.props[OKAWARU_DUEL_ITEMS_KEY].get_vector();
+        for (CrawlStoreValue value : vec)
+            copy_item_to_grid(value.get_item(), you.pos());
+
+        you.props.erase(OKAWARU_DUEL_ITEMS_KEY);
     }
 }
 
@@ -1571,7 +1593,7 @@ static void _generic_level_reset()
 {
     // TODO: can more be pulled into here?
 
-    you.prev_targ = MHITNOT;
+    you.prev_targ = MID_NOBODY;
     you.prev_grd_targ.reset();
 
     // Lose all listeners.
@@ -2037,6 +2059,14 @@ static void _fixup_transmuters()
 }
 #endif
 
+/// Learn where each transporter on the current level goes.
+static void _learn_transporters()
+{
+    auto li = travel_cache.find_level_info(level_id::current());
+    for (auto &tp : li->get_transporters())
+        li->update_transporter(tp.position, get_transporter_dest(tp.position));
+}
+
 /**
  * Load the current level.
  *
@@ -2103,7 +2133,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         if (old_level.depth != -1)
         {
             if (!crawl_state.game_is_descent())
-                _grab_followers();
+                _grab_followers_and_expire_summons();
 
             if (env.level_state & LSTATE_DELETED)
                 delete_level(old_level), dprf("<lightmagenta>Deleting level.</lightmagenta>");
@@ -2191,17 +2221,12 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     // Shouldn't happen, but this is too unimportant to assert.
     deleteAll(env.final_effects);
+    env.final_effect_monster_cache.clear();
 
     los_changed();
 
     if (load_mode != LOAD_VISITOR)
         you.set_level_visited(level_id::current());
-
-    // Markers must be activated early, since they may rely on
-    // events issued later, e.g. DET_ENTERING_LEVEL or
-    // the DET_TURN_ELAPSED from update_level.
-    if (make_changes || load_mode == LOAD_RESTART_GAME)
-        env.markers.activate_all();
 
     const bool descent_downclimb = crawl_state.game_is_descent()
                                    && feat_stair_direction(stair_taken) == CMD_GO_DOWNSTAIRS
@@ -2210,6 +2235,15 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                               && !feat_is_escape_hatch(stair_taken)
                               && stair_taken != DNGN_TRAP_SHAFT
                               && old_level.branch == you.where_are_you;
+
+    // Markers must be activated early, since they may rely on
+    // events issued later, e.g. DET_ENTERING_LEVEL or
+    // the DET_TURN_ELAPSED from update_level.
+    if (make_changes || load_mode == LOAD_RESTART_GAME)
+    {
+        bool message = !(load_mode == LOAD_RESTART_GAME && descent_peek);
+        env.markers.activate_all(message);
+    }
 
     if (make_changes && env.elapsed_time && !just_created_level && !descent_peek)
         update_level(you.elapsed_time - env.elapsed_time);
@@ -2381,7 +2415,10 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         you.attribute[ATTR_ABYSS_ENTOURAGE] = 0;
         gozag_count_level_gold();
         if (branches[you.where_are_you].branch_flags & brflag::fully_map)
+        {
             magic_mapping(GDM, 100, true, false, false, true, false);
+            _learn_transporters();
+        }
     }
 
 
@@ -2856,7 +2893,7 @@ save_version read_ghost_header(reader &inf)
         // Discard three more 32-bit words of padding.
         inf.read(nullptr, 3*4);
     }
-    catch (short_read_exception &E)
+    catch (const short_read_exception&)
     {
         mprf(MSGCH_ERROR,
              "Ghost file \"%s\" seems to be invalid (short read); deleting it.",
@@ -2898,7 +2935,7 @@ vector<ghost_demon> load_bones_file(string ghost_filename, bool backup)
         result = tag_read_ghosts(inf);
         inf.fail_if_not_eof(ghost_filename);
     }
-    catch (short_read_exception &short_read)
+    catch (const short_read_exception&)
     {
         string error = "Broken bones file: " + ghost_filename;
         throw corrupted_save(error, version);
@@ -3166,8 +3203,8 @@ static bool _restore_game(const string& filename)
     if (!crawl_state.bypassed_startup_menu
         && menu_game_type != crawl_state.type)
     {
-        if (!yesno(("You already have a "
-                        + _type_name_processed(save_info.saved_game_type) +
+        auto atype = article_a(_type_name_processed(save_info.saved_game_type));
+        if (!yesno(("You already have " + atype +
                     " game saved under the name '" + save_info.name + "';\n"
                     "do you want to load that instead?").c_str(),
                    true, 'n'))
@@ -3437,7 +3474,7 @@ save_version get_save_version(reader &file)
         if (minor == UINT8_MAX)
             minor = unmarshallInt(file);
     }
-    catch (short_read_exception& E)
+    catch (const short_read_exception&)
     {
         // Empty file?
         return save_version(-1, -1);
@@ -3484,6 +3521,23 @@ static bool _convert_obsolete_species()
         // addition, even if the player isn't over lava, they might still get
         // trapped.
         fly_player(100);
+        return true;
+    }
+    else if (you.species == SP_VAMPIRE)
+    {
+        if (!yesno(
+            "This Vampire save game cannot be loaded as-is. If you load it now,\n"
+            "your character will be converted to a Human. Continue?",
+                       false, 'N'))
+        {
+            you.save->abort(); // don't even rewrite the header
+            delete you.save;
+            you.save = 0;
+            game_ended(game_exit::abort,
+                "Please load the save in an earlier version "
+                "if you want to remain a Vampire.");
+        }
+        change_species_to(SP_HUMAN);
         return true;
     }
 #endif
@@ -3541,7 +3595,7 @@ static player_save_info _read_character_info(package *save)
         result.save_loadable = _loadable_save_ver(major, minor);
         return result;
     }
-    catch (short_read_exception &E)
+    catch (const short_read_exception &)
     {
         fail("Save file `%s` corrupted (short read)", save->get_filename().c_str());
     };
@@ -3617,7 +3671,7 @@ static bool _restore_tagged_chunk(package *save, const string &name,
     {
         tag_read(inf, tag);
     }
-    catch (short_read_exception &E)
+    catch (const short_read_exception&)
     {
         fail("truncated save chunk (%s)", name.c_str());
     };

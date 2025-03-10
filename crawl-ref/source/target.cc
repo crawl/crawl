@@ -23,6 +23,7 @@
 #include "ray.h"
 #include "spl-damage.h"
 #include "spl-goditem.h" // player_is_debuffable
+#include "spl-monench.h"
 #include "spl-summoning.h"
 #include "spl-other.h"
 #include "spl-transloc.h"
@@ -49,6 +50,11 @@ bool targeter::set_aim(coord_def a)
 
     aim = a;
     return true;
+}
+
+bool targeter::preferred_aim(coord_def)
+{
+    return false;
 }
 
 bool targeter::can_affect_outside_range()
@@ -78,6 +84,11 @@ bool targeter::anyone_there(coord_def loc)
 bool targeter::affects_monster(const monster_info& /*mon*/)
 {
     return true; //TODO: false
+}
+
+bool targeter::harmful_to_player()
+{
+    return true; // The safest default assumption
 }
 
 static inline bool _ti_should_iterate(aff_type cur_aff, aff_type threshold)
@@ -367,6 +378,11 @@ bool targeter_beam::affects_monster(const monster_info& mon)
            || beam.flavour == BEAM_INNER_FLAME;
 }
 
+bool targeter_beam::harmful_to_player()
+{
+    return !beam.ignores_player() && !beam.harmless_to_player();
+}
+
 targeter_view::targeter_view()
 {
     origin = aim = you.pos();
@@ -386,10 +402,14 @@ aff_type targeter_view::is_affected(coord_def loc)
 }
 
 targeter_smite::targeter_smite(const actor* act, int ran,
-                                 int exp_min, int exp_max, bool wall_ok,
+                                 int exp_min, int exp_max,
+                                 bool harmless_to_player,
+                                 bool wall_ok, bool monster_ok,
                                  bool (*affects_pos_func)(const coord_def &)):
     exp_range_min(exp_min), exp_range_max(exp_max), range(ran),
-    affects_walls(wall_ok), affects_pos(affects_pos_func)
+    cannot_harm_player(harmless_to_player), affects_walls(wall_ok),
+    can_target_monsters(monster_ok),
+    affects_pos(affects_pos_func)
 {
     ASSERT(act);
     ASSERT(exp_min >= 0);
@@ -406,12 +426,22 @@ bool targeter_smite::valid_aim(coord_def a)
         // Scrying/glass/tree/grate.
         if (agent && agent->see_cell(a))
             return notify_fail("There's something in the way.");
-        return notify_fail("You cannot see that place.");
+        else if (agent && agent->is_player())
+            return notify_fail("You cannot see that place.");
+        // When aiming something from a different actor's perspective
+        else
+            return notify_fail("Out of range.");
     }
     if ((origin - a).rdist() > range)
         return notify_fail("Out of range.");
     if (!affects_walls && cell_is_solid(a))
         return notify_fail(_wallmsg(a));
+    if (!can_target_monsters && monster_at(a) && you.can_see(*monster_at(a))
+        // XXX: To let Paragon Tempest be cast without moving the Paragon.
+        && monster_at(a) != agent)
+    {
+        return notify_fail("There's something in the way.");
+    }
     return true;
 }
 
@@ -451,6 +481,11 @@ bool targeter_smite::can_affect_walls()
     return affects_walls;
 }
 
+bool targeter_smite::harmful_to_player()
+{
+    return !cannot_harm_player;
+}
+
 aff_type targeter_smite::is_affected(coord_def loc)
 {
     if (!valid_aim(aim))
@@ -477,7 +512,7 @@ aff_type targeter_smite::is_affected(coord_def loc)
 }
 
 targeter_walljump::targeter_walljump() :
-    targeter_smite(&you, LOS_RADIUS, 1, 1, false, nullptr)
+    targeter_smite(&you, LOS_RADIUS, 1, 1)
 {
 }
 
@@ -505,7 +540,7 @@ aff_type targeter_walljump::is_affected(coord_def loc)
 }
 
 targeter_passwall::targeter_passwall(int max_range) :
-    targeter_smite(&you, max_range, 1, 1, true, nullptr)
+    targeter_smite(&you, max_range, 1, 1, true, true)
 {
 }
 
@@ -638,7 +673,7 @@ aff_type targeter_dig::is_affected(coord_def loc)
 }
 
 targeter_transference::targeter_transference(const actor* act, int aoe) :
-    targeter_smite(act, LOS_RADIUS, aoe, aoe, false, nullptr)
+    targeter_smite(act, LOS_RADIUS, aoe, aoe, true)
 {
 }
 
@@ -664,10 +699,17 @@ bool targeter_transference::valid_aim(coord_def a)
     return true;
 }
 
+bool targeter_transference::affects_monster(const monster_info& mon)
+{
+    return !mons_is_hepliaklqana_ancestor(mon.type)
+            && !mons_class_is_stationary(mon.type)
+            && !mons_is_tentacle_or_tentacle_segment(mon.type);
+}
+
 targeter_permafrost::targeter_permafrost(const actor &act, int power) :
     targeter_smite(&act)
 {
-    set<coord_def> possible_centres = permafrost_targets(act, power);
+    possible_centres = permafrost_targets(act, power, false);
     for (coord_def t : possible_centres)
     {
         targets.insert(t);
@@ -680,14 +722,17 @@ targeter_permafrost::targeter_permafrost(const actor &act, int power) :
 
 aff_type targeter_permafrost::is_affected(coord_def loc)
 {
-    // TODO: consider displaying each centre differently from the AOEs.
     if (targets.count(loc))
+    {
+        if (possible_centres.count(loc))
+            return single_target ? AFF_MULTIPLE : AFF_YES;
         return single_target ? AFF_YES : AFF_MAYBE;
+    }
     return AFF_NO;
 }
 
 targeter_inner_flame::targeter_inner_flame(const actor* act, int r) :
-    targeter_smite(act, r, 0, 0, false, nullptr)
+    targeter_smite(act, r)
 {
 }
 
@@ -703,7 +748,7 @@ bool targeter_inner_flame::valid_aim(coord_def a)
 }
 
 targeter_simulacrum::targeter_simulacrum(const actor* act, int r) :
-    targeter_smite(act, r, 0, 0, false, nullptr)
+    targeter_smite(act, r)
 {
 }
 
@@ -719,7 +764,7 @@ bool targeter_simulacrum::valid_aim(coord_def a)
 }
 
 targeter_unravelling::targeter_unravelling()
-    : targeter_smite(&you, LOS_RADIUS, 1, 1, false, nullptr)
+    : targeter_smite(&you, LOS_RADIUS, 1, 1)
 {
 }
 
@@ -752,10 +797,9 @@ bool targeter_unravelling::valid_aim(coord_def a)
     }
 
     if (mons && you.can_see(*mons) && _unravelling_explodes_at(a)
-        && god_protects(&you, mons))
+        && never_harm_monster(&you, mons))
     {
-        return notify_fail(mons->name(DESC_THE) + " is protected by " +
-                           god_name(you.religion) + ".");
+        return notify_fail("You cannot do harm to " + mons->name(DESC_THE));
     }
 
     return true;
@@ -859,7 +903,7 @@ aff_type targeter_passage::is_affected(coord_def loc)
 }
 
 targeter_fragment::targeter_fragment(const actor* act, int power, int ran) :
-    targeter_smite(act, ran, 1, 1, true, nullptr),
+    targeter_smite(act, ran, 1, 1, false, true),
     pow(power)
 {
 }
@@ -1206,11 +1250,6 @@ aff_type targeter_flame_wave::is_affected(coord_def loc)
     const int dist = (loc - origin).rdist();
     if (dist == 1)
         return AFF_YES;
-    if (you.props.exists(FLAME_WAVE_KEY)
-        && dist <= you.props[FLAME_WAVE_KEY].get_int() + 1)
-    {
-        return AFF_YES;
-    }
     return AFF_MAYBE;
 }
 
@@ -1268,7 +1307,6 @@ targeter_thunderbolt::targeter_thunderbolt(const actor *act, int r,
     prev = _prev;
     ASSERT(prev != origin);
     aim = prev.origin() ? origin : prev;
-    ASSERT_RANGE(r, 1 + 1, you.current_vision + 1);
     range = r;
 }
 
@@ -1377,195 +1415,6 @@ aff_type targeter_thunderbolt::is_affected(coord_def loc)
     return zapped[loc];
 }
 
-targeter_shadow_step::targeter_shadow_step(const actor* act, int r) :
-    range(r)
-{
-    ASSERT(act);
-    agent = act;
-    origin = act->pos();
-    step_is_blocked = false;
-}
-
-bool targeter_shadow_step::valid_aim(coord_def a)
-{
-    ray_def ray;
-
-    if (origin == a)
-        return notify_fail("You cannot target yourself.");
-    else if ((origin - a).rdist() > range)
-        return notify_fail("Out of range.");
-    else if (!cell_see_cell(origin, a, LOS_NO_TRANS))
-    {
-        if (agent->see_cell(a))
-            return notify_fail("There's something in the way.");
-        else
-            return notify_fail("You cannot see that place.");
-    }
-    else if (cell_is_solid(a))
-        return notify_fail("There's something in the way.");
-    else if (!find_ray(agent->pos(), a, ray, opc_solid_see))
-        return notify_fail("There's something in the way.");
-    else if (!has_additional_sites(a))
-    {
-        switch (no_landing_reason)
-        {
-        case shadow_step_blocked::move:
-        case shadow_step_blocked::occupied:
-            return notify_fail("There is no safe place near that"
-                               " location.");
-        case shadow_step_blocked::path:
-            return notify_fail("There's something in the way.");
-        case shadow_step_blocked::no_target:
-            return notify_fail("There isn't a shadow there.");
-        case shadow_step_blocked::none:
-            die("buggy no_landing_reason");
-        }
-    }
-    return true;
-}
-
-bool targeter_shadow_step::valid_landing(coord_def a, bool check_invis)
-{
-    actor *act;
-    ray_def ray;
-
-    if (!agent->is_habitable(a))
-    {
-        blocked_landing_reason = shadow_step_blocked::move;
-        return false;
-    }
-    if (agent->is_player())
-    {
-        monster* beholder = you.get_beholder(a);
-        if (beholder)
-        {
-            blocked_landing_reason = shadow_step_blocked::move;
-            return false;
-        }
-
-        monster* fearmonger = you.get_fearmonger(a);
-        if (fearmonger)
-        {
-            blocked_landing_reason = shadow_step_blocked::move;
-            return false;
-        }
-    }
-    if (!find_ray(agent->pos(), a, ray, opc_solid_see))
-    {
-        blocked_landing_reason = shadow_step_blocked::path;
-        return false;
-    }
-
-    // Check if a landing site is invalid due to a visible monster obstructing
-    // the path.
-    ray.advance();
-    while (map_bounds(ray.pos()))
-    {
-        act = actor_at(ray.pos());
-        if (ray.pos() == a)
-        {
-            if (act && (!check_invis || agent->can_see(*act)))
-            {
-                blocked_landing_reason = shadow_step_blocked::occupied;
-                return false;
-            }
-            break;
-        }
-        ray.advance();
-    }
-    return true;
-}
-
-aff_type targeter_shadow_step::is_affected(coord_def loc)
-{
-    aff_type aff = AFF_NO;
-
-    if (loc == aim)
-        aff = AFF_YES;
-    else if (additional_sites.count(loc))
-        aff = AFF_LANDING;
-    return aff;
-}
-
-// If something unseen either occupies the aim position or blocks the
-// shadow_step path, indicate that with step_is_blocked, but still return true
-// so long there is at least one valid landing position from the player's
-// perspective.
-bool targeter_shadow_step::set_aim(coord_def a)
-{
-    if (a == origin)
-        return false;
-    if (!targeter::set_aim(a))
-        return false;
-
-    step_is_blocked = false;
-
-    // Find our set of landing sites, choose one at random to be the
-    // destination and see if it's actually blocked.
-    set_additional_sites(aim);
-    if (additional_sites.size())
-    {
-        auto it = random_iterator(additional_sites);
-        landing_site = *it;
-        if (!valid_landing(landing_site, false))
-            step_is_blocked = true;
-        return true;
-    }
-    return false;
-}
-
-// Determine the set of valid landing sites
-void targeter_shadow_step::set_additional_sites(coord_def a)
-{
-    get_additional_sites(a);
-    additional_sites = temp_sites;
-}
-
-// Determine the set of valid landing sites for the target, putting the results
-// in the private set variable temp_sites. This uses valid_aim(), so it looks
-// for uninhabited squares that are habitable by the player, but doesn't check
-// against e.g. harmful clouds
-void targeter_shadow_step::get_additional_sites(coord_def a)
-{
-    bool agent_adjacent = a.distance_from(agent->pos()) == 1;
-    temp_sites.clear();
-
-    const actor *victim = actor_at(a);
-    if (!victim || !victim->as_monster()
-        || mons_is_firewood(*victim->as_monster())
-        || victim->as_monster()->friendly()
-        || !agent->can_see(*victim)
-        || !victim->umbraed())
-    {
-        no_landing_reason = shadow_step_blocked::no_target;
-        return;
-    }
-
-    no_landing_reason = shadow_step_blocked::none;
-    for (adjacent_iterator ai(a, false); ai; ++ai)
-    {
-        // See if site is valid, record a putative reason for why no sites were
-        // found.
-        if (!agent_adjacent || agent->pos().distance_from(*ai) > 1)
-        {
-            if (valid_landing(*ai))
-            {
-                temp_sites.insert(*ai);
-                no_landing_reason = shadow_step_blocked::none;
-            }
-            else
-                no_landing_reason = blocked_landing_reason;
-        }
-    }
-}
-
-// See if we can find at least one valid landing position for the given monster.
-bool targeter_shadow_step::has_additional_sites(coord_def a)
-{
-    get_additional_sites(a);
-    return temp_sites.size();
-}
-
 aff_type targeter_refrig::is_affected(coord_def loc)
 {
     if (!targeter_radius::is_affected(loc))
@@ -1573,9 +1422,9 @@ aff_type targeter_refrig::is_affected(coord_def loc)
     const actor* act = actor_at(loc);
     if (!act || act == agent || !agent->can_see(*act))
         return AFF_NO;
-    if (god_protects(agent, act->as_monster(), true))
+    if (never_harm_monster(agent, act->as_monster()))
         return AFF_NO;
-    switch (adjacent_huddlers(loc))
+    switch (adjacent_huddlers(loc, true))
     {
     case 0:  return AFF_MULTIPLE;
     case 1:  return AFF_YES;
@@ -2078,7 +1927,7 @@ targeter_englaciate::targeter_englaciate()
 bool targeter_englaciate::affects_monster(const monster_info& mon)
 {
     return get_resist(mon.resists(), MR_RES_COLD) <= 0
-           && !mons_class_flag(mon.type, M_STATIONARY);
+           && !mons_class_is_peripheral(mon.type);
 }
 
 targeter_fear::targeter_fear()
@@ -2117,8 +1966,8 @@ bool targeter_anguish::affects_monster(const monster_info& mon)
         && !mon.is(MB_ANGUISH);
 }
 
-targeter_boulder::targeter_boulder(const actor* caster)
-    : targeter_beam(caster, LOS_MAX_RANGE, ZAP_IOOD, 0, 0, 0)
+targeter_boulder::targeter_boulder(const actor* caster, int boulder_hp)
+    : targeter_beam(caster, LOS_MAX_RANGE, ZAP_IOOD, 0, 0, 0), hp(boulder_hp)
 {
 }
 
@@ -2135,6 +1984,45 @@ bool targeter_boulder::set_aim(coord_def a)
     tempbeam.fire();
     path_taken = tempbeam.path_taken;
 
+    boulder_sim.clear();
+
+    // Now simulate rolling a boulder down the given path, and see how quickly
+    // it is possible for it to get abraded by walls (to indicate what part of
+    // the path it will always roll, and which is more questionable.)
+    int _hp = hp;
+    for (auto pos : path_taken)
+    {
+        if (cell_is_solid(pos))
+            continue;
+
+        // If we've already passed the point of possible destruction, no
+        // need to calculate anything else.
+        if (_hp <= 0)
+        {
+            boulder_sim[pos] = AFF_MAYBE;
+            continue;
+        }
+
+        int solid_count = 0;
+        for (adjacent_iterator ai(pos); ai; ++ai)
+        {
+            // Assume that unseen tiles are walls.
+            if (env.map_knowledge(pos).feat() == DNGN_UNSEEN
+                || cell_is_solid(*ai))
+            {
+                ++solid_count;
+            }
+        }
+
+        // Assume maximum damage is taken
+        _hp -= (solid_count * BOULDER_ABRASION_DAMAGE);
+
+        if (_hp <= 0)
+            boulder_sim[pos] = AFF_MAYBE;
+        else
+            boulder_sim[pos] = AFF_YES;
+    }
+
     return true;
 }
 
@@ -2146,42 +2034,40 @@ bool targeter_boulder::valid_aim(coord_def a)
     if (a == agent->pos())
         return notify_fail("There's a thick-headed creature in the way.");
 
-    // make sure it's a true cardinal
     const coord_def delta = a - agent->pos();
     if (delta.x && delta.y && abs(delta.x) != abs(delta.y))
-        return notify_fail("Boulders only roll along the cardinals.");
+        return notify_fail("You can only roll a boulder in a compass direction.");
 
     ray_def ray;
     if (!find_ray(agent->pos(), a, ray, opc_solid))
         return notify_fail("There's something in the way.");
     if (!ray.advance())
-        return notify_fail("You cannot create a boulder there.");
+        return notify_fail("You cannot conjure a boulder there.");
 
     const coord_def start = ray.pos();
     actor* act = actor_at(start);
     if (feat_is_solid(env.grid(start)) || (act && you.can_see(*act)))
-        return notify_fail("You cannot create a boulder in an occupied space.");
-    if (!feat_has_solid_floor(env.grid(start)))
-        return notify_fail("You cannot create a boulder there.");
+        return notify_fail("You cannot conjure a boulder in an occupied space.");
+    if (env.grid(start) == DNGN_LAVA)
+        return notify_fail("You cannot conjure a boulder there.");
 
     return true;
 }
 
 aff_type targeter_boulder::is_affected(coord_def loc)
 {
-    for (auto pc : path_taken)
-        if (pc == loc)
-            return cell_is_solid(pc) ? AFF_NO : AFF_YES;
+    if (boulder_sim.count(loc))
+        return boulder_sim[loc];
 
     return AFF_NO;
 }
 
-targeter_petrify::targeter_petrify(const actor* caster, int r)
-    : targeter_beam(caster, r, ZAP_PETRIFY, 0, 0, 0)
+targeter_chain::targeter_chain(const actor* caster, int r, zap_type ztype)
+    : targeter_beam(caster, r, ztype, 0, 0, 0)
 {
 }
 
-bool targeter_petrify::set_aim(coord_def a)
+bool targeter_chain::set_aim(coord_def a)
 {
     if (!targeter::set_aim(a))
         return false;
@@ -2202,12 +2088,12 @@ bool targeter_petrify::set_aim(coord_def a)
         return true;
 
     vector<coord_def> chain_targs;
-    fill_petrify_chain_targets(tempbeam, pos, chain_targs, false);
+    fill_chain_targets(tempbeam, pos, chain_targs, false);
     chain_targ.insert(chain_targs.begin(), chain_targs.end());
     return true;
 }
 
-aff_type targeter_petrify::is_affected(coord_def loc)
+aff_type targeter_chain::is_affected(coord_def loc)
 {
     for (auto pc : path_taken)
     {
@@ -2226,7 +2112,7 @@ aff_type targeter_petrify::is_affected(coord_def loc)
 }
 
 targeter_bind_soul::targeter_bind_soul() :
-    targeter_smite(&you, LOS_MAX_RANGE, 0, 0, false, nullptr)
+    targeter_smite(&you, LOS_MAX_RANGE)
 {
 }
 
@@ -2241,12 +2127,12 @@ bool targeter_bind_soul::valid_aim(coord_def a)
 
     if (!yred_can_bind_soul(targ))
     {
-        if (targ->type == MONS_PANDEMONIUM_LORD)
+        if (targ->friendly())
+            return notify_fail("You cannot bind the soul of an ally.");
+        else if (targ->type == MONS_PANDEMONIUM_LORD)
             return notify_fail("You are unable to grasp such an alien soul.");
         else if (targ->is_summoned())
             return notify_fail("You cannot bind the soul of a summoned being.");
-        else if (targ->friendly())
-            return notify_fail("You cannot bind the soul of an ally.");
         else
             return notify_fail("That does not possess a soul you can bind.");
     }
@@ -2257,9 +2143,13 @@ bool targeter_bind_soul::valid_aim(coord_def a)
     return true;
 }
 
-targeter_explosive_beam::targeter_explosive_beam(const actor *act, int pow, int r,
+targeter_explosive_beam::targeter_explosive_beam(const actor *act,
+                                                 zap_type ztype,
+                                                 int pow, int r,
+                                                 bool _explode_on_monsters,
                                                  bool _always_explode) :
-                          targeter_beam(act, r, ZAP_COMBUSTION_BREATH, pow, 0, 0),
+                          targeter_beam(act, r, ztype, pow, 0, 0),
+                          explode_on_monsters(_explode_on_monsters),
                           always_explode(_always_explode)
 {
 }
@@ -2277,7 +2167,7 @@ bool targeter_explosive_beam::set_aim(coord_def a)
             break;
 
         tempbeam.target = c;
-        if (always_explode || anyone_there(c))
+        if (always_explode || (explode_on_monsters && anyone_there(c)))
         {
             tempbeam.use_target_as_pos = true;
             exp_map.init(INT_MAX);
@@ -2304,7 +2194,7 @@ aff_type targeter_explosive_beam::is_affected(coord_def loc)
     for (auto c : path_taken)
     {
         if ((always_explode
-             || (anyone_there(c)
+             || (explode_on_monsters && anyone_there(c)
                  && !beam.ignores_monster(monster_at(c))))
             && (loc - c).rdist() <= 9)
         {
@@ -2355,6 +2245,489 @@ aff_type targeter_galvanic::is_affected(coord_def loc)
         if (pos == loc)
             return AFF_YES;
     }
+
+    return AFF_NO;
+}
+
+targeter_gavotte::targeter_gavotte(const actor* caster)
+    : targeter_beam(caster, 1, ZAP_IOOD, 0, 0, 0)
+{
+}
+
+bool targeter_gavotte::set_aim(coord_def a)
+{
+    if (!targeter::set_aim(a))
+        return false;
+
+    affected_monsters.clear();
+    path_taken.clear();
+
+    if (!valid_aim(a))
+        return false;
+
+    bolt tempbeam = beam;
+    tempbeam.target = a;
+    tempbeam.aimed_at_spot = false;
+    tempbeam.range = you.is_stationary() || you.stasis() ? 0 : GAVOTTE_DISTANCE;
+    tempbeam.path_taken.clear();
+    tempbeam.fire();
+    path_taken = tempbeam.path_taken;
+
+    vector<monster*> affected = gavotte_affected_monsters(a - you.pos());
+    for (monster* mon : affected)
+        affected_monsters.push_back(mon->pos());
+
+    return true;
+}
+
+bool targeter_gavotte::valid_aim(coord_def a)
+{
+    if (!targeter_beam::valid_aim(a))
+        return false;
+
+    if (grid_distance(a, you.pos()) > 1 || a == you.pos())
+        return false;
+
+    if (a == agent->pos())
+        return notify_fail("Gravity is already pointing downward.");
+
+    // make sure it's a true cardinal
+    const coord_def delta = a - agent->pos();
+    if (delta.x && delta.y && abs(delta.x) != abs(delta.y))
+        return notify_fail("You can only reorient gravity in a cardinal direction.");
+
+    return true;
+}
+
+aff_type targeter_gavotte::is_affected(coord_def loc)
+{
+    for (coord_def pos : affected_monsters)
+        if (pos == loc)
+            return AFF_YES;
+
+    for (auto pc : path_taken)
+        if (pc == loc)
+            return cell_is_solid(pc) ? AFF_NO : AFF_MAYBE;
+
+    return AFF_NO;
+}
+
+targeter_magnavolt::targeter_magnavolt(const actor* act, int _range) :
+    targeter_smite(act, _range)
+{
+}
+
+bool targeter_magnavolt::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    if (!monster_at(a) || !you.can_see(*monster_at(a)))
+        return notify_fail("You don't see a valid target there.");
+
+    return true;
+}
+
+bool targeter_magnavolt::preferred_aim(coord_def a)
+{
+    return !monster_at(a)->has_ench(ENCH_MAGNETISED);
+}
+
+bool targeter_magnavolt::set_aim(coord_def a)
+{
+    beam_targets.clear();
+    beam_paths.clear();
+
+    if (!targeter_smite::set_aim(a))
+        return false;
+
+    beam_targets = get_magnavolt_targets();
+    beam_targets.push_back(a);
+    beam_paths = get_magnavolt_beam_paths(beam_targets);
+
+    return true;
+}
+
+aff_type targeter_magnavolt::is_affected(coord_def loc)
+{
+    for (coord_def pos : beam_targets)
+    {
+        if (loc == pos)
+            return AFF_YES;
+    }
+
+    for (coord_def pos : beam_paths)
+    {
+        if (loc == pos)
+            return AFF_MAYBE;
+    }
+
+    return AFF_NO;
+}
+
+targeter_mortar::targeter_mortar(const actor* act, int max_range) :
+    targeter_beam(act, max_range, ZAP_HELLFIRE_MORTAR_DIG, 0, 0, 0)
+{
+    beam.origin_spell = SPELL_HELLFIRE_MORTAR;
+}
+
+bool targeter_mortar::can_affect_unseen()
+{
+    return true;
+}
+
+bool targeter_mortar::affects_monster(const monster_info& /*mon*/)
+{
+    return false;
+}
+
+bool targeter_mortar::can_affect_walls()
+{
+    return true;
+}
+
+bool targeter_mortar::valid_aim(coord_def a)
+{
+    if (!in_bounds(a))
+        return notify_fail("Out of range.");
+    else
+        return targeter_beam::valid_aim(a);
+}
+
+aff_type targeter_mortar::is_affected(coord_def loc)
+{
+    aff_type current = AFF_YES;
+    bool hit_barrier = false;
+    for (auto pc : path_taken)
+    {
+        if (hit_barrier)
+            return AFF_NO; // some previous iteration hit a barrier
+        current = AFF_YES;
+        // uses comparison to DNGN_UNSEEN so that this works sensibly with magic
+        // mapping etc. TODO: console tracers use the same symbol/color as
+        // mmapped walls.
+        if (in_bounds(pc) && env.map_knowledge(pc).feat() != DNGN_UNSEEN)
+        {
+            if (cell_is_solid(pc) && !beam.can_affect_wall(pc)
+                || (monster_at(pc) && you.can_see(*monster_at(pc))
+                    && !beam.ignores_monster(monster_at(pc))))
+            {
+                current = AFF_NO;
+                hit_barrier = true;
+            }
+            else if (!cell_is_solid(pc))
+                current = AFF_TRACER;
+
+            // otherwise, default to AFF_YES
+        }
+        // unseen squares default to AFF_YES
+        if (pc == loc)
+            return current;
+    }
+    // path never intersected loc at all
+    return AFF_NO;
+}
+
+targeter_slouch::targeter_slouch()
+    : targeter_radius(&you, LOS_NO_TRANS, LOS_RADIUS)
+{
+}
+
+aff_type targeter_slouch::is_affected(coord_def loc)
+{
+    if (targeter_radius::is_affected(loc) == AFF_NO)
+        return AFF_NO;
+
+    if (!monster_at(loc) || !you.can_see(*monster_at(loc))
+        || !is_slouchable(loc))
+    {
+        return AFF_NO;
+    }
+
+    return AFF_YES;
+}
+
+targeter_marionette::targeter_marionette() :
+    targeter_smite(&you, LOS_RADIUS)
+{
+}
+
+bool targeter_marionette::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    monster* mons = monster_at(a);
+    if (!mons || !you.can_see(*mons) || mons->is_firewood() || mons->friendly())
+        return notify_fail("");
+
+    if (mons->has_ench(ENCH_SHADOWLESS))
+        return notify_fail("Their shadow is too faded to take hold of.");
+
+    if (mons->is_summoned())
+        return notify_fail("A summoned shadow is too ephemeral to take hold of.");
+
+    if (mons->props[DITHMENOS_MARIONETTE_SPELLS_KEY].get_int() <= 0)
+        return notify_fail("They have no useful spells to cast right now.");
+
+    return true;
+}
+
+targeter_putrefaction::targeter_putrefaction(int r) :
+    targeter_smite(&you, r)
+{
+}
+
+bool targeter_putrefaction::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    const monster* mon = monster_at(a);
+    if (!mon || !you.can_see(*mon))
+        return false;
+
+    if (mons_aligned(&you, mon))
+        return notify_fail("You cannot putrefy a friendly monster.");
+
+    if (!(mon->holiness() & MH_NATURAL))
+        return notify_fail("You can only putrefy natural creatures.");
+
+    if (mons_get_damage_level(*mon) < MDAM_HEAVILY_DAMAGED)
+        return notify_fail("This isn't wounded badly enough.");
+
+    return true;
+}
+
+targeter_soul_splinter::targeter_soul_splinter(const actor* caster, int r)
+    : targeter_beam(caster, r, ZAP_SOUL_SPLINTER, 0, 0, 0)
+{
+}
+
+bool targeter_soul_splinter::affects_monster(const monster_info& mon)
+{
+    if (!targeter_beam::affects_monster(mon))
+        return false;
+
+    if (mon.is(MB_SOUL_SPLINTERED))
+        return false;
+
+    if (!mons_can_be_spectralised(*monster_at(mon.pos), true, true))
+        return false;
+
+    if (agent->is_player())
+    {
+        for (adjacent_iterator ai(mon.pos); ai; ++ai)
+        {
+            if (!cell_is_solid(*ai) && !actor_at(*ai)
+                && agent->see_cell_no_trans(*ai))
+            {
+                return true;
+            }
+        }
+    }
+
+    // No visible free spots found
+    return false;
+}
+
+targeter_surprising_crocodile::targeter_surprising_crocodile(const actor* caster)
+    : targeter_smite(caster, 1)
+{
+}
+
+bool targeter_surprising_crocodile::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    string msg = surprising_crocodile_unusable_reason(*agent, a, false);
+    if (!msg.empty())
+        return notify_fail(msg);
+
+    return true;
+}
+
+bool targeter_surprising_crocodile::set_aim(coord_def a)
+{
+    landing_spots.clear();
+    if (!targeter_smite::set_aim(a) || !valid_aim(a))
+        return false;
+
+    const coord_def drag_shift = -(a - agent->pos()).sgn();
+    landing_spots.push_back(agent->pos() + drag_shift);
+
+    if (surprising_crocodile_can_drag(*agent, a, false))
+        landing_spots.push_back(agent->pos() + drag_shift + drag_shift);
+
+    return true;
+}
+
+aff_type targeter_surprising_crocodile::is_affected(coord_def loc)
+{
+    for (coord_def spot : landing_spots)
+        if (spot == loc)
+            return AFF_YES;
+
+    return AFF_NO;
+}
+
+targeter_wall_arc::targeter_wall_arc(const actor* caster, int count)
+    : targeter_smite(caster, 1, 0, 0, true, true), num_walls(count)
+{
+}
+
+bool targeter_wall_arc::set_aim(coord_def a)
+{
+    spots.clear();
+    if (!targeter_smite::set_aim(a) || !valid_aim(a) || a == agent->pos())
+        return false;
+
+    spots = get_splinterfrost_block_spots(*agent, a, num_walls);
+
+    return true;
+}
+
+aff_type targeter_wall_arc::is_affected(coord_def loc)
+{
+    for (coord_def spot : spots)
+        if (spot == loc)
+            return AFF_YES;
+
+    return AFF_NO;
+}
+
+targeter_tempering::targeter_tempering() :
+    targeter_smite(&you, LOS_RADIUS, 1, 1)
+{
+}
+
+bool targeter_tempering::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    monster* mons = monster_at(a);
+    if (!mons || !you.can_see(*mons) || !mons->friendly())
+        return false;
+
+    if (mons->has_ench(ENCH_TEMPERED))
+        return notify_fail("You cannot target a construct which is already augmented.");
+
+    if (!is_valid_tempering_target(*mons, *agent))
+        return notify_fail("You can only target your own Forgecraft constructs.");
+
+    return true;
+}
+
+bool targeter_tempering::preferred_aim(coord_def a)
+{
+    // Look for at least one visible hostile monster next to this target.
+    for (adjacent_iterator ai(a); ai; ++ai)
+    {
+        if (!you.see_cell_no_trans(*ai))
+            continue;
+
+        if (monster* mon = monster_at(*ai))
+        {
+            if (you.can_see(*mon) && !mon->wont_attack()
+                && !mon->is_peripheral())
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+targeter_piledriver::targeter_piledriver()
+    : targeter_smite(&you, 1)
+{
+    // Cache length of piledriver line in all directions
+    for (int i = 0; i < 8; ++i)
+        piledriver_lengths[i] = piledriver_path_distance(you.pos() + Compass[i], false);
+}
+
+bool targeter_piledriver::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    coord_def delta = (a - you.pos());
+    for (int i = 0; i < 8; ++i)
+    {
+        if (Compass[i] == delta)
+        {
+            if (piledriver_lengths[i] > 0)
+                return true;
+            else
+                return notify_fail("You see nothing there you can launch.");
+        }
+    }
+
+    return false;
+}
+
+bool targeter_piledriver::set_aim(coord_def a)
+{
+    spots.clear();
+
+    coord_def delta = (a - you.pos());
+    for (int i = 0; i < 8; ++i)
+    {
+        if (Compass[i] == delta)
+        {
+            for (int j = 1; j < piledriver_lengths[i] + 2; ++j)
+                spots.push_back(agent->pos() + delta * j);
+        }
+    }
+
+    return true;
+}
+
+aff_type targeter_piledriver::is_affected(coord_def loc)
+{
+    for (coord_def p : spots)
+        if (loc == p)
+            return AFF_YES;
+
+    return AFF_NO;
+}
+
+targeter_teleport_other::targeter_teleport_other(const actor* act, int r) :
+    targeter_smite(act, r)
+{
+}
+
+bool targeter_teleport_other::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    const monster_info* mi = env.map_knowledge(a).monsterinfo();
+
+    if (!mi)
+        return false;
+
+    if (mi->is(MB_NO_TELE))
+        return notify_fail("That cannot be teleported.");
+
+    if (mi->willpower() == WILL_INVULN)
+        return false;
+
+    return true;
+}
+
+targeter_malign_gateway::targeter_malign_gateway(actor& caster)
+{
+    agent = &caster;
+}
+
+aff_type targeter_malign_gateway::is_affected(coord_def loc)
+{
+    if (is_gateway_target(*agent, loc))
+        return AFF_MAYBE;
 
     return AFF_NO;
 }

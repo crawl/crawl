@@ -2,6 +2,8 @@
 #
 # Serial vault with an undead/graveyard theme
 
+: crawl_require('dlua/vault.lua')
+
 {{
 function init_undead(e)
   e.tags('serial_undead')
@@ -26,15 +28,14 @@ function init_undead(e)
     e.kmons('.-_ = w:30 zombie / w:20 wight / w:300 nothing')
   elseif you.absdepth() <= 12 then
     e.kmons('.-_ = w:30 zombie / w:10 wraith / w:10 vampire / \
-             w:10 shadow / w:300 nothing')
+             w:10 shadowghast / w:300 nothing')
   else
-    e.kmons('.-_ = w:30 zombie / w:5 shadow / w:5 wraith / w:5 vampire / \
+    e.kmons('.-_ = w:30 zombie / w:5 shadowghast / w:5 wraith / w:5 vampire / \
             w:15 skeletal warrior / w:300 nothing')
   end
   e.kmons('t = withered plant')
 
-  e.tile('G = dngn_gravestone')
-  e.set_feature_name("granite_statue", "a gravestone")
+  vault_granite_statue_setup(e, "G", "gravestone")
 end
 }}
 

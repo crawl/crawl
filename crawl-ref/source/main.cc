@@ -120,7 +120,9 @@
 #include "spl-cast.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
+#include "spl-monench.h"
 #include "spl-summoning.h"
+#include "spl-transloc.h"
 #include "spl-util.h"
 #include "stairs.h"
 #include "startup.h"
@@ -191,7 +193,6 @@ static void _launch_game_loop();
 NORETURN static void _launch_game();
 
 static void _do_berserk_no_combat_penalty();
-static void _do_wait_spells();
 
 static void _input();
 
@@ -332,6 +333,12 @@ int main(int argc, char *argv[])
         return -1;
 #endif
 
+#ifdef USE_TILE_LOCAL
+    // Hook up text colour redefinitions
+    for (auto col : Options.custom_text_colours)
+        term_colours[col.colour_index] = col.colour_def;
+#endif
+
     _launch_game_loop();
     if (crawl_state.last_game_exit.message.size())
         end(0, false, "%s\n", crawl_state.last_game_exit.message.c_str());
@@ -384,7 +391,7 @@ static void _launch_game_loop()
             game_ended = false;
             _launch_game();
         }
-        catch (game_ended_condition &ge)
+        catch (const game_ended_condition &ge)
         {
             game_ended = true;
             crawl_state.last_game_exit = ge;
@@ -395,11 +402,11 @@ static void _launch_game_loop()
             if (ge.exit_reason == game_exit::save)
                 crawl_state.last_type = GAME_TYPE_UNSPECIFIED;
         }
-        catch (ext_fail_exception &fe)
+        catch (const ext_fail_exception &fe)
         {
             end(1, false, "%s", fe.what());
         }
-        catch (short_read_exception &E)
+        catch (const short_read_exception&)
         {
             end(1, false, "Error: truncation inside the save file.\n");
         }
@@ -1109,11 +1116,14 @@ static void _input()
 
     hints_new_turn();
 
-    if (you.cannot_act())
+    if (you.duration[DUR_VEXED])
+        do_vexed_attack(you);
+
+    if (you.cannot_act() || you.duration[DUR_VEXED])
     {
         if (crawl_state.repeat_cmd != CMD_WIZARD)
         {
-            crawl_state.cancel_cmd_repeat("Cannot move, cancelling command "
+            crawl_state.cancel_cmd_repeat("Cannot control self, cancelling command "
                                           "repetition.");
         }
         world_reacts();
@@ -1140,7 +1150,7 @@ static void _input()
     if (you_are_delayed()
         && !dynamic_cast<MacroProcessKeyDelay*>(current_delay().get()))
     {
-        end_wait_spells();
+        stop_channelling_spells();
         handle_delay();
 
         // Some delays set you.turn_is_over.
@@ -1289,7 +1299,7 @@ static void _input()
         if (you.apply_berserk_penalty)
             _do_berserk_no_combat_penalty();
 
-        _do_wait_spells();
+        handle_channelled_spell();
 
         world_reacts();
     }
@@ -1345,6 +1355,11 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
     // not when otherwise unable to move.
     if (ftype == DNGN_PASSAGE_OF_GOLUBRIA || ftype == DNGN_TRANSPORTER)
         return true;
+    else if (you.duration[DUR_VAINGLORY])
+    {
+        mpr("It simply wouldn't do to leave so soon after announcing yourself.");
+        return false;
+    }
 
     // Mesmerised
     if (you.beheld() && !you.confused())
@@ -1523,8 +1538,11 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
         }
     }
 
-    if (ygrd != DNGN_TRANSPORTER && beogh_cancel_leaving_floor())
+    if (ygrd != DNGN_TRANSPORTER && ygrd != DNGN_PASSAGE_OF_GOLUBRIA
+        && beogh_cancel_leaving_floor())
+    {
         return false;
+    }
 
     if (Options.warn_hatches)
     {
@@ -1812,7 +1830,12 @@ static void _do_cycle_quiver(int dir)
 static void _do_list_gold()
 {
     if (shopping_list.empty())
+    {
         mprf("You have %d gold piece%s.", you.gold, you.gold != 1 ? "s" : "");
+        int vouchers = you.attribute[ATTR_VOUCHER];
+        if (vouchers > 0)
+            mprf("You also have %d voucher%s.", vouchers, vouchers > 1 ? "s" : "");
+    }
     else
         shopping_list.display();
 }
@@ -2632,6 +2655,8 @@ void world_reacts()
     if (!crawl_state.game_is_arena())
         player_reacts_to_monsters();
 
+    clear_monster_flags();
+
     add_auto_excludes();
 
     viewwindow();
@@ -2764,6 +2789,9 @@ static void _swing_at_target(coord_def move)
     dist target;
     target.target = you.pos() + move;
 
+    if (never_harm_monster(&you, monster_at(target.target), true))
+        return;
+
     // Don't warn the player "too injured to fight recklessly" when they
     // explicitly request an attack.
     unwind_bool autofight_ok(crawl_state.skip_autofight_check, true);
@@ -2809,18 +2837,6 @@ static void _do_berserk_no_combat_penalty()
             you.duration[DUR_BERSERK] = 1;
     }
     return;
-}
-
-/**
- * Update damaging spells that are channeled by waiting.
- * These only update when the player actively waits with CMD_WAIT,
- * so should not be moved to world_reacts().
- */
-static void _do_wait_spells()
-{
-    handle_searing_ray(you);
-    handle_maxwells_coupling();
-    handle_flame_wave();
 }
 
 static void _safe_move_player(coord_def move)

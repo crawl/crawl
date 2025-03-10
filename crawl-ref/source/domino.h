@@ -443,7 +443,7 @@ class DominoSet
                 else
                     tiling[pt] = rng(adjacencies_.size());
 
-                has_conflicts |= Conflicts(pt, tiling);
+                has_conflicts = has_conflicts || Conflicts(pt, tiling);
             }
 
             // If we were unable to constructively tile the plane
@@ -586,7 +586,6 @@ class DominoSet
         int Conflicts(Point pt, const std::map<Point, uint32_t>& tiling) const
         {
             int conflicts = 0;
-            int neighbors = 0;
             uint32_t id = tiling.find(pt)->second;
             T domino = dominoes_.find(id)->second;
             const Point offsets[] = {
@@ -601,7 +600,6 @@ class DominoSet
                 Point nb = pt + offsets[i];
                 if (tiling.find(nb) != tiling.end())
                 {
-                    ++neighbors;
                     T other = dominoes_.find(tiling.find(nb)->second)->second;
                     Direction dir;
                     asDirection(offsets[i], dir);

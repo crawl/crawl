@@ -10,6 +10,7 @@
 #include "cloud.h"
 #include "cluautil.h"
 #include "coord.h"
+#include "describe.h"
 #include "env.h"
 #include "l-defs.h"
 #include "losglobal.h"
@@ -24,6 +25,7 @@
 #include "map-knowledge.h"
 #include "coordit.h"
 #include "stash.h"
+#include "traps.h"
 
 /*** What is the feature here?
  * @tparam int x
@@ -65,6 +67,34 @@ LUAFN(view_cloud_at)
         return 1;
     }
     lua_pushstring(ls, cloud_type_name(c).c_str());
+    return 1;
+}
+
+/*** What kind of trap (if any) is here?
+ * @tparam int x
+ * @tparam int y
+ * @treturn string|nil The base trap name or nil. Here the base name doesn't
+ *                     include the word "trap" and is the same string passed to
+ *                     the c_trap_is_safe() hook.
+ * @function trap_at
+ */
+LUAFN(view_trap_at)
+{
+    PLAYERCOORDS(p, 1, 2)
+    if (!map_bounds(p))
+    {
+        lua_pushnil(ls);
+        return 1;
+    }
+
+    auto trap = trap_at(p);
+    if (!trap)
+    {
+        lua_pushnil(ls);
+        return 1;
+    }
+
+    lua_pushstring(ls, trap_name(trap->type).c_str());
     return 1;
 }
 
@@ -310,9 +340,7 @@ LUAFN(view_get_map)
     return 1;
 }
 
-/**
- * @brief Are the given coordinates in the minimal bounding box of the known
- * map?
+/*** Are the given coordinates in the minimal bounding box of the known map?
  * @tparam int x
  * @tparam int y
  * @treturn boolean
@@ -337,6 +365,7 @@ static const struct luaL_reg view_lib[] =
 {
     { "feature_at", view_feature_at },
     { "cloud_at", view_cloud_at },
+    { "trap_at", view_trap_at },
     { "is_safe_square", view_is_safe_square },
     { "can_reach", view_can_reach },
     { "withheld", view_withheld },

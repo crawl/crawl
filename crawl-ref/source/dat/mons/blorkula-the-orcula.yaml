@@ -1,0 +1,21 @@
+name: "Blorkula the Orcula"
+glyph: {char: "o", colour: brown}
+flags: [speaks, see_invis, warm_blood, unique, male, no_zombie]
+resists: {cold: 1}
+holiness: [undead]
+xp_mult: 15
+species: orc
+will: 20
+attacks:
+ - {type: hit, damage: 8}
+ - {type: bite, flavour: vampiric, damage: 6}
+hd: 5
+hp_10x: 315
+ac: 0
+ev: 9
+spells: blorkula
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

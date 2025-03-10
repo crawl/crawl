@@ -178,7 +178,9 @@ bool today_is_halloween()
     const time_t curr_time = time(nullptr);
     const struct tm *date = TIME_FN(&curr_time);
     // tm_mon is zero-based in case you are wondering
-    return date->tm_mon == 9 && date->tm_mday == 31;
+    // Oct 30th-31th, Nov 1st
+    return date->tm_mon == 9 && date->tm_mday >= 30
+           || date->tm_mon == 10 && date->tm_mday == 1;
 }
 
 /// It's beginning to feel an awful lot like Christmas.
@@ -209,14 +211,7 @@ bool today_is_serious()
     const time_t curr_time = time(nullptr);
     const struct tm *date = TIME_FN(&curr_time);
     // As ever, note that tm_mon is 0-based.
-    return date->tm_mon == 3 && date->tm_mday == 1;
-}
-
-bool now_is_morning()
-{
-    const time_t curr_time = time(nullptr);
-    const tm *date = TIME_FN(&curr_time);
-    // Assume 'morning' starts at 6 AM and ends at 6 PM.
-    dprf("hr %d", date->tm_hour);
-    return date->tm_hour >= 6 && date->tm_hour < 18;
+    // March 31st, April 1st-2nd
+    return date->tm_mon == 2 && date->tm_mday == 31
+           || date->tm_mon == 3 && date->tm_mday <= 2;
 }

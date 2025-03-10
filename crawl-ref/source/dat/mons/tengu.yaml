@@ -1,6 +1,6 @@
 name: "tengu"
 glyph: {char: "Q", colour: lightblue}
-flags: [flies, speaks, warm_blood]
+flags: [flies, speaks, no_poly_to, no_gen_derived, warm_blood]
 will: 20
 attacks:
  - {type: hit, damage: 10}

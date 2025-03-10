@@ -59,9 +59,7 @@ static int _gold_level()
            (you.gold >=  5000) ? 5 :
            (you.gold >=  1000) ? 4 :
            (you.gold >=   500) ? 3 :
-           (you.gold >=   100) ? 2 :
-           (you.props.exists(DESCENT_DEBT_KEY)) ? 0
-                               : 1;
+           (you.gold >=   100) ? 2 : 1;
 }
 
 static int _invocations_level()
@@ -80,7 +78,7 @@ int god_favour_rank(god_type which_god)
 {
     if (which_god == GOD_GOZAG)
         return _gold_level();
-    else if (which_god == GOD_USKAYAW || which_god == GOD_YREDELEMNUL)
+    else if (which_god == GOD_USKAYAW)
         return _invocations_level();
     else
         return _piety_level(you.piety);
@@ -143,11 +141,11 @@ static const char *divine_title[][8] =
     {"Honourless",         "Acolyte",               "Righteous",                "Unflinching",
         "Holy Warrior",       "Exorcist",              "Demon Slayer",             "Bringer of Light"},
 
-    // Kikubaaqudgha -- scholarly death.
-    {"Tormented",          "Purveyor of Pain",      "Scholar of Death",         "Merchant of Misery",
-        "Artisan of Death",   "Dealer of Despair",     "Black Sun",                "Lord of Darkness"},
+    // Kikubaaqudgha -- death scholar theme.
+    {"Tormented",          "Purveyor of Pain",       "Pupil of Sorrows",        "Merchant of Misery",
+     "Scholar of Souls",   "Artisan of Death",       "Demagogue of Despair",    "Lord of Darkness"},
 
-    // Yredelemnul
+    // Yredelemnul -- ferverent death knight theme.
     {"Traitor",            "Torchbearer",            "Despoiler",               "Black Crusader",
      "Fallen @Genus@",     "Harbinger of Doom",      "Inexorable Tide",         "Bringer of Blasphemy"},
 
@@ -167,7 +165,7 @@ static const char *divine_title[][8] =
     {"Orderly",            "Spawn of Chaos",        "Disciple of Destruction",  "Fanfare of Bloodshed",
         "Fiendish",           "Demolition @Genus@",    "Pandemonic",               "Champion of Chaos"},
 
-    // Sif Muna -- scholarly theme.
+    // Sif Muna -- generalist scholarly theme.
     {"Ignorant",           "Disciple",              "Student",                  "Adept",
         "Scribe",             "Scholar",               "Sage",                     "Genius of the Arcane"},
 
@@ -208,8 +206,8 @@ static const char *divine_title[][8] =
         "Oracle",            "Illuminatus",            "Prince of Secrets",        "Omniscient"},
 
     // Dithmenos -- darkness theme
-    {"Ember",              "Gloomy",                "Darkened",                 "Extinguished",
-        "Caliginous",         "Umbral",                "Hand of Shadow",           "Eternal Night"},
+    {"Conspicuous",         "Nocturnal",            "Bump in the Night",        "Thespian",
+        "Tenebrous",          "Puppetmaster",          "@Walking@ Midnight",       "Who Hides the Stars"},
 
     // Gozag -- entrepreneur theme
     {"Profligate",         "Pauper",                "Entrepreneur",             "Capitalist",
@@ -295,24 +293,19 @@ static string _describe_ash_skill_boost()
     desc << setw(30) << "Curse bonuses";
     desc << "</white>\n";
 
-    for (int j = EQ_FIRST_EQUIP; j < NUM_EQUIP; j++)
+    vector<item_def*> eq = you.equipment.get_slot_items(SLOT_ALL_EQUIPMENT, true);
+    for (item_def* item : eq)
     {
-        const equipment_type i = static_cast<equipment_type>(j);
-        if (you.equip[i] != -1)
+        if (item->cursed())
         {
-            const item_def& item = you.inv[you.equip[i]];
-            const bool meld = item_is_melded(item);
-            if (item.cursed())
-            {
-                desc << (meld ? "<darkgrey>" : "<lightred>");
-                desc << setw(40) << item.name(DESC_QUALNAME, true, false, false);
-                desc << setw(30) << (meld ? "melded" : _describe_item_curse(item));
-                desc << (meld ? "</darkgrey>" : "</lightred>");
-                desc << "\n";
-            }
+            const bool meld = item_is_melded(*item);
+            desc << (meld ? "<darkgrey>" : "<lightred>");
+            desc << setw(40) << item->name(DESC_QUALNAME, true, false, false);
+            desc << setw(30) << (meld ? "melded" : _describe_item_curse(*item));
+            desc << (meld ? "</darkgrey>" : "</lightred>");
+            desc << "\n";
         }
     }
-
 
     return desc.str();
 }
@@ -766,13 +759,16 @@ static formatted_string _describe_god_powers(god_type which_god)
     {
     case GOD_BEOGH:
     {
-        if (piety >= piety_breakpoint(5))
-            desc.cprintf("Orcs frequently recognize you as Beogh's chosen one.\n");
-        else if (piety >= piety_breakpoint(1))
-            desc.cprintf("Orcs sometimes recognize you as one of their own.\n");
+        have_any = true;
+        if (have_passive(passive_t::convert_orcs))
+            desc.textcolour(god_colour(which_god));
+        else
+            desc.textcolour(DARKGREY);
 
-        if (piety >= piety_breakpoint(2))
-            desc.cprintf("Your orcish followers are sometimes invigorated when you deal damage.\n");
+        if (piety >= piety_breakpoint(5))
+            desc.cprintf("Orcs frequently recognise you as Beogh's chosen one.\n");
+        else
+            desc.cprintf("Orcs sometimes recognise you as one of their own.\n");
     }
     break;
 
@@ -803,42 +799,40 @@ static formatted_string _describe_god_powers(god_type which_god)
         have_any = true;
         desc.cprintf("%s prevents you from stabbing unaware foes.\n",
                 uppercase_first(god_name(which_god)).c_str());
-        if (piety < piety_breakpoint(1))
-            desc.textcolour(DARKGREY);
-        else
-            desc.textcolour(god_colour(which_god));
-        const char *how =
-            (piety >= piety_breakpoint(5)) ? "completely" :
-            (piety >= piety_breakpoint(3)) ? "mostly" :
-                                             "partially";
-
-        desc.cprintf("%s %s shields you from negative energy.\n",
-                uppercase_first(god_name(which_god)).c_str(), how);
 
         const int halo_size = you_worship(which_god) ? you.halo_radius() : -1;
         if (halo_size < 0)
             desc.textcolour(DARKGREY);
         else
             desc.textcolour(god_colour(which_god));
-        desc.cprintf("You radiate a%s righteous aura, and others within it are "
+        desc.cprintf("You radiate a%s righteous aura, and foes within it are "
                 "easier to hit.\n",
                 halo_size > 5 ? " large" :
                 halo_size > 3 ? "" :
                                 " small");
+
+        if (piety >= piety_breakpoint(1))
+            desc.textcolour(god_colour(which_god));
+        else
+            desc.textcolour(DARKGREY);
+        const char *how =
+            (piety >= piety_breakpoint(5)) ? "completely" :
+            (piety >= piety_breakpoint(3)) ? "mostly" :
+                                             "partially";
+        desc.cprintf("%s %s shields you from negative energy.\n",
+                uppercase_first(god_name(which_god)).c_str(), how);
         break;
     }
 
-    case GOD_FEDHAS:
-        have_any = true;
-        desc.cprintf("You can walk through plants and fire through allied plants.\n");
-        break;
-
     case GOD_JIYVA:
         have_any = true;
-        if (!have_passive(passive_t::jelly_regen))
-            desc.textcolour(DARKGREY);
-        else
+        desc.cprintf("Jellies are peaceful and will consume items off the floor.\n");
+        desc.cprintf("Jiyva prevents you from harming jellies.\n");
+
+        if (have_passive(passive_t::jelly_regen))
             desc.textcolour(god_colour(which_god));
+        else
+            desc.textcolour(DARKGREY);
         desc.cprintf("Your health and magic regeneration is %saccelerated.\n",
                      piety >= piety_breakpoint(5) ? "very greatly " :
                      piety >= piety_breakpoint(3) ? "greatly " :
@@ -878,35 +872,14 @@ static formatted_string _describe_god_powers(god_type which_god)
         break;
 
     case GOD_YREDELEMNUL:
+        // TODO: Vary the text depending on the size of the umbra.
         desc.cprintf("You are surrounded by an umbra.\n"
                      "Foes that die within your umbra may be raised as undead servants.\n");
         break;
 
-    case GOD_DITHMENOS:
-    {
-        have_any = true;
-        const int umbra_size = you_worship(which_god) ? you.umbra_radius() : -1;
-        if (umbra_size < 0)
-            desc.textcolour(DARKGREY);
-        else
-            desc.textcolour(god_colour(which_god));
-        desc.cprintf("You radiate a%s aura of darkness, enhancing your stealth "
-                "and reducing the accuracy of your foes.\n",
-                umbra_size > 5 ? " large" :
-                umbra_size > 3 ? "n" :
-                                 " small");
-        break;
-    }
-
-    case GOD_GOZAG:
-        have_any = true;
-        desc.cprintf("%s turns your defeated foes' bodies to gold.\n",
-                uppercase_first(god_name(which_god)).c_str());
-        desc.cprintf("Your enemies may become distracted by gold.\n");
-        break;
-
     case GOD_HEPLIAKLQANA:
-        // XXX: move this logic back into the usual religion.cc god_powers block?
+        // Frailty occurs even under penance post-abandonment, so we can't put
+        // this in the usual god_powers block.
         have_any = true;
     {
         const auto textcol = have_passive(passive_t::frail) ? god_colour(which_god) : DARKGREY;
@@ -915,26 +888,7 @@ static formatted_string _describe_god_powers(god_type which_god)
         // Feature request: not this.
         desc.textcolour(textcol);
         desc.cprintf("Your life essence is reduced. (-10%% HP)\n");
-        desc.textcolour(textcol);
-        desc.cprintf("Your ancestor manifests to aid you.\n");
     }
-        break;
-
-    case GOD_LUGONU:
-        have_any = true;
-        desc.cprintf("You are protected from the effects of unwielding distortion weapons.\n");
-        break;
-
-    case GOD_OKAWARU:
-        have_any = true;
-        desc.cprintf("%s requires that you fight alone, and prevents you from "
-                     "gaining allies.\n",
-                uppercase_first(god_name(which_god)).c_str());
-        break;
-
-    case GOD_IGNIS:
-        have_any = true;
-        desc.cprintf("You are resistant to fire.\n");
         break;
 
     default:
@@ -947,6 +901,13 @@ static formatted_string _describe_god_powers(god_type which_god)
         // wasn't already mentioned by the other description
         if (power.abil == ABIL_KIKU_GIFT_CAPSTONE_SPELLS
             && !you.has_mutation(MUT_NO_GRASPING))
+        {
+            continue;
+        }
+        // Skip over Makhleb's brand options after the first one, since
+        // only the first one has an associated god ability.
+        if (power.abil == ABIL_MAKHLEB_BRAND_SELF_2
+            || power.abil == ABIL_MAKHLEB_BRAND_SELF_3)
         {
             continue;
         }
@@ -963,6 +924,29 @@ static formatted_string _describe_god_powers(god_type which_god)
         }
         else
             desc.textcolour(DARKGREY);
+
+        // XXX: I don't like this, but there's no other obvious way to
+        //      slot the destruction upgrade mutations in at the right piety
+        //      point in the list for them.
+        if (which_god == GOD_MAKHLEB && power.rank == 4)
+        {
+            desc.textcolour(god_colour(which_god));
+            if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_GEH))
+                desc.cprintf("Your Destruction is augmented by the power of Gehenna.\n");
+            else if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_COC))
+                desc.cprintf("Your Destruction is augmented by the power of Cocytus.\n");
+            else if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_TAR))
+                desc.cprintf("Your Destruction is augmented by the power of Tartarus.\n");
+            else if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_DIS))
+                desc.cprintf("Your Destruction is augmented by the power of Dis.\n");
+            else
+            {
+                desc.textcolour(DARKGREY);
+                desc.cprintf("Your Destruction will be augmented by one of the Four Hells.\n");
+            }
+
+            continue;
+        }
 
         string buf = power.general;
 
@@ -987,6 +971,17 @@ static formatted_string _describe_god_powers(god_type which_god)
 
     if (!have_any)
         desc.cprintf("None.\n");
+
+    // Show Jiyva's opening of the Slime Pits at the bottom of the list
+    // We want this to stay green permanently once the player hits 6*
+    if (which_god == GOD_JIYVA)
+    {
+        if (you.one_time_ability_used[which_god])
+            desc.textcolour(god_colour(which_god));
+        else
+            desc.textcolour(DARKGREY);
+        desc.cprintf("Jiyva will unlock the Slime Pits vaults.\n");
+    }
 
     return desc;
 }

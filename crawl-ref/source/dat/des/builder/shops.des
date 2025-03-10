@@ -58,8 +58,6 @@ function ks_shop_vault(e, glyphs)
 end
 }}
 
-# XXX: Don't change the name of this vault!
-# Gozag code uses it to find out where shops can normally place.
 NAME: serial_shops
 TAGS: nolayout_encompass allow_dup extra luniq
 DEPTH: D, Depths, Orc, Elf, Shoals, Snake, Vaults
@@ -128,7 +126,7 @@ NAME:   shop_scrolls
 TAGS:   allow_dup extra shop transparent
 WEIGHT: 1
 KFEAT:  O = scroll shop
-ITEM:   nothing w:30 / scroll of noise w:10
+ITEM:   nothing w:30 / scroll of noise pre_id
 MAP
 ddd
 dOd
@@ -462,7 +460,7 @@ TAGS:    allow_dup extra shop transparent no_pool_fixup
 KFEAT:   O = any shop
 : if you.depth() == 1 then
 SUBST:   S = )}]
-: elseif you.depth_fraction() < 1 then
+: elseif you.depth() ~= dgn.br_depth(you.branch()) then
 SUBST:   S = (){}[]
 : else
 SUBST:   S = ({[
@@ -644,9 +642,9 @@ KMONS:   p = dancing weapon ; rapier | triple sword | executioner's axe | \
                great mace | bardiche | lajatang | triple crossbow | \
                demon blade | demon trident | demon whip | quick blade | \
                giant club | giant spiked club
-KMONS:   q = animated armour ; plate armour | crystal plate armour | \
+KMONS:   q = armour echo ; plate armour | crystal plate armour | \
                pearl dragon scales | shadow dragon scales | \
-               storm dragon scales | gold dragon scales
+               storm dragon scales | golden dragon scales
 KMONS:   r = walking crystal tome / walking divine tome / \
              walking earthen tome / walking frostbound tome
 KFEAT:   P = weapon shop
@@ -863,6 +861,173 @@ MAP
   ---.
 ENDMAP
 
+NAME:    nicolae_shop_bimaterial_pillars
+TAGS:    allow_dup extra shop transparent
+KFEAT:   O = any shop
+SHUFFLE: cvbn
+MAP
+ ... ...
+..c...c..
+.cvc.cvc.
+..c...c..
+ ...O...
+..c...c..
+.cvc.cvc.
+..c...c..
+ ... ...
+ENDMAP
+
+NAME:    nicolae_shopburst
+TAGS:    allow_dup extra shop transparent
+KFEAT:   S = any shop
+SHUFFLE: DE, FH, JK, LM
+SUBST:   DFJL = c, EHKM = .
+MAP
+  FHF
+ cFHFc
+DD...JJ
+EE.S.KK
+DD...JJ
+ cLMLc
+  LML
+ENDMAP
+
+NAME:   nicolae_shop_closed_for_inventory
+TAGS:   extra shop transparent
+DEPTH:  D:8-, Depths, Snake, Shoals
+WEIGHT: 1
+KFEAT:  - = iron_grate
+KFEAT:  O = any shop
+KPROP:  O = no_tele_into
+KMASK:  O = opaque
+MAP
+.---
+.-O-
+.---
+ENDMAP
+
+NAME:    nicolae_shop_cornered_store
+TAGS:    allow_dup extra shop transparent
+KFEAT:   S = any shop
+SHUFFLE: DEF
+SUBST:   D = ., E : am, F : am.
+SHUFFLE: ma
+SUBST:   a = x
+MAP
+xxxxx
+x...D.
+x.S.E.
+x...F.
+xDEFa.
+ ....@
+ENDMAP
+
+NAME:  nicolae_shop_flopsided
+TAGS:  allow_dup extra shop transparent
+KFEAT: O = any shop
+SUBST: c : cvbnt
+MAP
+c.c.c
+......
+ c.O.c
+ ......
+  c.c.c
+ENDMAP
+
+NAME:    nicolae_shop_glassy
+TAGS:    allow_dup extra shop transparent
+KFEAT:   + = closed_clear_door
+KFEAT:   S = any shop
+SHUFFLE: +m`p/m+p`
+SUBST:   ` = ., p = m
+MAP
+ .....
+..`p`..
+.`m+m`.
+.p+S+p.
+.`m+m`.
+..`p`..
+ .....
+ENDMAP
+
+# Unwind by reading under a tree by a pond. :)
+NAME:   nicolae_shop_relaxation
+TAGS:   no_pool_fixup allow_dup extra shop transparent
+KFEAT:  S = scroll shop / book shop
+: if crawl.coinflip() then
+SUBST:  pq = t
+NSUBST: r = W / w
+: else
+SUBST:  r = t, p = w
+NSUBST: q = W / w
+: end
+MAP
+  ...
+ ..p..
+..qrq..
+.prSrp.
+..qrq..
+ ..p..
+  ...
+ENDMAP
+
+NAME:  nicolae_shop's_first_dollar
+TAGS:  extra shop transparent
+KITEM: $ = gold q:1
+KFEAT: O = any shop
+KPROP: $ = no_tele_into
+KMASK: $ = no_monster_gen
+KMASK: $ = no_item_gen
+KMASK: $ = no_trap_gen
+KMASK: $ = opaque
+MAP
+xxxxx
+xxm...
+x$m.O.
+xxm...
+xxxxx
+ENDMAP
+
+NAME:  nicolae_shop_swords_in_saltire
+TAGS:  extra shop transparent
+KFEAT: S = weapon shop / antique weapon shop
+MAP
+v.....v
+.v.T.v.
+..v.v..
+.T.v.T.
+v.v.v.v
+.v.S.v.
+v.v.v.v
+ENDMAP
+
+NAME:    nicolae_shop_targeted
+TAGS:    allow_dup extra shop transparent
+KFEAT:   S = any shop
+SHUFFLE: -G
+TILE:    G : dngn_statue_orb
+MAP
+xx.G.
+xx.-@
+xS.G.
+xx.-@
+xx.G.
+ENDMAP
+
+NAME:   nicolae_shop_well_armoured
+TAGS:   allow_dup extra shop transparent
+KFEAT:  S = armour shop / antique armour shop
+NSUBST: - = 2:@ / v
+MAP
+ v v v
+vv-v-vv
+ -...-
+vv.S.vv
+ -...-
+vv-v-vv
+ v v v
+ENDMAP
+
 ###############################################################################
 # <<2>> Themed.
 #       Not tagged shop, but still contains one. Can have threats, and can have
@@ -878,10 +1043,11 @@ DEPTH:   D:4-, Depths
 MONS:    ball python w:5 / adder, water moccasin
 MONS:    black mamba w:20 / naga ; sling, naga mage / naga ritualist, nagaraja
 KFEAT:   v = general shop type:Serpentskin suffix:Sales count:7 ; \
-         w:8 dart ego:poisoned | w:4 dart ego:curare | w:5 scroll of poison | \
-         w:3 ring of poison resistance | w:6 randbook disc:alchemy | \
-         w:2 staff of alchemy | w:6 any weapon ego:venom | w:1 serpent talisman | \
-         w:6 any armour ego:poison_resistance | w:1 swamp dragon scales
+         dart ego:poisoned w:8 | dart ego:curare w:4 | scroll of poison w:5 | \
+         ring of poison resistance w:3 | randbook disc:alchemy w:6 | \
+         staff of alchemy w:2 | any weapon ego:venom w:4 | \
+         partisan ego:venom w:1 | serpent talisman randart w:2 | \
+         any armour ego:poison_resistance w:6 | w:1 swamp dragon scales
 NSUBST:  ? = 2:? / 2 = ?.. / *:.
 : if you.absdepth() < 7 then
 SUBST:   ? = 1
@@ -908,7 +1074,7 @@ DEPTH:   D:11-, Depths
 KMONS:   1 = gargoyle / basilisk / boulder beetle / cyclops w:3
 KMONS:   2 = stone giant / catoblepas / deep troll earth mage / \
              iron dragon w:4
-KMONS:   B = boulder dbname:still_boulder
+KMONS:   D = pile of debris
 ITEM:    stone
 KFEAT:   S = general shop type:Pet suffix:Rocks count:7 ; \
              stone w:15 | large rock w:15 | sling w:8  | \
@@ -921,7 +1087,7 @@ SUBST:   ? = 2dd
 : if you.absdepth() < 16 then
 SUBST:   2 = 1
 : end
-SUBST:   B : B., C : B.
+SUBST:   B : D., C : D.
 MAP
 B.....C
 .xx+xx.
@@ -936,21 +1102,24 @@ ENDMAP
 # Custom blood shop
 NAME:    guppyfry_shop_blood
 TAGS:    no_monster_gen transparent
-DEPTH:   D:12-, Depths
-KMONS:   1 = vampire / bat
-KMONS:   2 = vampire / vampire mage / vampire knight
-KFEAT:   v = general shop type:Blood suffix:Bar count:7 ; \
-             nothing w:70 | any weapon ego:vampirism w:10 | \
+DEPTH:   D:11-, Depths
+KMONS:   1 = vampire / vampire bat
+KMONS:   2 = vampire mage / vampire knight
+KFEAT:   v = general shop type:Blood suffix:Bar count:8 ; \
+             dagger ego:vampirism w:20 | any weapon ego:vampirism w:15 | \
+             sanguine talisman w:8 | sanguine talisman randart w:2 | \
+             randbook numspells:2 spells:sublimation_of_blood w:20 | \
              randbook disc:necromancy w:9 | w:1 book of annihilations
-SUBST:   ? = 2.Y
-: if you.in_branch("D") then
-SUBST:   2 = 1
+SHUFFLE: ABCD
+SUBST:   A = 1, B = Y, C : 1Y., D = .
+: if you.in_branch("Depths") then
+SUBST:   1 = 2
 : end
 MAP
 xxxxx
-x???x
-+?v?+
-x???x
+xABCx
++DvD+
+xCBAx
 xxxxx
 ENDMAP
 
@@ -970,11 +1139,11 @@ SUBST:  G : YlG
 :   any weapon ego:vampirism | any weapon ego:chaos w:1 | demon blade w:5 | \
 :   demon trident w:5 | demon whip w:5 | scroll of torment | staff of death | \
 :   book of necromancy | book of death | book of unlife | \
-:   book of decay | \
+:   book of decay | book of the grave | \
 :   randbook disc:necromancy w:5 | necronomicon w:1 | grand grimoire w:1 | \
 :   sceptre_of_torment w:1 | scythe_of_curses w:1 | majin-bo w:1 | \
 :   black_knights_barding w:1 | obsidian_axe w:1 | damnation w:1 | \
-:   sword_of_zonguldrok w:1")
+:   skull_of_zonguldrok w:1")
 : if not you.in_branch("D") then
 KFEAT: a = altar_kikubaaqudgha / altar_yredelemnul / altar_makhleb / \
            altar_beogh w:1 / altar_lugonu w:1
@@ -989,9 +1158,9 @@ ENDMAP
 # Items related to the good gods thematically; healing, silver, holy wrath,
 # etc.
 NAME: nicolae_good_shop
-WEIGHT: 2
-DEPTH: D:6-, Depths
 TAGS: no_monster_gen no_trap_gen transparent
+DEPTH: D:6-, Depths
+WEIGHT: 2
 SHUFFLE: _s
 KFEAT: s = general shop type:Hallowed suffix:Reliquary ; \
    potion of heal wounds | potion of curing | \
@@ -1039,14 +1208,14 @@ ENDMAP
 #####################################################
 # Sells conjurations-heavy books, destructive wands, etc.
 NAME: nicolae_blasting_shop
-DEPTH: D:8-, Depths
 TAGS: no_monster_gen no_item_gen transparent extra
+DEPTH: D:8-, Depths
 MARKER: s = lua:fog_machine { cloud_type = "flame", \
              pow_min = 3, pow_max = 5, delay_min = 50, delay_max = 90, \
              start_clouds = 1, size = 3, walk_dist = 0, spread_rate= 0 }
 KFEAT: s = general shop type:Demolitions suffix:Depot ; \
    book of conjurations | book of power | book of annihilations | \
-   book of blasting |\
+   book of blasting | book of duality | \
    randbook disc:conjuration | book of storms | book of lightning | \
    any blast wand | wand of flame | wand of mindburst | \
    condenser vane | staff of conjuration | any beam wand | \
@@ -1066,41 +1235,37 @@ MAP
 ENDMAP
 
 #####################################################
-# Contains only four items: two evocable items/wands, a staff, and a randbook,
-# associated with one of each of the four elemental schools. Falls back to
-# generating additional books if the evocable in question is excluded due to
-# item sets.
+# Contains only four items, associated with one of each of the four elemental
+# schools. As time went on, the original setup with elemental-themed evokers
+# stopped working out as well, so the items are now elemental-branded weapons,
+# elemental-related rings, elemental staves, and elemental randbooks.
 NAME:    nicolae_elemental_shop
 TAGS:    no_monster_gen no_item_gen no_pool_fixup transparent extra
 DEPTH:   D:4-, Depths
-KMONS:   b = boulder dbname:still_boulder
 SHUFFLE: AB
-NSUBST:  A = 1:a / 1:l / 1:w / *:xxb
+NSUBST:  A = a / l / w / x
 SUBST:   B = .
 KPROP:   l = no_cloud_gen
 MARKER:  a = lua:fog_machine { cloud_type = "thin mist", \
              pow_min = 100, pow_max = 100, delay = 1, \
              size = 1, walk_dist = 0, start_clouds = 1 }
 {{
-  local evocables = {"wand of flame","wand of iceblast",
-                     "lightning rod","tin of tremorstones"}
-  if items.excluded_from_set("wand of iceblast") then
-    evocables[2] = "randbook disc:ice"
-  end
-  if items.excluded_from_set("tin of tremorstones") then
-    evocables[4] = "randbook disc:earth"
-  end
-  local staffs    = {"staff of fire","staff of cold",
-                     "staff of air","staff of earth"}
-  local randbooks = {"randbook disc:fire","randbook disc:ice",
-                     "randbook disc:air","randbook disc:earth"}
+  local weapons   = {"any weapon ego:flaming", "any weapon ego:freezing",
+                     "any weapon ego:electrocution", "any weapon ego:heavy"}
+  local rings     = {"ring of protection from fire",
+                     "ring of protection from cold", "ring of flight",
+                     "ring of protection"}
+  local staffs    = {"staff of fire", "staff of cold",
+                     "staff of air", "staff of earth"}
+  local randbooks = {"randbook disc:fire", "randbook disc:ice",
+                     "randbook disc:air", "randbook disc:earth"}
   local choices   = {1, 2, 3, 4}
   local i, j, temp
   for i = 4, 2, -1 do
-     j = crawl.random_range(1,i)
+     j = crawl.random_range(1, i)
      temp = choices[j] ; choices[j] = choices[i] ; choices[i] = temp
   end
-  local inventory = evocables[choices[1]] .. " | " .. evocables[choices[2]] ..
+  local inventory = weapons[choices[1]] .. " | " .. rings[choices[2]] ..
            " | " .. staffs[choices[3]] .. " | " .. randbooks[choices[4]]
   kfeat("s = general shop type:Elemental suffix:Accessories count:4 use_all ; "
          .. inventory )
@@ -1176,26 +1341,30 @@ MAP
   wwwwwwwww
 ENDMAP
 
-# Eat the purple.
-NAME:   nicolae_transmutations_shop
-TAGS:   transparent no_item_gen no_monster_gen extra
-DEPTH:  D:8-, Depths, Zot
-COLOUR: m = magenta
-TILE:   m = dngn_transparent_wall_magenta
-KFEAT:  S = general shop type:Changing suffix:Room count:7 ; \
-            potion of mutation | potion of lignification | wand of polymorph | \
-            book of transmutation w:5 | any talisman w:30 | \
-            randbook disc:alchemy w:5 | plutonium_sword w:1
+# You can't eat the purple anymore. But you can drink it. Drink the purple.
+NAME:  nicolae_transmutations_shop
+TAGS:  transparent no_item_gen no_monster_gen extra
+DEPTH: D:8-, Depths, Zot
+KFEAT: S = general shop type:Changing suffix:Room count:9 ; \
+           potion of mutation w:15 | potion of lignification w:15 | \
+           wand of polymorph | any talisman | staff of alchemy | \
+           randbook disc:alchemy spells:irradiate w:6 | \
+           randbook disc:alchemy spells:fulsome_fusillade w:6 | \
+           plutonium_sword w:1 | manual of shapeshifting w:5 | \
+           manual of alchemy w:5
 MARKER: F = lua:fog_machine { cloud_type = "mutagenic fog", pow_min = 50, \
    pow_max = 50, delay = 1, size = 1, walk_dist = 0, start_clouds = 1, \
    spread_rate = 0, excl_rad = 0 }
+COLOUR: m = magenta
+TILE:   m = dngn_transparent_wall_magenta
+: vault_metal_statue_setup(_G, "G", "alchemical conduit")
 MAP
 .........
 .mmmmmmm.
 .mFFFFFm.
-.m....Fm.
+.G....Fm.
 ....S.Fm.
-.m....Fm.
+.G....Fm.
 .mFFFFFm.
 .mmmmmmm.
 .........
@@ -1245,6 +1414,7 @@ KFEAT:   S = general shop type:Lightly-Used suffix:Armoury ; \
              damaged ego:none double sword | \
              damaged ego:none triple sword | \
              damaged ego:none executioner's axe | \
+             damaged ego:none partisan | \
              damaged ego:none demon trident | \
              damaged ego:none bardiche | \
              damaged ego:none lajatang | \
@@ -1254,7 +1424,7 @@ KFEAT:   S = general shop type:Lightly-Used suffix:Armoury ; \
              damaged ego:none crystal plate armour | \
              damaged ego:none barding | \
              damaged ego:none pearl dragon scales | \
-             damaged ego:none gold dragon scales
+             damaged ego:none golden dragon scales
 MAP
 S
 ENDMAP
@@ -1337,8 +1507,9 @@ local kstr = "S = general shop type:Mayhem suffix:Merchandise ; " ..
              "battleaxe | " ..
              "executioner's axe w:2 | " ..
              "book of fire w:5 | " ..
+             "book of ice w:5 | " ..
              "the unrestrained analects w:5 | " ..
-             "wand of iceblast"
+             "any blast wand"
 
 -- Unfortunately this can still result in the unrandart being picked twice or
 -- more in the shop (resulting in the shop having regular clubs/great maces).
@@ -1426,7 +1597,7 @@ ENDMAP
 NAME:   nicolae_shop_firing_range
 TAGS:   transparent no_monster_gen no_item_gen no_tide
 DEPTH:  D:4-, Depths, Orc, Elf, Shoals, Snake, Vaults
-KMONS:  DE = training dummy
+KMONS:  DE = generate_awake training dummy
 KITEM:  D = stone q:1 / nothing, stone q:1 / nothing, stone q:1 / nothing
 KITEM:  H = stone q:1 w:30 / boomerang q:1 / javelin q:1 / dart q:1
 KITEM:  E = throwing net q:1
@@ -1452,8 +1623,8 @@ ENDMAP
 NAME:    nicolae_shop_gadgets
 TAGS:    transparent
 DEPTH:   D:4-, Depths, Orc, Elf, Shoals, Snake, Vaults
-KFEAT:   S = general shop type:Gadget suffix:Gallery count:4 ; \
-         any wand | any misc
+KFEAT:   S = general shop type:Gadget suffix:Gallery count:5 use_all ; \
+         any wand | any wand | any wand | any wand | any misc
 SHUFFLE: cvmb
 MAP
 cc.vv
@@ -1524,10 +1695,10 @@ KFEAT:  D = armour shop type:Superior suffix:Scales count:3 ; \
 : if you.in_branch("Depths") then
 KMONS:  D = golden dragon / iron dragon / quicksilver dragon / storm dragon /\
         shadow dragon / pearl dragon w:1
-: elseif you.in_branch("D") and you.absdepth() < 13 then
-KMONS:  D = steam dragon / acid dragon
-:else
+: elseif you.in_branch("D") and you.absdepth() > 12 then
 KMONS:  D = fire dragon / ice dragon / swamp dragon
+:else
+KMONS:  D = steam dragon / acid dragon
 :end
 MAP
  xxx
@@ -1580,9 +1751,9 @@ local weaponnames = {"dagger", "short sword", "falchion", "scimitar",
                     "hand axe", "executioner's axe w:6",
                     "club w:20", "flail", "demon whip w:3",
                     "dire flail", "eveningstar w:6",
-                    "spear", "halberd", "demon trident w:3"}
+                    "spear", "halberd", "partisan w:6", "demon trident w:3"}
 local egos = {"chaos", "draining", "distortion", "electrocution", "flaming",
-              "freezing", "heavy", "speed", "spectral"}
+              "freezing", "heavy", "speed", "spectral", "protection", "pain"}
 local kstr = "S = general shop name:" .. name .. " type:Alliterative " ..
              "suffix:Armaments count:" .. count .. " ; " ..
              "halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:speed | " ..
@@ -1615,24 +1786,28 @@ KFEAT:    P = general shop type:Fire suffix:Supplies ; ring of fire | \
           any weapon ego:flaming w:30 | scroll of immolation | \
           randbook disc:fire w:20 | manual of fire magic w:1 | \
           any armour ego:fire_resistance w:30 | fire dragon scales w:5
+KFEAT:    C = c
 SUBVAULT: ' : nico_deadtrees
 MARKER:   O = lua:fog_machine { cloud_type = "black smoke", pow_min = 10, \
               pow_max = 20, delay = 40, size = 1, walk_dist = 0 }
+TILE:     c = wall_stone_gray
+TILE:     C = wall_stone_scorched
 MAP
-xxxxx@@xxxxx
+xxxCC@@ccxxx
 xx''....ttxx
 x''......ttx
 x'O.V..T.Ptx
 x''......ttx
 xx''....ttxx
-xxxxx@@xxxxx
+xxxCC@@ccxxx
 ENDMAP
 
 # Using a subvault so only these trees become dead trees.
+# TODO: Fix this not working.
 NAME:   nicolae_sub_dead_trees
 TAGS:   unrand nico_deadtrees
 SUBST:  t = tt.
-COLOUR: t = lightgrey / darkgrey
+COLOUR: t = brown
 TILE:   t = dngn_tree_dead
 : set_feature_name("tree", "dead tree")
 MAP
@@ -1647,9 +1822,10 @@ ENDMAP
 # besides the default pluses for that type of ring.
 # For the special randart, the available artprops are those that can go on rings
 # and either have weight 0 for random generation (everything but MP), or have a
-# preset value (MP+/-9) which we can exceed. For HP and MP, the values go from
-# +10 to +15 -- the low end is to exceed the default MP bonus of +9, and the
-# high end is the HP bonus from the old version of the Amulet of Vitality.
+# preset value (MP+/-12) which we can exceed. For MP, the values go from
+# +13 to +15 -- the low end is to exceed the max MP bonus of +12, the high end
+# is a nice round multiple of 5. For HP, the values are +5 to +15, capped by the
+# HP from the old Amulet of Vitality.
 # For each of the six rings that can have pluses, there is the possibility of
 # a ring of that type whose pluses are worse than default (which makes it a bit
 # less useful, but cheaper, and so possibly more enticing to poor players),
@@ -1664,8 +1840,8 @@ WEIGHT: 5
 {{
   local itemcount = crawl.roll_dice( 2, 3 ) + 2
   local artprops = {"rMut", "Clar", "RMsl", "SH:5",
-     "HP:" .. (crawl.roll_dice(5, 2) + 5),
-     "MP:" .. (crawl.roll_dice(5, 2) + 5)}
+     "HP:" .. (crawl.roll_dice(10, 2) - 5),
+     "MP:" .. (crawl.roll_dice(2, 2) + 11)}
   local rings = {
      -- Worse than usual:
      -- +1 to +5
@@ -1719,7 +1895,7 @@ WEIGHT: 5
   local scales = { "steam dragon scales", "acid dragon scales",
     "swamp dragon scales", "fire dragon scales", "ice dragon scales",
     "pearl dragon scales", "shadow dragon scales", "storm dragon scales",
-    "gold dragon scales", "quicksilver dragon scales" }
+    "golden dragon scales", "quicksilver dragon scales" }
 
   for i, sc in ipairs(scales) do
      if crawl.coinflip() then
@@ -1865,7 +2041,7 @@ local metal_goods = {"ring mail", "scale mail", "chain mail", "plate armour",
    "short sword", "scimitar", "great sword", "broad axe", "battleaxe", "glaive",
    "morningstar", "dire flail", "great mace", "trident", "arbalest", "bardiche",
    "executioner's axe", "eveningstar", "lajatang", "hand cannon",
-   "triple crossbow"}
+   "triple crossbow", "partisan"}
 local inventory = {}
 for _, good in ipairs(metal_goods) do
    table.insert(inventory, good .. " damaged w:13")
@@ -1904,7 +2080,7 @@ NAME:   tekkud_shop_of_orbs
 TAGS:   no_monster_gen no_item_gen no_trap_gen patrolling
 TAGS:   vaults_hard vaults_orient_s
 DEPTH:  D:13-, Snake:2-, Elf:2-, Vaults, Crypt, Depths, Zot, !Zot:$
-WEIGHT: 1 (Zot), 3
+WEIGHT: 1 (Zot, Crypt), 3
 {{
 local shopname = util.random_from({"type:Orb suffix:Outfitters",
    "type:Spherical suffix:Supermarket", "type:Round suffix:Resellers",
@@ -1917,6 +2093,9 @@ if not you.unrands("sphere of Battle") then
 end
 if not you.unrands("crystal ball of Wucad Mu") then
       kstr = kstr .. " | crystal ball of Wucad Mu w:2"
+end
+if not you.unrands("Charlatan's Orb") then
+      kstr = kstr .. " | Charlatan's Orb w:2"
 end
 
 kfeat(kstr)
@@ -1938,7 +2117,7 @@ MONS:  lich / fire giant, crystal guardian
 MONS:  great orb of eyes / occultist w:5 / glowing shapeshifter w:1
 SUBST: + = .
 : elseif you.in_branch("Crypt") then
-MONS:  revenant / curse skull w:5 / lich
+MONS:  revenant soulmonger / curse skull w:5 / lich
 MONS:  vampire knight / deep elf death mage
 MONS:  orb spider zombie / weeping skull / laughing skull
 : elseif you.in_branch("Depths") then
@@ -1960,22 +2139,157 @@ ccc.....ccc
   ccb+bcc
 ENDMAP
 
-NAME:   nicolae_clarity_for_sale
-TAGS:   transparent
-DEPTH:  D:7-, Depths, Elf, Snake
+# Wiglaf says his gran stitched his ever-iconic hat, so.
+NAME:   mainiacjoe_granny_wiglaf_hat_shop
+TAGS:   transparent no_monster_gen no_item_gen no_trap_gen
+DEPTH:  Vaults, Crypt, Depths, Snake:$
 WEIGHT: 5
-KFEAT:  S = general shop type:Clear_Minds suffix:Boutique count:5 use_all ; \
-            any weapon artprops:Clar | any armour artprops:Clar | \
-            any jewellery artprops:Clar | any magical staff artprops:Clar | \
-            any talisman artprops:Clar
+KFEAT:  O = altar_okawaru
+{{
+local shopname = util.random_from({"type:Magnificent suffix:Millinery",
+    "type:Humble suffix:Haberdashery", "type:Hat suffix:Hut"})
+local cannon = crawl.coinflip()
+local count = 5
+if cannon then
+    count = count + 1
+end
+local kstr = "S = armour shop name:Granny_Wiglaf " .. shopname ..
+    " count:" .. count .. " greed:15 use_all no_mimic ; " ..
+    " | hat randart tile:thelm_cap_jester" ..
+    " | hat randart tile:thelm_hat_art_last"
+possible_ego_hats = {
+    " | hat ego:intelligence tile:thelm_cap" ..
+        " | hat ego:see_invisible tile:thelm_hat_explorer2",
+    " | hat ego:see_invisible tile:thelm_cap" ..
+        " | hat ego:willpower tile:thelm_hat_explorer2",
+    " | hat ego:willpower tile:thelm_cap" ..
+        " | hat ego:intelligence tile:thelm_hat_explorer2"}
+kstr = kstr .. util.random_from(possible_ego_hats)
+
+unrand_list = {"hat of the Bear Spirit", "crown of Dyrovepreva",
+               "mask of the Dragon", "hat of the Alchemist",
+               "hat of Pondering", "hood of the Assassin"}
+possible_unrands = {}
+for i, k in pairs(unrand_list) do
+    if not you.unrands(k) then
+        table.insert(possible_unrands, " | " .. k)
+    end
+end
+if next(possible_unrands) == nil then
+    kstr = kstr .. " | hat randart tile:thelm_hat_santa"
+else
+    kstr = kstr .. util.random_from(possible_unrands)
+end
+
+if cannon then
+    kstr = kstr .. " | randbook owner:Granny_Wiglaf title:Secret_Sauce" ..
+                   " numspells:1 spells:hellfire_mortar"
+end
+kfeat(kstr)
+}}
+FTILE:  .@O = floor_cobble_blood
 MAP
-...m...
-.m...m.
-.......
-m..S..m
-.......
-.m...m.
-...m...
+    xxxxx
+  xxx...xxx
+ xx.......xx
+ x....O....x
+xx.........xx
+x...x...x...x
+@.xxx.S.xxx.@
+xxx x...x xxx
+    xxxxx
+ENDMAP
+
+# I realized there weren't any theme shops that were just themed around magic in
+# general, combining magic-themed items from various item classes. Also gives
+# the new conduit decorations a chance to shine.
+# I just included all potions, scrolls, wands, and jewellery as magical by their
+# very nature, so I wouldn't have to pick out specific different item types.
+# 1/3 randbooks, 1/3 consumables, 1/4 gear, 1/12 magic manuals
+NAME:  nicolae_shop_magical_conduits
+TAGS:  transparent
+DEPTH: D:6-, Depths, Elf, Snake, Shoals, Zot, !Zot:$
+KFEAT: G = metal_statue
+# The w:10 in the shop def is here for bug workaround purposes.
+KFEAT: S = general shop type:Magical suffix:Supplies w:10 ; \
+  randbook w:48 | any potion w:16 | any scroll w:16 | any wand w:16 | \
+  orb w:6 | any magical staff w:6 | hat w:6 | robe w:6 | any ring w:6 | \
+  any amulet w:6 | manual of spellcasting w:2 | manual of conjurations w:1 | \
+  manual of hexes w:1 | manual of summonings w:1 | manual of necromancy w:1 | \
+  manual of alchemy w:1 | manual of translocations w:1 | \
+  manual of fire magic w:1 | manual of air magic w:1 | \
+  manual of ice magic w:1 | manual of earth magic w:1
+: local conduittype = {"arcane", "dimensional", "misfortune",
+:   "soul", "fiery", "alchemical", "icy", "earthen", "storm"}
+: local whichconduit = crawl.random2(#conduittype) + 1
+: vault_metal_statue_setup(_G, "G", conduittype[whichconduit] .. " conduit")
+MAP
+ . .
+G.S.G
+ . .
+ENDMAP
+
+# Only in early D, since by later on you'd probably know what most things are,
+# and then there's not much point to it being antique.
+NAME:   nicolae_shop_antique_consumables
+TAGS:   allow_dup transparent extra luniq
+DEPTH:  D:2-8
+KMONS:  P = pile of debris
+KFEAT:  S = antiques shop type:Antique suffix:Scrolls ; any scroll / \
+            antiques shop type:Antique suffix:Potions ; any potion
+NSUBST: P = 1=. / 2=P / ...PP
+MAP
+cPcPc
+P...P
+c.S.c
+P...P
+cPcPc
+ENDMAP
+
+# In case you have some spare change and some open slots.
+NAME:   nicolae_shop_hand_me_the_aux
+TAGS:   transparent extra
+DEPTH:  D:4-7
+WEIGHT: 5
+# Having duplicates of mundane aux armors is a little boring, so do some lua
+# to get only one of each.
+: local auxes = {"hat mundane", "helmet mundane", "pair of gloves mundane",
+:   "cloak mundane", "pair of boots mundane", "barding mundane",
+:   "buckler mundane"}
+: local inventory = util.random_subset(auxes, 5)
+: kfeat("S = armour shop type:Wardrobe suffix:Accessories count:5 use_all ; " ..
+:   util.join(" | ", inventory))
+KFEAT:  - = iron_grate
+SUBST:  a : vv., p : v-., q : v-, r : v-., s : vv.
+NSUBST: ` = 2:@ / .
+MAP
+   .`.
+ vvs.avv
+ vqr.pqv
+.ap...rs.
+`...S...`
+.sr...pa.
+ vqp.rqv
+ vva.svv
+   .`.
+ENDMAP
+
+NAME:  nicolae_shop_information_kiosk
+TAGS:  transparent extra no_rotate no_vmirror no_pool_fixup
+DEPTH: D:1-7
+KFEAT: S = general shop type:Information suffix:Kiosk count:4 use_all ; \
+           scroll of identify q:1 | scroll of identify q:2 | \
+           scroll of revelation q:1 | scroll of revelation q:2
+MAP
+   ...
+  .WWW.
+ .WwSwW.
+.WwwwwwW.
+.WwwcwwW.
+.WwwcwwW.
+ .WwcwW.
+  .WWW.
+   ...
 ENDMAP
 
 ###############################################################################
@@ -2172,4 +2486,70 @@ MAP
 .....................
 .G..F..H..F..H..F..G.
 .....................
+ENDMAP
+
+# It's so old that the shop owners don't even know what they're selling anymore.
+# 2-4 shops
+NAME:   nicolae_shops_antique_district
+TAGS:   transparent extra
+DEPTH:  D:5-, Depths
+KMONS:  1 = withered plant
+KFEAT:  _ = altar_ecumenical
+KFEAT:  ^ = web
+KFEAT:  s = abandoned_shop
+KFEAT:  S = antiques shop / antique weapon shop / antique armour shop
+NSUBST: S = 2:S / 2:s / Ss
+SUBST:  t = ttt`, ` = 111^....
+COLOUR: t = lightgrey / darkgrey
+TILE:   t = dngn_tree_dead
+: set_feature_name("tree", "dead tree")
+MAP
+xxxxxxxxxxxxx
+xxxxxtStxxxxx
+xxtSt...tStxx
+.```.```.```.
+@`V`.`_`.`V`@
+.```.```.```.
+xxtSt...tStxx
+xxxxxtStxxxxx
+xxxxxxxxxxxxx
+ENDMAP
+
+# Just 2 shops
+NAME:  nicolae_shops_duplex
+TAGS:  extra luniq_floating_shops transparent
+DEPTH: D:4-, Depths, Elf
+KFEAT: S = any shop
+MAP
+xxx.@.xxx
+xcccncccx
+xcT...Tcx
+.c.cSc.c.
+@..ccc..@
+.c.cSc.c.
+xcT...Tcx
+xcccncccx
+xxx.@.xxx
+ENDMAP
+
+# 2-4 shops
+NAME:    nicolae_shops_little_town_plaza
+TAGS:    extra luniq_floating_shops transparent
+DEPTH:   D:4-, Depths, Elf
+KFEAT:   p = general shop / antiques shop
+KFEAT:   q = book shop
+KFEAT:   r = distillery shop
+KFEAT:   s = scroll shop
+SHUFFLE: GT-/TG`
+SUBST:   - = ., ` : x., G : GGt
+SHUFFLE: xc
+NSUBST:  S = p / q / rt / st
+MAP
+xx-G-xx
+xS...Sx
+-..T..-
+G.TxT.G
+-..T..-
+xS...Sx
+xx-G-xx
 ENDMAP

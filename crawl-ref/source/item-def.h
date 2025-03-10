@@ -91,8 +91,7 @@ public:
 
     string name(description_level_type descrip, bool terse = false,
                 bool ident = false, bool with_inscription = true,
-                bool quantity_in_words = false,
-                iflags_t ignore_flags = 0x0) const;
+                bool quantity_in_words = false) const;
     bool has_spells() const;
     bool cursed() const;
     colour_t get_colour() const;
@@ -146,12 +145,15 @@ public:
     /** Is this item of a type that should not be generated enchanted? */
     bool is_mundane() const;
 
+    /** Is this item fully identified? */
+    bool is_identified() const;
+
     /// If this is a gem, what colour is it in console?
     colour_t gem_colour() const;
 
 private:
     string name_aux(description_level_type desc, bool terse, bool ident,
-                    bool with_inscription, iflags_t ignore_flags) const;
+                    bool with_inscription) const;
 
     colour_t randart_colour() const;
 
@@ -171,5 +173,3 @@ private:
     colour_t talisman_colour() const;
     colour_t corpse_colour() const;
 };
-
-item_def get_item_known_info(const item_def& info);

@@ -4,6 +4,8 @@
 #           dis.des, geh.des, coc.des, or tar.des.
 ##############################################################################
 
+: crawl_require('dlua/vault.lua')
+
 {{
 function hell_entry_feature(e, glyph)
     e.tags("extra luniq_enter_hell chance_enter_hell")
@@ -12,6 +14,7 @@ function hell_entry_feature(e, glyph)
     e.depth_chance("D:21-", 10000)
 -- end TAG_MAJOR_VERSION
     e.kfeat(glyph .. " = enter_hell")
+    e.tile("v = dngn_metal_wall_darkgray")
 end
 
 function hell_entry_tier(e, tier)
@@ -74,11 +77,11 @@ NAME:   hellmouth_1
 ORIENT: float
 TAGS:   no_rotate
 MONS:   sun demon / smoke demon / soul eater / hell hog
-MONS:   hellion / balrug / reaper / hell beast / hell knight
+MONS:   hellion / balrug / reaper / sin beast / hell knight
 ITEM:   good_item demon blade / good_item demon whip / \
         good_item demon trident
-ITEM:   ring of fire ident:type / Necronomicon / \
-        grand grimoire / scroll of torment ident:type
+ITEM:   ring of fire pre_id / Necronomicon / \
+        grand grimoire / scroll of torment pre_id
 SUBST:  d=de, ?:?.l, ?=l.
 : hell_entry_feature(_G, 'A')
 : hell_entry_tier(_G, "mid")
@@ -110,11 +113,11 @@ WEIGHT: 6
 ORIENT: float
 TAGS:   no_monster_gen
 MONS:   sun demon / smoke demon / soul eater / hell hog / nothing w:20
-MONS:   hellion / balrug / reaper / hell beast / hell knight
+MONS:   hellion / balrug / reaper / sin beast / hell knight
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident
-ITEM:   ring of fire ident:type / Necronomicon / \
-        grand grimoire / scroll of torment ident:type
+ITEM:   ring of fire pre_id / Necronomicon / \
+        grand grimoire / scroll of torment pre_id
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident / w:30 nothing
 SUBST:  d=de, ?:?.l, ?=l.
@@ -151,7 +154,7 @@ NAME:   hellmouth_3
 TAGS:   transparent
 ORIENT: float
 MONS:   sun demon / hell knight / hell hog / soul eater / smoke demon
-MONS:   hellion / balrug w:20 / hell beast
+MONS:   hellion / balrug w:20 / sin beast
 ITEM:   demon blade / demon whip / demon trident
 NSUBST: 1 = 1:l / 1:1l / *:1
 KMASK:  12Ad = opaque
@@ -187,7 +190,7 @@ ORIENT: float
 TAGS:   no_monster_gen no_tele_into
 MONS:   sun demon / smoke demon / soul eater / ynoxinul / sixfirhy \
         / neqoxec w:5 / w:50 nothing
-MONS:   blizzard demon / hell beast / cacodemon / green death / reaper \
+MONS:   blizzard demon / sin beast / cacodemon / green death / reaper \
         / balrug / hellion w:5 / tormentor w:5 / nothing w:30
 ITEM:   skeleton
 KFEAT:  b = .
@@ -289,9 +292,9 @@ KMONS:  O = Margery band / hell knight band w:4, hell knight band
 KFEAT:  yz = b
 SUBST:  b : xxxz
 NSUBST: z = 1:y / 1:z
-TILE:   y = bedeviled_crystal_gehenna
-TILE:   z = bedeviled_crystal_dis
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+TILE:   y = bedevilled_crystal_gehenna
+TILE:   z = bedevilled_crystal_dis
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 : hell_entry_feature(_G, 'O')
 : hell_entry_tier(_G, "high")
 MAP
@@ -307,7 +310,7 @@ ENDMAP
 NAME: grunt_mini_vestibule
 TAGS: nolayout_encompass no_monster_gen uniq_hell_entry_high transparent
 : hell_entry_feature(_G, 'O')
-KMONS: O = hell beast
+KMONS: O = sin beast
 MONS: frost giant / quicksilver dragon simulacrum / freezing wraith
 MONS: iron dragon / war gargoyle / ancient champion
 MONS: salamander tyrant / hell hog / balrug
@@ -341,7 +344,7 @@ SHUFFLE: +- / +- / =+
 NSUBST:  - = 1:+cc / *:c
 SUBST:   = = c
 KMASK:   l = no_monster_gen
-TILE:    c = dngn_stone_wall_red
+TILE:    c = stone_wall_pyre
 : hell_entry_feature(_G, 'O')
 : hell_entry_tier(_G, "low")
 MAP
@@ -390,7 +393,7 @@ ENDMAP
 NAME:    pf_vacation_house_of_asmodeus
 TAGS:    transparent uniq_hell_entry_geh
 WEIGHT:  4
-TILE:    c = dngn_stone_wall_red
+TILE:    c = stone_wall_pyre
 COLOUR:  c = red
 FTILE:  'O = floor_infernal_blank
 : hell_entry_feature(_G, 'O')
@@ -418,7 +421,7 @@ ENDMAP
 NAME:   pf_dread_powers_of_hell
 TAGS:   transparent uniq_hell_entry_geh
 WEIGHT: 2
-KMONS:  i = reaper ; wand of flame / balrug ; wand of flame ident:type
+KMONS:  i = reaper ; wand of flame / balrug ; wand of flame pre_id
 TILE:   c = dngn_stone_wall_red
 COLOUR: c = red
 FTILE:  'iO = floor_infernal_blank
@@ -646,7 +649,6 @@ MAP
 ...................
 .........@.........
 ENDMAP
-
 # If you're dumb enough to go to the Hells this weekend, you're a big enough
 # schmuck to come to Big Baal Hell's Store!
 # Inspired by the NSFW classic: https://www.youtube.com/watch?v=4sZuN0xXWLc
@@ -665,46 +667,45 @@ WEIGHT: 2
   -- the Dis inventory focuses on damage/AC increases to counteract the
   -- corrosion hell effect, rCorr for caustic shrikes, reflection for various
   -- Dis projectiles, and enchant armour/weapon scrolls in bulk
-  local disinv = util.random_subset( { "any weapon good_item ego:heavy",
-    "any weapon randart ego:heavy", "ring of slaying randart",
-    "ring of protection randart", "any weapon good_item ego:protection",
+  local disinv = util.random_subset( { "any weapon randart ego:heavy",
+    "ring of slaying randart", "ring of protection randart",
     "any weapon randart ego:protection", "crystal plate armour randart",
-    "gold dragon scales randart", "tower shield randart",
+    "golden dragon scales randart", "tower shield randart",
+    "any weapon randart artprops:rCorr", "any armour randart artprops:rCorr",
     "ring of resist corrosion randart", "amulet of reflection randart",
     "scroll of enchant weapon q:10", "scroll of enchant armour q:10",
-    "potion of might q:10", "randbook disc:conjuration slevels:12",
-    "randbook disc:earth slevels:12", "staff of earth",
-    "staff of conjuration" }, 2 )
+    "potion of might q:10", "randbook disc:conjuration slevels:13",
+    "randbook disc:earth slevels:13", "staff of earth randart",
+    "staff of conjuration randart" }, 2 )
 
   -- the Gehenna inventory focuses on fire resistance and cold damage, and
   -- some potions of invisibility since a lot of monsters there can't sInv,
   -- and some tloc since you can't use blink/tele scrolls
-  local gehinv = util.random_subset( { "any weapon good_item ego:freezing",
-    "any weapon randart ego:freezing", "ring of protection from fire randart",
-    "ring of fire randart", "fire dragon scales randart",
-    "wand of iceblast charges:25", "any armour good_item ego:fire_resistance",
-    "any armour randart ego:fire_resistance", "potion of invisibility q:10",
-    "randbook disc:ice slevels:12", "randbook disc:translocation slevels:12",
-    "staff of fire" }, 2 )
+  local gehinv = util.random_subset( { "any weapon randart ego:freezing",
+    "ring of protection from fire randart", "ring of fire randart",
+    "fire dragon scales randart", "wand of iceblast charges:25",
+    "any weapon randart artprops:rF:1", "any armour randart artprops:rF:1",
+    "potion of invisibility q:10", "randbook disc:ice slevels:13",
+    "randbook disc:translocation slevels:13", "staff of fire randart" }, 2 )
 
   -- the Cocytus inventory focuses on cold resistance and fire damage, and
   -- throws in some willpower for narguns
-  local cocinv = util.random_subset( { "any weapon good_item ego:flaming",
-    "any weapon randart ego:flaming", "ring of protection from cold randart",
-    "ring of ice randart", "ice dragon scales randart",
-    "wand of flame charges:55", "any armour good_item ego:cold_resistance",
-    "any armour randart ego:cold_resistance", "ring of willpower randart",
-    "randbook disc:fire slevels:12", "staff of air", "staff of cold" }, 2 )
+  local cocinv = util.random_subset( { "any weapon randart ego:flaming",
+    "ring of protection from cold randart", "ring of ice randart",
+    "ice dragon scales randart", "any weapon randart artprops:rC:1",
+    "staff of air randart", "staff of cold randart", "wand of flame charges:55",
+    "any armour randart artprops:rC:1", "ring of willpower randart",
+    "randbook disc:fire slevels:13" }, 2 )
 
   -- the Tartarus inventory focuses on increased willpower to counteract the
   -- Will/2 hell effect, as well rN+ for theme, scrolls of fog in bulk to deal
   -- with fear/mesmerise
   local tarinv = util.random_subset( { "ring of willpower randart",
-    "ring of positive energy randart", "any armour randart ego:positive_energy",
-    "any armour randart ego:willpower", "pearl dragon scales randart",
-    "scroll of fog q:10", "any armour good_item ego:positive_energy",
-    "any armour good_item ego:willpower", "quicksilver dragon scales randart",
-    "staff of death" }, 2 )
+    "ring of positive energy randart", "any armour randart artprops:rN:1",
+    "any armour randart artprops:Will:1", "pearl dragon scales randart",
+    "scroll of fog q:10", "quicksilver dragon scales randart",
+    "any weapon randart artprops:Will:1", "any weapon randart artprops:rN:1",
+    "staff of death randart" }, 2 )
 
   -- Generically useful in all the Hells, a lot of scrolls and potions in bulk,
   -- but also rings of rN+ and willpower, which are useful in all the Hells, and
@@ -713,15 +714,15 @@ WEIGHT: 2
   local hellinv = util.random_subset( { "scroll of blinking q:10",
     "scroll of revelation q:10", "scroll of silence q:10",
     "any ally scroll q:10", "scroll of teleportation q:10",
-    "potion of brilliance q:10",
+    "potion of brilliance q:10", "potion of enlightenment q:10",
     "potion of cancellation q:10", "potion of curing q:10",
     "potion of haste q:10","potion of heal wounds q:10", "potion of magic q:10",
     "potion of experience", "potion of resistance q:10", "any weapon randart",
     "any armour randart", "any jewellery randart", "any weapon randart",
-    "any armour randart", "any jewellery randart", "any wand charges:25",
+    "any armour randart", "any jewellery randart", "any wand charges:27",
     "ring of positive energy randart", "ring of willpower randart",
     "randbook good_item", "randbook good_item", "ring of wizardry randart",
-    "any magical staff", "scroll of acquirement", "any manual",
+    "any magical staff randart", "scroll of acquirement q:2", "any manual",
     "demon trident randart", "demon whip randart", "demon blade randart",
     "javelin ego:silver q:25", "any misc" }, 2)
 
@@ -745,7 +746,7 @@ WEIGHT: 2
 : hell_entry_tier(_G, "low")
 KMONS: S = balrug band / hell knight band / jiangshi band / \
            ancient champion band / deep troll shaman band / \
-           salamander tyrant band / wendigo band
+           salamander tyrant band / wyrmhole
 SUBST: L = l., ` = lx
 MAP
   xxxx
@@ -770,13 +771,13 @@ ORIENT: float
 WEIGHT: 5
 KMONS:  1 = sun demon
 KMONS:  2 = shining eye / eye of devastation / great orb of eyes
-KMONS:  3 = hell hound / hell hog / hell beast / hellion
+KMONS:  3 = hell hound / hell hog / sin beast / hellion
 NSUBST: - = 4=1 / 8=1. / 2=2 / 4=2. / 1=3 / 2=3. / .
 SUBST:  b = bc
 KMASK:  O = opaque
 KPROP:  O = no_tele_into
-TILE:   b = bedeviled_crystal_gehenna
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+TILE:   b = bedevilled_crystal_gehenna
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 : hell_entry_feature(_G, 'O')
 : hell_entry_tier(_G, "high")
 MAP
@@ -896,7 +897,7 @@ ENDMAP
 NAME: vestibule_tar_old
 TAGS: vestibule_tar
 KFEAT: T = enter_tartarus
-KMONS: T = revenant / shadow dragon
+KMONS: T = revenant soulmonger / shadow dragon
 FTILE: +'T = floor_infernal_blank
 TILE: c = dngn_stone_dark
 MAP
@@ -952,8 +953,8 @@ TAGS:   vestibule_tar
 KFEAT:  T = enter_tartarus
 SUBST:  d = ccc., z = zzz..
 KMONS:  z = place:Depths:1 zombie
-KMONS:  b = revenant / lich / vampire mage / ancient lich / mummy priest / \
-           curse skull / dread lich
+KMONS:  b = revenant soulmonger / lich / vampire mage / ancient lich / \
+            mummy priest / curse skull / dread lich
 TILE:   c = dngn_stone_dark
 MAP
 .......dd...............dd.......
@@ -977,7 +978,7 @@ ENDMAP
 NAME: vestibule_tar_grunt_deathgaze
 TAGS: vestibule_tar
 KFEAT: T = enter_tartarus
-KMONS: T = revenant / lich / shadow dragon
+KMONS: T = revenant soulmonger / lich / shadow dragon
 MONS: ancient champion band, reaper / soul eater
 MONS: phantasmal warrior / vampire knight
 FTILE: +'T12 = floor_infernal_blank
@@ -1005,11 +1006,8 @@ NAME:   vestibule_tar_nicolae_cwn_annwn
 TAGS:   vestibule_tar patrolling
 KMONS:  1D = doom hound / nothing
 KFEAT:  D = enter_tartarus
-KFEAT:  G = metal_statue
-COLOUR: G = mist
 TILE:   c = dngn_stone_dark
-TILE:   G = dngn_mystic_cage
-: set_feature_name("metal_statue", "mystic cage")
+: vault_metal_statue_setup(_G, "G", "mystic cage")
 MAP
 ccccccccccccccccccccccccccccccccc
  cccccccccccccc...cccccccccccccc
@@ -1059,7 +1057,7 @@ ENDMAP
 
 NAME:    vestibule_tar_nicolae_seven_gates_of_the_underworld
 TAGS:    vestibule_tar
-KMONS:   H = lich / halazid warlock / shadow dragon / bone dragon / revenant
+KMONS:   H = lich / halazid warlock / shadow dragon / bone dragon / revenant soulmonger
 KMONS:   12 = ancient champion / skeletal warrior / phantasmal warrior / \
               reaper / soul eater / shadow demon / shadow wraith / \
               flayed ghost / putrid mouth
@@ -1120,7 +1118,7 @@ KFEAT:  G=enter_gehenna
 SUBST:  L = l.
 KMONS:  2 = hellion
 KMONS:  3 = sun demon / smoke demon
-KMONS:  2 = reaper / balrug / hell beast
+KMONS:  2 = reaper / balrug / sin beast
 FTILE:  x'5a2V+ = floor_infernal_blank
 : hell_lava_spawns(_G)
 MAP
@@ -1153,7 +1151,7 @@ SUBST:   ce = x, d : xlllLX., f : xlllLX., gi = ....m, m = mm.
 SUBST:   L = l., X = xl
 KMONS:   H = hellion
 KMONS:   m = sun demon / smoke demon
-KMONS:   ' = hell beast / hell hog / nothing w:140
+KMONS:   ' = sin beast / hell hog / nothing w:140
 FTILE:   AH' = floor_infernal_blank
 : hell_lava_spawns(_G)
 MAP
@@ -1175,14 +1173,14 @@ MAP
                ...
 ENDMAP
 
-NAME: vestibule_geh_grunt_obsidian_fortress
-TAGS: vestibule_geh
-KFEAT: G = enter_gehenna
-MONS: balrug / hellion, hell beast / hell hog
-MONS: sun demon / smoke demon / hell knight
-NSUBST: 2 = 3:2 / *:.
-NSUBST: 3 = 3:3 / *:.
-FTILE: 123+G = floor_infernal_blank
+NAME:   vestibule_geh_grunt_obsidian_fortress
+TAGS:   vestibule_geh
+KFEAT:  G = enter_gehenna
+MONS:   balrug / hellion, sin beast / hell hog
+MONS:   sun demon / smoke demon / hell knight
+NSUBST: 2 = 3:2 / *:., 3 = 3:3 / *:.
+FTILE:  123+G = floor_infernal_blank
+TILE:   c = stone_wall_pyre
 : hell_lava_spawns(_G)
 MAP
 lllllllllccccccccccccccclllllllll
@@ -1232,12 +1230,12 @@ ENDMAP
 
 NAME:    vestibule_geh_nicolae_lone_tower
 TAGS:    vestibule_geh
-KMONS:   D = balrug band / hell beast band / hell hog band / \
+KMONS:   D = balrug band / sin beast band / hell hog band / \
              hell knight band w:5
 KFEAT:   D = enter_gehenna
 SHUFFLE: Pp/Qq/Rr/Ss
 SUBST:   P = +, p = ., QRS = c, qrs = l, L = l.
-TILE:    c = dngn_stone_wall_red
+TILE:    c = stone_wall_pyre
 FTILE:   +D' = floor_infernal_blank
 COLOUR:  c = red
 MAP

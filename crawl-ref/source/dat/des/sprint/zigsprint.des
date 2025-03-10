@@ -27,8 +27,6 @@
 #   kill things. In my testing Makhleb's greater demons and Chei's slouch are
 #   two offenders for this.
 #
-#       -Also, Ashenzari lets you peek at some rooms but not all [evilmike]
-#
 ###############################################################################
 
 {{
@@ -95,15 +93,15 @@ function setup_room(e, id)
     e.tile("X = wall_stone_white")
 
     -- Create items
-e.kitem("1 = superb_item ident:all w:590 /\
-            potion of heal wounds ident:all q:4 w:3 /\
-            potion of haste ident:all q:4 w:3 /\
-            scroll of fog w:1 ident:all /\
-            potion of might ident:all w:2 /\
-            scroll of acquirement q:1 w:1 ident:all /\
-            scroll of enchant weapon ident:all q:4 w:2 /\
-            scroll of enchant armour ident:all q:4 w:2 /\
-            scroll of brand weapon ident:all")
+e.kitem("1 = superb_item pre_id w:590 /\
+            potion of heal wounds pre_id q:4 w:3 /\
+            potion of haste pre_id q:4 w:3 /\
+            scroll of fog w:1 pre_id /\
+            potion of might pre_id w:2 /\
+            scroll of acquirement q:1 w:1 pre_id /\
+            scroll of enchant weapon pre_id q:4 w:2 /\
+            scroll of enchant armour pre_id q:4 w:2 /\
+            scroll of brand weapon pre_id")
 
     -- Place monsters
     if id < 7 then
@@ -197,7 +195,7 @@ function choose_mset_1(e)
     e.kmons("1 = shapeshifter hd:5 / ugly thing w:5")
 -- Uniques
   else
-    e.kmons("1 = Sigmund, Jessica, Blork the orc, Crazy Yiuf, Dowan, \
+    e.kmons("1 = Sigmund, Jessica, Blorkula the orcula, Crazy Yiuf, Dowan, \
                Duvessa, Edmund, Erica, Erolcha, Eustachio, Gastronok, \
                Grum, Grinder, Harold, Ijyb, Joseph, Josephine, \
                Maurice, Menkaure, Pikel, Prince Ribbit, Psyche, \
@@ -292,7 +290,7 @@ function choose_mset_2(e)
     e.kmons("1 = shapeshifter / ugly thing w:5 / neqoxec w:5 / shining eye w:2")
 -- Uniques
   else
-    e.kmons("1 = Sigmund, Jessica, Blork the orc, Crazy Yiuf, Dowan, \
+    e.kmons("1 = Sigmund, Jessica, Blorkula the orcula, Crazy Yiuf, Dowan, \
                Duvessa, Edmund, Erica, Erolcha, Eustachio, Gastronok, \
                Grum, Grinder, Harold, Ijyb, Joseph, Josephine, \
                Maurice, Menkaure, Pikel, Prince Ribbit, Psyche, \
@@ -306,7 +304,7 @@ function choose_mset_3(e)
 -- Slime
   if rnd < 9 then
     e.kmons("1 = jelly w:15 / endoplasm / slime creature w:30 /\
-               glass eye w:2 / golden eye w:5 / quicksilver ooze w:2 /\
+               glass eye w:2 / golden eye w:5 / void ooze w:2 /\
                eye of devastation w:5 / shining eye w:5 / acid blob w:5 /\
                rockslime / azure jelly w:5 / great orb of eyes w:5 /\
                glowing orange brain w:2")
@@ -325,7 +323,7 @@ function choose_mset_3(e)
   elseif rnd < 34 then
     e.kmons("1 = zombie / skeleton / skeletal warrior w:5 / ghoul w:2 /\
                  laughing skull w:5 / vampire w:5 / vampire mage w:5 /\
-                 vampire knight w:5 / lich w:2 / ancient lich w:1 / shadow /\
+                 vampire knight w:5 / lich w:2 / ancient lich w:1 / shadowghast /\
                  wight / necromancer")
 -- Abyss
   elseif rnd < 39 then
@@ -415,7 +413,7 @@ function choose_mset_3(e)
                shining eye w:2 / glowing shapeshifter w:20")
 -- Uniques
   elseif rnd < 114 then
-    e.kmons("1 = Blork the orc / Crazy Yiuf / Dowan / Duvessa / Edmund / Erica / Erolcha /\
+    e.kmons("1 =  Blorkula the orcula / Crazy Yiuf / Dowan / Duvessa / Edmund / Erica / Erolcha /\
                Eustachio / Gastronok / Grum / Grinder / Harold / Ijyb / Jessica /\
                Joseph / Josephine / Maurice / Menkaure / Pikel /\
                Prince Ribbit / Psyche / Pargi / Sigmund / Sonja / Terence / Urug /\
@@ -424,8 +422,8 @@ function choose_mset_3(e)
                Rupert / Saint Roka / Snorg")
 -- Holy
   else
-    e.kmons("1 = daeva / angel / cherub / pearl dragon / ophan / \
-                 apis / nothing w:78")
+    e.kmons("1 = daeva w:5 / angel / fravashi / cherub / ophan / \
+                 apis w:5 / nothing w:88")
   end
 end
 
@@ -435,7 +433,7 @@ local rnd = crawl.random2(142)
 -- Slime
   if rnd < 9 then
     e.kmons("1 = jelly w:5 / slime creature w:30 /\
-               glass eye w:2 / golden eye w:4 / quicksilver ooze w:2 /\
+               glass eye w:2 / golden eye w:4 / void ooze w:2 /\
                eye of devastation w:5 / shining eye w:4 / acid blob /\
                rockslime / azure jelly / great orb of eyes w:4 /\
                glowing orange brain w:2")
@@ -449,25 +447,25 @@ local rnd = crawl.random2(142)
     e.kmons("1 = place:Lair:$ w:300 / hydra / catoblepas / dire elephant")
 -- Spider
   elseif rnd < 26 then
-    e.kmons("1 = place:Spider:$ w:70 / ghost moth w:5 / hornet /\
+    e.kmons("1 = place:Spider:$ w:70 / ghost moth w:5 / broodmother /\
                  moth of wrath w:5")
 -- Crypt
   elseif rnd < 34 then
     e.kmons("1 = zombie / skeleton / skeletal warrior / ghoul w:7 /\
                  laughing skull / vampire mage w:5 /\
-                 vampire knight / lich w:5 / ancient lich w:2 / shadow /\
-                 wight / necromancer")
+                 vampire knight / lich w:5 / ancient lich w:2 / shadowghast /\
+                 necromancer / vampire bloodprince")
 -- Abyss
   elseif rnd < 42 then
     e.kmons("1 = pandemonium lord / place:Abyss w:500")
 -- "Forest"
   elseif rnd < 47 then
-    e.kmons("1 = place:Lair:$ w:50 / spriggan defender /\
+    e.kmons("1 = place:Lair:$ w:50 / alderking w:3 / spriggan defender /\
                spriggan air mage / spriggan druid w:3 / spriggan berserker")
 -- Shoals
   elseif rnd < 52 then
-    e.kmons("1 = place:Shoals:$ w:55 / merfolk javelineer / merfolk impaler /\
-                 merfolk aquamancer")
+    e.kmons("1 = place:Shoals:$ w:45 / merfolk javelineer / merfolk impaler /\
+                 merfolk aquamancer / sphinx marauder")
     e.kmons("2 = kraken")
     e.subst("1 = 1:15 2:1")
     e.subst(". = W.")
@@ -492,8 +490,8 @@ local rnd = crawl.random2(142)
                frost giant / ettin / titan")
 -- Fire
   elseif rnd < 78 then
-    e.kmons("1 = fire vortex / hell hound / hell hog / fire elemental /\
-               efreet / fire dragon / fire giant / orb of fire w:5 / balrug")
+    e.kmons("1 = hell hound / hell hog / fire elemental / efreet / fire dragon /\
+                 will-o-the-wisp / fire giant / orb of fire w:5 / balrug")
 -- Ice
   elseif rnd < 81 then
     e.kmons("1 = ice beast / polar bear / white imp / simulacrum / rime drake/\
@@ -513,7 +511,7 @@ local rnd = crawl.random2(142)
     e.kmons("1 = swamp drake / rime drake / acid dragon / steam dragon /\
                death drake / swamp dragon / fire dragon / ice dragon /\
                shadow dragon / iron dragon / quicksilver dragon /\
-               golden dragon / wyvern / hydra")
+               golden dragon / wyrmhole / wyvern / hydra")
 -- Ranged
   elseif rnd < 93 then
     e.kmons("1 = centaur / yaktaur / cyclops / centaur warrior /\
@@ -549,7 +547,7 @@ local rnd = crawl.random2(142)
     e.kmons("1 = shapeshifter w:5 / glowing shapeshifter w:15 / glowing shapeshifter hd:27")
 -- Uniques
   elseif rnd < 140 then
-    e.kmons("1 = Blork the orc / Crazy Yiuf / Dowan / Duvessa / Edmund / Erica / Erolcha /\
+    e.kmons("1 = Blorkula the orcula / Crazy Yiuf / Dowan / Duvessa / Edmund / Erica / Erolcha /\
                Eustachio / Gastronok / Grum / Grinder / Harold / Ijyb / Jessica /\
                Joseph / Josephine / Maurice / Menkaure / Pikel /\
                Prince Ribbit / Psyche / Pargi / Sigmund / Sonja / Terence / Urug /\
@@ -564,7 +562,7 @@ local rnd = crawl.random2(142)
 -- Holy
   else
     e.kmons("1 = daeva / angel / cherub / pearl dragon / ophan / \
-                 apis")
+                 fravashi / apis")
   end
 end
 
@@ -723,83 +721,84 @@ KFEAT:  x = altar_xom
 KFEAT:  y = altar_yredelemnul
 KFEAT:  z = altar_zin
 KFEAT:  1 = altar_the_shining_one
-KITEM:    B = plate armour mundane ident:all plus:5, \
-              fire dragon scales mundane ident:all plus:5, \
-              ice dragon scales mundane ident:all plus:5, \
-              storm dragon scales mundane ident:all plus:5, \
-              shadow dragon scales mundane ident:all plus:5, \
-              gold dragon scales mundane ident:all plus:5, \
-              crystal plate armour mundane ident:all plus:5
-KITEM:    C = buckler mundane ident:all plus:3, \
-              kite shield mundane ident:all plus:3, \
-              tower shield mundane ident:all plus:3, \
+KITEM:    B = plate armour mundane pre_id plus:5, \
+              fire dragon scales mundane pre_id plus:5, \
+              ice dragon scales mundane pre_id plus:5, \
+              storm dragon scales mundane pre_id plus:5, \
+              shadow dragon scales mundane pre_id plus:5, \
+              golden dragon scales mundane pre_id plus:5, \
+              crystal plate armour mundane pre_id plus:5
+KITEM:    C = buckler mundane pre_id plus:3, \
+              kite shield mundane pre_id plus:3, \
+              tower shield mundane pre_id plus:3, \
               orb ego:guile, \
               orb ego:mayhem
-KITEM:    D = broad axe mundane ident:all plus:5, \
-              battleaxe mundane ident:all plus:5, \
-              executioner's axe mundane ident:all plus:5
-KITEM:    E = demon trident mundane ident:all plus:5, \
-              bardiche mundane ident:all plus:5
-KITEM:    F = demon whip mundane ident:all plus:5, \
-              great mace mundane ident:all plus:5, \
-              giant club mundane ident:all plus:5, \
-              giant spiked club mundane ident:all plus:5
-KITEM:    G = dagger mundane ident:all plus:5, \
-              rapier mundane ident:all plus:5, \
-              quick blade mundane ident:all plus:5
-KITEM:    H = demon blade mundane ident:all plus:5, \
-              double sword mundane ident:all plus:5, \
-              great sword mundane ident:all plus:5, \
-              triple sword mundane ident:all plus:5
-KITEM:    I = lajatang mundane ident:all plus:5
-KITEM:    J = hand cannon mundane ident:all plus:5, \
-              arbalest mundane ident:all plus:5, \
-              triple crossbow mundane ident:all plus:5, \
-              shortbow mundane ident:all plus:5, \
-              orcbow mundane ident:all plus:5, \
-              longbow mundane ident:all plus:5, \
-              sling mundane ident:all plus:5
-KITEM:    K = potion of curing q:9 ident:all, \
-              potion of heal wounds q:9 ident:all, \
-              potion of berserk rage q:2 ident:all, \
-              potion of might q:5 ident:all, \
-              potion of magic q:5 ident:all, \
-              potion of experience q:1 ident:all, \
-              potion of resistance q:4 ident:all, \
-              potion of haste q:5 ident:all, \
-              potion of invisibility q:2 ident:all, \
-              potion of brilliance q:2 ident:all
-KITEM:    L = scroll of blinking q:3 ident:all, \
-              scroll of fear q:2 ident:all, \
-              scroll of identify q:5 ident:all, \
-              scroll of fog q:7 ident:all, \
-              scroll of amnesia q:4 ident:all
-KITEM:    N = any beam wand ident:all charges:7, \
-              wand of iceblast ident:all charges:7, \
-              wand of mindburst ident:all charges:7
-KITEM:    P = ring of strength ident:all plus:6, \
-              ring of strength ident:all plus:6, \
-              ring of intelligence ident:all plus:6, \
-              ring of intelligence ident:all plus:6, \
-              ring of dexterity ident:all plus:6, \
-              ring of dexterity ident:all plus:6, \
-              ring of flight ident:all
-KITEM:    R = obsidian_axe ident:all, \
-              shield_of_the_gong ident:all, \
-              maxwells_patent_armour ident:all, \
-              dark_maul ident:all, \
-              sniper ident:all, \
-              majin-bo ident:all
-KITEM:    T = storm_bow ident:all, \
-              singing_sword ident:all, \
-              mace_of_variability ident:all, \
-              sword_of_power ident:all, \
-              scythe_of_curses ident:all, \
-              sword_of_zonguldrok ident:all, \
-              wyrmbane ident:all, \
-              plutonium_sword ident:all, \
-              devastator ident:all, \
-              firestarter ident:all
+KITEM:    D = broad axe mundane pre_id plus:5, \
+              battleaxe mundane pre_id plus:5, \
+              executioner's axe mundane pre_id plus:5
+KITEM:    E = demon trident mundane pre_id plus:5, \
+              partisan mundane pre_id plus:5, \
+              bardiche mundane pre_id plus:5
+KITEM:    F = demon whip mundane pre_id plus:5, \
+              great mace mundane pre_id plus:5, \
+              giant club mundane pre_id plus:5, \
+              giant spiked club mundane pre_id plus:5
+KITEM:    G = dagger mundane pre_id plus:5, \
+              rapier mundane pre_id plus:5, \
+              quick blade mundane pre_id plus:5
+KITEM:    H = demon blade mundane pre_id plus:5, \
+              double sword mundane pre_id plus:5, \
+              great sword mundane pre_id plus:5, \
+              triple sword mundane pre_id plus:5
+KITEM:    I = lajatang mundane pre_id plus:5
+KITEM:    J = hand cannon mundane pre_id plus:5, \
+              arbalest mundane pre_id plus:5, \
+              triple crossbow mundane pre_id plus:5, \
+              shortbow mundane pre_id plus:5, \
+              orcbow mundane pre_id plus:5, \
+              longbow mundane pre_id plus:5, \
+              sling mundane pre_id plus:5
+KITEM:    K = potion of curing q:9 pre_id, \
+              potion of heal wounds q:9 pre_id, \
+              potion of berserk rage q:2 pre_id, \
+              potion of might q:5 pre_id, \
+              potion of magic q:5 pre_id, \
+              potion of experience q:1 pre_id, \
+              potion of resistance q:4 pre_id, \
+              potion of haste q:5 pre_id, \
+              potion of invisibility q:2 pre_id, \
+              potion of brilliance q:2 pre_id
+KITEM:    L = scroll of blinking q:3 pre_id, \
+              scroll of fear q:2 pre_id, \
+              scroll of identify q:5 pre_id, \
+              scroll of fog q:7 pre_id, \
+              scroll of amnesia q:4 pre_id
+KITEM:    N = any beam wand pre_id charges:7, \
+              wand of iceblast pre_id charges:7, \
+              wand of mindburst pre_id charges:7
+KITEM:    P = ring of strength pre_id plus:6, \
+              ring of strength pre_id plus:6, \
+              ring of intelligence pre_id plus:6, \
+              ring of intelligence pre_id plus:6, \
+              ring of dexterity pre_id plus:6, \
+              ring of dexterity pre_id plus:6, \
+              ring of flight pre_id
+KITEM:    R = obsidian_axe pre_id, \
+              shield_of_the_gong pre_id, \
+              maxwells_patent_armour pre_id, \
+              dark_maul pre_id, \
+              sniper pre_id, \
+              majin-bo pre_id
+KITEM:    T = storm_bow pre_id, \
+              singing_sword pre_id, \
+              mace_of_variability pre_id, \
+              sword_of_power pre_id, \
+              scythe_of_curses pre_id, \
+              sword_of_zonguldrok pre_id, \
+              wyrmbane pre_id, \
+              plutonium_sword pre_id, \
+              devastator pre_id, \
+              firestarter pre_id
 KITEM:    S = beast talisman, maw talisman, blade talisman, serpent talisman
 KFEAT:    ^ = granite_statue
 KFEAT:    & = granite_statue

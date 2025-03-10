@@ -53,8 +53,7 @@ static bool _monster_clone_exists(monster* mons)
 
 static bool _mons_is_illusion_cloneable(monster* mons)
 {
-    return !mons_is_conjured(mons->type)
-           && !mons_is_tentacle_or_tentacle_segment(mons->type)
+    return !mons->is_peripheral()
            && !mons->is_illusion()
            && !_monster_clone_exists(mons);
 }
@@ -97,9 +96,12 @@ static void _mons_summon_monster_illusion(monster* caster,
         foe->props[CLONE_PRIMARY_KEY] = clone_id;
         mons_add_blame(clone,
                        "woven by " + caster->name(DESC_THE));
-        if (!clone->has_ench(ENCH_ABJ))
-            clone->mark_summoned(6, true, MON_SUMM_CLONE);
-        clone->add_ench(ENCH_PHANTOM_MIRROR);
+        if (!clone->has_ench(ENCH_SUMMON_TIMER))
+            clone->mark_summoned(MON_SUMM_CLONE, summ_dur(6), true, true);
+        // If isn't very ambiguous if a monster makes a hostile clone out of a
+        // friendly monster, so don't try to hide it.
+        if (!foe->friendly())
+            clone->add_ench(ENCH_PHANTOM_MIRROR);
         clone->summoner = caster->mid;
 
         // Discard unsuitable enchantments.
@@ -136,7 +138,7 @@ static void _init_player_illusion_properties(monsterentry *me)
     // the effects of their Necromutation form. This was 'important'
     // since Necromutation spell-users presumably also had Dispel
     // Undead available to them, but now...?!
-    if (form_changed_physiology() && me->holiness & MH_UNDEAD)
+    if (form_changes_physiology() && me->holiness & MH_UNDEAD)
         me->holiness = MH_NATURAL;
 }
 
@@ -148,14 +150,36 @@ static enchant_type _player_duration_to_mons_enchantment(duration_type dur)
 {
     switch (dur)
     {
-    case DUR_INVIS:     return ENCH_INVIS;
-    case DUR_CONF:      return ENCH_CONFUSION;
-    case DUR_PARALYSIS: return ENCH_PARALYSIS;
-    case DUR_SLOW:      return ENCH_SLOW;
-    case DUR_HASTE:     return ENCH_HASTE;
-    case DUR_MIGHT:     return ENCH_MIGHT;
-    case DUR_BERSERK:   return ENCH_BERSERK;
-    case DUR_POISONING: return ENCH_POISON;
+    case DUR_BARBS:            return ENCH_BARBS;
+    case DUR_BERSERK:          return ENCH_BERSERK;
+    case DUR_BRILLIANCE:       return ENCH_EMPOWERED_SPELLS;
+    case DUR_BLIND:            return ENCH_BLIND;
+    case DUR_CONF:             return ENCH_CONFUSION;
+    case DUR_CORROSION:        return ENCH_CORROSION;
+    case DUR_DIMENSION_ANCHOR: return ENCH_DIMENSION_ANCHOR;
+    case DUR_FIRE_VULN:        return ENCH_FIRE_VULN;
+    case DUR_FROZEN:           return ENCH_FROZEN;
+    case DUR_HASTE:            return ENCH_HASTE;
+    case DUR_INVIS:            return ENCH_INVIS;
+    case DUR_LOWERED_WL:       return ENCH_LOWERED_WL;
+    case DUR_MIGHT:            return ENCH_MIGHT;
+    case DUR_NO_MOMENTUM:      return ENCH_BOUND;
+    case DUR_PARALYSIS:        return ENCH_PARALYSIS;
+    case DUR_PETRIFYING:       return ENCH_PETRIFYING;
+    case DUR_PETRIFIED:        return ENCH_PETRIFIED;
+    case DUR_POISONING:        return ENCH_POISON;
+    case DUR_POISON_VULN:      return ENCH_POISON_VULN;
+    case DUR_RESISTANCE:       return ENCH_RESISTANCE;
+    case DUR_SAP_MAGIC:        return ENCH_SAP_MAGIC;
+    case DUR_SIGN_OF_RUIN:     return ENCH_SIGN_OF_RUIN;
+    case DUR_SLOW:             return ENCH_SLOW;
+    case DUR_STICKY_FLAME:     return ENCH_STICKY_FLAME;
+    case DUR_SWIFTNESS:        return ENCH_SWIFT;
+    case DUR_TOXIC_RADIANCE:   return ENCH_TOXIC_RADIANCE;
+    case DUR_TROGS_HAND:
+    case DUR_ENLIGHTENED:      return ENCH_STRONG_WILLED;
+    case DUR_VITRIFIED:        return ENCH_VITRIFIED;
+    case DUR_WEAK:             return ENCH_WEAK;
 
     default:            return ENCH_NONE;
     }
@@ -180,23 +204,25 @@ static void _mons_load_player_enchantments(monster* creator, monster* target)
     }
 }
 
-void mons_summon_illusion_from(monster* mons, actor *foe,
-                               spell_type spell_cast, int card_power)
+int mons_summon_illusion_from(monster* mons, actor *foe,
+                              spell_type spell_cast, int card_power, bool xom)
 {
     if (foe->is_player())
     {
-        int abj = 6;
+        int dur = 6;
 
-        if (card_power >= 0)
+        if (xom)
+            dur = 2;
+        else if (card_power >= 0)
         {
           // card effect
-          abj = 2 + random2(card_power);
+          dur = 2 + random2(card_power);
         }
 
         if (monster *clone = create_monster(
                 mgen_data(MONS_PLAYER_ILLUSION, SAME_ATTITUDE(mons),
                           mons->pos(), mons->foe)
-                 .set_summoned(mons, abj, spell_cast)))
+                 .set_summoned(mons, spell_cast, summ_dur(dur))))
         {
             if (card_power >= 0)
                 mpr("Suddenly you stand beside yourself.");
@@ -206,16 +232,22 @@ void mons_summon_illusion_from(monster* mons, actor *foe,
             _init_player_illusion_properties(
                 get_monster_data(MONS_PLAYER_ILLUSION));
             _mons_load_player_enchantments(mons, clone);
-            clone->add_ench(ENCH_PHANTOM_MIRROR);
+
+            return 1;
         }
         else if (card_power >= 0)
+        {
             mpr("You see a puff of smoke.");
+            return 0;
+        }
     }
     else
     {
         monster* mfoe = foe->as_monster();
         _mons_summon_monster_illusion(mons, mfoe);
     }
+
+    return 1;
 }
 
 bool mons_clonable(const monster* mon, bool needs_adjacent)
@@ -226,8 +258,7 @@ bool mons_clonable(const monster* mon, bool needs_adjacent)
     if (mons_is_unique(mon->type)
         || mon->type == MONS_INUGAMI
         || mon->is_named()
-        || mons_is_conjured(mon->type)
-        || mons_is_tentacle_or_tentacle_segment(mon->type))
+        || mon->is_peripheral())
     {
         return false;
     }
@@ -240,7 +271,7 @@ bool mons_clonable(const monster* mon, bool needs_adjacent)
         {
             if (in_bounds(*ai)
                 && !actor_at(*ai)
-                && monster_habitable_grid(mon, env.grid(*ai)))
+                && monster_habitable_grid(mon, *ai))
             {
                 square_found = true;
                 break;
@@ -270,10 +301,11 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious)
  * @param quiet         If true, suppress messages
  * @param obvious       If true, player can see the orig & cloned monster
  * @param mon_att       The attitude to set for the cloned monster
+ * @param place         If set, place it somewhere instead of near the source
  * @return              Returns the cloned monster
  */
 monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
-                    mon_attitude_type mon_att)
+                    mon_attitude_type mon_att, coord_def place)
 {
     // Is there an open slot in env.mons?
     monster* mons = get_free_monster();
@@ -282,18 +314,23 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
     if (!mons)
         return nullptr;
 
-    for (fair_adjacent_iterator ai(orig->pos()); ai; ++ai)
+    if (place.origin())
     {
-        if (in_bounds(*ai)
-            && !actor_at(*ai)
-            && monster_habitable_grid(orig, env.grid(*ai)))
+        for (fair_adjacent_iterator ai(orig->pos()); ai; ++ai)
         {
-            pos = *ai;
+            if (in_bounds(*ai)
+                && !actor_at(*ai)
+                && monster_habitable_grid(orig, *ai))
+            {
+                pos = *ai;
+            }
         }
-    }
 
-    if (!in_bounds(pos))
-        return nullptr;
+        if (!in_bounds(pos))
+            return nullptr;
+    }
+    else
+       pos = place;
 
     ASSERT(!actor_at(pos));
 
@@ -332,6 +369,9 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
     if (mons->has_ench(ENCH_TOUCH_OF_BEOGH))
         mons->del_ench(ENCH_TOUCH_OF_BEOGH);
 
+    if (mons->has_ench(ENCH_VENGEANCE_TARGET))
+        you.duration[DUR_BEOGH_SEEKING_VENGEANCE] += 1;
+
     // Duplicate objects, or unequip them if they can't be duplicated.
     for (mon_inv_iterator ii(*mons); ii; ++ii)
     {
@@ -340,8 +380,7 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
         const int new_index = get_mitm_slot(0);
         if (new_index == NON_ITEM)
         {
-            mons->unequip(env.item[old_index], false, true);
-            mons->inv[ii.slot()] = NON_ITEM;
+            mons->unequip(ii.slot(), false, true);
             continue;
         }
 

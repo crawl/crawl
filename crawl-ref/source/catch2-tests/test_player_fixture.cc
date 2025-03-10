@@ -3,6 +3,7 @@
 #include "end.h"
 #include "game-type.h"
 #include "items.h"
+#include "mutation.h"
 #include "newgame-def.h"
 #include "ng-setup.h"
 #include "player.h"
@@ -36,10 +37,12 @@ MockPlayerYouTestsFixture::MockPlayerYouTestsFixture() {
 
     setup_game(game_choices, false);
 
-    unequip_item(EQ_BODY_ARMOUR);
+    if (item_def* armour = you.body_armour())
+        unequip_item(*armour);
 
     destroy_items_in_player_inventory();
 
+    init_mut_index();
     init_properties();
 }
 
@@ -49,8 +52,9 @@ MockPlayerYouTestsFixture::~MockPlayerYouTestsFixture() {
 
 void destroy_items_in_player_inventory(){
 
-    for (int eq = EQ_MIN_ARMOUR; eq <= EQ_MAX_ARMOUR; ++eq)
-        unequip_item(static_cast<equipment_type>(eq));
+    vector<item_def*> eq = you.equipment.get_slot_items(SLOT_ALL_EQUIPMENT, true);
+    for (item_def* item : eq)
+        unequip_item(*item);
 
     // XXX: This is apparently how you destroy items in inventory?
     for (int i=0; i < ENDOFPACK; i++)

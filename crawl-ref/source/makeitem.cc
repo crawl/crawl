@@ -106,11 +106,6 @@ void item_colour(item_def &item)
     // it in appearance at some point, since sub_type isn't public information
     // for un-id'd items, and therefore can't be used to do a lookup at the
     // time item names/colours are calculated.
-    // it would probably be better to store this at the time that item_def is
-    // generated (get_item_known_info), but that requires some save compat work
-    // (and would be wrong if we ever try to get item colour/names directly...?)
-    // possibly a todo for a later date.
-
     if (auto idesc = map_find(_type_to_idesc, item.base_type))
         item.subtype_rnd = you.item_description[*idesc][item.sub_type];
 }
@@ -327,7 +322,7 @@ bool is_weapon_brand_ok(int type, int brand, bool /*strict*/)
     case SPWPN_PAIN:
     case SPWPN_DISTORTION:
     case SPWPN_SPECTRAL:
-    case SPWPN_REAPING: // only exists on Sword of Zonguldrok
+    case SPWPN_REAPING:
     case SPWPN_FOUL_FLAME: // only exists on Brilliance
         if (is_range_weapon(item))
             return false;
@@ -367,16 +362,22 @@ bool is_weapon_brand_ok(int type, int brand, bool /*strict*/)
     return true;
 }
 
+// Choose a random weapon type compatible with any supplied brand and fixed
+// artprops. If no weapon type is compatible with both of these, use the last
+// chosen type, set no brand, and ignore the fixed artprops.
 static void _roll_weapon_type(item_def& item, int item_level)
 {
     for (int i = 0; i < 1000; ++i)
     {
         item.sub_type = _determine_weapon_subtype(item_level);
-        if (is_weapon_brand_ok(item.sub_type, item.brand, true))
+        if (is_weapon_brand_ok(item.sub_type, item.brand, true)
+            && are_fixed_props_ok(item))
+        {
             return;
+        }
     }
 
-    item.brand = SPWPN_NORMAL; // fall back to no brand
+    item.brand = SPWPN_NORMAL;
 }
 
 /// Plusses for a non-artefact weapon with positive plusses.
@@ -548,7 +549,7 @@ static special_missile_type _determine_missile_brand(const item_def& item,
 
         rc = random_choose_weighted(60, SPMSL_BLINDING,
                                     20, SPMSL_FRENZY,
-                                    20, SPMSL_DISPERSAL,
+                                    20, SPMSL_DISJUNCTION,
                                     pw, SPMSL_POISONED);
         break;
     case MI_JAVELIN:
@@ -591,6 +592,7 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
 #endif
     case SPMSL_FRENZY:
     case SPMSL_DISPERSAL:
+    case SPMSL_DISJUNCTION:
         return type == MI_DART;
 
     case SPMSL_BLINDING:
@@ -720,7 +722,7 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
         // On body armour, an enchantment of less than 0 is never viable.
         // On aux armour & shields, going below -2 is likewise unviable.
         // (You think you're better than the hat of the Alchemist?)
-        if (get_armour_slot(item) == EQ_BODY_ARMOUR)
+        if (get_armour_slot(item) == SLOT_BODY_ARMOUR)
             item.plus = max(static_cast<int>(item.plus), random2(2));
         else
             item.plus = max(static_cast<int>(item.plus), random_range(-2, 1));
@@ -753,7 +755,7 @@ static special_armour_type _generate_armour_ego(const item_def& item)
 
 bool is_armour_brand_ok(int type, int brand, bool strict)
 {
-    equipment_type slot = get_armour_slot((armour_type)type);
+    equipment_slot slot = get_armour_slot((armour_type)type);
 
     // Currently being too restrictive results in asserts, being too
     // permissive will generate such items on "any armour ego:XXX".
@@ -765,7 +767,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
         return true;
 
     case SPARM_FLYING:
-        if (slot == EQ_BODY_ARMOUR)
+        if (slot == SLOT_BODY_ARMOUR)
             return true;
         // deliberate fall-through
 #if TAG_MAJOR_VERSION == 34
@@ -773,10 +775,10 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
     case SPARM_JUMPING:
 #endif
     case SPARM_RAMPAGING:
-        return slot == EQ_BOOTS;
+        return slot == SLOT_BOOTS || slot == SLOT_BARDING;
     case SPARM_STEALTH:
-        return slot == EQ_BOOTS || slot == EQ_CLOAK
-            || slot == EQ_HELMET || slot == EQ_GLOVES;
+        return slot == SLOT_BOOTS || slot == SLOT_BARDING || slot == SLOT_CLOAK
+            || slot == SLOT_HELMET || slot == SLOT_GLOVES;
 
     case SPARM_ARCHMAGI:
         return !strict || type == ARM_ROBE;
@@ -785,19 +787,19 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
         return true;
     case SPARM_PRESERVATION:
 #if TAG_MAJOR_VERSION > 34
-        return slot == EQ_CLOAK;
+        return slot == SLOT_CLOAK;
 #endif
 #if TAG_MAJOR_VERSION == 34
         if (type == ARM_PLATE_ARMOUR && !strict)
             return true;
-        return slot == EQ_CLOAK;
+        return slot == SLOT_CLOAK;
     case SPARM_INVISIBILITY:
-        return (slot == EQ_CLOAK && !strict) || type == ARM_SCARF;
+        return (slot == SLOT_CLOAK && !strict) || type == ARM_SCARF;
 #endif
 
     case SPARM_REFLECTION:
     case SPARM_PROTECTION:
-        return slot == EQ_OFFHAND;
+        return slot == SLOT_OFFHAND;
 
     case SPARM_STRENGTH:
     case SPARM_DEXTERITY:
@@ -806,18 +808,18 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
             return true;
         // deliberate fall-through
     case SPARM_HURLING:
-        return slot == EQ_GLOVES;
+        return slot == SLOT_GLOVES;
 
     case SPARM_SEE_INVISIBLE:
     case SPARM_INTELLIGENCE:
-        return slot == EQ_HELMET;
+        return slot == SLOT_HELMET;
 
     case SPARM_FIRE_RESISTANCE:
     case SPARM_COLD_RESISTANCE:
     case SPARM_RESISTANCE:
         if (type == ARM_FIRE_DRAGON_ARMOUR
             || type == ARM_ICE_DRAGON_ARMOUR
-            || type == ARM_GOLD_DRAGON_ARMOUR)
+            || type == ARM_GOLDEN_DRAGON_ARMOUR)
         {
             return false; // contradictory or redundant
         }
@@ -832,7 +834,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
         if (type == ARM_PEARL_DRAGON_ARMOUR && brand == SPARM_POSITIVE_ENERGY)
             return false; // contradictory or redundant
 
-        return slot == EQ_BODY_ARMOUR || slot == EQ_OFFHAND || slot == EQ_CLOAK
+        return slot == SLOT_BODY_ARMOUR || slot == SLOT_OFFHAND || slot == SLOT_CLOAK
                        || !strict;
 
     case SPARM_SPIRIT_SHIELD:
@@ -842,7 +844,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
                type == ARM_CAP ||
                type == ARM_SCARF ||
 #endif
-               slot == EQ_OFFHAND || !strict;
+               slot == SLOT_OFFHAND || !strict;
 
     case SPARM_REPULSION:
     case SPARM_HARM:
@@ -878,15 +880,15 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
  * @param armour_type   The type of armour being considered.
  * @return              The armour plus value required to be interesting.
  */
-static int _armour_plus_threshold(equipment_type armour_type)
+static int _armour_plus_threshold(equipment_slot armour_type)
 {
     switch (armour_type)
     {
         // body armour is very common; squelch most of it
-        case EQ_BODY_ARMOUR:
+        case SLOT_BODY_ARMOUR:
             return 3;
         // shields are fairly common
-        case EQ_OFFHAND:
+        case SLOT_OFFHAND:
             return 2;
         // aux armour is relatively uncommon
         default:
@@ -932,7 +934,7 @@ static armour_type _get_random_armour_type(int item_level)
         armtype = random_choose(ARM_STEAM_DRAGON_ARMOUR,
                                 ARM_ACID_DRAGON_ARMOUR,
                                 ARM_STORM_DRAGON_ARMOUR,
-                                ARM_GOLD_DRAGON_ARMOUR,
+                                ARM_GOLDEN_DRAGON_ARMOUR,
                                 ARM_SWAMP_DRAGON_ARMOUR,
                                 ARM_PEARL_DRAGON_ARMOUR,
                                 ARM_SHADOW_DRAGON_ARMOUR,
@@ -992,8 +994,11 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
         for (int i = 0; i < 1000; ++i)
         {
             item.sub_type = _get_random_armour_type(item_level);
-            if (is_armour_brand_ok(item.sub_type, item.brand, true))
+            if (is_armour_brand_ok(item.sub_type, item.brand, true)
+                && are_fixed_props_ok(item))
+            {
                 break;
+            }
         }
     }
 
@@ -1334,7 +1339,7 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
         // Set number of bonus skill points.
         item.skill_points = random_range(2000, 3000);
         // Preidentify.
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
+        item.flags |= ISFLAG_IDENTIFIED;
         return; // rare enough without being replaced with randarts
     }
 
@@ -1363,14 +1368,26 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
 
 static stave_type _get_random_stave_type()
 {
-    stave_type r;
-    do
-    {
-        r = static_cast<stave_type>(random2(NUM_STAVES));
-    }
-    while (item_type_removed(OBJ_STAVES, r));
+    static vector<stave_type> valid_types;
+    if (valid_types.empty())
+        for (int i = STAFF_FIRST_STAFF; i < NUM_STAVES; i++)
+            if (!item_type_removed(OBJ_STAVES, (stave_type)i))
+                valid_types.push_back((stave_type)i);
 
-    return r;
+    return *random_iterator(valid_types);
+}
+
+// Choose a random stave type compatible with any fixed artprops. If no stave
+// type is compatible, we use the last chosen type and ignore the fixed
+// artprops.
+static void _roll_stave_type(item_def& item)
+{
+    for (int i = 0; i < 1000; ++i)
+    {
+        item.sub_type = _get_random_stave_type();
+        if (are_fixed_props_ok(item))
+            return;
+    }
 }
 
 static void _try_make_staff_artefact(item_def& item, bool allow_uniques,
@@ -1406,7 +1423,7 @@ static void _generate_staff_item(item_def& item, bool allow_uniques,
                                  int force_type, int item_level, int agent)
 {
     if (force_type == OBJ_RANDOM)
-        item.sub_type = _get_random_stave_type();
+        _roll_stave_type(item);
     else
         item.sub_type = force_type;
 
@@ -1437,6 +1454,26 @@ static void _generate_gem_item(item_def& item, int force_type)
 {
     ASSERT_RANGE(force_type, 0, NUM_GEM_TYPES);
     item.sub_type = force_type;
+}
+
+jewellery_type get_random_amulet_type()
+{
+    static vector<jewellery_type> valid_types;
+    if (valid_types.empty())
+        for (int i = AMU_FIRST_AMULET; i < NUM_JEWELLERY; i++)
+            if (!item_type_removed(OBJ_JEWELLERY, (jewellery_type)i))
+                valid_types.push_back((jewellery_type)i);
+    return *random_iterator(valid_types);
+}
+
+jewellery_type get_random_ring_type()
+{
+    static vector<jewellery_type> valid_types;
+    if (valid_types.empty())
+        for (int i = RING_FIRST_RING; i < NUM_RINGS; i++)
+            if (!item_type_removed(OBJ_JEWELLERY, (jewellery_type)i))
+                valid_types.push_back((jewellery_type)i);
+    return *random_iterator(valid_types);
 }
 
 static bool _try_make_jewellery_unrandart(item_def& item, int force_type,
@@ -1493,6 +1530,33 @@ static short _determine_ring_plus(int subtype)
     return _good_jewellery_plus(subtype);
 }
 
+// Choose a random ring type compatible with any fixed artprops. If no ring
+// type is compatible, we use the last chosen type and ignore the fixed
+// artprops.
+static void _roll_ring_type(item_def& item)
+{
+    for (int i = 0; i < 1000; ++i)
+    {
+        item.sub_type = get_random_ring_type();
+        if (are_fixed_props_ok(item))
+            return;
+    }
+}
+
+// Choose a random amulet type compatible with any fixed artprops. If no amulet
+// type is compatible, we use the last chosen type and ignore the fixed
+// artprops.
+static void _roll_amulet_type(item_def& item)
+{
+    for (int i = 0; i < 1000; ++i)
+    {
+        item.sub_type = get_random_amulet_type();
+        if (are_fixed_props_ok(item))
+            return;
+    }
+
+}
+
 static void _generate_jewellery_item(item_def& item, bool allow_uniques,
                                      int force_type, int item_level,
                                      int agent)
@@ -1504,23 +1568,20 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
     }
 
     // Determine subtype.
-    // Note: removed double probability reduction for some subtypes
     if (force_type != OBJ_RANDOM
+        // These values request a random ring or a random amulet, respectively.
         && force_type != NUM_RINGS
         && force_type != NUM_JEWELLERY)
     {
         item.sub_type = force_type;
     }
-    else
+    else if (force_type == NUM_RINGS
+             || force_type == OBJ_RANDOM && !one_chance_in(4))
     {
-        if (force_type == NUM_RINGS)
-            item.sub_type = get_random_ring_type();
-        else if (force_type == NUM_JEWELLERY)
-            item.sub_type = get_random_amulet_type();
-        else
-            item.sub_type = (one_chance_in(4) ? get_random_amulet_type()
-                                              : get_random_ring_type());
+        _roll_ring_type(item);
     }
+    else
+        _roll_amulet_type(item);
 
     item.plus = _determine_ring_plus(item.sub_type);
 
@@ -1556,6 +1617,9 @@ static const vector<random_pick_entry<talisman_type>> talisman_weights =
     {  8, 20,  25, RISE, TALISMAN_DRAGON },
     { 21, 35,  25, FLAT, TALISMAN_DRAGON },
     {  0, 35,   5, FLAT, TALISMAN_DRAGON },
+    {  8, 20,  25, RISE, TALISMAN_VAMPIRE },
+    { 21, 35,  25, FLAT, TALISMAN_VAMPIRE },
+    {  0, 35,   5, FLAT, TALISMAN_VAMPIRE },
     // tier 3
     { 20, 27,  25, RISE, TALISMAN_DEATH },
     { 28, 35,  25, FLAT, TALISMAN_DEATH },
@@ -1581,19 +1645,30 @@ static int _talisman_level(int item_level)
     }
 }
 
-static int _pick_talisman_type(int force_type, int lvl)
+// Choose a random talisman type compatible with any fixed artprops. If no
+// talisman type is compatible, we use the last chosen type and ignore the
+// fixed artprops.
+static void _roll_talisman_type(item_def &item, int lvl)
 {
-    if (force_type != OBJ_RANDOM)
-        return force_type;
-
     random_picker<talisman_type, NUM_TALISMANS * 3 /*ew*/> picker;
-    return picker.pick(talisman_weights, lvl, NUM_TALISMANS);
+
+    for (int i = 0; i < 1000; ++i)
+    {
+        item.sub_type = picker.pick(talisman_weights, lvl, NUM_TALISMANS);
+        if (are_fixed_props_ok(item))
+            return;
+    }
 }
 
 static void _generate_talisman_item(item_def& item, int force_type, int item_level)
 {
     const int lvl = _talisman_level(item_level);
-    item.sub_type = _pick_talisman_type(force_type, lvl);
+
+    if (force_type != OBJ_RANDOM)
+        item.sub_type = force_type;
+    else
+        _roll_talisman_type(item, lvl);
+
     if (item_level == ISPEC_RANDART || x_chance_in_y(lvl, 270))
         make_item_randart(item);
 }
@@ -1601,23 +1676,19 @@ static void _generate_talisman_item(item_def& item, int force_type, int item_lev
 misc_item_type get_misc_item_type(int force_type, bool exclude)
 {
     if (force_type != OBJ_RANDOM)
-    {
-        if (exclude && you.generated_misc.count((misc_item_type)force_type))
-            return NUM_MISCELLANY;
         return (misc_item_type)force_type;
-    }
+
     set<misc_item_type> choices;
+
     if (exclude)
     {
         choices = {
-            MISC_PHIAL_OF_FLOODS,
+            (misc_item_type)item_for_set(ITEM_SET_CONTROL_MISCELLANY),
             MISC_LIGHTNING_ROD,
             (misc_item_type)item_for_set(ITEM_SET_ALLY_MISCELLANY),
             MISC_PHANTOM_MIRROR,
             (misc_item_type)item_for_set(ITEM_SET_AREA_MISCELLANY)
         };
-        for (auto it : you.generated_misc)
-            choices.erase(it);
     }
     else
     {
@@ -1646,20 +1717,6 @@ static void _generate_misc_item(item_def& item, int force_type, int item_level)
         return;
     }
     item.sub_type = typ;
-    switch (typ)
-    {
-    case MISC_SACK_OF_SPIDERS:
-    case MISC_BOX_OF_BEASTS:
-    case MISC_LIGHTNING_ROD:
-    case MISC_PHIAL_OF_FLOODS:
-    case MISC_PHANTOM_MIRROR:
-    case MISC_TIN_OF_TREMORSTONES:
-    case MISC_CONDENSER_VANE:
-        you.generated_misc.insert(typ);
-        break;
-    default:
-        break;
-    }
 }
 
 /**
@@ -1683,7 +1740,6 @@ static bool _ego_unrand_only(int base_type, int ego)
     {
         switch (static_cast<brand_type>(ego))
         {
-        case SPWPN_REAPING:
         case SPWPN_FOUL_FLAME:
         case SPWPN_ACID:
             return true;
@@ -1988,7 +2044,7 @@ int items(bool allow_uniques,
           && !is_missile_brand_ok(item.sub_type, item.brand, false))
     {
         mprf(MSGCH_ERROR, "Invalid brand on item %s, annulling.",
-            item.name(DESC_PLAIN, false, true, false, false, ISFLAG_KNOW_PLUSES).c_str());
+            item.name(DESC_PLAIN, false, true, false, false).c_str());
         item.brand = 0;
     }
 
@@ -2057,37 +2113,6 @@ static bool _armour_is_visibly_special(const item_def &item)
         return true;
 
     return false;
-}
-
-
-jewellery_type get_random_amulet_type()
-{
-    static vector<jewellery_type> valid_types;
-    if (valid_types.empty())
-        for (int i = AMU_FIRST_AMULET; i < NUM_JEWELLERY; i++)
-            if (!item_type_removed(OBJ_JEWELLERY, (jewellery_type)i))
-                valid_types.push_back((jewellery_type)i);
-    return *random_iterator(valid_types);
-}
-
-static jewellery_type _get_raw_random_ring_type()
-{
-    static vector<jewellery_type> valid_types;
-    if (valid_types.empty())
-        for (int i = RING_FIRST_RING; i < NUM_RINGS; i++)
-            if (!item_type_removed(OBJ_JEWELLERY, (jewellery_type)i))
-                valid_types.push_back((jewellery_type)i);
-    return *random_iterator(valid_types);
-}
-
-jewellery_type get_random_ring_type()
-{
-    const jewellery_type j = _get_raw_random_ring_type();
-    // Adjusted distribution here. - bwr
-    if (j == RING_SLAYING && !one_chance_in(3))
-        return _get_raw_random_ring_type();
-
-    return j;
 }
 
 // Sets item appearance to match brands, if any.

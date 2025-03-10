@@ -1,0 +1,18 @@
+# Wanderers' stats, equipment and skills are randomised. See ng-wanderer.cc.
+enum: JOB_WANDERER
+name: "Wanderer"
+short_name: Wn
+category: Adventurer
+category_priority: 80
+str: 0
+int: 0
+dex: 0
+recommended_species:
+  - mountain dwarf
+  - gnoll
+  - merfolk
+  - draconian
+  - human
+  - demonspawn
+  - barachi
+create_enum: false

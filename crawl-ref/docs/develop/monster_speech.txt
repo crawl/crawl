@@ -259,7 +259,7 @@ description. There are several possible ways this is attempted, in the
 following order:
 
 1. The actual monster name.
-   Examples: "crystal golem", "default confused moth of wrath"
+   Examples: "crystal guardian", "default confused moth of wrath"
 2. The monster genus.
    Examples: If "friendly ogre mage" wasn't found, try "friendly ogre"
              instead. Same for "dragon" if "swamp drake" was

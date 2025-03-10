@@ -25,7 +25,10 @@
 #include "item-prop.h"
 #include "level-state-type.h"
 #include "libutil.h"
+#include "macro.h"
 #include "message.h"
+#include "mon-place.h"
+#include "mutation.h"
 #include "notes.h"
 #include "options.h"
 #include "orb.h"
@@ -347,6 +350,26 @@ bool add_spell_to_memory(spell_type spell)
     if (you.num_turns)
         mprf("Spell assigned to '%c'.", index_to_letter(letter_j));
 
+    // A hint, for those who may not be aware.
+    if (spell == SPELL_SPELLSPARK_SERVITOR)
+    {
+        mprf(MSGCH_TUTORIAL,
+             "(You may use Imbue Servitor from the <w>%s</w>bility menu to change "
+             "which spell your servitor casts.)",
+                command_to_string(CMD_USE_ABILITY).c_str());
+    }
+    else if (spell == SPELL_PLATINUM_PARAGON)
+    {
+        mprf(MSGCH_TUTORIAL,
+             "(You may use Imprint Weapon from the <w>%s</w>bility menu to change "
+             "which weapon your Paragon wields.)",
+                command_to_string(CMD_USE_ABILITY).c_str());
+    }
+    // Give a free charge upon learning this spell for the first time, so the
+    // player can actually use it immediately.
+    else if (spell == SPELL_GRAVE_CLAW)
+        gain_grave_claw_soul(true);
+
     // Swapping with an existing spell.
     if (you.spell_letter_table[letter_j] != -1)
     {
@@ -426,7 +449,7 @@ bool spell_harms_target(spell_type spell)
 {
     const spell_flags flags = _seekspell(spell)->flags;
 
-    if (flags & (spflag::helpful | spflag::neutral))
+    if (flags & (spflag::helpful | spflag::aim_at_space))
         return false;
 
     if (flags & spflag::targeting_mask)
@@ -441,8 +464,12 @@ bool spell_harms_area(spell_type spell)
 {
     const spell_flags flags = _seekspell(spell)->flags;
 
-    if (flags & (spflag::helpful | spflag::neutral))
-        return false;
+    if (flags & (spflag::helpful | spflag::aim_at_space))
+    {
+        // XXX: This is a 'helpful' spell that also does area damage, so monster
+        //      logic should account for this, regarding Sanctuary.
+        return spell == SPELL_PERCUSSIVE_TEMPERING;
+    }
 
     if (flags & spflag::area)
         return true;
@@ -462,7 +489,6 @@ bool spell_is_direct_attack(spell_type spell)
         // spell school exceptions
         if (spell == SPELL_VIOLENT_UNRAVELLING  // hex
             || spell == SPELL_FORCE_LANCE // transloc
-            || spell == SPELL_GRAVITAS
             || spell == SPELL_BLINKBOLT
             || spell == SPELL_BANISHMENT)
         {
@@ -517,10 +543,23 @@ bool spell_is_direct_attack(spell_type spell)
 int spell_mana(spell_type which_spell, bool real_spell)
 {
     const int level = _seekspell(which_spell)->level;
-    if (real_spell && (you.duration[DUR_BRILLIANCE]
-                       || player_equip_unrand(UNRAND_FOLLY)))
+
+    if (real_spell)
     {
-        return level/2 + level%2; // round up
+        if (you.duration[DUR_ENKINDLED] && spell_can_be_enkindled(which_spell))
+            return 0;
+
+        int cost = level;
+        if (you.wearing_ego(OBJ_GIZMOS, SPGIZMO_SPELLMOTOR))
+            cost = max(1, cost - you.rev_tier());
+
+        if (you.has_mutation(MUT_EFFICIENT_MAGIC))
+            cost = max(1, cost - you.get_mutation_level(MUT_EFFICIENT_MAGIC));
+
+        if (you.duration[DUR_BRILLIANCE] || you.unrand_equipped(UNRAND_FOLLY))
+            cost = cost/2 + cost%2; // round up
+
+        return cost;
     }
     return level;
 }
@@ -855,6 +894,8 @@ const char* spelltype_short_name(spschool which_spelltype)
         return "Necr";
     case spschool::summoning:
         return "Summ";
+    case spschool::forgecraft:
+        return "Frge";
     case spschool::translocation:
         return "Tloc";
     case spschool::alchemy:
@@ -886,6 +927,8 @@ const char* spelltype_long_name(spschool which_spelltype)
         return "Necromancy";
     case spschool::summoning:
         return "Summoning";
+    case spschool::forgecraft:
+        return "Forgecraft";
     case spschool::translocation:
         return "Translocation";
     case spschool::alchemy:
@@ -910,6 +953,7 @@ skill_type spell_type2skill(spschool spelltype)
     case spschool::fire:           return SK_FIRE_MAGIC;
     case spschool::ice:            return SK_ICE_MAGIC;
     case spschool::necromancy:     return SK_NECROMANCY;
+    case spschool::forgecraft:     return SK_FORGECRAFT;
     case spschool::summoning:      return SK_SUMMONINGS;
     case spschool::translocation:  return SK_TRANSLOCATIONS;
     case spschool::alchemy:        return SK_ALCHEMY;
@@ -934,6 +978,7 @@ spschool skill2spell_type(skill_type spell_skill)
     case SK_ICE_MAGIC:       return spschool::ice;
     case SK_NECROMANCY:      return spschool::necromancy;
     case SK_SUMMONINGS:      return spschool::summoning;
+    case SK_FORGECRAFT:      return spschool::forgecraft;
     case SK_TRANSLOCATIONS:  return spschool::translocation;
     case SK_ALCHEMY:         return spschool::alchemy;
     case SK_EARTH_MAGIC:     return spschool::earth;
@@ -1015,7 +1060,6 @@ int spell_range(spell_type spell, int pow,
         && vehumet_supports_spell(spell)
         && have_passive(passive_t::spells_range)
         && maxrange > 1
-        && spell != SPELL_HAILSTORM // uses a special system
         && spell != SPELL_THUNDERBOLT) // lightning rod only
     {
         maxrange++;
@@ -1171,6 +1215,17 @@ string casting_uselessness_reason(spell_type spell, bool temp)
     case SPELL_SIMULACRUM:
     case SPELL_INFESTATION:
     case SPELL_TUKIMAS_DANCE:
+    case SPELL_HOARFROST_CANNONADE:
+    case SPELL_SOUL_SPLINTER:
+    case SPELL_CLOCKWORK_BEE:
+    case SPELL_PLATINUM_PARAGON:
+    case SPELL_WALKING_ALEMBIC:
+    case SPELL_MONARCH_BOMB:
+    case SPELL_PHALANX_BEETLE:
+    case SPELL_SPELLSPARK_SERVITOR:
+    case SPELL_FORGE_BLAZEHEART_GOLEM:
+    case SPELL_FORGE_LIGHTNING_SPIRE:
+    case SPELL_AWAKEN_ARMOUR:
         if (you.allies_forbidden())
             return "you cannot coerce anything to obey you.";
         break;
@@ -1298,12 +1353,12 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_OZOCUBUS_ARMOUR:
-        if (temp && player_equip_unrand(UNRAND_SALAMANDER))
+        if (temp && you.unrand_equipped(UNRAND_SALAMANDER))
             return "your ring of flames would instantly melt the ice.";
         break;
 
     case SPELL_SUBLIMATION_OF_BLOOD:
-        if (!you.can_bleed(temp))
+        if (!you.has_blood(temp))
             return "you have no blood to sublime.";
         break;
 
@@ -1321,7 +1376,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "the dungeon can only cope with one malign gateway"
                     " at a time.";
         }
-        if (temp && cast_malign_gateway(&you, 0, GOD_NO_GOD, false, true)
+        if (temp && cast_malign_gateway(&you, 0, false, true)
                     == spret::abort)
         {
             return "you need more open space to create a gateway.";
@@ -1331,7 +1386,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_SUMMON_FOREST:
         if (temp && you.duration[DUR_FORESTED])
             return "you can only summon one forest at a time.";
-        if (temp && cast_summon_forest(&you, 0, GOD_NO_GOD, false, true) == spret::abort)
+        if (temp && cast_summon_forest(&you, 0, false, true) == spret::abort)
             return "you need more open space to fit a forest.";
         break;
 
@@ -1357,18 +1412,12 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
 
     case SPELL_DEATH_CHANNEL:
         if (temp && you.duration[DUR_DEATH_CHANNEL])
-            return "you are already channeling the dead.";
+            return "you are already channelling the dead.";
         if (have_passive(passive_t::reaping))
             return "you are already reaping souls!";
         break;
 
-    case SPELL_ROT:
-        {
-            const mon_holy_type holiness = you.holiness(temp, false);
-            if (holiness != MH_NATURAL && holiness != MH_UNDEAD)
-                return "you have no flesh to rot.";
-        }
-        // fallthrough to cloud spells
+    case SPELL_PUTREFACTION:
     case SPELL_BLASTMOTE:
     case SPELL_POISONOUS_CLOUD:
     case SPELL_FREEZING_CLOUD:
@@ -1403,10 +1452,10 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you cannot sustain more bogs right now.";
         break;
 
-    case SPELL_ANIMATE_ARMOUR:
-        if (!you_can_wear(EQ_BODY_ARMOUR, temp))
+    case SPELL_AWAKEN_ARMOUR:
+        if (!you_can_wear(SLOT_BODY_ARMOUR, temp))
             return "you cannot wear body armour.";
-        if (temp && !you.slot_item(EQ_BODY_ARMOUR))
+        if (temp && !you.body_armour())
             return "you have no body armour to summon the spirit of.";
         break;
 
@@ -1422,6 +1471,20 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_MOMENTUM_STRIKE:
         if (temp && !you.is_motile())
             return "you cannot redirect your momentum while unable to move.";
+        break;
+
+    case SPELL_PILEDRIVER:
+        if (you.stasis())
+            return "your stasis prevents you from launching yourself.";
+        if (temp)
+        {
+            if (!you.is_motile())
+                return "you cannot launch yourself while unable to move.";
+            if (you.no_tele(true))
+                return lowercase_first(you.no_tele_reason(true));
+            if (!piledriver_target_exists())
+                return "you cannot see anything nearby that you can launch.";
+        }
         break;
 
     case SPELL_ELECTRIC_CHARGE:
@@ -1447,6 +1510,79 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_CALL_CANINE_FAMILIAR:
         if (temp && you.duration[DUR_CANINE_FAMILIAR_DEAD])
             return "your canine familiar is too injured to answer your call.";
+        break;
+
+    case SPELL_GELLS_GAVOTTE:
+        if (temp && you.duration[DUR_GAVOTTE_COOLDOWN])
+            return "local gravity is still too unstable to reorient.";
+        break;
+
+    case SPELL_FULSOME_FUSILLADE:
+        if (temp && you.duration[DUR_FUSILLADE])
+            return "you are already unleashing a barrage of alchemical concoctions!";
+        break;
+
+    case SPELL_HELLFIRE_MORTAR:
+        if (temp && count_summons(&you, SPELL_HELLFIRE_MORTAR) > 0)
+            return "you already have an active mortar!";
+        break;
+
+    case SPELL_STARBURST:
+        if (temp && you.current_vision == 0)
+            return "you cannot see far enough to hit anything with this spell.";
+        break;
+
+    case SPELL_GRAVE_CLAW:
+        if (temp && you.props[GRAVE_CLAW_CHARGES_KEY].get_int() == 0)
+            return "you must harvest more living souls to recharge this spell.";
+        break;
+
+    case SPELL_SPIKE_LAUNCHER:
+    {
+        if (!temp)
+            break;
+
+        for (adjacent_iterator ai(you.pos()); ai; ++ai)
+            if (feat_is_wall(env.grid(*ai)))
+                return "";
+
+        return "there are no nearby walls to construct a spike launcher in.";
+    }
+
+    case SPELL_DIAMOND_SAWBLADES:
+        if (temp && diamond_sawblade_spots(false).empty())
+            return "there is no room to construct a sawblade.";
+        break;
+
+    case SPELL_SURPRISING_CROCODILE:
+        if (temp)
+        {
+            if (!monster_habitable_grid(MONS_CROCODILE, you.pos()))
+                return "a crocodile could not survive beneath you.";
+            else if (count_summons(&you, SPELL_SURPRISING_CROCODILE))
+                return "your pet crocodile is still here.";
+        }
+        break;
+
+    case SPELL_PLATINUM_PARAGON:
+        if (temp)
+        {
+            if (!you.props.exists(PARAGON_WEAPON_KEY))
+            {
+                return "you must imprint a weapon on your paragon first! "
+                       "(Use the Imprint Weapon ability)";
+            }
+
+            monster* paragon = find_player_paragon();
+            if (paragon && paragon_charge_level(*paragon) == 0)
+                return "your paragon is already deployed, but not yet charged.";
+        }
+        break;
+
+    case SPELL_FORTRESS_BLAST:
+        if (temp && you.duration[DUR_FORTRESS_BLAST_TIMER])
+            return "you are already charging a Fortress Blast.";
+        break;
 
     default:
         break;
@@ -1505,17 +1641,21 @@ bool spell_no_hostile_in_range(spell_type spell)
     // case SPELL_LRD: // TODO: LRD logic here is a bit confusing, it should error
     //                 // now that it doesn't destroy walls
     case SPELL_FULMINANT_PRISM:
-    case SPELL_SUMMON_LIGHTNING_SPIRE:
+    case SPELL_FORGE_LIGHTNING_SPIRE:
     case SPELL_NOXIOUS_BOG:
     case SPELL_BOULDER:
+    case SPELL_GELLS_GAVOTTE:
+    case SPELL_PLATINUM_PARAGON:
+    case SPELL_SPLINTERFROST_SHELL:
     // This can always potentially hit out-of-LOS, although this is conditional
     // on spell-power.
     case SPELL_FIRE_STORM:
         return false;
 
-    case SPELL_OLGREBS_TOXIC_RADIANCE:
     case SPELL_IGNITION:
     case SPELL_FROZEN_RAMPARTS:
+    case SPELL_FULSOME_FUSILLADE:
+    case SPELL_HELLFIRE_MORTAR:
         return minRange > you.current_vision;
 
     // Special handling for cloud spells.
@@ -1545,6 +1685,9 @@ bool spell_no_hostile_in_range(spell_type spell)
         return true;
     }
 
+    case SPELL_OLGREBS_TOXIC_RADIANCE:
+        return cast_toxic_radiance(&you, pow, false, true) == spret::abort;
+
     case SPELL_IGNITE_POISON:
         return cast_ignite_poison(&you, -1, false, true) == spret::abort;
 
@@ -1555,7 +1698,7 @@ bool spell_no_hostile_in_range(spell_type spell)
         return cast_hailstorm(-1, false, true) == spret::abort;
 
     case SPELL_DAZZLING_FLASH:
-        return cast_dazzling_flash(pow, false, true) == spret::abort;
+        return cast_dazzling_flash(&you, pow, false, true) == spret::abort;
 
      case SPELL_MAXWELLS_COUPLING:
          return cast_maxwells_coupling(pow, false, true) == spret::abort;
@@ -1588,11 +1731,6 @@ bool spell_no_hostile_in_range(spell_type spell)
         }
         return true;
 
-    // Check slightly beyond our target range, in case someone wants to catch
-    // something in the AoE at the edge of range.
-    case SPELL_MERCURY_VAPOURS:
-        return find_near_hostiles(range + 1, false, you).empty();
-
     case SPELL_SCORCH:
         return find_near_hostiles(range, false, you).empty();
 
@@ -1613,7 +1751,7 @@ bool spell_no_hostile_in_range(spell_type spell)
         return true; // TODO
 
     case SPELL_PERMAFROST_ERUPTION:
-        return permafrost_targets(you, pow).empty();
+        return permafrost_targets(you, pow, false).empty();
 
     default:
         break;
@@ -1631,8 +1769,7 @@ bool spell_no_hostile_in_range(spell_type spell)
     // For choosing default targets and prompting we don't treat Inner Flame as
     // neutral, since the seeping flames trigger conducts and harm the monster
     // before it explodes.
-    const bool allow_friends = testbits(flags, spflag::neutral)
-                               || spell == SPELL_INNER_FLAME;
+    const bool allow_friends = spell == SPELL_INNER_FLAME;
 
     bolt beam;
     beam.flavour = BEAM_VISUAL;
@@ -1723,7 +1860,6 @@ bool spell_no_hostile_in_range(spell_type spell)
     return false;
 }
 
-
 // a map of schools to the corresponding sacrifice 'mutations'.
 static const mutation_type arcana_sacrifice_map[] = {
     MUT_NO_CONJURATION_MAGIC,
@@ -1735,7 +1871,8 @@ static const mutation_type arcana_sacrifice_map[] = {
     MUT_NO_TRANSLOCATION_MAGIC,
     MUT_NO_ALCHEMY_MAGIC,
     MUT_NO_EARTH_MAGIC,
-    MUT_NO_AIR_MAGIC
+    MUT_NO_AIR_MAGIC,
+    MUT_NO_FORGECRAFT_MAGIC,
 };
 
 /**
@@ -1795,23 +1932,54 @@ const vector<spell_type> *soh_breath_spells(spell_type spell)
     static const map<spell_type, vector<spell_type>> soh_breaths = {
         { SPELL_SERPENT_OF_HELL_GEH_BREATH,
             { SPELL_FIRE_BREATH,
-              SPELL_FLAMING_CLOUD,
+              SPELL_BOLT_OF_MAGMA,
               SPELL_FIREBALL } },
         { SPELL_SERPENT_OF_HELL_COC_BREATH,
             { SPELL_COLD_BREATH,
               SPELL_FREEZING_CLOUD,
               SPELL_FLASH_FREEZE } },
         { SPELL_SERPENT_OF_HELL_DIS_BREATH,
-            { SPELL_METAL_SPLINTERS,
+            { SPELL_IRON_SHOT,
               SPELL_QUICKSILVER_BOLT,
-              SPELL_LEHUDIBS_CRYSTAL_SPEAR } },
-        { SPELL_SERPENT_OF_HELL_TAR_BREATH,
-            { SPELL_BOLT_OF_DRAINING,
-              SPELL_MIASMA_BREATH,
               SPELL_CORROSIVE_BOLT } },
+        { SPELL_SERPENT_OF_HELL_TAR_BREATH,
+            { SPELL_GHOSTLY_FIREBALL,
+              SPELL_MIASMA_BREATH,
+              SPELL_POISON_ARROW } },
     };
 
     return map_find(soh_breaths, spell);
+}
+
+bool spell_has_variable_range(spell_type spell)
+{
+    return spell_range(spell, 0, false)
+            != spell_range(spell, spell_power_cap(spell), false);
+}
+
+bool spell_can_be_enkindled(spell_type spell)
+{
+    switch (spell)
+    {
+        // Veh-supported spells that aren't actually blasty.
+        case SPELL_BATTLESPHERE:
+        case SPELL_SPELLSPARK_SERVITOR:
+        case SPELL_MEPHITIC_CLOUD:
+            return false;
+
+        // Non-Veh-supported spells (for reasons of Kiku overlap) that are still
+        // sufficiently destructive for revenants.
+        case SPELL_GRAVE_CLAW:
+        case SPELL_VAMPIRIC_DRAINING:
+        case SPELL_BORGNJORS_VILE_CLUTCH:
+        case SPELL_PUTREFACTION:
+        case SPELL_DISPEL_UNDEAD:
+            return true;
+
+        // Everything else uses the standard destructive list.
+        default:
+            return vehumet_supports_spell(spell);
+    }
 }
 
 /* How to regenerate this:
@@ -1823,39 +1991,53 @@ const vector<spell_type> *soh_breath_spells(spell_type spell)
 const set<spell_type> removed_spells =
 {
 #if TAG_MAJOR_VERSION == 34
+    SPELL_ANIMATE_SKELETON,
     SPELL_AURA_OF_ABJURATION,
+    SPELL_AWAKEN_EARTH,
+    SPELL_BEASTLY_APPENDAGE,
+    SPELL_BLADE_HANDS,
     SPELL_BOLT_OF_INACCURACY,
     SPELL_CHANT_FIRE_STORM,
     SPELL_CIGOTUVIS_DEGENERATION,
     SPELL_CIGOTUVIS_EMBRACE,
+    SPELL_CLOUD_CONE,
     SPELL_CONDENSATION_SHIELD,
+    SPELL_CONJURE_FLAME,
     SPELL_CONTROLLED_BLINK,
     SPELL_CONTROL_TELEPORT,
     SPELL_CONTROL_UNDEAD,
     SPELL_CONTROL_WINDS,
+    SPELL_CORPSE_ROT,
     SPELL_CORRUPT_BODY,
     SPELL_CURE_POISON,
+    SPELL_DARKNESS,
     SPELL_DEFLECT_MISSILES,
     SPELL_DELAYED_FIREBALL,
     SPELL_DEMONIC_HORDE,
     SPELL_DRACONIAN_BREATH,
+    SPELL_DRAGON_FORM,
     SPELL_EPHEMERAL_INFUSION,
     SPELL_EVAPORATE,
+    SPELL_EXCRUCIATING_WOUNDS,
     SPELL_EXPLOSIVE_BOLT,
     SPELL_FAKE_RAKSHASA_SUMMON,
     SPELL_FIRE_BRAND,
     SPELL_FIRE_CLOUD,
+    SPELL_FLAME_TONGUE,
     SPELL_FLY,
     SPELL_FORCEFUL_DISMISSAL,
     SPELL_FREEZING_AURA,
     SPELL_FRENZY,
     SPELL_FULSOME_DISTILLATION,
+    SPELL_GOAD_BEASTS,
     SPELL_GRAND_AVATAR,
     SPELL_HASTE_PLANTS,
     SPELL_HOLY_LIGHT,
     SPELL_HOLY_WORD,
     SPELL_HOMUNCULUS,
     SPELL_HUNTING_CRY,
+    SPELL_HYDRA_FORM,
+    SPELL_ICE_FORM,
     SPELL_IGNITE_POISON_SINGLE,
     SPELL_INFUSION,
     SPELL_INSULATION,
@@ -1864,15 +2046,18 @@ const set<spell_type> removed_spells =
     SPELL_MELEE,
     SPELL_MIASMA_CLOUD,
     SPELL_MISLEAD,
+    SPELL_NECROMUTATION,
     SPELL_PHASE_SHIFT,
     SPELL_POISON_CLOUD,
     SPELL_POISON_WEAPON,
     SPELL_RANDOM_BOLT,
+    SPELL_RANDOM_EFFECTS,
     SPELL_REARRANGE_PIECES,
     SPELL_RECALL,
     SPELL_REGENERATION,
     SPELL_RESURRECT,
     SPELL_RING_OF_FLAMES,
+    SPELL_RING_OF_THUNDER,
     SPELL_SACRIFICE,
     SPELL_SCATTERSHOT,
     SPELL_SEE_INVISIBLE,
@@ -1883,8 +2068,11 @@ const set<spell_type> removed_spells =
     SPELL_SINGULARITY,
     SPELL_SONG_OF_SHIELDING,
     SPELL_SPECTRAL_WEAPON,
+    SPELL_SPIDER_FORM,
+    SPELL_STATUE_FORM,
     SPELL_STEAM_CLOUD,
     SPELL_STONESKIN,
+    SPELL_STORM_FORM,
     SPELL_STRIKING,
     SPELL_SUMMON_BUTTERFLIES,
     SPELL_SUMMON_ELEMENTAL,
@@ -1893,33 +2081,14 @@ const set<spell_type> removed_spells =
     SPELL_SUMMON_TWISTER,
     SPELL_SUNRAY,
     SPELL_SURE_BLADE,
+    SPELL_TELEPORT_SELF,
     SPELL_THROW,
     SPELL_TOMB_OF_DOROKLOHE,
+    SPELL_TWISTED_RESURRECTION,
     SPELL_VAMPIRE_SUMMON,
+    SPELL_VORTEX,
     SPELL_WARP_BRAND,
     SPELL_WEAVE_SHADOWS,
-    SPELL_DARKNESS,
-    SPELL_CLOUD_CONE,
-    SPELL_RING_OF_THUNDER,
-    SPELL_TWISTED_RESURRECTION,
-    SPELL_RANDOM_EFFECTS,
-    SPELL_HYDRA_FORM,
-    SPELL_VORTEX,
-    SPELL_GOAD_BEASTS,
-    SPELL_TELEPORT_SELF,
-    SPELL_EXCRUCIATING_WOUNDS,
-    SPELL_CONJURE_FLAME,
-    SPELL_CORPSE_ROT,
-    SPELL_FLAME_TONGUE,
-    SPELL_BEASTLY_APPENDAGE,
-    SPELL_SPIDER_FORM,
-    SPELL_ICE_FORM,
-    SPELL_BLADE_HANDS,
-    SPELL_STATUE_FORM,
-    SPELL_STORM_FORM,
-    SPELL_DRAGON_FORM,
-    SPELL_NECROMUTATION,
-    SPELL_AWAKEN_EARTH,
 #endif
 };
 
@@ -1945,10 +2114,3 @@ bool spell_was_form(spell_type spell)
     return form_spells.count(spell);
 }
 #endif
-
-void end_wait_spells(bool quiet)
-{
-    end_searing_ray(you);
-    end_maxwells_coupling(quiet);
-    end_flame_wave();
-}

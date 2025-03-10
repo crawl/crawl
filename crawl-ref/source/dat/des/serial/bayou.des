@@ -6,60 +6,37 @@
 # A Bayou level has a 'swampy' atmosphere (because everybody loves Swamp) by
 # placing a large number of ponds and lakes with thick vegetation.
 
+{{
+function bayou_setup(e, large)
+    e.tags('serial_bayou')
+    if large == nil then
+       e.tags('extra decor')
+    end
+    if you.in_branch("Snake") then
+       e.weight('6')
+    end
+    e.kmons('12 = plant')
+end
+}}
+
+default-depth: D, Lair, Snake, Depths
+
 NAME:   serial_bayou
-TAGS:   allow_dup extra luniq_serial decor nolayout_encompass
-DEPTH:  D, Depths, Snake, Lair
+TAGS:   allow_dup extra luniq_serial decor
+TAGS:   nolayout_encompass luniq_snakedec_liquid
 CHANCE: 1%
 {{
   local c = 4 + crawl.random2(3)*crawl.random2(2)
   hook("post_place", function()
-    dgn.place_maps{tag="coolio_serial_bayou", count=c}
+    dgn.place_maps{tag="serial_bayou", count=c}
   end)
 }}
 
-NAME:   serial_bayou_pond_a
-TAGS:   coolio_serial_bayou allow_dup extra decor
-DEPTH:  D, Depths, Snake, Lair
-MONS:   plant
-SUBST:  ? = .WW2
-SUBST:  1 = 11.t
-SUBST:  2 = t
-MAP
-    1..1..1
-   1..1??....1
- .1..??2W?...1
-1..1?2WWWW1.1
-...??WWWW?..1
-.1.?WW2W?.11
- ..1??W?..1
-   ..11..1
-ENDMAP
-
-NAME:   serial_bayou_pond_b
-TAGS:   coolio_serial_bayou allow_dup extra decor
-DEPTH:  D, Depths, Snake, Lair
-MONS:   plant
-SUBST:  ? = .WW21
-SUBST:  1 = 11.t
-MAP
-  ..1..11..
-..1?W?W?WW1
-.1WW?W?W??..
-1W?WWwwwW?W1
-.WW?wwww?W?1
-1WW?WW?WW?1.
-.1WW?WW?WW..
-. 1 .1..1 .
-ENDMAP
-
 NAME:   serial_bayou_pond_c
-TAGS:   coolio_serial_bayou allow_dup extra decor
-DEPTH:  D, Depths, Snake, Lair
-MONS:   plant
-SUBST:  ? = WWtt2
-SUBST:  . = ..W12
-KMONS:  2 = plant
+TAGS:   allow_dup
 KFEAT:  2 = W
+SUBST:  ? = WWtt2, . = ..W12
+: bayou_setup(_G)
 MAP
        1
     ..1W
@@ -75,12 +52,10 @@ MAP
 ENDMAP
 
 NAME:   serial_bayou_pond_d
-TAGS:  coolio_serial_bayou allow_dup extra decor
-DEPTH:  D, Depths, Snake, Lair
-SUBST:  1 = 1W.
-SUBST:  W = WWWt
-KMONS:  1 = plant
+TAGS:   allow_dup
 KFEAT:  1 = W
+SUBST:  1 = 1W., W = WWWt
+: bayou_setup(_G)
 MAP
  11
  WWW1
@@ -89,12 +64,10 @@ MAP
 ENDMAP
 
 NAME:  serial_bayou_pond_e
-TAGS:  coolio_serial_bayou allow_dup extra decor
-DEPTH: D, Depths, Snake, Lair
-SUBST: W = WWW1.
-SUBST: . = ..t
-KMONS: 1 = plant
+TAGS:  allow_dup
 KFEAT: 1 = W
+SUBST: W = WWW1., . = ..t
+: bayou_setup(_G)
 MAP
 .WWW.
 WWWWW
@@ -102,14 +75,10 @@ WWWWW
 ENDMAP
 
 NAME:  serial_bayou_ford_a
-TAGS:  coolio_serial_bayou transparent extra decor
-DEPTH: D, Depths, Snake, Lair
-SUBST: ? = Wt
-SUBST: V = Www
-SUBST: W = WWWW1
-SUBST: ! = W..
-KMONS: 1 = plant
+TAGS:  transparent
 KFEAT: 1 = W
+SUBST: ? = Wt, V = Www, W = WWWW1, ! = W..
+: bayou_setup(_G)
 MAP
        ttttt
       tttttttt
@@ -129,15 +98,12 @@ MAP
 ENDMAP
 
 NAME:   serial_bayou_shore_a
-TAGS:   coolio_serial_bayou extra decor transparent
-DEPTH:  D, Snake, Lair
+TAGS:   transparent allow_dup
+DEPTH:  D, Lair, Snake
 ORIENT: east
-SUBST:  ? = Wt
-SUBST:  V = Www
-SUBST:  W = WWW1
-SUBST:  ! = W1..
-KMONS:  1 = plant
 KFEAT:  1 = W
+SUBST:  ? = Wt, V = Www, W = WWW1, ! = W1..
+: bayou_setup(_G, true)
 MAP
  @@      ttttxxxxxx
 @..WWWWWWWWttttxxxx
@@ -155,15 +121,12 @@ MAP
 ENDMAP
 
 NAME:   serial_bayou_shore_b
-TAGS:   coolio_serial_bayou allow_dup extra decor transparent
+TAGS:   transparent allow_dup
+DEPTH:  D, Lair, Snake
 ORIENT: east
-DEPTH:  D, Depths, Snake, Lair
-SUBST:  ? = Wt
-SUBST:  V = Www
-SUBST:  W = WWW1
-SUBST:  ! = W1..
-KMONS:  1 = plant
 KFEAT:  1 = W
+SUBST:  ? = Wt,  V = Www, W = WWW1, ! = W1..
+: bayou_setup(_G)
 MAP
   ???xxx
 @.!W??xx
@@ -175,12 +138,10 @@ MAP
 ENDMAP
 
 NAME:   serial_bayou_lagoon_a
-TAGS:   coolio_serial_bayou transparent extra decor
-DEPTH:  D, Depths, Snake, Lair
-SUBST:  ? = W11.
-SUBST:  w = wwt
-KMONS:  1 = plant
+TAGS:   transparent
 KFEAT:  1 = W
+SUBST:  ? = W11., w = wwt
+: bayou_setup(_G)
 MAP
 ?????????
 ?WWt1W11???
@@ -200,14 +161,11 @@ MAP
 ENDMAP
 
 NAME:  serial_bayou_lagoon_b
-#a big lagoon with a bridge thingy going through it
-TAGS:  coolio_serial_bayou
-DEPTH: D, Depths, Snake, Lair
-KMONS: 1 = plant
 KFEAT: 1 = W
 SUBST: ? = Wt, ! = !t, V = Www, W = WWWW1
 FTILE: . = floor_dirt
 CLEAR: !
+: bayou_setup(_G, true)
 MAP
    ?????     ???
   ?WWWWW?!!??ttt?
@@ -233,12 +191,11 @@ MAP
 ENDMAP
 
 NAME:   serial_bayou_lake_a
-TAGS:   coolio_serial_bayou transparent
-DEPTH:  D, Depths, Snake, Lair
-KMONS:  1 = plant
+TAGS:   transparent
 KFEAT:  1 = W
 NSUBST: ! = 1:@ / * = @tt
 SUBST:  ? = Wt, V = Www, W = WWWW1
+: bayou_setup(_G, true)
 MAP
           !!!!!!!!!
       !!!!???????????!!
@@ -258,12 +215,10 @@ MAP
 ENDMAP
 
 NAME:  serial_bayou_crossing
-TAGS:  coolio_serial_bayou transparent
-DEPTH: D, Depths, Snake, Lair
-SUBST: ? = W1tt
-SUBST: W = WWW.
-KMONS: 1 = plant
+TAGS:  transparent
+SUBST: ? = W1tt, W = WWW.
 KFEAT: 1 = W
+: bayou_setup(_G)
 MAP
     t?@?t
     t?W?tt
