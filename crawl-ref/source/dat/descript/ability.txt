@@ -64,24 +64,6 @@ Uses your peerless coglin ingenuity to invent and assemble a one-of-a-kind
 piece of equipment and permanently install it in yourself. Such inspiration
 does not strike twice, so choose wisely.
 %%%%
-Bat Form ability
-
-Transforms the user into a swift-moving vampire bat, increasing evasion but
-substantially weakening melee attacks. The transformation drains the user's
-attributes.
-
-While transformed, any equipped weapons, armour and rings are melded, and the
-user becomes unable to cast spells.
-%%%%
-Exsanguinate ability
-
-Remove all of your blood, transitioning to a bloodless state.
-%%%%
-Revivify ability
-
-Return to life, transitioning from bloodless to alive. This process renders
-the user temporarily frail.
-%%%%
 Hurl Damnation ability
 
 Blasts a targeted enemy with damnation. These unholy forces harm the victim and
@@ -133,10 +115,6 @@ Turns the user invisible. Turning invisible in this way causes magical
 contamination. Reaching high levels of contamination will cause you to glow
 brightly, nullifying the invisibility.
 %%%%
-Evoke Thunderclouds ability
-
-Creates a mighty thundercloud surrounding the user.
-%%%%
 End Transformation ability
 
 Reverts you to your normal form.
@@ -145,6 +123,64 @@ Begin Untransformation ability
 
 Begins to transform you back into your native form. A short period of
 concentration is required.
+%%%%
+Imbue Servitor ability
+
+Chooses one of the caster's destructive spells to grant to Spellspark Servitors
+they create in the future, replacing any spell granted to them previously. The
+caster must be capable of casting this spell themselves with a failure rate of
+no more than 20%.
+
+Note: imbuing a spell in this manner will take several turns and also dismiss
+your servitor if it is active.
+%%%%
+Imprint Weapon ability
+
+Analyzes the structural composition of an artefact melee weapon in your
+inventory and imprints it upon your Platinum Paragon spell, allowing it to wield
+a functional replica of it whenever you create one.
+%%%%
+Cacophony ability
+
+Fully manifests your poltergeist nature, making all the armour you are haunting
+fly out and attack independently of your other actions for a short while - boots
+and scarves and helmets assailing your foes from all directions while a gleeful
+din fills the air.
+
+These items are still tethered to you and cannot be directed more than a short
+distance away, but you do not share any damage they suffer and can freely fire
+through them. Their attacks may inflict a variety of minor maladies on your
+foes - sometimes dazing, draining, or even confusing them.
+
+After using this ability, you must gain experience points before you can recover
+enough power to use it again.
+%%%%
+Bat Swarm ability
+
+Scatters your physical form into a swarm of vampire bats, melding your equipment
+but allowing you to move quickly and evasively. The number of bats that issue
+from your body is so immense that it even fills nearby spaces like a choking
+cloud, assailing enemies and gradually putting them to sleep.
+
+After using this ability, you must gain experience points before you can recover
+enough power to use it again.
+%%%%
+Enkindle ability
+
+Stokes your ghostly flames to a fever pitch, greatly enhancing your spellcasting
+at the cost of burning away all accumulated memories.
+
+While in this state, your damage-dealing spells cost no MP, are unaffected by
+encumbrance, and you receive a bonus to their spell success and power (the
+latter of which increases with your experience level). Any spellclaw attack made
+while Enkindled inflicts bonus damage proportional to the level of spell cast,
+and heals you for a percentage of the damage dealt.
+
+Each spell you cast while Enkindled consumes a memory, and the state will end
+once you have no more left (or after a short period of time, regardless).
+
+At your current experience level, you can hold enough memories to cast a maximum
+of {{return 3 + math.floor(you.xl() * 3 / 20);}} spells in a row this way.
 %%%%
 # Zin
 Recite ability
@@ -164,7 +200,7 @@ Vitalisation ability
 Temporarily provides protection from poison, confusion, petrification, and
 sickness, as well as the effects of clouds of foul pestilence. Your strength,
 intelligence and dexterity are also temporarily increased by a degree dependent
-on Invocations skill, and cannot be drained while the effect is active.
+on Invocations skill.
 %%%%
 Imprison ability
 
@@ -184,10 +220,14 @@ Cures all your mutations — but only once.
 # The Shining One
 Divine Shield ability
 
-Grants a temporary divine shield. Because it is held aloft by the Shining One's
-power, it does not interfere with your equipment, but it functions otherwise as
-a normal, physical shield. The strength and duration of the shield are increased
-by Invocations skill.
+Manifests a blindingly bright shield in front of the user. Held aloft by the
+Shining One's power, it will unerringly block the next several attacks which
+could be blocked by a mundane shield. Ranged attacks will be reflected and melee
+attackers have a chance of being briefly blinded by the resulting flash of
+light.
+
+This shield will block only a limited number of attacks before vanishing, with
+Invocations skill increasing how many.
 %%%%
 Cleansing Flame ability
 
@@ -213,11 +253,9 @@ Bring forth those near death from Kikubaaqudgha's necropolis, providing ample
 fodder for all kinds of necromancy. Their number and quality is dependent on
 Necromancy skill.
 %%%%
-Torment ability
+Sign of Ruin ability
 
-Call out to the dead, making all living creatures in sight experience all the
-pain some poor soul suffered in its entire life. This damage is never directly
-lethal. Kikubaaqudgha will always at least partially shield you from the effect.
+[[Sign of Ruin spell]]
 %%%%
 Brand Weapon With Pain ability
 
@@ -241,28 +279,28 @@ surroundings.
 %%%%
 Light the Black Torch ability
 
-Raises the Black Torch aloft and calls upon Yredelemnul to light it aflame.
-Those who have already earned the god's favour will be gifted temporary undead
-servants to help begin their conquest, with stronger servants being provided to
-the experienced and especially pious.
+Raises the Black Torch aloft and calls upon Yredelemnul to light it aflame,
+marking the beginning of your attempt to conquer the current level of the
+dungeon. Yredelemnul only grants piety for kills made while the torch is lit.
 
-Yredelemnul wishes for their worshippers to pour across the land as an endless
-despoiling tide, and so you will only earn piety for kills made while their
-symbol is lit; its flame will be taken from you the next time you leave the
-floor. They also do not offer second chances - the torch may only be lit once
-per floor, ever.
+Those who have earned some of Yredelemnul's favour will be gifted temporary
+undead servants to help begin their conquest, with stronger servants being
+provided to the experienced and especially pious.
+
+Yredelemnul does not offer second chances - the torch will be extinguished when
+you leave the current floor, and it may only be lit once per floor, ever.
 %%%%
 Hurl Torchlight ability
 
 Hurls a gout of umbral fire from the Black Torch, which deals irresistible
-damage to living, demonic, and unholy beings. The torchlight will also briefly
+damage to living, demonic, and holy beings. The torchlight will also briefly
 empower any of your undead servants caught in its blast, and is harmless to its
-user.
+user. The damage is increased by Invocations skill.
 
-Can only be used while the torch is lit, and doing so will expend a significant
-amount of its flame - never extinguishing it entirely, but leaving you unable to
-hurl more until you enter a new floor, or stoke its flames with a particularly
-remarkable enemy soul.
+This ability can be used only while the torch is lit, and only a limited number
+of times on each floor. The number of uses available per floor increases with
+piety, and stoking the Black Torch's flames with a particularly remarkable soul
+by killing a unique named enemy will also provide an additional use.
 %%%%
 Bind Soul ability
 
@@ -308,6 +346,11 @@ Duel ability
 Enters you into single combat with a worthy foe. On success, you and the
 challenged foe will be transported to Okawaru's Arena to fight to the death,
 with no escape until you either emerge victorious or are slain.
+
+Half of your missing health will be restored as the duel begins, and upon
+victory, Okawaru will return your health and magical power to whatever they
+were before you issued the challenge - letting you shake off any damage taken
+during it in the blink of an eye.
 %%%%
 Receive Weapon ability
 
@@ -320,25 +363,99 @@ Acquires a piece of armour from a choice of four. This blessing may only be
 redeemed once.
 %%%%
 # Makhleb
-Minor Destruction ability
+Unleash Destruction ability
 
-Shoots a weak blast of fire, lightning, stone, acid, or negative energy at the
-targeted creature. Damage and accuracy are increased by Invocations skill.
+Channels a blast of hellish {{
+    if you.get_base_mutation_level("Gehenna destruction") == 1 then
+        return "piercing fire, lava (from Gehenna's influence), lightning, or negative energy"
+    elseif you.get_base_mutation_level("Cocytus destruction") == 1 then
+        return "piercing ice (from Cocytus' influence), cold, lightning, or negative energy"
+    elseif you.get_base_mutation_level("Tartarus destruction") == 1 then
+        return "piercing fire, cold, devastation (from Tartarus' influence), or negative energy"
+    elseif you.get_base_mutation_level("Dis destruction") == 1 then
+        return "piercing fire, cold, lightning, acid, or metal splinters (the last two from Dis' influence)"
+    else
+        return "fire, cold, lightning, or negative energy"
+    end
+}} at a targeted creature. Damage and accuracy are increased by Invocations
+skill.
 %%%%
-Lesser Servant of Makhleb ability
+Infernal Servant ability
 
-Summons a minor demon. Failing to use this ability correctly will turn the
-demon hostile.
+Beckons a demon from the far reaches of Hell and binds it into service with your
+blood. At low Invocations skill, only lesser devils may be summoned, but major
+demons and even executioners may answer the call of those with high Invocations
+skill.
+
+Beware that the armies of chaos are prone to infighting, and sometimes a
+hostile demon may answer the ritual alongside your summoned servant.
 %%%%
-Major Destruction ability
+Brand Self ability
 
-Shoots a piercing bolt of fire, lightning, magma, acid, or negative energy at
-the targeted creature. Damage and accuracy are increased by Invocations skill.
+Permanently carves an Infernal Mark into yourself, forever tainting body and
+soul in service of the Destroyer.
+
+So long as you continue to worship Makhleb, this mark will grant you the
+following power:
+
 %%%%
-Greater Servant of Makhleb ability
+Infernal Legion ability
 
-[[Greater Servant of Makhleb spell]] Failing to use this ability correctly will
-turn the demon hostile.
+Uses one's own body as a conduit to unleash an army of chaos upon the world.
+For a short while, lesser demons will continuously manifest near the user -
+provided there is something around for them to fight. While these demons may
+be individually short-lived, the legions of chaos as a whole are virtually
+inexhaustible.
+%%%%
+Globe of Annihilation ability
+
+Launches a roiling sphere of intense destructive force drawn from the {{
+    if you.get_base_mutation_level("Gehenna destruction") == 1 then
+        return "endless fires of Gehenna."
+    elseif you.get_base_mutation_level("Cocytus destruction") == 1 then
+        return "frigid wastes of Cocytus."
+    elseif you.get_base_mutation_level("Tartarus destruction") == 1 then
+        return "wailing grief of Tartarus."
+    elseif you.get_base_mutation_level("Dis destruction") == 1 then
+        return "ruthless spite of Dis."
+    else
+        return "very Hells themselves."
+    end
+}}
+
+This sphere gathers strength as it travels, and will attempt to home in on a
+designated target, though it moves and turns with considerable inertia. When it
+collides with a creature or other obstruction, it will detonate in a violent
+explosion of {{
+    if you.get_base_mutation_level("Gehenna destruction") == 1 then
+        return "fire or lava"
+    elseif you.get_base_mutation_level("Cocytus destruction") == 1 then
+        return "cold or ice"
+    elseif you.get_base_mutation_level("Tartarus destruction") == 1 then
+        return "negative energy or devastation"
+    elseif you.get_base_mutation_level("Dis destruction") == 1 then
+        return "acid or metal splinters"
+    else
+        return "hellish energy"
+    end
+}} whose radius depends on the distance travelled.
+
+You are protected from this explosion yourself.
+%%%%
+Vessel of Slaughter ability
+
+Invokes a blood pact with the Destroyer, temporarily granting you enormous power
+at a dangerous price.
+
+At the moment the pact is sealed, a massive explosion of damnation will surround
+you, and you will transform into a demonic avatar, granting you demonic
+resistances, invulnerable will, doubled healing from kills, and reducing all
+damage you take by 1/3. You will additionally gain a bonus to all outgoing
+damage proportional to how injured you were when you used this ability.
+
+When your transformation expires, you will be dragged down into the Crucible of
+Flesh, and made to fight through waves of demons until Makhleb considers your
+debt paid.
 %%%%
 # Sif Muna
 %%%%
@@ -380,8 +497,7 @@ Summons huge angry allies to wreak havoc.
 Purification ability
 
 Purges your body of poison, confusion, slowness, petrification, weakness, and
-sickness. Any drained strength, dexterity or intelligence will also be fully
-restored, along with any drained maximum health.
+sickness. Any drained maximum health will also be fully restored.
 %%%%
 Heal Other ability
 
@@ -438,7 +554,7 @@ ability will leave your health depleted.
 %%%%
 Brand Weapon With Distortion ability
 
-Permanently corrupts a weapon of your choice with a localized field of
+Permanently corrupts a weapon of your choice with a localised field of
 distortion. This blessing may only be used once, and it cannot be used on
 artefact weapons.
 %%%%
@@ -471,7 +587,7 @@ Smiting ability
 Beogh will not allow you to use this directly against another apostle during a
 divine trial.
 %%%%
-Recall Orcish Apostles ability
+Recall Apostles ability
 
 Recalls your apostles from anywhere in the dungeon to your immediate
 surroundings.
@@ -508,12 +624,12 @@ at most once per death.
 # Fedhas
 Wall of Briars ability
 
-Grow short-lived briar patches around you. Monsters attacking these briars will
+Grows short-lived briar patches around you. Monsters attacking these briars will
 be damaged by sharp thorns. Invocations skill increases the briars' health.
 %%%%
 Grow Ballistomycete ability
 
-Grow a short-lived ballistomycete at the location you choose. A ballistomycete
+Grows a short-lived ballistomycete at the location you choose. A ballistomycete
 occasionally releases spores that quickly seek out foes and violently explode,
 damaging and confusing all living things caught in the blast.
 
@@ -522,13 +638,13 @@ well as the damage of its exploding spores.
 %%%%
 Overgrow ability
 
-Permanently destroy a wall-like structure, growing a short-lived plant ally in
+Permanently destroys a wall-like structure, growing a short-lived plant ally in
 its place. Even a tree will give its life to support the will of Fedhas, and
 only truly indestructible walls are immune to this power.
 %%%%
 Grow Oklob ability
 
-Grow a short-lived oklob plant at the location you choose. These dangerous
+Grows a short-lived oklob plant at the location you choose. These dangerous
 plants spray corrosive vitriol at your foes.
 
 Invocations skill increases the health and duration of the oklob as well as the
@@ -552,11 +668,13 @@ damage with greater differences in speed.
 %%%%
 Step From Time ability
 
-Removes you completely from the flow of time. Things around you will happen at
-their usual busy pace, and monsters will wander and may even forget about you.
-After some time has passed, you will return in the same state as the very
-second you departed. Invocations skill increases the amount of time that passes
-while you're gone.
+Removes you completely from the flow of time. Time will pass as it usually does,
+and monsters will wander away and sometimes even fall back to sleep. After some
+time has passed, you will return in the same state as the very second you
+departed.
+
+Invocations skill increases the likelihood that your absence will have been so
+long that alert monsters have fallen asleep again.
 %%%%
 # Jiyva
 Slimify ability
@@ -581,20 +699,45 @@ Shatter The Chains ability
 Destroys a chosen cursed equipped item, relieving the wearer of the curse.
 %%%%
 # Dithmenos
-Shadow Step ability
+Shadowslip ability
 
-Allows you to step into the shadow of any hostile creature within your umbra,
-landing on a random spot adjacent to the target.
+Instantly swaps places with your shadow (so long as it is active) and misleads
+all enemies in sight about which of the two is which. Enemies which were
+previously focused on you will instead focus their attention exclusively upon
+your shadow for several turns before they realize their mistake - though if they
+succeed in destroying your shadow, the illusion will end prematurely.
+
+The duration of this effect increases with Invocations skill, as will the
+durability of your shadow immediately after using it.
 %%%%
-Shadow Form ability
+Aphotic Marionette ability
 
-Transforms you into a swirling mass of dark shadows. While in this form, you
-are permanently invisible and are immune to poison, draining, and torment.
-All incoming damage is halved, you bleed smoke on any incoming attack, and
-you have infinite willpower. However, your ability to deal damage in melee
-and with ranged attacks is halved, your spellcasting power is greatly
-hampered, and your maximum health is further drained when taking damage.
-Invocations skill increases the duration of the transformation.
+Grabs hold of another creature's shadow and rapidly unleashes their spells and
+abilities as if they were your own, aimed at random enemies. Creatures they
+summon this way will belong to you, and many beneficial effects that they would
+apply to themselves will be applied to you instead. You are also fully protected
+from any damage they would cause.
+
+Can only be used on creatures with eligible spells that they could productively
+cast at the moment. The process also leaves the victim's shadow too dim to grasp
+a second time - once used successfully on a target, it may never be used on them
+again.
+
+(Not all spells can be cast via this method; those which cannot will be marked
+with an exclamation mark when examined.)
+%%%%
+Primordial Nightfall ability
+
+Invokes a night from before the stars first burned in the sky, engulfing your
+surroundings in impenetrable darkness. The user's sight radius will be reduced
+to nothing, preventing enemies from tracking or aiming abilities at you, and
+slowly expand back to normal over the duration of the effect. Your stealth will
+also be increased.
+
+It cannot be invoked again until its effect has fully ended, as even the very
+first night of creation must eventually give way to day.
+
+Invocations skill increases the duration of the effect.
 %%%%
 # Gozag
 Potion Petition ability
@@ -621,7 +764,8 @@ indifferent if they have not become your allies.
 Upheaval ability
 
 Calls on the forces of nature to blast a small area with magma, ice, wind,
-or rubble. Invocations skill increases both damage and area affected.
+or rubble. This blast will never harm you or any elementals manifested by you.
+Invocations skill increases both damage and area affected.
 %%%%
 Elemental Force ability
 
@@ -861,7 +1005,7 @@ invisibility, and obscure the vision of those outside the storm.
 %%%%
 Fiery Armour ability
 
-Armour yourself in fire, providing +7 AC and searing foes foolish enough to
+Armours yourself in fire, providing +7 AC and searing foes foolish enough to
 strike you in melee. The fire takes quite a long time to burn out.
 %%%%
 Foxfire Swarm ability
@@ -891,7 +1035,7 @@ again for a short time.
 %%%%
 Siphon Essence ability
 
-Torment nearby living foes, halving their health. The pain inflicted heals
+Torments nearby living foes, halving their health. The pain inflicted heals
 the user to an extent determined by Shapeshifting skill. After using this
 ability, you will be unable to use it again for a short time.
 %%%%

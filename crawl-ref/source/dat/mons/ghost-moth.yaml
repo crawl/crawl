@@ -6,9 +6,9 @@ xp_mult: 16
 genus: moth
 will: 100
 attacks:
- - {type: hit, flavour: drain_stat, damage: 24}
- - {type: hit, flavour: drain_stat, damage: 18}
- - {type: sting, flavour: drain_stat, damage: 18}
+ - {type: hit, damage: 24}
+ - {type: hit, damage: 18}
+ - {type: sting, damage: 18}
 hd: 13
 hp_10x: 715
 ac: 8

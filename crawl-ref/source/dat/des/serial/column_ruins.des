@@ -25,10 +25,12 @@
 #  -> ?-OP: Hell/Pan/Abyss-themed pillar/floor/portal/portal
 #
 
+: crawl_require('dlua/vault.lua')
+
 {{
 function init_column_ruins(e)
   e.kfeat('B = altar_ecumenical')
-  e.kmons('b = boulder dbname:still_boulder')
+  e.kmons('d = pile of debris')
   e.subst('J = _____.')
   e.subst('K = ____..')
   e.subst('L = ___...')
@@ -37,13 +39,11 @@ function init_column_ruins(e)
   e.subst('p = GGGG_')
   e.subst('q = GGG__')
   e.subst('r = GG__.')
-  e.subst('s = Gb_..')
+  e.subst('s = Gd_..')
   e.ftile('_$%*90GTUVB = floor_rough_brown')
   e.colour('_$%*90V = brown')
-  e.tile('G = dngn_crumbled_column')
-  e.colour('G = lightgrey')
   e.subst('_ = .')
-  e.set_feature_name("granite_statue", "broken pillar")
+  vault_granite_statue_setup(e, "G", "broken pillar")
 end
 
 function init_column_ruins_hut(e)
@@ -121,7 +121,6 @@ CHANCE: 3%
     end)
   end
 }}
-
 
 #
 # These are special vaults just containing pillars.  They are

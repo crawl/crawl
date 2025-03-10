@@ -19,13 +19,18 @@ static void _give_wanderer_weapon(skill_type wpn_skill, bool good_item)
 {
     if (wpn_skill == SK_THROWING)
     {
-        // good_item always gives curare
+        // good_item always assigns 7 ammo: 1-4 curare, the rest javelins
         if (good_item)
         {
-            newgame_make_item(OBJ_MISSILES, MI_DART, 1 + random2(4),
+            const int num_curare = 1 + random2(4);
+            newgame_make_item(OBJ_MISSILES, MI_DART, num_curare,
                               0, SPMSL_CURARE);
+
+            // Gives large rocks for large species, 2x boomerangs for small
+            const int num_javelins = 7 - num_curare;
+            give_throwing_ammo(num_javelins);
         }
-        // Otherwise, we get some poisoned darts or some boomerangs.
+        // Otherwise, we get 7-15 poisoned darts or 6-10 boomerangs.
         else
         {
             if (one_chance_in(3))
@@ -39,11 +44,12 @@ static void _give_wanderer_weapon(skill_type wpn_skill, bool good_item)
                               0, SPMSL_POISONED);
             }
         }
+        return; // don't give a dagger as well
     }
 
     weapon_type sub_type;
     int plus = 0;
-    bool upgrade_base = good_item && one_chance_in(5);
+    bool upgrade_base = good_item && one_chance_in(3);
     int ego = SPWPN_NORMAL;
 
     // Now fill in the type according to the random wpn_skill.
@@ -70,7 +76,11 @@ static void _give_wanderer_weapon(skill_type wpn_skill, bool good_item)
         break;
 
     case SK_STAVES:
+        // We only reach here for good quality staves skill.
+        // A +0 quarterstaff is plenty good enough for good staves skill.
         sub_type = WPN_QUARTERSTAFF;
+        upgrade_base = false;
+        good_item = false;
         break;
 
     case SK_RANGED_WEAPONS:
@@ -114,24 +124,24 @@ static void _assign_wanderer_stats(skill_type sk1, skill_type sk2,
             case SK_AXES:
             case SK_MACES_FLAILS:
             case SK_ARMOUR:
+            case SK_POLEARMS:
+            case SK_STAVES:
                 str_count++;
                 break;
 
             case SK_SHORT_BLADES:
             case SK_LONG_BLADES:
             case SK_RANGED_WEAPONS:
-            case SK_STAVES:
             case SK_DODGING:
             case SK_SHIELDS:
             case SK_STEALTH:
                 dex_count++;
                 break;
 
-            case SK_POLEARMS:
             case SK_UNARMED_COMBAT:
             case SK_FIGHTING:
-            case SK_EVOCATIONS:
             case SK_THROWING:
+            case SK_SHAPESHIFTING:
                 if (coinflip())
                     str_count++;
                 else
@@ -141,6 +151,7 @@ static void _assign_wanderer_stats(skill_type sk1, skill_type sk2,
             case SK_SPELLCASTING:
             case SK_SUMMONINGS:
             case SK_NECROMANCY:
+            case SK_FORGECRAFT:
             case SK_TRANSLOCATIONS:
             case SK_ALCHEMY:
             case SK_CONJURATIONS:
@@ -152,6 +163,13 @@ static void _assign_wanderer_stats(skill_type sk1, skill_type sk2,
                 int_count++;
                 break;
 
+            case SK_EVOCATIONS:
+                if (one_chance_in(3))
+                    str_count++;
+                else if (coinflip())
+                    int_count++;
+                else
+                    dex_count++;
             default:
                 break;
         }
@@ -193,7 +211,40 @@ static skill_type _apt_weighted_choice(const skill_type * skill_array,
     return NUM_SKILLS;
 }
 
-static skill_type _wanderer_role_skill_select(bool defense)
+static bool _wanderer_is_useful_skill(skill_type skill,
+                                      skill_type sk1, skill_type sk2)
+{
+    // Reroll duplicate skills
+    if (skill == sk1 || skill == sk2)
+        return false;
+
+    // Reroll decent staves skill, as no corresponding appropriate equipment
+    if (skill == SK_STAVES && sk1 != SK_NONE)
+        return false;
+
+    // Don't give a shield with good staves / ranged weapons
+    // (except for formicids, obviously)
+    if (!you.has_mutation(MUT_QUADRUMANOUS)
+        && skill == SK_SHIELDS
+        && (sk1 == SK_STAVES
+            || sk1 == SK_RANGED_WEAPONS || sk2 == SK_RANGED_WEAPONS
+            || sk1 == SK_POLEARMS && you.body_size() <= SIZE_SMALL))
+    {
+        return false;
+    }
+    // or two handers if we have a shield (getting a 2h and a bow is ok)
+    if (!you.has_mutation(MUT_QUADRUMANOUS)
+        && sk1 == SK_SHIELDS && skill == SK_RANGED_WEAPONS)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+static skill_type _wanderer_role_skill_select(bool defense,
+                                              skill_type sk1 = SK_NONE,
+                                              skill_type sk2 = SK_NONE)
 {
     skill_type skill = NUM_SKILLS;
     const skill_type offense_skills[] =
@@ -202,14 +253,14 @@ static skill_type _wanderer_role_skill_select(bool defense)
           SK_SUMMONINGS, SK_NECROMANCY, SK_TRANSLOCATIONS,
           SK_ALCHEMY, SK_CONJURATIONS,
           SK_HEXES, SK_FIRE_MAGIC, SK_ICE_MAGIC, SK_SPELLCASTING,
-          SK_AIR_MAGIC, SK_EARTH_MAGIC, SK_FIGHTING };
+          SK_AIR_MAGIC, SK_EARTH_MAGIC, SK_SHAPESHIFTING, SK_FIGHTING };
 
     int offense_size = ARRAYSZ(offense_skills);
 
     const skill_type physical_skills[] =
         { SK_AXES, SK_MACES_FLAILS, SK_RANGED_WEAPONS, SK_POLEARMS,
           SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_UNARMED_COMBAT,
-          SK_FIGHTING };
+          SK_SHAPESHIFTING, SK_FIGHTING };
 
     int physical_size = ARRAYSZ(physical_skills);
 
@@ -219,13 +270,28 @@ static skill_type _wanderer_role_skill_select(bool defense)
 
     int defense_size = ARRAYSZ(defense_skills);
 
-    if (defense)
-        skill = _apt_weighted_choice(defense_skills, defense_size);
-    // reduce the chance of a spell felid a bit
-    else if (you.has_mutation(MUT_NO_GRASPING) && one_chance_in(3))
-        skill = _apt_weighted_choice(physical_skills, physical_size);
-    else
-        skill = _apt_weighted_choice(offense_skills, offense_size);
+    const skill_type weapon_skills[] =
+        { SK_AXES, SK_MACES_FLAILS, SK_RANGED_WEAPONS, SK_POLEARMS,
+          SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_UNARMED_COMBAT };
+
+    int weapons_size = ARRAYSZ(weapon_skills);
+
+    do
+    {
+        if (defense)
+            skill = _apt_weighted_choice(defense_skills, defense_size);
+        // reduce the chance of a spell felid a bit
+        else if (you.has_mutation(MUT_NO_GRASPING) && one_chance_in(3))
+            skill = _apt_weighted_choice(physical_skills, physical_size);
+        else
+            skill = _apt_weighted_choice(offense_skills, offense_size);
+
+        // Convert good fighting skill to a random good weapon skill
+        if (skill == SK_FIGHTING && sk1 == SK_NONE)
+            skill = _apt_weighted_choice(weapon_skills, weapons_size);
+    }
+    // Reroll incompatible or duplicate skills
+    while (!_wanderer_is_useful_skill(skill, sk1, sk2));
 
     return skill;
 }
@@ -250,11 +316,8 @@ static void _setup_starting_skills(skill_type sk1, skill_type sk2,
             martial++;
         else if (sk > SK_LAST_MUNDANE && sk <= SK_LAST_MAGIC)
             magical++;
-        if (sk != SK_NONE)
-        {
-            you.skills[sk]++;
-            levels--;
-        }
+        you.skills[sk]++;
+        levels--;
     }
 
     skill_type selected = SK_NONE;
@@ -271,10 +334,10 @@ static void _setup_starting_skills(skill_type sk1, skill_type sk2,
                                           2, SK_STEALTH,
                                           1 + magical, SK_SPELLCASTING,
                                           2, SK_EVOCATIONS,
-                                          1, SK_INVOCATIONS);
+                                          1, SK_INVOCATIONS,
+                                          2, SK_SHAPESHIFTING);
 
-        if (!is_useless_skill(selected) && selected != SK_NONE
-            && you.skills[selected] < 5)
+        if (!is_useless_skill(selected) && you.skills[selected] < 5)
         {
             you.skills[selected]++;
             levels--;
@@ -463,7 +526,7 @@ static void _decent_potion_or_scroll()
         { { OBJ_POTIONS, POT_LIGNIFY },
             you.is_lifeless_undead(false) ? 0 : 5 },
         { { OBJ_POTIONS, POT_ATTRACTION },
-            you.is_lifeless_undead(false) ? 0 : 5 },
+            you.has_mutation(MUT_NO_DRINK) ? 0 : 5 },
         { { OBJ_POTIONS, POT_MUTATION },
             you.is_lifeless_undead(false) ? 0 : 1 },
     };
@@ -483,8 +546,10 @@ static void _wanderer_random_evokable()
             (misc_item_type)item_for_set(ITEM_SET_AREA_MISCELLANY);
         const auto ally_evoker_type =
             (misc_item_type)item_for_set(ITEM_SET_ALLY_MISCELLANY);
+        const auto control_evoker_type =
+            (misc_item_type)item_for_set(ITEM_SET_CONTROL_MISCELLANY);
         misc_item_type selected_evoker =
-              random_choose(ally_evoker_type, MISC_PHIAL_OF_FLOODS,
+              random_choose(ally_evoker_type, control_evoker_type,
                             MISC_PHANTOM_MIRROR, area_evoker_type,
                             MISC_LIGHTNING_ROD);
 
@@ -507,6 +572,7 @@ static void _wanderer_random_evokable()
         case WAND_QUICKSILVER:
         case WAND_ICEBLAST:
         case WAND_ROOTS:
+        case WAND_WARPING:
             charges = 2 + random2(3);
         break;
 
@@ -532,6 +598,15 @@ static void _wanderer_random_evokable()
     }
 }
 
+// Create a random low-level talisman in the inventory.
+static void _wanderer_random_talisman()
+{
+    talisman_type selected_talisman =
+        coinflip() ? TALISMAN_BEAST : TALISMAN_FLUX;
+
+    newgame_make_item(OBJ_TALISMANS, selected_talisman);
+}
+
 static void _give_wanderer_aux_armour(int plus = 0)
 {
     vector<armour_type> auxs = { ARM_HAT, ARM_GLOVES, ARM_BOOTS, ARM_CLOAK };
@@ -544,7 +619,7 @@ static void _give_wanderer_aux_armour(int plus = 0)
     for (armour_type aux : auxs)
     {
         dummy.sub_type = aux;
-        if (!can_wear_armour(dummy, false, true))
+        if (!can_equip_item(dummy))
             continue;
 
         if (one_chance_in(++seen))
@@ -560,18 +635,8 @@ static void _give_wanderer_aux_armour(int plus = 0)
         newgame_make_item(OBJ_ARMOUR, choice, 1, plus);
 }
 
-static vector<spell_type> _wanderer_good_equipment(skill_type & skill)
+static vector<spell_type> _wanderer_good_equipment(skill_type skill)
 {
-    const skill_type combined_weapon_skills[] =
-        { SK_AXES, SK_MACES_FLAILS, SK_RANGED_WEAPONS, SK_POLEARMS,
-          SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_UNARMED_COMBAT };
-
-    int total_weapons = ARRAYSZ(combined_weapon_skills);
-
-    // Normalise the input type.
-    if (skill == SK_FIGHTING)
-        skill =  _apt_weighted_choice(combined_weapon_skills, total_weapons);
-
     switch (skill)
     {
     case SK_MACES_FLAILS:
@@ -586,17 +651,13 @@ static vector<spell_type> _wanderer_good_equipment(skill_type & skill)
         break;
 
     case SK_ARMOUR:
-    {
-        item_def * arm;
-        if (coinflip())
-            arm = newgame_make_item(OBJ_ARMOUR, ARM_SCALE_MAIL, 1, 2);
-        else
-            arm = newgame_make_item(OBJ_ARMOUR, ARM_CHAIN_MAIL, 1, 0);
-        // weird body shape, give scales
-        if (!arm)
+        if (you_can_wear(SLOT_BODY_ARMOUR) != true)
             newgame_make_item(OBJ_ARMOUR, ARM_ACID_DRAGON_ARMOUR);
+        else if (coinflip())
+            newgame_make_item(OBJ_ARMOUR, ARM_SCALE_MAIL, 1, 2);
+        else
+            newgame_make_item(OBJ_ARMOUR, ARM_CHAIN_MAIL, 1, 0);
         break;
-    }
 
     case SK_DODGING:
         // +2 leather armour or +0 leather armour and also 2-4 nets
@@ -641,6 +702,7 @@ static vector<spell_type> _wanderer_good_equipment(skill_type & skill)
     case SK_CONJURATIONS:
     case SK_SUMMONINGS:
     case SK_NECROMANCY:
+    case SK_FORGECRAFT:
     case SK_TRANSLOCATIONS:
     case SK_FIRE_MAGIC:
     case SK_ICE_MAGIC:
@@ -665,6 +727,12 @@ static vector<spell_type> _wanderer_good_equipment(skill_type & skill)
         // Random wand or xp evoker
         _wanderer_random_evokable();
         break;
+
+    case SK_SHAPESHIFTING:
+        // Random low-level talisman
+        _wanderer_random_talisman();
+        break;
+
     default:
         break;
     }
@@ -672,29 +740,13 @@ static vector<spell_type> _wanderer_good_equipment(skill_type & skill)
     return vector<spell_type>{};
 }
 
-static vector<spell_type> _wanderer_decent_equipment(skill_type & skill,
+static vector<spell_type> _wanderer_decent_equipment(skill_type skill,
                                                      set<skill_type> & gift_skills)
 {
-    // don't give a shield if we filled our hands already
-    if (skill == SK_SHIELDS && (!you.has_usable_offhand()
-                                || gift_skills.count(SK_RANGED_WEAPONS)))
-    {
-        skill = random_choose(SK_DODGING, SK_ARMOUR);
-    }
-
-    // or two handers if we have a shield (getting a 2h and a bow is ok)
-    if (gift_skills.count(SK_SHIELDS)
-        && (skill == SK_STAVES || skill == SK_RANGED_WEAPONS))
-    {
-        skill = SK_FIGHTING;
-    }
-
-    // Don't give a gift from the same skill twice; just default to
-    // a decent consumable
-    if (gift_skills.count(skill))
-        skill = SK_NONE;
 
     // don't give the player a second piece of armour
+    // - give a decent consumable instead
+    // we still want the player to get the skill levels, though
     if (gift_skills.count(SK_ARMOUR) && (skill == SK_DODGING
                                          || skill == SK_STEALTH)
         || (gift_skills.count(SK_DODGING) && (skill == SK_ARMOUR
@@ -717,15 +769,15 @@ static vector<spell_type> _wanderer_decent_equipment(skill_type & skill,
         break;
 
     case SK_ARMOUR:
-        item_def * arm;
-        if (coinflip())
-            arm = newgame_make_item(OBJ_ARMOUR, ARM_SCALE_MAIL);
-        else
-            arm = newgame_make_item(OBJ_ARMOUR, ARM_RING_MAIL);
-        // can train but weird shape, skins and scales are too good for decent
-        // give a plain aux
-        if (!arm)
+        // Dragon scales/tla is too good for "decent" quality
+        // Just give an aux piece to On/Tr/Sp. Note: armour skill will later be
+        // converted to dodging skill by reassess_starting_skills in this case.
+        if (you_can_wear(SLOT_BODY_ARMOUR) != true)
             _give_wanderer_aux_armour();
+        else if (coinflip())
+            newgame_make_item(OBJ_ARMOUR, ARM_RING_MAIL);
+        else
+            newgame_make_item(OBJ_ARMOUR, ARM_SCALE_MAIL);
         break;
 
     case SK_SHIELDS:
@@ -736,6 +788,7 @@ static vector<spell_type> _wanderer_decent_equipment(skill_type & skill,
     case SK_CONJURATIONS:
     case SK_SUMMONINGS:
     case SK_NECROMANCY:
+    case SK_FORGECRAFT:
     case SK_TRANSLOCATIONS:
     case SK_FIRE_MAGIC:
     case SK_ICE_MAGIC:
@@ -748,6 +801,10 @@ static vector<spell_type> _wanderer_decent_equipment(skill_type & skill,
     case SK_EVOCATIONS:
         newgame_make_item(OBJ_WANDS, coinflip() ? WAND_FLAME : WAND_POLYMORPH,
                           1, 3 + random2(5));
+        break;
+
+    case SK_SHAPESHIFTING:
+        newgame_make_item(OBJ_TALISMANS, TALISMAN_BEAST);
         break;
 
     case SK_STEALTH:
@@ -778,13 +835,14 @@ static vector<spell_type> _wanderer_decent_equipment(skill_type & skill,
 // dungeon.
 static void _wanderer_cover_equip_holes()
 {
-    if (you.equip[EQ_BODY_ARMOUR] == -1)
+    if (!you.body_armour())
     {
         newgame_make_item(OBJ_ARMOUR,
                           you.strength() > you.intel() ? ARM_LEATHER_ARMOUR : ARM_ROBE);
     }
 
-    if (you.equip[EQ_WEAPON] == -1)
+    // Give weapon, unless we started with some unarmed skill
+    if (!you.weapon() && you.skills[SK_UNARMED_COMBAT] == 0)
     {
         newgame_make_item(OBJ_WEAPONS,
                           you.dex() > you.strength() ? WPN_DAGGER : WPN_CLUB);
@@ -836,8 +894,9 @@ void create_wanderer()
 
     // always give at least one "offense skill" and one "defence skill"
     skill_type gift_skill_1 = _wanderer_role_skill_select(one_chance_in(3));
-    skill_type gift_skill_2 = _wanderer_role_skill_select(false);
-    skill_type gift_skill_3 = _wanderer_role_skill_select(true);
+    skill_type gift_skill_2 = _wanderer_role_skill_select(false, gift_skill_1);
+    skill_type gift_skill_3 = _wanderer_role_skill_select(true, gift_skill_1,
+                                                          gift_skill_2);
 
     // assign remaining wanderer stat points according to gift skills
     _assign_wanderer_stats(gift_skill_1, gift_skill_2, gift_skill_3);

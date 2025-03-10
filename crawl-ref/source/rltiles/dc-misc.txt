@@ -1,59 +1,29 @@
 %sdir effect
 #### Magic Bolts
 %back none
-bolt01 SYM_BOLT_OFS
-bolt02
-bolt03
-bolt04
-bolt05
-bolt06
-bolt07
-bolt08
+bolt01 BOLT_DEFAULT_BLUE
+%syn SYM_BOLT_OFS
+bolt02 BOLT_DEFAULT_GREEN
+bolt03 BOLT_DEFAULT_CYAN
+bolt04 BOLT_DEFAULT_RED
+bolt05 BOLT_DEFAULT_MAGENTA
+bolt06 BOLT_DEFAULT_YELLOW
+bolt07 BOLT_DEFAULT_WHITE
+bolt08 BOLT_DEFAULT_BLACK
 
-crystal_spear0 BOLT_CRYSTAL_SPEAR
-crystal_spear1
-crystal_spear2
-crystal_spear3
-crystal_spear4
-crystal_spear5
-crystal_spear6
-crystal_spear7
+# Fire bolts
+flame0 BOLT_FLAME
+flame1
+flame2
 
-light_beam0 BOLT_LIGHT
-light_beam1
-light_beam2
-light_beam3
-light_beam4
-light_beam5
-light_beam6
-light_beam7
+magma0 BOLT_MAGMA
+magma1
 
-iron_shot0 BOLT_IRON_SHOT
-iron_shot1
-iron_shot2
-iron_shot3
-iron_shot4
-iron_shot5
-iron_shot6
-iron_shot7
+fire_storm0 BOLT_FIRE_STORM
 
-stone_arrow0 BOLT_STONE_ARROW
-stone_arrow1
-stone_arrow2
-stone_arrow3
-stone_arrow4
-stone_arrow5
-stone_arrow6
-stone_arrow7
-
-poison_arrow0 BOLT_POISON_ARROW
-poison_arrow1
-poison_arrow2
-poison_arrow3
-poison_arrow4
-poison_arrow5
-poison_arrow6
-poison_arrow7
+# Ice bolts
+frost0 BOLT_FROST
+frost1
 
 icicle0 BOLT_ICICLE
 icicle1
@@ -64,12 +34,63 @@ icicle5
 icicle6
 icicle7
 
-flame0 BOLT_FLAME
-flame1
-flame2
+# also used for hoarfrost cannonade
+iceblast0 BOLT_ICEBLAST
+iceblast1
 
-frost0 BOLT_FROST
-frost1
+icicle_salvo0 BOLT_ICICLE_SALVO
+icicle_salvo1
+icicle_salvo2
+icicle_salvo3
+icicle_salvo4
+icicle_salvo5
+icicle_salvo6
+icicle_salvo7
+
+# Air bolts
+zap0 BOLT_ZAP
+zap1
+zap2
+zap3
+
+weak_air0 BOLT_WEAK_AIR
+weak_air1
+medium_air0 BOLT_MEDIUM_AIR
+medium_air1
+strong_air0 BOLT_STRONG_AIR
+strong_air1
+
+# Earth bolts
+sandblast0 BOLT_SANDBLAST
+sandblast1
+sandblast2
+
+stone_arrow0 BOLT_STONE_ARROW
+stone_arrow1
+stone_arrow2
+stone_arrow3
+stone_arrow4
+stone_arrow5
+stone_arrow6
+stone_arrow7
+
+iron_shot0 BOLT_IRON_SHOT
+iron_shot1
+iron_shot2
+iron_shot3
+iron_shot4
+iron_shot5
+iron_shot6
+iron_shot7
+
+crystal_spear0 BOLT_CRYSTAL_SPEAR
+crystal_spear1
+crystal_spear2
+crystal_spear3
+crystal_spear4
+crystal_spear5
+crystal_spear6
+crystal_spear7
 
 magic_dart0 BOLT_MAGIC_DART
 magic_dart1
@@ -78,34 +99,132 @@ magic_dart3
 magic_dart4
 magic_dart5
 
-sandblast0 BOLT_SANDBLAST
-sandblast1
-sandblast2
+damnation BOLT_DAMNATION
 
-sting0 BOLT_STING
-sting1
-sting2
+# Pure conjurations bolts
+searing_ray4 BOLT_SEARING_RAY
+searing_ray5
 
-zap0 BOLT_ZAP
-zap1
-zap2
-zap3
+# Forgecraft bolts
+percussive_tempering BOLT_PERCUSSIVE_TEMPERING
 
+fortress_blast BOLT_FORTRESS_BLAST
+
+bomblet_launch0 BOLT_BOMBLET_LAUNCH
+bomblet_launch1
+
+bomblet_blast0 BOLT_BOMBLET_BLAST
+bomblet_blast1
+
+paragon_tempest0 BOLT_PARAGON_TEMPEST
+paragon_tempest1
+
+# Necromantic bolts
 drain0 BOLT_DRAIN
 drain1
 drain2
 
-searing_ray4 BOLT_SEARING_RAY
-searing_ray5
+# Alchemy bolts
+sting0 BOLT_STING
+sting1
+sting2
 
-damnation BOLT_DAMNATION
+meph_flask0 BOLT_MEPHITIC_FLASK
+meph_flask1
+meph_flask2
+meph_flask3
 
-umbral_torchlight BOLT_UMBRAL_TORCHLIGHT
+alembic_potion0 BOLT_ALEMBIC_POTION
+alembic_potion1
+alembic_potion2
+alembic_potion3
+alembic_potion4
 
 irradiate0 BOLT_IRRADIATE
 irradiate1
 irradiate2
 irradiate3
+
+fulsome_fire BOLT_FULSOME_FIRE
+fulsome_ice BOLT_FULSOME_ICE
+fulsome_electric BOLT_FULSOME_ELECTRIC
+fulsome_poison BOLT_FULSOME_POISON
+fulsome_quintessence BOLT_FULSOME_QUINTESSENCE
+
+# Translocations bolts
+mystic_blast BOLT_MYSTIC_BLAST
+
+manifold_assault0 BOLT_MANIFOLD_ASSAULT
+manifold_assault1
+
+# Wand-first bolts
+light_beam0 BOLT_LIGHT
+light_beam1
+light_beam2
+light_beam3
+light_beam4
+light_beam5
+light_beam6
+light_beam7
+
+warping_blast0 BOLT_WARP_SPACE
+
+# Monster bolts
+force_lance0 BOLT_FORCE_LANCE
+force_lance1
+force_lance2
+force_lance3
+force_lance4
+force_lance5
+force_lance6
+force_lance7
+
+harpoon_shot0 BOLT_HARPOON_SHOT
+harpoon_shot1
+harpoon_shot2
+harpoon_shot3
+harpoon_shot4
+harpoon_shot5
+harpoon_shot6
+harpoon_shot7
+
+poison_arrow0 BOLT_POISON_ARROW
+poison_arrow1
+poison_arrow2
+poison_arrow3
+poison_arrow4
+poison_arrow5
+poison_arrow6
+poison_arrow7
+
+splinters_thornwood0 BOLT_SPLINTERSPRAY
+splinters_thornwood1
+splinters_thornwood2
+splinters_thornwood3
+splinters_thornwood4
+splinters_thornwood5
+splinters_thornwood6
+splinters_thornwood7
+
+entropic_weave BOLT_ENTROPIC_WEAVE
+
+draining_gaze BOLT_DRAINING_GAZE
+
+bolas BOLT_BOLAS
+
+sentinel_mark BOLT_SENTINEL_MARK
+
+splinters_metal0 BOLT_METAL_SPLINTERS
+splinters_metal1
+splinters_metal2
+splinters_metal3
+splinters_metal4
+splinters_metal5
+splinters_metal6
+splinters_metal7
+
+ghostfire0 BOLT_GHOSTLY_FIREBALL
+ghostfire1
 
 pie0 BOLT_PIE
 pie1
@@ -115,6 +234,60 @@ pie4
 pie5
 pie6
 pie7
+
+chaos_buff0 BOLT_CHAOS_BUFF
+chaos_buff1
+
+sap_magic BOLT_SAP_MAGIC
+
+doom_howl BOLT_DOOM_HOWL
+
+phantom_blitz BOLT_PHANTOM_BLITZ
+
+# Divine bolts
+shadow_beam0 BOLT_SHADOW_BEAM
+shadow_beam1
+shadow_beam2
+shadow_beam3
+
+shadow_shard BOLT_SHADOW_SHARD
+
+shadow_blast0 BOLT_SHADOW_BLAST
+shadow_blast1
+shadow_blast2
+shadow_blast3
+
+shadow_shot0 BOLT_SHADOW_SHOT
+shadow_shot1
+shadow_shot2
+shadow_shot3
+shadow_shot4
+shadow_shot5
+shadow_shot6
+shadow_shot7
+
+potion_petition0 BOLT_POTION_PETITION
+potion_petition1
+potion_petition2
+potion_petition3
+potion_petition4
+potion_petition5
+
+haemoclasm0 BOLT_HAEMOCLASM
+haemoclasm1
+haemoclasm2
+haemoclasm3
+
+blood_arrow0 BOLT_BLOOD_ARROW
+blood_arrow1
+blood_arrow2
+blood_arrow3
+blood_arrow4
+blood_arrow5
+blood_arrow6
+blood_arrow7
+
+umbral_torchlight BOLT_UMBRAL_TORCHLIGHT
 
 ###### Priority indicators (for Fedhas' growth)
 indicator_1 INDICATOR
@@ -226,11 +399,25 @@ cloud_electricity_trail1
 cloud_electricity_trail2
 cloud_electricity_trail3
 
+cloud_faint_miasma0 CLOUD_FAINT_MIASMA
+cloud_faint_miasma1
+cloud_faint_miasma2
+cloud_faint_miasma3
+
 cloud_degeneration CLOUD_DEGENERATION
 
 cloud_blastmotes0 CLOUD_BLASTMOTES
 cloud_blastmotes1
 cloud_blastmotes2
+
+cloud_magnetic0 CLOUD_MAGNETISED_DUST
+cloud_magnetic2
+cloud_magnetic2
+
+cloud_bat_mist0 CLOUD_BATS
+cloud_bat_mist1
+cloud_bat_mist2
+cloud_bat_mist3
 
 %sdir mon
 fungi_plants/ballistomycete_spore SPORE_OVERLAY

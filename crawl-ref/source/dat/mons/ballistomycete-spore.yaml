@@ -1,6 +1,6 @@
 name: "ballistomycete spore"
 glyph: {char: "*", colour: green}
-flags: [flies, no_exp_gain]
+flags: [flies, no_exp_gain, unstable, peripheral]
 resists: {poison: 1}
 genus: fungus
 holiness: [plant]

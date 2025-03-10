@@ -31,6 +31,7 @@
 #include "items.h"
 #include "level-state-type.h"
 #include "libutil.h"
+#include "losglobal.h"
 #include "map-knowledge.h" // set_terrain_visible
 #include "mapmark.h"
 #include "message.h"
@@ -513,7 +514,7 @@ bool feat_is_trap(dungeon_feature_type feat)
     return get_feature_def(feat).flags & FFT_TRAP;
 }
 
-/** Is this feature a type of water, with the concomitant dangers/bonuss?
+/** Is this feature a type of water, with the concomitant dangers/bonuses?
  */
 bool feat_is_water(dungeon_feature_type feat)
 {
@@ -669,6 +670,7 @@ bool feat_is_fountain(dungeon_feature_type feat)
     return feat == DNGN_FOUNTAIN_BLUE
            || feat == DNGN_FOUNTAIN_SPARKLING
            || feat == DNGN_FOUNTAIN_BLOOD
+           || feat == DNGN_FOUNTAIN_EYES
            || feat == DNGN_DRY_FOUNTAIN;
 }
 
@@ -677,7 +679,8 @@ bool feat_is_fountain(dungeon_feature_type feat)
 bool feat_is_food(dungeon_feature_type feat)
 {
     return feat == DNGN_CACHE_OF_FRUIT
-           || feat == DNGN_CACHE_OF_MEAT;
+           || feat == DNGN_CACHE_OF_MEAT
+           || feat == DNGN_CACHE_OF_BAKED_GOODS;
 }
 
 /** Is this feature non-solid enough that you can reach past it?
@@ -700,7 +703,8 @@ FEATFN_MEMOIZED(feat_is_critical, feat)
     return feat_stair_direction(feat) != CMD_NO_CMD
            || feat_altar_god(feat) != GOD_NO_GOD
            || feat == DNGN_TRANSPORTER_LANDING
-           || feat == DNGN_MALIGN_GATEWAY;
+           || feat == DNGN_MALIGN_GATEWAY
+           || feat == DNGN_ORB_DAIS;
 }
 
 /** Can you use this feature for a map border?
@@ -926,6 +930,20 @@ int count_adjacent_icy_walls(const coord_def &pos)
     return count;
 }
 
+// Could an actor standing at a given position see a wall next to a given cell?
+bool near_visible_wall(coord_def observer_pos, coord_def cell)
+{
+    if (!cell_see_cell(observer_pos, cell, LOS_NO_TRANS))
+        return false;
+    for (adjacent_iterator ai(cell); ai; ++ai)
+        if (feat_is_wall(env.grid(*ai))
+            && cell_see_cell(observer_pos, *ai, LOS_NO_TRANS))
+        {
+            return true;
+        }
+    return false;
+}
+
 void feat_splash_noise(dungeon_feature_type feat)
 {
     if (crawl_state.generating_level)
@@ -1033,7 +1051,9 @@ static coord_def _dgn_find_nearest_square(
 static bool _item_safe_square(const coord_def &pos)
 {
     const dungeon_feature_type feat = env.grid(pos);
-    return feat_is_traversable(feat) && !feat_destroys_items(feat);
+    return feat_is_traversable(feat)
+            && !feat_is_closed_door(feat)
+            && !feat_destroys_items(feat);
 }
 
 static bool _item_traversable_square(const coord_def &pos)
@@ -1055,6 +1075,7 @@ static bool _dgn_shift_item(const coord_def &pos, item_def &item)
     {
         int index = item.index();
         move_item_to_grid(&index, np);
+
         return true;
     }
     return false;
@@ -1257,7 +1278,7 @@ static void _dgn_check_terrain_player(const coord_def pos)
     if (you.can_pass_through(pos))
         move_player_to_grid(pos, false);
     else
-        you_teleport_now();
+        push_or_teleport_actor_from(pos);
 }
 
 /**
@@ -1286,16 +1307,17 @@ void dungeon_terrain_changed(const coord_def &pos,
 {
     if (env.grid(pos) == nfeat)
         return;
-    if (feat_is_wall(nfeat) && monster_at(pos))
+
+    // Cannot change the terrain beneath the orb's starting location by any means.
+    if (env.grid(pos) == DNGN_ORB_DAIS)
         return;
+
+    // If we're trying to place a wall on top of a monster, push it out of the
+    // way first.
+    if (feat_is_wall(nfeat) && monster_at(pos))
+        push_or_teleport_actor_from(pos);
     if (feat_is_trap(nfeat) && env.trap.find(pos) == env.trap.end())
-    {
-        // TODO: create a trap_def in env for this case?
-        mprf(MSGCH_ERROR,
-            "Attempting to change terrain to a trap without a corresponding"
-            " trap_def!");
-        nfeat = DNGN_FLOOR;
-    }
+        place_specific_trap(pos, trap_type_from_feature(nfeat), 1);
 
 
     _dgn_check_terrain_covering(pos, env.grid(pos), nfeat);
@@ -1929,6 +1951,8 @@ const char* feat_type_name(dungeon_feature_type feat)
         return "shop";
     if (feat_is_fountain(feat))
         return "fountain";
+    if (feat == DNGN_ORB_DAIS)
+        return "dais";
     if (feat == DNGN_UNSEEN)
         return "unknown terrain";
     return "floor";
@@ -2030,6 +2054,12 @@ void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
                          terrain_change_type type, int mid)
 {
     dungeon_feature_type old_feat = env.grid(pos);
+
+    // We can't actually change this, so don't add a map marker that will add
+    // a confusing 'summoned' to the feature name when examining it.
+    if (old_feat == DNGN_ORB_DAIS)
+        return;
+
     tile_flavour old_flv = tile_env.flv(pos);
     for (map_marker *marker : env.markers.get_markers_at(pos))
     {
@@ -2141,6 +2171,8 @@ static bool _revert_terrain_to(coord_def pos, dungeon_feature_type feat)
     return true;
 }
 
+// If ctype == NUM_TERRAIN_CHANGE_TYPES, will revert *all* terrain changes on
+// the given pos.
 bool revert_terrain_change(coord_def pos, terrain_change_type ctype)
 {
     dungeon_feature_type newfeat = DNGN_UNSEEN;
@@ -2155,7 +2187,7 @@ bool revert_terrain_change(coord_def pos, terrain_change_type ctype)
             map_terrain_change_marker* tmarker =
                     dynamic_cast<map_terrain_change_marker*>(marker);
 
-            if (tmarker->change_type == ctype)
+            if (tmarker->change_type == ctype || ctype == NUM_TERRAIN_CHANGE_TYPES)
             {
                 if (tmarker->colour != BLACK)
                     colour = tmarker->colour;
@@ -2187,7 +2219,7 @@ bool revert_terrain_change(coord_def pos, terrain_change_type ctype)
         if (ctype == TERRAIN_CHANGE_BOG)
             env.map_knowledge(pos).set_feature(newfeat, colour);
         dungeon_terrain_changed(pos, newfeat, false, true, false, false,
-            newfeat_flv, newfeat_flv_idx);
+                                newfeat_flv, newfeat_flv_idx);
         env.grid_colours(pos) = colour;
         return true;
     }
@@ -2389,6 +2421,46 @@ coord_def push_actor_from(const coord_def& pos,
     return newpos;
 }
 
+/**
+ * Move an actor from 'pos' to some available space, by increasingly forceful
+ * means. Will first try to push into an adjacent moveable space. If none is
+ * available, will instead move into the closest habitable space without LOS_RADIUS.
+ * (Note: there is no guarantee that this isn't on the other side of a wall, but
+ * since this is usually used to push things OUT of walls, that is acceptable).
+ * Finally, if this fails, simply teleport the actor at random.
+ *
+ * @return the new coordinates for the actor.
+ */
+coord_def push_or_teleport_actor_from(const coord_def& pos)
+{
+    actor* act = actor_at(pos);
+    if (!act)
+        return coord_def(0,0);
+
+    if (push_actor_from(pos, nullptr, true).origin())
+    {
+        for (distance_iterator di(pos, false, true, LOS_RADIUS); di; ++di)
+        {
+            if (!actor_at(*di)
+                && ((act->is_player() && you.can_pass_through(*di))
+                    || act->is_monster() && monster_habitable_grid(act->as_monster(), *di)))
+            {
+                if (act->is_player())
+                    move_player_to_grid(*di, false);
+                else
+                    act->move_to_pos(*di);
+                return act->pos();
+            }
+        }
+
+        // Failed to find anywhere in LOS_RADIUS that was valid to put this actor,
+        // so just teleport them instead
+        act->teleport(true);
+    }
+
+    return act->pos();
+}
+
 /** Close any door at the given position. Handles the grid change, but does not
  * mark terrain or do any event handling.
  *
@@ -2480,7 +2552,7 @@ void ice_wall_damage(monster &mons, int delay)
         if (mons.alive())
         {
             behaviour_event(&mons, ME_WHACK, &you);
-            mons.expose_to_element(BEAM_COLD, orig_dam);
+            mons.expose_to_element(BEAM_COLD, orig_dam, &you);
         }
     }
 }

@@ -185,8 +185,7 @@ able to keep their balance, move at a normal speed, and avoid fumbling.
 %%%%
 Some mud
 
-A thick layer of gritty mud.
-<liquefied>
+A thick layer of gritty mud. [[liquefied]]
 %%%%
 The open sea
 
@@ -276,6 +275,11 @@ A demonic tree
 A tree hideously warped by the demonic forces of chaos. Despite its bizarre
 appearance and occasional, unsettling movement, it seems harmless.
 %%%%
+A petrified tree
+
+An ancient tree, long ago passed from biology into geology. While no longer
+wooden in a material sense, it retains the spiritual qualities of a tree.
+%%%%
 An abandoned shop
 
 A shop that has been abandoned.
@@ -344,7 +348,7 @@ a monster within its confines.
 %%%%
 A dry fountain
 
-A dried-up fountain that has seen better days.
+A dried-up decorative fountain that has seen better days.
 %%%%
 A fountain of clear blue water
 
@@ -354,9 +358,20 @@ A fountain of blood
 
 A decorative fountain, spurting with foul-looking blood.
 %%%%
+A fountain of eyes
+
+A decorative fountain, bubbling over with listless and unmoving eyes.
+%%%%
 A fountain of sparkling water
 
-A decorative fountain, flowing with brightly sparkling water.
+A decorative fountain, flowing with brightly sparkling, faintly magic water.
+%%%%
+A cache of baked goods
+
+A hoard of breadstuffs, baked and fried from minor divine gifts of flour and
+growth cultures, granted extended shelflife through sacred succour. You already
+carry as much food as you will ever need for this journey, but a light snack
+shouldn't hurt.
 %%%%
 A cache of fruit
 
@@ -393,6 +408,11 @@ A one-way staircase leading up
 A cursed staircase leading up, imbued with magic to prevent any return back
 down the stairs. Adventurers taking this passage will need to find a return
 stairway somewhere else on the level where they arrive.
+%%%%
+The orb dais
+
+A raised pedestal upon which rests the fabled Orb of Zot. More ancient than even
+the dungeon itself, it cannot be destroyed or transformed by any means.
 %%%%
 ########################################################################
 ### Branch entrances and exits
@@ -579,26 +599,33 @@ this location to return back through the transporter.
 ########################################################################
 An open door
 
-An open wooden door. If reopened by a monster, it has a chance of breaking.
+An open wooden door. If closed again, all monsters that can wield equipment,
+and some of them that can't, could open it again. If it is closed and reopened
+by a monster that is aware of you, it has a chance of breaking.
 %%%%
 A closed door
 
-A closed wooden door. If opened by a monster, it has a chance of breaking.
+A closed wooden door. All monsters that can wield equipment, and some of them
+that can't, may open it again. If it is opened by a monster while it is aware
+of you, it has a chance of breaking.
 %%%%
 A broken door
 
-A disappointingly poorly maintained wooden door. It'd take nothing short of magic
-to get this properly closed again.
+A disappointingly poorly maintained wooden door. It'd take nothing short of
+magic to get this properly closed again.
 %%%%
 An open translucent door
 
-An open door made from magically translucent wood. If reopened by a monster,
-it has a chance of breaking.
+An open door made from magically translucent wood. If closed again, all monsters
+that can wield equipment, and some of them that can't, could open it again. If
+it is closed and reopened by a monster that is aware of you, it has a chance of
+breaking.
 %%%%
 A closed translucent door
 
-A closed door made from magically translucent wood. If opened by a monster, it
-has a chance of breaking.
+A closed door made from magically translucent wood. All monsters that can wield
+equipment, and some of them that can't, may open it again. If it is opened by a
+monster while it is aware of you, it has a chance of breaking.
 %%%%
 A broken translucent door
 
@@ -615,6 +642,25 @@ A door, covered in runic writing. It looks like there is something special
 behind it — perhaps danger, perhaps treasure. You may break the runes by
 opening it like any other door, but creatures of the dungeon will not dare
 to try.
+%%%%
+A runed translucent door
+
+A door, covered in runic writing, made from magically translucent wood. It has
+been created to seal away great danger or glorious treasure. You may break the
+runes by opening it like any other door, but creatures of the dungeon will not
+dare to try.
+%%%%
+A large runed translucent door
+
+<A runed translucent door>
+%%%%
+A runed translucent gate
+
+<A runed translucent door>
+%%%%
+A huge runed translucent gate
+
+<A runed translucent door>
 %%%%
 A large open door
 
@@ -722,10 +768,31 @@ noise it creates, it will apply an enchantment making monsters all over the
 level aware of your location. Hostile monsters may trigger this trap themselves
 to invoke its effects against you, but your allies will avoid stepping on it.
 %%%%
+An archmage's trap
+
+A magical trap crafted by some avaricious master wizard. When you or a hostile
+monster steps on it, you will lose a percentage of your mp, while up to three of
+the strongest hostile spellcasters in sight will have their spells empowered.
+Your allies will avoid stepping on it.
+%%%%
+A devourer's trap
+
+A magical trap linked by divine cruelty to the stomachs of some unfathomable
+interdimensional predators. When you or a hostile monster steps on it, it has a
+high chance it will expel digestive acid onto you, corroding you. Your allies
+will avoid stepping on it.
+%%%%
 A dispersal trap
 
 Anyone stepping on this trap will translocate themself and anyone else in view
 to a new location nearby. Hostile monsters may trigger this trap, but your
+allies will avoid stepping on it.
+%%%%
+A harlequin's trap
+
+A magical trap left behind by the ineffable, spectacular revues of chaos. When
+you or a hostile monster steps on it, up to three of the strongest monsters in
+sight will have their attacks temporarily interwoven with a touch of chaos. Your
 allies will avoid stepping on it.
 %%%%
 A net trap
@@ -734,21 +801,34 @@ A large concealed net launcher hanging from the dungeon's ceiling. Enchanted by
 the power of Zot, whenever an intelligent creature steps here - whether friend
 or foe - the net will land only on you.
 %%%%
+A permanent teleport trap
+
+A magical trap which will displace anyone passing over it to a random place on
+the same dungeon level.
+%%%%
 A pressure plate
 
 A trigger of some sort. You cannot tell what kind of trap it is attached to.
 Its complicated detection system will trigger the trap even when someone flies
 over it.
 %%%%
+A spike launcher
+
+A magical contraption which skewers nearby monsters with sharp spikes. It will
+disintegrate after a short length of time or if the caster strays too far away
+from it.
+%%%%
 A teleport trap
 
 A magical trap which will displace anyone passing over it to a random place on
 the same dungeon level. It is worn with age, and will dissipate on use.
 %%%%
-A permanent teleport trap
+A tyrant's trap
 
-A magical trap which will displace anyone passing over it to a random place on
-the same dungeon level.
+A magical trap built to bolster the armies of some conquering despot. When you
+or a hostile monster steps on it, your melee attacks will be weakened to make
+up to three of the most dangerous monsters in sight become stronger. Your
+allies will avoid stepping on it.
 %%%%
 A web
 
@@ -835,8 +915,37 @@ A collapsed entrance
 A collapsed passage which cannot be used anymore.
 %%%%
 ########################################################################
-### Vault redefinitions
+### Portal redefinitions
 ########################################################################
+# sewer_minmay_treatment (Sewer)
+A large window
+
+A window embedded in the side of an enormous metal pipe, allowing observation
+of the water flowing inside.
+%%%%
+# Ice Cave
+An ice choked empty arch of ancient stone
+
+An inoperative portal, nearly completely encased in a mass of ice.
+%%%%
+An ice covered gate leading back out of this place
+
+A portal leading back to the place you came from. Its magic is holding the ice
+at bay, preventing it from blocking the gate. You will be unable to return here
+once you pass through it.
+%%%%
+An ice covered rock wall
+
+A rock wall covered by a thick layer of frost and ice.
+%%%%
+Some ice crusted deep water
+
+A pool of deep water, crusted with broken blocks of ice.
+%%%%
+Some ice crusted shallow water
+
+A pool of shallow water, crusted with broken blocks of ice.
+%%%%
 # volcanos
 A rock-blocked tunnel
 
@@ -847,6 +956,18 @@ A rocky tunnel leading out of this place
 An unstable passage in the volcanic rock, admitting a draft of cool air from
 beyond. It leads back to the place you came from. You will be unable to return
 here once you pass through it.
+%%%%
+# Desolation
+An endless expanse of salt
+
+A seemingly endless, flat plain, wracked by blinding salt-storms. Anyone
+venturing across it would be lost beyond all hope in short order.
+%%%%
+# Desolation
+A ruined idol
+
+A monument to the glory of a dead god. The statue has been methodically
+defaced; not a single distinguishing feature remains.
 %%%%
 # wizlabs
 A portal leading out of this place
@@ -904,6 +1025,10 @@ The pulsating floor
 
 The floor. It pulses to an unknown beat.
 %%%%
+A broken fleshy orifice
+
+It seems to be oozing quietly. Best not to touch it.
+%%%%
 # wizlab: Zonguldrok
 Zonguldrok's gravestone
 
@@ -929,6 +1054,14 @@ The damp floor
 The floor. It remains forever damp, perhaps due to the humidity or the constant
 flow of clouds.
 %%%%
+A wall of orange crystal
+
+<A crystal wall>
+%%%%
+A wall of pink crystal
+
+<A crystal wall>
+%%%%
 A wall of white crystal
 
 A wall made from low-grade crystal with an opalescent gleam.
@@ -943,6 +1076,25 @@ A carved rock wall
 
 A wall decorated with images of death and destruction.
 %%%%
+# Crucible of Flesh
+An unnaturally hard bloodstone wall
+
+An indestructible bulwark, wrought from blood and tempered in the suffering of
+mortal lives beyond count.
+########################################################################
+### Vault redefinitions
+########################################################################
+%%%%
+A metal statue
+
+A base type statue for other statue flavours. If you see this, file a bug
+report.
+%%%%
+A decorative floor
+
+A base floor type for various decorations one can walk over. If you see this,
+file a bug report.
+%%%%
 A dead tree
 
 The dry remains of a long-dead tree.
@@ -951,16 +1103,22 @@ A dead mangrove
 
 The dry remains of a long-dead mangrove.
 %%%%
-A metal statue
+# Dis vaults
+A bloodied mop and bucket
 
-A base type statue for other statue flavours. If you see this, file a bug
-report.
+A mop and bucket soaked with the bloody aftermath of demonic torture.
 %%%%
 # Dis:7
 An iron statue
 
 A statue of an ancient warrior, festooned with trophies from fallen victims.
 Some dark substance oozes from the gaps in its visor; surely it must be oil..?
+%%%%
+# Gehenna vaults
+An infernal standard
+
+A blazing flag of cruel conquest, planted amid the ruins of many a fallen
+kingdom to claim their ashes in the name of Hell.
 %%%%
 # Geh:7
 Ashen ground
@@ -1012,70 +1170,123 @@ A mystic cage
 
 A sturdy metal cage, inscribed with cryptic magics. Whatever it once held -
 whether person, beast, or experiment - was evidently already freed in response
-to intruders infiltrating the Dungeon.
+to intruders like you infiltrating the Dungeon.
 %%%%
 # Themed magic branches / portals / vaults.
 An arcane conduit
 
-A strange but benign metal construct, analyzing raw ambient magical energy. If
+A strange but benign metal construct, analysing raw ambient magical energy. If
 destroyed and disrupted by sufficiently mighty magic, its destructive mystic
 energy will harmlessly disperse.
 %%%%
 A misfortune conduit
 
-A strange but benign metal construct, analyzing raw ambient magical energy. If
+A strange but benign metal construct, analysing raw ambient magical energy. If
 destroyed and disrupted by sufficiently mighty magic, its malevolent cursed
 energy will harmlessly disperse.
 %%%%
 A dimensional conduit
 
-A strange but benign metal construct, analyzing raw ambient magical energy. If
+A strange but benign metal construct, analysing raw ambient magical energy. If
 destroyed and disrupted by sufficiently mighty magic, its extraplanar warp
 energy will harmlessly disperse.
 %%%%
 A soul conduit
 
-A strange but benign metal construct, analyzing raw ambient magical energy. If
+A strange but benign metal construct, analysing raw ambient magical energy. If
 destroyed and disrupted by sufficiently mighty magic, its negative energy will
 harmlessly disperse.
 %%%%
 An alchemical conduit
 
-A strange but benign metal construct, analyzing raw ambient magical energy. If
+A strange but benign metal construct, analysing raw ambient magical energy. If
 destroyed and disrupted by sufficiently mighty magic, its venomous churning
 energy will harmlessly disperse.
 %%%%
 A fiery conduit
 
-A strange but benign metal construct, analyzing raw ambient magical energy. If
+A strange but benign metal construct, analysing raw ambient magical energy. If
 destroyed and disrupted by sufficiently mighty magic, its ever-burning energy
 will harmlessly disperse.
 %%%%
 An icy conduit
 
-A strange but benign metal construct, analyzing raw ambient magical energy. If
+A strange but benign metal construct, analysing raw ambient magical energy. If
 destroyed and disrupted by sufficiently mighty magic, its chilling cold energy
 will harmlessly disperse.
 %%%%
 An earthen conduit
 
-A strange but benign metal construct, analyzing raw ambient magical energy. If
+A strange but benign metal construct, analysing raw ambient magical energy. If
 destroyed and disrupted by sufficiently mighty magic, its seismic energy will
 harmlessly disperse.
 %%%%
 A storm conduit
 
-A strange but benign metal construct, analyzing raw ambient magical energy. If
+A strange but benign metal construct, analysing raw ambient magical energy. If
 destroyed and disrupted by sufficiently mighty magic, its crackling energy will
 harmlessly disperse.
 %%%%
+# Wizlabs and Zot _only_.
+An enigmatic dynamo
+
+A harmless yet sturdy metal construct, arcane both in power-source and
+purpose. Whatever it analyses, processes, powers, or produces can neither be
+assessed nor accessed by intruders like you infiltrating the Dungeon.
+%%%%
+A nascence circuit
+
+A coruscating spark gap of twin electrodes of impenetrably advanced technology.
+These are used to forge and power thaumaturgical constructs, though despite the
+constant crackling, this one is used up and unable to do much more than
+harmlessly dance with the joy of creating life.
+%%%%
 # Vaults with extraplanar contents.
-A bedeviled crystal wall
+A bedevilled crystal wall
 
 A wall made from shimmering crystal, from which some demonic plane peers out.
 While its composition both make it resist destruction plus reflect both fire and
 cold, the otherworldly forces within it seem to be entirely harmless... from
 this end, anyway.
+%%%%
+# Housing, gardens, and zoos.
+A floral vase
+
+A vibrant bouquet of flowers in a clay vessel, kept alive with ample water
+and some minor magic.
+%%%%
+A garden patch
+
+A small decorative plot of flowers penned in by cobblestone.
+%%%%
+A flower patch
+
+A bed of hardy wildflowers, thriving in this place despite everything.
+%%%%
+A mop and bucket
+
+A mop and bucket, useful for keeping one's environs orderly and clean. Too bad
+you're here now.
+%%%%
+A fur brush
+
+A grooming brush laid to rest beside a pile of tangled, matted yak fur.
+%%%%
+# Graveyards, Crypt, Necropolis.
+A mourning vase
+
+A singular flower, suffused with gloom and held in a ceramic grip. It
+is difficult to tell whether it is even still alive.
+%%%%
+A broken floral vase
+
+A delicate arrangement, smashed to pieces and consigned to slow starvation.
+%%%%
+# Bailies and other Orc-containing larger vaults
+An orcish standard
+
+A flag of Beogh, raised to show that this fortification belongs to some arm of
+the Dungeon's orcish military.
 %%%%
 # Holy Pan.
 A silver wall
@@ -1115,40 +1326,6 @@ An adventurer's gravestone
 
 The grave of an adventurer who came close to victory.
 %%%%
-# Ice Cave
-An ice choked empty arch of ancient stone
-
-An inoperative portal, nearly completely encased in a mass of ice.
-%%%%
-An ice covered gate leading back out of this place
-
-A portal leading back to the place you came from. Its magic is holding the ice
-at bay, preventing it from blocking the gate. You will be unable to return here
-once you pass through it.
-%%%%
-An ice covered rock wall
-
-A rock wall covered by a thick layer of frost and ice.
-%%%%
-Some ice crusted deep water
-
-A pool of deep water, crusted with broken blocks of ice.
-%%%%
-Some ice crusted shallow water
-
-A pool of shallow water, crusted with broken blocks of ice.
-%%%%
-# sewer_minmay_treatment (Sewer)
-A large window
-
-A window embedded in the side of an enormous metal pipe, allowing observation
-of the water flowing inside.
-%%%%
-A petrified tree
-
-An ancient tree, long ago passed from biology into geology. While no longer
-wooden in a material sense, it retains the spiritual qualities of a tree.
-%%%%
 # due_jungle_book (Lair:$)
 An elephant-shaped statue
 
@@ -1164,22 +1341,6 @@ A sealed sarcophagus
 
 An ancient sarcophagus. It is sealed shut.
 %%%%
-# Desolation
-An endless expanse of salt
-
-A seemingly endless, flat plain, wracked by blinding salt-storms. Anyone
-venturing across it would be lost beyond all hope in short order.
-%%%%
-# Desolation
-A ruined idol
-
-A monument to the glory of a dead god. The statue has been methodically
-defaced; not a single distinguishing feature remains.
-%%%%
-# Cigotuvi's wizlab
-A broken fleshy orifice
-
-It seems to be oozing quietly. Best not to touch it.
 ########################################################################
 ### Sprint
 ########################################################################

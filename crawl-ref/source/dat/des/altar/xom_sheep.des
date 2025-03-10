@@ -29,12 +29,16 @@ function callback.kb_xom_exploding_sheep(data, triggerable,
     end
   end
   view.update_monsters()
+  local you_x, you_y = you.pos()
   for i = 1, nsheep do
     local sheep = sheeparray[i]
     sheep.add_ench("inner_flame", 1, 30000)
     sheep.add_ench("sticky_flame", 1, 30000)
     sheep.add_ench("fear", 1, 30000)
     sheep.beh = flee
+    -- Set target so they will actually flee from the player's location
+    sheep.targetx = you_x
+    sheep.targety = you_y
     if visarray[i] then
       crawl.mpr("A dream sheep catches fire!", "warning")
       sheep.speak("dream sheep flee")

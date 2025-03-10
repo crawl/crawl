@@ -44,7 +44,7 @@ function test.regenerate_level(place, use_random_maps)
   if place then
     debug.goto_place(place)
   end
-  debug.flush_map_memory() -- TODO: this is overkill for a single level
+  debug.reset_player_data() -- TODO: this is overkill for a single level
   dgn.reset_level()
   debug.generate_level(use_random_maps)
 end

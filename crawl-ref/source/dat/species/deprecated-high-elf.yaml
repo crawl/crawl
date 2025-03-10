@@ -1,0 +1,43 @@
+TAG_MAJOR_VERSION: 34
+enum: SP_HIGH_ELF
+monster: MONS_ELF
+name: High Elf
+short_name: HE
+adjective: Elven
+genus: Elf
+difficulty: False
+aptitudes:
+  xp: -1
+  hp: -1
+  mp_mod: 1
+  wl: 4
+  short_blades: 2
+  long_blades: 2
+  axes: -2
+  maces_and_flails: -2
+  polearms: -2
+  ranged weapons: 3
+  armour: -1
+  dodging: 1
+  stealth: 2
+  shields: -1
+  unarmed_combat: -2
+  spellcasting: 1
+  conjurations: 1
+  summoning: -1
+  necromancy: -2
+  translocations: 1
+  air_magic: 2
+  earth_magic: -2
+  alchemy: -2
+  invocations: 1
+  shapeshifting: -1
+str: 7
+int: 11
+dex: 10
+levelup_stat_frequency: 3
+levelup_stats:
+  - dex
+  - int
+
+orc_name: High Orc

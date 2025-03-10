@@ -1,0 +1,15 @@
+name: "shadow turret"
+glyph: {char: "I", colour: magenta}
+flags: [insubstantial, no_exp_gain, no_poly_to, see_invis, stationary]
+holiness: [nonliving]
+will: invuln
+attacks:
+hd: 10
+hp_10x: 250
+ac: 9
+ev: 15
+speed: 5
+spells: shadow_turret
+intelligence: brainless
+size: medium
+shape: misc

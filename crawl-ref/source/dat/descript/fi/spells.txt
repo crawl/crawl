@@ -9,12 +9,6 @@ Agony spell
 Tämä taika leikkaa olennon sietokyvyn kahtia, mutta ei tapa koskaan suoralta
 kädeltä.
 %%%%
-Animate Skeleton spell
-
-Tämä taika nostaa liikuntakyvyttömän luurangon epäelämän tilaan, vaikka
-kyseinen luuranko olisi lihan peittämä! Ota huomioon, että luurangot eivät voi
-poistua syntymäkerroksestaan.
-%%%%
 Blade Hands spell
 
 Tämä taika saa loitsijansa kädet kasvattamaan pitkät, viikatteen muotoiset

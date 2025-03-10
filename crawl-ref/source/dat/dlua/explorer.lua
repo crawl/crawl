@@ -516,7 +516,7 @@ end
 function explorer.catalog_dungeon(max_depth, cats_to_show, show_level_fun)
     local result = {}
     dgn.reset_level()
-    debug.flush_map_memory()
+    debug.reset_player_data()
     debug.dungeon_setup()
     for i,lvl in ipairs(explorer.generation_order) do
         if i > max_depth then break end

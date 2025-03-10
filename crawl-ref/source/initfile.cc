@@ -38,6 +38,7 @@
 #include "end.h"
 #include "errors.h"
 #include "explore-greedy-options.h"
+#include "explore-stop-options.h"
 #include "files.h"
 #include "game-options.h"
 #include "ghost.h"
@@ -88,9 +89,7 @@
 #include <shlobj.h>
 #elif defined(TARGET_OS_MACOSX)
 extern char **NXArgv;
-#ifndef DATA_DIR_PATH
 #include <unistd.h>
-#endif
 #elif defined(UNIX) || defined(TARGET_COMPILER_MINGW)
 #include <unistd.h>
 #endif
@@ -178,6 +177,30 @@ mlc_mapping::mlc_mapping(const string &s)
     }
 }
 
+#ifdef USE_TILE
+colour_remapping::colour_remapping(const string &s)
+{
+    vector<string> thesplit = split_string(":", s, true, true, 1);
+    const int scolour = thesplit.size() == 1 ? -1 : str_to_colour(thesplit[0]);
+
+    // let -1 for "" through
+    if ((scolour >= 16 || scolour < 0) && (thesplit.size() > 1 && !thesplit[0].empty()))
+    {
+        mprf(MSGCH_ERROR, "Options error: Bad custom_text_colours key: '%s'",
+            thesplit[1].c_str());
+        return;
+    }
+
+    colour_index = scolour;
+    colour_def = str_to_tile_colour(thesplit[1]);
+    if (colour_index == NUM_TERM_COLOURS)
+    {
+        mprf(MSGCH_ERROR, "Bad custom_text_colours: %s\n",
+                     thesplit[0].c_str());
+    }
+}
+#endif
+
 static bool _first_less(const pair<int, int> &l, const pair<int, int> &r)
 {
     return l.first < r.first;
@@ -194,6 +217,7 @@ const vector<GameOption*> base_game_options::build_options_list()
     return options; // ignored by subclass...
 }
 
+#ifndef DGAMELAUNCH
 static map<string, game_type> _game_modes()
 {
     map<string, game_type> modes = {
@@ -208,6 +232,7 @@ static map<string, game_type> _game_modes()
         modes["descent"] = GAME_TYPE_DESCENT;
     return modes;
 }
+#endif
 
 // **Adding new options**
 //
@@ -489,11 +514,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(note_dgl_messages), true),
         new StringGameOption(SIMPLE_NAME(user_note_prefix), "", true),
         new BoolGameOption(SIMPLE_NAME(clear_messages), false),
-#ifdef DEBUG
         new BoolGameOption(SIMPLE_NAME(show_more), false),
-#else
-        new BoolGameOption(SIMPLE_NAME(show_more), true),
-#endif
         new BoolGameOption(SIMPLE_NAME(small_more), false),
         new BoolGameOption(SIMPLE_NAME(pickup_thrown), true),
         new BoolGameOption(SIMPLE_NAME(drop_disables_autopickup), false),
@@ -643,6 +664,8 @@ const vector<GameOption*> game_options::build_options_list()
         new IntGameOption(SIMPLE_NAME(level_map_cursor_step), 7, 1, 50),
         new IntGameOption(SIMPLE_NAME(dump_item_origin_price), -1, -1),
         new IntGameOption(SIMPLE_NAME(dump_message_count), 40),
+        new IntGameOption(SIMPLE_NAME(food_snacking_frequency), 40, 0, 100),
+        new IntGameOption(SIMPLE_NAME(fountain_line_frequency), 40, 0, 100),
         new MultipleChoiceGameOption<kill_dump_options>(
             SIMPLE_NAME(dump_kill_places),
             KDO_ONE_PLACE,
@@ -653,9 +676,9 @@ const vector<GameOption*> game_options::build_options_list()
              {"one", KDO_ONE_PLACE},
              {"true", KDO_ONE_PLACE}}, true),
         new ListGameOption<string>(SIMPLE_NAME(dump_order),
-            {"header", "hiscore", "stats", "misc", "inventory", "skills",
-             "spells", "overview", "mutations", "messages", "screenshot",
-             "monlist", "kills", "notes", "screenshots", "vaults",
+            {"header", "hiscore", "stats", "misc",  "apostles", "inventory",
+             "skills", "spells", "overview", "mutations", "messages",
+             "screenshot", "monlist", "kills", "notes", "screenshots", "vaults",
              "skill_gains", "action_counts"}),
         new ListGameOption<text_pattern>(SIMPLE_NAME(confirm_action), {}, true),
         new MultipleChoiceGameOption<easy_confirm_type>(
@@ -864,6 +887,9 @@ const vector<GameOption*> game_options::build_options_list()
         new ListGameOption<string>(SIMPLE_NAME(tile_layout_priority),
             split_string(",", "minimap, inventory, command, "
                               "spell, ability, monster")),
+        new ListGameOption<string>(SIMPLE_NAME(tile_player_status_icons),
+            split_string(",", "slow, fragile, constr, will/2")),
+        new ListGameOption<colour_remapping>(SIMPLE_NAME(custom_text_colours), {}, false),
 #endif
 #ifdef USE_TILE_LOCAL
 # ifndef __ANDROID__
@@ -1064,7 +1090,7 @@ static const string message_channel_names[] =
     "friend_enchant", "monster_damage", "monster_target", "banishment",
     "equipment", "floor", "multiturn", "examine", "examine_filter", "diagnostic",
     "error", "tutorial", "orb", "timed_portal", "hell_effect", "monster_warning",
-    "dgl_message", "decor_flavour",
+    "dgl_message", "decor_flavour", "monster_timeout"
 };
 
 // returns -1 if unmatched else returns 0--(NUM_MESSAGE_CHANNELS-1)
@@ -1366,8 +1392,7 @@ void game_options::set_default_activity_interrupts()
         "interrupt_transform = interrupt_armour_on",
         "interrupt_memorise = hp_loss, monster_attack, stat",
         "interrupt_butcher = interrupt_armour_on, teleport, stat",
-        "interrupt_exsanguinate = interrupt_butcher",
-        "interrupt_revivify = interrupt_butcher",
+        "interrupt_imbue_servitor = interrupt_butcher",
         "interrupt_multidrop = hp_loss, monster_attack, teleport, stat",
         "interrupt_macro = interrupt_multidrop",
         "interrupt_travel = interrupt_butcher, hit_monster, sense_monster, ally_attacked, abyss_exit_spawned",
@@ -1601,7 +1626,6 @@ void game_options::reset_options()
     set_fire_order_ability("all", false, false);
 
     fire_order_ability.erase(ABIL_TROG_BERSERK);
-    fire_order_ability.erase(ABIL_REVIVIFY);
     fire_order_ability.erase(ABIL_IGNIS_FIERY_ARMOUR);
     fire_order_ability.erase(ABIL_IGNIS_FOXFIRE);
     fire_order_ability.erase(ABIL_IGNIS_RISING_FLAME);
@@ -1617,16 +1641,17 @@ void game_options::reset_options()
           SPELL_IGNITION, SPELL_NOXIOUS_BOG, SPELL_ANGUISH,
           SPELL_CAUSE_FEAR, SPELL_INTOXICATE, SPELL_DISCORD, SPELL_DISPERSAL,
           SPELL_ENGLACIATION, SPELL_DAZZLING_FLASH, SPELL_FLAME_WAVE,
-          SPELL_PLASMA_BEAM };
+          SPELL_PLASMA_BEAM, SPELL_PILEDRIVER, SPELL_DIAMOND_SAWBLADES,
+          SPELL_FORTRESS_BLAST };
     always_use_static_spell_targeters = false;
 
     force_ability_targeter =
         { ABIL_ZIN_SANCTUARY, ABIL_TSO_CLEANSING_FLAME, ABIL_WORD_OF_CHAOS,
           ABIL_ZIN_RECITE, ABIL_QAZLAL_ELEMENTAL_FORCE, ABIL_JIYVA_OOZEMANCY,
-          ABIL_GALVANIC_BREATH, ABIL_KIKU_TORMENT, ABIL_YRED_FATHOMLESS_SHACKLES,
+          ABIL_GALVANIC_BREATH, ABIL_YRED_FATHOMLESS_SHACKLES,
           ABIL_CHEIBRIADOS_SLOUCH, ABIL_QAZLAL_DISASTER_AREA,
           ABIL_RU_APOCALYPSE, ABIL_LUGONU_CORRUPT, ABIL_IGNIS_FOXFIRE,
-          ABIL_SIPHON_ESSENCE };
+          ABIL_SIPHON_ESSENCE, ABIL_DITHMENOS_SHADOWSLIP };
     always_use_static_ability_targeters = false;
 
 #ifdef DGAMELAUNCH
@@ -2537,12 +2562,6 @@ base_game_options::base_game_options(base_game_options const& other)
     *this = other;
 }
 
-base_game_options::base_game_options(base_game_options &&other) noexcept
-    : base_game_options()
-{
-    swap(*this, other);
-}
-
 base_game_options& base_game_options::operator=(base_game_options const& other)
 {
     if (this != &other)
@@ -3061,28 +3080,27 @@ void game_options::update_travel_terrain()
     }
 }
 
+
 void game_options::update_use_animations()
 {
+    static const std::map<const string, use_animation_type> ANIMATION_TYPES =
+    {
+        {  "beam", UA_BEAM },
+        {  "range", UA_RANGE },
+        {  "hp", UA_HP },
+        {  "monster_in_sight", UA_MONSTER_IN_SIGHT },
+        {  "pickup", UA_PICKUP },
+        {  "monster", UA_MONSTER },
+        {  "player", UA_PLAYER },
+        {  "branch_entry", UA_BRANCH_ENTRY }
+    };
+
     use_animations_type animations = UA_ALWAYS_ON; // not 0!
     for (const string &type : use_animations_option)
     {
-        // TODO: dataify into a map
-        if (type == "beam")
-            animations |= UA_BEAM;
-        else if (type == "range")
-            animations |= UA_RANGE;
-        else if (type == "hp")
-            animations |= UA_HP;
-        else if (type == "monster_in_sight")
-            animations |= UA_MONSTER_IN_SIGHT;
-        else if (type == "pickup")
-            animations |= UA_PICKUP;
-        else if (type == "monster")
-            animations |= UA_MONSTER;
-        else if (type == "player")
-            animations |= UA_PLAYER;
-        else if (type == "branch_entry")
-            animations |= UA_BRANCH_ENTRY;
+        const auto search = ANIMATION_TYPES.find(type);
+        if (search != ANIMATION_TYPES.end())
+            animations |= search->second;
         else
             report_error("Unknown animation type '%s'", type.c_str());
     }
@@ -3092,50 +3110,40 @@ void game_options::update_use_animations()
 
 void game_options::update_explore_stop_conditions()
 {
+    // Note: if altering these, make sure the same alternative spellings appear
+    // in update_explore_greedy_visit_conditions if relevant.
+    static const std::map<const string, explore_stop_options> STOP_CONDITIONS =
+    {
+        { "item", ES_ITEM }, { "items", ES_ITEM },
+        { "greedy_pickup", ES_GREEDY_PICKUP },
+        { "greedy_pickup_gold", ES_GREEDY_PICKUP_GOLD },
+        { "greedy_pickup_smart", ES_GREEDY_PICKUP_SMART },
+        { "greedy_pickup_thrown", ES_GREEDY_PICKUP_THROWN },
+        { "shop" , ES_SHOP }, { "shops", ES_SHOP },
+        { "stair", ES_STAIR }, { "stairs", ES_STAIR },
+        { "branch" , ES_BRANCH }, { "branches", ES_BRANCH },
+        { "portal", ES_PORTAL }, { "portals", ES_PORTAL },
+        { "altar", ES_ALTAR }, { "altars", ES_ALTAR },
+        { "runed_door", ES_RUNED_DOOR }, { "runed_doors", ES_RUNED_DOOR },
+        { "transporter", ES_TRANSPORTER }, { "transporters", ES_TRANSPORTER },
+        { "greedy_item", ES_GREEDY_ITEM }, { "greedy_items", ES_GREEDY_ITEM },
+        { "greedy_visited_item_stack", ES_GREEDY_VISITED_ITEM_STACK },
+        { "glowing" , ES_GLOWING_ITEM }, { "glowing_item", ES_GLOWING_ITEM },
+        { "glowing_items", ES_GLOWING_ITEM },
+        { "artefact", ES_ARTEFACT }, { "artefacts", ES_ARTEFACT },
+        { "artifact", ES_ARTEFACT }, { "artifacts", ES_ARTEFACT },
+        { "rune", ES_RUNE }, { "runes", ES_RUNE },
+    };
     // convert the options list into a bitfield, and save it by side-effect
     // into game_options::explore_stop. List processing is handled by the
     // option update code, and we can ignore it here.
     int conditions = ES_NONE;
     for (const string &stop : explore_stop_option)
     {
-        // TODO: dataify into a map
         const string c = replace_all_of(stop, " ", "_");
-        if (c == "item" || c == "items")
-            conditions |= ES_ITEM;
-        else if (c == "greedy_pickup")
-            conditions |= ES_GREEDY_PICKUP;
-        else if (c == "greedy_pickup_gold")
-            conditions |= ES_GREEDY_PICKUP_GOLD;
-        else if (c == "greedy_pickup_smart")
-            conditions |= ES_GREEDY_PICKUP_SMART;
-        else if (c == "greedy_pickup_thrown")
-            conditions |= ES_GREEDY_PICKUP_THROWN;
-        else if (c == "shop" || c == "shops")
-            conditions |= ES_SHOP;
-        else if (c == "stair" || c == "stairs")
-            conditions |= ES_STAIR;
-        else if (c == "branch" || c == "branches")
-            conditions |= ES_BRANCH;
-        else if (c == "portal" || c == "portals")
-            conditions |= ES_PORTAL;
-        else if (c == "altar" || c == "altars")
-            conditions |= ES_ALTAR;
-        else if (c == "runed_door" || c == "runed_doors")
-            conditions |= ES_RUNED_DOOR;
-        else if (c == "transporter" || c == "transporters")
-            conditions |= ES_TRANSPORTER;
-        else if (c == "greedy_item" || c == "greedy_items")
-            conditions |= ES_GREEDY_ITEM;
-        else if (c == "greedy_visited_item_stack")
-            conditions |= ES_GREEDY_VISITED_ITEM_STACK;
-        else if (c == "glowing" || c == "glowing_item"
-                 || c == "glowing_items")
-            conditions |= ES_GLOWING_ITEM;
-        else if (c == "artefact" || c == "artefacts"
-                 || c == "artifact" || c == "artifacts")
-            conditions |= ES_ARTEFACT;
-        else if (c == "rune" || c == "runes")
-            conditions |= ES_RUNE;
+        const auto search = STOP_CONDITIONS.find(c);
+        if (search != STOP_CONDITIONS.end())
+            conditions |= search->second;
         else
             report_error("Unknown explore stop condition '%s'", c.c_str());
     }
@@ -3144,22 +3152,24 @@ void game_options::update_explore_stop_conditions()
 
 void game_options::update_explore_greedy_visit_conditions()
 {
+    // Note: if altering these, make sure the same alternative spellings appear
+    // in update_explore_stop_conditions if relevant.
+    static const std::map<const string, explore_greedy_options> GREEDY_CONDITIONS =
+    {
+        { "glowing", EG_GLOWING },{ "glowing_item", EG_GLOWING },
+        { "glowing_items", EG_GLOWING },
+        { "artefact", EG_ARTEFACT }, { "artefacts", EG_ARTEFACT },
+        { "artifact", EG_ARTEFACT }, { "artifacts", EG_ARTEFACT },
+        { "stack", EG_STACK }, { "stacks", EG_STACK },
+        { "pile", EG_STACK }, { "piles", EG_STACK },
+    };
     int conditions = EG_NONE;
     for (const string &stop : explore_greedy_visit_option)
     {
-        // TODO: dataify into a map
         const string c = replace_all_of(stop, " ", "_");
-        if (c == "glowing" || c == "glowing_item"
-                 || c == "glowing_items")
-        {
-            conditions |= EG_GLOWING;
-        }
-        else if (c == "artefact" || c == "artefacts"
-                 || c == "artifact" || c == "artifacts")
-            conditions |= EG_ARTEFACT;
-        else if (c == "stack" || c == "stacks"
-                 || c == "pile" || c == "piles")
-            conditions |= EG_STACK;
+        const auto search = GREEDY_CONDITIONS.find(c);
+        if (search != GREEDY_CONDITIONS.end())
+            conditions |= search->second;
         else
             report_error("Unknown greedy visit condition '%s'", c.c_str());
     }
@@ -3965,12 +3975,7 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
         merge_lists(force_autopickup, new_entries, state.caret_equal());
         return true;
     }
-#ifndef _MSC_VER
-    // break if-else chain on broken Microsoft compilers with stupid nesting limits
-    else
-#endif
-
-    if (key == "autoinscribe")
+    else if (key == "autoinscribe")
     {
         if (state.plain())
             autoinscriptions.clear();
@@ -5229,6 +5234,21 @@ static void _write_vcolour(const string &name, VColour colour)
     tiles.json_close_object();
 }
 
+static void _write_custom_colours(const string &name, const vector<colour_remapping> colours)
+{
+    tiles.json_open_array(name);
+    for (const auto &entry : colours)
+    {
+        tiles.json_open_object();
+        tiles.json_write_int("index", entry.colour_index);
+        tiles.json_write_int("r", entry.colour_def.r);
+        tiles.json_write_int("g", entry.colour_def.g);
+        tiles.json_write_int("b", entry.colour_def.b);
+        tiles.json_close_object();
+    }
+    tiles.json_close_array();
+}
+
 static void _write_minimap_colours()
 {
     _write_vcolour("tile_unseen_col", Options.tile_unseen_col);
@@ -5266,6 +5286,8 @@ void game_options::write_webtiles_options(const string& name)
     _write_colour_list(hp_colour, "hp_colour");
     _write_colour_list(mp_colour, "mp_colour");
     _write_colour_list(stat_colour, "stat_colour");
+
+    _write_custom_colours("custom_text_colours", custom_text_colours);
 
     tiles.json_write_bool("tile_show_minihealthbar",
                           tile_show_minihealthbar);

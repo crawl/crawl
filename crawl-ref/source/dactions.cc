@@ -14,6 +14,7 @@
 #include "dungeon.h"
 #include "god-companions.h" // hepliaklqana_ancestor
 #include "god-passive.h"
+#include "god-wrath.h"
 #include "libutil.h"
 #include "mapmark.h"
 #include "map-knowledge.h"
@@ -206,7 +207,7 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
                 break;
 
             simple_monster_message(*mon, " returns to the mists of memory.");
-            monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
+            monster_die(*mon, KILL_RESET, NON_MONSTER);
             break;
 
         case DACT_UPGRADE_ANCESTOR:
@@ -221,7 +222,7 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
 
             simple_monster_message(*mon, " is freed.");
             // The monster disappears.
-            monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
+            monster_die(*mon, KILL_RESET_KEEP_ITEMS, NON_MONSTER);
             break;
 
         case DACT_SLIME_NEW_ATTEMPT:
@@ -237,7 +238,7 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
                                                 random_range(3, 5), nullptr);
             }
             // The monster disappears.
-            monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
+            monster_die(*mon, KILL_RESET, NON_MONSTER);
             break;
         }
         case DACT_KIRKE_HOGS:
@@ -278,11 +279,44 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
     }
 }
 
+// Print a farewell message from any of Pikel's minions who are visible.
+static void _pikel_band_message()
+{
+    int visible_minions = 0;
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->type == MONS_LEMURE
+            && mi->props.exists(PIKEL_BAND_KEY)
+            && mi->observable())
+        {
+            visible_minions++;
+        }
+    }
+    if (visible_minions > 0 && you.num_turns > 0)
+    {
+        if (you.get_mutation_level(MUT_NO_LOVE))
+        {
+            const char *substr = visible_minions > 1 ? "minions" : "minion";
+            mprf("Pikel's spell is broken, but his former %s can only feel hate"
+                 " for you!", substr);
+        }
+        else
+        {
+            const char *substr = visible_minions > 1
+                ? "minions thank you for their"
+                : "minion thanks you for its";
+            mprf("With Pikel's spell broken, his former %s freedom.", substr);
+        }
+    }
+}
+
 static void _apply_daction(daction_type act)
 {
     ASSERT_RANGE(act, 0, NUM_DACTIONS);
     dprf("applying delayed action: %s", daction_names[act]);
 
+    if (DACT_PIKEL_MINIONS == act)
+        _pikel_band_message();
     switch (act)
     {
     case DACT_JIYVA_DEAD:
@@ -333,20 +367,7 @@ static void _apply_daction(daction_type act)
         break;
     case DACT_REMOVE_GOZAG_SHOPS:
     {
-        vector<map_marker *> markers = env.markers.get_all(MAT_FEATURE);
-        for (const auto marker : markers)
-        {
-            map_feature_marker *feat =
-                dynamic_cast<map_feature_marker *>(marker);
-            ASSERT(feat);
-            if (feat->feat == DNGN_ABANDONED_SHOP)
-            {
-                // TODO: clear shop data out?
-                env.grid(feat->pos) = DNGN_ABANDONED_SHOP;
-                view_update_at(feat->pos);
-                env.markers.remove(feat);
-            }
-        }
+        gozag_abandon_shops_on_level();
         break;
     }
     case DACT_UPGRADE_ANCESTOR:

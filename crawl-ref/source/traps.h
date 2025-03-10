@@ -20,6 +20,8 @@ struct bolt;
 class monster;
 struct trap_def;
 
+bool chaos_lace_criteria(monster* mon);
+
 void free_self_from_net();
 void mons_clear_trapping_net(monster* mon);
 void free_stationary_net(int item_index);
@@ -33,6 +35,7 @@ void check_net_will_hold_monster(monster* mon);
 vector<coord_def> find_golubria_on_level();
 
 dungeon_feature_type trap_feature(trap_type type) IMMUTABLE;
+trap_type trap_type_from_feature(dungeon_feature_type type);
 
 void destroy_trap(const coord_def& pos);
 trap_def* trap_at(const coord_def& where);

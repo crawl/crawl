@@ -74,7 +74,7 @@ def handle_new_socket(path, event):
             del processes[abspath]
             return
 
-        process.logger.info("Found a %s game.", game_info["id"])
+        process.logger.info("Found a %s game for user %s.", game_info["id"], username)
 
         # Notify lobbys
         if config.get('dgl_mode'):
@@ -238,6 +238,9 @@ class CrawlProcessHandlerBase(object):
     def handle_chat_command(self, source_ws, text):
         # type: (CrawlWebSocket, str) -> bool
         source = source_ws.username
+        if len(text) >= 500:
+            # sanity check, distinct from chat max length
+            text = text[:500]
         text = text.strip()
         if len(text) == 0 or text[0] != '/':
             return False
@@ -602,18 +605,32 @@ class CrawlProcessHandlerBase(object):
         game_html = to_unicode(templ.generate(version = v))
         watcher.send_message("game_client", version = v, content = game_html)
 
-    def stop(self):
+    def stop(self, delay=False):
+        if delay:
+            IOLoop.current().call_later(0.2, self.stop)
+            return
         if self.process:
             self.process.flush_ttyrec()
-            self.process.send_signal(subprocess.signal.SIGHUP)
+            try:
+                self.process.send_signal(subprocess.signal.SIGHUP)
+            except OSError as e:
+                self.logger.error(f"Error {repr(e)} on SIGHUP to child process")
+                self._on_process_end()
+                return
             t = time.time() + config.get('kill_timeout')
             self.kill_timeout = IOLoop.current().add_timeout(t, self.kill)
 
     def kill(self):
         if self.process:
             self.logger.info("Killing crawl process after SIGHUP did nothing.")
-            self.process.send_signal(subprocess.signal.SIGABRT)
-            self.kill_timeout = None
+            try:
+                self.process.send_signal(subprocess.signal.SIGABRT)
+            except OSError as e:
+                self.logger.error(f"Error {repr(e)} on SIGKILL to child process")
+                self._on_process_end()
+                return
+            finally:
+                self.kill_timeout = None
 
     interesting_info = ("xl", "char", "place", "turn", "dur", "god", "title")
 
@@ -742,8 +759,9 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
     def start(self):
         self._purge_locks_and_start(True)
 
-    def stop(self):
-        super(CrawlProcessHandler, self).stop()
+    def stop(self, delay=False):
+        # n.b. the super call here is partly async
+        super(CrawlProcessHandler, self).stop(delay=delay)
         self._stop_purging_stale_processes()
         self._stale_pid = None
 
@@ -760,21 +778,26 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                 except ValueError:
                     # pidfile is empty or corrupted, can happen if the server
                     # crashed. Just clear it...
-                    self.logger.error("Invalid PID from lockfile %s, clearing", lockfile)
+                    self.logger.error("Invalid PID from lockfile `%s`, clearing", lockfile)
+                    self._stale_lockfile = lockfile
                     self._purge_stale_lock()
                     return
 
                 self._stale_pid = pid
                 self._stale_lockfile = lockfile
                 if firsttime:
-                    hup_wait = 10
-                    self.send_to_all("stale_processes",
-                                     timeout=hup_wait,
-                                     # is name really correct here?
-                                     game=self.game_params.templated("name", username=self.username))
-                    to = IOLoop.current().add_timeout(time.time() + hup_wait,
-                                                      self._kill_stale_process)
-                    self._process_hup_timeout = to
+                    if self._kill_stale_process(check_pid_only=True):
+                        # if we get here, the pid is real
+                        hup_wait = 10
+                        self.send_to_all("stale_processes",
+                                         timeout=hup_wait,
+                                         # is name really correct here?
+                                         game=self.game_params.templated("name", username=self.username))
+                        to = IOLoop.current().add_timeout(time.time() + hup_wait,
+                                                          self._kill_stale_process)
+                        self._process_hup_timeout = to
+                    # else: _purge_stale_lock recurses to this function, so no
+                    # need to do anything more here
                 else:
                     self._kill_stale_process()
             except Exception:
@@ -807,32 +830,47 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                                     path)
         return None
 
-    def _kill_stale_process(self, signal=subprocess.signal.SIGHUP):
+    def _kill_stale_process(self, signal=subprocess.signal.SIGHUP, check_pid_only=False):
+        if check_pid_only:
+            signal = 0
         self._process_hup_timeout = None
-        if self._stale_pid == None: return
+        if self._stale_pid == None:
+            return
         if signal == subprocess.signal.SIGHUP:
             self.logger.info("Purging stale lock at %s, pid %s.",
                              self._stale_lockfile, self._stale_pid)
         elif signal == subprocess.signal.SIGABRT:
             self.logger.warning("Terminating pid %s forcefully!",
                                 self._stale_pid)
+        # intentional missing `else`, don't message on 0
+
         try:
             os.kill(self._stale_pid, signal)
+        except ProcessLookupError as e:
+            # Process doesn't exist
+            self._purge_stale_lock()
+            if check_pid_only:
+                return False
+        except PermissionError as e:
+            # Process does exist, but we don't have permissions. Unlikely
+            # coincidence between an unrelated process + a stale lock?
+            self.logger.error("Clearing stale(?) lock on permission error for pid %i", self._stale_pid)
+            self._purge_stale_lock()
+            if check_pid_only:
+                return False
         except OSError as e:
-            if e.errno == errno.ESRCH:
-                # Process doesn't exist
-                self._purge_stale_lock()
-            else:
-                self.logger.error("Error while killing process %s.", self._stale_pid,
-                                  exc_info=True)
-                errmsg = ("Error while trying to terminate a stale process.\n" +
-                          "Please contact an administrator.")
-                self.exit_reason = "error"
-                self.exit_message = errmsg
-                self.exit_dump_url = None
-                self.handle_process_end()
-                return
+            self.logger.error("Error while killing process %s.", self._stale_pid,
+                              exc_info=True)
+            errmsg = ("Error while trying to terminate a stale process.\n" +
+                      "Please contact an administrator.")
+            self.exit_reason = "error"
+            self.exit_message = errmsg
+            self.exit_dump_url = None
+            self.handle_process_end()
+            return False
         else:
+            if check_pid_only:
+                return True
             if signal == subprocess.signal.SIGABRT:
                 self._purge_stale_lock()
             else:
@@ -893,6 +931,8 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         else:
             self.logger.info("Starting game.")
 
+        connected = False
+
         try:
             self.process = TerminalRecorder(call,
                                             self.logger,
@@ -924,7 +964,12 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             self.exit_dump_url = None
 
             if self.process and self.process.is_started():
-                self.stop()
+                # n.b. we delay a bit here so that the process has more
+                # time to start up, and avoid race conditions. (I couldn't come
+                # up with anything more reliable.) Also, currently
+                # if the connection fails the crawl process will be in a state
+                # where it ignores HUP, and the kill handler is needed.
+                self.stop(delay=True)
             else:
                 self._on_process_end()
 

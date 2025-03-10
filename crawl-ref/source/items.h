@@ -7,7 +7,6 @@
 
 #include <vector>
 
-#include "equipment-type.h"
 #include "god-type.h"
 #include "mon-inv-type.h"
 #include "item-prop.h"
@@ -127,7 +126,6 @@ bool pickup_single_item(int link, int qty);
 bool drop_item(int item_dropped, int quant_drop);
 void drop_last();
 
-int          get_equip_slot(const item_def *item);
 mon_inv_type get_mon_equip_slot(const monster* mon, const item_def &item);
 
 void origin_reset(item_def &item);
@@ -138,6 +136,7 @@ bool origin_describable(const item_def &item);
 string origin_desc(const item_def &item);
 void origin_purchased(item_def &item);
 void origin_acquired(item_def &item, int agent);
+void milestone_check(const item_def &item);
 void origin_set_startequip(item_def &item);
 void origin_set_unknown(item_def &item);
 god_type origin_as_god_gift(const item_def& item);
@@ -161,7 +160,7 @@ void autoinscribe();
 
 bool item_is_equipped(const item_def &item, bool quiver_too = false);
 bool item_is_melded(const item_def& item);
-equipment_type item_equip_slot(const item_def &item);
+equipment_slot item_equip_slot(const item_def &item);
 
 void item_was_lost(const item_def &item);
 void item_was_destroyed(const item_def &item);

@@ -52,6 +52,8 @@ the Tempest
 
 Temptation
 
+Velleity
+
 Wishful Thinking
 
 # FIXME: should appear on amulets only
@@ -144,6 +146,7 @@ _xom_esteem_
 # chosen 20% of the time
 w:40
 @divine_esteem@
+
 Absentmindedness
 
 Amusement
@@ -178,6 +181,8 @@ Wantonness
 
 Whimsicality
 
+Temerity
+
 %%%%
 _time_name_
 Autumn
@@ -186,7 +191,11 @@ Dawn
 
 Day
 
+Dusk
+
 Eternal Night
+
+Eternal Winter
 
 Eternity
 
@@ -209,6 +218,8 @@ Summer
 
 w:5
 Summertime
+
+Time Moved Backwards
 
 Tomorrow
 
@@ -244,6 +255,8 @@ Black
 Blue
 
 Grey
+
+Indigo
 
 Orange
 
@@ -302,8 +315,6 @@ Discretion
 
 Generosity
 
-Generosity
-
 Grace
 
 Honesty
@@ -311,6 +322,8 @@ Honesty
 Hospitality
 
 Kindness
+
+Largesse
 
 Modesty
 
@@ -362,6 +375,8 @@ Immorality
 Impatience
 
 Lies
+
+Misconduct
 
 Moral Flaws
 
@@ -590,6 +605,8 @@ Deaths
 
 Defenders
 
+Domains
+
 Demons
 
 Dreams
@@ -768,6 +785,8 @@ w:5
 Baking
 
 Bedazzling
+
+Bedighting
 
 Bespelling
 
@@ -1076,6 +1095,8 @@ Haunted
 
 Histrionic
 
+Impassible
+
 Impish
 
 Indestructible
@@ -1207,6 +1228,10 @@ Mango
 
 Watermelon
 
+Rockmelon
+
+Strawberry
+
 Coconut
 
 Breadfruit
@@ -1227,6 +1252,8 @@ Guava
 
 Mangosteen
 
+Soursop
+
 Tangerine
 
 Cherry
@@ -1242,4 +1269,6 @@ Date
 Lemon
 
 Lime
+
+Medlar
 %%%%

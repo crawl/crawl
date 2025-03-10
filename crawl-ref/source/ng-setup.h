@@ -21,4 +21,5 @@ struct newgame_def;
 void setup_game(const newgame_def& ng, bool normal_dungeon_setup=true);
 void initial_dungeon_setup();
 
+void give_throwing_ammo(int n);
 void give_items_skills(const newgame_def& ng);

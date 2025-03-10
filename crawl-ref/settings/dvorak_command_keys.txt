@@ -65,7 +65,7 @@ bindkey = [l] CMD_LOOK_AROUND
 # Take off armour -> 'U'nequip
 bindkey = [U] CMD_REMOVE_ARMOUR
 # Fire without quiver -> (K)ill from afar without quiver
-bindkey = [K] CMD_THROW_ITEM_NO_QUIVER
+bindkey = [K] CMD_FIRE_ITEM_NO_QUIVER
 # Goto level -> J for no reason
 bindkey = [J] CMD_INTERLEVEL_TRAVEL
 # e(X)amine map -> (L)ook at map
@@ -82,9 +82,6 @@ bindkey = [^L] CMD_FULL_VIEW
 
 # map (G)oto level -> J for no reason
 bindkey = [J] CMD_MAP_GOTO_LEVEL
-
-# target maybe prev target -> k
-bindkey = [k] CMD_TARGET_MAYBE_PREV_TARGET
 
 # target wizard (D)ebug monster -> J rather than K because small k is used for
 # firing

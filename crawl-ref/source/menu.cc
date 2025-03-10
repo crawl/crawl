@@ -222,6 +222,7 @@ void UIMenu::update_items()
     _invalidate_sizereq();
 
     item_info.resize(m_menu->items.size());
+    do_layout(m_region.width, m_num_columns, true);
     for (unsigned int i = 0; i < m_menu->items.size(); ++i)
         update_item(i);
 
@@ -363,6 +364,10 @@ void UIMenu::update_item(int index)
 #ifdef USE_TILE_LOCAL
 static bool _has_hotkey_prefix(const string &s)
 {
+    // Don't read out of bounds!
+    if (s.size() < 5)
+        return false;
+
     // [enne] - Ugh, hack. Maybe MenuEntry could specify the
     // presence and length of this substring?
     bool let = (s[1] >= 'a' && s[1] <= 'z' || s[1] >= 'A' && s[1] <= 'Z');
@@ -2415,6 +2420,24 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
     else if (Options.tile_show_threat_levels.find("unusual") != string::npos
              && m->has_unusual_items())
         tileset.emplace_back(TILE_THREAT_UNUSUAL);
+    else if (m->type == MONS_PLAYER_GHOST)
+        switch (m->threat)
+        {
+        case MTHRT_TRIVIAL:
+            tileset.emplace_back(TILE_THREAT_GHOST_TRIVIAL);
+            break;
+        case MTHRT_EASY:
+            tileset.emplace_back(TILE_THREAT_GHOST_EASY);
+            break;
+        case MTHRT_TOUGH:
+            tileset.emplace_back(TILE_THREAT_GHOST_TOUGH);
+            break;
+        case MTHRT_NASTY:
+            tileset.emplace_back(TILE_THREAT_GHOST_NASTY);
+            break;
+        default:
+            break;
+        }
     else
         switch (m->threat)
         {
@@ -2523,8 +2546,11 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
         tileset.emplace_back(TILEI_FLEEING);
     else if (m->is(MB_STABBABLE))
         tileset.emplace_back(TILEI_STAB_BRAND);
-    else if (m->is(MB_DISTRACTED))
-        tileset.emplace_back(TILEI_MAY_STAB_BRAND);
+    else if (m->is(MB_DISTRACTED) || m->is(MB_UNAWARE) || m->is(MB_WANDERING)
+             || m->is(MB_CANT_SEE_YOU))
+    {
+        tileset.emplace_back(TILEI_UNAWARE);
+    }
 
     return true;
 }

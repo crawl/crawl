@@ -125,7 +125,10 @@ would prefer this to be limited to small changes like vaults or artwork.
   get merged faster, all things being equal. A *very common* mistake is to
   put a lot of text in the PR first comment, and leave the commit message blank.
   Usually, this will require a devteam member to manually copy information
-  from the PR and reformat for a commit message, slowing the process.
+  from the PR and reformat for a commit message, slowing the process. Additionally,
+  commit messages should be formatted according to standard Git conventions; see
+  https://www.freecodecamp.org/news/writing-good-commit-messages-a-practical-guide/
+  for a list of common conventions.
 * PRs that fix bugs are very likely to get merged in some form (though you may
   receive suggestions for alternative strategies for fixing the bug).
 * PRs that change gameplay in particular need to be carefully thought out, and

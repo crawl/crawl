@@ -406,10 +406,6 @@ demonic magic mutation
 效果会更为强大，但具有更强意志力的怪物能够抵御它。这个变异每升一级，
 就能影响更远的怪物。这个变异达到第三级，你在挥动魔杖时也能麻痹怪物。
 %%%%
-noise suppression mutation
-
-你周围的环境更安静了，噪音从你视线以内的任何地方向外传播的距离减少了。
-%%%%
 icemail mutation
 
 你身上覆盖着一层起保护作用的冰。火焰攻击能暂时融化冰层，
@@ -460,7 +456,7 @@ aura of silence mutation
 你被沉默力场所围绕。与你相邻的怪物无法发出任何声音。
 它可以阻止大多数形式的施法和祈祷，但恶魔的魔法是无声的，不受此影响。
 %%%%
-bedeviling mutation
+bedevilling mutation
 
 你施放的妖术威力增强。
 %%%%
@@ -671,10 +667,6 @@ otherworldly mutation
 
 你与这个世界格格不入，很容易被黑暗势力察觉。
 在佐特找到你并永久降低你的生命值之前，你在每层地牢的时间只有正常时间的十分之一。
-%%%%
-glowing mutation
-
-你在黑暗中发光。敌人将更频繁地袭击你，你的潜行能力受到严重削弱，你也无法隐形。
 %%%%
 explore regen mutation
 

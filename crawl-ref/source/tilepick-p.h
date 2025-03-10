@@ -24,6 +24,7 @@ tileidx_t tilep_equ_boots(const item_def &item);
 
 tileidx_t tileidx_player();
 bool is_player_tile(tileidx_t tile, tileidx_t base_tile);
+bool player_uses_monster_tile();
 
 tileidx_t tilep_species_to_base_tile(int sp, int level);
 void randomize_doll_base();

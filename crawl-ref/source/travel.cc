@@ -279,11 +279,11 @@ bool feat_is_traversable_now(dungeon_feature_type grid, bool try_fallback,
             return true;
 
         // Permanently flying players can cross most hostile terrain.
-        if (grid == DNGN_DEEP_WATER || grid == DNGN_LAVA
-            || grid == DNGN_TOXIC_BOG)
-        {
+        if (grid == DNGN_DEEP_WATER || grid == DNGN_LAVA)
             return assume_flight || you.permanent_flight();
-        }
+        // Players casting Toxic Bog can safely traverse it
+        else if (grid == DNGN_TOXIC_BOG)
+            return you.duration[DUR_NOXIOUS_BOG];
     }
 
     return feat_is_traversable(grid, try_fallback);
@@ -336,8 +336,7 @@ static inline bool is_stash(const LevelStashes *ls, const coord_def& p)
 static bool _monster_blocks_travel(const monster_info *mons)
 {
     return mons
-           && (mons_class_is_stationary(mons->type)
-               || mons->type == MONS_BOULDER /* dubious */)
+           && mons_class_is_stationary(mons->type)
            && !fedhas_passthrough(mons);
 }
 
@@ -548,12 +547,8 @@ static bool _is_safe_move(const coord_def& c)
     {
         // Stop before wasting energy on plants and fungi,
         // unless worshipping Fedhas.
-        if (you.can_see(*mon)
-            && mons_class_is_firewood(mon->type)
-            && !fedhas_passthrough(mon))
-        {
+        if (you.can_see(*mon) && mon->is_firewood() && !fedhas_passthrough(mon))
             return false;
-        }
 
         // If this is any *other* monster, it'll be visible and
         // a) Friendly, in which case we'll displace it, no problem.
@@ -833,15 +828,21 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
     {
         if (explore_stopped_pos == you.pos())
         {
-            stack_iterator stk(you.pos());
-            string wishlist = comma_separated_fn(stk, stack_iterator::end(),
-                    [] (const item_def & item) { return item.name(DESC_A); },
-                    " and ", ", ", bind(item_needs_autopickup, placeholders::_1,
-                                        false));
+            vector<item_def*> to_pickup;
+            for (stack_iterator si(you.pos()); si; ++si)
+            {
+                if (item_needs_autopickup(*si))
+                    to_pickup.push_back(&*si);
+            }
+
+            string wishlist = comma_separated_fn(to_pickup.begin(), to_pickup.end(),
+                    [] (const item_def* item) { return item->name(DESC_A); },
+                    " and ", ", ");
+
             // XX [A] doesn't make sense for items being picked up only because
             // of an =g inscription
             const string prompt =
-                make_stringf("Could not pick up %s here; ([A]lways) ignore %s?",
+                make_stringf("Could not pick up %s here; Ignore %s?",
                              wishlist.c_str(),
                              tried_pickup == 1 ? "it" : "them");
 
@@ -851,11 +852,13 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
             map[CONTROL('G')] = 'n';
             map[' '] = 'y';
 
+            const bool allow_always = to_pickup.size() == 1 && !is_artefact(*to_pickup[0]);
+
             // If response is Yes (1) or Always (2), mark items for no pickup
             // If the response is Always, remove the item from autopickup
             // Otherwise, stop autoexplore.
             int response = yesno(prompt.c_str(), true, 'n', true, false,
-                                 false, &map, true, true);
+                                 false, &map, true, allow_always);
             switch (response)
             {
                 case 2:
@@ -4595,12 +4598,8 @@ bool runrest::run_should_stop() const
     const coord_def targ = you.pos() + pos;
     const map_cell& tcell = env.map_knowledge(targ);
 
-    // XXX: probably this should ignore cosmetic clouds (non-opaque)
-    if (tcell.cloud() != CLOUD_NONE
-        && !you.cloud_immune())
-    {
+    if (!_is_safe_cloud(targ))
         return true;
-    }
 
     if (is_excluded(targ) && !is_stair_exclusion(targ))
     {
@@ -4615,7 +4614,7 @@ bool runrest::run_should_stop() const
     if (mon && !fedhas_passthrough(tcell.monsterinfo()))
         return true;
 
-    if (count_adjacent_slime_walls(targ))
+    if (slime_wall_neighbour(targ) && !actor_slime_wall_immune(&you))
         return true;
 
     for (int i = 0; i < 3; i++)
@@ -4840,7 +4839,8 @@ void explore_discoveries::found_feature(const coord_def &pos,
     }
     else if (feat == DNGN_TRANSPORTER)
     {
-        seen_tracked_feature(feat);
+        if (is_unknown_transporter(pos))
+            seen_tracked_feature(feat);
         if (ES_transporter)
         {
             for (orth_adjacent_iterator ai(pos); ai; ++ai)

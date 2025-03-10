@@ -114,9 +114,7 @@ void display_runes();
 string quant_name(const item_def &item, int quant,
                   description_level_type des, bool terse = false);
 
-bool item_brand_known(const item_def &item);
 bool item_type_known(const item_def &item);
-bool item_type_unknown(const item_def &item);
 bool item_type_known(const object_class_type base_type, const int sub_type);
 
 bool is_interesting_item(const item_def& item);
@@ -143,11 +141,9 @@ const char* missile_brand_name(const item_def& item, mbn_type t);
 
 bool item_type_has_ids(object_class_type base_type);
 void check_if_everything_is_identified();
-bool get_ident_type(const item_def &item);
-bool get_ident_type(object_class_type basetype, int subtype);
-bool set_ident_type(item_def &item, bool identify, bool check_last=true);
-bool set_ident_type(object_class_type basetype, int subtype, bool identify,
-                    bool check_last=true);
+bool type_is_identified(const item_def &item);
+bool type_is_identified(object_class_type basetype, int subtype);
+bool identify_item_type(object_class_type basetype, int subtype);
 
 string item_prefix(const item_def &item, bool temp = true);
 string menu_colour_item_name(const item_def &item,

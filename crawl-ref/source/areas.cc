@@ -29,20 +29,19 @@
 #include "traps.h"
 #include "travel.h"
 
-/// Bitmasks for area properties
+/// Bitmasks for area properties that center on actors
 enum class areaprop
 {
-    sanctuary_1   = (1 << 0),
-    sanctuary_2   = (1 << 1),
+    // 0 and 1 were sanctuary, now unused
     silence       = (1 << 2),
     halo          = (1 << 3),
-    liquid        = (1 << 4),
-    actual_liquid = (1 << 5),
+    liquified     = (1 << 4),
+    // (1 << 5) was actual_liquid, now unused
     orb           = (1 << 6), ///< The glow of the Orb of Zot
     umbra         = (1 << 7),
     quad          = (1 << 8),
     disjunction   = (1 << 9),
-    soul_aura     = (1 << 10),
+    // 10 was lost soul aura, now unused
 };
 /// Bit field for the area properties
 DEF_BITFIELD(areaprops, areaprop);
@@ -150,10 +149,8 @@ static void _actor_areas(actor *a)
         {
             dungeon_feature_type f = env.grid(*ri);
 
-            _set_agrid_flag(*ri, areaprop::liquid);
-
             if (feat_has_solid_floor(f) && !feat_is_water(f))
-                _set_agrid_flag(*ri, areaprop::actual_liquid);
+                _set_agrid_flag(*ri, areaprop::liquified);
         }
         no_areas = false;
     }
@@ -194,7 +191,8 @@ static void _update_agrid()
     for (monster_iterator mi; mi; ++mi)
         _actor_areas(*mi);
 
-    if (player_has_orb() && !you.pos().origin())
+    if ((player_has_orb() || you.unrand_equipped(UNRAND_CHARLATANS_ORB))
+         && !you.pos().origin())
     {
         const int r = 2;
         _agrid_centres.emplace_back(area_centre_type::orb, you.pos(), r);
@@ -238,20 +236,13 @@ static void _update_agrid()
 static area_centre_type _get_first_area(const coord_def& f)
 {
     areaprops a = _agrid(f);
-    if (a & areaprop::sanctuary_1)
-        return area_centre_type::sanctuary;
-    if (a & areaprop::sanctuary_2)
-        return area_centre_type::sanctuary;
     if (a & areaprop::silence)
         return area_centre_type::silence;
     if (a & areaprop::halo)
         return area_centre_type::halo;
     if (a & areaprop::umbra)
         return area_centre_type::umbra;
-    // liquid is always applied; actual_liquid is on top
-    // of this. If we find the first, we don't care about
-    // the second.
-    if (a & areaprop::liquid)
+    if (a & areaprop::liquified)
         return area_centre_type::liquid;
 
     return area_centre_type::none;
@@ -447,7 +438,8 @@ void create_sanctuary(const coord_def& center, int time)
 
         env.pgrid(pos) &= ~(FPROP_BLOODY);
 
-        if (env.grid(pos) == DNGN_FOUNTAIN_BLOOD)
+        if (env.grid(pos) == DNGN_FOUNTAIN_BLOOD
+            || env.grid(pos) == DNGN_FOUNTAIN_EYES)
         {
             if (you.see_cell(pos))
                 blood_count++;
@@ -595,12 +587,14 @@ int player::halo_radius() const
                                                     / piety_breakpoint(5);
     }
 
-    if (player_equip_unrand(UNRAND_EOS))
+    if (you.unrand_equipped(UNRAND_EOS))
         size = max(size, 3);
-    else if (wearing_ego(EQ_ALL_ARMOUR, SPARM_LIGHT))
+    else if (wearing_ego(OBJ_ARMOUR, SPARM_LIGHT))
         size = max(size, 3);
     else if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
         size = max(size, 2);
+    if (you.unrand_equipped(UNRAND_VAINGLORY))
+        size = max(size, 0);
 
     return size;
 }
@@ -617,6 +611,8 @@ static int _mons_class_halo_radius(monster_type type)
     case MONS_CHERUB:
         return 4;
     case MONS_DAEVA:
+        return 4;
+    case MONS_FRAVASHI:
         return 4;
     case MONS_OPHAN:
         return 6;
@@ -643,7 +639,7 @@ int monster::halo_radius() const
     if (alt_wpn && is_unrandom_artefact(*alt_wpn, UNRAND_EOS))
         size = max(size, 3);
 
-    if (wearing_ego(EQ_ALL_ARMOUR, SPARM_LIGHT))
+    if (wearing_ego(OBJ_ARMOUR, SPARM_LIGHT))
         size = max(size, 3);
 
     if (!(holiness() & MH_HOLY))
@@ -672,12 +668,12 @@ int monster::liquefying_radius() const
     return shrinking_aoe_range(moddur);
 }
 
-bool liquefied(const coord_def& p, bool check_actual)
+bool liquefied(const coord_def& p, bool ledas_only)
 {
     if (!map_bounds(p))
         return false;
 
-    if (env.grid(p) == DNGN_MUD)
+    if (env.grid(p) == DNGN_MUD && !ledas_only)
         return true;
 
     if (!_agrid_valid)
@@ -686,12 +682,7 @@ bool liquefied(const coord_def& p, bool check_actual)
     if (feat_is_water(env.grid(p)) || feat_is_lava(env.grid(p)))
         return false;
 
-    // "actually" liquefied (ie, check for movement)
-    if (check_actual)
-        return _check_agrid_flag(p, areaprop::actual_liquid);
-    // just recoloured for consistency
-    else
-        return _check_agrid_flag(p, areaprop::liquid);
+    return _check_agrid_flag(p, areaprop::liquified);
 }
 
 /////////////
@@ -762,32 +753,19 @@ int player::umbra_radius() const
 
     if (have_passive(passive_t::umbra))
     {
-        // XXX: Two different gods have the umbra passive, but their umbras
-        // behave differently, so handle them differently.
-        if (you.religion == GOD_YREDELEMNUL)
-        {
-            if (piety >= piety_breakpoint(4))
-                size = 4;
-            else if (piety >= piety_breakpoint(3))
-                size = 3;
-            else
-                size = 2;
-        }
-        else if (you.religion == GOD_DITHMENOS)
-        {
-            // The cap is reached at piety 160 = ******.
-            size = min((int)piety, piety_breakpoint(5)) * you.normal_vision
-                                                        / piety_breakpoint(5);
-        }
+        if (piety >= piety_breakpoint(4))
+            size = 4;
+        else if (piety >= piety_breakpoint(3))
+            size = 3;
         else
-            mprf(MSGCH_ERROR, "God with umbra passive needs handling!");
+            size = 2;
     }
 
     if (you.has_mutation(MUT_FOUL_SHADOW))
         size = max(size, you.get_mutation_level(MUT_FOUL_SHADOW));
 
-    if ((player_equip_unrand(UNRAND_BRILLIANCE))
-         || player_equip_unrand(UNRAND_SHADOWS))
+    if ((you.unrand_equipped(UNRAND_BRILLIANCE))
+         || you.unrand_equipped(UNRAND_SHADOWS))
     {
         size = max(size, 3);
     }

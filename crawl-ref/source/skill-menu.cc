@@ -3,10 +3,12 @@
  * @brief Skill menu.
 **/
 
+// this precompiled header must be the first include otherwise
+// includes before it will be ignored without any warning in MSVC
+#include "AppHdr.h"
+
 #include <cmath>
 #include <clocale>
-
-#include "AppHdr.h"
 
 #include "skill-menu.h"
 
@@ -505,9 +507,19 @@ static bool _any_crosstrained()
     return false;
 }
 
+static bool _charlatan_bonus()
+{
+    if (you.unrand_equipped(UNRAND_CHARLATANS_ORB)
+        && you.skill(SK_EVOCATIONS, 10, true) > 0)
+    {
+        return true;
+    }
+    return false;
+}
+
 static bool _hermit_bonus()
 {
-    if (player_equip_unrand(UNRAND_HERMITS_PENDANT)
+    if (you.unrand_equipped(UNRAND_HERMITS_PENDANT)
         && you.skill(SK_INVOCATIONS, 10,  true) < 140)
     {
         return true;
@@ -517,7 +529,7 @@ static bool _hermit_bonus()
 
 static bool _hermit_penalty()
 {
-    if (player_equip_unrand(UNRAND_HERMITS_PENDANT))
+    if (you.unrand_equipped(UNRAND_HERMITS_PENDANT))
     {
         if (you.skill(SK_EVOCATIONS, 10, true) > 0
             || you.skill(SK_INVOCATIONS, 10, true) > 140)
@@ -566,6 +578,8 @@ string SkillMenuSwitch::get_help()
                 causes.push_back("cross-training");
             if (_hermit_bonus())
                 causes.push_back("the Hermit's pendant");
+            if (_charlatan_bonus())
+                causes.push_back("the Charlatan's Orb");
             result = "Skills enhanced by "
                      + comma_separated_line(causes.begin(), causes.end())
                      + " are in <green>green</green>.";
@@ -922,8 +936,17 @@ int SkillMenu::read_skill_target(skill_type sk)
         return -1;
     }
     else
+    {
         input = round(atof(result_buf) * 10.0);    // TODO: parse fixed point?
-
+        if (input > 270)
+        {
+            // 27.0 is the maximum target
+            set_help("<lightred>Your training target must be 27 or below!</lightred>");
+            return -1;
+        }
+        else
+            set_help("");
+    }
     you.set_training_target(sk, input);
     cancel_set_target();
     refresh_display();

@@ -4,7 +4,7 @@
 local map = "monster_plant_pathfind"
 local FAILMAP = map .. ".map"
 
-debug.flush_map_memory()
+debug.reset_player_data()
 debug.goto_place("D:2")
 dgn.reset_level()
 assert(dgn.place_map(dgn.map_by_name(map), true, true),

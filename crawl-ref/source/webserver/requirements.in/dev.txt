@@ -8,13 +8,12 @@ flake8-commas
 flake8-isort
 flake8-mutable
 flake8-polyfill
-flake8-print; python_version >= '3.3'
+flake8-print
 isort
 pytest
-mock; python_version < '3'
 tox
-flake8-mypy; python_version >= '3.5'
+flake8-mypy
 
-flake8-bugbear; python_version >= '3'
-flake8-comprehensions; python_version >= '3'
-flake8-eradicate; python_version >= '3'
+flake8-bugbear
+flake8-comprehensions
+flake8-eradicate

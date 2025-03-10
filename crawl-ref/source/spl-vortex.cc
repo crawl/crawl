@@ -116,14 +116,13 @@ static void _set_vortex_durations()
         you.duration[DUR_FLIGHT] = max(dur, you.duration[DUR_FLIGHT]);
 }
 
-spret cast_polar_vortex(int powc, bool fail)
+spret cast_polar_vortex(int powc, bool fail, bool no_prompt)
 {
     targeter_radius hitfunc(&you, LOS_NO_TRANS, POLAR_VORTEX_RADIUS);
-    if (stop_attack_prompt(hitfunc, "make a polar vortex",
+    if (!no_prompt && stop_attack_prompt(hitfunc, "make a polar vortex",
                 [](const actor *act) -> bool {
                     return !act->res_polar_vortex()
-                        && (!act->is_monster()
-                            || !god_protects(&you, act->as_monster(), true));
+                        && !never_harm_monster(&you, act->as_monster());
                 }))
     {
         return spret::abort;
@@ -248,7 +247,7 @@ void polar_vortex_damage(actor *caster, int dur)
         return;
 
     int pow;
-    const int max_radius = POLAR_VORTEX_RADIUS;
+    const int max_radius = min(POLAR_VORTEX_RADIUS, (int)you.current_vision);
 
     if (caster->is_player())
         pow = you.props[VORTEX_POWER_KEY].get_int();
@@ -315,8 +314,7 @@ void polar_vortex_damage(actor *caster, int dur)
                 && dur > 0
                 && bernoulli(rdur * 0.01, 0.05)) // 5% chance per 10 aut
             {
-                env.grid(*dam_i) = DNGN_FLOOR;
-                set_terrain_changed(*dam_i);
+                destroy_wall(*dam_i);
                 if (you.see_cell(*dam_i))
                     mpr("A tree falls to the furious winds!");
             }
@@ -374,8 +372,7 @@ void polar_vortex_damage(actor *caster, int dur)
                     // the victim.
                     if (dur > 0 && victim->alive()
                         && (!caster->is_player()
-                            || !victim->is_monster()
-                            || !god_protects(caster, victim->as_monster(), true)))
+                            || !never_harm_monster(caster, victim->as_monster())))
                     {
                         const int base_dmg = polar_vortex_dice(rpow, true).roll();
                         const int post_res_dmg

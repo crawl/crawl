@@ -491,15 +491,18 @@ up spellbooks, and the spells will be added to your library.
 %%%%
 tutorial4 spellcasting
 
-## TODO: A bit long at once. Idea for splitting: make the dummy not fight back
-##       by not giving them ammo, put the resting message further down the way.
 ##       Tiles memorisation: clicking on a spellbook in the inventory might be
 ##       easier to grasp; could leave the memorisation tab to be discovered by
 ##       the player on their own.
-You can cast spells with <input>$cmd[CMD_CAST_SPELL]</input><localtiles> or by
-<input>clicking</input> on the spell tile</localtiles>. Press
-<input>$cmd[CMD_CAST_SPELL]?</input> to get a list of your spells. Spells,
-like ammo, are shown in the quiver slot, so you can use
+To cast a spell, first memorise it with <input>$cmd[CMD_MEMORISE_SPELL]</input>.
+You can then cast it with <input>$cmd[CMD_CAST_SPELL]</input><localtiles> or by
+<input>clicking</input> on the spell tile</localtiles>.
+
+Press <input>$cmd[CMD_CAST_SPELL]</input>, then press <input>?</input> to get a
+list of your spells.
+%%%%
+tutorial4 spellquivering
+Spells, like ammo, are shown in the quiver slot, so you can use
 <input>$cmd[CMD_QUIVER_ITEM]</input> to ready a spell in the quiver. Use
 <input>$cmd[CMD_FIRE]</input> or <input>shift-tab</input> to fire the currently
 quivered spell.

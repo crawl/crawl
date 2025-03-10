@@ -7,6 +7,7 @@
 
 #include "artefact.h"
 #include "describe.h"
+#include "duration-type.h"
 #include "item-name.h"
 #include "item-prop.h"
 #include "item-status-flag-type.h"
@@ -191,6 +192,9 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_TRIDENT:
         tile = TILEP_HAND1_TRIDENT2;
         break;
+    case WPN_PARTISAN:
+        tile = TILEP_HAND1_PARTISAN;
+        break;
     case WPN_DEMON_TRIDENT:
         tile = TILEP_HAND1_DEMON_TRIDENT;
         break;
@@ -314,7 +318,7 @@ tileidx_t tilep_equ_armour(const item_def &item)
     case ARM_QUICKSILVER_DRAGON_ARMOUR: tile = TILEP_BODY_DRAGONARM_QUICKSILVER; break;
     case ARM_STORM_DRAGON_ARMOUR:   tile = TILEP_BODY_DRAGONARM_BLUE; break;
     case ARM_SHADOW_DRAGON_ARMOUR:  tile = TILEP_BODY_DRAGONARM_SHADOW; break;
-    case ARM_GOLD_DRAGON_ARMOUR:    tile = TILEP_BODY_DRAGONARM_GOLD; break;
+    case ARM_GOLDEN_DRAGON_ARMOUR:  tile = TILEP_BODY_DRAGONARM_GOLDEN; break;
     case ARM_SWAMP_DRAGON_ARMOUR:   tile = TILEP_BODY_DRAGONARM_BROWN; break;
     case ARM_PEARL_DRAGON_ARMOUR:   tile = TILEP_BODY_DRAGONARM_PEARL; break;
 
@@ -472,6 +476,7 @@ tileidx_t tileidx_player()
     case transformation::statue:
     case transformation::death:
     case transformation::tree:
+    case transformation::vampire:
     // (so is storm form)
     case transformation::storm:
         break;
@@ -489,7 +494,7 @@ tileidx_t tileidx_player()
     case transformation::jelly:     ch = TILEP_MONS_JELLY;     break;
 #endif
     case transformation::fungus:    ch = TILEP_TRAN_MUSHROOM;  break;
-    case transformation::shadow:    ch = TILEP_TRAN_SHADOW;    break;
+    case transformation::bat_swarm: ch = TILEP_TRAN_BAT_SWARM; break;
     case transformation::dragon:
     {
         switch (you.species)
@@ -505,6 +510,18 @@ tileidx_t tileidx_player()
         case SP_WHITE_DRACONIAN:   ch = TILEP_TRAN_DRAGON_WHITE;    break;
         case SP_RED_DRACONIAN:
         default:                   ch = TILEP_TRAN_DRAGON;          break;
+        }
+        break;
+    }
+    case transformation::slaughter:
+    {
+        switch (you.species)
+        {
+        case SP_ARMATAUR: ch = TILEP_TRAN_SLAUGHTER_ARMATAUR;  break;
+        case SP_NAGA:     ch = TILEP_TRAN_SLAUGHTER_NAGA;      break;
+        case SP_FELID:    ch = TILEP_TRAN_SLAUGHTER_FELID;     break;
+        case SP_OCTOPODE: ch = TILEP_TRAN_SLAUGHTER_OCTOPODE;  break;
+        default:          ch = TILEP_TRAN_SLAUGHTER_HUMANOID;  break;
         }
         break;
     }
@@ -636,17 +653,15 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_MINOTAUR;
     case SP_DEMONSPAWN:
         return TILEP_BASE_DEMONSPAWN;
+#if TAG_MAJOR_VERSION == 34
     case SP_GHOUL:
         return TILEP_BASE_GHOUL;
-    case SP_TENGU:
-#if TAG_MAJOR_VERSION == 34
     case SP_MAYFLYTAUR:
 #endif
+    case SP_TENGU:
         return TILEP_BASE_TENGU;
     case SP_MERFOLK:
         return TILEP_BASE_MERFOLK;
-    case SP_VAMPIRE:
-        return TILEP_BASE_VAMPIRE;
     case SP_GARGOYLE:
         return TILEP_BASE_GARGOYLE;
     case SP_FELID:
@@ -665,6 +680,10 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_DJINNI;
     case SP_COGLIN:
         return TILEP_BASE_COGLIN;
+    case SP_POLTERGEIST:
+        return TILEP_BASE_POLTERGEIST;
+    case SP_REVENANT:
+        return TILEP_BASE_REVENANT;
     default:
         return TILEP_BASE_HUMAN;
     }
@@ -751,19 +770,16 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
         case SP_DJINNI:
             hair = TILEP_HAIR_PART2_RED;
             break;
-        case SP_VAMPIRE:
-            hair = TILEP_HAIR_ARWEN;
-            break;
         case SP_SPRIGGAN:
             hair = 0;
             beard = TILEP_BEARD_MEDIUM_GREEN;
             break;
 #if TAG_MAJOR_VERSION == 34
         case SP_HILL_ORC:
+        case SP_GHOUL:
 #endif
         case SP_MINOTAUR:
         case SP_DEMONSPAWN:
-        case SP_GHOUL:
         case SP_KOBOLD:
         case SP_MUMMY:
         case SP_FORMICID:
@@ -961,6 +977,13 @@ void tilep_job_default(int job, dolls_data *doll)
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN;
             break;
 
+        case JOB_FORGEWRIGHT:
+            parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_GREEN;
+            parts[TILEP_PART_HAND1] = TILEP_HAND1_GANDALF;
+            parts[TILEP_PART_HAND2] = TILEP_HAND2_BOOK_GREEN_DIM;
+            parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN;
+            break;
+
         case JOB_WARPER:
             parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_BROWN;
             parts[TILEP_PART_HELM]  = TILEP_HELM_WIZARD_GRAY;
@@ -987,7 +1010,6 @@ void tilep_job_default(int job, dolls_data *doll)
             break;
 
         case JOB_GLADIATOR:
-            parts[TILEP_PART_HAND2] = TILEP_HAND2_KITE_SHIELD_ROUND2;
             parts[TILEP_PART_BODY]  = TILEP_BODY_BELT1;
             parts[TILEP_PART_LEG]   = TILEP_LEG_BELT_GRAY;
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_MIDDLE_GRAY;
@@ -1084,6 +1106,20 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
         flag[TILEP_PART_BEARD] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_SHADOW]= TILEP_FLAG_HIDE;
         flag[TILEP_PART_DRCWING]=TILEP_FLAG_HIDE;
+    }
+    else if (is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_POLTERGEIST))
+    {
+        flag[TILEP_PART_CLOAK]   = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_BOOTS]   = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_LEG]     = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_BODY]    = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_ARM]     = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_HELM]    = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_HAIR]    = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_BEARD]   = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_SHADOW]  = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_DRCWING] = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_BODY]    = TILEP_FLAG_CUT_BOTTOM;
     }
 
     if (doll.parts[TILEP_PART_ARM] == TILEP_ARM_OCTOPODE_SPIKE
@@ -1290,6 +1326,13 @@ void tilep_print_parts(char *fbuf, const dolls_data &doll)
     }
     ptr[0] = '\n'; // erase the last ':'
     ptr[1] = 0;
+}
+
+bool player_uses_monster_tile()
+{
+    return Options.tile_use_monster != MONS_0
+            || you.duration[DUR_EXECUTION]
+            || (you.may_pruneify() && you.cannot_act());
 }
 
 #endif

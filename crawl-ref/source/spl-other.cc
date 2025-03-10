@@ -9,12 +9,14 @@
 #include "spl-other.h"
 
 #include "act-iter.h"
+#include "beam.h"
 #include "coordit.h"
 #include "delay.h"
 #include "env.h"
 #include "god-companions.h"
 #include "libutil.h"
 #include "message.h"
+#include "mon-death.h"
 #include "mon-place.h"
 #include "mon-util.h"
 #include "movement.h" // passwall
@@ -24,6 +26,7 @@
 #include "spl-util.h"
 #include "terrain.h"
 #include "timed-effects.h"
+#include "view.h"
 
 spret cast_sublimation_of_blood(int pow, bool fail)
 {
@@ -31,13 +34,8 @@ spret cast_sublimation_of_blood(int pow, bool fail)
 
     if (you.duration[DUR_DEATHS_DOOR])
         mpr("You can't draw power from your own body while in death's door.");
-    else if (!you.can_bleed())
-    {
-        if (you.has_mutation(MUT_VAMPIRISM))
-            mpr("You don't have enough blood to draw power from your own body.");
-        else
-            mpr("Your body is bloodless.");
-    }
+    else if (!you.has_blood())
+        mpr("Your body is bloodless.");
     else if (!enough_hp(2, true))
         mpr("Your attempt to draw power from your own body fails.");
     else
@@ -92,20 +90,11 @@ static bool _dismiss_dead()
             continue;
 
         monster &mon = **mi;
-        if (!mon.alive()
-            || !mon.friendly()
-            || mon.type != MONS_ZOMBIE
-            || mon.is_summoned()
-            || is_yred_undead_follower(mon))
-        {
+        if (!mon.was_created_by(you, SPELL_ANIMATE_DEAD))
             continue;
-        }
 
         // crumble into dust...
-        mon_enchant abj(ENCH_FAKE_ABJURATION, 0, 0, 1);
-        mon.add_ench(abj);
-        abj.duration = 0;
-        mon.update_ench(abj);
+        monster_die(mon, KILL_TIMEOUT, NON_MONSTER);
         found = true;
     }
     return found;
@@ -204,7 +193,7 @@ bool try_recall(mid_t mid)
         return false;
     }
     coord_def empty;
-    if (!find_habitable_spot_near(you.pos(), mons->type, 3, false, empty)
+    if (!find_habitable_spot_near(you.pos(), mons->type, 3, empty)
         || !mons->move_to_pos(empty))
     {
         return false;
@@ -232,10 +221,16 @@ static bool _feat_is_passwallable(dungeon_feature_type feat)
     }
 }
 
+static bool _grid_is_passwallable(coord_def pos)
+{
+    return _feat_is_passwallable(env.grid(pos))
+            && !is_temp_terrain(pos);
+}
+
 bool passwall_simplified_check(const actor &act)
 {
     for (adjacent_iterator ai(act.pos(), true); ai; ++ai)
-        if (_feat_is_passwallable(env.grid(*ai)))
+        if (_grid_is_passwallable(*ai))
             return true;
     return false;
 }
@@ -257,7 +252,7 @@ passwall_path::passwall_path(const actor &act, const coord_def& dir, int max_ran
         path.emplace_back(pos);
         if (in_bounds(pos))
         {
-            if (!_feat_is_passwallable(env.grid(pos)))
+            if (!_grid_is_passwallable(pos))
             {
                 if (!dest_found)
                 {
@@ -614,11 +609,179 @@ void trigger_binding_sigil(actor& actor)
     {
         simple_monster_message(*m,
             " moves over the binding sigil and is bound in place!",
-            MSGCH_FRIEND_SPELL);
+            false, MSGCH_FRIEND_SPELL);
 
         // The enemy will gain swift for twice as long as it was bound
         m->props[BINDING_SIGIL_DURATION_KEY] = dur * 2;
     }
 
     revert_terrain_change(actor.pos(), TERRAIN_CHANGE_BINDING_SIGIL);
+}
+
+spret cast_spike_launcher(int pow, bool fail)
+{
+    fail_check();
+
+    int valid = 0;
+    coord_def spot;
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+    {
+        if (feat_is_wall(env.grid(*ai)))
+        {
+            if (one_chance_in(++valid))
+                spot = *ai;
+        }
+    }
+
+    // Targeter should prevent this from happening.
+    if (spot.origin())
+        return spret::abort;
+
+    // Remove any existing spike launcher, if we have one
+    if (you.duration[DUR_SPIKE_LAUNCHER_ACTIVE])
+    {
+        for (map_marker *mark : env.markers.get_all(MAT_TERRAIN_CHANGE))
+        {
+            map_terrain_change_marker *marker =
+                dynamic_cast<map_terrain_change_marker*>(mark);
+
+            if (marker->change_type == TERRAIN_CHANGE_SPIKE_LAUNCHER)
+                revert_terrain_change(marker->pos, TERRAIN_CHANGE_SPIKE_LAUNCHER);
+        }
+    }
+
+    int dur = random_range(50, 90) + pow;
+
+    temp_change_terrain(spot, DNGN_SPIKE_LAUNCHER, dur, TERRAIN_CHANGE_SPIKE_LAUNCHER);
+    you.duration[DUR_SPIKE_LAUNCHER_ACTIVE] = dur;
+    you.props.erase(SPIKE_LAUNCHER_TIMER);
+    you.props[SPIKE_LAUNCHER_POWER] = pow;
+
+    mpr("You shape a spike launcher from a nearby wall.");
+
+    return spret::success;
+}
+
+static void _fire_spike_launcher(monster* target, const coord_def& origin)
+{
+    bolt spike;
+    zappy(ZAP_SPIKE_LAUNCHER, you.props[SPIKE_LAUNCHER_POWER].get_int(),
+            false, spike);
+    spike.source = target->pos();
+    spike.target = target->pos();
+    spike.seen = true;
+    spike.range = 1;
+    spike.hit_verb = "skewers";
+    spike.thrower = KILL_YOU;
+
+    dungeon_feature_type feat = orig_terrain(origin);
+    switch (feat)
+    {
+        case DNGN_STONE_WALL:
+        case DNGN_CLEAR_STONE_WALL:
+            spike.name = "stone spike";
+            break;
+
+        case DNGN_METAL_WALL:
+            spike.name = "metal spike";
+            break;
+
+        case DNGN_CRYSTAL_WALL:
+            spike.name = "crystalline spike";
+            break;
+
+        // Rock already handled by zappy()
+        default:
+            break;
+    }
+
+    flash_tile(target->pos(), CYAN);
+    spike.fire();
+}
+
+static coord_def _find_spike_launcher()
+{
+    for (map_marker *mark : env.markers.get_all(MAT_TERRAIN_CHANGE))
+    {
+        map_terrain_change_marker *marker =
+            dynamic_cast<map_terrain_change_marker*>(mark);
+
+        if (marker->change_type == TERRAIN_CHANGE_SPIKE_LAUNCHER)
+            return marker->pos;
+    }
+
+    return coord_def();
+}
+
+void handle_spike_launcher(int delay)
+{
+    coord_def pos = _find_spike_launcher();
+
+    // Somehow it doesn't exist. Maybe it got destroyed?
+    if (pos.origin())
+    {
+        you.duration[DUR_SPIKE_LAUNCHER_ACTIVE] = 0;
+        return;
+    }
+
+    // Check if we've gotten too far away from our launcher
+    if (!you.see_cell_no_trans(pos) || grid_distance(you.pos(), pos) > 3)
+    {
+        mpr("Your spike launcher falls apart as you grow too distant to "
+            "maintain it.");
+        revert_terrain_change(pos, TERRAIN_CHANGE_SPIKE_LAUNCHER);
+        you.duration[DUR_SPIKE_LAUNCHER_ACTIVE] = 0;
+        return;
+    }
+
+    int& timer = you.props[SPIKE_LAUNCHER_TIMER].get_int();
+    timer -= delay;
+
+    // Now, fire the launcher, if anything is in range.
+    while (timer < 0)
+    {
+        for (fair_adjacent_iterator ai(pos); ai; ++ai)
+        {
+            if (monster* targ = monster_at(*ai))
+            {
+                if (!you.see_cell_no_trans(*ai) || targ->wont_attack()
+                    || targ->is_firewood())
+                {
+                    continue;
+                }
+
+                _fire_spike_launcher(targ, pos);
+                break;
+            }
+        }
+
+        timer += BASELINE_DELAY;
+    }
+}
+
+void end_spike_launcher()
+{
+    for (map_marker *mark : env.markers.get_all(MAT_TERRAIN_CHANGE))
+    {
+        map_terrain_change_marker *marker =
+            dynamic_cast<map_terrain_change_marker*>(mark);
+
+        if (marker->change_type == TERRAIN_CHANGE_SPIKE_LAUNCHER)
+        {
+            mpr("Your spike launcher falls apart.");
+            revert_terrain_change(marker->pos, TERRAIN_CHANGE_SPIKE_LAUNCHER);
+            return;
+        }
+    }
+}
+
+vector<coord_def> find_spike_launcher_walls()
+{
+    vector<coord_def> wall_locs;
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+    {
+        if (feat_is_wall(env.grid(*ai)))
+            wall_locs.push_back(*ai);
+    }
+    return wall_locs;
 }

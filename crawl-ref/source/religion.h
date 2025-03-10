@@ -42,6 +42,7 @@ string wu_jian_random_sifu_name();
 god_type str_to_god(const string &name, bool exact = true);
 
 int initial_wrath_penance_for(god_type god);
+void maybe_clear_traitor(god_type god);
 bool active_penance(god_type god);
 bool xp_penance(god_type god);
 void dec_penance(int val);
@@ -110,11 +111,6 @@ bool god_protects_from_harm();
 bool jiyva_is_dead();
 bool ignis_is_dead();
 void set_penance_xp_timeout();
-bool fedhas_protects(const monster &target);
-bool god_protects(const actor *agent, const monster &target, bool quiet=true);
-bool god_protects(const monster &target, bool quiet=true);
-bool god_protects(const actor *agent, const monster *target, bool quiet=true);
-bool god_protects(const monster *target, bool quiet=true);
 bool fedhas_neutralises(const monster& target);
 void nemelex_death_message();
 
@@ -142,6 +138,8 @@ int hepliaklqana_ally_hp();
 void upgrade_hepliaklqana_ancestor(bool quiet_force = false);
 void upgrade_hepliaklqana_weapon(monster_type mtyp, item_def &item);
 void upgrade_hepliaklqana_shield(const monster& ancestor, item_def &item);
+
+void makhleb_initialize_marks();
 
 bool god_hates_attacking_friend(god_type god, const monster& fr);
 

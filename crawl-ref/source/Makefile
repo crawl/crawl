@@ -558,14 +558,7 @@ ifdef USE_ICC
 # Some very good optimization flags.
   CFOPTIMIZE := -O2 -parallel
 else
-
-  ifneq (,$(shell $(GXX) --version|grep 'g++.*4\.2\.'))
-    # OS X uses a buggy ancient version of gcc without fixes from even
-    # subsequent point releases of 4.2.
-    CFOPTIMIZE := -O0
-  else
-    CFOPTIMIZE := -O2
-  endif
+  CFOPTIMIZE := -O2
 endif
 
 # Define this to automatically generate code optimized for your machine
@@ -786,9 +779,9 @@ endif # pkg-config
 ifndef GLES
 ifneq ($(uname_S),Darwin)
 ifeq ($(msys),Yes)
-LIBS += -lopengl32 -lglu32
+LIBS += -lopengl32
 else
-LIBS += -lGL -lGLU
+LIBS += -lGL
 endif
 endif
 endif
@@ -1272,11 +1265,11 @@ DOC_BASE        := ../docs
 DOC_TEMPLATES   := $(DOC_BASE)/template
 GENERATED_DOCS  := $(DOC_BASE)/aptitudes.txt $(DOC_BASE)/aptitudes-wide.txt $(DOC_BASE)/FAQ.html $(DOC_BASE)/crawl_manual.txt $(DOC_BASE)/quickstart.txt
 # Headers that need to exist before attempting to compile cc files
-GENERATED_HEADERS := art-enum.h config.h mon-mst.h species-type.h
+GENERATED_HEADERS := art-enum.h config.h mon-mst.h species-type.h job-type.h
 # All other generated files will be created later
 GENERATED_FILES := $(GENERATED_HEADERS) art-data.h mi-enum.h \
                    $(RLTILES)/dc-unrand.txt build.h compflag.h dat/dlua/tags.lua \
-                   cmd-name.h species-data.h aptitudes.h species-groups.h mon-data.h
+                   cmd-name.h species-data.h aptitudes.h species-groups.h mon-data.h job-data.h job-groups.h
 
 LANGUAGES = $(filter-out en, $(notdir $(wildcard dat/descript/??)))
 SRC_PKG_BASE  := stone_soup
@@ -1330,7 +1323,7 @@ TITLEIMGS = denzi_dragon denzi_kitchen_duty denzi_summoner \
             kaonedong_ignis_the_dying_flame kaonedong_menkaure_prince_of_dust \
             philosopheropposite_palentonga_paladin gompami_kohu_xbow \
             micah_c_ereshkigal SpinningBird_djinn_sears_gnolls \
-			benadryl_antaeus king7artist_eustachio
+            benadryl_antaeus king7artist_eustachio benadryl_oni
 
 STATICFILES = $(TILEIMAGEFILES:%=webserver/game_data/static/%.png) \
               webserver/static/stone_soup_icon-32x32.png \
@@ -1693,7 +1686,7 @@ util/monster/monster: $(MONSTER_OBJS) $(CONTRIB_LIBS) dat/dlua/tags.lua
 monster: util/monster/monster
 
 test-monster: monster
-	util/monster/monster quasit
+	util/monster/monster azure jelly
 
 clean-monster:
 	$(RM) util/monster/monster util/monster/vault_monster_data.h tile_info.txt
@@ -1811,8 +1804,8 @@ endif
 icon.o: util/crawl.rc dat/tiles/stone_soup_icon.ico .cflags
 	$(QUIET_WINDRES)$(WINDRES) util/crawl.rc icon.o
 
-config.h: util/configure .cflags
-	${QUIET_GEN}util/configure "$(CXX)" $(STDFLAG) $(ALL_CFLAGS)
+config.h: util/configure.py .cflags
+	$(QUIET_PYTHON)$(PYTHON) util/configure.py "$(CXX)" $(STDFLAG) $(ALL_CFLAGS)
 
 #
 # Header build tests.
@@ -1839,7 +1832,7 @@ $(foreach t,$(CONTRIB_LIBS),$(if $(wildcard $t),,$(shell rm -f .contrib-libs)))
 
 #############################################################################
 # Build unrandart data
-art-data.h: art-data.txt util/art-data.pl art-func.h
+art-data.h: art-data.txt util/art-data.pl art-func.h $(RLTILES)/dc-player.txt
 	util/art-data.pl
 art-enum.h rltiles/dc-unrand.txt rltiles/tiledef-unrand.cc: art-data.h
 
@@ -1855,7 +1848,7 @@ dat/dlua/tags.lua: tag-version.h util/gen-luatags.pl
 mi-enum.h: mon-info.h util/gen-mi-enum
 	$(QUIET_GEN)util/gen-mi-enum
 
-mon-data.h: dat/mons/*.yaml util/mon-gen.py util/species-gen/*.txt
+mon-data.h: dat/mons/*.yaml util/mon-gen.py util/mon-gen/*.txt
 	$(QUIET_PYTHON)$(PYTHON) util/mon-gen.py dat/mons/ util/mon-gen/ mon-data.h
 
 # species-gen.py creates multiple files at once. Ensure Make doesn't run it once
@@ -1871,6 +1864,17 @@ species-groups.h: aptitudes.h
 	$(QUIET_GEN)
 # no-op
 species-type.h: species-groups.h
+	$(QUIET_GEN)
+
+job-data.h: dat/jobs/*.yaml util/job-gen.py util/job-gen/*.txt
+	$(QUIET_PYTHON)$(PYTHON) util/job-gen.py dat/jobs/ util/job-gen/ job-data.h job-groups.h job-type.h
+
+# no-op
+job-groups.h: job-data.h
+	$(QUIET_GEN)
+
+# no-op
+job-type.h: job-groups.h
 	$(QUIET_GEN)
 
 $(RLTILES)/dc-unrand.txt: art-data.h
@@ -2095,7 +2099,7 @@ mac-app-console: all
 # Building the Android package
 #
 
-NPROC := $(shell nproc)
+NPROC := $(shell nproc 2>/dev/null || echo 1)
 
 android-project/app/build.gradle: android-project/app/build.gradle.in
 	sed -e "s/@ANDROID_VERSION@/${ANDROID}/" -e "s/@CRAWL_VERSION@/${SRC_VERSION}/" -e "s/@NPROC@/${NPROC}/" <android-project/app/build.gradle.in >android-project/app/build.gradle

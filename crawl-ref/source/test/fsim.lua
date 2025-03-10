@@ -8,7 +8,7 @@ end
 local function fsim_setup()
         you.init("migl", "morningstar")
         you.set_xl(20)
-        debug.flush_map_memory()
+        debug.reset_player_data()
         debug.goto_place("D:1")
         debug.generate_level()
         dgn.grid(2, 2, "floor")

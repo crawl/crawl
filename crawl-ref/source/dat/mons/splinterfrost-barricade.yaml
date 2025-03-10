@@ -1,0 +1,15 @@
+name: "splinterfrost barricade"
+glyph: {char: "I", colour: lightcyan}
+flags: [stationary, no_exp_gain, no_threat]
+resists: {fire: -1, cold: 3}
+holiness: [nonliving]
+will: invuln
+attacks:
+hd: 10
+hp_10x: 380
+ac: 15
+ev: 0
+intelligence: brainless
+size: large
+shape: misc
+habitat: amphibious

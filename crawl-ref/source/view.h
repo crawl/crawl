@@ -26,7 +26,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 
 string screenshot();
 
-int viewmap_flash_colour();
+colour_t viewmap_flash_colour();
 bool view_update();
 void view_update_at(const coord_def &pos);
 class targeter;
@@ -86,6 +86,12 @@ public:
 void view_add_tile_overlay(const coord_def &gc, tileidx_t tile);
 #endif
 void view_add_glyph_overlay(const coord_def &gc, cglyph_t glyph);
+
+void flash_tile(coord_def p, colour_t colour = WHITE, int delay = 50,
+                tileidx_t tile = 0);
+void draw_ring_animation(const coord_def& center, int radius, colour_t colour,
+                         colour_t colour_alt = BLACK, bool outward = false,
+                         int delay = 50);
 
 void view_clear_overlays();
 

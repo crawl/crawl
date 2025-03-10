@@ -360,11 +360,11 @@ tier1_gauntlet_arenas = {
   },
   {
     first  = {mons = "neqoxec", min = 1, max = 1},
-    second = {mons = "chaos spawn", min = 1, max = 3},
+    second = {mons = "chaos spawn", min = 2, max = 3},
     plant  = "demonic",
   },
   {
-    second = {mons = "shadow", min = 2, max = 4},
+    second = {mons = "shadowghast", min = 3, max = 4},
     liquid = "water",
     plant  = "withered",
   },
@@ -383,8 +383,7 @@ tier1_gauntlet_arenas = {
     liquid = "lava",
   },
   {
-    first  = {mons = "laughing skull", min = 1, max = 1},
-    second = {mons = "laughing skull", min = 1, max = 2},
+    second = {mons = "laughing skull", min = 2, max = 3},
     plant  = "withered",
   },
   {
@@ -412,7 +411,7 @@ tier1_gauntlet_arenas = {
   {
     first  = {mons = "shining eye", min = 1, max = 1},
     second = {mons = "glass eye / golden eye", min = 1, max = 2},
-    loot   = "potion of mutation ident:type",
+    loot   = "potion of mutation pre_id",
     plant  = "demonic",
     weight = 5,
   },
@@ -427,11 +426,11 @@ tier1_gauntlet_arenas = {
   },
   {
     first  = {mons = "arcanist", min = 1, max = 1},
-    second = {mons = "white imp / shadow imp", min = 1, max = 3},
+    second = {mons = "white imp / shadow imp", min = 4, max = 6},
   },
   {
-    second = {mons = "large abomination", min = 0, max = 2},
-    third  = {mons = "small abomination", min = 3, max = 6},
+    second = {mons = "large abomination", min = 0, max = 1},
+    third  = {mons = "small abomination", min = 3, max = 4},
     plant  = "demonic",
   },
   {
@@ -474,7 +473,7 @@ tier2_gauntlet_arenas = {
     liquid = "lava",
   },
   {
-    second = {mons = "shadow", min = 3, max = 6},
+    second = {mons = "shadowghast", min = 3, max = 6},
     liquid = "water",
     plant  = "withered",
   },
@@ -499,7 +498,7 @@ tier2_gauntlet_arenas = {
     plant  = "demonic",
   },
   {
-    first = {mons = "quicksilver ooze", min = 1, max = 1},
+    first = {mons = "void ooze", min = 1, max = 1},
     liquid = "water",
   },
   {
@@ -508,7 +507,7 @@ tier2_gauntlet_arenas = {
     plant  = "demonic",
   },
   {
-    first  = {mons = "hell beast", min = 1, max = 1},
+    first  = {mons = "sin beast", min = 1, max = 1},
     second = {mons = "hell hound", min = 0, max = 2},
     liquid = "lava",
     plant  = "demonic",
@@ -537,7 +536,7 @@ tier2_gauntlet_arenas = {
   {
     first  = {mons = "cacodemon", min = 1, max = 1},
     second = {mons = "neqoxec", min = 0, max = 3},
-    loot   = "potion of mutation ident:type",
+    loot   = "potion of mutation pre_id",
     plant  = "demonic",
     weight = 5
   },
@@ -564,7 +563,7 @@ tier2_gauntlet_arenas = {
   {
     first  = {mons = "death drake", min = 1, max = 1},
     second = {mons = "zombie place:D:15 / spectre place:D:15", min = 2,
-              max = 4},
+              max = 3},
     liquid = "water",
     plant  = "withered"
   },
@@ -594,7 +593,7 @@ tier2_gauntlet_arenas = {
   },
   {
     second = {mons = "thrashing horror", min = 1, max = 2},
-    third  = {mons = "small abomination", min = 2, max = 4},
+    third  = {mons = "small abomination", min = 2, max = 3},
     plant  = "demonic",
   },
   {
@@ -603,24 +602,24 @@ tier2_gauntlet_arenas = {
     plant  = "demonic",
   },
   {
-    second = {mons = "glowing orange brain", min = 1, max = 2},
+    second = {mons = "glowing orange brain", min = 1, max = 1},
     third  = {mons = "ugly thing", min = 1, max = 2},
     plant  = "demonic",
   },
   {
-    second = {mons = "large abomination", min = 2, max = 3},
-    third  = {mons = "small abomination", min = 3, max = 6},
+    second = {mons = "large abomination", min = 1, max = 2},
+    third  = {mons = "small abomination", min = 3, max = 5},
     plant  = "demonic",
   },
   {
     first  = {mons = "wretched star", min = 1, max = 1},
-    second = {mons = "neqoxec / small abomination", min = 1, max = 3},
-    loot   = "potion of mutation ident:type",
+    second = {mons = "neqoxec / small abomination", min = 1, max = 2},
+    loot   = "potion of mutation pre_id",
     plant  = "demonic",
   },
   {
-    second = {mons = "arcanist / occultist", min = 2, max = 2},
-    third  = {mons = "white imp / shadow imp", min = 3, max = 6},
+    second = {mons = "arcanist / occultist", min = 2, max = 3},
+    third  = {mons = "white imp / shadow imp", min = 4, max = 6},
   },
   {
     first  = {mons = "necromancer", min = 1, max = 1},
@@ -629,7 +628,7 @@ tier2_gauntlet_arenas = {
     plant  = "withered",
   },
   {
-    second = {mons = "death scarab", min = 2, max = 2},
+    second = {mons = "death scarab", min = 1, max = 2},
     third  = {mons = "spectre place:Lair:$", min = 2, max = 4},
     liquid = "water",
     plant  = "withered",
@@ -649,7 +648,7 @@ tier2_gauntlet_arenas = {
     third  = {mons = "raiju", min = 1, max = 2},
   },
   {
-    first  = {mons = "tyrant leech", min = 1, max = 1},
+    first  = {mons = "tyrant leech", min = 1, max = 2},
     second = {mons = "swamp worm", min = 2, max = 4},
   },
 }

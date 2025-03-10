@@ -78,11 +78,10 @@ static const char *conducts[] =
     "Spell Practise", "Cannibalism", "Deliberate Mutation",
     "Cause Glowing", "Use Unclean", "Use Chaos",
 #if TAG_MAJOR_VERSION == 34
-    "Desecrate Orcish Remains",
+    "Desecrate Orcish Remains", "Kill Slime",
 #endif
-    "Kill Slime", "Was Hasty", "Attack In Sanctuary",
-    "Kill Nonliving", "Exploration", "Seen Monster",
-    "Sacrificed Love", "Hurt Foe", "Use Wizardly Item",
+    "Was Hasty", "Attack In Sanctuary", "Kill Nonliving", "Exploration",
+    "Seen Monster", "Sacrificed Love", "Hurt Foe", "Use Wizardly Item",
 };
 COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
 
@@ -346,7 +345,7 @@ static peeve_map divine_peeves[] =
             1, 0, nullptr, " does not appreciate your training of magic skills!"
         } },
         { DID_WIZARDLY_ITEM, {
-            "you use magical staves or pain-branded weapons", true,
+            "you use magical staves or other wizardly items", true,
             1, 0, nullptr, " does not appreciate your use of wizardly items!"
         } },
     },
@@ -375,26 +374,9 @@ static peeve_map divine_peeves[] =
         { DID_ATTACK_FRIEND, _on_attack_friend("you attack your followers") },
     },
     // GOD_JIYVA,
-    {
-        { DID_KILL_SLIME, {
-            "you kill slimes", true,
-            1, 2, nullptr, nullptr, [] (const monster* victim) -> bool {
-                return victim && !victim->is_shapeshifter();
-            }
-        } },
-        { DID_ATTACK_NEUTRAL, {
-            nullptr, true,
-            1, 1, nullptr, nullptr, [] (const monster* victim) -> bool {
-                return victim
-                    && mons_is_slime(*victim) && !victim->is_shapeshifter();
-            }
-        } },
-        { DID_ATTACK_FRIEND, _on_attack_friend("you attack fellow slimes") },
-    },
+    peeve_map(),
     // GOD_FEDHAS,
-    {
-        { DID_ATTACK_FRIEND, _on_attack_friend(nullptr) },
-    },
+    peeve_map(),
     // GOD_CHEIBRIADOS,
     {
         { DID_HASTY, {
@@ -662,25 +644,31 @@ static const like_response _yred_kill_response()
         _piety_bonus_for_holiness(MH_NATURAL), 18, 0,
         nullptr, [] (int &piety, int &, const monster* victim)
         {
-            if (!yred_torch_is_raised())
+            if (victim)
             {
-                piety = 0;
-                //Print a reminder if the torch isn't lit, but *could* be
-                if (yred_cannot_light_torch_reason().empty())
-                    mprf(MSGCH_GOD, "With your torch unlit, their soul goes wasted...");
-            }
-            else if (victim && !victim->has_ench(ENCH_SOUL_RIPE))
-            {
-                mprf(MSGCH_GOD, "%s %ssoul becomes fuel for the torch.",
-                                you.can_see(*victim) ? "Their" : "A",
-                                mons_is_unique(victim->type) ? "potent "
-                                : victim->holiness() & MH_HOLY ? "unsullied " : "");
+                if (!yred_torch_is_raised())
+                {
+                    piety = 0;
+                    //Print a reminder if the torch isn't lit, but *could* be
+                    if (yred_cannot_light_torch_reason().empty())
+                    {
+                        mprf(MSGCH_GOD, "With your torch unlit, %s soul goes wasted...",
+                             you.can_see(*victim) ? victim->pronoun(PRONOUN_POSSESSIVE).c_str() : "a");
+                    }
+                }
+                else
+                {
+                    mprf(MSGCH_GOD, "%s %ssoul becomes fuel for the torch.",
+                         you.can_see(*victim) ? victim->pronoun(PRONOUN_POSSESSIVE).c_str() : "A",
+                         mons_is_unique(victim->type) ? "potent "
+                             : victim->holiness() & MH_HOLY ? "unsullied " : "");
 
-                if (mons_is_unique(victim->type))
-                    piety *= 3;
+                    if (mons_is_unique(victim->type))
+                        piety *= 3;
 
-                if (victim->holiness() & MH_HOLY)
-                    piety *= 2;
+                    if (victim->holiness() & MH_HOLY)
+                        piety *= 2;
+                }
             }
         }
     };
@@ -892,11 +880,15 @@ static like_map divine_likes[] =
     },
     // GOD_DITHMENOS,
     {
-        { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
-        { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
-        { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
-        { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
-        { DID_KILL_NONLIVING, KILL_NONLIVING_RESPONSE },
+        { DID_EXPLORATION, {
+            "you explore the world", false,
+            0, 0, 0, nullptr,
+            [] (int &piety, int &/*denom*/, const monster* /*victim*/)
+            {
+                // piety = denom = level at the start of the function
+                piety = 18;
+            }
+        } },
     },
     // GOD_GOZAG,
     like_map(),
@@ -1160,20 +1152,25 @@ conduct_type god_hates_item_handling(const item_def& item)
 }
 
 /**
- * Handle god conducts triggered by hurting a monster. Currently set up to only
- * account for Uskayaw's use pattern; if anyone else uses it, add a second case.
+ * Handle passive effects triggered by hurting a monster (eg: Uskayaw piety,
+ * Beogh healing)
  *
- * @param thing_done        The conduct in question.
  * @param victim            The victim being harmed.
  * @param damage_done       The amount of damage done.
+ * @param flavor            The flavour of damage done
+ * @param kill_type         The category of damage source (eg: clouds)
  */
-void did_hurt_conduct(conduct_type thing_done,
-                      const monster &victim,
-                      int damage_done)
+void did_hurt_monster(const monster &victim, int damage_done,
+                      beam_type flavour, kill_method_type kill_type)
 {
-    UNUSED(thing_done);
-    // Currently only used by Uskayaw; initially planned to use god conduct
-    // logic more heavily, but the god seems to need something different.
+    if (flavour == BEAM_SHARED_PAIN
+        || flavour == BEAM_STICKY_FLAME
+        || kill_type == KILLED_BY_POISON
+        || kill_type == KILLED_BY_CLOUD
+        || kill_type == KILLED_BY_BEOGH_SMITING)
+    {
+        return;
+    }
 
     if (you_worship(GOD_USKAYAW))
     {

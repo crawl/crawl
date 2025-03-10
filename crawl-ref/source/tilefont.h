@@ -3,7 +3,7 @@
 #include "defines.h"
 #include "glwrapper.h"
 
-extern const VColour term_colours[NUM_TERM_COLOURS];
+extern VColour term_colours[NUM_TERM_COLOURS];
 
 class FontBuffer;
 class formatted_string;

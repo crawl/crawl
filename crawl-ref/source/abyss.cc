@@ -213,6 +213,9 @@ static bool _abyss_place_map(const map_def *mdef)
     }
     catch (dgn_veto_exception &e)
     {
+#ifndef DEBUG_DIAGNOSTICS
+        UNUSED(e);
+#endif
         dprf(DIAG_ABYSS, "Abyss map placement vetoed: %s", e.what());
     }
     return false;
@@ -466,8 +469,10 @@ void push_features_to_abyss()
 
             p += you.pos();
 
-            dungeon_feature_type feature = map_bounds(p) ? env.grid(p) : DNGN_UNSEEN;
+            dungeon_feature_type feature = map_bounds(p) ? env.grid(p)
+                                                         : DNGN_UNSEEN;
             feature = sanitize_feature(feature);
+
             abyssal_features.push_back(feature);
         }
     }
@@ -613,7 +618,7 @@ static void _abyss_lose_monster(monster& mons)
     else if (hepliaklqana_ancestor() == mons.mid)
     {
         simple_monster_message(mons, " is pulled into the Abyss.",
-                MSGCH_BANISHMENT);
+                false, MSGCH_BANISHMENT);
         remove_companion(&mons);
         you.duration[DUR_ANCESTOR_DELAY] = random_range(50, 150); //~5-15 turns
     }
@@ -656,7 +661,7 @@ static void _place_displaced_monsters()
             if (you.can_see(*mon) && hepliaklqana_ancestor() != mon->mid)
             {
                 simple_monster_message(*mon, " is pulled into the Abyss.",
-                        MSGCH_BANISHMENT);
+                        false, MSGCH_BANISHMENT);
             }
             _abyss_lose_monster(*mon);
 
@@ -1171,7 +1176,7 @@ static ProceduralSample _abyss_grid(const coord_def &p)
         levelLayout = new LevelLayout(lid, 5, rivers);
         complex_vec[0] = levelLayout;
         complex_vec[1] = &rivers; // const
-        abyssLayout = new WorleyLayout(23571113, complex_vec, 6.1);
+        abyssLayout = new WorleyLayout(23571113, complex_vec, 6.1f);
         if (is_existing_level(lid))
         {
             auto &vault_list =  you.vault_list[level_id::current()];
@@ -1307,7 +1312,7 @@ static void _update_abyss_terrain(const coord_def &p,
         else if (feat_is_solid(feat))
             delete_cloud(rp);
         monster* mon = monster_at(rp);
-        if (mon && !monster_habitable_grid(mon, feat))
+        if (mon && !monster_habitable_feat(mon, feat))
             _push_displaced_monster(mon);
     }
 }
@@ -1351,20 +1356,14 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
     bool used_queue = false;
     if (morph && !abyss_sample_queue.empty())
     {
-        int ii = 0;
         used_queue = true;
         while (!abyss_sample_queue.empty()
             && abyss_sample_queue.top().changepoint() < abyssal_state.depth)
         {
-            ++ii;
             coord_def p = abyss_sample_queue.top().coord();
             _update_abyss_terrain(p, abyss_genlevel_mask, morph);
             abyss_sample_queue.pop();
         }
-/*
-        if (ii)
-            dprf(DIAG_ABYSS, "Examined %d features.", ii);
-*/
     }
 
     int ii = 0;
@@ -1858,10 +1857,10 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
 
         monster_type mons = pick_monster(level_id(BRANCH_ABYSS), _incorruptible);
         ASSERT(mons);
-        if (!monster_habitable_grid(mons, env.grid(p)))
+        if (!monster_habitable_grid(mons, p))
             continue;
         mgen_data mg(mons, BEH_NEUTRAL, p);
-        mg.set_summoned(0, 5, 0).set_non_actor_summoner("Lugonu's corruption");
+        mg.set_summoned(0, 0, summ_dur(5)).set_non_actor_summoner("Lugonu's corruption");
         mg.place = BRANCH_ABYSS;
         return create_monster(mg);
     }
@@ -1883,10 +1882,10 @@ static void _spawn_corrupted_servant_near_monster(const monster &who)
             continue;
         monster_type mons = pick_monster(level_id(BRANCH_ABYSS), _incorruptible);
         ASSERT(mons);
-        if (!monster_habitable_grid(mons, env.grid(p)))
+        if (!monster_habitable_grid(mons, p))
             continue;
         mgen_data mg(mons, BEH_COPY, p);
-        mg.set_summoned(&who, 3, 0);
+        mg.set_summoned(&who, 0, summ_dur(3));
         mg.place = BRANCH_ABYSS;
         if (create_monster(mg))
             return;
@@ -2291,7 +2290,7 @@ void lugonu_corrupt_level(int power)
     if (is_level_incorruptible())
         return;
 
-    simple_god_message("'s Hand of Corruption reaches out!");
+    simple_god_message(" Hand of Corruption reaches out!", true);
     take_note(Note(NOTE_MESSAGE, 0, 0, make_stringf("Corrupted %s",
               level_id::current().describe().c_str()).c_str()));
     mark_corrupted_level(level_id::current());

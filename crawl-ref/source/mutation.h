@@ -8,7 +8,6 @@
 #include <string>
 #include <vector>
 
-#include "equipment-type.h"
 #include "mutation-type.h"
 #include "externs.h"
 
@@ -43,6 +42,7 @@ bool is_bad_mutation(mutation_type mut);
 bool is_good_mutation(mutation_type mut);
 bool is_body_facet(mutation_type mut);
 bool is_slime_mutation(mutation_type mut);
+bool is_makhleb_mark(mutation_type mut);
 
 bool mutate(mutation_type which_mutation, const string &reason,
             bool failMsg = true,
@@ -89,8 +89,6 @@ void check_monster_detect();
 bool physiology_mutation_conflict(mutation_type mutat);
 int augmentation_amount();
 void reset_powered_by_death_duration();
-
-string mut_blocks_item_reason(const item_def &item, bool temp);
 
 bool delete_all_temp_mutations(const string &reason);
 bool delete_temp_mutation();

@@ -15,9 +15,12 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
 
     var defense_boosters = {
         "ac": "ice-armoured|protected from physical damage|sanguine armoured"
-              + "|under a protective aura|curled up|fiery-armoured",
+              + "|under a protective aura|fiery-armoured|phalanx barrier"
+              + "|trickster",
         "ev": "^agile|acrobatic|in a heavenly storm",
-        "sh": "divinely shielded",
+
+        // RIP "I am here because empty strings match everything and this does not"
+        "sh": "ephemerally shielded"
     }
 
     /**
@@ -175,10 +178,10 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
     }
     player.inventory_item_desc = inventory_item_desc;
 
-    function wielded_weapon()
+    function wielded_weapon(offhand=false)
     {
         var elem;
-        var wielded = player.equip[enums.equip.WEAPON];
+        var wielded = offhand ? player.offhand_index : player.weapon_index;
         if (wielded == -1)
         {
             elem = $("<span>");
@@ -236,7 +239,10 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
         elem.text(player[type]);
         elem.removeClass();
         if (type == "sh" && player.incapacitated()
-            && player.equip[enums.equip.SHIELD] != -1)
+            && player.offhand_index != -1)
+            // XXX This really doesn't work properly
+            // Orbs, and coglins with offhand weapons, also trigger this...
+            // Amulets of reflection on the other hand, do not...
             elem.addClass("degenerated_defense");
         else if (player.has_status(defense_boosters[type]))
             elem.addClass("boosted_defense");
@@ -324,7 +330,9 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
      */
     function update_stats_pane()
     {
-        $("#stats_titleline").text(player.name + " " + player.title);
+        $("#stats_titleline").text(player.name
+                                    + (player.title[0] === "," ? "" : " ")
+                                    + player.title);
         $("#stats_wizmode").text(player.wizard ? "*WIZARD*" : player.explore ? "*EXPLORE*" : "");
 
         // Setup species
@@ -444,8 +452,17 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
         }
 
         $("#stats_weapon_letter").text(
-            index_to_letter(player.equip[enums.equip.WEAPON]) + ")");
+            index_to_letter(player.weapon_index) + ")");
         $("#stats_weapon").html(wielded_weapon());
+
+        if (player.offhand_weapon) // Coglin dual wielding
+            $("#stats_offhand_weapon_line").show();
+        else
+            $("#stats_offhand_weapon_line").hide();
+
+        $("#stats_offhand_weapon_letter").text(
+            index_to_letter(player.offhand_index) + ")");
+        $("#stats_offhand_weapon").html(wielded_weapon(true));
 
         $("#stats_quiver").html(quiver());
     }
@@ -458,12 +475,10 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
             $.extend(player.inv[i], data.inv[i]);
             player.inv[i].slot = Number(i); // XX why is i a string?
         }
-        $.extend(player.equip, data.equip);
 
         if (data.inv)
             $("#action-panel").triggerHandler("update");
 
-        delete data.equip;
         delete data.inv;
         delete data.msg;
 
@@ -543,7 +558,9 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
                 str_max: 0, int_max: 0, dex_max: 0,
                 piety_rank: 0, penance: false,
                 status: [],
-                inv: {}, equip: {},
+                inv: {},
+                weapon_index: -1,
+                offhand_index: -1,
                 quiver_item: -1,
                 unarmed_attack: "",
                 pos: {x: 0, y: 0},
@@ -555,8 +572,6 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
             });
             delete player["old_hp"];
             delete player["old_mp"];
-            for (var i = 0; i < enums.equip.NUM_EQUIP; ++i)
-                player.equip[i] = -1;
             last_time = null;
         });
 

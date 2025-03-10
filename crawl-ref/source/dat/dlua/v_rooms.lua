@@ -122,7 +122,7 @@ local function make_tagged_room(options,chosen)
       grid = {}
     }
 
-    room.preserve_wall = dgn.has_tag(room.map, "preserve_wall")
+    room.preserve_wall = dgn.has_tag(room.map, "no_wall_fixup")
     room.no_windows = dgn.has_tag(room.map, "no_windows")
 
     -- Check all four directions for orient tag before we create the wals data, since the existence of a

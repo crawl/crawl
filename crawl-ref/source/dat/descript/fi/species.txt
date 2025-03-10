@@ -32,11 +32,6 @@ Felid
 Näillä kissoilla on älykkyttä, mutta ne eivät pysty panssarin tai aseistuksen
 käyttöön.
 %%%%
-Ghoul
-
-Epäkuollut, kirottu mätänemään ikuisesti. He aina etsivät syötäväksi
-pilaantunutta ruokaa, hakkaamalla kaiken kynsillään.
-%%%%
 Halfling
 
 Pieniä mutta kovapintaisia, he ovat hyviä linkojen kanssa. He pystyvät myös

@@ -190,7 +190,6 @@
 {CONTROL('X'), CMD_TARGET_FULL_DESCRIBE},
 {'?', CMD_TARGET_HELP},
 {' ', CMD_TARGET_SELECT}, // XXX hack: can also be CMD_TARGET_CANCEL
-{CONTROL('P'), CMD_TARGET_SHOW_PROMPT},
 {CONTROL('C'), CMD_TARGET_CYCLE_BEAM},
 {':', CMD_TARGET_TOGGLE_BEAM},
 {'!', CMD_TARGET_SELECT_FORCE},
@@ -207,7 +206,6 @@
 {'<', CMD_TARGET_FIND_UPSTAIR},
 {'>', CMD_TARGET_FIND_DOWNSTAIR},
 {'r', CMD_TARGET_FIND_YOU},
-{'p', CMD_TARGET_PREV_TARGET},
 //{'f', CMD_TARGET_SELECT}, // HACK: Moved to be the downmost for tutorial key
                             // look-up.
 {'g', CMD_TARGET_GET},

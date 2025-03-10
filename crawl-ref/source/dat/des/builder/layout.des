@@ -6,6 +6,7 @@
 #
 ###############################################################################
 
+: crawl_require("dlua/vault.lua")
 : crawl_require("dlua/layout/zonify.lua")
 : crawl_require("dlua/layout/theme.lua")
 : crawl_require("dlua/layout/minimum_map_area.lua")
@@ -1307,10 +1308,7 @@ TAGS:   no_rotate no_vmirror no_hmirror
 validate {{
     return minimum_map_area.is_map_big_enough(_G, minimum_map_area.DIVISIONS)
 }}
-KFEAT:   G = metal_statue
-COLOUR:  G : cyan
-TILE:    G = dngn_statue_iron_golem
-: set_feature_name("metal_statue", "iron statue")
+: vault_metal_statue_setup(_G, "G", "iron statue")
 MAP
 ENDMAP
 

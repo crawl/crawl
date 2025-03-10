@@ -324,6 +324,15 @@ int div_round_up(int num, int den)
     return num / den + (num % den != 0);
 }
 
+// Divides and rounds to *nearest* int, so 1.5 gets rounded up to 2 but 1.49 is
+// rounded down to 1. (I was amazed this function did not already exist in the
+// entire crawl codebase. Or did I just miss an obvious way? -mumra)
+int div_round_near(int num, int den)
+{
+    const int rem = num % den;
+    return num / den + (rem >= den / 2);
+}
+
 // random2avg() returns same mean value as random2() but with a lower variance
 // never use with rolls < 2 as that would be silly - use random2() instead {dlb}
 // [0, max)

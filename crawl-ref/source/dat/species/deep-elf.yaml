@@ -26,6 +26,7 @@ aptitudes:
   conjurations: 1
   hexes: 3
   summoning: 1
+  forgecraft: 1
   necromancy: 2
   translocations: 1
   shapeshifting: 0
@@ -42,20 +43,22 @@ dex: 10
 levelup_stat_frequency: 4
 levelup_stats:
   - int
-# if you add any mutations here: you'll need to fix test/mut_species.lua, which
-# relies on DE having none.
+mutations:
+  1:
+    MUT_MANA_REGENERATION: 1
 recommended_jobs:
-  - JOB_HEDGE_WIZARD
-  - JOB_CONJURER
-  - JOB_SUMMONER
-  - JOB_NECROMANCER
-  - JOB_FIRE_ELEMENTALIST
-  - JOB_ICE_ELEMENTALIST
-  - JOB_AIR_ELEMENTALIST
-  - JOB_EARTH_ELEMENTALIST
-  - JOB_ALCHEMIST
+  - hedge wizard
+  - conjurer
+  - summoner
+  - forgewright
+  - necromancer
+  - fire elementalist
+  - ice elementalist
+  - air elementalist
+  - earth elementalist
+  - alchemist
 recommended_weapons:
-  - SK_SHORT_BLADES
-  - SK_STAVES
+  - short blades
+  - staves
 
 orc_name: Deep Orc

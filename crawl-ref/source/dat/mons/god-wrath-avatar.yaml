@@ -1,0 +1,17 @@
+name: "god wrath avatar"
+glyph: {char: "X", colour: white}
+flags: [stationary, fast_regen, no_poly_to, no_threat]
+xp_mult: 15
+holiness: [holy]
+will: 20
+attacks:
+hd: 1000
+hp_10x: 10000000
+ac: 0
+ev: 0
+intelligence: brainless
+habitat: amphibious
+speed: 10
+size: giant
+shape: misc
+tile: program_bug

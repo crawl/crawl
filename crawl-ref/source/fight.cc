@@ -89,50 +89,133 @@ int aux_to_hit()
 
 }
 
-/**
- * Return the odds of an attack with the given to-hit bonus hitting a defender with the
- * given EV, rounded to the nearest percent.
- *
- * @return                  To-hit percent between 0 and 100 (inclusive).
- */
-int to_hit_pct(const monster_info& mi, attack &atk, bool melee)
+static double _to_hit_hit_chance(const monster_info& mi, attack &atk, bool melee,
+                                 int to_land, bool is_aux = false)
 {
-    const int to_land = atk.calc_pre_roll_to_hit(false);
     if (to_land >= AUTOMATIC_HIT)
-        return 100;
+        return 1.0;
+
+    const double AUTO_MISS_CHANCE = is_aux ? 0 : 2.5;
+    const double AUTO_HIT_CHANCE = is_aux ? 3.3333 : 2.5;
 
     int ev = mi.ev + (!melee && mi.is(MB_REPEL_MSL) ? REPEL_MISSILES_EV_BONUS : 0);
 
     if (ev <= 0)
-        return 100 - MIN_HIT_MISS_PERCENTAGE / 2;
+        return 1 - AUTO_MISS_CHANCE / 200.0;
 
     int hits = 0;
     for (int rolled_mhit = 0; rolled_mhit < to_land; rolled_mhit++)
     {
         // Apply post-roll manipulations:
-        int adjusted_mhit = rolled_mhit + mi.lighting_modifiers();
+        int adjusted_mhit = rolled_mhit + atk.post_roll_to_hit_modifiers(rolled_mhit, false);
 
-        adjusted_mhit += atk.post_roll_to_hit_modifiers(adjusted_mhit, false);
+        // But the above will bail out because there's no defender in the attack object,
+        // so we reproduce any possibly relevant effects here:
+        adjusted_mhit += mi.lighting_modifiers();
 
-        // Duplicates ranged_attack::post_roll_to_hit_modifiers().
-        if (!melee)
+        // And this duplicates ranged_attack::post_roll_to_hit_modifiers().
+        if (!melee && mi.is(MB_BULLSEYE_TARGET))
         {
-            if (mi.is(MB_BULLSEYE_TARGET))
-            {
-                adjusted_mhit += calc_spell_power(SPELL_DIMENSIONAL_BULLSEYE)
-                                 / 2 / BULLSEYE_TO_HIT_DIV;
-            }
+            adjusted_mhit += calc_spell_power(SPELL_DIMENSIONAL_BULLSEYE)
+                                / 2 / BULLSEYE_TO_HIT_DIV;
         }
 
+        // Now count the hit if it's above target ev
         if (adjusted_mhit >= ev)
             hits++;
     }
 
     double hit_chance = ((double)hits) / to_land;
     // Apply Bayes Theorem to account for auto hit and miss.
-    hit_chance = hit_chance * (1 - MIN_HIT_MISS_PERCENTAGE / 200.0) + (1 - hit_chance) * MIN_HIT_MISS_PERCENTAGE / 200.0;
+    hit_chance = hit_chance * (1 - AUTO_MISS_CHANCE / 200.0)
+                 + (1 - hit_chance) * AUTO_HIT_CHANCE / 200.0;
+    return hit_chance;
+}
 
-    return (int)(hit_chance*100);
+static bool _to_hit_is_invisible(const monster_info& mi)
+{
+    // Replicates player->visible_to(defender)
+    if (mi.attitude == ATT_FRIENDLY)
+        return false;
+
+    if (mi.has_trivial_ench(ENCH_BLIND))
+        return true;
+
+    return you.invisible() && !mi.can_see_invisible() && !you.in_water();
+}
+
+static double _to_hit_shield_chance(const monster_info& mi,
+                                    bool melee, int to_land, bool penetrating)
+{
+    // Duplicates more logic that is defined in attack::attack_shield_blocked, and
+    // melee_attack and ranged_attack classes, for real attacks, and also
+    // monster::shield_bonus (since it's randomised and loses some resolution
+    // through division, it's more accurate to use floating point math here.)
+
+    // Guaranteed hits should ignore the shield as well
+    if (to_land >= AUTOMATIC_HIT)
+        return 0;
+
+    // Shield bonus is -100 if incapacitated or the roll is too low, resolve
+    // that first. Monster can only block at all if shield_class > 2.
+    if (mi.incapacitated() || mi.sh <= 2)
+        return 0;
+
+    // There is also a check for a ranged attacker to ignore a shield, but we can't call
+    // the same function because it needs a real defender; instead we simply pass in
+    // penetration (since we might want to set it another way for e.g. spells)
+    if (!melee && !player_omnireflects() && penetrating)
+        return 0;
+
+    // Main check
+    const int con_block = you.shield_bypass_ability(to_land);
+
+    // This is an approximation of the average result of shield_bonus, which
+    // looks odd due to how integer rounding affects the result for different
+    // values of sh. It's a sequence of fractions looking like:
+    // 1/3, 2/4, 4/5, 6/6, 9/7, 12/8, 16/9, 20/10 ... (for sh starting from 3)
+    const int pro_mult = (mi.sh - 1) / 2;
+    double pro_block = (double)(pro_mult * (mi.sh - pro_mult - 1)) / (double)mi.sh;
+
+    // Slightly inaccurate for very low shield values as the chance should be
+    // zero below a certain sh, due to integer division in attack_shield_blocked.
+    if (_to_hit_is_invisible(mi))
+        pro_block /= 3.0;
+
+    // Shield exhaustion would be checked at this point but it's only meaningful
+    // for multiple hits, so for basic hit chance we assume no exhaustion.
+
+    // Final average
+    return min(1.0, max(0.0, pro_block / (double)con_block));
+}
+
+/**
+ * Return the odds of a provided attack hitting a defender defined as a
+ * monster_info, rounded to the nearest percent.
+ *
+ * @return                  To-hit percent between 0 and 100 (inclusive).
+ */
+int to_hit_pct(const monster_info& mi, attack &atk, bool melee,
+               bool penetrating, int distance)
+{
+    const int to_land = atk.calc_pre_roll_to_hit(false);
+    const double hit_chance = _to_hit_hit_chance(mi, atk, melee, to_land);
+    const double shield_chance = _to_hit_shield_chance(mi, melee, to_land, penetrating);
+    const int blind_miss_chance = player_blind_miss_chance(distance);
+    return (int)(hit_chance * (1.0 - shield_chance) * 100 * (100 - blind_miss_chance) / 100);
+}
+
+/**
+ * Return the odds of the player hitting a defender defined as a
+ * monster_info with an auxiliary melee attack, rounded to the nearest percent.
+ */
+int to_hit_pct_aux(const monster_info& mi, attack &atk)
+{
+    const int to_land = aux_to_hit();
+    const double hit_chance = _to_hit_hit_chance(mi, atk, true, to_land, true);
+    const double shield_chance = _to_hit_shield_chance(mi, true, to_land, false);
+    const int blind_miss_chance = player_blind_miss_chance(1);
+    return (int)(hit_chance * (1.0 - shield_chance) * 100 * (100 - blind_miss_chance) / 100);
 }
 
 /**
@@ -244,20 +327,26 @@ int mon_beat_sh_pct(int bypass, int scaled_sh)
  */
 static bool _autoswitch_to_melee()
 {
+    // It's not a good idea to quietly replace an attack action with one that
+    // takes 5 times as long. Even prompting would be better.
+    if (you.has_mutation(MUT_SLOW_WIELD))
+        return false;
+
+    item_def* weapon = you.weapon();
     bool penance;
-    if (!you.weapon()
+    if (!weapon
         // don't autoswitch from a weapon that needs a warning
-        || is_melee_weapon(*you.weapon())
-            && !needs_handle_warning(*you.weapon(), OPER_ATTACK, penance))
+        || is_melee_weapon(*weapon)
+            && !needs_handle_warning(*weapon, OPER_ATTACK, penance))
     {
         return false;
     }
 
-    // don't autoswitch if a or b is not selected
+    // Only try autoswapping if weapon is in slot a or b
     int item_slot;
-    if (you.equip[EQ_WEAPON] == letter_to_index('a'))
+    if (weapon->link == letter_to_index('a'))
         item_slot = letter_to_index('b');
-    else if (you.equip[EQ_WEAPON] == letter_to_index('b'))
+    else if (weapon->link == letter_to_index('b'))
         item_slot = letter_to_index('a');
     else
         return false;
@@ -387,6 +476,13 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         if (!simu && will_have_passive(passive_t::shadow_attacks))
             dithmenos_shadow_melee(defender);
 
+        // Executioner state doesn't wear off so long as you keep attacking.
+        if (you.duration[DUR_EXECUTION])
+            you.duration[DUR_EXECUTION] += you.time_taken;
+
+        if (you.duration[DUR_PARAGON_ACTIVE])
+            paragon_attack_trigger();
+
         return true;
     }
 
@@ -477,91 +573,81 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         fire_final_effects();
     }
 
+    // Here, rather than in melee_attack, so that it only triggers on attack
+    // actions, rather than additional times for bonus attacks (ie: from Autumn Katana)
+    if (attacker->as_monster()->type == MONS_PLATINUM_PARAGON)
+        paragon_charge_up(*attacker->as_monster());
+
     return true;
 }
 
 /**
- * If the given attacker attacks the given defender right now, what kind of
- * extra-damage "stab" attack can the attacker perform, if any?
+ * What is the best stab type that could be applied against a given monster
+ * right now? (Ignoring the player's own potential incapacitation.)
  *
- * @param attacker  The attacker; may be null.
- * @param defender  The defender.
- * @param actual    True if we're actually committing to a stab, false if we're
- *                  just checking for display purposes.
- * @return          The best (most damaging) kind of stab available to the
- *                  attacker against this defender, or STAB_NO_STAB.
+ * Note that while all of these stab types map to only two tiers of mechnical
+ * power, the specific type is still noted in the action count section of
+ * character dumps.
+ *
+ * @param victim    The monster being sized up by the player.
+ * @return          The best (most damaging) kind of stab available against this
+ *                  monser, or STAB_NO_STAB if none is available.
  */
-stab_type find_stab_type(const actor *attacker,
-                         const actor &defender,
-                         bool actual)
+stab_type find_player_stab_type(const monster &victim)
 {
-    const monster* def = defender.as_monster();
-
-    // Stabbing monsters is unchivalric, and disabled under TSO!
-    // When just checking for display purposes, still indicate when monsters
-    // are sleeping/paralysed etc.
-    if (actual && attacker && attacker->is_player()
-        && def && have_passive(passive_t::no_stabbing))
-    {
-        return STAB_NO_STAB;
-    }
-
     // No stabbing monsters that cannot fight (e.g. plants) or monsters
     // the attacker can't see (either due to invisibility or being behind
     // opaque clouds).
-    if (def && mons_is_firewood(*def))
+    if (victim.is_firewood())
         return STAB_NO_STAB;
 
-    if (attacker && !attacker->can_see(defender))
-        return STAB_NO_STAB;
-
-    // Can't stab these
-    if (def && def->type == MONS_SPECTRAL_WEAPON)
+    if (!you.can_see(victim))
         return STAB_NO_STAB;
 
     // sleeping
-    if (defender.asleep())
+    if (victim.asleep())
         return STAB_SLEEPING;
 
     // paralysed
-    if (defender.paralysed())
+    if (victim.paralysed())
         return STAB_PARALYSED;
 
     // petrified
-    if (defender.petrified())
+    if (victim.petrified())
         return STAB_PETRIFIED;
 
     // petrifying
-    if (def && def->petrifying())
+    if (victim.petrifying())
         return STAB_PETRIFYING;
 
     // held in a net
-    if (def && def->caught())
+    if (victim.caught())
         return STAB_HELD_IN_NET;
 
     // invisible
-    if (attacker && !attacker->visible_to(&defender))
-        return STAB_INVISIBLE;
+    if (!you.visible_to(&victim))
+    {
+        if (victim.has_ench(ENCH_BLIND))
+            return STAB_BLIND;
+        else
+            return STAB_INVISIBLE;
+    }
 
     // fleeing
-    if (def && mons_is_fleeing(*def))
+    if (mons_is_fleeing(victim))
         return STAB_FLEEING;
 
     // allies
-    if (def && def->friendly())
+    if (victim.friendly())
         return STAB_ALLY;
 
     // confused (but not perma-confused)
-    if (def && mons_is_confused(*def, false))
+    if (mons_is_confused(victim, false))
         return STAB_CONFUSED;
 
-    // Distracted (but not batty); this only applies to players.
-    if (attacker && attacker->is_player()
-        && def && def->foe != MHITYOU
-        && def->behaviour != BEH_BATTY)
-    {
+    // Distracted
+    if (mons_looks_distracted(victim))
         return STAB_DISTRACTED;
-    }
 
     return STAB_NO_STAB;
 }
@@ -620,6 +706,7 @@ static inline int get_resistible_fraction(beam_type flavour)
     case BEAM_LAVA:
         return 50;
     case BEAM_POISON_ARROW:
+    case BEAM_MERCURY:
         return 70;
     default:
         return 100;
@@ -650,12 +737,12 @@ static int _beam_to_resist(const actor* defender, beam_type flavour)
         case BEAM_PAIN:
         case BEAM_MALIGN_OFFERING:
         case BEAM_VAMPIRIC_DRAINING:
-        case BEAM_NECROTISE:
             return defender->res_negative_energy();
         case BEAM_ACID:
-            return defender->res_acid();
+            return defender->res_corr();
         case BEAM_POISON:
         case BEAM_POISON_ARROW:
+        case BEAM_MERCURY:
             return defender->res_poison();
         case BEAM_HOLY:
             return defender->res_holy_energy();
@@ -701,13 +788,13 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int rawdamage
         const bool immune_at_3_res = is_mon
                                      || flavour == BEAM_NEG
                                      || flavour == BEAM_PAIN
-                                     || flavour == BEAM_NECROTISE
                                      || flavour == BEAM_MALIGN_OFFERING
                                      || flavour == BEAM_VAMPIRIC_DRAINING
                                      || flavour == BEAM_HOLY
                                      || flavour == BEAM_FOUL_FLAME
                                      || flavour == BEAM_POISON
                                      // just the resistible part
+                                     || flavour == BEAM_MERCURY
                                      || flavour == BEAM_POISON_ARROW;
 
         if (immune_at_3_res && res >= 3 || res > 3)
@@ -722,7 +809,6 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int rawdamage
                 resistible /= 1 + bonus_res + res * res;
             else if (flavour == BEAM_NEG
                      || flavour == BEAM_PAIN
-                     || flavour == BEAM_NECROTISE
                      || flavour == BEAM_MALIGN_OFFERING
                      || flavour == BEAM_VAMPIRIC_DRAINING)
             {
@@ -803,7 +889,7 @@ static bool _missing_weapon(const item_def *weapon, const item_def *offhand)
            && you.form != transformation::tree
            && any_of(you.inv.begin(), you.inv.end(),
                      [](item_def &it) {
-               return is_melee_weapon(it) && can_wield(&it);
+               return is_melee_weapon(it) && can_equip_item(it);
             });
 }
 
@@ -851,20 +937,10 @@ bool player_unrand_bad_attempt(const item_def &weapon,
                                const actor *defender,
                                bool check_only)
 {
-    if (is_unrandom_artefact(weapon, UNRAND_DEVASTATOR))
-    {
+    const monster* defending_monster = defender ? defender->as_monster() :
+        nullptr;
 
-        targeter_smite hitfunc(&you, 1, 1, 1, false);
-        hitfunc.set_aim(defender->pos());
-
-        return stop_attack_prompt(hitfunc, "attack",
-                                  [](const actor *act)
-                                  {
-                                      return !god_protects(act->as_monster());
-                                  }, nullptr, defender->as_monster(),
-                                  check_only);
-    }
-    else if (is_unrandom_artefact(weapon, UNRAND_VARIABILITY)
+    if (is_unrandom_artefact(weapon, UNRAND_VARIABILITY)
              || is_unrandom_artefact(weapon, UNRAND_SINGING_SWORD)
                 && !silenced(you.pos()))
     {
@@ -873,8 +949,8 @@ bool player_unrand_bad_attempt(const item_def &weapon,
         return stop_attack_prompt(hitfunc, "attack",
                                [](const actor *act)
                                {
-                                   return !god_protects(act->as_monster());
-                               }, nullptr, defender->as_monster(),
+                                   return !never_harm_monster(&you, act->as_monster());
+                               }, nullptr, defending_monster,
                                check_only);
     }
     if (is_unrandom_artefact(weapon, UNRAND_TORMENT))
@@ -885,30 +961,75 @@ bool player_unrand_bad_attempt(const item_def &weapon,
                                [] (const actor *m)
                                {
                                    return !m->res_torment()
-                                       && !god_protects(m->as_monster());
+                                       && !never_harm_monster(&you, m->as_monster());
                                },
-                                  nullptr, defender->as_monster(),
+                                  nullptr, defending_monster,
                                 check_only);
+    }
+
+    if (!defender)
+        return false;
+
+    return player_unrand_bad_target(weapon, *defender, check_only);
+}
+
+bool player_unrand_bad_attempt(const item_def *weapon,
+    const item_def *offhand,
+    const actor *defender,
+    bool check_only)
+{
+    return weapon && ::player_unrand_bad_attempt(*weapon, defender, check_only)
+        || offhand && ::player_unrand_bad_attempt(*offhand, defender, check_only);
+}
+
+bool player_unrand_bad_target(const item_def &weapon,
+    const actor &defender,
+    bool check_only)
+{
+    const monster* defending_monster = defender.as_monster();
+
+    if (is_unrandom_artefact(weapon, UNRAND_DEVASTATOR))
+    {
+        targeter_smite hitfunc(&you, LOS_RADIUS, 1, 1);
+        hitfunc.set_aim(defender.pos());
+
+        return stop_attack_prompt(hitfunc, "attack",
+                               [](const actor *act)
+                               {
+                                   return !never_harm_monster(&you, act->as_monster());
+                               }, nullptr, defending_monster,
+                               check_only);
     }
     if (is_unrandom_artefact(weapon, UNRAND_ARC_BLADE))
     {
-        vector<const actor *> exclude;
-        return !safe_discharge(defender->pos(), exclude, check_only);
+        if (you.pos().distance_from(defender.pos()) <= 1)
+            return !safe_discharge(you.pos(), check_only);
+
+        return !safe_discharge(defender.pos(), check_only, false);
     }
     if (is_unrandom_artefact(weapon, UNRAND_POWER))
     {
         targeter_beam hitfunc(&you, 4, ZAP_SWORD_BEAM, 100, 0, 0);
         hitfunc.beam.aimed_at_spot = false;
-        hitfunc.set_aim(defender->pos());
+        hitfunc.set_aim(defender.pos());
 
         return stop_attack_prompt(hitfunc, "attack",
                                [](const actor *act)
                                {
-                                   return !god_protects(act->as_monster());
-                               }, nullptr, defender->as_monster(),
+                                   return !never_harm_monster(&you, act->as_monster());
+                               }, nullptr, defending_monster,
                                check_only);
     }
     return false;
+}
+
+bool player_unrand_bad_target(const item_def *weapon,
+    const item_def *offhand,
+    const actor &defender,
+    bool check_only)
+{
+    return weapon && ::player_unrand_bad_target(*weapon, defender, check_only)
+        || offhand && ::player_unrand_bad_target(*offhand, defender, check_only);
 }
 
 /**
@@ -924,6 +1045,9 @@ bool dont_harm(const actor &attacker, const actor &defender)
 {
     if (mons_aligned(&attacker, &defender))
         return true;
+
+    if (defender.is_monster())
+        return never_harm_monster(&attacker, defender.as_monster(), true);
 
     if (defender.is_player())
         return attacker.wont_attack();
@@ -1040,6 +1164,8 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
             continue;
         if (di.radius() == 2 && !can_reach_attack_between(atk, *di, REACH_TWO))
             continue;
+        else if (di.radius() == 3 && !can_reach_attack_between(atk, *di, REACH_THREE))
+            continue;
         targets.push_back(target);
     }
 }
@@ -1049,17 +1175,28 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
  *
  * @param attacker                  The attacking creature.
  * @param targets                   The targets to cleave.
- * @param attack_number             ?
- * @param effective_attack_number   ?
+ * @param attack_number             For monsters, which of their 4 possible attacks this
+ *                                  corresponds to. For players, usually 0, but can be 1
+ *                                  for the second of a Coglin's two weapons per round
+ * @param effective_attack_number   Like attack_number, if invalid attacks were skipped
+ *                                  (ie: fake attacks or ones outside of their max range.)
+ * @param wu_jian_attack            The type of martial attack being performed (if any).
+ * @param is_projected              Whether the attack is projected (ie: Manifold Assault)
+ * @param is_cleaving               Whether this is a cleaving attack.
+ * @param weapon                    The weapon this attack is being performed with (if any).
+ *
+ * @return  The total amount of damage inflicted directly by all attacks caused by this function.
  */
-void attack_multiple_targets(actor &attacker, list<actor*> &targets,
+int attack_multiple_targets(actor &attacker, list<actor*> &targets,
                              int attack_number, int effective_attack_number,
                              wu_jian_attack_type wu_jian_attack,
                              bool is_projected, bool is_cleaving,
                              item_def *weapon)
 {
     if (!attacker.alive())
-        return;
+        return 0;
+
+    int total_damage = 0;
     const item_def* weap = weapon ? weapon : attacker.weapon(attack_number);
     const bool reaching = weap && weapon_reach(*weap) > REACH_NONE;
     while (attacker.alive() && !targets.empty())
@@ -1081,9 +1218,13 @@ void attack_multiple_targets(actor &attacker, list<actor*> &targets,
             attck.cleaving = is_cleaving;
             attck.is_multihit = !is_cleaving; // heh heh heh
             attck.attack();
+
+            total_damage += attck.total_damage_done;
         }
         targets.pop_front();
     }
+
+    return total_damage;
 }
 
 /**
@@ -1175,18 +1316,15 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
     if (is_sanctuary(mon->pos()) || is_sanctuary(attack_pos))
         suffix = ", despite your sanctuary";
 
-    if (you_worship(GOD_JIYVA) && mons_is_slime(*mon)
-        && !(mon->is_shapeshifter() && (mon->flags & MF_KNOWN_SHIFTER)))
-    {
-        would_cause_penance = true;
-        return true;
-    }
-
     if (mon->friendly())
     {
         // There's not really any harm in attacking your own spectral weapon.
         // It won't share damage, and it'll go away anyway.
         if (mon->type == MONS_SPECTRAL_WEAPON)
+            return false;
+
+        // If we cannot hurt an ally anyway, don't bother warning as if we could
+        if (never_harm_monster(&you, mon))
             return false;
 
         if (god_hates_attacking_friend(you.religion, *mon))
@@ -1261,7 +1399,7 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
     if (check_only)
         return true;
 
-    // Listed in the form: "your rat", "Blork the orc".
+    // Listed in the form: "your rat", "Blorkula the orcula".
     string mon_name = mon->name(DESC_PLAIN);
     if (starts_with(mon_name, "the ")) // no "your the Royal Jelly" nor "the the RJ"
         mon_name = mon_name.substr(4); // strlen("the ")
@@ -1355,7 +1493,7 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
     if (check_only)
         return true;
 
-    // Listed in the form: "your rat", "Blork the orc".
+    // Listed in the form: "your rat", "Blorkula the orcula".
     string mon_name = victims.describe(DESC_PLAIN);
     if (starts_with(mon_name, "the ")) // no "your the Royal Jelly" nor "the the RJ"
         mon_name = mon_name.substr(4); // strlen("the ")
@@ -1391,7 +1529,61 @@ string stop_summoning_reason(resists_t resists, monclass_flags_t flags)
         return "noxious bog";
     if (you.duration[DUR_VORTEX])
         return "polar vortex";
+    if (you.duration[DUR_FUSILLADE])
+        return "fulsome fusillade";
     return "";
+}
+
+bool warn_about_bad_targets(spell_type spell, vector<coord_def> targets,
+                            function<bool(const monster&)> should_ignore)
+{
+    return warn_about_bad_targets(spell_title(spell), targets, should_ignore);
+}
+
+bool warn_about_bad_targets(const char* source_name, vector<coord_def> targets,
+                            function<bool(const monster&)> should_ignore)
+{
+    vector<const monster*> bad_targets;
+    for (coord_def p : targets)
+    {
+        const monster* mon = monster_at(p);
+        if (!mon || never_harm_monster(&you, mon))
+            continue;
+
+        if (should_ignore && should_ignore(*mon))
+            continue;
+
+        // If we've already found and marked this target as bad, don't include
+        // it a second time (or it will produce a confusing prompt).
+        if (find(bad_targets.begin(), bad_targets.end(), mon) != bad_targets.end())
+            continue;
+
+        string adj, suffix;
+        bool penance;
+        if (bad_attack(mon, adj, suffix, penance, you.pos()))
+            bad_targets.push_back(mon);
+    }
+
+    if (bad_targets.empty())
+        return false;
+
+    const monster* ex_mon = bad_targets.back();
+    string adj, suffix;
+    bool penance;
+    bad_attack(ex_mon, adj, suffix, penance, you.pos());
+    const string and_more = bad_targets.size() > 1 ?
+            make_stringf(" (and %zu other bad targets)",
+                         bad_targets.size() - 1) : "";
+    const string prompt = make_stringf("%s might hit %s%s. Cast it anyway?",
+                                       source_name,
+                                       ex_mon->name(DESC_THE).c_str(),
+                                       and_more.c_str());
+    if (!yesno(prompt.c_str(), false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return true;
+    }
+    return false;
 }
 
 /**
@@ -1419,8 +1611,8 @@ bool stop_summoning_prompt(resists_t resists, monclass_flags_t flags,
     if (noun.empty())
         return false;
 
-    string prompt = make_stringf("Really %s while emitting a %s?",
-                                 verb.c_str(), noun.c_str());
+    string prompt = make_stringf("Really %s while emitting %s?",
+                                 verb.c_str(), article_a(noun).c_str());
 
     if (yesno(prompt.c_str(), false, 'n'))
         return false;
@@ -1522,11 +1714,13 @@ int apply_fighting_skill(int damage, bool aux, bool random)
     return damage;
 }
 
-int throwing_base_damage_bonus(const item_def &proj)
+int throwing_base_damage_bonus(const item_def &proj, bool random)
 {
     // Stones get half bonus; everything else gets full bonus.
-    return div_rand_round(you.skill_rdiv(SK_THROWING)
-                          * min(4, property(proj, PWPN_DAMAGE)), 4);
+    int damage_mult = min(4, property(proj, PWPN_DAMAGE));
+    if (random)
+        return div_rand_round(you.skill_rdiv(SK_THROWING) * damage_mult, 4);
+    return (you.skill(SK_THROWING) * damage_mult) / 4;
 }
 
 int brand_adjust_weapon_damage(int base_dam, int brand, bool random)

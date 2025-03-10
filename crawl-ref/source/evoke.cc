@@ -102,8 +102,8 @@ static bool _evoke_horn_of_geryon()
 
         if (random2(adjusted_power) > 7)
             beh = BEH_FRIENDLY;
-        mgen_data mg(MONS_HELL_BEAST, beh, you.pos(), MHITYOU, MG_AUTOFOE);
-        mg.set_summoned(&you, 3, SPELL_NO_SPELL);
+        mgen_data mg(MONS_SIN_BEAST, beh, you.pos(), MHITYOU, MG_AUTOFOE);
+        mg.set_summoned(&you, SPELL_NO_SPELL, summ_dur(3));
         mg.set_prox(PROX_CLOSE_TO_PLAYER);
         mon = create_monster(mg);
         if (mon)
@@ -156,7 +156,7 @@ int wand_power(spell_type wand_spell)
         return -1;
     const int mp_cost = wand_mp_cost();
     int pow = (15 + you.skill(SK_EVOCATIONS, 7) / 2) * (mp_cost + 9) / 9;
-    if (player_equip_unrand(UNRAND_GADGETEER))
+    if (you.unrand_equipped(UNRAND_GADGETEER))
         pow = pow * 130 / 100;
     return min(pow, cap);
 }
@@ -198,10 +198,6 @@ void zap_wand(int slot, dist *_target)
     if (!item_currently_evokable(&wand))
         return;
 
-    // If you happen to be wielding the wand, its display might change.
-    if (you.equip[EQ_WEAPON] == item_slot)
-        you.wield_change = true;
-
     const int mp_cost = wand_mp_cost();
     const spell_type spell =
         spell_in_wand(static_cast<wand_type>(wand.sub_type));
@@ -231,8 +227,8 @@ void zap_wand(int slot, dist *_target)
         finalize_mp_cost();
 
     // Take off a charge (unless gadgeteer procs)
-    if ((you.wearing_ego(EQ_GIZMO, SPGIZMO_GADGETEER)
-        || player_equip_unrand(UNRAND_GADGETEER))
+    if ((you.wearing_ego(OBJ_GIZMOS, SPGIZMO_GADGETEER)
+        || you.unrand_equipped(UNRAND_GADGETEER))
         && x_chance_in_y(3, 10))
     {
         mpr("You conserve a charge of your wand.");
@@ -284,7 +280,7 @@ static bool _box_of_beasts()
 
     mgen_data mg(MONS_MUTANT_BEAST, BEH_FRIENDLY, you.pos(), MHITYOU,
                  MG_AUTOFOE);
-    mg.set_summoned(&you, 3 + random2(3), 0);
+    mg.set_summoned(&you, 0, summ_dur(3 + random2(3)));
 
     mg.hd = beast_tiers[tier];
     dprf("hd %d (min %d, tier %d)", mg.hd, hd_min, tier);
@@ -385,7 +381,7 @@ static bool _spill_out_spiders()
         monster_type mon = pick_monster_from(pop_spiders, evo_skill,
                                              _sack_of_spiders_veto_mon);
         mgen_data mg(mon, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE);
-        mg.set_summoned(&you, 3 + random2(4), 0);
+        mg.set_summoned(&you, 0, summ_dur(3 + random2(4)));
         if (create_monster(mg))
             made_mons = true;
     }
@@ -519,7 +515,8 @@ void wind_blast(actor* agent, int pow, coord_def target)
         if (act->alive())
         {
             const int push = _gale_push_dist(agent, act, pow);
-            act->knockback(*agent, push, pow, "gust of wind");
+            act->knockback(*agent, push, default_collision_damage(pow, true).roll(),
+                           "gust of wind");
         }
     }
 
@@ -638,7 +635,7 @@ static spret _phantom_mirror(dist *target)
     if (!target)
         target = &target_local;
 
-    targeter_smite tgt(&you, LOS_RADIUS, 0, 0);
+    targeter_smite tgt(&you, LOS_RADIUS);
 
     direction_chooser_args args;
     args.restricts = DIR_TARGET;
@@ -684,7 +681,7 @@ static spret _phantom_mirror(dist *target)
     int dur = min(6, max(1, (you.skill(SK_EVOCATIONS, 1) / 4 + 1)
                          * (100 - victim->check_willpower(&you, power)) / 100));
 
-    mon->mark_summoned(dur, true, SPELL_PHANTOM_MIRROR);
+    mon->mark_summoned(SPELL_PHANTOM_MIRROR, summ_dur(dur), true, true);
 
     mon->summoner = MID_PLAYER;
     mons_add_blame(mon, "mirrored by the player character");
@@ -696,6 +693,10 @@ static spret _phantom_mirror(dist *target)
     mon->behaviour = BEH_SEEK;
     set_nearest_monster_foe(mon);
 
+    // If the original monster was unrewarding, and these flags are copied, the
+    // mirrored copy will not properly count as summoned for some purposes.
+    mon->flags &= ~(MF_HARD_RESET | MF_NO_REWARD);
+
     mprf("You reflect %s with the mirror!",
          victim->name(DESC_THE).c_str());
 
@@ -704,9 +705,8 @@ static spret _phantom_mirror(dist *target)
 
 static bool _valid_tremorstone_target(const monster &m)
 {
-    return !mons_is_firewood(m)
-        && !god_protects(m)
-        && !always_shoot_through_monster(&you, m);
+    return !m.is_firewood()
+        && !never_harm_monster(&you, m);
 }
 
 /**
@@ -925,17 +925,14 @@ static spret _condenser()
         target_list.push_back(t);
     shuffle_array(target_list);
     bool did_something = false;
-    bool suppressed = false;
 
     for (auto p : target_list)
     {
-        const cloud_type cloud = cloud_picker.pick(condenser_clouds, pow, CLOUD_NONE);
+        cloud_type cloud = cloud_picker.pick(condenser_clouds, pow, CLOUD_NONE);
 
-        if (is_good_god(you.religion) && cloud == CLOUD_MISERY)
-        {
-            suppressed = true;
-            continue;
-        }
+        // Reroll misery clouds until we get something our god is okay with
+        while (is_good_god(you.religion) && cloud == CLOUD_MISERY)
+            cloud = cloud_picker.pick(condenser_clouds, pow, CLOUD_NONE);
 
         // Get at least one cloud, even at 0 power.
         if (did_something && !x_chance_in_y(50 + pow, 160))
@@ -949,10 +946,24 @@ static spret _condenser()
 
     if (did_something)
         mpr("Clouds condense from the air!");
-    else if (suppressed)
-        simple_god_message(" suppresses the foul vapours!");
 
     return spret::success;
+}
+
+static int _gravitambourine_power()
+{
+    return 15 + you.skill(SK_EVOCATIONS, 7) / 2;
+}
+
+static bool _gravitambourine(dist *target)
+{
+    const spret ret = your_spells(SPELL_GRAVITAS, _gravitambourine_power(),
+            false, nullptr, target);
+
+    if (ret == spret::abort)
+        return false;
+
+    return true;
 }
 
 static transformation _form_for_talisman(const item_def &talisman)
@@ -965,7 +976,7 @@ static transformation _form_for_talisman(const item_def &talisman)
 static bool _evoke_talisman(const item_def &talisman)
 {
     const transformation trans = _form_for_talisman(talisman);
-    if (!check_transform_into(trans) || !check_form_stat_safety(trans))
+    if (!check_transform_into(trans, false, &talisman))
         return false;
     if (!i_feel_safe(true) && !yesno("Still begin transforming?", true, 'n'))
     {
@@ -1067,7 +1078,6 @@ string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident)
         && silenced(you.pos()))
     {
         return "You can't produce a sound!";
-
     }
 
     if (temp && is_xp_evoker(*item) && evoker_charges(item->sub_type) <= 0)
@@ -1108,21 +1118,6 @@ bool evoke_item(item_def& item, dist *preselect)
         zap_wand(item.link, preselect);
         return true;
 
-    case OBJ_WEAPONS:
-    {
-#ifdef ASSERTS
-        ASSERT(in_inventory(item));
-        const int equip = you.equip[EQ_WEAPON];
-        ASSERT(equip != -1 && item.link == equip);
-#endif
-        dist targ_local;
-        if (!preselect)
-            preselect = &targ_local;
-
-        quiver::get_primary_action()->trigger(*preselect);
-        return you.turn_is_over;
-    }
-
     case OBJ_TALISMANS:
         return _evoke_talisman(item);
 
@@ -1144,6 +1139,16 @@ bool evoke_item(item_def& item, dist *preselect)
 
         case MISC_PHIAL_OF_FLOODS:
             if (_phial_of_floods(preselect))
+            {
+                expend_xp_evoker(item.sub_type);
+                practise_evoking(3);
+            }
+            else
+                return false;
+            break;
+
+        case MISC_GRAVITAMBOURINE:
+            if (_gravitambourine(preselect))
             {
                 expend_xp_evoker(item.sub_type);
                 practise_evoking(3);
@@ -1345,6 +1350,11 @@ string evoke_damage_string(const item_def& item)
             return spell_damage_string(SPELL_TREMORSTONE, true,
                 _tremorstone_power());
         }
+        else if (item.sub_type == MISC_GRAVITAMBOURINE)
+        {
+            return spell_damage_string(SPELL_GRAVITAS, true,
+                _gravitambourine_power());
+        }
         else
             return "";
     }
@@ -1367,6 +1377,8 @@ string evoke_noise_string(const item_def& item)
             return spell_noise_string(SPELL_THUNDERBOLT);
         else if (item.sub_type == MISC_TIN_OF_TREMORSTONES)
             return spell_noise_string(SPELL_TREMORSTONE);
+        else if (item.sub_type == MISC_GRAVITAMBOURINE)
+            return spell_noise_string(SPELL_GRAVITAS);
         else
             return "";
     }

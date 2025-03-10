@@ -353,7 +353,7 @@ MONS:     fire giant ; battleaxe ego:freezing / \
           frost giant ; great sword ego:flaming / \
           deep troll earth mage / salamander tyrant / tengu reaver / \
           ettin ; great mace ego:flaming . great mace ego:freezing / \
-          spriggan air mage / lich / sphinx w:5 / \
+          spriggan air mage / lich / guardian sphinx w:5 / \
           deep elf annihilator ; ice dragon scales | fire dragon scales . \
                                  scimitar ego:flaming | scimitar ego:freezing
 MONS:     iron dragon w:5 / iron dragon perm_ench:shapeshifter w:5 / \
@@ -366,12 +366,12 @@ KMONS:    5 = deep elf blademaster ; mundane crystal plate armour . \
                                      rapier ego:flaming . rapier ego:freezing
 KMONS:    6 = deep elf master archer ; ice dragon scales . longbow ego:flaming / \
               deep elf master archer ; fire dragon scales . longbow ego:freezing
-KMONS:    7 = Vv w:2 / ancient lich / dread lich w:6, \
-              ancient lich / dread lich w:6
+KMONS:    7 = Vv w:2 / ancient lich / alderking w:6, \
+              ancient lich / alderking w:6
 KMONS:    8 = Frederick / titan / draconian annihilator w:5, \
               titan / draconian annihilator w:5
 KMONS:    A = golden dragon w:19 / golden dragon perm_ench:shapeshifter w:1 / \
-              quicksilver dragon w:14 / \
+              wyrmhole w:5 / quicksilver dragon w:14 / \
               quicksilver dragon perm_ench:shapeshifter w:1
 KMONS:    B = glowing shapeshifter hd:16 / glowing shapeshifter hd:15
 KMONS:    C = Josephina band w:5 / walking frostbound tome, \
@@ -828,7 +828,7 @@ ENDMAP
 NAME:    grunt_runaround_loot
 TAGS:    grunt_runaround_loot allow_dup unrand
 KMONS:   9 = 9 band
-KMONS:   8 = 8 band
+KMONS:   8 = 8
 SHUFFLE: }>de
 SUBST:   d = %, e = A
 NSUBST:  % = 4:| / 8:* / *=%
@@ -911,6 +911,7 @@ KMONS:  3 = orc priest / orc wizard / centaur / gnoll bouda
 KMONS:  4 = orc / hound / kobold / goblin / hobgoblin / gnoll
 KMONS:  5 = yak / hog / bullfrog w:40
 KMONS:  6 = wyvern w:6 / manticore w:3 / black bear w:19
+KFEAT:  B = cache of baked goods
 KITEM:  o5 = gold / nothing w:1000
 SUBST:  M = tww.!, p = pP!!!!!
 NSUBST: 1 = 1:1 / *:., H = 20:H / 5:% / 160:. / * = .:25 %:1 4
@@ -919,7 +920,7 @@ NSUBST: ' = 2:6 / 3 = 66... / *:., " = 2:6 / 3 = 66... / *:.
 NSUBST: ` = 3:6 / 4 = 66... / *:., - = 1:6 / 2 = 6.. / *:.
 NSUBST: } = 1:] / 1:) / 1:} / * = **23..
 TILE:   x = wall_pebble_brown
-FTILE:  !pPt = floor_grass / floor_dirt w:1
+FTILE:  !pPt = floor_grass / floor_swamp w:1
 FTILE:  5oR = floor_dirt
 SUBST:  ! = .
 MAP
@@ -937,7 +938,7 @@ xttt!!tptpppppppptttttp!pp!!!!!wwwwwwwwppppppppttp!ttttttttt!ttttxxxxxxxxxxx*xxx
 xtttt!!ppppwwwppppppppp!!!!!!!!!wwwwwwww!!!!!!ppp!pttttttttt!ptttttttxxxxxxx}xxx
 xtttp!!!wwwwwwwwppw!!!!!!wwwwwwwwwwwwwwwww!!!!!!!!!ptttttttt!!ptttttttxxxxxxxxxx
 xtttp!!!wccmmccwwwwwwwwwwccmmccwwwwwwwwwwwwwwwwwwww!pptttttttt!pttttttttxxxxxxxx
-xttpp!!!wcHHHHcRRRRwRRRRRcHHHHcwww!wwwwwwwwwwwwwwww..!ptttttttt!pttttttttpxxxxxx
+xttpp!!!wcBHHHcRRRRwRRRRRcHHHHcwww!wwwwwwwwwwwwwwww..!ptttttttt!pttttttttpxxxxxx
 xtttp!!!wmH3HHcRRRRRRRRRRcHH3Hmww!!!!wwwwwwwwwwwwwwww.!ppppptpp!!ppppppptp!!xxxx
 xtttp!!!wmHHHHcRRRRRRRRRRcHHHHmww!!!!!!wwwwwwwwwwwwwwww!!!!!!!!!!!!!!!!!!!!!xxxx
 xtttp!!!wcHHHHccccccccccccHHHHcw!!!!!!.!!!!!!!!wwwwwwww.FFFFFFFFFFFFFFFFFFF!!xxx
@@ -951,7 +952,7 @@ xtttpp!!wcccHHHHHH2HH2HHHHHHcccw!...........!!!wwwwwwwww!!!!!!!!!!!!!!!!!!!!!!!x
 xttttp!!wcHHHHccccHHHHccccHHHHcw!!.cc...cc.!!!!wwwwwwwwwFFFFFFFFFFFFFFFFFFF!!!!x
 xttttp!!wmHHHHcRRcHHHHcRRcHHHHmw!!!cc...cc!!!!wwwwwwwwww!!!!!!!!!!!!!!!!!!!!!!!x
 xttttp!!wmH3HHcRRcc++ccRRcHH3Hmw!!!!..G..!!!!wwwwwwwwwwwFFFFFFFFFFFFccccccc!!!!x
-xtttpp!!wcHHHHcRRRR..RRRRcHHHHcww!!!!...!!!!wwwwwwwwwwww!!!!!!!!!!!!cHHH}Hc!!!!x
+xtttpp!!wcHHHHcRRRR..RRRRcHHHBcww!!!!...!!!!wwwwwwwwwwww!!!!!!!!!!!!cHHH}Hc!!!!x
 xtttppp!wccmmccRRRw..RwRRccmmccw!!!!!...!!!wwwwwwwwwwwwwFFFFFFFFFFFFcHHHHHc!!!!x
 xtttttppwwwwwwwwwww..wwwwwwwwwww!!!!!...!!wwwwwwww!!wwww.!!!!!!!!!!!c++cccc!!!!x
 xttttttpp!!!www!ww!..!!!!!!!!!!!!!!!!...!wwwwccc!!!!!wwwwFFFFFFFFFFFF..!!!!!!!!x

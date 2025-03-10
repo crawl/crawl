@@ -46,6 +46,7 @@ enum msg_channel_type
     MSGCH_MONSTER_WARNING,  // "Foo comes into view", et al
     MSGCH_DGL_MESSAGE,      // dgamelaunch messages
     MSGCH_DECOR_FLAVOUR,    // Flavour messages for walking on some features
+    MSGCH_MONSTER_TIMEOUT,  // Messages for summons/temporary monsters expiring.
 
     NUM_MESSAGE_CHANNELS    // always last
 };

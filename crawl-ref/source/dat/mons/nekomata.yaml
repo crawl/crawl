@@ -1,0 +1,19 @@
+name: "nekomata"
+glyph: {char: "R", colour: white}
+flags: [flies, fighter, archer, see_invis, speaks]
+resists: {fire: 1, poison: 1}
+xp_mult: 27
+holiness: [demonic]
+will: 120
+attacks:
+ - {type: hit, damage: 32}
+ - {type: claw, damage: 16}
+hd: 15
+hp_10x: 880
+ac: 7
+ev: 23
+spells: nekomata
+intelligence: human
+uses: starting_equipment
+size: medium
+shape: humanoid

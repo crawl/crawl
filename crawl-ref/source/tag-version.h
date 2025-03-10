@@ -304,6 +304,21 @@ enum tag_minor_version
     TAG_MINOR_COGLIN_NO_JEWELLERY, // Remove all jewellery from Coglins
     TAG_MINOR_TALISMANS_SEEN,      // Keep track of seen talismans
     TAG_MINOR_FIX_APOSTLE_DAMAGE,  // Fix damage tracking of banished apostles
+    TAG_MINOR_MON_AURA_REFACTORING,// Mark enchantments from passive auras in mon_enchant
+    TAG_MINOR_GRAVE_CLAW_CHARGES,  // Add stockpiling of Grave Claw charges
+    TAG_MINOR_ENDLESS_DIVINE_SHIELD, // Make Divine Shield not expire with time
+    TAG_MINOR_NEGATIVE_DIVINE_SHIELD, // Fix negative Divine Shield charges
+    TAG_MINOR_MAKHLEB_REVAMP,      // Handle backend of giving existing Makh worshippers mark options
+    TAG_MINOR_NO_FAKE_ABJ,         // Remove ENCH_FAKE_ABJURATION
+    TAG_MINOR_ADD_FORGECRAFT,      // Add Forgecraft skill by replacing unused Transmutations
+    TAG_MINOR_REFACTOR_CHANNEL_SPELLS, // Refactor tracking of channelled spells
+    TAG_MINOR_SIMPLIFY_ID,         // Crunch all item identification flags into just one
+    TAG_MINOR_STACKABLE_EVOKERS_TWO, // XP evokers stack for a recharge speed boost
+    TAG_MINOR_EQUIP_SLOT_REWRITE,  // Convert all player equipment handling over to a new system
+    TAG_MINOR_REMOVE_STAT_DRAIN,   // Remove all stat draining
+    TAG_MINOR_SIMPLIFY_STAT_ZERO,  // Simplify stat-zero to permaslow with no duration
+    TAG_MINOR_REMOVE_VAMPIRES,     // Remove the player vampire species
+    TAG_MINOR_SPECTRAL_DUAL_WIELDING, // Allow having multiple spectral weapons out at the same time
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

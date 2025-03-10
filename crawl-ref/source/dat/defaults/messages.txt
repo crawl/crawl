@@ -14,7 +14,7 @@ msc += $danger:Space warps( horribly)? around you
 msc += $danger:sense of stasis
 msc += $danger:clumsily bash
 msc += $danger:goes berserk!
-msc += $danger:The blast of calcifying dust hits you!
+msc += $danger:The blast of calcifying dust hits you
 msc += $danger:you are engulfed in calcifying dust
 msc += $danger:is moving more slowly
 # Don't recolour acquirement messages along with messages about invisible monsters.
@@ -28,6 +28,7 @@ msc += $danger:place you under penance
 msc += $danger:cause instant excommunication
 msc += $danger:corrodes you
 msc += $danger:Your body becomes as fragile as glass
+msc += lightmagenta:malevolent force fills
 
 # Less urgent, but still significant messages
 #
@@ -38,9 +39,10 @@ msc += $warning:floor suddenly vibrates
 msc += $warning:a sudden draft
 msc += $warning:coins.*counted
 msc += $warning:tolling.*bell
+msc += $warning:notes of the bell
 msc += $warning:roar of battle
 msc += $warning:creaking.*portcullis
-msc += $warning:portcullis is probably
+msc += $warning:portcullis has been lowered
 msc += $warning:wave of frost
 msc += $warning:crackling.*melting
 msc += $warning:hiss.*sand
@@ -69,12 +71,7 @@ msc += $warning:Beware. you cannot shaft yourself on this level
 #
 msc += $boring:You start (resting|waiting)
 msc += $boring:Unknown command
-msc += $boring:disappears? in a (puff of smoke|burst of colours)
-msc += $boring:dissolves? into (sparkling lights|shadows)
-msc += $boring:(crumbles|melts) away\.
-msc += $boring:returns to the deep
-msc += $boring:shimmers and vanishes
-msc += $boring:turns back into a lifeless stick
+msc += $boring:blood churns to no real effect
 #
 msc += $boring:plain:miss(es)? (the|you|it)
 msc += $boring:but (do no|doesn't do any) damage
@@ -101,6 +98,8 @@ force_more_message += You rejoin the land of the living
 force_more_message += You cannot cast spells when silenced
 force_more_message += This is a scroll of acquirement
 force_more_message += create your gizmo
+force_more_message += malevolent force fills
+force_more_message += malevolence running through your instability
 
 ## Zot is coming!
 force_more_message += You have lingered too long
@@ -123,6 +122,7 @@ force_more_message += sound of rushing water
 force_more_message += oppressive heat about you
 force_more_message += crackle of arcane power
 force_more_message += hear a distant wind
+force_more_message += Beware! This is a limited time offer
 
 # Religion
 force_more_message += press .* to convert to Beogh
@@ -183,8 +183,15 @@ force_more_message += deals you some cards
 force_more_message += deal. but finds you have enough
 force_more_message += partake of a vision and a curse
 force_more_message += allow you to induct
+force_more_message += will allow you to brand your body
 
 force_more_message += Beogh speaks to you:
+
+# Xom doing things you really shouldn't miss
+force_more_message += is forced to slowly start .* word of recall
+
+# Crucible exit notification
+force_more_message += Makhleb acknowledges your contrition
 
 # Show passwall message while still in the starting position
 force_more_message += You finish merging with the rock

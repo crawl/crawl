@@ -27,6 +27,8 @@ Relevant enums are noted with a (filename ➡ enum).
   used for some corner cases of monster behavior. Defaults to `species`.
   (monster-type.h ➡ monster-type).
 - ✨glyph✨ (`glyph` entry): See below.
+- god (string): The god the monster worships. Defaults to "no god".
+  (god-type.h ➡ god_type)
 - habitat (string): The monster's native terrain type. Defaults to "land".
   (mon-enum.h ➡ habitat_type)
 - ✨has_corpse✨ (bool): Whether the monster leaves a corpse behind on death.

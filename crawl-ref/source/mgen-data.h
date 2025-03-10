@@ -6,6 +6,8 @@
 #include "mgen-enum.h"
 #include "mon-enum.h"
 #include "mon-flags.h"
+#include "mon-util.h"
+#include "player.h"
 #include "xp-tracking-type.h"
 
 // Hash key for passing a weapon to be given to
@@ -30,21 +32,31 @@ struct mgen_data
     beh_type        behaviour;
 
     // Who summoned this monster?  Important to know for death accounting
-    // and the summon cap, if and when it goes in. nullptr is no summoner.
+    // and the summon cap. nullptr is no summoner.
     const actor*    summoner;
 
     // For summoned monsters, this is a measure of how long the summon will
-    // hang around, on a scale of 1-6, 6 being longest. Use 0 for monsters
-    // that aren't summoned.
-    int             abjuration_duration;
+    // hang around, measured in aut. Use 0 for monsters that aren't summoned
+    // or those which are summoned but do not expire on their.
+    int             summon_duration;
 
     // For summoned monsters this is their type of summoning, either the
     // spell which summoned them or one of the values of the enumeration
     // mon_summon_type in mon-enum.h.
     int             summon_type;
 
-    // Where the monster will be created.
+    // The center point around which the monster will be created.
     coord_def       pos;
+
+    // Used to control where the monster will be randomly placed, relative to
+    // the center point. At first, place_monster() will attempt to find a valid
+    // spot within range_preferred tiles of pos. If none can be found, it will
+    // expand its search up to range_max tiles of pos before giving up. If
+    // range_min is non-negative, it will exclude tiles which are within that
+    // distance of pos.
+    int range_preferred = 2;
+    int range_max = 0;
+    int range_min = -1;
 
     // The monster's foe, i.e. which monster it will want to attack. foe
     // may be an index into the monster array (0 - (MAX_MONSTERS-1)), or
@@ -92,14 +104,6 @@ struct mgen_data
     // This simply stores the initial shape-shifter type.
     monster_type    initial_shifter;
 
-    // A grid feature to prefer when finding a place to create monsters.
-    // For instance, using DNGN_FLOOR when placing flying monsters or
-    // merfolk in the Shoals will force them to appear on land.
-    // preferred_grid_feature will be ignored if it is incompatible with
-    // the monster's native habitat (for instance, if trying to place
-    // a electric eel with preferred_grid_feature DNGN_FLOOR).
-    dungeon_feature_type preferred_grid_feature = DNGN_UNSEEN;
-
     // Some predefined vaults (aka maps) include flags to suppress random
     // generation of monsters. When generating monsters, this is a mask of
     // map flags to honour (such as MMT_NO_MONS to specify that we shouldn't
@@ -122,7 +126,7 @@ struct mgen_data
               mgen_flags genflags = MG_NONE,
               god_type which_god = GOD_NO_GOD)
 
-        : cls(mt), behaviour(beh), summoner(nullptr), abjuration_duration(0),
+        : cls(mt), behaviour(beh), summoner(nullptr), summon_duration(0),
           summon_type(0), pos(p), foe(mfoe), flags(genflags), god(which_god),
           base_type(MONS_NO_MONSTER), colour(COLOUR_INHERIT),
           proximity(PROX_ANYWHERE), place(level_id::current()), hd(0), hp(0),
@@ -160,30 +164,59 @@ struct mgen_data
         return *this;
     }
 
-    mgen_data &set_summoned(const actor* _summoner, int abjuration_dur,
-                            int _summon_type, god_type _god = GOD_NO_GOD)
+    mgen_data &set_range(int preferred_range, int max_range = 0, int min_range = -1)
     {
-        summoner = _summoner;
-        abjuration_duration = abjuration_dur;
-        summon_type = _summon_type;
-        if (_god != GOD_NO_GOD)
-            god = _god;
+        range_preferred = preferred_range;
+        if (max_range > 0)
+            range_max = max_range;
+        if (min_range >= 0)
+            range_min = min_range;
+        return *this;
+    }
 
-        ASSERT(summon_type == 0 || abjuration_dur >= 1 && abjuration_dur <= 6
-               || cls == MONS_BALL_LIGHTNING || cls == MONS_ORB_OF_DESTRUCTION
-               || cls == MONS_BATTLESPHERE || cls == MONS_BALLISTOMYCETE_SPORE
-               || cls == MONS_BOULDER
-               || summon_type == SPELL_ANIMATE_DEAD
-               || summon_type == SPELL_NECROTISE
-               || summon_type == SPELL_DEATH_CHANNEL
-               || summon_type == SPELL_BIND_SOULS
-               || summon_type == SPELL_SIMULACRUM
-               || summon_type == SPELL_AWAKEN_VINES
-               || summon_type == SPELL_FULMINANT_PRISM
-               || summon_type == SPELL_INFESTATION
-               || summon_type == SPELL_FOXFIRE
-               || summon_type == SPELL_MARSHLIGHT
-               || summon_type == MON_SUMM_AID);
+    mgen_data &set_summoned(const actor* _summoner, int _summon_type,
+                            int duration = 0, bool abjurable = true,
+                            bool dependent = true)
+    {
+        // Hijack any summons created by player shadows or marionettes to belong
+        // to the player (your shadow is too emphemeral to keep them from
+        // poofing and marionette is a one-shot effect)
+        if (_summoner && _summoner->is_monster()
+            && (mons_is_player_shadow(*_summoner->as_monster())
+                || _summoner->real_attitude() == ATT_MARIONETTE))
+        {
+            // Summons that would appear around a marionette caster appear
+            // around the player instead. (All bets are off it any more custom
+            // placement is used.)
+            if (pos == _summoner->pos()
+                && _summoner->real_attitude() == ATT_MARIONETTE)
+            {
+                pos = you.pos();
+            }
+
+            summoner = &you;
+            behaviour = BEH_FRIENDLY;
+
+        }
+        else
+            summoner = _summoner;
+        summon_duration = duration;
+        summon_type = _summon_type;
+
+        // It doesn't make sense to have an abjurable summon with no duration.
+        if (duration == 0)
+            abjurable = false;
+
+        if (abjurable)
+            extra_flags |= MF_ACTUAL_SUMMON;
+        else
+            extra_flags &= ~MF_ACTUAL_SUMMON;
+
+        if (!dependent)
+            extra_flags |= MF_PERSISTS;
+        else
+            extra_flags &= ~MF_PERSISTS;
+
         return *this;
     }
 
@@ -200,7 +233,10 @@ struct mgen_data
     // when placing the monster?
     bool use_position() const { return in_bounds(pos); };
 
-    bool summoned() const { return abjuration_duration > 0; }
+    // XXX: The summoner field is used in normal band placement to temporarily
+    //      designate a band member's leader, so we need to rule that out.
+    bool is_summoned() const { return summon_type != SPELL_NO_SPELL
+                                      || (summoner != nullptr && !(flags & MG_BAND_MINION)); }
 
     static mgen_data sleeper_at(monster_type what,
                                 const coord_def &where,
@@ -211,9 +247,11 @@ struct mgen_data
 
     static mgen_data hostile_at(monster_type mt,
                                 bool alert = false,
-                                const coord_def &p = coord_def(-1, -1))
+                                const coord_def &p = coord_def(-1, -1),
+                                god_type god = GOD_NO_GOD)
 
     {
-        return mgen_data(mt, BEH_HOSTILE, p, alert ? MHITYOU : MHITNOT);
+        return mgen_data(mt, BEH_HOSTILE, p, alert ? MHITYOU : MHITNOT,
+                         MG_NONE, god);
     }
 };

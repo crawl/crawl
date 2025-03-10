@@ -33,11 +33,6 @@ Felid
 Myslící plemeno koček s mnoha života, které zato nejsou schopny jemné
 manipulace s předměty či používaní zbroje a zbraní.
 %%%%
-Ghoul
-
-Nemrtvý, odsouzený k věčnému úpadku těla. Neustále se ženou za zkaženým jídlem,
-a cestu si klestí pomocí svých drápů.
-%%%%
 Gargoyle
 
 Díky tomu, že jsou vytesáni ze žijícího kamene, mají nadpřirozeně pozitivní

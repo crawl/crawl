@@ -12,6 +12,7 @@
 #include "describe.h"
 #include "english.h"
 #include "externs.h"
+#include "god-abil.h"
 #include "invent.h"
 #include "libutil.h"
 #include "menu.h"
@@ -161,11 +162,9 @@ static void _monster_spellbooks(const monster_info &mi,
 
     spellbook_contents output_book;
 
-    output_book.label +=
-        "\n" +
-        uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE)) +
-        " " +
-        _booktype_header(type, mi.pronoun_plurality());
+    output_book.label += make_stringf("\n%s %s",
+        uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE)).c_str(),
+        _booktype_header(type, mi.pronoun_plurality()).c_str());
 
     // Does the monster have a spell that allows them to cast Abjuration?
     bool mons_abjure = false;
@@ -205,11 +204,9 @@ static void _monster_wand_spellbook(const monster_info &mi,
 
     spellbook_contents book;
 
-    book.label +=
-        "\n" +
-        uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE)) +
-        " " +
-        _booktype_header(MON_SPELL_EVOKE, mi.pronoun_plurality());
+    book.label += make_stringf("\n%s %s",
+        uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE)).c_str(),
+        _booktype_header(MON_SPELL_EVOKE, mi.pronoun_plurality()).c_str());
 
     const wand_type wandtyp = static_cast<wand_type>(wand->sub_type);
     ASSERT(wandtyp < NUM_WANDS);
@@ -295,13 +292,10 @@ static int _spell_colour(spell_type spell, const item_def* const source_item)
     if (!source_item)
         return spell_highlight_by_utility(spell, COL_UNKNOWN);
 
-    if (you.has_spell(spell))
-        return COL_MEMORIZED;
-
-    // this is kind of ugly.
-    if (!you_can_memorise(spell)
-        || you.experience_level < spell_difficulty(spell)
-        || player_spell_levels() < spell_levels_required(spell))
+    // note: Vehumet's gifts mean having a spell memorised does not imply that
+    // said spell is in your library
+    if (you.spell_library[spell] || you.has_spell(spell)
+        || !you_can_memorise(spell))
     {
         return COL_USELESS;
     }
@@ -309,10 +303,13 @@ static int _spell_colour(spell_type spell, const item_def* const source_item)
     if (god_hates_spell(spell, you.religion))
         return COL_FORBIDDEN;
 
-    if (!you.has_spell(spell))
-        return COL_UNMEMORIZED;
+    if (you.experience_level < spell_difficulty(spell)
+        || player_spell_levels() < spell_levels_required(spell))
+    {
+        return COL_USEFUL_IN_FUTURE;
+    }
 
-    return spell_highlight_by_utility(spell, COL_UNKNOWN);
+    return COL_USEFUL_NOW;
 }
 
 /**
@@ -366,18 +363,26 @@ static string _range_string(const spell_type &spell, const monster_info *mon_own
 {
     auto flags = get_spell_flags(spell);
     int pow = mons_power_for_hd(spell, hd);
-    int range = spell_range(spell, pow, false);
+    int range = spell_range(spell, pow, mon_owner && mon_owner->is(MB_PLAYER_SERVITOR));
     const bool has_range = mon_owner
                         && range > 0
                         && !testbits(flags, spflag::selfench);
     if (!has_range)
         return "";
+
+    int minrange = 0;
+    if (spell == SPELL_CALL_DOWN_LIGHTNING || spell == SPELL_FLASHING_BALESTRA)
+        minrange = 2;
+
     const bool in_range = has_range
                     && crawl_state.need_save
                     && in_bounds(mon_owner->pos)
-                    && grid_distance(you.pos(), mon_owner->pos) <= range;
+                    && grid_distance(you.pos(), mon_owner->pos) <= range
+                    && grid_distance(you.pos(), mon_owner->pos) >= minrange;
     const char *range_col = in_range ? "lightred" : "lightgray";
-    return make_stringf("(<%s>%d</%s>)", range_col, range, range_col);
+    return make_stringf("(<%s>%d%s</%s>)", range_col, range,
+                                           minrange > 0 ? "*" : "",
+                                           range_col);
 }
 
 // TODO: deduplicate with the same-named function in spl-cast.cc
@@ -387,8 +392,6 @@ static dice_def _spell_damage(spell_type spell, int hd)
 
     switch (spell)
     {
-        case SPELL_FREEZE:
-            return freeze_damage(pow, false);
         case SPELL_SCORCH:
             return scorch_damage(pow, false);
         case SPELL_WATERSTRIKE:
@@ -415,6 +418,11 @@ static dice_def _spell_damage(spell_type spell, int hd)
             return polar_vortex_dice(pow, false);
         case SPELL_ELECTROLUNGE:
             return electrolunge_damage(pow);
+        case SPELL_FULMINANT_PRISM:
+        case SPELL_SHADOW_PRISM:
+            return prism_damage(prism_hd(pow, false), true);
+        case SPELL_HELLFIRE_MORTAR:
+            return hellfire_mortar_damage(pow);
 
         // This is the per-turn *sticky flame* damage against the player.
         // The spell has no impact damage and otherwise uses different numbers
@@ -437,6 +445,8 @@ static int _spell_hd(spell_type spell, const monster_info &mon_owner)
 {
     if (spell == SPELL_SEARING_BREATH && mon_owner.type == MONS_XTAHUA)
         return mon_owner.hd * 3 / 2;
+    if (spell == SPELL_COLD_BREATH && mons_is_draconian(mon_owner.type))
+        return mon_owner.hd * 5 / 6;
     if (mons_spell_is_spell(spell))
         return mon_owner.spell_hd();
     return mon_owner.hd;
@@ -503,7 +513,13 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
         }
         if (you.immune_to_hex(spell))
             return "(immune)";
-        return make_stringf("(%d%%)", hex_chance(spell, mon_owner));
+
+        const string hex_str = make_stringf("%d%%", hex_chance(spell, mon_owner));
+
+        const dice_def dam = _spell_damage(spell, hd);
+        if (!dam.size || !dam.num)
+            return make_stringf("(%s)", hex_str.c_str());
+        return make_stringf("(%s,%dd%d)", hex_str.c_str(), dam.num, dam.size);
     }
 
     if (spell == SPELL_SMITING)
@@ -516,6 +532,30 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
     {
         const int pow = mons_power_for_hd(SPELL_DRAINING_GAZE, hd);
         return make_stringf("0-%d MP", pow / 8); // >_> >_>
+    }
+
+    if (spell == SPELL_WIND_BLAST)
+    {
+        const int pow = mons_power_for_hd(SPELL_WIND_BLAST, hd);
+        return make_stringf("2d%d*", default_collision_damage(pow, false).size);
+    }
+
+    if (spell == SPELL_FORCE_LANCE)
+    {
+        const int pow = mons_power_for_hd(SPELL_FORCE_LANCE, hd);
+            return make_stringf("%dd%d(+%dd%d)",
+                _spell_damage(spell, hd).num,
+                _spell_damage(spell, hd).size,
+                default_collision_damage(pow, false).num,
+                default_collision_damage(pow, false).size);
+    }
+
+    if (spell == SPELL_HOARFROST_BULLET)
+    {
+        const int pow = mons_power_for_hd(spell, hd);
+        return make_stringf("3d(%d/%d)",
+            zap_damage(ZAP_HOARFROST_BULLET, pow, true, false).size,
+            zap_damage(ZAP_HOARFROST_BULLET_FINALE, pow, true, false).size);
     }
 
     const dice_def dam = _spell_damage(spell, hd);
@@ -545,8 +585,10 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
         mult = "3x";
     else if (spell == SPELL_ELECTROLUNGE)
         mult = "+";
-    const char* asterisk = (spell == SPELL_LRD || spell == SPELL_PYRE_ARROW) ? "*" : "";
-    return make_stringf("(%s%dd%d%s)", mult.c_str(), dam.num, dam.size, asterisk);
+    const char* suffix = spell == SPELL_LRD ? "*"
+                       : spell == SPELL_PYRE_ARROW ? "/turn"
+                       : "";
+    return make_stringf("(%s%dd%d%s)", mult.c_str(), dam.num, dam.size, suffix);
 }
 
 /**
@@ -575,7 +617,7 @@ static void _describe_book(const spellbook_contents &book,
     if (source_item)
     {
         description.cprintf(
-            "\n Spells                            Type                      Level");
+            "\n Spells                              Type                    Level");
         if (crawl_state.need_save)
             description.cprintf("       Known");
     }
@@ -605,10 +647,20 @@ static void _describe_book(const spellbook_contents &book,
         const string range_str = _range_string(spell, mon_owner, hd);
         string effect_str = _effect_string(spell, mon_owner);
 
+        const string dith_marker = mon_owner
+                                   && crawl_state.need_save
+                                   && you_worship(GOD_DITHMENOS)
+                                        ? !valid_marionette_spell(spell)
+                                          ? "<magenta>!</magenta>"
+                                          : spell_has_marionette_override(spell)
+                                          ? "<lightmagenta>*</lightmagenta>" : ""
+                                        : "";
+
         const int effect_len = effect_str.length();
         const int range_len = range_str.empty() ? 0 : 3;
         const int effect_range_space = effect_len && range_len ? 1 : 0;
-        const int chop_len = 30 - effect_len - range_len - effect_range_space;
+        const int chop_len = 32 - effect_len - range_len - effect_range_space
+                                - (dith_marker.length() > 0 ? 1 : 0);
 
         if (effect_len && !testbits(get_spell_flags(spell), spflag::WL_check))
             effect_str = colourize_str(effect_str, _spell_colour(spell));
@@ -621,7 +673,8 @@ static void _describe_book(const spellbook_contents &book,
             spell_name = "Crystal Spear";
         }
         description += formatted_string::parse_string(
-                make_stringf("%c - %s%s%s%s", spell_letter,
+                make_stringf("%c - %s%s%s%s%s", spell_letter,
+                             dith_marker.c_str(),
                              chop_string(spell_name, chop_len).c_str(),
                              effect_str.c_str(),
                              effect_range_space ? " " : "",
@@ -651,7 +704,7 @@ static void _describe_book(const spellbook_contents &book,
             known = you.spell_library[spell] ? "         yes" : "          no";
 
         description.cprintf("%s%d%s\n",
-                            chop_string(schools, 30).c_str(),
+                            chop_string(schools, 28).c_str(),
                             spell_difficulty(spell),
                             known.c_str());
     }
@@ -695,7 +748,17 @@ static void _write_book(const spellbook_contents &book,
     for (auto spell : book.spells)
     {
         tiles.json_open_object();
-        tiles.json_write_string("title", spell_title(spell));
+
+        const string dith_marker = mon_owner
+                                   && crawl_state.need_save
+                                   && you_worship(GOD_DITHMENOS)
+                                        ? !valid_marionette_spell(spell)
+                                          ? "<magenta>!</magenta>"
+                                          : spell_has_marionette_override(spell)
+                                          ? "<lightmagenta>*</lightmagenta>" : ""
+                                        : "";
+
+        tiles.json_write_string("title", dith_marker + spell_title(spell));
         tiles.json_write_int("colour", _spell_colour(spell, source_item));
         tiles.json_write_name("tile");
         tiles.write_tileidx(tileidx_spell(spell));

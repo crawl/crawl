@@ -68,9 +68,6 @@ static void _make_all_books()
 
         item_def book(env.item[thing]);
 
-        set_ident_flags(book, ISFLAG_KNOW_TYPE);
-        set_ident_flags(book, ISFLAG_IDENT_MASK);
-
         mpr(book.name(DESC_PLAIN));
     }
 }
@@ -349,7 +346,7 @@ void wizard_tweak_object()
     if (prompt_failed(item))
         return;
 
-    if (item == you.equip[EQ_WEAPON])
+    if (you.weapon() && you.weapon()->link == item)
         you.wield_change = true;
 
     const bool is_art = is_artefact(you.inv[item]);
@@ -404,8 +401,7 @@ void wizard_tweak_object()
         int64_t new_val = strtoll(specs, &end, hex ? 16 : 0);
 
         if (keyin == 'e' && new_val & ISFLAG_ARTEFACT_MASK
-            && (!you.inv[item].props.exists(KNOWN_PROPS_KEY)
-             || !you.inv[item].props.exists(ARTEFACT_PROPS_KEY)))
+            && !you.inv[item].props.exists(ARTEFACT_PROPS_KEY))
         {
             mpr("You can't set this flag on a non-artefact.");
             continue;
@@ -432,7 +428,7 @@ void wizard_tweak_object()
 
         // cursedness might have changed
         ash_check_bondage();
-        auto_id_inventory();
+        ash_id_inventory();
     }
 }
 
@@ -522,7 +518,7 @@ void wizard_create_all_artefacts(bool override_unique)
             }
         }
         item_def &item = env.item[islot];
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
+        identify_item(item);
 
         if (!is_artefact(item))
         {
@@ -555,7 +551,7 @@ void wizard_create_all_artefacts(bool override_unique)
         item.quantity  = 1;
         item_colour(item);
 
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
+        identify_item(item);
         move_item_to_grid(&islot, you.pos());
 
         msg::streams(MSGCH_DIAGNOSTICS) << "Made " << item.name(DESC_A)
@@ -585,12 +581,12 @@ void wizard_make_object_randart()
         return;
     }
 
-    const equipment_type eq = item_equip_slot(item);
+    const equipment_slot eq = item_equip_slot(item);
     int invslot = 0;
-    if (eq != EQ_NONE)
+    if (eq != SLOT_UNUSED)
     {
-        invslot = you.equip[eq];
-        unequip_item(eq);
+        invslot = item.link;
+        unequip_item(item);
     }
 
     if (is_random_artefact(item))
@@ -635,7 +631,7 @@ void wizard_make_object_randart()
     }
 
     // If it was equipped, requip the item.
-    if (eq != EQ_NONE)
+    if (eq != SLOT_UNUSED)
         equip_item(eq, invslot);
 
     mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
@@ -651,18 +647,11 @@ void wizard_identify_pack()
 
 static void _forget_item(item_def &item)
 {
-    set_ident_type(item, false);
-    unset_ident_flags(item, ISFLAG_IDENT_MASK);
-    item.flags &= ~(ISFLAG_SEEN | ISFLAG_HANDLED | ISFLAG_THROWN
+    if (item_type_has_ids(item.base_type))
+        you.type_ids[item.base_type][item.sub_type] = false;
+
+    item.flags &= ~(ISFLAG_SEEN | ISFLAG_HANDLED | ISFLAG_THROWN | ISFLAG_IDENTIFIED
                     | ISFLAG_DROPPED | ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
-    if (is_artefact(item) && item.props.exists(KNOWN_PROPS_KEY))
-    {
-        ASSERT(item.props.exists(KNOWN_PROPS_KEY));
-        CrawlVector &known = item.props[KNOWN_PROPS_KEY].get_vector();
-        ASSERT(known.size() == ART_PROPERTIES);
-        for (vec_size i = 0; i < ART_PROPERTIES; i++)
-            known[i] = static_cast<bool>(false);
-    }
 }
 
 void wizard_unidentify_pack()
@@ -911,37 +900,20 @@ static void _debug_acquirement_stats()
             species::name(you.species).c_str(),
             get_job_name(you.char_class), godname.c_str());
 
-    // Print player equipment.
-    const int e_order[] =
-    {
-        EQ_WEAPON, EQ_BODY_ARMOUR, EQ_OFFHAND, EQ_HELMET, EQ_CLOAK,
-        EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_RIGHT_RING, EQ_LEFT_RING,
-        EQ_RING_ONE, EQ_RING_TWO, EQ_RING_THREE, EQ_RING_FOUR,
-        EQ_RING_FIVE, EQ_RING_SIX, EQ_RING_SEVEN, EQ_RING_EIGHT,
-        EQ_RING_AMULET
-    };
-
     bool naked = true;
-    for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; i++)
+    for (player_equip_entry& entry : you.equipment.items)
     {
-        // We can't acquire for the gizmo or preview ring slots. Skip them.
-        if (i == EQ_GIZMO || i == EQ_PREVIEW_RING)
+        // We can't acquire for the gizmo slots. Skip it.
+        if (entry.slot = SLOT_GIZMO)
             continue;
 
-        int eqslot = e_order[i];
+        if (entry.is_overflow)
+            continue;
 
-        // Only output filled slots.
-        if (you.equip[ e_order[i] ] != -1)
-        {
-            // The player has something equipped.
-            const int item_idx   = you.equip[e_order[i]];
-            const item_def& item = you.inv[item_idx];
-
-            fprintf(ostat, "%-7s: %s %s\n", equip_slot_to_name(eqslot),
-                    item.name(DESC_PLAIN, true).c_str(),
-                    you.melded[i] ? "(melded)" : "");
-            naked = false;
-        }
+        fprintf(ostat, "%-7s: %s %s\n", equip_slot_name(entry.slot),
+                entry.get_item().name(DESC_PLAIN, true).c_str(),
+                entry.melded ? "(melded)" : "");
+        naked = false;
     }
     if (naked)
         fprintf(ostat, "Not wearing or wielding anything.\n");
@@ -1411,17 +1383,17 @@ void wizard_identify_all_items()
     wizard_identify_pack();
     for (auto &item : env.item)
         if (item.defined())
-            set_ident_flags(item, ISFLAG_IDENT_MASK);
+            identify_item(item);
     for (auto& entry : env.shop)
         for (auto &item : entry.second.stock)
-            set_ident_flags(item, ISFLAG_IDENT_MASK);
+            identify_item(item);
     for (int ii = 0; ii < NUM_OBJECT_CLASSES; ii++)
     {
         object_class_type i = (object_class_type)ii;
         if (!item_type_has_ids(i))
             continue;
         for (const auto j : all_item_subtypes(i))
-            set_ident_type(i, j, true);
+            identify_item_type(i, j);
     }
 }
 
@@ -1440,7 +1412,7 @@ void wizard_unidentify_all_items()
         if (!item_type_has_ids(i))
             continue;
         for (const auto j : all_item_subtypes(i))
-            set_ident_type(i, j, false);
+            you.type_ids[i][j] = false;
     }
 }
 

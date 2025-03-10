@@ -47,16 +47,16 @@ dgn_init_hook_tables(dgn.MAP_GLOBAL_HOOKS)
 -- Table that will be saved in <foo>.sav.
 dgn.persist = { }
 
-function dgn_clear_data()
-  dgn.persist = { }
-end
-
 function dgn_save_data(th)
   lmark.marshall_table(th, dgn.persist)
 end
 
 function dgn_load_data(th)
   dgn.persist = lmark.unmarshall_table(th) or { }
+end
+
+function dgn_clear_persistant_data()
+  dgn.persist = { }
 end
 
 function dgn_set_persistent_var(var, val)
@@ -860,25 +860,26 @@ dgn.monster_weapons = {
                        ["double sword"] = 5, ["great sword"] = 15,
                        ["triple sword"] = 5, ["broad axe"] = 10,
                        ["battleaxe"] = 15, ["executioner's axe"] = 5,
-                       ["demon trident"] = 5, ["glaive"] = 10,
-                       ["bardiche"] = 5, ["morningstar"] = 10,
-                       ["demon whip"] = 5, ["eveningstar"] = 5,
-                       ["dire flail"] = 10, ["great mace"] = 10,
-                       ["lajatang"] = 5},
+                       ["partisan"] = 10, ["demon trident"] = 5,
+                       ["glaive"] = 10, ["bardiche"] = 5,
+                       ["morningstar"] = 10, ["demon whip"] = 5,
+                       ["eveningstar"] = 5, ["dire flail"] = 10,
+                       ["great mace"] = 10, ["lajatang"] = 5},
     ["knight-1h"] =   {["scimitar"] = 30, ["demon blade"] = 5,
                        ["double sword"] = 5, ["broad axe"] = 10,
-                       ["demon trident"] = 5, ["morningstar"] = 30,
-                       ["demon whip"] = 5, ["eveningstar"] = 5},
+                       ["partisan"] = 10, ["demon trident"] = 5,
+                       ["morningstar"] = 30, ["demon whip"] = 5,
+                       ["eveningstar"] = 5},
     ["knight-2h"] =   {["great sword"] = 15, ["triple sword"] = 5,
                        ["battleaxe"] = 15, ["executioner's axe"] = 5,
                        ["glaive"] = 15, ["bardiche"] = 5,
                        ["dire flail"] = 15, ["great mace"] = 10,
                        ["lajatang"] = 5},
 
-    -- Spriggan sets. Rider gets a small chance for demon trident, and druid
-    -- gets and equal chance for lajatang.
+    -- Spriggan sets. Rider gets a small chance for a partisan, and druid
+    -- gets an equal chance for a lajatang.
     ["spriggan"] =    {["dagger"] = 1, ["short sword"] = 1, ["rapier"] = 2},
-    ["rider"] =       {["spear"] = 5, ["trident"] = 10, ["demon trident"] = 2},
+    ["rider"] =       {["spear"] = 5, ["trident"] = 10, ["partisan"] = 2},
     ["druid"] =       {["quarterstaff"] = 10, ["lajatang"] = 10},
     ["berserker"] =   {["rapier"] = 10, ["quick blade"] = 5, ["war axe"] = 5,
                        ["broad axe"] = 10, ["morningstar"] = 10,
@@ -920,7 +921,7 @@ function dgn.monster_weapon(class, egos, args)
         error("Unknown weapon class: " .. class)
     end
 
-    return dgn.random_item_def(dgn.monster_weapons[class], egos, quality, '|')
+    return dgn.random_item_def(dgn.monster_weapons[class], egos, args, '|')
 end
 
 -- Returns true if point1 is inside radius(X, point2).

@@ -686,11 +686,6 @@ deep elf summoner
 Cet elfe profond est entrainé dans l'art de la convocation de petits démons et
 créatures.
 %%%%
-deep dwarf death knight
-
-Un guerrier-prêtre nain des profondeurs de Yredelemnul, qui chante des hommages
-impies à la gloire du dieu sombre et évoque la mort.
-%%%%
 deep troll
 
 Un troll voûté à la peau sombre, les trolls vivants dans les grottes voyagent
@@ -1013,7 +1008,7 @@ les nagas. Leur absence de bras, ajouté à leur sens extrême du devoir, en fai
 des gardiens renommés. On dit qu'un garde Serpent préfère mourir au combat
 plutôt que de laisser quoi que ce soit faire intrusion.
 %%%%
-hell beast
+sin beast
 
 Un croisement abominable d'une bête et d'un homme qui produit des glapissements
 épouvantables.
@@ -1276,11 +1271,6 @@ lindwurm
 Un petit dragon ophite avec une paire de membres antérieurs robustes. Ses
 épaisses écailles brillent d'une lueur verte sinistre.
 %%%%
-lorocyproca
-
-Une grande silhouette décharné, drapé dans une longue robe s'ecoulant tel une
-forme vivante. Elle a soif d'énergies magiques.
-%%%%
 lost soul
 
 L'écho d'une âme endeuillé, vacillant dans et hors du monde des mortels. Bien
@@ -1531,11 +1521,6 @@ program bug
 Un monstre vorace et incroyablement buggé. Veuillez rapporter son existence aux
 développeurs de Devteam.
 %%%%
-quasit
-
-Un petit démon lâche avec une longue queue pointue. Ses griffes acérées sont
-couvertes d'un venin qui raidit les muscles.
-%%%%
 queen bee
 
 La dirigeante de l'essaim d'abeilles, bien plus large et dangereuse que ses
@@ -1618,7 +1603,7 @@ sea snake
 Un serpent vivement coloré, très à l'aise dans l'eau. Sa morsure est
 extrêmement venimeuse.
 %%%%
-shadow
+shadowghast
 
 Une ombre furtive et sans vie qui se cache dans les ténèbres du donjon. Elle se
 déplace rapidement et en silence d'une flaque d'ombre à l'autre, frappant

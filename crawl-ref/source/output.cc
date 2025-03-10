@@ -25,6 +25,7 @@
 #include "god-abil.h"
 #include "god-passive.h"
 #include "initfile.h"
+#include "invent.h"
 #include "item-name.h"
 #include "item-prop.h"
 #include "jobs.h"
@@ -630,8 +631,9 @@ static bool _boosted_ev()
 
 static bool _boosted_sh()
 {
-    return you.duration[DUR_DIVINE_SHIELD]
-           || qazlal_sh_boost() > 0
+    return qazlal_sh_boost() > 0
+           || (you.get_mutation_level(MUT_EPHEMERAL_SHIELD)
+                && you.duration[DUR_EPHEMERAL_SHIELD])
            || (you.get_mutation_level(MUT_CONDENSATION_SHIELD)
                 && !you.duration[DUR_ICEMAIL_DEPLETED]);
 }
@@ -702,35 +704,51 @@ static int _count_digits(int val)
     return 1;
 }
 
-static const equipment_type e_order[] =
+static const equipment_slot slot_order[] =
 {
-    EQ_WEAPON, EQ_OFFHAND, EQ_BODY_ARMOUR, EQ_HELMET, EQ_CLOAK,
-    EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_LEFT_RING, EQ_RIGHT_RING,
-    EQ_RING_ONE, EQ_RING_TWO, EQ_RING_THREE, EQ_RING_FOUR,
-    EQ_RING_FIVE, EQ_RING_SIX, EQ_RING_SEVEN, EQ_RING_EIGHT,
-    EQ_RING_AMULET, EQ_GIZMO
+    SLOT_WEAPON, SLOT_OFFHAND, SLOT_WEAPON_OR_OFFHAND, SLOT_BODY_ARMOUR,
+    SLOT_HAUNTED_AUX,
+    SLOT_HELMET, SLOT_CLOAK, SLOT_GLOVES, SLOT_BOOTS, SLOT_BARDING,
+    SLOT_AMULET, SLOT_RING, SLOT_GIZMO
 };
 
 static void _print_stats_equip(int x, int y)
 {
     CGOTOXY(x, y, GOTO_STAT);
     textcolour(HUD_CAPTION_COLOUR);
-    cprintf((species::arm_count(you.species) > 2) ? "Eq: " : "Equip: ");
+
+    int total_slots = 0;
+    for (int i = SLOT_FIRST_STANDARD; i < NUM_EQUIP_SLOTS; ++i)
+        total_slots += you.equipment.num_slots[i];
+
+    cprintf(total_slots > 8 ? "Eq: " : "Equip: ");
     textcolour(LIGHTGREY);
-    for (equipment_type eqslot : e_order)
+    for (equipment_slot slot : slot_order)
     {
-        if (you_can_wear(eqslot) != false)
-        {
-            if (you.slot_item(eqslot))
-            {
-                cglyph_t g = get_item_glyph(*(you.slot_item(eqslot)));
-                g.col = element_colour(g.col, !Options.animate_equip_bar);
-                formatted_string::parse_string(glyph_to_tagstr(g)).display();
-            }
-            else if (!you_can_wear(eqslot, true))
+        const int num_slots = you.equipment.num_slots[slot];
+        if (num_slots == 0)
+            continue;
+
+        if (slot_is_melded(slot))
+            for (int i = 0; i < num_slots; ++i)
                 cprintf(" ");
-            else
-                cprintf(".");
+        else
+        {
+            vector<player_equip_entry> entries = you.equipment.get_slot_entries(slot);
+            for (int i = 0; i < num_slots; ++i)
+            {
+                if (i >= (int)entries.size())
+                    cprintf(".");
+                else if (entries[i].is_overflow)
+                    cprintf(" ");
+                else
+                {
+                    const item_def& item = entries[i].get_item();
+                    cglyph_t g = get_item_glyph(item);
+                    g.col = element_colour(g.col, !Options.animate_equip_bar);
+                    formatted_string::parse_string(glyph_to_tagstr(g)).display();
+                }
+            }
         }
     }
     you.gear_change = false;
@@ -857,6 +875,8 @@ static void _print_stats_gold(int x, int y)
     }
     if (you.duration[DUR_GOZAG_GOLD_AURA])
         textcolour(LIGHTBLUE);
+    else if (you.attribute[ATTR_VOUCHER] > 0)
+        textcolour(MAGENTA);
     else
         textcolour(HUD_VALUE_COLOUR);
     CPRINTF("%-6d", you.gold);
@@ -987,7 +1007,7 @@ static void _print_stats_hp(int x, int y)
 
 static short _get_stat_colour(stat_type stat)
 {
-    if (you.duration[stat_zero_duration(stat)])
+    if (you.stat(stat) <= 0)
         return LIGHTRED;
 
     // Check the stat_colour option for warning thresholds.
@@ -999,10 +1019,6 @@ static short _get_stat_colour(stat_type stat)
     if (you.duration[DUR_DIVINE_STAMINA])
         return LIGHTBLUE;  // no end of effect warning
 
-    // Stat is degenerated.
-    if (you.stat_loss[stat] > 0)
-        return YELLOW;
-
     return HUD_VALUE_COLOUR;
 }
 
@@ -1012,14 +1028,8 @@ static void _print_stat(stat_type stat, int x, int y)
 
     textcolour(_get_stat_colour(stat));
     CPRINTF("%d", you.stat(stat, false));
-
     if (!_is_using_small_layout())
-    {
-        if (you.stat_loss[stat] > 0)
-            CPRINTF(" (%d)  ", you.max_stat(stat));
-        else
-            CPRINTF("       ");
-    }
+        CPRINTF("       ");
 }
 
 static void _print_stats_ac(int x, int y)
@@ -1034,7 +1044,7 @@ static void _print_stats_ac(int x, int y)
     string ac = make_stringf("%2d ", you.armour_class_scaled(1));
 #ifdef WIZARD
     if (you.wizard && !_is_using_small_layout())
-        ac += make_stringf("(%d%%) ", you.gdr_perc());
+        ac += make_stringf("(%d%%) ", you.gdr_perc(false));
 #endif
     textcolour(text_col);
     CGOTOXY(x+4, y, GOTO_STAT);
@@ -1223,14 +1233,15 @@ static void _get_status_lights(vector<status_light>& out)
     {
         STATUS_ORB,
         STATUS_ZOT,
-        STATUS_STR_ZERO, STATUS_INT_ZERO, STATUS_DEX_ZERO,
-        STATUS_ALIVE_STATE,
+        STATUS_STAT_ZERO,
         DUR_PARALYSIS,
         DUR_CONF,
         DUR_PETRIFYING,
         DUR_PETRIFIED,
         DUR_BERSERK,
         DUR_TELEPORT,
+        DUR_ENKINDLED,
+        STATUS_MNEMOPHAGE,
         DUR_HASTE,
         DUR_SLOW,
         STATUS_SPEED,
@@ -1354,7 +1365,8 @@ static void _draw_wizmode_flag(const char *word)
 static void _redraw_title()
 {
     const unsigned int WIDTH = crawl_view.hudsz.x;
-    string title = you.your_name + " " + filtered_lang(player_title());
+    string title = filtered_lang(player_title());
+    title = you.your_name + (title[0] == ',' ? "" : " ") + title;
     const bool small_layout = _is_using_small_layout();
 
     if (small_layout)
@@ -1944,36 +1956,14 @@ int update_monster_pane()
 
 static const char *s_equip_slot_names[] =
 {
-    "Weapon", "Cloak",  "Helmet", "Gloves", "Boots",
-    "Shield", "Body Armour", "Left Ring", "Right Ring", "Amulet",
-    "First Ring", "Second Ring", "Third Ring", "Fourth Ring",
-    "Fifth Ring", "Sixth Ring", "Seventh Ring", "Eighth Ring",
-    "Amulet Ring", "Gizmo", "Preview Ring"
+    "Weapon", "Offhand", "Armour", "Helmet", "Gloves", "Boots",
+    "Barding", "Cloak", "Ring", "Amulet", "Gizmo"
 };
 
-const char *equip_slot_to_name(int equip)
+int equip_slot_by_name(const char *s)
 {
-    COMPILE_CHECK(ARRAYSZ(s_equip_slot_names) == NUM_EQUIP);
-
-    if (equip == EQ_RINGS
-        || equip >= EQ_FIRST_JEWELLERY && equip <= EQ_LAST_JEWELLERY && equip != EQ_AMULET)
-    {
-        return "Ring";
-    }
-
-    if (equip == EQ_BOOTS && you.wear_barding())
-        return "Barding";
-
-    if (equip < EQ_FIRST_EQUIP || equip >= NUM_EQUIP)
-        return "";
-
-    return s_equip_slot_names[equip];
-}
-
-int equip_name_to_slot(const char *s)
-{
-    for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
-        if (!strcasecmp(s_equip_slot_names[i], s))
+    for (int i = SLOT_FIRST_STANDARD; i <= SLOT_LAST_STANDARD; ++i)
+        if (!strcasecmp(s_equip_slot_names[i - SLOT_FIRST_STANDARD], s))
             return i;
 
     return -1;
@@ -2048,37 +2038,42 @@ static void _print_overview_screen_equip(column_composer& cols,
 {
     sw = min(max(sw, 79), 640);
 
-    for (equipment_type eqslot : e_order)
+    for (equipment_slot slot : slot_order)
     {
-        // leave space for all the ring slots
-        if (species::arm_count(you.species) > 2
-            && eqslot != EQ_WEAPON
-            && bool(!you_can_wear(eqslot)))
-        {
-            continue;
-        }
-
-        if (species::arm_count(you.species) <= 2
-            && eqslot >= EQ_RING_ONE && eqslot <= EQ_RING_EIGHT)
-        {
-            continue;
-        }
-
-        if (eqslot == EQ_RING_AMULET && bool(!you_can_wear(eqslot)))
+        // Skip slots the player doesn't have any of
+        const int num_slots = you.equipment.num_slots[slot];
+        if (num_slots == 0)
             continue;
 
-        if (eqslot == EQ_GIZMO && bool(!you_can_wear(eqslot)))
-            continue;
-
-        const string slot_name_lwr = lowercase_string(equip_slot_to_name(eqslot));
-
+        const string slot_name_lwr = lowercase_string(equip_slot_name(slot));
+        const bool slot_melded = slot_is_melded(slot);
         string str;
 
-        if (you.slot_item(eqslot, true))
+        vector<player_equip_entry> equipped = you.equipment.get_slot_entries(slot);
+        for (int i = 0; i < num_slots; ++i)
         {
-            // The player has something equipped.
-            const item_def& item = *you.slot_item(eqslot, true);
-            const bool melded    = you.melded[eqslot];
+            if (i >= (int)equipped.size())
+            {
+                // Some special-cased messages:
+                if (slot == SLOT_WEAPON && i == 0)
+                    str = "  - " + you.unarmed_attack_name();
+                else if (slot_melded)
+                    str = "<darkgrey>(" + slot_name_lwr + " unavailable)</darkgrey>";
+                else
+                    str = "<darkgrey>(no " + slot_name_lwr + ")</darkgrey>";
+
+                cols.add_formatted(1, str, false);
+                continue;
+            }
+            else if (equipped[i].is_overflow)
+            {
+                str = "  <darkgrey>[" + slot_name_lwr + " occupied]</darkgrey>";
+                cols.add_formatted(1, str, false);
+                continue;
+            }
+
+            const item_def& item = equipped[i].get_item();
+            const bool melded    = equipped[i].melded;
             const string prefix = item_prefix(item);
             const int prefcol = menu_colour(item.name(DESC_INVENTORY), prefix, "resists", false);
             const int col = prefcol == -1 ? LIGHTGREY : prefcol;
@@ -2086,7 +2081,7 @@ static void _print_overview_screen_equip(column_composer& cols,
             // Colour melded equipment dark grey.
             string colname = melded ? "darkgrey" : colour_to_str(col);
 
-            const int item_idx   = you.equip[eqslot];
+            const int item_idx   = equipped[i].item;
             const char equip_char = index_to_letter(item_idx);
 
             str = make_stringf(
@@ -2098,38 +2093,16 @@ static void _print_overview_screen_equip(column_composer& cols,
                                  melded ? sw - 32 : sw - 25, false).c_str(),
                      colname.c_str());
             equip_chars.push_back(equip_char);
+
+            cols.add_formatted(1, str.c_str(), false);
         }
-        else if (eqslot == EQ_WEAPON
-                 && you.skill(SK_UNARMED_COMBAT))
-        {
-            str = "  - Unarmed";
-        }
-        else if (eqslot == EQ_WEAPON
-                 && you.form == transformation::blade_hands)
-        {
-            const bool plural = you.arm_count() > 1;
-            str = string("  - Blade Hand") + (plural ? "s" : "");
-        }
-        else if (eqslot == EQ_BOOTS && you.wear_barding())
-            str = "<darkgrey>(no " + slot_name_lwr + ")</darkgrey>";
-        else if (!you_can_wear(eqslot))
-            str = "<darkgrey>(" + slot_name_lwr + " unavailable)</darkgrey>";
-        else if (!you_can_wear(eqslot, true))
-        {
-            str = "<darkgrey>(" + slot_name_lwr +
-                               " currently unavailable)</darkgrey>";
-        }
-        else if (you_can_wear(eqslot) == maybe_bool::maybe)
-            str = "<darkgrey>(" + slot_name_lwr + " restricted)</darkgrey>";
-        else // maybe_bool::t
-            str = "<darkgrey>(no " + slot_name_lwr + ")</darkgrey>";
-        cols.add_formatted(1, str.c_str(), false);
     }
 }
 
 static string _overview_screen_title(int sw)
 {
-    string title = make_stringf(" %s ", player_title().c_str());
+    string title = player_title();
+    title = (title[0] == ',' ? "" : " ") + title + " ";
 
     string species_job = make_stringf("(%s %s)",
                                       species::name(you.species).c_str(),
@@ -2243,13 +2216,6 @@ static int _god_status_colour(int default_colour)
     return default_colour;
 }
 
-static bool _player_statrotted()
-{
-    return you.strength(false) != you.max_strength()
-        || you.intel(false) != you.max_intel()
-        || you.dex(false) != you.max_dex();
-}
-
 static vector<formatted_string> _get_overview_stats()
 {
     formatted_string entry;
@@ -2261,9 +2227,6 @@ static vector<formatted_string> _get_overview_stats()
 
     if (player_drained())
         col1 += 1;
-
-    if (_player_statrotted())
-        col3 += 2;
 
     column_composer cols(4, col1, col1 + col2, col1 + col2 + col3);
 
@@ -2369,8 +2332,6 @@ static vector<formatted_string> _get_overview_stats()
     entry.textcolour(_get_stat_colour(STAT_STR));
 
     entry.cprintf("%2d", you.strength(false));
-    if (you.strength(false) != you.max_strength())
-        entry.cprintf(" (%d)", you.max_strength());
 
     cols.add_formatted(2, entry.to_colour_string(), false);
     entry.clear();
@@ -2381,8 +2342,6 @@ static vector<formatted_string> _get_overview_stats()
     entry.textcolour(_get_stat_colour(STAT_INT));
 
     entry.cprintf("%2d", you.intel(false));
-    if (you.intel(false) != you.max_intel())
-        entry.cprintf(" (%d)", you.max_intel());
 
     cols.add_formatted(2, entry.to_colour_string(), false);
     entry.clear();
@@ -2393,8 +2352,6 @@ static vector<formatted_string> _get_overview_stats()
     entry.textcolour(_get_stat_colour(STAT_DEX));
 
     entry.cprintf("%2d", you.dex(false));
-    if (you.dex(false) != you.max_dex())
-        entry.cprintf(" (%d)", you.max_dex());
 
     cols.add_formatted(2, entry.to_colour_string(), false);
     entry.clear();
@@ -2513,7 +2470,7 @@ static vector<formatted_string> _get_overview_resistances(
     const int relec = player_res_electricity(false);
     out += _resist_composer("rElec", cwidth, relec) + "\n";
 
-    const int rcorr = you.res_corr(false);
+    const int rcorr = player_res_corrosion(false);
     out += _resist_composer("rCorr", cwidth, rcorr) + "\n";
 
     const int sinv = you.can_see_invisible();
@@ -2529,17 +2486,20 @@ static vector<formatted_string> _get_overview_resistances(
     out += chop_string("HPRegen", cwidth);
     out += make_stringf("%d.%02d/turn\n", regen/100, regen%100);
 
-    out += chop_string("MPRegen", cwidth);
+    if (!you.has_mutation(MUT_HP_CASTING))
+    {
+        out += chop_string("MPRegen", cwidth);
 #if TAG_MAJOR_VERSION == 34
-    const bool etheric = player_equip_unrand(UNRAND_ETHERIC_CAGE);
-    const int mp_regen = player_mp_regen() //round up
-                         + (etheric ? 50 : 0); // on average
-    out += make_stringf("%d.%02d/turn%s\n", mp_regen / 100, mp_regen % 100,
-                        etheric ? "*" : "");
+        const bool etheric = you.unrand_equipped(UNRAND_ETHERIC_CAGE);
+        const int mp_regen = player_mp_regen() //round up
+                            + (etheric ? 50 : 0); // on average
+        out += make_stringf("%d.%02d/turn%s\n", mp_regen / 100, mp_regen % 100,
+                            etheric ? "*" : "");
 #else
-    const int mp_regen = player_mp_regen(); // round up
-    out += make_stringf("%d.%02d/turn\n", mp_regen / 100, mp_regen % 100);
+        const int mp_regen = player_mp_regen(); // round up
+        out += make_stringf("%d.%02d/turn\n", mp_regen / 100, mp_regen % 100);
 #endif
+    }
 
     cols.add_formatted(0, out, false);
 
@@ -2674,7 +2634,7 @@ static string _extra_passive_effects()
                          incoming_harm_amount(harm)).c_str());
     }
 
-    if (you.wearing_ego(EQ_ALL_ARMOUR, SPARM_MAYHEM))
+    if (you.wearing_ego(OBJ_ARMOUR, SPARM_MAYHEM))
         passives.emplace_back("mayhem");
 
     if (you.missile_repulsion())
@@ -2700,7 +2660,7 @@ static string _extra_passive_effects()
 
     if (you.rampaging())
     {
-        const bool infinite = player_equip_unrand(UNRAND_SEVEN_LEAGUE_BOOTS);
+        const bool infinite = you.unrand_equipped(UNRAND_SEVEN_LEAGUE_BOOTS);
         const char *inf = Options.char_set == CSET_ASCII ? "+inf"
                                                           : "+\u221e"; //"∞"
         passives.emplace_back(
@@ -2719,7 +2679,7 @@ static string _extra_passive_effects()
     if (you.archmagi())
         passives.emplace_back("archmagi");
 
-    const int channel = player_channeling();
+    const int channel = player_channelling();
     if (channel)
     {
         passives.emplace_back(

@@ -10,13 +10,14 @@
 ###############################################################################
 
 : crawl_require("dlua/ghost.lua")
+: crawl_require("dlua/vault.lua")
 
 {{
 
 function shoals_finale_setup(e, qualifier, decoy_count)
   qualifier = "_" .. qualifier
   if not decoy_count then
-    decoy_count = crawl.random_range(6, 7)
+    decoy_count = crawl.random_range(6, 8)
   end
   e.hook('post_place', function ()
     -- one rune hut, one ilsuiw hut, maybe a mimic hut, and a bunch of decoys.
@@ -71,7 +72,8 @@ end
 
 function shoals_ice_setup(e)
   e.subst("- = xxxW.")
-  e.rtile("x = wall_zot_cyan")
+  e.rtile("x = wall_ice_block")
+  e.set_feature_name("rock_wall", "ice covered rock wall")
   e.colour(".x@01eO| = white")
   e.ftile(".x@+01eO| = floor_ice")
 end
@@ -223,18 +225,20 @@ TAGS:   shoals_entry patrolling transparent
 WEIGHT: 5
 KMONS:  M = merfolk
 KMONS:  O = water nymph
+KITEM:  $ = $ q:1 no_pickup
 KFEAT:  O = enter_shoals
+KFEAT:  $ = W
 NSUBST: M = 1:M`` / *:`
 SUBST:  x = xx`, ` = W.
 MAP
  .........
 ...xx`xx...
 ..xxx`xxx..
-.xxxWWWxxx.
+.xxxWW$xxx.
 .xxWMMMWxx.
 .``WMOMW``.
 .xxWMMMWxx.
-.xxxWWWxxx.
+.xxx$WWxxx.
 ..xxx`xxx..
 ...xx`xx...
  .........
@@ -327,7 +331,7 @@ ENDMAP
 
 NAME:   nicolae_shoals_former_cling_halls
 TAGS:   no_pool_fixup extra no_descent
-DEPTH:  Shoals:2-, !Spider:$
+DEPTH:  Shoals:2-, !Shoals:$
 ORIENT: float
 NSUBST: D = 2=w / x, E = 2=w / x, F = 2=w / x
 SUBST:  ' = ..wx, . = W...., H = x_, J = xw
@@ -766,7 +770,7 @@ NAME:  nicolae_shoals_nautilus_by_nature
 TAGS:  extra transparent water_ok
 : if you.depth() == 1 then
 SUBST: S = )}]
-: elseif you.depth_fraction() < 1 then
+: elseif you.depth() ~= dgn.br_depth(you.branch()) then
 SUBST: S = (){}[]
 : else
 SUBST: S = ({[
@@ -861,18 +865,17 @@ ENDMAP
 #
 NAME:   overgrown_hall
 WEIGHT: 2
-MONS:   plant, fungus
+MONS:   plant, fungus, pile of debris
 MONS:   cyclops / stone giant w:2
-SUBST:  x = x:20 .
-SUBST:  G = G:40 .
+SUBST:  x = xx., G = GG33.
 SUBST:  . = .:90 1:19 x:1
-SUBST:  1 = 1 2:1
+SUBST:  1 = 1 2:1, ' = .
 MAP
 xxxxxxxxxxx
 x.........x
-x.G.G.G.G.x
-+....3....+
-x.G.G.G.G.x
+x.G'G.G'G.x
++''.'4'.'.+
+x.G'G.G'G.x
 x.........x
 xxxxxxxxxxx
 ENDMAP
@@ -986,9 +989,10 @@ TAGS:    no_pool_fixup
 MONS:    cyclops, frost giant, stone giant
 KMONS:   P = plant
 KMONS:   f = fungus
+KMONS:   D = pile of debris
 KFEAT:   Pfp = shallow_water
-KFEAT:   5 = deep_water
-SUBST:   p = ppWw, p = Pf, y = xxxxcccPPPfw, f = PPwW, x = x:10 c:1
+KFEAT:   D5 = deep_water
+SUBST:   p = ppWw, p = Pf, y = xxxcccPPfDDw, f = PPwW, x = x:10 c:1
 SHUFFLE: 23
 SUBST:   2 = 2:15 1:10, 3 = 3:15 1:10
 MAP
@@ -1050,13 +1054,15 @@ KMONS:   6 = cyclops
 KMONS:   7 = stone giant
 KMONS:   8 = frost giant
 KMONS:   9 = titan
-KFEAT:   123456789 = deep_water
-KITEM:   | = |
-KITEM:   * = *
+KMONS:   D = pile of debris
+KFEAT:   123456789D = deep_water
+KITEM:   | = $, *, |
+KITEM:   * = $, %, *
 KFEAT:   |* = shallow_water
 SHUFFLE: 12345 / 86769
 NSUBST:  Z = 1:w / *:c
-SUBST:   G = GGGwwW, 7 = 667, 8 = 688, 9 = 7899, x = c
+SUBST:   G = GGDwwW, 7 = 667, 8 = 688, 9 = 7899, x = c
+KPROP:   |* = no_tele_into
 MAP
    xxxxxxxxxxx
   xxGxGxGxGxGxx
@@ -1343,23 +1349,26 @@ xxr----WWmwW--rx
      xxxxxxxx
 ENDMAP
 
-NAME:  wheals_shoals_ruined_temple
-TAGS:  water_ok
-DEPTH: Shoals, !Shoals:$
-KPROP: c.GWuw1 = no_tide
-KMONS: 1 = kraken
-KFEAT: 1 = w
-SUBST: u = Ww
-SUBST: . = .:500 0
+NAME:   wheals_shoals_ruined_temple
+TAGS:   water_ok
+DEPTH:  Shoals, !Shoals:$
+KPROP:  c.GWuw1 = no_tide
+KMONS:  D = pile of debris
+KMONS:  1 = kraken
+KFEAT:  1D = w
+SUBST:  u = Ww, . = .:500 0
+TILE:   G = dngn_statue_centaur w:5 / dngn_statue_maw / dngn_statue_mermaid / \
+            dngn_statue_orb w:5 / dngn_statue_princess / \
+            dngn_statue_polearm / dngn_statue_tentacles
 MAP
 ccccccccccccccccccccccccccccccccc
+c...c................$WWWWWWuwwwc
+@.c...c..G....G...G...DWWWWWuwwwc
 c...c.................WWWWWWuwwwc
-@.c...c..G....G...G...GWWWWWuwwwc
+@.c...c..G....G...G...DWWCWWuw1wc
 c...c.................WWWWWWuwwwc
-@.c...c..G....G...G...GWWCWWuw1wc
-c...c.................WWWWWWuwwwc
-@.c...c..G....G...G...GWWWWWuwwwc
-c...c.................WWWWWWuwwwc
+@.c...c..G....G...G...DWWWWWuwwwc
+c...c................$WWWWWWuwwwc
 ccccccccccccccccccccccccccccccccc
 ENDMAP
 
@@ -1524,6 +1533,7 @@ SUBST:   0 = 24., X : xp.., Y : xp..
 SUBST:   A = x, B : p., F = x, G = p., CHI = .
 : dgn.delayed_decay(_G, 'g', 'snapping turtle corpse')
 : dgn.delayed_decay(_G, 'h', 'elephant corpse')
+: decorative_floor(_G, 'p', "flower patch")
 MAP
     ccccccxxxxxxxcccccc
     c3dd*xxxg_hxxx*dd5c
@@ -1531,7 +1541,7 @@ MAP
     cex+xWWx...xWWx+xfc
     cxx...WW.1.WW...xxc
    xxx2.CBAWX.XWABC.4xxx
-  xx...1..WWW1WWW..1...xx
+  xxp..1..WWW1WWW..1..pxx
 xxx...IHGFWYWWWYWFGHI..xxx
 .........WW..W..WW........
  ....xxxWW...W...WWxxx....
@@ -1625,33 +1635,35 @@ MAP
      xxx
 ENDMAP
 
-NAME: cheibrodos_shoals_satyrical_garden
-TAGS: no_monster_gen no_tide no_trap_gen
-DEPTH: Shoals, !Shoals:$
-ORIENT: float
-KMONS: P = bush
-MONS: faun, satyr, centaur
+NAME:    cheibrodos_shoals_satyrical_garden
+TAGS:    no_monster_gen no_tide no_trap_gen
+DEPTH:   Shoals, !Shoals:$
+ORIENT:  float
+MONS:    faun, satyr, centaur
+KMONS:   P = bush
 # One of two garden designs
 SHUFFLE: AB / CD
-SUBST: A = P, B = _, C = _, D = P, c = cccccc.
-NSUBST: - = 3:1 / 2=1_ / 1:2 / 1=23 / 1=3_
-FTILE: -_TP123 = floor_grass
-COLOUR: -_P123 = green
-COLOUR: c = white
+SUBST:   A = P, B = _, C = _, D = P, c = cccccc.
+NSUBST:  - = 3:1 / 2=1_ / 1:2 / 1=23 / 1=3_
+FTILE:   -_TpP123 = floor_grass
+FTILE:   ' = floor_swamp
+COLOUR:  -_P123 = green
+COLOUR:  c = white
+: decorative_floor(_G, 'p', "flower patch")
 MAP
 ....................
 .cc..cc..cc..cc..cc.
 .cc..cc..cc..cc..cc.
-....................
-....-------A----....
-.cc.BA-AB----BA-.cc.
-.cc.--T--A-B---B.cc.
-@...BA--B---AB--...@
-@...--BA---B--AB...@
-.cc.B---B-A--T--.cc.
-.cc.-AB----BA-AB.cc.
-....----A-------....
-....................
+...''''''''''''''...
+...'--p----A----'...
+.cc'BA-AB----BA-'cc.
+.cc'--T--A-B---B'cc.
+@..'BA--B---AB--'..@
+@..'--BA---B--AB'..@
+.cc'B---B-A--T--'cc.
+.cc'-AB----BA-AB'cc.
+...'----A----p--'...
+...''''''''''''''...
 .cc..cc..cc..cc..cc.
 .cc..cc..cc..cc..cc.
 ....................
@@ -1875,23 +1887,24 @@ KMONS:   4 = satyr band
 KFEAT:   3 = w
 NSUBST:  a = x / ., p = w / t, q = w / t, r = w / t, d = e / f / g / d
 SUBST:   D = t., R = xw, M = W., P = w.
-FTILE:   @124defgt. = floor_grass
+FTILE:   @124defgFt. = floor_grass
+: decorative_floor(_G, 'F', "flower patch")
 MAP
           wwwwwww
   wwwwwwwwwxxxxxwww
   wxxxxxxxxxtttxwww
  wwxRRRwwwwR.1.xxwww
-wwxxR.PPwwwP...Dxwww
+wwxxR.PPwwwP.F.Dxwww
 wxx..2.Pw3ww..2Dxxww
 wxD....PwwwPD2..Dxwww
 wxx.4..MWWWM2DD..xwww
 xxx....DpppDxxxx2xwww
 xaxP...ttwttxdd..xwww
-@x....Dtqtqtxdd4.xxwww
+@x..F.Dtqtqtxdd4.xxwww
 xaxP.Dtttwttxdd...xwww
 xxx...DtrrrDxxxxx2xwww
 wxxD..DPwwwP.2....xwww
-wxxD.2.wwwww......xwww
+wxxD.2.wwwww...F..xwww
 wxD.2.Pww3ww..4..Dxwww
 wxD2..MMwwwwM...xxxwww
 wxD.1.xMWWWMMRxxxwwwww
@@ -2010,7 +2023,7 @@ KMONS:   3 = merfolk avatar / merfolk javelineer / merfolk impaler / \
 -- They're all owned by the same person.
 local owner = string.gsub(crawl.make_name(), " ", "_")
 kfeat("D = weapon shop name:" .. owner .. " type:Merfolk suffix:Weapons ; \
-      spear | trident | halberd | demon trident | bardiche | glaive | \
+      spear | trident | halberd | partisan | demon trident | glaive | bardiche | \
       dagger | quick blade | short sword | rapier | dart | javelin | \
       throwing net | boomerang" )
 kfeat("E = armour shop name:" .. owner .. " type:Merfolk suffix:Armours ; \
@@ -2027,7 +2040,7 @@ kfeat("F = general shop name:" .. owner .. " type:Merfolk suffix:Magic ; \
 -- will be more than happy to help make arrangements. With an additional
 -- convenience fee, of course. (The scroll is for if you get stuck.)
 kfeat("J = general shop name:" .. owner .. " type:Visitors' suffix:Centre \
-      greed:100 count:2 use_all ; potion of enlightenment q:1 | \
+      greed:20 count:2 use_all ; potion of enlightenment q:1 | \
       scroll of teleportation q:1" )
 }}
 KFEAT:   ~ = open_sea
@@ -2092,28 +2105,30 @@ DDDD       DDDDE.132...EDDD
                  DDDDD
 ENDMAP
 
-NAME:  nicolae_shoals_raging_river
-TAGS:  transparent no_tide patrolling
-KMONS: 1 = water elemental
-KMONS: 2 = elemental wellspring
-KITEM: L = * w:20 / |
-KFEAT: L = W / .
-KFEAT: 12 = w
-SUBST: M = Wx, w = W x 1:5 2:5 w:70, W = . W:70, ~ = w:90 1
-SUBST: ' = L', x = x:60 c
+NAME:   nicolae_shoals_raging_river
+TAGS:   transparent no_tide patrolling
+KMONS:  1 = water elemental
+KMONS:  2 = elemental wellspring
+KMONS:  D = pile of debris
+KITEM:  L = * w:20 / |
+KFEAT:  L = W / .
+KFEAT:  123 = w
+NSUBST: w = 1:2.. / 3:1 / 10 = W x w:70 / * = 1:5 W x w:70
+SUBST:  M = Wx, W = . W:70, ~ = w:90 1
+SUBST:  ' = L', x = x:60 c
 MAP
  xxxxxxxx xxxxxx
 xxccccccxxxMMMMxxx
 xccLW2wccxMWWWWWMxxx
-xcL''WWwcxWW~~~WWWMxx
+xcL''WWwcxWW1~~WWWMxx
 xc'...WwcxWwwWW~~WWMx
 xc'...WwcxWwWxxW~~WMx
 xcc..Ww2cxWwwWxWW~WMx
 xxccWwWccxxWwWxxW~WMx
- xxxWwWxxxWwwWxxW~WMx
+ xxxWDWxxxWwwWxxW~WMx
   xMWwWxxxWwWxxMW~Wxx
- xxWwwWxxxWwWxxW~WWx
-xxWwwWxxxWwwWxMW~W..
+ xxWwDWxxxWwWxxW~WWx
+xxWDwWxxxWwwWxMW~W..
 xWwwWxxxWwwWxxWW~W.@
 xWwWxxxWwwWxxxW~WW..
 xWwWxxxWwWMxxxx~xxxx
@@ -2417,7 +2432,7 @@ ORIENT: west
 KITEM:  pr = $ w:80 / any jewellery
 KITEM:  q = $ w:50 / $ good_item w:30 / any jewellery good_item / \
             any weapon good_item w:5 / any armour good_item w:5
-KITEM:  S = scroll of acquirement ident:all
+KITEM:  S = scroll of acquirement pre_id
 KMONS:  p = merfolk siren / nothing w:40
 KMONS:  qS = merfolk impaler / merfolk javelineer / merfolk aquamancer / \
              merfolk avatar / nothing w:35
@@ -2466,7 +2481,7 @@ KITEM:  p = leather armour / ring mail / scale mail / chain mail, \
 KITEM:  12 = nothing w:30 / any book / any scroll / any potion
 # Deep elves have to bring the high-strength sunscreen. At least one potion
 # of resistance is guaranteed in the changing room.
-KITEM:  s = potion of resistance ident:all
+KITEM:  s = potion of resistance pre_id
 # 1/3 chance of rudely walking in on a deep elf changing.
 KMONS:  p = deep elf knight ; nothing / nothing w:20
 KMONS:  1 = deep elf pyromancer w:20 / deep elf zephyrmancer w:20 / \
@@ -2521,6 +2536,7 @@ NSUBST:  N = N / w, < = { / [[< / ((< / <, p = M / 1=M. / 1=MS... / ., \
          q = M / 1=M. / 1=MS... / ., r = S / 1=S. / 1=SM... / .
 SHUFFLE: {[(
 CLEAR:   _
+: decorative_floor(_G, 'V', "floral vase")
 MAP
         `x++x`
        `xx''xx`
@@ -2537,7 +2553,7 @@ xx'p."WW-wNNw-WW".q'xx
  `xxxx''"W--W"''xxxx`
   `xxxxx'"WW"'xxxxx`
     `xxx'"WW"'xxx`
-      xxx."".xxx
+      xxxV""Vxxx
       `xx.<<.xx`
        xx'<<'xx
        `xx''xx`
@@ -2563,6 +2579,44 @@ MAP
  .....
 ENDMAP
 
+# Original by Lemuel - Stranded yaks(?)
+NAME:    lemuel_tekkud_yak_island
+TAGS:    transparent no_pool_fixup no_monster_gen patrolling
+DEPTH:   Shoals
+WEIGHT:  5
+MONS:    yak band w:15 / dream sheep band, cyclops / yaktaur w:15
+MONS:    satyr / stone giant w:5 / yaktaur captain
+KMONS:   B = bush
+KMONS:   P = oklob plant
+KITEM:   d = large rock q:1, $, any potion q:1
+SHUFFLE: -> / ~"
+SUBST:   - = w, ~ = W, " = .
+: if you.depth() ~= dgn.br_depth(you.branch()) then
+SUBST:   > = <
+NSUBST:  . = 1:1 / 2:2 / 2:d / *:.
+: else
+NSUBST:  . = 1:1 / 3:2 / 1:3 / 3:d / *:.
+: end
+FTILE:   .d<>123BP = floor_grass
+KMASK:   .d<>123BP = opaque
+KPROP:   .d<>123BP = no_tide
+: decorative_floor(_G, 'P', "flower patch")
+MAP
+   WWWWWWWWW
+  WWWWWwWWWWW
+ WWWWwwwwwWWWW
+WWWwwwwwwwwwWWW
+WWwwwwB..wwwwWW
+WWwwwP....wwwWW
+Wwwww..>..wwwwW
+WWwww....PwwwWW
+WWww--..BwwwwWW
+WWW---wwwwwwWWW
+ WWWWwwwwwWWWW
+  WWWWWwWWWWW
+   WWWWWWWWW
+ENDMAP
+
 ###############################################################################
 #
 # <<4>> Shoals ending vaults
@@ -2585,7 +2639,7 @@ NAME: shoals_end_hangedman
 ORIENT: float
 PLACE: Shoals:$
 WEIGHT: 8
-: shoals_finale_setup(_G, 'hangedman', crawl.random_range(5,6))
+: shoals_finale_setup(_G, 'hangedman', crawl.random_range(5,7))
 
 # Grunt's icy Shoals ending
 NAME: shoals_end_grunt_ice
@@ -2635,7 +2689,7 @@ ENDMAP
 NAME:   shoalhut
 TAGS:   shoal_hut_simple water_ok no_dump allow_dup transparent
 NSUBST: A = 1 = x:14 +:1 / *:x
-NSUBST: 0 = 2:. / 2:0 / * = 0.
+NSUBST: 0 = 1:. / 2:0 / * = 0.
 MAP
  xxAxx
 xx.0.xx
@@ -2674,7 +2728,7 @@ NAME:      shoals_rune_alternative
 TAGS:      shoal_rune_hangedman shoal_mimic_hangedman water_ok allow_dup \
            transparent no_dump
 KMONS:     12 = merfolk impaler / merfolk javelineer / merfolk aquamancer
-KMONS:     3 = kraken / harpy band w:15
+KMONS:     3 = kraken / sphinx marauder band w:15
 KMONS:     d = merfolk avatar / water nymph w:5
 : if shoals_vault_is_mimic() then
 KITEM:     d = barnacled rune of zot mimic
@@ -2685,7 +2739,7 @@ KITEM:     e = azure gem
 KFEAT:     123 = w
 KPROP:     d = no_tide
 SHUFFLE:   AB / AB / BA, CD / CD / DC
-NSUBST:    2 = 2 = 22w / * = 22www, 0 = 2:0 / 1:. / * = 00...
+NSUBST:    2 = 2 = 22w / * = 22www, 0 = 2:0 / * = 00...
 SUBST:     AC = x, B = w, D = .
 LROCKTILE: wall_pebble_lightgray
 FHEIGHT: .d0@ = 15
@@ -2706,7 +2760,7 @@ ENDMAP
 NAME:    shoals_rune_alternative_decoy
 TAGS:    shoal_hut_hangedman water_ok allow_dup transparent no_dump
 SHUFFLE: AB / AB / BA, CD / CD / DC
-NSUBST:  0 = 2:0 / 2:. / * = 00...
+NSUBST:  0 = 2:0 / 1:. / * = 00...
 SUBST:   AC = x, B = w, D = .
 FHEIGHT: .d0@ = 15
 MAP
@@ -2847,7 +2901,7 @@ TAGS:    shoal_rune_grunt_garden shoal_mimic_grunt_garden water_ok
 TAGS:    no_dump allow_dup transparent
 MONS:    satyr w:18 / merfolk impaler / merfolk javelineer / merfolk aquamancer
 MONS:    faun w:6 / 0
-KMONS:   P = plant
+KMONS:   pP = plant
 : if shoals_vault_is_mimic() then
 KITEM:   R = azure gem mimic
 KITEM:   O = barnacled rune of Zot mimic
@@ -2857,8 +2911,11 @@ KITEM:   O = barnacled rune of Zot
 : end
 NSUBST:  R = 1:R / *:1, 1 = 4:1 / 2:1. / 2:1. / 2:2 / 2:2. / 2:2. / *:.
 SHUFFLE: abcdefghijk, ABCDEFGH
-SUBST:   abAB = x, cdeCDE = P, g : xP, h : P., ijkGH = .
-KPROP:   O = no_tide
+SUBST:   abcABC = x, def = p, DEF = P, g : xp, h : p', ijk = ', GH = "
+TILE:    x = wall_brick_gray
+FTILE:   xpP"' = floor_swamp
+FTILE:   12P.OR = floor_grass
+KPROP:   OR = no_tide
 MAP
    abcbd
  kkaBAAdee
@@ -2876,10 +2933,15 @@ ENDMAP
 NAME:    shoals_garden
 TAGS:    shoal_hut_grunt_garden water_ok no_dump allow_dup transparent
 MONS:    faun w:6 / 0
-KMONS:   P = plant
+KMONS:   pP = plant
+KITEM:   | = |
 NSUBST:  1 = 2:1 / 2:1. / 2:1. / *:.
 SHUFFLE: abcdefghijk, ABCDEFGH
-SUBST:   abAB = x, cdeCDE = P, g : xP, h : P., ijkGH = .
+SUBST:   abAB = x, cdef = p, CDE = P, g : xp, h : p', ijk = ', FGH = "
+TILE:    x = wall_brick_gray
+FTILE:   xpP"' = floor_swamp
+FTILE:   1P. = floor_grass
+: decorative_floor(_G, '|', "garden patch")
 MAP
    abcbd
  kkaBAAdee
@@ -2908,8 +2970,8 @@ NAME:   shoals_end_hellmonk_lost_city
 ORIENT:  encompass
 PLACE:   Shoals:$
 WEIGHT:  3
-MONS:    faun w:15 / manticore / harpy, satyr, minotaur, sphinx
-KMONS:   O = sphinx
+MONS:    faun w:15 / manticore / harpy, satyr, minotaur, sphinx marauder
+KMONS:   O = sphinx marauder
 KMONS:   P = plant
 KITEM:   f = azure gem
 KITEM:   O = barnacled rune of Zot
@@ -2978,14 +3040,14 @@ ORIENT:  encompass
 PLACE:   Shoals:$
 WEIGHT:  3
 MONS:    cyclops
-MONS:    death yak / dream sheep / yak / holy swine w:1 / apis w:3
+MONS:    death yak w:16 / dream sheep / yak w:6 / holy swine w:1
 MONS:    w:15 merfolk impaler ; trident ego:flaming good_item |\
             trident ego:freezing good_item | trident ego:protection good_item |\
             trishula w:5 . robe w:15 | pearl dragon scales w:1 / \
          merfolk javelineer ; javelin ego:silver w:20 | javelin /\
          merfolk aquamancer
-MONS:    cherub
-KMONS:   H = angel / daeva w:3
+MONS:    cherub, apis
+KMONS:   H = angel
 KMONS:   P = plant
 KMONS:   s = sacred lotus
 KITEM:   H = barnacled rune of Zot
@@ -2996,74 +3058,75 @@ KFEAT:   F = altar_the_shining_one
 KFEAT:   s = w
 SHUFFLE: Hh / Ii / Jj, DEF
 SUBST:   IJ = |, ij = .
-NSUBST:  < = 1:( / 1:[ / 1:{ / *: <''
+NSUBST:  < = 1:( / 1:[ / 1:{ / * = <
 SUBST:   - = W:30 ' P:1, _ = W:5 ':15 P:1
-SUBST:   3 = 330, 0 = 0...
-NSUBST:  4 = 2:4 / * = 4...
+SUBST:   3 = 330, 0 = 0....
+NSUBST:  4 = 2 = 44455 / 1:5... / * = 4...
 NSUBST:  ' = 8 = 1''' / 24 = 2''' / * = P''''''''''
+NSUBST:  q = 2:c / 2 = c' / *:', r = 2:c / 2 = c' / *:', s = 2:c / 2 = c' / *:'
 TILE:    G = dngn_statue_angel
 FTILE:   12P'~([{< = floor_grass
-FTILE:   034|DEFGOc+. = floor_limestone
+FTILE:   0345|DEFGOc+. = floor_limestone
 : set_border_fill_type("open_sea")
 MAP
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwww-----wwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwww---ccc----wwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwww------cccHccc------wwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwww------cc|3h3|cc------wwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwww----___c3.000.3c___----wwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwww----__'cc...3...cc''__---wwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwww---__''c3.0ccc0.3c''__---wwwwwwwwwwwwwwww
-wwwwwwwwwwwwwww----_c''c40ccDcc04c''c__---wwwwwwwwwwwwwww
-wwwwwwwwwwwwwww---_cc''c0.G000G.0c''cc_---wwwwwwwwwwwwwww
-wwwwwwwwwwwwwww--_cc'''cc...3...cc'''c_----wwwwwwwwwwwwww
-wwwwwwwwwwwwww---_c'''''c.......c''''cc----wwwwwwwwwwwwww
-wwwwwwwwwwwwww---_c'''''cc.....cc'''''c_---wwwwwwwwwwwwww
-wwwwwwwwwwwwww---_'''''''ccc.ccc''''''c_---wwwwwwwwwwwwww
-wwwwwwwwwwwwww--__'''''''''c+c'''''''''__---wwwwwwwwwwwww
-wwwwwwwwwwwww---__'''''''''''''''''''''__---wwwwwwwwwwwww
-wwwwwwwwwwwww---_'''''''''''''''''''''''_---wwwwwwwwwwwww
-wwwwwwwwwwwww---_'''''''''''''''''''''''_---wwwwwwwwwwwww
-wwwwwwwwwwwww---_'''''''''''''''''''''''_----wwwwwwwwwwww
-wwwwwwwwwwwwww--__'''''''''''''''''''''__--wwwwwwwwwwwwww
-wwwwwwwwwwwwsww--___'''''''~~~''''''___--wwwswwwwwwwwwwww
-wwwwwwwwwwwwwwwww--___'cc''~<~''cc'__--wwwwwwwwwwwwwwwwww
-wwwwwwwwwwww-wwwwww--___cc'~~~'cc__--wwwwww---wwwwwwwwwww
-wwwwwwwwwww----wwwwww--__ccccccc_--wwwwww-----wwwwwwwwwww
-wwwwwwwwwww------wwwwww--ccccccc-wwwwww--__---wwwwwwwwwww
-wwwwwwwwwww---__---wwwwwW--~~~--Wwwww--__'_----wwwwwwwwww
-wwwwwwwwwww--______--wwwwW_~<~_WWww---__''_----wwwwwwwwww
-wwwwwwwwww---__''''_---wW--~~~------___''''_---wwwwwwwwww
-wwwwwwwwww--___'''''__---cc---cc--___''''''_---wwwwwwwwww
-wwwwwwwwww--__''''''cc___ccWwWcc___cc''''''__---wwwwwwwww
-wwwwwwwwww--_''''''''ccc__-www-__ccc'''''''__---wwwwwwwww
-wwwwwwwww---_''''''''~~cc_-www-_cc~~'''''''__---wwwwwwwww
-wwwwwwwww--__''''''''~<~c_-www-_c~<~''''''''_---wwwwwwwww
-wwwwwwwww--_'''''''''~~~c_-www-_cc~~'''''''''_---wwwwwwww
-wwwwwwwww--_c+c'''''''''c_--www-_c''''''''c+c_---wwwwwwww
-wwwwwwww--ccc.ccc''''''''__-www-_c''''''ccc.ccc--wwwwwwww
-wwwwwwww-cc.....cc'''''''__-www-_''''''cc.....cc-wwwwwwww
-wwwwwwww-c.......c'''''''__-www-_''''''c.......c--wwwwwww
-wwwwwww-cc...3...cc''''''__-www-_'''''cc...3...cc-wwwwwww
-wwwwwww-c0.G000G.0c'''''c__-www-_c''''c0.G000G.0c-wwwwwww
-wwwwwww-c40ccEcc04c''''cc_-www--_c''''c40ccFcc04c-wwwwwww
-wwwwwww-c3.0ccc0.3c''ccc__-www-__ccc''c3.0ccc0.3c-wwwwwww
-wwwwwww-cc...3...cc'_____--www-______'cc...3...cc-wwwwwww
-wwwwwwww-c3.000.3c_______-www-_________c3.000.3c-wwwwwwww
-wwwwwwww-cc|3i3|cc___-----www-------___cc|3j3|cc-wwwwwwww
-wwwwwwwww-cccIccc---------www-----------cccJccc-wwwwwwwww
-wwwwwwwwww--ccc----------www--------------ccc--wwwwwwwwww
-wwwwwwwwwww--------------wsw------------------wwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwww-----wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwww---ccc----wwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwww------cccHccc------wwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwww------cc|3h3|cc------wwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwww----___c3.000.3c___----wwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwww----__'cc...3...cc''__---wwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwww---__''c3.0ccc0.3c''__---wwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwww----_c''c40ccDcc04c''c__---wwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwww---_cc''c0.G000G.0c''cc_---wwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwww--_cc'''cc...3...cc'''c_----wwwwwwwwwwwwwww
+wwwwwwwwwwwwwww---_c'''''c.......c''''cc----wwwwwwwwwwwwwww
+wwwwwwwwwwwwwww---_c'''''cc.....cc'''''c_---wwwwwwwwwwwwwww
+wwwwwwwwwwwwwww---_'''''''ccc.ccc''''''c_---wwwwwwwwwwwwwww
+wwwwwwwwwwwwwww--__'''''''''c+c'''''''''__---wwwwwwwwwwwwww
+wwwwwwwwwwwwww---__'''''''''''''''''''''__---wwwwwwwwwwwwww
+wwwwwwwwwwwwww---_''''''''''c'c''''''''''_---wwwwwwwwwwwwww
+wwwwwwwwwwwwww---_'''''''''''''''''''''''_---wwwwwwwwwwwwww
+wwwwwwwwwwwwww---_'''''''''''''''''''''''_---wwwwwwwwwwwwww
+wwwwwwwwwwwwww---_'''''''''''''''''''''''_----wwwwwwwwwwwww
+wwwwwwwwwwwwwww--__''''''''qq~qq''''''''__--wwwwwwwwwwwwwww
+wwwwwwwwwwwwwsww--___''''''qqqqq'''''___--wwwswwwwwwwwwwwww
+wwwwwwwwwwwwwwwwww--___'cc'~q<q~'cc'__--wwwwwwwwwwwwwwwwwww
+wwwwwwwwwwww--wwwwww--___cc~~~~~cc__--wwwwww----wwwwwwwwwww
+wwwwwwwwwww-----wwwwww--__ccccccc_--wwwwww------wwwwwwwwwww
+wwwwwwwwwww-------wwwwww--ccccccc-wwwwww--__----wwwwwwwwwww
+wwwwwwwwwww----__---wwwwwW--~~~--Wwwww--__'_-----wwwwwwwwww
+wwwwwwwwwww---______--wwwwc_~<~_cWww---__''_-----wwwwwwwwww
+wwwwwwwww----__''''c_---wW--~~~------___c''''_----wwwwwwwww
+wwwwwwwww---___'''''c__---cc---cc--___cc'''''_----wwwwwwwww
+wwwwwwwww---__'''''''cc___ccWwWcc___cc'''''''__----wwwwwwww
+wwwwwwwww---_'''''''r'ccc__-www-__ccc's''''''__----wwwwwwww
+wwwwwwww----_'''''''r'~~cc_-www-_cc~~'s''''''__----wwwwwwww
+wwwwwwww---_c'c'''''''r<~c_-www-_c~<s'''''''c'c----wwwwwwww
+wwwwwwww---_''''''''''rr~c_-www-_cc~s''''''''''_----wwwwwww
+wwwwwwww---_c+c''''''''''c_--www-_c'''s'''''c+c_----wwwwwww
+wwwwwww---ccc.ccc''''''rr'__-www-_c''ss'''ccc.ccc---wwwwwww
+wwwwwww--cc.....cc''''''''__-www-_'''''''cc.....cc--wwwwwww
+wwwwwww--c.......c''''''''__-www-_'''''''c.......c---wwwwww
+wwwwww--cc...3...cc'''''''__-www-_''''''cc...3...cc--wwwwww
+wwwwww--c0.G000G.0c''''''c__-www-_c'''''c0.G000G.0c--wwwwww
+wwwwww--c40ccEcc04c'''''cc_-www--_c'''''c40ccFcc04c--wwwwww
+wwwwww--c3.0ccc0.3c'''ccc__-www-__ccc'''c3.0ccc0.3c--wwwwww
+wwwwww--cc...3...cc''_____--www-______''cc...3...cc--wwwwww
+wwwwwww--c3.000.3c________-www-__________c3.000.3c--wwwwwww
+wwwwwww--cc|3i3|cc____-----www-------____cc|3j3|cc--wwwwwww
+wwwwwwww--cccIccc----------www------------cccJccc--wwwwwwww
+wwwwwwwww---ccc-----------www---------------ccc---wwwwwwwww
+wwwwwwwwww----------------wsw--------------------wwwwwwwwww
+wwwwwwwwwww--------------wwwww------------------wwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 ENDMAP
 
 NAME: shoals_end_hellmonk_storm_palace
@@ -3074,7 +3137,7 @@ WEIGHT: 3
 MONS:   water elemental / air elemental w:5, wind drake / water nymph
 MONS:   merfolk impaler / merfolk javelineer w:5 / merfolk aquamancer w:5
 SUBST:  + : ++., p : ccc+., q : ccc+., r : ccc+., s = W.c
-SUBST:  1 = 011..., 2 = 2., 3 = 33.
+SUBST:  1 = 011...., 2 = 2., 3 = 33.
 NSUBST: ; = 1:{ / 1:[ / 1:( / * = <.
 SUBVAULT: D : storm_palace_rune
 SUBVAULT: E : storm_palace_corner
@@ -3142,7 +3205,7 @@ KITEM:  O = barnacled rune of Zot
 KITEM:  R = |, azure gem
 KITEM:  | = superb_item
 KFEAT:  |RO = shallow_water
-NSUBST: | = 1:O / 1:R / *:|, 1 = 4 = 8. / * = 1..
+NSUBST: | = 1:O / 1:R / *:|, 1 = 3 = 8. / * = 1..
 SUBST:  p : W., q : W., r : W., S : W.
 MAP
 cccc..pppppppppp..cccc
@@ -3176,7 +3239,7 @@ KMONS:  O = patrolling storm dragon / patrolling titan
 KMONS:  P = plant
 KITEM:  O = barnacled rune of Zot
 KITEM:  R = |, azure gem
-NSUBST: | = 1:O / 1:R / *:|, 1 = 4 = 8. / * = 1..
+NSUBST: | = 1:O / 1:R / *:|, 1 = 3 = 8. / * = 1..
 SUBST:  . = P......
 MAP
 c....................c
@@ -3209,7 +3272,7 @@ MONS:   merfolk aquamancer / merfolk javelineer / merfolk impaler
 KMONS:  O = patrolling storm dragon / patrolling titan
 KITEM:  O = barnacled rune of Zot
 KITEM:  R = |, azure gem
-NSUBST: | = 1:O / 1:R / *:|, 1 = 4 = 8. / * = 1..
+NSUBST: | = 1:O / 1:R / *:|, 1 = 3 = 8. / * = 1..
 SUBST:  p : W., q: W., . = W..., c = cc.
 TILE:   G = dngn_statue_mermaid w:25 / dngn_statue_polearm / \
             dngn_statue_dragon / dngn_statue_maw

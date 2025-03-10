@@ -463,7 +463,7 @@ HINT_SEEN_RUNED_DOOR
 
 That<console> $1</console> is a runed door, which is probably in front of
 something unusually dangerous. Monsters will never open it. If you do, the runes
-will be broken, and it will become a normal door
+will be broken, and it will become a normal door.
 %%%%
 HINT_KILLED_MONSTER
 
@@ -640,6 +640,13 @@ You are lethally poisoned, so now would be a good time to
 curing. If you have seen neither of these so far, try unknown potions in your
 inventory. Good luck!
 %%%%
+HINT_ON_FIRE
+
+You have been covered in sticky liquid flame. You can put this out more quickly
+by spending your turns moving, or put it out entirely by walking into a nearby
+pool of water. Whatever covered you in liquid flames may light you further on
+fire while you run around, however.
+%%%%
 HINT_INVISIBLE_DANGER
 
 Fighting against a monster you cannot see is difficult. If you don't have a
@@ -756,7 +763,7 @@ to attack a fleeing creature by throwing something after it. If you have any
 stones in your <w>$cmd[CMD_DISPLAY_INVENTORY]</w>nventory, you can look at one
 of them to read an explanation of how to do this.
 %%%%
-HINT_MONSTER_BRAND
+HINT_MONSTER_UNUSUAL
 
 That monster looks a bit unusual. You might wish to examine it a bit more
 closely by <localtiles>hovering your mouse over its tile.</localtiles>

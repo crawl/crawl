@@ -1,15 +1,14 @@
 name: "small abomination"
 enum: abomination_small
 glyph: {char: "x", colour: lightred}
-flags: [no_regen]
 holiness: [undead]
 will: 40
 attacks:
- - {type: hit, damage: 23}
+ - {type: hit, damage: 17}
 hd: 6
 hp_10x: 270
-ac: 0
-ev: 0
+ac: 6
+ev: 9
 intelligence: brainless
 speed: 12
 size: large

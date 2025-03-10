@@ -26,8 +26,7 @@ void redraw_screen(bool show_updates = true);
 string mpr_monster_list(bool past = false);
 int update_monster_pane();
 
-const char *equip_slot_to_name(int equip);
-int equip_name_to_slot(const char *s);
+int equip_slot_by_name(const char *s);
 
 int stealth_pips();
 

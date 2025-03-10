@@ -12,7 +12,7 @@ hp_10x: 800
 ac: 1
 ev: 20
 spells: quicksilver_dragon
-intelligence: brainless
+intelligence: animal
 speed: 20
 size: large
 shape: misc

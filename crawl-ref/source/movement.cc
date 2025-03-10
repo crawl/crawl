@@ -29,6 +29,7 @@
 #include "god-conduct.h"
 #include "god-passive.h"
 #include "items.h"
+#include "map-knowledge.h"
 #include "message.h"
 #include "mon-act.h"
 #include "mon-behv.h"
@@ -45,6 +46,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "spl-damage.h"
+#include "spl-summoning.h"
 #include "target-compass.h"
 #include "terrain.h"
 #include "traps.h"
@@ -63,7 +65,7 @@ static void _apply_move_time_taken();
 static void _swap_places(monster* mons, const coord_def &loc)
 {
     ASSERT(map_bounds(loc));
-    ASSERT(monster_habitable_grid(mons, env.grid(loc)));
+    ASSERT(monster_habitable_grid(mons, loc));
 
     if (monster_at(loc))
     {
@@ -74,9 +76,9 @@ static void _swap_places(monster* mons, const coord_def &loc)
     // Friendly foxfire dissipates instead of damaging the player.
     if (mons->type == MONS_FOXFIRE)
     {
-        simple_monster_message(*mons, " dissipates!",
+        simple_monster_message(*mons, " dissipates!", false,
                                MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
-        monster_die(*mons, KILL_DISMISSED, NON_MONSTER, true);
+        monster_die(*mons, KILL_RESET, NON_MONSTER, true);
         return;
     }
 
@@ -552,7 +554,7 @@ bool prompt_descent_shortcut(dungeon_feature_type ftype)
 
 static coord_def _rampage_destination(coord_def move, monster* target)
 {
-    if (!player_equip_unrand(UNRAND_SEVEN_LEAGUE_BOOTS))
+    if (!you.unrand_equipped(UNRAND_SEVEN_LEAGUE_BOOTS))
         return you.pos() + move;
     const int dist = grid_distance(you.pos(), target->pos()) - 1;
     return you.pos() + move * dist;
@@ -614,7 +616,7 @@ monster* get_rampage_target(coord_def move)
 
         if (mon->wont_attack()
             || mons_is_projectile(*mon)
-            || mons_is_firewood(*mon)
+            || mon->is_firewood()
             || adjacent(you.pos(), mon->pos()))
         {
             return nullptr;
@@ -647,7 +649,7 @@ static spret _rampage_forward(coord_def move)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    const bool enhanced = player_equip_unrand(UNRAND_SEVEN_LEAGUE_BOOTS);
+    const bool enhanced = you.unrand_equipped(UNRAND_SEVEN_LEAGUE_BOOTS);
     const bool rolling = you.has_mutation(MUT_ROLLPAGE);
     const string noun = enhanced ? "stride" :
                          rolling ? "roll" : "rampage";
@@ -698,7 +700,7 @@ static spret _rampage_forward(coord_def move)
     // * dangerous terrain/trap/cloud/exclusion prompt
     // * weapon check prompts;
     // messaging for this is handled by check_moveto().
-    if (!check_moveto(rampage_destination, noun)
+    if (attacking && !check_moveto(rampage_destination, noun)
         || attacking && !wielded_weapon_check(you.weapon(), noun + " and attack")
         || !attacking && !check_moveto(rampage_target, noun))
     {
@@ -947,12 +949,14 @@ void move_player_action(coord_def move)
 
     if (you.digging)
     {
-        if (feat_is_diggable(env.grid(targ)))
+        if (feat_is_diggable(env.grid(targ)) && env.grid(targ) != DNGN_SLIMY_WALL)
             targ_pass = true;
         else // moving or attacking ends dig
         {
             you.digging = false;
-            if (feat_is_solid(env.grid(targ)))
+            if (env.grid(targ) == DNGN_SLIMY_WALL)
+                mpr("Trying to dig through that would dissolve your mandibles.");
+            else if (feat_is_solid(env.grid(targ)))
                 mpr("You can't dig through that.");
             else
                 mpr("You retract your mandibles.");
@@ -990,6 +994,15 @@ void move_player_action(coord_def move)
 
     if (targ_monst)
     {
+        if (try_to_swap
+            && targ_monst->type == MONS_CLOCKWORK_BEE_INACTIVE)
+        {
+            if (clockwork_bee_recharge(*targ_monst))
+                you.turn_is_over = false;
+
+            return;
+        }
+
         if (try_to_swap && !beholder && !fmonger)
         {
             if (swap_check(targ_monst, mon_swap_dest))
@@ -1162,6 +1175,18 @@ void move_player_action(coord_def move)
             mpr("You cannot walk through the dense trees.");
         else if (!try_to_swap && env.grid(targ) == DNGN_MALIGN_GATEWAY)
             mpr("The malign portal rejects you as you step towards it.");
+        // Show the player the wall they've just bumped into, if they can't see it.
+        else if (you.current_vision == 0)
+        {
+            mpr("You feel something solid in that direction.");
+            map_cell& knowledge = env.map_knowledge(targ);
+            if (!knowledge.mapped() || knowledge.changed())
+            {
+                dungeon_feature_type newfeat = env.grid(targ);
+                knowledge.set_feature(newfeat, env.grid_colours(targ), TRAP_UNASSIGNED);
+                set_terrain_mapped(targ);
+            }
+        }
 
         stop_running();
         move.reset();
@@ -1209,7 +1234,7 @@ void move_player_action(coord_def move)
     you.apply_berserk_penalty = !attacking;
 
     if (rampaged && !you.has_mutation(MUT_ROLLPAGE)
-        || player_equip_unrand(UNRAND_LIGHTNING_SCALES))
+        || you.unrand_equipped(UNRAND_LIGHTNING_SCALES))
     {
         did_god_conduct(DID_HASTY, 1, true);
     }

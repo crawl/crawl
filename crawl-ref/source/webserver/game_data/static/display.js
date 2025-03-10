@@ -31,14 +31,7 @@ function ($, comm, map_knowledge, view_data, monster_list, minimap,
         var t1 = new Date();
 
         if (map_knowledge.reset_bounds_changed())
-        {
             minimap.center();
-        }
-
-        if (view_data.flash_changed())
-        {
-            invalidate();
-        }
 
         var dirty_locs = map_knowledge.dirty();
         for (var i = 0; i < dirty_locs.length; i++)
@@ -98,7 +91,13 @@ function ($, comm, map_knowledge, view_data, monster_list, minimap,
                 map_knowledge.touch(loc.x, loc.y - 1);
             // left overlap
             if (cell.t && cell.t.left_overlap && cell.t.left_overlap < 0)
+            {
                 map_knowledge.touch(loc.x - 1, loc.y);
+                // If we overlap at both top *and* left, we may additionally
+                // overlap diagonally.
+                if (cell.t.sy && cell.t.sy < 0)
+                    map_knowledge.touch(loc.x - 1, loc.y - 1);
+            }
         });
 
         display();

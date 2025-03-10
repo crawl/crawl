@@ -1,6 +1,6 @@
 name: "slime creature"
 glyph: {char: "J", colour: green}
-flags: [unblindable, web_immune, no_skeleton, herd]
+flags: [unblindable, amorphous, no_skeleton, herd]
 resists: {poison: 1}
 xp_mult: 3
 genus: jelly

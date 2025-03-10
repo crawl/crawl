@@ -1,14 +1,14 @@
 name: "arcanist"
-glyph: {char: "p", colour: brown}
+glyph: {char: "p", colour: lightred}
 flags: [speaks, warm_blood]
 species: human
 will: 60
 attacks:
  - {type: hit, damage: 6}
-hd: 10
-hp_10x: 400
+hd: 11
+hp_10x: 460
 ac: 0
-ev: 13
+ev: 15
 spells: arcanist
 has_corpse: true
 shout: shout

@@ -257,13 +257,14 @@ function setup_xom_dancing_weapon(e)
         quality = crawl.one_chance_in(6) and "good_item" or ""
     elseif you.absdepth() < 12 then
         base_weapons = {"rapier", "long sword", "scimitar", "mace", "flail",
-                        "hand axe", "war axe", "trident", "quarterstaff"}
-        good_weapons = {"morningstar", "dire flail", "broad axe", "halberd"}
+                        "hand axe", "war axe", "trident", "halberd",
+                        "quarterstaff"}
+        good_weapons = {"morningstar", "dire flail", "broad axe", "partisan"}
         quality = crawl.one_chance_in(4) and "good_item" or ""
     elseif you.absdepth() < 14 then
         base_weapons = {"rapier", "long sword", "scimitar", "flail",
                         "morningstar", "dire flail", "war axe", "broad axe",
-                        "trident", "halberd", "quarterstaff"}
+                        "trident", "partisan", "halberd", "quarterstaff"}
         good_weapons = {"great sword", "great mace", "battleaxe", "glaive"}
         great_weapons = {"quick blade", "demon blade", "double sword",
                          "triple sword", "demon whip", "eveningstar",
@@ -275,8 +276,7 @@ function setup_xom_dancing_weapon(e)
     else
         base_weapons = {"rapier", "scimitar", "great sword", "morningstar",
                         "dire flail", "great mace", "war axe", "broad axe",
-                        "battleaxe", "halberd", "glaive",
-                        "quarterstaff"}
+                        "battleaxe", "partisan", "glaive", "quarterstaff"}
         good_weapons = {}
         great_weapons = {"quick blade", "demon blade", "double sword",
                          "triple sword", "demon whip", "eveningstar",

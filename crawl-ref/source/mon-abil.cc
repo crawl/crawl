@@ -21,11 +21,13 @@
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
+#include "database.h"
 #include "delay.h"
 #include "dgn-overview.h"
 #include "directn.h"
 #include "english.h"
 #include "env.h"
+#include "fineff.h"
 #include "fprop.h"
 #include "god-abil.h"
 #include "item-prop.h"
@@ -40,11 +42,13 @@
 #include "mon-pathfind.h"
 #include "mon-place.h"
 #include "mon-poly.h"
+#include "mon-speak.h"
 #include "mon-util.h"
 #include "ouch.h"
 #include "random.h"
 #include "religion.h"
 #include "spl-damage.h"
+#include "spl-summoning.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
@@ -52,6 +56,7 @@
 #include "teleport.h"
 #include "terrain.h"
 #include "view.h"
+#include "viewchar.h"
 
 static bool _slime_split_merge(monster* thing);
 
@@ -370,7 +375,7 @@ static void _do_merge_slimes(monster* initial_slime, monster* merge_to)
     // case 5 (no-op)
 
     // Have to 'kill' the slime doing the merging.
-    monster_die(*initial_slime, KILL_DISMISSED, NON_MONSTER, true);
+    monster_die(*initial_slime, KILL_RESET, NON_MONSTER, true);
 }
 
 // Slime creatures can split but not merge under these conditions.
@@ -726,7 +731,7 @@ static bool _worthy_sacrifice(monster* soul, const monster* target)
 bool lost_soul_revive(monster& mons, killer_type killer)
 {
     if (killer == KILL_RESET
-        || killer == KILL_DISMISSED
+        || killer == KILL_RESET_KEEP_ITEMS
         || killer == KILL_BANISHED)
     {
         return false;
@@ -789,7 +794,7 @@ bool lost_soul_revive(monster& mons, killer_type killer)
         }
 
         if (mi->alive())
-            monster_die(**mi, KILL_MISC, -1, true);
+            monster_die(**mi, KILL_NON_ACTOR, -1, true);
 
         return true;
     }
@@ -805,24 +810,23 @@ void treant_release_fauna(monster& mons)
 
     monster_type fauna_t = MONS_HORNET;
 
-    mon_enchant abj = mons.get_ench(ENCH_ABJ);
-
     for (int i = 0; i < count; ++i)
     {
         mgen_data fauna_data(fauna_t, SAME_ATTITUDE(&mons),
                             mons.pos(),  mons.foe);
-        fauna_data.set_summoned(&mons, 0, SPELL_NO_SPELL);
         fauna_data.extra_flags |= MF_WAS_IN_VIEW;
-        monster* fauna = create_monster(fauna_data);
 
-        if (fauna)
+        // If the mangrove was summoned, give its fauna the same summon type and duration.
+        if (mons.is_summoned())
         {
-            fauna->set_band_leader(mons);
+            mon_enchant summ = mons.get_ench(ENCH_SUMMON);
+            mon_enchant timer = mons.get_ench(ENCH_SUMMON_TIMER);
+            fauna_data.set_summoned(summ.agent(), summ.degree, timer.duration,
+                                    mons.is_abjurable(), !!(mons.flags & ~MF_PERSISTS));
+        }
 
-            // Give released fauna the same summon duration as their 'parent'
-            if (abj.ench != ENCH_NONE)
-                fauna->add_ench(abj);
-
+        if (create_monster(fauna_data))
+        {
             created = true;
             mons.mangrove_pests--;
         }
@@ -858,7 +862,7 @@ static coord_def _find_nearer_tree(coord_def cur_loc, coord_def target)
 
         if (!cell_see_cell(target, *di, LOS_NO_TRANS) // there might be a better iterator
             || !_adj_to_tree(*di)
-            || !monster_habitable_grid(MONS_ELEIONOMA, env.grid(*di)))
+            || !monster_habitable_grid(MONS_ELEIONOMA, *di))
         {
             continue;
         }
@@ -898,6 +902,47 @@ static void _weeping_skull_cloud_aura(monster* mons)
         place_cloud(CLOUD_MISERY, pos[i], random2(3) + 2, mons);
 }
 
+static void _seismosaurus_egg_hatch(monster* mons)
+{
+    mon_enchant hatch = mons->get_ench(ENCH_HATCHING);
+    hatch.duration -= 1;
+
+    if (hatch.duration  == 4)
+    {
+        simple_monster_message(*mons, " cracks slightly.");
+        mons->number = 1;
+    }
+    else if (hatch.duration  == 2)
+    {
+        simple_monster_message(*mons, " shakes eagerly.");
+        mons->number = 2;
+    }
+    // Hatching time!
+    else if (hatch.duration  == 0)
+    {
+        simple_monster_message(*mons, " hatches with a roar like a landslide!",
+                                false, MSGCH_MONSTER_SPELL);
+
+        const int old_hd = mons->get_experience_level();
+        change_monster_type(mons, MONS_SEISMOSAURUS, true);
+        mons->heal(mons->max_hit_points);
+        mons->set_hit_dice(old_hd);
+
+        mon_enchant timer = mons->get_ench(ENCH_SUMMON_TIMER);
+        timer.duration = random_range(40, 55) * BASELINE_DELAY;
+        mons->update_ench(timer);
+        mons->del_ench(ENCH_HATCHING);
+
+        // Immediately stomp if anything is in range
+        mons->speed_increment = 80;
+        try_mons_cast(*mons, SPELL_SEISMIC_STOMP);
+
+        return;
+    }
+
+    mons->update_ench(hatch);
+}
+
 static inline void _mons_cast_abil(monster* mons, bolt &pbolt,
                                    spell_type spell_cast)
 {
@@ -915,7 +960,7 @@ bool mon_special_ability(monster* mons)
     // Slime creatures can split while out of sight.
     if ((!mons->near_foe() || mons->asleep())
          && mons->type != MONS_SLIME_CREATURE
-         && mons->type != MONS_LOST_SOUL)
+         && mons->type != MONS_SEISMOSAURUS_EGG)
     {
         return false;
     }
@@ -951,7 +996,7 @@ bool mon_special_ability(monster* mons)
 
         for (monster_near_iterator targ(mons, LOS_NO_TRANS); targ; ++targ)
         {
-            if (mons_aligned(mons, *targ) || mons_is_firewood(**targ)
+            if (mons_aligned(mons, *targ) || targ->is_firewood()
                 || grid_distance(mons->pos(), targ->pos()) > 2
                 || !you.see_cell(targ->pos()))
             {
@@ -976,14 +1021,15 @@ bool mon_special_ability(monster* mons)
         {
             foxfire_attack(mons, &you);
             check_place_cloud(CLOUD_FLAME, mons->pos(), 2, mons);
-            mons->suicide();
+            if (mons->alive())
+                monster_die(*mons, KILL_RESET, NON_MONSTER, true);
             used = true;
             break;
         }
 
         for (monster_near_iterator targ(mons, LOS_NO_TRANS); targ; ++targ)
         {
-            if (mons_aligned(mons, *targ) || mons_is_firewood(**targ)
+            if (mons_aligned(mons, *targ) || targ->is_firewood()
                 || grid_distance(mons->pos(), targ->pos()) > 1
                 || !you.see_cell(targ->pos()))
             {
@@ -993,25 +1039,11 @@ bool mon_special_ability(monster* mons)
             if (!cell_is_solid(targ->pos()))
             {
                 foxfire_attack(mons, *targ);
-                mons->suicide();
+                if (mons->alive())
+                    monster_die(*mons, KILL_RESET, NON_MONSTER, true);
                 used = true;
                 break;
             }
-        }
-        break;
-
-    case MONS_SKY_BEAST:
-        if (one_chance_in(8))
-        {
-            // If we're invisible, become visible.
-            if (mons->invisible())
-            {
-                mons->del_ench(ENCH_INVIS);
-                place_cloud(CLOUD_RAIN, mons->pos(), 2, mons);
-            }
-            // Otherwise, go invisible.
-            else
-                enchant_monster_invisible(mons, "flickers out of sight");
         }
         break;
 
@@ -1094,7 +1126,7 @@ bool mon_special_ability(monster* mons)
 
         const coord_def targ = foe->pos();
         coord_def spot;
-        if (!find_habitable_spot_near(targ, MONS_ELECTRIC_EEL, 3, false, spot)
+        if (!find_habitable_spot_near(targ, MONS_ELECTRIC_EEL, 3, spot)
             || targ.distance_from(spot) >= targ.distance_from(mons->pos()))
         {
             break;
@@ -1146,8 +1178,31 @@ bool mon_special_ability(monster* mons)
         _weeping_skull_cloud_aura(mons);
         break;
 
-    case MONS_MARTYRED_SHADE:
-        martyr_injury_bond(*mons);
+    case MONS_SEISMOSAURUS_EGG:
+        if (egg_is_incubating(*mons))
+        {
+            _seismosaurus_egg_hatch(mons);
+            used = true;
+        }
+        break;
+
+    case MONS_NAMELESS_REVENANT:
+        // If we are injured and have full memories, burn one fairly immediately.
+        if (mons->hit_points < mons->max_hit_points
+            && mons->props[NOBODY_MEMORIES_KEY].get_vector().size() == 3
+            && coinflip())
+        {
+            pyrrhic_recollection(*mons);
+            used = true;
+        }
+
+        // If Nobody is left alone long enough, allow their memories to return.
+        if (you.elapsed_time > mons->props[NOBODY_RECOVERY_KEY].get_int())
+        {
+            mons->props.erase(NOBODY_RECOVERY_KEY);
+            initialize_nobody_memories(*mons);
+        }
+
         break;
 
     default:
@@ -1160,16 +1215,148 @@ bool mon_special_ability(monster* mons)
     return used;
 }
 
-void martyr_injury_bond(monster& mons)
+bool egg_is_incubating(const monster& egg)
 {
-    for (monster_near_iterator mi(&mons, LOS_NO_TRANS); mi; ++mi)
+    if (!egg.has_ench(ENCH_HATCHING))
+        return false;
+
+    mon_enchant hatch = egg.get_ench(ENCH_HATCHING);
+
+    // Check if we're near our 'parent'
+    const actor* parent = hatch.agent();
+    if (!parent || !adjacent(parent->pos(), egg.pos()))
+        return false;
+
+    // Finally, check that there are foes sufficiently nearby (and also in the
+    // parent's LoS)
+    for (monster_near_iterator mi(&egg, LOS_NO_TRANS); mi; ++mi)
     {
-        if (mons_aligned(&mons, *mi)
-            && !mi->has_ench(ENCH_CHARM)
-            && !mons_is_projectile(**mi)
-            && *mi != &mons)
+        if (!mons_aligned(*mi, &egg) && !mi->is_firewood()
+            && grid_distance(egg.pos(), mi->pos()) <= 4
+            && parent->see_cell(mi->pos()))
         {
-            mi->add_ench(mon_enchant(ENCH_INJURY_BOND, 1, &mons, INFINITE_DURATION));
+            return true;
         }
     }
+
+    return false;
+}
+
+struct nobody_recollection
+{
+    int weight;
+    string key;
+    vector<pair<spell_type, uint8_t>> spells;
+};
+
+const static vector<nobody_recollection> _recollections =
+{
+    {50, "fire", {{SPELL_MARSHLIGHT, 40}, {SPELL_SCORCH, 50}}},
+    {50, "fire", {{SPELL_PYRE_ARROW, 80}}},
+    {50, "cold", {{SPELL_OZOCUBUS_REFRIGERATION, 80}}},
+    {50, "cold", {{SPELL_PERMAFROST_ERUPTION, 80}}},
+    {50, "poison", {{SPELL_CORROSIVE_BOLT, 80}}},
+    {50, "poison", {{SPELL_HURL_SLUDGE, 100}}},
+    {50, "poison", {{SPELL_IRRADIATE, 75}}},
+    {65, "undead", {{SPELL_BORGNJORS_VILE_CLUTCH, 120}}},
+    {80, "fear", {{SPELL_CAUSE_FEAR, 120}, {SPELL_GHOSTLY_FIREBALL, 50}}},
+    {80, "soldiers", {{SPELL_BATTLESPHERE, 120}, {SPELL_BOMBARD, 60}}},
+    {50, "rockslide", {{SPELL_LRD, 100}}},
+    {50, "electricity", {{SPELL_ARCJOLT, 80}}},
+
+    {75, "xxx", {{SPELL_SUMMON_HORRIBLE_THINGS, 70}}},
+    {85, "demons", {{SPELL_SUMMON_GREATER_DEMON, 70}}},
+    {85, "undead", {{SPELL_HAUNT, 70}}},
+    {110, "vermin", {{SPELL_SUMMON_VERMIN, 70}}},
+
+    {180, "soldiers", {{SPELL_HASTE, 75}, {SPELL_MIGHT, 75}}},
+};
+
+// Initialize a set of 3 random spellsets for Nobody, guaranteed to all be
+// different from each other. (Called upon Nobody spawning or so much time
+// passing that they regenerate their memories.)
+void initialize_nobody_memories(monster& nobody)
+{
+    CrawlVector& memories = nobody.props[NOBODY_MEMORIES_KEY].get_vector();
+    memories.clear();
+
+    vector<pair<int, int>> weights;
+    for (size_t i = 0; i < _recollections.size(); ++i)
+        weights.push_back({i, _recollections[i].weight});
+
+    for (int i = 0; i < 3; ++i)
+    {
+        const int index = *random_choose_weighted(weights);
+        memories.push_back(index);
+        weights[index].second = 0;
+    }
+}
+
+bool pyrrhic_recollection(monster& nobody)
+{
+    CrawlVector& memories = nobody.props[NOBODY_MEMORIES_KEY].get_vector();
+    if (memories.size() <= 0)
+        return false;
+
+    const bool can_see = you.see_cell(nobody.pos());
+
+    if (can_see)
+        draw_ring_animation(nobody.pos(), 3, LIGHTCYAN, CYAN, true);
+
+    // Change spells
+    nobody.spells.clear();
+    const auto& recollection = _recollections[memories[memories.size() - 1].get_int()];
+
+    vector<string> spell_names;
+    for (pair<spell_type, uint8_t> spell : recollection.spells)
+    {
+        nobody.spells.push_back({spell.first, spell.second, MON_SPELL_WIZARD});
+        spell_names.push_back(spell_title(spell.first));
+    }
+    nobody.spells.push_back({SPELL_PYRRHIC_RECOLLECTION, 0, MON_SPELL_NATURAL});
+    nobody.props[CUSTOM_SPELLS_KEY] = true;
+    memories.pop_back();
+
+    if (can_see)
+    {
+        mprf(MSGCH_MONSTER_SPELL, "%s ignites a memory of %s to re-knit themselves.",
+                nobody.name(DESC_THE).c_str(),
+                comma_separated_line(spell_names.begin(), spell_names.end()).c_str());
+        string speech = make_stringf("\"We remember... %s...\"",
+                            getSpeakString("nobody_recollection " + recollection.key).c_str());
+        mons_speaks_msg(&nobody, speech, MSGCH_TALK);
+    }
+
+    // Heal and move.
+    nobody.heal(nobody.max_hit_points);
+
+    // If this was a phantom mirror copy, allow it to revive, but don't wipe out
+    // its summoner timer at the same time, to keep it from having unlimited duration.
+    mon_enchant summon_timer = nobody.get_ench(ENCH_SUMMON_TIMER);
+    nobody.timeout_enchantments(1000);
+    nobody.update_ench(summon_timer);
+
+    monster_blink(&nobody, true, true);
+    nobody.add_ench(mon_enchant(ENCH_PYRRHIC_RECOLLECTION, 0, &nobody, random_range(300, 500)));
+
+    // Don't immediately expire summons (we want them to stick around into the next phase),
+    // but at least make them time out a bit faster.
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->was_created_by(nobody))
+        {
+            mon_enchant timer = mi->get_ench(ENCH_SUMMON_TIMER);
+            timer.duration = timer.duration / 3;
+            mi->update_ench(timer);
+        }
+    }
+
+    nobody.props[NOBODY_RECOVERY_KEY] = you.elapsed_time + (random_range(300, 500));
+
+    // Allow Nobody to wake up if you kill them in their sleep
+    behaviour_event(&nobody, ME_ALERT);
+
+    avoided_death_fineff::schedule(&nobody);
+
+    return true;
 }

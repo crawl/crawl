@@ -146,11 +146,17 @@ public:
 
     const monsterentry *find_monsterentry() const;
 
-    void mark_summoned(int longevity, bool mark_items_summoned,
-                       int summon_type = 0, bool abj = true);
-    bool is_summoned(int* duration = nullptr, int* summon_type = nullptr) const
-        override;
-    bool is_perm_summoned() const override;
+    void mark_summoned(int summon_type = 0, int longevity = 0,
+                       bool mark_items_summoned = true,
+                       bool make_abjurable = false);
+    bool is_summoned() const override;
+    bool was_created_by(int summon_type) const override;
+    bool was_created_by(const actor& summoner,
+                        int summon_type = SPELL_NO_SPELL) const override;
+    bool is_abjurable() const;
+    bool is_unrewarding() const;
+    bool is_firewood() const override;
+    bool is_peripheral() const override;
     bool has_action_energy() const;
     void drain_action_energy();
     bool matches_player_speed() const;
@@ -163,9 +169,10 @@ public:
     void self_destruct() override;
 
     void set_position(const coord_def &c) override;
-    void moveto(const coord_def& c, bool clear_net = true) override;
+    void moveto(const coord_def& c, bool clear_net = true,
+                bool clear_constrict = true) override;
     bool move_to_pos(const coord_def &newpos, bool clear_net = true,
-                     bool force = false) override;
+                     bool force = false, bool clear_constrict = true) override;
     bool swap_with(monster* other);
     bool blink_to(const coord_def& c, bool quiet = false) override;
     bool blink_to(const coord_def& c, bool quiet, bool jump);
@@ -239,7 +246,6 @@ public:
     void set_ghost(const ghost_demon &ghost);
     void ghost_init(bool need_pos = true);
     void ghost_demon_init();
-    void inugami_init();
     void uglything_init(bool only_mutate = false);
     void uglything_mutate(colour_t force_colour = COLOUR_UNDEF);
     void destroy_inventory();
@@ -266,7 +272,8 @@ public:
     bool     extra_balanced() const override;
     bool     can_pass_through_feat(dungeon_feature_type grid) const override;
     bool     can_burrow() const override;
-    bool     is_habitable_feat(dungeon_feature_type actual_grid) const override;
+    bool     can_burrow_through(dungeon_feature_type feat) const;
+    bool     is_habitable_feat(dungeon_feature_type feat) const override;
     bool     shove(const char* name = "") override;
 
     size_type   body_size(size_part_type psize = PSIZE_TORSO,
@@ -277,40 +284,34 @@ public:
                              bool rescale = true) const override;
     int         has_claws(bool allow_tran = true) const override;
 
-    int wearing(equipment_type slot, int type) const override;
-    int wearing_ego(equipment_type slot, int type) const override;
+    int wearing(object_class_type obj_type, int sub_type,
+                bool count_plus = 0, bool check_attuned = false) const override;
+    int wearing_ego(object_class_type obj_type, int ego) const override;
     int scan_artefacts(artefact_prop_type which_property,
                        vector<const item_def *> *_unused_matches = nullptr) const
         override;
+    bool unrand_equipped(int unrand_index, bool include_melded = false) const override;
 
-    item_def *slot_item(equipment_type eq, bool include_melded=false) const
-        override;
     item_def *mslot_item(mon_inv_type sl) const;
     item_def *weapon(int which_attack = -1) const override;
     item_def *launcher() const;
     item_def *melee_weapon() const;
     item_def *missiles() const;
     item_def *shield() const override;
+    item_def *body_armour() const override;
     item_def *get_defining_object() const;
 
     hands_reqd_type hands_reqd(const item_def &item,
                                bool base = false) const override;
 
-    bool      can_wield(const item_def &item,
-                        bool ignore_curse = false,
-                        bool ignore_brand = false,
-                        bool ignore_shield = false,
-                        bool ignore_transform = false) const override;
-    bool      could_wield(const item_def &item,
-                          bool ignore_brand = false,
-                          bool ignore_transform = false,
-                          bool quiet = true) const override;
+    bool      could_wield(const item_def &item) const;
 
     void      wield_melee_weapon(maybe_bool msg = maybe_bool::maybe);
     void      swap_weapons(maybe_bool msg = maybe_bool::maybe);
     bool      pickup_item(item_def &item, bool msg, bool force);
     bool      drop_item(mon_inv_type eslot, bool msg);
-    bool      unequip(item_def &item, bool msg, bool force = false);
+    bool      do_unequip_effects(item_def &item, bool msg, bool force = false);
+    bool      unequip(mon_inv_type slot, bool msg, bool force = false);
     void      steal_item_from_player();
     item_def* take_item(int steal_what, mon_inv_type mslot,
                         bool is_stolen = false);
@@ -336,6 +337,7 @@ public:
     string hand_name(bool plural, bool *can_plural = nullptr) const override;
     string foot_name(bool plural, bool *can_plural = nullptr) const override;
     string arm_name(bool plural, bool *can_plural = nullptr) const override;
+    string blood_name() const;
 
     bool fumbles_attack() override;
 
@@ -353,15 +355,16 @@ public:
     bool can_mutate() const override;
     bool can_safely_mutate(bool temp = true) const override;
     bool can_polymorph() const override;
-    bool can_bleed(bool allow_tran = true) const override;
+    bool has_blood(bool temp = true) const override;
+    bool has_bones(bool temp = true) const override;
     bool is_stationary() const override;
-    bool malmutate(const string &/*reason*/) override;
-    void corrupt();
+    bool malmutate(const actor* source, const string& reason = "") override;
     bool polymorph(int pow, bool allow_immobile = true) override;
     bool polymorph(poly_power_type power = PPT_SAME);
     void banish(const actor *agent, const string &who = "", const int power = 0,
                 bool force = false) override;
     void expose_to_element(beam_type element, int strength = 0,
+                           const actor* source = nullptr,
                            bool slow_cold_blood = true) override;
 
     monster_type mons_species(bool zombie_base = false) const override;
@@ -376,6 +379,7 @@ public:
     int how_chaotic(bool check_spells_god = false) const override;
     bool is_unbreathing() const override;
     bool is_insubstantial() const override;
+    bool is_amorphous() const override;
     bool res_damnation() const override;
     int res_fire() const override;
     int res_steam() const override;
@@ -389,14 +393,13 @@ public:
     int res_foul_flame() const override;
     int res_negative_energy(bool intrinsic_only = false) const override;
     bool res_torment() const override;
-    int res_acid() const override;
+    int res_corr() const override;
     bool res_polar_vortex() const override;
     bool res_petrify(bool /*temp*/ = true) const override;
     bool res_constrict() const override;
     resists_t all_resists() const;
     int willpower() const override;
     bool no_tele(bool blink = false, bool /*temp*/ = true) const override;
-    bool res_corr(bool /*allow_random*/ = true, bool temp = true) const override;
     bool antimagic_susceptible() const override;
 
     bool stasis() const override;
@@ -457,12 +460,16 @@ public:
     int constriction_damage(constrict_type typ) const override;
 
     bool can_throw_large_rocks() const override;
+
+    bool can_be_dazzled() const override;
+    bool can_be_blinded() const override;
+
     bool can_speak();
     bool is_silenced() const;
 
     int base_armour_class() const;
     int armour_class() const override;
-    int gdr_perc() const override { return 0; }
+    int gdr_perc(bool) const override { return 0; }
     int base_evasion() const;
     int evasion(bool ignore_temporary = false,
                 const actor* /*attacker*/ = nullptr) const override;
@@ -472,13 +479,14 @@ public:
     void paralyse(const actor *, int str, string source = "") override;
     void petrify(const actor *, bool force = false) override;
     bool fully_petrify(bool quiet = false) override;
+    bool vex(const actor* who, int dur, string source = "", string special_msg = "") override;
     void slow_down(actor *, int str) override;
     void confuse(actor *, int strength) override;
     bool drain(const actor *, bool quiet = false, int pow = 3) override;
     void splash_with_acid(actor *evildoer) override;
-    void acid_corrode(int /*acid_strength*/) override;
-    bool corrode_equipment(const char* corrosion_source = "the acid",
-                           int degree = 1) override;
+    bool corrode(const actor* source = nullptr,
+                 const char* corrision_msg = "the acid",
+                 int amount = 4) override;
     int hurt(const actor *attacker, int amount,
              beam_type flavour = BEAM_MISSILE,
              kill_method_type kill_type = KILLED_BY_MONSTER,
@@ -488,17 +496,16 @@ public:
              bool attacker_effects = true) override;
     bool heal(int amount) override;
     void blame_damage(const actor *attacker, int amount);
-    void blink() override;
+    void blink(bool ignore_stasis = false) override;
     void teleport(bool right_now = false,
                   bool wizard_tele = false) override;
     bool shift(coord_def p = coord_def(0, 0));
     void suicide(int hp_target = -1);
 
-    void put_to_sleep(actor *attacker, int power = 0, bool hibernate = false)
+    void put_to_sleep(actor *attacker, int duration = 0, bool hibernate = false)
         override;
-    void weaken(actor *attacker, int pow) override;
+    void weaken(const actor *attacker, int pow) override;
     bool strip_willpower(actor *attacker, int dur, bool quiet = false) override;
-    void check_awaken(int disturbance) override;
     int beam_resists(bolt &beam, int hurted, bool doEffects, string source = "")
         override;
 
@@ -592,9 +599,6 @@ private:
     void init_with(const monster& mons);
 
     int armour_bonus(const item_def &item) const;
-
-    void id_if_worn(mon_inv_type mslot, object_class_type base_type,
-                    int sub_type) const;
 
     bool decay_enchantment(enchant_type en, bool decay_degree = true);
 

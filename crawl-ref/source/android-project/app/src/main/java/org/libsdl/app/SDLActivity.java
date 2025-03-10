@@ -69,6 +69,7 @@ public class SDLActivity extends AppCompatActivity {
     protected static int keyboardOption;
     protected static int extraKeyboardOption;
     protected static int keyboardSize;
+    protected static boolean fullScreen;
     protected static View mTextEdit;
     protected static boolean mScreenKeyboardShown;
     protected static boolean mScreenExtraKeyboardShown;
@@ -147,6 +148,7 @@ public class SDLActivity extends AppCompatActivity {
         keyboardOption = 0;
         extraKeyboardOption = 0;
         keyboardSize = 0;
+        fullScreen = true;
         mTextEdit = null;
         mLayout = null;
         mClipboardHandler = null;
@@ -232,6 +234,8 @@ public class SDLActivity extends AppCompatActivity {
         Log.i(TAG, "Extra keyboard option: " + extraKeyboardOption);
         keyboardSize = intent.getIntExtra("keyboard_size", 0);
         Log.i(TAG, "Extra keyboard option: " + keyboardSize);
+        fullScreen = intent.getBooleanExtra("full_screen", false);
+        Log.i(TAG, "Full screen: " + fullScreen);
 
         mLayout = new RelativeLayout(this);
         mLayout.setBackgroundColor(getResources().getColor(R.color.black));
@@ -376,10 +380,18 @@ public class SDLActivity extends AppCompatActivity {
            return;
         }
 
+        // CRAWL HACK: Full screen
+        // Once UI flags have been cleared (for example, by navigating away from the activity),
+        // your app needs to reset them if you want to hide the bars again
+        if (fullScreen) {
+            View decorView = getWindow().getDecorView();
+            int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+            decorView.setSystemUiVisibility(uiOptions);
+        }
+
         SDLActivity.mHasFocus = hasFocus;
         if (hasFocus) {
            mNextNativeState = NativeState.RESUMED;
-
         } else {
            mNextNativeState = NativeState.PAUSED;
         }
@@ -1243,6 +1255,8 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
 
     // CRAWL HACK: Long press as right click
     protected static long touchStart = 0L;
+    protected static float touchStartX = 0;
+    protected static float touchStartY = 0;
 
     // Startup
     public SDLSurface(Context context) {
@@ -1475,16 +1489,12 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         /* Ref: http://developer.android.com/training/gestures/multi.html */
-        int touchDevId = event.getDeviceId();
         int pointerCount = event.getPointerCount();
         int action = event.getActionMasked();
-        int pointerFingerId;
         int mouseButton;
-        int i = -1;
-        float x,y,p;
 
         // !!! FIXME: dump this SDK check after 2.0.4 ships and require API14.
-        if (event.getSource() == InputDevice.SOURCE_MOUSE && SDLActivity.mSeparateMouseAndTouch) {
+        if (event.isFromSource(InputDevice.SOURCE_MOUSE) && SDLActivity.mSeparateMouseAndTouch) {
             if (Build.VERSION.SDK_INT < 14) {
                 mouseButton = 1; // all mouse buttons are the left button
             } else {
@@ -1494,13 +1504,22 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
                     mouseButton = 1;    // oh well.
                 }
             }
-            SDLActivity.onNativeMouse(mouseButton, action, event.getX(0), event.getY(0));
+            // CRAWL HACK: Fix touchpad scrolling
+            if (action == MotionEvent.ACTION_MOVE && mouseButton == 0) {
+                int historySize = event.getHistorySize();
+                if (historySize > 0) {
+                    float scroll = event.getY(0) - event.getHistoricalY(0, 0);
+                    SDLActivity.onNativeMouse(MotionEvent.BUTTON_PRIMARY, MotionEvent.ACTION_SCROLL, 0, scroll*0.1f);
+                }
+            } else {
+                SDLActivity.onNativeMouse(mouseButton, action, event.getX(0), event.getY(0));
+            }
         } else {
             switch(action) {
                 case MotionEvent.ACTION_MOVE:
 
                     // CRAWL HACK: Scroll with 2 fingers
-                    if (pointerCount == 2) {
+                    if (pointerCount > 1) {
                         int historySize = event.getHistorySize();
                         if (historySize > 0) {
                             float scroll0 = event.getY(0) - event.getHistoricalY(0, 0);
@@ -1525,15 +1544,23 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
                 // CRAWL HACK: Long press as right click
                 case MotionEvent.ACTION_DOWN:
                     touchStart = System.currentTimeMillis();
+                    touchStartX = event.getX();
+                    touchStartY = event.getY();
                     break;
 
                 // CRAWL HACK: Long press as right click
                 case MotionEvent.ACTION_UP:
                     if (!scrolling) {
-                        if (touchStart+500 > System.currentTimeMillis()) {
-                            SDLActivity.onNativeMouse(MotionEvent.BUTTON_PRIMARY, MotionEvent.ACTION_DOWN, event.getX(0), event.getY(0));
-                        } else {
-                            SDLActivity.onNativeMouse(MotionEvent.BUTTON_SECONDARY, MotionEvent.ACTION_DOWN, event.getX(0), event.getY(0));
+                        // Don't perform a click if the finger moved more than 1%
+                        float margin = Math.min(mWidth, mHeight) / 100;
+                        if (event.getX() + margin >= touchStartX && event.getX() - margin <= touchStartX &&
+                            event.getY() + margin >= touchStartY && event.getY() - margin <= touchStartY)
+                        {
+                            if (touchStart + 500 > System.currentTimeMillis()) {
+                                SDLActivity.onNativeMouse(MotionEvent.BUTTON_PRIMARY, MotionEvent.ACTION_DOWN, event.getX(0), event.getY(0));
+                            } else {
+                                SDLActivity.onNativeMouse(MotionEvent.BUTTON_SECONDARY, MotionEvent.ACTION_DOWN, event.getX(0), event.getY(0));
+                            }
                         }
                         SDLActivity.onNativeMouse(0, MotionEvent.ACTION_UP, event.getX(0), event.getY(0));
                     }

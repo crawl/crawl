@@ -50,21 +50,6 @@ Breathe Noxious Fumes ability
 
 向一个目标生物喷吐一股毒烟。
 %%%%
-Bat Form ability
-
-使用者变形成一只行动迅捷的吸血蝠，
-这会提升闪避能力，但会大大削弱近战攻击力。变形会减少使用者的属性值。
-
-变形后，装备的武器和防具会被融合，使用者无法施展法术。
-%%%%
-Exsanguinate ability
-
-排空体内的血液，转化为无血状态。
-%%%%
-Revivify ability
-
-重获生命，从“无血”状态变为“活”状态。使用者在此期间较为脆弱。
-%%%%
 Hurl Damnation ability
 
 用天谴轰击一个目标敌人。
@@ -242,26 +227,6 @@ Receive Weapon ability
 Receive Armour ability
 
 从四件防具中选取其中一件。这个福泽只能承蒙一次。
-%%%%
-# 马科列布
-Minor Destruction ability
-
-向一个目标怪物发射一道较弱的火、闪电、石、酸或负能量冲击波。
-攻击力和命中率随祈祷技能的提升而增加。
-%%%%
-Lesser Servant of Makhleb ability
-
-召唤一个低阶恶魔。使用此能力时如果失败会让那个恶魔变得敌对。
-%%%%
-Major Destruction ability
-
-向一个目标怪物发射一道火、闪电、岩浆、酸或负能量冲击波。
-攻击力和命中率随祈祷技能的提升而增加。
-%%%%
-Greater Servant of Makhleb ability
-
-[[Greater Servant of Makhleb spell]] 使用此能力时如果失败
-会让那个恶魔变得敌对。
 %%%%
 # Sif Muna
 %%%%
@@ -453,20 +418,6 @@ Curse Item ability
 Shatter The Chains ability
 
 摧毁一个选定的诅咒装备，解除佩戴者的诅咒。
-%%%%
-# 迪斯姆诺
-Shadow Step ability
-
-在你的本影之中，进入其他敌对生物的影子，随机落在目标的相邻位置上。
-%%%%
-Shadow Form ability
-
-将你转变成旋涡状的暗影。
-在这种形态下，你将持续隐形，且免疫毒、衰竭和折磨的影响。
-所有受到的伤害减半，并且受到的任何的攻击都会使你流出烟，
-并且你将拥有无限的意志力。但是，你的近战和远程的攻击力将减半，
-施法会受到极大的阻碍，在受到伤害时，你的最大生命值会流失。
-提升祈祷技能可以增加变形的持续时间。
 %%%%
 # 哥萨戈
 Potion Petition ability

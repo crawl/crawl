@@ -74,6 +74,7 @@ struct direction_chooser_args
     bool just_looking;
     bool needs_path;
     bool prefer_farthest;
+    bool try_multizap;
     bool unrestricted; // for wizmode
     bool allow_shift_dir;
     confirm_prompt_type self;
@@ -93,6 +94,7 @@ struct direction_chooser_args
         just_looking(false),
         needs_path(true),
         prefer_farthest(false),
+        try_multizap(false),
         unrestricted(false),
         allow_shift_dir(true),
         self(confirm_prompt_type::prompt),
@@ -136,7 +138,9 @@ private:
     bool targets_enemies() const;
 
     // Return the location where targeting should start.
-    coord_def find_default_target() const;
+    coord_def find_default_target();
+    coord_def find_default_monster_target();
+    coord_def find_default_object_target();
 
     bool process_command(command_type command);
 
@@ -149,14 +153,13 @@ private:
     // Jump to the player.
     void move_to_you();
 
-    // Cycle to the next (dir == 1) or previous (dir == -1) object.
-    void object_cycle(int dir);
+    // Cycle to the next (dir == 1) or previous (dir == -1) valid target in
+    // range. (This is usually a monster, but may be a cell near a monster if
+    // that is the only way to hit them, ie: a fireball hitting something just
+    // out of range.)
+    void cycle_target(int dir);
 
-    // Cycle to the next (dir == 1) or previous (dir == -1) monster.
-    void monster_cycle(int dir);
-
-    // Cycle to the next feature of the given type.
-    void feature_cycle_forward(int feature);
+    void cycle_feature(char feature_class);
 
     // Set the remembered target to be the current target.
     void update_previous_target() const;
@@ -165,7 +168,6 @@ private:
     // successful, false if failed (e.g. out of range.)
     bool select(bool allow_out_of_range, bool endpoint);
     bool select_compass_direction(const coord_def& delta);
-    bool select_previous_target();
 
     // Mark item for pickup, initiate movement.
     bool pickup_item();
@@ -179,12 +181,23 @@ private:
     const coord_def& target() const;
     void set_target(const coord_def& new_target);
 
-    string build_targeting_hint_string() const;
-
     actor* targeted_actor() const;
     monster* targeted_monster() const;
 
-    bool find_default_monster_target(coord_def& result) const;
+    // Calculates all friends/foes/other relevant points of interest in sight
+    // and determines our cycle points.
+    void calculate_target_info();
+
+    // Determine cycle points for reachable objects (for Apportation).
+    void fill_object_cycle_points();
+
+    // Determine cycle points for features of a given type, in visible viewport.
+    void fill_feature_cycle_points(char feature_class);
+
+    // Tries to find a more acceptable default spot to target a given monster
+    // (for when targeting it correctly may harm the player or an ally)
+    coord_def find_acceptable_aim(const monster* focus);
+
     // Functions which print things to the user.
     // Each one is commented with a sample output.
 
@@ -259,6 +272,8 @@ private:
     int range;                  // Max range to consider
     bool just_looking;
     bool prefer_farthest;       // Prefer to target the farthest monster.
+    bool try_multizap;          // Whether to go to extra effort to find
+                                // potential multizap shots.
     bool allow_shift_dir;       // Allow aiming in cardinal directions.
     confirm_prompt_type self;   // What do when aiming at yourself
     const char *target_prefix;  // A string displayed before describing target
@@ -273,7 +288,30 @@ private:
     ray_def beam;               // The (possibly invalid) beam.
     bool show_beam;             // Does the user want the beam displayed?
     bool have_beam;             // Is the currently stored beam valid?
-    coord_def objfind_pos, monsfind_pos; // Cycling memory
+
+    int cycle_index;                // Current index into cycle_pos
+    vector<coord_def> cycle_pos;    // All calculated coordinates that we should
+                                    // cycle through via +/-
+
+    char feature_cache_type;        // Type of feature positions cached in
+                                    // feature_cycle_pos
+    vector<coord_def> feature_cycle_pos;    // Calculated coordinates to cycle
+                                            // through via last feature cycle
+                                            // command issued
+
+    bool harmful_to_player;         // Whether to avoid aiming this in a way
+                                    // that touches the player's cell.
+
+    // All visible monster targets that could theoretically be affected by what
+    // we are aiming (whether they are actually in range or not)
+    vector<monster*> valid_targs;
+
+    // For certain spells (like Magnavolt) a list of aimable spots that should
+    // be prioritized about others when picking a default target.
+    vector<coord_def> preferred_targs;
+
+    // All friends in sight.
+    vector<monster*> valid_friends;
 
     // What we need to redraw.
     bool need_viewport_redraw;

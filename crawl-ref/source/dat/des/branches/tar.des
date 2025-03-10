@@ -604,13 +604,11 @@ MONS:    vampire knight ; demon whip | demon trident | demon blade . \
                           plate armour | chain mail
 MONS:    putrid mouth, tormentor w:3, silent spectre
 KMONS:   9 = reaper
-KMONS:   J = Jory w:9 / tzitzimitl w:1, tzitzimitl
-KFEAT:   G = metal_statue
+KMONS:   J = Jory w:5 / vampire bloodprince w:4 / tzitzimitl w:1, \
+             vampire bloodprince w:4 / tzitzimitl w:1
 NSUBST:  J = 1:J / *:9, 8 = 1:6 / * = 5:19 6:1
 SUBST:   A : x.., B : x.., } = }>
-COLOUR:  G = mist
-TILE:    G = dngn_mystic_cage
-: set_feature_name("metal_statue", "mystic cage")
+: vault_metal_statue_setup(_G, "G", "mystic cage")
 MAP
           xx  xx  xx  xx  xx  xx
          xxxxxxxxxxxxxxxxxxxxxxxxx
@@ -657,7 +655,7 @@ TAGS:    transparent
 DEPTH:   Tar
 : if you.depth() == 1 then
 SUBST:   { = }
-: elseif you.depth_fraction() < 1 then
+: elseif you.depth() ~= dgn.br_depth(you.branch()) then
 SUBST:   { = {}
 : end
 SHUFFLE: DEFHJ
@@ -714,7 +712,7 @@ KFEAT:   } = }
 KMONS:   } = royal mummy
 KMONS:   1 = mummy priest
 KMONS:   2 = guardian mummy / ushabti / death scarab band / ancient champion / \
-             emperor scorpion / sphinx
+             emperor scorpion / guardian sphinx
 SHUFFLE: DE/FH/JK
 SUBST:   M = 12, DH = +, EFJK = x
 MAP
@@ -868,8 +866,7 @@ NSUBST: D = + / x, E = + / x, F = + / x, H = + / x, J = + / x, K = + / x, \
         R = +x / +x / x
 SUBST:  G : GGVVY
 : if crawl.coinflip() then
-TILE:  G = dngn_crumbled_column
-: set_feature_name("granite_statue", "broken pillar")
+:   vault_granite_statue_setup(_G, "G", "broken pillar")
 : end
 MAP
 .....xRRRx.....
@@ -922,7 +919,7 @@ NSUBST: D = 3=+ / x, E = 3=+ / x, F = 3=+ / x, H = 3=+ / x, J = + / x, \
         Q = + / x
 : if you.depth() == 1 then
 SUBST:  { = }
-: elseif you.depth_fraction() < 1 then
+: elseif you.depth() ~= dgn.br_depth(you.branch()) then
 SUBST:  { = {}
 : end
 SUBST:  0 = 0009, 9 = 9998
@@ -971,11 +968,10 @@ NAME:   nicolae_tar_just_some_guys
 TAGS:   transparent
 DEPTH:  Tar, !Tar:$
 KMONS:  1 = halazid warlock
-KMONS:  2 = revenant
+KMONS:  2 = revenant soulmonger
 KMONS:  3 = spectral thing / nothing w:5
 SUBST:  S = 12
-TILE:  G = dngn_crumbled_column
-: set_feature_name("granite_statue", "broken pillar")
+: vault_granite_statue_setup(_G, "G", "broken pillar")
 MAP
     xxxxxxx
   xxx.x.x.xxx
@@ -1178,6 +1174,7 @@ ENDMAP
 # Ereshkigal (Tartarus)
 ##############################################################################
 
+# FIXME: southeast chambers are excessively aggressive for little reward.
 NAME:    tar_old
 ORIENT:  encompass
 MONS:    patrolling Ereshkigal, tainted leviathan, profane servitor
@@ -1193,63 +1190,63 @@ SHUFFLE: 3569
 : tar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxx..............................................................xxxx
-xxxx..............................................................xxxx
-xxxx.................cccc..........ccc............................xxxx
-xxxx.............ccccc..cccc.....ccc.cccc.........................xxxx
-xxxx...........ccc.........ccccccc.....cc.........................xxxx
-xxxx.........ccc........6...........V..cc.........................xxxx
-xxxx........cc4........................cc...........xxxxxxxx......xxxx
-xxxx........cc44xxx++xxx......D........cc..........xx......xx.....xxxx
-xxxx........ccxxx......xxx.......ccc++ccc....6....xx........xx....xxxx
-xxxx........cxx..........xxx.....ccc44ccc.........x..........x....xxxx
-xxxx........cx............xx....cccc44cc.........xx.9......7.xx...xxxx
-xxxx.......ccx.G........G.xxx7ccc..c44c..........x....||||....x...xxxx
-xxxx.......cxx............xxxcc..................x....||||....x...xxxx
-xxxx......ccx..............xxc...................xx.9......9.xx...xxxx
-xxxx......ccx..G........G..xxc..x.........x.......x..........x....xxxx
-xxxx......ccx..............xcc......??............xx........xx....xxxx
-xxxx.......cxx............xxc......2222............xx......xx.....xxxx
-xxxx.......ccx.G........G.xcc.......??..............xxxxxxxx......xxxx
-xxxx........cx7..........7xc......................................xxxx
-xxxx........cxx....17....xxc....x.........x.......................xxxx
-xxxx........ccxxx......xxxcc......................................xxxx
-xxxx........cccc+xxxxxx+cccc.................................3....xxxx
-xxxx........cc$$cccccccc$$cc......................................xxxx
-xxxx.........cc$$$$O$$$$$cc.......................................xxxx
-xxxx..........cccccccccccc......x.........x............V..........xxxx
-xxxx..............................................................xxxx
-xxxx...........................................cccccccccccccccc...xxxx
-xxxx...........................................cccccccccccccccc...xxxx
-xxxx..................................6........cc$$$$$xx|||||cc...xxxx
-xxxx.......3........V...........x.........x....cc$$$$$xx|||||cc...xxxx
-xxxx................................7..........ccxxcccccccccccc...xxxx
-xxxx...........................................ccxxcccccccccccc...xxxx
-xxxx...........................................cc44744xx00000cc...xxxx
-xxxx.......ccccccccc+ccccccccc.................cc44444xx88888cc...xxxx
-xxxx.......c.................c..x.........x..ccccccccccccxxxxcc...xxxx
-xxxx.......c.x.x.x.x.x.x.x.x.c.................ccccccccccxxxxcc...xxxx
-xxxx.......c.................c......................+........cc...xxxx
-xxxx.......cx5x.x.x.x.x.x.x5xc......................+........cc...xxxx
-xxxx.......c.................c.................ccccccccccxxxxcc...xxxx
-xxxx.......c.x.x.x.x5x.x.x.x.c..x.........x..ccccccccccccxxxxcc...xxxx
-xxxx.......c.................c.................ccZZZZZxx88888cc...xxxx
-xxxx.......cxxxxxxx.x.xxxxxxxc.................ccZZZZZxx00000cc...xxxx
-xxxx.......c$$$$$$x....x$$$||c.................ccxxcccccccccccc...xxxx
-xxxx.......c$x$$x$xx.x.x$x$x|c.................ccxxcccccccccccc...xxxx
-xxxx.......c||||||+....+$$$||c..x....3....x....cc||xx444xx|||cc...xxxx
-xxxx.......ccccccccccccccccccc.................cc||xx444xx|7|cc...xxxx
-xxxx...........................................cccccccccccccccc...xxxx
-xxxx...........................................cccccccccccccccc...xxxx
-xxxx..............................................................xxxx
-xxxx..............................................................xxxx
-xxxx..............................................................xxxx
-xxxx..............................................................xxxx
-xxxx..............................................................xxxx
-xxxx..............................{...............................xxxx
-xxxx..............................................................xxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccxxx
+xxxc..............................................................cxxx
+xxxc..............................................................cxxx
+xxxc.................cccc..........ccc............................cxxx
+xxxc.............ccccc..cccc.....ccc.cccc.........................cxxx
+xxxc...........ccc.........ccccccc.....cc.........................cxxx
+xxxc.........ccc........6...........V..cc.........................cxxx
+xxxc........cc4........................cc...........xxxxxxxx......cxxx
+xxxc........cc44xxx++xxx......D........cc..........xx......xx.....cxxx
+xxxc........ccxxx......xxx.......ccc++ccc....6....xx........xx....cxxx
+xxxc........cxx..........xxx.....ccc44ccc.........x..........x....cxxx
+xxxc........cx............xx....cccc44cc.........xx.9......7.xx...cxxx
+xxxc.......ccx.G........G.xxx7ccc..c44c..........x....||||....x...cxxx
+xxxc.......cxx............xxxcc..................x....||||....x...cxxx
+xxxc......ccx..............xxc...................xx.9......9.xx...cxxx
+xxxc......ccx..G........G..xxc..x.........x.......x..........x....cxxx
+xxxc......ccx..............xcc......??............xx........xx....cxxx
+xxxc.......cxx............xxc......2222............xx......xx.....cxxx
+xxxc.......ccx.G........G.xcc.......??..............xxxxxxxx......cxxx
+xxxc........cx7..........7xc......................................cxxx
+xxxc........cxx....17....xxc....x.........x.......................cxxx
+xxxc........ccxxx......xxxcc......................................cxxx
+xxxc........cccc+xxxxxx+cccc.................................3....cxxx
+xxxc........cc$$cccccccc$$cc......................................cxxx
+xxxc.........cc$$$$O$$$$$cc.......................................cxxx
+xxxc..........cccccccccccc......x.........x............V..........cxxx
+xxxc..............................................................cxxx
+xxxc...........................................cccccccccccccccc...cxxx
+xxxc...........................................cccccccccccccccc...cxxx
+xxxc..................................6........cc$$$$$xx|||||cc...cxxx
+xxxc.......3........V...........x.........x....cc$$$$$xx|||||cc...cxxx
+xxxc................................7..........ccxxcccccccccccc...cxxx
+xxxc...........................................ccxxcccccccccccc...cxxx
+xxxc...........................................cc44744xx00000cc...cxxx
+xxxc.......ccccccccc+ccccccccc.................cc44444xx88888cc...cxxx
+xxxc.......c.................c..x.........x..ccccccccccccxxxxcc...cxxx
+xxxc.......c.x.x.x.x.x.x.x.x.c.................ccccccccccxxxxcc...cxxx
+xxxc.......c.................c......................+........cc...cxxx
+xxxc.......cx5x.x.x.x.x.x.x5xc......................+........cc...cxxx
+xxxc.......c.................c.................ccccccccccxxxxcc...cxxx
+xxxc.......c.x.x.x.x5x.x.x.x.c..x.........x..ccccccccccccxxxxcc...cxxx
+xxxc.......c.................c.................ccZZZZZxx88888cc...cxxx
+xxxc.......cxxxxxxx.x.xxxxxxxc.................ccZZZZZxx00000cc...cxxx
+xxxc.......c$$$$$$x....x$$$||c.................ccxxcccccccccccc...cxxx
+xxxc.......c$x$$x$xx.x.x$x$x|c.................ccxxcccccccccccc...cxxx
+xxxc.......c||||||+....+$$$||c..x....3....x....cc||xx444xx|||cc...cxxx
+xxxc.......ccccccccccccccccccc.................cc||xx444xx|7|cc...cxxx
+xxxc...........................................cccccccccccccccc...cxxx
+xxxc...........................................cccccccccccccccc...cxxx
+xxxc..............................................................cxxx
+xxxc..............................................................cxxx
+xxxc..............................................................cxxx
+xxxc..............................................................cxxx
+xxxc..............................................................cxxx
+xxxc..............................{...............................cxxx
+xxxc..............................................................cxxx
+xxxccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
@@ -1283,7 +1280,7 @@ xxxx.4.............................4............................{.xxxx
 xxxx..ccccccccccccccccccccccccccccc...............................xxxx
 xxxx..c===========================+...............................xxxx
 xxxx..c===========================c...............................xxxx
-xxxx..c===========================c...............................xxxx
+xxxx..c===========================cD..............................xxxx
 xxxx..c===========================c...............................xxxx
 xxxx..c===========================c..............3ccccccc3........xxxx
 xxxx..c===========================c............7ccccccccccc7......xxxx

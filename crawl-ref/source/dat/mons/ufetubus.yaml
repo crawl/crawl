@@ -5,8 +5,8 @@ xp_mult: 28
 holiness: [demonic]
 will: 10
 attacks:
- - {type: hit, flavour: flank, damage: 5}
- - {type: hit, damage: 5}
+ - {type: hit, flavour: flank, damage: 6}
+ - {type: hit, damage: 6}
 hd: 1
 hp_10x: 90
 ac: 2
@@ -16,4 +16,4 @@ intelligence: human
 speed: 15
 uses: open_doors
 size: small
-shape: humanoid
+shape: bird

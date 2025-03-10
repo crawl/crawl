@@ -27,7 +27,7 @@ static monsterentry mondata[] =
     0, 0, \
     0, 0, MST_NO_SPELLS, true, S_SILENT, \
     I_BRAINLESS, HT_LAND, 0, DEFAULT_ENERGY, \
-    MONUSE_NOTHING, SIZE_GIANT, MON_SHAPE_MISC, \
+    MONUSE_NOTHING, SIZE_GIANT, MON_SHAPE_MISC, GOD_NO_GOD, \
     {TILEP_MONS_PROGRAM_BUG}, TILE_ERROR \
 },
 
@@ -118,7 +118,6 @@ static monsterentry mondata[] =
     AXED_MON(MONS_TRAPDOOR_SPIDER, "trapdoor spider")
     AXED_MON(MONS_SALAMANDER_STORMCALLER, "salamander stormcaller")
     AXED_MON(MONS_MAUD, "maud")
-    AXED_MON(MONS_WIGLAF, "wiglaf")
     AXED_MON(MONS_SHEEP, "sheep")
     AXED_MON(MONS_ANUBIS_GUARD, "anubis guard")
     AXED_MON(MONS_GRIFFON, "griffon")
@@ -148,11 +147,14 @@ static monsterentry mondata[] =
     AXED_MON(MONS_WORKER_ANT, "worker ant")
     AXED_MON(MONS_QUEEN_ANT, "queen ant")
     AXED_MON(MONS_SOLDIER_ANT, "soldier ant")
-    AXED_MON(MONS_IRONBOUND_BEASTMASTER, "ironbound beastmaster")
     AXED_MON(MONS_MONSTROUS_DEMONSPAWN, "monstrous demonspawn")
     AXED_MON(MONS_GELID_DEMONSPAWN, "gelid demonspawn")
     AXED_MON(MONS_INFERNAL_DEMONSPAWN, "infernal demonspawn")
     AXED_MON(MONS_TORTUROUS_DEMONSPAWN, "torturous demonspawn")
+    AXED_MON(MONS_LOROCYPROCA, "lorocyproca")
+    AXED_MON(MONS_ELECTROFERRIC_VORTEX, "electroferric vortex")
+    AXED_MON(MONS_QUASIT, "quasit")
+    AXED_MON(MONS_DEEP_DWARF, "deep dwarf")
 #endif
 
 // Real monsters begin here {dlb}:

@@ -204,6 +204,10 @@ public:
             name = "manuals";
         else if (item->is_type(OBJ_BOOKS, 0))
             name = "spellbooks";
+        else if (item->is_type(OBJ_JEWELLERY, NUM_RINGS))
+            name = "unknown rings";
+        else if (item->is_type(OBJ_JEWELLERY, NUM_JEWELLERY))
+            name = "unknown amulets";
         else if (item->base_type == OBJ_GOLD)
         {
             name = lowercase_string(item_class_name(item->base_type));
@@ -231,8 +235,7 @@ public:
         }
         else
         {
-            name = item->name(DESC_PLAIN, false, true, false, false,
-                              ISFLAG_KNOW_PLUSES);
+            name = item->name(DESC_PLAIN, false, true, false, false);
             name = pluralise(name);
         }
 
@@ -303,8 +306,7 @@ public:
         description_level_type desctype =
             item->base_type == OBJ_WANDS ? DESC_DBNAME : DESC_PLAIN;
 
-        return " " + item->name(desctype, false, true, false, false,
-                                ISFLAG_KNOW_PLUSES);
+        return " " + item->name(desctype, false, true, false, false);
     }
 };
 
@@ -328,8 +330,8 @@ static bool _identified_item_names(const item_def *it1,
     description_level_type desc =
         it1->base_type == OBJ_JEWELLERY ? DESC_DBNAME : DESC_PLAIN;
 
-    return it1->name(desc, false, true, false, false, ISFLAG_KNOW_PLUSES)
-         < it2->name(desc, false, true, false, false, ISFLAG_KNOW_PLUSES);
+    return it1->name(desc, false, true, false, false)
+         < it2->name(desc, false, true, false, false);
 }
 
 // Allocate (with new) a new item_def with the given base and sub types,
@@ -353,7 +355,7 @@ static void _add_fake_item(object_class_type base, int sub,
         ptmp->quantity = 18;
 
     if (force_known_type)
-        ptmp->flags |= ISFLAG_KNOW_TYPE;
+        ptmp->flags |= ISFLAG_IDENTIFIED;
 
     items.push_back(ptmp);
 
@@ -412,7 +414,14 @@ void check_item_knowledge(bool unknown_items)
             object_class_type i = (object_class_type)ii;
             if (i == OBJ_BOOKS || !item_type_has_ids(i))
                 continue;
-            _add_fake_item(i, get_max_subtype(i), selected_items, items);
+
+            if (i == OBJ_JEWELLERY)
+            {
+                _add_fake_item(i, NUM_RINGS, selected_items, items);
+                _add_fake_item(i, NUM_JEWELLERY, selected_items, items);
+            }
+            else
+                _add_fake_item(i, get_max_subtype(i), selected_items, items);
         }
         // Missiles
         for (int i = 0; i < NUM_MISSILES; i++)
@@ -435,6 +444,7 @@ void check_item_knowledge(bool unknown_items)
         {
             if (i == MISC_HORN_OF_GERYON
                 || i == MISC_ZIGGURAT
+                || i == MISC_SHOP_VOUCHER
 #if TAG_MAJOR_VERSION == 34
                 || is_deck_type(i)
                 || i == MISC_BUGGY_EBONY_CASKET
@@ -469,7 +479,7 @@ void check_item_knowledge(bool unknown_items)
             { OBJ_GOLD, 1 },
             { OBJ_BOOKS, 0 },
             { OBJ_RUNES, NUM_RUNE_TYPES },
-            { OBJ_GEMS, NUM_GEM_TYPES },
+            { OBJ_GEMS, GEM_DUNGEON },
         };
         for (auto e : misc_list)
             _add_fake_item(e.first, e.second, selected_items, items_other);

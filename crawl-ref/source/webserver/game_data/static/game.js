@@ -194,6 +194,7 @@ function ($, exports, comm, client, key_conversion, dungeon_renderer, display,
         display.invalidate(true);
         display.display();
         glyph_mode_font_init();
+        init_custom_text_colours();
     });
 
     function toggle_full_window_dungeon_view(full)
@@ -357,6 +358,25 @@ function ($, exports, comm, client, key_conversion, dungeon_renderer, display,
             glyph_mode_font: glyph_font
         };
         $.extend(dungeon_renderer, renderer_settings);
+    }
+
+    function init_custom_text_colours()
+    {
+        const root = document.querySelector(':root');
+
+        // Reset colours first
+        for (let i = 0; i < 16; i++)
+            root.style.removeProperty('--color-' + i);
+
+        // Load custom replacements
+        var colours = options.get("custom_text_colours");
+        for (var i in colours)
+        {
+            root.style.setProperty('--color-' + colours[i].index,
+                "rgba(" + colours[i].r + ", "
+                        + colours[i].g + ", "
+                        + colours[i].b + ", 255)");
+        }
     }
 
     function is_mobile()

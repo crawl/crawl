@@ -1,6 +1,6 @@
 name: "pandemonium lord"
 glyph: {char: "&", colour: colour_undef}
-flags: [fighter, see_invis, speaks, ghost_demon, tall_tile]
+flags: [fighter, see_invis, speaks, ghost_demon, tall_tile, always_named]
 resists: {poison: 1}
 xp_mult: 14
 holiness: [demonic]

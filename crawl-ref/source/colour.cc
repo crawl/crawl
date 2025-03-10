@@ -663,6 +663,16 @@ void init_element_colours()
                               {40,  YELLOW},
                               {40,  WHITE},
                             }));
+    add_element_colour(new random_element_colour_calc(
+                            ETC_GLITTER, "glitter",
+                            { {20,  LIGHTRED},
+                              {20,  YELLOW},
+                              {20,  LIGHTBLUE},
+                              {20,  LIGHTCYAN},
+                              {20,  LIGHTMAGENTA},
+                              {20,  LIGHTGREEN},
+                              {100, LIGHTGREY},
+                            }));
     // redefined by Lua later
     add_element_colour(new element_colour_calc(
                             ETC_DISCO, "disco", _etc_random

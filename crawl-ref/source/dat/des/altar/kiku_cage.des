@@ -44,9 +44,6 @@ function callback.tgw_kikubaaqudgha_zombify(data, triggerable,
     return
   end
 
-  -- Won't place the monster if there's a cloud there
-  dgn.delete_cloud(pt[1].x, pt[1].y)
-
   dgn.create_monster(pt[1].x, pt[1].y, "generate_awake human zombie")
   if you.see_cell(pt[1].x, pt[1].y) then
     crawl.god_speaks("Kikubaaqudgha", "The human rises from the dead!")
