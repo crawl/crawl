@@ -265,11 +265,8 @@ bool TextDB::_needs_update() const
         en->translation = 0;
         return false;
     }
-#ifdef __EMSCRIPTEN__
-    return false;
-#else
+
     return ts != timestamp;
-#endif
 }
 
 void TextDB::_regenerate_db()

@@ -1294,10 +1294,7 @@ static bool verify_file_version(const string &file, time_t mtime)
         return major == TAG_MAJOR_VERSION
                && minor <= TAG_MINOR_VERSION
                && word == WORD_LEN
-#ifndef __EMSCRIPTEN__
-               && t == mtime
-#endif
-            ;
+               && t == mtime;
     }
     catch (const short_read_exception&)
     {
@@ -1328,14 +1325,11 @@ static bool _load_map_index(const string& cache, const string &base,
         int8_t word = unmarshallByte(inf);
         int64_t t = unmarshallSigned(inf);
         if (major != TAG_MAJOR_VERSION || minor > TAG_MINOR_VERSION
-            || word != WORD_LEN
-#ifndef __EMSCRIPTEN__
-            || t != mtime
-#endif
-            )
+            || word != WORD_LEN || t != mtime)
         {
             return false;
         }
+
         lc_global_prelude.read(inf);
         fclose(fp);
 
@@ -1353,11 +1347,7 @@ static bool _load_map_index(const string& cache, const string &base,
     int8_t word = unmarshallByte(inf);
     int64_t t = unmarshallSigned(inf);
     if (major != TAG_MAJOR_VERSION || minor > TAG_MINOR_VERSION
-            || word != WORD_LEN
-#ifndef __EMSCRIPTEN__
-            || t != mtime
-#endif
-            )
+        || word != WORD_LEN || t != mtime)
     {
         return false;
     }
