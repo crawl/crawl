@@ -4063,7 +4063,7 @@ int choose_ability_menu(const vector<talent>& talents)
     }
 #else
     abil_menu.set_title(
-        new ToggleableMenuEntry("Ability - do what?                  "
+        make_unique<ToggleableMenuEntry>("Ability - do what?                  "
                                 "Cost                            Failure",
                                 "Ability - describe what?            "
                                 "Cost                            Failure",

@@ -310,18 +310,16 @@ public:
     }
 };
 
-static MenuEntry *known_item_mangle(MenuEntry *me)
+static unique_ptr<MenuEntry> known_item_mangle(unique_ptr<MenuEntry> me)
 {
-    unique_ptr<InvEntry> ie(dynamic_cast<InvEntry*>(me));
-    KnownEntry *newme = new KnownEntry(ie.get());
-    return newme;
+    InvEntry* ie = dynamic_cast<InvEntry*>(me.get());
+    return make_unique<KnownEntry>(ie);
 }
 
-static MenuEntry *unknown_item_mangle(MenuEntry *me)
+static unique_ptr<MenuEntry> unknown_item_mangle(unique_ptr<MenuEntry> me)
 {
-    unique_ptr<InvEntry> ie(dynamic_cast<InvEntry*>(me));
-    UnknownEntry *newme = new UnknownEntry(ie.get());
-    return newme;
+    InvEntry* ie = dynamic_cast<InvEntry*>(me.get());
+    return make_unique<UnknownEntry>(ie);
 }
 
 static bool _identified_item_names(const item_def *it1,
