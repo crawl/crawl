@@ -742,4 +742,11 @@ FOUNTAIN(DNGN_RUNELIGHT, "runelight", "runelight", ETC_DISJUNCTION),
     FFT_OPAQUE | FFT_WALL | FFT_SOLID, MF_WALL,
 },
 
+{
+    DNGN_FRIGID_WALL, "frigid wall", "frigid wall",
+    DCHAR_WALL, DCHAR_FLOOR,
+    COLOUR_IS(ETC_ICE),
+    FFT_OPAQUE | FFT_WALL | FFT_SOLID, MF_WALL,
+},
+
 };

@@ -950,6 +950,18 @@ You are insubstantial and immune to many effects that require a solid body. You
 cannot be constricted, petrified, engulfed, skewered by barbs, covered in sticky
 flame, or caught by webs, nets, or bolas.
 %%%%
+frigid aura mutation
+
+Your breath radiates an intense chill which freezes nearby walls solid as you
+fight.
+
+Whenever you attack, you turn a random wall adjacent to your target or yourself
+frigid. Frigid walls deal damage to any enemies adjacent to them each turn - up
+to twice as much when an enemy is adjacent to as many as possible. This damage
+increases with your shapeshifting skill.
+
+The walls will rapidly melt again if you stop attacking.
+%%%%
 # ------ Makhleb destruction flavours ------
 Gehenna destruction mutation
 

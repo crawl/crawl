@@ -143,6 +143,57 @@ bool melee_attack::player_unrand_bad_attempt(const item_def *offhand,
     return ::player_unrand_bad_attempt(weapon, offhand, defender, check_only);
 }
 
+// Freeze a random wall adjacent to our target. If all those are frozen, freeze
+// one adjacent to the player instead. Regardless of either, extend the duration
+// of all frozen walls nearby.
+static void _do_rime_yak_freeze(coord_def targ)
+{
+    vector<coord_def> new_spots;
+    vector<coord_def> frigid_spots;
+
+    for (adjacent_iterator ai(targ); ai; ++ai)
+    {
+        if (feat_is_wall(env.grid(*ai)) && env.grid(*ai) != DNGN_FRIGID_WALL
+            && you.see_cell_no_trans(*ai))
+        {
+            new_spots.push_back(*ai);
+        }
+    }
+
+    if (new_spots.empty())
+    {
+        for (adjacent_iterator ai(you.pos()); ai; ++ai)
+        {
+            if (feat_is_wall(env.grid(*ai)) && env.grid(*ai) != DNGN_FRIGID_WALL
+                && you.see_cell_no_trans(*ai))
+            {
+                new_spots.push_back(*ai);
+            }
+        }
+    }
+
+    if (!new_spots.empty())
+    {
+        temp_change_terrain(new_spots[random2(new_spots.size())], DNGN_FRIGID_WALL,
+                            20, TERRAIN_CHANGE_RIME_YAK, MID_PLAYER);
+    }
+
+    // Extend duration of all frozen walls in range
+    for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
+    {
+        if (env.grid(*ri) == DNGN_FRIGID_WALL)
+        {
+            temp_change_terrain(*ri, DNGN_FRIGID_WALL, 30 + random_range(0, 30),
+                                TERRAIN_CHANGE_RIME_YAK, MID_PLAYER);
+        }
+    }
+
+    // Used to tell the game to run the wall damage phase after each player
+    // turn. Just needs to be longer than the max possible duration of walls
+    // which may exist.
+    you.duration[DUR_RIME_YAK_AURA] = 70;
+}
+
 bool melee_attack::handle_phase_attempted()
 {
     // Skip invalid and dummy attacks.
@@ -268,6 +319,12 @@ bool melee_attack::handle_phase_attempted()
             if (attacker->is_player())
                 mpr("The grapnel guides your strike.");
         }
+    }
+
+    if (attacker->is_player() && you.form == transformation::rime_yak
+        && defender && !defender->is_firewood() && !mons_aligned(&you, defender))
+    {
+        _do_rime_yak_freeze(defender->pos());
     }
 
     attack_occurred = true;

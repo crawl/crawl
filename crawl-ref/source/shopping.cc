@@ -705,6 +705,7 @@ unsigned int item_value(item_def item, bool ident)
             break;
 
         case TALISMAN_FLUX:
+        case TALISMAN_RIMEHORN:
             valued += 250;
             break;
 

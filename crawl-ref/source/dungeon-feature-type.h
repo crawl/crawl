@@ -46,6 +46,10 @@ enum dungeon_feature_type
     DNGN_CLEAR_STONE_WALL,
     DNGN_CLEAR_PERMAROCK_WALL,
 
+#if TAG_MAJOR_VERSION > 34
+    DNGN_FRIGID_WALL,
+#endif
+
     DNGN_GRATE,
 
     // Misc solid features
@@ -389,6 +393,7 @@ enum dungeon_feature_type
     DNGN_TRAP_DEVOURER,
     DNGN_ENTER_NECROPOLIS,
     DNGN_EXIT_NECROPOLIS,
+    DNGN_FRIGID_WALL,
 #endif
 
     NUM_FEATURES

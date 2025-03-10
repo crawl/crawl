@@ -64,6 +64,8 @@ constexpr int ENKINDLE_CHARGE_COST = 40;
 #define ENKINDLE_PROGRESS_KEY "enkindle_progress"
 #define ENKINDLE_GIFT_GIVEN_KEY "enkindle_gifted"
 
+#define RIME_AURA_LAST_POS "rime_aura_pos"
+
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
 #define HORROR_LVL_OVERWHELMING  5

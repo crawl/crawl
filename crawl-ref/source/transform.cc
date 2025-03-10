@@ -39,6 +39,7 @@
 #include "stringutil.h"
 #include "tag-version.h"
 #include "terrain.h"
+#include "timed-effects.h"
 #include "traps.h"
 #include "xom.h"
 
@@ -1005,6 +1006,25 @@ public:
     static const FormBatswarm &instance() { static FormBatswarm inst; return inst; }
 };
 
+class FormRimeYak : public Form
+{
+private:
+FormRimeYak() : Form(transformation::rime_yak) { }
+    DISALLOW_COPY_AND_ASSIGN(FormRimeYak);
+public:
+    static const FormRimeYak &instance() { static FormRimeYak inst; return inst; }
+
+        dice_def get_special_damage(bool random, int skill = -1) const override
+        {
+            const int pow = skill == -1 ? get_level(10) : skill * 10;
+
+            if (random)
+                return dice_def(2, 4 + div_rand_round(pow, 10));
+            else
+                return dice_def(2, 4 + pow / 10);
+        }
+};
+
 static const Form* forms[] =
 {
     &FormNone::instance(),
@@ -1044,6 +1064,7 @@ static const Form* forms[] =
     &FormSlaughter::instance(),
     &FormVampire::instance(),
     &FormBatswarm::instance(),
+    &FormRimeYak::instance(),
 };
 
 const Form* get_form(transformation xform)

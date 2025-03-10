@@ -2056,3 +2056,6 @@ icy_wall_overlay0 DNGN_WALL_ICY_WALL_OVERLAY
 icy_wall_overlay1
 icy_wall_overlay2
 icy_wall_overlay3
+
+rime_wall0 DNGN_WALL_FRIGID
+rime_wall1

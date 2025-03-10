@@ -1126,6 +1126,14 @@ rapier
 
 A slender, sharply pointed sword, with an uncommonly elegant design.
 %%%%
+rimehorn talisman
+
+A crude ornament carved from the horn of a rare arctic beast - so cold to the
+touch that ice still clings to it. Transforms the user into a rime yak, a hardy
+ungulate that is highly resistant to cold and whose breath is so frigid that it
+freezes the walls around itself as it fights. Being so attuned to arctic
+temperatures also makes it easier for the user to cast Ice magic.
+%%%%
 ring mail
 
 A light leather suit reinforced with a covering of metal rings. It is

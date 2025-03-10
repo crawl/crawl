@@ -1142,3 +1142,7 @@ Shroud status
 You are covered by a thin shroud of slime that may deflect a melee attack. When
 it does, the shroud will break for a short time, though it will soon repair
 itself naturally.
+%%%%
+Yak status
+
+You are a rime yak, fur encrusted with ice.

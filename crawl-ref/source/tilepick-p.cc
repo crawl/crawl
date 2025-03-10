@@ -510,6 +510,7 @@ tileidx_t tileidx_player()
 #endif
     case transformation::fungus:    ch = TILEP_TRAN_MUSHROOM;  break;
     case transformation::bat_swarm: ch = TILEP_TRAN_BAT_SWARM; break;
+    case transformation::rime_yak:  ch = TILEP_TRAN_RIME_YAK;  break;
     case transformation::dragon:
     {
         switch (you.species)

@@ -1259,6 +1259,7 @@ dragon TALISMAN_DRAGON
 storm TALISMAN_STORM
 death TALISMAN_DEATH
 vampire TALISMAN_VAMPIRE
+rimehorn TALISMAN_RIMEHORN
 
 %sdir item/misc/uncollected_runes
 generic MISC_UNCOLLECTED_RUNE_OF_ZOT

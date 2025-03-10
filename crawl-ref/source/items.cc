@@ -3913,6 +3913,8 @@ colour_t item_def::talisman_colour() const
         return YELLOW; // brown taken by staves
     case TALISMAN_FLUX:
         return CYAN; // could maybe swap this and death
+    case TALISMAN_RIMEHORN:
+        return LIGHTBLUE;
     case TALISMAN_MAW:
         return ETC_BLOOD;
     case TALISMAN_SERPENT:

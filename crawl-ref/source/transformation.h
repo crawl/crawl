@@ -38,6 +38,7 @@ enum class transformation
     slaughter,
     vampire,
     bat_swarm,
+    rime_yak,
     COUNT
 };
 constexpr int NUM_TRANSFORMS = static_cast<int>(transformation::COUNT);

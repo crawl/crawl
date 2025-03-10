@@ -567,6 +567,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_ORB_DAIS;
     case DNGN_SPIKE_LAUNCHER:
         return TILE_DNGN_SPIKE_LAUNCHER;
+    case DNGN_FRIGID_WALL:
+        return TILE_DNGN_WALL_FRIGID;
     default:
         return TILE_DNGN_ERROR;
     }
@@ -3023,6 +3025,7 @@ static tileidx_t _tileidx_talisman(const item_def &item)
     {
     case TALISMAN_BEAST:    return TILE_TALISMAN_BEAST;
     case TALISMAN_FLUX:    return TILE_TALISMAN_FLUX;
+    case TALISMAN_RIMEHORN: return TILE_TALISMAN_RIMEHORN;
     case TALISMAN_SERPENT:  return TILE_TALISMAN_SNAKE;
     case TALISMAN_MAW:      return TILE_TALISMAN_MAW;
     case TALISMAN_BLADE:    return TILE_TALISMAN_BLADE;

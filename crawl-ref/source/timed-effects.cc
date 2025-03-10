@@ -924,16 +924,15 @@ void timeout_binding_sigils()
         mprf(MSGCH_DURATION, "Your binding sigil disappears.");
 }
 
-// Force-cancel the player's toxic bog (in cases of !cancellation or quicksilver)
-void end_toxic_bog()
+void end_terrain_change(terrain_change_type type)
 {
     for (map_marker *mark : env.markers.get_all(MAT_TERRAIN_CHANGE))
     {
         map_terrain_change_marker *marker =
             dynamic_cast<map_terrain_change_marker*>(mark);
 
-        if (marker->change_type == TERRAIN_CHANGE_BOG)
-            revert_terrain_change(marker->pos, TERRAIN_CHANGE_BOG);
+        if (marker->change_type == type)
+            revert_terrain_change(marker->pos, type);
     }
 }
 

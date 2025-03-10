@@ -240,6 +240,11 @@ A rock wall
 
 A wall consisting of simple rock.
 %%%%
+A frigid wall
+
+A wall that radiates a chill so intense it can damage enemies which stand next
+to it.
+%%%%
 ########################################################################
 ### Features
 ########################################################################

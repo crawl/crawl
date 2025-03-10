@@ -77,6 +77,11 @@ static void _end_growing_destruction()
     you.props.erase(MAKHLEB_ATROCITY_STACKS_KEY);
 }
 
+static void _end_toxic_bog()
+{
+    end_terrain_change(TERRAIN_CHANGE_BOG);
+}
+
 // properties of the duration.
 enum duration_flags : uint32_t
 {
@@ -753,7 +758,7 @@ static const duration_def duration_data[] =
       MAGENTA, "Bog",
       "spewing sludge", "noxious bog",
       "You are spewing a noxious bog.", D_DISPELLABLE,
-      {{ "Your noxious spew wanes.", end_toxic_bog }}},
+      {{ "Your noxious spew wanes.", _end_toxic_bog }}},
     { DUR_FROZEN_RAMPARTS, LIGHTBLUE, "Ramparts", "freezing walls",
         "frozen ramparts", "You have covered nearby walls with an icy ambush.",
         D_DISPELLABLE},
@@ -788,6 +793,7 @@ static const duration_def duration_data[] =
     { DUR_PHALANX_BARRIER, 0, "", "phalanx barrier", "phalanx barrier", "", D_NO_FLAGS},
     { DUR_TRICKSTER_GRACE, 0, "", "", "trickster", "", D_NO_FLAGS, {{""}}},
     { DUR_DROWSY, 0, "Drowsy", "", "drowsy", "", D_NO_FLAGS, {{"You feel less drowsy."}}},
+    { DUR_RIME_YAK_AURA, 0, "", "", "cold aura", "", D_NO_FLAGS, {{""}}},
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

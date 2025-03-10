@@ -362,6 +362,9 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
         fail_reduce = fail_reduce * 2 / 3;
     }
 
+    if (you.form == transformation::rime_yak && spell_typematch(spell, spschool::ice))
+        fail_reduce = fail_reduce * 2 / 3;
+
     const int wizardry = player_wizardry();
 
     if (wizardry > 0)

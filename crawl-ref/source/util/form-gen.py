@@ -270,7 +270,7 @@ class FormScaling:
 
 def parse_scaling(s):
     return FormScaling(
-                base = parse_num(s['base'], 0, 100) if 'base' in s else 0,
+                base = parse_num(s['base'], -100, 100) if 'base' in s else 0,
                 scaling = parse_num(s['scaling'], 0, 100    ) if 'scaling' in s else 0,
                 xl_based = parse_bool(s['xl_based'] if 'xl_based' in s else False))
 

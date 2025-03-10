@@ -3102,6 +3102,7 @@ string talisman_type_name(int type)
     {
     case TALISMAN_BEAST:    return "beast talisman";
     case TALISMAN_FLUX:     return "flux talisman";
+    case TALISMAN_RIMEHORN: return "rimehorn talisman";
     case TALISMAN_MAW:      return "maw talisman";
     case TALISMAN_SERPENT:  return "serpent talisman";
     case TALISMAN_BLADE:    return "blade talisman";

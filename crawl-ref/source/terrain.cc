@@ -11,6 +11,7 @@
 #include <functional>
 #include <sstream>
 
+#include "act-iter.h"
 #include "areas.h"
 #include "attack.h"
 #include "branch.h"
@@ -2553,6 +2554,50 @@ void ice_wall_damage(monster &mons, int delay)
         {
             behaviour_event(&mons, ME_WHACK, &you);
             mons.expose_to_element(BEAM_COLD, orig_dam, &you);
+        }
+    }
+}
+
+void frigid_walls_damage(int delay)
+{
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+    {
+        if (mi->wont_attack())
+            continue;
+
+        int wall_count = 0;
+        for (adjacent_iterator ai(mi->pos()); ai; ++ai)
+            if (env.grid(*ai) == DNGN_FRIGID_WALL)
+                ++wall_count;
+
+        if (wall_count == 0)
+            continue;
+
+        int base_dmg = get_form()->get_special_damage().roll();
+        const int wall_bonus = (wall_count - 1) * 100 / 6;
+        base_dmg = div_rand_round(base_dmg * (100 + wall_bonus), 100);
+
+        const int post_ac_dam = mi->apply_ac(base_dmg);
+        const int orig_dam = div_rand_round(delay * post_ac_dam, BASELINE_DELAY);
+
+        bolt beam;
+        beam.flavour = BEAM_COLD;
+        beam.thrower = KILL_YOU;
+        int dam = mons_adjust_flavoured(*mi, beam, orig_dam);
+        mprf("The frigid air chills %s%s%s",
+            you.can_see(**mi) ? mi->name(DESC_THE).c_str() : "something",
+            dam ? "" : " but does no damage",
+            attack_strength_punctuation(dam).c_str());
+
+        if (dam > 0)
+        {
+            mi->hurt(&you, dam, BEAM_COLD);
+
+            if (mi->alive())
+            {
+                behaviour_event(*mi, ME_WHACK, &you);
+                mi->expose_to_element(BEAM_COLD, orig_dam, &you);
+            }
         }
     }
 }
