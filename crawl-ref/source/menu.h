@@ -394,8 +394,8 @@ public:
 protected:
     string _title_prompt_help_tag;
 
-    MenuEntry *title;
-    MenuEntry *title2;
+    unique_ptr<MenuEntry> title;
+    unique_ptr<MenuEntry> title2;
     bool m_indent_title;
 
     int flags;

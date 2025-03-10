@@ -1956,7 +1956,7 @@ public:
         set_tag("game_menu");
         action_cycle = Menu::CYCLE_NONE;
         menu_action  = Menu::ACT_EXECUTE;
-        set_title(new MenuEntry(
+        set_title(make_unique<MenuEntry>(
             string("<w>" CRAWL " ") + Version::Long + "</w>",
             MEL_TITLE));
         on_single_selection = [this](const MenuEntry& item)
@@ -1989,39 +1989,39 @@ public:
     void fill_entries()
     {
         clear();
-        add_entry(new CmdMenuEntry("", MEL_SUBTITLE));
-        add_entry(new CmdMenuEntry("Return to game", MEL_ITEM, CK_ESCAPE,
+        add_entry(make_unique<CmdMenuEntry>("", MEL_SUBTITLE));
+        add_entry(make_unique<CmdMenuEntry>("Return to game", MEL_ITEM, CK_ESCAPE,
             CMD_NO_CMD, false));
         items[1]->add_tile(tileidx_command(CMD_GAME_MENU));
         // n.b. CMD_SAVE_GAME_NOW crashes on returning to the main menu if we
         // don't exit out of this popup now, not sure why
-        add_entry(new CmdMenuEntry(
+        add_entry(make_unique<CmdMenuEntry>(
             (crawl_should_restart(game_exit::save)
                             ? "Save and return to main menu"
                             : "Save and exit"),
             MEL_ITEM, 'S', CMD_SAVE_GAME_NOW, false));
-        add_entry(new CmdMenuEntry("Generate and view character dump",
+        add_entry(make_unique<CmdMenuEntry>("Generate and view character dump",
             MEL_ITEM, '#', CMD_SHOW_CHARACTER_DUMP));
 #ifdef USE_TILE_LOCAL
-        add_entry(new CmdMenuEntry("Edit player tile",
+        add_entry(make_unique<CmdMenuEntry>("Edit player tile",
             MEL_ITEM, '-', CMD_EDIT_PLAYER_TILE));
 #endif
-        add_entry(new CmdMenuEntry("Edit macros",
+        add_entry(make_unique<CmdMenuEntry>("Edit macros",
             MEL_ITEM, '~', CMD_MACRO_MENU));
-        add_entry(new CmdMenuEntry("Help and manual",
+        add_entry(make_unique<CmdMenuEntry>("Help and manual",
             MEL_ITEM, '?', CMD_DISPLAY_COMMANDS));
-        add_entry(new CmdMenuEntry("Lookup info",
+        add_entry(make_unique<CmdMenuEntry>("Lookup info",
             MEL_ITEM, '/', CMD_LOOKUP_HELP));
 #ifdef TARGET_OS_MACOSX
-        add_entry(new CmdMenuEntry("Show options file in finder",
+        add_entry(make_unique<CmdMenuEntry>("Show options file in finder",
             MEL_ITEM, 'O', CMD_REVEAL_OPTIONS));
 #endif
 #ifdef __ANDROID__
-        add_entry(new CmdMenuEntry("Toggle on-screen keyboard",
+        add_entry(make_unique<CmdMenuEntry>("Toggle on-screen keyboard",
             MEL_ITEM, CK_F12, CMD_TOGGLE_KEYBOARD));
 #endif
-        add_entry(new CmdMenuEntry("", MEL_SUBTITLE));
-        add_entry(new CmdMenuEntry(
+        add_entry(make_unique<CmdMenuEntry>("", MEL_SUBTITLE));
+        add_entry(make_unique<CmdMenuEntry>(
                             "Quit and <lightred>abandon character</lightred>",
             MEL_ITEM, 'Q', CMD_QUIT, false));
     }

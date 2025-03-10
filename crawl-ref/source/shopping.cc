@@ -1159,7 +1159,7 @@ void ShopMenu::purchase_selected()
     {
         ASSERT(cost == 0);
         buying_from_list = true;
-        for (auto item : items)
+        for (const auto& item : items)
         {
             auto e = dynamic_cast<ShopEntry*>(item.get());
             if (shopping_list.is_on_list(*e->item, &pos))
@@ -1290,19 +1290,19 @@ void ShopMenu::resort()
     }
     case ORDER_PRICE:
         sort(begin(items), end(items),
-             [](MenuEntry* a, MenuEntry* b)
+             [](unique_ptr<MenuEntry>& a, unique_ptr<MenuEntry>& b)
              {
-                 return dynamic_cast<ShopEntry*>(a)->cost
-                        < dynamic_cast<ShopEntry*>(b)->cost;
+                 return dynamic_cast<ShopEntry*>(a.get())->cost
+                        < dynamic_cast<ShopEntry*>(b.get())->cost;
              });
         break;
     case ORDER_ALPHABETICAL:
         sort(begin(items), end(items),
-             [this](MenuEntry* a, MenuEntry* b) -> bool
+             [this](unique_ptr<MenuEntry>& a, unique_ptr<MenuEntry>& b)
              {
                  const bool id = shoptype_identifies_stock(shop.type);
-                 return dynamic_cast<ShopEntry*>(a)->item->name(DESC_PLAIN, false, id)
-                        < dynamic_cast<ShopEntry*>(b)->item->name(DESC_PLAIN, false, id);
+                 return dynamic_cast<ShopEntry*>(a.get())->item->name(DESC_PLAIN, false, id)
+                        < dynamic_cast<ShopEntry*>(b.get())->item->name(DESC_PLAIN, false, id);
              });
         break;
     case NUM_ORDERS:

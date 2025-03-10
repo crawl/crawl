@@ -37,7 +37,7 @@ public:
 
     // This loads items in the order they are put into the list (sequentially)
     menu_letter load_items_seq(const vector<const item_def*> &mitems,
-                               unique_ptr<InvEntry>(*procfn)(unique_ptr<InvEntry> me) = nullptr,
+                               unique_ptr<MenuEntry>(*procfn)(unique_ptr<MenuEntry> me) = nullptr,
                                menu_letter ckey = 'a')
     {
         for (const item_def *item : mitems)

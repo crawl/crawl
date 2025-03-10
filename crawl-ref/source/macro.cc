@@ -1538,7 +1538,7 @@ public:
 
         const bool existed = get_map().count(key);
 
-        MappingEditMenu pop = MappingEditMenu(key,
+        MappingEditMenu pop(key,
             existed ? get_map()[key] : keyseq(), *this);
         if (pop.input_mapping())
         {

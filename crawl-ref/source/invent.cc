@@ -929,7 +929,7 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
 
         sort_menu(items_in_class, cond);
         if (forced_first)
-            items_in_class.insert(items_in_class.begin(),forced_first);
+            items_in_class.insert (items_in_class.begin(), std::move(forced_first));
 
         for (unique_ptr<InvEntry>& ie : items_in_class)
         {
