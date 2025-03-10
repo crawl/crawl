@@ -9,3 +9,4 @@ melds: [held, gloves]
 unarmed: {base: 12, scaling: 8}
 unarmed_colour: red
 unarmed_verbs: [hit, slash, slice, shred]
+offhand_punch: yes

@@ -135,12 +135,11 @@ public:
      */
     virtual brand_type get_uc_brand() const { return uc_brand; }
 
-    virtual bool can_offhand_punch() const { return can_wield(); }
     virtual string get_uc_attack_name(string default_name) const;
     virtual int slay_bonus(bool /*random*/ = true, int /*skill*/ = -1) const { return 0; }
     virtual int contam_dam(bool /*random*/ = true, int /*skill*/ = -1) const { return 0; }
     virtual int get_ac_bonus(int skill = -1) const;
-    virtual int ev_bonus(int /*skill*/ = -1) const { return 0; }
+    virtual int ev_bonus(int /*skill*/ = -1) const;
     virtual int get_base_ac_penalty(int /*base*/, int /*skill*/ = -1) const { return 0; }
     virtual int get_vamp_chance(int /*skill*/ = -1) const { return 0; }
     virtual dice_def get_ability_damage(bool /*random*/, int /*skill*/ = -1) const { return dice_def(); }
@@ -151,6 +150,7 @@ public:
     bool player_can_fly() const;
     bool player_can_swim() const;
     bool player_likes_water() const;
+    bool can_offhand_punch() const;
 
     string player_prayer_action() const;
     string melding_description(bool itemized) const;
@@ -239,6 +239,9 @@ protected:
     /// bonuses to AC when in this form, potentially scaling with skill or XL
     const FormScaling ac;
 
+    /// bonuses to EV when in this form, potentially scaling with skill or XL
+    const FormScaling ev;
+
     /// See Form::get_base_unarmed_damage().
     const FormScaling unarmed_bonus_dam;
 
@@ -260,6 +263,8 @@ private:
      * ability to swim (traverse deep water).
      */
     const form_capability can_swim;
+
+    const form_capability offhand_punch;
 
     /// See Form::get_uc_brand().
     const brand_type uc_brand;

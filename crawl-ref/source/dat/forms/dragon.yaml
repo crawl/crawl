@@ -13,6 +13,7 @@ unarmed: {base: 15, scaling: 9}
 unarmed_colour: green
 unarmed_name: Teeth and claws
 unarmed_verbs: [hit, claw, bite, maul]
+offhand_punch: yes
 can_fly: yes
 can_swim: no
 changes_anatomy: yes

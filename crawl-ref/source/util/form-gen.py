@@ -88,6 +88,7 @@ class Form(MutableMapping):
         self["full_enum"] = "transformation::" + self['enum']
         self["joined_resists"] = ' | '.join(r.format() for r in self["resists"])
         self["ac_scaling"] = self["ac"].format()
+        self["ev_scaling"] = self["ev"].format()
         self["unarmed_scaling"] = self["unarmed"].format()
 
         if 'TAG_MAJOR_VERSION' in s:
@@ -303,6 +304,7 @@ keyfns = {
     'move_speed': Field(lambda s: parse_num(s, 1, 100)),
 
     'ac': Field(parse_scaling),
+    'ev': Field(parse_scaling),
     'can_cast': Field(parse_bool),
     'unarmed': Field(parse_scaling),
 
@@ -313,6 +315,7 @@ keyfns = {
 
     'can_fly': Field(parse_capability),
     'can_swim': Field(parse_capability),
+    'offhand_punch': Field(parse_capability),
     'changes_anatomy': Field(parse_bool),
     'changes_substance': Field(parse_bool),
     'holiness': Field(lambda s: "MH_" + s.upper()),
@@ -357,6 +360,7 @@ defaults = {
     'move_speed': 10,
 
     'ac': FormScaling(),
+    'ev': FormScaling(),
     'can_cast': 'true',
     'unarmed': FormScaling(),
 
@@ -367,6 +371,7 @@ defaults = {
 
     'can_fly': "FC_DEFAULT",
     'can_swim': "FC_DEFAULT",
+    'offhand_punch': "FC_DEFAULT",
     'changes_anatomy': "false",
     'changes_substance': "false",
     'holiness': "MH_NONE",

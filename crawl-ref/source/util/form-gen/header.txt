@@ -36,6 +36,7 @@ struct form_entry
 
     // Row 6:
     FormScaling ac;
+    FormScaling ev;
     bool can_cast;
     FormScaling unarmed_bonus_dam;
 
@@ -48,6 +49,7 @@ struct form_entry
     // Row 8:
     form_capability can_fly;
     form_capability can_swim;
+    form_capability offhand_punch;
     bool changes_anatomy;
     bool changes_substance;
     mon_holy_type holiness;

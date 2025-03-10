@@ -145,9 +145,9 @@ Form::Form(const form_entry &fe)
       hand_name(fe.hand_name), foot_name(fe.foot_name),
       flesh_equivalent(fe.flesh_equivalent),
       long_name(fe.long_name), description(fe.description),
-      resists(fe.resists), ac(fe.ac),
+      resists(fe.resists), ac(fe.ac), ev(fe.ev),
       unarmed_bonus_dam(fe.unarmed_bonus_dam),
-      can_fly(fe.can_fly), can_swim(fe.can_swim),
+      can_fly(fe.can_fly), can_swim(fe.can_swim), offhand_punch(fe.offhand_punch),
       uc_brand(fe.uc_brand), uc_attack(fe.uc_attack),
       prayer_action(fe.prayer_action), equivalent_mons(fe.equivalent_mons),
       hp_mod(fe.hp_mod), fakemuts(fe.fakemuts), badmuts(fe.badmuts)
@@ -259,10 +259,25 @@ int Form::get_ac_bonus(int skill) const
     return max(0, scaling_value(ac, false, skill, 100));
 }
 
+int Form::ev_bonus(int skill) const
+{
+    return max(0, scaling_value(ev, false, skill, 1));
+}
+
 int Form::get_base_unarmed_damage(bool random, int skill) const
 {
     // All forms start with base 3 UC damage.
     return 3 + max(0, divided_scaling(unarmed_bonus_dam, random, skill, 100));
+}
+
+bool Form::can_offhand_punch() const
+{
+    if (offhand_punch == FC_ENABLE)
+        return true;
+    else if (offhand_punch == FC_FORBID)
+        return false;
+    else
+        return can_wield();
 }
 
 /// `force_talisman` means to calculate HP as if we were in a talisman form (i.e. with penalties with insufficient Shapeshifting skill),
@@ -499,12 +514,6 @@ public:
     {
         return divided_scaling(FormScaling().Base(30).Scaling(20), random, skill, 100);
     }
-
-    int ev_bonus(int /*skill*/) const override
-    {
-        return 4;
-    }
-
 };
 
 class FormBlade : public Form
@@ -572,8 +581,6 @@ public:
         // Round up.
         return (shortfall * base + div - 1) / div;
     }
-
-    bool can_offhand_punch() const override { return true; }
 
     /**
      * Get the name displayed in the UI for the form's unarmed-combat 'weapon'.
@@ -714,8 +721,6 @@ public:
                 return 0;
         }
     }
-
-    bool can_offhand_punch() const override { return true; }
 };
 
 class FormDeath : public Form
@@ -872,12 +877,6 @@ private:
 public:
     static const FormStorm &instance() { static FormStorm inst; return inst; }
 
-    int ev_bonus(int skill) const override
-    {
-        return max(0, divided_scaling(FormScaling().Base(20).Scaling(7),
-                                    false, skill, 100));
-    }
-
     // XXX: Currently only used for the damage *descriptions*, alas.
     dice_def get_ability_damage(bool random, int skill = -1) const override
     {
@@ -886,8 +885,6 @@ public:
 
         return zap_damage(ZAP_BLINKBOLT, pow, false, random);
     }
-
-    bool can_offhand_punch() const override { return true; }
 
     /**
      * Get the name displayed in the UI for the form's unarmed-combat 'weapon'.
