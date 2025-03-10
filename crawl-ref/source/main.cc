@@ -239,20 +239,27 @@ static void _startup_asserts()
 __attribute__((externally_visible))
 # endif
 #endif
-int main(int argc, char *argv[])
-{
 #ifdef __EMSCRIPTEN__
-    EM_ASM({
+EM_ASYNC_JS(void, _init_indexeddb_file_system, (), {
+    await new Promise((resolve, reject) => {
         FS.mkdir('/saves');
         FS.mount(IDBFS, { autoPersist: true }, '/saves');
         FS.mkdir('/morgue');
         FS.mount(IDBFS, { autoPersist: true }, '/morgue');
+        // This must complete before we proceed to load the game, otherwise
+        // there's no chance to find the cached des and db files
         FS.syncfs(true, function (err) {
-            // Error
+            if (err)
+                reject(err);
+            else
+                resolve();
         });
     });
+});
 #endif
 
+int main(int argc, char *argv[])
+{
 #ifdef DGAMELAUNCH
     // avoid commas instead of dots, etc, on CDO
     setlocale(LC_CTYPE, "");
@@ -266,6 +273,11 @@ int main(int argc, char *argv[])
         exit(1);
     }
 #endif
+
+#ifdef __EMSCRIPTEN__
+    _init_indexeddb_file_system();
+#endif
+
 #ifdef DEBUG_GLOBALS
     real_Options = new game_options();
     real_you = new player();
