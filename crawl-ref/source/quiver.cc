@@ -2470,7 +2470,7 @@ namespace quiver
               any_items(_any_items_to_quiver())
         {
             set_tag("actions");
-            set_title(new MenuEntry("", MEL_TITLE));
+            set_title(make_unique<MenuEntry>("", MEL_TITLE));
 
             on_single_selection = [this](const MenuEntry& item)
                 {
@@ -2538,7 +2538,7 @@ namespace quiver
             string action_desc = a->quiver_description();
             if (you.quiver_action.item_is_quivered(a->get_item()))
                 action_desc += " (quivered)";
-            MenuEntry *me = new MenuEntry(action_desc,
+            unique_ptr<MenuEntry> me = make_unique<MenuEntry>(action_desc,
                                                 MEL_ITEM, 1,
                                                 (int) hotkey);
             me->colour = a->quiver_color();
@@ -2548,7 +2548,7 @@ namespace quiver
             for (auto t : a->get_tiles())
                 me->add_tile(t);
 #endif
-            add_entry(me);
+            add_entry(std::move(me));
         }
 
         void sync_focus(bool force=false)
@@ -2650,7 +2650,7 @@ namespace quiver
             if (it_count && show_headers)
             {
                 add_entry(
-                    new MenuEntry("<lightcyan>Items</lightcyan>" + keyhelp,
+                    make_unique<MenuEntry>("<lightcyan>Items</lightcyan>" + keyhelp,
                     MEL_SUBTITLE));
                 first_spell += 1;
                 first_abil += 1;
@@ -2663,7 +2663,7 @@ namespace quiver
                 if (i == it_count && spell_count && show_headers)
                 {
                     add_entry(
-                        new MenuEntry("<lightcyan>Spells</lightcyan>" + keyhelp,
+                        make_unique<MenuEntry>("<lightcyan>Spells</lightcyan>" + keyhelp,
                         MEL_SUBTITLE));
                     first_spell += 1;
                     first_abil += 1;
@@ -2671,7 +2671,7 @@ namespace quiver
                 else if (i == it_count + spell_count && show_headers)
                 {
                     add_entry(
-                        new MenuEntry("<lightcyan>Abilities</lightcyan>" + keyhelp,
+                        make_unique<MenuEntry>("<lightcyan>Abilities</lightcyan>" + keyhelp,
                         MEL_SUBTITLE));
                     first_abil += 1;
                 }

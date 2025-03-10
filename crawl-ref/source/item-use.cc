@@ -474,7 +474,8 @@ void UseItemMenu::populate_menu()
         if (!you.weapon())
             hands_string += " (current attack)";
 
-        MenuEntry *hands = new MenuEntry(hands_string, MEL_ITEM);
+        unique_ptr<MenuEntry> hands = make_unique<MenuEntry>(hands_string,
+            MEL_ITEM);
         if (!you.weapon())
             hands->colour = LIGHTGREEN;
         hands->add_hotkey('-');
@@ -483,7 +484,7 @@ void UseItemMenu::populate_menu()
                 lastch = '-';
                 return false;
             };
-        add_entry(hands);
+        add_entry(std::move(hands));
     }
 
     if (!item_inv.empty())
@@ -492,15 +493,17 @@ void UseItemMenu::populate_menu()
         // items.
         if (!item_floor.empty())
         {
-            inv_header = new MenuEntry("Inventory Items", MEL_TITLE);
-            inv_header->colour = LIGHTCYAN;
-            add_entry(inv_header);
+            unique_ptr<MenuEntry> temp = make_unique<MenuEntry>("Inventory Items", MEL_TITLE);
+            temp->colour = LIGHTCYAN;
+            // TODO: do the lifetimes work out?
+            inv_header = temp.get();
+            add_entry(std::move(temp));
         }
         load_items(item_inv,
-                    [&](MenuEntry* entry) -> MenuEntry*
+                    [&](unique_ptr<MenuEntry> entry) -> unique_ptr<MenuEntry>
                     {
                         if (item_type_filter == OBJ_SCROLLS)
-                            _note_tele_cancel(entry);
+                            _note_tele_cancel(entry.get());
                         return entry;
                     }, 'a', true, use_category_selection);
     }
@@ -511,19 +514,22 @@ void UseItemMenu::populate_menu()
 #ifndef USE_TILE
         // vertical padding for console
         if (!item_inv.empty())
-            add_entry(new MenuEntry("", MEL_TITLE));
+            add_entry(make_unique<MenuEntry>("", MEL_TITLE));
 #endif
         // Load floor items to menu. Always add a subtitle, even if there are
         // no inv items.
-        floor_header = new MenuEntry("Floor Items", MEL_TITLE);
-        floor_header->colour = LIGHTCYAN;
-        add_entry(floor_header);
+
+        unique_ptr<MenuEntry> temp_floor_header = make_unique<MenuEntry>("Floor Items", MEL_TITLE);
+        temp_floor_header->colour = LIGHTCYAN;
+        // TODO: do the lifetimes work out?
+        floor_header = temp_floor_header.get();
+        add_entry(std::move(temp_floor_header));
 
         load_items(item_floor,
-                    [&](MenuEntry* entry) -> MenuEntry*
+                    [&](unique_ptr<MenuEntry> entry) -> unique_ptr<MenuEntry>
                     {
                         if (item_type_filter == OBJ_SCROLLS)
-                            _note_tele_cancel(entry);
+                            _note_tele_cancel(entry.get());
                         return entry;
                     }, 'a', true, false);
     }
@@ -576,7 +582,7 @@ void UseItemMenu::save_hover()
         return;
     }
 
-    auto tgt = _entry_to_item(items[last_hovered]);
+    auto tgt = _entry_to_item(items[last_hovered].get());
     if (!tgt || !in_inventory(*tgt))
     {
         saved_inv_item = NON_ITEM;
@@ -590,7 +596,7 @@ void UseItemMenu::restore_hover(bool preserve_pos)
     // if there is a saved hovered item, look for that first
     if (saved_inv_item != NON_ITEM)
         for (int i = 0; i < static_cast<int>(items.size()); i++)
-            if (auto tgt = _entry_to_item(items[i]))
+            if (auto tgt = _entry_to_item(items[i].get()))
                 if (tgt->link == saved_inv_item)
                 {
                     set_hovered(i);
@@ -626,7 +632,7 @@ void UseItemMenu::update_sections()
         if (items[i]->level == MEL_ITEM)
         {
             items[i]->set_enabled(is_inventory);
-            if (is_inventory && !_enable_equip_check(oper, items[i]))
+            if (is_inventory && !_enable_equip_check(oper, items[i].get()))
                 items[i]->on_select = _disable_item;
         }
     for (; i < static_cast<int>(items.size()); i++)
@@ -727,7 +733,7 @@ bool UseItemMenu::examine_index(int i)
         return InvMenu::examine_index(i);
     else // floor item
     {
-        auto desc_tgt = _entry_to_item(items[i]);
+        auto desc_tgt = _entry_to_item(items[i].get());
         ASSERT(desc_tgt);
         return describe_item(*desc_tgt, nullptr, false);
     }

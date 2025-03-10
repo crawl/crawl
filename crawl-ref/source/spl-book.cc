@@ -819,7 +819,7 @@ private:
 
             desc << spell.difficulty;
 
-            MenuEntry* me = new MenuEntry(desc.str(), MEL_ITEM, 1,
+            unique_ptr<MenuEntry> me = make_unique<MenuEntry>(desc.str(), MEL_ITEM, 1,
                     // don't add a hotkey if you can't memorise/cast it
                     unavailable ? 0 : char(hotkey));
             // But do increment hotkeys anyway, to keep the hotkeys consistent.
@@ -830,7 +830,7 @@ private:
             me->add_tile(tile_def(tileidx_spell(spell.spell)));
 
             me->data = &(spell.spell);
-            add_entry(me);
+            add_entry(std::move(me));
             if (hovered_spell == spell.spell)
                 new_hover = items.size() - 1;
 
@@ -853,7 +853,7 @@ public:
     {
         set_highlighter(nullptr);
         // Actual text handled by calc_title
-        set_title(new MenuEntry(""), true, true);
+        set_title(make_unique<MenuEntry>(""), true, true);
 
         if (you.divine_exegesis)
         {

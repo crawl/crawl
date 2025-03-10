@@ -871,6 +871,11 @@ ifdef COVERAGE
     endif
 endif
 
+ifdef ASAN
+CFOTHERS += -fsanitize=address -fno-omit-frame-pointer
+LDFLAGS += -fsanitize=address -fno-omit-frame-pointer
+endif
+
 ifdef FULLDEBUG
 DEFINES += -DFULLDEBUG
 endif

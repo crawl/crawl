@@ -1219,7 +1219,7 @@ public:
           mode(MENU_MUTS)
     {
         set_highlighter(nullptr);
-        set_title(new MenuEntry("Innate Abilities, Weirdness & Mutations",
+        set_title(make_unique<MenuEntry>("Innate Abilities, Weirdness & Mutations",
                                 MEL_TITLE));
         menu_action = ACT_EXAMINE;
         update_entries();
@@ -1250,50 +1250,50 @@ private:
             const string tal_name = you.active_talisman.name(DESC_PLAIN, false, false, false);
             const string head = make_stringf("<w>%s</w>:",
                                              uppercase_first(tal_name).c_str());
-            add_entry(new MenuEntry(head, MEL_ITEM, 1, 0));
+            add_entry(make_unique<MenuEntry>(head, MEL_ITEM, 1, 0));
 
             if (is_artefact(you.active_talisman))
             {
                 vector<string> artps;
                 desc_randart_props(you.active_talisman, artps);
                 for (string desc : artps)
-                    add_entry(new MenuEntry(desc, MEL_ITEM, 1, 0));
+                    add_entry(make_unique<MenuEntry>(desc, MEL_ITEM, 1, 0));
             }
         }
 
 
         talisman_form_desc tfd;
         describe_talisman_form(you.default_form, tfd, true);
-        add_entry(new MenuEntry("", MEL_ITEM, 1, 0)); // XXX spacing kludge?
+        add_entry(make_unique<MenuEntry>("", MEL_ITEM, 1, 0)); // XXX spacing kludge?
         if (you.active_talisman.defined() && is_artefact(you.active_talisman))
         {
-            add_entry(new MenuEntry("<w>Skill:</w>", MEL_ITEM, 1, 0));
-            add_entry(new MenuEntry("", MEL_ITEM, 1, 0)); // XXX spacing kludge?
+            add_entry(make_unique<MenuEntry>("<w>Skill:</w>", MEL_ITEM, 1, 0));
+            add_entry(make_unique<MenuEntry>("", MEL_ITEM, 1, 0)); // XXX spacing kludge?
         }
         for (auto skinfo : tfd.skills)
         {
             const string label = make_stringf("%s: %s\n", skinfo.first.c_str(), skinfo.second.c_str());
-            add_entry(new MenuEntry(label, MEL_ITEM, 1, 0));
+            add_entry(make_unique<MenuEntry>(label, MEL_ITEM, 1, 0));
         }
         if (!tfd.defenses.empty())
         {
-            add_entry(new MenuEntry("<w>Defence:</w>", MEL_ITEM, 1, 0));
-            add_entry(new MenuEntry("", MEL_ITEM, 1, 0)); // XXX  spacing kludge?
+            add_entry(make_unique<MenuEntry>("<w>Defence:</w>", MEL_ITEM, 1, 0));
+            add_entry(make_unique<MenuEntry>("", MEL_ITEM, 1, 0)); // XXX  spacing kludge?
         }
         for (auto skinfo : tfd.defenses)
         {
             const string label = make_stringf("%s: %s\n", skinfo.first.c_str(), skinfo.second.c_str());
-            add_entry(new MenuEntry(label, MEL_ITEM, 1, 0));
+            add_entry(make_unique<MenuEntry>(label, MEL_ITEM, 1, 0));
         }
         if (!tfd.offenses.empty())
         {
-            add_entry(new MenuEntry("<w>Offence:</w>", MEL_ITEM, 1, 0));
-            add_entry(new MenuEntry("", MEL_ITEM, 1, 0)); // XXX  spacing kludge?
+            add_entry(make_unique<MenuEntry>("<w>Offence:</w>", MEL_ITEM, 1, 0));
+            add_entry(make_unique<MenuEntry>("", MEL_ITEM, 1, 0)); // XXX  spacing kludge?
         }
         for (auto skinfo : tfd.offenses)
         {
             const string label = make_stringf("%s: %s\n", skinfo.first.c_str(), skinfo.second.c_str());
-            add_entry(new MenuEntry(label, MEL_ITEM, 1, 0));
+            add_entry(make_unique<MenuEntry>(label, MEL_ITEM, 1, 0));
         }
     }
 
@@ -1306,29 +1306,29 @@ private:
             if (fakemut.second.empty())
                 continue;
 
-            MenuEntry* me;
+            unique_ptr<MenuEntry> me;
             // Add a full clickable entry if there's a long description for this
             // fakemut, and a non-clickable one otherwise.
             if (_fakemut_has_description(fakemut.first))
             {
-                me = new MenuEntry(fakemut.second, MEL_ITEM, 2, hotkey);
+                me = make_unique<MenuEntry>(fakemut.second, MEL_ITEM, 2, hotkey);
                 me->data = &fakemut.first;
                 ++hotkey;
             }
             else
             {
-                me = new MenuEntry(fakemut.second, MEL_ITEM, 2, 0);
+                me = make_unique<MenuEntry>(fakemut.second, MEL_ITEM, 2, 0);
                 me->indent_no_hotkeys = !muts.empty();
             }
 
-            add_entry(me);
+            add_entry(std::move(me));
         }
 
         for (mutation_type &mut : muts)
         {
             const string desc = mutation_desc(mut, -1, true,
                                               you.sacrifices[mut] != 0);
-            MenuEntry* me = new MenuEntry(desc, MEL_ITEM, 1, hotkey);
+            unique_ptr<MenuEntry> me = make_unique<MenuEntry>(desc, MEL_ITEM, 1, hotkey);
             ++hotkey;
             me->data = &mut;
 #ifdef USE_TILE
@@ -1336,7 +1336,7 @@ private:
             if (tile != 0)
                 me->add_tile(tile_def(tile + you.get_mutation_level(mut, false) - 1));
 #endif
-            add_entry(me);
+            add_entry(std::move(me));
         }
 
         const vector<level_up_mutation> &xl_muts = get_species_def(you.species).level_up_mutations;
@@ -1366,11 +1366,12 @@ private:
                     const string desc = make_stringf("<darkgrey>[%s]</darkgrey> XL %d",
                                                         mut_desc.c_str(),
                                                         mut.xp_level);
-                    MenuEntry* me = new MenuEntry(desc, MEL_ITEM, 1, hotkey);
+                    unique_ptr<MenuEntry> me = make_unique<MenuEntry>(
+                        desc, MEL_ITEM, 1, hotkey);
                     ++hotkey;
                     // XXX: Ugh...
                     me->data = (void*)&mut.mut;
-                    add_entry(me);
+                    add_entry(std::move(me));
 
                     has_future_muts = true;
                 }
@@ -1379,7 +1380,7 @@ private:
 
         if (items.empty())
         {
-            add_entry(new MenuEntry("You are rather mundane.",
+            add_entry(make_unique<MenuEntry>("You are rather mundane.",
                                     MEL_ITEM, 1, 0));
         }
     }
