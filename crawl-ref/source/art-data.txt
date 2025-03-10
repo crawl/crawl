@@ -926,10 +926,9 @@ TILE:    urand_salamander
 TILE_EQ: leather_red
 FIRE:    2
 COLD:    -2
-BOOL:    special
+BOOL:    enh_fire, special
 INSCRIP: Flames, rFlCloud
-DESCRIP: Flames:    It surrounds you with flame clouds and enhances your fire
- magic.
+DESCRIP: Flames:    It surrounds you with flame clouds.
 +rFlCloud:  It grants immunity to flame clouds.
 
 NAME:    gauntlets of War
@@ -1071,13 +1070,12 @@ BOOL:     rcorr
 DESCRIP:  Loud:      It is deafeningly noisy when blocking attacks.
 
 NAME:    amulet of the Air
-INSCRIP: Inacc Air
+INSCRIP: Inacc
 OBJ:     OBJ_JEWELLERY/AMU_NOTHING
 COLOUR:  ETC_ELECTRICITY
 TILE:    urand_air
-BOOL:    elec, fly, rmsl
+BOOL:    enh_air, elec, fly, rmsl
 DESCRIP: Inacc:     It reduces the accuracy of your attacks and spells.
-+Air:       It enhances your air magic.
 
 NAME:    ring of Shadows
 INSCRIP: Umbra

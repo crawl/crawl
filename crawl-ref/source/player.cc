@@ -1518,9 +1518,6 @@ int player_spec_fire()
 
     sf += you.scan_artefacts(ARTP_ENHANCE_FIRE);
 
-    if (you.unrand_equipped(UNRAND_SALAMANDER))
-        sf++;
-
     if (you.unrand_equipped(UNRAND_ELEMENTAL_STAFF))
         sf++;
 
@@ -1568,9 +1565,6 @@ int player_spec_air()
     sa += you.scan_artefacts(ARTP_ENHANCE_AIR);
 
     if (you.unrand_equipped(UNRAND_ELEMENTAL_STAFF))
-        sa++;
-
-    if (you.unrand_equipped(UNRAND_AIR))
         sa++;
 
     return sa;
