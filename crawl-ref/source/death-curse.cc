@@ -96,13 +96,13 @@ static void _ouch(actor& target, const actor * source, int dam,
 struct  curse_effect
 {
     string name;
-    function<void (actor& target, actor* source,
+    function<void (actor& target, const actor* source,
              string cause, int severity)> effect;
     int trivial_weight; // Weight at severity 0
     int severe_weight;  // Weight at severity 15. Linearly interpolated
 };
 
-static void _curse_message(actor& target, actor* /*source*/,
+static void _curse_message(actor& target, const actor* /*source*/,
                            string /*cause*/, int /*severity*/)
 {
     // Avoid message spam
@@ -169,7 +169,7 @@ static const vector<curse_effect> curse_effects = {
     },
     {
         "smiting",
-        [](actor& target, actor* source, string cause, int severity) {
+        [](actor& target, const actor* source, string cause, int severity) {
             int dmg = 5 + random2avg(2*severity,2);
             string punct = attack_strength_punctuation(dmg);
             _do_msg(target, "A forgotten god smites you" + punct,
@@ -181,7 +181,7 @@ static const vector<curse_effect> curse_effects = {
     },
     {
         "slow",
-        [](actor& target, actor* source, string /*cause*/, int severity) {
+        [](actor& target, const actor* source, string /*cause*/, int severity) {
             _do_msg(target,
                     "You feel horribly lethargic.",
                     "@The_monster@ looks incredibly listless.",
@@ -192,7 +192,7 @@ static const vector<curse_effect> curse_effects = {
     },
     {
         "drain",
-        [](actor& target, actor* source, string /*cause*/, int severity) {
+        [](actor& target, const actor* source, string /*cause*/, int severity) {
             _do_msg(target,
                     "You are engulfed in negative energy!",
                     "@The_monster@ is engulfed in negative energy!",
@@ -203,7 +203,7 @@ static const vector<curse_effect> curse_effects = {
     },
     {
         "torment",
-        [](actor& target, actor* source,
+        [](actor& target, const actor* source,
            string /*cause*/, int /*severity*/) {
             // XXX: Passing a cached copy of a dead mummy will crash here if
             //      another monster is the victim, via behavior_event() since
@@ -214,7 +214,8 @@ static const vector<curse_effect> curse_effects = {
     },
 };
 
-void death_curse(actor& target, actor* source, string cause, int severity)
+void death_curse(actor& target, const actor* source, string cause,
+                 int severity)
 {
 
     if (target.is_player()

@@ -7586,7 +7586,7 @@ actor* bolt::agent(bool ignore_reflection) const
         // If this is an explosion caused by a dead friendly monster, set its
         // agent to MID_ANON_FRIEND, so that the player gets XP attribution for
         // the damage.
-        else if (monster* mon = cached_monster_copy_by_mid(nominal_source))
+        else if (monster* mon = monster_by_mid(nominal_source, false, true))
         {
             if (mon->friendly())
                 return monster_by_mid(MID_ANON_FRIEND);

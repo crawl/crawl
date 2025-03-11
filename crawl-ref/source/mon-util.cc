@@ -5016,16 +5016,17 @@ bool monster_nearby()
     return false;
 }
 
-actor *actor_by_mid(mid_t m, bool require_valid)
+actor *actor_by_mid(mid_t m, bool exclude_fake,
+                    bool include_dead)
 {
     if (m == MID_PLAYER)
         return &you;
-    return monster_by_mid(m, require_valid);
+    return monster_by_mid(m, exclude_fake, include_dead);
 }
 
-monster *monster_by_mid(mid_t m, bool require_valid)
+monster *monster_by_mid(mid_t m, bool exclude_fake, bool include_dead)
 {
-    if (!require_valid)
+    if (!exclude_fake)
     {
         if (m == MID_ANON_FRIEND)
             return &env.mons[ANON_FRIENDLY_MONSTER];
@@ -5034,18 +5035,12 @@ monster *monster_by_mid(mid_t m, bool require_valid)
     }
 
     if (unsigned short *mc = map_find(env.mid_cache, m))
-        return &env.mons[*mc];
-    return 0;
-}
-
-monster *cached_monster_copy_by_mid(mid_t m)
-{
-    for (size_t i = 0; i < env.final_effect_monster_cache.size(); ++i)
     {
-        if (env.final_effect_monster_cache[i].mid == m)
-            return &env.final_effect_monster_cache[i];
+        monster* mons = &env.mons[*mc];
+        if (!include_dead && !mons->alive())
+            return nullptr;
+        return mons;
     }
-
     return nullptr;
 }
 
@@ -5346,6 +5341,8 @@ void debug_monspells()
 // are handled properly.
 void reset_all_monsters()
 {
+    env.dead_monsters.clear();
+
     for (auto &mons : menv_real)
     {
         // The monsters here have already been saved or discarded, so this

@@ -194,7 +194,7 @@ public:
     virtual void petrify(const actor *attacker, bool force = false) = 0;
     virtual bool fully_petrify(bool quiet = false) = 0;
     virtual bool vex(const actor* who, int dur, string source = "", string special_msg = "") = 0;
-    virtual void slow_down(actor *attacker, int strength) = 0;
+    virtual void slow_down(const actor *attacker, int strength) = 0;
     virtual void confuse(actor *attacker, int strength) = 0;
     virtual void put_to_sleep(actor *attacker, int duration,
                               bool hibernate = false) = 0;

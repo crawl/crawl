@@ -733,7 +733,7 @@ public:
     bool fully_petrify(bool quiet = false) override;
     bool vex(const actor* who, int dur, string source = "", string special_msg = "") override;
     void give_stun_immunity(int duration);
-    void slow_down(actor *, int str) override;
+    void slow_down(const actor *, int str) override;
     void confuse(actor *, int strength) override;
     void weaken(const actor *attacker, int pow) override;
     bool strip_willpower(actor *attacker, int dur, bool quiet = false) override;

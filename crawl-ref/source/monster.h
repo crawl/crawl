@@ -480,7 +480,7 @@ public:
     void petrify(const actor *, bool force = false) override;
     bool fully_petrify(bool quiet = false) override;
     bool vex(const actor* who, int dur, string source = "", string special_msg = "") override;
-    void slow_down(actor *, int str) override;
+    void slow_down(const actor *, int str) override;
     void confuse(actor *, int strength) override;
     bool drain(const actor *, bool quiet = false, int pow = 3) override;
     void splash_with_acid(actor *evildoer) override;

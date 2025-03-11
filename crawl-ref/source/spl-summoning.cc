@@ -1754,7 +1754,7 @@ void end_battlesphere(monster* mons, bool killed)
     if (!mons)
         return;
 
-    actor* agent = actor_by_mid(mons->summoner);
+    actor* agent = actor_by_mid(mons->summoner, false, true);
     if (agent)
         agent->props.erase(BATTLESPHERE_KEY);
 
@@ -2088,7 +2088,9 @@ static bool _is_item_for_spectral_weapon(item_def* weapon, mid_t mid)
 
 static item_def* _find_spectral_weapon_item(const monster& mons)
 {
-    actor *owner = actor_by_mid(mons.summoner);
+    // Include dead owners as we might be trying to remove the spectral
+    // weapon of a dead monster
+    actor *owner = actor_by_mid(mons.summoner, false, true);
     if (!owner)
         return nullptr;
 
