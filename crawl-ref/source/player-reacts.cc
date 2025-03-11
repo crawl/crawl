@@ -516,6 +516,8 @@ void player_reacts_to_monsters()
         uncontrolled_blink(false, 3);
         ouch(roll_dice(2, 2), KILLED_BY_BLINKING);
     }
+
+    _decrement_a_duration(DUR_AUTODODGE, you.time_taken);
 }
 
 static bool _check_recite()

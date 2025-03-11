@@ -7264,6 +7264,7 @@ static string _describe_talisman_form(const item_def &item)
     _maybe_populate_form_table(items, bind(&Form::ev_bonus, form, placeholders::_1), "EV", skill);
     _maybe_populate_form_table(items, bind(&Form::slay_bonus, form, false, placeholders::_1), "Slay", skill);
     _maybe_populate_form_table(items, bind(&Form::get_vamp_chance, form, placeholders::_1), "Vamp Chance (while <50% HP)", skill, 0, true, false);
+    _maybe_populate_form_table(items, bind(&Form::get_web_chance, form, placeholders::_1), "Ensnare Chance", skill, 0, true, false);
     _maybe_note_armour_penalty(items, *form, skill);
 
     _maybe_note_form_dice(items, bind(&Form::get_special_damage, form, false, placeholders::_1), form->special_dice_name, skill);
@@ -7346,6 +7347,8 @@ static string _describe_talisman_form(const item_def &item)
         pr.AddCell("Will", "+");
     else if (form_type == transformation::vampire)
         pr.AddCell("Stealth", "++");
+    else if (form_type == transformation::spider)
+        pr.AddCell("Stealth", "+");
 
     // Don't output extra blank lines if there's no content.
     if (pr.NumCells() > 0)

@@ -1,18 +1,20 @@
-TAG_MAJOR_VERSION: 34
 enum: spider
 equivalent_mons: spider
-description: a venomous arachnid creature.
-skill: {min: 0, max: 27}
+description: an agile web-spinner.
+talisman: spider
+skill: {min: 10, max: 19}
 melds: [physical]
 dex: 5
 size: tiny
 resists: {poison: -1}
+ev: {base: 5, scaling: 10}
+ac: {base: 3}
 can_swim: no
 changes_anatomy: yes
-unarmed_brand: venom
+unarmed: {base: 3}
 unarmed_colour: lightgreen
 unarmed_name: Fangs
-unarmed_verbs: animal
+unarmed_verbs: [hit, bite, pounce on, eviscerate]
 has_blood: no
 has_hair: no
 has_bones: no
@@ -24,7 +26,10 @@ hand_name: front pincers
 prayer_action: crawl onto
 flesh_name: flesh
 fakemuts:
-  - ["venomous fangs", "You have venomous fangs."]
+  - ["ensnaring attack", "You sometimes web enemies you hit."]
+  - ["rampage", "You can move swiftly towards enemies."]
+  - ["jumping", "You can leap distances in the blink of an eye."]
+  - ["stealth", "You are stealthy and inflict bonus damage to unaware enemies."]
   - ["", "You are tiny and dextrous."] #short-form "tiny" is automatically added
 badmuts:
   - ["poison vulnerability", "You are susceptible to poisons. (rPois-)"]

@@ -1061,3 +1061,12 @@ Causes the caster to radiate toxic energy, continuously inflicting poison on
 everything in line of sight for as long as the aura lasts. The power of this
 ability scales with the Evocations skill, and this ability is available only
 while wielding the Staff of Olgreb.
+%%%%
+Jump ability
+
+Leaps through the air in the blink of an eye. While it is impossible to control
+your destination, the movement is so abrupt and agile that no monster will be
+able to land a blow on you until you can act again, and many may lose track of
+your position entirely.
+
+You must spend a short while recovering between each use of this ability.

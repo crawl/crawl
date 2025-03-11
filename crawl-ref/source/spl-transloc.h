@@ -16,6 +16,7 @@ spret cast_blink(int pow, bool fail = false);
 void uncontrolled_blink(bool override_stasis = false, int max_dist = LOS_RADIUS);
 spret controlled_blink(bool safe_cancel = true, dist *target = nullptr);
 void wizard_blink();
+spret spider_jump();
 
 int frog_hop_range();
 spret frog_hop(bool fail, dist *target = nullptr);

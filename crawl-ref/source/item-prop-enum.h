@@ -865,6 +865,7 @@ enum talisman_type
     TALISMAN_FLUX,
     TALISMAN_VAMPIRE,
     TALISMAN_RIMEHORN,
+    TALISMAN_SPIDER,
     NUM_TALISMANS,
 };
 

@@ -1451,6 +1451,13 @@ spear
 A hunting weapon consisting of a wooden shaft with a pointed metal head
 fastened on one end.
 %%%%
+spider talisman
+
+A strange charm made from shed arachnid exoskeletons bound together with silk.
+Transforms the user into an agile jumping spider who can move swiftly towards
+foes and inflict grievous damage on any it catches unaware. Its attacks can
+also ensnare its enemies in webs and it can leap briskly away from many dangers.
+%%%%
 staff of air
 
 A staff that increases the power of air spells cast by its wielder, and

@@ -409,6 +409,9 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_ENKINDLE, "Enkindle",
                 0, 0, 0, -1, {}, abflag::instant },
 
+        { ABIL_SPIDER_JUMP, "Jump",
+                0, 0, 0, -1, {}, abflag::none },
+
         // EVOKE abilities use Evocations and come from items.
         { ABIL_EVOKE_BLINK, "Evoke Blink",
             0, 0, 0, -1, {fail_basis::evo, 40, 2}, abflag::none },
@@ -1155,6 +1158,7 @@ ability_type fixup_ability(ability_type ability)
             return ABIL_NON_ABILITY;
         return ability;
 
+    case ABIL_SPIDER_JUMP:
     case ABIL_EVOKE_BLINK:
         if (you.stasis())
             return ABIL_NON_ABILITY;
@@ -2246,6 +2250,16 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
         return true;
 
+    // Note: *Not* identical to blink. Is not affected by -Tele.
+    case ABIL_SPIDER_JUMP:
+        if (you.duration[DUR_BLINK_COOLDOWN])
+        {
+            if (!quiet)
+                canned_msg(MSG_CANNOT_DO_YET);
+            return false;
+        }
+        return true;
+
     case ABIL_EVOKE_BLINK:
         if (you.duration[DUR_BLINK_COOLDOWN])
         {
@@ -2615,6 +2629,7 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 1, 0, 1);
 
     // Multiposition:
+    case ABIL_SPIDER_JUMP:
     case ABIL_EVOKE_BLINK:
         return make_unique<targeter_multiposition>(&you, find_blink_targets());
     case ABIL_WORD_OF_CHAOS:
@@ -3234,6 +3249,9 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
 
         return result;
     }
+
+    case ABIL_SPIDER_JUMP:
+        return spider_jump();
 
     case ABIL_EVOKE_BLINK:      // randarts
         return cast_blink(min(50, 1 + you.skill(SK_EVOCATIONS, 3)), fail);
@@ -4231,6 +4249,8 @@ bool player_has_ability(ability_type abil, bool include_unusable)
     case ABIL_BREATHE_FIRE:
         return you.form == transformation::dragon
                && !species::is_draconian(you.species);
+    case ABIL_SPIDER_JUMP:
+        return you.form == transformation::spider;
     case ABIL_BLINKBOLT:
         return you.form == transformation::storm;
     case ABIL_SIPHON_ESSENCE:
@@ -4324,6 +4344,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_CACOPHONY,
             ABIL_BAT_SWARM,
             ABIL_ENKINDLE,
+            ABIL_SPIDER_JUMP,
             ABIL_BLINKBOLT,
             ABIL_SIPHON_ESSENCE,
             ABIL_IMBUE_SERVITOR,

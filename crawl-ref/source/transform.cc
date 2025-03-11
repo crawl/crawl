@@ -523,6 +523,11 @@ private:
     DISALLOW_COPY_AND_ASSIGN(FormSpider);
 public:
     static const FormSpider &instance() { static FormSpider inst; return inst; }
+
+    int get_web_chance(int skill = -1) const override
+    {
+        return divided_scaling(FormScaling().Base(20).Scaling(20), false, skill, 100);
+    }
 };
 #endif
 

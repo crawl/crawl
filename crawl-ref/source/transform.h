@@ -141,6 +141,7 @@ public:
     virtual int ev_bonus(int /*skill*/ = -1) const;
     virtual int get_base_ac_penalty(int /*base*/, int /*skill*/ = -1) const { return 0; }
     virtual int get_vamp_chance(int /*skill*/ = -1) const { return 0; }
+    virtual int get_web_chance(int /*skill*/ = -1) const {return 0; }
     virtual dice_def get_special_damage(bool /*random*/ = true, int /*skill*/ = -1) const;
 
     virtual int get_effect_size(int /*skill*/ = -1) const { return 0; }

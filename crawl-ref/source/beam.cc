@@ -3582,7 +3582,8 @@ bool bolt::misses_player()
     const int repel = you.missile_repulsion() ? REPEL_MISSILES_EV_BONUS : 0;
     dodge += repel;
 
-    const int hit_margin = _test_beam_hit(real_tohit, dodge, r);
+    const int hit_margin = you.duration[DUR_AUTODODGE] ? -1000
+                            : _test_beam_hit(real_tohit, dodge, r);
     if (hit_margin < 0)
     {
         if (hit_margin > -repel)

@@ -156,6 +156,66 @@ void uncontrolled_blink(bool override_stasis, int max_distance)
     crawl_state.potential_pursuers.clear();
 }
 
+spret spider_jump()
+{
+    if (cancel_harmful_move(false))
+        return spret::abort;
+
+    you.duration[DUR_AUTODODGE] = 1;
+
+    coord_def target;
+    // First try to find a random square not adjacent to the player,
+    // then one adjacent if that fails.
+    if (!random_near_space(&you, you.pos(), target, false, you.current_vision)
+        && !random_near_space(&you, you.pos(), target, true, you.current_vision))
+    {
+        mpr("You jump in place.");
+        return spret::success;
+    }
+
+    // It may be a little counterintuitive, but the chance of a monster losing
+    // track of the player is proportional to how many monsters are looking at
+    // them in the first place. This is because the chance of them being spotted
+    // afterward is *also* effectively proportional to how many monsters are
+    // looking for them, due to how stealth works. So this is an attempt to give
+    // an 'okay' level of misdirection against groups without being a sure-fire
+    // escape against individual monsters.
+    int onlookers = 0;
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (mi->foe == MHITYOU && !mi->is_firewood() && !mi->wont_attack())
+            ++onlookers;
+    }
+
+    // Make some monsters lose track of the player.
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (mi->foe == MHITYOU && !mi->is_firewood() && !mi->wont_attack()
+            && x_chance_in_y(onlookers + 3, 9))
+        {
+            mi->foe = MHITNOT;
+            mi->foe_memory = 0;
+            mi->target = mi->pos();
+            mi->behaviour = BEH_WANDER;
+        }
+    }
+
+    you.stop_being_constricted(false, "jump");
+
+    mpr("You jump through the air!");
+    const coord_def origin = you.pos();
+    move_player_to_grid(target, false);
+    if (!cell_is_solid(origin))
+        place_cloud(CLOUD_DUST, origin, 2 + random2(3), &you);
+
+    crawl_state.potential_pursuers.clear();
+
+    you.increase_duration(DUR_BLINK_COOLDOWN, random_range(2, 5));
+    place_cloud(CLOUD_DUST, origin, 2 + random2(3), &you);
+
+    return spret::success;
+}
+
 /**
  * Let the player choose a destination for their controlled blink or similar
  * effect.

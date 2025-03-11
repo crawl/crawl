@@ -1009,6 +1009,9 @@ int attack::test_hit(int to_land, int ev, bool randomise_ev)
 {
     int margin = AUTOMATIC_HIT;
 
+    if (defender->is_player() && you.duration[DUR_AUTODODGE])
+        return -1000;
+
     if (randomise_ev)
         ev = random2avg(2*ev, 2);
     if (to_land >= AUTOMATIC_HIT)

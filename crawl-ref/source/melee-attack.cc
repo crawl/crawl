@@ -809,6 +809,12 @@ bool melee_attack::handle_phase_hit()
         _apply_flux_contam(*(defender->as_monster()));
     }
 
+    if (attacker->is_player() && you.form == transformation::spider
+        && defender->alive() && x_chance_in_y(get_form()->get_web_chance(), 100))
+    {
+        ensnare(defender);
+    }
+
     // Fireworks when using Serpent's Lash to kill.
     if (!defender->alive()
         && defender->as_monster()->has_blood()
@@ -2996,6 +3002,7 @@ bool melee_attack::player_good_stab()
 {
     return wpn_skill == SK_SHORT_BLADES
            || you.get_mutation_level(MUT_PAWS)
+           || you.form == transformation::spider
            || you.unrand_equipped(UNRAND_HOOD_ASSASSIN)
               && (!weapon || is_melee_weapon(*weapon));
 }

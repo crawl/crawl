@@ -1146,3 +1146,7 @@ itself naturally.
 Yak status
 
 You are a rime yak, fur encrusted with ice.
+%%%%
+Spider status
+
+You are an agile jumping spider who attacks can web enemies.
