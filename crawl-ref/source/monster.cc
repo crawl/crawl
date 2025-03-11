@@ -74,6 +74,7 @@
 #include "tilepick.h"
 #include "tileview.h"
 #endif
+#include "spl-goditem.h"
 #include "traps.h"
 #include "view.h"
 #include "xom.h"
@@ -4268,6 +4269,16 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         || mid == MID_ANON_FRIEND)
     {
         return 0;
+    }
+
+    // Handle spell vamp for spells that deal damage directly through enchantments
+    // This is done before damage is adjusted like any other spell vamp
+    // These damage flavors are currently only applied through spells
+    if (amount && agent && agent->is_player()
+        && (flavour == BEAM_VAMPIRIC_DRAINING
+            || flavour == BEAM_NECROTISE))
+    {
+        majin_bo_vampirism(*this, min(amount, stat_hp()));
     }
 
     if (alive())
