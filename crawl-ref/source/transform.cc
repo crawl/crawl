@@ -144,13 +144,15 @@ Form::Form(const form_entry &fe)
       shout_volume_modifier(fe.shout_volume_modifier),
       hand_name(fe.hand_name), foot_name(fe.foot_name),
       flesh_equivalent(fe.flesh_equivalent),
+      special_dice_name(fe.special_dice_name),
       long_name(fe.long_name), description(fe.description),
       resists(fe.resists), ac(fe.ac), ev(fe.ev),
       unarmed_bonus_dam(fe.unarmed_bonus_dam),
       can_fly(fe.can_fly), can_swim(fe.can_swim), offhand_punch(fe.offhand_punch),
       uc_brand(fe.uc_brand), uc_attack(fe.uc_attack),
       prayer_action(fe.prayer_action), equivalent_mons(fe.equivalent_mons),
-      hp_mod(fe.hp_mod), fakemuts(fe.fakemuts), badmuts(fe.badmuts)
+      hp_mod(fe.hp_mod), special_dice(fe.special_dice),
+      fakemuts(fe.fakemuts), badmuts(fe.badmuts)
 { }
 
 Form::Form(transformation tran)
@@ -293,6 +295,27 @@ int Form::mult_hp(int base_hp, bool force_talisman, int skill) const
     // -10% hp per skill level short, down to -90%
     const int penalty = min(shortfall, 9 * scale);
     return base_hp * hp_mod * (10 * scale - penalty) / (scale * 100 * 10);
+}
+
+/**
+ * What is the damage of some form-specific specify ability or passive used
+ * by this form (eg: Blinkbolt damage for Storm or contam damage for Flux)?
+ *
+ * @param random    Whether to randomly divide power or round down.
+ * @param skill     Shapeshifting skill to use (default of -1 to use the
+ *                  player's current skill with this form).
+ *
+ * @return The damage dice used by this form's special action.
+ */
+dice_def Form::get_special_damage(bool random, int skill) const
+{
+    if (skill == -1)
+        skill = get_level(1);
+
+    if (special_dice)
+        return (*special_dice)(skill, random);
+    else
+        return dice_def();
 }
 
 /**
@@ -509,11 +532,6 @@ private:
     DISALLOW_COPY_AND_ASSIGN(FormFlux);
 public:
     static const FormFlux &instance() { static FormFlux inst; return inst; }
-
-    int contam_dam(bool random = true, int skill = -1) const override
-    {
-        return divided_scaling(FormScaling().Base(30).Scaling(20), random, skill, 100);
-    }
 };
 
 class FormBlade : public Form
@@ -876,15 +894,6 @@ private:
     DISALLOW_COPY_AND_ASSIGN(FormStorm);
 public:
     static const FormStorm &instance() { static FormStorm inst; return inst; }
-
-    // XXX: Currently only used for the damage *descriptions*, alas.
-    dice_def get_ability_damage(bool random, int skill = -1) const override
-    {
-        const int pow = skill == -1 ? get_level(200) / 27
-                                    : skill * 200 / 27;
-
-        return zap_damage(ZAP_BLINKBOLT, pow, false, random);
-    }
 
     /**
      * Get the name displayed in the UI for the form's unarmed-combat 'weapon'.
@@ -1936,4 +1945,10 @@ transformation form_for_talisman(const item_def &talisman)
         if (formdata[i].talisman == talisman.sub_type)
             return static_cast<transformation>(i);
     return transformation::none;
+}
+
+void clear_form_info_on_exit()
+{
+    for (const form_entry &entry : formdata)
+        delete entry.special_dice;
 }

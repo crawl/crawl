@@ -69,6 +69,10 @@ struct form_entry
     const char *prayer_action;
     const char *flesh_equivalent;
 
+    // Row 11:
+    const dam_deducer* special_dice;
+    const char* special_dice_name;
+
     // pairs of the form {terse_description, full_description} for display in
     // `A` and `%`. Either can be empty.
     // Resistances (except rTorm), flight, amphibious, no grasping,

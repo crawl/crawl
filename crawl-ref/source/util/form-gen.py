@@ -90,6 +90,7 @@ class Form(MutableMapping):
         self["ac_scaling"] = self["ac"].format()
         self["ev_scaling"] = self["ev"].format()
         self["unarmed_scaling"] = self["unarmed"].format()
+        self["special_dice"] = self["special_damage"].format()
 
         if 'TAG_MAJOR_VERSION' in s:
             self['tag_major_version_opener'] = (
@@ -273,6 +274,34 @@ def parse_scaling(s):
                 scaling = parse_num(s['scaling'], 0, 100    ) if 'scaling' in s else 0,
                 xl_based = parse_bool(s['xl_based'] if 'xl_based' in s else False))
 
+class DiceDef:
+    def __init__(self, num=0, size=0, mult=0, div=0):
+        self.num = num;
+        self.size = size;
+        self.mult = mult;
+        self.div = div;
+
+    def format(self):
+        if self.num == 0 and self.size == 0 and self.mult == 0 and self.div == 0:
+            return 'nullptr'
+        return "new dicedef_calculator<{},{},{},{}>".format(self.num, self.size, self.mult, self.div)
+
+# Extremely simple/dumb parser that just lets you write dice formulas in a more readable way
+def parse_dice(s):
+    s = s.replace('d', ',')
+    s = s.replace('+', ',')
+    s = s.replace('(', ' ')
+    s = s.replace(')', ' ')
+    s = s.replace('/', ',')
+    arg_str = s.split(',')
+    args = [0, 0, 0, 1]
+
+    for i in range(0, 4):
+        if len(arg_str) > i:
+            args[i] = parse_num(int(arg_str[i].strip()), 0, 1000)
+
+    return DiceDef(args[0], args[1], args[2], args[3])
+
 CAPABILITIES = {'default', 'enable', 'forbid'}
 def parse_capability(s):
     if not isinstance(s, bool):
@@ -333,6 +362,9 @@ keyfns = {
     'prayer_action': Field(parse_str),
     'flesh_name': Field(parse_str),
 
+    'special_damage': Field(parse_dice),
+    'special_damage_name': Field(parse_str),
+
     'fakemuts': Field(parse_muts),
     'badmuts': Field(parse_muts),
 
@@ -388,6 +420,9 @@ defaults = {
     'foot_name': "",
     'prayer_action': "",
     'flesh_name': "",
+
+    'special_damage': DiceDef(),
+    'special_damage_name': "",
 
     'fakemuts': "",
     'badmuts': "",

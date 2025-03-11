@@ -1533,7 +1533,7 @@ static string _ability_damage_string(ability_type ability)
                              false, false);
             break;
         case ABIL_BLINKBOLT:
-            dam = get_form(transformation::storm)->get_ability_damage(false);
+            dam = get_form(transformation::storm)->get_special_damage(false);
             break;
         case ABIL_COMBUSTION_BREATH:
             dam = combustion_breath_damage(you.form == transformation::dragon

@@ -10,6 +10,7 @@
     {can_fly}, {can_swim}, {offhand_punch}, {changes_anatomy}, {changes_substance}, {holiness},
     {has_blood}, {has_hair}, {has_bones}, {has_feet}, {has_ears},
     "{shout_verb}", {shout_volume}, "{hand_name}", "{foot_name}", "{prayer_action}", "{flesh_name}",
+    {special_dice}, "{special_damage_name}",
     {{{fakemuts}}},
     {{{badmuts}}}
 }},

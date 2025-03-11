@@ -601,12 +601,10 @@ static void _apply_flux_contam(monster &m)
 
     if (old_glow.degree >= 2)
     {
-        const int max_dam = get_form()->contam_dam();
-        const int dam = random2(max_dam);
+        const int dam = get_form()->get_special_damage().roll();
         string msg = make_stringf(" shudders as magic cascades through %s%s",
                                   m.pronoun(PRONOUN_OBJECTIVE).c_str(),
                                   attack_strength_punctuation(dam).c_str());
-        dprf("done %d (max %d)", dam, max_dam);
         simple_monster_message(m, msg.c_str());
         if (dam)
         {

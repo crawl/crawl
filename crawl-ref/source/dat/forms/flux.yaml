@@ -3,6 +3,8 @@ equivalent_mons: shapeshifter
 description: something dangerously unstable.
 skill: {min: 7, max: 14}
 talisman: flux
+special_damage: 1d10+(40/14)
+special_damage_name: Contam Dmg
 melds: [held, body]
 unarmed_colour: cyan
 ev: {base: 4}

@@ -137,12 +137,13 @@ public:
 
     virtual string get_uc_attack_name(string default_name) const;
     virtual int slay_bonus(bool /*random*/ = true, int /*skill*/ = -1) const { return 0; }
-    virtual int contam_dam(bool /*random*/ = true, int /*skill*/ = -1) const { return 0; }
     virtual int get_ac_bonus(int skill = -1) const;
     virtual int ev_bonus(int /*skill*/ = -1) const;
     virtual int get_base_ac_penalty(int /*base*/, int /*skill*/ = -1) const { return 0; }
     virtual int get_vamp_chance(int /*skill*/ = -1) const { return 0; }
-    virtual dice_def get_ability_damage(bool /*random*/, int /*skill*/ = -1) const { return dice_def(); }
+    virtual dice_def get_special_damage(bool /*random*/ = true, int /*skill*/ = -1) const;
+
+    virtual int get_effect_size(int /*skill*/ = -1) const { return 0; }
 
     bool enables_flight() const;
     bool forbids_flight() const;
@@ -224,6 +225,10 @@ public:
     /// The name of this form's flesh-equivalent; "" defaults to species.
     const string flesh_equivalent;
 
+    /// Identifier for the meaning of the special dice for this form (for the
+    /// form properties screen).
+    const string special_dice_name;
+
 protected:
     /// See Form::get_long_name().
     const string long_name;
@@ -280,6 +285,10 @@ private:
     /// 100 * multiplier to hp/mhp (that is, 100 is base, 150 is 1.5x, etc)
     const int hp_mod;
 
+    /// Calculator for form-specific 'special' damage done by this form (eg:
+    /// Blinkbolt damage or Contam damage)
+    const dam_deducer* special_dice;
+
     vector<pair<string,string>> fakemuts;
     vector<pair<string,string>> badmuts;
 };
@@ -330,3 +339,4 @@ void merfolk_start_swimming(bool step = false);
 void merfolk_stop_swimming();
 
 transformation form_for_talisman(const item_def &talisman);
+void clear_form_info_on_exit();

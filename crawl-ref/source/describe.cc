@@ -7263,14 +7263,13 @@ static string _describe_talisman_form(const item_def &item)
     _maybe_populate_form_table(items, bind(&Form::get_ac_bonus, form, placeholders::_1), "AC", skill, 0, false, true, 100);
     _maybe_populate_form_table(items, bind(&Form::ev_bonus, form, placeholders::_1), "EV", skill);
     _maybe_populate_form_table(items, bind(&Form::slay_bonus, form, false, placeholders::_1), "Slay", skill);
-    _maybe_populate_form_table(items, bind(&Form::contam_dam, form, false, placeholders::_1), "Contam Dmg", skill, 0, false, false);
     _maybe_populate_form_table(items, bind(&Form::get_vamp_chance, form, placeholders::_1), "Vamp Chance (while <50% HP)", skill, 0, true, false);
     _maybe_note_armour_penalty(items, *form, skill);
 
+    _maybe_note_form_dice(items, bind(&Form::get_special_damage, form, false, placeholders::_1), form->special_dice_name, skill);
+
     if (form_type == transformation::maw)
         _maybe_populate_form_table(items, bind(&Form::get_aux_damage, form, false, placeholders::_1), "Bite Dmg", skill, 0, false, false);
-    else if (form_type == transformation::storm)
-        _maybe_note_form_dice(items, bind(&Form::get_ability_damage, form, false, placeholders::_1), "Blinkbolt Dmg", skill);
 
     vector<int> column_width;
 
