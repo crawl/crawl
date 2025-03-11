@@ -76,12 +76,6 @@ battleaxe
 
 A large war axe with a formidable double-sided head.
 %%%%
-beast talisman
-
-A large patch of fur around a shining, gold-glowing eye. Transforms the user
-into a monstrous, furry were-beast, limbs pulsing with murderous energy.
-Shapeshifting skill increases the killing power provided.
-%%%%
 blade talisman
 
 A jagged cluster of blades, almost impossible to grasp without injury.
@@ -1121,6 +1115,12 @@ quick blade
 
 A dagger with an uncanny enchantment upon it, allowing it to strike twice
 for every blow its wielder makes.
+%%%%
+quill talisman
+
+A spiny trinket reminiscent of a cactus. Causes sharp quills to grow all over
+the user's body which may cause injury to anyone unwise enough to attack them
+in melee.
 %%%%
 rapier
 

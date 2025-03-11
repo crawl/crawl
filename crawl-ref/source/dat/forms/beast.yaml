@@ -1,7 +1,0 @@
-enum: beast
-equivalent_mons: wolf
-description: a hulking beast.
-skill: {min: 0, max: 7}
-talisman: beast
-melds: [aux]
-has_hair: yes

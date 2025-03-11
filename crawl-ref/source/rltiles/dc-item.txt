@@ -1249,7 +1249,6 @@ generic_unfound_broken
 #OBJ_TALISMANS
 %sdir item/talisman
 %rim 0
-beast TALISMAN_BEAST
 flux TALISMAN_FLUX
 snake TALISMAN_SNAKE
 maw TALISMAN_MAW
@@ -1261,6 +1260,7 @@ death TALISMAN_DEATH
 vampire TALISMAN_VAMPIRE
 rimehorn TALISMAN_RIMEHORN
 spider TALISMAN_SPIDER
+quill TALISMAN_QUILL
 
 %sdir item/misc/uncollected_runes
 generic MISC_UNCOLLECTED_RUNE_OF_ZOT

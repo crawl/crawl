@@ -1029,7 +1029,7 @@ ITEM:   young poisoner's handbook / fen folio / \
         randbook numspells:3 title:Nature \
         spells:mercury_arrow&stone_arrow&hailstorm&summon_forest
 KITEM:  f = dart ego:poisoned / dart ego:curare / dart ego:atropa
-KITEM:  g = beast talisman randart, any potion q:2
+KITEM:  g = quill talisman randart, any potion q:2
 MONS:   plant, oklob sapling, ball python
 MONS:   adder, oklob plant, water moccasin
 KMONS:  7 = hornet
@@ -1079,7 +1079,7 @@ ITEM:   young poisoner's handbook / fen folio / \
         randbook numspells:4 title:Nature \
         spells:mercury_arrow&stone_arrow&hailstorm&summon_forest
 KITEM:  f = dart ego:poisoned / dart ego:curare / dart ego:atropa
-KITEM:  g = beast talisman randart, any potion q:2 / any potion q:3
+KITEM:  g = quill talisman randart, any potion q:2 / any potion q:3
 MONS:   plant, oklob sapling, ball python
 MONS:   adder, oklob plant, water moccasin
 KMONS:  7 = hornet

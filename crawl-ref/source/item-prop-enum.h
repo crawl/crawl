@@ -854,7 +854,7 @@ enum item_set_type
 
 enum talisman_type
 {
-    TALISMAN_BEAST,
+    TALISMAN_QUILL,
     TALISMAN_MAW,
     TALISMAN_SERPENT,
     TALISMAN_BLADE,

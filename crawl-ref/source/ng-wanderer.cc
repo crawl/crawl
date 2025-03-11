@@ -602,7 +602,7 @@ static void _wanderer_random_evokable()
 static void _wanderer_random_talisman()
 {
     talisman_type selected_talisman =
-        coinflip() ? TALISMAN_BEAST : TALISMAN_FLUX;
+        coinflip() ? TALISMAN_QUILL : TALISMAN_FLUX;
 
     newgame_make_item(OBJ_TALISMANS, selected_talisman);
 }
@@ -804,7 +804,7 @@ static vector<spell_type> _wanderer_decent_equipment(skill_type skill,
         break;
 
     case SK_SHAPESHIFTING:
-        newgame_make_item(OBJ_TALISMANS, TALISMAN_BEAST);
+        newgame_make_item(OBJ_TALISMANS, TALISMAN_QUILL);
         break;
 
     case SK_STEALTH:

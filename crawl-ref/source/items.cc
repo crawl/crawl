@@ -3909,8 +3909,8 @@ colour_t item_def::talisman_colour() const
 
     switch (sub_type)
     {
-    case TALISMAN_BEAST:
-        return YELLOW; // brown taken by staves
+    case TALISMAN_QUILL:
+        return BROWN;
     case TALISMAN_FLUX:
         return CYAN; // could maybe swap this and death
     case TALISMAN_RIMEHORN:

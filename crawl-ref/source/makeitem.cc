@@ -1594,8 +1594,8 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
 static const vector<random_pick_entry<talisman_type>> talisman_weights =
 {
     // tier 0
-    {  0, 20,  45, FALL, TALISMAN_BEAST },
-    {  0, 35,   5, FLAT, TALISMAN_BEAST },
+    {  0, 20,  45, FALL, TALISMAN_QUILL },
+    {  0, 35,   5, FLAT, TALISMAN_QUILL },
     {  0, 20,  45, FALL, TALISMAN_FLUX },
     {  0, 35,   5, FLAT, TALISMAN_FLUX },
     {  0, 20,  45, FALL, TALISMAN_RIMEHORN },

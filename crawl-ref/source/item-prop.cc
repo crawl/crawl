@@ -3100,7 +3100,7 @@ string talisman_type_name(int type)
 {
     switch (type)
     {
-    case TALISMAN_BEAST:    return "beast talisman";
+    case TALISMAN_QUILL:    return "quill talisman";
     case TALISMAN_FLUX:     return "flux talisman";
     case TALISMAN_RIMEHORN: return "rimehorn talisman";
     case TALISMAN_SPIDER:   return "spider talisman";

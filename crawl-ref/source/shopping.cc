@@ -710,7 +710,7 @@ unsigned int item_value(item_def item, bool ident)
             valued += 250;
             break;
 
-        case TALISMAN_BEAST:
+        case TALISMAN_QUILL:
         default:
             valued += 200;
             break;

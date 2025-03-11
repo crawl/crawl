@@ -1089,7 +1089,7 @@ MONS:    thrashing horror / unseen horror / raiju / \
 MONS:    starcursed mass / apocalypse crab / hellephant / \
          tentacled monstrosity / tentacled starspawn w:5
 ITEM:    great sword randart ego:distortion / flux talisman / \
-         beast talisman / maw talisman / granite talisman / \
+         quill talisman / maw talisman / granite talisman / \
          mundane amulet of regeneration / orb ego:guile
 SHUFFLE: yY / yY / Yy
 SUBST:   x : X:9 C:1, y : W:25 L:25 X:35 C:10 M:5, Y = ., z : X:20 CMB

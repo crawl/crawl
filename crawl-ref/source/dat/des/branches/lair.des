@@ -2244,7 +2244,7 @@ TAGS:   ruin transparent
 DEPTH:  Lair
 MONS:   rat, river rat, hell rat
 KMONS:  D = pile of debris
-ITEM:   beast talisman / beast talisman randart w:2
+ITEM:   quill talisman / quill talisman randart w:2
 KFEAT:  C = cache of fruit / cache of baked goods w:4
 NSUBST: d = 1:d / 1:C / 1:F / 1:* / 1:d / 1:9 / 1:3 / * = $11223.......
 NSUBST: c = 5:Dc / *:c

@@ -1085,7 +1085,7 @@ KFEAT:  L = armour shop count:17 greed:12 type:Basic suffix:Armour use_all ; \
             mundane cloak | mundane buckler |\
             mundane pair of gloves | mundane helmet
 KFEAT:  M = jewellery shop type:Timeless suffix:Talismans count:9 greed:7 use_all ; \
-            beast talisman | maw talisman | serpent talisman |\
+            quill talisman | maw talisman | serpent talisman |\
             blade talisman | sanguine talisman | dragon-coil talisman |\
             granite talisman | storm talisman | talisman of death
 KFEAT:  N = weapon shop type:Staff suffix:Store count:9 use_all greed:30 ; \

@@ -4127,13 +4127,26 @@ void melee_attack::do_spines()
 
             dprf(DIAG_COMBAT, "Spiny: dmg = %d hurt = %d", dmg, hurt);
 
-            if (hurt <= 0)
-                return;
+            if (hurt > 0)
+            {
+                simple_monster_message(*attacker->as_monster(),
+                                    " is struck by your spines.");
 
-            simple_monster_message(*attacker->as_monster(),
-                                   " is struck by your spines.");
+                attacker->hurt(&you, hurt);
+            }
+        }
 
-            attacker->hurt(&you, hurt);
+        if (you.form == transformation::quill && attacker->alive() && x_chance_in_y(2, 5))
+        {
+            int dmg = attacker->apply_ac(get_form()->get_special_damage().roll());
+            int hurt = attacker->apply_ac(dmg);
+            if (hurt > 0)
+            {
+                simple_monster_message(*attacker->as_monster(),
+                                       " is struck by your quills.");
+
+                attacker->hurt(&you, hurt);
+            }
         }
     }
     else if (defender->as_monster()->is_spiny())

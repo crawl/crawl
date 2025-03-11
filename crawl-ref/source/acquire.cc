@@ -647,7 +647,7 @@ static int _acquirement_book_subtype(int & /*quantity*/,
 static vector<pair<talisman_type, int>> _base_talisman_tiers()
 {
     vector<pair<talisman_type, int>> tiers = {
-        { TALISMAN_BEAST,   1 },
+        { TALISMAN_QUILL,   1 },
         { TALISMAN_FLUX,    2 },
         { TALISMAN_RIMEHORN, 2 },
         { TALISMAN_SPIDER,  2 },

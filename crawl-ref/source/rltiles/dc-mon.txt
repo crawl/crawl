@@ -1439,6 +1439,9 @@ slaughter_form_felid TRAN_SLAUGHTER_FELID
 slaughter_form_humanoid TRAN_SLAUGHTER_HUMANOID
 slaughter_form_naga TRAN_SLAUGHTER_NAGA
 rime_yak_form TRAN_RIME_YAK
+quill_form_felid TRAN_QUILL_FELID
+quill_form_octopode TRAN_QUILL_OCTOPODE
+
 %rim 1
 
 %sdir misc

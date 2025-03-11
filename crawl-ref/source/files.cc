@@ -2038,7 +2038,7 @@ static void _rescue_player_from_wall()
 static void _fixup_transmuters()
 {
     vector<pair<spell_type, talisman_type>> forms = {
-        { SPELL_BEASTLY_APPENDAGE, TALISMAN_BEAST },
+        { SPELL_BEASTLY_APPENDAGE, TALISMAN_QUILL },
         { SPELL_SPIDER_FORM,       TALISMAN_FLUX },
         { SPELL_ICE_FORM,          TALISMAN_SERPENT },
         { SPELL_BLADE_HANDS,       TALISMAN_BLADE },

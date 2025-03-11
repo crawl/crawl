@@ -484,8 +484,16 @@ tileidx_t tileidx_player()
     // Handle shapechange first
     switch (you.form)
     {
+    case transformation::quill:
+        switch (you.species)
+        {
+            case SP_OCTOPODE:   ch = TILEP_TRAN_QUILL_OCTOPODE;     break;
+            case SP_FELID:      ch = TILEP_TRAN_QUILL_FELID;        break;
+            default: break;
+        }
+        break;
+
     // equipment-using forms are handled regularly
-    case transformation::beast:
     case transformation::flux:
     case transformation::maw:
     case transformation::statue:

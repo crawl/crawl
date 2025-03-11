@@ -912,24 +912,22 @@ public:
     }
 };
 
-class FormBeast : public Form
+class FormQuill : public Form
 {
 private:
-    FormBeast() : Form(transformation::beast) { }
-    DISALLOW_COPY_AND_ASSIGN(FormBeast);
+    FormQuill() : Form(transformation::quill) { }
+    DISALLOW_COPY_AND_ASSIGN(FormQuill);
 public:
-    static const FormBeast &instance() { static FormBeast inst; return inst; }
-    int slay_bonus(bool random, int skill = -1) const override
+    static const FormQuill &instance() { static FormQuill inst; return inst; }
+
+    string transform_message() const override
     {
-        return divided_scaling(FormScaling().Scaling(4), random, skill, 100);
+        return "Sharp quills grow all over your body.";
     }
 
-    vector<pair<string, string>> get_fakemuts() const override
+    string get_untransform_message() const override
     {
-        return {{
-            make_stringf("beast (slay +%d)", slay_bonus(false)),
-            make_stringf("Your limbs bulge with bestial killing power. (Slay +%d)",
-                         slay_bonus(false))}};
+        return "Your quills recede back into your body.";
     }
 };
 
@@ -1063,7 +1061,7 @@ static const Form* forms[] =
     &FormHydra::instance(),
 #endif
     &FormStorm::instance(),
-    &FormBeast::instance(),
+    &FormQuill::instance(),
     &FormMaw::instance(),
     &FormFlux::instance(),
     &FormSlaughter::instance(),

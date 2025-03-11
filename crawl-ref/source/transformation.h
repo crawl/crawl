@@ -32,7 +32,7 @@ enum class transformation
     hydra,
 #endif
     storm,
-    beast,
+    quill,
     maw,
     flux,
     slaughter,

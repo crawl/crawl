@@ -600,15 +600,15 @@ static void _setup_generic(const newgame_def& ng,
         const item_def* talisman = nullptr;
         for (auto& item : you.inv)
         {
-            if (item.is_type(OBJ_TALISMANS, TALISMAN_BEAST))
+            if (item.is_type(OBJ_TALISMANS, TALISMAN_QUILL))
             {
                 talisman = &item;
                 break;
             }
         }
         ASSERT(talisman);
-        set_default_form(transformation::beast, talisman);
-        set_form(transformation::beast, 1); // hacky...
+        set_default_form(transformation::quill, talisman);
+        set_form(transformation::quill, 1); // hacky...
     }
 
     reassess_starting_skills(false);

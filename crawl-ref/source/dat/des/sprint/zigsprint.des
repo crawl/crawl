@@ -799,7 +799,7 @@ KITEM:    T = storm_bow pre_id, \
               plutonium_sword pre_id, \
               devastator pre_id, \
               firestarter pre_id
-KITEM:    S = beast talisman, maw talisman, blade talisman, serpent talisman
+KITEM:    S = quill talisman, maw talisman, blade talisman, serpent talisman
 KFEAT:    ^ = granite_statue
 KFEAT:    & = granite_statue
 COLOUR:   & = magenta

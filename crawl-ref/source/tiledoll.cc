@@ -276,6 +276,8 @@ static tileidx_t _random_trousers()
 
 void fill_doll_equipment(dolls_data &result)
 {
+    tileidx_t ch;
+
     // Equipment-using forms
     switch (you.form)
     {
@@ -288,22 +290,23 @@ void fill_doll_equipment(dolls_data &result)
         result.parts[TILEP_PART_LEG]     = 0;
         result.parts[TILEP_PART_SHADOW]  = 0;
         break;
-    case transformation::beast:
+    case transformation::quill:
+
+        // These get full-body tiles elsewhere.
+        if (you.species == SP_FELID || you.species == SP_OCTOPODE)
+            break;
+
         switch (you.species)
         {
-        case SP_ARMATAUR:
-        case SP_NAGA:
-        case SP_FELID:
-        case SP_OCTOPODE:
-        case SP_DJINNI:  break;
-        default:
-            result.parts[TILEP_PART_BASE] = TILEP_TRAN_BEAST;
-            result.parts[TILEP_PART_LEG]     = 0;
-            break;
+        case SP_ARMATAUR:   ch = TILEP_BODY_QUILL_ARMATAUR;  break;
+        case SP_NAGA:       ch = TILEP_BODY_QUILL_NAGA;      break;
+        case SP_DJINNI:     ch = TILEP_BODY_QUILL_DJINN;     break;
+        default:            ch = TILEP_BODY_QUILL_HUMANOID;  break;
         }
+        result.parts[TILEP_PART_LEG] = 0;
+        result.parts[TILEP_PART_HELM] = ch;
         break;
     case transformation::statue:
-        tileidx_t ch;
         switch (you.species)
         {
 #if TAG_MAJOR_VERSION == 34

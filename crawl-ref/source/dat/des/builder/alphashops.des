@@ -69,7 +69,7 @@
        "acid dragon scales", "potion of attraction", "book of armaments",
        "handbook of applied construction" }
 
-      elseif s == "B" then i = { "bardiche", "battleaxe", "beast talisman",
+      elseif s == "B" then i = { "bardiche", "battleaxe",
        "book of battle", "book of burglary", "book of blasting",
        "book of blood", "buckler", "boomerang", "blade talisman",
        "broad axe", "pair of boots", "potion of berserk rage",
@@ -151,7 +151,7 @@
        "ring of protection from cold" }
 
       elseif s == "Q" then i = { "quarterstaff", "quicksilver dragon scales",
-       "quick blade" }
+       "quick blade", "quill talisman" }
 
       elseif s == "R" then i = { "amulet of reflection",
        "manual of ranged weapons", "wand of roots", "scroll of revelation",

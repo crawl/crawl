@@ -8,7 +8,7 @@ dex: 4
 equipment:
   - "animal skin"
   - "potion of lignification"
-  - "beast talisman"
+  - "quill talisman"
   - "flux talisman"
 recommended_species:
   - naga
