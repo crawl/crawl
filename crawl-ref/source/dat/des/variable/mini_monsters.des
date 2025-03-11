@@ -7961,7 +7961,7 @@ MONS:   place:Depths:$ zombie / place:Depths:$ skeleton, bone dragon
 : else
 MONS:   place:D:$ zombie / place:D:$ skeleton, bone dragon
 : end
-ITEM:   sword_of_zonguldrok no_pickup
+ITEM:   skull_of_zonguldrok no_pickup
 MAP
 ...............
 .cc+cccccccccc.

@@ -794,7 +794,7 @@ KITEM:    T = storm_bow pre_id, \
               mace_of_variability pre_id, \
               sword_of_power pre_id, \
               scythe_of_curses pre_id, \
-              sword_of_zonguldrok pre_id, \
+              skull_of_zonguldrok pre_id, \
               wyrmbane pre_id, \
               plutonium_sword pre_id, \
               devastator pre_id, \
