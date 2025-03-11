@@ -814,11 +814,6 @@ int corrosion_chance(int sources)
     return 3 * sources;
 }
 
-int silence_chance(int sources)
-{
-    return 3 * sources;
-}
-
 /**
  * Maybe corrode the player after taking damage if they're wearing *Corrode.
  **/
@@ -845,7 +840,7 @@ static void _maybe_slow()
 static void _maybe_silence()
 {
     int silence_sources = you.scan_artefacts(ARTP_SILENCE);
-    if (x_chance_in_y(silence_chance(silence_sources), 100))
+    if (x_chance_in_y(silence_sources, 100))
         silence_player(4 + random2(7));
 }
 /**
