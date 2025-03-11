@@ -443,6 +443,9 @@ static const vector<property_descriptor> & _get_all_artp_desc_data()
         { ARTP_WIZARDRY,
             "It increases the success rate of your magical spells.",
             prop_note::plain },
+        { ARTP_SILENCE,
+            "It may silence you when you take damage.",
+            prop_note::plain },
     };
     return data;
 }
@@ -483,6 +486,7 @@ static const vector<artefact_prop_type> artprop_annotation_order =
     ARTP_CORRODE,
     ARTP_DRAIN,
     ARTP_SLOW,
+    ARTP_SILENCE,
     ARTP_FRAGILE,
 
     // Evokable abilities come second
