@@ -5650,7 +5650,7 @@ void bolt::affect_monster(monster* mon)
         // Test if this qualifies to trigger Dimensional Bullseye later on.
         if (agent()->is_player() && you.duration[DUR_DIMENSIONAL_BULLSEYE]
             && !can_trigger_bullseye
-            && !mons_is_firewood(*mon) && mon->summoner != MID_PLAYER)
+            && !mon->is_firewood() && mon->summoner != MID_PLAYER)
         {
             can_trigger_bullseye = true;
         }
