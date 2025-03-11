@@ -31,3 +31,6 @@
 [submodule "crawl-ref/source/contrib/sdl2-mixer"]
 	path = crawl-ref/source/contrib/sdl2-mixer
 	url = https://github.com/crawl/crawl-sdl2-mixer.git
+[submodule "crawl-ref/source/contrib/emsdk"]
+	path = crawl-ref/source/contrib/emsdk
+	url = https://github.com/emscripten-core/emsdk.git

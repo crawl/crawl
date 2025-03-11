@@ -40,7 +40,10 @@
 #else
 # define WORD_LEN -(int8_t)sizeof(long)
 #endif
-
+#ifdef __EMSCRIPTEN__
+# include "version.h"
+# include <emscripten.h>
+#endif
 static map_section_type _write_vault(map_def &mdef,
                                      vault_placement &,
                                      bool check_place);
@@ -1278,86 +1281,86 @@ string get_descache_path(const string &file, const string &ext)
     return _des_cache_dir(basename);
 }
 
-static bool verify_file_version(const string &file, time_t mtime)
+static bool verify_file_version(reader &inf, time_t mtime)
 {
-    FILE *fp = fopen_u(file.c_str(), "rb");
+    const auto version = get_save_version(inf);
+    const auto major = version.major, minor = version.minor;
+    const int8_t word = unmarshallByte(inf);
+#ifdef __EMSCRIPTEN__
+    const string long_version = unmarshallString(inf);
+#else
+    const int64_t t = unmarshallSigned(inf);
+#endif
+
+    return major == TAG_MAJOR_VERSION
+               && minor == TAG_MINOR_VERSION
+               && word == WORD_LEN
+#ifdef __EMSCRIPTEN__
+               && strcmp(long_version.c_str(), Version::Long) == 0;
+#else
+               && t == (int64_t)mtime;
+#endif
+}
+
+static bool _load_map_index(const string& cache, const string &base,
+                            time_t mtime)
+{
+    // First ensure main cache exists and is valid
+    if (FILE *fp = fopen_u((base + ".dsc").c_str(), "rb"))
+    {
+        reader inf(fp, TAG_MINOR_VERSION);
+        try
+        {
+            if (!verify_file_version(inf, mtime))
+                return false;
+        }
+        catch (const short_read_exception&)
+        {
+            fclose(fp);
+            return false;
+        }
+    }
+    else
+        return false;
+
+    // If there's a global prelude, load that first.
+    if (FILE *fp = fopen_u((base + ".lux").c_str(), "rb"))
+    {
+        try
+        {
+            reader inf(fp, TAG_MINOR_VERSION);
+            if (!verify_file_version(inf, mtime))
+                return false;
+            lc_global_prelude.read(inf);
+            fclose(fp);
+    
+            global_preludes.push_back(lc_global_prelude);
+        }
+        catch (const short_read_exception&)
+        {
+            fclose(fp);
+            return false;
+        }
+    }
+
+    FILE* fp = fopen_u((base + ".idx").c_str(), "rb");
     if (!fp)
         return false;
+    reader inf(fp, TAG_MINOR_VERSION);
     try
     {
-        reader inf(fp);
-        const auto version = get_save_version(inf);
-        const auto major = version.major, minor = version.minor;
-        const int8_t word = unmarshallByte(inf);
-        const int64_t t = unmarshallSigned(inf);
-        fclose(fp);
-        return major == TAG_MAJOR_VERSION
-               && minor <= TAG_MINOR_VERSION
-               && word == WORD_LEN
-               && t == mtime;
+        if (!verify_file_version(inf, mtime))
+            return false;
     }
     catch (const short_read_exception&)
     {
         fclose(fp);
         return false;
     }
-}
 
-static bool _verify_map_index(const string &base, time_t mtime)
-{
-    return verify_file_version(base + ".idx", mtime);
-}
-
-static bool _verify_map_full(const string &base, time_t mtime)
-{
-    return verify_file_version(base + ".dsc", mtime);
-}
-
-static bool _load_map_index(const string& cache, const string &base,
-                            time_t mtime)
-{
-    // If there's a global prelude, load that first.
-    if (FILE *fp = fopen_u((base + ".lux").c_str(), "rb"))
-    {
-        reader inf(fp, TAG_MINOR_VERSION);
-        const auto version = get_save_version(inf);
-        const auto major = version.major, minor = version.minor;
-        int8_t word = unmarshallByte(inf);
-        int64_t t = unmarshallSigned(inf);
-        if (major != TAG_MAJOR_VERSION || minor > TAG_MINOR_VERSION
-            || word != WORD_LEN || t != mtime)
-        {
-            return false;
-        }
-
-        lc_global_prelude.read(inf);
-        fclose(fp);
-
-        global_preludes.push_back(lc_global_prelude);
-    }
-
-    FILE* fp = fopen_u((base + ".idx").c_str(), "rb");
-    if (!fp)
-        end(1, true, "Unable to read %s", (base + ".idx").c_str());
-
-    reader inf(fp, TAG_MINOR_VERSION);
-    // Re-check version, might have been modified in the meantime.
-    const auto version = get_save_version(inf);
-    const auto major = version.major, minor = version.minor;
-    int8_t word = unmarshallByte(inf);
-    int64_t t = unmarshallSigned(inf);
-    if (major != TAG_MAJOR_VERSION || minor > TAG_MINOR_VERSION
-        || word != WORD_LEN || t != mtime)
-    {
-        return false;
-    }
-
-#if TAG_MAJOR_VERSION == 34
-    // Throw out indices that could have CHANCE priority entirely.
-    if (minor < TAG_MINOR_NO_PRIORITY)
-        return false;
-#endif
-
+    // From this point on we want to throw exceptions if anything goes wrong,
+    // otherwise we leave things in a broken state
+    
     const int nmaps = unmarshallShort(inf);
     const int nexist = vdefs.size();
     vdefs.resize(nexist + nmaps, map_def());
@@ -1377,26 +1380,18 @@ static bool _load_map_index(const string& cache, const string &base,
     return true;
 }
 
-static bool _load_map_cache(const string &filename, const string &cachename)
+static bool _load_map_cache(const string &filename, const string &cachename,
+                            time_t &mtime)
 {
     _check_des_index_dir();
-    if (!crawl_state.use_des_cache)
-        return false;
 
     const string descache_base = get_descache_path(cachename, "");
 
     file_lock deslock(descache_base + ".lk", "rb", false);
+    mtime = file_modtime(filename);
 
-    time_t mtime = file_modtime(filename);
-    string file_idx = descache_base + ".idx";
-    string file_dsc = descache_base + ".dsc";
-
-    // What's the point in checking these twice (here and in load_ma_index)?
-    if (!_verify_map_index(descache_base, mtime)
-        || !_verify_map_full(descache_base, mtime))
-    {
+    if (!crawl_state.use_des_cache)
         return false;
-    }
 
     return _load_map_index(cachename, descache_base, mtime);
 }
@@ -1414,7 +1409,11 @@ static void _write_map_prelude(const string &filebase, time_t mtime)
     writer outf(luafile, fp);
     write_save_version(outf, save_version::current());
     marshallByte(outf, WORD_LEN);
+#ifdef __EMSCRIPTEN__
+    marshallString(outf, string(Version::Long));
+#else
     marshallSigned(outf, mtime);
+#endif
     lc_global_prelude.write(outf);
     fclose(fp);
 }
@@ -1430,7 +1429,11 @@ static void _write_map_full(const string &filebase, size_t vs, size_t ve,
     writer outf(cfile, fp);
     write_save_version(outf, save_version::current());
     marshallByte(outf, WORD_LEN);
+#ifdef __EMSCRIPTEN__
+    marshallString(outf, string(Version::Long));
+#else
     marshallSigned(outf, mtime);
+#endif
     for (size_t i = vs; i < ve; ++i)
         vdefs[i].write_full(outf);
     fclose(fp);
@@ -1447,7 +1450,11 @@ static void _write_map_index(const string &filebase, size_t vs, size_t ve,
     writer outf(cfile, fp);
     write_save_version(outf, save_version::current());
     marshallByte(outf, WORD_LEN);
+#ifdef __EMSCRIPTEN__
+    marshallString(outf, string(Version::Long));
+#else
     marshallSigned(outf, mtime);
+#endif
     marshallShort(outf, ve > vs? ve - vs : 0);
     for (size_t i = vs; i < ve; ++i)
     {
@@ -1468,7 +1475,6 @@ static void _write_map_cache(const string &filename, size_t vs, size_t ve,
     const string descache_base = get_descache_path(filename, "");
 
     file_lock deslock(descache_base + ".lk", "wb");
-
     _write_map_prelude(descache_base, mtime);
     _write_map_full(descache_base, vs, ve, mtime);
     _write_map_index(descache_base, vs, ve, mtime);
@@ -1482,7 +1488,8 @@ static void _parse_maps(const string &s)
 
     map_files_read.insert(cache_name);
 
-    if (_load_map_cache(s, cache_name))
+    time_t mtime = 0;
+    if (_load_map_cache(s, cache_name, mtime))
         return;
 
     FILE *dat = fopen_u(s.c_str(), "r");
@@ -1495,7 +1502,6 @@ static void _parse_maps(const string &s)
     // won't be seen by the user unless they look for it
     mprf(MSGCH_PLAIN, "Regenerating des: %s", s.c_str());
 
-    time_t mtime = file_modtime(dat);
     _reset_map_parser();
 
     extern int yyparse();
