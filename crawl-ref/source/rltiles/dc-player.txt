@@ -492,6 +492,7 @@ quill_form_armataur QUILL_ARMATAUR
 quill_form_djinn QUILL_DJINN
 quill_form_humanoid QUILL_HUMANOID
 quill_form_naga QUILL_NAGA
+hive_form HIVE_FORM
 
 %end_ctg
 

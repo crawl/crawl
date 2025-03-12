@@ -962,6 +962,13 @@ increases with your shapeshifting skill.
 
 The walls will rapidly melt again if you stop attacking.
 %%%%
+hive swarm mutation
+
+Whenever an injury reduces your health to less than 50%, angry bees will swarm
+out of your body to defend you.
+
+This effect cannot happen again until your health is fully recovered.
+%%%%
 # ------ Makhleb destruction flavours ------
 Gehenna destruction mutation
 

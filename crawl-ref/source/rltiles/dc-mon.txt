@@ -1441,6 +1441,8 @@ slaughter_form_naga TRAN_SLAUGHTER_NAGA
 rime_yak_form TRAN_RIME_YAK
 quill_form_felid TRAN_QUILL_FELID
 quill_form_octopode TRAN_QUILL_OCTOPODE
+hive_form_felid TRAN_HIVE_FELID
+hive_form_octopode TRAN_HIVE_OCTOPODE
 
 %rim 1
 

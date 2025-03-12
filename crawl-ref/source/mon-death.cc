@@ -2904,6 +2904,8 @@ item_def* monster_die(monster& mons, killer_type killer,
             string msg;
             if (mons.has_ench(ENCH_VAMPIRE_THRALL))
                 msg = " turns to dust.";
+            else if (mons.was_created_by(MON_SUMM_HIVE))
+                msg = " returns to its hive.";
             // ratskin cloak
             else if (mons_genus(mons.type) == MONS_RAT)
                 msg = " returns to the shadows of the Dungeon.";

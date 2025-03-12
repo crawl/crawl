@@ -793,6 +793,39 @@ static void _maybe_fog(int dam)
     }
 }
 
+static void _maybe_hive_swarm()
+{
+    if (you.form != transformation::hive
+        || you.allies_forbidden()
+        || you.hp * 2 > you.hp_max
+        || you.duration[DUR_HIVE_COOLDOWN])
+    {
+        return;
+    }
+
+    mgen_data mg(MONS_KILLER_BEE, BEH_FRIENDLY, you.pos(), MHITYOU, MG_FORCE_BEH | MG_AUTOFOE);
+    mg.set_summoned(&you, MON_SUMM_HIVE, random_range(12, 18) * BASELINE_DELAY, false).set_range(1, 3);
+    mg.hd = 5;
+
+    const int num = div_rand_round(get_form()->get_effect_size(), 10);
+    bool made_mon = false;
+    for (int i = 0; i < num; ++i)
+    {
+        if (monster *swarmer = create_monster(mg))
+        {
+            made_mon = true;
+            swarmer->add_ench(ENCH_BERSERK);
+            swarmer->add_ench(ENCH_CONCENTRATE_VENOM);
+        }
+    }
+
+    if (made_mon)
+    {
+        mpr("Angry insects swarm out of your body to defend their hive!");
+        you.duration[DUR_HIVE_COOLDOWN] = 1;
+    }
+}
+
 static void _handle_poor_constitution(int dam)
 {
     const int level = you.get_mutation_level(MUT_POOR_CONSTITUTION);
@@ -1236,6 +1269,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             _maybe_blood_hastes_allies();
             _powered_by_pain(dam);
             makhleb_celebrant_bloodrite();
+            _maybe_hive_swarm();
             if (sanguine_armour_valid())
                 activate_sanguine_armour();
             refresh_meek_bonus();

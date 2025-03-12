@@ -1036,6 +1036,8 @@ static int _player_bonus_regen()
     // Fast heal mutation.
     rr += you.get_mutation_level(MUT_REGENERATION) * REGEN_PIP;
 
+    rr += get_form()->regen_bonus();
+
     // Powered By Death mutation, boosts regen by variable strength
     // if the duration of the effect is still active.
     if (you.duration[DUR_POWERED_BY_DEATH])
@@ -1144,6 +1146,8 @@ int player_mp_regen()
         // We use piety rank to avoid leaking piety info to the player.
         regen_amount += 40 + (40 * (piety_rank(you.piety) - 1)) / 5;
     }
+
+    regen_amount += get_form()->mp_regen_bonus();
 
     return regen_amount;
 }

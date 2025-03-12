@@ -1155,3 +1155,11 @@ Quill status
 
 You have spiny quills growing out of your body which may damage melee attackers.
 %%%%
+Hive status
+
+You are a living beehive, abuzz with busy insects.
+%%%%
+-Swarm status
+
+The insects that dwell within you have recently swarmed to your defense. This
+will not happen again until your health fully recovers.

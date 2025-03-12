@@ -793,6 +793,14 @@ helmet
 
 A piece of metal headgear.
 %%%%
+honeycomb talisman
+
+A preserved honeycomb, still dripping with ambrosial nectar. Transforms the user
+into a living beehive, filled with the buzz of countless insects laboring inside
+them. The nectar produced within greatly increases the user's health and magic
+regeneration and if they become seriously injured, angry bees will swarm out to
+defend their hive.
+%%%%
 horn of Geryon
 
 The horn belonging to Geryon, guardian of the Vestibule of Hell. It has the

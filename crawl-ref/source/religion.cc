@@ -3201,6 +3201,9 @@ static bool _transformed_player_can_join_god(god_type which_god)
     if (is_good_god(which_god) && you.form == transformation::death)
         return false;
 
+    if (which_god == GOD_OKAWARU && you.form == transformation::hive)
+        return false;
+
     return true;
 }
 
@@ -3919,8 +3922,16 @@ void print_god_rejection(god_type which_god)
     }
     if (!_transformed_player_can_join_god(which_god))
     {
-        simple_god_message(" says: How dare you approach in such a loathsome "
-                           "form!", false, which_god);
+        if (which_god == GOD_OKAWARU)
+        {
+            simple_god_message(" says: You must forswear the aid of any and all "
+                               "before you are fit to worship.", false, which_god);
+        }
+        else
+        {
+            simple_god_message(" says: How dare you approach in such a loathsome "
+                               "form!", false, which_god);
+        }
         return;
     }
 

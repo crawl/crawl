@@ -493,6 +493,15 @@ tileidx_t tileidx_player()
         }
         break;
 
+    case transformation::hive:
+        switch (you.species)
+        {
+            case SP_OCTOPODE:   ch = TILEP_TRAN_HIVE_OCTOPODE;     break;
+            case SP_FELID:      ch = TILEP_TRAN_HIVE_FELID;        break;
+            default: break;
+        }
+        break;
+
     // equipment-using forms are handled regularly
     case transformation::flux:
     case transformation::maw:

@@ -306,6 +306,14 @@ void fill_doll_equipment(dolls_data &result)
         result.parts[TILEP_PART_LEG] = 0;
         result.parts[TILEP_PART_HELM] = ch;
         break;
+    case transformation::hive:
+
+        // These get full-body tiles elsewhere.
+        if (you.species == SP_FELID || you.species == SP_OCTOPODE)
+            break;
+
+        result.parts[TILEP_PART_BODY] = TILEP_BODY_HIVE_FORM;
+        break;
     case transformation::statue:
         switch (you.species)
         {

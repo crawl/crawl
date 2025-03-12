@@ -1,0 +1,11 @@
+enum: hive
+equivalent_mons: spider
+short_name: Hive
+description: a living hive.
+skill: {min: 16, max: 25}
+talisman: hive
+melds: [body, helmet]
+ac: {base: 5}
+fakemuts:
+  - ["hive swarm", "When at low health, angry bees swarm out to defend you."]
+  - ["hive regen", "You regenerate HP and MP more quickly."]

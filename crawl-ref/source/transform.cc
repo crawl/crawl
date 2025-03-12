@@ -1028,6 +1028,31 @@ public:
         }
 };
 
+class FormHive : public Form
+{
+private:
+FormHive() : Form(transformation::hive) { }
+    DISALLOW_COPY_AND_ASSIGN(FormHive);
+public:
+    static const FormHive &instance() { static FormHive inst; return inst; }
+
+    int regen_bonus(int skill = -1) const override
+    {
+        return scaling_value(FormScaling().Base(160).Scaling(120), false, skill);
+    }
+
+    int mp_regen_bonus(int skill = -1) const override
+    {
+        return scaling_value(FormScaling().Base(60).Scaling(40), false, skill);
+    }
+
+    // Number of bees created (x10)
+    int get_effect_size(int skill = -1) const override
+    {
+        return scaling_value(FormScaling().Base(32).Scaling(23), false, skill);
+    }
+};
+
 static const Form* forms[] =
 {
     &FormNone::instance(),
@@ -1068,6 +1093,7 @@ static const Form* forms[] =
     &FormVampire::instance(),
     &FormBatswarm::instance(),
     &FormRimeYak::instance(),
+    &FormHive::instance(),
 };
 
 const Form* get_form(transformation xform)

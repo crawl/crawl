@@ -3925,6 +3925,8 @@ colour_t item_def::talisman_colour() const
         return ETC_IRON;
     case TALISMAN_STATUE:
         return ETC_EARTH;
+    case TALISMAN_HIVE:
+        return YELLOW;
     case TALISMAN_DRAGON:
         return ETC_FIRE;
     case TALISMAN_VAMPIRE:

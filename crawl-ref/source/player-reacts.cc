@@ -1191,6 +1191,12 @@ void player_reacts()
         you.duration[DUR_TIME_WARPED_BLOOD_COOLDOWN] = 0;
     }
 
+    if (you.duration[DUR_HIVE_COOLDOWN] && you.hp == you.hp_max)
+    {
+        mprf(MSGCH_DURATION, "The buzzing within you returns to its normal rhythm.");
+        you.duration[DUR_HIVE_COOLDOWN] = 0;
+    }
+
     if (you.duration[DUR_POISONING])
         handle_player_poison(you.time_taken);
 
