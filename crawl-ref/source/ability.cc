@@ -412,6 +412,9 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_SPIDER_JUMP, "Jump",
                 0, 0, 0, -1, {}, abflag::none },
 
+        { ABIL_WATERY_GRAVE, "Watery Grave",
+                    6, 0, 0, -1, {}, abflag::none },
+
         // EVOKE abilities use Evocations and come from items.
         { ABIL_EVOKE_BLINK, "Evoke Blink",
             0, 0, 0, -1, {fail_basis::evo, 40, 2}, abflag::none },
@@ -2279,6 +2282,24 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return false;
     }
 
+    case ABIL_WATERY_GRAVE:
+        if (you.props.exists(WATERY_GRAVE_XP_KEY))
+        {
+            if (!quiet)
+                mpr("You must recover your energy before doing this again.");
+            return false;
+        }
+        for (radius_iterator ri(you.pos(), 4, C_SQUARE, LOS_NO_TRANS, false); ri; ++ri)
+        {
+            if (feat_is_water(env.grid(*ri)))
+                return true;
+        }
+
+        if (!quiet)
+            mpr("There is no water in range!");
+
+        return false;
+
     case ABIL_TROG_BERSERK:
         return you.can_go_berserk(true, false, true)
                && (quiet || berserk_check_wielded_weapon());
@@ -2632,6 +2653,8 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
     case ABIL_SPIDER_JUMP:
     case ABIL_EVOKE_BLINK:
         return make_unique<targeter_multiposition>(&you, find_blink_targets());
+    case ABIL_WATERY_GRAVE:
+        return make_unique<targeter_watery_grave>();
     case ABIL_WORD_OF_CHAOS:
         return make_unique<targeter_multiposition>(&you, find_chaos_targets(true));
     case ABIL_ZIN_RECITE:
@@ -3252,6 +3275,9 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
 
     case ABIL_SPIDER_JUMP:
         return spider_jump();
+
+    case ABIL_WATERY_GRAVE:
+        return cast_watery_grave();
 
     case ABIL_EVOKE_BLINK:      // randarts
         return cast_blink(min(50, 1 + you.skill(SK_EVOCATIONS, 3)), fail);
@@ -4251,6 +4277,8 @@ bool player_has_ability(ability_type abil, bool include_unusable)
                && !species::is_draconian(you.species);
     case ABIL_SPIDER_JUMP:
         return you.form == transformation::spider;
+    case ABIL_WATERY_GRAVE:
+        return you.form == transformation::aqua;
     case ABIL_BLINKBOLT:
         return you.form == transformation::storm;
     case ABIL_SIPHON_ESSENCE:
@@ -4345,6 +4373,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_BAT_SWARM,
             ABIL_ENKINDLE,
             ABIL_SPIDER_JUMP,
+            ABIL_WATERY_GRAVE,
             ABIL_BLINKBOLT,
             ABIL_SIPHON_ESSENCE,
             ABIL_IMBUE_SERVITOR,

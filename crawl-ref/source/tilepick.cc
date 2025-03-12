@@ -3027,6 +3027,7 @@ static tileidx_t _tileidx_talisman(const item_def &item)
     case TALISMAN_FLUX:    return TILE_TALISMAN_FLUX;
     case TALISMAN_RIMEHORN: return TILE_TALISMAN_RIMEHORN;
     case TALISMAN_SPIDER:   return TILE_TALISMAN_SPIDER;
+    case TALISMAN_AQUA:     return TILE_TALISMAN_AQUA;
     case TALISMAN_SERPENT:  return TILE_TALISMAN_SNAKE;
     case TALISMAN_MAW:      return TILE_TALISMAN_MAW;
     case TALISMAN_BLADE:    return TILE_TALISMAN_BLADE;
@@ -3908,6 +3909,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_BAT_SWARM;
     case ABIL_ENKINDLE:
         return TILEG_ABILITY_ENKINDLE;
+    case ABIL_WATERY_GRAVE:
+        return TILEG_ABILITY_WATERY_GRAVE;
 
     // Others
     case ABIL_END_TRANSFORMATION:

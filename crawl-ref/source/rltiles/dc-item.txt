@@ -1262,6 +1262,7 @@ rimehorn TALISMAN_RIMEHORN
 spider TALISMAN_SPIDER
 quill TALISMAN_QUILL
 hive TALISMAN_HIVE
+water TALISMAN_AQUA
 
 %sdir item/misc/uncollected_runes
 generic MISC_UNCOLLECTED_RUNE_OF_ZOT

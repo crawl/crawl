@@ -982,8 +982,7 @@ aff_type targeter_reach::is_affected(coord_def loc)
     if (loc == aim)
         return AFF_YES;
 
-    // hacks: Reach 3 entails smite targeting, because it exists entirely
-    // for the sake of UNRAND_RIFT. So, don't show the tracer.
+    // Reach 3 entails smite targeting, so don't show the tracer.
     if (range == 2
         && ((loc - origin) * 2 - (aim - origin)).abs() < 1
         && feat_is_reachable_past(env.grid(loc)))
@@ -2756,4 +2755,20 @@ aff_type targeter_malign_gateway::is_affected(coord_def loc)
         return AFF_MAYBE;
 
     return AFF_NO;
+}
+
+targeter_watery_grave::targeter_watery_grave()
+    : targeter_radius(&you, LOS_NO_TRANS, 4)
+{
+}
+
+aff_type targeter_watery_grave::is_affected(coord_def loc)
+{
+    if (!targeter_radius::is_affected(loc))
+        return AFF_NO;
+
+    if (feat_is_water(env.grid(loc)))
+        return AFF_YES;
+    else
+        return AFF_MAYBE;
 }

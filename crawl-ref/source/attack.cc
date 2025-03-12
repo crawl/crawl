@@ -1514,7 +1514,9 @@ void attack::player_stab_check()
 {
     // Stabbing monsters is unchivalric, and disabled under TSO!
     // (And also requires more finesse than just stumbling into a monster.)
-    if (you.confused() || have_passive(passive_t::no_stabbing))
+    // Water form also cannot stab from a distance.
+    if (you.confused() || have_passive(passive_t::no_stabbing)
+        || you.form == transformation::aqua && !adjacent(you.pos(), defender->pos()))
     {
         stab_attempt = false;
         stab_bonus = 0;

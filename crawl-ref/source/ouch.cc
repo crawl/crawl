@@ -66,10 +66,12 @@
 #include "spl-clouds.h"
 #include "spl-damage.h"
 #include "spl-goditem.h"
+#include "spl-monench.h"
 #include "spl-selfench.h"
 #include "state.h"
 #include "stringutil.h"
 #include "teleport.h"
+#include "terrain.h"
 #include "transform.h"
 #include "tutorial.h"
 #include "view.h"
@@ -373,6 +375,15 @@ void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_bl
     {
         mprf(MSGCH_WARN, "The flames go out!");
         end_sticky_flame_player();
+    }
+
+    if (you.form == transformation::aqua
+        && flavour == BEAM_COLD || flavour == BEAM_ICE
+        && coinflip())
+    {
+        if (!you.duration[DUR_FROZEN])
+            mpr("Your body starts to freeze solid!");
+        you.increase_duration(DUR_FROZEN, random_range(5, 10), 50);
     }
 }
 
@@ -790,6 +801,54 @@ static void _maybe_fog(int dam)
         mprf(MSGCH_GOD, "You emit a cloud of colourful smoke!");
         big_cloud(CLOUD_XOM_TRAIL, &you, you.pos(), 50, 4 + random2(5), -1);
         take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "smoke on damage"), true);
+    }
+}
+
+static void _maybe_splash_water(int dam)
+{
+    if (you.form != transformation::aqua)
+        return;
+
+    const int percent = dam * 100 / you.hp_max;
+
+    if (percent < 10 && !one_chance_in(percent))
+        return;
+
+    // Assume the player can fill 25 tiles will all their hp (with some randomisation).
+    int water = div_rand_round(percent, 2);
+
+    if (water == 0)
+        return;
+
+    vector<coord_def> spots;
+    for (distance_iterator di(you.pos(), true, false, 3); di; ++di)
+    {
+        if (you.see_cell_no_trans(*di)
+            && feat_has_dry_floor(env.grid(*di))
+            && !feat_is_critical(env.grid(*di)))
+        {
+            spots.push_back(*di);
+        }
+    }
+
+    // spots is neatly ordered from player->outwards. random_spots is completely
+    // randomized. We mostly pick from spots, with a smaller chance to pick from
+    // random spots, so that the splash tends to build outward from the player,
+    // but slightly unevenly.
+    vector<coord_def> random_spots = spots;
+    shuffle_array(random_spots);
+
+    water = min(water, (int)spots.size());
+
+    if (water == 0)
+        return;
+
+    mpr("You splash onto the ground.");
+    for (int i = 0; i < water; ++i)
+    {
+        const coord_def pos = one_chance_in(3) ? random_spots[i] : spots[i];
+        temp_change_terrain(pos, DNGN_SHALLOW_WATER, random_range(80, 110),
+                            TERRAIN_CHANGE_AQUA_FORM, MID_PLAYER);
     }
 }
 
@@ -1269,6 +1328,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             _maybe_blood_hastes_allies();
             _powered_by_pain(dam);
             makhleb_celebrant_bloodrite();
+            _maybe_splash_water(dam);
             _maybe_hive_swarm();
             if (sanguine_armour_valid())
                 activate_sanguine_armour();

@@ -2366,6 +2366,24 @@ static void _handle_batform_recharge(int exp)
     }
 }
 
+static void _handle_watery_grave_recharge(int exp)
+{
+    if (!you.props.exists(WATERY_GRAVE_XP_KEY)
+        || you.default_form != transformation::aqua)
+    {
+        return;
+    }
+
+    int loss = div_rand_round(exp, calc_skill_cost(you.skill_cost_level));
+    you.props[WATERY_GRAVE_XP_KEY].get_int() -= loss;
+
+    if (you.props[WATERY_GRAVE_XP_KEY].get_int() <= 0)
+    {
+        you.props.erase(WATERY_GRAVE_XP_KEY);
+        mprf(MSGCH_DURATION, "You feel ready to drown your foes once more.");
+    }
+}
+
 static void _handle_god_wrath(int exp)
 {
     for (god_iterator it; it; ++it)
@@ -2428,6 +2446,7 @@ void apply_exp()
     _handle_breath_recharge(skill_xp);
     _handle_cacophony_recharge(skill_xp);
     _handle_batform_recharge(skill_xp);
+    _handle_watery_grave_recharge(skill_xp);
 
     if (player_under_penance(GOD_HEPLIAKLQANA))
         return; // no xp for you!
@@ -6556,8 +6575,7 @@ bool player::is_insubstantial() const
 
 bool player::is_amorphous() const
 {
-    // Maybe this'll change some day?...
-    return false;
+    return you.form == transformation::aqua;
 }
 
 int player::res_corr() const
@@ -6898,7 +6916,8 @@ int player::reach_range() const
     const item_def *off = offhand_weapon();
     const int wpn_reach = wpn ? weapon_reach(*wpn) : 1;
     const int off_reach = off ? weapon_reach(*off) : 1;
-    return max(wpn_reach, off_reach);
+    const int bonus = you.form == transformation::aqua ? 2 : 0;
+    return max(wpn_reach, off_reach) + bonus;
 }
 
 monster_type player::mons_species(bool /*zombie_base*/) const

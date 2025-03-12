@@ -87,9 +87,11 @@ melee_attack::melee_attack(actor *attk, actor *defn,
 bool melee_attack::can_reach(int dist)
 {
     const int wpn_reach = weapon ? weapon_reach(*weapon) : 1;
+    const int range_bonus =
+            attacker->is_player() && you.form == transformation::aqua ? 2 : 0;
 
     return dist <= 1
-           || attk_type == AT_HIT && wpn_reach >= dist
+           || attk_type == AT_HIT && wpn_reach + range_bonus >= dist
            || flavour_has_reach(attk_flavour)
            || is_projected;
 }
@@ -941,8 +943,9 @@ bool melee_attack::handle_phase_aux()
     {
         // returns whether an aux attack successfully took place
         // additional attacks from cleave don't get aux
+        const int aux_dist = you.form == transformation::aqua ? 3 : 1;
         if (!defender->as_monster()->friendly()
-            && adjacent(defender->pos(), attack_position))
+            && grid_distance(defender->pos(), attack_position) <= aux_dist)
         {
             player_do_aux_attacks();
         }
@@ -1234,9 +1237,11 @@ void melee_attack::set_weapon(item_def *wpn, bool offhand)
         wpn_skill = SK_FIGHTING;
 }
 
+// Perform a player attack with a specific weapon.
 bool melee_attack::swing_with(item_def &wpn, bool offhand)
 {
-    const bool reaching = weapon_reach(wpn) > 1;
+    const bool reaching = weapon_reach(wpn) > 1
+                            || you.form == transformation::aqua;
     if (!is_projected
         && !reaching
         && !adjacent(attacker->pos(), defender->pos()))

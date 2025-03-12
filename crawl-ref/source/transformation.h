@@ -40,6 +40,7 @@ enum class transformation
     bat_swarm,
     rime_yak,
     hive,
+    aqua,
     COUNT
 };
 constexpr int NUM_TRANSFORMS = static_cast<int>(transformation::COUNT);

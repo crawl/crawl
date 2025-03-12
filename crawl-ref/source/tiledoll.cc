@@ -306,6 +306,19 @@ void fill_doll_equipment(dolls_data &result)
         result.parts[TILEP_PART_LEG] = 0;
         result.parts[TILEP_PART_HELM] = ch;
         break;
+    case transformation::aqua:
+        switch (you.species)
+        {
+        case SP_ARMATAUR:   ch = TILEP_TRAN_AQUA_ARMATAUR;  break;
+        case SP_NAGA:       ch = TILEP_TRAN_AQUA_NAGA;      break;
+        case SP_FELID:      ch = TILEP_TRAN_AQUA_FELID;     break;
+        case SP_OCTOPODE:   ch = TILEP_TRAN_AQUA_OCTOPODE;  break;
+        case SP_DJINNI:     ch = TILEP_TRAN_AQUA_DJINN;     break;
+        default:            ch = TILEP_TRAN_AQUA_HUMANOID;  break;
+        }
+        result.parts[TILEP_PART_BASE]    = ch;
+        result.parts[TILEP_PART_HAIR]    = 0;
+        break;
     case transformation::hive:
 
         // These get full-body tiles elsewhere.

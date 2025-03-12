@@ -1070,3 +1070,13 @@ able to land a blow on you until you can act again, and many may lose track of
 your position entirely.
 
 You must spend a short while recovering between each use of this ability.
+%%%%
+Watery Grave ability
+
+Turns all of the water near you into a surging tide that attempts to drown every
+enemy standing in or above it. Those who need air to breathe it will also become
+Waterlogged, preventing them from casting spells affected by Silence for several
+turns.
+
+After using this ability, you must gain experience points before you can recover
+enough power to use it again.

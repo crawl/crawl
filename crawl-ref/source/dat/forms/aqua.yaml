@@ -1,0 +1,17 @@
+enum: aqua
+skill: {min: 10, max: 19}
+talisman: aqua
+melds: [body]
+unarmed_colour: blue
+ev: {base: 6, scaling: 7}
+changes_substance: yes
+can_swim: yes
+special_damage: 4d1+(6/5)
+special_damage_name: Watery Grave Dmg
+fakemuts:
+  - ["water reaching", "Your aqueous body allows to you attack from a distance."]
+  - ["water splatter", "When injured, pools of shallow water form around you."]
+  - ["watery grave", "You can command nearby water to drown your enemies."]
+badmuts:
+  - ["steam response", "When hit by fire damage, your body sometimes produces steam."]
+  - ["freeze response", "When hit by cold damage, your body sometimes freezes."]

@@ -1443,6 +1443,12 @@ quill_form_felid TRAN_QUILL_FELID
 quill_form_octopode TRAN_QUILL_OCTOPODE
 hive_form_felid TRAN_HIVE_FELID
 hive_form_octopode TRAN_HIVE_OCTOPODE
+aqua_form_armataur TRAN_AQUA_ARMATAUR
+aqua_form_djinn TRAN_AQUA_DJINN
+aqua_form_felid TRAN_AQUA_FELID
+aqua_form_humanoid TRAN_AQUA_HUMANOID
+aqua_form_naga TRAN_AQUA_NAGA
+aqua_form_octopode TRAN_AQUA_OCTOPODE
 
 %rim 1
 

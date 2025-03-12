@@ -7367,6 +7367,8 @@ static string _describe_talisman_form(const item_def &item)
         pr.AddCell("Stealth", "++");
     else if (form_type == transformation::spider)
         pr.AddCell("Stealth", "+");
+    else if (form_type == transformation::aqua)
+        pr.AddCell("Reach", "+2");
 
     // Don't output extra blank lines if there's no content.
     if (pr.NumCells() > 0)

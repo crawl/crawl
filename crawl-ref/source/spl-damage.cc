@@ -3120,6 +3120,41 @@ spret cast_plasma_beam(int pow, const actor &agent, bool fail)
     return spret::success;
 }
 
+spret cast_watery_grave()
+{
+    mpr("You reach out to the water around you and turn it against your foes!");
+
+    bolt strike;
+    zappy(ZAP_WATERY_GRAVE, get_form()->get_level(8), false, strike);
+    strike.set_agent(&you);
+    strike.damage = get_form()->get_special_damage();
+    strike.hit_verb = "engulfs";
+
+    for (radius_iterator ri(you.pos(), 4, C_SQUARE, LOS_NO_TRANS, false); ri; ++ri)
+    {
+        if (monster* mon = monster_at(*ri))
+        {
+            if (!mon->wont_attack())
+            {
+                bolt _strike = strike;
+                _strike.source = *ri;
+                _strike.target = *ri;
+                if (!mon->is_unbreathing())
+                    _strike.hit_verb = "drowns";
+                _strike.fire();
+            }
+        }
+
+        revert_terrain_change(*ri, TERRAIN_CHANGE_AQUA_FORM);
+        if (env.grid(*ri) == DNGN_SHALLOW_WATER)
+            dungeon_terrain_changed(*ri, DNGN_FLOOR);
+    }
+
+    you.props[WATERY_GRAVE_XP_KEY] = 75;
+
+    return spret::success;
+}
+
 static bool _elec_not_immune(const actor *act)
 {
     return act->res_elec() < 3 && !never_harm_monster(&you, act->as_monster());

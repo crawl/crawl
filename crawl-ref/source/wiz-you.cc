@@ -221,6 +221,7 @@ void wizard_heal(bool super_heal)
         you.props.erase(BARBS_MOVE_KEY);
         you.props.erase(CACOPHONY_XP_KEY);
         you.props.erase(BATFORM_XP_KEY);
+        you.props.erase(WATERY_GRAVE_XP_KEY);
         you.duration[DUR_SICKNESS]  = 0;
         you.duration[DUR_EXHAUSTED] = 0;
         you.duration[DUR_BREATH_WEAPON] = 0;

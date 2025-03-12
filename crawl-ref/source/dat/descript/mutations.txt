@@ -969,6 +969,30 @@ out of your body to defend you.
 
 This effect cannot happen again until your health is fully recovered.
 %%%%
+water reaching mutation
+
+Your body is formed of elemental water that changes shape flexibly, allowing you
+to reach and perform melee attacks from several tiles away - including auxiliary
+attacks of all sorts.
+
+The precision required to preform stab attacks is still impossible unless you're
+adjacent to your target.
+%%%%
+water splatter mutation
+
+When injured, parts of your watery body may splatter as puddles of shallow
+water nearby. The more damage you take at once, the more water is spread around.
+%%%%
+freeze response mutation
+
+Whenever you are exposed to cold damage, you have a chance to become Frozen,
+lowering your movement speed for a short while.
+%%%%
+steam response mutation
+
+Whenever you take fire damage from a projectile, you have a chance (increasing
+with the damage suffered) to spread steam clouds around yourself.
+%%%%
 # ------ Makhleb destruction flavours ------
 Gehenna destruction mutation
 

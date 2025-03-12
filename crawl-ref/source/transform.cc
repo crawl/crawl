@@ -1053,6 +1053,31 @@ public:
     }
 };
 
+class FormWater : public Form
+{
+private:
+FormWater() : Form(transformation::aqua) { }
+    DISALLOW_COPY_AND_ASSIGN(FormWater);
+public:
+    static const FormWater &instance() { static FormWater inst; return inst; }
+
+    string get_description(bool past_tense) const override
+    {
+        return make_stringf("Your body %s made of elemental water.",
+                            past_tense ? "was" : "is");
+    }
+
+    string transform_message() const override
+    {
+        return "Your body transforms into elemental water.";
+    }
+
+    string get_untransform_message() const override
+    {
+        return "Your body returns to its normal shape and substance.";
+    }
+};
+
 static const Form* forms[] =
 {
     &FormNone::instance(),
@@ -1094,6 +1119,7 @@ static const Form* forms[] =
     &FormBatswarm::instance(),
     &FormRimeYak::instance(),
     &FormHive::instance(),
+    &FormWater::instance(),
 };
 
 const Form* get_form(transformation xform)

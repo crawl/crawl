@@ -742,3 +742,10 @@ public:
     aff_type is_affected(coord_def loc) override;
     bool valid_aim(coord_def) override { return true; }
 };
+
+class targeter_watery_grave : public targeter_radius
+{
+public:
+    targeter_watery_grave();
+    aff_type is_affected(coord_def loc) override;
+};

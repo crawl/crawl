@@ -4514,6 +4514,17 @@ void bolt::affect_player()
             you.duration[DUR_FROZEN] = (random_range(3, 5)) * BASELINE_DELAY;
         }
     }
+
+    if (you.form == transformation::aqua
+        && flavour == BEAM_FIRE || flavour == BEAM_LAVA
+        && !agent()->is_player()
+        && x_chance_in_y(final_dam, you.hp_max * 2 / 3))
+    {
+        const int pow = div_rand_round(final_dam * 100 / you.hp_max, 10);
+        mpr("A part of your body evaporates into steam!");
+        big_cloud(CLOUD_STEAM, monster_by_mid(MID_YOU_FAULTLESS), you.pos(),
+                  random_range(1, 4) + pow, random_range(2, 7));
+    }
 }
 
 bool bolt::ignores_player() const
@@ -5302,6 +5313,10 @@ void bolt::monster_post_hit(monster* mon, int dmg)
 
     if (origin_spell == SPELL_KINETIC_GRAPNEL && dmg > 0)
         mon->add_ench(mon_enchant(ENCH_KINETIC_GRAPNEL, 0, agent(), random_range(30, 50)));
+
+    // Watery Grave
+    if (name == "grasping water" && !mon->is_unbreathing())
+        _waterlog_mon(*mon, ench_power);
 }
 
 static int _knockback_dist(spell_type origin, int pow)

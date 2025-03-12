@@ -2718,4 +2718,20 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     false,
 },
 
+{
+    ZAP_WATERY_GRAVE,
+    "grasping water",
+    200,
+    new calcdice_calculator<0, 1, 1, 1>,    // Overriden by Form::get_special_damage()
+    new tohit_calculator<AUTOMATIC_HIT>,
+    nullptr,
+    nullptr,
+    LIGHTBLUE,
+    false,
+    BEAM_WATER,
+    DCHAR_WAVY,
+    false,
+    false,
+},
+
 };

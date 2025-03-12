@@ -190,3 +190,5 @@ void do_catalyst_explosion(coord_def center, const item_def* wpn);
 
 bool find_life_bolt_ray(coord_def& source, coord_def target, ray_def& ray);
 void fire_life_bolt(actor& attacker, coord_def target);
+
+spret cast_watery_grave();
