@@ -1383,7 +1383,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     item_def &i = env.item[thing_created];
     if (melee_only && (i.base_type != OBJ_WEAPONS || is_range_weapon(i)))
     {
-        destroy_item(thing_created);
+        destroy_item(thing_created, true);
         return NON_ITEM;
     }
 
