@@ -569,7 +569,7 @@ IDEF(reach_range)
     if (!item || !item->defined())
         return 0;
 
-    reach_type rt = weapon_reach(*item);
+    int rt = weapon_reach(*item);
     lua_pushnumber(ls, rt);
     return 1;
 }

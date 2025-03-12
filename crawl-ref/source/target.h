@@ -5,7 +5,6 @@
 #include "beam.h"
 #include "coordit.h"
 #include "los-type.h"
-#include "reach-type.h"
 
 using std::vector;
 
@@ -204,8 +203,8 @@ public:
 class targeter_reach : public targeter
 {
 public:
-    targeter_reach(const actor* act, reach_type ran = REACH_NONE);
-    reach_type range;
+    targeter_reach(const actor* act, int ran = 1);
+    int range;
     bool valid_aim(coord_def a) override;
     aff_type is_affected(coord_def loc) override;
 };

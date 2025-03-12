@@ -1789,9 +1789,6 @@
     <ClInclude Include="..\ray.h">
       <Filter>h</Filter>
     </ClInclude>
-    <ClInclude Include="..\reach-type.h">
-      <Filter>h</Filter>
-    </ClInclude>
     <ClInclude Include="..\recite-eligibility.h">
       <Filter>h</Filter>
     </ClInclude>

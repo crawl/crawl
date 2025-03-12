@@ -905,7 +905,6 @@ python.exe util/gen-all.py</Command>
     <ClInclude Include="..\random.h" />
     <ClInclude Include="..\ranged-attack.h" />
     <ClInclude Include="..\ray.h" />
-    <ClInclude Include="..\reach-type.h" />
     <ClInclude Include="..\recite-eligibility.h" />
     <ClInclude Include="..\recite-type.h" />
     <ClInclude Include="..\religion-enum.h" />

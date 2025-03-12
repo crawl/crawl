@@ -1164,8 +1164,6 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
         return;
 
     const coord_def atk = attacker.pos();
-    //If someone adds a funky reach which isn't just a number
-    //They will need to special case it here.
     const int cleave_radius = weap ? weapon_reach(*weap) : 1;
 
     for (distance_iterator di(atk, true, true, cleave_radius); di; ++di)
@@ -1174,9 +1172,7 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
         actor *target = actor_at(*di);
         if (!target || dont_harm(attacker, *target))
             continue;
-        if (di.radius() == 2 && !can_reach_attack_between(atk, *di, REACH_TWO))
-            continue;
-        else if (di.radius() == 3 && !can_reach_attack_between(atk, *di, REACH_THREE))
+        if (di.radius() > 1 && !can_reach_attack_between(atk, *di, cleave_radius))
             continue;
         targets.push_back(target);
     }
@@ -1210,7 +1206,7 @@ int attack_multiple_targets(actor &attacker, list<actor*> &targets,
 
     int total_damage = 0;
     const item_def* weap = weapon ? weapon : attacker.weapon(attack_number);
-    const bool reaching = weap && weapon_reach(*weap) > REACH_NONE;
+    const bool reaching = weap && weapon_reach(*weap) > 1;
     while (attacker.alive() && !targets.empty())
     {
         actor* def = targets.front();
@@ -1625,8 +1621,7 @@ bool stop_summoning_prompt(resists_t resists, monclass_flags_t flags,
     return true;
 }
 
-bool can_reach_attack_between(coord_def source, coord_def target,
-                              reach_type range)
+bool can_reach_attack_between(coord_def source, coord_def target, int range)
 {
     // The foe should be on the map (not stepped from time).
     if (!in_bounds(target))
@@ -1636,7 +1631,7 @@ bool can_reach_attack_between(coord_def source, coord_def target,
     const int grid_distance(delta.rdist());
 
     // Unrand only - Rift is smite-targeted and up to 3 range.
-    if (range == REACH_THREE)
+    if (range >= 3)
     {
         return cell_see_cell(source, target, LOS_NO_TRANS)
                && grid_distance > 1 && grid_distance <= range;

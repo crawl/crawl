@@ -467,7 +467,7 @@ namespace quiver
                 return "punch";
             }
 
-            if (weapon_reach(*weapon) > REACH_NONE)
+            if (weapon_reach(*weapon) > 1)
                 return "reach";
             else if (attack_cleaves(you))
                 return "cleave";
@@ -578,7 +578,7 @@ namespace quiver
                 return;
 
             target.isEndpoint = true; // is this needed? imported from autofight code
-            const reach_type reach_range = you.reach_range();
+            const int reach_range = you.reach_range();
 
             direction_chooser_args args;
             args.restricts = DIR_TARGET;
@@ -654,11 +654,11 @@ namespace quiver
 
             // Check for a monster in the way. If there is one, it blocks the reaching
             // attack 50% of the time, and the attack tries to hit it if it is hostile.
-            // REACH_THREE entails smite targeting; this is a bit hacky in that
+            // Reach 3 entails smite targeting; this is a bit hacky in that
             // this is entirely for the sake of UNRAND_RIFT.
             // Cleaving reaches also will never fail to miss, since the player can
             // just attack another target in most cases to hit both.
-            if (reach_range < REACH_THREE
+            if (reach_range < 3
                 && !attack_cleaves(you)
                 && (x_distance > 1 || y_distance > 1))
             {

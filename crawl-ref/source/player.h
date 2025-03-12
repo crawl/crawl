@@ -531,7 +531,7 @@ public:
     undead_state_type undead_state(bool temp = true) const;
     bool nightvision() const override;
     bool may_pruneify() const;
-    reach_type reach_range() const override;
+    int reach_range() const override;
     bool see_cell(const coord_def& p) const override;
 
     // Is c in view but behind a transparent wall?

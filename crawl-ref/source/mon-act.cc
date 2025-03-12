@@ -368,7 +368,7 @@ static bool _allied_monster_at(monster* mon, coord_def delta)
     if (ally == nullptr)
         return false;
 
-    if (ally->is_stationary() || ally->reach_range() > REACH_NONE)
+    if (ally->is_stationary() || ally->reach_range() > 1)
         return false;
 
     // Hostile monsters of normal intelligence only move aside for
@@ -914,7 +914,7 @@ static bool _handle_swoop_or_flank(monster& mons)
 static bool _handle_reaching(monster& mons)
 {
     bool       ret = false;
-    const reach_type range = mons.reach_range();
+    const int range = mons.reach_range();
     actor *foe = mons.get_foe();
 
     // Don't attempt to reach-attack a player we cannot see through Nightfall
@@ -924,7 +924,7 @@ static bool _handle_reaching(monster& mons)
     if (mons.caught()
         || mons_is_confused(mons)
         || !foe
-        || range <= REACH_NONE
+        || range <= 1
         || is_sanctuary(mons.pos())
         || is_sanctuary(foe->pos())
         || (mons_aligned(&mons, foe) && !mons.has_ench(ENCH_FRENZIED))

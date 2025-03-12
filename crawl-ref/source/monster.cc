@@ -5980,9 +5980,9 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     }
 }
 
-reach_type monster::reach_range() const
+int monster::reach_range() const
 {
-    reach_type range = REACH_NONE;
+    int range = 1;
 
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
@@ -5990,9 +5990,9 @@ reach_type monster::reach_range() const
         if (flavour_has_reach(attk.flavour) && attk.damage)
         {
             if (attk.flavour == AF_RIFT)
-                range = REACH_THREE;
+                range = 3;
             else
-                range = max(REACH_TWO, range);
+                range = max(2, range);
         }
     }
 

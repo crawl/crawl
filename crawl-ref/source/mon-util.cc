@@ -58,7 +58,6 @@
 #include "notes.h"
 #include "options.h"
 #include "random.h"
-#include "reach-type.h"
 #include "religion.h"
 #include "showsymb.h"
 #include "species.h"
@@ -3880,7 +3879,7 @@ bool mons_has_ranged_attack(const monster& mon)
     return mons_has_ranged_spell(mon, true)
            || _mons_has_usable_ranged_weapon(&mon)
            || mon.missiles()
-           || mon.reach_range() != REACH_NONE
+           || mon.reach_range() > 1
            || _mons_has_attack_wand(mon);
 }
 

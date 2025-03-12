@@ -86,8 +86,10 @@ melee_attack::melee_attack(actor *attk, actor *defn,
 
 bool melee_attack::can_reach(int dist)
 {
+    const int wpn_reach = weapon ? weapon_reach(*weapon) : 1;
+
     return dist <= 1
-           || attk_type == AT_HIT && weapon && weapon_reach(*weapon) >= dist
+           || attk_type == AT_HIT && wpn_reach >= dist
            || flavour_has_reach(attk_flavour)
            || is_projected;
 }
@@ -1234,7 +1236,7 @@ void melee_attack::set_weapon(item_def *wpn, bool offhand)
 
 bool melee_attack::swing_with(item_def &wpn, bool offhand)
 {
-    const bool reaching = weapon_reach(wpn) > REACH_NONE;
+    const bool reaching = weapon_reach(wpn) > 1;
     if (!is_projected
         && !reaching
         && !adjacent(attacker->pos(), defender->pos()))

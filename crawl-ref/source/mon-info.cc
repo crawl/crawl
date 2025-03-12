@@ -1740,20 +1740,20 @@ int monster_info::range() const
     return range;
 }
 
-reach_type monster_info::reach_range(bool items) const
+int monster_info::reach_range(bool items) const
 {
     const monsterentry *e = get_monster_data(mons_class_is_zombified(type)
                                              ? base_type : type);
     ASSERT(e);
-    reach_type range = REACH_NONE;
+    int range = 1;
 
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
         const attack_flavour fl = e->attack[i].flavour;
         if (fl == AF_RIFT)
-            range = REACH_THREE;
+            range = 3;
         else if (flavour_has_reach(fl))
-            range = max(REACH_TWO, range);
+            range = max(2, range);
     }
 
     if (items)
@@ -1990,10 +1990,10 @@ static bool _has_polearm(const monster_info& mi)
     if (mi.itemuse() >= MONUSE_STARTING_EQUIPMENT)
     {
         const item_def* weapon = mi.inv[MSLOT_WEAPON].get();
-        return weapon && weapon_reach(*weapon) >= REACH_TWO;
+        return weapon && weapon_reach(*weapon) >= 2;
     }
     else
-        return mi.type == MONS_DANCING_WEAPON && mi.reach_range() >= REACH_TWO;
+        return mi.type == MONS_DANCING_WEAPON && mi.reach_range() >= 2;
 }
 
 static bool _has_launcher(const monster_info& mi)
@@ -2070,7 +2070,7 @@ void mons_conditions_string(string& desc, const vector<monster_info>& mi,
                 launcher_count++;
             else if (_has_missile(mi[j]))
                 missile_count++;
-            if (mi[j].reach_range(false) > REACH_NONE)
+            if (mi[j].reach_range(false) > 1)
                 reach_count++;
             if (_has_attack_flavour(mi[j], AF_CRUSH))
                 constrict_count++;

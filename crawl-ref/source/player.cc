@@ -6892,12 +6892,12 @@ bool player::nightvision() const
            || you.unrand_equipped(UNRAND_SHADOWS);
 }
 
-reach_type player::reach_range() const
+int player::reach_range() const
 {
     const item_def *wpn = weapon();
     const item_def *off = offhand_weapon();
-    const reach_type wpn_reach = wpn ? weapon_reach(*wpn) : REACH_NONE;
-    const reach_type off_reach = off ? weapon_reach(*off) : REACH_NONE;
+    const int wpn_reach = wpn ? weapon_reach(*wpn) : 1;
+    const int off_reach = off ? weapon_reach(*off) : 1;
     return max(wpn_reach, off_reach);
 }
 

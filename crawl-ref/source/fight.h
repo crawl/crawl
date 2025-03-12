@@ -123,8 +123,7 @@ bool warn_about_bad_targets(const char* source_name, vector<coord_def> targets,
                             function<bool(const monster&)> should_ignore = nullptr,
                             const char* msg = "Cast it anyway?");
 
-bool can_reach_attack_between(coord_def source, coord_def target,
-                              reach_type range);
+bool can_reach_attack_between(coord_def source, coord_def target, int range);
 dice_def spines_damage(monster_type mon);
 int archer_bonus_damage(int hd);
 
