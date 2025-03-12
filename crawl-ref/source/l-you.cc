@@ -1113,6 +1113,17 @@ LUAFN(you_caught)
     return 1;
 }
 
+/*** What is your current reaching range?
+ * @treturn int
+ * @function reach_range
+ */
+LUAFN(you_reach_range)
+{
+    lua_pushinteger(ls, you.reach_range());
+
+    return 1;
+}
+
 /*** Get the mutation level of a mutation.
  * If all optional parameters are false this returns zero.
  * @tparam string mutationname
@@ -1488,6 +1499,7 @@ static const struct luaL_reg you_clib[] =
     { "constricting", you_constricting },
     { "status",       you_status },
     { "immune_to_hex", you_immune_to_hex },
+    { "reach_range", you_reach_range },
 
     { "stop_activity", you_stop_activity },
     { "taking_stairs", you_taking_stairs },

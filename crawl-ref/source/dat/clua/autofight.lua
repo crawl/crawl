@@ -84,21 +84,8 @@ local function vector_move(a, dx, dy)
   end
 end
 
-local function reach_range()
-  local r = 1
-  local wp = items.equipped_at("weapon")
-  if wp and not wp.is_melded then
-      r = wp.reach_range
-  end
-  local o = items.equipped_at("shield")
-  if o and not o.is_melded and o.is_weapon and o.reach_range > r then
-      r = o.reach_range
-  end
-  return r
-end
-
 local function have_reaching()
-  return reach_range() > 1
+  return you.reach_range() > 1
 end
 
 local function have_ranged()
@@ -216,7 +203,7 @@ local function move_towards(dx, dy)
 end
 
 local function will_tab(ax, ay, bx, by)
-  local range = reach_range()
+  local range = you.reach_range()
   if abs(bx-ax) <= range and abs(by-ay) <= range then
     return true
   end
@@ -247,7 +234,7 @@ local function get_monster_info(dx,dy,no_move)
   elseif not have_reaching() then
     info.attack_type = (-info.distance < 2) and AF_MELEE or AF_MOVES
   else
-    local range = reach_range()
+    local range = you.reach_range()
     -- Assume extended reach (i.e. Rift) gets smite targeting.
     local can_reach = range > 2 and you.see_cell_no_trans or view.can_reach
     if -info.distance > range then
