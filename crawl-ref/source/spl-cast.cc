@@ -2254,7 +2254,7 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
 
         const int spfail_chance = raw_spell_fail(spell);
 
-        if (spfl < spfail_chance && !enkindled)
+        if (spfl < spfail_chance)
             fail = spfail_chance - spfl;
     }
 
