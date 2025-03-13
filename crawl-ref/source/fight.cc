@@ -1003,9 +1003,9 @@ bool player_unrand_bad_target(const item_def &weapon,
     if (is_unrandom_artefact(weapon, UNRAND_ARC_BLADE))
     {
         if (you.pos().distance_from(defender.pos()) <= 1)
-            return !safe_discharge(you.pos(), check_only);
+            return !safe_discharge(you.pos(), check_only, true, true);
 
-        return !safe_discharge(defender.pos(), check_only, false);
+        return !safe_discharge(defender.pos(), check_only, false, true);
     }
     if (is_unrandom_artefact(weapon, UNRAND_POWER))
     {
@@ -1535,13 +1535,15 @@ string stop_summoning_reason(resists_t resists, monclass_flags_t flags)
 }
 
 bool warn_about_bad_targets(spell_type spell, vector<coord_def> targets,
-                            function<bool(const monster&)> should_ignore)
+                            function<bool(const monster&)> should_ignore,
+                            const char* msg)
 {
-    return warn_about_bad_targets(spell_title(spell), targets, should_ignore);
+    return warn_about_bad_targets(spell_title(spell), targets, should_ignore, msg);
 }
 
 bool warn_about_bad_targets(const char* source_name, vector<coord_def> targets,
-                            function<bool(const monster&)> should_ignore)
+                            function<bool(const monster&)> should_ignore,
+                            const char* msg)
 {
     vector<const monster*> bad_targets;
     for (coord_def p : targets)
@@ -1574,10 +1576,11 @@ bool warn_about_bad_targets(const char* source_name, vector<coord_def> targets,
     const string and_more = bad_targets.size() > 1 ?
             make_stringf(" (and %zu other bad targets)",
                          bad_targets.size() - 1) : "";
-    const string prompt = make_stringf("%s might hit %s%s. Cast it anyway?",
+    const string prompt = make_stringf("%s might hit %s%s. %s",
                                        source_name,
                                        ex_mon->name(DESC_THE).c_str(),
-                                       and_more.c_str());
+                                       and_more.c_str(),
+                                       msg);
     if (!yesno(prompt.c_str(), false, 'n'))
     {
         canned_msg(MSG_OK);

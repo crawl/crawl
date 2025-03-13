@@ -67,7 +67,7 @@ int get_mercury_weaken_chance(int victim_hd, int pow);
 dice_def poisonous_vapours_damage(int pow, bool random);
 spret cast_poisonous_vapours(const actor& agent, int pow, const coord_def target, bool fail);
 bool safe_discharge(coord_def where, bool check_only = false,
-                    bool exclude_center = true);
+                    bool exclude_center = true, bool arc_blade = false);
 void discharge_at_location(int pow, const actor &agent, coord_def location);
 spret cast_discharge(int pow, const actor &agent, bool fail = false,
                           bool prompt = true);

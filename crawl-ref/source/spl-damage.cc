@@ -2678,8 +2678,9 @@ static int _discharge_monsters(const coord_def &where, int pow,
     return damage;
 }
 
-static bool _safe_discharge(coord_def where, vector<const actor *> &exclude,
-                     bool check_only, bool exclude_center)
+static void _collect_discharge_targets(coord_def where,
+                                       vector<const actor *> &exclude,
+                                       bool exclude_center)
 {
     for (adjacent_iterator ai(where, exclude_center); ai; ++ai)
     {
@@ -2694,29 +2695,42 @@ static bool _safe_discharge(coord_def where, vector<const actor *> &exclude,
                 // Harmless to these monsters, so don't prompt about them.
                 if (act->res_elec() >= 3 || never_harm_monster(&you, act->as_monster()))
                     continue;
-
-                if (stop_attack_prompt(act->as_monster(), false, where, nullptr,
-                                       coord_def(), check_only))
-                {
-                    return false;
-                }
             }
             // Don't prompt for the player, but always continue arcing.
 
             exclude.push_back(act);
-            if (!_safe_discharge(act->pos(), exclude, check_only, true))
-                return false;
+            _collect_discharge_targets(act->pos(), exclude, true);
         }
     }
-
-    return true;
 }
 
-bool safe_discharge(coord_def where, bool check_only,
-                    bool exclude_center)
+bool safe_discharge(coord_def where, bool check_only, bool exclude_center,
+                    bool arc_blade)
 {
     vector<const actor *> exclude;
-    return _safe_discharge(where, exclude, check_only, exclude_center);
+    _collect_discharge_targets(where, exclude, exclude_center);
+
+    if (check_only)
+    {
+        string adj, suffix;
+        bool penance;
+
+        for (const actor* act : exclude)
+            if (bad_attack(act->as_monster(), adj, suffix, penance, you.pos()))
+                return false;
+
+        return true;
+    }
+    else
+    {
+        vector<coord_def> targs;
+        for (const actor* act : exclude)
+            targs.push_back(act->pos());
+
+        return !warn_about_bad_targets(arc_blade ? "The arc blade's discharge" : "Static Discharge",
+                                       targs, nullptr,
+                                       arc_blade ? "Attack anyway?" : "Cast it anyway?");
+    }
 }
 
 static void _discharge_message(int dam)

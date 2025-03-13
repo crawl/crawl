@@ -117,9 +117,11 @@ bool stop_summoning_prompt(resists_t resists = MR_NO_FLAGS,
                            string verb = "summon");
 
 bool warn_about_bad_targets(spell_type spell, vector<coord_def> targets,
-                            function<bool(const monster& mon)> should_ignore = nullptr);
+                            function<bool(const monster& mon)> should_ignore = nullptr,
+                            const char* msg = "Cast it anyway?");
 bool warn_about_bad_targets(const char* source_name, vector<coord_def> targets,
-                            function<bool(const monster&)> should_ignore = nullptr);
+                            function<bool(const monster&)> should_ignore = nullptr,
+                            const char* msg = "Cast it anyway?");
 
 bool can_reach_attack_between(coord_def source, coord_def target,
                               reach_type range);
