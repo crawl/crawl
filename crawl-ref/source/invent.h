@@ -135,20 +135,20 @@ public:
     void set_title_annotator(invtitle_annotator fn);
 
     // Not an override, but an overload. Not virtual!
-    void set_title(MenuEntry *title, bool first = true);
+    void set_title(unique_ptr<MenuEntry> t, bool first = true);
     void set_title(const string &s);
 
     // Loads items into the menu. If "procfn" is provided, it'll be called
     // for each MenuEntry added.
     // NOTE: Does not set menu title, ever! You *must* set the title explicitly
     menu_letter load_items(const vector<const item_def*> &items,
-                           function<MenuEntry* (MenuEntry*)> procfn = nullptr,
+                           function<unique_ptr<MenuEntry> (unique_ptr<MenuEntry>)> procfn = nullptr,
                            menu_letter ckey = 'a', bool sort = true,
                            bool subkeys = false);
 
     // Make sure this menu does not outlive items, or mayhem will ensue!
     menu_letter load_items(const vector<item_def>& items,
-                           function<MenuEntry* (MenuEntry*)> procfn = nullptr,
+                           function<unique_ptr<MenuEntry> (unique_ptr<MenuEntry>)> procfn = nullptr,
                            menu_letter ckey = 'a', bool sort = true,
                            bool subkeys = false);
 
@@ -156,12 +156,12 @@ public:
     // title to the stock title. If "procfn" is provided, it'll be called for
     // each MenuEntry added, *excluding the title*.
     void load_inv_items(int item_selector = OSEL_ANY, int excluded_slot = -1,
-                        function<MenuEntry* (MenuEntry*)> procfn = nullptr);
+                        function<unique_ptr<MenuEntry> (unique_ptr<MenuEntry>)> procfn = nullptr);
 
     vector<SelItem> get_selitems() const;
 
     const menu_sort_condition *find_menu_sort_condition() const;
-    void sort_menu(vector<InvEntry*> &items, const menu_sort_condition *cond);
+    void sort_menu(vector<unique_ptr<InvEntry>> &items, const menu_sort_condition *cond);
 
     // Drop menu only: if true, dropped items are removed from autopickup.
     bool mode_special_drop() const;

@@ -2167,7 +2167,6 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
     // Adjust the end marker to align the - because Bksp text is longer by 3
     //tmp = new TextItem();
     //tmp->set_text("Bksp - Return to character menu");
-    //tmp->set_description_text("Lets you return back to Character choice menu");
     //tmp->set_fg_colour(BROWN);
     //tmp->add_hotkey(CK_BKSP);
     //tmp->set_id(M_ABORT);

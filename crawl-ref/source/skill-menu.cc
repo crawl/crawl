@@ -75,6 +75,7 @@ bool SkillTextTileItem::handle_mouse(const wm_mouse_event& me)
 #define APTITUDE_SIZE 5
 SkillMenuEntry::SkillMenuEntry(coord_def coord)
 {
+    // TODO: ALL OF THESE ARE LEAKING LIKE A SIEVE
 #ifdef USE_TILE_LOCAL
     m_name = new SkillTextTileItem();
 #else
@@ -1294,6 +1295,7 @@ void SkillMenu::init_button_row()
     if (!is_set(SKMF_SPECIAL))
     {
         // left button always display help.
+        // TODO: ALL OF THESE ARE LEAKING LIKE A SIEVE
         m_help_button = new FormattedTextItem();
         m_help_button->set_id(SKM_HELP);
         m_help_button->add_hotkey('?');
@@ -1302,6 +1304,7 @@ void SkillMenu::init_button_row()
 
         // middle button is used to display [a-z] legends, and also to set a
         // skill target in the proper mode.
+        // TODO: ALL OF THESE ARE LEAKING LIKE A SIEVE
         m_middle_button = new FormattedTextItem();
         m_middle_button->add_hotkey('=');
         m_middle_button->set_id(SKM_SET_TARGET);
@@ -1309,6 +1312,7 @@ void SkillMenu::init_button_row()
         add_item(m_middle_button, 24, m_pos);
 
         // right button is either blank or shows target clearing options.
+        // TODO: ALL OF THESE ARE LEAKING LIKE A SIEVE
         m_clear_targets_button = new FormattedTextItem();
         m_clear_targets_button->set_id(SKM_CLEAR_TARGETS);
         m_clear_targets_button->add_hotkey('-');
@@ -1323,6 +1327,7 @@ void SkillMenu::init_switches()
     SkillMenuSwitch* sw;
     if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING))
     {
+        // TODO: ALL OF THESE ARE LEAKING LIKE A SIEVE
         sw = new SkillMenuSwitch("mode", '/');
         m_switches[SKM_MODE] = sw;
         sw->add(SKM_MODE_AUTO);
@@ -1334,6 +1339,7 @@ void SkillMenu::init_switches()
         sw->set_id(SKM_MODE);
         add_item(sw, sw->size(), m_pos);
 
+        // TODO: ALL OF THESE ARE LEAKING LIKE A SIEVE
         sw = new SkillMenuSwitch("skill", '|');
         m_switches[SKM_DO] = sw;
         if (!is_set(SKMF_EXPERIENCE)
@@ -1350,6 +1356,7 @@ void SkillMenu::init_switches()
         sw->set_id(SKM_DO);
         add_item(sw, sw->size(), m_pos);
 
+        // TODO: ALL OF THESE ARE LEAKING LIKE A SIEVE
         sw = new SkillMenuSwitch("skills", '*');
         m_switches[SKM_SHOW] = sw;
         sw->add(SKM_SHOW_DEFAULT);
@@ -1366,6 +1373,7 @@ void SkillMenu::init_switches()
 
     if (is_set(SKMF_CHANGED))
     {
+        // TODO: ALL OF THESE ARE LEAKING LIKE A SIEVE
         sw = new SkillMenuSwitch("level", '_');
         m_switches[SKM_LEVEL] = sw;
         sw->add(SKM_LEVEL_ENHANCED);
@@ -1375,6 +1383,7 @@ void SkillMenu::init_switches()
         add_item(sw, sw->size(), m_pos);
     }
 
+    // TODO: ALL OF THESE ARE LEAKING LIKE A SIEVE
     sw = new SkillMenuSwitch("", '!');
     m_switches[SKM_VIEW] = sw;
     if (!is_set(SKMF_SPECIAL) || you.wizard)

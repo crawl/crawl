@@ -464,7 +464,7 @@ bool debug_make_trap(const coord_def& pos)
     sort(options.begin(), options.end());
     options.emplace_back(WizardEntry('*', "any", TRAP_RANDOM));
 
-    auto menu = WizardMenu("Make which kind of trap?", options);
+    WizardMenu menu ("Make which kind of trap?", options);
     if (!menu.run(true))
         return false;
 
@@ -500,7 +500,7 @@ bool debug_make_shop(const coord_def& pos)
     sort(options.begin(), options.end());
     options.emplace_back(WizardEntry('*', "any", SHOP_RANDOM));
 
-    auto menu = WizardMenu("Make which kind of shop?", options);
+    WizardMenu menu ("Make which kind of shop?", options);
     if (!menu.run(true))
         return false;
 
