@@ -1134,6 +1134,19 @@ rapier
 
 A slender, sharply pointed sword, with an uncommonly elegant design.
 %%%%
+riddle talisman
+
+An intricate puzzlebox containing an unknowable prize. Transforms the user into
+a riddle-loving sphinx. In this form, they are capable of wearing a cloak and
+barding, and their melee attacks cause powerful winds to strike their foe which
+do increased damage for every open space next to them. They are also masterful
+enchanters, casting Hex spells much more easily and ignoring a portion of their
+foe's Willpower.
+
+Alas, their love of riddles is so compulsive that even the most hardened
+adventurer will be unable to resist posing them to new foes they encounter, no
+matter how unwise this may be.
+%%%%
 rimehorn talisman
 
 A crude ornament carved from the horn of a rare arctic beast - so cold to the

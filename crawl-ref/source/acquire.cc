@@ -659,6 +659,7 @@ static vector<pair<talisman_type, int>> _base_talisman_tiers()
         { TALISMAN_HIVE,    4 },
         { TALISMAN_DRAGON,  4 },
         { TALISMAN_VAMPIRE, 4 },
+        { TALISMAN_SPHINX,  4 },
         { TALISMAN_STORM,   5 },
         { TALISMAN_DEATH,   5 },
         { NUM_TALISMANS,    5 },

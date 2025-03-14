@@ -7986,3 +7986,27 @@ void bolt::set_is_tracer(bool value) noexcept
     static beam_tracer default_tracer;
     tracer = &default_tracer;
 }
+
+// Returns the effective willpower an actor with a given willpower would have
+// against hexes from a given source.
+int apply_willpower_bypass(const actor& source, int willpower)
+{
+    if (source.wearing_ego(OBJ_ARMOUR, SPARM_GUILE))
+        willpower = max(0, willpower - 2 * WL_PIP);
+
+    if (source.is_player() && you.form == transformation::sphinx)
+        willpower = max(0, willpower - WL_PIP);
+
+    return willpower;
+}
+
+int apply_willpower_bypass(const monster_info& source, int willpower)
+{
+    if (source.inv[MSLOT_SHIELD]
+        && get_armour_ego_type(*source.inv[MSLOT_SHIELD]) == SPARM_GUILE)
+    {
+        willpower = max(0, willpower - 2 * WL_PIP);
+    }
+
+    return willpower;
+}

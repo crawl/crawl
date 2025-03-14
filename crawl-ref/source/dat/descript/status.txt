@@ -1168,3 +1168,8 @@ Aqua status
 
 Your body is composed of elemental water that can reach to attack and drown
 enemies.
+%%%%
+Sphinx status
+
+You are a cunning, riddle-loving sphinx, with the force of a windstorm in your
+paws.

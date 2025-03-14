@@ -6741,6 +6741,12 @@ int player_willpower(bool temp)
         rm += WL_PIP;
     }
 
+    if (you.form == transformation::sphinx &&
+        (temp || you.default_form == transformation::sphinx))
+    {
+        rm += WL_PIP;
+    }
+
     // In this moment, you are euphoric.
     if (you.duration[DUR_ENLIGHTENED])
         rm += WL_PIP;

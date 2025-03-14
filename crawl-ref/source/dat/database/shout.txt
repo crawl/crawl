@@ -380,3 +380,75 @@ Polyphemus
 # This would also work for other monsters that are surrounded by allies.
 SOUND:@The_monster@ shouts, "Attack, my pets! Attack!"
 %%%%
+####################################
+Player sphinx riddle lines
+####################################
+%%%%
+_riddle_adj_
+
+a baffling
+
+a brilliant
+
+w:20
+a clever
+
+a confusing
+
+w:20
+a cunning
+
+an impossible
+
+an ingenious
+
+a masterful
+
+a mind-bending
+
+a perplexing
+
+a vexing
+
+%%%%
+_riddle_fail_acknowledged_
+
+, but @subjective@ doesn't care.
+
+, but @subjective@ is unimpressed.
+
+, but @subjective@ scoffs.
+%%%%
+_riddle_fail_general_
+
+, but @subjective@ ignores you.
+
+, but @subjective@ doesn't understand.
+
+, but @subjective@ pretends not to notice.
+
+, but @subjective@ ignores you.
+
+w:40
+_riddle_fail_acknowledged_
+%%%%
+_riddle_prefix_
+
+You pose @_riddle_adj_@ riddle to @the_monster@
+
+You ask @the_monster@ @_riddle_adj_@ riddle
+
+You challege @the_monster@ with @_riddle_adj_@ riddle
+%%%%
+Sphinx riddle success
+
+@_riddle_prefix_@.
+%%%%
+Sphinx riddle failure
+
+@_riddle_prefix_@@_riddle_fail_general_@
+%%%%
+Sphinx riddle failure acknowledged
+
+@_riddle_prefix_@@_riddle_fail_acknowledged_@
+%%%%

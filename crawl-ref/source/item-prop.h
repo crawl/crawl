@@ -139,8 +139,6 @@ bool is_shield_incompatible(const item_def &weapon,
 bool shield_reflects(const item_def &shield) PURE;
 int shield_block_limit(const item_def &shield) PURE;
 
-int guile_adjust_willpower(int wl) PURE;
-
 bool is_regen_item(const item_def& item);
 bool is_mana_regen_item(const item_def& item);
 

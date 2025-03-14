@@ -34,6 +34,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "terrain.h"
+#include "transform.h"
 #include "traps.h"
 #include "xom.h"
 
@@ -805,4 +806,7 @@ void seen_monster(monster* mons)
 
     if (mons_offers_beogh_conversion(*mons))
         env.level_state |= LSTATE_BEOGH;
+
+    if (you.form == transformation::sphinx)
+        sphinx_notice_riddle_target(mons);
 }

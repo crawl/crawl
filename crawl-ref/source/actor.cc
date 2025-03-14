@@ -115,8 +115,8 @@ int actor::check_willpower(const actor* source, int power) const
     if (wl == WILL_INVULN)
         return 100;
 
-    if (source && source->wearing_ego(OBJ_ARMOUR, SPARM_GUILE))
-        wl = guile_adjust_willpower(wl);
+    if (source)
+        wl = apply_willpower_bypass(*source, wl);
 
     // Marionettes get better hex success against friends to avoid hex casts
     // often being wasted with normal monster spellpower.

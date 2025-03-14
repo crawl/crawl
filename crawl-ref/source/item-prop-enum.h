@@ -868,6 +868,7 @@ enum talisman_type
     TALISMAN_SPIDER,
     TALISMAN_HIVE,
     TALISMAN_AQUA,
+    TALISMAN_SPHINX,
     NUM_TALISMANS,
 };
 

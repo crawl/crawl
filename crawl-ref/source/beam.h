@@ -475,3 +475,6 @@ bolt setup_targeting_beam(const monster &mons);
 
 bool cancel_beam_prompt(const bolt& beam,
                                 const player_beam_tracer& tracer);
+
+int apply_willpower_bypass(const actor& source, int willpower);
+int apply_willpower_bypass(const monster_info& source, int willpower);

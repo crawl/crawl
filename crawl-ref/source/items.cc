@@ -3931,6 +3931,8 @@ colour_t item_def::talisman_colour() const
         return YELLOW;
     case TALISMAN_DRAGON:
         return ETC_FIRE;
+    case TALISMAN_SPHINX:
+        return ETC_MAGIC;
     case TALISMAN_VAMPIRE:
         return LIGHTMAGENTA;
     case TALISMAN_DEATH:

@@ -4393,10 +4393,7 @@ static int _hex_pow(const spell_type spell, const int hd)
 int hex_chance(const spell_type spell, const monster_info* mi)
 {
     const int capped_pow = _hex_pow(spell, mi->spell_hd());
-    const bool guile = mi->inv[MSLOT_SHIELD]
-                       && get_armour_ego_type(*mi->inv[MSLOT_SHIELD]) == SPARM_GUILE;
-    const int will = guile ? guile_adjust_willpower(you.willpower())
-                           : you.willpower();
+    const int will = apply_willpower_bypass(*mi, you.willpower());
     const int chance = hex_success_chance(will, capped_pow,
                                           100, true);
     if (spell == SPELL_STRIP_WILLPOWER)
@@ -7195,6 +7192,25 @@ static void _maybe_note_form_dice(vector<vector<string>>& items,
     items.push_back(labels);
 }
 
+static void _maybe_note_airstrike_damage(vector<vector<string>>& items,
+                                         const int skill[3])
+{
+    dice_def data[3][2];
+    for (int i = 0; i < 3; ++i)
+    {
+        data[i][0] = player_airstrike_melee_damage(skill[i], 0);
+        data[i][1] = player_airstrike_melee_damage(skill[i], 7);
+    }
+
+    vector<string> labels;
+    labels.push_back("Airstrike Dmg");
+    labels.push_back(make_stringf("(%d-%d)d%d", data[0][0].num, data[0][1].num, data[0][0].size));
+    labels.push_back(make_stringf("(%d-%d)d%d", data[1][0].num, data[1][1].num, data[1][0].size));
+    labels.push_back(make_stringf("(%d-%d)d%d", data[2][0].num, data[2][1].num, data[2][0].size));
+
+    items.push_back(labels);
+}
+
 /**
  * Possibly add a column of data to the form properties table.
  *
@@ -7289,6 +7305,8 @@ static string _describe_talisman_form(const item_def &item)
         _maybe_populate_form_table(items, bind(&Form::get_aux_damage, form, false, placeholders::_1), "Bite Dmg", skill, 0, false, false);
     if (form_type == transformation::hive)
         _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "# of Bees", skill, 0, false, false, 10, true);
+    if (form_type == transformation::sphinx)
+        _maybe_note_airstrike_damage(items, skill);
 
     vector<int> column_width;
 
@@ -7369,6 +7387,12 @@ static string _describe_talisman_form(const item_def &item)
         pr.AddCell("Stealth", "+");
     else if (form_type == transformation::aqua)
         pr.AddCell("Reach", "+2");
+    else if (form_type == transformation::sphinx)
+    {
+        if (!you.has_mutation(MUT_NO_ARMOUR))
+            pr.AddCell("Barding", "Yes");
+        pr.AddCell("Will", "+");
+    }
 
     // Don't output extra blank lines if there's no content.
     if (pr.NumCells() > 0)

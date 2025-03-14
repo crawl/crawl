@@ -343,3 +343,6 @@ void merfolk_stop_swimming();
 
 transformation form_for_talisman(const item_def &talisman);
 void clear_form_info_on_exit();
+
+void sphinx_notice_riddle_target(monster* mon);
+void sphinx_check_riddle();

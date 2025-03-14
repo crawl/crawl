@@ -2184,6 +2184,11 @@ Boris triumphant
 @The_monster@ says, "I'd like to see you come back from this one."
 
 @The_monster@ says, "I'll treasure this one."
+%%%%
+Boris riddle
+
+@The_monster@ says, "You would ask such trivialities of one who has solved death itself?"
+%%%%
 ## END Boris ##
 %%%%
 ############ CHUCK ### An avid rock collector.
@@ -3908,6 +3913,10 @@ Donald marionette
 
 @The_monster@ says, "Don't use me like a cheap sock puppet. I hate that."
 %%%%
+Donald riddle
+
+@The_monster@ says, "Everybody knows that one already. Try something more original."
+%%%%
 Donald killed
 
 w:100
@@ -4456,6 +4465,10 @@ Frederick triumphant
 @The_monster@ sighs, "Killing weak @player_genus_plural@ does nothing to prove my superiority."
 
 @The_monster@ sighs, "Another waste of time."
+%%%%
+Frederick riddle
+
+@The_monster@ sighs, "Your wits are somehow even duller than your claws."
 %%%%
 Ashenzari Frederick triumphant
 
@@ -5705,6 +5718,10 @@ _Mara_rare_
 @The_monster@ calls, "Stop! In seven days from now the wheel of empire will appear!"
 
 @The_monster@ boasts, "I am lord over the four continents and the two thousand adjacent isles."
+%%%%
+Mara riddle
+
+@The_monster@ smirks. "I shall give thine eyesight a greater riddle by far."
 %%%%
 ############ MARGERY ### A powerful sorceress, guarding the ORB
 Margery
@@ -7476,6 +7493,10 @@ VISUAL:@The_monster@ belches a long, triumphant arc of flame.
 @The_monster@ growls, "COMING HERE WAS YOUR LAST MISTAKE."
 
 @The_monster@ rumbles, "TIME FOR A NIBBLE."
+%%%%
+Xtahua riddle
+
+@The_monster@ roars at you, "BIG WORDS FOR SUCH A SMALL MORSEL!"
 ## END Xtahua ##
 %%%%
 ############ ZENATA ### A cultist of constructs

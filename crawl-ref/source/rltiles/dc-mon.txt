@@ -1449,6 +1449,9 @@ aqua_form_felid TRAN_AQUA_FELID
 aqua_form_humanoid TRAN_AQUA_HUMANOID
 aqua_form_naga TRAN_AQUA_NAGA
 aqua_form_octopode TRAN_AQUA_OCTOPODE
+sphinx_form_default TRAN_SPHINX
+sphinx_form_barding TRAN_SPHINX_BARDING
+sphinx_form_felid TRAN_SPHINX_FELID
 
 %rim 1
 

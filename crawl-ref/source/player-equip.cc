@@ -182,9 +182,17 @@ int count = 0;
         if (species::wears_barding(you.species))
             return 1;
 
+        if (you.form == transformation::sphinx && !you.has_mutation(MUT_NO_ARMOUR))
+            return 1;
+
         NO_SLOT("You can't fit into that!")
 
     case SLOT_CLOAK:
+        // If octopodes are allowed to wear bardings, then surely they can also
+        // get a cloak, too.
+        if (you.form == transformation::sphinx && !you.has_mutation(MUT_NO_ARMOUR))
+            return 1;
+
         if (you.has_mutation(MUT_FORMLESS))
             NO_SLOT("You don't have any shoulders.")
         else if (you.species == SP_OCTOPODE || you.has_mutation(MUT_NO_ARMOUR))

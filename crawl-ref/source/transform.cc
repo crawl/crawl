@@ -12,6 +12,7 @@
 
 #include "artefact.h"
 #include "art-enum.h"
+#include "database.h"
 #include "delay.h"
 #include "describe.h"
 #include "english.h"
@@ -27,12 +28,14 @@
 #include "items.h"
 #include "message.h"
 #include "mon-death.h"
+#include "mon-speak.h"
 #include "mutation.h"
 #include "output.h"
 #include "player-equip.h"
 #include "player-stats.h"
 #include "prompt.h"
 #include "religion.h"
+#include "shout.h"
 #include "skills.h"
 #include "spl-cast.h"
 #include "state.h"
@@ -42,6 +45,9 @@
 #include "timed-effects.h"
 #include "traps.h"
 #include "xom.h"
+
+// List of valid monsters newly seen this turn for a sphinx to tell a riddle to.
+vector<monster*> riddle_targs;
 
 // transform slot enums into flags
 #define SLOTF(s) (1 << s)
@@ -1078,6 +1084,15 @@ public:
     }
 };
 
+class FormSphinx : public Form
+{
+private:
+FormSphinx() : Form(transformation::sphinx) { }
+    DISALLOW_COPY_AND_ASSIGN(FormSphinx);
+public:
+    static const FormSphinx &instance() { static FormSphinx inst; return inst; }
+};
+
 static const Form* forms[] =
 {
     &FormNone::instance(),
@@ -1120,6 +1135,7 @@ static const Form* forms[] =
     &FormRimeYak::instance(),
     &FormHive::instance(),
     &FormWater::instance(),
+    &FormSphinx::instance(),
 };
 
 const Form* get_form(transformation xform)
@@ -1886,6 +1902,9 @@ void untransform(bool skip_move, bool scale_hp)
 
     if (old_form == transformation::slaughter)
         makhleb_enter_crucible_of_flesh(15);
+
+    if (old_form == transformation::sphinx)
+        riddle_targs.clear();
 }
 
 void return_to_default_form()
@@ -2027,4 +2046,80 @@ void clear_form_info_on_exit()
 {
     for (const form_entry &entry : formdata)
         delete entry.special_dice;
+}
+
+void sphinx_notice_riddle_target(monster* mon)
+{
+    if (!mon->is_peripheral() && !mons_aligned(&you, mon))
+    {
+        mprf("Noticed %s.", mon->name(DESC_THE).c_str());
+        riddle_targs.push_back(mon);
+    }
+}
+
+static int _riddle_score(const monster& mon)
+{
+    return mons_intel(mon) + (mons_is_unique(mon.type) ? 3 : 0);
+}
+
+void sphinx_check_riddle()
+{
+    if (you.form != transformation::sphinx)
+        return;
+
+    bool unique_found = false;
+    vector<monster*> valid_targs;
+    for (monster* mon : riddle_targs)
+    {
+        if (mon->alive() && you.see_cell_no_trans(mon->pos()))
+        {
+            valid_targs.push_back(mon);
+            if (mons_is_unique(mon->type))
+                unique_found = true;
+        }
+    }
+
+    riddle_targs.clear();
+
+    // Be more likely to ask a riddle the more monsters we see at once, but always
+    // ask one to any unique we see. They look more interesting!
+    if (!unique_found && !x_chance_in_y(valid_targs.size(), valid_targs.size() + 5))
+        return;
+
+    // Pick the best candidate to pose a riddle to, favoring uniques and then
+    // monsters with human intelligence. (But don't ignore the pseudo-shoutitits
+    // against animals altogether.)
+    monster* best_mon = valid_targs[0];
+    for (monster* mon : valid_targs)
+        if (_riddle_score(*mon) > _riddle_score(*best_mon))
+            best_mon = mon;
+
+    // Tiny chance to do something other than make noise.
+    if (one_chance_in(20))
+    {
+        string msg = getShoutString("Sphinx riddle success");
+        msg = do_mon_str_replacements(msg, *best_mon, S_SILENT);
+        mpr(msg);
+
+        if (coinflip())
+            best_mon->vex(&you, random_range(5, 8));
+        else
+            best_mon->confuse(&you, 10);
+    }
+    else
+    {
+        // Check if a monster would have a specific reaction first, to skip
+        // messages about them ignoring you.
+        string mon_msg = getSpeakString(best_mon->name(DESC_PLAIN) + " riddle");
+
+        string msg = getShoutString(mon_msg.empty() ? "Sphinx riddle failure"
+                                                    : "Sphinx riddle failure acknowledged");
+        msg = do_mon_str_replacements(msg, *best_mon, S_SILENT);
+        mpr(msg);
+
+        if (!mon_msg.empty())
+            mons_speaks_msg(best_mon, mon_msg, MSGCH_TALK);
+    }
+
+    noisy(you.shout_volume(), you.pos(), MID_PLAYER);
 }

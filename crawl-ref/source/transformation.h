@@ -41,6 +41,7 @@ enum class transformation
     rime_yak,
     hive,
     aqua,
+    sphinx,
     COUNT
 };
 constexpr int NUM_TRANSFORMS = static_cast<int>(transformation::COUNT);

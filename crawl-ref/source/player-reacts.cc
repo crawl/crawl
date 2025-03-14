@@ -471,6 +471,8 @@ void player_reacts_to_monsters()
 
     _handle_jinxbite_interest();
 
+    sphinx_check_riddle();
+
     // If you have signalled your allies to stop attacking, cancel this order
     // once there are no longer any enemies in view for 50 consecutive aut
     if (you.pet_target == MHITYOU)

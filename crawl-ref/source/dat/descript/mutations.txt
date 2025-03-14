@@ -993,6 +993,22 @@ steam response mutation
 Whenever you take fire damage from a projectile, you have a chance (increasing
 with the damage suffered) to spread steam clouds around yourself.
 %%%%
+airstrike attack mutation
+
+Whenever you strike an enemy in melee, the wind twists around and strikes them
+for additional damage which is increased for each empty space adjacent to them.
+%%%%
+hex mastery mutation
+
+Your Hexes spells are much easier to cast (reduced miscast chance and severity)
+and enemies have reduced willpower versus against all your effects.
+%%%%
+riddle compulsion mutation
+
+You compulsively pose riddles to enemies when you encounter them. Every now and
+again, these may confuse or vex them, but mostly they just attract their
+attention.
+%%%%
 # ------ Makhleb destruction flavours ------
 Gehenna destruction mutation
 

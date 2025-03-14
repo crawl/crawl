@@ -3077,11 +3077,6 @@ int shield_block_limit(const item_def &shield)
     }
 }
 
-int guile_adjust_willpower(int wl)
-{
-    return max(0, wl - 2 * WL_PIP);
-}
-
 bool is_regen_item(const item_def& item)
 {
     return is_artefact(item) && artefact_property(item, ARTP_REGENERATION)
@@ -3111,6 +3106,7 @@ string talisman_type_name(int type)
     case TALISMAN_STATUE:   return "granite talisman";
     case TALISMAN_HIVE:     return "honeycomb talisman";
     case TALISMAN_DRAGON:   return "dragon-coil talisman";
+    case TALISMAN_SPHINX:   return "riddle talisman";
     case TALISMAN_VAMPIRE:  return "sanguine talisman";
     case TALISMAN_DEATH:    return "talisman of death";
     case TALISMAN_STORM:    return "storm talisman";

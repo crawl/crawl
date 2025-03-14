@@ -364,6 +364,8 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
 
     if (you.form == transformation::rime_yak && spell_typematch(spell, spschool::ice))
         fail_reduce = fail_reduce * 2 / 3;
+    if (you.form == transformation::sphinx && spell_typematch(spell, spschool::hexes))
+        fail_reduce = fail_reduce * 2 / 3;
 
     const int wizardry = player_wizardry();
 
@@ -1849,10 +1851,9 @@ vector<string> desc_wl_success_chance(const monster_info& mi, int pow,
     int wl = mi.willpower();
     if (wl == WILL_INVULN)
         return vector<string>{"infinite will"};
-    if (you.wearing_ego(OBJ_ARMOUR, SPARM_GUILE))
-        wl = guile_adjust_willpower(wl);
     if (hitfunc && !hitfunc->affects_monster(mi))
         return vector<string>{"not susceptible"};
+    wl = apply_willpower_bypass(you, wl);
     vector<string> descs;
     if (beam_hitf && beam_hitf->beam.flavour == BEAM_POLYMORPH)
     {

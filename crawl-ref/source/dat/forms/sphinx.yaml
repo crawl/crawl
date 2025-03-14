@@ -1,0 +1,26 @@
+enum: sphinx
+equivalent_mons: sphinx
+description: a cunning sphinx.
+skill: {min: 16, max: 25}
+talisman: sphinx
+melds: [weapon, offhand, body, boots, helmet, gloves]
+hp_mod: 115
+ac: {base: 7}
+unarmed_colour: lightcyan
+unarmed_name: Paws
+unarmed_verbs: [hit, swat, pounce on, maul]
+can_fly: yes
+changes_anatomy: yes
+has_hair: yes
+has_bones: yes
+has_feet: yes
+has_ears: yes
+shout_verb: roar
+hand_name: forepaw
+prayer_action: curl up before
+flesh_name: flesh
+fakemuts:
+  - ["airstrike attack", "You unleash cutting winds upon enemies you strike."]
+  - ["hex mastery", "Hexes are much easier for you to cast and harder to resist."]
+badmuts:
+  - ["riddle compulsion", "You often pose riddles to enemies when you first see then."]
