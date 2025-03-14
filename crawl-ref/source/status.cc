@@ -902,6 +902,16 @@ bool fill_status_info(int status, status_info& inf)
         inf.light_text = make_stringf("Enkindled (%d)", you.props[ENKINDLE_CHARGES_KEY].get_int());
         break;
 
+    case STATUS_SHROUD:
+        if (you.has_mutation(MUT_SLIME_SHROUD)
+                && !you.duration[DUR_SHROUD_TIMEOUT])
+        {
+            inf.light_colour = GREEN;
+            inf.light_text   = "Shroud";
+            inf.short_text   = "slimy shroud";
+        }
+        break;
+
     default:
         if (!found)
         {
