@@ -216,19 +216,38 @@ bool Stash::needs_stop() const
     return false;
 }
 
-bool Stash::is_boring_feature(dungeon_feature_type feat)
-{
-    return !feat_is_staircase(feat)
-        && !feat_is_escape_hatch(feat)
-        && (!is_notable_terrain(feat)
-            // Count shops as boring features, because they are handled
-            // separately.
-            || feat == DNGN_ENTER_SHOP);
-}
-
 static bool _grid_has_perceived_item(const coord_def& pos)
 {
     return you.visible_igrd(pos) != NON_ITEM;
+}
+
+static bool _grid_is_interesting(const coord_def& pos)
+{
+    const auto feat = env.grid(pos);
+    if (feat_is_staircase(feat)
+       || feat_is_escape_hatch(feat)
+       || (is_notable_terrain(feat)
+            // Count shops as boring features, because they are
+            // handled separately.
+            && feat != DNGN_ENTER_SHOP))
+    {
+        return true;
+    }
+
+    const auto trap = get_trap_type(pos);
+    if (trap == TRAP_UNASSIGNED)
+        return false;
+
+    // Certain traps we want to put in stashes, since they help navigate
+    // within or across levels, or can be used tactically (alarm), or might
+    // release goodies (plate).
+    return trap == TRAP_PLATE
+        || trap == TRAP_DISPERSAL
+        || trap == TRAP_TELEPORT
+        || trap == TRAP_TELEPORT_PERMANENT
+        || trap == TRAP_GOLUBRIA
+        || trap == TRAP_ALARM
+        || trap == TRAP_SHAFT;
 }
 
 bool Stash::unmark_trapping_nets()
@@ -242,23 +261,15 @@ bool Stash::unmark_trapping_nets()
 
 void Stash::update()
 {
-    feat = env.grid(pos);
-    trap = NUM_TRAPS;
-
-    if (is_boring_feature(feat))
-        feat = DNGN_FLOOR;
-
-    if (feat_is_trap(feat))
+    feat = DNGN_FLOOR;
+    trap = TRAP_UNASSIGNED;
+    feat_desc = "";
+    if (_grid_is_interesting(pos))
     {
+        feat = env.grid(pos);
         trap = get_trap_type(pos);
-        if (trap == TRAP_WEB)
-            feat = DNGN_FLOOR, trap = TRAP_UNASSIGNED;
-    }
-
-    if (feat == DNGN_FLOOR)
-        feat_desc = "";
-    else
         feat_desc = feature_description_at(pos, false, DESC_A);
+    }
 
     int previous_size = items.size();
 
@@ -271,8 +282,8 @@ void Stash::update()
         return;
     }
 
-    // Squares are big, whole piles of loot can be seen on each so
-    // let's update them
+    // Squares are big, whole piles of loot can be seen on each,
+    // so let's update them.
 
     // There's something on this square. Take a squint at it.
     item_def *pitem = &env.item[you.visible_igrd(pos)];
@@ -1075,7 +1086,7 @@ void StashTracker::update_visible_stashes()
 
         if ((!lev || !lev->update_stash(*ri))
             && (_grid_has_perceived_item(*ri)
-                || !Stash::is_boring_feature(feat)))
+                || _grid_is_interesting(*ri)))
         {
             if (!lev)
                 lev = &get_current_level();
