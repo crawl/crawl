@@ -87,6 +87,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    { MST_ANACHROBAT,
+      {
+       { SPELL_BULLET_TIME, 35, MON_SPELL_NATURAL },
+      }
+    },
+
     // ('c') Centaurs and such.
     {  MST_FAUN,
       {
