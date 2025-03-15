@@ -1390,16 +1390,6 @@ void elyvilon_remove_divine_vigour()
     calc_mp();
 }
 
-bool vehumet_supports_spell(spell_type spell)
-{
-    // Conjurations work by conjuring up a chunk of short-lived matter and
-    // propelling it towards the victim. This is the most popular way, but
-    // by no means it has a monopoly for being destructive.
-    // Vehumet loves all direct physical destruction.
-    return spell_typematch(spell, spschool::conjuration)
-           || (get_spell_flags(spell) & spflag::destructive);
-}
-
 void trog_do_trogs_hand(int pow)
 {
     you.increase_duration(DUR_TROGS_HAND,

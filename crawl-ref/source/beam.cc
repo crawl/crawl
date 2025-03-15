@@ -67,7 +67,6 @@
 #include "spl-monench.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
-#include "spl-util.h"
 #include "spl-zap.h"
 #include "state.h"
 #include "stepdown.h"
@@ -922,14 +921,6 @@ void bolt::bounce()
     ray.bounce(rg);
     extra_range_used += 2;
 
-    // Keep length of bounced spells constant despite reduced los (scarf of
-    // shadows, Robe of Night)
-    if (bounces == 1)
-    {
-        extra_range_used -= spell_range(origin_spell, ench_power, true, true)
-                            - range;
-    }
-
     ASSERT(!cell_is_solid(ray.pos()));
 }
 
@@ -1079,6 +1070,18 @@ int bolt::range_used(bool leg_only) const
 {
     const int leg_length = pos().distance_from(leg_source());
     return leg_only ? leg_length : leg_length + extra_range_used;
+}
+
+bool bolt::all_range_used() const
+{
+    return range_used() > range
+       // Or it travels further from caster than the *player's* current line
+       // of sight. This prevents the player getting shot from outside their
+       // view; however it also hobbles monsters who want to shoot at your
+       // allies, or allies that want to shoot other monsters, if the distance
+       // happens to be more than *your* LOS. Which seems a bit strange, and
+       // maybe the rule should only apply if the beam *started* outside LOS.
+           || source.distance_from(pos()) > you.current_vision;
 }
 
 void bolt::finish_beam()
@@ -1272,11 +1275,13 @@ void bolt::do_fire()
     // Note: nothing but this loop should be changing the ray.
     while (map_bounds(pos()))
     {
-        if (range_used() > range)
+        // End beam when range fully used
+        if (all_range_used())
         {
             ray.regress();
             extra_range_used++;
-            ASSERT(range_used() >= range);
+            ASSERT(range_used() >= range
+                   || source.distance_from(pos()) == you.current_vision);
             break;
         }
 
@@ -1306,7 +1311,6 @@ void bolt::do_fire()
             // of the player manually targeting something whose line of fire
             // is blocked, even though its line of sight isn't blocked. Give
             // a warning about this fact.
-            string prompt = "Your line of fire to ";
             const monster* mon = monster_at(target);
 
             string blockee;
@@ -1382,7 +1386,9 @@ void bolt::do_fire()
         else if (!affects_nothing)
             affect_cell();
 
-        if (range_used() > range)
+        // Checking distance from source prevents bouncing bolts from
+        // ever going beyond original range
+        if (all_range_used())
             break;
 
         if (beam_cancelled)

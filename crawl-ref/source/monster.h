@@ -557,6 +557,9 @@ public:
     bool is_jumpy() const;
 
     int  spell_hd(spell_type spell = SPELL_NO_SPELL) const;
+    int  spell_range(spell_type spell, int pow = -1,
+                     spell_cast_type how = spell_cast_type::magical) const override;
+
     void remove_summons(bool check_attitude = false);
 
     bool clear_far_engulf(bool force = false, bool /*moved*/ = false) override;

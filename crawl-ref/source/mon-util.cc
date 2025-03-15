@@ -3852,7 +3852,7 @@ bool mons_has_ranged_spell(const monster& mon, bool attack_only,
         if (ms_ranged_spell(slot.spell, attack_only, ench_too)
             // Assume spells with no defined range are always effective at
             // range.
-            && mons_spell_range(mon, slot.spell) != 1)
+            && mon.spell_range(slot.spell) != 1)
         {
             return true;
         }

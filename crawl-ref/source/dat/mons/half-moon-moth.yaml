@@ -1,0 +1,19 @@
+name: "half-moon moth"
+enum: half_moon_moth
+glyph: {char: "y", colour: lightgreen}
+flags: [flies, no_skeleton, cautious, has_aura]
+resists: {poison: 1, cold: 1}
+xp_mult: 16
+genus: moth
+will: 60
+attacks:
+ - {type: bite, damage: 28}
+hd: 15
+hp_10x: 920
+ac: 8
+ev: 14
+has_corpse: true
+intelligence: animal
+speed: 12
+size: medium
+shape: insect_winged

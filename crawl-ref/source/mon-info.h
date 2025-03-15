@@ -253,6 +253,7 @@ enum monster_info_flags
     MB_VEXED,
     MB_VAMPIRE_THRALL,
     MB_PYRRHIC_RECOLLECTION,
+    MB_DAMPENED,
     NUM_MB_FLAGS
 };
 
@@ -477,6 +478,7 @@ struct monster_info : public monster_info_base
     bool has_spells() const;
     bool antimagic_susceptible() const;
     int spell_hd(spell_type spell = SPELL_NO_SPELL) const;
+    int spell_range(spell_type spell, int pow = -1) const;
     unsigned colour(bool base_colour = false) const;
     void set_colour(int colour);
 
