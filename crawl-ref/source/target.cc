@@ -1744,6 +1744,24 @@ bool targeter_scorch::valid_aim(coord_def a)
     return true;
 }
 
+targeter_exchange::targeter_exchange(const actor &a, int _range)
+    : targeter_multiposition(&a,
+                        find_near_hostiles(_range, false, a), AFF_MAYBE),
+      range(_range)
+{ }
+
+aff_type targeter_exchange::is_affected(coord_def a)
+{
+    if ((cell_is_solid(a) && !can_affect_walls())
+        || !cell_see_cell(agent->pos(), a, LOS_SOLID_SEE))
+    {
+        return AFF_NO;
+    }
+
+    // is this better with maybe or yes?
+    return affected_positions.count(a) > 0 ? positive : AFF_NO;
+}
+
 targeter_chain_lightning::targeter_chain_lightning()
 {
     vector<coord_def> target_set = chain_lightning_targets();

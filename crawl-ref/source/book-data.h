@@ -236,6 +236,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Party Tricks
     SPELL_APPORTATION,
+    SPELL_HEATED_EXCHANGE,
     SPELL_JINXBITE,
     SPELL_INTOXICATE,
 },

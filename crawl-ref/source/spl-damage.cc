@@ -5287,3 +5287,97 @@ dice_def fortress_blast_damage(int AC, bool is_monster)
     int power = min(200, (int)pow(AC, 1.343) * 2 / 3);
     return zap_damage(ZAP_FORTRESS_BLAST, power, is_monster, false);
 }
+
+dice_def heated_exchange_damage(int pow, bool random)
+{
+    if (random)
+        return dice_def(1, 7 + div_rand_round(pow,5));
+    return dice_def(1, 7 + pow / 5);
+}
+
+static void _animate_heated_exchange(coord_def p)
+{
+    if (!(Options.use_animations & UA_BEAM))
+        return;
+
+#ifdef USE_TILE
+    view_add_tile_overlay(p, tileidx_zap(RED));
+#endif
+#ifndef USE_TILE_LOCAL
+    view_add_glyph_overlay(p, { dchar_glyph(DCHAR_FIRED_ZAP),
+                               static_cast<unsigned short>(RED) });
+#endif
+
+    viewwindow(false);
+    update_screen();
+    scaled_delay(50);
+}
+
+spret cast_heated_exchange(int pow, bool fail, bool tracer)
+{
+    const int range = spell_range(SPELL_HEATED_EXCHANGE, pow);
+
+    monster* targ = nullptr;
+    int seen = 0;
+    for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_SOLID_SEE); ri; ++ri)
+    {
+        monster* mons = monster_at(*ri);
+        if (!mons
+            || mons->wont_attack()
+            || !_act_worth_targeting(you, *mons)
+            || mons_class_is_stationary(mons->type)
+            || mons_is_tentacle_or_tentacle_segment(mons->type)
+            || !you.is_habitable(mons->pos())
+            || !mons->is_habitable(you.pos()))
+        {
+            continue;
+        }
+        //at least one target, bail immediately
+        if (tracer)
+            return spret::success;
+
+        ++seen;
+        if (one_chance_in(seen))
+            targ = mons;
+    }
+
+    //no targets
+    if (tracer)
+        return spret::abort;
+
+    fail_check();
+
+    if (!targ)
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return spret::success;
+    }
+
+    swap_with_monster(targ);
+    const coord_def p = targ->pos();
+    check_place_cloud(CLOUD_FLAME, p, 2, &you);
+    check_place_cloud(CLOUD_FLAME, you.pos(), 2, &you);
+
+    god_conduct_trigger conducts[3];
+    set_attack_conducts(conducts, *targ);
+
+    int target_damage = heated_exchange_damage(pow, true).roll();
+
+    bolt beam;
+    beam.flavour = BEAM_FIRE;
+
+    target_damage = mons_adjust_flavoured(targ, beam, target_damage, false);
+    _player_hurt_monster(*targ, target_damage, beam.flavour, false);
+
+
+    // identical to minimum power target damage
+    int self_damage = dice_def(1, 7).roll();
+    self_damage = resist_adjust_damage(&you, BEAM_FIRE, self_damage);
+    you.expose_to_element(BEAM_FIRE, 1);
+    dec_hp(self_damage, false);
+
+    _animate_heated_exchange(p);
+    _animate_heated_exchange(you.pos());
+
+    return spret::success;
+}

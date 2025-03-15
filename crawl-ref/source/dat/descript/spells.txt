@@ -886,6 +886,14 @@ Calls wraiths and ghosts to haunt the caster's target. They will only attack
 the creature they are haunting, and will dissipate quickly once their target
 dies. The number of spectres summoned increases with spell power.
 %%%%
+Heated Exchange spell
+
+Swaps the positions of the caster and a random nearby enemy in a gout of smoke
+and flame. Both the caster and the target will be burned by the transfer, though
+improved power increases only the damage dealt to the target and the range of
+the spell. Formerly popular as a party trick, it fell out of favor due to a
+series of fatal accidents.
+%%%%
 Hellfire Mortar spell
 
 Splits apart the ground in front of the caster and sculpts a terrifying weapon
