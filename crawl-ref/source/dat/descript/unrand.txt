@@ -859,3 +859,8 @@ crown of vainglory
 An extravagant crown of gold filigree and glittering jewels that even a king
 could feel immodest wearing. It grants its wearer a regal aura the match of any
 in heaven and also a great deal of unearned confidence.
+%%%%
+boots of scraped shins
+
+A sturdy pair of boots which hide a blade in one boot-tip.
+Enemies may be confused by being stabbed in the shins unexpectedly.
