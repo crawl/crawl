@@ -307,7 +307,15 @@ from within the MSYS2 Shell.
     you to also uninstall other packages that are part of the `base-devel`
     group, but they aren't needed for developing with python.
 
-5. To get the DCSS source, follow the steps in the [Getting The
+5. Actually there's a final dependency to install, for advcomp and pngcrush.
+   Technically they're optional but you'll get warnings (and, clearly, inflated
+   image sizes) if you don't do this.
+
+   ```sh
+   pacman -S mingw-w64-x86_64-advancecomp
+   ```
+
+6. To get the DCSS source, follow the steps in the [Getting The
    Source](#getting-the-source) section above to clone DCSS into your MSYS2
    home directory. We recommend using the MSYS2-installed version of git for
    these steps. In brief:
@@ -319,7 +327,7 @@ from within the MSYS2 Shell.
     3. Run `cd crawl/crawl-ref/source`.
     4. Run `git submodule update --init`.
 
-6. Build DCSS by simply running:
+7. Build DCSS by simply running:
 
     ```sh
     # for the console build:
@@ -331,14 +339,14 @@ from within the MSYS2 Shell.
     If you want a debug build, add the target `debug` to the above commands (eg
     `make debug TILES=y`).
 
-7. When the build process finishes, you can run crawl.exe directly from the
+8. When the build process finishes, you can run crawl.exe directly from the
    source directory in the MSYS2 shell. For Tiles, type `./crawl.exe`, and for
    console, type `start crawl`, which will open DCSS in a new command.exe
    window (the Windows version of DCSS requires a command.exe shell and will
    not run in an MSYS2 shell). Both versions can also be started by
    double-clicking `crawl.exe` using the file explorer.
 
-8. If you want to build the installer or zipped packages instead,
+9. If you want to build the installer or zipped packages instead,
    you need to install zip and nsis:
 
     ```sh
