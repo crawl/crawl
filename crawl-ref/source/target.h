@@ -749,3 +749,15 @@ public:
     targeter_watery_grave();
     aff_type is_affected(coord_def loc) override;
 };
+
+class targeter_bestial_takedown : public targeter_smite
+{
+public:
+    targeter_bestial_takedown();
+    bool valid_aim(coord_def a) override;
+    bool set_aim(coord_def a) override;
+    aff_type is_affected(coord_def loc) override;
+
+private:
+    vector<coord_def> landing_spots;
+};

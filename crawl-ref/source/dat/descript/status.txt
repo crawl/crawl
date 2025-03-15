@@ -1173,3 +1173,12 @@ Sphinx status
 
 You are a cunning, riddle-loving sphinx, with the force of a windstorm in your
 paws.
+%%%%
+Werewolf status
+
+You are a vicious werewolf.
+%%%%
+Slay status
+
+The damage and accuracy of your attacks is temporarily increased.
+%%%%

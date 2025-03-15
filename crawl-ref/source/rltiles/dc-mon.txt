@@ -1452,6 +1452,12 @@ aqua_form_octopode TRAN_AQUA_OCTOPODE
 sphinx_form_default TRAN_SPHINX
 sphinx_form_barding TRAN_SPHINX_BARDING
 sphinx_form_felid TRAN_SPHINX_FELID
+werewolf_form_armataur TRAN_WEREWOLF_ARMATAUR
+werewolf_form_djinn TRAN_WEREWOLF_DJINN
+werewolf_form_felid TRAN_WEREWOLF_FELID
+werewolf_form_humanoid TRAN_WEREWOLF_HUMANOID
+werewolf_form_naga TRAN_WEREWOLF_NAGA
+werewolf_form_octopode TRAN_WEREWOLF_OCTOPODE
 
 %rim 1
 

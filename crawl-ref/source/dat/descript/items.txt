@@ -885,6 +885,15 @@ longbow
 
 A long, strong bow made of yew.
 %%%%
+lupine talisman
+
+An painted eyepatch made from a scrap of wolf pelt. Transforms the user into a
+vicious werewolf, muscles surging with predatory instinct. Killing enemies in
+this form will give a stacking bonus to your damage and accuracy, and slaying
+enough of them in a row will cause you to unleash a vicious howl that makes
+any still alive cower in fear - and leaves them succeptible to a devastating
+leaping takedown.
+%%%%
 mace
 
 A short club with a metal head.

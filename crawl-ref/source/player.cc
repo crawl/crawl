@@ -3504,6 +3504,9 @@ int slaying_bonus(bool throwing, bool random)
     if (you.duration[DUR_FUGUE])
         ret += you.props[FUGUE_KEY].get_int();
 
+    if (you.duration[DUR_WEREFURY])
+        ret += you.props[WEREFURY_KEY].get_int();
+
     if (you.duration[DUR_HORROR])
         ret -= you.props[HORROR_PENALTY_KEY].get_int();
 
@@ -6735,17 +6738,8 @@ int player_willpower(bool temp)
     rm += WL_PIP * you.get_mutation_level(MUT_DEMONIC_WILL);
     rm -= WL_PIP * you.get_mutation_level(MUT_WEAK_WILLED);
 
-    if (you.form == transformation::death &&
-        (temp || you.default_form == transformation::death))
-    {
-        rm += WL_PIP;
-    }
-
-    if (you.form == transformation::sphinx &&
-        (temp || you.default_form == transformation::sphinx))
-    {
-        rm += WL_PIP;
-    }
+    if (you.form == you.default_form || temp)
+        rm += get_form()->will_bonus();
 
     // In this moment, you are euphoric.
     if (you.duration[DUR_ENLIGHTENED])
@@ -7245,6 +7239,8 @@ int player::has_claws(bool allow_tran) const
         // these transformations bring claws with them
         if (form == transformation::dragon)
             return DRAGON_CLAWS;
+        else if (form == transformation::werewolf)
+            return 3;
     }
 
     return get_mutation_level(MUT_CLAWS, allow_tran);

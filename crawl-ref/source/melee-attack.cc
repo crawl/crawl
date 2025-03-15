@@ -12,6 +12,7 @@
 #include <cstdlib>
 #include <cstring>
 
+#include "act-iter.h"
 #include "art-enum.h"
 #include "attitude-change.h"
 #include "bloodspatter.h"
@@ -73,8 +74,8 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     attack_number(attack_num), effective_attack_number(effective_attack_num),
     total_damage_done(0),
     cleaving(false), is_multihit(false), is_riposte(false),
-    is_projected(false), charge_pow(0), never_cleave(false), dmg_mult(0),
-    flat_dmg_bonus(0), never_prompt(false),
+    is_projected(false), is_bestial_takedown(false), charge_pow(0),
+    never_cleave(false), dmg_mult(0), flat_dmg_bonus(0), never_prompt(false),
     wu_jian_attack(WU_JIAN_ATTACK_NONE),
     wu_jian_number_of_targets(1),
     is_shadow_stab(false)
@@ -1077,6 +1078,50 @@ static void _consider_devouring(monster &defender)
     _devour(defender);
 }
 
+static void _handle_werewolf_kill_bonus(const monster& victim, bool takedown)
+{
+    if (victim.is_summoned())
+        return;
+
+    const int old_power = you.duration[DUR_WEREFURY] ? you.props[WEREFURY_KEY].get_int() : 0;
+    int& power = you.props[WEREFURY_KEY].get_int();
+    if (!you.duration[DUR_WEREFURY])
+    {
+        mpr("You revel in your kill!");
+        power = div_rand_round(get_form()->get_werefury_kill_bonus() * 3 / 2, 10);
+    }
+    else
+        power += div_rand_round(get_form()->get_werefury_kill_bonus(), 10);
+
+    // Cap slaying bonus
+    if (power > 12)
+        power = 12;
+
+    // Howl whenever we cross the 5 slaying threshold, with a smaller chance after that.
+    // (Bestial takedown kills always make you howl.)
+    if (takedown || (power >= 5 && (old_power < 5 || one_chance_in(4))))
+    {
+        const int howl_power = get_form()->get_howl_power();
+        mpr("You let out a blood-chilling howl!");
+        draw_ring_animation(you.pos(), you.current_vision, DARKGRAY, 0, true, 10);
+        for (monster_near_iterator mi(you.pos()); mi; ++mi)
+        {
+            if (mi->can_feel_fear(true) && !mi->has_ench(ENCH_FEAR)
+                && mi->check_willpower(&you, howl_power) <= 0)
+            {
+                mprf("%s freezes in fear!", mi->name(DESC_THE).c_str());
+                int dur = random_range(40, 70);
+                mi->add_ench(mon_enchant(ENCH_FEAR, 0, &you, dur));
+                mi->add_ench(mon_enchant(ENCH_BOUND, 0, &you, dur));
+                mi->props[FROZEN_IN_FEAR_KEY] = true;
+                behaviour_event(*mi, ME_SCARE, &you);
+            }
+        }
+    }
+
+    you.increase_duration(DUR_WEREFURY, random_range(7, 11), 20);
+}
+
 /**
  * Handle effects that fire when the defender (the target of the attack) is
  * killed.
@@ -1121,6 +1166,9 @@ bool melee_attack::handle_phase_killed()
 
     if (execute)
         makhleb_execution_activate();
+
+    if (attacker->is_player() && you.form == transformation::werewolf)
+        _handle_werewolf_kill_bonus(*defender->as_monster(), is_bestial_takedown);
 
     return killed;
 }

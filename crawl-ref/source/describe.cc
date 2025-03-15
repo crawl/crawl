@@ -7307,6 +7307,12 @@ static string _describe_talisman_form(const item_def &item)
         _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "# of Bees", skill, 0, false, false, 10, true);
     if (form_type == transformation::sphinx)
         _maybe_note_airstrike_damage(items, skill);
+    if (form_type == transformation::werewolf)
+    {
+        _maybe_populate_form_table(items, bind(&Form::get_werefury_kill_bonus, form, placeholders::_1), "+Slay/Kill", skill, 0, false, false, 10, true);
+        _maybe_populate_form_table(items, bind(&Form::get_takedown_multiplier, form, placeholders::_1), "Takedown Dmg", skill, 0, true, true);
+        _maybe_populate_form_table(items, bind(&Form::get_howl_power, form, placeholders::_1), "Howl Power", skill, 0, false, false);
+    }
 
     vector<int> column_width;
 
@@ -7392,6 +7398,11 @@ static string _describe_talisman_form(const item_def &item)
         if (!you.has_mutation(MUT_NO_ARMOUR))
             pr.AddCell("Barding", "Yes");
         pr.AddCell("Will", "+");
+    }
+    else if (form_type == transformation::werewolf)
+    {
+        pr.AddCell("Will", "-", RED);
+        pr.AddCell("Claws", "3");
     }
 
     // Don't output extra blank lines if there's no content.

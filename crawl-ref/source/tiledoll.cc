@@ -319,6 +319,20 @@ void fill_doll_equipment(dolls_data &result)
         result.parts[TILEP_PART_BASE]    = ch;
         result.parts[TILEP_PART_HAIR]    = 0;
         break;
+    case transformation::werewolf:
+        switch (you.species)
+        {
+        case SP_ARMATAUR:   ch = TILEP_TRAN_WEREWOLF_ARMATAUR;  break;
+        case SP_NAGA:       ch = TILEP_TRAN_WEREWOLF_NAGA;     break;
+        case SP_FELID:      ch = TILEP_TRAN_WEREWOLF_FELID;    break;
+        case SP_OCTOPODE:   ch = TILEP_TRAN_WEREWOLF_OCTOPODE; break;
+        case SP_DJINNI:     ch = TILEP_TRAN_WEREWOLF_DJINN;    break;
+        default:            ch = TILEP_TRAN_WEREWOLF_HUMANOID; break;
+        }
+        result.parts[TILEP_PART_BASE]    = ch;
+        result.parts[TILEP_PART_HAIR]    = 0;
+        result.parts[TILEP_PART_LEG]     = 0;
+        break;
     case transformation::hive:
 
         // These get full-body tiles elsewhere.

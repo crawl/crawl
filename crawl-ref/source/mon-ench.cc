@@ -510,6 +510,12 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         if (!quiet)
             simple_monster_message(*this, msg.c_str());
 
+        if (props.exists(FROZEN_IN_FEAR_KEY))
+        {
+            props.erase(FROZEN_IN_FEAR_KEY);
+            del_ench(ENCH_BOUND);
+        }
+
         // Reevaluate behaviour.
         behaviour_event(this, ME_EVAL);
         break;

@@ -49,6 +49,7 @@ public:
     bool         is_multihit;     // quick blade follow-up attack
     bool         is_riposte;      // fencers' retaliation attack
     bool         is_projected;    // projected weapon spell attack
+    bool         is_bestial_takedown;   // bestial takedown attack
     int          charge_pow;      // electric charge bonus damage
     bool         never_cleave;    // if this attack shouldn't trigger cleave
                                   // followups, but still do 100% damage

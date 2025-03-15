@@ -1009,6 +1009,20 @@ You compulsively pose riddles to enemies when you encounter them. Every now and
 again, these may confuse or vex them, but mostly they just attract their
 attention.
 %%%%
+werefury mutation
+
+Whenever you kill an enemy with a melee attack, you gain a temporary slaying
+bonus that increases with your Shapeshifting skill.
+
+This bonus stacks up to +12 and will not expire so long as you continue to
+perform melee attacks.
+%%%%
+werehowl mutation
+
+When you kill an enemy in melee, if your werefury bonus is at least 5, you may
+unleash a terrifying howl that attempts to freeze all nearby enemies in place
+with fear if it overcomes their willpower.
+%%%%
 # ------ Makhleb destruction flavours ------
 Gehenna destruction mutation
 

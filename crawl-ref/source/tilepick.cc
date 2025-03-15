@@ -3031,6 +3031,7 @@ static tileidx_t _tileidx_talisman(const item_def &item)
     case TALISMAN_SERPENT:  return TILE_TALISMAN_SNAKE;
     case TALISMAN_MAW:      return TILE_TALISMAN_MAW;
     case TALISMAN_BLADE:    return TILE_TALISMAN_BLADE;
+    case TALISMAN_WEREWOLF: return TILE_TALISMAN_WEREWOLF;
     case TALISMAN_STATUE:   return TILE_TALISMAN_STATUE;
     case TALISMAN_HIVE:     return TILE_TALISMAN_HIVE;
     case TALISMAN_DRAGON:   return TILE_TALISMAN_DRAGON;
@@ -3912,6 +3913,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_ENKINDLE;
     case ABIL_WATERY_GRAVE:
         return TILEG_ABILITY_WATERY_GRAVE;
+    case ABIL_BESTIAL_TAKEDOWN:
+        return TILEG_ABILITY_BESTIAL_TAKEDOWN;
 
     // Others
     case ABIL_END_TRANSFORMATION:

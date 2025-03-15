@@ -289,5 +289,6 @@ enum duration_type
     DUR_RIME_YAK_AURA,
     DUR_AUTODODGE,
     DUR_HIVE_COOLDOWN,
+    DUR_WEREFURY,
     NUM_DURATIONS
 };

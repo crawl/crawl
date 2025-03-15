@@ -415,6 +415,9 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_WATERY_GRAVE, "Watery Grave",
                     6, 0, 0, -1, {}, abflag::none },
 
+        { ABIL_BESTIAL_TAKEDOWN, "Bestial Takedown",
+            4, 0, 0, 5, {}, abflag::target },
+
         // EVOKE abilities use Evocations and come from items.
         { ABIL_EVOKE_BLINK, "Evoke Blink",
             0, 0, 0, -1, {fail_basis::evo, 40, 2}, abflag::none },
@@ -2655,6 +2658,8 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
         return make_unique<targeter_multiposition>(&you, find_blink_targets());
     case ABIL_WATERY_GRAVE:
         return make_unique<targeter_watery_grave>();
+    case ABIL_BESTIAL_TAKEDOWN:
+        return make_unique<targeter_bestial_takedown>();
     case ABIL_WORD_OF_CHAOS:
         return make_unique<targeter_multiposition>(&you, find_chaos_targets(true));
     case ABIL_ZIN_RECITE:
@@ -3278,6 +3283,9 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
 
     case ABIL_WATERY_GRAVE:
         return cast_watery_grave();
+
+    case ABIL_BESTIAL_TAKEDOWN:
+        return do_bestial_takedown(beam.target);
 
     case ABIL_EVOKE_BLINK:      // randarts
         return cast_blink(min(50, 1 + you.skill(SK_EVOCATIONS, 3)), fail);
@@ -4279,6 +4287,8 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         return you.form == transformation::spider;
     case ABIL_WATERY_GRAVE:
         return you.form == transformation::aqua;
+    case ABIL_BESTIAL_TAKEDOWN:
+        return you.form == transformation::werewolf;
     case ABIL_BLINKBOLT:
         return you.form == transformation::storm;
     case ABIL_SIPHON_ESSENCE:
@@ -4374,6 +4384,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_ENKINDLE,
             ABIL_SPIDER_JUMP,
             ABIL_WATERY_GRAVE,
+            ABIL_BESTIAL_TAKEDOWN,
             ABIL_BLINKBOLT,
             ABIL_SIPHON_ESSENCE,
             ABIL_IMBUE_SERVITOR,

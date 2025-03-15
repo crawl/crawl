@@ -1264,6 +1264,7 @@ quill TALISMAN_QUILL
 hive TALISMAN_HIVE
 water TALISMAN_AQUA
 sphinx TALISMAN_SPHINX
+lupine TALISMAN_WEREWOLF
 
 %sdir item/misc/uncollected_runes
 generic MISC_UNCOLLECTED_RUNE_OF_ZOT

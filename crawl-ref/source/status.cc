@@ -532,6 +532,10 @@ bool fill_status_info(int status, status_info& inf)
     }
     break;
 
+    case DUR_WEREFURY:
+        inf.light_text = make_stringf("Slay +%d", you.props[WEREFURY_KEY].get_int());
+    break;
+
     case DUR_STICKY_FLAME:
     {
         int intensity = you.props[STICKY_FLAME_POWER_KEY].get_int();

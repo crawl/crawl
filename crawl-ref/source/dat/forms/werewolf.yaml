@@ -1,0 +1,13 @@
+enum: werewolf
+description: a ferocious werewolf.
+equivalent_mons: wolf
+skill: {min: 10, max: 19}
+talisman: werewolf
+melds: [aux]
+resists: {cold: 1}
+str: 3
+dex: 3
+fakemuts:
+ - ["werefury", "You gain temporary slaying when you kill enemies in melee."]
+ - ["werehowl", "You sometimes unleash a terrifying howl when you kill enemies in melee."]
+ - ["bestial takedown", "You can leap to fearful enemies and eviscerate them."]

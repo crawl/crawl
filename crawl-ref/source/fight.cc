@@ -479,6 +479,8 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         // Executioner state doesn't wear off so long as you keep attacking.
         if (you.duration[DUR_EXECUTION])
             you.duration[DUR_EXECUTION] += you.time_taken;
+        if (you.duration[DUR_WEREFURY])
+            you.duration[DUR_WEREFURY] += you.time_taken;
 
         if (you.duration[DUR_DETONATION_CATALYST])
             you.duration[DUR_DETONATION_CATALYST] += you.time_taken;

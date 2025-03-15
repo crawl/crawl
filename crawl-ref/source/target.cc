@@ -2772,3 +2772,46 @@ aff_type targeter_watery_grave::is_affected(coord_def loc)
     else
         return AFF_MAYBE;
 }
+
+targeter_bestial_takedown::targeter_bestial_takedown()
+    : targeter_smite(&you, LOS_RADIUS)
+{
+}
+
+bool targeter_bestial_takedown::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    if (monster* mon = monster_at(a))
+    {
+        if (!mon->friendly() && mon->has_ench(ENCH_FEAR))
+        {
+            if (get_bestial_landing_spots(a).empty())
+                return notify_fail("You can see nowhere safe to land near that.");
+            else
+                return true;
+        }
+    }
+
+    return notify_fail("You must target an enemy who is afraid.");
+}
+
+bool targeter_bestial_takedown::set_aim(coord_def a)
+{
+    landing_spots = get_bestial_landing_spots(a);
+
+    return true;
+}
+
+aff_type targeter_bestial_takedown::is_affected(coord_def loc)
+{
+    if (loc == aim)
+        return AFF_YES;
+
+    for (coord_def p : landing_spots)
+        if (loc == p)
+            return AFF_LANDING;
+
+    return AFF_NO;
+}

@@ -776,6 +776,8 @@ public:
     {
         return "You feel yourself come back to life.";
     }
+
+    int will_bonus() const override { return WL_PIP; }
 };
 
 class FormBat : public Form
@@ -1091,6 +1093,37 @@ FormSphinx() : Form(transformation::sphinx) { }
     DISALLOW_COPY_AND_ASSIGN(FormSphinx);
 public:
     static const FormSphinx &instance() { static FormSphinx inst; return inst; }
+
+    int will_bonus() const override { return WL_PIP; }
+};
+
+class FormWerewolf : public Form
+{
+private:
+FormWerewolf() : Form(transformation::werewolf) { }
+    DISALLOW_COPY_AND_ASSIGN(FormWerewolf);
+public:
+    static const FormWerewolf &instance() { static FormWerewolf inst; return inst; }
+
+    int will_bonus() const override { return -WL_PIP; }
+
+    int regen_bonus(int /*skill*/ = -1) const override { return REGEN_PIP; }
+
+    // Amount of slaying gained per kill (multiplied by 10). 50% more for initial kill.
+    int get_werefury_kill_bonus(int skill = -1) const override
+    {
+        return divided_scaling(FormScaling().Base(12).Scaling(10), false, skill);
+    }
+
+    virtual int get_takedown_multiplier(int skill = -1) const override
+    {
+        return divided_scaling(FormScaling().Base(75).Scaling(50), false, skill);
+    }
+
+    virtual int get_howl_power(int skill = -1) const override
+    {
+        return divided_scaling(FormScaling().Base(80).Scaling(40), false, skill);
+    }
 };
 
 static const Form* forms[] =
@@ -1136,6 +1169,7 @@ static const Form* forms[] =
     &FormHive::instance(),
     &FormWater::instance(),
     &FormSphinx::instance(),
+    &FormWerewolf::instance(),
 };
 
 const Form* get_form(transformation xform)

@@ -42,6 +42,7 @@ enum class transformation
     hive,
     aqua,
     sphinx,
+    werewolf,
     COUNT
 };
 constexpr int NUM_TRANSFORMS = static_cast<int>(transformation::COUNT);

@@ -58,6 +58,7 @@
 #ifdef USE_TILE
 #include "tilepick.h"
 #endif
+#include "transform.h"
 #include "traps.h"
 #include "view.h"
 #include "viewmap.h"
@@ -2589,4 +2590,56 @@ spret cast_teleport_other(const coord_def& target, int power, bool fail)
     beam.set_agent(&you);
 
     return zapping(ZAP_TELEPORT_OTHER, power, beam, false, nullptr, fail);
+}
+
+vector<coord_def> get_bestial_landing_spots(coord_def target)
+{
+    vector<coord_def> spots;
+    for (adjacent_iterator ai(target); ai; ++ai)
+    {
+        if (in_bounds(*ai) && you.see_cell_no_trans(*ai)
+            && !cell_is_solid(*ai) && !is_feat_dangerous(env.grid(*ai))
+            && (!actor_at(*ai) || !you.can_see(*actor_at(*ai))))
+        {
+            spots.push_back(*ai);
+        }
+    }
+
+    return spots;
+}
+
+spret do_bestial_takedown(coord_def target)
+{
+    monster* targ = monster_at(target);
+    ASSERT(targ);
+
+    vector<coord_def> spots = get_bestial_landing_spots(target);
+
+    coord_def landing = spots[random2(spots.size())];
+
+    // We've selected a spot with an invisible monster, so just fling them out
+    // of the way.
+    if (monster_at(landing))
+        _displace_charge_blocker(you, landing);
+
+    mprf("You pounce on %s with bestial fury!", targ->name(DESC_THE).c_str());
+
+    const coord_def old_pos = you.pos();
+    you.moveto(landing, true);
+    viewwindow();
+    update_screen();
+
+    melee_attack atk(&you, targ);
+    atk.dmg_mult = get_form()->get_takedown_multiplier();
+    atk.to_hit = AUTOMATIC_HIT;
+    atk.is_bestial_takedown = true;
+    atk.attack();
+
+    you.time_taken = you.attack_delay().roll();
+
+    you.did_deliberate_movement();
+    you.apply_location_effects(old_pos);
+    noisy(5, you.pos(), MID_PLAYER);
+
+    return spret::success;
 }

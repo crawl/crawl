@@ -718,6 +718,12 @@ static const duration_def duration_data[] =
       "shroud timeout", "shroud timeout",
       "Your shroud of slime is broken and needs time to repair.", D_EXPIRES,
       {{ "Your slime shroud regrows." }}},
+    { DUR_WEREFURY,
+      BLUE, "Slay",
+      "full of bloodlust", "bloodlust",
+      "Your melee attacks are strengthened by primal bloodlust.", D_EXPIRES,
+      {{ "Your bloodlust subsides." },
+       { "You feel your bloodlust ebbing." }}, 6},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
