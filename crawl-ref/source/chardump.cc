@@ -1268,6 +1268,7 @@ static const char* _aux_attack_names[] =
     "Maw",
     "Executioner Blades",
     "Fungal Fists",
+    "Boot knife",
 };
 COMPILE_CHECK(ARRAYSZ(_aux_attack_names) == NUM_UNARMED_ATTACKS);
 

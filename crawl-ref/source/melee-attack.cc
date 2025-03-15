@@ -1556,21 +1556,9 @@ public:
             return damage + 1 + you.get_mutation_level(MUT_TALONS);
         }
 
-        if (you.get_mutation_level(MUT_TENTACLE_SPIKE))
-        {
-            // Max spike damage: 8.
-            // ... yes, apparently tentacle spikes are "kicks".
-            return damage + you.get_mutation_level(MUT_TENTACLE_SPIKE);
-        }
-
-        if (you.unrand_equipped(UNRAND_BOOT_KNIFE))
-        {
-            // Max bootknife damage: 7.
-            return damage + 2;
-        }
-
-        // XXX: impossible?
-        return damage;
+        // Max spike damage: 8.
+        // ... yes, apparently tentacle spikes are "kicks".
+        return damage + you.get_mutation_level(MUT_TENTACLE_SPIKE);
     }
 
     string get_verb() const override
@@ -1579,8 +1567,6 @@ public:
             return "claw";
         if (you.get_mutation_level(MUT_TENTACLE_SPIKE))
             return "pierce";
-        if (you.unrand_equipped(UNRAND_BOOT_KNIFE))
-            return "bootknife";
         return name;
     }
 
@@ -1595,8 +1581,7 @@ public:
     {
         return you.has_usable_hooves()
                || you.has_usable_talons()
-               || you.get_mutation_level(MUT_TENTACLE_SPIKE)
-               || you.unrand_equipped(UNRAND_BOOT_KNIFE);
+               || you.get_mutation_level(MUT_TENTACLE_SPIKE);
     }
 };
 
@@ -1898,6 +1883,20 @@ public:
     }
 };
 
+class AuxBootknife: public AuxAttackType
+{
+public:
+    AuxBootknife()
+    : AuxAttackType(7, 100, "bootknife") { };
+
+    bool xl_based_chance() const override { return true; }
+
+    bool is_usable() const override
+    {
+        return you.unrand_equipped(UNRAND_BOOT_KNIFE);
+    }
+};
+
 static const AuxConstrict   AUX_CONSTRICT = AuxConstrict();
 static const AuxKick        AUX_KICK = AuxKick();
 static const AuxPeck        AUX_PECK = AuxPeck();
@@ -1911,6 +1910,7 @@ static const AuxTentacles   AUX_TENTACLES = AuxTentacles();
 static const AuxMaw         AUX_MAW = AuxMaw();
 static const AuxBlades      AUX_EXECUTIONER_BLADE = AuxBlades();
 static const AuxFisticloak  AUX_FUNGAL_FISTICLOAK = AuxFisticloak();
+static const AuxBootknife  AUX_BOOTKNIFE = AuxBootknife();
 static const AuxAttackType* const aux_attack_types[] =
 {
     &AUX_CONSTRICT,
@@ -1926,6 +1926,7 @@ static const AuxAttackType* const aux_attack_types[] =
     &AUX_MAW,
     &AUX_EXECUTIONER_BLADE,
     &AUX_FUNGAL_FISTICLOAK,
+    &AUX_BOOTKNIFE,
 };
 
 
@@ -2093,16 +2094,6 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
         if (atk == UNAT_CONSTRICT)
             attacker->start_constricting(*defender);
 
-
-        if (atk == UNAT_KICK && you.unrand_equipped(UNRAND_BOOT_KNIFE) &&
-            x_chance_in_y(5, 5))
-        {
-            // TODO: what chance? how long?
-            mprf("Your bootknife's poison paralyses %s!",
-                 defender->name(DESC_THE).c_str());
-            defender->paralyse(&you, 2);
-        }
-
         if (damage_done > 0 || atk == UNAT_CONSTRICT)
         {
             player_announce_aux_hit();
@@ -2175,7 +2166,8 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
         handle_phase_killed();
         return true;
     }
-    else if (atk == UNAT_FUNGAL_FISTICLOAK && !defender->is_unbreathing()
+    else if (((atk == UNAT_FUNGAL_FISTICLOAK && !defender->is_unbreathing()) ||
+             (atk == UNAT_BOOTKNIFE))
             && one_chance_in(3))
     {
         defender->confuse(attacker, 5);
