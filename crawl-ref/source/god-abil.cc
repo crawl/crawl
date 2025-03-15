@@ -3183,7 +3183,6 @@ spret dithmenos_marionette(monster& target, bool fail)
     const coord_def old_target = target.target;
     const int old_energy = target.speed_increment;
     target.attitude = ATT_MARIONETTE;
-    env.final_effect_monster_cache.push_back(target);
 
     // Attempt to cast all valid spells the monster has, in randomized order,
     // (but using all spells at least once before repeating). End early if the

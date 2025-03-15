@@ -704,9 +704,10 @@ void bennu_revive_fineff::fire()
 
 void avoided_death_fineff::fire()
 {
-    ASSERT(defender() && defender()->is_monster());
-    defender()->as_monster()->hit_points = hp;
-    defender()->as_monster()->flags &= ~MF_PENDING_REVIVAL;
+    monster* defend = monster_by_mid(def, true, true);
+    ASSERT(defend);
+    defend->hit_points = hp;
+    defend->flags &= ~MF_PENDING_REVIVAL;
 }
 
 void infestation_death_fineff::fire()
@@ -808,9 +809,9 @@ void mummy_death_curse_fineff::fire()
         mprf(MSGCH_MONSTER_SPELL, "A malignant aura surrounds %s.",
              victim->name(DESC_THE).c_str());
     }
-    // The real mummy is dead, but we pass along a cached copy save at the time
-    // they died (for morgue purposes)
-    death_curse(*victim, cached_monster_copy_by_mid(dead_mummy), "", pow);
+    // The mummy is dead, but the pointer to it should still be good until
+    // after all the final effects have processed.
+    death_curse(*victim, dead_mummy, "", pow);
 }
 
 void summon_dismissal_fineff::fire()
@@ -941,7 +942,4 @@ void fire_final_effects()
         env.final_effects.pop_back();
         eff->fire();
     }
-
-    // Clear all cached monster copies
-    env.final_effect_monster_cache.clear();
 }
