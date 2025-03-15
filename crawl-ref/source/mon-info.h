@@ -253,6 +253,7 @@ enum monster_info_flags
     MB_VEXED,
     MB_VAMPIRE_THRALL,
     MB_PYRRHIC_RECOLLECTION,
+    MB_DAMPENED,
     NUM_MB_FLAGS
 };
 

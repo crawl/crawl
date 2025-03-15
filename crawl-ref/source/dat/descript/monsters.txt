@@ -1585,6 +1585,12 @@ An ancient undead sorcerer, exhumed by the living divines Sheza and Sargol and
 forced to labour night and day to anchor them to the world. Even after the fall
 of the divine twins, it works to resurrect its fallen masters.
 %%%%
+half-moon moth
+
+A faintly glowing moth normally only seen twice per Lunar cycle. Its presence
+has a strange effect on the magical firmanent: its density is increased such
+that spells may only travel a fraction of their normal distance.
+%%%%
 harpy
 
 A bird-like creature with a human face that roams the coasts endlessly, feared

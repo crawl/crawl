@@ -1149,3 +1149,8 @@ You are noisily attacking with all of your armour. Every piece of armour you
 haunt currently moves of its own volition; any damage it takes will not affect
 you, you can freely fire through it, and its attacks may daze, drain, or confuse
 your enemies.
+%%%%
+Dampened status
+
+You are within a field of unusually high density in the magical firmament. As
+a result, spells you cast have approximately half their normal range.

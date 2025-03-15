@@ -1084,7 +1084,14 @@ int player::spell_range(spell_type spell, int pow, spell_cast_type how) const
 
     int range = spell_range_base(spell, pow);
 
-    // Vehumet only boosts spells cast magically
+    // Dampen range only if it's a magic spell or an evokable. Gods work on their
+    // own rules, and breaths and other natural abilities work physically or
+    // otherwise. Reduce to half (rounded down).
+    if (duration[DUR_DAMPENED] && how <= spell_cast_type::device && range > 1)
+        range /= 2;
+
+    // Vehumet only boosts spells cast magically and the bonus is applied after
+    // the halving so followers still always get +1
     if (how == spell_cast_type::magical && have_passive(passive_t::spells_range)
         && vehumet_boosts_spell_range(spell))
     {

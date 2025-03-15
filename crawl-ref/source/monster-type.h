@@ -276,9 +276,7 @@ enum monster_type                      // env.mons[].type
     MONS_SCORPION,
     MONS_EMPEROR_SCORPION,
     MONS_MOTH,                  // genus
-#if TAG_MAJOR_VERSION == 34
-    MONS_MOTH_OF_SUPPRESSION,
-#endif
+    MONS_HALF_MOON_MOTH,
     MONS_GHOST_MOTH,
     MONS_MOTH_OF_WRATH,
     MONS_DEMONIC_CRAWLER,

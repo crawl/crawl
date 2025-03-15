@@ -1895,7 +1895,7 @@ static int _ench_power(spell_type spell, const monster &mons)
  *                  being cast
  * @return          -1 if the spell has an undefined range; else its range.
  */
-int monster::spell_range(spell_type spell, int pow, spell_cast_type /*how*/) const
+int monster::spell_range(spell_type spell, int pow, spell_cast_type how) const
 {
     if (pow < 0)
         pow = mons_spellpower(*this, spell);
@@ -1904,6 +1904,9 @@ int monster::spell_range(spell_type spell, int pow, spell_cast_type /*how*/) con
         return you.spell_range(spell, pow);
 
     int range = spell_range_base(spell, pow);
+
+    if (has_ench(ENCH_DAMPENED) && how <= spell_cast_type::device && range > 1)
+        range /= 2;
 
     return range;
 }
