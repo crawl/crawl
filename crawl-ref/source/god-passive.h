@@ -302,6 +302,9 @@ void dithmenos_shadow_spell(spell_type spell);
 void uskayaw_prepares_audience();
 void uskayaw_bonds_audience();
 
+bool vehumet_supports_spell(spell_type spell);
+bool vehumet_boosts_spell_range(spell_type spell);
+
 void wu_jian_trigger_serpents_lash(bool wall_jump, const coord_def& old_pos);
 void wu_jian_heaven_tick();
 void wu_jian_decrement_heavenly_storm();

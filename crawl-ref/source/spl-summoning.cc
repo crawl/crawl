@@ -1605,7 +1605,7 @@ void init_servitor(monster* servitor, actor* caster, int pow)
         if (slot.spell == SPELL_NO_SPELL)
             continue;
 
-        int range = spell_range(slot.spell, 100, false);
+        int range = servitor->spell_range(slot.spell, 100);
         if (range < shortest_range)
             shortest_range = range;
     }
@@ -1984,7 +1984,10 @@ spret cast_fulminating_prism(actor* caster, int pow, const coord_def& where,
                              bool fail, bool is_shadow)
 {
     if (grid_distance(where, caster->pos())
-        > spell_range(SPELL_FULMINANT_PRISM, pow))
+    // XX: Maybe the shadow check should just fold into spell_range as well
+    // (But it messes with god-passive as it has to check the range before creating the shadow)
+        > is_shadow ? you.spell_range(SPELL_FULMINANT_PRISM, pow)
+                    : caster->spell_range(SPELL_FULMINANT_PRISM, pow))
     {
         if (caster->is_player())
             mpr("That's too far away.");

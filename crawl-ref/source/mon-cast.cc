@@ -1393,7 +1393,7 @@ static void _cast_mass_regeneration(monster* caster)
 
 static bool _cast_seismic_stomp(const monster& caster, bolt& beam, bool check_only)
 {
-    const int range = spell_range(SPELL_SEISMIC_STOMP, 4);
+    const int range = caster.spell_range(SPELL_SEISMIC_STOMP);
     vector<actor*> targs;
     for (actor_near_iterator mi(&caster, LOS_NO_TRANS); mi; ++mi)
     {
@@ -1885,26 +1885,27 @@ static int _ench_power(spell_type spell, const monster &mons)
     return min(cap, mons_spellpower(mons, spell) / ENCH_POW_FACTOR);
 }
 
-int mons_spell_range(const monster &mons, spell_type spell)
-{
-    return mons_spell_range_for_hd(spell, mons.spell_hd(),
-                                   mons.type == MONS_SPELLSPARK_SERVITOR
-                                   && mons.summoner == MID_PLAYER);
-}
-
 /**
- * How much range does a monster of the given spell HD have with the given
- * spell?
+ * How much range does the monster have with the given spell?
  *
- * @param spell         The spell in question.
- * @param hd            The monster's effective HD for spellcasting purposes.
- * @param use_veh_bonus Whether to use Vehumet's range bonus (for player Servitor)
- * @return              -1 if the spell has an undefined range; else its range.
+ * @param spell     The spell in question.
+ * @param pow       Optional spellpower, if it is -1 then also calculate
+ *                  the monster's current spellpower
+ * @param how       An enum value specifying the method by which the spell is
+ *                  being cast
+ * @return          -1 if the spell has an undefined range; else its range.
  */
-int mons_spell_range_for_hd(spell_type spell, int hd, bool use_veh_bonus)
+int monster::spell_range(spell_type spell, int pow, spell_cast_type /*how*/) const
 {
-    const int power = mons_power_for_hd(spell, hd);
-    return spell_range(spell, power, use_veh_bonus);
+    if (pow < 0)
+        pow = mons_spellpower(*this, spell);
+
+    if (type == MONS_SPELLSPARK_SERVITOR && summoner == MID_PLAYER)
+        return you.spell_range(spell, pow);
+
+    int range = spell_range_base(spell, pow);
+
+    return range;
 }
 
 /**
@@ -1972,7 +1973,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     beam.is_explosion = false;
     beam.attitude     = mons_attitude(*mons);
 
-    beam.range = mons_spell_range(*mons, spell_cast);
+    beam.range = mons->spell_range(spell_cast, power);
 
     spell_type real_spell = spell_cast;
 
@@ -4105,7 +4106,7 @@ static void _prayer_of_brilliance(monster* agent)
 
 static bool _glaciate_tracer(monster *caster, int pow, coord_def aim)
 {
-    targeter_cone hitfunc(caster, spell_range(SPELL_GLACIATE, pow));
+    targeter_cone hitfunc(caster, caster->spell_range(SPELL_GLACIATE, pow));
     hitfunc.set_aim(aim);
 
     mon_attitude_type castatt = caster->temp_attitude();
@@ -4238,9 +4239,10 @@ static coord_def _mons_bomblet_target(const monster& caster)
 {
     // Check if foe is valid first.
     actor* foe = caster.get_foe();
+    auto range = caster.spell_range(SPELL_DEPLOY_BOMBLET);
     if (foe && caster.can_see(*foe) && monster_los_is_valid(&caster, foe)
         && grid_distance(caster.pos(), foe->pos()) > 1
-        && grid_distance(caster.pos(), foe->pos()) <= spell_range(SPELL_DEPLOY_BOMBLET, 0))
+        && grid_distance(caster.pos(), foe->pos()) <= range)
     {
         coord_def result;
         if (find_habitable_spot_near(foe->pos(), MONS_BOMBLET, 2, result))
@@ -4254,7 +4256,7 @@ static coord_def _mons_bomblet_target(const monster& caster)
         if (!ai->is_peripheral()
             && !mons_aligned(&caster, *ai)
             && grid_distance(caster.pos(), ai->pos()) > 1
-            && grid_distance(caster.pos(), ai->pos()) <= spell_range(SPELL_DEPLOY_BOMBLET, 0)
+            && grid_distance(caster.pos(), ai->pos()) <= range
             && caster.can_see(**ai)
             && monster_los_is_valid(&caster, *ai))
         {
@@ -4342,7 +4344,7 @@ static ai_action::goodness _grave_claw_goodness(const monster &caster)
 {
     const actor* foe = caster.get_foe();
     if (!foe || !caster.can_see(*foe)
-        || grid_distance(caster.pos(), foe->pos()) > spell_range(SPELL_GRAVE_CLAW, 0))
+        || grid_distance(caster.pos(), foe->pos()) > caster.spell_range(SPELL_GRAVE_CLAW, 0))
     {
         return ai_action::impossible();
     }
@@ -5737,7 +5739,7 @@ static coord_def _mons_fragment_target(const monster &mon)
     const monster *mons = &mon; // TODO: rewriteme
     const int pow = mons_spellpower(*mons, SPELL_LRD);
 
-    const int range = mons_spell_range(*mons, SPELL_LRD);
+    const int range = mons->spell_range(SPELL_LRD);
     int maxpower = 0;
     for (distance_iterator di(mons->pos(), true, true, range); di; ++di)
     {
@@ -6682,7 +6684,7 @@ static bool _mons_cast_prisms(monster& caster, actor& foe, int pow, bool check_o
     vector<coord_def> pos;
     for (radius_iterator ri(foe.pos(), 2, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
     {
-        if (grid_distance(caster.pos(), *ri) <= spell_range(SPELL_FULMINANT_PRISM, pow)
+        if (grid_distance(caster.pos(), *ri) <= caster.spell_range(SPELL_FULMINANT_PRISM, pow)
             && !actor_at(*ri) && !feat_is_solid(env.grid(*ri)))
         {
             // If we're just looking for a valid position, we found one.

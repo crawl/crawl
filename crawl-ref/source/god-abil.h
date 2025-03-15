@@ -121,8 +121,6 @@ void elyvilon_purification();
 void elyvilon_divine_vigour();
 void elyvilon_remove_divine_vigour();
 
-bool vehumet_supports_spell(spell_type spell);
-
 void trog_do_trogs_hand(int power);
 void trog_remove_trogs_hand();
 
