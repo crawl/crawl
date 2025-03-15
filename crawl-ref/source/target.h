@@ -438,6 +438,16 @@ protected:
     int range;
 };
 
+class targeter_exchange : public targeter_multiposition
+{
+public:
+    targeter_exchange(const actor &a, int _range);
+    aff_type is_affected(coord_def a) override;
+
+protected:
+    int range;
+};
+
 class targeter_chain_lightning : public targeter
 {
 public:
