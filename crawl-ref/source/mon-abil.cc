@@ -1333,8 +1333,12 @@ bool pyrrhic_recollection(monster& nobody)
     // If this was a phantom mirror copy, allow it to revive, but don't wipe out
     // its summoner timer at the same time, to keep it from having unlimited duration.
     mon_enchant summon_timer = nobody.get_ench(ENCH_SUMMON_TIMER);
+    // Mark as pending revival so that enchantments such as summon timers
+    // ending don't kill them.
+    nobody.flags |= MF_PENDING_REVIVAL;
     nobody.timeout_enchantments(1000);
-    nobody.update_ench(summon_timer);
+    if (summon_timer.ench == ENCH_SUMMON_TIMER)
+        nobody.add_ench(summon_timer);
 
     monster_blink(&nobody, true, true);
     nobody.add_ench(mon_enchant(ENCH_PYRRHIC_RECOLLECTION, 0, &nobody, random_range(300, 500)));
