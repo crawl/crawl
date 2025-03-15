@@ -889,7 +889,7 @@ STEALTH:  2
 VALUE:    600
 DESCRIP:  Detect:    It allows the wearer to sense nearby creatures.
 +Stab+:     It allows the wearer to make particularly effective stabbing attacks
- against helpless or unaware enemies with any weapon.
+ against helpless or unaware enemies with any melee weapon.
 
 ENUM:    LEAR
 NAME:    Lear's hauberk
