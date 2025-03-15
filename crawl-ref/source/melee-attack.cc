@@ -1556,9 +1556,21 @@ public:
             return damage + 1 + you.get_mutation_level(MUT_TALONS);
         }
 
-        // Max spike damage: 8.
-        // ... yes, apparently tentacle spikes are "kicks".
-        return damage + you.get_mutation_level(MUT_TENTACLE_SPIKE);
+        if (you.get_mutation_level(MUT_TENTACLE_SPIKE))
+        {
+            // Max spike damage: 8.
+            // ... yes, apparently tentacle spikes are "kicks".
+            return damage + you.get_mutation_level(MUT_TENTACLE_SPIKE);
+        }
+
+        if (you.unrand_equipped(UNRAND_BOOT_KNIFE))
+        {
+            // Max bootknife damage: 7.
+            return damage + 2;
+        }
+
+        // XXX: impossible?
+        return damage;
     }
 
     string get_verb() const override
@@ -1567,6 +1579,8 @@ public:
             return "claw";
         if (you.get_mutation_level(MUT_TENTACLE_SPIKE))
             return "pierce";
+        if (you.unrand_equipped(UNRAND_BOOT_KNIFE))
+            return "bootknife";
         return name;
     }
 
@@ -1581,7 +1595,8 @@ public:
     {
         return you.has_usable_hooves()
                || you.has_usable_talons()
-               || you.get_mutation_level(MUT_TENTACLE_SPIKE);
+               || you.get_mutation_level(MUT_TENTACLE_SPIKE)
+               || you.unrand_equipped(UNRAND_BOOT_KNIFE);
     }
 };
 
@@ -2078,6 +2093,16 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
         if (atk == UNAT_CONSTRICT)
             attacker->start_constricting(*defender);
 
+
+        if (atk == UNAT_KICK && you.unrand_equipped(UNRAND_BOOT_KNIFE) &&
+            x_chance_in_y(5, 5))
+        {
+            // TODO: what chance? how long?
+            mprf("Your bootknife's poison paralyses %s!",
+                 defender->name(DESC_THE).c_str());
+            defender->paralyse(&you, 2);
+        }
+
         if (damage_done > 0 || atk == UNAT_CONSTRICT)
         {
             player_announce_aux_hit();
@@ -2130,6 +2155,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
                     }
                 }
             }
+
         }
         else // no damage was done
         {
