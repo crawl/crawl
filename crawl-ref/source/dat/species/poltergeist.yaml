@@ -13,7 +13,7 @@ species_flags:
   - no_hair
   - no_ears
 aptitudes:
-  xp: -1
+  xp: 0
   hp: -1
   mp_mod: 0
   wl: 4

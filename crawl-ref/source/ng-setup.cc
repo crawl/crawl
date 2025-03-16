@@ -150,6 +150,7 @@ item_def* newgame_make_item(object_class_type base,
                  && you.has_mutation(MUT_FORMLESS))
         {
             item.sub_type = ARM_CLOAK;
+            item.plus = max(item.plus, (short)1);
         }
         else
             item.sub_type = ARM_ROBE;
