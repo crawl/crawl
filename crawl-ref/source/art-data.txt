@@ -1909,8 +1909,9 @@ TILE_EQ:  scarf_invisibility
 BOOL:     inv, nogen
 
 #TODO: tile tweak or replacement
+#TODO: name needs more work
 ENUM:     BOOT_KNIFE
-NAME:     boots of scraped shins
+NAME:     Uskayaw's dancing shoes
 OBJ:      OBJ_ARMOUR/ARM_BOOTS
 TILE:     urand_assassin
 TILE_EQ:  mesh_black
