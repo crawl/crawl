@@ -2643,6 +2643,11 @@ static void _gain_innate_spells()
 // being gifted this one.)
 static void _revenant_spell_gift()
 {
+    // Also give a memory charge, so that the player can use it immediately.
+    // (Due to XP scaling, there first few XLs give charges *really* slowly,
+    // which I'd independetly like to fix, but this will do for now.)
+    you.props[ENKINDLE_CHARGES_KEY].get_int() = 1;
+
     const static vector<pair<spell_type, string>> enkindle_gifts =
     {
         {SPELL_FOXFIRE, "wisps of flame dancing upon you"},
