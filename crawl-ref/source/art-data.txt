@@ -1899,6 +1899,19 @@ DESCRIP: Majesty:   You are bathed in light that prevents you from turning
  enemies and refuse to leave the floor again for some time.
 +Ring++:   You can equip two additional rings.
 
+ENUM:    CRAB_CLAWS
+NAME:    ghost crab claws
+INSCRIP: Mist
+OBJ:     OBJ_ARMOUR/ARM_GLOVES
+PLUS:    +4
+STR:     4
+INT:     4
+COLOUR:  ETC_MAGIC
+TILE:    urand_crab_claws
+BOOL:    enh_necro, special
+DESCRIP: Mist:   It may create clouds of spectral mist when the wearer attacks
+ or casts spells, and grants immunity from such clouds.
+
 # Fedhas sprint, to allow coglins access to evocable invisibility.
 ENUM:     SCARF_INVISIBILITY
 NAME:     scarf of invisibility
