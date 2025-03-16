@@ -2716,7 +2716,7 @@ bool safe_discharge(coord_def where, bool check_only, bool exclude_center,
         bool penance;
 
         for (const actor* act : exclude)
-            if (bad_attack(act->as_monster(), adj, suffix, penance, you.pos()))
+            if (act->is_monster() && bad_attack(act->as_monster(), adj, suffix, penance, you.pos()))
                 return false;
 
         return true;
