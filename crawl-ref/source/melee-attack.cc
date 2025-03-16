@@ -2166,11 +2166,14 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
         handle_phase_killed();
         return true;
     }
-    else if (((atk == UNAT_FUNGAL_FISTICLOAK && !defender->is_unbreathing()) ||
-             (atk == UNAT_BOOTKNIFE))
+    else if (atk == UNAT_FUNGAL_FISTICLOAK && !defender->is_unbreathing()
             && one_chance_in(3))
     {
         defender->confuse(attacker, 5);
+    }
+    else if (atk == UNAT_BOOTKNIFE && one_chance_in(3))
+    {
+        defender->confuse(attacker, 1);
     }
 
     return false;
