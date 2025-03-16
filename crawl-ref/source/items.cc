@@ -3911,6 +3911,8 @@ colour_t item_def::talisman_colour() const
     {
     case TALISMAN_QUILL:
         return BROWN;
+    case TALISMAN_INKWELL:
+        return BLUE;
     case TALISMAN_FLUX:
         return CYAN; // could maybe swap this and death
     case TALISMAN_RIMEHORN:

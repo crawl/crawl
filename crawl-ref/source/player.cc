@@ -3985,6 +3985,8 @@ int get_real_mp(bool include_items)
         enp +=     you.scan_artefacts(ARTP_MAGICAL_POWER);
     }
 
+    enp += get_form()->max_mp_bonus();
+
     enp *= 100 + you.attribute[ATTR_DIVINE_VIGOUR] * 5;
     enp /= 100;
 
@@ -5987,6 +5989,12 @@ int player::skill(skill_type sk, int scale, bool real, bool temp) const
 
     if (temp && duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
         level += 5 * scale;
+
+    if (you.form == transformation::walking_scroll
+        && sk >= SK_FIRST_MAGIC_SCHOOL && sk <= SK_LAST_MAGIC)
+    {
+        level += (10 + get_form()->get_level(10)) * scale / 20;
+    }
 
     if (level > MAX_SKILL_LEVEL * scale)
         level = MAX_SKILL_LEVEL * scale;

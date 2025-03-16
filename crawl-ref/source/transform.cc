@@ -1126,6 +1126,20 @@ public:
     }
 };
 
+class FormWalkingScroll : public Form
+{
+private:
+FormWalkingScroll() : Form(transformation::walking_scroll) { }
+    DISALLOW_COPY_AND_ASSIGN(FormWalkingScroll);
+public:
+    static const FormWalkingScroll &instance() { static FormWalkingScroll inst; return inst; }
+
+    int max_mp_bonus(int skill = -1) const override
+    {
+        return scaling_value(FormScaling().Base(4).Scaling(5), false, skill);
+    }
+};
+
 static const Form* forms[] =
 {
     &FormNone::instance(),
@@ -1170,6 +1184,7 @@ static const Form* forms[] =
     &FormWater::instance(),
     &FormSphinx::instance(),
     &FormWerewolf::instance(),
+    &FormWalkingScroll::instance(),
 };
 
 const Form* get_form(transformation xform)
@@ -1667,6 +1682,7 @@ void set_form(transformation which_trans, int dur, bool scale_hp)
         notify_stat_change(STAT_DEX, dex_mod, true);
 
     calc_hp(scale_hp);
+    calc_mp();
 
     you.redraw_evasion      = true;
     you.redraw_armour_class = true;

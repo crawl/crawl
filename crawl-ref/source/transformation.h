@@ -43,6 +43,7 @@ enum class transformation
     aqua,
     sphinx,
     werewolf,
+    walking_scroll,
     COUNT
 };
 constexpr int NUM_TRANSFORMS = static_cast<int>(transformation::COUNT);

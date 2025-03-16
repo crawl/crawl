@@ -580,6 +580,8 @@ string SkillMenuSwitch::get_help()
                 causes.push_back("the Hermit's pendant");
             if (_charlatan_bonus())
                 causes.push_back("the Charlatan's Orb");
+            if (you.form == transformation::walking_scroll)
+                causes.push_back("scribal knowledge");
             result = "Skills enhanced by "
                      + comma_separated_line(causes.begin(), causes.end())
                      + " are in <green>green</green>.";

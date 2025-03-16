@@ -870,6 +870,7 @@ enum talisman_type
     TALISMAN_AQUA,
     TALISMAN_SPHINX,
     TALISMAN_WEREWOLF,
+    TALISMAN_INKWELL,
     NUM_TALISMANS,
 };
 

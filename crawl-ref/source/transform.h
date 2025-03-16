@@ -145,6 +145,7 @@ public:
     virtual int get_web_chance(int /*skill*/ = -1) const {return 0; }
     virtual int regen_bonus(int /*skill*/ = -1) const {return 0; }
     virtual int mp_regen_bonus(int /*skill*/ = -1) const {return 0; }
+    virtual int max_mp_bonus(int /*skill*/ = -1) const {return 0; }
     virtual dice_def get_special_damage(bool /*random*/ = true, int /*skill*/ = -1) const;
 
     // XXX: Werewolf-specific

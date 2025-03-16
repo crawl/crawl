@@ -7271,6 +7271,11 @@ static void _desc_form_val(TablePrinter& pr, string label, int val)
     pr.AddCell(label, make_stringf("%+d", val).c_str(), val < 0 ? RED : LIGHTGREY);
 }
 
+static int _get_scroll_skill_boost(int skill)
+{
+    return 10 + skill * 5;
+}
+
 static string _describe_talisman_form(const item_def &item)
 {
     const transformation form_type = form_for_talisman(item);
@@ -7292,6 +7297,7 @@ static string _describe_talisman_form(const item_def &item)
     _maybe_populate_form_table(items, bind(&Form::get_base_unarmed_damage, form, false, placeholders::_1), "UC Base Dmg", skill, -3);
     _maybe_populate_form_table(items, bind(&Form::get_ac_bonus, form, placeholders::_1), "AC", skill, 0, false, true, 100);
     _maybe_populate_form_table(items, bind(&Form::ev_bonus, form, placeholders::_1), "EV", skill);
+    _maybe_populate_form_table(items, bind(&Form::max_mp_bonus, form, placeholders::_1), "MP", skill);
     _maybe_populate_form_table(items, bind(&Form::slay_bonus, form, false, placeholders::_1), "Slay", skill);
     _maybe_populate_form_table(items, bind(&Form::regen_bonus, form, placeholders::_1), "Regen", skill, 0, false, true, 100, true);
     _maybe_populate_form_table(items, bind(&Form::mp_regen_bonus, form, placeholders::_1), "MP Regen", skill, 0, false, true, 100, true);
@@ -7313,6 +7319,8 @@ static string _describe_talisman_form(const item_def &item)
         _maybe_populate_form_table(items, bind(&Form::get_takedown_multiplier, form, placeholders::_1), "Takedown Dmg", skill, 0, true, true);
         _maybe_populate_form_table(items, bind(&Form::get_howl_power, form, placeholders::_1), "Howl Power", skill, 0, false, false);
     }
+    if (form_type == transformation::walking_scroll)
+        _maybe_populate_form_table(items, _get_scroll_skill_boost, "Spell Skill Boost", skill, 0, false, true, 10, true);
 
     vector<int> column_width;
 
@@ -7404,6 +7412,8 @@ static string _describe_talisman_form(const item_def &item)
         pr.AddCell("Will", "-", RED);
         pr.AddCell("Claws", "3");
     }
+    else if (form_type == transformation::walking_scroll)
+        pr.AddCell("Melee damage", "-50%", RED);
 
     // Don't output extra blank lines if there's no content.
     if (pr.NumCells() > 0)

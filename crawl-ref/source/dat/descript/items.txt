@@ -817,6 +817,17 @@ ice dragon scales
 The scales of a cold-breathing dragon. It provides great protection from cold,
 while rendering its wearer more susceptible to fire.
 %%%%
+inkwell talisman
+
+A small bottle filled with mystical ink. Transforms the user into a walking
+scroll whose body is tattooed with the knowledge of a hundred mages. Being an
+omnibus of magical techniques gives them increased skill with all spell schools,
+which improves with Shapeshifting skill, but the form's ability to channel such
+magic is limited, and it cannot cast spells above level 4.
+
+Its attacks are also very weak, but have a chance of restoring 1 MP when they
+hit.
+%%%%
 ivory gem
 
 [[gem]]

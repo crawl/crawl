@@ -376,8 +376,11 @@ void redraw_skill(skill_type exsk, skill_type old_best_skill, bool recalculate_o
     if (exsk == SK_FIGHTING || trained_form)
         calc_hp(true);
 
-    if (exsk == SK_INVOCATIONS || exsk == SK_SPELLCASTING)
+    if (exsk == SK_INVOCATIONS || exsk == SK_SPELLCASTING
+        || exsk == SK_SHAPESHIFTING && you.form == transformation::walking_scroll)
+    {
         calc_mp();
+    }
 
     if (exsk == SK_DODGING || exsk == SK_ARMOUR || trained_form)
         you.redraw_evasion = true;

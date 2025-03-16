@@ -838,6 +838,12 @@ bool melee_attack::handle_phase_hit()
         inflict_damage(special_damage);
     }
 
+    if (attacker->is_player() && you.form == transformation::walking_scroll
+        && !defender->is_firewood() && coinflip())
+    {
+        inc_mp(1);
+    }
+
     // Fireworks when using Serpent's Lash to kill.
     if (!defender->alive()
         && defender->as_monster()->has_blood()
@@ -2404,6 +2410,8 @@ int melee_attack::player_apply_postac_multipliers(int damage)
         damage = div_rand_round(damage * 3, 2);
     else if (you.form == transformation::flux)
         damage = div_rand_round(damage * 2, 3);
+    else if (you.form == transformation::walking_scroll)
+        damage = div_rand_round(damage, 2);
 
     return damage;
 }

@@ -648,6 +648,7 @@ static vector<pair<talisman_type, int>> _base_talisman_tiers()
 {
     vector<pair<talisman_type, int>> tiers = {
         { TALISMAN_QUILL,   1 },
+        { TALISMAN_INKWELL, 1 },
         { TALISMAN_FLUX,    2 },
         { TALISMAN_RIMEHORN, 2 },
         { TALISMAN_SPIDER,  2 },

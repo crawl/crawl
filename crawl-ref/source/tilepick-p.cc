@@ -527,6 +527,7 @@ tileidx_t tileidx_player()
 #endif
     case transformation::fungus:    ch = TILEP_TRAN_MUSHROOM;  break;
     case transformation::bat_swarm: ch = TILEP_TRAN_BAT_SWARM; break;
+    case transformation::walking_scroll: ch = TILEP_TRAN_WALKING_SCROLL; break;
     case transformation::rime_yak:  ch = TILEP_TRAN_RIME_YAK;  break;
     case transformation::sphinx:
         if (you.species == SP_FELID)

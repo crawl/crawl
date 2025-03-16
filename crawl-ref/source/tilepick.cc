@@ -3023,6 +3023,7 @@ static tileidx_t _tileidx_talisman(const item_def &item)
 {
     switch (item.sub_type)
     {
+    case TALISMAN_INKWELL:  return TILE_TALISMAN_INKWELL;
     case TALISMAN_QUILL:    return TILE_TALISMAN_QUILL;
     case TALISMAN_FLUX:    return TILE_TALISMAN_FLUX;
     case TALISMAN_RIMEHORN: return TILE_TALISMAN_RIMEHORN;
