@@ -1889,7 +1889,7 @@ public:
     AuxBootknife()
     : AuxAttackType(7, 100, "bootknife") { };
 
-    bool xl_based_chance() const override { return true; }
+    bool xl_based_chance() const override { return false; }
 
     bool is_usable() const override
     {
