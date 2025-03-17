@@ -1,16 +1,42 @@
 #pragma once
 
+#include "newgame-def.h"
 // This TestFixture has not been verified to work for anything involving
 // items, and definitely doesn't work for anything which requires any
 // dungeon or branch levels to exist.
+template<typename T>
 class MockPlayerYouTestsFixture {
     public:
-    MockPlayerYouTestsFixture(void);
+    MockPlayerYouTestsFixture<T>();
 
-    ~MockPlayerYouTestsFixture(void);
+    ~MockPlayerYouTestsFixture<T>();
 };
 
 void destroy_items_in_player_inventory();
+
+struct HumanMonkOptions
+{
+    newgame_def game_options();
+};
+
+struct CoglinMonkOptions
+{
+    newgame_def game_options();
+};
+
+struct OctopodeMonkOptions
+{
+    newgame_def game_options();
+};
+
+using MockPlayerYouHumanMonkFixture =
+        MockPlayerYouTestsFixture<HumanMonkOptions>;
+using MockPlayerYouCoglinMonkFixture =
+        MockPlayerYouTestsFixture<CoglinMonkOptions>;
+using MockPlayerYouOctopodeMonkFixture =
+        MockPlayerYouTestsFixture<OctopodeMonkOptions>;
+
+
 /* I'm sure there's a name for this, but remember that if you want to
  * refactor some monster method, you can create a copy of it so that you
  * can test your new, refactored version has the same behaviour as the
@@ -24,7 +50,7 @@ void destroy_items_in_player_inventory();
  */
 
 /*
-TEST_CASE_METHOD(MockPlayerYouTestsFixture,
+TEST_CASE_METHOD(MockPlayerYouHumanMonkFixture,
                  "Monte Carlo mutation ac testing", "[single-file]"){
     mutation_type mut;
 
