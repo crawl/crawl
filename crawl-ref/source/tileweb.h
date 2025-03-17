@@ -101,7 +101,8 @@ public:
 
     bool initialise();
     void shutdown();
-    void load_dungeon(const crawl_view_buffer &vbuf, const coord_def &gc);
+    void set_tiles_buffer(crawl_tile_view_buffer&& vbuf, coord_def gc);
+    void set_glyphs_buffer(crawl_console_view_buffer&& vbuf, coord_def gc);
     void load_dungeon(const coord_def &gc);
     int getch_ck();
     void resize();
@@ -272,13 +273,17 @@ protected:
     bool m_view_loaded;
     bool m_player_on_level;
 
-    crawl_view_buffer m_current_view;
+    crawl_tile_view_buffer m_current_tile_view;
+    crawl_console_view_buffer m_current_glyph_view;
     coord_def m_current_gc;
 
-    crawl_view_buffer m_next_view;
+    crawl_tile_view_buffer m_next_tile_view;
+    crawl_console_view_buffer m_next_glyph_view;
     coord_def m_next_gc;
     coord_def m_next_view_tl;
     coord_def m_next_view_br;
+
+    string old_tile_display_mode;
 
     bitset<GXM * GYM> m_dirty_cells;
     bitset<GXM * GYM> m_cells_needing_redraw;
@@ -288,6 +293,9 @@ protected:
     bool cell_needs_redraw(const coord_def& gc);
 
     FixedArray<map_cell, GXM, GYM> m_current_map_knowledge;
+    FixedArray<map_cell, GXM, GYM> m_rendering_map_knowledge;
+    // Only used by glyphs display mode
+    unique_ptr<FixedArray<map_cell, GXM, GYM>> m_prev_rendering_map_knowledge;
     map<uint32_t, coord_def> m_monster_locs;
     bool m_need_full_map;
 
@@ -320,11 +328,19 @@ protected:
 
     void _send_cursor(cursor_type type);
     void _send_map(bool force_full = false);
-    void _send_cell(const coord_def &gc,
-                    const screen_cell_t &current_sc, const screen_cell_t &next_sc,
-                    const map_cell &current_mc, const map_cell &next_mc,
-                    map<uint32_t, coord_def>& new_monster_locs,
-                    bool force_full);
+    void _send_cell_map_knowledge(const coord_def &gc,
+                                  const map_cell &current_mc,
+                                  const map_cell &next_mc,
+                                  map<uint32_t, coord_def>& new_monster_locs,
+                                  bool force_full);
+    void _send_tile_cell(const tile_screen_cell &current_sc,
+                         const tile_screen_cell &next_sc,
+                         bool force_full);
+    void _send_glyph_cell(coord_def gc,
+                          const glyph_screen_cell &current_sc,
+                          const glyph_screen_cell &next_sc,
+                          bool showing_tiles,
+                          bool force_full);
     void _send_monster(const coord_def &gc, const monster_info* m,
                        map<uint32_t, coord_def>& new_monster_locs,
                        bool force_full);

@@ -143,7 +143,8 @@ private:
 };
 
 class FontWrapper;
-class crawl_view_buffer;
+class crawl_tile_view_buffer;
+class crawl_console_view_buffer;
 
 class TilesFramework
 {
@@ -153,7 +154,8 @@ public:
 
     bool initialise();
     void shutdown();
-    void load_dungeon(const crawl_view_buffer &vbuf, const coord_def &gc);
+    void set_tiles_buffer(crawl_tile_view_buffer&& vbuf, coord_def gc);
+    void set_glyphs_buffer(crawl_console_view_buffer&& vbuf, coord_def gc);
     void load_dungeon(const coord_def &gc);
     int getch_ck();
     void resize();
@@ -220,8 +222,9 @@ public:
     int handle_mouse(wm_mouse_event &event);
 
     void grid_to_screen(const coord_def &gc, coord_def *pc) const;
-
 protected:
+    void set_loaded_location(const coord_def &gc);
+
     void reconfigure_fonts();
     FontWrapper* load_font(const char *font_file, int font_size,
                   bool default_on_fail, bool use_cached=true);

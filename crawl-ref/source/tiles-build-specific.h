@@ -11,12 +11,18 @@
 
 #ifdef USE_TILE_LOCAL
 static inline bool is_tiles() { return true; }
+bool is_showing_tiles(); // in tilesdl.cc
+bool is_showing_glyphs(); // in tilesdl.cc
 # include "tilesdl.h"
 #elif defined(USE_TILE_WEB)
-bool is_tiles(); // in tilesdl.cc
+bool is_tiles(); // in tileweb.cc
+bool is_showing_tiles(); // in tileweb.cc
+bool is_showing_glyphs(); // in tileweb.cc
 # include "tileweb.h"
 #else
 static inline bool is_tiles() { return false; }
+static inline bool is_showing_tiles() { return false; }
+static inline bool is_showing_glyphs() { return false; }
 #endif
 
 #ifdef USE_TILE

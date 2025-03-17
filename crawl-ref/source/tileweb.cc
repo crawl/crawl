@@ -88,18 +88,13 @@ TilesFramework::TilesFramework() :
       _send_lock(false),
       m_last_ui_state(UI_INIT),
       m_view_loaded(false),
-      m_current_view(coord_def(GXM, GYM)),
-      m_next_view(coord_def(GXM, GYM)),
       m_next_view_tl(0, 0),
       m_next_view_br(-1, -1),
       m_need_full_map(true),
       m_text_menu("menu_txt"),
-      m_print_fg(15)
+      m_print_fg(15),
+      m_mcache_ref_done(false)
 {
-    screen_cell_t default_cell;
-    default_cell.tile.bg = TILE_FLAG_UNSEEN;
-    m_current_view.fill(default_cell);
-    m_next_view.fill(default_cell);
 }
 
 TilesFramework::~TilesFramework()
@@ -1525,11 +1520,11 @@ void TilesFramework::write_tileidx(tileidx_t t)
         tiles.write_message("[%d,%d]", lo, hi);
 }
 
-void TilesFramework::_send_cell(const coord_def &gc,
-                                const screen_cell_t &current_sc, const screen_cell_t &next_sc,
-                                const map_cell &current_mc, const map_cell &next_mc,
-                                map<uint32_t, coord_def>& new_monster_locs,
-                                bool force_full)
+void TilesFramework::_send_cell_map_knowledge(const coord_def &gc,
+                                    const map_cell &current_mc,
+                                    const map_cell &next_mc,
+                                    map<uint32_t, coord_def>& new_monster_locs,
+                                    bool force_full)
 {
     if (current_mc.feat() != next_mc.feat())
         json_write_int("f", next_mc.feat());
@@ -1542,7 +1537,43 @@ void TilesFramework::_send_cell(const coord_def &gc,
     map_feature mf = get_cell_map_feature(gc);
     if (get_cell_map_feature(current_mc) != mf)
         json_write_int("mf", mf);
+}
 
+static tileidx_t _mon_damage_flag(const monster_info* mons_ptr)
+{
+    if (!mons_ptr)
+        return (tileidx_t)0;
+
+    const monster_info& mons = *mons_ptr;
+
+    mon_dam_level_type damage_level = mons.dam;
+
+    switch (damage_level)
+    {
+    case MDAM_DEAD:
+    case MDAM_ALMOST_DEAD:
+        return TILE_FLAG_MDAM_ADEAD;
+    case MDAM_SEVERELY_DAMAGED:
+        return TILE_FLAG_MDAM_SEV;
+    case MDAM_HEAVILY_DAMAGED:
+        return TILE_FLAG_MDAM_HEAVY;
+    case MDAM_MODERATELY_DAMAGED:
+        return TILE_FLAG_MDAM_MOD;
+    case MDAM_LIGHTLY_DAMAGED:
+        return TILE_FLAG_MDAM_LIGHT;
+    case MDAM_OKAY:
+    default:
+        // no flag for okay.
+        return (tileidx_t)0;
+    }
+}
+
+void TilesFramework::_send_glyph_cell(coord_def gc,
+                                      const glyph_screen_cell &current_sc,
+                                      const glyph_screen_cell &next_sc,
+                                      bool showing_tiles,
+                                      bool force_full)
+{
     // Glyph and colour
     char32_t glyph = next_sc.glyph;
     if (current_sc.glyph != glyph)
@@ -1551,13 +1582,45 @@ void TilesFramework::_send_cell(const coord_def &gc,
         buf[wctoutf8(buf, glyph)] = 0;
         json_write_string("g", buf);
     }
+
     if ((current_sc.colour != next_sc.colour
-         || current_sc.glyph == ' ') && glyph != ' ')
+        || current_sc.glyph == ' ') && glyph != ' ')
     {
         int col = next_sc.colour;
         col = (_get_highlight(col) << 4) | macro_colour(col & 0xF);
         json_write_int("col", col);
     }
+
+    if (showing_tiles)
+        return;
+
+    // The javascript client expects to find seen flags in cell.t.bg,
+    // and monster damage flags in cell.t.fg even when rendering glyphs
+    json_open_object("t");
+    {
+        const map_cell& current_mc = (*m_prev_rendering_map_knowledge)(gc);
+        const map_cell& next_mc = m_rendering_map_knowledge(gc);
+        if (current_mc.visible() != next_mc.visible() || force_full)
+        {
+            json_write_name("bg");
+            write_tileidx(next_mc.visible() ? 0 : (tileidx_t)TILE_FLAG_UNSEEN);
+        }
+        tileidx_t current_damage = _mon_damage_flag(current_mc.monsterinfo());
+        tileidx_t next_damage = _mon_damage_flag(next_mc.monsterinfo());
+        if (current_damage != next_damage || force_full)
+        {
+            json_write_name("fg");
+            write_tileidx(next_damage);
+        }
+    }
+
+    json_close_object(true);
+}
+
+void TilesFramework::_send_tile_cell(const tile_screen_cell &current_sc,
+                                     const tile_screen_cell &next_sc,
+                                     bool force_full)
+{
     if (current_sc.flash_colour != next_sc.flash_colour)
         json_write_int("flc", next_sc.flash_colour);
     if (current_sc.flash_alpha != next_sc.flash_alpha)
@@ -1787,7 +1850,7 @@ void TilesFramework::_mcache_ref(bool inc)
         {
             coord_def gc(x, y);
 
-            int fg_idx = m_current_view(gc).tile.fg & TILE_FLAG_MASK;
+            int fg_idx = m_current_tile_view(gc).tile.fg & TILE_FLAG_MASK;
             if (fg_idx >= TILEP_MCACHE_START)
             {
                 mcache_entry *entry = mcache.get(fg_idx);
@@ -1841,18 +1904,27 @@ void TilesFramework::_send_map(bool force_full)
         m_current_gc = m_next_gc;
     }
 
-    screen_cell_t default_cell;
-    default_cell.tile.bg = TILE_FLAG_UNSEEN;
-    default_cell.glyph = ' ';
-    default_cell.colour = 7;
+    tile_screen_cell default_tile_cell;
+    default_tile_cell.tile.bg = TILE_FLAG_UNSEEN;
+    glyph_screen_cell default_glyph_cell;
+    default_glyph_cell.glyph = ' ';
+    default_glyph_cell.colour = 7;
     map_cell default_map_cell;
 
     coord_def last_gc(0, 0);
     bool send_gc = true;
 
-    int flash_colour = you.flash_colour;
+    const view_window_render_data& render_data =
+        current_view_window_render_data();
+
+    int flash_colour = render_data.flash_colour;
     if (flash_colour == BLACK)
         flash_colour = viewmap_flash_colour();
+
+    targeter* flash_where = render_data.flash_where;
+
+    const bool show_tiles = is_showing_tiles();
+    const bool show_glyphs = is_showing_glyphs();
 
     json_open_array("cells");
     for (int y = 0; y < GYM; y++)
@@ -1865,14 +1937,38 @@ void TilesFramework::_send_map(bool force_full)
 
             if (cell_needs_redraw(gc))
             {
-                screen_cell_t *cell = &m_next_view(gc);
-
-                if (you.flash_where && you.flash_where->is_affected(gc) <= 0)
-                    draw_cell(cell, gc, false, 0);
+                if (flash_where && flash_where->is_affected(gc) <= 0)
+                {
+                    m_rendering_map_knowledge(gc) = env.map_knowledge(gc);
+                    if (show_tiles)
+                    {
+                        tile_screen_cell *cell = &m_next_tile_view(gc);
+                        draw_cell_tile(cell, gc, 0);
+                        pack_cell_overlays(gc, cell->tile,
+                                           m_rendering_map_knowledge);
+                    }
+                    if (show_glyphs)
+                    {
+                        glyph_screen_cell *cell = &m_next_glyph_view(gc);
+                        draw_cell_glyph(cell, gc, 0);
+                    }
+                }
                 else
-                    draw_cell(cell, gc, false, flash_colour);
-
-                pack_cell_overlays(gc, m_next_view);
+                {
+                    m_rendering_map_knowledge(gc) = env.map_knowledge(gc);
+                    if (show_tiles)
+                    {
+                        tile_screen_cell *cell = &m_next_tile_view(gc);
+                        draw_cell_tile(cell, gc, flash_colour);
+                        pack_cell_overlays(gc, cell->tile,
+                                           m_rendering_map_knowledge);
+                    }
+                    if (show_glyphs)
+                    {
+                        glyph_screen_cell *cell = &m_next_glyph_view(gc);
+                        draw_cell_glyph(cell, gc, flash_colour);
+                    }
+                }
             }
 
             mark_clean(gc);
@@ -1890,15 +1986,27 @@ void TilesFramework::_send_map(bool force_full)
                 json_treat_as_empty();
             }
 
-            const screen_cell_t& sc = force_full ? default_cell
-                : m_current_view(gc);
-            const map_cell& mc = force_full ? default_map_cell
+            const map_cell& current_mc = force_full ? default_map_cell
                 : m_current_map_knowledge(gc);
-            _send_cell(gc,
-                       sc,
-                       m_next_view(gc),
-                       mc, env.map_knowledge(gc),
-                       new_monster_locs, force_full);
+            const map_cell &next_mc = env.map_knowledge(gc);
+            _send_cell_map_knowledge(gc, current_mc, next_mc,
+                                     new_monster_locs, force_full);
+
+            if (show_glyphs)
+            {
+                const glyph_screen_cell& sc = force_full ? default_glyph_cell
+                    : m_current_glyph_view(gc);
+
+                _send_glyph_cell(gc, sc, m_next_glyph_view(gc), show_tiles,
+                                 force_full);
+            }
+            if (show_tiles)
+            {
+                const tile_screen_cell& sc = force_full ? default_tile_cell
+                    : m_current_tile_view(gc);
+
+                _send_tile_cell(sc, m_next_tile_view(gc), force_full);
+            }
 
             if (!json_is_empty())
             {
@@ -1920,10 +2028,17 @@ void TilesFramework::_send_map(bool force_full)
         _mcache_ref(false);
 
     m_current_map_knowledge = env.map_knowledge;
-    m_current_view = m_next_view;
+    m_current_tile_view = m_next_tile_view;
+    m_current_glyph_view = m_next_glyph_view;
 
-    _mcache_ref(true);
-    m_mcache_ref_done = true;
+    if (show_tiles)
+    {
+        _mcache_ref(true);
+        m_mcache_ref_done = true;
+    }
+
+    if (show_glyphs && !show_tiles)
+        *m_prev_rendering_map_knowledge = m_rendering_map_knowledge;
 
     m_monster_locs = new_monster_locs;
 }
@@ -1994,13 +2109,27 @@ void TilesFramework::_send_monster(const coord_def &gc, const monster_info* m,
     json_close_object(true);
 }
 
-void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
-                                  const coord_def &gc)
+void TilesFramework::set_tiles_buffer(crawl_tile_view_buffer&& vbuf,
+                                      coord_def gc)
 {
     if (vbuf.size().equals(0, 0))
         return;
 
     m_view_loaded = true;
+
+    if (old_tile_display_mode.empty())
+        old_tile_display_mode = Options.tile_display_mode;
+    ASSERT(old_tile_display_mode == Options.tile_display_mode);
+
+    if (m_next_tile_view.empty())
+    {
+        tile_screen_cell default_cell;
+        default_cell.tile.bg = TILE_FLAG_UNSEEN;
+        m_current_tile_view = crawl_tile_view_buffer(coord_def(GXM, GYM));
+        m_current_tile_view.fill(default_cell);
+        m_next_tile_view = crawl_tile_view_buffer(coord_def(GXM, GYM));
+        m_next_tile_view.fill(default_cell);
+    }
 
     if (m_ui_state == UI_CRT)
         set_ui_state(UI_NORMAL);
@@ -2018,13 +2147,7 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
 
     // re-cache the map knowledge for the whole map, not just the updated portion
     // fixes render bugs for out-of-LOS when transitioning levels in shoals/slime
-    for (int y = 0; y < GYM; y++)
-        for (int x = 0; x < GXM; x++)
-        {
-            const coord_def cache_gc(x, y);
-            screen_cell_t *cell = &m_next_view(cache_gc);
-            cell->tile.map_knowledge = map_bounds(cache_gc) ? env.map_knowledge(cache_gc) : map_cell();
-        }
+    m_rendering_map_knowledge = env.map_knowledge;
 
     m_next_view_tl = view2grid(coord_def(1, 1));
     m_next_view_br = view2grid(crawl_view.viewsz);
@@ -2039,10 +2162,80 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
             if (grid.x < 0 || grid.x >= GXM || grid.y < 0 || grid.y >= GYM)
                 continue;
 
-            screen_cell_t *cell = &m_next_view(grid);
+            tile_screen_cell *cell = &m_next_tile_view(grid);
 
-            *cell = ((const screen_cell_t *) vbuf)[x + vbuf.size().x * y];
-            pack_cell_overlays(grid, m_next_view);
+            *cell = ((const tile_screen_cell *) vbuf)[x + vbuf.size().x * y];
+
+            mark_clean(grid); // Remove redraw flag
+            mark_dirty(grid);
+        }
+
+    m_next_gc = gc;
+}
+
+void TilesFramework::set_glyphs_buffer(crawl_console_view_buffer&& vbuf,
+                                       coord_def gc)
+{
+    if (vbuf.size().equals(0, 0))
+        return;
+
+    m_view_loaded = true;
+
+    if (old_tile_display_mode.empty())
+        old_tile_display_mode = Options.tile_display_mode;
+    ASSERT(old_tile_display_mode == Options.tile_display_mode);
+
+    if (m_next_glyph_view.empty())
+    {
+        glyph_screen_cell default_cell;
+        default_cell.glyph = ' ';
+        default_cell.colour = 7;
+        m_current_glyph_view = crawl_console_view_buffer(coord_def(GXM, GYM));
+        m_current_glyph_view.fill(default_cell);
+        m_next_glyph_view = crawl_console_view_buffer(coord_def(GXM, GYM));
+        m_next_glyph_view.fill(default_cell);
+
+        if (!is_showing_tiles())
+        {
+            m_prev_rendering_map_knowledge.reset(
+                                           new FixedArray<map_cell, GXM, GYM>);
+        }
+    }
+
+    if (m_ui_state == UI_CRT)
+        set_ui_state(UI_NORMAL);
+
+    // First re-render the area that was covered by vbuf the last time
+    for (int y = m_next_view_tl.y; y <= m_next_view_br.y; y++)
+        for (int x = m_next_view_tl.x; x <= m_next_view_br.x; x++)
+        {
+            if (x < 0 || x >= GXM || y < 0 || y >= GYM)
+                continue;
+
+            if (!crawl_view.in_viewport_g(coord_def(x, y)))
+                mark_for_redraw(coord_def(x, y));
+        }
+
+    // re-cache the map knowledge for the whole map, not just the updated portion
+    // fixes render bugs for out-of-LOS when transitioning levels in shoals/slime
+    m_rendering_map_knowledge = env.map_knowledge;
+
+    m_next_view_tl = view2grid(coord_def(1, 1));
+    m_next_view_br = view2grid(crawl_view.viewsz);
+
+    // Copy vbuf into m_next_view
+    for (int y = 0; y < vbuf.size().y; y++)
+        for (int x = 0; x < vbuf.size().x; x++)
+        {
+            coord_def pos(x+1, y+1);
+            coord_def grid = view2grid(pos);
+
+            if (grid.x < 0 || grid.x >= GXM || grid.y < 0 || grid.y >= GYM)
+                continue;
+
+            glyph_screen_cell *cell = &m_next_glyph_view(grid);
+
+            *cell = ((const glyph_screen_cell *) vbuf)[x + vbuf.size().x * y];
 
             mark_clean(grid); // Remove redraw flag
             mark_dirty(grid);
@@ -2102,6 +2295,9 @@ void TilesFramework::_send_everything()
 
      // Player
     _send_player(true);
+
+    // Make sure the view window is up to date before sending the map
+    render_view_window();
 
     // Map is sent after player, otherwise HP/MP bar can be left behind in the
     // old location if the player has moved
@@ -2176,6 +2372,8 @@ void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
 
 void TilesFramework::redraw()
 {
+    render_view_window();
+
     if (!has_receivers())
     {
         if (m_mcache_ref_done)
@@ -2586,5 +2784,15 @@ void TilesFramework::json_write_string(const string& name, const string& value)
 bool is_tiles()
 {
     return tiles.is_controlled_from_web();
+}
+
+bool is_showing_tiles()
+{
+    return is_tiles() && Options.tile_display_mode != "glyphs";
+}
+
+bool is_showing_glyphs()
+{
+    return is_tiles() && Options.tile_display_mode != "tiles";
 }
 #endif

@@ -39,9 +39,9 @@ static inline void scaled_delay(unsigned int ms)
 
 void animation_delay(unsigned int ms, bool do_refresh);
 
-// beware, flash_view is broken for USE_TILE_LOCAL
-void flash_view(use_animation_type a, colour_t colour,
-                targeter *where = nullptr);
+// Flashes the view until the player regains the ability to take actions
+void flash_view(use_animation_type a, colour_t colour);
+// Flashes the view for the given number of milliseconds
 void flash_view_delay(use_animation_type a, colour_t colour, int delay,
                       targeter *where = nullptr);
 
@@ -63,25 +63,46 @@ public:
     {
         UNUSED(frame);
     }
-    virtual coord_def cell_cb(const coord_def &pos, int &colour) = 0;
+    virtual coord_def cell_cb(const coord_def &pos,
+                              colour_t &colour) const = 0;
 
     int frames;
     int frame_delay;
 };
 
 /**
- * A crawl_view_buffer renderer callback that can be injected into
- * viewwindow(), allowing the addition of new visual elements without
+ * A renderer callback that can be injected into viewwindow(),
+ * allowing the addition of new visual elements without
  * adding code directly to viewwindow() itself.
  */
 class view_renderer
 {
 public:
     view_renderer() {}
-    virtual ~view_renderer() {}
+    virtual ~view_renderer();
 
-    virtual void render(crawl_view_buffer &vbuf) = 0;
+    virtual void render(crawl_view_buffer &vbuf, bool draw_tiles) = 0;
 };
+
+#ifdef USE_TILE
+struct view_window_render_data
+{
+    coord_def saved_viewp;
+    coord_def saved_vgrdc;
+
+    animation* anim;
+    view_renderer* renderer;
+    targeter* flash_where;
+    colour_t flash_colour;
+
+    view_window_render_data() noexcept;
+    void reset() noexcept;
+    void update(animation* a, view_renderer* r, targeter* new_flash_where,
+                colour_t new_flash_colour);
+};
+
+const view_window_render_data& current_view_window_render_data();
+#endif
 
 #ifdef USE_TILE
 void view_add_tile_overlay(const coord_def &gc, tileidx_t tile);
@@ -99,9 +120,18 @@ void view_clear_overlays();
 void run_animation(animation_type anim, use_animation_type type,
                    bool cleanup = true);
 void viewwindow(bool show_updates = true, bool tiles_only = false,
-                animation *a = nullptr, view_renderer *renderer = nullptr);
-void draw_cell(screen_cell_t *cell, const coord_def &gc,
-               bool anim_updates, int flash_colour);
+                animation *a = nullptr, view_renderer *renderer = nullptr,
+                colour_t flash_colour = BLACK,
+                targeter *flash_where = nullptr);
+#ifdef USE_TILE
+void render_view_window();
+#endif
+void draw_cell_glyph(glyph_screen_cell *cell, const coord_def &gc,
+                     int flash_colour);
+#ifdef USE_TILE
+void draw_cell_tile(tile_screen_cell *cell, const coord_def &gc,
+                    int flash_colour);
+#endif
 
 void update_monsters_in_view();
 bool handle_seen_interrupt(monster* mons, vector<string>* msgs_buf = nullptr);

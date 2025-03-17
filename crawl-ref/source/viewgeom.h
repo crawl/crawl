@@ -3,49 +3,90 @@
 #include "tilecell.h"
 #include "coord-def.h"
 
-struct screen_cell_t
+struct glyph_screen_cell
 {
-    // Console output part.
     char32_t glyph;
     unsigned short colour; // TODO: check if this is real colour (8 bit)
-    // Tiles output part.
+};
+
 #ifdef USE_TILE
+struct tile_screen_cell
+{
     unsigned short flash_colour = 0;
     unsigned short flash_alpha = 0;
     packed_cell tile;
-#endif
 };
+#endif
 
-class crawl_view_buffer
+class crawl_view_buffer {};
+
+class crawl_console_view_buffer : public crawl_view_buffer
 {
 public:
-    crawl_view_buffer();
-    crawl_view_buffer(const coord_def &sz);
-    crawl_view_buffer(const crawl_view_buffer &rhs);
-    ~crawl_view_buffer();
+    crawl_console_view_buffer();
+    crawl_console_view_buffer(const coord_def &sz);
+    crawl_console_view_buffer(crawl_console_view_buffer &&rhs) noexcept;
+    crawl_console_view_buffer(const crawl_console_view_buffer& rhs);
+    ~crawl_console_view_buffer();
 
     coord_def size() const { return m_size; }
     bool empty() const;
 
-    operator screen_cell_t * () { return m_buffer; }
-    operator const screen_cell_t * () const { return m_buffer; }
-    const crawl_view_buffer & operator =(crawl_view_buffer rhs);
+    operator glyph_screen_cell * () { return m_buffer; }
+    operator const glyph_screen_cell * () const { return m_buffer; }
+    const crawl_console_view_buffer & operator=(
+                                       crawl_console_view_buffer rhs) noexcept;
 
     template<class Indexer>
-    screen_cell_t& operator () (const Indexer &i)
+    glyph_screen_cell& operator () (const Indexer &i)
     {
         ASSERT(i.x >= 0 && i.y >= 0 && i.x < m_size.x && i.y < m_size.y);
         return m_buffer[i.y*m_size.x + i.x];
     }
 
-    void fill(const screen_cell_t& value);
+    void fill(const glyph_screen_cell& value);
     void clear();
     void draw();
 private:
     void resize(const coord_def &sz);
     coord_def m_size;
-    screen_cell_t *m_buffer;
+    glyph_screen_cell *m_buffer;
 };
+
+#ifdef USE_TILE
+class crawl_tile_view_buffer : public crawl_view_buffer
+{
+public:
+    crawl_tile_view_buffer();
+    crawl_tile_view_buffer(const coord_def &sz);
+    crawl_tile_view_buffer(crawl_tile_view_buffer &&rhs) noexcept;
+    crawl_tile_view_buffer(const crawl_tile_view_buffer& rhs);
+    ~crawl_tile_view_buffer();
+
+    coord_def size() const { return m_size; }
+    bool empty() const;
+
+    operator tile_screen_cell * () { return m_buffer; }
+    operator const tile_screen_cell * () const { return m_buffer; }
+    const crawl_tile_view_buffer & operator=(
+                                          crawl_tile_view_buffer rhs) noexcept;
+
+    template<class Indexer>
+    tile_screen_cell& operator () (const Indexer &i)
+    {
+        ASSERT(i.x >= 0 && i.y >= 0 && i.x < m_size.x && i.y < m_size.y);
+        return m_buffer[i.y*m_size.x + i.x];
+    }
+
+    void fill(const tile_screen_cell& value);
+    void clear();
+    void draw();
+private:
+    void resize(const coord_def &sz);
+    coord_def m_size;
+    tile_screen_cell *m_buffer;
+};
+#endif
 
 struct crawl_view_geometry
 {

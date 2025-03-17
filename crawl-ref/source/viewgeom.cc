@@ -227,66 +227,154 @@ public:
 };
 
 //////////////////////////////////////////////////////////////////////////////
-// crawl_view_buffer
+// crawl_console_view_buffer
 
-crawl_view_buffer::crawl_view_buffer()
+crawl_console_view_buffer::crawl_console_view_buffer()
     : m_size(0, 0)
     , m_buffer(nullptr)
 {
 }
-crawl_view_buffer::crawl_view_buffer(const coord_def &sz)
+crawl_console_view_buffer::crawl_console_view_buffer(const coord_def &sz)
     : m_size(0, 0)
     , m_buffer(nullptr)
 {
     resize(sz);
 }
 
-crawl_view_buffer::~crawl_view_buffer()
+crawl_console_view_buffer::~crawl_console_view_buffer()
 {
     delete [] m_buffer;
 }
 
-void crawl_view_buffer::resize(const coord_def &sz)
+void crawl_console_view_buffer::resize(const coord_def &sz)
 {
     delete [] m_buffer;
     m_size = sz;
-    m_buffer = new screen_cell_t [ sz.x * sz.y ];
+    int new_length = sz.x * sz.y;
+    m_buffer = new_length > 0 ? new glyph_screen_cell[new_length] : nullptr;
 }
 
-bool crawl_view_buffer::empty() const
+bool crawl_console_view_buffer::empty() const
 {
-    return m_size.x * m_size.y <= 0;
+    return m_buffer == nullptr;
 }
 
-crawl_view_buffer::crawl_view_buffer(const crawl_view_buffer &rhs)
-    : crawl_view_buffer(rhs.m_size)
+crawl_console_view_buffer::crawl_console_view_buffer(
+                                  crawl_console_view_buffer&& other) noexcept :
+    m_size(other.m_size),
+    m_buffer(other.m_buffer)
+{
+    other.m_size = coord_def(0, 0);
+    other.m_buffer = nullptr;
+}
+
+crawl_console_view_buffer::crawl_console_view_buffer(
+                                          const crawl_console_view_buffer& rhs)
+    : crawl_console_view_buffer(rhs.m_size)
 {
     if (rhs.m_buffer)
     {
         size_t count = m_size.x * m_size.y;
-        copy(rhs.m_buffer, rhs.m_buffer+count, m_buffer);
+        copy(rhs.m_buffer, rhs.m_buffer + count, m_buffer);
     }
 }
 
-const crawl_view_buffer &crawl_view_buffer::operator = (crawl_view_buffer rhs)
+const crawl_console_view_buffer &crawl_console_view_buffer::operator=(
+                                        crawl_console_view_buffer rhs) noexcept
 {
     swap(m_size, rhs.m_size);
     swap(m_buffer, rhs.m_buffer);
     return *this;
 }
 
-void crawl_view_buffer::fill(const screen_cell_t& value)
+void crawl_console_view_buffer::fill(const glyph_screen_cell& value)
 {
     for (int i = 0; i < m_size.x * m_size.y; ++i)
         m_buffer[i] = value;
 }
 
-void crawl_view_buffer::clear()
+void crawl_console_view_buffer::clear()
 {
     delete [] m_buffer;
     m_buffer = nullptr;
     m_size = coord_def(0,0);
 }
+
+#ifdef USE_TILE
+//////////////////////////////////////////////////////////////////////////////
+// crawl_tile_view_buffer
+
+crawl_tile_view_buffer::crawl_tile_view_buffer()
+    : m_size(0, 0)
+    , m_buffer(nullptr)
+{
+}
+crawl_tile_view_buffer::crawl_tile_view_buffer(const coord_def &sz)
+    : m_size(0, 0)
+    , m_buffer(nullptr)
+{
+    resize(sz);
+}
+
+crawl_tile_view_buffer::~crawl_tile_view_buffer()
+{
+    delete[] m_buffer;
+}
+
+void crawl_tile_view_buffer::resize(const coord_def &sz)
+{
+    delete[] m_buffer;
+    m_size = sz;
+    int new_length = sz.x * sz.y;
+    m_buffer = new_length > 0 ? new tile_screen_cell[new_length] : nullptr;
+}
+
+bool crawl_tile_view_buffer::empty() const
+{
+    return m_buffer == nullptr;
+}
+
+crawl_tile_view_buffer::crawl_tile_view_buffer(
+                                     crawl_tile_view_buffer&& other) noexcept :
+    m_size(other.m_size),
+    m_buffer(other.m_buffer)
+{
+    other.m_size = coord_def(0, 0);
+    other.m_buffer = nullptr;
+}
+
+crawl_tile_view_buffer::crawl_tile_view_buffer(
+                                             const crawl_tile_view_buffer& rhs)
+    : crawl_tile_view_buffer(rhs.m_size)
+{
+    if (rhs.m_buffer)
+    {
+        size_t count = m_size.x * m_size.y;
+        copy(rhs.m_buffer, rhs.m_buffer + count, m_buffer);
+    }
+}
+
+const crawl_tile_view_buffer &crawl_tile_view_buffer::operator=(
+                                           crawl_tile_view_buffer rhs) noexcept
+{
+    swap(m_size, rhs.m_size);
+    swap(m_buffer, rhs.m_buffer);
+    return *this;
+}
+
+void crawl_tile_view_buffer::fill(const tile_screen_cell& value)
+{
+    for (int i = 0; i < m_size.x * m_size.y; ++i)
+        m_buffer[i] = value;
+}
+
+void crawl_tile_view_buffer::clear()
+{
+    delete[] m_buffer;
+    m_buffer = nullptr;
+    m_size = coord_def(0, 0);
+}
+#endif
 
 // ----------------------------------------------------------------------
 // crawl_view_geometry

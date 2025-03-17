@@ -476,22 +476,38 @@ FontWrapper* TilesFramework::load_font(const char *font_file, int font_size,
 
     return font;
 }
-void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
-                                  const coord_def &gc)
+
+void TilesFramework::set_loaded_location(const coord_def &gc)
 {
     m_active_layer = LAYER_NORMAL;
 
     if (m_region_tile)
-        m_region_tile->load_dungeon(vbuf, gc);
+        m_region_tile->set_loaded_location(gc);
 
     if (m_region_map)
     {
-        int ox = m_region_tile->mx/2;
-        int oy = m_region_tile->my/2;
+        int ox = m_region_tile->mx / 2;
+        int oy = m_region_tile->my / 2;
         coord_def win_start(gc.x - ox, gc.y - oy);
         coord_def win_end(gc.x + ox + 1, gc.y + oy + 1);
         m_region_map->set_window(win_start, win_end);
     }
+}
+
+void TilesFramework::set_tiles_buffer(crawl_tile_view_buffer&& vbuf,
+                                      coord_def gc)
+{
+    if (m_region_tile)
+        m_region_tile->set_tiles_buffer(std::move(vbuf));
+    set_loaded_location(gc);
+}
+
+void TilesFramework::set_glyphs_buffer(crawl_console_view_buffer&& vbuf,
+                                  coord_def gc)
+{
+    if (m_region_tile)
+        m_region_tile->set_glyphs_buffer(std::move(vbuf));
+    set_loaded_location(gc);
 }
 
 void TilesFramework::load_dungeon(const coord_def &cen)
@@ -1346,8 +1362,7 @@ void TilesFramework::redraw()
 
     glmanager->reset_view_for_redraw();
 
-    for (Region *region : m_layers[m_active_layer].m_regions)
-        region->render();
+    render_current_regions();
 
     // Draw tooltip
     if (Options.tile_tooltip_ms > 0 && !m_tooltip.empty())
@@ -1375,6 +1390,8 @@ void TilesFramework::maybe_redraw_screen()
 
 void TilesFramework::render_current_regions()
 {
+    render_view_window();
+
     for (Region *region : m_layers[m_active_layer].m_regions)
         region->render();
 }
@@ -1509,5 +1526,15 @@ bool TilesFramework::need_redraw(unsigned int min_tick_delay) const
 int TilesFramework::to_lines(int num_tiles, int tile_height)
 {
     return num_tiles * tile_height / get_crt_font()->char_height();
+}
+
+bool is_showing_tiles()
+{
+    return Options.tile_display_mode != "glyphs";
+}
+
+bool is_showing_glyphs()
+{
+    return Options.tile_display_mode != "tiles";
 }
 #endif

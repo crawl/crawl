@@ -5,7 +5,7 @@
 void console_startup();
 void console_shutdown();
 
-class crawl_view_buffer;
+class crawl_console_view_buffer;
 
 int get_number_of_lines();
 int get_number_of_cols();
@@ -35,7 +35,7 @@ void set_getch_returns_resizes(bool rr);
 int getch_ck();
 bool kbhit();
 void delay(unsigned int ms);
-void puttext(int x, int y, const crawl_view_buffer &vbuf);
+void puttext(int x, int y, const crawl_console_view_buffer &vbuf);
 void update_screen();
 
 void set_cursor_enabled(bool enabled);

@@ -268,8 +268,8 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
     region.height = min(region.height, GYM);
 
     const coord_def extents(region.width, region.height);
-    crawl_view_buffer vbuf(extents);
-    screen_cell_t *cell = vbuf;
+    crawl_console_view_buffer vbuf(extents);
+    glyph_screen_cell *cell = vbuf;
 
     cursor_control cs(false);
 

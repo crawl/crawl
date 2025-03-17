@@ -40,6 +40,7 @@
 #include "tag-version.h"
 #include "tilefont.h"
 #include "tilepick.h"
+#include "tilepick-p.h"
 #include "tiles-build-specific.h"
 #include "traps.h"
 #include "travel.h"
@@ -90,26 +91,22 @@ DungeonRegion::~DungeonRegion()
 {
 }
 
-void DungeonRegion::load_dungeon(const crawl_view_buffer &vbuf,
-                                 const coord_def &gc_at_vbuf_centre)
+void DungeonRegion::set_tiles_buffer(crawl_tile_view_buffer&& vbuf)
+{
+    m_tile_buffer = std::move(vbuf);
+}
+
+void DungeonRegion::set_glyphs_buffer(crawl_console_view_buffer&& vbuf)
+{
+    m_glyph_buffer = std::move(vbuf);
+}
+
+void DungeonRegion::set_loaded_location(const coord_def &gc_at_vbuf_centre)
 {
     m_dirty = true;
 
     m_cx_to_gx = gc_at_vbuf_centre.x - mx / 2;
     m_cy_to_gy = gc_at_vbuf_centre.y - my / 2;
-
-    m_vbuf = vbuf;
-
-    for (int y = 0; y < m_vbuf.size().y; ++y)
-        for (int x = 0; x < m_vbuf.size().x; ++x)
-        {
-            coord_def gc(x + m_cx_to_gx, y + m_cy_to_gy);
-
-            if (map_bounds(gc))
-                pack_cell_overlays(coord_def(x, y), m_vbuf);
-        }
-
-    place_cursor(CURSOR_TUTORIAL, m_cursor[CURSOR_TUTORIAL]);
 }
 
 void DungeonRegion::pack_cursor(cursor_type type, unsigned int tile)
@@ -138,7 +135,7 @@ static unsigned _get_highlight(int col)
                                             : unsigned{CHATTR_NORMAL};
 }
 
-void DungeonRegion::pack_glyph_at(screen_cell_t *vbuf_cell, int vx, int vy)
+void DungeonRegion::pack_glyph_at(glyph_screen_cell *vbuf_cell, int vx, int vy)
 {
     // need to do some footwork to decode glyph colours
     const int bg = _get_highlight(vbuf_cell->colour);
@@ -192,36 +189,55 @@ void DungeonRegion::pack_buffers()
 {
     m_buf_dngn.clear();
     m_buf_flash.clear();
-    const bool pack_tiles = Options.tile_display_mode != "glyphs";
-    const bool pack_glyphs = Options.tile_display_mode != "tiles";
+    const bool pack_tiles = is_showing_tiles();
+    const bool pack_glyphs = is_showing_glyphs();
 
-    if (m_vbuf.empty())
+    bool tiles_need_packing = pack_tiles && !m_tile_buffer.empty();
+    bool glyphs_need_packing = pack_glyphs && !m_glyph_buffer.empty();
+    if (!tiles_need_packing && !glyphs_need_packing)
         return;
 
-    coord_def m_vbuf_sz = m_vbuf.size();
-    ASSERT(m_vbuf_sz.x == crawl_view.viewsz.x);
-    ASSERT(m_vbuf_sz.y == crawl_view.viewsz.y);
+    if (tiles_need_packing)
+    {
+        coord_def m_vbuf_sz = m_tile_buffer.size();
+        ASSERT(m_vbuf_sz.x == crawl_view.viewsz.x);
+        ASSERT(m_vbuf_sz.y == crawl_view.viewsz.y);
 
-    screen_cell_t *vbuf_cell = m_vbuf;
-    for (int y = 0; y < crawl_view.viewsz.y; ++y)
-        for (int x = 0; x < crawl_view.viewsz.x; ++x)
-        {
-            if (pack_tiles)
+        tile_screen_cell *vbuf_cell = m_tile_buffer;
+        for (int y = 0; y < crawl_view.viewsz.y; ++y)
+            for (int x = 0; x < crawl_view.viewsz.x; ++x)
+            {
                 m_buf_dngn.add(vbuf_cell->tile, x, y);
-            if (pack_glyphs)
+
+                const int fcol = vbuf_cell->flash_colour;
+                const int falpha = vbuf_cell->flash_alpha;
+                if (fcol)
+                {
+                    m_buf_flash.add(x, y, x + 1, y + 1,
+                        falpha ? _alpha_flash_colour(fcol, falpha)
+                        : _flash_colours[fcol]);
+                }
+
+                vbuf_cell++;
+            }
+    }
+
+    if (glyphs_need_packing)
+    {
+        coord_def m_vbuf_sz = m_glyph_buffer.size();
+        ASSERT(m_vbuf_sz.x == crawl_view.viewsz.x);
+        ASSERT(m_vbuf_sz.y == crawl_view.viewsz.y);
+
+        glyph_screen_cell *vbuf_cell = m_glyph_buffer;
+
+        for (int y = 0; y < crawl_view.viewsz.y; ++y)
+            for (int x = 0; x < crawl_view.viewsz.x; ++x)
+            {
                 pack_glyph_at(vbuf_cell, x, y);
 
-            const int fcol = vbuf_cell->flash_colour;
-            const int falpha = vbuf_cell->flash_alpha;
-            if (fcol)
-            {
-                m_buf_flash.add(x, y, x + 1, y + 1,
-                                falpha ? _alpha_flash_colour(fcol, falpha)
-                                       : _flash_colours[fcol]);
+                vbuf_cell++;
             }
-
-            vbuf_cell++;
-        }
+    }
 
     // TODO: these cursors are a bit thick for glyphs mode
     pack_cursor(CURSOR_TUTORIAL, TILEI_TUTORIAL_CURSOR);
@@ -385,7 +401,8 @@ void DungeonRegion::draw_minibars()
 
 void DungeonRegion::clear()
 {
-    m_vbuf.clear();
+    m_tile_buffer.clear();
+    m_glyph_buffer.clear();
 }
 
 void DungeonRegion::config_glyph_font()
@@ -760,7 +777,10 @@ bool DungeonRegion::update_tip_text(string &tip)
                 tip += make_stringf("HEIGHT(%d)\n", dgn_height_at(gc));
 
             tip += "\n";
-            tip += tile_debug_string(tile_env.fg(ep), tile_env.bg(ep), ' ');
+            tileidx_t fg = tile_env.fg(ep);
+            if (gc == you.pos() && you.on_current_level)
+                fg = tileidx_player();
+            tip += tile_debug_string(fg, tile_env.bg(ep), ' ');
             tip += "\n";
         }
         else
@@ -817,11 +837,11 @@ bool DungeonRegion::update_tip_text(string &tip)
 
         tip += tile_debug_string(tile_env.bk_fg(gc), tile_env.bk_bg(gc), 'B');
 
-        if (!m_vbuf.empty())
+        if (!m_tile_buffer.empty())
         {
-            const screen_cell_t *vbuf = m_vbuf;
+            const tile_screen_cell *vbuf = m_tile_buffer;
             const coord_def vc(gc.x - m_cx_to_gx, gc.y - m_cy_to_gy);
-            const screen_cell_t &cell = vbuf[crawl_view.viewsz.x * vc.y + vc.x];
+            const tile_screen_cell &cell = vbuf[crawl_view.viewsz.x * vc.y + vc.x];
             tip += tile_debug_string(cell.tile.fg, cell.tile.bg, 'V');
         }
 

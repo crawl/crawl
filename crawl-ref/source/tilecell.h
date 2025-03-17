@@ -1,7 +1,7 @@
 #ifdef USE_TILE
 #pragma once
 
-#include "map-cell.h"
+#include "env.h"
 #include "tag-version.h"
 
 enum halo_type: uint8_t
@@ -20,11 +20,7 @@ struct packed_cell
     // SSE2 / XMM registers = 128 bits or 16 bytes
     // Current size of 16x int32 == 512 bits aligns nicely
     COMPILE_CHECK(sizeof(FixedVector<int, MAX_DNGN_OVERLAY>) % 16 == 0);
-
-    // This is directly copied from env.map_knowledge by viewwindow()
-    // Here for packing / alignment purposes
-    map_cell map_knowledge;
-    // Logically should go with dngn_overlay, but that would pack worse
+    // After dngn_overlay, as that packs better
     short int num_dngn_overlay;
     halo_type halo;
     bool quad_glow: 1;
@@ -66,7 +62,6 @@ struct packed_cell
                     }
 
     packed_cell(const packed_cell* c) : dngn_overlay(c->dngn_overlay),
-                                        map_knowledge(c->map_knowledge),
                                         num_dngn_overlay(c->num_dngn_overlay),
                                         halo(c->halo),
                                         quad_glow(c->quad_glow),
@@ -95,10 +90,9 @@ struct packed_cell
     void add_overlay(int tileidx);
 };
 
-class crawl_view_buffer;
-
 // For a given location, pack any waves/ink/wall shadow tiles
 // that require knowledge of the surrounding env cells.
-void pack_cell_overlays(const coord_def &gc, crawl_view_buffer &vbuf);
+void pack_cell_overlays(const coord_def &gc, packed_cell &cell,
+                        const MapKnowledge& map_knowledge);
 
 #endif // TILECELL_H

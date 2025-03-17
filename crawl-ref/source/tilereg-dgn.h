@@ -35,7 +35,9 @@ public:
     void config_glyph_font();
     virtual bool inside(int px, int py) override;
 
-    void load_dungeon(const crawl_view_buffer &vbuf, const coord_def &gc);
+    void set_tiles_buffer(crawl_tile_view_buffer&& vbuf);
+    void set_glyphs_buffer(crawl_console_view_buffer&& vbuf);
+    void set_loaded_location(const coord_def &gc);
     void place_cursor(cursor_type type, const coord_def &gc);
     bool on_screen(const coord_def &gc) const;
 
@@ -51,14 +53,15 @@ public:
 protected:
     void recalculate() override;
     void pack_buffers();
-    void pack_glyph_at(screen_cell_t *vbuf_cell, int vx, int vy);
+    void pack_glyph_at(glyph_screen_cell *vbuf_cell, int vx, int vy);
     void pack_cursor(cursor_type type, unsigned int tile);
 
     void draw_minibars();
 
     int get_buffer_index(const coord_def &gc);
 
-    crawl_view_buffer m_vbuf;
+    crawl_tile_view_buffer m_tile_buffer;
+    crawl_console_view_buffer m_glyph_buffer;
     int m_cx_to_gx;
     int m_cy_to_gy;
     coord_def m_cursor[CURSOR_MAX];

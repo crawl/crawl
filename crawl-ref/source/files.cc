@@ -2152,8 +2152,14 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (load_mode != LOAD_VISITOR)
     {
         tiles.clear_minimap();
-        crawl_view_buffer empty_vbuf;
-        tiles.load_dungeon(empty_vbuf, crawl_view.vgrdc);
+
+        if (is_showing_tiles())
+            tiles.set_tiles_buffer(crawl_tile_view_buffer(), crawl_view.vgrdc);
+        if (is_showing_glyphs())
+        {
+            tiles.set_glyphs_buffer(crawl_console_view_buffer(),
+                                    crawl_view.vgrdc);
+        }
     }
 #endif
 

@@ -21,7 +21,6 @@ void packed_cell::clear()
     fg = 0;
     bg = 0;
     cloud = 0;
-    map_knowledge.clear();
     icons.clear();
 
     flv.floor_idx = 0;
@@ -53,7 +52,6 @@ bool packed_cell::operator ==(const packed_cell &other) const
     if (fg != other.fg) return false;
     if (bg != other.bg) return false;
     if (cloud != other.cloud) return false;
-    if (map_knowledge != other.map_knowledge) return false;
 
     if (is_bloody != other.is_bloody) return false;
     if (is_silenced != other.is_silenced) return false;
@@ -104,7 +102,7 @@ void packed_cell::add_overlay(int tileidx)
     }
 }
 
-typedef bool (*map_predicate) (const coord_def&, crawl_view_buffer& vbuf);
+typedef bool (*map_predicate) (const coord_def&, const MapKnowledge&);
 
 static coord_def overlay_directions[] =
 {
@@ -118,18 +116,19 @@ static coord_def overlay_directions[] =
     coord_def(-1, 1)
 };
 
-static void _add_directional_overlays(const coord_def& gc, crawl_view_buffer& vbuf,
+static void _add_directional_overlays(const coord_def& gc, packed_cell &cell,
                                       tileidx_t tile, map_predicate pred,
+                                       const MapKnowledge& map_knowledge,
                                       uint8_t tile_mask = 0xFF)
 {
-    auto& cell = vbuf(gc).tile;
+    const map_cell& cell_knowledge = map_knowledge(gc);
 
     uint8_t dir_mask = 0;
 
     for (int i = 0; i < 8; ++i)
     {
-        if (!pred(gc + overlay_directions[i], vbuf)
-            || feat_is_wall(cell.map_knowledge.feat()))
+        if (!pred(gc + overlay_directions[i], map_knowledge)
+            || feat_is_wall(cell_knowledge.feat()))
         {
             continue;
         }
@@ -160,18 +159,19 @@ static void _add_directional_overlays(const coord_def& gc, crawl_view_buffer& vb
     }
 }
 
-static bool _feat_has_ink(coord_def gc, crawl_view_buffer& vbuf)
+static bool _feat_has_ink(const map_cell& cell_knowledge)
 {
-    return vbuf(gc).tile.map_knowledge.cloud() == CLOUD_INK;
+    return cell_knowledge.cloud() == CLOUD_INK;
 }
 
-static void _pack_shoal_waves(const coord_def &gc, crawl_view_buffer& vbuf)
+static void _pack_shoal_waves(const coord_def &gc, packed_cell &cell,
+                           const FixedArray<map_cell, GXM, GYM>& map_knowledge)
 {
-    auto& cell = vbuf(gc).tile;
+    const map_cell& cell_knowledge = map_knowledge(gc);
 
     // Add wave tiles on floor adjacent to shallow water.
-    const auto feat = cell.map_knowledge.feat();
-    const bool feat_has_ink = _feat_has_ink(gc, vbuf);
+    const auto feat = cell_knowledge.feat();
+    const bool feat_has_ink = _feat_has_ink(cell_knowledge);
 
     if (feat == DNGN_DEEP_WATER && feat_has_ink)
     {
@@ -205,13 +205,11 @@ static void _pack_shoal_waves(const coord_def &gc, crawl_view_buffer& vbuf)
 
     for (adjacent_iterator ri(gc, true); ri; ++ri)
     {
-        if (ri->x < 0 || ri->x >= vbuf.size().x || ri->y < 0 || ri->y >= vbuf.size().y)
-            continue;
-        const map_cell& adj_knowledge = vbuf(*ri).tile.map_knowledge;
+        const map_cell& adj_knowledge = map_knowledge(*ri);
         if (!adj_knowledge.seen() && !adj_knowledge.mapped())
             continue;
 
-        const bool ink = _feat_has_ink(*ri, vbuf);
+        const bool ink = _feat_has_ink(adj_knowledge);
         const auto adj_feat = adj_knowledge.feat();
 
         wave_type wt = WV_NONE;
@@ -370,27 +368,28 @@ static void _pack_shoal_waves(const coord_def &gc, crawl_view_buffer& vbuf)
     }
 }
 
-static dungeon_feature_type _safe_feat(coord_def gc, crawl_view_buffer& vbuf)
+static dungeon_feature_type _safe_feat(coord_def gc,
+                                       const MapKnowledge& map_knowledge)
 {
-    if (gc.x < 0 || gc.x >= vbuf.size().x || gc.y < 0 || gc.y >= vbuf.size().y)
+    if (!map_bounds(gc))
         return DNGN_UNSEEN;
 
-    return vbuf(gc).tile.map_knowledge.feat();
+    return map_knowledge(gc).feat();
 }
 
-static bool _is_seen_land(coord_def gc, crawl_view_buffer& vbuf)
+static bool _is_seen_land(coord_def gc, const MapKnowledge& map_knowledge)
 {
-    const auto feat = _safe_feat(gc, vbuf);
+    const auto feat = _safe_feat(gc, map_knowledge);
 
     return feat != DNGN_UNSEEN && !feat_is_water(feat) && !feat_is_lava(feat)
            && feat != DNGN_MANGROVE;
 }
 
-static bool _is_seen_shallow(coord_def gc, crawl_view_buffer& vbuf)
+static bool _is_seen_shallow(coord_def gc, const MapKnowledge& map_knowledge)
 {
-    const auto feat = _safe_feat(gc, vbuf);
+    const auto feat = _safe_feat(gc, map_knowledge);
 
-    if (!vbuf(gc).tile.map_knowledge.seen())
+    if (!map_knowledge(gc).seen())
         return false;
 
     return feat == DNGN_SHALLOW_WATER || feat == DNGN_MANGROVE;
@@ -406,13 +405,14 @@ static tileidx_t _base_wave_tile(colour_t colour)
     }
 }
 
-static void _pack_default_waves(const coord_def &gc, crawl_view_buffer& vbuf)
+static void _pack_default_waves(const coord_def &gc, packed_cell &cell,
+                                const MapKnowledge& map_knowledge)
 {
-    auto& cell = vbuf(gc).tile;
+    const map_cell& cell_knowledge = map_knowledge(gc);
     // Any tile on water with an adjacent solid tile will get an extra
     // bit of shoreline.
-    auto feat = cell.map_knowledge.feat();
-    auto colour = cell.map_knowledge.feat_colour();
+    auto feat = cell_knowledge.feat();
+    auto colour = cell_knowledge.feat_colour();
 
     // Treat mangroves as though they were shallow water.
     if (cell.mangrove_water && feat == DNGN_MANGROVE)
@@ -427,16 +427,14 @@ static void _pack_default_waves(const coord_def &gc, crawl_view_buffer& vbuf)
         int tile = _base_wave_tile(colour) + 7;
         for (adjacent_iterator ai(gc); ai; ++ai, --tile)
         {
-            if (ai->x < 0 || ai->x >= vbuf.size().x || ai->y < 0 || ai->y >= vbuf.size().y)
-                continue;
-            if (_is_seen_shallow(*ai, vbuf))
+            if (_is_seen_shallow(*ai, map_knowledge))
                 cell.add_overlay(tile);
         }
     }
 
-    bool north = _is_seen_land(coord_def(gc.x, gc.y - 1), vbuf);
-    bool west  = _is_seen_land(coord_def(gc.x - 1, gc.y), vbuf);
-    bool east  = _is_seen_land(coord_def(gc.x + 1, gc.y), vbuf);
+    bool north = _is_seen_land(coord_def(gc.x, gc.y - 1), map_knowledge);
+    bool west  = _is_seen_land(coord_def(gc.x - 1, gc.y), map_knowledge);
+    bool east  = _is_seen_land(coord_def(gc.x + 1, gc.y), map_knowledge);
 
     if (north || west || east && (colour == BLACK || colour == LIGHTGREEN))
     {
@@ -453,85 +451,91 @@ static void _pack_default_waves(const coord_def &gc, crawl_view_buffer& vbuf)
     }
 }
 
-static bool _is_seen_wall(coord_def gc, crawl_view_buffer& vbuf)
+static bool _is_seen_wall(coord_def gc, const MapKnowledge& map_knowledge)
 {
-    const auto feat = _safe_feat(gc, vbuf);
+    const auto feat = _safe_feat(gc, map_knowledge);
     return (feat_is_opaque(feat) || feat_is_wall(feat))
            && !feat_is_tree(feat) && feat != DNGN_UNSEEN;
 }
 
-static void _pack_wall_shadows(const coord_def &gc, crawl_view_buffer& vbuf,
-                               tileidx_t tile)
+static void _pack_wall_shadows(const coord_def &gc, packed_cell &cell,
+                               tileidx_t tile,
+                               const MapKnowledge& map_knowledge)
 {
-    if (_is_seen_wall(gc, vbuf) || _safe_feat(gc, vbuf) == DNGN_GRATE)
+    if (_is_seen_wall(gc, map_knowledge) || _safe_feat(gc, map_knowledge) == DNGN_GRATE)
         return;
-
-    auto& cell = vbuf(gc).tile;
 
     bool ne = 0;
     bool nw = 0;
     int offset;
 
     // orthogonals
-    if (_is_seen_wall(coord_def(gc.x - 1, gc.y), vbuf))
+    if (_is_seen_wall(coord_def(gc.x - 1, gc.y), map_knowledge))
     {
-        offset = _is_seen_wall(coord_def(gc.x - 1, gc.y - 1), vbuf) ? 0 : 5;
+        offset = _is_seen_wall(coord_def(gc.x - 1, gc.y - 1), map_knowledge) ? 0 : 5;
         cell.add_overlay(tile + offset);
         nw = 1;
     }
-    if (_is_seen_wall(coord_def(gc.x, gc.y - 1), vbuf))
+    if (_is_seen_wall(coord_def(gc.x, gc.y - 1), map_knowledge))
     {
         cell.add_overlay(tile + 2);
         ne = 1;
         nw = 1;
     }
-    if (_is_seen_wall(coord_def(gc.x + 1, gc.y), vbuf))
+    if (_is_seen_wall(coord_def(gc.x + 1, gc.y), map_knowledge))
     {
-        offset = _is_seen_wall(coord_def(gc.x + 1, gc.y - 1), vbuf) ? 4 : 6;
+        offset = _is_seen_wall(coord_def(gc.x + 1, gc.y - 1), map_knowledge) ? 4 : 6;
         cell.add_overlay(tile + offset);
         ne = 1;
     }
 
     // corners
-    if (nw == 0 && _is_seen_wall(coord_def(gc.x - 1, gc.y - 1), vbuf))
+    if (nw == 0 && _is_seen_wall(coord_def(gc.x - 1, gc.y - 1), map_knowledge))
         cell.add_overlay(tile + 1);
-    if (ne == 0 && _is_seen_wall(coord_def(gc.x + 1, gc.y - 1), vbuf))
+    if (ne == 0 && _is_seen_wall(coord_def(gc.x + 1, gc.y - 1), map_knowledge))
         cell.add_overlay(tile + 3);
 }
 
-static bool _is_seen_slimy_wall(const coord_def& gc, crawl_view_buffer &vbuf)
+static bool _is_seen_slimy_wall(const coord_def& gc,
+                                const MapKnowledge& map_knowledge)
 {
-    return _safe_feat(gc, vbuf) == DNGN_SLIMY_WALL;
+    return _safe_feat(gc, map_knowledge) == DNGN_SLIMY_WALL;
 }
 
-static bool _is_seen_icy_wall(const coord_def& gc, crawl_view_buffer &vbuf)
+static bool _is_seen_icy_wall(const coord_def& gc,
+                              const MapKnowledge& map_knowledge)
 {
-    return feat_is_wall(_safe_feat(gc, vbuf))
-           && vbuf(gc).tile.map_knowledge.flags & MAP_ICY;
+    if (!map_bounds(gc))
+        return false;
+
+    const map_cell& cell_knowledge = map_knowledge(gc);
+    return feat_is_wall(cell_knowledge.feat())
+           && cell_knowledge.flags & MAP_ICY;
 }
 
-void pack_cell_overlays(const coord_def &gc, crawl_view_buffer &vbuf)
+void pack_cell_overlays(const coord_def &gc, packed_cell &cell,
+                        const MapKnowledge& map_knowledge)
 {
-    auto& cell = vbuf(gc).tile;
+    const map_cell& cell_knowledge = map_knowledge(gc);
 
-    if (cell.map_knowledge.feat() == DNGN_UNSEEN)
+    if (cell_knowledge.feat() == DNGN_UNSEEN)
         return; // Don't put overlays on unseen tiles
 
     if (player_in_branch(BRANCH_SHOALS))
-        _pack_shoal_waves(gc, vbuf);
+        _pack_shoal_waves(gc, cell, map_knowledge);
     else
-        _pack_default_waves(gc, vbuf);
+        _pack_default_waves(gc, cell, map_knowledge);
 
     if (env.level_state & LSTATE_SLIMY_WALL
-        && cell.map_knowledge.feat() != DNGN_SLIMY_WALL)
+        && cell_knowledge.feat() != DNGN_SLIMY_WALL)
     {
-        _add_directional_overlays(gc, vbuf, TILE_SLIME_OVERLAY,
-                                  _is_seen_slimy_wall);
+        _add_directional_overlays(gc, cell, TILE_SLIME_OVERLAY,
+                                  _is_seen_slimy_wall, map_knowledge);
     }
     else if (env.level_state & LSTATE_ICY_WALL
-             && cell.map_knowledge.flags & MAP_ICY)
+             && cell_knowledge.flags & MAP_ICY)
     {
-        if (feat_is_wall(cell.map_knowledge.feat()))
+        if (feat_is_wall(cell_knowledge.feat()))
         {
             const int count = tile_dngn_count(TILE_DNGN_WALL_ICY_WALL_OVERLAY);
             cell.add_overlay(TILE_DNGN_WALL_ICY_WALL_OVERLAY
@@ -539,8 +543,8 @@ void pack_cell_overlays(const coord_def &gc, crawl_view_buffer &vbuf)
         }
         else
         {
-            _add_directional_overlays(gc, vbuf, TILE_ICE_OVERLAY,
-                                      _is_seen_icy_wall);
+            _add_directional_overlays(gc, cell, TILE_ICE_OVERLAY,
+                                      _is_seen_icy_wall, map_knowledge);
         }
     }
     else
@@ -548,7 +552,7 @@ void pack_cell_overlays(const coord_def &gc, crawl_view_buffer &vbuf)
         tileidx_t shadow_tile = TILE_DNGN_WALL_SHADOW;
         if (player_in_branch(BRANCH_CRYPT) || player_in_branch(BRANCH_DEPTHS))
             shadow_tile = TILE_DNGN_WALL_SHADOW_DARK;
-        _pack_wall_shadows(gc, vbuf, shadow_tile);
+        _pack_wall_shadows(gc, cell, shadow_tile, map_knowledge);
     }
 }
 #endif //TILECELL.CC
