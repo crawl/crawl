@@ -3117,8 +3117,12 @@ string feature_description_at(const coord_def& where, bool covering,
         if (is_icecovered(where))
             covering_description = ", covered with ice";
 
-        if (is_temp_terrain(where))
-            covering_description = ", summoned";
+        if (auto mark = get_temp_terrain(where))
+        {
+            covering_description += ", summoned";
+            if (mark->mon_num == (int)you.mid)
+                covering_description += " (by you)";
+        }
 
         if (is_bloodcovered(where))
             covering_description += ", spattered with blood";
