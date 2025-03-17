@@ -114,7 +114,10 @@ class direction_chooser_renderer : public view_renderer
 {
 public:
     direction_chooser_renderer(direction_chooser &directn) : m_directn(directn) {}
-    void render(crawl_view_buffer& vbuf);
+    void render(crawl_console_view_buffer& vbuf) override;
+#ifdef USE_TILE
+    void render(crawl_tile_view_buffer& vbuf) override;
+#endif
 private:
     direction_chooser &m_directn;
 };
@@ -251,8 +254,14 @@ private:
     void finalize_moves();
     void do_redraws();
 
-    void draw_beam(crawl_view_buffer &vbuf);
-    void highlight_summoner(crawl_view_buffer &vbuf);
+    void draw_beam(crawl_console_view_buffer &vbuf);
+#ifdef USE_TILE
+    void draw_beam(crawl_tile_view_buffer &vbuf);
+#endif
+    void highlight_summoner(crawl_console_view_buffer &vbuf);
+#ifdef USE_TILE
+    void highlight_summoner(crawl_tile_view_buffer &vbuf);
+#endif
     coord_def find_summoner();
 
     // Whether the current target is you.

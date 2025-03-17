@@ -1347,13 +1347,9 @@ static colour_t _colour_aff_type(aff_type aff, bool target)
         die("unhandled aff %d", aff);
 }
 
-static void _draw_ray_cell(screen_cell_t& cell, coord_def p, bool on_target,
-                           aff_type aff)
+static void _draw_ray_cell_glyph(glyph_screen_cell& cell, coord_def p,
+                                 bool on_target, aff_type aff)
 {
-#ifdef USE_TILE
-    UNUSED(on_target, p);
-    cell.tile.add_overlay(_tileidx_aff_type(aff));
-#endif
     const auto bcol = _colour_aff_type(aff, on_target);
     const auto mbcol = on_target ? bcol : bcol | COLFLAG_REVERSE;
     const auto cglyph = _get_ray_glyph(p, bcol, '*', mbcol);
@@ -1361,7 +1357,14 @@ static void _draw_ray_cell(screen_cell_t& cell, coord_def p, bool on_target,
     cell.colour = cglyph.col;
 }
 
-void direction_chooser_renderer::render(crawl_view_buffer& vbuf)
+#ifdef USE_TILE
+static void _draw_ray_cell_tile(tile_screen_cell& cell, aff_type aff)
+{
+    cell.tile.add_overlay(_tileidx_aff_type(aff));
+}
+#endif
+
+void direction_chooser_renderer::render(crawl_console_view_buffer& vbuf)
 {
     if (crawl_state.invisible_targeting)
         return;
@@ -1369,7 +1372,17 @@ void direction_chooser_renderer::render(crawl_view_buffer& vbuf)
     m_directn.highlight_summoner(vbuf);
 }
 
-void direction_chooser::draw_beam(crawl_view_buffer &vbuf)
+#ifdef USE_TILE
+void direction_chooser_renderer::render(crawl_tile_view_buffer& vbuf)
+{
+    if (crawl_state.invisible_targeting)
+        return;
+    m_directn.draw_beam(vbuf);
+    m_directn.highlight_summoner(vbuf);
+}
+#endif
+
+void direction_chooser::draw_beam(crawl_console_view_buffer &vbuf)
 {
     if (!show_beam)
         return;
@@ -1388,7 +1401,7 @@ void direction_chooser::draw_beam(crawl_view_buffer &vbuf)
                 && (!feat_is_solid(env.grid(*ri)) || hitfunc->can_affect_walls()))
             {
                 auto& cell = vbuf(grid2view(*ri) - 1);
-                _draw_ray_cell(cell, *ri, *ri == target(), aff);
+                _draw_ray_cell_glyph(cell, *ri, *ri == target(), aff);
             }
         }
 
@@ -1417,23 +1430,73 @@ void direction_chooser::draw_beam(crawl_view_buffer &vbuf)
 
         const bool inrange = in_range(p);
         auto& cell = vbuf(grid2view(p) - 1);
-#ifdef USE_TILE
-        cell.tile.add_overlay(inrange ? TILE_RAY : TILE_RAY_OUT_OF_RANGE);
-#endif
         const auto bcol = inrange ? MAGENTA : DARKGREY;
-        const auto cglyph = _get_ray_glyph(p, bcol, '*', bcol| COLFLAG_REVERSE);
+        const auto cglyph = _get_ray_glyph(p, bcol, '*', bcol | COLFLAG_REVERSE);
         cell.glyph = cglyph.ch;
         cell.colour = cglyph.col;
     }
     textcolour(LIGHTGREY);
+}
+
+#ifdef USE_TILE
+void direction_chooser::draw_beam(crawl_tile_view_buffer &vbuf)
+{
+    if (!show_beam)
+        return;
+
+    // Use the new API if implemented.
+    if (hitfunc)
+    {
+        if (behaviour->targeted() && !hitfunc->set_aim(target()))
+            return;
+        const los_type los = hitfunc->can_affect_unseen()
+                                            ? LOS_NONE : LOS_DEFAULT;
+        for (radius_iterator ri(you.pos(), los); ri; ++ri)
+        {
+            aff_type aff = hitfunc->is_affected(*ri);
+            if (aff
+                && (!feat_is_solid(env.grid(*ri)) || hitfunc->can_affect_walls()))
+            {
+                auto& cell = vbuf(grid2view(*ri) - 1);
+                _draw_ray_cell_tile(cell, aff);
+            }
+        }
+
+        return;
+    }
+
+    // If we don't have a new beam to show, we're done.
+    if (!have_beam)
+        return;
+
+    // We shouldn't ever get a beam to an out-of-LOS target.
+    ASSERT(you.see_cell(target()));
+
+    // Work with a copy in order not to mangle anything.
+    ray_def ray = beam;
+
+    // Draw the new ray with magenta '*'s, not including your square
+    // or the target square. Out-of-range cells get grey '*'s instead.
+    for (; ray.pos() != target(); ray.advance())
+    {
+        const coord_def p = ray.pos();
+        ASSERT(you.see_cell(p));
+
+        if (p == you.pos())
+            continue;
+
+        const bool inrange = in_range(p);
+        auto& cell = vbuf(grid2view(p) - 1);
+        cell.tile.add_overlay(inrange ? TILE_RAY : TILE_RAY_OUT_OF_RANGE);
+    }
+    textcolour(LIGHTGREY);
 
     // Only draw the ray over the target on tiles.
-#ifdef USE_TILE
     auto& cell = vbuf(grid2view(target()) - 1);
     cell.tile.add_overlay(in_range(ray.pos()) ? TILE_RAY :
                                                 TILE_RAY_OUT_OF_RANGE);
-#endif
 }
+#endif
 
 bool direction_chooser::in_range(const coord_def& p) const
 {
@@ -2142,20 +2205,29 @@ coord_def direction_chooser::find_summoner()
     return INVALID_COORD;
 }
 
-void direction_chooser::highlight_summoner(crawl_view_buffer &vbuf)
+void direction_chooser::highlight_summoner(crawl_console_view_buffer &vbuf)
 {
     const coord_def summ_loc = find_summoner();
     if (summ_loc == INVALID_COORD)
         return;
 
     auto& cell = vbuf(grid2view(summ_loc) - 1);
-#ifdef USE_TILE
-    cell.tile.is_highlighted_summoner = true;
-#endif
 #if defined(USE_TILE_WEB) || !defined(USE_TILE)
     cell.colour = CYAN | COLFLAG_REVERSE;
 #endif
 }
+
+#ifdef USE_TILE
+void direction_chooser::highlight_summoner(crawl_tile_view_buffer &vbuf)
+{
+    const coord_def summ_loc = find_summoner();
+    if (summ_loc == INVALID_COORD)
+        return;
+
+    auto& cell = vbuf(grid2view(summ_loc) - 1);
+    cell.tile.is_highlighted_summoner = true;
+}
+#endif
 
 bool direction_chooser::tiles_update_target()
 {
