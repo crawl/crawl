@@ -904,14 +904,16 @@ void timeout_tombs(int duration)
     }
 }
 
-void timeout_binding_sigils()
+void timeout_binding_sigils(const actor &caster)
 {
+    // Only to be called for player sigils
     int num_seen = 0;
     for (map_marker *mark : env.markers.get_all(MAT_TERRAIN_CHANGE))
     {
         map_terrain_change_marker *marker =
                 dynamic_cast<map_terrain_change_marker*>(mark);
-        if (marker->change_type == TERRAIN_CHANGE_BINDING_SIGIL)
+        if (marker->change_type == TERRAIN_CHANGE_BINDING_SIGIL
+            && marker->mon_num == (int)caster.mid)
         {
             if (you.see_cell(marker->pos))
                 num_seen++;
@@ -919,10 +921,15 @@ void timeout_binding_sigils()
         }
     }
 
+    // Avoid a potential information leak by not naming the monster owner
     if (num_seen > 1)
-        mprf(MSGCH_DURATION, "Your binding sigils disappear.");
+    {
+        mprf(MSGCH_DURATION, "%s binding sigils disappear.",
+             caster.is_player() ? "Your" : "Some");
+    }
     else if (num_seen > 0)
-        mprf(MSGCH_DURATION, "Your binding sigil disappears.");
+        mprf(MSGCH_DURATION, "%s binding sigil disappears.",
+             caster.is_player() ? "Your" : "A");
 }
 
 void end_terrain_change(terrain_change_type type)
@@ -973,14 +980,17 @@ void timeout_terrain_changes(int duration, bool force)
             continue;
         }
 
+        actor* src = actor_by_mid(marker->mon_num);
+
+        // Player-modified terrain times out immediately on leaving LOS
         if ((marker->change_type == TERRAIN_CHANGE_BOG
-             || marker->change_type == TERRAIN_CHANGE_BINDING_SIGIL)
+             || marker->change_type == TERRAIN_CHANGE_BINDING_SIGIL
+                && src && src->is_player())
             && !you.see_cell(marker->pos))
         {
             marker->duration = 0;
         }
 
-        actor* src = actor_by_mid(marker->mon_num);
         if (marker->duration <= 0
             || (marker->mon_num != 0
                 && (!src || !src->alive()
@@ -1001,10 +1011,11 @@ void timeout_terrain_changes(int duration, bool force)
     else if (num_seen[TERRAIN_CHANGE_DOOR_SEAL] > 0)
         mpr("The runic seal fades away.");
 
+    // Use generic "the/a" rather than "your" to avoid checking ownership
     if (num_seen[TERRAIN_CHANGE_BINDING_SIGIL] > 1)
-        mprf(MSGCH_DURATION, "Your binding sigils disappear.");
+        mprf(MSGCH_DURATION, "The binding sigils disappear.");
     else if (num_seen[TERRAIN_CHANGE_BINDING_SIGIL] > 0)
-        mprf(MSGCH_DURATION, "Your binding sigil disappears.");
+        mprf(MSGCH_DURATION, "A binding sigil disappears.");
 }
 
 ////////////////////////////////////////////////////////////////////////////

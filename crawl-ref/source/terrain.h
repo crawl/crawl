@@ -11,6 +11,7 @@
 #include "command-type.h"
 #include "enum.h"
 #include "god-type.h"
+#include "mapmark.h"
 #include "terrain-change-type.h"
 
 using std::vector;
@@ -165,6 +166,7 @@ void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
 bool revert_terrain_change(coord_def pos,
                            terrain_change_type ctype = NUM_TERRAIN_CHANGE_TYPES);
 bool is_temp_terrain(coord_def pos);
+const map_terrain_change_marker *get_temp_terrain(coord_def pos);
 
 bool plant_forbidden_at(const coord_def &p, bool connectivity_only = false);
 
