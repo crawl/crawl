@@ -1817,6 +1817,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_YAKTAUR_SCRIBE,
+      {
+       { SPELL_CIRCLE_OF_GLYPHS, 50, MON_SPELL_WIZARD },
+      }
+    },
+
     // ('d') Draconians.
     { MST_BAI_SUZHEN,
       {
