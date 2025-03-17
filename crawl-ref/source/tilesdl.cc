@@ -1349,8 +1349,7 @@ void TilesFramework::redraw()
 
     glmanager->reset_view_for_redraw();
 
-    for (Region *region : m_layers[m_active_layer].m_regions)
-        region->render();
+    render_current_regions();
 
     // Draw tooltip
     if (Options.tile_tooltip_ms > 0 && !m_tooltip.empty())
@@ -1378,6 +1377,8 @@ void TilesFramework::maybe_redraw_screen()
 
 void TilesFramework::render_current_regions()
 {
+    render_view_window();
+
     for (Region *region : m_layers[m_active_layer].m_regions)
         region->render();
 }

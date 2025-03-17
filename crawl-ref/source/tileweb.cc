@@ -1845,9 +1845,14 @@ void TilesFramework::_send_map(bool force_full)
     coord_def last_gc(0, 0);
     bool send_gc = true;
 
-    int flash_colour = you.flash_colour;
+    const view_window_render_data& render_data =
+        current_view_window_render_data();
+
+    int flash_colour = render_data.flash_colour;
     if (flash_colour == BLACK)
         flash_colour = viewmap_flash_colour();
+
+    targeter* flash_where = render_data.flash_where;
 
     json_open_array("cells");
     for (int y = 0; y < GYM; y++)
@@ -1862,7 +1867,7 @@ void TilesFramework::_send_map(bool force_full)
             {
                 screen_cell_t *cell = &m_next_view(gc);
 
-                if (you.flash_where && you.flash_where->is_affected(gc) <= 0)
+                if (flash_where && flash_where->is_affected(gc) <= 0)
                     draw_cell(cell, gc, false, 0);
                 else
                     draw_cell(cell, gc, false, flash_colour);
@@ -2098,6 +2103,9 @@ void TilesFramework::_send_everything()
      // Player
     _send_player(true);
 
+    // Make sure the view window is up to date before sending the map
+    render_view_window();
+
     // Map is sent after player, otherwise HP/MP bar can be left behind in the
     // old location if the player has moved
     _send_map(true);
@@ -2171,6 +2179,8 @@ void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
 
 void TilesFramework::redraw()
 {
+    render_view_window();
+
     if (!has_receivers())
     {
         if (m_mcache_ref_done)

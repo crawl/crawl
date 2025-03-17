@@ -2829,6 +2829,11 @@ static void _start_translevel_travel()
 
     if (level_target.id.depth > 0)
     {
+#ifdef USE_TILE
+        if (tiles.need_redraw())
+            tiles.redraw();
+#endif
+
         you.running = RMODE_INTERLEVEL;
         you.running.pos.reset();
         last_stair.id.depth = -1;
@@ -3336,6 +3341,11 @@ void start_travel(const coord_def& p)
             return;
         }
 
+#ifdef USE_TILE
+        if (tiles.need_redraw())
+            tiles.redraw();
+#endif
+
         // Start running
         you.running = RMODE_TRAVEL;
         _start_running();
@@ -3357,6 +3367,11 @@ void start_explore(bool grab_items)
         canned_msg(MSG_OK);
         return;
     }
+
+#ifdef USE_TILE
+    if (tiles.need_redraw())
+        tiles.redraw();
+#endif
 
     you.running = (grab_items ? RMODE_EXPLORE_GREEDY : RMODE_EXPLORE);
 
@@ -4516,6 +4531,11 @@ runrest::runrest()
 // include travel and wrap it all in.
 void runrest::initialise(int dir, int mode)
 {
+#ifdef USE_TILE
+    if (tiles.need_redraw())
+        tiles.redraw();
+#endif
+
     // Note HP and MP for reference.
     hp = you.hp;
     mp = you.magic_points;
