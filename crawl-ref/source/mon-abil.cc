@@ -1336,8 +1336,13 @@ bool pyrrhic_recollection(monster& nobody)
     nobody.heal(nobody.max_hit_points);
 
     // If this was a phantom mirror copy, allow it to revive, but don't wipe out
-    // its summoner timer at the same time, to keep it from having unlimited duration.
-    mon_enchant summon_timer = nobody.get_ench(ENCH_SUMMON_TIMER);
+    // its summon timer at the same time, to keep it from having unlimited duration.
+    mon_enchant summon_timer;
+    if (nobody.has_ench(ENCH_SUMMON_TIMER))
+    {
+        summon_timer = nobody.get_ench(ENCH_SUMMON_TIMER);
+        nobody.del_ench(ENCH_SUMMON_TIMER, true, false);
+    }
     // Also, manually delete the previous enkindle without effect, in case
     // Nobody's taken a big enough hit to go from healthy to dead in one action,
     // or we'll immediately wipe out the spells we just gave them.
