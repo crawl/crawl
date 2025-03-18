@@ -8900,7 +8900,7 @@ void trickster_trigger(const monster& victim, enchant_type ench)
     if (!_ench_triggers_trickster(ench))
         return;
 
-    if (!you.can_see(victim) || !you.see_cell_no_trans(victim.pos()))
+    if (!you.can_see(victim) || !you.see_cell_no_trans(victim.pos()) || victim.friendly())
         return;
 
     const int min_bonus = 3 + you.experience_level / 6;
