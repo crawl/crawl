@@ -6000,7 +6000,7 @@ void place_spec_shop(const coord_def& where, shop_type force_type)
 
 int greed_for_shop_type(shop_type shop, int level_number)
 {
-    if (!shoptype_identifies_stock(shop))
+    if (!shoptype_identifies_stock(shop) || shop == SHOP_GADGET)
     {
         const int rand = random2avg(19, 2);
         return 15 + rand + random2(level_number);
@@ -6095,6 +6095,16 @@ static int _choose_shop_item_level(shop_type shop_type_, int level_number)
     return min(base_level + bazaar_bonus, level_number * 5);
 }
 
+static int _item_in_shop_subtype(shop_type shop_type,
+                                 object_class_type base_type)
+{
+    // Force orbs if armour is rolledin gadget shop (would rarely be rolled by
+    // chance). Everything else gets a random subtype.
+    // (Orbs are evicted from armour shops later in _valid_item_for_shop)
+    return shop_type == SHOP_GADGET && base_type == OBJ_ARMOUR ? ARM_ORB
+                                                               : OBJ_RANDOM;
+}
+
 /**
  * Is the given item valid for placement in the given shop?
  *
@@ -6103,8 +6113,7 @@ static int _choose_shop_item_level(shop_type shop_type_, int level_number)
  * @param spec          The specification for the shop.
  * @return              Whether the item is valid.
  */
-static bool _valid_item_for_shop(int item_index, shop_type shop_type_,
-                                 shop_spec &spec)
+static bool _valid_item_for_shop(int item_index, shop_type shop_type_)
 {
     if (item_index == NON_ITEM)
         return false;
@@ -6118,15 +6127,15 @@ static bool _valid_item_for_shop(int item_index, shop_type shop_type_,
         return false;
 
     // Don't place missiles or books in general antique shops...
-    if (shop_type_ == SHOP_GENERAL_ANTIQUE
-            && (item.base_type == OBJ_MISSILES
-                || item.base_type == OBJ_BOOKS))
-    {
-        // ...unless they're specified by the item spec.
-        return !spec.items.empty();
-    }
-
-    return true;
+    return !(shop_type_ == SHOP_GENERAL_ANTIQUE
+                 && (item.base_type == OBJ_MISSILES
+                     || item.base_type == OBJ_BOOKS)
+             // Orbs aren't really armour despite going in the shield slot
+             || (shop_type_ == SHOP_ARMOUR || shop_type_ == SHOP_ARMOUR_ANTIQUE)
+                 && item.sub_type == ARM_ORB
+             // But instead count as gadgets
+             || (shop_type_ == SHOP_GADGET)
+                 && item.base_type == OBJ_ARMOUR && item.sub_type != ARM_ORB);
 }
 
 /**
@@ -6160,7 +6169,6 @@ static void _stock_shop_item(int j, shop_type shop_type_,
     while (true)
     {
         object_class_type basetype = item_in_shop(shop_type_);
-        int subtype = OBJ_RANDOM;
 
         if (!spec.items.empty() && !spec.use_all)
         {
@@ -6181,6 +6189,7 @@ static void _stock_shop_item(int j, shop_type shop_type_,
             // gozag shop items are better
             const bool good_item = spec.gozag || one_chance_in(4);
             const int level = good_item ? ISPEC_GOOD_ITEM : item_level;
+            const int subtype = _item_in_shop_subtype(shop_type_, basetype);
             item_index = items(true, basetype, subtype, level);
         }
 
@@ -6195,8 +6204,12 @@ static void _stock_shop_item(int j, shop_type shop_type_,
             }
         }
 
-        if (_valid_item_for_shop(item_index, shop_type_, spec))
+        // Exit loop if we found a valid item or one from the item spec
+        if (item_index != NON_ITEM && !spec.items.empty()
+            || _valid_item_for_shop(item_index, shop_type_))
+        {
             break;
+        }
 
         // Reset object and try again.
         if (item_index != NON_ITEM)
@@ -6229,10 +6242,9 @@ static shop_type _random_shop()
 {
     return random_choose(SHOP_WEAPON, SHOP_ARMOUR, SHOP_WEAPON_ANTIQUE,
                          SHOP_ARMOUR_ANTIQUE, SHOP_GENERAL_ANTIQUE,
-                         SHOP_JEWELLERY, SHOP_BOOK,
+                         SHOP_JEWELLERY, SHOP_BOOK, SHOP_GADGET,
                          SHOP_DISTILLERY, SHOP_SCROLL, SHOP_GENERAL);
 }
-
 
 /**
  * Attempt to place a shop in a given location.
@@ -6260,6 +6272,11 @@ void place_spec_shop(const coord_def& where, shop_spec &spec, int shop_level)
     shop.level = level_number * 2;
     shop.type = spec.sh_type;
     if (shop.type == SHOP_RANDOM)
+        shop.type = _random_shop();
+    // Re-roll if we got a gadget shop below level 10; you need to roll it
+    // twice in a row to get one here. They're *really* rare. Level 10 means
+    // they could start showing up in Orc end vaults.
+    if (shop.type == SHOP_GADGET && level_number < 10)
         shop.type = _random_shop();
     shop.greed = _shop_greed(shop.type, level_number, spec.greed);
     shop.pos = where;
@@ -6299,8 +6316,6 @@ object_class_type item_in_shop(shop_type shop_type)
         return OBJ_RANDOM;
 
     case SHOP_JEWELLERY:
-        if (one_chance_in(10))
-            return OBJ_TALISMANS;
         return OBJ_JEWELLERY;
 
     case SHOP_BOOK:
@@ -6311,6 +6326,20 @@ object_class_type item_in_shop(shop_type shop_type)
 
     case SHOP_SCROLL:
         return OBJ_SCROLLS;
+
+    case SHOP_GADGET:
+    {
+        // Gadget shops are a nice mix of things that don't fit anywhere else,
+        // mostly evocations themed.
+        return random_choose_weighted(
+              80, OBJ_WANDS,
+              50, OBJ_MISCELLANY,
+              30, OBJ_TALISMANS, // Evoked even if they don't use evo skills
+              20, OBJ_STAVES,    // Since they use evocations skill too
+                                 // (and aren't covered by OBJ_WEAPONS)
+              20, OBJ_ARMOUR     // Gets refined to just orbs
+        );
+    }
 
     default:
         die("unknown shop type %d", shop_type);

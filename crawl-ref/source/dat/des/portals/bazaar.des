@@ -409,7 +409,7 @@ SUBST:   A = Y
 SHUFFLE: XY
 SUBST:   X = <, Y = >
 # high quality shops, pity they don't stay :p
-KFEAT:   B = general shop
+KFEAT:   B = general shop / gadget shop
 KFEAT:   C = book shop / jewellery shop
 KFEAT:   D = antique weapon shop
 KFEAT:   E = antique armour shop
@@ -471,7 +471,7 @@ SHUFFLE: Aa/Zz, Bb/Yy, Cc/Rr, Dd/Ss
 # two guaranteed shops, expected four shops
 KFEAT:   A = any shop / antique weapon shop
 KFEAT:   B = any shop / antique armour shop
-KFEAT:   C = any shop / antiques shop
+KFEAT:   C = any shop / antiques shop / gadget shop
 KFEAT:   D = any shop / jewellery shop
 KFEAT:   E = any shop / weapon shop / armour shop
 KFEAT:   F = any shop / book shop / scroll shop
@@ -586,7 +586,7 @@ KFEAT:   D = antique armour shop / book shop
 : else
 SUBST:   T = <, A = >
 KFEAT:   B = antique weapon shop
-KFEAT:   C = antique armour shop
+KFEAT:   C = antique armour shop / gadget shop
 KFEAT:   D = general shop / distillery shop
 :end
 : if crawl.coinflip() then
@@ -1108,7 +1108,7 @@ SHUFFLE: AX
 SUBST:   X = <, A = >
 SUBST:   B : T G
 KFEAT:   C = any shop
-KFEAT:   D = weapon shop / book shop / jewellery shop
+KFEAT:   D = weapon shop / book shop / jewellery shop / gadget shop
 : bazaar_setup(_G)
 : local colour = dgn.get_floor_colour()
 : if colour == "red" then
@@ -1357,7 +1357,7 @@ SUBST:      "=l , '=. , A=l , B=!
 SUBST:      "=. , '=l , A=! , B=l
 : end
 KFEAT:      ! = jewellery shop / jewellery shop / antiques shop / scroll shop / \
-               book shop
+               book shop / gadget shop
 LFLOORCOL:  darkgrey
 : set_border_fill_type("endless_lava")
 : bazaar_setup(_G, false, false)
@@ -1716,7 +1716,7 @@ ORIENT:  encompass
 WEIGHT:  1
 SHUFFLE: AC, BD
 KFEAT:   A = armour shop / weapon shop / jewellery shop
-KFEAT:   B = general shop
+KFEAT:   B = general shop / gadget shop
 KFEAT:   C = scroll shop / book shop / distillery shop
 SUBST:   D = >
 SUBST:   = : +x
@@ -1776,7 +1776,7 @@ SHUFFLE:  AEST
 NSUBST:   A = 1:A / 1:B / 1:C / 1:D
 SUBST:    E=>, S=T, T:TUV, D=ABC.
 KFEAT:    A = armour shop / weapon shop / jewellery shop
-KFEAT:    B = general shop
+KFEAT:    B = general shop / gadget shop
 KFEAT:    C = scroll shop / book shop / distillery shop
 : if crawl.coinflip() then
 SUBST:    '=+, "=x, :=x
