@@ -4306,8 +4306,11 @@ string random_body_part_name(bool plural, int part_class)
 
     if (part_class & BPART_EXTERNAL)
     {
-        plural_parts.push_back(false);
-        body_parts.push_back("head");
+        if (!you.get_mutation_level(MUT_FORMLESS))
+        {
+            plural_parts.push_back(false);
+            body_parts.push_back("head");
+        }
 
         string hands;
         if (you.get_mutation_level(MUT_MISSING_HAND))
