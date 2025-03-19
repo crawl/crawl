@@ -120,13 +120,12 @@ int count = 0;
     // Hats versus helmets is handled elsewhere. If you can wear at least a hat,
     // this should be non-zero.
     case SLOT_HELMET:
-        if (you.has_mutation(MUT_FORMLESS))
-            return 0;
-
         if (you.unrand_equipped(UNRAND_SKULL_OF_ZONGULDROK))
             ++count;
 
-        if (you.has_mutation(MUT_NO_ARMOUR))
+        if (you.has_mutation(MUT_FORMLESS))
+            NO_SLOT("You don't have a head.")
+        else if (you.has_mutation(MUT_NO_ARMOUR))
             NO_SLOT("That is much too large for your head.")
         else if (you.get_mutation_level(MUT_HORNS, mutation_activity_type::INACTIVE) >= 3)
             NO_SLOT("You can't wear any headgear with your large horns!")
@@ -138,16 +137,15 @@ int count = 0;
         return count;
 
     case SLOT_GLOVES:
-        if (you.has_mutation(MUT_FORMLESS))
-            return 0;
-
         if (you.unrand_equipped(UNRAND_FISTICLOAK))
             ++count;
 
         if (you.has_mutation(MUT_QUADRUMANOUS))
             ++count;
 
-        if (player_size <= SIZE_LITTLE)
+        if (you.has_mutation(MUT_FORMLESS))
+            NO_SLOT("You don't have hands.")
+        else if (player_size <= SIZE_LITTLE)
             NO_SLOT(make_stringf("Those are too big for your %s.", you.hand_name(true).c_str()))
         else if (player_size >= SIZE_LARGE)
             NO_SLOT(make_stringf("Those are too small for your %s.", you.hand_name(true).c_str()))
@@ -163,9 +161,7 @@ int count = 0;
         return count;
 
     case SLOT_BOOTS:
-        if (you.has_mutation(MUT_FORMLESS))
-            return 0;
-        else if (species::wears_barding(you.species))
+        if (species::wears_barding(you.species) || you.has_mutation(MUT_FORMLESS))
             NO_SLOT("You don't have any feet!")
         else if (player_size <= SIZE_LITTLE)
             NO_SLOT(make_stringf("Those are too big for your %s.", you.foot_name(true).c_str()))
@@ -190,7 +186,7 @@ int count = 0;
 
     case SLOT_CLOAK:
         if (you.has_mutation(MUT_FORMLESS))
-            return 0;
+            NO_SLOT("You don't have any shoulders.")
         else if (you.species == SP_OCTOPODE || you.has_mutation(MUT_NO_ARMOUR))
             NO_SLOT("You can't wear that.")
         else if (you.get_mutation_level(MUT_WEAKNESS_STINGER, mutation_activity_type::INACTIVE) >= 3)
