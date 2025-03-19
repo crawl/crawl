@@ -529,7 +529,7 @@ static void _xom_random_spell(int sever)
          spell);
 #endif
 
-    your_spells(spell, power, false);
+    your_spells(spell, power, spell_cast_type::god);
     const string note = make_stringf("cast spell '%s'", spell_title(spell));
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
 }

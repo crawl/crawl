@@ -2188,6 +2188,7 @@ static const char *enchant_names[] =
     "grapnel", "tempered", "hatching", "blinkitis", "chaos_laced", "vexed",
     "deep sleep", "drowsy",
     "vampire thrall", "pyrrhic recollection",
+    "dampened",
     "buggy", // NUM_ENCHANTMENTS
 };
 

@@ -701,6 +701,9 @@ static const duration_def duration_data[] =
       "enkindled", "enkindled",
       "Your flames burn bright with remembrance.", D_EXPIRES,
       {{ "Your flames start to waver.", end_enkindled_status }}},
+    { DUR_DAMPENED, RED, "-Range", "magic range is reduced", "reduced range",
+      "Your magical abilities have reduced range.", D_DISPELLABLE,
+      {{ "Your magical range is fully restored." }}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

@@ -128,7 +128,7 @@ static int _lightning_rod_power()
 static bool _lightning_rod(dist *preselect)
 {
     const spret ret = your_spells(SPELL_THUNDERBOLT, _lightning_rod_power(),
-            false, nullptr, preselect);
+                                  spell_cast_type::device, nullptr, preselect);
 
     if (ret == spret::abort)
         return false;
@@ -207,7 +207,7 @@ void zap_wand(int slot, dist *_target)
     if (spell == SPELL_FASTROOT)
         you.props[FASTROOT_POWER_KEY] = power; // we may cancel, but that's fine
 
-    spret ret = your_spells(spell, power, false, &wand, _target);
+    spret ret = your_spells(spell, power, spell_cast_type::device, &wand, _target);
 
     if (ret == spret::abort)
     {
@@ -958,7 +958,7 @@ static int _gravitambourine_power()
 static bool _gravitambourine(dist *target)
 {
     const spret ret = your_spells(SPELL_GRAVITAS, _gravitambourine_power(),
-            false, nullptr, target);
+                                  spell_cast_type::device, nullptr, target);
 
     if (ret == spret::abort)
         return false;
@@ -1301,7 +1301,7 @@ string target_evoke_desc(const monster_info& mi, const item_def& item)
     {
         spell = spell_in_wand(static_cast<wand_type>(item.sub_type));
         power = wand_power(spell);
-        range = spell_range(spell, power, false);
+        range = mi.spell_range(spell, power);
     }
     else if (item.base_type == OBJ_MISCELLANY
             && item.sub_type == MISC_PHIAL_OF_FLOODS)

@@ -121,7 +121,8 @@ static const struct spell_desc spelldata[] =
     spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
     5,
     200,
-    4, 11, // capped at LOS, yet this 11 matters since range increases linearly
+    4, 11, // capped at LOS normally, yet this 11 matters since range increases
+           // linearly (and it gets some extra bounce distance)
     20,
     TILEG_LIGHTNING_BOLT,
 },
