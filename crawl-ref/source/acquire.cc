@@ -1166,7 +1166,7 @@ static string _why_reject(const item_def &item, int agent)
     if (agent == GOD_OKAWARU && get_weapon_brand(item) == SPWPN_REAPING)
         return "Destroying Oka-gifted reaping weapon.";
 
-    // Pain brand is useless if you've sacrificed Necromacy.
+    // Pain brand is useless if you've sacrificed Necromancy.
     if (you.get_mutation_level(MUT_NO_NECROMANCY_MAGIC)
         && get_weapon_brand(item) == SPWPN_PAIN)
     {
