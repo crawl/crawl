@@ -1966,6 +1966,31 @@ bool targeter_anguish::affects_monster(const monster_info& mon)
         && !mon.is(MB_ANGUISH);
 }
 
+targeter_poisonous_vapours::targeter_poisonous_vapours(const actor* act, int r)
+    : targeter_smite(act, r)
+{
+}
+
+bool targeter_poisonous_vapours::affects_monster(const monster_info& mon)
+{
+    return get_resist(mon.resists(), MR_RES_POISON) <= 0;
+}
+
+bool targeter_poisonous_vapours::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    const monster_info *mon = env.map_knowledge(a).monsterinfo();
+    if (mon && !affects_monster(*mon))
+    {
+        return notify_fail(mon->full_name(DESC_THE) + " cannot be affected by "
+                           "poisonous vapours.");
+    }
+
+    return true;
+}
+
 targeter_boulder::targeter_boulder(const actor* caster, int boulder_hp)
     : targeter_beam(caster, LOS_MAX_RANGE, ZAP_IOOD, 0, 0, 0), hp(boulder_hp)
 {

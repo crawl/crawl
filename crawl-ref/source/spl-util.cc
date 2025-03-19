@@ -1658,6 +1658,24 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_HELLFIRE_MORTAR:
         return minRange > you.current_vision;
 
+    case SPELL_POISONOUS_VAPOURS:
+    {
+        for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_NO_TRANS);
+             ri; ++ri)
+        {
+            const monster* mons = monster_at(*ri);
+            if (mons
+                && you.can_see(*mons)
+                && !mons->wont_attack()
+                && mons_is_threatening(*mons)
+                && mons->res_poison() <= 0)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
     // Special handling for cloud spells.
     case SPELL_FREEZING_CLOUD:
     case SPELL_POISONOUS_CLOUD:
