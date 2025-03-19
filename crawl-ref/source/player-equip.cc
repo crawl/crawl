@@ -474,16 +474,23 @@ bool can_equip_item(const item_def& item, bool include_form, string* veto_reason
     if (item.base_type == OBJ_ARMOUR)
     {
         size_type player_size = you.body_size(PSIZE_TORSO, !include_form);
-        int bad_size = fit_armour_size(item, player_size);
-        if (bad_size != 0)
+        if (get_armour_slot(static_cast<armour_type>(item.sub_type)) == SLOT_BODY_ARMOUR)
         {
-            NO_EQUIP(make_stringf("This armour is too %s for you!",
-                                        (bad_size > 0) ? "big" : "small"))
+            int bad_size = fit_armour_size(item, player_size);
+            if (bad_size != 0)
+            {
+                NO_EQUIP(make_stringf("This armour is too %s for you!",
+                                            (bad_size > 0) ? "big" : "small"))
+            }
         }
 
         if (is_hard_helmet(item))
         {
-            if (species::is_draconian(you.species))
+            if (player_size >= SIZE_LARGE)
+                NO_EQUIP("This helmet is too small for your head.")
+            else if (player_size <= SIZE_LITTLE)
+                NO_EQUIP("This helmet is too large for your head.")
+            else if (species::is_draconian(you.species))
                 NO_EQUIP("You can't wear that with your reptilian head.")
             else if (you.species == SP_OCTOPODE)
                 NO_EQUIP("Your can't wear that!")
