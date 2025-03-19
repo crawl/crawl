@@ -2296,7 +2296,7 @@ tile_update_rate = 1000
         number. If, on the other hand, response time is fine but it takes too
         long for redrawings to happen, set it to a lower value.
 
-tile_runrest_rate = 100
+tile_runrest_rate = 17
         The number of milliseconds that tick by before the screen is redrawn
         when running or resting. If Crawl is slow while running or resting,
         increase this number.

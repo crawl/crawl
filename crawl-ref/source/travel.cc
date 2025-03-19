@@ -1177,7 +1177,14 @@ command_type travel()
 
         }
         else if (you.running.is_explore() && Options.explore_delay > -1)
-            delay(Options.explore_delay);
+        {
+#ifdef USE_TILE
+            if (tiles.need_redraw(Options.tile_runrest_rate))
+                tiles.redraw();
+#endif
+            if (Options.explore_delay > 0)
+                delay(Options.explore_delay);
+        }
         else if (Options.travel_delay > 0)
             delay(Options.travel_delay);
     }
@@ -4665,11 +4672,6 @@ void runrest::stop(bool clear_delays)
     // run/rest/travel on top of other delays.
     if (clear_delays)
         stop_delay();
-
-#ifdef USE_TILE_LOCAL
-    if (Options.tile_runrest_rate > 0)
-        tiles.set_need_redraw();
-#endif
 
     quiver::set_needs_redraw();
     if (need_redraw)
