@@ -598,16 +598,23 @@ equipment_slot player_equip_set::find_slot_to_equip_item(const item_def& item,
 {
     vector<equipment_slot> slots = get_all_item_slots(item);
 
+    FixedVector<int, NUM_EQUIP_SLOTS> slot_count = num_slots;
     equipment_slot ret = SLOT_UNUSED;
     for (size_t i = 0; i < slots.size(); ++i)
     {
         to_replace.emplace_back();
         equipment_slot slot = find_slot_to_equip_item(slots[i], to_replace.back(),
+                                                      slot_count,
                                                       ignore_curses);
 
         // Save this result to return, if it is possible to fill other slots.
         if (i == 0)
             ret = slot;
+
+        // Track that this slot was used (to handle the case of multi-slot
+        // items competing for the same flex slot, such as poltergeists wearing
+        // the Fungal Fisticloak).
+        slot_count[slot] -= 1;
 
         if (slot == SLOT_UNUSED)
         {
@@ -631,14 +638,14 @@ equipment_slot player_equip_set::find_slot_to_equip_item(const item_def& item,
 
 equipment_slot player_equip_set::find_slot_to_equip_item(equipment_slot base_slot,
                                                          vector<item_def*>& to_replace,
+                                                         FixedVector<int, NUM_EQUIP_SLOTS>& slot_count,
                                                          bool ignore_curses) const
 {
     const vector<equipment_slot>& slots = get_alternate_slots(base_slot);
     for (equipment_slot slot : slots)
     {
         // Skip slots the player doesn't have at all.
-        // TODO: Check melded slots.
-        if (num_slots[slot] == 0)
+        if (slot_count[slot] == 0)
             continue;
 
         // Otherwise, iterate all slots of this type and see if one is free.
@@ -651,7 +658,7 @@ equipment_slot player_equip_set::find_slot_to_equip_item(equipment_slot base_slo
 
         // The player has more slots than they're currently using, so this one
         // should be fine.
-        if (count < num_slots[slot])
+        if (count < slot_count[slot])
             return slot;
     }
 
