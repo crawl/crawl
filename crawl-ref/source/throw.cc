@@ -619,6 +619,14 @@ void throw_it(quiver::action &a)
     // completely distinct?
     const int ammo_slot = launcher ? -1 : a.get_item();
 
+    item_def fake_proj;
+    item_def& thrown = fake_proj;
+    if (launcher)
+        populate_fake_projectile(*launcher, fake_proj);
+    else
+        thrown = you.inv[ammo_slot];
+    ASSERT(thrown.defined());
+
     if (you.confused())
     {
         do
@@ -638,6 +646,9 @@ void throw_it(quiver::action &a)
         args.behaviour = &beh;
         args.mode = TARG_HOSTILE;
         args.self = confirm_prompt_type::cancel;
+        targeter_beam hitfunc(&you, LOS_MAX_RANGE, ZAP_MISSILE_TRACER, 0, 0, 0);
+        hitfunc.beam.pierce = is_penetrating_attack(you, launcher, thrown);
+        args.hitfunc = &hitfunc;
         direction(a.target, args);
     }
     if (!a.target.isValid || a.target.isCancel)
@@ -645,14 +656,6 @@ void throw_it(quiver::action &a)
 
     bolt pbolt;
     pbolt.set_target(a.target);
-
-    item_def fake_proj;
-    item_def& thrown = fake_proj;
-    if (launcher)
-        populate_fake_projectile(*launcher, fake_proj);
-    else
-        thrown = you.inv[ammo_slot];
-    ASSERT(thrown.defined());
 
     // Figure out if we're thrown or launched.
     const bool is_thrown = is_throwable(&you, thrown);

@@ -1115,6 +1115,22 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
 },
 
 {
+    ZAP_MISSILE_TRACER,
+    "missile tracer",
+    100,
+    new dicedef_calculator<1, 1, 0, 1>,
+    new tohit_calculator<0, 0, 1>,
+    nullptr,
+    nullptr,
+    WHITE,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_DEBUG,
+    false,
+    false,
+},
+
+{
     ZAP_BREATHE_FIRE,
     "fiery breath",
     50,

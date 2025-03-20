@@ -181,5 +181,6 @@ enum zap_type
     ZAP_FREEZE,
     ZAP_VEX,
     ZAP_RAVENOUS_SWARM,
+    ZAP_MISSILE_TRACER,
     NUM_ZAPS
 };
