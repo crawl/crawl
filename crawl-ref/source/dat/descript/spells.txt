@@ -462,6 +462,16 @@ Debugging Ray spell
 
 Fires a ray which does massive damage (1500 hp) and always hits.
 %%%%
+Detonation Catalyst spell
+
+Affixes a volatile catalyst to the caster's fists or melee weapon, causing each
+of their strikes to release a fiery explosion at its primary target. The caster
+and their allies are protected from the explosion's effects. The activity of the
+catalyst may be prolonged indefinitely as long as the caster continues to
+attack, but it rapidly loses potency when they take other actions. The base
+damage of the caster's weapon and the caster's spellpower each increase the
+explosion's damage.
+%%%%
 Diamond Sawblades spell
 
 Forges up to four razor-sharp sawblades at fixed positions around the caster

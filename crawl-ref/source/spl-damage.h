@@ -184,3 +184,6 @@ void gain_grave_claw_soul(bool silent = false, bool wizard = false);
 spret cast_fortress_blast(actor& caster, int pow, bool fail);
 void unleash_fortress_blast(actor& caster);
 dice_def fortress_blast_damage(int AC, bool is_monster);
+
+dice_def detonation_catalyst_damage(int pow, bool random);
+void do_catalyst_explosion(coord_def center);

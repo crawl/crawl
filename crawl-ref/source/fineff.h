@@ -628,4 +628,22 @@ protected:
     const mgen_data mg;
 };
 
+class detonation_fineff : public final_effect
+{
+public:
+    bool mergeable(const final_effect &/*a*/) const override { return false; };
+    void fire() override;
+
+    static void schedule(const coord_def &pos)
+    {
+        final_effect::schedule(new detonation_fineff(pos));
+    }
+protected:
+    detonation_fineff(const coord_def &pos)
+        : final_effect(&you, nullptr, pos)
+    {
+    }
+};
+
+
 void fire_final_effects();
