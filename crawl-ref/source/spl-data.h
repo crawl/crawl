@@ -4418,6 +4418,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_HEATED_EXCHANGE, "Heated Exchange",
+    spschool::translocation | spschool::fire,
+    spflag::no_ghost,
+    2,
+    50,
+    1, 3,
+    0,
+    TILEG_ERROR,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

@@ -1436,6 +1436,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_SIGIL_OF_BINDING:
         return make_unique<targeter_multiposition>(&you,
                                                    find_sigil_locations(true));
+    case SPELL_HEATED_EXCHANGE:
+        return make_unique<targeter_exchange>(you, range);
     case SPELL_BOULDER:
         return make_unique<targeter_boulder>(&you, barrelling_boulder_hp(pow));
     case SPELL_PERMAFROST_ERUPTION:
@@ -2422,6 +2424,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_SCORCH:
         return cast_scorch(you, powc, fail);
+
+    case SPELL_HEATED_EXCHANGE:
+        return cast_heated_exchange(powc, fail);
 
     case SPELL_POISONOUS_VAPOURS:
         return cast_poisonous_vapours(you, powc, target, fail);

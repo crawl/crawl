@@ -1771,6 +1771,9 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_PERMAFROST_ERUPTION:
         return permafrost_targets(you, pow, false).empty();
 
+    case SPELL_HEATED_EXCHANGE:
+        return cast_heated_exchange(pow, false, true) == spret::abort;
+
     default:
         break;
     }
