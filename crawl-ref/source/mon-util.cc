@@ -4289,7 +4289,7 @@ string random_body_part_name(bool plural, int part_class)
         body_parts.push_back("soul");
 
         plural_parts.push_back(true);
-        body_parts.push_back("muscles");
+        body_parts.push_back("sinews");
 
         if (you.has_blood())
         {
