@@ -64,6 +64,7 @@
 #include "spl-damage.h"
 #include "spl-goditem.h"
 #include "spl-monench.h"
+#include "spl-other.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
@@ -908,6 +909,19 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             _cast_dominate_undead(caster, pow, false);
         },
         nullptr, MSPELL_LOGIC_NONE, 30
+    } },
+    { SPELL_CIRCLE_OF_GLYPHS, {
+        [](const monster &caster) {
+            auto locations = find_sigil_locations(caster, true);
+            if (locations.size() == 0)
+                return ai_action::impossible();
+            // 2 or more locations is preferable
+            return ai_action::good();
+        },
+        [] (monster &caster, mon_spell_slot /*slot*/, bolt& /*beem*/) {
+            const int pow = mons_spellpower(caster, SPELL_SIGIL_OF_BINDING);
+            cast_circle_of_glyphs(caster, pow);
+        }
     } }
 };
 
