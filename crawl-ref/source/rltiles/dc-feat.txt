@@ -981,10 +981,6 @@ mold_small1 MOLD
 mold_small2
 mold_small3
 mold_small4
-mold_glowing1 GLOWING_MOLD
-mold_glowing2
-mold_glowing3
-mold_glowing4
 effect/silenced SILENCED
 %shrink 0
 %sdir mon/tentacles/kraken_corners

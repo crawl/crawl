@@ -153,11 +153,22 @@ apis CORPSE_APIS
 
 ### Non-animals
 
-## Formicids ('a;)
+## Plants
+%back blood_green blood_green1 blood_green2 blood_green3 blood_green4
+%sdir misc
+%start
+%compose mold_glowing1
+%compose mold_glowing2
+%compose mold_glowing3
+%compose mold_glowing4
+%finish CORPSE_WOLF_LICHEN
+
+## Formicids ('a')
 %sdir mon/demihumanoids
 formicid CORPSE_FORMICID
 
 ## Centaurs ('c')
+%back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 faun CORPSE_FAUN
 satyr CORPSE_SATYR
 %sdir mon/demihumanoids/taurs

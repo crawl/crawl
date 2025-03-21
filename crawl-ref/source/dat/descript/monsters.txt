@@ -3234,6 +3234,13 @@ wolf
 
 A strong wild canine, with sharp teeth and a healthy appetite.
 %%%%
+wolf lichen
+
+A carpet of colourful but toxic moss-like fungus found often in woodlands. But
+why is it flowing at speed across the floor and up the walls?
+
+It is able to move on and through walls, and completely surround you in a group.
+%%%%
 wolf spider
 
 A hairy fast-moving hunting spider with vicious mandibles, the size of a wolf.

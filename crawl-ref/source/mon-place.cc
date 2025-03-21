@@ -2016,6 +2016,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_SPHINX_MARAUDER, { {}, {{ BAND_HARPIES, {0, 1} }}}},
     { MONS_PROTEAN_PROGENITOR, { {}, {{ BAND_PROTEAN_PROGENITORS, {0, 1} }}}},
     { MONS_THERMIC_DYNAMO, { {}, {{ BAND_THERMIC_DYNAMOS, {0, 1} }}}},
+    { MONS_WOLF_LICHEN, { {}, {{ BAND_WOLF_LICHENS, {0, 1} }}}},
 };
 
 static band_type _choose_band(monster_type mon_type, int *band_size_p,
@@ -2196,6 +2197,10 @@ static band_type _choose_band(monster_type mon_type, int *band_size_p,
             band_size = 1;
         break;
 
+    case MONS_WOLF_LICHEN:
+        band_size = random_range(1 + env.absdepth0 / 5, 2 + env.absdepth0 / 3);
+        break;
+
     default: ;
     }
 
@@ -2270,6 +2275,7 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_SALAMANDERS,         {{{MONS_SALAMANDER, 1}}}},
     { BAND_SPARK_WASPS,         {{{MONS_SPARK_WASP, 1}}}},
     { BAND_UGLY_THINGS,         {{{MONS_UGLY_THING, 1}}}},
+    { BAND_WOLF_LICHENS,        {{{MONS_WOLF_LICHEN, 1}}}},
     { BAND_DREAM_SHEEP,         {{{MONS_DREAM_SHEEP, 1}}}},
     { BAND_DEATH_SCARABS,       {{{MONS_DEATH_SCARAB, 1}}}},
     { BAND_ORANGE_DEMONS,       {{{MONS_ORANGE_DEMON, 1}}}},

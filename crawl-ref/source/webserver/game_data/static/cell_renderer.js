@@ -651,16 +651,6 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 offset = cell.flv.s % dngn.tile_count(basetile);
                 this.draw_dngn(basetile + offset, x, y);
             }
-            else if (cell.moldy)
-            {
-                offset = cell.flv.s % dngn.tile_count(dngn.MOLD);
-                this.draw_dngn(dngn.MOLD + offset, x, y);
-            }
-            else if (cell.glowing_mold)
-            {
-                offset = cell.flv.s % dngn.tile_count(dngn.GLOWING_MOLD);
-                this.draw_dngn(dngn.GLOWING_MOLD + offset, x, y);
-            }
         },
 
         draw_ray: function(x, y, cell)
