@@ -1131,9 +1131,15 @@ void bolt::affect_cell()
 {
     fake_flavour();
 
+    monster *m = monster_at(pos());
+
     // Note that this can change the solidity of the wall.
-    if (cell_is_solid(pos()))
+    if (cell_is_solid(pos())
+        // Wall affecting beams still do even with a monster there.
+        && (!m || can_affect_wall(pos())))
+    {
         affect_wall();
+    }
 
     if (origin_spell == SPELL_CHAIN_LIGHTNING && pos() != target)
         return;
@@ -1161,12 +1167,16 @@ void bolt::affect_cell()
     // affected the player on this square. -cao
     if (!hit_player || pierce || is_explosion)
     {
-        monster *m = monster_at(pos());
         if (m && can_affect_actor(m))
         {
             const bool ignored = ignores_monster(m);
             affect_monster(m);
-            if (hit == AUTOMATIC_HIT && !pierce && !ignored
+            const dungeon_feature_type feat = env.grid(pos());
+            if (hit == AUTOMATIC_HIT && !ignored
+                // Piercing beams are still stopped by wall monsters
+                // unless they were going to bounce
+                && (!pierce || cell_is_solid(pos())
+                        && !is_bouncy(feat) && !is_explosion)
                 && (!is_tracer || (agent() && m->visible_to(agent()))))
             {
                 finish_beam();
@@ -1269,6 +1279,10 @@ void bolt::do_fire()
         ray.advance();
     }
 
+    // Tracks if the *last* cell seen was a wall monster, therefore pretend
+    // next cell is solid for purposes of bouncing or stopping the beam.
+    bool wall_monster_hit = false;
+
     // Note: nothing but this loop should be changing the ray.
     while (map_bounds(pos()))
     {
@@ -1328,13 +1342,18 @@ void bolt::do_fire()
             finish_beam();
             return;
         }
-
+        const monster* mon_at = monster_at(pos());
         // digging is taken care of in affect_cell
         if (feat_is_solid(feat) && !can_affect_wall(pos())
-                                                    && flavour != BEAM_DIGGING)
+            && flavour != BEAM_DIGGING)
         {
-            if (is_bouncy(feat))
+            // If wall monster then don't bounce or explode, it's handled later
+            if (mon_at && !wall_monster_hit)
+                wall_monster_hit = true;
+            else if (is_bouncy(feat))
             {
+                // Reset so we can hit another
+                wall_monster_hit = false;
                 bounce();
                 // see comment in bounce(); the beam will be cancelled if this
                 // is a tracer and showing the bounce would be an info leak.
@@ -1395,6 +1414,7 @@ void bolt::do_fire()
         // Dig tracers continue through unseen cells.
         ASSERT(!cell_is_solid(pos())
                || is_tracer && can_affect_wall(pos(), true)
+               || mon_at // If there *was* a monster (they might have died by now)
                || affects_nothing); // returning weapons
 
         const bool was_seen = seen;
@@ -1426,7 +1446,10 @@ void bolt::do_fire()
 
         noise_generated = false;
 
-        ray.advance();
+        // If a wall monster was hit and the beam is continuing, don't
+        // actually advance the ray: next iteration will take care of the bounce
+        if (!wall_monster_hit)
+            ray.advance();
     }
 
     if (!map_bounds(pos()))
@@ -2938,7 +2961,6 @@ void bolt::affect_ground()
         return;
 
     affect_place_clouds();
-
 }
 
 bool bolt::is_fiery() const
@@ -7336,8 +7358,14 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
         // Special case: explosion originates from rock/statue
         // (e.g. Lee's Rapid Deconstruction) - in this case, ignore
         // solid cells at the center of the explosion.
-        if (stop_at_walls && !(delta.origin() && can_affect_wall(loc)))
+        if (stop_at_walls && !(delta.origin() && can_affect_wall(loc))
+            // Also affect *other* wall monsters around the area, as long
+            // as caster still has LOS to them (i.e. they're not on the *other*
+            // side of the wall) which the later recursion loop will check
+            && !monster_at(loc))
+        {
             return;
+        }
         // But remember that we are at a wall.
         if (flavour != BEAM_DIGGING)
             at_wall = true;
