@@ -359,7 +359,7 @@ static void _populate_staff_intrinsic_artps(stave_type staff,
 {
     artefact_prop_type *prop = map_find(staff_resist_artps, staff);
     if (prop)
-        proprt[*prop] = 1;
+        proprt[*prop] += 1;
     prop = map_find(staff_enhancer_artps, staff);
     if (prop)
         proprt[*prop] = 1;
