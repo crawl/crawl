@@ -829,9 +829,14 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
     }
 
     // There's already a cloud here. See if we can overwrite it.
+    // (Clouds can overwrite weaker cloud types OR clouds of the same type with
+    // less remaining duration)
     const cloud_struct *cloud = cloud_at(ctarget);
-    if (cloud && !cloud_is_stronger(cl_type, *cloud))
+    if (cloud && (!cloud_is_stronger(cl_type, *cloud)
+                  && (cloud->type != cl_type || cloud->decay > cl_range * 10)))
+    {
         return;
+    }
 
     // If the old cloud was opaque, may need to recalculate los. It *is*
     // possible to overwrite an opaque cloud with a non-opaque one; OOD will do
