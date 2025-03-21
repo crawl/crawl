@@ -520,6 +520,97 @@ static void _tweak_wall_move(const monster* mons, coord_def &dir)
     dir = mon_compass[choice];
 }
 
+static bool _surround_move(const monster& mons)
+{
+    // Valid foe?
+    auto foe = mons.get_foe();
+    if (!foe || !mons.see_cell_no_trans(foe->pos()))
+        return false;
+    // Firstly scan the space around our foe
+    vector<coord_def> empty_space;
+    vector<coord_def> other_surrounders;
+    for (adjacent_iterator ai(foe->pos()); ai; ++ai)
+    {
+        if (!in_bounds(*ai))
+            continue;
+        auto other = actor_at(*ai);
+        if (other)
+        {
+            // Don't try to move the player, of course
+            auto other_mons = other->as_monster();
+            if (!other_mons)
+                continue;
+            if (mons_class_flag(other->type, M_SURROUND)
+                // XX: Maybe there should be a separate method for all these
+                // kind of checks. unswappable *still* doesn't check VEXED
+                && !mons_is_immotile(*other_mons) && !other_mons->unswappable()
+                && !mons_is_confused(*other_mons)
+                && !(other_mons->berserk_or_frenzied())
+                && mons_aligned(&mons, other) && mons.is_habitable(*ai))
+            {
+                // We'll let them be moved even if they don't actually have enough
+                // energy, but to avoid a situation where they flip-flop backwards and
+                // forwards indefinitely don't use more than one bonus move
+                const int bonus_energy = other_mons->action_energy(_get_swim_or_move(*other_mons));
+                if (other_mons->has_action_energy(bonus_energy))
+                    other_surrounders.push_back(*ai);
+            }
+        }
+        else
+            empty_space.push_back(*ai);
+    }
+    if (empty_space.empty() || other_surrounders.empty())
+        return false;
+    // Now figure out which moves are most likely to open up space
+    vector<tuple<coord_def, coord_def, int>> possible_moves;
+    int best_score = 0;
+    for (auto pos : other_surrounders)
+    {
+        auto other = actor_at(pos);
+        ASSERT(other);
+        auto other_mons = other->as_monster();
+        ASSERT(other_mons);
+        const int absx = abs_ce(pos.x - mons.pos().x);
+        const int absy = abs_ce(pos.y - mons.pos().y);
+        for (auto target : empty_space)
+        {
+            // Is this an adjacent space and can we even move there?
+            if (pos.distance_from(target) > 1 || !mon_can_move_to_pos(other_mons, target - pos))
+                continue;
+            // Is the target square *further away* from the acting monster than
+            // the subject monster is now? Either absolutely or just in one axis?
+            int score = 0;
+            if (mons.pos().distance_from(target) > mons.pos().distance_from(pos))
+                score = 2;
+            else if (abs_ce(target.x - mons.pos().x) > absx || abs_ce(target.y - mons.pos().y) > absy)
+                score = 1;
+            if (score > 0)
+            {
+                best_score = max(best_score, score);
+                possible_moves.push_back({ pos, target, score });
+            }
+        }
+    }
+    // Didn't find anything that will work, sorry
+    if (possible_moves.empty())
+        return false;
+    // Randomly pick one of the best moves
+    int count = 0;
+    tuple<coord_def, coord_def, int> picked_move;
+    for (auto move : possible_moves)
+    {
+        if (get<2>(move) != best_score)
+            continue;
+        if (x_chance_in_y(1, ++count))
+            picked_move = move;
+    }
+    ASSERT(in_bounds(get<0>(picked_move)));
+    ASSERT(in_bounds(get<1>(picked_move)));
+    auto mover = monster_at(get<0>(picked_move));
+    ASSERT(mover);
+    return _do_move_monster(*mover, get<1>(picked_move) - get<0>(picked_move));
+}
+
 typedef FixedArray< bool, 3, 3 > move_array;
 
 static void _fill_good_move(const monster* mons, move_array* good_move)
@@ -2393,7 +2484,22 @@ void handle_monster_move(monster* mons)
         }
 
         if (mons->cannot_act() || !_monster_move(mons, mmov))
+        {
+            // Couldn't move anywhere; see if another monster is nice enough to
+            // make more room for us
+            if (!mons->cannot_act() && mons_class_flag(mons->type, M_SURROUND)
+                && !mons_is_confused(*mons) && _surround_move(*mons))
+            {
+                // The monster that moved already used *their* energy, so just
+                // use a nominal amount to avoid any nasty loops (if a space was
+                // opened up we cna move into it then, or try and move something
+                // else next turn)
+                mons->speed_increment--;
+                return;
+            }
+
             mons->speed_increment -= non_move_energy;
+        }
     }
     you.update_beholder(mons);
     you.update_fearmonger(mons);

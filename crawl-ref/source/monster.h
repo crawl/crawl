@@ -157,7 +157,7 @@ public:
     bool is_unrewarding() const;
     bool is_firewood() const override;
     bool is_peripheral() const override;
-    bool has_action_energy() const;
+    bool has_action_energy(int modifier = 0) const;
     void drain_action_energy();
     bool matches_player_speed() const;
     int  player_speed_energy() const;

@@ -5347,9 +5347,9 @@ bool monster::is_spiny() const
 
 static const int ENERGY_THRESHOLD = 80; // why?
 
-bool monster::has_action_energy() const
+bool monster::has_action_energy(int modifier) const
 {
-    return speed_increment >= ENERGY_THRESHOLD;
+    return speed_increment + modifier >= ENERGY_THRESHOLD;
 }
 
 /// If a monster had enough energy to act this turn, change it so it doesn't.

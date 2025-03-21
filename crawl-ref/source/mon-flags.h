@@ -191,6 +191,9 @@ enum monclass_flag_type : uint64_t
 
     // monster is made of liquid and is immune to webs, nets, and constriction
     M_AMORPHOUS         = BIT(61),
+
+    // attempts to surround the foe completely
+    M_SURROUND          = BIT(62),
 };
 DEF_BITFIELD(monclass_flags_t, monclass_flag_type);
 
