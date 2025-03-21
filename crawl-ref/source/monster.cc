@@ -4211,7 +4211,7 @@ bool monster::drain(const actor *agent, bool quiet, int /*pow*/)
     return true;
 }
 
-bool monster::corrode(const actor* source, const char* corrosion_msg, int /*amount*/)
+bool monster::corrode(const actor* source, const char* corrosion_msg, int amount)
 {
     const int res = res_corr();
 
@@ -4231,7 +4231,11 @@ bool monster::corrode(const actor* source, const char* corrosion_msg, int /*amou
             mprf("%s seems to be corroded for longer.", name(DESC_THE).c_str());
     }
 
-    add_ench(mon_enchant(ENCH_CORROSION, 0, source));
+    // XXX: Make rust cloud corrosion wear off more quickly
+    if (amount == 1)
+        add_ench(mon_enchant(ENCH_CORROSION, 0, source, random_range(15, 25)));
+    else
+        add_ench(mon_enchant(ENCH_CORROSION, 0, source));
     return true;
 }
 

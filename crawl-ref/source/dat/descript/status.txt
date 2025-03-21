@@ -1185,3 +1185,7 @@ The damage and accuracy of your attacks is temporarily increased.
 Scroll status
 
 You are a walking scroll, parchment crisp and full of magic.
+%%%%
+Crab status
+
+You are a heavily-armoured crab with rusting breath.

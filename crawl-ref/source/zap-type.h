@@ -182,5 +182,6 @@ enum zap_type
     ZAP_VEX,
     ZAP_RAVENOUS_SWARM,
     ZAP_WATERY_GRAVE,
+    ZAP_RUST_BREATH,
     NUM_ZAPS
 };

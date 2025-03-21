@@ -1459,6 +1459,7 @@ werewolf_form_humanoid TRAN_WEREWOLF_HUMANOID
 werewolf_form_naga TRAN_WEREWOLF_NAGA
 werewolf_form_octopode TRAN_WEREWOLF_OCTOPODE
 walking_scroll_form TRAN_WALKING_SCROLL
+fortress_crab_form TRAN_FORTRESS_CRAB
 
 %rim 1
 

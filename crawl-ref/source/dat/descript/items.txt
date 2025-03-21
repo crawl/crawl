@@ -680,6 +680,15 @@ However, this instability makes the user unable to use weapons, shields or body
 armour. They also glow, reducing stealth and preventing invisibility, and their
 melee damage is reduced, as their limbs sometimes destabilise mid-swing.
 %%%%
+fortress talisman
+
+A miniature battlement, carved from a piece of shell. Transforms the user into a
+heavily armoured crab, fusing whatever body armour they are wearing into the
+shell in the process. In this form, they are slow-moving, but well-defended and
+even capable of wielding a weapon in their large main claw. They can also
+breathe clouds of rust at the cost of their own HP, which corrode and weaken
+enemies.
+%%%%
 gell's gravitambourine
 
 A copper and tungsten tambourine that vibrates excitedly in your hands, as if

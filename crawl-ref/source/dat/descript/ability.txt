@@ -182,6 +182,12 @@ once you have no more left (or after a short period of time, regardless).
 At your current experience level, you can hold enough memories to cast a maximum
 of {{return 3 + math.floor(you.xl() * 3 / 20);}} spells in a row this way.
 %%%%
+Rust Breath ability
+
+Exhales a blast of oxidizing vapour that continuously corrodes and weakens the
+attacks of creatures which stand inside it. These clouds are long-lasting, but
+do only minimal damage.
+%%%%
 # Zin
 Recite ability
 

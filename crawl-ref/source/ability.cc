@@ -418,6 +418,9 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_BESTIAL_TAKEDOWN, "Bestial Takedown",
             4, 0, 0, 5, {}, abflag::target },
 
+        { ABIL_BREATHE_RUST, "Breathe Rust",
+                0, scaling_cost(120, 12), 0, 4, {}, abflag::none },
+
         // EVOKE abilities use Evocations and come from items.
         { ABIL_EVOKE_BLINK, "Evoke Blink",
             0, 0, 0, -1, {fail_basis::evo, 40, 2}, abflag::none },
@@ -3287,6 +3290,9 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     case ABIL_BESTIAL_TAKEDOWN:
         return do_bestial_takedown(beam.target);
 
+    case ABIL_BREATHE_RUST:
+        return your_spells(SPELL_RUST_BREATH, get_form()->get_effect_size(), false, nullptr, target);
+
     case ABIL_EVOKE_BLINK:      // randarts
         return cast_blink(min(50, 1 + you.skill(SK_EVOCATIONS, 3)), fail);
 
@@ -4289,6 +4295,8 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         return you.form == transformation::aqua;
     case ABIL_BESTIAL_TAKEDOWN:
         return you.form == transformation::werewolf;
+    case ABIL_BREATHE_RUST:
+        return you.form == transformation::fortress_crab;
     case ABIL_BLINKBOLT:
         return you.form == transformation::storm;
     case ABIL_SIPHON_ESSENCE:
@@ -4385,6 +4393,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_SPIDER_JUMP,
             ABIL_WATERY_GRAVE,
             ABIL_BESTIAL_TAKEDOWN,
+            ABIL_BREATHE_RUST,
             ABIL_BLINKBOLT,
             ABIL_SIPHON_ESSENCE,
             ABIL_IMBUE_SERVITOR,

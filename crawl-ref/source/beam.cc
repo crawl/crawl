@@ -2518,6 +2518,9 @@ int bolt::get_cloud_size(bool min, bool max) const
             return random_range(10, 16);
     }
 
+    if (origin_spell == SPELL_RUST_BREATH)
+        return ench_power;
+
     if (min)
         return 8;
     if (max)
@@ -2627,6 +2630,20 @@ void bolt::affect_endpoint()
 
     if (cloud != CLOUD_NONE)
         big_cloud(cloud, agent(), pos(), get_cloud_pow(), get_cloud_size());
+
+    // Not using big_cloud so that the area affected is more predictable to the player.
+    if (origin_spell == SPELL_RUST_BREATH)
+    {
+        int to_place = ench_power;
+        for (distance_iterator di(pos(), true, false, 2); di && to_place > 0; ++di)
+        {
+            if (!cell_is_solid(*di) && cell_see_cell(*di, agent()->pos(), LOS_NO_TRANS))
+            {
+                place_cloud(CLOUD_RUST, *di, 5 + ench_power * 2 / 3 + random2(2), agent());
+                to_place--;
+            }
+        }
+    }
 
     // bail out of bullseye early if its target died somehow
     if (use_bullseye && you.duration[DUR_DIMENSIONAL_BULLSEYE] > 0)
@@ -3057,6 +3074,9 @@ void bolt::affect_place_clouds()
             }
         }
     }
+
+    if (origin_spell == SPELL_RUST_BREATH)
+        place_cloud(CLOUD_RUST, p, 5 + ench_power * 2 / 3 + random2(2), agent());
 
     // Only place clouds on creatures who are immune to them
     if (origin_spell == SPELL_MOURNING_WAIL)

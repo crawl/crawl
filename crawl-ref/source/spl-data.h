@@ -4429,6 +4429,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_RUST_BREATH, "Rust Breath",
+    spschool::conjuration | spschool::alchemy | spschool::air,
+    spflag::dir_or_target | spflag::area | spflag::needs_tracer,
+    5,
+    200,
+    4, 4,
+    0,
+    TILEG_MEPHITIC_CLOUD,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

@@ -339,6 +339,14 @@ static const cloud_data clouds[] = {
       BEAM_BAT_CLOUD,
       { 4, 11, true },
     },
+    // CLOUD_RUST,
+    { "rust", nullptr,                            // terse, verbose name
+        BROWN,                                    // colour
+        { TILE_CLOUD_RUST, CTVARY_DUR },          // tile
+        BEAM_ACID,                                // beam_effect
+        { 2, 3, false },                          // base, random damage
+      },
+
 };
 COMPILE_CHECK(ARRAYSZ(clouds) == NUM_CLOUD_TYPES);
 
@@ -873,6 +881,7 @@ static bool _cloud_has_negative_side_effects(cloud_type cloud)
     case CLOUD_MISERY:
     case CLOUD_BLASTMOTES:
     case CLOUD_BATS:
+    case CLOUD_RUST:
         return true;
     default:
         return false;
@@ -978,6 +987,8 @@ bool actor_cloud_immune(const actor &act, cloud_type type)
             return !act.is_fiery();
         case CLOUD_BATS:
             return bool(act.holiness() & MH_UNDEAD);
+        case CLOUD_RUST:
+            return act.is_player() && you.form == transformation::fortress_crab;
         default:
             return false;
     }
@@ -1182,6 +1193,11 @@ static bool _actor_apply_cloud_side_effects(actor *act,
             act->corrode(cloud.agent());
         return true;
 
+    case CLOUD_RUST:
+        act->corrode(cloud.agent(), "the rust", 1);
+        act->weaken(cloud.agent(), 1);
+        return true;
+
     case CLOUD_MISERY:
     {
         int dam = 0;
@@ -1307,6 +1323,7 @@ static int _actor_cloud_damage(const actor *act,
     case CLOUD_SPECTRAL:
     case CLOUD_ACID:
     case CLOUD_STORM:
+    case CLOUD_RUST:
         final_damage =
             _cloud_damage_output(act, _cloud2beam(cloud.type),
                                  cloud_base_damage,

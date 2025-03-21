@@ -46,6 +46,7 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_KINETIC_GRAPNEL, ZAP_KINETIC_GRAPNEL },
     { SPELL_SHRED, ZAP_SHRED },
     { SPELL_MAGMA_BARRAGE, ZAP_MAGMA_BARRAGE },
+    { SPELL_RUST_BREATH, ZAP_RUST_BREATH },
     // Wizard mode only.
     { SPELL_PORKALATOR, ZAP_PORKALATOR },
     { SPELL_HURL_DAMNATION, ZAP_HURL_DAMNATION },

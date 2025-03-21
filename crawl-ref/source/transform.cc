@@ -1140,6 +1140,28 @@ public:
     }
 };
 
+class FormFortressCrab : public Form
+{
+private:
+FormFortressCrab() : Form(transformation::fortress_crab) { }
+    DISALLOW_COPY_AND_ASSIGN(FormFortressCrab);
+public:
+    static const FormFortressCrab &instance() { static FormFortressCrab inst; return inst; }
+
+    // XXX: Used here for how much AC you *gain* in this form (by giving a negative 'penalty'))
+    int get_base_ac_penalty(int base, int skill = -1) const override
+    {
+        const int mult = scaling_value(FormScaling().Base(75).Scaling(75), false, skill);
+        return -(base * mult / 100);
+    }
+
+    // Number of clouds placed
+    int get_effect_size(int skill = -1) const override
+    {
+        return scaling_value(FormScaling().Base(9).Scaling(16), false, skill);
+    }
+};
+
 static const Form* forms[] =
 {
     &FormNone::instance(),
@@ -1185,6 +1207,7 @@ static const Form* forms[] =
     &FormSphinx::instance(),
     &FormWerewolf::instance(),
     &FormWalkingScroll::instance(),
+    &FormFortressCrab::instance(),
 };
 
 const Form* get_form(transformation xform)

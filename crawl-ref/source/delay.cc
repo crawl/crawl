@@ -169,6 +169,8 @@ const char* EquipOnDelay::get_verb()
     }
     else if (you.has_mutation(MUT_FORMLESS))
         return "haunting";
+    else if (equip.base_type == OBJ_ARMOUR && you.form == transformation::fortress_crab)
+        return "fusing with";
     else
         return "putting on";
 }
@@ -209,6 +211,8 @@ const char* EquipOffDelay::get_verb()
     }
     else if (you.has_mutation(MUT_FORMLESS))
         return "removing yourself from";
+    else if (equip.base_type == OBJ_ARMOUR && you.form == transformation::fortress_crab)
+        return "unfusing";
     else
         return "removing";
 }

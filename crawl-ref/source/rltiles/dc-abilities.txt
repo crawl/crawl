@@ -34,6 +34,7 @@ imprint_weapon ABILITY_IMPRINT_WEAPON
 jump ABILITY_JUMP
 watery_grave ABILITY_WATERY_GRAVE
 bestial_takedown ABILITY_BESTIAL_TAKEDOWN
+breathe_rust ABILITY_BREATHE_RUST
 
 wiz_build_terrain ABILITY_WIZ_BUILD_TERRAIN
 wiz_set_terrain ABILITY_WIZ_SET_TERRAIN

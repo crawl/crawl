@@ -1727,6 +1727,9 @@ int player_movement_speed(bool check_terrain, bool temp)
         mv /= 10;
     }
 
+    if (you.form == transformation::fortress_crab)
+        mv = mv * 13 / 10;
+
     if (temp && you.duration[DUR_FROZEN])
         mv = div_rand_round(mv * 3, 2);
 

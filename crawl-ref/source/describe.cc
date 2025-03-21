@@ -7140,9 +7140,9 @@ static string _format_data_label(int value, bool show_sign, bool is_percent,
                                  red ? "</red>" : "");
 }
 
-static void _maybe_note_armour_penalty(vector<vector<string>>& items,
-                                       const Form& form,
-                                       const int skill[3])
+static void _maybe_note_armour_modifier(vector<vector<string>>& items,
+                                        const Form& form,
+                                        const int skill[3])
 {
     int penalty[2][3];
     for (int i = 0; i < 3; ++i)
@@ -7162,8 +7162,8 @@ static void _maybe_note_armour_penalty(vector<vector<string>>& items,
 
     for (int i = 0; i < 3; ++i)
     {
-        if (penalty[0][i] > 0)
-            labels.push_back(make_stringf("%-d (%-d%%)", -penalty[1][i], -penalty[0][i]));
+        if (penalty[0][i] != 0)
+            labels.push_back(make_stringf("%+d (%+d%%)", -penalty[1][i], -penalty[0][i]));
         else
             labels.push_back("0");
     }
@@ -7303,7 +7303,7 @@ static string _describe_talisman_form(const item_def &item)
     _maybe_populate_form_table(items, bind(&Form::mp_regen_bonus, form, placeholders::_1), "MP Regen", skill, 0, false, true, 100, true);
     _maybe_populate_form_table(items, bind(&Form::get_vamp_chance, form, placeholders::_1), "Vamp Chance (while <50% HP)", skill, 0, true, false);
     _maybe_populate_form_table(items, bind(&Form::get_web_chance, form, placeholders::_1), "Ensnare Chance", skill, 0, true, false);
-    _maybe_note_armour_penalty(items, *form, skill);
+    _maybe_note_armour_modifier(items, *form, skill);
 
     _maybe_note_form_dice(items, bind(&Form::get_special_damage, form, false, placeholders::_1), form->special_dice_name, skill);
 
@@ -7321,6 +7321,8 @@ static string _describe_talisman_form(const item_def &item)
     }
     if (form_type == transformation::walking_scroll)
         _maybe_populate_form_table(items, _get_scroll_skill_boost, "Spell Skill Boost", skill, 0, false, true, 10, true);
+    if (form_type == transformation::fortress_crab)
+        _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "Rust Breath Size", skill, 0, false, false);
 
     vector<int> column_width;
 
