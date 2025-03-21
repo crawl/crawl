@@ -1642,7 +1642,8 @@ void yred_fathomless_shackles_effect(int delay)
 
     int total_drained = 0;
     const coord_def p = you.props[YRED_BLASPHEMY_CENTER_KEY].get_coord();
-    int pow = div_rand_round((7 + you.skill_rdiv(SK_INVOCATIONS, 7, 5)) * 5, delay);
+    int pow = delay > 0 ? div_rand_round((7 + you.skill_rdiv(SK_INVOCATIONS, 7, 5)) * 5, delay)
+                        : 0;
     for (monster_near_iterator mi(p); mi; ++mi)
     {
         if (grid_distance(mi->pos(), p) > radius
