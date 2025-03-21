@@ -686,7 +686,7 @@ equipment_slot player_equip_set::find_slot_to_equip_item(equipment_slot base_slo
     {
         for (const player_equip_entry& entry : items)
         {
-            if (entry.slot == slot && !entry.melded)
+            if (entry.slot == slot)
             {
                 item_def& item = entry.get_item();
 
