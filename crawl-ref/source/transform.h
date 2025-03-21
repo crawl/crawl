@@ -260,6 +260,9 @@ protected:
     /// See Form::get_base_unarmed_damage().
     const FormScaling unarmed_bonus_dam;
 
+    vector<pair<string,string>> fakemuts;
+    vector<pair<string,string>> badmuts;
+
     /// Calculate the given FormScaling for this form, multiplied by scale.
     int scaling_value(const FormScaling &sc, bool random,
                       int level = -1, int scale = 1) const;
@@ -298,9 +301,6 @@ private:
     /// Calculator for form-specific 'special' damage done by this form (eg:
     /// Blinkbolt damage or Contam damage)
     const dam_deducer* special_dice;
-
-    vector<pair<string,string>> fakemuts;
-    vector<pair<string,string>> badmuts;
 };
 const Form* get_form(transformation form = you.form);
 const Form* cur_form(bool temp = true);

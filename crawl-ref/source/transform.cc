@@ -155,11 +155,11 @@ Form::Form(const form_entry &fe)
       long_name(fe.long_name), description(fe.description),
       resists(fe.resists), ac(fe.ac), ev(fe.ev),
       unarmed_bonus_dam(fe.unarmed_bonus_dam),
+      fakemuts(fe.fakemuts), badmuts(fe.badmuts),
       can_fly(fe.can_fly), can_swim(fe.can_swim), offhand_punch(fe.offhand_punch),
       uc_brand(fe.uc_brand), uc_attack(fe.uc_attack),
       prayer_action(fe.prayer_action), equivalent_mons(fe.equivalent_mons),
-      hp_mod(fe.hp_mod), special_dice(fe.special_dice),
-      fakemuts(fe.fakemuts), badmuts(fe.badmuts)
+      hp_mod(fe.hp_mod), special_dice(fe.special_dice)
 { }
 
 Form::Form(transformation tran)
@@ -676,6 +676,15 @@ private:
     DISALLOW_COPY_AND_ASSIGN(FormSerpent);
 public:
     static const FormSerpent &instance() { static FormSerpent inst; return inst; }
+
+    vector<pair<string, string>> get_fakemuts() const override
+    {
+        // Don't claim felids can wear two hats
+        if (you.has_mutation(MUT_NO_ARMOUR))
+            return vector<pair<string, string>>({fakemuts[0]});
+
+        return fakemuts;
+    }
 };
 
 class FormDragon : public Form

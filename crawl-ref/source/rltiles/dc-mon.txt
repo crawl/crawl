@@ -1393,6 +1393,7 @@ beast_form TRAN_BEAST
 spider_form TRAN_SPIDER
 pig_form TRAN_PIG
 serpent_form TRAN_SERPENT
+serpent_form_felid TRAN_SERPENT_FELID
 statue_form_humanoid TRAN_STATUE_HUMANOID
 %syn TRAN_STATUE_EQUIP_FIRST
 statue_form_armataur TRAN_STATUE_ARMATAUR

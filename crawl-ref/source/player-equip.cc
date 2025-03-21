@@ -127,6 +127,8 @@ int count = 0;
             NO_SLOT("You don't have a head.")
         else if (you.has_mutation(MUT_NO_ARMOUR))
             NO_SLOT("That is much too large for your head.")
+        else if (you.form == transformation::serpent)
+            return 2;
         else if (you.get_mutation_level(MUT_HORNS, false) >= 3)
             NO_SLOT("You can't wear any headgear with your large horns!")
         else if (you.get_mutation_level(MUT_ANTENNAE, false) >= 3)

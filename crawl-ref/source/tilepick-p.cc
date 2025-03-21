@@ -520,7 +520,12 @@ tileidx_t tileidx_player()
 #endif
     case transformation::pig:       ch = TILEP_TRAN_PIG;       break;
     // non-animals
-    case transformation::serpent:   ch = TILEP_TRAN_SERPENT;   break;
+    case transformation::serpent:
+        if (you.species == SP_FELID)
+            ch = TILEP_TRAN_SERPENT_FELID;
+        else
+            ch = TILEP_TRAN_SERPENT;
+        break;
     case transformation::wisp:      ch = TILEP_MONS_INSUBSTANTIAL_WISP; break;
 #if TAG_MAJOR_VERSION == 34
     case transformation::jelly:     ch = TILEP_MONS_JELLY;     break;

@@ -1,11 +1,11 @@
 enum: serpent
 equivalent_mons: anaconda
-long_name: snake-form
-wiz_name: snake
-description: an enormous serpent.
+long_name: amphisbaena-form
+wiz_name: amphisbaena
+description: an enormous two-headed serpent.
 skill: {min: 10, max: 19}
 talisman: serpent
-melds: [physical]
+melds: [weapon, offhand, body, boots, barding, gloves, cloak]
 resists: {poison: 1}
 str: 5
 size: large
@@ -28,3 +28,4 @@ flesh_name: flesh
 # cold-blooded and amphibious are added separately
 fakemuts:
   - ["constrict", "You have a powerful constriction melee attack."]
+  - ["two hats", "You can wear a hat on each head."]
