@@ -1154,7 +1154,7 @@ void fire_monster_death_event(monster* mons,
         map_terrain_change_marker *marker =
                 dynamic_cast<map_terrain_change_marker*>(mark);
 
-        if (marker->mon_num != 0 && monster_by_mid(marker->mon_num) == mons)
+        if (marker->mon_num != 0 && marker->mon_num == mons->mid)
         {
             terrain_changed = true;
             marker->duration = 0;
@@ -3418,9 +3418,6 @@ void monster_cleanup(monster* mons)
     if (mons_is_tentacle_head(mons_base_type(*mons)))
         destroy_tentacles(mons);
 
-    const mid_t mid = mons->mid;
-    env.mid_cache.erase(mid);
-
     mons->remove_summons();
 
     unsigned int monster_killed = mons->mindex();
@@ -3433,7 +3430,25 @@ void monster_cleanup(monster* mons)
     if (you.pet_target == monster_killed)
         you.pet_target = MHITNOT;
 
-    mons->reset();
+    mons_remove_from_grid(*mons);
+    mons->hit_points = 0;
+
+    if (crawl_state.generating_level)
+    {
+        // We aren't holding any references to dead monsters during level
+        // generation, so its fine to free the monster's memory now.
+
+        const mid_t mid = mons->mid;
+        env.mid_cache.erase(mid);
+        mons->reset();
+    }
+    else
+    {
+        // Don't free the memory used by the monster just yet. There might
+        // still be places holding pointers to it. Instead, add it to a queue
+        // to be freed when we aren't holding any pointers to monsters.
+        env.dead_monsters.push_back(mons);
+    }
 }
 
 item_def* mounted_kill(monster* daddy, monster_type mc, killer_type killer,
@@ -3575,6 +3590,7 @@ int dismiss_monsters(string pattern)
             ++ndismissed;
         }
     }
+    free_dead_monsters();
 
     return ndismissed;
 }
@@ -4041,4 +4057,16 @@ bool mons_bennu_can_revive(const monster* mons)
 {
     return !mons->props.exists(BENNU_REVIVES_KEY)
            || mons->props[BENNU_REVIVES_KEY].get_byte() < 1;
+}
+
+// Allows the memory used by dead monsters to be reused
+void free_dead_monsters()
+{
+    for (monster* mons : env.dead_monsters)
+    {
+        const mid_t mid = mons->mid;
+        env.mid_cache.erase(mid);
+        mons->reset();
+    }
+    env.dead_monsters.clear();
 }
