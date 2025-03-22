@@ -3196,23 +3196,9 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
                 return spret::abort;
             }
 
-            static const vector<int> forbidden_unrands =
-            {
-                UNRAND_POWER,
-            };
-
-            // Currently excluding the same weapons that Manifold Assault does
-            // (because they work weirdly for projected attacks), though a
-            // larger number than that are *unsafe*. Is it okay if the player
-            // knowingly imprints something dangerous-but-fun? Maybe?
-            for (int urand : forbidden_unrands)
-            {
-                if (is_unrandom_artefact(*wpn, urand))
-                {
-                    mprf(MSGCH_WARN, "That weapon cannot be imprinted.");
-                    return spret::abort;
-                }
-            }
+            // Currently allowing all unrand weapons, though some are *unsafe*.
+            // Is it okay if the player knowingly imprints something
+            // dangerous-but-fun? Maybe?
 
             if (monster* paragon = find_player_paragon())
                 paragon->del_ench(ENCH_SUMMON_TIMER);

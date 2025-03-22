@@ -1459,15 +1459,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you have no body armour to summon the spirit of.";
         break;
 
-    case SPELL_MANIFOLD_ASSAULT:
-        if (temp)
-        {
-            const string unproj_reason = weapon_unprojectability_reason(you.weapon());
-            if (unproj_reason != "")
-                return unproj_reason;
-        }
-        break;
-
     case SPELL_MOMENTUM_STRIKE:
         if (temp && !you.is_motile())
             return "you cannot redirect your momentum while unable to move.";

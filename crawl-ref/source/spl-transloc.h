@@ -45,7 +45,6 @@ spret cast_dimensional_bullseye(int pow, monster *target, bool fail);
 
 spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real = true,
                             actor* katana_defender = nullptr);
-string weapon_unprojectability_reason(const item_def* wpn);
 
 struct bolt;
 spret cast_apportation(int pow, bolt& beam, bool fail);

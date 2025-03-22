@@ -47,7 +47,7 @@
 #include "player-stats.h"
 #include "showsymb.h"      // For Cigotuvi's Embrace
 #include "spl-cast.h"      // For evokes
-#include "spl-damage.h"    // For the Singing Sword.
+#include "spl-damage.h"    // For the Singing Sword and the Sword of Power.
 #include "spl-goditem.h"   // For Sceptre of Torment tormenting
 #include "spl-miscast.h"   // For Spellbinder and plutonium sword miscasts
 #include "spl-monench.h"   // For Zhor's aura
@@ -296,17 +296,7 @@ static void _POWER_melee_effects(item_def* /*weapon*/, actor* attacker,
     coord_def targ = defender->pos();
 
     for (int i = 0; i < num_beams; i++)
-    {
-        bolt beam;
-        beam.thrower   = attacker->is_player() ? KILL_YOU : KILL_MON;
-        beam.source    = attacker->pos();
-        beam.source_id = attacker->mid;
-        beam.attitude  = attacker->temp_attitude();
-        beam.range = 4;
-        beam.target = targ;
-        zappy(ZAP_SWORD_BEAM, 100, false, beam);
-        beam.fire();
-    }
+        fire_life_bolt(*attacker, targ);
 }
 
 ////////////////////////////////////////////////////

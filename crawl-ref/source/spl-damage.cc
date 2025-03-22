@@ -5287,3 +5287,40 @@ dice_def fortress_blast_damage(int AC, bool is_monster)
     int power = min(200, (int)pow(AC, 1.343) * 2 / 3);
     return zap_damage(ZAP_FORTRESS_BLAST, power, is_monster, false);
 }
+
+bool find_life_bolt_ray(coord_def& source, coord_def target, ray_def& ray)
+{
+    bool has_ray = find_ray(source, target, ray, opc_no_trans);
+    if (!has_ray)
+        return false;
+    while (true)
+    {
+        ray_def next_ray = ray;
+        next_ray.advance();
+        if (next_ray.pos() == target)
+        {
+            source = ray.pos();
+            break;
+        }
+        ray = next_ray;
+    }
+    return true;
+}
+
+void fire_life_bolt(actor& attacker, coord_def target)
+{
+    bolt beam;
+    beam.thrower = attacker.is_player() ? KILL_YOU : KILL_MON;
+    beam.source = attacker.pos();
+    beam.source_id = attacker.mid;
+    beam.attitude = attacker.temp_attitude();
+    beam.range = 4;
+    beam.target = target;
+    beam.chose_ray = true;
+    zappy(ZAP_SWORD_BEAM, 100, false, beam);
+    bool has_ray = find_life_bolt_ray(beam.source, beam.target, beam.ray);
+    if (!has_ray)
+        return;
+
+    beam.fire();
+}
