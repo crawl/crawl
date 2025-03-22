@@ -202,14 +202,10 @@ targeter_beam::targeter_beam(const actor *act, int r, zap_type zap,
     origin = aim = act->pos();
     beam.attitude = ATT_FRIENDLY;
     zappy(zap, pow, false, beam);
-    beam.is_tracer = true;
-    beam.is_targeting = true;
+    beam.set_is_tracer(true);
     beam.range = range;
     beam.source = origin;
     beam.target = aim;
-    beam.dont_stop_player = true;
-    beam.friend_info.dont_stop = true;
-    beam.foe_info.dont_stop = true;
     beam.ex_size = min_ex_rad;
     beam.aimed_at_spot = true;
 
