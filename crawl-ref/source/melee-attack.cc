@@ -2172,7 +2172,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
         defender->confuse(attacker, 5);
     }
     else if (atk == UNAT_BOOTKNIFE &&
-        x_chance_in_y(5 + 2 * you.skills[SK_SHORT_BLADES], 100))
+        x_chance_in_y(5 + you.skills[SK_SHORT_BLADES], 100))
     {
         defender->paralyse(attacker, 1);
     }
