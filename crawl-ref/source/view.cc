@@ -942,6 +942,19 @@ colour_t viewmap_flash_colour()
     return BLACK;
 }
 
+static bool _viewwindow_should_render()
+{
+    if (you.asleep())
+        return false;
+    if (mouse_control::current_mode() != MOUSE_MODE_NORMAL)
+        return true;
+    if (you.running && you.running.is_rest())
+        return Options.rest_delay != -1;
+    const bool run_dont_draw = you.running && Options.travel_delay < 0
+        && (!you.running.is_explore() || Options.explore_delay < 0);
+    return !run_dont_draw;
+}
+
 // Updates one square of the view area. Should only be called for square
 // in LOS.
 void view_update_at(const coord_def &pos)
@@ -960,11 +973,11 @@ void view_update_at(const coord_def &pos)
 #ifndef USE_TILE_LOCAL
     if (!env.map_knowledge(pos).visible())
         return;
+    if (!_viewwindow_should_render())
+        return;
     cglyph_t g = get_cell_glyph(pos);
 
-    int flash_colour = you.flash_colour == BLACK
-        ? viewmap_flash_colour()
-        : you.flash_colour;
+    int flash_colour = viewmap_flash_colour();
     monster_type mons = env.map_knowledge(pos).monster();
     int cell_colour =
         flash_colour &&
@@ -1013,18 +1026,18 @@ void animation_delay(unsigned int ms, bool do_refresh)
     scaled_delay(ms);
 }
 
-void flash_view(use_animation_type a, colour_t colour, targeter *where)
+void flash_view(use_animation_type a, colour_t colour)
 {
     if (crawl_state.need_save && Options.use_animations & a)
     {
 #ifndef USE_TILE_LOCAL
         save_cursor_pos save;
 #endif
-
-        you.flash_colour = colour;
-        you.flash_where = where;
-        viewwindow(false);
+        viewwindow(false, false, nullptr, nullptr, colour);
         update_screen();
+#ifdef USE_TILE
+        tiles.redraw();
+#endif
     }
 }
 
@@ -1033,9 +1046,16 @@ void flash_view_delay(use_animation_type a, colour_t colour, int flash_delay,
 {
     if (crawl_state.need_save && Options.use_animations & a)
     {
-        flash_view(a, colour, where);
-        scaled_delay(flash_delay);
-        flash_view(a, 0);
+#ifndef USE_TILE_LOCAL
+        save_cursor_pos save;
+#endif
+        {
+            viewwindow(false, false, nullptr, nullptr, colour, where);
+            update_screen();
+            scaled_delay(flash_delay);
+        }
+        viewwindow(false);
+        update_screen();
     }
 }
 
@@ -1251,7 +1271,7 @@ public:
         offset.y = random2(3) - 1;
     }
 
-    coord_def cell_cb(const coord_def &pos, int &/*colour*/) override
+    coord_def cell_cb(const coord_def &pos, colour_t &/*colour*/) override
     {
         return pos + offset;
     }
@@ -1284,7 +1304,7 @@ public:
         remaining = false;
     }
 
-    coord_def cell_cb(const coord_def &pos, int &/*colour*/) override
+    coord_def cell_cb(const coord_def &pos, colour_t &/*colour*/) override
     {
         if (pos == you.pos())
             return pos;
@@ -1322,7 +1342,7 @@ public:
         frame_delay = 3 * (6 - range) * (6 - range);
     }
 
-    coord_def cell_cb(const coord_def &pos, int &colour) override
+    coord_def cell_cb(const coord_def &pos, colour_t &colour) override
     {
         const coord_def diff = pos - you.pos();
         const int dist = diff.x * diff.x * 4 / 9 + diff.y * diff.y;
@@ -1380,20 +1400,72 @@ void run_animation(animation_type anim, use_animation_type type, bool cleanup)
 
 static bool _view_is_updating = false;
 
-crawl_view_buffer view_dungeon(animation *a, bool anim_updates, view_renderer *renderer);
+static crawl_view_buffer _view_dungeon(animation *a,
+                                       bool anim_updates,
+                                       view_renderer *renderer,
+                                       colour_t flash_colour,
+                                       targeter *flash_where);
 
-static bool _viewwindow_should_render()
+#ifdef USE_TILE
+view_window_render_data::view_window_render_data() noexcept
 {
-    if (you.asleep())
-        return false;
-    if (mouse_control::current_mode() != MOUSE_MODE_NORMAL)
-        return true;
-    if (you.running && you.running.is_rest())
-        return Options.rest_delay != -1;
-    const bool run_dont_draw = you.running && Options.travel_delay < 0
-                && (!you.running.is_explore() || Options.explore_delay < 0);
-    return !run_dont_draw;
+    flash_colour = BLACK;
+    reset();
 }
+
+void view_window_render_data::reset() noexcept
+{
+    saved_viewp = coord_def{};
+    saved_vgrdc = coord_def{};
+
+    anim = nullptr;
+    renderer = nullptr;
+    flash_where = nullptr;
+    flash_colour = BLACK;
+    animation_updates = false;
+    render_tiles_only = true;
+}
+
+void view_window_render_data::update(animation* a, view_renderer* r,
+                                     targeter* new_flash_where,
+                                     colour_t new_flash_colour,
+                                     bool anim_updates, bool tiles_only)
+{
+    saved_viewp = crawl_view.viewp;
+    saved_vgrdc = crawl_view.vgrdc;
+
+    anim = a;
+    renderer = r;
+    flash_where = new_flash_where;
+    flash_colour = new_flash_colour;
+    animation_updates = animation_updates || anim_updates;
+    render_tiles_only = render_tiles_only && tiles_only;
+}
+
+static view_window_render_data _render_data;
+static bool _view_window_dirty = false;
+
+const view_window_render_data& current_view_window_render_data()
+{
+    return _render_data;
+}
+#endif
+
+view_renderer::~view_renderer()
+{
+#ifdef USE_TILE
+    // _view_window_renderer should be replaced before we next render,
+    // but still set it to null to be safe. If it isn't replaced that would be
+    // a problem for the window resizing code that needs to call `viewwindow`
+    // with the its last used arguments.
+    if (this == _render_data.renderer)
+        _render_data.renderer = nullptr;
+#endif
+}
+
+static void _render_view_window(bool tiles_only, animation *a,
+                                view_renderer *renderer, bool anim_updates,
+                                colour_t flash_colour, targeter *flash_where);
 
 /**
  * Draws the main window using the character set returned
@@ -1407,7 +1479,9 @@ static bool _viewwindow_should_render()
  * @param a[in] the animation to be showing, if any.
  * @param renderer[in] A view renderer used to inject extra visual elements.
  */
-void viewwindow(bool show_updates, bool tiles_only, animation *a, view_renderer *renderer)
+void viewwindow(bool show_updates, bool tiles_only,
+                animation *a, view_renderer *renderer,
+                colour_t flash_colour, targeter *flash_where)
 {
     if (_view_is_updating)
     {
@@ -1423,90 +1497,141 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a, view_renderer 
         return;
     }
 
+    unwind_bool updating(_view_is_updating, true);
+
+#ifndef USE_TILE_LOCAL
+    save_cursor_pos save;
+
+    if (crawl_state.smallterm)
     {
-        unwind_bool updating(_view_is_updating, true);
-
-#ifndef USE_TILE_LOCAL
-        save_cursor_pos save;
-
-        if (crawl_state.smallterm)
-        {
-            smallterm_warning();
-            update_screen();
-            return;
-        }
+        smallterm_warning();
+        update_screen();
+        return;
+    }
 #endif
 
-        // The player could be at (0,0) if we are called during level-gen; this can
-        // happen via mpr -> interrupt_activity -> stop_delay -> runrest::stop
-        if (you.duration[DUR_TIME_STEP] || you.pos().origin())
-            return;
+    // The player could be at (0,0) if we are called during level-gen; this can
+    // happen via mpr -> interrupt_activity -> stop_delay -> runrest::stop
+    if (you.duration[DUR_TIME_STEP] || you.pos().origin())
+        return;
 
-        // Update the animation of cells only once per turn.
-        const bool anim_updates = (you.last_view_update != you.num_turns);
+    // Update the animation of cells only once per turn.
+    const bool anim_updates = (you.last_view_update != you.num_turns);
 
-        if (anim_updates)
-            you.frame_no++;
+    if (anim_updates)
+        you.frame_no++;
 
 #ifdef USE_TILE
-        tiles.clear_text_tags(TAG_NAMED_MONSTER);
+    tiles.clear_text_tags(TAG_NAMED_MONSTER);
 
-        if (show_updates)
-            mcache.clear_nonref();
+    if (show_updates)
+        mcache.clear_nonref();
+
+    _render_data.update(a, renderer, flash_where, flash_colour,
+                        anim_updates, tiles_only);
 #endif
 
-        if (show_updates || _layers != LAYERS_ALL)
-        {
-            if (!is_map_persistent())
-                ash_detect_portals(false);
+    if (show_updates || _layers != LAYERS_ALL)
+    {
+        if (!is_map_persistent())
+            ash_detect_portals(false);
 
-            // TODO: why on earth is this called from here? It seems like it
-            // should be called directly on changing location, or something
-            // like that...
-            if (you.on_current_level)
-                show_init(_layers);
+        // TODO: why on earth is this called from here? It seems like it
+        // should be called directly on changing location, or something
+        // like that...
+        if (you.on_current_level)
+            show_init(_layers);
 
 #ifdef USE_TILE
-            tile_draw_floor();
-            tile_draw_map_cells();
+        tile_draw_floor();
+        tile_draw_map_cells();
 #endif
-            view_clear_overlays();
-        }
+        view_clear_overlays();
+    }
 
-        if (show_updates)
-            player_view_update();
+    if (show_updates)
+        player_view_update();
 
-        if (_viewwindow_should_render())
-        {
-            const auto vbuf = view_dungeon(a, anim_updates, renderer);
+    if (_viewwindow_should_render())
+    {
+        you.last_view_update = you.num_turns;
+#ifdef USE_TILE
+        _view_window_dirty = true;
 
-            you.last_view_update = you.num_turns;
-#ifndef USE_TILE_LOCAL
-            if (!tiles_only)
-            {
-                puttext(crawl_view.viewp.x, crawl_view.viewp.y, vbuf);
-                update_monster_pane();
-            }
+        tiles.set_need_redraw(you.running ? Options.tile_runrest_rate : 0);
 #else
-            UNUSED(tiles_only);
+        _render_view_window(tiles_only, a, renderer, anim_updates,
+                            flash_colour, flash_where);
 #endif
+    }
+
+    // This is very hacky, but when not showing all layers we update the map
+    // knowledge with the previous call to `show_init` so that it doesn't
+    // have the layers we don't want to show. This means that we need to
+    // restore it before leaving this function so we don't have any gameplay
+    // effects, but after rendering so that we don't see the layers.
+    // XXX: handle not showing layers in the rendering code instead
+    if (_layers != LAYERS_ALL)
+    {
 #ifdef USE_TILE
-            tiles.set_need_redraw(you.running ? Options.tile_runrest_rate : 0);
-            tiles.load_dungeon(vbuf, crawl_view.vgrdc);
-            tiles.update_tabs();
+        render_view_window();
 #endif
-
-            // Leaving it this way because short flashes can occur in long ones,
-            // and this simply works without requiring a stack.
-            you.flash_colour = BLACK;
-            you.flash_where = 0;
-        }
-
-        // Reset env.show if we munged it.
-        if (_layers != LAYERS_ALL)
-            show_init();
+        show_init(_layers);
     }
 }
+
+static void _render_view_window(bool tiles_only, animation *a,
+                                view_renderer *renderer, bool anim_updates,
+                                colour_t flash_colour, targeter *flash_where)
+{
+#ifndef USE_TILE_LOCAL
+    save_cursor_pos save;
+#endif
+
+    const auto vbuf = _view_dungeon(a, anim_updates, renderer, flash_colour,
+                                    flash_where);
+
+#ifndef USE_TILE_LOCAL
+    if (!tiles_only)
+    {
+        puttext(crawl_view.viewp.x, crawl_view.viewp.y, vbuf);
+        update_monster_pane();
+    }
+#else
+    UNUSED(tiles_only);
+#endif
+#ifdef USE_TILE
+    tiles.load_dungeon(vbuf, crawl_view.vgrdc);
+    tiles.update_tabs();
+#endif
+}
+
+#ifdef USE_TILE
+void render_view_window()
+{
+    if (!_view_window_dirty)
+        return;
+    _view_window_dirty = false;
+
+    bool anim_updates = _render_data.animation_updates;
+    bool tiles_only = _render_data.render_tiles_only;
+    animation* a = _render_data.anim;
+    view_renderer* renderer = _render_data.renderer;
+    colour_t flash_colour = _render_data.flash_colour;
+    targeter* flash_where = _render_data.flash_where;
+
+    unwind_var<coord_def> viewp(crawl_view.viewp, _render_data.saved_viewp);
+    unwind_var<coord_def> vgrdc(crawl_view.vgrdc, _render_data.saved_vgrdc);
+    unwind_var<coord_def> vlos1(crawl_view.vlos1);
+    unwind_var<coord_def> vlos2(crawl_view.vlos2);
+    crawl_view.calc_vlos();
+
+    _render_data.reset();
+
+    _render_view_window(tiles_only, a, renderer, anim_updates, flash_colour,
+                        flash_where);
+}
+#endif
 
 #ifdef USE_TILE
 struct tile_overlay
@@ -1659,7 +1784,11 @@ static void add_overlays(const coord_def& gc, screen_cell_t* cell)
  * @param a[in] the animation to be showing, if any.
  * @return A new view buffer with the rendered content.
  */
-crawl_view_buffer view_dungeon(animation *a, bool anim_updates, view_renderer *renderer)
+static crawl_view_buffer _view_dungeon(animation *a,
+                                       bool anim_updates,
+                                       view_renderer *renderer,
+                                       colour_t flash_colour,
+                                       targeter *flash_where)
 {
     crawl_view_buffer vbuf(crawl_view.viewsz);
 
@@ -1669,7 +1798,6 @@ crawl_view_buffer view_dungeon(animation *a, bool anim_updates, view_renderer *r
 
     _sort_overlays();
 
-    int flash_colour = you.flash_colour;
     if (flash_colour == BLACK)
         flash_colour = viewmap_flash_colour();
 
@@ -1682,7 +1810,7 @@ crawl_view_buffer view_dungeon(animation *a, bool anim_updates, view_renderer *r
             ? a->cell_cb(view2grid(*ri), flash_colour)
             : view2grid(*ri);
 
-        if (you.flash_where && you.flash_where->is_affected(gc) <= 0)
+        if (flash_where && flash_where->is_affected(gc) <= 0)
             draw_cell(cell, gc, anim_updates, 0);
         else
             draw_cell(cell, gc, anim_updates, flash_colour);
