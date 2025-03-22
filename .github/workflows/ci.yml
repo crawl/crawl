@@ -304,6 +304,8 @@ jobs:
       - name: Set up Homebrew
         id: set-up-homebrew
         uses: Homebrew/actions/setup-homebrew@master
+      - name: Install modern Bash on macOS
+        run: brew install bash
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0 # all history
@@ -368,8 +370,67 @@ jobs:
             macos-clang
       - name: "Setup ccache: prepend path"
         run: "echo $(brew --prefix)/opt/ccache/libexec >> $GITHUB_PATH"
-      - run: make -j$(sysctl -n hw.ncpu) mac-app-${{ matrix.build_type }} ${{matrix.build_opts }}
+      - run: make -j$(sysctl -n hw.ncpu) mac-app-${{ matrix.build_type }} ${{ matrix.build_opts }}
         working-directory: crawl-ref/source
+      - name: "Determine Filenames on macOS"
+        shell: bash
+        run: |
+          target=${{ matrix.build_type }}
+          target_type=${target%-universal}
+          BUNDLE_NAME="Dungeon Crawl Stone Soup - ${target_type^}"
+          MACOS_BINARY=$(if [[ "$target" == "console-universal" ]]; then echo "crawl"; else echo "${BUNDLE_NAME}"; fi)
+          echo "BUNDLE_NAME=$BUNDLE_NAME" >> $GITHUB_ENV
+          echo "MACOS_BINARY=$MACOS_BINARY" >> $GITHUB_ENV
+      - name: "Generate signed .app for macOS"
+        working-directory: crawl-ref/source
+        shell: bash
+        run: |
+          # Create p12 file
+          CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
+          echo -n "${{ secrets.APPLE_BUILD_CERTIFICATE_BASE64 }}" | base64 --decode > $CERTIFICATE_PATH
+
+          # Configure Keychain
+          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+          security create-keychain -p "${{ secrets.APPLE_KEYCHAIN_PASSWORD }}" $KEYCHAIN_PATH
+          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          security unlock-keychain -p "${{ secrets.APPLE_KEYCHAIN_PASSWORD }}" $KEYCHAIN_PATH
+          security list-keychain -d user -s $KEYCHAIN_PATH
+
+          # Import certificates on Keychain
+          security import $CERTIFICATE_PATH -P "${{ secrets.APPLE_P12_PASSWORD }}" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+
+          # Codesign files
+          APP_DIR="build/app-bundle-stage/${BUNDLE_NAME}.app"
+          CONSOLE_BINARY="$APP_DIR/Contents/Resources/$MACOS_BINARY"
+          test -f "$CONSOLE_BINARY" && \
+            codesign --options=runtime --entitlements mac/entitlements.xml --deep --keychain $KEYCHAIN_PATH --timestamp --force --sign "${{ secrets.APPLE_DEVELOPER_ID_INSTALLER }}" -v "$CONSOLE_BINARY"
+          codesign --options=runtime --entitlements mac/entitlements.xml --deep --keychain $KEYCHAIN_PATH --timestamp --force --sign "${{ secrets.APPLE_DEVELOPER_ID_INSTALLER }}" -v "$APP_DIR/Contents/MacOS/$BUNDLE_NAME"
+          codesign --options=runtime --entitlements mac/entitlements.xml --keychain $KEYCHAIN_PATH --timestamp --force --sign "${{ secrets.APPLE_DEVELOPER_ID_INSTALLER }}" -v "$APP_DIR"
+      - name: "Notarize Release Build for macOS"
+        uses: wpilibsuite/xcode-notarize@v3
+        with:
+          product-path: crawl-ref/source/build/app-bundle-stage/${{ env.BUNDLE_NAME }}.app
+          appstore-connect-username: ${{ secrets.APPLE_ACCOUNT_USERNAME }}
+          appstore-connect-password: ${{ secrets.APPLE_ACCOUNT_PASSWORD }}
+          appstore-connect-teamid: ${{ secrets.APPLE_ACCOUNT_TEAM_ID }}
+          primary-bundle-id: 'DCSS'
+      - name: "Staple Release Build for macOS"
+        uses: BoundfoxStudios/action-xcode-staple@v1
+        with:
+          product-path: crawl-ref/source/build/app-bundle-stage/${{ env.BUNDLE_NAME }}.app
+      - name: Clean up keychain and certificate
+        if: ${{ always() }}
+        run: |
+          security delete-keychain $RUNNER_TEMP/app-signing.keychain-db
+          rm $RUNNER_TEMP/build_certificate.p12
+      - name: "Create release zip for macOS"
+        working-directory: crawl-ref/source
+        shell: bash
+        run: |
+          mkdir mac-app-zips
+          rm -f mac-app-zips/latest.zip
+          ditto -c -k --sequesterRsrc --keepParent "build/app-bundle-stage/${BUNDLE_NAME}.app" "${BUNDLE_NAME}.zip"
+          mv "${BUNDLE_NAME}.zip" mac-app-zips/latest.zip
       - name: Add build to release
         if: github.event.release.tag_name != null
         uses: svenstaro/upload-release-action@v2
