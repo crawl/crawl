@@ -1010,7 +1010,9 @@ bool player_unrand_bad_target(const item_def &weapon,
     if (is_unrandom_artefact(weapon, UNRAND_POWER))
     {
         targeter_beam hitfunc(&you, 4, ZAP_SWORD_BEAM, 100, 0, 0);
+        hitfunc.beam.chose_ray = true;
         hitfunc.beam.aimed_at_spot = false;
+        find_life_bolt_ray(hitfunc.beam.source, defender.pos(), hitfunc.beam.ray);
         hitfunc.set_aim(defender.pos());
 
         return stop_attack_prompt(hitfunc, "attack",
