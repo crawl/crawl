@@ -469,6 +469,83 @@ int distance_iterator::radius() const
     return r;
 }
 
+static void _set_number_at_index(std::uint_fast32_t& numbers,
+    std::uint_fast8_t index, std::uint_fast8_t value) noexcept
+{
+    std::uint_fast32_t mask = 15 << (index << 2);
+    mask = ~mask;
+    numbers = (numbers & mask) | (value << (index << 2));
+}
+
+static std::uint_fast8_t _get_number_at_index(std::uint_fast32_t numbers,
+    std::uint_fast8_t index) noexcept
+{
+    return (numbers >> (index << 2)) & 15;
+}
+
+static coord_def _unpack_coord(coord_def center, std::uint_fast32_t packed) noexcept
+{
+    int x = packed & 3;
+    x -= 1;
+    int y = (packed >> 2) & 3;
+    y -= 1;
+    return center + coord_def(x, y);
+}
+
+fair_adjacent_iterator::fair_adjacent_iterator(coord_def _center) :
+    center(_center)
+{
+    remaining_count = 0;
+    remaining = 0;
+    for (std::uint_fast8_t x = 0; x < 3; x++)
+    {
+        for (std::uint_fast8_t y = 0; y < 3; y++)
+        {
+            if (x == 1 && y == 1)
+                continue;
+            std::uint_fast32_t value = x | y << 2;
+            if (!in_bounds(_unpack_coord(center, value)))
+                continue;
+            remaining |= value << (remaining_count << 2);
+            remaining_count++;
+        }
+    }
+
+    std::uint_fast8_t rand_index = random2(remaining_count);
+    std::uint_fast8_t rand_value = _get_number_at_index(remaining, rand_index);
+    std::uint_fast8_t first_value = _get_number_at_index(remaining, 0);
+    _set_number_at_index(remaining, rand_index, first_value);
+    _set_number_at_index(remaining, 0, rand_value);
+}
+
+fair_adjacent_iterator::operator bool() const noexcept
+{
+    return remaining_count != 0;
+}
+
+coord_def fair_adjacent_iterator::operator *() const noexcept
+{
+    return _unpack_coord(center, remaining);
+}
+
+void fair_adjacent_iterator::operator++()
+{
+    if (!remaining_count)
+        return;
+    std::uint_fast8_t rand_index = random2(remaining_count) + 1;
+    std::uint_fast8_t rand_value = _get_number_at_index(remaining, rand_index);
+    _set_number_at_index(remaining, 0, rand_value);
+    std::uint_fast8_t last_value = _get_number_at_index(remaining,
+        remaining_count);
+    _set_number_at_index(remaining, rand_index, last_value);
+    remaining_count--;
+}
+
+void fair_adjacent_iterator::operator++(int)
+{
+    ++(*this);
+}
+
 /********************/
 /* regression tests */
 /********************/
