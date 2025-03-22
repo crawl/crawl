@@ -2467,14 +2467,27 @@ spret cast_ignite_poison(actor* agent, int pow, bool fail, bool tracer)
     return spret::success;
 }
 
-static void _ignition_square(const actor */*agent*/, bolt beam, coord_def square, bool center)
+// Explode at a square for shaped explosion effects like ignition
+static void _explosion_square(const actor */*agent*/, bolt beam,
+                coord_def square, bool center, spell_type spell)
 {
     // HACK: bypass visual effect
     beam.target = square;
     beam.in_explosion_phase = true;
     beam.explosion_affect_cell(square);
     if (center)
-        noisy(spell_effect_noise(SPELL_IGNITION),square);
+        noisy(spell_effect_noise(spell),square);
+}
+
+// Sets up the visual explosion for ignition and detonation catalyst
+static void _setup_visual_ignition_beam(const actor *agent, bolt &beam)
+{
+    beam.set_agent(agent);
+    beam.flavour        = BEAM_VISUAL;
+    beam.glyph          = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.colour         = RED;
+    beam.ex_size        = 1;
+    beam.is_explosion   = true;
 }
 
 vector<coord_def> get_ignition_blast_sources(const actor *agent, bool tracer)
@@ -2526,13 +2539,7 @@ spret cast_ignition(const actor *agent, int pow, bool fail)
 
     // Used to draw explosion cells
     bolt beam_visual;
-    beam_visual.set_agent(agent);
-    beam_visual.flavour       = BEAM_VISUAL;
-    // XXX: why is this different from fireball?
-    beam_visual.glyph         = dchar_glyph(DCHAR_FIRED_BURST);
-    beam_visual.colour        = RED;
-    beam_visual.ex_size       = 1;
-    beam_visual.is_explosion  = true;
+    _setup_visual_ignition_beam(agent, beam_visual);
 
     // Used to deal damage; invisible
     bolt beam_actual;
@@ -2582,9 +2589,9 @@ spret cast_ignition(const actor *agent, int pow, bool fail)
 
     // Real explosions on each individual square.
     for (coord_def pos : blast_sources)
-        _ignition_square(agent, beam_actual, pos, true);
+        _explosion_square(agent, beam_actual, pos, true, SPELL_IGNITION);
     for (coord_def pos : blast_adjacents)
-        _ignition_square(agent, beam_actual, pos, false);
+        _explosion_square(agent, beam_actual, pos, false, SPELL_IGNITION);
 
     return spret::success;
 }
@@ -5286,4 +5293,74 @@ dice_def fortress_blast_damage(int AC, bool is_monster)
 {
     int power = min(200, (int)pow(AC, 1.343) * 2 / 3);
     return zap_damage(ZAP_FORTRESS_BLAST, power, is_monster, false);
+}
+
+// XXX: how does this work with coglin?
+dice_def detonation_catalyst_damage(int pow, bool random)
+{
+    int weapon_dam = 0;
+    item_def* wpn = you.weapon();
+    if (!wpn)
+        weapon_dam = unarmed_base_damage(random);
+    else if (is_melee_weapon(*wpn))
+        weapon_dam = property(*wpn, PWPN_DAMAGE);
+
+    weapon_dam = random ? div_rand_round(weapon_dam, 2) : weapon_dam / 2;
+
+    int power_dam = random ? div_rand_round(pow, 12) : pow / 12;
+
+    return dice_def(3, weapon_dam + power_dam);
+}
+
+void do_catalyst_explosion(coord_def center)
+{
+    vector<coord_def> blast_targets;
+
+    int pow = calc_spell_power(SPELL_DETONATION_CATALYST);
+
+    // Identical visual beam to ignition
+    bolt beam_visual;
+    _setup_visual_ignition_beam(&you, beam_visual);
+
+    // The damage beam is different. Not using a zap due to weapon component.
+    bolt beam_actual;
+    beam_actual.hit         = AUTOMATIC_HIT;
+    beam_actual.damage      = detonation_catalyst_damage(pow, true);
+    beam_actual.name        = "detonation";
+    beam_actual.flavour     = BEAM_FIRE;
+    beam_actual.ex_size     = 0;
+    beam_actual.set_agent(&you);
+    beam_actual.apply_beam_conducts();
+
+    // XXX: would be nice to refactor this bit too, but it's a bit annoying
+    // because it uses both beams and needs a different center condition.
+    for (adjacent_iterator ai(center, false); ai; ++ai)
+        {
+            if (cell_is_solid(*ai)
+                && (!beam_actual.can_affect_wall(*ai)
+                    || you_worship(GOD_FEDHAS)))
+            {
+                continue;
+            }
+
+            actor *act = actor_at(*ai);
+
+            // Friendly creature, don't blast this square.
+            if (act && (act == &you
+                        || (act->is_monster()
+                            && act->as_monster()->wont_attack())))
+            {
+                continue;
+            }
+
+            blast_targets.push_back(*ai);
+            if (Options.use_animations & UA_BEAM)
+                beam_visual.explosion_draw_cell(*ai);
+        }
+
+        if (Options.use_animations & UA_BEAM)
+            animation_delay(50, true);
+
+    for (coord_def pos : blast_targets)
+        _explosion_square(&you, beam_actual, pos, false, SPELL_DETONATION_CATALYST);
 }

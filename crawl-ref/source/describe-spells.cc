@@ -423,6 +423,8 @@ static dice_def _spell_damage(spell_type spell, int hd)
             return prism_damage(prism_hd(pow, false), true);
         case SPELL_HELLFIRE_MORTAR:
             return hellfire_mortar_damage(pow);
+        case SPELL_DETONATION_CATALYST:
+            return detonation_catalyst_damage(pow, false);
 
         // This is the per-turn *sticky flame* damage against the player.
         // The spell has no impact damage and otherwise uses different numbers
