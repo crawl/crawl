@@ -1545,11 +1545,15 @@ void direction_chooser::update_previous_target() const
     if (mode == TARG_NON_ACTOR)
         return;
 
+    const monster* old_m = _get_current_target();
+
     // Reset memory.
     you.prev_targ = MID_NOBODY;
     you.prev_grd_targ.reset();
 
-    const monster* old_m = _get_current_target();
+    // You can't target outside the map
+    if (!map_bounds(target()))
+        return;
 
     // If directly targeting a monster, remember that monster.
     const monster* m = monster_at(target());
