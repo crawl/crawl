@@ -151,8 +151,8 @@ tile_update_rate = 1000
     more often if you take actions that change the display. You could try
     cranking up this value, though this may lead to updating taking too long.
 
-tile_runrest_rate = 100
-    While running and resting the screen is redraw every 100 milliseconds.
+tile_runrest_rate = 17
+    While running and resting the screen is redrawn every 17 milliseconds.
     If Crawl is slow while running or resting, increase this number.
 
 tile_tooltip_ms = 0

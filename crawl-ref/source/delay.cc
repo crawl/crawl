@@ -409,8 +409,11 @@ static command_type _get_running_command()
         you.running.rest();
 
 #ifdef USE_TILE
-        if (Options.rest_delay >= 0 && tiles.need_redraw())
+        if (Options.rest_delay >= 0
+            && tiles.need_redraw(Options.tile_runrest_rate))
+        {
             tiles.redraw();
+        }
 #endif
 
         if (!is_resting() && you.running.hp == you.hp
@@ -425,7 +428,14 @@ static command_type _get_running_command()
         return CMD_WAIT;
     }
     else if (you.running.is_explore() && Options.explore_delay > -1)
-        delay(Options.explore_delay);
+    {
+#ifdef USE_TILE
+        if (tiles.need_redraw(Options.tile_runrest_rate))
+            tiles.redraw();
+#endif
+        if (Options.explore_delay > 0)
+            delay(Options.explore_delay);
+    }
     else if (Options.travel_delay > 0)
         delay(Options.travel_delay);
 

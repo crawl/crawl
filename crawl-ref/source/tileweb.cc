@@ -2294,17 +2294,17 @@ const coord_def &TilesFramework::get_cursor() const
     return m_cursor[CURSOR_MOUSE];
 }
 
-void TilesFramework::set_need_redraw(unsigned int min_tick_delay)
+void TilesFramework::set_need_redraw()
 {
-    unsigned int ticks = (get_milliseconds() - m_last_tick_redraw);
-    if (min_tick_delay && ticks <= min_tick_delay)
-        return;
-
     m_need_redraw = true;
 }
 
-bool TilesFramework::need_redraw() const
+bool TilesFramework::need_redraw(unsigned int min_tick_delay) const
 {
+    unsigned int ticks_passed = (get_milliseconds() - m_last_tick_redraw);
+    if (ticks_passed < min_tick_delay)
+        return false;
+
     return m_need_redraw;
 }
 

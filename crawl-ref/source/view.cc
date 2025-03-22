@@ -1491,7 +1491,7 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a, view_renderer 
             UNUSED(tiles_only);
 #endif
 #ifdef USE_TILE
-            tiles.set_need_redraw(you.running ? Options.tile_runrest_rate : 0);
+            tiles.set_need_redraw();
             tiles.load_dungeon(vbuf, crawl_view.vgrdc);
             tiles.update_tabs();
 #endif

@@ -850,7 +850,7 @@ const vector<GameOption*> game_options::build_options_list()
         new IntGameOption(SIMPLE_NAME(tile_tooltip_ms), 0, 0, INT_MAX),
 #endif
         new IntGameOption(SIMPLE_NAME(tile_update_rate), 1000, 50, INT_MAX),
-        new IntGameOption(SIMPLE_NAME(tile_runrest_rate), 100, 0, INT_MAX),
+        new IntGameOption(SIMPLE_NAME(tile_runrest_rate), 17, 0, INT_MAX),
         // minimap colours
         new TileColGameOption(SIMPLE_NAME(tile_branchstairs_col), "#ff7788"),
         new TileColGameOption(SIMPLE_NAME(tile_deep_water_col), "#001122"),
