@@ -473,14 +473,15 @@ bool can_equip_item(const item_def& item, bool include_form, string* veto_reason
     // type, is there some *other* reason they cannot wear this item?
     if (item.base_type == OBJ_ARMOUR)
     {
-        size_type player_size = you.body_size(PSIZE_TORSO, !include_form);
-        if (get_armour_slot(static_cast<armour_type>(item.sub_type)) == SLOT_BODY_ARMOUR)
+        const size_type player_size = you.body_size(PSIZE_TORSO, !include_form);
+        const equipment_slot slot = get_armour_slot(static_cast<armour_type>(item.sub_type));
+        if (slot == SLOT_BODY_ARMOUR || slot == SLOT_OFFHAND)
         {
             int bad_size = fit_armour_size(item, player_size);
             if (bad_size != 0)
             {
-                NO_EQUIP(make_stringf("This armour is too %s for you!",
-                                            (bad_size > 0) ? "big" : "small"))
+                NO_EQUIP(make_stringf("That is too %s for you to equip!",
+                                            (bad_size > 0) ? "large" : "small"))
             }
         }
 
