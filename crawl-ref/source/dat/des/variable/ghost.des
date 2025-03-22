@@ -876,7 +876,8 @@ MONS:   death cob w:20 / shadow dragon w:20 / storm dragon simulacrum \
         / draconian monk spectre
 MONS:   bone dragon w:40 / golden dragon simulacrum / golden dragon spectre \
         / quicksilver dragon simulacrum / quicksilver dragon spectre \
-        / killer klown simulacrum / killer klown spectre
+        / killer klown simulacrum / killer klown spectre \
+        / anachrobat simulacrum / anachrobat spectre
 MONS:   ancient lich / dread lich / curse toe
 SUBST:  fghij = |*
 NSUBST: D = 5=1 / 5=1- / 2=2 / 4=2- / 3 / 2=3- / -
@@ -2515,7 +2516,7 @@ MONS:   rakshasa w:5 / very ugly thing w:5 / great orb of eyes w:5 \
         / glowing orange brain / tentacled starspawn / cacodemon \
         / glowing shapeshifter / crystal guardian / tentacled monstrosity
 MONS:   draconian shifter / daeva god:Xom / executioner / profane servitor \
-        / killer klown
+        / killer klown / anachrobat
 MONS:   lurking horror / wretched star / hellion / apocalypse crab \
         / starcursed mass
 MONS:   ancient lich / dread lich / hellephant / hell sentinel / wyrmhole w:4

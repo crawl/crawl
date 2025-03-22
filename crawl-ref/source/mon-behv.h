@@ -14,6 +14,8 @@
 
 #define MON_SPELL_USABLE_KEY "mon_spell_usable"
 
+#define BULLET_TIME_METHOD_KEY "bullet_time_method"
+
 class actor;
 
 enum mon_event_type
@@ -25,6 +27,15 @@ enum mon_event_type
     ME_WHACK,                           // physical attack
     ME_SCARE,                           // frighten monster
     ME_CORNERED,                        // cannot flee
+};
+
+enum class bullet_time_method
+{
+    pending = -1,
+    none = 0,
+    armour,
+    evasion,
+    shield,
 };
 
 class monster;
@@ -58,3 +69,7 @@ vector<monster *> find_allies_targeting(const actor &a);
 bool is_ally_target(const actor &a);
 
 void mons_end_withdraw_order(monster& mons);
+
+bullet_time_method get_bullet_time(const actor& defender);
+void set_bullet_time(actor& defender, bullet_time_method method = bullet_time_method::pending);
+bool is_bullet_time(const actor& defender, bullet_time_method method = bullet_time_method::none);

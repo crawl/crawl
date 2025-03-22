@@ -29,7 +29,8 @@ void mons_reset_just_seen();
 bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
                          bool just_check = false);
 
-bool handle_throw(monster* mons, bolt &beem, bool teleport, bool check_only);
+bool handle_throw(monster* mons, bolt &beem, bool teleport, bool check_only,
+                  bool alt_weapon = false);
 
 void handle_monsters(bool with_noise = false);
 void handle_monster_move(monster* mon);
@@ -37,3 +38,4 @@ void handle_monster_move(monster* mon);
 void queue_monster_for_action(monster* mons);
 
 void clear_monster_flags();
+void bullet_time(monster &mons);

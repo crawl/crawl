@@ -1,0 +1,22 @@
+name: "anachrobat"
+glyph: { char: "b", colour: white }
+flags: [see_invis, speaks, warm_blood, no_poly_to, no_gen_derived, two_weapons, prefer_ranged]
+xp_mult: 23
+genus: human
+will: 160
+attacks:
+  - { type: hit, damage: 10 }
+  - { type: hit, damage: 10 }
+hd: 18
+hp_10x: 800
+ac: 5
+ev: 26
+spells: anachrobat
+has_corpse: true
+shout: hiss
+intelligence: human
+speed: 15
+energy: {attack: 15}
+uses: starting_equipment
+size: medium
+shape: humanoid_winged
