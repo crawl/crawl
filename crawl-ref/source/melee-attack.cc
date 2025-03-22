@@ -1887,7 +1887,7 @@ class AuxBootknife: public AuxAttackType
 {
 public:
     AuxBootknife()
-    : AuxAttackType(5, 100, "bootknife") { };
+    : AuxAttackType(3, 100, "bootknife") { };
 
     bool xl_based_chance() const override { return false; }
 
