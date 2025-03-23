@@ -1386,22 +1386,23 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             if self.failed_messages == 0:
                 self.logger.warning("Connection closed during async write_message")
             self.failed_messages += 1
-            if self.ws_connection is not None:
+            if self.ws_connection:
                 self.ws_connection._abort()
         except tornado.websocket.WebSocketClosedError as e:
             if self.failed_messages == 0:
                 self.logger.warning("Connection closed during async write_message")
             self.failed_messages += 1
-            if self.ws_connection is not None:
+            if self.ws_connection:
                 self.ws_connection._abort()
         except Exception as e:
-            # Not necessarily as helpful, but getting the current stack is too expensive to do in the happy path
+            # Not necessarily as helpful, but getting the current stack is
+            # too expensive to do in the happy path
             cur_stack = traceback.format_stack()
             self.logger.warning("Exception during async write_message, stack at call:")
             self.logger.warning("".join(cur_stack))
             self.logger.warning(e, exc_info=True)
             self.failed_messages += 1
-            if self.ws_connection is not None:
+            if self.ws_connection:
                 self.ws_connection._abort()
 
     # send a single message batch, encoding and compressing it if necessary
@@ -1422,7 +1423,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             # TODO: this whole call chain should be converted to use coroutines
 
             # extreme back-compat `f` should be None in ancient tornado versions
-            if f is not None:
+            if f:
                 #TODO: would partial application be faster?
                 f.add_done_callback(lambda x: self.after_write_callback(x))
             # true means that something was queued up to send, but it may be
@@ -1432,12 +1433,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             if self.failed_messages == 0:
                 self.logger.warning("Connection closed during write_message")
             self.failed_messages += 1
-            if self.ws_connection is not None:
+            if self.ws_connection:
                 self.ws_connection._abort()
         except:
             self.logger.warning("Exception trying to send message.", exc_info = True)
             self.failed_messages += 1
-            if self.ws_connection is not None:
+            if self.ws_connection:
                 self.ws_connection._abort()
             return False
 
