@@ -1421,7 +1421,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             # handle any exceptions lingering in the Future
             # TODO: this whole call chain should be converted to use coroutines
 
-            start = time.perf_counter_ns()
             # extreme back-compat `f` should be None in ancient tornado versions
             if f is not None:
                 #TODO: would partial application be faster?
@@ -1448,14 +1447,14 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if self.client_closed or len(self.message_queue) == 0:
             return False
 
-        start = time.perf_counter_ns()
+        # start = time.perf_counter_ns()
         batch = ("{\"msgs\":["
             + ",".join(self.message_queue)
             + "]}")
         self.message_queue = [] # always empty the queue
         result = self._send_raw_message(batch)
 
-        self.logger.info("Message duration: %d ns", time.perf_counter_ns() - start)
+        # self.logger.info("Message duration: %d ns", time.perf_counter_ns() - start)
         return result
 
     # n.b. this looks a lot like superclass write_message, but has a static
