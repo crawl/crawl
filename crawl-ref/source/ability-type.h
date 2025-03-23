@@ -7,7 +7,7 @@ enum ability_type
     ABIL_NON_ABILITY = -1,
     // Innate abilities and (Demonspawn) mutations.
     ABIL_SPIT_POISON = 1,
-    ABIL_BREATHE_FIRE,
+    ABIL_GOLDEN_BREATH,
     ABIL_GLACIAL_BREATH,
     ABIL_BREATHE_POISON,
     ABIL_GALVANIC_BREATH,

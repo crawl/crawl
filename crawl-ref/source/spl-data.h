@@ -4440,6 +4440,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_GOLDEN_BREATH, "Golden Breath",
+    spschool::conjuration | spschool::fire | spschool::ice | spschool::alchemy,
+    spflag::dir_or_target | spflag::noisy | spflag::needs_tracer,
+    5,
+    0,
+    5, 5,
+    0,
+    TILEG_FIRE_BREATH,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

@@ -1403,6 +1403,7 @@ statue_form_djinni TRAN_STATUE_DJINN
 %syn TRAN_STATUE_EQUIP_LAST
 statue_form_felid TRAN_STATUE_FELID
 dragon_form TRAN_DRAGON
+dragon_form_red TRAN_DRAGON_RED
 dragon_form_white TRAN_DRAGON_WHITE
 dragon_form_green TRAN_DRAGON_GREEN
 dragon_form_yellow TRAN_DRAGON_YELLOW

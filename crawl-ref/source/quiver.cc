@@ -1335,7 +1335,7 @@ namespace quiver
         case ABIL_RU_POWER_LEAP: // disable under nomove, or altogether?
         case ABIL_SPIT_POISON:
         case ABIL_CAUSTIC_BREATH:
-        case ABIL_BREATHE_FIRE:
+        case ABIL_GOLDEN_BREATH:
         case ABIL_GLACIAL_BREATH:
         case ABIL_BREATHE_POISON:
         case ABIL_NULLIFYING_BREATH:

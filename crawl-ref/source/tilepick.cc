@@ -3551,6 +3551,7 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dir, int dist)
     case TILE_BOLT_FORCE_LANCE:
     case TILE_BOLT_HARPOON_SHOT:
     case TILE_BOLT_METAL_SPLINTERS:
+    case TILE_BOLT_FROSTFIRE:
         return tile + dir;
 
     case TILE_BOLT_ZAP:
@@ -3878,7 +3879,8 @@ tileidx_t tileidx_ability(const ability_type ability)
     // Innate abilities and (Demonspaw) mutations.
     case ABIL_SPIT_POISON:
         return TILEG_ABILITY_SPIT_POISON;
-    case ABIL_BREATHE_FIRE:
+    case ABIL_GOLDEN_BREATH:
+        return TILEG_ABILITY_GOLDEN_BREATH;
     case ABIL_COMBUSTION_BREATH:
         return TILEG_ABILITY_BREATHE_FIRE;
     case ABIL_GLACIAL_BREATH:

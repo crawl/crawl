@@ -7173,7 +7173,7 @@ static void _maybe_note_armour_modifier(vector<vector<string>>& items,
 
 static void _maybe_note_form_dice(vector<vector<string>>& items,
                                   function<dice_def(int)> func, string label,
-                                  const int skill[3])
+                                  const int skill[3], const string suffix = "")
 {
     dice_def data[3];
     for (int i = 0; i < 3; ++i)
@@ -7185,9 +7185,9 @@ static void _maybe_note_form_dice(vector<vector<string>>& items,
 
     vector<string> labels;
     labels.push_back(label);
-    labels.push_back(make_stringf("%dd%d", data[0].num, data[0].size));
-    labels.push_back(make_stringf("%dd%d", data[1].num, data[1].size));
-    labels.push_back(make_stringf("%dd%d", data[2].num, data[2].size));
+    labels.push_back(make_stringf("%dd%d%s", data[0].num, data[0].size, suffix.c_str()));
+    labels.push_back(make_stringf("%dd%d%s", data[1].num, data[1].size, suffix.c_str()));
+    labels.push_back(make_stringf("%dd%d%s", data[2].num, data[2].size, suffix.c_str()));
 
     items.push_back(labels);
 }
@@ -7305,7 +7305,8 @@ static string _describe_talisman_form(const item_def &item)
     _maybe_populate_form_table(items, bind(&Form::get_web_chance, form, placeholders::_1), "Ensnare Chance", skill, 0, true, false);
     _maybe_note_armour_modifier(items, *form, skill);
 
-    _maybe_note_form_dice(items, bind(&Form::get_special_damage, form, false, placeholders::_1), form->special_dice_name, skill);
+    _maybe_note_form_dice(items, bind(&Form::get_special_damage, form, false, placeholders::_1), form->special_dice_name, skill,
+                          form_type == transformation::dragon && !species::is_draconian(you.species) ? " (x2)" : "");
 
     if (form_type == transformation::maw)
         _maybe_populate_form_table(items, bind(&Form::get_aux_damage, form, false, placeholders::_1), "Bite Dmg", skill, 0, false, false);

@@ -586,32 +586,17 @@ An intricate carving, inlaid with dragon tooth and scale. {{
     local desc = "Transforms the user into a mighty"
 
     if you.race():find("Draconian") then
-        desc = desc .. " dragon"
-        if you.race() ~= "Grey Draconian" then
-            desc = desc .. ", increasing the power of any innate breath attacks"
-        end
-        if you.race() == "Red Draconian" then
-            desc = desc .. ". The user becomes highly resistant to fire " ..
-                           "and resistant to poison, but vulnerable to cold"
-        elseif you.race() == "White Draconian" then
-            desc = desc .. ". The user becomes highly resistant to cold " ..
-                           "and resistant to poison, but vulnerable to fire"
-        elseif you.race() == "Green Draconian" then
-            desc = desc .. " and retaining their innate colour"
-        else
-            desc = desc .. ". The user retains their innate colour, and " ..
-                           "becomes resistant to poison"
-        end
+        desc = desc .. " dragon. The user retains their innate colour, " ..
+                       "becomes resistant to poison, and their breath weapon's " ..
+                       "power and recharge rate are greatly increased."
     else
-        desc = desc .. ", fire-breathing dragon. The user becomes highly " ..
-                       "resistant to fire and resistant to poison, but " ..
-                       "vulnerable to cold"
+        desc = desc .. " golden dragon. The user becomes resistant to fire, " ..
+                       "cold, and poison, and gains a powerful breath attack " ..
+                       "that inflicts all three types of damage at once, but " ..
+                       "only recharges as you gain XP."
     end
-
-    desc = desc .. "."
-
     return desc
-}} Shapeshifting skill increases damage from claws and armour from scales.
+}}
 %%%%
 earthy gem
 

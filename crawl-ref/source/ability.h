@@ -91,3 +91,6 @@ vector<ability_type> get_god_abilities(bool ignore_silence = true,
                                        bool ignore_piety = true,
                                        bool ignore_penance = true);
 void swap_ability_slots(int index1, int index2, bool silent = false);
+
+spell_type draconian_breath_to_spell(ability_type abil);
+int draconian_breath_power(int shapeshifting_skill = -1);

@@ -3155,7 +3155,8 @@ static void _tag_read_you(reader &th)
         if (th.getMinorVersion() < TAG_MINOR_NEW_DRACONIAN_BREATH
             && species::is_draconian(you.species) && you.experience_level >= 7)
         {
-            if (a == ABIL_BREATHE_FIRE)
+            // XXX: Used to be ABIL_BREATHE_FIRE
+            if (a == ABIL_GOLDEN_BREATH)
                 a = ABIL_COMBUSTION_BREATH;
 
             // Give some charges to existing draconians

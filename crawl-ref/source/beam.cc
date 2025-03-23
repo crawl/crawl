@@ -3078,6 +3078,9 @@ void bolt::affect_place_clouds()
     if (origin_spell == SPELL_RUST_BREATH)
         place_cloud(CLOUD_RUST, p, 5 + ench_power * 2 / 3 + random2(2), agent());
 
+    if (origin_spell == SPELL_GOLDEN_BREATH)
+        place_cloud(CLOUD_POISON, p, random_range(4, 8), agent());
+
     // Only place clouds on creatures who are immune to them
     if (origin_spell == SPELL_MOURNING_WAIL)
     {

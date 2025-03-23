@@ -2316,7 +2316,8 @@ static void _handle_hp_drain(int exp)
 
 static void _handle_breath_recharge(int exp)
 {
-    if (!species::is_draconian(you.species) || you.experience_level < 7
+    if (!(species::is_draconian(you.species) && you.experience_level >= 7
+            || you.form == transformation::dragon)
         || you.props[DRACONIAN_BREATH_USES_KEY].get_int() >= MAX_DRACONIAN_BREATH)
     {
         return;
@@ -2326,6 +2327,8 @@ static void _handle_breath_recharge(int exp)
         you.props[DRACONIAN_BREATH_RECHARGE_KEY] = 50;
 
     int loss = div_rand_round(exp, calc_skill_cost(you.skill_cost_level));
+    if (you.form == transformation::dragon)
+        loss *= 2;
     you.props[DRACONIAN_BREATH_RECHARGE_KEY].get_int() -= loss;
 
     if (you.props[DRACONIAN_BREATH_RECHARGE_KEY].get_int() <= 0)

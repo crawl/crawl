@@ -2743,6 +2743,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     }
     break;
 
+    case SPELL_GOLDEN_BREATH:
+        return cast_golden_breath(beam, powc, fail);
+
     case SPELL_GELLS_GAVOTTE:
         return cast_gavotte(powc, beam.target - you.pos(), fail);
 

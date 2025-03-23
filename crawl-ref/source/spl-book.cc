@@ -256,6 +256,7 @@ static unordered_set<int> _player_nonbook_spells =
     SPELL_MUD_BREATH,
     // Form spells
     SPELL_RUST_BREATH,
+    SPELL_GOLDEN_BREATH,
 };
 
 bool is_player_spell(spell_type which_spell)

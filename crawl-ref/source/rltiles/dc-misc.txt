@@ -244,6 +244,15 @@ doom_howl BOLT_DOOM_HOWL
 
 phantom_blitz BOLT_PHANTOM_BLITZ
 
+frostfire0 BOLT_FROSTFIRE
+frostfire1
+frostfire2
+frostfire3
+frostfire4
+frostfire5
+frostfire6
+frostfire7
+
 # Divine bolts
 shadow_beam0 BOLT_SHADOW_BEAM
 shadow_beam1

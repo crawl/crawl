@@ -1573,6 +1573,9 @@ static bool _draconian_dragon_form_exception(mutation_type mut)
 {
     if (you.form == transformation::dragon)
     {
+        if (mut == MUT_ARMOURED_TAIL)
+            return true;
+
         monster_type drag = species::dragon_form(you.species);
         if (mut == MUT_SHOCK_RESISTANCE && drag == MONS_STORM_DRAGON)
             return true;

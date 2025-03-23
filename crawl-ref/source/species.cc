@@ -223,8 +223,9 @@ namespace species
         case SP_PALE_DRACONIAN:
             return MONS_STEAM_DRAGON;
         case SP_RED_DRACONIAN:
-        default:
             return MONS_FIRE_DRAGON;
+        default:
+            return MONS_GOLDEN_DRAGON;
         }
     }
 
@@ -606,7 +607,7 @@ namespace species
 
 int draconian_breath_uses_available()
 {
-    if (!species::is_draconian(you.species))
+    if (!species::is_draconian(you.species) && you.form != transformation::dragon)
         return 0;
 
     if (!you.props.exists(DRACONIAN_BREATH_USES_KEY))

@@ -10,6 +10,7 @@
 #include <cstdio>
 #include <cstring>
 
+#include "ability.h"
 #include "artefact.h"
 #include "art-enum.h"
 #include "database.h"
@@ -38,6 +39,7 @@
 #include "shout.h"
 #include "skills.h"
 #include "spl-cast.h"
+#include "spl-zap.h"
 #include "state.h"
 #include "stringutil.h"
 #include "tag-version.h"
@@ -48,6 +50,8 @@
 
 // List of valid monsters newly seen this turn for a sphinx to tell a riddle to.
 vector<monster*> riddle_targs;
+
+#define HAS_USED_DRAGON_TALISMAN_KEY "used_dragon_talisman"
 
 // transform slot enums into flags
 #define SLOTF(s) (1 << s)
@@ -736,10 +740,8 @@ public:
     {
         switch (species::dragon_form(you.species))
         {
-            case MONS_FIRE_DRAGON:
-                return 2;
-            case MONS_ICE_DRAGON:
-                return -1;
+            case MONS_GOLDEN_DRAGON:
+                return 1;
             default:
                 return 0;
         }
@@ -752,13 +754,25 @@ public:
     {
         switch (species::dragon_form(you.species))
         {
-            case MONS_ICE_DRAGON:
-                return 2;
-            case MONS_FIRE_DRAGON:
-                return -1;
+            case MONS_GOLDEN_DRAGON:
+                return 1;
             default:
                 return 0;
         }
+    }
+
+    dice_def get_special_damage(bool random = true, int skill = -1) const override
+    {
+        ability_type abil = species::draconian_breath(you.species);
+        spell_type spell = abil == ABIL_NON_ABILITY ? SPELL_GOLDEN_BREATH
+                                                    : draconian_breath_to_spell(abil);
+
+        const zap_type zap = spell_to_zap(spell);
+
+        if (spell == SPELL_COMBUSTION_BREATH)
+            return combustion_breath_damage(draconian_breath_power(skill), random);
+        else
+            return zap_damage(zap, draconian_breath_power(skill), false, random);
     }
 };
 
@@ -1676,6 +1690,15 @@ static void _on_enter_form(transformation which_trans)
                 destroy_item(net);
                 stop_being_held();
             }
+        }
+
+        // The first time the player becomes a dragon, given them a charge of
+        // their breath weapon so they can actually use them.
+        if (!you.props.exists(HAS_USED_DRAGON_TALISMAN_KEY)
+            && !species::is_draconian(you.species))
+        {
+            gain_draconian_breath_uses(1);
+            you.props[HAS_USED_DRAGON_TALISMAN_KEY] = true;
         }
         break;
 

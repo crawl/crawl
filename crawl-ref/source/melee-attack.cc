@@ -1791,7 +1791,6 @@ public:
                             || you.has_mutation(MUT_ARMOURED_TAIL)
                             || you.has_mutation(MUT_WEAKNESS_STINGER)
                             || you.has_mutation(MUT_WEAKNESS_STINGER)
-                            || you.form == transformation::dragon
                             ? 6 : 0;
 
         return base + max(0, you.get_mutation_level(MUT_ARMOURED_TAIL) - 1) * 4
@@ -1820,8 +1819,7 @@ public:
         return you.has_mutation(MUT_ARMOURED_TAIL)
                 || you.has_mutation(MUT_STINGER)
                 || you.has_mutation(MUT_WEAKNESS_STINGER)
-                || you.fishtail
-                || you.form == transformation::dragon;
+                || you.fishtail;
     }
 };
 

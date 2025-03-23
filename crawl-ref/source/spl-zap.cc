@@ -170,6 +170,7 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_THROW_BOLAS, ZAP_BOLAS },
     { SPELL_SOJOURNING_BOLT, ZAP_SOJOURNING },
     { SPELL_RAVENOUS_SWARM, ZAP_RAVENOUS_SWARM },
+    { SPELL_GOLDEN_BREATH, ZAP_GOLDEN_BREATH },
 
     // This is just to satisfy monster spell setup code
     { SPELL_HELLFIRE_MORTAR, ZAP_HELLFIRE_MORTAR_DIG },
@@ -195,7 +196,6 @@ static pair<spell_type, zap_type> _spl_zaps[] =
 static pair<ability_type, zap_type> _abil_zaps[] =
 {
     { ABIL_SPIT_POISON, ZAP_SPIT_POISON },
-    { ABIL_BREATHE_FIRE, ZAP_BREATHE_FIRE },
     { ABIL_BREATHE_POISON, ZAP_BREATHE_POISON },
     { ABIL_MAKHLEB_DESTRUCTION, ZAP_UNLEASH_DESTRUCTION },
 };

@@ -2750,4 +2750,22 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     false,
 },
 
+// Name and flavor filled in via cast_golden_breath
+{
+    ZAP_GOLDEN_BREATH,
+    "buggy blast",
+    200,
+    new dicedef_calculator<3, 2, 4, 3>,
+    new tohit_calculator<20, 1, 5>,
+    nullptr,
+    nullptr,
+    RED,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    true,
+    false,
+    TILE_BOLT_FROSTFIRE
+},
+
 };

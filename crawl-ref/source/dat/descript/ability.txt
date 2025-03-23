@@ -188,6 +188,11 @@ Exhales a blast of oxidizing vapour that continuously corrodes and weakens the
 attacks of creatures which stand inside it. These clouds are long-lasting, but
 do only minimal damage.
 %%%%
+Golden Breath ability
+
+Exhales a powerful blast of elemental devastation, which inflicts both fire and
+cold damage, and leaves clouds of poisonous vapour in its wake.
+%%%%
 # Zin
 Recite ability
 

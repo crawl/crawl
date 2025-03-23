@@ -555,7 +555,7 @@ tileidx_t tileidx_player()
         case SP_PALE_DRACONIAN:    ch = TILEP_TRAN_DRAGON_PALE;     break;
         case SP_PURPLE_DRACONIAN:  ch = TILEP_TRAN_DRAGON_PURPLE;   break;
         case SP_WHITE_DRACONIAN:   ch = TILEP_TRAN_DRAGON_WHITE;    break;
-        case SP_RED_DRACONIAN:
+        case SP_RED_DRACONIAN:     ch = TILEP_TRAN_DRAGON_RED;      break;
         default:                   ch = TILEP_TRAN_DRAGON;          break;
         }
         break;

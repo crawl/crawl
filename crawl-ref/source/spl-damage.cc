@@ -3155,6 +3155,44 @@ spret cast_watery_grave()
     return spret::success;
 }
 
+spret cast_golden_breath(bolt& beam, int power, bool fail)
+{
+    bolt tracer = beam;
+
+    tracer.set_is_tracer(true);
+    tracer.fire();
+
+    if (warn_about_bad_targets(SPELL_GOLDEN_BREATH, tracer.path_taken,
+        [](const monster& m) { return m.res_fire() == 3 && m.res_cold() == 3
+                                      && m.res_poison() > 1;}, "Breathe anyway?"))
+    {
+        return spret::abort;
+    }
+
+    fail_check();
+
+    mpr("You exhale a blast of multi-hued devastation!");
+
+    bolt fire_beam = beam;
+    fire_beam.set_agent(&you);
+    zappy(ZAP_GOLDEN_BREATH, power, false, fire_beam);
+    fire_beam.flavour = BEAM_FIRE;
+    fire_beam.colour = RED;
+    fire_beam.name = "blast of fire";
+
+    bolt cold_beam = beam;
+    cold_beam.set_agent(&you);
+    zappy(ZAP_GOLDEN_BREATH, power, false, cold_beam);
+    cold_beam.flavour = BEAM_COLD;
+    cold_beam.name = "blast of cold";
+    cold_beam.animate = false;       // Skip animation on this one.
+
+    fire_beam.fire();
+    cold_beam.fire();
+
+    return spret::success;
+}
+
 static bool _elec_not_immune(const actor *act)
 {
     return act->res_elec() < 3 && !never_harm_monster(&you, act->as_monster());

@@ -192,3 +192,5 @@ bool find_life_bolt_ray(coord_def& source, coord_def target, ray_def& ray);
 void fire_life_bolt(actor& attacker, coord_def target);
 
 spret cast_watery_grave();
+
+spret cast_golden_breath(bolt& beam, int power, bool fail);
