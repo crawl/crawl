@@ -726,11 +726,12 @@ xxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   minmay_twisted_water
+DEPTH:  D:9-
 ORIENT: north
 TAGS:   no_descent
-DEPTH:  D:9-
+KPROP:  W-*|123 = no_tele_into
 SUBST:  W = wW
-MONS:   ice statue, patrolling ice dragon, patrolling frost giant, ice beast
+MONS:   ice statue, patrolling ice dragon, patrolling frost giant
 KMONS:  w = w:490 nothing / ice beast
 KFEAT:  w = w
 MAP
@@ -738,14 +739,14 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxx*xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxWxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxwwxxxx*xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxwwwwxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxwwwwxx-xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxwwwxxxWWxxxWwxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxwwxwwwwxx*xxwxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxwwwwwxxxxxwwxxxxxxxxxxxwwW.xxxxx
-xxxxxxxxxxxxx..xxwwwwwxxxwwwxxxxxxxxwwwwwWWWwxxx
-xxxxxxxxxxx.....Wwwxwwwwwwwwxxxxxxwwwwwwwwwwwwxx
-xxxxxxxxxxx.....xwwxwwwwwxxxxxxxxwwwwwwwwwwwwwxx
-xxxxxxxxxxxx.3.xxxwxxwwxxxxxxxxxxwwwwwwwwwwwwwwx
+xxxxxxxxxxxxxxxxwwwwwxxxxxwwxxxxxxxxxxxwwW-xxxxx
+xxxxxxxxxxxxx--xxwwwwwxxxwwwxxxxxxxxwwwwwWWWwxxx
+xxxxxxxxxxx-----Wwwxwwwwwwwwxxxxxxwwwwwwwwwwwwxx
+xxxxxxxxxxx-----xwwxwwwwwxxxxxxxxwwwwwwwwwwwwwxx
+xxxxxxxxxxxx-3-xxxwxxwwxxxxxxxxxxwwwwwwwwwwwwwwx
 xxxxxxxxxxxxWWWxxxwxxxxxxxxxxxxxwwwwwwxxxwwwwwwx
 xxxxxxxxxxxwwwwxxxwwxxxxxxxxxxxxwwwxxxxxxxxwwwwx
 xxxxxxxxxxwwwwxxxxwwwxxxxxxxxxxwwwxxxxxxxxxwwwwx
@@ -753,7 +754,7 @@ xxxxxxxxxxxwwwwwwwwwwxxxxxxxxwwwwxxxx**|xxwwwwxx
 xxxxxxxxxxxxxwwwwwwwwwwxxxwwwwwwxxxxWW2*xxwwwwxx
 xxxxxxxxxxxxxwwwwwwwwwwwwwwwwwwxxxxxwwWWxwwwwwxx
 xxxxxxxxxxxxWwwwwwwwwwwwwwwwwwwxxxxxwwwwwwwwwxxx
-xxxxxxxxxxx.Wwwwwwwwwwwwwwwwwwxxxxxxxwwwwwwwxxxx
+xxxxxxxxxxx-Wwwwwwwwwwwwwwwwwwxxxxxxxwwwwwwwxxxx
 xxxxxxxxxxxWWwwwwwwwwwwwwwwwwwxxxxxxxxxwwwxxxxxx
 xxxxxxxxxxxxwwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxwwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxx
@@ -763,12 +764,12 @@ xx*Wxxx*xxwwwwwwwwwwWWWwwwwwwwxxxxxxxxxxxxxxxxxx
 xxxWxxWWxxwwwwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxx
 xxxwxxwxxwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxxxxx
 xxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxxxx
-xxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwW.xxxxxxxxxxxxxx
+xxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwW-xxxxxxxxxxxxxx
 xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwWWWwwxxxxxxxxxxx
 xwwxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxx
 xWxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxx
 x*xxxWwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxx
-xxxx.Wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxx
+xxxx-Wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxx
 xxxxxWwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxx
 xxxxxwwwwwwwwwwwwww...........wwwwwwwwwwwwwwwwwx
 xxxwwwwwww..........................wwwwwwwwwwwx
