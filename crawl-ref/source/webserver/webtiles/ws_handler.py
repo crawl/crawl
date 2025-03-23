@@ -286,9 +286,15 @@ MessageBundle = collections.namedtuple('MessageBundle', ["binmsg", "compressed"]
 MessageBundle.__bool__ = lambda self: bool(self.binmsg)
 
 class CrawlWebSocket(tornado.websocket.WebSocketHandler):
+    __slots__ = ("username", "user_id", "user_email",
+                 "timeout", "lobby_timeout", "watched_game",
+                 "process", "game_id", "received_pong", "save_info", "id",
+                 "deflate", "_compressobj", "total_message_bytes",
+                 "compressed_bytes_sent", "uncompressed_bytes_sent",
+                 "message_queue", "failed_messages", "failed_on_messages",
+                 "subprotocol", "chat_hidden", "logger")
     def __init__(self, app, req, **kwargs):
         # init takes ~57000ns
-        start =  time.perf_counter_ns()
         tornado.websocket.WebSocketHandler.__init__(self, app, req, **kwargs)
         self.username = None
         self.user_id = None
@@ -355,7 +361,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             "admin_pw_reset": self.admin_pw_reset,
             "admin_pw_reset_clear": self.admin_pw_reset_clear
             }
-        self.logger.info("compress: %d ns", end - start)
 
     @admin_required
     def admin_announce(self, text):
@@ -1417,11 +1422,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             return False
 
         try:
-            start = time.perf_counter_ns()
             # ~100,000ns at compression level = 6, ~70000 at level 1
-            # ~15000ns with it disabled
+            # ~15,000ns with it disabled
             to_send = self._encode_for_send(msg)
-            self.logger.info("Message duration 1: %d ns", time.perf_counter_ns() - start)
             # Most of the time is spent here
             # 100,000ns, approx, for full map messages
             if self.deflate:
