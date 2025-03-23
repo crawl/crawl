@@ -287,6 +287,8 @@ MessageBundle.__bool__ = lambda self: bool(self.binmsg)
 
 class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def __init__(self, app, req, **kwargs):
+        # init takes ~57000ns
+        start =  time.perf_counter_ns()
         tornado.websocket.WebSocketHandler.__init__(self, app, req, **kwargs)
         self.username = None
         self.user_id = None
@@ -305,13 +307,16 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.id = current_id
         current_id += 1
 
-        self.deflate = True
+        self.deflate = False
         # Tweak: compression from 0 to 9
         # Default zlib.Z_DEFAULT_COMPRESSION is -1 => 6
         # Seems a bit rich for our CPU budget
+        # this call alone takes ~5000ns
         self._compressobj = zlib.compressobj(1,
                                              zlib.DEFLATED,
                                              -zlib.MAX_WBITS)
+        end = time.perf_counter_ns()
+
         self.total_message_bytes = 0
         self.compressed_bytes_sent = 0
         self.uncompressed_bytes_sent = 0
@@ -350,6 +355,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             "admin_pw_reset": self.admin_pw_reset,
             "admin_pw_reset_clear": self.admin_pw_reset_clear
             }
+        self.logger.info("compress: %d ns", end - start)
 
     @admin_required
     def admin_announce(self, text):
@@ -1411,14 +1417,17 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             return False
 
         try:
+            start = time.perf_counter_ns()
+            # ~100,000ns at compression level = 6, ~70000 at level 1
+            # ~15000ns with it disabled
             to_send = self._encode_for_send(msg)
-
+            self.logger.info("Message duration 1: %d ns", time.perf_counter_ns() - start)
             # Most of the time is spent here
+            # 100,000ns, approx, for full map messages
             if self.deflate:
                 f = self.write_message(to_send, binary=True)
             else:
                 f = self.write_message(to_send)
-
             # handle any exceptions lingering in the Future
             # TODO: this whole call chain should be converted to use coroutines
 
@@ -1448,14 +1457,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if self.client_closed or len(self.message_queue) == 0:
             return False
 
-        # start = time.perf_counter_ns()
         batch = ("{\"msgs\":["
             + ",".join(self.message_queue)
             + "]}")
         self.message_queue = [] # always empty the queue
         result = self._send_raw_message(batch)
 
-        # self.logger.info("Message duration: %d ns", time.perf_counter_ns() - start)
         return result
 
     # n.b. this looks a lot like superclass write_message, but has a static
