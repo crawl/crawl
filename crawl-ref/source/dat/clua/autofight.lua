@@ -204,12 +204,14 @@ local function move_towards(dx, dy)
   local move = choose_move_towards(0, 0, dx, dy, can_move_now)
   if move == nil then
     crawl.mpr("Failed to move towards target.")
-  else
-    if you.status("immotile") then
+  elseif you.status("immotile") then
+    if AUTOFIGHT_WAIT then
       crawl.do_commands({"CMD_WAIT"})
     else
-      crawl.do_commands({delta_to_cmd(move[1],move[2])})
+      crawl.mpr("Failed to move towards target because you cannot move.")
     end
+  else
+      crawl.do_commands({delta_to_cmd(move[1],move[2])})
   end
 end
 
