@@ -954,6 +954,8 @@ bool melee_attack::handle_phase_damaged()
         {
             _inflict_deathly_blight(*(defender->as_monster()));
         }
+        if (you.form == transformation::sun_scarab && defender->alive() && coinflip())
+            sear_defender();
     }
 
     return true;
@@ -2692,6 +2694,31 @@ void melee_attack::player_weapon_upsets_god()
     }
 }
 
+void melee_attack::sear_defender()
+{
+    bool visible_effect = false;
+    if (defender->is_player())
+    {
+        if (defender->res_fire() <= 3 && !you.duration[DUR_FIRE_VULN])
+            visible_effect = true;
+        you.increase_duration(DUR_FIRE_VULN, 5 + random2(attk_damage), 50);
+    }
+    else
+    {
+        if (!defender->as_monster()->has_ench(ENCH_FIRE_VULN))
+            visible_effect = true;
+        defender->as_monster()->add_ench(
+            mon_enchant(ENCH_FIRE_VULN, 1, attacker,
+                        (5 + random2(attk_damage)) * BASELINE_DELAY));
+    }
+
+    if (needs_message && visible_effect)
+    {
+        mprf("%s fire resistance is stripped away!",
+             def_name(DESC_ITS).c_str());
+    }
+}
+
 /* Apply some player-specific hit effects.
  *
  * Called after damage is calculated, but before unrand effects and before
@@ -3874,33 +3901,10 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_SEAR:
-    {
         if (!one_chance_in(3))
-            break;
+            sear_defender();
 
-        bool visible_effect = false;
-        if (defender->is_player())
-        {
-            if (defender->res_fire() <= 3 && !you.duration[DUR_FIRE_VULN])
-                visible_effect = true;
-            you.increase_duration(DUR_FIRE_VULN, 3 + random2(attk_damage), 50);
-        }
-        else
-        {
-            if (!defender->as_monster()->has_ench(ENCH_FIRE_VULN))
-                visible_effect = true;
-            defender->as_monster()->add_ench(
-                mon_enchant(ENCH_FIRE_VULN, 1, attacker,
-                            (3 + random2(attk_damage)) * BASELINE_DELAY));
-        }
-
-        if (needs_message && visible_effect)
-        {
-            mprf("%s fire resistance is stripped away!",
-                 def_name(DESC_ITS).c_str());
-        }
         break;
-    }
 
     case AF_SPIDER:
     {

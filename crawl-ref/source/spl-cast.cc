@@ -367,6 +367,9 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
     if (you.form == transformation::sphinx && spell_typematch(spell, spschool::hexes))
         fail_reduce = fail_reduce * 2 / 3;
 
+    if (you.form == transformation::sun_scarab && spell_typematch(spell, spschool::fire))
+        fail_reduce = fail_reduce * 2 / 3;
+
     const int wizardry = player_wizardry();
 
     if (wizardry > 0)

@@ -31,6 +31,7 @@
 #include "melee-attack.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-abil.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-place.h"
@@ -443,6 +444,8 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
                 return true;
         }
 
+        const bool was_firewood = defender->is_firewood();
+
         melee_attack attk(&you, defender);
 
         if (simu)
@@ -487,6 +490,9 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
 
         if (you.duration[DUR_PARAGON_ACTIVE])
             paragon_attack_trigger();
+
+        if (you.form == transformation::sun_scarab && !was_firewood)
+            solar_ember_blast();
 
         return true;
     }

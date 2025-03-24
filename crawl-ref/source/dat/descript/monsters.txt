@@ -2736,6 +2736,15 @@ snapping turtle
 A belligerent testudine with an armoured carapace. Its neck is surprisingly
 extensible and can reach out and bite from afar.
 %%%%
+solar ember
+
+A mote of intense light and heat manifested by a sun scarab. It is linked to
+their essence and will never leave their side, being reconstituted time and time
+again whenever it is extinguished.
+
+Some myths even claim that the sun which shines down upon the outside world was
+once carried around by such a scarab.
+%%%%
 soul eater
 
 A demon that manifests as a malignantly shifting shadow gliding through the

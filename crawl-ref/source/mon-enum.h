@@ -184,6 +184,7 @@ enum mon_summon_type
     MON_SUMM_CACOPHONY, // Poltergeist ability
     MON_SUMM_THRALL,    // Vampiric thralls
     MON_SUMM_HIVE,      // Hive form insects
+    MON_SUMM_SUN_SCARAB, // Sun Scarab's solar ember
 };
 
 #include "mon-flags.h"

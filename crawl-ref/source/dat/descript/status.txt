@@ -1189,3 +1189,7 @@ You are a walking scroll, parchment crisp and full of magic.
 Crab status
 
 You are a heavily-armoured crab with rusting breath.
+%%%%
+Scarab status
+
+You are a sun scarab, with solar fire blazing beside you.

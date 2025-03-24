@@ -330,6 +330,7 @@ enum monster_type                      // env.mons[].type
     MONS_NARGUN,
     MONS_PLATINUM_PARAGON,
     MONS_WALKING_ALEMBIC,
+    MONS_SOLAR_EMBER,
 #endif
     MONS_ORB_OF_FIRE,    // Swords renamed to fit -- bwr
 #if TAG_MAJOR_VERSION > 34
@@ -1334,6 +1335,7 @@ enum monster_type                      // env.mons[].type
     MONS_REVENANT,               // player species dummy
     MONS_NAMELESS_REVENANT,      // 'Nobody' (except with a less misleading enum name)
     MONS_PETRIFIED_FLOWER,
+    MONS_SOLAR_EMBER,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

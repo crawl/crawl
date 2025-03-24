@@ -2020,6 +2020,15 @@ void handle_monster_move(monster* mons)
         return;
     }
 
+    // Solar embers shouldn't attempt to reposition around the player on their
+    // own. (It makes their AoE harder to predict and control.)
+    if (mons->type == MONS_SOLAR_EMBER && adjacent(you.pos(), mons->pos()))
+    {
+        mons->lose_energy(EUT_MOVE);
+        return;
+    }
+
+
     // Melt barricades whose creator has moved too far away.
     if (mons->type == MONS_SPLINTERFROST_BARRICADE)
     {
@@ -3243,11 +3252,16 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
                 return false;
             }
             // Don't consider moving into enemies good enough if we're trying
-            // to return to our creator.
-            else if (grid_distance(creator->pos(), mons->pos()) > leash_range
-                     && actor_at(targ))
+            // to return to our creator (but swapping with friendlies is
+            // allowed).
+            else if (grid_distance(creator->pos(), mons->pos()) > leash_range)
             {
-                return false;
+                actor* act = actor_at(targ);
+                if (act && !(act->is_monster() && mons_aligned(act, mons)
+                             && _mons_can_displace(mons, act->as_monster())))
+                {
+                    return false;
+                }
             }
         }
     }

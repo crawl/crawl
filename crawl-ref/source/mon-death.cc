@@ -2564,6 +2564,13 @@ item_def* monster_die(monster& mons, killer_type killer,
                                                         * BASELINE_DELAY;
         }
     }
+    // Note that 'timeout' deaths happen when the player leaves the floor.
+    else if (mons.type == MONS_SOLAR_EMBER && real_death && !timeout)
+    {
+        you.props[SOLAR_EMBER_REVIVAL_KEY].get_int() = you.elapsed_time + random_range(200, 320);
+        if (!you.can_see(mons))
+            mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "You feel your sun fade away.");
+    }
     else if (mons.type == MONS_BATTLESPHERE)
         end_battlesphere(&mons, true);
     else if (mons.type == MONS_SPECTRAL_WEAPON)

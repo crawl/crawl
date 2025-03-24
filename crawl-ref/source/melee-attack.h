@@ -102,7 +102,7 @@ private:
     void check_autoberserk();
     bool check_unrand_effects() override;
 
-    void rot_defender(int amount);
+    void sear_defender();
 
     bool consider_decapitation(int damage_done);
     bool attack_chops_heads(int damage_done);

@@ -68,6 +68,9 @@ constexpr int ENKINDLE_CHARGE_COST = 40;
 
 #define RIME_AURA_LAST_POS "rime_aura_pos"
 
+#define SOLAR_EMBER_MID_KEY "solar_ember_mid"
+#define SOLAR_EMBER_REVIVAL_KEY "solar_ember_revival"
+
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
 #define HORROR_LVL_OVERWHELMING  5

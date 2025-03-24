@@ -354,6 +354,7 @@ twister2
 twister3
 twister4
 orb_of_fire MONS_ORB_OF_FIRE /*'*'*/
+solar_ember MONS_SOLAR_EMBER
 boulder1 MONS_BOULDER /*'*'*/
 boulder2
 boulder3
@@ -1462,6 +1463,7 @@ werewolf_form_naga TRAN_WEREWOLF_NAGA
 werewolf_form_octopode TRAN_WEREWOLF_OCTOPODE
 walking_scroll_form TRAN_WALKING_SCROLL
 fortress_crab_form TRAN_FORTRESS_CRAB
+sun_scarab_form TRAN_SUN_SCARAB
 
 %rim 1
 

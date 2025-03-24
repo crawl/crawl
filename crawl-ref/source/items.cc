@@ -3921,6 +3921,8 @@ colour_t item_def::talisman_colour() const
         return LIGHTGREEN;
     case TALISMAN_AQUA:
         return ETC_WATER;
+    case TALISMAN_SCARAB:
+        return ETC_FIRE;
     case TALISMAN_MAW:
         return ETC_BLOOD;
     case TALISMAN_SERPENT:

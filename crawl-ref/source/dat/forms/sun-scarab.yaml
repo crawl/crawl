@@ -1,0 +1,35 @@
+enum: sun_scarab
+short_name: Scarab
+equivalent_mons: bombardier_beetle
+description: a gleaming scarab beetle.
+talisman: scarab
+skill: {min: 7, max: 14}
+melds: [physical]
+size: small
+resists: {fire: 2, poison: -1}
+ac: {base: 5, scaling: 4}
+can_swim: no
+changes_anatomy: yes
+unarmed_colour: lightred
+unarmed_name: Mandibles
+unarmed_verbs: Animal
+has_blood: no
+has_hair: no
+has_bones: no
+has_feet: yes
+has_ears: no
+special_damage: 2d4+4/3
+special_damage_name: Flare Dmg
+shout_verb: hiss
+shout_volume: -4
+hand_name: mandibles
+prayer_action: crawl onto
+flesh_name: carapace
+fakemuts:
+  - ["sun companion", "You manifest a globe of solar heat that you carry with you."]
+  - ["", "Your solar ember damages enemies next to it every second time you attack."]
+  - ["", "You heal your solar ember whenever you swap places with it."]
+  - ["searing attack", "Your melee attacks sometimes make enemies vulnerable to fire."]
+  - ["fire wizardry", "You can cast Fire magic much more easily."]
+badmuts:
+  - ["poison vulnerability", "You are susceptible to poisons. (rPois-)"]

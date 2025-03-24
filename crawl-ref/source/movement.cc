@@ -31,6 +31,7 @@
 #include "items.h"
 #include "map-knowledge.h"
 #include "message.h"
+#include "mon-abil.h"
 #include "mon-act.h"
 #include "mon-behv.h"
 #include "mon-death.h"
@@ -1141,6 +1142,13 @@ void move_player_action(coord_def move)
         // put a monster at the player's location.
         if (swap)
             targ_monst->apply_location_effects(targ);
+
+        if (swap && targ_monst->type == MONS_SOLAR_EMBER
+            && targ_monst->hit_points < targ_monst->max_hit_points)
+        {
+            targ_monst->heal(targ_monst->max_hit_points / 2);
+            mprf("You weave more energy into your solar ember.");
+        }
 
         if (you_are_delayed() && current_delay()->is_run())
             env.travel_trail.push_back(you.pos());

@@ -55,6 +55,7 @@
 #include "target.h"
 #include "teleport.h"
 #include "terrain.h"
+#include "transform.h"
 #include "view.h"
 #include "viewchar.h"
 
@@ -1385,4 +1386,47 @@ bool pyrrhic_recollection(monster& nobody)
     avoided_death_fineff::schedule(&nobody);
 
     return true;
+}
+
+// AoE attack when the player attacks in scarab form
+void solar_ember_blast()
+{
+    monster* ember = get_solar_ember();
+    if (!ember)
+        return;
+
+    if (!ember->has_ench(ENCH_SPELL_CHARGED))
+    {
+        simple_monster_message(*ember, " glows brighter.");
+        ember->add_ench(mon_enchant(ENCH_SPELL_CHARGED, 0, ember, random_range(3, 5)));
+        return;
+    }
+
+    vector<monster*> targs;
+    for (adjacent_iterator ai(ember->pos()); ai; ++ai)
+        if (monster* mon = monster_at(*ai))
+            if (!mons_aligned(ember, mon) && !mon->is_firewood() && you.see_cell_no_trans(mon->pos()))
+                targs.push_back(mon);
+
+    if (targs.empty())
+        return;
+
+    simple_monster_message(*ember, " blazes with a fierce heat.", false, MSGCH_FRIEND_SPELL);
+
+    bolt beam;
+    beam.flavour = BEAM_FIRE;
+    dice_def dmg = get_form()->get_special_damage();
+    for (monster* mon : targs)
+    {
+        flash_tile(mon->pos(), RED, 0);
+        const int damage_done = mons_adjust_flavoured(mon, beam, mon->apply_ac(dmg.roll()));
+        mprf("The solar flare engulfs %s%s.", mon->name(DESC_THE).c_str(),
+                damage_done ? "" : " but does no damage");
+        mon->hurt(ember, damage_done, BEAM_FIRE);
+    }
+
+    animation_delay(10, true);
+
+    ember->hurt(ember, random_range(7, 10));
+    ember->del_ench(ENCH_SPELL_CHARGED);
 }

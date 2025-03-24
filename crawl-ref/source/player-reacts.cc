@@ -878,6 +878,13 @@ static void _decrement_durations()
         _try_to_respawn_ancestor();
     }
 
+    if (you.form == transformation::sun_scarab
+        && !get_solar_ember()
+        && you.elapsed_time >= you.props[SOLAR_EMBER_REVIVAL_KEY].get_int())
+    {
+        sun_scarab_spawn_ember(false);
+    }
+
     const bool sanguine_armour_is_valid = sanguine_armour_valid();
     if (sanguine_armour_is_valid)
         activate_sanguine_armour();

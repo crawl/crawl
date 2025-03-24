@@ -353,3 +353,6 @@ void clear_form_info_on_exit();
 
 void sphinx_notice_riddle_target(monster* mon);
 void sphinx_check_riddle();
+
+void sun_scarab_spawn_ember(bool first_time);
+monster* get_solar_ember();

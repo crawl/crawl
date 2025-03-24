@@ -36,3 +36,5 @@ bool egg_is_incubating(const monster& egg);
 
 void initialize_nobody_memories(monster& nobody);
 bool pyrrhic_recollection(monster& nobody);
+
+void solar_ember_blast();

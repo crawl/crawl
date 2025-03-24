@@ -29,6 +29,7 @@
 #include "items.h"
 #include "message.h"
 #include "mon-death.h"
+#include "mon-place.h"
 #include "mon-speak.h"
 #include "mutation.h"
 #include "output.h"
@@ -1185,6 +1186,16 @@ public:
     }
 };
 
+class FormSunScarab : public Form
+{
+private:
+    FormSunScarab() : Form(transformation::sun_scarab) { }
+    DISALLOW_COPY_AND_ASSIGN(FormSunScarab);
+public:
+    static const FormSunScarab &instance() { static FormSunScarab inst; return inst; }
+
+};
+
 static const Form* forms[] =
 {
     &FormNone::instance(),
@@ -1231,6 +1242,7 @@ static const Form* forms[] =
     &FormWerewolf::instance(),
     &FormWalkingScroll::instance(),
     &FormFortressCrab::instance(),
+    &FormSunScarab::instance(),
 };
 
 const Form* get_form(transformation xform)
@@ -1716,6 +1728,10 @@ static void _on_enter_form(transformation which_trans)
         }
         break;
 
+    case transformation::sun_scarab:
+        sun_scarab_spawn_ember(true);
+        break;
+
     default:
         break;
     }
@@ -1943,6 +1959,14 @@ void untransform(bool skip_move, bool scale_hp)
     {
         _print_death_brand_changes(you.weapon(), false);
         _print_death_brand_changes(you.offhand_weapon(), false);
+    }
+    else if (old_form == transformation::sun_scarab)
+    {
+        if (monster* ember = get_solar_ember())
+        {
+            monster_die(*ember, KILL_RESET, NON_MONSTER);
+            mprf(MSGCH_DURATION, "Your tiny sun winks out.");
+        }
     }
 
     // If the player is no longer be eligible to equip some of the items that
@@ -2227,4 +2251,32 @@ void sphinx_check_riddle()
     }
 
     noisy(you.shout_volume(), you.pos(), MID_PLAYER);
+}
+
+void sun_scarab_spawn_ember(bool first_time)
+{
+    // Don't let the player cheat the revival timer by exiting and reentering
+    // the form.
+    if (first_time && you.props.exists(SOLAR_EMBER_REVIVAL_KEY))
+        return;
+
+    mgen_data mg(MONS_SOLAR_EMBER, BEH_COPY, you.pos(), MHITYOU, MG_AUTOFOE);
+              mg.set_summoned(&you, MON_SUMM_SUN_SCARAB, 0, false)
+                .set_range(1);
+
+    if (monster* mon = create_monster(mg))
+    {
+        you.props[SOLAR_EMBER_MID_KEY].get_int() = mon->mid;
+        mprf(MSGCH_DURATION, first_time ? "A tiny sun coalesceses beside you."
+                                        : "You reconstitue your solar ember.");
+        you.props.erase(SOLAR_EMBER_REVIVAL_KEY);
+    }
+}
+
+monster* get_solar_ember()
+{
+    if (!you.props.exists(SOLAR_EMBER_MID_KEY))
+        return nullptr;
+
+    return monster_by_mid(you.props[SOLAR_EMBER_MID_KEY].get_int());
 }

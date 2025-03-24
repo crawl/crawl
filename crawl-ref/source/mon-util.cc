@@ -3982,6 +3982,10 @@ bool monster_shover(const monster& m)
         return false;
     }
 
+    // Allow the ember to push back to its scarab
+    if (m.type == MONS_SOLAR_EMBER)
+        return true;
+
     // Monsters too stupid to use stairs (e.g. non-spectral zombified undead)
     // are also disqualified.
     // However, summons *can* push past pals & cause trouble.
@@ -4017,6 +4021,10 @@ bool monster_shover(const monster& m)
  */
 bool monster_senior(const monster& m1, const monster& m2, bool fleeing)
 {
+    // A sun scarab's ember can push past anything to get back to it.
+    if (m1.type == MONS_SOLAR_EMBER)
+        return true;
+
     // non-fleeing smiters won't push past anything.
     if (_mons_has_smite_attack(&m1) && !fleeing)
         return false;
@@ -5988,6 +5996,7 @@ int mons_leash_range(monster_type mc)
 {
     switch (mc)
     {
+        case MONS_SOLAR_EMBER:
         case MONS_PHALANX_BEETLE:   return 1;
         case MONS_HAUNTED_ARMOUR:   return 2;
         default:                    return 0; // No leashing

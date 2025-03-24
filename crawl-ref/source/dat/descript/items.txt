@@ -1296,6 +1296,16 @@ A leather suit covered with metal plates attached to each other in overlapping
 rows to provide full protection, but at the cost of reduced freedom of
 movement.
 %%%%
+scarab talisman
+
+A small golden cameo of a beetle. Transforms the user into a sun scarab, a
+fiery insect that carries around a mote of searing heat and light outside
+itself, like a tiny sun.
+
+This solar ember burns adjacent enemies whenever the scarab attacks, and can be
+healed by swapping with it. In addition, the scarab's own mandibles can reduce
+enemies' fire resistance and Fire spells are easier for the user to cast.
+%%%%
 scarf
 
 A length of stylish fabric. At its creation, enchantments were woven into it,
