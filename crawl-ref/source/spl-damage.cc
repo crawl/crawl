@@ -5370,5 +5370,5 @@ void do_catalyst_explosion(coord_def center)
             animation_delay(50, true);
 
     for (coord_def pos : blast_targets)
-        _explosion_square(&you, beam_actual, pos, false, SPELL_DETONATION_CATALYST);
+        _explosion_square(&you, beam_actual, pos, pos == center, SPELL_DETONATION_CATALYST);
 }
