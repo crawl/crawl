@@ -741,6 +741,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             { WPN_ARBALEST,      19 },
             { WPN_HAND_CANNON, 1  },
         } } },
+        { MONS_YAKTAUR_FUSILIER, { { { WPN_HAND_CANNON, 1 } } } },
         { MONS_EFREET,                  EFREET_WSPEC },
         { MONS_ERICA,                   EFREET_WSPEC },
         { MONS_AZRAEL,                  EFREET_WSPEC },
@@ -1726,6 +1727,16 @@ static void _give_shield(monster* mon, int level)
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER, level, 1);
         break;
 
+    case MONS_YAKTAUR_FUSILIER:
+        // Fusiliers carry a hand cannon so they have a shield arm free. So
+        // sometimes they can have an orb of guile to give any hex wand a boost.
+        if (one_chance_in(3) && (shield = make_item_for_monster(mon, OBJ_ARMOUR,
+                                                                ARM_ORB, level)))
+        {
+            set_item_ego_type(*shield, OBJ_ARMOUR, SPARM_GUILE);
+            break;
+        }
+        // Otherwise fall through and definitely get a potentially very good shield
     case MONS_NAGA_WARRIOR:
         if (coinflip())
             level = ISPEC_GOOD_ITEM;
@@ -1733,7 +1744,7 @@ static void _give_shield(monster* mon, int level)
     case MONS_VAULT_GUARD:
     case MONS_VAULT_WARDEN:
     case MONS_ORC_WARLORD:
-        if (one_chance_in(3))
+        if (mon->type == MONS_YAKTAUR_FUSILIER || one_chance_in(3))
         {
             make_item_for_monster(mon, OBJ_ARMOUR,
                                   one_chance_in(3) ? ARM_TOWER_SHIELD
