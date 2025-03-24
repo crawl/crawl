@@ -1,8 +1,8 @@
 %%%%
 Air Elementalist
 
-Air Elementalists have learned the Shock spell. Later on, their selection of
-Air Magic spells provides them with the flexibility to survive.
+Air Elementalists have learned the Shock spell. Their electrical magic can harm
+groups of foes, while their air spells assist in fighting or fleeing enemies.
 %%%%
 Artificer
 
@@ -26,11 +26,12 @@ god's constantly changing moods.
 Cinder Acolyte
 
 Cinder Acolytes worship Ignis, drawing upon the flame of a dying god until
-there is nothing left.
+there is nothing left. They have both melee and fire magic capabilities.
 %%%%
 Conjurer
 
-Conjurers confront problems with damaging spells.
+Conjurers begin with the Magic Dart spell, and can learn other non-elemental
+spells to reliably blast their foes.
 %%%%
 Delver
 
@@ -50,12 +51,12 @@ equipped with an enchanted dagger and potions of invisibility.
 Fighter
 
 Fighters are equipped with armour and shield, as well as a weapon of their
-choice and a potion of might.
+choice and potions of might.
 %%%%
 Fire Elementalist
 
 Fire Elementalists have learned the Foxfire spell. Their other starting spells
-are likewise focused on fiery destruction.
+are likewise focused on fiery and explosive destruction.
 %%%%
 Gladiator
 
@@ -64,8 +65,8 @@ and a few throwing weapons and nets.
 %%%%
 Hedge Wizard
 
-Hedge Wizards learn many minor magics, letting them backstab or escape their
-bewildered foes.
+Hedge Wizards are magic generalists, good at using a wide variety of tools to
+frustrate their foes and gain an edge in the battlefield.
 %%%%
 Hunter
 
@@ -79,8 +80,8 @@ to attacks from afar.
 %%%%
 Ice Elementalist
 
-Ice Elementalists begin with the Freeze spell. The spells in their starting
-library are quite versatile.
+Ice Elementalists begin with the Freeze spell. Their later spells provide strong
+offense and defense, but may restrict their movement.
 %%%%
 Monk
 
@@ -89,8 +90,8 @@ of divine ambrosia, and gain additional piety with the first god they worship.
 %%%%
 Necromancer
 
-Necromancers are wizards specialising in the practice of death magic. They
-start out with the Soul Splinter spell.
+Necromancers start out with the Soul Splinter spell. Eventually, they can turn
+the dead into allies and use the life force of the living to restore themselves.
 %%%%
 Reaver
 
@@ -100,7 +101,7 @@ when in need. They start with the Kiss of Death spell.
 Summoner
 
 Summoners are able to cast Summon Small Mammal from the start, and begin with
-other Summonings spells in their library.
+spells to summon stronger and more exotic allies in their library.
 %%%%
 Forgewright
 
@@ -124,5 +125,5 @@ Wanderers start with random equipment and skills.
 Warper
 
 Warpers start with a weapon of their choice, a scroll of blinking, darts of
-dispersal, and some Translocation spells in their library.
+disjunction, and some Translocation spells in their library.
 %%%%
