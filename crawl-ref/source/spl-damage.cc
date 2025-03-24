@@ -5295,21 +5295,29 @@ dice_def fortress_blast_damage(int AC, bool is_monster)
     return zap_damage(ZAP_FORTRESS_BLAST, power, is_monster, false);
 }
 
-// XXX: how does this work with coglin?
+// XXX: coglin detonation randomly chooses a weapon. Might be better to tie
+// damage to the weapon that caused the hit? A bit annoying to implement...
 dice_def detonation_catalyst_damage(int pow, bool random)
 {
-    int weapon_dam = 0;
+    int wpn_dam = 0;
+    int power_dam = random ? div_rand_round(pow, 6) : pow / 6;
+
     item_def* wpn = you.weapon();
-    if (!wpn)
-        weapon_dam = unarmed_base_damage(random);
+    item_def* offhand = you.offhand_weapon();
+
+    if (!wpn && !offhand)
+        wpn_dam = unarmed_base_damage(random);
+    // Technically, it's possible to have some edge case where the player would
+    // prefer to trigger a weaponless offhand as coglin. That seems less likely
+    // than not wanting to trigger it with a non-weapon offhand, however.
+    else if (offhand && is_melee_weapon(*offhand) && coinflip())
+        wpn_dam = property(*wpn, PWPN_DAMAGE);
     else if (is_melee_weapon(*wpn))
-        weapon_dam = property(*wpn, PWPN_DAMAGE);
+        wpn_dam = property(*wpn, PWPN_DAMAGE);
 
-    weapon_dam = random ? div_rand_round(weapon_dam, 2) : weapon_dam / 2;
+    wpn_dam = random ? div_rand_round(wpn_dam * 4, 3) : wpn_dam * 4 / 3;
 
-    int power_dam = random ? div_rand_round(pow, 12) : pow / 12;
-
-    return dice_def(3, weapon_dam + power_dam);
+    return calc_dice(3, wpn_dam + power_dam);
 }
 
 void do_catalyst_explosion(coord_def center)
