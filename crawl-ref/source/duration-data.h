@@ -701,6 +701,9 @@ static const duration_def duration_data[] =
       "enkindled", "enkindled",
       "Your flames burn bright with remembrance.", D_EXPIRES,
       {{ "Your flames start to waver.", end_enkindled_status }}},
+    { DUR_DETONATION_CATALYST, BLUE, "Catalyst",
+      "catalyst", "catalyst",
+      "Your strikes ignite an explosive catalyst.", D_EXPIRES},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

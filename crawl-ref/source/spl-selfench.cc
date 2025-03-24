@@ -308,3 +308,15 @@ spret cast_confusing_touch(int power, bool fail)
 
     return spret::success;
 }
+
+spret cast_detonation_catalyst(bool fail)
+{
+    fail_check();
+
+    mpr("You ready an explosive catalyst.");
+
+    // base duration is very low to minimize precasting
+    you.set_duration(DUR_DETONATION_CATALYST, random_range(3,5));
+
+    return spret::success;
+}

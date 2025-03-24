@@ -118,6 +118,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Spontaneous Combustion
     SPELL_INNER_FLAME,
+    SPELL_DETONATION_CATALYST,
     SPELL_IRRADIATE,
     SPELL_IGNITION,
 },
@@ -200,6 +201,7 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Battle
     SPELL_FUGUE_OF_THE_FALLEN,
     SPELL_OZOCUBUS_ARMOUR,
+    SPELL_DETONATION_CATALYST,
     SPELL_MANIFOLD_ASSAULT,
 },
 
