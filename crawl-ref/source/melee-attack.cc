@@ -270,14 +270,6 @@ bool melee_attack::handle_phase_attempted()
         }
     }
 
-    // increase catalyst duration even if we miss.
-    // Projected attacks are handled elsewhere.
-    if (attacker->is_player() && you.duration[DUR_DETONATION_CATALYST]
-        && !effective_attack_number && !is_projected)
-    {
-        you.duration[DUR_DETONATION_CATALYST] += you.time_taken;
-    }
-
     attack_occurred = true;
 
     // Check for player practicing dodging
