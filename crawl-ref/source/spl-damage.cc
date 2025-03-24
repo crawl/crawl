@@ -5310,7 +5310,7 @@ dice_def detonation_catalyst_damage(int pow, bool random)
     // Technically, it's possible to have some edge case where the player would
     // prefer to trigger a weaponless offhand as coglin. That seems less likely
     // than not wanting to trigger it with a non-weapon offhand, however.
-    else if (offhand && is_melee_weapon(*offhand) && coinflip())
+    else if (offhand && is_melee_weapon(*offhand) && random && coinflip())
         wpn_dam = property(*wpn, PWPN_DAMAGE);
     else if (is_melee_weapon(*wpn))
         wpn_dam = property(*wpn, PWPN_DAMAGE);
