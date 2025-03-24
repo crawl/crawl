@@ -81,7 +81,7 @@ to attacks from afar.
 Ice Elementalist
 
 Ice Elementalists begin with the Freeze spell. Their later spells provide strong
-offense and defense, but may restrict their movement.
+offence and defence, but may restrict their movement.
 %%%%
 Monk
 
