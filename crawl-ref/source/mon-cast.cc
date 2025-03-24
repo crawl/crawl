@@ -8526,7 +8526,7 @@ static monster* _find_ally_to_throw(const monster &mons)
     int furthest_dist = -1;
 
     monster* best = nullptr;
-    for (fair_adjacent_iterator ai(mons.pos(), true); ai; ++ai)
+    for (fair_adjacent_iterator ai(mons.pos()); ai; ++ai)
     {
         monster* throwee = monster_at(*ai);
 
