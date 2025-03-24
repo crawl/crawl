@@ -1502,7 +1502,7 @@ void melee_attack::maybe_trigger_detonation()
                        && you.duration[DUR_DETONATION_CATALYST]
                        && !cleaving && in_bounds(defender->pos()))
         {
-            detonation_fineff::schedule(defender->pos());
+            detonation_fineff::schedule(defender->pos(), weapon);
         }
 }
 

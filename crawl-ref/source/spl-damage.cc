@@ -5295,32 +5295,40 @@ dice_def fortress_blast_damage(int AC, bool is_monster)
     return zap_damage(ZAP_FORTRESS_BLAST, power, is_monster, false);
 }
 
-// XXX: coglin detonation randomly chooses a weapon. Might be better to tie
-// damage to the weapon that caused the hit? A bit annoying to implement...
-dice_def detonation_catalyst_damage(int pow, bool random)
+static int _catalyst_weapon_power(const item_def* wpn, bool random)
 {
-    int wpn_dam = 0;
-    int power_dam = random ? div_rand_round(pow, 6) : pow / 6;
+    if (!wpn)
+        return unarmed_base_damage(random);
 
-    item_def* wpn = you.weapon();
-    item_def* offhand = you.offhand_weapon();
-
-    if (!wpn && !offhand)
-        wpn_dam = unarmed_base_damage(random);
-    // Technically, it's possible to have some edge case where the player would
-    // prefer to trigger a weaponless offhand as coglin. That seems less likely
-    // than not wanting to trigger it with a non-weapon offhand, however.
-    else if (offhand && is_melee_weapon(*offhand) && random && coinflip())
-        wpn_dam = property(*wpn, PWPN_DAMAGE);
-    else if (is_melee_weapon(*wpn))
-        wpn_dam = property(*wpn, PWPN_DAMAGE);
-
-    wpn_dam = random ? div_rand_round(wpn_dam * 4, 3) : wpn_dam * 4 / 3;
-
-    return calc_dice(3, wpn_dam + power_dam);
+    const int wpn_dam = property(*wpn, PWPN_DAMAGE);
+    return random ? div_rand_round(wpn_dam * 4, 3) : wpn_dam * 4 / 3;
 }
 
-void do_catalyst_explosion(coord_def center)
+dice_def detonation_catalyst_damage(int pow, bool real, const item_def* wpn)
+{
+    int wpn_dam = 0;
+    int power_dam = real ? div_rand_round(pow, 6) : pow / 6;
+
+    if (real)
+        wpn_dam = _catalyst_weapon_power(wpn, true);
+    // For the UI, average the power of both coglin weapons together
+    else
+    {
+        vector<item_def*> weapons = you.equipment.get_slot_items(SLOT_WEAPON);
+        if (weapons.empty())
+            wpn_dam = _catalyst_weapon_power(nullptr, false);
+        else
+        {
+            for (item_def* weapon : weapons)
+                wpn_dam += _catalyst_weapon_power(weapon, false);
+            wpn_dam /= weapons.size();
+        }
+    }
+
+    return calc_dice(3, wpn_dam + power_dam, real);
+}
+
+void do_catalyst_explosion(coord_def center, const item_def* wpn)
 {
     vector<coord_def> blast_targets;
 
@@ -5333,7 +5341,7 @@ void do_catalyst_explosion(coord_def center)
     // The damage beam is different. Not using a zap due to weapon component.
     bolt beam_actual;
     beam_actual.hit         = AUTOMATIC_HIT;
-    beam_actual.damage      = detonation_catalyst_damage(pow, true);
+    beam_actual.damage      = detonation_catalyst_damage(pow, true, wpn);
     beam_actual.name        = "detonation";
     beam_actual.flavour     = BEAM_FIRE;
     beam_actual.ex_size     = 0;

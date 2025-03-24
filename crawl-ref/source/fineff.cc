@@ -931,7 +931,7 @@ void splinterfrost_fragment_fineff::fire()
 
 void detonation_fineff::fire()
 {
-    do_catalyst_explosion(posn);
+    do_catalyst_explosion(posn, weapon);
 }
 
 // Effects that occur after all other effects, even if the monster is dead.
