@@ -1464,6 +1464,8 @@ werewolf_form_octopode TRAN_WEREWOLF_OCTOPODE
 walking_scroll_form TRAN_WALKING_SCROLL
 fortress_crab_form TRAN_FORTRESS_CRAB
 sun_scarab_form TRAN_SUN_SCARAB
+medusa_form_felid TRAN_MEDUSA_FELID
+medusa_form_octopode TRAN_MEDUSA_OCTOPODE
 
 %rim 1
 

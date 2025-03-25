@@ -1196,6 +1196,43 @@ public:
 
 };
 
+class FormMedusa : public Form
+{
+private:
+FormMedusa() : Form(transformation::medusa) { }
+    DISALLOW_COPY_AND_ASSIGN(FormMedusa);
+public:
+    static const FormMedusa &instance() { static FormMedusa inst; return inst; }
+
+    string transform_message() const override
+    {
+        return "A mane of stinging tendrils grows from your head.";
+    }
+
+    string get_untransform_message() const override
+    {
+        return "Your tendrils shrivel away.";
+    }
+
+    int get_aux_damage(bool random, int skill) const override
+    {
+        return divided_scaling(FormScaling().Base(3).Scaling(3), random, skill, 100);
+    }
+
+    // Number of monsters affected by tendrils per attack (multiplied by 10,
+    // so that it can start at 2.5)
+    int get_effect_size(int skill = -1) const override
+    {
+        return scaling_value(FormScaling().Base(25).Scaling(15), false, skill);
+    }
+
+    // Chance of lithotoxin petrification.
+    int get_effect_chance(int skill = -1) const override
+    {
+        return scaling_value(FormScaling().Base(55).Scaling(15), false, skill);
+    }
+};
+
 static const Form* forms[] =
 {
     &FormNone::instance(),
@@ -1243,6 +1280,7 @@ static const Form* forms[] =
     &FormWalkingScroll::instance(),
     &FormFortressCrab::instance(),
     &FormSunScarab::instance(),
+    &FormMedusa::instance(),
 };
 
 const Form* get_form(transformation xform)

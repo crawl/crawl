@@ -501,6 +501,14 @@ tileidx_t tileidx_player()
             default: break;
         }
         break;
+    case transformation::medusa:
+        switch (you.species)
+        {
+            case SP_OCTOPODE:   ch = TILEP_TRAN_MEDUSA_OCTOPODE;     break;
+            case SP_FELID:      ch = TILEP_TRAN_MEDUSA_FELID;        break;
+            default: break;
+        }
+        break;
 
     // equipment-using forms are handled regularly
     case transformation::flux:

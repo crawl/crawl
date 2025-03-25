@@ -24,8 +24,9 @@ enum unarmed_attack_type
     UNAT_MAW,
     UNAT_EXECUTIONER_BLADE,
     UNAT_FUNGAL_FISTICLOAK,
+    UNAT_MEDUSA_STINGER,
     UNAT_FIRST_ATTACK = UNAT_CONSTRICT,
-    UNAT_LAST_ATTACK = UNAT_FUNGAL_FISTICLOAK,
+    UNAT_LAST_ATTACK = UNAT_MEDUSA_STINGER,
     NUM_UNARMED_ATTACKS,
 };
 
@@ -180,7 +181,7 @@ private:
     bool apply_staff_damage();
     void player_stab_check() override;
     bool player_good_stab() override;
-    void player_announce_aux_hit();
+    void player_announce_aux_hit(unarmed_attack_type atk);
     string charge_desc();
     string weapon_desc();
     void player_warn_miss();

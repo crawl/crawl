@@ -220,7 +220,13 @@ ratskin RATSKIN_CLOAK
 dragonskin DRAGONSKIN_CLOAK
 fungal_fisticloak_back FUNGAL_FISTICLOAK_BACK
 
+### Must be before scarves to render behind the player!
+%sdir player/transform
+medusa_form_armataur_back MEDUSA_FORM_ARMATAUR
+medusa_form_humanoid_back MEDUSA_FORM_HUMANOID
+
 ###Scarf
+%sdir player/cloak
 scarf_cyan SCARF_CYAN SCARF_FIRST_NORM
 scarf_red SCARF_RED
 scarf_white SCARF_WHITE
@@ -1193,6 +1199,11 @@ hood_green HOOD_GREEN
 ninja_black MASK_NINJA_BLACK
 hood_purple HOOD_PURPLE
 hood_assassin HOOD_ASSASSIN
+
+%sdir player/transform
+medusa_form_armataur_front MEDUSA_FORM_ARMATAUR
+medusa_form_humanoid_front MEDUSA_FORM_HUMANOID
+
 %end_ctg
 
 # draconian wings and heads, need same order as draconians

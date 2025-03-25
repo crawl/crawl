@@ -1268,6 +1268,7 @@ lupine TALISMAN_WEREWOLF
 inkwell TALISMAN_INKWELL
 fortress TALISMAN_FORTRESS
 scarab TALISMAN_SCARAB
+medusa TALISMAN_MEDUSA
 
 %sdir item/misc/uncollected_runes
 generic MISC_UNCOLLECTED_RUNE_OF_ZOT

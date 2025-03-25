@@ -290,5 +290,6 @@ enum duration_type
     DUR_AUTODODGE,
     DUR_HIVE_COOLDOWN,
     DUR_WEREFURY,
+    DUR_MEDUSA_COOLDOWN,
     NUM_DURATIONS
 };

@@ -3923,6 +3923,8 @@ colour_t item_def::talisman_colour() const
         return ETC_WATER;
     case TALISMAN_SCARAB:
         return ETC_FIRE;
+    case TALISMAN_MEDUSA:
+        return ETC_POISON;
     case TALISMAN_MAW:
         return ETC_BLOOD;
     case TALISMAN_SERPENT:

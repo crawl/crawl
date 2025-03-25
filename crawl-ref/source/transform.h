@@ -154,6 +154,7 @@ public:
     virtual int get_howl_power(int /*skill*/ = -1) const { return 0; }
 
     virtual int get_effect_size(int /*skill*/ = -1) const { return 0; }
+    virtual int get_effect_chance(int /*skill*/ = -1) const { return 0; }
 
     bool enables_flight() const;
     bool forbids_flight() const;

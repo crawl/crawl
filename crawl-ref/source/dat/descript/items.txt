@@ -921,6 +921,13 @@ foes. The mouth may devour slain creatures, healing the user to an extent increa
 by the user's Shapeshifting skill and the power of the creature eaten. Skill also
 increases the damage done by the maw.
 %%%%
+medusa talisman
+
+A fossilised jellyfish polyp, inscribed with sigils. Causes a mane of long
+stinging tendrils to sprout from the user's head which lash out at nearby
+enemies whenever the user attacks, poisoning them. When they feel their host's
+life is in danger, they can even turn these poisoned foes to stone.
+%%%%
 midnight gem
 
 [[gem]]

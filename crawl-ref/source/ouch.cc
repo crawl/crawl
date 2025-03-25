@@ -885,6 +885,37 @@ static void _maybe_hive_swarm()
     }
 }
 
+static void _maybe_medusa_lithotoxin()
+{
+    if (you.form != transformation::medusa
+        || you.hp * 10 > you.hp_max * 6
+        || you.duration[DUR_MEDUSA_COOLDOWN])
+    {
+        return;
+    }
+
+    vector<monster*> targs;
+    for (radius_iterator ri(you.pos(), 3, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
+        if (monster* mon = monster_at(*ri))
+            if (!mon->wont_attack() && mon->has_ench(ENCH_POISON))
+                targs.push_back(mon);
+
+    if (targs.empty())
+        return;
+
+    draw_ring_animation(you.pos(), 3, LIGHTGREY, 0U, true, 25);
+    mprf("Your pain echoes through the poison around you!");
+    for (monster* targ : targs)
+    {
+        if (x_chance_in_y(get_form()->get_effect_chance(), 100))
+            targ->petrify(&you);
+        else
+            simple_monster_message(*targ, " resists.");
+    }
+
+    you.duration[DUR_MEDUSA_COOLDOWN] = 1;
+}
+
 static void _handle_poor_constitution(int dam)
 {
     const int level = you.get_mutation_level(MUT_POOR_CONSTITUTION);
@@ -1330,6 +1361,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             makhleb_celebrant_bloodrite();
             _maybe_splash_water(dam);
             _maybe_hive_swarm();
+            _maybe_medusa_lithotoxin();
             if (sanguine_armour_valid())
                 activate_sanguine_armour();
             refresh_meek_bonus();

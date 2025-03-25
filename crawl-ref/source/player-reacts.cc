@@ -1206,6 +1206,12 @@ void player_reacts()
         you.duration[DUR_HIVE_COOLDOWN] = 0;
     }
 
+    if (you.duration[DUR_MEDUSA_COOLDOWN] && you.hp == you.hp_max)
+    {
+        mprf(MSGCH_DURATION, "You feel your defenses recover.");
+        you.duration[DUR_MEDUSA_COOLDOWN] = 0;
+    }
+
     if (you.duration[DUR_POISONING])
         handle_player_poison(you.time_taken);
 

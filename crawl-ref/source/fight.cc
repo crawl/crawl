@@ -13,6 +13,7 @@
 #include <cstdlib>
 #include <cstring>
 
+#include "act-iter.h"
 #include "areas.h" // silenced
 #include "art-enum.h"
 #include "coord.h"
@@ -385,6 +386,27 @@ static bool _autofire_at(actor *defender)
     return true;
 }
 
+static void _do_medusa_stinger()
+{
+    vector<monster*> targs;
+    for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
+    {
+        if (!mi->wont_attack() && !mi->is_firewood()
+            && grid_distance(you.pos(), mi->pos()) <= 2)
+        {
+            targs.push_back(*mi);
+        }
+    }
+
+    shuffle_array(targs);
+    int num = min(div_rand_round(get_form()->get_effect_size(), 10), (int)targs.size());
+    for (int i = 0; i < num; ++i)
+    {
+        melee_attack sting(&you, targs[i]);
+        sting.player_do_aux_attack(UNAT_MEDUSA_STINGER);
+    }
+}
+
 /**
  * Handle melee combat between attacker and defender.
  *
@@ -493,6 +515,9 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
 
         if (you.form == transformation::sun_scarab && !was_firewood)
             solar_ember_blast();
+
+        if (you.form == transformation::medusa)
+            _do_medusa_stinger();
 
         return true;
     }

@@ -1193,3 +1193,12 @@ You are a heavily-armoured crab with rusting breath.
 Scarab status
 
 You are a sun scarab, with solar fire blazing beside you.
+%%%%
+Medusa status
+
+You have a mane of venomous tendrils for hair.
+%%%%
+-Lithotox status
+
+Your lithotoxin has recently activated and will not do so again until you fully
+heal.

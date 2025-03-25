@@ -22,6 +22,7 @@
 #include "spl-util.h"
 #include "stringutil.h" // make_stringf
 #include "terrain.h"
+#include "transform.h"
 #include "rltiles/tiledef-main.h"
 #include "view.h"
 
@@ -444,17 +445,25 @@ bool is_valid_tempering_target(const monster& mon, const actor& caster)
 // Actor friendliness doesn't matter - you are just as likely to attack allies
 // as enemies, though gods won't penance you for this action since it's not your
 // fault. The allies themselves may not be so generous!
-void do_vexed_attack(actor& attacker)
+void do_vexed_attack(actor& attacker, bool always_hit_ally)
 {
     vector<coord_def> empty_space;
     vector<actor*> targs;
+
     for (adjacent_iterator ai(attacker.pos()); ai; ++ai)
     {
         if (actor* targ = actor_at(*ai))
-            targs.push_back(targ);
-        else
+        {
+            if (!always_hit_ally || mons_aligned(&attacker, targ))
+                targs.push_back(targ);
+        }
+        else if (!always_hit_ally)
             empty_space.push_back(*ai);
     }
+
+    // If we've been told to attack an ally, but none are around, just hit the floor.
+    if (always_hit_ally && targs.empty())
+        empty_space.push_back(attacker.pos());
 
     // Decide whether to attack empty space or an actor
     const int total_weight = empty_space.size() + targs.size() * 7;

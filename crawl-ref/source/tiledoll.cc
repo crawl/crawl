@@ -341,6 +341,23 @@ void fill_doll_equipment(dolls_data &result)
 
         result.parts[TILEP_PART_BODY] = TILEP_BODY_HIVE_FORM;
         break;
+    case transformation::medusa:
+
+        // These get full-body tiles elsewhere.
+        if (you.species == SP_FELID || you.species == SP_OCTOPODE)
+            break;
+
+        if (you.species == SP_ARMATAUR)
+        {
+            result.parts[TILEP_PART_HELM] = TILEP_HELM_MEDUSA_FORM_ARMATAUR;
+            result.parts[TILEP_PART_CLOAK] = TILEP_CLOAK_MEDUSA_FORM_ARMATAUR;
+        }
+        else
+        {
+            result.parts[TILEP_PART_HELM] = TILEP_HELM_MEDUSA_FORM_HUMANOID;
+            result.parts[TILEP_PART_CLOAK] = TILEP_CLOAK_MEDUSA_FORM_HUMANOID;
+        }
+        break;
     case transformation::statue:
         switch (you.species)
         {

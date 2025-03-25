@@ -2061,6 +2061,23 @@ public:
     }
 };
 
+class AuxMedusaStinger: public AuxAttackType
+{
+public:
+    AuxMedusaStinger()
+    : AuxAttackType(0, 100, "sting") { };
+    int get_damage(bool random) const override {
+        return get_form()->get_aux_damage(random);
+    };
+    bool xl_based_chance() const override { return false; }
+
+    bool is_usable() const override
+    {
+        return false; // Actually handled by _do_medusa_stinger() due to its
+                      // quasi-AoE nature.
+    }
+};
+
 static const AuxConstrict   AUX_CONSTRICT = AuxConstrict();
 static const AuxKick        AUX_KICK = AuxKick();
 static const AuxPeck        AUX_PECK = AuxPeck();
@@ -2074,6 +2091,7 @@ static const AuxTentacles   AUX_TENTACLES = AuxTentacles();
 static const AuxMaw         AUX_MAW = AuxMaw();
 static const AuxBlades      AUX_EXECUTIONER_BLADE = AuxBlades();
 static const AuxFisticloak  AUX_FUNGAL_FISTICLOAK = AuxFisticloak();
+static const AuxMedusaStinger AUX_MEDUSA_STINGER = AuxMedusaStinger();
 static const AuxAttackType* const aux_attack_types[] =
 {
     &AUX_CONSTRICT,
@@ -2089,6 +2107,7 @@ static const AuxAttackType* const aux_attack_types[] =
     &AUX_MAW,
     &AUX_EXECUTIONER_BLADE,
     &AUX_FUNGAL_FISTICLOAK,
+    &AUX_MEDUSA_STINGER,
 };
 
 
@@ -2256,8 +2275,8 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
         if (atk == UNAT_CONSTRICT)
             attacker->start_constricting(*defender);
 
-        if (damage_done > 0 || atk == UNAT_CONSTRICT)
-            player_announce_aux_hit();
+        if (damage_done > 0 || atk == UNAT_CONSTRICT || atk == UNAT_MEDUSA_STINGER)
+            player_announce_aux_hit(atk);
         else
         {
             mprf("You %s %s%s.",
@@ -2265,6 +2284,9 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
                     defender->name(DESC_THE).c_str(),
                     you.can_see(*defender) ? ", but do no damage" : "");
         }
+
+        if (atk == UNAT_MEDUSA_STINGER)
+            poison_monster(defender->as_monster(), &you, random_range(1, 2));
 
         // Allow to trigger regardless of damage, just like venom weapons.
         if (damage_brand == SPWPN_VENOM && !one_chance_in(3))
@@ -2320,7 +2342,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
         }
     }
     else // defender was just alive, so this call should be ok?
-        player_announce_aux_hit();
+        player_announce_aux_hit(atk);
 
     total_damage_done += damage_done;
 
@@ -2338,9 +2360,10 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
     return false;
 }
 
-void melee_attack::player_announce_aux_hit()
+void melee_attack::player_announce_aux_hit(unarmed_attack_type atk)
 {
-    mprf("You %s %s%s%s",
+    mprf("%s %s %s%s%s",
+         atk == UNAT_MEDUSA_STINGER ? "Your tendrils" : "You",
          aux_verb.c_str(),
          defender->name(DESC_THE).c_str(),
          debug_damage_number().c_str(),

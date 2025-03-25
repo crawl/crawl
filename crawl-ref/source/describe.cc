@@ -7324,6 +7324,11 @@ static string _describe_talisman_form(const item_def &item)
         _maybe_populate_form_table(items, _get_scroll_skill_boost, "Spell Skill Boost", skill, 0, false, true, 10, true);
     if (form_type == transformation::fortress_crab)
         _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "Rust Breath Size", skill, 0, false, false);
+    if (form_type == transformation::medusa)
+    {
+        _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "Tendril targets", skill, 0, false, false, 10, true);
+        _maybe_populate_form_table(items, bind(&Form::get_effect_chance, form, placeholders::_1), "Petrify chance", skill, 0, true, false);
+    }
 
     vector<int> column_width;
 

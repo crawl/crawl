@@ -46,6 +46,7 @@ enum class transformation
     walking_scroll,
     fortress_crab,
     sun_scarab,
+    medusa,
     COUNT
 };
 constexpr int NUM_TRANSFORMS = static_cast<int>(transformation::COUNT);

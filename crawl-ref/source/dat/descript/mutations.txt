@@ -1023,6 +1023,23 @@ When you kill an enemy in melee, if your werefury bonus is at least 5, you may
 unleash a terrifying howl that attempts to freeze all nearby enemies in place
 with fear if it overcomes their willpower.
 %%%%
+stinger hair mutation
+
+Your hair is made of long prehensile jellyfish-like tendrils. Whenever you
+attack in melee, they will lash out and attempt to poison several nearby enemies
+at random.
+
+The number of enemies they can afflict at once is improved by Shapeshifting
+skill.
+%%%%
+lithotoxin mutation
+
+When your health drops to 60% of your max HP or less, your tendrils reflexively
+attempt to petrify all poisoned enemies within 3 tiles of you.
+
+This effect cannot activate again until you fully heal and its success chance
+improves with your Shapeshifting skill.
+%%%%
 # ------ Makhleb destruction flavours ------
 Gehenna destruction mutation
 
