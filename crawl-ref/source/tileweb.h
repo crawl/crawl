@@ -116,8 +116,8 @@ public:
     void update_tabs();
 
     void mark_for_redraw(const coord_def& gc);
-    void set_need_redraw(unsigned int min_tick_delay = 0);
-    bool need_redraw() const;
+    void set_need_redraw();
+    bool need_redraw(unsigned int min_tick_delay = 0) const;
     void redraw();
 
     void place_cursor(cursor_type type, const coord_def &gc);
