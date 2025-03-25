@@ -2732,6 +2732,7 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     DCHAR_ITEM_GOLD,
     true,
     false,
+    TILE_BOLT_UNGOLD,
 },
 
 };

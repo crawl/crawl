@@ -41,6 +41,7 @@
 #include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-tentacle.h"
+#include "movement.h"
 #include "mutation.h"
 #include "ouch.h"
 #include "prompt.h"
@@ -2114,59 +2115,34 @@ dice_def ungoldify_damage(int pow, int position, bool random)
 string describe_ungoldify_damage(int pow, bool terse)
 {
     dice_def center_damage = ungoldify_damage(pow, 0);
-    const int beam_width = ungoldify_beam_width(spell_range(SPELL_UNGOLDIFY, pow));
+    const int beam_width = ungoldify_beam_width();
     dice_def side_damage = ungoldify_damage(pow, beam_width / 2);
 
-    // if (terse)
-    // {
+    if (terse)
+    {
         return make_stringf("%dx(%d-%d)d%d", beam_width, side_damage.num,
                             center_damage.num, center_damage.size);
-    // }
-
-    // TODO: How to communicate there are three different strengths of beams (oh and increasing
-    // damage by level as well)
-    // return make_stringf("%dd%d (central beam), %dd%d (explosion)",
-    //                     dot_damage.num, dot_damage.size,
-    //                     shards_damage.num, shards_damage.size);
+    }
+    return make_stringf("%dd%d (center beam), %dd%d (side beams), x%d",
+                        center_damage.num, center_damage.size,
+                        side_damage.num, side_damage.size, beam_width);
 }
 
-int ungoldify_beam_width(int range)
+int ungoldify_beam_width()
 {
     // Five with Vehumet, otherwise 3
-    // XX: Doing it this way we will be handicapped by shadows as they would reduce range < 7 even with Veh.
-    return range > 6 ? 5 : 3;
-    // Old version:
-    // return min(3 + 2 * (max(0, range - 3) / 2), 7);
+    return have_passive(passive_t::spells_range) ? 5: 3;
 }
 
-// string describe_ungoldify_damage(int pow, bool terse)
-// {
-//     dice_def min_damage = ungoldify_damage(pow, per_beam, 1);
-//     dice_def max_damage = ungoldify_damage(pow, per_beam, 0);
-
-//     if (terse)
-//     {
-//         return make_stringf("%dd%d-%dd%d", min_damage.num, min_damage.size,
-//                                            max_damage.num, max_damage.size);
-//     }
-
-//     return make_stringf("%dd%d (center beam), %dd%d (side beams)",
-//                         max_damage.num, max_damage.size,
-//                         min_damage.num, min_damage.size);
-// }
-
-static void _ungoldify_targets(vector<widebeam_beam> beams, int coins, int pow, int range)
+static void _ungoldify_targets(vector<widebeam_beam> beams, int pow, int range)
 {
-    // Now fire all the beams
+    // Combine all the beams into a multibolt and fire them
     bolt beam;
     zappy(ZAP_UNGOLD, pow, false, beam);
     beam.set_agent(&you);
     beam.range             = range;
     beam.hit_verb          = "peppers";
     beam.draw_delay        = 0;
-
-    // beam.draw_delay        = 50;
-    // beam.draw_delay        = 10;
     beam.momentum_loss     = 1;
     beam.aimed_at_spot     = true;
 
@@ -2182,194 +2158,98 @@ static void _ungoldify_targets(vector<widebeam_beam> beams, int coins, int pow, 
     multi_bolt_fire(bolts, 50);
 }
 
-static void _end_ungoldify() {
-    mpr("The last of the transmuted silver is flung out impotently around you.");
-    // { DUR_UNGOLDIFY, YELLOW, "-Gold", "", "transmuting gold to base metals",
-    //   "You are transmuting gold into silver slugs and will propel them as you move.",
-    // Extract necessary data
-    const int pow = you.props[UNGOLDIFY_POWER_KEY].get_int();
-    const int coins = you.props[UNGOLDIFY_COINS_KEY].get_int();
+// XX: Started implementing this. But actually move_player_action *probably*
+// does everything right, and the cases that wouldn't work (e.g. being confused)
+// can't possibly apply if we just cast a spell successfully
 
-    // Casting at half power and lower range with a 360 degree spread. Basically fires
-    // 8 different directions of the targetter but with all the numbers reduced.
-    // const int range = max(2, spell_range(SPELL_UNGOLDIFY, pow) - 2);
-    const int range = max(3, spell_range(SPELL_UNGOLDIFY, pow) - 4);
-    targeter_widebeam_compass hitfunc(&you, range, 3);
+// static bool _ungoldify_move_player(coord_def target, bool check_only)
+// {
+//     // XX: Shouldn't have got here if this is true
+//     // if (is_stationary() || resists_dislodge("being knocked back"))
+//     //     return false;
 
-    for (targeter_widebeam item : hitfunc.beams)
-    {
-        if (x_chance_in_y(1, 3))
-            continue;
+//     if (!in_bounds(target)
+//         || !you.is_habitable_feat(env.grid(target)))
+//     {
+//         return false;
+//     }
 
-        _ungoldify_targets(item.beams, div_round_up(coins, 10),
-                           div_rand_round(pow, 2), range);
-    }
+//     if (monster* mons = monster_at(target))
+//     {
+//         if (!mons->friendly())
+//         {
+//             if (check_only)
+//                 return true;
+//             // XX: Maybe add a ::attack method on player instead of including melee-attack.h?
+//             melee_attack atk(&you, mons);
+//             atk.never_prompt = true;
+//             atk.launch_attack_set();
+//             return true;
+//         }
+//         coord_def swapdest;
+//         if (swap_check(mons, swapdest, true))
+//         {
+//             if (check_only)
+//                 return true;
+//             if (swap_with_monster(mons))
+//                 return true;
+//         }
+//     }
 
-    you.props.erase(UNGOLDIFY_KEY);
-    you.props.erase(UNGOLDIFY_POWER_KEY);
-    you.props.erase(UNGOLDIFY_COINS_KEY);
-}
-
-static int _finance_ungoldify(int powc, int range, int level)
-{
-    ASSERT(level > 0);
-
-    auto damage = ungoldify_damage(powc, 0, true); // XX: , level);
-
-    const int coins = damage.size;
-    // const int coins_per_beam = div_round_up(coins, ungoldify_beam_width(range));
-    // you.props[UNGOLDIFY_COINS_KEY] = coins_per_beam;
-
-    // On initial casting we check for > 0 gold, but on subsequent triggerings
-    // the gold has maybe gone
-    if (coins > you.gold)
-    {
-        if (you.gold == 0)
-            mpr("You reach for more coins ... but your purse is empty.");
-        else
-            mprf("You need to supply %d gold coin%s to continue the reaction, "
-                 "but you have only %d.", coins, coins != 1 ? "s" : "", you.gold);
-        _end_ungoldify();
-    }
-    else
-    {
-        mprf("You grab a handful of %d gold coin%s and they begin to pop and "
-             "fizzle. You have %d gold remaining.",
-             coins, coins != 1 ? "s" : "", you.gold);
-        you.del_gold(coins);
-    }
-    return coins;
-}
+//     you.apply_location_effects(oldpos, cause.is_player()? KILL_YOU_MISSILE : KILL_MON_MISSILE,
+//                                 actor_to_death_source(&cause));
+// }
 
 /**
  * Attempt to cast the spell "Alistair's Pocket Shrapnel", beginning a transmutation of gold
  * into base metals (lead, iron and silver) which can be released explosively on your
  * next turn in a 3- 5- or 7- wide beam in your direction of movement.
  *
+ * @param target Target coordinate for the spell.
  * @param powc   The power at which the spell is being cast.
  * @param fail   Whether the player has failed to cast the spell.
  * @return       spret::abort if the player changed their mind about casting after
  *               realizing they would hit an ally; spret::fail if they failed the
  *               cast chance; spret::success otherwise.
  */
-spret cast_ungoldify(int powc, bool fail)
+spret cast_ungoldify(coord_def target, int powc, bool fail)
 {
-    if (you.props.exists(UNGOLDIFY_KEY))
-    {
-        mpr("You are already transmuting a handful of gold. Your next movement"
-            " will propel silver shrapnel in the direction you move.");
-        return spret::abort;
-    }
-
-    if (you.gold == 0)
-    {
-        mpr("You are too poor to cast this spell.");
-        return spret::abort;
-    }
-
     // TODO: Check danger to allies
     fail_check();
 
+    // Coins have already been deducted in cast_a_spell
+    const int coins = spell_mana(SPELL_UNGOLDIFY);
+    mprf("You grab %d gold coin%s and they begin to pop and fizzle."
+         " You have %d gold remaining.",
+            coins, coins != 1 ? "s" : "", you.gold);
+
     const int range = spell_range(SPELL_UNGOLDIFY, powc);
 
-    _finance_ungoldify(powc, range, 1);
     noisy(spell_effect_noise(SPELL_UNGOLDIFY), you.pos());
 
-    // Save state for when the effect actually happens next turn
-    you.props[UNGOLDIFY_KEY] = 0;
-    you.props[UNGOLDIFY_POWER_KEY] = powc;
-
-    // *Starting* the effect takes zero time, but you must move to use it
-    you.time_taken = 0;
-    targeter_widebeam_compass flashfunc = targeter_widebeam_compass(&you, range, ungoldify_beam_width(range));
-    flash_view_delay(UA_PLAYER, ETC_GOLD, 100, &flashfunc);
-
-    return spret::success;
-}
-
-static bool _was_goldify_movement_command(command_type cmd)
-{
-    return cmd >= CMD_MOVE_LEFT && cmd <= CMD_SAFE_MOVE_DOWN_RIGHT
-           && cmd != CMD_SAFE_WAIT;
-}
-
-void handle_ungoldify_turn()
-{
-    if (!you.props.exists(UNGOLDIFY_KEY))
-        return;
-
-    int &lvl = you.props[UNGOLDIFY_KEY].get_int();
-    ++lvl;
-    if (lvl == 1) // This was the initial casting turn
-        return;
-
-    if (!_was_goldify_movement_command(crawl_state.prev_cmd))
-    {
-        mpr("With no kinetic energy to drive it, the reaction fizzles out.");
-        _end_ungoldify();
-        return;
-    }
-}
-
-void handle_ungoldify_movement(coord_def move)
-{
-    if (!you.props.exists(UNGOLDIFY_KEY))
-        return;
-
-    int lvl = you.props[UNGOLDIFY_KEY].get_int();
-
-    // TODO: Get an extra casting with Vehumet like flame wave
-    if (lvl > 4)
-    {
-        _end_ungoldify();
-        return;
-    }
-
-    if (!can_cast_spells(true))
-    {
-        mpr("Unable to use magic, you allow the reaction to consume itself.");
-        _end_ungoldify();
-        return;
-    }
-
-    // Extract various info
-    const int pow = you.props[UNGOLDIFY_POWER_KEY].get_int();
-    const int range = spell_range(SPELL_UNGOLDIFY, pow);
-
-    // First time around we already did some of this
-    if (lvl > 1)
-    {
-        // Use 1MP for chanelling and some more gold
-        if (!enough_mp(1, true))
-        {
-            mpr("Without a little magic to sustain it, the reaction ends.");
-            _end_ungoldify();
-            return;
-        }
-
-        // Don't carry on if no coins (message is printed there)
-        if (_finance_ungoldify(pow, range, lvl) == 0)
-            return;
-
-        pay_mp(1);
-        finalize_mp_cost();
-    }
-
-    const int coins = you.props[UNGOLDIFY_COINS_KEY].get_int();
+    targeter_widebeam_compass flashfunc = targeter_widebeam_compass(&you, 3, 3);
+    flash_view_delay(UA_PLAYER, ETC_GOLD, 20, &flashfunc);
 
     // Set up a list of potential projectile targets; use LOS_NONE so the beams
     // are picked evenly regardless of terrain, even if they're aiming through a
     // wall or something else impassible.
-    targeter_widebeam hitfunc(&you, range, ungoldify_beam_width(range));
+    targeter_widebeam hitfunc(&you, range, ungoldify_beam_width());
     // Aim from one back (should be where we originally were, assuming movement
     // was 1 tile)
-    hitfunc.origin = you.pos() - move.sgn();
-    hitfunc.set_aim(you.pos() + move);
+    // hitfunc.origin = you;// you.pos() - move.sgn();
+    // hitfunc.origin = you.pos() - move.sgn();
+    const coord_def move = (target - you.pos()).sgn();
+    const coord_def normalised_target = you.pos() + move;
+    hitfunc.set_aim(normalised_target);
+
+    _ungoldify_targets(hitfunc.beams, powc, range);
 
     mpr("You expel the base metals with the kinetic energy of your movement!");
-    _ungoldify_targets(hitfunc.beams, coins, pow, range);
 
-    trigger_battlesphere(&you);
+    // Move the player in the direction of the target
+    // _ungoldify_move_player(normalised_target);
+    move_player_action(move);
+    return spret::success;
 }
 
 // How much work can we consider we'll have done by igniting a cloud here?

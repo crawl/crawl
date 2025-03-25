@@ -538,7 +538,7 @@ bool spell_is_direct_attack(spell_type spell)
 
 // How much MP does it cost for the player to cast this spell?
 //
-// @param real_spell  True iff the player is casting the spell normally,
+// @param real_spell  True if the player is casting the spell normally,
 // not via an evocable or other odd source.
 int spell_mana(spell_type which_spell, bool real_spell)
 {
@@ -1175,7 +1175,13 @@ string casting_uselessness_reason(spell_type spell, bool temp)
         if (spell_difficulty(spell) > you.experience_level)
             return "you aren't experienced enough to cast this spell.";
 
-        if (you.has_mutation(MUT_HP_CASTING))
+        if (spell == SPELL_UNGOLDIFY)
+        {
+            // Use gold instead of mana
+            if (you.gold < spell_mana(spell))
+                return "you don't have enough gold to cast this spell.";
+        }
+        else if (you.has_mutation(MUT_HP_CASTING))
         {
             // TODO: deduplicate with enough_hp()
             if (you.duration[DUR_DEATHS_DOOR])

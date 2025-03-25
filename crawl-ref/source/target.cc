@@ -1611,11 +1611,10 @@ bool targeter_widebeam::set_aim(coord_def a)
 
             const int position = n * m;
             const coord_def offset = (position < 0 ? unit_left : unit_right) * abs(position);
-            // Offset by -1 in the forward direction unless at origin because beam sources
-            // are 1 tile before what will actually get hit, at origin we offset 1 tile forward
-            // because we need a space to move into and still not get hit
-            const int beam_range = range - (offset.zero() ? 2 : abs(position)) + 1;
-            const coord_def start = origin + (offset.zero() ? unit_forward
+            // Offset by -1 in the forward direction unless at origin because we
+            // don't want to hit the caster's tile
+            const int beam_range = range - (offset.zero() ? 1 : abs(position)) + 1;
+            const coord_def start = origin + (offset.zero() ? offset
                                                             : (offset - unit_forward));
             const coord_def end = start + unit_forward * beam_range;
             const widebeam_beam beam = widebeam_beam{start, end, position};
@@ -1635,9 +1634,9 @@ bool targeter_widebeam::set_aim(coord_def a)
                         && cell_see_cell(origin, at, LOS_NO_TRANS))
                 {
                     // Targets beyond the first possible hit may not be hit
-                    // (due to overkill). This could be improved by using proper
-                    // beam targetters interally because they should understand
-                    // things like protected allies.
+                    // (due to momentum loss). This could be improved by using proper
+                    // beam targetters internally because they should understand
+                    // things like protected allies and momentum value.
                     zapped[at] = yes_or_maybe;
                     if (actor_at(at))
                         yes_or_maybe = AFF_MAYBE;

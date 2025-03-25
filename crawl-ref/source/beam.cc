@@ -878,7 +878,7 @@ void bolt::draw(const coord_def& p, bool force_refresh)
     // Set default value if none specified.
     if (tile_beam == 0)
         tile_beam = tileidx_zap(colour);
-    view_add_tile_overlay(p, vary_bolt_tile(tile_beam, source, target, p));
+    view_add_tile_overlay(p, vary_bolt_tile(tile_beam, source, target, p, this));
 #endif
     const unsigned short c = colour == BLACK ? random_colour(true)
                                              : element_colour(colour);
@@ -1880,12 +1880,14 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             }
         }
         break;
-    case BEAM_UNGOLD: {
+    case BEAM_UNGOLD:
+    {
         string msg;
         const int extra_dam = silver_damages_victim(mons, hurted, msg);
         hurted += extra_dam;
         if (extra_dam > 0 && doFlavouredEffects)
             mpr(msg);
+        break;
     }
 
     default:

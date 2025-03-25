@@ -3505,16 +3505,17 @@ tileidx_t tileidx_cloud(const cloud_info &cl)
 
 #ifdef USE_TILE
 tileidx_t vary_bolt_tile(tileidx_t tile, const coord_def& origin,
-                         const coord_def& target, const coord_def& pos)
+                         const coord_def& target, const coord_def& pos,
+                         const bolt* beam)
 {
     const coord_def diff = target - origin;
     const int dir = _tile_bolt_dir(diff.x, diff.y);
     const int dist = (pos - origin).rdist();
 
-    return vary_bolt_tile(tile, dir, dist);
+    return vary_bolt_tile(tile, dir, dist, beam);
 }
 
-tileidx_t vary_bolt_tile(tileidx_t tile, int dir, int dist)
+tileidx_t vary_bolt_tile(tileidx_t tile, int dir, int dist, const bolt* beam)
 {
     switch (tile)
     {
@@ -3567,18 +3568,11 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dir, int dist)
     case TILE_MI_BOOMERANG0:
         return tile + ui_random(4);
 
-    // Used by SPELL_UNGOLDIFY; more coins as damage dice increase
-    // XX: Used to have this as well
-    // case ETC_UNGOLD:
-    //     return TILE_BOLT_UNGOLD + min(bolt.damage.num / 10, 3);
-
-    // Turning to gold over distance, but we have to allow for 4 different
-    // base tiles (for different damage levels)
+    // Turning to gold over distance, as well as 4 different base types for
+    // how much "momentum" remains (i.e. the number of coins left in the shrapnel)
     case TILE_BOLT_UNGOLD:
-    // case TILE_BOLT_UNGOLD + 1:
-    // case TILE_BOLT_UNGOLD + 2:
-    // case TILE_BOLT_UNGOLD + 3:
-        return tile + min(8, max(0, 4 * (dist - 1)));
+        // XX: Change to really use momentum
+        return tile + (beam ? min(beam->damage.num / 10, 3) : 0) + min(8, max(0, 4 * (dist - 1)));
     default:
         return tile;
     }
