@@ -5298,16 +5298,16 @@ dice_def fortress_blast_damage(int AC, bool is_monster)
 static int _catalyst_weapon_power(const item_def* wpn, bool random)
 {
     if (!wpn)
-        return unarmed_base_damage(random);
+        return unarmed_base_damage(random) + unarmed_base_damage_bonus(random);
 
     const int wpn_dam = property(*wpn, PWPN_DAMAGE);
-    return random ? div_rand_round(wpn_dam * 4, 3) : wpn_dam * 4 / 3;
+    return random ? div_rand_round(wpn_dam * 3, 2) : wpn_dam * 3 / 2;
 }
 
 dice_def detonation_catalyst_damage(int pow, bool real, const item_def* wpn)
 {
     int wpn_dam = 0;
-    int power_dam = real ? div_rand_round(pow, 6) : pow / 6;
+    int power_factor = real ? div_rand_round(pow, 10) : pow / 10;
 
     if (real)
         wpn_dam = _catalyst_weapon_power(wpn, true);
@@ -5325,7 +5325,10 @@ dice_def detonation_catalyst_damage(int pow, bool real, const item_def* wpn)
         }
     }
 
-    return calc_dice(3, wpn_dam + power_dam, real);
+    // Flat penalty on damage, capped below at 1, reduced by power.
+    wpn_dam = max(1, wpn_dam - (10 - power_factor));
+
+    return calc_dice(2, wpn_dam, real);
 }
 
 void do_catalyst_explosion(coord_def center, const item_def* wpn)
