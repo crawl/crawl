@@ -6283,6 +6283,7 @@ static void _stock_shop_item(int j, shop_type shop_type_,
 
     int rerolls = 0;
     bool no_trash = false;
+    bool on_list = false;
 
     // XXX: this scares the hell out of me. should it be a for (...1000)?
     // also, it'd be nice if it was just a function that returned an
@@ -6295,6 +6296,7 @@ static void _stock_shop_item(int j, shop_type shop_type_,
         if (!spec.items.empty() && !spec.use_all)
         {
             // shop spec lists a random set of items; choose one
+            on_list = true;
             item_index = dgn_place_item(spec.items.random_item_weighted(),
                                         coord_def(), item_level);
         }
@@ -6302,6 +6304,7 @@ static void _stock_shop_item(int j, shop_type shop_type_,
                  && j < (int)spec.items.size())
         {
             // shop lists ordered items; take the one at the right index
+            on_list = true;
             item_index = dgn_place_item(spec.items.get_item(j), coord_def(),
                                         item_level);
         }
@@ -6327,6 +6330,9 @@ static void _stock_shop_item(int j, shop_type shop_type_,
 
         if (_valid_item_for_shop(item_index, shop_type_, spec))
         {
+            // Spec shops are allowed to stock trash and may intentionally do so
+            if (on_list)
+                break;
             const bool is_trash = _item_is_trash(env.item[item_index]);
 
             if (!no_trash && level_number > 10 && is_trash)
