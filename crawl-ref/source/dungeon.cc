@@ -5208,8 +5208,8 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
         }
 
         const monster_type montype = mons_class_is_zombified(type)
-                                                         ? mspec.monbase
-                                                         : type;
+                                     ? fixup_zombie_type(type, mspec.monbase)
+                                     : type;
 
         const habitat_type habitat = mons_class_primary_habitat(montype);
 

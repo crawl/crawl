@@ -493,11 +493,11 @@ monster_type resolve_monster_type(monster_type mon_type,
 monster_type fixup_zombie_type(const monster_type cls,
                                const monster_type base_type)
 {
-    // Yredelemnul's bound souls can fly - they aren't bound by their old flesh.
-    // Other zombies, regrettably, still are.
+    // Yredelemnul's bound souls and spectrals can fly - they aren't bound by
+    // their old flesh. Other zombies, regrettably, still are.
     // XXX: consider replacing the latter check with monster_class_flies(cls)
     // and adjusting vaults that use spectral krakens.
-    if (!mons_class_is_zombified(cls) || cls == MONS_BOUND_SOUL)
+    if (!mons_class_is_zombified(cls) || cls == MONS_BOUND_SOUL || cls == MONS_SPECTRAL_THING)
         return cls;
     // For generation purposes, don't treat simulacra of lava enemies as
     // being able to place on lava.
