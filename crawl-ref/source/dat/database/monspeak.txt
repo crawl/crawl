@@ -7794,6 +7794,33 @@ VISUAL: @The_monster@ begins to take a bow, but slips on a banana peel.
 VISUAL: @The_monster@ begins to tie you into a balloon animal.
 ## END Killer Klown ##
 %%%%
+################## Anachrobat ###############################
+anachrobat
+
+@The_monster@ says, "Is it that time already?"
+
+@The_monster@ says, "[Play|Dinner|Show|Out of ]time!"
+
+@The_monster@ says, "The show must go on ... and on and on and on."
+
+@The_monster@ says, "I don't have time for this."
+
+@The_monster@ says, "Time waits for no bat."
+
+@The_monster@ says, "I will end you time after time after time after time."
+
+VISUAL:@The_monster@ starts breakdancing.
+
+VISUAL:@The_monster@ peers at @foe@ over @possessive@ tinted glasses.
+
+VISUAL:@The_monster@ performs a quick-change routine.
+
+VISUAL:@The_monster@ checks @possessive@ wristwatch.
+
+VISUAL:@The_monster@ pauses to take a selfie.
+
+VISUAL:@The_monster@ gazes into [@possessive@|@foe_possessive@] future.
+%%%%
 ################## Laughing skull ###########################
 laughing skull
 

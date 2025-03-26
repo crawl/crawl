@@ -2644,7 +2644,7 @@ NAME:    circus_mu
 TAGS:    no_rotate no_hmirror no_monster_gen
 DEPTH:   Zot, !Zot:$
 ORIENT:  float
-MONS:    killer klown, elephant / dire elephant / hellephant w:5, human ; club
+MONS:    killer klown / anachrobat, elephant / dire elephant / hellephant w:5, human ; club
 KITEM:   ! = club
 KFEAT:   y = x
 KFEAT:   B = cache of baked goods
@@ -3491,7 +3491,7 @@ MONS:    titan / lich / deep elf annihilator w:3 / deep elf high priest w:4 / \
          deep elf sorcerer w:3 / glowing orange brain w:3
 MONS:    nonbase draconian w:20 / protean progenitor / killer klown / \
          death cob / curse toe w:5 / ancient lich / dread lich / \
-         electric golem / orb of fire w:5
+         electric golem / orb of fire w:5 / anachrobat
 KFEAT:   V = v
 SHUFFLE: EF
 SUBST:   E : .
@@ -3595,8 +3595,8 @@ ORIENT: east
 MONS:   nonbase draconian, base draconian, moth of wrath
 MONS:   fire dragon w:35 / ice dragon w:35 / shadow dragon w:25 / \
         storm dragon w:50 / wyrmhole w:15 / golden dragon w:35
-MONS:   Killer Klown / electric golem w:5 / \
-        curse toe w:5 / protean progenitor w:5
+MONS:   Killer Klown / anachrobat w:3 / electric golem w:4 / \
+        curse toe w:4 / protean progenitor w:4
 MONS:   orb of fire
 SUBST:  2 = 222., 5 = 55.
 SUBST:  } = }:80 >, ] = ]:80 >, ) = ):80 >
@@ -3839,7 +3839,7 @@ MONS:   war gargoyle / dancing weapon ; scimitar good_item / spark wasp w:5
 MONS:   black draconian stormcaller / black draconian shifter / storm dragon
 MONS:   ghost moth / moth of wrath / death cob / \
         tentacled monstrosity / killer klown w:5
-MONS:   patrolling electric golem
+MONS:   patrolling electric golem / patrolling anachrobat
 MONS:   patrolling black draconian annihilator ; cloak good_item . \
         rapier ego:electrocution
 KMONS:  O = diamond obelisk
@@ -3952,7 +3952,7 @@ NAME:    ebering_klown_carousel
 TAGS:    no_monster_gen no_trap_gen
 DEPTH:   Zot, !Zot:$
 ORIENT:  float
-MONS:    killer klown, ancient lich / dread lich, death cob
+MONS:    killer klown, ancient lich / dread lich, death cob / anachrobat
 KFEAT:   a = iron_grate
 KFEAT:   ^ = dispersal trap
 NSUBST:  - = 2 / 3 = 3.. / *:.
@@ -4034,7 +4034,7 @@ NSUBST:  H = 3 = aa7 / 9 = 7. / *:.
 KMONS:   a = draconian shifter
 # Those laffy daffy Klowns
 NSUBST:  I = 8 = k. / *:.
-KMONS:   k = killer klown
+KMONS:   k = killer klown / anachrobat w:5
 TILE:    x = wall_zot_red
 TILE:    X = wall_zot_white
 : vault_granite_statue_setup(_G, "G", "scintillating statue")
@@ -4068,7 +4068,7 @@ KMONS:   01 = ghost moth
 KMONS:   23 = golden dragon
 KMONS:   45 = nonbase draconian
 KMONS:   67 = protean progenitor
-KMONS:   89 = killer klown
+KMONS:   89 = killer klown / anachrobat w:5
 KMONS:   AB = curse toe
 KMONS:   CD = electric golem
 KMONS:   E = orb of fire
@@ -4116,7 +4116,7 @@ TAGS:   no_monster_gen
 ORIENT: float
 DEPTH:  Zot
 MONS:   angel god:zin dbname:zin_angel
-MONS:   killer klown / protean progenitor w:5
+MONS:   killer klown / protean progenitor w:5 / anachrobat w:5
 MONS:   chaos spawn, glowing shapeshifter
 KMONS:  s = killer klown-shaped pillar of salt
 KMONS:  f = butterfly
@@ -4487,7 +4487,7 @@ TAGS:    no_dump no_trap_gen
 PLACE:   Zot:$
 ORIENT:  north
 MONS:    patrolling orb guardian, orange crystal statue / w:20 obsidian statue
-MONS:    electric golem, killer klown, ancient lich / dread lich, orb of fire
+MONS:    electric golem, killer klown / anachrobat, ancient lich / dread lich, orb of fire
 KITEM:   R = prismatic gem
 KITEM:   Z = Orb of Zot
 KFEAT:   Z = orb dais

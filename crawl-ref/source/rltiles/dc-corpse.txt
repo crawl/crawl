@@ -215,6 +215,7 @@ killer_klown_green
 killer_klown_purple
 killer_klown_red
 killer_klown_yellow
+anachrobat CORPSE_ANACHROBAT
 mon/demihumanoids/entropy_weaver CORPSE_ENTROPY_WEAVER
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4
 %sdir mon/amorphous

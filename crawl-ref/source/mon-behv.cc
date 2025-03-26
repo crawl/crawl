@@ -1516,3 +1516,23 @@ void mons_end_withdraw_order(monster& mons)
     mons.props.erase(LAST_POS_KEY);
     mons.props.erase(BLOCKED_DEADLINE_KEY);
 }
+
+bullet_time_method get_bullet_time(const actor& defender)
+{
+    return defender.props.exists(BULLET_TIME_METHOD_KEY)
+        ? (bullet_time_method)defender.props[BULLET_TIME_METHOD_KEY].get_byte()
+        : bullet_time_method::none;
+}
+
+void set_bullet_time(actor& defender, bullet_time_method method)
+{
+    defender.props[BULLET_TIME_METHOD_KEY].get_byte() = (char)method;
+}
+
+bool is_bullet_time(const actor& defender, bullet_time_method method)
+{
+    if (!defender.props.exists(BULLET_TIME_METHOD_KEY))
+        return false;
+    auto value = get_bullet_time(defender);
+    return (method == bullet_time_method::none) ? true : (value == method);
+}

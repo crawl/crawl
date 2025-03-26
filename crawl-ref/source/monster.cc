@@ -445,13 +445,13 @@ item_def *monster::missiles() const
     return inv[MSLOT_MISSILE] != NON_ITEM ? &env.item[inv[MSLOT_MISSILE]] : nullptr;
 }
 
-item_def *monster::launcher() const
+item_def *monster::launcher(bool alt_weapon) const
 {
-    item_def *weap = mslot_item(MSLOT_WEAPON);
+    item_def *weap = mslot_item(alt_weapon ? MSLOT_ALT_WEAPON : MSLOT_WEAPON);
     if (weap && is_range_weapon(*weap))
         return weap;
 
-    weap = mslot_item(MSLOT_ALT_WEAPON);
+    weap = mslot_item(alt_weapon ? MSLOT_WEAPON : MSLOT_ALT_WEAPON);
     return weap && is_range_weapon(*weap) ? weap : nullptr;
 }
 
@@ -465,29 +465,16 @@ static int _mons_offhand_weapon_index(const monster* m)
 item_def *monster::weapon(int which_attack) const
 {
     const mon_attack_def attk = mons_attack_spec(*this, which_attack);
-    if (attk.type != AT_HIT && attk.type != AT_WEAP_ONLY)
-        return nullptr;
 
-    // Even/odd attacks use main/offhand weapon.
-    if (which_attack > 1)
-        which_attack &= 1;
+    const int weap = inv[MSLOT_WEAPON];
+    item_def *main_weapon = weap == NON_ITEM ? nullptr : &env.item[weap];
 
-    // This randomly picks one of the wielded weapons for monsters that can use
-    // two weapons. Not ideal, but better than nothing. fight.cc does it right,
-    // for various values of right.
-    int weap = inv[MSLOT_WEAPON];
+    const int offhand = _mons_offhand_weapon_index(this);
+    item_def *offhand_weapon = offhand == NON_ITEM ? nullptr
+                                                   : &env.item[offhand];
 
-    if (which_attack && mons_wields_two_weapons(*this))
-    {
-        const int offhand = _mons_offhand_weapon_index(this);
-        if (offhand != NON_ITEM
-            && (weap == NON_ITEM || which_attack == 1 || coinflip()))
-        {
-            weap = offhand;
-        }
-    }
-
-    return weap == NON_ITEM ? nullptr : &env.item[weap];
+    return mons_weapon_for_attack(attk.type, mons_wields_two_weapons(*this),
+                                  which_attack, main_weapon, offhand_weapon);
 }
 
 /**
@@ -1172,6 +1159,17 @@ bool monster::pickup_launcher(item_def &launch, bool msg, bool force)
 {
     if (!force && !_needs_ranged_attack(this))
         return false;
+
+    const bool dual_wielding = mons_wields_two_weapons(*this);
+    if (dual_wielding)
+    {
+        // If we have either weapon slot free, pick up the weapon.
+        if (inv[MSLOT_WEAPON] == NON_ITEM)
+            return pickup(launch, MSLOT_WEAPON, msg);
+
+        if (inv[MSLOT_ALT_WEAPON] == NON_ITEM)
+            return pickup(launch, MSLOT_ALT_WEAPON, msg);
+    }
 
     const int mdam_rating = mons_weapon_damage_rating(launch);
     for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
@@ -1983,11 +1981,17 @@ void monster::swap_weapons(maybe_bool maybe_msg)
     int old_halo = halo_radius();
     int old_umbra = umbra_radius();
 
-    if (weap && !do_unequip_effects(*weap, msg))
+    // Dual wielders with two weapons shouldn't need to swap them
+    // (and it creates a lot of message spam for dual handguns)
+    if (weap && is_weapon(*weap) && alt && is_weapon(*alt)
+        && mons_wields_two_weapons(*this))
     {
-        // Item was cursed.
         return;
     }
+
+    // Is item cursed?
+    if (weap && !do_unequip_effects(*weap, msg))
+        return;
 
     swap(inv[MSLOT_WEAPON], inv[MSLOT_ALT_WEAPON]);
 
@@ -6429,6 +6433,7 @@ bool monster::is_jumpy() const
 {
     return type == MONS_JUMPING_SPIDER
         || type == MONS_BOULDER_BEETLE
+        || type == MONS_ANACHROBAT
         || mons_species() == MONS_BARACHI;
 }
 
