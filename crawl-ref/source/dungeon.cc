@@ -72,6 +72,7 @@
 #include "tilepick.h"
 #include "tileview.h"
 #include "timed-effects.h"
+#include "transform.h"
 #include "traps.h"
 #include "unique-creature-list-type.h"
 #ifdef WIZARD
@@ -6130,6 +6131,132 @@ static bool _valid_item_for_shop(int item_index, shop_type shop_type_,
 }
 
 /**
+ * Is this item reasonably worthless after the early/mid game? Shops get an
+ * increasing chance to reroll such items the further down we go.
+ */
+static bool _item_is_trash(item_def& item)
+{
+    // Never trash! (Maybe we could apply *some* logic to random artefacts, but
+    // it's really hard to say what may or may not be useful to a given player.
+    if (is_artefact(item))
+        return false;
+    switch (item.base_type)
+    {
+    case OBJ_SCROLLS:
+        switch (item.sub_type)
+        {
+        case SCR_NOISE:
+        case SCR_IDENTIFY:
+            return true;
+        default:
+            return false;
+        }
+    case OBJ_POTIONS:
+        switch (item.sub_type)
+        {
+        case POT_MOONSHINE:
+        case POT_LIGNIFY:
+            return true;
+        default:
+            return false;
+        }
+    case OBJ_WANDS:
+        switch (item.sub_type)
+        {
+        case WAND_FLAME:
+        case WAND_DIGGING: // Questionable
+            return true;
+        default:
+            return false;
+        }
+    // Get a bit more choosy. A lot of base jewellery types are boring once
+    // you've seen one, but ones with variable plusses can still be good.
+    case OBJ_JEWELLERY:
+        switch (item.sub_type)
+        {
+        case RING_SLAYING:
+        case AMU_FAITH:
+        case AMU_REGENERATION:
+        case AMU_MANA_REGENERATION:
+            return false;
+        case RING_STRENGTH:
+        case RING_INTELLIGENCE:
+        case RING_DEXTERITY:
+        case RING_PROTECTION:
+        case RING_EVASION:
+        case RING_MAGICAL_POWER:
+            return item.plus < 5;
+        default:
+            // All other rings and amulets
+            return true;
+        }
+
+    case OBJ_WEAPONS:
+    {
+        const int rarity = weapon_rarity(item.sub_type);
+        // Rarest weapons are great whatever the stats. Uncommon weapons need
+        // to have a good plus or a brand.
+        return rarity > 6 || rarity > 3 && item.brand == SPWPN_NORMAL && item.plus < 5;
+    }
+
+    case OBJ_MISSILES:
+        // Get rid of the most boring missiles
+        switch (item.sub_type)
+        {
+        case MI_STONE:
+        case MI_BOOMERANG:
+            return true;
+        case MI_JAVELIN:
+            return item.brand == SPMSL_NORMAL;
+        case MI_DART:
+            return item.brand == SPMSL_POISONED;
+        default:
+            return false;
+        }
+    case OBJ_ARMOUR:
+        switch (item.sub_type)
+        {
+        case ARM_ORB:
+            // Non-artefact orbs.
+            return true;
+        case ARM_BARDING:
+            // Barding is rare enough let's allow it even if mundane
+            return false;
+        default:
+            // For everything else, use a bit of logic.
+            return !armour_is_special(item) && item.brand == SPARM_NORMAL
+                   // Eliminates plain +2 hats or boots, but not +5 plate armour
+                   && item.plus < 5;
+        }
+    case OBJ_TALISMANS:
+    {
+        // Keep the higher-tier non-artefact talismans
+        const transformation form_type = form_for_talisman(item);
+        const Form* form = get_form(form_type);
+        // Max skill seems to be a better indication of tier than min skill.
+        // This trashes blade and serpent talismans. Review once more forms
+        // are added.
+        return form->max_skill < 20;
+    }
+    case OBJ_STAVES:
+        // Non-artefact staves aren't very interesting. They don't even generate
+        // in shops right now anyway.
+        return true;
+    case OBJ_MISCELLANY:
+    case OBJ_BOOKS:
+        // Miscellany could be trash if we tracked how many were generated
+        // so far in the dungeon, but we're not doing that.
+        // Nothing can really be done with books; once single spells are
+        // sold in shops, maybe trash spell level < 5.
+        return false;
+    default:
+        // Should never reach here unless a new item type is added; at least
+        // fail quickly if that happens.
+        ASSERT(false);
+    }
+}
+
+/**
  * Create an item and place it in a shop.
  *
  * FIXME: I'm pretty sure this will go into an infinite loop if env.item is full.
@@ -6153,6 +6280,9 @@ static void _stock_shop_item(int j, shop_type shop_type_,
 
     int item_index; // index into env.item (global item array)
                     // where the generated item will be stored
+
+    int rerolls = 0;
+    bool no_trash = false;
 
     // XXX: this scares the hell out of me. should it be a for (...1000)?
     // also, it'd be nice if it was just a function that returned an
@@ -6196,11 +6326,25 @@ static void _stock_shop_item(int j, shop_type shop_type_,
         }
 
         if (_valid_item_for_shop(item_index, shop_type_, spec))
-            break;
+        {
+            const bool is_trash = _item_is_trash(env.item[item_index]);
 
-        // Reset object and try again.
+            if (!no_trash && level_number > 10 && is_trash)
+                no_trash = x_chance_in_y(level_number - 10, level_number - 6);
+
+#ifdef DEBUG
+            dprf("Shop level %d item %s: %s (%s) (%d rolls)", level_number,
+                 env.item[item_index].name(DESC_PLAIN, false, true).c_str(), is_trash ? "trash" : "ok",
+                 (is_trash && no_trash) ? "trashing" : "keeping", rerolls + 1);
+#endif
+            if (!is_trash || !no_trash || ++rerolls > 10)
+                break;
+        }
+
+        // Reset object and try again. Shouldn't ever be an unrand, but flag it
+        // as never created, just in case.
         if (item_index != NON_ITEM)
-            env.item[item_index].clear();
+            destroy_item(env.item[item_index], true);
     }
 
     ASSERT(item_index != NON_ITEM);
