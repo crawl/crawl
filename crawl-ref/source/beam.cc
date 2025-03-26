@@ -5917,9 +5917,12 @@ void bolt::affect_monster(monster* mon)
     else if (!invalid_monster(mon))
         kill_monster(*mon);
 
-    if (momentum_loss && damage.num > 1)
-        damage = dice_def(max(1, damage.num - momentum_loss), damage.size);
-    extra_range_used += range_used_on_hit();
+    // Can't do this in range_used_on_hit as it's const. Right now this is
+    // only used against monsters anyway.
+    if (momentum > 0 && --momentum == 0)
+        extra_range_used += BEAM_STOP;
+    else
+        extra_range_used += range_used_on_hit();
 }
 
 bool bolt::ignores_monster(const monster* mon) const
@@ -6932,6 +6935,7 @@ int bolt::range_used_on_hit() const
     {
         return BEAM_STOP;
     }
+
     // Lightning that isn't an explosion goes through things.
     return 0;
 }

@@ -100,10 +100,9 @@ struct bolt
                                     // isn't in view.
     bool   pierce = false;        // Can the beam pass through a target and
                                   // hit another target behind the first?
-    int    momentum_loss = 0;     // Only makes sense in combination with
-                                  // pierce and when you have more than one
-                                  // damage dice. Reduces the number of dice
-                                  // by n each successful hit.
+    int    momentum = 0;          // Use in combination of piercing to limit the
+                                  // number of targets to be hit. If positive,
+                                  // reduce by 1 each hit, and stop the beam at 0.
     bool   is_explosion = false;
     bool   is_death_effect = false; // effect of e.g. ballistomycete spore
     bool   aimed_at_spot = false; // aimed at (x, y), should not cross

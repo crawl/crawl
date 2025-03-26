@@ -3571,8 +3571,7 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dir, int dist, const bolt* beam)
     // Turning to gold over distance, as well as 4 different base types for
     // how much "momentum" remains (i.e. the number of coins left in the shrapnel)
     case TILE_BOLT_UNGOLD:
-        // XX: Change to really use momentum
-        return tile + (beam ? min(beam->damage.num / 10, 3) : 0) + min(8, max(0, 4 * (dist - 1)));
+        return tile + (beam ? beam->momentum - 1 : 0) + min(8, max(0, 4 * (dist - 1)));
     default:
         return tile;
     }

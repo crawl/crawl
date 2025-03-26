@@ -2143,9 +2143,8 @@ static void _ungoldify_targets(vector<widebeam_beam> beams, int pow, int range)
     beam.range             = range;
     beam.hit_verb          = "peppers";
     beam.draw_delay        = 0;
-    beam.momentum_loss     = 1;
     beam.aimed_at_spot     = true;
-
+    beam.momentum          = max(2, min(4, div_round_up(pow, 4)));
     vector<bolt> bolts;
     for (widebeam_beam item : beams)
     {
