@@ -3776,6 +3776,7 @@ void melee_attack::mons_apply_attack_flavour()
         }
         break;
     }
+
     case AF_SLEEP:
         if (!coinflip())
             break;
@@ -3793,7 +3794,6 @@ void melee_attack::mons_apply_attack_flavour()
         }
         defender->put_to_sleep(attacker, random_range(3, 5) * BASELINE_DELAY);
         break;
-
 
     case AF_ALEMBIC:
     {
@@ -3827,6 +3827,13 @@ void melee_attack::mons_apply_attack_flavour()
 
         if (--attacker->as_monster()->number == 0)
             alembic_brew_potion(*attacker->as_monster());
+    }
+
+    case AF_SHED:
+    {
+        if (!defender->is_firewood())
+            summon_detritus(*attacker->as_monster(), defender->pos());
+        break;
     }
     break;
 
@@ -4253,9 +4260,9 @@ bool melee_attack::do_knockback(bool slippery)
 
     if (!slippery && !x_chance_in_y(size_diff + 3, 6)
         // need a valid tile
-        || !defender->is_habitable_feat(env.grid(new_pos))
+        || !defender->is_habitable(new_pos)
         // don't trample anywhere the attacker can't follow
-        || !attacker->is_habitable_feat(env.grid(old_pos))
+        || !attacker->is_habitable(old_pos)
         // don't trample into a monster - or do we want to cause a chain
         // reaction here?
         || actor_at(new_pos)

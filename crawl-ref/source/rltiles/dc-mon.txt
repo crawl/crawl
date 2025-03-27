@@ -266,7 +266,7 @@ phalanx_beetle MONS_PHALANX_BEETLE
 %sdir mon/unique
 xakkrixis MONS_XAKKRIXIS
 
-## Frogs and flying fish ('F')
+## Frogs and fish of air and earth ('F')
 %sdir mon/demihumanoids
 barachi MONS_BARACHI
 %sdir mon/unique
@@ -281,6 +281,8 @@ blinking_frog MONS_BLINK_FROG_BLINKING
 cane_toad MONS_CANE_TOAD
 goliath_frog MONS_GOLIATH_FROG
 skyshark MONS_SKYSHARK
+%sdir mon/aquatic
+rock_fish MONS_ROCK_FISH
 %sdir mon/undead
 marrowcuda MONS_MARROWCUDA
 
@@ -638,6 +640,7 @@ gargoyle MONS_GARGOYLE
 war_gargoyle MONS_WAR_GARGOYLE
 molten_gargoyle MONS_MOLTEN_GARGOYLE
 %rim 0
+strolling_stone MONS_STROLLING_STONE
 nargun MONS_NARGUN
 %rim 1
 
@@ -1195,7 +1198,13 @@ ballistomycete MONS_BALLISTOMYCETE
 wandering_mushroom MONS_WANDERING_MUSHROOM
 deathcap MONS_DEATHCAP
 sleepcap MONS_SLEEPCAP
+
 %rim 1
+%sdir misc
+mold_glowing1 MONS_WOLF_LICHEN
+mold_glowing2
+mold_glowing3
+mold_glowing4
 
 ## Goblins ('g')
 %sdir mon/unique

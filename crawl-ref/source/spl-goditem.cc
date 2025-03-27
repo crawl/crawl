@@ -352,7 +352,7 @@ spret cast_healing(int pow, bool fail)
 
     if (!spd.isValid)
         return spret::abort;
-    if (cell_is_solid(spd.target))
+    if (cell_is_invalid_target(spd.target))
     {
         canned_msg(MSG_NOTHING_THERE);
         return spret::abort;

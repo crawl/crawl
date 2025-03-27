@@ -2478,6 +2478,11 @@ river rat
 A rodent with hair of a most peculiar green colour, and a powerful bite. It
 tends to form great swarms with its kin.
 %%%%
+rock fish
+
+A small fish carved perfectly in stone but swimming through rock as easily as
+a flesh and bone one through water.
+%%%%
 rockslime
 
 An oozing avalanche, scouring the ground beneath it as it rumbles forward.
@@ -2875,6 +2880,14 @@ strange machine
 A strange mechanical contraption, all hisses and pops. Shadows seem to dance
 across its reflective surface.
 %%%%
+strolling stone
+
+They say a rolling stone gathers no moss; this may be true, but when moving at
+more of a sauntering pace they gather all kinds of detritus. A craggy beast
+shuffling through the dungeon covered in moss, lichen, and fungus.
+
+When struck it will shed lichen and mushrooms around itself.
+%%%%
 sun demon
 
 A demonic figure shining with the heat and fury of a fallen star.
@@ -3228,6 +3241,13 @@ the currents of air that surround it. It can exhale powerful blasts of wind.
 wolf
 
 A strong wild canine, with sharp teeth and a healthy appetite.
+%%%%
+wolf lichen
+
+A carpet of colourful but toxic moss-like fungus found often in woodlands. But
+why is it flowing at speed across the floor and up the walls?
+
+It is able to move on and through walls, and completely surround you in a group.
 %%%%
 wolf spider
 
