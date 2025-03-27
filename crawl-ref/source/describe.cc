@@ -111,6 +111,7 @@ struct property_descriptor;
 static const property_descriptor & _get_artp_desc_data(artefact_prop_type p);
 
 static string _describe_talisman(const item_def &item, bool verbose);
+static string _describe_talisman_form(transformation form_type, const item_def* item = nullptr);
 
 int show_description(const string &body, const tile_def *tile)
 {
@@ -2682,6 +2683,7 @@ static string _cannot_use_reason(const item_def &item, bool temp=true)
     {
     case OBJ_SCROLLS: return cannot_read_item_reason(&item, temp);
     case OBJ_POTIONS: return cannot_drink_item_reason(&item, temp);
+    case OBJ_BAUBLES:
     case OBJ_MISCELLANY:
     case OBJ_WANDS:   return cannot_evoke_item_reason(&item, temp);
     default: return "";
@@ -3049,6 +3051,13 @@ string get_item_description(const item_def &item,
 
     case OBJ_GIZMOS:
         description << _describe_gizmo(item);
+        break;
+
+    case OBJ_BAUBLES:
+        if (!is_useless_item(item, false))
+            description << "\n" << _describe_talisman_form(transformation::flux);
+        if (verbose)
+            _uselessness_desc(description, item);
         break;
 
     case OBJ_ORBS:
@@ -7276,9 +7285,8 @@ static int _get_scroll_skill_boost(int skill)
     return 10 + skill * 5;
 }
 
-static string _describe_talisman_form(const item_def &item)
+static string _describe_talisman_form(transformation form_type, const item_def* item)
 {
-    const transformation form_type = form_for_talisman(item);
     const Form* form = get_form(form_type);
 
     // First comes the big table of scaling values
@@ -7397,8 +7405,6 @@ static string _describe_talisman_form(const item_def &item)
     // Various ad hoc properties of individual forms
     if (form_type == transformation::statue)
         pr.AddCell("Melee damage", "+50%");
-    else if (form_type == transformation::flux)
-        pr.AddCell("Melee damage", "-33%", RED);
     else if (form_type == transformation::maw)
         pr.AddCell("Bite chance", "75%");
     else if (form_type == transformation::death)
@@ -7420,8 +7426,11 @@ static string _describe_talisman_form(const item_def &item)
         pr.AddCell("Will", "-", RED);
         pr.AddCell("Claws", "3");
     }
-    else if (form_type == transformation::walking_scroll)
+    else if (form_type == transformation::walking_scroll
+             || form_type == transformation::flux)
+    {
         pr.AddCell("Melee damage", "-50%", RED);
+    }
 
     // Don't output extra blank lines if there's no content.
     if (pr.NumCells() > 0)
@@ -7458,16 +7467,19 @@ static string _describe_talisman_form(const item_def &item)
     description << string(60, '_') << "\n";
 
     // Include info about setting skill targets, if this is a real item.
-    const int target_skill = _item_training_target(item);
-    const bool can_set_target = _is_below_training_target(item, true) && in_inventory(item)
-                                && !you.has_mutation(MUT_DISTRIBUTED_TRAINING);
-    if (can_set_target)
+    if (item)
     {
-        description << "\n" << _your_skill_desc(SK_SHAPESHIFTING, can_set_target,
-            target_skill, "   ");
-        string desc;
-        _append_skill_target_desc(desc, SK_SHAPESHIFTING, target_skill);
-        description << desc << "\n";
+        const int target_skill = _item_training_target(*item);
+        const bool can_set_target = _is_below_training_target(*item, true) && in_inventory(*item)
+                                    && !you.has_mutation(MUT_DISTRIBUTED_TRAINING);
+        if (can_set_target)
+        {
+            description << "\n" << _your_skill_desc(SK_SHAPESHIFTING, can_set_target,
+                target_skill, "   ");
+            string desc;
+            _append_skill_target_desc(desc, SK_SHAPESHIFTING, target_skill);
+            description << desc << "\n";
+        }
     }
 
     return description.str();
@@ -7475,24 +7487,24 @@ static string _describe_talisman_form(const item_def &item)
 
 static string _describe_talisman(const item_def &item, bool verbose)
 {
-    string description;
+    ostringstream description;
 
-    if (verbose && !is_useless_item(item))
-        description += "\n" + _describe_talisman_form(item);
+    if (verbose && !is_useless_item(item, false) && item.sub_type != TALISMAN_PROTEAN)
+        description << "\n" << _describe_talisman_form(form_for_talisman(item), &item);
 
     // Artefact properties.
     string art_desc = _artefact_descrip(item);
     if (!art_desc.empty())
-        description += "\n" + art_desc;
+        description << "\n" << art_desc;
 
-    if (verbose && !is_useless_item(item))
+    if (verbose && !is_useless_item(item, false))
     {
-        description += "\n\nA period of sustained concentration is needed to "
+            description << "\n\nA period of sustained concentration is needed to "
                         "enter or leave forms. To leave this form, evoke the "
                         "talisman again.";
     }
 
-    return description;
+    return description.str();
 }
 
 /**

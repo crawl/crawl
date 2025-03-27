@@ -333,6 +333,17 @@ void fill_doll_equipment(dolls_data &result)
         result.parts[TILEP_PART_HAIR]    = 0;
         result.parts[TILEP_PART_LEG]     = 0;
         break;
+    case transformation::flux:
+        switch (you.species)
+        {
+        case SP_FELID:
+            result.parts[TILEP_PART_BASE] = TILEP_TRAN_FLUX_FELID;
+            break;
+        default:
+            result.parts[TILEP_PART_BODY] = TILEP_TRAN_FLUX_HUMANOID;
+            break;
+        }
+        break;
     case transformation::hive:
 
         // These get full-body tiles elsewhere.

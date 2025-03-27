@@ -300,9 +300,15 @@ int Form::mult_hp(int base_hp, bool force_talisman, int skill) const
 {
     const int scale = 100;
     const int lvl = skill == -1 ? get_level(scale) : skill * scale;
-    // Only penalize if you're in a talisman form with insufficient skill.
-    const int shortfall = min_skill * scale - lvl;
-    if (shortfall <= 0 || you.default_form != you.form && !force_talisman)
+    // Only penalize if you're in a talisman/bauble form with insufficient skill.
+    // (Flux form gets double the HP penalty per level, since its min skill is so low.)
+    const int shortfall = (min_skill * scale - lvl)
+                          * (you.form == transformation::flux ? 2 : 1);
+    const bool should_downscale = force_talisman
+                                  || you.default_form == you.form
+                                  || you.form == transformation::flux;
+
+    if (shortfall <= 0 || !should_downscale)
         return hp_mod * base_hp / 100;
     // -10% hp per skill level short, down to -90%
     const int penalty = min(shortfall, 9 * scale);
@@ -549,6 +555,22 @@ private:
     DISALLOW_COPY_AND_ASSIGN(FormFlux);
 public:
     static const FormFlux &instance() { static FormFlux inst; return inst; }
+
+    string get_description(bool past_tense) const override
+    {
+        return make_stringf("You %s overflowing with transmutational energy.",
+                            past_tense ? "were" : "are");
+    }
+
+    string transform_message() const override
+    {
+        return "Your body destabilises.";
+    }
+
+    string get_untransform_message() const override
+    {
+        return "Your body stabilises again.";
+    }
 };
 
 class FormBlade : public Form

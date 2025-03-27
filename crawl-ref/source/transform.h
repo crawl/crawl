@@ -13,6 +13,9 @@
 #define DRAGON_CLAWS 3
 #define DRAGON_FANGS 5
 
+#define FLUX_ENERGY_KEY "flux_energy"
+#define FLUX_ENERGY_WARNING 10
+
 enum form_capability
 {
     FC_DEFAULT,

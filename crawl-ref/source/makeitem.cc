@@ -1938,6 +1938,9 @@ int items(bool allow_uniques,
         // them later.
         if (one_chance_in(100) && !x_chance_in_y(max(item_level, 5) * 2, 100))
             item.base_type = OBJ_TALISMANS;
+
+        if (one_chance_in(275) && !x_chance_in_y(item_level, 35))
+            item.base_type = OBJ_BAUBLES;
     }
 
     ASSERT(force_type == OBJ_RANDOM
@@ -2036,6 +2039,12 @@ int items(bool allow_uniques,
     case OBJ_GIZMOS:
         item.base_type = OBJ_GIZMOS;
         item.sub_type = 0;
+        break;
+
+    case OBJ_BAUBLES:
+        item.base_type = OBJ_BAUBLES;
+        item.sub_type = BAUBLE_FLUX;
+        item.quantity = random_range(2, 3);
         break;
 
     // that is, everything turns to gold if not enumerated above, so ... {dlb}

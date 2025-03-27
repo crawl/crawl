@@ -1159,6 +1159,7 @@ const char *base_type_string(object_class_type type)
     case OBJ_GEMS: return "gem";
     case OBJ_TALISMANS: return "talisman";
     case OBJ_GIZMOS: return "gizmo";
+    case OBJ_BAUBLES: return "bauble";
     default: return "";
     }
 }
@@ -1893,6 +1894,10 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     }
     break;
 
+    case OBJ_BAUBLES:
+        buff << "flux bauble";
+    break;
+
     default:
         buff << "!";
     }
@@ -1949,6 +1954,7 @@ bool item_type_known(const item_def& item)
     case OBJ_GOLD:
     case OBJ_RUNES:
     case OBJ_GEMS:
+    case OBJ_BAUBLES:
 #if TAG_MAJOR_VERSION == 34
     case OBJ_FOOD:
     case OBJ_RODS:
@@ -3333,6 +3339,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         }
 
         // Deliberate fallthrough.
+    case OBJ_BAUBLES:
     case OBJ_TALISMANS:
     case OBJ_WANDS:
         return cannot_evoke_item_reason(&item, temp, ident || item_type_known(item)).size();

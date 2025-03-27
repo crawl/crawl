@@ -1529,6 +1529,7 @@ bool is_stackable_item(const item_def &item)
         case OBJ_SCROLLS:
         case OBJ_POTIONS:
         case OBJ_GOLD:
+        case OBJ_BAUBLES:
 #if TAG_MAJOR_VERSION == 34
         case OBJ_FOOD:
 #endif
@@ -3345,6 +3346,7 @@ int get_max_subtype(object_class_type base_type)
         NUM_RUNE_TYPES,
         NUM_TALISMANS,
         NUM_GEM_TYPES,
+        1,
         1,
     };
     COMPILE_CHECK(ARRAYSZ(max_subtype) == NUM_OBJECT_CLASSES);

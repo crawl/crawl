@@ -877,6 +877,11 @@ enum talisman_type
     NUM_TALISMANS,
 };
 
+enum bauble_type
+{
+    BAUBLE_FLUX,
+};
+
 enum special_gizmo_type
 {
     SPGIZMO_NORMAL,

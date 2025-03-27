@@ -594,7 +594,7 @@ static void _try_to_respawn_ancestor()
 
 static void _decrement_transform_duration(int delay)
 {
-    if (you.form == you.default_form)
+    if (you.form == you.default_form || you.form == transformation::flux)
         return;
 
     // FIXME: [ds] Remove this once we've ensured durations can never go < 0?

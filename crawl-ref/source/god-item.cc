@@ -234,6 +234,7 @@ bool is_chaotic_item(const item_def& item, bool calc_unid)
     case OBJ_MISCELLANY:
         return item.sub_type == MISC_BOX_OF_BEASTS;
     case OBJ_TALISMANS:
+    case OBJ_BAUBLES:
         return true;
     default:
         return false;

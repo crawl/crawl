@@ -3171,8 +3171,13 @@ bool dur_expiring(duration_type dur)
         return false;
 
     // XXX: reconsider using DUR_TRANSFORM here
-    if (dur == DUR_TRANSFORMATION && you.form == you.default_form)
-        return false;
+    if (dur == DUR_TRANSFORMATION)
+    {
+        if (you.form == you.default_form)
+            return false;
+        else if (you.form == transformation::flux)
+            return you.props[FLUX_ENERGY_KEY].get_int() < FLUX_ENERGY_WARNING;
+    }
 
     return value <= duration_expire_point(dur);
 }

@@ -1040,6 +1040,13 @@ attempt to petrify all poisoned enemies within 3 tiles of you.
 This effect cannot activate again until you fully heal and its success chance
 improves with your Shapeshifting skill.
 %%%%
+contaminating mutation
+
+When you strike an enemy in melee, a portion of the transmutational energy
+surging through will contaminate them. Upon landing the third strike in a row,
+this contamination will grow so acute that it will twist their bodily form,
+inflicting significant AC-ignoring damage and malmutating them.
+%%%%
 # ------ Makhleb destruction flavours ------
 Gehenna destruction mutation
 

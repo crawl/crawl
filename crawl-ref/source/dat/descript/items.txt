@@ -654,16 +654,20 @@ flail
 
 A mace with a short chain connecting the head to the haft.
 %%%%
-flux talisman
+flux bauble
 
-A canister holding an ominously glowing substance. Its user becomes unstable at
-a fundamental level, inflicting dangerous levels of magical contamination on
-foes with each touch. Sufficient contamination causes a highly localised meltdown,
-dealing enormous damage which increases with the user's Shapeshifting skill.
+A small glass bauble containing an ominously glowing substance. Crushing it will
+flood you with transmutational energy, leaving your physical form unstable at a
+fundamental level.
 
-However, this instability makes the user unable to use weapons, shields or body
-armour. They also glow, reducing stealth and preventing invisibility, and their
-melee damage is reduced, as their limbs sometimes destabilise mid-swing.
+In this state of flux, your melee attacks are much weaker, but each strike will
+contaminate whatever you hit with transmutational energy - eventually causing
+significant damage to them as their body twists and deforms. The lack of
+certainty in your physical form also makes you much harder to hit, though you
+glow in a way that hinders stealth.
+
+The power contained in each bauble is finite, and once it is exhausted by
+spreading it to enemies, you will return to your previous form.
 %%%%
 fortress talisman
 

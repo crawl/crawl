@@ -767,6 +767,7 @@ static const acquirement_subtype_finder _subtype_finders[] =
     _acquirement_talisman_subtype,
     0, // no gems either
     0, // no gizmos (handled elsewhere)
+    0, // no baubles
 };
 
 static int _find_acquirement_subtype(object_class_type &class_wanted,

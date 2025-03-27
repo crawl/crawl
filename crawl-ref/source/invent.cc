@@ -832,6 +832,7 @@ FixedVector<int, NUM_OBJECT_CLASSES> inv_order(
 #endif
     OBJ_JEWELLERY,
     OBJ_TALISMANS,
+    OBJ_BAUBLES,
     OBJ_WANDS,
     OBJ_SCROLLS,
     OBJ_POTIONS,
@@ -1062,6 +1063,7 @@ const char *item_class_name(int type, bool terse)
         case OBJ_GEMS:       return "Ancient Gems";
         case OBJ_TALISMANS:  return "Talismans";
         case OBJ_GIZMOS:     return "Gizmo";
+        case OBJ_BAUBLES:    return "Baubles";
         }
     }
     return "";

@@ -3289,6 +3289,9 @@ tileidx_t tileidx_item(const item_def &item)
     case OBJ_GIZMOS:
         return TILE_GIZMO + item.rnd % tile_main_count(TILE_GIZMO);
 
+    case OBJ_BAUBLES:
+        return TILE_BAUBLE_FLUX;
+
     case OBJ_DETECTED:
         return TILE_UNSEEN_ITEM;
 

@@ -1,13 +1,14 @@
 enum: flux
 equivalent_mons: shapeshifter
 description: something dangerously unstable.
-skill: {min: 7, max: 14}
-talisman: flux
-special_damage: 1d10+(40/14)
+skill: {min: 5, max: 14}
+special_damage: 2d5+(30/15)
 special_damage_name: Contam Dmg
-melds: [held, body]
+melds: [held, body, gloves]
 unarmed_colour: cyan
-ev: {base: 4}
+ev: {base: 6, scaling: 10}
 fakemuts:
-  - ["contaminating", "Foes you strike become dangerously contaminated with magical radiation."]
-  - ["glow", "You glow with magical radiation, making you easy to see."]
+  - ["contaminating", "Foes you strike become dangerously contaminated with transmutational energy."]
+  - ["glow", "You glow with energy, making you easy to see."]
+badmuts:
+  - ["weak attacks", "Your attacks are very weak."]

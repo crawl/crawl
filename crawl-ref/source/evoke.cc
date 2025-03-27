@@ -1042,12 +1042,23 @@ string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident)
         if (!form_unreason.empty())
             return lowercase_first(form_unreason);
 
-        if (you.form != you.default_form)
+        if (you.form != you.default_form && temp)
             return "you need to leave your temporary form first.";
 
         if (trans == transformation::hive && you_worship(GOD_OKAWARU))
             return "you have forsworn all allies in Okawaru's name.";
 
+        return "";
+    }
+
+    if (item->is_type(OBJ_BAUBLES, BAUBLE_FLUX))
+    {
+        if (you.form == transformation::flux && temp)
+            return "you are already filled with unstable energy.";
+
+        const string form_unreason = cant_transform_reason(transformation::flux, false, temp);
+        if (!form_unreason.empty())
+            return lowercase_first(form_unreason);
         return "";
     }
 
@@ -1124,6 +1135,15 @@ bool evoke_item(item_def& item, dist *preselect)
 
     case OBJ_TALISMANS:
         return _evoke_talisman(item);
+
+    case OBJ_BAUBLES:
+        mprf("You crush the flux bauble in your %s and feel its energy "
+            "flooding your body.", you.hand_name(false).c_str());
+        ASSERT(in_inventory(item));
+        dec_inv_item_quantity(item.link, 1);
+        transform(0, transformation::flux);
+        you.props[FLUX_ENERGY_KEY] = 40;
+        break;
 
     case OBJ_MISCELLANY:
         ASSERT(in_inventory(item));

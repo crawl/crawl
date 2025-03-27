@@ -684,6 +684,20 @@ static void _apply_flux_contam(monster &m)
         simple_monster_message(m, " begins to glow.");
     else
         simple_monster_message(m, " glows dangerously bright.");
+
+    // Deduct player energy for the attack and maybe untransform.
+    int& energy = you.props[FLUX_ENERGY_KEY].get_int();
+    const bool above_warning = energy > FLUX_ENERGY_WARNING;
+    energy -= random_range(1, 2);
+
+    if (energy <= 0)
+    {
+        mprf(MSGCH_DURATION, "The last of your unstable energy dissipates and "
+                             "you return to your previous form.");
+        untransform();
+    }
+    else if (above_warning && energy < FLUX_ENERGY_WARNING)
+        mprf(MSGCH_DURATION, "You feel the transmutational energy in your body is nearly expended.");
 }
 
 /* An attack has been determined to have hit something
@@ -2432,7 +2446,7 @@ int melee_attack::player_apply_postac_multipliers(int damage)
     if (you.form == transformation::statue)
         damage = div_rand_round(damage * 3, 2);
     else if (you.form == transformation::flux)
-        damage = div_rand_round(damage * 2, 3);
+        damage = div_rand_round(damage, 2);
     else if (you.form == transformation::walking_scroll)
         damage = div_rand_round(damage, 2);
 

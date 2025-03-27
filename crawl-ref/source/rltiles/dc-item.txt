@@ -1270,6 +1270,11 @@ fortress TALISMAN_FORTRESS
 scarab TALISMAN_SCARAB
 medusa TALISMAN_MEDUSA
 
+#OBJ_BAUBLES
+%sdir item/misc
+%rim 0
+bauble_flux BAUBLE_FLUX
+
 %sdir item/misc/uncollected_runes
 generic MISC_UNCOLLECTED_RUNE_OF_ZOT
 rune_tartarus UNCOLLECTED_RUNE_TARTARUS

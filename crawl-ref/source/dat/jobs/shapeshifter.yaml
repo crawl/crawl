@@ -7,7 +7,7 @@ int: 2
 dex: 4
 equipment:
   - "animal skin"
-  - "potion of lignification"
+  - "flux bauble q:4"
   - "quill talisman"
   - "flux talisman"
 recommended_species:

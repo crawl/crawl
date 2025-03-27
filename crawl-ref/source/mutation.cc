@@ -593,12 +593,9 @@ static vector<pair<string,string>> _get_form_fakemuts()
     vector<pair<string,string>> result;
     const auto *form = get_form(you.form);
     ASSERT(form);
-    // The terse name for your transformation while using a talisman is not included
-    // in the normal mutation list, but is used as an identifier for the mutation menu
-    if (you.active_talisman.defined() && you.form == you.default_form)
-        result.push_back({"--talisman--", "<lightgreen>" + form->get_description() + "</lightgreen>"});
-    else
-        result.push_back({"", _formmut(form->get_description())});
+    // The terse name for your transformation is not included in the normal
+    // mutation list, but is used as an identifier for the mutation menu.
+    result.push_back({"--transformation--", "<lightgreen>" + form->get_description() + "</lightgreen>"});
 
     vector<pair<string,string>> form_fakemuts = form->get_fakemuts();
     for (const auto &p : form_fakemuts)
@@ -960,7 +957,7 @@ static vector<string> _get_mutations_descs(bool terse)
     for (const auto& p : fakemuts)
     {
         const string& mut = terse ? p.first : p.second;
-        if (!mut.empty() && mut != "--talisman--")
+        if (!mut.empty() && mut != "--transformation--")
             result.push_back(mut);
     }
 
@@ -1074,7 +1071,9 @@ private:
             MenuEntry* me;
             // Special-case the transformation fakemut to put an item popup
             // behind it, so the player can examine form details and artprops
-            if (fakemut.first == "--talisman--")
+            if (fakemut.first == "--transformation--"
+                && ((you.form == you.default_form && you.active_talisman.defined())
+                    || you.form == transformation::flux))
             {
                 me = new MenuEntry(fakemut.second, MEL_ITEM, 3, hotkey);
                 ++hotkey;
@@ -1197,7 +1196,18 @@ private:
         }
         // XXX: And the talisman is marked with quantity 3
         else if (items[i]->quantity == 3)
-            describe_item_popup(you.active_talisman);
+        {
+            if (you.form == you.default_form && you.active_talisman.defined())
+                describe_item_popup(you.active_talisman);
+            else if (you.form == transformation::flux)
+            {
+                item_def bauble;
+                bauble.base_type = OBJ_BAUBLES;
+                bauble.sub_type = BAUBLE_FLUX;
+                bauble.quantity = 1;
+                describe_item_popup(bauble);
+            }
+        }
 
         return true;
     }
