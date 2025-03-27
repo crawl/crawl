@@ -1929,7 +1929,7 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
                 break;
 
                 // NOTE: When more are added here, *must* duplicate unwielding
-                // effect in brand weapon scroll effect in read_scroll.
+                // effect when reading brand weapon in read() in item-use.cc
 
             case SPWPN_ACID:
                 mprf("%s stops oozing corrosive slime.", msg.c_str());
