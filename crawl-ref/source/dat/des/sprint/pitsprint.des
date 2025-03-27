@@ -689,7 +689,7 @@ KITEM: i = lajatang plus:0 pre_id /\
 KITEM: j = scimitar plus:2 ego:flaming pre_id /\
        scimitar plus:2 ego:holy_wrath pre_id /\
        scimitar plus:2 good_item pre_id
-KITEM: k = flux talisman / serpent talisman /\
+KITEM: k = protean talisman / serpent talisman /\
            blade talisman / maw talisman, /\
            pair of gloves mundane pre_id /\
            pair of boots mundane pre_id /\

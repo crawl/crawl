@@ -6542,7 +6542,7 @@ KFEAT:   ^ = harlequin's trap
 SUBST:   ^ = ^..., ; = ., ~ = ', X = c
 : end
 ITEM:    potion of mutation q:4 pre_id
-ITEM:    potion of ambrosia q:4 pre_id / flux talisman randart w:5 / \
+ITEM:    potion of ambrosia q:4 pre_id / protean talisman randart w:5 / \
          sanguine talisman randart w:5 / talisman of death randart w:5 / \
          randbook owner:Xom disc:alchemy disc2:necromancy numspells:6
 KFEAT:   _ = altar_xom

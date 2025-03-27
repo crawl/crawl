@@ -4525,7 +4525,7 @@ NAME:   kilobyte_mutagenic_chamber
 TAGS:   ruin_abyss
 DEPTH:  Depths, Elf, Abyss
 ITEM:   randbook disc:alchemy numspells:4
-ITEM:   maw talisman randart / flux talisman randart / granite talisman
+ITEM:   maw talisman randart / protean talisman randart / granite talisman
 ITEM:   double sword ego:chaos / manual of alchemy / manual of shapeshifting
 : if you.in_branch("Abyss") then
 NSUBST: | = 1:def / 1:def$$ / *:$
@@ -4729,7 +4729,7 @@ ENDMAP
 NAME:  minivault_22
 TAGS:  transparent allow_dup extra ruin_abyss
 DEPTH: D:6-, Depths, !Depths:$, Abyss
-ITEM:  large rock q:4, flux talisman, demon blade / demon trident / demon whip
+ITEM:  large rock q:4, protean talisman, demon blade / demon trident / demon whip
 : if you.in_branch("Abyss") then
 SUBST: $ : def$$
 : else

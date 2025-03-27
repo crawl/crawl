@@ -3029,7 +3029,7 @@ static tileidx_t _tileidx_talisman(const item_def &item)
     {
     case TALISMAN_INKWELL:  return TILE_TALISMAN_INKWELL;
     case TALISMAN_QUILL:    return TILE_TALISMAN_QUILL;
-    case TALISMAN_FLUX:    return TILE_TALISMAN_FLUX;
+    case TALISMAN_PROTEAN:  return TILE_TALISMAN_PROTEAN;
     case TALISMAN_RIMEHORN: return TILE_TALISMAN_RIMEHORN;
     case TALISMAN_SCARAB:   return TILE_TALISMAN_SCARAB;
     case TALISMAN_MEDUSA:   return TILE_TALISMAN_MEDUSA;

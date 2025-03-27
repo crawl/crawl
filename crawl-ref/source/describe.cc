@@ -7497,11 +7497,16 @@ static string _describe_talisman(const item_def &item, bool verbose)
     if (!art_desc.empty())
         description << "\n" << art_desc;
 
-    if (verbose && !is_useless_item(item, false))
+    if (verbose)
     {
+        if (is_useless_item(item, false))
+            _uselessness_desc(description, item);
+        else if (item.sub_type != TALISMAN_PROTEAN)
+        {
             description << "\n\nA period of sustained concentration is needed to "
                         "enter or leave forms. To leave this form, evoke the "
                         "talisman again.";
+        }
     }
 
     return description.str();

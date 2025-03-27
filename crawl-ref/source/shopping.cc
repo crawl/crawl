@@ -708,7 +708,6 @@ unsigned int item_value(item_def item, bool ident)
             valued += 300;
             break;
 
-        case TALISMAN_FLUX:
         case TALISMAN_RIMEHORN:
         case TALISMAN_SPIDER:
         case TALISMAN_AQUA:
@@ -719,6 +718,7 @@ unsigned int item_value(item_def item, bool ident)
 
         case TALISMAN_QUILL:
         case TALISMAN_INKWELL:
+        case TALISMAN_PROTEAN:
         default:
             valued += 200;
             break;

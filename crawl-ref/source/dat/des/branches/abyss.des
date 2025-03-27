@@ -671,7 +671,7 @@ KMONS:   B = boggart
 KFEAT:   T = fountain_eyes
 ITEM:    randbook disc:summoning numspells:1 / \
          scarf ego:shadows / scarf ego:invisibility / \
-         wand of polymorph charges:20 / flux talisman randart / \
+         wand of polymorph charges:20 / protean talisman randart / \
          shadow dragon scales good_item / any ally scroll q:1 pre_id
 SHUFFLE: 12 / 34 / 56 / 78 / 90, A' / A' / A' / A' / 'B
 SUBST:   x = x:5 c:6 v:1, X = x:2 c:4 b:3 v:1, ' = ..lw
@@ -704,7 +704,7 @@ MONS:    tentacled starspawn / starcursed mass
 MONS:    very ugly thing / reaper, wretched star, lurking horror, ancient zyme
 ITEM:    partisan good_item / demon trident ego:distortion / \
          bardiche ego:chaos good_item w:5 / demon trident ego:chaos w:5 / \
-         flux talisman randart / gold q:100
+         protean talisman randart / gold q:100
 SHUFFLE: 2d, 34eAB / 34eAB / '''CD, 34 / 56
 SUBST:   e = d, AB = x, C = ., D = @, x = xxccb
 MAP
@@ -1088,7 +1088,7 @@ MONS:    thrashing horror / unseen horror / raiju / \
          shapeshifter w:5 / large abomination / common demon
 MONS:    starcursed mass / apocalypse crab / hellephant / \
          tentacled monstrosity / tentacled starspawn w:5
-ITEM:    great sword randart ego:distortion / flux talisman / \
+ITEM:    great sword randart ego:distortion / protean talisman / \
          quill talisman / maw talisman / granite talisman / \
          mundane amulet of regeneration / orb ego:guile
 SHUFFLE: yY / yY / Yy

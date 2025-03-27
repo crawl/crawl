@@ -973,8 +973,22 @@ static transformation _form_for_talisman(const item_def &talisman)
     return form_for_talisman(talisman);
 }
 
-static bool _evoke_talisman(const item_def &talisman)
+static bool _evoke_talisman(item_def &talisman)
 {
+    if (talisman.sub_type == TALISMAN_PROTEAN)
+    {
+        const talisman_type new_type = random_choose(TALISMAN_RIMEHORN,
+                                                     TALISMAN_SCARAB,
+                                                     TALISMAN_MEDUSA,
+                                                     TALISMAN_MAW);
+
+        mprf("%s responds to your shapeshifting skill and transforms into a %s!",
+             talisman.name(DESC_YOUR).c_str(), talisman_type_name(new_type).c_str());
+
+        talisman.sub_type = new_type;
+        return true;
+    }
+
     const transformation trans = _form_for_talisman(talisman);
     if (!check_transform_into(trans, false, &talisman))
         return false;
@@ -1037,6 +1051,17 @@ string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident)
 
     if (item->base_type == OBJ_TALISMANS)
     {
+        if (item->sub_type == TALISMAN_PROTEAN && temp)
+        {
+            if (you.skill(SK_SHAPESHIFTING) < 6)
+            {
+                return "you lack the shapeshifting skill to coax this "
+                       "talisman into a stable form.";
+            }
+            else
+                return "";
+        }
+
         const transformation trans = _form_for_talisman(*item);
         const string form_unreason = cant_transform_reason(trans, false, temp);
         if (!form_unreason.empty())

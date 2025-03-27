@@ -602,7 +602,7 @@ static void _wanderer_random_evokable()
 static void _wanderer_random_talisman()
 {
     talisman_type selected_talisman =
-        coinflip() ? TALISMAN_QUILL : TALISMAN_FLUX;
+        coinflip() ? TALISMAN_QUILL : TALISMAN_PROTEAN;
 
     newgame_make_item(OBJ_TALISMANS, selected_talisman);
 }
