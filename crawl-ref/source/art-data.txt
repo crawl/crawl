@@ -1915,7 +1915,7 @@ NAME:     Uskayaw's dance shoes
 OBJ:      OBJ_ARMOUR/ARM_BOOTS
 TILE:     urand_assassin
 TILE_EQ:  mesh_black
-PLUS:     +3
+PLUS:     +0
 COLOUR:   ETC_ENCHANT
 VALUE:    400
 STEALTH:  1
