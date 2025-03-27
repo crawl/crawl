@@ -3002,8 +3002,8 @@ item_glyph -= <regexp>
 
         Multiple rules can modify a single item, which is useful if you want
         to change the colour and glyph separately:
-            item_glyph += corpse : x625
-            item_glyph += inedible.* corpse : lightgreen
+            item_glyph += dart : x2191
+            item_glyph += curare.*dart : red
 
         Rules are applied in order, so later rules are higher priority.
 
