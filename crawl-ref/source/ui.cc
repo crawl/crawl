@@ -3396,6 +3396,11 @@ void delay(unsigned int ms)
             pump_events();
     }
 #endif
+    if (crawl_state.seen_hups)
+    {
+        macro_buf_add(CK_ESCAPE, true); // Let the caller respond to seen_hups.
+        pump_events();
+    }
 }
 
 /**
