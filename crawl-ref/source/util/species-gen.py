@@ -347,6 +347,18 @@ def generate_species_type_data(s):
         return '    %s,\n' % s['enum']
 
 
+def maybe_write(filename, text):
+    """Write `text` to `filename`, but only if the file would be created or changed"""
+    if os.path.exists(filename):
+        with open(filename, 'r') as f:
+            cur = f.read()
+        if cur == text:
+            return
+
+    with open(filename, 'w') as f:
+        f.write(text)
+
+
 def main():
     parser = argparse.ArgumentParser(description='Generate species-data.h')
     parser.add_argument('datadir', help='dat/species source dir')
@@ -433,18 +445,15 @@ def main():
 
     species_data_out_text += load_template(args.templatedir,
                                         'species-data-footer.txt')
-    with open(args.species_data, 'w') as f:
-        f.write(species_data_out_text)
+    maybe_write(args.species_data, species_data_out_text)
 
     aptitudes_out_text += load_template(args.templatedir,
                                         'aptitudes-footer.txt')
-    with open(args.aptitudes, 'w') as f:
-        f.write(aptitudes_out_text)
+    maybe_write(args.aptitudes, aptitudes_out_text)
 
     species_type_out_text += load_template(args.templatedir,
                                         'species-type-footer.txt')
-    with open(args.species_type, 'w') as f:
-        f.write(species_type_out_text)
+    maybe_write(args.species_type, species_type_out_text)
 
     species_groups_out_text = ''
     species_groups_out_text += load_template(args.templatedir,
@@ -452,8 +461,7 @@ def main():
     species_groups_out_text += generate_species_groups(species_groups)
     species_groups_out_text += load_template(args.templatedir,
                                         'species-groups-footer.txt')
-    with open(args.species_groups, 'w') as f:
-        f.write(species_groups_out_text)
+    maybe_write(args.species_groups, species_groups_out_text)
 
 
 if __name__ == '__main__':
