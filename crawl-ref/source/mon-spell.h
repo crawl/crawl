@@ -1839,6 +1839,15 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_YAKTAUR_SCRIBE,
+      {
+       { SPELL_CIRCLE_OF_GLYPHS, 50, MON_SPELL_WIZARD },
+       // Blink range stands in for a Scroll of Blinking (and the scribe has
+       // a special cast message in monspell.txt)
+       { SPELL_BLINK_RANGE, 5, MON_SPELL_WIZARD },
+      }
+    },
+
     // ('d') Draconians.
     { MST_BAI_SUZHEN,
       {

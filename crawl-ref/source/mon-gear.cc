@@ -748,7 +748,18 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             { 1, 1, 3 },
             { { SPWPN_FLAMING, 1 } }
         } },
-        { MONS_YAKTAUR,         { { { WPN_ARBALEST, 1 } } } },
+        { MONS_YAKTAUR,             { { { WPN_ARBALEST, 1 } } } },
+        { MONS_YAKTAUR_SCRIBE, { { { WPN_ARBALEST, 1 } },
+            { 1, 1, 5 }, // Enchant weapon
+            {// Brand weapon
+                { SPWPN_NORMAL, 20 },
+                { SPWPN_FLAMING, 5 },
+                { SPWPN_FREEZING, 5 },
+                { SPWPN_ELECTROCUTION, 3 },
+                { SPWPN_HEAVY, 2 },
+            },
+            4   // Acquirement
+            } },
         { MONS_YAKTAUR_CAPTAIN, { {
             { WPN_ARBALEST,      19 },
             { WPN_HAND_CANNON, 1  },
@@ -2080,6 +2091,20 @@ int make_mons_armour(monster_type type, int level)
                                     : ARM_FIRE_DRAGON_ARMOUR;
         break;
 
+    case MONS_YAKTAUR_SCRIBE:
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type = ARM_ROBE;
+        // Enchant armour
+        item.plus = random_range(0, 2);
+        // Acquirement
+        if (one_chance_in(3))
+        {
+            level = ISPEC_GOOD_ITEM;
+            break;
+        }
+    // Intentional fall-through, give scribes a small chance of barding
+    // if they didn't get a good robe.
+
     // Centaurs sometimes wear barding.
     case MONS_CENTAUR:
     case MONS_CENTAUR_WARRIOR:
@@ -2087,14 +2112,13 @@ int make_mons_armour(monster_type type, int level)
     case MONS_YAKTAUR_CAPTAIN:
         if (one_chance_in(type == MONS_CENTAUR              ? 1000 :
                           type == MONS_CENTAUR_WARRIOR      ?  500 :
-                          type == MONS_YAKTAUR              ?  300
+                          type == MONS_YAKTAUR              ?  300 :
+                          type == MONS_YAKTAUR_SCRIBE  ?  250
                        /* type == MONS_YAKTAUR_CAPTAIN ? */ :  200))
         {
             item.base_type = OBJ_ARMOUR;
             item.sub_type  = ARM_BARDING;
         }
-        else
-            return NON_ITEM; // ???
         break;
 
     case MONS_NAGA:
@@ -2118,8 +2142,6 @@ int make_mons_armour(monster_type type, int level)
             item.base_type = OBJ_ARMOUR;
             item.sub_type  = ARM_ROBE;
         }
-        else
-            return NON_ITEM; // ???
         break;
 
     case MONS_VASHNIA:
