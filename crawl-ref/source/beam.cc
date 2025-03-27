@@ -395,6 +395,16 @@ public:
     }
 };
 
+template<int num_adder, int num_mult, int num_denom, int size>
+class multiply_dice_calculator : public dam_deducer
+{
+public:
+    dice_def operator()(int pow, bool /*random*/) const override
+    {
+        return dice_def(num_adder + pow * num_mult / num_denom, size);
+    }
+};
+
 struct zap_info
 {
     zap_type ztype;
@@ -868,7 +878,7 @@ void bolt::draw(const coord_def& p, bool force_refresh)
     // Set default value if none specified.
     if (tile_beam == 0)
         tile_beam = tileidx_zap(colour);
-    view_add_tile_overlay(p, vary_bolt_tile(tile_beam, source, target, p));
+    view_add_tile_overlay(p, vary_bolt_tile(tile_beam, source, target, p, this));
 #endif
     const unsigned short c = colour == BLACK ? random_colour(true)
                                              : element_colour(colour);
@@ -1194,7 +1204,7 @@ static void _undo_tracer(bolt &orig, bolt &copy)
     orig.bounce_pos       = copy.bounce_pos;
 }
 
-// This saves some important things before calling fire().
+// This saves some important things before calling do_fire().
 void bolt::fire()
 {
     path_taken.clear();
@@ -1232,7 +1242,7 @@ void bolt::fire()
     }
 }
 
-void bolt::do_fire()
+bool bolt::begin_fire()
 {
     initialise_fire();
 
@@ -1243,11 +1253,10 @@ void bolt::do_fire()
              "'%s' (item = '%s')", name.c_str(),
              item ? item->name(DESC_PLAIN).c_str() : "none");
 #endif
-        return;
+        return false;
     }
 
     apply_beam_conducts();
-    cursor_control coff(false);
 
 #ifdef USE_TILE
     // Set up uninitialized / item-based beam tile, if we're actually firing.
@@ -1268,167 +1277,188 @@ void bolt::do_fire()
         // Take *one* step, so as not to hurt the source.
         ray.advance();
     }
+    return true;
+}
+
+void bolt::do_fire()
+{
+    if (!begin_fire())
+        return;
+
+    cursor_control coff(false);
 
     // Note: nothing but this loop should be changing the ray.
     while (map_bounds(pos()))
     {
-        if (range_used() > range)
-        {
-            ray.regress();
-            extra_range_used++;
-            ASSERT(range_used() >= range);
+        if (!advance_fire())
             break;
-        }
-
-        const dungeon_feature_type feat = env.grid(pos());
-
-        if (in_bounds(target)
-            // Starburst beams are essentially untargeted; some might even hit
-            // a victim if others have LOF blocked.
-            && origin_spell != SPELL_STARBURST
-            // We ran into a solid wall with a real beam...
-            && (feat_is_solid(feat)
-                && flavour != BEAM_DIGGING && flavour <= BEAM_LAST_REAL
-                && !cell_is_solid(target)
-            // Or hit a monster that'll stop our beam...
-                || at_blocking_monster())
-            // and it's a player tracer...
-            // (!is_targeting so you don't get prompted while adjusting the aim)
-            && is_tracer && !is_targeting && YOU_KILL(thrower)
-            // and we're actually between you and the target...
-            && !passed_target && pos() != target && pos() != source
-            // ?
-            && foe_info.count == 0 && bounces == 0 && reflections == 0
-            // and you aren't shooting out of LOS.
-            && you.see_cell(target))
-        {
-            // Okay, with all those tests passed, this is probably an instance
-            // of the player manually targeting something whose line of fire
-            // is blocked, even though its line of sight isn't blocked. Give
-            // a warning about this fact.
-            string prompt = "Your line of fire to ";
-            const monster* mon = monster_at(target);
-
-            string blockee;
-            if (mon && mon->observable())
-                blockee = mon->name(DESC_THE);
-            else
-            {
-                blockee = "the targeted "
-                        + feature_description_at(target, false, DESC_PLAIN);
-            }
-
-            const string blocker = feat_is_solid(feat) ?
-                        feature_description_at(pos(), false, DESC_A) :
-                        monster_at(pos())->name(DESC_A);
-
-            mprf("Your line of fire to %s is blocked by %s.",
-                 blockee.c_str(), blocker.c_str());
-            beam_cancelled = true;
-            finish_beam();
-            return;
-        }
-
-        // digging is taken care of in affect_cell
-        if (feat_is_solid(feat) && !can_affect_wall(pos())
-                                                    && flavour != BEAM_DIGGING)
-        {
-            if (is_bouncy(feat))
-            {
-                bounce();
-                // see comment in bounce(); the beam will be cancelled if this
-                // is a tracer and showing the bounce would be an info leak.
-                // In that case, we have to break early to avoid adding this
-                // square to path_taken twice, which would make it look like a
-                // a bounce ANYWAY.
-                if (range_used() > range)
-                    break;
-            }
-            else
-            {
-                // Regress for explosions: blow up in an open grid (if regressing
-                // makes any sense). Also regress when dropping items.
-                if (pos() != source && need_regress())
-                {
-                    do
-                    {
-                        ray.regress();
-                    }
-                    while (ray.pos() != source && cell_is_solid(ray.pos()));
-
-                    // target is where the explosion is centered, so update it.
-                    if (is_explosion && !is_tracer)
-                        target = ray.pos();
-                }
-                break;
-            }
-        }
-
-        path_taken.push_back(pos());
-
-        // Roots only have an effect during explosions.
-        if (flavour == BEAM_ROOTS)
-        {
-            if (cell_is_solid(pos()))
-                affect_wall();
-            const actor *victim = actor_at(pos());
-            if (victim
-                && !ignores_monster(victim->as_monster())
-                && (!is_tracer || agent()->can_see(*victim)))
-            {
-                finish_beam();
-            }
-        }
-        else if (!affects_nothing)
-            affect_cell();
-
-        if (range_used() > range)
-            break;
-
-        if (beam_cancelled)
-            return;
-
-        // Weapons of returning should find an inverse ray
-        // through find_ray and setup_retrace, but they didn't
-        // always in the past, and we don't want to crash
-        // if they accidentally pass through a corner.
-        // Dig tracers continue through unseen cells.
-        ASSERT(!cell_is_solid(pos())
-               || is_tracer && can_affect_wall(pos(), true)
-               || affects_nothing); // returning weapons
-
-        const bool was_seen = seen;
-        if (!was_seen && range > 0 && visible() && you.see_cell(pos()))
-            seen = true;
-
-        if (flavour != BEAM_VISUAL && !was_seen && seen && !is_tracer)
-        {
-            mprf("%s appears from out of your range of vision.",
-                 article_a(name, false).c_str());
-        }
-
-        // Reset chaos beams so that it won't be considered an invisible
-        // enchantment beam for the purposes of animation.
-        if (real_flavour == BEAM_CHAOS)
-            flavour = real_flavour;
-
-        // Actually draw the beam/missile/whatever, if the player can see
-        // the cell.
-        if (animate)
-            draw(pos(), redraw_per_cell);
-
-        if (pos() == target)
-        {
-            passed_target = true;
-            if (stop_at_target())
-                break;
-        }
-
-        noise_generated = false;
-
-        ray.advance();
     }
 
+    if (beam_cancelled)
+        return;
+
+    finish_fire();
+}
+
+bool bolt::advance_fire()
+{
+    if (range_used() > range)
+    {
+        ray.regress();
+        extra_range_used++;
+        ASSERT(range_used() >= range);
+        return false;
+    }
+
+    const dungeon_feature_type feat = env.grid(pos());
+
+    if (in_bounds(target)
+        // Starburst beams are essentially untargeted; some might even hit
+        // a victim if others have LOF blocked.
+        && origin_spell != SPELL_STARBURST
+        // We ran into a solid wall with a real beam...
+        && (feat_is_solid(feat)
+            && flavour != BEAM_DIGGING && flavour <= BEAM_LAST_REAL
+            && !cell_is_solid(target)
+        // Or hit a monster that'll stop our beam...
+            || at_blocking_monster())
+        // and it's a player tracer...
+        // (!is_targeting so you don't get prompted while adjusting the aim)
+        && is_tracer && !is_targeting && YOU_KILL(thrower)
+        // and we're actually between you and the target...
+        && !passed_target && pos() != target && pos() != source
+        // ?
+        && foe_info.count == 0 && bounces == 0 && reflections == 0
+        // and you aren't shooting out of LOS.
+        && you.see_cell(target))
+    {
+        // Okay, with all those tests passed, this is probably an instance
+        // of the player manually targeting something whose line of fire
+        // is blocked, even though its line of sight isn't blocked. Give
+        // a warning about this fact.
+        string prompt = "Your line of fire to ";
+        const monster* mon = monster_at(target);
+
+        string blockee;
+        if (mon && mon->observable())
+            blockee = mon->name(DESC_THE);
+        else
+        {
+            blockee = "the targeted "
+                    + feature_description_at(target, false, DESC_PLAIN);
+        }
+
+        const string blocker = feat_is_solid(feat) ?
+                    feature_description_at(pos(), false, DESC_A) :
+                    monster_at(pos())->name(DESC_A);
+
+        mprf("Your line of fire to %s is blocked by %s.",
+                blockee.c_str(), blocker.c_str());
+        beam_cancelled = true;
+        finish_beam();
+        return false;
+    }
+
+    // digging is taken care of in affect_cell
+    if (feat_is_solid(feat) && !can_affect_wall(pos())
+                                                && flavour != BEAM_DIGGING)
+    {
+        if (is_bouncy(feat))
+        {
+            bounce();
+            // see comment in bounce(); the beam will be cancelled if this
+            // is a tracer and showing the bounce would be an info leak.
+            // In that case, we have to break early to avoid adding this
+            // square to path_taken twice, which would make it look like a
+            // a bounce ANYWAY.
+            if (range_used() > range)
+                return false;
+        }
+        else
+        {
+            // Regress for explosions: blow up in an open grid (if regressing
+            // makes any sense). Also regress when dropping items.
+            if (pos() != source && need_regress())
+            {
+                do
+                {
+                    ray.regress();
+                }
+                while (ray.pos() != source && cell_is_solid(ray.pos()));
+
+                // target is where the explosion is centered, so update it.
+                if (is_explosion && !is_tracer)
+                    target = ray.pos();
+            }
+            return false;
+        }
+    }
+
+    path_taken.push_back(pos());
+
+    // Roots only have an effect during explosions.
+    if (flavour == BEAM_ROOTS)
+    {
+        if (cell_is_solid(pos()))
+            affect_wall();
+        const actor *victim = actor_at(pos());
+        if (victim
+            && !ignores_monster(victim->as_monster())
+            && (!is_tracer || agent()->can_see(*victim)))
+        {
+            finish_beam();
+        }
+    }
+    else if (!affects_nothing)
+        affect_cell();
+
+    if (range_used() > range || beam_cancelled)
+        return false;
+
+    // Weapons of returning should find an inverse ray
+    // through find_ray and setup_retrace, but they didn't
+    // always in the past, and we don't want to crash
+    // if they accidentally pass through a corner.
+    // Dig tracers continue through unseen cells.
+    ASSERT(!cell_is_solid(pos())
+            || is_tracer && can_affect_wall(pos(), true)
+            || affects_nothing); // returning weapons
+
+    const bool was_seen = seen;
+    if (!was_seen && range > 0 && visible() && you.see_cell(pos()))
+        seen = true;
+
+    if (flavour != BEAM_VISUAL && !was_seen && seen && !is_tracer)
+    {
+        mprf("%s appears from out of your range of vision.",
+                article_a(name, false).c_str());
+    }
+
+    // Reset chaos beams so that it won't be considered an invisible
+    // enchantment beam for the purposes of animation.
+    if (real_flavour == BEAM_CHAOS)
+        flavour = real_flavour;
+
+    // Actually draw the beam/missile/whatever, if the player can see
+    // the cell.
+    if (animate)
+        draw(pos(), redraw_per_cell);
+
+    if (pos() == target)
+    {
+        passed_target = true;
+        if (stop_at_target())
+            return false;
+    }
+
+    noise_generated = false;
+
+    ray.advance();
+    return map_bounds(pos());
+}
+
+void bolt::finish_fire()
+{
     if (!map_bounds(pos()))
     {
         ASSERT(!aimed_at_spot);
@@ -1850,6 +1880,15 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             }
         }
         break;
+    case BEAM_UNGOLD:
+    {
+        string msg;
+        const int extra_dam = silver_damages_victim(mons, hurted, msg);
+        hurted += extra_dam;
+        if (extra_dam > 0 && doFlavouredEffects)
+            mpr(msg);
+        break;
+    }
 
     default:
         break;
@@ -5883,7 +5922,12 @@ void bolt::affect_monster(monster* mon)
     else if (!invalid_monster(mon))
         kill_monster(*mon);
 
-    extra_range_used += range_used_on_hit();
+    // Can't do this in range_used_on_hit as it's const. Right now this is
+    // only used against monsters anyway.
+    if (momentum > 0 && --momentum == 0)
+        extra_range_used += BEAM_STOP;
+    else
+        extra_range_used += range_used_on_hit();
 }
 
 bool bolt::ignores_monster(const monster* mon) const
@@ -6896,6 +6940,7 @@ int bolt::range_used_on_hit() const
     {
         return BEAM_STOP;
     }
+
     // Lightning that isn't an explosion goes through things.
     return 0;
 }
@@ -7750,6 +7795,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_BOLAS:                 return "entwining bolas";
     case BEAM_MERCURY:               return "mercury";
     case BEAM_BAT_CLOUD:             return "cloud of bats";
+    case BEAM_UNGOLD:                return "silver";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }
@@ -7879,4 +7925,44 @@ bolt setup_targeting_beam(const monster &mons)
     beem.source_id = mons.mid;
 
     return beem;
+}
+
+void multi_bolt_fire(vector<bolt> bolts, int delay)
+{
+    vector<multi_bolt_component> components;
+    int active_beams = 0;
+    for (auto& beam : bolts)
+    {
+        // These have special handling in bolt::fire which isn't supported
+        // right now for a multi beam as refactoring this is non-trivial
+        ASSERT(!beam.special_explosion && !beam.is_tracer);
+
+        beam.path_taken.clear();
+        if (!beam.begin_fire())
+            return;
+        active_beams++;
+        components.push_back({ beam, false });
+    }
+
+    cursor_control coff(false);
+
+    while (active_beams)
+    {
+        for (auto& component : components)
+        {
+            auto& beam = component.beam;
+            if (component.finished)
+                continue;
+            if (!beam.advance_fire()) // || !map_bounds(beam.pos()))
+            {
+                active_beams--;
+                component.finished = true;
+
+                if (!beam.beam_cancelled)
+                    beam.finish_fire();
+            }
+        }
+        if (Options.use_animations & UA_BEAM)
+            animation_delay(delay, true);
+    }
 }

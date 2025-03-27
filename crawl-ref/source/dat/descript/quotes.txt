@@ -382,6 +382,14 @@ Agony spell
 
 <Curse of Agony spell>
 %%%%
+Alistair's Pocket Shrapnel spell
+
+“My advice to you,
+ my violent friend,
+ is to seek out gold
+ and sit on it.”
+    -John Gardner
+%%%%
 Alistair's Walking Alembic spell
 
 Despite its unwieldy appearance, it is widely considered Alistair's most popular

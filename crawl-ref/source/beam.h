@@ -100,6 +100,9 @@ struct bolt
                                     // isn't in view.
     bool   pierce = false;        // Can the beam pass through a target and
                                   // hit another target behind the first?
+    int    momentum = 0;          // Use in combination of piercing to limit the
+                                  // number of targets to be hit. If positive,
+                                  // reduce by 1 each hit, and stop the beam at 0.
     bool   is_explosion = false;
     bool   is_death_effect = false; // effect of e.g. ballistomycete spore
     bool   aimed_at_spot = false; // aimed at (x, y), should not cross
@@ -199,7 +202,7 @@ public:
 
     actor* agent(bool ignore_reflections = false) const;
 
-    void fire();
+    virtual void fire();
 
     // Returns member short_name if set, otherwise some reasonable string
     // for a short name, most likely the name of the beam's flavour.
@@ -237,6 +240,12 @@ public:
 
     // Setup.
     void fake_flavour();
+
+    // Methods for controlling the firing externally; generally just call fire()
+    bool begin_fire();
+    bool advance_fire();
+    void finish_fire();
+
 private:
     void do_fire();
     void initialise_fire();
@@ -334,6 +343,14 @@ public:
     void choose_ray();
     ai_action::goodness good_to_fire() const;
 };
+
+struct multi_bolt_component
+{
+    bolt beam;
+    bool finished;
+};
+
+void multi_bolt_fire(vector<bolt> bolts, int delay);
 
 int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
                           bool doFlavouredEffects = true);

@@ -3505,16 +3505,17 @@ tileidx_t tileidx_cloud(const cloud_info &cl)
 
 #ifdef USE_TILE
 tileidx_t vary_bolt_tile(tileidx_t tile, const coord_def& origin,
-                         const coord_def& target, const coord_def& pos)
+                         const coord_def& target, const coord_def& pos,
+                         const bolt* beam)
 {
     const coord_def diff = target - origin;
     const int dir = _tile_bolt_dir(diff.x, diff.y);
     const int dist = (pos - origin).rdist();
 
-    return vary_bolt_tile(tile, dir, dist);
+    return vary_bolt_tile(tile, dir, dist, beam);
 }
 
-tileidx_t vary_bolt_tile(tileidx_t tile, int dir, int dist)
+tileidx_t vary_bolt_tile(tileidx_t tile, int dir, int dist, const bolt* beam)
 {
     switch (tile)
     {
@@ -3567,6 +3568,10 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dir, int dist)
     case TILE_MI_BOOMERANG0:
         return tile + ui_random(4);
 
+    // Turning to gold over distance, as well as 4 different base types for
+    // how much "momentum" remains (i.e. the number of coins left in the shrapnel)
+    case TILE_BOLT_UNGOLD:
+        return tile + (beam ? beam->momentum - 1 : 0) + min(8, max(0, 4 * (dist - 1)));
     default:
         return tile;
     }

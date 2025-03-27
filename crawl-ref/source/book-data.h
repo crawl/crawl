@@ -238,6 +238,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_APPORTATION,
     SPELL_JINXBITE,
     SPELL_INTOXICATE,
+    SPELL_UNGOLDIFY,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -275,6 +276,7 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Transmutation
     SPELL_PETRIFY,
     SPELL_IRRADIATE,
+    SPELL_UNGOLDIFY,
     SPELL_FULSOME_FUSILLADE,
 },
 

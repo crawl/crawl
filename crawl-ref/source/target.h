@@ -329,7 +329,36 @@ private:
     int range;
 };
 
-#define CLOUD_CONE_BEAM_COUNT 11
+struct widebeam_beam
+{
+    coord_def start;
+    coord_def end;
+    int position;
+};
+
+class targeter_widebeam : public targeter
+{
+public:
+    targeter_widebeam(const actor *act, int r, int w);
+
+    bool valid_aim(coord_def a) override;
+    bool set_aim(coord_def a) override;
+    aff_type is_affected(coord_def loc) override;
+    map<coord_def, aff_type> zapped;
+    vector<widebeam_beam> beams;
+private:
+    int range;
+    int width;
+};
+
+class targeter_widebeam_compass : public targeter
+{
+public:
+    targeter_widebeam_compass(const actor *act, int r, int w);
+    bool valid_aim(coord_def) override { return true; }
+    aff_type is_affected(coord_def loc) override;
+    vector<targeter_widebeam> beams;
+};
 
 class targeter_monster_sequence : public targeter_beam
 {
@@ -472,6 +501,8 @@ public:
     aff_type is_affected(coord_def loc) override;
     bool can_affect_walls() override { return true; }
 };
+
+vector<coord_def> compass_offsets(int range);
 
 // a class for fixed beams at some offset from the player
 class targeter_starburst_beam : public targeter_beam
