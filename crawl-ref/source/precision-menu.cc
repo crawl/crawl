@@ -382,10 +382,11 @@ void PrecisionMenu::draw_menu()
         obj->render();
 }
 
-MenuItem::MenuItem(): m_min_coord(0,0), m_max_coord(0,0), m_selected(false),
-                      m_allow_highlight(true), m_dirty(false), m_visible(false),
+MenuItem::MenuItem(): m_min_coord(0,0), m_max_coord(0,0),
                       m_link_left(nullptr), m_link_right(nullptr),
-                      m_link_up(nullptr), m_link_down(nullptr), m_item_id(-1)
+                      m_link_up(nullptr), m_link_down(nullptr),
+                      m_selected(false), m_allow_highlight(true),
+                      m_dirty(false), m_visible(false), m_item_id(-1)
 {
 #ifdef USE_TILE_LOCAL
     m_unit_width_pixels = tiles.get_crt_font()->char_width();

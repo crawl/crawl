@@ -224,7 +224,7 @@ protected:
         {
             for (size_t i = 0; i < items.size(); ++i)
             {
-                if (static_cast<SpellMenuEntry*>(items[i])->preselected)
+                if (static_cast<SpellMenuEntry*>(items[i].get())->preselected)
                 {
                     select_index(i, 1);
                     break;
@@ -259,12 +259,12 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
             make_stringf("Your spells (%s)", real_action.c_str()).c_str());
 
     {
-        ToggleableMenuEntry* me =
-            new ToggleableMenuEntry(
+        unique_ptr<ToggleableMenuEntry> me =
+            make_unique<ToggleableMenuEntry>(
                 titlestring + "           Type                      Failure  Level  ",
                 titlestring + "           Power     Damage    Range   Noise         ",
                 MEL_TITLE);
-        spell_menu.set_title(me, true, true);
+        spell_menu.set_title(std::move(me), true, true);
     }
     spell_menu.set_highlighter(nullptr);
     spell_menu.set_tag("spell");
@@ -296,8 +296,8 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
         if (!is_valid_spell(spell))
             continue;
 
-        SpellMenuEntry* me =
-            new SpellMenuEntry(_spell_base_description(spell, viewing),
+        unique_ptr<SpellMenuEntry> me = make_unique<SpellMenuEntry>(
+                               _spell_base_description(spell, viewing),
                                _spell_extra_description(spell, viewing),
                                MEL_ITEM, 1, letter);
         me->colour = spell_highlight_by_utility(spell, COL_UNKNOWN, !viewing);
@@ -310,7 +310,7 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
         }
 
         me->add_tile(tile_def(tileidx_spell(spell)));
-        spell_menu.add_entry(me);
+        spell_menu.add_entry(std::move(me));
     }
     spell_menu.set_hovered(initial_hover);
 

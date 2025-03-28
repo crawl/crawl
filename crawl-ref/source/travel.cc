@@ -2282,13 +2282,13 @@ public:
             {
                 if (wdescs[i].size() == 0)
                     continue;
-                MenuEntry *wp_entry = new MenuEntry(wdescs[i], '0' + i,
+                auto wp_entry = make_unique<MenuEntry>(wdescs[i], '0' + i,
                     [this,&i](const MenuEntry&)
                     {
                         set_waypoint_result(i);
                         return false;
                     });
-                add_entry(wp_entry);
+                add_entry(std::move(wp_entry));
             }
         }
         else if (travel_mode == Mode::altars)
@@ -2320,7 +2320,7 @@ public:
 
                 // XX this menu would be more useful if it showed the target
                 // branch
-                MenuEntry *altar_entry = new MenuEntry(altar_name, god_initial,
+                auto altar_entry = make_unique<MenuEntry>(altar_name, god_initial,
                     [this, altar_target](const MenuEntry&)
                     {
                         result = ID_ALTAR;
@@ -2332,14 +2332,14 @@ public:
                 if (shortcut != god_initial)
                     altar_entry->add_hotkey(shortcut);
 
-                add_entry(altar_entry);
+                add_entry(std::move(altar_entry));
             }
         }
         else // Mode::normal
         {
             for (const branch_type &br : prompt_branches)
             {
-                MenuEntry *br_entry = new MenuEntry(branches[br].shortname,
+                auto br_entry = make_unique<MenuEntry>(branches[br].shortname,
                     branches[br].travel_shortcut,
                     [this,&br](const MenuEntry&)
                     {
@@ -2351,7 +2351,7 @@ public:
                 const auto shortcut = tolower_safe(branches[br].travel_shortcut);
                 if (shortcut != branches[br].travel_shortcut)
                     br_entry->add_hotkey(shortcut);
-                add_entry(br_entry);
+                add_entry(std::move(br_entry));
                 if (has_default_target() && def_target.id.branch == br)
                     def_choice = items.size() - 1;
             }

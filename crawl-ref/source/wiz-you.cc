@@ -679,7 +679,7 @@ void wizard_edit_durations()
     if (!active.empty())
     {
         active.emplace_back('*', "other durations", NUM_DURATIONS);
-        auto menu = WizardMenu("Edit which duration (ESC to exit)?", active);
+        WizardMenu menu ("Edit which duration (ESC to exit)?", active);
         if (!menu.run(true))
             return;
         choice = static_cast<duration_type>(menu.result());
@@ -919,7 +919,7 @@ void wizard_transform()
 #endif
         choices.emplace_back(WizardEntry(0, transform_name(tr), i));
     }
-    auto menu = WizardMenu("Which form (ESC to exit)?", choices);
+    WizardMenu menu ("Which form (ESC to exit)?", choices);
     if (!menu.run(true))
         return;
     auto form = static_cast<transformation>(menu.result());

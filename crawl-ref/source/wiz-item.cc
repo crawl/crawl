@@ -101,7 +101,7 @@ void wizard_create_spec_object()
         {'|', "staves"}, {'}', "miscellany"}, {'%', "talismans"},
         {'X', "corpses"}, {'$', "gold"}, {'0', "the Orb"}
     };
-    auto menu = WizardMenu(title, options);
+    WizardMenu menu (title, options);
     object_class_type class_wanted = item_class_by_sym(menu.run());
     if (NUM_OBJECT_CLASSES == class_wanted)
         return;
@@ -262,7 +262,7 @@ static void _tweak_randart(item_def &item)
         else
             ++choice;
     }
-    auto menu = WizardMenu("Change which field (ESC to exit)?", choices);
+    WizardMenu menu("Change which field (ESC to exit)?", choices);
     if (!menu.run(true))
         return;
     auto prop = static_cast<artefact_prop_type>(menu.result());
@@ -361,7 +361,7 @@ void wizard_tweak_object()
             {'e', "flags"}
         };
         mprf_nocap("%s", you.inv[item].name(DESC_INVENTORY_EQUIP).c_str());
-        auto menu = WizardMenu("Which field (Esc to exit)?", options);
+        WizardMenu menu("Which field (Esc to exit)?", options);
         keyin = menu.run();
 
         if (keyin == 'a')
@@ -773,7 +773,7 @@ static void _debug_acquirement_stats()
     char c = 'a';
     for (auto typ : list)
         choices.emplace_back(WizardEntry(c++, item_class_name(typ), typ));
-    auto menu = WizardMenu("What kind of item would you like to get acquirement"
+    WizardMenu menu("What kind of item would you like to get acquirement"
                            " stats on (ESC to exit)?", choices, OBJ_UNASSIGNED);
     if (!menu.run(true))
         return;
