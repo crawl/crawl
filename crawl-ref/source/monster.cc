@@ -1928,6 +1928,11 @@ bool monster::pickup_wand(item_def &item, bool msg, bool force)
         return false;
 }
 
+bool monster::pickup_scroll(item_def &item, bool msg)
+{
+    return pickup(item, MSLOT_SCROLL, msg);
+}
+
 bool monster::pickup_gold(item_def &item, bool msg)
 {
     return pickup(item, MSLOT_GOLD, msg);
@@ -1968,6 +1973,8 @@ bool monster::pickup_item(item_def &item, bool msg, bool force)
     case OBJ_TALISMANS:
     case OBJ_MISCELLANY:
         return pickup_misc(item, msg, force);
+    case OBJ_SCROLLS:
+        return pickup_scroll(item, msg);
     default:
         return false;
     }
