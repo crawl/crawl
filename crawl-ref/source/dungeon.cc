@@ -6143,23 +6143,12 @@ static bool _item_is_trash(item_def& item)
     switch (item.base_type)
     {
     case OBJ_SCROLLS:
-        switch (item.sub_type)
-        {
-        case SCR_NOISE:
-        case SCR_IDENTIFY:
-            return true;
-        default:
-            return false;
-        }
     case OBJ_POTIONS:
-        switch (item.sub_type)
-        {
-        case POT_MOONSHINE:
-        case POT_LIGNIFY:
-            return true;
-        default:
-            return false;
-        }
+        // Noise, moonshine - if they're not id'd by now it's not worth putting
+        // them in a shop just for that
+        return is_worthless_consumable(item)
+            || item.base_type == OBJ_SCROLLS && item.sub_type == SCR_IDENTIFY;
+
     case OBJ_WANDS:
         switch (item.sub_type)
         {
@@ -6168,27 +6157,6 @@ static bool _item_is_trash(item_def& item)
             return true;
         default:
             return false;
-        }
-    // Get a bit more choosy. A lot of base jewellery types are boring once
-    // you've seen one, but ones with variable plusses can still be good.
-    case OBJ_JEWELLERY:
-        switch (item.sub_type)
-        {
-        case RING_SLAYING:
-        case AMU_FAITH:
-        case AMU_REGENERATION:
-        case AMU_MANA_REGENERATION:
-            return false;
-        case RING_STRENGTH:
-        case RING_INTELLIGENCE:
-        case RING_DEXTERITY:
-        case RING_PROTECTION:
-        case RING_EVASION:
-        case RING_MAGICAL_POWER:
-            return item.plus < 5;
-        default:
-            // All other rings and amulets
-            return true;
         }
 
     case OBJ_WEAPONS:
@@ -6238,16 +6206,20 @@ static bool _item_is_trash(item_def& item)
         // are added.
         return form->max_skill < 20;
     }
-    case OBJ_STAVES:
-        // Non-artefact staves aren't very interesting. They don't even generate
-        // in shops right now anyway.
+    case OBJ_JEWELLERY:
+        // Non-artefact jewellery isn't interesting at this point. Yes it's
+        // possible there's a useful ego you haven't found, but it's still more
+        // interesting to find it on an artefact instead.
         return true;
+    // Miscellany could be trash if we tracked how many were generated
+    // so far in the dungeon, but we're not doing that.
     case OBJ_MISCELLANY:
+    // Nothing can really be done with books; once single spells are
+    // sold in shops, maybe trash spell level < 5.
     case OBJ_BOOKS:
-        // Miscellany could be trash if we tracked how many were generated
-        // so far in the dungeon, but we're not doing that.
-        // Nothing can really be done with books; once single spells are
-        // sold in shops, maybe trash spell level < 5.
+    // Staves are very rare as only in general shops so let's keep them ...
+    // player could really need a particular enhancer.
+    case OBJ_STAVES:
         return false;
     default:
         // Should never reach here unless a new item type is added; at least
@@ -6333,15 +6305,36 @@ static void _stock_shop_item(int j, shop_type shop_type_,
             // Spec shops are allowed to stock trash and may intentionally do so
             if (on_list)
                 break;
-            const bool is_trash = _item_is_trash(env.item[item_index]);
+            item_def& item = env.item[item_index];
+            bool is_trash = _item_is_trash(item);
+            const bool boring_consumable =
+                consumable_rarity(item) >= RARITY_RARE;
+            // Start trashing after Orc:$ depth; starts at a 3/20 probability,
+            // jumps to 50% at Depths:1, 90% by Zot:$.
+            if (!no_trash && level_number > 12 && (is_trash || boring_consumable))
+                no_trash = x_chance_in_y(level_number - 10, 20);
 
-            if (!no_trash && level_number > 10 && is_trash)
-                no_trash = x_chance_in_y(level_number - 10, level_number - 6);
+            if (no_trash && boring_consumable && !is_trash)
+            {
+                // No simple way in the trash filter to skew towards rarer
+                // consumables in a meaningful way without unfairly reducing
+                // *very* important ones that are still more common such as
+                // heal, haste, teleport, blink... So instead, merge stacks
+                // for repeated ones so we get larger stacks of common items
+                // and more rolls at rare ones.
+                for (auto& stock : shop.stock)
+                    if (stock.base_type == item.base_type && stock.sub_type == item.sub_type)
+                    {
+                        stock.quantity += item.quantity;
+                        is_trash = true;
+                    }     
+            }
 
 #ifdef DEBUG
             dprf("Shop level %d item %s: %s (%s) (%d rolls)", level_number,
                  env.item[item_index].name(DESC_PLAIN, false, true).c_str(), is_trash ? "trash" : "ok",
-                 (is_trash && no_trash) ? "trashing" : "keeping", rerolls + 1);
+                 (is_trash && no_trash) ? (boring_consumable ? "merging" : "trashing")
+                                        : "keeping", rerolls + 1);
 #endif
             if (!is_trash || !no_trash || ++rerolls > 10)
                 break;
