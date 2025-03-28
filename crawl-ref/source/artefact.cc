@@ -362,7 +362,7 @@ static void _populate_staff_intrinsic_artps(stave_type staff,
     if (prop)
     {
         // Staffs of earth give AC, not resistance.
-        if(*prop == ARTP_AC)
+        if (*prop == ARTP_AC)
             proprt[*prop] += 3;
         else
             proprt[*prop] += 1;
