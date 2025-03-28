@@ -1213,9 +1213,7 @@ void TilesFramework::_send_player(bool force_full)
 
                 // add expiring description
                 if (status.short_text.find(" (expiring)") != std::string::npos)
-                {
                     dbdesc += " (expiring)";
-                }
 
                 json_write_string("desc", dbdesc.size() ? dbdesc : "No description found");
             }
