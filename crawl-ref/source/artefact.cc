@@ -341,7 +341,8 @@ static map<stave_type, artefact_prop_type> staff_resist_artps = {
     { STAFF_ALCHEMY, ARTP_POISON },
     { STAFF_DEATH,   ARTP_NEGATIVE_ENERGY },
     { STAFF_AIR,     ARTP_ELECTRICITY },
-    // nothing for conj or earth
+    { STAFF_EARTH,   ARTP_AC },
+    // nothing for conj
 };
 
 static map<stave_type, artefact_prop_type> staff_enhancer_artps = {
@@ -359,7 +360,13 @@ static void _populate_staff_intrinsic_artps(stave_type staff,
 {
     artefact_prop_type *prop = map_find(staff_resist_artps, staff);
     if (prop)
-        proprt[*prop] += 1;
+    {
+        // Staffs of earth give AC, not resistance.
+        if(*prop == ARTP_AC)
+            proprt[*prop] += 3;
+        else
+            proprt[*prop] += 1;
+    }
     prop = map_find(staff_enhancer_artps, staff);
     if (prop)
         proprt[*prop] = 1;

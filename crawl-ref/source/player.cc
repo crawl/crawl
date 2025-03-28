@@ -6209,6 +6209,9 @@ int player::base_ac(int scale) const
 
     AC += ac_changes_from_mutations();
 
+    if (you.wearing(OBJ_STAVES,STAFF_EARTH))
+        AC += 300;
+
     return AC * scale / 100;
 }
 

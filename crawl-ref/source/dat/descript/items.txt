@@ -1487,10 +1487,10 @@ dealing negative energy damage which bypasses armour.
 %%%%
 staff of earth
 
-A staff that increases the power of earth spells cast by its wielder. If the
-wielder is skilled in Evocations and Earth magic, they can fracture the ground
-beneath those struck by it, dealing substantial damage - though much less to
-creatures which fly.
+A staff that increases the power of earth spells cast by its wielder, and protects
+them from less sources of damage. If the wielder is skilled in Evocations and Earth
+magic, they can fracture the ground beneath those struck by it, dealing substantial
+damage - though much less to creatures which fly.
 %%%%
 staff of fire
 
