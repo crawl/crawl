@@ -24,8 +24,8 @@ enum mon_inv_type           // env.mons[].inv[]
 
 #if TAG_MAJOR_VERSION == 34
     MSLOT_POTION,
-    MSLOT_SCROLL,
 #endif
+    MSLOT_SCROLL,
     MSLOT_GOLD,
     NUM_MONSTER_SLOTS
 };

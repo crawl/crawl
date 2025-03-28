@@ -203,6 +203,17 @@ static void _give_wand(monster* mon, int level)
     give_specific_item(mon, idx);
 }
 
+static void _give_scroll(monster* mons, int level)
+{
+    if (mons->type != MONS_YAKTAUR_SCRIBE || coinflip())
+        return;
+    const int idx = items(false, OBJ_SCROLLS, OBJ_RANDOM, level);
+    if (idx == NON_ITEM)
+        return;
+    // They won't ever use this scroll, it's just for the loot drop flavour
+    give_specific_item(mons, idx);
+}
+
 static item_def* make_item_for_monster(
     monster* mons,
     object_class_type base,
@@ -2417,6 +2428,7 @@ void give_item(monster *mons, int level_number, bool mons_summoned)
     _give_armour(mons, 1 + level_number / 2);
     _give_shield(mons, 1 + level_number / 2);
     _give_book(mons);
+    _give_scroll(mons, level_number);
 
     if (mons->type == MONS_ORC_APOSTLE)
         give_apostle_equipment(mons);
