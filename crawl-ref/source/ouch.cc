@@ -1179,6 +1179,10 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
                 return;
         }
 
+        // Never directly die from attacking your charmer
+        if (dam >= you.hp && death_type == KILLED_BY_CHARMER)
+            dam = max(0, you.hp - 1);
+
         if (dam >= you.hp && you.hp_max > 0 && god_protects_from_harm())
         {
             simple_god_message(" protects you from harm!");

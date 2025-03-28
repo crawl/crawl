@@ -2534,6 +2534,7 @@ void spare_beogh_convert()
 
         ++witc;
         orc->del_ench(ENCH_CHARM);
+        orc->del_ench(ENCH_CHARMER);
         mons_pacify(*orc, ATT_GOOD_NEUTRAL, true);
     }
 

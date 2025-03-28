@@ -2198,6 +2198,8 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_GD_NEUTRAL;
     else if (mons.neutral())
         ch |= TILE_FLAG_NEUTRAL;
+    else if (mons.has_trivial_ench(ENCH_CHARMER))
+        ch |= TILE_FLAG_CHARMER;
     else if (Options.tile_show_threat_levels.find("unusual") != string::npos
              && mons.has_unusual_items())
         ch |= TILE_FLAG_UNUSUAL;

@@ -1924,6 +1924,11 @@ void monster::apply_enchantment(const mon_enchant &me)
         break;
     }
 
+    case ENCH_CHARMER:
+        if (decay_enchantment(en))
+            simple_monster_message(*this, " no longer appears friendly.");
+        break;
+
     default:
         break;
     }
@@ -2188,6 +2193,7 @@ static const char *enchant_names[] =
     "grapnel", "tempered", "hatching", "blinkitis", "chaos_laced", "vexed",
     "deep sleep", "drowsy",
     "vampire thrall", "pyrrhic recollection",
+    "charmer",
     "buggy", // NUM_ENCHANTMENTS
 };
 
@@ -2419,6 +2425,7 @@ int mon_enchant::calc_duration(const monster* mons,
         cturn += 1000 * min(4, deg) / _mod_speed(100, mons->speed);
         break;
     case ENCH_CHARM:
+    case ENCH_CHARMER:
     case ENCH_HEXED:
         cturn = 500 / modded_speed(mons, 10);
         break;

@@ -713,7 +713,6 @@ private:
     item_def wpn;
 };
 
-
 void push_delay(shared_ptr<Delay> delay);
 
 template<typename T, typename... Args>

@@ -59,5 +59,6 @@ enum kill_method_type
     KILLED_BY_EXPLORING,
     KILLED_BY_BLINKING,
     KILLED_BY_DEATH_CURSE,
+    KILLED_BY_CHARMER,
     NUM_KILLBY
 };

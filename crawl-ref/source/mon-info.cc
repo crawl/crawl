@@ -148,6 +148,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_CHAOS_LACE,      MB_CHAOS_LACE },
     { ENCH_VEXED,           MB_VEXED },
     { ENCH_PYRRHIC_RECOLLECTION, MB_PYRRHIC_RECOLLECTION },
+    { ENCH_CHARMER,         MB_CHARMER },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -770,7 +771,7 @@ monster_info::monster_info(const monster* m, int milev)
             ok = false;
         else if (i == MSLOT_MISCELLANY)
             ok = false;
-        else if (i == MSLOT_WAND && !m->likes_wand(env.item[m->inv[i]]))
+        else if (i == MSLOT_WAND && !m->likes_wand((wand_type)env.item[m->inv[i]].sub_type))
             ok = false;
         else if (attitude == ATT_FRIENDLY)
             ok = true;

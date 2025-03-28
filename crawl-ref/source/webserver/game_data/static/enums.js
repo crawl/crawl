@@ -1,4 +1,4 @@
-// TODO: Generate this automatically from enum.h?
+// TODO: Generate this automatically from enum.h, tile-flags.h, etc.?
 define(function () {
     "use strict";
 
@@ -142,10 +142,10 @@ define(function () {
         PET        : 0x00010000,
         GD_NEUTRAL : 0x00020000,
         NEUTRAL    : 0x00030000,
+        CHARMER    : 0x00040000,
     });
 
-    fg_flags.flags.S_UNDER = 0x00040000;
-    fg_flags.flags.FLYING  = 0x00080000;
+    fg_flags.flags.S_UNDER = 0x00080000;
 
     // 4 mutually exclusive flags for behaviour.
     fg_flags.exclusive_flags.push({
@@ -158,6 +158,7 @@ define(function () {
 
     fg_flags.flags.NET          = 0x00800000;
     fg_flags.flags.WEB          = 0x01000000;
+    fg_flags.flags.FLYING       = 0x02000000;
 
     // Three levels of poison in 2 bits.
     fg_flags.exclusive_flags.push({

@@ -1345,7 +1345,6 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
                 adj += "the ";
 
             would_cause_penance = true;
-
         }
         else
         {

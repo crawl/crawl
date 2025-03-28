@@ -674,6 +674,36 @@ bool monster::can_use_missile(const item_def &item) const
     return _needs_ranged_attack(this) && is_throwable(this, item);
 }
 
+static int _monster_wand_tier(int type)
+{
+    switch (type)
+    {
+    case WAND_FLAME:
+        return 1;
+
+    case WAND_POLYMORPH:
+        return 2;
+
+    case WAND_WARPING:
+    case WAND_LIGHT:
+    case WAND_ACID:
+    case WAND_CHARMING:
+    case WAND_ICEBLAST:
+    case WAND_MINDBURST:
+    case WAND_PARALYSIS:
+    case WAND_QUICKSILVER:
+    case WAND_ROOTS:
+        return 3;
+
+    // Prevent abuse, only innate digging allowed
+    case WAND_DIGGING:
+    // Removed or new wands are disallowed. New wands must have a tier
+    // assigned to be usable.
+    default:
+        return 0;
+    }
+}
+
 /**
  * Does this monster have any interest in using the given wand? (Will they
  * pick it up?)
@@ -684,19 +714,34 @@ bool monster::can_use_missile(const item_def &item) const
  * @param item      The wand in question.
  * @return          Whether the monster will bother picking up the wand.
  */
-bool monster::likes_wand(const item_def &item) const
+bool monster::likes_wand(wand_type wand) const
 {
-    ASSERT(item.base_type == OBJ_WANDS);
-    if (item.sub_type == WAND_DIGGING)
-        return false; // Avoid very silly abuses.
-    // kind of a hack
-    // assumptions:
-    // bad wands are value 32, so won't be used past hd 6
-    // mediocre wands are value 24; won't be used past hd 8
-    // good wands are value 15; won't be used past hd 9
-    // best wands are value 9; won't be used past hd 10
-    // better implementations welcome
-    return wand_charge_value(item.sub_type) + get_hit_dice() * 6 <= 72;
+    ASSERT(wand >= WAND_FLAME && wand < NUM_WANDS);
+    const int tier = _monster_wand_tier(wand);
+    if (tier == 0)
+        return false;
+
+    // Get a min and max HD for monsters that can use this wand.
+
+    // Tier  Min Max   Wand
+    // 0     X   X     Dig
+    // 1     1   6     Flame
+    // 2     4   100   Poly
+    // 3     7   100   * (everything else)
+
+    // "Artificer" flagged monsters (Ijyb, Maurice) like even the higher tier
+    // wands, except in Sprint
+    const bool artificer = mons_class_flag(type, M_ARTIFICER)
+                           && !crawl_state.game_is_sprint();
+
+    const int hd = get_hit_dice();
+
+    // Monsters of hd 7 and above get to use the highest tier (so Grinder no
+    // longer needs a special flag)
+    const int min = artificer ? 1 : tier * 3 - 2;
+    // Flame won't be used past hd 6
+    const int max = tier == 1 ? 6 : 100;
+    return hd >= min && hd <= max;
 }
 
 void monster::equip_weapon_message(item_def &item)
@@ -1895,37 +1940,15 @@ bool monster::pickup_missile(item_def &item, bool msg, bool force)
 
 bool monster::pickup_wand(item_def &item, bool msg, bool force)
 {
-    if (!force)
-    {
-        // Don't pick up empty wands.
-        if (item.plus == 0)
-            return false;
-
-        // Only low-HD monsters bother with wands.
-        if (!likes_wand(item))
-            return false;
-
-        // Holy monsters and worshippers of good gods won't pick up evil
-        // wands.
-        if ((is_holy() || is_good_god(god)) && is_evil_item(item))
-            return false;
-    }
-
-    // If a monster already has a charged wand, don't bother.
-    // Otherwise, replace with a charged one.
-    if (item_def *wand = mslot_item(MSLOT_WAND))
-    {
-        if (wand->plus > 0 && !force)
-            return false;
-
-        if (!drop_item(MSLOT_WAND, msg))
-            return false;
-    }
-
-    if (pickup(item, MSLOT_WAND, msg))
-        return true;
-    else
+    // Only use wand tiers appropriate to monster level (unless forced)
+    if (!force && !likes_wand((wand_type)item.sub_type))
         return false;
+
+    // If a monster already has a wand, don't bother.
+    if (mslot_item(MSLOT_WAND) && (!force || !drop_item(MSLOT_WAND, msg)))
+        return false;
+
+    return pickup(item, MSLOT_WAND, msg);
 }
 
 bool monster::pickup_gold(item_def &item, bool msg)
@@ -4385,6 +4408,24 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             int hp_before_pain_bond = hit_points;
             radiate_pain_bond(*this, amount, this);
             amount += max(hp_before_pain_bond - hit_points, 0);
+        }
+
+
+        // If the player is charmed and one of their fake friends is harmed, check
+        // if the player was responsible even indirectly; it seems fair to base
+        // this on whether XP would be received so ally damage counts, and if the
+        // player finds a sneaky way to damage them at least they risk losing XP
+        if (you.duration[DUR_CHARMED] && has_ench(ENCH_CHARMER) && !you.grieving()
+            && damage_contributes_xp(*agent) && !you.props[CHARMER_DAMAGE_REACTION_KEY].get_bool())
+        {
+            // Even though we check for the Grief duration, it's possible that could
+            // expire before your turn and an ally could then damage the charmer,
+            // creating an endless grief cycle. Reset this key at the start of the
+            // next turn to avoid this.
+            you.props[CHARMER_DAMAGE_REACTION_KEY] = true;
+            charmer_damage_reaction_fineff::schedule(this);
+            // Save a copy in case we die before the fineff is fired
+            env.final_effect_monster_cache.push_back(*this);
         }
 
         // Allow the victim to exhibit passive damage behaviour (e.g.

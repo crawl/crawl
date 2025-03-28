@@ -54,7 +54,7 @@ enum status_type
     STATUS_STAT_ZERO,
     STATUS_TRICKSTER,
     STATUS_MNEMOPHAGE,
-    STATUS_LAST_STATUS = STATUS_MNEMOPHAGE
+    STATUS_LAST_STATUS
 };
 
 struct status_info

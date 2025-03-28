@@ -628,4 +628,23 @@ protected:
     const mgen_data mg;
 };
 
+class charmer_damage_reaction_fineff : public final_effect
+{
+public:
+    bool mergeable(const final_effect &) const override { return true; }
+    void merge(const final_effect &a) override;
+    void fire() override;
+
+    static void schedule(const monster *charmer)
+    {
+        final_effect::schedule(
+            new charmer_damage_reaction_fineff(charmer));
+    }
+protected:
+    charmer_damage_reaction_fineff(const monster *charmer)
+        : final_effect(&you, charmer, coord_def())
+    {
+    }
+};
+
 void fire_final_effects();
