@@ -1210,9 +1210,9 @@ void TilesFramework::_send_player(bool force_full)
                 if (dbname == "Zot" && status.light_colour == WHITE)
                     dbname = "Zot count";
                 string dbdesc = getLongDescription(dbname + " status");
-                
+
                 // add expiring description
-                if(status.short_text.find(" (expiring)") != std::string::npos) 
+                if (status.short_text.find(" (expiring)") != std::string::npos)
                 {
                     dbdesc += " (expiring)";
                 }
