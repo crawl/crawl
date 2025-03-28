@@ -965,7 +965,8 @@ bool actor_cloud_immune(const actor &act, cloud_type type)
         case CLOUD_SPECTRAL:
             return bool(act.holiness() & MH_UNDEAD)
                    || act.is_player()
-                      && have_passive(passive_t::r_spectral_mist);
+                      && (have_passive(passive_t::r_spectral_mist)
+                      || you.unrand_equipped(UNRAND_CRAB_CLAWS));
         case CLOUD_ACID:
             return act.res_corr() > 0;
         case CLOUD_STORM:
