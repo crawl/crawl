@@ -1701,7 +1701,7 @@ static coord_def _find_shadow_prism_position(coord_def& aim)
         {
             coord_def p = you.pos() + targ_spots[i].first;
             if (p != valid_spots[j]
-                && grid_distance(p, valid_spots[j]) <= spell_range(SPELL_SHADOW_PRISM, 100)
+                && grid_distance(p, valid_spots[j]) <= you.spell_range(SPELL_SHADOW_PRISM, 100)
                 && cell_see_cell(p, valid_spots[j], LOS_NO_TRANS)
                 && cell_see_cell(you.pos(), valid_spots[j], LOS_NO_TRANS)
                 && cell_see_cell(you.pos(), p, LOS_NO_TRANS))
@@ -1825,6 +1825,22 @@ void dithmenos_shadow_spell(spell_type spell)
     setup_mons_cast(mon, beam, shadow_spell);
     beam.target = aim;
     mons_cast(mon, beam, shadow_spell, MON_SPELL_WIZARD);
+}
+
+bool vehumet_supports_spell(spell_type spell)
+{
+    // Conjurations work by conjuring up a chunk of short-lived matter and
+    // propelling it towards the victim. This is the most popular way, but
+    // by no means it has a monopoly for being destructive.
+    // Vehumet loves all direct physical destruction.
+    return spell_typematch(spell, spschool::conjuration)
+           || (get_spell_flags(spell) & spflag::destructive);
+}
+
+bool vehumet_boosts_spell_range(spell_type spell)
+{
+    return vehumet_supports_spell(spell)
+        && spell_range_max(spell) > 1;
 }
 
 void wu_jian_trigger_serpents_lash(bool wall_jump, const coord_def& old_pos)

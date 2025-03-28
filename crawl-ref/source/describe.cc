@@ -4795,8 +4795,7 @@ static void _get_spell_description(const spell_type spell,
 
         }
 
-        const int hd = mon_owner->spell_hd();
-        const int range = mons_spell_range_for_hd(spell, hd, mon_owner->is(MB_PLAYER_SERVITOR));
+        const int range = mon_owner->spell_range(spell);
         const int minrange = (spell == SPELL_CALL_DOWN_LIGHTNING
                                 || spell == SPELL_FLASHING_BALESTRA) ? 2 : 0;
 
@@ -4840,7 +4839,7 @@ static void _get_spell_description(const spell_type spell,
             string wiz_info;
 #ifdef WIZARD
             if (you.wizard)
-                wiz_info += make_stringf(" (pow %d)", _hex_pow(spell, hd));
+                wiz_info += make_stringf(" (pow %d)", _hex_pow(spell, mon_owner->hd));
 #endif
             description += you.immune_to_hex(spell)
                 ? make_stringf("You cannot be affected by this "

@@ -1015,10 +1015,8 @@ bool is_valid_spell(spell_type spell)
 
 static bool _spell_range_varies(spell_type spell)
 {
-    int minrange = _seekspell(spell)->min_range;
-    int maxrange = _seekspell(spell)->max_range;
-
-    return minrange < maxrange;
+    auto desc = _seekspell(spell);
+    return desc->min_range < desc->max_range;
 }
 
 int spell_power_cap(spell_type spell)
@@ -1041,14 +1039,14 @@ int spell_power_cap(spell_type spell)
     }
 }
 
-int spell_range(spell_type spell, int pow,
-                bool allow_bonus, bool ignore_shadows)
+/**
+ * Base spell range according to spell power, no modifiers or limits applied
+ */
+int spell_range_base(spell_type spell, int pow)
 {
-    int minrange = _seekspell(spell)->min_range;
-    int maxrange = _seekspell(spell)->max_range;
-
-    const int range_cap = ignore_shadows ? you.normal_vision
-                                         : you.current_vision;
+    auto desc = _seekspell(spell);
+    int minrange = desc->min_range;
+    int maxrange = desc->max_range;
 
     ASSERT(maxrange >= minrange);
 
@@ -1056,27 +1054,51 @@ int spell_range(spell_type spell, int pow,
     if (maxrange < 0)
         return maxrange;
 
-    if (allow_bonus
-        && vehumet_supports_spell(spell)
-        && have_passive(passive_t::spells_range)
-        && maxrange > 1
-        && spell != SPELL_THUNDERBOLT) // lightning rod only
-    {
-        maxrange++;
-        minrange++;
-    }
-
     if (minrange == maxrange)
-        return min(minrange, range_cap);
+        return minrange;
 
     const int powercap = spell_power_cap(spell);
 
     if (powercap <= pow)
-        return min(maxrange, range_cap);
+        return maxrange;
 
     // Round appropriately.
-    return min(range_cap,
-           (pow * (maxrange - minrange) + powercap / 2) / powercap + minrange);
+    return (pow * (maxrange - minrange) + powercap / 2) / powercap + minrange;
+}
+
+int spell_range_max(spell_type spell)
+{
+    return _seekspell(spell)->max_range;
+}
+
+int spell_range_limit(int range, int override_limit)
+{
+    return min(range, override_limit > 0 ? override_limit
+                                         : (int)you.current_vision);
+}
+
+int player::spell_range(spell_type spell, int pow, spell_cast_type how) const
+{
+    if (pow < 0)
+        pow = calc_spell_power(spell);
+
+    int range = spell_range_base(spell, pow);
+
+    // Dampen range only if it's a magic spell or an evokable. Gods work on their
+    // own rules, and breaths and other natural abilities work physically or
+    // otherwise. Reduce to half (rounded down).
+    if (duration[DUR_DAMPENED] && how <= spell_cast_type::device && range > 1)
+        range /= 2;
+
+    // Vehumet only boosts spells cast magically and the bonus is applied after
+    // the halving so followers still always get +1
+    if (how == spell_cast_type::magical && have_passive(passive_t::spells_range)
+        && vehumet_boosts_spell_range(spell))
+    {
+        range++;
+    }
+
+    return range;
 }
 
 /**
@@ -1619,10 +1641,9 @@ bool spell_no_hostile_in_range(spell_type spell)
     if (!in_bounds(you.pos()) || !you.on_current_level)
         return true;
 
-    const int range = calc_spell_range(spell, 0);
+    const int range = you.spell_range(spell);
     const int minRange = get_dist_to_nearest_monster();
     const int pow = calc_spell_power(spell);
-
     switch (spell)
     {
     // These don't target monsters or can target features.
@@ -1962,8 +1983,8 @@ const vector<spell_type> *soh_breath_spells(spell_type spell)
 
 bool spell_has_variable_range(spell_type spell)
 {
-    return spell_range(spell, 0, false)
-            != spell_range(spell, spell_power_cap(spell), false);
+    return spell_range_base(spell, 0)
+            != spell_range_base(spell, spell_power_cap(spell));
 }
 
 bool spell_can_be_enkindled(spell_type spell)

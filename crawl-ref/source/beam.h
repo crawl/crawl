@@ -63,6 +63,9 @@ struct bolt
     // INPUT parameters set by caller
     spell_type  origin_spell = SPELL_NO_SPELL; // may remain SPELL_NO_SPELL for
                                                // non-spell beams.
+    spell_cast_type origin_spell_cast
+                = spell_cast_type::magical; // How was the spell cast?
+
     int         range = -2;
     char32_t    glyph = '*';           // missile gfx
     colour_t    colour = BLACK;
@@ -284,6 +287,7 @@ private:
     void affect_place_clouds();
     void affect_place_explosion_clouds();
     int range_used(bool leg_only = false) const;
+    bool all_range_used() const;
     void finish_beam();
     void drop_object();
 

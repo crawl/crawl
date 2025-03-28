@@ -226,7 +226,7 @@ public:
     virtual int stat_hp() const = 0;
     virtual int stat_maxhp() const = 0;
 
-    virtual int stealth () const = 0;
+    virtual int stealth() const = 0;
 
     virtual bool can_throw_large_rocks() const = 0;
 
@@ -361,6 +361,8 @@ public:
     virtual mon_attitude_type real_attitude() const = 0;
 
     virtual bool has_spell(spell_type spell) const = 0;
+    virtual int  spell_range(spell_type spell, int pow = -1,
+                             spell_cast_type how = spell_cast_type::magical) const = 0;
 
     virtual bool     will_trigger_shaft() const;
     virtual level_id shaft_dest() const;

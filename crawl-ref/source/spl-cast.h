@@ -72,6 +72,21 @@ enum class spret
     none,                 // spell was not handled
 };
 
+/**
+ * Used to determine how the "spell" was cast, for the purposes of
+ * calculating spell range, and other things.
+ */
+enum class spell_cast_type
+{
+    magical = 0,    // Gets vehumet range boost
+    device,         // Wands and misc evokers
+    god,            // Religious abilities
+    natural,        // Breaths and other innate things
+#ifdef WIZARD
+    wizard,         // Wizard mode wizard_cast_spec_spell
+#endif
+};
+
 #define IOOD_X "iood_x"
 #define IOOD_Y "iood_y"
 #define IOOD_VX "iood_vx"
@@ -97,8 +112,6 @@ int list_spells(bool toggle_with_I = true, bool viewing = false,
                 const string &title = "cast");
 int raw_spell_fail(spell_type spell, bool enkindled = false);
 int calc_spell_power(spell_type spell);
-int calc_spell_range(spell_type spell, int power = 0, bool allow_bonus = true,
-                     bool ignore_shadows = false);
 
 spret cast_a_spell(bool check_range, spell_type spell = SPELL_NO_SPELL,
                    dist *_target = nullptr, bool force_failure = false);
@@ -120,7 +133,8 @@ vector<string> desc_beam_hit_chance(const monster_info& mi, targeter* hitfunc);
 typedef function<vector<string> (const monster_info& mi)> (desc_filter);
 desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
                                        targeter *hitfunc);
-spret your_spells(spell_type spell, int powc = 0, bool actual_spell = true,
+spret your_spells(spell_type spell, int powc = 0,
+                  spell_cast_type how = spell_cast_type::magical,
                   const item_def* const evoked_item = nullptr,
                   dist *_target = nullptr, bool force_failure = false);
 

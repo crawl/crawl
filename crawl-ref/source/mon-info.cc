@@ -148,6 +148,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_CHAOS_LACE,      MB_CHAOS_LACE },
     { ENCH_VEXED,           MB_VEXED },
     { ENCH_PYRRHIC_RECOLLECTION, MB_PYRRHIC_RECOLLECTION },
+    { ENCH_DAMPENED,        MB_DAMPENED },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -1730,12 +1731,12 @@ int monster_info::range() const
     const vector<mon_spell_slot> &unique_slots = get_unique_spells(*this);
     for (const auto& slot : unique_slots)
         if (ms_ranged_spell(slot.spell, true, true))
-            range = max(range, mons_spell_range_for_hd(slot.spell, hd));
+            range = max(range, spell_range(slot.spell));
     // has attack wand?
     const item_def *wand = inv[MSLOT_WAND].get();
     if (wand && is_offensive_wand(*wand)) {
         const spell_type spell = spell_in_wand(static_cast<wand_type>(wand->sub_type));
-        range = max(range, calc_spell_range(spell, spell_power_cap(spell), true, true));
+        range = max(range, spell_range(spell));
     }
     return range;
 }
@@ -1899,6 +1900,24 @@ int monster_info::spell_hd(spell_type spell) const
     if (!props.exists(SPELL_HD_KEY))
         return hd;
     return props[SPELL_HD_KEY].get_int();
+}
+
+/**
+ * How much range does the monster have with the given spell?
+ *
+ * @param spell     The spell in question.
+ * @param pow       Optional spellpower, if not supplied we
+ *                  will check monster's current spellpower
+ * @return          -1 if the spell has an undefined range; else its range.
+ */
+int monster_info::spell_range(spell_type spell, int pow) const
+{
+    if (pow < 0)
+        pow = mons_power_for_hd(spell, spell_hd(spell));
+    if (is(MB_PLAYER_SERVITOR))
+        return you.spell_range(spell, pow);
+    int range = spell_range_base(spell, pow);
+    return range;
 }
 
 unsigned monster_info::colour(bool base_colour) const

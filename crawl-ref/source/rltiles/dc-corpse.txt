@@ -101,6 +101,7 @@ spark_wasp CORPSE_SPARK_WASP
 ghost_moth CORPSE_GHOST_MOTH
 moth_of_wrath CORPSE_MOTH_OF_WRATH
 sun_moth CORPSE_SUN_MOTH
+halfmoon_moth CORPSE_HALF_MOON_MOTH
 %sdir mon/demihumanoids
 meliai CORPSE_MELIAI
 

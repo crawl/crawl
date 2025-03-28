@@ -49,7 +49,6 @@ static monsterentry mondata[] =
     AXED_MON(MONS_DEEP_DWARF_NECROMANCER, "deep dwarf necromancer")
     AXED_MON(MONS_CHAOS_BUTTERFLY, "chaos butterfly")
     AXED_MON(MONS_POLYMOTH, "polymoth")
-    AXED_MON(MONS_MOTH_OF_SUPPRESSION, "moth of suppression")
     AXED_MON(MONS_ROCK_WORM, "rock worm")
     AXED_MON(MONS_FORMICID_DRONE, "formicid drone")
     AXED_MON(MONS_SPIRIT_WOLF, "spirit wolf")
