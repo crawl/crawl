@@ -1035,7 +1035,6 @@ two_headed_ogre MONS_TWO_HEADED_OGRE
 swamp_ogre MONS_SWAMP_OGRE
 ogre_mage MONS_OGRE_MAGE
 ironbound_thunderhulk MONS_IRONBOUND_THUNDERHULK
-%rim 1
 
 ## Plants ('P')
 %sdir mon/fungi_plants
@@ -1057,7 +1056,9 @@ withered_plant3
 %weight 8
 withered_plant4
 plant_demonic MONS_DEMONIC_PLANT
-%rim 0
+petrified_flower0 MONS_PETRIFIED_FLOWER
+petrified_flower1
+petrified_flower2
 bush MONS_BUSH
 bush2
 bush3

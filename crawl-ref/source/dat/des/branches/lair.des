@@ -3437,9 +3437,9 @@ ITEM:   any good_item
 KITEM:  R = earthy gem
 MONS:   yak, death yak, manticore
 KMONS:  4C = patrolling catoblepas
-# These are still living plants for all intents and purposes...
-KMONS:  P = withered plant perm_ench:petrified
-SUBST:  P = P.
+KMONS:  P = withered plant
+KMONS:  f = petrified flower
+SUBST:  P = P., f = f.
 NSUBST: 0 = 3:1 / 1:2 / * = 1112
 NSUBST: 9 = 1:C / 2:2 / 3:3 / * = 11222
 COLOUR: d|*$4c-R = lightgrey
@@ -3451,8 +3451,8 @@ xxxxccc*cccxxxxxxxxxxxxxxxx
 xxxxcd|$$4cxxxxxxxxxxxxxxxx
 xxxxcc$R--ccxxxxxxxxxxxxxxxxxx
 xxxxxcc----ccxxx%PxxPxxxxxxxxxxx
-xxxxxxccc---cxxP......Pxxxxxxxxxxx
-xxxxxxxxcc-ccxP.9.0.x...xxxxxxxxxxx
+xxxxxxccc---cxxf......Pxxxxxxxxxxx
+xxxxxxxxcc-ccxf.9.0.x...xxxxxxxxxxx
 xxxxxxxxxc-cxx.0.9.xxxP..xxxxPP.%xxxx
 xxxxxxxxxc-cxxP...xxxxx...xxxx0.9xxxx
 xxxxxxxxxx.cxxxx..xxxxxxx...xx.1.0xxx
@@ -3462,13 +3462,13 @@ xxxxxxx.....xxxxxxx..Pxxxx..xxxxxxxxxx
 xxxxxx90.x..xxxxxxP..xxxx..xxxxcccxxxx
 xxxxxx0xxxx..xxxxxx..Pxxx.xxxccc4ccxxx
 xxxxxxxxxx..xxxxxx0.......xxcc----ccxx
-xxxxxxxxxP..Pxxxx01xxxP...Pcc------cxx
+xxxxxxxxxf..Pxxxx01xxxP...Pcc------cxx
 xxxxxxxxx.....xx..xxxxxxP..c------ccx
 xxxxxxxxP.G.G.....xxxxxxx..---cc--cxx
 xxx%xxx..G.P9.G.xxxxxxxxxxx-ccc---cxx
-x%P9Pxx..9..G....xxxxxxxxxxxxc---ccxx
-xx0..1....P0.G..PPxxxxxxPPxxx...xxxx
-xxxP1...xxxP..PxxxxxxxxxxP9....xxxxx
+x%f9fxx..9..G....xxxxxxxxxxxxc---ccxx
+xx0..1....f0.G..fPxxxxxxPPxxx...xxxx
+xxxf1...xxxf..PxxxxxxxxxxP9....xxxxx
 xxxxxPPxxxxxxxxxxxxxxxxxxx......xxx
 xxxxxxxxxxxxxxxxxxxxxxxx......G...
 xxxxxxxxxxxxxxxxxxxxxx....G.......

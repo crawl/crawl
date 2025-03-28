@@ -2266,6 +2266,11 @@ pearl dragon
 A dragon consecrated to the holy divine powers. Its breath is blessed fire, and
 its claws sear its victims with divine wrath.
 %%%%
+petrified flower
+
+A sizeable and statuesque flower, fossilized either by bitter grief or the cruel
+grace of divinity, standing in its own eternal vigil.
+%%%%
 phalanx beetle
 
 An intricate mechanical beetle covered in reinforced metal plates that resemble
@@ -3566,10 +3571,6 @@ orb of ice
 A globe of primordial ice, floating in the air. It is said to be a relic of
 ancient times, when the world was a void bracketed by realms of endless fire
 and cold.
-%%%%
-petrified plant
-
-An ordinary plant that has been turned to stone.
 %%%%
 phase bat
 

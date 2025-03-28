@@ -262,7 +262,7 @@ ENDMAP
 NAME:    ebering_ecumenical_altar_petrified
 TAGS:    transparent
 KFEAT:   t = petrified_tree
-KMONS:   p = withered plant perm_ench:petrified
+KMONS:   p = petrified flower
 SHUFFLE: tp
 SUBST:   p = pp.
 SUBST:   t = t.

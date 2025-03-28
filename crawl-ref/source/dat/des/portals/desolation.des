@@ -1037,7 +1037,7 @@ KMONS:  3 = ushabti
 KMONS:  4 = halazid warlock
 KMONS:  5 = crystal guardian
 KMONS:  6 = ragged hierophant
-KMONS:  p = withered plant perm_ench:petrified
+KMONS:  p = petrified flower
 KFEAT:  ! = iron_grate
 NSUBST: - = d / .pp
 : desolation_ruins_setup(_G)
@@ -1393,7 +1393,7 @@ ENDMAP
 NAME:   desolation_ruin_ebering_petrified_1
 TAGS:   desolation_ruin transparent
 KFEAT:  t = petrified_tree
-KMONS:  p = withered plant perm_ench:petrified / plant-shaped pillar of salt
+KMONS:  p = petrified flower / plant-shaped pillar of salt
 NSUBST: p = 1:S / *:p
 SUBST:  X = tp.
 SUBST:  t = tt.
@@ -1420,7 +1420,7 @@ ENDMAP
 NAME:   desolation_ruin_ebering_petrified_2
 TAGS:   desolation_ruin transparent
 KFEAT:  t = petrified_tree
-KMONS:  p = withered plant perm_ench:petrified / plant-shaped pillar of salt
+KMONS:  p = petrified flower / plant-shaped pillar of salt
 SUBST:  X = tp.
 SUBST:  t = tt.
 SUBST:  p = p..
@@ -1447,7 +1447,7 @@ ENDMAP
 NAME:   desolation_ruin_ebering_petrified_temple
 TAGS:   desolation_ruin transparent
 KFEAT:  t = petrified_tree
-KMONS:  p = withered plant perm_ench:petrified / plant-shaped pillar of salt
+KMONS:  p = petrified flower / plant-shaped pillar of salt
 SUBST:  c = ccx...
 SUBST:  t = tt.
 SUBST:  p = p....
@@ -1645,7 +1645,7 @@ KITEM:   %O = any weapon good_item / any armour good_item / randbook w:5 / \
               any jewellery randart w:5 / gold good_item w:1
 KMONS:   1 = saltling band
 KMONS:   O2 = imperial myrmidon / halazid warlock / crystal guardian
-KMONS:   p = withered plant perm_ench:petrified
+KMONS:   p = petrified flower
 KFEAT:   ! = iron_grate
 KFEAT:   < = exit_desolation
 KFEAT:   H = stone_arch

@@ -3666,22 +3666,23 @@ xxxx.....xxx...xxx.....xxxx
 xxxxxxxxxxx@@@@@xxxxxxxxxxx
 ENDMAP
 
-NAME: nicolae_zot_crop_circle
-TAGS: no_monster_gen transparent
-DEPTH: Zot, !Zot:1
-SHUFFLE: {[(
-NSUBST: p = 2:2 / 1:12 / 1
-MONS: withered plant, death cob
+NAME:    nicolae_zot_crop_circle
+TAGS:    no_monster_gen transparent
+DEPTH:   Zot, !Zot:1
+SHUFFLE: {[(, qrs
+SUBST:   q = 2, r : pp2, s = p
+NSUBST:  p = 2:3 / 1:13 / 1
+MONS:    withered plant, petrified flower, death cob
 MAP
    ..@..
   .......
- ...ppp...
-...p...p...
-..p.....p..
+ ...pqp...
+...p...r...
+..p.....s..
 @.p..{..p.@
-..p.....p..
-...p...p...
- ...ppp...
+..s.....p..
+...r...p...
+ ...pqp...
   .......
    ..@..
 ENDMAP
