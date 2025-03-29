@@ -1194,7 +1194,8 @@ int torment_player(const actor *attacker, torment_source_type taux)
     return hploss;
 }
 
-int torment_cell(coord_def where, actor *attacker, torment_source_type taux)
+int torment_cell(coord_def where, const actor *attacker,
+                 torment_source_type taux)
 {
     int damage = 0;
 
