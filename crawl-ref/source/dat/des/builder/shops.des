@@ -15,14 +15,19 @@ lua {{
 crawl_require('dlua/vault.lua')
 
 MAX_RANDOM_SHOPS = 5
+MAX_RANDOM_SHOPS_DEPTHS = 3
 
 -- If a level gets shops, how many there are.
--- Just one most of the time; expected value is 1.42.
+-- Just one most of the time; expected average is 1.42.
 function num_shops()
-    if crawl.x_chance_in_y(5, 6) then
+    if you.absdepth() < 4 or crawl.x_chance_in_y(3, 4) then
         return 1
     else
-        return crawl.random_range(2, MAX_RANDOM_SHOPS)
+        local roll = crawl.random_real()
+        -- Depths get less extra shops per floor since they're especially high
+        -- quality, but a boosted chance of *some* shops to even out variance
+        local max = (you.in_branch("Depths") and MAX_RANDOM_SHOPS_DEPTHS or MAX_RANDOM_SHOPS)
+        return 1 + math.max(1, math.floor(roll * roll * max))
     end
 end
 
@@ -62,8 +67,7 @@ NAME: serial_shops
 TAGS: nolayout_encompass allow_dup extra luniq
 DEPTH: D, Depths, Orc, Elf, Shoals, Snake, Vaults
 CHANCE: 15% (D)
-CHANCE: 20% (Depths)
-CHANCE: 30% (Orc)
+CHANCE: 30% (Depths, Orc)
 CHANCE: 40% (Elf, Vaults)
 CHANCE: 20% (Shoals, Snake)
 {{
