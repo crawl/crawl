@@ -953,9 +953,9 @@ void delay(unsigned int ms)
     Sleep((DWORD)ms);
 }
 
-void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
+void puttext(int x1, int y1, const crawl_console_view_buffer &vbuf)
 {
-    const screen_cell_t *cell = vbuf;
+    const glyph_screen_cell *cell = vbuf;
     const coord_def size = vbuf.size();
     for (int y = 0; y < size.y; ++y)
     {
