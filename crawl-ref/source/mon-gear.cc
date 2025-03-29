@@ -201,6 +201,17 @@ static void _give_wand(monster* mon, int level)
     give_specific_item(mon, idx);
 }
 
+static void _give_scroll(monster* mons, int level)
+{
+    if (mons->type != MONS_YAKTAUR_SCRIBE || coinflip())
+        return;
+    const int idx = items(false, OBJ_SCROLLS, OBJ_RANDOM, level);
+    if (idx == NON_ITEM)
+        return;
+    // They won't ever use this scroll, it's just for the loot drop flavour
+    give_specific_item(mons, idx);
+}
+
 static item_def* make_item_for_monster(
     monster* mons,
     object_class_type base,
@@ -730,7 +741,18 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             { 1, 1, 3 },
             { { SPWPN_FLAMING, 1 } }
         } },
-        { MONS_YAKTAUR,         { { { WPN_ARBALEST, 1 } } } },
+        { MONS_YAKTAUR,             { { { WPN_ARBALEST, 1 } } } },
+        { MONS_YAKTAUR_SCRIBE, { { { WPN_ARBALEST, 1 } },
+            { 1, 1, 5 }, // Enchant weapon
+            {// Brand weapon
+                { SPWPN_NORMAL, 20 },
+                { SPWPN_FLAMING, 5 },
+                { SPWPN_FREEZING, 5 },
+                { SPWPN_ELECTROCUTION, 3 },
+                { SPWPN_HEAVY, 2 },
+            },
+            4   // Acquirement
+            } },
         { MONS_YAKTAUR_CAPTAIN, { {
             { WPN_ARBALEST,      19 },
             { WPN_HAND_CANNON, 1  },
@@ -2045,6 +2067,20 @@ int make_mons_armour(monster_type type, int level)
                                     : ARM_FIRE_DRAGON_ARMOUR;
         break;
 
+    case MONS_YAKTAUR_SCRIBE:
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type = ARM_ROBE;
+        // Enchant armour
+        item.plus = random_range(0, 2);
+        // Acquirement
+        if (one_chance_in(3))
+        {
+            level = ISPEC_GOOD_ITEM;
+            break;
+        }
+    // Intentional fall-through, give scribes a small chance of barding
+    // if they didn't get a good robe.
+
     // Centaurs sometimes wear barding.
     case MONS_CENTAUR:
     case MONS_CENTAUR_WARRIOR:
@@ -2052,14 +2088,13 @@ int make_mons_armour(monster_type type, int level)
     case MONS_YAKTAUR_CAPTAIN:
         if (one_chance_in(type == MONS_CENTAUR              ? 1000 :
                           type == MONS_CENTAUR_WARRIOR      ?  500 :
-                          type == MONS_YAKTAUR              ?  300
+                          type == MONS_YAKTAUR              ?  300 :
+                          type == MONS_YAKTAUR_SCRIBE  ?  250
                        /* type == MONS_YAKTAUR_CAPTAIN ? */ :  200))
         {
             item.base_type = OBJ_ARMOUR;
             item.sub_type  = ARM_BARDING;
         }
-        else
-            return NON_ITEM; // ???
         break;
 
     case MONS_NAGA:
@@ -2083,8 +2118,6 @@ int make_mons_armour(monster_type type, int level)
             item.base_type = OBJ_ARMOUR;
             item.sub_type  = ARM_ROBE;
         }
-        else
-            return NON_ITEM; // ???
         break;
 
     case MONS_VASHNIA:
@@ -2339,6 +2372,7 @@ void give_item(monster *mons, int level_number, bool mons_summoned)
     _give_ammo(mons, level_number, mons_summoned);
     _give_armour(mons, 1 + level_number / 2);
     _give_shield(mons, 1 + level_number / 2);
+    _give_scroll(mons, level_number);
 
     if (mons->type == MONS_ORC_APOSTLE)
         give_apostle_equipment(mons);

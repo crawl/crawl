@@ -14,7 +14,7 @@ void timeout_tombs(int duration);
 int count_malign_gateways();
 void timeout_malign_gateways(int duration);
 
-void timeout_binding_sigils();
+void timeout_binding_sigils(const actor &caster);
 void end_toxic_bog();
 
 void end_enkindled_status();
