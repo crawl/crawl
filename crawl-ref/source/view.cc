@@ -1211,7 +1211,7 @@ static void _draw_player(screen_cell_t *cell,
     cell->tile.fg = tile_env.fg(ep) = tileidx_player();
     cell->tile.bg = tile_env.bg(ep);
     cell->tile.cloud = tile_env.cloud(ep);
-    cell->tile.icons = status_icons_for_player();
+    cell->tile.icons = std::move(status_icons_for_player());
     if (anim_updates)
         tile_apply_animations(cell->tile.bg, &tile_env.flv(gc));
 #else
@@ -1231,7 +1231,7 @@ static void _draw_los(screen_cell_t *cell,
     cell->tile.fg = tile_env.fg(ep);
     cell->tile.bg = tile_env.bg(ep);
     cell->tile.cloud = tile_env.cloud(ep);
-    cell->tile.icons = tile_env.icons[ep];
+    cell->tile.icons = tile_env.icons(ep);
     if (anim_updates)
         tile_apply_animations(cell->tile.bg, &tile_env.flv(gc));
 #else

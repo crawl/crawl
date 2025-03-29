@@ -905,7 +905,7 @@ void tile_draw_floor()
             tile_env.bg(ep) = bg;
             tile_env.fg(ep) = 0;
             tile_env.cloud(ep) = 0;
-            tile_env.icons.erase(ep);
+            tile_env.icons(ep).reset();
         }
 }
 

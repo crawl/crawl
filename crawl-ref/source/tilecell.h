@@ -11,6 +11,48 @@ enum halo_type: uint8_t
     HALO_UMBRA = 2,
 };
 
+// The common case is zero icons.
+// We trade ~48 bytes fixed on every cell for the naive set<tileidx_t>
+// for 8 bytes fixed on every cell
+// + 32 bytes on cells with icons.
+struct packed_icons {
+    unique_ptr<FixedBitVector<256>> icons;
+    // constructor
+    packed_icons() = default;
+    // destructor
+    ~packed_icons() = default;
+    // copy constructor
+    // copy-construct the inner set
+    packed_icons(const packed_icons& o): icons(nullptr) {
+        if (o.icons)
+            this->icons = make_unique<FixedBitVector<256>>(o.icons);
+    }
+
+    // move constructor
+    packed_icons(packed_icons&&) = default;
+
+    // copy assignment
+    // copy the innser set, then assign that.
+    packed_icons operator=(const packed_icons& o)
+    {
+        if (o.icons)
+            this->icons = make_unique<FixedBitVector<256>>(o.icons);
+        else
+            this->icons.reset();
+    }
+
+    // move assignment
+    packed_icons& operator=(packed_icons&&) = default;
+
+    // insert an icon
+    void insert(tileidx_t icon);
+
+    // Clear the icons
+    inline void reset() {
+        icons.reset();
+    }
+};
+
 struct packed_cell
 {
     // For anything that requires multiple dungeon tiles (such as waves)
@@ -48,8 +90,9 @@ struct packed_cell
     tile_flavour flv;
     tileidx_t fg;
     tileidx_t bg;
+    // TODO: seems weird this isn't just part of dngn_overlay?
     tileidx_t cloud;
-    set<tileidx_t> icons;
+    packed_icons icons;
 
     bool operator ==(const packed_cell &other) const;
     bool operator !=(const packed_cell &other) const { return !(*this == other); }

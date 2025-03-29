@@ -2498,7 +2498,7 @@ void TilesFramework::json_write_comma()
     write_message(",");
 }
 
-void TilesFramework::json_write_icons(const set<tileidx_t> &icons)
+void TilesFramework::json_write_icons(const packed_icons &icons)
 {
     json_open_array("icons");
     for (const tileidx_t icon : icons)
