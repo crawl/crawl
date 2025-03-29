@@ -1083,8 +1083,9 @@ bool mon_special_ability(monster* mons)
                 beem.target = foe->pos();
                 setup_mons_cast(mons, beem, SPELL_THORN_VOLLEY);
 
-                fire_tracer(mons, beem);
-                if (mons_should_fire(beem))
+                targeting_tracer tracer;
+                fire_tracer(mons, tracer, beem);
+                if (mons_should_fire(beem, tracer))
                 {
                     make_mons_stop_fleeing(mons);
                     _mons_cast_abil(mons, beem, SPELL_THORN_VOLLEY);

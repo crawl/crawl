@@ -3700,7 +3700,8 @@ void mons_pacify(monster& mon, mon_attitude_type att, bool no_xp)
     mons_att_changed(&mon);
 }
 
-static bool _mons_should_fire_beneficial(bolt &beam)
+static bool _mons_should_fire_beneficial(const bolt &beam,
+                                         const targeting_tracer &tracer)
 {
     // Should monster heal other, haste other or might other be able to
     // target the player? Saying no for now. -cao
@@ -3710,8 +3711,8 @@ static bool _mons_should_fire_beneficial(bolt &beam)
     // Assuming all beneficial beams are enchantments if a foe is in
     // the path the beam will definitely hit them so we shouldn't fire
     // in that case.
-    if (beam.friend_info.count == 0
-        || beam.foe_info.count != 0)
+    if (tracer.friend_info.count == 0
+        || tracer.foe_info.count != 0)
     {
         return false;
     }
@@ -3743,18 +3744,19 @@ static bool _beneficial_beam_flavour(beam_type flavour)
     }
 }
 
-bool mons_should_fire(bolt &beam, bool ignore_good_idea)
+bool mons_should_fire(const bolt& beam, const targeting_tracer &tracer,
+                      bool ignore_good_idea)
 {
     dprf("tracer: foes %d (pow: %d), friends %d (pow: %d), "
          "foe_ratio: %d",
-         beam.foe_info.count, beam.foe_info.power,
-         beam.friend_info.count, beam.friend_info.power,
+         tracer.foe_info.count, tracer.foe_info.power,
+         tracer.friend_info.count, tracer.friend_info.power,
          beam.foe_ratio);
 
     // Use different evaluation criteria if the beam is a beneficial
     // enchantment (haste other).
     if (_beneficial_beam_flavour(beam.flavour))
-        return _mons_should_fire_beneficial(beam);
+        return _mons_should_fire_beneficial(beam, tracer);
 
     if (is_sanctuary(you.pos()) || is_sanctuary(beam.source))
         return false;
@@ -3781,7 +3783,7 @@ bool mons_should_fire(bolt &beam, bool ignore_good_idea)
             return false;
     }
 
-    return beam.good_to_fire() >= ai_action::good();
+    return tracer.good_to_fire(beam.foe_ratio) >= ai_action::good();
 }
 
 /**

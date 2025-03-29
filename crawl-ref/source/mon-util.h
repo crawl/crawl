@@ -356,7 +356,8 @@ void define_monster(monster& mons, bool friendly = false);
 void mons_pacify(monster& mon, mon_attitude_type att = ATT_GOOD_NEUTRAL,
                  bool no_xp = false);
 
-bool mons_should_fire(bolt &beam, bool ignore_good_idea = false);
+bool mons_should_fire(const bolt &beam, const targeting_tracer& tracer,
+                      bool ignore_good_idea = false);
 
 bool mons_has_los_ability(monster_type mon_type);
 bool ms_ranged_spell(spell_type monspell, bool attack_only = false,

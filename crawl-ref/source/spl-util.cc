@@ -1800,16 +1800,12 @@ bool spell_no_hostile_in_range(spell_type spell)
         bool found = false;
         beam.source_id = MID_PLAYER;
         beam.range = range;
-        beam.is_tracer = true;
-        beam.is_targeting = true;
         beam.source  = you.pos();
-        beam.dont_stop_player = true;
-        beam.friend_info.dont_stop = true;
-        beam.foe_info.dont_stop = true;
         beam.attitude = ATT_FRIENDLY;
 #ifdef DEBUG_DIAGNOSTICS
         beam.quiet_debug = true;
 #endif
+        targeting_tracer tracer;
 
         const bool smite = testbits(flags, spflag::target);
 
@@ -1838,23 +1834,19 @@ bool spell_no_hostile_in_range(spell_type spell)
                 // be good to move basic explosion radius info into spell_desc
                 // or possibly zap_data. -gammafunk
                 tempbeam.ex_size = tempbeam.is_explosion ? 1 : 0;
-                tempbeam.explode();
+                tempbeam.explode(tracer);
             }
             else
-                tempbeam.fire();
-
-            int foes = tempbeam.foe_info.count;
-            int friends = tempbeam.friend_info.count;
+                tempbeam.fire(tracer);
 
             // Need to check both beam flavours for Plasma Beam.
             if (zap == ZAP_PLASMA)
             {
                 tempbeam.flavour = BEAM_ELECTRICITY;
-                tempbeam.fire();
-                foes += tempbeam.foe_info.count;
+                tempbeam.fire(tracer);
             }
 
-            if (foes > 0 || allow_friends && friends > 0)
+            if (tracer.foe_info.count > 0 || allow_friends && tracer.friend_info.count > 0)
             {
                 found = true;
                 break;
