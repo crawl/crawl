@@ -15,6 +15,7 @@
 #include "env.h"
 #include "fprop.h"
 #include "libutil.h" // map_find
+#include "los.h"
 #include "losglobal.h"
 #include "mgen-data.h"
 #include "mon-death.h"
@@ -208,7 +209,7 @@ monster& get_tentacle_head(const monster& mon)
 }
 
 static void _establish_connection(monster* tentacle,
-                                  monster* head,
+                                  const monster* head,
                                   set<position_node>::iterator path,
                                   monster_type connector_type)
 {
@@ -545,7 +546,7 @@ static bool _tentacle_pathfind(monster* tentacle,
 static bool _try_tentacle_connect(const coord_def & new_pos,
                                   const coord_def & base_position,
                                   monster* tentacle,
-                                  monster* head,
+                                  const monster* head,
                                   tentacle_connect_constraints & connect_costs,
                                   monster_type connect_type)
 {
@@ -617,13 +618,13 @@ static void _purge_connectors(monster* tentacle)
     ASSERT(tentacle->alive());
 }
 
-static void _collect_foe_positions(monster *mons,
+static void _collect_foe_positions(const monster *mons,
                                    vector<coord_def> &foe_positions,
-                                   function<bool(const actor *)> sight_check)
+                                   function<bool(const actor *)> valid_check)
 {
     coord_def foe_pos(-1, -1);
     actor * foe = mons->get_foe();
-    if (foe && sight_check(foe))
+    if (foe && valid_check(foe))
     {
         foe_positions.push_back(mons->get_foe()->pos());
         foe_pos = foe_positions.back();
@@ -635,7 +636,7 @@ static void _collect_foe_positions(monster *mons,
         if (!test->is_firewood()
             && !mons_aligned(test, mons)
             && test->pos() != foe_pos
-            && sight_check(test))
+            && valid_check(test))
         {
             foe_positions.push_back(test->pos());
         }
@@ -918,6 +919,21 @@ void move_solo_tentacle(monster* tentacle)
     tentacle->apply_location_effects(old_pos);
 }
 
+//How far past the edge of LOS a particular tentacle can reach
+int _tentacle_reach(const monster_type type)
+{
+    if (type == MONS_KRAKEN)
+        return 2;
+    else
+        return 0;
+}
+
+bool _tentacle_in_range(const monster* mons, const actor* test)
+{
+    return grid_distance(mons->pos(), test->pos())
+                <= get_los_radius() + _tentacle_reach(mons->type);
+}
+
 void move_child_tentacles(monster* mons)
 {
     ASSERT(mons);
@@ -932,10 +948,10 @@ void move_child_tentacles(monster* mons)
 
     vector<coord_def> foe_positions;
     _collect_foe_positions(mons, foe_positions,
-                           [mons](const actor *test) -> bool
-                           {
-                               return mons->can_see(*test);
-                           });
+                            [mons] (const actor *test) -> bool
+                            {
+                                return _tentacle_in_range(mons, test);
+                            });
 
     if (foe_positions.empty()
         || mons->behaviour == BEH_FLEE

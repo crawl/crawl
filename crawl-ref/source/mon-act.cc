@@ -1661,7 +1661,7 @@ static coord_def _confused_move_dir(monster *mons)
 static int _tentacle_move_speed(monster_type type)
 {
     if (type == MONS_KRAKEN)
-        return 10;
+        return 20;
     else if (type == MONS_TENTACLED_STARSPAWN)
         return 18;
     else
