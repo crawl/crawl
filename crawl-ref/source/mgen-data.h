@@ -236,6 +236,7 @@ struct mgen_data
     // XXX: The summoner field is used in normal band placement to temporarily
     //      designate a band member's leader, so we need to rule that out.
     bool is_summoned() const { return summon_type != SPELL_NO_SPELL
+                                      || summon_duration > 0
                                       || (summoner != nullptr && !(flags & MG_BAND_MINION)); }
 
     static mgen_data sleeper_at(monster_type what,
