@@ -838,10 +838,10 @@ made for trapping {{ return you.genus(true) }} rather than flies.
 A Zot trap
 
 A trap which inflicts dangerously unpredictable magical effects on those
-unlucky enough to step on it. You may find yourself thrown into the Abyss,
-contaminated with enormous amounts of wild magic, have mighty fiends summoned
-against you, or the like. Hostile monsters may trigger this trap themselves to
-invoke its effects against you, but your allies will avoid stepping on it.
+unlucky enough to step on it. You may find yourself petrified, contaminated
+with enormous amounts of wild magic, have mighty fiends summoned against you,
+or the like. Hostile monsters may trigger this trap themselves to invoke its
+effects against you, but your allies will avoid stepping on it.
 %%%%
 ########################################################################
 ### Portal vault entrances
