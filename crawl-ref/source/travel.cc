@@ -5107,17 +5107,18 @@ void do_interlevel_travel()
 
 #ifdef USE_TILE
 // (0,0) = same position is handled elsewhere.
-const int dir_dx[8] = {-1, 0, 1, -1, 1, -1,  0,  1};
-const int dir_dy[8] = { 1, 1, 1,  0, 0, -1, -1, -1};
+static const int dir_dx[8] = {-1, 0, 1, -1, 1, -1,  0,  1};
+static const int dir_dy[8] = { 1, 1, 1,  0, 0, -1, -1, -1};
 
-const int cmd_array[8] =
+static const command_type cmd_array[8] =
 {
     CMD_MOVE_DOWN_LEFT,  CMD_MOVE_DOWN,  CMD_MOVE_DOWN_RIGHT,
     CMD_MOVE_LEFT,                       CMD_MOVE_RIGHT,
     CMD_MOVE_UP_LEFT,    CMD_MOVE_UP,    CMD_MOVE_UP_RIGHT,
 };
 
-static int _adjacent_cmd(const coord_def &gc, bool force)
+static command_type _adjacent_cmd(const coord_def &gc, bool attack,
+    bool close_door)
 {
     const coord_def dir = gc - you.pos();
     for (int i = 0; i < 8; i++)
@@ -5125,19 +5126,15 @@ static int _adjacent_cmd(const coord_def &gc, bool force)
         if (dir_dx[i] != dir.x || dir_dy[i] != dir.y)
             continue;
 
-        int cmd = cmd_array[i];
-        if (!force)
-            return cmd;
-        const dungeon_feature_type feat = env.grid(gc);
-        if ((feat == DNGN_OPEN_DOOR || feat == DNGN_OPEN_CLEAR_DOOR)
-            && !env.map_knowledge(gc).monsterinfo())
-        {
-            return CMD_CLOSE_DOOR_LEFT - CMD_MOVE_LEFT;
-        }
-        return cmd + CMD_ATTACK_LEFT - CMD_MOVE_LEFT;
+        command_type cmd = cmd_array[i];
+        if (attack)
+            return (command_type)(cmd + CMD_ATTACK_LEFT - CMD_MOVE_LEFT);
+        if (close_door)
+            return (command_type)(cmd + CMD_CLOSE_DOOR_LEFT - CMD_MOVE_LEFT);
+        return cmd;
     }
 
-    return CK_MOUSE_CMD;
+    return CMD_NO_CMD;
 }
 
 bool click_travel_safe(const coord_def &gc)
@@ -5147,14 +5144,16 @@ bool click_travel_safe(const coord_def &gc)
         && i_feel_safe(false, false, false, false);
 }
 
-int click_travel(const coord_def &gc, bool force)
+command_type click_travel(const coord_def &gc, bool force_attack,
+                          bool force_close_doors)
 {
     if (!in_bounds(gc))
-        return CK_MOUSE_CMD;
+        return CMD_NO_CMD;
 
-    const int cmd = _adjacent_cmd(gc, force);
-    if (cmd != CK_MOUSE_CMD)
-        return cmd;
+    const command_type adj_cmd = _adjacent_cmd(gc, force_attack,
+                                               force_close_doors);
+    if (adj_cmd != CMD_NO_CMD)
+        return adj_cmd;
 
     if (click_travel_safe(gc))
     {
@@ -5164,7 +5163,7 @@ int click_travel(const coord_def &gc, bool force)
         if (!_monster_blocks_travel(cell.monsterinfo()))
         {
             start_travel(gc);
-            return CK_MOUSE_CMD;
+            return CMD_NO_CMD;
         }
     }
 
@@ -5175,9 +5174,11 @@ int click_travel(const coord_def &gc, bool force)
     const coord_def dest = tp.pathfind(RMODE_TRAVEL);
 
     if (!dest.x && !dest.y)
-        return CK_MOUSE_CMD;
+        return CMD_NO_CMD;
 
-    return _adjacent_cmd(dest, force);
+    // Don't pass on the force_attack and force_close_doors flags because
+    // the player didn't click on this square
+    return _adjacent_cmd(dest, false, false);
 }
 #endif
 

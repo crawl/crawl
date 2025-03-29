@@ -238,10 +238,13 @@ int MapRegion::handle_mouse(wm_mouse_event &event)
                 do_explore_cmd();
                 return CK_MOUSE_CMD;
             }
-
-            const int cmd = click_travel(gc, event.mod & TILES_MOD_CTRL);
-            if (cmd != CK_MOUSE_CMD)
-                process_command((command_type)cmd);
+            if (!tiles.get_map_display())
+            {
+                const command_type cmd =
+                    click_travel(gc, event.mod & TILES_MOD_CTRL, false);
+                if (cmd != CMD_NO_CMD)
+                    process_command(cmd);
+            }
 
             return CK_MOUSE_CMD;
         }
