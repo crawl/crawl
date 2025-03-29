@@ -190,19 +190,27 @@ class CrawlProcessHandlerBase(object):
                 and re.search(r'"clear" *: *true', tocheck))
 
     def handle_process_message(self, msg, send): # type: (str, bool) -> None
+        #start = time.perf_counter_ns()
         # special handling for map messages on a new spectator: these can be
         # massive, and the deflate time adds up, so only send it to new
         # spectators. This is all a bit heuristic, and probably could use
         # a new control message instead...
+        # TODO: fresh_watchers case takes ~1200ns, vs ~3000-5000ns in the other case
         # TODO: if multiple spectators join at the same time, it's probably
         # possible for this heuristic to fail and send a full map to everyone
+        #is_full_map_msg = self._is_full_map_msg(msg)
         if self._fresh_watchers and self._is_full_map_msg(msg):
             for w in self._fresh_watchers:
                 w.append_message(msg, send)
             self._fresh_watchers = set()
+            #self.logger.info("Message duration 1: %d ns", time.perf_counter_ns() - start)
             return
+
         for receiver in self._receivers:
             receiver.append_message(msg, send)
+        #if is_full_map_msg:
+        #    self.logger.info("Race lost")
+        #self.logger.info("Message duration 2: %d ns", time.perf_counter_ns() - start)
 
     def send_to_all(self, msg, **data): # type: (str, Any) -> None
         for receiver in self._receivers:
