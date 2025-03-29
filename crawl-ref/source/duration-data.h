@@ -701,6 +701,11 @@ static const duration_def duration_data[] =
       "enkindled", "enkindled",
       "Your flames burn bright with remembrance.", D_EXPIRES,
       {{ "Your flames start to waver.", end_enkindled_status }}},
+    { DUR_SHROUD_TIMEOUT,
+      DARKGREY, "Shroud",
+      "shroud timeout", "shroud timeout",
+      "Your shroud of slime is broken and needs time to repair.", D_EXPIRES,
+      {{ "Your slime shroud regrows." }}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

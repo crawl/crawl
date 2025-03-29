@@ -1149,3 +1149,9 @@ You are noisily attacking with all of your armour. Every piece of armour you
 haunt currently moves of its own volition; any damage it takes will not affect
 you, you can freely fire through it, and its attacks may daze, drain, or confuse
 your enemies.
+%%%%
+Shroud status
+
+You are covered by a thin shroud of slime that may deflect a melee attack. When
+it does, the shroud will break for a short time, though it will soon repair
+itself naturally.

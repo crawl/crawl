@@ -284,5 +284,6 @@ enum duration_type
     DUR_CACOPHONY,
     DUR_DROWSY,
     DUR_ENKINDLED,
+    DUR_SHROUD_TIMEOUT,
     NUM_DURATIONS
 };
