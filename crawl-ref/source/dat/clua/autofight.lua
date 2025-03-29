@@ -107,12 +107,15 @@ local function have_ranged()
 end
 
 local function have_quiver_action(no_move)
-  return ((AUTOFIGHT_THROW or no_move and AUTOFIGHT_THROW_NOMOVE)
-          and you.quiver_valid(1) and you.quiver_enabled(1)
-          -- TODO: armataur roll passes the following check, which may be
-          -- counterintuitive for the nomove case
-          and you.quiver_allows_autofight()
-          and (not you.quiver_uses_mp() or not AUTOMAGIC_FIGHT or not af_mp_is_low()))
+    return (no_move and AUTOFIGHT_THROW_NOMOVE
+            or not no_move and AUTOFIGHT_THROW)
+        and you.quiver_valid(1) and you.quiver_enabled(1)
+        -- TODO: armataur roll passes the following check, which may be
+        -- counterintuitive for the nomove case.
+        and you.quiver_allows_autofight()
+        and (not you.quiver_uses_mp()
+            or not AUTOMAGIC_FIGHT
+            or not af_mp_is_low())
 end
 
 local function is_safe_square(dx, dy)

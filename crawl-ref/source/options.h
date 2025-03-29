@@ -904,6 +904,7 @@ public:
     bool        tile_window_limit_size;
     maybe_bool  tile_use_small_layout;
 #endif
+    int         tile_min_stat_width_characters;
     int         tile_sidebar_pixels;
     int         tile_cell_pixels;
     fixedp<>    tile_viewport_scale;

@@ -2723,7 +2723,7 @@ bool safe_discharge(coord_def where, bool check_only, bool exclude_center,
         bool penance;
 
         for (const actor* act : exclude)
-            if (bad_attack(act->as_monster(), adj, suffix, penance, you.pos()))
+            if (act->is_monster() && bad_attack(act->as_monster(), adj, suffix, penance, you.pos()))
                 return false;
 
         return true;
@@ -5382,4 +5382,41 @@ void do_catalyst_explosion(coord_def center, const item_def* wpn)
 
     for (coord_def pos : blast_targets)
         _explosion_square(&you, beam_actual, pos, pos == center, SPELL_DETONATION_CATALYST);
+}
+
+bool find_life_bolt_ray(coord_def& source, coord_def target, ray_def& ray)
+{
+    bool has_ray = find_ray(source, target, ray, opc_no_trans);
+    if (!has_ray)
+        return false;
+    while (true)
+    {
+        ray_def next_ray = ray;
+        next_ray.advance();
+        if (next_ray.pos() == target)
+        {
+            source = ray.pos();
+            break;
+        }
+        ray = next_ray;
+    }
+    return true;
+}
+
+void fire_life_bolt(actor& attacker, coord_def target)
+{
+    bolt beam;
+    beam.thrower = attacker.is_player() ? KILL_YOU : KILL_MON;
+    beam.source = attacker.pos();
+    beam.source_id = attacker.mid;
+    beam.attitude = attacker.temp_attitude();
+    beam.range = 4;
+    beam.target = target;
+    beam.chose_ray = true;
+    zappy(ZAP_SWORD_BEAM, 100, false, beam);
+    bool has_ray = find_life_bolt_ray(beam.source, beam.target, beam.ray);
+    if (!has_ray)
+        return;
+
+    beam.fire();
 }

@@ -3396,6 +3396,11 @@ void delay(unsigned int ms)
             pump_events();
     }
 #endif
+    if (crawl_state.seen_hups)
+    {
+        macro_buf_add(CK_ESCAPE, true); // Let the caller respond to seen_hups.
+        pump_events();
+    }
 }
 
 /**
@@ -3612,6 +3617,7 @@ wm_mouse_event to_wm_event(const MouseEvent &ev)
     wm_mouse_event mev;
     mev.event = ev.type() == Event::Type::MouseMove ? wm_mouse_event::MOVE :
                 ev.type() == Event::Type::MouseDown ? wm_mouse_event::PRESS :
+                ev.type() == Event::Type::MouseUp ? wm_mouse_event::RELEASE :
                 wm_mouse_event::WHEEL;
     mev.button = static_cast<wm_mouse_event::mouse_event_button>(ev.button());
     int x = 0;

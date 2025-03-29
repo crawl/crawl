@@ -120,13 +120,12 @@ int count = 0;
     // Hats versus helmets is handled elsewhere. If you can wear at least a hat,
     // this should be non-zero.
     case SLOT_HELMET:
-        if (you.has_mutation(MUT_FORMLESS))
-            return 0;
-
         if (you.unrand_equipped(UNRAND_SKULL_OF_ZONGULDROK))
             ++count;
 
-        if (you.has_mutation(MUT_NO_ARMOUR))
+        if (you.has_mutation(MUT_FORMLESS))
+            NO_SLOT("You don't have a head.")
+        else if (you.has_mutation(MUT_NO_ARMOUR))
             NO_SLOT("That is much too large for your head.")
         else if (you.get_mutation_level(MUT_HORNS, mutation_activity_type::INACTIVE) >= 3)
             NO_SLOT("You can't wear any headgear with your large horns!")
@@ -138,16 +137,15 @@ int count = 0;
         return count;
 
     case SLOT_GLOVES:
-        if (you.has_mutation(MUT_FORMLESS))
-            return 0;
-
         if (you.unrand_equipped(UNRAND_FISTICLOAK))
             ++count;
 
         if (you.has_mutation(MUT_QUADRUMANOUS))
             ++count;
 
-        if (player_size <= SIZE_LITTLE)
+        if (you.has_mutation(MUT_FORMLESS))
+            NO_SLOT("You don't have hands.")
+        else if (player_size <= SIZE_LITTLE)
             NO_SLOT(make_stringf("Those are too big for your %s.", you.hand_name(true).c_str()))
         else if (player_size >= SIZE_LARGE)
             NO_SLOT(make_stringf("Those are too small for your %s.", you.hand_name(true).c_str()))
@@ -163,9 +161,7 @@ int count = 0;
         return count;
 
     case SLOT_BOOTS:
-        if (you.has_mutation(MUT_FORMLESS))
-            return 0;
-        else if (species::wears_barding(you.species))
+        if (species::wears_barding(you.species) || you.has_mutation(MUT_FORMLESS))
             NO_SLOT("You don't have any feet!")
         else if (player_size <= SIZE_LITTLE)
             NO_SLOT(make_stringf("Those are too big for your %s.", you.foot_name(true).c_str()))
@@ -190,7 +186,7 @@ int count = 0;
 
     case SLOT_CLOAK:
         if (you.has_mutation(MUT_FORMLESS))
-            return 0;
+            NO_SLOT("You don't have any shoulders.")
         else if (you.species == SP_OCTOPODE || you.has_mutation(MUT_NO_ARMOUR))
             NO_SLOT("You can't wear that.")
         else if (you.get_mutation_level(MUT_WEAKNESS_STINGER, mutation_activity_type::INACTIVE) >= 3)
@@ -477,17 +473,25 @@ bool can_equip_item(const item_def& item, bool include_form, string* veto_reason
     // type, is there some *other* reason they cannot wear this item?
     if (item.base_type == OBJ_ARMOUR)
     {
-        size_type player_size = you.body_size(PSIZE_TORSO, !include_form);
-        int bad_size = fit_armour_size(item, player_size);
-        if (bad_size != 0)
+        const size_type player_size = you.body_size(PSIZE_TORSO, !include_form);
+        const equipment_slot slot = get_armour_slot(static_cast<armour_type>(item.sub_type));
+        if (slot == SLOT_BODY_ARMOUR || slot == SLOT_OFFHAND)
         {
-            NO_EQUIP(make_stringf("This armour is too %s for you!",
-                                        (bad_size > 0) ? "big" : "small"))
+            int bad_size = fit_armour_size(item, player_size);
+            if (bad_size != 0)
+            {
+                NO_EQUIP(make_stringf("That is too %s for you to equip!",
+                                            (bad_size > 0) ? "large" : "small"))
+            }
         }
 
         if (is_hard_helmet(item))
         {
-            if (species::is_draconian(you.species))
+            if (player_size >= SIZE_LARGE)
+                NO_EQUIP("This helmet is too small for your head.")
+            else if (player_size <= SIZE_LITTLE)
+                NO_EQUIP("This helmet is too large for your head.")
+            else if (species::is_draconian(you.species))
                 NO_EQUIP("You can't wear that with your reptilian head.")
             else if (you.species == SP_OCTOPODE)
                 NO_EQUIP("Your can't wear that!")
@@ -602,16 +606,23 @@ equipment_slot player_equip_set::find_slot_to_equip_item(const item_def& item,
 {
     vector<equipment_slot> slots = get_all_item_slots(item);
 
+    FixedVector<int, NUM_EQUIP_SLOTS> slot_count = num_slots;
     equipment_slot ret = SLOT_UNUSED;
     for (size_t i = 0; i < slots.size(); ++i)
     {
         to_replace.emplace_back();
         equipment_slot slot = find_slot_to_equip_item(slots[i], to_replace.back(),
+                                                      slot_count,
                                                       ignore_curses);
 
         // Save this result to return, if it is possible to fill other slots.
         if (i == 0)
             ret = slot;
+
+        // Track that this slot was used (to handle the case of multi-slot
+        // items competing for the same flex slot, such as poltergeists wearing
+        // the Fungal Fisticloak).
+        slot_count[slot] -= 1;
 
         if (slot == SLOT_UNUSED)
         {
@@ -635,14 +646,14 @@ equipment_slot player_equip_set::find_slot_to_equip_item(const item_def& item,
 
 equipment_slot player_equip_set::find_slot_to_equip_item(equipment_slot base_slot,
                                                          vector<item_def*>& to_replace,
+                                                         FixedVector<int, NUM_EQUIP_SLOTS>& slot_count,
                                                          bool ignore_curses) const
 {
     const vector<equipment_slot>& slots = get_alternate_slots(base_slot);
     for (equipment_slot slot : slots)
     {
         // Skip slots the player doesn't have at all.
-        // TODO: Check melded slots.
-        if (num_slots[slot] == 0)
+        if (slot_count[slot] == 0)
             continue;
 
         // Otherwise, iterate all slots of this type and see if one is free.
@@ -655,7 +666,7 @@ equipment_slot player_equip_set::find_slot_to_equip_item(equipment_slot base_slo
 
         // The player has more slots than they're currently using, so this one
         // should be fine.
-        if (count < num_slots[slot])
+        if (count < slot_count[slot])
             return slot;
     }
 
@@ -1918,7 +1929,7 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
                 break;
 
                 // NOTE: When more are added here, *must* duplicate unwielding
-                // effect in brand weapon scroll effect in read_scroll.
+                // effect when reading brand weapon in read() in item-use.cc
 
             case SPWPN_ACID:
                 mprf("%s stops oozing corrosive slime.", msg.c_str());

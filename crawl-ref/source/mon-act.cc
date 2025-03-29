@@ -3750,7 +3750,7 @@ static bool _monster_move(monster* mons, coord_def& delta)
     const habitat_type habitat = mons_primary_habitat(*mons);
     bool deep_water_available = false;
 
-    // TODO: move the above logic out of move code.
+    // TODO: move the below logic out of move code.
     if (one_chance_in(10) && you.can_see(*mons) && mons->berserk())
         mprf(MSGCH_TALK_VISUAL, "%s rages.", mons->name(DESC_THE).c_str());
     // Look, this is silly.

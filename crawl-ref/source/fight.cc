@@ -512,6 +512,8 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
     // Melee combat, tell attacker to wield its melee weapon.
     attacker->as_monster()->wield_melee_weapon();
 
+    bool was_hostile = !mons_aligned(attacker, defender);
+
     int effective_attack_number = 0;
     int attack_number;
     for (attack_number = 0; attack_number < nrounds && attacker->alive();
@@ -520,10 +522,13 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         if (!attacker->alive())
             return false;
 
-        // Monster went away?
+        // Monster went away or become friendly?
         if (!defender->alive()
             || defender->pos() != pos
-            || defender->is_banished())
+            || defender->is_banished()
+            || was_hostile && mons_aligned(attacker, defender)
+               && !mons_is_confused(*attacker->as_monster())
+               && !attacker->as_monster()->has_ench(ENCH_FRENZIED))
         {
             if (attacker == defender
                || !attacker->as_monster()->has_multitargeting())
@@ -542,6 +547,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
                     attacker->as_monster()->foe = MHITYOU;
                     attacker->as_monster()->target = you.pos();
                     defender = &you;
+                    was_hostile = true;
                     end = false;
                     break;
                 }
@@ -550,6 +556,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
                 if (mons && !mons_aligned(attacker, mons))
                 {
                     defender = mons;
+                    was_hostile = true;
                     end = false;
                     pos = mons->pos();
                     break;
@@ -1013,7 +1020,9 @@ bool player_unrand_bad_target(const item_def &weapon,
     if (is_unrandom_artefact(weapon, UNRAND_POWER))
     {
         targeter_beam hitfunc(&you, 4, ZAP_SWORD_BEAM, 100, 0, 0);
+        hitfunc.beam.chose_ray = true;
         hitfunc.beam.aimed_at_spot = false;
+        find_life_bolt_ray(hitfunc.beam.source, defender.pos(), hitfunc.beam.ray);
         hitfunc.set_aim(defender.pos());
 
         return stop_attack_prompt(hitfunc, "attack",

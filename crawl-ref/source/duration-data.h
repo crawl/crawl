@@ -704,6 +704,11 @@ static const duration_def duration_data[] =
     { DUR_DETONATION_CATALYST, BLUE, "Catalyst",
       "catalyst", "catalyst",
       "Your strikes ignite an explosive catalyst.", D_EXPIRES},
+    { DUR_SHROUD_TIMEOUT,
+      DARKGREY, "Shroud",
+      "shroud timeout", "shroud timeout",
+      "Your shroud of slime is broken and needs time to repair.", D_EXPIRES,
+      {{ "Your slime shroud regrows." }}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

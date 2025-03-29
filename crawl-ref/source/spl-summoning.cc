@@ -1232,7 +1232,7 @@ spret cast_summon_horrible_things(int pow, bool fail)
     if (one_chance_in(4))
     {
         // if someone deletes the db, no message is ok
-        mpr(getMiscString("SHT_int_loss"));
+        mpr(getMiscString("summon_horrible_things"));
 
         // XXX: Temporary effect until something else is implemented.
         temp_mutate(MUT_WEAK_WILLED, "glimpsing the beyond");

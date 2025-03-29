@@ -840,6 +840,18 @@ static void _inflict_deathly_blight(monster &m)
 
 bool melee_attack::handle_phase_damaged()
 {
+    if (defender->is_player() && you.get_mutation_level(MUT_SLIME_SHROUD)
+        && !you.duration[DUR_SHROUD_TIMEOUT] && one_chance_in(4))
+    {
+        you.duration[DUR_SHROUD_TIMEOUT] = 100 + random2(damage_done) * 10;
+        mprf("your slimy shroud breaks as it bends %s attack away%s",
+                     atk_name(DESC_ITS).c_str(),
+                     attack_strength_punctuation(damage_done).c_str());
+        did_hit = false;
+        damage_done = 0;
+        return false;
+    }
+
     if (!attack::handle_phase_damaged())
         return false;
 

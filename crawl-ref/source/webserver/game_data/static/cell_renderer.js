@@ -1116,6 +1116,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 case icons.FULLY_CHARGED:
                 case icons.VITRIFIED:
                 case icons.CONFUSED:
+                case icons.LACED_WITH_CHAOS:
                     this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
                     return 6;
                 case icons.CONC_VENOM:
@@ -1160,6 +1161,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 case icons.TEMPERED:
                 case icons.HEART:
                 case icons.UNSTABLE:
+                case icons.VEXED:
                     this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
                     return 10;
                 case icons.CONSTRICTED:

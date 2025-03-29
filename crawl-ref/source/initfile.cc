@@ -850,7 +850,7 @@ const vector<GameOption*> game_options::build_options_list()
         new IntGameOption(SIMPLE_NAME(tile_tooltip_ms), 0, 0, INT_MAX),
 #endif
         new IntGameOption(SIMPLE_NAME(tile_update_rate), 1000, 50, INT_MAX),
-        new IntGameOption(SIMPLE_NAME(tile_runrest_rate), 100, 0, INT_MAX),
+        new IntGameOption(SIMPLE_NAME(tile_runrest_rate), 17, 0, INT_MAX),
         // minimap colours
         new TileColGameOption(SIMPLE_NAME(tile_branchstairs_col), "#ff7788"),
         new TileColGameOption(SIMPLE_NAME(tile_deep_water_col), "#001122"),
@@ -909,6 +909,7 @@ const vector<GameOption*> game_options::build_options_list()
         new StringGameOption(SIMPLE_NAME(tile_font_stat_file), MONOSPACED_FONT, true),
         new StringGameOption(SIMPLE_NAME(tile_font_tip_file), MONOSPACED_FONT, true),
         new StringGameOption(SIMPLE_NAME(tile_font_lbl_file), PROPORTIONAL_FONT, true),
+        new IntGameOption(SIMPLE_NAME(tile_min_stat_width_characters), 42, 1, INT_MAX),
         new IntGameOption(SIMPLE_NAME(tile_sidebar_pixels), 32, 1, INT_MAX),
         new MultipleChoiceGameOption<screen_mode>(
             SIMPLE_NAME(tile_full_screen),

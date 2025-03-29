@@ -2016,9 +2016,8 @@ Calls forth divine warriors to aid the caster.
 Summon Horrible Things spell
 
 Opens a gate to the Abyss and calls through two or more hideous abominations
-from that dreadful place. The opening of the gate may drain a portion of the
-caster's intellect. The number of abominations summoned increases with spell
-power.
+from that dreadful place. The opening of the gate may temporarily mutate the
+caster, reducing their willpower.
 %%%%
 Summon Hydra spell
 

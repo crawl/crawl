@@ -25,7 +25,8 @@ jobs:
       - name: Unbrace
         run: util/unbrace -n
         working-directory: crawl-ref/source
-      - name: Checkconventionalcommit
+      - name: Checkconventionalcommit # If not in crawl/crawl, or if it's a branch other than master or the release branches, run
+        if: (github.repository != 'crawl/crawl' || !(github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/stone_soup-')))
         run: util/checkconventionalcommit.py
         working-directory: crawl-ref/source
         continue-on-error: true

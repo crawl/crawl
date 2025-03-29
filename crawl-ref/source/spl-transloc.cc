@@ -1370,27 +1370,6 @@ spret cast_dimensional_bullseye(int pow, monster *target, bool fail)
     return spret::success;
 }
 
-string weapon_unprojectability_reason(const item_def* wpn)
-{
-    if (!wpn)
-        return "";
-
-    // These don't work properly when performing attacks against non-adjacent
-    // targets. Maybe support them in future?
-    static const vector<int> forbidden_unrands = {
-        UNRAND_POWER,
-    };
-    for (int urand : forbidden_unrands)
-    {
-        if (is_unrandom_artefact(*wpn, urand))
-        {
-            return make_stringf("%s would react catastrophically with paradoxical space!",
-                                you.weapon()->name(DESC_THE, false, false, false, false).c_str());
-        }
-    }
-    return "";
-}
-
 // Mildly hacky: If this was triggered via Autumn Katana, katana_defender is the
 //               target it first triggered on. If nullptr, this is a normal cast.
 spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
@@ -1451,17 +1430,6 @@ spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
                 mpr("You can't see anything you can safely attack.");
         }
         return spret::abort;
-    }
-
-    if (real && !katana_defender)
-    {
-        const string unproj_reason = weapon_unprojectability_reason(weapon);
-        if (unproj_reason != "")
-        {
-            if (agent.is_player())
-                mpr(unproj_reason);
-            return spret::abort;
-        }
     }
 
     if (!real)

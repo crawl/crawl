@@ -114,7 +114,10 @@ bool ugly_thing_mutate(monster& ugly, bool force)
             continue;
 
         if (act->is_player() && get_contamination_level())
+        {
             msg = " basks in your mutagenic energy and changes!";
+            break;
+        }
         else if (mons_genus(act->type) == MONS_UGLY_THING)
         {
             msg = " basks in the mutagenic energy from its kin and changes!";
@@ -122,6 +125,7 @@ bool ugly_thing_mutate(monster& ugly, bool force)
                 make_low_colour(act->as_monster()->colour);
             if (make_low_colour(ugly.colour) != other_colour)
                 new_colour = other_colour;
+            break;
         }
     }
 
@@ -1187,10 +1191,11 @@ bool mon_special_ability(monster* mons)
         break;
 
     case MONS_NAMELESS_REVENANT:
-        // If we are injured and have full memories, burn one fairly immediately.
-        if (mons->hit_points < mons->max_hit_points
+        // If we are engaging the player and have full memories, burn one fairly
+        // immediately.
+        if (mons->foe == MHITYOU && mons->can_see(you)
             && mons->props[NOBODY_MEMORIES_KEY].get_vector().size() == 3
-            && coinflip())
+            && one_chance_in(3))
         {
             pyrrhic_recollection(*mons);
             used = true;
@@ -1299,6 +1304,7 @@ bool pyrrhic_recollection(monster& nobody)
         return false;
 
     const bool can_see = you.see_cell(nobody.pos());
+    const bool was_injured = nobody.hit_points < nobody.max_hit_points;
 
     if (can_see)
         draw_ring_animation(nobody.pos(), 3, LIGHTCYAN, CYAN, true);
@@ -1319,24 +1325,43 @@ bool pyrrhic_recollection(monster& nobody)
 
     if (can_see)
     {
-        mprf(MSGCH_MONSTER_SPELL, "%s ignites a memory of %s to re-knit themselves.",
+        mprf(MSGCH_MONSTER_SPELL, "%s ignites a memory of %s%s.",
                 nobody.name(DESC_THE).c_str(),
-                comma_separated_line(spell_names.begin(), spell_names.end()).c_str());
+                comma_separated_line(spell_names.begin(), spell_names.end()).c_str(),
+                was_injured ? " to re-knit themselves" : "");
         string speech = make_stringf("\"We remember... %s...\"",
                             getSpeakString("nobody_recollection " + recollection.key).c_str());
         mons_speaks_msg(&nobody, speech, MSGCH_TALK);
     }
 
     // Heal and move.
+    if (was_injured)
+        monster_blink(&nobody, true, true);
     nobody.heal(nobody.max_hit_points);
 
     // If this was a phantom mirror copy, allow it to revive, but don't wipe out
-    // its summoner timer at the same time, to keep it from having unlimited duration.
-    mon_enchant summon_timer = nobody.get_ench(ENCH_SUMMON_TIMER);
+    // its summon timer at the same time, to keep it from having unlimited duration.
+    mon_enchant summon_timer;
+    if (nobody.has_ench(ENCH_SUMMON_TIMER))
+    {
+        summon_timer = nobody.get_ench(ENCH_SUMMON_TIMER);
+        nobody.del_ench(ENCH_SUMMON_TIMER, true, false);
+    }
+    // Also, manually delete the previous enkindle without effect, in case
+    // Nobody's taken a big enough hit to go from healthy to dead in one action,
+    // or we'll immediately wipe out the spells we just gave them.
+    nobody.del_ench(ENCH_PYRRHIC_RECOLLECTION, true, false);
+    // XXX: Also save their Haste and Might, since the *point* of that spellset
+    // is that the effects can linger into other phases. It would really be
+    // nice if there was a general 'clear *negative* status effects on a monster,
+    // but we don't have that at the moment.
+    mon_enchant haste = nobody.get_ench(ENCH_HASTE);
+    mon_enchant might = nobody.get_ench(ENCH_MIGHT);
     nobody.timeout_enchantments(1000);
-    nobody.update_ench(summon_timer);
+    nobody.add_ench(summon_timer);
+    nobody.add_ench(haste);
+    nobody.add_ench(might);
 
-    monster_blink(&nobody, true, true);
     nobody.add_ench(mon_enchant(ENCH_PYRRHIC_RECOLLECTION, 0, &nobody, random_range(300, 500)));
 
     // Don't immediately expire summons (we want them to stick around into the next phase),

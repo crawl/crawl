@@ -2415,6 +2415,9 @@ static void _vampiric_draining_effect(actor& victim, actor& agent, int damage)
              attack_strength_punctuation(damage).c_str());
     }
 
+    if (agent.is_player())
+        majin_bo_vampirism(*victim.as_monster(), min(damage, victim.stat_hp()));
+
     const int drain_amount = victim.hurt(&agent, damage,
                                          BEAM_VAMPIRIC_DRAINING,
                                          KILLED_BY_BEAM, "",
@@ -2824,6 +2827,8 @@ void bolt::affect_endpoint()
             bool obviousness; // dummy argument
             monster *mirror = clone_mons(blitzer, true, &obviousness,
                                          blitzer->attitude, spot);
+            if (!mirror)
+                break;
             mirror->mark_summoned(SPELL_PHANTOM_BLITZ, summ_dur(2), true, true);
             mirror->summoner = blitzer->mid;
             mirror->foe = blitzer->foe;

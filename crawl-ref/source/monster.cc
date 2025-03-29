@@ -5973,7 +5973,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         add_ench(ENCH_RING_OF_THUNDER);
     }
     else if (type == MONS_NAMELESS_REVENANT && has_ench(ENCH_PYRRHIC_RECOLLECTION)
-             && hit_points * 5 / 3 < max_hit_points)
+             && hit_points * 2 < max_hit_points)
     {
         simple_monster_message(*this, " blaze of memory is extinguished!", true, MSGCH_MONSTER_ENCHANT);
         del_ench(ENCH_PYRRHIC_RECOLLECTION, true);

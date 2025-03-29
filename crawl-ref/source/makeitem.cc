@@ -1243,8 +1243,7 @@ static int _scroll_weight(item_rarity_type rarity)
     }
 }
 
-static void _generate_scroll_item(item_def& item, int force_type,
-                                  int item_level, int agent)
+static void _generate_scroll_item(item_def& item, int force_type, int agent)
 {
     // determine sub_type:
     if (force_type != OBJ_RANDOM)
@@ -1293,10 +1292,6 @@ static void _generate_scroll_item(item_def& item, int force_type,
                                             1, 3);
 
     item.plus = 0;
-
-    // Don't let monsters use ?summoning too early
-    if (item_level < 2 && item.sub_type == SCR_SUMMONING)
-        item.flags |= ISFLAG_NO_PICKUP;
 }
 
 /// Choose a random skill for a manual to be generated for.
@@ -1982,7 +1977,7 @@ int items(bool allow_uniques,
         break;
 
     case OBJ_SCROLLS:
-        _generate_scroll_item(item, force_type, item_level, agent);
+        _generate_scroll_item(item, force_type, agent);
         break;
 
     case OBJ_JEWELLERY:

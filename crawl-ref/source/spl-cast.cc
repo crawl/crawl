@@ -1315,14 +1315,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
                                             0, 0,
                                             silence_min_range(pow));
     case SPELL_POISONOUS_VAPOURS:
-        return make_unique<targeter_smite>(&you, range, 0, 0, false, false,
-                                           true, [](const coord_def& p) -> bool {
-                                              if (monster* mon = monster_at(p))
-                                              {
-                                                if (you.can_see(*mon) && mon->res_poison())
-                                                    return false;
-                                              }
-                                              return true; });
+        return make_unique<targeter_poisonous_vapours>(&you, range);
     case SPELL_MERCURY_ARROW:
         return make_unique<targeter_explosive_beam>(&you, ZAP_MERCURY_ARROW, pow,
                                                     range, true, false);
