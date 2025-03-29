@@ -859,3 +859,14 @@ crown of vainglory
 An extravagant crown of gold filigree and glittering jewels that even a king
 could feel immodest wearing. It grants its wearer a regal aura the match of any
 in heaven and also a great deal of unearned confidence.
+%%%%
+Uskayaw's dance shoes
+
+Created by one of Uskayaw's most devoted worshippers, a skilled dancer and
+artisan named TODO, these dancing shoes are perfect for even the bloodiest
+of dances.
+
+Legend has it that a sufficiently skilled dancer can use the point of the shoe
+to stab an enemy as if with a dagger.
+If you could pull off such a difficult move, Uskayaw might briefly paralyse
+your current dance partner.
