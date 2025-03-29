@@ -965,7 +965,13 @@ int attack::calc_damage()
         damage = apply_damage_modifiers(damage);
 
         set_attack_verb(damage);
-        return apply_defender_ac(damage, damage_max);
+
+        ac_type ac_rule = ac_type::normal;
+
+        if (defender && is_bullet_time(*defender, bullet_time_method::armour))
+            ac_rule = ac_type::none;
+
+        return apply_defender_ac(damage, damage_max, ac_rule);
     }
     else
     {

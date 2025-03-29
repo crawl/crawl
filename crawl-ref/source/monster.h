@@ -294,7 +294,7 @@ public:
 
     item_def *mslot_item(mon_inv_type sl) const;
     item_def *weapon(int which_attack = -1) const override;
-    item_def *launcher() const;
+    item_def *launcher(bool alt_weapon = false) const;
     item_def *melee_weapon() const;
     item_def *missiles() const;
     item_def *shield() const override;

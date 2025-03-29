@@ -86,6 +86,10 @@ branch summon cast prefix
 
 @The_monster@ calls forth creatures from
 %%%%
+Bullet Time cast
+
+Time bends around @the_monster@ as they slow down and take aim @at@ @target@.
+%%%%
 Call Lost Souls cast
 
 @The_monster@ beckons forth restless souls!

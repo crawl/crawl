@@ -277,6 +277,9 @@ int mons_demon_tier(monster_type mc);
 
 bool mons_class_wields_two_weapons(monster_type mc);
 bool mons_wields_two_weapons(const monster& m);
+item_def *mons_weapon_for_attack(attack_type at, bool wields_two_weapons,
+                                 int which_attack, item_def *main_weapon,
+                                 item_def *offhand_weapon);
 bool mons_self_destructs(const monster& m);
 bool mons_blows_up(const monster& m);
 bool mons_destroyed_on_impact(const monster& m);

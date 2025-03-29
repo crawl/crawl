@@ -696,6 +696,17 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             electric_charge(caster, pow, false, caster.get_foe()->pos());
         }
     } },
+    { SPELL_BULLET_TIME, {
+        [](const monster &caster) {
+            if (caster.no_tele() || caster.caught())
+                return ai_action::impossible();
+            const actor* foe = caster.get_foe();
+            return foe ? ai_action::good() : ai_action::impossible();
+        },
+        [] (monster &caster, mon_spell_slot, bolt&) {
+            bullet_time(caster);
+        }
+    } },
     { SPELL_CORRUPT_LOCALE, {
         [](const monster & /* caster */) {
             return ai_action::good_or_impossible(!player_in_branch(BRANCH_ABYSS));
@@ -1835,6 +1846,7 @@ bool mons_spell_is_spell(spell_type spell)
         case SPELL_SEARING_BREATH:
         case SPELL_ELECTRICAL_BOLT:
         case SPELL_FLAMING_CLOUD:
+        case SPELL_BULLET_TIME:
             return false;
         default:
             return true;
@@ -2193,6 +2205,10 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
 
     case SPELL_DIMENSION_ANCHOR:
         beam.flavour    = BEAM_DIMENSION_ANCHOR;
+        break;
+
+    case SPELL_BULLET_TIME:
+        beam.flavour    = BEAM_SLOW;
         break;
 
     // XXX: This seems needed to give proper spellcasting messages, even though

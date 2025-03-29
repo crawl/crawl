@@ -211,6 +211,7 @@ blink_allies_away BLINK_ALLIES_AWAY
 blink_allies_encircling BLINK_ALLIES_ENCIRCLING
 blink_other BLINK_OTHER
 brain_bite BRAIN_BITE
+bullet_time BULLET_TIME
 call_of_chaos CALL_OF_CHAOS
 call_down_damnation CALL_DOWN_DAMNATION
 call_down_lightning CALL_DOWN_LIGHTNING
