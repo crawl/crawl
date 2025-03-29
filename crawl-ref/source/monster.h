@@ -157,7 +157,7 @@ public:
     bool is_unrewarding() const;
     bool is_firewood() const override;
     bool is_peripheral() const override;
-    bool has_action_energy() const;
+    bool has_action_energy(int modifier = 0) const;
     void drain_action_energy();
     bool matches_player_speed() const;
     int  player_speed_energy() const;
@@ -264,6 +264,7 @@ public:
     bool     alive() const override;
     bool     defined() const { return alive(); }
     bool     swimming() const override;
+    bool     swimming(bool energy_cost) const;
 
     bool     can_drown() const;
     bool     floundering_at(const coord_def p) const;
@@ -274,6 +275,7 @@ public:
     bool     can_burrow() const override;
     bool     can_burrow_through(dungeon_feature_type feat) const;
     bool     is_habitable_feat(dungeon_feature_type feat) const override;
+    bool     is_habitable(const coord_def &_pos) const override;
     bool     shove(const char* name = "") override;
 
     size_type   body_size(size_part_type psize = PSIZE_TORSO,

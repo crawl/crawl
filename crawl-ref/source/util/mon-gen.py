@@ -322,7 +322,7 @@ HOLINESSES = {'holy', 'natural', 'undead', 'demonic', 'nonliving', 'plant'}
 def parse_holiness(s):
     return [parse_enum(h, "MH_", HOLINESSES) for h in s]
 
-HABITATS = {'land', 'amphibious', 'water', 'lava', 'amphibious_lava'}
+HABITATS = {'land', 'amphibious', 'water', 'lava', 'amphibious_lava', 'walls'}
 def parse_habitat(s):
     return parse_enum(s, "HT_", HABITATS)
 

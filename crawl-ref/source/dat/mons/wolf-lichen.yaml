@@ -1,0 +1,21 @@
+name: "wolf lichen"
+glyph: {char: "f", colour: lightcyan}
+flags: [unblindable, amorphous, no_skeleton, herd, surround]
+xp_mult: 12
+resists: {poison: 1}
+genus: fungus
+holiness: [plant]
+will: 20
+attacks:
+ - {type: bite, damage: 8}
+hd: 6
+hp_10x: 140
+ac: 2
+ev: 7
+has_corpse: true
+intelligence: brainless
+habitat: walls
+speed: 10
+size: tiny
+shape: fungus
+tile_variance: random

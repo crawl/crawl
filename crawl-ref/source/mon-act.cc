@@ -293,14 +293,9 @@ static bool _swap_monsters(monster& mover, monster& moved)
     return true;
 }
 
-
-
 static energy_use_type _get_swim_or_move(monster& mon)
 {
-    const dungeon_feature_type feat = env.grid(mon.pos());
-    // FIXME: Replace check with mons_is_swimming()?
-    return (feat_is_lava(feat) || feat_is_water(feat))
-            && mon.ground_level() ? EUT_SWIM : EUT_MOVE;
+    return mon.swimming(true) ? EUT_SWIM : EUT_MOVE;
 }
 
 static void _swim_or_move_energy(monster& mon)
@@ -470,6 +465,152 @@ static coord_def _get_step_from_dest(const monster* mons, const coord_def dest)
     return direction;
 }
 
+static void _tweak_wall_move(const monster* mons, coord_def &dir)
+{
+    // This is the resurrected version of _tweak_wall_mmov which used to
+    // applied to dryads and prior to that, rock worms.
+    // It was removed in 26b5dca when dryads were evicted from their trees.
+
+    // Wall dwellers will try to move through walls for as long as
+    // possible. If the player is walking through a corridor, for example,
+    // moving along in the wall beside him is much preferable to actually
+    // leaving the wall.
+    // This might cause the monster to take detours but it still
+    // comes off as smarter than otherwise.
+
+    // If we're already moving into a wall spot, don't adjust move
+    // (this leads to zig-zagging)
+    if (cell_is_solid(mons->pos() + dir))
+        return;
+
+    int cdir = _compass_idx(dir);
+    ASSERT(cdir != -1);
+
+    // If we're already adjacent to our target and in a wall, don't shift position.
+    // If we're adjacent and in open space, widen our search angle to include any
+    // spot adjacent to both us and our target. This no longer gives any shield
+    // advantage, but might make room allowing another target to approach.
+    int range = 1;
+    if (mons->target == mons->pos() + dir)
+    {
+        if (cell_is_solid(mons->pos()))
+            return;
+        else
+        {
+            if (cdir % 2 == 1)
+                range = 2;
+        }
+    }
+
+    int count = 0;
+    int choice = cdir; // stick with original move if none are good
+    for (int i = -range; i <= range; ++i)
+    {
+        // Ignore same direction
+        if (i == 0)
+            continue;
+        const int altdir = (cdir + i + 8) % 8;
+        coord_def t = mons->pos() + mon_compass[altdir];
+        const bool good = mons_preferred_habitat(*mons, env.grid(t))
+                            && mons->is_habitable(t)
+                            && mon_can_move_to_pos(mons, mon_compass[altdir]);
+        if (good && one_chance_in(++count))
+            choice = altdir;
+    }
+    dir = mon_compass[choice];
+}
+
+static bool _surround_move(const monster& mons)
+{
+    // Valid foe?
+    auto foe = mons.get_foe();
+    if (!foe || !mons.see_cell_no_trans(foe->pos()))
+        return false;
+    // Firstly scan the space around our foe
+    vector<coord_def> empty_space;
+    vector<coord_def> other_surrounders;
+    for (adjacent_iterator ai(foe->pos()); ai; ++ai)
+    {
+        if (!in_bounds(*ai))
+            continue;
+        auto other = actor_at(*ai);
+        if (other)
+        {
+            // Don't try to move the player, of course
+            auto other_mons = other->as_monster();
+            if (!other_mons)
+                continue;
+            if (mons_class_flag(other->type, M_SURROUND)
+                // XX: Maybe there should be a separate method for all these
+                // kind of checks. unswappable *still* doesn't check VEXED
+                && !mons_is_immotile(*other_mons) && !other_mons->unswappable()
+                && !mons_is_confused(*other_mons)
+                && !(other_mons->berserk_or_frenzied())
+                && mons_aligned(&mons, other) && mons.is_habitable(*ai))
+            {
+                // We'll let them be moved even if they don't actually have enough
+                // energy, but to avoid a situation where they flip-flop backwards and
+                // forwards indefinitely don't use more than one bonus move
+                const int bonus_energy = other_mons->action_energy(_get_swim_or_move(*other_mons));
+                if (other_mons->has_action_energy(bonus_energy))
+                    other_surrounders.push_back(*ai);
+            }
+        }
+        else
+            empty_space.push_back(*ai);
+    }
+    if (empty_space.empty() || other_surrounders.empty())
+        return false;
+    // Now figure out which moves are most likely to open up space
+    vector<tuple<coord_def, coord_def, int>> possible_moves;
+    int best_score = 0;
+    for (auto pos : other_surrounders)
+    {
+        auto other = actor_at(pos);
+        ASSERT(other);
+        auto other_mons = other->as_monster();
+        ASSERT(other_mons);
+        const int absx = abs_ce(pos.x - mons.pos().x);
+        const int absy = abs_ce(pos.y - mons.pos().y);
+        for (auto target : empty_space)
+        {
+            // Is this an adjacent space and can we even move there?
+            if (pos.distance_from(target) > 1 || !mon_can_move_to_pos(other_mons, target - pos))
+                continue;
+            // Is the target square *further away* from the acting monster than
+            // the subject monster is now? Either absolutely or just in one axis?
+            int score = 0;
+            if (mons.pos().distance_from(target) > mons.pos().distance_from(pos))
+                score = 2;
+            else if (abs_ce(target.x - mons.pos().x) > absx || abs_ce(target.y - mons.pos().y) > absy)
+                score = 1;
+            if (score > 0)
+            {
+                best_score = max(best_score, score);
+                possible_moves.push_back({ pos, target, score });
+            }
+        }
+    }
+    // Didn't find anything that will work, sorry
+    if (possible_moves.empty())
+        return false;
+    // Randomly pick one of the best moves
+    int count = 0;
+    tuple<coord_def, coord_def, int> picked_move;
+    for (auto move : possible_moves)
+    {
+        if (get<2>(move) != best_score)
+            continue;
+        if (x_chance_in_y(1, ++count))
+            picked_move = move;
+    }
+    ASSERT(in_bounds(get<0>(picked_move)));
+    ASSERT(in_bounds(get<1>(picked_move)));
+    auto mover = monster_at(get<0>(picked_move));
+    ASSERT(mover);
+    return _do_move_monster(*mover, get<1>(picked_move) - get<0>(picked_move));
+}
+
 typedef FixedArray< bool, 3, 3 > move_array;
 
 static void _fill_good_move(const monster* mons, move_array* good_move)
@@ -596,6 +737,10 @@ static coord_def _find_best_step(monster* mons)
     // Now quit if we can't move.
     if (dir.origin())
         return dir;
+
+    // Wall monsters prefer their natural habitat.
+    if (mons_habitat(*mons) == HT_WALLS)
+        _tweak_wall_move(mons, dir);
 
     const coord_def newpos(mons->pos() + dir);
 
@@ -2339,7 +2484,22 @@ void handle_monster_move(monster* mons)
         }
 
         if (mons->cannot_act() || !_monster_move(mons, mmov))
+        {
+            // Couldn't move anywhere; see if another monster is nice enough to
+            // make more room for us
+            if (!mons->cannot_act() && mons_class_flag(mons->type, M_SURROUND)
+                && !mons_is_confused(*mons) && _surround_move(*mons))
+            {
+                // The monster that moved already used *their* energy, so just
+                // use a nominal amount to avoid any nasty loops (if a space was
+                // opened up we cna move into it then, or try and move something
+                // else next turn)
+                mons->speed_increment--;
+                return;
+            }
+
             mons->speed_increment -= non_move_energy;
+        }
     }
     you.update_beholder(mons);
     you.update_fearmonger(mons);
@@ -2995,7 +3155,7 @@ static void _mons_open_door(monster& mons, const coord_def &pos)
 static bool _no_habitable_adjacent_grids(const monster* mon)
 {
     for (adjacent_iterator ai(mon->pos()); ai; ++ai)
-        if (monster_habitable_grid(mon, *ai))
+        if (mon->is_habitable(*ai))
             return false;
 
     return true;
@@ -3172,7 +3332,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     {
     }
     else if (!mons_can_traverse(*mons, targ, false, false)
-             && !monster_habitable_feat(mons, target_grid))
+             && !mons->is_habitable(targ))
     {
         // If the monster somehow ended up in this habitat (and is
         // not dead by now), give it a chance to get out again.

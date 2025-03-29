@@ -97,7 +97,7 @@ public:
     virtual bool can_burrow() const = 0;
 
     virtual bool is_habitable_feat(dungeon_feature_type actual_grid) const = 0;
-            bool is_habitable(const coord_def &pos) const;
+    virtual bool is_habitable(const coord_def &pos) const;
 
     virtual size_type body_size(size_part_type psize = PSIZE_TORSO,
                                 bool base = false) const = 0;

@@ -436,6 +436,7 @@ static bool _habitat_matches(bool orig_flies, habitat_type orig_hab,
     {
         case HT_AMPHIBIOUS:
         case HT_AMPHIBIOUS_LAVA:
+        case HT_WALLS:
             return new_hab == orig_hab;
         case HT_WATER:
             return new_hab == orig_hab || new_hab == HT_AMPHIBIOUS;
