@@ -12,8 +12,7 @@
       <PreprocessorDefinitions>__DYNAMIC__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <OutputFile>$(SolutionDir)\..\$(ProjectName).dll</OutputFile>
-      <ImportLibrary>$(SolutionDir)\bin\8.0\$(Platform)\$(ProjectName).lib</ImportLibrary>
+      <ImportLibrary>$(ProjectDir)..\bin\$(Platform)\$(Configuration)\$(ProjectName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup />
