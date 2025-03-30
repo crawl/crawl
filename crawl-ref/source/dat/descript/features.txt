@@ -1112,7 +1112,7 @@ file a bug report.
 # Necropolis.
 A tree of woe
 
-A half-alive tree burdened with fruits of crystallized sorrow.
+A half-alive tree burdened with fruits of crystallised sorrow.
 %%%%
 A dead tree
 

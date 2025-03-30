@@ -1904,7 +1904,7 @@ begin to form again as normal.
 %%%%
 Sting spell
 
-Conjures a jagged shard of crystallized toxins. The stinger's impact will always
+Conjures a jagged shard of crystallised toxins. The stinger's impact will always
 poison a susceptible target. Even resistant targets have a chance to be poisoned
 and immune monsters will still be damaged by the physical impact of the stinger.
 %%%%

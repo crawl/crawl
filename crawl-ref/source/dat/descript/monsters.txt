@@ -2268,7 +2268,7 @@ its claws sear its victims with divine wrath.
 %%%%
 petrified flower
 
-A sizeable and statuesque flower, fossilized either by bitter grief or the cruel
+A sizeable and statuesque flower, fossilised either by bitter grief or the cruel
 grace of divinity, standing in its own eternal vigil.
 %%%%
 phalanx beetle
