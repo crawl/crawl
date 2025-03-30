@@ -6000,13 +6000,15 @@ void place_spec_shop(const coord_def& where, shop_type force_type)
 
 int greed_for_shop_type(shop_type shop, int level_number)
 {
+    const int level_greed = level_number / 6 + random2(level_number * 2 / 3);
+
     if (!shoptype_identifies_stock(shop))
     {
         const int rand = random2avg(19, 2);
-        return 15 + rand + random2(level_number);
+        return 15 + rand + level_greed;
     }
     const int rand = random2(5);
-    return 10 + rand + random2(level_number / 2);
+    return 10 + rand + level_greed;
 }
 
 /**
@@ -6024,12 +6026,12 @@ static int _shop_greed(shop_type type, int level_number, int spec_greed)
     const int base_greed = greed_for_shop_type(type, level_number);
     int adj_greed = base_greed;
 
-    // Allow bargains in bazaars, prices randomly between 60% and 95%.
+    // Allow bargains in bazaars, prices randomly between 50% and 85%.
     if (player_in_branch(BRANCH_BAZAAR))
     {
         // divided by 20, so each is 5% of original price
-        // 12-19 = 60-95%, per above
-        const int factor = random2(8) + 12;
+        // 10-17 = 50-85%, per above
+        const int factor = random2(8) + 10;
 
         dprf(DIAG_DNGN, "Shop type %d: original greed = %d, factor = %d,"
              " discount = %d%%.",
