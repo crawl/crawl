@@ -190,6 +190,9 @@ private:
     void _defender_die();
     void handle_spectral_brand();
 
+    // Spell effects.
+    void maybe_trigger_detonation();
+
     // Added in, were previously static methods of fight.cc
     bool _extra_aux_attack(unarmed_attack_type atk);
 

@@ -923,6 +923,11 @@ void splinterfrost_fragment_fineff::fire()
     beam.fire();
 }
 
+void detonation_fineff::fire()
+{
+    do_catalyst_explosion(posn, weapon);
+}
+
 // Effects that occur after all other effects, even if the monster is dead.
 // For example, explosions that would hit other creatures, but we want
 // to deal with only one creature at a time, so that's handled last.

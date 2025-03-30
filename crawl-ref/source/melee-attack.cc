@@ -670,6 +670,9 @@ bool melee_attack::handle_phase_hit()
         return false;
     }
 
+    // Detonation catalyst should trigger even if the defender dies later on.
+    maybe_trigger_detonation();
+
     // This does more than just calculate the damage, it also sets up
     // messages, etc. It also wakes nearby creatures on a failed stab,
     // meaning it could have made the attacked creature vanish. That
@@ -1503,6 +1506,16 @@ bool melee_attack::check_unrand_effects()
     }
 
     return false;
+}
+
+void melee_attack::maybe_trigger_detonation()
+{
+    if (attacker->is_player()
+                       && you.duration[DUR_DETONATION_CATALYST]
+                       && !cleaving && in_bounds(defender->pos()))
+        {
+            detonation_fineff::schedule(defender->pos(), weapon);
+        }
 }
 
 class AuxAttackType

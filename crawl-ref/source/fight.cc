@@ -480,6 +480,9 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         if (you.duration[DUR_EXECUTION])
             you.duration[DUR_EXECUTION] += you.time_taken;
 
+        if (you.duration[DUR_DETONATION_CATALYST])
+            you.duration[DUR_DETONATION_CATALYST] += you.time_taken;
+
         if (you.duration[DUR_PARAGON_ACTIVE])
             paragon_attack_trigger();
 

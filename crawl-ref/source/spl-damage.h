@@ -185,5 +185,8 @@ spret cast_fortress_blast(actor& caster, int pow, bool fail);
 void unleash_fortress_blast(actor& caster);
 dice_def fortress_blast_damage(int AC, bool is_monster);
 
+dice_def detonation_catalyst_damage(int pow, bool real, const item_def* wpn = nullptr);
+void do_catalyst_explosion(coord_def center, const item_def* wpn);
+
 bool find_life_bolt_ray(coord_def& source, coord_def target, ray_def& ray);
 void fire_life_bolt(actor& attacker, coord_def target);

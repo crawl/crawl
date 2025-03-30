@@ -803,6 +803,9 @@ static void _decrement_durations()
         you.props.erase(XOM_CLOUD_TRAIL_TYPE_KEY);
     }
 
+    _decrement_a_duration(DUR_DETONATION_CATALYST, delay,
+        "Your catalyst becomes inert.");
+
     if (you.duration[DUR_WATER_HOLD])
         handle_player_drowning(delay);
 

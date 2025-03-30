@@ -1503,6 +1503,11 @@ spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
         }
     }
 
+    // Refund duration for catalyst, but only if we cast the spell.
+    // Autumn Katana already refunded duration in melee_attack.
+    if (!katana_defender && you.duration[DUR_DETONATION_CATALYST])
+        you.duration[DUR_DETONATION_CATALYST] += you.time_taken;
+
     return spret::success;
 }
 

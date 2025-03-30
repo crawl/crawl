@@ -4418,6 +4418,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_DETONATION_CATALYST, "Detonation Catalyst",
+    spschool::fire | spschool::alchemy,
+    spflag::selfench,
+    5,
+    100,
+    -1, -1,
+    15,
+    TILEG_ERROR,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,
