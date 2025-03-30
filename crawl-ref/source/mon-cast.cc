@@ -1672,8 +1672,9 @@ static monster* _get_allied_target(const monster &caster, bolt &tracer)
         {
             // Make sure we won't hit someone other than we're aiming at.
             tracer.target = targ->pos();
-            fire_tracer(&caster, tracer);
-            if (!mons_should_fire(tracer)
+            targeting_tracer target_tracer;
+            fire_tracer(&caster, target_tracer, tracer);
+            if (!mons_should_fire(tracer, target_tracer)
                 || tracer.path_taken.back() != tracer.target)
             {
                 continue;
@@ -1721,8 +1722,9 @@ static bool _set_hex_target(monster* caster, bolt& pbolt)
         {
             // Make sure we won't hit an invalid target with this aim.
             pbolt.target = targ->pos();
-            fire_tracer(caster, pbolt);
-            if (!mons_should_fire(pbolt)
+            targeting_tracer tracer;
+            fire_tracer(caster, tracer, pbolt);
+            if (!mons_should_fire(pbolt, tracer)
                 || pbolt.path_taken.back() != pbolt.target)
             {
                 continue;
@@ -2512,7 +2514,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     if (!theBeam.target.origin())
         pbolt.target = theBeam.target;
     pbolt.source = mons->pos();
-    pbolt.is_tracer = false;
+    pbolt.set_is_tracer(false);
     if (pbolt.aux_source.empty() && !pbolt.is_enchantment())
         pbolt.aux_source = pbolt.name;
 
@@ -3361,8 +3363,9 @@ static ai_action::goodness _arcjolt_goodness(const monster &caster)
 {
     vector<coord_def> targets = arcjolt_targets(caster, false);
 
-    bolt tracer;
-    tracer.foe_ratio = 100; // safety first
+    bolt beam;
+    targeting_tracer tracer;
+    beam.foe_ratio = 100; // safety first
                             // XXX: rethink this if we put this on an enemy
 
     for (coord_def t : targets)
@@ -3385,7 +3388,7 @@ static ai_action::goodness _arcjolt_goodness(const monster &caster)
         }
     }
 
-    return mons_should_fire(tracer) ? ai_action::good() : ai_action::bad();
+    return mons_should_fire(beam, tracer) ? ai_action::good() : ai_action::bad();
 }
 
 static ai_action::goodness _scorch_goodness(const monster& caster)
@@ -3853,7 +3856,7 @@ static bool _already_bramble_wall(const monster* mons, coord_def targ)
     tracer.source    = mons->pos();
     tracer.target    = targ;
     tracer.range     = 12;
-    tracer.is_tracer = true;
+    tracer.set_is_tracer(true);
     tracer.pierce    = true;
     tracer.fire();
 
@@ -4039,8 +4042,9 @@ monster* cast_phantom_mirror(monster* mons, monster* targ, int hp_perc,
 
 static bool _trace_los(const monster* agent, bool (*vulnerable)(const actor*))
 {
-    bolt tracer;
-    tracer.foe_ratio = 0;
+    bolt beam;
+    targeting_tracer tracer;
+    beam.foe_ratio = 0;
     for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
     {
         if (agent == *ai || !vulnerable(*ai))
@@ -4061,7 +4065,7 @@ static bool _trace_los(const monster* agent, bool (*vulnerable)(const actor*))
                                     : ai->as_monster()->get_experience_level();
         }
     }
-    return mons_should_fire(tracer);
+    return mons_should_fire(beam, tracer);
 }
 
 static bool _vortex_vulnerable(const actor* victim)
@@ -4137,7 +4141,7 @@ static bool _glaciate_tracer(monster *caster, int pow, coord_def aim)
  * Get the fraction of damage done by the given beam that's to enemies,
  * multiplied by the given scale.
  */
-static int _get_dam_fraction(const bolt &tracer, int scale)
+static int _get_dam_fraction(const targeting_tracer &tracer, int scale)
 {
     if (!tracer.foe_info.power)
         return 0;
@@ -4152,14 +4156,14 @@ static int _get_dam_fraction(const bolt &tracer, int scale)
  *  @return The target square, or an out of bounds coord if none was found.
  */
 static coord_def _mons_ghostly_sacrifice_target(const monster &caster,
-                                                bolt tracer)
+                                                bolt beam)
 {
     const int dam_scale = 1000;
     int best_dam_fraction = dam_scale / 2;
     coord_def best_target = coord_def(GXM+1, GYM+1); // initially out of bounds
     if (!in_bounds(caster.pos()))
         return best_target;
-    tracer.ex_size = 1;
+    beam.ex_size = 1;
 
     for (monster_near_iterator mi(&caster, LOS_NO_TRANS); mi; ++mi)
     {
@@ -4172,8 +4176,9 @@ static coord_def _mons_ghostly_sacrifice_target(const monster &caster,
         if (mons_is_projectile(mi->type))
             continue;
 
-        tracer.target = mi->pos();
-        fire_tracer(&caster, tracer, true, true);
+        beam.target = mi->pos();
+        targeting_tracer tracer;
+        fire_tracer(&caster, tracer, beam, true, true);
         if (mons_is_threatening(**mi)) // only care about sacrificing real mons
             tracer.friend_info.power += mi->get_experience_level() * 2;
 
@@ -4295,13 +4300,13 @@ static bool _can_injury_bond(const monster &protector, const monster &protectee)
  */
 static coord_def _mons_seracfall_source(const monster &caster)
 {
-    bolt tracer;
-    setup_mons_cast(&caster, tracer, SPELL_ICEBLAST);
+    bolt beam;
+    setup_mons_cast(&caster, beam, SPELL_ICEBLAST);
     const int dam_scale = 1000;
     int best_dam_fraction = dam_scale / 2;
     coord_def best_source = coord_def(GXM+1, GYM+1); // initially out of bounds
-    tracer.target  = caster.target;
-    tracer.ex_size = 1;
+    beam.target  = caster.target;
+    beam.ex_size = 1;
 
     for (monster_near_iterator mi(&caster, LOS_NO_TRANS); mi; ++mi)
     {
@@ -4314,14 +4319,15 @@ static coord_def _mons_seracfall_source(const monster &caster)
         if (!you.see_cell(mi->pos()))
             continue; // don't hurl simulacra from out of player los
 
+        targeting_tracer tracer;
         // beam is shot as if the simulac is falling onto the player
         // so we treat the simulacrum as the "caster"
-        fire_tracer(*mi, tracer);
+        fire_tracer(*mi, tracer, beam);
 
         const int dam_fraction = _get_dam_fraction(tracer, dam_scale);
         dprf("if seracfalling %s (aim %d,%d): ratio %d/%d",
              mi->name(DESC_A, true).c_str(),
-             tracer.target.x, tracer.target.y, dam_fraction, dam_scale);
+            beam.target.x, beam.target.y, dam_fraction, dam_scale);
         if (dam_fraction > best_dam_fraction)
         {
             best_source = mi->pos();
@@ -4567,9 +4573,10 @@ static bool _should_cast_spell(const monster &mons, spell_type spell,
     if (get_spell_flags(spell) & spflag::needs_tracer)
     {
         const bool explode = spell_is_direct_explosion(spell);
-        fire_tracer(&mons, beem, explode);
+        targeting_tracer tracer;
+        fire_tracer(&mons, tracer, beem, explode);
         // Good idea?
-        return mons_should_fire(beem, ignore_good_idea);
+        return mons_should_fire(beem, tracer, ignore_good_idea);
     }
 
     // Spells with custom marionette logic get to bypass certain normal checks
@@ -5575,8 +5582,10 @@ static ai_action::goodness _should_irradiate(const monster &mons)
     tracer.source = tracer.target = mons.pos();
     tracer.hit = AUTOMATIC_HIT;
     tracer.damage = dice_def(999, 1);
-    fire_tracer(&mons, tracer, true, true);
-    return mons_should_fire(tracer) ? ai_action::good() : ai_action::bad();
+    targeting_tracer target_tracer;
+    fire_tracer(&mons, target_tracer, tracer, true, true);
+    return mons_should_fire(tracer, target_tracer) ? ai_action::good()
+                                                   : ai_action::bad();
 }
 
 // Check whether targets might be scared.
@@ -5754,14 +5763,15 @@ static coord_def _mons_fragment_target(const monster &mon)
         }
 
         beam.range = range;
-        fire_tracer(mons, beam, true);
-        if (!mons_should_fire(beam))
+        targeting_tracer tracer;
+        fire_tracer(mons, tracer, beam, true);
+        if (!mons_should_fire(beam, tracer))
             continue;
 
-        if (beam.foe_info.count > 0
-            && beam.foe_info.power > maxpower)
+        if (tracer.foe_info.count > 0
+            && tracer.foe_info.power > maxpower)
         {
-            maxpower = beam.foe_info.power;
+            maxpower = tracer.foe_info.power;
             target = *di;
         }
     }
@@ -6744,7 +6754,7 @@ static bool _mons_cast_hellfire_mortar(monster& caster, actor& foe, int pow, boo
         tracer.target = possible_targets[i];
         tracer.source_id = caster.mid;
         tracer.origin_spell = SPELL_HELLFIRE_MORTAR;
-        tracer.is_tracer = true;
+        tracer.set_is_tracer(true);
         tracer.fire();
 
         // Skip paths that are less than 3 tiles long (which generally requires
@@ -6780,11 +6790,11 @@ static bool _mons_cast_hellfire_mortar(monster& caster, actor& foe, int pow, boo
             magma_tracer.target = foe.pos();
             magma_tracer.source_id = caster.mid;
             magma_tracer.attitude = mons_attitude(caster);
-            magma_tracer.is_tracer = true;
+            targeting_tracer magma_target_tracer;
             magma_tracer.foe_ratio = 100;
-            magma_tracer.fire();
+            magma_tracer.fire(magma_target_tracer);
 
-            if (mons_should_fire(magma_tracer))
+            if (mons_should_fire(magma_tracer, magma_target_tracer))
                 useful_count++;
 
             // This path has enough useful shots to take!
@@ -8203,12 +8213,13 @@ static void _speech_fill_target(string& targ_prep, string& target,
     targ_prep = "at";
     target    = "nothing";
 
-    bolt tracer = pbolt;
+    bolt tracer_beam = pbolt;
+    targeting_tracer tracer;
     // For a targeted but rangeless spell make the range positive so that
     // fire_tracer() will fill out path_taken.
     if (pbolt.range == 0 && pbolt.target != mons->pos())
-        tracer.range = ENV_SHOW_DIAMETER;
-    fire_tracer(mons, tracer);
+        tracer_beam.range = ENV_SHOW_DIAMETER;
+    fire_tracer(mons, tracer, tracer_beam);
 
     if (pbolt.target == you.pos())
         target = "you";
@@ -8272,7 +8283,7 @@ static void _speech_fill_target(string& targ_prep, string& target,
 
         bool mons_targ_aligned = false;
 
-        for (const coord_def &pos : tracer.path_taken)
+        for (const coord_def &pos : tracer_beam.path_taken)
         {
             if (pos == mons->pos())
                 continue;
@@ -8963,7 +8974,8 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
             tracer.target = foe->pos();
             tracer.range  = LOS_RADIUS;
             tracer.hit    = AUTOMATIC_HIT;
-            fire_tracer(mon, tracer);
+            targeting_tracer target_tracer;
+            fire_tracer(mon, target_tracer, tracer);
 
             actor* act = actor_at(tracer.path_taken.back());
             // XX does this handle multiple actors?
@@ -9180,8 +9192,9 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
                                    5 + (7 * mon->spell_hd(spell)) / 12,
                                    cleansing_flame_source::spell,
                                    mon->pos(), mon);
-        fire_tracer(mon, tracer, true);
-        return ai_action::good_or_bad(mons_should_fire(tracer));
+        targeting_tracer target_tracer;
+        fire_tracer(mon, target_tracer, tracer, true);
+        return ai_action::good_or_bad(mons_should_fire(tracer, target_tracer));
     }
 
     case SPELL_DOOM_HOWL:

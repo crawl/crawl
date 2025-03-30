@@ -164,11 +164,11 @@ spret cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
     beam.thrower           = KILL_YOU;
     beam.hit               = AUTOMATIC_HIT;
     beam.damage            = CONVENIENT_NONZERO_DAMAGE;
-    beam.is_tracer         = true;
     beam.use_target_as_pos = true;
     beam.origin_spell      = spl;
-    beam.affect_endpoint();
-    if (beam.beam_cancelled)
+    player_beam_tracer tracer;
+    beam.affect_endpoint(tracer);
+    if (cancel_beam_prompt(beam, tracer))
         return spret::abort;
 
     fail_check();
