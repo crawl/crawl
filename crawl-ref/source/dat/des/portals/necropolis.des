@@ -1220,7 +1220,6 @@ ENDMAP
 
 NAME:   gammafunk_necropolis_ghost_grave
 TAGS:   allow_dup luniq necropolis_ghost_nested_inner_solo no_rotate
-WEIGHT: 999999
 : lone_ghost_guarded_loot(_G, "O")
 : lone_ghost_extra_loot(_G, "`")
 KMONS:  O = player ghost
