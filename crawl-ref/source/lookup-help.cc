@@ -1035,7 +1035,7 @@ static int _describe_generic(const string &key, const string &suffix,
     return _describe_key(key, suffix, footer, "");
 }
 
-static map<monster_type, monster_type> draconian_job_to_color =
+static map<monster_type, monster_type> draconian_job_to_colour =
 {
     { MONS_DRACONIAN_STORMCALLER,   MONS_WHITE_DRACONIAN },
     { MONS_DRACONIAN_MONK,          MONS_GREEN_DRACONIAN },
@@ -1066,18 +1066,18 @@ static int _describe_monster(const string &key, const string &suffix,
         return _describe_generic(key, suffix, footer);
 
     monster_type base_type = MONS_NO_MONSTER;
-    if (mons_is_draconian_job(mon_num)
-        && draconian_job_to_color.find(mon_num)
-           != draconian_job_to_color.end())
+    if (mons_is_draconian_job(mon_num))
     {
-        // Classed draconians have fixed colours since 0.28
-        base_type = draconian_job_to_color[mon_num];
-    }
-    else
-    {
-        // Might be better to show all possible combinations rather than
-        // picking one at random as this does?
-        base_type = random_draconian_monster_species();
+        // Classed draconians have a fixed colour per job since 0.28
+        const auto colour_it = draconian_job_to_colour.find(mon_num);
+        if (colour_it != draconian_job_to_colour.end())
+            base_type = colour_it -> second;
+        else
+        {
+            // Might be better to show all possible combinations rather than
+            // picking one at random as this does?
+            base_type = random_draconian_monster_species();
+        }
     }
     monster_info mi(mon_num, base_type);
     // Avoid slime creature being described as "buggy"
