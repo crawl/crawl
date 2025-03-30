@@ -192,7 +192,7 @@ function necropolis_generic_spawns(e, _0, _9, _8)
     e.kmons(_0 .. " = naga w:15 / salamander w:15 / black mamba / \
                       mana viper / anaconda")
     e.kmons(_9 .. " = naga warrior / naga ritualist / \
-                      naga sharpshooter / salmander mystic")
+                      naga sharpshooter / salamander mystic")
     e.kmons(_8 .. " = nagaraja / guardian serpent / \
                       salamander tyrant / shock serpent")
   elseif dgn.persist.necropolis_difficulty == "swamp" then
