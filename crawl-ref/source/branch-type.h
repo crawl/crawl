@@ -67,7 +67,9 @@ enum branch_type                // you.where_are_you
 #endif
     BRANCH_ARENA,
     BRANCH_CRUCIBLE,
+#if TAG_MAJOR_VERSION == 34
     BRANCH_NECROPOLIS,
+#endif
     NUM_BRANCHES,
 
     GLOBAL_BRANCH_INFO = 127,
