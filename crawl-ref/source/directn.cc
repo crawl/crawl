@@ -313,7 +313,12 @@ void direction_chooser::describe_cell() const
 {
     print_top_prompt();
     print_key_hints();
-
+    if (Options.monster_item_view_coordinates)
+    {
+        const coord_def relpos = target() - you.pos();
+        string location_str = make_stringf("Location (%d, %d)", relpos.x, -relpos.y);
+        mprf(MSGCH_PLAIN, "%s", location_str.c_str());
+    }
     if (!you.see_cell(target()))
     {
         // FIXME: make this better integrated.
@@ -2679,6 +2684,12 @@ string get_terse_square_desc(const coord_def &gc)
 
 void terse_describe_square(const coord_def &c, bool in_range)
 {
+    if (Options.monster_item_view_coordinates)
+    {
+        const coord_def relpos = c - you.pos();
+        string location_str = make_stringf("Location (%d, %d)", relpos.x, -relpos.y);
+        mprf(MSGCH_PLAIN, "%s", location_str.c_str());
+    }
     if (!you.see_cell(c))
         _describe_oos_square(c);
     else if (in_bounds(c))
