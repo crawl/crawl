@@ -7845,6 +7845,9 @@ void player_beam_tracer::monster_hit(const bolt& beam, const monster& mon)
     if (!you.can_see(mon))
         return;
 
+    if (beam.is_harmless(&mon))
+        return;
+
     bool penance = false;
     string adj, suffix;
     if (bad_attack(&mon, adj, suffix, penance))
