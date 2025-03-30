@@ -5301,7 +5301,7 @@ static int _catalyst_weapon_power(const item_def* wpn, bool random)
         return unarmed_base_damage(random) + unarmed_base_damage_bonus(random);
 
     const int wpn_dam = property(*wpn, PWPN_DAMAGE);
-    return random ? div_rand_round(wpn_dam * 3, 2) : wpn_dam * 3 / 2;
+    return random ? div_rand_round(wpn_dam * 9, 5) : wpn_dam * 9 / 5;
 }
 
 dice_def detonation_catalyst_damage(int pow, bool real, const item_def* wpn)
@@ -5325,8 +5325,9 @@ dice_def detonation_catalyst_damage(int pow, bool real, const item_def* wpn)
         }
     }
 
-    // Flat penalty on damage, capped below at 1, reduced by power.
-    wpn_dam = max(1, wpn_dam - (10 - power_factor));
+    // Flat penalty on damage, capped below at 1.
+    // Power reduces the penalty, eventually turning into a bonus.
+    wpn_dam = max(1, wpn_dam - (8 - power_factor));
 
     return calc_dice(2, wpn_dam, real);
 }
