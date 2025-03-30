@@ -872,7 +872,7 @@ A phantasmal passage
 
 A portal leading to one of many Necropolis repositories, where the freshly slain
 and deeply resentful are sealed away. This wandering rift will eventually move
-elsewhere to recieve further dead.
+elsewhere to receive further dead.
 %%%%
 A frozen archway
 
@@ -928,7 +928,7 @@ An archival metal wall
 
 An ensorcelled metal wall coated in an inscrutable non-linear script, recording
 the regrets of the interred and their visitors alike. As with all metal walls,
-it is next to impossible to destroy, and will ground all varities of bounding
+it is next to impossible to destroy, and will ground all varieties of bounding
 lightning.
 %%%%
 # sewer_minmay_treatment (Sewer)
