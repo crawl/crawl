@@ -426,9 +426,6 @@ void ghost_demon::init_pandemonium_lord(bool friendly)
     colour = one_chance_in(10) ? colour_t{ETC_RANDOM} : random_monster_colour();
 }
 
-static const set<brand_type> ghost_banned_brands =
-                { SPWPN_HOLY_WRATH, SPWPN_CHAOS };
-
 void ghost_demon::init_player_ghost()
 {
     // don't preserve transformations for ghosty purposes
@@ -482,8 +479,8 @@ void ghost_demon::init_player_ghost()
             {
                 brand = static_cast<brand_type>(get_weapon_brand(weapon));
 
-                // normalize banned weapon brands
-                if (ghost_banned_brands.count(brand) > 0)
+                // No holy weapons for ghosts.
+                if (brand == SPWPN_HOLY_WRATH)
                     brand = SPWPN_NORMAL;
 
                 // Don't copy ranged- or artefact-only brands (reaping etc.).
