@@ -37,6 +37,7 @@
 #include "nearby-danger.h"
 #include "religion.h"
 #include "shout.h"
+#include "spl-clouds.h" // ghost crab claws
 #include "spl-damage.h"
 #include "spl-goditem.h"
 #include "spl-summoning.h" //AF_SPIDER
@@ -863,6 +864,13 @@ bool melee_attack::handle_phase_damaged()
             && defender->is_monster())
         {
             _inflict_deathly_blight(*(defender->as_monster()));
+        }
+        if (you.unrand_equipped(UNRAND_CRAB_CLAWS) && defender->alive()
+            && defender->is_monster()
+            && x_chance_in_y(damage_done, damage_done + 15))
+        {
+            big_cloud(CLOUD_SPECTRAL, &you, defender->pos(),
+                random_range(12, 20), 4 + random2(5));
         }
     }
 
