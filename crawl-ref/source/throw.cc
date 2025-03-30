@@ -60,7 +60,7 @@ bool is_penetrating_attack(const actor& attacker, const item_def* weapon,
                            const item_def& projectile)
 {
     return is_throwable(&attacker, projectile)
-            && projectile.is_type(OBJ_MISSILES, MI_JAVELIN)
+              && is_javelin_type(projectile.sub_type)
            || weapon
               && (get_weapon_brand(*weapon) == SPWPN_PENETRATION
                   || is_unrandom_artefact(*weapon, UNRAND_STORM_BOW));
@@ -212,7 +212,7 @@ vector<string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
 
     // Display the chance for a dart of para/confuse/sleep/frenzy
     // to affect monster
-    if (item->is_type(OBJ_MISSILES, MI_DART))
+    if (is_dart(*item))
     {
         special_missile_type brand = get_ammo_brand(*item);
         if (brand == SPMSL_FRENZY || brand == SPMSL_BLINDING)
@@ -744,7 +744,7 @@ void throw_it(quiver::action &a)
     if ((launcher || is_thrown)
         && will_have_passive(passive_t::shadow_attacks)
         && item.base_type == OBJ_MISSILES
-        && item.sub_type != MI_DART
+        && !is_dart_type(item.sub_type)
         && item.sub_type != MI_THROWING_NET)
     {
         dithmenos_shadow_shoot(a.target, item);

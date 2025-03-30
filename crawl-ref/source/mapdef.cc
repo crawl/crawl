@@ -5592,6 +5592,20 @@ bool item_list::parse_single_spec(item_spec& result, string s)
     if (!error.empty())
         return false;
 
+    if (result.base_type == OBJ_MISSILES)
+    {
+        if (is_dart_type(result.sub_type))
+        {
+            result.ego = dart_type_to_ego(result.sub_type);
+            return true;
+        }
+        if (result.sub_type == MI_JAVELIN_SILVER)
+        {
+            result.ego = SPMSL_SILVER;
+            return true;
+        }
+    }
+
     if (ego_str.empty())
         return true;
 

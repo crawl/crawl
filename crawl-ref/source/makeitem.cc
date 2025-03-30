@@ -508,55 +508,74 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
     }
 }
 
+// For darts and javelins, the brand should match the sub_type.
+// This code forces this.
+void fixup_missile_subtype(item_def& item, int brand)
+{
+    int subtype = item.sub_type;
+    if (is_dart_type(subtype))
+    {
+        switch (brand)
+        {
+        case SPMSL_POISONED:        subtype = MI_DART_POISONED;     break;
+        case SPMSL_CURARE:          subtype = MI_DART_CURARE;       break;
+        case SPMSL_BLINDING:        subtype = MI_DART_ATROPA;       break;
+        case SPMSL_DISJUNCTION:     subtype = MI_DART_DISJUNCTION;  break;        
+        case SPMSL_FRENZY:          subtype = MI_DART_DATURA;       break;
+        default: break;
+        }
+    }
+    else if (is_javelin_type(subtype))
+    {
+        if (brand == SPMSL_SILVER)
+            subtype = MI_JAVELIN_SILVER;
+        else
+            subtype = MI_JAVELIN;
+    }
+    item.sub_type = subtype;
+}
+
 // Remember to update the code in is_missile_brand_ok if adding or altering
 // brands that are applied to missiles. {due}
-static special_missile_type _determine_missile_brand(const item_def& item,
+static special_missile_type _determine_missile_brand(item_def& item,
                                                      int item_level)
 {
     // Forced ego.
     if (item.brand != 0)
+    {
+        fixup_missile_subtype(item, item.brand);
         return static_cast<special_missile_type>(item.brand);
+    }
 
     special_missile_type rc = SPMSL_NORMAL;
 
-    // Weight of SPMSL_NORMAL
+    // Weight of SPMSL_NORMAL for javelins
     // Gifts from Trog/Oka can be unbranded boomerangs/javelins
     // but not poisoned darts
     int nw = item_level >= ISPEC_GOOD_ITEM ?   0 :
              item_level == ISPEC_GIFT      ? 120
                                            : random2(2000 - 55 * item_level);
 
-    // Weight of SPMSL_POISONED
+    // Weight of SPMSL_POISONED for darts
     int pw = item_level >= ISPEC_GIFT ? 0 : random2(2000 - 55 * item_level);
 
-    switch (item.sub_type)
+    if (is_dart_type(item.sub_type))
     {
-    case MI_THROWING_NET:
-    case MI_STONE:
-    case MI_LARGE_ROCK:
-        rc = SPMSL_NORMAL;
-        break;
-    case MI_BOOMERANG:
-        rc = SPMSL_NORMAL;
-        break;
-    case MI_DART:
         // Curare is special cased, all the others aren't.
-        if (got_curare_roll(item_level))
-        {
-            rc = SPMSL_CURARE;
-            break;
-        }
-
-        rc = random_choose_weighted(60, SPMSL_BLINDING,
-                                    20, SPMSL_FRENZY,
-                                    20, SPMSL_DISJUNCTION,
-                                    pw, SPMSL_POISONED);
-        break;
-    case MI_JAVELIN:
-        rc = random_choose_weighted(90, SPMSL_SILVER,
-                                    nw, SPMSL_NORMAL);
-        break;
+        rc = got_curare_roll(item_level)
+             ? SPMSL_CURARE
+             : random_choose_weighted(60, SPMSL_BLINDING,
+                                      20, SPMSL_FRENZY,
+                                      20, SPMSL_DISJUNCTION,
+                                      pw, SPMSL_POISONED);
     }
+    else if (is_javelin_type(item.sub_type))
+        rc = random_choose_weighted(90, SPMSL_SILVER, nw, SPMSL_NORMAL);
+    else
+        rc = SPMSL_NORMAL;
+
+    // Now we have a brand, make sure darts/javelins get their correct subtypes.
+    fixup_missile_subtype(item, (int) rc);
 
     ASSERT(is_missile_brand_ok(item.sub_type, rc, true));
 
@@ -582,26 +601,21 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
     switch (brand)
     {
     case SPMSL_POISONED:
-        if (type == MI_DART)
-            return true;
+        if (is_dart_type(type))
+            return type == MI_DART_POISONED;
         break;
-
     case SPMSL_CURARE:
-#if TAG_MAJOR_VERSION == 34
-    case SPMSL_PARALYSIS:
-#endif
+        return type == MI_DART_CURARE;
     case SPMSL_FRENZY:
-    case SPMSL_DISPERSAL:
+        return type == MI_DART_DATURA;
     case SPMSL_DISJUNCTION:
-        return type == MI_DART;
-
+        return type == MI_DART_DISJUNCTION;
     case SPMSL_BLINDING:
-        // possible on ex-pies
-        return type == MI_DART || (type == MI_BOOMERANG && !strict);
-
+        return type == MI_DART_ATROPA;
     default:
-        if (type == MI_DART)
+        if (is_dart_type(type))
             return false;
+        break;
     }
 
     // Everything else doesn't matter.
@@ -624,7 +638,7 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
     case SPMSL_CHAOS:
         return type == MI_BOOMERANG || type == MI_JAVELIN;
     case SPMSL_SILVER:
-        return type == MI_JAVELIN;
+        return type == MI_JAVELIN_SILVER;
     default: break;
     }
 
@@ -641,13 +655,15 @@ static void _generate_missile_item(item_def& item, int force_type,
 
     item.plus = 0;
 
+    // Dart and javelin sub-types are interchangeable at this stage
+    // and will be fixed up later once the ego has been selected.
     if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;
     else
     {
         item.sub_type =
             random_choose_weighted(50, MI_STONE,
-                                   10, MI_DART,
+                                   10, MI_DART_POISONED, // for now
                                    3,  MI_BOOMERANG,
                                    2,  MI_JAVELIN,
                                    1,  MI_THROWING_NET,

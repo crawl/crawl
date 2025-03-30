@@ -2197,8 +2197,8 @@ local aux = table.concat(util.random_subset({
 -- Double-sided consumables and niche darts. Since only Xom worshippers see
 -- this bazaar, the potions of mutation are fine to hand out.
 -- Only give out one each of the most potentially useful options.
-local darts = { "dart ego:atropa w:3", "dart ego:datura w:3",
-                "dart ego:disjunction w:3" }
+local darts = { "atropa-tipped dart w:3", "datura-tipped dart w:3",
+                "dart of disjunction w:3" }
 local interest = util.random_from({"potion of berserk rage w:12",
                                    "potion of ambrosia w:12",
                                    "scroll of silence w:12"})

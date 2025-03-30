@@ -3147,7 +3147,7 @@ static bool _item_matches(const item_def &item, fire_type types, bool manual)
 
     if ((types & FIRE_STONE) && item.sub_type == MI_STONE)
         return true;
-    if ((types & FIRE_JAVELIN) && item.sub_type == MI_JAVELIN)
+    if ((types & FIRE_JAVELIN) && is_javelin_type(item.sub_type))
         return true;
     if ((types & FIRE_ROCK) && item.sub_type == MI_LARGE_ROCK)
         return true;
@@ -3155,7 +3155,7 @@ static bool _item_matches(const item_def &item, fire_type types, bool manual)
         return true;
     if ((types & FIRE_BOOMERANG) && item.sub_type == MI_BOOMERANG)
         return true;
-    if ((types & FIRE_DART) && item.sub_type == MI_DART)
+    if ((types & FIRE_DART) && is_dart_type(item.sub_type))
         return true;
 
     return false;

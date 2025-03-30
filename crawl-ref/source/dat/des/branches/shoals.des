@@ -2024,7 +2024,7 @@ KMONS:   3 = merfolk avatar / merfolk javelineer / merfolk impaler / \
 local owner = string.gsub(crawl.make_name(), " ", "_")
 kfeat("D = weapon shop name:" .. owner .. " type:Merfolk suffix:Weapons ; \
       spear | trident | halberd | partisan | demon trident | glaive | bardiche | \
-      dagger | quick blade | short sword | rapier | dart | javelin | \
+      dagger | quick blade | short sword | rapier | curare-tipped dart | javelin | \
       throwing net | boomerang" )
 kfeat("E = armour shop name:" .. owner .. " type:Merfolk suffix:Armours ; \
       robe | leather armour | helmet | hat | pair of boots | cloak | scarf | \
@@ -2987,7 +2987,7 @@ MONS:    death yak w:16 / dream sheep / yak w:6 / holy swine w:1
 MONS:    w:15 merfolk impaler ; trident ego:flaming good_item |\
             trident ego:freezing good_item | trident ego:protection good_item |\
             trishula w:5 . robe w:15 | pearl dragon scales w:1 / \
-         merfolk javelineer ; javelin ego:silver w:20 | javelin /\
+         merfolk javelineer ; silver javelin w:20 | javelin /\
          merfolk aquamancer
 MONS:    cherub, apis
 KMONS:   H = angel

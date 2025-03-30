@@ -57,6 +57,12 @@ arbalest
 A large piece of machinery used for firing bolts, braced with steel and cranked
 with a windlass. It takes some time to load and fire.
 %%%%
+atropa-tipped dart
+
+A thin piece of metal, which has been rubbed against the fruit of an atropa
+plant. When thrown it can deliver its deliriant toxins into the bloodstream of
+a living or demonic being.
+%%%%
 azure gem
 
 [[gem]]
@@ -539,14 +545,27 @@ crystal plate armour
 
 An incredibly heavy but extremely effective suit of crystalline armour.
 %%%%
+curare-tipped dart
+
+A thin piece of metal, which has been coated in a layer of deadly curare toxin.
+When thrown it can deliver its asphyxiating toxins into the bloodstream of a
+living or demonic being.
+%%%%
 dagger
 
 A double-edged fighting knife with a sharp point.
 %%%%
-dart
+dart of disjunction
 
-A thin piece of metal, typically coated in some harmful substance. When thrown
-it can deliver its toxins into the bloodstream of a living or demonic being.
+A thin piece of metal, coated in a strange substance. When thrown it can deliver
+its unstable toxins into the bloodstream of a living or demonic being.
+%%%%
+datura-tipped dart
+
+A thin piece of metal, which has been rubbed against the flowers of a datura
+plant. When thrown it can deliver its psychoactive toxins into the bloodstream
+of a living or demonic being.
+
 %%%%
 decaying skeleton
 
@@ -1012,6 +1031,11 @@ plate armour
 A full suit of solid metal plate: cuirass, pauldrons, vambraces, waist plate
 and greaves. It provides excellent protection.
 %%%%
+poisoned dart
+
+A thin piece of metal, coated in a layer of poison. When thrown it can deliver
+its toxins into the bloodstream of a living or demonic being.
+%%%%
 potion of ambrosia
 
 A strange substance, produced by ghost moths. Consuming it causes regeneration
@@ -1439,6 +1463,17 @@ A curved piece of wood and string, for shooting arrows.
 short sword
 
 A personal stabbing weapon with a short grip.
+%%%%
+silver javelin
+
+A lightweight spear coated in sterling silver, designed for throwing. It will
+pass through the targets it hits, potentially hitting all targets in its path
+until it reaches maximum range.
+{{
+    if you.race() == "Kobold" or you.race() == "Spriggan" then
+        return "Unfortunately, it is too long and awkward for you to use."
+    end
+}}
 %%%%
 smoky gem
 

@@ -6029,7 +6029,7 @@ void unmarshallItem(reader &th, item_def &item)
     {
         if (item.sub_type == MI_NEEDLE)
         {
-            item.sub_type = MI_DART;
+            item.sub_type = MI_DART_POISONED;
 
             switch (item.brand)
             {
@@ -6040,7 +6040,9 @@ void unmarshallItem(reader &th, item_def &item)
                 case SPMSL_SICKNESS:
                     item.brand = SPMSL_BLINDING;
                     break;
-                default: break;
+                default:
+                    item.brand = SPMSL_POISONED;
+                    break;
             }
         }
         else if (item.sub_type == MI_BOOMERANG || item.sub_type == MI_JAVELIN)
@@ -6064,6 +6066,16 @@ void unmarshallItem(reader &th, item_def &item)
     {
         if (item.is_type(OBJ_ARMOUR, ARM_CENTAUR_BARDING))
             item.sub_type = ARM_BARDING;
+    }
+
+    if (th.getMinorVersion() < TAG_MINOR_MISSILE_SPLIT
+        && item.base_type == OBJ_MISSILES)
+    {
+        if (item.sub_type == MI_BOOMERANG)
+            item.brand = SPMSL_NORMAL;
+        if (item.brand == SPMSL_DISPERSAL)
+            item.brand = SPMSL_DISJUNCTION;
+        fixup_missile_subtype(item, item.brand);
     }
 #endif
 

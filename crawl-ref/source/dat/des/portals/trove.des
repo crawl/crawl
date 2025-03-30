@@ -843,7 +843,7 @@ MONS:    storm dragon zombie, golden dragon zombie, fire dragon skeleton
 ITEM:    dragon-coil talisman good_item / any armour good_item
 ITEM:    golden dragon scales / storm dragon scales / fire dragon scales / \
          troll leather armour / any useful armour good_item
-ITEM:    javelin good_item / dart good_item
+ITEM:    javelin good_item / dart of disjunction good_item
 ITEM:    longbow good_item / arbalest good_item / any useful weapon good_item
 SHUFFLE: 123, defg
 : trove.setup_features(_G)

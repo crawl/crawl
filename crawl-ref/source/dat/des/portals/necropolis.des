@@ -3116,11 +3116,11 @@ ENDMAP
 NAME:   gammafunk_necropolis_ghost_nasty_kobolds
 : necropolis_depth_tagging(_G, {"pre_temple_d", "pre_lair_d", "post_lair_d"})
 MONS:   kobold, kobold brigand, kobold demonologist
-KMONS:  D = kobold ; dart ego:poisoned . dagger | short sword | whip
+KMONS:  D = kobold ; poisoned dart . dagger | short sword | whip
 KMONS:  E = kobold ; wand of flame | any beam wand | any blast wand \
                 | wand of mindburst | wand of polymorph | any hex wand \
                 . dagger | short sword | whip
-KMONS:  F = kobold brigand ; dart ego:poisoned | dart ego:curare w:5 \
+KMONS:  F = kobold brigand ; poisoned dart | curare-tipped dart w:5 \
                 . wand of flame | any beam wand | any blast wand \
                 | wand of mindburst | wand of polymorph | any hex wand \
                 . dagger | short sword | whip
@@ -3132,12 +3132,12 @@ KMONS:  F = kobold brigand ; dart ego:poisoned | dart ego:curare w:5 \
     local good_def = dgn.monster_weapon("kobold", egos,
                      crawl.coinflip() and "randart" or "good_item")
     kmons("H = kobold ; " .. dgn.monster_weapon("kobold", "distortion"))
-    kmons("J = kobold brigand ; dart ego:poisoned | dart ego:curare w:5 . " ..
+    kmons("J = kobold brigand ; poisoned dart | curare-tipped dart w:5 . " ..
           dgn.monster_weapon("kobold", "distortion"))
     kmons("K = kobold ; " .. basic_def)
-    kmons("L = kobold brigand ; dart ego:poisoned | dart ego:curare w:5 . " ..
+    kmons("L = kobold brigand ; poisoned dart | curare-tipped dart w:5 . " ..
           basic_def)
-    kmons("M = kobold brigand ; dart ego:poisoned | dart ego:curare w:5 . " ..
+    kmons("M = kobold brigand ; poisoned dart | curare-tipped dart w:5 . " ..
           good_def)
 }}
 KMONS:  O = player ghost
@@ -3504,7 +3504,7 @@ NSUBST: R = 1:R / *:-
 {{
 kmons("q = kobold; " .. wrathful_weapon("kobold",
                crawl.one_chance_in(3) and "randart" or "good_item") ..
-      "    . dart ego:curare | dart ego:poisoned w:5")
+      "    . curare-tipped dart | poisoned dart w:5")
 kmons("r = gnoll sergeant ; " .. wrathful_weapon("sergeant",
                crawl.one_chance_in(3) and "randart" or "good_item") ..
       "    . leather armour good_item | ring mail good_item" ..
@@ -3606,7 +3606,7 @@ WEIGHT: 3
 KMONS:  O = player ghost
 KITEM:  N = scroll of teleportation q:3 pre_id w:20 / \
             scroll of blinking pre_id w:20 / \
-            dart ego:disjunction q:6 pre_id / \
+            dart of disjunction q:6 pre_id / \
             book of spatial translocations / book of the warp / \
             there-and-back book / book of displacement / \
             randbook owner:Lugonu disc:translocation pre_id w:5 \
@@ -4289,7 +4289,7 @@ NSUBST:  % = 1:e / 1:d / *:%, * = 1:f / *:*
 : end
 KMONS:   O = player ghost
 ITEM:    potion of lignification pre_id w:30 / \
-         dart ego:atropa no_pickup / dart ego:datura no_pickup
+         atropa-tipped dart no_pickup / datura-tipped dart no_pickup
 ITEM:    any magical staff / quarterstaff randart ego:spectral w:5 pre_id / \
          dagger randart plus:9 pre_id w:5 / rapier good_item / \
          randbook disc:hexes disc2:summoning spells:summon_forest numspells:3 / \

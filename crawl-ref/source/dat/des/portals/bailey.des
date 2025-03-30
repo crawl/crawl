@@ -424,10 +424,10 @@ ORIENT: encompass
 TAGS:   bailey_axe no_rotate no_item_gen no_monster_gen no_pool_fixup
 SUBST:  v : ccv
 ITEM:   any good_item
-ITEM:   dart ego:atropa q:4 / dart ego:datura q:4
+ITEM:   atropa-tipped dart q:4 / datura-tipped dart q:4
 KFEAT:  _ = altar_trog / altar_okawaru / altar_makhleb
 : kobold_axe_returning(_G)
-MONS: kobold brigand ; war axe . dart ego:poisoned | dart ego:curare w:5
+MONS: kobold brigand ; war axe . poisoned dart | curare-tipped dart w:5
 : hard_axe_fighter(_G)
 SUBST:  2 = 2.
 NSUBST: 1 = 3:2 / *=1., 3 = 1:3 / *=3..

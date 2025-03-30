@@ -1403,7 +1403,7 @@ int arena_cull_items()
 
             // Arrows/needles/etc on the floor is just clutter.
             if (item.base_type != OBJ_MISSILES
-               || item.sub_type == MI_JAVELIN
+               || is_javelin_type(item.sub_type)
                || item.sub_type == MI_BOOMERANG
                || item.sub_type == MI_THROWING_NET)
             {

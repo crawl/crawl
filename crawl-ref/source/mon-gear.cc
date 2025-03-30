@@ -1489,7 +1489,7 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
     case MONS_KOBOLD:
         if (one_chance_in(10) && level > 1)
         {
-            weap_type  = MI_DART;
+            weap_type  = MI_DART_POISONED;
             qty = random_range(2, 8);
             brand = SPMSL_POISONED;
             break;
@@ -1501,23 +1501,24 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
         }
         break;
     case MONS_KOBOLD_BRIGAND:
-        weap_type  = MI_DART;
         if (one_chance_in(3))
         {
             // Avoid increasing total amount of generated curare
             // too much.
+            weap_type  = MI_DART_CURARE;
             brand = SPMSL_CURARE;
             qty = 1;
         }
         else
         {
+            weap_type  = MI_DART_POISONED;
             qty = random_range(2, 8);
             brand = SPMSL_POISONED;
         }
         break;
 
     case MONS_SONJA:
-        weap_type = MI_DART;
+        weap_type = MI_DART_CURARE;
         brand = SPMSL_CURARE;
         qty = random_range(2, 5);
         break;
@@ -1525,7 +1526,7 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
     case MONS_SPRIGGAN_RIDER:
         if (one_chance_in(15))
         {
-            weap_type = MI_DART;
+            weap_type = MI_DART_CURARE;
             brand = SPMSL_CURARE;
             qty = random_range(1, 4);
         }
@@ -1626,7 +1627,10 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
         item_def& w(env.item[thing_created]);
 
         if (brand != SPMSL_NORMAL)
+        {
             set_item_ego_type(w, OBJ_MISSILES, brand);
+            fixup_missile_subtype(w, brand);
+        }
 
         w.quantity = qty;
         give_specific_item(mon, thing_created);

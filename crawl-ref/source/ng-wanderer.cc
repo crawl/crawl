@@ -23,7 +23,7 @@ static void _give_wanderer_weapon(skill_type wpn_skill, bool good_item)
         if (good_item)
         {
             const int num_curare = 1 + random2(4);
-            newgame_make_item(OBJ_MISSILES, MI_DART, num_curare,
+            newgame_make_item(OBJ_MISSILES, MI_DART_CURARE, num_curare,
                               0, SPMSL_CURARE);
 
             // Gives large rocks for large species, 2x boomerangs for small
@@ -40,8 +40,8 @@ static void _give_wanderer_weapon(skill_type wpn_skill, bool good_item)
             }
             else
             {
-                newgame_make_item(OBJ_MISSILES, MI_DART, 5 + roll_dice(2, 5),
-                              0, SPMSL_POISONED);
+                newgame_make_item(OBJ_MISSILES, MI_DART_POISONED,
+                                  5 + roll_dice(2, 5), 0, SPMSL_POISONED);
             }
         }
         return; // don't give a dagger as well
@@ -684,9 +684,9 @@ static vector<spell_type> _wanderer_good_equipment(skill_type skill)
         else
         {
             newgame_make_item(OBJ_WEAPONS, WPN_DAGGER, 1, 0);
-            newgame_make_item(OBJ_MISSILES, MI_DART, 1 + coinflip(), 0,
+            newgame_make_item(OBJ_MISSILES, MI_DART_ATROPA, 1 + coinflip(), 0,
                               SPMSL_BLINDING);
-            newgame_make_item(OBJ_MISSILES, MI_DART, 1 + coinflip(), 0,
+            newgame_make_item(OBJ_MISSILES, MI_DART_DATURA, 1 + coinflip(), 0,
                               SPMSL_FRENZY);
         }
         break;

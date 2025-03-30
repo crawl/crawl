@@ -2181,11 +2181,13 @@ static string _describe_ammo(const item_def &item)
                            "The chance of successfully applying its effect "
                            "increases with Throwing and Stealth skill.";
             break;
+#if TAG_MAJOR_VERSION == 34
         case SPMSL_DISPERSAL:
             description += "It causes any target it hits to blink, with a "
                            "tendency towards blinking further away from the "
                            "one who threw it.";
             break;
+#endif
         case SPMSL_DISJUNCTION:
             description += "It causes any target it hits to become temporarily "
                            "untethered in space, blinking uncontrollably for "
@@ -5376,7 +5378,7 @@ static void _check_attack_counts_and_flavours(const monster_info &mi,
         if (quiv && quiv->base_type == OBJ_MISSILES)
         {
             di.plural = true;
-            if (quiv->sub_type == MI_DART || quiv->sub_type == MI_THROWING_NET)
+            if (is_dart_type(quiv->sub_type) || quiv->sub_type == MI_THROWING_NET)
             {
                 di.has_any_flavour = true;
                 di.flavour_without_dam = true;
@@ -5576,7 +5578,7 @@ static void _attacks_table_row_throwing(const monster_info &mi,
     string bonus_desc = "";
     if (quiv->sub_type == MI_THROWING_NET)
         bonus_desc = "Ensnare in a net";
-    else if (quiv->sub_type == MI_DART)
+    else if (is_dart_type(quiv->sub_type))
     {
         switch (quiv->brand)
         {

@@ -454,7 +454,9 @@ static int _acquirement_missile_subtype(int & /*quantity*/,
     vector<pair<missile_type, int> > missile_weights;
 
     missile_weights.emplace_back(MI_BOOMERANG, 50);
-    missile_weights.emplace_back(MI_DART, 75);
+
+    // Dart type will be changed later
+    missile_weights.emplace_back(MI_DART_POISONED, 75);
 
     if (you.body_size() >= SIZE_MEDIUM)
         missile_weights.emplace_back(MI_JAVELIN, 100);

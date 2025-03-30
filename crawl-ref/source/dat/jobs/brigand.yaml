@@ -9,8 +9,8 @@ equipment:
   - "dagger plus:2"
   - "robe"
   - "cloak"
-  - "dart ego:poisoned q:9"
-  - "dart ego:curare q:3"
+  - "poisoned dart q:9"
+  - "curare-tipped dart q:3"
 recommended_species:
   - troll
   - spriggan

@@ -1879,10 +1879,10 @@ bool monster::pickup_missile(item_def &item, bool msg, bool force)
     if (!force && !can_use_missile(item))
         return false;
 
-        // Allow upgrading throwing weapon brands (XXX: improve this!)
+    // Allow upgrading to silver javelins
     if (miss
-        && item.sub_type == miss->sub_type
-        && (item.sub_type == MI_BOOMERANG || item.sub_type == MI_JAVELIN)
+        && is_javelin_type(item.sub_type)
+        && is_javelin_type(miss->sub_type)
         && get_ammo_brand(*miss) == SPMSL_NORMAL
         && get_ammo_brand(item) != SPMSL_NORMAL)
     {
