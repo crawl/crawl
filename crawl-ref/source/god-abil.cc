@@ -3613,6 +3613,7 @@ static string _gozag_shop_spec(int index)
     const shop_type type = _gozag_shop_type(index);
     const string name =
         you.props[make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, index)];
+    const int greed = 12 + random2avg(17,2);
 
     string suffix = replace_all(
                                 you.props[make_stringf(GOZAG_SHOP_SUFFIX_KEY,
@@ -3621,10 +3622,11 @@ static string _gozag_shop_spec(int index)
     if (!suffix.empty())
         suffix = " suffix:" + suffix;
 
-    return make_stringf("%s shop name:%s%s gozag",
+    return make_stringf("%s shop name:%s%s greed:%d gozag",
                         shoptype_to_str(type),
                         replace_all(name, " ", "_").c_str(),
-                        suffix.c_str());
+                        suffix.c_str(),
+                        greed);
 
 }
 

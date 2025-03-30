@@ -49,9 +49,29 @@
 
 ShoppingList shopping_list;
 
+// Hack to make the cost of certain items (consumables) scale more severely with
+// depth. Currently applies to all potions, scrolls, and wands. I have set this
+// up for more complicated handling if we want to restrict to certain subtypes
+// later on. - hellmonk
+static bool _item_has_extra_greed(const item_def& item)
+{
+    switch (item.base_type)
+    {
+        case OBJ_POTIONS:
+        case OBJ_SCROLLS:
+        case OBJ_WANDS:
+            return true;
+        default:
+            return false;
+    }
+}
+
 static int _shop_get_item_value(const item_def& item, int greed, bool id)
 {
     int result = (greed * item_value(item, id) / 10);
+
+    if (_item_has_extra_greed(item) && id)
+        result = max(result, result * (15 + greed) / 30);
 
     return max(result, 1);
 }
@@ -454,13 +474,13 @@ unsigned int item_value(item_def item, bool ident)
             case POT_MAGIC:
             case POT_INVISIBILITY:
             case POT_CANCELLATION:
+            case POT_HEAL_WOUNDS:
             case POT_AMBROSIA:
             case POT_MUTATION:
                 valued += 80;
                 break;
 
             case POT_BERSERK_RAGE:
-            case POT_HEAL_WOUNDS:
             case POT_ENLIGHTENMENT:
                 valued += 50;
                 break;
@@ -500,10 +520,11 @@ unsigned int item_value(item_def item, bool ident)
             case SCR_TORMENT:
             case SCR_SILENCE:
             case SCR_BRAND_WEAPON:
+            case SCR_BLINKING:
+            case SCR_BUTTERFLIES:
                 valued += 95;
                 break;
 
-            case SCR_BLINKING:
             case SCR_ENCHANT_ARMOUR:
             case SCR_ENCHANT_WEAPON:
             case SCR_REVELATION:
@@ -516,7 +537,6 @@ unsigned int item_value(item_def item, bool ident)
             case SCR_POISON:
             case SCR_VULNERABILITY:
             case SCR_FOG:
-            case SCR_BUTTERFLIES:
                 valued += 40;
                 break;
 
