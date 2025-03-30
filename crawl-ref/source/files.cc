@@ -2661,28 +2661,32 @@ void save_game_state()
         save_game(true);
 }
 
-static bool _bones_save_individual_levels(bool store)
+static bool _bones_save_individual_levels(branch_type branch, bool store)
 {
     // Only use level-numbered bones files for places where players die a lot.
     // For the permastore, go even coarser (just D and Lair use level numbers).
     // n.b. some branches here may not currently generate ghosts.
     // TODO: further adjustments? Make Zot coarser?
-    return store ? player_in_branch(BRANCH_DUNGEON) ||
-                   player_in_branch(BRANCH_LAIR)
-                 : !(player_in_branch(BRANCH_ZIGGURAT) ||
-                     player_in_branch(BRANCH_CRYPT) ||
-                     player_in_branch(BRANCH_TOMB) ||
-                     player_in_branch(BRANCH_ABYSS) ||
-                     player_in_branch(BRANCH_SLIME));
+    return store ? branch == BRANCH_DUNGEON ||
+                   branch == BRANCH_LAIR
+                 : !(branch == BRANCH_ZIGGURAT ||
+                     branch ==BRANCH_CRYPT ||
+                     branch == BRANCH_TOMB ||
+                     branch == BRANCH_ABYSS ||
+                     branch == BRANCH_SLIME);
 }
 
 static string _make_ghost_filename(bool store=false)
 {
-    const bool with_number = _bones_save_individual_levels(store);
+    const level_id lvl = player_in_branch(BRANCH_NECROPOLIS)
+                            ? !you.level_stack.empty() ? you.level_stack.back().id
+                                                       : level_id(BRANCH_DUNGEON, 15)
+                            : level_id::current();
+    const bool with_number = _bones_save_individual_levels(lvl.branch, store);
     // Players die so rarely in hell in practice that it doesn't even make
     // sense to have per-hell bones. (Maybe vestibule should be separate?)
-    const string level_desc = player_in_hell(true) ? "Hells" :
-        replace_all(level_id::current().describe(false, with_number), ":", "-");
+    const string level_desc = is_hell_branch(lvl.branch) ? "Hells" :
+        replace_all(lvl.describe(false, with_number), ":", "-");
     return string("bones.") + (store ? "store." : "") + level_desc;
 }
 
@@ -3733,7 +3737,7 @@ static FILE* _make_bones_file(string * return_gfilename)
 
 static size_t _ghost_permastore_size()
 {
-    if (_bones_save_individual_levels(true))
+    if (_bones_save_individual_levels(you.where_are_you, true))
         return GHOST_PERMASTORE_SIZE;
     else
         return GHOST_PERMASTORE_SIZE * 2;
