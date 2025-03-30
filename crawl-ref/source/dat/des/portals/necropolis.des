@@ -3732,7 +3732,7 @@ FTILE:  'PSncbv = floor_nerves_brown
 KMONS:  q = ghost moth
 FTILE:  'PSncbv = floor_nerves_brown
 :   end
-:   if dgn.persist.necropolis_difficulty ~= "Swamp" then
+:   if dgn.persist.necropolis_difficulty ~= "swamp" then
 NSUBST: - = 1:q / -
 :   end
 SUBST:  fg = |*, h = *%, i = $%--, j= -
