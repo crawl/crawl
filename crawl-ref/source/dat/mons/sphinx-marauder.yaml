@@ -16,5 +16,5 @@ shout: shout
 intelligence: human
 speed: 12
 uses: starting_equipment
-size: giant
+size: large
 shape: quadruped_winged

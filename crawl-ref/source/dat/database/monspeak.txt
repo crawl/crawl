@@ -7915,6 +7915,13 @@ VISUAL:@The_monster@ unfurls and squashes hidden [antennae|spinnerets|pseudopods
 w:20
 __NONE
 %%%%
+# Protean progenitors are far too tired to bother much with default chatter.
+friendly protean progenitor
+
+@protean progenitor@
+
+w:30
+__NONE
 ################## Reaper ##################################
 # The reaper has come for you!
 reaper

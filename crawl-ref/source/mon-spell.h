@@ -326,7 +326,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_WYRMHOLE,
       {
-       { SPELL_SOJOURNING_BOLT, 55, MON_SPELL_NATURAL | MON_SPELL_BREATH
+       { SPELL_SOJOURNING_BOLT, 50, MON_SPELL_NATURAL | MON_SPELL_BREATH
                                         | MON_SPELL_NOISY },
       }
     },
