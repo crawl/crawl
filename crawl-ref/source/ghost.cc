@@ -457,7 +457,7 @@ void ghost_demon::init_player_ghost()
     set_resist(resists, MR_RES_MIASMA, you.res_miasma());
     set_resist(resists, MR_RES_PETRIFY, you.res_petrify());
 
-    move_energy = 10;
+    move_energy = player_movement_speed(false, false);
     speed       = 10;
 
     damage = 4;

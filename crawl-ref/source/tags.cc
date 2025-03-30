@@ -8203,11 +8203,11 @@ static ghost_demon _unmarshallGhost(reader &th)
 #endif
     ghost.move_energy      = unmarshallShort(th);
     // fix up ghost_demons that forgot to have move_energy initialized
-    if (ghost.move_energy < FASTEST_PLAYER_MOVE_SPEED
-        || ghost.move_energy > 15) // Ponderous naga
-    {
-        ghost.move_energy = 10;
-    }
+    if (ghost.move_energy < FASTEST_PLAYER_MOVE_SPEED)
+        ghost.move_energy = FASTEST_PLAYER_MOVE_SPEED;
+    else if (ghost.move_energy > 30)
+        ghost.move_energy = 30;
+
     ghost.see_invis        = unmarshallByte(th);
     ghost.brand            = static_cast<brand_type>(unmarshallShort(th));
     ghost.att_type = static_cast<attack_type>(unmarshallShort(th));
