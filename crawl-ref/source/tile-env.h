@@ -7,8 +7,10 @@
 #include "externs.h"
 #include "fixedarray.h"
 #include "rltiles/tiledef_defines.h"
+#ifdef USE_TILE // TODO: separate out this stuff from crawl_environment
+#include "tilecell.h"
+#endif
 
-struct packed_icons;
 struct crawl_tile_environment
 {
     // indexed by grid coords

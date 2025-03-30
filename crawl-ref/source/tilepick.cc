@@ -2331,9 +2331,9 @@ tileidx_t tileidx_monster(const monster_info& mons)
 void packed_icons::insert(tileidx_t icon) {
     ASSERT_RANGE(icon, TILEG_GUI_MAX, TILEI_ICONS_MAX);
     if (!icons)
-        icons = make_unique<FixedBitVector<256>>();
+        icons = make_unique<set<tileidx_t>>();
 
-    icons->set(icon - TILEG_GUI_MAX);
+    icons->insert(icon);
 }
 
 static const map<monster_info_flags, tileidx_t> monster_status_icons = {

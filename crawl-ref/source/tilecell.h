@@ -16,7 +16,7 @@ enum halo_type: uint8_t
 // for 8 bytes fixed on every cell
 // + 32 bytes on cells with icons.
 struct packed_icons {
-    unique_ptr<FixedBitVector<256>> icons;
+    unique_ptr<set<tileidx_t>> icons;
     // constructor
     packed_icons() = default;
     // destructor
@@ -25,20 +25,23 @@ struct packed_icons {
     // copy-construct the inner set
     packed_icons(const packed_icons& o): icons(nullptr) {
         if (o.icons)
-            this->icons = make_unique<FixedBitVector<256>>(o.icons);
+            this->icons = make_unique<set<tileidx_t>>(*o.icons);
     }
 
     // move constructor
     packed_icons(packed_icons&&) = default;
 
     // copy assignment
-    // copy the innser set, then assign that.
-    packed_icons operator=(const packed_icons& o)
+    // copy the inner set, then assign that.
+    packed_icons operator=(const packed_icons& other)
     {
-        if (o.icons)
-            this->icons = make_unique<FixedBitVector<256>>(o.icons);
-        else
-            this->icons.reset();
+        if (this != &other) {
+            if (other.icons)
+                this->icons = make_unique<set<tileidx_t>>(*other.icons);
+            else
+                this->icons.reset();
+        }
+        return *this;
     }
 
     // move assignment
@@ -48,7 +51,7 @@ struct packed_icons {
     void insert(tileidx_t icon);
 
     // Clear the icons
-    inline void reset() {
+    inline void clear() {
         icons.reset();
     }
 };

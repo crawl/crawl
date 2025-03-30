@@ -905,7 +905,7 @@ void tile_draw_floor()
             tile_env.bg(ep) = bg;
             tile_env.fg(ep) = 0;
             tile_env.cloud(ep) = 0;
-            tile_env.icons(ep).reset();
+            tile_env.icons(ep).clear();
         }
 }
 
@@ -1028,7 +1028,7 @@ static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
         return;
     }
     tile_env.fg(ep) = t;
-    tile_env.icons[ep] = status_icons_for(mon);
+    tile_env.icons(ep) = status_icons_for(mon);
 
     // Add name tags.
     if (!mons_class_gives_xp(mon.type))
@@ -1090,7 +1090,7 @@ void tile_draw_map_cell(const coord_def& gc, bool foreground_only)
         const coord_def ep = grid2show(gc);
         tile_env.fg(ep) = 0;
         tile_env.cloud(ep) = 0;
-        tile_env.icons.erase(ep);
+        tile_env.icons(ep).clear();
     }
 
     const map_cell& cell = env.map_knowledge(gc);
