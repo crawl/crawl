@@ -864,6 +864,7 @@ static void _add_formatted_help_menu(column_composer &cols)
         "<w>L</w>.      Licence, Contact, History\n"
         "<w>M</w>.      Macros, Options, Performance\n"
         "<w>N</w>.      Philosophy\n"
+        "<w>O</w>.      Keybindings\n"
         "<w>1</w>.      List of Character Species\n"
         "<w>2</w>.      List of Character Backgrounds\n"
         "<w>3</w>.      List of Skills\n"

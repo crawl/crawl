@@ -10,6 +10,7 @@
 #include <cctype>
 #include <functional>
 
+#include "keybindings.h"
 #include "cio.h"
 #include "colour.h"
 #include "command.h"

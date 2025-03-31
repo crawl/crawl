@@ -135,6 +135,7 @@ luaterp.o \
 macro.o \
 makeitem.o \
 map-knowledge.o \
+keybindings.o \
 mapdef.o \
 mapmark.o \
 maps.o \

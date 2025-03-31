@@ -5,6 +5,7 @@ enum command_type
     CMD_NO_CMD = 2000,
     CMD_NO_CMD_DEFAULT, // hack to allow assignment of keys to CMD_NO_CMD
     CMD_EDIT_OPTIONS, // new command
+    CMD_CHANGE_KEYBINDINGS, // new command
     CMD_MOVE_LEFT,
     CMD_MOVE_DOWN,
     CMD_MOVE_UP,

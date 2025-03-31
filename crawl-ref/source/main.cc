@@ -15,6 +15,7 @@
 #include <list>
 #include <sstream>
 #include <string>
+#include "keybindings.h"
 #include <utility> // pair
 #include <vector>
 #include <fcntl.h>
@@ -2035,21 +2036,134 @@ public:
     }
 };
 
-class OptionsEditMenu : public Menu
+class OptionsMenu : public Menu
 {
+// this could be easily generalized for other menus that select among commands
+// if it's ever needed
 public:
-    OptionsEditMenu()
-        : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING | MF_WRAP | MF_INIT_HOVER)
+    class CmdMenuEntry : public MenuEntry
+    {
+    public:
+        CmdMenuEntry(string label, MenuEntryLevel _level, int hotk=0,
+                                                command_type _cmd=CMD_NO_CMD,
+                                                bool _uses_popup=true)
+            : MenuEntry(label, _level, 1, hotk), cmd(_cmd),
+              uses_popup(_uses_popup)
+        {
+            if (tileidx_command(cmd) != TILEG_TODO)
+                add_tile(tileidx_command(cmd));
+        }
+
+        command_type cmd;
+        bool uses_popup;
+    };
+
+    command_type cmd;
+    OptionsMenu()
+        : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING
+                | MF_ARROWS_SELECT | MF_WRAP | MF_INIT_HOVER
+#ifdef USE_TILE_LOCAL
+                | MF_SPECIAL_MINUS // doll editor (why?)
+#endif
+                ),
+          cmd(CMD_NO_CMD)
     {
         set_tag("options_menu");
-        set_title(new MenuEntry("<w>Edit Game Options</w>", MEL_TITLE));
+        action_cycle = Menu::CYCLE_NONE;
+        menu_action  = Menu::ACT_EXECUTE;
+        set_title(new MenuEntry(
+            string("<w>" CRAWL " ") + Version::Long + "</w>",
+            MEL_TITLE));
+        on_single_selection = [this](const MenuEntry& item)
+        {
+            const CmdMenuEntry *c = dynamic_cast<const CmdMenuEntry *>(&item);
+            if (c)
+            {
+                if (c->uses_popup)
+                {
+                    // recurse
+                    if (c->cmd != CMD_NO_CMD)
+                        ::process_command(c->cmd, CMD_GAME_MENU);
+                    return true;
+                }
+                // otherwise, exit menu and process in the main process_command call
+                cmd = c->cmd;
+                return false;
+            }
+            return true;
+        };
+    }
 
+    bool skip_process_command(int keyin) override
+    {
+        if (keyin == '?')
+            return true; // hotkeyed
+        return Menu::skip_process_command(keyin);
+    }
+
+    void fill_entries()
+    {
+        clear();
+        add_entry(new CmdMenuEntry("Change Keybindings", MEL_ITEM, 'k', CMD_CHANGE_KEYBINDINGS));
         add_entry(new MenuEntry("placeholder_option_1 = true", MEL_ITEM));
         add_entry(new MenuEntry("placeholder_option_2 = false", MEL_ITEM));
         add_entry(new MenuEntry("<lightgrey>Use arrow keys to navigate.</lightgrey>", MEL_ITEM));
     }
+
+    vector<MenuEntry *> show(bool reuse_selections = false) override
+    {
+        fill_entries();
+        return Menu::show(reuse_selections);
+    }
 };
 
+class KeybindingMenu : public Menu
+{
+public:
+    class CmdMenuEntry : public MenuEntry
+    {
+    public:
+        CmdMenuEntry(string label, MenuEntryLevel _level, int hotk=0,
+                                                command_type _cmd=CMD_NO_CMD,
+                                                bool _uses_popup=true)
+            : MenuEntry(label, _level, 1, hotk), cmd(_cmd),
+            uses_popup(_uses_popup)
+        {
+            if (tileidx_command(cmd) != TILEG_TODO)
+                add_tile(tileidx_command(cmd));
+        }
+
+        command_type cmd;
+        bool uses_popup;
+    };
+
+    KeybindingMenu()
+        : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING | MF_WRAP | MF_INIT_HOVER)
+    {
+        set_tag("keybinding_menu");
+        set_title(new MenuEntry("<w>Change Movement Keybindings</w>", MEL_TITLE));
+
+        for (size_t i = 0; i < movement_keys.size(); i++)
+        {
+            int index = 1 + i;
+            std::string entry_text = movement_keys[i].action + " -> [" + movement_keys[i].key + "]";
+            add_entry(new CmdMenuEntry(entry_text, MEL_ITEM, index, CMD_NO_CMD));
+        }
+
+        add_entry(new MenuEntry("<lightgrey>Press number to change, ESC to exit.</lightgrey>", MEL_ITEM));
+    }
+
+    bool process_key(int key) override
+    {
+        if (key >= '1' && key <= '8')
+        {
+            int index = key - '1';
+            change_keybinding(index);
+            return true;
+        }
+        return Menu::process_key(key);
+    }
+};
 
 // Note that in some actions, you don't want to clear afterwards.
 // e.g. list_jewellery, etc.
@@ -2075,11 +2189,18 @@ void process_command(command_type cmd, command_type prev_cmd)
     case CMD_EDIT_PLAYER_TILE: tiles.draw_doll_edit(); break;
 #endif
 
-        //cool command
-    case CMD_EDIT_OPTIONS:
+    case CMD_EDIT_OPTIONS: // This now correctly opens the options menu
     {
-        OptionsEditMenu m;
-        m.show();
+        OptionsMenu options_menu;
+        options_menu.show();
+        redraw_screen();
+        update_screen();
+        break;
+    }
+    case CMD_CHANGE_KEYBINDINGS:
+    { 
+        KeybindingMenu menu;
+        menu.show();
         redraw_screen();
         update_screen();
         break;
