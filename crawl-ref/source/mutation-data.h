@@ -1564,6 +1564,7 @@ static const mutation_def mut_data[] =
   {"A fragile, slimy shroud covers you, deflecting attacks.", "", ""},
   {"A thin film of slime covers your body.", "", ""},
   {"Your film of slime dries up.", "", ""},
+  TILEG_MUT_GENERIC_JIYVA_MUTATION,
 },
 
 { MUT_ANTIMAGIC_BITE, 0, 1, mutflag::good, true,
