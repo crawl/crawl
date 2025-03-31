@@ -105,11 +105,7 @@ static bool _feat_compatible(dungeon_feature_type wanted_feat,
     return wanted_feat == actual_feat
            || wanted_feat == DNGN_DEEP_WATER && feat_is_water(actual_feat)
            || wanted_feat == DNGN_FLOOR && feat_has_solid_floor(actual_feat)
-           || wanted_feat == DNGN_ROCK_WALL && feat_is_solid(actual_feat)
-              // Duplicated in mons_class_can_pass but this gets called from
-              // different paths so really make sure we don't place wall
-              // monsters on runed doors etc.
-              && !is_notable_terrain(actual_feat);
+           || wanted_feat == DNGN_ROCK_WALL && feat_is_solid(actual_feat);
 }
 
 static bool _hab_requires_mon_flight(dungeon_feature_type g)
@@ -179,69 +175,31 @@ bool monster_habitable_feat(monster_type mt, dungeon_feature_type feat)
     return false;
 }
 
-/**
- * Can anything at all exist here? (Used for wall monsters, assuming it's
- * already a habitable feature for the given monster type.)
- */
-static bool _habitable_grid(const coord_def& pos)
-{
-    // Non-solid features are always inhabitable
-    if (!feat_is_solid(env.grid(pos)))
-        return true;
-
-    // Veto protective walls created by deities
-    auto no_tombs = [](map_terrain_change_marker& terrain) {
-        return terrain.change_type == TERRAIN_CHANGE_IMPRISON
-            || terrain.change_type == TERRAIN_CHANGE_TOMB;
-    };
-    if (map_terrain_change_marker::any_at(pos, no_tombs))
-        return false;
-
-    return has_non_solid_adjacent(pos);
-}
-
 bool monster_habitable_grid(const monster* mon, const coord_def& pos)
 {
-    if (!monster_habitable_feat(mon, env.grid(pos)))
-        return false;
-    return _habitable_grid(pos);
+    return monster_habitable_feat(mon, env.grid(pos));
 }
 
 bool monster_habitable_grid(monster_type mt, const coord_def& pos)
 {
-    if (!monster_habitable_feat(mt, env.grid(pos)))
-        return false;
-    return _habitable_grid(pos);
+    return monster_habitable_feat(mt, env.grid(pos));
 }
 
 /**
  * Solid features are only inhabitable one tile deep so monsters don't get
- * lost inside large areas of wall (and inaccessible to the player). This checks
- * there is at least one non-solid adjacent.
+ * spawned inside large areas of wall (and not findable by the player). This
+ * checks if the tile is solid there is at least one non-solid adjacent.
  */
 bool has_non_solid_adjacent(coord_def pos)
 {
-    bool result = false;
+    if (!feat_is_solid(env.grid(pos)))
+        return true;
     for (adjacent_iterator ai(pos); ai; ++ai)
     {
-        if (!in_bounds(*ai) || feat_is_solid(env.grid(*ai)))
-            continue;
-        // Vaults may apply no_tele_into in cases where there may be enclosed
-        // monsters that should not be able to escape. Any adjacent instances of
-        // this flag means we should prevent monsters breaching walls in case.
-        // (It could prevent some fairly reasonable wall usage as well, and
-        // should be improved.)
-        // Note: All walls already have FPROP_NO_TELE_INTO but we are only
-        // looking at the *empty* adjacent tiles for a *vault*-applied prop.
-        if (dgn_vault_at(*ai) && (env.pgrid(*ai) & FPROP_NO_TELE_INTO ||
-            dgn_vault_at(*ai)->map.has_tag("no_tele_into")))
-        {
-            return false;
-        }
-        // At least one eligible tile has been found
-        result = true;
+        if (in_bounds(*ai) && !feat_is_solid(env.grid(*ai)))
+            return true;
     }
-    return result;
+    return false;
 }
 
 static int _ood_fuzzspan(level_id &place)
@@ -576,7 +534,8 @@ static bool _valid_monster_generation_location(const mgen_data &mg,
     if (!monster_habitable_grid(montype, mg_pos)
         || (mg.behaviour != BEH_FRIENDLY
             && is_sanctuary(mg_pos)
-            && !mons_is_tentacle_segment(montype)))
+            && !mons_is_tentacle_segment(montype))
+        || !has_non_solid_adjacent(mg_pos))
     {
         return false;
     }
@@ -2902,12 +2861,12 @@ public:
             return true;
 
         if (!in_bounds(dc)
-            || (maxdistance > 0 && traveled_distance > maxdistance))
+            || (maxdistance > 0 && traveled_distance > maxdistance)
+            || !monster_habitable_grid(mons_class, dc)
+            || !has_non_solid_adjacent(dc))
         {
             return false;
         }
-        if (!monster_habitable_grid(mons_class, dc))
-            return false;
 
         // It's at least habitable, even if not preferred, so mark it to
         // continue the path flood at least.

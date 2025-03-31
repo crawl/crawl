@@ -4121,23 +4121,14 @@ bool mons_class_can_pass(monster_type mc, dungeon_feature_type grid)
         return false;
     }
 
-    // Wall monsters can move on most solid features; they are also prevented
-    // from going more than one tile deep but this test is telling us
-    // if they *can* exist on the terrain theoretically.
+    // Wall monsters can move on most solid features
     if (_mons_class_habitat(mc) == HT_WALLS)
     {
         if (feat_is_permarock(grid))
             return false;
 
-        // Aversion to even shallow water.
-        if (feat_is_water(grid) && !feat_is_tree(grid)) // Mangroves
-            return false;
-
         if (feat_is_solid(grid))
         {
-            // Prevent passing through runed doors and so on.
-            if (is_notable_terrain(grid))
-                return false;
             // Fish aren't known for hanging out in trees
             if (mons_species(mc) == MONS_ROCK_FISH && feat_is_tree(grid))
                 return false;
