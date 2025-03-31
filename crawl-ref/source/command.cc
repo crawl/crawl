@@ -857,7 +857,7 @@ static void _add_formatted_help_menu(column_composer &cols)
         "<w>E</w>.      Experience and Skills\n"
         "<w>F</w>.      Monsters\n"
         "<w>G</w>.      Items\n"
-        "<w>H</w>.      Spellcasting\n"
+        "<w>H</w>.      Spellcastingg\n"
         "<w>I</w>.      Targeting\n"
         "<w>J</w>.      Religion\n"
         "<w>K</w>.      Mutations\n"

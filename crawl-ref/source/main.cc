@@ -2006,12 +2006,14 @@ public:
         add_entry(new CmdMenuEntry("Edit player tile",
             MEL_ITEM, '-', CMD_EDIT_PLAYER_TILE));
 #endif
-        add_entry(new CmdMenuEntry("Edit macros",
+        add_entry(new CmdMenuEntry("Edit macroz",
             MEL_ITEM, '~', CMD_MACRO_MENU));
         add_entry(new CmdMenuEntry("Help and manual",
             MEL_ITEM, '?', CMD_DISPLAY_COMMANDS));
         add_entry(new CmdMenuEntry("Lookup info",
             MEL_ITEM, '/', CMD_LOOKUP_HELP));
+        add_entry(new CmdMenuEntry("Edit game options",
+            MEL_ITEM, 'm', CMD_EDIT_OPTIONS));
 #ifdef TARGET_OS_MACOSX
         add_entry(new CmdMenuEntry("Show options file in finder",
             MEL_ITEM, 'O', CMD_REVEAL_OPTIONS));
@@ -2032,6 +2034,22 @@ public:
         return Menu::show(reuse_selections);
     }
 };
+
+class OptionsEditMenu : public Menu
+{
+public:
+    OptionsEditMenu()
+        : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING | MF_WRAP | MF_INIT_HOVER)
+    {
+        set_tag("options_menu");
+        set_title(new MenuEntry("<w>Edit Game Options</w>", MEL_TITLE));
+
+        add_entry(new MenuEntry("placeholder_option_1 = true", MEL_ITEM));
+        add_entry(new MenuEntry("placeholder_option_2 = false", MEL_ITEM));
+        add_entry(new MenuEntry("<lightgrey>Use arrow keys to navigate.</lightgrey>", MEL_ITEM));
+    }
+};
+
 
 // Note that in some actions, you don't want to clear afterwards.
 // e.g. list_jewellery, etc.
@@ -2056,6 +2074,16 @@ void process_command(command_type cmd, command_type prev_cmd)
         // Tiles-specific commands.
     case CMD_EDIT_PLAYER_TILE: tiles.draw_doll_edit(); break;
 #endif
+
+        //cool command
+    case CMD_EDIT_OPTIONS:
+    {
+        OptionsEditMenu m;
+        m.show();
+        redraw_screen();
+        update_screen();
+        break;
+    }
 
         // Movement and running commands.
     case CMD_ATTACK_DOWN_LEFT:  _swing_at_target({-1,  1}); break;
