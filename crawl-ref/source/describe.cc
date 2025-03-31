@@ -5053,7 +5053,7 @@ static string _describe_draconian(const monster_info& mi)
         description += "Acidic fumes swirl around it.";
         break;
     case MONS_GREEN_DRACONIAN:
-        description += "Venom drips from its jaws.";
+        description += "Venom drips from its jaws and stinger tail.";
         break;
     case MONS_PURPLE_DRACONIAN:
         description += "Its outline shimmers with magical energy.";
