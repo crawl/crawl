@@ -1743,6 +1743,9 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
     // the proper stats from it.
     define_zombie(mon, mon->type, MONS_BOUND_SOUL);
 
+    if (orig.mons_species() == MONS_HYDRA)
+        mon->num_heads = mon->props[OLD_HEADS_KEY].get_int();
+
     // Modify health based on invocations skill
     mon->max_hit_points = yred_get_bound_soul_hp(orig.type);
     mon->hit_points = mon->max_hit_points;
