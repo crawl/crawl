@@ -1040,9 +1040,9 @@ void TilesFramework::zoom_dungeon(bool in)
     current_scale = min(ceil(max_zoom*10)/10, max(0.2,
                     current_scale + (in ? ZOOM_INC : -ZOOM_INC)));
     do_layout(); // recalculate the viewport setup
+    redraw_screen(false);
     if (current_scale != orig)
         mprf(MSGCH_PROMPT, "Zooming to %.2f", (float) current_scale);
-    redraw_screen(false);
     update_screen();
 #endif
 }
