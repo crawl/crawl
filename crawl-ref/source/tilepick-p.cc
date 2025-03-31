@@ -400,6 +400,10 @@ tileidx_t tilep_equ_helm(const item_def &item)
                 return TILEP_HELM_EXPLORER2;
             case TILE_THELM_HAT_SANTA:
                 return TILEP_HELM_SANTA;
+            case TILE_THELM_HAT_APRIL1:
+                return TILEP_HELM_APRIL1;
+            case TILE_THELM_HAT_APRIL2:
+                return TILEP_HELM_APRIL2;
             default:
                 return _modrng(item.rnd, TILEP_HELM_HAT_FIRST_NORM,
                                TILEP_HELM_HAT_LAST_NORM);
@@ -439,6 +443,17 @@ tileidx_t tilep_equ_boots(const item_def &item)
 
     if (item.props.exists(WORN_TILE_KEY))
         return item.props[WORN_TILE_KEY].get_short();
+
+    auto equip_tile = tileidx_enchant_equ(item, TILE_ARM_BOOTS, true);
+    switch (equip_tile)
+    {
+        case TILE_ARM_BOOTS_APRIL1:
+            return TILEP_BOOTS_APRIL1;
+        case TILE_ARM_BOOTS_APRIL2:
+            return TILEP_BOOTS_APRIL2;
+        default:
+            break;
+    }
 
     if (is_unrandom_artefact(item))
     {

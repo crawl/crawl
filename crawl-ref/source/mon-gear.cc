@@ -23,6 +23,7 @@
 #include "mpr.h"
 #include "religion.h" // upgrade_hepliaklqana_weapon
 #include "state.h"
+#include "stringutil.h"
 #include "tag-version.h"
 #include "tilepick.h"
 #include "unwind.h"
@@ -1333,6 +1334,15 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         {
             floor_tile  = "wpn_scythe";
             equip_tile  = "scythe";
+        }
+        break;
+
+    case MONS_CRAZY_YIUF:
+        if (today_is_serious())
+        {
+            int staff_num = random_range(1, 2);
+            floor_tile  = make_stringf("wpn_april_staff%d", staff_num);
+            equip_tile  = make_stringf("april_staff%d", staff_num);
         }
         break;
 

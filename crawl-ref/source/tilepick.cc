@@ -4644,11 +4644,16 @@ tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile, bool player)
             case 1:
             case 2:
             case 3:
-                tile = _modrng(item.rnd, TILE_THELM_HAT_EGO_FIRST, TILE_THELM_HAT_EGO_LAST);
+                if (item.rnd % 2 && today_is_serious())
+                    tile = TILE_THELM_HAT_APRIL1;
+                else
+                    tile = _modrng(item.rnd, TILE_THELM_HAT_EGO_FIRST, TILE_THELM_HAT_EGO_LAST);
                 break;
             case 4:
                 if (item.rnd % 2 && december_holidays())
                     tile = TILE_THELM_HAT_SANTA;
+                else if (item.rnd % 2 && today_is_serious())
+                    tile = (item.rnd % 3) ? TILE_THELM_CAP_JESTER : TILE_THELM_HAT_APRIL2;
                 else
                     tile = _modrng(item.rnd, TILE_THELM_HAT_ART_FIRST, TILE_THELM_HAT_ART_LAST);
                 break;
@@ -4703,7 +4708,10 @@ tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile, bool player)
             case 1:
             case 2:
             case 3:
-                tile = _modrng(item.rnd, TILE_ARM_BOOTS_EGO_FIRST, TILE_ARM_BOOTS_EGO_LAST);
+                if (item.rnd % 2 && today_is_serious())
+                    tile = (item.rnd % 3) ? TILE_ARM_BOOTS_APRIL1 : TILE_ARM_BOOTS_APRIL2;
+                else
+                    tile = _modrng(item.rnd, TILE_ARM_BOOTS_EGO_FIRST, TILE_ARM_BOOTS_EGO_LAST);
                 break;
             case 4:
                 tile = _modrng(item.rnd, TILE_ARM_BOOTS_ART_FIRST, TILE_ARM_BOOTS_ART_LAST);

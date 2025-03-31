@@ -258,6 +258,8 @@ mesh_blue MESH_BLUE LAST_NORM
 spider SPIDER
 seven_league_boots SEVEN_LEAGUE_BOOTS
 slippers SLIPPERS
+april_boots1 APRIL1
+april_boots2 APRIL2
 
 ## Mutations
 hooves HOOVES
@@ -732,6 +734,8 @@ lajatang1 LAJATANG
 lajatang2
 lajatang3
 xmas-scythe XMAS_SCYTHE
+april_staff1 APRIL_STAFF1
+april_staff2 APRIL_STAFF2
 
 ## staves
 
@@ -1078,6 +1082,8 @@ turban_brown TURBAN_BROWN
 turban_purple TURBAN_PURPLE HAT_LAST_NORM
 pumpkin PUMPKIN
 santa_hat SANTA
+april_hat1 APRIL1
+april_hat2 APRIL2
 hat_archer ARCHER
 hat_archer2 ARCHER2
 hat_explorer EXPLORER
