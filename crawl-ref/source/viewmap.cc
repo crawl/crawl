@@ -313,6 +313,12 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
                 if (travel_mode && travel_colour_override(c))
                     cell->colour = _get_travel_colour(c);
 
+                // If we've a waypoint on the current square,
+                // show the waypoint number.
+                const uint8_t waypoint_char = is_waypoint(c);
+                if (waypoint_char)
+                    cell->glyph = waypoint_char;
+
                 if (c == you.pos() && !crawl_state.arena_suspended && on_level)
                 {
                     // [dshaligram] Draw the @ symbol on the
@@ -321,18 +327,6 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
                     // directly.
                     cell->colour = WHITE;
                     cell->glyph  = mons_char(you.symbol);
-                }
-
-                // If we've a waypoint on the current square, *and* the
-                // square is a normal floor square with nothing on it,
-                // show the waypoint number.
-                // XXX: This is a horrible hack.
-                char32_t bc   = cell->glyph;
-                uint8_t ch = is_waypoint(c);
-                if (ch && (bc == _get_sightmap_char(DNGN_FLOOR)
-                           || bc == _get_magicmap_char(DNGN_FLOOR)))
-                {
-                    cell->glyph = ch;
                 }
 
                 if (Options.show_travel_trail && travel_trail_index(c) >= 0)
