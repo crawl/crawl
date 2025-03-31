@@ -1055,7 +1055,7 @@ static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
     else if (pref != TAGPREF_ALL && !mon.is_named())
         return;
 
-    if (pref != TAGPREF_NAMED && pref != TAGPREF_ALL &&  mon.attitude == ATT_FRIENDLY)
+    if (pref != TAGPREF_NAMED && pref != TAGPREF_ALL && mon.attitude == ATT_FRIENDLY)
         return;
 
     tiles.add_text_tag(TAG_NAMED_MONSTER, mon);
