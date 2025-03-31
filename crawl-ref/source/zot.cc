@@ -15,6 +15,7 @@
 #include "god-passive.h"
 #include "items.h" // stack_iterator
 #include "item-prop.h"
+#include "item-status-flag-type.h" // ISFLAG_MIMIC
 #include "message.h"
 #include "notes.h" // NOTE_MESSAGE
 #include "options.h" // UA_PICKUP, more_gem_info
@@ -257,6 +258,8 @@ bool gem_clock_active()
            && !crawl_state.game_is_descent();
 }
 
+/// Destroy all gems on the current floor. Note that there may be multiple, if
+/// mimics are involved.
 static void _shatter_floor_gem(gem_type gem, bool quiet = false)
 {
     for (rectangle_iterator ri(0); ri; ++ri)
@@ -266,20 +269,27 @@ static void _shatter_floor_gem(gem_type gem, bool quiet = false)
             if (!si->is_type(OBJ_GEMS, gem))
                 continue;
 
+            const bool was_mimic = si->flags & ISFLAG_MIMIC;
+
             item_was_destroyed(*si);
             destroy_item(si.index());
             you.gems_shattered.set(gem);
 
-            if (!quiet && Options.more_gem_info && you.see_cell(*ri))
+            if (quiet || !you.see_cell(*ri))
+                continue;
+
+            if (was_mimic)
             {
-                mprf("With a frightful flash, the power of Zot shatters the %s"
-                     " gem into ten thousand fragments!", gem_adj(gem));
-                // Using UA_PICKUP here is dubious.
-                flash_view_delay(UA_PICKUP, MAGENTA, 100);
-                flash_view_delay(UA_PICKUP, LIGHTMAGENTA, 100);
+                mprf("The power of Zot manifests... and reveals the %s gem was"
+                     " a mimic! It cackles and vanishes.", gem_adj(gem));
+                continue;
             }
 
-            return;
+            mprf("With a frightful flash, the power of Zot shatters the %s"
+                 " gem into ten thousand fragments!", gem_adj(gem));
+            // Using UA_PICKUP here is dubious.
+            flash_view_delay(UA_PICKUP, MAGENTA, 100);
+            flash_view_delay(UA_PICKUP, LIGHTMAGENTA, 100);
         }
     }
 }

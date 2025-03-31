@@ -200,8 +200,8 @@ bool companion_is_elsewhere(mid_t mid, bool must_exist)
         // a single floor, and the Abyss can eat our companions without notice)
         if (!monster_by_mid(mid))
         {
-            // Mark them as being on a non-existant floor, for the future.
-            // (This also lets interlevel recall pull them back again)
+            // Mark them as being on a non-existent floor, for the future.
+            // (This also lets inter-level recall pull them back again)
             companion_list[mid].level = level_id();
             return true;
         }
@@ -304,7 +304,7 @@ void fixup_bad_companions()
     }
 }
 
-bool maybe_bad_priest_monster(monster &mons)
+bool maybe_bad_priest_monster(const monster &mons)
 {
     // prior to e6d7efa92cb0, if a follower got polymorphed to a form that
     // satisfied is_priest, its god got cleared. This resulted in Beogh
@@ -321,10 +321,12 @@ void fixup_bad_priest_monster(monster &mons)
         return;
     mprf(MSGCH_ERROR, "Removing corrupted ex-follower from level: %s.",
                                             mons.full_name(DESC_PLAIN).c_str());
-    monster_die(mons, KILL_RESET, -1, true, false);
+    monster_die(mons, KILL_RESET, -1, true);
 }
 #endif
 
+// Apostle 0 is not yet recruited
+const int FIRST_RECRUITED_APOSTLE = 1;
 vector<apostle_data> apostles;
 
 apostle_data::apostle_data(const monster& m) : state(STATE_ALIVE),
@@ -363,7 +365,7 @@ static void _remove_offlevel_companion(mid_t mid)
 void beogh_do_ostracism()
 {
     mprf(MSGCH_GOD, "Beogh sends your followers elsewhere.");
-    for (unsigned int i = 1; i < apostles.size(); ++i)
+    for (unsigned int i = FIRST_RECRUITED_APOSTLE; i < apostles.size(); ++i)
     {
         if (apostles[i].state == STATE_ALIVE)
         {
@@ -394,8 +396,8 @@ static int _apostle_challenge_piety_needed()
     // Make the first few trials happen more quickly, so the player can get a
     // minimal number of followers. Slow them down over time.
     return 25
-     + (min((short)4, you.num_current_gifts[you.religion]) * 12)
-     + (min((short)10, you.num_total_gifts[you.religion]) * 4);
+     + (min(static_cast<short>(4), you.num_current_gifts[you.religion]) * 12)
+     + (min(static_cast<short>(10), you.num_total_gifts[you.religion]) * 4);
 }
 
 // Try to find a suitable spot to place a hostile apostle and their band.
@@ -485,7 +487,7 @@ static bool _try_generate_apostle_challenge(int pow, int band_pow)
     if (!apostle)
         return false;
 
-    apostle->add_ench(mon_enchant(ENCH_TOUCH_OF_BEOGH, 0, 0, INFINITE_DURATION));
+    apostle->add_ench(mon_enchant(ENCH_TOUCH_OF_BEOGH, 0, nullptr, INFINITE_DURATION));
     apostle->flags |= (MF_APOSTLE_BAND | MF_HARD_RESET);
     apostle->props[ALWAYS_CORPSE_KEY] = true;
 
@@ -572,9 +574,9 @@ bool maybe_generate_apostle_challenge()
 
     // Mostly based on number of apostles you've fought, but capped by xl
     int pow_cap = div_rand_round((max(1, you.experience_level - 7)) * 12, 22) * 10;
-    int base_pow = 10 + min((int)you.num_total_gifts[GOD_BEOGH], 13) * 5;
+    int base_pow = 10 + min(static_cast<int>(you.num_total_gifts[GOD_BEOGH]), 13) * 5;
 
-    // Guarenteed no band for the first 2 apostles.
+    // Guaranteed no band for the first 2 apostles.
     int band_pow = you.num_total_gifts[GOD_BEOGH] < 3 ? 0 : base_pow;
 
     if (you.num_total_gifts[GOD_BEOGH] > 2)
@@ -631,6 +633,9 @@ void win_apostle_challenge(monster& apostle)
     apostle.stop_constricting_all();
     apostle.stop_being_constricted();
 
+    // Don't let the player get XP from killing off apostles with e.g. ?poison
+    apostle.flags |= MF_NO_REWARD;
+
     // Save the recruit's current, healthy state
     if (apostles.size() > 0)
         apostles[0] = apostle_data(apostle);
@@ -647,7 +652,7 @@ void win_apostle_challenge(monster& apostle)
     // Remind the player how to do this, if they don't already have an apostle
     if (get_num_apostles() == 0)
     {
-        msg += make_stringf("\n(press <w>%c</w> on the <w>%s</w>bility menu to recruit an apostle)",
+        msg += make_stringf(" (press <w>%c</w> on the <w>%s</w>bility menu to recruit an apostle)",
                             get_talent(ABIL_BEOGH_RECRUIT_APOSTLE, false).hotkey,
                             command_to_string(CMD_USE_ABILITY).c_str());
     }
@@ -679,7 +684,7 @@ void end_beogh_recruit_window()
 
 string get_apostle_name(int slot, bool with_title)
 {
-    if (slot > (int)apostles.size() - 1)
+    if (slot > static_cast<int>(apostles.size()) - 1)
         return "Buggy Apostle";
 
     const monster& apostle = apostles[slot].apostle.mons;
@@ -714,9 +719,9 @@ void beogh_recruit_apostle()
     }
 
     if (msg.length() > 0)
-        msg += "you anoint them with ash and charcoal and welcome them as a companion.";
+        msg += "you anoint " + real->pronoun(PRONOUN_OBJECTIVE) + " with ash and charcoal and welcome " + real->pronoun(PRONOUN_OBJECTIVE) + " as a companion.";
     else
-        msg += "You anoint " + real->name(DESC_THE, true) + " with ash and charcoal and welcome them as a companion.";
+        msg += "You anoint " + real->name(DESC_THE, true) + " with ash and charcoal and welcome " + real->pronoun(PRONOUN_OBJECTIVE) + " as a companion.";
 
     mpr(msg.c_str());
 
@@ -814,7 +819,7 @@ void beogh_dismiss_apostle(int slot)
         // This is likely because our apostle is in a disconnected branch that
         // the player is not in. We still need to manually erase them from the
         // companion list, otherwise they will still be recallable and this can
-        // cause other crahses because their apostle data has been deleted.
+        // cause other crashes because their apostle data has been deleted.
         else
             companion_list.erase(mid);
     }
@@ -828,7 +833,7 @@ void beogh_dismiss_apostle(int slot)
 static int _get_num_dead_apostles()
 {
     int num_dead = 0;
-    for (unsigned int i = 1; i < apostles.size(); ++i)
+    for (unsigned int i = FIRST_RECRUITED_APOSTLE; i < apostles.size(); ++i)
     {
         if (apostles[i].state == STATE_DEAD || apostles[i].state == STATE_BANISHED)
             ++num_dead;
@@ -851,26 +856,28 @@ static int _get_apostle_revival_cost()
     return amount;
 }
 
-static apostle_data& _get_saved_apostle(const monster apostle)
+static apostle_data& _get_saved_apostle(const monster& apostle)
 {
-    for (unsigned int i = 1; i < apostles.size(); ++i)
+    for (unsigned int i = FIRST_RECRUITED_APOSTLE; i < apostles.size(); ++i)
     {
         if (apostles[i].apostle.mons.mid == apostle.mid)
             return apostles[i];
     }
 
     // Should be impossible to reach here unless we did something wrong
-    ASSERT(false);
+    die("apostle %s not found", apostle.name(DESC_THE).c_str());
 }
 
 int get_num_apostles()
 {
-    return max(0, (int)apostles.size() - 1);
+    // Shifted by 1 because the 0th apostle is not yet recruited
+    // capped at 0 since it might not have been populated yet
+    return max(0, static_cast<int>(apostles.size()) - 1);
 }
 
 bool beogh_apostle_is_alive(int slot)
 {
-    if (slot > (int)apostles.size())
+    if (slot > static_cast<int>(apostles.size()))
         return false;
 
     return apostles[slot].state != STATE_DEAD;
@@ -880,7 +887,7 @@ bool beogh_apostle_is_alive(int slot)
 // the apostles the player currently has.
 bool apostle_has_unique_name(const monster& apostle)
 {
-    for (unsigned int i = 1; i < apostles.size(); ++i)
+    for (unsigned int i = FIRST_RECRUITED_APOSTLE; i < apostles.size(); ++i)
     {
         if (apostles[i].apostle.mons.name(DESC_PLAIN, true)
             == apostle.name(DESC_PLAIN, true))
@@ -892,7 +899,7 @@ bool apostle_has_unique_name(const monster& apostle)
     return true;
 }
 
-void beogh_swear_vegeance(monster& apostle)
+void beogh_swear_vengeance(const monster& apostle)
 {
     bool already_avenging = you.duration[DUR_BEOGH_SEEKING_VENGEANCE];
     if (!already_avenging)
@@ -903,19 +910,19 @@ void beogh_swear_vegeance(monster& apostle)
     // To keep track of which monsters correspond to which period of avenging
     // (so that off-level things can be cleaned up properly when starting and
     // ending vengeance periods repeatedly)
-    int vengenance_num = you.props[BEOGH_VENGEANCE_NUM_KEY].get_int();
+    int vengeance_num = you.props[BEOGH_VENGEANCE_NUM_KEY].get_int();
     for (radius_iterator ri(apostle.pos(), LOS_NO_TRANS, true); ri; ++ri)
     {
         monster* mon = monster_at(*ri);
-        if (mon && !mon->wont_attack() && !mons_is_firewood(*mon)
+        if (mon && !mon->wont_attack() && !mon->is_firewood()
             // This isn't redundant with wont_attack here, but additionally
             // prevents marking frenzied apostles
             && mon->attitude != ATT_FRIENDLY
-            && !mon->is_summoned() && !mons_is_conjured(mon->type)
+            && !mon->is_summoned() && !mon->is_peripheral()
             && !mon->has_ench(ENCH_VENGEANCE_TARGET))
         {
             you.duration[DUR_BEOGH_SEEKING_VENGEANCE] += 1;
-            mon->add_ench(mon_enchant(ENCH_VENGEANCE_TARGET, vengenance_num, &you, INFINITE_DURATION));
+            mon->add_ench(mon_enchant(ENCH_VENGEANCE_TARGET, vengeance_num, &you, INFINITE_DURATION));
             mon->patrol_point = apostle.pos();
             new_targets = true;
         }
@@ -961,7 +968,7 @@ void beogh_progress_vengeance()
     {
         mprf(MSGCH_DURATION, "You feel as though your fallen companions have been avenged.");
 
-        // This cleanup should usually be unneccessary, since we are only supposed
+        // This cleanup should usually be unnecessary, since we are only supposed
         // to end when we've killed EVERY marked target, but slime creature
         // splitting (and probably some other methods of cloning) can result in
         // more monsters being marked in total than were marked originally,
@@ -1008,7 +1015,7 @@ void beogh_resurrect_followers(bool end_ostracism_only)
     vector<string> revived_names;
     vector<bool> was_banished;
 
-    for (unsigned int i = 1; i < apostles.size(); ++i)
+    for (unsigned int i = FIRST_RECRUITED_APOSTLE; i < apostles.size(); ++i)
     {
         if (apostles[i].state != STATE_ALIVE)
         {
@@ -1035,7 +1042,7 @@ void beogh_resurrect_followers(bool end_ostracism_only)
         {
             if (was_banished[i])
             {
-                // Rough up our poor Abyss escapeee
+                // Rough up our poor Abyss escapee
                 apostle->hit_points -= random2avg(apostle->max_hit_points - 1, 3);
                 if (coinflip())
                     apostle->add_ench(ENCH_WRETCHED);
@@ -1121,17 +1128,22 @@ string apostle_short_description(int slot)
     const apostle_type atype
         = static_cast<apostle_type>(apostle.props[APOSTLE_TYPE_KEY].get_int());
 
-    string str;
+    string status;
+
+    if (slot == 0)
+        status = "<green>**Available to recruit**</green>";
+    else if (!beogh_apostle_is_alive(slot))
+        status = "<lightred>**DEAD**</lightred>";
+    else if (apostle_d.state == STATE_BANISHED)
+        status = "<magenta>**BANISHED**</magenta>";
 
     // Make title line
-    str = make_stringf("%s (<%s>%s</%s>)     %s\n",
+    string str = make_stringf("%s (<%s>%s</%s>)     %s\n",
         apostle.name(DESC_PLAIN, true).c_str(),
         _apostle_type_colours[atype],
         apostle_type_names[atype].c_str(),
         _apostle_type_colours[atype],
-        slot > 0 ? beogh_apostle_is_alive(slot) ? ""
-                                                : "<lightred>**DEAD**</lightred>"
-                 : "<green>**Available to recruit**</green>");
+        status.c_str());
 
     // Stat line
     str += make_stringf("HP: %d    AC: %d    Damage:%d (w/weapon)\n",

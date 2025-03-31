@@ -66,6 +66,13 @@ static VColour _flash_colours[NUM_TERM_COLOURS] =
     VColour(255, 255, 255, 100), // WHITE
 };
 
+/* Copy a VColour but change the alpha */
+static VColour _alpha_flash_colour(int index, int alpha)
+{
+    const VColour source = _flash_colours[index];
+    return VColour(source.r, source.g, source.b, alpha);
+}
+
 DungeonRegion::DungeonRegion(const TileRegionInit &init) :
     TileRegion(init),
     m_cx_to_gx(0),
@@ -205,8 +212,13 @@ void DungeonRegion::pack_buffers()
                 pack_glyph_at(vbuf_cell, x, y);
 
             const int fcol = vbuf_cell->flash_colour;
+            const int falpha = vbuf_cell->flash_alpha;
             if (fcol)
-                m_buf_flash.add(x, y, x + 1, y + 1, _flash_colours[fcol]);
+            {
+                m_buf_flash.add(x, y, x + 1, y + 1,
+                                falpha ? _alpha_flash_colour(fcol, falpha)
+                                       : _flash_colours[fcol]);
+            }
 
             vbuf_cell++;
         }
@@ -555,14 +567,15 @@ int DungeonRegion::handle_mouse(wm_mouse_event &event)
                 {
                     // if on stairs, travel them
                     const dungeon_feature_type feat = env.grid(gc);
-                    switch (feat_stair_direction(feat))
+                    const command_type cmd = feat_stair_direction(feat);
+                    switch (cmd)
                     {
                     case CMD_GO_DOWNSTAIRS:
                     case CMD_GO_UPSTAIRS:
-                        return command_to_key(feat_stair_direction(feat));
+                        return encode_command_as_key(cmd);
                     default:
                         // otherwise wait
-                        return command_to_key(CMD_WAIT);
+                        return encode_command_as_key(CMD_WAIT);
                     }
                 }
                 else
@@ -578,26 +591,32 @@ int DungeonRegion::handle_mouse(wm_mouse_event &event)
                         update_screen();
                         return CK_MOUSE_CMD;
                     }
-                    return command_to_key(CMD_PICKUP);
+                    return encode_command_as_key(CMD_PICKUP);
                 }
             }
 
             const dungeon_feature_type feat = env.grid(gc);
-            switch (feat_stair_direction(feat))
+            const command_type cmd = feat_stair_direction(feat);
+            switch (cmd)
             {
             case CMD_GO_DOWNSTAIRS:
             case CMD_GO_UPSTAIRS:
-                return command_to_key(feat_stair_direction(feat));
+                return encode_command_as_key(cmd);
             default:
                 return 0;
             }
         }
         case wm_mouse_event::RIGHT:
             if (!(event.mod & TILES_MOD_SHIFT))
-                return command_to_key(CMD_RESISTS_SCREEN); // Character overview.
+            {
+                // Character overview.
+                return encode_command_as_key(CMD_RESISTS_SCREEN);
+            }
             if (!you_worship(GOD_NO_GOD))
-                return command_to_key(CMD_DISPLAY_RELIGION); // Religion screen.
-
+            {
+                // Religion screen.
+                return encode_command_as_key(CMD_DISPLAY_RELIGION);
+            }
             // fall through...
         default:
             return 0;
@@ -631,11 +650,12 @@ int tile_click_cell(const coord_def &gc, unsigned char mod)
             return CK_MOUSE_CMD;
     }
 
-    if ((mod & TILES_MOD_CTRL) && adjacent(you.pos(), gc))
+    if ((mod & (TILES_MOD_CTRL | TILES_MOD_SHIFT)) && adjacent(you.pos(), gc))
     {
-        const int cmd = click_travel(gc, mod & TILES_MOD_CTRL);
-        if (cmd != CK_MOUSE_CMD)
-            process_command((command_type) cmd);
+        const command_type cmd = click_travel(gc, mod & TILES_MOD_CTRL,
+                                              mod & TILES_MOD_SHIFT);
+        if (cmd != CMD_NO_CMD)
+            process_command(cmd);
 
         return CK_MOUSE_CMD;
     }
@@ -646,9 +666,9 @@ int tile_click_cell(const coord_def &gc, unsigned char mod)
         return CK_MOUSE_CMD;
 
     dprf("click_travel");
-    const int cmd = click_travel(gc, mod & TILES_MOD_CTRL);
-    if (cmd != CK_MOUSE_CMD)
-        process_command((command_type) cmd);
+    const command_type cmd = click_travel(gc, false, false);
+    if (cmd != CMD_NO_CMD)
+        process_command(cmd);
 
     return CK_MOUSE_CMD;
 }
@@ -741,6 +761,7 @@ bool DungeonRegion::update_tip_text(string &tip)
 
             tip += "\n";
             tip += tile_debug_string(tile_env.fg(ep), tile_env.bg(ep), ' ');
+            tip += "\n";
         }
         else
         {
@@ -760,6 +781,35 @@ bool DungeonRegion::update_tip_text(string &tip)
                                  vp.pos.x, vp.pos.y,
                                  br.x, br.y,
                                  vp.size.x, vp.size.y);
+        }
+
+        {
+            terrain_property_t props = env.pgrid(gc);
+            vector<string> str;
+
+            // Not a complete list at the moment, but focusing on those which
+            // are not otherwise visible in game (such as Sanctuary or bloody).
+            if (props & FPROP_NO_TELE_INTO)
+                str.push_back("no_tele_into");
+
+            if (props & FPROP_NO_CLOUD_GEN)
+                str.push_back("no_cloud_gen");
+
+            if (props & FPROP_NO_TIDE)
+                str.push_back("no_tide");
+
+            if (props & FPROP_NO_JIYVA)
+                str.push_back("no_jiyva");
+
+            if (props & FPROP_SEEN_OR_NOEXP)
+                str.push_back("seen_or_noexp");
+
+            if (!str.empty())
+            {
+                tip += "FProps: ";
+                tip += comma_separated_line(str.begin(), str.end(), " ");
+                tip += "\n\n";
+            }
         }
 
         tip += tile_debug_string(tile_env.bk_fg(gc), tile_env.bk_bg(gc), 'B');
@@ -867,7 +917,14 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
         else if (!cell_is_solid(gc)) // no monster or player
         {
             if (adjacent(gc, you.pos()))
+            {
                 _add_tip(tip, "[L-Click] Move");
+                if (feat_is_open_door(env.grid(gc)))
+                {
+                    _add_tip(tip, "[Shift + L-Click] Close (%)");
+                    cmd.push_back(CMD_CLOSE_DOOR);
+                }
+            }
             else if (env.map_knowledge(gc).feat() != DNGN_UNSEEN)
             {
                 if (click_travel_safe(gc))

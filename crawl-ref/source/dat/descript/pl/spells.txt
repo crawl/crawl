@@ -34,12 +34,6 @@ zdolne do powstania są nim objęte. Za pomocą tego czaru można stworzyć ogro
 armię, jednak utworzeni nieumarli nie są zdolni ani do regeneracji, ani do
 żadnych skomplikowanych akcji, ani nawet do chodzenia po schodach.
 %%%%
-Animate Skeleton spell
-
-Ten czar zmusza martwy szkielet do powstania, nawet jeśli ten szkielet jest
-ciągle jeszcze ubrany w mięso (które zostanie zrzucone). Szkielety są
-prymitywnymi nieumarłymi, niezdolnymi do regeneracji ani chodzenia po schodach.
-%%%%
 Apportation spell
 
 Ten czar pozwala przyciągnąć jakiś przedmiot, lub czasem nawet grupę

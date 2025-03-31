@@ -85,9 +85,9 @@ enum armour_type
 #endif
     ARM_STORM_DRAGON_ARMOUR,
 #if TAG_MAJOR_VERSION == 34
-    ARM_GOLD_DRAGON_HIDE,
+    ARM_GOLDEN_DRAGON_HIDE,
 #endif
-    ARM_GOLD_DRAGON_ARMOUR,
+    ARM_GOLDEN_DRAGON_ARMOUR,
 #if TAG_MAJOR_VERSION == 34
     ARM_SWAMP_DRAGON_HIDE,
 #endif
@@ -179,8 +179,8 @@ enum brand_type // item_def.special
 #if TAG_MAJOR_VERSION > 34
     SPWPN_CONFUSE, // Confusing Touch only for the moment
 #endif
-    SPWPN_WEAKNESS,
-    SPWPN_VULNERABILITY,
+    SPWPN_WEAKNESS,  // Weakness Stinger
+    SPWPN_VULNERABILITY, // Demonic Touch
     SPWPN_FOUL_FLAME,
     SPWPN_DEBUG_RANDART,
     NUM_SPECIAL_WEAPONS,
@@ -322,6 +322,7 @@ enum misc_item_type
     MISC_TIN_OF_TREMORSTONES,
     MISC_CONDENSER_VANE,
     MISC_GRAVITAMBOURINE,
+    MISC_SHOP_VOUCHER,
 
     NUM_MISCELLANY,
     MISC_DECK_UNKNOWN = NUM_MISCELLANY,
@@ -354,6 +355,7 @@ const vector<misc_item_type> misc_types =
     MISC_TIN_OF_TREMORSTONES,
     MISC_CONDENSER_VANE,
     MISC_GRAVITAMBOURINE,
+    MISC_SHOP_VOUCHER,
 };
 
 enum missile_type
@@ -552,6 +554,7 @@ enum special_missile_type // to separate from weapons in general {dlb}
 #endif
     SPMSL_FRENZY,                      // Datura
     SPMSL_BLINDING,                    // Atropa
+    SPMSL_DISJUNCTION,
     NUM_REAL_SPECIAL_MISSILES,
     NUM_SPECIAL_MISSILES = NUM_REAL_SPECIAL_MISSILES,
 };
@@ -569,6 +572,7 @@ enum stave_type
     STAFF_POWER,
 #endif
     STAFF_FIRE,
+    STAFF_FIRST_STAFF = STAFF_FIRE,
     STAFF_COLD,
     STAFF_ALCHEMY,
 #if TAG_MAJOR_VERSION == 34
@@ -675,6 +679,9 @@ enum weapon_type
     WPN_TRIPLE_SWORD,
 
     WPN_DEMON_TRIDENT,
+#if TAG_MAJOR_VERSION > 34
+    WPN_PARTISAN,
+#endif
 #if TAG_MAJOR_VERSION == 34
     WPN_SCYTHE,
 #endif
@@ -706,6 +713,7 @@ enum weapon_type
 
     WPN_CUTLASS,
     WPN_ORCBOW,
+    WPN_PARTISAN,
 #endif
 
     NUM_WEAPONS,
@@ -855,13 +863,14 @@ enum talisman_type
     TALISMAN_DEATH,
     TALISMAN_STORM,
     TALISMAN_FLUX,
+    TALISMAN_VAMPIRE,
     NUM_TALISMANS,
 };
 
 enum special_gizmo_type
 {
     SPGIZMO_NORMAL,
-    SPGIZMO_MANAREV,
+    SPGIZMO_SPELLMOTOR,
     SPGIZMO_GADGETEER,
     SPGIZMO_PARRYREV,
     SPGIZMO_AUTODAZZLE,

@@ -4,7 +4,7 @@ flags: [fighter, speaks, cold_blood]
 species: draconian
 will: 40
 attacks:
- - {type: hit, flavour: flank, damage: 35}
+ - {type: punch, flavour: flank, damage: 35}
  - {type: kick, damage: 20}
  - {type: tail_slap, damage: 15}
 hd: 16

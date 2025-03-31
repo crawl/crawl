@@ -4,8 +4,9 @@ monster: MONS_CENTAUR
 name: Centaur
 difficulty: False
 species_flags:
-  - SPF_SMALL_TORSO
-  - SPF_BARDING
+  - small_torso
+  - barding
+  - no_feet
 aptitudes:
   xp: -1
   hp: 1

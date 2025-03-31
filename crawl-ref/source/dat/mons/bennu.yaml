@@ -5,9 +5,8 @@ resists: {poison: 1, fire: 3, neg: 3, miasma: 1}
 xp_mult: 6
 will: 140
 attacks:
- - {type: peck, flavour: holy, damage: 27}
- - {type: claw, damage: 24}
- - {type: claw, damage: 24}
+ - {type: peck, flavour: holy, damage: 46}
+ - {type: claw, damage: 36}
 hd: 14
 hp_10x: 770
 ac: 6

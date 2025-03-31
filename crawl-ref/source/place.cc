@@ -30,7 +30,20 @@ bool single_level_branch(branch_type branch)
 
 int absdungeon_depth(branch_type branch, int subdepth)
 {
-    return branches[branch].absdepth + subdepth - 1;
+    // Necropolis always counts as the same depth of whatever location it was
+    // entered from.
+    if (branch == BRANCH_NECROPOLIS)
+    {
+        // Protection against wizmode shenanigans
+        if (you.level_stack.empty()
+            || you.level_stack.back().id.branch == BRANCH_NECROPOLIS)
+        {
+            return 1;
+        }
+        return you.level_stack.back().id.absdepth();
+    }
+    else
+        return branches[branch].absdepth + subdepth - 1;
 }
 
 vector<level_id> all_dungeon_ids()

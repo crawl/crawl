@@ -95,6 +95,13 @@ private:
     }
 };
 
+enum body_part_class_flags
+{
+    BPART_INTERNAL = 1,
+    BPART_EXTERNAL = 1 << 1,
+    BPART_ANY      = (BPART_INTERNAL|BPART_EXTERNAL),
+};
+
 /// in what ways do a monster's tiles vary?
 enum mon_type_tile_variation
 {
@@ -255,6 +262,8 @@ const char * single_holiness_description(mon_holy_type holiness);
 string holiness_description(mon_holy_type holiness);
 mon_holy_type mons_class_holiness(monster_type mc);
 
+const char * intelligence_description(mon_intel_type intel);
+
 void discover_mimic(const coord_def& pos);
 void discover_shifter(monster& shifter);
 
@@ -262,7 +271,6 @@ bool mons_is_statue(monster_type mc);
 bool mons_is_demon(monster_type mc);
 bool mons_is_draconian(monster_type mc);
 bool mons_is_base_draconian(monster_type mc);
-bool mons_is_conjured(monster_type mc);
 bool mons_is_beast(monster_type mc);
 bool mons_is_avatar(monster_type mc);
 int mons_demon_tier(monster_type mc);
@@ -305,6 +313,7 @@ bool mons_class_can_regenerate(monster_type mc);
 bool mons_can_regenerate(const monster& mon);
 bool mons_class_fast_regen(monster_type mc);
 int mons_class_regen_amount(monster_type mc);
+int mons_leash_range(monster_type mc);
 int mons_zombie_size(monster_type mc);
 monster_type mons_zombie_base(const monster& mon);
 bool mons_class_is_zombified(monster_type mc);
@@ -347,12 +356,16 @@ void define_monster(monster& mons, bool friendly = false);
 void mons_pacify(monster& mon, mon_attitude_type att = ATT_GOOD_NEUTRAL,
                  bool no_xp = false);
 
-bool mons_should_fire(bolt &beam, bool ignore_good_idea = false);
+bool mons_should_fire(const bolt &beam, const targeting_tracer& tracer,
+                      bool ignore_good_idea = false);
 
 bool mons_has_los_ability(monster_type mon_type);
+bool ms_ranged_spell(spell_type monspell, bool attack_only = false,
+                     bool ench_too = true);
 bool mons_has_ranged_spell(const monster& mon, bool attack_only = false,
                            bool ench_too = true);
 bool mons_has_ranged_attack(const monster& mon);
+bool _mons_has_smite_attack(const monster* mons);
 bool mons_can_attack(const monster& mon);
 
 gender_type mons_class_gender(monster_type mc);
@@ -381,6 +394,7 @@ bool mons_is_batty(const monster& m);
 bool mons_is_influenced_by_sanctuary(const monster& m);
 bool mons_is_fleeing_sanctuary(const monster& m);
 bool mons_just_slept(const monster& m);
+bool mons_is_deep_asleep(const monster& m);
 bool mons_class_is_slime(monster_type mc);
 bool mons_is_slime(const monster& mon);
 bool mons_class_is_plant(monster_type mc);
@@ -398,7 +412,6 @@ bool mons_is_siren_beholder(const monster& mons);
 
 bool mons_is_removed(monster_type mc);
 
-bool mons_looks_stabbable(const monster& m);
 bool mons_looks_distracted(const monster& m);
 
 void mons_start_fleeing_from_sanctuary(monster& mons);
@@ -406,8 +419,8 @@ void mons_stop_fleeing_from_sanctuary(monster& mons);
 
 bool mons_class_is_stationary(monster_type mc);
 bool mons_class_is_firewood(monster_type mc);
+bool mons_class_is_peripheral(monster_type mc);
 bool mons_class_is_test(monster_type mc);
-bool mons_is_firewood(const monster& mon);
 bool mons_is_active_ballisto(const monster& mon);
 bool mons_has_body(const monster& mon);
 bool mons_is_abyssal_only(monster_type mc);
@@ -419,7 +432,6 @@ int cheibriados_monster_player_speed_delta(const monster& mon);
 bool cheibriados_thinks_mons_is_fast(const monster& mon);
 bool mons_is_projectile(monster_type mc);
 bool mons_is_projectile(const monster& mon);
-bool mons_is_object(monster_type mc);
 bool mons_has_blood(monster_type mc);
 bool mons_is_sensed(monster_type mc);
 bool mons_offers_beogh_conversion(const monster& mon);
@@ -468,6 +480,8 @@ monster_type random_monster_at_grid(const coord_def& p, bool species = false);
 void         init_mon_name_cache();
 monster_type get_monster_by_name(string name, bool substring = false);
 
+string random_body_part_name(bool plural, int part_class);
+
 string do_mon_str_replacements(const string &msg, const monster& mons,
                                int s_type = -1);
 
@@ -488,7 +502,7 @@ bool mons_can_traverse(const monster& mon, const coord_def& pos,
                        bool only_in_sight = false,
                        bool checktraps = true);
 
-mon_inv_type equip_slot_to_mslot(equipment_type eq);
+mon_inv_type equip_slot_to_mslot(equipment_slot eq);
 mon_inv_type item_to_mslot(const item_def &item);
 
 bool player_or_mon_in_sanct(const monster& mons);
@@ -566,3 +580,8 @@ bool apply_visible_monsters(monster_func mf,
 int derived_undead_avg_hp(monster_type mtype, int hd, int scale = 10);
 
 int touch_of_beogh_hp_mult(const monster& mon);
+
+bool shoot_through_monster(const actor* agent, const monster& mon,bool do_message = false);
+bool shoot_through_monster(const actor* agent, const monster* mon, bool do_message = false);
+bool never_harm_monster(const actor* agent, const monster& mon, bool do_message = false);
+bool never_harm_monster(const actor* agent, const monster* mon, bool do_message = false);

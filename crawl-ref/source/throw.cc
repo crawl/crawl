@@ -15,6 +15,7 @@
 #include "chardump.h"
 #include "command.h"
 #include "coordit.h"
+#include "describe.h"
 #include "directn.h"
 #include "english.h"
 #include "env.h"
@@ -41,6 +42,7 @@
 #include "showsymb.h"
 #include "skills.h"
 #include "sound.h"
+#include "spl-summoning.h"
 #include "state.h"
 #include "stringutil.h"
 #include "tag-version.h"
@@ -194,18 +196,14 @@ vector<string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
 {
     vector<string> descs;
     item_def* item = active_item();
-    item_def fake_proj;
     const item_def *launcher = action.get_launcher();
-    if (launcher && is_range_weapon(*launcher))
-    {
-        populate_fake_projectile(*launcher, fake_proj);
-        item = &fake_proj;
-    }
-    if (!targeted() || !item || item->base_type != OBJ_MISSILES)
+    const bool ranged = launcher && is_range_weapon(*launcher);
+    if (!targeted() || !(ranged || (item && item->base_type == OBJ_MISSILES)))
         return descs;
 
-    ranged_attack attk(&you, nullptr, launcher, item, false);
-    descs.emplace_back(make_stringf("%d%% to hit", to_hit_pct(mi, attk, false)));
+    ostringstream result;
+    describe_to_hit(mi, result, ranged ? launcher : item);
+    descs.emplace_back(result.str());
 
     if (get_ammo_brand(*item) == SPMSL_SILVER && mi.is(MB_CHAOTIC))
         descs.emplace_back("chaotic");
@@ -512,8 +510,7 @@ static void _setup_missile_beam(const actor *agent, bolt &beam,
             expl->name   += " fragments";
 
             const string short_name =
-                item.name(DESC_BASENAME, true, false, false, false,
-                          ISFLAG_IDENT_MASK | ISFLAG_COSMETIC_MASK);
+                item.name(DESC_BASENAME, true, false, false, false);
 
             expl->name = replace_all(expl->name, item.name(DESC_PLAIN),
                                      short_name);
@@ -624,9 +621,12 @@ void throw_it(quiver::action &a)
 
     if (you.confused())
     {
-        a.target.target = you.pos();
-        a.target.target.x += random2(13) - 6;
-        a.target.target.y += random2(13) - 6;
+        do
+        {
+            a.target.target.x = you.pos().x + random2(13) - 6;
+            a.target.target.y = you.pos().y + random2(13) - 6;
+        } while (a.target.target == you.pos());
+
         a.target.isValid = true;
         a.target.cmd_result = CMD_FIRE;
     }
@@ -676,31 +676,37 @@ void throw_it(quiver::action &a)
         pbolt.damage = dice_def(1, 100);
 
         // Init tracer variables.
-        pbolt.foe_info.reset();
-        pbolt.friend_info.reset();
-        pbolt.foe_ratio = 100;
-        pbolt.is_tracer = true;
+        player_beam_tracer tracer;
         pbolt.overshoot_prompt = false;
 
-        pbolt.fire();
+        pbolt.fire(tracer);
 
         pbolt.hit    = 0;
         pbolt.damage = dice_def();
         if (pbolt.friendly_past_target)
             pbolt.aimed_at_spot = true;
-        if (pbolt.foe_info.count)
+        if (tracer.has_hit_foe())
             aimed_at_foe = true; // dubious
 
-        // Should only happen if the player answered 'n' to one of those
-        // "Fire through friendly?" prompts.
-        if (pbolt.beam_cancelled)
+        if (cancel_beam_prompt(pbolt, tracer))
         {
             you.turn_is_over = false;
             return;
         }
-    }
 
-    pbolt.is_tracer = false;
+        // Warn about Mule potentially knocking the player back into a trap.
+        if (launcher && is_unrandom_artefact(*launcher, UNRAND_MULE))
+        {
+            const coord_def back = you.stumble_pos(a.target.target);
+            if (!back.origin()
+                && back != you.pos()
+                && !check_moveto(back, "potentially stumble back", false))
+            {
+                you.turn_is_over = false;
+                return;
+            }
+        }
+    }
 
     // Now start real firing!
     origin_set_unknown(item);
@@ -743,6 +749,9 @@ void throw_it(quiver::action &a)
     {
         dithmenos_shadow_shoot(a.target, item);
     }
+
+    if (aimed_at_foe && launcher && you.duration[DUR_PARAGON_ACTIVE])
+        paragon_attack_trigger();
 }
 
 // Once the player has committed to a target, shoot/throw/toss at it.
@@ -779,7 +788,7 @@ static void _player_shoot(bolt &pbolt, item_def &item, item_def const *launcher)
 
     // Ensure we're firing a 'missile'-type beam.
     pbolt.pierce    = false;
-    pbolt.is_tracer = false;
+    pbolt.set_is_tracer(false);
 
     pbolt.loudness = item.base_type == OBJ_MISSILES
                    ? ammo_type_damage(item.sub_type) / 3

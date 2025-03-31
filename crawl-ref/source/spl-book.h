@@ -28,7 +28,7 @@ bool is_player_spell(spell_type which_spell);
 bool is_player_book_spell(spell_type which_spell);
 bool is_wand_spell(spell_type spell);
 
-bool book_has_title(const item_def &book, bool ident = false);
+bool book_has_title(const item_def &book);
 
 bool can_learn_spell(bool silent = false);
 bool player_has_available_spells();

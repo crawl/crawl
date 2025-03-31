@@ -514,7 +514,7 @@ bool feat_is_trap(dungeon_feature_type feat)
     return get_feature_def(feat).flags & FFT_TRAP;
 }
 
-/** Is this feature a type of water, with the concomitant dangers/bonuss?
+/** Is this feature a type of water, with the concomitant dangers/bonuses?
  */
 bool feat_is_water(dungeon_feature_type feat)
 {
@@ -670,6 +670,7 @@ bool feat_is_fountain(dungeon_feature_type feat)
     return feat == DNGN_FOUNTAIN_BLUE
            || feat == DNGN_FOUNTAIN_SPARKLING
            || feat == DNGN_FOUNTAIN_BLOOD
+           || feat == DNGN_FOUNTAIN_EYES
            || feat == DNGN_DRY_FOUNTAIN;
 }
 
@@ -678,7 +679,8 @@ bool feat_is_fountain(dungeon_feature_type feat)
 bool feat_is_food(dungeon_feature_type feat)
 {
     return feat == DNGN_CACHE_OF_FRUIT
-           || feat == DNGN_CACHE_OF_MEAT;
+           || feat == DNGN_CACHE_OF_MEAT
+           || feat == DNGN_CACHE_OF_BAKED_GOODS;
 }
 
 /** Is this feature non-solid enough that you can reach past it?
@@ -701,7 +703,8 @@ FEATFN_MEMOIZED(feat_is_critical, feat)
     return feat_stair_direction(feat) != CMD_NO_CMD
            || feat_altar_god(feat) != GOD_NO_GOD
            || feat == DNGN_TRANSPORTER_LANDING
-           || feat == DNGN_MALIGN_GATEWAY;
+           || feat == DNGN_MALIGN_GATEWAY
+           || feat == DNGN_ORB_DAIS;
 }
 
 /** Can you use this feature for a map border?
@@ -1048,7 +1051,9 @@ static coord_def _dgn_find_nearest_square(
 static bool _item_safe_square(const coord_def &pos)
 {
     const dungeon_feature_type feat = env.grid(pos);
-    return feat_is_traversable(feat) && !feat_destroys_items(feat);
+    return feat_is_traversable(feat)
+            && !feat_is_closed_door(feat)
+            && !feat_destroys_items(feat);
 }
 
 static bool _item_traversable_square(const coord_def &pos)
@@ -1070,6 +1075,7 @@ static bool _dgn_shift_item(const coord_def &pos, item_def &item)
     {
         int index = item.index();
         move_item_to_grid(&index, np);
+
         return true;
     }
     return false;
@@ -1301,6 +1307,11 @@ void dungeon_terrain_changed(const coord_def &pos,
 {
     if (env.grid(pos) == nfeat)
         return;
+
+    // Cannot change the terrain beneath the orb's starting location by any means.
+    if (env.grid(pos) == DNGN_ORB_DAIS)
+        return;
+
     // If we're trying to place a wall on top of a monster, push it out of the
     // way first.
     if (feat_is_wall(nfeat) && monster_at(pos))
@@ -1940,6 +1951,8 @@ const char* feat_type_name(dungeon_feature_type feat)
         return "shop";
     if (feat_is_fountain(feat))
         return "fountain";
+    if (feat == DNGN_ORB_DAIS)
+        return "dais";
     if (feat == DNGN_UNSEEN)
         return "unknown terrain";
     return "floor";
@@ -2041,6 +2054,12 @@ void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
                          terrain_change_type type, int mid)
 {
     dungeon_feature_type old_feat = env.grid(pos);
+
+    // We can't actually change this, so don't add a map marker that will add
+    // a confusing 'summoned' to the feature name when examining it.
+    if (old_feat == DNGN_ORB_DAIS)
+        return;
+
     tile_flavour old_flv = tile_env.flv(pos);
     for (map_marker *marker : env.markers.get_markers_at(pos))
     {
@@ -2152,6 +2171,8 @@ static bool _revert_terrain_to(coord_def pos, dungeon_feature_type feat)
     return true;
 }
 
+// If ctype == NUM_TERRAIN_CHANGE_TYPES, will revert *all* terrain changes on
+// the given pos.
 bool revert_terrain_change(coord_def pos, terrain_change_type ctype)
 {
     dungeon_feature_type newfeat = DNGN_UNSEEN;
@@ -2166,7 +2187,7 @@ bool revert_terrain_change(coord_def pos, terrain_change_type ctype)
             map_terrain_change_marker* tmarker =
                     dynamic_cast<map_terrain_change_marker*>(marker);
 
-            if (tmarker->change_type == ctype)
+            if (tmarker->change_type == ctype || ctype == NUM_TERRAIN_CHANGE_TYPES)
             {
                 if (tmarker->colour != BLACK)
                     colour = tmarker->colour;
@@ -2422,7 +2443,7 @@ coord_def push_or_teleport_actor_from(const coord_def& pos)
         {
             if (!actor_at(*di)
                 && ((act->is_player() && you.can_pass_through(*di))
-                    || act->is_monster() && monster_habitable_grid(act->as_monster(), env.grid(*di))))
+                    || act->is_monster() && monster_habitable_grid(act->as_monster(), *di)))
             {
                 if (act->is_player())
                     move_player_to_grid(*di, false);
@@ -2531,7 +2552,7 @@ void ice_wall_damage(monster &mons, int delay)
         if (mons.alive())
         {
             behaviour_event(&mons, ME_WHACK, &you);
-            mons.expose_to_element(BEAM_COLD, orig_dam);
+            mons.expose_to_element(BEAM_COLD, orig_dam, &you);
         }
     }
 }

@@ -345,7 +345,7 @@ static peeve_map divine_peeves[] =
             1, 0, nullptr, " does not appreciate your training of magic skills!"
         } },
         { DID_WIZARDLY_ITEM, {
-            "you use magical staves or pain-branded weapons", true,
+            "you use magical staves or other wizardly items", true,
             1, 0, nullptr, " does not appreciate your use of wizardly items!"
         } },
     },
@@ -644,25 +644,31 @@ static const like_response _yred_kill_response()
         _piety_bonus_for_holiness(MH_NATURAL), 18, 0,
         nullptr, [] (int &piety, int &, const monster* victim)
         {
-            if (!yred_torch_is_raised())
+            if (victim)
             {
-                piety = 0;
-                //Print a reminder if the torch isn't lit, but *could* be
-                if (yred_cannot_light_torch_reason().empty())
-                    mprf(MSGCH_GOD, "With your torch unlit, their soul goes wasted...");
-            }
-            else if (victim && !victim->has_ench(ENCH_SOUL_RIPE))
-            {
-                mprf(MSGCH_GOD, "%s %ssoul becomes fuel for the torch.",
-                                you.can_see(*victim) ? "Their" : "A",
-                                mons_is_unique(victim->type) ? "potent "
-                                : victim->holiness() & MH_HOLY ? "unsullied " : "");
+                if (!yred_torch_is_raised())
+                {
+                    piety = 0;
+                    //Print a reminder if the torch isn't lit, but *could* be
+                    if (yred_cannot_light_torch_reason().empty())
+                    {
+                        mprf(MSGCH_GOD, "With your torch unlit, %s soul goes wasted...",
+                             you.can_see(*victim) ? victim->pronoun(PRONOUN_POSSESSIVE).c_str() : "a");
+                    }
+                }
+                else
+                {
+                    mprf(MSGCH_GOD, "%s %ssoul becomes fuel for the torch.",
+                         you.can_see(*victim) ? victim->pronoun(PRONOUN_POSSESSIVE).c_str() : "A",
+                         mons_is_unique(victim->type) ? "potent "
+                             : victim->holiness() & MH_HOLY ? "unsullied " : "");
 
-                if (mons_is_unique(victim->type))
-                    piety *= 3;
+                    if (mons_is_unique(victim->type))
+                        piety *= 3;
 
-                if (victim->holiness() & MH_HOLY)
-                    piety *= 2;
+                    if (victim->holiness() & MH_HOLY)
+                        piety *= 2;
+                }
             }
         }
     };
@@ -880,7 +886,7 @@ static like_map divine_likes[] =
             [] (int &piety, int &/*denom*/, const monster* /*victim*/)
             {
                 // piety = denom = level at the start of the function
-                piety = 20;
+                piety = 18;
             }
         } },
     },
@@ -1146,20 +1152,25 @@ conduct_type god_hates_item_handling(const item_def& item)
 }
 
 /**
- * Handle god conducts triggered by hurting a monster. Currently set up to only
- * account for Uskayaw's use pattern; if anyone else uses it, add a second case.
+ * Handle passive effects triggered by hurting a monster (eg: Uskayaw piety,
+ * Beogh healing)
  *
- * @param thing_done        The conduct in question.
  * @param victim            The victim being harmed.
  * @param damage_done       The amount of damage done.
+ * @param flavor            The flavour of damage done
+ * @param kill_type         The category of damage source (eg: clouds)
  */
-void did_hurt_conduct(conduct_type thing_done,
-                      const monster &victim,
-                      int damage_done)
+void did_hurt_monster(const monster &victim, int damage_done,
+                      beam_type flavour, kill_method_type kill_type)
 {
-    UNUSED(thing_done);
-    // Currently only used by Uskayaw; initially planned to use god conduct
-    // logic more heavily, but the god seems to need something different.
+    if (flavour == BEAM_SHARED_PAIN
+        || flavour == BEAM_STICKY_FLAME
+        || kill_type == KILLED_BY_POISON
+        || kill_type == KILLED_BY_CLOUD
+        || kill_type == KILLED_BY_BEOGH_SMITING)
+    {
+        return;
+    }
 
     if (you_worship(GOD_USKAYAW))
     {

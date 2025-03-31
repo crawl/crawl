@@ -34,6 +34,7 @@
 #include "dgn-overview.h"
 #include "dgn-shoals.h"
 #include "end.h"
+#include "english.h"
 #include "fight.h"
 #include "files.h"
 #include "flood-find.h"
@@ -193,7 +194,6 @@ static void _mark_solid_squares();
 vector<vault_placement> Temp_Vaults;
 static unique_creature_list temp_unique_creatures;
 static FixedVector<unique_item_status_type, MAX_UNRANDARTS> temp_unique_items;
-static set<misc_item_type> temp_generated_misc;
 
 const map_bitmask *Vault_Placement_Mask = nullptr;
 
@@ -301,9 +301,8 @@ bool builder(bool enable_random_maps)
     // TODO: why are these globals?
     // Save a copy of unique creatures for vetoes.
     temp_unique_creatures = you.unique_creatures;
-    // And unrands & misc items
+    // And unrands
     temp_unique_items = you.unique_items;
-    temp_generated_misc = you.generated_misc;
 
     unwind_bool levelgen(crawl_state.generating_level, true);
     rng::generator levelgen_rng(you.where_are_you);
@@ -345,7 +344,6 @@ bool builder(bool enable_random_maps)
                 get_uniq_map_names() = uniq_names;
                 you.unique_creatures = temp_unique_creatures;
                 you.unique_items = temp_unique_items;
-                you.generated_misc = temp_generated_misc;
 
                 // Because vault generation can be interrupted, this potentially
                 // leaves unlinked items kicking around, which triggers a lot
@@ -733,13 +731,15 @@ void level_clear_vault_memory()
     env.level_map_ids.init(INVALID_MAP_INDEX);
 }
 
-void dgn_flush_map_memory()
+/*
+It's probably better in general to just reset `you` instead of calling this.
+But that's not so convenient for some users of this function, notably lua
+tests. This leaves some state uninitialized, and probably should be immediately
+followed by a call to `initial_dungeon_setup` and something that moves the
+player to a level or regenerates a level.
+*/
+void dgn_reset_player_data()
 {
-    // it's probably better in general to just reset `you`. But that's not so
-    // convenient for lua tests, who are the only user of this function.
-    // This leaves some state uninitialized, and probably should be immediately
-    // followed by a call to `initial_dungeon_setup` and something that moves
-    // the player to a level or regenerates a level.
 
     // vaults and map stuff
     you.uniq_map_tags.clear();
@@ -762,7 +762,7 @@ void dgn_flush_map_memory()
     // the following is supposed to clear any persistent lua state related to
     // the builder. However, it's susceptible to custom dlua doing its own
     // thing...
-    dlua.callfn("dgn_clear_data", "");
+    dlua.callfn("dgn_clear_persistant_data", "");
 
     // monsters
     you.unique_creatures.reset();
@@ -770,6 +770,7 @@ void dgn_flush_map_memory()
     // item stuff that can interact with the builder
     you.runes.reset();
     you.obtainable_runes = 15;
+    initialise_item_sets(true);
     you.unique_items.init(UNIQ_NOT_EXISTS);
     you.octopus_king_rings = 0x00;
     you.item_description.init(255); // random names need reset after this, e.g.
@@ -932,7 +933,7 @@ static bool _dgn_square_is_boring(const coord_def &c)
     const dungeon_feature_type feat = env.grid(c);
     return (feat_has_solid_floor(feat) || feat_is_door(feat))
         && (env.mgrid(c) == NON_MONSTER
-            || mons_is_firewood(env.mons[env.mgrid(c)]))
+            || env.mons[env.mgrid(c)].is_firewood())
         && (env.level_map_mask(c) & MMT_PASSABLE
             || !(env.level_map_mask(c) & MMT_OPAQUE));
 }
@@ -960,7 +961,9 @@ static bool _dgn_fill_zone(
     bool ret = false;
     list<coord_def> points[2];
     int cur = 0;
+#ifdef DEBUG_DIAGNOSTICS
     int found_points = 0;
+#endif
 
     // No bounds checks, assuming the level has at least one layer of
     // rock border.
@@ -970,7 +973,9 @@ static bool _dgn_fill_zone(
         for (const auto &c : points[cur])
         {
             travel_point_distance[c.x][c.y] = zone;
+#ifdef DEBUG_DIAGNOSTICS
             found_points++;
+#endif
 
             if (iswanted && iswanted(c))
                 ret = true;
@@ -1186,7 +1191,7 @@ static int _process_disconnected_zones(int x1, int y1, int x2, int y2,
                             && !env.mons[env.mgrid(c)].is_habitable_feat(fill))
                         {
                             monster_die(env.mons[env.mgrid(c)],
-                                        KILL_RESET, NON_MONSTER, false, true);
+                                        KILL_RESET, NON_MONSTER, true);
                         }
                     }
                 }
@@ -1524,7 +1529,6 @@ void dgn_reset_level(bool enable_random_maps)
 
     you.unique_creatures = temp_unique_creatures;
     you.unique_items = temp_unique_items;
-    you.generated_misc = temp_generated_misc;
 
 #ifdef DEBUG_STATISTICS
     _you_all_vault_list.clear();
@@ -2034,9 +2038,13 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs,
     // In Hell, don't create extra hatches, the levels are small already.
     if (player_in_branch(BRANCH_ZOT) || player_in_hell())
     {
-        replace = random_choose(DNGN_FOUNTAIN_BLUE,
-                                DNGN_FOUNTAIN_SPARKLING,
-                                DNGN_FOUNTAIN_BLOOD);
+        if (player_in_branch(BRANCH_GEHENNA) || player_in_branch(BRANCH_TARTARUS))
+            replace = random_choose(DNGN_FOUNTAIN_BLOOD, DNGN_DRY_FOUNTAIN);
+        else
+        {
+            replace = random_choose(DNGN_FOUNTAIN_BLUE, DNGN_FOUNTAIN_SPARKLING,
+                                    DNGN_FOUNTAIN_BLOOD);
+        }
     }
 
     dprf(DIAG_DNGN, "Before culling: %d/%d %s stairs",
@@ -2795,6 +2803,8 @@ static void _build_dungeon_level()
         && !player_in_branch(BRANCH_SHOALS))
     {
         _prepare_water();
+        if (player_in_branch(BRANCH_LAIR) || !one_chance_in(4))
+            _prepare_water();
     }
 
     if (player_in_hell())
@@ -2863,6 +2873,7 @@ int count_feature_in_box(int x0, int y0, int x1, int y1,
 // shallow. Checks each water space.
 static void _prepare_water()
 {
+    set<coord_def> fix_positions;
     for (rectangle_iterator ri(1); ri; ++ri)
     {
         if (map_masked(*ri, MMT_NO_POOL) || env.grid(*ri) != DNGN_DEEP_WATER)
@@ -2872,14 +2883,17 @@ static void _prepare_water()
         {
             const dungeon_feature_type which_grid = env.grid(*ai);
 
-            if (which_grid == DNGN_SHALLOW_WATER && one_chance_in(20)
-                || feat_has_dry_floor(which_grid) && x_chance_in_y(2, 5))
+            if (which_grid == DNGN_SHALLOW_WATER && one_chance_in(10)
+                || feat_has_dry_floor(which_grid) && one_chance_in(5))
             {
-                _set_grd(*ri, DNGN_SHALLOW_WATER);
+                fix_positions.insert(*ri);
                 break;
             }
         }
     }
+
+    for (coord_def pos : fix_positions)
+        _set_grd(pos, DNGN_SHALLOW_WATER);
 }
 
 static bool _vault_can_use_layout(const map_def *vault, const map_def *layout)
@@ -3540,7 +3554,16 @@ static bool _builder_normal()
 
 static void _place_traps()
 {
-    const int num_traps = random2avg(2 * trap_rate_for_place(), 2);
+
+    int num_traps = random2avg(2 * trap_rate_for_place(), 2);
+
+    // Snake and Vaults don't have a lot of unique terrain types or open
+    // themes compared to their adjacent branches, and have themed weaker
+    // trap options to fall back on, so they get extra traps.
+    if (player_in_branch(BRANCH_SNAKE))
+        num_traps += 2;
+    else if (player_in_branch(BRANCH_VAULTS))
+        num_traps += 1;
 
     ASSERT(num_traps >= 0);
     dprf("attempting to place %d traps", num_traps);
@@ -3585,7 +3608,7 @@ static void _place_traps()
         env.grid(ts.pos) = ts.feature();
         ts.prepare_ammo();
         env.trap[ts.pos] = ts;
-        dprf("placed a %s trap", trap_name(type).c_str());
+        dprf("placed %s trap", article_a(trap_name(type)).c_str());
     }
 
     if (player_in_branch(BRANCH_SPIDER))
@@ -4090,7 +4113,7 @@ static void _place_assorted_zombies()
         mg.base_type = z_base;
         mg.behaviour = BEH_SLEEP;
         mg.map_mask |= MMT_NO_MONS;
-        mg.preferred_grid_feature = DNGN_FLOOR;
+        mg.flags |= MG_PREFER_LAND;
 
         place_monster(mg);
     }
@@ -4111,12 +4134,6 @@ static void _builder_monsters()
     const bool in_shoals = player_in_branch(BRANCH_SHOALS);
     if (in_shoals)
         dgn_shoals_generate_flora();
-
-    // Try to place Shoals monsters on floor where possible instead of
-    // letting all the merfolk be generated in the middle of the
-    // water.
-    const dungeon_feature_type preferred_grid_feature =
-        in_shoals ? DNGN_FLOOR : DNGN_UNSEEN;
 
     dprf(DIAG_DNGN, "_builder_monsters: Generating %d monsters", mon_wanted);
     for (int i = 0; i < mon_wanted; i++)
@@ -4149,7 +4166,12 @@ static void _builder_monsters()
 
         mg.flags    |= MG_PERMIT_BANDS;
         mg.map_mask |= MMT_NO_MONS;
-        mg.preferred_grid_feature = preferred_grid_feature;
+
+        // Try to place Shoals monsters on solid ground where possible, instead
+        // of letting half the level spawn at the far reaches of deep water.
+        if (in_shoals)
+            mg.flags |= MG_PREFER_LAND;
+
         place_monster(mg);
     }
 
@@ -4175,7 +4197,7 @@ static void _randomly_place_item(int item)
         found = env.grid(itempos) == DNGN_FLOOR
                 && !map_masked(itempos, MMT_NO_ITEM)
                 // oklobs or statues are ok
-                && (!mon || !mons_is_firewood(*mon));
+                && (!mon || !mon->is_firewood());
     }
     if (!found)
     {
@@ -4688,8 +4710,7 @@ static int _dgn_item_corpse(const item_spec &ispec, const coord_def where)
         mon->position = where;
         corpse = place_monster_corpse(*mon, true);
         // Dismiss the monster we used to place the corpse.
-        mon->flags |= MF_HARD_RESET;
-        monster_die(*mon, KILL_DISMISSED, NON_MONSTER, false, true);
+        monster_die(*mon, KILL_RESET, NON_MONSTER, true);
     }
 
     if (ispec.props.exists(CORPSE_NEVER_DECAYS))
@@ -4787,7 +4808,6 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
         item.base_type = OBJ_MISCELLANY;
         const auto typ = get_misc_item_type(spec.sub_type, false);
         item.sub_type = typ;
-        you.generated_misc.insert(typ);
         item_colour(item);
         item_set_appearance(item);
         ASSERT(item.is_valid());
@@ -4838,7 +4858,7 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
         item_set_appearance(item);
     }
     if (props.exists(IDENT_KEY))
-        item.flags |= props[IDENT_KEY].get_int();
+        item.flags |= ISFLAG_IDENTIFIED;
     if (props.exists(UNOBTAINABLE_KEY))
     {
         item.flags |= ISFLAG_UNOBTAINABLE;
@@ -4847,6 +4867,12 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
             destroy_item(item, true);
             return false;
         }
+    }
+
+    if (props.exists(CHAOTIC_ITEM_KEY) && is_unrandom_artefact(item)
+        && item.base_type == OBJ_WEAPONS)
+    {
+        item.flags |= ISFLAG_CHAOTIC;
     }
 
     if (props.exists(NO_PICKUP_KEY))
@@ -4879,7 +4905,7 @@ static object_class_type _superb_object_class()
             10, OBJ_JEWELLERY,
             10, OBJ_BOOKS,
             10, OBJ_STAVES,
-            10, OBJ_MISCELLANY,
+            4, OBJ_MISCELLANY,
             1, OBJ_TALISMANS);
 }
 
@@ -5037,8 +5063,9 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec, monster *mon)
     // Get rid of existing equipment.
     for (mon_inv_iterator ii(*mon); ii; ++ii)
     {
-        mon->unequip(*ii, false, true);
-        destroy_item(ii->index(), true);
+        item_def &item = *ii;
+        mon->unequip(ii.slot(), false, true);
+        destroy_item(item, true);
     }
 
     item_list &list = mspec.items;
@@ -5090,7 +5117,7 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec, monster *mon)
                 if (_apply_item_props(item, spec, (useless_tries >= 10), true))
                 {
                     // Mark items on summoned monsters as such.
-                    if (mspec.abjuration_duration != 0)
+                    if (mspec.summon_duration != 0)
                         item.flags |= ISFLAG_SUMMONED;
 
                     if (!mon->pickup_item(item, false, true))
@@ -5181,12 +5208,12 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
         }
 
         const monster_type montype = mons_class_is_zombified(type)
-                                                         ? mspec.monbase
-                                                         : type;
+                                     ? fixup_zombie_type(type, mspec.monbase)
+                                     : type;
 
         const habitat_type habitat = mons_class_primary_habitat(montype);
 
-        if (in_bounds(where) && !monster_habitable_grid(montype, env.grid(where)))
+        if (in_bounds(where) && !monster_habitable_grid(montype, where))
             dungeon_terrain_changed(where, habitat2grid(habitat));
     }
 
@@ -5238,7 +5265,7 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
         mg.xp_tracking = XP_VAULT;
 
     // Marking monsters as summoned
-    mg.abjuration_duration = mspec.abjuration_duration;
+    mg.summon_duration     = mspec.summon_duration;
     mg.summon_type         = mspec.summon_type;
     mg.non_actor_summoner  = mspec.non_actor_summoner;
 
@@ -5921,6 +5948,10 @@ static dungeon_feature_type _pick_an_altar()
             god = random_choose(GOD_VEHUMET, GOD_SIF_MUNA, GOD_KIKUBAAQUDGHA);
             break;
 
+       case BRANCH_SNAKE: // barding god, slow god, treasure hoard god
+            god = random_choose(GOD_OKAWARU, GOD_CHEIBRIADOS, GOD_GOZAG);
+            break;
+
         case BRANCH_SLIME:
             god = GOD_JIYVA;
             break;
@@ -5933,15 +5964,19 @@ static dungeon_feature_type _pick_an_altar()
         case BRANCH_DIS:
         case BRANCH_GEHENNA:
         case BRANCH_COCYTUS:
-        case BRANCH_TARTARUS:
-        case BRANCH_PANDEMONIUM: // particularly destructive / elemental gods
-            if (one_chance_in(3))
+        case BRANCH_TARTARUS:  // particularly destructive / elemental gods
+            if (one_chance_in(9))
             {
                 god = random_choose(GOD_KIKUBAAQUDGHA, GOD_NEMELEX_XOBEH,
                                     GOD_QAZLAL, GOD_VEHUMET);
             }
             else
                 god = GOD_MAKHLEB;
+            break;
+
+        case BRANCH_PANDEMONIUM: // DS enemy gods + the & summoner
+            god = random_choose(GOD_KIKUBAAQUDGHA, GOD_LUGONU, GOD_TROG,
+                                GOD_MAKHLEB, GOD_NEMELEX_XOBEH);
             break;
 
         default: // Any temple-valid god
@@ -5965,13 +6000,15 @@ void place_spec_shop(const coord_def& where, shop_type force_type)
 
 int greed_for_shop_type(shop_type shop, int level_number)
 {
+    const int level_greed = level_number / 6 + random2(level_number * 2 / 3);
+
     if (!shoptype_identifies_stock(shop))
     {
         const int rand = random2avg(19, 2);
-        return 15 + rand + random2(level_number);
+        return 15 + rand + level_greed;
     }
     const int rand = random2(5);
-    return 10 + rand + random2(level_number / 2);
+    return 10 + rand + level_greed;
 }
 
 /**
@@ -5989,12 +6026,12 @@ static int _shop_greed(shop_type type, int level_number, int spec_greed)
     const int base_greed = greed_for_shop_type(type, level_number);
     int adj_greed = base_greed;
 
-    // Allow bargains in bazaars, prices randomly between 60% and 95%.
+    // Allow bargains in bazaars, prices randomly between 50% and 85%.
     if (player_in_branch(BRANCH_BAZAAR))
     {
         // divided by 20, so each is 5% of original price
-        // 12-19 = 60-95%, per above
-        const int factor = random2(8) + 12;
+        // 10-17 = 50-85%, per above
+        const int factor = random2(8) + 10;
 
         dprf(DIAG_DNGN, "Shop type %d: original greed = %d, factor = %d,"
              " discount = %d%%.",
@@ -6179,7 +6216,7 @@ static void _stock_shop_item(int j, shop_type shop_type_,
 
     // Identify the item, unless we don't do that.
     if (shoptype_identifies_stock(shop_type_))
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
+        item.flags |= ISFLAG_IDENTIFIED;
 
     // Now move it into the shop!
     dec_mitm_item_quantity(item_index, item.quantity, false);
@@ -6259,6 +6296,8 @@ object_class_type item_in_shop(shop_type shop_type)
 
     case SHOP_GENERAL:
     case SHOP_GENERAL_ANTIQUE:
+        if (one_chance_in(10))
+            return OBJ_MISCELLANY;
         return OBJ_RANDOM;
 
     case SHOP_JEWELLERY:
@@ -6411,7 +6450,7 @@ static void _place_specific_trap(const coord_def& where, trap_spec* spec,
     env.grid(where) = trap_feature(spec_type);
     t.prepare_ammo(charges);
     env.trap[where] = t;
-    dprf("placed a %s trap", trap_name(spec_type).c_str());
+    dprf("placed %s trap", article_a(trap_name(spec_type)).c_str());
 }
 
 /**
@@ -6515,8 +6554,7 @@ static coord_def _get_feat_dest(coord_def base_pos, dungeon_feature_type feat,
                 dest_pos = random_in_bounds();
             }
             while (env.grid(dest_pos) != DNGN_FLOOR
-                   || env.pgrid(dest_pos) & FPROP_NO_TELE_INTO
-                   || count_adjacent_slime_walls(dest_pos) != 0);
+                   || env.pgrid(dest_pos) & FPROP_NO_TELE_INTO);
         }
 
         if (!shaft)

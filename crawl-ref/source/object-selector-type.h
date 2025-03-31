@@ -22,4 +22,6 @@ enum object_selector
     OSEL_WORN_EQUIPABLE          = -18,
     OSEL_WEARABLE                = -19,
     OSEL_AMULET                  = -20,
+    OSEL_ARTEFACT_WEAPON         = -21,
+    OSEL_MARKED_ITEMS            = -22,
 };

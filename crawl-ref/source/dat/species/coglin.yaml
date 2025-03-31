@@ -26,6 +26,7 @@ aptitudes:
   conjurations: -1
   hexes: -1
   alchemy: +1
+  forgecraft: +2
   fire_magic: -1
   ice_magic: -1
   air_magic: -1
@@ -45,11 +46,12 @@ mutations:
     MUT_WARMUP_STRIKES: 1
     MUT_NO_JEWELLERY: 1
 recommended_jobs:
-  - JOB_ARTIFICER
-  - JOB_HUNTER
-  - JOB_GLADIATOR
-  - JOB_WARPER
-  - JOB_BERSERKER
-  - JOB_ALCHEMIST
+  - artificer
+  - hunter
+  - gladiator
+  - warper
+  - berserker
+  - alchemist
+  - forgewright
 
 orc_name: Exo-Orc

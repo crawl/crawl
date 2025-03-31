@@ -147,11 +147,11 @@ void dismiss_god_summons(god_type god)
     for (monster_iterator mi; mi; ++mi)
     {
         if (is_follower(**mi)
-            && mi->has_ench(ENCH_ABJ)
+            && mi->is_summoned()
             && mons_is_god_gift(**mi, god))
         {
             // The monster disappears.
-            monster_die(**mi, KILL_DISMISSED, NON_MONSTER);
+            monster_die(**mi, KILL_RESET, NON_MONSTER);
         }
     }
 }

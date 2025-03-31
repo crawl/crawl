@@ -126,7 +126,9 @@ void set_terrain_seen(const coord_def pos)
     {
         _automap_from(pos.x, pos.y, _map_quality());
 
-        if (!is_boring_terrain(feat))
+        if (!is_boring_terrain(feat)
+            && (!env.map_forgotten
+                || ~(*env.map_forgotten)(pos).flags & MAP_SEEN_FLAG))
         {
             string desc = feature_description_at(pos, false, DESC_A) + ".";
             take_note(Note(NOTE_SEEN_FEAT, 0, 0, desc));
@@ -167,7 +169,7 @@ void map_cell::set_detected_item()
 {
     clear_item();
     flags |= MAP_DETECTED_ITEM;
-    _item = new item_def();
+    _item = make_unique<item_def>();
     _item->base_type = OBJ_DETECTED;
     _item->rnd       = 1;
 }

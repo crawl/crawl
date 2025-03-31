@@ -83,6 +83,8 @@
     Mike Adams
     Aj Adamson
     Nikhil Addleman
+    adelrune
+    Ahyangyi
     Alcon
     Brandon Allbery
     Warwick Allison
@@ -128,6 +130,7 @@
     Joe Buzzelli
     Micah C
     Policarpo Caballero
+    cadi
     Ian Caltabiano
     David Candido
     Edgar Carballo
@@ -151,6 +154,7 @@
     cut1less
     Matthew Daley
     David Damerell
+    Darby
     Paul Dejean
     Denzi
     Sean Dewar
@@ -178,6 +182,7 @@
     Robert Faulk
     Floodkiller
     floraline
+    Flugkiller
     Brett Foster
     Kyle Fox
     Perry Fraser
@@ -187,6 +192,7 @@
     Ge0ff
     Joshua Gelbard
     Peter Gerlagh
+    Charlie Gettys
     Benoît Giannangeli
     Gittourarmy
     Ben Goetter
@@ -204,14 +210,15 @@
     Sophie Hamilton
     Chris Hamons
     Tomas Krag Hansen
+    Lexi Hattaway
     Taylor Hedberg
     Anders Heggestøyl
     Alex Henry
     R. Dan Henry
-    Max 'Ploomutoo' Hon-Anderson
     Chris Honey
     Sylvia 'Onia' Hörnke
     Benoit Hudson
+    Michael Hunter
     Hurricos
     Iainuki
     ICC
@@ -248,6 +255,7 @@
     Maciej Lapinski
     Lamil Lerran
     Jordan Lewis
+    Lici
     Sami Liedes
     Dom 'Bodrick' Light
     Lightli
@@ -289,6 +297,7 @@
     Mushboom
     Rosstin Murphy
     Eva Myers
+    Mystic Sailboat
     nagdon
     Naruni
     neofelis
@@ -316,12 +325,16 @@
     panicbit
     Anders Papitto
     William Parker
+    Christopher Partin
     Pedro
     Pekkekke
+    Alejandro Ramirez
     Rytis Petronis
     Arlen Phillips
+    pianoman523
     pikaro
     Lemuel Pitkin
+    valerie "ploomutoo"
     Paul Pollack
     Poroing
     Iago Porto
@@ -329,11 +342,13 @@
     Brian Power
     psywombats
     pubby
+    pyy156941
     Ashley Elizabeth Raine
     randomMesh
     Edward Randtke
     Derek Ray
     RealzHS
+    Robert J. Redelmeier
     Terence Reeves
     Tobias Rehbein
     Remsleep
@@ -385,6 +400,7 @@
     John Stilley
     Johan Strandell
     Ben Striegel
+    Bernardo Sulzbach
     Cebolla Sunbeam
     Derrick Sund
     Pavel 'Curio' Svinarchuk
@@ -392,6 +408,7 @@
     Matthew Tadd
     William Tanksley, Jr.
     Tedronai
+    tekkud
     Chris Terenzi
     Jared 'Twinge' Tinney
     Matt Titus

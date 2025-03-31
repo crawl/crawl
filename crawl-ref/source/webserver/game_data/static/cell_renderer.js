@@ -224,9 +224,6 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
 
             if (!cell)
             {
-                if (options.get("tile_display_mode") != "glyphs")
-                    this.render_flash(x, y);
-
                 this.render_cursors(cx, cy, x, y);
                 return;
             }
@@ -384,7 +381,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 this.ctx.save();
                 try
                 {
-                    this.ctx.globalAlpha = cell.trans ? 0.5 : 1.0;
+                    this.ctx.globalAlpha = cell.trans ? 0.55 : 1.0;
 
                     draw_dolls();
                 }
@@ -436,7 +433,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                         });
             }
 
-            this.render_flash(x, y);
+            this.render_flash(x, y, map_cell);
 
             this.render_cursors(cx, cy, x, y);
 
@@ -588,11 +585,11 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
             }
         },
 
-        render_flash: function(x, y)
+        render_flash: function(x, y, map_cell)
         {
-            if (view_data.flash) // Flash
+            if (map_cell.flc)
             {
-                var col = view_data.flash_colour;
+                var col = view_data.get_flash_colour(map_cell.flc, map_cell.fla);
                 this.ctx.save();
                 try
                 {
@@ -832,17 +829,33 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                         else if (fg.NEUTRAL)
                             this.draw_dngn(dngn.HALO_NEUTRAL, x, y);
 
-                        // Monster difficulty
-                        if (fg.TRIVIAL)
-                            this.draw_dngn(dngn.THREAT_TRIVIAL, x, y);
-                        else if (fg.EASY)
-                            this.draw_dngn(dngn.THREAT_EASY, x, y);
-                        else if (fg.TOUGH)
-                            this.draw_dngn(dngn.THREAT_TOUGH, x, y);
-                        else if (fg.NASTY)
-                            this.draw_dngn(dngn.THREAT_NASTY, x, y);
-                        else if (fg.UNUSUAL)
-                            this.draw_dngn(dngn.THREAT_UNUSUAL, x, y);
+                        // Monster difficulty. Ghosts get a special highlight.
+                        if (fg.GHOST)
+                        {
+                            if (fg.TRIVIAL)
+                                this.draw_dngn(dngn.THREAT_GHOST_TRIVIAL, x, y);
+                            else if (fg.EASY)
+                                this.draw_dngn(dngn.THREAT_GHOST_EASY, x, y);
+                            else if (fg.TOUGH)
+                                this.draw_dngn(dngn.THREAT_GHOST_TOUGH, x, y);
+                            else if (fg.NASTY)
+                                this.draw_dngn(dngn.THREAT_GHOST_NASTY, x, y);
+                            else if (fg.UNUSUAL)
+                                this.draw_dngn(dngn.THREAT_UNUSUAL, x, y);
+                        }
+                        else
+                        {
+                            if (fg.TRIVIAL)
+                                this.draw_dngn(dngn.THREAT_TRIVIAL, x, y);
+                            else if (fg.EASY)
+                                this.draw_dngn(dngn.THREAT_EASY, x, y);
+                            else if (fg.TOUGH)
+                                this.draw_dngn(dngn.THREAT_TOUGH, x, y);
+                            else if (fg.NASTY)
+                                this.draw_dngn(dngn.THREAT_NASTY, x, y);
+                            else if (fg.UNUSUAL)
+                                this.draw_dngn(dngn.THREAT_UNUSUAL, x, y);
+                        }
 
                         if (cell.highlighted_summoner)
                             this.draw_dngn(dngn.HALO_SUMMONER, x, y);
@@ -952,7 +965,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
             }
             else if (fg.MAY_STAB)
             {
-                this.draw_icon(icons.MAY_STAB_BRAND, x, y, undefined, undefined, img_scale);
+                this.draw_icon(icons.UNAWARE, x, y, undefined, undefined, img_scale);
                 status_shift += 7;
             }
             else if (fg.FLEEING)
@@ -1073,9 +1086,17 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 case icons.SHADOWLESS:
                 // Anim. weap. and summoned might overlap, but that's okay
                 case icons.SUMMONED:
-                case icons.PERM_SUMMON:
+                case icons.MINION:
+                case icons.UNREWARDING:
                 case icons.ANIMATED_WEAPON:
                 case icons.VENGEANCE_TARGET:
+                case icons.VAMPIRE_THRALL:
+                case icons.ENKINDLED_1:
+                case icons.ENKINDLED_2:
+                case icons.NOBODY_MEMORY_1:
+                case icons.NOBODY_MEMORY_2:
+                case icons.NOBODY_MEMORY_3:
+                case icons.PYRRHIC:
                     this.draw_icon(idx, x, y, undefined, undefined, img_scale);
                     return 0;
                 case icons.DRAIN:
@@ -1094,6 +1115,8 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 case icons.PARTIALLY_CHARGED:
                 case icons.FULLY_CHARGED:
                 case icons.VITRIFIED:
+                case icons.CONFUSED:
+                case icons.LACED_WITH_CHAOS:
                     this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
                     return 6;
                 case icons.CONC_VENOM:
@@ -1130,6 +1153,15 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 case icons.RETREAT:
                 case icons.RIMEBLIGHT:
                 case icons.UNDYING_ARMS:
+                case icons.BIND:
+                case icons.SIGN_OF_RUIN:
+                case icons.WEAK_WILLED:
+                case icons.DOUBLED_HEALTH:
+                case icons.KINETIC_GRAPNEL:
+                case icons.TEMPERED:
+                case icons.HEART:
+                case icons.UNSTABLE:
+                case icons.VEXED:
                     this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
                     return 10;
                 case icons.CONSTRICTED:

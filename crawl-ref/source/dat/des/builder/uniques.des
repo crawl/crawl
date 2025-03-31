@@ -296,7 +296,7 @@ veto {{
   end
   return false
 }}
-: place_unique(_G, "Arachne")
+: place_unique(_G, "Arachne band")
 
 NAME:   uniq_asterion
 DEPTH:  Depths:1-2, Elf, Snake, Spider, Vaults:1-3
@@ -391,6 +391,10 @@ DEPTH:  Depths:3-, Vaults:2-, Crypt
 NAME:   uniq_grunn
 DEPTH:  Depths:2-, Zot:1-4, Crypt
 : place_unique(_G, "Grunn band")
+
+NAME:   uniq_nameless_revenant
+DEPTH:  Depths, Vaults:2-, Crypt
+: place_unique(_G, "Nobody")
 
 ################################################################################
 # Uniques which appear in neither the Dungeon nor the Depths:
@@ -563,9 +567,10 @@ SUBST:   ; = .:10 d:2
 : if crawl.one_chance_in(300) then
 SUBST:   t = "
 : end
-SUBST:   e = e''', ':.......' , "=' , ':d' , '=..d
+SUBST:   e = ef'', ':.......' , "=' , ':d' , '=..d
 # Randomisation 4: trees or rock
 SUBST:   t : ttx
+: decorative_floor(_G, 'f', "garden patch")
 MAP
  xxxxxxxxxxxxxxxx
  xxtttttttxxtttxx

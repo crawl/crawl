@@ -239,17 +239,12 @@ static void _zap_los_monsters()
             if (mons_is_elven_twin(mon))
             {
                 if (monster* sibling = mons_find_elven_twin_of(mon))
-                {
-                    sibling->flags |=MF_HARD_RESET;
-                    monster_die(*sibling, KILL_DISMISSED, NON_MONSTER, true, true);
-                }
+                    monster_die(*sibling, KILL_RESET, NON_MONSTER, true);
             }
         }
-        // Do a hard reset so the monster's items will be discarded.
-        mon->flags |= MF_HARD_RESET;
-        // Do a silent, wizard-mode monster_die() just to be extra sure the
+        // Do a silent reset monster_die() just to be sure the
         // player sees nothing.
-        monster_die(*mon, KILL_DISMISSED, NON_MONSTER, true, true);
+        monster_die(*mon, KILL_RESET, NON_MONSTER, true);
     }
 }
 

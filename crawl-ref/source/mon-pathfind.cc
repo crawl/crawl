@@ -63,7 +63,8 @@ int mons_tracking_range(const monster* mon)
 //#define DEBUG_PATHFIND
 monster_pathfind::monster_pathfind()
     : mons(nullptr), start(), target(), pos(), allow_diagonals(true),
-      traverse_unmapped(false), range(0), min_length(0), max_length(0),
+      traverse_unmapped(false), fill_range(false),
+      range(0), min_length(0), max_length(0),
       dist(), prev(), hash(), traversable_cache()
 {
 }
@@ -96,8 +97,9 @@ bool monster_pathfind::init_pathfind(const monster* mon, coord_def dest,
     allow_diagonals   = diag;
     traverse_unmapped = pass_unmapped;
     traverse_in_sight = (!crawl_state.game_is_arena()
-                         && mon->friendly() &&  mon->is_summoned()
+                         && mon->friendly() && mon->is_summoned()
                          && you.see_cell_no_trans(mon->pos()));
+    traverse_no_actors = false;
 
     // Easy enough. :P
     if (start == target)
@@ -112,19 +114,38 @@ bool monster_pathfind::init_pathfind(const monster* mon, coord_def dest,
 }
 
 bool monster_pathfind::init_pathfind(coord_def src, coord_def dest, bool doors,
-                                     bool diag, bool msg)
+                                     bool diag, bool no_actors, bool msg)
 {
     start  = src;
     target = dest;
     pos    = start;
     allow_diagonals = diag;
     traverse_doors = doors;
+    traverse_no_actors = no_actors;
 
     // Easy enough. :P
     if (start == target)
         return true;
 
     return start_pathfind(msg);
+}
+
+void monster_pathfind::fill_traversability(const monster* mon, int _range,
+                                           bool no_actors)
+{
+    mons   = mon;
+    start  = mon->pos();
+    target = coord_def();
+    pos    = start;
+    allow_diagonals = true;
+    traverse_unmapped = false;
+    traverse_in_sight = (!crawl_state.game_is_arena()
+                         && mon->friendly() && mon->is_summoned()
+                         && you.see_cell_no_trans(mon->pos()));
+    fill_range = true;
+    traverse_no_actors = no_actors;
+    set_range(_range);
+    start_pathfind();
 }
 
 bool monster_pathfind::start_pathfind(bool msg)
@@ -137,6 +158,11 @@ bool monster_pathfind::start_pathfind(bool msg)
     //       a wall.
 
     max_length = min_length = grid_distance(pos, target);
+    if (fill_range)
+    {
+        min_length = 1;
+        max_length = range;
+    }
     for (int i = 0; i < GXM; i++)
         for (int j = 0; j < GYM; j++)
         {
@@ -206,12 +232,12 @@ bool monster_pathfind::calc_path_to_neighbours()
         if (!in_bounds(npos))
             continue;
 
-        if (!traversable_memoized(npos) && npos != target)
-            continue;
-
         // Ignore this grid if it takes us above the allowed distance
         // away from the target.
         if (range && estimated_cost(npos) > range)
+            continue;
+
+        if (!traversable_memoized(npos) && npos != target)
             continue;
 
         distance = dist[pos.x][pos.y] + travel_cost(npos);
@@ -400,9 +426,21 @@ bool monster_pathfind::traversable_memoized(const coord_def& p)
     return bool(traversable_cache[p.x][p.y]);
 }
 
+// Since traversable_memoized is only called for spaces that were at least
+// reachable in some fashion, this can be used after pathfinding calculations
+// are done to determine whether this space was somehow reachable within the
+// pathfinding range.
+bool monster_pathfind::is_reachable(const coord_def& p)
+{
+    return dist[p.x][p.y] <= range && bool(traversable_cache[p.x][p.y]);
+}
+
 bool monster_pathfind::traversable(const coord_def& p)
 {
     if (!traverse_unmapped && env.grid(p) == DNGN_UNSEEN)
+        return false;
+
+    if (traverse_no_actors && actor_at(p))
         return false;
 
     // XXX: Hack to be somewhat consistent with uses of
@@ -492,7 +530,7 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
 // The estimated cost to reach a grid is simply max(dx, dy).
 int monster_pathfind::estimated_cost(coord_def p)
 {
-    return grid_distance(p, target);
+    return fill_range ? grid_distance(p, start) : grid_distance(p, target);
 }
 
 void monster_pathfind::add_new_pos(coord_def npos, int total)

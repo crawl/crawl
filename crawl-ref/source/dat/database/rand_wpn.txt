@@ -135,6 +135,8 @@ the Gibberer
 the Hated
 
 the Scorned
+
+the Abhorred
 %%%%
 _battle_or_war_
 
@@ -459,17 +461,67 @@ w:15
 %%%%
 _weapon_animal_
 
-# insects
+@_arachnid_name_@
+
+@_crustacean_name_@
+
+@_fish_name_@
+
+@_amphibian_name_@
+
+@_reptile_name_@
+
+@_bird_name_@
+
+@_mammal_name_@
+
+%%%%
+
+_crustacean_name_
+
+# insects and other crustaceans
+
+Ant
+
+Barnacle
+
+Bee
 
 Blowfly
 
+Bristletail
+
 Butterfly
+
+Caddisfly
+
+Crab
+
+Crayfish
+
+Damselfly
 
 Dragonfly
 
 Firefly
 
+Flea
+
 Gnat
+
+Hornet
+
+June-Bug
+
+Krill
+
+Lacewing
+
+Lobster
+
+Louse
+
+Mayfly
 
 Mosquito
 
@@ -477,23 +529,93 @@ Moth
 
 Pill Bug
 
+Prawn
+
+Shrimp
+
+Silverfish
+
 Wasp
 
-# arachnids
+# The largest extant insect, endemic to New Zealand
+Weta
+
+Woodlouse
+
+Yellowjacket
+
+%%%%
+
+_arachnid_name_
+
+Harvestman
 
 Scorpion
 
 Spider
 
-# amphibians and reptiles
+Tick
+
+%%%%
+
+_amphibian_name_
+
+Axolotl
+
+Caecilian
+
+Frog
+
+Hellbender
+
+Newt
+
+Olm
+
+Salamander
+
+Siren
+
+Toad
+
+%%%%
+
+_reptile_name_
+
+Alligator
 
 Asp
 
+Crocodile
+
+Gecko
+
+Gharial
+
+Krait
+
+Leatherback
+
+Lizard
+
+Python
+
 Rattlesnake
+
+Skink
+
+Terrapin
+
+Tortoise
+
+Turtle
 
 Viper
 
-# fish
+%%%%
+
+_fish_name_
+
 Big Fish
 
 Eel
@@ -504,35 +626,92 @@ Salmon
 
 Shark
 
-# birds
+%%%%
+
+_bird_name_
+
+Apostlebird
+
+Arctic Tern
+
+Auk
+
+Bustard
+
+Buzzard
 
 Cardinal
 
+Cassowary
+
 Dove
 
+Duck
+
+Emu
+
 Flamingo
+
+Forest Kingfisher
+
+Fulmar
+
+Goose
+
+Guillemot
 
 Hawk
 
 Hummingbird
 
-Fulmar
-
 Hoatzin
+
+Kiwi
+
+Kookaburra
+
+Moa
+
+Noisy Friarbird
+
+Ostrich
 
 Owl
 
 Penguin
 
+Pigeon
+
+Potoo
+
 Puffin
+
+Rainbow Bee-Eater
+
+Razorbill
+
+Rhea
+
+Roseate Spoonbill
+
+Sage Grouse
 
 Shrike
 
 Stork
 
+Swan
+
+Superb Lyrebird
+
+Tawny Frogmouth
+
 Vulture
 
-# mammals
+%%%%
+
+_mammal_name_
+
 Ass
 
 Badger
@@ -605,6 +784,8 @@ Ancient Evil
 
 Corruption
 
+Debasement
+
 Defilement
 
 Deformation
@@ -626,6 +807,8 @@ Perversion
 Putrescence
 
 Shrieking Terror
+
+Vitiation
 
 the Beast
 
@@ -1342,6 +1525,8 @@ Crystal
 Dried Tears
 
 Dung
+
+Ichor
 
 Ointment
 

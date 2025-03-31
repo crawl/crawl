@@ -292,13 +292,10 @@ static int _spell_colour(spell_type spell, const item_def* const source_item)
     if (!source_item)
         return spell_highlight_by_utility(spell, COL_UNKNOWN);
 
-    if (you.has_spell(spell))
-        return COL_MEMORIZED;
-
-    // this is kind of ugly.
-    if (!you_can_memorise(spell)
-        || you.experience_level < spell_difficulty(spell)
-        || player_spell_levels() < spell_levels_required(spell))
+    // note: Vehumet's gifts mean having a spell memorised does not imply that
+    // said spell is in your library
+    if (you.spell_library[spell] || you.has_spell(spell)
+        || !you_can_memorise(spell))
     {
         return COL_USELESS;
     }
@@ -306,10 +303,13 @@ static int _spell_colour(spell_type spell, const item_def* const source_item)
     if (god_hates_spell(spell, you.religion))
         return COL_FORBIDDEN;
 
-    if (!you.has_spell(spell))
-        return COL_UNMEMORIZED;
+    if (you.experience_level < spell_difficulty(spell)
+        || player_spell_levels() < spell_levels_required(spell))
+    {
+        return COL_USEFUL_IN_FUTURE;
+    }
 
-    return spell_highlight_by_utility(spell, COL_UNKNOWN);
+    return COL_USEFUL_NOW;
 }
 
 /**
@@ -363,18 +363,26 @@ static string _range_string(const spell_type &spell, const monster_info *mon_own
 {
     auto flags = get_spell_flags(spell);
     int pow = mons_power_for_hd(spell, hd);
-    int range = spell_range(spell, pow, false);
+    int range = spell_range(spell, pow, mon_owner && mon_owner->is(MB_PLAYER_SERVITOR));
     const bool has_range = mon_owner
                         && range > 0
                         && !testbits(flags, spflag::selfench);
     if (!has_range)
         return "";
+
+    int minrange = 0;
+    if (spell == SPELL_CALL_DOWN_LIGHTNING || spell == SPELL_FLASHING_BALESTRA)
+        minrange = 2;
+
     const bool in_range = has_range
                     && crawl_state.need_save
                     && in_bounds(mon_owner->pos)
-                    && grid_distance(you.pos(), mon_owner->pos) <= range;
+                    && grid_distance(you.pos(), mon_owner->pos) <= range
+                    && grid_distance(you.pos(), mon_owner->pos) >= minrange;
     const char *range_col = in_range ? "lightred" : "lightgray";
-    return make_stringf("(<%s>%d</%s>)", range_col, range, range_col);
+    return make_stringf("(<%s>%d%s</%s>)", range_col, range,
+                                           minrange > 0 ? "*" : "",
+                                           range_col);
 }
 
 // TODO: deduplicate with the same-named function in spl-cast.cc
@@ -384,8 +392,6 @@ static dice_def _spell_damage(spell_type spell, int hd)
 
     switch (spell)
     {
-        case SPELL_FREEZE:
-            return freeze_damage(pow, false);
         case SPELL_SCORCH:
             return scorch_damage(pow, false);
         case SPELL_WATERSTRIKE:
@@ -417,6 +423,8 @@ static dice_def _spell_damage(spell_type spell, int hd)
             return prism_damage(prism_hd(pow, false), true);
         case SPELL_HELLFIRE_MORTAR:
             return hellfire_mortar_damage(pow);
+        case SPELL_DETONATION_CATALYST:
+            return detonation_catalyst_damage(pow, false);
 
         // This is the per-turn *sticky flame* damage against the player.
         // The spell has no impact damage and otherwise uses different numbers
@@ -579,8 +587,10 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
         mult = "3x";
     else if (spell == SPELL_ELECTROLUNGE)
         mult = "+";
-    const char* asterisk = (spell == SPELL_LRD || spell == SPELL_PYRE_ARROW) ? "*" : "";
-    return make_stringf("(%s%dd%d%s)", mult.c_str(), dam.num, dam.size, asterisk);
+    const char* suffix = spell == SPELL_LRD ? "*"
+                       : spell == SPELL_PYRE_ARROW ? "/turn"
+                       : "";
+    return make_stringf("(%s%dd%d%s)", mult.c_str(), dam.num, dam.size, suffix);
 }
 
 /**
@@ -609,7 +619,7 @@ static void _describe_book(const spellbook_contents &book,
     if (source_item)
     {
         description.cprintf(
-            "\n Spells                            Type                      Level");
+            "\n Spells                              Type                    Level");
         if (crawl_state.need_save)
             description.cprintf("       Known");
     }
@@ -651,7 +661,7 @@ static void _describe_book(const spellbook_contents &book,
         const int effect_len = effect_str.length();
         const int range_len = range_str.empty() ? 0 : 3;
         const int effect_range_space = effect_len && range_len ? 1 : 0;
-        const int chop_len = 30 - effect_len - range_len - effect_range_space
+        const int chop_len = 32 - effect_len - range_len - effect_range_space
                                 - (dith_marker.length() > 0 ? 1 : 0);
 
         if (effect_len && !testbits(get_spell_flags(spell), spflag::WL_check))
@@ -696,7 +706,7 @@ static void _describe_book(const spellbook_contents &book,
             known = you.spell_library[spell] ? "         yes" : "          no";
 
         description.cprintf("%s%d%s\n",
-                            chop_string(schools, 30).c_str(),
+                            chop_string(schools, 28).c_str(),
                             spell_difficulty(spell),
                             known.c_str());
     }

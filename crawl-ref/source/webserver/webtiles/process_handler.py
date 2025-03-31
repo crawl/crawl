@@ -6,7 +6,7 @@ import logging
 import os
 import os.path
 import re
-import subprocess
+import signal
 import time
 
 from tornado.escape import json_decode
@@ -612,7 +612,7 @@ class CrawlProcessHandlerBase(object):
         if self.process:
             self.process.flush_ttyrec()
             try:
-                self.process.send_signal(subprocess.signal.SIGHUP)
+                self.process.send_signal(signal.SIGHUP)
             except OSError as e:
                 self.logger.error(f"Error {repr(e)} on SIGHUP to child process")
                 self._on_process_end()
@@ -624,7 +624,7 @@ class CrawlProcessHandlerBase(object):
         if self.process:
             self.logger.info("Killing crawl process after SIGHUP did nothing.")
             try:
-                self.process.send_signal(subprocess.signal.SIGABRT)
+                self.process.send_signal(signal.SIGABRT)
             except OSError as e:
                 self.logger.error(f"Error {repr(e)} on SIGKILL to child process")
                 self._on_process_end()
@@ -778,7 +778,8 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                 except ValueError:
                     # pidfile is empty or corrupted, can happen if the server
                     # crashed. Just clear it...
-                    self.logger.error("Invalid PID from lockfile %s, clearing", lockfile)
+                    self.logger.error("Invalid PID from lockfile `%s`, clearing", lockfile)
+                    self._stale_lockfile = lockfile
                     self._purge_stale_lock()
                     return
 
@@ -795,7 +796,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                         to = IOLoop.current().add_timeout(time.time() + hup_wait,
                                                           self._kill_stale_process)
                         self._process_hup_timeout = to
-                    # else: _purge_stale_locks recurses to this function, so no
+                    # else: _purge_stale_lock recurses to this function, so no
                     # need to do anything more here
                 else:
                     self._kill_stale_process()
@@ -829,22 +830,22 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                                     path)
         return None
 
-    def _kill_stale_process(self, signal=subprocess.signal.SIGHUP, check_pid_only=False):
+    def _kill_stale_process(self, sig=signal.SIGHUP, check_pid_only=False):
         if check_pid_only:
-            signal = 0
+            sig = 0
         self._process_hup_timeout = None
         if self._stale_pid == None:
             return
-        if signal == subprocess.signal.SIGHUP:
+        if sig == signal.SIGHUP:
             self.logger.info("Purging stale lock at %s, pid %s.",
                              self._stale_lockfile, self._stale_pid)
-        elif signal == subprocess.signal.SIGABRT:
+        elif sig == signal.SIGABRT:
             self.logger.warning("Terminating pid %s forcefully!",
                                 self._stale_pid)
         # intentional missing `else`, don't message on 0
 
         try:
-            os.kill(self._stale_pid, signal)
+            os.kill(self._stale_pid, sig)
         except ProcessLookupError as e:
             # Process doesn't exist
             self._purge_stale_lock()
@@ -870,10 +871,10 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         else:
             if check_pid_only:
                 return True
-            if signal == subprocess.signal.SIGABRT:
+            if sig == signal.SIGABRT:
                 self._purge_stale_lock()
             else:
-                if signal == subprocess.signal.SIGHUP:
+                if sig == signal.SIGHUP:
                     self._purging_timer = 10
                 else:
                     self._purging_timer -= 1
@@ -893,7 +894,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
     def _do_force_terminate(self, answer):
         if answer:
-            self._kill_stale_process(subprocess.signal.SIGABRT)
+            self._kill_stale_process(signal.SIGABRT)
         else:
             self.handle_process_end()
 

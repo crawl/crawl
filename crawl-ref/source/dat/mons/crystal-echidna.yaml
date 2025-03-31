@@ -11,5 +11,6 @@ ac: 10
 ev: 10
 spells: crystal_echidna
 intelligence: animal
+speed: 13
 size: little
 shape: quadruped

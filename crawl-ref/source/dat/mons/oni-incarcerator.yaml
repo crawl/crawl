@@ -1,0 +1,20 @@
+name: "oni incarcerator"
+glyph: {char: "O", colour: lightmagenta}
+flags: [fighter, speaks, warm_blood]
+xp_mult: 16
+species: oni
+will: 100
+attacks:
+ - {type: hit, flavour: drag, damage: 58}
+ - {type: headbutt, damage: 24}
+hd: 19
+hp_10x: 1500
+ac: 6
+ev: 8
+spells: oni_incarcerator
+has_corpse: true
+shout: shout
+intelligence: human
+uses: starting_equipment
+size: large
+shape: humanoid

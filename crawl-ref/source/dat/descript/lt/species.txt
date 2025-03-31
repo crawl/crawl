@@ -32,11 +32,6 @@ Felid
 Šie katinai turi sąmonę, bet yra nepajėgūs valdyti sudėtingesnių daiktų, šarvų
 ir ginklų.
 %%%%
-Ghoul
-
-Nemirėliai, prakeikti amžinai pūti. Jie visada ieško supuvusio maisto,
-kapodamiesi savo nagais.
-%%%%
 Halfling
 
 Maži bet atsparūs, jie pranoksta visus kitus naudodami laidynes. Jie turi

@@ -99,7 +99,7 @@ void add_auto_excludes()
             continue;
 
         // Something of a speed hack, but some vaults have a TON of plants.
-        if (mons_is_firewood(*mon))
+        if (mon->is_firewood())
             continue;
         if (_need_auto_exclude(mon) && !is_exclude_root(*ri))
         {
@@ -517,18 +517,8 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl,
             }
             else
             {
-                // Maybe it's a door or staircase?
                 const dungeon_feature_type feat = cell.feat();
-                if (feat_is_door(feat))
-                    desc = "door";
-                else
-                {
-                    const command_type dir = feat_stair_direction(feat);
-                    if (dir == CMD_GO_UPSTAIRS)
-                        desc = "upstairs";
-                    else if (dir == CMD_GO_DOWNSTAIRS)
-                        desc = "downstairs";
-                }
+                desc = feat_type_name(feat);
             }
         }
         else if (cloud_struct* cloud = cloud_at(p))

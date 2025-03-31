@@ -14,7 +14,6 @@
 #include <sys/un.h>
 
 #include "cursor-type.h"
-#include "equipment-type.h"
 #include "map-cell.h"
 #include "map-knowledge.h"
 #include "status.h"
@@ -63,9 +62,9 @@ struct player_info
     int evasion;
     int shield_class;
 
-    int8_t strength, strength_max;
-    int8_t intel, intel_max;
-    int8_t dex, dex_max;
+    int8_t strength;
+    int8_t intel;
+    int8_t dex;
 
     int experience_level;
     int8_t exp_progress;
@@ -83,13 +82,15 @@ struct player_info
 
     FixedVector<item_def, ENDOFPACK> inv;
     FixedVector<bool, ENDOFPACK> inv_uselessness;
-    FixedVector<int8_t, NUM_EQUIP> equip;
     bool offhand_weapon;
     int8_t quiver_item;
     string quiver_desc;
     string unarmed_attack;
     uint8_t unarmed_attack_colour;
     bool quiver_available;
+
+    int8_t weapon_index;
+    int8_t offhand_index;
 };
 
 class TilesFramework
@@ -115,8 +116,8 @@ public:
     void update_tabs();
 
     void mark_for_redraw(const coord_def& gc);
-    void set_need_redraw(unsigned int min_tick_delay = 0);
-    bool need_redraw() const;
+    void set_need_redraw();
+    bool need_redraw(unsigned int min_tick_delay = 0) const;
     void redraw();
 
     void place_cursor(cursor_type type, const coord_def &gc);
@@ -285,9 +286,6 @@ protected:
     void mark_clean(const coord_def& gc);
     bool is_dirty(const coord_def& gc);
     bool cell_needs_redraw(const coord_def& gc);
-
-    int m_current_flash_colour;
-    int m_next_flash_colour;
 
     FixedArray<map_cell, GXM, GYM> m_current_map_knowledge;
     map<uint32_t, coord_def> m_monster_locs;

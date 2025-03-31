@@ -8,7 +8,7 @@ Acid Splash spell
 向附近的一个生物吐出一团酸液，使其被腐蚀性粘液覆盖一小段时间。
 它也有可能溅射到目标附近的其他生物。
 %%%%
-Agonizing Touch spell
+Agonising Touch spell
 
 让一个邻近生物的生命值减半。但永远不会直接杀死目标。
 %%%%
@@ -264,15 +264,6 @@ Chaos Breath spell
 Chilling Breath spell
 
 呼出一阵冰霜，如果对目标造成伤害，可能会将其击退。
-%%%%
-Cigotuvi's Dreadful Rot spell
-
-腐化掉施法者的一部分肉，在他们周围产生一团瘴气。
-瘴气会减缓并强力毒害任何还在里面逗留的生物，包括施法者，
-如果他们在施法后停留的话。大多数生物都害怕瘴气，不愿进入其中。
-
-这个腐化会让施法者的生命暂时被衰竭。
-亡灵仍然可以使用这个咒语，但无肉的生物（如石质生物）不能使用。
 %%%%
 Cleansing Flame spell
 
@@ -586,7 +577,7 @@ Grasping Roots spell
 召唤来自地下深处的巨大抓握的根，抓住并束缚受害者。
 如果受害人挣脱或它离开召唤者的视野，则根会撤去。
 %%%%
-Greater Servant of Makhleb spell
+Infernal Servant spell
 
 召唤一个大恶魔。
 %%%%
@@ -1172,7 +1163,7 @@ Spectral Cloud spell
 制造一团幽灵迷雾云，对亡灵以外的所有生物造成轻微伤害。
 随时间的推移，危险但短暂存在的幽灵亡灵生物将从迷雾中聚合。
 %%%%
-Spellforged Servitor spell
+Spellspark Servitor spell
 
 召唤一个界外元素，并将其束缚到由施法者自己的魔法锻造的坚固外壳之中。
 侍从有能力释放其创造者所知的一些破坏性法术，

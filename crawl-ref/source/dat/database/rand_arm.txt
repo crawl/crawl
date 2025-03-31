@@ -17,6 +17,8 @@ _armour_animal_
 # microorganisms
 Amoeba
 
+Tardigrade
+
 # insects
 Ant
 
@@ -176,6 +178,10 @@ Hippogriff
 
 Kraken
 
+Leogriff
+
+Pooka
+
 Skiapode
 
 Unicorn
@@ -202,11 +208,43 @@ Shishi
 
 Tsukumogami
 
-# Brasilia
+# South America
+
+Carbunclo
+
+Cherruve
+
+Cuero
 
 Curupira
 
+Ebigane
+
+Gasogonaga
+
 Mpinguari
+
+Tapire-iauara
+
+# Africa
+
+Biloko
+
+Guiamala
+
+Impundulu
+
+Isitwalangcengce
+
+Nkala
+
+Zankallala
+
+# South East Asia
+
+Bakunawa
+
+Minokawa
 
 # Unlikely hybrids
 
@@ -239,7 +277,11 @@ Jackalope
 
 Jersey Devil
 
+Skvader
+
 Snallygaster
+
+Tatzelwurm
 
 Wild Haggis
 

@@ -83,9 +83,6 @@ bindkey = [^L] CMD_FULL_VIEW
 # map (G)oto level -> J for no reason
 bindkey = [J] CMD_MAP_GOTO_LEVEL
 
-# target maybe prev target -> k
-bindkey = [k] CMD_TARGET_MAYBE_PREV_TARGET
-
 # target wizard (D)ebug monster -> J rather than K because small k is used for
 # firing
 bindkey = [J] CMD_TARGET_WIZARD_DEBUG_MONSTER

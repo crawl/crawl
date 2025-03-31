@@ -238,6 +238,8 @@ ebony
 
 ecru
 
+eggplant
+
 electric blue
 
 electric indigo
@@ -815,6 +817,8 @@ stars
 
 tartan
 
+triangles
+
 whorls
 %%%%
 any_colour_pattern
@@ -825,3 +829,40 @@ any_colour_pattern
 # Two colours. There's a chance of them being the same but
 # in practise it happens little enough to just be funny when it does.
 @any_colour@ on @any_colour@ @any_pattern@
+%%%%
+# Any word other than "glowing" itself will work here.
+glowing_adj
+
+bright
+
+brilliant
+
+dark
+
+dull
+
+faint
+
+gleaming
+
+glossy
+
+luminous
+
+mottled
+
+murky
+
+pale
+
+pulsating
+
+shimmering
+
+shining
+
+vivid
+%%%%
+any_glowing_colour
+
+@glowing_adj@ @any_colour@

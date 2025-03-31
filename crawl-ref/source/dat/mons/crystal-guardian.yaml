@@ -6,7 +6,7 @@ genus: golem
 holiness: [nonliving]
 will: invuln
 attacks:
- - {type: hit, damage: 38}
+ - {type: hit, damage: 42}
 hd: 16
 hp_10x: 600
 ac: 20

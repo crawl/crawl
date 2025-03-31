@@ -40,16 +40,16 @@ Ddg - Dodging                                            Coj - Conjurations
 Sth - Stealth                M&F - Maces & Flails        Hex - Hexes
 Shd - Shields                Axs - Axes                  Sum - Summonings
 Shp - Shapeshifting          Pla - Polearms              Nec - Necromancy
-                             Stv - Staves                Trl - Translocations
-Inv - Invocations            UC  - Unarmed Combat        Fir - Fire Magic
-Evo - Evocations                                         Ice - Ice Magic
-Thr - Throwing               SBl - Short Blades          Air - Air Magic
-                             LBl - Long Blades           Ear - Earth Magic
-HP  - hit points             Rng - Ranged Weapons        Alc - Alchemy
-MP  - magic points
+                             Stv - Staves                Frg - Forgecraft
+Inv - Invocations            UC  - Unarmed Combat        Trl - Translocations
+Evo - Evocations                                         Fir - Fire Magic
+Thr - Throwing               SBl - Short Blades          Ice - Ice Magic
+                             LBl - Long Blades           Air - Air Magic
+HP  - hit points             Rng - Ranged Weapons        Ear - Earth Magic
+MP  - magic points                                       Alc - Alchemy
 Exp - experience
 WL  - willpower
 
 
-                 Arm Ddg Sth Shd Shp   Inv Evo Thr   HP  MP Exp  WL   Fgt M&F Axs Pla Stv UC SBl LBl Rng   Spc Coj Hex Sum Nec Trl   Fir Ice Air Ear Alc
---------------------------------------------------------------------------------------------------------------------------------------------------------
+                 Arm Ddg Sth Shd Shp   Inv Evo Thr   HP  MP Exp  WL   Fgt M&F Axs Pla Stv UC SBl LBl Rng   Spc Coj Hex Sum Nec Frg Trl   Fir Ice Air Ear Alc
+------------------------------------------------------------------------------------------------------------------------------------------------------------

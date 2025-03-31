@@ -214,7 +214,7 @@ static int _get_mons_colour(const monster_info& mi)
         col |= COLFLAG_WILLSTAB;
     }
     else if (Options.may_stab_highlight != CHATTR_NORMAL
-             && mi.is(MB_DISTRACTED))
+             && mi.is(MB_MAYBE_STABBABLE))
     {
         col |= COLFLAG_MAYSTAB;
     }
@@ -321,6 +321,7 @@ show_class get_cell_show_class(const map_cell& cell,
     if (feat && feat_is_solid(feat)
         || feat_has_dry_floor(feat)
            && feat != DNGN_FLOOR
+           && feat != DNGN_ORB_DAIS
            && !feat_is_open_door(feat)
            && feat != DNGN_ABANDONED_SHOP
            && feat != DNGN_STONE_ARCH

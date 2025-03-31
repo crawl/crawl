@@ -248,6 +248,11 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         flv.floor = TILE_FLOOR_VAULT;
         return;
 
+    case BRANCH_NECROPOLIS:
+        flv.wall  = TILE_WALL_CATACOMBS;
+        flv.floor = TILE_FLOOR_NECROPOLIS_SQUARES;
+        return;
+
 #if TAG_MAJOR_VERSION == 34
     case BRANCH_LABYRINTH:
 #endif
@@ -292,6 +297,11 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         return;
 
     case BRANCH_ARENA:
+        flv.wall  = TILE_WALL_NORMAL;
+        flv.floor = TILE_FLOOR_NORMAL;
+        return;
+
+    case BRANCH_CRUCIBLE:
         flv.wall  = TILE_WALL_NORMAL;
         flv.floor = TILE_FLOOR_NORMAL;
         return;
@@ -470,7 +480,7 @@ static tileidx_t _pick_dngn_tile_multi(vector<tileidx_t> candidates, int value)
     }
 
     // Should never reach this place
-    ASSERT(false);
+    die("couldn't find tile");
 }
 
 static bool _same_door_at(dungeon_feature_type feat, const coord_def &gc)
@@ -1130,10 +1140,11 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
 #ifndef USE_TILE_WEB
     tileidx_t bg_idx = bg & TILE_FLAG_MASK;
 
-    // Wizlab entries and conduits both have spinning sequential cycle
-    // tile animations.
-    if (bg_idx == TILE_DNGN_PORTAL_WIZARD_LAB ||
-        (bg_idx >= TILE_ARCANE_CONDUIT && bg_idx < TILE_DNGN_SARCOPHAGUS_SEALED)
+    // Wizlab entries, conduits, and harlequin traps both have spinning
+    // sequential cycle tile animations. The Jiyva altar, meanwhile, drips.
+    if (bg_idx == TILE_DNGN_PORTAL_WIZARD_LAB || bg_idx == TILE_DNGN_EXIT_NECROPOLIS
+       || bg_idx == TILE_DNGN_ALTAR_JIYVA || bg_idx == TILE_DNGN_TRAP_HARLEQUIN
+       || (bg_idx >= TILE_ARCANE_CONDUIT && bg_idx < TILE_DNGN_SARCOPHAGUS_SEALED)
         && Options.tile_misc_anim)
     {
         flv->special = (flv->special + 1) % tile_dngn_count(bg_idx);
@@ -1290,7 +1301,7 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
     else if (player_in_branch(BRANCH_GEHENNA))
     {
         if (orig == TILE_DNGN_STONE_WALL)
-            orig = TILE_DNGN_STONE_WALL_RED;
+            orig = TILE_STONE_WALL_PYRE;
         if (orig == TILE_DNGN_METAL_WALL)
             orig = TILE_DNGN_METAL_WALL_RED;
     }
@@ -1339,6 +1350,37 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
     {
         if (orig == TILE_DNGN_STONE_WALL)
             orig = TILE_STONE_WALL_DEPTHS;
+        else if (orig == TILE_DNGN_METAL_WALL)
+        {
+            if (!((gc.x + gc.y) % 3) == !((gc.x - gc.y) % 3))
+                orig = TILE_WALL_DEPTHS_METAL;
+            else
+                orig = TILE_WALL_DEPTHS_METAL_LEAFY;
+        }
+        else if  (orig == TILE_DNGN_GRANITE_STATUE)
+        {
+            int hash = hash3(gc.x * gc.x * 10, gc.y * gc.y * 10,
+                             you.depth * gc.x * gc.y * 27);
+            if (hash % 2 && hash % 7)
+                orig = TILE_DNGN_GRANITE_STATUE_DEPTHS_ZOT;
+            else
+                orig = TILE_DNGN_GRANITE_STATUE_DEPTHS;
+        }
+    }
+    else if (player_in_branch(BRANCH_ABYSS))
+    {
+        if (orig == TILE_DNGN_STONE_WALL)
+        {
+            tileidx_t choices[3] = {TILE_STONE_WALL_ABYSS_A,
+                                    TILE_STONE_WALL_ABYSS_B,
+                                    TILE_STONE_WALL_ABYSS_C};
+            orig = choices[you.birth_time % 3];
+        }
+    }
+    else if (player_in_branch(BRANCH_PANDEMONIUM))
+    {
+        if (orig == TILE_DNGN_STONE_WALL)
+            orig = TILE_STONE_WALL_PANDEMONIUM;
     }
     else if (player_in_branch(BRANCH_ZOT))
     {
@@ -1355,6 +1397,17 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
                 orig = TILE_DNGN_STONE_WALL_MAGENTA;
             else if (you.depth == 5)
                 orig = TILE_DNGN_STONE_WALL_LIGHTMAGENTA;
+        }
+        else if (orig == TILE_DNGN_METAL_WALL)
+            orig = TILE_DNGN_METAL_ZOT;
+        else if (orig == TILE_DNGN_GRANITE_STATUE)
+        {
+            int hash = hash3(gc.x * gc.x * 10, gc.y * gc.y * 10,
+                             you.depth * gc.x * gc.y * 27);
+            if (hash % 2 && hash % 3 && hash % 7)
+                orig = TILE_DNGN_GRANITE_STATUE_ZOT;
+            else
+                orig = TILE_DNGN_GRANITE_STATUE_DEPTHS_ZOT;
         }
     }
 
@@ -1389,8 +1442,12 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
         else
             *bg = orig + min((int)flv.special, 6);
     }
-    else if (orig == TILE_DNGN_PORTAL_WIZARD_LAB)
+    else if (orig == TILE_DNGN_PORTAL_WIZARD_LAB
+             || orig == TILE_DNGN_EXIT_NECROPOLIS
+             || orig == TILE_DNGN_TRAP_HARLEQUIN)
+    {
         *bg = orig + flv.special % tile_dngn_count(orig);
+    }
     else if ((orig == TILE_SHOALS_SHALLOW_WATER
               || orig == TILE_SHOALS_DEEP_WATER)
              && element_colour(ETC_WAVES, 0, gc) == LIGHTCYAN)

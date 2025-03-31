@@ -1,0 +1,17 @@
+name: "poltergeist"
+glyph: {char: "v", colour: lightgreen}
+flags: [flies, insubstantial]
+resists: {cold: 1}
+xp_mult: 7
+holiness: [undead]
+will: 80
+attacks:
+ - {type: hit, damage: 20}
+hd: 11
+hp_10x: 650
+ac: 6
+ev: 18
+intelligence: human
+uses: open_doors
+size: medium
+shape: misc

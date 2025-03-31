@@ -241,7 +241,7 @@ static unordered_set<int> _player_nonbook_spells =
     SPELL_SONIC_WAVE,
     // religion
     SPELL_SMITING,
-    SPELL_MINOR_DESTRUCTION,
+    SPELL_UNLEASH_DESTRUCTION,
     SPELL_HURL_TORCHLIGHT,
     // Ds powers
     SPELL_HURL_DAMNATION,
@@ -254,8 +254,6 @@ static unordered_set<int> _player_nonbook_spells =
     SPELL_CAUSTIC_BREATH,
     SPELL_GALVANIC_BREATH,
     SPELL_MUD_BREATH,
-    // Activate component of Seismic Cannonade
-    SPELL_SEISMIC_SHOCKWAVE,
 };
 
 bool is_player_spell(spell_type which_spell)
@@ -427,10 +425,9 @@ bool library_add_spells(vector<spell_type> spells, bool quiet)
         if (!you.spell_library[st])
         {
             you.spell_library.set(st, true);
-            bool memorise = you_can_memorise(st);
-            if (memorise)
+            if (you_can_memorise(st))
                 new_spells.push_back(st);
-            if (!memorise || Options.auto_hide_spells)
+            if (Options.auto_hide_spells)
                 you.hidden_spells.set(st, true);
         }
     }
@@ -529,7 +526,7 @@ protected:
     virtual formatted_string calc_title() override
     {
         return formatted_string::parse_string(
-                    make_stringf("<w>Spells %s                 Type                          %sLevel",
+                    make_stringf("<w>Spells %s                   Type                      %sLevel",
                         current_action == action::cast ? "(Cast)    "
                         : current_action == action::memorise ? "(Memorise)"
                         : current_action == action::describe ? "(Describe)"
@@ -753,6 +750,7 @@ private:
         clear();
         hidden_count = 0;
         const bool show_hidden = current_action == action::unhide;
+        const bool show_enkindle = you.has_mutation(MUT_MNEMOPHAGE);
         menu_letter hotkey;
         text_pattern pat(search_text, true);
         for (auto& spell : spells)
@@ -789,20 +787,33 @@ private:
             desc << "<" << colour_to_str(colour) << ">";
 
             desc << left;
-            desc << chop_string(spell.name, 30);
+            desc << chop_string(spell.name, 32);
             desc << spell.school;
 
             int so_far = strwidth(desc.str()) - (colour_to_str(colour).length()+2);
-            if (so_far < 60)
-                desc << string(60 - so_far, ' ');
+            if (so_far < 58)
+                desc << string(58 - so_far, ' ');
             desc << "</" << colour_to_str(colour) << ">";
 
             if (you.divine_exegesis)
                 desc << string(9, ' ');
+            else if (show_enkindle && spell_can_be_enkindled(spell.spell))
+            {
+                const int enkindled_fail = failure_rate_to_int(raw_spell_fail(spell.spell, true));
+
+                const string fail_string = make_stringf("<%s>%d%%</%s><darkgrey> (%d%%)</darkgrey>",
+                                                            colour_to_str(spell.fail_rate_colour).c_str(),
+                                                            failure_rate_to_int(spell.raw_fail),
+                                                            colour_to_str(spell.fail_rate_colour).c_str(),
+                                                            enkindled_fail);
+
+                const int width = strwidth(formatted_string::parse_string(fail_string).tostring());
+                desc << fail_string << string(13 - width, ' ');
+            }
             else
             {
                 desc << "<" << colour_to_str(spell.fail_rate_colour) << ">";
-                desc << chop_string(failure_rate_to_string(spell.raw_fail), 9);
+                desc << chop_string(failure_rate_to_string(spell.raw_fail), show_enkindle ? 13 : 9);
                 desc << "</" << colour_to_str(spell.fail_rate_colour) << ">";
             }
 
@@ -851,7 +862,7 @@ public:
                 you.magic_points);
         }
         else if (default_action == action::imbue)
-            spell_levels_str = "<lightgreen>Select a spell to imbue your Spellforged Servitor with:</lightgreen>";
+            spell_levels_str = "<lightgreen>Select a spell to imbue your Spellspark Servitor with:</lightgreen>";
         else
         {
             spell_levels_str = make_stringf("<lightgreen>%d spell level%s"
@@ -933,13 +944,6 @@ static spell_type _choose_mem_spell(spell_list &spells)
 
 bool can_learn_spell(bool silent)
 {
-    if (you.duration[DUR_BRAINLESS])
-    {
-        if (!silent)
-            mpr("Your brain is not functional enough to learn spells.");
-        return false;
-    }
-
     if (you.confused())
     {
         if (!silent)
@@ -1000,7 +1004,7 @@ static bool _learn_spell_checks(spell_type specspell, bool wizard = false)
 {
     if (spell_removed(specspell))
     {
-        mpr("Sorry, this spell is gone!");
+        mprf("Sorry, the spell '%s' is gone!", spell_title(specspell));
         return false;
     }
 
@@ -1114,7 +1118,7 @@ bool learn_spell(spell_type specspell, bool wizard, bool interactive)
     return true;
 }
 
-bool book_has_title(const item_def &book, bool ident)
+bool book_has_title(const item_def &book)
 {
     ASSERT(book.base_type == OBJ_BOOKS);
 
@@ -1122,7 +1126,8 @@ bool book_has_title(const item_def &book, bool ident)
     if (book.sub_type == BOOK_BIOGRAPHIES_II
         || book.sub_type == BOOK_BIOGRAPHIES_VII
         || book.sub_type == BOOK_MAXWELL
-        || book.sub_type == BOOK_UNRESTRAINED)
+        || book.sub_type == BOOK_UNRESTRAINED
+        || book.sub_type == BOOK_SWAMP_SOJOURN)
     {
         return true;
     }
@@ -1131,8 +1136,7 @@ bool book_has_title(const item_def &book, bool ident)
         return false;
 
     return book.props.exists(BOOK_TITLED_KEY)
-           && book.props[BOOK_TITLED_KEY].get_bool() == true
-           && (ident || item_ident(book, ISFLAG_KNOW_PROPERTIES));
+           && book.props[BOOK_TITLED_KEY].get_bool() == true;
 }
 
 spret divine_exegesis(bool fail)

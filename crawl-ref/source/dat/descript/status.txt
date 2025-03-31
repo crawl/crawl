@@ -17,6 +17,12 @@ You are about to teleport. While waiting to teleport, attempting to apply the
 status again (such as by using a scroll of teleportation) will cancel the
 teleportation.
 %%%%
+!Tele! status
+
+You are about to teleport towards hostile monsters, if possible. Before this
+happens, attempting to teleport again (such as by using a scroll of
+teleportation) will cancel this teleportation.
+%%%%
 Fly status
 
 You are flying above the ground, and are able to cross water and lava or fight
@@ -30,7 +36,7 @@ You are unnaturally agile, and gain a bonus to your evasion.
 Brill status
 
 You are unnaturally smart, and gain a bonus to the power of your spells as well
-as halving their mana cost (rounding up).
+as halving their magic cost (rounding up).
 %%%%
 Might status
 
@@ -246,23 +252,10 @@ magic, briefly preventing you from casting any further spells.
 
 You are unable to cast spells.
 %%%%
-Brainless status
+Crippled status
 
-Your intelligence has fallen to 0. You are slowed, cannot cast or memorise
-spells, and cannot read scrolls. The status will persist for a short while even
-after recovering your intelligence.
-%%%%
-Clumsy status
-
-Your dexterity has fallen to 0. You are slowed, cannot sneak or use shields,
-and are almost entirely unable to dodge. The status will persist for a short
-while even after recovering your dexterity.
-%%%%
-Collapse status
-
-Your strength has fallen to 0. You are slowed, and you do not regenerate health
-while monsters are visible. The status will persist for a short while even after
-recovering your strength.
+At least one of your strength, intelligence, or dexterity has fallen to 0 or
+below. You will act slowly until this situation is remedied.
 %%%%
 DChan status
 
@@ -385,9 +378,9 @@ randomly blinked away from you.
 %%%%
 Fugue status
 
-Your weapon is temporarily enhanced by the souls of the damned, providing slaying
-bonuses that increase with every enemy killed. At the maximum bonus, foes adjacent
-to your attacks' targets suffer pain damage.
+Your weapon is temporarily enhanced by the souls of the damned, providing
+slaying bonuses that increase with every enemy killed. At the maximum bonus,
+foes adjacent to your attacks' targets suffer pain damage.
 %%%%
 Debt status
 
@@ -813,12 +806,6 @@ Gem status
 If you spend the indicated number of turns in this branch, its gem will be found
 and shattered by the power of Zot.
 %%%%
-Curl status
-
-After being struck by an attack, you reflexively curled up, protecting yourself
-against subsequent strikes. You are now emerging from that defensive curl and
-will receive no further protection until after you are struck again.
-%%%%
 rF0 status
 
 The wrath of Ignis prevents you from resisting fire.
@@ -982,10 +969,10 @@ Rev* status
 You're limbered up. Your weapon-based and unarmed attacks are at full strength,
 and will remain so as long as you keep swinging and for a short while afterward.
 %%%%
-Stiff status
+-Gavotte status
 
-Your legs have stiffened up from lack of motion, making your next move twice as
-slow as usual. This only affects movement actions.
+Gravity around you is still unstable, and you cannot cast Gell's Gavotte again
+until it settles back down.
 %%%%
 Fusillade status
 
@@ -995,3 +982,182 @@ Nightfall status
 
 You are channelling the deepest night, greatly reducing your sight range. It
 will gradually return to normal over time.
+%%%%
+Blind status
+
+Your vision is badly impaired. All spells and attacks you perform (which do not
+automatically hit) have an increased chance to miss. This chance is much greater
+the further away you are from your target.
+%%%%
+Ruin status
+
+You are marked with the sign of ruin, causing any melee attacks which damage you
+to heavily drain and randomly slow, weaken, or blind you.
+%%%%
+-GClaw status
+
+You have not yet harvested enough death to cast Grave Claw again.
+%%%%
+Legion status
+
+You are beckoning the legions of chaos; short-lived demons will be periodically
+summoned near you.
+%%%%
+-Bloodrite status
+
+You have recently performed an infernal blood rite and must fully heal before
+being able to perform another.
+%%%%
+Execution status
+
+You are sharing your body with an Executioner, giving you a powerful auxiliary
+attack that also triggers when you dodge attacks, as well as letting you rampage
+towards foes. This will expire quickly if you stop attacking.
+%%%%
+Destr status
+
+Your Unleash Destruction is growing more powerful as you use it consecutively.
+%%%%
+Destr+ status
+
+<Destr status>
+%%%%
+Destr++ status
+
+<Destr status>
+%%%%
+Destr+++ status
+
+<Destr status>
+If you use it again, it will unleash a salvo of additional bolts aimed at random
+targets and this bonus will reset.
+%%%%
+Slaughter status
+
+You are an instrument of Makhleb's destructive will. Your power and defenses are
+greatly enhanced, but you must endure the Crucible of Flesh once this effect
+ends.
+%%%%
+Pact status
+
+Makhleb has come to collect on certain promises made to them.
+{{ if you.religion == "Makhleb" then
+        return "Fulfill your oath as their instrument by slaying the terrified " ..
+               "mortals that have been gathered here, and they may grant you " ..
+               "freedom once again."
+   else
+        return "Fight and bleed and you may be granted freedom once again."
+    end}}
+%%%%
+Escape! status
+
+A path out of the Crucible has opened. Find it and claim your freedom again. For
+a time.
+%%%%
+Shield status
+
+You are protected by a divine shield. Enemies that strike it in melee will have
+their attacks completely blocked, and they may also be blinded by its light.
+%%%%
+Blast status
+
+You are preparing to unleash a kinetic shockwave and cannot move until this is
+complete.
+%%%%
+Blast. status
+
+<Blast status>
+%%%%
+Blast.. status
+
+<Blast status>
+%%%%
+Blast... status
+
+<Blast status>
+%%%%
+Winding status
+
+You are winding up your clockwork bee. It cannot attack its target until it is
+fully wound up.
+%%%%
+Winding. status
+
+<Winding status>
+%%%%
+Winding.. status
+
+<Winding status>
+%%%%
+Winding... status
+
+<Winding status>
+%%%%
+Unstable status
+
+You have become untethered in space, blinking randomly each turn and suffering a
+small amount of damage each time you do so.
+%%%%
+Vainglory status
+
+You have recently announced your regal presence and it simply would not do to
+leave the floor again so soon afterward.
+%%%%
+Protected status
+
+Your platinum paragon is close enough to you to sometimes parry attacks directed
+at you.
+%%%%
+Vexed status
+
+Your mind is clouded by frustration. For the next several turns, you will
+uncontrollably attack random adjacent creatures (whether friendly or enemy) or
+even empty space.
+%%%%
+Drowsy status
+
+You are rapidly growing sleepy and may soon fall asleep completely.
+%%%%
+Vampire status
+
+You are a vampire - a creature that straddles the border between life and
+undeath. You can drink the lifeblood of the living to heal, and even turn those
+you slay stealthily into vampiric thralls, but do not heal in the presence of
+monsters.
+%%%%
+Swarm status
+
+You have transformed into a swarm of vampire bats, allowing you to move quickly
+and evasively. You may trail clouds of bats in your wake.
+%%%%
+Memories status
+
+This indicates how many spells you could cast from accumulated memories if you
+Enkindled now.
+%%%%
+Enkindled status
+
+You are burning accumulated memories for power. Each damage-dealing spell you
+cast will consume a memory. In exchange, their power and spell success are
+increased, encumbrance penalties are ignored, and your spellclaw attacks do
+bonus damage proportional to the spell level and heal you based on the damage
+dealt.
+%%%%
+Cacophony status
+
+You are noisily attacking with all of your armour. Every piece of armour you
+haunt currently moves of its own volition; any damage it takes will not affect
+you, you can freely fire through it, and its attacks may daze, drain, or confuse
+your enemies.
+%%%%
+Catalyst status
+
+You have an explosive catalyst readied. The catalyst will detonate, dealing fire
+damage to the primary target of each of your melee attacks and any enemy
+adjacent to them, with each hit. Attacking will extend the duration of the
+catalyst even if you miss.
+Shroud status
+
+You are covered by a thin shroud of slime that may deflect a melee attack. When
+it does, the shroud will break for a short time, though it will soon repair
+itself naturally.

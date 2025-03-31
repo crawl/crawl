@@ -17,6 +17,7 @@ struct dice_def;
 
 #define OLD_ARMS_KEY "old_arms"
 #define OLD_ARMS_ALT_KEY "old_arms_alt"
+#define ARMS_COOLDOWN_KEY "bestow_arms_timer"
 
 void init_mons_spells();
 bool is_valid_mon_spell(spell_type spell);
@@ -37,11 +38,12 @@ bool mons_spell_is_spell(spell_type spell);
 int mons_power_for_hd(spell_type spell, int hd);
 int mons_spellpower(const monster &mons, spell_type spell);
 int mons_spell_range(const monster &mons, spell_type spell);
-int mons_spell_range_for_hd(spell_type spell, int hd);
+int mons_spell_range_for_hd(spell_type spell, int hd, bool use_veh_bonus = false);
 bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
                      bool check_validity = false);
 void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                mon_spell_slot_flags slot_flags, bool do_noise = true);
+bool is_mons_cast_possible(monster& mons, spell_type spell);
 bool try_mons_cast(monster& mons, spell_type spell);
 void mons_cast_noise(monster* mons, const bolt &pbolt,
                      spell_type spell_cast, mon_spell_slot_flags slot_flags);
@@ -50,6 +52,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
                      bool check_validity = false);
 
 void mons_cast_flay(monster &caster, mon_spell_slot, bolt&);
+bool _should_recall(monster* caller);
 bool mons_word_of_recall(monster* mons, int recall_target);
 void setup_breath_timeout(monster* mons);
 bool mons_can_bind_soul(monster* binder, monster* bound);

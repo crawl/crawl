@@ -123,6 +123,7 @@ static TextDB AllDBs[] =
             "godname.txt",  // god-related names (mostly His Xomminess)
             "montitle.txt", // titles for monsters (i.e. uniques)
             "decorlines.txt", //  miscellaneous lines for walking on decoration
+            "colourname.txt", // colour names again
             "gizmo.txt",    // name-assembling for gizmos
             }),
 
@@ -273,14 +274,14 @@ void TextDB::_regenerate_db()
     shutdown();
     if (_parent)
     {
-#ifdef DEBUG_DIAGNOSTICS
+#if defined(DEBUG_DIAGNOSTICS) && !(defined(TARGET_COMPILER_VC) && defined(USE_TILE))
         printf("Regenerating db: %s [%s]\n", _db_name, Options.lang_name);
 #endif
         mprf(MSGCH_PLAIN, "Regenerating db: %s [%s]", _db_name, Options.lang_name);
     }
     else
     {
-#ifdef DEBUG_DIAGNOSTICS
+#if defined(DEBUG_DIAGNOSTICS) && !(defined(TARGET_COMPILER_VC) && defined(USE_TILE))
         printf("Regenerating db: %s\n", _db_name);
 #endif
         mprf(MSGCH_PLAIN, "Regenerating db: %s", _db_name);

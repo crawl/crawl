@@ -79,6 +79,8 @@ string pluralise(const string &name, const char * const qualifiers[],
         return name.substr(0, name.length() - 1) + "es";
     else if (lowname == "catoblepas")
         return "catoblepae";
+    else if (lowname == "stratum")
+        return "strata";
     else if (ends_with(lowname, "s"))
         return name;
     else if (ends_with(lowname, "y"))
@@ -107,17 +109,17 @@ string pluralise(const string &name, const char * const qualifiers[],
         // TODO: if someone defines a "goblin chief", this should be revisited.
         return name.substr(0, name.length() - 1) + "ves";
     }
-    else if (ends_with(lowname, "mage"))
+    else if (ends_with(lowname, "mage") && !ends_with(lowname, "damage"))
     {
         // mage -> magi
         return name.substr(0, name.length() - 1) + "i";
     }
-    else if (lowname == "gold"                 || ends_with(lowname, "fish")
-             || ends_with(lowname, "folk")     || ends_with(lowname, "spawn")
-             || ends_with(lowname, "tengu")    || ends_with(lowname, "sheep")
-             || ends_with(lowname, "swine")    || ends_with(lowname, "efreet")
-             || ends_with(lowname, "jiangshi") || ends_with(lowname, "raiju")
-             || ends_with(lowname, "meliai"))
+    else if (lowname == "gold"                 || lowname == "oni"
+             || ends_with(lowname, "fish")     || ends_with(lowname, "folk")
+             || ends_with(lowname, "spawn")    || ends_with(lowname, "tengu")
+             || ends_with(lowname, "sheep")    || ends_with(lowname, "swine")
+             || ends_with(lowname, "efreet")   || ends_with(lowname, "jiangshi")
+             || ends_with(lowname, "raiju")    || ends_with(lowname, "meliai"))
     {
         return name;
     }

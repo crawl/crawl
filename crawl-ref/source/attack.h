@@ -164,6 +164,8 @@ protected:
     void maybe_trigger_fugue_wail(const coord_def pos);
     void maybe_trigger_autodazzler();
 
+    bool paragon_defends_player();
+
     virtual int inflict_damage(int dam, beam_type flavour = NUM_BEAMS,
                                bool clean = false);
 
@@ -180,8 +182,6 @@ protected:
 
     string atk_name(description_level_type desc);
     string def_name(description_level_type desc);
-    string wep_name(description_level_type desc = DESC_YOUR,
-                    iflags_t ignore_flags = ISFLAG_KNOW_PLUSES);
 
     attack_flavour random_chaos_attack_flavour();
     bool apply_poison_damage_brand();

@@ -6,6 +6,11 @@ adjective: Octopoid
 genus: Octopus
 difficulty: Advanced
 difficulty_priority: 50
+species_flags:
+  - no_hair
+  - no_bones
+  - no_feet
+  - no_ears
 aptitudes:
   xp: 0
   hp: -1
@@ -23,9 +28,6 @@ str: 7
 int: 10
 dex: 7
 levelup_stat_frequency: 5
-species_flags:
-  - SPF_NO_HAIR
-  - SPF_NO_BONES
 mutations:
   1:
     MUT_CAMOUFLAGE: 1
@@ -36,13 +38,13 @@ fake_mutations:
   - long: You cannot wear most types of armour.
     short: almost no armour
 recommended_jobs:
-  - JOB_SHAPESHIFTER
-  - JOB_HEDGE_WIZARD
-  - JOB_CONJURER
-  - JOB_BRIGAND
-  - JOB_FIRE_ELEMENTALIST
-  - JOB_EARTH_ELEMENTALIST
-  - JOB_ALCHEMIST
+  - shapeshifter
+  - hedge wizard
+  - conjurer
+  - brigand
+  - fire elementalist
+  - earth elementalist
+  - alchemist
 
 walking_verb: Wriggl
 altar_action: curl up in front of

@@ -49,7 +49,9 @@ tileidx_t tileidx_known_base_item(tileidx_t label);
 
 tileidx_t tileidx_cloud(const cloud_info &cl);
 tileidx_t tileidx_bolt(const bolt &bolt);
-tileidx_t vary_bolt_tile(tileidx_t tile, int dist);
+tileidx_t vary_bolt_tile(tileidx_t tile, const coord_def& origin,
+                         const coord_def& target, const coord_def& pos);
+tileidx_t vary_bolt_tile(tileidx_t tile, int dir = 0, int dist = 0);
 tileidx_t tileidx_zap(int colour);
 tileidx_t tileidx_spell(const spell_type spell);
 tileidx_t tileidx_skill(const skill_type skill, int train);
@@ -65,6 +67,7 @@ tileidx_t tileidx_known_brand(const item_def &item);
 tileidx_t tileidx_unseen_flag(const coord_def &gc);
 
 set<tileidx_t> status_icons_for(const monster_info &mon);
+set<tileidx_t> status_icons_for_player();
 
 // Return the level of enchantment as an int. None is 0, Randart is 4.
 int enchant_to_int(const item_def &item);

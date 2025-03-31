@@ -30,22 +30,27 @@
 #include "target.h"
 #include "terrain.h"
 
-spret cast_dreadful_rot(int pow, bool fail)
+spret cast_putrefaction(monster* target, int pow, bool fail)
 {
-    if (cloud_at(you.pos()))
-    {
-        mpr("There's already a cloud here!");
-        return spret::abort;
-    }
-
     fail_check();
 
-    const int min_dur = 6;
-    const int max_dur = 9 + div_rand_round(pow, 10);
-    you.props[MIASMA_IMMUNE_KEY] = true;
-    place_cloud(CLOUD_MIASMA, you.pos(), random_range(min_dur, max_dur), &you);
-    mpr("A part of your flesh rots into a cloud of miasma!");
-    drain_player(27, true, true);
+    // Place one miasma cloud immediately beneath the target.
+    place_cloud(CLOUD_MIASMA, target->pos(), random_range(5, 9), &you);
+
+    // Then start a spread of fiant miasma that will become proper miasma a
+    // turn later.
+    map_cloud_spreader_marker *marker =
+    new map_cloud_spreader_marker(target->pos(), CLOUD_FAINT_MIASMA, 7,
+                                        random_range(18, 28), 5, 2, &you);
+
+    // Start the cloud at radius 1, regardless of the speed of the killing blow
+    marker->speed_increment -= you.time_taken - 7;
+    env.markers.add(marker);
+    env.markers.clear_need_activate();
+
+    mprf("Rot billows forth from %s wounds!", target->name(DESC_ITS).c_str());
+
+    drain_player(75 - div_rand_round(pow * 4, 10), true, true);
 
     return spret::success;
 }
@@ -92,7 +97,7 @@ void explode_blastmotes_at(coord_def p)
     const string boom  = "The cloud of blastmotes explodes!";
     const string sanct = "By Zin's power, the fiery explosion is contained.";
     explosion_fineff::schedule(beam, boom, sanct, EXPLOSION_FINEFF_CONCUSSION,
-                               nullptr);
+                               nullptr, "");
 }
 
 cloud_type spell_to_cloud(spell_type spell)
@@ -159,11 +164,11 @@ spret cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
     beam.thrower           = KILL_YOU;
     beam.hit               = AUTOMATIC_HIT;
     beam.damage            = CONVENIENT_NONZERO_DAMAGE;
-    beam.is_tracer         = true;
     beam.use_target_as_pos = true;
     beam.origin_spell      = spl;
-    beam.affect_endpoint();
-    if (beam.beam_cancelled)
+    player_beam_tracer tracer;
+    beam.affect_endpoint(tracer);
+    if (cancel_beam_prompt(beam, tracer))
         return spret::abort;
 
     fail_check();

@@ -7,8 +7,8 @@ attacks:
  - {type: hit, flavour: swoop, damage: 1}
  - {type: hit, flavour: flank, damage: 1}
  - {type: hit, flavour: crush, damage: 1}
-hd: 9
-hp_10x: 400
+hd: 10
+hp_10x: 350
 ac: 5
 ev: 20
 intelligence: brainless

@@ -11,6 +11,7 @@
 #include "confirm-prompt-type.h"
 #include "easy-confirm-type.h"
 #include "explore-greedy-options.h"
+#include "explore-stop-options.h"
 #include "feature.h"
 #include "fixedp.h"
 #include "flang-t.h"
@@ -320,7 +321,7 @@ struct base_game_options
     virtual void reset_options();
 
     base_game_options(base_game_options const& other);
-    base_game_options(base_game_options &&other) noexcept;
+    base_game_options(base_game_options &&other) noexcept = delete;
     base_game_options& operator=(base_game_options const& other);
 
     void read_options(LineInput &, bool runscripts,
@@ -540,6 +541,8 @@ public:
     use_animations_type use_animations; // which animations to show
     bool        darken_beyond_range; // whether to darken squares out of range
     bool        show_blood; // whether to show blood or not
+    int         food_snacking_frequency; // how often walking on food makes one eat
+    int         fountain_line_frequency; // how often walking on fountains causes commentary
     bool        reduce_animations;   // if true, don't show interim steps for animations
     bool        drop_disables_autopickup;   // if true, automatically remove drops from autopickup
 
@@ -901,6 +904,7 @@ public:
     bool        tile_window_limit_size;
     maybe_bool  tile_use_small_layout;
 #endif
+    int         tile_min_stat_width_characters;
     int         tile_sidebar_pixels;
     int         tile_cell_pixels;
     fixedp<>    tile_viewport_scale;
@@ -926,6 +930,7 @@ public:
     vector<string> tile_layout_priority;
     monster_type tile_use_monster;
     bool        tile_grinch;
+    vector<string> tile_player_status_icons;
 #ifdef USE_TILE_WEB
     bool        tile_realtime_anim;
     bool        tile_level_map_hide_messages;

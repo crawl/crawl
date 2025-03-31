@@ -60,6 +60,7 @@ public:
     virtual aff_type is_affected(coord_def loc) = 0;
     virtual bool can_affect_unseen();
     virtual bool affects_monster(const monster_info& mon);
+    virtual bool harmful_to_player();
 
     targeting_iterator affected_iterator(aff_type threshold = AFF_YES);
 protected:
@@ -77,6 +78,7 @@ public:
     bool can_affect_outside_range() override;
     virtual aff_type is_affected(coord_def loc) override;
     virtual bool affects_monster(const monster_info& mon) override;
+    bool harmful_to_player() override;
 protected:
     vector<coord_def> path_taken; // Path beam took.
     void set_explosion_aim(bolt tempbeam);
@@ -100,20 +102,25 @@ class targeter_smite : public targeter
 {
 public:
     targeter_smite(const actor *act, int range = LOS_RADIUS,
-                    int exp_min = 0, int exp_max = 0, bool wall_ok = false,
+                    int exp_min = 0, int exp_max = 0,
+                    bool harmless_to_player = false,
+                    bool wall_ok = false, bool monster_okay = true,
                     bool (*affects_pos_func)(const coord_def &) = 0);
     virtual bool set_aim(coord_def a) override;
     virtual bool valid_aim(coord_def a) override;
     virtual bool can_affect_outside_range() override;
     bool can_affect_walls() override;
     aff_type is_affected(coord_def loc) override;
+    bool harmful_to_player() override;
 protected:
     // assumes exp_map is valid only if >0, so let's keep it private
     int exp_range_min, exp_range_max;
     explosion_map exp_map_min, exp_map_max;
     int range;
 private:
+    bool cannot_harm_player;
     bool affects_walls;
+    bool can_target_monsters;
     bool (*affects_pos)(const coord_def &);
 };
 
@@ -141,6 +148,7 @@ class targeter_transference : public targeter_smite
 public:
     targeter_transference(const actor *act, int aoe);
     bool valid_aim(coord_def a) override;
+    bool affects_monster(const monster_info& mon) override;
 };
 
 class targeter_inner_flame : public targeter_smite
@@ -412,6 +420,7 @@ public:
 
     void add_position(const coord_def &c, bool force=false);
     bool valid_aim(coord_def) override { return true; }
+    bool can_affect_walls() override { return true; }
     aff_type is_affected(coord_def loc) override;
 
 protected:
@@ -549,19 +558,31 @@ public:
     targeter_anguish();
     bool affects_monster(const monster_info& mon) override;
 };
+
+class targeter_poisonous_vapours : public targeter_smite
+{
+public:
+    targeter_poisonous_vapours(const actor *act, int range);
+    bool affects_monster(const monster_info& mon) override;
+    bool valid_aim(coord_def a) override;
+};
+
 class targeter_boulder : public targeter_beam
 {
 public:
-    targeter_boulder(const actor* caster);
+    targeter_boulder(const actor* caster, int boulder_hp);
     bool valid_aim(coord_def a) override;
     bool set_aim(coord_def a) override;
     aff_type is_affected(coord_def loc) override;
+private:
+    int hp;
+    map<coord_def, aff_type> boulder_sim;
 };
 
-class targeter_petrify : public targeter_beam
+class targeter_chain : public targeter_beam
 {
 public:
-    targeter_petrify(const actor *act, int r);
+    targeter_chain(const actor *act, int r, zap_type ztype);
     bool set_aim(coord_def a) override;
     aff_type is_affected(coord_def loc) override;
 
@@ -579,12 +600,15 @@ public:
 class targeter_explosive_beam : public targeter_beam
 {
 public:
-    targeter_explosive_beam(const actor *act, int pow, int range,
+    targeter_explosive_beam(const actor *act, zap_type ztype,
+                            int pow, int range,
+                            bool explode_on_monsters = true,
                             bool always_explode = false);
     bool set_aim(coord_def a) override;
     aff_type is_affected(coord_def loc) override;
 private:
     explosion_map exp_map;
+    bool explode_on_monsters;
     bool always_explode;
 };
 
@@ -605,6 +629,7 @@ public:
     bool valid_aim(coord_def a) override;
     bool set_aim(coord_def a) override;
     aff_type is_affected(coord_def loc) override;
+    bool harmful_to_player() override { return false; };
 private:
     vector<coord_def> affected_monsters;
 };
@@ -645,4 +670,76 @@ class targeter_marionette : public targeter_smite
 public:
     targeter_marionette();
     bool valid_aim(coord_def a) override;
+};
+
+class targeter_putrefaction : public targeter_smite
+{
+public:
+    targeter_putrefaction(int range);
+    bool valid_aim(coord_def a) override;
+};
+
+class targeter_soul_splinter : public targeter_beam
+{
+public:
+    targeter_soul_splinter(const actor *act, int r);
+    bool affects_monster(const monster_info& mon) override;
+};
+
+class targeter_surprising_crocodile : public targeter_smite
+{
+public:
+    targeter_surprising_crocodile(const actor* caster);
+    bool valid_aim(coord_def a) override;
+    bool set_aim(coord_def a) override;
+    aff_type is_affected(coord_def loc) override;
+private:
+    vector<coord_def> landing_spots;
+};
+
+class targeter_wall_arc : public targeter_smite
+{
+public:
+    targeter_wall_arc(const actor* caster, int num_walls);
+    bool set_aim(coord_def a) override;
+    aff_type is_affected(coord_def loc) override;
+private:
+    vector<coord_def> spots;
+    int num_walls;
+};
+
+class targeter_tempering : public targeter_smite
+{
+public:
+    targeter_tempering();
+    bool valid_aim(coord_def a) override;
+    bool preferred_aim(coord_def a) override;
+};
+
+class targeter_piledriver : public targeter_smite
+{
+public:
+    targeter_piledriver();
+    bool valid_aim(coord_def a) override;
+    bool set_aim(coord_def a) override;
+    aff_type is_affected(coord_def loc) override;
+
+private:
+    int piledriver_lengths[8];
+    vector<coord_def> spots;
+};
+
+class targeter_teleport_other : public targeter_smite
+{
+public:
+    targeter_teleport_other(const actor *act, int range);
+    bool valid_aim(coord_def a) override;
+};
+
+class targeter_malign_gateway : public targeter
+{
+public:
+    targeter_malign_gateway(actor& caster);
+    aff_type is_affected(coord_def loc) override;
+    bool valid_aim(coord_def) override { return true; }
 };

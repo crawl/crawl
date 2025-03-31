@@ -94,7 +94,7 @@ enum band_type
     BAND_BLOOD_SAINT,
     BAND_WARMONGER,
     BAND_CORRUPTER,
-    BAND_BLACK_SUN,
+    BAND_SOUL_SCHOLAR,
     BAND_VASHNIA,
     BAND_CEREBOV,
     BAND_GLOORX_VLOQ,
@@ -132,14 +132,12 @@ enum band_type
     BAND_WEEPING_SKULLS,
     BAND_THERMIC_DYNAMOS,
     BAND_ORB_SPIDERS,
+    BAND_SIN_BEASTS,
+    BAND_WURMS_AND_MASTER,
+    BAND_SLIMES_AND_MASTER,
+    BAND_ELEPHANTS_AND_MASTER,
+    BAND_SPHINXES,
     NUM_BANDS                   // always last
-};
-
-enum dragon_class_type
-{
-    DRAGON_LIZARD,
-    DRAGON_DRACONIAN,
-    DRAGON_DRAGON,
 };
 
 enum proximity_type   // proximity to player to create monster
@@ -164,5 +162,10 @@ enum mgen_flag
                    // 0x080, ///< was MG_DONT_CAP
     MG_FORBID_BANDS = 0x100, ///< override MG_PERMIT_BANDS
     MG_NO_OOD       = 0x200, ///< don't choose out-of-depth random monsters
+    MG_PREFER_LAND  = 0x400, ///< don't place monsters in deep water / lava if
+                             ///  they could be placed on land / shallow water
+                             ///  instead.
+    MG_SEE_SUMMONER = 0x800, ///< will always be generated in sight of its
+                             ///  summoner
 };
 DEF_BITFIELD(mgen_flags, mgen_flag);

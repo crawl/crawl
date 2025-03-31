@@ -15,8 +15,8 @@ attacks:
  - {type: tail_slap, damage: 15}
 hd: 17
 hp_10x: 3230
-ac: 30
-ev: 8
+ac: 28
+ev: 4
 spells: serpent_of_hell_dis
 shout: loud_roar
 intelligence: human

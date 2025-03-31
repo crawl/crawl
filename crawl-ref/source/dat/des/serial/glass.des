@@ -9,11 +9,16 @@
 
 NAME:   serial_glass
 TAGS:   allow_dup extra luniq_serial decor nolayout_encompass
-DEPTH:  D, Depths, Elf, Vaults, Crypt, Dis
+DEPTH:  D, Depths, Elf, Crypt, Dis
 CHANCE: 1%
 {{
-  local c = 2 + crawl.random2(3)*crawl.random2(3)*crawl.random2(4)
-  local d = crawl.random2(2)*crawl.random2(2)*crawl.random2(5)
+  local c = 2 + crawl.random2(3) * crawl.random2(3) * crawl.random2(4)
+  local d = crawl.random2(2) * crawl.random2(2) * crawl.random2(5)
+  local tile = "dngn_transparent_wall"
+  if not you.in_branch("D") and crawl.one_chance_in(4) then
+    tile = tile .. util.random_from({"_blue", "_white", "_darkgray"})
+  end
+  dgn.persist.serial_glass_tile = tile
   hook("post_place", function()
     dgn.place_maps{tag="serial_glass", count=c}
     if not you.in_branch("Dis") then

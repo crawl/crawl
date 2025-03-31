@@ -11,6 +11,8 @@
 #
 ##############################################################################
 
+: crawl_require('dlua/vault.lua')
+
 {{
 function ossuary_portal(e)
   local timeout_turns = crawl.random_range(600, 800)
@@ -45,8 +47,9 @@ function ossuary_portal(e)
   e.depth_chance("D:4-5", 500)
   e.depth_chance("D:6-7", 550)
   e.kfeat("O = enter_ossuary")
-  e.colour("' = yellow")
-  e.ftile("' = floor_sandstone")
+  e.colour("123' = yellow")
+  e.colour("c = white")
+  e.ftile("123'O = floor_sandstone")
   e.tile("c = wall_tomb")
 end
 
@@ -115,9 +118,11 @@ ENDMAP
 
 NAME:   enter_ossuary_4
 TAGS:   transparent
-COLOUR: 1 = yellow, x = white
 MONS:   rat zombie / quokka zombie / goblin zombie
-FTILE:  1 = floor_sandstone, x = floor_sandstone, O = floor_sandstone
+MONS:   adder zombie / scorpion zombie / centaur zombie w:5
+: if you.depth() > 5 then
+SUBST:  1 = 2
+: end
 : ossuary_portal(_G)
 MAP
 .........
@@ -132,7 +137,6 @@ ENDMAP
 
 NAME:   enter_ossuary_5
 TAGS:   transparent
-COLOUR: c = white, + = white, ' = yellow
 : ossuary_portal(_G)
 MAP
    ...
@@ -306,11 +310,9 @@ ENDMAP
 NAME:   mainiacjoe_ossuary_entry_dusty_tomb
 TAGS:   no_monster_gen no_item_gen
 KFEAT:  ` = web
-KFEAT:  H = granite_statue
 NSUBST: ` = 8:` / *:.
-TILE:   G = dngn_sarcophagus_pedestal_right
+: vault_granite_statue_setup(_G, "GH", "sarcophagus")
 TILE:   H = dngn_sarcophagus_pedestal_left
-: set_feature_name("granite_statue", "sarcophagus")
 : ossuary_portal(_G)
 MAP
   .......
@@ -337,16 +339,16 @@ TAGS:  no_monster_gen
 :      " / hound " .. z .. d .. " / hound " .. s .. d ..
 :      " / scorpion " .. z .. e .. " / howler monkey " .. s .. e ..
 :      " / bullfrog " .. s .. f .. " / killer bee " .. z .. f)
-SUBST: 1 = 11., 3 = 1.
+SUBST: 1 = 11', 3 = 1'
 : ossuary_portal(_G)
 MAP
    .....
   .x+x+x.
- ..x.x1x..
-.xxc.cccxx.
-.+1c3.3c1+.
-.xxc.O.cxx.
-.+1c3.3c1+.
+ ..x'x1x..
+.xxc'cccxx.
+.+1c3'3c1+.
+.xxc'O'cxx.
+.+1c3'3c1+.
 .xxcccccxx.
  ..x1x1x..
   .x+x+x.
@@ -549,9 +551,9 @@ MONS:    weeping skull / burial acolyte
 # more likely to be the one with less loot, giving weak players a chance.
 ITEM:    any scroll, any potion
 SHUFFLE: def$
-NSUBST:  d = 1:1 / *:d, e = 1:1 / *:e,  $ = 1:1 / *:$
-SUBST:   ? = 2 3:1 .:1
-NSUBST:  ! = 1:4 / 1:5 / 1:4! / * = 3 2:1 .:1
+NSUBST:  d = 1:1 / *:d, e = 1:1 / *:e, $ = 1:1 / *:$
+SUBST:   ? = 2:11 3:2 .:1
+NSUBST:  ! = 1:4 / 1:5 / 1:4. / * = 3 2:1 .:1
 : ossuary_setup_features(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxx
@@ -561,7 +563,7 @@ x......cccccccc......x
 x...cccc!??!+eccc+...x
 x..cc.......ceec.+c..x
 x..c<!ccccc.cccc..c..x
-x..cc.+dddc..!.?.+c..x
+x..cc?+dddc..!.?.+c..x
 x..?ccccddc...ccc+?..x
 x......cccccccc......x
 x..?....?.!.?........x
@@ -569,7 +571,7 @@ x........?.!.?....?..x
 x......cccccccc......x
 x..?+ccc!+ffc!cccc?..x
 x..c+...?cccc.c$$cc..x
-x..c..?....!..+$$<c..x
+x..c..?....!?.+$$<c..x
 x..c+...?cccc.c$$cc..x
 x...+ccc!+ffc!cccc...x
 x......cccccccc......x
@@ -588,12 +590,12 @@ MONS:    human zombie / elf zombie / centaur zombie
 # mix of good items with useless ones. sometimes mostly useless ones,
 # and occasional raw random ones.
 : item( dgn.loot_scrolls .. " / " .. dgn.loot_potions .. " / " ..
-:       "scroll of noise ident:type w:33 / " ..
-:       "potion of degeneration ident:type w:33" )
+:       "scroll of noise pre_id w:33 / " ..
+:       "potion of moonshine pre_id w:33" )
 # and sometimes mostly useless ones
-ITEM:    scroll of noise ident:type w:30 / scroll of poison ident:type / \
-         potion of mutation ident:type w:5 / \
-         potion of degeneration ident:type w:40
+ITEM:    scroll of noise pre_id w:30 / scroll of poison pre_id / \
+         potion of mutation pre_id w:5 / \
+         potion of moonshine pre_id w:40
 # occasionally just use this
 ITEM:    any potion / any scroll w:5
 KFEAT:   ^ = alarm trap
@@ -637,7 +639,7 @@ MONS:   gnoll zombie / jackal zombie / orc zombie / \
         human zombie / ball python zombie / adder zombie / \
         centaur zombie / scorpion zombie w:30
 ITEM:   any scroll / any potion / any jewellery w:1
-SUBST:  1 = 11..., 3 = 33., d = d:21 .
+SUBST:  1 = 111.., 3 = 33., d = d:21 .
 : ossuary_setup_features(_G)
 MAP
 ccccccccccccccccccccccccc
@@ -826,7 +828,7 @@ WEIGHT:  10
 ORIENT:  encompass
 MONS:    kobold skeleton / orc skeleton / gnoll skeleton
 MONS:    mummy
-KMONS:   3X = wight
+KMONS:   3X = wight ; mace | flail | falchion | short sword . robe
 KMONS:   4C = burial acolyte
 KITEM:   34d = any scroll / any potion
 KFEAT:   C = altar_kikubaaqudgha
@@ -982,7 +984,7 @@ KMONS:  6 = spectral bullfrog / spectral scorpion
 ITEM:   any potion / any scroll / nothing w:1
 KFEAT:  IP`" = floor
 KFEAT:  ^ = alarm trap
-NSUBST: I = 1:5i / 6:I / 5 = I` / *:`, P = 1:6p / 6:P / 5 = P" / *:"
+NSUBST: I = 1:5i / 5:I / 5 = I` / *:`, P = 1:6p / 5:P / 5 = P" / *:"
 COLOUR: I` = cyan
 COLOUR: P" = green
 SUBST:  ' = ^ .:70
@@ -1084,7 +1086,8 @@ MONS:   bullfrog simulacrum / spectral scorpion / \
         killer bee zombie w:5 / crocodile zombie w:35
 MONS:   mummy
 ITEM:   any scroll / any potion / any scroll q:2 w:2 / any potion q:2 w:2
-NSUBST: 2 = 1:. / 2 = 12 / *:1
+KFEAT:  ^ = alarm trap
+NSUBST: 2 = 1:2 / 2 = 12 / *:1, ^ = 1:^ / 1:. / *:^.
 : ossuary_setup_features(_G)
 MAP
             ccc
@@ -1093,21 +1096,21 @@ MAP
          c..ddd..c
          c...d...c
          c.......c
-         cc.....cc
+         cc..^..cc
           ccc.ccc
             c+c
   ccccc   ccc.ccc   ccccc
  cc1.2cc cc.....cc cc2.1cc
  c.....c c.......c c.....c
 cc.....ccc...<...ccc.....cc
-c3......+...<A<...+......3c
+c3....^.+...<A<...+.^....3c
 cc.....ccc...<...ccc.....cc
  c.....c c.......c c.....c
  cc1.2cc cc.....cc cc2.1cc
   ccccc   ccc.ccc   ccccc
             c+c
           ccc.ccc
-         cc.....cc
+         cc..^..cc
          c2.....2c
          c.......c
          c1.....1c
@@ -1255,7 +1258,7 @@ c...........................c
 c.............F.............c
 c..xxxx..4..xxxxx..4..xxxx..c
 c..xL+..4G4.xMMMx.4G4..+Nx..c
-c..xL+...4..x+++x..4...+Nx..c
+c..xL+...4..x+++x.44...+Nx..c
 c..xxxx.....x...x.....xxxx..c
 c...........................c
 c......xxxxx..4..xxxxx......c
@@ -1263,7 +1266,7 @@ c^....FxOO+..4C4..+PPxF....^c
 c......xxxxx..4..xxxxx......c
 c...........................c
 c..xxxx.....x...x.....xxxx..c
-c..xQ+...4..x+++x..4...+Sx..c
+c..xQ+...44.x+++x..4...+Sx..c
 c..xQ+..4G4.xRRRx.4G4..+Sx..c
 c..xxxx..4..xxxxx..4..xxxx..c
 c.............D.............c
@@ -1335,4 +1338,146 @@ cc~~~~~~~~~~c.!!!!!!!!!!!cc
        c....<c
        c....Ac
        ccccccc
+ENDMAP
+
+# an ossuary with no clear pathway and monsters and loot scattered about
+NAME:    ossuary_hellmonk_twisting_tombs
+TAGS:    no_monster_gen no_item_gen
+WEIGHT:  10
+ORIENT:  encompass
+MONS:    weeping skull / burial acolyte
+MONS:    mummy / wight w:2
+MONS:    kobold zombie / gnoll zombie / orc zombie / hound zombie / \
+         human zombie w:4 / centaur zombie w:6
+ITEM:    any potion w:15 / any scroll w:15 / gold w:6
+SHUFFLE: -+
+SHUFFLE: <A
+SUBST:   -:c, V:VVVVG
+NSUBST:  + = 10:++~ / *:+
+NSUBST:  1 = 1:1 / 1:12 / * = 3., 2 = 1:2 / 1:23 / * = 3.
+NSUBST:  " = 4:^ / 3=^" / *:"
+NSUBST:  . = 3:3 / 12=3. / *:.
+NSUBST:  d = 1:* / 1:*d / *:d
+KFEAT:   ^ = net trap / alarm trap w:30 / dispersal trap
+KFEAT:   ~ = broken_door
+: ossuary_setup_features(_G)
+MAP
+ccccccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccccccc
+cccd13...+.2c.....dc.....-.dccc
+ccc.33...c..+......+.....c31ccc
+ccc-cccccc..c......c....dc33ccc
+ccc......+..cc-ccccccc-cccc+ccc
+ccc......c..c....c.....+....ccc
+ccccc+c+-cc-c....+..2..c...dccc
+cccd..c"""""c....c.....ccc-cccc
+ccc...c"""""+....cc-cccc...dccc
+ccc2..-"<VA"cccc-c.....-....ccc
+ccc...c"""""+....c.....cc-c+ccc
+ccc...c"""""c....+...2.c....ccc
+cccc-+ccc+ccc....-.....+..'.ccc
+ccc....c....-....c.....cd...ccc
+ccc....c....ccccccccc+ccccc-ccc
+ccc3...-....c......c....+.3.ccc
+ccc13..c..2.+......-....c.31ccc
+cccd3..+....c.....dcd...-.3dccc
+ccccccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccccccc
+ENDMAP
+
+NAME:   ossuary_hellmonk_split_paths
+TAGS:   no_monster_gen no_item_gen
+WEIGHT: 10
+ORIENT: encompass
+MONS:   burial acolyte / weeping skull
+MONS:   mummy / scorpion w:4
+MONS:   centaur zombie / water moccasin zombie / scorpion zombie /\
+        bullfrog zombie
+MONS:   goblin zombie / hobgoblin zombie / adder zombie / orc zombie /\
+        gnoll zombie
+ITEM:   any potion w:15 / any scroll w:15 / gold w:6
+KFEAT:  ^ = net trap / alarm trap w:30 / dispersal trap
+NSUBST: 3 = 2:3 / *=3...
+NSUBST: - = 3:4 / 1:3 / 8=4. / *:., ~ = 3:4 / 1:3 / 8=4. / *:.
+NSUBST: ! = 2:4 / 1:3 / 1:3.. / 6=4. / *:., ' = 2:4 / 1:3 / 1:3.. / 6=4. / *:.
+NSUBST: " = 2:^ / 1:2 / *:.
+NSUBST: 2 = 1:2 / 4=2... / *:.
+NSUBST: d = 1:* / 1:*d / *:d
+: ossuary_setup_features(_G)
+MAP
+cccccccccccccccccccccccc
+cccc-----------------ccc
+ccc-------------------cc
+cc------ccccccccccc----c
+c----cccc!!!!!!!!!ccc..c
+c---cc!!!!!!!!!!!!.....c
+c..cc!!!!!cc!!!cc....cccc
+c..!!!!!ccccccccccc.....cc
+c..!!!cccc2.....2cccc....c
+c..!!cc"3cc..3..ccddccc..cc
+c..ccc""""cc...ccd43dc....c
+c..""""""".c...c.3.4dcc...c
+c3.""""2"3^+.G^+...1ddcA.<c
+c..""""""".c...c.3.4dcc...c
+c..ccc""""cc...ccd43dc....c
+c..''cc"3cc..3..ccddccc..cc
+c..'''cccc2.....2cccc....c
+c..'''''ccccccccccc.....cc
+c..cc'''''cc'''cc....cccc
+c~~~cc''''''''''''.....c
+c~~~~cccc'''''''''ccc..c
+cc~~~~~~ccccccccccc~~~~c
+ccc~~~~~~~~~~~~~~~~~~~cc
+cccc~~~~~~~~~~~~~~~~~ccc
+cccccccccccccccccccccccc
+ENDMAP
+
+NAME:   ossuary_hellmonk_orc_graveyard
+TAGS:   no_monster_gen no_item_gen
+WEIGHT: 10
+ORIENT: encompass
+MONS:   orc warrior zombie w:20 / weeping skull / troll zombie w:1
+MONS:   ogre zombie / mummy w:1
+MONS:   orc zombie w:30 / gnoll zombie / ogre zombie w:2 /\
+        hobgoblin zombie w:7 / elf zombie w:1
+KMONS:  B = burial acolyte
+ITEM:   any potion w:15 / any scroll w:15 / gold w:6
+KFEAT:  ^ = alarm trap
+KFEAT:  B = altar_kikubaaqudgha / altar_beogh w:2
+KFEAT:  t = petrified_tree
+SUBST:  3 = 3..
+NSUBST: - = 10:t / 3:G / 5:3 / 20 = t.. / 5 = G. / 6 = 3. / *:.
+NSUBST: 1 = 1:1 / *:2, d = 6:d / 1:* / *=ddd*
+: vault_granite_statue_setup(_G, "G", "gravestone")
+: ossuary_setup_features(_G)
+MAP
+         ccccc
+        cc.B.cc
+        c.....c
+ccccccccccc+ccccccccccc
+c.....^..3.2.3..^.....c
+c.....^.........^.....c
+c3...cc.........cc...3c
+cd13dcccc.^^^.ccccd31dc
+cddddc3.cc+++cc.3cddddc
+cccccc...........cccccc
+  cc.....-----.....ccc
+  c3...--.---.--...3c
+  c...-.--.-.--.-...c
+  cc..-----------..cc
+   c3.----.-.----.3c
+   c...--.---.--...c
+   cc..-.-----.-..cc
+    c...-.-.-.-...c
+    cc...-.-.-...cc
+     cc.........cc
+      ccc.....ccc
+        c..G..c
+       cc.....cc
+       c..A.<..c
+       c.......c
+       cc..t..cc
+        ccccccc
 ENDMAP

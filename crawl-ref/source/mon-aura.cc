@@ -3,6 +3,7 @@
 #include "mon-aura.h"
 
 #include "act-iter.h"
+#include "coord.h"
 #include "fprop.h"
 #include "monster.h"
 #include "mon-ench.h"
@@ -17,18 +18,21 @@ struct mon_aura_data
     string player_key;
     function<bool(const actor& targ)> valid_target;
     function<void(const monster& source)> player_msg;
+    bool adjacent_only;
 
     mon_aura_data(monster_type _mon_source, enchant_type _ench_type,
                   int _base_duration, bool _is_hostile,
                   duration_type _dur_type = NUM_DURATIONS,
                   string _player_key = "",
                   function<bool(const actor& targ)> _valid_target = nullptr,
-                  function<void(const monster& source)> _player_msg = nullptr):
+                  function<void(const monster& source)> _player_msg = nullptr,
+                  bool _adjacent_only = false):
                   mon_source(_mon_source), ench_type(_ench_type),
                   base_duration(_base_duration), is_hostile(_is_hostile),
                   dur_type(_dur_type), player_key(_player_key),
                   valid_target(_valid_target),
-                  player_msg(_player_msg)
+                  player_msg(_player_msg),
+                  adjacent_only(_adjacent_only)
                   {}
 };
 
@@ -60,6 +64,21 @@ static const vector<mon_aura_data> aura_map =
         ENCH_EMPOWERED_SPELLS, 1, false,
         NUM_DURATIONS, "",
         [](const actor& targ) { return targ.antimagic_susceptible() ;}},
+
+    {MONS_APIS,
+        ENCH_DOUBLED_HEALTH, 1, false,
+        NUM_DURATIONS, "",
+        [](const actor& targ) { return targ.type != MONS_APIS ;}},
+
+    {MONS_IRONBOUND_BEASTMASTER,
+        ENCH_HASTE, 1, false,
+        NUM_DURATIONS, "",
+        [](const actor& targ) { return (targ.holiness() & MH_NATURAL)
+        && targ.is_monster() && (mons_intel(*targ.as_monster()) != I_HUMAN) ;}},
+
+    {MONS_PHALANX_BEETLE,
+        ENCH_NONE, 1, false, DUR_PHALANX_BARRIER, PHALANX_BARRIER_KEY,
+         nullptr, nullptr, true},
 };
 
 static mon_aura_data _get_aura_for(const monster& mon)
@@ -73,7 +92,7 @@ static mon_aura_data _get_aura_for(const monster& mon)
             return aura;
     }
 
-    ASSERT(false);
+    die("no aura found for %s", mon.name(DESC_THE).c_str());
 }
 
 static mon_aura_data _get_aura_from_key(string player_key)
@@ -84,7 +103,7 @@ static mon_aura_data _get_aura_from_key(string player_key)
             return aura;
     }
 
-    ASSERT(false);
+    die("aura %s not found", player_key.c_str());
 }
 
 bool mons_has_aura(const monster& mon)
@@ -137,12 +156,21 @@ bool mons_has_aura_of_type(const monster& mon, duration_type type)
 static bool _aura_could_affect(const mon_aura_data& aura, const monster& source,
                                const actor& victim)
 {
+    if (aura.adjacent_only && !adjacent(source.pos(), victim.pos()))
+        return false;
+
     // Auras do not apply to self
     if (victim.is_monster() && victim.as_monster() == &source)
         return false;
 
     // Is the victim the right alignment?
     if (mons_aligned(&source, &victim) == aura.is_hostile)
+        return false;
+
+    // Is the aura something that should affect firewood?
+    // (Guarding firewood may sound silly, but is quite relevant for Fedhas
+    // + Martyr's Knell)
+    if (victim.is_firewood() && aura.ench_type != ENCH_INJURY_BOND)
         return false;
 
     // If the aura suppressed by sanctuary?
@@ -183,11 +211,15 @@ void mons_update_aura(const monster& mon)
                         continue;
                 }
 
-                // Remove any enchantment that may currently exist, since we don't
-                // want them to stack.
-                mi->del_ench(aura.ench_type, true, false);
-                mi->add_ench(mon_enchant(aura.ench_type, 1, &mon, aura.base_duration,
-                                        aura.is_hostile ? AURA_HOSTILE : AURA_FRIENDLY));
+                mon_enchant new_ench(aura.ench_type, 1, &mon, aura.base_duration,
+                                     aura.is_hostile ? AURA_HOSTILE : AURA_FRIENDLY);
+
+                // Override an existing enchant rather than just add to it
+                // (which would stack durations).
+                if (mi->has_ench(aura.ench_type))
+                    mi->update_ench(new_ench);
+                else
+                    mi->add_ench(new_ench);
             }
         }
     }
@@ -203,7 +235,12 @@ void mons_update_aura(const monster& mon)
         return;
 
     if (!you.duration[aura.dur_type])
-        aura.player_msg(mon);
+    {
+        if (aura.player_msg)
+            aura.player_msg(mon);
+        if (aura.dur_type == DUR_PHALANX_BARRIER)
+            you.redraw_armour_class = true;
+    }
 
     you.duration[aura.dur_type] = aura.base_duration;
     you.props[aura.player_key].get_bool() = true;

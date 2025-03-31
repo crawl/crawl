@@ -247,6 +247,10 @@ Nikola title
 
 Nikola the Mad Inventor
 %%%%
+Nobody title
+
+Nobody, Grudge of the Unmourned
+%%%%
 Norris title
 
 Norris the Philosopher
@@ -305,7 +309,7 @@ Sonja, the Graceful Assassin
 %%%%
 Terence title
 
-Terence the Incautious
+Terence the Veteran
 %%%%
 Tiamat title
 

@@ -21,6 +21,7 @@
 #include "message.h"
 #include "mon-behv.h"
 #include "mon-death.h"
+#include "mon-util.h"
 #include "religion.h"
 #include "spl-damage.h"
 #include "stepdown.h"
@@ -63,25 +64,6 @@ hands_reqd_type actor::hands_reqd(const item_def &item, bool base) const
     return basic_hands_reqd(item, body_size(PSIZE_TORSO, base));
 }
 
-/**
- * Wrapper around the virtual actor::can_wield(const item_def&,bool,bool,bool,bool) const overload.
- * @param item May be nullptr, in which case a dummy item will be passed in.
- */
-bool actor::can_wield(const item_def* item, bool ignore_curse,
-                      bool ignore_brand, bool ignore_shield,
-                      bool ignore_transform) const
-{
-    if (item == nullptr)
-    {
-        // Unarmed combat.
-        item_def fake;
-        fake.base_type = OBJ_UNASSIGNED;
-        return can_wield(fake, ignore_curse, ignore_brand, ignore_shield, ignore_transform);
-    }
-    else
-        return can_wield(*item, ignore_curse, ignore_brand, ignore_shield, ignore_transform);
-}
-
 bool actor::can_pass_through(int x, int y) const
 {
     return can_pass_through_feat(env.grid[x][y]);
@@ -120,6 +102,12 @@ int actor::skill_rdiv(skill_type sk, int mult, int div) const
     return div_rand_round(skill(sk, mult * 256), div * 256);
 }
 
+int actor::wearing_jewellery(int sub_type) const
+{
+    return wearing(OBJ_JEWELLERY, sub_type, ring_plusses_matter(sub_type),
+                   sub_type == AMU_REGENERATION || sub_type == AMU_MANA_REGENERATION);
+}
+
 int actor::check_willpower(const actor* source, int power) const
 {
     int wl = willpower();
@@ -127,7 +115,7 @@ int actor::check_willpower(const actor* source, int power) const
     if (wl == WILL_INVULN)
         return 100;
 
-    if (source && source->wearing_ego(EQ_ALL_ARMOUR, SPARM_GUILE))
+    if (source && source->wearing_ego(OBJ_ARMOUR, SPARM_GUILE))
         wl = guile_adjust_willpower(wl);
 
     // Marionettes get better hex success against friends to avoid hex casts
@@ -206,7 +194,7 @@ void actor::shield_block_succeeded(actor *attacker)
 
     if (sh
         && sh->base_type == OBJ_ARMOUR
-        && get_armour_slot(*sh) == EQ_OFFHAND
+        && get_armour_slot(*sh) == SLOT_OFFHAND
         && is_artefact(*sh)
         && is_unrandom_artefact(*sh)
         && (unrand_entry = get_unrand_entry(sh->unrand_idx))
@@ -226,7 +214,7 @@ int actor::get_res(int res) const
     case MR_RES_COLD:      return res_cold();
     case MR_RES_NEG:       return res_negative_energy();
     case MR_RES_MIASMA:    return res_miasma();
-    case MR_RES_ACID:      return res_acid();
+    case MR_RES_CORR:      return res_corr();
     case MR_RES_TORMENT:   return res_torment();
     case MR_RES_PETRIFY:   return res_petrify();
     case MR_RES_DAMNATION: return res_damnation();
@@ -240,8 +228,7 @@ int actor::get_res(int res) const
 /// How many levels of penalties does this actor have from inaccuracy-conferring effects?
 int actor::inaccuracy() const
 {
-    const item_def *amu = slot_item(EQ_AMULET);
-    return amu && is_unrandom_artefact(*amu, UNRAND_AIR);
+    return unrand_equipped(UNRAND_AIR);
 }
 
 /// How great are the penalties to this actor's to-hit from any inaccuracy effects they have?
@@ -250,19 +237,9 @@ int actor::inaccuracy_penalty() const
     return inaccuracy() * 5;
 }
 
-bool actor::res_corr(bool /*allow_random*/, bool temp) const
-{
-    return temp && (wearing(EQ_RINGS, RING_RESIST_CORROSION)
-                    || wearing(EQ_BODY_ARMOUR, ARM_ACID_DRAGON_ARMOUR)
-                    || scan_artefacts(ARTP_RCORR)
-                    || wearing_ego(EQ_ALL_ARMOUR, SPARM_PRESERVATION));
-}
-
 bool actor::cloud_immune(bool items) const
 {
-    const item_def *body_armour = slot_item(EQ_BODY_ARMOUR);
-    return items && body_armour
-           && is_unrandom_artefact(*body_armour, UNRAND_RCLOUDS);
+    return items && unrand_equipped(UNRAND_RCLOUDS);
 }
 
 bool actor::holy_wrath_susceptible() const
@@ -288,7 +265,7 @@ int actor::angry(bool items) const
     if (!items)
         return anger;
 
-    return anger + 20 * wearing_ego(EQ_ALL_ARMOUR, SPARM_RAGE)
+    return anger + 20 * wearing_ego(OBJ_ARMOUR, SPARM_RAGE)
                  + scan_artefacts(ARTP_ANGRY);
 }
 
@@ -299,12 +276,12 @@ bool actor::clarity(bool items) const
 
 bool actor::faith(bool items) const
 {
-    return items && wearing(EQ_AMULET, AMU_FAITH);
+    return items && wearing_jewellery(AMU_FAITH);
 }
 
 int actor::archmagi(bool items) const
 {
-    return items ? wearing_ego(EQ_ALL_ARMOUR, SPARM_ARCHMAGI)
+    return items ? wearing_ego(OBJ_ARMOUR, SPARM_ARCHMAGI)
                    + scan_artefacts(ARTP_ARCHMAGI) : 0;
 }
 
@@ -316,8 +293,8 @@ bool actor::no_cast(bool items) const
 bool actor::reflection(bool items) const
 {
     return items &&
-           (wearing(EQ_AMULET, AMU_REFLECTION)
-            || wearing_ego(EQ_ALL_ARMOUR, SPARM_REFLECTION));
+           (wearing_jewellery(AMU_REFLECTION)
+            || wearing_ego(OBJ_ARMOUR, SPARM_REFLECTION));
 }
 
 int actor::extra_harm(bool items) const
@@ -325,7 +302,7 @@ int actor::extra_harm(bool items) const
     if (!items)
         return 0;
 
-    int harm = wearing_ego(EQ_CLOAK, SPARM_HARM) + scan_artefacts(ARTP_HARM);
+    int harm = wearing_ego(OBJ_ARMOUR, SPARM_HARM) + scan_artefacts(ARTP_HARM);
 
     return harm > 2 ? 2 : harm;
 }
@@ -337,19 +314,16 @@ bool actor::rmut_from_item() const
 
 bool actor::evokable_invis() const
 {
-    return wearing_ego(EQ_CLOAK, SPARM_INVISIBILITY)
+    return wearing_ego(OBJ_ARMOUR, SPARM_INVISIBILITY)
            || scan_artefacts(ARTP_INVISIBLE);
 }
 
 // Return an int so we know whether an item is the sole source.
 int actor::equip_flight() const
 {
-    if (is_player() && get_form()->forbids_flight())
-        return 0;
-
     // For the player, this is cached on ATTR_PERM_FLIGHT
-    return wearing(EQ_RINGS, RING_FLIGHT)
-           + wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING)
+    return wearing_jewellery(RING_FLIGHT)
+           + wearing_ego(OBJ_ARMOUR, SPARM_FLYING)
            + scan_artefacts(ARTP_FLY);
 }
 
@@ -359,8 +333,8 @@ int actor::spirit_shield(bool items) const
 
     if (items)
     {
-        ss += wearing_ego(EQ_ALL_ARMOUR, SPARM_SPIRIT_SHIELD);
-        ss += wearing(EQ_AMULET, AMU_GUARDIAN_SPIRIT);
+        ss += wearing_ego(OBJ_ARMOUR, SPARM_SPIRIT_SHIELD);
+        ss += wearing_jewellery(AMU_GUARDIAN_SPIRIT);
     }
 
     if (is_player())
@@ -371,8 +345,9 @@ int actor::spirit_shield(bool items) const
 
 bool actor::rampaging() const
 {
-    return wearing_ego(EQ_ALL_ARMOUR, SPARM_RAMPAGING)
-           || scan_artefacts(ARTP_RAMPAGING);
+    return wearing_ego(OBJ_ARMOUR, SPARM_RAMPAGING)
+           || scan_artefacts(ARTP_RAMPAGING)
+           || you.duration[DUR_EXECUTION];
 }
 
 int actor::apply_ac(int damage, int max_damage, ac_type ac_rule, bool for_real) const
@@ -411,9 +386,9 @@ int actor::apply_ac(int damage, int max_damage, ac_type ac_rule, bool for_real) 
         saved = max(saved, min(gdr * max_damage / 100, div_rand_round(ac, 2)));
     if (for_real && (damage > 0) && is_player())
     {
-        const item_def *body_armour = slot_item(EQ_BODY_ARMOUR);
-        if (body_armour)
-            count_action(CACT_ARMOUR, body_armour->sub_type);
+        const item_def *armour = body_armour();
+        if (armour)
+            count_action(CACT_ARMOUR, armour->sub_type);
         else
             count_action(CACT_ARMOUR, -1); // unarmoured subtype
     }
@@ -437,7 +412,7 @@ bool actor::shield_exhausted() const
 bool actor_slime_wall_immune(const actor *act)
 {
     return act->is_player() && have_passive(passive_t::slime_wall_immune)
-        || act->res_acid() == 3
+        || act->res_corr() >= 3
         || act->is_monster() && mons_is_slime(*act->as_monster());
 }
 
@@ -741,7 +716,7 @@ bool actor::can_engulf(const actor &defender) const
     return can_see(defender)
         && !confused()
         && body_size(PSIZE_BODY) >= defender.body_size(PSIZE_BODY)
-        && !defender.res_constrict()
+        && !defender.is_insubstantial()
         && adjacent(pos(), defender.pos());
 }
 
@@ -970,8 +945,9 @@ void actor::collide(coord_def newpos, const actor *agent, int damage)
 {
     actor *other = actor_at(newpos);
     // TODO: should the first of these check agent?
-    const bool god_prot = god_protects(agent, as_monster());
-    const bool god_prot_other = other && god_protects(agent, other->as_monster());
+    const bool immune = never_harm_monster(agent, as_monster());
+    const bool immune_other = other ? never_harm_monster(agent, other->as_monster())
+                                    : false;
 
     ASSERT(this != other);
     ASSERT(alive());
@@ -982,7 +958,7 @@ void actor::collide(coord_def newpos, const actor *agent, int damage)
         return;
     }
 
-    if (is_monster() && !god_prot)
+    if (is_monster() && !immune)
         behaviour_event(as_monster(), ME_WHACK, agent);
 
     const int dam = apply_ac(damage);
@@ -997,26 +973,26 @@ void actor::collide(coord_def newpos, const actor *agent, int damage)
                  conj_verb("collide").c_str(),
                  other->name(DESC_THE).c_str(),
                  attack_strength_punctuation((dam + damother) / 2).c_str());
-            // OK, now do the messaging for god protection.
-            if (god_prot)
-                god_protects(agent, *as_monster(), false);
-            if (god_prot_other)
-                god_protects(agent, *other->as_monster(), false);
+            // OK, now do the messaging for protected monsters.
+            if (immune)
+                never_harm_monster(agent, *as_monster(), true);
+            if (immune_other)
+                never_harm_monster(agent, *other->as_monster(), true);
         }
 
-        if (other->is_monster() && !god_prot_other)
+        if (other->is_monster() && !immune_other)
             behaviour_event(other->as_monster(), ME_WHACK, agent);
 
         const string thisname = name(DESC_A, true);
         const string othername = other->name(DESC_A, true);
-        if (other->alive() && !god_prot_other)
+        if (other->alive() && !immune_other)
         {
             other->hurt(agent, damother, BEAM_MISSILE, KILLED_BY_COLLISION,
                         othername, thisname);
             if (damother && other->is_monster())
                 print_wounds(*other->as_monster());
         }
-        if (alive() && !god_prot)
+        if (alive() && !immune)
         {
             hurt(agent, dam, BEAM_MISSILE, KILLED_BY_COLLISION,
                  thisname, othername);
@@ -1045,11 +1021,11 @@ void actor::collide(coord_def newpos, const actor *agent, int damage)
                  attack_strength_punctuation(dam).c_str());
         }
 
-        if (god_prot)
-            god_protects(agent, *as_monster(), false); // messaging
+        if (immune)
+            never_harm_monster(agent, *as_monster(), true); // messaging
     }
 
-    if (!god_prot)
+    if (!immune)
     {
         hurt(agent, dam, BEAM_MISSILE, KILLED_BY_COLLISION,
              "", feature_description_at(newpos));
@@ -1180,9 +1156,9 @@ void actor::stumble_away_from(coord_def targ, string src)
         return;
     }
 
-    if (is_player())
+    if (is_player() && !src.empty())
         mprf("%s sends you backwards.", uppercase_first(src).c_str());
-    else if (you.can_see(*this))
+    else if (you.can_see(*this) && !src.empty())
         mprf("%s is knocked back by %s.", name(DESC_THE).c_str(), src.c_str());
 
     move_to_pos(newpos);

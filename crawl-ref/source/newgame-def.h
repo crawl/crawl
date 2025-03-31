@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <cstdint>
 
 #include "game-type.h"
 #include "item-prop-enum.h"

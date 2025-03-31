@@ -1,16 +1,18 @@
 name: "creeping inferno"
 glyph: {char: "*", colour: lightred}
-flags: [flies, insubstantial, no_exp_gain]
+flags: [flies, insubstantial, peripheral]
 resists: {fire: 3}
+xp_mult: 3
 holiness: [nonliving]
-will: 10
+will: 60
 attacks:
  - {type: hit, damage: 1}
 hd: 15
-hp_10x: 10
+hp_10x: 1110
 ac: 0
 ev: 10
 intelligence: brainless
-speed: 14
+speed: 10
 size: small
 shape: orb
+tile_variance: cycle

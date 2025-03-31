@@ -16,18 +16,26 @@ class monster;
 
 int englaciate(coord_def where, int pow, actor *agent);
 spret cast_englaciation(int pow, bool fail);
-bool backlight_monster(monster* mons);
+bool backlight_monster(monster* mons, const actor* source);
 
 //returns true if it slowed the monster
 bool do_slow_monster(monster& mon, const actor *agent, int dur = 0);
+bool silence_monster(monster& mon, const actor* agent, int dur);
 bool enfeeble_monster(monster &mon, int pow);
 spret cast_vile_clutch(int pow, bolt &beam, bool fail);
 bool start_ranged_constriction(actor& caster, actor& target, int duration,
                                constrict_type type);
 
-dice_def rimeblight_dot_damage(int pow);
+dice_def rimeblight_dot_damage(int pow, bool random = true);
 string describe_rimeblight_damage(int pow, bool terse);
 void do_rimeblight_explosion(coord_def pos, int power, int size);
-bool maybe_spread_rimeblight(monster& victim, int power, bool test_only = false);
+bool maybe_spread_rimeblight(monster& victim, int power);
 bool apply_rimeblight(monster& victim, int power, bool quiet = false);
 void tick_rimeblight(monster& victim);
+
+spret cast_sign_of_ruin(actor& caster, coord_def target, int duration, bool check_only = false);
+
+spret cast_percussive_tempering(const actor& caster, monster& target, int power, bool fail);
+bool is_valid_tempering_target(const monster& mon, const actor& caster);
+
+void do_vexed_attack(actor& actor);

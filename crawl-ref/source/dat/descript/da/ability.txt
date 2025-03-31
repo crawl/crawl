@@ -242,24 +242,6 @@ Finesse ability
 virkning forårsager en anelse magisk besmittelse, som det kan være usundt at
 være udsat for gennem længere tid.
 %%%%
-Minor Destruction ability
-
-Skyder et tilfældigt, skadeligt skud efter det valgte uhyre.
-%%%%
-Lesser Servant of Makhleb ability
-
-Hidkalder en smådæmon. Høj færdighed inden for påkaldelser mindsker risikoen
-for at den er fjendtlig.
-%%%%
-Major Destruction ability
-
-Skyder en tilfældig, skadelig stråle eller eksplosion efter målet.
-%%%%
-Greater Servant of Makhleb ability
-
-Hidkalder en større dæmon. Højere færdighed inden for påkaldelser mindsker
-risikoen for at den er fjendtlig.
-%%%%
 Channel Energy ability
 
 Genopfylder dit magiske reservoir med en mængde, som er baseret på dine

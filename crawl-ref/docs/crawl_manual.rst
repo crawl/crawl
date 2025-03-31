@@ -708,7 +708,7 @@ adventures, how they are displayed, and what commands there are to use them:
 /        wands          (use 'V' to evoke, 'Q' to quiver)
 =        rings          (use 'P'ut on and 'R'emove)
 "        amulets        (use 'P'ut on and 'R'emove)
-\|       staves         (use 'w'ield)
+\|        staves         (use 'w'ield)
 :        spellbooks     (use 'M'emorise and 'z'ap, 'Q' to quiver)
 %        talismans      (use 'V' to evoke)
 }        miscellaneous  (use 'V' to evoke, 'Q' to quiver)
@@ -1022,9 +1022,10 @@ There are many skills related to magic, the principal one being Spellcasting.
 Spellcasting determines the number of Magic Points available; it also helps to
 cast any spell, though less so than schools associated with a spell. Next, there
 are several general magical schools (Conjuration, Hexes, Summoning, Necromancy,
-Translocation and Alchemy) as well as several elemental schools (Fire, Ice, Air
-and Earth). A particular spell can belong to up to three schools. Being skilled
-in a spell's schools improves the casting chance and the power of that spell.
+Forgecraft, Translocation and Alchemy) as well as several elemental schools
+(Fire, Ice, Air and Earth). A particular spell can belong to up to three
+schools. Being skilled in a spell's schools improves the casting chance and the
+power of that spell.
 
 Spells are stored in books, which you will occasionally find in the dungeon.
 Once you have picked up a book and added its contents to your spell library, you
@@ -1727,18 +1728,28 @@ Spriggans (Sp)
   armour. They cannot wield large weapons, and even most smaller weapons require
   both hands to be wielded by a Spriggan.
 
-Ghouls (Gh)
-  Ghouls are horrible undead creatures that sleep in their graves for years on
-  end, only to rise and stalk the living. Slain foes heal these monstrous
-  beings as they feast on the macabre energies released.
+Revenants (Re)
+  Revenants are skeletal undead, created when an individual dies to violent
+  magic without being mourned or remembered. They rise with fragmentary
+  recollections of their former life and an all-consuming hunger to claw back
+  that existence which the world forgot.
 
-  They learn most skills slowly, although they make decent unarmed fighters
-  with their claws. Due to their contact with the grave they can also learn to
-  use ice, earth, and necromantic magic without too many difficulties.
+  So powerful is this drive which animates them that they can they can actually
+  rip the very existence from others, tearing fragments of souls and memories
+  and even the fundamental essence of inanimate objects and turning them into
+  fuel for the unholy fire that forever flickers upon their form.
 
-  Like other undead, ghouls are naturally immune to poisons, negative energy
-  and torment; have little warmth left to be affected by cold; and are not
-  susceptible to mutations.
+  Their nature makes them uniquely skilled at wielding destructive magic;
+  while their reserves of magical energy are poor and their aptitudes
+  unremarkable (aside from an affinity for ice, earth, and necromantic magic),
+  they can channel damage-dealing spells through their claws, allowing them to
+  perform melee attacks at the same time as they cast spells. They can even burn
+  away the memories they have collected to briefly empower their magic and allow
+  them to cast unhindered by armour.
+
+  Beyond this, they are sturdy and skilled at using their claws in unarmed
+  combat, and possess the same immunity to poison, negative energy, and torment
+  that all undead share, as well as a resistance to cold.
 
 Tengu (Te)
   The Tengu are an ancient and feared species of bird-people with a legendary
@@ -1826,16 +1837,26 @@ Vine Stalkers (VS)
   reserves start to run low, thus replenishing their shroud of magic and their
   spells' fuel with each voracious bite.
 
-Vampires (Vp)
-  Vampires are an undead species, with the ability to shift between bloodless
-  and alive forms at will. Bloodless Vampires can heal themselves by drinking
-  the blood of the living in combat, and have the traits of the undead (immunity
-  to poisons, negative energy and torment, and resistance to damage from cold),
-  but are much less resilient and cannot regenerate health when monsters are in
-  sight. On the other hand, a Vampire full with blood will regenerate very
-  quickly, but will lose all undead powers. Upon growing, they learn to
-  transform from their bloodless form into a fast-moving bat. Unlike other
-  undead species, they may be mutated normally at all times.
+Poltergeists (Po)
+  Poltergeists are undead spirits who delight in causing trouble for the living.
+  Completely incorporeal, they interact with the physical world by possessing
+  small objects and making them fly through the air. They can use this to
+  fight with weapons as well as the living do, as well as gain the protective
+  benefits of many different hats, boots, gloves, and cloaks at once, though
+  body armour is too large for them to manipulate in this fashion. At higher
+  levels of experience, they can even control these possessed objects
+  at a distance from time to time, harassing their foes with a barrage of
+  unruly armour.
+
+  Their superlative aptitude for both stealth and hexes make them powerful
+  enchanters, and they are adequate at most other forms of magic, though they
+  struggle with conjurations. They are adept with short blades, if a little
+  below average with heavier weapons, and their lack of a physical body makes
+  them terrible at unarmed combat. The same power they used to possess objects
+  makes them natural experts at throwing.
+
+  Finally, their nature as spirits of bad luck also grants them temporary AC
+  whenever they inflict maladies upon their enemies.
 
 Demigods (Dg)
   Demigods are mortals with some divine or angelic ancestry, however distant.
@@ -1938,12 +1959,13 @@ Draconian types
 
 Red Draconians
   feel at home in fiery surroundings. They are bad with ice magic but very
-  proficient with fire. Their scorchingly hot breath will leave a lingering
-  cloud of flame.
+  proficient with fire. They can breathe highly combustible embers which
+  cause a fiery explosion whenever they hits a foe.
 
 White Draconians
-  stem from frost-bitten lands, and are naturally resistant to frost. Their
-  breath is piercing cold. They are versed in ice magic, but bad at fire.
+  stem from frost-bitten lands, and are naturally resistant to frost. They
+  beathe piercing cold which encases anything it kills in a solid block of
+  ice. They are versed in ice magic, but bad at fire.
 
 Green Draconians
   are used to venomous surroundings and breathe clouds of mephitic vapours. They
@@ -1951,30 +1973,35 @@ Green Draconians
   magic realms. Later on, they will develop a poisonous stinger.
 
 Yellow Draconians
-  have a sulphurous breath full of corrosive acid, and later gain an acidic bite
-  attack. They are acid resistant, too.
+  have a sulphurous breath full of corrosive acid, and are naturally acid
+  resistant. Their knowledge of corrosion makes them especially good in the
+  maintenance of Forgecraft machinery. Later on, they gain an acidic bite
+  attack.
 
 Grey Draconians
-  have no breath weapon, but their bodies are adapted to the water, allowing
-  them to swim. They are proficient with earth magic but bad with air magic, and
-  they also have harder scales than other Draconians.
+  can breathe torrents of mud which impede the movement and attacks of
+  non-flying enemies. They are proficient with earth magic but bad with air
+  magic. Later on, iron fuses onto their scales to make them hardier than
+  other Draconians.
 
 Black Draconians
-  can unleash huge electrical discharges, and are naturally insulated. They are
-  good at air magic but feel cumbersome with earth magic. Their wings will
+  can unleash arcing electrical discharges, and are naturally insulated. They
+  are good at air magic but feel cumbersome with earth magic. Their wings will
   eventually grow larger, which allows them to fly when combined with their
   natural skill with air magic.
 
 Purple Draconians
   are highly adapted to all spellcasting in general, and to hexes in
   particular. They are a bit better at evoking things than most other
-  Draconians. They can breathe dispelling energy which strips those it hits of
-  their enchantments, and are naturally stronger-willed than other draconians.
+  Draconians. They can breathe dispelling energy which strips those it hits
+  of enchantments and impairs their spellcasting. They are stronger-willed
+  than other draconians, and later on, they gain resistance to both external
+  mana draining and to enchantment stripping.
 
 Pale Draconians
   are better at air and fire magic, and have no deficiencies in other schools.
-  They breathe steam and, like their Purple cousins, have a slight advantage at
-  Evocations.
+  They breathe sight-obscuring steam and, like their Purple cousins, have a
+  slight advantage at Evocations.
 
 ****************************************
 2. List of character backgrounds
@@ -2107,8 +2134,8 @@ Mage backgrounds
 
 A mage is not an available character background by itself, but a type of
 background, encompassing Hedge Wizards, Conjurers, Summoners, Necromancers,
-various Elementalists and Alchemists. Mages are the best at using magic.
-Among other things, they start with a robe, a potion of magic, and spells
+Forgewrights, various Elementalists and Alchemists. Mages are the best at using
+magic. Among other things, they start with a robe, a potion of magic, and spells
 which should see them through the first several levels of the Dungeon.
 
 Hedge Wizards
@@ -2132,6 +2159,11 @@ Necromancers
   The Necromancer is a magician who specialises in the less pleasant side of
   magic. Necromantic spells are a varied bunch, but many involve some degree of
   risk or harm to the caster.
+
+Forgewright
+ The Forgewright specialises in the creation of magical constructs, ranging from
+ simple weapons to elaborate and powerful golems. Many of their creations
+ benefit from fighting alongside them.
 
 Elementalists
   Elementalists are magicians who specialise in one of the four types of
@@ -2950,6 +2982,12 @@ commands:
 !d
   Prompt before dropping this item.
 
+!e
+  Prompt before equipping this item.
+
+!u
+  Prompt before unequipping this item.
+
 !q
   Prompt before quaffing this item.
 
@@ -2993,7 +3031,8 @@ commands:
   Prompt before explicitly quivering this item. Entails =F,=f.
 
 =R
-  Do not offer to swap out this ring if another one can be removed instead.
+  Do not offer to swap out this piece of equipment if another one could be
+  removed instead.
 
 !D
   Prompt before performing an action that might destroy this item. It won't

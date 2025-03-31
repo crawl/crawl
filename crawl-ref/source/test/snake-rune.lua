@@ -62,7 +62,7 @@ end
 for i = 1, niters do
   crawl.message("Visiting Snake:$ the hard way")
   current_iter = i
-  debug.flush_map_memory()
+  debug.reset_player_data()
   entry = crawl.random_range(3, 7)
   debug.goto_place("Snake:1", entry)
   visit_branch_end_from("D:1",

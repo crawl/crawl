@@ -319,6 +319,7 @@ catch2-tests/test_randbook.o \
 catch2-tests/test_stringutil.o \
 catch2-tests/test_species.o \
 catch2-tests/test_tags.o \
+catch2-tests/test_tilecell.o \
 catch2-tests/test_ui.o \
 catch2-tests/test_viewmap.o \
 catch2-tests/test_spl-util.o
@@ -389,7 +390,7 @@ enchant-type.h.o \
 endianness.h.o \
 energy-use-type.h.o \
 enum.h.o \
-equipment-type.h.o \
+equipment-slot.h.o \
 errors.h.o \
 externs.h.o \
 explore-greedy-options.h.o \

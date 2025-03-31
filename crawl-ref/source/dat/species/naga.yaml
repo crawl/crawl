@@ -4,8 +4,9 @@ name: Naga
 difficulty: Advanced
 difficulty_priority: 60
 species_flags:
-  - SPF_SMALL_TORSO
-  - SPF_BARDING
+  - small_torso
+  - barding
+  - no_feet
 aptitudes:
   xp: 0
   hp: 2
@@ -37,14 +38,14 @@ mutations:
   13:
     MUT_CONSTRICTING_TAIL: 1
 recommended_jobs:
-  - JOB_BERSERKER
-  - JOB_SHAPESHIFTER
-  - JOB_ENCHANTER
-  - JOB_FIRE_ELEMENTALIST
-  - JOB_ICE_ELEMENTALIST
-  - JOB_WARPER
-  - JOB_HEDGE_WIZARD
-  - JOB_ALCHEMIST
+  - berserker
+  - shapeshifter
+  - enchanter
+  - fire elementalist
+  - ice elementalist
+  - warper
+  - hedge wizard
+  - alchemist
 
 walking_verb: Slither
 altar_action: coil in front of

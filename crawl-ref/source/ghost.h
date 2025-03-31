@@ -25,6 +25,8 @@ using std::vector;
 #define APOSTLE_POWER_KEY "apostle_power"
 #define APOSTLE_BAND_POWER_KEY "apostle_band_power"
 
+#define MAX_GHOST_EVASION    50
+
 enum apostle_type
 {
     // Basic generation types
@@ -77,6 +79,7 @@ public:
     ghost_demon();
     bool has_spells() const;
     void reset();
+    void barebones_init();
     void init_pandemonium_lord(bool friendly = false);
     void init_player_ghost();
     void init_ugly_thing(bool very_ugly, bool only_mutate = false,
@@ -88,6 +91,8 @@ public:
     void ugly_thing_to_very_ugly_thing();
 
     void init_inugami_from_player(int power);
+
+    void init_platinum_paragon(int power);
 
 
 public:

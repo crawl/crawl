@@ -66,3 +66,4 @@ private:
 };
 
 enchant_type name_to_ench(const char *name);
+int summ_dur(int degree);

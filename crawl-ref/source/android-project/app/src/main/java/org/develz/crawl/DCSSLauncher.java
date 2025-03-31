@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -18,14 +19,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 
-public class DCSSLauncher extends AppCompatActivity implements AdapterView.OnItemSelectedListener, TextWatcher {
+public class DCSSLauncher extends AppCompatActivity implements AdapterView.OnItemSelectedListener, TextWatcher, CompoundButton.OnCheckedChangeListener {
 
     public final static String TAG = "LAUNCHER";
 
     private static final String INIT_FILE = "/init.txt";
 
     private static final int DEFAULT_KEYBOARD = 0;
+
+    private static final boolean DEFAULT_FULL_SCREEN = true;
 
     // Crawl's init file
     private File initFile;
@@ -51,6 +55,12 @@ public class DCSSLauncher extends AppCompatActivity implements AdapterView.OnIte
     // Screen density
     private float density;
 
+    // Full screen input
+    SwitchCompat fullScreenSwitch;
+
+    // Full screen
+    private boolean fullScreen;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -64,6 +74,7 @@ public class DCSSLauncher extends AppCompatActivity implements AdapterView.OnIte
         preferences = getPreferences(Context.MODE_PRIVATE);
         keyboardOption = preferences.getInt("keyboard", DEFAULT_KEYBOARD);
         extraKeyboardOption = preferences.getInt("extra_keyboard", DEFAULT_KEYBOARD);
+        fullScreen = preferences.getBoolean("full_screen", DEFAULT_FULL_SCREEN);
 
         // Density is the relationship between px and dp
         density = getResources().getDisplayMetrics().density;
@@ -94,6 +105,11 @@ public class DCSSLauncher extends AppCompatActivity implements AdapterView.OnIte
         ksizeEditText.setText(Integer.toString(keyboardSizeDp));
         ksizeEditText.addTextChangedListener(this);
 
+        // Full screen switch
+        fullScreenSwitch = findViewById(R.id.fullScreen);
+        fullScreenSwitch.setChecked(fullScreen);
+        fullScreenSwitch.setOnCheckedChangeListener(this);
+
         initFile = new File(getExternalFilesDir(null)+INIT_FILE);
         resetInitFile(false);
     }
@@ -104,6 +120,7 @@ public class DCSSLauncher extends AppCompatActivity implements AdapterView.OnIte
         intent.putExtra("keyboard", keyboardOption);
         intent.putExtra("extra_keyboard", extraKeyboardOption);
         intent.putExtra("keyboard_size", Math.round(keyboardSizePx));
+        intent.putExtra("full_screen", fullScreen);
         startActivity(intent);
     }
 
@@ -167,5 +184,11 @@ public class DCSSLauncher extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void afterTextChanged(Editable editable) {}
+
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        fullScreen = b;
+        preferences.edit().putBoolean("full_screen", fullScreen).apply();
+    }
 
 }

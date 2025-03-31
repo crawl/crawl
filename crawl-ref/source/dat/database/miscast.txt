@@ -24,7 +24,7 @@ You are blasted with magical energy
 %%%%
 conjuration miscast monster
 
-Sparks fly from @the_monster@'s @hands@
+Sparks fly from @the_monster_possessive@ @hands@
 
 @The_monster@ emits a flash of light
 
@@ -70,9 +70,9 @@ The light around @the_monster@ dims momentarily
 
 @The_monster@ twitches
 
-@The_monster@'s body glows momentarily
+@The_monster_possessive@ body glows momentarily
 
-Waves of @any_colour@ light ripple over @the_monster@'s body
+Waves of @any_colour@ light ripple over @the_monster_possessive@ body
 
 Magic surges out from @the_monster@
 %%%%
@@ -192,7 +192,7 @@ translocation miscast monster
 
 @The_monster@ appears momentarily distorted
 
-@The_monster@'s features rearrange themselves for a while
+@The_monster_possessive@ features rearrange themselves for a while
 
 @The_monster@ is caught in a field of spatial distortion
 
@@ -228,13 +228,13 @@ There is a sudden and violent explosion of flames
 %%%%
 fire miscast monster
 
-[Cinders|Ashes] fly from @the_monster@'s @hands@
+[Cinders|Ashes] fly from @the_monster_possessive@ @hands@
 
 The air around @the_monster@ burns with energy
 
-Dim flames ripple over @the_monster@'s body
+Dim flames ripple over @the_monster_possessive@ body
 
-Fire whirls out @the_monster@'s @hands@
+Fire whirls out @the_monster_possessive@ @hands@
 
 Flames sear @the_monster@
 
@@ -276,7 +276,7 @@ ice miscast monster
 
 @The_monster@ shivers with cold
 
-Frost covers @the_monster@'s body
+Frost covers @the_monster_possessive@ body
 
 @The_monster@ shivers
 
@@ -318,7 +318,7 @@ air miscast monster
 
 @The_monster@ bobs in the air for a moment
 
-Sparks of electricity dance between @the_monster@'s @hands@
+Sparks of electricity dance between @the_monster_possessive@ @hands@
 
 The air around @the_monster@ crackles with energy
 
@@ -364,7 +364,7 @@ You are caught in an explosion of flying shrapnel
 %%%%
 earth miscast monster
 
-[Sand|Gravel] pours from @the_monster@'s @hands@
+[Sand|Gravel] pours from @the_monster_possessive@ @hands@
 
 @The_monster@ is hit by flying rocks
 
@@ -402,12 +402,17 @@ The inside of your mouth momentarily tastes like @any_colour@
 
 w:2
 Your skin changes to @any_colour_pattern@
+
+w:2
+You are surrounded by clouds of @any_glowing_colour@ dust
 %%%%
 alchemy miscast monster
 
 @The_monster@ is engulfed in toxic fumes
 
 @The_monster@ is [blasted|coated] with [cinnabar|sulphur] dust
+
+@The_monster@ is coated in salt
 
 @The_monster@ starts coughing violently
 
@@ -417,7 +422,10 @@ w:5
 @The_monster@ is overcome by clouds of @any_colour@ smoke
 
 w:5
-@The_monster@'s skin changes to @any_colour_pattern@
+@The_monster_possessive@ skin changes to @any_colour_pattern@
+
+w:5
+@The_monster@ is surrounded by clouds of @any_glowing_colour@ dust
 %%%%
 alchemy miscast unseen
 
@@ -426,3 +434,35 @@ The air has a green tinge for a moment
 Sulphurous heat explodes from thin air
 
 An unseen figure is coated in salt
+%%%%
+forgecraft miscast player
+
+You lose structural integrity
+
+You feel yourself deconstruct slightly
+
+A [buzzing|clanking|creaking|whirring] sound echoes in your mind
+
+Metal odds and ends fall onto you out of nowhere
+
+You are covered in metallic shards
+
+You are caught in an explosion of metallic debris
+%%%%
+forgecraft miscast monster
+
+@The_monster@ loses structural integrity
+
+Metal odds and ends fall onto @the_monster@ out of nowhere
+
+@The_monster@ is covered in metallic shards
+
+@The_monster@ is caught in an explosion of metallic debris
+%%%%
+forgecraft miscast unseen
+
+Metal odds and ends rain from above
+
+An unseen figure is covered in metallic shards
+
+Metallic debris explodes from thin air

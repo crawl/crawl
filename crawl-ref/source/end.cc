@@ -301,7 +301,7 @@ NORETURN void end_game(scorefile_entry &se)
         save_ghosts(ghost_demon::find_ghosts());
 
     for (auto &item : you.inv)
-        if (item.defined() && item_type_unknown(item))
+        if (item.defined() && !item.is_identified())
             add_inscription(item, "unknown");
 
     identify_inventory();

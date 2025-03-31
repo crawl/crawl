@@ -30,22 +30,24 @@
   {  0, 11,   40, FLAT, MONS_FLAYED_GHOST },\
   {  0, 13,   80, SEMI, MONS_GLOWING_SHAPESHIFTER },\
   {  0, 13,   80, SEMI, MONS_TENGU_REAVER },\
-  {  0, 13,   60, SEMI, MONS_SPHINX },\
+  {  0, 13,   60, SEMI, MONS_GUARDIAN_SPHINX },\
   {  1,  7,  135, SEMI, MONS_SPRIGGAN_AIR_MAGE },\
   {  1,  7,  185, SEMI, MONS_SPRIGGAN_BERSERKER },\
   {  1,  9,   45, FLAT, MONS_GLASS_EYE },\
   {  2, 13,   45, FLAT, MONS_SPRIGGAN_DEFENDER },\
-  {  3, 13,   80, SEMI, MONS_TENTACLED_MONSTROSITY },\
+  {  3, 13,   70, SEMI, MONS_TENTACLED_MONSTROSITY },\
   {  3, 13,   40, FLAT, MONS_STORM_DRAGON },\
   {  3, 13,   40, FLAT, MONS_SHADOW_DRAGON },\
   {  3, 13,   20, FLAT, MONS_QUICKSILVER_DRAGON },\
   {  3, 13,   40, FLAT, MONS_IRON_DRAGON },\
   {  3, 13,   80, SEMI, MONS_GOLDEN_DRAGON },\
+  {  3, 15,   45, SEMI, MONS_WYRMHOLE },\
   {  3, 13,   50, RISE, MONS_FROSTBOUND_TOME },\
   {  3, 13,   50, RISE, MONS_EARTHEN_TOME },\
   {  3, 13,   50, RISE, MONS_CRYSTAL_TOME },\
   {  3, 13,   50, RISE, MONS_DIVINE_TOME },\
   {  4, 13,   50, FLAT, MONS_JUGGERNAUT },\
+  {  4, 22,   60, SEMI, MONS_ALDERKING },\
   {  4, 13,   50, FLAT, MONS_CAUSTIC_SHRIKE },\
   {  5, 13,   50, FLAT, MONS_TITAN },\
   {  9, 13,   10, FLAT, MONS_ANCIENT_LICH },\
@@ -173,13 +175,13 @@ static const vector<pop_entry> population[] =
   { 18, 28,  180, PEAK, MONS_FLAYED_GHOST },
   { 19, 25,   35, PEAK, MONS_ORC_HIGH_PRIEST },
   { 19, 26,  136, SEMI, MONS_DEEP_TROLL },
-  { 19, 27,   89, RISE, MONS_SPHINX },
+  { 19, 27,   25, PEAK, MONS_ORC_SORCERER },
   { 20, 30,  310, FALL, MONS_YAKTAUR_CAPTAIN },
   { 20, 30,  136, SEMI, MONS_FIRE_GIANT },
   { 20, 30,  136, SEMI, MONS_FROST_GIANT },
-  { 21, 27,   25, PEAK, MONS_ORC_SORCERER },
   { 21, 27,  310, FALL, MONS_STONE_GIANT },
   { 21, 31,  192, PEAK, MONS_ETTIN },
+  { 22, 27,  100, RISE, MONS_SPHINX_MARAUDER },
   { 22, 30,  136, SEMI, MONS_DEEP_TROLL_EARTH_MAGE },
   { 23, 27,   89, RISE, MONS_STORM_DRAGON },
   { 23, 27,   28, SEMI, MONS_ORC_WARLORD },
@@ -369,10 +371,11 @@ static const vector<pop_entry> population[] =
   {  1,  4,  300, FLAT, MONS_MERFOLK_SIREN },
   {  1,  4,  195, FLAT, MONS_WATER_ELEMENTAL },
   {  1,  4,  275, FLAT, MONS_WIND_DRAKE },
-  {  1,  4,  200, FLAT, MONS_HARPY },
+  {  1,  4,  190, FLAT, MONS_HARPY },
   {  1,  7,  135, PEAK, MONS_MERFOLK_JAVELINEER },
   {  1,  7,  110, PEAK, MONS_ALLIGATOR_SNAPPING_TURTLE },
   {  2,  4,  190, SEMI, MONS_SATYR },
+  {  2,  7,   80, SEMI, MONS_SPHINX_MARAUDER },
   {  3,  7,   30, PEAK, MONS_FORMLESS_JELLYFISH },
 },
 
@@ -454,7 +457,7 @@ static const vector<pop_entry> population[] =
   {  1,  5, 1000, FLAT, MONS_ACID_BLOB },
   {  1,  5,  515, FLAT, MONS_AZURE_JELLY },
   {  1,  5,  515, FLAT, MONS_ROCKSLIME },
-  {  1,  5,  515, FLAT, MONS_QUICKSILVER_OOZE },
+  {  1,  5,  515, FLAT, MONS_VOID_OOZE },
   {  1,  5,  515, FLAT, MONS_SHINING_EYE },
   {  1,  5,  200, FLAT, MONS_GOLDEN_EYE },
   {  1,  5,  200, FLAT, MONS_FORMLESS_JELLYFISH },
@@ -508,7 +511,8 @@ static const vector<pop_entry> population[] =
   {  1,  4,   50, RISE, MONS_ORC_WARLORD },
   // Top-tier threats:
   {  1,  4,  350, RISE, MONS_PEACEKEEPER },
-  {  1,  4,  300, RISE, MONS_SPHINX },
+  {  1,  4,  225, RISE, MONS_SPHINX_MARAUDER },
+  {  2,  4,  115, RISE, MONS_GUARDIAN_SPHINX },
 
   // Vaults:5 enemies. These weights are very roughly based on
   // the monster frequency as of 0.26.
@@ -545,15 +549,12 @@ static const vector<pop_entry> population[] =
   {  5, 12,  750, FALL, MONS_GLOWING_SHAPESHIFTER },
   {  5, 12,  600, FALL, MONS_TENGU_REAVER },
   {  5, 12,  330, FALL, MONS_VERY_UGLY_THING },
-  {  5, 12,  260, FALL, MONS_SPHINX },
+  {  5, 12,  260, FALL, MONS_GUARDIAN_SPHINX },
   {  5, 12,  260, FALL, MONS_WAR_GARGOYLE },
   {  5, 12,  300, FALL, MONS_POLTERGUARDIAN },
-  // V:5 chaff we should really get rid of
+  // V:5 chaff from earlier floors
   {  5,  5,  650, FLAT, MONS_ORC_KNIGHT },
-  {  5,  5,   60, FLAT, MONS_REDBACK },
-  {  5,  5,   60, FLAT, MONS_WOLF_SPIDER },
-  {  5,  5,   60, FLAT, MONS_HORNET },
-  {  5,  5,   60, FLAT, MONS_HARPY },
+  {  5,  5,  180, FLAT, MONS_FORMLESS_JELLYFISH },
   {  5,  5,   60, FLAT, MONS_DANCING_WEAPON },
   {  5,  5,   60, FLAT, MONS_GREAT_ORB_OF_EYES },
 
@@ -593,12 +594,13 @@ static const vector<pop_entry> population[] =
   {  1,  5,   55, SEMI, MONS_SOUL_EATER },
   {  1,  6,  145, SEMI, MONS_EIDOLON },
   {  1,  6,   80, SEMI, MONS_DEEP_ELF_DEATH_MAGE },
-  {  1,  7,   85, SEMI, MONS_REVENANT },
-  {  1,  7,   75, SEMI, MONS_CURSE_SKULL },
+  {  1,  7,   85, SEMI, MONS_REVENANT_SOULMONGER },
+  {  1,  7,   60, SEMI, MONS_CURSE_SKULL },
   {  2,  5,  145, SEMI, MONS_FLAYED_GHOST },
   {  2,  5,   95, SEMI, MONS_SHADOW_WRAITH },
   {  2,  7,   40, SEMI, MONS_REAPER },
   {  2,  7,   55, PEAK, MONS_LICH },
+  {  2,  7,   30, PEAK, MONS_VAMPIRE_BLOODPRINCE },
   {  3,  7,   15, PEAK, MONS_ANCIENT_LICH },
   {  3,  7,   15, PEAK, MONS_DREAD_LICH },
 },
@@ -692,14 +694,16 @@ POP_DEPTHS,
   // "branch flavour" threats
   {  1,  7,  450, SEMI, MONS_BALRUG },
   {  7, 14,  450, FALL, MONS_BALRUG },
+  {  1,  7,   30, FLAT, MONS_CREEPING_INFERNO },
   {  1,  7,  450, SEMI, MONS_SEARING_WRETCH },
   {  7, 14,  450, FALL, MONS_SEARING_WRETCH },
+  {  1,  7,  300, SEMI, MONS_HELLEPHANT },
+  {  8, 14,  300, FALL, MONS_HELLEPHANT },
   // cut these off for deep super-ood
-  {  1, 12,   70, FLAT, MONS_STOKER },
-  {  1, 12,   30, FLAT, MONS_CREEPING_INFERNO },
+  {  1, 10,   70, FLAT, MONS_STOKER },
   // "top tier" signature threats
-  {  1,  7,  400, RISE, MONS_HELLEPHANT },
-  {  8, 14,  400, FLAT, MONS_HELLEPHANT },
+  {  1,  8,  225, RISE, MONS_ONI_INCARCERATOR },
+  {  9, 14,  225, FLAT, MONS_ONI_INCARCERATOR },
   {  1, 14,  400, RISE, MONS_BRIMSTONE_FIEND },
 },
 
@@ -813,7 +817,6 @@ POP_DEPTHS,
 
   {  1,  4,   25, FALL, MONS_CRIMSON_IMP },
   {  1,  4,  180, FALL, MONS_WHITE_IMP },
-  {  1,  4,  180, FALL, MONS_QUASIT },
   {  1,  4,  180, FALL, MONS_UFETUBUS },
   {  1,  4,  180, FALL, MONS_IRON_IMP },
   {  1,  4,   25, FALL, MONS_SHADOW_IMP },
@@ -955,7 +958,7 @@ POP_DEPTHS,
   {  1,  7,   10, FLAT, MONS_SILENT_SPECTRE },
   {  1,  7,    8, FLAT, MONS_PHANTASMAL_WARRIOR },
   {  1,  7,   80, FLAT, MONS_BONE_DRAGON },
-  {  1,  7,    9, FLAT, MONS_REVENANT },
+  {  1,  7,    9, FLAT, MONS_REVENANT_SOULMONGER },
   {  1,  7,   46, FLAT, MONS_LICH },
   {  1,  7,    8, FLAT, MONS_ANCIENT_LICH },
   {  1,  7,    8, FLAT, MONS_DREAD_LICH },
@@ -978,6 +981,7 @@ POP_DEPTHS,
   {  1,  7,    5, FLAT, MONS_BUNYIP },
 
   {  3,  7,    1, FLAT, MONS_DEMONSPAWN_CORRUPTER },
+  {  5,  7,    2, FLAT, MONS_FRAVASHI },
   {  1,  7,   11, FLAT, MONS_ANGEL },
   {  1,  7,   14, FLAT, MONS_DAEVA },
   {  1,  7,    8, FLAT, MONS_OPHAN },
@@ -1027,8 +1031,9 @@ POP_DEPTHS,
   {  1,  1,  675, FLAT, MONS_DEMONSPAWN_BLOOD_SAINT },
   {  1,  1,  675, FLAT, MONS_DEMONSPAWN_WARMONGER },
   {  1,  1,  675, FLAT, MONS_DEMONSPAWN_CORRUPTER },
-  {  1,  1,  675, FLAT, MONS_DEMONSPAWN_BLACK_SUN },
+  {  1,  1,  675, FLAT, MONS_DEMONSPAWN_SOUL_SCHOLAR },
   {  1,  1,   50, FLAT, MONS_ANGEL },
+  {  1,  1,   50, FLAT, MONS_FRAVASHI },
   {  1,  1,   40, FLAT, MONS_CHERUB },
   {  1,  1,   25, FLAT, MONS_DAEVA },
 },
@@ -1049,8 +1054,9 @@ POP_DEPTHS,
 
 { // Sewer
   {  1,  1, 1000, FLAT, MONS_FRILLED_LIZARD },
-  {  1,  1,  515, FLAT, MONS_QUOKKA },
+  {  1,  1,  315, FLAT, MONS_QUOKKA },
   {  1,  1, 1000, FLAT, MONS_BAT },
+  {  1,  1,  315, FLAT, MONS_DART_SLUG },
   {  1,  1,  515, FLAT, MONS_BALL_PYTHON },
   {  1,  1,  515, FLAT, MONS_ADDER },
   {  1,  1,  515, FLAT, MONS_RIBBON_WORM },
@@ -1080,9 +1086,10 @@ POP_DEPTHS,
 #endif
 
 { // Ice Cave
-  {  1,  1,   89, FLAT, MONS_YAK },
-  {  1,  1,   89, FLAT, MONS_POLAR_BEAR },
-  {  1,  1,  515, FLAT, MONS_ICE_BEAST },
+  {  1,  1,  120, FLAT, MONS_YAK },
+  {  1,  1,   90, FLAT, MONS_WOLF },
+  {  1,  1,  400, FLAT, MONS_POLAR_BEAR },
+  {  1,  1,   90, FLAT, MONS_ICE_BEAST },
   {  1,  1,  515, FLAT, MONS_WHITE_IMP },
   {  1,  1,  515, FLAT, MONS_ICE_DEVIL },
   {  1,  1,  515, FLAT, MONS_RIME_DRAKE },
@@ -1091,13 +1098,15 @@ POP_DEPTHS,
 },
 
 { // Volcano
-  {  1,  1,  515, FLAT, MONS_SALAMANDER },
+  {  1,  1,  555, FLAT, MONS_SALAMANDER },
   {  1,  1,  515, FLAT, MONS_HELL_HOUND },
   {  1,  1,  385, FLAT, MONS_RED_DEVIL },
   {  1,  1,  515, FLAT, MONS_EFREET },
   {  1,  1,  515, FLAT, MONS_LINDWURM },
-  {  1,  1,  255, FLAT, MONS_TOENAIL_GOLEM },
-  {  1,  1,  515, FLAT, MONS_FIRE_ELEMENTAL },
+  {  1,  1,   55, FLAT, MONS_TOENAIL_GOLEM },
+  {  1,  1,   55, FLAT, MONS_OBSIDIAN_BAT },
+  {  1,  1,   55, FLAT, MONS_FIRE_CRAB },
+  {  1,  1,  555, FLAT, MONS_FIRE_ELEMENTAL },
   {  1,  1,  385, FLAT, MONS_GARGOYLE },
   {  1,  1,  515, FLAT, MONS_MOLTEN_GARGOYLE },
 },
@@ -1125,6 +1134,28 @@ POP_DEPTHS,
 { // Arena
 },
 
+{ // Crucible
+  {  1,  1,  100, FLAT, MONS_ICE_DEVIL },
+  {  1,  1,  100, FLAT, MONS_ORANGE_DEMON },
+  {  1,  1,  100, FLAT, MONS_RUST_DEVIL },
+  {  1,  1,  100, FLAT, MONS_RED_DEVIL },
+  {  1,  1,   75, FLAT, MONS_HELLWING },
+  {  1,  1,  100, FLAT, MONS_SOUL_EATER },
+  {  1,  1,  120, FLAT, MONS_YNOXINUL },
+  {  1,  1,  120, FLAT, MONS_SMOKE_DEMON },
+  {  1,  1,  120, FLAT, MONS_SUN_DEMON },
+  {  1,  1,  120, FLAT, MONS_SIXFIRHY },
+  {  1,  1,  100, FLAT, MONS_BLIZZARD_DEMON },
+  {  1,  1,  100, FLAT, MONS_GREEN_DEATH },
+  {  1,  1,   65, FLAT, MONS_CACODEMON },
+  {  1,  1,   50, FLAT, MONS_BALRUG },
+  {  1,  1,   50, FLAT, MONS_EXECUTIONER },
+},
+
+{ // Necropolis
+  {  1,  1,  100, FLAT, MONS_WRAITH },
+  {  1,  1,  100, FLAT, MONS_SHADOWGHAST },
+},
 };
 
 COMPILE_CHECK(ARRAYSZ(population) == NUM_BRANCHES);
@@ -1277,6 +1308,8 @@ static const vector<pop_entry> population_water[] =
     GENERIC_WATER_POP, // Gauntlet
 #endif
     GENERIC_WATER_POP, // Arena
+    GENERIC_WATER_POP, // Crucible
+    GENERIC_WATER_POP, // Necropolis
 };
 COMPILE_CHECK(ARRAYSZ(population_water) == NUM_BRANCHES);
 
@@ -1292,8 +1325,9 @@ COMPILE_CHECK(ARRAYSZ(population_water) == NUM_BRANCHES);
 #define HELL_LAVA_POP {\
   {  1,  8,   300, FALL, MONS_NO_MONSTER }, \
   {  1,  7,    50, RISE, MONS_STOKER },\
-  {  1,  7,    50, FLAT, MONS_CREEPING_INFERNO },\
-  {  1,  7,   100, FLAT, MONS_NO_MONSTER },\
+  {  1,  7,    60, FLAT, MONS_CREEPING_INFERNO },\
+  {  1,  7,    20, FLAT, MONS_SEARING_WRETCH },\
+  {  1,  7,    70, FLAT, MONS_NO_MONSTER },\
 }
 
 // This is done to avoid duplicating the Depths list and can be
@@ -1378,6 +1412,8 @@ static const vector<pop_entry> population_lava[] =
     GENERIC_LAVA_POP, // Gauntlet
 #endif
     GENERIC_LAVA_POP, // Arena
+    GENERIC_LAVA_POP, // Crucible
+    GENERIC_LAVA_POP, // Necropolis
 };
 
 COMPILE_CHECK(ARRAYSZ(population_lava) == NUM_BRANCHES);

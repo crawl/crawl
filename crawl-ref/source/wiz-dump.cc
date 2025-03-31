@@ -305,8 +305,7 @@ static item_def _item_from_string(string s)
     else
         end--;
 
-    set_ident_type(ret, true);
-    set_ident_flags(ret, ISFLAG_IDENT_MASK);
+    identify_item(ret);
 
     string base_name = s.substr(0, end);
     item_kind parsed = item_kind_by_name(base_name);

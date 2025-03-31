@@ -23,6 +23,7 @@
 #include "monster.h"
 #include "options.h" // tile_grinch
 #include "state.h"
+#include "stringutil.h" // starts_with
 #include "terrain.h"
 #include "tileview.h"
 #include "traps.h"
@@ -125,7 +126,7 @@ void counted_monster_list::add(const monster* mons)
     list.emplace_back(mons, 1);
 }
 
-int counted_monster_list::count()
+int counted_monster_list::count() const
 {
     int nmons = 0;
     for (const auto &entry : list)
@@ -133,7 +134,7 @@ int counted_monster_list::count()
     return nmons;
 }
 
-string counted_monster_list::describe(description_level_type desc)
+string counted_monster_list::describe(description_level_type desc) const
 {
     string out;
 
@@ -153,6 +154,31 @@ string counted_monster_list::describe(description_level_type desc)
                : cm.first->name(desc);
     }
     return out;
+}
+
+void attacked_monster_list::add(const monster& mons, string adj, string suffix,
+                                bool penance)
+{
+    // record the adjectives for the first listed, or
+    // first that would cause penance
+    if (m_victims.empty() || penance && !m_penance)
+    {
+        m_adj = std::move(adj);
+        m_suffix = std::move(suffix);
+        m_penance = penance;
+    }
+    m_victims.add(&mons);
+}
+
+string attacked_monster_list::describe() const
+{
+    string mon_name = m_victims.describe(DESC_PLAIN);
+    if (starts_with(mon_name, "the ")) // no "your the Royal Jelly" nor "the the RJ"
+        mon_name = mon_name.substr(4); // strlen("the ")
+    const char* prefix = "";
+    if (!starts_with(m_adj, "your"))
+        prefix = "the ";
+    return prefix + m_adj + mon_name;
 }
 
 /**
@@ -178,7 +204,9 @@ bool today_is_halloween()
     const time_t curr_time = time(nullptr);
     const struct tm *date = TIME_FN(&curr_time);
     // tm_mon is zero-based in case you are wondering
-    return date->tm_mon == 9 && date->tm_mday == 31;
+    // Oct 30th-31th, Nov 1st
+    return date->tm_mon == 9 && date->tm_mday >= 30
+           || date->tm_mon == 10 && date->tm_mday == 1;
 }
 
 /// It's beginning to feel an awful lot like Christmas.
@@ -209,5 +237,7 @@ bool today_is_serious()
     const time_t curr_time = time(nullptr);
     const struct tm *date = TIME_FN(&curr_time);
     // As ever, note that tm_mon is 0-based.
-    return date->tm_mon == 3 && date->tm_mday == 1;
+    // March 31st, April 1st-2nd
+    return date->tm_mon == 2 && date->tm_mday == 31
+           || date->tm_mon == 3 && date->tm_mday <= 2;
 }

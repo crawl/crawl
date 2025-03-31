@@ -30,7 +30,8 @@ good_neutral GOOD_NEUTRAL
 neutral NEUTRAL
 animated_weapon ANIMATED_WEAPON
 summoned SUMMONED
-summoned_durable PERM_SUMMON
+unrewarding UNREWARDING
+minion MINION
 poison POISON
 poison_more MORE_POISON
 poison_max MAX_POISON
@@ -45,7 +46,8 @@ petrifying PETRIFYING
 petrified PETRIFIED
 blind BLIND
 fleeing FLEEING
-may_stab_brand MAY_STAB_BRAND
+unaware UNAWARE
+confused CONFUSED
 sleeping STAB_BRAND
 pain_mirror PAIN_MIRROR
 recall RECALL
@@ -90,6 +92,23 @@ beogh_touch TOUCH_OF_BEOGH
 rimeblight RIMEBLIGHT
 arms UNDYING_ARMS
 shadowless SHADOWLESS
+bind BIND
+weak_willed WEAK_WILLED
+sign_of_ruin SIGN_OF_RUIN
+doubled_health DOUBLED_HEALTH
+kinetic_grapnel KINETIC_GRAPNEL
+tempered TEMPERED
+heart HEART
+unstable UNSTABLE
+laced_with_chaos LACED_WITH_CHAOS
+vexed VEXED
+vampire_thrall VAMPIRE_THRALL
+enkindled_1 ENKINDLED_1
+enkindled_2 ENKINDLED_2
+nobody_memory_1 NOBODY_MEMORY_1
+nobody_memory_2 NOBODY_MEMORY_2
+nobody_memory_3 NOBODY_MEMORY_3
+pyrrhic PYRRHIC
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR
@@ -127,6 +146,12 @@ plus2 NUM_PLUS2
 plus3 NUM_PLUS3
 plus4 NUM_PLUS4
 plus5 NUM_PLUS5
+plus6 NUM_PLUS6
+plus7 NUM_PLUS7
+plus8 NUM_PLUS8
+plus9 NUM_PLUS9
+plus10 NUM_PLUS10
+plus11 NUM_PLUS11
 
 %sdir misc/icons
 demon_pentagram1 DEMON_NUM1

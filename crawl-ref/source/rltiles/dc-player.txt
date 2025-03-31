@@ -47,8 +47,8 @@ kobold2_m
 kobold2_f
 mummy_m MUMMY
 mummy_f
-naga_f NAGA
-naga_m
+naga_green_f NAGA
+naga_green_m
 naga_darkgreen_f
 naga_darkgreen_m
 naga_lightgreen_f
@@ -101,8 +101,11 @@ octopode3
 octopode4 OCTOPODE_SILLY
 octopode5
 %rim 0
-djinni_f DJINNI
-djinni_m
+poltergeist POLTERGEIST
+revenant REVENANT
+revenant2
+djinni_red_f DJINNI
+djinni_red_m
 djinni_blue_f
 djinni_blue_m
 djinni_gold_f
@@ -116,6 +119,8 @@ vine_stalker_green_f VINE_STALKER
 vine_stalker_green_m
 vine_stalker_red_f
 vine_stalker_red_m
+vine_stalker_purple_f
+vine_stalker_purple_m
 
 # draconians
 draconian DRACONIAN DRACONIAN_FIRST
@@ -155,8 +160,6 @@ merfolk_f MERFOLK
 merfolk_m
 merfolk_water_f MERFOLK_WATER
 merfolk_water_m
-vampire_f VAMPIRE
-vampire_m
 gargoyle_m GARGOYLE
 gargoyle_f
 gargoyle_red_m
@@ -215,6 +218,7 @@ white WHITE LAST_NORM
 #unrand
 ratskin RATSKIN_CLOAK
 dragonskin DRAGONSKIN_CLOAK
+fungal_fisticloak_back FUNGAL_FISTICLOAK_BACK
 
 ###Scarf
 scarf_cyan SCARF_CYAN SCARF_FIRST_NORM
@@ -447,7 +451,7 @@ dragonarm_cyan DRAGONARM_CYAN
 dragonarm_brown DRAGONARM_BROWN
 dragonarm_blue DRAGONARM_BLUE
 dragonarm_shadow DRAGONARM_SHADOW
-dragonarm_gold DRAGONARM_GOLD
+dragonarm_golden DRAGONARM_GOLDEN
 dragonarm_pearl DRAGONARM_PEARL
 
 aragorn ARAGORN
@@ -467,6 +471,8 @@ vanhel1 VANHEL
 deep_troll_leather DEEP_TROLL_LEATHER
 iron_troll_leather IRON_TROLL_LEATHER
 
+augmentation AUGMENTATION
+robe_of_folly ROBE_OF_FOLLY
 maxwell MAXWELL
 lears_hauberk LEARS_HAUBERK
 faerie_dragon_armour FAERIE_DRAGON_ARMOUR
@@ -475,6 +481,7 @@ orange_crystal ORANGE_CRYSTAL
 vines VINES
 kryias KRYIAS
 talos TALOS
+justicar JUSTICAR
 
 %sdir player/transform
 maw_form0 MAW_FORM
@@ -695,6 +702,9 @@ trident_elec TRIDENT_ELEC
 trident_two TRIDENT2
 trident_two2
 trident_three TRIDENT3
+partisan_1 PARTISAN
+partisan_2
+partisan_3
 lance LANCE
 lance_two LANCE2
 scythe SCYTHE
@@ -858,6 +868,7 @@ orb_of_dispater ORB_OF_DISPATER
 orb_of_wucad_mu ORB_OF_WUCAD_MU
 orb_of_battle ORB_OF_BATTLE
 charlatans_orb CHARLATANS_ORB
+skull_of_zonguldrok SKULL_OF_ZONGULDROK
 
 buckler_spriggan BUCKLER_SPRIGGAN
 buckler_warlock BUCKLER_WARLOCK
@@ -1117,6 +1128,8 @@ taiso_white
 bear BEAR
 dyrovepreva DYROVEPREVA
 eternal_torment ETERNAL_TORMENT
+fungal_fisticloak_front FUNGAL_FISTICLOAK_FRONT
+vainglory VAINGLORY
 wizard_lightgreen WIZARD_LIGHTGREEN
 
 ## All helmets below (HELM_OFS and greater) hide hair.

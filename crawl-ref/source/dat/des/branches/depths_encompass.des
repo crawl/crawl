@@ -2,6 +2,8 @@
 # depths_encompass.des: Full level (encompassing) vaults for the Depths go here.
 ###############################################################################
 
+: crawl_require('dlua/vault.lua')
+
 # Setups for the below.
 {{
     function grunt_profane_halls_setup(e)
@@ -16,7 +18,7 @@
                         'spriggan air mage w:5 / ' ..
                         'nothing w:68')
             e.kmons('2 = spriggan berserker / deep elf demonologist / ' ..
-                        'sphinx w:5')
+                        'guardian sphinx w:5')
             e.kmons('3 = deep elf high priest / walking divine tome w:5')
         end
         e.subst('% = * %:20 .')
@@ -46,16 +48,17 @@
         e.kmons("r = war gargoyle / molten gargoyle / nothing w:20")
         e.kmons("t = glowing orange brain / wind drake w:5")
         e.kfeat("A = stone_arch")
+        e.kfeat("T = fountain_eyes")
         e.kfeat("W = deep_water")
         e.shuffle("wKLMN / lghij")
         e.shuffle("KLMN")
         e.shuffle("ghij")
         e.shuffle("JH")
         e.shuffle("34")
-        e.kitem("p = potion of mutation ident:type")
+        e.kitem("p = potion of mutation pre_id")
         e.kitem("P = any jewellery good_item")
-        e.kitem("Q = potion of mutation ident:type")
-        e.kitem("R = potion of mutation ident:type / nothing")
+        e.kitem("Q = potion of mutation pre_id")
+        e.kitem("R = potion of mutation pre_id / nothing")
         e.nsubst("u = 2:Q / 1:P / 1:R / *:u")
         e.nsubst("G = 1:G / *:2")
         e.nsubst("H = 2:8 / 2:3")
@@ -92,12 +95,12 @@
     function hex_setup(e)
         e.tags("hex_subvault unrand no_rotate no_monster_gen no_item_gen")
 
-        local set_weight = crawl.random2(14)
+        local set_weight = crawl.random2(15)
         if set_weight == 1 then
             e.mons("ogre mage band / ironbound thunderhulk / ettin / "..
                    "stone giant w:5")
             e.mons("fire giant / frost giant / stone giant")
-            e.mons("titan / juggernaut / iron giant w:3")
+            e.mons("titan / juggernaut")
             e.kfeat("A = granite_statue")
             e.kfeat("B = stone_arch")
             e.subst("x = c")
@@ -113,22 +116,27 @@
             e.mons("any common demon / raiju / demonic crawler")
             e.mons("rakshasa / hell hog / greater demon w:5")
             e.mons("ice fiend / brimstone fiend / hell sentinel / " ..
-                   "tzitzimitl / greater demon w:200")
+                   "tzitzimitl / greater demon w:300")
+            e.subst("x = c")
+            e.tile("c = stone_wall_pandemonium")
             e.subst("A : ....l")
             e.subst("B = Y")
         elseif set_weight == 4 then
             e.mons("zombie / simulacrum / spectral thing / freezing wraith")
             e.mons("vampire mage / jiangshi / ghoul / ancient champion / " ..
                    "flayed ghost / vampire knight / mummy priest w:2")
-            e.mons("lich / ancient lich / dread lich / royal mummy w:2")
+            e.mons("lich w:25 / ancient lich / dread lich / " ..
+                   "vampire bloodprince w:2")
             e.kfeat("A = granite_statue")
             e.subst("B = V")
             e.tile("A = depths_column / depths_crumbled_column")
             e.tile("x = wall_catacombs")
         elseif set_weight == 5 and crawl.one_chance_in(4) then
-            e.mons("cherub / apis")
+            e.mons("cherub w:26 / apis w:6 / " ..
+                   "merfolk impaler ; trident ego:holy_wrath . " ..
+                                     "kite shield . plate armour")
             e.mons("angel / daeva")
-            e.mons("ophan / pearl dragon w:5")
+            e.mons("ophan / fravashi w:3 / pearl dragon w:3")
             e.kfeat("A : fountain_sparkling")
             e.kfeat("B = altar_zin / altar_the_shining_one / " ..
                         " altar_elyvilon")
@@ -139,7 +147,9 @@
             e.mons("acid dragon / swamp dragon / fire dragon / ice dragon")
             e.mons("storm dragon / shadow dragon / bone dragon")
             e.mons("golden dragon w:15 / quicksilver dragon / iron dragon / " ..
-                   "pearl dragon w:1")
+                   "wyrmhole w:5 / pearl dragon w:1")
+            e.subst("x = c")
+            e.tile("c = wall_stone_scorched")
             e.subst("+ = ...+")
             e.subst("A = $")
             e.subst("B = $")
@@ -160,7 +170,7 @@
             e.mons("hell knight / hell hog / occultist / molten gargoyle")
             e.mons("fire giant / hell knight band / sun moth / balrug / " ..
                    "salamander tyrant")
-            e.mons("hellephant / brimstone fiend w:2")
+            e.mons("hellephant")
             e.subst("A = ..l")
             e.subst("B = l")
             e.tile("x = wall_pebble_red")
@@ -169,8 +179,8 @@
         elseif set_weight == 10 then
             e.mons("spriggan rider")
             e.mons("spriggan air mage / spriggan berserker / spriggan defender")
-            e.mons("spriggan defender")
-            e.kmons("D = the Enchantress")
+            e.mons("spriggan defender / alderking w:3")
+            e.kmons("D = the Enchantress, alderking / nothing")
             e.subst("3 = D3")
             e.subst("A = t")
             e.subst("B = tT")
@@ -180,7 +190,7 @@
         elseif set_weight == 11 then
             e.mons("simulacrum / freezing wraith")
             e.mons("frost giant / ice dragon / blizzard demon / azure jelly")
-            e.mons("walking frostbound tome / shard shrike w:4 / ice fiend w:4")
+            e.mons("walking frostbound tome / shard shrike w:4 / ice fiend w:2")
             e.subst("A : ...W")
             e.subst("B = wT")
             e.tile("x = wall_ice")
@@ -188,11 +198,12 @@
             e.ftile("xT+.123 = floor_ice")
         elseif set_weight == 12 then
             e.mons("rakshasa / occultist / necromancer")
-            e.mons("fenstrider witch / deep troll earth mage / sphinx w:5 / " ..
-                   "spriggan air mage / tengu reaver w:5 / vampire mage band")
+            e.mons("fenstrider witch / deep troll earth mage / " ..
+                   "guardian sphinx w:5 /  spriggan air mage / " ..
+                   "tengu reaver w:5 / vampire mage band")
             e.mons("walking frostbound tome / walking earthen tome / lich / " ..
                    "walking crystal tome / walking divine tome / " ..
-                   "ancient lich / dread lich / deep elf annihilator")
+                   "ancient lich w:3 / dread lich w:3 / deep elf annihilator")
             e.subst("A = b")
             e.subst("B = b")
             e.subst("x = c")
@@ -200,8 +211,8 @@
         elseif set_weight == 13 then
             e.mons("deep troll / deep troll earth mage / deep troll shaman")
             e.mons("iron troll / crystal guardian / war gargoyle")
-            e.mons("walking earthen tome / hell sentinel w:4 / " ..
-                   "iron dragon / caustic shrike band / iron giant w:2")
+            e.mons("walking earthen tome / walking crystal tome / " ..
+                   "iron dragon / caustic shrike band")
             e.kfeat("A = iron_grate")
             e.kfeat("B = stone_arch")
             e.subst("x:xc")
@@ -232,7 +243,7 @@ TAGS:    no_rotate no_monster_gen no_item_gen uniq_d_encompass no_descent
 ORIENT:  encompass
 KITEM:   r = any scroll
 KITEM:   e = any / any good_item w:4
-KITEM:   DP = potion of experience ident:type / any good_item
+KITEM:   DP = potion of experience pre_id / any good_item
 KITEM:   E = |
 KMONS:   p = plant / fungus w:2
 MONS:    spectral thing
@@ -325,14 +336,14 @@ ORIENT:  encompass
 KITEM:   zZ = any potion / nothing w:90
 # Two themes: birds with elves, and spriggans with giants.
 : if crawl.coinflip() then
-MONS:   tengu conjurer / tengu warrior / deep elf elementalist \
-        / sphinx / nothing
-MONS:   tengu reaver / deep elf annihilator / deep elf high priest \
-        / caustic shrike
+MONS:   tengu conjurer / tengu warrior / caustic shrike zombie / \
+        guardian sphinx / nothing
+MONS:   tengu reaver / walking crystal tome / walking divine tome / \
+        caustic shrike
 : else
-MONS:   spriggan berserker / spriggan air mage / ettin / stone giant \
-        / frost giant / fire giant / nothing
-MONS:   spriggan defender / titan / juggernaut
+MONS:   spriggan berserker / spriggan air mage / ettin / stone giant / \
+        frost giant / fire giant / nothing
+MONS:   spriggan defender / alderking / titan / juggernaut
 : end
 KMONS:   L = fire dragon
 KMONS:   ~ = ice dragon
@@ -431,7 +442,7 @@ KMASK:    1290KLMN = !no_monster_gen
 KMONS:    K = storm dragon
 KMONS:    L = shadow dragon
 KMONS:    M = quicksilver dragon
-KMONS:    N = golden dragon
+KMONS:    N = golden dragon / wyrmhole w:2
 SUBST:    }])> = G
 NSUBST:   D = 1:K / 1:L / 1:M / 1:N
 SUBVAULT: H : grunt_zot_portal
@@ -669,11 +680,10 @@ KMONS:  4 : iron troll / skeletal warrior
 KMONS:  5 : iron dragon / walking earthen tome
 KMONS:  6 : war gargoyle w:15 / caustic shrike
 KFEAT:  A = stone_arch
-KFEAT:  G = metal_statue
 MARKER: A = lua:props_marker { portal=1 }
 NSUBST: 4 = 5:4 / 2 = 4. / *:., 5 = 1:6 / *:5
 KMASK:  12345 = !no_monster_gen
-COLOUR: G = cyan
+: vault_metal_statue_setup(_G, "G", "iron statue")
 TILE:   G = dngn_statue_iron_golem
 TILE:   b = bedevilled_crystal_dis
 MAP
@@ -705,7 +715,7 @@ TAGS:    grunt_profane_loot no_monster_gen
 KMONS:   K = storm dragon
 KMONS:   L = shadow dragon
 KMONS:   M = quicksilver dragon
-KMONS:   N = golden dragon
+KMONS:   N = golden dragon / wyrmhole w:5
 KITEM:   KLMN> = any good_item
 KITEM:   12 = any
 SHUFFLE: KLMN
@@ -754,39 +764,37 @@ default-depth: Depths:2-, !Depths:$
 # LIE DOWN. FORGET YOUR TROUBLES.
 # SMILE.
 NAME:    hangedman_pleasuredromes
-TAGS:    no_monster_gen no_item_gen uniq_d_encompass
+TAGS:    no_monster_gen no_item_gen no_trap_gen uniq_d_encompass
 ORIENT:  encompass
 PLACE:   Depths:$
 DEPTH:   Depths:2-
 WEIGHT:  1 (Depths:$), 10
 # everything here (bar the very top) spawns regularly in depths,
 # if possibly as part of a band.
-MONS:    occultist w:8 / necromancer w:8 / tengu warrior / \
-         spriggan defender w:2 / tengu conjurer / nothing w:2
+MONS:    occultist w:8 / necromancer w:8 / tengu warrior w:8 / \
+         tengu conjurer / deep troll w:6 / spriggan rider w:4
 MONS:    rakshasa / hell knight / stone giant w:5 / \
          vampire mage / ettin / spriggan berserker / \
          deep troll earth mage / deep troll shaman w:5
 MONS:    fire giant / frost giant / stone giant w:6 / lich w:4 / \
          vampire knight / spriggan air mage / tengu reaver / \
-         deep elf high priest w:4 / deep elf demonologist w:4 / \
-         deep elf annihilator w:4 / deep elf sorcerer w:4 / \
-         deep elf death mage w:2 / deep elf elementalist w:2
+         walking earthen tome w:6 / walking divine tome w:6
 MONS:    very ugly thing w:10 / ugly thing w:30 / \
-         great orb of eyes / glowing orange brain / deep troll
-MONS:    fire dragon / ice dragon / very ugly thing / glowing shapeshifter / \
-         titanic slime creature w:4 / jiangshi w:2 / phantasmal warrior w:2 / \
+         great orb of eyes / fire dragon / ice dragon / glass eye w:4
+MONS:    glowing orange brain / very ugly thing / glowing shapeshifter / \
+         jiangshi w:4 / phantasmal warrior w:4 / \
          caustic shrike skeleton w:2 / spark wasp zombie w:2
-MONS:    sphinx / entropy weaver / spark wasp / flayed ghost / \
+MONS:    guardian sphinx / spark wasp / flayed ghost / \
          storm dragon w:4 / shadow dragon w:4 / quicksilver dragon w:4 / \
          iron dragon w:4 / golden dragon w:4 / caustic shrike / \
          tentacled monstrosity / juggernaut zombie w:2
 MONS:    spriggan defender w:30 / titan w:30 / ancient lich w:30 / \
-         deep elf blademaster / deep elf master archer / \
-         draconian monk / draconian annihilator / draconian knight / \
-         juggernaut w:20
+         walking crystal tome / walking frostbound tome / \
+         juggernaut w:20 / alderking w:15 / wyrmhole / draconian monk / \
+         draconian annihilator / draconian knight
 KMONS:   Z = draconian knight / draconian annihilator
 KITEM:   Z = midnight gem
-KFEAT:   z^ = zot trap w:499 / floor w:1
+KFEAT:   z^ = harlequin's trap
 KFEAT:   Z = enter_zot
 SHUFFLE: Y], {([>, HI / HI / IH, JK / JK / KJ
 SHUFFLE: NO / NO / ON, PQ / PQ / QP, RS / RS / SR, lm / lm / ml
@@ -828,16 +836,16 @@ xx....x..x...........b.2.b5cc....xxxxxxxxxxxxx
 xx...cF..x..F....%...xx.2x..cc...xxxxxxxxxxxxxx
 xx..cb...b......%*.....x.b...bc..xxxx@.%.%.@.xxx
 xx.cbcbxb.bx...%*.*%...xb.bxbcbc.xxxxx........xxx
-xx..cb...b.x.....*%....x.b...bc..xxxxxx........xxx
+xx..cb...b.x.....*|....x.b...bc..xxxxxx........xxx
 xx...cc..x..xx...%...xx..x..cc...xxxxxxx%.......xxx
 xx....cc@b...b.......b%63b5cc....xxxxxxxx...I.x.xxxx
 xx..xx.cc.bcb.bx...xb.bxb.cc..xx.xx..xxxxx...H.!..xxx
 xx......cc..*b.x...x%b%*|cc......xx....xxxx.x...x..xxx
 xx.....x.cc!.x2.xxx.6x*7cc.......xx.......xx...H....xxx
 xxxx..n..@cc.b.2.b..3b|cc.....xMx.x.xLx.....x.x.I....xx
- xxx....@..cc.bxb.bxb.cc.@.xxx...xxx...xxx...x......@xx
+ xxx....@..cc.bxb.bxb.cc...xxx...xxx...xxx.@.x......@xx
   xx........cc5..b..5cc.........x...x........xx......xx
-  xxxxL....x.cc..x..cc...x.@..SR..@..RS..@.x..xx....%xx
+  xxxxL....x.cc..x..cc...x....SR..@..RS....x..xx....%xx
   xxxxxM..n...cc.b.cc....x....SR.....RS....x..xxx%...xx
      xxx.....x.cbcbc.....x....SR.....RS....x..xxxx..%xx
     xxcc.....x..cbc..x..x..SSSJ.x.Q.x.HSSS..x..xxxx..xx
@@ -851,21 +859,21 @@ xxxx..n..@cc.b.2.b..3b|cc.....xMx.x.xLx.....x.x.I....xx
    xc...j....xx......x..x..SSSH.x.Q.x.JSSS..x.....cbc........xx
    xxc.......xx.c....x...x....SR.....RS....x].Y..xbcbx.......xxx
     xc..........b....xx..x....SR.....RS....x....x..b..x......Lxxxxx
-    x@cc......cb%bc...x..x.@..SR..@..RS..@.x.x.x..4c...x.x....Mxxxx
+    x@cc......cb%bc...x..x....SR..@..RS....x.x.x..4c...x.x....Mxxxx
     xc..cc..cc.4b.....KJ........x...x.....x....b..1b14.b.........xx
-    xc....cc....c.xx..KJ...xxx...xxx...xxx.}.xb.bcbcbcb.bx.......xxx
+    xc....cc....c.xx..KJ.@.xxx...xxx...xxx.}.xb.bcbcbcb.bx.......xxx
     xxc........c..xx...KJ.....xLx.x.xMx]....x..b..%b%..b..x......xxx
-     xc.....k..c....xx..KJJ.......xx]....x.x..4c.0ccc5.c...x.x....xxx
-     xxc..%...c.....xx...KKxx.....xx...Y...b.41b*cc7cc%b25.b.......xx
-     xxc..%%..c.......xx....xxxx..xx.....xb.bcbcbc6x6cbcbcb.bx.....xx
+     xc.....k..c....xx..KJJ.......xx]....x.x.4.c.0ccc5.c...x.x....xxx
+     xxc..%...c.....xx...KKxx.....xx...Y...b..1b*cc7cc%b25.b.......xx
+     xxc..%%..c.......xx....xxxx..xx.....xb.bcbcbc6x.cbcbcb.bx.....xx
      xc..k.....c......xx.......xxxxx.Y..x..b..*b@..x..5b*..b..x....xx
     xxc........c...j....xx......nnnx...x...c.0cc.@|x|*4cc3.c...x...xx
-    xc....cc....c.......xx.c......nx..cb.41c%cc3.|x%*|.4cc*b36.bc..xx
+    xc....cc....c.......xx.c......nx..cb.41c%cc3.|x%*|..cc*b36.bc..xx
     xc2.cc..cc."b".........b......nx.cbcbccccc7xxx%|%xxxccbcbcbcbc.xx
-    x.cc......cb'bc......cb%bc....nx..cb..1c%cc3.|*%x.....%C...Bx..xx
+    x.cc......cb'bc......cb%bc....nx..cb..1c%cc..|*%x.....%C...Bx..xx
     xc........!"b".cc..cc.4b.......x...x..4c.5cc.*|x....C..x...x...xx
    xxc.mm....ll!c....cc....c.xx....x....x..b..%c21.x.....%.x..x....xx
-   xc..mm...%ll..c........c..xx....x.....xb.bccccc1x....D.x........xx
+   xc..mm...%ll..c........c..xx....x.....xb.bccccc.x....D.x........xx
    xc......xx%...c.....k..c....xx..........b..2c*ccc.C%D...........xx
   xc%.....%xx.....c..%...c.....xx........x.x..5c.5cc.....D.x.......xx
   xc%....xx%......c..%%..c.......xx.........x..b..*b%..x.........HOxx
@@ -931,7 +939,7 @@ xxxxxxxxxxxxxbbwwwbuuuzbwb+bbbbbb+++bbbbbb+bbb.u.ubwwwbbxxxxxxxxxxxxx
 xxxxxxxxxxxxxxbbwwbuA..bbb..b...........b..bbbyzAubwwbbxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxbbwby...bb...b...........b...bb..u.bwbbxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxbbbbbb.br...b...b...b...b...rb.bbbbbbxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxbbb+b..b+b.....7.....b+b..b+bbbxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxbbb+b..b+b.T...7...T.b+b..b+bbbxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxbb....b.b...b7.7b...b.b....bbxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxbb....b.b...........b.b....bbxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxbbt...bzbqq.b...b.qqbzb...tbbxxxxxxxxxxxxxxxxxxxx
@@ -978,7 +986,7 @@ xx..NN.t.xxxxbbwwwbuuuzbwb+bbbbbb+++bbbbbb+bbb.u.ubwwwbbxxxxxxxxxxxxx
 xx.t.......xxxbbwwbuA..bbb..b...........b..bbbyzAubwwbbxxxxxxxxxxxxxx
 xx..JJt..xx.xxxbbwby...bb...b...........b...bb..u.bwbbxxxxxxxxxxxxxxx
 xx.......xxx.xxxbbbbbb.br...b...b...b...b...rb.bbbbbbxxxxxxxxxxxxxxxx
-xxx.....xxxxx.xxxxxbbb+b..b+b.....7.....b+b..b+bbbxxxxxxxxxxxxxxxxxxx
+xxx.....xxxxx.xxxxxbbb+b..b+b.T...7...T.b+b..b+bbbxxxxxxxxxxxxxxxxxxx
 xxxx...xxxxxxxt.xxxxbb....b.b...b7.7b...b.b....bbxxxxxxxxxxxxxxxxxxxx
 xxxxx..xxxxxxxxt.xxxbb....b.b...........b.b....bbxlllllxxxxxxxxxxxxxx
 xxxxxx..xxxxxxxx..xxbbt...bzbqq.b...b.qqbzb...tbbxlKK.lxxxxxxxxxxxxxx
@@ -1092,7 +1100,7 @@ ENDMAP
 
 NAME:   hex_subvault_empty
 TAGS:   allow_dup
-NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+NSUBST: . = 1:3 / 2 = 3... / 1:2 / 8 = 2... / 1:1 / 12 = 1... / *:.
 : hex_setup(_G)
 MAP
          ...
@@ -1119,7 +1127,8 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_big_grid
-NSUBST: 3 = 1:3 / * = 3.., 2 = 2:2 / * = 2.., . = 4 = 2... / 28 = 1... / *:.
+NSUBST: 3 = 1:3 / 2 = 3... / *:. , 2 = 1:2 / * = 2..
+NSUBST: . = 4 = 2... / 28 = 1... / *:.
 : hex_setup(_G)
 MAP
          ...
@@ -1146,7 +1155,7 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_open_curves
-NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+NSUBST: . = 1:3 / 2 = 3... / 1:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
          ...
@@ -1173,7 +1182,7 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_bowtie
-NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+NSUBST: . = 1:3 / 2 = 3... / 1:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
          ...
@@ -1200,7 +1209,8 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_four_corners
-NSUBST: 3 = 1:3 / * = 3.., 2 = 2:2 / * = 2.., . = 4 = 2... / 28 = 1... / *:.
+NSUBST: 3 = 1:3 / 2 = 3... / *:. , 2 = 1:2 / * = 2..
+NSUBST: . = 4 = 2... / 28 = 1... / *:.
 : hex_setup(_G)
 MAP
          ...
@@ -1227,7 +1237,8 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_ellipse_pattern
-NSUBST: 3 = 1:3 / * = 3.., 2 = 2:2 / * = 2.., . = 4 = 2... / 28 = 1... / *:.
+NSUBST: 3 = 1:3 / 2 = 3... / *:. , 2 = 1:2 / * = 2..
+NSUBST: . = 4 = 2... / 28 = 1... / *:.
 SUBST:  C = AB.
 : hex_setup(_G)
 MAP
@@ -1255,7 +1266,7 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_fishy
-NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+NSUBST: . = 1:3 / 2 = 3... / 1:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
          xxx
@@ -1282,7 +1293,7 @@ xxxxx.....x.....xxxxx
 ENDMAP
 
 NAME:   hex_subvault_narrow
-NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+NSUBST: . = 1:3 / 2 = 3... / 1:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
          ...
@@ -1309,7 +1320,8 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_octagon
-NSUBST: 3 = 1:3 / * = 3.., 2 = 2:2 / * = 2.., . = 4 = 2... / 28 = 1... / *:.
+NSUBST: 3 = 1:3 / 2 = 3... / *:. , 2 = 1:2 / * = 2..
+NSUBST: . = 4 = 2... / 28 = 1... / *:.
 : hex_setup(_G)
 MAP
          ...
@@ -1336,7 +1348,7 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_one_slice
-NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+NSUBST: . = 1:3 / 2 = 3... / 1:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
          ...
@@ -1363,7 +1375,7 @@ xxx.......x...xxx....
 ENDMAP
 
 NAME:   hex_subvault_rings
-NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+NSUBST: . = 1:3 / 2 = 3... / 1:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
          ...
@@ -1390,7 +1402,7 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_roundabout
-NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+NSUBST: . = 1:3 / 2 = 3... / 1:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
          xxx
@@ -1417,7 +1429,7 @@ xxxxxx..xxxxx..xxxxxx
 ENDMAP
 
 NAME:   hex_subvault_dug_out
-NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+NSUBST: . = 1:3 / 2 = 3... / 1:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 NSUBST: A = 1:B / *:A
 : hex_setup(_G)
 MAP
@@ -1445,7 +1457,7 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_village
-NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+NSUBST: . = 1:3 / 2 = 3... / 1:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
          ...
@@ -1472,7 +1484,7 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_spokes
-NSUBST: 3 = 1:3 / 2:2 / 4 = 3... / *:., . = 12 = 2... / 3:1 / 16 = 1... / *:.
+NSUBST: 3 = 1:3 / 1:2 / 2 = 3... / *:., . = 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
          ...
@@ -1499,7 +1511,7 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_bell
-NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+NSUBST: . = 1:3 / 2 = 3... / 1:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
          xxx
@@ -1526,7 +1538,7 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_channel
-NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+NSUBST: . = 1:3 / 2 = 3... / 1:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
          ...
@@ -1553,7 +1565,7 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_orbs
-NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+NSUBST: . = 1:3 / 2 = 3... / 1:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
          xxx
@@ -1580,7 +1592,7 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_rooms
-NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+NSUBST: . = 1:3 / 2 = 3... / 1:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
          x..
@@ -1607,7 +1619,7 @@ xxx+xxx+xx..x........
 ENDMAP
 
 NAME:   hex_subvault_rooms_two
-NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+NSUBST: . = 1:3 / 2 = 3... / 1:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
          ...
@@ -1634,7 +1646,7 @@ xxx+xxxxxx+xx.....x..
 ENDMAP
 
 NAME:   hex_subvault_small_grid
-NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+NSUBST: . = 1:3 / 2 = 3... / 1:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 SUBST:  x = xxx.
 : hex_setup(_G)
 MAP
@@ -1662,7 +1674,7 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_two_sheets
-NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+NSUBST: . = 1:3 / 2 = 3... / 1:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
          ...
@@ -1689,7 +1701,7 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_filled
-NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+NSUBST: . = 1:3 / 2 = 3... / 1:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
          ...
@@ -1716,7 +1728,7 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_double_channel
-NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+NSUBST: . = 1:3 / 2 = 3... / 1:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
          xxx
@@ -1743,7 +1755,7 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_uneven
-NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+NSUBST: . = 1:3 / 2 = 3... / 1:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
          xxx
@@ -1770,7 +1782,7 @@ xxx.......x.......xxx
 ENDMAP
 
 NAME:   hex_subvault_angles
-NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+NSUBST: . = 1:3 / 2 = 3... / 1:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
          ...
@@ -1797,7 +1809,7 @@ xxxxxxxxxxx....xx....
 ENDMAP
 
 NAME:   hex_subvault_crossings
-NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+NSUBST: . = 1:3 / 2 = 3... / 1:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 NSUBST: x = 1:Bx / 12 = Axxx / x
 : hex_setup(_G)
 MAP
@@ -1825,7 +1837,7 @@ x.x..xx..x.x...xx.xx.
 ENDMAP
 
 NAME:   hex_subvault_bug
-NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+NSUBST: . = 1:3 / 2 = 3... / 1:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
          xxx

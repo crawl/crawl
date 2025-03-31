@@ -22,8 +22,10 @@ enum unarmed_attack_type
     UNAT_PSEUDOPODS,
     UNAT_TENTACLES,
     UNAT_MAW,
+    UNAT_EXECUTIONER_BLADE,
+    UNAT_FUNGAL_FISTICLOAK,
     UNAT_FIRST_ATTACK = UNAT_CONSTRICT,
-    UNAT_LAST_ATTACK = UNAT_MAW,
+    UNAT_LAST_ATTACK = UNAT_FUNGAL_FISTICLOAK,
     NUM_UNARMED_ATTACKS,
 };
 
@@ -37,6 +39,11 @@ public:
     int       attack_number;
     int       effective_attack_number;
 
+    // A tally of all direct weapon + brand damage inflicted by this attack
+    // (including damage against cleave targets, both hits of quick blades,
+    // and aux attacks).
+    int       total_damage_done;
+
     list<actor*> cleave_targets;
     bool         cleaving;        // additional attack from cleaving
     bool         is_multihit;     // quick blade follow-up attack
@@ -45,6 +52,10 @@ public:
     int          charge_pow;      // electric charge bonus damage
     bool         never_cleave;    // if this attack shouldn't trigger cleave
                                   // followups, but still do 100% damage
+    int          dmg_mult;        // percentage multiplier to max damage roll
+    int          flat_dmg_bonus;  // flat slaying to add to this attack
+    bool         never_prompt;    // whether to skip prompting the player about
+                                  // harming allies
     wu_jian_attack_type wu_jian_attack;
     int wu_jian_number_of_targets;
     coord_def attack_position;
@@ -63,6 +74,9 @@ public:
     bool would_prompt_player();
 
     static void chaos_affect_actor(actor *victim);
+
+    bool player_do_aux_attack(unarmed_attack_type atk);
+    bool do_drag();
 
 private:
     /* Attack phases */
@@ -125,7 +139,6 @@ private:
 
     /* Brand / Attack Effects */
     bool do_knockback(bool slippery);
-    bool do_drag();
 
     /* Output methods */
     void set_attack_verb(int damage) override;
@@ -142,13 +155,14 @@ private:
     void mons_do_eyeball_confusion();
     void mons_do_tendril_disarm();
     void apply_black_mark_effects();
+    void apply_sign_of_ruin_effects();
     void do_ooze_engulf();
     void try_parry_disarm();
+    void do_vampire_lifesteal();
 private:
     // Player-attack specific stuff
     // Auxiliary unarmed attacks.
-    bool player_aux_unarmed();
-    bool player_gets_aux_punch();
+    bool player_do_aux_attacks();
     void player_aux_setup(unarmed_attack_type atk);
     bool player_aux_test_hit();
     bool player_aux_apply(unarmed_attack_type atk);
@@ -176,11 +190,11 @@ private:
     void _defender_die();
     void handle_spectral_brand();
 
+    // Spell effects.
+    void maybe_trigger_detonation();
+
     // Added in, were previously static methods of fight.cc
     bool _extra_aux_attack(unarmed_attack_type atk);
-    bool _player_vampire_draws_blood(const monster* mon, const int damage,
-                                     bool needs_bite_msg = false);
-    bool _vamp_wants_blood_from_monster(const monster* mon);
 
     bool can_reach(int dist);
 
@@ -190,7 +204,15 @@ private:
     void copy_to(melee_attack &other);
 
     vorpal_damage_type damage_type;
+
+    // Is a special stab against a sleeping monster by a Dithmenos player
+    // shadow (affects messaging).
+    bool is_shadow_stab;
 };
 
 string aux_attack_desc(unarmed_attack_type unat, int force_damage = -1);
 string mut_aux_attack_desc(mutation_type mut);
+vector<string> get_player_aux_names();
+
+bool coglin_spellmotor_attack();
+bool spellclaws_attack(int spell_level);

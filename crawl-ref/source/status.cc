@@ -117,22 +117,6 @@ static void _mark_expiring(status_info& inf, bool expiring)
     }
 }
 
-static string _ray_text()
-{
-    const int n_plusses = max(you.attribute[ATTR_SEARING_RAY] - 1, 0);
-    return "Ray" + string(n_plusses, '+');
-}
-
-static vector<string> _charge_strings = { "Charge-", "Charge/",
-                                          "Charge|", "Charge\\"};
-
-static string _charge_text()
-{
-    static int charge_index = 0;
-    charge_index = (charge_index + 1) % 4;
-    return _charge_strings[charge_index];
-}
-
 /**
  * Populate a status_info struct from the duration_data struct corresponding
  * to the given duration_type.
@@ -166,12 +150,12 @@ static void _describe_regen(status_info& inf);
 static void _describe_speed(status_info& inf);
 static void _describe_poison(status_info& inf);
 static void _describe_transform(status_info& inf);
-static void _describe_stat_zero(status_info& inf, stat_type st);
 static void _describe_terrain(status_info& inf);
 static void _describe_invisible(status_info& inf);
 static void _describe_zot(status_info& inf);
 static void _describe_gem(status_info& inf);
 static void _describe_rev(status_info& inf);
+static void _describe_channelled_spell(status_info& inf);
 
 bool fill_status_info(int status, status_info& inf)
 {
@@ -195,6 +179,28 @@ bool fill_status_info(int status, status_info& inf)
     // completing or overriding the defaults set above.
     switch (status)
     {
+    case STATUS_STAT_ZERO:
+    {
+        if (!you.attribute[ATTR_STAT_ZERO])
+            break;
+
+        vector<string> stat_str;
+        for (int i = STAT_STR; i <= STAT_DEX; ++i)
+        {
+            stat_type stat = static_cast<stat_type>(i);
+            if (you.stat(stat, false) <= 0)
+                stat_str.emplace_back(stat_desc(stat, SD_NAME));
+        }
+
+        string msg = comma_separated_line(stat_str.begin(), stat_str.end());
+
+        inf.light_text   = "Crippled";
+        inf.light_colour = LIGHTRED;
+        inf.short_text   = make_stringf("lost %s", msg.c_str());
+        inf.long_text    = make_stringf("You have no %s!", msg.c_str());
+    }
+    break;
+
     case STATUS_DRACONIAN_BREATH:
     {
         if (!species::is_draconian(you.species) || you.experience_level < 7)
@@ -239,7 +245,16 @@ bool fill_status_info(int status, status_info& inf)
             }
             else
                 inf.light_text = "Torch";
+
+            inf.short_text = "lit torch";
         }
+    break;
+
+    case DUR_DIVINE_SHIELD:
+    {
+        inf.light_text = make_stringf("Shield (%d)",
+                                        you.duration[DUR_DIVINE_SHIELD]);
+    }
     break;
 
     case STATUS_CORROSION:
@@ -259,7 +274,7 @@ bool fill_status_info(int status, status_info& inf)
         break;
 
     case DUR_BERSERK:
-        if (player_equip_unrand(UNRAND_BEAR_SPIRIT))
+        if (you.unrand_equipped(UNRAND_BEAR_SPIRIT))
             inf.light_text = "Bearserk";
         break;
 
@@ -320,17 +335,6 @@ bool fill_status_info(int status, status_info& inf)
         }
         break;
 
-    case STATUS_IN_DEBT:
-        if (you.props.exists(DESCENT_DEBT_KEY))
-        {
-            inf.light_colour = RED;
-            inf.light_text = make_stringf("Debt (%d)",
-                          you.props[DESCENT_DEBT_KEY].get_int());
-            inf.short_text   = "in debt";
-            inf.long_text    = "You are in debt. Gold earned will pay it off.";
-        }
-        break;
-
     case STATUS_CONTAMINATION:
         _describe_glow(inf);
         break;
@@ -361,25 +365,8 @@ bool fill_status_info(int status, status_info& inf)
         }
         break;
 
-    case STATUS_ALIVE_STATE:
-        if (you.has_mutation(MUT_VAMPIRISM))
-        {
-            if (!you.vampire_alive)
-            {
-                inf.light_colour = LIGHTRED;
-                inf.light_text = "Bloodless";
-                inf.short_text = "bloodless";
-            }
-            else
-            {
-                inf.light_colour = GREEN;
-                inf.light_text = "Alive";
-            }
-        }
-        break;
-
     case STATUS_REGENERATION:
-        // DUR_TROGS_HAND + some vampire and non-healing stuff
+        // DUR_TROGS_HAND and inhibited regeneration
         _describe_regen(inf);
         break;
 
@@ -471,16 +458,6 @@ bool fill_status_info(int status, status_info& inf)
 
     case DUR_TRANSFORMATION:
         _describe_transform(inf);
-        break;
-
-    case STATUS_STR_ZERO:
-        _describe_stat_zero(inf, STAT_STR);
-        break;
-    case STATUS_INT_ZERO:
-        _describe_stat_zero(inf, STAT_INT);
-        break;
-    case STATUS_DEX_ZERO:
-        _describe_stat_zero(inf, STAT_DEX);
         break;
 
     case STATUS_CONSTRICTED:
@@ -637,24 +614,8 @@ bool fill_status_info(int status, status_info& inf)
         break;
 
     }
-    case STATUS_RAY:
-        if (you.attribute[ATTR_SEARING_RAY] && can_cast_spells(true))
-        {
-            inf.light_colour = WHITE;
-            inf.light_text   = _ray_text().c_str();
-        }
-        break;
-
-    case STATUS_FLAME_WAVE:
-        if (you.props.exists(FLAME_WAVE_KEY) && can_cast_spells(true))
-        {
-            // It's only possible to hit the prop = 0 case if we reprint the
-            // screen after the spell was cast but before the end of the
-            // player's turn, which mostly happens in webtiles. Great!
-            const int lvl = max(you.props[FLAME_WAVE_KEY].get_int() - 1, 0);
-            inf.light_colour = WHITE;
-            inf.light_text   = "Wave" + string(lvl, '+');
-        }
+    case STATUS_CHANNELLING_SPELL:
+        _describe_channelled_spell(inf);
         break;
 
     case STATUS_DIG:
@@ -706,7 +667,7 @@ bool fill_status_info(int status, status_info& inf)
     case DUR_HORROR:
     {
         const int horror = you.props[HORROR_PENALTY_KEY].get_int();
-        inf.light_text = make_stringf("Horr(%d)", -1 * horror);
+        inf.light_text = make_stringf("Horr (%d)", -1 * horror);
         if (horror >= HORROR_LVL_OVERWHELMING)
         {
             inf.light_colour = RED;
@@ -758,7 +719,7 @@ bool fill_status_info(int status, status_info& inf)
             inf.light_colour = LIGHTMAGENTA;
             inf.light_text = "Orb";
         }
-        else if (player_equip_unrand(UNRAND_CHARLATANS_ORB))
+        else if (you.unrand_equipped(UNRAND_CHARLATANS_ORB))
         {
             inf.light_colour = LIGHTMAGENTA;
             inf.light_text = "Orb?";
@@ -777,14 +738,6 @@ bool fill_status_info(int status, status_info& inf)
         {
             inf.light_colour = BROWN;
             inf.light_text = "-Clouds";
-        }
-        break;
-
-    case STATUS_MAXWELLS:
-        if (you.props.exists(COUPLING_TIME_KEY) && can_cast_spells(true))
-        {
-            inf.light_colour = LIGHTCYAN;
-            inf.light_text   = _charge_text().c_str();
         }
         break;
 
@@ -809,8 +762,7 @@ bool fill_status_info(int status, status_info& inf)
         break;
 
     case STATUS_NO_SCROLL:
-        if (you.duration[DUR_NO_SCROLLS] || you.duration[DUR_BRAINLESS]
-            || player_in_branch(BRANCH_GEHENNA))
+        if (you.duration[DUR_NO_SCROLLS] || player_in_branch(BRANCH_GEHENNA))
         {
             inf.light_colour = RED;
             inf.light_text   = "-Scroll";
@@ -845,6 +797,119 @@ bool fill_status_info(int status, status_info& inf)
     case DUR_FUSILLADE:
         if (!enough_mp(2, true))
             inf.light_colour = DARKGREY;
+        break;
+
+    case STATUS_GRAVE_CLAW_UNAVAILABLE:
+        if (you.has_spell(SPELL_GRAVE_CLAW)
+            && you.props[GRAVE_CLAW_CHARGES_KEY].get_int() == 0)
+        {
+            inf.light_colour = DARKGREY;
+            inf.light_text = "-GClaw";
+        }
+        break;
+
+    case DUR_GROWING_DESTRUCTION:
+    {
+        inf.light_text = "Destr";
+        const int stacks = you.props[MAKHLEB_ATROCITY_STACKS_KEY].get_int();
+        for (int i = 0; i < stacks - 1; ++i)
+            inf.light_text += "+";
+        if (stacks == MAKHLEB_ATROCITY_MAX_STACKS)
+            inf.light_colour = LIGHTBLUE;
+    }
+    break;
+
+    case STATUS_CRUCIBLE_DEBT:
+    {
+        if (player_in_branch(BRANCH_CRUCIBLE))
+        {
+            inf.light_text = "Pact";
+            const int debt = you.props[MAKHLEB_CRUCIBLE_DEBT_KEY].get_int();
+            if (debt > 20)
+                inf.light_colour = MAGENTA;
+            else if (debt > 10)
+                inf.light_colour = RED;
+            else if (debt > 5)
+                inf.light_colour = LIGHTRED;
+            else if (debt > 0)
+                inf.light_colour = YELLOW;
+            else
+            {
+                inf.light_text = "Escape!";
+                inf.light_colour = WHITE;
+            }
+        }
+        break;
+    }
+
+    case DUR_PARAGON_ACTIVE:
+    {
+        if (paragon_defense_bonus_active())
+        {
+            inf.light_colour = WHITE;
+            inf.light_text = "Protected";
+        }
+        break;
+    }
+
+    case DUR_FORTRESS_BLAST_TIMER:
+        inf.light_colour = WHITE;
+        inf.light_text = "Blast" + string(max(0, (40 - you.duration[DUR_FORTRESS_BLAST_TIMER]) / 10), '.');
+        inf.short_text = "fortress blast";
+        inf.long_text = "Preparing a Fortress Blast.";
+        break;
+
+    case DUR_TELEPORT:
+        if (you.props.exists(SJ_TELEPORTITIS_SOURCE))
+        {
+            inf.light_text   = "!Tele!";
+            inf.light_colour = RED;
+            inf.short_text   = "teleporting to hostiles";
+            inf.long_text    = "You are about to teleport to other enemies.";
+        }
+        break;
+
+    case STATUS_TRICKSTER:
+        if (you.has_mutation(MUT_TRICKSTER))
+        {
+            const int bonus = trickster_bonus();
+            if (bonus > 0)
+            {
+                inf.short_text = make_stringf("trickster (+%d AC)", bonus);
+                inf.long_text = make_stringf("You are bolsted by spread misfortune (+%d AC)", bonus);
+            }
+        }
+        break;
+
+    case DUR_DROWSY:
+        if (you.duration[DUR_DROWSY] > 70)
+            inf.light_colour = LIGHTRED;
+        else if (you.duration[DUR_DROWSY] >= 35)
+            inf.light_colour = RED;
+        else
+            inf.light_colour = LIGHTGREY;
+        break;
+
+    case STATUS_MNEMOPHAGE:
+        if (!you.duration[DUR_ENKINDLED] && you.has_mutation(MUT_MNEMOPHAGE))
+        {
+            inf.light_colour = CYAN;
+            inf.light_text = make_stringf("Memories (%d)", you.props[ENKINDLE_CHARGES_KEY].get_int());
+        }
+        break;
+
+    case DUR_ENKINDLED:
+        inf.light_text = make_stringf("Enkindled (%d)", you.props[ENKINDLE_CHARGES_KEY].get_int());
+        break;
+
+    case STATUS_SHROUD:
+        if (you.has_mutation(MUT_SLIME_SHROUD)
+                && !you.duration[DUR_SHROUD_TIMEOUT])
+        {
+            inf.light_colour = GREEN;
+            inf.light_text   = "Shroud";
+            inf.short_text   = "slimy shroud";
+        }
         break;
 
     default:
@@ -1007,12 +1072,6 @@ static void _describe_regen(status_info& inf)
         inf.long_text  = "You are regenerating.";
         _mark_expiring(inf, dur_expiring(DUR_TROGS_HAND));
     }
-    else if (you.has_mutation(MUT_VAMPIRISM)
-             && you.vampire_alive
-             && !you.duration[DUR_SICKNESS])
-    {
-        inf.short_text = "healing quickly";
-    }
     else if (regeneration_is_inhibited())
     {
         inf.light_colour = RED;
@@ -1101,27 +1160,9 @@ static void _describe_transform(status_info& inf)
     inf.short_text = form->get_long_name();
     inf.long_text = form->get_description();
 
-    const bool vampbat = (you.get_mutation_level(MUT_VAMPIRISM) >= 2
-                          && you.form == transformation::bat);
-    const bool expire  = dur_expiring(DUR_TRANSFORMATION) && !vampbat;
-
+    const bool expire  = dur_expiring(DUR_TRANSFORMATION);
     inf.light_colour = _dur_colour(GREEN, expire);
     _mark_expiring(inf, expire);
-}
-
-static const char* s0_names[NUM_STATS] = { "Collapse", "Brainless", "Clumsy", };
-
-static void _describe_stat_zero(status_info& inf, stat_type st)
-{
-    if (you.duration[stat_zero_duration(st)])
-    {
-        inf.light_colour = you.stat(st) ? LIGHTRED : RED;
-        inf.light_text   = s0_names[st];
-        inf.short_text   = make_stringf("lost %s", stat_desc(st, SD_NAME));
-        inf.long_text    = make_stringf(you.stat(st) ?
-                "You are recovering from loss of %s." : "You have no %s!",
-                stat_desc(st, SD_NAME));
-    }
 }
 
 static void _describe_terrain(status_info& inf)
@@ -1160,6 +1201,54 @@ static void _describe_invisible(status_info& inf)
     }
     inf.long_text = "You are " + inf.short_text + ".";
     _mark_expiring(inf, dur_expiring(DUR_INVIS));
+}
+
+static vector<string> _charge_strings = { "Charge-", "Charge/",
+                                          "Charge|", "Charge\\"};
+
+static string _charge_text()
+{
+    static int charge_index = 0;
+    charge_index = (charge_index + 1) % 4;
+    return _charge_strings[charge_index];
+}
+
+static void _describe_channelled_spell(status_info& inf)
+{
+    const spell_type spell = (spell_type)you.attribute[ATTR_CHANNELLED_SPELL];
+    if (spell == SPELL_NO_SPELL)
+        return;
+
+    const int turns = you.attribute[ATTR_CHANNEL_DURATION];
+
+    switch (spell)
+    {
+        // It's only possible to hit the prop = 0 case if we reprint the
+        // screen after the spell was cast but before the end of the
+        // player's turn, which mostly happens in webtiles. Great!
+        case SPELL_FLAME_WAVE:
+            inf.light_colour = WHITE;
+            inf.light_text   = "Wave" + string(max(turns - 1, 0), '+');
+            break;
+
+        case SPELL_SEARING_RAY:
+            inf.light_colour = WHITE;
+            inf.light_text   = "Ray" + string(max(turns - 1, 0), '+');
+            break;
+
+        case SPELL_MAXWELLS_COUPLING:
+            inf.light_colour = LIGHTCYAN;
+            inf.light_text   = _charge_text().c_str();
+            break;
+
+        case SPELL_CLOCKWORK_BEE:
+            inf.light_colour = CYAN;
+            inf.light_text = "Winding" + string(max(turns - 1, 0), '.');
+            break;
+
+        default:
+            break;
+    }
 }
 
 /**

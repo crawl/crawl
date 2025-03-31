@@ -65,9 +65,9 @@ KMASK:  - = no_monster_gen
 KPROP:  - = no_tele_into
 SUBST:  - = tt.
 : if crawl.one_chance_in(4) then
-: set_feature_name("tree", "dead tree")
 TILE:   t = dngn_tree_dead
-COLOUR: t = w:5 lightgrey / brown
+COLOUR: t = brown
+:   set_feature_name("tree", "dead tree")
 : elseif crawl.one_chance_in(4) then
 COLOUR: t = lightred / red w:4 / yellow w:4
 TILE:   t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4
@@ -247,9 +247,7 @@ SUBST:  G = GGG-
 SUBST:  - = --.
 COLOUR: - = brown
 FTILE:  -G = floor_rough_brown
-COLOUR: G = lightgrey
-TILE:   G = dngn_crumbled_column
-: set_feature_name("granite_statue", "broken pillar")
+: vault_granite_statue_setup(_G, "G", "broken pillar")
 : ecumenical_altar_setup(_G)
 MAP
   G-G
@@ -264,7 +262,7 @@ ENDMAP
 NAME:    ebering_ecumenical_altar_petrified
 TAGS:    transparent
 KFEAT:   t = petrified_tree
-KMONS:   p = withered plant perm_ench:petrified
+KMONS:   p = petrified flower
 SHUFFLE: tp
 SUBST:   p = pp.
 SUBST:   t = t.
@@ -438,12 +436,14 @@ ENDMAP
 
 NAME:   dilly_ecumenical_altar_fadedgnrine
 TAGS:   transparent
-MONS:   plant
-KITEM:  E = gnoll bouda skeleton / gnoll skeleton
-SUBST:  z = t111
-SUBST:  1 = 11'
 KPROP:  E = no_tele_into
 KMASK:  E = opaque
+KMASK:  E = no_monster_gen
+KMASK:  E = no_item_gen
+MONS:   plant
+KITEM:  E = gnoll skeleton
+SUBST:  z = t111
+SUBST:  1 = 11'
 FTILE:  1Et'_  = floor_grass
 COLOUR: 1E'_ = green
 : ecumenical_altar_setup(_G)
@@ -469,9 +469,7 @@ SUBST:  - = --.
 SUBST:  G = GGG-
 COLOUR: - = brown
 FTILE:  -G = floor_rough_brown
-COLOUR: G = lightgrey
-TILE:   G = dngn_crumbled_column
-: set_feature_name("granite_statue", "broken pillar")
+: vault_granite_statue_setup(_G, "G", "broken pillar")
 : ecumenical_altar_setup(_G)
 
 MAP
@@ -491,15 +489,11 @@ ENDMAP
 
 NAME:   shapermc_ecumenical_altar_mp_highgroup
 TAGS:   transparent
-SUBST:  - = --.
-SUBST:  G = GGG-
+KFEAT:  ^ = web trap
+SUBST:  - = --., G = GGG-, ^ = ^^.
 COLOUR: - = brown
 FTILE:  -G = floor_rough_brown
-COLOUR: G = lightgrey
-TILE:   G = dngn_crumbled_column
-: set_feature_name("granite_statue", "broken pillar")
-SUBST:  ^ = ^^.
-KFEAT:  ^ = web trap
+: vault_granite_statue_setup(_G, "G", "broken pillar")
 : ecumenical_altar_setup(_G)
 MAP
 xxxxxx-xxxxxx
@@ -513,16 +507,14 @@ ENDMAP
 
 NAME:   shapermc_ecumenical_altar_mp_urbaneastern
 TAGS:   transparent
+KMONS:  p = plant
+KMONS:  f = fungus
 SUBST:  - = --.
 SUBST:  G = GGG-
 COLOUR: - = brown
 FTILE:  -G = floor_rough_brown
-COLOUR: G = lightgrey
-KMONS:  p = plant
-KMONS:  f = fungus
 NSUBST: ' = 8=pf / 12=ppf... / .
-TILE:   G = dngn_crumbled_column
-: set_feature_name("granite_statue", "broken pillar")
+: vault_granite_statue_setup(_G, "G", "broken pillar")
 : ecumenical_altar_setup(_G)
 MAP
 ...............
@@ -542,19 +534,17 @@ ENDMAP
 
 NAME:   shapermc_ecumenical_altar_mp_ritualfount
 TAGS:   transparent
+KMONS: W = plant / nothing
+KMONS: p = plant
+KMONS: f = fungus
 SUBST: ^ = TUV---
 SUBST: - = --.
 SUBST: G = GGG-
 SUBST: W = WWWWw.
 COLOUR: - = brown
-FTILE: -G = floor_rough_brown
-COLOUR: G = lightgrey
-KMONS: W = plant / nothing
-KMONS: p = plant
-KMONS: f = fungus
 NSUBST: ' = 8=pf. / 12=ppf... / .
-TILE: G = dngn_crumbled_column
-: set_feature_name("granite_statue", "broken pillar")
+FTILE: -G = floor_rough_brown
+: vault_granite_statue_setup(_G, "G", "broken pillar")
 : ecumenical_altar_setup(_G)
 MAP
 ......x....
@@ -623,7 +613,7 @@ ENDMAP
 
 NAME:  hellmonk_ecumenical_altar_blasted
 TAGS:  transparent
-KITEM: _ = scroll of immolation ident:type
+KITEM: _ = scroll of immolation pre_id
 SUBST: x = ..x
 SUBST: x : xc
 : ecumenical_altar_setup(_G)
@@ -957,28 +947,32 @@ xG-G-G-
 ENDMAP
 
 # goal of this is to feel hidden in something, so no b seen from outside
-NAME: shapermc_ecumenical_altar_petra
-TAGS: transparent
+NAME:    shapermc_ecumenical_altar_petra
+TAGS:    transparent
 : if crawl.coinflip() then
-SUBST:  ' = pf......
-KMONS:  p = plant
-KMONS:  f = fungus
+KMONS:   p = plant
+KMONS:   f = fungus
+KFEAT:   C = c
+SHUFFLE: bB / cC / cC
+SUBST:   ' = f...
+TILE:    C = wall_stone_puffball
 : else
-NSUBST: ' = 3=^^. / .
-KFEAT:  ^ = web trap
+NSUBST:  ' = 3 = ^^. / .
+KFEAT:   ^ = web trap
 : end
+SUBST:   B = b
 : ecumenical_altar_setup(_G)
 MAP
  xxxxxx
 xxbbbbxx
 xbb_G'bx
-xbG''bbx
+xbG''bBx
 xb'b''bx
-xbbb''bx
+xbBb''bx
 xbb'''bx
-xb''bbbx
+xb''bBbx
 xbb''bxx
-xxbb''bx
+xxBb''bx
  xxG'Gxx
 ENDMAP
 
@@ -1100,10 +1094,9 @@ KMASK:  ? = opaque
 KPROP:  ? = no_tele_into
 KMONS:  ? = any demon perm_ench:petrified generate_awake
 KMONS:  p = demonic plant
-TILE:   G = dngn_crumbled_column
-: set_feature_name("granite_statue", "broken pillar")
+: vault_granite_statue_setup(_G, "G", "broken pillar")
 FTILE:  G_vn?- = floor_demonic_red
-COLOUR: G-? = red
+COLOUR: -? = red
 : ecumenical_altar_setup(_G)
 MAP
 .........
@@ -1222,10 +1215,8 @@ KMONS: 1_ = ball python / nothing
 : else
 KMONS: 1_ = ball python w:30 / adder / nothing
 : end
-KFEAT: G = metal_statue
 SUBST: G : Gx
-TILE:  G = dngn_mystic_cage
-: set_feature_name("metal_statue", "mystic cage")
+: vault_metal_statue_setup(_G, "G", "mystic cage")
 : ecumenical_altar_setup(_G)
 MAP
  x    x    x
@@ -1241,4 +1232,49 @@ xxxGx._.xGxxx
  x..xxxxx..x
 xxx..xxx..xxx
  x    x    x
+ENDMAP
+
+NAME:   angelslayer_ecumenical_altar_simple_liquid
+TAGS:   transparent no_monster_gen no_pool_fixup
+SUBST:  W : W:10 w:5 l:1
+: ecumenical_altar_setup(_G)
+MAP
+.WWW.
+W...W
+W._.W
+W...W
+.WWW.
+ENDMAP
+
+NAME:     angelslayer_ecumenical_altar_broken_walls_simple
+TAGS:     ruin transparent
+SHUFFLE:  _E
+SUBST:    E = G:10 V:5 A:3 .:3
+TILE:     x = wall_catacombs
+FTILE:    ._xGVA = floor_crypt
+: ecumenical_altar_setup(_G)
+MAP
+xxxxxxxxx
+x.......x
+x._...E.x
+x.......x
+xx.xxxxxx
+ENDMAP
+
+NAME:     angelslayer_ecumenical_altar_muddy
+TAGS:     transparent ruin
+KMONS:    F = plant
+NSUBST:   - = 1:_ / 1:t / 3:F / *:.
+NSUBST:   ? = 1:t / 5:F / *:.
+FTILE:    t_.F = floor_mud
+: ecumenical_altar_setup(_G)
+MAP
+?  ? ?
+????????
+ ?-----??
+??-----?  ?
+??-----???
+ ???????
+ ? ??
+  ??
 ENDMAP

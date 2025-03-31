@@ -18,6 +18,8 @@
 
 default-depth: Depths:1, Vaults, !Vaults:$, Elf, !Elf:$
 
+: crawl_require('dlua/vault.lua')
+
 {{
 function init_research(e, disc)
   e.tags('serial_research')
@@ -29,7 +31,6 @@ function init_research(e, disc)
   else
      e.kmons('0 = arcanist w:5 / occultist w:5 / ogre mage / naga mage w:8 / deep elf pyromancer w:5 / deep elf zephyrmancer w:5')
   end
-  e.kfeat('G = metal_statue')
   e.kmask('@, = !no_monster_gen')
   e.shuffle('abcdefghi')
   e.subst('abcd = c')
@@ -125,9 +126,7 @@ KITEM:   B = large rock q:1
 COLOUR:  .xB012345D = brown
 FTILE:   .+xB012345D = floor_pebble_brown
 TILE:    x = wall_pebble_brown
-COLOUR:  G = earth
-TILE:    G = earthen_conduit
-: set_feature_name("metal_statue", "earthen conduit")
+: vault_metal_statue_setup(_G, "G", "dimensional conduit")
 : init_research(_G, 'earth')
 MAP
 @'''@'''@
@@ -144,8 +143,8 @@ ENDMAP
 NAME:    hangedman_research_toxicology
 MONS:    sea snake, mana viper, tarantella, death drake
 KMONS:   5D = radroach
-KITEM:   E = potion of degeneration ident:type / \
-             potion of mutation ident:type
+KITEM:   E = potion of moonshine pre_id / \
+             potion of mutation pre_id
 COLOUR:  .012345DE = lightgreen
 FTILE:   .+n012345DE = floor_moss
 SHUFFLE: 12, 34
@@ -187,9 +186,13 @@ ENDMAP
 
 NAME:   hangedman_research_quantum
 MONS:   blink frog / jumping spider w:7, spatial vortex
+: if you.in_branch("Depths") then
+KMONS:  D = wyrmhole
+: else
 KMONS:  D = eldritch tentacle
 MARKER: D = lua:fog_machine { cloud_type = "translocational energy", \
             pow_min = 3, pow_max = 10, delay = 50, size = 1, walk_dist = 1 }
+: end
 COLOUR: .012D = magenta
 FTILE:  .n+012D = floor_demonic_red
 : init_research(_G, 'translocation')
@@ -228,14 +231,12 @@ dcbadabcd
 ENDMAP
 
 NAME:   hangedman_research_probablistics
-MONS:   eidolon, glass eye, great orb of eyes, sphinx
+MONS:   eidolon, glass eye, great orb of eyes, guardian sphinx
 MARKER: V = lua:fog_machine { cloud_type = "seething chaos", pow_min = 3, \
                 pow_max = 10, delay = 50, size = 1, walk_dist = 1 }
 COLOUR: .01234D = blue
 FTILE:  .Vn+01234D = floor_marble
-COLOUR:  G = shimmer_blue
-TILE:    G = misfortune_conduit
-: set_feature_name("metal_statue", "misfortune conduit")
+: vault_metal_statue_setup(_G, "G", "misfortune conduit")
 : init_research(_G, 'hexes')
 MAP
 @'''@'''@

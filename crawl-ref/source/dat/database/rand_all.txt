@@ -52,6 +52,8 @@ the Tempest
 
 Temptation
 
+Velleity
+
 Wishful Thinking
 
 # FIXME: should appear on amulets only
@@ -193,6 +195,8 @@ Dusk
 
 Eternal Night
 
+Eternal Winter
+
 Eternity
 
 Midnight
@@ -214,6 +218,8 @@ Summer
 
 w:5
 Summertime
+
+Time Moved Backwards
 
 Tomorrow
 
@@ -369,6 +375,8 @@ Immorality
 Impatience
 
 Lies
+
+Misconduct
 
 Moral Flaws
 
@@ -777,6 +785,8 @@ w:5
 Baking
 
 Bedazzling
+
+Bedighting
 
 Bespelling
 

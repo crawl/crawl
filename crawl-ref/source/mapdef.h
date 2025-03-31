@@ -42,6 +42,8 @@
 #define RANDBK_SLVLS_KEY "randbook_slevels"
 #define RANDBK_NSPELLS_KEY "randbook_num_spells"
 
+#define CHAOTIC_ITEM_KEY "chaotic_item"
+
 #ifdef DEBUG_TAG_PROFILING
 void tag_profile_out();
 #endif
@@ -663,7 +665,7 @@ public:
 
     int hd;
     int hp;
-    int abjuration_duration;
+    int summon_duration;
     int summon_type;
 
     item_list items;
@@ -685,7 +687,7 @@ public:
           quantity(1), genweight(10),
           generate_awake(false), patrolling(false), band(false),
           colour(COLOUR_INHERIT), god(GOD_NO_GOD), god_gift(false), hd(0),
-          hp(0), abjuration_duration(0), summon_type(0), items(), monname(""),
+          hp(0), summon_duration(0), summon_type(0), items(), monname(""),
           non_actor_summoner(""), explicit_spells(false), spells(),
           extra_monster_flags(), initial_shifter(RANDOM_MONSTER), props()
     {

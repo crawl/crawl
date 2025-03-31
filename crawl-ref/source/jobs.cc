@@ -11,7 +11,9 @@
 #include "player.h"
 #include "spl-book.h"
 #include "stringutil.h"
+#include "tilepick.h"
 
+#include "job-def.h"
 #include "job-data.h"
 
 static const job_def& _job_def(job_type job)
@@ -80,12 +82,12 @@ void job_stat_init(job_type job)
 
 bool job_has_weapon_choice(job_type job)
 {
-    return _job_def(job).wchoice != WCHOICE_NONE;
+    return _job_def(job).wchoice != weapon_choice::none;
 }
 
 bool job_gets_good_weapons(job_type job)
 {
-    return _job_def(job).wchoice == WCHOICE_GOOD;
+    return _job_def(job).wchoice == weapon_choice::good;
 }
 
 void give_job_equipment(job_type job)
@@ -101,8 +103,23 @@ void give_job_equipment(job_type job)
             plus = spec.props[CHARGES_KEY];
         if (spec.props.exists(PLUS_KEY))
             plus = spec.props[PLUS_KEY];
-        newgame_make_item(spec.base_type, spec.sub_type, max(spec.qty, 1),
-                          plus, spec.ego);
+        item_def* item = newgame_make_item(spec.base_type, spec.sub_type,
+                                           max(spec.qty, 1), plus, spec.ego);
+        if (item)
+        {
+            if (spec.props.exists(ITEM_NAME_KEY))
+                item->props[ITEM_NAME_KEY] = spec.props[ITEM_NAME_KEY].get_string();
+            if (spec.props.exists(ITEM_TILE_NAME_KEY))
+            {
+                item->props[ITEM_TILE_NAME_KEY] = spec.props[ITEM_TILE_NAME_KEY].get_string();
+                bind_item_tile(*item);
+            }
+            if (spec.props.exists(WORN_TILE_NAME_KEY))
+            {
+                item->props[WORN_TILE_NAME_KEY] = spec.props[WORN_TILE_NAME_KEY].get_string();
+                bind_item_tile(*item);
+            }
+        }
     }
 }
 

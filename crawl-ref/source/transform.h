@@ -87,9 +87,8 @@ private:
 protected:
     Form(transformation tran);
 public:
-    bool slot_available(int slot) const;
-    bool can_wield() const { return slot_available(EQ_WEAPON); }
-    virtual bool can_wear_item(const item_def& item) const;
+    bool slot_is_blocked(equipment_slot slot) const;
+    bool can_wield() const { return !slot_is_blocked(SLOT_WEAPON); }
 
     int get_duration(int pow) const;
 
@@ -131,7 +130,7 @@ public:
     virtual string get_transform_description() const { return description; }
 
     virtual string get_description(bool past_tense = false) const;
-    virtual string transform_message(bool was_flying) const;
+    virtual string transform_message() const;
     virtual string get_untransform_message() const;
 
     virtual int res_fire() const;
@@ -140,7 +139,7 @@ public:
     bool res_elec() const;
     int res_pois() const;
     bool res_rot() const;
-    bool res_acid() const;
+    bool res_corr() const;
     bool res_miasma() const;
     bool res_petrify() const;
 
@@ -181,8 +180,8 @@ public:
     string player_prayer_action() const;
     string melding_description() const;
 
-    virtual vector<string> get_fakemuts(bool terse) const;
-    virtual vector<string> get_bad_fakemuts(bool terse) const;
+    virtual vector<pair<string, string>> get_fakemuts() const;
+    virtual vector<pair<string, string>> get_bad_fakemuts() const;
 
 public:
     /// Status light ("Foo"); "" for none
@@ -204,8 +203,8 @@ public:
     const int dex_mod;
 
     /// Equipment types unusable in this form.
-    /** A bitfield representing a union of (1 << equipment_type) values for
-     * equipment types that are unusable in this form.
+    /** A bitfield representing a union of (1 << equipment_slot) values for
+     * equipment slots that are melded in this form.
      */
     const int blocked_slots; // XX check enum size at compile time?
     /// size of the form
@@ -219,12 +218,21 @@ public:
     /// a set of verbs to use based on damage done, when using UC in this form
     const FormAttackVerbs uc_attack_verbs;
 
-    /// has blood (used for sublimation and bloodsplatters)
-    const form_capability can_bleed;
     /// "Used to mark forms which keep most form-based mutations."
     const bool keeps_mutations;
     //
     const bool changes_physiology;
+
+    /// Does this form have blood (used for sublimation and bloodsplatters)?
+    const form_capability has_blood;
+    /// Does this form have hair?
+    const form_capability has_hair;
+    /// Does this form have bones?
+    const form_capability has_bones;
+    /// Does this form have feet?
+    const form_capability has_feet;
+    /// Does this form have ears?
+    const form_capability has_ears;
 
     /// what verb does the player use when shouting in this form?
     const string shout_verb;
@@ -264,9 +272,6 @@ protected:
                         bool max = false, int scale = 1) const;
 
 private:
-    bool all_blocked(int slotflags) const;
-
-private:
     /// Can this form fly?
     /** Whether the form enables, forbids, or does nothing to the player's
      * ability to fly.
@@ -296,49 +301,42 @@ private:
     vector<pair<string,string>> badmuts;
 };
 const Form* get_form(transformation form = you.form);
-const Form* cur_form(bool temp);
+const Form* cur_form(bool temp = true);
 
-enum undead_form_reason
-{
-    UFR_TOO_DEAD  = -1,
-    UFR_GOOD      = 0, // Must be 0, so we convert to bool sanely.
-    UFR_TOO_ALIVE = 1,
-};
-undead_form_reason lifeless_prevents_form(transformation form = you.form,
-                                          bool involuntary = false,
-                                          bool temp = true);
+bool lifeless_prevents_form(transformation form = you.form);
 
 bool form_can_wield(transformation form = you.form);
 bool form_can_wear(transformation form = you.form);
 bool form_can_fly(transformation form = you.form);
 bool form_can_swim(transformation form = you.form);
-bool form_changed_physiology(transformation form = you.form);
-bool form_can_bleed(transformation form = you.form);
+bool form_changes_physiology(transformation form = you.form);
 // Does the form keep the benefits of resistance, scale, and aux mutations?
 bool form_keeps_mutations(transformation form = you.form);
+bool form_has_blood(transformation form = you.form);
+bool form_has_hair(transformation form = you.form);
+bool form_has_bones(transformation form = you.form);
+bool form_has_feet(transformation form = you.form);
+bool form_has_ears(transformation form = you.form);
 
 bool feat_dangerous_for_form(transformation which_trans,
-                             dungeon_feature_type feat);
-
-bool check_form_stat_safety(transformation new_form, bool quiet = false);
+                             dungeon_feature_type feat,
+                             const item_def* talisman = nullptr);
 
 string cant_transform_reason(transformation which_trans, bool involuntary = false,
                              bool temp = true);
-bool check_transform_into(transformation which_trans, bool involuntary = false);
-bool transform(int pow, transformation which_trans, bool involuntary = false);
+bool check_transform_into(transformation which_trans, bool involuntary = false,
+                          const item_def* talisman = nullptr);
+bool transform(int pow, transformation which_trans, bool involuntary = false,
+               bool using_talisman = false);
 
 // skip_move: don't make player re-enter current cell
-void untransform(bool skip_move = false);
+void untransform(bool skip_move = false, bool scale_hp = true);
 
 void unset_default_form();
 void set_default_form(transformation t, const item_def *source);
 
-void set_form(transformation which_trans, int dur);
+void set_form(transformation which_trans, int dur, bool scale_hp = true);
 void return_to_default_form();
-
-void remove_one_equip(equipment_type eq, bool meld = true,
-                      bool mutation = false);
-void unmeld_one_equip(equipment_type eq);
 
 monster_type transform_mons();
 string blade_parts(bool terse = false);
@@ -348,7 +346,6 @@ void merfolk_check_swimming(dungeon_feature_type old_grid,
                             bool stepped = false);
 void merfolk_start_swimming(bool step = false);
 void merfolk_stop_swimming();
-void vampire_update_transformations();
 int form_base_movespeed(transformation tran);
 bool draconian_dragon_exception();
 

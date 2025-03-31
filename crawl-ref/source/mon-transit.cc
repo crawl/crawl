@@ -23,6 +23,7 @@
 #include "mpr.h"
 #include "religion.h"
 #include "tag-version.h"
+#include "terrain.h"
 #include "timed-effects.h"
 
 #define MAX_LOST 100
@@ -150,16 +151,47 @@ void place_followers()
     _place_lost_ones(_level_place_followers);
 }
 
+static void _place_oka_duel_target(monster* mons)
+{
+    // It's possible for kobolds to have shorter LoS than the default min
+    // placement distance, so place enemies closer to them.
+    const int min_dist = min((int)you.current_vision, 3);
+    int seen = 0;
+    coord_def targ;
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        if (cell_is_solid(*ri) || (env.pgrid(*ri) & FPROP_NO_TELE_INTO))
+            continue;
+
+        const int dist = grid_distance(you.pos(), *ri);
+        if (dist > 5 || dist < min_dist)
+            continue;
+
+        if (one_chance_in(++seen))
+            targ = *ri;
+    }
+
+    if (!targ.origin())
+        mons->move_to_pos(targ);
+}
+
 static monster* _place_lost_monster(follower &f)
 {
     dprf("Placing lost one: %s", f.mons.name(DESC_PLAIN, true).c_str());
 
-    // Duel targets have to arrive next to the player.
-    bool near_player = f.mons.props.exists(OKAWARU_DUEL_CURRENT_KEY)
-                       || f.mons.props.exists(OKAWARU_DUEL_ABANDONED_KEY);
+    // Duel targets that survive a duel (due to player excommunication) should
+    // be placed next to the player when they exit. Duel targets *entering* a
+    // duel will be moved again later, but near_player prevents a tiny chance
+    // of them failing to place at all.
+    bool near_player = f.mons.props.exists(OKAWARU_DUEL_ABANDONED_KEY)
+                       || f.mons.props.exists(OKAWARU_DUEL_CURRENT_KEY);
 
     if (monster* mons = f.place(near_player))
     {
+        // Try to place current duel targets 3-5 spaces away from the player
+        if (f.mons.props.exists(OKAWARU_DUEL_CURRENT_KEY))
+            _place_oka_duel_target(mons);
+
         // Figure out how many turns we need to update the monster
         int turns = (you.elapsed_time - f.transit_start_time)/10;
 
@@ -357,14 +389,6 @@ void follower::read_from_prop(CrawlVector& vec)
     transit_start_time = vec[NUM_MONSTER_SLOTS + 1].get_int();
 }
 
-static bool _is_religious_follower(const monster &mon)
-{
-    return (you_worship(GOD_YREDELEMNUL)
-            || will_have_passive(passive_t::convert_orcs)
-            || you_worship(GOD_FEDHAS))
-                && is_follower(mon);
-}
-
 static bool _mons_can_follow_player_from(const monster &mons,
                                          const coord_def from,
                                          bool within_level = false)
@@ -374,12 +398,13 @@ static bool _mons_can_follow_player_from(const monster &mons,
         || mons.incapacitated()
         || mons.is_stationary()
         || mons.is_constricted()
-        || mons.has_ench(ENCH_BOUND))
+        || mons.has_ench(ENCH_BOUND)
+        || mons.has_ench(ENCH_VEXED))
     {
         return false;
     }
 
-    if (!monster_habitable_grid(&mons, DNGN_FLOOR))
+    if (!monster_habitable_feat(&mons, DNGN_FLOOR))
         return false;
 
     // Only non-wandering friendly monsters or those actively
@@ -395,23 +420,18 @@ static bool _mons_can_follow_player_from(const monster &mons,
     if (!mons.friendly() && (mons.pos() - from).rdist() > 1)
         return false;
 
-    // Monsters that can't use stairs can still be marked as followers
-    // (though they'll be ignored for transit), so any adjacent real
-    // follower can follow through. (jpeg)
+    // Finally, check whether it is possible for the monster to actually use
+    // the same method of transit the player is.
     if (within_level && !mons_class_can_use_transporter(mons.type)
         || !within_level && !mons_can_use_stairs(mons, env.grid(from)))
     {
-        if (_is_religious_follower(mons))
-            return true;
-
         return false;
     }
     return true;
 }
 
 // Tag any monster following the player
-static bool _tag_follower_at(const coord_def &pos, const coord_def &from,
-                             bool &real_follower)
+static bool _tag_follower_at(const coord_def &pos, const coord_def &from)
 {
     if (!in_bounds(pos) || pos == from)
         return false;
@@ -423,7 +443,6 @@ static bool _tag_follower_at(const coord_def &pos, const coord_def &from,
     if (!_mons_can_follow_player_from(*fol, from))
         return false;
 
-    real_follower = true;
     fol->flags |= MF_TAKING_STAIRS;
 
     // Clear patrolling/travel markers.
@@ -436,69 +455,27 @@ static bool _tag_follower_at(const coord_def &pos, const coord_def &from,
     return true;
 }
 
-static int _follower_tag_radius(const coord_def &from)
-{
-    // If only friendlies are adjacent, we set a max radius of 5, otherwise
-    // only adjacent friendlies may follow.
-    for (adjacent_iterator ai(from); ai; ++ai)
-    {
-        if (const monster* mon = monster_at(*ai))
-            if (!mon->friendly())
-                return 1;
-    }
-
-    return 5;
-}
-
 /**
- * Handle movement of adjacent player followers from a given location. This is
- * used when traveling through stairs or a transporter.
+ * Handle movement of monsters following the player across stairs or transporters
  *
  * @param from       The location from which the player moved.
  * @param handler    A handler function that does movement of the actor to the
- *                   destination, returning true if the actor was friendly. The
- *                   `real` argument tracks whether the actor was an actual
- *                   follower that counts towards the follower limit.
+ *                   destination, returning true if the actor was (or will be)
+ *                   moved.
  **/
 void handle_followers(const coord_def &from,
                       bool (*handler)(const coord_def &pos,
-                                      const coord_def &from, bool &real))
+                                      const coord_def &from))
 {
-    const int radius = _follower_tag_radius(from);
     int n_followers = 18;
-
-    vector<coord_def> places[2];
-    int place_set = 0;
-
-    bool visited[GXM][GYM];
-    memset(&visited, 0, sizeof(visited));
-
-    places[place_set].push_back(from);
-    while (!places[place_set].empty())
+    for (radius_iterator ri(from, 3, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
     {
-        for (const coord_def &p : places[place_set])
+        if (handler(*ri, from))
         {
-            for (adjacent_iterator ai(p); ai; ++ai)
-            {
-                if ((*ai - from).rdist() > radius
-                    || visited[ai->x][ai->y])
-                {
-                    continue;
-                }
-                visited[ai->x][ai->y] = true;
-
-                bool real_follower = false;
-                if (handler(*ai, from, real_follower))
-                {
-                    // If we've run out of our follower allowance, bail.
-                    if (real_follower && --n_followers <= 0)
-                        return;
-                    places[!place_set].push_back(*ai);
-                }
-            }
+            // If we've run out of our follower allowance, bail.
+            if (--n_followers <= 0)
+                return;
         }
-        places[place_set].clear();
-        place_set = !place_set;
     }
 }
 
@@ -519,8 +496,7 @@ void untag_followers()
         mons.flags &= ~MF_TAKING_STAIRS;
 }
 
-static bool _transport_follower_at(const coord_def &pos, const coord_def &from,
-                                   bool &real_follower)
+static bool _transport_follower_at(const coord_def &pos, const coord_def &from)
 {
     if (!in_bounds(pos) || pos == from)
         return false;
@@ -538,12 +514,13 @@ static bool _transport_follower_at(const coord_def &pos, const coord_def &from,
     // Guantlet and Beogh in particular.
     if (fol->find_place_to_live(true, fol->friendly()))
     {
-        real_follower = true;
         env.map_knowledge(pos).clear_monster();
         dprf("%s is transported.", fol->name(DESC_THE, true).c_str());
+
+        return true;
     }
 
-    return true;
+    return false;
 }
 
 /**

@@ -17,6 +17,7 @@ wrapping slow-revving metal around their puny goblinoid frames.
 Deep Elf
 
 Deep Elves have a strong affinity for all kinds of magic, but are very fragile.
+They regenerate magical power rapidly.
 %%%%
 Demigod
 
@@ -46,11 +47,6 @@ strong and they live in a state of permanent stasis.
 Felid
 
 Felids are many-lived sentient cats. They cannot use armour or weapons.
-%%%%
-Ghoul
-
-Ghouls are undead creatures, damned to rot eternally. They have sharp claws,
-and they heal from the death of the living.
 %%%%
 Gargoyle
 
@@ -112,6 +108,16 @@ Oni
 Large, robust, and extremely fond of drinking, Oni make capable brawlers and
 spellcasters and gain extra benefits from healing potions.
 %%%%
+Poltergeist
+
+Formless ghosts who delight in hexing their enemies. They can equip many
+different hats, gloves, boots, or cloaks at once, but cannot wear body armour.
+%%%%
+Revenant
+
+Revenants are skeletal undead who are strong at melee combat and can empower
+damage-dealing spells by consuming memories they harvest from their victims.
+%%%%
 Spriggan
 
 Very small, very frail and very fast, Spriggans are highly competent stabbers
@@ -121,11 +127,6 @@ Troll
 
 Trolls are monstrous creatures with powerful claws. They regenerate health
 rapidly.
-%%%%
-Vampire
-
-Shifting between the states of life and undeath at will, Vampires are
-accomplished stabbers and casters.
 %%%%
 Vine Stalker
 

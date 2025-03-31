@@ -26,6 +26,7 @@ aptitudes:
   conjurations: -3
   hexes: -4
   summoning: -3
+  forgecraft: -3
   necromancy: -2
   translocations: -3
   fire_magic: -3
@@ -50,14 +51,14 @@ mutations:
     MUT_CLAWS: 3
     MUT_SHAGGY_FUR: 1
 recommended_jobs:
-  - JOB_FIGHTER
-  - JOB_GLADIATOR
-  - JOB_BERSERKER
-  - JOB_WARPER
-  - JOB_EARTH_ELEMENTALIST
-  - JOB_HEDGE_WIZARD
+  - fighter
+  - gladiator
+  - berserker
+  - warper
+  - earth elementalist
+  - hedge wizard
 recommended_weapons:
-  - SK_MACES_FLAILS
-  - SK_UNARMED_COMBAT
+  - maces and flails
+  - unarmed combat
 
 orc_name: Trorc

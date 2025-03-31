@@ -199,24 +199,21 @@ LUARET1(you_corrosion, number, you.corrosion_amount())
 
 /*** Strength.
  * @treturn int current strength
- * @treturn int max strength
  * @function strength
  */
-LUARET2(you_strength, number, you.strength(false), you.max_strength())
+LUARET1(you_strength, number, you.strength(false))
 
 /*** Intelligence.
  * @treturn int current intelligence
- * @treturn int max intelligence
  * @function intelligence
  */
-LUARET2(you_intelligence, number, you.intel(false), you.max_intel())
+LUARET1(you_intelligence, number, you.intel(false))
 
 /*** Dexterity.
  * @treturn int current dexterity
- * @treturn int max dexterity
  * @function dexterity
  */
-LUARET2(you_dexterity, number, you.dex(false), you.max_dex())
+LUARET1(you_dexterity, number, you.dex(false))
 
 /*** XL.
  * @treturn int xl
@@ -343,6 +340,12 @@ LUARET1(you_stealth_pips, number, stealth_pips())
  */
 LUARET1(you_willpower, number, player_willpower() / WL_PIP)
 
+/*** Are you currently immune to torment?
+ * @treturn boolean
+ * @function torment_immune
+ */
+LUARET1(you_torment_immune, boolean, you.res_torment())
+
 /*** Drowning resistance (rDrown).
  * @treturn boolean
  * @function res_drowning
@@ -372,7 +375,7 @@ LUARET1(you_spirit_shield, number, you.spirit_shield() ? 1 : 0)
  * @treturn int resistance level
  * @function res_corr
  */
-LUARET1(you_res_corr, boolean, you.res_corr(false))
+LUARET1(you_res_corr, boolean, player_res_corrosion(false))
 
 /*** Are you flying?
  * @treturn boolean
@@ -640,6 +643,12 @@ LUARET1(you_turns, number, you.num_turns)
  * @function time
  */
 LUARET1(you_time, number, you.elapsed_time)
+
+/*** Total elapsed real time in seconds.
+ * @treturn int
+ * @function real_time
+ */
+LUARET1(you_real_time, number, you.real_time())
 
 /*** How many spell levels are currently available.
  * @treturn int
@@ -1371,11 +1380,14 @@ LUAFN(you_quiver_allows_autofight)
     PLUARET(boolean, quiver::get_secondary_action()->allow_autofight());
 }
 
+LUARET1(you_is_web_immune, boolean, you.is_web_immune())
+
 static const struct luaL_reg you_clib[] =
 {
     { "turn_is_over", you_turn_is_over },
     { "turns"       , you_turns },
     { "time"        , you_time },
+    { "real_time"   , you_real_time },
     { "spells"      , l_you_spells },
     { "spell_letters", l_you_spell_letters },
     { "spell_table" , l_you_spell_table },
@@ -1429,6 +1441,7 @@ static const struct luaL_reg you_clib[] =
     { "res_shock"   , you_res_shock },
     { "stealth_pips", you_stealth_pips },
     { "willpower"   , you_willpower },
+    { "torment_immune", you_torment_immune },
     { "res_drowning", you_res_drowning },
     { "res_mutation", you_res_mutation },
     { "see_invisible", you_see_invisible },
@@ -1513,6 +1526,7 @@ static const struct luaL_reg you_clib[] =
     { "quiver_uses_mp",     you_quiver_uses_mp},
     { "quiver_allows_autofight", you_quiver_allows_autofight },
     { "activate_ability",        you_activate_ability},
+    { "is_web_immune",     you_is_web_immune },
 
     { nullptr, nullptr },
 };

@@ -134,7 +134,7 @@ static coord_def _random_monster_nearby_habitable_space(const monster& mon)
         if (!in_bounds(target))
             continue;
 
-        if (!monster_habitable_grid(&mon, env.grid(target)))
+        if (!monster_habitable_grid(&mon, target))
             continue;
 
         if (respect_sanctuary && is_sanctuary(target))
@@ -156,8 +156,11 @@ static coord_def _random_monster_nearby_habitable_space(const monster& mon)
     return target;
 }
 
-bool monster_blink(monster* mons, bool quiet)
+bool monster_blink(monster* mons, bool ignore_stasis, bool quiet)
 {
+    if (!ignore_stasis && mons->no_tele())
+        return false;
+
     coord_def near = _random_monster_nearby_habitable_space(*mons);
     return mons->blink_to(near, quiet);
 }
@@ -178,7 +181,7 @@ bool monster_space_valid(const monster* mons, coord_def target,
     if (testbits(env.pgrid(target), FPROP_NO_TELE_INTO))
         return false;
 
-    return monster_habitable_grid(mons, env.grid(target));
+    return monster_habitable_grid(mons, target);
 }
 
 static bool _monster_random_space(const monster* mons, coord_def& target,
@@ -212,11 +215,12 @@ void mons_relocated(monster* mons)
                             ? mons : monster_by_mid(mons->tentacle_connect);
 
         // this should take care of any tentacles
-        monster_die(*tentacle, KILL_RESET, -1, true, false);
+        monster_die(*tentacle, KILL_RESET, -1, true);
     }
 }
 
-void monster_teleport(monster* mons, bool instan, bool silent, bool away_from_player)
+void monster_teleport(monster* mons, bool instan, bool silent, bool away_from_player,
+                      const actor* agent)
 {
     ASSERT(mons); // XXX: change to monster &mons
     bool was_seen = !silent && you.can_see(*mons);
@@ -233,7 +237,7 @@ void monster_teleport(monster* mons, bool instan, bool silent, bool away_from_pl
             if (!silent)
                 simple_monster_message(*mons, " looks slightly unstable.");
 
-            mons->add_ench(mon_enchant(ENCH_TP, 0, 0,
+            mons->add_ench(mon_enchant(ENCH_TP, 0, agent,
                                        random_range(20, 30)));
         }
 
@@ -302,7 +306,8 @@ void monster_teleport(monster* mons, bool instan, bool silent, bool away_from_pl
 // because of a memory problem described below. (isn't this fixed now? -rob)
 static coord_def random_space_weighted(actor* moved, actor* target,
                                        bool close, bool keep_los = true,
-                                       bool allow_sanct = true)
+                                       bool allow_sanct = true,
+                                       int dist_max = LOS_RADIUS)
 {
     vector<coord_weight> dests;
     const coord_def tpos = target->pos();
@@ -320,7 +325,7 @@ static coord_def random_space_weighted(actor* moved, actor* target,
     if (stay_weight < 0)
         stay_weight = 0;
 
-    for (radius_iterator ri(moved->pos(), LOS_NO_TRANS); ri; ++ri)
+    for (radius_iterator ri(moved->pos(), dist_max, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
     {
         if (!valid_blink_destination(*moved, *ri, !allow_sanct)
             || (keep_los && !target->see_cell_no_trans(*ri)))
@@ -389,7 +394,8 @@ bool blink_player_away(monster* caster)
 }
 
 // Blink a monster away from the caster.
-bool blink_away(monster* mon, actor* caster, bool from_seen, bool self_cast)
+bool blink_away(monster* mon, actor* caster, bool from_seen, bool self_cast,
+                int max_dist)
 {
     ASSERT(mon); // XXX: change to monster &mon
     ASSERT(caster); // XXX: change to actor &caster
@@ -397,7 +403,7 @@ bool blink_away(monster* mon, actor* caster, bool from_seen, bool self_cast)
     if (from_seen && !mon->can_see(*caster))
         return false;
     bool jumpy = self_cast && mon->is_jumpy();
-    coord_def dest = random_space_weighted(mon, caster, false, false, true);
+    coord_def dest = random_space_weighted(mon, caster, false, false, true, max_dist);
     if (dest.origin())
         return false;
     bool success = mon->blink_to(dest, false, jumpy);
@@ -493,7 +499,8 @@ vector<coord_def> find_blink_targets()
 
 bool random_near_space(const actor* victim,
                        const coord_def& origin, coord_def& target,
-                       bool allow_adjacent, bool forbid_sanctuary,
+                       bool allow_adjacent, int max_distance,
+                       bool forbid_sanctuary,
                        bool forbid_unhabitable)
 {
     // This might involve ray tracing (LOS calcs in valid_blink_destination),
@@ -516,8 +523,9 @@ bool random_near_space(const actor* victim,
 
         target = origin + (p - tried_o);
 
-        if (valid_blink_destination(*victim, target,
-                                    forbid_sanctuary, forbid_unhabitable)
+        if (grid_distance(origin, target) <= max_distance
+            && valid_blink_destination(*victim, target,
+                                       forbid_sanctuary, forbid_unhabitable)
             && (allow_adjacent || grid_distance(origin, target) > 1))
         {
             return true;

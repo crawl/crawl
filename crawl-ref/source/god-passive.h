@@ -265,13 +265,14 @@ bool god_gives_passive(god_type god, passive_t passive);
 bool have_passive(passive_t passive);
 bool will_have_passive(passive_t passive);
 int rank_for_passive(passive_t passive);
-bool god_id_item(item_def& item, bool silent = true);
 
 int chei_stat_boost(int piety = you.piety);
 
 void jiyva_eat_offlevel_items();
 
 void ash_check_bondage();
+void ash_id_inventory();
+void ash_id_item(item_def& item, bool silent = true);
 int ash_detect_portals(bool all);
 monster_type ash_monster_tier(const monster *mon);
 unsigned int ash_skill_point_boost(skill_type sk, int scaled_skill);
@@ -282,8 +283,6 @@ void ash_scrying();
 void gozag_move_level_gold_to_top();
 void gozag_move_gold_to_top(const coord_def p);
 void gozag_count_level_gold();
-
-int tso_sh_boost();
 
 int qazlal_sh_boost(int piety = you.piety);
 void qazlal_storm_clouds();
@@ -314,3 +313,8 @@ bool wu_jian_has_momentum(wu_jian_attack_type);
 bool wu_jian_post_move_effects(bool did_wall_jump,
                                const coord_def& initial_position);
 bool wu_jian_move_triggers_attacks(coord_def new_pos);
+
+void makhleb_tyrant_buff();
+void makhleb_celebrant_bloodrite();
+void makhleb_execution_activate();
+bool makhleb_haemoclasm_trigger_check(const monster& victim);

@@ -1,0 +1,29 @@
+enum: JOB_CONJURER
+name: "Conjurer"
+short_name: Cj
+category: Mage
+category_priority: 90
+str: -1
+int: 10
+dex: 3
+spells:
+  - SPELL_MAGIC_DART
+  - SPELL_SEARING_RAY
+  - SPELL_FULMINANT_PRISM
+  - SPELL_ISKENDERUNS_MYSTIC_BLAST
+equipment:
+  - "robe"
+  - "potion of magic"
+recommended_species:
+  - deep elf
+  - naga
+  - tengu
+  - draconian
+  - demigod
+  - djinni
+skills:
+  dodging: 2
+  spellcasting: 2
+  conjurations: 4
+  stealth: 2
+create_enum: false

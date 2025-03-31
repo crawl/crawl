@@ -72,6 +72,7 @@
 # * chaotic:  Is treated as a chaotic item.
 # * clarity:  Provides clarity.
 # * corrode:  Randomly causes corrosion when taking damage.
+# * deleted:  Never randomly generated. Should only appear in old games.
 # * drain:    Causes draining when unequipped.
 # * elec:     Grants electrical resistance.
 # * evil:     Is treated as an evil item (hated by good gods).
@@ -319,6 +320,7 @@ VALUE:   1200
 DBRAND:  Torment:   It occasionally torments all nearby living foes when it
  strikes in combat.
 
+# start TAG_MAJOR_VERSION == 34
 NAME:    sword of Zonguldrok
 OBJ:     OBJ_WEAPONS/WPN_DOUBLE_SWORD
 PLUS:    +9
@@ -328,6 +330,8 @@ TILE_EQ: zonguldrok
 BRAND:   SPWPN_REAPING
 FB_BRAND: SPWPN_PAIN
 VALUE:   800
+BOOL:    deleted
+# end TAG_MAJOR_VERSION
 
 NAME:    sword of Cerebov
 APPEAR:  great serpentine sword
@@ -387,7 +391,7 @@ TILE:    urand_bloodbane
 TILE_EQ: bloodbane
 BRAND:   SPWPN_DRAINING
 ANGRY:   5
-BOOL:    nogen
+BOOL:    deleted
 STEALTH: -1
 # end TAG_MAJOR_VERSION
 
@@ -402,7 +406,7 @@ TILE_EQ: flaming_death
 BRAND:   SPWPN_FLAMING
 FIRE:    2
 COLD:    -1
-BOOL:    poison, skip_ego, nogen
+BOOL:    poison, skip_ego, deleted
 WILL:    1
 # end TAG_MAJOR_VERSION
 
@@ -443,10 +447,10 @@ BRAND:   SPWPN_FREEZING
 FIRE:    -1
 COLD:    2
 WILL:    1
-BOOL:    poison, skip_ego, nogen
+BOOL:    poison, skip_ego, deleted
 # end TAG_MAJOR_VERSION
 
-# TAG_MAJOR_VERSION == 34
+# start TAG_MAJOR_VERSION == 34
 NAME:     dagger "Morg"
 OBJ:      OBJ_WEAPONS/WPN_DAGGER
 PLUS:     +4
@@ -456,7 +460,7 @@ TILE_EQ:  morg
 BRAND:    SPWPN_PAIN
 INT:      5
 WILL:     1
-BOOL:     nogen
+BOOL:     deleted
 # end TAG_MAJOR_VERSION
 
 NAME:    scythe "Finisher"
@@ -557,7 +561,7 @@ TILE:    urand_doom_knight
 TILE_EQ: doom_knight
 FB_BRAND: SPWPN_PAIN
 WILL:    1
-BOOL:    nospell, evil, drain
+BOOL:    silence, evil, drain
 DBRAND:  Doom: It inflicts additional damage proportional to its victim's
  maximum health.
 
@@ -589,7 +593,7 @@ BRAND:    SPWPN_REAPING
 FB_BRAND: SPWPN_PAIN
 HP:       -6
 LIFE:     1
-BOOL:     poison, nogen
+BOOL:     poison, deleted
 # end TAG_MAJOR_VERSION
 
 NAME:     trident of the Octopus King
@@ -650,7 +654,7 @@ TILE:    urand_piercer
 TILE_EQ: great_bow
 BRAND:   SPWPN_PENETRATION
 EV:      -2
-BOOL:    nogen
+BOOL:    deleted
 # end TAG_MAJOR_VERSION
 
 # start TAG_MAJOR_VERSION == 34
@@ -665,7 +669,7 @@ COLOUR:  ETC_DEATH
 TILE:    urand_blowgun
 TILE_EQ: great_bow
 STEALTH: 2
-BOOL:    inv, tilerim, nogen
+BOOL:    inv, tilerim, deleted
 # end TAG_MAJOR_VERSION
 
 NAME:    lance "Wyrmbane"
@@ -744,7 +748,7 @@ PLUS:     +27
 COLOUR:   LIGHTCYAN
 TILE:     urand_knife_of_accuracy
 TILE_EQ:  knife_of_accuracy
-BOOL:     tilerim, nogen
+BOOL:     tilerim, deleted
 # end TAG_MAJOR_VERSION
 
 # start TAG_MAJOR_VERSION == 34
@@ -757,7 +761,7 @@ COLOUR:   GREEN
 TILE:     urand_crystal_spear
 TILE_EQ:  crystal_spear
 INT:      3
-BOOL:     nogen
+BOOL:     deleted
 # end TAG_MAJOR_VERSION
 
 ENUM:     CAPTAIN
@@ -799,7 +803,7 @@ OBJ:     OBJ_ARMOUR/ARM_ROBE
 PLUS:    +4
 COLOUR:  LIGHTRED
 TILE:    urand_augmentation
-TILE_EQ: robe_white_blue
+TILE_EQ: augmentation
 STR:     4
 INT:     4
 DEX:     4
@@ -823,7 +827,7 @@ COLOUR:  RED
 TILE:    urand_bullseye
 TILE_EQ: kite_shield_bullseye
 EV:      -5
-BOOL:    nogen
+BOOL:    deleted
 # end TAG_MAJOR_VERSION
 
 NAME:    crown of Dyrovepreva
@@ -869,7 +873,7 @@ COLOUR:   ETC_FLASH
 TILE:     urand_flash
 TILE_EQ:  red
 EV:       4
-BOOL:     fly, nogen
+BOOL:     fly, deleted
 # end TAG_MAJOR_VERSION
 
 ENUM:     HOOD_ASSASSIN
@@ -885,7 +889,7 @@ STEALTH:  2
 VALUE:    600
 DESCRIP:  Detect:    It allows the wearer to sense nearby creatures.
 +Stab+:     It allows the wearer to make particularly effective stabbing attacks
- against helpless or unaware enemies with any weapon.
+ against helpless or unaware enemies with any melee weapon.
 
 ENUM:    LEAR
 NAME:    Lear's hauberk
@@ -922,10 +926,9 @@ TILE:    urand_salamander
 TILE_EQ: leather_red
 FIRE:    2
 COLD:    -2
-BOOL:    special
+BOOL:    enh_fire, special
 INSCRIP: Flames, rFlCloud
-DESCRIP: Flames:    It surrounds you with flame clouds and enhances your fire
- magic.
+DESCRIP: Flames:    It surrounds you with flame clouds.
 +rFlCloud:  It grants immunity to flame clouds.
 
 NAME:    gauntlets of War
@@ -951,7 +954,7 @@ OBJ:     OBJ_ARMOUR/ARM_ROBE
 PLUS:    4
 COLOUR:  LIGHTGREY
 TILE:    urand_folly
-TILE_EQ: robe_red2
+TILE_EQ: robe_of_folly
 INT:     8
 INSCRIP: Brill Will-∞
 DESCRIP: Brill:     It increases the power of your magical spells and halves
@@ -966,7 +969,7 @@ COLOUR:  LIGHTGREEN
 TILE:    urand_maxwell
 TILE_EQ: maxwell
 WILL:    1
-BOOL:    nospell, notelep, elec, rCorr
+BOOL:    silence, notelep, elec, rCorr
 
 ENUM:    DRAGONMASK
 NAME:    mask of the Dragon
@@ -993,11 +996,11 @@ DESCRIP:  Dark:      It shrouds the wearer in darkness, reducing the range at
  which they can see and be seen by others.
 
 NAME:    scales of the Dragon King
-OBJ:     OBJ_ARMOUR/ARM_GOLD_DRAGON_ARMOUR
+OBJ:     OBJ_ARMOUR/ARM_GOLDEN_DRAGON_ARMOUR
 PLUS:    +9
 COLOUR:  ETC_GOLD
 TILE:    urand_dragon_king
-TILE_EQ: dragonarm_gold
+TILE_EQ: dragonarm_golden
 WILL:    1
 
 NAME:    hat of the Alchemist
@@ -1067,13 +1070,12 @@ BOOL:     rcorr
 DESCRIP:  Loud:      It is deafeningly noisy when blocking attacks.
 
 NAME:    amulet of the Air
-INSCRIP: Inacc Air
+INSCRIP: Inacc
 OBJ:     OBJ_JEWELLERY/AMU_NOTHING
 COLOUR:  ETC_ELECTRICITY
 TILE:    urand_air
-BOOL:    elec, fly, rmsl
+BOOL:    enh_air, elec, fly, rmsl
 DESCRIP: Inacc:     It reduces the accuracy of your attacks and spells.
-+Air:       It enhances your air magic.
 
 NAME:    ring of Shadows
 INSCRIP: Umbra
@@ -1093,7 +1095,7 @@ TILE:    urand_cekugob
 AC:      1
 EV:      1
 LIFE:    2
-BOOL:    elec, poison, notelep, nogen
+BOOL:    elec, poison, notelep, deleted
 # end TAG_MAJOR_VERSION
 
 NAME:    amulet of the Four Winds
@@ -1294,9 +1296,10 @@ TILE:     urand_finger
 COLOUR:   ETC_BONE
 BOOL:     evil
 LIFE:     1
+HP:       +7
 VALUE:    400
-INSCRIP:  Finger+
-DESCRIP:  Finger+:   It enables you to equip an extra ring.
+INSCRIP:  Ring+
+DESCRIP:  Ring+:   It enables you to equip an extra ring.
 
 # start TAG_MAJOR_VERSION == 34
 ENUM:     SPIDER
@@ -1308,7 +1311,7 @@ PLUS:     +3
 BRAND:    SPARM_JUMPING
 COLOUR:   LIGHTMAGENTA
 STEALTH:  1
-BOOL:     nogen
+BOOL:     deleted
 # end TAG_MAJOR_VERSION
 
 NAME:     dark maul
@@ -1334,7 +1337,7 @@ TILE_EQ: wizard_lightgreen
 PLUS:    +2
 BRAND:   SPARM_ARCHMAGI
 STEALTH: -1
-BOOL:    nogen
+BOOL:    deleted
 # end TAG_MAJOR_VERSION
 
 NAME:     arc blade
@@ -1444,7 +1447,7 @@ TILE_EQ: etheric_cage
 INSCRIP: RegenMP+
 PLUS:    +0
 MP:      +4
-BOOL:    mutate, elec, chaotic, nogen
+BOOL:    mutate, elec, chaotic, deleted
 VALUE:   400
 # end TAG_MAJOR_VERSION
 
@@ -1458,7 +1461,7 @@ TILE:    urand_eternal_torment
 TILE_EQ: eternal_torment
 INSCRIP: rTorment HP--
 LIFE:    3
-BOOL:    evil, seeinv, nogen, drain
+BOOL:    evil, seeinv, drain, deleted
 # end TAG_MAJOR_VERSION
 
 ENUM:    VINES
@@ -1509,7 +1512,7 @@ TILE_EQ:  talos
 COLOUR:   ETC_FIRE
 BRAND:    SPARM_PONDEROUSNESS
 FIRE:     1
-BOOL:     nogen
+BOOL:     deleted
 # end TAG_MAJOR_VERSION
 
 ENUM:     WARLOCK_MIRROR
@@ -1831,10 +1834,70 @@ OBJ:      OBJ_ARMOUR/ARM_ORB
 TILE:     urand_charlatan
 TILE_EQ:  charlatans_orb
 COLOUR:   MAGENTA
-INSCRIP: orb Evoboost
+INSCRIP: orb Charlatan
 DBRAND:  It massively reduces your stealth.
 +It interferes with translocations, delaying teleports.
-+Evoboost:    It boosts the power of your evoked items.
++Charlatan: It boosts your other skills by 20% of your base Evocations skill.
+
+ENUM:    JUSTICARS_REGALIA
+NAME:    justicar's regalia
+INSCRIP: Inspire Amulet+
+OBJ:     OBJ_ARMOUR/ARM_SCALE_MAIL
+PLUS:    +5
+STR:     4
+COLOUR:  WHITE
+TILE:    urand_justicars_regalia
+TILE_EQ: justicar
+VALUE:   900
+DESCRIP: Inspire:   When you summon or create an ally, it gains Regeneration.
++Amulet+:   You can equip an additional amulet.
+
+ENUM:    SKULL_OF_ZONGULDROK
+NAME:    skull of Zonguldrok
+INSCRIP: Reaping Hat+
+OBJ:     OBJ_ARMOUR/ARM_ORB
+INT:     4
+LIFE:    1
+COLOUR:  BLUE
+TILE:    urand_skull_of_zonguldrok
+TILE_EQ: skull_of_zonguldrok
+VALUE:   600
+BOOL:    evil
+DESCRIP: Reaping:   When you kill an enemy with your weapon, its spirit may be
+ forced to fight for you.
++Hat+:   You can equip an additional hat (on the skull).
+
+ENUM:    FISTICLOAK
+NAME:    fungal fisticloak
+INSCRIP: Shroompunch Gloves+
+OBJ:     OBJ_ARMOUR/ARM_CLOAK
+PLUS:    +3
+HP:      -10
+INT:     -2
+STR:     -2
+COLOUR:  MAGENTA
+TILE:    urand_fungal_fisticloak
+TILE_EQ: fungal_fisticloak_back
+VALUE:   550
+DESCRIP: Shroompunch:   The cloak sometimes lashes out at its wearer's enemies,
+ inflicting confusion with its spores.
++Gloves+:   Your cloak can equip an additional pair of gloves.
+
+ENUM:    VAINGLORY
+NAME:    crown of vainglory
+INSCRIP: Majesty Ring++
+OBJ:     OBJ_ARMOUR/ARM_HAT
+PLUS:    +3
+WILL:    1
+BOOL:    fragile
+COLOUR:  YELLOW
+TILE:    urand_crown_of_vainglory
+TILE_EQ: vainglory
+VALUE:   550
+DESCRIP: Majesty:   You are bathed in light that prevents you from turning
+ invisible. Whenever you enter a new floor, you announce yourself to nearby
+ enemies and refuse to leave the floor again for some time.
++Ring++:   You can equip two additional rings.
 
 # Fedhas sprint, to allow coglins access to evocable invisibility.
 ENUM:     SCARF_INVISIBILITY

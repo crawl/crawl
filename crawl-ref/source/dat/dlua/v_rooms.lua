@@ -122,7 +122,7 @@ local function make_tagged_room(options,chosen)
       grid = {}
     }
 
-    room.preserve_wall = dgn.has_tag(room.map, "preserve_wall")
+    room.preserve_wall = dgn.has_tag(room.map, "no_wall_fixup")
     room.no_windows = dgn.has_tag(room.map, "no_windows")
 
     -- Check all four directions for orient tag before we create the wals data, since the existence of a
@@ -164,17 +164,17 @@ local function pick_room(e, options)
 
   local chosen
   -- Roll the chance to pick a ghost vault room if we haven't done so.
-  if not options.did_ghost_chance then
-    if crawl.x_chance_in_y(_GHOST_CHANCE_PERCENT, 100) then
+  if not options.did_necropolis_chance then
+    if crawl.x_chance_in_y(dgn.necropolis_chance_percent, 100) then
       -- Find the ghost vault generator, if this somehow doesn't exist, we will
       -- fall back to the usual set of generators.
       for i, r in ipairs(options.room_type_weights) do
-        if r.generator == "tagged" and r.tag == "vaults_ghost" then
+        if r.generator == "tagged" and r.tag == "vaults_necropolis" then
           chosen = r
         end
       end
     end
-    options.did_ghost_chance = true
+    options.did_necropolis_chance = true
   end
   -- Roll the chance to pick a Wizlab vault room if we haven't done so.
   if not options.did_wizlab_chance then
@@ -199,8 +199,8 @@ local function pick_room(e, options)
     options.did_desolation_chance = true
   end
 
-  -- We aren't choosing a ghost vault or a vault for wizlab or desolation
-  -- portals, so pick a generator from the weighted table.
+  -- We aren't choosing a ghost vault or a vault for wizlab / desolation /
+  -- necropolis portals, so pick a generator from the weighted table.
   if chosen == nil then
     chosen = util.random_weighted_from(weight_callback,
                                        options.room_type_weights)

@@ -39,7 +39,7 @@ enum duration_type
     DUR_PIETY_POOL,             // distribute piety over time
     DUR_DIVINE_VIGOUR,          // duration of Ely's Divine Vigour
     DUR_DIVINE_STAMINA,         // duration of Zin's Divine Stamina
-    DUR_DIVINE_SHIELD,          // duration of TSO's Divine Shield
+    DUR_DIVINE_SHIELD,          // remaining charges of TSO's Divine Shield
 #if TAG_MAJOR_VERSION == 34
     DUR_REGENERATION,
 #endif
@@ -106,7 +106,7 @@ enum duration_type
 #if TAG_MAJOR_VERSION == 34
     DUR_LIFESAVING,
 #endif
-    DUR_PARALYSIS_IMMUNITY,
+    DUR_STUN_IMMUNITY,
 #if TAG_MAJOR_VERSION == 34
     DUR_DARKNESS,
 #endif
@@ -151,7 +151,9 @@ enum duration_type
     DUR_TOXIC_RADIANCE,
     DUR_RECITE,
     DUR_GRASPING_ROOTS,
+#if TAG_MAJOR_VERSION == 34
     DUR_SLEEP_IMMUNITY,
+#endif
     DUR_FIRE_VULN,
     DUR_ELIXIR,
 #if TAG_MAJOR_VERSION == 34
@@ -190,10 +192,10 @@ enum duration_type
 #endif
     DUR_CLEAVE,
     DUR_GOZAG_GOLD_AURA,
+#if TAG_MAJOR_VERSION == 34
     DUR_COLLAPSE,
     DUR_BRAINLESS,
     DUR_CLUMSY,
-#if TAG_MAJOR_VERSION == 34
     DUR_DEVICE_SURGE,
 #endif
     DUR_DOOM_HOWL,
@@ -262,5 +264,27 @@ enum duration_type
     DUR_GAVOTTE_COOLDOWN,
     DUR_FUSILLADE,
     DUR_PRIMORDIAL_NIGHTFALL,
+    DUR_BLIND,
+    DUR_SIGN_OF_RUIN,
+    DUR_GRAVE_CLAW_RECHARGE,
+    DUR_INFERNAL_LEGION,
+    DUR_CELEBRANT_COOLDOWN,
+    DUR_EXECUTION,
+    DUR_GROWING_DESTRUCTION,
+    DUR_EPHEMERAL_SHIELD,
+    DUR_TIME_WARPED_BLOOD_COOLDOWN,
+    DUR_SPIKE_LAUNCHER_ACTIVE,
+    DUR_PARAGON_ACTIVE,
+    DUR_FORTRESS_BLAST_TIMER,
+    DUR_PHALANX_BARRIER,
+    DUR_BLINKITIS,
+    DUR_VAINGLORY,
+    DUR_VEXED,
+    DUR_TRICKSTER_GRACE,
+    DUR_CACOPHONY,
+    DUR_DROWSY,
+    DUR_ENKINDLED,
+    DUR_SHROUD_TIMEOUT,
+    DUR_DETONATION_CATALYST,
     NUM_DURATIONS
 };

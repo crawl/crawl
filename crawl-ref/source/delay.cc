@@ -161,8 +161,16 @@ bool MacroDelay::try_interrupt(bool /*force*/)
 const char* EquipOnDelay::get_verb()
 {
     if (is_weapon(equip))
-        return "attuning to"; // coglin
-    return "putting on";
+    {
+        if (you.has_mutation(MUT_SLOW_WIELD))
+            return "attuning to";
+        else
+            return "wielding";
+    }
+    else if (you.has_mutation(MUT_FORMLESS))
+        return "haunting";
+    else
+        return "putting on";
 }
 
 bool EquipOnDelay::try_interrupt(bool force)
@@ -193,8 +201,16 @@ bool EquipOnDelay::try_interrupt(bool force)
 const char* EquipOffDelay::get_verb()
 {
     if (is_weapon(equip))
-        return "parting from";
-    return "removing";
+    {
+        if (you.has_mutation(MUT_SLOW_WIELD))
+            return "parting from";
+        else
+            return "unwielding";
+    }
+    else if (you.has_mutation(MUT_FORMLESS))
+        return "removing yourself from";
+    else
+        return "removing";
 }
 
 bool EquipOffDelay::try_interrupt(bool force)
@@ -207,7 +223,7 @@ bool EquipOffDelay::try_interrupt(bool force)
     {
         const bool is_armour = equip.base_type == OBJ_ARMOUR
                                // Shields and orbs aren't clothes.
-                               && get_armour_slot(equip) != EQ_OFFHAND;
+                               && get_armour_slot(equip) != SLOT_OFFHAND;
         const char* verb = is_armour ? "disrobing" : "removing your equipment";
         const string prompt = make_stringf("Keep %s?", verb);
         // yesno might call this function again, don't double prompt
@@ -230,12 +246,14 @@ bool EquipOffDelay::try_interrupt(bool force)
 bool AscendingStairsDelay::try_interrupt(bool /*force*/)
 {
     mpr("You stop ascending the stairs.");
+    untag_followers();
     return true;  // short... and probably what people want
 }
 
 bool DescendingStairsDelay::try_interrupt(bool /*force*/)
 {
     mpr("You stop descending the stairs.");
+    untag_followers();
     return true;  // short... and probably what people want
 }
 
@@ -254,56 +272,6 @@ bool ShaftSelfDelay::try_interrupt(bool /*force*/)
 {
     mpr("You stop digging.");
     return true;
-}
-
-bool ExsanguinateDelay::try_interrupt(bool force)
-{
-    bool interrupt = false;
-
-    if (force)
-        interrupt = true;
-    else if (duration > 1 && !was_prompted)
-    {
-        // yesno might call this function again, don't double prompt
-        was_prompted = true;
-        if (!crawl_state.disables[DIS_CONFIRMATIONS]
-            && !yesno("Keep bloodletting?", false, 0, false))
-        {
-            interrupt = true;
-        }
-    }
-
-    if (interrupt)
-    {
-        mpr("You stop emptying yourself of blood.");
-        return true;
-    }
-    return false;
-}
-
-bool RevivifyDelay::try_interrupt(bool force)
-{
-    bool interrupt = false;
-
-    if (force)
-        interrupt = true;
-    else if (duration > 1 && !was_prompted)
-    {
-        // yesno might call this function again, don't double prompt
-        was_prompted = true;
-        if (!crawl_state.disables[DIS_CONFIRMATIONS]
-            && !yesno("Continue your ritual?", false, 0, false))
-        {
-            interrupt = true;
-        }
-    }
-
-    if (interrupt)
-    {
-        mpr("You stop revivifying.");
-        return true;
-    }
-    return false;
 }
 
 bool TransformDelay::try_interrupt(bool force)
@@ -352,6 +320,12 @@ bool ImbueDelay::try_interrupt(bool force)
         return true;
     }
     return false;
+}
+
+bool ImprintDelay::try_interrupt(bool /*force*/)
+{
+    mpr("Your concentration is interrupted.");
+    return true;
 }
 
 void stop_delay(bool stop_relocations, bool force)
@@ -435,8 +409,11 @@ static command_type _get_running_command()
         you.running.rest();
 
 #ifdef USE_TILE
-        if (Options.rest_delay >= 0 && tiles.need_redraw())
+        if (Options.rest_delay >= 0
+            && tiles.need_redraw(Options.tile_runrest_rate))
+        {
             tiles.redraw();
+        }
 #endif
 
         if (!is_resting() && you.running.hp == you.hp
@@ -451,7 +428,14 @@ static command_type _get_running_command()
         return CMD_WAIT;
     }
     else if (you.running.is_explore() && Options.explore_delay > -1)
-        delay(Options.explore_delay);
+    {
+#ifdef USE_TILE
+        if (tiles.need_redraw(Options.tile_runrest_rate))
+            tiles.redraw();
+#endif
+        if (Options.explore_delay > 0)
+            delay(Options.explore_delay);
+    }
     else if (Options.travel_delay > 0)
         delay(Options.travel_delay);
 
@@ -499,21 +483,17 @@ void ShaftSelfDelay::start()
     mprf(MSGCH_MULTITURN_ACTION, "You begin to dig a shaft.");
 }
 
-void ExsanguinateDelay::start()
-{
-    mprf(MSGCH_MULTITURN_ACTION, "You begin bloodletting.");
-}
-
-void RevivifyDelay::start()
-{
-    mprf(MSGCH_MULTITURN_ACTION, "You begin the revivification ritual.");
-}
-
 void ImbueDelay::start()
 {
     mprf(MSGCH_MULTITURN_ACTION, "You begin to imbue your servitor with "
          "knowledge of %s.",
          spell_title(spell));
+}
+
+void ImprintDelay::start()
+{
+    mprf(MSGCH_MULTITURN_ACTION, "You begin to imprint %s upon your paragon.",
+         wpn.name(DESC_THE).c_str());
 }
 
 void TransformDelay::start()
@@ -672,14 +652,6 @@ void MultidropDelay::tick()
     items.erase(items.begin());
 }
 
-void JewelleryOnDelay::tick()
-{
-    // This is a 1-turn delay where the time cost is handled
-    // in finish().
-    // FIXME: get rid of this hack!
-    you.time_taken = 0;
-}
-
 void DropItemDelay::tick()
 {
     // This is a 1-turn delay where the time cost is handled
@@ -743,33 +715,6 @@ void handle_delay()
     delay->handle();
 }
 
-void JewelleryOnDelay::finish()
-{
-    // Recheck -Tele here, since our condition may have changed since starting
-    // the amulet swap process.
-    // Just breaking here is okay because swapping jewellery is a one-turn
-    // action, so conceptually there is nothing to interrupt - in other words,
-    // this is equivalent to if the user took off the previous amulet and was
-    // affected by tele other before putting the -Tele amulet on as a separate
-    // action on the next turn.
-    // XXX: duplicates a check in invent.cc:check_warning_inscriptions()
-    if (!crawl_state.disables[DIS_CONFIRMATIONS]
-        && needs_notele_warning(jewellery, OPER_PUTON)
-        && item_ident(jewellery, ISFLAG_KNOW_TYPE))
-    {
-        string prompt = "Really put on ";
-        prompt += jewellery.name(DESC_INVENTORY);
-        prompt += " while about to teleport?";
-        if (!yesno(prompt.c_str(), false, 'n'))
-            return;
-    }
-
-#ifdef USE_SOUND
-    parse_sound(WEAR_JEWELLERY_SOUND);
-#endif
-    puton_ring(jewellery, false, false, true);
-}
-
 bool EquipOnDelay::invalidated()
 {
     return !equip.defined();
@@ -777,30 +722,12 @@ bool EquipOnDelay::invalidated()
 
 void EquipOnDelay::finish()
 {
-    const unsigned int old_talents = your_talents(false).size();
-    const bool is_amulet = equip.base_type == OBJ_JEWELLERY;
-    const equipment_type eq_slot = is_amulet ?      EQ_AMULET :
-                                   primary_weapon ? EQ_WEAPON :
-                                                    get_armour_slot(equip);
-
-#ifdef USE_SOUND
-    if (is_weapon(equip))
-        parse_sound(WIELD_WEAPON_SOUND);
-    else if (!is_amulet)
-        parse_sound(EQUIP_ARMOUR_SOUND);
-#endif
     mprf("You finish %s %s.", get_verb(), equip.name(DESC_YOUR).c_str());
 
-    equip_item(eq_slot, equip.link);
-
-    check_item_hint(equip, old_talents);
-
-    if (is_weapon(equip))
-    {
+    if (is_weapon(equip) && you.has_mutation(MUT_SLOW_WIELD))
         maybe_name_weapon(equip);
-        you.wield_change  = true;
-        quiver::on_weapon_changed();
-    }
+
+    equip_item(slot, equip.link);
 }
 
 bool EquipOffDelay::invalidated()
@@ -810,30 +737,8 @@ bool EquipOffDelay::invalidated()
 
 void EquipOffDelay::finish()
 {
-    const bool is_amu = equip.base_type == OBJ_JEWELLERY;
-    const equipment_type slot = is_amu ?         EQ_AMULET :
-                                primary_weapon ? EQ_WEAPON :
-                                                 get_armour_slot(equip);
-    ASSERTM(you.equip[slot] == equip.link,
-        "Mismatched link in EquipOffDelay::finish: slot is %d with link %d, link is %d",
-        slot, you.equip[slot], equip.link);
-
-#ifdef USE_SOUND
-    parse_sound(is_amu ?           REMOVE_JEWELLERY_SOUND :
-                is_weapon(equip) ? WIELD_NOTHING_SOUND :
-                                   DEQUIP_ARMOUR_SOUND);
-#endif
-    if (is_weapon(equip))
-        say_farewell_to_weapon(equip);
-
     mprf("You finish %s %s.", get_verb(), equip.name(DESC_YOUR).c_str());
-    unequip_item(slot);
-
-    if (is_weapon(equip))
-    {
-        you.wield_change  = true;
-        quiver::on_weapon_changed();
-    }
+    unequip_item(equip);
 }
 
 void MemoriseDelay::finish()
@@ -955,29 +860,17 @@ void DescendingStairsDelay::finish()
     down_stairs();
 }
 
-void ExsanguinateDelay::finish()
-{
-    blood_spray(you.pos(), MONS_PLAYER, 10);
-    you.vampire_alive = false;
-    you.redraw_status_lights = true;
-    calc_hp(true);
-    mpr("You become bloodless.");
-    vampire_update_transformations();
-}
-
-void RevivifyDelay::finish()
-{
-    you.vampire_alive = true;
-    you.redraw_status_lights = true;
-    mpr("You return to life.");
-    temp_mutate(MUT_FRAIL, "vampire revification");
-    vampire_update_transformations();
-}
-
 void ImbueDelay::finish()
 {
     mpr("You finish imbuing your servitor.");
     you.props[SERVITOR_SPELL_KEY] = spell;
+}
+
+void ImprintDelay::finish()
+{
+    mprf("You finish imprinting the physical structure of %s upon your paragon.",
+            wpn.name(DESC_THE).c_str());
+    you.props[PARAGON_WEAPON_KEY].get_item() = wpn;
 }
 
 bool TransformDelay::invalidated()
@@ -990,8 +883,8 @@ void TransformDelay::finish()
 {
     if (form == transformation::none)
     {
-        untransform();
         unset_default_form();
+        untransform(false, false);
         return;
     }
 
@@ -1305,8 +1198,7 @@ static inline bool _monster_warning(activity_interrupt ai,
             if (player_under_penance(GOD_GOZAG)
                 && !mon->wont_attack()
                 && !mon->is_stationary()
-                && !mons_is_object(mon->type)
-                && !mons_is_tentacle_or_tentacle_segment(mon->type))
+                && !mon->is_peripheral())
             {
                 if (coinflip()
                     && mon->get_experience_level() >=

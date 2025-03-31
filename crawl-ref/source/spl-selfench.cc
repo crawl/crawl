@@ -187,11 +187,11 @@ void do_fugue_wail(const coord_def pos)
     vector <monster*> affected;
     for (adjacent_iterator ai(pos); ai; ++ai)
     {
-        if (monster_at(*ai) && !mons_is_firewood(*monster_at(*ai))
-            && !monster_at(*ai)->wont_attack()
-            && monster_at(*ai)->res_negative_energy() < 3)
+        monster* mon = monster_at(*ai);
+        if (mon && !mon->is_firewood() && !mon->wont_attack()
+            && mon->res_negative_energy() < 3)
         {
-            affected.push_back(monster_at(*ai));
+            affected.push_back(mon);
         }
     }
 
@@ -305,6 +305,18 @@ spret cast_confusing_touch(int power, bool fail)
                          you.duration[DUR_CONFUSING_TOUCH]),
                      20, nullptr);
     you.props[CONFUSING_TOUCH_KEY] = power;
+
+    return spret::success;
+}
+
+spret cast_detonation_catalyst(bool fail)
+{
+    fail_check();
+
+    mpr("You ready an explosive catalyst.");
+
+    // base duration is very low to minimize precasting
+    you.set_duration(DUR_DETONATION_CATALYST, random_range(3,5));
 
     return spret::success;
 }

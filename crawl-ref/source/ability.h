@@ -25,7 +25,7 @@ enum class abflag
     none                = 0x00000000,
     breath              = 0x00000001, // ability uses DUR_BREATH_WEAPON
     delay               = 0x00000002, // ability has its own delay
-    pain                = 0x00000004, // ability must hurt player (ie torment)
+    torment             = 0x00000004, // torments the player
     quiet_fail          = 0x00000008, // no message on failure
     exhaustion          = 0x00000010, // fails if you.exhausted
     instant             = 0x00000020, // doesn't take time to use
@@ -35,7 +35,7 @@ enum class abflag
     max_hp_drain        = 0x00000200, // drains max hit points
     gold                = 0x00000400, // costs gold
     sacrifice           = 0x00000800, // sacrifice (Ru)
-    hostile             = 0x00001000, // failure summons a hostile (Makhleb)
+    injury              = 0x00001000, // costs a large proportion of player HP
     berserk_ok          = 0x00002000, // can use even if berserk
     card                = 0x00004000, // deck drawing (Nemelex)
     torchlight          = 0x00008000, // costs torchlight (Yred)
@@ -55,6 +55,7 @@ vector<ability_type> get_defined_abilities();
 skill_type invo_skill(god_type god = you.religion);
 int get_gold_cost(ability_type ability);
 string nemelex_card_text(ability_type ability);
+mutation_type makhleb_ability_to_mutation(ability_type abil);
 const string make_cost_description(ability_type ability);
 unsigned int ability_mp_cost(ability_type abil);
 int ability_range(ability_type abil);

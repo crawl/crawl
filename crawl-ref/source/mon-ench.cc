@@ -39,6 +39,7 @@
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mon-tentacle.h"
+#include "player.h"
 #include "religion.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
@@ -222,13 +223,20 @@ bool monster::add_ench(const mon_enchant &ench)
 
 void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
 {
+    if ((ench.who == KC_YOU || ench.who == KC_FRIENDLY) && you.has_mutation(MUT_TRICKSTER))
+        trickster_trigger(*this, ench.ench);
+
     // Check for slow/haste.
     switch (ench.ench)
     {
     case ENCH_BERSERK:
-        // Inflate hp.
         scale_hp(3, 2);
-        // deliberate fall-through
+        calc_speed();
+        break;
+
+    case ENCH_DOUBLED_HEALTH:
+        scale_hp(2, 1);
+        break;
 
     case ENCH_FRENZIED:
         calc_speed();
@@ -298,7 +306,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
             {
                 mprf("You %sdetect the %s %s.",
                      friendly() ? "" : "can no longer ",
-                     ench.ench == ENCH_HEXED ? "hexed" :
+                     ench.ench == ENCH_HEXED ? "dominated" :
                      ench.ench == ENCH_CHARM ? "charmed"
                                              : "bribed",
                      name(DESC_PLAIN, true).c_str());
@@ -412,6 +420,12 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         calc_speed();
         break;
 
+    case ENCH_DOUBLED_HEALTH:
+        scale_hp(1, 2);
+        if (!quiet)
+            simple_monster_message(*this, " excess health fades away.", true);
+        break;
+
     case ENCH_HASTE:
         calc_speed();
         if (!quiet)
@@ -450,6 +464,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         if (!quiet)
             simple_monster_message(*this, " is no longer moving slowly.");
         calc_speed();
+        break;
+
+    case ENCH_VEXED:
+        if (!quiet)
+            simple_monster_message(*this, " is no longer overcome with frustration.");
         break;
 
     case ENCH_PARALYSIS:
@@ -532,16 +551,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         {
             if (!quiet)
             {
-                if (me.ench == ENCH_CHARM && props.exists(CHARMED_DEMON_KEY))
-                {
-                    mprf("%s breaks free of your control!",
-                         name(DESC_THE, true).c_str());
-                }
-                else
-                    mprf("%s is no longer %s.", name(DESC_THE, true).c_str(),
-                         me.ench == ENCH_CHARM   ? "charmed"
-                         : me.ench == ENCH_HEXED ? "hexed"
-                                                 : "bribed");
+                mprf("%s is no longer %s.", name(DESC_THE, true).c_str(),
+                        me.ench == ENCH_CHARM   ? "charmed"
+                        : me.ench == ENCH_HEXED ? "dominated"
+                                                : "bribed");
 
                 mprf("You can %s detect %s.",
                      friendly() ? "once again" : "no longer",
@@ -558,18 +571,12 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         {
             if (!quiet)
             {
-                if (me.ench == ENCH_CHARM && props.exists(CHARMED_DEMON_KEY))
-                {
-                    simple_monster_message(*this,
-                                           " breaks free of your control!");
-                }
-                else
-                    simple_monster_message(*this,
-                                        me.ench == ENCH_CHARM
-                                        ? " is no longer charmed."
-                                        : me.ench == ENCH_HEXED
-                                        ? " is no longer hexed."
-                                        : " is no longer bribed.");
+                simple_monster_message(*this,
+                                    me.ench == ENCH_CHARM
+                                    ? " is no longer charmed."
+                                    : me.ench == ENCH_HEXED
+                                    ? " is no longer hexed."
+                                    : " is no longer bribed.");
             }
 
         }
@@ -588,13 +595,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             patrol_point.reset();
         }
         mons_att_changed(this);
-
-        // If a greater demon is breaking free, give the player time to respond
-        if (me.ench == ENCH_CHARM && props.exists(CHARMED_DEMON_KEY))
-        {
-            speed_increment -= speed;
-            props.erase(CHARMED_DEMON_KEY);
-        }
 
         // Reevaluate behaviour.
         behaviour_event(this, ME_EVAL);
@@ -643,29 +643,17 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         monster_web_cleanup(*this, true);
         break;
     }
-    case ENCH_FAKE_ABJURATION:
-        if (type == MONS_BATTLESPHERE)
-            return end_battlesphere(this, false);
-    case ENCH_ABJ:
+
+    case ENCH_SUMMON_TIMER:
         if (type == MONS_SPECTRAL_WEAPON)
             return end_spectral_weapon(this, false);
-        // Set duration to -1 so that monster_die() and any of its
-        // callees can tell that the monster ran out of time or was
-        // abjured.
-        add_ench(mon_enchant(
-            (me.ench != ENCH_FAKE_ABJURATION) ?
-                ENCH_ABJ : ENCH_FAKE_ABJURATION, 0, 0, -1));
+        else if (type == MONS_BATTLESPHERE)
+            return end_battlesphere(this, false);
 
         if (berserk())
             simple_monster_message(*this, " is no longer berserk.");
 
-        monster_die(*this, (me.ench == ENCH_FAKE_ABJURATION) ? KILL_MISC :
-                            (quiet) ? KILL_DISMISSED : KILL_RESET, NON_MONSTER);
-        break;
-    case ENCH_SHORT_LIVED:
-        // Conjured ball lightnings explode when they time out.
-        suicide();
-        monster_die(*this, KILL_TIMEOUT, NON_MONSTER);
+        monster_die(*this, quiet ? KILL_RESET : KILL_TIMEOUT, NON_MONSTER);
         break;
 
     case ENCH_SOUL_RIPE:
@@ -698,7 +686,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_INNER_FLAME:
         if (!quiet && alive())
-            simple_monster_message(*this, "'s inner flame fades away.");
+            simple_monster_message(*this, " inner flame fades away.", true);
         break;
 
     //The following should never happen, but just in case...
@@ -757,21 +745,18 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_HAUNTING:
-    {
-        mon_enchant abj = get_ench(ENCH_ABJ);
-        abj.degree = 1;
-        abj.duration = min(5 + random2(30), abj.duration);
-        update_ench(abj);
+        if (type != MONS_SOUL_WISP && type != MONS_CLOCKWORK_BEE)
+        {
+            mon_enchant timer = get_ench(ENCH_SUMMON_TIMER);
+            timer.degree = 1;
+            timer.duration = min(5 + random2(30), timer.duration);
+            update_ench(timer);
+        }
         break;
-    }
 
     case ENCH_WEAK:
         if (!quiet)
             simple_monster_message(*this, " is no longer weakened.");
-        break;
-
-    case ENCH_AWAKEN_VINES:
-        unawaken_vines(this, quiet);
         break;
 
     case ENCH_TOXIC_RADIANCE:
@@ -804,13 +789,8 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         calc_speed();
         break;
 
-    case ENCH_BLACK_MARK:
-        if (!quiet)
-        {
-            simple_monster_message(*this, " is no longer absorbing vital"
-                                         " energies.");
-        }
-        calc_speed();
+    case ENCH_SIGN_OF_RUIN:
+        simple_monster_message(*this, " sign of ruin fades away.", true);
         break;
 
     case ENCH_SAP_MAGIC:
@@ -820,7 +800,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_CORROSION:
         if (!quiet)
-           simple_monster_message(*this, " is no longer covered in acid.");
+           simple_monster_message(*this, " is no longer corroded.");
         break;
 
     case ENCH_GOLD_LUST:
@@ -910,7 +890,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         if (props.exists(BINDING_SIGIL_DURATION_KEY))
         {
             if (!quiet)
-                simple_monster_message(*this, "'s lost momentum returns!");
+                simple_monster_message(*this, " lost momentum returns!", true);
             add_ench(mon_enchant(ENCH_SWIFT, 1, &you,
                                  props[BINDING_SIGIL_DURATION_KEY].get_int()));
             props.erase(BINDING_SIGIL_DURATION_KEY);
@@ -952,7 +932,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     break;
 
     case ENCH_CURSE_OF_AGONY:
-        simple_monster_message(*this, " is freed from its curse.");
+        if (you.can_see(*this) && !quiet)
+        {
+            mprf("%s is freed from %s curse.", name(DESC_THE).c_str(),
+                 pronoun(PRONOUN_POSSESSIVE).c_str());
+        }
         break;
 
     case ENCH_TOUCH_OF_BEOGH:
@@ -992,6 +976,38 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_CHANGED_APPEARANCE:
         props.erase(MONSTER_TILE_KEY);
+        break;
+
+    case ENCH_KINETIC_GRAPNEL:
+        if (you.can_see(*this) && !quiet)
+            mprf("The grapnel comes loose from %s.", name(DESC_THE).c_str());
+        break;
+
+    case ENCH_BLINKITIS:
+        if (!quiet)
+            simple_monster_message(*this, " looks more stable.");
+        break;
+
+    case ENCH_CHAOS_LACE:
+        if (!quiet)
+            simple_monster_message(*this, " is no longer laced with chaos.");
+        break;
+
+    case ENCH_DEEP_SLEEP:
+        if (behaviour == BEH_SLEEP)
+        {
+            if (!quiet)
+                simple_monster_message(*this, " wakes up again.");
+            behaviour_event(this, coinflip() ? ME_DISTURB : ME_ALERT, me.agent(), pos());
+        }
+        break;
+
+    case ENCH_PYRRHIC_RECOLLECTION:
+        if (!quiet)
+            simple_monster_message(*this, " memory burns away to nothing.", true);
+        spells.clear();
+        spells.push_back({SPELL_PYRRHIC_RECOLLECTION, 0, MON_SPELL_NATURAL});
+        spells.push_back({SPELL_BLINK_CLOSE, 15, MON_SPELL_WIZARD});
         break;
 
     default:
@@ -1154,7 +1170,7 @@ static bool _merfolk_avatar_movement_effect(const monster* mons)
     tracer.target          = mons->pos();
     tracer.source          = you.pos();
     tracer.range           = LOS_RADIUS;
-    tracer.is_tracer       = true;
+    tracer.set_is_tracer(true);
     tracer.aimed_at_spot   = true;
     tracer.fire();
 
@@ -1297,7 +1313,7 @@ static void _merfolk_avatar_song(monster* mons)
                 monster* soul = create_monster(
                     mgen_data(MONS_DROWNED_SOUL, SAME_ATTITUDE(mons),
                               deep_water[i], mons->foe, MG_FORCE_PLACE)
-                    .set_summoned(mons, 1, SPELL_NO_SPELL));
+                    .set_summoned(mons, SPELL_NO_SPELL, summ_dur(1)));
 
                 // Scale down drowned soul damage for low level merfolk avatars
                 if (soul)
@@ -1313,23 +1329,29 @@ void monster::apply_enchantment(const mon_enchant &me)
     switch (me.ench)
     {
     case ENCH_FRENZIED:
+    {
+        const actor* old_agent = me.agent();
         if (decay_enchantment(en))
         {
             simple_monster_message(*this, " is no longer in a wild frenzy.");
             const int duration = random_range(70, 130);
-            add_ench(mon_enchant(ENCH_FATIGUE, 0, 0, duration));
-            add_ench(mon_enchant(ENCH_SLOW, 0, 0, duration));
+            add_ench(mon_enchant(ENCH_FATIGUE, 0, old_agent, duration));
+            add_ench(mon_enchant(ENCH_SLOW, 0, old_agent, duration));
         }
+    }
         break;
 
     case ENCH_BERSERK:
+    {
+        const actor* old_agent = me.agent();
         if (decay_enchantment(en))
         {
             simple_monster_message(*this, " is no longer berserk.");
             const int duration = random_range(70, 130);
-            add_ench(mon_enchant(ENCH_FATIGUE, 0, 0, duration));
-            add_ench(mon_enchant(ENCH_SLOW, 0, 0, duration));
+            add_ench(mon_enchant(ENCH_FATIGUE, 0, old_agent, duration));
+            add_ench(mon_enchant(ENCH_SLOW, 0, old_agent, duration));
         }
+    }
         break;
 
     case ENCH_FATIGUE:
@@ -1351,18 +1373,17 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_SICK:
     case ENCH_CORONA:
     case ENCH_CONTAM:
-    case ENCH_ABJ:
+    case ENCH_SUMMON_TIMER:
     case ENCH_CHARM:
     case ENCH_SLEEP_WARY:
     case ENCH_LOWERED_WL:
     case ENCH_TIDE:
     case ENCH_REGENERATION:
+    case ENCH_DOUBLED_HEALTH:
     case ENCH_STRONG_WILLED:
     case ENCH_IDEALISED:
-    case ENCH_LIFE_TIMER:
     case ENCH_FLIGHT:
     case ENCH_DAZED:
-    case ENCH_FAKE_ABJURATION:
     case ENCH_RECITE_TIMER:
     case ENCH_INNER_FLAME:
     case ENCH_MUTE:
@@ -1372,7 +1393,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_WRETCHED:
     case ENCH_SCREAMED:
     case ENCH_WEAK:
-    case ENCH_AWAKEN_VINES:
     case ENCH_FIRE_VULN:
     case ENCH_BARBS:
     case ENCH_POISON_VULN:
@@ -1387,12 +1407,11 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_EMPOWERED_SPELLS:
     case ENCH_BOUND_SOUL:
     case ENCH_INFESTATION:
-    case ENCH_BLACK_MARK:
+    case ENCH_SIGN_OF_RUIN:
     case ENCH_STILL_WINDS:
     case ENCH_VILE_CLUTCH:
     case ENCH_GRASPING_ROOTS:
     case ENCH_WATERLOGGED:
-    case ENCH_NECROTISE:
     case ENCH_CONCENTRATE_VENOM:
     case ENCH_VITRIFIED:
     case ENCH_INSTANT_CLEAVE:
@@ -1402,12 +1421,19 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_REPEL_MISSILES:
     case ENCH_MISDIRECTED:
     case ENCH_CHANGED_APPEARANCE:
+    case ENCH_KINETIC_GRAPNEL:
+    case ENCH_TEMPERED:
+    case ENCH_CHAOS_LACE:
+    case ENCH_VEXED:
+    case ENCH_DEEP_SLEEP:
+    case ENCH_DROWSY:
+    case ENCH_PYRRHIC_RECOLLECTION:
         decay_enchantment(en);
         break;
 
     case ENCH_ANTIMAGIC:
         if (decay_enchantment(en))
-            simple_monster_message(*this, "'s magic is no longer disrupted.");
+            simple_monster_message(*this, " magic is no longer disrupted.", true);
         break;
 
     case ENCH_ROLLING:
@@ -1421,7 +1447,7 @@ void monster::apply_enchantment(const mon_enchant &me)
 
     case ENCH_MIRROR_DAMAGE:
         if (decay_enchantment(en))
-            simple_monster_message(*this, "'s dark mirror aura disappears.");
+            simple_monster_message(*this, " dark mirror aura disappears.", true);
         break;
 
     case ENCH_SILENCE:
@@ -1437,7 +1463,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_AQUATIC_LAND:
         // Aquatic monsters lose hit points every turn they spend on dry land.
         ASSERT(mons_habitat(*this) == HT_WATER || mons_habitat(*this) == HT_LAVA);
-        if (monster_habitable_grid(this, env.grid(pos())))
+        if (monster_habitable_grid(this, pos()))
         {
             del_ench(ENCH_AQUATIC_LAND);
             break;
@@ -1515,52 +1541,10 @@ void monster::apply_enchantment(const mon_enchant &me)
         break;
     }
 
-    case ENCH_SHORT_LIVED:
-        // This should only be used for ball lightning -- bwr
-        if (decay_enchantment(en))
-            suicide();
-        break;
-
     case ENCH_SLOWLY_DYING:
         // If you are no longer dying, you must be dead.
         if (decay_enchantment(en))
-        {
-            if (you.can_see(*this))
-            {
-
-                switch (type)
-                {
-                    case MONS_ELECTROFERRIC_VORTEX:
-                        mprf("%s dissipates.", name(DESC_THE, false).c_str());
-                        break;
-                    case MONS_PILE_OF_DEBRIS:
-                        mprf("%s collapses into dust.", name(DESC_THE, false).c_str());
-                        break;
-                    case MONS_PILLAR_OF_SALT:
-                    case MONS_WITHERED_PLANT:
-                        mprf("%s crumbles away.", name(DESC_THE, false).c_str());
-                        break;
-                    case MONS_BLOCK_OF_ICE:
-                        mprf("%s melts away.", name(DESC_THE, false).c_str());
-                        break;
-                    default:
-                        if (props.exists(KIKU_WRETCH_KEY))
-                        {
-                            mprf("A nearby %s perishes wretchedly.",
-                                 name(DESC_PLAIN, false).c_str());
-                        }
-                        else
-                        {
-                            mprf("A nearby %s withers and dies.",
-                                 name(DESC_PLAIN, false).c_str());
-                        }
-                        break;
-
-                }
-            }
-
-            monster_die(*this, KILL_MISC, NON_MONSTER, true);
-        }
+            monster_die(*this, KILL_TIMEOUT, NON_MONSTER);
         break;
 
     case ENCH_EXPLODING:
@@ -1786,7 +1770,12 @@ void monster::apply_enchantment(const mon_enchant &me)
 
     case ENCH_HAUNTING:
         if (!me.agent() || !me.agent()->alive())
-            del_ench(ENCH_HAUNTING);
+        {
+            if (type != MONS_CLOCKWORK_BEE)
+                del_ench(ENCH_HAUNTING);
+            else
+                clockwork_bee_pick_new_target(*this);
+        }
         break;
 
     case ENCH_TOXIC_RADIANCE:
@@ -1921,91 +1910,110 @@ void monster::apply_enchantment(const mon_enchant &me)
         decay_enchantment(en);
         break;
 
+    case ENCH_BLINKITIS:
+    {
+        actor* agent = me.agent();
+        if (agent)
+            blink_away(this, agent, false, false, 3);
+        else
+            blink();
+
+        hurt(agent, roll_dice(2, 2));
+        if (alive())
+            decay_enchantment(en);
+        break;
+    }
+
     default:
         break;
     }
 }
 
-void monster::mark_summoned(int longevity, bool mark_items, int summon_type, bool abj)
+void monster::mark_summoned(int summon_type, int longevity, bool mark_items,
+                            bool make_abjurable)
 {
-    if (abj)
-        add_ench(mon_enchant(ENCH_ABJ, longevity));
-    if (summon_type != 0)
+    if (longevity > 0)
+        add_ench(mon_enchant(ENCH_SUMMON_TIMER, 1, 0, longevity));
+
+    // Fully replace any existing summon source, if we're giving a new one.
+    if (has_ench(ENCH_SUMMON) && summon_type != 0)
+        del_ench(ENCH_SUMMON);
+
+    if (!has_ench(ENCH_SUMMON))
         add_ench(mon_enchant(ENCH_SUMMON, summon_type, 0, INT_MAX));
 
     if (mark_items)
         for (mon_inv_iterator ii(*this); ii; ++ii)
             ii->flags |= ISFLAG_SUMMONED;
+
+    if (make_abjurable)
+        flags |= MF_ACTUAL_SUMMON;
 }
 
-/* Is the monster temporarily summoned?
+/* Is the monster created by a spell or effect (generally temporary)?
  *
- * Monsters must have ENCH_ABJ (giving how long they last) to be considered
- * summons. If they additionally set ENCH_SUMMON, which gives how they were
- * derived, this must not be from certain spells or "monster summoning types"
- * we don't consider actual summons. Temporary monsters with
- * ENCH_FAKE_ABJURATION also aren't summons, and durably summoned monsters
- * aren't temporary.
+ * Monsters with ENCH_SUMMON are considered summoned for this purpose, whether
+ * or not they are 'actual' abjurable summons or non-abjurable magical creations
+ * like battlespheres or hoarfrost cannons.
  *
- * @param[out] duration    The monster's summon duration in aut.
- * @param[out] summon_type The monster's means of summoning. If negative, this
- *                         is a mon_summon_type, otherwise it's a spell_type.
- * @returns True if the monster is a temporary summon, false otherwise.
+ * This function is used to determine eligability for many effects (such as
+ * vampiric draining), whether a monster should be able to take stairs, and also
+ * to prevent it giving the player XP upon death.
+ *
+ * Note: We can't just look at whether they have a timer, since they won't have
+ *       one during KILL_TIMEOUT
+ *
+ * @returns True if the monster is a (temporary) summon/creation, false otherwise.
  */
-bool monster::is_summoned(int* duration, int* summon_type) const
+bool monster::is_summoned() const
 {
-    // Not everything with a 'summon source' counts as a temporary summon, but
-    // we should at least return their source if one exists
-    const mon_enchant summ = get_ench(ENCH_SUMMON);
-    if (summ.ench == ENCH_NONE)
-    {
-        if (summon_type != nullptr)
-            *summon_type = 0;
-    }
-    else if (summon_type != nullptr)
-        *summon_type = summ.degree;
+    return has_ench(ENCH_SUMMON) && !is_unrewarding();
+}
 
-    const mon_enchant abj = get_ench(ENCH_ABJ);
-    if (abj.ench == ENCH_NONE)
-    {
-        if (duration != nullptr)
-            *duration = -1;
-
-        return false;
-    }
-    if (duration != nullptr)
-        *duration = abj.duration;
-
-    // Conjured things (fire vortices, ball lightning, IOOD) are not summoned.
-    if (mons_is_conjured(type))
+bool monster::was_created_by(int summon_type) const
+{
+    if (!has_ench(ENCH_SUMMON))
         return false;
 
-    // No summon type specified, but we otherwise seem to be temporary.
-    if (summ.ench == ENCH_NONE)
+    mon_enchant summ = get_ench(ENCH_SUMMON);
+    return summ.degree == summon_type;
+}
+
+bool monster::was_created_by(const actor& _summoner, int summon_type) const
+{
+    if (!has_ench(ENCH_SUMMON))
+        return false;
+
+    if (summoner != _summoner.mid)
+        return false;
+
+    // If we didn't specify a specific summon type to check for, any summon
+    // type will do.
+    if (summon_type == SPELL_NO_SPELL)
         return true;
 
-    // Certain spells or monster summon types that set abjuration but aren't
-    // considered summons.
-    switch (summ.degree)
-    {
-    // Temporarily dancing weapons are really there.
-    case SPELL_TUKIMAS_DANCE:
-
-    // Clones aren't really summoned (though their equipment might be).
-    case MON_SUMM_CLONE:
-
-    // Nor are body parts.
-    case SPELL_CREATE_TENTACLES:
-
-    // Some object which was animated, and thus not really summoned.
-    case MON_SUMM_ANIMATE:
-        return false;
-    }
-
-    return true;
+    // Otherwise check that the creating spell/effect matches the query.
+    mon_enchant summ = get_ench(ENCH_SUMMON);
+    return summ.degree == summon_type;
 }
 
-bool monster::is_perm_summoned() const
+// Returns whether the monster is a 'proper' summon, vulnerable to abjuration,
+// and whose corpse will vanish (possibly in a puff of smoke) upon them dying
+// for any reason.
+bool monster::is_abjurable() const
+{
+    return is_summoned() && testbits(flags, MF_ACTUAL_SUMMON);
+}
+
+// Returns whether the monster will be explicitly marked by the UI as
+// Unrewarding, regardless of its normal properties. This is used for monsters
+// created by god wrath, spawns from The Royal Jelly, and some other situations
+// where we want a monster that is otherwise normal, but provides the player
+// with no reward.
+//
+// Note: This returns false for monsters which provide no XP for other reasons,
+//       such as being firewood or summoned.
+bool monster::is_unrewarding() const
 {
     return testbits(flags, MF_HARD_RESET | MF_NO_REWARD);
 }
@@ -2046,13 +2054,13 @@ static const char *enchant_names[] =
 #if TAG_MAJOR_VERSION == 34
     "rot",
 #endif
-    "summon", "abj", "corona",
+    "summon", "summon_timer", "corona",
     "charm", "sticky_flame", "glowing_shapeshifter", "shapeshifter", "tp",
     "sleep_wary",
 #if TAG_MAJOR_VERSION == 34
-    "submerged",
+    "submerged", "short_lived",
 #endif
-    "short_lived", "paralysis", "sick",
+    "paralysis", "sick",
 #if TAG_MAJOR_VERSION == 34
     "sleepy",
 #endif
@@ -2086,9 +2094,12 @@ static const char *enchant_names[] =
 #endif
     "temporarily pacified",
 #if TAG_MAJOR_VERSION == 34
-    "withdrawn", "attached",
+    "withdrawn", "attached", "guardian_timer",
 #endif
-    "guardian_timer", "flight", "liquefying", "polar_vortex", "fake_abjuration",
+    "flight", "liquefying", "polar_vortex",
+#if TAG_MAJOR_VERSION == 34
+    "fake_abjuration",
+#endif
     "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
     "inner_flame",
 #if TAG_MAJOR_VERSION == 34
@@ -2107,11 +2118,10 @@ static const char *enchant_names[] =
 #if TAG_MAJOR_VERSION == 34
     "retching",
 #endif
-    "weak", "dimension_anchor", "awaken vines",
+    "weak", "dimension_anchor",
 #if TAG_MAJOR_VERSION == 34
-    "control_winds", "wind_aided",
+     "awaken vines", "control_winds", "wind_aided", "summon_capped",
 #endif
-    "summon_capped",
     "toxic_radiance",
 #if TAG_MAJOR_VERSION == 34
     "grasping_roots_source",
@@ -2140,7 +2150,7 @@ static const char *enchant_names[] =
     "shroud",
 #endif
     "phantom_mirror", "bribed", "permabribed",
-    "corrosion", "gold_lust", "drained", "repel missiles",
+    "corrosion", "gold_lust", "drained", "repel_missiles",
 #if TAG_MAJOR_VERSION == 34
     "deflect missiles",
     "negative_vuln", "condensation_shield",
@@ -2161,9 +2171,9 @@ static const char *enchant_names[] =
     "ring_acid", "ring_miasma", "concentrate_venom", "fire_champion",
     "anguished",
 #if TAG_MAJOR_VERSION == 34
-    "simulacra",
+    "simulacra", "necrotising",
 #endif
-    "necrotizing", "glowing",
+     "glowing",
 #if TAG_MAJOR_VERSION == 34
     "pursuing",
 #endif
@@ -2174,7 +2184,10 @@ static const char *enchant_names[] =
     "rimeblight",
     "magnetised",
     "armed",
-    "misdirected", "changed appearance", "shadowless",
+    "misdirected", "changed appearance", "shadowless", "doubled_health",
+    "grapnel", "tempered", "hatching", "blinkitis", "chaos_laced", "vexed",
+    "deep sleep", "drowsy",
+    "vampire thrall", "pyrrhic recollection",
     "buggy", // NUM_ENCHANTMENTS
 };
 
@@ -2245,7 +2258,7 @@ void mon_enchant::cap_degree()
 
     // Hard cap to simulate old enum behaviour, we should really throw this
     // out entirely.
-    const int max = (ench == ENCH_ABJ || ench == ENCH_FAKE_ABJURATION) ?
+    const int max = (ench == ENCH_SUMMON_TIMER) ?
             MAX_ENCH_DEGREE_ABJURATION : MAX_ENCH_DEGREE_DEFAULT;
     if (degree > max)
         degree = max;
@@ -2276,7 +2289,7 @@ killer_type mon_enchant::killer() const
 {
     return who == KC_YOU      ? KILL_YOU :
            who == KC_FRIENDLY ? KILL_MON
-                              : KILL_MISC;
+                              : KILL_NON_ACTOR;
 }
 
 int mon_enchant::kill_agent() const
@@ -2314,7 +2327,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_WEAK:
     case ENCH_INVIS:
     case ENCH_AGILE:
-    case ENCH_BLACK_MARK:
+    case ENCH_SIGN_OF_RUIN:
     case ENCH_RESISTANCE:
     case ENCH_IDEALISED:
     case ENCH_BOUND_SOUL:
@@ -2367,9 +2380,6 @@ int mon_enchant::calc_duration(const monster* mons,
             cturn = 1000 * (deg - 1) / _mod_speed(200, mons->speed);
         cturn += 1000 / _mod_speed(100, mons->speed);
         break;
-    case ENCH_SHORT_LIVED:
-        cturn = 1200 / _mod_speed(200, mons->speed);
-        break;
     case ENCH_SLOWLY_DYING:
     {
         // This may be a little too direct but the randomization at the end
@@ -2393,8 +2403,7 @@ int mon_enchant::calc_duration(const monster* mons,
         cturn = 30 * 10 / _mod_speed(10, mons->speed);
         break;
 
-    case ENCH_FAKE_ABJURATION:
-    case ENCH_ABJ:
+    case ENCH_SUMMON_TIMER:
         // The duration is:
         // deg = 1     90 aut
         // deg = 2    180 aut
@@ -2419,12 +2428,10 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_SLEEP_WARY:
         cturn = 1000 / _mod_speed(50, mons->speed);
         break;
-    case ENCH_LIFE_TIMER:
-        cturn = 20 * (4 + random2(4)) / _mod_speed(10, mons->speed);
-        break;
     case ENCH_INNER_FLAME:
         return random_range(25, 35) * 10;
     case ENCH_BERSERK:
+    case ENCH_DOUBLED_HEALTH:
         return (16 + random2avg(13, 2)) * 10;
     case ENCH_ROLLING:
         return random_range(10 * BASELINE_DELAY, 15 * BASELINE_DELAY);
@@ -2440,8 +2447,6 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_EMPOWERED_SPELLS:
         cturn = 35 * 10 / _mod_speed(10, mons->speed);
         break;
-    case ENCH_NECROTISE:
-        return 10;
     case ENCH_RING_OF_THUNDER:
     case ENCH_RING_OF_FLAMES:
     case ENCH_RING_OF_CHAOS:
@@ -2484,4 +2489,19 @@ void mon_enchant::set_duration(const monster* mons, const mon_enchant *added)
 
     if (duration > maxduration)
         maxduration = duration;
+}
+
+// Converts a given summon duration category into a duration in aut (with random
+// fuzzing).
+int summ_dur(int degree)
+{
+    int aut = 0;
+
+    if (degree >= 6)
+        aut = 1000;
+    if (degree >= 5)
+        aut += 500;
+    aut += 100 * min(4, degree);
+
+    return fuzz_value(aut, 60, 40);
 }

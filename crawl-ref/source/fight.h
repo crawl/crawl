@@ -25,6 +25,7 @@ enum stab_type
     STAB_PARALYSED,
     STAB_SLEEPING,
     STAB_ALLY,
+    STAB_BLIND,
     NUM_STABS
 };
 
@@ -40,9 +41,7 @@ int melee_confuse_chance(int HD);
 
 bool wielded_weapon_check(const item_def *weapon, string attack_verb="");
 
-stab_type find_stab_type(const actor *attacker,
-                         const actor &defender,
-                         bool actual = true);
+stab_type find_player_stab_type(const monster &victim);
 
 int stab_bonus_denom(stab_type stab);
 
@@ -57,17 +56,19 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
                         bool force_cleaving = false,
                         const item_def *weapon = nullptr);
 // too many params... need to pass in a mini-struct or something
-void attack_multiple_targets(actor &attacker, list<actor*> &targets,
-                             int attack_number = 0,
-                             int effective_attack_number = 0,
-                             wu_jian_attack_type wu_jian_attack
-                               = WU_JIAN_ATTACK_NONE,
-                             bool is_projected = false,
-                             bool is_cleave = true,
-                             item_def *weapon = nullptr);
+int attack_multiple_targets(actor &attacker, list<actor*> &targets,
+                            int attack_number = 0,
+                            int effective_attack_number = 0,
+                            wu_jian_attack_type wu_jian_attack
+                              = WU_JIAN_ATTACK_NONE,
+                            bool is_projected = false,
+                            bool is_cleave = true,
+                            item_def *weapon = nullptr);
 
 class attack;
-int to_hit_pct(const monster_info& mi, attack &atk, bool melee);
+int to_hit_pct(const monster_info& mi, attack &atk,
+               bool melee, bool penetrating, int distance);
+int to_hit_pct_aux(const monster_info& mi, attack &atk);
 int mon_to_hit_base(int hd, bool skilled);
 int mon_to_hit_pct(int to_land, int scaled_ev);
 int mon_shield_bypass(int hd);
@@ -82,6 +83,18 @@ int mons_weapon_damage_rating(const item_def &launcher);
 bool player_unrand_bad_attempt(const item_def &weapon,
                                const actor *defender,
                                bool check_only);
+bool player_unrand_bad_attempt(const item_def *weapon,
+                               const item_def *offhand,
+                               const actor *defender,
+                               bool check_only);
+
+bool player_unrand_bad_target(const item_def &weapon,
+                              const actor &defender,
+                              bool check_only);
+bool player_unrand_bad_target(const item_def *weapon,
+                              const item_def *offhand,
+                              const actor &defender,
+                              bool check_only);
 
 bool bad_attack(const monster *mon, string& adj, string& suffix,
                 bool& would_cause_penance,
@@ -103,6 +116,13 @@ bool stop_summoning_prompt(resists_t resists = MR_NO_FLAGS,
                            monclass_flags_t flags = M_NO_FLAGS,
                            string verb = "summon");
 
+bool warn_about_bad_targets(spell_type spell, vector<coord_def> targets,
+                            function<bool(const monster& mon)> should_ignore = nullptr,
+                            const char* msg = "Cast it anyway?");
+bool warn_about_bad_targets(const char* source_name, vector<coord_def> targets,
+                            function<bool(const monster&)> should_ignore = nullptr,
+                            const char* msg = "Cast it anyway?");
+
 bool can_reach_attack_between(coord_def source, coord_def target,
                               reach_type range);
 dice_def spines_damage(monster_type mon);
@@ -114,7 +134,7 @@ bool weapon_uses_strength(skill_type wpn_skill, bool using_weapon);
 int stat_modify_damage(int base_dam, skill_type wpn_skill, bool using_weapon);
 int apply_weapon_skill(int base_dam, skill_type wpn_skill, bool random);
 int apply_fighting_skill(int base_dam, bool aux, bool random);
-int throwing_base_damage_bonus(const item_def &projectile);
+int throwing_base_damage_bonus(const item_def &projectile, bool random);
 int brand_adjust_weapon_damage(int base_dam, int brand, bool random);
 
 int unarmed_base_damage(bool random);

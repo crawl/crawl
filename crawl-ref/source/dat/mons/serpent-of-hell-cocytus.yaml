@@ -13,7 +13,7 @@ attacks:
  - {type: claw, damage: 15}
  - {type: trample, flavour: trample, damage: 15}
 hd: 17
-hp_10x: 2805
+hp_10x: 3230
 ac: 20
 ev: 12
 spells: serpent_of_hell_coc

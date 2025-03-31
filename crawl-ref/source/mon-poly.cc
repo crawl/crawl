@@ -7,9 +7,11 @@
 
 #include "mon-poly.h"
 
+#include "areas.h"
 #include "artefact.h"
 #include "art-enum.h"
 #include "attitude-change.h"
+#include "colour.h"
 #include "delay.h"
 #include "describe.h"
 #include "dgn-overview.h"
@@ -66,29 +68,52 @@ void monster_drop_things(monster* mons,
         if (item == NON_ITEM || !suitable(env.item[item]))
             continue;
 
+        mons->do_unequip_effects(env.item[item], false, true);
+
+        int old_halo = mons->halo_radius();
+        int old_umbra = mons->umbra_radius();
+
         if (testbits(env.item[item].flags, ISFLAG_SUMMONED))
         {
             item_was_destroyed(env.item[item]);
             destroy_item(item);
-            mons->inv[i] = NON_ITEM;
-            continue;
         }
-
-        if (mark_item_origins && env.item[item].defined())
-            origin_set_monster(env.item[item], mons);
-
-        env.item[item].props[DROPPER_MID_KEY].get_int() = mons->mid;
-
-        if (env.item[item].props.exists("autoinscribe"))
+        else
         {
-            add_inscription(env.item[item],
-                env.item[item].props["autoinscribe"].get_string());
-            env.item[item].props.erase("autoinscribe");
+            if (mark_item_origins && env.item[item].defined())
+                origin_set_monster(env.item[item], mons);
+
+            env.item[item].props[DROPPER_MID_KEY].get_int() = mons->mid;
+
+            if (env.item[item].props.exists("autoinscribe"))
+            {
+                add_inscription(env.item[item],
+                    env.item[item].props["autoinscribe"].get_string());
+                env.item[item].props.erase("autoinscribe");
+            }
+
+            // If a monster is swimming, the items are ALREADY underwater.
+            if (move_item_to_grid(&item, mons->pos(), mons->swimming())
+                && player_under_penance(GOD_GOZAG)
+                // Dropping items into water/lava may have destroyed them
+                && item != NON_ITEM
+                && env.item[item].base_type == OBJ_GOLD
+                && you.see_cell(mons->pos())
+                && x_chance_in_y(env.item[item].quantity, 100)
+                && you.can_be_dazzled())
+            {
+                string msg = make_stringf("%s dazzles you with the glint of coin.",
+                    god_name(GOD_GOZAG).c_str());
+                mprf(MSGCH_GOD, GOD_GOZAG, "%s", msg.c_str());
+                blind_player(10 + random2(8), ETC_GOLD);
+            }
+            mons->inv[i] = NON_ITEM;
         }
 
-        // If a monster is swimming, the items are ALREADY underwater.
-        move_item_to_grid(&item, mons->pos(), mons->swimming());
-        mons->inv[i] = NON_ITEM;
+        int new_halo = mons->halo_radius();
+        int new_umbra = mons->umbra_radius();
+        if (old_halo != new_halo || old_umbra != new_umbra)
+            invalidate_agrid(true);
     }
 }
 
@@ -160,7 +185,7 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
     }
 
     // Determine if the monster is happy on current tile.
-    return monster_habitable_grid(new_mclass, env.grid(mons->pos()));
+    return monster_habitable_grid(new_mclass, mons->pos());
 }
 
 static bool _jiyva_slime_target(monster_type targetc)
@@ -204,14 +229,14 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     // trj spills out jellies when polied, as if he'd been hit for mhp.
     if (mons->type == MONS_ROYAL_JELLY)
     {
-        simple_monster_message(*mons, "'s form twists and warps, and jellies "
-                               "spill out!");
+        simple_monster_message(*mons, " form twists and warps, and jellies "
+                               "spill out!", true);
         trj_spawn_fineff::schedule(nullptr, mons, mons->pos(),
                                    mons->hit_points);
     }
 
     // Inform listeners that the original monster is gone.
-    fire_monster_death_event(mons, KILL_MISC, true);
+    fire_monster_death_event(mons, KILL_NON_ACTOR, true);
 
     // the actual polymorphing:
     auto flags =
@@ -238,6 +263,12 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
              || mons->mname == "shaped Serpent of Hell")
     {
         name   = "shaped Serpent of Hell";
+        flags |= MF_NAME_SUFFIX;
+    }
+    else if (mons->type == MONS_ENCHANTRESS
+             || mons->mname == "shaped Enchantress")
+    {
+        name   = "shaped Enchantress";
         flags |= MF_NAME_SUFFIX;
     }
     else if (!mons->mname.empty())
@@ -282,18 +313,17 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     if (!mons->props.exists(ORIG_HD_KEY))
         mons->props[ORIG_HD_KEY] = mons->get_experience_level();
 
-    mon_enchant abj       = mons->get_ench(ENCH_ABJ);
-    mon_enchant fabj      = mons->get_ench(ENCH_FAKE_ABJURATION);
+    mon_enchant timer     = mons->get_ench(ENCH_SUMMON_TIMER);
     mon_enchant charm     = mons->get_ench(ENCH_CHARM);
     mon_enchant shifter   = mons->get_ench(ENCH_GLOWING_SHAPESHIFTER,
                                            ENCH_SHAPESHIFTER);
     mon_enchant summon    = mons->get_ench(ENCH_SUMMON);
     mon_enchant tp        = mons->get_ench(ENCH_TP);
-    mon_enchant vines     = mons->get_ench(ENCH_AWAKEN_VINES);
     mon_enchant forest    = mons->get_ench(ENCH_AWAKEN_FOREST);
     mon_enchant hexed     = mons->get_ench(ENCH_HEXED);
     mon_enchant insanity  = mons->get_ench(ENCH_FRENZIED);
     mon_enchant vengeance = mons->get_ench(ENCH_VENGEANCE_TARGET);
+    mon_enchant tempered  = mons->get_ench(ENCH_TEMPERED);
 
     mons->number       = 0;
 
@@ -325,17 +355,16 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     mons->god = (mons->is_priest() && old_god == GOD_NO_GOD) ? GOD_NAMELESS
                                                              : old_god;
 
-    mons->add_ench(abj);
-    mons->add_ench(fabj);
+    mons->add_ench(timer);
     mons->add_ench(charm);
     mons->add_ench(shifter);
     mons->add_ench(summon);
     mons->add_ench(tp);
-    mons->add_ench(vines);
     mons->add_ench(forest);
     mons->add_ench(hexed);
     mons->add_ench(insanity);
     mons->add_ench(vengeance);
+    mons->add_ench(tempered);
 
     mons->ench_countdown = old_ench_countdown;
 
@@ -573,7 +602,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     if (mons_demon_tier(mons->type) == -1)
     {
         return simple_monster_message(*mons,
-            "'s appearance momentarily alters.");
+            " appearance momentarily alters.", true);
     }
 
     targetc = _concretize_target(*mons, targetc, power);
@@ -694,7 +723,7 @@ void slimify_monster(monster* mon)
     const monster_type target = _slime_target(*mon);
 
     // Bail out if jellies can't live here.
-    if (!monster_habitable_grid(target, env.grid(mon->pos())))
+    if (!monster_habitable_grid(target, mon->pos()))
     {
         simple_monster_message(*mon, " quivers momentarily.");
         return;
@@ -754,7 +783,7 @@ void seen_monster(monster* mons)
         take_note(Note(NOTE_SEEN_MONSTER, mons->type, 0, name));
     }
 
-    if (player_equip_unrand(UNRAND_WYRMBANE))
+    if (you.unrand_equipped(UNRAND_WYRMBANE))
     {
         const item_def *wyrmbane = you.weapon();
         if (wyrmbane && mons->dragon_level() > wyrmbane->plus)

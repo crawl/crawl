@@ -1,0 +1,16 @@
+name: "spellspark servitor"
+glyph: {char: "9", colour: lightmagenta}
+flags: [flies, no_exp_gain, no_poly_to]
+resists: {elec: 1, fire: 2, cold: 2}
+genus: golem
+holiness: [nonliving]
+will: invuln
+attacks:
+hd: 8
+hp_10x: 800
+ac: 10
+ev: 10
+intelligence: brainless
+energy: {spell: 18}
+size: medium
+shape: humanoid

@@ -34,15 +34,15 @@ mutations:
   1:
     MUT_NIGHTSTALKER: 3
 recommended_jobs:
-  - JOB_BRIGAND
-  - JOB_BERSERKER
-  - JOB_HEXSLINGER
-  - JOB_ENCHANTER
-  - JOB_CONJURER
-  - JOB_EARTH_ELEMENTALIST
+  - brigand
+  - berserker
+  - hexslinger
+  - enchanter
+  - conjurer
+  - earth elementalist
 recommended_weapons:
-  - SK_SHORT_BLADES
-  - SK_MACES_FLAILS
-  - SK_STAVES
+  - short blades
+  - maces and flails
+  - staves
 
 orc_name: Orcobold

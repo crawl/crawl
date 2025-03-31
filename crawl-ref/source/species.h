@@ -4,7 +4,6 @@
 
 #include "enum.h"
 #include "ability-type.h"
-#include "equipment-type.h"
 #include "item-prop-enum.h"
 #include "job-type.h"
 #include "size-part-type.h"
@@ -45,8 +44,13 @@ namespace species
 
     int mutation_level(species_type species, mutation_type mut, int mut_level=1);
     const vector<string>& fake_mutations(species_type species, bool terse);
+
+    bool has_blood(species_type species);
     bool has_hair(species_type species);
     bool has_bones(species_type species);
+    bool has_feet(species_type species);
+    bool has_ears(species_type species);
+
     bool can_throw_large_rocks(species_type species);
     bool wears_barding(species_type species);
     bool has_claws(species_type species);
@@ -65,9 +69,6 @@ namespace species
     string arm_name(species_type species);
     string hand_name(species_type species);
     int arm_count(species_type species);
-    equipment_type sacrificial_arm(species_type species);
-    bool bans_eq(species_type species, equipment_type eq);
-    vector<equipment_type> ring_slots(species_type species, bool missing_hand);
 
     int get_exp_modifier(species_type species);
     int get_hp_modifier(species_type species);
