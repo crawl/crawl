@@ -458,6 +458,13 @@ static string _print_altars_for_gods(const vector<god_type>& gods,
     int num_printed = 0;
     char const *colour;
     const int columns = 4;
+    vector<string> good_god = {"elyvilon", "zin", "the shining one"};
+    vector<string> neut_god = {"ashenzari", "cheibriados", "dithmenos", "fedhas madash", "gozag ym sagoz",
+                            "hepliaklqana", "ignis", "okawaru", "qazlal", "ru", "sif muna", "trog", "uskayaw",
+                            "vehumet", "wu jian"};
+    vector<string> chaotic_god = {"jiyva", "nemelex xobeh", "xom"};
+    vector<string> evil_god = {"beogh", "kikubaaqudgha", "yredelemnul"};
+    vector<string> chaot_evil = { "lugonu", "makhleb"};
 
     for (const god_type god : gods)
     {
@@ -507,6 +514,23 @@ static string _print_altars_for_gods(const vector<god_type>& gods,
             colour = "darkgrey";
 
         string disp_name = uppercase_first(god_name(god, false));
+        
+        //Alignment symbol (BTT)
+        string god_lower = lowercase(disp_name);
+        string symbol = "";
+        if (find(good_god.begin(), good_god.end(), god_lower) != good_god.end())
+            symbol = "+";
+        else if (find(neut_god.begin(), neut_god.end(), god_lower) != neut_god.end())
+            symbol = "=";
+        else if (find(chaotic_god.begin(), chaotic_god.end(), god_lower) != chaotic_god.end())
+            symbol = "&";
+        else if (find(evil_god.begin(), evil_god.end(), god_lower) != evil_god.end())
+            symbol = "-";
+         else if (find(chaot_evil.begin(), chaot_evil.end(), god_lower) != chaot_evil.end())
+            symbol = "@";
+
+        disp_name += " " + symbol;
+        
         if (god == GOD_GOZAG && !you_worship(GOD_GOZAG))
             disp_name += make_stringf(" ($%d)", gozag_service_fee());
 
