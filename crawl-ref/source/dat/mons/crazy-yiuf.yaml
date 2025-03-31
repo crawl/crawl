@@ -1,5 +1,5 @@
 name: "Crazy Yiuf"
-glyph: {char: "g", colour: colour_undef}
+glyph: {char: "j", colour: colour_undef}
 flags: [speaks, warm_blood, unique, male]
 species: gnoll
 will: 10
