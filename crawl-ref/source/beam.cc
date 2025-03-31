@@ -1297,7 +1297,7 @@ void bolt::do_fire()
             // and we're actually between you and the target...
             && !passed_target && pos() != target && pos() != source
             // ?
-            && tracer->has_hit_foe() && bounces == 0 && reflections == 0
+            && !tracer->has_hit_foe() && bounces == 0 && reflections == 0
             // and you aren't shooting out of LOS.
             && you.see_cell(target))
         {
