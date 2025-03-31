@@ -995,7 +995,12 @@ public:
 
     int get_aux_damage(bool random, int skill) const override
     {
-        return divided_scaling(FormScaling().Base(12).Scaling(8), random, skill, 100);
+        return divided_scaling(FormScaling().Base(10).Scaling(8), random, skill, 100);
+    }
+
+    int get_base_ac_penalty(int base, int /*skill*/ = -1) const override
+    {
+        return base * 4 / 5;
     }
 };
 
@@ -2339,4 +2344,21 @@ monster* get_solar_ember()
         return nullptr;
 
     return monster_by_mid(you.props[SOLAR_EMBER_MID_KEY].get_int());
+}
+
+bool maw_growl_check(const monster* mon)
+{
+    // Only growl at things that look edible. (Alas, they still look edible for
+    // Gozag worshippers, even if you are doomed to suffer the curse of Midas.)
+    if (mons_class_can_leave_corpse(mons_species(mon->type))
+        && !mon->is_summoned()
+        && !(mon->flags & MF_HARD_RESET)
+        && one_chance_in(8))
+    {
+        mprf("Your maw growls hungrily at %s.", mon->name(DESC_THE).c_str());
+        noisy(you.shout_volume(), you.pos(), MID_PLAYER);
+        return true;
+    }
+
+    return false;
 }

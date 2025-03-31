@@ -74,6 +74,7 @@
  #include "tileview.h"
 #endif
 #include "tiles-build-specific.h"
+#include "transform.h"
 #include "traps.h"
 #include "travel.h"
 #include "unicode.h"
@@ -487,6 +488,11 @@ static void _handle_comes_into_view(const vector<string> &msgs,
 /// If the player has the shout mutation, maybe shout at newly-seen monsters.
 static void _maybe_trigger_shoutitis(const vector<monster*> monsters)
 {
+    if (you.form == transformation::maw)
+        for (const monster* mon : monsters)
+            if (maw_growl_check(mon))
+                return;
+
     if (!you.get_mutation_level(MUT_SCREAM))
         return;
 

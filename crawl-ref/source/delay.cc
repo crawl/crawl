@@ -1216,6 +1216,8 @@ static inline bool _monster_warning(activity_interrupt ai,
         }
         if (should_shout_at_mons(*mon))
             yell(mon);
+        else if (you.form == transformation::maw)
+            maw_growl_check(mon);
         mons_set_just_seen(mon);
     }
 

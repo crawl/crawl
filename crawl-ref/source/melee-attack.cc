@@ -1040,10 +1040,10 @@ static void _devour(monster &victim)
         return;
 
     const int xl = victim.get_experience_level();
-    const int xl_heal = xl + random2(xl);
+    const int xl_heal = xl * 3 / 4 + random2(xl);
     const int scale = 100;
     const int form_lvl = get_form()->get_level(scale);
-    const int form_heal = div_rand_round(form_lvl, scale) + random2(20); // max 40
+    const int form_heal = div_rand_round(form_lvl, scale) + random2(15); // max 28
     const int healing = 1 + min(xl_heal, form_heal);
     dprf("healing for %d", healing);
 
