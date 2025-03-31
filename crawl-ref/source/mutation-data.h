@@ -1536,7 +1536,7 @@ static const mutation_def mut_data[] =
   {"Your pseudopods retract into your body.",
    "Your pseudopods become smaller.",
    "Your pseudopods become smaller."},
-  TILEG_MUT_GENERIC_JIYVA_MUTATION,
+  TILEG_MUT_PSEUDOPODS,
 },
 #if TAG_MAJOR_VERSION == 34
 

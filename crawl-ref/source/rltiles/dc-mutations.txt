@@ -266,6 +266,9 @@ gelatinous_body_2
 gelatinous_body_3
 jelly_absorbing_missiles JELLY_ABSORBING_MISSILES
 jelly_growth JELLY_GROWTH
+pseudopods_1 PSEUDOPODS
+pseudopods_2
+pseudopods_3
 tendrils TENDRILS
 
 # Ru sacrifices
