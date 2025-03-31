@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief Main entry point, event loop, and some initialization functions
+ * @brief Main entry point, event loop, and some initialization functionse
 **/
 
 #include "AppHdr.h"
