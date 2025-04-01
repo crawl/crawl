@@ -122,6 +122,26 @@ static bool _habitable_feat(habitat_type ht, dungeon_feature_type feat)
 }
 
 /**
+* What dungoen features can have it least one of the monster types on them?
+*
+* @param mon_types the array of monster types to check.
+* @param types_count the number of monster types in the array to check.
+* @return the set of dungeon features that can hold at least one of the
+*         moster types.
+*/
+habitat_type habitat_for_any(const monster_type* mon_types,
+                             std::size_t types_count)
+{
+    habitat_type features = HT_NONE;
+    for (std::size_t i = 0; i < types_count; ++i)
+    {
+        habitat_type feat = mons_class_habitat(mon_types[i]);
+        features = (habitat_type)(features | feat);
+    }
+    return features;
+}
+
+/**
  * Can this monster survive on a given feature?
  *
  * @param mon         the monster to be checked.
@@ -3055,6 +3075,38 @@ bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
     }
 
     return good_count > 0;
+}
+
+bool you_can_see_habitable_spot_near(habitat_type habitat, int max_radius,
+                                     int exclude_radius)
+{
+    return you_can_see_habitable_spot_near(you.pos(), habitat, max_radius,
+                                           exclude_radius);
+}
+
+bool you_can_see_habitable_spot_near(coord_def pos, habitat_type habitat,
+                                     int max_radius, int exclude_radius)
+{
+    for (radius_iterator ri(pos, max_radius, C_SQUARE, exclude_radius >= 0);
+        ri; ++ri)
+    {
+        if (exclude_radius > 0 && grid_distance(pos, *ri) <= exclude_radius)
+            continue;
+
+        actor* blocking_actor = actor_at(*ri);
+        if (blocking_actor && blocking_actor->visible_to(&you))
+            continue;
+
+        if (!cell_see_cell(pos, *ri, LOS_NO_TRANS))
+            continue;
+
+        if (!_habitable_feat(habitat, env.grid(*ri)))
+            continue;
+
+        return true;
+    }
+
+    return false;
 }
 
 static void _get_vault_mon_list(vector<mons_spec> &list);
