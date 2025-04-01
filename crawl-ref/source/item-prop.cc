@@ -1803,7 +1803,7 @@ bool is_blessed_weapon_type(int wpn_type)
 
 /**
  * Which special_missile_type goes with this type of dart?
- * 
+ *
  * @param wpn_type  The missile_type under consideration.
  * @return          The corresponding special_missile_type.
  */

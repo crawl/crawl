@@ -520,7 +520,7 @@ void fixup_missile_subtype(item_def& item, int brand)
         case SPMSL_POISONED:        subtype = MI_DART_POISONED;     break;
         case SPMSL_CURARE:          subtype = MI_DART_CURARE;       break;
         case SPMSL_BLINDING:        subtype = MI_DART_ATROPA;       break;
-        case SPMSL_DISJUNCTION:     subtype = MI_DART_DISJUNCTION;  break;        
+        case SPMSL_DISJUNCTION:     subtype = MI_DART_DISJUNCTION;  break;
         case SPMSL_FRENZY:          subtype = MI_DART_DATURA;       break;
         default: break;
         }
