@@ -282,40 +282,22 @@ end
 function trove.weapon_skills (e)
     local weapon_skills = { "Short Blades", "Long Blades", "Axes",
         "Maces & Flails", "Polearms", "Staves", "Ranged Weapons" }
-    local skill_total = 0
-    local nonzero_skills = 0
+    local max = 0
     for _, skill in ipairs(weapon_skills) do
-        local base_skill = you.base_skill(skill)
-        skill_total = skill_total + base_skill
-        if base_skill > 0 then
-            nonzero_skills = nonzero_skills + 1
-        end
+        max = math.max(you.base_skill(skill), max)
     end
-    if nonzero_skills > 0 then
-        return skill_total / nonzero_skills
-    else
-        return 0
-    end
+    return max
 end
 
 function trove.spell_skills (e)
     local spell_skills = { "Spellcasting", "Conjurations", "Hexes", "Summonings",
         "Necromancy", "Translocations", "Alchemy", "Fire Magic", "Ice Magic",
         "Air Magic", "Earth Magic", "Forgecraft" }
-    local skill_total = 0
-    local nonzero_skills = 0
+    local sum = 0
     for _, skill in ipairs(spell_skills) do
-        local base_skill = you.base_skill(skill)
-        skill_total = skill_total + base_skill
-        if base_skill > 0 then
-            nonzero_skills = nonzero_skills + 1
-        end
+        sum = sum + you.base_skill(skill)
     end
-    if nonzero_skills > 0 then
-        return skill_total / nonzero_skills
-    else
-        return 0
-    end
+    return sum
 end
 }}
 
@@ -662,7 +644,7 @@ ENDMAP
 NAME:   trove_library
 WEIGHT: 30
 veto {{ return crawl.game_started()
-          and trove.spell_skills() < trove.weapon_skills()
+          and trove.spell_skills() < 20
           and not crawl.one_chance_in(6) }}
 ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen allow_dup
@@ -740,7 +722,7 @@ ENDMAP
 # A 'weapon shoppe', same template as the jewellery shop.
 NAME:   trove_weapon_1
 veto {{ return crawl.game_started()
-          and (trove.weapon_skills() < trove.spell_skills()
+          and (trove.weapon_skills() < 10
                or trove.weapon_skills() < you.base_skill("Unarmed Combat"))
           and not crawl.one_chance_in(3) }}
 ORIENT: encompass
@@ -768,7 +750,7 @@ ENDMAP
 # A simple treasure chamber.
 NAME:   trove_weapon_2
 veto {{ return crawl.game_started()
-          and (trove.weapon_skills() < trove.spell_skills()
+          and (trove.weapon_skills() < 10
                or trove.weapon_skills() < you.base_skill("Unarmed Combat"))
           and not crawl.one_chance_in(3) }}
 ORIENT: encompass
@@ -985,7 +967,7 @@ ENDMAP
 NAME:   trove_trog_arena
 TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
 veto {{ return crawl.game_started()
-          and (trove.weapon_skills() < trove.spell_skills()
+          and (trove.weapon_skills() < 10
                or trove.weapon_skills() < you.base_skill("Unarmed Combat"))
           and not crawl.one_chance_in(3) }}
 ORIENT: encompass
@@ -1077,7 +1059,7 @@ ENDMAP
 NAME:   trove_weapons_four_rooms
 TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
 veto {{ return crawl.game_started()
-          and (trove.weapon_skills() < trove.spell_skills()
+          and (trove.weapon_skills() < 10
                or trove.weapon_skills() < you.base_skill("Unarmed Combat"))
           and not crawl.one_chance_in(3) }}
 ORIENT: encompass
@@ -1144,7 +1126,7 @@ NAME:   trove_books_scrolls
 TAGS:   no_item_gen no_monster_gen allow_dup no_species_dj
 ORIENT: encompass
 veto {{ return crawl.game_started()
-          and trove.spell_skills() < trove.weapon_skills()
+          and trove.spell_skills() < 20
           and not crawl.one_chance_in(6) }}
 ITEM:   acquire magical staff / acquire book / acquire:sif_muna book / any book
 SUBST:  d = de
@@ -1239,7 +1221,7 @@ ENDMAP
 NAME:    nicolae_trove_branded_display_cases
 TAGS:    no_item_gen no_monster_gen allow_dup no_species_fe
 veto  {{ return crawl.game_started()
-           and (trove.weapon_skills() < trove.spell_skills()
+           and (trove.weapon_skills() < 10
              or trove.weapon_skills() < you.base_skill("Unarmed Combat"))
            and not crawl.one_chance_in(3) }}
 ORIENT:  encompass
