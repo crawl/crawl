@@ -3460,11 +3460,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     }
 
     case ABIL_TSO_SUMMON_DIVINE_WARRIOR:
-        if (stop_summoning_prompt(MR_RES_POISON, M_FLIES))
-            return spret::abort;
-        fail_check();
-        summon_holy_warrior(you.skill(SK_INVOCATIONS, 4), false);
-        break;
+        return cast_summon_holy_warrior(you.skill(SK_INVOCATIONS, 4), fail);
 
     case ABIL_TSO_BLESS_WEAPON:
         simple_god_message(" will bless one of your weapons.");
@@ -3474,9 +3470,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         break;
 
     case ABIL_KIKU_UNEARTH_WRETCHES:
-        fail_check();
-        kiku_unearth_wretches();
-        break;
+        return kiku_unearth_wretches(fail);
 
     case ABIL_KIKU_SIGN_OF_RUIN:
         fail_check();
@@ -3642,12 +3636,12 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         break;
 
     case ABIL_TROG_BROTHERS_IN_ARMS:
-        fail_check();
-        // Trog abilities don't use or train invocations.
-        summon_berserker(you.piety +
-                         random2(you.piety/4) - random2(you.piety/4),
-                         &you);
-        break;
+    {
+        int pow = you.piety + random2(you.piety / 4);
+        // force a sequence point between random calls
+        pow -= random2(you.piety / 4);
+        return cast_summon_berserker(pow, fail);
+    }
 
     case ABIL_SIF_MUNA_FORGET_SPELL:
         if (cast_selective_amnesia() <= 0)

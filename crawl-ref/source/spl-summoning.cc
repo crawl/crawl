@@ -110,8 +110,42 @@ static mgen_data _pal_data(monster_type pal, int dur, spell_type spell,
     return _summon_data(you, pal, dur, spell, abjurable);
 }
 
+static bool _can_summon(monster_type mon_type, int max_radius = 2,
+                        int exclude_radius = 0)
+{
+    habitat_type habitat = mons_class_habitat(mon_type);
+    return you_can_see_habitable_spot_near(habitat, max_radius,
+                                           exclude_radius);
+}
+
+static bool _can_summon_any_of(const monster_type* mon_types,
+                               size_t types_count,
+                               int max_radius = 2,
+                               int exclude_radius = 0,
+                               coord_def pos = you.pos())
+{
+    habitat_type habitat = habitat_for_any(mon_types, types_count);
+    return you_can_see_habitable_spot_near(pos, habitat, max_radius,
+                                           exclude_radius);
+}
+
+template<size_t N>
+static bool _can_summon_any_in_array(const monster_type (&mon_types)[N],
+                               int max_radius = 2, int exclude_radius = 0,
+                               coord_def pos = you.pos())
+{
+    return _can_summon_any_of(mon_types, N, max_radius, exclude_radius, pos);
+}
+
 spret cast_summon_small_mammal(int pow, bool fail)
 {
+    static const monster_type summons[] = { MONS_BAT, MONS_RAT, MONS_QUOKKA };
+    if (!_can_summon_any_in_array(summons))
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+
     if (stop_summoning_prompt())
         return spret::abort;
 
@@ -152,6 +186,12 @@ spret cast_call_canine_familiar(int pow, bool fail)
     // Many parts of this spell behave differently if our familiar has already
     // been summoned.
     monster *old_dog = find_canine_familiar();
+
+    if (!old_dog && !_can_summon(MONS_INUGAMI))
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
 
     if (!old_dog && stop_summoning_prompt())
         return spret::abort;
@@ -212,6 +252,12 @@ spret cast_call_canine_familiar(int pow, bool fail)
 
 spret cast_summon_cactus(int pow, bool fail)
 {
+    if (!_can_summon(MONS_CACTUS_GIANT))
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+
     if (stop_summoning_prompt(MR_RES_POISON))
         return spret::abort;
 
@@ -232,6 +278,12 @@ spret cast_awaken_armour(int pow, bool fail)
     {
         // I don't think we can ever reach this line, but let's be safe.
         mpr("You aren't wearing any armour!");
+        return spret::abort;
+    }
+
+    if (!_can_summon(MONS_ARMOUR_ECHO))
+    {
+        mpr("There is no available space!");
         return spret::abort;
     }
 
@@ -271,6 +323,12 @@ spret cast_awaken_armour(int pow, bool fail)
 
 spret cast_summon_ice_beast(int pow, bool fail)
 {
+    if (!_can_summon(MONS_ICE_BEAST))
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+
     if (stop_summoning_prompt(MR_RES_POISON))
         return spret::abort;
 
@@ -289,8 +347,20 @@ spret cast_summon_ice_beast(int pow, bool fail)
 
 spret cast_monstrous_menagerie(actor* caster, int pow, bool fail)
 {
-    if (caster->is_player() && stop_summoning_prompt())
-        return spret::abort;
+    if (caster->is_player())
+    {
+        static const monster_type summons[] = { MONS_GUARDIAN_SPHINX,
+                                                MONS_MANTICORE,
+                                                MONS_LINDWURM };
+        if (!_can_summon_any_in_array(summons))
+        {
+            mpr("There is no available space!");
+            return spret::abort;
+        }
+
+        if (stop_summoning_prompt())
+            return spret::abort;
+    }
 
     fail_check();
     monster_type type = MONS_PROGRAM_BUG;
@@ -325,8 +395,17 @@ spret cast_monstrous_menagerie(actor* caster, int pow, bool fail)
 
 spret cast_summon_hydra(actor *caster, int pow, bool fail)
 {
-    if (caster->is_player() && stop_summoning_prompt(MR_RES_POISON))
-        return spret::abort;
+    if (caster->is_player())
+    {
+        if (!_can_summon(MONS_HYDRA))
+        {
+            mpr("There is no available space!");
+            return spret::abort;
+        }
+
+        if (stop_summoning_prompt(MR_RES_POISON))
+            return spret::abort;
+    }
 
     fail_check();
     // Power determines number of heads. Minimum 4 heads, maximum 12.
@@ -544,6 +623,12 @@ spret cast_summon_dragon(actor *caster, int pow, bool fail)
 
 spret cast_summon_mana_viper(int pow, bool fail)
 {
+    if (!_can_summon(MONS_MANA_VIPER))
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+
     if (stop_summoning_prompt(MR_RES_POISON))
         return spret::abort;
 
@@ -634,6 +719,29 @@ bool summon_berserker(int pow, actor *caster, monster_type override_mons)
     return true;
 }
 
+spret cast_summon_berserker(int pow, bool fail)
+{
+    static const monster_type summons[] = { MONS_BLACK_BEAR,
+                                            MONS_POLAR_BEAR,
+                                            MONS_TWO_HEADED_OGRE,
+                                            MONS_OGRE,
+                                            MONS_TROLL,
+                                            MONS_DEEP_TROLL,
+                                            MONS_IRON_TROLL,
+                                            MONS_CYCLOPS,
+                                            MONS_STONE_GIANT };
+    if (!_can_summon_any_in_array(summons))
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+
+    fail_check();
+
+    summon_berserker(pow, &you);
+    return spret::success;
+}
+
 // Not a spell. Rather, this is TSO's doing.
 bool summon_holy_warrior(int pow, bool punish)
 {
@@ -660,6 +768,25 @@ bool summon_holy_warrior(int pow, bool punish)
         mpr("You are momentarily dazzled by a brilliant light.");
 
     return true;
+}
+
+spret cast_summon_holy_warrior(int pow, bool fail)
+{
+    static const monster_type summons[] = { MONS_ANGEL,
+                                            MONS_DAEVA };
+    if (!_can_summon_any_in_array(summons))
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+
+    if (stop_summoning_prompt(MR_RES_POISON, M_FLIES))
+        return spret::abort;
+
+    fail_check();
+
+    summon_holy_warrior(pow, false);
+    return spret::success;
 }
 
 /**
@@ -835,6 +962,12 @@ int mons_ball_lightning_hd(int pow, bool random)
 
 spret cast_conjure_ball_lightning(int pow, bool fail)
 {
+    if (!_can_summon(MONS_BALL_LIGHTNING))
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+
     fail_check();
     bool success = false;
 
@@ -879,6 +1012,12 @@ dice_def lightning_spire_damage(int pow)
 
 spret cast_forge_lightning_spire(int pow, bool fail)
 {
+    if (!_can_summon(MONS_LIGHTNING_SPIRE))
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+
     fail_check();
 
     mgen_data spire = _pal_data(MONS_LIGHTNING_SPIRE, summ_dur(2),
@@ -897,6 +1036,12 @@ spret cast_forge_lightning_spire(int pow, bool fail)
 
 spret cast_forge_blazeheart_golem(int pow, bool fail)
 {
+    if (!_can_summon(MONS_BLAZEHEART_GOLEM))
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+
     fail_check();
 
     mgen_data golem = _pal_data(MONS_BLAZEHEART_GOLEM, summ_dur(3),
@@ -927,6 +1072,12 @@ spret cast_forge_blazeheart_golem(int pow, bool fail)
  */
 spret cast_call_imp(int pow, bool fail)
 {
+    if (!_can_summon(MONS_CERULEAN_IMP))
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+
     if (stop_summoning_prompt(MR_RES_POISON, M_FLIES))
         return spret::abort;
 
@@ -1020,6 +1171,14 @@ spret summon_butterflies()
 
 spret summon_shadow_creatures()
 {
+    // A small number of the monsters summoned by shadow creatures can fly,
+    // so it is technically still usable above water or lava
+    if (!you_can_see_habitable_spot_near(HT_FLYER, 2))
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+
     // Hard to predict what resistances might come from this.
     if (stop_summoning_prompt())
         return spret::abort;
@@ -1225,6 +1384,14 @@ spret cast_malign_gateway(actor * caster, int pow, bool fail, bool test)
 
 spret cast_summon_horrible_things(int pow, bool fail)
 {
+    static const monster_type summons[] = { MONS_ABOMINATION_LARGE,
+                                            MONS_TENTACLED_MONSTROSITY };
+    if (!_can_summon_any_in_array(summons))
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+
     if (stop_summoning_prompt(MR_RES_POISON))
         return spret::abort;
 
@@ -1392,6 +1559,16 @@ monster_type pick_random_wraith()
 
 spret cast_haunt(int pow, const coord_def& where, bool fail)
 {
+    static const monster_type summons[] = { MONS_SHADOW_WRAITH,
+                                           MONS_WRAITH,
+                                           MONS_FREEZING_WRAITH,
+                                           MONS_PHANTASMAL_WARRIOR };
+    if (!_can_summon_any_in_array(summons, 2, 0, where))
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+
     if (stop_summoning_prompt(MR_RES_POISON, M_FLIES, "haunt your foe"))
         return spret::abort;
 
@@ -1456,8 +1633,17 @@ spret cast_haunt(int pow, const coord_def& where, bool fail)
 
 spret cast_martyrs_knell(const actor* caster, int pow, bool fail)
 {
-    if (caster->is_player() && stop_summoning_prompt(MR_RES_POISON, M_FLIES))
-        return spret::abort;
+    if (caster->is_player())
+    {
+        if (!_can_summon(MONS_MARTYRED_SHADE))
+        {
+            mpr("There is no available space!");
+            return spret::abort;
+        }
+
+        if (stop_summoning_prompt(MR_RES_POISON, M_FLIES))
+            return spret::abort;
+    }
 
     fail_check();
 
@@ -1614,6 +1800,12 @@ void init_servitor(monster* servitor, actor* caster, int pow)
 
 spret cast_spellspark_servitor(int pow, bool fail)
 {
+    if (!_can_summon(MONS_SPELLSPARK_SERVITOR))
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+
     if (stop_summoning_prompt(MR_RES_POISON, M_FLIES))
         return spret::abort;
 
@@ -1674,10 +1866,23 @@ dice_def battlesphere_damage_from_hd(int hd)
 
 spret cast_battlesphere(actor* agent, int pow, bool fail)
 {
+    monster* battlesphere = nullptr;
+    if (agent->is_player())
+    {
+        battlesphere = find_battlesphere(&you);
+
+        // You do get a message when your battle sphere ends, even if its out
+        // of sight, so this shouldn't leak any information.
+        if (!battlesphere && !_can_summon(MONS_BATTLESPHERE))
+        {
+            mpr("There is no available space!");
+            return spret::abort;
+        }
+    }
+
     fail_check();
 
-    monster* battlesphere;
-    if (agent->is_player() && (battlesphere = find_battlesphere(&you)))
+    if (agent->is_player() && battlesphere)
     {
         bool recalled = false;
         if (!you.can_see(*battlesphere))
@@ -2663,8 +2868,18 @@ spret fedhas_grow_oklob(const coord_def& target, bool fail)
     return spret::success;
 }
 
-void kiku_unearth_wretches()
+spret kiku_unearth_wretches(bool fail)
 {
+    // A small number of the monsters kiku gives can fly, so the ability is
+    // technically still usable above water or lava
+    if (!you_can_see_habitable_spot_near(HT_FLYER, 4))
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+
+    fail_check();
+
     const int pow = you.skill(SK_NECROMANCY, 5);
     const int min_wretches = 1 + random2(2);
     const int max_wretches = min_wretches + div_rand_round(pow, 27); // 7 max
@@ -2708,6 +2923,8 @@ void kiku_unearth_wretches()
         simple_god_message(" has no space to call forth the wretched!");
     else
         simple_god_message(" calls piteous wretches from the earth!");
+
+    return spret::success;
 }
 
 static bool _create_foxfire(const actor &agent, coord_def pos, int pow,
@@ -2895,12 +3112,8 @@ bool summon_spider(const actor &agent, coord_def pos,
     return false;
 }
 
-spret summon_spiders(actor &agent, int pow, bool fail)
+spret summon_spiders(monster &agent, int pow, bool fail)
 {
-    // Can't happen at present, but why not check just to be sure.
-    if (agent.is_player() && stop_summoning_prompt())
-        return spret::abort;
-
     fail_check();
 
     int created = 0;
@@ -2918,8 +3131,6 @@ spret summon_spiders(actor &agent, int pow, bool fail)
              agent.conj_verb("summon").c_str(),
              created > 1 ? "spiders" : "a spider");
     }
-    else if (agent.is_player())
-        canned_msg(MSG_NOTHING_HAPPENS);
 
     return spret::success;
 }
@@ -3065,6 +3276,10 @@ dice_def hoarfrost_cannonade_damage(int pow, bool finale)
 
 spret cast_hoarfrost_cannonade(const actor& agent, int pow, bool fail)
 {
+    // XXX: it would be nice to abort if there isn't space for the cannons,
+    // however, you could cast the spell just to get rid of old cannons.
+    // Maybe we should just get rid of cannons within summoning range instead?
+
     fail_check();
 
     // Remove any existing cannons we may have first
@@ -3996,6 +4211,12 @@ bool paragon_defense_bonus_active()
 
 spret cast_walking_alembic(const actor& agent, int pow, bool fail)
 {
+    if (!_can_summon(MONS_WALKING_ALEMBIC))
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+
     fail_check();
 
     mgen_data mg = _summon_data(agent, MONS_WALKING_ALEMBIC, summ_dur(3),
@@ -4144,10 +4365,16 @@ void alembic_brew_potion(monster& mons)
 
 spret cast_monarch_bomb(const actor& agent, int pow, bool fail)
 {
-    fail_check();
-
     if (count_summons(&agent, SPELL_MONARCH_BOMB))
-        return monarch_detonation(agent, pow);
+        return monarch_detonation(agent, pow, fail);
+
+    if (!_can_summon(MONS_MONARCH_BOMB))
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+
+    fail_check();
 
     mgen_data mg = _summon_data(agent, MONS_MONARCH_BOMB, summ_dur(3),
                                 SPELL_MONARCH_BOMB, false);
@@ -4213,7 +4440,7 @@ vector<coord_def> get_monarch_detonation_spots(const actor& agent)
     return spots;
 }
 
-spret monarch_detonation(const actor& agent, int pow)
+spret monarch_detonation(const actor& agent, int pow, bool fail)
 {
     vector<coord_def> spots = get_monarch_detonation_spots(agent);
     if (agent.is_player()
@@ -4223,6 +4450,8 @@ spret monarch_detonation(const actor& agent, int pow)
     {
         return spret::abort;
     }
+
+    fail_check();
 
     if (you.can_see(agent))
     {
@@ -4425,6 +4654,12 @@ bool splinterfrost_block_fragment(monster& block, const coord_def& aim)
 
 spret cast_summon_seismosaurus_egg(const actor& agent, int pow, bool fail)
 {
+    if (!_can_summon(MONS_SEISMOSAURUS_EGG, 3, 1))
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+
     fail_check();
 
     mgen_data egg = _summon_data(agent, MONS_SEISMOSAURUS_EGG, summ_dur(3),
@@ -4445,6 +4680,12 @@ spret cast_summon_seismosaurus_egg(const actor& agent, int pow, bool fail)
 
 spret cast_phalanx_beetle(const actor& agent, int pow, bool fail)
 {
+    if (!_can_summon(MONS_PHALANX_BEETLE))
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+
     fail_check();
 
     mgen_data beetle = _summon_data(agent, MONS_PHALANX_BEETLE, summ_dur(4),
@@ -4479,6 +4720,12 @@ dice_def rending_blade_damage(int power, bool include_mp)
 
 spret cast_rending_blade(int pow, bool fail)
 {
+    if (!_can_summon(MONS_RENDING_BLADE))
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+
     fail_check();
 
     mgen_data blade = _pal_data(MONS_RENDING_BLADE, random_range(7, 10) * BASELINE_DELAY,
