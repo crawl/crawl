@@ -476,8 +476,7 @@ de su memoria para recapturar la energía mágica asociada a él.
 scroll of blinking
 
 Este pergamino permite al lector teleportarse a una distancia corta, con un
-control preciso. Sea cauteloso, las teleportaciones controladas causan
-contaminaciones con energía mágica.
+control preciso.
 %%%%
 scroll of curse armour
 
