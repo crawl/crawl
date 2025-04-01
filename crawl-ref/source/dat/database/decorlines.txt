@@ -620,6 +620,30 @@ oni baked goods cache
 
 You reach down and grab @_baked_good_and_reaction_@ You go for seconds.
 %%%%
+poltergeist fruit cache
+
+@inediate fruit cache@
+%%%%
+poltergeist meat cache
+
+@inediate meat cache@
+%%%%
+poltergeist baked goods cache
+
+@inediate baked goods cache@
+%%%%
+revenant fruit cache
+
+@inediate fruit cache@
+%%%%
+revenant meat cache
+
+@inediate meat cache@
+%%%%
+revenant baked goods cache
+
+@inediate baked goods cache@
+%%%%
 spriggan fruit cache
 
 @short fruit cache@
@@ -646,17 +670,6 @@ troll fruit cache
 troll baked goods cache
 
 @oni baked goods cache@
-%%%%
-vampire fruit cache
-
-You root around, looking for a blood orange, but fail to find any.
-
-w:4
-You reach down and find a blood orange. Delicious.
-%%%%
-vampire baked goods cache
-
-You reach down and sample @_baked_good_and_reaction_@ Not filling, though, alas.
 ########################## Form diets ######################################
 # TODO: fungus, wisp messages?
 %%%%
@@ -769,3 +782,14 @@ tree meat cache
 tree baked goods cache
 
 @short baked goods cache@
+%%%%
+vampire fruit cache
+
+You root around, looking for a blood orange, but fail to find any.
+
+w:4
+You reach down and find a blood orange. Delicious.
+%%%%
+vampire baked goods cache
+
+You reach down and sample @_baked_good_and_reaction_@ Not filling, though, alas.
