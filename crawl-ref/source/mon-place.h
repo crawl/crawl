@@ -24,12 +24,19 @@ class monster;
 class mons_spec;
 struct mgen_data;
 
+struct habitable_features_set
+{
+    unsigned int flags;
+
+    bool contains(dungeon_feature_type feat);
+};
+
 /* ***********************************************************************
  * Creates a monster near the place specified in the mgen_data, producing
  * a "puff of smoke" message if the monster cannot be placed. This is usually
  * used for summons and other monsters that want to appear near a given
  * position like a summon.
- * Returns -1 on failure, index into env.mons otherwise.
+ * Returns null on failure, the monster otherwise.
  * *********************************************************************** */
 monster* create_monster(mgen_data mg, bool fail_msg = true);
 
@@ -97,9 +104,19 @@ void check_lovelessness(monster &mon);
 bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
                               int radius, coord_def& result, int exclude_radius = -1,
                               const actor* in_sight_of = nullptr);
+bool you_can_see_habitable_spot_near(coord_def pos,
+                                     habitable_features_set habitat,
+                                     int max_radius, int exclude_radius = 0);
+bool you_can_see_habitable_spot_near(habitable_features_set habitat,
+                                     int max_radius, int exclude_radius = 0);
 
 monster_type random_demon_by_tier(int tier);
 monster_type summon_any_demon(monster_type dct, bool use_local_demons = false);
+
+habitable_features_set habitable_features_for_flyer();
+habitable_features_set mons_class_habitable_features(monster_type mt);
+habitable_features_set habitable_features_for_any(const monster_type* mon_types,
+                                                  std::size_t types_count);
 
 bool monster_habitable_feat(const monster* mon,
                             dungeon_feature_type feat);

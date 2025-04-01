@@ -514,15 +514,30 @@ bool feat_is_trap(dungeon_feature_type feat)
     return get_feature_def(feat).flags & FFT_TRAP;
 }
 
+/** Is this feature a type of water that is too deep for most creatures to
+*   wade through?
+*/
+bool feat_is_deep_water(dungeon_feature_type feat)
+{
+    return feat == DNGN_DEEP_WATER
+           || feat == DNGN_OPEN_SEA;
+}
+
+/** Is this feature a type of water that is shallow enough to wade through?
+*/
+bool feat_is_shallow_water(dungeon_feature_type feat)
+{
+    return feat == DNGN_SHALLOW_WATER
+           || feat == DNGN_TOXIC_BOG
+           || feat == DNGN_MANGROVE;
+}
+
 /** Is this feature a type of water, with the concomitant dangers/bonuses?
  */
 bool feat_is_water(dungeon_feature_type feat)
 {
-    return feat == DNGN_SHALLOW_WATER
-           || feat == DNGN_DEEP_WATER
-           || feat == DNGN_OPEN_SEA
-           || feat == DNGN_TOXIC_BOG
-           || feat == DNGN_MANGROVE;
+    return feat_is_shallow_water(feat)
+           || feat_is_deep_water(feat);
 }
 
 /** Is this feature a kind of lava?

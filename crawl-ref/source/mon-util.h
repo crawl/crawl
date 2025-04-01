@@ -291,6 +291,7 @@ mon_intel_type mons_intel(const monster& mon);
 // since the class variants do not handle zombies correctly.
 habitat_type mons_habitat_type(monster_type t, monster_type base_t,
                                bool real_amphibious = false);
+habitat_type mons_class_habitat(monster_type t, bool real_amphibious = false);
 habitat_type mons_habitat(const monster& mon, bool real_amphibious = false);
 
 habitat_type mons_class_primary_habitat(monster_type mc);

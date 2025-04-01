@@ -112,6 +112,136 @@ static bool _hab_requires_mon_flight(dungeon_feature_type g)
     return g == DNGN_LAVA || g == DNGN_DEEP_WATER;
 }
 
+enum habitable_feature_type_flag
+{
+    HF_NONE = 0,
+    HF_LAND = 1 << 0,
+    HF_SHALLOW_WATER = 1 << 1,
+    HF_DEEP_WATER = 1 << 2,
+    HF_LAVA = 1 << 3,
+    HF_MALIGN_GATEWAY = 1 << 4,
+
+    HF_ALL = HF_LAND | HF_SHALLOW_WATER
+             | HF_DEEP_WATER | HF_LAVA | HF_MALIGN_GATEWAY,
+};
+
+habitable_features_set habitable_features_for_flyer()
+{
+    unsigned int flags = HF_LAND | HF_SHALLOW_WATER | HF_DEEP_WATER | HF_LAVA;
+    return habitable_features_set{ flags };
+}
+
+habitable_features_set mons_class_habitable_features(monster_type mt)
+{
+    habitat_type habitat = mons_class_habitat(mt);
+
+    unsigned int flags;
+    switch (habitat)
+    {
+    case HT_LAND:
+        flags = HF_LAND | HF_SHALLOW_WATER;
+        break;
+
+    case HT_AMPHIBIOUS:
+        flags = HF_LAND | HF_SHALLOW_WATER | HF_DEEP_WATER;
+        break;
+
+    case HT_WATER:
+        // The kraken is so large it cannot enter shallow water.
+        // Its tentacles can, and will, though.
+        if (mt == MONS_KRAKEN)
+            flags = HF_DEEP_WATER;
+        else
+            flags = HF_SHALLOW_WATER | HF_DEEP_WATER;
+        break;
+
+    case HT_LAVA:
+        flags = HF_LAVA;
+        break;
+
+    case HT_AMPHIBIOUS_LAVA:
+        flags = HF_LAND | HF_SHALLOW_WATER | HF_LAVA;
+        break;
+
+    default:
+        flags = HF_NONE;
+        break;
+    }
+
+    if (mt == MONS_ELDRITCH_TENTACLE || mt == MONS_ELDRITCH_TENTACLE_SEGMENT)
+        flags |= HF_MALIGN_GATEWAY;
+
+    // [dshaligram] Flying creatures are all HT_LAND, so we
+    // only have to check for the additional valid grids of deep
+    // water and lava.
+    if (mons_class_flag(mt, M_FLIES))
+        flags |= HF_DEEP_WATER | HF_LAVA;
+
+    return habitable_features_set{ flags };
+}
+
+/**
+* What dungoen features can have it least one of the monster types on them?
+*
+* @param mon_types the array of monster types to check.
+* @param types_count the number of monster types in the array to check.
+* @return the set of dungeon features that can hold at least one of the
+*         moster types.
+*/
+habitable_features_set habitable_features_for_any(const monster_type* mon_types,
+                                                  std::size_t types_count)
+{
+    habitable_features_set features{ HF_NONE };
+    for (std::size_t i = 0; i < types_count; ++i)
+    {
+        habitable_features_set feat = mons_class_habitable_features(
+                                                                 mon_types[i]);
+        features.flags |= feat.flags;
+    }
+    return features;
+}
+
+static bool _has_habitat_flag(unsigned int flags,
+                              habitable_feature_type_flag flag) noexcept
+{
+    return (flags & flag) != 0;
+}
+
+bool habitable_features_set::contains(dungeon_feature_type feat)
+{
+    if (feat == DNGN_MALIGN_GATEWAY
+        && _has_habitat_flag(flags, HF_MALIGN_GATEWAY))
+    {
+        return true;
+    }
+
+    // No monster may be placed in walls etc.
+    if (feat_is_solid(feat))
+        return false;
+
+#if TAG_MAJOR_VERSION == 34
+    // Monsters can't use teleporters, and standing there would look just wrong.
+    if (feat == DNGN_TELEPORTER)
+        return false;
+#endif
+    if (_has_habitat_flag(flags, HF_SHALLOW_WATER)
+        && feat_is_shallow_water(feat))
+    {
+        return true;
+    }
+    if (_has_habitat_flag(flags, HF_DEEP_WATER) && feat_is_deep_water(feat))
+        return true;
+    if (_has_habitat_flag(flags, HF_LAVA) && feat_is_lava(feat))
+        return true;
+    if (_has_habitat_flag(flags, HF_LAND)
+        && feat_has_solid_floor(feat) && !feat_is_water(feat))
+    {
+        return true;
+    }
+
+    return false;
+}
+
 /**
  * Can this monster survive on a given feature?
  *
@@ -140,47 +270,8 @@ bool monster_habitable_feat(const monster* mon, dungeon_feature_type feat)
  */
 bool monster_habitable_feat(monster_type mt, dungeon_feature_type feat)
 {
-    // No monster may be placed in walls etc.
-    if (!mons_class_can_pass(mt, feat))
-        return false;
-
-#if TAG_MAJOR_VERSION == 34
-    // Monsters can't use teleporters, and standing there would look just wrong.
-    if (feat == DNGN_TELEPORTER)
-        return false;
-#endif
-    // The kraken is so large it cannot enter shallow water.
-    // Its tentacles can, and will, though.
-    if ((feat == DNGN_SHALLOW_WATER || feat == DNGN_TOXIC_BOG)
-        && mt == MONS_KRAKEN)
-    {
-        return false;
-    }
-    // Only eldritch tentacles are allowed to exist on this feature.
-    else if (feat == DNGN_MALIGN_GATEWAY)
-    {
-        return mt == MONS_ELDRITCH_TENTACLE
-               || mt == MONS_ELDRITCH_TENTACLE_SEGMENT;
-    }
-
-    const dungeon_feature_type feat_preferred =
-        habitat2grid(mons_class_primary_habitat(mt));
-    const dungeon_feature_type feat_nonpreferred =
-        habitat2grid(mons_class_secondary_habitat(mt));
-
-    if (_feat_compatible(feat_preferred, feat)
-        || _feat_compatible(feat_nonpreferred, feat))
-    {
-        return true;
-    }
-
-    // [dshaligram] Flying creatures are all HT_LAND, so we
-    // only have to check for the additional valid grids of deep
-    // water and lava.
-    if (_hab_requires_mon_flight(feat) && (mons_class_flag(mt, M_FLIES)))
-        return true;
-
-    return false;
+    habitable_features_set features = mons_class_habitable_features(mt);
+    return features.contains(feat);
 }
 
 bool monster_habitable_grid(const monster* mon, const coord_def& pos)
@@ -3087,6 +3178,39 @@ bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
     }
 
     return good_count > 0;
+}
+
+bool you_can_see_habitable_spot_near(habitable_features_set habitat,
+                                     int max_radius, int exclude_radius)
+{
+    return you_can_see_habitable_spot_near(you.pos(), habitat, max_radius,
+                                           exclude_radius);
+}
+
+bool you_can_see_habitable_spot_near(coord_def pos,
+                                     habitable_features_set habitat,
+                                     int max_radius, int exclude_radius)
+{
+    for (radius_iterator ri(pos, max_radius, C_SQUARE, exclude_radius >= 0);
+        ri; ++ri)
+    {
+        if (exclude_radius > 0 && grid_distance(pos, *ri) <= exclude_radius)
+            continue;
+
+        actor* blocking_actor = actor_at(*ri);
+        if (blocking_actor && blocking_actor->visible_to(&you))
+            continue;
+
+        if (!cell_see_cell(pos, *ri, LOS_NO_TRANS))
+            continue;
+
+        if (!habitat.contains(env.grid(*ri)))
+            continue;
+
+        return true;
+    }
+
+    return false;
 }
 
 static void _get_vault_mon_list(vector<mons_spec> &list);
