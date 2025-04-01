@@ -1009,7 +1009,7 @@ function (exports, $, key_conversion, chat, comm) {
     {
         // Ignores wrong rcfile if on a slow connection we clicked two different
         // "edit rc" buttons quickly
-        if (data.game_id !== editing_rc)
+        if (data.game_id && data.game_id !== editing_rc)
             return;
         $("#rc_file_contents").val(data.contents);
         show_dialog("#rc_edit");
