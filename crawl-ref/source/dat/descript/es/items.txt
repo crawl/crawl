@@ -152,7 +152,7 @@ Una capa de tela.
 %%%%
 corpse
 
-Un cadáver. Puedes descuartizarlo para conseguir trozos de carne comestible.
+Un cadáver. Muerte y inútil.
 %%%%
 crystal plate armour
 
