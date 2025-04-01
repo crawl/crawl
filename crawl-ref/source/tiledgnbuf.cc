@@ -52,6 +52,10 @@ void DungeonCellBuffer::add_glyph(const char32_t &g, const VColour &col, const V
 
 void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
 {
+    static const coord_def edge_offsets[] = {
+        {0,16}, {16,16}, {16,0}, {16,-16},
+    };
+
     pack_background(x, y, cell);
 
     const tileidx_t fg_idx = cell.fg & TILE_FLAG_MASK;
@@ -62,6 +66,22 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
     // in the shoals, ink is handled in pack_cell_overlays(): don't overdraw
     if (cloud_idx == TILE_CLOUD_INK && player_in_branch(BRANCH_SHOALS))
         cloud_idx = 0;
+
+    for (int n=0; n < 4; n++)
+    {
+        if (cell.edges[n])
+        {
+            m_buf_doll.add(cell.edges[n], x, y, 1, false, false,
+                           edge_offsets[n].x, edge_offsets[n].y);
+        }
+        if (cell.edge_masks[n])
+        {
+            // Add mask layer at lower z-index. This allows us to build up an
+            // outline for a shape that is made up of several tiles and edges.
+            m_buf_doll.add(cell.edge_masks[n], x, y, -2, false, false,
+                           edge_offsets[n].x, edge_offsets[n].y);
+        }
+    }
 
     if (fg_idx >= TILEP_MCACHE_START)
     {

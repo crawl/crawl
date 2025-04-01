@@ -51,6 +51,12 @@ struct packed_cell
     tileidx_t cloud;
     set<tileidx_t> icons;
 
+    // Four tiles to use to render around the edges and corners; they correspond
+    // to S-SE-E-NE in order. For performance each tile only deals with 4 edges,
+    // the other 4 are handled by the tiles to the N, NW, W and SW.
+    FixedVector<int, 4> edges = {0,0,0,0};
+    FixedVector<int, 4> edge_masks = {0,0,0,0};
+
     bool operator ==(const packed_cell &other) const;
     bool operator !=(const packed_cell &other) const { return !(*this == other); }
 

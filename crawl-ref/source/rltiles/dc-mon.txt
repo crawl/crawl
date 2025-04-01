@@ -1199,12 +1199,18 @@ wandering_mushroom MONS_WANDERING_MUSHROOM
 deathcap MONS_DEATHCAP
 sleepcap MONS_SLEEPCAP
 
+wolf_lichen MONS_WOLF_LICHEN
+wolf_lichen_n_s MONS_WOLF_LICHEN_N_S
+wolf_lichen_w_e MONS_WOLF_LICHEN_W_E
+wolf_lichen_nw_se MONS_WOLF_LICHEN_NW_SE
+wolf_lichen_ne_sw MONS_WOLF_LICHEN_NE_SW
+
 %rim 1
-%sdir misc
-mold_glowing1 MONS_WOLF_LICHEN
-mold_glowing2
-mold_glowing3
-mold_glowing4
+wolf_lichen MONS_WOLF_LICHEN_MASK
+wolf_lichen_n_s MONS_WOLF_LICHEN_N_S_MASK
+wolf_lichen_w_e MONS_WOLF_LICHEN_W_E_MASK
+wolf_lichen_nw_se MONS_WOLF_LICHEN_NW_SE_MASK
+wolf_lichen_ne_sw MONS_WOLF_LICHEN_NE_SW_MASK
 
 ## Goblins ('g')
 %sdir mon/unique

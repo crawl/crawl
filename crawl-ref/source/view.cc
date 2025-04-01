@@ -1696,6 +1696,86 @@ crawl_view_buffer view_dungeon(animation *a, bool anim_updates, view_renderer *r
     return vbuf;
 }
 
+static bool _has_edge_tiles(monster_type type)
+{
+    switch (type)
+    {
+        case MONS_WOLF_LICHEN:
+            return true;
+        default:
+            return false;
+    }
+}
+
+static int _determine_edge_tile(const monster_info& origin,
+                                const monster_info& connected, int dx, int dy)
+{
+    auto species = mons_species(connected.type);
+    if (species != mons_species(origin.type))
+        return 0;
+
+    switch (species)
+    {
+        case MONS_WOLF_LICHEN:
+            return dx == 0 ? TILEP_MONS_WOLF_LICHEN_N_S
+                 : dy == 0 ? TILEP_MONS_WOLF_LICHEN_W_E
+                 : dy == 1 ? TILEP_MONS_WOLF_LICHEN_NW_SE
+                           : TILEP_MONS_WOLF_LICHEN_NE_SW;
+        // Shouldn't get here unless _has_edge_tiles is wrong
+        default:
+            return 0;
+    }
+}
+
+static int _mask_tile_for(int tile_idx)
+{
+    if (tile_idx >= TILEP_MONS_WOLF_LICHEN && tile_idx <= TILEP_MONS_WOLF_LICHEN_NE_SW)
+        return tile_idx + (TILEP_MONS_WOLF_LICHEN_NE_SW - TILEP_MONS_WOLF_LICHEN) + 1;
+
+    return 0;
+}
+
+static void _pack_edges(coord_def gc, packed_cell& cell, const monster_info& mon)
+{
+    if (!in_bounds(gc) || !_has_edge_tiles(mon.type))
+        return;
+    int edge_num = -1;
+    for (adjacent_iterator ri(gc, true); ri; ++ri)
+    {
+        // Get the delta to this tile
+        int dx = ri->x - gc.x;
+        // Not interested in NW, W, or SW - those edges are handled by the
+        // tiles in that direction
+        if (dx < 0)
+            continue;
+        int dy = ri->y - gc.y;
+        // We also let N edge be handled by tile to the N
+        if (dy < 0 && dx < 1)
+            continue;
+        // Now this is one of the 4 edges we handle
+        edge_num++;
+        cell.edges[edge_num] = 0;
+
+        if (!in_bounds(*ri))
+            continue;
+        const map_cell& adj_knowledge = env.map_knowledge(*ri);
+        if (!adj_knowledge.seen() && !adj_knowledge.mapped())
+            continue;
+        // Now we know this is a connection we *might* want to check, see if
+        // there's an applicable monster there first
+        auto connected = adj_knowledge.monsterinfo();
+        if (!connected)
+            continue;
+        int edge = _determine_edge_tile(mon, *connected, dx, dy);
+        if (!edge)
+            continue;
+        cell.edges[edge_num] = edge;
+        // Add mask layer at lower z-index. This allows us to build up an
+        // outline for a shape that is made up of several tiles and edges.
+        cell.edge_masks[edge_num] = _mask_tile_for(cell.edges[edge_num]);
+    }
+}
+
 void draw_cell(screen_cell_t *cell, const coord_def &gc,
                bool anim_updates, int flash_colour)
 {
@@ -1724,6 +1804,8 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
     cell->tile.map_knowledge = map_bounds(gc) ? env.map_knowledge(gc) : map_cell();
     cell->flash_colour = BLACK;
     cell->flash_alpha = 0;
+    if (cell->tile.map_knowledge.monsterinfo())
+        _pack_edges(gc, cell->tile, *cell->tile.map_knowledge.monsterinfo());
 #endif
 
     // Don't hide important information by recolouring monsters.

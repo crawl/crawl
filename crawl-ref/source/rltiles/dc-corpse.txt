@@ -153,15 +153,10 @@ apis CORPSE_APIS
 
 ### Non-animals
 
-## Plants
+## Fungi ('f')
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4
-%sdir misc
-%start
-%compose mold_glowing1
-%compose mold_glowing2
-%compose mold_glowing3
-%compose mold_glowing4
-%finish CORPSE_WOLF_LICHEN
+%sdir mon/fungi_plants
+wolf_lichen CORPSE_WOLF_LICHEN
 
 ## Formicids ('a')
 %sdir mon/demihumanoids

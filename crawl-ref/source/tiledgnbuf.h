@@ -55,6 +55,7 @@ protected:
     TileBuffer m_buf_floor;
     TileBuffer m_buf_wall;
     TileBuffer m_buf_feat;
+    TileBuffer m_buf_offset;
     SubmergedTileBuffer m_buf_feat_trans;
     SubmergedTileBuffer m_buf_doll;
     SubmergedTileBuffer m_buf_main_trans;
