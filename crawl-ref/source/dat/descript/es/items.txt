@@ -234,10 +234,9 @@ helmet
 
 Una protección metálica para la cabeza.
 %%%%
-ice dragon hide
+ice dragon scales
 
-La escamosa piel de un dragón. Puede usarse para elaborar una armadura, pero
-incluso en su actual estado proporciona gran protección contra los efectos del
+Una armadura de las escamas de un dragón de hielo. Te da gran protección contra los efectos del
 frío, aunque a costa de hacerte más vulnerable a los efectos del fuego.
 %%%%
 javelin
