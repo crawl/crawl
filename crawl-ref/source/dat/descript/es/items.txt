@@ -4,6 +4,10 @@ amulet of inaccuracy
 Este amuleto hace que su portador sea menos preciso en el combate cuerpo a
 cuerpo, y cuando ataque monstruos mediante ataques a distancia o hechizos.
 %%%%
+amulet of nothing
+
+Un amuleto sin características especiales.
+%%%%
 animal skin
 
 La piel de un animal.
@@ -15,6 +19,11 @@ Prunus armeniaca, una suculenta fruta amarillenta o anaranjada.
 arrow
 
 Una flecha, hecha para ser disparada con un arco.
+%%%%
+#the_bakery
+baked corpse
+
+Un cadáver horneado. Tibia, muerte y inútil
 %%%%
 bardiche
 
@@ -47,9 +56,6 @@ puede sentir el diáfano impacto de la furia arcana contenida en el libro. Es
 codiciado por los brujos, ya que le permite al dotado e ingenioso ordenar la
 destrucción con un simple chasquido de los dedos. Sin embargo, los magos más
 endebles podrían encontrar su perdición al intentar leer este opus.
-
-ADVERTENCIA: Si fallas al intentar memorizar un hechizo de este libro,
-recibirás un castigo.
 %%%%
 book of cantrips
 
@@ -57,7 +63,7 @@ Un libro con hechizos mágicos.
 %%%%
 book of conjurations
 
-Un libro con hechizos mágicos.
+Un libro que contiene una introdución a las artes destructivos de las Conjuraciones.
 %%%%
 book of debilitation
 
@@ -75,6 +81,11 @@ Un libro con hechizos mágicos.
 book of fixed theme
 
 Un libro con hechizos mágicos.
+%%%%
+book of geomancy
+
+Un libro con hechizos sencillos que implican el elemento Tierra. Lectores deben
+llevar guantes de jardinería cuando leyéndolo.
 %%%%
 book of hexes
 
@@ -152,7 +163,7 @@ Una capa de tela.
 %%%%
 corpse
 
-Un cadáver. Puedes descuartizarlo para conseguir trozos de carne comestible.
+Un cadáver. Muerte y inútil.
 %%%%
 crystal plate armour
 
@@ -234,10 +245,9 @@ helmet
 
 Una protección metálica para la cabeza.
 %%%%
-ice dragon hide
+ice dragon scales
 
-La escamosa piel de un dragón. Puede usarse para elaborar una armadura, pero
-incluso en su actual estado proporciona gran protección contra los efectos del
+Una armadura de las escamas de un dragón de hielo. Te da gran protección contra los efectos del
 frío, aunque a costa de hacerte más vulnerable a los efectos del fuego.
 %%%%
 javelin
@@ -421,6 +431,10 @@ ring of protection from cold
 
 Este anillo protege del frío.
 %%%%
+ring of protection from fire
+
+Este anillo protege del fuego
+%%%%
 ring of protection from magic
 
 Este anillo incrementa la resistencia de su portador contra embrujos adversos.
@@ -473,8 +487,7 @@ de su memoria para recapturar la energía mágica asociada a él.
 scroll of blinking
 
 Este pergamino permite al lector teleportarse a una distancia corta, con un
-control preciso. Sea cauteloso, las teleportaciones controladas causan
-contaminaciones con energía mágica.
+control preciso.
 %%%%
 scroll of curse armour
 
@@ -505,10 +518,9 @@ Si es usado en un mazo de cartas, este pergamino revelará la carta superior.
 %%%%
 scroll of revelation
 
-Este pergamino revela los alrededores del lector.
-
-Revelará la presencia de puertas secretas, pero no es lo suficientemente
-poderoso para ver más allá de ellas, o en zonas completamente cerradas.
+Este pergamino revela los alrededores del lector. El piso actual está mapeado, y
+todo dentro de una distancia moderada, incluyendo visible e invisible monstruos,
+está revelado por un momento.
 %%%%
 scroll of remove curse
 
