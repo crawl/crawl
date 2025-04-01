@@ -39,6 +39,10 @@ A dry fountain
 
 Una fuente reseca que ha visto días mejores.
 %%%%
+A frozen archway
+
+Este portal lleva a una cueva de hielo. Está derritiéndose lentamente.
+%%%%
 A gate leading back out of this place
 
 Esta puerta te conduce de vuelta al calabozo.
@@ -46,6 +50,15 @@ Esta puerta te conduce de vuelta al calabozo.
 A gate leading to another region of Pandemonium
 
 Esta puerta te lleva a otra región más del Pandemonio. Siempre habrán más.
+%%%%
+A gate to the Realm of Zot
+
+Esta puerta va al Reino de Zot.
+%%%%
+A gate to the Vaults
+
+Esta puetra va a las bóvedas. Ten cuidado porque no puedes salir sin una runa 
+de Zot, y la runa plata en el quinto piso está muy guardado. 
 %%%%
 A gateway leading out of the Abyss
 
