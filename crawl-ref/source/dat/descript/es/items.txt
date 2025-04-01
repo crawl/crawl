@@ -420,6 +420,10 @@ ring of protection from cold
 
 Este anillo protege del frío.
 %%%%
+ring of protection from fire
+
+Este anillo protege del fuego
+%%%%
 ring of protection from magic
 
 Este anillo incrementa la resistencia de su portador contra embrujos adversos.
