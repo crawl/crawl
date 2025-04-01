@@ -6041,7 +6041,6 @@ void unmarshallItem(reader &th, item_def &item)
                     item.brand = SPMSL_BLINDING;
                     break;
                 default:
-                    item.brand = SPMSL_POISONED;
                     break;
             }
         }
