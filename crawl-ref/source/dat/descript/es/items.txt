@@ -47,9 +47,6 @@ puede sentir el diáfano impacto de la furia arcana contenida en el libro. Es
 codiciado por los brujos, ya que le permite al dotado e ingenioso ordenar la
 destrucción con un simple chasquido de los dedos. Sin embargo, los magos más
 endebles podrían encontrar su perdición al intentar leer este opus.
-
-ADVERTENCIA: Si fallas al intentar memorizar un hechizo de este libro,
-recibirás un castigo.
 %%%%
 book of cantrips
 
