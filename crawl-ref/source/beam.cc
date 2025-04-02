@@ -4681,6 +4681,10 @@ void bolt::update_hurt_or_helped(monster* mon)
 
 void bolt::tracer_enchantment_affect_monster(monster* mon)
 {
+    bool has_friendly_past_target = check_for_friendly_past_target(mon);
+    if (has_friendly_past_target)
+        return;
+
     // Only count tracers as hitting creatures they could potentially affect
     if (ench_flavour_affects_monster(agent(), flavour, mon, true)
         && !(has_saving_throw() && mons_invuln_will(*mon)))
@@ -4693,7 +4697,6 @@ void bolt::tracer_enchantment_affect_monster(monster* mon)
 
     tracer->monster_hit(*this, *mon);
     extra_range_used += range_used_on_hit();
-    check_for_friendly_past_target(mon);
 }
 
 // Return false if we should skip handling this monster.
@@ -4772,10 +4775,10 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final)
     return true;
 }
 
-void bolt::check_for_friendly_past_target(monster* mon)
+bool bolt::check_for_friendly_past_target(monster* mon)
 {
     if (!tracer->should_stop() || is_harmless(mon))
-        return;
+        return false;
 
     // If prompts for overshooting the target are disabled, instead
     // just let the caller know that there was something there. They
@@ -4791,9 +4794,11 @@ void bolt::check_for_friendly_past_target(monster* mon)
         {
             finish_beam();
             friendly_past_target = true;
+            return true;
         }
-        return;
     }
+
+    return false;
 }
 
 // Whether or not this non-enchantment effect would have a relevant non-damage
@@ -4827,6 +4832,10 @@ bool bolt::has_relevant_side_effect(monster* mon)
 
 void bolt::tracer_nonenchantment_affect_monster(monster* mon)
 {
+    bool has_friendly_past_target = check_for_friendly_past_target(mon);
+    if (has_friendly_past_target)
+        return;
+
     int preac = 0, post = 0, final = 0;
 
     bool side_effect = has_relevant_side_effect(mon);
@@ -4886,8 +4895,6 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
     tracer->monster_hit(*this, *mon);
     // Either way, we could hit this monster, so update range used.
     extra_range_used += range_used_on_hit();
-
-    check_for_friendly_past_target(mon);
 
     if (origin_spell == SPELL_COMBUSTION_BREATH && !in_explosion_phase)
         _combustion_breath_explode(this, mon->pos());
