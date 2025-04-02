@@ -954,7 +954,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             cast_sphinx_sisters(caster, mons_spellpower(caster, SPELL_SPHINX_SISTERS), false);
         }
     } },
-    { SPELL_CIRCLE_OF_GLYPHS, {
+    { SPELL_RING_OF_BINDING, {
         [](const monster &caster) {
             auto locations = find_sigil_locations(caster, true);
             if (locations.size() == 0)
@@ -964,7 +964,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         },
         [] (monster &caster, mon_spell_slot /*slot*/, bolt& /*beem*/) {
             const int pow = mons_spellpower(caster, SPELL_SIGIL_OF_BINDING);
-            cast_circle_of_glyphs(caster, pow);
+            cast_ring_of_binding(caster, pow);
         }
     } }
 };

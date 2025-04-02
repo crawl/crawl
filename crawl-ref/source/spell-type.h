@@ -637,6 +637,6 @@ enum spell_type : int
     SPELL_BECKONING_GALE,
     SPELL_ALL_PURPOSE_TEMPERING,    // Monster version of Percussive Tempering
     SPELL_SPHINX_SISTERS,
-    SPELL_CIRCLE_OF_GLYPHS,
+    SPELL_RING_OF_BINDING,
     NUM_SPELLS
 };

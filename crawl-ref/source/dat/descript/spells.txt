@@ -337,7 +337,7 @@ wounded, and channelling such necrotic energies will leave the caster's own
 health temporarily drained (though spellpower will reduce the intensity of this
 side-effect).
 %%%%
-Circle of Glyphs spell
+Ring of Binding spell
 
 Inscribes sigils on the floor surrounding the target which will bind anyone
 passing over them, leaving them able to act and dodge normally but unable to

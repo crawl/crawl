@@ -4485,7 +4485,7 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_CIRCLE_OF_GLYPHS, "Circle of Glyphs",
+    SPELL_RING_OF_BINDING, "Ring of Binding",
     spschool::hexes,
     spflag::monster,
     3,

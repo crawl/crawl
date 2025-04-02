@@ -650,7 +650,7 @@ spret cast_sigil_of_binding(int pow, bool fail, bool tracer)
     return spret::success;
 }
 
-void cast_circle_of_glyphs(const monster& caster, int pow)
+void cast_ring_of_binding(const monster& caster, int pow)
 {
     // Fill list of viable locations to create the sigil
     vector<coord_def> positions = find_sigil_locations(caster, false);
@@ -675,14 +675,12 @@ void cast_circle_of_glyphs(const monster& caster, int pow)
     // How many positions do we want to take?
     int num_sigils = min(4, (int)positions.size());
 
-    int dur = BASELINE_DELAY * random_range(5 + div_rand_round(pow, 4),
-                                            8 + div_rand_round(pow, 2));
-
-    // Now pick as many as we need from each list in turn
+    // Now pick as many as we need from the list
     int seen = 0;
 
     for (int n=0; n<num_sigils; n++)
     {
+        int dur = random_range(20 + pow / 8, 40 + pow / 4);
         temp_change_terrain(positions[n], DNGN_BINDING_SIGIL, dur,
                             TERRAIN_CHANGE_BINDING_SIGIL, caster.mid);
         if (you.see_cell(positions[n]))
