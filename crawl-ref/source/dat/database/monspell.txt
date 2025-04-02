@@ -1110,7 +1110,7 @@ yaktaur scribe cast
 %%%%
 unseen yaktaur scribe cast
 
-A quill and parchment hovers in the air, scribbling furiously.
+You hear the frantic scratching of a quill on parchment.
 %%%%
 living spell cast
 

@@ -205,11 +205,25 @@ static void _give_wand(monster* mon, int level)
 
 static void _give_scroll(monster* mons, int level)
 {
-    if (mons->type != MONS_YAKTAUR_SCRIBE || coinflip())
+    if (mons->type != MONS_YAKTAUR_SCRIBE || !one_chance_in(7))
         return;
-    const int idx = items(false, OBJ_SCROLLS, OBJ_RANDOM, level);
+
+    // Mostly the strategic scrolls (except for blinking, which we actually
+    // see them use)
+    const scroll_type which_scroll = random_choose_weighted(
+        50, SCR_IDENTIFY,
+        25, SCR_AMNESIA,
+        20, SCR_REVELATION,
+        15, SCR_BLINKING,
+        10, SCR_ENCHANT_WEAPON,
+        10, SCR_ENCHANT_ARMOUR,
+        10, SCR_BRAND_WEAPON,
+         1, SCR_ACQUIREMENT);  // 1/981 chance
+
+    const int idx = items(false, OBJ_SCROLLS, which_scroll, level);
     if (idx == NON_ITEM)
         return;
+    env.item[idx].quantity = 1;
     // They won't ever use this scroll, it's just for the loot drop flavour
     give_specific_item(mons, idx);
 }
