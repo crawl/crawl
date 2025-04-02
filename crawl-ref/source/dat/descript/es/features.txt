@@ -1,3 +1,7 @@
+###############################################################################
+### Altars
+### Altares
+###############################################################################
 %%%%
 A basalt altar of Yredelemnul
 
@@ -17,31 +21,41 @@ A burning altar of Makhleb
 Un siempre ardiente altar de Makhleb el Destructor. Extrañas y retorcidas
 formas se pueden ver en las llamas.
 %%%%
-A closed door
-
-Una puera de madera. Para abrirla, simplemente camina hacia ella, o usa 'O'
-%%%%
 A corrupted altar of Lugonu
 
 Un altar de Lugonu, posiblemente dedicado a algún otro poder antes de que fuera
 corrompido irrevocablemente.
-%%%%
-A crawl-hole back to the Lair
-
-Puedes usarlo para volver a un sitio menos estresante y con menos telarañas.
 %%%%
 A deep blue altar of Sif Muna
 
 Un altar del azul más oscuro, cubierto de intrincadas formas y escrituras en
 alfabetos ya olvidados hace mucho, dedicado a Sif Muna.
 %%%%
-A dry fountain
+A glowing golden altar of the Shining One
 
-Una fuente reseca que ha visto días mejores.
+Un altar de El Resplandeciente, hecho del oro más puro y de un resplandor que
+casi ciega.
 %%%%
+A glowing silver altar of Zin
+
+Un altar a Zin, quien dio las Leyes, hecho de una plata tan prístina como se
+espera que sean los seguidores de Zin, y brillando gentilmente.
+%%%%
+###############################################################################
+### (Timed) Portals
+### Portales (Temporales)
+###############################################################################
 A frozen archway
 
 Este portal lleva a una cueva de hielo. Está derritiéndose lentamente.
+%%%%
+###############################################################################
+### Gateways (To Another Branch)
+### Puertas (A Otra Rama)
+###############################################################################
+A crawl-hole back to the Lair
+
+Puedes usarlo para volver a un sitio menos estresante y con menos telarañas.
 %%%%
 A gate leading back out of this place
 
@@ -69,15 +83,17 @@ A gateway to Hell
 
 Este portal lleva al Vestíbulo del Infierno. Pocos irían allí voluntariamente.
 %%%%
-A glowing golden altar of the Shining One
+###############################################################################
+### Other
+### Otros
+###############################################################################
+A closed door
 
-Un altar de El Resplandeciente, hecho del oro más puro y de un resplandor que
-casi ciega.
+Una puera de madera. Para abrirla, simplemente camina hacia ella, o usa 'O'
 %%%%
-A glowing silver altar of Zin
+A dry fountain
 
-Un altar a Zin, quien dio las Leyes, hecho de una plata tan prístina como se
-espera que sean los seguidores de Zin, y brillando gentilmente.
+Una fuente reseca que ha visto días mejores.
 %%%%
 A granite statue
 
@@ -93,6 +109,10 @@ A rock wall
 
 Una pared de roca sencilla
 %%%%
+###############################################################################
+### Old and Unused
+### Viejos y no usados
+###############################################################################
 A crystal clear mirror
 
 Un espejo reluciente, que refleja todo a su alrededor.
