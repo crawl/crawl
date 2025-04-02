@@ -58,7 +58,7 @@
 typedef vector<string> (*keys_by_glyph)(char32_t showchar);
 typedef vector<string> (*simple_key_list)();
 typedef void (*db_keys_recap)(vector<string>&);
-typedef MenuEntry* (*menu_entry_generator)(char letter, const string &str,
+typedef unique_ptr<MenuEntry> (*menu_entry_generator)(char letter, const string &str,
                                            string &key);
 typedef function<int (const string &, const string &, string)> key_describer;
 
@@ -126,7 +126,7 @@ public:
     /// A set of optional functionality; see lookup_type for details
     lookup_type_flags flags;
 private:
-    MenuEntry* make_menu_entry(char letter, string &key) const;
+    unique_ptr<MenuEntry> make_menu_entry(char letter, string &key) const;
     string key_to_menu_str(const string &key) const;
     vector<string> get_desc_keys(string regex) const;
 
@@ -202,7 +202,7 @@ static monster_type _mon_by_name(string name)
     return _is_soh(name) ? _soh_type(name) : get_monster_by_name(name);
 }
 
-static bool _compare_mon_names(MenuEntry *entry_a, MenuEntry* entry_b)
+static bool _compare_mon_names(unique_ptr<MenuEntry>& entry_a, unique_ptr<MenuEntry>& entry_b)
 {
     monster_info* a = static_cast<monster_info* >(entry_a->data);
     monster_info* b = static_cast<monster_info* >(entry_b->data);
@@ -217,7 +217,7 @@ static bool _compare_mon_names(MenuEntry *entry_a, MenuEntry* entry_b)
 
 // Compare monsters by location-independent level, or by hitdice if
 // levels are equal, or by name if both level and hitdice are equal.
-static bool _compare_mon_toughness(MenuEntry *entry_a, MenuEntry* entry_b)
+static bool _compare_mon_toughness(unique_ptr<MenuEntry>& entry_a, unique_ptr<MenuEntry>& entry_b)
 {
     monster_info* a = static_cast<monster_info* >(entry_a->data);
     monster_info* b = static_cast<monster_info* >(entry_b->data);
@@ -267,7 +267,7 @@ namespace
                 else
                     prompt += "(CTRL-S to sort by name)";
             }
-            set_title(new MenuEntry(prompt, MEL_TITLE));
+            set_title(make_unique<MenuEntry>(prompt, MEL_TITLE));
         }
 
         bool skip_process_command(int keyin) override
@@ -605,9 +605,9 @@ static void _recap_feat_keys(vector<string> &keys)
  * @param key       The raw database key for the entry. (E.g. "blade card".)
  * @return          A new menu entry.
  */
-static MenuEntry* _simple_menu_gen(char letter, const string &str, string &key)
+static unique_ptr<MenuEntry> _simple_menu_gen(char letter, const string &str, string &key)
 {
-    MenuEntry* me = new MenuEntry(str, MEL_ITEM, 1, letter);
+    auto me = make_unique<MenuEntry>(str, MEL_ITEM, 1, letter);
     me->data = &key;
     return me;
 }
@@ -620,7 +620,7 @@ static MenuEntry* _simple_menu_gen(char letter, const string &str, string &key)
  * @param mslot[out]  A space in memory to store a fake monster.
  * @return            A new menu entry.
  */
-static MenuEntry* _monster_menu_gen(char letter, const string &str,
+static unique_ptr<MenuEntry> _monster_menu_gen(char letter, const string &str,
                                     monster_info &mslot)
 {
     // Create and store fake monsters, so the menu code will
@@ -659,7 +659,7 @@ static MenuEntry* _monster_menu_gen(char letter, const string &str,
     // NOTE: MonsterMenuEntry::get_tiles() takes care of setting
     // up a fake weapon when displaying a fake dancing weapon's
     // tile.
-    return new MonsterMenuEntry(title, &mslot, letter);
+    return make_unique<MonsterMenuEntry>(title, &mslot, letter);
 }
 
 static bool _make_item_fake_unrandart(item_def &item, int unrand_index)
@@ -677,9 +677,9 @@ static bool _make_item_fake_unrandart(item_def &item, int unrand_index)
 /**
  * Generate a ?/I menu entry. (ref. _simple_menu_gen()).
  */
-static MenuEntry* _item_menu_gen(char letter, const string &str, string &key)
+static unique_ptr<MenuEntry> _item_menu_gen(char letter, const string &str, string &key)
 {
-    MenuEntry* me = _simple_menu_gen(letter, str, key);
+    auto me = _simple_menu_gen(letter, str, key);
     item_def item;
     item_kind kind = item_kind_by_name(key);
     if (kind.base_type == OBJ_UNASSIGNED)
@@ -698,9 +698,9 @@ static MenuEntry* _item_menu_gen(char letter, const string &str, string &key)
 /**
  * Generate a ?/F menu entry. (ref. _simple_menu_gen()).
  */
-static MenuEntry* _feature_menu_gen(char letter, const string &str, string &key)
+static unique_ptr<MenuEntry> _feature_menu_gen(char letter, const string &str, string &key)
 {
-    MenuEntry* me = new MenuEntry(str, MEL_ITEM, 1, letter);
+    auto me = make_unique<MenuEntry>(str, MEL_ITEM, 1, letter);
     me->data = &key;
 
     const dungeon_feature_type feat = feat_by_desc(str);
@@ -716,17 +716,17 @@ static MenuEntry* _feature_menu_gen(char letter, const string &str, string &key)
 /**
  * Generate a ?/G menu entry. (ref. _simple_menu_gen()).
  */
-static MenuEntry* _god_menu_gen(char /*letter*/, const string &/*str*/, string &key)
+static unique_ptr<MenuEntry> _god_menu_gen(char /*letter*/, const string &/*str*/, string &key)
 {
-    return new GodMenuEntry(str_to_god(key));
+    return make_unique<GodMenuEntry>(str_to_god(key));
 }
 
 /**
  * Generate a ?/A menu entry. (ref. _simple_menu_gen()).
  */
-static MenuEntry* _ability_menu_gen(char letter, const string &str, string &key)
+static unique_ptr<MenuEntry> _ability_menu_gen(char letter, const string &str, string &key)
 {
-    MenuEntry* me = _simple_menu_gen(letter, str, key);
+    auto me = _simple_menu_gen(letter, str, key);
 
     const ability_type ability = ability_by_name(str);
     if (ability != ABIL_NON_ABILITY)
@@ -738,9 +738,9 @@ static MenuEntry* _ability_menu_gen(char letter, const string &str, string &key)
 /**
  * Generate a ?/C menu entry. (ref. _simple_menu_gen()).
  */
-static MenuEntry* _card_menu_gen(char letter, const string &str, string &key)
+static unique_ptr<MenuEntry> _card_menu_gen(char letter, const string &str, string &key)
 {
-    MenuEntry* me = _simple_menu_gen(letter, str, key);
+    auto me = _simple_menu_gen(letter, str, key);
     me->add_tile(tile_def(TILEG_NEMELEX_CARD));
     return me;
 }
@@ -748,9 +748,9 @@ static MenuEntry* _card_menu_gen(char letter, const string &str, string &key)
 /**
  * Generate a ?/S menu entry. (ref. _simple_menu_gen()).
  */
-static MenuEntry* _spell_menu_gen(char letter, const string &str, string &key)
+static unique_ptr<MenuEntry> _spell_menu_gen(char letter, const string &str, string &key)
 {
-    MenuEntry* me = _simple_menu_gen(letter, str, key);
+    auto me = _simple_menu_gen(letter, str, key);
 
     const spell_type spell = spell_by_name(str);
     if (spell != SPELL_NO_SPELL)
@@ -764,9 +764,9 @@ static MenuEntry* _spell_menu_gen(char letter, const string &str, string &key)
 /**
  * Generate a ?/K menu entry. (ref. _simple_menu_gen()).
  */
-static MenuEntry* _skill_menu_gen(char letter, const string &str, string &key)
+static unique_ptr<MenuEntry> _skill_menu_gen(char letter, const string &str, string &key)
 {
-    MenuEntry* me = _simple_menu_gen(letter, str, key);
+    auto me = _simple_menu_gen(letter, str, key);
 
     const skill_type skill = str_to_skill_safe(str);
     me->add_tile(tile_def(tileidx_skill(skill, TRAINING_ENABLED)));
@@ -777,9 +777,9 @@ static MenuEntry* _skill_menu_gen(char letter, const string &str, string &key)
 /**
  * Generate a ?/B menu entry. (ref. _simple_menu_gen()).
  */
-static MenuEntry* _branch_menu_gen(char letter, const string &str, string &key)
+static unique_ptr<MenuEntry> _branch_menu_gen(char letter, const string &str, string &key)
 {
-    MenuEntry* me = _simple_menu_gen(letter, str, key);
+    auto me = _simple_menu_gen(letter, str, key);
 
     const branch_type branch = branch_by_shortname(str);
     int hotkey = branches[branch].travel_shortcut;
@@ -792,9 +792,9 @@ static MenuEntry* _branch_menu_gen(char letter, const string &str, string &key)
 /**
  * Generate a ?/L menu entry. (ref. _simple_menu_gen()).
  */
-static MenuEntry* _cloud_menu_gen(char letter, const string &str, string &key)
+static unique_ptr<MenuEntry> _cloud_menu_gen(char letter, const string &str, string &key)
 {
-    MenuEntry* me = _simple_menu_gen(letter, str, key);
+    auto me = _simple_menu_gen(letter, str, key);
 
     const string cloud_name = lowercase_string(str);
     const cloud_type cloud = cloud_name_to_type(cloud_name);
@@ -817,9 +817,9 @@ static MenuEntry* _cloud_menu_gen(char letter, const string &str, string &key)
 /**
  * Generate a ?/U menu entry. (ref. _simple_menu_gen()).
  */
-static MenuEntry* _mut_menu_gen(char letter, const string &str, string &key)
+static unique_ptr<MenuEntry> _mut_menu_gen(char letter, const string &str, string &key)
 {
-    MenuEntry* me = _simple_menu_gen(letter, str, key);
+    auto me = _simple_menu_gen(letter, str, key);
 
     const mutation_type mut = mutation_from_name(str, false);
     if (mut == NUM_MUTATIONS)
@@ -912,13 +912,13 @@ void LookupType::display_keys(vector<string> &key_list) const
         const char letter = index_to_letter(letter_i % 52);
         string &key = key_list[i];
         // XXX: double ugh
-        auto *entry = doing_mons
+        auto entry = doing_mons
             ? _monster_menu_gen(letter, key_to_menu_str(key), monster_list[i])
             : make_menu_entry(letter, key);
 
         if (!entry)
             continue;
-        desc_menu.add_entry(entry);
+        desc_menu.add_entry(std::move(entry));
         letter_i++;
     }
 
@@ -959,7 +959,8 @@ void LookupType::display_keys(vector<string> &key_list) const
  * @param key       The key for the entry.
  * @return          A pointer to a new MenuEntry object.
  */
-MenuEntry* LookupType::make_menu_entry(char letter, string &key) const
+unique_ptr<MenuEntry> LookupType::make_menu_entry(
+    char letter, string &key) const
 {
     ASSERT(menu_gen);
     return menu_gen(letter, key_to_menu_str(key), key);
@@ -1570,7 +1571,7 @@ public:
     {
         action_cycle = Menu::CYCLE_NONE;
         menu_action  = Menu::ACT_EXECUTE;
-        set_title(new MenuEntry("Lookup information about:", MEL_TITLE));
+        set_title(make_unique<MenuEntry>("Lookup information about:", MEL_TITLE));
         on_single_selection = [](const MenuEntry& item)
         {
             const LookupHelpMenuEntry *lhme
@@ -1589,15 +1590,15 @@ public:
         const string back = back_cmd == CMD_GAME_MENU
                                 ? "Back to game menu"
                                 : "Exit help lookup";
-        auto back_button = new MenuEntry(back, MEL_ITEM, 1, CK_ESCAPE);
+        auto back_button = make_unique<MenuEntry>(back, MEL_ITEM, 1, CK_ESCAPE);
         if (back_cmd != CMD_NO_CMD)
             back_button->add_tile(tileidx_command(back_cmd));
 
         for (int i = FIRST_LOOKUP_HELP_TYPE; i < NUM_LOOKUP_HELP_TYPES; ++i)
-            add_entry(new LookupHelpMenuEntry((lookup_help_type)i));
+            add_entry(make_unique<LookupHelpMenuEntry>((lookup_help_type)i));
 
-        add_entry(new MenuEntry("", MEL_SUBTITLE));
-        add_entry(back_button);
+        add_entry(make_unique<MenuEntry>("", MEL_SUBTITLE));
+        add_entry(std::move(back_button));
     }
 
     vector<MenuEntry *> show(bool reuse_selections = false) override

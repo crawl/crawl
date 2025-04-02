@@ -1506,7 +1506,7 @@ void AcquireMenu::init_entries()
     string key = items_key;
     for (item_def& item : acq_items)
     {
-        auto newentry = make_unique<AcquireEntry>(item);
+        unique_ptr<AcquireEntry> newentry = make_unique<AcquireEntry>(item);
         newentry->hotkeys.clear();
         newentry->add_hotkey(ckey++);
         add_entry(std::move(newentry));

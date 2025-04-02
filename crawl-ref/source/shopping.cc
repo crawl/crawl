@@ -1036,9 +1036,9 @@ int ShopMenu::selected_cost(bool use_shopping_list) const
         cost += dynamic_cast<ShopEntry*>(item)->cost;
     if (use_shopping_list && cost == 0)
     {
-        for (auto item : items)
+        for (const auto& item : items)
         {
-            auto e = dynamic_cast<ShopEntry*>(item);
+            auto e = dynamic_cast<ShopEntry*>(item.get());
             if (shopping_list.is_on_list(*e->item, &pos))
                 cost += e->cost;
         }
@@ -1182,12 +1182,12 @@ void ShopMenu::purchase_selected()
     {
         ASSERT(cost == 0);
         buying_from_list = true;
-        for (auto item : items)
+        for (const auto& item : items)
         {
-            auto e = dynamic_cast<ShopEntry*>(item);
+            auto e = dynamic_cast<ShopEntry*>(item.get());
             if (shopping_list.is_on_list(*e->item, &pos))
             {
-                selected.push_back(item);
+                selected.push_back(item.get());
                 cost += e->cost;
             }
         }
@@ -1295,37 +1295,37 @@ void ShopMenu::resort()
         const bool id = shoptype_identifies_stock(shop.type);
         // Using a map to sort reduces the number of item->name() calls.
         multimap<const string, MenuEntry *> list;
-        for (const auto entry : items)
+        for (auto& entry : items)
         {
-            const auto item = dynamic_cast<ShopEntry*>(entry)->item;
+            const auto item = dynamic_cast<ShopEntry*>(entry.get())->item;
             if (is_artefact(*item) && item->is_identified())
-                list.insert({item->name(DESC_QUALNAME, false, id), entry});
+                list.insert({item->name(DESC_QUALNAME, false, id), entry.release()});
             else
             {
                 list.insert({item->name(DESC_DBNAME, false, id) + " "
-                     + item->name(DESC_PLAIN, false, id), entry});
+                     + item->name(DESC_PLAIN, false, id), entry.release()});
             }
         }
         items.clear();
         for (auto &entry : list)
-            items.push_back(entry.second);
+            items.emplace_back(entry.second);
         break;
     }
     case ORDER_PRICE:
         sort(begin(items), end(items),
-             [](MenuEntry* a, MenuEntry* b)
+             [](unique_ptr<MenuEntry>& a, unique_ptr<MenuEntry>& b)
              {
-                 return dynamic_cast<ShopEntry*>(a)->cost
-                        < dynamic_cast<ShopEntry*>(b)->cost;
+                 return dynamic_cast<ShopEntry*>(a.get())->cost
+                        < dynamic_cast<ShopEntry*>(b.get())->cost;
              });
         break;
     case ORDER_ALPHABETICAL:
         sort(begin(items), end(items),
-             [this](MenuEntry* a, MenuEntry* b) -> bool
+             [this](unique_ptr<MenuEntry>& a, unique_ptr<MenuEntry>& b)
              {
                  const bool id = shoptype_identifies_stock(shop.type);
-                 return dynamic_cast<ShopEntry*>(a)->item->name(DESC_PLAIN, false, id)
-                        < dynamic_cast<ShopEntry*>(b)->item->name(DESC_PLAIN, false, id);
+                 return dynamic_cast<ShopEntry*>(a.get())->item->name(DESC_PLAIN, false, id)
+                        < dynamic_cast<ShopEntry*>(b.get())->item->name(DESC_PLAIN, false, id);
              });
         break;
     case NUM_ORDERS:
@@ -1344,7 +1344,7 @@ bool ShopMenu::examine_index(int i)
     // to make the description more useful. The flags are copied by
     // value by the default copy constructor so this is safe.
     item_def& item(*const_cast<item_def*>(dynamic_cast<ShopEntry*>(
-        items[i])->item));
+        items[i].get())->item));
     if (shoptype_identifies_stock(shop.type))
     {
         item.flags |= (ISFLAG_IDENTIFIED | ISFLAG_NOTED_ID
@@ -1419,8 +1419,8 @@ bool ShopMenu::process_key(int keyin)
         else if (can_purchase)
         {
             // Move shoplist to selection.
-            for (auto entry : items)
-                if (shopping_list.is_on_list(*dynamic_cast<ShopEntry*>(entry)->item, &pos))
+            for (auto& entry : items)
+                if (shopping_list.is_on_list(*dynamic_cast<ShopEntry*>(entry.get())->item, &pos))
                     entry->select(-2);
         }
         // Move shoplist to selection.
@@ -1441,7 +1441,7 @@ bool ShopMenu::process_key(int keyin)
     if (keyin - 'A' >= 0 && keyin - 'A' < (int)items.size())
     {
         const auto index = letter_to_index(keyin) % 26;
-        auto entry = dynamic_cast<ShopEntry*>(items[index]);
+        auto entry = dynamic_cast<ShopEntry*>(items[index].get());
         entry->selected_qty = 0;
         const item_def& item(*entry->item);
         if (shopping_list.is_on_list(item, &pos))
@@ -2354,7 +2354,7 @@ void ShoppingList::fill_out_menu(Menu& shopmenu)
                 name_thing(thing, DESC_A).c_str(),
                 unknown ? " (unknown)" : "");
 
-        MenuEntry *me = new MenuEntry(etitle, MEL_ITEM, 1, hotkey);
+        unique_ptr<MenuEntry> me = make_unique<MenuEntry>(etitle, MEL_ITEM, 1, hotkey);
         me->data = &thing;
 
         if (thing_is_item(thing))
@@ -2377,7 +2377,7 @@ void ShoppingList::fill_out_menu(Menu& shopmenu)
         if (cost > you.gold)
             me->colour = DARKGREY;
 
-        shopmenu.add_entry(me);
+        shopmenu.add_entry(std::move(me));
         ++hotkey;
     }
 }
@@ -2418,9 +2418,9 @@ void ShoppingList::display(bool view_only)
     shopmenu.action_cycle = view_only ? Menu::CYCLE_NONE : Menu::CYCLE_CYCLE;
     string title          = "item";
 
-    MenuEntry *mtitle = new MenuEntry(title, MEL_TITLE);
+    auto mtitle = make_unique<MenuEntry>(title, MEL_TITLE);
     mtitle->quantity = list->size();
-    shopmenu.set_title(mtitle);
+    shopmenu.set_title(std::move(mtitle));
 
     fill_out_menu(shopmenu);
 
@@ -2460,7 +2460,7 @@ void ShoppingList::display(bool view_only)
 
             del_thing_at_index(index);
             mtitle->quantity = this->list->size();
-            shopmenu.set_title(mtitle);
+            shopmenu.set_title(std::move(mtitle));
 
             if (this->list->empty())
             {

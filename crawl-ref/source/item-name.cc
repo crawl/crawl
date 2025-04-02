@@ -2099,9 +2099,9 @@ static string _gem_text(const item_def *gem_it)
     return text;
 }
 
-static MenuEntry* _fixup_runeorb_entry(MenuEntry* me)
+static unique_ptr<MenuEntry> _fixup_runeorb_entry(unique_ptr<MenuEntry> me)
 {
-    auto entry = static_cast<InvEntry*>(me);
+    unique_ptr<InvEntry> entry {static_cast<InvEntry*>(me.release())};
     ASSERT(entry);
 
     switch (entry->item->base_type)

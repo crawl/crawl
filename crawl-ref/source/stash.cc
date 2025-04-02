@@ -1642,9 +1642,9 @@ bool StashSearchMenu::process_key(int key)
     if (cur_action != menu_action)
     {
         // recolor items at the player's position
-        for (auto *me : items)
+        for (unique_ptr<MenuEntry>& me : items)
         {
-            auto *sme = dynamic_cast<StashMenuEntry *>(me);
+            auto *sme = dynamic_cast<StashMenuEntry *>(me.get());
             if (me)
                 sme->set_here_enabled(menu_action != ACT_EXECUTE);
         }
@@ -1660,7 +1660,7 @@ bool StashSearchMenu::examine_index(int i)
 {
     ASSERT(i >= 0 && i < static_cast<int>(items.size()));
 
-    const StashMenuEntry *sme = dynamic_cast<const StashMenuEntry *>(items[i]);
+    const StashMenuEntry *sme = dynamic_cast<const StashMenuEntry *>(items[i].get());
     const stash_search_result *res = sme->get_search_result();
 
     if (res->item.defined())
@@ -1716,15 +1716,15 @@ bool StashTracker::display_search_results(
     if (!nohl)
         stashmenu.search = search;
 
-    MenuEntry *mtitle = new MenuEntry(title, MEL_TITLE);
+    auto mtitle = make_unique<MenuEntry>(title, MEL_TITLE);
     // Abuse of the quantity field.
     mtitle->quantity = num_alt_results;
-    stashmenu.set_title(mtitle);
+    stashmenu.set_title(std::move(mtitle));
 
     bool need_here_subtitle = stashmenu.menu_action == Menu::ACT_EXECUTE
                                                             && sort_by_dist;
     bool need_there_subtitle = false;
-    StashMenuEntry *first_hdr = nullptr;
+    unique_ptr<StashMenuEntry> first_hdr = nullptr;
 
     menu_letter hotkey;
     int initial_snap = -1;
@@ -1738,9 +1738,9 @@ bool StashTracker::display_search_results(
         if (need_here_subtitle && (here || res.in_inventory))
         {
             // LIGHTCYAN for better contrast. XX change the default?
-            first_hdr = new StashMenuEntry("Results at your position",
+            first_hdr = make_unique<StashMenuEntry>("Results at your position",
                                                     MEL_SUBTITLE, LIGHTCYAN);
-            stashmenu.add_entry(first_hdr);
+            stashmenu.add_entry(std::move(first_hdr));
             // only show the `elsewhere` subtitle if there are any `here`
             // results
             need_there_subtitle = true;
@@ -1751,7 +1751,7 @@ bool StashTracker::display_search_results(
         if (need_there_subtitle && !(here || res.in_inventory))
         {
             const string cycle_keyhelp = " <lightgrey>([<w>,</w>] to cycle)</lightgrey>";
-            stashmenu.add_entry(new StashMenuEntry(
+            stashmenu.add_entry(make_unique<StashMenuEntry>(
                 "Results elsewhere" + cycle_keyhelp, MEL_SUBTITLE, LIGHTCYAN));
             ASSERT(first_hdr);
             first_hdr->text += cycle_keyhelp;
@@ -1795,7 +1795,7 @@ bool StashTracker::display_search_results(
                 colour = itemcol;
         }
 
-        StashMenuEntry *me = new StashMenuEntry(matchtitle.str(), MEL_ITEM,
+        auto me = make_unique<StashMenuEntry>(matchtitle.str(), MEL_ITEM,
                                             colour, 1, (int) hotkey, here);
         me->data = &res;
 
@@ -1824,7 +1824,7 @@ bool StashTracker::display_search_results(
             me->add_tile(tile_def(tileidx_feature_base(feat)));
         }
 
-        stashmenu.add_entry(me);
+        stashmenu.add_entry(std::move(me));
         hotkey++;
     }
     if (initial_snap > 0)

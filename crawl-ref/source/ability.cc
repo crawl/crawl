@@ -4038,18 +4038,18 @@ int choose_ability_menu(const vector<talent>& talents)
 #ifdef USE_TILE_LOCAL
     {
         // Hack like the one in spl-cast.cc:list_spells() to align the title.
-        ToggleableMenuEntry* me =
-            new ToggleableMenuEntry("Ability - do what?                  "
+        unique_ptr<ToggleableMenuEntry> me =make_unique<ToggleableMenuEntry>(
+                                    "Ability - do what?                  "
                                     "Cost                            Failure",
                                     "Ability - describe what?            "
                                     "Cost                            Failure",
                                     MEL_ITEM);
         me->colour = BLUE;
-        abil_menu.set_title(me, true, true);
+        abil_menu.set_title(std::move(me), true, true);
     }
 #else
     abil_menu.set_title(
-        new ToggleableMenuEntry("Ability - do what?                  "
+        make_unique<ToggleableMenuEntry>("Ability - do what?                  "
                                 "Cost                            Failure",
                                 "Ability - describe what?            "
                                 "Cost                            Failure",
@@ -4088,9 +4088,9 @@ int choose_ability_menu(const vector<talent>& talents)
             found_invocations = true;
         else
         {
-            ToggleableMenuEntry* me =
-                new ToggleableMenuEntry(describe_talent(talents[i]),
-                                        describe_talent(talents[i]),
+            string talent_str = describe_talent(talents[i]);
+            unique_ptr<ToggleableMenuEntry> me =
+                make_unique<ToggleableMenuEntry>(talent_str, talent_str,
                                         MEL_ITEM, 1, talents[i].hotkey);
             me->data = &numbers[i];
             me->add_tile(tile_def(tileidx_ability(talents[i].which)));
@@ -4099,35 +4099,37 @@ int choose_ability_menu(const vector<talent>& talents)
                 me->colour = COL_INAPPLICABLE;
                 me->add_tile(tile_def(TILEI_MESH));
             }
-            abil_menu.add_entry(me);
+            abil_menu.add_entry(std::move(me));
         }
     }
 
     if (found_invocations)
     {
 #ifdef USE_TILE_LOCAL
-        MenuEntry* subtitle = new MenuEntry(" Invocations -    ", MEL_ITEM);
+        unique_ptr<MenuEntry> subtitle = make_unique<MenuEntry>(
+            " Invocations -    ", MEL_ITEM);
         subtitle->colour = BLUE;
-        abil_menu.add_entry(subtitle);
+        abil_menu.add_entry(std::move(subtitle));
 #else
-        abil_menu.add_entry(new MenuEntry(" Invocations -    ", MEL_SUBTITLE));
+        abil_menu.add_entry(make_unique<MenuEntry>(" Invocations -    ", MEL_SUBTITLE));
 #endif
         for (unsigned int i = 0; i < talents.size(); ++i)
         {
-            if (talents[i].is_invocation)
+            const auto& t = talents[i];
+            if (t.is_invocation)
             {
-                ToggleableMenuEntry* me =
-                    new ToggleableMenuEntry(describe_talent(talents[i]),
-                                            describe_talent(talents[i]),
-                                            MEL_ITEM, 1, talents[i].hotkey);
+                string talent_str = describe_talent(t);
+                unique_ptr<ToggleableMenuEntry> me =
+                    make_unique<ToggleableMenuEntry>(talent_str, talent_str,
+                                            MEL_ITEM, 1, t.hotkey);
                 me->data = &numbers[i];
-                me->add_tile(tile_def(tileidx_ability(talents[i].which)));
-                if (!check_ability_possible(talents[i].which, true))
+                me->add_tile(tile_def(tileidx_ability(t.which)));
+                if (!check_ability_possible(t.which, true))
                 {
                     me->colour = COL_INAPPLICABLE;
                     me->add_tile(tile_def(TILEI_MESH));
                 }
-                abil_menu.add_entry(me);
+                abil_menu.add_entry(std::move(me));
             }
         }
     }

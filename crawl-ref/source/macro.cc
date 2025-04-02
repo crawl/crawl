@@ -1034,7 +1034,7 @@ public:
 #endif
         action_cycle = Menu::CYCLE_NONE;
         menu_action  = Menu::ACT_EXECUTE;
-        set_title(new MenuEntry("", MEL_TITLE));
+        set_title(make_unique<MenuEntry>("", MEL_TITLE));
     }
 
     void fill_entries(int set_hover_keycode=0)
@@ -1042,7 +1042,7 @@ public:
         // TODO: this seems like somehow it should involve ui::Switcher, but I
         // have no idea how to use that class with a Menu
         clear();
-        add_entry(new MenuEntry("Create/edit " + mode_name() + " from key", '~',
+        add_entry(make_unique<MenuEntry>("Create/edit " + mode_name() + " from key", '~',
             [this](const MenuEntry &)
                 {
                     edit_mapping(keyseq());
@@ -1050,7 +1050,8 @@ public:
                 }));
         if (get_map().size())
         {
-            MenuEntry *clear_entry = new MenuEntry("Clear all " + mode_name() + "s", '-',
+            unique_ptr<MenuEntry> clear_entry = make_unique<MenuEntry>(
+                "Clear all " + mode_name() + "s", '-',
                 [this](const MenuEntry &)
                     {
                         status_msg = "";
@@ -1063,14 +1064,15 @@ public:
             clear_entry->add_hotkey(CK_NUMPAD_SUBTRACT);
             clear_entry->add_hotkey(CK_NUMPAD_SUBTRACT2);
 
-            add_entry(clear_entry);
-            add_entry(new MenuEntry("Current " + mode_name() + "s", MEL_SUBTITLE));
+            add_entry(std::move(clear_entry));
+            add_entry(make_unique<MenuEntry>("Current " + mode_name() + "s", MEL_SUBTITLE));
             for (auto &mapping : get_map())
             {
                 // TODO: indicate if macro is from rc file somehow?
                 string action_str = vtostr(mapping.second);
                 action_str = replace_all(action_str, "<", "<<");
-                MenuEntry *me = new MenuEntry(action_str, (int) mapping.first[0],
+                unique_ptr<MenuEntry> me = make_unique<MenuEntry>(action_str,
+                    static_cast<int>(mapping.first[0]),
                     [this](const MenuEntry &item)
                     {
                         if (item.data)
@@ -1078,7 +1080,7 @@ public:
                         return true;
                     });
                 me->data = (void *) &mapping.first;
-                add_entry(me);
+                add_entry(std::move(me));
                 if (set_hover_keycode == mapping.first[0])
                     last_hovered = item_count() - 1;
             }
@@ -1274,7 +1276,7 @@ public:
             prompt = make_stringf(
                 "Input trigger key to edit or create a %s:",
                 parent.mode_name().c_str());
-            set_title(new MenuEntry(prompt, MEL_TITLE));
+            set_title(make_unique<MenuEntry>(prompt, MEL_TITLE));
             set_more("<lightgray>([<w>~</w>] to enter by keycode)</lightgray>");
             doing_key_input = true;
         }
@@ -1286,7 +1288,7 @@ public:
                         _keyseq_desc(key).c_str(),
                         _keyseq_action_desc(action).c_str());
 
-            set_title(new MenuEntry(prompt + "\n", MEL_TITLE));
+            set_title(make_unique<MenuEntry>(prompt + "\n", MEL_TITLE));
         }
 
         /// Initialize the menu for key editing, given some key to edit
@@ -1297,14 +1299,14 @@ public:
             reset_key_prompt();
             set_more(string(""));
 
-            add_entry(new MenuEntry("redefine", 'r',
+            add_entry(make_unique<MenuEntry>("redefine", 'r',
                 [this](const MenuEntry &)
                 {
                     set_more("");
                     return !edit_action();
                 }));
 
-            add_entry(new MenuEntry("redefine with raw key entry", 'R',
+            add_entry(make_unique<MenuEntry>("redefine with raw key entry", 'R',
                 [this](const MenuEntry &)
                 {
                     set_more("");
@@ -1314,7 +1316,7 @@ public:
 
             if (!action.empty())
             {
-                add_entry(new MenuEntry("clear", 'c',
+                add_entry(make_unique<MenuEntry>("clear", 'c',
                     [this](const MenuEntry &)
                     {
                         //weirdly MSVC requires the use of `this->` here
@@ -1323,7 +1325,7 @@ public:
                     }));
             }
 
-            add_entry(new MenuEntry("abort", 'a',
+            add_entry(make_unique<MenuEntry>("abort", 'a',
                 [this](const MenuEntry &)
                 {
                     abort = true;
@@ -1343,7 +1345,7 @@ public:
                         prompt.c_str(),
                         parent.mode_name().c_str(),
                         _keyseq_desc(key).c_str());
-            set_title(new MenuEntry(prompt, MEL_TITLE));
+            set_title(make_unique<MenuEntry>(prompt, MEL_TITLE));
             set_more("Raw input: [<w>esc</w>] to abort, [<w>enter</w>] to accept.");
             update_menu(true);
 #ifdef USE_TILE_WEB
@@ -1440,7 +1442,7 @@ public:
                     return true;
                 }
                 raw_tmp.push_back(keyin);
-                set_title(new MenuEntry(prompt + vtostr(raw_tmp)));
+                set_title(make_unique<MenuEntry>(prompt + vtostr(raw_tmp)));
                 return true;
             }
             else if (doing_key_input)
@@ -1533,7 +1535,7 @@ public:
 
         const bool existed = get_map().count(key);
 
-        MappingEditMenu pop = MappingEditMenu(key,
+        MappingEditMenu pop(key,
             existed ? get_map()[key] : keyseq(), *this);
         if (pop.input_mapping())
         {

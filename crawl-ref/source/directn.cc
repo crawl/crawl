@@ -555,7 +555,7 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
     desc_menu.set_tag("pickup");
     // necessary for sorting of the item submenu
     desc_menu.set_type(menu_type::pickup);
-    desc_menu.set_title(new MenuEntry(title, MEL_TITLE));
+    desc_menu.set_title(make_unique<MenuEntry>(title, MEL_TITLE));
     if (examine_only)
     {
         desc_menu.action_cycle = Menu::CYCLE_NONE;
@@ -565,7 +565,8 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
     {
         desc_menu.action_cycle = Menu::CYCLE_TOGGLE;
         desc_menu.menu_action = InvMenu::ACT_EXECUTE;
-        desc_menu.set_title(new MenuEntry(title_secondary, MEL_TITLE), false);
+        desc_menu.set_title(make_unique<MenuEntry>(title_secondary, MEL_TITLE),
+            false);
     }
 
     // Start with hotkey 'a' and count from there.
@@ -573,7 +574,7 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
     // Build menu entries for monsters.
     if (!list_mons.empty())
     {
-        desc_menu.add_entry(new MenuEntry("Monsters", MEL_SUBTITLE));
+        desc_menu.add_entry(make_unique<MenuEntry>("Monsters", MEL_SUBTITLE));
         for (const monster_info &mi : list_mons)
         {
             // List monsters in the form
@@ -608,21 +609,22 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
 #endif
             vector<formatted_string> fss;
             formatted_string::parse_string_to_multiple(str, fss);
-            MenuEntry *me = nullptr;
+            unique_ptr<MenuEntry> me;
             for (unsigned int j = 0; j < fss.size(); ++j)
             {
                 if (j == 0)
-                    me = new MonsterMenuEntry(prefix.str() + fss[j].tostring(), &mi, hotkey++);
+                    me = make_unique<MonsterMenuEntry>(prefix.str() + fss[j].tostring(), &mi, hotkey++);
 #ifndef USE_TILE_LOCAL
                 else
                 {
                     str = "         " + fss[j].tostring();
-                    me = new MenuEntry(str, MEL_ITEM, 1);
+                    me = make_unique<MenuEntry>(str, MEL_ITEM, 1);
                     // Not using a MonsterMenuEntry since that would display the tile again.
                     me->data = (void*)&mi;
                 }
 #endif
-                desc_menu.add_entry(me);
+                // TODO: do we sometimes add nulls here?
+                desc_menu.add_entry(std::move(me));
             }
         }
     }
@@ -630,19 +632,19 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
     // Build menu entries for items.
     if (!list_items.empty())
     {
-        vector<InvEntry*> all_items;
+        vector<unique_ptr<InvEntry>> all_items;
         for (const item_def *item : list_items)
         {
             all_items.push_back(full_view
-                                ? new FullViewInvEntry(*item)
-                                : new InvEntry(*item));
+                                ? make_unique<FullViewInvEntry>(*item)
+                                : make_unique<InvEntry>(*item));
         }
 
         const menu_sort_condition *cond = desc_menu.find_menu_sort_condition();
         desc_menu.sort_menu(all_items, cond);
 
-        desc_menu.add_entry(new MenuEntry("Items", MEL_SUBTITLE));
-        for (InvEntry *me : all_items)
+        desc_menu.add_entry(make_unique<MenuEntry>("Items", MEL_SUBTITLE));
+        for (unique_ptr<InvEntry>& me : all_items)
         {
 #ifndef USE_TILE_LOCAL
             // Show glyphs only for ASCII.
@@ -653,14 +655,14 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
             me->hotkeys[0] = hotkey;
             me->quantity = 2; // Hack to make items selectable.
 
-            desc_menu.add_entry(me);
+            desc_menu.add_entry(std::move(me));
             ++hotkey;
         }
     }
 
     if (!list_features.empty())
     {
-        desc_menu.add_entry(new MenuEntry("Features", MEL_SUBTITLE));
+        desc_menu.add_entry(make_unique<MenuEntry>("Features", MEL_SUBTITLE));
         for (const coord_def &c : list_features)
         {
             ostringstream desc;
@@ -681,11 +683,12 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
             desc << feature_description_at(c, false, DESC_A);
             if (is_unknown_stair(c) || is_unknown_transporter(c))
                 desc << " (not visited)";
-            FeatureMenuEntry *me = new FeatureMenuEntry(desc.str(), c, hotkey);
+            unique_ptr<FeatureMenuEntry> me = make_unique<FeatureMenuEntry>(
+                desc.str(), c, hotkey);
             me->tag        = "description";
             // Hack to make features selectable.
             me->quantity   = c.x*100 + c.y + 3;
-            desc_menu.add_entry(me);
+            desc_menu.add_entry(std::move(me));
             ++hotkey;
         }
     }

@@ -772,7 +772,7 @@ void wizard_make_monster_summoned(monster* mon)
         {'s', "spell", 's'},
     };
 
-    auto menu = WizardMenu("Which summon type (ESC to exit)?", choices);
+    WizardMenu menu ("Which summon type (ESC to exit)?", choices);
     if (!menu.run(true))
         return;
 

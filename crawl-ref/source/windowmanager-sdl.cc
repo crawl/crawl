@@ -33,7 +33,7 @@
 #include "unicode.h"
 #include "version.h"
 #include "windowmanager.h"
-
+// TODO: leaks on shutdown
 WindowManager *wm = nullptr;
 
 #define MIN_SDL_WINDOW_SIZE_X 800

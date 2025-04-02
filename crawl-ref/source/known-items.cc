@@ -37,20 +37,20 @@ public:
 
     // This loads items in the order they are put into the list (sequentially)
     menu_letter load_items_seq(const vector<const item_def*> &mitems,
-                               MenuEntry *(*procfn)(MenuEntry *me) = nullptr,
+                               unique_ptr<MenuEntry>(*procfn)(unique_ptr<MenuEntry> me) = nullptr,
                                menu_letter ckey = 'a')
     {
         for (const item_def *item : mitems)
         {
-            InvEntry *ie = new InvEntry(*item);
+            unique_ptr<InvEntry> ie = make_unique<InvEntry>(*item);
             if (tag == "pickup")
                 ie->tag = "pickup";
             // If there's no hotkey, provide one.
             if (ie->hotkeys[0] == ' ')
                 ie->hotkeys[0] = ckey++;
-            do_preselect(ie);
+            do_preselect(ie.get());
 
-            add_entry(procfn? (*procfn)(ie) : ie);
+            add_entry(procfn? (*procfn)(std::move(ie)) : std::move(ie));
         }
 
         return ckey;
@@ -310,18 +310,16 @@ public:
     }
 };
 
-static MenuEntry *known_item_mangle(MenuEntry *me)
+static unique_ptr<MenuEntry> known_item_mangle(unique_ptr<MenuEntry> me)
 {
-    unique_ptr<InvEntry> ie(dynamic_cast<InvEntry*>(me));
-    KnownEntry *newme = new KnownEntry(ie.get());
-    return newme;
+    InvEntry* ie = dynamic_cast<InvEntry*>(me.get());
+    return make_unique<KnownEntry>(ie);
 }
 
-static MenuEntry *unknown_item_mangle(MenuEntry *me)
+static unique_ptr<MenuEntry> unknown_item_mangle(unique_ptr<MenuEntry> me)
 {
-    unique_ptr<InvEntry> ie(dynamic_cast<InvEntry*>(me));
-    UnknownEntry *newme = new UnknownEntry(ie.get());
-    return newme;
+    InvEntry* ie = dynamic_cast<InvEntry*>(me.get());
+    return make_unique<UnknownEntry>(ie);
 }
 
 static bool _identified_item_names(const item_def *it1,
@@ -522,7 +520,7 @@ void check_item_knowledge(bool unknown_items)
     ml = menu.load_items(items_talismans, known_item_mangle, ml, false);
     if (!items_other.empty())
     {
-        menu.add_entry(new MenuEntry("Other Items", MEL_SUBTITLE));
+        menu.add_entry(make_unique<MenuEntry>("Other Items", MEL_SUBTITLE));
         ml = menu.load_items_seq(items_other, known_item_mangle, ml);
     }
 

@@ -333,9 +333,9 @@ void InvMenu::set_title_annotator(invtitle_annotator afn)
     title_annotate = afn;
 }
 
-void InvMenu::set_title(MenuEntry *t, bool first)
+void InvMenu::set_title(unique_ptr<MenuEntry> t, bool first)
 {
-    Menu::set_title(t, first);
+    Menu::set_title(std::move(t), first);
 }
 
 void InvMenu::set_preselect(const vector<SelItem> *pre)
@@ -350,9 +350,8 @@ string slot_description()
 
 void InvMenu::set_title(const string &s)
 {
-    set_title(new InvTitle(this, s.empty() ? "Inventory: " + slot_description()
-                                           : s,
-                           title_annotate));
+    string title = s.empty() ? "Inventory: " + slot_description() : s;
+    set_title(make_unique<InvTitle>(this, title,title_annotate));
 }
 
 bool InvMenu::skip_process_command(int keyin)
@@ -402,7 +401,7 @@ void InvMenu::select_item_index(int idx, int qty)
     if (type != menu_type::drop)
         return Menu::select_item_index(idx, qty);
 
-    InvEntry *ie = static_cast<InvEntry*>(items[idx]);
+    InvEntry *ie = static_cast<InvEntry*>(items[idx].get());
 
     bool should_toggle_star = _item_is_permadrop_candidate(ie->item[0])
         && (ie->has_star() || _mode_special_drop);
@@ -422,7 +421,7 @@ bool InvMenu::examine_index(int i)
     const bool do_actions = type == menu_type::describe;
     // not entirely sure if the bounds check is necessary
     auto ie = (i >= 0 && i < static_cast<int>(items.size()))
-                    ? dynamic_cast<InvEntry *>(items[i])
+                    ? dynamic_cast<InvEntry *>(items[i].get())
                     : nullptr;
 
     // superclass behavior: do nothing unless on_examine is defined, in which
@@ -546,7 +545,7 @@ string no_selectables_message(int item_selector)
 }
 
 void InvMenu::load_inv_items(int item_selector, int excluded_slot,
-                             function<MenuEntry* (MenuEntry*)> procfn)
+                             function<unique_ptr<MenuEntry> (unique_ptr<MenuEntry>)> procfn)
 {
     vector<const item_def *> tobeshown;
     _get_inv_items_to_show(tobeshown, item_selector, excluded_slot);
@@ -656,7 +655,7 @@ bool InvMenu::is_selectable(int index) const
 {
     if (type == menu_type::drop)
     {
-        InvEntry *item = dynamic_cast<InvEntry*>(items[index]);
+        InvEntry *item = dynamic_cast<InvEntry*>(items[index].get());
         if (item->is_cursed() && item->is_equipped())
             return false;
 
@@ -750,10 +749,17 @@ struct menu_entry_comparator
     {
     }
 
-    bool operator () (const MenuEntry* a, const MenuEntry* b) const
+    bool operator () (const unique_ptr<MenuEntry>& a, const unique_ptr<MenuEntry>& b) const
     {
-        const InvEntry *ia = dynamic_cast<const InvEntry *>(a);
-        const InvEntry *ib = dynamic_cast<const InvEntry *>(b);
+        const InvEntry *ia = dynamic_cast<const InvEntry *>(a.get());
+        const InvEntry *ib = dynamic_cast<const InvEntry *>(b.get());
+        return _compare_invmenu_items(ia, ib, &cond->cmp);
+    }
+
+    bool operator () (const unique_ptr<InvEntry>& a, const unique_ptr<InvEntry>& b) const
+    {
+        const InvEntry *ia = a.get();
+        const InvEntry *ib = b.get();
         return _compare_invmenu_items(ia, ib, &cond->cmp);
     }
 };
@@ -812,7 +818,7 @@ const menu_sort_condition *InvMenu::find_menu_sort_condition() const
     return nullptr;
 }
 
-void InvMenu::sort_menu(vector<InvEntry*> &invitems,
+void InvMenu::sort_menu(vector<unique_ptr<InvEntry>> &invitems,
                         const menu_sort_condition *cond)
 {
     if (!cond || cond->sort == -1 || (int) invitems.size() < cond->sort)
@@ -848,7 +854,7 @@ FixedVector<int, NUM_OBJECT_CLASSES> inv_order(
     OBJ_GOLD);
 
 menu_letter InvMenu::load_items(const vector<item_def>& mitems,
-                                function<MenuEntry* (MenuEntry*)> procfn,
+                                function<unique_ptr<MenuEntry> (unique_ptr<MenuEntry>)> procfn,
                                 menu_letter ckey, bool sort, bool subkeys)
 {
     vector<const item_def*> xlatitems;
@@ -858,7 +864,7 @@ menu_letter InvMenu::load_items(const vector<item_def>& mitems,
 }
 
 menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
-                                function<MenuEntry* (MenuEntry*)> procfn,
+                                function<unique_ptr<MenuEntry> (unique_ptr<MenuEntry>)> procfn,
                                 menu_letter ckey, bool sort, bool subkeys)
 {
     subkeys |= is_set(MF_MULTISELECT); // XXX Can the caller do this?
@@ -867,7 +873,7 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
     for (const item_def * const mitem : mitems)
         inv_class[mitem->base_type]++;
 
-    vector<InvEntry*> items_in_class;
+    vector<unique_ptr<InvEntry>> items_in_class;
     const menu_sort_condition *cond = nullptr;
     if (sort)
         cond = find_menu_sort_condition();
@@ -909,30 +915,30 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
                 subtitle += "</w><blue>)";
             }
         }
-        add_entry(new MenuEntry(subtitle, MEL_SUBTITLE));
+        add_entry(make_unique<MenuEntry>(subtitle, MEL_SUBTITLE));
 
         items_in_class.clear();
 
-        InvEntry *forced_first = nullptr;
+        unique_ptr<InvEntry> forced_first = nullptr;
         for (const item_def * const mitem : mitems)
         {
             if (mitem->base_type != i)
                 continue;
 
-            InvEntry * const ie = new InvEntry(*mitem);
+            unique_ptr<InvEntry> ie = make_unique<InvEntry>(*mitem);
             if (!subkeys)
                 ie->hotkeys.resize(1);
             if (mitem->sub_type == get_max_subtype(mitem->base_type))
-                forced_first = ie;
+                forced_first = std::move(ie);
             else
-                items_in_class.push_back(ie);
+                items_in_class.push_back(std::move(ie));
         }
 
         sort_menu(items_in_class, cond);
         if (forced_first)
-            items_in_class.insert(items_in_class.begin(),forced_first);
+            items_in_class.insert (items_in_class.begin(), std::move(forced_first));
 
-        for (InvEntry *ie : items_in_class)
+        for (unique_ptr<InvEntry>& ie : items_in_class)
         {
             if (tag == "pickup")
             {
@@ -951,9 +957,9 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
                 else
                     ie->hotkeys[0] = ckey++;
             }
-            do_preselect(ie);
+            do_preselect(ie.get());
 
-            add_entry(procfn ? procfn(ie) : ie);
+            add_entry(procfn ? procfn(std::move(ie)) : std::move(ie));
         }
     }
 

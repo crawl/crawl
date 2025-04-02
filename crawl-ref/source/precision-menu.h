@@ -38,9 +38,6 @@ public:
     virtual const coord_def& get_min_coord() const { return m_min_coord; }
     virtual const coord_def& get_max_coord() const { return m_max_coord; }
 
-    virtual void set_description_text(const string& text) { m_description = text; }
-    virtual const string& get_description_text() const { return m_description; }
-
 #ifdef USE_TILE_LOCAL
     virtual bool handle_mouse(const wm_mouse_event&) {return false; }
 #endif
@@ -79,21 +76,20 @@ public:
 protected:
     coord_def m_min_coord;
     coord_def m_max_coord;
-    bool m_selected;
-    bool m_allow_highlight;
-    bool m_dirty;
-    bool m_visible;
-    vector<int> m_hotkeys;
-    string m_description;
-
-    COLOURS m_fg_colour;
-    COLOURS m_highlight_colour;
-    int m_bg_colour;
 
     MenuItem* m_link_left;
     MenuItem* m_link_right;
     MenuItem* m_link_up;
     MenuItem* m_link_down;
+
+    vector<int> m_hotkeys;
+    COLOURS m_fg_colour;
+    COLOURS m_highlight_colour;
+    int m_bg_colour;
+    bool m_selected;
+    bool m_allow_highlight;
+    bool m_dirty;
+    bool m_visible;
 
 #ifdef USE_TILE_LOCAL
     // Holds the conversion values to translate unit values to pixel values
@@ -210,6 +206,8 @@ public:
     void clear_tile() { m_tiles.clear(); };
 
 protected:
+    // TODO: this class is only used by SkillTextTileItem?
+    // And SkillTextTileItem only uses 1 or 0 tiles
     vector<tile_def> m_tiles;
     FixedVector<TileBuffer, TEX_MAX> m_tile_buf;
 };

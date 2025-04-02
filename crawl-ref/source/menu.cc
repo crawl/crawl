@@ -344,7 +344,7 @@ void UIMenu::update_item(int index)
     _queue_allocation();
 
     ASSERT(index < static_cast<int>(m_menu->items.size()));
-    const MenuEntry *me = m_menu->items[index];
+    const MenuEntry *me = m_menu->items[index].get();
     int colour = m_menu->item_colour(me);
     string text = me->get_text();
 
@@ -925,7 +925,7 @@ void UIMenu::update_hovered_entry(bool force)
         const auto& entry = item_info[i];
         if (entry.heading)
             continue;
-        const auto me = m_menu->items[i];
+        const auto me = m_menu->items[i].get();
         if (me->hotkeys_count() == 0 && !force)
             continue;
         const int w = m_region.width / m_num_columns;
@@ -1066,7 +1066,7 @@ void UIMenu::pack_buffers()
     for (int i = vis_min; i < vis_max; ++i)
     {
         const auto& entry = item_info[i];
-        const auto me = m_menu->items[i];
+        const auto me = m_menu->items[i].get();
         const int entry_x = entry.column * col_width;
         const int entry_ex = entry_x + col_width;
         const int entry_h = row_heights[entry.row+1] - row_heights[entry.row];
@@ -1223,12 +1223,12 @@ void Menu::check_add_formatted_line(int firstcol, int nextcol,
 
         trim_string_right(s);
 
-        MenuEntry *me = new MenuEntry(s);
+        auto me = make_unique<MenuEntry>(s);
         me->colour = col;
         if (!title)
-            set_title(me);
+            set_title(std::move(me));
         else
-            add_entry(me);
+            add_entry(std::move(me));
     }
 
     line.clear();
@@ -1236,16 +1236,11 @@ void Menu::check_add_formatted_line(int firstcol, int nextcol,
 
 Menu::~Menu()
 {
-    deleteAll(items);
-    delete title;
-    if (title2)
-        delete title2;
     delete highlighter;
 }
 
 void Menu::clear()
 {
-    deleteAll(items);
     m_ui.menu->_queue_allocation();
 }
 
@@ -1449,19 +1444,16 @@ void Menu::set_highlighter(MenuHighlighter *mh)
     highlighter = mh;
 }
 
-void Menu::set_title(MenuEntry *e, bool first, bool indent)
+void Menu::set_title(unique_ptr<MenuEntry> e, bool first, bool indent)
 {
     if (first)
     {
-        if (title != e)
-            delete title;
-
-        title = e;
+        title = std::move(e);
         title->level = MEL_TITLE;
     }
     else
     {
-        title2 = e;
+        title2 = std::move(e);
         title2->level = MEL_TITLE;
     }
     m_indent_title = indent;
@@ -1470,13 +1462,13 @@ void Menu::set_title(MenuEntry *e, bool first, bool indent)
 
 void Menu::set_title(const string &t, bool first, bool indent)
 {
-    set_title(new MenuEntry(t, MEL_TITLE), first, indent);
+    set_title(make_unique<MenuEntry>(t, MEL_TITLE), first, indent);
 }
 
-void Menu::add_entry(MenuEntry *entry)
+void Menu::add_entry(unique_ptr<MenuEntry> entry)
 {
     entry->tag = tag;
-    items.push_back(entry);
+    items.push_back(std::move(entry));
 }
 
 void Menu::reset()
@@ -2111,9 +2103,9 @@ void Menu::get_selected(vector<MenuEntry*> *selected) const
 {
     selected->clear();
 
-    for (MenuEntry *item : items)
+    for (const auto& item : items)
         if (item->selected())
-            selected->push_back(item);
+            selected->push_back(item.get());
 }
 
 void Menu::deselect_all(bool update_view)
@@ -2684,7 +2676,7 @@ int Menu::get_entry_index(const MenuEntry *e) const
     int index = 0;
     for (const auto &item : items)
     {
-        if (item == e)
+        if (item.get() == e)
             return index;
 
         if (item->quantity != 0)
@@ -2790,8 +2782,8 @@ MenuEntry *Menu::get_cur_title() const
 
     // if title2 is set, use it as an alt title; otherwise don't change
     // titles
-    return first ? title
-                 : title2 ? title2 : title;
+    return first ? title.get()
+                 : title2 ? title2.get() : title.get();
 }
 
 void Menu::update_title()
@@ -3617,12 +3609,12 @@ int ToggleableMenu::pre_process(int key)
     if (find(toggle_keys.begin(), toggle_keys.end(), key) != toggle_keys.end())
     {
         // Toggle all menu entries
-        for (MenuEntry *item : items)
-            if (auto p = dynamic_cast<ToggleableMenuEntry*>(item))
+        for (auto& item : items)
+            if (auto p = dynamic_cast<ToggleableMenuEntry*>(item.get()))
                 p->toggle();
 
         // Toggle title
-        if (auto pt = dynamic_cast<ToggleableMenuEntry*>(title))
+        if (auto pt = dynamic_cast<ToggleableMenuEntry*>(title.get()))
             pt->toggle();
 
         update_menu();

@@ -462,18 +462,18 @@ static void _handle_FAQ()
         return;
     }
     Menu FAQmenu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING);
-    MenuEntry *title = new MenuEntry("Frequently Asked Questions");
+    unique_ptr<MenuEntry> title = make_unique<MenuEntry>("Frequently Asked Questions");
     title->colour = YELLOW;
-    FAQmenu.set_title(title);
+    FAQmenu.set_title(std::move(title));
 
     for (unsigned int i = 0, size = question_keys.size(); i < size; i++)
     {
         const char letter = index_to_letter(i);
         string question = getFAQ_Question(question_keys[i]);
         trim_string_right(question);
-        MenuEntry *me = new MenuEntry(question, MEL_ITEM, 1, letter);
+        unique_ptr<MenuEntry> me = make_unique<MenuEntry>(question, MEL_ITEM, 1, letter);
         me->data = &question_keys[i];
-        FAQmenu.add_entry(me);
+        FAQmenu.add_entry(std::move(me));
     }
 
     while (true)

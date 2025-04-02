@@ -182,22 +182,24 @@ int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_
 
     if (use_popup)
     {
-        MenuEntry * const y_me = new MenuEntry("Yes", MEL_ITEM, 1, 'Y');
+        unique_ptr<MenuEntry> y_me = make_unique<MenuEntry>("Yes", MEL_ITEM, 1, 'Y');
         y_me->add_hotkey('y');
-        MenuEntry * const n_me = new MenuEntry("No", MEL_ITEM, 1, 'N');
+        // TODO: ALL OF THESE ARE LEAKING LIKE A SIEVE
+        unique_ptr<MenuEntry>  n_me = make_unique<MenuEntry>("No", MEL_ITEM, 1, 'N');
         n_me->add_hotkey('n');
-        MenuEntry * const a_me = new MenuEntry("Always", MEL_ITEM, 1, 'A');
+        // TODO: ALL OF THESE ARE LEAKING LIKE A SIEVE
+        unique_ptr<MenuEntry> a_me = make_unique<MenuEntry>("Always", MEL_ITEM, 1, 'A');
         a_me->add_hotkey('a');
         y_me->add_tile(tile_def(TILEG_PROMPT_YES));
         n_me->add_tile(tile_def(TILEG_PROMPT_NO));
-
-        MenuEntry *question = new MenuEntry(prompt, MEL_TITLE);
+        // TODO: ALL OF THESE ARE LEAKING LIKE A SIEVE
+        unique_ptr<MenuEntry> question = make_unique<MenuEntry>(prompt, MEL_TITLE);
         question->wrap_text();
-        pop.set_title(question);
-        pop.add_entry(y_me);
-        pop.add_entry(n_me);
+        pop.set_title(std::move(question));
+        pop.add_entry(std::move(y_me));
+        pop.add_entry(std::move(n_me));
         if (ask_always)
-            pop.add_entry(a_me);
+            pop.add_entry(std::move(a_me));
         if (default_answer == 'Y')
             pop.set_hovered(1);
         else if (default_answer == 'N')
@@ -441,7 +443,7 @@ void PromptMenu::update_columns()
         return;
     }
     int max_width = 0;
-    for (MenuEntry *item : items)
+    for (const unique_ptr<MenuEntry>& item : items)
         max_width = max(max_width, static_cast<int>(_prompt_text(*item).size()));
     // the + 2 here is to allow at least 2 spaces between cols.
     // currently no limit on columns, maybe it shouldn't be more than 6 or so?
@@ -456,7 +458,7 @@ void PromptMenu::build_prompt_menu()
     update_columns();
     int c = 0;
     formatted_string line;
-    for (MenuEntry *item : items)
+    for (const unique_ptr<MenuEntry>& item : items)
     {
         if (item->level != MEL_ITEM && c != 0)
         {
@@ -464,7 +466,7 @@ void PromptMenu::build_prompt_menu()
             line.clear();
         }
 
-        line.textcolour(item_colour(item));
+        line.textcolour(item_colour(item.get()));
         // TODO: support MF_ALLOW_FORMATTING
         line.cprintf("%-*s",
             col_width,
@@ -560,13 +562,13 @@ WizardMenu::WizardMenu(string _title, vector<WizardEntry> &_options,
     : PromptMenu(MF_SINGLESELECT | MF_ARROWS_SELECT | MF_INIT_HOVER
                  | MF_GRID_LAYOUT | MF_ANYPRINTABLE), default_value(_default)
 {
-    set_title(new MenuEntry(_title, MEL_TITLE));
+    set_title(make_unique<MenuEntry>(_title, MEL_TITLE));
     for (auto &o : _options)
     {
-        auto p = new WizardEntry(o); // Menu expects new pointers.
+        auto p = make_unique<WizardEntry>(o); // Menu expects new pointers.
         if (!p->hotkeys_count())
             p->add_hotkey(next_unused_symbol()); // Give everything a hotkey.
-        add_entry(p);
+        add_entry(std::move(p));
     }
 }
 
