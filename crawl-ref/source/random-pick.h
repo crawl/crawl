@@ -102,7 +102,7 @@ int random_picker<T, max>::probability_at(T entry,
         ASSERTM(rar > 0, "Rarity %d: %d at level %d", rar, pop.value, level);
 
         if (entry == pop.value)
-            entry_rarity = rar;
+            entry_rarity += rar;
         totalrar += rar;
     }
 
