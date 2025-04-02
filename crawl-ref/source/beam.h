@@ -366,7 +366,7 @@ private:
     // for monsters
     void affect_monster(monster* m);
     void kill_monster(monster &m);
-    void check_for_friendly_past_target(monster* mon);
+    bool check_for_friendly_past_target(monster* mon);
     bool attempt_block(monster* mon);
     void update_hurt_or_helped(monster* mon);
     void enchantment_affect_monster(monster* mon);
