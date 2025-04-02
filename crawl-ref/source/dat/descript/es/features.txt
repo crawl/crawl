@@ -3,38 +3,42 @@
 ### Altares
 ###############################################################################
 %%%%
-A basalt altar of Yredelemnul
+A glowing golden altar of the Shining One
 
-Un altar a Yredelemnul el Oscuro, labrado a partir de columnatas basálticas
-%%%%
-A bloodstained altar of Trog
-
-Un altar a Trog el Colérico, burdamente hecho por lo que parecen ser manos de
-gigantes y cubierto con marcas de sangre.
+Un altar de El Resplandeciente, hecho del oro más puro y de un resplandor que
+casi ciega.
 %%%%
 A blossoming altar of Fedhas
 
 Un altar a Fedhas Madash, cubierto con vibrante y colorida vida vegetal.
 %%%%
-A burning altar of Makhleb
+A candlelit altar of Ignis
 
-Un siempre ardiente altar de Makhleb el Destructor. Extrañas y retorcidas
-formas se pueden ver en las llamas.
+Un altar a Ignis el flama moriendo. Es cubierto con cirios de todas las formas y tamaños, pero solo uno permance encendido.
 %%%%
 A corrupted altar of Lugonu
 
 Un altar de Lugonu, posiblemente dedicado a algún otro poder antes de que fuera
 corrompido irrevocablemente.
 %%%%
+A burning altar of Makhleb
+
+Un siempre ardiente altar de Makhleb el Destructor. Extrañas y retorcidas
+formas se pueden ver en las llamas.
+%%%%
 A deep blue altar of Sif Muna
 
 Un altar del azul más oscuro, cubierto de intrincadas formas y escrituras en
 alfabetos ya olvidados hace mucho, dedicado a Sif Muna.
 %%%%
-A glowing golden altar of the Shining One
+A bloodstained altar of Trog
 
-Un altar de El Resplandeciente, hecho del oro más puro y de un resplandor que
-casi ciega.
+Un altar a Trog el Colérico, burdamente hecho por lo que parecen ser manos de
+gigantes y cubierto con marcas de sangre.
+%%%%
+A basalt altar of Yredelemnul
+
+Un altar a Yredelemnul el Oscuro, labrado a partir de columnatas basálticas
 %%%%
 A glowing silver altar of Zin
 
