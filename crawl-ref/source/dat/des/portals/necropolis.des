@@ -77,7 +77,7 @@ function necropolis_portal_entry(e)
     -- number of ghost vaults one got per game previously.
     e.chance(350)
     e.depth_chance("Vaults", 0)
-    e.tags("vaults_necropolis no_monster_gen no_item_gen no_trap_gen")
+    e.tags("vaults_necropolis no_monster_gen no_item_gen no_trap_gen chance_necropolis")
     e.kfeat("O = enter_necropolis")
     e.kfeat("a = x")
     e.kfeat("t = t")
