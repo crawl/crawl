@@ -152,6 +152,7 @@ void uncontrolled_blink(bool override_stasis, int max_distance)
     const coord_def origin = you.pos();
     move_player_to_grid(target, false);
     _place_tloc_cloud(origin);
+    stop_delay(true);
 
     crawl_state.potential_pursuers.clear();
 }
