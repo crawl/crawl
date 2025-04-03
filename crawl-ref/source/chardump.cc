@@ -317,6 +317,18 @@ static void _sdump_visits(dump_params &par)
     }
 
     {
+        const PlaceInfo place_info = you.get_place_info(BRANCH_NECROPOLIS);
+        if (place_info.num_visits > 0)
+        {
+            text += make_stringf("You %svisited the chambers of the Necropolis %d time",
+                                 have.c_str(), place_info.num_visits);
+            if (place_info.num_visits > 1)
+                text += "s";
+            text += ".\n";
+        }
+    }
+
+    {
         const PlaceInfo place_info = you.get_place_info(BRANCH_ZIGGURAT);
         if (place_info.num_visits > 0)
         {
