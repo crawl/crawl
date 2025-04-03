@@ -144,7 +144,7 @@ static void _monster_regenerate(monster* mons)
     }
 
     // Non-land creatures out of their element cannot regenerate.
-    if (mons_primary_habitat(*mons) != HT_LAND
+    if (!(mons_habitat(*mons) & HT_DRY_LAND)
         && !monster_habitable_grid(mons, mons->pos()))
     {
         return;
@@ -3156,7 +3156,6 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
         return false;
 
     const dungeon_feature_type target_grid = env.grid(targ);
-    const habitat_type habitat = mons_primary_habitat(*mons);
 
     // No monster may enter the open sea.
     if (feat_is_endless(target_grid))
@@ -3285,7 +3284,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     // [dshaligram] Monsters now prefer to head for deep water only if
     // they're low on hitpoints. No point in hiding if they want a
     // fight.
-    if (habitat == HT_WATER
+    if (!(mons_habitat(*mons) & HT_DRY_LAND)
         && targ != you.pos()
         && target_grid != DNGN_DEEP_WATER
         && env.grid(mons->pos()) == DNGN_DEEP_WATER
@@ -3763,7 +3762,7 @@ static bool _monster_move(monster* mons, coord_def& delta)
     ASSERT(mons); // XXX: change to monster &mons
     move_array good_move;
 
-    const habitat_type habitat = mons_primary_habitat(*mons);
+    const habitat_type habitat = mons_habitat(*mons);
     bool deep_water_available = false;
 
     // TODO: move the below logic out of move code.
@@ -3789,8 +3788,8 @@ static bool _monster_move(monster* mons, coord_def& delta)
             if (!cell_is_solid(*ai))
             {
                 adj_move.push_back(*ai);
-                if (habitat == HT_WATER && feat_is_water(env.grid(*ai))
-                    || habitat == HT_LAVA && feat_is_lava(env.grid(*ai)))
+                if ((habitat & HT_DEEP_WATER) && feat_is_water(env.grid(*ai))
+                    || (habitat & HT_LAVA) && feat_is_lava(env.grid(*ai)))
                 {
                     adj_water.push_back(*ai);
                 }

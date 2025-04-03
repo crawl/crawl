@@ -301,14 +301,26 @@ void debug_list_monsters()
     }
 }
 
-static const char* ht_names[] =
+static string _habitat_debug_name(habitat_type ht)
 {
-    "land",
-    "amphibious",
-    "water",
-    "lava",
-    "amphibious_lava",
-};
+    string result;
+    if (ht & HT_DRY_LAND)
+        result += "dry_land|";
+    if (ht & HT_SHALLOW_WATER)
+        result += "shallow_water|";
+    if (ht & HT_DEEP_WATER)
+        result += "deep_water|";
+    if (ht & HT_LAVA)
+        result += "lava|";
+    if (ht & HT_MALIGN_GATEWAY)
+        result += "malign_gateway|";
+    if (ht >= (HT_MALIGN_GATEWAY << 1))
+        result += "INVALID|";
+    if (result.empty())
+        return "none";
+    result.pop_back();
+    return result;
+}
 
 // Prints a number of useful (for debugging, that is) stats on monsters.
 void debug_stethoscope(int mon)
@@ -387,14 +399,11 @@ void debug_stethoscope(int mon)
     }
 
     // Print habitat and behaviour information.
-    const habitat_type hab = mons_habitat(mons);
-
-    COMPILE_CHECK(ARRAYSZ(ht_names) == NUM_HABITATS);
     const actor * const summoner = actor_by_mid(mons.summoner);
     mprf(MSGCH_DIAGNOSTICS,
          "hab=%s beh=%s(%d) foe=%s(%d) mem=%d target=(%d,%d) "
          "firing_pos=(%d,%d) patrol_point=(%d,%d) god=%s%s",
-         (hab >= 0 && hab < NUM_HABITATS) ? ht_names[hab] : "INVALID",
+         _habitat_debug_name(mons_habitat(mons)).c_str(),
          mons.asleep()                    ? "sleep"
          : mons.behaviour == BEH_BATTY   ? "flitting"
          : mons_is_wandering(mons)       ? "wander"

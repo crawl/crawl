@@ -88,10 +88,6 @@ struct mon_display
 
 static mon_display monster_symbols[NUM_MONSTERS];
 
-static bool initialised_randmons = false;
-static vector<monster_type> monsters_by_habitat[NUM_HABITATS];
-static vector<monster_type> species_by_habitat[NUM_HABITATS];
-
 #include "mon-spell.h"
 #include "mon-data.h"
 
@@ -128,76 +124,18 @@ bool monster_inherently_flies(const monster &mons)
         || mons.has_facet(BF_BAT);
 }
 
-static habitat_type _grid2habitat(dungeon_feature_type grid)
+dungeon_feature_type preferred_feature_type(monster_type mt)
 {
-    if (feat_is_water(grid))
-        return HT_WATER;
-
-    switch (grid)
-    {
-    case DNGN_LAVA:
-        return HT_LAVA;
-    case DNGN_FLOOR:
-    default:
-        return HT_LAND;
-    }
-}
-
-dungeon_feature_type habitat2grid(habitat_type ht)
-{
-    switch (ht)
-    {
-    case HT_WATER:
-        return DNGN_DEEP_WATER;
-    case HT_LAVA:
-        return DNGN_LAVA;
-    case HT_LAND:
-    case HT_AMPHIBIOUS:
-    case HT_AMPHIBIOUS_LAVA:
-    default:
+    const habitat_type ht = mons_class_habitat(mt);
+    if (ht & HT_LAND)
         return DNGN_FLOOR;
-    }
-}
+    if (ht & HT_LAVA)
+        return DNGN_LAVA;
+    if (ht & HT_DEEP_WATER)
+        return DNGN_DEEP_WATER;
 
-static void _initialise_randmons()
-{
-    for (int i = 0; i < NUM_HABITATS; ++i)
-    {
-        set<monster_type> tmp_species;
-        const dungeon_feature_type feat = habitat2grid(habitat_type(i));
-
-        for (monster_type mt = MONS_0; mt < NUM_MONSTERS; ++mt)
-        {
-            if (invalid_monster_type(mt))
-                continue;
-
-            if (monster_habitable_feat(mt, feat))
-                monsters_by_habitat[i].push_back(mt);
-
-            const monster_type species = mons_species(mt);
-            if (monster_habitable_feat(species, feat))
-                tmp_species.insert(species);
-
-        }
-
-        for (auto type : tmp_species)
-            species_by_habitat[i].push_back(type);
-    }
-    initialised_randmons = true;
-}
-
-monster_type random_monster_at_grid(const coord_def& p, bool species)
-{
-    if (!initialised_randmons)
-        _initialise_randmons();
-
-    const habitat_type ht = _grid2habitat(env.grid(p));
-    const vector<monster_type> &valid_mons = species ? species_by_habitat[ht]
-                                                     : monsters_by_habitat[ht];
-
-    ASSERT(!valid_mons.empty());
-    return valid_mons.empty() ? MONS_PROGRAM_BUG
-                              : valid_mons[ random2(valid_mons.size()) ];
+    // Nothing should have none of these habitats, but we need to return something.
+    return DNGN_FLOOR;
 }
 
 typedef map<string, monster_type> mon_name_map;
@@ -3383,8 +3321,7 @@ mon_intel_type mons_intel(const monster& m)
     return mons_class_intel(mon.type);
 }
 
-static habitat_type _mons_class_habitat(monster_type mc,
-                                        bool real_amphibious = false)
+habitat_type mons_class_habitat(monster_type mc, bool real_amphibious)
 {
     const monsterentry *me = get_monster_data(mc);
     habitat_type ht = (me ? me->habitat
@@ -3403,8 +3340,8 @@ static habitat_type _mons_class_habitat(monster_type mc,
 habitat_type mons_habitat_type(monster_type t, monster_type base_t,
                                bool real_amphibious)
 {
-    return _mons_class_habitat(fixup_zombie_type(t, base_t),
-                               real_amphibious);
+    return mons_class_habitat(fixup_zombie_type(t, base_t),
+                              real_amphibious);
 }
 
 habitat_type mons_habitat(const monster& mon, bool real_amphibious)
@@ -3413,32 +3350,6 @@ habitat_type mons_habitat(const monster& mon, bool real_amphibious)
         ? draconian_subspecies(mon) : mon.type;
 
     return mons_habitat_type(type, mons_base_type(mon), real_amphibious);
-}
-
-habitat_type mons_class_primary_habitat(monster_type mc)
-{
-    habitat_type ht = _mons_class_habitat(mc);
-    if (ht == HT_AMPHIBIOUS || ht == HT_AMPHIBIOUS_LAVA)
-        ht = HT_LAND;
-    return ht;
-}
-
-habitat_type mons_primary_habitat(const monster& mon)
-{
-    const monster_type type = mons_is_draconian_job(mon.type)
-        ? draconian_subspecies(mon) : mons_base_type(mon);
-
-    return mons_class_primary_habitat(type);
-}
-
-habitat_type mons_class_secondary_habitat(monster_type mc)
-{
-    habitat_type ht = _mons_class_habitat(mc);
-    if (ht == HT_AMPHIBIOUS)
-        ht = HT_WATER;
-    if (ht == HT_AMPHIBIOUS_LAVA)
-        ht = HT_LAVA;
-    return ht;
 }
 
 int mons_power(monster_type mc)
