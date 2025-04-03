@@ -7,6 +7,9 @@
 #include "externs.h"
 #include "fixedarray.h"
 #include "rltiles/tiledef_defines.h"
+#ifdef USE_TILE // TODO: separate out this stuff from crawl_environment
+#include "tilecell.h"
+#endif
 
 struct crawl_tile_environment
 {
@@ -22,7 +25,7 @@ struct crawl_tile_environment
     FixedArray<tileidx_t, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> fg;
     FixedArray<tileidx_t, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> bg;
     FixedArray<tileidx_t, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> cloud;
-    map<coord_def, set<tileidx_t>> icons;
+    FixedArray<packed_icons, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> icons;
 #endif
     tile_flavour default_flavour;
     std::vector<std::string> names;
