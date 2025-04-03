@@ -6609,8 +6609,7 @@ spret okawaru_duel(const coord_def& target, bool fail)
     }
 
     if (mons->is_peripheral()
-        || mons_primary_habitat(*mons) == HT_LAVA
-        || mons_primary_habitat(*mons) == HT_WATER
+        || !(mons_habitat(*mons) & HT_DRY_LAND)
         || mons->wont_attack())
     {
         mpr("You cannot duel that!");

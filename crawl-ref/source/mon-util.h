@@ -188,7 +188,7 @@ static inline int get_resist(resists_t all, mon_resist_flags res)
     return v;
 }
 
-dungeon_feature_type habitat2grid(habitat_type ht);
+dungeon_feature_type preferred_feature_type(monster_type mt);
 
 monsterentry *get_monster_data(monster_type mc) IMMUTABLE;
 int get_mons_class_ac(monster_type mc) IMMUTABLE;
@@ -287,15 +287,12 @@ bool should_attract_mons(const monster &m);
 mon_intel_type mons_class_intel(monster_type mc);
 mon_intel_type mons_intel(const monster& mon);
 
-// Use mons_habitat() and mons_primary_habitat() wherever possible,
-// since the class variants do not handle zombies correctly.
+// Use mons_habitat() wherever possible, since the class variants do not
+// handle zombies correctly.
 habitat_type mons_habitat_type(monster_type t, monster_type base_t,
                                bool real_amphibious = false);
+habitat_type mons_class_habitat(monster_type t, bool real_amphibious = false);
 habitat_type mons_habitat(const monster& mon, bool real_amphibious = false);
-
-habitat_type mons_class_primary_habitat(monster_type mc);
-habitat_type mons_primary_habitat(const monster& mon);
-habitat_type mons_class_secondary_habitat(monster_type mc);
 
 bool mons_skeleton(monster_type mc);
 

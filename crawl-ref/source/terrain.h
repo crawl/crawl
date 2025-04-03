@@ -73,6 +73,8 @@ string feat_preposition(dungeon_feature_type feat, bool active = false,
                         const actor* who = nullptr);
 string stair_climb_verb(dungeon_feature_type feat);
 
+bool feat_is_deep_water(dungeon_feature_type feat);
+bool feat_is_shallow_water(dungeon_feature_type feat);
 bool feat_is_water(dungeon_feature_type feat);
 bool feat_is_lava(dungeon_feature_type feat);
 god_type feat_altar_god(dungeon_feature_type feat);

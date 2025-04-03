@@ -263,7 +263,11 @@ mon_attitude_type monster::temp_attitude() const
 bool monster::swimming() const
 {
     const dungeon_feature_type grid = env.grid(pos());
-    return feat_is_water(grid) && mons_primary_habitat(*this) == HT_WATER;
+    const habitat_type habitat = mons_habitat(*this);
+    // XXX: counting anything that can leave water as not swimming seems too
+    // restrictive to me as it excludes monstrs like merfolk, frogs, and
+    // polar bears --Wizard Ike
+    return feat_is_water(grid) && (habitat & HT_WATER) == habitat;
 }
 
 bool monster::extra_balanced_at(const coord_def p) const
@@ -294,12 +298,9 @@ bool monster::floundering_at(const coord_def p) const
     const dungeon_feature_type grid = env.grid(p);
     return (liquefied(p)
             || (feat_is_water(grid)
-                // Can't use monster_habitable_feat() because that'll return
-                // true for non-water monsters in shallow water.
-                && mons_primary_habitat(*this) != HT_WATER
                 // Use real_amphibious to detect giant non-water monsters in
                 // deep water, who flounder despite being treated as amphibious.
-                && mons_habitat(*this, true) != HT_AMPHIBIOUS
+                && !(mons_habitat(*this, true) & HT_DEEP_WATER)
                 && !extra_balanced_at(p)))
            && ground_level();
 }
@@ -321,19 +322,6 @@ bool monster::is_habitable_feat(dungeon_feature_type feat) const
 
 bool monster::can_drown() const
 {
-    // Presumably a electric eel in lava or a lavafish in deep water could
-    // drown, but that should never happen, so this simple check should
-    // be enough.
-    switch (mons_primary_habitat(*this))
-    {
-    case HT_WATER:
-    case HT_LAVA:
-    case HT_AMPHIBIOUS:
-        return false;
-    default:
-        break;
-    }
-
     return !is_unbreathing();
 }
 

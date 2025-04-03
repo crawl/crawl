@@ -196,14 +196,21 @@ enum mon_intel_type             // Must be in increasing intelligence order
 
 enum habitat_type
 {
-    // Flying monsters will appear in all categories except rock walls
-    HT_LAND = 0,         // Land critters
-    HT_AMPHIBIOUS,       // Amphibious creatures
-    HT_WATER,            // Water critters
-    HT_LAVA,             // Lava critters
-    HT_AMPHIBIOUS_LAVA,  // Amphibious w/ lava (salamanders)
 
-    NUM_HABITATS
+    HT_NONE = 0,
+    HT_DRY_LAND = 1 << 0,
+    HT_SHALLOW_WATER = 1 << 1,
+    HT_DEEP_WATER = 1 << 2,
+    HT_LAVA = 1 << 3,
+    HT_MALIGN_GATEWAY = 1 << 4,
+
+    HT_LAND = HT_DRY_LAND | HT_SHALLOW_WATER,
+    HT_AMPHIBIOUS = HT_LAND | HT_DEEP_WATER,
+    HT_WATER = HT_SHALLOW_WATER | HT_DEEP_WATER,
+    HT_AMPHIBIOUS_LAVA = HT_LAND | HT_LAVA,
+    HT_ELDRITCH_TENTACLE = HT_AMPHIBIOUS | HT_MALIGN_GATEWAY,
+    // Flying monsters will appear in all categories except HT_MALIGN_GATEWAY
+    HT_FLYER = HT_LAND | HT_WATER | HT_LAVA,
 };
 
 // order of these is important:

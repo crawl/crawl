@@ -12,7 +12,7 @@ hp_10x: 1200
 ac: 13
 ev: 0
 intelligence: animal
-habitat: amphibious
+habitat: eldritch_tentacle
 speed: 12
 size: giant
 shape: snake

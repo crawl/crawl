@@ -432,23 +432,8 @@ static bool _habitat_matches(bool orig_flies, habitat_type orig_hab,
         return false;
 
     const habitat_type new_hab = mons_habitat_type(new_type, new_type, false);
-    switch (orig_hab)
-    {
-        case HT_AMPHIBIOUS:
-        case HT_AMPHIBIOUS_LAVA:
-            return new_hab == orig_hab;
-        case HT_WATER:
-            return new_hab == orig_hab || new_hab == HT_AMPHIBIOUS;
-        case HT_LAVA:
-            return new_hab == orig_hab || new_hab == HT_AMPHIBIOUS_LAVA;
-        case HT_LAND:
-            return new_hab == orig_hab
-                || new_hab == HT_AMPHIBIOUS
-                || new_hab == HT_AMPHIBIOUS_LAVA;
-        case NUM_HABITATS:
-            break;
-    }
-    return false; // should never happen
+
+    return (new_hab & orig_hab) == orig_hab;
 }
 
 static int _goal_hd(int orig_hd, poly_power_type ppt)
