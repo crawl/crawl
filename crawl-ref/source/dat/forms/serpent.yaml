@@ -9,7 +9,7 @@ melds: [physical]
 resists: {poison: 1}
 str: 5
 size: large
-hp_mod: 12
+hp_mod: 120
 ac: {base: 9, scaling: 6}
 unarmed: {base: 7}
 unarmed_colour: lightgrey

@@ -3,7 +3,7 @@ equivalent_mons: animated_tree
 description: a tree.
 melds: [aux, body]
 resists: {poison: 1}
-hp_mod: 15
+hp_mod: 150
 ac: {base: 20, scaling: 14, xl_based: yes}
 unarmed: {base: 9}
 unarmed_colour: brown

@@ -289,10 +289,10 @@ int Form::mult_hp(int base_hp, bool force_talisman, int skill) const
     // Only penalize if you're in a talisman form with insufficient skill.
     const int shortfall = min_skill * scale - lvl;
     if (shortfall <= 0 || you.default_form != you.form && !force_talisman)
-        return hp_mod * base_hp / 10;
+        return hp_mod * base_hp / 100;
     // -10% hp per skill level short, down to -90%
     const int penalty = min(shortfall, 9 * scale);
-    return base_hp * hp_mod * (10 * scale - penalty) / (scale * 10 * 10);
+    return base_hp * hp_mod * (10 * scale - penalty) / (scale * 100 * 10);
 }
 
 /**

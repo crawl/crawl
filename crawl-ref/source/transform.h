@@ -277,7 +277,7 @@ private:
     /// See Form::get_equivalent_mons().
     const monster_type equivalent_mons;
 
-    /// 10 * multiplier to hp/mhp (that is, 10 is base, 15 is 1.5x, etc)
+    /// 100 * multiplier to hp/mhp (that is, 100 is base, 150 is 1.5x, etc)
     const int hp_mod;
 
     vector<pair<string,string>> fakemuts;

@@ -300,7 +300,7 @@ keyfns = {
     'str': Field(lambda s: parse_num(s, -99, 127)),
     'dex': Field(lambda s: parse_num(s, -99, 127)),
     'size': Field(parse_size),
-    'hp_mod': Field(lambda s: parse_num(s, 1, 100)),
+    'hp_mod': Field(lambda s: parse_num(s, 1, 200)),
     'move_speed': Field(lambda s: parse_num(s, 1, 100)),
 
     'ac': Field(parse_scaling),
@@ -356,7 +356,7 @@ defaults = {
     'str': 0,
     'dex': 0,
     'size': "SIZE_CHARACTER",
-    'hp_mod': 10,
+    'hp_mod': 100,
     'move_speed': 10,
 
     'ac': FormScaling(),

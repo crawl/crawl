@@ -4,7 +4,7 @@ talisman: statue
 skill: {min: 16, max: 25}
 description: a stone statue.
 melds: [gloves, boots, barding, body]
-hp_mod: 13
+hp_mod: 130
 resists: {elec: 1, neg: 1, petrify: 1}
 ac: {base: 27, scaling: 11}
 unarmed: {base: 9}

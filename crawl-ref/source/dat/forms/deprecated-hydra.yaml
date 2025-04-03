@@ -4,7 +4,7 @@ equivalent_mons: hydra
 melds: [physical]
 resists: {poison: 1}
 size: giant
-hp_mod: 13
+hp_mod: 130
 unarmed_colour: green
 unarmed_verbs: [nip at, bite, gouge, chomp]
 can_swim: yes
