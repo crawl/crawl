@@ -116,11 +116,11 @@ void surge_power_wand(const int mp_cost)
     }
 }
 
-static string _spell_base_description(spell_type spell, bool viewing)
+static string _spell_base_description(spell_type spell, bool transient)
 {
     ostringstream desc;
 
-    int highlight =  spell_highlight_by_utility(spell, COL_UNKNOWN, !viewing);
+    int highlight =  spell_highlight_by_utility(spell, COL_UNKNOWN, transient);
     if (you.duration[DUR_ENKINDLED] && highlight == COL_UNKNOWN
         && spell_can_be_enkindled(spell))
     {
@@ -157,11 +157,11 @@ static string _spell_base_description(spell_type spell, bool viewing)
     return desc.str();
 }
 
-static string _spell_extra_description(spell_type spell, bool viewing)
+static string _spell_extra_description(spell_type spell, bool transient)
 {
     ostringstream desc;
 
-    int highlight =  spell_highlight_by_utility(spell, COL_UNKNOWN, !viewing);
+    int highlight =  spell_highlight_by_utility(spell, COL_UNKNOWN, transient);
     if (you.duration[DUR_ENKINDLED] && spell_can_be_enkindled(spell) && highlight == COL_UNKNOWN)
         highlight = LIGHTCYAN;
 
@@ -246,8 +246,8 @@ protected:
 // selector is a boolean function that filters spells according
 // to certain criteria. Currently used for Tiles to distinguish
 // spells targeted on player vs. spells targeted on monsters.
-int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
-                const string &action)
+int list_spells(bool toggle_with_I, bool transient, bool viewing,
+                bool allow_preselect, const string &action)
 {
     if (toggle_with_I && get_spell_by_letter('I') != SPELL_NO_SPELL)
         toggle_with_I = false;
@@ -297,10 +297,10 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
             continue;
 
         SpellMenuEntry* me =
-            new SpellMenuEntry(_spell_base_description(spell, viewing),
-                               _spell_extra_description(spell, viewing),
+            new SpellMenuEntry(_spell_base_description(spell, transient),
+                               _spell_extra_description(spell, transient),
                                MEL_ITEM, 1, letter);
-        me->colour = spell_highlight_by_utility(spell, COL_UNKNOWN, !viewing);
+        me->colour = spell_highlight_by_utility(spell, COL_UNKNOWN, transient);
         // TODO: maybe fill this from the quiver if there's a quivered spell and
         // no last cast one?
         if (allow_preselect && you.last_cast_spell == spell)
@@ -649,7 +649,7 @@ void inspect_spells()
         return;
     }
 
-    list_spells(true, true);
+    list_spells(true, false, true);
 }
 
 /**
@@ -862,7 +862,7 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
 
             if (keyin == '?' || keyin == '*' || Options.spell_menu)
             {
-                keyin = list_spells(true, false);
+                keyin = list_spells(true, true, false);
                 if (!keyin)
                     keyin = ESCAPE;
 
