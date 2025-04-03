@@ -51,7 +51,19 @@ espera que sean los seguidores de Zin, y brillando gentilmente.
 ###############################################################################
 A frozen archway
 
-Este portal lleva a una cueva de hielo. Está derritiéndose lentamente.
+Este portal te lleva a una cueva de hielo. Está derritiéndose lentamente.
+%%%%
+A glowing drain
+
+Este pasaje te te lleva a un alcantarillado. Está oxidándose lentamente.
+%%%%
+A magical portal
+
+Un portal a un laboratorio de un mago. Está desvaneciéndose
+%%%%
+A collapsed entrance
+
+Un pasaje colapsado que no se puede ser utilizado.
 %%%%
 ###############################################################################
 ### Gateways (To Another Branch)
@@ -103,6 +115,10 @@ A granite statue
 
 A pesar de la dureza de la piedra, los rasgos de esta estatua han desaparecido
 hace tiempo.
+%%%%
+A gravestone
+
+Una tumba sin un nombre.
 %%%%
 A mechanical trap
 
