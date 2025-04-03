@@ -24,7 +24,15 @@ def needs_running(generated_files, input_files):
         needs_to_run = True
     return needs_to_run
 
+used_input_files = set()
+
 def run_if_needed(generated_files, input_files, command):
+    used_input_files.update(input_files)
+    for file in generated_files:
+        if file in used_input_files:
+            print('Error:', file, 'was used before it was generated',
+                  file=sys.stderr)
+
     needs_to_run = needs_running(generated_files, input_files)
     if not needs_to_run:
         return
@@ -168,6 +176,9 @@ def build_rtiles():
             sys.stdout.flush()
             result = subprocess.call(command)
             if(result != 0):
+                print('Error: command "', ' '.join(command),
+                      '" failed with exit code ', result, sep='',
+                      file=sys.stderr)
                 sys.exit(result)
 
     os.chdir('..')
