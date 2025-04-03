@@ -724,7 +724,7 @@ WEIGHT: 2
     "randbook good_item", "randbook good_item", "ring of wizardry randart",
     "any magical staff randart", "scroll of acquirement q:2", "any manual",
     "demon trident randart", "demon whip randart", "demon blade randart",
-    "javelin ego:silver q:25", "any misc" }, 2)
+    "silver javelin q:25", "any misc" }, 2)
 
   -- one guaranteed randart weapon with holy wrath, including ranged weapons
   local hw = " randart ego:holy_wrath"

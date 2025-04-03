@@ -824,19 +824,24 @@ struct missile_def
 static int Missile_index[NUM_MISSILES];
 static const missile_def Missile_prop[] =
 {
-    { MI_DART,          "dart",          0, 12, 3  },
+    { MI_DART_POISONED,      "poisoned dart",       0, 12, 3  },
+    { MI_DART_ATROPA,        "atropa-tipped dart",  0, 12, 3  },
+    { MI_DART_DATURA,        "datura-tipped dart",  0, 12, 3  },
+    { MI_DART_CURARE,        "curare-tipped dart",  0, 12, 3  },
+    { MI_DART_DISJUNCTION,   "dart of disjunction", 0, 12, 3  },
 #if TAG_MAJOR_VERSION == 34
-    { MI_NEEDLE,        "needle",        0, 12, 2  },
+    { MI_NEEDLE,             "needle",              0, 12, 2  },
 #endif
-    { MI_STONE,         "stone",         2, 8,  1  },
-    { MI_ARROW,         "arrow",         0, 1,  2  },
-    { MI_BOLT,          "bolt",          0, 1,  2  },
-    { MI_SLUG,          "slug",          0, 1,  2  },
-    { MI_LARGE_ROCK,    "large rock",   20, 25, 15 },
-    { MI_SLING_BULLET,  "sling bullet",  0, 1,  5  },
-    { MI_JAVELIN,       "javelin",      10, 20, 30 },
-    { MI_THROWING_NET,  "throwing net",  0, 0,  30 },
-    { MI_BOOMERANG,     "boomerang",     6, 20, 20 },
+    { MI_STONE,              "stone",               2, 8,  1  },
+    { MI_ARROW,              "arrow",               0, 1,  2  },
+    { MI_BOLT,               "bolt",                0, 1,  2  },
+    { MI_SLUG,               "slug",                0, 1,  2  },
+    { MI_LARGE_ROCK,         "large rock",         20, 25, 15 },
+    { MI_SLING_BULLET,       "sling bullet",        0, 1,  5  },
+    { MI_JAVELIN,            "javelin",            10, 20, 30 },
+    { MI_JAVELIN_SILVER,     "silver javelin",     10, 20, 30 },
+    { MI_THROWING_NET,       "throwing net",        0, 0,  30 },
+    { MI_BOOMERANG,          "boomerang",           6, 20, 20 },
 };
 
 #if TAG_MAJOR_VERSION == 34
@@ -1796,6 +1801,58 @@ bool is_blessed_weapon_type(int wpn_type)
            || wpn_type == WPN_TRISHULA;
 }
 
+/**
+ * Which special_missile_type goes with this type of dart?
+ *
+ * @param wpn_type  The missile_type under consideration.
+ * @return          The corresponding special_missile_type.
+ */
+special_missile_type dart_type_to_ego(int mi_type)
+{
+    ASSERT(is_dart_type(mi_type));
+    switch (mi_type)
+    {
+        case MI_DART_POISONED:    return SPMSL_POISONED;
+        case MI_DART_CURARE:      return SPMSL_CURARE;
+        case MI_DART_DATURA:      return SPMSL_FRENZY;
+        case MI_DART_ATROPA:      return SPMSL_BLINDING;
+        default: // MI_DART_DISJUNCTION
+            return SPMSL_DISJUNCTION;
+    }
+}
+
+/**
+ * Is the provided type a dart?
+ *
+ * @param wpn_type  The missile_type under consideration.
+ * @return          Whether it's a dart.
+ */
+bool is_dart_type(int mi_type)
+{
+    switch (mi_type)
+    {
+        case MI_DART_POISONED:
+        case MI_DART_ATROPA:
+        case MI_DART_CURARE:
+        case MI_DART_DATURA:
+        case MI_DART_DISJUNCTION:
+            return true;
+        default:
+            return false;
+    }
+}
+
+/**
+ * Is the provided type a javelin?
+ *
+ * @param wpn_type  The missile_type under consideration.
+ * @return          Whether it's a javelin.
+ */
+bool is_javelin_type(int mi_type)
+{
+    return mi_type == MI_JAVELIN || mi_type == MI_JAVELIN_SILVER;
+}
+
 bool is_melee_weapon(const item_def &weapon)
 {
     return is_weapon(weapon) && !is_range_weapon(weapon);
@@ -1831,6 +1888,17 @@ bool is_blessed_convertible(const item_def &item)
            && (item.base_type == OBJ_WEAPONS
                && (is_demonic(item)
                    || is_blessed(item)));
+}
+
+/**
+ * Is the item a dart?
+ *
+ * @param wpn_type  The item under consideration.
+ * @return          Whether it's a dart.
+ */
+bool is_dart(const item_def &item)
+{
+    return item.base_type == OBJ_MISSILES && is_dart_type(item.sub_type);
 }
 
 static map<weapon_type, weapon_type> _holy_upgrades =
@@ -2136,7 +2204,7 @@ bool is_throwable(const actor *actor, const item_def &wpn)
 
     if (wpn.sub_type == MI_LARGE_ROCK)
         return actor->can_throw_large_rocks();
-    return wpn.sub_type != MI_JAVELIN || actor->body_size() >= SIZE_MEDIUM;
+    return !is_javelin_type(wpn.sub_type) || actor->body_size() >= SIZE_MEDIUM;
 }
 
 // Decide if something is launched or thrown.

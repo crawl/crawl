@@ -1507,8 +1507,10 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     case OBJ_MISSILES:
     {
         special_missile_type msl_brand = get_ammo_brand(*this);
+        const bool brand_included_in_basename
+            = is_dart_type(item_typ) || item_typ == MI_JAVELIN_SILVER;
 
-        if (!terse && !dbname && !basename)
+        if (!terse && !dbname && !basename && !brand_included_in_basename)
         {
             if (props.exists(DAMNATION_BOLT_KEY)) // hack alert
                 buff << "damnation ";
@@ -1519,7 +1521,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         buff << ammo_name(static_cast<missile_type>(item_typ));
 
         if (msl_brand != SPMSL_NORMAL
-            && !basename && !dbname)
+            && !basename && !dbname && !brand_included_in_basename)
         {
             if (terse)
             {

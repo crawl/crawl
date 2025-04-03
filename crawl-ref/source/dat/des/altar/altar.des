@@ -322,9 +322,9 @@ mons("kobold; " .. dgn.monster_weapon("kobold", ego))
 kmons("E = kobold ; " .. dgn.monster_weapon("kobold", ego, quality))
 
 brigand_weap = {["dagger"] = 5, ["rapier"] = 10, ["short sword"] = 10}
-mons("kobold brigand ; dart ego:poisoned | dart ego:curare w:5 . " ..
+mons("kobold brigand ; poisoned dart | curare-tipped dart w:5 . " ..
      dgn.random_item_def(brigand_weap, ego, nil, "|"))
-kmons("F = kobold brigand ; dart ego:poisoned | dart ego:curare w:5 . " ..
+kmons("F = kobold brigand ; poisoned dart | curare-tipped dart w:5 . " ..
      dgn.random_item_def(brigand_weap, ego, quality, "|"))
 
 mons("kobold demonologist; dagger ego:" .. ego .. " . robe")

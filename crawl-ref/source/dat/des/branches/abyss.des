@@ -981,7 +981,7 @@ NAME:    hangedman_abyss_or_decor_stagger
 TAGS:    transparent no_pool_fixup decor
 DEPTH:   D:4-, Depths, Abyss
 ITEM:    great mace ego:distortion randart / wand of mindburst pre_id / \
-         dart ego:atropa q:4 w:4 / potion of moonshine pre_id w:4 / \
+         atropa-tipped dart q:4 w:4 / potion of moonshine pre_id w:4 / \
          randbook numspells:1 spells:alistair's_intoxication
 KFEAT:   ^ = harlequin's trap w:7 / devourer's trap w:13
 : if you.in_branch("Abyss") then
@@ -1734,7 +1734,7 @@ KMONS:   6 = lurking horror
 # Note: if anything in these two item sets becomes useful for more then a tiny
 # fraction of characters finding the abyssal rune, remove or replace them.
 KITEM:   4d = scroll of noise w:15 q:1 / \
-         club w:6 / stone q:1 / dart q:1 ego:atropa / \
+         club w:6 / stone q:1 / atropa-tipped dart q:1 / \
          mundane animal skin / mundane ring mail / gold q:1
 KITEM:   5 = wand of flame / whip w:2 / hat mundane w:5
 KITEM:   6e = abyssal rune of zot mimic
@@ -2277,9 +2277,9 @@ MARKER: P  = lua:fog_machine { cloud_type="blue smoke", walk_dist=1, \
              size=9, pow_max=20, delay=10, buildup_amnt=14, buildup_time=7, \
              spread_rate=3, start_clouds=1, colour="blue" }
 KFEAT:  _ = altar_lugonu
-KMONS:  1 = kobold brigand w:80 ; dart ego:poisoned | dart ego:curare w:5 \
+KMONS:  1 = kobold brigand w:80 ; poisoned dart | curare-tipped dart w:5 \
                 . short sword | rapier | quick blade w:3 \
-            / kobold brigand w:10 ; dart ego:poisoned | dart ego:curare w:5 \
+            / kobold brigand w:10 ; poisoned dart | curare-tipped dart w:5 \
                 . quick blade ego:distortion w:6 | rapier ego:distortion \
                     | short sword ego:distortion
 : init_abyss_exit(_G, "P")

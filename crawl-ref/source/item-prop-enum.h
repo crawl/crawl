@@ -360,7 +360,7 @@ const vector<misc_item_type> misc_types =
 
 enum missile_type
 {
-    MI_DART,
+    MI_DART_POISONED,
 #if TAG_MAJOR_VERSION == 34
     MI_NEEDLE,
 #endif
@@ -375,6 +375,16 @@ enum missile_type
     MI_BOOMERANG,
 
     MI_SLUG,
+
+    MI_DART_CURARE,
+    MI_DART_DATURA,
+    MI_DART_ATROPA,
+    MI_DART_DISJUNCTION,
+
+    MI_JAVELIN_SILVER,
+    // Don't forget to also adjust is_dart_type / is_javelin_type
+    // and dart_type_to_ego functions in item-prop.cc if
+    // more dart/javelin subtypes are added.
 
     NUM_MISSILES,
     MI_NONE             // was MI_EGGPLANT... used for launch type detection

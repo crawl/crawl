@@ -319,6 +319,7 @@ enum tag_minor_version
     TAG_MINOR_SIMPLIFY_STAT_ZERO,  // Simplify stat-zero to permaslow with no duration
     TAG_MINOR_REMOVE_VAMPIRES,     // Remove the player vampire species
     TAG_MINOR_SPECTRAL_DUAL_WIELDING, // Allow having multiple spectral weapons out at the same time
+    TAG_MINOR_MISSILE_SPLIT,       // Split up darts/javelins into different sub_types
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

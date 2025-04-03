@@ -197,8 +197,8 @@ bool ranged_attack::handle_phase_blocked()
              punctuation.c_str());
     }
 
-    if (!projectile->is_type(OBJ_MISSILES, MI_DART)
-        && !projectile->is_type(OBJ_MISSILES, MI_THROWING_NET))
+    if (!projectile->is_type(OBJ_MISSILES, MI_THROWING_NET)
+        && !is_dart(*projectile))
     {
         maybe_trigger_jinxbite();
     }
@@ -232,8 +232,8 @@ bool ranged_attack::handle_phase_dodged()
              defender_name(false).c_str());
     }
 
-    if (!projectile->is_type(OBJ_MISSILES, MI_DART)
-        && !projectile->is_type(OBJ_MISSILES, MI_THROWING_NET))
+    if (!projectile->is_type(OBJ_MISSILES, MI_THROWING_NET)
+        && !is_dart(*projectile))
     {
         maybe_trigger_jinxbite();
     }
@@ -270,7 +270,7 @@ bool ranged_attack::handle_phase_hit()
         range_used = BEAM_STOP;
     }
 
-    if (projectile->is_type(OBJ_MISSILES, MI_DART))
+    if (is_dart(*projectile))
     {
         damage_done = dart_duration_roll(get_ammo_brand(*projectile));
         set_attack_verb(0);
@@ -658,8 +658,7 @@ bool ranged_attack::apply_missile_brand()
         defender->expose_to_element(BEAM_COLD, 2, attacker);
         break;
     case SPMSL_POISONED:
-        if (projectile->is_type(OBJ_MISSILES, MI_DART)
-                && damage_done > 0
+        if (is_dart(*projectile) && damage_done > 0
             || !one_chance_in(4))
         {
             int old_poison;
@@ -673,7 +672,7 @@ bool ranged_attack::apply_missile_brand()
             }
 
             defender->poison(attacker,
-                             projectile->is_type(OBJ_MISSILES, MI_DART)
+                             is_dart(*projectile)
                              ? damage_done
                              : 6 + random2(8) + random2(damage_done * 3 / 2));
 

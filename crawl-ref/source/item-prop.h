@@ -158,11 +158,15 @@ bool is_giant_club_type(int wpn_type) IMMUTABLE;
 bool is_ranged_weapon_type(int wpn_type) IMMUTABLE;
 bool is_blessed_weapon_type(int wpn_type) IMMUTABLE;
 bool is_demonic_weapon_type(int wpn_type) IMMUTABLE;
+special_missile_type dart_type_to_ego(int mi_type) IMMUTABLE;
+bool is_dart_type(int mi_type) IMMUTABLE;
+bool is_javelin_type(int mi_type) IMMUTABLE;
 
 bool is_melee_weapon(const item_def &weapon) PURE;
 bool is_demonic(const item_def &item) PURE;
 bool is_blessed(const item_def &item) PURE;
 bool is_blessed_convertible(const item_def &item) PURE;
+bool is_dart(const item_def &item) PURE;
 bool convert2good(item_def &item);
 bool convert2bad(item_def &item);
 

@@ -1318,8 +1318,8 @@ KMONS:   1 = blorkula the orcula ; quarterstaff good_item . robe / \
              orc wizard ; quarterstaff good_item . robe, \
              orc wizard ; quarterstaff good_item . robe
 KMONS:   2 = sigmund; halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:draining . robe / \
-             kobold brigand ; dagger ego:draining . dart ego:atropa, \
-             kobold brigand ; dagger ego:draining . dart ego:atropa
+             kobold brigand ; dagger ego:draining . atropa-tipped dart, \
+             kobold brigand ; dagger ego:draining . atropa-tipped dart
 KMONS:   3 = edmund ; flail good_item . kite shield . chain mail / \
              orc warrior ; flail good_item . kite shield . chain mail / \
              gnoll sergeant ; flail good_item . kite shield . chain mail, \
@@ -1329,7 +1329,7 @@ NSUBST:  123 = 2:.
 :     elseif you.depth() < 10 then
 MONS:    gargoyle ; quarterstaff good_item
 MONS:    kobold brigand ; dagger ego:draining good_item . wand of paralysis . \
-                          dart ego:atropa / \
+                          atropa-tipped dart / \
          spriggan ; dagger ego:draining good_item . robe good_item . \
                     buckler . wand of paralysis / \
          vampire ; dagger ego:draining good_item . robe good_item
@@ -1340,7 +1340,7 @@ NSUBST:  123 = 2:.
 MONS:    gargoyle ; quarterstaff good_item / \
          molten gargoyle w:5 ; quarterstaff good_item
 MONS:    kobold brigand ; dagger ego:draining good_item . wand of paralysis . \
-                          dart ego:atropa / \
+                          atropa-tipped dart / \
          spriggan ; dagger ego:draining good_item . robe good_item . \
                     buckler . wand of paralysis / \
          vampire ; dagger ego:draining good_item . robe good_item

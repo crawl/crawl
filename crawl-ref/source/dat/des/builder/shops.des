@@ -1043,7 +1043,7 @@ DEPTH:   D:4-, Depths
 MONS:    ball python w:5 / adder, water moccasin
 MONS:    black mamba w:20 / naga ; sling, naga mage / naga ritualist, nagaraja
 KFEAT:   v = general shop type:Serpentskin suffix:Sales count:7 ; \
-         dart ego:poisoned w:8 | dart ego:curare w:4 | scroll of poison w:5 | \
+         poisoned dart w:8 | curare-tipped dart w:4 | scroll of poison w:5 | \
          ring of poison resistance w:3 | randbook disc:alchemy w:6 | \
          staff of alchemy w:2 | any weapon ego:venom w:4 | \
          partisan ego:venom w:1 | serpent talisman randart w:2 | \
@@ -1164,7 +1164,7 @@ WEIGHT: 2
 SHUFFLE: _s
 KFEAT: s = general shop type:Hallowed suffix:Reliquary ; \
    potion of heal wounds | potion of curing | \
-   javelin ego:silver w:2 | \
+   silver javelin w:2 | \
    any weapon ego:holy_wrath | any armour ego:positive_energy w:5 |\
    amulet of faith w:2 | ring of positive energy w:5
 : if not you.in_branch("D") then
@@ -1599,11 +1599,13 @@ TAGS:   transparent no_monster_gen no_item_gen no_tide
 DEPTH:  D:4-, Depths, Orc, Elf, Shoals, Snake, Vaults
 KMONS:  DE = generate_awake training dummy
 KITEM:  D = stone q:1 / nothing, stone q:1 / nothing, stone q:1 / nothing
-KITEM:  H = stone q:1 w:30 / boomerang q:1 / javelin q:1 / dart q:1
+KITEM:  H = stone q:1 w:30 / boomerang q:1 / javelin q:1 / poisoned dart q:1
 KITEM:  E = throwing net q:1
 # Launchers are weighted so they have the same total weight as the projectiles.
 # The slightly-higher weights go to the better weapons, because I'm nice.
-KFEAT:  S = weapon shop type:Firing suffix:Range ; dart w:14 | \
+KFEAT:  S = weapon shop type:Firing suffix:Range ; poisoned dart w:5 | \
+        curare-tipped dart w:3 | atropa-tipped dart w:3 | \
+        datura-tipped dart w:3 | dart of disjunction w:2 | \
         throwing net w:14 | boomerang  w:14 | javelin w:14 | large rock w:14 \
         | sling | shortbow | orcbow | longbow | hand cannon | arbalest | \
         triple crossbow | manual of throwing w:1 | manual of ranged weapons w:1

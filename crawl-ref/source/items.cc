@@ -3505,6 +3505,12 @@ colour_t item_def::missile_colour() const
     ASSERT(base_type == OBJ_MISSILES);
 
     // TODO: move this into item-prop.cc
+
+    if (is_dart_type(sub_type))
+        return WHITE;
+    else if (is_javelin_type(sub_type))
+        return RED;
+
     switch (sub_type)
     {
         case MI_STONE:
@@ -3518,10 +3524,7 @@ colour_t item_def::missile_colour() const
         case MI_BOLT:          // removed as an item, but don't crash
         case MI_SLING_BULLET:  // removed as an item, but don't crash
         case MI_SLUG:          // never existed as an item
-        case MI_DART:
             return WHITE;
-        case MI_JAVELIN:
-            return RED;
         case MI_THROWING_NET:
             return MAGENTA;
         case MI_BOOMERANG:
@@ -4399,6 +4402,16 @@ bool get_item_by_name(item_def *item, const char* specs,
     {
     case OBJ_MISSILES:
         item->quantity = 30;
+        if (item->sub_type == MI_JAVELIN_SILVER)
+        {
+            item->brand = SPMSL_SILVER;
+            break;
+        }
+        else if (is_dart_type(item->sub_type))
+        {
+            item->brand = dart_type_to_ego(item->sub_type);
+            break;
+        }
         // intentional fall-through
     case OBJ_WEAPONS:
     case OBJ_ARMOUR:
