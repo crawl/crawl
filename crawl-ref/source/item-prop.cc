@@ -3120,6 +3120,53 @@ string talisman_type_name(int type)
     }
 }
 
+static const pair<talisman_type, int> _talisman_tiers[] =
+{
+    { TALISMAN_QUILL,       1 },
+    { TALISMAN_INKWELL,     1 },
+
+    { TALISMAN_RIMEHORN,    2 },
+    { TALISMAN_SCARAB,      2 },
+    { TALISMAN_MEDUSA,      2 },
+    { TALISMAN_MAW,         2 },
+
+    { TALISMAN_SERPENT,     3 },
+    { TALISMAN_BLADE,       3 },
+    { TALISMAN_FORTRESS,    3 },
+    { TALISMAN_WEREWOLF,    3 },
+    { TALISMAN_SPIDER,      3 },
+    { TALISMAN_AQUA,        3 },
+
+    { TALISMAN_STATUE,      4 },
+    { TALISMAN_HIVE,        4 },
+    { TALISMAN_DRAGON,      4 },
+    { TALISMAN_VAMPIRE,     4 },
+    { TALISMAN_SPHINX,      4 },
+
+    { TALISMAN_STORM,       5 },
+    { TALISMAN_DEATH,       5 },
+};
+
+const vector<talisman_type> talismans_by_tier(int tier)
+{
+    vector<talisman_type> talismans;
+    for (const auto& talisman : _talisman_tiers)
+        if (talisman.second == tier)
+            talismans.push_back(talisman.first);
+
+    return talismans;
+}
+
+int talisman_tier(talisman_type type)
+{
+    for (const auto& talisman : _talisman_tiers)
+        if (talisman.first == type)
+            return talisman.second;
+
+    // Impossible to generate normally.
+    return 6;
+}
+
 string item_base_name(const item_def &item)
 {
     if (item.props.exists(ITEM_NAME_KEY))

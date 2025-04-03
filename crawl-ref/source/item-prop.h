@@ -262,6 +262,8 @@ string item_base_name(object_class_type type, int sub_type);
 const char *weapon_base_name(weapon_type subtype) IMMUTABLE;
 weapon_type name_nospace_to_weapon(string name_nospace);
 string talisman_type_name(int sub_type);
+const vector<talisman_type> talismans_by_tier(int tier);
+int talisman_tier(talisman_type type);
 
 void initialise_item_sets(bool reset = false);
 void force_item_set_choice(item_set_type typ, int sub_type);

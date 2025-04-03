@@ -646,7 +646,7 @@ static void _generate_missile_item(item_def& item, int force_type,
     else
     {
         item.sub_type =
-            random_choose_weighted(50, MI_STONE,
+            random_choose_weighted(40, MI_STONE,
                                    10, MI_DART,
                                    3,  MI_BOOMERANG,
                                    2,  MI_JAVELIN,
@@ -1590,56 +1590,26 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
 }
 
 /// For a given dungeon depth (or item level), how much weight should we give
-/// to each talisman?
-static const vector<random_pick_entry<talisman_type>> talisman_weights =
+/// to each talisman tier?
+static const vector<random_pick_entry<int>> talisman_weights =
 {
-    // tier 0
-    {  0, 20,  45, FALL, TALISMAN_QUILL },
-    {  0, 35,   5, FLAT, TALISMAN_QUILL },
-    {  0, 20,  45, FALL, TALISMAN_RIMEHORN },
-    {  0, 35,   5, FLAT, TALISMAN_RIMEHORN },
-    {  0, 20,  45, FALL, TALISMAN_SPIDER },
-    {  0, 35,   5, FLAT, TALISMAN_SPIDER },
-    {  0, 20,  45, FALL, TALISMAN_AQUA },
-    {  0, 35,   5, FLAT, TALISMAN_AQUA },
-    {  0, 20,  45, FALL, TALISMAN_SCARAB },
-    {  0, 35,   5, FLAT, TALISMAN_SCARAB },
-    {  0, 20,  45, FALL, TALISMAN_MEDUSA },
-    {  0, 35,   5, FLAT, TALISMAN_MEDUSA },
-    // tier 1
-    {  0, 27,  90, PEAK, TALISMAN_MAW },
-    {  0, 35,  10, FLAT, TALISMAN_MAW },
-    {  0, 27,  90, PEAK, TALISMAN_SERPENT },
-    {  0, 35,  10, FLAT, TALISMAN_SERPENT },
-    {  0, 27,  90, PEAK, TALISMAN_BLADE },
-    {  0, 35,  10, FLAT, TALISMAN_BLADE },
-    {  0, 27,  90, PEAK, TALISMAN_WEREWOLF },
-    {  0, 35,  10, FLAT, TALISMAN_WEREWOLF },
-    {  0, 27,  90, PEAK, TALISMAN_FORTRESS },
-    {  0, 35,  10, FLAT, TALISMAN_FORTRESS },
-    // tier 2
-    {  8, 20,  25, RISE, TALISMAN_STATUE },
-    { 21, 35,  25, FLAT, TALISMAN_STATUE },
-    {  0, 35,   5, FLAT, TALISMAN_STATUE },
-    {  8, 20,  25, RISE, TALISMAN_DRAGON },
-    { 21, 35,  25, FLAT, TALISMAN_DRAGON },
-    {  0, 35,   5, FLAT, TALISMAN_DRAGON },
-    {  8, 20,  25, RISE, TALISMAN_VAMPIRE },
-    { 21, 35,  25, FLAT, TALISMAN_VAMPIRE },
-    {  0, 35,   5, FLAT, TALISMAN_VAMPIRE },
-    {  8, 20,  25, RISE, TALISMAN_HIVE },
-    { 21, 35,  25, FLAT, TALISMAN_HIVE },
-    {  0, 35,   5, FLAT, TALISMAN_HIVE },
-    {  8, 20,  25, RISE, TALISMAN_SPHINX },
-    { 21, 35,  25, FLAT, TALISMAN_SPHINX },
-    {  0, 35,   5, FLAT, TALISMAN_SPHINX },
-    // tier 3
-    { 20, 27,  25, RISE, TALISMAN_DEATH },
-    { 28, 35,  25, FLAT, TALISMAN_DEATH },
-    {  0, 35,   5, FLAT, TALISMAN_DEATH },
-    { 20, 27,  25, RISE, TALISMAN_STORM },
-    { 28, 35,  25, FLAT, TALISMAN_STORM },
-    {  0, 35,   5, FLAT, TALISMAN_STORM },
+    {  0, 10,  65, FALL, 1 },
+    {  0, 35,   5, FLAT, 1 },
+
+    {  -5, 20, 56, PEAK, 2 },
+    {  0, 35,  12, FLAT, 2 },
+
+    {  5, 22,  30, RISE, 3 },
+    { 21, 35,  30, FLAT, 3 },
+    {  0, 35,   5, FLAT, 3 },
+
+    { 12, 27,  24, RISE, 4 },
+    { 28, 35,  24, FLAT, 4 },
+    {  0, 35,   5, FLAT, 4 },
+
+    { 20, 27,  15, RISE, 5 },
+    { 28, 35,  15, FLAT, 5 },
+    {  0, 35,   5, FLAT, 5 },
 };
 
 static int _talisman_level(int item_level)
@@ -1652,7 +1622,7 @@ static int _talisman_level(int item_level)
         return 15; // ?? arbitrary
     case ISPEC_RANDART:
     case ISPEC_GOOD_ITEM:
-        return 27; // ?? arbitrary
+        return 25; // Relatively even mix of higher-tier options
     default:
         return min(item_level, 35); // roughly the bottom of the Hells
     }
@@ -1663,11 +1633,13 @@ static int _talisman_level(int item_level)
 // fixed artprops.
 static void _roll_talisman_type(item_def &item, int lvl)
 {
-    random_picker<talisman_type, NUM_TALISMANS * 3 /*ew*/> picker;
+    random_picker<int, 11> picker;
 
     for (int i = 0; i < 1000; ++i)
     {
-        item.sub_type = picker.pick(talisman_weights, lvl, NUM_TALISMANS);
+        const int tier = picker.pick(talisman_weights, lvl, 3);
+        const vector<talisman_type> types = talismans_by_tier(tier);
+        item.sub_type = types[random2(types.size())];
         if (are_fixed_props_ok(item))
             return;
     }
@@ -1682,7 +1654,11 @@ static void _generate_talisman_item(item_def& item, int force_type, int item_lev
     else
         _roll_talisman_type(item, lvl);
 
-    if (item_level == ISPEC_RANDART || x_chance_in_y(lvl, 270))
+    // Make randarts significantly more common for 'low-tier' talisman rolls
+    // compared to the expected average at a given item level (very roughly).
+    const int tier = talisman_tier(static_cast<talisman_type>(item.sub_type));
+    const int randart_chance = max(0, lvl - (tier - 1) * 6) * 5 / 2 + 5;
+    if (item_level == ISPEC_RANDART || x_chance_in_y(randart_chance, 100))
         make_item_randart(item);
 }
 
@@ -1910,13 +1886,14 @@ int items(bool allow_uniques,
         // Total weight: 1660
         item.base_type = random_choose_weighted(
                                     10, OBJ_STAVES,
+                                    25, OBJ_TALISMANS,
                                     45, OBJ_JEWELLERY,
                                     45, OBJ_BOOKS,
                                     70, OBJ_WANDS,
                                    212, OBJ_ARMOUR,
                                    212, OBJ_WEAPONS,
                                    176, OBJ_POTIONS,
-                                   180, OBJ_MISSILES,
+                                   156, OBJ_MISSILES,
                                    270, OBJ_SCROLLS,
                                    440, OBJ_GOLD);
 
@@ -1930,12 +1907,6 @@ int items(bool allow_uniques,
         {
             item.base_type = random_choose(OBJ_POTIONS, OBJ_SCROLLS);
         }
-
-        // Sorry. Trying to get a high enough weight of talismans early
-        // so that folks can upgrade, etc, without deluging players with
-        // them later.
-        if (one_chance_in(100) && !x_chance_in_y(max(item_level, 5) * 2, 100))
-            item.base_type = OBJ_TALISMANS;
 
         if (one_chance_in(275) && !x_chance_in_y(item_level, 35))
             item.base_type = OBJ_BAUBLES;

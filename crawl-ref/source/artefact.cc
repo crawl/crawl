@@ -426,15 +426,21 @@ static void _populate_jewel_intrinsic_artps(const item_def &item,
 }
 
 // XXX: Building this directly from form data would be nice.
+// Note: Negative resistances are intentionally left off multiple forms so that
+//       it is possible to generate randarts that give that resistance, which
+//       I think is still an appropriate bonus.
 static map<talisman_type, vector<artp_value>> talisman_artps = {
-    { TALISMAN_SERPENT, { { ARTP_POISON, 1 } } },
-    { TALISMAN_STATUE, { { ARTP_POISON, 1 }, { ARTP_ELECTRICITY, 1 },
-                         { ARTP_NEGATIVE_ENERGY, 1 } } },
-    { TALISMAN_DRAGON, { { ARTP_POISON, 1 } } },
-    { TALISMAN_STORM, { { ARTP_POISON, 1 }, { ARTP_ELECTRICITY, 1 } } },
-    { TALISMAN_DEATH, { { ARTP_POISON, 1 }, { ARTP_NEGATIVE_ENERGY, 3 },
-                        { ARTP_COLD, 1 } } },
-    { TALISMAN_VAMPIRE, { { ARTP_COLD, 1 }, { ARTP_NEGATIVE_ENERGY, 3 }}},
+    { TALISMAN_RIMEHORN,    {{ARTP_COLD, 2}}},
+    { TALISMAN_SCARAB,      {{ARTP_FIRE, 2}}},
+    { TALISMAN_MEDUSA,      {{ARTP_POISON, 1}}},
+    { TALISMAN_SERPENT,     {{ARTP_POISON, 1}}},
+    { TALISMAN_STATUE,  {{ARTP_POISON, 1}, {ARTP_ELECTRICITY, 1},
+                         {ARTP_NEGATIVE_ENERGY, 1}}},
+    { TALISMAN_DRAGON,  {{ARTP_FIRE, 1}, {ARTP_COLD, 1}, {ARTP_POISON, 1}}},
+    { TALISMAN_STORM,   {{ARTP_POISON, 1}, {ARTP_ELECTRICITY, 1}}},
+    { TALISMAN_DEATH,   {{ARTP_POISON, 1}, {ARTP_NEGATIVE_ENERGY, 3},
+                        {ARTP_COLD, 1}}},
+    { TALISMAN_VAMPIRE, {{ARTP_COLD, 1}, {ARTP_NEGATIVE_ENERGY, 1}}},
 };
 
 /**
