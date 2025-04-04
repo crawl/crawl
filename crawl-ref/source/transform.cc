@@ -1635,13 +1635,13 @@ static void _enter_form(int pow, transformation which_trans, bool scale_hp = tru
     if (you.has_innate_mutation(MUT_MERTAIL))
         merfolk_check_swimming(env.grid(you.pos()), false);
 
-    if (is_artefact(you.active_talisman))
-        equip_artefact_effect(you.active_talisman, nullptr, false);
-
     // In the case where we didn't actually meld any gear (but possibly used
     // a new artefact talisman or were forcibly polymorphed away from one),
     // refresh equipment properties.
     you.equipment.update();
+
+    if (is_artefact(you.active_talisman))
+        equip_artefact_effect(you.active_talisman, nullptr, false);
 
     // Update flight status now (won't actually land the player if we're still flying).
     if (was_flying)
@@ -1937,14 +1937,8 @@ void merfolk_stop_swimming()
 
 void unset_default_form()
 {
-    item_def talisman = you.active_talisman;
-
     you.default_form = transformation::none;
-    you.active_talisman.clear();
-
-    if (is_artefact(talisman))
-        unequip_artefact_effect(talisman, nullptr, false);
-    item_skills(talisman, you.skills_to_hide);
+    set_default_form(transformation::none, nullptr);
 }
 
 void set_default_form(transformation t, const item_def *source)
@@ -1953,7 +1947,13 @@ void set_default_form(transformation t, const item_def *source)
     you.active_talisman.clear();
 
     if (is_artefact(talisman))
+    {
+        // We need to remove any artifact properties before running the unequip
+        // effects so that max health and magic are updated properly
+        you.equipment.update();
+
         unequip_artefact_effect(talisman, nullptr, false);
+    }
     item_skills(talisman, you.skills_to_hide);
 
     if (source)
