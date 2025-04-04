@@ -1331,6 +1331,7 @@ int get_shout_noise_level(const shout_type shout)
     case S_SOFT:
         return 6;
     case S_LOUD:
+    case S_RASPBERRY:
         return 10;
     case S_LOUD_ROAR:
     case S_VERY_LOUD:
@@ -1361,11 +1362,12 @@ static bool _shout_fits_monster(monster_type mc, int shout)
 
     switch (shout)
     {
-    // Bees, books, cherubs and two-headed ogres never fit.
+    // Bees, books, cherubs, two-headed ogres and balloon yaks never fit.
     case S_SHOUT2:
     case S_BUZZ:
     case S_CHERUB:
     case S_RUSTLE:
+    case S_RASPBERRY:
     // The beast cannot speak.
     case S_DEMON_TAUNT:
         return false;
@@ -4852,6 +4854,7 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
         "roars",
         "rustles",      // dubious
         "squeaks",
+        "wetly raspberries",  // balloon yak
         "buggily says", // NUM_SHOUTS
         "breathes",     // S_VERY_SOFT
         "whispers",     // S_SOFT

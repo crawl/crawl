@@ -2310,6 +2310,11 @@ void melee_attack::set_attack_verb(int damage)
                 attack_verb = "spit";
                 verb_degree = "like the proverbial pig";
             }
+            else if (defender->type == MONS_BALLOON_YAK)
+            {
+                attack_verb = "pop";
+                verb_degree = "like a balloon";
+            }
             else if (defender_genus == MONS_CRAB
                      && Options.has_fake_lang(flang_t::grunt))
             {

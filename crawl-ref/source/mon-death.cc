@@ -27,6 +27,7 @@
 #include "dgn-overview.h"
 #include "english.h"
 #include "env.h"
+#include "evoke.h" // Windblast death effect
 #include "fineff.h"
 #include "god-abil.h"
 #include "god-blessing.h"
@@ -3123,6 +3124,31 @@ item_def* monster_die(monster& mons, killer_type killer,
         treant_release_fauna(mons);
     else if (mons.type == MONS_PHARAOH_ANT && real_death)
         _pharaoh_ant_bind_souls(&mons);
+    else if (mons.type == MONS_BALLOON_YAK && real_death && !mons.pacified())
+    {
+        if (you.can_see(mons))
+        {
+            mprf(MSGCH_WARN, "The %s ruptures with a %s and chaos begins "
+                 "spilling from the puncture!", mons.name(DESC_PLAIN).c_str(),
+                 silenced(you.pos()) ? "rush of air" : "loud pop");
+        }
+        else if (!silenced(you.pos()))
+            mprf(MSGCH_WARN, "You hear a loud pop and a rush of air!");
+
+        // Wind blast their foe or otherwise you. The real spell power
+        // would knock you well out of reach of the clouds, 50 is about right.
+        auto foe = mons.get_foe();
+        wind_blast(&mons, 50, foe ? foe->pos() : you.pos());
+
+        map_cloud_spreader_marker *marker =
+            new map_cloud_spreader_marker(mons.pos(), CLOUD_CHAOS, 8,
+                                          40 + random2(25), LOS_DEFAULT_RANGE,
+                                          8, &mons);
+        // Start the cloud at radius 1, regardless of the speed of the killing blow
+        marker->speed_increment -= you.time_taken;
+        env.markers.add(marker);
+        env.markers.clear_need_activate();
+    }
     else if (!mons.is_summoned() && mummy_curse_power(mons.type) > 0)
     {
         // TODO: set attacker better? (Player attacker is handled by checking

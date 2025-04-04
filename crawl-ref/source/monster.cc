@@ -2417,7 +2417,8 @@ string monster::foot_name(bool plural, bool *can_plural) const
             str = "paw";
         else if (ch == 'l' || ch == 'D')
             str = "talon";
-        else if (type == MONS_YAK || type == MONS_DEATH_YAK)
+        else if (type == MONS_YAK || type == MONS_DEATH_YAK
+                 || type == MONS_BALLOON_YAK)
             str = "hoof";
         else if (ch == 'H')
         {
