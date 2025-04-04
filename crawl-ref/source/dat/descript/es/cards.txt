@@ -1,4 +1,10 @@
 %%%%
+The Wraith card
+
+Esta carta no representa nada
+
+Sacando esta carta va a drenar el usario.
+%%%%
 the Stairs card
 
 Esta carta hace que las escaleras se desplazen hacia o lejos de ti. (Es un bug
