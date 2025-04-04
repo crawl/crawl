@@ -542,6 +542,9 @@ targeter_passwall::targeter_passwall(int max_range) :
 
 bool targeter_passwall::valid_aim(coord_def a)
 {
+    // Don't allow casting with 0 LOS
+    if (!you.see_cell(a))
+        return notify_fail("You cannot see that place.");
     passwall_path tmp_path(you, a - you.pos(), range);
     string failmsg;
     tmp_path.is_valid(&failmsg);
@@ -552,6 +555,8 @@ bool targeter_passwall::valid_aim(coord_def a)
 
 bool targeter_passwall::set_aim(coord_def a)
 {
+    if (!you.see_cell(a))
+        return false;
     cur_path = make_unique<passwall_path>(you, a - you.pos(), range);
     return true;
 }
