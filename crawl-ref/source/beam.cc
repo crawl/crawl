@@ -7297,7 +7297,8 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
         return;
     }
 
-    m(delta + centre) = min(count, m(delta + centre));
+    if (!actor_at(loc) || can_affect_actor(actor_at(loc)))
+        m(delta + centre) = min(count, m(delta + centre));
 
     // Now recurse in every direction.
     for (int i = 0; i < 8; ++i)
