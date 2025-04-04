@@ -86,7 +86,6 @@ protected:
     int min_expl_rad, max_expl_rad;
     int range;
 private:
-    bool penetrates_targets;
     explosion_map exp_map_min, exp_map_max;
 };
 

@@ -22,6 +22,8 @@
 
 #define ART_FUNC_H
 
+#include <memory>
+
 #include "areas.h"         // For silenced() and invalidate_agrid()
 #include "attack.h"        // For attack_strength_punctuation()
 #include "beam.h"          // For Lajatang of Order's silver damage
@@ -54,6 +56,7 @@
 #include "spl-summoning.h" // For Zonguldrok animating dead
 #include "spl-transloc.h"  // For Autumn Katana's Manifold Assault
 #include "tag-version.h"
+#include "target.h"        // For Damnation
 #include "terrain.h"       // For storm bow
 #include "rltiles/tiledef-main.h"
 #include "unwind.h"        // For autumn katana
@@ -869,9 +872,22 @@ static void _WOE_melee_effects(item_def* /*weapon*/, actor* attacker,
 
 ///////////////////////////////////////////////////
 
+static unique_ptr<targeter> _DAMNATION_hitfunc(const item_def* launcher)
+{
+    auto hitfunc = make_unique<targeter_explosive_beam>(&you, ZAP_MISSILE_TRACER,
+                                                        100, LOS_MAX_RANGE);
+    hitfunc->beam.pierce = true;
+    hitfunc->beam.aimed_at_spot = false;
+    item_def fake_proj;
+    // Projectile required to make explosion not affect player (via DAMNATION_BOLT_KEY)
+    if (launcher)
+        populate_fake_projectile(*launcher, fake_proj);
+    hitfunc->beam.item = &fake_proj;
+    return hitfunc;
+}
+
 static void _DAMNATION_launch(bolt* beam)
 {
-
     beam->name    = "damnation bolt";
     beam->colour  = LIGHTRED;
     beam->glyph   = DCHAR_FIRED_ZAP;
@@ -883,7 +899,7 @@ static void _DAMNATION_launch(bolt* beam)
     expl->name   = "damnation";
     expl->tile_explode = TILE_BOLT_DAMNATION;
 
-    beam->special_explosion = expl;
+    beam.special_explosion = expl;
 }
 
 ///////////////////////////////////////////////////
