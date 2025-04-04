@@ -1787,6 +1787,10 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_YAKTAUR_CAPTAIN, { {2}, {{ BAND_YAKTAURS, {2, 5}, true }}}},
     { MONS_YAKTAUR,         { {2}, {{ BAND_YAKTAURS, {2, 5} }}}},
     { MONS_DEATH_YAK,       { {}, {{ BAND_DEATH_YAKS, {2, 6} }}}},
+    { MONS_BALLOON_YAK,     { {2, 0, []() {
+        return branch_has_monsters(you.where_are_you)
+            || !vault_mon_types.empty();
+    }},                           {{ BAND_BALLOON_YAKS, {1, 2} }}}},
     { MONS_OGRE_MAGE,       { {}, {{ BAND_OGRE_MAGE, {4, 8} }}}},
     { MONS_LODUL,           { {}, {{ BAND_OGRES, {6, 10}, true }}}},
     { MONS_BALRUG,          { {0, 0, []() { return !player_in_hell(); }},
@@ -2209,6 +2213,7 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_ALLIGATOR,           {{{MONS_ALLIGATOR, 1}}}},
     { BAND_JELLYFISH,           {{{MONS_FORMLESS_JELLYFISH, 1}}}},
     { BAND_DEATH_YAKS,          {{{MONS_DEATH_YAK, 1}}}},
+    { BAND_BALLOON_YAKS,        {{{MONS_BALLOON_YAK, 1}}}},
     { BAND_GREEN_RATS,          {{{MONS_RIVER_RAT, 1}}}},
     { BAND_BRAIN_WORMS,         {{{MONS_BRAIN_WORM, 1}}}},
     { BAND_BLINK_FROGS,         {{{MONS_BLINK_FROG, 1}}}},
