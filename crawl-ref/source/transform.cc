@@ -627,14 +627,14 @@ public:
 
     /**
      * How much AC do you lose from body armour from being in this form?
-     * 100% at `min_skill` or below, 0% at `max_skill` or above.
+     * 80% at `min_skill` or below, 0% at `max_skill` or above.
      */
     int get_base_ac_penalty(int base, int skill = -1) const override
     {
         const int scale = 100;
         const int lvl = max(skill == -1 ? get_level(scale) : skill * scale, min_skill * scale);
         const int shortfall = max(0, max_skill * scale - lvl);
-        const int div = (max_skill - min_skill) * scale;
+        const int div = (max_skill - min_skill + 2) * scale;
         // Round up.
         return (shortfall * base + div - 1) / div;
     }

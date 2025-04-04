@@ -2,7 +2,7 @@ enum: spider
 equivalent_mons: spider
 description: an agile web-spinner.
 talisman: spider
-skill: {min: 10, max: 19}
+skill: {min: 12, max: 20}
 melds: [physical]
 dex: 5
 size: tiny

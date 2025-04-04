@@ -1,7 +1,7 @@
 enum: statue
 equivalent_mons: statue
 talisman: statue
-skill: {min: 16, max: 25}
+skill: {min: 17, max: 25}
 description: a stone statue.
 melds: [gloves, boots, barding, body]
 hp_mod: 130

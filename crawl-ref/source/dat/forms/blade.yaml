@@ -4,9 +4,9 @@ short_name: Blade
 long_name: ''
 wiz_name: blade
 talisman: blade
-skill: {min: 10, max: 19}
+skill: {min: 12, max: 20}
 melds: [held, gloves]
-unarmed: {base: 12, scaling: 8}
+unarmed: {base: 14, scaling: 6}
 unarmed_colour: red
 unarmed_verbs: [hit, slash, slice, shred]
 offhand_punch: yes

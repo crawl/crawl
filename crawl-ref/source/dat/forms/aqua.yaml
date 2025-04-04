@@ -1,5 +1,5 @@
 enum: aqua
-skill: {min: 10, max: 19}
+skill: {min: 12, max: 20}
 talisman: aqua
 melds: [body]
 unarmed_colour: blue

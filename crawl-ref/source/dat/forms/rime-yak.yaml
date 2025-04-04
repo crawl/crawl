@@ -2,7 +2,7 @@ enum: rime_yak
 equivalent_mons: yak
 short_name: Yak
 description: an ice-encrusted yak.
-skill: {min: 7, max: 14}
+skill: {min: 8, max: 14}
 talisman: rimehorn
 melds: [physical]
 resists: {cold: 2, fire: -1}

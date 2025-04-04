@@ -4,7 +4,7 @@ short_name: Bat Swarm
 long_name: batswarm-form
 wiz_name: bat swarm
 description: a swarm of vampire bats.
-skill: {min: 16, max: 25}
+skill: {min: 17, max: 25}
 melds: [physical]
 resists: {cold: 1, neg: 3}
 dex: 5

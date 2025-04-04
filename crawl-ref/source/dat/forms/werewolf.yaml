@@ -1,7 +1,7 @@
 enum: werewolf
 description: a ferocious werewolf.
 equivalent_mons: wolf
-skill: {min: 10, max: 19}
+skill: {min: 12, max: 20}
 talisman: werewolf
 melds: [aux]
 resists: {cold: 1}

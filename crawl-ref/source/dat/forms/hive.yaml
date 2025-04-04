@@ -2,7 +2,7 @@ enum: hive
 equivalent_mons: spider
 short_name: Hive
 description: a living hive.
-skill: {min: 16, max: 25}
+skill: {min: 17, max: 25}
 talisman: hive
 melds: [body, helmet]
 ac: {base: 5}

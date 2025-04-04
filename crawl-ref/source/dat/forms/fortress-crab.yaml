@@ -2,7 +2,7 @@ enum: fortress_crab
 equivalent_mons: crab
 short_name: Crab
 description: a heavily-armoured crab.
-skill: {min: 10, max: 19}
+skill: {min: 12, max: 20}
 talisman: fortress
 melds: [offhand, aux]
 ac: {base: 3}

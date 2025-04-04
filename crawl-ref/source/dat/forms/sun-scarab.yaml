@@ -3,7 +3,7 @@ short_name: Scarab
 equivalent_mons: bombardier_beetle
 description: a gleaming scarab beetle.
 talisman: scarab
-skill: {min: 7, max: 14}
+skill: {min: 8, max: 14}
 melds: [physical]
 size: small
 resists: {fire: 2, poison: -1}

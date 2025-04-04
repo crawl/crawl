@@ -1,7 +1,7 @@
 enum: vampire
 equivalent_mons: vampire
 description: a living vampire.
-skill: {min: 16, max: 25}
+skill: {min: 17, max: 25}
 talisman: vampire
 resists: {cold: 1, neg: 2}
 unarmed_colour: lightmagenta

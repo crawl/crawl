@@ -1,6 +1,6 @@
 enum: medusa
 equivalent_mons: formless_jellyfish
-skill: {min: 7, max: 14}
+skill: {min: 8, max: 14}
 talisman: medusa
 melds: [helmet, cloak]
 resists: {poison: 1}

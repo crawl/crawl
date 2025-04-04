@@ -1,7 +1,7 @@
 enum: sphinx
 equivalent_mons: sphinx
 description: a cunning sphinx.
-skill: {min: 16, max: 25}
+skill: {min: 17, max: 25}
 talisman: sphinx
 melds: [weapon, offhand, body, boots, helmet, gloves]
 hp_mod: 115
