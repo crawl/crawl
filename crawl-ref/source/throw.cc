@@ -646,9 +646,20 @@ void throw_it(quiver::action &a)
         args.behaviour = &beh;
         args.mode = TARG_HOSTILE;
         args.self = confirm_prompt_type::cancel;
-        targeter_beam hitfunc(&you, LOS_MAX_RANGE, ZAP_MISSILE_TRACER, 0, 0, 0);
-        hitfunc.beam.pierce = is_penetrating_attack(you, launcher, thrown);
-        args.hitfunc = &hitfunc;
+        unique_ptr<targeter> hitfunc;
+        const unrandart_entry* entry = launcher && is_unrandom_artefact(*launcher)
+            ? get_unrand_entry(launcher->unrand_idx) : nullptr;
+        if (entry && entry->hitfunc)
+            hitfunc = entry->hitfunc(launcher);
+        else
+        {
+            hitfunc = make_unique<targeter_beam>(&you, LOS_MAX_RANGE,
+                                                 ZAP_MISSILE_TRACER, 0, 0, 0);
+            targeter_beam* beam_hitfunc = dynamic_cast<targeter_beam*>(hitfunc.get());
+            beam_hitfunc->beam.pierce = is_penetrating_attack(you, launcher, thrown);
+            beam_hitfunc->beam.aimed_at_spot = false;
+        }
+        args.hitfunc = hitfunc.get();
         direction(a.target, args);
     }
     if (!a.target.isValid || a.target.isCancel)

@@ -13,7 +13,7 @@
 #include "object-class-type.h"
 #include "killer-type.h"
 #include "fixedvector.h"
-
+#include "target.h"
 
 #define ART_PROPERTIES ARTP_NUM_PROPERTIES
 
@@ -81,6 +81,7 @@ struct unrandart_entry
                           actor* defender, bool mondied, int damage);
     void (*launch)(bolt* beam);
     void (*death_effects)(item_def* item, monster* mons, killer_type killer);
+    unique_ptr<targeter> (*hitfunc)(const item_def* item);
 };
 
 bool is_artefact(const item_def &item);
