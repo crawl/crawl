@@ -47,6 +47,10 @@ Breathe Noxious Fumes ability
 
 Exhalas humos nocivos al monstruo que apuntes.
 %%%%
+Heal Wounds ability
+
+Cura el usario considerablemente, con una posibilidad de reducando su magia máximo por uno.
+%%%%
 Bat Form ability
 
 Te conviertes en un veloz murciélago vampiro. En esta forma ni puedes
