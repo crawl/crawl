@@ -14,7 +14,7 @@ Muchos aventureros encuentran que la Guarida de las Bestias es un excitante
 cambio de clima. Y de hecho, tiene su aquél el ser corneado, aplastado y
 devorado antes que cortado, quemado o apuñalado.
 
-La Guarida tiene ocho niveles y contiene las escaleras hacia tres ramas más:
+La Guarida tiene cinco niveles y contiene las escaleras hacia tres ramas más:
 uno a uno de los hoyo de serpientes o el nido de arañas, uno a uno de el ciénaga
 o los bancos de arena y uno a los fosos cenagosos.
 %%%%
