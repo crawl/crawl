@@ -7380,7 +7380,7 @@ static string _describe_talisman_form(transformation form_type, const item_def* 
         description << "\nClass: " << uppercase_first(holiness_description(form->holiness));
 
     // Now add various one-off bits of (generally non-scaling) data after that
-    TablePrinter pr(5, 80);
+    TablePrinter pr(4, 80);
     pr.AddRow();
 
     if (form->size != SIZE_CHARACTER)
@@ -7404,7 +7404,10 @@ static string _describe_talisman_form(transformation form_type, const item_def* 
 
     // Various ad hoc properties of individual forms
     if (form_type == transformation::statue)
-        pr.AddCell("Melee damage", "+50%");
+    {
+        pr.AddCell("Melee dmg", "+50%");
+        pr.AddCell("EV", "-20%", RED);
+    }
     else if (form_type == transformation::maw)
         pr.AddCell("Bite chance", "75%");
     else if (form_type == transformation::death)

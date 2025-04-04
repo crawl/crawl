@@ -7,7 +7,8 @@ melds: [gloves, boots, barding, body]
 hp_mod: 130
 resists: {elec: 1, neg: 1, petrify: 1}
 ac: {base: 27, scaling: 11}
-unarmed: {base: 9}
+unarmed: {base: 5}
+str: 7
 unarmed_colour: lightgrey
 changes_substance: yes
 holiness: nonliving
@@ -21,3 +22,4 @@ fakemuts:
   - ["torment resistance 1", "You are resistant to unholy torment."]
 badmuts:
   - ["slow", "All of your actions are slow."]
+  - ["reduced EV", "Your evasion is reduced."]
