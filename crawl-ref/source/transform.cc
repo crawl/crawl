@@ -1719,6 +1719,12 @@ bool transform(int pow, transformation which_trans, bool involuntary,
         else if (!involuntary && which_trans != transformation::none)
             mpr("You fail to extend your transformation any further.");
 
+        if (is_artefact(you.active_talisman))
+        {
+            you.equipment.update();
+            equip_artefact_effect(you.active_talisman, nullptr, false);
+        }
+
         return true;
     }
 
