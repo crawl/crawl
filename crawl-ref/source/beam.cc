@@ -1403,7 +1403,7 @@ void bolt::do_fire()
         return;
 
     // final delay for any draws that happened in the above loop
-    if (animate && Options.reduce_animations)
+    if (animate && Options.reduce_animations && draw_delay > 0)
         animation_delay(15 + draw_delay, true);
 
     // Canned msg for enchantments that affected no-one, but only if the
