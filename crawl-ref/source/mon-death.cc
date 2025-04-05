@@ -2483,7 +2483,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         make_derived_undead_fineff::schedule(simu.pos, simu,
                                              get_monster_data(simu.base_type)->HD,
                                              "the player",
-                                             msg.c_str());
+                                             msg.c_str(), true);
 
         silent = true;
     }

@@ -744,6 +744,13 @@ void make_derived_undead_fineff::fire()
 
     if (!agent.empty())
         mons_add_blame(undead, "animated by " + agent);
+
+    if (act_immediately)
+    {
+        undead->flags &= ~MF_JUST_SUMMONED;
+        undead->speed_increment = 80;
+        queue_monster_for_action(undead);
+    }
 }
 
 const actor *mummy_death_curse_fineff::fixup_attacker(const actor *a)
