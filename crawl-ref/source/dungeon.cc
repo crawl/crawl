@@ -235,6 +235,7 @@ typedef FixedArray< coloured_feature, GXM, GYM > dungeon_colour_grid;
 static unique_ptr<dungeon_colour_grid> dgn_colour_grid;
 
 static string branch_epilogues[NUM_BRANCHES];
+static string_set branch_uniq_map_tags[NUM_BRANCHES];
 
 set<string> &get_uniq_map_tags()
 {
@@ -854,6 +855,8 @@ static void _dgn_register_vault(const string &name, const unordered_set<string> 
             get_uniq_map_tags().insert(tag);
         else if (starts_with(tag, "luniq_"))
             env.level_uniq_map_tags.insert(tag);
+        else if (starts_with(tag, "buniq_"))
+            env.branch_uniq_map_tags.insert(tag);
     }
 }
 
@@ -878,6 +881,8 @@ static void _dgn_unregister_vault(const map_def &map)
             get_uniq_map_tags().erase(tag);
         else if (starts_with(tag, "luniq_"))
             env.level_uniq_map_tags.erase(tag);
+        else if (starts_with(tag, "buniq_"))
+            env.branch_uniq_map_tags.erase(tag);
     }
 
     for (const subvault_place &sub : map.subvault_places)
@@ -2714,6 +2719,7 @@ static void _post_vault_build()
 
 static void _build_dungeon_level()
 {
+    env.branch_uniq_map_tags = branch_uniq_map_tags[you.where_are_you];
     bool place_vaults = _builder_by_type();
 
     if (player_in_branch(BRANCH_SLIME))
@@ -2816,6 +2822,7 @@ static void _build_dungeon_level()
         _fixup_descent_hatches();
         _place_dungeon_exit();
     }
+    branch_uniq_map_tags[you.where_are_you] = env.branch_uniq_map_tags;
 }
 
 static void _dgn_set_floor_colours()

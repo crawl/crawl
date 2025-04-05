@@ -54,6 +54,9 @@ struct crawl_environment
     string_set                               level_uniq_maps;
     string_set                               level_uniq_map_tags;
     string_set                               level_layout_types;
+    // copied from Branches[n].uniq_map_tags, copied back again after level gen
+    // (if level vetoes we need to reset to the original)
+    string_set                               branch_uniq_map_tags;
 
     string                                   level_build_method;
 
@@ -124,7 +127,7 @@ struct crawl_environment
     // A set of the unique subvaults being placed. These are considered used
     // for the purposes of placing additional subvaults.
     string_set new_used_subvault_names;
-    // A set of uniq_ or luniq_ map tags being placed.
+    // A set of uniq_, luniq_ or buniq_ map tags being placed.
     string_set new_used_subvault_tags;
 
     // Vault currently being placed, for crash dump purposes.
