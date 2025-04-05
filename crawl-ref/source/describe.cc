@@ -7282,7 +7282,7 @@ static void _desc_form_val(TablePrinter& pr, string label, int val)
 
 static int _get_scroll_skill_boost(int skill)
 {
-    return 10 + skill * 5;
+    return 5 + skill * 5;
 }
 
 static string _describe_talisman_form(transformation form_type, const item_def* item)
