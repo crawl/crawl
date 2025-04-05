@@ -235,7 +235,7 @@ typedef FixedArray< coloured_feature, GXM, GYM > dungeon_colour_grid;
 static unique_ptr<dungeon_colour_grid> dgn_colour_grid;
 
 static string branch_epilogues[NUM_BRANCHES];
-static string_set branch_uniq_map_tags[NUM_BRANCHES];
+FixedVector<string_set, NUM_BRANCHES> branch_uniq_map_tags;
 
 set<string> &get_uniq_map_tags()
 {
@@ -459,6 +459,8 @@ static bool _build_level_vetoable(bool enable_random_maps)
     mapstat_report_map_build_start();
 #endif
 
+    // Copy uniq tags for previous floors in this branch
+    env.branch_uniq_map_tags = branch_uniq_map_tags[you.where_are_you];
     dgn_reset_level(enable_random_maps);
 
     if (player_in_branch(BRANCH_TEMPLE))
@@ -515,6 +517,9 @@ static bool _build_level_vetoable(bool enable_random_maps)
     env.level_layout_types.clear();
     env.level_uniq_maps.clear();
     env.level_uniq_map_tags.clear();
+    // Copy final tags set back over to the branch list
+    branch_uniq_map_tags[you.where_are_you] = env.branch_uniq_map_tags;
+
     _dgn_map_colour_fixup();
 
     // Call the branch epilogue, if any.
@@ -2719,7 +2724,6 @@ static void _post_vault_build()
 
 static void _build_dungeon_level()
 {
-    env.branch_uniq_map_tags = branch_uniq_map_tags[you.where_are_you];
     bool place_vaults = _builder_by_type();
 
     if (player_in_branch(BRANCH_SLIME))
@@ -2822,7 +2826,6 @@ static void _build_dungeon_level()
         _fixup_descent_hatches();
         _place_dungeon_exit();
     }
-    branch_uniq_map_tags[you.where_are_you] = env.branch_uniq_map_tags;
 }
 
 static void _dgn_set_floor_colours()
@@ -6079,7 +6082,11 @@ static int _shop_num_items(const shop_spec &spec)
         return (int) spec.items.size();
     }
 
-    return 5 + random2avg(8, 3);
+    int num = 5 + random2avg(8, 3);
+    const int level_number = shop_level ? shop_level : env.absdepth0;
+    if (level_number > 12)
+        num = min(num, max(8, 12 - div_round_up(level_number - 12, 4)));
+    return num;
 }
 
 /**
@@ -6319,7 +6326,7 @@ static void _stock_shop_item(int j, shop_type shop_type_,
             // Start trashing after Orc:$ depth; starts at a 3/20 probability,
             // jumps to 50% at Depths:1, 90% by Zot:$.
             if (!no_trash && level_number > 12 && (is_trash || boring_consumable))
-                no_trash = x_chance_in_y(level_number - 10, 20);
+                no_trash = x_chance_in_y(min(18, level_number - 10), 20);
 
             if (no_trash && boring_consumable && !is_trash)
             {

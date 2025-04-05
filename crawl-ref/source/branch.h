@@ -103,7 +103,6 @@ extern const Branch branches[NUM_BRANCHES];
 extern FixedVector<level_id, NUM_BRANCHES> brentry;
 extern FixedVector<int, NUM_BRANCHES> brdepth;
 extern FixedVector<int, NUM_BRANCHES> branch_bribe;
-extern FixedVector<string_set, NUM_BRANCHES> branch_uniq_map_tags;
 extern branch_type root_branch;
 
 const Branch& your_branch();

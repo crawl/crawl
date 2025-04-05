@@ -66,9 +66,9 @@ end
 NAME: serial_shops
 TAGS: nolayout_encompass allow_dup extra luniq_shops
 DEPTH: D, Depths, Orc, Elf, Shoals, Snake, Vaults
-CHANCE: 18% (D, Depths)
-CHANCE: 33% (Orc)
-CHANCE: 45% (Elf, Vaults)
+CHANCE: 20% (D, Depths)
+CHANCE: 35% (Orc)
+CHANCE: 50% (Elf, Vaults, !Vaults:$)
 CHANCE: 25% (Shoals, Snake)
 {{
 hook("post_place", function()

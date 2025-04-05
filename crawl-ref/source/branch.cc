@@ -13,7 +13,6 @@
 FixedVector<level_id, NUM_BRANCHES> brentry;
 FixedVector<int, NUM_BRANCHES> brdepth;
 FixedVector<int, NUM_BRANCHES> branch_bribe;
-FixedVector<string_set, NUM_BRANCHES> branch_uniq_map_tags;
 branch_type root_branch;
 
 /// A save-compat ordering for branches.
