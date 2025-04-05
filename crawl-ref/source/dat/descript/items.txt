@@ -1129,7 +1129,7 @@ consider this gem 'a bit tacky'. Preposterous!
 %%%%
 protean talisman
 
-An ever-changing fragment of something primordeal; its substance seems to
+An ever-changing fragment of something primordial; its substance seems to
 undulate between flesh and bone and perhaps even metal. A sufficiently skilled
 shapeshifter can stabilise it into a useable - if unpredictable - form.
 

@@ -1095,7 +1095,7 @@ enough power to use it again.
 Bestial Takedown ability
 
 Unleashes the full power of your predatory instincts to leap towards a terrified
-enemy and perform a vicious melee attack against them. This attack recieves a
+enemy and perform a vicious melee attack against them. This attack receives a
 damage multiplier based on your Shapeshifting skill. If it kills them, you will
 always perform a Howl afterward.
 
