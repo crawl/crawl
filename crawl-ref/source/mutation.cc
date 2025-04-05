@@ -606,7 +606,7 @@ static vector<pair<string,string>> _get_form_fakemuts()
         if (!species::is_draconian(you.species)
             || you.species == SP_BASE_DRACONIAN) // ugh
         {
-            result.push_back({ "breathe fire", _formmut("You can breathe fire.")});
+            result.push_back({ "golden breath", _formmut("You can breathe a blast of fire, cold, and poison.")});
         }
         else if (species::draconian_breath(you.species) != ABIL_NON_ABILITY)
             result.push_back({ "", _formmut("Your breath weapon is enhanced in this form.")});
