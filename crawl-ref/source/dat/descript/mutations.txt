@@ -1026,8 +1026,8 @@ with fear if it overcomes their willpower.
 stinger hair mutation
 
 Your hair is made of long prehensile jellyfish-like tendrils. Whenever you
-attack in melee, they will lash out and attempt to poison several nearby enemies
-at random.
+attack in melee, they will lash out and attempt to poison several enemies
+within 2 tiles of the player at random.
 
 The number of enemies they can afflict at once is improved by Shapeshifting
 skill.
