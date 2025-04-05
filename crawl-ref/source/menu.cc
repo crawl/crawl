@@ -3482,7 +3482,7 @@ int MenuHighlighter::entry_colour(const MenuEntry *entry) const
 // column_composer
 
 column_composer::column_composer(int cols, ...)
-    :  prev_col(0), columns()
+    :  columns()
 {
     ASSERT(cols > 0);
 
@@ -3504,7 +3504,7 @@ column_composer::column_composer(int cols, ...)
 }
 
 column_composer::column_composer(int cols, vector<int> widths)
-    :  prev_col(0), columns()
+    :  columns()
 {
     ASSERT(cols > 0 && (int)widths.size() >= cols);
 

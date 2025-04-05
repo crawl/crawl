@@ -55,32 +55,34 @@ vector<monster*> riddle_targs;
 #define HAS_USED_DRAGON_TALISMAN_KEY "used_dragon_talisman"
 
 // transform slot enums into flags
-#define SLOTF(s) (1 << s)
+constexpr int SLOTF(equipment_slot s) {
+    return 1 << s;
+}
 
-static const int EQF_NONE = 0;
+static constexpr int EQF_NONE = 0;
 
 // Weapons and offhand items
-static const int EQF_HELD = SLOTF(SLOT_WEAPON) | SLOTF(SLOT_OFFHAND)
-                             | SLOTF(SLOT_WEAPON_OR_OFFHAND);
+static constexpr int EQF_HELD = SLOTF(SLOT_WEAPON) | SLOTF(SLOT_OFFHAND)
+                                | SLOTF(SLOT_WEAPON_OR_OFFHAND);
 // auxen
-static const int EQF_AUXES = SLOTF(SLOT_GLOVES) | SLOTF(SLOT_BOOTS)
-                              | SLOTF(SLOT_BARDING)
-                              | SLOTF(SLOT_CLOAK) | SLOTF(SLOT_HELMET);
+static constexpr int EQF_AUXES = SLOTF(SLOT_GLOVES) | SLOTF(SLOT_BOOTS)
+                                 | SLOTF(SLOT_BARDING)
+                                 | SLOTF(SLOT_CLOAK) | SLOTF(SLOT_HELMET);
 // core body slots (statue form)
-static const int EQF_STATUE = SLOTF(SLOT_GLOVES) | SLOTF(SLOT_BOOTS)
-                              | SLOTF(SLOT_BARDING)
-                              | SLOTF(SLOT_BODY_ARMOUR);
+static constexpr int EQF_STATUE = SLOTF(SLOT_GLOVES) | SLOTF(SLOT_BOOTS)
+                                  | SLOTF(SLOT_BARDING)
+                                  | SLOTF(SLOT_BODY_ARMOUR);
 // everything you can (W)ear
-static const int EQF_WEAR = EQF_AUXES | SLOTF(SLOT_BODY_ARMOUR)
+static constexpr int EQF_WEAR = EQF_AUXES | SLOTF(SLOT_BODY_ARMOUR)
                             | SLOTF(SLOT_OFFHAND) | SLOTF(SLOT_WEAPON_OR_OFFHAND);
 // everything but jewellery
-static const int EQF_PHYSICAL = EQF_HELD | EQF_WEAR;
+static constexpr int EQF_PHYSICAL = EQF_HELD | EQF_WEAR;
 // just rings
-static const int EQF_RINGS = SLOTF(SLOT_RING);
+static constexpr int EQF_RINGS = SLOTF(SLOT_RING);
 // all jewellery
-static const int EQF_JEWELLERY = SLOTF(SLOT_RING) | SLOTF(SLOT_AMULET);
+static constexpr int EQF_JEWELLERY = EQF_RINGS | SLOTF(SLOT_AMULET);
 // everything
-static const int EQF_ALL = EQF_PHYSICAL | EQF_JEWELLERY;
+static constexpr int EQF_ALL = EQF_PHYSICAL | EQF_JEWELLERY;
 
 string Form::melding_description(bool itemized) const
 {
@@ -91,9 +93,12 @@ string Form::melding_description(bool itemized) const
             return "Your equipment is entirely melded.";
         else if (blocked_slots == EQF_PHYSICAL)
             return "Your armour is entirely melded.";
-        else if ((blocked_slots & EQF_PHYSICAL) == EQF_PHYSICAL)
+        // XXX: huh? The next condition is effecetively
+        // blocked_slots != EQF_PHYSICAL && testbits(blocked_slots, EQF_PHYSICAL)
+        // Is that not more restrictive, not less?
+        else if (testbits(blocked_slots, EQF_PHYSICAL))
             return "Your equipment is almost entirely melded.";
-        else if ((blocked_slots & EQF_STATUE) == EQF_STATUE
+        else if (testbits(blocked_slots,EQF_STATUE)
                 && (you_can_wear(SLOT_GLOVES, false) != false
                     || you_can_wear(SLOT_BOOTS, false) != false
                     || you_can_wear(SLOT_BARDING, false) != false
@@ -115,7 +120,7 @@ string Form::melding_description(bool itemized) const
         for (int i = SLOT_WEAPON; i < SLOT_GIZMO; ++i)
         {
             equipment_slot slot = static_cast<equipment_slot>(i);
-            if (testbits(blocked_slots, SLOTF(i)))
+            if (testbits(blocked_slots, SLOTF(slot)))
                 tags.emplace_back(equip_slot_name(slot));
         }
     }
@@ -136,7 +141,7 @@ static const form_entry &_find_form_entry(transformation form)
     for (const form_entry &entry : formdata)
         if (entry.tran == form)
             return entry;
-    die("No formdata entry found for form %d", (int)form);
+    die("No formdata entry found for form %d", static_cast<int>(form));
 }
 
 Form::Form(const form_entry &fe)
