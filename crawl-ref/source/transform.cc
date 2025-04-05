@@ -532,7 +532,6 @@ public:
     string get_transform_description() const override { return "your old self."; }
 };
 
-#if TAG_MAJOR_VERSION == 34
 class FormSpider : public Form
 {
 private:
@@ -546,7 +545,6 @@ public:
         return divided_scaling(FormScaling().Base(20).Scaling(20), false, skill, 100);
     }
 };
-#endif
 
 class FormFlux : public Form
 {
