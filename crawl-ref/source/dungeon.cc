@@ -6334,7 +6334,7 @@ static void _stock_shop_item(int j, shop_type shop_type_,
                     {
                         stock.quantity += item.quantity;
                         is_trash = true;
-                    }     
+                    }
             }
 
 #ifdef DEBUG
