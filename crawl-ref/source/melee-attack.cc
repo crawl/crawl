@@ -2271,7 +2271,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 
         aux_damage  = player_apply_final_multipliers(aux_damage, true);
 
-        if (atk == UNAT_CONSTRICT)
+        if (atk == UNAT_CONSTRICT || atk == UNAT_MEDUSA_STINGER)
             aux_damage = 0;
         else
             aux_damage = apply_defender_ac(aux_damage);
