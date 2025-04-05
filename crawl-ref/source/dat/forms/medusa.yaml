@@ -5,5 +5,5 @@ talisman: medusa
 melds: [helmet, cloak]
 resists: {poison: 1}
 fakemuts:
-  - ["stinger hair", "Your have a mane of long, stinging tendrils."]
+  - ["stinger hair", "Your tendrils poison nearby enemies when you attack."]
   - ["lithotoxin", "When significantly injured, you may petrify poisoned enemies."]
