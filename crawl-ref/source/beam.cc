@@ -7363,6 +7363,8 @@ bool bolt::nasty_to(const monster* mon) const
 
     switch (flavour)
     {
+        // Don't immediately break Cause Fear when cast by a Dith worshipper)
+        case BEAM_SHADOW_TORPOR:
         case BEAM_DIGGING:
             return false;
         case BEAM_INNER_FLAME:
