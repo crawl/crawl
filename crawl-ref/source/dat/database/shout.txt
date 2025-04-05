@@ -430,7 +430,7 @@ _riddle_fail_general_
 , but @subjective@ ignores you.
 
 w:40
-_riddle_fail_acknowledged_
+@_riddle_fail_acknowledged_@
 %%%%
 _riddle_prefix_
 
