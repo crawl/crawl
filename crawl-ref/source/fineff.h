@@ -483,17 +483,14 @@ public:
 protected:
     mummy_death_curse_fineff(const actor* attack, const monster* source, killer_type _killer, int _pow)
         : final_effect(fixup_attacker(attack), 0, coord_def()),
-          killer(_killer), pow(_pow)
+          killer(_killer), pow(_pow), dead_mummy(source)
     {
-        // Cache the dying mummy so morgues can look up the monster source if it kills us.
-        env.final_effect_monster_cache.push_back(*source);
-        dead_mummy = source->mid;
     }
     const actor *fixup_attacker(const actor *a);
 
     killer_type killer;
     int pow;
-    mid_t dead_mummy;
+    const actor* dead_mummy;
 };
 
 class summon_dismissal_fineff : public final_effect
