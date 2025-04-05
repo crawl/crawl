@@ -1263,9 +1263,7 @@ public:
 static const Form* forms[] =
 {
     &FormNone::instance(),
-#if TAG_MAJOR_VERSION == 34
     &FormSpider::instance(),
-#endif
     &FormBlade::instance(),
     &FormStatue::instance(),
 
