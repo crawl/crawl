@@ -661,10 +661,10 @@ flood you with transmutational energy, leaving your physical form unstable at a
 fundamental level.
 
 In this state of flux, your melee attacks are much weaker, but each strike will
-contaminate whatever you hit with transmutational energy - eventually causing
-significant damage to them as their body twists and deforms. The lack of
-certainty in your physical form also makes you much harder to hit, though you
-glow in a way that hinders stealth.
+contaminate whatever you hit with transmutational energy - growing so intense
+upon the third strike that it will cause their body to twist and deform,
+inflicting significant damage. The lack of certainty in your physical form also
+makes you much harder to hit, though you glow in a way that hinders stealth.
 
 The power contained in each bauble is finite, and once it is exhausted by
 spreading it to enemies, you will return to your previous form.
