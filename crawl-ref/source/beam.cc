@@ -4540,7 +4540,6 @@ void bolt::affect_player()
 
     if (you.form == transformation::aqua
         && flavour == BEAM_FIRE || flavour == BEAM_LAVA
-        && (!agent() || !agent()->is_player())
         && x_chance_in_y(final_dam, you.hp_max * 2 / 3))
     {
         const int pow = div_rand_round(final_dam * 100 / you.hp_max, 10);
