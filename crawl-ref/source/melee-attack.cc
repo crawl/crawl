@@ -2080,9 +2080,7 @@ class AuxMedusaStinger: public AuxAttackType
 public:
     AuxMedusaStinger()
     : AuxAttackType(0, 100, "sting") { };
-    int get_damage(bool random) const override {
-        return get_form()->get_aux_damage(random);
-    };
+
     bool xl_based_chance() const override { return false; }
 
     bool is_usable() const override
