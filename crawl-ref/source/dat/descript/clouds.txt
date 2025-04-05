@@ -210,5 +210,5 @@ feed off their helpless body, once they fall.
 %%%%
 rust cloud
 
-A cloud of oxidizing vapour that continuously corrodes and weakens the attacks
+A cloud of oxidising vapour that continuously corrodes and weakens the attacks
 of whatever stands inside it (but does only minimal damage).
