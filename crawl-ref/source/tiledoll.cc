@@ -472,6 +472,18 @@ void fill_doll_equipment(dolls_data &result)
         break;
     }
 
+    // XXX: The checks to hide pants per-species fail if they're not using a
+    //      normal base species tile. But no form is going to *give* them pants,
+    //      surely, so remind them they shouldn't have any.
+    if (you.species == SP_FELID
+        || you.species == SP_OCTOPODE
+        || you.species == SP_DJINNI
+        || you.species == SP_ARMATAUR
+        || you.species == SP_NAGA)
+    {
+        result.parts[TILEP_PART_LEG] = 0;
+    }
+
     // Base tile.
     if (result.parts[TILEP_PART_BASE] == TILEP_SHOW_EQUIP)
         tilep_race_default(you.species, you.experience_level, &result);
