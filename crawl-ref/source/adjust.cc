@@ -86,7 +86,7 @@ static void _adjust_spell()
 
     // Select starting slot
     mprf(MSGCH_PROMPT, "Adjust which spell? ");
-    int keyin = list_spells(false, false, false, "adjust");
+    int keyin = list_spells(false, false, false, false, "adjust");
 
     if (!isaalpha(keyin))
     {
@@ -123,7 +123,7 @@ static void _adjust_spell()
         // XX this does not really work well with new menu code
         if (keyin == '?' || keyin == '*')
         {
-            keyin = list_spells(true, false, false, "adjust it to");
+            keyin = list_spells(true, false, false, false, "adjust it to");
             if (keyin < 'a' || keyin > 'Z')
                 continue;
         }
