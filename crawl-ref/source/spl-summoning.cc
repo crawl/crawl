@@ -3718,7 +3718,7 @@ spret cast_surprising_crocodile(actor& agent, const coord_def& targ, int pow, bo
     mg.pos = start_pos;
     mg.set_range(0);
     mg.foe = victim->mindex();
-    mg.hd = 4 + div_rand_round(pow, 15);
+    mg.hd = 3 + div_rand_round(pow, 15);
     monster* croc = create_monster(mg);
 
     // Probably only possible if the monster array is filled?
@@ -3746,7 +3746,7 @@ spret cast_surprising_crocodile(actor& agent, const coord_def& targ, int pow, bo
     if (victim->alive())
     {
         atk.needs_message = true;
-        atk.dmg_mult = 20 + pow;
+        atk.dmg_mult = 15 + div_rand_round(pow * 2, 3);
         atk.to_hit = AUTOMATIC_HIT;
         atk.attack();
     }
