@@ -107,18 +107,6 @@ bool travel_colour_override(const coord_def& p)
         return false;
 }
 
-#ifndef USE_TILE_LOCAL
-static char32_t _get_sightmap_char(dungeon_feature_type feat)
-{
-    return get_feature_def(feat).symbol();
-}
-
-static char32_t _get_magicmap_char(dungeon_feature_type feat)
-{
-    return get_feature_def(feat).magic_symbol();
-}
-#endif
-
 static bool _is_player_defined_feature(char32_t feature)
 {
     return feature == 'E' || feature == 'F' || feature == 'W';
