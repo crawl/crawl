@@ -4014,7 +4014,7 @@ static void _place_aquatic_in(vector<coord_def> &places, const vector<pop_entry>
         mg.pos = places[i];
 
         // Amphibious creatures placed with water should hang around it
-        if (mons_class_primary_habitat(mon) == HT_LAND)
+        if (mons_class_habitat(mon) & HT_DRY_LAND)
             mg.flags |= MG_PATROLLING;
 
         if (allow_zombies
@@ -5211,10 +5211,8 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
                                      ? fixup_zombie_type(type, mspec.monbase)
                                      : type;
 
-        const habitat_type habitat = mons_class_primary_habitat(montype);
-
         if (in_bounds(where) && !monster_habitable_grid(montype, where))
-            dungeon_terrain_changed(where, habitat2grid(habitat));
+            dungeon_terrain_changed(where, preferred_feature_type(montype));
     }
 
     if (type == RANDOM_MONSTER)

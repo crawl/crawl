@@ -90,26 +90,38 @@ static monster* _place_pghost_aux(const mgen_data &mg, const monster *leader,
 
 static int _fill_apostle_band(monster& mons, monster_type* band);
 
-/**
- * Is this feature "close enough" to the one we want for monster generation?
- *
- * @param wanted_feat the preferred feature
- * @param actual_feat the feature to be compared to it
- * @returns Whether wanted_feat is considered to be similar enough to
- *          actual_feat that being able to survive in the former means you can
- *          survive in the latter.
- */
-static bool _feat_compatible(dungeon_feature_type wanted_feat,
-                             dungeon_feature_type actual_feat)
-{
-    return wanted_feat == actual_feat
-           || wanted_feat == DNGN_DEEP_WATER && feat_is_water(actual_feat)
-           || wanted_feat == DNGN_FLOOR && feat_has_solid_floor(actual_feat);
-}
-
 static bool _hab_requires_mon_flight(dungeon_feature_type g)
 {
     return g == DNGN_LAVA || g == DNGN_DEEP_WATER;
+}
+
+static bool _habitable_feat(habitat_type ht, dungeon_feature_type feat)
+{
+    if ((ht & HT_MALIGN_GATEWAY) && feat == DNGN_MALIGN_GATEWAY)
+        return true;
+
+    // No monster may be placed in walls etc.
+    if (feat_is_solid(feat))
+        return false;
+
+#if TAG_MAJOR_VERSION == 34
+    // Monsters can't use teleporters, and standing there would look just wrong.
+    if (feat == DNGN_TELEPORTER)
+        return false;
+#endif
+    if ((ht & HT_SHALLOW_WATER) && feat_is_shallow_water(feat))
+        return true;
+    if ((ht & HT_DEEP_WATER) && feat_is_deep_water(feat))
+        return true;
+    if ((ht & HT_LAVA) && feat_is_lava(feat))
+        return true;
+    if ((ht & HT_DRY_LAND)
+        && feat_has_solid_floor(feat) && !feat_is_water(feat))
+    {
+        return true;
+    }
+
+    return false;
 }
 
 /**
@@ -122,13 +134,9 @@ static bool _hab_requires_mon_flight(dungeon_feature_type g)
  */
 bool monster_habitable_feat(const monster* mon, dungeon_feature_type feat)
 {
-    // Zombified monsters enjoy the same habitat as their original,
-    // except lava-based monsters.
-    const monster_type mt = mons_is_draconian_job(mon->type)
-        ? draconian_subspecies(*mon)
-        : fixup_zombie_type(mon->type, mons_base_type(*mon));
+    habitat_type ht = mons_habitat(*mon);
 
-    bool type_safe = monster_habitable_feat(mt, feat);
+    bool type_safe = _habitable_feat(ht, feat);
     return type_safe || (_hab_requires_mon_flight(feat) && mon->airborne());
 }
 
@@ -140,47 +148,11 @@ bool monster_habitable_feat(const monster* mon, dungeon_feature_type feat)
  */
 bool monster_habitable_feat(monster_type mt, dungeon_feature_type feat)
 {
-    // No monster may be placed in walls etc.
-    if (!mons_class_can_pass(mt, feat))
-        return false;
+    habitat_type ht = mons_class_habitat(mt);
+    if (mons_class_flag(mt, M_FLIES))
+        ht = (habitat_type)(ht | HT_FLYER);
 
-#if TAG_MAJOR_VERSION == 34
-    // Monsters can't use teleporters, and standing there would look just wrong.
-    if (feat == DNGN_TELEPORTER)
-        return false;
-#endif
-    // The kraken is so large it cannot enter shallow water.
-    // Its tentacles can, and will, though.
-    if ((feat == DNGN_SHALLOW_WATER || feat == DNGN_TOXIC_BOG)
-        && mt == MONS_KRAKEN)
-    {
-        return false;
-    }
-    // Only eldritch tentacles are allowed to exist on this feature.
-    else if (feat == DNGN_MALIGN_GATEWAY)
-    {
-        return mt == MONS_ELDRITCH_TENTACLE
-               || mt == MONS_ELDRITCH_TENTACLE_SEGMENT;
-    }
-
-    const dungeon_feature_type feat_preferred =
-        habitat2grid(mons_class_primary_habitat(mt));
-    const dungeon_feature_type feat_nonpreferred =
-        habitat2grid(mons_class_secondary_habitat(mt));
-
-    if (_feat_compatible(feat_preferred, feat)
-        || _feat_compatible(feat_nonpreferred, feat))
-    {
-        return true;
-    }
-
-    // [dshaligram] Flying creatures are all HT_LAND, so we
-    // only have to check for the additional valid grids of deep
-    // water and lava.
-    if (_hab_requires_mon_flight(feat) && (mons_class_flag(mt, M_FLIES)))
-        return true;
-
-    return false;
+    return _habitable_feat(ht, feat);
 }
 
 bool monster_habitable_grid(const monster* mon, const coord_def& pos)
@@ -501,7 +473,7 @@ monster_type fixup_zombie_type(const monster_type cls,
         return cls;
     // For generation purposes, don't treat simulacra of lava enemies as
     // being able to place on lava.
-    if (mons_class_secondary_habitat(base_type) == HT_LAVA)
+    if (mons_class_habitat(base_type) & HT_LAVA)
         return cls;
     return base_type;
 }
@@ -536,12 +508,9 @@ static bool _valid_monster_generation_location(const mgen_data &mg,
     // so if possible.
     if (mg.flags & MG_PREFER_LAND)
     {
-        habitat_type habitat = mons_class_primary_habitat(montype);
-        if (habitat != HT_WATER && habitat != HT_LAVA
-            && !feat_has_solid_floor(env.grid(mg_pos)))
-        {
+        const habitat_type habitat = mons_class_habitat(montype);
+        if ((habitat & HT_DRY_LAND) && !feat_has_solid_floor(env.grid(mg_pos)))
             return false;
-        }
     }
 
     bool close_to_player = grid_distance(you.pos(), mg_pos) <= LOS_RADIUS;
@@ -2798,20 +2767,6 @@ monster* mons_place(mgen_data mg)
     return creation;
 }
 
-static dungeon_feature_type _monster_primary_habitat_feature(monster_type mc)
-{
-    if (_is_random_monster(mc))
-        return DNGN_FLOOR;
-    return habitat2grid(mons_class_primary_habitat(mc));
-}
-
-static dungeon_feature_type _monster_secondary_habitat_feature(monster_type mc)
-{
-    if (_is_random_monster(mc))
-        return DNGN_FLOOR;
-    return habitat2grid(mons_class_secondary_habitat(mc));
-}
-
 static bool _valid_spot(coord_def pos, bool check_mask=true)
 {
     if (actor_at(pos))
@@ -2824,7 +2779,7 @@ static bool _valid_spot(coord_def pos, bool check_mask=true)
 class newmons_square_find : public travel_pathfind
 {
 private:
-    dungeon_feature_type feat_wanted;
+    habitat_type habitat_wanted;
     int maxdistance;
 
     int best_distance;
@@ -2834,11 +2789,11 @@ public:
     // Terrain that we can't spawn on, but that we can skip through.
     set<dungeon_feature_type> passable;
 public:
-    newmons_square_find(dungeon_feature_type grdw,
+    newmons_square_find(habitat_type ht_wanted,
                         const coord_def &pos,
                         int maxdist = 0,
                         bool _levelgen=true)
-        :  feat_wanted(grdw), maxdistance(maxdist),
+        :  habitat_wanted(ht_wanted), maxdistance(maxdist),
            best_distance(0), nfound(0), levelgen(_levelgen)
     {
         start = pos;
@@ -2861,7 +2816,7 @@ public:
         {
             return false;
         }
-        if (!_feat_compatible(feat_wanted, env.grid(dc)))
+        if (!_habitable_feat(habitat_wanted, env.grid(dc)))
         {
             if (passable.count(env.grid(dc)))
                 good_square(dc);
@@ -2879,6 +2834,20 @@ public:
     }
 };
 
+static habitat_type _preferred_habitat(habitat_type ht)
+{
+    if (ht & HT_LAND)
+        return HT_LAND;
+    return ht;
+}
+
+static habitat_type _spawning_monster_habitat(monster_type mons_class)
+{
+    if (_is_random_monster(mons_class))
+        return HT_LAND;
+    return mons_class_habitat(mons_class);
+}
+
 // Finds a square for a monster of the given class, pathfinding
 // through only contiguous squares of habitable terrain.
 coord_def find_newmons_square_contiguous(monster_type mons_class,
@@ -2888,18 +2857,16 @@ coord_def find_newmons_square_contiguous(monster_type mons_class,
 {
     coord_def p;
 
-    const dungeon_feature_type feat_preferred =
-        _monster_primary_habitat_feature(mons_class);
-    const dungeon_feature_type feat_nonpreferred =
-        _monster_secondary_habitat_feature(mons_class);
+    const habitat_type ht_nonpreferred = _spawning_monster_habitat(mons_class);
+    const habitat_type ht_preferred = _preferred_habitat(ht_nonpreferred);
 
-    newmons_square_find nmpfind(feat_preferred, start, distance, levelgen);
+    newmons_square_find nmpfind(ht_preferred, start, distance, levelgen);
     const coord_def pp = nmpfind.pathfind();
     p = pp;
 
-    if (feat_nonpreferred != feat_preferred && !in_bounds(pp))
+    if (ht_nonpreferred != ht_preferred && !in_bounds(pp))
     {
-        newmons_square_find nmsfind(feat_nonpreferred, start, distance);
+        newmons_square_find nmsfind(ht_nonpreferred, start, distance);
         const coord_def ps = nmsfind.pathfind();
         p = ps;
     }

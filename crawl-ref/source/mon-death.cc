@@ -1408,8 +1408,9 @@ static string _derived_undead_message(const monster &mons, monster_type which_z,
         return "A buggy dead thing appears!";
     }
 
-    const auto habitat = mons_class_primary_habitat(mons.type);
-    if (habitat == HT_WATER || habitat == HT_LAVA)
+    const habitat_type habitat = mons_class_habitat(mons.type);
+    const habitat_type swimming_habitats = (habitat_type)(HT_WATER | HT_LAVA);
+    if ((habitat & swimming_habitats) == habitat)
         return "The dead are swimming!";
 
     if (mons_class_flag(mons.type, M_FLIES))

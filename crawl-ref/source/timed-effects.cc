@@ -439,9 +439,9 @@ static void _catchup_monster_moves(monster* mon, int turns)
         return;
 
     // Don't move non-land or stationary monsters around.
-    if (mons_primary_habitat(*mon) != HT_LAND
+    if (!(mons_habitat(*mon) & HT_DRY_LAND)
         || mons_is_zombified(*mon)
-           && mons_class_primary_habitat(mon->base_monster) != HT_LAND
+           && !(mons_class_habitat(mon->base_monster) & HT_DRY_LAND)
         || mon->is_stationary())
     {
         return;
