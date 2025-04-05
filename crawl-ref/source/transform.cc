@@ -1106,7 +1106,7 @@ public:
     // Number of bees created (x10)
     int get_effect_size(int skill = -1) const override
     {
-        return scaling_value(FormScaling().Base(32).Scaling(23), false, skill);
+        return max(10, scaling_value(FormScaling().Base(32).Scaling(23), false, skill));
     }
 };
 
