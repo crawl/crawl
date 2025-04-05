@@ -386,6 +386,10 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
           * "luniq_BAR": (luniq_ with any suffix) specifies that only one
              of the vaults with this tag can be used on any given level.
              "luniq_BAR" is only relevant when used with "allow_dup".
+          * "buniq_BAR": (buniq_ with any suffix) specifies that only one
+             of the vaults with this tag can be used in the entirety of any
+             given branch.
+             "buniq_BAR" is only relevant when used with "allow_dup".
           * "branch_entry" eg. "orc_entry", "lair_entry" etc.
              If chosen, these maps will contain the stairs for that branch.
              If a branch has very few entries, a dummy entry is advisable to

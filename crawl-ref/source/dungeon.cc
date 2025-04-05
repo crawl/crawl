@@ -72,6 +72,7 @@
 #include "tilepick.h"
 #include "tileview.h"
 #include "timed-effects.h"
+#include "transform.h"
 #include "traps.h"
 #include "unique-creature-list-type.h"
 #ifdef WIZARD
@@ -234,6 +235,7 @@ typedef FixedArray< coloured_feature, GXM, GYM > dungeon_colour_grid;
 static unique_ptr<dungeon_colour_grid> dgn_colour_grid;
 
 static string branch_epilogues[NUM_BRANCHES];
+static string_set branch_uniq_map_tags[NUM_BRANCHES];
 
 set<string> &get_uniq_map_tags()
 {
@@ -853,6 +855,8 @@ static void _dgn_register_vault(const string &name, const unordered_set<string> 
             get_uniq_map_tags().insert(tag);
         else if (starts_with(tag, "luniq_"))
             env.level_uniq_map_tags.insert(tag);
+        else if (starts_with(tag, "buniq_"))
+            env.branch_uniq_map_tags.insert(tag);
     }
 }
 
@@ -877,6 +881,8 @@ static void _dgn_unregister_vault(const map_def &map)
             get_uniq_map_tags().erase(tag);
         else if (starts_with(tag, "luniq_"))
             env.level_uniq_map_tags.erase(tag);
+        else if (starts_with(tag, "buniq_"))
+            env.branch_uniq_map_tags.erase(tag);
     }
 
     for (const subvault_place &sub : map.subvault_places)
@@ -2713,6 +2719,7 @@ static void _post_vault_build()
 
 static void _build_dungeon_level()
 {
+    env.branch_uniq_map_tags = branch_uniq_map_tags[you.where_are_you];
     bool place_vaults = _builder_by_type();
 
     if (player_in_branch(BRANCH_SLIME))
@@ -2815,6 +2822,7 @@ static void _build_dungeon_level()
         _fixup_descent_hatches();
         _place_dungeon_exit();
     }
+    branch_uniq_map_tags[you.where_are_you] = env.branch_uniq_map_tags;
 }
 
 static void _dgn_set_floor_colours()
@@ -6132,6 +6140,104 @@ static bool _valid_item_for_shop(int item_index, shop_type shop_type_,
 }
 
 /**
+ * Is this item reasonably worthless after the early/mid game? Shops get an
+ * increasing chance to reroll such items the further down we go.
+ */
+static bool _item_is_trash(item_def& item)
+{
+    // Never trash! (Maybe we could apply *some* logic to random artefacts, but
+    // it's really hard to say what may or may not be useful to a given player.
+    if (is_artefact(item))
+        return false;
+    switch (item.base_type)
+    {
+    case OBJ_SCROLLS:
+    case OBJ_POTIONS:
+        // Noise, moonshine - if they're not id'd by now it's not worth putting
+        // them in a shop just for that
+        return is_worthless_consumable(item)
+            || item.base_type == OBJ_SCROLLS && item.sub_type == SCR_IDENTIFY;
+
+    case OBJ_WANDS:
+        switch (item.sub_type)
+        {
+        case WAND_FLAME:
+        case WAND_DIGGING: // Questionable
+            return true;
+        default:
+            return false;
+        }
+
+    case OBJ_WEAPONS:
+    {
+        const int rarity = weapon_rarity(item.sub_type);
+        // Rarest weapons are great whatever the stats. Uncommon weapons need
+        // to have a good plus or a brand.
+        return rarity > 6 || rarity > 3 && item.brand == SPWPN_NORMAL && item.plus < 5;
+    }
+
+    case OBJ_MISSILES:
+        // Get rid of the most boring missiles
+        switch (item.sub_type)
+        {
+        case MI_STONE:
+        case MI_BOOMERANG:
+            return true;
+        case MI_JAVELIN:
+            return item.brand == SPMSL_NORMAL;
+        case MI_DART:
+            return item.brand == SPMSL_POISONED;
+        default:
+            return false;
+        }
+    case OBJ_ARMOUR:
+        switch (item.sub_type)
+        {
+        case ARM_ORB:
+            // Non-artefact orbs.
+            return true;
+        case ARM_BARDING:
+            // Barding is rare enough let's allow it even if mundane
+            return false;
+        default:
+            // For everything else, use a bit of logic.
+            return !armour_is_special(item) && item.brand == SPARM_NORMAL
+                   // Eliminates plain +2 hats or boots, but not +5 plate armour
+                   && item.plus < 5;
+        }
+    case OBJ_TALISMANS:
+    {
+        // Keep the higher-tier non-artefact talismans
+        const transformation form_type = form_for_talisman(item);
+        const Form* form = get_form(form_type);
+        // Max skill seems to be a better indication of tier than min skill.
+        // This trashes blade and serpent talismans. Review once more forms
+        // are added.
+        return form->max_skill < 20;
+    }
+    case OBJ_JEWELLERY:
+        // Non-artefact jewellery isn't interesting at this point. Yes it's
+        // possible there's a useful ego you haven't found, but it's still more
+        // interesting to find it on an artefact instead.
+        return true;
+    // Miscellany could be trash if we tracked how many were generated
+    // so far in the dungeon, but we're not doing that.
+    case OBJ_MISCELLANY:
+    // Nothing can really be done with books; once single spells are
+    // sold in shops, maybe trash spell level < 5.
+    case OBJ_BOOKS:
+    // Staves are very rare as only in general shops so let's keep them ...
+    // player could really need a particular enhancer.
+    case OBJ_STAVES:
+        return false;
+    default:
+        // Should never reach here unless a new item type is added; at least
+        // fail quickly if that happens.
+        ASSERT(false);
+    }
+}
+
+/**
  * Create an item and place it in a shop.
  *
  * FIXME: I'm pretty sure this will go into an infinite loop if env.item is full.
@@ -6156,6 +6262,10 @@ static void _stock_shop_item(int j, shop_type shop_type_,
     int item_index; // index into env.item (global item array)
                     // where the generated item will be stored
 
+    int rerolls = 0;
+    bool no_trash = false;
+    bool on_list = false;
+
     // XXX: this scares the hell out of me. should it be a for (...1000)?
     // also, it'd be nice if it was just a function that returned an
     // item index, maybe
@@ -6167,6 +6277,7 @@ static void _stock_shop_item(int j, shop_type shop_type_,
         if (!spec.items.empty() && !spec.use_all)
         {
             // shop spec lists a random set of items; choose one
+            on_list = true;
             item_index = dgn_place_item(spec.items.random_item_weighted(),
                                         coord_def(), item_level);
         }
@@ -6174,6 +6285,7 @@ static void _stock_shop_item(int j, shop_type shop_type_,
                  && j < (int)spec.items.size())
         {
             // shop lists ordered items; take the one at the right index
+            on_list = true;
             item_index = dgn_place_item(spec.items.get_item(j), coord_def(),
                                         item_level);
         }
@@ -6198,11 +6310,49 @@ static void _stock_shop_item(int j, shop_type shop_type_,
         }
 
         if (_valid_item_for_shop(item_index, shop_type_, spec))
-            break;
+        {
+            // Spec shops are allowed to stock trash and may intentionally do so
+            if (on_list)
+                break;
+            item_def& item = env.item[item_index];
+            bool is_trash = _item_is_trash(item);
+            const bool boring_consumable =
+                consumable_rarity(item) >= RARITY_RARE;
+            // Start trashing after Orc:$ depth; starts at a 3/20 probability,
+            // jumps to 50% at Depths:1, 90% by Zot:$.
+            if (!no_trash && level_number > 12 && (is_trash || boring_consumable))
+                no_trash = x_chance_in_y(level_number - 10, 20);
 
-        // Reset object and try again.
+            if (no_trash && boring_consumable && !is_trash)
+            {
+                // No simple way in the trash filter to skew towards rarer
+                // consumables in a meaningful way without unfairly reducing
+                // *very* important ones that are still more common such as
+                // heal, haste, teleport, blink... So instead, merge stacks
+                // for repeated ones so we get larger stacks of common items
+                // and more rolls at rare ones.
+                for (auto& stock : shop.stock)
+                    if (stock.base_type == item.base_type && stock.sub_type == item.sub_type)
+                    {
+                        stock.quantity += item.quantity;
+                        is_trash = true;
+                    }     
+            }
+
+#ifdef DEBUG
+            dprf("Shop level %d item %s: %s (%s) (%d rolls)", level_number,
+                 env.item[item_index].name(DESC_PLAIN, false, true).c_str(), is_trash ? "trash" : "ok",
+                 (is_trash && no_trash) ? (boring_consumable ? "merging" : "trashing")
+                                        : "keeping", rerolls + 1);
+#endif
+            if (!is_trash || !no_trash || ++rerolls > 10)
+                break;
+        }
+
+        // Reset object and try again. Shouldn't ever be an unrand, but flag it
+        // as never created, just in case.
         if (item_index != NON_ITEM)
-            env.item[item_index].clear();
+            destroy_item(env.item[item_index], true);
     }
 
     ASSERT(item_index != NON_ITEM);
