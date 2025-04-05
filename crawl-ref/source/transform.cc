@@ -1095,12 +1095,12 @@ public:
 
     int regen_bonus(int skill = -1) const override
     {
-        return scaling_value(FormScaling().Base(160).Scaling(120), false, skill);
+        return max(0, scaling_value(FormScaling().Base(160).Scaling(120), false, skill));
     }
 
     int mp_regen_bonus(int skill = -1) const override
     {
-        return scaling_value(FormScaling().Base(60).Scaling(40), false, skill);
+        return max(0, scaling_value(FormScaling().Base(60).Scaling(40), false, skill));
     }
 
     // Number of bees created (x10)
