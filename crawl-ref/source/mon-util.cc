@@ -3383,8 +3383,7 @@ mon_intel_type mons_intel(const monster& m)
     return mons_class_intel(mon.type);
 }
 
-static habitat_type _mons_class_habitat(monster_type mc,
-                                        bool real_amphibious = false)
+habitat_type mons_class_habitat(monster_type mc, bool real_amphibious)
 {
     const monsterentry *me = get_monster_data(mc);
     habitat_type ht = (me ? me->habitat
@@ -3403,8 +3402,7 @@ static habitat_type _mons_class_habitat(monster_type mc,
 habitat_type mons_habitat_type(monster_type t, monster_type base_t,
                                bool real_amphibious)
 {
-    return _mons_class_habitat(fixup_zombie_type(t, base_t),
-                               real_amphibious);
+    return mons_class_habitat(fixup_zombie_type(t, base_t), real_amphibious);
 }
 
 habitat_type mons_habitat(const monster& mon, bool real_amphibious)
@@ -3417,7 +3415,7 @@ habitat_type mons_habitat(const monster& mon, bool real_amphibious)
 
 habitat_type mons_class_primary_habitat(monster_type mc)
 {
-    habitat_type ht = _mons_class_habitat(mc);
+    habitat_type ht = mons_class_habitat(mc);
     if (ht == HT_AMPHIBIOUS || ht == HT_AMPHIBIOUS_LAVA)
         ht = HT_LAND;
     return ht;
@@ -3433,7 +3431,7 @@ habitat_type mons_primary_habitat(const monster& mon)
 
 habitat_type mons_class_secondary_habitat(monster_type mc)
 {
-    habitat_type ht = _mons_class_habitat(mc);
+    habitat_type ht = mons_class_habitat(mc);
     if (ht == HT_AMPHIBIOUS)
         ht = HT_WATER;
     if (ht == HT_AMPHIBIOUS_LAVA)
