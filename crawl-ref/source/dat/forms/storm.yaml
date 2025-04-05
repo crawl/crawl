@@ -32,5 +32,3 @@ fakemuts:
   - ["evasive", "You are incredibly evasive."]
   - ["blinkbolt", "You can turn into living lightning."]
   - ["insubstantial", "You are insubstantial and cannot be petrified, ensnared, or set on fire."]
-badmuts:
-  - ["poison vulnerability", "You are susceptible to poisons. (rPois-)"]
