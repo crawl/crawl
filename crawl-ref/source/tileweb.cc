@@ -606,7 +606,39 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
         // (possibly just as a string, like the lua API for this)
         process_command(CMD_GAME_MENU);
     }
-
+    else if (msgtype == "list_worn_armor")
+    {
+        process_command(CMD_LIST_ARMOUR);
+    }
+    else if (msgtype == "show_spell_library")
+    {   
+        process_command(CMD_DISPLAY_SPELLS);
+    }
+    else if (msgtype == "show_inventory")
+    {
+        process_command(CMD_DISPLAY_INVENTORY);
+    }
+    else if (msgtype == "list_gold")
+    {
+        process_command(CMD_LIST_GOLD);
+    }
+    else if (msgtype == "list_player_status")
+    {
+        process_command(CMD_DISPLAY_CHARACTER_STATUS);
+    }
+    else if (msgtype == "show_skills")
+    {
+        process_command(CMD_DISPLAY_SKILLS);
+    }
+    else if (msgtype == "show_wield")
+    {
+        process_command(CMD_WIELD_WEAPON);
+    }
+    else if (msgtype == "rest_100")
+    {
+        process_command(CMD_REST);
+    }
+    
     return c;
 }
 
