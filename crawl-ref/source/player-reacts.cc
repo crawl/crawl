@@ -831,7 +831,7 @@ static void _decrement_durations()
                 heal_flayed_effect(&you);
         }
         else if (you.duration[DUR_FLAYED] < 80)
-            you.duration[DUR_FLAYED] += div_rand_round(50, delay);
+            you.duration[DUR_FLAYED] += div_rand_round(delay, 2);
     }
 
     if (you.duration[DUR_TOXIC_RADIANCE])
