@@ -1274,7 +1274,6 @@ static int _adjusted_failure_chance(ability_type ability, int base_chance)
 {
     switch (ability)
     {
-    case ABIL_GOLDEN_BREATH:
     case ABIL_GLACIAL_BREATH:
     case ABIL_CAUSTIC_BREATH:
     case ABIL_GALVANIC_BREATH:
@@ -3067,11 +3066,17 @@ static spret _siphon_essence(bool fail)
  */
 int draconian_breath_power(int shapeshifting_skill)
 {
-    int power = 0;
-    if (shapeshifting_skill == -1 && you.form == transformation::dragon)
-        shapeshifting_skill = get_form()->get_level(1);
+    const bool actual = shapeshifting_skill == -1;
 
-    power = max(0, shapeshifting_skill - 5);
+    int power = 0;
+    if (actual && you.form == transformation::dragon)
+        shapeshifting_skill = get_form(transformation::dragon)->get_level(1);
+
+    // Use shapeshifting power if the player is in dragon form currently *or*
+    // we're previewing this on a talisman (regardless of what form we're
+    // currently in).
+    if (you.form == transformation::dragon || !actual)
+        power = max(0, shapeshifting_skill - 5);
     if (species::is_draconian(you.species))
         power += you.experience_level;
 
@@ -3082,8 +3087,7 @@ static spret _do_draconian_breath(const ability_def& abil, dist *target, bool fa
 {
     spret result = spret::abort;
 
-    const int pow = you.form == transformation::dragon ? you.experience_level * 2
-                                                       : you.experience_level;
+    const int pow = draconian_breath_power();
 
     result = your_spells(breath_to_spell[abil.ability], pow,
                             false, nullptr, target, fail);
