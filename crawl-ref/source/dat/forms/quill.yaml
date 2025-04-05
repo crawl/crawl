@@ -1,6 +1,6 @@
 enum: quill
 description: covered in sharp quills.
-equivalent_mons: porcupine
+equivalent_mons: player
 skill: {min: 0, max: 7}
 talisman: quill
 melds: [aux]
