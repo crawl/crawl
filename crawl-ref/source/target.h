@@ -761,3 +761,10 @@ public:
 private:
     vector<coord_def> landing_spots;
 };
+
+class targeter_paragon_deploy : public targeter_smite
+{
+public:
+    targeter_paragon_deploy(int range);
+    bool valid_aim(coord_def a) override;
+};

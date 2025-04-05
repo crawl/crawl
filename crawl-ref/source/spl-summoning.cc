@@ -3850,12 +3850,6 @@ spret cast_platinum_paragon(const coord_def& target, int pow, bool fail)
         return spret::success;
     }
 
-    if (!monster_habitable_grid(MONS_PLATINUM_PARAGON, target))
-    {
-        mpr("You cannot deploy your paragon there!");
-        return spret::abort;
-    }
-
     const int dur = summ_dur(4);
     mgen_data mg = _pal_data(MONS_PLATINUM_PARAGON, dur,
                              SPELL_PLATINUM_PARAGON, false);

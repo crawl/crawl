@@ -1402,7 +1402,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     {
         const monster* paragon = find_player_paragon();
         if (!paragon)
-            return make_unique<targeter_smite>(&you, range, 1, 1, true, false, false);
+            return make_unique<targeter_paragon_deploy>(range);
         else if (paragon_charge_level(*paragon) == 2)
             return make_unique<targeter_smite>(paragon, 3, 3, 3, true, false, false);
         else
@@ -2096,6 +2096,7 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
     if (use_targeter)
     {
         const targ_mode_type targ =
+              spell == SPELL_PLATINUM_PARAGON           ? TARG_HOSTILE_OR_EMPTY :
               testbits(flags, spflag::aim_at_space)     ? TARG_NON_ACTOR :
               testbits(flags, spflag::helpful)          ? TARG_FRIEND :
               testbits(flags, spflag::obj)              ? TARG_MOVABLE_OBJECT :

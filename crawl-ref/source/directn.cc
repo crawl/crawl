@@ -306,7 +306,7 @@ bool direction_chooser::targets_objects() const
 /// Are we looking for enemies?
 bool direction_chooser::targets_enemies() const
 {
-    return mode == TARG_HOSTILE;
+    return mode == TARG_HOSTILE || mode == TARG_HOSTILE_OR_EMPTY;
 }
 
 void direction_chooser::describe_cell() const
@@ -1233,8 +1233,11 @@ void direction_chooser::calculate_target_info()
 
 coord_def direction_chooser::find_default_target()
 {
-    if (cycle_pos.empty() || mode == TARG_NON_ACTOR || just_looking)
+    if (mode == TARG_NON_ACTOR || just_looking
+        || (cycle_pos.empty() && mode != TARG_HOSTILE_OR_EMPTY))
+    {
         return you.pos();
+    }
 
     if (mode == TARG_MOVABLE_OBJECT)
         return find_default_object_target();
@@ -1277,7 +1280,9 @@ coord_def direction_chooser::find_default_monster_target()
     }
 
     // Otherwise, try aiming at the nearest target position found for this action.
-    coord_def pos = cycle_pos[0];
+    coord_def pos;
+    if (!cycle_pos.empty())
+        pos = cycle_pos[0];
 
     // If we shouldn't refine our target (or can't, because we don't have a
     // hitfunc), just return it as-is.
@@ -1288,6 +1293,16 @@ coord_def direction_chooser::find_default_monster_target()
     // aim to avoid hitting the player or nearby allies.
     if (monster* mon = monster_at(pos))
         pos = find_acceptable_aim(mon);
+
+    // If we've found no enemy target, but this can fall back on empty space,
+    // pick an acceptable one in sight.
+    if (pos.origin() && mode == TARG_HOSTILE_OR_EMPTY)
+    {
+        fprintf(stderr, "A");
+        for (radius_iterator ri(you.pos(), LOS_NO_TRANS, true); ri; ++ri)
+            if (hitfunc->valid_aim(*ri))
+                return *ri;
+    }
 
     // If we can find literally nowhere else useful to aim, fall back to the player.
     if (!pos.origin())
@@ -2879,6 +2894,7 @@ static bool _want_target_monster(const monster *mon, targ_mode_type mode,
     case TARG_ANY:
         return true;
     case TARG_HOSTILE:
+    case TARG_HOSTILE_OR_EMPTY:
         return mons_attitude(*mon) == ATT_HOSTILE
             || mon->has_ench(ENCH_FRENZIED);
     case TARG_FRIEND:

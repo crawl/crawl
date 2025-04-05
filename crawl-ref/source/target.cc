@@ -18,6 +18,7 @@
 #include "libutil.h"
 #include "los-def.h"
 #include "losglobal.h"
+#include "mon-place.h"
 #include "mon-tentacle.h"
 #include "religion.h"
 #include "ray.h"
@@ -2814,4 +2815,20 @@ aff_type targeter_bestial_takedown::is_affected(coord_def loc)
             return AFF_LANDING;
 
     return AFF_NO;
+}
+
+targeter_paragon_deploy::targeter_paragon_deploy(int _range)
+    : targeter_smite(&you, _range, 1, 1, true, false, false)
+{
+}
+
+bool targeter_paragon_deploy::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    if (!monster_habitable_grid(MONS_PLATINUM_PARAGON, a))
+        return notify_fail("Your paragon could not survive being deployed there.");
+
+    return true;
 }
