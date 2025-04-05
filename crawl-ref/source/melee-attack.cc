@@ -1908,6 +1908,20 @@ public:
     }
 };
 
+class AuxBootknife: public AuxAttackType
+{
+public:
+    AuxBootknife()
+    : AuxAttackType(3, 100, "bootknife") { };
+
+    bool xl_based_chance() const override { return false; }
+
+    bool is_usable() const override
+    {
+        return you.unrand_equipped(UNRAND_BOOT_KNIFE);
+    }
+};
+
 static const AuxConstrict   AUX_CONSTRICT = AuxConstrict();
 static const AuxKick        AUX_KICK = AuxKick();
 static const AuxPeck        AUX_PECK = AuxPeck();
@@ -1921,6 +1935,7 @@ static const AuxTentacles   AUX_TENTACLES = AuxTentacles();
 static const AuxMaw         AUX_MAW = AuxMaw();
 static const AuxBlades      AUX_EXECUTIONER_BLADE = AuxBlades();
 static const AuxFisticloak  AUX_FUNGAL_FISTICLOAK = AuxFisticloak();
+static const AuxBootknife  AUX_BOOTKNIFE = AuxBootknife();
 static const AuxAttackType* const aux_attack_types[] =
 {
     &AUX_CONSTRICT,
@@ -1936,6 +1951,7 @@ static const AuxAttackType* const aux_attack_types[] =
     &AUX_MAW,
     &AUX_EXECUTIONER_BLADE,
     &AUX_FUNGAL_FISTICLOAK,
+    &AUX_BOOTKNIFE,
 };
 
 
@@ -2155,6 +2171,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
                     }
                 }
             }
+
         }
         else // no damage was done
         {
@@ -2178,6 +2195,11 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
             && one_chance_in(3))
     {
         defender->confuse(attacker, 5);
+    }
+    else if (atk == UNAT_BOOTKNIFE &&
+        x_chance_in_y(6 + you.skills[SK_SHORT_BLADES], 100))
+    {
+        defender->paralyse(attacker, 1);
     }
 
     return false;

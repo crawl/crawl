@@ -1908,6 +1908,18 @@ TILE:     urand_scarf_invisibility
 TILE_EQ:  scarf_invisibility
 BOOL:     inv, nogen
 
+#TODO: tile tweak or replacement
+#TODO: name needs more work
+ENUM:     BOOT_KNIFE
+NAME:     Uskayaw's dance shoes
+OBJ:      OBJ_ARMOUR/ARM_BOOTS
+TILE:     urand_assassin
+TILE_EQ:  mesh_black
+PLUS:     +0
+COLOUR:   ETC_ENCHANT
+VALUE:    400
+STEALTH:  1
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2
