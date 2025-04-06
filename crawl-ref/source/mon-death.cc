@@ -2177,7 +2177,7 @@ static void _player_on_kill_effects(monster& mons, killer_type killer,
     if (killer == KILL_YOU && you.berserk())
     {
         if (have_passive(passive_t::extend_berserk)
-            && you.piety > random2(1000))
+            && min((int)you.piety, piety_breakpoint(5)) > random2(800))
         {
             const int bonus = (3 + random2avg(10, 2)) / 2;
 
