@@ -1120,13 +1120,13 @@ int torment_player(const actor *attacker, torment_source_type taux)
         int kiku_piety = min(piety_breakpoint(5), (int)you.piety);
         if (hploss > 0)
         {
-            if (random2(480) < kiku_piety) // 13.33% to 33.33% chance
+            if (random2(480) < kiku_piety) // 20.83% to 33.33% chance
             {
                 hploss = 0;
                 simple_god_message(" shields you from torment!");
             }
             // Always give at least partial protection for invoked torment.
-            // 24% to 80% chance for other sources.
+            // 50% to 80% chance for other sources.
             else if (random2(200) < kiku_piety || taux == TORMENT_KIKUBAAQUDGHA)
             {
                 hploss -= (1 + random2(hploss - 1));
