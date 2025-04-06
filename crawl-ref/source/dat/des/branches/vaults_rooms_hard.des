@@ -2522,3 +2522,113 @@ x`sS`n3......
  2||1x...
  xxxxx...
 ENDMAP
+
+NAME:    tekkud_vaults_beastmaster_terrariums
+TAGS:    vaults_hard vaults_orient_n no_wall_fixup
+KMONS:   1 = ironbound beastmaster
+KMONS:   ? = kraken att:neutral w:5 / electric eel att:neutral
+KMONS:   " = lava snake att:neutral
+NSUBST:  ' = 2:1 / 30:' / *=':250 1
+SUBST:   . = ' , w = ?ww , l = "ll
+KMASK:   qrsukJzKLMNOPQRS&-_`Zdefghij. = no_monster_gen
+SHUFFLE: qrsu / kJzK / LMNO / PQRS / &-_` / Zdef / ghij
+KFEAT:   uOSfj = x
+KFEAT:   ` = c
+# Snake
+FTILE:   qrs = floor_mosaic
+TILE:    u = wall_snake
+KMONS:   2 = water moccasin w:2 / black mamba / mana viper / sea snake /\
+             shock serpent / anaconda
+KITEM:   A = serpent talisman
+SUBST:   s = tq
+NSUBST:  r = 1:1 / *:q , q = 7:2 / 1:A / 1:% / 25:. /\
+         *=.:300 $$%221
+# Swamp
+FTILE:   kJz = floor_swamp
+KFEAT:   3 = shallow_water
+KFEAT:   K = mangrove
+KMONS:   3 = hydra / swamp dragon / swamp drake w:5 / swamp worm / tyrant leech /\
+             bunyip w:5 / goliath frog / death drake w:2 / snapping turtle w:5
+KMONS:   T = 12-headed hydra / bunyip / swamp dragon w:5 / alligator snapping turtle
+KITEM:   B = fortress talisman w:20 / wellspring talisman
+SUBST:   z = Kk
+NSUBST:  J = 1:1 / 1:T / *:k , k = 6:3 / 1:B / 1:% / 15:W / 10:. /\
+         *=.:125 W:175 $$%331
+# Spider
+FTILE:   LMN = floor_spider
+TILE:    O = wall_spider
+KFEAT:   ^ = web trap
+KMONS:   4 = culicivora / jumping spider / tarantella / redback w:15 / orb spider /\
+             sun moth w:5 / ghost moth w:2 / boulder beetle / radroach /\
+             queen bee w:5 / hornet w:5 / spark wasp w:3 / steelbarb worm
+KMONS:   U = spark wasp band / ghost moth / killer bee band w:5 / emperor scorpion
+KITEM:   C = spider talisman w:20 / honeycomb talisman
+SUBST:   N = L
+NSUBST:  M = 1:1 / 1:U / *:L , L = 7:4 / 1:C / 1:% / 10:^ / 15:. /\
+            *=.:200 ^:100 $%441
+# Forest/lair
+FTILE:   PQRS = floor_grass
+TILE:    S = wall_lair
+KMONS:   5 = place:Lair:$ 9 w:100 / dire elephant w:25 / death yak / anaconda w:8 /\
+             redback w:8 / formless jellyfish w:8 / manticore w:8
+KMONS:   V = catoblepas / death yak band / dire elephant band
+KITEM:   D = rimehorn talisman / lupine talisman
+NSUBST:  Q = 1:1 / 1:V / *:P , R = 8:t / *=ttPPP , P = 6:5 / 1:D / 1:% / 25:. /\
+         *=.:300 $$%551
+SUBST:   S = SSt
+# Dragons
+FTILE:   &-_ = floor_depthstone
+TILE:    ` = stone_wall_depths
+KMONS:   6 = steam dragon w:2 / acid dragon / swamp dragon / swamp drake w:5 /\
+             fire dragon w:5 / ice dragon w:5 / rime drake / lindwurm /\
+             death drake w:2 / wind drake / wyvern w:5
+KMONS:   ! = fire dragon / ice dragon / storm dragon / iron dragon /\
+             quicksilver dragon
+KITEM:   E = dragon-coil talisman
+NSUBST:  - = 1:1 / 1:! / *:& , & = 6:6 / 1:E / 1:% / 25:. / *=.:300 $$%661
+# Desert
+FTILE:   Zde = floor_sand
+TILE:    f = wall_sandstone
+KMONS:   7 = emperor scorpion w:15 / fire crab w:8 / sun moth / black mamba /\
+             fire dragon w:5 / acid dragon w:5 / steam dragon w:2 / lindwurm
+KITEM:   F = scarab talisman
+NSUBST:  d = 1:1 / *:Z , Z = 7:7 / 1:F / 1:% / 25:. / *=.:300 $$%771
+# Evil experiments
+FTILE:   ghi = floor_nerves
+TILE:    j = wall_flesh
+KFEAT:   y = demonic_tree
+KMONS:   H = ugly thing w:15 / very ugly thing w:20 / eye of devastation w:6 /\
+             shining eye w:6 / mature mutant beast w:3 / radroach
+KMONS:   I = very large slime creature band / very ugly thing band /\
+             elder mutant beast
+KMONS:   ~ = arcanist
+KITEM:   G = protean talisman
+SUBST:   i = yyg
+NSUBST:  h = 1:1 / 1:I / *:g , g = 6:H / 1:G / 1:~ / 1:% / 25:. /\
+             *=.:300 $$%HH1
+MAP
+                   vv.vv
+                   v...v
+   uuuuu         vvv+++vvv         KKKKK
+ uuusssuuu     vvv.......vvv     KKKzzzKKK
+ usssqsssu   vvv...........vvv   KzzzkzzzK
+uusrrqqqsuuvvv...vvv...vvv...vvvKKzkkkJJzKK
+ussrrqqqssuv...vvvvv...vvvvv...vKzzkkkJJzzK
+usrrrqqqqqq+...vvvvv...vvvvv...+kkkkkkJJJzK
+ussrrqqqssuv...vvvvv...vvvvv...vKzzkkkJJzzK
+uusrrqqqsuuvvv...vvv...vvv...vvvKKzkkkJJzKK
+ usssqsssuvvvvnn'''''''''''nnvvvvKzzzkzzzK
+ uuusssuuuvlllln'''''''''''nwwwwvKKKzzzKKK
+   uuuuuvvvlllln'''''''''''nwwwwvvvKKKKK
+   OOOOOvvvlllln'''''''''''nwwwwvvvSSSSS
+ OOONNNOOOvlllln'''''''''''nwwwwvSSSRRRSSS
+ ONNNLNNNOvvvvnn'''''''''''nnvvvvSRRRPRRRS
+OONMMLLLNOOvvv...vvv...vvv...vvvSSRPPPQQRSS
+ONNMMLLLNNOv...vvvvv...vvvvv...vSRRPPPQQRRS
+ONMMMLLLLLL+...vvvvv...vvvvv...+PPPPPPQQQRS
+ONNMMLLLNNOv...vvvvv...vvvvv...vSRRPPPQQRRS
+OONMMLLLNOOvvv...vvv...vvv...vvvSSRPPPQQRSS
+ ONNNLNNNO   vvv...........vvv   SRRRPRRRS
+ OOONNNOOO     vvvv.....vvvv     SSSRRRSSS
+   OOOOO          vvvvvvv          SSSSS
+ENDMAP
