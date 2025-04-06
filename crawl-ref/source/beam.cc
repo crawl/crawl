@@ -4768,28 +4768,44 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final)
 
 bool bolt::check_for_friendly_past_target(monster* mon)
 {
-    if (!tracer->should_stop() || is_harmless(mon))
-        return false;
-
     // If prompts for overshooting the target are disabled, instead
     // just let the caller know that there was something there. They
     // should be responsible and keep the player from shooting friends.
     // (We skip this for explosions, since stopping at our target is not
     // guaranteed to spare allies behind the target)
-    if (passed_target && !overshoot_prompt && you.can_see(*mon)
-        && !is_explosion)
+
+    if (!passed_target || overshoot_prompt || is_explosion
+        || !you.can_see(*mon) || !tracer->should_stop() || is_harmless(mon))
     {
-        string adj, suffix;
-        bool penance;
-        if (bad_attack(mon, adj, suffix, penance, target))
-        {
-            finish_beam();
-            friendly_past_target = true;
-            return true;
-        }
+        return false;
     }
 
-    return false;
+    string adj, suffix;
+    bool penance;
+    bool should_stop_at_target = bad_attack(mon, adj, suffix, penance, target);
+
+    if (should_stop_at_target && special_explosion)
+    {
+        targeting_tracer tracer;
+        bolt special_explosion_copy = *special_explosion;
+        special_explosion_copy.tracer = &tracer;
+        special_explosion_copy.in_explosion_phase = false;
+        special_explosion_copy.target = target;
+        special_explosion_copy.refine_for_explosion();
+        special_explosion_copy.explode();
+
+        // Only stop at our target if it would stop us hitting allies.
+        should_stop_at_target = tracer.friend_info.count == 0;
+    }
+
+    if (should_stop_at_target)
+    {
+        finish_beam();
+        friendly_past_target = true;
+        use_target_as_pos = true;
+    }
+
+    return should_stop_at_target;
 }
 
 // Whether or not this non-enchantment effect would have a relevant non-damage
@@ -4826,6 +4842,16 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
     bool has_friendly_past_target = check_for_friendly_past_target(mon);
     if (has_friendly_past_target)
         return;
+
+    // Special explosions (current exploding missiles) aren't
+    // auto-hit, so we need to explode them at every possible
+    // end-point?
+    if (special_explosion)
+    {
+        bolt orig = *special_explosion;
+        affect_endpoint();
+        *special_explosion = orig;
+    }
 
     int preac = 0, post = 0, final = 0;
 
@@ -4908,16 +4934,6 @@ void bolt::tracer_affect_monster(monster* mon)
     {
         finish_beam();
         return;
-    }
-
-    // Special explosions (current exploding missiles) aren't
-    // auto-hit, so we need to explode them at every possible
-    // end-point?
-    if (special_explosion)
-    {
-        bolt orig = *special_explosion;
-        affect_endpoint();
-        *special_explosion = orig;
     }
 
     if (is_enchantment())
