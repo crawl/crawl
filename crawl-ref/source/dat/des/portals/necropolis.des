@@ -3828,7 +3828,7 @@ MONS:   crystal guardian w:2 / tentacled monstrosity / starcursed mass / \
 :     kmons("q = merfolk impaler ; " .. disto_weapon("impaler", "randart") ..
 :                " . robe good_item | leather armour good_item")
 FTILE:  'PSncbv = floor_nerves_yellow
-:   elseif dgn.persist.necropolis_difficulty == "shoals" then
+:   elseif dgn.persist.necropolis_difficulty == "snake" then
 :     kmons("q = naga warrior ; " .. disto_weapon("warrior", "randart") ..
 :               " . robe good_item w:90 | barding good_item" ..
 :               " . kite shield good_item | tower shield good_item / " ..
