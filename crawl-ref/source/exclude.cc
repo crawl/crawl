@@ -509,9 +509,10 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl,
             // Don't list a monster in the exclusion annotation if the
             // exclusion was triggered by e.g. the flamethrowers' lua check.
             const map_cell& cell = env.map_knowledge(p);
-            if (cell.monster() != MONS_NO_MONSTER)
+            monster_type mt = env.map_knowledge.monster(cell);
+            if (mt != MONS_NO_MONSTER)
             {
-                desc = mons_type_name(cell.monster(), DESC_PLAIN);
+                desc = mons_type_name(mt, DESC_PLAIN);
                 if (cell.detected_monster())
                     desc += " (detected)";
             }

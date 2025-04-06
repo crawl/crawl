@@ -180,8 +180,10 @@ static inline void unmarshallSigned(reader& th, T& v)
     v = (T)unmarshallSigned(th);
 }
 
-void marshallMapCell (writer &, const map_cell &);
-void unmarshallMapCell (reader &, map_cell& cell);
+class MapKnowledge;
+
+void marshallMapCell (writer &, coord_def, const MapKnowledge &);
+void unmarshallMapCell (reader &, coord_def, MapKnowledge &);
 
 FixedVector<spell_type, MAX_KNOWN_SPELLS> unmarshall_player_spells(reader &th);
 

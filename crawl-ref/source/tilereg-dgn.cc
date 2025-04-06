@@ -106,7 +106,10 @@ void DungeonRegion::load_dungeon(const crawl_view_buffer &vbuf,
             coord_def gc(x + m_cx_to_gx, y + m_cy_to_gy);
 
             if (map_bounds(gc))
-                pack_cell_overlays(coord_def(x, y), m_vbuf);
+            {
+                pack_cell_overlays(gc, m_vbuf(coord_def(x, y)).tile,
+                                   env.map_knowledge);
+            }
         }
 
     place_cursor(CURSOR_TUTORIAL, m_cursor[CURSOR_TUTORIAL]);
@@ -954,9 +957,9 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
     // These apply both on the same square as the player's and elsewhere.
     if (!has_monster)
     {
-        if (you.see_cell(gc) && env.map_knowledge(gc).item())
+        if (you.see_cell(gc) && env.map_knowledge.item(gc))
         {
-            const item_def * const item = env.map_knowledge(gc).item();
+            const item_def * const item = env.map_knowledge.item(gc);
             if (item && !item_is_stationary(*item))
             {
                 _add_tip(tip, "[L-Click] Pick up items (%)");

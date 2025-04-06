@@ -1534,14 +1534,20 @@ void TilesFramework::_send_cell(const coord_def &gc,
     if (current_mc.feat() != next_mc.feat())
         json_write_int("f", next_mc.feat());
 
-    if (next_mc.monsterinfo())
-        _send_monster(gc, next_mc.monsterinfo(), new_monster_locs, force_full);
-    else if (current_mc.monsterinfo())
+    const monster_info* current_monster_info =
+                               m_current_map_knowledge.monsterinfo(current_mc);
+    const monster_info* next_monster_info =
+                                        env.map_knowledge.monsterinfo(next_mc);
+    if (next_monster_info)
+        _send_monster(gc, next_monster_info, new_monster_locs, force_full);
+    else if (current_monster_info)
         json_write_null("mon");
 
-    map_feature mf = get_cell_map_feature(gc);
-    if (get_cell_map_feature(current_mc) != mf)
-        json_write_int("mf", mf);
+    map_feature current_mf =
+                           m_current_map_knowledge.get_map_feature(current_mc);
+    map_feature next_mf = get_cell_map_feature(gc);
+    if (current_mf != next_mf)
+        json_write_int("mf", next_mf);
 
     // Glyph and colour
     char32_t glyph = next_sc.glyph;
@@ -1871,8 +1877,8 @@ void TilesFramework::_send_map(bool force_full)
                     draw_cell(cell, gc, false, 0);
                 else
                     draw_cell(cell, gc, false, flash_colour);
-
-                pack_cell_overlays(gc, m_next_view);
+                m_rendering_map_knowledge.copy_at(gc, env.map_knowledge, gc);
+                pack_cell_overlays(gc, cell->tile, m_rendering_map_knowledge);
             }
 
             mark_clean(gc);
@@ -1944,14 +1950,14 @@ void TilesFramework::_send_monster(const coord_def &gc, const monster_info* m,
     auto it = m_monster_locs.find(m->client_id);
     if (m->client_id == 0 || it == m_monster_locs.end())
     {
-        last = m_current_map_knowledge(gc).monsterinfo();
+        last = m_current_map_knowledge.monsterinfo(gc);
 
         if (last && last->client_id != m->client_id)
             json_treat_as_nonempty(); // Force sending at least the id
     }
     else
     {
-        last = m_current_map_knowledge(it->second).monsterinfo();
+        last = m_current_map_knowledge.monsterinfo(it->second);
 
         if (it->second != gc)
             json_treat_as_nonempty(); // As above
@@ -2018,13 +2024,7 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
 
     // re-cache the map knowledge for the whole map, not just the updated portion
     // fixes render bugs for out-of-LOS when transitioning levels in shoals/slime
-    for (int y = 0; y < GYM; y++)
-        for (int x = 0; x < GXM; x++)
-        {
-            const coord_def cache_gc(x, y);
-            screen_cell_t *cell = &m_next_view(cache_gc);
-            cell->tile.map_knowledge = map_bounds(cache_gc) ? env.map_knowledge(cache_gc) : map_cell();
-        }
+    m_rendering_map_knowledge = env.map_knowledge;
 
     m_next_view_tl = view2grid(coord_def(1, 1));
     m_next_view_br = view2grid(crawl_view.viewsz);
@@ -2042,7 +2042,7 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
             screen_cell_t *cell = &m_next_view(grid);
 
             *cell = ((const screen_cell_t *) vbuf)[x + vbuf.size().x * y];
-            pack_cell_overlays(grid, m_next_view);
+            pack_cell_overlays(grid, cell->tile, m_rendering_map_knowledge);
 
             mark_clean(grid); // Remove redraw flag
             mark_dirty(grid);

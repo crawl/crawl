@@ -118,7 +118,7 @@ static void _initialize()
 
     env.igrid.init(NON_ITEM);
     env.mgrid.init(NON_MONSTER);
-    env.map_knowledge.init(map_cell());
+    env.map_knowledge.reset();
     env.pgrid.init(terrain_property_t{});
 
     you.unique_creatures.reset();
