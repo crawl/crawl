@@ -1478,7 +1478,7 @@ void tesseract_action(monster& mon)
             if (mi->type != MONS_BOUNDLESS_TESSERACT)
                 continue;
 
-            env.map_knowledge(mi->pos()).set_monster(monster_info(*mi));
+            env.map_knowledge.set_monster(mi->pos(), monster_info(*mi));
             set_terrain_seen(mi->pos());
             view_update_at(mi->pos());
 

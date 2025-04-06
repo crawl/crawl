@@ -652,14 +652,14 @@ int detect_items(int pow)
         // Note: assumptions are being made here about how
         // terrain can change (eg it used to be solid, and
         // thus item free).
-        if (pow != -1 && env.map_knowledge(*ri).changed())
+        if (pow != -1 && env.map_knowledge.changed(*ri))
             continue;
 
         if (you.visible_igrd(*ri) != NON_ITEM
-            && !env.map_knowledge(*ri).item())
+            && !env.map_knowledge.item(*ri))
         {
             items_found++;
-            env.map_knowledge(*ri).set_detected_item();
+            env.map_knowledge.set_detected_item(*ri);
         }
     }
 
@@ -684,6 +684,8 @@ static void _fuzz_detect_creatures(int pow, int *fuzz_radius, int *fuzz_chance)
 static void _mark_detected_creature(coord_def where, const monster& mon,
                                     int fuzz_chance, int fuzz_radius)
 {
+    MapKnowledge map = env.map_knowledge;
+
     if (fuzz_radius && x_chance_in_y(fuzz_chance, 100))
     {
         const int fuzz_diam = 2 * fuzz_radius + 1;
@@ -696,17 +698,18 @@ static void _mark_detected_creature(coord_def where, const monster& mon,
             place.set(where.x + random2(fuzz_diam) - fuzz_radius,
                       where.y + random2(fuzz_diam) - fuzz_radius);
 
-            // the player believes there is no monster there, and this one could be there
-            if (query_map_knowledge(false, place, [&mon](const map_cell& m) {
-                  return !m.detected_monster() && mon.can_pass_through_feat(m.feat());
-                }) && !you.see_cell(place))
+            // the player believes there is no monster there, and this one
+            // could be there
+            if (map_bounds(place) && !map.detected_monster(place)
+                && mon.can_pass_through_feat(map.feat(place))
+                && !you.see_cell(place))
             {
                 where = place;
             }
         }
     }
 
-    env.map_knowledge(where).set_detected_monster(mons_detected_base(mon.type));
+    map.set_detected_monster(where, mons_detected_base(mon.type));
 }
 
 int detect_creatures(int pow, bool telepathic)
@@ -873,10 +876,10 @@ spret cast_tomb(int pow, actor* victim, int source, bool fail)
                 tile_env.flv(*ai).feat_idx =
                         store_tilename_get_index("dngn_silver_wall");
                 tile_env.flv(*ai).feat = TILE_DNGN_SILVER_WALL;
-                if (env.map_knowledge(*ai).seen())
+                if (env.map_knowledge.seen(*ai))
                 {
-                    env.map_knowledge(*ai).set_feature(DNGN_METAL_WALL);
-                    env.map_knowledge(*ai).clear_item();
+                    env.map_knowledge.set_feature(*ai, DNGN_METAL_WALL);
+                    env.map_knowledge.clear_item(*ai);
 #ifdef USE_TILE
                     tile_env.bk_bg(*ai) = TILE_DNGN_SILVER_WALL;
                     tile_env.bk_fg(*ai) = 0;
@@ -893,10 +896,10 @@ spret cast_tomb(int pow, actor* victim, int source, bool fail)
                 tile_env.flv(*ai).feat_idx =
                         store_tilename_get_index("wall_sandstone");
                 tile_env.flv(*ai).feat = TILE_WALL_SANDSTONE;
-                if (env.map_knowledge(*ai).seen())
+                if (env.map_knowledge.seen(*ai))
                 {
-                    env.map_knowledge(*ai).set_feature(DNGN_ROCK_WALL);
-                    env.map_knowledge(*ai).clear_item();
+                    env.map_knowledge.set_feature(*ai, DNGN_ROCK_WALL);
+                    env.map_knowledge.clear_item(*ai);
 #ifdef USE_TILE
                     tile_env.bk_bg(*ai) = TILE_WALL_SANDSTONE;
                     tile_env.bk_fg(*ai) = 0;

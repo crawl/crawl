@@ -121,13 +121,13 @@ opacity_type opacity_no_actor::operator()(const coord_def& p) const
 
 opacity_type opacity_excl::operator()(const coord_def& p) const
 {
-    map_cell& cell = env.map_knowledge(p);
-    if (!cell.seen())
+    const MapKnowledge& map = env.map_knowledge;
+    if (!map.seen(p))
         return OPC_CLEAR;
-    else if (!cell.changed())
+    else if (!map.changed(p))
         return feat_is_opaque(env.grid(p)) ? OPC_OPAQUE : OPC_CLEAR;
-    else if (cell.feat() != DNGN_UNSEEN)
-        return feat_is_opaque(cell.feat()) ? OPC_OPAQUE : OPC_CLEAR;
+    else if (map.feat(p) != DNGN_UNSEEN)
+        return feat_is_opaque(map.feat(p)) ? OPC_OPAQUE : OPC_CLEAR;
     else
         return OPC_CLEAR;
 }

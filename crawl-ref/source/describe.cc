@@ -3183,7 +3183,7 @@ typedef struct {
 static vector<extra_feature_desc> _get_feature_extra_descs(const coord_def &pos)
 {
     vector<extra_feature_desc> ret;
-    const dungeon_feature_type feat = env.map_knowledge(pos).feat();
+    const dungeon_feature_type feat = env.map_knowledge.feat(pos);
 
     if (feat_is_tree(feat) && env.forest_awoken_until)
     {
@@ -3193,7 +3193,7 @@ static vector<extra_feature_desc> _get_feature_extra_descs(const coord_def &pos)
             tile_def(TILE_AWOKEN_OVERLAY)
         });
     }
-    if (feat_is_wall(feat) && env.map_knowledge(pos).flags & MAP_ICY)
+    if (feat_is_wall(feat) && env.map_knowledge.flags(pos) & MAP_ICY)
     {
         ret.push_back({
             "A covering of ice.",
@@ -3236,7 +3236,7 @@ static vector<extra_feature_desc> _get_feature_extra_descs(const coord_def &pos)
             });
         }
     }
-    if (const auto cloud = env.map_knowledge(pos).cloudinfo())
+    if (const auto cloud = env.map_knowledge.cloudinfo(pos))
     {
         ret.push_back({
             "A cloud of " + cloud_type_name(cloud->type) + ".",
@@ -3291,7 +3291,7 @@ static vector<command_type> _allowed_feat_actions(const coord_def &pos)
         return actions;
 
     // ugh code duplication, some refactoring could be useful in all of this
-    dungeon_feature_type feat = env.map_knowledge(pos).feat();
+    dungeon_feature_type feat = env.map_knowledge.feat(pos);
     // TODO: CMD_MAP_GOTO_TARGET
     const command_type dir = feat_stair_direction(feat);
 
@@ -3328,7 +3328,7 @@ static string _esc_cmd_to_str(command_type cmd)
 
 void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_extra)
 {
-    dungeon_feature_type feat = env.map_knowledge(pos).feat();
+    dungeon_feature_type feat = env.map_knowledge.feat(pos);
 
     string desc      = feature_description_at(pos, false, DESC_A);
     string desc_the  = feature_description_at(pos, false, DESC_THE);
@@ -3663,7 +3663,7 @@ bool describe_feature_wide(const coord_def& pos, bool do_actions)
     formatted_string footer_text("", CYAN);
     if (!actions.empty())
     {
-        const dungeon_feature_type feat = env.map_knowledge(pos).feat();
+        const dungeon_feature_type feat = env.map_knowledge.feat(pos);
         footer_text += formatted_string(_feat_action_desc(actions, feat));
         auto footer = make_shared<Text>();
         footer->set_text(footer_text);

@@ -88,11 +88,10 @@ bool travel_colour_override(const coord_def& p)
         return true;
 #endif
 
-    const map_cell& cell = env.map_knowledge(p);
-    show_class cls = get_cell_show_class(cell);
+    show_class cls = get_cell_show_class(p);
     if (cls == SH_FEATURE)
     {
-        switch (cell.feat())
+        switch (env.map_knowledge.feat(p))
         {
         case DNGN_FLOOR:
         case DNGN_LAVA:
@@ -122,10 +121,10 @@ static bool _is_player_defined_feature(char32_t feature)
 // 5. Anything else will look for the exact same character in the level map.
 bool is_feature(char32_t feature, const coord_def& where)
 {
-    if (!env.map_knowledge(where).known() && !you.see_cell(where) && !_is_player_defined_feature(feature))
+    if (!env.map_knowledge.known(where) && !you.see_cell(where) && !_is_player_defined_feature(feature))
         return false;
 
-    dungeon_feature_type grid = env.map_knowledge(where).feat();
+    dungeon_feature_type grid = env.map_knowledge.feat(where);
 
     switch (feature)
     {
@@ -163,7 +162,7 @@ bool is_feature(char32_t feature, const coord_def& where)
 
 static bool _is_feature_fudged(char32_t glyph, const coord_def& where)
 {
-    if (!env.map_knowledge(where).known() && !_is_player_defined_feature(glyph))
+    if (!env.map_knowledge.known(where) && !_is_player_defined_feature(glyph))
         return false;
 
     if (is_feature(glyph, where))
@@ -289,7 +288,7 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
                 cell->glyph = g.ch;
                 cell->colour = g.col;
 
-                const show_class show = get_cell_show_class(env.map_knowledge(c));
+                const show_class show = get_cell_show_class(c);
 
                 if (show == SH_NOTHING && is_explore_horizon(c))
                 {
@@ -387,7 +386,7 @@ class feature_list
 
     group get_group(const coord_def& gc)
     {
-        dungeon_feature_type feat = env.map_knowledge(gc).feat();
+        dungeon_feature_type feat = env.map_knowledge.feat(gc);
 
         if (feat_is_staircase(feat) || feat_is_escape_hatch(feat))
             return feat_dir(feat);
@@ -403,7 +402,7 @@ class feature_list
     void maybe_add(const coord_def& gc)
     {
 #ifndef USE_TILE_LOCAL
-        if (!env.map_knowledge(gc).known())
+        if (!env.map_knowledge.known(gc))
             return;
 
         group grp = get_group(gc);
@@ -481,7 +480,7 @@ static level_pos _stair_dest(const coord_def& p, command_type dir)
     if (!in_bounds(p))
         return level_pos();
 
-    if (feat_stair_direction(env.map_knowledge(p).feat()) != dir)
+    if (feat_stair_direction(env.map_knowledge.feat(p)) != dir)
         return level_pos();
 
     LevelInfo *linf = travel_cache.find_level_info(level_id::current());
@@ -501,11 +500,11 @@ static void _unforget_map()
     MapKnowledge &old(*env.map_forgotten);
 
     for (rectangle_iterator ri(0); ri; ++ri)
-        if (!env.map_knowledge(*ri).seen() && old(*ri).seen())
+        if (!env.map_knowledge.seen(*ri) && old.seen(*ri))
         {
             // Don't overwrite known squares, nor magic-mapped with
             // magic-mapped data -- what was forgotten is less up to date.
-            env.map_knowledge(*ri) = old(*ri);
+            env.map_knowledge.copy_at(*ri, old, *ri);
             env.map_seen.set(*ri);
 #ifdef USE_TILE
             tiles.update_minimap(*ri);
@@ -517,13 +516,13 @@ static void _forget_map(bool wizard_forget = false)
 {
     for (rectangle_iterator ri(0); ri; ++ri)
     {
-        auto& flags = env.map_knowledge(*ri).flags;
+        auto& flags = env.map_knowledge.flags(*ri);
         // don't touch squares we can currently see
         if (flags & MAP_VISIBLE_FLAG)
             continue;
         if (wizard_forget)
         {
-            env.map_knowledge(*ri).clear();
+            env.map_knowledge.clear(*ri);
 #ifdef USE_TILE
             tile_forget_map(*ri);
 #endif
@@ -1380,7 +1379,7 @@ map_control_state process_map_command(command_type cmd, const map_control_state&
         break; // allow mouse clicks to move cursor without leaving map mode
 #endif
     case CMD_MAP_DESCRIBE:
-        if (map_bounds(state.lpos.pos) && env.map_knowledge(state.lpos.pos).known())
+        if (map_bounds(state.lpos.pos) && env.map_knowledge.known(state.lpos.pos))
         {
             if (full_describe_square(state.lpos.pos, false))
             {
@@ -1416,8 +1415,8 @@ static cglyph_t _get_feat_glyph(const coord_def& gc)
 {
     // XXX: it's unclear whether we want to display all features
     // or just those not obscured by remembered/detected stuff.
-    dungeon_feature_type feat = env.map_knowledge(gc).feat();
-    const bool terrain_seen = env.map_knowledge(gc).seen();
+    dungeon_feature_type feat = env.map_knowledge.feat(gc);
+    const bool terrain_seen = env.map_knowledge.seen(gc);
     const feature_def &fdef = get_feature_def(feat);
     cglyph_t g;
     g.ch  = terrain_seen ? fdef.symbol() : fdef.magic_symbol();

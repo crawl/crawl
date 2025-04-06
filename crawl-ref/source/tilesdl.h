@@ -45,7 +45,6 @@ class DollEditRegion;
 class StatRegion;
 class MessageRegion;
 
-struct map_cell;
 struct crawl_view_geometry;
 
 void gui_init_view_params(crawl_view_geometry &geom);
