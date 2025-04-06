@@ -1,5 +1,5 @@
 name: "sky beast"
-glyph: {char: "Y", colour: lightcyan}
+glyph: {char: "F", colour: cyan}
 flags: [flies, no_skeleton]
 resists: {elec: 3}
 xp_mult: 13
@@ -13,4 +13,4 @@ ev: 13
 has_corpse: true
 intelligence: animal
 size: large
-shape: quadruped_winged
+shape: fish
