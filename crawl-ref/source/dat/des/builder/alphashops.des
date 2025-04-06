@@ -102,7 +102,7 @@
        "ring of fire", "scroll of fear", "staff of fire", "fen folio",
        "ring of flight", "scroll of fog", "wand of flame",
        "manual of fighting", "amulet of faith", "manual of fire magic",
-       "manual of forgecraft", "book of the fortress" }
+       "manual of forgecraft", "book of the fortress", "fortress talisman" }
 
       elseif s == "G" then i = { "amulet of guardian spirit", "giant club",
        "giant spiked club", "book of geomancy", "granite talisman",
@@ -113,13 +113,13 @@
       elseif s == "H" then i = { "halberd", "hand axe",
        "hand cannon", "potion of heal wounds",
        "potion of haste", "manual of hexes", "hat",
-       "helmet", "book of hexes", "book of the hunter" }
+       "helmet", "book of hexes", "book of the hunter", "honeycomb talisman" }
 
       elseif s == "I" then i = { "ring of ice",
        "scroll of immolation", "ice dragon scales", "book of ice",
        "potion of invisibility", "ring of intelligence", "scroll of identify",
        "wand of iceblast", "manual of invocations", "manual of ice magic",
-       "book of iron" }
+       "book of iron", "inkwell talisman" }
 
       elseif s == "J" then i = { "javelin" }
 
@@ -127,12 +127,13 @@
 
       elseif s == "L" then i = { "manual of long blades", "large rock",
        "leather armour", "long sword", "potion of lignification", "lajatang",
-       "longbow",  "book of lightning", "wand of light" }
+       "longbow",  "book of lightning", "wand of light", "lupine talisman" }
 
       elseif s == "M" then i = { "manual of maces & flails",
        "book of minor magic", "book of misfortune", "maw talisman",
-       "morningstar", "mace", "potion of magic", "wand of mindburst",
-       "ring of magical power", "amulet of magic regeneration", "potion of might",
+       "medusa talisman", "morningstar", "mace", "potion of magic",
+       "wand of mindburst", "ring of magical power",
+       "amulet of magic regeneration", "potion of might",
        "potion of mutation", "book of the moon", "book of movement",
        "book of maladies", "book of metalworking",
        "maxwell's memoranda", "my sojourn through swampland" }
@@ -156,11 +157,13 @@
       elseif s == "R" then i = { "amulet of reflection",
        "manual of ranged weapons", "wand of roots", "scroll of revelation",
        "amulet of regeneration", "rapier", "ring of resist corrosion",
-       "potion of resistance", "robe", "ring mail" }
+       "potion of resistance", "robe", "ring mail",
+       "rimehorn talisman", "riddle talisman" }
 
       elseif s == "S" then i = { "scarf", "scimitar", "short sword",
-       "scale mail", "spear", "serpent talisman", "sanguine talisman",
-       "storm talisman", "ring of see invisible", "ring of slaying",
+       "scale mail", "spear", "scarab talisman", "spider talisman",
+       "serpent talisman", "sanguine talisman", "storm talisman",
+       "ring of see invisible", "ring of slaying",
        "ring of strength", "manual of stealth", "scroll of summoning",
        "book of spatial translocations", "scroll of silence", "shortbow",
        "manual of staves", "steam dragon scales", "manual of shapeshifting",
@@ -185,7 +188,7 @@
 
       elseif s == "W" then i = { "ring of wizardry", "book of the warp", "whip",
        "war axe", "ring of willpower", "book of winter", "book of weapons",
-       "book of the wilderness", "book of wicked creation" }
+       "book of the wilderness", "book of wicked creation", "wellspring talisman" }
 
       elseif s == "X" then i = { "any" }
 

@@ -1039,14 +1039,15 @@ ENDMAP
 # Custom venom shop
 NAME:    guppyfry_shop_venom
 TAGS:    no_monster_gen transparent
-DEPTH:   D:4-, Depths
+DEPTH:   D:4-, Snake
 MONS:    ball python w:5 / adder, water moccasin
 MONS:    black mamba w:20 / naga ; sling, naga mage / naga ritualist, nagaraja
 KFEAT:   v = general shop type:Serpentskin suffix:Sales count:7 ; \
          dart ego:poisoned w:8 | dart ego:curare w:4 | scroll of poison w:5 | \
          ring of poison resistance w:3 | randbook disc:alchemy w:6 | \
          staff of alchemy w:2 | any weapon ego:venom w:4 | \
-         partisan ego:venom w:1 | serpent talisman randart w:2 | \
+         partisan ego:venom w:1 | medusa talisman w:2 | \
+         serpent talisman randart w:2 | \
          any armour ego:poison_resistance w:6 | w:1 swamp dragon scales
 NSUBST:  ? = 2:? / 2 = ?.. / *:.
 : if you.absdepth() < 7 then
@@ -1072,22 +1073,26 @@ NAME:    guppyfry_shop_earth
 TAGS:    no_monster_gen transparent
 DEPTH:   D:11-, Depths
 KMONS:   1 = gargoyle / basilisk / boulder beetle / cyclops w:3
-KMONS:   2 = stone giant / catoblepas / deep troll earth mage / \
-             iron dragon w:4
+KMONS:   2 = stone giant / walking earthen tome w:4 / \
+             deep troll earth mage / iron dragon w:4
 KMONS:   D = pile of debris
 ITEM:    stone
-KFEAT:   S = general shop type:Pet suffix:Rocks count:7 ; \
-             stone w:15 | large rock w:15 | sling w:8  | \
-             tin of tremorstones w:7 | wand of digging w:8 | \
-             staff of earth w:4 | granite talisman w:4 | \
-             randbook disc:earth w:5 | book of the earth w:2 | \
-             book of geomancy w:2 | book of iron w:2 | book of the moon w:2 | \
-             book of blasting w:2 | crystal plate armour w:1
-SUBST:   ? = 2dd
+: local inv = "tin of tremorstones w:7 | wand of digging w:8 | \
+:              staff of earth w:4 randbook disc:earth w:5 | \
+:              book of the earth w:2 | book of iron w:2 | \
+:              book of the moon w:2 | crystal plate armour w:1 | "
+SUBST:   ? = 1dd
 : if you.absdepth() < 16 then
-SUBST:   2 = 1
+:   inv = inv .. "stone w:14 | large rock w:14 | sling w:8 | \
+:                 medusa talisman w:6 |  book of geomancy w:2"
+: else
+:   inv = inv .. "large rock w:20 | sling randart w:4 | \
+:                 medusa talisman randart w:4 | granite talisman w:2 | \
+:                 compendium of siegecraft w:2 | book of annihilation w:2"
+SUBST:   1 = 2
 : end
 SUBST:   B : D., C : D.
+: kfeat("S = general shop type:Pet suffix:Rocks count:7 ; " .. inv)
 MAP
 B.....C
 .xx+xx.
@@ -1516,10 +1521,10 @@ local kstr = "S = general shop type:Mayhem suffix:Merchandise ; " ..
 -- unrandart axes aren't included here since one of the above axes can already
 -- get turned into them.
 if not you.unrands("devastator") then
-      kstr = kstr .. "|devastator w:1"
+      kstr = kstr .. "| devastator w:1"
 end
 if not you.unrands("firestarter") then
-      kstr = kstr .. "|firestarter w:1"
+      kstr = kstr .. "| firestarter w:1"
 end
 
 kfeat(kstr)

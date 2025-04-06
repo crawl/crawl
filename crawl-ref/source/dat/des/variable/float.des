@@ -2138,7 +2138,7 @@ SUBST:   @y = ., l = %
 NSUBST:  1 = 2 = *% / *:1
 CLEAR:   X
 : end
-ITEM:    staff of earth / granite talisman
+ITEM:    staff of earth / medusa talisman w:5 / granite talisman w:5
 TILE:    G = dngn_statue_angel / dngn_statue_imp / \
              dngn_statue_tengu / dngn_statue_dragon
 MAP
@@ -7123,9 +7123,10 @@ MARKER:  U = lua:fog_machine { cloud_type = "freezing vapour", size = 1, \
              pow_max = 10, delay_min = 30, delay_max = 40, excl_rad = 0 }
 : end
 ITEM:    ice dragon scales w:15 / kite shield ego:cold_resistance / \
-         ring of ice randart w:4 / staff of cold w:3
+         ring of ice randart w:4 / staff of cold w:3 / rimehorn talisman w:2
 ITEM:    ice dragon scales randart w:15 / tower shield ego:cold_resistance / \
-         ring of protection from cold randart w:4 / staff of cold randart w:3
+         ring of protection from cold randart w:4 / staff of cold randart w:3 / \
+         rimehorn talisman randart w:2
 ITEM:    randbook numspells:3 disc1:ice spells:frozen_ramparts&hoarfrost_cannonade
 ITEM:    randbook numspells:5 disc1:ice spells:hoarfrost_cannonade&splinterfrost_shell
 KITEM:   % = $ no_pickup, any weapon ego:freezing no_pickup

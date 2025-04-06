@@ -858,7 +858,7 @@ NAME:   hangedman_abyss_or_decor_jellyfish_corner
 TAGS:   transparent decor extra
 DEPTH:  D:4-, Depths, Abyss
 WEIGHT: 5 (D), 10
-ITEM:   ring of poison resistance / any beam wand charges:1 / \
+ITEM:   ring of poison resistance / medusa talisman / \
         demon whip ego:venom pre_id / throwing net q:1
 KFEAT:  ^ = harlequin's trap / devourer's trap w:13
 : if you.in_branch("Abyss") then
@@ -1089,7 +1089,7 @@ MONS:    thrashing horror / unseen horror / raiju / \
 MONS:    starcursed mass / apocalypse crab / hellephant / \
          tentacled monstrosity / tentacled starspawn w:5
 ITEM:    great sword randart ego:distortion / protean talisman / \
-         quill talisman / maw talisman / granite talisman / \
+         quill talisman / maw talisman / medusa talisman / \
          mundane amulet of regeneration / orb ego:guile
 SHUFFLE: yY / yY / Yy
 SUBST:   x : X:9 C:1, y : W:25 L:25 X:35 C:10 M:5, Y = ., z : X:20 CMB

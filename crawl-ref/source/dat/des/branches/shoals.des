@@ -2918,9 +2918,10 @@ KMONS:   O = sphinx marauder
 KMONS:   P = plant
 KITEM:   f = azure gem
 KITEM:   O = barnacled rune of Zot
+KITEM:   R = riddle talisman
 SHUFFLE: d% / e* / f|
 NSUBST:  | = 1:O / *:|
-SUBST:   de = ., %* = |, 1 = 1.., 2 = 2.., 3 = 334, G = G.
+SUBST:   de = ., %* = |, 1 = 1.., 2 = 2.., 3 = 334, G = G., R = R.
 SUBST:   ; : W.., p : W.., q : W.., r : W.., s : W.., y : W.., z : W..
 NSUBST:  . = 16 = 0. / *=.........W
 SUBST:   D = x., c = ccc.
@@ -2950,7 +2951,7 @@ wwwwwwW''''''.W+...pDx......Dyy.....D....D...ccccccccwwwwwwwww
 wwwwwwW'''''..W+...ppxD1..1DxyyDD1..x1..2x.ccc1....1cccwwwwwww
 wwwwwwW''''..ccccc..pxDDDDxxxxxDD...xD++Dxcc1.........ccwwwwww
 wwwwwwW'''..cc..1cc..G....G.....G....G....Gc.....2.....*cwwwww
-wwwwwwW'''..+....2+;;;;;;;;;;;;;;;;;;;;;;;;+..2.....e3.*cwwwww
+wwwwwwW'''..+....2+;;;;;;;;;;;;;;;;;;;;;;;;+..2.....e3R*cwwwww
 wwwwwwW'''..cc..1cc..G....G.....G....G....Gc.....2.....*cwwwww
 wwwwwwW''''..ccccc..qxDDDDxxxxxDD...xD++Dxcc1.........ccwwwwww
 wwwwwwW'''''..W+...qqxD1..1DxzzDD1..x1..2x.ccc1....1cccwwwwwww

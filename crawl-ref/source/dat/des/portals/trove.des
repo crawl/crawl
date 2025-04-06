@@ -254,11 +254,21 @@ function trove.good_scroll (e)
 end
 
 function trove.good_talisman (e)
-    local t = "blade talisman randart / maw talisman randart / " ..
-              "serpent talisman randart w:8 / granite talisman w:4 / " ..
-              "granite talisman randart w:6 / dragon-coil talisman w:4 / " ..
-              "dragon-coil talisman randart w:6 / storm talisman w:8 / " ..
-              "storm talisman randart w:2"
+    -- XXX: should we just have talisman tier itemspec clauses?
+    --      doesn't help here very much, though, due to good gods.
+    --      acquirement's still not the best off due to neglecting blade tier.
+    local t = "blade talisman randart / lupine talisman randart" ..
+              "serpent talisman randart / wellspring talisman randart / " ..
+              "granite talisman w:4 / granite talisman randart w:6 / " ..
+              "dragon-coil talisman w:4 / dragon-coil talisman randart w:6 / " ..
+              "honeycomb talisman w:4 / honeycomb talisman randart w:6 / " ..
+              "riddle talisman w:4 / riddle talisman randart w:6 / " ..
+              "storm talisman w:8 / storm talisman randart w:2"
+
+    if you.genus() ~= "draconian" and you.race() ~= "Felid" and
+      you.race() ~= "octopode" then
+        t = t .. " / fortress talisman randart"
+    end
 
     if you.god() ~= "Elyvilon" and you.god() ~= "the Shining One" then
         t = t .. " / sanguine talisman w:4 / sanguine talisman randart w:6 / " ..
@@ -519,6 +529,16 @@ ENDMAP
 #
 # Most of the vaults have 16 items of loot. Usually weighted 'd', 'e', 'f', from
 # good to "worse". Some vaults have more than 16 items for specific reasons.
+#
+# TODO:
+# * Instead of relying on giant piles of mostly just item categories for
+#   high costs usually fulfilled pretty late, we should pivot more into
+#   smaller piles of specifically themed loot named after the owners
+#   of the trove, using unrand and spell namesake and god flavour, for
+#   somewhat lower costs fulfillable earlier. Consider weapon brands, jewellery
+#   types, armour artprops, and specific consumables / talismans / spells
+#   as can easily fit themes like "Ozocubu's Refridgerator" or "Nadja's Forge".
+#   (Might want the ability to combine acquirement and ego itemspecs?...)
 #
 ##############################################################################
 

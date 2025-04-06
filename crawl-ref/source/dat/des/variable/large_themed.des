@@ -19,7 +19,9 @@ function grandhive_vaults(e, hivewallglyph)
     e.item('potion of ambrosia / nothing')
     e.kitem('% = % no_pickup')
     e.kitem('* = * no_pickup')
+    e.kitem('& = honeycomb talisman')
     e.kfeat(hivewallglyph .. ' = x')
+    e.nsubst('% = %%%&')
     e.tile(hivewallglyph .. ' = wall_wax')
     e.colour(hivewallglyph .. ' = yellow')
     -- Lair has lots of randomization and thin scaling in its
@@ -729,11 +731,13 @@ NAME:   minmay_twisted_water
 DEPTH:  D:9-
 ORIENT: north
 TAGS:   no_descent
-KPROP:  W-*|123 = no_tele_into
-SUBST:  W = wW
 MONS:   ice statue, patrolling ice dragon, patrolling frost giant
+KITEM:  ? = wellspring talisman
+SUBST:  W = wW
+NSUBST: * = 1:?* / *:*
 KMONS:  w = w:490 nothing / ice beast
 KFEAT:  w = w
+KPROP:  wW-*|?123 = no_tele_into
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxx*xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -3321,7 +3325,7 @@ MONS:    ice beast / sky beast / sleepcap
 MONS:    bullfrog / scorpion / iguana / black bear
 MONS:    hound / phantom / ufetubus
 SUBST:   })] = %
-NSUBST:  | = 1:e / 1:ef / 2:g / * = effg, % = 1:d / 2:e / 1:fg / * = k.
+NSUBST:  | = 1:e / 1:ef / 2:g / * = effg, % = 1:d / 2:e / 1:fg / 1:zk. / * = k.
 NSUBST:  23 = 1:.
 :   elseif you.depth() < 12 then
 MONS:    arcanist / kobold demonologist w:5, boggart / vampire w:5
@@ -3329,7 +3333,7 @@ MONS:    basilisk / shapeshifter w:20 / manticore
 MONS:    hornet / wyvern / centaur / yak band
 MONS:    howler monkey / water moccasin / acid dragon
 SUBST:   })] = %
-NSUBST:  | = 1:e / 1:f / 3:g / * = ffg, % = 2:d / 2:e / 2:fg / * = k.
+NSUBST:  | = 1:e / 1:f / 3:g / * = ffg, % = 2:d / 2:e / 2:fg / 1:zk / * = k.
 NSUBST:  1 = 1:2 / *:1, 23 = 2:.
 :   elseif you.where() ~= dgn.level_name(dgn.br_entrance("Depths")) then
 MONS:    deep elf knight / orc sorcerer / ogre mage / sphinx marauder w:2
@@ -3338,7 +3342,8 @@ MONS:    laughing skull band w:5 / great orb of eyes / meliai band w:1
 MONS:    centaur warrior / boulder beetle / unseen horror / wolf spider
 MONS:    basilisk / manticore / shapeshifter w:20 / shadowghast / redback zombie
 SUBST:   })] = %
-NSUBST:  | = 1:f / 3:g / 1:h / 1:i / * = ffg, % = 1:d / 2:e / 1:fg / * = def.
+NSUBST:  | = 1:f / 3:g / 1:h / 1:i / * = ffg
+NSUBST:  % = 1:d / 2:e / 1:fg / 1:zzz. / * = def.
 :   else
 MONS:    rakshasa / occultist, tengu conjurer / necromancer
 MONS:    ice dragon w:1 / glowing orange brain w:20 / \
@@ -3347,9 +3352,10 @@ MONS:    flayed ghost / glowing shapeshifter w:20 / guardian sphinx skeleton
 MONS:    ugly thing / shapeshifter w:15 / spriggan air mage simulacrum w:5
 KFEAT:   ) = enter_depths
 KITEM:   S = smoky gem
-NSUBST:  | = 1:f / 4:g / 1:i / * = ffg, % = 2:d / 2:e / 1:fg / * = def.
+NSUBST:  | = 1:f / 4:g / 1:i / 1:ZZZfg / * = ffg
+NSUBST:  % = 2:d / 2:e / 1:fg / * = def.
 :   end
-FTILE:   .12345defghijkS) = floor_vines / floor_pebble_darkgray
+FTILE:   .12345defghijkzZS) = floor_vines / floor_pebble_darkgray
 FTILE:   P = floor_pebble_brown
 TILE:    x = wall_pebble_lightblue
 TILE:    c = wall_marble w:200 / dngn_stone_wall_lightblue
@@ -3360,7 +3366,7 @@ MONS:    merfolk siren w:2 / faun w:2 / water elemental
 SHUFFLE: })]
 SUBST:   )] = %
 NSUBST:  | = 1:f / 2:g / 2:h / 1:i / * = ffg
-NSUBST:  % = 1:d / 2:e / 1:f / 1:g / * = def., . = 4:5 / *:.
+NSUBST:  % = 1:d / 2:e / 1:f / 1:g / 1:zZef / * = def., . = 4:5 / *:.
 : elseif you.in_branch("Depths") then
 :   if you.where() ~= dgn.level_name(dgn.br_entrance("Zot")) then
 MONS:    tengu reaver / titan / lich / alderking w:5
@@ -3374,8 +3380,8 @@ MONS:    spriggan air mage / very ugly thing / glowing orange brain / \
 SHUFFLE: }])
 SUBST:   } = }:60 >, ] = ]:40 >
 NSUBST:  . = 2:3 / 2 = 5. / *:.
-NSUBST:  | = 3:h / 2:i / * = fgg, % = 2:d / 2:f / 2:g / * = e.
-FTILE:   .12345defghijkS}]) = floor_vines / floor_pebble_darkgray
+NSUBST:  | = 3:h / 2:i / * = fgg, % = 2:d / 2:f / 2:g / 1:zZ / * = e.
+FTILE:   .12345defghijkzZS}]) = floor_vines / floor_pebble_darkgray
 :   else
 MONS:    draconian annihilator / draconian shifter
 MONS:    purple draconian / yellow draconian / \
@@ -3390,8 +3396,8 @@ KFEAT:   ) = enter_zot
 KITEM:   S = midnight gem
 SUBST:   }] = %
 NSUBST:  . = 1:1 / 3 = 245. / *:.
-NSUBST:  | = 4 = hfg / 1:i / 1:hi / *:f, % = 2:d / 2 = fg / * = ee.
-FTILE:   .12345defghijkS) = floor_hall / floor_pebble_darkgray
+NSUBST:  | = 4 = hfg / 1:i / 1:hi / *:f, % = 2:d / 2 = fg / 1:Z / * = ee.
+FTILE:   .12345defghijkzZS) = floor_hall / floor_pebble_darkgray
 :   end
 FTILE:   PDt = floor_pebble_brown
 TILE:    x = wall_pebble_cyan
@@ -3438,6 +3444,8 @@ ITEM:    mundane pair of boots / mundane cloak, stone q:1
 : else
 ITEM:    pair of boots / hat / cloak, large rock q:1
 : end
+KITEM:   z = riddle talisman
+KITEM:   Z = riddle talisman randart
 KFEAT:   - = broken_door
 KFEAT:   S = altar_sif_muna
 KFEAT:   y = x

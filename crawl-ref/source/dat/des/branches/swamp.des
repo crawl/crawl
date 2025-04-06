@@ -3087,7 +3087,7 @@ MONS:   spriggan w:12 ; shortbow | sling good_item / spriggan rider w:8
 MONS:   spriggan druid / spriggan air mage w:5 / \
         spriggan berserker w:5 ; hand cannon . animal skin
 ITEM:   tin of tremorstones / staff of earth randart no_pickup w:2 / \
-        granite talisman / granite talisman randart w:2
+        medusa talisman randart / granite talisman randart w:2
 ITEM:   spear good_item / quick blade w:5 / shortbow / hand cannon w:5
 ITEM:   stone q:1 no_pickup
 KFEAT:  X = x

@@ -181,7 +181,7 @@ for examples and inspiration.
 The current range of levels that ghost subvault tags correspond to:
 
 ```
-"pre_temple_d":  D:4-7
+"pre_temple_d":  D:5-7
 "pre_lair_d":    D:8-11
 "post_lair_d":   D:12-15
 "lair":          Lair:1-5
