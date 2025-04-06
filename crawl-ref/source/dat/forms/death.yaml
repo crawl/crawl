@@ -1,7 +1,7 @@
 enum: death
 equivalent_mons: ancient_champion
 description: an undying horror.
-skill: {min: 23, max: 27}
+skill: {min: 26, max: 27}
 talisman: death
 resists: {cold: 1, neg: 3}
 unarmed: {base: 6}
