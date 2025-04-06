@@ -1963,19 +1963,17 @@ bool transform(int dur, transformation which_trans, bool involuntary,
         return false;
     }
 
-    // Vampire should shift in and out of bat swarm without reverting to fully untransformed in the middle
-    // This must occur before the untransform().
-    if (you.form == which_trans)
+    // If swapping to a different talisman of the same type, make sure to
+    // activate properties of the new one.
+    if (you.form == which_trans && is_artefact(you.active_talisman))
     {
-        if (is_artefact(you.active_talisman))
-        {
-            you.equipment.update();
-            equip_artefact_effect(you.active_talisman, nullptr, false);
-        }
+        you.equipment.update();
+        equip_artefact_effect(you.active_talisman, nullptr, false);
 
         return true;
     }
 
+    // Vampire should shift in and out of bat swarm without reverting to fully untransformed in the middle
     if (you.form != transformation::none
         && !((you.form == transformation::vampire || you.form == transformation::bat_swarm)
                && (which_trans == transformation::vampire || which_trans == transformation::bat_swarm)))
