@@ -36,12 +36,12 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
          Kikubaaqudgha = "rat corpse / kobold corpse",
          Okawaru = "any ally scroll pre_id q:3 / any ally misc /\
                     phantom mirror",
-         ["Sif Muna"] = "plate armour randart plus:-1 artprops:-cast:1&&int:-6",
+         ["Sif Muna"] = "plate armour randart plus:-1 artprops:*silence:1&&int:-6",
          Trog = "manual of Spellcasting / manual of Air Magic w:5 /\
                  manual of Earth Magic w:5 / manual of Fire Magic w:5 /\
                  manual of Ice Magic w:5 / manual of Alchemy w:5 /\
                  any magical staff pre_id / ring of wizardry pre_id",
-         Vehumet = "tower shield randart plus:-1 artprops:-cast:1&&int:-6",
+         Vehumet = "tower shield randart plus:-1 artprops:*silence:1&&int:-6",
          ["Wu Jian"] = "mundane ring of slaying pre_id",
          Xom = "manual of Invocations",
          Yredelemnul = "good_item " .. weapon .. " ego:holy_wrath pre_id",
