@@ -1418,6 +1418,9 @@ void solar_ember_blast()
     dice_def dmg = get_form()->get_special_damage();
     for (monster* mon : targs)
     {
+        if (!mon->alive())
+            continue;
+
         flash_tile(mon->pos(), RED, 0);
         const int damage_done = mons_adjust_flavoured(mon, beam, mon->apply_ac(dmg.roll()));
         mprf("The solar flare engulfs %s%s.", mon->name(DESC_THE).c_str(),
